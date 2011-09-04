@@ -342,7 +342,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
 	CString str;
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		str.Format(_T("Property Change: %d\n"), W2T(pDispParams->rgvarg[0].bstrVal));
+		str.Format(_T("Property Change: %s\n"), (LPCTSTR)W2T(pDispParams->rgvarg[0].bstrVal));
 
 	TRACE(str);
 }

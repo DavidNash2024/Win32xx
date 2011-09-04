@@ -14,6 +14,9 @@ New Features and Enhancements
    - CHeader
    - CHotKey
    - CMonthCalendar
+   
+* CString constructors now accept either ANSI or Unicode characters and converts 
+   these to Unicode as required. 
 	
 
 Changes in detail

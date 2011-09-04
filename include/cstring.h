@@ -42,18 +42,18 @@
 // cstring.h
 //  Declaration of the cstring.h
 
-// This class is intended to provide a simple alternative to the MFC/ATL 
+// This class is intended to provide a simple alternative to the MFC/ATL
 // CString class that ships with Microsoft compilers. The CString class
 // specified here is compatible with other compilers such as Borland 5.5
 // and MinGW.
 
 // Differences between this class and the MFC/ATL CString class
 // ------------------------------------------------------------
-// 1) The constructors for this class accepts only TCHARs. The various text conversion
-//    functions can be used to convert from other character types to TCHARs.
+// 1) The constructors for this class accepts both ANSI and Unicode characters and
+//    automatically converts these to TCHAR as required.
 //
-// 2) This class is not reference counted, so these CStrings should be passed as 
-//    references or const references when used as function arguments. As a result there 
+// 2) This class is not reference counted, so these CStrings should be passed as
+//    references or const references when used as function arguments. As a result there
 //    is no need for functions like LockBuffer and UnLockBuffer.
 //
 // 3) The Format functions only accepts POD (Plain Old Data) arguments. It does not
@@ -69,16 +69,16 @@
 //      // This is ok
 //      string2.Format(_T("String1 is: %s"), (LPCTSTR)string1); // Yes, this is correct
 //
-//    Note: The MFC/ATL CString class uses a non portable hack to make its CString class 
+//    Note: The MFC/ATL CString class uses a non portable hack to make its CString class
 //          behave like a POD. Other compilers (such as the MinGW compiler) specifically
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
 // 4) This class provides a few additional functions:
 //       b_str			Returns a BSTR string. This an an alternative for casting to BSTR.
 //       c_str			Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
-//       GetErrorString	Assigns CString to the error string for the specified System Error Code 
+//       GetErrorString	Assigns CString to the error string for the specified System Error Code
 //                      (from ::GetLastErrror() for example).
-//       GetString		Returns a reference to the underlying std::basic_string<TCHAR>. This 
+//       GetString		Returns a reference to the underlying std::basic_string<TCHAR>. This
 //						reference can be used to modify the string directly.
 
 
@@ -93,14 +93,14 @@
 namespace Win32xx
 {
 
-	class CString 
+	class CString
 	{
 		// friend functions allow the left hand side to be something other than CString
 		friend CString operator + (const CString& string1, const CString& string2);
-		friend CString operator + (const CString& string, LPCTSTR pszText);	
+		friend CString operator + (const CString& string, LPCTSTR pszText);
 		friend CString operator + (const CString& string, TCHAR ch);
 		friend CString operator + (LPCTSTR pszText, const CString& string);
-		friend CString operator + (TCHAR ch, const CString& string);		
+		friend CString operator + (TCHAR ch, const CString& string);
 
 	public:
 		CString();
@@ -219,10 +219,10 @@ namespace Win32xx
 	{
 		m_str.assign(nLength, ch);
 	}
-	
+
 	inline CString::CString(LPCTSTR pszText, int nLength)
 	{
-		m_str.assign(pszText, nLength);	
+		m_str.assign(pszText, nLength);
 	}
 
 	inline CString& CString::operator = (const CString& str)
@@ -304,7 +304,7 @@ namespace Win32xx
 		m_str.append(str);
 		return *this;
 	}
-	
+
 	inline CString& CString::operator += (LPCSTR szText)
 	{
 		m_str.append(A2T(szText));
@@ -326,8 +326,8 @@ namespace Win32xx
 	inline void CString::AppendFormat(LPCTSTR pszFormat,...)
 	// Appends formatted data to an the CString content.
 	{
-		CString str;	
-	
+		CString str;
+
 		va_list args;
 		va_start(args, pszFormat);
 		str.FormatV(pszFormat, args);
@@ -341,13 +341,12 @@ namespace Win32xx
 	{
 		CString str1;
 		CString str2;
-		
+
 		if (str1.LoadString(nFormatID))
 		{
-			LPCTSTR pszFormat = str1.c_str();
 			va_list args;
-			va_start(args, pszFormat);
-			str2.FormatV(pszFormat, args);
+			va_start(args, nFormatID);
+			str2.FormatV(str1.c_str(), args);
 			va_end(args);
 
 			m_str.append(str2);
@@ -408,7 +407,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Find(LPCTSTR pszText, int nIndex /* = 0 */) const
-	// Finds a substring within the string. 
+	// Finds a substring within the string.
 	{
 		assert(pszText);
 		assert(nIndex >= 0);
@@ -438,9 +437,8 @@ namespace Win32xx
 		if (str.LoadString(nID))
 		{
 			va_list args;
-			LPCTSTR pszFormat = str.c_str();
-			va_start(args, pszFormat);
-			FormatV(pszFormat, args);
+			va_start(args, nID);
+			FormatV(str.c_str(), args);
 			va_end(args);
 		}
 	}
@@ -499,16 +497,16 @@ namespace Win32xx
 	}
 
 	inline LPTSTR CString::GetBuffer(int nMinBufLength)
-	// Creates a buffer of nMinBufLength charaters (+1 extra for NULL termination) and returns 
+	// Creates a buffer of nMinBufLength charaters (+1 extra for NULL termination) and returns
 	// a pointer to this buffer. This buffer can be used by any function which accepts a LPTSTR.
-	// Care must be taken not to exceed the length of the buffer. Use ReleaseBuffer to safely 
+	// Care must be taken not to exceed the length of the buffer. Use ReleaseBuffer to safely
 	// copy this buffer back to the CString object.
 	//
 	// Note: The buffer uses a vector. Vectors are required to be contiguous in memory under
 	//       the current standard, whereas std::strings do not have this requirement.
 	{
 		assert (nMinBufLength >= 0);
-		
+
 		m_buf.assign(nMinBufLength + 1, _T('\0'));
 		tString::iterator it_end;
 
@@ -519,7 +517,7 @@ namespace Win32xx
 		}
 		else
 			it_end = m_str.end();
-		
+
 		std::copy(m_str.begin(), it_end, m_buf.begin());
 
 		return &m_buf[0];
@@ -548,7 +546,7 @@ namespace Win32xx
 	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
 		m_str.erase();
-		
+
 		if (dwError != 0)
 		{
 			TCHAR* pTemp = 0;
@@ -558,7 +556,7 @@ namespace Win32xx
 			::LocalFree(pTemp);
 		}
 	}
-	
+
 	inline int CString::Insert(int nIndex, TCHAR ch)
 	// Inserts a single character or a substring at the given index within the string.
 	{
@@ -689,7 +687,7 @@ namespace Win32xx
 
 		std::vector<TCHAR>::iterator it_end = m_buf.begin();
 		std::advance(it_end, nNewLength);
-		
+
 		std::copy(m_buf.begin(), it_end, m_str.begin());
 		m_buf.clear();
 	}
@@ -765,7 +763,7 @@ namespace Win32xx
 	}
 
 	inline CString CString::SpanExcluding(LPCTSTR pszText) const
-	// Extracts characters from the string, starting with the first character, 
+	// Extracts characters from the string, starting with the first character,
 	// that are not in the set of characters identified by pszCharSet.
 	{
 		assert (pszText);
@@ -845,7 +843,7 @@ namespace Win32xx
 	}
 
 	inline void CString::TrimLeft(LPCTSTR pszTargets)
-	// Trims the specified set of characters from the beginning of the string. 
+	// Trims the specified set of characters from the beginning of the string.
 	{
 		assert(pszTargets);
 		m_str.erase(0, m_str.find_first_not_of(pszTargets));
@@ -893,7 +891,7 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	///////////////////////////////////
 	// Global Functions
 	//
@@ -912,27 +910,27 @@ namespace Win32xx
 		str.m_str.append(pszText);
 		return str;
 	}
-	
+
 	inline CString operator + (const CString& string, TCHAR ch)
 	{
 		CString str(string);
 		str.m_str.append(1, ch);
 		return str;
 	}
-	
+
 	inline CString operator + (LPCTSTR pszText, const CString& string)
 	{
 		CString str(pszText);
 		str.m_str.append(string);
 		return str;
 	}
-	
+
 	inline CString operator + (TCHAR ch, const CString& string)
 	{
 		CString str(ch);
 		str.m_str.append(string);
 		return str;
-	}	
+	}
 
 	// Global LoadString
 	inline CString LoadString(UINT nID)
