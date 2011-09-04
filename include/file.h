@@ -150,7 +150,7 @@ namespace Win32xx
 
 		LONG HighPosCur = 0;
 		LONG HighPosEnd = 0;
-	//	DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_END);
+
 		DWORD LowPosCur = SetFilePointer(m_hFile, 0, &HighPosCur, FILE_CURRENT);
 		DWORD LowPosEnd = SetFilePointer(m_hFile, 0, &HighPosEnd, FILE_END);
 		SetFilePointer(m_hFile, LowPosCur, &HighPosCur, FILE_BEGIN);

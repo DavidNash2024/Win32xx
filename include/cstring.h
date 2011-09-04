@@ -326,8 +326,13 @@ namespace Win32xx
 	inline void CString::AppendFormat(LPCTSTR pszFormat,...)
 	// Appends formatted data to an the CString content.
 	{
-		CString str;
-		str.Format(pszFormat);
+		CString str;	
+	
+		va_list args;
+		va_start(args, pszFormat);
+		str.FormatV(pszFormat, args);
+		va_end(args);
+
 		m_str.append(str);
 	}
 
@@ -336,9 +341,15 @@ namespace Win32xx
 	{
 		CString str1;
 		CString str2;
+		
 		if (str1.LoadString(nFormatID))
 		{
-			str2.Format(str1);
+			LPCTSTR pszFormat = str1.c_str();
+			va_list args;
+			va_start(args, pszFormat);
+			str2.FormatV(pszFormat, args);
+			va_end(args);
+
 			m_str.append(str2);
 		}
 	}
@@ -423,10 +434,15 @@ namespace Win32xx
 	inline void CString::Format(UINT nID, ...)
 	// Formats the string as sprintf does.
 	{
-		Empty();
 		CString str;
 		if (str.LoadString(nID))
-			Format(str);
+		{
+			va_list args;
+			LPCTSTR pszFormat = str.c_str();
+			va_start(args, pszFormat);
+			FormatV(pszFormat, args);
+			va_end(args);
+		}
 	}
 
 	inline void CString::FormatV(LPCTSTR pszFormat, va_list args)

@@ -261,11 +261,15 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\..\include\controls.h"
+				RelativePath="..\..\..\include\cstring.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\file.h"
 				>
 			</File>
 			<File
