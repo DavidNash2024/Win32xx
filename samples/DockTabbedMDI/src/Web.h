@@ -16,9 +16,6 @@ public:
 	virtual void OnInitialUpdate() 
 	{
 		GetIWebBrowser2()->GoHome();
-	//	GetIWebBrowser2()->Stop();
-		GetIWebBrowser2()->Quit();
-	//	GetAXWindow().Remove();
 	}
 
 protected:
