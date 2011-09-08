@@ -74,7 +74,6 @@
 //          prohibit the use of non POD types for functions with variable argument lists.
 //
 // 4) This class provides a few additional functions:
-//       b_str			Returns a BSTR string. This an an alternative for casting to BSTR.
 //       c_str			Returns a const TCHAR string. This is an alternative for casting to LPCTSTR.
 //       GetErrorString	Assigns CString to the error string for the specified System Error Code
 //                      (from ::GetLastErrror() for example).

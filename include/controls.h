@@ -38,8 +38,8 @@
 ////////////////////////////////////////////////////////
 // controls.h
 //  Declaration of the following classes:
-//  CAnimation, CComboBox, CComboBoxEx, CDateTime, CIPAddress, 
-//  CHeader, CHotKey, CMonthCalendar, CProgressBar, CScrollBar, 
+//  CAnimation, CComboBox, CComboBoxEx, CDateTime, CIPAddress,
+//  CHeader, CHotKey, CMonthCalendar, CProgressBar, CScrollBar,
 //  CSlider, CSpinButton
 
 
@@ -197,21 +197,19 @@ namespace Win32xx
 		HIMAGELIST SetImageList(HIMAGELIST himl);
 		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
 		BOOL SetOrderArray(int iCount, LPINT piArray);
-#if WINVER >= 0x0500
 		int GetBitmapMargin() const;
 		int SetBitmapMargin(int nWidth);
-#endif
 
 		// Operations
 		HIMAGELIST CreateDragImage(int nIndex);
 		BOOL DeleteItem(int nPos);
 		int InsertItem(int nPos, HDITEM* phdi);
 		BOOL Layout(HDLAYOUT* pHeaderLayout);
-#ifndef __GNUC__
+#ifdef Header_SetHotDivider
 		int SetHotDivider(CPoint pt);
 		int SetHotDivider(int nIndex);
 #endif
-#if WINVER >= 0x0500
+#ifdef Header_ClearFilter
 		int ClearAllFilters();
 		int ClearFilter(int nColumn);
 		int EditFilter(int nColumn, BOOL bDiscardChanges);
@@ -1002,7 +1000,7 @@ namespace Win32xx
 		return Header_OrderToIndex( m_hWnd, nOrder);
 	}
 
-#ifndef __GNUC__
+#ifdef Header_SetHotDivider
 	inline int CHeader::SetHotDivider(CPoint pt)
 	{
 		assert(IsWindow());
@@ -1034,7 +1032,7 @@ namespace Win32xx
 		return Header_SetOrderArray(m_hWnd, iCount, piArray);
 	}
 
-#if WINVER >= 0x0500
+#ifdef Header_ClearFilter
 	inline int CHeader::ClearFilter(int nColumn)
 	{
 		assert(IsWindow());

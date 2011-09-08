@@ -257,11 +257,27 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\..\include\cstring.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\frame.h"
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\statusbar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\thread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>
 			<File
@@ -270,6 +286,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\winthread.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\winutils.h"
 				>
 			</File>
 		</Filter>

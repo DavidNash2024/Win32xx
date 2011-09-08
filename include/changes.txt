@@ -16,7 +16,7 @@ New Features and Enhancements
    - CMonthCalendar
    
 * CString constructors now accept either ANSI or Unicode characters and converts 
-   these to Unicode as required. 
+   these to TCHAR as required. 
 	
 
 Changes in detail

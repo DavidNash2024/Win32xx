@@ -265,11 +265,19 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\..\include\cstring.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\dialog.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\file.h"
 				>
 			</File>
 			<File
@@ -289,7 +297,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\propertysheet.h"
+				RelativePath="..\..\..\include\menu.h"
 				>
 			</File>
 			<File
@@ -298,14 +306,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\ribbon.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\socket.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\splitter.h"
 				>
 			</File>
 			<File
@@ -325,15 +325,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wcestddef.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\winutils.h"
 				>
 			</File>
 		</Filter>

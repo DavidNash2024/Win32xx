@@ -325,11 +325,19 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\..\include\cstring.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\dialog.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\file.h"
 				>
 			</File>
 			<File
@@ -342,6 +350,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\listview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\menu.h"
 				>
 			</File>
 			<File
