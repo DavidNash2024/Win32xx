@@ -131,9 +131,6 @@
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\MyBrowser.cpp">
-			</File>
-			<File
 				RelativePath="..\src\MyCombo.cpp">
 			</File>
 			<File
@@ -152,9 +149,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
-			</File>
-			<File
-				RelativePath="..\src\MyBrowser.h">
 			</File>
 			<File
 				RelativePath="..\src\MyCombo.h">

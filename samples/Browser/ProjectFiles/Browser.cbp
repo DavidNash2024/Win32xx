@@ -189,8 +189,6 @@
 		<Unit filename="..\src\EventSink.h" />
 		<Unit filename="..\src\Mainfrm.cpp" />
 		<Unit filename="..\src\Mainfrm.h" />
-		<Unit filename="..\src\MyBrowser.cpp" />
-		<Unit filename="..\src\MyBrowser.h" />
 		<Unit filename="..\src\MyCombo.cpp" />
 		<Unit filename="..\src\MyCombo.h" />
 		<Unit filename="..\src\Resource.rc">

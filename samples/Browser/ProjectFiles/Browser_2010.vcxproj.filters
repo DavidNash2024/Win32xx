@@ -13,9 +13,6 @@
     <ClCompile Include="..\src\Mainfrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MyBrowser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\StdAfx.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -56,9 +53,6 @@
     </ClInclude>
     <ClInclude Include="..\src\Mainfrm.h">
       <Filter>Resource Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\MyBrowser.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\resource.h">
       <Filter>Resource Files</Filter>

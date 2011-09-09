@@ -34,12 +34,6 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	ReBarTheme RBTheme = RB.GetReBarTheme();
 
 	// Create the ComboboxEx window
-	CREATESTRUCT cs = {0};
-	cs.lpszClass = _T("COMBOBOXEX32");
-	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN;
-	cs.cy = 100;	// required to display list
-	cs.hMenu = (HMENU)IDC_COMBOBOXEX;
-	m_ComboboxEx.PreCreate(cs);
 	m_ComboboxEx.Create(&GetReBar());
 
 	// Put the window in a new rebar band

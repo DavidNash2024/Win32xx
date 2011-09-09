@@ -5,7 +5,6 @@
 #define MAINFRM_H
 
 
-#include "MyBrowser.h"
 #include "MyCombo.h"
 #include "EventSink.h"
 
@@ -17,7 +16,7 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 	virtual void ConnectEvents();
-	virtual CMyBrowser& GetBrowser() const { return (CMyBrowser&)m_View; }
+	virtual CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_View; }
 	virtual IConnectionPoint* GetConnectionPoint(REFIID riid);
 	virtual void OnBeforeNavigate2(DISPPARAMS* pDispParams);
 	virtual void OnCommandStateChange(DISPPARAMS* pDispParams);
@@ -42,10 +41,10 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CMyBrowser m_View;
-	CEventSink		m_EventSink;		// Routes event notifications from IWebBrowser
-	CMyCombo m_ComboboxEx;
-	DWORD			m_eventCookie;		// Token that uniquely identifies this connection
+	CWebBrowser m_View;
+	CEventSink	m_EventSink;		// Routes event notifications from IWebBrowser
+	CMyCombo	m_ComboboxEx;
+	DWORD		m_eventCookie;		// Token that uniquely identifies this connection
 };
 
 
