@@ -45,7 +45,6 @@ IDW_MAIN                ICON                    "res/Dialog.ico"
 //
 
 IDD_DIALOG1 DIALOGEX 0, 0, 310, 178
-//STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE | WS_CLIPCHILDREN | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME
 EXSTYLE WS_EX_APPWINDOW
 CAPTION "Resizable dialog with a Custom Control"
@@ -54,21 +53,7 @@ BEGIN
 	CONTROL      "", IDC_CUSTOMWEB, "WebControl", 0, 11,23,288,146
 END
 
-/*
-/////////////////////////////////////////////////////////////////////////////
-//
-// Dialog
-//
 
-IDD_DIALOG2 DIALOGEX 0, 0, 316, 183
-STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "Dialog"
-FONT 8, "MS Shell Dlg", 400, 0, 0x1
-BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,205,162,50,14
-    PUSHBUTTON      "Cancel",IDCANCEL,259,162,50,14
-END
-*/
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
 //

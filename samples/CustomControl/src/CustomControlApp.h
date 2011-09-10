@@ -19,7 +19,6 @@ public:
 
 private:
 	CMyDialog m_MyDialog;
-	CWebControl m_MyWebControl;
 };
 
 

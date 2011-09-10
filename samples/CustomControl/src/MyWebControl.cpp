@@ -23,7 +23,7 @@ CWebControl::CWebControl()
 void CWebControl::OnInitialUpdate()
 {
 	// Go to the browser's home page
-	GetIWebBrowser2()->GoHome();
+	GoHome();
 }
 
 
