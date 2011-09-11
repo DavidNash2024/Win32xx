@@ -240,6 +240,10 @@ namespace Win32xx
 
 	inline CAXWindow::~CAXWindow()
 	{
+		if (m_pUnk)
+			m_pUnk->Release();
+		
+		Release();
 	}
 
 	inline void CAXWindow::CreateControl(BSTR bstrClsid)
@@ -562,8 +566,6 @@ namespace Win32xx
 			pipo->Release();
 		}
 
-		m_pUnk->Release();
-		m_pUnk = NULL;
 	}
 
 	inline STDMETHODIMP CAXWindow::RemoveMenus(HMENU hmenuShared)

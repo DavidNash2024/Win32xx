@@ -21,7 +21,7 @@ class CMainFrame;	// Forward declaration
 // About the CEventSink class.
 //  The CEventSink implements the event sink for our browser. An Event Sink
 //  provides a mechanism to respond to events triggered by an ActiveX control.
-//  The ActiveX browser is the event source, and CMyBrowser is the event sink.
+//  The ActiveX browser is the event source, and CMainFrame is the event sink.
 class CEventSink : public IDispatch
 {
 public:
@@ -40,8 +40,8 @@ public:
 	STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
 
 private:
-	ULONG        m_cRefs;		// ref count
-	CMainFrame* m_pSink;		// Send the notifications here
+	ULONG		m_cRefs;		// ref count
+	CMainFrame*	m_pSink;		// Send the notifications here
 };
 
 #endif // EVENTSINK_H
