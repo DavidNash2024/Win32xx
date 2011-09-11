@@ -410,11 +410,11 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 	};
 	
-	class CToolip : public CWnd
+	class CToolTip : public CWnd
 	{
 	public:
-		CToolip();
-		virtual ~CToolip();
+		CToolTip();
+		virtual ~CToolTip();
 
 		//Attributes
 		int GetDelayTime(DWORD dwDuration) const;
@@ -455,12 +455,15 @@ namespace Win32xx
 		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle);
 #endif
 #if WINVER >= 0x0501
-		HRESULT SetWindowTheme(LPCWSTR pszSubAppName);
+		HRESULT SetWindowTheme(LPCWSTR lpstrTheme);
 #endif
 
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
+	
+	private:
+		void LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT nIDTool) const;
 	};
 	
 
@@ -1752,126 +1755,111 @@ namespace Win32xx
 	}
 	
 	////////////////////////////////////////
-	// Definitions for the CTooltip class
+	// Definitions for the CToolTip class
 	//
 
-	inline CToolip::CToolip() 
+	inline CToolTip::CToolTip() 
 	{}
 	
-	inline CToolip::~CToolip()
+	inline CToolTip::~CToolTip()
 	{}
 	
-	inline void CToolip::Activate(BOOL bActivate)
+	inline void CToolTip::Activate(BOOL bActivate)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_ACTIVATE, bActivate, 0);
 	}
 	
-	inline BOOL CToolip::AddTool(CWnd* pWnd, UINT nIDText, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	inline BOOL CToolTip::AddTool(CWnd* pWnd, UINT nIDText, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
+		ti.hinst = GetApp()->GetResourceHandle();
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
 		if (lpRectTool)
 			ti.rect = *lpRectTool;
-		ti.uId = nIDTool;	
 		return (BOOL)SendMessage(TTM_ADDTOOL, 0, (LPARAM)&ti); 
 	}
 	
-	inline BOOL CToolip::AddTool(CWnd* pWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	inline BOOL CToolTip::AddTool(CWnd* pWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
 		ti.lpszText = (LPTSTR)lpszText;
 		if (lpRectTool)
 			ti.rect = *lpRectTool;
-		ti.uId = nIDTool;	
 		return (BOOL)SendMessage(TTM_ADDTOOL, 0, (LPARAM)&ti);		
 	}
 	
-	inline void CToolip::DelTool(CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) 
+	inline void CToolTip::DelTool(CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) 
 	{
 		assert(IsWindow());
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
-		ti.uId = nIDTool;
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
 		SendMessage(TTM_DELTOOL, 0, (LPARAM)&ti);		
 	}
 	
-	inline int CToolip::GetDelayTime(DWORD dwDuration) const
+	inline int CToolTip::GetDelayTime(DWORD dwDuration) const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_GETDELAYTIME, dwDuration, 0);
 	}
 	
-	inline void CToolip::GetMargin(LPRECT lprc) const
+	inline void CToolTip::GetMargin(LPRECT lprc) const
 	{
 		assert(IsWindow());
 		SendMessage(TTM_GETMARGIN, 0, (LPARAM)lprc);
 	}
 	
-	inline int CToolip::GetMaxTipWidth() const
+	inline int CToolTip::GetMaxTipWidth() const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_GETMAXTIPWIDTH, 0, 0);
 	}
 	
-	inline void CToolip::GetText(CString& str, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const 
+	inline void CToolTip::GetText(CString& str, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const 
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed Tooltip for Windows XP and below
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
-		ti.uId = nIDTool;
+		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed Tooltip is 80 characters for Windows XP and below
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
 		ti.lpszText = pszText;
 		SendMessage(TTM_GETTEXT, 0, (LPARAM)&ti);
 		str.ReleaseBuffer();		
 	}
 	
-	inline COLORREF CToolip::GetTipBkColor() const
+	inline COLORREF CToolTip::GetTipBkColor() const
 	{
 		assert(IsWindow());
 		return (COLORREF)SendMessage(TTM_GETTIPBKCOLOR, 0,0);
 	}
 	
-	inline COLORREF CToolip::GetTipTextColor() const
+	inline COLORREF CToolTip::GetTipTextColor() const
 	{
 		assert(IsWindow());
 		return (COLORREF)SendMessage(TTM_GETTIPTEXTCOLOR, 0, 0);
 	}
 	
-	inline int CToolip::GetToolCount() const
+	inline int CToolTip::GetToolCount() const
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_GETTOOLCOUNT, 0, 0);
 	}
 	
-	inline BOOL CToolip::GetToolInfo(TOOLINFO& ToolInfo, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const
+	inline BOOL CToolTip::GetToolInfo(TOOLINFO& ToolInfo, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
-		ti.uId = nIDTool;
+		LoadToolInfo(ToolInfo, pWnd, nIDTool);
 		return (BOOL)SendMessage(TTM_GETTOOLINFO, 0, (LPARAM)&ToolInfo);
 	}
 	
-	inline BOOL CToolip::HitTest(CWnd* pWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
+	inline BOOL CToolTip::HitTest(CWnd* pWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1882,116 +1870,126 @@ namespace Win32xx
 		hti.ti = *lpToolInfo;
 		return (BOOL)SendMessage(TTM_HITTEST, 0, (LPARAM)&hti);	
 	}
+
+	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT nIDTool) const
+	{
+		::ZeroMemory(&ti, sizeof(TOOLINFO));
+		ti.cbSize = sizeof(TOOLINFO);
+		HWND hWnd = pWnd->GetHwnd();
+		if (nIDTool == 0)
+		{
+			ti.hwnd = ::GetParent(hWnd);
+			ti.uFlags = TTF_IDISHWND;
+			ti.uId = (UINT)hWnd;
+		}
+		else
+		{
+			ti.hwnd = hWnd;
+			ti.uId = nIDTool;
+		}
+	}
 	
-	inline void CToolip::Pop()
+	inline void CToolTip::Pop()
 	{
 		assert(IsWindow());
 		SendMessage(TTM_POP, 0, 0);
 	}
 	
-	inline void CToolip::RelayEvent(LPMSG lpMsg)
+	inline void CToolTip::RelayEvent(LPMSG lpMsg)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_RELAYEVENT, 0, (LPARAM)lpMsg);
 	}
 	
-	inline void CToolip::SetDelayTime(UINT nDelay)
+	inline void CToolTip::SetDelayTime(UINT nDelay)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETDELAYTIME, TTDT_INITIAL, nDelay);
 	}
 	
-	inline void CToolip::SetDelayTime(DWORD dwDuration, int iTime)
+	inline void CToolTip::SetDelayTime(DWORD dwDuration, int iTime)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETDELAYTIME, dwDuration, iTime);
 	}
 	
-	inline void CToolip::SetMargin(LPRECT lprc)
+	inline void CToolTip::SetMargin(LPRECT lprc)
 	{
 		assert(IsWindow());
 		assert(lprc);
 		SendMessage(TTM_SETMARGIN, 0, (LPARAM)lprc);
 	}
 	
-	inline int CToolip::SetMaxTipWidth(int iWidth)
+	inline int CToolTip::SetMaxTipWidth(int iWidth)
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_SETMAXTIPWIDTH, 0, iWidth);
 	}
 	
-	inline void CToolip::SetTipBkColor(COLORREF clr)
+	inline void CToolTip::SetTipBkColor(COLORREF clr)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTIPBKCOLOR, clr, 0);
 	}
 	
-	inline void CToolip::SetTipTextColor(COLORREF clr)
+	inline void CToolTip::SetTipTextColor(COLORREF clr)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTIPTEXTCOLOR, clr, 0);
 	}
 
-	inline void CToolip::SetToolInfo(LPTOOLINFO lpToolInfo)
+	inline void CToolTip::SetToolInfo(LPTOOLINFO lpToolInfo)
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTOOLINFO, 0, (LPARAM)lpToolInfo);
 	}
 	
-	inline void CToolip::SetToolRect(CWnd* pWnd, UINT_PTR nIDTool, LPCRECT lpRect)
+	inline void CToolTip::SetToolRect(CWnd* pWnd, UINT_PTR nIDTool, LPCRECT lpRect)
 	{
 		assert(IsWindow());
 		assert(pWnd);
 		assert(lpRect);
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
 		ti.rect = *lpRect;
-		ti.uId = nIDTool;
-		SetToolInfo(&ti);
+		SendMessage(TTM_NEWTOOLRECT, 0, (LPARAM)&ti);
 	}
 	
-	inline void CToolip::Update()
+	inline void CToolTip::Update()
 	{
 		assert(IsWindow());
 		SendMessage(TTM_UPDATE, 0, 0);
 	}
 	
-	inline void CToolip::UpdateTipText(LPCTSTR lpszText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	inline void CToolTip::UpdateTipText(LPCTSTR lpszText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
 		ti.lpszText = (LPTSTR)lpszText;
-		ti.uId = nIDTool;
 		SendMessage(TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);
 	}
 	
-	inline void CToolip::UpdateTipText(UINT nIDText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	inline void CToolTip::UpdateTipText(UINT nIDText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		TOOLINFO ti = {0};
-		ti.cbSize = sizeof(TOOLINFO);
-		ti.hinst = GetApp()->GetInstanceHandle();
-		ti.hwnd = pWnd->GetHwnd();
+		TOOLINFO ti;
+		LoadToolInfo(ti, pWnd, nIDTool);
+		ti.hinst = GetApp()->GetResourceHandle();		
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
-		ti.uId = nIDTool;
 		SendMessage(TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);		
 	}
 
 #if _WIN32_IE >=0x0500
-	inline BOOL CToolip::AdjustRect(LPRECT lprc, BOOL bLarger /*= TRUE*/)
+	inline BOOL CToolTip::AdjustRect(LPRECT lprc, BOOL bLarger /*= TRUE*/)
 	{
 		assert(IsWindow());
 		return (BOOL)SendMessage(TTM_ADJUSTRECT, bLarger, (LPARAM)lprc);
 	}
 
-	inline CSize CToolip::GetBubbleSize(LPTOOLINFO lpToolInfo) const
+	inline CSize CToolTip::GetBubbleSize(LPTOOLINFO lpToolInfo) const
 	{
 		assert(IsWindow());
 		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, (LPARAM)lpToolInfo);
@@ -1999,7 +1997,7 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline BOOL CToolip::SetTitle(UINT uIcon, LPCTSTR lpstrTitle)
+	inline BOOL CToolTip::SetTitle(UINT uIcon, LPCTSTR lpstrTitle)
 	{
 		assert(IsWindow());
 		return (BOOL)SendMessage(TTM_SETTITLE, uIcon, (LPARAM)lpstrTitle);
@@ -2007,10 +2005,10 @@ namespace Win32xx
 #endif
 
 #if WINVER >= 0x0501
-	inline HRESULT CToolip::SetWindowTheme(LPCWSTR pszSubAppName)
+	inline HRESULT CToolTip::SetWindowTheme(LPCWSTR lpstrTheme)
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETWINDOWTHEME, 0, pszSubAppName);
+		SendMessage(TTM_SETWINDOWTHEME, 0, (LPARAM)lpstrTheme);
 	}
 #endif
 	

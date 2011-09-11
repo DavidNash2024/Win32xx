@@ -16,4 +16,4 @@ Features demonstrated in this example
 * Use of Hot and Disabled image lists for the toolbar
 * Adding icons for popup menu items  
 * Use of a ComboBoxEx control in the rebar
-* Use of WideToTChar and TCharToWide text conversion functions
+* Use of T2W and W2T text conversion functions
