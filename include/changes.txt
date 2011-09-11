@@ -10,10 +10,11 @@ New Features and Enhancements
 
 * Added the following controls
    - CDateTime
-   - CIPaddress
    - CHeader
    - CHotKey
+   - CIPAddress   
    - CMonthCalendar
+   - CTooltip
    
 * CString constructors now accept either ANSI or Unicode characters and converts 
    these to TCHAR as required. 
@@ -21,6 +22,12 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+- Added CDateTime
+- Added CHeader
+- Added CHotKey
+- Added CIPAddress
+- Added CMonthCalendar
+- Added CTooltip
 - Added many functions to CWebBrowser
 - Added 	CString(LPCSTR pszText);
 - Added 	CString(LPCWSTR pszText);
