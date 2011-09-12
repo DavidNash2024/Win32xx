@@ -432,7 +432,7 @@ namespace Win32xx
 		void SetTipBkColor(COLORREF clr);
 		void SetTipTextColor(COLORREF clr);
 		void SetToolInfo(LPTOOLINFO lpToolInfo);
-#if defined TTM_SETTITLE // _WIN32_IE >=0x0500
+#if (defined TTM_SETTITLE) && (_WIN32_IE >=0x0500)
 		CSize GetBubbleSize(LPTOOLINFO lpToolInfo) const;
 #endif
 
@@ -450,11 +450,11 @@ namespace Win32xx
 		void UpdateTipText(LPCTSTR lpszText, CWnd* pWnd, UINT_PTR nIDTool = 0);
 		void UpdateTipText(UINT nIDText, CWnd* pWnd, UINT_PTR nIDTool = 0);
 
-#if defined TTM_SETTITLE // _WIN32_IE >=0x0500
+#if (defined TTM_SETTITLE) && (_WIN32_IE >=0x0500)
 		BOOL AdjustRect(LPRECT lprc, BOOL bLarger = TRUE);
 		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle);
 #endif
-#if defined TTM_SETWINDOWTHEME	// WINVER >= 0x0501
+#if (defined TTM_SETWINDOWTHEME) && (WINVER >= 0x0501)
 		HRESULT SetWindowTheme(LPCWSTR lpstrTheme);
 #endif
 
@@ -1887,7 +1887,7 @@ namespace Win32xx
 
 	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT nIDTool) const
 	{
-		::ZeroMemory(&ti, sizeof(TOOLINFO));
+		ZeroMemory(&ti, sizeof(TOOLINFO));
 		ti.cbSize = sizeof(TOOLINFO);
 		HWND hWnd = pWnd->GetHwnd();
 		if (nIDTool == 0)
@@ -2009,7 +2009,7 @@ namespace Win32xx
 		SendMessage(TTM_UPDATETIPTEXT, 0, (LPARAM)&ti);
 	}
 
-#if  defined  TTM_SETTITLE // defined when _WIN32_IE >=0x0500
+#if (defined TTM_SETTITLE) && (_WIN32_IE >=0x0500)
 	inline BOOL CToolTip::AdjustRect(LPRECT lprc, BOOL bLarger /*= TRUE*/)
 	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the 
 	//  ToolTip window rectangle needed to display a specified text display rectangle.
@@ -2035,7 +2035,7 @@ namespace Win32xx
 	}
 #endif
 
-#if defined TTM_SETWINDOWTHEME	// WINVER >= 0x0501
+#if (defined TTM_SETWINDOWTHEME) && (WINVER >= 0x0501)
 	inline HRESULT CToolTip::SetWindowTheme(LPCWSTR lpstrTheme)
 	// Sets the visual style of a ToolTip control.
 	{
