@@ -1765,12 +1765,14 @@ namespace Win32xx
 	{}
 
 	inline void CToolTip::Activate(BOOL bActivate)
+	// Activates or deactivates a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_ACTIVATE, bActivate, 0);
 	}
 
 	inline BOOL CToolTip::AddTool(CWnd* pWnd, UINT nIDText, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	// Registers a tool with a ToolTip control.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1784,6 +1786,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolTip::AddTool(CWnd* pWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	// Registers a tool with a ToolTip control.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1796,6 +1799,7 @@ namespace Win32xx
 	}
 
 	inline void CToolTip::DelTool(CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	// Removes a tool from a ToolTip control.
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
@@ -1804,24 +1808,28 @@ namespace Win32xx
 	}
 
 	inline int CToolTip::GetDelayTime(DWORD dwDuration) const
+	// Retrieves the initial, pop-up, and reshow durations currently set for a ToolTip control.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_GETDELAYTIME, dwDuration, 0);
 	}
 
 	inline void CToolTip::GetMargin(LPRECT lprc) const
+	// Retrieves the top, left, bottom, and right margins set for a ToolTip window.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_GETMARGIN, 0, (LPARAM)lprc);
 	}
 
 	inline int CToolTip::GetMaxTipWidth() const
+	// Retrieves the maximum width for a ToolTip window.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_GETMAXTIPWIDTH, 0, 0);
 	}
 
 	inline void CToolTip::GetText(CString& str, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const
+	// Retrieves the information a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1834,24 +1842,28 @@ namespace Win32xx
 	}
 
 	inline COLORREF CToolTip::GetTipBkColor() const
+	// Retrieves the background color in a ToolTip window.
 	{
 		assert(IsWindow());
 		return (COLORREF)SendMessage(TTM_GETTIPBKCOLOR, 0,0);
 	}
 
 	inline COLORREF CToolTip::GetTipTextColor() const
+	// Retrieves the text color in a ToolTip window.
 	{
 		assert(IsWindow());
 		return (COLORREF)SendMessage(TTM_GETTIPTEXTCOLOR, 0, 0);
 	}
 
 	inline int CToolTip::GetToolCount() const
+	// Retrieves a count of the tools maintained by a ToolTip control.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_GETTOOLCOUNT, 0, 0);
 	}
 
 	inline BOOL CToolTip::GetToolInfo(TOOLINFO& ToolInfo, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const
+	// Retrieves the information that a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1860,6 +1872,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolTip::HitTest(CWnd* pWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
+	// Tests a point to determine whether it is within the bounding rectangle of the 
+	//  specified tool and, if it is, retrieves information about the tool.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1890,30 +1904,35 @@ namespace Win32xx
 	}
 
 	inline void CToolTip::Pop()
+	// Removes a displayed ToolTip window from view.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_POP, 0, 0);
 	}
 
 	inline void CToolTip::RelayEvent(LPMSG lpMsg)
+	// Passes a mouse message to a ToolTip control for processing.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_RELAYEVENT, 0, (LPARAM)lpMsg);
 	}
 
 	inline void CToolTip::SetDelayTime(UINT nDelay)
+	// Sets the initial delay for a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETDELAYTIME, TTDT_INITIAL, nDelay);
 	}
 
 	inline void CToolTip::SetDelayTime(DWORD dwDuration, int iTime)
+	// Sets the initial, pop-up, and reshow durations for a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETDELAYTIME, dwDuration, iTime);
 	}
 
 	inline void CToolTip::SetMargin(LPRECT lprc)
+	// Sets the top, left, bottom, and right margins for a ToolTip window.
 	{
 		assert(IsWindow());
 		assert(lprc);
@@ -1921,30 +1940,35 @@ namespace Win32xx
 	}
 
 	inline int CToolTip::SetMaxTipWidth(int iWidth)
+	// Sets the maximum width for a ToolTip window.
 	{
 		assert(IsWindow());
 		return (int)SendMessage(TTM_SETMAXTIPWIDTH, 0, iWidth);
 	}
 
 	inline void CToolTip::SetTipBkColor(COLORREF clr)
+	// Sets the background color in a ToolTip window.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTIPBKCOLOR, clr, 0);
 	}
 
 	inline void CToolTip::SetTipTextColor(COLORREF clr)
+	// Sets the text color in a ToolTip window.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTIPTEXTCOLOR, clr, 0);
 	}
 
 	inline void CToolTip::SetToolInfo(LPTOOLINFO lpToolInfo)
+	// Sets the information that a ToolTip control maintains for a tool.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTOOLINFO, 0, (LPARAM)lpToolInfo);
 	}
 
 	inline void CToolTip::SetToolRect(CWnd* pWnd, UINT_PTR nIDTool, LPCRECT lpRect)
+	// Sets a new bounding rectangle for a tool.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1956,12 +1980,14 @@ namespace Win32xx
 	}
 
 	inline void CToolTip::Update()
+	// Forces the current tool to be redrawn.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_UPDATE, 0, 0);
 	}
 
 	inline void CToolTip::UpdateTipText(LPCTSTR lpszText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1972,6 +1998,7 @@ namespace Win32xx
 	}
 
 	inline void CToolTip::UpdateTipText(UINT nIDText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
 		assert(pWnd);
@@ -1984,12 +2011,15 @@ namespace Win32xx
 
 #if  defined  TTM_SETTITLE // defined when _WIN32_IE >=0x0500
 	inline BOOL CToolTip::AdjustRect(LPRECT lprc, BOOL bLarger /*= TRUE*/)
+	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the 
+	//  ToolTip window rectangle needed to display a specified text display rectangle.
 	{
 		assert(IsWindow());
 		return (BOOL)SendMessage(TTM_ADJUSTRECT, bLarger, (LPARAM)lprc);
 	}
 
 	inline CSize CToolTip::GetBubbleSize(LPTOOLINFO lpToolInfo) const
+	// Returns the width and height of a ToolTip control.
 	{
 		assert(IsWindow());
 		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, (LPARAM)lpToolInfo);
@@ -1998,6 +2028,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolTip::SetTitle(UINT uIcon, LPCTSTR lpstrTitle)
+	// Adds a standard icon and title string to a ToolTip.
 	{
 		assert(IsWindow());
 		return (BOOL)SendMessage(TTM_SETTITLE, uIcon, (LPARAM)lpstrTitle);
@@ -2006,6 +2037,7 @@ namespace Win32xx
 
 #if defined TTM_SETWINDOWTHEME	// WINVER >= 0x0501
 	inline HRESULT CToolTip::SetWindowTheme(LPCWSTR lpstrTheme)
+	// Sets the visual style of a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETWINDOWTHEME, 0, (LPARAM)lpstrTheme);
