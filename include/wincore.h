@@ -1385,23 +1385,34 @@ namespace Win32xx
 	// of the window. Supports Win95.
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd;
+		HWND hWnd = m_hWnd;
 
-#if (WINVER < 0x0500)	// Win2000 and above
-		UNREFERENCED_PARAMETER(gaFlags);
-		hWnd = m_hWnd;
-		HWND hWndParent = ::GetParent(hWnd);
-		while (::IsChild(hWndParent, hWnd))
+		// Load the User32 DLL
+		typedef HWND WINAPI GETANCESTOR(HWND, UINT);
+		GETANCESTOR* pfnGetAncestor = NULL;
+		HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));		
+		if (hModule)
 		{
-			hWnd = hWndParent;
-			hWndParent = ::GetParent(hWnd);
+			// Declare a pointer to the GetAncestor function
+			pfnGetAncestor = (GETANCESTOR*)::GetProcAddress(hModule, "GetAncestor");
+			if (pfnGetAncestor)
+				hWnd = (*pfnGetAncestor)(m_hWnd, gaFlags);
+
+			::FreeLibrary(hModule);
 		}
-#else
-		hWnd = ::GetAncestor(m_hWnd, gaFlags);
-#endif
+
+		if (!pfnGetAncestor)
+		{
+			// Provide our own GetAncestor if necessary
+			HWND hWndParent = ::GetParent(hWnd);
+			while (::IsChild(hWndParent, hWnd))
+			{
+				hWnd = hWndParent;
+				hWndParent = ::GetParent(hWnd);
+			}
+		}
 
 		return FromHandle(hWnd);
-
 	}
 
 	inline CString CWnd::GetClassName() const
