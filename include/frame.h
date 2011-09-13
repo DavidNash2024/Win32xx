@@ -240,7 +240,7 @@ namespace Win32xx
 		void SetMenuTheme(MenuTheme& Theme);
 		void SetView(CWnd& wndView);
 		BOOL IsMenuBarUsed() const		{ return (GetMenuBar() != 0); }
-		BOOL IsReBarSupported() const	{ return (GetComCtlVersion() >= 470); }
+		BOOL IsReBarSupported() const	{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const		{ return (GetReBar() != 0); }
 
 	protected:
@@ -1376,7 +1376,7 @@ namespace Win32xx
 		LoadCommonControls();
 
 		// By default, we use the rebar if we can
-		if (GetComCtlVersion() >= 470)
+		if (GetComCtlVersion() > 470)
 			m_bUseReBar = TRUE;
 
 		for (int i = 0 ; i < 3 ; ++i)

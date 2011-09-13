@@ -944,7 +944,10 @@ namespace Win32xx
 		int iNumButtons = 0;
 		std::vector<UINT>::iterator iter;
 		for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
-			if ((*iter) != 0) ++iNumButtons;
+		{
+			if ((*iter) != 0) 
+				++iNumButtons;
+		}
 
 		int iImageWidth  = bm.bmWidth / iNumButtons;
 		int iImageHeight = bm.bmHeight;
@@ -1222,7 +1225,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		// ToolBar ImageLists require Comctl32.dll version 4.7 or later
-		if (400 == GetComCtlVersion())
+		if (GetComCtlVersion() < 470)
 		{
 			// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
 			// Instead we simply set the bitmap.
