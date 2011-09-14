@@ -425,15 +425,10 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_SETFOCUS:
-		m_RichView.SetFocus();
-		break;
-	case WM_SIZE:
-		m_RichView.Invalidate();
-		break;
-	}
+//	switch (uMsg)
+//	{
+//
+//	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
 }
