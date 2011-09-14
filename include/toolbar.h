@@ -844,7 +844,7 @@ namespace Win32xx
 		{
 			case NM_CUSTOMDRAW:
 			{
-				if (m_Theme.UseThemes)
+				if ((m_Theme.UseThemes) && (GetComCtlVersion() > 470))
 					return OnCustomDraw((LPNMHDR) lParam);
 			}
 			break;
