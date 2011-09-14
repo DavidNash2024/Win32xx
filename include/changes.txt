@@ -22,13 +22,14 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-- Added CDateTime
-- Added CHeader
-- Added CHotKey
-- Added CIPAddress
-- Added CMonthCalendar
-- Added CTooltip
+- Added 	CDateTime
+- Added 	CHeader
+- Added		CHotKey
+- Added 	CIPAddress
+- Added 	CMonthCalendar
+- Added 	CTooltip
 - Added many functions to CWebBrowser
+- Added 	CGDIObject::DeleteObject
 - Added 	CString(LPCSTR pszText);
 - Added 	CString(LPCWSTR pszText);
 - Added		CString::operator += (LPCSTR szText)

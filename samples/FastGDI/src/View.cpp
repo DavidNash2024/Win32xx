@@ -22,7 +22,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		m_bmImage.LoadImage(szFilename, 0, 0, LR_LOADFROMFILE);
 	}
 	else
-		DeleteObject(m_bmImage.Detach());
+		m_bmImage.DeleteObject();
 
 	return (BOOL)m_bmImage.GetHandle();
 }

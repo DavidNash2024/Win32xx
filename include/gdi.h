@@ -176,6 +176,7 @@ namespace Win32xx
 		void operator = (HGDIOBJ hObject);
 
 		void	Attach(HGDIOBJ hObject);
+		void	DeleteObject();
 		HGDIOBJ Detach();
 		HGDIOBJ GetHandle() const;
 		int		GetObject(int nCount, LPVOID pObject) const;
@@ -908,6 +909,16 @@ namespace Win32xx
 		{
 			m_pData->hGDIObject = hObject;
 			AddToMap();
+		}
+	}
+
+	inline void CGDIObject::DeleteObject()
+	{
+		assert(m_pData);
+
+		if (m_pData->hGDIObject)
+		{
+			::DeleteObject(Detach());
 		}
 	}
 
