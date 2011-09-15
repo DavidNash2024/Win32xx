@@ -1218,7 +1218,9 @@ namespace Win32xx
 				return 0;
 			}
 			break;
-
+		case WM_DESTROY:
+			ImageList_Destroy(m_himlTab);
+			return 0;	// required for Comtl32 version 4.70
 		case WM_ERASEBKGND:
 			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
 				return 0;

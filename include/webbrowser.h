@@ -767,13 +767,7 @@ namespace Win32xx
 			// Navigate to an empty page
 			if (SUCCEEDED(hr))
 			{
-				VARIANT vURL;
-				vURL.vt = VT_BSTR;
-				vURL.bstrVal = SysAllocString(L"about:blank");
-
-				m_pIWebBrowser2->Navigate2(&vURL, 0, 0, 0, 0);
-
-				VariantClear(&vURL);
+				m_pIWebBrowser2->Navigate(L"about:blank", 0, 0, 0, 0);
 			}
 		}
 	}
