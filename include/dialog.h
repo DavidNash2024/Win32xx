@@ -70,6 +70,8 @@
 	#define SWP_NOCOPYBITS      0x0100
 #endif
 
+#define IDLE_TIMER_ID 300
+
 namespace Win32xx
 {
 
@@ -264,6 +266,10 @@ namespace Win32xx
 
 		switch (uMsg)
 	    {
+			case WM_TIMER:
+				if (wParam == IDLE_TIMER_ID)
+					GetApp()->CleanupTemps();
+			return 0L;
 		case UWM_CLEANUPTEMPS:
 			{
 				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
@@ -274,6 +280,8 @@ namespace Win32xx
 			{
 				// Center the dialog
 				CenterWindow();
+				if (IsModal())
+					SetTimer(IDLE_TIMER_ID, 1000, 0);
 			}
 		    return OnInitDialog();
 	    case WM_COMMAND:
