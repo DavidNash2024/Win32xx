@@ -1391,10 +1391,16 @@ namespace Win32xx
 		typedef HWND WINAPI GETANCESTOR(HWND, UINT);
 		GETANCESTOR* pfnGetAncestor = NULL;
 		HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));		
+
 		if (hModule)
 		{
 			// Declare a pointer to the GetAncestor function
+#ifndef _WIN32_WCE
 			pfnGetAncestor = (GETANCESTOR*)::GetProcAddress(hModule, "GetAncestor");
+#else
+			pfnGetAncestor = (GETANCESTOR*)::GetProcAddress(hModule, L"GetAncestor");
+#endif
+
 			if (pfnGetAncestor)
 				hWnd = (*pfnGetAncestor)(m_hWnd, gaFlags);
 
