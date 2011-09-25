@@ -104,7 +104,7 @@ BOOL CMyDialog::OnInitDialog()
 
 void CMyDialog::OnOK()
 {
-	::MessageBox(NULL, _T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
+	MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
 	CDialog::OnOK();
 }
 
