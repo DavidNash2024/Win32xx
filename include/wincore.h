@@ -1094,13 +1094,15 @@ namespace Win32xx
 		// Note: Perform the attach from the same thread as the window's message loop
 		GetApp()->SetTlsIndex();
 
+		// Cleanup any previous attachment
 		if (m_PrevWindowProc)
 			Detach();
+		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
+		if (pWnd)
+			pWnd->Cleanup();
 
-		Subclass(hWnd);
-
-		// Store the CWnd pointer in the HWND map
-		AddToMap();
+		Subclass(hWnd);		// Set the window's callback to CWnd::StaticWindowProc
+		AddToMap();			// Store the CWnd pointer in the HWND map
 		OnCreate();
 		OnInitialUpdate();
 
