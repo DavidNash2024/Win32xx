@@ -531,7 +531,8 @@ namespace Win32xx
 	inline void CDialog::OnOK()
 	{
 		// Override to customize OnOK behaviour
-		EndDialog(IDOK);
+		if ( IsWindow() )
+			EndDialog(IDOK);
 	}
 
 	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
