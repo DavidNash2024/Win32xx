@@ -242,7 +242,7 @@ namespace Win32xx
 	{
 		if (m_pUnk)
 			m_pUnk->Release();
-		
+
 		Release();
 	}
 
@@ -767,7 +767,7 @@ namespace Win32xx
 			// Navigate to an empty page
 			if (SUCCEEDED(hr))
 			{
-				m_pIWebBrowser2->Navigate(L"about:blank", 0, 0, 0, 0);
+				m_pIWebBrowser2->Navigate((OLECHAR*)L"about:blank", 0, 0, 0, 0);
 			}
 		}
 	}

@@ -319,7 +319,7 @@ namespace Win32xx
 	// Retrieves the first visible item that precedes a specified item in a tree-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return TreeView_GetPrevSibling(m_hWnd, hItem);
+		return TreeView_GetPrevVisible(m_hWnd, hItem);
 	}
 
 	inline HTREEITEM CTreeView::GetRootItem() const

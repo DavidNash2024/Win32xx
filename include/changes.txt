@@ -36,6 +36,7 @@ Changes in detail
 - Added 	CString::operator += (LPCWSTR szText)
 - Modified  CComboBoxEx::GetEditCtrl 	now returns CEdit*
 - Modified  CListView::GetEditCtrl      now returns CEdit*
+- Modified  CListView::GetHeader		now returns CHeader*
 - Modified  CTreeView::GetEditCtrl      now returns CEdit*
 - Removed 	CString::b_str
 - Removed 	CString(LPCTSTR pszText);
