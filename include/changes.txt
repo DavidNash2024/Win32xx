@@ -28,19 +28,56 @@ Changes in detail
 - Added 	CIPAddress
 - Added 	CMonthCalendar
 - Added 	CTooltip
-- Added many functions to CWebBrowser
+
 - Added 	CGDIObject::DeleteObject
 - Added 	CString(LPCSTR pszText);
 - Added 	CString(LPCWSTR pszText);
 - Added		CString::operator += (LPCSTR szText)
 - Added 	CString::operator += (LPCWSTR szText)
+- Added 	CWebBrowser::ExecWB
+- Added 	CWebBrowser::GetApplication
+- Added 	CWebBrowser::GetBusy
+- Added 	CWebBrowser::GetContainer
+- Added 	CWebBrowser::GetFullScreen
+- Added 	CWebBrowser::GetHeight
+- Added 	CWebBrowser::GetLeft
+- Added 	CWebBrowser::GetLocationName
+- Added 	CWebBrowser::GetLocationURL
+- Added 	CWebBrowser::GetOffline
+- Added 	CWebBrowser::GetProperty		
+- Added 	CWebBrowser::GetReadyState
+- Added 	CWebBrowser::GetRegisterAsBrowser
+- Added 	CWebBrowser::GetTheaterMode
+- Added 	CWebBrowser::GetTop
+- Added 	CWebBrowser::GetTopLevelContainer
+- Added 	CWebBrowser::GetType
+- Added 	CWebBrowser::GetVisible
+- Added 	CWebBrowser::GetWidth
+- Added 	CWebBrowser::GoBack
+- Added 	CWebBrowser::GoForward
+- Added 	CWebBrowser::GoHome
+- Added 	CWebBrowser::GoSearch
+- Added 	CWebBrowser::Navigate2
+- Added 	CWebBrowser::PutProperty
+- Added 	CWebBrowser::Refresh
+- Added 	CWebBrowser::Refresh2		
+- Added 	CWebBrowser::SetFullScreen
+- Added 	CWebBrowser::SetHeight
+- Added 	CWebBrowser::SetLeft
+- Added 	CWebBrowser::SetOffline
+- Added 	CWebBrowser::SetRegisterAsBrowser
+- Added 	CWebBrowser::SetTheaterMode
+- Added 	CWebBrowser::SetTop
+- Added 	CWebBrowser::SetVisible
+- Added 	CWebBrowser::SetWidth
+- Added 	CWebBrowser::Stop
 - Modified  CComboBoxEx::GetEditCtrl 	now returns CEdit*
 - Modified  CListView::GetEditCtrl      now returns CEdit*
 - Modified  CListView::GetHeader		now returns CHeader*
 - Modified  CTreeView::GetEditCtrl      now returns CEdit*
 - Removed 	CString::b_str
 - Removed 	CString(LPCTSTR pszText);
-- Removed 	Cstring::operator += (LPCTSTR szText);
+- Removed 	CString::operator += (LPCTSTR szText);
 
 Incompatibilities with previous versions
 ----------------------------------------

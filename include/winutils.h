@@ -405,7 +405,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
-		if (::IsWindow(hWnd) && pWnd == 0)
+		if ( pWnd == 0 )
 		{
 			GetApp()->AddTmpWnd(hWnd);
 			pWnd = GetApp()->GetCWndFromMap(hWnd);
