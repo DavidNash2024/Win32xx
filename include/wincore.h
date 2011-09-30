@@ -775,6 +775,7 @@ namespace Win32xx
 	{
 		// TmpWnds are created if required to support functions like CWnd::GetParent.
 		// They are removed by CleanupTemps
+		assert(::IsWindow(hWnd));
 		assert(!GetCWndFromMap(hWnd));
 
 		CWnd* pWnd = new CWnd;
@@ -1076,7 +1077,9 @@ namespace Win32xx
 		assert( GetApp() );
 		GetApp()->m_csMapLock.Lock();
 
+		assert(::IsWindow(m_hWnd));
 		assert(!GetApp()->GetCWndFromMap(m_hWnd));
+
 		GetApp()->m_mapHWND.insert(std::make_pair(m_hWnd, this));
 		GetApp()->m_csMapLock.Release();
 	}
