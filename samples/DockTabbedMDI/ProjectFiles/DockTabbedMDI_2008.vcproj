@@ -303,6 +303,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\targetver.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Text.h"
 				>
 			</File>
