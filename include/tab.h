@@ -1116,7 +1116,7 @@ namespace Win32xx
 			// Position the View over the tab control's display area
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
-			GetActiveView()->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
 			GetActiveView()->SetFocus();
 		}
 	}

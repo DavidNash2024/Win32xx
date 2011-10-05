@@ -414,6 +414,15 @@ namespace Win32xx
 
 	public:
 		CWnd();				// Constructor
+		CWnd(HWND hWnd)		// Constructor 
+		{
+			if (hWnd == HWND_TOP || hWnd == HWND_TOPMOST || hWnd == HWND_BOTTOM || hWnd == HWND_NOTOPMOST)
+			{
+				m_hWnd = hWnd;
+			}
+			else
+				Attach(hWnd);
+		}
 		virtual ~CWnd();	// Destructor
 
 		// These virtual functions can be overridden
@@ -515,8 +524,8 @@ namespace Win32xx
 		int   SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const;
 		UINT_PTR SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
-		BOOL  SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		BOOL  SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
+		BOOL  SetWindowPos(const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
+		BOOL  SetWindowPos(const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const;
 		int   SetWindowRgn(CRgn* pRgn, BOOL bRedraw = TRUE) const;
 		BOOL  SetWindowText(LPCTSTR lpString) const;
 		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
@@ -605,6 +614,10 @@ namespace Win32xx
 
 	}; // class CWnd
 
+	static const CWnd wndTop(HWND_TOP);
+	static const CWnd wndTopMost(HWND_TOPMOST);
+	static const CWnd wndBottom(HWND_BOTTOM);
+	static const CWnd wndNoTopMost(HWND_NOTOPMOST);
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -684,6 +697,13 @@ namespace Win32xx
 
 			m_hResource = m_hInstance;
 			SetCallback();
+
+			m_csMapLock.Lock();
+			m_mapHWND.insert(std::make_pair(HWND_TOP, (CWnd*)&wndTop));
+			m_mapHWND.insert(std::make_pair(HWND_TOPMOST, (CWnd*)&wndTopMost));
+			m_mapHWND.insert(std::make_pair(HWND_NOTOPMOST, (CWnd*)&wndNoTopMost));
+			m_mapHWND.insert(std::make_pair(HWND_BOTTOM, (CWnd*)&wndBottom));
+			GetApp()->m_csMapLock.Release();
 		}
 
 		catch (const CWinException &e)
@@ -1192,7 +1212,7 @@ namespace Win32xx
 		y = (y < rcDesktop.top) ? rcDesktop.top: y;
 		y = (y > rcDesktop.bottom - rc.Height())? rcDesktop.bottom - rc.Height() : y;
 
-		SetWindowPos(HWND_TOP, x, y, 0, 0, SWP_NOSIZE);
+		SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE);
 	}
 
 	inline void CWnd::Cleanup()
@@ -2589,21 +2609,23 @@ namespace Win32xx
 		return ::SetWindowLongPtr(m_hWnd, nIndex, dwNewLong);
 	}
 
-	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
+	inline BOOL CWnd::SetWindowPos(const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-	// or top-level window. The hWndInsertAfter can be a HWND or one of:
-	// HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, HWND_TOPMOST
+	// or top-level window. 
+	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(::IsWindow(m_hWnd));
+		HWND hWndInsertAfter = pInsertAfter? *pInsertAfter : 0;
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
-	inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
+	inline BOOL CWnd::SetWindowPos(const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-	// or top-level window. The hWndInsertAfter can be a HWND or one of:
-	// HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, HWND_TOPMOST
+	// or top-level window. 
+	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(::IsWindow(m_hWnd));
+		HWND hWndInsertAfter = pInsertAfter? *pInsertAfter : 0;
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
 	}
 
@@ -2984,6 +3006,7 @@ namespace Win32xx
 		assert(pDC);
 		return FromHandle( ::WindowFromDC(pDC->GetHDC()) );
 	}
+
 
   #endif
 

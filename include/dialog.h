@@ -870,8 +870,8 @@ namespace Win32xx
 			{
 				CWnd* pWnd = FromHandle((*iter).hWnd);
 				CWnd *pWndPrev = pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
-				HWND hWnd = pWndPrev ? pWndPrev->GetHwnd():NULL;
-				pWnd->SetWindowPos(hWnd, rc, SWP_NOCOPYBITS);
+			//	HWND hWnd = pWndPrev ? pWndPrev->GetHwnd():NULL;
+				pWnd->SetWindowPos(pWndPrev, rc, SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
 			}
     	}

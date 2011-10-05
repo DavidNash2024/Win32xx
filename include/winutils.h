@@ -404,7 +404,7 @@ namespace Win32xx
 	// Returns the CWnd object associated with the window handle
 	{
 		assert( GetApp() );
-		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
+		CWnd* pWnd = hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
 	//	if (::IsWindow(hWnd) && pWnd == 0)
 		if ( hWnd != NULL && pWnd == 0 )
 		{

@@ -1437,7 +1437,7 @@ namespace Win32xx
 		CRect rcTarget = pDockTarget->GetDockClient().GetWindowRect();
 		int xMid = rcTarget.left + (rcTarget.Width() - cxImage)/2;
 		int yMid = rcTarget.top + (rcTarget.Height() - cyImage)/2;
-		SetWindowPos(HWND_TOPMOST, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+		SetWindowPos(&wndTopMost, xMid, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 
 		// Create the docking zone rectangles
 		CPoint pt = pDragPos->ptPos;
@@ -1540,7 +1540,7 @@ namespace Win32xx
 			Create();
 			CRect rc = pDockTarget->GetWindowRect();
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
-			SetWindowPos(HWND_TOPMOST, rc.left + 10, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, rc.left + 10, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 
 		CRect rcLeft(0, 0, cxImage, cyImage);
@@ -1584,7 +1584,7 @@ namespace Win32xx
 			Create();
 			CRect rc = pDockTarget->GetWindowRect();
 			int xMid = rc.left + (rc.Width() - cxImage)/2;
-			SetWindowPos(HWND_TOPMOST, xMid, rc.top + 10, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, xMid, rc.top + 10, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 
 		CRect rcTop(0, 0, cxImage, cyImage);
@@ -1628,7 +1628,7 @@ namespace Win32xx
 			Create();
 			CRect rc = pDockTarget->GetWindowRect();
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
-			SetWindowPos(HWND_TOPMOST, rc.right - 10 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, rc.right - 10 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 
 		CRect rcRight(0, 0, cxImage, cyImage);
@@ -1672,7 +1672,7 @@ namespace Win32xx
 			Create();
 			CRect rc = pDockTarget->GetWindowRect();
 			int xMid = rc.left + (rc.Width() - cxImage)/2;
-			SetWindowPos(HWND_TOPMOST, xMid, rc.bottom - 10 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, xMid, rc.bottom - 10 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 		CRect rcBottom(0, 0, cxImage, cyImage);
 		ScreenToClient(pt);
@@ -1801,7 +1801,7 @@ namespace Win32xx
 		pDocker->SetWindowLongPtr(GWL_STYLE, dwStyle);
 		pDocker->SetRedraw(FALSE);
 		pDocker->SetParent(0);
-		pDocker->SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+		pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		pDocker->SetRedraw(TRUE);
 		pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		pDocker->SetWindowText(pDocker->GetCaption().c_str());
@@ -3943,7 +3943,7 @@ namespace Win32xx
 			CRect rc = GetClientRect();
 			AdjustRect(FALSE, &rc);
 			CDockContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
-			pContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+			pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
 		}
 	}
 
@@ -4012,7 +4012,7 @@ namespace Win32xx
 				CDockContainer* pOldContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 				CDockContainer* pNewContainer = m_vContainerInfo[nPage].pContainer;
 				pOldContainer->GetViewPage().ShowWindow(SW_HIDE);
-				pNewContainer->GetViewPage().SetWindowPos(HWND_TOP, rc, SWP_SHOWWINDOW);
+				pNewContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
 				pNewContainer->GetViewPage().GetView()->SetFocus();
 
 				// Adjust the docking caption
