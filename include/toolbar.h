@@ -818,9 +818,8 @@ namespace Win32xx
 						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
 					DrawDC.SetBkMode(iMode);
-					DrawDC.Detach();
-				}
 
+				}
 				DrawDC.Detach();
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
