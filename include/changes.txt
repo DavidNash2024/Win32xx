@@ -28,15 +28,18 @@ Changes in detail
 - Added 	CIPAddress
 - Added 	CMonthCalendar
 - Added 	CTooltip
+
 - Added		wndTop						a special CWnd for use with SetWindowPos
 - Added		wndTopMost					a special CWnd for use with SetWindowPos
 - Added		wndNoTopMost				a special CWnd for use with SetWindowPos
 - Added		wndBottom					a special CWnd for use with SetWindowPos
+
 - Added 	CGDIObject::DeleteObject
-- Added 	CString(LPCSTR pszText);
-- Added 	CString(LPCWSTR pszText);
+- Added 	CString::CString(LPCSTR pszText);
+- Added 	CString::CString(LPCWSTR pszText);
 - Added		CString::operator += (LPCSTR szText)
 - Added 	CString::operator += (LPCWSTR szText)
+- Added     CReBar::SetToolTips
 - Added 	CWebBrowser::ExecWB
 - Added 	CWebBrowser::GetApplication
 - Added 	CWebBrowser::GetBusy
@@ -93,7 +96,15 @@ Changes in detail
 - Modified  CDC::CreatePenIndirect      now returns HPEN
 - Modified  CListView::GetEditCtrl      now returns CEdit*
 - Modified  CListView::GetHeader		now returns CHeader*
+- Modified  CListView::GetToolTips      now returns CToolTip*
+- Modified  CListView::SetToolTips      now accepts CToolTip*
+- Modified  CListView::EditLabel		now returns CEdit*
+- Modified  CRebar::GetToolTips         now returns CToolTip*
+- Modified  CToolBar::GetToolTips		now returns CToolTip*
+- Modified  CToolBar::SetToolTips       now accepts CToolTip*
 - Modified  CTreeView::GetEditCtrl      now returns CEdit*
+- Modified  CTreeView::GetToolTips      now returns CToolTip*
+- Modified  CTreeView::SetToolTips      now accepts CToolTip*
 - Modified  CWnd::SetWindowPos			now uses CWnd* for first arguement
 - Removed 	CString::b_str
 - Removed 	CString(LPCTSTR pszText);

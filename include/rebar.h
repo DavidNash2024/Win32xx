@@ -98,13 +98,14 @@ namespace Win32xx
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
 		UINT GetSizeofRBBI() const;
-		HWND GetToolTips() const;
+		CToolTip* GetToolTips() const;
 		BOOL SetBandBitmap(const int nBand, const CBitmap* pBackground) const;
 		BOOL SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		BOOL SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL SetBarInfo(REBARINFO& rbi) const;
 		void SetMenuBar(HWND hMenuBar) {m_hMenuBar = hMenuBar;}
 		void SetReBarTheme(ReBarTheme& Theme);
+		void SetToolTips(CToolTip* pToolTip) const;
 
 	protected:
 	//Overridables
@@ -259,11 +260,11 @@ namespace Win32xx
 		return uSizeof;
 	}
 
-	inline HWND CReBar::GetToolTips() const
+	inline CToolTip* CReBar::GetToolTips() const
 	// Retrieves the handle to any ToolTip control associated with the rebar control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L);
+		return (CToolTip*)FromHandle( (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L) );
 	}
 
 	inline int CReBar::HitTest(RBHITTESTINFO& rbht)
@@ -651,6 +652,14 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(RB_SIZETORECT, 0, (LPARAM) (LPRECT)rect);
+	}
+
+	inline void CReBar::SetToolTips(CToolTip* pToolTip) const
+	// Associates a ToolTip control with the rebar control. 
+	{
+		assert(::IsWindow(m_hWnd));
+		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
+		SendMessage(RB_SETTOOLTIPS, WPARAM(hToolTip), 0);
 	}
 
 	inline LRESULT CReBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

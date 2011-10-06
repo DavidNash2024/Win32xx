@@ -85,7 +85,7 @@ namespace Win32xx
 		BOOL GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const;
 		COLORREF GetTextBkColor( ) const;
 		COLORREF GetTextColor( ) const;
-		HWND GetToolTips( ) const;
+		CToolTip* GetToolTips( ) const;
 		int GetTopIndex( ) const;
 		BOOL GetViewRect( CRect& rc ) const;
 		void GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const;
@@ -116,7 +116,7 @@ namespace Win32xx
 		int SetSelectionMark( int iIndex ) const;
 		BOOL SetTextBkColor( COLORREF clrBkText ) const;
 		BOOL SetTextColor( COLORREF clrText ) const;
-		HWND SetToolTips( HWND hWndToolTip ) const;
+		CToolTip* SetToolTips ( CToolTip* pToolTip ) const;
 		void SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const;
 		int SubItemHitTest( LVHITTESTINFO& htInfo ) const;
 
@@ -126,7 +126,7 @@ namespace Win32xx
 		BOOL DeleteAllItems( ) const;
 		BOOL DeleteColumn( int iCol ) const;
 		BOOL DeleteItem( int iItem ) const;
-		HWND EditLabel( int iItem ) const;
+		CEdit* EditLabel( int iItem ) const;
 		BOOL EnsureVisible( int iItem, BOOL fPartialOK ) const;
 		int FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
 		int HitTest( LVHITTESTINFO& HitTestInfo ) const;
@@ -418,11 +418,11 @@ namespace Win32xx
 		return ListView_GetTextColor( m_hWnd );
 	}
 
-	inline HWND CListView::GetToolTips( ) const
+	inline CToolTip* CListView::GetToolTips( ) const
 	// Retrieves the ToolTip control that the list-view control uses to display ToolTips.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ListView_GetToolTips( m_hWnd );
+		return(CToolTip*)FromHandle(ListView_GetToolTips( m_hWnd ) );
 	}
 
 	inline int CListView::GetTopIndex( ) const
@@ -669,11 +669,14 @@ namespace Win32xx
 		return ListView_SetTextColor( m_hWnd, clrText );
 	}
 
-	inline HWND CListView::SetToolTips( HWND hWndToolTip ) const
+	inline CToolTip* CListView::SetToolTips( CToolTip* pToolTip ) const
 	// Sets the ToolTip control that the list-view control will use to display ToolTips.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HWND)::SendMessage(m_hWnd, LVM_SETTOOLTIPS, (WPARAM)hWndToolTip, 0L);
+		assert(pToolTip);
+
+		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
+		return (CToolTip*) FromHandle( (HWND)::SendMessage(m_hWnd, LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L) );
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const
@@ -727,11 +730,11 @@ namespace Win32xx
 		return ListView_DeleteItem( m_hWnd, iItem );
 	}
 
-	inline HWND CListView::EditLabel( int iItem ) const
+	inline CEdit* CListView::EditLabel( int iItem ) const
 	// Begins in-place editing of the specified list-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ListView_EditLabel( m_hWnd, iItem );
+		return (CEdit*)FromHandle( ListView_EditLabel( m_hWnd, iItem ) );
 	}
 
 	inline BOOL CListView::EnsureVisible( int iItem, BOOL fPartialOK ) const

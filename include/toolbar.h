@@ -103,7 +103,7 @@ namespace Win32xx
 		CRect GetRect(int idButton) const;
 		int   GetRows() const;
 		int   GetTextRows() const;
-		HWND  GetToolTips() const;
+		CToolTip*  GetToolTips() const;
 		BOOL  HasText() const;
 		BOOL  HideButton(int idButton, BOOL fShow) const;
 		int   HitTest() const;
@@ -133,7 +133,7 @@ namespace Win32xx
 		BOOL  SetIndent(int iIndent) const;
 		BOOL  SetMaxTextRows(int iMaxRows) const;
 		BOOL  SetPadding(int cx, int cy) const;
-		void  SetToolTips(HWND hwndToolTip) const;
+		void  SetToolTips(CToolTip* pToolTip) const;
 
 		// Attributes
 		std::vector<UINT>& GetToolBarData() const {return (std::vector <UINT> &)m_vToolBarData;}
@@ -489,11 +489,11 @@ namespace Win32xx
 		return (int)SendMessage(TB_GETTEXTROWS, 0L, 0L);
 	}
 
-	inline HWND CToolBar::GetToolTips() const
+	inline CToolTip* CToolBar::GetToolTips() const
 	// Retrieves the handle to the ToolTip control, if any, associated with the toolbar.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L);
+		return (CToolTip*)FromHandle( (HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L) );
 	}
 
 	inline BOOL CToolBar::HasText() const
@@ -1334,11 +1334,12 @@ namespace Win32xx
 			Invalidate();
 	}
 
-	inline void CToolBar::SetToolTips(HWND hwndToolTip) const
+	inline void CToolBar::SetToolTips(CToolTip* pToolTip) const
 	// Associates a ToolTip control with a toolbar.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(TB_SETTOOLTIPS, (WPARAM)hwndToolTip, 0L);
+		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
+		SendMessage(TB_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
 	}
 
 	inline LRESULT CToolBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

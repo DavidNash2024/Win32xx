@@ -84,7 +84,7 @@ namespace Win32xx
 		int GetScrollTime() const;
 		HTREEITEM GetSelection() const;
 		COLORREF GetTextColor() const;
-		HWND GetToolTips() const;
+		CToolTip* GetToolTips() const;
 		UINT GetVisibleCount() const;
 		BOOL ItemHasChildren(HTREEITEM hItem) const;
 		COLORREF SetBkColor(COLORREF clrBk) const;
@@ -100,7 +100,7 @@ namespace Win32xx
 		BOOL SetItemText(HTREEITEM hItem, LPCTSTR szText) const;
 		UINT SetScrollTime(UINT uScrollTime) const;
 		COLORREF SetTextColor(COLORREF clrText) const;
-		HWND SetToolTips(HWND hwndTooltip) const;
+		CToolTip* SetToolTips(CToolTip* pToolTip) const;
 
 // Operations
 		HIMAGELIST CreateDragImage(HTREEITEM hItem) const;
@@ -350,11 +350,11 @@ namespace Win32xx
 		return TreeView_GetTextColor( m_hWnd );
 	}
 
-	inline HWND CTreeView::GetToolTips() const
+	inline CToolTip* CTreeView::GetToolTips() const
 	// Retrieves the handle to the child ToolTip control used by a tree-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return TreeView_GetToolTips( m_hWnd );
+		return (CToolTip*) FromHandle( TreeView_GetToolTips( m_hWnd ) );
 	}
 
 	inline UINT CTreeView::GetVisibleCount() const
@@ -494,11 +494,12 @@ namespace Win32xx
 		return TreeView_SetTextColor( m_hWnd, clrText );
 	}
 
-	inline HWND CTreeView::SetToolTips(HWND hwndTooltip) const
+	inline CToolTip* CTreeView::SetToolTips(CToolTip* pToolTip) const
 	// Sets a tree-view control's child ToolTip control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return TreeView_SetToolTips( m_hWnd, hwndTooltip );
+		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
+		return (CToolTip*) FromHandle( TreeView_SetToolTips( m_hWnd, hToolTip ) );
 	}
 
 	// Operations

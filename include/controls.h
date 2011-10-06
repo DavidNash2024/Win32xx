@@ -52,7 +52,9 @@
 namespace Win32xx
 {
 
+	// Forward declarations
 	class CMonthCalendar;
+	class CToolTip;
 
 	class CAnimation : public CWnd
 	{
@@ -344,7 +346,6 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("SCROLLBAR"); ; }
 	};
 
-
 	class CSlider : public CWnd
 	{
 	public:
@@ -367,7 +368,7 @@ namespace Win32xx
 		CRect GetThumbRect() const;
 		int  GetTic(int nTic ) const;
 		int  GetTicPos(int nTic) const;
-		CWnd* GetToolTips() const;
+		CToolTip* GetToolTips() const;
 		CWnd* SetBuddy(CWnd* pBuddy, BOOL fLocation = TRUE ) const;
 		int  SetLineSize(int nSize) const;
 		int  SetPageSize(int nSize) const;
@@ -378,7 +379,7 @@ namespace Win32xx
 		BOOL SetTic(int nTic) const;
 		void SetTicFreq(int nFreq)  const;
 		int  SetTipSide(int nLocation) const;
-		void SetToolTips(CWnd* pToolTip) const;
+		void SetToolTips(CToolTip* pToolTip) const;
 
 	protected:
 		// Overridables
@@ -1585,11 +1586,11 @@ namespace Win32xx
 		return (int)SendMessage(TBM_GETTICPOS, (WPARAM)nTic, 0);
 	}
 
-	inline CWnd* CSlider::GetToolTips() const
+	inline CToolTip* CSlider::GetToolTips() const
 	// Retrieves the handle to the ToolTip control assigned to the trackbar, if any.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(TBM_GETTOOLTIPS, 0, 0));
+		return (CToolTip*)FromHandle((HWND)SendMessage(TBM_GETTOOLTIPS, 0, 0));
 	}
 
 	inline CWnd* CSlider::SetBuddy(CWnd* pBuddy, BOOL fLocation /*= TRUE*/ ) const
@@ -1664,11 +1665,12 @@ namespace Win32xx
 		return (int)SendMessage(TBM_SETTIPSIDE, (WPARAM)nLocation, 0);
 	}
 
-	inline void CSlider::SetToolTips(CWnd* pToolTip) const
+	inline void CSlider::SetToolTips(CToolTip* pToolTip) const
 	// Assigns a ToolTip control to the trackbar control.
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETTOOLTIPS, (WPARAM)pToolTip->GetHwnd(), 0);
+		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
+		SendMessage(TBM_SETTOOLTIPS, (WPARAM)hToolTip, 0);
 	}
 
 	////////////////////////////////////////
