@@ -2083,7 +2083,7 @@ namespace Win32xx
 		{
 			if ((*iter)->IsDocked())
 				(*iter)->GetDockClient().DrawCaption((WPARAM)1);
-		}
+		} 
 	}
 
 	inline void CDocker::DrawHashBar(HWND hBar, POINT Pos)
