@@ -28,7 +28,10 @@ Changes in detail
 - Added 	CIPAddress
 - Added 	CMonthCalendar
 - Added 	CTooltip
-
+- Added		wndTop						a special CWnd for use with SetWindowPos
+- Added		wndTopMost					a special CWnd for use with SetWindowPos
+- Added		wndNoTopMost				a special CWnd for use with SetWindowPos
+- Added		wndBottom					a special CWnd for use with SetWindowPos
 - Added 	CGDIObject::DeleteObject
 - Added 	CString(LPCSTR pszText);
 - Added 	CString(LPCWSTR pszText);
@@ -72,6 +75,22 @@ Changes in detail
 - Added 	CWebBrowser::SetWidth
 - Added 	CWebBrowser::Stop
 - Modified  CComboBoxEx::GetEditCtrl 	now returns CEdit*
+- Modified  CDC::CreateBitmap			now returns HBITMAP
+- Modified  CDC::CreateCompatibleBitmap now returns HBITMAP
+- Modified  CDC::CreateDIBSection       now returns HBITMAP
+- Modified  CDC::CreateBitmapIndirect   now returns HBITMAP
+- Modified  CDC::CreateDIBitmap         now returns HBITMAP
+- Modified  CDC::CreateMappedBitmap     now returns HBITMAP
+- Modified  CDC::CreatePatternBrush     now returns HBRUSH
+- Modified  CDC::CreateSolidBrush       now returns HBRUSH
+- Modified  CDC::CreateBrushIndirect    now returns HBRUSH
+- Modified  CDC::CreateHatchBrush       now returns HBRUSH
+- Modified  CDC::CreateDIBPatternBrush  now returns HBRUSH
+- Modified  CDC::CreateDIBPatternBrushPt now returns HBRUSH
+- Modified  CDC::CreateFontIndirect     now returns HFONT
+- Modified  CDC::CreateFont             now returns HFONT
+- Modified  CDC::CreatePen              now returns HPEN
+- Modified  CDC::CreatePenIndirect      now returns HPEN
 - Modified  CListView::GetEditCtrl      now returns CEdit*
 - Modified  CListView::GetHeader		now returns CHeader*
 - Modified  CTreeView::GetEditCtrl      now returns CEdit*

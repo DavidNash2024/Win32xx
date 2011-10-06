@@ -315,7 +315,7 @@ namespace Win32xx
 	//
 	class CWinApp
 	{
-		// Provide these access to CWinApp's private members: 
+		// Provide these access to CWinApp's private members:
 		friend class CDC;
 		friend class CDialog;
 		friend class CGDIObject;
@@ -362,7 +362,7 @@ namespace Win32xx
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		CDC* GetCDCFromMap(HDC hDC);
-		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);		
+		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 
@@ -414,7 +414,7 @@ namespace Win32xx
 
 	public:
 		CWnd();				// Constructor
-		CWnd(HWND hWnd)		// Constructor 
+		CWnd(HWND hWnd)		// Constructor
 		{
 			if (hWnd == HWND_TOP || hWnd == HWND_TOPMOST || hWnd == HWND_BOTTOM || hWnd == HWND_NOTOPMOST)
 			{
@@ -614,6 +614,7 @@ namespace Win32xx
 
 	}; // class CWnd
 
+	// Special CWnd objects used by SetWindowPos
 	static const CWnd wndTop(HWND_TOP);
 	static const CWnd wndTopMost(HWND_TOPMOST);
 	static const CWnd wndBottom(HWND_BOTTOM);
@@ -622,7 +623,7 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#include "gdi.h"	
+#include "gdi.h"
 #include "menu.h"
 
 namespace Win32xx
@@ -698,6 +699,7 @@ namespace Win32xx
 			m_hResource = m_hInstance;
 			SetCallback();
 
+			// Assign the special CWnds used by SetWindowPos
 			m_csMapLock.Lock();
 			m_mapHWND.insert(std::make_pair(HWND_TOP, (CWnd*)&wndTop));
 			m_mapHWND.insert(std::make_pair(HWND_TOPMOST, (CWnd*)&wndTopMost));
@@ -763,7 +765,7 @@ namespace Win32xx
 	{
 		// The temporary CGDIObjects are removed by CleanupTemps
 		assert(pObject);
-	
+
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
@@ -910,13 +912,13 @@ namespace Win32xx
 		LONG lCount = 0;
 
 		while (status != 0)
-		{		
+		{
 			// While idle, perform idle processing until OnIdle returns FALSE
 			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) == TRUE)
 			{
 				++lCount;
 			}
-			
+
 			lCount = 0;
 
 			// Now wait until we get a message
@@ -929,7 +931,7 @@ namespace Win32xx
 				::DispatchMessage(&Msg);
 			}
 		}
-		
+
 		return LOWORD(Msg.wParam);
 	}
 
@@ -1412,7 +1414,7 @@ namespace Win32xx
 		// Load the User32 DLL
 		typedef HWND WINAPI GETANCESTOR(HWND, UINT);
 		GETANCESTOR* pfnGetAncestor = NULL;
-		HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));		
+		HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));
 
 		if (hModule)
 		{
@@ -2055,7 +2057,7 @@ namespace Win32xx
 
 	inline CWnd* CWnd::ChildWindowFromPoint(POINT pt) const
 	// determines which, if any, of the child windows belonging to a parent window contains
-	// the specified point. The search is restricted to immediate child windows. 
+	// the specified point. The search is restricted to immediate child windows.
 	// Grandchildren, and deeper descendant windows are not searched.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -2611,21 +2613,21 @@ namespace Win32xx
 
 	inline BOOL CWnd::SetWindowPos(const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-	// or top-level window. 
+	// or top-level window.
 	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWndInsertAfter = pInsertAfter? *pInsertAfter : 0;
+		HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
 	inline BOOL CWnd::SetWindowPos(const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-	// or top-level window. 
+	// or top-level window.
 	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWndInsertAfter = pInsertAfter? *pInsertAfter : 0;
+		HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::SetWindowPos(m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
 	}
 

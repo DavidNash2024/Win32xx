@@ -655,7 +655,7 @@ namespace Win32xx
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
 			{
-				CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
+				CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
 				CRect rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -673,33 +673,33 @@ namespace Win32xx
 				CSize TextSize;
 				if (HasText())	// Does any button have text?
 				{
-					pDrawDC->SelectObject(GetFont());
+					DrawDC.SelectObject(GetFont());
 					if (SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)pszText)> 0)
 					{
-						TextSize = pDrawDC->GetTextExtentPoint32(pszText, lstrlen(pszText));
+						TextSize = DrawDC.GetTextExtentPoint32(pszText, lstrlen(pszText));
 					}
 				}
 
 				// Draw outline rectangle
 				if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 				{
-					pDrawDC->CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-					pDrawDC->MoveTo(rcRect.left, rcRect.top);
-					pDrawDC->LineTo(rcRect.left, rcRect.bottom-1);
-					pDrawDC->LineTo(rcRect.right-1, rcRect.bottom-1);
-					pDrawDC->LineTo(rcRect.right-1, rcRect.top);
-					pDrawDC->LineTo(rcRect.left, rcRect.top);
+					DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+					DrawDC.MoveTo(rcRect.left, rcRect.top);
+					DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
+					DrawDC.LineTo(rcRect.right-1, rcRect.bottom-1);
+					DrawDC.LineTo(rcRect.right-1, rcRect.top);
+					DrawDC.LineTo(rcRect.left, rcRect.top);
 				}
 
 				// Draw filled gradient background
 				rcRect.InflateRect(-1, -1);
 				if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 				{
-					pDrawDC->GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcRect, FALSE);
+					DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcRect, FALSE);
 				}
 				else if (nState & CDIS_HOT)
 				{
-					pDrawDC->GradientFill(m_Theme.clrHot1, m_Theme.clrHot2, rcRect, FALSE);
+					DrawDC.GradientFill(m_Theme.clrHot1, m_Theme.clrHot2, rcRect, FALSE);
 				}
 
 				// Get the appropriate image list depending on the button state
@@ -753,32 +753,32 @@ namespace Win32xx
 					{
 						CRect rcArrowBkgnd = rcRect;
 						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-						pDrawDC->GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcArrowBkgnd, FALSE);
+						DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcArrowBkgnd, FALSE);
 					}
 
 					m_bDrawArrowBkgrnd = FALSE;
 
 					// Manually draw the dropdown arrow
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0,0,0));
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
 					for (int i = 2; i >= 0; --i)
 					{
-						pDrawDC->MoveTo(xAPos -i-1, yAPos - i+1);
-						pDrawDC->LineTo(xAPos +i,   yAPos - i+1);
+						DrawDC.MoveTo(xAPos -i-1, yAPos - i+1);
+						DrawDC.LineTo(xAPos +i,   yAPos - i+1);
 					}
 
 					// Draw line between icon and dropdown arrow
 					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
 					{
-						pDrawDC->CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-						pDrawDC->MoveTo(rcRect.right - 13, rcRect.top);
-						pDrawDC->LineTo(rcRect.right - 13, rcRect.bottom);
+						DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
+						DrawDC.MoveTo(rcRect.right - 13, rcRect.top);
+						DrawDC.LineTo(rcRect.right - 13, rcRect.bottom);
 					}
 				}
 
 				// Draw the button image
 				if (xImage > 0)
 				{
-					ImageList_Draw(himlToolBar, iImage, *pDrawDC, xImage, yImage, ILD_TRANSPARENT);
+					ImageList_Draw(himlToolBar, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
 				}
 
 				//Draw Text
@@ -799,26 +799,29 @@ namespace Win32xx
 
 					OffsetRect(&rcText, xOffset, yOffset);
 
-					int iMode = pDrawDC->SetBkMode(TRANSPARENT);
-					pDrawDC->SelectObject(GetFont());
+					int iMode = DrawDC.SetBkMode(TRANSPARENT);
+					DrawDC.SelectObject(GetFont());
 
 					if (nState & (CDIS_DISABLED))
 					{
 						// Draw text twice for embossed look
 						rcText.OffsetRect(1, 1);
-						pDrawDC->SetTextColor(RGB(255,255,255));
-						pDrawDC->DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
+						DrawDC.SetTextColor(RGB(255,255,255));
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
 						rcText.OffsetRect(-1, -1);
-						pDrawDC->SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-						pDrawDC->DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
+						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
 					}
 					else
 					{
-						pDrawDC->SetTextColor(GetSysColor(COLOR_BTNTEXT));
-						pDrawDC->DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
+						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
-					pDrawDC->SetBkMode(iMode);
+					DrawDC.SetBkMode(iMode);
+					DrawDC.Detach();
 				}
+
+				DrawDC.Detach();
 			}
 			return CDRF_SKIPDEFAULT;  // No further drawing
 		}

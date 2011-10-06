@@ -524,7 +524,7 @@ namespace Win32xx
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
 
 					// Draw the text
-					dcMem.SelectObject(&m_Font);
+					::SelectObject(dcMem, m_Font);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -665,7 +665,7 @@ namespace Win32xx
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
 		{
 			CClientDC dcClient(this);
-			dcClient.SelectObject(&m_Font);
+			::SelectObject(dcClient, m_Font);
 			std::vector<TCHAR> vTitle(MAX_MENU_STRING, _T('\0'));
 			TCHAR* pszTitle = &vTitle.front();
 			TCITEM tcItem = {0};
@@ -698,7 +698,7 @@ namespace Win32xx
 	inline int CTab::GetTextHeight() const
 	{
 		CClientDC dcClient(this);
-		dcClient.SelectObject(&m_Font);
+		::SelectObject(dcClient, m_Font);
 		CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
@@ -890,7 +890,7 @@ namespace Win32xx
 		HWND hWndParent = ::GetParent(m_hWnd);
 		CDC dcParent = ::GetDC(hWndParent);
 		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
-		dcMem.SelectObject(FromHandle(hBrush));
+		::SelectObject(dcMem, hBrush);
 		dcMem.PaintRgn(&rgnClip);
 
 		// Draw the tab buttons on the memory DC:
@@ -1210,8 +1210,8 @@ namespace Win32xx
 			{
 				// Remove all pending paint requests
 				PAINTSTRUCT ps;
-				BeginPaint(ps);
-				EndPaint(ps);
+				::BeginPaint(m_hWnd, &ps);
+				::EndPaint(m_hWnd, &ps);
 
 				// Now call our local Paint
 				Paint();

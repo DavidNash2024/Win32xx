@@ -693,7 +693,7 @@ namespace Win32xx
 			// An item is about to be drawn
 			case CDDS_ITEMPREPAINT:
 				{
-					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
+					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
 					CRect rcRect = lpNMCustomDraw->nmcd.rc;
 					int nState = lpNMCustomDraw->nmcd.uItemState;
 					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -715,9 +715,9 @@ namespace Win32xx
 						int cy = ::GetSystemMetrics (SM_CYSMICON);
 						int y = 1 + (GetWindowRect().Height() - cy)/2;
 						int x = (rcRect.Width() - cx)/2;
-						pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+						DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
-						pDrawDC->Detach();	// Optional, deletes GDI objects sooner
+						DrawDC.Detach();
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
 
@@ -725,21 +725,21 @@ namespace Win32xx
 					{
 						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							pDrawDC->GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
+							DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							pDrawDC->GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
+							DrawDC.GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
 						}
 
 						// Draw border
-						pDrawDC->CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						pDrawDC->MoveTo(rcRect.left, rcRect.bottom);
-						pDrawDC->LineTo(rcRect.left, rcRect.top);
-						pDrawDC->LineTo(rcRect.right-1, rcRect.top);
-						pDrawDC->LineTo(rcRect.right-1, rcRect.bottom);
-						pDrawDC->MoveTo(rcRect.right-1, rcRect.bottom);
-						pDrawDC->LineTo(rcRect.left, rcRect.bottom);
+						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
+						DrawDC.MoveTo(rcRect.left, rcRect.bottom);
+						DrawDC.LineTo(rcRect.left, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
+						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
+						DrawDC.LineTo(rcRect.left, rcRect.bottom);
 
 						TCHAR str[80] = _T("");
 						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
@@ -747,15 +747,17 @@ namespace Win32xx
 							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
 
 						// Draw highlight text
-						pDrawDC->SelectObject(GetFont());
+						CFont* pFont = GetFont();
+						::SelectObject(DrawDC, pFont->GetHandle());
 						rcRect.bottom += 1;
-						int iMode = pDrawDC->SetBkMode(TRANSPARENT);
-						pDrawDC->DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+						int iMode = DrawDC.SetBkMode(TRANSPARENT);
+						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-						pDrawDC->SetBkMode(iMode);
-						pDrawDC->Detach();	// Optional, deletes GDI objects sooner
+						DrawDC.SetBkMode(iMode);
+						DrawDC.Detach();	
 						return CDRF_SKIPDEFAULT;  // No further drawing
-					} 
+					}
+					DrawDC.Detach();
 				} 
 				return CDRF_DODEFAULT ;   // Do default drawing
 
@@ -763,9 +765,9 @@ namespace Win32xx
 			case CDDS_POSTPAINT:
 				// Draw MDI Minimise, Restore and Close buttons
 				{
-					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
-					DrawAllMDIButtons(*pDrawDC);
-					pDrawDC->Detach();	// Optional, deletes GDI objects sooner
+					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
+					DrawAllMDIButtons(DrawDC);
+					DrawDC.Detach();
 				}
 				break;
 			}

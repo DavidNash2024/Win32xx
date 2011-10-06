@@ -558,7 +558,7 @@ namespace Win32xx
 	inline void CDocker::CDockBar::OnDraw(CDC* pDC)
 	{
 		CRect rcClient = GetClientRect();
-		pDC->SelectObject(&m_brBackground);
+		::SelectObject(*pDC, m_brBackground);
 		pDC->PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
 	}
 
