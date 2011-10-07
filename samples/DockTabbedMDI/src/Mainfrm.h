@@ -5,13 +5,13 @@
 #define MAINFRM_H
 
 
-#include "Web.h"
 #include "Rect.h"
 #include "Classes.h"
 #include "Files.h"
 #include "DockTabbedMDI.h"
 #include "Text.h"
 #include "Output.h"
+#include "Simple.h"
 
 
 // Declaration of the CMainFrame class

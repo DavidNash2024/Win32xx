@@ -127,6 +127,10 @@ SOURCE=..\src\Rect.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\Simple.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -136,10 +140,6 @@ SOURCE=..\src\TabbedMDIApp.cpp
 # Begin Source File
 
 SOURCE=..\src\Text.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Web.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -187,6 +187,10 @@ SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\Simple.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\stdafx.h
 # End Source File
 # Begin Source File
@@ -197,17 +201,45 @@ SOURCE=..\src\TabbedMDIApp.h
 
 SOURCE=..\src\Text.h
 # End Source File
-# Begin Source File
-
-SOURCE=..\src\Web.h
-# End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
+SOURCE=..\src\res\classview.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\Docking.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\fileview.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\Globe.ico
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\rect.ico
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Resource.rc
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\SplitH.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\SplitV.cur
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\res\Text.ico
 # End Source File
 # End Group
 # Begin Group "Win32++"

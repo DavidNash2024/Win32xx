@@ -217,6 +217,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Simple.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration
@@ -242,10 +246,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Text.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Web.cpp"
 				>
 			</File>
 		</Filter>
@@ -295,6 +295,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Simple.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\stdafx.h"
 				>
 			</File>
@@ -308,10 +312,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Text.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Web.h"
 				>
 			</File>
 		</Filter>

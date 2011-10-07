@@ -26,8 +26,8 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
 	case ID_MDI_TEXT:
 		pView = new CViewText;
 		break;
-	case ID_MDI_BROWSER:
-		pView = new CViewBrowser;
+	case ID_MDI_SIMPLE:
+		pView = new CViewSimple;
 		break;
 	case ID_MDI_RECT:
 		pView = new CViewRect;

@@ -36,7 +36,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
+        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
@@ -80,7 +80,7 @@ IDM_NEWMENU MENU
 BEGIN
     POPUP "New"
     BEGIN
-        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
+        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
@@ -218,7 +218,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDM_FILE_NEWBROWSER     "Create Browser MDI Child"
+    IDM_FILE_NEWSIMPLE      "Create Simple MDI Child"
     IDM_FILE_NEWRECT        "Create Rect MDI Child"
     IDM_FILE_NEWTEXT        "Create Text MDI Child"
 END

@@ -37,9 +37,7 @@
     <ClCompile Include="..\src\TabbedMDIApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Web.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="..\src\Simple.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Classes.h">
@@ -105,12 +103,10 @@
     <ClInclude Include="..\src\TabbedMDIApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Web.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Text.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\Simple.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Source Files">

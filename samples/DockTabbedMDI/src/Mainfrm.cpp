@@ -101,14 +101,15 @@ void CMainFrame::LoadDefaultDockers()
 
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
 	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
-	pDockBottom->AddDockedChild(new CDockBrowser, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_BROWSER1);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
 }
 
 void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-	pTabbedMDI->AddMDIChild(new CViewBrowser, _T("Browser"), ID_MDI_BROWSER);
+	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
+//	pTabbedMDI->AddMDIChild(new CViewBrowser, _T("Browser"), ID_MDI_BROWSER);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
@@ -128,8 +129,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_NEW:
 		OnFileNew();
 		return TRUE;
-	case IDM_FILE_NEWBROWSER:
-		pTabbedMDI->AddMDIChild(new CViewBrowser, _T("Browser"), ID_MDI_BROWSER);
+	case IDM_FILE_NEWSIMPLE:
+		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple"), ID_MDI_SIMPLE);
 		return TRUE;
 	case IDM_FILE_NEWRECT:
 		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
@@ -297,7 +298,7 @@ void CMainFrame::SetupToolBar()
 	::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWBROWSER, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_BROWSER), IMAGE_ICON, 0, 0, LR_SHARED));
+	AddMenuIcon(IDM_FILE_NEWSIMPLE, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_SIMPLE), IMAGE_ICON, 0, 0, LR_SHARED));
 	AddMenuIcon(IDM_FILE_NEWRECT, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_RECT), IMAGE_ICON, 0, 0, LR_SHARED));
 	AddMenuIcon(IDM_FILE_NEWTEXT, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_TEXT), IMAGE_ICON, 0, 0, LR_SHARED));
 	AddMenuIcon(IDM_FILE_NEWLIST, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW), IMAGE_ICON, 0, 0, LR_SHARED));

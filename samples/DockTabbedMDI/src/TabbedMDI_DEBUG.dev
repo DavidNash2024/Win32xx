@@ -198,26 +198,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=Web.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit23]
-FileName=Web.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit24]
 FileName=MyCombo.cpp
 CompileCpp=1
 Folder=Source
@@ -227,7 +207,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit23]
 FileName=MyCombo.h
 CompileCpp=1
 Folder=Header
@@ -237,8 +217,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=StdAfx.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit25]
+FileName=stdafx.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=Simple.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -307,7 +307,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=stdafx.h
+FileName=Simple.h
 CompileCpp=1
 Folder=Header
 Compile=1

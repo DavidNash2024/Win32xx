@@ -200,7 +200,7 @@
         <FILE FILENAME="..\src\TabbedMDIApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="TabbedMDIApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Text.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Text" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
-        <FILE FILENAME="..\src\Web.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Web" FORMNAME="" DESIGNCLASS=""/>
+        <FILE FILENAME="..\src\Simple.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Simple" FORMNAME="" DESIGNCLASS=""/>
       </FILELIST>
       <IDEOPTIONS>
         <VersionInfo>
