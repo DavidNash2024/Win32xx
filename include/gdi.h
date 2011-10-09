@@ -79,7 +79,7 @@
 //  {
 //	  CClientDC dcClient(this)
 //    CMemDC dcMem(&dcClient);
-//	  CBitmap* pOldBitmap = dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
+//	  dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
 //    CPen* pOldPen = CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
 //	  CMemDC.MoveTo(0, 0);
 //    CMemDC.LineTo(50, 50);
@@ -91,7 +91,7 @@
 //  {
 //	  CClientDC dcClient(this)
 //    CMemDC CMemDC(&dcClient);
-//	  CBitmap* pOldBitmap = dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
+//	  dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
 //    CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
 //    CPen* pOldPen = CMemDC.SelectObject(&MyPen);
 //	  CMemDC.MoveTo(0, 0);
@@ -439,50 +439,52 @@ namespace Win32xx
 #endif
 
 		// Create and Select Bitmaps
-		HBITMAP CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
-		HBITMAP CreateCompatibleBitmap(CDC* pDC, int cx, int cy);
-		HBITMAP CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+		void CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
+		void CreateCompatibleBitmap(CDC* pDC, int cx, int cy);
+		void CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
+
+		CBitmap DetachBitmap();
 		BITMAP  GetBitmapData() const;
-		CBitmap* LoadBitmap(UINT nID);
-		CBitmap* LoadBitmap(LPCTSTR lpszName);
-		CBitmap* LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
-		CBitmap* LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
-		CBitmap* LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
+		BOOL LoadBitmap(UINT nID);
+		BOOL LoadBitmap(LPCTSTR lpszName);
+		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
+		BOOL LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
+		BOOL LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
 
 #ifndef _WIN32_WCE
-		HBITMAP CreateBitmapIndirect(LPBITMAP pBitmap);
-		HBITMAP CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
+		void CreateBitmapIndirect(LPBITMAP pBitmap);
+		void CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage);
-		HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
+		void CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
 #endif
 
 		// Create and Select Brushes
-		HBRUSH CreatePatternBrush(CBitmap* pBitmap);
-		HBRUSH CreateSolidBrush(COLORREF rbg);
+		void CreatePatternBrush(CBitmap* pBitmap);
+		void CreateSolidBrush(COLORREF rbg);
 		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
-		HBRUSH CreateBrushIndirect(LPLOGBRUSH pLogBrush);
-		HBRUSH CreateHatchBrush(int fnStyle, COLORREF rgb);
-		HBRUSH CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
-		HBRUSH CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
+		void CreateBrushIndirect(LPLOGBRUSH pLogBrush);
+		void CreateHatchBrush(int fnStyle, COLORREF rgb);
+		void CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
+		void CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
 #endif
 
 		// Create and Select Fonts
-		HFONT CreateFontIndirect(LPLOGFONT plf);
+		void CreateFontIndirect(LPLOGFONT plf);
 		LOGFONT GetLogFont() const;
 
 #ifndef _WIN32_WCE
-		HFONT CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
+		void CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
   							DWORD fdwItalic, DWORD fdwUnderline, DWORD fdwStrikeOut, DWORD fdwCharSet,
   							DWORD fdwOutputPrecision, DWORD fdwClipPrecision, DWORD fdwQuality,
   							DWORD fdwPitchAndFamily, LPCTSTR lpszFace);
 #endif
 
 		// Create and Select Pens
-		HPEN CreatePen(int nStyle, int nWidth, COLORREF rgb);
-		HPEN CreatePenIndirect(LPLOGPEN pLogPen);
+		void CreatePen(int nStyle, int nWidth, COLORREF rgb);
+		void CreatePenIndirect(LPLOGPEN pLogPen);
 		LOGPEN GetLogPen() const;
 
 		// Create Select Regions
@@ -2191,7 +2193,7 @@ namespace Win32xx
 	}
 
 	// Bitmap functions
-	inline HBITMAP CDC::CreateCompatibleBitmap(CDC* pDC, int cx, int cy)
+	inline void CDC::CreateCompatibleBitmap(CDC* pDC, int cx, int cy)
 	// Creates a compatible bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
@@ -2200,10 +2202,10 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateCompatibleBitmap(pDC, cx, cy);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap);
+		::SelectObject(m_pData->hDC, *pBitmap);
 	}
 
-	inline HBITMAP CDC::CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
+	inline void CDC::CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
 	// Creates a bitmap and selects it into the device context.
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
@@ -2212,11 +2214,11 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateBitmap(cx, cy, Planes, BitsPerPixel, pvColors);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap);
+		::SelectObject(m_pData->hDC, *pBitmap);
 	}
 
 #ifndef _WIN32_WCE
-	inline HBITMAP CDC::CreateBitmapIndirect (LPBITMAP lpBitmap)
+	inline void CDC::CreateBitmapIndirect (LPBITMAP lpBitmap)
 	// Creates a bitmap and selects it into the device context.
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
@@ -2225,10 +2227,10 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateBitmapIndirect(lpBitmap);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap);
+		::SelectObject(m_pData->hDC, *pBitmap);
 	}
 
-	inline HBITMAP CDC::CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
+	inline void CDC::CreateDIBitmap(CDC* pDC, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi,  UINT fuUsage)
 	// Creates a bitmap and selects it into the device context.
 	// Returns a pointer to the old bitmap selected out of the device context
@@ -2239,11 +2241,11 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateDIBitmap(pDC, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap);
+		::SelectObject(m_pData->hDC, *pBitmap);
 	}
 #endif
 
-	inline HBITMAP CDC::CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+	inline void CDC::CreateDIBSection(CDC* pDC, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset)
 	// Creates a bitmap and selects it into the device context.
 	// Returns a pointer to the old bitmap selected out of the device context
@@ -2254,7 +2256,33 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateDIBSection(pDC, &bmi, iUsage, ppvBits, hSection, dwOffset);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap);
+		::SelectObject(m_pData->hDC, *pBitmap);
+	}
+
+	inline CBitmap CDC::DetachBitmap()
+	// Provides a convenient method of detaching a bitmap from a memory device context.
+	// Returns the CBitmap detached from the DC.
+	// Useage:  CBitmap MyBitmap = MyMemDC.DetachBitmap();
+	{
+		// Create a stock bitmap to replace the current one.
+		CBitmap* pBitmap = new CBitmap;
+		pBitmap->CreateBitmap(1, 1, 1, 1, 0);
+		m_pData->m_vGDIObjects.push_back(pBitmap);
+		
+		// Select our new stock bitmap into the device context
+		HBITMAP hBitmap = (HBITMAP)::SelectObject(*this, *pBitmap);
+
+		// Detach the bitmap from our internally managed GDIObjects
+		std::vector<GDIPtr>::iterator it;
+		for (it = m_pData->m_vGDIObjects.begin(); it < m_pData->m_vGDIObjects.end(); ++it)
+		{
+			if((*it)->GetHandle() == hBitmap)
+				(*it)->Detach();
+		}
+
+		// Create a local CBitmap. We can return this by value because it is reference counted
+		CBitmap Bitmap(hBitmap);
+		return Bitmap;
 	}
 
 	inline void CDC::Destroy()
@@ -2281,8 +2309,6 @@ namespace Win32xx
 				m_pData->bRemoveHDC = TRUE;
 			}
 		}
-
-	//	RemoveFromMap();
 	}
 
 	inline BITMAP CDC::GetBitmapData() const
@@ -2296,13 +2322,13 @@ namespace Win32xx
 		return bm;
 	}
 
-	inline CBitmap* CDC::LoadBitmap(UINT nID)
+	inline BOOL CDC::LoadBitmap(UINT nID)
 	// Loads a bitmap from the resource and selects it into the device context
 	{
 		return LoadBitmap(MAKEINTRESOURCE(nID));
 	}
 
-	inline CBitmap* CDC::LoadBitmap(LPCTSTR lpszName)
+	inline BOOL CDC::LoadBitmap(LPCTSTR lpszName)
 	// Loads a bitmap from the resource and selects it into the device context
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
@@ -2311,18 +2337,21 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		BOOL bResult = pBitmap->LoadBitmap(lpszName);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
+	
+		if (bResult)
+			::SelectObject(*this, *pBitmap);
 
-		return bResult? SelectObject(pBitmap) : NULL;
+		return bResult;
 	}
 
-	inline CBitmap* CDC::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
+	inline BOOL CDC::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
 	// Loads a bitmap from the resource and selects it into the device context
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
 		return LoadImage(nID, cxDesired, cyDesired, fuLoad);
 	}
 
-	inline CBitmap* CDC::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
+	inline BOOL CDC::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
 	// Loads a bitmap from the resource and selects it into the device context
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
@@ -2331,10 +2360,14 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		BOOL bResult = pBitmap->LoadImage(lpszName, cxDesired, cyDesired, fuLoad);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return bResult? SelectObject(pBitmap) : NULL;
+
+		if (bResult)
+			::SelectObject(*this, *pBitmap);
+
+		return bResult;
 	}
 
-	inline CBitmap* CDC::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
+	inline BOOL CDC::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	// Loads a predefined system bitmap and selects it into the device context
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
@@ -2343,11 +2376,15 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		BOOL bResult = pBitmap->LoadOEMBitmap(nIDBitmap);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return bResult? SelectObject(pBitmap) : NULL;
+		
+		if (bResult)
+			::SelectObject(*this, *pBitmap);
+
+		return bResult;
 	}
 
 #ifndef _WIN32_WCE
-	inline HBITMAP CDC::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+	inline void CDC::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 	// creates and selects a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
 	// Returns a pointer to the old bitmap selected out of the device context
 	{
@@ -2356,14 +2393,14 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateMappedBitmap(nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		return (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap);;
+		::SelectObject(m_pData->hDC, *pBitmap);;
 	}
 #endif // !_WIN32_WCE
 
 
 	// Brush functions
 #ifndef _WIN32_WCE
-	inline HBRUSH CDC::CreateBrushIndirect(LPLOGBRUSH pLogBrush)
+	inline void CDC::CreateBrushIndirect(LPLOGBRUSH pLogBrush)
 	// Creates the brush and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2372,10 +2409,10 @@ namespace Win32xx
 		CBrush* pBrush = new CBrush;
 		pBrush->CreateBrushIndirect(pLogBrush);
 		m_pData->m_vGDIObjects.push_back(pBrush);
-		return (HBRUSH)::SelectObject(m_pData->hDC, *pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
 	}
 
-	inline HBRUSH CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
+	inline void CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
 	// Creates a brush with the specified hatch pattern and color, and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2384,10 +2421,10 @@ namespace Win32xx
 		CBrush* pBrush = new CBrush;
 		pBrush->CreateHatchBrush(fnStyle, rgb);
 		m_pData->m_vGDIObjects.push_back(pBrush);
-		return (HBRUSH)::SelectObject(m_pData->hDC, *pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
 	}
 
-	inline HBRUSH CDC::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
+	inline void CDC::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
 	// Creates a logical from the specified device-independent bitmap (DIB), and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2396,10 +2433,10 @@ namespace Win32xx
 		CBrush* pBrush = new CBrush;
 		pBrush->CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
 		m_pData->m_vGDIObjects.push_back(pBrush);
-		return (HBRUSH)::SelectObject(m_pData->hDC, *pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
 	}
 	
-	inline HBRUSH CDC::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage)
+	inline void CDC::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage)
 	// Creates a logical from the specified device-independent bitmap (DIB), and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2408,11 +2445,11 @@ namespace Win32xx
 		CBrush* pBrush = new CBrush;
 		pBrush->CreateDIBPatternBrushPt(lpPackedDIB, iUsage);
 		m_pData->m_vGDIObjects.push_back(pBrush);
-		return (HBRUSH)::SelectObject(m_pData->hDC, *pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
 	}
 #endif
 
-	inline HBRUSH CDC::CreatePatternBrush(CBitmap* pBitmap)
+	inline void CDC::CreatePatternBrush(CBitmap* pBitmap)
 	// Creates the brush with the specified pattern, and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2422,10 +2459,10 @@ namespace Win32xx
 		CBrush* pBrush = new CBrush;
 		pBrush->CreatePatternBrush(pBitmap);
 		m_pData->m_vGDIObjects.push_back(pBrush);
-		return (HBRUSH)::SelectObject(m_pData->hDC, *pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
 	}
 
-	inline HBRUSH CDC::CreateSolidBrush(COLORREF rgb)
+	inline void CDC::CreateSolidBrush(COLORREF rgb)
 	// Creates the brush with the specified color, and selects it into the device context.
 	// Returns a pointer to the old brush selected out of the device context.
 	{
@@ -2434,7 +2471,7 @@ namespace Win32xx
 		CBrush* pBrush = new CBrush;
 		pBrush->CreateSolidBrush(rgb);
 		m_pData->m_vGDIObjects.push_back(pBrush);
-		return (HBRUSH)::SelectObject(m_pData->hDC, *pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
 	}
 
 	inline LOGBRUSH CDC::GetLogBrush() const
@@ -2451,7 +2488,7 @@ namespace Win32xx
 
 	// Font functions
 #ifndef _WIN32_WCE
-	inline HFONT CDC::CreateFont (
+	inline void CDC::CreateFont (
 					int nHeight,               // height of font
   					int nWidth,                // average character width
   					int nEscapement,           // angle of escapement
@@ -2479,11 +2516,11 @@ namespace Win32xx
 								fdwOutputPrecision, fdwClipPrecision, fdwQuality,
 								fdwPitchAndFamily, lpszFace);
 		m_pData->m_vGDIObjects.push_back(pFont);
-		return (HFONT)::SelectObject(m_pData->hDC, *pFont);
+		::SelectObject(m_pData->hDC, *pFont);
 	}
 #endif
 
-	inline HFONT CDC::CreateFontIndirect(LPLOGFONT plf)
+	inline void CDC::CreateFontIndirect(LPLOGFONT plf)
 	// Creates a logical font and selects it into the device context.
 	// Returns a pointer to the old font selected out of the device context.
 	{
@@ -2492,7 +2529,7 @@ namespace Win32xx
 		CFont* pFont = new CFont;
 		pFont->CreateFontIndirect(plf);
 		m_pData->m_vGDIObjects.push_back(pFont);
-		return (HFONT)::SelectObject(m_pData->hDC, *pFont);
+		::SelectObject(m_pData->hDC, *pFont);
 	}
 
 	inline LOGFONT CDC::GetLogFont() const
@@ -2507,7 +2544,7 @@ namespace Win32xx
 	}
 
 	// Pen functions
-	inline HPEN CDC::CreatePen (int nStyle, int nWidth, COLORREF rgb)
+	inline void CDC::CreatePen (int nStyle, int nWidth, COLORREF rgb)
 	// Creates the pen and selects it into the device context.
 	// Returns a pointer to the old pen selected out of the device context.
 	{
@@ -2516,10 +2553,10 @@ namespace Win32xx
 		CPen* pPen = new CPen;
 		pPen->CreatePen(nStyle, nWidth, rgb);
 		m_pData->m_vGDIObjects.push_back(pPen);
-		return (HPEN)::SelectObject(m_pData->hDC, *pPen);
+		::SelectObject(m_pData->hDC, *pPen);
 	}
 
-	inline HPEN CDC::CreatePenIndirect (LPLOGPEN pLogPen)
+	inline void CDC::CreatePenIndirect (LPLOGPEN pLogPen)
 	// Creates the pen and selects it into the device context.
 	// Returns a pointer to the old pen selected out of the device context.
 	{
@@ -2528,7 +2565,7 @@ namespace Win32xx
 		CPen* pPen = new CPen;
 		pPen->CreatePenIndirect(pLogPen);
 		m_pData->m_vGDIObjects.push_back(pPen);
-		return (HPEN)::SelectObject(m_pData->hDC, *pPen);
+		::SelectObject(m_pData->hDC, *pPen);
 	}
 
 	inline LOGPEN CDC::GetLogPen() const
@@ -3773,7 +3810,7 @@ namespace Win32xx
 		{
 			CClientDC DesktopDC(NULL);
 			CMemDC MemDC(NULL);
-			HBITMAP hOldBitmap = MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
+			MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
 			CRect rc;
 			rc.SetRect(0, 0, cx, cx);
 
@@ -3809,8 +3846,8 @@ namespace Win32xx
 			}
 
 			// Detach the bitmap so we can use it.
-			HBITMAP hBitmap = (HBITMAP)::SelectObject(MemDC, hOldBitmap);
-			ImageList_AddMasked(himlDisabled, hBitmap, crMask);
+			CBitmap Bitmap = MemDC.DetachBitmap();
+			ImageList_AddMasked(himlDisabled, Bitmap, crMask);
 		}
 
 		return himlDisabled;

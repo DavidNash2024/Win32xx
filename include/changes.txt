@@ -17,7 +17,13 @@ New Features and Enhancements
    - CTooltip
    
 * CString constructors now accept either ANSI or Unicode characters and converts 
-   these to TCHAR as required. 
+   these to TCHAR as required.
+   
+* Extended CDC
+	The CDC::DetachBitmap function has been added. This provides a convenient
+	way of detaching a bitmap from a memory DC by CDC::CreateCompatibleBitmap.
+	The various CDC::CreateXXX functions now return void instead of a pointer
+	to the old GDI object. 
 	
 
 Changes in detail
@@ -29,11 +35,12 @@ Changes in detail
 - Added 	CMonthCalendar
 - Added 	CTooltip
 
-- Added		wndTop						a special CWnd for use with SetWindowPos
-- Added		wndTopMost					a special CWnd for use with SetWindowPos
-- Added		wndNoTopMost				a special CWnd for use with SetWindowPos
-- Added		wndBottom					a special CWnd for use with SetWindowPos
+- Added		wndTop					a special CWnd for use with SetWindowPos
+- Added		wndTopMost				a special CWnd for use with SetWindowPos
+- Added		wndNoTopMost			a special CWnd for use with SetWindowPos
+- Added		wndBottom				a special CWnd for use with SetWindowPos
 
+- Added     CDC::DetachBitmap
 - Added 	CGDIObject::DeleteObject
 - Added 	CString::CString(LPCSTR pszText);
 - Added 	CString::CString(LPCWSTR pszText);
@@ -77,35 +84,38 @@ Changes in detail
 - Added 	CWebBrowser::SetVisible
 - Added 	CWebBrowser::SetWidth
 - Added 	CWebBrowser::Stop
-- Modified  CComboBoxEx::GetEditCtrl 	now returns CEdit*
-- Modified  CDC::CreateBitmap			now returns HBITMAP
-- Modified  CDC::CreateCompatibleBitmap now returns HBITMAP
-- Modified  CDC::CreateDIBSection       now returns HBITMAP
-- Modified  CDC::CreateBitmapIndirect   now returns HBITMAP
-- Modified  CDC::CreateDIBitmap         now returns HBITMAP
-- Modified  CDC::CreateMappedBitmap     now returns HBITMAP
-- Modified  CDC::CreatePatternBrush     now returns HBRUSH
-- Modified  CDC::CreateSolidBrush       now returns HBRUSH
-- Modified  CDC::CreateBrushIndirect    now returns HBRUSH
-- Modified  CDC::CreateHatchBrush       now returns HBRUSH
-- Modified  CDC::CreateDIBPatternBrush  now returns HBRUSH
-- Modified  CDC::CreateDIBPatternBrushPt now returns HBRUSH
-- Modified  CDC::CreateFontIndirect     now returns HFONT
-- Modified  CDC::CreateFont             now returns HFONT
-- Modified  CDC::CreatePen              now returns HPEN
-- Modified  CDC::CreatePenIndirect      now returns HPEN
-- Modified  CListView::GetEditCtrl      now returns CEdit*
-- Modified  CListView::GetHeader		now returns CHeader*
-- Modified  CListView::GetToolTips      now returns CToolTip*
-- Modified  CListView::SetToolTips      now accepts CToolTip*
-- Modified  CListView::EditLabel		now returns CEdit*
-- Modified  CRebar::GetToolTips         now returns CToolTip*
-- Modified  CToolBar::GetToolTips		now returns CToolTip*
-- Modified  CToolBar::SetToolTips       now accepts CToolTip*
-- Modified  CTreeView::GetEditCtrl      now returns CEdit*
-- Modified  CTreeView::GetToolTips      now returns CToolTip*
-- Modified  CTreeView::SetToolTips      now accepts CToolTip*
-- Modified  CWnd::SetWindowPos			now uses CWnd* for first arguement
+- Modified  CComboBoxEx::GetEditCtrl 		now returns CEdit*
+- Modified  CDC::CreateBitmap				now returns void
+- Modified  CDC::CreateCompatibleBitmap 	now returns void
+- Modified  CDC::CreateDIBSection       	now returns void
+- Modified  CDC::CreateBitmapIndirect   	now returns void
+- Modified  CDC::CreateDIBitmap         	now returns void
+- Modified  CDC::CreateMappedBitmap     	now returns void
+- Modified  CDC::CreatePatternBrush     	now returns void
+- Modified  CDC::CreateSolidBrush       	now returns void
+- Modified  CDC::CreateBrushIndirect    	now returns void
+- Modified  CDC::CreateHatchBrush       	now returns void
+- Modified  CDC::CreateDIBPatternBrush  	now returns void
+- Modified  CDC::CreateDIBPatternBrushPt 	now returns void
+- Modified  CDC::CreateFontIndirect     	now returns void
+- Modified  CDC::CreateFont             	now returns void
+- Modified  CDC::CreatePen              	now returns void
+- Modified  CDC::CreatePenIndirect      	now returns void
+- Modified  CDC::LoadBitmap 				now returns BOOL
+- Modified  CDC::LoadImage              	now returns BOOL
+- Modified  CDC::LoadOEMBitmap          	now returns BOOL
+- Modified  CListView::GetEditCtrl      	now returns CEdit*
+- Modified  CListView::GetHeader			now returns CHeader*
+- Modified  CListView::GetToolTips      	now returns CToolTip*
+- Modified  CListView::SetToolTips      	now accepts CToolTip*
+- Modified  CListView::EditLabel			now returns CEdit*
+- Modified  CRebar::GetToolTips         	now returns CToolTip*
+- Modified  CToolBar::GetToolTips			now returns CToolTip*
+- Modified  CToolBar::SetToolTips       	now accepts CToolTip*
+- Modified  CTreeView::GetEditCtrl      	now returns CEdit*
+- Modified  CTreeView::GetToolTips      	now returns CToolTip*
+- Modified  CTreeView::SetToolTips      	now accepts CToolTip*
+- Modified  CWnd::SetWindowPos				now uses CWnd* for first argument
 - Removed 	CString::b_str
 - Removed 	CString(LPCTSTR pszText);
 - Removed 	CString::operator += (LPCTSTR szText);

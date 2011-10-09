@@ -223,6 +223,5 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 
 	// Make a second copy of the bitmap
 	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, &Dest1DC, 0, 0, SRCCOPY);
-
 }
 
