@@ -252,8 +252,8 @@ namespace Win32xx
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolBar();
-		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis, CDC& DrawDC);
-		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, BOOL bDisabled);
+		virtual void DrawCheckmark(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, int BarWidth);
+		virtual void DrawMenuIcon(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, int BarWidth, BOOL bDisabled);
 		virtual void DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
@@ -304,7 +304,6 @@ namespace Win32xx
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
 		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		BOOL m_bUseToolBar;					// set to TRUE if the toolbar is used
-		BOOL m_bUseCustomDraw;				// set to TRUE to perform custom drawing on menu items
 		BOOL m_bShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
 		BOOL m_bShowToolBar;				// A flag to indicate if the ToolBar should be displayed
 		MenuTheme m_ThemeMenu;				// Theme structure for popup menus
@@ -1368,7 +1367,7 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_tsStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE), m_bUseCustomDraw(TRUE),
+		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
 						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL), m_himlMenuDis(NULL),
 						m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
@@ -1651,7 +1650,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis, CDC& DrawDC)
+	inline void CFrame::DrawCheckmark(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, int BarWidth)
 	// Draws the checkmark or radiocheck transparently
 	{
 		CRect rc = pdis->rcItem;
@@ -1662,7 +1661,7 @@ namespace Win32xx
 		// Draw the checkmark's background rectangle first
 		int Iconx = 16, Icony = 16;
 		if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		int BarWidth = Iconx + 8;
+	//	int BarWidth = Iconx + 8;
 		int left = (BarWidth - Iconx)/2;
 		int top = rc.top + (rc.Height() - Icony)/2;
 		rcBk.SetRect(left, top, left + Iconx, top + Icony);
@@ -1716,7 +1715,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, BOOL bDisabled)
+	inline void CFrame::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, CDC& DrawDC, int BarWidth, BOOL bDisabled)
 	{
 		if (!m_himlMenu)
 			return;
@@ -1724,7 +1723,7 @@ namespace Win32xx
 		int Iconx;
 		int Icony;
 		ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		int BarWidth = Iconx + 8;
+	//	int BarWidth = Iconx + 8;
 
 		// get the drawing rectangle
 		CRect rc = pdis->rcItem;
@@ -2101,8 +2100,8 @@ namespace Win32xx
 		}
 		else
 		{
-			::CheckMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-			::EnableMenuItem(GetFrameMenu(), IDW_VIEW_TOOLBAR, MF_GRAYED);
+			GetFrameMenu().CheckMenuItem(IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
 
 		// Create the status bar
@@ -2141,7 +2140,7 @@ namespace Win32xx
 
 		CRect rc = pdis->rcItem;
 		ItemData* pmd = (ItemData*)pdis->itemData;
-		CDC* pDrawDC = FromHandle(pdis->hDC);
+		CDC DrawDC(pdis->hDC);
 		MenuTheme tm = GetMenuTheme();
 
 		int Iconx = 16;
@@ -2154,7 +2153,7 @@ namespace Win32xx
 		{
 			CRect rcBar = rc;
 			rcBar.right = BarWidth;
-			pDrawDC->GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
+			DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
 		}
 
 		if (pmd->fType & MFT_SEPARATOR)
@@ -2163,12 +2162,12 @@ namespace Win32xx
 			CRect rcSep = rc;
 			rcSep.left = BarWidth;
 			if (tm.UseThemes)
-				pDrawDC->SolidFill(RGB(255,255,255), rcSep);
+				DrawDC.SolidFill(RGB(255,255,255), rcSep);
 			else
-				pDrawDC->SolidFill(GetSysColor(COLOR_MENU), rcSep);
+				DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcSep);
 			rcSep.top += (rc.bottom - rc.top)/2;
 			rcSep.left = BarWidth + 2;
-			pDrawDC->DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
+			DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
 		}
 		else
 		{
@@ -2183,55 +2182,56 @@ namespace Win32xx
 				// draw selected item background
 				if (tm.UseThemes)
 				{
-					pDrawDC->CreateSolidBrush(tm.clrHot1);
-					pDrawDC->CreatePen(PS_SOLID, 1, tm.clrOutline);
-					pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+					DrawDC.CreateSolidBrush(tm.clrHot1);
+					DrawDC.CreatePen(PS_SOLID, 1, tm.clrOutline);
+					DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 				}
 				else
-					pDrawDC->SolidFill(GetSysColor(COLOR_HIGHLIGHT), rcDraw);
+					DrawDC.SolidFill(GetSysColor(COLOR_HIGHLIGHT), rcDraw);
 			}
 			else
 			{
 				// draw non-selected item background
 				rcDraw.left = BarWidth;
 				if (tm.UseThemes)
-					pDrawDC->SolidFill(RGB(255,255,255), rcDraw);
+					DrawDC.SolidFill(RGB(255,255,255), rcDraw);
 				else
-					pDrawDC->SolidFill(GetSysColor(COLOR_MENU), rcDraw);
+					DrawDC.SolidFill(GetSysColor(COLOR_MENU), rcDraw);
 			}
 
 			if (bChecked)
-				DrawCheckmark(pdis, *pDrawDC);
+				DrawCheckmark(pdis, DrawDC, BarWidth);
 			else
-				DrawMenuIcon(pdis, *pDrawDC, bDisabled);
+				DrawMenuIcon(pdis, DrawDC, BarWidth, bDisabled);
 
 			// Calculate the text rect size
-			rc.left  = rc.bottom - rc.top + 2;
+			CRect rcText = rc;
+			rcText.left = BarWidth;
 			if (_tcschr(pmd->GetItemText(), _T('\t')))
-				rc.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
+				rcText.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
 
 			// Draw the text
-			int iMode = pDrawDC->SetBkMode(TRANSPARENT);
+			int iMode = DrawDC.SetBkMode(TRANSPARENT);
 			COLORREF colorText;
 			if (tm.UseThemes)
 			{
-				rc.left += 8;
+				rcText.left += 8;
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 			}
 			else
 				colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : bSelected ? COLOR_HIGHLIGHTTEXT : COLOR_MENUTEXT);
 
-			DrawMenuText(*pDrawDC, pmd->GetItemText(), rc, colorText);
-			pDrawDC->SetBkMode(iMode); 
+			DrawMenuText(DrawDC, pmd->GetItemText(), rcText, colorText);
+			DrawDC.SetBkMode(iMode); 
 		}
 
-		pDrawDC->Detach();	// Optional, deletes GDI objects sooner
+		DrawDC.Detach();
 		return TRUE;
 	}
 
 	inline void CFrame::OnExitMenuLoop()
 	{
-		if (m_bUseCustomDraw)
+		if (m_bUseThemes)
 		{
 			for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 			{
@@ -2273,7 +2273,7 @@ namespace Win32xx
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) return;
 
-		if (m_bUseCustomDraw)
+		if (m_bUseThemes)
 		{
 			CMenu* pMenu = FromHandle((HMENU)wParam);
 
@@ -2356,7 +2356,7 @@ namespace Win32xx
 			int Icony = 16;
 			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
 
-			pmis->itemHeight = 2+ MAX(MAX(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
+			pmis->itemHeight = 2 + MAX(MAX(size.cy, GetSystemMetrics(SM_CYMENU)-2), Icony+2);
 			pmis->itemWidth = size.cx + MAX(::GetSystemMetrics(SM_CXMENUSIZE), Iconx+2);
 
 			// Allow extra width if the text includes a tab
