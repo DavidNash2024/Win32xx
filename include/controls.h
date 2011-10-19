@@ -462,6 +462,11 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
+		virtual void PreCreate(CREATESTRUCT &cs) 
+		{ 
+			cs.dwExStyle = WS_EX_TOOLWINDOW; 
+			cs.style = WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP;
+		}
 
 	private:
 		void LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT nIDTool) const;
@@ -1895,7 +1900,7 @@ namespace Win32xx
 		if (nIDTool == 0)
 		{
 			ti.hwnd = ::GetParent(hWnd);
-			ti.uFlags = TTF_IDISHWND;
+			ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 			ti.uId = (UINT)hWnd;
 		}
 		else
@@ -1950,6 +1955,7 @@ namespace Win32xx
 
 	inline void CToolTip::SetTipBkColor(COLORREF clr)
 	// Sets the background color in a ToolTip window.
+	// Ignored when XP themes are active.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTIPBKCOLOR, clr, 0);
@@ -1957,6 +1963,7 @@ namespace Win32xx
 
 	inline void CToolTip::SetTipTextColor(COLORREF clr)
 	// Sets the text color in a ToolTip window.
+	// Ignored when XP themes are active.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTIPTEXTCOLOR, clr, 0);
