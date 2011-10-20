@@ -35,13 +35,10 @@ INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	m_Resizer.HandleMessage(uMsg, wParam, lParam);
 
-/*	switch (uMsg)
-	{
-	case WM_SIZE:
-		m_Resizer.RecalcLayout();
-		break;
-
-	} */
+//	switch (uMsg)
+//	{
+//		Add case statements for each messages to be handled here
+//	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -113,18 +110,18 @@ BOOL CFormView::OnInitDialog()
 	// Put some text in the list box
 	for (int i = 0 ; i < 8 ; i++) 
 	{
-		m_ListBox.SendMessage(LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+		m_ListBox.AddString(_T("List Box"));
 	}
 
 	// Set initial button states
 	BOOL bCheck = GetDoc().GetCheckA();
-	m_CheckA.SendMessage(BM_SETCHECK, bCheck, 0);
+	m_CheckA.SetCheck(bCheck);
 
 	bCheck = GetDoc().GetCheckB();
-	m_CheckB.SendMessage(BM_SETCHECK, bCheck, 0);
+	m_CheckB.SetCheck(bCheck);
 
 	bCheck = GetDoc().GetCheckC();
-	m_CheckC.SendMessage(BM_SETCHECK, bCheck, 0);
+	m_CheckC.SetCheck(bCheck);
 
 	UINT curRadio = GetDoc().GetRadio();
 	OnRangeOfIds_Radio(curRadio);

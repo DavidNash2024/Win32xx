@@ -293,6 +293,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\stdcontrols.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>

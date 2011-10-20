@@ -83,8 +83,9 @@ BOOL CMyDialog::OnInitDialog()
 	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
+	AttachItem(IDC_LIST1, m_ListBox);
 	for (int i = 0 ; i < 8 ; i++)
-		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+		m_ListBox.AddString(_T("List Box"));
 
 	// Turn our button into a MyButton object
 	AttachItem(IDC_BUTTON2, m_Button);

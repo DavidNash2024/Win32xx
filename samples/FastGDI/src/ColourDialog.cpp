@@ -108,11 +108,11 @@ void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	wsprintf(Text, _T("%d\0"), nPos);
 
 	if ((HWND)lParam == m_RedSlider.GetHwnd())
-		SendMessage(m_RedEdit.GetHwnd(), WM_SETTEXT, 0, (LPARAM)&Text);
+		m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
 	else if ((HWND)lParam == m_GreenSlider.GetHwnd())
-		SendMessage(m_GreenEdit.GetHwnd(), WM_SETTEXT, 0, (LPARAM)&Text);
+		m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
 	else if ((HWND)lParam == m_BlueSlider.GetHwnd())
-		SendMessage(m_BlueEdit.GetHwnd(), WM_SETTEXT, 0, (LPARAM)&Text);
+		m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
 
 	// Store the colour values
 	m_cRed   = m_RedSlider.SendMessage(TBM_GETPOS);
@@ -155,7 +155,7 @@ void CColourDialog::OnPaintPreview()
 
 	// Get the size of the destination display area
 	CRect rcView = m_Preview.GetClientRect();
-	::MapWindowPoints(m_Preview.GetHwnd(), m_hWnd, (LPPOINT)&rcView, 2);
+	m_Preview.MapWindowPoints(this, rcView);
 
 	int nLeftDest;
 	int nTopDest;

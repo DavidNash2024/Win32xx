@@ -37,8 +37,8 @@ void CMainWindow::OnCreate()
 		// Create the Test Window and store the CTestWindow pointer
 		CTestWindow* pTestWin = new CTestWindow(i);
 
-		TCHAR str[80];
-		wsprintf(str, _T("Thread %d started\n"), i);
+		CString str;
+		str.Format( _T("Thread %d started\n"), i );
 		TRACE(str);
 
 		m_vTestWnd.push_back(pTestWin);
@@ -53,8 +53,8 @@ void CMainWindow::OnCreate()
 
 void CMainWindow::OnAllWindowsCreated()
 {
-	TCHAR str[80];
-	wsprintf(str, _T("%d Test windows created in seperate threads\n"), m_nTestWin);
+	CString str;
+	str.Format( _T("%d Test windows created in seperate threads\n"), m_nTestWin );
 	TRACE(str);
 }
 
@@ -90,9 +90,9 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_WINDOWCREATED:
 		{
 			// Message recieved when a test window is created
-			TCHAR str[80];
+			CString str;
 			++m_nWindowsCreated;
-			wsprintf(str, _T("Created Window %d\n"), m_nWindowsCreated);
+			str.Format( _T("Created Window %d\n"), m_nWindowsCreated );
 			TRACE(str);
 			if (m_nWindowsCreated == m_nTestWin)
 				OnAllWindowsCreated();

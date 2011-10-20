@@ -69,12 +69,12 @@ void CMainWindow::OnSize()
 
 void CMainWindow::OnAllWindowsCreated()
 {
-	TCHAR str[80];
-	wsprintf(str, _T("%d  Windows Created"), m_nTestWindows);
+	CString str;
+	str.Format(_T("%d  Windows Created"), m_nTestWindows);
 	SendText(str);
 	SendText(_T("Ready to run performance test"));
 
-	int nResult = ::MessageBox(m_hWnd, _T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);
+	int nResult = MessageBox(_T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);
 	if (nResult != IDOK) return;
 
 	PerformanceTest();
@@ -83,7 +83,7 @@ void CMainWindow::OnAllWindowsCreated()
 	nResult = IDYES;
 	while(nResult == IDYES)
 	{
-		nResult = ::MessageBox(m_hWnd, _T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
+		nResult = MessageBox(_T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
 		if (nResult != IDYES) break;
 
 		PerformanceTest();
@@ -97,8 +97,8 @@ void CMainWindow::PerformanceTest()
 	int nMessages = 0;
 
 	SendText(_T(""));
-	TCHAR str[80];
-	wsprintf(str, _T("Sending %d  Messages"), m_nTestMessages);
+	CString str;
+	str.Format(str, _T("Sending %d  Messages"), m_nTestMessages);
 	SendText(str);
 
 	// Choose a Window handle(HWND) to send the messages to
@@ -116,10 +116,10 @@ void CMainWindow::PerformanceTest()
 	DWORD mSeconds = tEnd - tStart;
 
 	// Display the results
-	wsprintf(str, _T("%d milliseconds to process %d messages"), mSeconds, m_nTestMessages);
+	str.Format(_T("%d milliseconds to process %d messages"), mSeconds, m_nTestMessages);
 	SendText(str);
 
-	wsprintf(str, _T("%d total messages sent\n"), lr);
+	str.Format(_T("%d total messages sent\n"), lr);
 	TRACE(str);
 
 	MessageBox(str, _T("Info"), MB_OK);

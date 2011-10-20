@@ -468,27 +468,32 @@ BOOL CMyListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
 	DWORD dwFileSizeLo;
 	DWORD dwFileSizeHi;
 	DWORDLONG ldwSize;
-	TCHAR szTemp[32];
+	int nMaxSize = 31;
+	CString strPreFormat;
+	CString strPostFormat;
 
 	dwFileSizeLo = ::GetFileSize (hFile, &dwFileSizeHi);
 	ldwSize = ((DWORDLONG) dwFileSizeHi)<<32 | dwFileSizeLo;
-	::wsprintf(szTemp, _T("%d"), ((1023 + ldwSize)>>10));
+	strPreFormat.Format(_T("%d"), ((1023 + ldwSize)>>10));
 
 	//Convert our number string using Locale information
-	::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, szTemp, NULL, lpszSize, 31);
+	::GetNumberFormat(LOCALE_USER_DEFAULT, LOCALE_NOUSEROVERRIDE, strPreFormat, NULL, strPostFormat.GetBuffer(nMaxSize), nMaxSize);
+	strPostFormat.ReleaseBuffer();
 
 	//Get our decimal point character from Locale information
-	TCHAR Decimal;
-	::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, &Decimal, 1);
+	int nBuffLen = ::GetLocaleInfo( LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, NULL, 0 );
+    assert(nBuffLen > 0);    
+	CString Decimal;
+	::GetLocaleInfo(LOCALE_USER_DEFAULT, LOCALE_SDECIMAL, Decimal.GetBuffer(nBuffLen), nBuffLen);
+	Decimal.ReleaseBuffer();
 
 	//Truncate at the "decimal" point
-	int i = 0;
-	while ((lpszSize[i] != Decimal) && (i < ::lstrlen(lpszSize)))
-		i++;
+	int nPos = strPostFormat.Find(Decimal);
+	if (nPos > 0)
+		strPostFormat = strPostFormat.Left(nPos);
 
-	lpszSize[i] = _T('\0');
-	::lstrcat(lpszSize, _T(" KB"));
-
+	strPostFormat += _T(" KB");
+	lstrcpyn(lpszSize, strPostFormat, nMaxSize);
 	return TRUE;
 }
 

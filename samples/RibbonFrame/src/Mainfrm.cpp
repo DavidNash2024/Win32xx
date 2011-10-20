@@ -109,9 +109,9 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 			break;
 		default:
 			{
-				TCHAR t[256];
-				wsprintf(t, _T("Unknown Button %d\n"),nCmdID);
-				TRACE(t);
+				CString str;
+				str.Format(_T("Unknown Button %d\n"),nCmdID);
+				TRACE(str);
 			}
 			break;
 		}

@@ -445,9 +445,9 @@ BOOL CSvrDialog::StartServer()
 
 	// Bind to the socket
 	Append(IDC_EDIT_STATUS, _T("Binding to socket"));
-	TCHAR Text[80];
-	wsprintf(Text, _T("Addr %s, Port %s, type %s"), tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
-	Append(IDC_EDIT_STATUS, Text);
+	CString str;
+	str.Format( _T("Addr %s, Port %s, type %s"), tAddr.c_str(), tPort.c_str(), (m_SocketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
+	Append(IDC_EDIT_STATUS, str);
 
 	int RetVal = m_MainSocket.Bind( tAddr.c_str(), tPort.c_str() );
 	if ( RetVal != 0 )

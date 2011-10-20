@@ -53,13 +53,13 @@ void CMyDialog::SetSlider(int nPos)
 
 void CMyDialog::SetStatic(BOOL IsSlider, int nPos)
 {
-	TCHAR szStatic[80];
+	CString str;
 	if (IsSlider)
-		wsprintf(szStatic, _T("Slider Position %d"), nPos);
+		str.Format(_T("Slider Position %d"), nPos);
 	else
-		wsprintf(szStatic, _T("Scroll Position %d"), nPos);
+		str.Format(_T("Scroll Position %d"), nPos);
 
 	// Set the text in the static control
-	SetDlgItemText(IDC_STATIC2, szStatic);
+	SetDlgItemText(IDC_STATIC2, str);
 }
 

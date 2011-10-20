@@ -26,7 +26,7 @@ void CTestWindow::OnInitialUpdate()
 	CMainWindow& MainWnd = ((CPerformanceApp*)GetApp())->GetMainWnd();
 
 	// Post a message to MainWnd when the window is created. 
-	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
+	MainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
 }
 
 LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -36,8 +36,8 @@ LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CLOSE:
 		{
-			TCHAR str[80];
-			wsprintf(str, _T("Closing test Window #%d\n"), m_nWindow);
+			CString str;
+			str.Format(str, _T("Closing test Window #%d\n"), m_nWindow);
 			TRACE(str);
 		}
 		break;

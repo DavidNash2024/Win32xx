@@ -15,9 +15,9 @@ HWND CTestWindow::Create(CWnd* pParent)
 {
 	UNREFERENCED_PARAMETER(pParent);
 
-	TCHAR szTitle[80];
-	wsprintf(szTitle, _T("Test Window %d"), m_nWindow);
-	return CreateEx(0L, NULL, szTitle, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	CString Title;
+	Title.Format( _T("Test Window %d"), m_nWindow );
+	return CreateEx(0L, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		70 + 20*m_nWindow, 120 + 20*m_nWindow, 300, 200, NULL, NULL);
 }
 
@@ -48,8 +48,8 @@ LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_CLOSE:
 		{
-			TCHAR str[80];
-			wsprintf(str, _T("Closing test Window %d\n"), m_nWindow);
+			CString str;
+			str.Format( _T("Closing test Window %d\n"), m_nWindow );
 			TRACE(str);
 		}
 		break;

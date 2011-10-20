@@ -36,6 +36,7 @@ private:
 	HMODULE m_hInstRichEdit;
 	CMyButton m_Button;
 	CHyperlink m_Hyperlink;
+	CListBox m_ListBox;
 };
 
 #endif //MYDIALOG_H

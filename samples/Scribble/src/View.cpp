@@ -191,8 +191,8 @@ void CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	// hold down the left mouse button and move mouse to draw lines.
 	if ( (wParam & MK_LBUTTON) && (GetCapture() == this) )
 	{
-		TCHAR str[80];
-		::wsprintf(str, TEXT("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+		CString str;
+		str.Format( _T("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) );
 		TRACE(str);
 
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
