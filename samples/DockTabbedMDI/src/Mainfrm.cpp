@@ -109,7 +109,6 @@ void CMainFrame::LoadDefaultMDIs()
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
 	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
-//	pTabbedMDI->AddMDIChild(new CViewBrowser, _T("Browser"), ID_MDI_BROWSER);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);

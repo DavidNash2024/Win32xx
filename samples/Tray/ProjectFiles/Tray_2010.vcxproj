@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -11,7 +11,32 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\controls.h" />
+    <ClInclude Include="..\..\..\include\cstring.h" />
+    <ClInclude Include="..\..\..\include\default_resource.h" />
+    <ClInclude Include="..\..\..\include\dialog.h" />
+    <ClInclude Include="..\..\..\include\docking.h" />
+    <ClInclude Include="..\..\..\include\file.h" />
+    <ClInclude Include="..\..\..\include\frame.h" />
+    <ClInclude Include="..\..\..\include\gdi.h" />
+    <ClInclude Include="..\..\..\include\listview.h" />
+    <ClInclude Include="..\..\..\include\mdi.h" />
+    <ClInclude Include="..\..\..\include\menu.h" />
+    <ClInclude Include="..\..\..\include\propertysheet.h" />
+    <ClInclude Include="..\..\..\include\rebar.h" />
+    <ClInclude Include="..\..\..\include\ribbon.h" />
+    <ClInclude Include="..\..\..\include\shared_ptr.h" />
+    <ClInclude Include="..\..\..\include\socket.h" />
+    <ClInclude Include="..\..\..\include\statusbar.h" />
+    <ClInclude Include="..\..\..\include\stdcontrols.h" />
+    <ClInclude Include="..\..\..\include\tab.h" />
+    <ClInclude Include="..\..\..\include\taskdialog.h" />
+    <ClInclude Include="..\..\..\include\thread.h" />
+    <ClInclude Include="..\..\..\include\toolbar.h" />
+    <ClInclude Include="..\..\..\include\treeview.h" />
+    <ClInclude Include="..\..\..\include\webbrowser.h" />
     <ClInclude Include="..\..\..\include\wincore.h" />
+    <ClInclude Include="..\..\..\include\winutils.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\TrayApp.h" />
     <ClInclude Include="..\src\View.h" />

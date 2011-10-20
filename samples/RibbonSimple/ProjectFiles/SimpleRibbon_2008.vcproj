@@ -253,11 +253,27 @@
 			Name="Win32++"
 			>
 			<File
+				RelativePath="..\..\..\include\controls.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\cstring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\default_resource.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\dialog.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\file.h"
 				>
 			</File>
 			<File
@@ -277,6 +293,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menu.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\propertysheet.h"
 				>
 			</File>
@@ -289,11 +309,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\socket.h"
+				RelativePath="..\..\..\include\shared_ptr.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\splitter.h"
+				RelativePath="..\..\..\include\socket.h"
 				>
 			</File>
 			<File
@@ -301,7 +321,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\stdcontrols.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\tab.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\taskdialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\thread.h"
 				>
 			</File>
 			<File
@@ -313,15 +345,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wcestddef.h"
+				RelativePath="..\..\..\include\webbrowser.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\winutils.h"
 				>
 			</File>
 		</Filter>
