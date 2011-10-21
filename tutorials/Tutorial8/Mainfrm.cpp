@@ -83,7 +83,7 @@ void CMainFrame::OnFileSave()
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_PathName.c_str());
+		m_View.FileSave(m_PathName);
 }
 
 void CMainFrame::OnFileSaveAs()

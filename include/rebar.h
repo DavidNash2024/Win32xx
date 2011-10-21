@@ -40,7 +40,7 @@
 
 #include "wincore.h"
 #include "gdi.h"
-
+#include "controls.h"
 
 namespace Win32xx
 {
