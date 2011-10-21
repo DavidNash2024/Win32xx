@@ -33,7 +33,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_NEW:
 		m_View.ClearPoints();
-		m_PathName = _T("");
+		m_strPathName = _T("");
 		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
@@ -82,12 +82,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_FILE_MRU_FILE5:
 		{
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			tString tsMRUText = GetMRUEntry(nMRUIndex);
+			CString strMRUText = GetMRUEntry(nMRUIndex);
 
-			if (m_View.FileOpen(tsMRUText.c_str()))
-				m_PathName = tsMRUText;
+			if (m_View.FileOpen(strMRUText))
+				m_strPathName = strMRUText;
 			else
-				RemoveMRUEntry(tsMRUText.c_str());
+				RemoveMRUEntry(strMRUText);
 
 			return TRUE;
 		}
@@ -107,20 +107,20 @@ void CMainFrame::OnFileOpen()
 		if (m_View.FileOpen(str))
 		{
 			// Save the filename
-			m_PathName = str;
+			m_strPathName = str;
 			AddMRUEntry(str);
 		}
 		else
-			m_PathName=_T("");
+			m_strPathName=_T("");
 	}
 }
 
 void CMainFrame::OnFileSave()
 {
-	if (m_PathName == _T(""))
+	if (m_strPathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_PathName.c_str());
+		m_View.FileSave(m_strPathName);
 }
 
 void CMainFrame::OnFileSaveAs()
@@ -131,7 +131,7 @@ void CMainFrame::OnFileSaveAs()
 	// Store the PlotPoint data in the file
 	if (!str.IsEmpty())
 	{
-		m_PathName = str;
+		m_strPathName = str;
 
 		// Save the file name
 		m_View.FileSave(str);

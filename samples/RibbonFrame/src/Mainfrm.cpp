@@ -122,12 +122,12 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 
 void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 {
-	tString tsMRUText = GetMRUEntry(nMRUIndex);
+	CString strMRUText = GetMRUEntry(nMRUIndex);
 
-	if (m_View.FileOpen(tsMRUText.c_str()))
-		m_PathName = tsMRUText;
+	if (m_View.FileOpen(strMRUText))
+		m_PathName = strMRUText;
 	else
-		RemoveMRUEntry(tsMRUText.c_str());
+		RemoveMRUEntry(strMRUText);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -226,7 +226,7 @@ void CMainFrame::OnFileSave()
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_PathName.c_str());
+		m_View.FileSave(m_PathName);
 }
 
 void CMainFrame::OnFileSaveAs()

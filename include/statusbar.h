@@ -60,7 +60,7 @@ namespace Win32xx
 		int GetParts();
 		HICON GetPartIcon(int iPart);
 		CRect GetPartRect(int iPart);
-		tString GetPartText(int iPart) const;
+		CString GetPartText(int iPart) const;
 		BOOL IsSimple();
 		BOOL SetPartIcon(int iPart, HICON hIcon);
 		BOOL SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
@@ -122,10 +122,10 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline tString CStatusBar::GetPartText(int iPart) const
+	inline CString CStatusBar::GetPartText(int iPart) const
 	{
 		assert(::IsWindow(m_hWnd));
-		tString PaneText;
+		CString PaneText;
 		
 		// Get size of Text array
 		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));

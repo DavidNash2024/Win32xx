@@ -404,8 +404,8 @@ namespace Win32xx
 	inline HRESULT CRibbonFrame::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
 	{
 		LONG iCurrentFile = 0;
-		std::vector<tString> FileNames = GetMRUEntries();
-		std::vector<tString>::iterator iter;
+		std::vector<CString> FileNames = GetMRUEntries();
+		std::vector<CString>::iterator iter;
 		int iFileCount = FileNames.size();
 		HRESULT hr = E_FAIL;
 		SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
@@ -415,9 +415,9 @@ namespace Win32xx
 		{
 			for (iter = FileNames.begin(); iter < FileNames.end(); ++iter)
 			{
-				tString strCurrentFile = (*iter);
+				CString strCurrentFile = (*iter);
 				WCHAR wszCurrentFile[MAX_PATH] = {0L};
-				lstrcpynW(wszCurrentFile, T2W(strCurrentFile.c_str()), MAX_PATH);
+				lstrcpynW(wszCurrentFile, T2W(strCurrentFile), MAX_PATH);
 				
 				CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
 				m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));

@@ -63,8 +63,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnDraw(CDC* pDC)
 {
 	CRect rc = GetViewRect();
-	tString tsHello = LoadString(IDS_HELLO);
-	pDC->DrawText(tsHello.c_str(), tsHello.length(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	CString strHello = LoadString(IDS_HELLO);
+	pDC->DrawText(strHello, strHello.GetLength(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 

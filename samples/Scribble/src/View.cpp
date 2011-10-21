@@ -109,9 +109,9 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	}
 	else
 	{
-		tString tsErrMsg = _T("Failed to open file ");
-		tsErrMsg += szFilename;
-		::MessageBox (0, tsErrMsg.c_str(), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		CString strErrMsg = _T("Failed to open file ");
+		strErrMsg += szFilename;
+		::MessageBox (0, strErrMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
 	}
 
 	Invalidate();

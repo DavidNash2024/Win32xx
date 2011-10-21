@@ -32,7 +32,7 @@ protected:
 
 private:
 	CView m_View;
-	tString m_PathName;
+	CString m_PathName;
 };
 
 #endif //MAINFRM_H

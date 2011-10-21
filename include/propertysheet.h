@@ -111,7 +111,7 @@ namespace Win32xx
 		CPropertyPage(const CPropertyPage&);				// Disable copy construction
 		CPropertyPage& operator = (const CPropertyPage&);	// Disable assignment operator
 
-		tString m_Title;
+		CString m_Title;
 	};
 
 	class CPropertySheet : public CWnd
@@ -155,7 +155,7 @@ namespace Win32xx
 		void BuildPageArray();
 		static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
 
-		tString m_Title;
+		CString m_Title;
 		std::vector<PropertyPagePtr> m_vPages;	// vector of CPropertyPage
 		std::vector<PROPSHEETPAGE> m_vPSP;		// vector of PROPSHEETPAGE
 		BOOL m_bInitialUpdate;
@@ -181,7 +181,7 @@ namespace Win32xx
 		m_PSP.dwFlags       |= PSP_USECALLBACK;
 		m_PSP.hInstance     = GetApp()->GetResourceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
-		m_PSP.pszTitle      = m_Title.c_str();
+		m_PSP.pszTitle      = m_Title;
 		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
 		m_PSP.lParam        = (LPARAM)this;
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
@@ -544,11 +544,11 @@ namespace Win32xx
 		}
 		else
 		{
-			m_Title.erase();
+			m_Title.Empty();
 			m_PSP.dwFlags &= ~PSP_USETITLE;
 		}
 
-		m_PSP.pszTitle = m_Title.c_str();
+		m_PSP.pszTitle = m_Title;
 	}
 
 	inline void CPropertyPage::SetWizardButtons(DWORD dwFlags) const
@@ -907,9 +907,9 @@ namespace Win32xx
 		if (szTitle)
 			m_Title = szTitle;
 		else
-			m_Title.erase();
+			m_Title.Empty();
 
-		m_PSH.pszCaption = m_Title.c_str();
+		m_PSH.pszCaption = m_Title;
 	}
 
 	inline void CPropertySheet::SetWizardMode(BOOL bWizard)

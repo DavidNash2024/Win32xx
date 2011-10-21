@@ -125,7 +125,7 @@ namespace Win32xx
 
 	private:
 		CCmdBar m_MenuBar;
-		tString m_tsAppName;
+		CString m_strAppName;
 
 #ifdef SHELL_AYGSHELL
 		SHACTIVATEINFO m_sai;
@@ -305,27 +305,16 @@ namespace Win32xx
 	inline void CWceFrame::PreCreate(CREATESTRUCT &cs)
 	{
 		cs.style = WS_VISIBLE;
-		m_tsAppName = _T("Win32++ Application");
+		m_strAppName = _T("Win32++ Application");
 
 		// Choose a unique class name for this app
 		if (LoadString(IDW_MAIN) != _T(""))
 		{
-			m_tsAppName = LoadString(IDW_MAIN);
+			m_strAppName = LoadString(IDW_MAIN);
 		}
 			
-		cs.lpszClass = m_tsAppName.c_str();
+		cs.lpszClass = m_strAppName;
 	}
-
-/*	inline BOOL CWceFrame::PreTranslateMessage(MSG* pMsg)
-	{
-		HACCEL hAccelTable = ::LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
-		{
-			if (TranslateAccelerator(m_hWnd, hAccelTable, pMsg))
-				return TRUE;
-		}
-		return CWnd::PreTranslateMessage(pMsg);
-	} */
 
 	inline void CWceFrame::RecalcLayout()
 	{

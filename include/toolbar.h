@@ -156,7 +156,7 @@ namespace Win32xx
 		CToolBar& operator = (const CToolBar&); // Disable assignment operator
 
 		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for toolbar buttons
-		std::map<tString, int> m_StringMap;	// a map of strings used in SetButtonText
+		std::map<CString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ToolBarTheme m_Theme;				// The theme structure
 		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
@@ -1080,8 +1080,8 @@ namespace Win32xx
 		assert(-1 != iIndex);
 
 		BOOL Succeeded = TRUE;
-		tString sString = szText;
-		std::map<tString, int>::iterator m;
+		CString sString = szText;
+		std::map<CString, int>::iterator m;
 		int iString;
 
 		// Check to see if the string is already added

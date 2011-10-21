@@ -80,7 +80,7 @@ namespace Win32xx
 			CSelectDialog(const CSelectDialog&);				// Disable copy construction
 			CSelectDialog& operator = (const CSelectDialog&); // Disable assignment operator
 
-			std::vector<tString> m_vItems;
+			std::vector<CString> m_vItems;
 			int IDC_LIST;
 
 		};

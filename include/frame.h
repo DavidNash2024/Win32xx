@@ -231,10 +231,10 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
 		CMenu& GetFrameMenu() const					{ return (CMenu&)m_Menu; }
-		std::vector<tString> GetMRUEntries() const	{ return m_vMRUEntries; }
+		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		tString GetRegistryKeyName() const			{ return m_tsKeyName; }
 		CWnd* GetView() const						{ return m_pView; }
-		tString GetMRUEntry(UINT nIndex);
+		CString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme& Theme);
@@ -297,7 +297,7 @@ namespace Win32xx
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
 		};
 
-		tString m_tsStatusText;				// TCHAR std::string for status text
+		CString m_strStatusText;			// TCHAR std::string for status text
         BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseReBar;					// set to TRUE if ReBars are to be used
@@ -317,7 +317,7 @@ namespace Win32xx
 
 		std::vector<ItemDataPtr> m_vMenuItemData;// vector of ItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
-		std::vector<tString> m_vMRUEntries;	// Vector of tStrings for MRU entires
+		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entires
 		CDialog m_AboutDialog;				// Help about dialog
 		CMenuBar m_MenuBar;					// CMenuBar object
 		CReBar m_ReBar;						// CReBar object
@@ -330,7 +330,7 @@ namespace Win32xx
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
 		tString m_tsKeyName;				// TCHAR std::string for Registry key name
-		tString m_tsTooltip;				// TCHAR std::string for tool tips
+		CString m_strTooltip;				// TCHAR std::string for tool tips
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
@@ -1369,7 +1369,7 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_tsStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
+	inline CFrame::CFrame() : m_strStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
 						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL), m_himlMenuDis(NULL),
 						m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
@@ -1822,17 +1822,17 @@ namespace Win32xx
 		return -1;
 	}
 
-	inline tString CFrame::GetMRUEntry(UINT nIndex)
+	inline CString CFrame::GetMRUEntry(UINT nIndex)
 	{
-		tString tsPathName;
+		CString strPathName;
 		if (nIndex < m_vMRUEntries.size())
 		{
-			tsPathName = m_vMRUEntries[nIndex];
+			strPathName = m_vMRUEntries[nIndex];
 
 			// Now put the selected entry at Index 0
-			AddMRUEntry(tsPathName.c_str());
+			AddMRUEntry(strPathName);
 		}
-		return tsPathName;
+		return strPathName;
 	}
 
 	inline CRect CFrame::GetViewRect() const
@@ -1921,7 +1921,7 @@ namespace Win32xx
 		try
 		{
 			m_nMaxMRU = MIN(nMaxMRU, 16);
-			std::vector<tString> vMRUEntries;
+			std::vector<CString> vMRUEntries;
 			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
 
 			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
@@ -2407,9 +2407,9 @@ namespace Win32xx
 			CMenu* pMenu = FromHandle((HMENU) lParam);
 
 			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
-				m_tsStatusText = LoadString(nID);
+				m_strStatusText = LoadString(nID);
 			else
-				m_tsStatusText = _T("Ready");
+				m_strStatusText = _T("Ready");
 
 			SetStatusText();
 		}
@@ -2461,11 +2461,11 @@ namespace Win32xx
 						int nID = pToolBar->GetCommandID(iIndex);
 						if (nID > 0)
 						{
-							m_tsTooltip = LoadString(nID);
-							lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
+							m_strTooltip = LoadString(nID);
+							lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
 						}
 						else
-							m_tsTooltip = _T("");
+							m_strTooltip = _T("");
 					}
 				}
 			}
@@ -2484,40 +2484,42 @@ namespace Win32xx
 	inline void CFrame::OnSysColorChange()
 	{
 		// Honour theme color changes
-		for (int nBand = 0; nBand <= GetReBar().GetBandCount(); ++nBand)
+		if (GetReBar().IsWindow())
 		{
-			GetReBar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
+			for (int nBand = 0; nBand <= GetReBar().GetBandCount(); ++nBand)
+			{
+				GetReBar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
+			}
 		}
-
+		
 		// Update the status bar font and text
 		NONCLIENTMETRICS nm = {0};
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-	//	LOGFONT lf = nm.lfStatusFont;
-	//	CFont* pFont = FromHandle(CreateFontIndirect(&lf));
-	//	GetStatusBar().SetFont(pFont, TRUE);
 		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
 		GetStatusBar().SetFont(&m_fntStatusBar, TRUE);
 		SetStatusText();
 
-		// Update the MenuBar font and button size
-	//	lf = nm.lfMenuFont;
-	//	pFont = FromHandle(CreateFontIndirect(&lf));
-		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
-		GetMenuBar().SetFont(&m_fntMenuBar, TRUE);
-		GetMenuBar().SetMenu(GetFrameMenu());
+		
+		if (GetMenuBar().IsWindow())
+		{
+			// Update the MenuBar font and button size
+			m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
+			GetMenuBar().SetFont(&m_fntMenuBar, TRUE);
+			GetMenuBar().SetMenu(GetFrameMenu());
 
-		// Update the MenuBar band size
-		int nBand = GetReBar().GetBand(GetMenuBar());
-		REBARBANDINFO rbbi = {0};
-		CClientDC dcMenuBar(&GetMenuBar());
-		dcMenuBar.SelectObject(GetMenuBar().GetFont());
-		CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
-		int MenuBar_Height = sizeMenuBar.cy + 6;
-		rbbi.fMask      = RBBIM_CHILDSIZE;
-		rbbi.cyMinChild = MenuBar_Height;
-		rbbi.cyMaxChild = MenuBar_Height;
-		GetReBar().SetBandInfo(nBand, rbbi);
+			// Update the MenuBar band size
+			int nBand = GetReBar().GetBand(GetMenuBar());
+			REBARBANDINFO rbbi = {0};
+			CClientDC dcMenuBar(&GetMenuBar());
+			dcMenuBar.SelectObject(GetMenuBar().GetFont());
+			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+			int MenuBar_Height = sizeMenuBar.cy + 6;
+			rbbi.fMask      = RBBIM_CHILDSIZE;
+			rbbi.cyMinChild = MenuBar_Height;
+			rbbi.cyMaxChild = MenuBar_Height;
+			GetReBar().SetBandInfo(nBand, rbbi);
+		}
 
 		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
 
@@ -2577,9 +2579,9 @@ namespace Win32xx
 						if (nID != m_nOldID)
 						{
 							if (nID != 0)
-								m_tsStatusText = LoadString(nID);
+								m_strStatusText = LoadString(nID);
 							else
-								m_tsStatusText = _T("Ready");
+								m_strStatusText = _T("Ready");
 
 							if (GetStatusBar().IsWindow())
 								SetStatusText();
@@ -2591,7 +2593,7 @@ namespace Win32xx
 				{
 					if (m_nOldID != -1)
 					{
-						m_tsStatusText = _T("Ready");
+						m_strStatusText = _T("Ready");
 						SetStatusText();
 					}
 					m_nOldID = -1;
@@ -2681,7 +2683,7 @@ namespace Win32xx
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	{
-		std::vector<tString>::iterator it;
+		std::vector<CString>::iterator it;
 		for (it = m_vMRUEntries.begin(); it != m_vMRUEntries.end(); ++it)
 		{
 			if ((*it) == szMRUEntry)
@@ -2932,7 +2934,7 @@ namespace Win32xx
 			}
 
 			// Place text in the 1st pane
-			GetStatusBar().SetPartText(0, m_tsStatusText.c_str());
+			GetStatusBar().SetPartText(0, m_strStatusText);
 		}
 	}
 
@@ -3198,30 +3200,30 @@ namespace Win32xx
 		if (0 >= m_nMaxMRU) return;
 
 		// Set the text for the MRU Menu
-		tString tsMRUArray[16];
+		CString strMRUArray[16];
 		UINT MaxMRUArrayIndex = 0;
 		if (m_vMRUEntries.size() > 0)
 		{
 			for (UINT n = 0; ((n < m_vMRUEntries.size()) && (n <= m_nMaxMRU)); ++n)
 			{
-				tsMRUArray[n] = m_vMRUEntries[n];
-				if (tsMRUArray[n].length() > MAX_MENU_STRING - 10)
+				strMRUArray[n] = m_vMRUEntries[n];
+				if (strMRUArray[n].GetLength() > MAX_MENU_STRING - 10)
 				{
 					// Truncate the string if its too long
-					tsMRUArray[n].erase(0, tsMRUArray[n].length() - MAX_MENU_STRING +10);
-					tsMRUArray[n] = _T("... ") + tsMRUArray[n];
+					strMRUArray[n].Delete(0, strMRUArray[n].GetLength() - MAX_MENU_STRING +10);
+					strMRUArray[n] = _T("... ") + strMRUArray[n];
 				}
 
 				// Prefix the string with its number
 				TCHAR tVal[5];
 				wsprintf(tVal, _T("%d "), n+1);
-				tsMRUArray[n] = tVal + tsMRUArray[n];
+				strMRUArray[n] = tVal + strMRUArray[n];
 				MaxMRUArrayIndex = n;
 			}
 		}
 		else
 		{
-			tsMRUArray[0] = _T("Recent Files");
+			strMRUArray[0] = _T("Recent Files");
 		}
 
 		// Set MRU menu items
@@ -3247,7 +3249,7 @@ namespace Win32xx
 				mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
 				mii.fType = MFT_STRING;
 				mii.wID = IDW_FILE_MRU_FILE1 + index;
-				mii.dwTypeData = (LPTSTR)tsMRUArray[index].c_str();
+				mii.dwTypeData = (LPTSTR)strMRUArray[index].c_str();
 
 				BOOL bResult;
 				if (index == MaxMRUIndex)

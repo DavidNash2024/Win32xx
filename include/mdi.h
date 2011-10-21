@@ -250,17 +250,17 @@ namespace Win32xx
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
 				{
-					tString tsMenuItem ( (*v)->GetWindowText() );
+					CString strMenuItem ( (*v)->GetWindowText() );
 
-					if (tsMenuItem.length() > MAX_MENU_STRING -10)
+					if (strMenuItem.GetLength() > MAX_MENU_STRING -10)
 					{
 						// Truncate the string if its too long
-						tsMenuItem.erase(tsMenuItem.length() - MAX_MENU_STRING +10);
-						tsMenuItem += _T(" ...");
+						strMenuItem.Delete(strMenuItem.GetLength() - MAX_MENU_STRING +10);
+						strMenuItem += _T(" ...");
 					}
 
 					TCHAR szMenuString[MAX_MENU_STRING+1];
-					wsprintf(szMenuString, _T("&%d %s"), nWindow+1, tsMenuItem.c_str());
+					wsprintf(szMenuString, _T("&%d %s"), nWindow+1, strMenuItem.c_str());
 
 					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szMenuString);
 

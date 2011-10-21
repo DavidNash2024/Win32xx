@@ -32,7 +32,7 @@ private:
 	};
 
 	CView m_View;
-	tString m_PathName;
+	CString m_strPathName;
 
 };
 

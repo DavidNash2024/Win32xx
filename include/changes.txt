@@ -110,11 +110,13 @@ Changes in detail
 - Modified  CDC::LoadImage              	now returns BOOL
 - Modified  CDC::LoadOEMBitmap          	now returns BOOL
 - Modified  CListView::GetEditCtrl      	now returns CEdit*
+- Modified  CListView::GetItemText          now returns CString
 - Modified  CListView::GetHeader			now returns CHeader*
 - Modified  CListView::GetToolTips      	now returns CToolTip*
 - Modified  CListView::SetToolTips      	now accepts CToolTip*
 - Modified  CListView::EditLabel			now returns CEdit*
 - Modified  CRebar::GetToolTips         	now returns CToolTip*
+- Modified  CStatusBar::GetPartText         now returns CString
 - Modified  CToolBar::GetToolTips			now returns CToolTip*
 - Modified  CToolBar::SetToolTips       	now accepts CToolTip*
 - Modified  CTreeView::GetEditCtrl      	now returns CEdit*

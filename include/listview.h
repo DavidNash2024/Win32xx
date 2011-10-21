@@ -75,7 +75,7 @@ namespace Win32xx
 		BOOL GetItemPosition( int iItem, CPoint& pt ) const;
 		BOOL GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
 		UINT GetItemState( int iItem, UINT nMask ) const;
-		tString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
+		CString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
 		int GetNextItem( int iItem, int iFlags ) const;
 		UINT GetNumberOfWorkAreas( ) const;
 		BOOL GetOrigin( CPoint& pt ) const;
@@ -328,14 +328,14 @@ namespace Win32xx
 		return  ListView_GetItemState( m_hWnd, iItem, nMask );
 	}
 
-	inline tString CListView::GetItemText( int iItem, int iSubItem, UINT nTextMax /* = 260 */ ) const
+	inline CString CListView::GetItemText( int iItem, int iSubItem, UINT nTextMax /* = 260 */ ) const
 	// Retrieves the text of a list-view item.
 	// Note: Although the list-view control allows any length string to be stored
 	//       as item text, only the first 260 characters are displayed.
 	{
 		assert(::IsWindow(m_hWnd));
 
-		tString t;
+		CString t;
 		if (nTextMax > 0)
 		{
 			std::vector<TCHAR> vTChar(nTextMax +1, _T('\0'));
