@@ -324,6 +324,8 @@ namespace Win32xx
 		CStatusBar m_StatusBar;				// CStatusBar object
 		CToolBar m_ToolBar;					// CToolBar object
 		CMenu m_Menu;						// handle to the frame menu
+		CFont m_fntMenuBar;					// MenuBar font
+		CFont m_fntStatusBar;				// StatusBar font					
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
@@ -748,6 +750,7 @@ namespace Win32xx
 						// Draw highlight text
 						CFont* pFont = GetFont();
 						::SelectObject(DrawDC, pFont->GetHandle());
+
 						rcRect.bottom += 1;
 						int iMode = DrawDC.SetBkMode(TRANSPARENT);
 						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
@@ -1382,6 +1385,13 @@ namespace Win32xx
 
 		for (int i = 0 ; i < 3 ; ++i)
 			m_OldStatus[i] = _T('\0');
+			
+		NONCLIENTMETRICS nm = {0};
+		nm.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
+		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+
 	}
 
 	inline CFrame::~CFrame()
@@ -2106,6 +2116,7 @@ namespace Win32xx
 
 		// Create the status bar
 		GetStatusBar().Create(this);
+		GetStatusBar().SetFont(&m_fntStatusBar, FALSE);
 		ShowStatusBar(m_bShowStatusBar);
 
 		// Create the view window
@@ -2121,6 +2132,7 @@ namespace Win32xx
 			SetTimer(ID_STATUS_TIMER, 200, NULL);
 
 		// Reposition the child windows
+		OnSysColorChange();
 		RecalcLayout();
 	}
 
@@ -2481,10 +2493,31 @@ namespace Win32xx
 		NONCLIENTMETRICS nm = {0};
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		LOGFONT lf = nm.lfStatusFont;
-		CFont* pFont = FromHandle(CreateFontIndirect(&lf));
-		GetStatusBar().SetFont(pFont, FALSE);
+	//	LOGFONT lf = nm.lfStatusFont;
+	//	CFont* pFont = FromHandle(CreateFontIndirect(&lf));
+	//	GetStatusBar().SetFont(pFont, TRUE);
+		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+		GetStatusBar().SetFont(&m_fntStatusBar, TRUE);
 		SetStatusText();
+
+		// Update the MenuBar font and button size
+	//	lf = nm.lfMenuFont;
+	//	pFont = FromHandle(CreateFontIndirect(&lf));
+		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
+		GetMenuBar().SetFont(&m_fntMenuBar, TRUE);
+		GetMenuBar().SetMenu(GetFrameMenu());
+
+		// Update the MenuBar band size
+		int nBand = GetReBar().GetBand(GetMenuBar());
+		REBARBANDINFO rbbi = {0};
+		CClientDC dcMenuBar(&GetMenuBar());
+		dcMenuBar.SelectObject(GetMenuBar().GetFont());
+		CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+		int MenuBar_Height = sizeMenuBar.cy + 6;
+		rbbi.fMask      = RBBIM_CHILDSIZE;
+		rbbi.cyMinChild = MenuBar_Height;
+		rbbi.cyMaxChild = MenuBar_Height;
+		GetReBar().SetBandInfo(nBand, rbbi);
 
 		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
 
@@ -2953,7 +2986,8 @@ namespace Win32xx
 			case Modern:
 				{
 					ToolBarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-					ReBarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
+				//	ReBarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(233, 236, 250), RGB(244, 247, 252), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
 					GetToolBar().SetToolBarTheme(tt);

@@ -3,6 +3,11 @@ Version 7.3
 
 New Features and Enhancements
 -----------------------------
+* Adjusted the frame's appearance
+	- now honours the current window theme's menu and status fonts.
+	- the frame's appearence changes dynamically to reflect changes to the window theme.
+	- minor adjustment to the rebar theme colours for the "Modern" theme.
+	
 * Extended CWebBrowser
 	The CWebBrower class has been extended to wrap the member functions of 
 	iWebBrowser2. The Browser sample has been updated and now supports
