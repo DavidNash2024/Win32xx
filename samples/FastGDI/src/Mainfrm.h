@@ -35,7 +35,7 @@ protected:
 
 private:
 	CView m_MyView;
-	tString m_PathName;
+	CString m_PathName;
 
 };
 

@@ -18,10 +18,10 @@ CMainWindow::~CMainWindow()
 
 HWND CMainWindow::Create(CWnd* pParent /*= 0*/)
 {
-	tString str = _T("Main Window");
+	CString str = _T("Main Window");
 
 	// Create the main window
-	return CreateEx(WS_EX_TOPMOST, NULL, str.c_str(), WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
 		20 , 50, 400, 300, pParent, NULL);
 }
 

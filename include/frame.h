@@ -232,7 +232,7 @@ namespace Win32xx
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
 		CMenu& GetFrameMenu() const					{ return (CMenu&)m_Menu; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
-		tString GetRegistryKeyName() const			{ return m_tsKeyName; }
+		CString GetRegistryKeyName() const			{ return m_strKeyName; }
 		CWnd* GetView() const						{ return m_pView; }
 		CString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
@@ -329,7 +329,7 @@ namespace Win32xx
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
-		tString m_tsKeyName;				// TCHAR std::string for Registry key name
+		CString m_strKeyName;				// TCHAR std::string for Registry key name
 		CString m_strTooltip;				// TCHAR std::string for tool tips
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
@@ -1914,7 +1914,7 @@ namespace Win32xx
 	{
 		// Load the MRU list from the registry
 
-		assert(!m_tsKeyName.empty()); // KeyName must be set before calling LoadRegistryMRUSettings
+		assert(!m_strKeyName.IsEmpty()); // KeyName must be set before calling LoadRegistryMRUSettings
 		HKEY hKey = NULL;
 		BOOL bRet = FALSE;
 
@@ -1922,9 +1922,9 @@ namespace Win32xx
 		{
 			m_nMaxMRU = MIN(nMaxMRU, 16);
 			std::vector<CString> vMRUEntries;
-			tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+			CString strKey = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
 
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 			{
 				for (UINT i = 0; i < m_nMaxMRU; ++i)
 				{
@@ -1969,15 +1969,15 @@ namespace Win32xx
 	inline BOOL CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		assert (NULL != szKeyName);
-		m_tsKeyName = szKeyName;
+		m_strKeyName = szKeyName;
 
-		tString tsKey = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
+		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
 		HKEY hKey = 0;
 		BOOL bRet = FALSE;
 
 		try
 		{
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey))
+			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 			{
 				DWORD dwType = REG_BINARY;
 				DWORD BufferSize = sizeof(DWORD);
@@ -2699,14 +2699,14 @@ namespace Win32xx
 	inline BOOL CFrame::SaveRegistrySettings()
 	{
 		// Store the window position in the registry
-		if (!m_tsKeyName.empty())
+		if (!m_strKeyName.IsEmpty())
 		{
-			tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Frame Settings");
+			CString strKeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
 			HKEY hKey = NULL;
 
 			try
 			{
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw CWinException(_T("RegCreateKeyEx failed"));
 
 				WINDOWPLACEMENT Wndpl = {0};
@@ -2750,7 +2750,7 @@ namespace Win32xx
 				if (hKey)
 				{
 					// Roll back the registry changes by deleting this subkey
-					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
+					RegDeleteKey(HKEY_CURRENT_USER ,strKeyName);
 					RegCloseKey(hKey);
 				}
 
@@ -2761,23 +2761,23 @@ namespace Win32xx
 			// Store the MRU entries in the registry
 			if (m_nMaxMRU > 0)
 			{
-				tString tsKeyName = _T("Software\\") + m_tsKeyName + _T("\\Recent Files");
+				CString strKeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
 				HKEY hKey = NULL;
 
 				try
 				{
-					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 						throw CWinException(_T("RegCreateKeyEx failed"));
 
 					for (UINT i = 0; i < m_nMaxMRU; ++i)
 					{
 						TCHAR szSubKey[10];
 						wsprintf(szSubKey, _T("File %d\0"), i+1);
-						tString tsPathName;
+						CString strPathName;
 						if (i < m_vMRUEntries.size())
-							tsPathName = m_vMRUEntries[i];
+							strPathName = m_vMRUEntries[i];
 
-						if (ERROR_SUCCESS != RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)tsPathName.c_str(), (1 + lstrlen(tsPathName.c_str()))*sizeof(TCHAR)))
+						if (ERROR_SUCCESS != RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
 							throw CWinException(_T("RegSetValueEx failed"));
 					}
 
@@ -2791,7 +2791,7 @@ namespace Win32xx
 					if (hKey)
 					{
 						// Roll back the registry changes by deleting this subkey
-						RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
+						RegDeleteKey(HKEY_CURRENT_USER ,strKeyName);
 						RegCloseKey(hKey);
 					}
 

@@ -47,7 +47,7 @@ protected:
 	
 private:
 	CRichView m_RichView;
-	tString m_stPathName;
+	CString m_strPathName;
 };
 
 #endif //MAINFRM_H

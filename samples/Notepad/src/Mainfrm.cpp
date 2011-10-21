@@ -16,7 +16,7 @@
 // definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
-	m_stPathName = _T("");
+	m_strPathName = _T("");
 	SetView(m_RichView);
 
 	// Set the registry key name, and load the initial window position
@@ -114,12 +114,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_FILE_MRU_FILE5:
 		{
 			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			tString tsMRUText = GetMRUEntry(nMRUIndex);
+			CString strMRUText = GetMRUEntry(nMRUIndex);
 
-			if (ReadFile(tsMRUText.c_str()))
-				m_stPathName = tsMRUText;
+			if (ReadFile(strMRUText))
+				m_strPathName = strMRUText;
 			else
-				RemoveMRUEntry(tsMRUText.c_str());
+				RemoveMRUEntry(strMRUText);
 
 			SetWindowTitle();
 			return TRUE;
@@ -134,7 +134,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnFileNew()
 {
 	m_RichView.SetWindowText(_T(""));
-	m_stPathName = _T("");
+	m_strPathName = _T("");
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
 	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
@@ -201,7 +201,7 @@ void CMainFrame::OnFilePrint()
 		DOCINFO di;
 		ZeroMemory(&di, sizeof(di));
 		di.cbSize = sizeof(DOCINFO);
-		di.lpszDocName = m_stPathName.c_str();
+		di.lpszDocName = m_strPathName;
 
 		// Do not print to file.
 		di.lpszOutput = NULL;
@@ -299,9 +299,9 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	CFile File;
 	if (!File.Open(szFileName, OPEN_EXISTING))
 	{
-		tString ts = _T("Failed to load:  ");
-		ts += szFileName;
-		::MessageBox(NULL, ts.c_str(), _T("Warning"), MB_ICONWARNING);
+		CString str = _T("Failed to load:  ");
+		str += szFileName;
+		::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
 		return FALSE;
 	}
 
@@ -325,9 +325,9 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 	CFile File;
 	if (!File.Open(szFileName, CREATE_ALWAYS))
 	{
-		tString ts = _T("Failed to write:  ");
-		ts += szFileName;
-		::MessageBox(NULL, ts.c_str(), _T("Warning"), MB_ICONWARNING);
+		CString str = _T("Failed to write:  ");
+		str += szFileName;
+		::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
 		return FALSE;
 	}
 
@@ -364,10 +364,10 @@ void CMainFrame::OnFileOpen()
 
 void CMainFrame::OnFileSave()
 {
-	if (m_stPathName == _T(""))
+	if (m_strPathName == _T(""))
 		OnFileSaveAs();
 	else
-		WriteFile(m_stPathName.c_str());
+		WriteFile(m_strPathName);
 }
 
 void CMainFrame::OnFileSaveAs()
@@ -393,17 +393,17 @@ void CMainFrame::SetFileName(LPCTSTR szFilePathName)
 	int i = lstrlen(szFilePathName)+1;
 	while ((--i > 0) && (szFilePathName[i-1] != _T('\\')));
 
-	m_stPathName = szFilePathName+i;
+	m_strPathName = szFilePathName+i;
 }
 
 void CMainFrame::SetWindowTitle()
 {
-    tString Title;
+    CString Title;
 
-	if (m_stPathName == _T("")) Title = _T("TextEdit - Untitled");
+	if (m_strPathName == _T("")) Title = _T("TextEdit - Untitled");
 
-	else Title = _T("TextEdit - ") + m_stPathName;
-	SetWindowText(Title.c_str());
+	else Title = _T("TextEdit - ") + m_strPathName;
+	SetWindowText(Title);
 }
 
 void CMainFrame::SetupToolBar()

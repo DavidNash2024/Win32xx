@@ -32,10 +32,10 @@ DWORD CFormDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
 void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 {
 	HKEY hKey;
-	tString tsKey = _T("Software\\");
-	tsKey += szKeyName;
-	tsKey += _T("\\Document Settings");
-	if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0,
+	CString strKey = _T("Software\\");
+	strKey += szKeyName;
+	strKey += _T("\\Document Settings");
+	if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0,
 		KEY_READ, &hKey))
 	{
 		m_bCheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
@@ -50,12 +50,12 @@ void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
 void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
 {
 	HKEY hKey;
-	tString tsKey = _T("Software\\");
-	tsKey += szKeyName;
-	tsKey += _T("\\Document Settings");
+	CString strKey = _T("Software\\");
+	strKey += szKeyName;
+	strKey += _T("\\Document Settings");
 
-	RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, NULL,
-		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+	RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
+	REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 	RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_bCheckA, sizeof(BOOL));
 	RegSetValueEx(hKey, _T("CheckB"), 0, REG_DWORD, (LPBYTE)&m_bCheckB, sizeof(BOOL));

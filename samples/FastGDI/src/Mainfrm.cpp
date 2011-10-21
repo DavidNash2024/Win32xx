@@ -119,8 +119,7 @@ void CMainFrame::OnFileNew()
 	m_MyView.Invalidate();
 
 	// Set the caption
-	tString ts = _T("FastGDI");
-	SetWindowText(ts.c_str());
+	SetWindowText(_T("FastGDI"));
 }
 
 void CMainFrame::OnFileOpen()
@@ -154,8 +153,8 @@ void CMainFrame::OnFileOpen()
 		GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 		// Set the caption
-		tString ts = _T("FastGDI - ") + m_PathName;
-		SetWindowText(ts.c_str());
+		CString str = _T("FastGDI - ") + m_PathName;
+		SetWindowText(str);
 	}
 }
 
@@ -164,12 +163,12 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-	tString tsMRUText = GetMRUEntry(nMRUIndex);
+	CString strMRUText = GetMRUEntry(nMRUIndex);
 	CToolBar& TB = GetToolBar();
 
-	if (m_MyView.FileOpen(tsMRUText.c_str()))
+	if (m_MyView.FileOpen(strMRUText))
 	{
-		m_PathName = tsMRUText;
+		m_PathName = strMRUText;
 		TB.EnableButton(IDM_FILE_SAVEAS);
 		TB.EnableButton(IDM_IMAGE_ADJUST);
 
@@ -179,7 +178,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	}
 	else
 	{
-		RemoveMRUEntry(tsMRUText.c_str());
+		RemoveMRUEntry(strMRUText);
 		TB.DisableButton(IDM_FILE_SAVEAS);
 		TB.DisableButton(IDM_IMAGE_ADJUST);
 	}
@@ -196,19 +195,19 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 	// Set the caption
-	tString ts = _T("FastGDI - ") + m_PathName;
-	SetWindowText(ts.c_str());
+	CString str = _T("FastGDI - ") + m_PathName;
+	SetWindowText(str);
 	return TRUE;
 }
 
 void CMainFrame::OnFileSave()
 {
-	if (!m_PathName.empty())
+	if (!m_PathName.IsEmpty())
 	{
-		tString ts = m_PathName + _T("  already exists.\nDo you want to replace it?");
+		CString str = m_PathName + _T("  already exists.\nDo you want to replace it?");
 
-		if (IDYES == MessageBox(ts.c_str(), _T("FileSaveAs"), MB_YESNO | MB_ICONWARNING))
-			m_MyView.FileSave(m_PathName.c_str());
+		if (IDYES == MessageBox(str, _T("FileSaveAs"), MB_YESNO | MB_ICONWARNING))
+			m_MyView.FileSave(m_PathName);
 	}
 }
 
@@ -220,8 +219,8 @@ void CMainFrame::OnFileSaveAs()
 	{
 		// Set the caption
 		m_PathName = str;
-		tString ts = _T("FastGDI - ") + m_PathName;
-		SetWindowText(ts.c_str());
+		CString Title = _T("FastGDI - ") + m_PathName;
+		SetWindowText(Title);
 
 		// Save the file name
 		m_MyView.FileSave(str);

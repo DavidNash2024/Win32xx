@@ -109,6 +109,7 @@ Changes in detail
 - Modified  CDC::LoadBitmap 				now returns BOOL
 - Modified  CDC::LoadImage              	now returns BOOL
 - Modified  CDC::LoadOEMBitmap          	now returns BOOL
+- Modified  CFrame::GetMRUEntry             now returns CString
 - Modified  CListView::GetEditCtrl      	now returns CEdit*
 - Modified  CListView::GetItemText          now returns CString
 - Modified  CListView::GetHeader			now returns CHeader*

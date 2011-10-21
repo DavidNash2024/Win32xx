@@ -133,7 +133,7 @@ namespace Win32xx
 
 		private:
 			CToolBar m_ToolBar;
-			tString m_tsTooltip;
+			CString m_strTooltip;
 			CWnd* m_pView;
 			CWnd* m_pTab;
 		};
@@ -161,7 +161,7 @@ namespace Win32xx
 		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
 		CString& GetDockCaption() const	{ return (CString&)m_csCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
-		LPCTSTR GetTabText() const		{ return m_tsTabText.c_str(); }
+		LPCTSTR GetTabText() const		{ return m_strTabText; }
 		virtual CToolBar& GetToolBar() const	{ return GetViewPage().GetToolBar(); }
 		CWnd* GetView() const			{ return GetViewPage().GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
@@ -169,7 +169,7 @@ namespace Win32xx
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabIcon(int i, HICON hIcon) { CTab::SetTabIcon(i, hIcon); }
-		void SetTabText(LPCTSTR szText) { m_tsTabText = szText; }
+		void SetTabText(LPCTSTR szText) { m_strTabText = szText; }
 		void SetTabText(UINT nTab, LPCTSTR szText);
 		void SetView(CWnd& Wnd);
 
@@ -184,7 +184,7 @@ namespace Win32xx
 
 	private:
 		std::vector<ContainerInfo> m_vContainerInfo;
-		tString m_tsTabText;
+		CString m_strTabText;
 		CString m_csCaption;
 		CViewPage m_ViewPage;
 		int m_iCurrentPage;
@@ -419,9 +419,9 @@ namespace Win32xx
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
 		virtual void Hide();
-		virtual BOOL LoadRegistrySettings(tString tsRegistryKeyName);
+		virtual BOOL LoadRegistrySettings(CString strRegistryKeyName);
 		virtual void RecalcDockLayout();
-		virtual BOOL SaveRegistrySettings(tString tsRegistryKeyName);
+		virtual BOOL SaveRegistrySettings(CString strRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
 		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked);
 		virtual BOOL VerifyDockers();
@@ -2355,19 +2355,19 @@ namespace Win32xx
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline BOOL CDocker::LoadRegistrySettings(tString tsRegistryKeyName)
+	inline BOOL CDocker::LoadRegistrySettings(CString strRegistryKeyName)
 	// Recreates the docker layout based on information stored in the registry.
 	// Assumes the DockAncestor window is already created.
 	{
 		BOOL bResult = FALSE;
 
-		if (0 != tsRegistryKeyName.size())
+		if (!strRegistryKeyName.IsEmpty())
 		{
 			std::vector<DockInfo> vDockList;
 			std::vector<int> vActiveContainers;
-			tString tsKey = _T("Software\\") + tsRegistryKeyName + _T("\\Dock Windows");
+			CString strKey = _T("Software\\") + strRegistryKeyName + _T("\\Dock Windows");
 			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, KEY_READ, &hKey);
+			RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey);
 			if (hKey)
 			{
 				DWORD dwType = REG_BINARY;
@@ -2375,31 +2375,32 @@ namespace Win32xx
 				DockInfo di;
 				int i = 0;
 				TCHAR szNumber[20];
-				tString tsSubKey = _T("DockChild");
-				tsSubKey += _itot(i, szNumber, 10);
+				CString strSubKey = _T("DockChild");
+				strSubKey += _itot(i, szNumber, 10);
 
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&di, &BufferSize))
+				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&di, &BufferSize))
 				{
 					vDockList.push_back(di);
 					i++;
-					tsSubKey = _T("DockChild");
-					tsSubKey += _itot(i, szNumber, 10);
+					strSubKey = _T("DockChild");
+					strSubKey += _itot(i, szNumber, 10);
 				}
 
 				dwType = REG_DWORD;
 				BufferSize = sizeof(int);
 				int nID;
 				i = 0;
-				tsSubKey = _T("ActiveContainer");
-				tsSubKey += _itot(i, szNumber, 10);
+				strSubKey = _T("ActiveContainer");
+				strSubKey += _itot(i, szNumber, 10);
+				
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, tsSubKey.c_str(), NULL, &dwType, (LPBYTE)&nID, &BufferSize))
+				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nID, &BufferSize))
 				{
 					vActiveContainers.push_back(nID);
 					i++;
-					tsSubKey = _T("ActiveContainer");
-					tsSubKey += _itot(i, szNumber, 10);
+					strSubKey = _T("ActiveContainer");
+					strSubKey += _itot(i, szNumber, 10);
 				}
 
 				RegCloseKey(hKey);
@@ -3152,7 +3153,7 @@ namespace Win32xx
 		return vSorted;
 	}
 
-	inline BOOL CDocker::SaveRegistrySettings(tString tsRegistryKeyName)
+	inline BOOL CDocker::SaveRegistrySettings(CString strRegistryKeyName)
 	// Stores the docking configuration in the registry
 	// NOTE: This function assumes that each docker has a unique DockID
 	{
@@ -3162,7 +3163,7 @@ namespace Win32xx
 		std::vector<CDocker*>::iterator iter;
 		std::vector<DockInfo> vDockInfo;
 
-		if (0 != tsRegistryKeyName.size())
+		if (!strRegistryKeyName.IsEmpty())
 		{
 			// Fill the DockInfo vector with the docking information
 			for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
@@ -3178,13 +3179,13 @@ namespace Win32xx
 				vDockInfo.push_back(di);
 			}
 
-			tString tsKeyName = _T("Software\\") + tsRegistryKeyName;
+			CString strKeyName = _T("Software\\") + strRegistryKeyName;
 			HKEY hKey = NULL;
 			HKEY hKeyDock = NULL;
 
 			try
 			{
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, tsKeyName.c_str(), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				RegDeleteKey(hKey, _T("Dock Windows"));
@@ -3196,9 +3197,9 @@ namespace Win32xx
 				{
 					DockInfo di = vDockInfo[u];
 					TCHAR szNumber[16];
-					tString tsSubKey = _T("DockChild");
-					tsSubKey += _itot((int)u, szNumber, 10);
-					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
+					CString strSubKey = _T("DockChild");
+					strSubKey += _itot((int)u, szNumber, 10);
+					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
 						throw (CWinException(_T("RegSetValueEx failed")));
 				}
 
@@ -3211,10 +3212,10 @@ namespace Win32xx
 					if (pContainer && (pContainer == pContainer->GetActiveContainer()))
 					{
 						TCHAR szNumber[20];
-						tString tsSubKey = _T("ActiveContainer");
-						tsSubKey += _itot(i++, szNumber, 10);
+						CString strSubKey = _T("ActiveContainer");
+						strSubKey += _itot(i++, szNumber, 10);
 						int nID = GetDockFromView(pContainer)->GetDockID();
-						if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, tsSubKey.c_str(), 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
+						if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
 							throw (CWinException(_T("RegSetValueEx failed")));
 					}
 				}
@@ -3234,7 +3235,7 @@ namespace Win32xx
 						RegCloseKey(hKeyDock);
 					}
 
-					RegDeleteKey(HKEY_CURRENT_USER ,tsKeyName.c_str());
+					RegDeleteKey(HKEY_CURRENT_USER, strKeyName);
 					RegCloseKey(hKey);
 				}
 
@@ -4133,11 +4134,11 @@ namespace Win32xx
 					int nID = GetToolBar().GetCommandID(iIndex);
 					if (nID > 0)
 					{
-						m_tsTooltip = LoadString(nID);
-						lpDispInfo->lpszText = (LPTSTR)m_tsTooltip.c_str();
+						m_strTooltip = LoadString(nID);
+						lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
 					}
 					else
-						m_tsTooltip = _T("");
+						m_strTooltip = _T("");
 				}
 			}
 			break;

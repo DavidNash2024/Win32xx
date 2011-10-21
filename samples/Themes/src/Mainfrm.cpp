@@ -221,12 +221,11 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	CFrame::LoadRegistrySettings(szKeyName);
 
 	HKEY hKey;
-	tString tsKey = _T("Software\\");
-	tsKey += szKeyName;
-	tsKey += (_T("\\Theme Settings"));
+	CString strKey = _T("Software\\");
+	strKey += szKeyName;
+	strKey += (_T("\\Theme Settings"));
 
-	if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0,
-		KEY_READ, &hKey))
+	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 	{
 		m_nColor = GetRegDwordFromOpenKey(hKey, _T("ColorStyle"));
 		m_bUseThemes = GetRegDwordFromOpenKey(hKey, _T("UseThemes")) & 1;
@@ -569,13 +568,13 @@ BOOL CMainFrame::SaveRegistrySettings()
 		CFrame::SaveRegistrySettings();
 
 		HKEY hKey;
-		tString szKeyName = GetRegistryKeyName();
-		tString tsKey = _T("Software\\");
-		tsKey += szKeyName + (_T("\\Theme Settings"));
+		CString strKeyName = GetRegistryKeyName();
+		CString strKey = _T("Software\\");
+		strKey += strKeyName + (_T("\\Theme Settings"));
 		int nBands = GetReBar().GetBandCount();
 
-		RegCreateKeyEx(HKEY_CURRENT_USER, tsKey.c_str(), 0, NULL,
-			REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
+		RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
+		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
 		// Save the theme settings
 		RegSetValueEx(hKey, _T("ColorStyle"), 0, REG_DWORD, (LPBYTE)&m_nColor, sizeof(DWORD));

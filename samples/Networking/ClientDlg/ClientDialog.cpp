@@ -256,10 +256,10 @@ void CClientDialog::OnStartClient()
 				}
 
 				// Retrieve the IP Address
-				tString tAddr;
+				CString strAddr;
 				if (PF_INET6 == IPfamily)
 				{
-					tAddr = m_EditIP6Address.GetWindowText();
+					strAddr = m_EditIP6Address.GetWindowText();
 				}
 				else
 				{
@@ -267,17 +267,17 @@ void CClientDialog::OnStartClient()
 					m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 					in_addr addr = {0};
 					addr.S_un.S_addr = htonl(dwAddr);
-					tAddr = A2T( inet_ntoa(addr) );
+					strAddr = A2T( inet_ntoa(addr) );
 				}
 
 				// Retrieve the local port number
-				tString tPort = (LPCTSTR)m_EditPort.GetWindowText();
+				CString strPort = m_EditPort.GetWindowText();
 
 				// Temporarily disable the Connect/Disconnect button
-				m_ButtonConnect.EnableWindow( FALSE);
+				m_ButtonConnect.EnableWindow(FALSE);
 
 				// Connect to the server
-				if (0 != m_Client.Connect(tAddr.c_str(), tPort.c_str()) )
+				if (0 != m_Client.Connect(strAddr, strPort) )
 				{
 					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );
@@ -352,7 +352,7 @@ void CClientDialog::OnSend()
 	case SOCK_STREAM:	// for TCP client
 		{
 			CString sSend = GetDlgItemText(IDC_EDIT_SEND);
-			if (SOCKET_ERROR == m_Client.Send(sSend, lstrlen(sSend), 0))
+			if (SOCKET_ERROR == m_Client.Send(sSend, sSend.GetLength(), 0))
 				m_EditStatus.SetWindowText( _T("Send Failed") );
 		}
 		break;
@@ -361,14 +361,14 @@ void CClientDialog::OnSend()
 			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
 			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
-			tString tPort = (LPCTSTR)m_EditPort.GetWindowText();
-			tString tSend = (LPCTSTR)m_EditSend.GetWindowText();
+			CString strPort = m_EditPort.GetWindowText();
+			CString strSend = m_EditSend.GetWindowText();
 
 			// Retrieve the IP Address
-			tString tAddr;
+			CString strAddr;
 			if (PF_INET6 == IPfamily)
 			{
-				tAddr = m_EditIP6Address.GetWindowText();
+				strAddr = m_EditIP6Address.GetWindowText();
 			}
 			else
 			{
@@ -376,10 +376,10 @@ void CClientDialog::OnSend()
 				m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
 				in_addr addr = {0};
 				addr.S_un.S_addr = htonl(dwAddr);
-				tAddr = A2T( inet_ntoa(addr) );
+				strAddr = A2T( inet_ntoa(addr) );
 			}
 
-			if (SOCKET_ERROR == m_Client.SendTo( tSend.c_str(), lstrlen(tSend.c_str()), 0, tAddr.c_str(), tPort.c_str() ))
+			if (SOCKET_ERROR == m_Client.SendTo( strSend, strSend.GetLength(), 0, strAddr, strPort ))
 				m_EditStatus.SetWindowText( _T("SendTo Failed") );
 		}
 		break;
