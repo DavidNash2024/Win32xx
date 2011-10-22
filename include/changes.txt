@@ -9,7 +9,7 @@ New Features and Enhancements
 	- minor adjustment to the rebar theme colours for the "Modern" theme.
 	
 * Extended CWebBrowser
-	The CWebBrower class has been extended to wrap the member functions of 
+	The CWebBrower class has been extended to wrap the member functions of
 	iWebBrowser2. The Browser sample has been updated and now supports
 	Copy/Paste.
 
@@ -17,19 +17,19 @@ New Features and Enhancements
    - CDateTime
    - CHeader
    - CHotKey
-   - CIPAddress   
+   - CIPAddress
    - CMonthCalendar
    - CTooltip
    
-* CString constructors now accept either ANSI or Unicode characters and converts 
+* CString constructors now accept either ANSI or Unicode characters and converts
    these to TCHAR as required.
    
 * Extended CDC
 	The CDC::DetachBitmap function has been added. This provides a convenient
 	way of detaching a bitmap from a memory DC by CDC::CreateCompatibleBitmap.
 	The various CDC::CreateXXX functions now return void instead of a pointer
-	to the old GDI object. 
-	
+	to the old GDI object.
+
 
 Changes in detail
 -----------------
@@ -62,7 +62,7 @@ Changes in detail
 - Added 	CWebBrowser::GetLocationName
 - Added 	CWebBrowser::GetLocationURL
 - Added 	CWebBrowser::GetOffline
-- Added 	CWebBrowser::GetProperty		
+- Added 	CWebBrowser::GetProperty
 - Added 	CWebBrowser::GetReadyState
 - Added 	CWebBrowser::GetRegisterAsBrowser
 - Added 	CWebBrowser::GetTheaterMode
@@ -78,7 +78,7 @@ Changes in detail
 - Added 	CWebBrowser::Navigate2
 - Added 	CWebBrowser::PutProperty
 - Added 	CWebBrowser::Refresh
-- Added 	CWebBrowser::Refresh2		
+- Added 	CWebBrowser::Refresh2
 - Added 	CWebBrowser::SetFullScreen
 - Added 	CWebBrowser::SetHeight
 - Added 	CWebBrowser::SetLeft
@@ -109,7 +109,11 @@ Changes in detail
 - Modified  CDC::LoadBitmap 				now returns BOOL
 - Modified  CDC::LoadImage              	now returns BOOL
 - Modified  CDC::LoadOEMBitmap          	now returns BOOL
+- Modified  CDocker::GetCaption             now returns CString
+- Modified  CDocker::LoadRegistrySettings   now accepts CString
+- Modified  CDocker::SaveRegistrySettings   now accepts CString
 - Modified  CFrame::GetMRUEntry             now returns CString
+- Modified  CFrame::GetRegistryKeyName      now returns CString
 - Modified  CListView::GetEditCtrl      	now returns CEdit*
 - Modified  CListView::GetItemText          now returns CString
 - Modified  CListView::GetHeader			now returns CHeader*

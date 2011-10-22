@@ -372,7 +372,7 @@ namespace Win32xx
 	// Performs a case sensitive comparison of the two strings.
 	{
 		assert(pszText);
-		return m_str.compare(pszText);
+		return _tcscmp(m_str.data(), pszText);
 	}
 
 	inline int CString::CompareNoCase(LPCTSTR pszText) const

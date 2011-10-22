@@ -210,6 +210,7 @@ namespace Win32xx
 
 		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView) const;
+		virtual CString GetThemeName();
 		virtual CRect GetViewRect() const;
 		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
@@ -297,12 +298,11 @@ namespace Win32xx
 			POST_TEXT_GAP   = 16,			// for owner draw menu item
 		};
 
-		CString m_strStatusText;			// TCHAR std::string for status text
+		CString m_strStatusText;			// CString for status text
         BOOL m_bShowIndicatorStatus;		// set to TRUE to see indicators in status bar
 		BOOL m_bShowMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseReBar;					// set to TRUE if ReBars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
-		BOOL m_bUpdateTheme;				// set to TRUE to run SetThemes when theme changes
 		BOOL m_bUseToolBar;					// set to TRUE if the toolbar is used
 		BOOL m_bShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
 		BOOL m_bShowToolBar;				// A flag to indicate if the ToolBar should be displayed
@@ -329,8 +329,9 @@ namespace Win32xx
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
 		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
-		CString m_strKeyName;				// TCHAR std::string for Registry key name
-		CString m_strTooltip;				// TCHAR std::string for tool tips
+		CString m_strKeyName;				// CString for Registry key name
+		CString m_strTooltip;				// CString for tool tips
+		CString m_XPThemeName;				// CString for Windows Theme Name
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
@@ -1370,7 +1371,7 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_strStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUpdateTheme(FALSE), m_bUseToolBar(TRUE),
+		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUseToolBar(TRUE),
 						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(NULL), m_himlMenuDis(NULL),
 						m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
@@ -1863,6 +1864,27 @@ namespace Win32xx
 
 		CRect rcView(left, top, right, bottom);
 		return rcView;
+	}
+
+	inline CString CFrame::GetThemeName()
+	{
+		// Returns the XP theme name
+		CString ThemeName;
+		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+		if(hMod)
+		{
+			typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
+				LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
+
+			PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
+
+			(*pfn)(0, 0, ThemeName.GetBuffer(30), 30, 0, 0);
+			ThemeName.ReleaseBuffer();
+
+			::FreeLibrary(hMod);
+		}
+
+		return ThemeName;
 	}
 
 	inline void CFrame::LoadCommonControls()
@@ -2521,7 +2543,8 @@ namespace Win32xx
 			GetReBar().SetBandInfo(nBand, rbbi);
 		}
 
-		if ((m_bUpdateTheme) && (m_bUseThemes)) SetTheme();
+		if (m_XPThemeName != GetThemeName())
+			SetTheme();
 
 		// Reposition and redraw everything
 		RecalcLayout();
@@ -2953,32 +2976,20 @@ namespace Win32xx
 
 		if (m_bUseThemes)
 		{
-			// Set a flag redo SetTheme when the theme changes
-			m_bUpdateTheme = TRUE;
-
-			// Detect the XP theme name
-			WCHAR Name[30] = L"";
-			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-			if(hMod)
-			{
-				typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
-					LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
-
-				PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
-
-				(*pfn)(0, 0, Name, 30, 0, 0);
-
-				::FreeLibrary(hMod);
-			}
+			// Retrieve the XP theme name
+			m_XPThemeName = GetThemeName();
 
 			enum Themetype{ Modern, Grey, Blue, Silver, Olive };
 
 			int Theme = Grey;
 			if (GetWinVersion() < 2600) // Not for Vista and above
 			{
-				if (0 == wcscmp(L"NormalColor", Name))	Theme = Blue;
-				if (0 == wcscmp(L"Metallic", Name))		Theme = Silver;
-				if (0 == wcscmp(L"HomeStead", Name))	Theme = Olive;
+				if (m_XPThemeName == _T("NormalColor"))	
+					Theme = Blue;
+				if (m_XPThemeName == _T("Metallic"))	
+					Theme = Silver;
+				if (m_XPThemeName == _T("HomeStead"))	
+					Theme = Olive;
 			}
 			else
 				Theme = Modern;

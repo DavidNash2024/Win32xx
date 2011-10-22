@@ -78,7 +78,7 @@ namespace Win32xx
 	{
 	public:
 		CComboBox() {}
-		virtual ~CComboBox() {}
+		virtual ~CComboBox() { ::InitCommonControls(); }
 
 		int   AddString(LPCTSTR lpszString) const;
 		void  Clear() const;
@@ -128,7 +128,13 @@ namespace Win32xx
 	class CComboBoxEx : public CComboBox
 	{
 	public:
-		CComboBoxEx() {}
+		CComboBoxEx() 
+		{
+			INITCOMMONCONTROLSEX icce;
+			icce.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			icce.dwICC = ICC_USEREX_CLASSES;
+			::InitCommonControlsEx(&icce);		
+		}
 		virtual ~CComboBoxEx() {}
 
 		int  	DeleteItem(int nIndex ) const;
@@ -226,7 +232,7 @@ namespace Win32xx
 	class CHotKey : public CWnd
 	{
 	public:
-		CHotKey() { InitCommonControls(); }
+		CHotKey() { ::InitCommonControls(); }
 		virtual ~CHotKey() {}
 
 		DWORD GetHotKey() const;
@@ -310,7 +316,7 @@ namespace Win32xx
 	class CProgressBar : public CWnd
 	{
 	public:
-		CProgressBar() {}
+		CProgressBar() { ::InitCommonControls(); }
 		virtual ~CProgressBar() {}
 
 		int  GetPos() const;
@@ -349,7 +355,7 @@ namespace Win32xx
 	class CSlider : public CWnd
 	{
 	public:
-		CSlider() {}
+		CSlider() { ::InitCommonControls(); }
 		virtual ~CSlider() {}
 
 		void ClearSel() const;
@@ -391,7 +397,7 @@ namespace Win32xx
 	class CSpinButton : public CWnd
 	{
 	public:
-		CSpinButton() {}
+		CSpinButton() { ::InitCommonControls(); }
 		virtual ~CSpinButton() {}
 
 		int  GetAccel(int cAccels, LPUDACCEL paAccels) const;

@@ -376,6 +376,9 @@ void CMainFrame::OnCreate()
 
 	if (IsReBarSupported())
 	{
+		//Set our theme colors
+		ChooseColor(m_nColor);
+		
 		// Set the band styles and positions
 		for (int i = 0; i < GetReBar().GetBandCount(); ++i)
 		{
@@ -662,9 +665,6 @@ void CMainFrame::SetupToolBar()
 	// Add the two other toolbars if we can use rebars (Need Win95 and IE 4 or better)
 	if (IsReBarSupported())
 	{
-		//Set our theme
-		ChooseColor(m_nColor);
-
 		// Add the Arrows toolbar
 		AddToolBarBand(Arrows, 0, IDC_ARROWS);
 		Arrows.AddButton(IDM_ARROW_LEFT);
