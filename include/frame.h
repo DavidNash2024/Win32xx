@@ -1869,22 +1869,20 @@ namespace Win32xx
 	inline CString CFrame::GetThemeName()
 	{
 		// Returns the XP theme name
-		CString ThemeName;
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+		WCHAR ThemeName[31] = L"";
 		if(hMod)
 		{
 			typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
 				LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
 
 			PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
-
-			(*pfn)(0, 0, ThemeName.GetBuffer(30), 30, 0, 0);
-			ThemeName.ReleaseBuffer();
+			(*pfn)(0, 0, ThemeName, 30, 0, 0);
 
 			::FreeLibrary(hMod);
 		}
 
-		return ThemeName;
+		return CString(ThemeName);
 	}
 
 	inline void CFrame::LoadCommonControls()
@@ -3000,7 +2998,7 @@ namespace Win32xx
 				{
 					ToolBarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 				//	ReBarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
-					ReBarTheme tr = {T, RGB(233, 236, 250), RGB(244, 247, 252), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(233, 236, 250), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
 					GetToolBar().SetToolBarTheme(tt);

@@ -143,10 +143,6 @@ SOURCE=..\src\ContainerApp.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\DockContainer.h
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Files.h
 # End Source File
 # Begin Source File

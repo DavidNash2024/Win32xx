@@ -1,7 +1,7 @@
 [Project]
 FileName=ContainerDocking_DEBUG.dev
 Name=ContainerDocking
-UnitCount=20
+UnitCount=19
 Type=0
 Ver=1
 ObjFiles=
@@ -50,9 +50,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit6]
-FileName=DockContainer.h
+FileName=Files.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -60,8 +60,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit7]
-FileName=Files.cpp
-Folder=Source
+FileName=Files.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -70,16 +70,6 @@ BuildCmd=
 CompileCpp=1
 
 [Unit10]
-FileName=Mainfrm.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit11]
 FileName=Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -89,17 +79,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
-FileName=Simple.cpp
+[Unit11]
+FileName=resource.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit13]
 FileName=Simple.h
 CompileCpp=1
 Folder=Header
@@ -109,10 +99,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit14]
 FileName=Text.cpp
 CompileCpp=1
 Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=Text.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -138,16 +138,6 @@ ProductVersion=
 AutoIncBuildNr=0
 
 [Unit16]
-FileName=Text.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
 FileName=Output.cpp
 CompileCpp=1
 Folder=Source
@@ -157,7 +147,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=Output.h
 CompileCpp=1
 Folder=Header
@@ -167,10 +157,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit18]
 FileName=MyCombo.cpp
 CompileCpp=1
 Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=MyCombo.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -277,16 +277,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=Files.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit9]
 FileName=main.cpp
 CompileCpp=1
 Folder=Source
@@ -296,10 +286,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
-FileName=resource.h
+[Unit9]
+FileName=Mainfrm.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit12]
+FileName=Simple.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

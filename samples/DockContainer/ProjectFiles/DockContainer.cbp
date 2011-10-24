@@ -175,7 +175,6 @@
 		<Unit filename="..\src\Classes.h" />
 		<Unit filename="..\src\ContainerApp.cpp" />
 		<Unit filename="..\src\ContainerApp.h" />
-		<Unit filename="..\src\DockContainer.h" />
 		<Unit filename="..\src\Files.cpp" />
 		<Unit filename="..\src\Files.h" />
 		<Unit filename="..\src\Mainfrm.cpp" />

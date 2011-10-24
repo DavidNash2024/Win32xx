@@ -253,10 +253,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\DockContainer.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Files.h"
 				>
 			</File>
