@@ -61,7 +61,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 	{
 	case IDM_MODERN:
 		{
-			SetReBarTheme( RGB(233, 236, 250), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
+			SetReBarTheme( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
 			ToolBarTheme tt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 			TB.SetToolBarTheme(tt);
