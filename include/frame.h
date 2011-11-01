@@ -189,20 +189,19 @@ namespace Win32xx
 	{
 		friend class CMenuBar;
 
-		struct ItemData
+		struct MenuItemData
 		// Each Dropdown menu item has this data
 		{
 			HMENU hMenu;
+			MENUITEMINFO mii;
 			UINT  nPos;
-			UINT  fType;
 			std::vector<TCHAR> vItemText;
-			HMENU hSubMenu;
 
-			ItemData() : hMenu(0), nPos(0), fType(0), hSubMenu(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
+			MenuItemData() : hMenu(0), nPos(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
 			LPTSTR GetItemText() {return &vItemText[0];}
 		};
 
-		typedef Shared_Ptr<ItemData> ItemDataPtr;
+		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
 
 	public:
 		CFrame();
@@ -315,7 +314,7 @@ namespace Win32xx
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		void LoadCommonControls();
 
-		std::vector<ItemDataPtr> m_vMenuItemData;// vector of ItemData pointers
+		std::vector<ItemDataPtr> m_vMenuItemData;// vector of MenuItemData pointers
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
 		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entires
 		CDialog m_AboutDialog;				// Help about dialog
@@ -1665,7 +1664,7 @@ namespace Win32xx
 	// Draws the checkmark or radiocheck transparently
 	{
 		CRect rc = pdis->rcItem;
-		UINT fType = ((ItemData*)pdis->itemData)->fType;
+		UINT fType = ((MenuItemData*)pdis->itemData)->mii.fType;
 		MenuTheme tm = GetMenuTheme();
 		CRect rcBk;
 
@@ -2171,7 +2170,7 @@ namespace Win32xx
 			return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
 
 		CRect rc = pdis->rcItem;
-		ItemData* pmd = (ItemData*)pdis->itemData;
+		MenuItemData* pmd = (MenuItemData*)pdis->itemData;
 		CDC DrawDC(pdis->hDC);
 		MenuTheme tm = GetMenuTheme();
 
@@ -2188,7 +2187,7 @@ namespace Win32xx
 			DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
 		}
 
-		if (pmd->fType & MFT_SEPARATOR)
+		if (pmd->mii.fType & MFT_SEPARATOR)
 		{
 			// draw separator
 			CRect rcSep = rc;
@@ -2272,7 +2271,7 @@ namespace Win32xx
 				mii.cbSize = GetSizeofMenuItemInfo();
 
 				mii.fMask = MIIM_TYPE | MIIM_DATA;
-				mii.fType = m_vMenuItemData[nItem]->fType;
+				mii.fType = m_vMenuItemData[nItem]->mii.fType;
 				mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
 				mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
 				mii.dwItemData = 0;
@@ -2311,14 +2310,15 @@ namespace Win32xx
 
 			for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
 			{
+				MenuItemData* pItem = new MenuItemData;			// deleted in OnExitMenuLoop
+				m_vMenuItemData.push_back(ItemDataPtr(pItem));	// Store pItem in smart pointer for later automatic deletion
+
 				MENUITEMINFO mii = {0};
 				mii.cbSize = GetSizeofMenuItemInfo();
 
-				TCHAR szMenuItem[MAX_MENU_STRING] = _T("");
-
 				// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
-				mii.fMask  = MIIM_TYPE | MIIM_DATA | MIIM_SUBMENU;
-				mii.dwTypeData = szMenuItem;
+				mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
+				mii.dwTypeData = pItem->GetItemText();	// assign TCHAR pointer, text is assigned by GetMenuItemInfo
 				mii.cch = MAX_MENU_STRING -1;
 
 				// Send message for menu updates
@@ -2330,16 +2330,11 @@ namespace Win32xx
 				{
 					if (0 == mii.dwItemData)
 					{
-						ItemData* pItem = new ItemData;		// deleted in OnExitMenuLoop
 						pItem->hMenu = *pMenu;
 						pItem->nPos = i;
-						pItem->fType = mii.fType;
-						pItem->hSubMenu = mii.hSubMenu;
-						mii.fType |= MFT_OWNERDRAW;
-						lstrcpyn(pItem->GetItemText(), szMenuItem, MAX_MENU_STRING);
+						pItem->mii = mii;
 						mii.dwItemData = (DWORD_PTR)pItem;
-
-						m_vMenuItemData.push_back(ItemDataPtr(pItem));		// Store pItem in m_vMenuItemData
+						mii.fType |= MFT_OWNERDRAW;
 						pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
 					}
 				}
@@ -2355,11 +2350,11 @@ namespace Win32xx
 		if (pmis->CtlType != ODT_MENU)
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
-		ItemData* pmd = (ItemData *) pmis->itemData;
-		assert(::IsMenu(pmd->hMenu));	// Does itemData contain a valid ItemData struct?
+		MenuItemData* pmd = (MenuItemData *) pmis->itemData;
+		assert(::IsMenu(pmd->hMenu));	// Does itemData contain a valid MenuItemData struct?
 		MenuTheme tm = GetMenuTheme();
 
-		if (pmd->fType & MFT_SEPARATOR)
+		if (pmd->mii.fType & MFT_SEPARATOR)
 		{
 			pmis->itemHeight = 7;
 			pmis->itemWidth  = 0;
@@ -2396,7 +2391,7 @@ namespace Win32xx
 				pmis->itemWidth += POST_TEXT_GAP;
 
 			// Allow extra width if the menu item has a sub menu
-			if (pmd->hSubMenu)
+			if (pmd->mii.hSubMenu)
 				pmis->itemWidth += 10;
 
 			// Allow extra width for themed menu
@@ -2997,7 +2992,6 @@ namespace Win32xx
 			case Modern:
 				{
 					ToolBarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-				//	ReBarTheme tr = {T, RGB(220, 225, 250), RGB(240, 242, 250), RGB(240, 240, 250), RGB(180, 200, 230), F, T, T, T, T, F};
 					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
@@ -3308,8 +3302,7 @@ namespace Win32xx
 		case WM_SIZE:
 			RecalcLayout();
 			return 0L;
-		case WM_SYSCOLORCHANGE:
-			// Changing themes trigger this
+		case WM_SYSCOLORCHANGE:		// Changing themes trigger this
 			OnSysColorChange();
 			return 0L;
 		case WM_SYSCOMMAND:
@@ -3317,8 +3310,7 @@ namespace Win32xx
 		case WM_TIMER:
 			OnTimer(wParam);
 			return 0L;
-		case WM_DRAWITEM:
-			// Owner draw menu items
+		case WM_DRAWITEM:		// Owner draw menu items	
 			return OnDrawItem(wParam, lParam);
 		case WM_INITMENUPOPUP:
 			OnInitMenuPopup(wParam, lParam);
