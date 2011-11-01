@@ -1185,16 +1185,24 @@ namespace Win32xx
 			int nPage = GetCurSel();
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
+			int nLength = 30;
+			std::vector<TCHAR> vTChar1( nLength+1, _T('\0') );	// vector for TCHAR array
+			std::vector<TCHAR> vTChar2( nLength+1, _T('\0') );	// vector for TCHAR array
 
 			TCITEM Item1 = {0};
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+			Item1.cchTextMax = nLength;
+			Item1.pszText = &vTChar1.front();
 			GetItem(nTab1, &Item1);
+			
 			TCITEM Item2 = {0};
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+			Item2.cchTextMax = nLength;
+			Item2.pszText = &vTChar2.front();
 			GetItem(nTab2, &Item2);
+			
 			TabCtrl_SetItem(m_hWnd, nTab1, &Item2);
-			TabCtrl_SetItem(m_hWnd, nTab2, &Item1);
-
+			TabCtrl_SetItem(m_hWnd, nTab2, &Item1); 
 			m_vTabPageInfo[nTab1] = T2;
 			m_vTabPageInfo[nTab2] = T1;
 			SelectPage(nPage);
