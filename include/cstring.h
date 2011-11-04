@@ -102,8 +102,12 @@ namespace Win32xx
 		friend CString operator + (TCHAR ch, const CString& string);
 		friend bool    operator < (const CString& string1, const CString& string2);
 		friend bool    operator > (const CString& string1, const CString& string2);
+		friend bool    operator < (const CString& string1, LPCTSTR pszText);
+		friend bool    operator > (const CString& string1, LPCTSTR pszText);
 		friend bool    operator <= (const CString& string1, const CString& string2);
 		friend bool    operator >= (const CString& string1, const CString& string2);
+		friend bool    operator <= (const CString& string1, LPCTSTR pszText);
+		friend bool    operator >= (const CString& string1, LPCTSTR pszText);
 
 	public:
 		CString();
@@ -120,10 +124,6 @@ namespace Win32xx
 		CString& operator = (LPCWSTR pszText);
 		bool     operator == (LPCTSTR pszText);
 		bool     operator != (LPCTSTR pszText);
-		bool	 operator < (LPCTSTR pszText);
-		bool	 operator > (LPCTSTR pszText);
-		bool	 operator <= (LPCTSTR pszText);
-		bool	 operator >= (LPCTSTR pszText);
 				 operator LPCTSTR() const;
 		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
@@ -264,30 +264,6 @@ namespace Win32xx
 	{
 		assert(pszText);
         return Compare(pszText) != 0;
-	}
-
-	inline bool CString::operator < (LPCTSTR pszText)
-	{
-		assert(pszText);
-		return Compare(pszText) < 0;
-	}
-
-	inline bool CString::operator > (LPCTSTR pszText)
-	{
-		assert(pszText);
-		return Compare(pszText) > 0;
-	}
-
-	inline bool CString::operator <= (LPCTSTR pszText)
-	{
-		assert(pszText);
-		return Compare(pszText) <= 0;
-	}
-
-	inline bool CString::operator >= (LPCTSTR pszText)
-	{
-		assert(pszText);
-		return Compare(pszText) >= 0;
 	}
 
 	inline CString::operator LPCTSTR() const
@@ -953,6 +929,26 @@ namespace Win32xx
 	inline bool operator >= (const CString& string1, const CString& string2)
 	{
 		return string1.Compare(string2) >= 0;
+	}
+
+	inline bool	operator < (const CString& string1, LPCTSTR pszText)
+	{
+		return string1.Compare(pszText) < 0;
+	}
+
+	inline bool	operator > (const CString& string1, LPCTSTR pszText)
+	{
+		return string1.Compare(pszText) > 0;
+	}
+
+	inline bool operator <= (const CString& string1, LPCTSTR pszText)
+	{
+		return string1.Compare(pszText) <= 0;
+	}
+	
+	inline bool operator >= (const CString& string1, LPCTSTR pszText)
+	{
+		return string1.Compare(pszText) >= 0;
 	}
 
 	// Global LoadString
