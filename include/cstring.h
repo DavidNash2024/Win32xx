@@ -100,6 +100,10 @@ namespace Win32xx
 		friend CString operator + (const CString& string, TCHAR ch);
 		friend CString operator + (LPCTSTR pszText, const CString& string);
 		friend CString operator + (TCHAR ch, const CString& string);
+		friend bool    operator < (const CString& string1, const CString& string2);
+		friend bool    operator > (const CString& string1, const CString& string2);
+		friend bool    operator <= (const CString& string1, const CString& string2);
+		friend bool    operator >= (const CString& string1, const CString& string2);
 
 	public:
 		CString();
@@ -114,12 +118,12 @@ namespace Win32xx
 		CString& operator = (const TCHAR ch);
 		CString& operator = (LPCSTR pszText);
 		CString& operator = (LPCWSTR pszText);
-		BOOL     operator == (LPCTSTR pszText);
-		BOOL     operator != (LPCTSTR pszText);
-		BOOL	 operator < (LPCTSTR pszText);
-		BOOL	 operator > (LPCTSTR pszText);
-		BOOL	 operator <= (LPCTSTR pszText);
-		BOOL	 operator >= (LPCTSTR pszText);
+		bool     operator == (LPCTSTR pszText);
+		bool     operator != (LPCTSTR pszText);
+		bool	 operator < (LPCTSTR pszText);
+		bool	 operator > (LPCTSTR pszText);
+		bool	 operator <= (LPCTSTR pszText);
+		bool	 operator >= (LPCTSTR pszText);
 				 operator LPCTSTR() const;
 		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
@@ -152,9 +156,9 @@ namespace Win32xx
 		void     Empty();
 		int      Insert(int nIndex, TCHAR ch);
 		int      Insert(int nIndex, const CString& str);
-		BOOL     IsEmpty() const;
+		bool     IsEmpty() const;
 		CString  Left(int nCount) const;
-		BOOL	 LoadString(UINT nID);
+		bool	 LoadString(UINT nID);
 		void     MakeLower();
 		void	 MakeReverse();
 		void     MakeUpper();
@@ -183,7 +187,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		int      Collate(LPCTSTR pszText) const;
 		int		 CollateNoCase(LPCTSTR pszText) const;
-		BOOL	 GetEnvironmentVariable(LPCTSTR pszVar);
+		bool	 GetEnvironmentVariable(LPCTSTR pszVar);
 #endif
 
 	private:
@@ -248,39 +252,39 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline BOOL CString::operator == (LPCTSTR pszText)
+	inline bool CString::operator == (LPCTSTR pszText)
 	// Returns TRUE if the strings have the same content
 	{
 		assert(pszText);
 		return (0 == Compare(pszText));
 	}
 
-	inline BOOL CString::operator != (LPCTSTR pszText)
+	inline bool CString::operator != (LPCTSTR pszText)
 	// Returns TRUE if the strings have a different content
 	{
 		assert(pszText);
         return Compare(pszText) != 0;
 	}
 
-	inline BOOL CString::operator < (LPCTSTR pszText)
+	inline bool CString::operator < (LPCTSTR pszText)
 	{
 		assert(pszText);
 		return Compare(pszText) < 0;
 	}
 
-	inline BOOL CString::operator > (LPCTSTR pszText)
+	inline bool CString::operator > (LPCTSTR pszText)
 	{
 		assert(pszText);
 		return Compare(pszText) > 0;
 	}
 
-	inline BOOL CString::operator <= (LPCTSTR pszText)
+	inline bool CString::operator <= (LPCTSTR pszText)
 	{
 		assert(pszText);
 		return Compare(pszText) <= 0;
 	}
 
-	inline BOOL CString::operator >= (LPCTSTR pszText)
+	inline bool CString::operator >= (LPCTSTR pszText)
 	{
 		assert(pszText);
 		return Compare(pszText) >= 0;
@@ -523,7 +527,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CString::GetEnvironmentVariable(LPCTSTR pszVar)
+	inline bool CString::GetEnvironmentVariable(LPCTSTR pszVar)
 	// Sets the string to the value of the specified environment variable.
 	{
 		assert(pszVar);
@@ -537,7 +541,7 @@ namespace Win32xx
 			m_str = &vBuffer[0];
 		}
 
-		return (BOOL)nLength;
+		return (nLength != 0);
 	}
 #endif // _WIN32_WCE
 
@@ -575,7 +579,7 @@ namespace Win32xx
 		return (int)m_str.size();
 	}
 
-	inline BOOL CString::IsEmpty() const
+	inline bool CString::IsEmpty() const
 	// Returns TRUE if the string is empty
 	{
 		return m_str.empty();
@@ -591,7 +595,7 @@ namespace Win32xx
 		return str;
 	}
 
-	inline BOOL CString::LoadString(UINT nID)
+	inline bool CString::LoadString(UINT nID)
 	// Loads the string from a Windows resource.
 	{
 		assert (GetApp());
@@ -929,6 +933,26 @@ namespace Win32xx
 		CString str(ch);
 		str.m_str.append(string);
 		return str;
+	}
+
+	inline bool operator < (const CString& string1, const CString& string2)
+	{
+		return string1.Compare(string2) < 0;
+	}
+
+	inline bool operator > (const CString& string1, const CString& string2)
+	{
+		return string1.Compare(string2) > 0;
+	}
+
+	inline bool operator <= (const CString& string1, const CString& string2)
+	{
+		return string1.Compare(string2) <= 0;
+	}
+
+	inline bool operator >= (const CString& string1, const CString& string2)
+	{
+		return string1.Compare(string2) >= 0;
 	}
 
 	// Global LoadString

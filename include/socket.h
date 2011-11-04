@@ -135,13 +135,13 @@ namespace Win32xx
 		virtual int  Bind(const struct sockaddr* name, int namelen);
 		virtual int  Connect(LPCTSTR addr, LPCTSTR port);
 		virtual int  Connect(const struct sockaddr* name, int namelen);
-		virtual BOOL Create( int family, int type, int protocol = IPPROTO_IP);
+		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
 		virtual void FreeAddrInfo( struct addrinfo* ai );
 		virtual int  GetAddrInfo( LPCTSTR nodename, LPCTSTR servname, const struct addrinfo* hints, struct addrinfo** res);
 		virtual LPCTSTR GetLastError();
 		virtual int  ioCtlSocket(long cmd, u_long* argp);
-		virtual BOOL IsIPV6Supported();
+		virtual bool IsIPV6Supported();
 		virtual int  Listen(int backlog = SOMAXCONN);
 		virtual int  Receive(TCHAR* buf, int len, int flags);
 		virtual int  ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen);
@@ -374,7 +374,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline BOOL CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
+	inline bool CSocket::Create( int family, int type, int protocol /*= IPPROTO_IP*/)
 	{
 		// Creates the socket
 
@@ -602,9 +602,9 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline BOOL CSocket::IsIPV6Supported()
+	inline bool CSocket::IsIPV6Supported()
 	{
-		BOOL IsIPV6Supported = FALSE;
+		bool IsIPV6Supported = FALSE;
 
 #ifdef GetAddrInfo
 
