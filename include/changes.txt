@@ -4,7 +4,10 @@ Version 7.3
 New Features and Enhancements
 -----------------------------
 * Adjusted the frame's appearance
-	- now honours the current window theme's menu and status fonts.
+	- Updated the visual appearance of popup menus on systems using Windows Aero. On 
+	  systems with Aero, popup menus are rendered with Windows Themes. Systems without
+	  Area continue to use the Win32++ theme for popup menus.
+	- Frames now honour the current window theme's menu and status fonts.
 	- the frame's appearence changes dynamically to reflect changes to the window theme.
 	- minor adjustment to the rebar theme colours for the "Modern" theme.
 	
