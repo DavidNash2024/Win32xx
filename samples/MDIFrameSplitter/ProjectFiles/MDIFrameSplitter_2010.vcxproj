@@ -34,8 +34,6 @@
     <ClInclude Include="..\..\..\include\thread.h" />
     <ClInclude Include="..\..\..\include\toolbar.h" />
     <ClInclude Include="..\..\..\include\treeview.h" />
-    <ClInclude Include="..\..\..\include\wceframe.h" />
-    <ClInclude Include="..\..\..\include\wcestddef.h" />
     <ClInclude Include="..\..\..\include\webbrowser.h" />
     <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\..\..\include\winutils.h" />
@@ -55,7 +53,6 @@
     <ClInclude Include="..\src\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\..\..\include\default_resource.rc" />
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <ItemGroup>

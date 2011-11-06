@@ -135,12 +135,6 @@
     <ClInclude Include="..\..\..\include\treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wceframe.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wcestddef.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\webbrowser.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -168,9 +162,6 @@
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
-    </ResourceCompile>
-    <ResourceCompile Include="..\..\..\include\default_resource.rc">
-      <Filter>Win32++</Filter>
     </ResourceCompile>
   </ItemGroup>
 </Project>
