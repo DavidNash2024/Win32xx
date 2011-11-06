@@ -2037,7 +2037,27 @@ inline void CDrawMenu::DrawMenuItem(DRAWITEMSTRUCT *pdis)
 		// Draw the text.
 		ULONG uAccel = ((pdis->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
 		CRect rcText = GetTextRect(pdis->rcItem, pmid->GetItemText());
-		DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(pmid->GetItemText()), pmid->mii.cch, DT_SINGLELINE | DT_LEFT | uAccel, 0, &rcText);
+
+	//	DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(pmid->GetItemText()), pmid->mii.cch, DT_SINGLELINE | DT_LEFT | uAccel, 0, &rcText);
+		LPCTSTR pszItemText = T2W(pmid->GetItemText());
+		
+		// find the position of tab character
+		int nTab = -1;
+		for(int i = 0; i < lstrlen(pszItemText); ++i)
+		{
+			if(_T('\t') == pszItemText[i])
+			{
+				nTab = i;
+				break;
+			}
+		}
+
+		// Draw the item text before the tab
+		DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, pszItemText, nTab, DT_SINGLELINE | DT_LEFT | uAccel, 0, &rcText);
+		
+		// Draw text after tab, right aligned
+		if(nTab != -1)
+			DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, &pszItemText[nTab + 1], -1, DT_SINGLELINE | DT_RIGHT | uAccel, 0, &rcText);
 	}
 
 	RestoreDC(pdis->hDC, iSaveDC);
@@ -2244,10 +2264,10 @@ inline CRect CDrawMenu::GetTextRect(CRect rcItem, LPCTSTR szText)
 {
 	int x = rcItem.left + m_marItem.cxLeftWidth +  m_marCheckBackground.cxLeftWidth + m_marCheckBackground.cxRightWidth + GetCheckSize().cx;
 	int y = rcItem.top;
-	int cx = GetTextSize(szText).cx;
+	int right = rcItem.right - m_marItem.cxRightWidth;
 	int cy = GetTextSize(szText).cy;
 
-	CRect rcMeasure(x, y, x + cx, y + cy);
+	CRect rcMeasure(x, y, right, y + cy);
 	CRect rcText = ToDrawRect(&rcMeasure, &m_marText);
 	rcText.OffsetRect(0, (rcItem.Height() - cy) / 2);
 	return rcText;
