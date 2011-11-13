@@ -369,27 +369,6 @@ namespace Win32xx
 		HANDLE OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
 
 	private:
-		inline CSize ToMeasureSize(const CSize *psizeDraw, const MARGINS* pmargins)
-		{
-			// Convert the drawing size to measure size.
-			CSize sizeMeasure;
-			sizeMeasure.cx = psizeDraw->cx + pmargins->cxLeftWidth + pmargins->cxRightWidth;
-			sizeMeasure.cy = psizeDraw->cy + pmargins->cyTopHeight + pmargins->cyBottomHeight;
-			return sizeMeasure;
-		}
-
-		inline CRect ToDrawRect(LPCRECT prcMeasure, const MARGINS* pmargins)
-		{
-			// Convert the measure rect to a drawing rect.
-			CRect rcDraw;
-			rcDraw.SetRect(prcMeasure->left    + pmargins->cxLeftWidth,
-							prcMeasure->top     + pmargins->cyTopHeight,
-							prcMeasure->right   - pmargins->cxRightWidth,
-							prcMeasure->bottom  - pmargins->cyBottomHeight);
-			return rcDraw;
-		}
-
-	private:
 		typedef HRESULT WINAPI CLOSETHEMEDATA(HANDLE);
 		typedef HRESULT WINAPI DRAWTHEMEBACKGROUND(HANDLE, HDC, int, int, const RECT*, const RECT*);
 		typedef HRESULT WINAPI DRAWTHEMETEXT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, DWORD, LPCRECT);
@@ -1645,8 +1624,6 @@ inline void CDrawMenu::Initialize()
 		m_marText = m_marItem;
 	    m_marText.cxRightWidth = iBorderSize;
         m_marText.cxLeftWidth = iBgBorderSize;
-
-        m_cyMarCheckBackground = m_marCheckBackground.cyTopHeight + m_marCheckBackground.cyBottomHeight;
     }
 	else
 	{
@@ -1978,7 +1955,7 @@ inline HANDLE CDrawMenu::OpenThemeData(HWND hwnd, LPCWSTR pszClassList)
 
 inline void CDrawMenu::DrawMenuItem(DRAWITEMSTRUCT *pdis)
 {
-//	int iSaveDC = SaveDC(pdis->hDC); 
+//	int iSaveDC = SaveDC(pdis->hDC);
 	MENUITEMDATA* pmid = (MENUITEMDATA*)pdis->itemData;
 	POPUPITEMSTATES iStateId = ToItemStateId(pdis->itemState);
 
@@ -2020,8 +1997,8 @@ inline void CDrawMenu::DrawMenuItem(DRAWITEMSTRUCT *pdis)
 		ULONG uAccel = ((pdis->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
 		CRect rcText = GetTextRect(pdis->rcItem);//, pmid->GetItemText());
 
-		LPCTSTR pszItemText = T2W(pmid->GetItemText());
-		
+		LPCTSTR pszItemText = pmid->GetItemText();
+
 		// find the position of tab character
 		int nTab = -1;
 		for(int i = 0; i < lstrlen(pszItemText); ++i)
@@ -2034,11 +2011,11 @@ inline void CDrawMenu::DrawMenuItem(DRAWITEMSTRUCT *pdis)
 		}
 
 		// Draw the item text before the tab
-		DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, pszItemText, nTab, DT_SINGLELINE | DT_LEFT | DT_TOP | uAccel, 0, &rcText);
-		
+		DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(pszItemText), nTab, DT_SINGLELINE | DT_LEFT | DT_TOP | uAccel, 0, &rcText);
+
 		// Draw text after tab, right aligned
 		if(nTab != -1)
-			DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, &pszItemText[nTab + 1], -1, DT_SINGLELINE | DT_RIGHT | DT_TOP | uAccel, 0, &rcText);
+			DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(&pszItemText[nTab + 1]), -1, DT_SINGLELINE | DT_RIGHT | DT_TOP | uAccel, 0, &rcText);
 
 		// Draw the Submenu arrow
 		if (pmid->mii.hSubMenu)
@@ -2046,7 +2023,7 @@ inline void CDrawMenu::DrawMenuItem(DRAWITEMSTRUCT *pdis)
 			CRect rcSubMenu = pdis->rcItem;
 			rcSubMenu.left = GetTextRect(pdis->rcItem).right;
 			DrawThemeBackground(pdis->hDC, MENU_POPUPSUBMENU, ToCheckStateId(pmid->mii.fType, iStateId), &rcSubMenu, NULL);
-		}			
+		}
 	}
 
 	// Suppress further drawing to prevent an incorrect Submenu arrow being drawn
@@ -2133,36 +2110,26 @@ inline void CDrawMenu::DrawMenuItemClassic(DRAWITEMSTRUCT *pdis)
 
 inline CRect CDrawMenu::GetCheckBackgroundRect(CRect rcItem)
 {
-    // Calculate the check background draw size.
-    CSize sizeDraw(GetCheckSize().cx, GetCheckSize().cy - m_cyMarCheckBackground);
+	int x = rcItem.left + m_marCheckBackground.cxLeftWidth;
+	int y = rcItem.top  + m_marCheckBackground.cyTopHeight;
+	int cx = m_sizeCheck.cx + m_marCheck.Width();
+	int cy = m_sizeCheck.cy + m_marCheck.Height();
 
-    // Calculate the check background measure size.
-    CSize sizeMeasure = ToMeasureSize(&sizeDraw, &m_marCheckBackground);
-
-    // Lay out the check background rectangle.
-	CPoint ptTopLeft(rcItem.left + m_marItem.cxLeftWidth, rcItem.top);
-	CRect rcMeasure(ptTopLeft, sizeMeasure);
-
-	CRect rcCheckBackground = ToDrawRect(&rcMeasure, &m_marCheckBackground);
-    OffsetRect(&rcCheckBackground, 0, (rcItem.Height() - sizeMeasure.cy) / 2);
-	return rcCheckBackground;
+	return CRect(x, y, x + cx, y + cy);
 }
 
 inline CSize CDrawMenu::GetCheckSize()
 {
-	// Size the check rectangle.
-	CSize sizeDraw = m_sizeCheck;
-	sizeDraw.cy += m_marCheckBackground.cyTopHeight + m_marCheckBackground.cyBottomHeight;
-
-	return ToMeasureSize(&sizeDraw, &m_marCheck);
+	int cx = m_sizeCheck.cx + m_marCheckBackground.Width() + m_marCheck.Width();
+	int cy = m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height();
+	return CSize(cx, cy);
 }
 
 inline CRect CDrawMenu::GetGutterRect(CRect rcItem)
 {
-    // Lay out gutter rectangle.
     int x = rcItem.left;
 	int y = rcItem.top;
-	int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheckBackground.Width() + GetCheckSize().cx;
+	int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheckBackground.Width() + m_sizeCheck.cx;
 	int cy = rcItem.Height();
 
 	return CRect(x, y, x + cx, y + cy);
@@ -2170,15 +2137,10 @@ inline CRect CDrawMenu::GetGutterRect(CRect rcItem)
 
 inline CRect CDrawMenu::GetCheckRect(CRect rcItem)
 {
-	int x = rcItem.left + m_marItem.cxLeftWidth + m_marCheckBackground.cxLeftWidth;
-	int y = rcItem.top;
-	int cx =  GetCheckSize().cx;
-	int cy =  GetCheckSize().cy - m_cyMarCheckBackground;
+	int x = rcItem.left + m_marItem.cxLeftWidth + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
+	int y = rcItem.top + m_marItem.cyTopHeight + m_marCheckBackground.cyTopHeight + m_marCheck.cyTopHeight;
 
-	CRect rcMeasure(x, y, x + cx, y + cy);
-	CRect rcCheck = ToDrawRect(&rcMeasure, &m_marCheck);
-	rcCheck.OffsetRect(0, (rcItem.Height() - cy) / 2);
-	return rcCheck;
+	return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
 }
 
 inline CRect CDrawMenu::GetSelectionRect(CRect rcItem)
@@ -2192,25 +2154,18 @@ inline CRect CDrawMenu::GetSelectionRect(CRect rcItem)
 inline CSize CDrawMenu::GetSeparatorSize()
 {
 	// Size the separator, using the minimum width.
-	CSize sizeDraw = m_sizeCheck;
-	sizeDraw.cy = m_sizeSeparator.cy;
-
-	return ToMeasureSize(&sizeDraw, &m_marItem);
+	return CSize(1, m_sizeSeparator.cy + m_marItem.Height());
 }
 
 inline CRect CDrawMenu::GetSeperatorRect(CRect rcItem)
 {
-	int x = GetGutterRect(rcItem).right + m_marItem.cxLeftWidth;
-	int y = rcItem.top;
+	int left = GetGutterRect(rcItem).right;
+	int top  = rcItem.top;
+	int right = rcItem.right - m_marItem.cxRightWidth;
+	int bottom = rcItem.top + m_sizeSeparator.cy;
 
-	CRect rcMeasure;
-	SetRect(&rcMeasure, x, y, rcItem.right - m_marItem.cxRightWidth, y + GetSeparatorSize().cy);
-
-	CRect rcSeparator = ToDrawRect(&rcMeasure, &m_marItem);
-	rcSeparator.OffsetRect(0, (rcItem.Height() - GetSeparatorSize().cy) / 2);
-	return rcSeparator;
+	return CRect(left, top, right, bottom);
 }
-
 
 inline CSize CDrawMenu::GetTextSize(LPCTSTR szItemText)
 {
@@ -2224,8 +2179,7 @@ inline CSize CDrawMenu::GetTextSize(LPCTSTR szItemText)
 		GetThemeTextExtent(hdc, MENU_POPUPITEM, 0, T2W(szItemText), lstrlen(szItemText),
 						   DT_LEFT | DT_SINGLELINE, NULL, &rcText);
 
-		CSize sizeDraw(rcText.right, rcText.bottom);
-		sizeText = ToMeasureSize(&sizeDraw, &m_marText);
+		sizeText.SetSize(rcText.right + m_marText.Width(), rcText.bottom + m_marText.Height());
 		ReleaseDC(*m_pFrame, hdc);
 	}
 
@@ -2395,9 +2349,8 @@ inline UINT CDrawMenu::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF 
 	//
 	inline CFrame::CFrame() : m_strStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
 		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUseToolBar(TRUE),
-						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), /*m_himlMenu(NULL), m_himlMenuDis(NULL), */
-						m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1),
-						m_pDrawMenu(0)
+						m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
+						m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_pDrawMenu(0)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 
@@ -2416,7 +2369,6 @@ inline UINT CDrawMenu::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF 
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
 		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
-
 	}
 
 	inline CFrame::~CFrame()
@@ -2973,7 +2925,7 @@ inline UINT CDrawMenu::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF 
 				m_pDrawMenu->DrawMenuItem(pdis);
 			else
 				m_pDrawMenu->DrawMenuItemClassic(pdis);
-		} 
+		}
 
 		return TRUE;
 	}
