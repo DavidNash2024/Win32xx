@@ -218,17 +218,29 @@ namespace Win32xx
 			int cxRightWidth;     // width of right border that retains its size
 			int cyTopHeight;      // height of top border that retains its size
 			int cyBottomHeight;   // height of bottom border that retains its size
+		} MARGINS, *PMARGINS;
 
+		class CMargins : public MARGINS
+		{
+		public:
+			CMargins(int cxLeft, int cxRight, int cyTop, int cyBottom)
+			{
+				cxLeftWidth    = cxLeft;	cxRightWidth   = cxRight;
+				cyTopHeight    = cyTop;		cyBottomHeight = cyBottom;				
+			}
+			CMargins()
+			{
+				cxLeftWidth    = 0;			cxRightWidth   = 0;
+				cyTopHeight    = 0;			cyBottomHeight = 0;			
+			}
 			int Width() const		{ return cxLeftWidth + cxRightWidth; }
 			int Height() const		{ return cyTopHeight + cyBottomHeight; }
 			void SetMargins(int cxLeft, int cxRight, int cyTop, int cyBottom) 
 			{
-				cxLeftWidth    = cxLeft;
-				cxRightWidth   = cxRight;
-				cyTopHeight    = cyTop;
-				cyBottomHeight = cyBottom;
+				cxLeftWidth    = cxLeft;	cxRightWidth   = cxRight;
+				cyTopHeight    = cyTop;		cyBottomHeight = cyBottom;
 			}
-		} MARGINS, *PMARGINS;
+		};
 
 		enum THEMESIZE
 		{
@@ -326,10 +338,10 @@ namespace Win32xx
 		HANDLE  m_hTheme;              // Theme handle
 		CFrame* m_pFrame;              // Pointer to the frame window
 
-		MARGINS m_marCheck;            // Check margins
-		MARGINS m_marCheckBackground;  // Check background margins
-		MARGINS m_marItem;             // Item margins
-		MARGINS m_marText;             // Text margins
+		CMargins m_marCheck;            // Check margins
+		CMargins m_marCheckBackground;  // Check background margins
+		CMargins m_marItem;             // Item margins
+		CMargins m_marText;             // Text margins
 
 		CSize   m_sizeCheck;           // Check size metric
 		CSize   m_sizeSeparator;       // Separator size metric
@@ -343,10 +355,10 @@ namespace Win32xx
 
 		BOOL  AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/);
 		UINT  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
-		void  DrawCheckmark(LPDRAWITEMSTRUCT pdis, int BarWidth);
-		void  DrawMenuIcon(LPDRAWITEMSTRUCT pdis, int BarWidth);
-		void  DrawMenuItem(DRAWITEMSTRUCT *pdis);
-		void  DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
+		void  DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis);
+		void  DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis);
+		void  DrawMenuItem(LPDRAWITEMSTRUCT pdis);
+		void  DrawMenuItemText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
 		void  DrawMenuItemClassic(DRAWITEMSTRUCT *pdis);
 		CRect GetCheckBackgroundRect(CRect rcItem);
 		CRect GetCheckRect(CRect rcItem);
@@ -504,7 +516,6 @@ namespace Win32xx
 		enum Constants
 		{
 			ID_STATUS_TIMER = 1,
-			POST_TEXT_GAP   = 16,			// for owner draw menu item
 		};
 
 		CString m_strStatusText;			// CString for status text
@@ -1837,7 +1848,7 @@ namespace Win32xx
 			return (UINT)m_vMenuIcons.size();
 		}
 
-		inline void CDrawMenu::DrawCheckmark(LPDRAWITEMSTRUCT pdis, int BarWidth)
+		inline void CDrawMenu::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis)
 		// Draws the checkmark or radiocheck transparently
 		{
 			CRect rc = pdis->rcItem;
@@ -1849,8 +1860,7 @@ namespace Win32xx
 			// Draw the checkmark's background rectangle first
 			int Iconx = 16, Icony = 16;
 			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		//	int BarWidth = Iconx + 8;
-			int left = (BarWidth - Iconx)/2;
+			int left = m_marCheck.cxLeftWidth;
 			int top = rc.top + (rc.Height() - Icony)/2;
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
@@ -1899,7 +1909,7 @@ namespace Win32xx
 			}
 		}
 
-		inline void CDrawMenu::DrawMenuIcon(LPDRAWITEMSTRUCT pdis, int BarWidth)
+		inline void CDrawMenu::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
 		{
 			if (!m_himlMenu)
 				return;
@@ -1908,11 +1918,10 @@ namespace Win32xx
 			int Iconx;
 			int Icony;
 			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		//	int BarWidth = Iconx + 8;
 
 			// get the drawing rectangle
 			CRect rc = pdis->rcItem;
-			int left = (BarWidth - Iconx)/2;
+			int left = m_marCheck.cxLeftWidth;
 			int top = rc.top + (rc.Height() - Icony)/2;
 			rc.SetRect(left, top, left + Iconx, top + Icony);
 
@@ -1935,7 +1944,7 @@ namespace Win32xx
 			}
 		}
 
-		inline void CDrawMenu::DrawMenuText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
+		inline void CDrawMenu::DrawMenuItemText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
 		{
 			// find the position of tab character
 			int nTab = -1;
@@ -1957,7 +1966,7 @@ namespace Win32xx
 				DrawDC.DrawText( &ItemText[nTab + 1], -1, rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
 		}
 
-	inline void CDrawMenu::DrawMenuItem(DRAWITEMSTRUCT *pdis)
+	inline void CDrawMenu::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
 	{
 	//	int iSaveDC = SaveDC(pdis->hDC);
 		MENUITEMDATA* pmid = (MENUITEMDATA*)pdis->itemData;
@@ -1993,7 +2002,7 @@ namespace Win32xx
 			else
 			{
 				// Draw icon
-				DrawMenuIcon(pdis, GetCheckBackgroundRect(pdis->rcItem).Width());
+				DrawMenuItemIcon(pdis);
 			}
 
 			// Draw the text.
@@ -2053,7 +2062,6 @@ namespace Win32xx
 		rcBar.right = BarWidth;
 		DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
 
-
 		if (pmd->mii.fType & MFT_SEPARATOR)
 		{
 			// draw separator
@@ -2088,9 +2096,9 @@ namespace Win32xx
 			}
 
 			if (bChecked)
-				DrawCheckmark(pdis, BarWidth);
+				DrawMenuItemCheckmark(pdis);
 			else
-				DrawMenuIcon(pdis, BarWidth);
+				DrawMenuItemIcon(pdis);
 
 			// Calculate the text rect size
 			CRect rcText = rc;
@@ -2104,7 +2112,7 @@ namespace Win32xx
 			rcText.left += 8;
 			colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 
-			DrawMenuText(DrawDC, pmd->GetItemText(), rcText, colorText);
+			DrawMenuItemText(DrawDC, pmd->GetItemText(), rcText, colorText);
 			DrawDC.SetBkMode(iMode);
 		}
 
@@ -2125,7 +2133,7 @@ namespace Win32xx
 	{
 		int x = rcItem.left;
 		int y = rcItem.top;
-		int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheckBackground.Width() + m_sizeCheck.cx;
+		int cx = m_marItem.cxLeftWidth + m_marCheckBackground.Width() + m_marCheck.Width() + m_sizeCheck.cx;
 		int cy = rcItem.Height();
 
 		return CRect(x, y, x + cx, y + cy);
@@ -2178,19 +2186,21 @@ namespace Win32xx
 			NONCLIENTMETRICS nm = {0};
 			nm.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
+			
 			// Default menu items are bold, so take this into account
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
-				nm.lfMenuFont.lfWeight = FW_BOLD;
-
-			TCHAR* pItemText = &(pmd->vItemText[0]);
-			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
+				nm.lfMenuFont.lfWeight = FW_BOLD;		
 
 			// Calculate the size of the text
-			sizeText = DesktopDC.GetTextExtentPoint32(pItemText, lstrlen(pItemText));
+			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
+			sizeText = DesktopDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
 		//	sizeText.cx += m_marText.Width();
 			sizeText.cx += m_marText.cxRightWidth;
 			sizeText.cy += m_marText.Height();
 		}
+
+		if (_tcschr(szItemText, _T('\t')))
+			sizeText.cx += 8;	// Add POST_TEXT_GAP if the text includes a tab
 
 		return sizeText;
 	}
@@ -2281,8 +2291,9 @@ namespace Win32xx
 			cxTotal += m_marItem.cxLeftWidth + m_marItem.cxRightWidth;
 
 			// Account for text size
-			cxTotal += GetTextSize(pmid).cx;
-			cyMax = MAX(cyMax, GetTextSize(pmid).cy);
+			CSize sizeText = GetTextSize(pmid);
+			cxTotal += sizeText.cx;
+			cyMax = MAX(cyMax, sizeText.cy);
 
 			// Account for icon or check height
 			cyMax = MAX(cyMax, m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height());
