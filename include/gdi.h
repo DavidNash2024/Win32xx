@@ -1899,7 +1899,7 @@ namespace Win32xx
 #else
 			m_pData->hWnd = hWnd;
 #endif
-			if (m_pData->hWnd)
+			if (m_pData->hWnd == 0)
 				AddToMap();
 		}
 	}

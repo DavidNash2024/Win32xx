@@ -249,19 +249,6 @@ namespace Win32xx
 			TS_DRAW             // size that theme mgr will use to draw part
 		};
 
-
-		struct MENUITEMDATA
-		// Each Dropdown menu item has this data
-		{
-			HMENU hmenu;
-			MENUITEMINFO mii;
-			UINT  nPos;
-			std::vector<TCHAR> vItemText;
-
-			MENUITEMDATA() : hmenu(0), nPos(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
-			LPTSTR GetItemText() {return &vItemText[0];}
-		};
-
 		enum POPUPCHECKSTATES
 		{
 			MC_CHECKMARKNORMAL = 1,
@@ -315,11 +302,6 @@ namespace Win32xx
 			MENU_SYSTEMRESTORE = 20,
 		};
 
-		enum Constants
-		{
-			POST_TEXT_GAP   = 16,			// for owner draw menu item
-		};
-
 		struct MenuItemData
 		// Each Dropdown menu item has this data
 		{
@@ -355,18 +337,17 @@ namespace Win32xx
 
 		BOOL  AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/);
 		UINT  AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
+		void  DrawMenuItem(LPDRAWITEMSTRUCT pdis);		
+		void  DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis);
 		void  DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis);
 		void  DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis);
-		void  DrawMenuItem(LPDRAWITEMSTRUCT pdis);
-		void  DrawMenuItemText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText);
-		void  DrawMenuItemClassic(DRAWITEMSTRUCT *pdis);
+		void  DrawMenuItemText(LPDRAWITEMSTRUCT pdis);
 		CRect GetCheckBackgroundRect(CRect rcItem);
 		CRect GetCheckRect(CRect rcItem);
 		CRect GetGutterRect(CRect rcItem);
 		CRect GetSelectionRect(CRect rcItem);
 		CRect GetSeperatorRect(CRect rcItem);
 		CSize GetTextSize(MenuItemData* pmd);
-		CRect GetTextRect(CRect rcItem);
 		void Initialize();
 		void  MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
 		UINT  SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
@@ -1646,7 +1627,7 @@ namespace Win32xx
 			m_marCheck.SetMargins(4, 4, 2, 2);
 			m_marCheckBackground.SetMargins(0, 0, 0, 0);
 			m_marItem.SetMargins(0, 0, 0, 0);
-			m_marText.SetMargins(8, 10, 0, 0);
+			m_marText.SetMargins(8, 16, 0, 0);
 		}
 	}
 
@@ -1848,6 +1829,40 @@ namespace Win32xx
 			return (UINT)m_vMenuIcons.size();
 		}
 
+		inline void CDrawMenu::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis)
+		{
+			// Draw the item background
+			CRect rcSelection = GetSelectionRect(pdis->rcItem);
+			if (IsAeroThemed())
+			{
+				POPUPITEMSTATES iStateId = ToItemStateId(pdis->itemState);
+				DrawThemeBackground(pdis->hDC, MENU_POPUPITEM, iStateId, &rcSelection, NULL);
+			}
+			else
+			{
+				BOOL bDisabled = pdis->itemState & ODS_GRAYED;
+				BOOL bSelected = pdis->itemState & ODS_SELECTED;
+			//	BOOL bChecked  = pdis->itemState & ODS_CHECKED;
+				CRect rcDraw = pdis->rcItem;
+				CDC* pDrawDC = FromHandle(pdis->hDC);
+				MenuTheme tm = m_pFrame->GetMenuTheme();
+
+				if ((bSelected) && (!bDisabled))
+				{
+					// draw selected item background
+					pDrawDC->CreateSolidBrush(tm.clrHot1);
+					pDrawDC->CreatePen(PS_SOLID, 1, tm.clrOutline);
+					pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+				}
+				else
+				{
+					// draw non-selected item background
+					rcDraw.left = GetGutterRect(pdis->rcItem).Width();
+					pDrawDC->SolidFill(RGB(255,255,255), rcDraw);
+				}
+			}
+		}
+
 		inline void CDrawMenu::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis)
 		// Draws the checkmark or radiocheck transparently
 		{
@@ -1857,9 +1872,21 @@ namespace Win32xx
 			CRect rcBk;
 			CDC* pDrawDC = FromHandle(pdis->hDC);
 
+			if (IsAeroThemed())
+			{
+				POPUPITEMSTATES iStateId = ToItemStateId(pdis->itemState);
+				MenuItemData* pmid = (MenuItemData*)pdis->itemData;
+				CRect rcCheckBackground = GetCheckBackgroundRect(pdis->rcItem);
+				DrawThemeBackground(pdis->hDC, MENU_POPUPCHECKBACKGROUND, ToCheckBackgroundStateId(iStateId), &rcCheckBackground, NULL);
+				CRect rcCheck = GetCheckRect(pdis->rcItem);
+				DrawThemeBackground(pdis->hDC, MENU_POPUPCHECK, ToCheckStateId(pmid->mii.fType, iStateId), &rcCheck, NULL);
+			}
+			else
+			{
+
 			// Draw the checkmark's background rectangle first
-			int Iconx = 16, Icony = 16;
-			if (m_himlMenu) ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+			int Iconx = m_sizeCheck.cx;
+			int Icony = m_sizeCheck.cy;
 			int left = m_marCheck.cxLeftWidth;
 			int top = rc.top + (rc.Height() - Icony)/2;
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
@@ -1907,6 +1934,7 @@ namespace Win32xx
 				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, &MemDC, 0, 0, SRCAND);
 				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, &MaskDC, 0, 0, SRCAND);
 			}
+			}
 		}
 
 		inline void CDrawMenu::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
@@ -1915,9 +1943,8 @@ namespace Win32xx
 				return;
 
 			// Get icon size
-			int Iconx;
-			int Icony;
-			ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
+			int Iconx = m_sizeCheck.cx;
+			int Icony = m_sizeCheck.cy;
 
 			// get the drawing rectangle
 			CRect rc = pdis->rcItem;
@@ -1944,8 +1971,17 @@ namespace Win32xx
 			}
 		}
 
-		inline void CDrawMenu::DrawMenuItemText(CDC& DrawDC, LPCTSTR ItemText, CRect& rc, COLORREF colorText)
+		inline void CDrawMenu::DrawMenuItemText(LPDRAWITEMSTRUCT pdis)
 		{
+			LPCTSTR ItemText = ((MenuItemData*)pdis->itemData)->GetItemText();
+			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
+			COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
+
+			// Calculate the text rect size
+			CRect rcText = pdis->rcItem;
+			rcText.left = GetGutterRect(pdis->rcItem).Width() + m_marText.cxLeftWidth;
+			rcText.right -= m_marText.cxRightWidth;
+			
 			// find the position of tab character
 			int nTab = -1;
 			for(int i = 0; i < lstrlen(ItemText); ++i)
@@ -1958,164 +1994,99 @@ namespace Win32xx
 			}
 
 			// Draw the item text
-			DrawDC.SetTextColor(colorText);
-			DrawDC.DrawText(ItemText, nTab, rc, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+			if (IsAeroThemed())
+			{
+				ULONG uAccel = ((pdis->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
+				POPUPITEMSTATES iStateId = ToItemStateId(pdis->itemState);
 
-			// Draw text after tab, right aligned
-			if(nTab != -1)
-				DrawDC.DrawText( &ItemText[nTab + 1], -1, rc, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+				// Draw the item text before the tab
+				DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(ItemText), nTab, DT_SINGLELINE | DT_LEFT | DT_TOP | uAccel, 0, &rcText);
+
+				// Draw text after tab, right aligned
+				if(nTab != -1)
+					DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(&ItemText[nTab + 1]), -1, DT_SINGLELINE | DT_RIGHT | DT_TOP | uAccel, 0, &rcText);
+			}
+			else
+			{
+				SetTextColor(pdis->hDC, colorText);
+				int iMode = SetBkMode(pdis->hDC, TRANSPARENT);
+				DrawText(pdis->hDC, ItemText, nTab, rcText, DT_SINGLELINE | DT_LEFT | DT_VCENTER);
+
+				// Draw text after tab, right aligned
+				if(nTab != -1)
+					DrawText(pdis->hDC, &ItemText[nTab + 1], -1, rcText, DT_SINGLELINE | DT_RIGHT | DT_VCENTER);
+
+				SetBkMode(pdis->hDC, iMode);
+			}
 		}
 
 	inline void CDrawMenu::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
 	{
-	//	int iSaveDC = SaveDC(pdis->hDC);
-		MENUITEMDATA* pmid = (MENUITEMDATA*)pdis->itemData;
+		MenuItemData* pmid = (MenuItemData*)pdis->itemData;
 		POPUPITEMSTATES iStateId = ToItemStateId(pdis->itemState);
+		MenuTheme tm = m_pFrame->GetMenuTheme();
+		CDC DrawDC(pdis->hDC);
 
-		if (IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
+		if (IsAeroThemed() && IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
 		{
 			DrawThemeBackground(pdis->hDC, MENU_POPUPBACKGROUND, 0, &pdis->rcItem, NULL);
 		}
 
+		// Draw the gutter
 		CRect rcGutter = GetGutterRect(pdis->rcItem);
-		DrawThemeBackground(pdis->hDC, MENU_POPUPGUTTER, 0, &rcGutter, NULL);
+		if (IsAeroThemed())
+			DrawThemeBackground(pdis->hDC, MENU_POPUPGUTTER, 0, &rcGutter, NULL);
+		else
+			DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcGutter, TRUE);
 
 		if (pmid->mii.fType & MFT_SEPARATOR)
 		{
-			CRect rcSeparator = GetSeperatorRect(pdis->rcItem);
-			DrawThemeBackground(pdis->hDC, MENU_POPUPSEPARATOR, 0, &rcSeparator, NULL);
-		}
-		else
-		{
-			// Item selection
-			CRect rcSelection = GetSelectionRect(pdis->rcItem);
-			DrawThemeBackground(pdis->hDC, MENU_POPUPITEM, iStateId, &rcSelection, NULL);
-			
-			if (pmid->mii.fState & MFS_CHECKED)
+			// Draw the separator
+			if (IsAeroThemed())
 			{
-				// Draw the checkbox
-				CRect rcCheckBackground = GetCheckBackgroundRect(pdis->rcItem);
-				DrawThemeBackground(pdis->hDC, MENU_POPUPCHECKBACKGROUND, ToCheckBackgroundStateId(iStateId), &rcCheckBackground, NULL);
-				CRect rcCheck = GetCheckRect(pdis->rcItem);
-				DrawThemeBackground(pdis->hDC, MENU_POPUPCHECK, ToCheckStateId(pmid->mii.fType, iStateId), &rcCheck, NULL);
+				CRect rcSeparator = GetSeperatorRect(pdis->rcItem);
+				DrawThemeBackground(pdis->hDC, MENU_POPUPSEPARATOR, 0, &rcSeparator, NULL);
 			}
 			else
 			{
-				// Draw icon
+				CRect rc = pdis->rcItem;
+				CRect rcSep = pdis->rcItem;
+				rcSep.left = GetGutterRect(rc).Width() + 2;
+				DrawDC.SolidFill(RGB(255,255,255), rcSep);
+				rcSep.top += (rc.bottom - rc.top)/2;
+				DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
+			}
+		}
+		else
+		{
+			// Draw the item background
+			DrawMenuItemBkgnd(pdis);
+			
+			// Draw Checkmark or icon
+			if (pmid->mii.fState & MFS_CHECKED)
+				DrawMenuItemCheckmark(pdis);
+			else
 				DrawMenuItemIcon(pdis);
-			}
-
+			
 			// Draw the text.
-			ULONG uAccel = ((pdis->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
-			CRect rcText = GetTextRect(pdis->rcItem);//, pmid->GetItemText());
+			DrawMenuItemText(pdis);
+		}
 
-			LPCTSTR pszItemText = pmid->GetItemText();
-
-			// find the position of tab character
-			int nTab = -1;
-			for(int i = 0; i < lstrlen(pszItemText); ++i)
-			{
-				if(_T('\t') == pszItemText[i])
-				{
-					nTab = i;
-					break;
-				}
-			}
-
-			// Draw the item text before the tab
-			DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(pszItemText), nTab, DT_SINGLELINE | DT_LEFT | DT_TOP | uAccel, 0, &rcText);
-
-			// Draw text after tab, right aligned
-			if(nTab != -1)
-				DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(&pszItemText[nTab + 1]), -1, DT_SINGLELINE | DT_RIGHT | DT_TOP | uAccel, 0, &rcText);
-
+		if (IsAeroThemed())
+		{
 			// Draw the Submenu arrow
 			if (pmid->mii.hSubMenu)
 			{
 				CRect rcSubMenu = pdis->rcItem;
-				rcSubMenu.left = GetTextRect(pdis->rcItem).right;
+				rcSubMenu.left = pdis->rcItem.right - m_marItem.cxRightWidth - m_marText.cxRightWidth;;
 				DrawThemeBackground(pdis->hDC, MENU_POPUPSUBMENU, ToCheckStateId(pmid->mii.fType, iStateId), &rcSubMenu, NULL);
 			}
+
+			// Suppress further drawing to prevent an incorrect Submenu arrow being drawn
+			CRect rc = pdis->rcItem;
+			::ExcludeClipRect(pdis->hDC, rc.left, rc.top, rc.right, rc.bottom);
 		}
-
-		// Suppress further drawing to prevent an incorrect Submenu arrow being drawn
-		CRect rc = GetSelectionRect(pdis->rcItem);
-		::ExcludeClipRect(pdis->hDC, rc.left, rc.top, rc.right, rc.bottom);
-
-	//	RestoreDC(pdis->hDC, iSaveDC);
-	}
-
-	inline void CDrawMenu::DrawMenuItemClassic(DRAWITEMSTRUCT *pdis)
-	{
-		CRect rc = pdis->rcItem;
-		MenuItemData* pmd = (MenuItemData*)pdis->itemData;
-		CDC DrawDC(pdis->hDC);
-		MenuTheme tm = m_pFrame->GetMenuTheme();
-
-		int Iconx = 16;
-		int Icony = 16;
-		if (m_himlMenu)	ImageList_GetIconSize(m_himlMenu, &Iconx, &Icony);
-		int BarWidth = Iconx + 8;
-
-		// Draw the side bar
-		CRect rcBar = rc;
-		rcBar.right = BarWidth;
-		DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcBar, TRUE);
-
-		if (pmd->mii.fType & MFT_SEPARATOR)
-		{
-			// draw separator
-			CRect rcSep = rc;
-			rcSep.left = BarWidth;
-			DrawDC.SolidFill(RGB(255,255,255), rcSep);
-			rcSep.top += (rc.bottom - rc.top)/2;
-			rcSep.left = BarWidth + 2;
-			DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
-		}
-		else
-		{
-			// draw menu item
-			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			BOOL bSelected = pdis->itemState & ODS_SELECTED;
-			BOOL bChecked  = pdis->itemState & ODS_CHECKED;
-			CRect rcDraw = rc;
-
-			if ((bSelected) && (!bDisabled))
-			{
-				// draw selected item background
-				DrawDC.CreateSolidBrush(tm.clrHot1);
-				DrawDC.CreatePen(PS_SOLID, 1, tm.clrOutline);
-				DrawDC.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
-
-			}
-			else
-			{
-				// draw non-selected item background
-				rcDraw.left = BarWidth;
-				DrawDC.SolidFill(RGB(255,255,255), rcDraw);
-			}
-
-			if (bChecked)
-				DrawMenuItemCheckmark(pdis);
-			else
-				DrawMenuItemIcon(pdis);
-
-			// Calculate the text rect size
-			CRect rcText = rc;
-			rcText.left = BarWidth;
-			if (_tcschr(pmd->GetItemText(), _T('\t')))
-				rcText.right -= POST_TEXT_GAP;	// Add POST_TEXT_GAP if the text includes a tab
-
-			// Draw the text
-			int iMode = DrawDC.SetBkMode(TRANSPARENT);
-			COLORREF colorText;
-			rcText.left += 8;
-			colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
-
-			DrawMenuItemText(DrawDC, pmd->GetItemText(), rcText, colorText);
-			DrawDC.SetBkMode(iMode);
-		}
-
+		
 		DrawDC.Detach();
 	}
 
@@ -2205,15 +2176,15 @@ namespace Win32xx
 		return sizeText;
 	}
 
-	inline CRect CDrawMenu::GetTextRect(CRect rcItem)
+/*	inline CRect CDrawMenu::GetTextRect(CRect rcItem)
 	{
 		int left    = GetGutterRect(rcItem).Width() + m_marText.cxLeftWidth;
 		int top     = rcItem.top + m_marText.cyTopHeight;
 		int right   = rcItem.right - m_marItem.cxRightWidth - m_marText.cxRightWidth;
-		int bottom = rcItem.bottom - m_marText.cyBottomHeight;
+		int bottom	= rcItem.bottom - m_marText.cyBottomHeight;
 
 		return CRect(left, top, right, bottom);
-	}
+	} */
 
 	inline CDrawMenu::POPUPITEMSTATES CDrawMenu::ToItemStateId(UINT uItemState)
 	{
@@ -2897,12 +2868,7 @@ namespace Win32xx
 			return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
 
 		if (!IsRectEmpty(&pdis->rcItem))
-		{
-			if (IsAeroThemed())
-				m_pDrawMenu->DrawMenuItem(pdis);
-			else
-				m_pDrawMenu->DrawMenuItemClassic(pdis);
-		}
+			m_pDrawMenu->DrawMenuItem(pdis);
 
 		return TRUE;
 	}
