@@ -308,10 +308,10 @@ namespace Win32xx
 
 	/////////////////////////////////////
 	// Declaration of the CMenuMetrics class
-	//  This class is used by CFrame to retrieve information on the size
-	//  of the components used to perform owner-drawing of menu items.
-	//  Windows themes are used to render menu items for Vista and above
-	//  Win32++ custom themes are used to render menut items for XP and below.
+	//  This class is used by CFrame to retrieve the size of the components 
+	//  used to perform owner-drawing of menu items.  Windows Visual Styles
+	//  are used to render menu items for Vista and above.  Win32++ custom 
+	//  themes are used to render menut items for XP and below.
 	class CMenuMetrics
 	{
 	public:

@@ -419,9 +419,9 @@ namespace Win32xx
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
 		virtual void Hide();
-		virtual BOOL LoadRegistrySettings(CString strRegistryKeyName);
+		virtual BOOL LoadRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void RecalcDockLayout();
-		virtual BOOL SaveRegistrySettings(CString strRegistryKeyName);
+		virtual BOOL SaveRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
 		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked);
 		virtual BOOL VerifyDockers();
@@ -2355,17 +2355,18 @@ namespace Win32xx
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline BOOL CDocker::LoadRegistrySettings(CString strRegistryKeyName)
+	inline BOOL CDocker::LoadRegistrySettings(LPCTSTR szRegistryKeyName)
 	// Recreates the docker layout based on information stored in the registry.
 	// Assumes the DockAncestor window is already created.
 	{
 		BOOL bResult = FALSE;
 
-		if (!strRegistryKeyName.IsEmpty())
+		if (szRegistryKeyName)
 		{
 			std::vector<DockInfo> vDockList;
 			std::vector<int> vActiveContainers;
-			CString strKey = _T("Software\\") + strRegistryKeyName + _T("\\Dock Windows");
+
+			CString strKey = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
 			HKEY hKey = 0;
 			RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey);
 			if (hKey)
@@ -3153,7 +3154,7 @@ namespace Win32xx
 		return vSorted;
 	}
 
-	inline BOOL CDocker::SaveRegistrySettings(CString strRegistryKeyName)
+	inline BOOL CDocker::SaveRegistrySettings(LPCTSTR szRegistryKeyName)
 	// Stores the docking configuration in the registry
 	// NOTE: This function assumes that each docker has a unique DockID
 	{
@@ -3163,7 +3164,7 @@ namespace Win32xx
 		std::vector<CDocker*>::iterator iter;
 		std::vector<DockInfo> vDockInfo;
 
-		if (!strRegistryKeyName.IsEmpty())
+		if (szRegistryKeyName)
 		{
 			// Fill the DockInfo vector with the docking information
 			for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
@@ -3179,7 +3180,7 @@ namespace Win32xx
 				vDockInfo.push_back(di);
 			}
 
-			CString strKeyName = _T("Software\\") + strRegistryKeyName;
+			CString strKeyName = _T("Software\\") + CString(szRegistryKeyName);
 			HKEY hKey = NULL;
 			HKEY hKeyDock = NULL;
 
