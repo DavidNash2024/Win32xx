@@ -1928,6 +1928,17 @@ namespace Win32xx
 
 		GetDockChildren().clear();
 		SetRedraw(TRUE);
+		
+		// Delete any child containers this container might have
+		if (GetContainer())
+		{
+			while (GetContainer()->GetAllContainers().size() > 1)
+			{
+				CDockContainer* pContainer = GetContainer()->GetAllContainers().back().pContainer;
+				GetContainer()->RemoveContainer(pContainer);
+			}
+		}
+
 		RecalcDockLayout();
 	}
 
@@ -2227,6 +2238,9 @@ namespace Win32xx
 			if ((*iter)->GetView() == pView)
 				pDock = (*iter).get();
 		}
+
+		if (GetDockAncestor()->GetView() == pView)
+			pDock = GetDockAncestor();
 
 		return pDock;
 	}
@@ -3523,6 +3537,8 @@ namespace Win32xx
 		// Return if we shouldn't undock
 		if (GetDockFromView(pContainer)->GetDockStyle() & DS_NO_UNDOCK) return;
 
+		if (GetDockFromView(pContainer) == GetDockAncestor()) return;
+
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
 
@@ -3946,7 +3962,7 @@ namespace Win32xx
 			AdjustRect(FALSE, &rc);
 			CDockContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 			pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
-		}
+		} 
 	}
 
 	inline void CDockContainer::RemoveContainer(CDockContainer* pWnd)

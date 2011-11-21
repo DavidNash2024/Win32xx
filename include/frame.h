@@ -310,22 +310,10 @@ namespace Win32xx
 	// Declaration of the CMenuMetrics class
 	//  This class is used by CFrame to retrieve the size of the components 
 	//  used to perform owner-drawing of menu items.  Windows Visual Styles
-	//  are used to render menu items for Vista and above.  Win32++ custom 
-	//  themes are used to render menut items for XP and below.
+	//  are used to render menu items for systems running Aero (Vista and above).
+	//  Win32++ custom themes are used to render menu items for systems without Aero.
 	class CMenuMetrics
 	{
-	public:
-		HANDLE  m_hTheme;              // Theme handle
-		CFrame* m_pFrame;              // Pointer to the frame window
-
-		CMargins m_marCheck;            // Check margins
-		CMargins m_marCheckBackground;  // Check background margins
-		CMargins m_marItem;             // Item margins
-		CMargins m_marText;             // Text margins
-
-		CSize   m_sizeCheck;           // Check size metric
-		CSize   m_sizeSeparator;       // Separator size metric
-
 	public:
 		CMenuMetrics(CFrame* pFrame);
 		~CMenuMetrics();
@@ -341,6 +329,8 @@ namespace Win32xx
 		int   ToItemStateId(UINT uItemState);
 		int   ToCheckBackgroundStateId(int iStateId);
 		int   ToCheckStateId(UINT fType, int iStateId);
+
+		// Wrappers for Windows API functions
 		HRESULT CloseThemeData();
 		HRESULT DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect);
 		HRESULT DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect);
@@ -350,6 +340,17 @@ namespace Win32xx
 		HRESULT GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect);
 		BOOL    IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId);
 		HANDLE  OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
+
+		HANDLE  m_hTheme;              // Theme handle
+		CFrame* m_pFrame;              // Pointer to the frame window
+
+		CMargins m_marCheck;            // Check margins
+		CMargins m_marCheckBackground;  // Check background margins
+		CMargins m_marItem;             // Item margins
+		CMargins m_marText;             // Text margins
+
+		CSize   m_sizeCheck;           // Check size metric
+		CSize   m_sizeSeparator;       // Separator size metric
 
 	private:
 		typedef HRESULT WINAPI CLOSETHEMEDATA(HANDLE);
@@ -497,7 +498,7 @@ namespace Win32xx
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		void LoadCommonControls();
 
-		std::vector<ItemDataPtr> m_vMenuItemData;// vector of MenuItemData pointers
+		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
 		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entires
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
 		CDialog m_AboutDialog;				// Help about dialog

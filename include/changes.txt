@@ -5,8 +5,8 @@ New Features and Enhancements
 -----------------------------
 * Adjusted the frame's appearance
 	- Updated the visual appearance of popup menus on systems using Windows Aero. On 
-	  systems with Aero, popup menus are rendered with Windows Themes. Systems without
-	  Area continue to use the Win32++ theme for popup menus.
+	  systems with Aero, popup menus are rendered with Windows Visual Styles. Systems
+	  without Areo continue to use the Win32++ theme for popup menus.
 	- Frames now honour the current window theme's menu and status fonts.
 	- the frame's appearence changes dynamically to reflect changes to the window theme.
 	- minor adjustment to the rebar theme colours for the "Modern" theme.
@@ -49,6 +49,9 @@ Changes in detail
 - Added		wndBottom				a special CWnd for use with SetWindowPos
 
 - Added     CDC::DetachBitmap
+- Added 	CFrame::DrawMenuItem
+- Added     CFrame::DrawMenuItemBkgnd
+- Added     CFrame::MeasureMenuItem
 - Added 	CGDIObject::DeleteObject
 - Added 	CString::CString(LPCSTR pszText);
 - Added 	CString::CString(LPCWSTR pszText);
@@ -134,6 +137,8 @@ Changes in detail
 - Removed 	CString::b_str
 - Removed 	CString(LPCTSTR pszText);
 - Removed 	CString::operator += (LPCTSTR szText);
+- Renamed 	CFrame::DrawCheckmark to DrawMenuCheckmark
+
 
 Incompatibilities with previous versions
 ----------------------------------------
