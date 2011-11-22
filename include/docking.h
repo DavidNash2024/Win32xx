@@ -1932,10 +1932,12 @@ namespace Win32xx
 		// Delete any child containers this container might have
 		if (GetContainer())
 		{
-			while (GetContainer()->GetAllContainers().size() > 1)
+			std::vector<ContainerInfo> AllContainers = GetContainer()->GetAllContainers();
+			std::vector<ContainerInfo>::iterator iter;
+			for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
 			{
-				CDockContainer* pContainer = GetContainer()->GetAllContainers().back().pContainer;
-				GetContainer()->RemoveContainer(pContainer);
+				if (GetContainer() != (*iter).pContainer)
+					GetContainer()->RemoveContainer((*iter).pContainer);
 			}
 		}
 
