@@ -1,8 +1,10 @@
 ///////////////////////////////////
 // main.cpp
 
-// Add the Win32++\include  directory to project's additional include directories
-#include "Wincore.h"
+// The directory of the include directory should also be added to project's 
+//  additional include directories.
+
+#include "wincore.h"
 
 
 class CView : public CWnd

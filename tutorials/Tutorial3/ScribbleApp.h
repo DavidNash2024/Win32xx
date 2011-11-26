@@ -1,7 +1,7 @@
 ////////////////////////////////////
 // ScribbleApp.h
 
-#include "WinCore.h"
+#include "wincore.h"
 #include "View.h"
 
 

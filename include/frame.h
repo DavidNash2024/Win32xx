@@ -390,7 +390,7 @@ namespace Win32xx
 
 		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView) const;
-		virtual CString GetThemeName();
+		virtual CString GetThemeName() const;
 		virtual CRect GetViewRect() const;
 		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
@@ -2472,7 +2472,7 @@ namespace Win32xx
 		return rcView;
 	}
 
-	inline CString CFrame::GetThemeName()
+	inline CString CFrame::GetThemeName() const
 	{
 		// Returns the XP theme name
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));

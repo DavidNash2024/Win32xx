@@ -1,7 +1,9 @@
 ///////////////////////////////////////
 // main.cpp
 
-// Add the Win32++\include  directory to project's additional include directories
+// Also add the Win32++\include  directory to project's additional include directories
+// Also add the Win32++\include  directory to project's additional resource directories
+
 #include "ScribbleApp.h"
 
 

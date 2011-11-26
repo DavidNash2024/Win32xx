@@ -5,8 +5,8 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "Frame.h"
-#include "File.h"
+#include "frame.h"
+#include "file.h"
 #include "View.h"
 
 // required for Dev-C++

@@ -6,7 +6,7 @@
 #define SCRIBBLEAPP_H
 
 #include "targetver.h"
-#include "Wincore.h"
+#include "wincore.h"
 #include "Mainfrm.h"
 
 
