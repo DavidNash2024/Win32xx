@@ -236,7 +236,7 @@ namespace Win32xx
 		virtual ~CHotKey() {}
 
 		DWORD GetHotKey() const;
-		static CString GetKeyName(UINT vk, BOOL fExtended);
+		CString GetKeyName(UINT vk, BOOL fExtended) const;
 		void SetHotKey(DWORD dwKey);
 		void SetRules(WORD wInvalidComb, WORD wModifiers);
 
@@ -965,7 +965,7 @@ namespace Win32xx
 		return (DWORD)SendMessage(HKM_GETHOTKEY, 0, 0);
 	}
 
-	inline CString CHotKey::GetKeyName(UINT vk, BOOL fExtended)
+	inline CString CHotKey::GetKeyName(UINT vk, BOOL fExtended) const
 	{
 		// Translate the virtual-key code to a scan code
 		LONG lScan = MapVirtualKey(vk, 0);
