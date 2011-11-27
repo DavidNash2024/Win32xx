@@ -426,7 +426,7 @@ namespace Win32xx
 
 	protected:
 		// Override these functions as required
-		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx = 16, int cy = 16);
+		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon);
 		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
@@ -1871,18 +1871,13 @@ namespace Win32xx
 		if (m_himlMenuDis)	ImageList_Destroy(m_himlMenuDis);
 	}
 
-	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon, int cx /*= 16*/, int cy /*= 16*/)
+	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon)
 	{
-		// Get ImageList image size
-		int cxOld = 0;
-		int cyOld = 0;
-		ImageList_GetIconSize(m_himlMenu, &cxOld, &cyOld );
-
 		// Create a new ImageList if required
-		if ((cx != cxOld) || (cy != cyOld) || (NULL == m_himlMenu))
+		if (NULL == m_himlMenu)
 		{
 			if (m_himlMenu) ImageList_Destroy(m_himlMenu);
-			m_himlMenu = ImageList_Create(cx, cy, ILC_COLOR32 | ILC_MASK, 1, 0);
+			m_himlMenu = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 0);
 			m_vMenuIcons.clear();
 		}
 
