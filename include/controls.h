@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.3
-// Released: N/A (Work in Progress code)
+// Win32++   Version 7.3
+// Released: 30th November 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -475,7 +475,7 @@ namespace Win32xx
 		}
 
 	private:
-		void LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT nIDTool) const;
+		void LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT_PTR nIDTool) const;
 	};
 
 
@@ -898,13 +898,13 @@ namespace Win32xx
 	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
 	{
 		assert(IsWindow());
-		return DateTime_GetMonthCalColor(m_hWnd, iColor);
+		return (COLORREF)DateTime_GetMonthCalColor(m_hWnd, iColor);
 	}
 
 	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr)
 	{
 		assert(IsWindow());
-		return DateTime_SetMonthCalColor(m_hWnd, iColor, clr);
+		return (COLORREF)DateTime_SetMonthCalColor(m_hWnd, iColor, clr);
 	}
 
 	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat)
@@ -984,7 +984,7 @@ namespace Win32xx
 		{
 			nBufferLen *= 4;
 			LPTSTR pszStr = str.GetBuffer(nBufferLen);
-			nStrLen = ::GetKeyNameText(lParam, pszStr, nBufferLen + 1);
+			nStrLen = ::GetKeyNameText((LONG)lParam, pszStr, nBufferLen + 1);
 			str.ReleaseBuffer();
 		}
 
@@ -1202,7 +1202,7 @@ namespace Win32xx
 	inline COLORREF CMonthCalendar::GetColor(int nRegion) const
 	{
 		assert(IsWindow());
-		return MonthCal_GetColor(m_hWnd, nRegion);
+		return (COLORREF)MonthCal_GetColor(m_hWnd, nRegion);
 	}
 
 	inline BOOL CMonthCalendar::GetCurSel(LPSYSTEMTIME pDateTime) const
@@ -1268,7 +1268,7 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return MonthCal_GetSelRange(m_hWnd, &MinMax);
+		return (BOOL)MonthCal_GetSelRange(m_hWnd, &MinMax);
 	}
 
 	inline BOOL CMonthCalendar::GetToday(LPSYSTEMTIME pDateTime) const
@@ -1280,13 +1280,13 @@ namespace Win32xx
 	inline DWORD CMonthCalendar::HitTest(PMCHITTESTINFO pMCHitTest)
 	{
 		assert(IsWindow());
-		return MonthCal_HitTest(m_hWnd, pMCHitTest);
+		return (DWORD)MonthCal_HitTest(m_hWnd, pMCHitTest);
 	}
 
 	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
 	{
 		assert(IsWindow());
-		return MonthCal_SetColor(m_hWnd, nRegion, clr);
+		return (COLORREF)MonthCal_SetColor(m_hWnd, nRegion, clr);
 	}
 
 	inline BOOL CMonthCalendar::SetCurSel(const LPSYSTEMTIME pDateTime)
@@ -1298,13 +1298,13 @@ namespace Win32xx
 	inline BOOL CMonthCalendar::SetDayState(int nMonths, LPMONTHDAYSTATE pStates)
 	{
 		assert(IsWindow());
-		return MonthCal_SetDayState(m_hWnd, nMonths, pStates);
+		return (BOOL)MonthCal_SetDayState(m_hWnd, nMonths, pStates);
 	}
 
 	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
 	{
 		assert(IsWindow());
-		DWORD dwValue = MonthCal_SetFirstDayOfWeek(m_hWnd, iDay);
+		DWORD dwValue = (DWORD)MonthCal_SetFirstDayOfWeek(m_hWnd, iDay);
 
 		if(pnOld)
 			*pnOld = LOWORD(dwValue);
@@ -1350,7 +1350,7 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return MonthCal_SetSelRange(m_hWnd, &MinMax);
+		return (BOOL)MonthCal_SetSelRange(m_hWnd, &MinMax);
 	}
 
 	inline void CMonthCalendar::SetToday(const LPSYSTEMTIME pDateTime)
@@ -1898,7 +1898,7 @@ namespace Win32xx
 		return (BOOL)SendMessage(TTM_HITTEST, 0, (LPARAM)&hti);
 	}
 
-	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT nIDTool) const
+	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT_PTR nIDTool) const
 	{
 		ZeroMemory(&ti, sizeof(TOOLINFO));
 		ti.cbSize = sizeof(TOOLINFO);

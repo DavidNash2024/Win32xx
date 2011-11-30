@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.3
-// Released: N/A (Work in Progress code)
+// Win32++   Version 7.3
+// Released: 30th November 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2623,6 +2623,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::SetWindowPos(const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const
+	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
+	// or top-level window.
 	// The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
 	// or top-level window.
 	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost

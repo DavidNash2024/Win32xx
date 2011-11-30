@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.3
-// Released: N/A (Work in Progress code)
+// Win32++   Version 7.3
+// Released: 30th November 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -140,16 +140,16 @@ namespace Win32xx
 	public:
 		CWebBrowser();
 		virtual ~CWebBrowser();
-		virtual void AddWebBrowserControl(void);
-		virtual CAXWindow& GetAXWindow() const { return (CAXWindow&)m_AXContainer; }
-		virtual IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
-
+		
+		
 		//Attributes
 		LPDISPATCH GetApplication() const;
+		CAXWindow& GetAXWindow() const { return (CAXWindow&)m_AXContainer; }
 		BOOL GetBusy() const;
 		LPDISPATCH GetContainer() const;
 		BOOL GetFullScreen() const;
 		long GetHeight() const;
+		IWebBrowser2* GetIWebBrowser2() const { return m_pIWebBrowser2; }
 		long GetLeft() const;
 		CString GetLocationName() const;
 		CString GetLocationURL() const;
@@ -173,6 +173,7 @@ namespace Win32xx
 		void SetWidth(long nNewValue);
 
 		// Operations
+		void AddWebBrowserControl(void);
 		void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
 		BOOL GetProperty(LPCTSTR pszProperty, CString& strValue);
 		VARIANT GetProperty( LPCTSTR pszProperty);

@@ -95,6 +95,7 @@ Changes in detail
 - Added 	CWebBrowser::SetVisible
 - Added 	CWebBrowser::SetWidth
 - Added 	CWebBrowser::Stop
+- Modified  CComboBoxEx::GetComboBoxControl now returns CWnd*
 - Modified  CComboBoxEx::GetEditCtrl 		now returns CEdit*
 - Modified  CDC::CreateBitmap				now returns void
 - Modified  CDC::CreateCompatibleBitmap 	now returns void

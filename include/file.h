@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.3
-// Released: N/A (Work in Progress code)
+// Win32++   Version 7.3
+// Released: 30th November 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

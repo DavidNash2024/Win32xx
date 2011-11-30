@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.3
-// Released: N/A (Work in Progress code)
+// Win32++   Version 7.3
+// Released: 30th November 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2598,7 +2598,7 @@ namespace Win32xx
 #if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		if (GetParent()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 		{
-			DWORD dwExStyle = GetWindowLongPtr(GWL_EXSTYLE);
+			DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
 			SetWindowLongPtr(GWL_EXSTYLE, dwExStyle | WS_EX_LAYOUTRTL);
 		}
 #endif

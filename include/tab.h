@@ -1,5 +1,5 @@
-// Win32++   Pre-release Version 7.3
-// Released: N/A (Work in Progress code)
+// Win32++   Version 7.3
+// Released: 30th November 2011
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1213,6 +1213,15 @@ namespace Win32xx
 	{
 		switch(uMsg)
 		{
+		case WM_DESTROY:
+			// Required for Windows NT
+			{
+				for (int i = GetItemCount()-1; i >= 0; --i)
+				{
+					RemoveTabPage(i);
+				}
+			}
+			break;
 		case WM_PAINT:
 			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
 			{
