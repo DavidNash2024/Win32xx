@@ -232,7 +232,7 @@ BOOL CClientDialog::OnInitDialog()
 
 void CClientDialog::OnStartClient()
 {
-	TRACE(_T("Connect/Disconnect Button Pressed\n"));
+	TRACE("Connect/Disconnect Button Pressed\n");
 
 	LRESULT lr = m_RadioTCP.SendMessage( BM_GETCHECK, 0, 0 );
 	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;

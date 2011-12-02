@@ -139,13 +139,13 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:
-		TRACE(_T("File New\n"));
+		TRACE("File New\n");
 		break;
 	case IDM_FILE_OPEN:
-		TRACE(_T("File Open\n"));
+		TRACE("File Open\n");
 		break;
 	case IDM_FILE_SAVE:
-		TRACE(_T("FILE Save\n"));
+		TRACE("FILE Save\n");
 		break;
 	}
 

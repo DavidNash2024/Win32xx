@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -157,7 +157,7 @@ namespace Win32xx
 		// A thread's state is set to signalled when the thread terminates.
 		// If your thread is still running at this point, you have a bug.
 		if (0 != WaitForSingleObject(m_hThread, 0))
-			TRACE(_T("*** Error *** Ending CThread before ending its thread\n"));
+			TRACE("*** Error *** Ending CThread before ending its thread\n");
 
 		// Close the thread's handle
 		::CloseHandle(m_hThread);

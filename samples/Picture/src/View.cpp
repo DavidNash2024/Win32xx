@@ -69,7 +69,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	}
 
 	TRACE(szFile);
-	TRACE(_T("\n"));
+	TRACE("\n");
 
 	m_xCurrentScroll = 0;
 	m_yCurrentScroll = 0;
@@ -87,7 +87,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	}
 	else
 	{
-		TRACE(_T("Failed to load picture\n"));
+		TRACE("Failed to load picture\n");
 
 		// Set Frame title back to default
 		GetParent()->SetWindowText(LoadString(IDW_MAIN).c_str());

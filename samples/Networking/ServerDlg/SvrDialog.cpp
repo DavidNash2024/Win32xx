@@ -271,7 +271,7 @@ BOOL CSvrDialog::OnInitDialog()
 void CSvrDialog::OnStartServer()
 {
 	// Respond to the Start/Stop Button press
-	TRACE( _T("Start/Stop Button Pressed\n") );
+	TRACE("Start/Stop Button Pressed\n");
 
 	if (!m_bServerStarted)
 	{
@@ -349,7 +349,7 @@ void CSvrDialog::OnSocketAccept()
 	m_MainSocket.Accept(*pClient, NULL, NULL);
 	if (INVALID_SOCKET == m_MainSocket.GetSocket())
 	{
-		TRACE(_T("Failed to accept connection from client\n"));
+		TRACE("Failed to accept connection from client\n");
 		TRACE(m_MainSocket.GetLastError());
 		return;
 	}
@@ -400,7 +400,7 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		{
 			int addrlen = sizeof(m_saUDPClient);
 			m_MainSocket.ReceiveFrom(bufArray, 1024, 0, (LPSOCKADDR)&m_saUDPClient, &addrlen);
-			TRACE(_T("[Received:] ")); TRACE(bufArray); TRACE(_T("\n"));
+			TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);
 			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE );

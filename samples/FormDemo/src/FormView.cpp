@@ -149,18 +149,18 @@ BOOL CFormView::OnInitDialog()
 void CFormView::OnOK()
 {
 	SetDlgItemText(IDC_STATUS, _T("OK Button Pressed."));
-	TRACE(_T("OK Button Pressed.\n"));
+	TRACE("OK Button Pressed.\n");
 }
 
 void CFormView::OnButton()
 {
 	SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
-	TRACE(_T("Button Pressed\n"));
+	TRACE("Button Pressed\n");
 }
 
 void CFormView::OnCheckA()
 {
-	TRACE(_T("Check Box A\n"));
+	TRACE("Check Box A\n");
 	BOOL bCheck = GetDoc().GetCheckA();
 	bCheck = !bCheck;  // Toggle
 	SendDlgItemMessage(ID_CHECK_A, BM_SETCHECK, bCheck, 0);
@@ -171,7 +171,7 @@ void CFormView::OnCheckA()
 
 void CFormView::OnCheckB()
 {
-	TRACE(_T("Check Box B\n"));
+	TRACE("Check Box B\n");
 	BOOL bCheck = GetDoc().GetCheckB();
 	bCheck = !bCheck;  // Toggle
 	SendDlgItemMessage(ID_CHECK_B, BM_SETCHECK, bCheck, 0);
@@ -182,7 +182,7 @@ void CFormView::OnCheckB()
 
 void CFormView::OnCheckC()
 {
-	TRACE(_T("Check Box C\n"));
+	TRACE("Check Box C\n");
 	BOOL bCheck = GetDoc().GetCheckC();
 	bCheck = !bCheck;  // Toggle
 	SendDlgItemMessage(ID_CHECK_C, BM_SETCHECK, bCheck, 0);
@@ -200,6 +200,6 @@ void CFormView::OnRangeOfIds_Radio(UINT nIdAdjust)
 	GetDoc().SetRadio(nIdAdjust);
 
 	SetDlgItemText(IDC_STATUS, _T("Radio changed"));
-	TRACE(_T("Radio changed\n"));
+	TRACE("Radio changed\n");
 }
 

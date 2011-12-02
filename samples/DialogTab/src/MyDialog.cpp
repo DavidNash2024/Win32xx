@@ -44,25 +44,25 @@ BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch (LOWORD(wParam))
     {
 	case IDC_BUTTON1:
-		TRACE(_T("Push Button Pressed\n"));
+		TRACE("Push Button Pressed\n");
 		return TRUE;
 	case IDC_RADIO1:
-		TRACE(_T("Radio Button 1\n"));
+		TRACE("Radio Button 1\n");
 		return TRUE;
 	case IDC_RADIO2:
-		TRACE(_T("Radio Button 2\n"));
+		TRACE("Radio Button 2\n");
 		return TRUE;
 	case IDC_RADIO3:
-		TRACE(_T("Radio Button 3\n"));
+		TRACE("Radio Button 3\n");
 		return TRUE;
 	case IDC_CHECK1:
-		TRACE(_T("Check Box 1\n"));
+		TRACE("Check Box 1\n");
 		return TRUE;
 	case IDC_CHECK2:
-		TRACE(_T("Check Box 2\n"));
+		TRACE("Check Box 2\n");
 		return TRUE;
 	case IDC_CHECK3:
-		TRACE(_T("Check Box 3\n"));
+		TRACE("Check Box 3\n");
 		return TRUE;
     } //switch (LOWORD(wParam))
 

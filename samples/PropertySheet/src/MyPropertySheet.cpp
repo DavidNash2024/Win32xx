@@ -29,7 +29,7 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 int CButtonPage::OnApply()
 { 
-	TRACE (_T("Appy button pressed\n")); 
+	TRACE ("Appy button pressed\n"); 
 	
 	// The possible return values are:
 	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
@@ -41,18 +41,18 @@ int CButtonPage::OnApply()
 
 void CButtonPage::OnCancel()
 { 
-	TRACE (_T("Cancel button pressed\n")); 
+	TRACE ("Cancel button pressed\n"); 
 }
 
 BOOL CButtonPage::OnInitDialog()
 { 
-	TRACE (_T("Button page created\n")); 
+	TRACE ("Button page created\n"); 
 	return TRUE; 
 }
 
 int CButtonPage::OnOK()
 { 
-	TRACE (_T("OK button pressed\n"));
+	TRACE ("OK button pressed\n");
 
 	// The possible return values are:
 	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
@@ -64,14 +64,14 @@ int CButtonPage::OnOK()
 
 BOOL CButtonPage::OnQueryCancel()
 { 
-	TRACE (_T("Ok to Cancel?\n")); 
+	TRACE ("Ok to Cancel?\n"); 
 	
 	return FALSE;    // Allow cancel to proceed
 }
 
 int CButtonPage::OnSetActive()
 {
-	TRACE(_T("Button page is now active\n"));
+	TRACE("Button page is now active\n");
 
 	// Set the wizard buttons
 	SetWizardButtons(PSWIZB_NEXT);
@@ -98,7 +98,7 @@ int CButtonPage::Validate()
 	if (nStatus != PSNRET_NOERROR)
 		MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
 	else
-		TRACE(_T("Button Page Validation passed\n"));
+		TRACE("Button Page Validation passed\n");
 	
 	return nStatus;
 }
@@ -126,7 +126,7 @@ INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 BOOL CComboPage::OnInitDialog()
 {
-	TRACE (_T("Combo page created\n"));
+	TRACE("Combo page created\n");
 
 	// Put some text in the Combo Boxes
 	for (int i = 0 ; i < 6 ; i++)
@@ -141,7 +141,7 @@ BOOL CComboPage::OnInitDialog()
 
 int CComboPage::OnSetActive()
 {
-	TRACE(_T("Combo page is now active\n"));
+	TRACE("Combo page is now active\n");
 
 	// Set the wizard buttons
 	SetWizardButtons(PSWIZB_BACK | PSWIZB_FINISH);

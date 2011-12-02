@@ -408,7 +408,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 		//Next Sibling
 		hChild = GetNextSibling(hChild);
 	}
-	TRACE(_T("Item NOT found\n"));
+	TRACE("Item NOT found\n");
 
 	return FALSE;
 }

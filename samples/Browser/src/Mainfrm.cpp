@@ -212,7 +212,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 {
 	UNREFERENCED_PARAMETER(pDispParams);
-	TRACE(_T("OnDocumentBegin\n"));
+	TRACE("OnDocumentBegin\n");
 }
 
 void CMainFrame::OnCreate()
@@ -276,7 +276,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
 {
 	UNREFERENCED_PARAMETER(pDispParams);
-	TRACE(_T("NewWindow2\n"));
+	TRACE("NewWindow2\n");
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -358,7 +358,7 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 {
-	TRACE(_T("TitleChange: \n"));
+	TRACE("TitleChange: \n");
     CString str;
 
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)

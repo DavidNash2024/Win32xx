@@ -52,7 +52,7 @@ void CView::OnCreate()
 		}
 	}
 	else
-		TRACE(_T("Failed to initialize DirectX\n"));
+		TRACE("Failed to initialize DirectX\n");
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
@@ -192,12 +192,12 @@ void CView::Render()
 					m_d3dpp.BackBufferWidth		= rcClient.Width();
 					m_d3dpp.BackBufferHeight	= rcClient.Height();
 					if ( !SUCCEEDED( m_pd3dDevice->Reset(&m_d3dpp) ) )
-						TRACE(_T("Failed to reset the DirectX device\n"));
+						TRACE("Failed to reset the DirectX device\n");
 				}
 
 				// Clear the backbuffer to a black color
 				if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
-					TRACE(_T("Failed to clear back buffer\n"));
+					TRACE("Failed to clear back buffer\n");
 
 				// Begin the scene
 				if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
@@ -216,21 +216,21 @@ void CView::Render()
 					m_pd3dDevice->EndScene();
 				}
 				else
-					TRACE(_T("Failed to render the scene\n"));
+					TRACE("Failed to render the scene\n");
 
 				// Present the backbuffer contents to the display
 				m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 			}
 			break;
 		case D3DERR_DEVICELOST:
-			TRACE(_T("Got D3DERR_DEVICELOST\n"));
+			TRACE("Got D3DERR_DEVICELOST\n");
 			break;
 		case D3DERR_DEVICENOTRESET:
-			TRACE(_T("Got D3DERR_DEVICENOTRESET\n"));
+			TRACE("Got D3DERR_DEVICENOTRESET\n");
 			m_pd3dDevice->Reset(&m_d3dpp);	// Reset the DX device
 			break;
 		default:
-			TRACE(_T("Direct3D device is in an invalid state\n"));
+			TRACE("Direct3D device is in an invalid state\n");
 			break;
 		}
 

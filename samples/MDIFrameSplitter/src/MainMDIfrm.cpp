@@ -56,7 +56,7 @@ void CMainMDIFrame::OnFilePrint()
 
 void CMainMDIFrame::OnInitialUpdate()
 {
-	TRACE(_T("MDI Frame started \n"));
+	TRACE("MDI Frame started \n");
 	//The frame is now created.
 	//Place any additional startup code here.
 }

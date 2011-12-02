@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -210,7 +210,7 @@ namespace Win32xx
 
 		if (INVALID_HANDLE_VALUE == m_hFile)
 		{
-			TRACE(_T("Failed\n"));
+			TRACE("Failed\n");
 			m_hFile = 0;
 		}
 

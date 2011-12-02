@@ -21,7 +21,7 @@ void CView::OnCreate()
 	// Set the window title
 	SetWindowText(LoadString(IDW_MAIN));
 
-	TRACE(_T("OnCreate\n"));
+	TRACE("OnCreate\n");
 }
 
 void CView::OnDestroy()
@@ -46,7 +46,7 @@ void CView::OnInitialUpdate()
 	// OnInitialUpdate is called after the window is created.
 	// Tasks which are to be done after the window is created go here.
 
-	TRACE(_T("OnInitialUpdate\n"));
+	TRACE("OnInitialUpdate\n");
 }
 
 void CView::OnSize()

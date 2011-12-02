@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -445,7 +445,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			TRACE(_T("\n*** Failed to create dialog ***\n"));
+			TRACE("\n*** Failed to create dialog ***\n");
 			e.what();	// Display the last error message.
 
 			// eat the exception (don't rethrow)
@@ -492,7 +492,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			TRACE(_T("\n*** Failed to create dialog ***\n"));
+			TRACE("\n*** Failed to create dialog ***\n");
 			e.what();	// Display the last error message.
 
 			// eat the exception (don't rethrow)

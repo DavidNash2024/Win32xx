@@ -134,7 +134,7 @@ void CGDIPlusView::OnDraw(CDC* pDC)
 void CGDIPlusView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called immediately after the window is created
-	TRACE(_T("View window created\n"));
+	TRACE("View window created\n");
 }
 
 void CGDIPlusView::PreCreate(CREATESTRUCT &cs)

@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -236,7 +236,7 @@ namespace Win32xx
 
 		rClientSock.m_Socket = ::accept(m_Socket, addr, addrlen);
 		if (INVALID_SOCKET == rClientSock.GetSocket())
-			TRACE(_T("Accept failed\n"));
+			TRACE("Accept failed\n");
 	}
 
 	inline int CSocket::Bind(LPCTSTR addr, LPCTSTR port)
@@ -256,7 +256,7 @@ namespace Win32xx
 			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
-				TRACE( _T("GetAddrInfo failed\n"));
+				TRACE("GetAddrInfo failed\n");
 				return RetVal;
 			}
 
@@ -264,7 +264,7 @@ namespace Win32xx
 			RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 			if ( RetVal == SOCKET_ERROR )
 			{
-				TRACE(_T("Bind failed\n"));
+				TRACE("Bind failed\n");
 				return RetVal;
 			}
 
@@ -283,14 +283,14 @@ namespace Win32xx
             nPort = atoi( T2A(port) );
 			if (-1 == nPort)
 			{
-				TRACE(_T("Invalid port number\n"));
+				TRACE("Invalid port number\n");
 				return SOCKET_ERROR;
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
 			RetVal = ::bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( 0 != RetVal )
-				TRACE(_T("Bind failed\n"));
+				TRACE("Bind failed\n");
 		}
 
 		return RetVal;
@@ -302,7 +302,7 @@ namespace Win32xx
 
 		int Result = ::bind (m_Socket, name, namelen);
 		if ( 0 != Result )
-			TRACE(_T("Bind failed\n"));
+			TRACE("Bind failed\n");
 		return Result;
 	}
 
@@ -323,7 +323,7 @@ namespace Win32xx
 			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
-				TRACE( _T("getaddrinfo failed\n"));
+				TRACE("getaddrinfo failed\n");
 				return SOCKET_ERROR;
 			}
 
@@ -331,7 +331,7 @@ namespace Win32xx
 			RetVal = Connect( AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 			if ( RetVal == SOCKET_ERROR )
 			{
-				TRACE(_T("Connect failed\n"));
+				TRACE("Connect failed\n");
 				return RetVal;
 			}
 
@@ -350,14 +350,14 @@ namespace Win32xx
 			nPort = atoi( T2A(port) );
 			if (-1 == nPort)
 			{
-				TRACE(_T("Invalid port number\n"));
+				TRACE("Invalid port number\n");
 				return SOCKET_ERROR;
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
 			RetVal = ::connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( 0 != RetVal )
-				TRACE(_T("Connect failed\n"));
+				TRACE("Connect failed\n");
 		}
 
 		return RetVal;
@@ -369,7 +369,7 @@ namespace Win32xx
 
 		int Result = ::connect( m_Socket, name, namelen );
 		if ( 0 != Result )
-			TRACE(_T("Connect failed\n"));
+			TRACE("Connect failed\n");
 
 		return Result;
 	}
@@ -386,7 +386,7 @@ namespace Win32xx
 		m_Socket = socket(family, type, protocol);
 		if(m_Socket == INVALID_SOCKET)
 		{
-			TRACE(_T("Failed to create socket\n"));
+			TRACE("Failed to create socket\n");
 			return FALSE;
 		}
 
@@ -428,7 +428,7 @@ namespace Win32xx
 		// specified network events (Events) on socket sClient.
 		if(	SOCKET_ERROR == WSAEventSelect(sClient, AllEvents[0], Events))
 		{
-			TRACE(_T("Error in Event Select\n"));
+			TRACE("Error in Event Select\n");
 			::SetEvent(pSocket->m_Stopped);
 			::WSACloseEvent(AllEvents[0]);
 			return 0;
@@ -450,7 +450,7 @@ namespace Win32xx
 
 			if (WSA_WAIT_FAILED == dwResult)
 			{
-				TRACE(_T("WSAWaitForMultipleEvents failed\n"));
+				TRACE("WSAWaitForMultipleEvents failed\n");
 				::WSACloseEvent(AllEvents[0]);
 				::SetEvent(pSocket->m_Stopped);
 				return 0;
@@ -462,7 +462,7 @@ namespace Win32xx
 
 				if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(sClient, AllEvents[0], &NetworkEvents) )
 				{
-					TRACE(_T("WSAEnumNetworkEvents failed\n"));
+					TRACE("WSAEnumNetworkEvents failed\n");
 					::WSACloseEvent(AllEvents[0]);
 					::SetEvent(pSocket->m_Stopped);
 					return 0;
@@ -553,7 +553,7 @@ namespace Win32xx
 	{
 		int Result = ::getpeername(m_Socket, name, namelen);
 		if (0 != Result)
-			TRACE(_T("GetPeerName failed\n"));
+			TRACE("GetPeerName failed\n");
 
 		return Result;
 	}
@@ -562,7 +562,7 @@ namespace Win32xx
 	{
 		int Result = ::getsockname(m_Socket, name, namelen);
 		if (0 != Result)
-			TRACE(_T("GetSockName Failed\n"));
+			TRACE("GetSockName Failed\n");
 
 		return Result;
 	}
@@ -571,7 +571,7 @@ namespace Win32xx
 	{
 		int Result = ::getsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
-			TRACE(_T("GetSockOpt Failed\n"));
+			TRACE("GetSockOpt Failed\n");
 
 		return Result;
 	}
@@ -597,7 +597,7 @@ namespace Win32xx
 	{
 		int Result = ::ioctlsocket(m_Socket, cmd, argp);
 		if (0 != Result)
-			TRACE(_T("ioCtlSocket Failed\n"));
+			TRACE("ioCtlSocket Failed\n");
 
 		return Result;
 	}
@@ -620,7 +620,7 @@ namespace Win32xx
 	{
 		int Result = ::listen(m_Socket, backlog);
 		if (0 != Result)
-			TRACE(_T("Listen Failed\n"));
+			TRACE("Listen Failed\n");
 
 		return Result;
 	}
@@ -631,7 +631,7 @@ namespace Win32xx
 		char* pCharArray = &vChar.front();
 		int Result = ::recv(m_Socket, pCharArray, len, flags);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("Receive failed\n"));
+			TRACE("Receive failed\n");
 
 		lstrcpyn(buf, A2T(pCharArray), len);
 
@@ -645,7 +645,7 @@ namespace Win32xx
 		char* pCharArray = &vChar.front();
 		int Result = ::recvfrom(m_Socket, pCharArray, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("ReceiveFrom failed\n"));
+			TRACE("ReceiveFrom failed\n");
 
 		lstrcpyn(buf, A2T(pCharArray), len);
 
@@ -656,7 +656,7 @@ namespace Win32xx
 	{
 		int Result = ::send(m_Socket, T2A(buf), len, flags);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("Send failed\n"));
+			TRACE("Send failed\n");
 
 		return Result;
 	}
@@ -678,14 +678,14 @@ namespace Win32xx
 			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
-				TRACE( _T("GetAddrInfo failed\n"));
+				TRACE("GetAddrInfo failed\n");
 				return SOCKET_ERROR;
 			}
 
 			RetVal = ::sendto(m_Socket, T2A(send), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 			if ( RetVal == SOCKET_ERROR )
 			{
-				TRACE(_T("SendTo failed\n"));
+				TRACE("SendTo failed\n");
 				return RetVal;
 			}
 
@@ -704,14 +704,14 @@ namespace Win32xx
             nPort = atoi( T2A(port));
 			if (-1 == nPort)
 			{
-				TRACE(_T("Invalid port number\n"));
+				TRACE("Invalid port number\n");
 				return SOCKET_ERROR;
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
 			RetVal = ::sendto( m_Socket, T2A(send), len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
-				TRACE(_T("SendTo failed\n"));
+				TRACE("SendTo failed\n");
 		}
 
 		return RetVal;
@@ -722,7 +722,7 @@ namespace Win32xx
 	{
 		int Result =  ::sendto(m_Socket, T2A(buf), len, flags, to, tolen);
 		if (SOCKET_ERROR == Result)
-			TRACE(_T("SendTo failed\n"));
+			TRACE("SendTo failed\n");
 
 		return Result;
 	}
@@ -731,7 +731,7 @@ namespace Win32xx
 	{
 		int Result = ::setsockopt(m_Socket, level, optname, optval, optlen);
 		if (0 != Result)
-			TRACE(_T("SetSockOpt failed\n"));
+			TRACE("SetSockOpt failed\n");
 
 		return Result;
 	}
@@ -759,7 +759,7 @@ namespace Win32xx
 				{
 					// Note: An excessive delay in processing any of the notification functions
 					// can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
-					TRACE(_T("*** Error: Event Thread won't die ***\n") );
+					TRACE("*** Error: Event Thread won't die ***\n");
 				}
 				else break;
 			}

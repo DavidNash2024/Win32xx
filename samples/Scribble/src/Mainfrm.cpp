@@ -48,19 +48,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnFilePrint();
 		return TRUE;
 	case IDM_PEN_RED:
-		TRACE(_T("Red pen selected\n"));
+		TRACE("Red pen selected\n");
 		m_View.SetPen(RGB(255,0,0));
 		return TRUE;
 	case IDM_PEN_BLUE:
-		TRACE(_T("Blue pen selected\n"));
+		TRACE("Blue pen selected\n");
 		m_View.SetPen(RGB(0,0,255));
 		return TRUE;
 	case IDM_PEN_GREEN:
-		TRACE(_T("Green pen selected\n"));
+		TRACE("Green pen selected\n");
 		m_View.SetPen(RGB(0,196,0));
 		return TRUE;
 	case IDM_PEN_BLACK:
-		TRACE(_T("Black pen selected\n"));
+		TRACE("Black pen selected\n");
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
@@ -165,7 +165,7 @@ void CMainFrame::OnFilePrint()
 	// Retrieve the printer DC
 	if( !PrintDlg( &pd ) )
 	{
-		TRACE(_T("PrintDlg canceled"));
+		TRACE("PrintDlg canceled");
 		return;
 	}
 

@@ -133,7 +133,7 @@ void CMainWindow::SendText(LPCTSTR str)
 	m_Edit.SendMessage(EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
 
 	TRACE(str);
-	TRACE(_T("\n"));
+	TRACE("\n");
 }
 
 LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

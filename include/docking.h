@@ -610,7 +610,7 @@ namespace Win32xx
 							hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV));
 
 						if (hCursor) SetCursor(hCursor);
-						else TRACE(_T("**WARNING** Missing cursor resource for slider bar\n"));
+						else TRACE("**WARNING** Missing cursor resource for slider bar\n");
 
 						return TRUE;
 					}
@@ -1383,19 +1383,19 @@ namespace Win32xx
 		CBitmap bmBottom(IDW_SDBOTTOM);
 
 		if (bmCentre.GetHandle())	pDC->DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
-		else TRACE(_T("Missing docking resource: Target Centre\n"));
+		else TRACE("Missing docking resource: Target Centre\n");
 
 		if (bmLeft.GetHandle()) pDC->DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
-		else TRACE(_T("Missing docking resource: Target Left\n"));
+		else TRACE("Missing docking resource: Target Left\n");
 
 		if (bmTop.GetHandle()) pDC->DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
-		else TRACE(_T("Missing docking resource: Target Top\n"));
+		else TRACE("Missing docking resource: Target Top\n");
 
 		if (bmRight.GetHandle()) pDC->DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
-		else TRACE(_T("Missing docking resource: Target Right\n"));
+		else TRACE("Missing docking resource: Target Right\n");
 
 		if (bmBottom.GetHandle()) pDC->DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
-		else TRACE(_T("Missing docking resource: Target Bottom\n"));
+		else TRACE("Missing docking resource: Target Bottom\n");
 
 		if (IsOverContainer())
 		{
@@ -1505,7 +1505,7 @@ namespace Win32xx
 		if (m_bmImage) 
 			pDC->DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
 		else 
-			TRACE(_T("Missing docking resource\n"));
+			TRACE("Missing docking resource\n");
 	}
 
 	inline void CDocker::CTarget::PreCreate(CREATESTRUCT &cs)
@@ -1750,29 +1750,29 @@ namespace Win32xx
 		if (!(dwDockStyle & DS_NO_RESIZE))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITH), RT_GROUP_CURSOR))
-				TRACE(_T("**WARNING** Horizontal cursor resource missing\n"));
+				TRACE("**WARNING** Horizontal cursor resource missing\n");
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SPLITV), RT_GROUP_CURSOR))
-				TRACE(_T("**WARNING** Vertical cursor resource missing\n"));
+				TRACE("**WARNING** Vertical cursor resource missing\n");
 		}
 
 		if (!(dwDockStyle & DS_NO_UNDOCK))
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDCENTER), RT_BITMAP))
-				TRACE(_T("**WARNING** Docking center bitmap resource missing\n"));
+				TRACE("**WARNING** Docking center bitmap resource missing\n");
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDLEFT), RT_BITMAP))
-				TRACE(_T("**WARNING** Docking left bitmap resource missing\n"));
+				TRACE("**WARNING** Docking left bitmap resource missing\n");
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDRIGHT), RT_BITMAP))
-				TRACE(_T("**WARNING** Docking right bitmap resource missing\n"));
+				TRACE("**WARNING** Docking right bitmap resource missing\n");
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDTOP), RT_BITMAP))
-				TRACE(_T("**WARNING** Docking top bitmap resource missing\n"));
+				TRACE("**WARNING** Docking top bitmap resource missing\n");
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDBOTTOM), RT_BITMAP))
-				TRACE(_T("**WARNING** Docking center bottom resource missing\n"));
+				TRACE("**WARNING** Docking center bottom resource missing\n");
 		}
 
 		if (dwDockStyle & DS_DOCKED_CONTAINER)
 		{
 			if (!FindResource(hMod, MAKEINTRESOURCE(IDW_SDMIDDLE), RT_BITMAP))
-				TRACE(_T("**WARNING** Docking container bitmap resource missing\n"));
+				TRACE("**WARNING** Docking container bitmap resource missing\n");
 		}
 
 		return pDocker;
@@ -1854,7 +1854,7 @@ namespace Win32xx
 		{
 			if (GetDockAncestor() != (*iter)->m_pDockAncestor)
 			{
-				TRACE(_T("Invalid Dock Ancestor\n"));
+				TRACE("Invalid Dock Ancestor\n");
 				bResult = FALSE;
 			}
 		}
@@ -1864,13 +1864,13 @@ namespace Win32xx
 		{
 			if ((*iter)->IsUndocked() && (*iter)->m_pDockParent != 0)
 			{
-				TRACE(_T("Error: Undocked dockers should not have a dock parent\n"));
+				TRACE("Error: Undocked dockers should not have a dock parent\n");
 					bResult = FALSE;
 			}
 
 			if ((*iter)->IsDocked() && (*iter)->m_pDockParent == 0)
 			{
-				TRACE(_T("Error: Docked dockers should have a dock parent\n"));
+				TRACE("Error: Docked dockers should have a dock parent\n");
 					bResult = FALSE;
 			}
 		}
@@ -1883,12 +1883,12 @@ namespace Win32xx
 			{
 				if ((*iterChild)->m_pDockParent != (*iter).get())
 				{
-					TRACE(_T("Error: Docking parent/Child information mismatch\n"));
+					TRACE("Error: Docking parent/Child information mismatch\n");
 					bResult = FALSE;
 				}
 				if ((*iterChild)->GetParent() != (*iter).get())
 				{
-					TRACE(_T("Error: Incorrect windows child parent relationship\n"));
+					TRACE("Error: Incorrect windows child parent relationship\n");
 					bResult = FALSE;
 				}
 			}
@@ -1899,7 +1899,7 @@ namespace Win32xx
 		{
 			CDocker* pDockTopLevel = (*iter)->GetTopmostDocker();
 			if (pDockTopLevel->IsDocked())
-				TRACE(_T("Error: Top level parent should be undocked\n"));
+				TRACE("Error: Top level parent should be undocked\n");
 		}
 
 		return bResult;
@@ -2443,7 +2443,7 @@ namespace Win32xx
 					}
 					else
 					{
-						TRACE(_T("Failed to add dockers without parents from registry"));
+						TRACE("Failed to add dockers without parents from registry");
 						bResult = FALSE;
 					}
 				}
@@ -2477,7 +2477,7 @@ namespace Win32xx
 						}
 						else
 						{
-							TRACE(_T("Failed to add dockers with parents from registry"));
+							TRACE("Failed to add dockers with parents from registry");
 							bResult = FALSE;
 						}
 
@@ -2488,7 +2488,7 @@ namespace Win32xx
 
 				if (!bFound)
 				{
-					TRACE(_T("Orphaned dockers stored in registry "));
+					TRACE("Orphaned dockers stored in registry ");
 					bResult = FALSE;
 					break;
 				}
@@ -2549,7 +2549,7 @@ namespace Win32xx
 			pDock = new CDockFiles;
 			break;
 		default:
-			TRACE(_T("Unknown Dock ID\n"));
+			TRACE("Unknown Dock ID\n");
 			break;
 		} */
 

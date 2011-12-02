@@ -33,7 +33,7 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
 		pView = new CViewRect;
 		break;
 	default:
-		TRACE(_T("Unknown TabbedMDI id\n"));
+		TRACE("Unknown TabbedMDI id\n");
 		break;
 	}
 

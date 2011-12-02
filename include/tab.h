@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1486,7 +1486,7 @@ namespace Win32xx
 					}
 					else
 					{
-						TRACE(_T("Failed to get TabbedMDI info from registry"));
+						TRACE("Failed to get TabbedMDI info from registry");
 						bResult = FALSE;
 						break;
 					}
@@ -1525,7 +1525,7 @@ namespace Win32xx
 			pView = new CViewRect;
 			break;
 		default:
-			TRACE(_T("Unknown MDI child ID\n"));
+			TRACE("Unknown MDI child ID\n");
 			break;
 		} */
 

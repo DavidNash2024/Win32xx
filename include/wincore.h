@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -988,7 +988,7 @@ namespace Win32xx
 		}
 		else
 		{
-			TRACE(_T("InitInstance failed!  Terminating program\n"));
+			TRACE("InitInstance failed!  Terminating program\n");
 			::PostQuitMessage(-1);
 			return -1;
 		}
@@ -1360,7 +1360,7 @@ namespace Win32xx
 
 		catch (const CWinException &e)
 		{
-			TRACE(_T("\n*** Failed to create window ***\n"));
+			TRACE("\n*** Failed to create window ***\n");
 			e.what();	// Display the last error message.
 
 			// eat the exception (don't rethrow)
@@ -1806,7 +1806,7 @@ namespace Win32xx
 		if (hIconLarge)
 			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (hIconLarge));
 		else
-			TRACE(_T("**WARNING** SetIconLarge Failed\n"));
+			TRACE("**WARNING** SetIconLarge Failed\n");
 
 		return hIconLarge;
 	}
@@ -1823,7 +1823,7 @@ namespace Win32xx
 		if (hIconSmall)
 			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (hIconSmall));
 		else
-			TRACE(_T("**WARNING** SetIconSmall Failed\n"));
+			TRACE("**WARNING** SetIconSmall Failed\n");
 
 		return hIconSmall;
 	}

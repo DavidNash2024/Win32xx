@@ -128,7 +128,7 @@ void CMainFrame::OnFilePrint()
 	// Retrieve the printer DC
 	if( !PrintDlg( &pd ) )
 	{
-		TRACE(_T("PrintDlg canceled"));
+		TRACE("PrintDlg canceled");
 		return;
 	}
 

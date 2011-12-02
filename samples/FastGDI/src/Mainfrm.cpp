@@ -232,7 +232,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	TRACE(_T("Frame created\n"));
+	TRACE("Frame created\n");
 }
 
 inline void CMainFrame::OnMenuUpdate(UINT nID)

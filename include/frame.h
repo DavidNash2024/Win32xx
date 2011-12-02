@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1935,7 +1935,7 @@ namespace Win32xx
 			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
 			if (iImageHeight != Oldcy)
 			{
-				TRACE(_T("Unable to add icons. The new icons are a different size to the old ones\n"));
+				TRACE("Unable to add icons. The new icons are a different size to the old ones\n");
 				return (UINT)m_vMenuIcons.size();
 			}
 		}
@@ -2065,7 +2065,7 @@ namespace Win32xx
 		if(0 != szText)
 			GetToolBar().SetButtonText(nID, szText);
 
-		if (!IsWindow()) TRACE(_T("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n"));
+		if (!IsWindow()) TRACE("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n");
 	}
 
 	inline void CFrame::AdjustFrameRect(RECT rcView) const
@@ -2122,7 +2122,7 @@ namespace Win32xx
 		}
 		else
 		{
-			TRACE(_T("Warning ... No resource IDs assigned to the toolbar\n"));
+			TRACE("Warning ... No resource IDs assigned to the toolbar\n");
 		}
 	}
 
@@ -2577,7 +2577,7 @@ namespace Win32xx
 
 		catch(const CWinException& e)
 		{
-			TRACE(_T("Failed to load MRU values from registry\n"));
+			TRACE("Failed to load MRU values from registry\n");
 			e.what();
 
 			if (hKey)
@@ -2630,7 +2630,7 @@ namespace Win32xx
 
 		catch (const CWinException& e)
 		{
-			TRACE(_T("Failed to load values from registry, using defaults!\n"));
+			TRACE("Failed to load values from registry, using defaults!\n");
 			e.what();
 
 			if (hKey)
@@ -3272,7 +3272,7 @@ namespace Win32xx
 
 			catch (const CWinException& e)
 			{
-				TRACE(_T("Failed to save registry settings\n"));
+				TRACE("Failed to save registry settings\n");
 
 				if (hKey)
 				{
@@ -3313,7 +3313,7 @@ namespace Win32xx
 
 				catch (const CWinException& e)
 				{
-					TRACE(_T("Failed to save registry MRU settings\n"));
+					TRACE("Failed to save registry MRU settings\n");
 
 					if (hKey)
 					{
@@ -3775,7 +3775,7 @@ namespace Win32xx
 
 				if (!bResult)
 				{
-					TRACE(_T("Failed to set MRU menu item\n"));
+					TRACE("Failed to set MRU menu item\n");
 					break;
 				}
 			}

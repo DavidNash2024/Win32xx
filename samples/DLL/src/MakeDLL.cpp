@@ -21,16 +21,16 @@ BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReser
 	switch( ul_reason_for_call )
 	{
     case DLL_PROCESS_ATTACH:
-		TRACE(_T("DLL_PROCESS_ATTACH\n"));
+		TRACE("DLL_PROCESS_ATTACH\n");
 		break;
     case DLL_THREAD_ATTACH:
-		TRACE(_T("DLL_THREAD_ATTACH\n"));
+		TRACE("DLL_THREAD_ATTACH\n");
 		break;
     case DLL_THREAD_DETACH:
-		TRACE(_T("DLL_THREAD_DETACH\n"));
+		TRACE("DLL_THREAD_DETACH\n");
 		break;
     case DLL_PROCESS_DETACH:
-		TRACE(_T("DLL_PROCESS_DETACH\n"));
+		TRACE("DLL_PROCESS_DETACH\n");
 		break;
     }
 

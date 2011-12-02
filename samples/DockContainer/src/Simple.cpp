@@ -72,7 +72,7 @@ CDocker* CDockSimple::NewDockerFromID(int nID)
 		pDock = new CDockText;
 		break;
 	default:
-		TRACE(_T("Unknown Dock ID\n"));
+		TRACE("Unknown Dock ID\n");
 		break;
 	}
 

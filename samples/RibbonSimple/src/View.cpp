@@ -16,7 +16,7 @@ void CView::OnCreate()
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
 
-	TRACE(_T("OnCreate\n"));
+	TRACE("OnCreate\n");
 	
 	// Set the window's icon
 	SetIconSmall(IDI_SMALL);
@@ -28,9 +28,9 @@ void CView::OnCreate()
 	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
 	{
 		if (CreateRibbon(this))
-			TRACE(_T("Ribbon Created Succesfully\n"));
+			TRACE("Ribbon Created Succesfully\n");
 		else
-			TRACE(_T("Failed to create ribbon\n"));
+			TRACE("Failed to create ribbon\n");
 	}
 
 }
@@ -62,7 +62,7 @@ void CView::OnInitialUpdate()
 	// OnInitialUpdate is called after the window is created.
 	// Tasks which are to be done after the window is created go here.
 
-	TRACE(_T("OnInitialUpdate\n"));
+	TRACE("OnInitialUpdate\n");
 }
 
 void CView::OnSize()
@@ -99,34 +99,34 @@ STDMETHODIMP CView::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTY
 	switch(nCmdID)
 	{
 	case cmdButton1:
-		TRACE(_T("Button 1\n"));
+		TRACE("Button 1\n");
 		break;
 	case cmdButton2:
-		TRACE(_T("Button 2\n"));
+		TRACE("Button 2\n");
 		break;
 	case cmdButton3:
-		TRACE(_T("Button 3\n"));
+		TRACE("Button 3\n");
 		break;
 	case cmdButton4:
-		TRACE(_T("Button 4\n"));
+		TRACE("Button 4\n");
 		break;
 	case cmdButton5:
-		TRACE(_T("Button 5\n"));
+		TRACE("Button 5\n");
 		break;
 	case cmdButton6:
-		TRACE(_T("Button 6\n"));
+		TRACE("Button 6\n");
 		break;
 	case cmdToggleButton1:
-		TRACE(_T("Toggle Button 1\n"));
+		TRACE("Toggle Button 1\n");
 		break;
 	case cmdToggleButton2:
-		TRACE(_T("Toggle Button 2\n"));
+		TRACE("Toggle Button 2\n");
 		break;
 	case IDC_CMD_EXIT:
-		TRACE(_T("Exit button\n"));
+		TRACE("Exit button\n");
 		break;
 	default:
-		TRACE(_T("Unknown button\n"));
+		TRACE("Unknown button\n");
 		break;
 	}
 

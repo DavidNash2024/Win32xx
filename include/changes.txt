@@ -3,6 +3,9 @@ Version 7.4
 * Bug Fixes
   - The dockbar's parent for dock containers was set incorrectly. The wrong 
      dockbar could be destroyed when a dock container was destroyed.
+	 
+New Features and Enhancements
+* TRACE now accepts both ANSI and Unicode strings.	 
 
 
 Version 7.3
@@ -796,46 +799,6 @@ New Features and Enhancements
 * The visual editor that ships with VS2008 and VS2010 can now be used to
    modify the resource files (Resource.rc and resource.h) without mangling them.   
 
-Changes in detail
------------------
-Added CAXWindow
-Added CWebBrowser
-Added CWnd::CharToWide
-Added CWnd::WideToChar
-Added CWnd::TCharToWide
-Added CWnd::WideToTChar
-Added CWnd::CharToTChar
-Added CWnd::TCharToChar
-Added CWnd::GetClassName
-Added CWnd::GetDlgItemText
-Added CWnd::GetWindowText
-Added CWnd::GetWindowType
-Added CWnd::KillTimer
-Added CWnd::SetTimer
-Added GetSizeofMenuItemInfo
-Removed CharToTString
-Removed TCharToString
-Removed TCharToWide
-Removed CWnd::GetWindowString
-Removed CWnd::GetClassString
-Removed CWnd::GetDlgItemString
-Removed CWnd::IsContainer
-Removed CWnd::IsDocker
-Removed CWnd::IsFrame
-Removed CWnd::IsMenubar
-Removed CWnd::IsMDIChild
-Removed CWnd::IsMDIFrame
-Removed CWnd::IsRebar
-Removed CWnd::IsStatusbar
-Removed CWnd::IsTab
-Removed CWnd::IsTabbedMDI
-Removed CWnd::IsToolbar
-Renamed CContainer to CDockContainer
-
-Modified Browser Sample
-Added MDIFrameSplitter demo
-Added Tray demo
-
 
 Incompatibilities with previous versions
 ----------------------------------------
@@ -847,6 +810,9 @@ Incompatibilities with previous versions
 
 Version 6.8
 ===========
+Bug Fixes:
+- Fixed TCharToString
+- Dockers can now be used as the view for CMDIChild
 
 New Features
 ------------
@@ -865,32 +831,9 @@ New Features
 * Modal dialogs now support pretranslated messages.          
 
 
-Changes
--------
-Added CButton class
-Added CEdit class
-Added CListBox class
-Added CRibbon class
-Added CRibbonFrame class
-Added CStatic class
+Other Changes
+-------------
 Removed CSplitter class
-
-Added CDocker::Dock
-Added CDocker::DockInContainer
-Added CDocker::Hide
-Added CDocker::Undock
-Added CDocker::UndockContainer
-Added CFrame::GetRebarTheme
-Added CFrame::GetToolbarTheme
-Added CFrame::GetMRUEntries
-Renamed ThemeMenu to MenuTheme
-Renamed ThemeRebar to RebarTheme
-Renamed ThemeToolbar to ToolbarTheme
-Renamed CFrame::GetThemeMenu to CFrame::GetMenuTheme
-
-Added UWM_GETMENUTHEME     message
-Added UWM_GETREBARTHEME    message 
-Added UWM_GETTOOLBARTHEME  message
 
 Added RibbonFrame sample
 Added RibbonSimple sample
@@ -899,12 +842,6 @@ Added 'Compile VS2005 Express'  tool
 Added 'Compile VS2008 Express'  tool
 Added 'Compile VS2010 Express'  tool
 
-Added PreTranslate Message support for modal dialogs
-
-Bug Fixes
----------
-- Fixed TCharToString
-- Dockers can now be used as the view for CMDIChild
 
 Version 6.7
 ===========

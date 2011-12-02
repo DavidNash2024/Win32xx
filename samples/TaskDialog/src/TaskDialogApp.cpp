@@ -62,46 +62,46 @@ BOOL CTaskDialogApp::InitInstance()
 		switch (td.GetSelectedButtonID())
 		{
 		case CB_FIRST:
-			TRACE(_T("First command control selected\n"));
+			TRACE("First command control selected\n");
 			break;
 		case CB_SECOND:
-			TRACE(_T("Second command control selected\n"));
+			TRACE("Second command control selected\n");
 			break;
 		case CB_THIRD:
-			TRACE(_T("Third command control selected\n"));
+			TRACE("Third command control selected\n");
 			break;
 		case IDYES:
-			TRACE(_T("The 'Yes' button was pressed\n"));
+			TRACE("The 'Yes' button was pressed\n");
 			break;
 		case IDNO:
-			TRACE(_T("The 'No' button was pressed\n"));
+			TRACE("The 'No' button was pressed\n");
 			break;
 		case IDCANCEL:
-			TRACE(_T("The 'Cancel' button was pressed\n"));
+			TRACE("The 'Cancel' button was pressed\n");
 			break;
 		}
 
 		switch (td.GetSelectedRadioButtonID())
 		{
 		case RB_FIRST:
-			TRACE(_T("First radio button selected\n"));
+			TRACE("First radio button selected\n");
 			break;
 		case RB_SECOND:
-			TRACE(_T("Second radio button selected\n"));
+			TRACE("Second radio button selected\n");
 			break;
 		case RB_THIRD:
-			TRACE(_T("Third radio button selected\n"));
+			TRACE("Third radio button selected\n");
 			break;
 		}
 
 		if (td.GetVerificationCheckboxState())
 		{
-			TRACE(_T("Verification button selected\n"));
+			TRACE("Verification button selected\n");
 		}
 	}
 	else
 	{
-	   TRACE(_T("Some error occurred\n"));
+	   TRACE("Some error occurred\n");
 	}
 
 	return FALSE;	// Don't run the message loop

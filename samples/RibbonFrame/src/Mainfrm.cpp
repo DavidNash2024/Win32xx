@@ -56,13 +56,13 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 			OnFilePrint();
 			 break;
 		case IDC_CMD_COPY:
-			TRACE(_T("Copy\n"));
+			TRACE("Copy\n");
 			break;
 		case IDC_CMD_CUT:
-			TRACE(_T("Cut\n"));
+			TRACE("Cut\n");
 			break;
 		case IDC_CMD_PASTE:
-			TRACE(_T("Paste\n"));
+			TRACE("Paste\n");
 			break;
 		case IDC_CMD_ABOUT:
 			OnHelp();
@@ -99,13 +99,13 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 			}
 			break;
 		case IDC_RICHFONT:
-			TRACE(_T("Font dialog button\n"));
+			TRACE("Font dialog button\n");
 			break;
 		case IDC_RIBBONHELP:
 			OnHelp();
 			break;
 		case IDC_CUSTOMIZE_QAT:
-			TRACE(_T("Customize Quick Access ToolBar\n"));
+			TRACE("Customize Quick Access ToolBar\n");
 			break;
 		default:
 			{
@@ -154,19 +154,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		OnFilePrint();
 		return TRUE;
 	case IDM_PEN_RED:
-		TRACE(_T("Red pen selected\n"));
+		TRACE("Red pen selected\n");
 		m_View.SetPen(RGB(255,0,0));
 		return TRUE;
 	case IDM_PEN_BLUE:
-		TRACE(_T("Blue pen selected\n"));
+		TRACE("Blue pen selected\n");
 		m_View.SetPen(RGB(0,0,255));
 		return TRUE;
 	case IDM_PEN_GREEN:
-		TRACE(_T("Green pen selected\n"));
+		TRACE("Green pen selected\n");
 		m_View.SetPen(RGB(0,196,0));
 		return TRUE;
 	case IDM_PEN_BLACK:
-		TRACE(_T("Black pen selected\n"));
+		TRACE("Black pen selected\n");
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
@@ -270,7 +270,7 @@ void CMainFrame::OnFilePrint()
 	// Retrieve the printer DC
 	if( !PrintDlg( &pd ) )
 	{
-		TRACE(_T("PrintDlg canceled"));
+		TRACE("PrintDlg canceled");
 		return;
 	}
 
@@ -343,7 +343,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
-	TRACE(_T("Frame created\n"));
+	TRACE("Frame created\n");
 }
 
 STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 

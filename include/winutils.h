@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -443,15 +443,26 @@ namespace Win32xx
 	}
 
 
-	inline void TRACE(LPCTSTR str)
+	inline void TRACE(LPCSTR str)
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	{
   #ifdef _DEBUG
-		OutputDebugString(str);
+		OutputDebugString(A2T(str));
   #else
 		UNREFERENCED_PARAMETER(str); // no-op
   #endif
 	}
+
+	inline void TRACE(LPCWSTR str)
+	// TRACE sends a string to the debug/output pane, or an external debugger
+	{
+  #ifdef _DEBUG
+		OutputDebugString(W2T(str));
+  #else
+		UNREFERENCED_PARAMETER(str); // no-op
+  #endif
+	}
+
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
 

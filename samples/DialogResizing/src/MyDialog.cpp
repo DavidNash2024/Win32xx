@@ -111,43 +111,43 @@ void CMyDialog::OnOK()
 void CMyDialog::OnButton()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
-	TRACE(_T("Button Pressed\n"));
+	TRACE("Button Pressed\n");
 }
 
 void CMyDialog::OnCheck1()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Check Box 1"));
-	TRACE(_T("Check Box 1\n"));
+	TRACE("Check Box 1\n");
 }
 
 void CMyDialog::OnCheck2()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Check Box 2"));
-	TRACE(_T("Check Box 2\n"));
+	TRACE("Check Box 2\n");
 }
 
 void CMyDialog::OnCheck3()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Check Box 3"));
-	TRACE(_T("Check Box 3\n"));
+	TRACE("Check Box 3\n");
 }
 
 void CMyDialog::OnRadio1()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Radio 1"));
-	TRACE(_T("Radio 1\n"));
+	TRACE("Radio 1\n");
 }
 
 void CMyDialog::OnRadio2()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Radio 2"));
-	TRACE(_T("Radio 2\n"));
+	TRACE("Radio 2\n");
 }
 
 void CMyDialog::OnRadio3()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Radio 3"));
-	TRACE(_T("Radio 3\n"));
+	TRACE("Radio 3\n");
 }
 
 BOOL CMyDialog::OnEraseBkgnd(CDC* pDC)

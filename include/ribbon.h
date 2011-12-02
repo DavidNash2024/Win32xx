@@ -1,5 +1,5 @@
-// Win32++   Version 7.3
-// Released: 30th November 2011
+// Win32++   Pre-release Version 7.4
+// Released: Not offically released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -338,9 +338,9 @@ namespace Win32xx
 			CFrame::OnCreate();
 
 			if (CreateRibbon(this))
-				TRACE(_T("Ribbon Created Succesfully\n"));
+				TRACE("Ribbon Created Succesfully\n");
 			else
-				throw CWinException(_T("Failed to create ribbon"));
+				throw CWinException("Failed to create ribbon");
 		}
 		else 
 		{
