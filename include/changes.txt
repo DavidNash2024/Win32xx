@@ -1,3 +1,10 @@
+Version 7.4
+===========
+* Bug Fixes
+  - The dockbar's parent for dock containers was set incorrectly. The wrong 
+     dockbar could be destroyed when a dock container was destroyed.
+
+
 Version 7.3
 ===========
 
@@ -271,8 +278,8 @@ Incompatibilities with previous versions
 * CWnd::OnEraseBkgnd has changed. This function now uses a CDC pointer instead
    of a CDC reference. This change will need to be made for any function that
    overrides OnEraseBkgnd in order for it to get called.
-* CWnd::OnPaint has been removed and replaced with OnPaint.  Code that previously 
-   overrode OnPaint will now need to override OnPaint instead. OnPaint uses a 
+* CWnd::OnPaint has been removed and replaced with OnDraw. Code that previously 
+   overrode OnPaint will now need to override OnDraw instead. OnDraw uses a 
    CDC pointer, not a CDC reference.
 * Changes made to the CDC class (and the addition of CClientDC, CWindowDC, CMemDC,
    etc.) are rather likely to affect existing code.
