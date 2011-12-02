@@ -1157,6 +1157,7 @@ namespace Win32xx
 		case WM_NCHITTEST:
 			return OnNCHitTest(wParam, lParam);
 
+		case WM_NCLBUTTONDBLCLK:
 		case WM_NCLBUTTONDOWN:
 			return OnNCLButtonDown(wParam, lParam);
 
