@@ -41,19 +41,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	// Respond to ToolBar buttons
 	case IDM_RED:
 		m_PenColor = RGB(255, 0, 0);
-		TRACE(_T("Red Pen Selected \n"));
+		TRACE("Red Pen Selected \n");
 		return TRUE;
 	case IDM_BLUE:
 		m_PenColor = RGB(0, 0, 255);
-		TRACE(_T("Blue Pen Selected \n"));
+		TRACE("Blue Pen Selected \n");
 		return TRUE;
 	case IDM_GREEN:
 		m_PenColor = RGB(0, 191, 0);
-		TRACE(_T("Green Pen Selected \n"));
+		TRACE("Green Pen Selected \n");
 		return TRUE;
 	case IDM_BLACK:
 		m_PenColor = RGB(0, 0, 0);
-		TRACE(_T("Black Pen Selected \n"));
+		TRACE("Black Pen Selected \n");
 		return TRUE;
 
 	// Respond to the accelerator key

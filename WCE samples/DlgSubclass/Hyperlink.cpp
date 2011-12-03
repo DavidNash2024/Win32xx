@@ -73,7 +73,7 @@ void CHyperlink::OpenUrl()
 		Invalidate();
 	}
 	else
-		TRACE(_T("ShellExecuteEx Failed"));
+		TRACE("ShellExecuteEx Failed");
 }
 
 LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)

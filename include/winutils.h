@@ -59,7 +59,6 @@ namespace Win32xx
 	class CPoint;
 	class CRect;
 	CWinApp* GetApp();
-	void TRACE(LPCTSTR str);
 
 
 	/////////////////////////////////////////

@@ -25,23 +25,23 @@ LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_MOUSEMOVE:
-		TRACE(TEXT("WndProc - WM_MOUSEMOVE Message\n"));
+		TRACE("WndProc - WM_MOUSEMOVE Message\n");
 		break;
 	case WM_SETCURSOR:
-		TRACE(TEXT("WndProc - WM_SETCURSOR Message\n"));
+		TRACE("WndProc - WM_SETCURSOR Message\n");
 		break;
 	case WM_LBUTTONDOWN:
-		TRACE(TEXT("WndProc - WM_LBUTTONDOWN Message\n"));
+		TRACE("WndProc - WM_LBUTTONDOWN Message\n");
 		break;
 	case WM_LBUTTONUP:
-		TRACE(TEXT("WndProc - WM_LBUTTONUP Message\n"));
+		TRACE("WndProc - WM_LBUTTONUP Message\n");
 		break;
 	case WM_PAINT:
-		TRACE(TEXT("WndProc - WM_PAINT Message\n"));
+		TRACE("WndProc - WM_PAINT Message\n");
 		break;
 
 	default:
-		TRACE(TEXT("WndProc - Unspecified Message\n"));
+		TRACE("WndProc - Unspecified Message\n");
 		break;
 	}
 
