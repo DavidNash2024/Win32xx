@@ -1,8 +1,9 @@
 Version 7.4
 ===========
-* Bug Fixes
-  - The dockbar's parent for dock containers was set incorrectly. The wrong 
-     dockbar could be destroyed when a dock container was destroyed.
+Bug Fixes
+* The dockbar's parent for dock containers was set incorrectly. The wrong 
+   dockbar could be destroyed when a dock container was destroyed.
+* Corrected variable initialisation in CMenuMetrics   
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.	 
@@ -1128,42 +1129,14 @@ Incompatibilities with previous versions
    CSplitter. CSplitter will be retained for backwards compatibility, as
    well as for those who require its 'immediate' mode.
    
-More About Docking Containers
------------------------------
-A container can be used is a view window for a frame, MDI child, dockable etc.
-It has a tab control, and is capable of containing and displaying other
-containers. Each container will in turn have a view window of its own. The view 
-for each container as well as it's toolbar (if any) is displayed in the tab's 
-page. When used as the view window of a dockable, the container also permits
- docking and undocking of it's containers.  
-
-In Summary:
-* Any CWnd object inherited from CContainer is capable of containing other CWnd
-   objects inherrited from CContainer. There is no theoretical limit as to the
-   number of containers that can be contained.
-* A child container (a container contained within another) can not in turn
-   contain other containers.   
-* Containers have a View window, just like Frames, MDI children and dockables.
-* Containers can set an icon and text for the tab, as well as text for the 
-   docking caption.
-* Containers can optionally include a toolbar.
-* When a container contains other containers, each container's view is displayed
-   in a separate tab.
-* When a container is the view  window for a dockable, any container children
-   can be individually undocked from their parent container.
-* When used a the view for a docker, a container with child containers can be
-   undocked as a group.
-* An undocked container group (container with children) can be docked as a
-   group inside another docked container. 
-
 
 Version 6.3
 ===========
 
 Major Changes
 -------------
-* Added support for docking. See below for more information on Docking  
-   - Note: CDocker is now recommended over CSplitter for splitter apps.     
+* Added support for docking. CDocker is now recommended over CSplitter for 
+   splitter apps.     
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
 * MDI child windows now require a view window. The use of a view window is 
    now the same for Frames, MDI children, and dockables. The MDI demo example
@@ -1194,56 +1167,6 @@ Incompatibilities with previous versions
 * Some functions have been added to CWnd which have the same name as their 
    Win32 counterparts. Prefix functions with the global scope specifier '::' 
    to use the original Win32 API function instead of the Win32++ version.
-
-
-More About Docking
-------------------
-* Any CWnd object inherited from CDocker is capable of docking other CWnd
-    objects inherrited from CDocker.
-* Dockables can be docked in any of the 4 sides. Any number of windows can be 
-   docked on a side.
-* A dockable could be docked inside another dockable which in turn is docked
-   inside another. There is no theoretical limit as to depth of dockables 
-   within dockables.
-* Dockables have a View window, just like the Frame, and MDI children.
-* Dockables are separated by a movable splitter bar.
-* Dockables use a modern style of dock targeting and dock hinting (the same
-    as Visual Studio 2005 and 2008).
-* Dockables can have styles including:
-  - DS_NOTDOCKED			   
-  - DS_DOCKED_LEFT	   
-  - DS_DOCKED_RIGHT   
-  - DS_DOCKED_TOP		   
-  - DS_DOCKED_BOTTOM  
-  - DS_NODOCKCHILD_LEFT	 	
-  - DS_NODOCKCHILD_RIGHT	 	
-  - DS_NODOCKCHILD_TOP	 
-  - DS_NODOCKCHILD_BOTTOM	 	
-  - DS_NO_RESIZE				 
-  - DS_NO_CAPTION		 
-  - DS_NO_UNDOCK
-* CDocker is now the recommended alternative to CSplitter (being much simpler
-    to implement - see the example below). The DS_NO_CAPTION and DS_NO_UNDOCK
-    styles should be specified if docking and undocking are not required.
-
-Example of how to dock 8 dockables inside a dockable view:
-----------------------------------------------------------
-void CMainFrame::OnInitialUpdate()
-{
-    // CTextDockable in inherited from CDocker
-	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_LEFT, 100);
-	CDocker* pDockRight  = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
-	CDocker* pDockTop    = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_TOP, 100);
-	CDocker* pDockBottom = m_DockView.AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
-
-	// Dock 4 dockables inside other dockables
-    pDockLeft->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
-	pDockRight->AddDockedChild(new CTextDockable, DS_DOCKED_BOTTOM, 100);
-	pDockTop->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
-	pDockBottom->AddDockedChild(new CTextDockable, DS_DOCKED_RIGHT, 100);
-}      			   
-
-(Refer to the Docking example for an example of to use CDocker.)    
 
 
 Version 6.2
@@ -1298,13 +1221,7 @@ Tree-View control from a dialog.
 
 * Added CPoint CRect and CSize classes
 The CPoint, CRect and CSize classes can be used anywhere a POINT, RECT
-or CSize struct can be used respectively. In addition:
-- The constructors ensure that members are set to reasonable values.
-  They also allow a default value to be set when the class is used as a 
-  function argument.
-- The classes have additional member functions, including operator==
-  and operator!= .   
-- These classes makes porting code from MFC or WTL a little easier.
+or CSize struct can be used respectively.
 
 * Extended the CRebar, CToolbar and CStatusbar classes.
 
@@ -1367,7 +1284,7 @@ New Features
    - Automates the deletion or release of the device contexts.
    
 * PreRegisterClass can now be used to set the WNDCLASS parameters before the
-   window class is registered. This provides a convenient way to set a window's 
+   window class is registered. This provides a convenient way to set a window's
    background brush or cursor.
    
 * Improvements to tracing. It now uses OutputDebugString to send the trace
@@ -1393,8 +1310,8 @@ New Features
 Version 5.6
 ===========
 * Property Sheets are now supported. The files PropertySheet.cpp and 
-   PropertySheet.h have been added to Win32++. These files define
-   the CPropertySheet and CPropertyPage classes. The Property sheet generic 
+   PropertySheet.h have been added to Win32++. These files define the 
+   CPropertySheet and CPropertyPage classes. The Property sheet generic 
    demonstrates the following:
   - Modal property sheets.
   - Modeless property sheets.
@@ -1491,8 +1408,7 @@ Version 3
 =========
 * Added Tracing. To use tracing, ensure that you are in Debug mode, 
    i.e. the variable _DEBUG is defined, and use the TRACE("xxxxx")
-   function to send trace messages.  The first TRACE(...) creates 
-   the Trace output window.   
+   function to send trace messages.
 * Enhanced the error reporting in the event of an exception. The 
    GetLastError information is now decoded and displayed if it 
    provides any additional information.

@@ -341,16 +341,17 @@ namespace Win32xx
 		BOOL    IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId);
 		HANDLE  OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
 
-		HANDLE  m_hTheme;              // Theme handle
-		CFrame* m_pFrame;              // Pointer to the frame window
+		HANDLE  m_hTheme;				// Theme handle
+		CFrame* m_pFrame;				// Pointer to the frame window
+		HMODULE m_hmodUXTheme;			// Module handle to the UXTheme dll
 
-		CMargins m_marCheck;            // Check margins
-		CMargins m_marCheckBackground;  // Check background margins
-		CMargins m_marItem;             // Item margins
-		CMargins m_marText;             // Text margins
+		CMargins m_marCheck;			// Check margins
+		CMargins m_marCheckBackground;	// Check background margins
+		CMargins m_marItem;				// Item margins
+		CMargins m_marText;				// Text margins
 
-		CSize   m_sizeCheck;           // Check size metric
-		CSize   m_sizeSeparator;       // Separator size metric
+		CSize   m_sizeCheck;			// Check size metric
+		CSize   m_sizeSeparator;		// Separator size metric
 
 	private:
 		typedef HRESULT WINAPI CLOSETHEMEDATA(HANDLE);
@@ -1549,8 +1550,8 @@ namespace Win32xx
 	} // LRESULT CMenuBar::WndProcDefault(...)
 
 
-	inline CMenuMetrics::CMenuMetrics(CFrame* pFrame) : m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0), m_pfnDrawThemeText(0),
-												 m_pfnGetThemePartSize(0), m_pfnGetThemeInt(0), m_pfnGetThemeMargins(0),
+	inline CMenuMetrics::CMenuMetrics(CFrame* pFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0), 
+												 m_pfnDrawThemeText(0), m_pfnGetThemePartSize(0), m_pfnGetThemeInt(0), m_pfnGetThemeMargins(0),
 												 m_pfnGetThemeTextExtent(0), m_pfnIsThemeBGPartTransparent(0), m_pfnOpenThemeData(0)
 	{
 		assert(pFrame);
@@ -1563,19 +1564,20 @@ namespace Win32xx
 	{
 		assert(m_pFrame);
 
-		HMODULE hModule = ::LoadLibrary(_T("UXTHEME.DLL"));
-		if (hModule)
+		if (!m_hmodUXTheme)
+			m_hmodUXTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
+		
+		if (m_hmodUXTheme)
 		{
-			m_pfnCloseThemeData			  = (CLOSETHEMEDATA*)::GetProcAddress(hModule, "CloseThemeData");
-			m_pfnDrawThemeBackground	  = (DRAWTHEMEBACKGROUND*)::GetProcAddress(hModule, "DrawThemeBackground");
-			m_pfnDrawThemeText			  = (DRAWTHEMETEXT*)::GetProcAddress(hModule, "DrawThemeText");
-			m_pfnGetThemePartSize		  = (GETTHEMEPARTSIZE*)::GetProcAddress(hModule, "GetThemePartSize");
-			m_pfnGetThemeInt			  = (GETTHEMEINT*)::GetProcAddress(hModule, "GetThemeInt");
-			m_pfnGetThemeMargins		  = (GETTHEMEMARGINS*)::GetProcAddress(hModule, "GetThemeMargins");
-			m_pfnGetThemeTextExtent		  = (GETTHEMETEXTEXTENT*)::GetProcAddress(hModule, "GetThemeTextExtent");
-			m_pfnIsThemeBGPartTransparent = (ISTHEMEBGPARTTRANSPARENT*)::GetProcAddress(hModule, "IsThemeBackgroundPartiallyTransparent");
-			m_pfnOpenThemeData			  = (OPENTHEMEDATA*)::GetProcAddress(hModule, "OpenThemeData");
-			::FreeLibrary(hModule);
+			m_pfnCloseThemeData			  = (CLOSETHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "CloseThemeData");
+			m_pfnDrawThemeBackground	  = (DRAWTHEMEBACKGROUND*)::GetProcAddress(m_hmodUXTheme, "DrawThemeBackground");
+			m_pfnDrawThemeText			  = (DRAWTHEMETEXT*)::GetProcAddress(m_hmodUXTheme, "DrawThemeText");
+			m_pfnGetThemePartSize		  = (GETTHEMEPARTSIZE*)::GetProcAddress(m_hmodUXTheme, "GetThemePartSize");
+			m_pfnGetThemeInt			  = (GETTHEMEINT*)::GetProcAddress(m_hmodUXTheme, "GetThemeInt");
+			m_pfnGetThemeMargins		  = (GETTHEMEMARGINS*)::GetProcAddress(m_hmodUXTheme, "GetThemeMargins");
+			m_pfnGetThemeTextExtent		  = (GETTHEMETEXTEXTENT*)::GetProcAddress(m_hmodUXTheme, "GetThemeTextExtent");
+			m_pfnIsThemeBGPartTransparent = (ISTHEMEBGPARTTRANSPARENT*)::GetProcAddress(m_hmodUXTheme, "IsThemeBackgroundPartiallyTransparent");
+			m_pfnOpenThemeData			  = (OPENTHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "OpenThemeData");
 		}
 
 		if (m_hTheme)
@@ -1616,7 +1618,11 @@ namespace Win32xx
 
 	inline CMenuMetrics::~CMenuMetrics()
 	{
-		if (m_hTheme)		CloseThemeData();
+		if (m_hTheme)
+			CloseThemeData();
+
+		if (m_hmodUXTheme)
+			::FreeLibrary(m_hmodUXTheme);
 	}
 
 	inline HRESULT CMenuMetrics::CloseThemeData()
