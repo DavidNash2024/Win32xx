@@ -101,6 +101,7 @@ namespace Win32xx
 		virtual void RemoveTabPage(int nPage);
 		virtual void SelectPage(int nPage);
 		virtual void SetFixedWidth(BOOL bEnabled);
+		virtual void SetFont(CFont* pFont, BOOL bRedraw = 1);
 		virtual void SetOwnerDraw(BOOL bEnabled);
 		virtual void SetShowButtons(BOOL bShow);
 		virtual void SetTabIcon(int i, HICON hIcon);
@@ -750,7 +751,7 @@ namespace Win32xx
 		}
 
 		int HeightGap = 5;
-		SetTabHeight(MAX(20, (GetTextHeight() + HeightGap)));
+		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
 		SelectPage(0);
 	}
 
@@ -1001,6 +1002,15 @@ namespace Win32xx
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_FIXEDWIDTH);
 
 		RecalcLayout();
+	}
+
+	inline void CTab::SetFont(CFont* pFont, BOOL bRedraw /* = 1 */)
+	{
+		assert(pFont);
+		m_Font = *pFont;
+		int HeightGap = 5;
+		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
+		CWnd::SetFont(pFont, bRedraw);
 	}
 
 	inline void CTab::SetOwnerDraw(BOOL bEnabled)
