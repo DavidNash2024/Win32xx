@@ -122,17 +122,17 @@ namespace Win32xx
 		CString& operator = (const TCHAR ch);
 		CString& operator = (LPCSTR pszText);
 		CString& operator = (LPCWSTR pszText);
-		bool     operator == (LPCTSTR pszText);
-		bool     operator != (LPCTSTR pszText);
+		bool     operator == (LPCTSTR pszText) const;
+		bool     operator != (LPCTSTR pszText) const;
 				 operator LPCTSTR() const;
-		TCHAR&   operator [] (int nIndex);
+		TCHAR    operator [] (int nIndex) const;
 		CString& operator += (const CString& str);
 		CString& operator += (LPCSTR szText);
 		CString& operator += (LPCWSTR szText);
 
 		// Attributes
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
-		tString& GetString()		{ return m_str; }				// returns a reference to the underlying std::basic_string<TCHAR>
+		tString& GetString() 		{ return m_str; }				// returns a reference to the underlying std::basic_string<TCHAR>
 		int      GetLength() const	{ return (int)m_str.length(); }	// returns the length in characters
 
 		// Operations
@@ -252,14 +252,14 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline bool CString::operator == (LPCTSTR pszText)
+	inline bool CString::operator == (LPCTSTR pszText) const
 	// Returns TRUE if the strings have the same content
 	{
 		assert(pszText);
 		return (0 == Compare(pszText));
 	}
 
-	inline bool CString::operator != (LPCTSTR pszText)
+	inline bool CString::operator != (LPCTSTR pszText) const
 	// Returns TRUE if the strings have a different content
 	{
 		assert(pszText);
@@ -271,7 +271,7 @@ namespace Win32xx
 		return m_str.c_str();
 	}
 
-	inline TCHAR& CString::operator [] (int nIndex)
+	inline TCHAR CString::operator [] (int nIndex) const
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
