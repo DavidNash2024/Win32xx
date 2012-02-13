@@ -632,7 +632,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CString str;
-		str.m_str.assign(c_str(), nFirst, nFirst + nCount);
+		str.m_str.assign(c_str(), nFirst, nCount);
 		return str;
 	}
 
