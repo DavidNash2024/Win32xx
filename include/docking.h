@@ -2609,7 +2609,7 @@ namespace Win32xx
 		GetDockClient().SetDock(this);
 		GetDockClient().Create(this);
 
-		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+		assert(GetView());			// Use SetView in the docker's constructor to set the view window
 		GetView()->Create(&GetDockClient());
 
 		// Create the slider bar belonging to this docker
