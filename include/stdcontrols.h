@@ -76,7 +76,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS &wc);
 	};
 
 	class CEdit : public CWnd
@@ -315,9 +315,10 @@ namespace Win32xx
 		SendMessage(BM_SETSTATE, bHighlight, 0);
 	}
 
-	inline void CButton::PreCreate(CREATESTRUCT& cs)
+	inline void CButton::PreRegisterClass(WNDCLASS &wc)
 	{
-		cs.lpszClass = _T("Button");
+		// Set the Window Class
+		wc.lpszClassName =  _T("Button");
 	}
 
 
