@@ -430,7 +430,7 @@ namespace Win32xx
 			int nResult = -1, nLength = 256;
 
 			// A vector is used to store the TCHAR array
-			std::vector<TCHAR> vBuffer;( nLength+1, _T('\0') );
+			std::vector<TCHAR> vBuffer;
 
 			while (-1 == nResult)
 			{
