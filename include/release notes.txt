@@ -68,7 +68,7 @@ The file download from Sourceforge includes the following:
 The sample applications include:
  * Browser - An Internet browser application with an event sink.
  * Dialog - An example of a simple dialog application.
- * DialogDemo - An interative dialog application demonstrating slider controls and progress bars.
+ * DialogDemo - An interactive dialog application demonstrating slider controls and progress bars.
  * DialogResizing - An example of a resizable dialog.
  * DialogTab - A dialog application with a tab control.
  * DirectX - A simple DirectX application.
@@ -90,7 +90,7 @@ The sample applications include:
  * Picture - A simple picture rendering application.
  * PropertySheets - A demonstration of property sheets.
  * RibbonFrame - Demonstrates how to use the Windows 7 ribbon with a frame.
- * RibbonSimple - Demonstrates how to use the Windwos 7 ribbon with a simple window.
+ * RibbonSimple - Demonstrates how to use the Windows 7 ribbon with a simple window.
  * Scribble - A simple drawing application.
  * Simple - Creates a simple window.
  * Splitter - Demonstrates how to use dockers to create splitter windows.

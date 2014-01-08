@@ -1,5 +1,5 @@
 // Win32++   Pre-release Version 7.4
-// Released: Not offically released
+// Released: Not officially released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

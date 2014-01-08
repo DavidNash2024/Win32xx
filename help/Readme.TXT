@@ -2,7 +2,7 @@ Some .CHM files may not render properly on Windows XP, Windows Vista and Windows
 
 When attempting to open a Compiled HTML Help (.CHM) file, the file may open but display one of the following messages instead of the expected content:
 
-  * Navigation to the webpage was cancelled.
+  * Navigation to the web page was cancelled.
   * Action cancelled.
 	
 To resolve this issue, carry out the following steps:

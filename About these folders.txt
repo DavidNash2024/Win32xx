@@ -1,6 +1,6 @@
 The contents of the folders within Win32++
 ==========================================
-3rd Party Software	Contains software devloped by other authors
+3rd Party Software	Contains software developed by other authors
 help             	Contains the documentation of Win32++.
 include          	Contains the set of files that make up the Win32++ library.
 new projects     	A set of projects to be used in your new projects. 
