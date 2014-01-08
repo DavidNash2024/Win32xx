@@ -19,7 +19,7 @@ New Features and Enhancements
 	  systems with Aero, popup menus are rendered with Windows Visual Styles. Systems
 	  without Areo continue to use the Win32++ theme for popup menus.
 	- Frames now honour the current window theme's menu and status fonts.
-	- the frame's appearence changes dynamically to reflect changes to the window theme.
+	- the frame's appearance changes dynamically to reflect changes to the window theme.
 	- minor adjustment to the rebar theme colours for the "Modern" theme.
 	
 * Extended CWebBrowser
@@ -308,7 +308,7 @@ Version 7.1.3
 This version has some additional bug fixes:
 * Fixed a thread safety issue in CWinApp::SetTLSIndex introduced in version 7.1.2.
 * Added CWinApp::PreTranslateMessage to simplify overloading CWinApp::MessageLoop.
-* The Explorer sample now ends without throwing an exeption on Win2000.
+* The Explorer sample now ends without throwing an exception on Win2000.
 * CResizer now preserves the tab order in a dialog.
 
 Version 7.1.2

@@ -36,7 +36,7 @@ Features demonstrated in this example
 * Use of OpenFile and print dialogs.
 * Responding to frame window messages in CFrame::WndProc
 * Responding to view window messages in CView::WndProc
-* Using the TRACE command to ouput debug text
+* Using the TRACE command to output debug text
 * Saving the frame settings in the registry
 
 

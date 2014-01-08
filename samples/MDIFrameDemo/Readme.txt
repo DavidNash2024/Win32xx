@@ -7,7 +7,7 @@ Interface) frames only display a single view.
 
 In this project we have the following different types of MDI children available:
  - A simple view window which displays some text
- - A window which will be initally displayed as maximised
+ - A window which will be initially displayed as maximised
  - A window displaying rectangles drawn on the device context
  - A RichText view window
  - A ListView view window
@@ -28,11 +28,11 @@ Features demonstrated in this example
    - Use/don't use a toolbar in the frame.
 * Setting the MDI Frame's toolbar.  
 * Setting the view window for the CMDIChid.
-* Setting the seperate menu for the CMDIChild.
-* Reponding to the MDI specific commands in CMDIFrame::OnCommand
+* Setting the separate menu for the CMDIChild.
+* Responding to the MDI specific commands in CMDIFrame::OnCommand
 * Using several different types of MDI children
    - Each MDI child type has a different menu and icon
-   - Each MDI child type has a differnet view window
+   - Each MDI child type has a different view window
 * Handling a MDI child's OnClose to provide an opportunity to save data before
    the MDI child's window is closed.   
 

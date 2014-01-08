@@ -4,7 +4,7 @@ Win32++ users.
 
 The original authors retain all rights over their software. Each folder contains information
 regarding where the software was download from. Refer to the original download sites to
-ensure your use of the software is consistant with any copyright or license.
+ensure your use of the software is consistent with any copyright or license.
 
  
 

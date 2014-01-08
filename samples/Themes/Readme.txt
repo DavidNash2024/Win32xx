@@ -28,7 +28,7 @@ Features demonstrated in this example
    - lock the menubar at the top of the rebar
    
 * How to add additional toolbars to the rebar control
-* How to hide/dispay the addtional toolbars from the menu
+* How to hide/display the additional toolbars from the menu
 * How to add a ComboBoxEx control to a toolbar
 * How to save application settings in the registry
 

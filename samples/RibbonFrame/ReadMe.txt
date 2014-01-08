@@ -33,7 +33,7 @@ IUICommandHandler::UpdateProperty
   Sets a property value for a bound Command, for example, setting a Command to 
   enabled or disabled depending on the state of a View.  
 
-This example demonstratues how to override IUICommandHandler::Execute to respond
+This example demonstrates how to override IUICommandHandler::Execute to respond
 to button clicks on the ribbon, and IUICommandHandler::UpdateProperty to
 configure parts of the ribbon.
   

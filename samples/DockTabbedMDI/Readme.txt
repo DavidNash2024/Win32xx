@@ -12,7 +12,7 @@ The dock containers are the view window for dockers, allowing them to be
 undocked and docked as required.
 
 A TabbedMDI is a specialised view window which provides support for a tabbed 
-MDI (Multiple Document Interface). It uses a tab control to diplay the MDI 
+MDI (Multiple Document Interface). It uses a tab control to display the MDI 
 children, and also provides optional close and list buttons. The tabs can be
 display either at the top or bottom of the window. 
 

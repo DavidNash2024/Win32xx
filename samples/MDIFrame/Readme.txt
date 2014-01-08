@@ -20,5 +20,5 @@ Features demonstrated in this example
    - Use/don't use a toolbar in the frame.
 * Setting the MDI Frame's toolbar.  
 * Setting the view window for the CMDIChid.
-* Setting the seperate menu for the CMDIChild.
-* Reponding to the MDI specific commands in CMDIFrame::OnCommand
+* Setting the separate menu for the CMDIChild.
+* Responding to the MDI specific commands in CMDIFrame::OnCommand

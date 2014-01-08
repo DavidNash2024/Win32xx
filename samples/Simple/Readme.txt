@@ -13,4 +13,4 @@ Features demonstrated in this example
 * Processing window messages in CView::WndProc
 * Overriding PreCreate to set the initial window parameters
 * Overriding OnDraw to draw text on the window's device context
-* Using TRACE to ouput debug text
+* Using TRACE to output debug text

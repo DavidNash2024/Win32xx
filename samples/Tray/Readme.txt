@@ -13,5 +13,5 @@ Features demonstrated in this example
 * Overriding PreCreate to set the initial window parameters
 * Overriding OnDraw to draw text on the window's device context
 * Adding a menu to a simple window
-* Using TRACE to ouput debug text
+* Using TRACE to output debug text
 * Use of Shell_NotifyIcon to add an icon to the system tray
