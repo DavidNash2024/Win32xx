@@ -332,15 +332,14 @@ namespace Win32xx
 
 		if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
 		{		
-			m_bUseReBar = FALSE;			// Don't use rebars
-			m_bUseToolBar = FALSE;			// Don't use a toolbar
-			
-			CFrame::OnCreate();
-
 			if (CreateRibbon(this))
-				TRACE("Ribbon Created Succesfully\n");
-			else
-				throw CWinException("Failed to create ribbon");
+			{
+				m_bUseReBar = FALSE;			// Don't use rebars
+				m_bUseToolBar = FALSE;			// Don't use a toolbar
+
+				CFrame::OnCreate();
+				SetMenu(NULL);
+			}		
 		}
 		else 
 		{
