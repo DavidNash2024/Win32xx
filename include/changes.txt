@@ -9,6 +9,10 @@ New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.	 
 
 
+Changes in detail
+-----------------
+- Modified  CWnd::DeferWindowPos				now uses CWnd* for second argument
+
 Version 7.3
 ===========
 

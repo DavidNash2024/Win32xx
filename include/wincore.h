@@ -453,8 +453,8 @@ namespace Win32xx
 		BOOL  ClientToScreen(POINT& pt) const;
 		BOOL  ClientToScreen(RECT& rc) const;
 		LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
-		HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
+		HDWP  DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
+		HDWP  DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const;
 		BOOL  DrawMenuBar() const;
 		BOOL  EnableWindow(BOOL bEnable = TRUE) const;
 		BOOL  EndPaint(PAINTSTRUCT& ps) const;
@@ -753,8 +753,8 @@ namespace Win32xx
 
 	inline void CWinApp::AddTmpDC(CDC* pDC)
 	{
-		// The TmpMenus are created by GetSybMenu.
-		// They are removed by CleanupTemps
+		// The temporary CDCs are created by GetDC and GetWindowDC
+		// The temporary CDCs are removed by CleanupTemps
 		assert(pDC);
 
 		// Ensure this thread has the TLS index set
@@ -798,7 +798,6 @@ namespace Win32xx
 	{
 		// TmpWnds are created if required to support functions like CWnd::GetParent.
 		// They are removed by CleanupTemps
-	//	assert(::IsWindow(hWnd));
 		assert(!GetCWndFromMap(hWnd));
 
 		CWnd* pWnd = new CWnd;
@@ -2079,17 +2078,19 @@ namespace Win32xx
 		return (BOOL)::MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rc, 2);
 	}
 
-	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
+	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
 	{
         assert(::IsWindow(m_hWnd));
+		HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
-	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
+	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
 	{
 		assert(::IsWindow(m_hWnd));
+		HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
 	}
 

@@ -308,7 +308,7 @@ namespace Win32xx
 
 	/////////////////////////////////////
 	// Declaration of the CMenuMetrics class
-	//  This class is used by CFrame to retrieve the size of the components 
+	//  This class is used by CFrame to retrieve the size of the components
 	//  used to perform owner-drawing of menu items.  Windows Visual Styles
 	//  are used to render menu items for systems running Aero (Vista and above).
 	//  Win32++ custom themes are used to render menu items for systems without Aero.
@@ -1550,7 +1550,7 @@ namespace Win32xx
 	} // LRESULT CMenuBar::WndProcDefault(...)
 
 
-	inline CMenuMetrics::CMenuMetrics(CFrame* pFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0), 
+	inline CMenuMetrics::CMenuMetrics(CFrame* pFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0),
 												 m_pfnDrawThemeText(0), m_pfnGetThemePartSize(0), m_pfnGetThemeInt(0), m_pfnGetThemeMargins(0),
 												 m_pfnGetThemeTextExtent(0), m_pfnIsThemeBGPartTransparent(0), m_pfnOpenThemeData(0)
 	{
@@ -1566,7 +1566,7 @@ namespace Win32xx
 
 		if (!m_hmodUXTheme)
 			m_hmodUXTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
-		
+
 		if (m_hmodUXTheme)
 		{
 			m_pfnCloseThemeData			  = (CLOSETHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "CloseThemeData");
@@ -3095,7 +3095,6 @@ namespace Win32xx
 				}
 				else
 				{
-					CPoint pt = GetCursorPos();
 					CWnd* pWnd = WindowFromPoint(GetCursorPos());
 					if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
 						pToolBar = (CToolBar*)pWnd;

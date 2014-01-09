@@ -1254,7 +1254,6 @@ namespace Win32xx
 
 		int Width;
 		CRect rcDockDrag = pDockDrag->GetWindowRect();
-		CRect rcDockTarget = pDockTarget->GetDockClient().GetWindowRect();
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if ((uDockSide == DS_DOCKED_LEFTMOST) || (uDockSide  == DS_DOCKED_RIGHTMOST))
@@ -1349,7 +1348,7 @@ namespace Win32xx
 		m_bmBlueTint.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-		dcMem.SelectObject(pOldBitmap); 
+		dcMem.SelectObject(pOldBitmap);
 		TintBitmap(&m_bmBlueTint, -64, -24, +128);
 
 		// Create the Hint window
@@ -1502,9 +1501,9 @@ namespace Win32xx
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
-		if (m_bmImage) 
+		if (m_bmImage)
 			pDC->DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
-		else 
+		else
 			TRACE("Missing docking resource\n");
 	}
 
@@ -1929,7 +1928,7 @@ namespace Win32xx
 
 		GetDockChildren().clear();
 		SetRedraw(TRUE);
-		
+
 		// Delete any child containers this container might have
 		if (GetContainer())
 		{
@@ -2098,7 +2097,7 @@ namespace Win32xx
 		{
 			if ((*iter)->IsDocked())
 				(*iter)->GetDockClient().DrawCaption((WPARAM)1);
-		} 
+		}
 	}
 
 	inline void CDocker::DrawHashBar(HWND hBar, POINT Pos)
@@ -2129,7 +2128,7 @@ namespace Win32xx
 		else
 			dcBar.PatBlt(rc.left, Pos.y - BarWidth/2, cx, BarWidth, PATINVERT);
 	}
-	
+
 	inline CDockContainer* CDocker::GetContainer() const
 	{
 		CDockContainer* pContainer = NULL;
@@ -2412,7 +2411,7 @@ namespace Win32xx
 				i = 0;
 				strSubKey = _T("ActiveContainer");
 				strSubKey += _itot(i, szNumber, 10);
-				
+
 				// Fill the DockList vector from the registry
 				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nID, &BufferSize))
 				{
@@ -3967,7 +3966,7 @@ namespace Win32xx
 			AdjustRect(FALSE, &rc);
 			CDockContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 			pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
-		} 
+		}
 	}
 
 	inline void CDockContainer::RemoveContainer(CDockContainer* pWnd)

@@ -140,8 +140,8 @@ namespace Win32xx
 	public:
 		CWebBrowser();
 		virtual ~CWebBrowser();
-		
-		
+
+
 		//Attributes
 		LPDISPATCH GetApplication() const;
 		CAXWindow& GetAXWindow() const { return (CAXWindow&)m_AXContainer; }
@@ -344,10 +344,9 @@ namespace Win32xx
 		if (!m_pUnk)
 			return NULL;
 
-		HRESULT     hr;
 		IDispatch*  pdisp;
 
-		hr = m_pUnk->QueryInterface(IID_IDispatch, (void**)&pdisp);
+		m_pUnk->QueryInterface(IID_IDispatch, (void**)&pdisp);
 		return pdisp;
 	}
 
