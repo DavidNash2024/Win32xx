@@ -6,11 +6,14 @@ Bug Fixes
 * Corrected variable initialisation in CMenuMetrics   
 	 
 New Features and Enhancements
-* TRACE now accepts both ANSI and Unicode strings.	 
+* TRACE now accepts both ANSI and Unicode strings.
+* CFile functions are now virtual	 
 
 
 Changes in detail
 -----------------
+- Added CTab::GetFont
+- Added CTab::SetFont	
 - Modified  CWnd::DeferWindowPos				now uses CWnd* for second argument
 
 Version 7.3
@@ -21,7 +24,7 @@ New Features and Enhancements
 * Adjusted the frame's appearance
 	- Updated the visual appearance of popup menus on systems using Windows Aero. On 
 	  systems with Aero, popup menus are rendered with Windows Visual Styles. Systems
-	  without Areo continue to use the Win32++ theme for popup menus.
+	  without Aero continue to use the Win32++ theme for popup menus.
 	- Frames now honour the current window theme's menu and status fonts.
 	- the frame's appearance changes dynamically to reflect changes to the window theme.
 	- minor adjustment to the rebar theme colours for the "Modern" theme.

@@ -50,35 +50,35 @@ namespace Win32xx
 		CFile();
 		CFile(HANDLE hFile);
 		CFile(LPCTSTR pszFileName, UINT nOpenFlags);
-		~CFile();
+		virtual ~CFile();
 		operator HANDLE() const;
 
-		BOOL Close();
-		BOOL Flush();
+		virtual BOOL Close();
+		virtual BOOL Flush();
 		HANDLE GetHandle() const;
-		ULONGLONG GetLength() const;
-		const CString& GetFileName() const;
-		const CString& GetFilePath() const;
-		const CString& GetFileTitle() const;
-		ULONGLONG GetPosition() const;
-		BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
-		BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
-		CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
+		virtual ULONGLONG GetLength() const;
+		virtual const CString& GetFileName() const;
+		virtual const CString& GetFilePath() const;
+		virtual const CString& GetFileTitle() const;
+		virtual ULONGLONG GetPosition() const;
+		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
+		virtual BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
+		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
 						CWnd* pOwnerWnd = NULL);
-		UINT Read(void* pBuf, UINT nCount);
+		virtual UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
-		CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
+		virtual CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
 						LPCTSTR pszDefExt = NULL, CWnd* pOwnerWnd = NULL);
-		ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
-		void SeekToBegin();
-		ULONGLONG SeekToEnd();
-		void SetFilePath(LPCTSTR pszNewName);
-		BOOL SetLength(ULONGLONG NewLen);
-		BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
-		BOOL Write(const void* pBuf, UINT nCount);
+		virtual ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
+		virtual void SeekToBegin();
+		virtual ULONGLONG SeekToEnd();
+		virtual void SetFilePath(LPCTSTR pszNewName);
+		virtual BOOL SetLength(ULONGLONG NewLen);
+		virtual BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
+		virtual BOOL Write(const void* pBuf, UINT nCount);
 
 	private:
 		CFile(const CFile&);				// Disable copy construction

@@ -415,15 +415,7 @@ namespace Win32xx
 
 	public:
 		CWnd();				// Constructor
-		CWnd(HWND hWnd)		// Constructor
-		{
-			if (hWnd == HWND_TOP || hWnd == HWND_TOPMOST || hWnd == HWND_BOTTOM || hWnd == HWND_NOTOPMOST)
-			{
-				m_hWnd = hWnd;
-			}
-			else
-				Attach(hWnd);
-		}
+		CWnd(HWND hWnd);	// Constructor
 		virtual ~CWnd();	// Destructor
 
 		// These virtual functions can be overridden
@@ -1086,6 +1078,16 @@ namespace Win32xx
 		::ZeroMemory(m_pcs.get(), sizeof(CREATESTRUCT));
 		::ZeroMemory(m_pwc.get(), sizeof(WNDCLASS));
 	}
+	
+	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL), m_IsTmpWnd(FALSE)
+	{
+		if (hWnd == HWND_TOP || hWnd == HWND_TOPMOST || hWnd == HWND_BOTTOM || hWnd == HWND_NOTOPMOST)
+		{
+			m_hWnd = hWnd;
+		}
+		else
+			Attach(hWnd);
+	}
 
 	inline CWnd::~CWnd()
 	{
@@ -1099,7 +1101,6 @@ namespace Win32xx
 		assert( GetApp() );
 		GetApp()->m_csMapLock.Lock();
 
-	//	assert(::IsWindow(m_hWnd));
 		assert(!GetApp()->GetCWndFromMap(m_hWnd));
 
 		GetApp()->m_mapHWND.insert(std::make_pair(m_hWnd, this));
@@ -1503,7 +1504,7 @@ namespace Win32xx
 
 	inline void CWnd::OnCreate()
 	{
-		// This function is called when a WM_CREATE message is recieved
+		// This function is called when a WM_CREATE message is received
 		// Override it in your derived class to automatically perform tasks
 		//  during window creation.
 	}
@@ -1591,7 +1592,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 		// This function processes those special messages (see above) sent
 		// by some older controls, and reflects them back to the originating CWnd object.
-		// Override this function in your derrived class to handle these special messages.
+		// Override this function in your derived class to handle these special messages.
 
 		// Your overriding function should look like this ...
 
@@ -1676,7 +1677,7 @@ namespace Win32xx
 		m_pcs->x              = cs.x;
 		m_pcs->y              = cs.y;
 
-		// Overide this function in your derived class to set the
+		// Override this function in your derived class to set the
 		// CREATESTRUCT values prior to window creation.
 		// The cs.lpszClass parameter should NOT be specified if the
 		// PreRegisterClass function is used to create a window class.
@@ -1700,7 +1701,7 @@ namespace Win32xx
 		m_pwc->lpszMenuName		= wc.lpszMenuName;
 		m_pwc->lpszClassName	= wc.lpszClassName;
 
-		// Overide this function in your derived class to set the
+		// Override this function in your derived class to set the
 		// WNDCLASS values prior to window creation.
 
 		// ADDITIONAL NOTES:
@@ -1867,7 +1868,7 @@ namespace Win32xx
 
 	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derrived from CWnd to handle
+		// Override this function in your class derived from CWnd to handle
 		//  window messages. A typical function might look like this:
 
 		//	switch (uMsg)
@@ -1900,7 +1901,7 @@ namespace Win32xx
 			break;
 		case WM_COMMAND:
 			{
-				// Refelect this message if it's from a control
+				// Reflect this message if it's from a control
 				CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);
@@ -2677,7 +2678,7 @@ namespace Win32xx
 
 	inline HRESULT CWnd::SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const
 	// Set the XP Theme for a window.
-	// Exampes:
+	// Examples:
 	//  SetWindowTheme(NULL, NULL);		// Reverts the window's XP theme back to default
 	//  SetWindowTheme(L" ", L" ");		// Disables XP theme for the window
 	{
@@ -2735,7 +2736,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWnd::WindowFromPoint(POINT pt)
-	// Retrieves the window that contains the specified point (in screen coodinates).
+	// Retrieves the window that contains the specified point (in screen coordinates).
 	{
 		return FromHandle(::WindowFromPoint(pt));
 	}
