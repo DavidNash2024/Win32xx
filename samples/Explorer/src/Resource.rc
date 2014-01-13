@@ -177,6 +177,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                 "Simple Explorer"
+    IDW_READY                "Ready"	
 END
 
 STRINGTABLE

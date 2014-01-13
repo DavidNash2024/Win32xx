@@ -12,13 +12,16 @@
 #define IDW_VIEW_TOOLBAR                 53
 #define IDW_VIEW_STATUSBAR               54
 
+// Resource ID for frame "Ready"
+#define IDW_READY                        55
+
 // Resource IDs for the Command Bands
-#define IDW_CMD_BANDS                    55
-#define IDW_MENUBAR                      56
-#define IDW_TOOLBAR                      57
+#define IDW_CMD_BANDS                    56
+#define IDW_MENUBAR                      57
+#define IDW_TOOLBAR                      58
 
 // Resource ID for the Accelerator key
-#define IDW_QUIT                         58
+#define IDW_QUIT                         59
 
 // Resource IDs for MDI menu items
 #define IDW_MDI_CASCADE                  60

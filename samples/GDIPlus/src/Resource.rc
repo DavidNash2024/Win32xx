@@ -157,6 +157,7 @@ BEGIN
     IDW_MAIN                "Frame Window"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
+    IDW_READY               "Ready"	
 END
 
 STRINGTABLE

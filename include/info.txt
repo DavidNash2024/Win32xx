@@ -18,7 +18,7 @@ vcw       | A project file used by eMbedded Visual C++
 dev       | A project file used by Dev-C++
 cpp       | A C++ source file 
 h         | A C++ header file
-rc        | A C++ resouce script file
+rc        | A C++ resource script file
 jpg       | A jpeg resource file
 ico       | An icon resource file
 bmp       | A bitmap resource file

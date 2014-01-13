@@ -78,7 +78,7 @@ void CMainFrame::OnFileOpen()
 	TCHAR szFilter[] = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
 
 	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY, szFilter, this);
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY, _T("Open File"), szFilter, this);
 	if (!str.IsEmpty())
 	{
 		m_View.LoadPictureFile(str);
@@ -93,7 +93,7 @@ void CMainFrame::OnFileSaveAs()
 	{
 		TCHAR szFilter[] = _T("*.bmp\0");
 		CFile File;
-		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, szFilter, _T("bmp"), this);
+		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, _T("Open File"), szFilter, _T("bmp"), this);
 		
 		if (!str.IsEmpty())
 		{

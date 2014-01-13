@@ -62,7 +62,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnFileOpen()
 {
 	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
 
 	if (!str.IsEmpty())
 	{
@@ -89,7 +89,7 @@ void CMainFrame::OnFileSave()
 void CMainFrame::OnFileSaveAs()
 {
 	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), this);
+	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), this);
 
 	// Store the PlotPoint data in the file
 	if (!str.IsEmpty())

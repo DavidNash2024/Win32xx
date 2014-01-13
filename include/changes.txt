@@ -2,19 +2,24 @@ Version 7.4
 ===========
 Bug Fixes
 * The dockbar's parent for dock containers was set incorrectly. The wrong 
-   dockbar could be destroyed when a dock container was destroyed.
+   dockbar could be destroyed when a dock container was destroyed.   
 * Corrected variable initialisation in CMenuMetrics   
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.
-* CFile functions are now virtual	 
+* CFile functions are now virtual
+* Frames now uses IDW_READY for the "Ready" string
 
 
 Changes in detail
 -----------------
-- Added CTab::GetFont
-- Added CTab::SetFont	
-- Modified  CWnd::DeferWindowPos				now uses CWnd* for second argument
+- Modified CFile::OpenFileDialog   		Added Title argument	
+- Modified CFile::SaveFileDialog		Added Title argument
+- Modified CString  operator == 		now accepts const
+- Modified CString  operator != 		now accepts const
+- Modified CString  operator [] 		now accepts const
+- Modified  CWnd::DeferWindowPos		now uses CWnd* for second argument
+
 
 Version 7.3
 ===========

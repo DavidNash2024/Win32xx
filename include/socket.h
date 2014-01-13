@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2011  David Nash
+// Copyright (c) 2005-2014  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -39,8 +39,8 @@
 // socket.h
 //  Declaration of the CSocket class
 //
-// The CSocket class represents a network socket. It encapsualtes many of
-// the Windows Socket SPI fuctions, providing an object-oriented approach
+// The CSocket class represents a network socket. It encapsulates many of
+// the Windows Socket SPI functions, providing an object-oriented approach
 // to network programming. After StartEvents is called, CSocket monitors
 // the socket and responds automatically to network events. This event
 // monitoring, for example, automatically calls OnReceive when there is
@@ -49,7 +49,7 @@
 
 // Users of this class should be aware that functions like OnReceive,
 // OnAccept, etc. are called on a different thread from the one CSocket is
-// instanciated on. The thread for these functions needs to respond quickly
+// instantiated on. The thread for these functions needs to respond quickly
 // to other network events, so it shouldn't be delayed. It also doesn't run
 // a message loop, so it can't be used to create windows. For these reasons
 // it might be best to use PostMessage in response to these functions in a
@@ -76,10 +76,10 @@
 // 7) The server socket uses the 'accept' function to accept an incoming connection
 //     from this new data socket.
 
-// The purpose of the data socket is to send data to, and recieve data from the client.
+// The purpose of the data socket is to send data to, and receive data from the client.
 // There will be one data socket for each client accepted by the server.
 // To use it we do the following:
-// * To recieve data from the client, override OnReceive and use Receive.
+// * To receive data from the client, override OnReceive and use Receive.
 // * To send data to use Send.
 // * OnDisconnect can be used to detect when the client is disconnected.
 
@@ -88,16 +88,16 @@
 // 1) Create the socket.
 // 2) Connect to the server.
 // 3) Use StartNotifyRevents to receive notification of network events.
-//    We are now ready to send and recieve data from the server.
+//    We are now ready to send and receive data from the server.
 // * Use Send to send data to the server.
-// * Override OnReceive and use Recieve to receive data from the server
+// * Override OnReceive and use Receive to receive data from the server
 // * OnDisconnect can be used to detect when the client is disconnected from the server.
 
 // Notes regarding IPv6 support
 // * IPv6 is supported on Windows Vista and above. Windows XP with SP2 provides
 //    "experimental" support, which can be enabled by entering "ipv6 install"
 //    at a command prompt.
-// * IPv6 is not supported by all compilters and devlopment environments. In
+// * IPv6 is not supported by all compilers and development environments. In
 //    particular, it is not supported by Dev-C++ or Borland 5.5. A modern
 //    Platform SDK needs to be added to Visual Studio 6 for it to support IPv6.
 // * IsIPV6Supported returns false if either the operating system or the
@@ -335,7 +335,7 @@ namespace Win32xx
 				return RetVal;
 			}
 
-			// Free the address information allocatied by GetAddrInfo
+			// Free the address information allocated by GetAddrInfo
 			FreeAddrInfo(AddrInfo);
 
 #endif
@@ -405,7 +405,7 @@ namespace Win32xx
 	{
 		// These are the possible network event notifications:
 		//	FD_READ 	Notification of readiness for reading.
-		//	FD_WRITE 	Motification of readiness for writing.
+		//	FD_WRITE 	Notification of readiness for writing.
 		//	FD_OOB 		Notification of the arrival of Out Of Band data.
 		//	FD_ACCEPT 	Notification of incoming connections.
 		//	FD_CONNECT 	Notification of completed connection or multipoint join operation.
@@ -689,7 +689,7 @@ namespace Win32xx
 				return RetVal;
 			}
 
-			// Free the address information allocatied by GetAddrInfo
+			// Free the address information allocated by GetAddrInfo
 			FreeAddrInfo(AddrInfo);
 
 #endif

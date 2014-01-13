@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2011  David Nash
+// Copyright (c) 2005-2014  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -64,14 +64,14 @@ namespace Win32xx
 		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
 		virtual BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
 		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
-						CWnd* pOwnerWnd = NULL);
+						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL, 
+						LPCTSTR pszFilter = NULL, CWnd* pOwnerWnd = NULL);
 		virtual UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
 		virtual CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszFilter = NULL,
-						LPCTSTR pszDefExt = NULL, CWnd* pOwnerWnd = NULL);
+						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
+						LPCTSTR pszFilter = NULL, LPCTSTR pszDefExt = NULL, CWnd* pOwnerWnd = NULL);
 		virtual ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
 		virtual void SeekToBegin();
 		virtual ULONGLONG SeekToEnd();
@@ -222,7 +222,7 @@ namespace Win32xx
 		return (m_hFile != 0);
 	}
 
-	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, CWnd* pOwnerWnd)
+	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, CWnd* pOwnerWnd)
 	// Displays the file open dialog. 
 	// Returns a CString containing either the selected file name or an empty CString.
 	{
@@ -241,7 +241,7 @@ namespace Win32xx
 		ofn.hwndOwner = pOwnerWnd? pOwnerWnd->GetHwnd() : NULL;
 		ofn.hInstance = GetApp()->GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
-		ofn.lpstrTitle = _T("Open File");
+		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
 		ofn.Flags = dwFlags;
 		ofn.nMaxFile = _MAX_PATH;
 		
@@ -276,7 +276,7 @@ namespace Win32xx
 		return ::DeleteFile(pszFileName);
 	}
 
-	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszFilter, LPCTSTR pszDefExt, CWnd* pOwnerWnd)
+	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, LPCTSTR pszDefExt, CWnd* pOwnerWnd)
 	// Displays the SaveFileDialog.
 	// Returns a CString containing either the selected file name or an empty CString
 	{
@@ -299,7 +299,7 @@ namespace Win32xx
 		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
 		ofn.lpstrDefExt = pszDefExt;
 		ofn.nMaxFile = lstrlen(pszFilePathName);
-		ofn.lpstrTitle = _T("Save File");
+		ofn.lpstrTitle = pszTitle? pszTitle : _T("Save File");
 		ofn.Flags = dwFlags;
 		ofn.nMaxFile = _MAX_PATH;
 		ofn.lpstrFile = (LPTSTR)str.GetBuffer(_MAX_PATH);

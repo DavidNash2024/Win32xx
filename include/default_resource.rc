@@ -157,6 +157,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                 "MDI Frame"
+	IDW_READY                "Ready"
 END
 
 STRINGTABLE

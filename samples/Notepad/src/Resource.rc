@@ -158,6 +158,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                 "Frame Window"
+    IDW_READY                "Ready"	
 END
 
 STRINGTABLE

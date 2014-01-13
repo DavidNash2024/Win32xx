@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2011  David Nash
+// Copyright (c) 2005-2014  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -518,7 +518,7 @@ namespace Win32xx
 		CString m_XPThemeName;				// CString for Windows Theme Name
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		CRect m_rcPosition;					// CRect of the starting window position
-		HWND m_hOldFocus;					// The window which had focus prior to the app'a deactivation
+		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 
 	};  // class CFrame
@@ -650,7 +650,7 @@ namespace Win32xx
 			}
 		}
 
-		// Resestablish Focus
+		// Re-establish Focus
 		if (m_bKeyMode)
 			GrabFocus();
 	}
@@ -1848,11 +1848,12 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_pMenuMetrics(0), m_strStatusText(_T("Ready")), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE),
-		                m_bUseReBar(FALSE), m_bUseThemes(TRUE), m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE),
-		                m_himlMenu(0), m_himlMenuDis(0), m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
+	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseReBar(FALSE),
+		                m_bUseThemes(TRUE), m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(0), 
+		                m_himlMenuDis(0), m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
+		m_strStatusText = LoadString(IDW_READY);
 
 		// Do either InitCommonControls or InitCommonControlsEx
 		LoadCommonControls();
@@ -2940,7 +2941,7 @@ namespace Win32xx
 			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_strStatusText = LoadString(nID);
 			else
-				m_strStatusText = _T("Ready");
+				m_strStatusText = LoadString(IDW_READY);
 
 			SetStatusText();
 		}
@@ -3113,7 +3114,7 @@ namespace Win32xx
 							if (nID != 0)
 								m_strStatusText = LoadString(nID);
 							else
-								m_strStatusText = _T("Ready");
+								m_strStatusText = LoadString(IDW_READY);
 
 							if (GetStatusBar().IsWindow())
 								SetStatusText();
@@ -3125,7 +3126,7 @@ namespace Win32xx
 				{
 					if (m_nOldID != -1)
 					{
-						m_strStatusText = _T("Ready");
+						m_strStatusText = LoadString(IDW_READY);
 						SetStatusText();
 					}
 					m_nOldID = -1;

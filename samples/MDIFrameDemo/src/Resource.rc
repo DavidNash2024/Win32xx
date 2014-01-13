@@ -393,7 +393,8 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                 "MDI Demo"
+    IDW_MAIN                "MDI Demo"
+	IDW_READY               "Ready"
 END
 
 STRINGTABLE
