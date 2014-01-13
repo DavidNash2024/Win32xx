@@ -46,7 +46,7 @@
 // on a property page can be validated before the next page is presented.
 // Property sheets have three modes of use: Modal, Modeless, and Wizard.
 //
-// Refer to the PropertySheet demo program for an example of how propert sheets
+// Refer to the PropertySheet demo program for an example of how property sheets
 // can be used.
 
 
@@ -197,7 +197,7 @@ namespace Win32xx
 
 	inline INT_PTR CPropertyPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derrived from CPropertyPage if you wish to handle messages
+		// Override this function in your class derived from CPropertyPage if you wish to handle messages
 		// A typical function might look like this:
 
 		//	switch (uMsg)
@@ -237,7 +237,7 @@ namespace Win32xx
 
 		case WM_COMMAND:
 			{
-				// Refelect this message if it's from a control
+				// Reflect this message if it's from a control
 				CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);
@@ -260,7 +260,7 @@ namespace Win32xx
 					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 				else
 				{
-					// Some controls (eg ListView) have child windows.
+					// Some controls (e.g. ListView) have child windows.
 					// Reflect those notifications too.
 					CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
 					if (pWndFromParent != NULL)

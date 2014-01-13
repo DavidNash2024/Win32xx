@@ -293,7 +293,7 @@ namespace Win32xx
 		BOOL  m_bMenuActive;	// popup menu active
 		BOOL  m_bSelPopup;		// a popup (cascade) menu is selected
 		HMENU m_hPopupMenu;		// handle to the popup menu
-		HMENU m_hSelMenu;		// handle to the casceded popup menu
+		HMENU m_hSelMenu;		// handle to the cascaded popup menu
 		HMENU m_hTopMenu;		// handle to the top level menu
 		HWND  m_hPrevFocus;		// handle to window which had focus
 		CRect m_MDIRect[3];		// array of CRect for MDI buttons
@@ -500,7 +500,7 @@ namespace Win32xx
 		void LoadCommonControls();
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
-		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entires
+		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entries
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
 		CDialog m_AboutDialog;				// Help about dialog
 		CMenuBar m_MenuBar;					// CMenuBar object
@@ -1904,21 +1904,21 @@ namespace Win32xx
 	}
 
 	inline UINT CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
-	// Adds the icons from a bitmap resouce to an internal ImageList for use with popup menu items.
+	// Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
 	// Note:  If existing are a different size to the new ones, the old ones will be removed!
 	//        The ToolBarDisabledID is ignored unless ToolBarID and ToolBarDisabledID bitmaps are the same size.
 	{
-		// Count the MenuData entries excluding seperators
+		// Count the MenuData entries excluding separators
 		int iImages = 0;
 		for (UINT i = 0 ; i < MenuData.size(); ++i)
 		{
-			if (MenuData[i] != 0)	// Don't count seperators
+			if (MenuData[i] != 0)	// Don't count separators
 			{
 				++iImages;
 			}
 		}
 
-		// Load the button images from Resouce ID
+		// Load the button images from Resource ID
 		CBitmap Bitmap(ToolBarID);
 
 		if ((0 == iImages) || (!Bitmap))
@@ -2966,7 +2966,7 @@ namespace Win32xx
 	//		break;
 		case RBN_MINMAX:
 			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().ShortBands)
-				return 1L;	// Supress maximise or minimise rebar band
+				return 1L;	// Suppress maximise or minimise rebar band
 			break;
 
 		// Display tooltips for the toolbar
@@ -3339,7 +3339,7 @@ namespace Win32xx
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
 	{
-		// Sets the frame's menu from a Resouce ID.
+		// Sets the frame's menu from a Resource ID.
 		// A resource ID of 0 removes the menu from the frame.
 		HMENU hMenu = 0;
 		if (ID_MENU != 0)
@@ -3430,7 +3430,7 @@ namespace Win32xx
 			LPCTSTR Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? _T("\tNUM") : _T("");
 			LPCTSTR Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? _T("\tSCRL"): _T("");
 
-			// Only update indictors if the text has changed
+			// Only update indicators if the text has changed
 			if (Status1 != m_OldStatus[0]) 	GetStatusBar().SetPartText(1, (Status1));
 			if (Status2 != m_OldStatus[1])  GetStatusBar().SetPartText(2, (Status2));
 			if (Status3 != m_OldStatus[2])  GetStatusBar().SetPartText(3, (Status3));

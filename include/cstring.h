@@ -644,7 +644,7 @@ namespace Win32xx
 	}
 
 	inline void CString::SetAt(int nIndex, TCHAR ch)
-	// Sets the character at the specificed position to the specified value.
+	// Sets the character at the specified position to the specified value.
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
@@ -687,7 +687,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Replace(TCHAR chOld, TCHAR chNew)
-	// Replaces each occurance of the old character with the new character.
+	// Replaces each occurrence of the old character with the new character.
 	{
 		int nCount = 0;
 		tString::iterator it = m_str.begin();
@@ -704,7 +704,7 @@ namespace Win32xx
 	}
 
 	inline int CString::Replace(LPCTSTR pszOld, LPCTSTR pszNew)
-	// Replaces each occurance of the old substring with the new substring.
+	// Replaces each occurrence of the old substring with the new substring.
 	{
 		assert(pszOld);
 		assert(pszNew);

@@ -88,7 +88,7 @@
 
 #ifdef __BORLANDC__
   #pragma option -w-8019			// code has no effect
-  #pragma option -w-8026            // functions with exception specifiations are not expanded inline
+  #pragma option -w-8026            // functions with exception specifications are not expanded inline
   #pragma option -w-8027		    // function not expanded inline
   #pragma option -w-8030			// Temporary used for 'rhs'	
   #define STRICT 1

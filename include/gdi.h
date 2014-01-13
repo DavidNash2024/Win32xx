@@ -2315,14 +2315,14 @@ namespace Win32xx
 
 	inline BOOL CDC::LoadBitmap(UINT nID)
 	// Loads a bitmap from the resource and selects it into the device context
-	// Returns TRUE if succesful
+	// Returns TRUE if successful
 	{
 		return LoadBitmap(MAKEINTRESOURCE(nID));
 	}
 
 	inline BOOL CDC::LoadBitmap(LPCTSTR lpszName)
 	// Loads a bitmap from the resource and selects it into the device context
-	// Returns TRUE if succesful
+	// Returns TRUE if successful
 	{
 		assert(m_pData->hDC);
 
@@ -2338,14 +2338,14 @@ namespace Win32xx
 
 	inline BOOL CDC::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
 	// Loads a bitmap from the resource and selects it into the device context
-	// Returns TRUE if succesful
+	// Returns TRUE if successful
 	{
 		return LoadImage(nID, cxDesired, cyDesired, fuLoad);
 	}
 
 	inline BOOL CDC::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
 	// Loads a bitmap from the resource and selects it into the device context
-	// Returns TRUE if succesful
+	// Returns TRUE if successful
 	{
 		assert(m_pData->hDC);
 
@@ -2361,7 +2361,7 @@ namespace Win32xx
 
 	inline BOOL CDC::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
 	// Loads a predefined system bitmap and selects it into the device context
-	// Returns TRUE if succesful
+	// Returns TRUE if successful
 	{
 		assert(m_pData->hDC);
 

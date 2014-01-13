@@ -690,7 +690,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CTab::GetTabsAtTop() const
-	// Returns TRUE if the contol's tabs are placed at the top
+	// Returns TRUE if the control's tabs are placed at the top
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		return (!(dwStyle & TCS_BOTTOM));
@@ -1058,7 +1058,7 @@ namespace Win32xx
 	}	
 
 	inline void CTab::SetTabsAtTop(BOOL bTop)
-	// Positions the tabs at the top or botttom of the control
+	// Positions the tabs at the top or bottom of the control
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 
@@ -1372,7 +1372,7 @@ namespace Win32xx
 
 		GetTab().AddTabPage(WndPtr(pView), szTabText, 0, idMDIChild);
 
-		// Fake a WM_MOUSEACTIVATE to propogate focus change to dockers
+		// Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
 		if (IsWindow())
 			GetParent()->SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 

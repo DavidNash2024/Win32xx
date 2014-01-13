@@ -65,7 +65,7 @@
 #define DS_NO_CLOSE				0x0400	// Prevent closing of a docker while docked
 #define DS_NO_UNDOCK			0x0800  // Prevent undocking and dock closing
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
-#define DS_FIXED_RESIZE			0x2000	// Perfomed a fixed resize instead of a proportional resize on dock children
+#define DS_FIXED_RESIZE			0x2000	// Perform a fixed resize instead of a proportional resize on dock children
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
 #define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
 #define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
@@ -210,7 +210,7 @@ namespace Win32xx
 	class CDocker : public CWnd
 	{
 	public:
-		//  A nested class for the splitter bar that seperates the docked panes.
+		//  A nested class for the splitter bar that separates the docked panes.
 		class CDockBar : public CWnd
 		{
 		public:
@@ -1720,7 +1720,7 @@ namespace Win32xx
 	// This function creates the docker, and adds it to the docker heirachy as docked
 	{
 		// Create the docker window as a child of the frame window.
-		// This pernamently sets the frame window as the docker window's owner,
+		// This permanently sets the frame window as the docker window's owner,
 		// even when its parent is subsequently changed.
 
 		assert(pDocker);
@@ -1778,7 +1778,7 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, RECT rc, int nDockID /* = 0*/)
-	// This function creates the docker, and adds it to the docker heirachy as undocked
+	// This function creates the docker, and adds it to the docker hierarchy as undocked
 	{
 		assert(pDocker);
 
@@ -2922,7 +2922,7 @@ namespace Win32xx
 			else
 				rgbColour = GetSysColor(COLOR_BTNFACE);
 
-			// Set the splitter bar colour for each docker decendant
+			// Set the splitter bar colour for each docker descendant
 			std::vector<DockPtr>::iterator iter;
 			for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 				(*iter)->SetBarColor(rgbColour);

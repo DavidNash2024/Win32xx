@@ -159,7 +159,7 @@ namespace Win32xx
 		std::map<CString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 		ToolBarTheme m_Theme;				// The theme structure
-		BOOL m_bDrawArrowBkgrnd;			// True if a seperate arrow background is to be drawn
+		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn
 
 	};  // class CToolBar
 
@@ -1222,7 +1222,7 @@ namespace Win32xx
 	// Assumes buttons have been already been added via AdddToolBarButton
 	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	// The color mask is ignored for 32bit bitmap resources
-	// The Hot and disiabled bitmap resources can be 0
+	// The Hot and disabled bitmap resources can be 0
 	{
 		assert(::IsWindow(m_hWnd));
 

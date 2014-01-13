@@ -260,7 +260,7 @@ namespace Win32xx
 	}
 
 	inline HICON CButton::GetIcon() const
-	// returns the handle to the icon associated withe the button
+	// returns the handle to the icon associated with the button
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HICON)SendMessage(BM_GETIMAGE, IMAGE_ICON, 0);
@@ -948,7 +948,7 @@ namespace Win32xx
 	}
 
 	inline HENHMETAFILE CStatic::GetEnhMetaFile() const
-	// Returns the handle to the enhanced metafile for the static control
+	// Returns the handle to the enhanced meta-file for the static control
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HENHMETAFILE)SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0);
@@ -976,7 +976,7 @@ namespace Win32xx
 	}
 
 	inline HENHMETAFILE CStatic::SetEnhMetaFile(HENHMETAFILE hMetaFile) const
-	// Sets the handle to the enhanced metafile for the static control
+	// Sets the handle to the enhanced meta-file for the static control
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HENHMETAFILE)SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, (LPARAM)hMetaFile);

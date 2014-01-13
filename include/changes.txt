@@ -3,12 +3,14 @@ Version 7.4
 Bug Fixes
 * The dockbar's parent for dock containers was set incorrectly. The wrong 
    dockbar could be destroyed when a dock container was destroyed.   
-* Corrected variable initialisation in CMenuMetrics   
+* Corrected variable initialisation in CMenuMetrics
+* Adjusted text position in Windows 7 menus.  
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.
 * CFile functions are now virtual
-* Frames now uses IDW_READY for the "Ready" string
+* Frames now use IDW_READY for the "Ready" string
+* Added project files for VS2013
 
 
 Changes in detail
@@ -20,6 +22,9 @@ Changes in detail
 - Modified CString  operator != 		now accepts const
 - Modified CString  operator [] 		now accepts const
 - Modified  CWnd::DeferWindowPos		now uses CWnd* for second argument
+
+Added IDW_READY resource for ready string.
+Added VS2013 project files
 
 
 Version 7.3

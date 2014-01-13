@@ -241,7 +241,7 @@ namespace Win32xx
 
 	inline INT_PTR CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derrived from CDialog if you wish to handle messages
+		// Override this function in your class derived from CDialog if you wish to handle messages
 		// A typical function might look like this:
 
 		//	switch (uMsg)
@@ -295,7 +295,7 @@ namespace Win32xx
 				return TRUE;
 			default:
 				{
-					// Refelect this message if it's from a control
+					// Reflect this message if it's from a control
 					CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
 					if (pWnd != NULL)
 						lr = pWnd->OnCommand(wParam, lParam);

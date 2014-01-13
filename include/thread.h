@@ -37,7 +37,7 @@
 
 // The CThread class simplifies the use of threads with Win32++.
 // To use threads in your Win32++ application, inherit a class from
-// CThread, and override InitInstance. When your class is instanciated,
+// CThread, and override InitInstance. When your class is instantiated,
 // a new thread is started, and the InitInstance function is called to
 // run in the new thread.
 
@@ -59,21 +59,21 @@
 // 1) Avoid using SendMessage between threads, as this will cause one thread to wait for
 //    the other to respond. Use PostMessage between threads to avoid this problem.
 // 2) Access to variables and resources shared between threads need to be made thread safe.
-//    Having one thread modify a resouce or variable while another thread is accessing it is
+//    Having one thread modify a resource or variable while another thread is accessing it is
 //    a recipe for disaster.
 // 3) Thread Local Storage (TLS) can be used to replace global variables to make them thread
 //    safe. With TLS, each thread gets its own copy of the variable.
 // 4) Critical Sections can be used to make shared resources thread safe.
 // 5) Window messages (including user defined messages) can be posted between GUI threads to
 //    communicate information between them.
-// 6) Events (created by CreateEvent) can be used to comunicate information between threads 
+// 6) Events (created by CreateEvent) can be used to communicate information between threads 
 //    (both GUI and worker threads).
 // 7) Avoid using sleep to synchronise threads. Generally speaking, the various wait 
 //    functions (e.g. WaitForSingleObject) will be better for this.
 
 // About Threads:
 // Each program that executes has a "process" allocated to it. A process has one or more
-// threads. Threads run independantly of each other. It is the job of the operating system
+// threads. Threads run independently of each other. It is the job of the operating system
 // to manage the running of the threads, and do the task switching between threads as required.
 // Systems with multiple CPUs will be able to run as many threads simultaneously as there are
 // CPUs. 

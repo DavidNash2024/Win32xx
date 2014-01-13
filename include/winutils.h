@@ -416,7 +416,7 @@ namespace Win32xx
 
 	
 	inline CWinApp* GetApp()
-	// Returns a pointer to the CWinApp derrived class
+	// Returns a pointer to the CWinApp derived class
 	{
 		return CWinApp::SetnGetThis();
 	}

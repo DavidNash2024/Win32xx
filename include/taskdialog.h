@@ -260,7 +260,7 @@ namespace Win32xx
 	}
 	
 	inline void CTaskDialog::ElevateButton(int nButtonID, BOOL bElevated)
-	// Adds a shield icon to indicate that the button's action requires elevated privilages. 
+	// Adds a shield icon to indicate that the button's action requires elevated privileges. 
 	{
 		assert(m_hWnd);
 		SendMessage(TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE, (WPARAM)nButtonID, (LPARAM)bElevated);
@@ -398,7 +398,7 @@ namespace Win32xx
 	}
 	
 	inline BOOL CTaskDialog::OnTDTimer(DWORD dwTickCount) 
-	// Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set. 
+	// Called every 200 milliseconds (approximately) when the TDF_CALLBACK_TIMER flag is set. 
 	{
 		UNREFERENCED_PARAMETER(dwTickCount);
 
@@ -733,7 +733,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CTaskDialog::TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// Handles the Task Dialog's notificaions.
+	// Handles the Task Dialog's notifications.
 	{
 		switch(uMsg)
 		{
@@ -778,7 +778,7 @@ namespace Win32xx
 
 	inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derrived from CDialog if you wish to handle messages
+		// Override this function in your class derived from CDialog if you wish to handle messages
 		// A typical function might look like this:
 
 		//	switch (uMsg)

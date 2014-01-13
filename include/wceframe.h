@@ -260,7 +260,7 @@ namespace Win32xx
 		::GetClientRect(m_hWnd, &r);
 
 #ifndef SHELL_AYGSHELL
-		// Reduce the size of the client rectange, by the commandbar height
+		// Reduce the size of the client rectangle, by the commandbar height
 		r.top += m_MenuBar.GetHeight();
 #endif
 
