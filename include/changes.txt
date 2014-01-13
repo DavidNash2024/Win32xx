@@ -13,6 +13,7 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+- Added CTab::SetFont
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
 - Modified CString  operator == 		now accepts const
