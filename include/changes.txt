@@ -15,6 +15,7 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+- Added CRect operator LPCRECT()
 - Added CTab::SetFont
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument

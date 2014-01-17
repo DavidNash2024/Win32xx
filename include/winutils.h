@@ -191,6 +191,7 @@ namespace Win32xx
 
 		// operators
 		operator LPRECT()							{ return this; }
+		operator LPCRECT() const					{ return this; }
 		BOOL operator == (RECT rc) const			{ return ::EqualRect(this, &rc); }
 		BOOL operator != (RECT rc) const			{ return !::EqualRect(this, &rc); }
 		void operator += (POINT pt)					{ ::OffsetRect(this, pt.x, pt.y); }
