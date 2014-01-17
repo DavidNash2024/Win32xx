@@ -808,7 +808,7 @@ namespace Win32xx
 		tString::iterator iter;
 		for (iter = m_str.begin(); iter < m_str.end(); ++iter)
 		{
-			if (!isspace(*iter))
+			if (!_istspace(*iter))
 				break;
 		}
 
@@ -835,7 +835,7 @@ namespace Win32xx
 		tString::reverse_iterator riter;
 		for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
 		{
-			if (!isspace(*riter))
+			if (!_istspace(*riter))
 				break;
 		}
 
