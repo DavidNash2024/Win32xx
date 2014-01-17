@@ -12,7 +12,7 @@
 CFormView::CFormView(UINT nResID, CWnd* pParent)
 	: CDialog(nResID, pParent)
 {
-	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
+	m_hInstRichEdit = SafeLoadSystemLibrary(_T("RICHED32.DLL"));
 	if (!m_hInstRichEdit) 
 	{
 		::MessageBox(NULL, _T("CFormView::CRichView  Failed to load RICHED32.DLL"), 

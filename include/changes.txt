@@ -4,17 +4,20 @@ Bug Fixes
 * The dockbar's parent for dock containers was set incorrectly. The wrong 
    dockbar could be destroyed when a dock container was destroyed.   
 * Corrected variable initialisation in CMenuMetrics
-* Adjusted text position in Windows 7 menus.  
+* Adjusted text position in Windows 7 menus.
+* Minor bug fixes to CString  
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.
 * CFile functions are now virtual
 * Frames now use IDW_READY for the "Ready" string
 * Added project files for VS2013
+* SafeLoadSystemLibrary is used to ensure libraries are only loaded from the system directory.
 
 
 Changes in detail
 -----------------
+- Added SafeLoadSystemLibrary
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
 - Modified CFile::OpenFileDialog   		Added Title argument	

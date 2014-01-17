@@ -150,12 +150,12 @@ INT_PTR CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CSvrDialog::LoadCommonControlsEx()
 {
 	// This function adds support for the IP address control in the dialog.
-	HMODULE hComCtl;
+	HMODULE hComCtl = 0;
 
 	try
 	{
 		// Load the Common Controls DLL
-		hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+		hComCtl = SafeLoadSystemLibrary(_T("COMCTL32.DLL"));
 		if (!hComCtl)
 			throw CWinException(_T("Failed to load COMCTL32.DLL"));
 

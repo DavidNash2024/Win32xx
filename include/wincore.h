@@ -1179,7 +1179,7 @@ namespace Win32xx
 
 	#ifndef _WIN32_WCE
 		// Import the GetMonitorInfo and MonitorFromWindow functions
-		HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
+		HMODULE hUser32 = SafeLoadSystemLibrary(_T("USER32.DLL"));
 		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
 		typedef HMONITOR (WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
 		LPMFW pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
@@ -1415,7 +1415,7 @@ namespace Win32xx
 		// Load the User32 DLL
 		typedef HWND WINAPI GETANCESTOR(HWND, UINT);
 		GETANCESTOR* pfnGetAncestor = NULL;
-		HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));
+		HMODULE hModule = SafeLoadSystemLibrary(_T("USER32.DLL"));
 
 		if (hModule)
 		{
@@ -2686,7 +2686,7 @@ namespace Win32xx
 
 #ifndef	_WIN32_WCE
 
-		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+		HMODULE hMod = SafeLoadSystemLibrary(_T("uxtheme.dll"));
 		if(hMod)
 		{
 			typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);

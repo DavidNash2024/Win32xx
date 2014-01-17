@@ -489,10 +489,36 @@ namespace Win32xx
 		return nVersion;
 	}
 
+	inline HMODULE SafeLoadSystemLibrary(LPCTSTR fileName) 
+	{
+		// Safely load system libraries, by ensuring they are loaded from the system directory.
+		// Can be used in place of LoadLibrary.
+		
+		assert(fileName);
+
+		HMODULE hMod = NULL;
+		UINT uLen = ::GetSystemDirectory(0, 0);
+		if (uLen > 0)
+		{	
+			// Use a vector to allocate the TChar array with space for null terminator + '\'
+			std::vector<TCHAR> vTChar( uLen + 2 + lstrlen(fileName), _T('\0') );
+			TCHAR* pszSysDir = &vTChar.front();
+			
+			// Load our array with the system directory and append with '\'
+			::GetSystemDirectory(pszSysDir, uLen);
+			lstrcat(pszSysDir, _T("\\") );
+
+			// Load the library from the system directory
+			hMod = ::LoadLibrary(lstrcat(pszSysDir, fileName));
+		}
+
+	  return hMod;
+	}
+
 	inline int GetComCtlVersion()
 	{
 		// Load the Common Controls DLL
-		HMODULE hComCtl = ::LoadLibraryA("COMCTL32.DLL");
+		HMODULE hComCtl = SafeLoadSystemLibrary(_T("COMCTL32.DLL"));
 		if (!hComCtl)
 			return 0;
 
@@ -589,7 +615,8 @@ namespace Win32xx
 		// Test if Windows version is XP or greater
 		if (GetWinVersion() >= 2501)
 		{
-			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			HMODULE hMod = SafeLoadSystemLibrary(_T("uxtheme.dll"));
+
 			if(hMod)
 			{
 				// Declare pointers to IsCompositionActive function
@@ -616,7 +643,7 @@ namespace Win32xx
 		// Test if Windows version is XP or greater
 		if (GetWinVersion() >= 2501)
 		{
-			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			HMODULE hMod = SafeLoadSystemLibrary(_T("uxtheme.dll"));
 			if(hMod)
 			{
 				// Declare pointers to functions

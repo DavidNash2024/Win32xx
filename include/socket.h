@@ -205,7 +205,7 @@ namespace Win32xx
 		if (0 != ::WSAStartup(MAKEWORD(2,2), &wsaData))
 			throw CWinException(_T("WSAStartup failed"));
 
-		m_hWS2_32 = ::LoadLibrary(_T("WS2_32.dll"));
+		m_hWS2_32 = SafeLoadSystemLibrary(_T("WS2_32.dll"));
 		if (0 == m_hWS2_32)
 			throw CWinException(_T("Failed to load WS2_2.dll"));
 
