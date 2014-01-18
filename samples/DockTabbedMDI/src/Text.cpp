@@ -12,7 +12,7 @@
 // CViewText functions
 CViewText::CViewText()
 {
-	m_hRichEdit = SafeLoadSystemLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
+	m_hRichEdit = ::LoadLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
     if (!m_hRichEdit)
     {
 		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load Riched20.dll"), _T(""), MB_ICONWARNING);

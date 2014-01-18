@@ -10,7 +10,7 @@ CRichView::CRichView(void) : m_hInstRichEdit(NULL)
 {
 	// Changed from RichEdit v1.0 to RichEdit v2.0 for Unicode support!
 
-	m_hInstRichEdit = SafeLoadSystemLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
+	m_hInstRichEdit = ::LoadLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
     if (!m_hInstRichEdit)
     {
 		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load Riched20.dll"), _T(""), MB_ICONWARNING);

@@ -13,7 +13,6 @@ New Features and Enhancements
 * CFile functions are now virtual
 * Frames now use IDW_READY for the "Ready" string
 * Added project files for VS2013
-* SafeLoadSystemLibrary is used to ensure libraries are only loaded from the system directory.
 
 
 Changes in detail

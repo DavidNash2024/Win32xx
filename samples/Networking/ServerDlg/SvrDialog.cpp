@@ -155,7 +155,7 @@ void CSvrDialog::LoadCommonControlsEx()
 	try
 	{
 		// Load the Common Controls DLL
-		hComCtl = SafeLoadSystemLibrary(_T("COMCTL32.DLL"));
+		hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
 		if (!hComCtl)
 			throw CWinException(_T("Failed to load COMCTL32.DLL"));
 

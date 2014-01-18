@@ -9,7 +9,7 @@
 
 CViewText::CViewText()
 {
-	m_hRichEdit = SafeLoadSystemLibrary(_T("RICHED32.DLL"));
+	m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hRichEdit)
     {
 		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
