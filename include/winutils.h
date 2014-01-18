@@ -463,6 +463,39 @@ namespace Win32xx
   #endif
 	}
 
+	inline HMODULE SafeLoadSystemLibrary(LPCTSTR fileName) 
+	{
+		// Safely load system libraries, by ensuring they are loaded from the system directory.
+		// Can be used in place of LoadLibrary.
+		
+		assert(fileName);
+
+		HMODULE hMod = NULL;
+
+	#ifndef _WIN32_WCE
+
+		UINT uLen = ::GetSystemDirectory(0, 0);
+		if (uLen > 0)
+		{	
+			// Use a vector to allocate the TChar array with space for null terminator + '\'
+			std::vector<TCHAR> vTChar( uLen + 2 + lstrlen(fileName), _T('\0') );
+			TCHAR* pszSysDir = &vTChar.front();
+			
+			// Load our array with the system directory and append with '\'
+			::GetSystemDirectory(pszSysDir, uLen);
+			lstrcat(pszSysDir, _T("\\") );
+
+			// Load the library from the system directory
+			hMod = ::LoadLibrary(lstrcat(pszSysDir, fileName));
+		}
+
+		#else
+			hMod = ::LoadLibrary(fileName);
+		#endif
+
+		return hMod;
+	}
+
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
 
@@ -487,32 +520,6 @@ namespace Win32xx
 		//  2601     Windows 7
 
 		return nVersion;
-	}
-
-	inline HMODULE SafeLoadSystemLibrary(LPCTSTR fileName) 
-	{
-		// Safely load system libraries, by ensuring they are loaded from the system directory.
-		// Can be used in place of LoadLibrary.
-		
-		assert(fileName);
-
-		HMODULE hMod = NULL;
-		UINT uLen = ::GetSystemDirectory(0, 0);
-		if (uLen > 0)
-		{	
-			// Use a vector to allocate the TChar array with space for null terminator + '\'
-			std::vector<TCHAR> vTChar( uLen + 2 + lstrlen(fileName), _T('\0') );
-			TCHAR* pszSysDir = &vTChar.front();
-			
-			// Load our array with the system directory and append with '\'
-			::GetSystemDirectory(pszSysDir, uLen);
-			lstrcat(pszSysDir, _T("\\") );
-
-			// Load the library from the system directory
-			hMod = ::LoadLibrary(lstrcat(pszSysDir, fileName));
-		}
-
-	  return hMod;
 	}
 
 	inline int GetComCtlVersion()

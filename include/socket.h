@@ -111,8 +111,10 @@
 #include "wincore.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
-#include <process.h>
 
+#ifndef _WIN32_WCE
+#include <process.h>
+#endif
 
 #define THREAD_TIMEOUT 100
 
@@ -170,8 +172,6 @@ namespace Win32xx
 		virtual void OnRoutingChange() {}
 		virtual void OnSend()		{}
 
-
-
 		// Allow CSocket to be used as a SOCKET
 		operator SOCKET() const {return m_Socket;}
 
@@ -209,8 +209,13 @@ namespace Win32xx
 		if (0 == m_hWS2_32)
 			throw CWinException(_T("Failed to load WS2_2.dll"));
 
+#ifdef _WIN32_WCE
+		m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, L"getaddrinfo");
+		m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, L"freeaddrinfo");
+#else
 		m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
 		m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
+#endif
 
 		m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
 		m_Stopped = ::CreateEvent(0, TRUE, FALSE, 0);
@@ -740,8 +745,13 @@ namespace Win32xx
 	{
 		// This function starts the thread which monitors the socket for events.
 		StopEvents();	// Ensure the thread isn't already running
+#ifdef _WIN32_WCE
+		DWORD ThreadID;	// a return variable required for Win95, Win98, WinME
+		m_hEventThread = (HANDLE)::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
+#else
 		UINT ThreadID;	// a return variable required for Win95, Win98, WinME
 		m_hEventThread = (HANDLE)::_beginthreadex(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
+#endif
 	}
 
 	inline void CSocket::StopEvents()
