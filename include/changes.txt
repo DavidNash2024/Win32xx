@@ -5,7 +5,8 @@ Bug Fixes
    dockbar could be destroyed when a dock container was destroyed.   
 * Corrected variable initialisation in CMenuMetrics
 * Adjusted text position in Windows 7 menus.
-* Minor bug fixes to CString  
+* Minor bug fixes to CString
+* CSocket now works for WinCE  
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.

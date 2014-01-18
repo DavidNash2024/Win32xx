@@ -104,7 +104,8 @@ BOOL CTaskDialogApp::InitInstance()
 	   TRACE("Some error occurred\n");
 	}
 
-	return FALSE;	// Don't run the message loop
+	::PostQuitMessage(0);	// End the application
+	return TRUE;
 }
 
 

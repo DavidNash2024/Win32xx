@@ -484,14 +484,15 @@ namespace Win32xx
 			// Load our array with the system directory and append with '\'
 			::GetSystemDirectory(pszSysDir, uLen);
 			lstrcat(pszSysDir, _T("\\") );
+			lstrcpy(pszSysDir, _T("C:\\Windows\\SysWOW64\\"));
 
 			// Load the library from the system directory
 			hMod = ::LoadLibrary(lstrcat(pszSysDir, fileName));
 		}
 
-		#else
+	#else
 			hMod = ::LoadLibrary(fileName);
-		#endif
+	#endif
 
 		return hMod;
 	}

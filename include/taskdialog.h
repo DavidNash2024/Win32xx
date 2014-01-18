@@ -247,7 +247,7 @@ namespace Win32xx
 		pTLSData->pCWnd = this;
 
 		// Declare a pointer to the TaskDialogIndirect function
-		HMODULE hComCtl = SafeLoadSystemLibrary(_T("COMCTL32.DLL"));
+		HMODULE hComCtl = LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hComCtl);
 		typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
 		TASKDIALOGINDIRECT* pTaskDialogIndirect = (TASKDIALOGINDIRECT*)::GetProcAddress(hComCtl, "TaskDialogIndirect");
@@ -331,7 +331,7 @@ namespace Win32xx
 	inline BOOL CTaskDialog::IsSupported()
 	// Returns true if TaskDialogs are supported on this system.
 	{
-		HMODULE hModule = SafeLoadSystemLibrary(_T("COMCTL32.DLL"));
+		HMODULE hModule = LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hModule);
 		
 		BOOL bResult = (BOOL)::GetProcAddress(hModule, "TaskDialogIndirect");
@@ -669,40 +669,26 @@ namespace Win32xx
 
 		assert( GetApp() );
 
-		try
+		CTaskDialog* t = (CTaskDialog*)GetApp()->GetCWndFromMap(hWnd);
+		if (0 == t)
 		{
-			CTaskDialog* t = (CTaskDialog*)GetApp()->GetCWndFromMap(hWnd);
-			if (0 == t)
-			{
-				// The CTaskDialog pointer wasn't found in the map, so add it now
+			// The CTaskDialog pointer wasn't found in the map, so add it now
 
-				// Retrieve the pointer to the TLS Data
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				if (NULL == pTLSData)
-					throw CWinException(_T("Unable to get TLS"));
+			// Retrieve the pointer to the TLS Data
+			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			assert(pTLSData);
 
-				// Retrieve pointer to CTaskDialog object from Thread Local Storage TLS
-				t = (CTaskDialog*)(pTLSData->pCWnd);
-				if (NULL == t)
-					throw CWinException(_T("Failed to route message"));
+			// Retrieve pointer to CTaskDialog object from Thread Local Storage TLS
+			t = (CTaskDialog*)(pTLSData->pCWnd);
+			assert(t);
+			pTLSData->pCWnd = NULL;
 
-				pTLSData->pCWnd = NULL;
-
-				// Store the CTaskDialog pointer in the HWND map
-				t->m_hWnd = hWnd;
-				t->AddToMap();
-			}
-
-			return t->TaskDialogProc(uNotification, wParam, lParam);
+			// Store the CTaskDialog pointer in the HWND map
+			t->m_hWnd = hWnd;
+			t->AddToMap();
 		}
 
-		catch (const CWinException &e)
-		{
-			// Most CWinExceptions will end up here unless caught earlier.
-			e.what();
-		}
-
-		return 0L;
+		return t->TaskDialogProc(uNotification, wParam, lParam);
 
 	} // LRESULT CALLBACK StaticTaskDialogProc(...)
 
