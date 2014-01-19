@@ -172,6 +172,7 @@ pushd ..\Tutorials
 
 
 REM: Compile Tutorials
+ECHO "Compiling Tutorials" >>"..\output\VS2005.log"
 ::Compile code
 devenv /build Debug Tutorial1\Tutorial1_2005.sln      >>"..\output\VS2005.log"
 devenv /build Release Tutorial1\Tutorial1_2005.sln    >>"..\output\VS2005.log"

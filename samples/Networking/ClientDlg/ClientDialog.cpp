@@ -155,8 +155,8 @@ void CClientDialog::OnClientConnect()
 int CClientDialog::OnClientReceive()
 {
 	// Called when the socket has data to receive
-	std::vector<TCHAR> vTChar( 1025, _T('\0') );
-	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0')
+	std::vector<CHAR> vChar( 1025, '\0' );
+	CHAR* buf = &vChar.front();	// CHAR array with 1025 elements initialised to '\0'
 	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
 	if (SOCKET_ERROR == size)
 	{
@@ -164,7 +164,7 @@ int CClientDialog::OnClientReceive()
 		return size;
 	}
 
-	Append( IDC_EDIT_RECEIVE, buf );
+	Append( IDC_EDIT_RECEIVE, A2T(buf) );
 	return size;
 }
 
@@ -352,7 +352,7 @@ void CClientDialog::OnSend()
 	case SOCK_STREAM:	// for TCP client
 		{
 			CString sSend = GetDlgItemText(IDC_EDIT_SEND);
-			if (SOCKET_ERROR == m_Client.Send(sSend, sSend.GetLength(), 0))
+			if (SOCKET_ERROR == m_Client.Send(T2A(sSend), sSend.GetLength(), 0))
 				m_EditStatus.SetWindowText( _T("Send Failed") );
 		}
 		break;
@@ -379,7 +379,7 @@ void CClientDialog::OnSend()
 				strAddr = A2T( inet_ntoa(addr) );
 			}
 
-			if (SOCKET_ERROR == m_Client.SendTo( strSend, strSend.GetLength(), 0, strAddr, strPort ))
+			if (SOCKET_ERROR == m_Client.SendTo( T2A(strSend), strSend.GetLength(), 0, strAddr, strPort ))
 				m_EditStatus.SetWindowText( _T("SendTo Failed") );
 		}
 		break;

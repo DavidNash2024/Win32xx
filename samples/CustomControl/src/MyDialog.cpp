@@ -30,6 +30,40 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam); 
 }
 
+void CMyDialog::OnOK()
+{
+	TRACE("Enter key pressed\n");
+	// Send Ctrl M to the browser
+
+	// Create a generic keyboard event structure
+	INPUT ip;
+	ip.type = INPUT_KEYBOARD;
+	ip.ki.wScan = 0;
+	ip.ki.time = 0;
+	ip.ki.dwExtraInfo = 0;
+
+	// Press the "Ctrl" key
+	ip.ki.wVk = VK_CONTROL;
+	ip.ki.dwFlags = 0;
+	SendInput(1, &ip, sizeof(INPUT));
+
+	// Press the "M" key
+	ip.ki.wVk = 'M';
+	ip.ki.dwFlags = 0;
+	SendInput(1, &ip, sizeof(INPUT));
+	
+	// Release the "M" key
+	ip.ki.wVk = 'M';
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT)); 
+	
+	// Release the "Ctrl" key
+	ip.ki.wVk = VK_CONTROL;
+	ip.ki.dwFlags = KEYEVENTF_KEYUP;
+	SendInput(1, &ip, sizeof(INPUT)); 
+
+}
+
 BOOL CMyDialog::OnInitDialog()
 {
 	// Set the Icon
@@ -45,4 +79,6 @@ BOOL CMyDialog::OnInitDialog()
 	
 	return TRUE;
 }
+
+
 

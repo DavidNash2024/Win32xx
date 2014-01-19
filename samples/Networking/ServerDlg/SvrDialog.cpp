@@ -76,16 +76,16 @@ BOOL CTCPClientDlg::OnInitDialog()
 
 void CTCPClientDlg::Receive()
 {
-	std::vector<TCHAR> vTChar( 1025, _T('\0') );
-	TCHAR* buf = &vTChar.front();	// TChar array with 1025 elements initialised to _T('\0')
+	std::vector<char> vChar( 1025, '\0' );
+	char* buf = &vChar.front();	// char array with 1025 elements initialised to '\0'
 	m_pSocket->Receive(buf, 1024, 0);
-	Append(IDC_EDIT_RECEIVE2, buf);
+	Append(IDC_EDIT_RECEIVE2, A2T(buf));
 }
 
 void CTCPClientDlg::Send()
 {
 	CString sSend = m_EditSend.GetWindowText();
-	m_pSocket->Send(sSend, lstrlen(sSend), 0);
+	m_pSocket->Send(T2A(sSend), lstrlen(sSend), 0);
 }
 
 
@@ -336,7 +336,7 @@ void CSvrDialog::OnSend()
 		case SOCK_DGRAM:
 			{
 				CString sSend = m_EditSend.GetWindowText();
-				m_MainSocket.SendTo(sSend, lstrlen(sSend), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
+				m_MainSocket.SendTo(T2A(sSend), lstrlen(sSend), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
 			}
 			break;
 	}
@@ -376,8 +376,8 @@ void CSvrDialog::OnSocketAccept()
 
 void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 {
-	std::vector<TCHAR> vTChar(1025, _T('\0'));
-	TCHAR* bufArray = &vTChar.front(); // TCHAR array with 1025 elements
+	std::vector<char> vChar(1025, '\0');
+	char* bufArray = &vChar.front(); // char array with 1025 elements
 
 	switch (m_SocketType)
 	{
@@ -407,7 +407,7 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		}
 		break;
 	}
-	Append(IDC_EDIT_RECEIVE, bufArray);
+	Append(IDC_EDIT_RECEIVE, A2T(bufArray));
 }
 
 BOOL CSvrDialog::StartServer()

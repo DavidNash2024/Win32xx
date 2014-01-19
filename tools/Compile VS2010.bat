@@ -169,7 +169,7 @@ popd
 pushd ..\Tutorials
 
 REM: Compile Tutorials
-ECHO "Compliling Tutorials" >>"..\output\VS2010.log"
+ECHO "Compiling Tutorials" >>"..\output\VS2010.log"
 ::Compile code
 devenv /build Debug Tutorial1\Tutorial1_2010.sln      >>"..\output\VS2010.log"
 devenv /build Release Tutorial1\Tutorial1_2010.sln    >>"..\output\VS2010.log"

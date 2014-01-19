@@ -934,7 +934,7 @@ namespace Win32xx
 
 						// Draw highlight text
 						CFont* pFont = GetFont();
-						::SelectObject(DrawDC, pFont->GetHandle());
+						DrawDC.SelectObject(pFont);
 
 						rcRect.bottom += 1;
 						int iMode = DrawDC.SetBkMode(TRANSPARENT);

@@ -525,7 +525,7 @@ namespace Win32xx
 					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
 
 					// Draw the text
-					::SelectObject(dcMem, m_Font);
+					dcMem.SelectObject(&m_Font);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -666,7 +666,7 @@ namespace Win32xx
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
 		{
 			CClientDC dcClient(this);
-			::SelectObject(dcClient, m_Font);
+			dcClient.SelectObject(&m_Font);
 			std::vector<TCHAR> vTitle(MAX_MENU_STRING, _T('\0'));
 			TCHAR* pszTitle = &vTitle.front();
 			TCITEM tcItem = {0};
@@ -699,7 +699,7 @@ namespace Win32xx
 	inline int CTab::GetTextHeight() const
 	{
 		CClientDC dcClient(this);
-		::SelectObject(dcClient, m_Font);
+		dcClient.SelectObject(&m_Font);
 		CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}

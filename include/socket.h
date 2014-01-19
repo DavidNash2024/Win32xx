@@ -145,11 +145,11 @@ namespace Win32xx
 		virtual int  ioCtlSocket(long cmd, u_long* argp);
 		virtual bool IsIPV6Supported();
 		virtual int  Listen(int backlog = SOMAXCONN);
-		virtual int  Receive(TCHAR* buf, int len, int flags);
-		virtual int  ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen);
-		virtual int  Send(LPCTSTR buf, int len, int flags);
-		virtual int  SendTo(LPCTSTR send, int len, int flags, LPCTSTR addr, LPCTSTR port);
-		virtual int  SendTo(LPCTSTR buf, int len, int flags, const struct sockaddr* to, int tolen);
+		virtual int  Receive(char* buf, int len, int flags);
+		virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen);
+		virtual int  Send(const char* buf, int len, int flags);
+		virtual int  SendTo(const char* send, int len, int flags, LPCTSTR addr, LPCTSTR port);
+		virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen);
 
 		virtual void StartEvents();
 		virtual void StopEvents();
@@ -630,43 +630,39 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline int CSocket::Receive(TCHAR* buf, int len, int flags)
+	inline int CSocket::Receive(char* buf, int len, int flags)
 	{
-		std::vector<char> vChar(len+1, '\0');
-		char* pCharArray = &vChar.front();
-		int Result = ::recv(m_Socket, pCharArray, len, flags);
+		int Result = ::recv(m_Socket, buf, len, flags);
 		if (SOCKET_ERROR == Result)
-			TRACE("Receive failed\n");
-
-		lstrcpyn(buf, A2T(pCharArray), len);
-
+			TRACE(_T("Receive failed\n"));
 		return Result;
 	}
 
-	inline int CSocket::ReceiveFrom(TCHAR* buf, int len, int flags, struct sockaddr* from, int* fromlen)
-	//The ReceiveFrom function receives a datagram and stores the source address.
+	inline int CSocket::ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen)
 	{
-		std::vector<char> vChar(len+1, '\0');
-		char* pCharArray = &vChar.front();
-		int Result = ::recvfrom(m_Socket, pCharArray, len, flags, from, fromlen);
+		int Result = ::recvfrom(m_Socket, buf, len, flags, from, fromlen);
 		if (SOCKET_ERROR == Result)
-			TRACE("ReceiveFrom failed\n");
-
-		lstrcpyn(buf, A2T(pCharArray), len);
-
+			TRACE(_T("ReceiveFrom failed\n"));
 		return Result;
 	}
 
-	inline int CSocket::Send(LPCTSTR buf, int len, int flags)
+	inline int CSocket::Send(const char* buf, int len, int flags)
 	{
-		int Result = ::send(m_Socket, T2A(buf), len, flags);
+		int Result = ::send(m_Socket, buf, len, flags);
 		if (SOCKET_ERROR == Result)
-			TRACE("Send failed\n");
-
+			TRACE(_T("Send failed\n"));
 		return Result;
 	}
 
-	inline int CSocket::SendTo(LPCTSTR send, int len, int flags, LPCTSTR addr, LPCTSTR port)
+	inline int CSocket::SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen)
+	{
+		int Result =  ::sendto(m_Socket, buf, len, flags, to, tolen);
+		if (SOCKET_ERROR == Result)
+			TRACE(_T("SendTo failed\n"));
+		return Result;
+	}
+
+	inline int CSocket::SendTo(const char* send, int len, int flags, LPCTSTR addr, LPCTSTR port)
 	// The sendto function sends data to a specific destination.
 	{
 		int RetVal = 0;
@@ -687,7 +683,7 @@ namespace Win32xx
 				return SOCKET_ERROR;
 			}
 
-			RetVal = ::sendto(m_Socket, T2A(send), len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			RetVal = ::sendto(m_Socket, send, len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
 			if ( RetVal == SOCKET_ERROR )
 			{
 				TRACE("SendTo failed\n");
@@ -714,22 +710,12 @@ namespace Win32xx
 			}
 			clientService.sin_port = htons( (u_short)nPort );
 
-			RetVal = ::sendto( m_Socket, T2A(send), len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::sendto( m_Socket, send, len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
 				TRACE("SendTo failed\n");
 		}
 
 		return RetVal;
-	}
-
-	inline int CSocket::SendTo(LPCTSTR buf, int len, int flags, const struct sockaddr* to, int tolen)
-	// The sendto function sends data to a specific destination.
-	{
-		int Result =  ::sendto(m_Socket, T2A(buf), len, flags, to, tolen);
-		if (SOCKET_ERROR == Result)
-			TRACE("SendTo failed\n");
-
-		return Result;
 	}
 
 	inline int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen)

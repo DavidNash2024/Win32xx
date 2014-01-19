@@ -170,7 +170,7 @@ popd
 pushd ..\Tutorials
 
 REM: Compile Tutorials
-ECHO "Compliling Tutorials" >>"..\output\VS2008.log"
+ECHO "Compiling Tutorials" >>"..\output\VS2008.log"
 ::Compile code
 vcbuild /rebuild Tutorial1\Tutorial1_2008.vcproj debug 		>>"..\output\VS2008.log"
 vcbuild /rebuild Tutorial1\Tutorial1_2008.vcproj release		>>"..\output\VS2008.log"

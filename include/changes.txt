@@ -6,7 +6,8 @@ Bug Fixes
 * Corrected variable initialisation in CMenuMetrics
 * Adjusted text position in Windows 7 menus.
 * Minor bug fixes to CString
-* CSocket now works for WinCE  
+* CSocket now works for WinCE
+* CSocket send and receive functions now use char and support binary data. 
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.
@@ -17,11 +18,14 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-- Added SafeLoadSystemLibrary
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
+- Modified CSocket::Receive             uses char instead of TCHAR
+- Modified CSocket::RecieveFrom         uses char instead of TCHAR
+- Modified CSocket::Send                uses char instead of TCHAR
+- Modified CSocket::SendTo              uses char instead of TCHAR
 - Modified CString  operator == 		now accepts const
 - Modified CString  operator != 		now accepts const
 - Modified CString  operator [] 		now accepts const
@@ -29,6 +33,11 @@ Changes in detail
 
 Added IDW_READY resource for ready string.
 Added VS2013 project files
+
+Incompatibilities with previous versions
+----------------------------------------
+* The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
+* Programs with frames should now use the IDW_READY resource for "Ready" 
 
 
 Version 7.3
