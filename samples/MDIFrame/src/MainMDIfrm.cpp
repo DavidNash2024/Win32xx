@@ -69,7 +69,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		AddMDIChild(new CSimpleMDIChild); // CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
 	case IDM_FILE_CLOSE:          // Close the active MDI window
-		GetActiveMDIChild()->SendMessage(WM_CLOSE, 0, 0);
+		GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 		return TRUE;
 	case IDM_FILE_OPEN:
 		OnFileOpen();
@@ -108,7 +108,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		}
 		break ;
 	case IDM_FILE_EXIT:
-		SendMessage(WM_CLOSE, 0, 0);
+		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();

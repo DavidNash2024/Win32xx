@@ -14,13 +14,16 @@ New Features and Enhancements
 * CFile functions are now virtual
 * Frames now use IDW_READY for the "Ready" string
 * Added project files for VS2013
-* Added CWnd::OnDestroy
+* Added CWnd::OnClose. Called automatically when a window asks to be closed.
+* Added CWnd::OnDestroy. Called automatically when a window is destroyed.
+
 
 
 Changes in detail
 -----------------
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
+- Added CWnd::OnClose
 - Added CWnd::OnDestroy
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument

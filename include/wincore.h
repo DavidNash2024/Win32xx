@@ -574,6 +574,7 @@ namespace Win32xx
 		// Override these functions as required
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+		virtual void OnClose();
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual void OnDraw(CDC* pDC);
@@ -1485,6 +1486,13 @@ namespace Win32xx
 		return str;
 	}
 
+	inline void CWnd::OnClose()
+	// Called in reponse to WM_CLOSE. Overide to supress destroying the window
+	// A WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking the red X
+	{
+		::DestroyWindow(m_hWnd);
+	}
+
 	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -1907,6 +1915,11 @@ namespace Win32xx
 				pTLSData->vTmpWnds.clear();
 			}
 			break;
+		case WM_CLOSE:
+			{
+				OnClose();
+				return 0L;
+			}
 		case WM_COMMAND:
 			{
 				// Reflect this message if it's from a control

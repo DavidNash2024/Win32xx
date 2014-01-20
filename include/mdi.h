@@ -101,9 +101,11 @@ namespace Win32xx
 		void MDIRestore() const;
 
 	protected:
+		// These are the functions you might wish to override
+		virtual void OnClose();
+		virtual void OnCreate();
 		// Its unlikely you would need to override these functions
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void OnCreate();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -353,7 +355,6 @@ namespace Win32xx
 		if (RemoveAllMDIChildren())
 		{
 			CFrame::OnClose();
-			Destroy();
 		}
 	}
 
@@ -409,7 +410,12 @@ namespace Win32xx
 		// Remove the children in reverse order
 		for (int i = Children-1; i >= 0; --i)
 		{
-			if (IDNO == m_vMDIChild[i]->SendMessage(WM_CLOSE, 0L, 0L))	// Also removes the MDI child
+			MDIChildPtr pMDIChild = m_vMDIChild[i];
+
+			// Ask the window to close. If it is destroyed, RemoveMDIChild gets called.
+			pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);	
+
+			if (pMDIChild->IsWindow())
 				bResult = FALSE;
 		}
 
@@ -502,10 +508,6 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_CLOSE:
-			OnClose();
-			return 0;
-
 		case WM_WINDOWPOSCHANGED:
 			// MDI Child or MDI frame has been resized
 			OnWindowPosChanged();
@@ -682,6 +684,12 @@ namespace Win32xx
 	inline void CMDIChild::MDIRestore() const
 	{
 		GetParent()->SendMessage(WM_MDIRESTORE, (WPARAM)m_hWnd, 0L);
+	}
+
+	inline void CMDIChild::OnClose()
+	{
+		// Override this to customise what happens when the window asks to be closed.
+		MDIDestroy();
 	}
 
 	inline void CMDIChild::OnCreate()

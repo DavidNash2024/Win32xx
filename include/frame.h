@@ -1085,7 +1085,7 @@ namespace Win32xx
 				if (m_MDIRect[2].PtInRect(pt))
 				{
 					if (MDI_CLOSE == m_nMDIButton)
-						::PostMessage(MDIChild, WM_CLOSE, 0L, 0L);
+						::PostMessage(MDIChild, WM_SYSCOMMAND, SC_CLOSE, 0);
 				}
 			}
 		}
@@ -2732,6 +2732,7 @@ namespace Win32xx
 		GetReBar().Destroy();
 		GetStatusBar().Destroy();
 		GetView()->Destroy();
+		Destroy();
 	}
 
 	inline void CFrame::OnCreate()
@@ -3797,9 +3798,6 @@ namespace Win32xx
 		case WM_ACTIVATE:
 			OnActivate(wParam, lParam);
 			return 0L;
-		case WM_CLOSE:
-			OnClose();
-			break;
 		case WM_ERASEBKGND:
 			return 0L;
 		case WM_HELP:

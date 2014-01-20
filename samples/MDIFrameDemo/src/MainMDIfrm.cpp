@@ -76,11 +76,11 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_NEWLIST:
 		AddMDIChild(new CMDIChildListView);	// CMDIFrame::RemoveMDIChild deletes this pointer
 		return TRUE;
-	case IDM_FILE_CLOSE:	// Close the active MDI window
-		GetActiveMDIChild()->SendMessage(WM_CLOSE, 0L, 0L);
+	case IDM_FILE_CLOSE:	// Ask the active MDI window to close
+		GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);	
 		return TRUE;
 	case IDM_FILE_EXIT:
-		SendMessage(WM_CLOSE, 0L, 0L);
+		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
