@@ -51,6 +51,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_HELP_ABOUT:
 		OnHelp();
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusBar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolBar();
+		return TRUE;
 	case IDM_FILE_EXIT:
 		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
 		return TRUE;

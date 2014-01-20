@@ -48,6 +48,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_PEN_BLACK:
 		m_View.SetPen(RGB(0,0,0));
 		return TRUE;
+	case IDW_VIEW_STATUSBAR:
+		OnViewStatusBar();
+		return TRUE;
+	case IDW_VIEW_TOOLBAR:
+		OnViewToolBar();
+		return TRUE;
 	case IDM_HELP_ABOUT:
 		OnHelp();
 		return TRUE;

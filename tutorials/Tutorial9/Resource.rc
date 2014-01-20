@@ -156,7 +156,8 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                 "Scribble Application"
+    IDW_MAIN                "Scribble Application"
+    IDW_READY               "Ready"		
 END
 
 STRINGTABLE

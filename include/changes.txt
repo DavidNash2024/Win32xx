@@ -43,7 +43,8 @@ Tutorials 1 and 2 now use OnDestroy to end the application
 Incompatibilities with previous versions
 ----------------------------------------
 * The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
-* Programs with frames should now use the IDW_READY resource for "Ready" 
+* Programs with frames should now use the IDW_READY resource for "Ready". Add IDW_READY
+   as a string resource to resource.rc
 
 
 Version 7.3

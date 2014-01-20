@@ -3,7 +3,7 @@
 
 // The resource ID for MENU, ICON, ToolBar Bitmap, Accelerator,
 //  and Window Caption
-#define IDW_MAIN                        51
+#define IDW_MAIN                         51
 
 // Resource ID for the About dialog
 #define IDW_ABOUT                        52
