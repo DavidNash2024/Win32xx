@@ -3,10 +3,16 @@
 
 #include "wincore.h"
 
-// Notes:  
-//  1) This application doesn't end when the window is closed
-//  2) Add the Win32++\include  directory to project's additional include directories
+// Note:  
+//  * Add the Win32++\include  directory to project's additional include directories
 
+class CMyWindow : public CWnd
+{
+public:
+	CMyWindow() {}
+	virtual void OnDestroy() { PostQuitMessage(0); }	// Ends the program
+	virtual ~CMyWindow() {}
+};
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
@@ -15,7 +21,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	CWinApp MyApp;
 
 	// Create a CWnd object
-	CWnd MyWindow;
+	CMyWindow MyWindow;
 
 	// Create (and display) the window
 	MyWindow.Create();

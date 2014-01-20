@@ -197,6 +197,7 @@ namespace Win32xx
 
 	protected:
 		virtual void OnCreate();
+		virtual void OnDestroy();
 		virtual void OnSize(int width, int height);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -777,6 +778,11 @@ namespace Win32xx
 		AddWebBrowserControl();
 	}
 
+	inline void CWebBrowser::OnDestroy()
+	{
+		GetAXWindow().Remove();
+	}
+
 	inline void CWebBrowser::OnSize(int width, int height)
 	{
 		// position the container
@@ -789,9 +795,6 @@ namespace Win32xx
 		{
 		case WM_SIZE:
 			OnSize(LOWORD(lParam), HIWORD(lParam));
-			break;
-		case WM_DESTROY:
-			GetAXWindow().Remove();
 			break;
 		}
 

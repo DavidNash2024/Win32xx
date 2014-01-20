@@ -16,6 +16,12 @@ void CView::DrawLine(int x, int y)
 	pDC->LineTo(x, y);
 }
 
+void CView::OnDestroy()
+{
+	//End the program when window is destroyed
+	::PostQuitMessage(0);
+}
+
 void CView::OnLButtonDown(LPARAM lParam)
 {
  	// Capture mouse input.
@@ -27,10 +33,8 @@ void CView::OnLButtonDown(LPARAM lParam)
 
 void CView::OnLButtonUp(LPARAM lParam)
 {
-	{
-		//Release the capture on the mouse
-		ReleaseCapture();
-	}
+	//Release the capture on the mouse
+	ReleaseCapture();
 }
 
 void CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
@@ -58,11 +62,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_LBUTTONUP:
 		OnLButtonUp(lParam);
-		break;
-
-	case WM_DESTROY:
-		//End the program when window is destroyed
-		::PostQuitMessage(0);
 		break;
 	}
 

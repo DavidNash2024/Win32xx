@@ -460,7 +460,7 @@ namespace Win32xx
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCaptionTimer(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
-		virtual void OnDestroy(WPARAM wParam, LPARAM lParam);
+		virtual void OnDestroy();
 		virtual void OnDockDestroyed(WPARAM wParam, LPARAM lParam);
 		virtual void OnExitSizeMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -2635,11 +2635,8 @@ namespace Win32xx
 		m_NCHeight = MAX(20, GetTextHeight() + 5);
 	}
 
-	inline void CDocker::OnDestroy(WPARAM wParam, LPARAM lParam)
+	inline void CDocker::OnDestroy()
 	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
 		// Destroy any dock children first
 		std::vector<CDocker*>::iterator iter;
 		for (iter = GetDockChildren().begin(); iter < GetDockChildren().end(); ++iter)
@@ -3667,9 +3664,6 @@ namespace Win32xx
 
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged(wParam, lParam);
-			break;
-		case WM_DESTROY:
-			OnDestroy(wParam, lParam);
 			break;
 		case WM_SETFOCUS:
 			OnSetFocus(wParam, lParam);

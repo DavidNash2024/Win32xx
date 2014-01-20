@@ -96,20 +96,10 @@ void CViewFiles::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
-LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+void CViewFiles::OnDestroy()
 {
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
-			
+	SetImageList(NULL, LVSIL_SMALL);
+}		
 
 
 ///////////////////////////////////////////////

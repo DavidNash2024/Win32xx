@@ -13,8 +13,8 @@ public:
 	CMyCombo();
 	virtual ~CMyCombo();
 	BOOL AddItems();
+	virtual void OnDestroy();
 	void SetImages(int nImages, UINT ImageID);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 protected:
 	virtual void PreCreate(CREATESTRUCT &cs);

@@ -136,6 +136,7 @@ namespace Win32xx
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnCreate();
+		virtual void	OnDestroy();
 		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
@@ -201,7 +202,7 @@ namespace Win32xx
 		virtual HWND    Create(CWnd* pParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void	OnCreate();
-		virtual void    OnDestroy(WPARAM wParam, LPARAM lParam);
+		virtual void    OnDestroy();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1219,19 +1220,18 @@ namespace Win32xx
 		}
 	}
 
+	inline void CTab::OnDestroy()
+	{
+		for (int i = GetItemCount()-1; i >= 0; --i)
+		{
+			RemoveTabPage(i);
+		}
+	}
+
 	inline LRESULT CTab::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
-		case WM_DESTROY:
-			// Required for Windows NT
-			{
-				for (int i = GetItemCount()-1; i >= 0; --i)
-				{
-					RemoveTabPage(i);
-				}
-			}
-			break;
 		case WM_PAINT:
 			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
 			{
@@ -1549,7 +1549,7 @@ namespace Win32xx
 		GetTab().SetOwnerDraw(TRUE);
 	}
 
-	inline void CTabbedMDI::OnDestroy(WPARAM /*wParam*/, LPARAM /*lParam*/ )
+	inline void CTabbedMDI::OnDestroy()
 	{
 		CloseAllMDIChildren();
 	}
@@ -1665,10 +1665,6 @@ namespace Win32xx
 	{
 		switch(uMsg)
 		{
-		case WM_DESTROY:
-			OnDestroy(wParam, lParam);
-			break;
-
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged(wParam, lParam);
 			break;

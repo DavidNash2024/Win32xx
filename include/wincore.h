@@ -575,6 +575,7 @@ namespace Win32xx
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
+		virtual void OnDestroy();
 		virtual void OnDraw(CDC* pDC);
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
 		virtual void OnInitialUpdate();
@@ -1509,6 +1510,13 @@ namespace Win32xx
 		//  during window creation.
 	}
 
+	inline void CWnd::OnDestroy()
+	{
+		// This function is called when a window is destroyed
+		// Override it to do additional tasks, such as ending the application
+		//  with PostQuitMessage.
+	}
+
 	inline void CWnd::OnDraw(CDC* pDC)
 	// Called when part of the client area of the window needs to be drawn
 	{
@@ -1915,12 +1923,10 @@ namespace Win32xx
 			break;  // Note: Some MDI commands require default processing
 		case WM_CREATE:
 			OnCreate();
-			break;
-	// An example of how to end the application when the window closes
-	//  If needed, put this in the class you inherit from CWnd
-	//	case WM_DESTROY:
-	//		::PostQuitMessage(0);
-	//		return 0L;
+			return 0L;
+		case WM_DESTROY:
+			OnDestroy();
+			return 0L;
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object

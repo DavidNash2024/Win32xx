@@ -16,6 +16,12 @@ void CView::DrawLine(int x, int y)
 	dcClient.LineTo(x, y);
 }
 
+void CView::OnDestroy()
+{
+	//End the program when window is destroyed
+	::PostQuitMessage(0);
+}
+
 void CView::OnDraw(CDC* pDC)
 {
 	if (m_points.size() > 0)
@@ -83,11 +89,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     case WM_LBUTTONUP:
 		OnLButtonUp(lParam);
-		break;
-
-	case WM_DESTROY:
-		//End the program when window is destroyed
-		::PostQuitMessage(0);
 		break;
 	}
 

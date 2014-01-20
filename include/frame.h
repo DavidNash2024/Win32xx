@@ -3800,9 +3800,6 @@ namespace Win32xx
 		case WM_CLOSE:
 			OnClose();
 			break;
-		case WM_DESTROY:
-			OnDestroy();
-			return 0L;
 		case WM_ERASEBKGND:
 			return 0L;
 		case WM_HELP:

@@ -14,12 +14,14 @@ New Features and Enhancements
 * CFile functions are now virtual
 * Frames now use IDW_READY for the "Ready" string
 * Added project files for VS2013
+* Added CWnd::OnDestroy
 
 
 Changes in detail
 -----------------
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
+- Added CWnd::OnDestroy
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
 - Modified CSocket::Receive             uses char instead of TCHAR
@@ -33,6 +35,7 @@ Changes in detail
 
 Added IDW_READY resource for ready string.
 Added VS2013 project files
+Tutorials 1 and 2 now use OnDestroy to end the application
 
 Incompatibilities with previous versions
 ----------------------------------------

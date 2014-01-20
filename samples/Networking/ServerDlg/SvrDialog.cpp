@@ -336,7 +336,7 @@ void CSvrDialog::OnSend()
 		case SOCK_DGRAM:
 			{
 				CString sSend = m_EditSend.GetWindowText();
-				m_MainSocket.SendTo(T2A(sSend), lstrlen(sSend), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
+				m_MainSocket.SendTo(T2A(sSend), strlen(T2A(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
 			}
 			break;
 	}

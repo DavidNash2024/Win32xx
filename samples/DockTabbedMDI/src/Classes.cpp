@@ -78,19 +78,11 @@ void CViewClasses::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = WC_TREEVIEW;
 }
 
-LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+void CViewClasses::OnDestroy()
 {
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
+	SetImageList(NULL, LVSIL_SMALL);
 }
+
 
 
 ///////////////////////////////////////////////

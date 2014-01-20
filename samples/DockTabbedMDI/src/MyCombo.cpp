@@ -84,17 +84,8 @@ void CMyCombo::SetImages(int nImages, UINT ImageID)
 	::DeleteObject(hbm);
 }
 
-LRESULT CMyCombo::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+void CMyCombo::OnDestroy()
 {
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SendMessage(CBEM_SETIMAGELIST, 0L, 0L);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
+	SendMessage(CBEM_SETIMAGELIST, 0L, 0L);
 }
 

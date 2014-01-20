@@ -1345,9 +1345,6 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_DESTROY:
-			OnDestroy();
-			break;
 		case UWM_GETTOOLBARTHEME:
 			{
 				ToolBarTheme& tt = GetToolBarTheme();

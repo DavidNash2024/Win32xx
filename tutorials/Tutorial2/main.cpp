@@ -11,6 +11,7 @@ class CView : public CWnd
 {
 public:
 	CView() {}
+	virtual void OnDestroy() { PostQuitMessage(0); } // Ends the program
 	virtual ~CView() {}
 };
 
@@ -34,7 +35,6 @@ BOOL CSimpleApp::InitInstance()
 	return TRUE;
 }
 
-// Note:  This application doesn't end when the window is closed
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

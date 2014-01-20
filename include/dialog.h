@@ -310,6 +310,9 @@ namespace Win32xx
 	        }
 	        break;
 
+		case WM_DESTROY:
+			OnDestroy();
+			return 0L;
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object
