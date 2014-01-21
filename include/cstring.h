@@ -658,11 +658,11 @@ namespace Win32xx
 	// terminator, you must specify the buffer's length.
 	{
 		assert (nNewLength > 0 || -1 == nNewLength);
-		assert (nNewLength < (int)m_buf.size());
+		assert (nNewLength <= (int)m_buf.size());
 
 		if (-1 == nNewLength)
 			nNewLength = lstrlen(&m_buf[0]);
-		m_str.assign(nNewLength+1, _T('\0'));
+		m_str.assign(nNewLength, _T('\0'));
 
 		std::vector<TCHAR>::iterator it_end = m_buf.begin();
 		std::advance(it_end, nNewLength);
