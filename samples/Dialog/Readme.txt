@@ -7,7 +7,7 @@ starting point for your own dialog based projects.
 Features demonstrated in this example
 =====================================
 * Using a dialog as an application
-* Using CDialog to display a dialog defined a resource script (resource.rc)
+* Using CDialog to display a dialog defined in a resource script (resource.rc)
 
 
 About Dialogs

@@ -1,7 +1,7 @@
 Frame Example
 =============
 This project demonstrates the use of the CFrame class to display a frame
-window. A frame uses a seperate view window which is displayed over its 
+window. A frame uses a separate view window which is displayed over its 
 client area.
 
 CFrame provides a set of features including:
@@ -9,7 +9,7 @@ CFrame provides a set of features including:
 - a Menubar
 - a rebar to hold the frame's toolbar and menubar
 - a statusbar, displaying toolbar/menubar status and indicators
-- support for a seperate view window
+- support for a separate view window
 - tooltips for toolbars
 - themes support to set colours for the rebar, menubar and toolbar
 - Most Recently Used (MRU) list support

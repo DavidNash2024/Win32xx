@@ -27,6 +27,7 @@ Changes in detail
 - Added CWnd::OnDestroy
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
+- Modified CMDIChild::OnClose           now returns void.
 - Modified CSocket::Receive             uses char instead of TCHAR
 - Modified CSocket::RecieveFrom         uses char instead of TCHAR
 - Modified CSocket::Send                uses char instead of TCHAR
@@ -38,7 +39,7 @@ Changes in detail
 
 Added IDW_READY resource for ready string.
 Added VS2013 project files
-Tutorials 1 and 2 now use OnDestroy to end the application
+Updated the tutorials to take advantage of the new features.
 
 Incompatibilities with previous versions
 ----------------------------------------

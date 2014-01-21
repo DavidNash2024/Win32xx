@@ -5,6 +5,8 @@
 #include "View.h"
 
 
+// A class that inherits from CWinApp. 
+// It is used to run the application's message loop.
 class CScribbleApp : public CWinApp
 {
 public:

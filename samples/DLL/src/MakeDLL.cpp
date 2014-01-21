@@ -41,7 +41,7 @@ void __declspec(dllexport) ShowDialog()
 {
 	//NOTE: This function doesn't return until the dialog is closed.
 	//      CThread can be used to put the dialog creation and message loop in
-	//      a seperate thread if you wish the function to return immediately.
+	//      a separate thread if you wish the function to return immediately.
 
 	// Create the dialog
 	TRACE(_T("Creating a dialog inside the DLL:\n"));

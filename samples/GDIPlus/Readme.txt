@@ -10,7 +10,7 @@ GDI+ ships with Windows XP (and above). The GDI+ redistributable can be used
 to add GDI+ support to Windows NT 4.0 SP6, Windows 2000, Windows 98, and 
 Windows Millennium Edition (Windows Me) operating systems. 
  
-Some compilers (including MinGW and Borland versoin 5.5) may not support GDI+.
+Some compilers (including MinGW and Borland version 5.5) may not support GDI+.
 Some Microsoft compilers will require the Platform SDK integrated with it to
 compile this code.
 

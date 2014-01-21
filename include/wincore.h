@@ -1487,7 +1487,7 @@ namespace Win32xx
 	}
 
 	inline void CWnd::OnClose()
-	// Called in reponse to WM_CLOSE. Overide to supress destroying the window
+	// Called in response to WM_CLOSE. Override to suppress destroying the window
 	// A WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking the red X
 	{
 		::DestroyWindow(m_hWnd);

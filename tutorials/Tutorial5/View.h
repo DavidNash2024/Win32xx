@@ -11,6 +11,7 @@
 using std::vector;
 
 
+// A class that inherits from CWnd. It is used to create the window.
 class CView : public CWnd
 {
 public:

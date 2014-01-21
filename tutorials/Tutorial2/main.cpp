@@ -1,12 +1,13 @@
 ///////////////////////////////////
 // main.cpp
 
-// The directory of the include directory should also be added to project's 
-//  additional include directories.
+// Note:  
+//  * Add the Win32++\include  directory to project's additional include directories
 
 #include "wincore.h"
 
 
+// A class that inherits from CWnd. It is used to create the window.
 class CView : public CWnd
 {
 public:
@@ -16,6 +17,8 @@ public:
 };
 
 
+// A class that inherits from CWinApp. 
+// It is used to run the application's message loop.
 class CSimpleApp : public CWinApp
 {
 public:

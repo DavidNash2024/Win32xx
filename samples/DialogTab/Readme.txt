@@ -1,6 +1,6 @@
 DialogTab Example
 ==================
-This dialog features a Tab control in the main dialg. The tab control
+This dialog features a Tab control in the main dialog. The tab control
 then displays other simple dialogs. 
   
 Note that property sheets provide an alternative to dialogs with a tab control.

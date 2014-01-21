@@ -6,6 +6,8 @@
 // Note:  
 //  * Add the Win32++\include  directory to project's additional include directories
 
+
+// A class that inherits from CWnd. It is used to create the window.
 class CMyWindow : public CWnd
 {
 public:
@@ -20,13 +22,13 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// Start Win32++
 	CWinApp MyApp;
 
-	// Create a CWnd object
+	// Create a CMyWindow object
 	CMyWindow MyWindow;
 
 	// Create (and display) the window
 	MyWindow.Create();
 
-	// Run the application
+	// Run the application's message loop
 	return MyApp.Run();
 }
 

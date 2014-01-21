@@ -76,7 +76,7 @@ void CView::OnDestroy()
 	::PostQuitMessage(0);
 }
 
-void CView::OnPaint(CDC* pDC)
+void CView::OnDraw(CDC* pDC)
 {
 	// OnPaint is called automatically whenever a part of the
 	// window needs to be repainted.

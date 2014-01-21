@@ -10,8 +10,9 @@ is resumed, it runs the InitInstance function which creates the window.
 
 Features demonstrated in this example
 =====================================
+* How to use the CThread class to create threads
 * How to create a thread that is initially suspended
 * How to create windows in different threads
 * Using PostMessage to communicate information between threads
 * Using PostQuitMessage to end a GUI thread
-* Using the CThread class
+

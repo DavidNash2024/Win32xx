@@ -1006,6 +1006,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SetFont(CFont* pFont, BOOL bRedraw /* = 1 */)
+	// Sets the font and adjusts the tab height to match
 	{
 		assert(pFont);
 		m_Font = *pFont;
