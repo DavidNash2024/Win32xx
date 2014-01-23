@@ -103,13 +103,13 @@
   #include "wcestddef.h"
 #endif
 
-#define _WINSOCKAPI_            // Prevent winsock.h #include's.
 
 #include <assert.h>
 #include <vector>
 #include <algorithm>
 #include <string>
 #include <map>
+#include <winsock2.h>
 #include <windows.h>
 #include <commctrl.h>
 #include <stdio.h>
