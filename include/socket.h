@@ -515,9 +515,7 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-		std::string sNodeName = T2A(nodename);
-		std::string sServName = T2A(servname);
-		return (*m_pfnGetAddrInfo)(sNodeName.c_str(), sServName.c_str(), hints, res);
+		return (*m_pfnGetAddrInfo)(T2A(nodename), T2A(servname), hints, res);
 
 #else
 
@@ -526,7 +524,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(hints);
 		UNREFERENCED_PARAMETER(res);
 
-		throw CWinException(_T("getaddrinfo is not supported"));
+		return WSAVERNOTSUPPORTED;
 
 #endif
 
@@ -591,8 +589,6 @@ namespace Win32xx
 #else
 
 		UNREFERENCED_PARAMETER(ai);
-
-		throw CWinException(_T("getaddrinfo is not supported"));
 
 #endif
 

@@ -1479,9 +1479,8 @@ namespace Win32xx
 				DWORD BufferSize = sizeof(TabPageInfo);
 				TabPageInfo tbi = {0};
 				int i = 0;
-				TCHAR szNumber[16];
-				CString strSubKey = _T("MDI Child ");
-				strSubKey += _itot(i, szNumber, 10);
+				CString strSubKey;
+				strSubKey.Format(_T("MDI Child %d"), i);
 
 				// Fill the DockList vector from the registry
 				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&tbi, &BufferSize))
@@ -1491,8 +1490,7 @@ namespace Win32xx
 					{
 						AddMDIChild(pWnd, tbi.szTabText, tbi.idTab);
 						i++;
-						strSubKey = _T("MDI Child ");
-						strSubKey += _itot(i, szNumber, 10);
+						strSubKey.Format(_T("MDI Child %d"), i);
 						bResult = TRUE;
 					}
 					else
@@ -1607,9 +1605,8 @@ namespace Win32xx
 
 				for (int i = 0; i < GetMDIChildCount(); ++i)
 				{
-					TCHAR szNumber[16];
-					CString strSubKey = _T("MDI Child ");
-					strSubKey += _itot(i, szNumber, 10);
+					CString strSubKey;
+					strSubKey.Format(_T("MDI Child %d"), i);
 					TabPageInfo pdi = GetTab().GetTabPageInfo(i);
 					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, strSubKey, 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo)))
 						throw (CWinException(_T("RegSetValueEx Failed")));

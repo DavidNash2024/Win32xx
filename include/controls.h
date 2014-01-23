@@ -128,12 +128,12 @@ namespace Win32xx
 	class CComboBoxEx : public CComboBox
 	{
 	public:
-		CComboBoxEx() 
+		CComboBoxEx()
 		{
 			INITCOMMONCONTROLSEX icce;
 			icce.dwSize = sizeof(INITCOMMONCONTROLSEX);
 			icce.dwICC = ICC_USEREX_CLASSES;
-			::InitCommonControlsEx(&icce);		
+			::InitCommonControlsEx(&icce);
 		}
 		virtual ~CComboBoxEx() {}
 
@@ -468,9 +468,9 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
-		virtual void PreCreate(CREATESTRUCT &cs) 
-		{ 
-			cs.dwExStyle = WS_EX_TOOLWINDOW; 
+		virtual void PreCreate(CREATESTRUCT &cs)
+		{
+			cs.dwExStyle = WS_EX_TOOLWINDOW;
 			cs.style = WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP;
 		}
 
@@ -1885,7 +1885,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolTip::HitTest(CWnd* pWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
-	// Tests a point to determine whether it is within the bounding rectangle of the 
+	// Tests a point to determine whether it is within the bounding rectangle of the
 	//  specified tool and, if it is, retrieves information about the tool.
 	{
 		assert(IsWindow());
@@ -1907,7 +1907,7 @@ namespace Win32xx
 		{
 			ti.hwnd = ::GetParent(hWnd);
 			ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
-			ti.uId = (UINT)hWnd;
+			ti.uId = (UINT_PTR)hWnd;
 		}
 		else
 		{
@@ -2026,7 +2026,7 @@ namespace Win32xx
 
 #if (defined TTM_SETTITLE) && (_WIN32_IE >=0x0500)
 	inline BOOL CToolTip::AdjustRect(LPRECT lprc, BOOL bLarger /*= TRUE*/)
-	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the 
+	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the
 	//  ToolTip window rectangle needed to display a specified text display rectangle.
 	{
 		assert(IsWindow());

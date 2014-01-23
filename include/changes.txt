@@ -35,7 +35,7 @@ Changes in detail
 - Modified CString  operator == 		now accepts const
 - Modified CString  operator != 		now accepts const
 - Modified CString  operator [] 		now accepts const
-- Modified  CWnd::DeferWindowPos		now uses CWnd* for second argument
+- Modified CWnd::DeferWindowPos			now uses CWnd* for second argument
 
 Added IDW_READY resource for ready string.
 Added VS2013 project files

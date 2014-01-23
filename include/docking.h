@@ -2392,33 +2392,29 @@ namespace Win32xx
 				DWORD BufferSize = sizeof(DockInfo);
 				DockInfo di;
 				int i = 0;
-				TCHAR szNumber[20];
-				CString strSubKey = _T("DockChild");
-				strSubKey += _itot(i, szNumber, 10);
+				CString strSubKey;
+				strSubKey.Format(_T("DockChild%d"), i);
 
 				// Fill the DockList vector from the registry
 				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&di, &BufferSize))
 				{
 					vDockList.push_back(di);
 					i++;
-					strSubKey = _T("DockChild");
-					strSubKey += _itot(i, szNumber, 10);
+					strSubKey.Format(_T("DockChild%d"), i);
 				}
 
 				dwType = REG_DWORD;
 				BufferSize = sizeof(int);
 				int nID;
 				i = 0;
-				strSubKey = _T("ActiveContainer");
-				strSubKey += _itot(i, szNumber, 10);
+				strSubKey.Format(_T("ActiveContainer%d"), i);
 
 				// Fill the DockList vector from the registry
 				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nID, &BufferSize))
 				{
 					vActiveContainers.push_back(nID);
 					i++;
-					strSubKey = _T("ActiveContainer");
-					strSubKey += _itot(i, szNumber, 10);
+					strSubKey.Format(_T("ActiveContainer%d"), i);
 				}
 
 				RegCloseKey(hKey);
@@ -3211,9 +3207,8 @@ namespace Win32xx
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
 				{
 					DockInfo di = vDockInfo[u];
-					TCHAR szNumber[16];
-					CString strSubKey = _T("DockChild");
-					strSubKey += _itot((int)u, szNumber, 10);
+					CString strSubKey;
+					strSubKey.Format(_T("DockChild%u"), u);
 					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
 						throw (CWinException(_T("RegSetValueEx failed")));
 				}
@@ -3226,9 +3221,8 @@ namespace Win32xx
 
 					if (pContainer && (pContainer == pContainer->GetActiveContainer()))
 					{
-						TCHAR szNumber[20];
-						CString strSubKey = _T("ActiveContainer");
-						strSubKey += _itot(i++, szNumber, 10);
+						CString strSubKey;
+						strSubKey.Format(_T("ActiveContainer%d"), i++);
 						int nID = GetDockFromView(pContainer)->GetDockID();
 						if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
 							throw (CWinException(_T("RegSetValueEx failed")));

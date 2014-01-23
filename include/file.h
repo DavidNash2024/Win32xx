@@ -230,6 +230,8 @@ namespace Win32xx
 		if (pszFilePathName)
 			str = pszFilePathName;
 
+		int MaxPath = 260; // Should be a const int but VS6 can't handle it.
+
 		OPENFILENAME ofn = {0};
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
@@ -243,9 +245,9 @@ namespace Win32xx
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
 		ofn.Flags = dwFlags;
-		ofn.nMaxFile = _MAX_PATH;
+		ofn.nMaxFile = MaxPath;
 		
-		ofn.lpstrFile = (LPTSTR)str.GetBuffer(_MAX_PATH);
+		ofn.lpstrFile = (LPTSTR)str.GetBuffer(MaxPath);
 		::GetOpenFileName(&ofn);
 		str.ReleaseBuffer();
 
@@ -284,6 +286,8 @@ namespace Win32xx
 		if (pszFilePathName)
 			str = pszFilePathName;
 
+		int MaxPath = 260; // Should be a const int but VS6 can't handle it.
+
 		OPENFILENAME ofn = {0};
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
@@ -301,8 +305,8 @@ namespace Win32xx
 		ofn.nMaxFile = lstrlen(pszFilePathName);
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Save File");
 		ofn.Flags = dwFlags;
-		ofn.nMaxFile = _MAX_PATH;
-		ofn.lpstrFile = (LPTSTR)str.GetBuffer(_MAX_PATH);
+		ofn.nMaxFile = MaxPath;
+		ofn.lpstrFile = (LPTSTR)str.GetBuffer(MaxPath);
 		::GetSaveFileName(&ofn);
 		str.ReleaseBuffer();
 
