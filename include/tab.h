@@ -1411,10 +1411,11 @@ namespace Win32xx
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES;
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the MDICLIENT view window
 		if (!CreateEx(0, _T("MDICLIENT"), _T(""),
-			dwStyle, 0, 0, 0, 0, pParent, NULL, (PSTR) &clientcreate))
+			dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
 				throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
 
 		return m_hWnd;

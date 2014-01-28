@@ -7,7 +7,8 @@ Bug Fixes
 * Adjusted text position in Windows 7 menus.
 * Minor bug fixes to CString
 * CSocket now works for WinCE
-* CSocket send and receive functions now use char and support binary data. 
+* CSocket send and receive functions now use char and support binary data.
+* Fixed CMenu::GetMenuString
 	 
 New Features and Enhancements
 * TRACE now accepts both ANSI and Unicode strings.
@@ -16,6 +17,9 @@ New Features and Enhancements
 * Added project files for VS2013
 * Added CWnd::OnClose. Called automatically when a window asks to be closed.
 * Added CWnd::OnDestroy. Called automatically when a window is destroyed.
+* CWnd::CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
+   the menu parameter to specify a menu for a parent window, or a window ID
+   for a child window.
 
 
 
@@ -35,6 +39,7 @@ Changes in detail
 - Modified CString  operator == 		now accepts const
 - Modified CString  operator != 		now accepts const
 - Modified CString  operator [] 		now accepts const
+- Modified CWnd::CreateEx               now uses HMENU instead of CMenu*
 - Modified CWnd::DeferWindowPos			now uses CWnd* for second argument
 
 Added IDW_READY resource for ready string.

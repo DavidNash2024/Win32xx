@@ -423,8 +423,8 @@ namespace Win32xx
 		virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
 		virtual void CenterWindow() const;
 		virtual HWND Create(CWnd* pParent = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, CMenu* pMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, CMenu* pMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
 		virtual HICON SetIconLarge(int nIcon);
@@ -1273,26 +1273,29 @@ namespace Win32xx
 		// Create the window
 #ifndef _WIN32_WCE
 		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
-				cx, cy, pParent, FromHandle(m_pcs->hMenu), m_pcs->lpCreateParams);
+				cx, cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
 #else
 		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
-				cx, cy, pParent, 0, m_pcs->lpCreateParams);
+				cx, cy, hWndParent, 0, m_pcs->lpCreateParams);
 #endif
 
 		return m_hWnd;
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, CMenu* pMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam /*= NULL*/)
 	// Creates the window by specifying all the window creation parameters
 	{
 		int x = rc.left;
 		int y = rc.top;
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
-		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, pParent, pMenu, lpParam);
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
+		HMENU hMenu = pParent? (HMENU)nID : ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
+
+		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
 	}
 
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, CWnd* pParent, CMenu* pMenu, LPVOID lpParam /*= NULL*/)
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam /*= NULL*/)
 	// Creates the window by specifying all the window creation parameters
 	{
 
@@ -1322,8 +1325,6 @@ namespace Win32xx
 			if (!RegisterClass(wc))
 				throw CWinException(_T("Failed to register window class"));
 
-			HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-
 			// Ensure this thread has the TLS index set
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
@@ -1331,14 +1332,8 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			// Create window
-#ifdef _WIN32_WCE
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-									hWndParent, 0, GetApp()->GetInstanceHandle(), lpParam);
-#else
-			HMENU hMenu = pMenu? pMenu->GetHandle() : NULL;
-			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-									hWndParent, hMenu, GetApp()->GetInstanceHandle(), lpParam);
-#endif
+									hWndParent, nIDorHMenu, GetApp()->GetInstanceHandle(), lpParam);
 
 			// Now handle window creation failure
 			if (!m_hWnd)

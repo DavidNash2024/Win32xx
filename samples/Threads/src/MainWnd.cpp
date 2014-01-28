@@ -25,8 +25,9 @@ HWND CMainWindow::Create(CWnd* pParent)
 	CString str = _T("Main Thread Window");
 
 	// Create the main window
+	CRect rc(20 , 50, 400, 300);
 	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		20 , 50, 400, 300, pParent, NULL);
+		rc, pParent, NULL);
 }
 
 void CMainWindow::OnCreate()

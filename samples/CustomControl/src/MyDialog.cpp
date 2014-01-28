@@ -36,6 +36,9 @@ void CMyDialog::OnOK()
 	// Send Ctrl M to the browser
 
 	// Create a generic keyboard event structure
+
+#ifdef INPUT	// Not supported on some old ms compilers
+
 	INPUT ip;
 	ip.type = INPUT_KEYBOARD;
 	ip.ki.wScan = 0;
@@ -60,8 +63,9 @@ void CMyDialog::OnOK()
 	// Release the "Ctrl" key
 	ip.ki.wVk = VK_CONTROL;
 	ip.ki.dwFlags = KEYEVENTF_KEYUP;
-	SendInput(1, &ip, sizeof(INPUT)); 
+	SendInput(1, &ip, sizeof(INPUT));
 
+#endif
 }
 
 BOOL CMyDialog::OnInitDialog()

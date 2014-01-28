@@ -525,9 +525,10 @@ namespace Win32xx
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the view window
-		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, pParent, NULL, (PSTR) &clientcreate);
+		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 
 		return m_hWnd;
 	}
@@ -599,6 +600,7 @@ namespace Win32xx
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
+		assert(pParent);
 		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
 		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
 
@@ -630,10 +632,11 @@ namespace Win32xx
 
 		// Turn off redraw while creating the window
 		pParent->SendMessage(WM_SETREDRAW, FALSE, 0L);
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the window
 		if (!CreateEx(dwExStyle, szClassName, m_pcs->lpszName, dwStyle, x, y,
-			cx, cy, pParent, FromHandle(m_pcs->hMenu), m_pcs->lpCreateParams))
+			cx, cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)
