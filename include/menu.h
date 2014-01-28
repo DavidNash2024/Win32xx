@@ -424,7 +424,9 @@ namespace Win32xx
 	// Copies the text string of the specified menu item into the specified buffer.
 	{
 		assert(IsMenu(m_hMenu));
-		return ::GetMenuString(m_hMenu, uIDItem, (LPTSTR)rString.c_str(), rString.GetLength(), uFlags);
+		int n = ::GetMenuString(m_hMenu, uIDItem, rString.GetBuffer(MAX_MENU_STRING), MAX_MENU_STRING, uFlags);
+		rString.ReleaseBuffer();
+		return n;
 	}
 
 	inline CMenu* CMenu::GetSubMenu(int nPos)
