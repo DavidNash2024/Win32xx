@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.4
+// Win32++   Pre-release Version 7.3.1
 // Released: Not officially released
 //
 //      David Nash
@@ -266,7 +266,7 @@ namespace Win32xx
 			std::vector<TCHAR> vTChar(nTextMax +1, _T('\0'));
 			TCHAR* pTCharArray = &vTChar.front();
 			tvi.pszText = pTCharArray;
-			::SendMessage(m_hWnd, TVM_GETITEM, 0L, (LPARAM)&tvi);
+			SendMessage(TVM_GETITEM, 0L, (LPARAM)&tvi);
 			t = tvi.pszText;
 		}
 		return t;

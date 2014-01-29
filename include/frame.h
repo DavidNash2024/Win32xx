@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.4
+// Win32++   Pre-release Version 7.3.1
 // Released: Not officially released
 //
 //      David Nash
@@ -273,7 +273,8 @@ namespace Win32xx
 		void DrawAllMDIButtons(CDC& DrawDC);
 		void DrawMDIButton(CDC& DrawDC, int iButton, UINT uState);
 		void ExitMenu();
-		HWND GetActiveMDIChild();
+	//	HWND GetActiveMDIChild();
+		CWnd* GetActiveMDIChild();
 		void GrabFocus();
 		BOOL IsMDIChildMaxed() const;
 		BOOL IsMDIFrame() const;
@@ -581,15 +582,17 @@ namespace Win32xx
 		m_bExitAfter = FALSE;
 		m_OldMousePos = GetCursorPos();
 
-		HWND hMaxMDIChild = NULL;
+	//	HWND hMaxMDIChild = NULL;
+		CWnd* pMaxMDIChild = NULL;
 		if (IsMDIChildMaxed())
-			hMaxMDIChild = GetActiveMDIChild();
+	//		hMaxMDIChild = GetActiveMDIChild();
+			pMaxMDIChild = GetActiveMDIChild();
 
 		// Load the submenu
 		int nMaxedOffset = IsMDIChildMaxed()? 1:0;
 		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - nMaxedOffset);
 		if (IsMDIChildMaxed() && (0 == m_nHotItem) )
-			m_hPopupMenu = ::GetSystemMenu(hMaxMDIChild, FALSE);
+		m_hPopupMenu = ::GetSystemMenu(*pMaxMDIChild, FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
 		CRect rc = GetItemRect(m_nHotItem);
@@ -643,10 +646,10 @@ namespace Win32xx
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
 		{
-			if (::GetSystemMenu(hMaxMDIChild, FALSE) == m_hPopupMenu )
+			if (::GetSystemMenu(*pMaxMDIChild, FALSE) == m_hPopupMenu )
 			{
 				if (nID)
-					::SendMessage(hMaxMDIChild, WM_SYSCOMMAND, nID, 0L);
+					pMaxMDIChild->SendMessage(WM_SYSCOMMAND, nID, 0L);
 			}
 		}
 
@@ -809,15 +812,27 @@ namespace Win32xx
 		SendMessage(WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
 	}
 
-	inline HWND CMenuBar::GetActiveMDIChild()
+/*	inline HWND CMenuBar::GetActiveMDIChild()
 	{
 		HWND hwndMDIChild = NULL;
 		if (IsMDIFrame())
 		{
-			hwndMDIChild = (HWND)::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0L, 0L);
+		//	hwndMDIChild = (HWND)::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0L, 0L);
+			hwndMDIChild = (HWND)m_pFrame->GetView()->SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		}
 
 		return hwndMDIChild;
+	} */
+
+	inline CWnd* CMenuBar::GetActiveMDIChild()
+	{
+		CWnd* pMDIChild = NULL;
+		if (IsMDIFrame())
+		{
+			pMDIChild = FromHandle((HWND)m_pFrame->GetView()->SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+		}
+
+		return pMDIChild;
 	}
 
 	inline void CMenuBar::GrabFocus()
@@ -893,7 +908,7 @@ namespace Win32xx
 					if (IsMDIChildMaxed() && (0 == dwItem))
 					// Draw over MDI Max button
 					{
-						HICON hIcon = (HICON)::SendMessage(GetActiveMDIChild(), WM_GETICON, ICON_SMALL, 0L);
+						HICON hIcon = (HICON)GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
 						if (NULL == hIcon)
 							hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 
@@ -1061,8 +1076,10 @@ namespace Win32xx
 
 		if (IsMDIFrame())
 		{
-			HWND MDIClient = m_pFrame->GetView()->GetHwnd();
-			HWND MDIChild = GetActiveMDIChild();
+			CWnd* pMDIClient = m_pFrame->GetView();
+			CWnd* pMDIChild = GetActiveMDIChild();
+			assert(pMDIClient);
+			assert(pMDIChild);
 
 			if (IsMDIChildMaxed())
 			{
@@ -1073,19 +1090,19 @@ namespace Win32xx
 				if (m_MDIRect[0].PtInRect(pt))
 				{
 					if (MDI_MIN == m_nMDIButton)
-						::ShowWindow(MDIChild, SW_MINIMIZE);
+						pMDIChild->ShowWindow(SW_MINIMIZE);
 				}
 
 				if (m_MDIRect[1].PtInRect(pt))
 				{
 					if (MDI_RESTORE == m_nMDIButton)
-					::PostMessage(MDIClient, WM_MDIRESTORE, (WPARAM)MDIChild, 0L);
+						pMDIClient->PostMessage(WM_MDIRESTORE, (WPARAM)pMDIChild->GetHwnd(), 0L);
 				}
 
 				if (m_MDIRect[2].PtInRect(pt))
 				{
 					if (MDI_CLOSE == m_nMDIButton)
-						::PostMessage(MDIChild, WM_SYSCOMMAND, SC_CLOSE, 0);
+						pMDIChild->PostMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 				}
 			}
 		}
@@ -1177,7 +1194,8 @@ namespace Win32xx
 			// Perform default action for DblClick on MDI Maxed icon
 			if (IsMDIChildMaxed() && (0 == HitTest()))
 			{
-				CWnd* pMDIChild = FromHandle(GetActiveMDIChild());
+				CWnd* pMDIChild = GetActiveMDIChild();
+				assert(pMDIChild);
 				CMenu* pChildMenu = pMDIChild->GetSystemMenu(FALSE);
 
 				UINT nID = pChildMenu->GetDefaultItem(FALSE, 0);

@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.4
+// Win32++   Pre-release Version 7.3.1
 // Released: Not officially released
 //
 //      David Nash
@@ -4207,7 +4207,7 @@ namespace Win32xx
 			case NM_KILLFOCUS:
 			case NM_SETFOCUS:
 			case UWM_FRAMELOSTFOCUS:
-				::SendMessage(::GetParent(::GetParent(m_hWnd)), WM_NOTIFY, wParam, lParam);
+				GetParent()->GetParent()->SendMessage(WM_NOTIFY, wParam, lParam);
 				break;
 			}
 

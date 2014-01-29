@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.4
+// Win32++   Pre-release Version 7.3.1
 // Released: Not officially released
 //
 //      David Nash
@@ -256,7 +256,7 @@ namespace Win32xx
 	// returns the handle to the cursor associated withe the button
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HCURSOR)::SendMessage(m_hWnd, BM_GETIMAGE, IMAGE_CURSOR, 0L);
+		return (HCURSOR)SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0L);
 	}
 
 	inline HICON CButton::GetIcon() const
@@ -366,7 +366,7 @@ namespace Win32xx
 	// Copies characters to a buffer and returns the number of characters copied.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (int)::SendMessage(m_hWnd, EM_GETLINE, nIndex, (LPARAM)lpszBuffer);
+		return (int)SendMessage(EM_GETLINE, nIndex, (LPARAM)lpszBuffer);
 	}
 
 	inline int CEdit::GetLine(int nIndex, LPTSTR lpszBuffer, int nMaxLength) const
@@ -574,7 +574,7 @@ namespace Win32xx
 	// Sets tab-stop positions in the multiline edit control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (BOOL)::SendMessage(m_hWnd, EM_SETTABSTOPS, nTabStops, (LPARAM)rgTabStops);
+		return (BOOL)SendMessage(EM_SETTABSTOPS, nTabStops, (LPARAM)rgTabStops);
 	}
 
 	inline BOOL CEdit::SetTabStops() const
@@ -683,7 +683,7 @@ namespace Win32xx
 	//  and the low-order word contains the language identifier.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (LCID)::SendMessage(m_hWnd, LB_GETLOCALE, 0, 0);
+		return (LCID)SendMessage(LB_GETLOCALE, 0, 0);
 	}
 
 	inline int CListBox::GetSel(int nIndex) const
@@ -697,7 +697,7 @@ namespace Win32xx
 	// Retrieves the string associated with a specified item and the length of the string.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (int)::SendMessage(m_hWnd, LB_GETTEXT, nIndex, (LPARAM)lpszBuffer);
+		return (int)SendMessage(LB_GETTEXT, nIndex, (LPARAM)lpszBuffer);
 	}
 
 	inline int CListBox::GetTextLen(int nIndex) const
@@ -718,7 +718,7 @@ namespace Win32xx
 	// Retrieves the zero-based index of the item nearest the specified point in a list box.
 	{
 		assert(::IsWindow(m_hWnd));
-		DWORD dw = (DWORD)::SendMessage(m_hWnd, LB_ITEMFROMPOINT, 0, MAKELPARAM(pt.x, pt.y));
+		DWORD dw = (DWORD)SendMessage(LB_ITEMFROMPOINT, 0, MAKELPARAM(pt.x, pt.y));
 		bOutside = !!HIWORD(dw);
 		return LOWORD(dw);
 	}
@@ -762,7 +762,7 @@ namespace Win32xx
 	// Sets the locale of a list box and returns the previous locale identifier.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (LCID)::SendMessage(m_hWnd, LB_SETLOCALE, (WPARAM)nNewLocale, 0);
+		return (LCID)SendMessage(LB_SETLOCALE, (WPARAM)nNewLocale, 0);
 	}
 
 	inline BOOL CListBox::SetTabStops(int nTabStops, LPINT rgTabStops) const
@@ -920,7 +920,7 @@ namespace Win32xx
 	// Selects the first string it finds that matches a specified prefix.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (int)::SendMessage(m_hWnd, LB_SELECTSTRING, nStartAfter, (LPARAM)lpszItem);
+		return (int)SendMessage(LB_SELECTSTRING, nStartAfter, (LPARAM)lpszItem);
 	}
 
 	inline void CListBox::PreRegisterClass(WNDCLASS &wc)

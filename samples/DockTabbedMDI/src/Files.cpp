@@ -56,7 +56,7 @@ void CViewFiles::SetColumns()
 	lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 	lvColumn.fmt = LVCFMT_LEFT;
 	lvColumn.cx = 120;
-	TCHAR szString[3][20] = {_T("Name"), TEXT("Size"), _T("Type")};
+	TCHAR szString[3][20] = {_T("Name"), _T("Size"), _T("Type")};
 	for(int i = 0; i < 3; ++i)
 	{
 		lvColumn.pszText = szString[i];

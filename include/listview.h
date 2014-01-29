@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.4
+// Win32++   Pre-release Version 7.3.1
 // Released: Not officially released
 //
 //      David Nash
@@ -380,21 +380,21 @@ namespace Win32xx
 	// Determines the number of selected items in a list-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (UINT)::SendMessage( m_hWnd, LVM_GETSELECTEDCOUNT, 0L, 0L );
+		return (UINT)SendMessage( LVM_GETSELECTEDCOUNT, 0L, 0L );
 	}
 
 	inline int CListView::GetSelectionMark( ) const
 	// Retrieves the selection mark from a list-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (int)::SendMessage( m_hWnd, LVM_GETSELECTIONMARK, 0L, 0L );
+		return (int)SendMessage( LVM_GETSELECTIONMARK, 0L, 0L );
 	}
 
 	inline int CListView::GetStringWidth( LPCTSTR pszString ) const
 	// Determines the width of a specified string using the specified list-view control's current font.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (int)::SendMessage( m_hWnd, LVM_GETSTRINGWIDTH, 0L, (LPARAM)pszString );
+		return (int)SendMessage( LVM_GETSTRINGWIDTH, 0L, (LPARAM)pszString );
 	}
 
 	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const
@@ -631,7 +631,7 @@ namespace Win32xx
 	// LVIS_STATEIMAGEMASK	Use this mask to retrieve the item's state image index.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (BOOL)::SendMessage(m_hWnd, LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)&Item);
+		return (BOOL)SendMessage(LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)&Item);
 	}
 
     inline void CListView::SetItemState( int iItem, UINT nState, UINT nMask ) const
@@ -676,7 +676,7 @@ namespace Win32xx
 		assert(pToolTip);
 
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return (CToolTip*) FromHandle( (HWND)::SendMessage(m_hWnd, LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L) );
+		return (CToolTip*) FromHandle( (HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L) );
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const

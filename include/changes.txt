@@ -1,11 +1,11 @@
-Version 7.4
-===========
+Version 7.3.1
+=============
 Bug Fixes
 * The dockbar's parent for dock containers was set incorrectly. The wrong 
    dockbar could be destroyed when a dock container was destroyed.   
 * Corrected variable initialisation in CMenuMetrics
 * Adjusted text position in Windows 7 menus.
-* Minor bug fixes to CString
+* Several minor bug fixes to CString
 * CSocket now works for WinCE
 * CSocket send and receive functions now use char and support binary data.
 * Fixed CMenu::GetMenuString

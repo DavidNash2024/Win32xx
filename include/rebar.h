@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.4
+// Win32++   Pre-release Version 7.3.1
 // Released: Not officially released
 //
 //      David Nash
@@ -513,7 +513,7 @@ namespace Win32xx
 				// Maximize the last band on each row
 				if (IsBandVisible(nBand))
 				{
-					::SendMessage(GetHwnd(), RB_MAXIMIZEBAND, nBand, 0L);
+					SendMessage(RB_MAXIMIZEBAND, nBand, 0L);
 					OldrcTop = rc.top;
 				}
 			}
