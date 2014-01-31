@@ -95,12 +95,10 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM lParam)
 
 LRESULT CMDIChildSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_CLOSE:
-		OnClose();
-		return 0L;
-	}
+//	switch (uMsg)
+//	{
+//		Add case statements for each messages to be handled here
+//	}
 
 	// Do default processing for other messages
 	return WndProcDefault(uMsg, wParam, lParam);

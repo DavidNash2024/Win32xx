@@ -19,6 +19,11 @@ CViewFiles::~CViewFiles()
 	ImageList_Destroy(m_himlSmall);
 }
 
+void CViewFiles::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
+}
+
 void CViewFiles::OnInitialUpdate()
 {
 	// Set the image lists
@@ -96,20 +101,6 @@ void CViewFiles::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
-LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
-			
 
 
 ///////////////////////////////////////////////

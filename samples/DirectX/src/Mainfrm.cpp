@@ -82,6 +82,15 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 }
 
+void CMainFrame::OnDestroy()
+{
+	PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
+	::WaitForSingleObject(m_View.GetThread(), INFINITE);
+	
+	// Call the base function
+	CFrame::OnDestroy();
+}
+
 void CMainFrame::OnInitialUpdate()
 {
 	// The frame is now created.
@@ -160,10 +169,10 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_DESTROY:
-		PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
-		::WaitForSingleObject(m_View.GetThread(), INFINITE);
-		break;
+//	case WM_DESTROY:
+//		PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
+//		::WaitForSingleObject(m_View.GetThread(), INFINITE);
+//		break;
 	case UWM_VIEWCREATED:
 		RecalcLayout();
 		break;

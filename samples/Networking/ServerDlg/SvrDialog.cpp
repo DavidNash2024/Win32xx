@@ -33,18 +33,10 @@ void CTCPClientDlg::Append(int nID, LPCTSTR buf)
 	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) buf);
 }
 
-INT_PTR CTCPClientDlg::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+void CTCPClientDlg::OnClose()
 {
-	switch (uMsg)
-	{
-	case WM_CLOSE:
-		// Disconnect the socket when the user closes this chat dialog
-		m_pSocket->Disconnect();
-		break;
-	}
-
-	// Pass unhandled messages on to parent DialogProc
-	return DialogProcDefault(uMsg, wParam, lParam);
+	// Disconnect the socket when the user closes this chat dialog
+	m_pSocket->Disconnect();
 }
 
 BOOL CTCPClientDlg::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -138,9 +130,6 @@ INT_PTR CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case USER_RECEIVE:
 		OnSocketReceive((CServerSocket*)wParam);
 		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
  	}
 
 	// Pass unhandled messages on to parent DialogProc
@@ -186,6 +175,11 @@ void CSvrDialog::LoadCommonControlsEx()
 		if (hComCtl)
 			::FreeLibrary(hComCtl);
 	}
+}
+
+void CSvrDialog::OnDestroy()
+{
+	PostQuitMessage(0);
 }
 
 void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)

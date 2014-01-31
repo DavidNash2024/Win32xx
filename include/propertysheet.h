@@ -234,6 +234,12 @@ namespace Win32xx
 
 		case PSM_QUERYSIBLINGS:
 			return (BOOL)OnQuerySiblings(wParam, lParam);
+			
+		case WM_CLOSE:	
+			{
+				OnClose();
+				return 0L;
+			}	
 
 		case WM_COMMAND:
 			{

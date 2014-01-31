@@ -19,6 +19,11 @@ CViewTree::~CViewTree()
 	ImageList_Destroy(m_himlNormal);
 }
 
+void CView::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
+}
+
 void CViewTree::OnInitialUpdate()
 {
 	//set the image lists
@@ -71,19 +76,6 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
-LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
 
 
 ///////////////////////////////////////////////

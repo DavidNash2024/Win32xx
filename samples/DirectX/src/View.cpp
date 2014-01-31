@@ -55,6 +55,12 @@ void CView::OnCreate()
 		TRACE("Failed to initialize DirectX\n");
 }
 
+void CView::OnDestroy()
+{
+	// End this thread
+	::PostQuitMessage( 0 );
+}
+
 void CView::PreCreate(CREATESTRUCT &cs)
 {
 	cs.x = 50;
@@ -277,13 +283,10 @@ int CView::MessageLoop()
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		// End this thread
-		::PostQuitMessage( 0 );
-		break;
-	}
+//	switch(uMsg)
+//	{
+//
+//	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
 }

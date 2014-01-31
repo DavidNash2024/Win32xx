@@ -162,14 +162,7 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-//	// Suppress resizing
-//	case WM_SIZING:
-//		{
-//			LPRECT pRect = (LPRECT)lParam;
-//			pRect->right = pRect->left + 500;
-//			pRect->bottom = pRect->top + 420;
-//		}
-//		return TRUE; 
+//		Add case statements for each messages to be handled here
 //	} 
 
 	// pass unhandled messages on for default processing

@@ -19,6 +19,11 @@ CViewList::~CViewList()
 	ImageList_Destroy(m_himlSmall);
 }
 
+void CViewList::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
+}
+
 void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
@@ -95,19 +100,6 @@ void CViewList::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
-LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
 
 ///////////////////////////////////////////////
 // CMDIChildListView functions

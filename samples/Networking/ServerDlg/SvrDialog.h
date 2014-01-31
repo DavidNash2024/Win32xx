@@ -20,8 +20,8 @@ class CTCPClientDlg : public CDialog
 public:
 	CTCPClientDlg(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CTCPClientDlg() {}
-	virtual INT_PTR DialogProc (UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnClose();
 	virtual BOOL OnInitDialog();
 	void Append(int nID, LPCTSTR buf);
 	void Receive();
@@ -59,6 +59,7 @@ public:
 	void StopServer();
 
 protected:
+	virtual void OnDestroy();
 	virtual BOOL OnInitDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

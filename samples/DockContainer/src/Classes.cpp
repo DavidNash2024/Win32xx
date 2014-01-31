@@ -36,6 +36,11 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
+void CViewClasses::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
+}
+
 void CViewClasses::OnInitialUpdate()
 {
 	//set the image lists
@@ -79,19 +84,6 @@ void CViewClasses::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = WC_TREEVIEW;
 }
 
-LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
 
 
 ///////////////////////////////////////////////

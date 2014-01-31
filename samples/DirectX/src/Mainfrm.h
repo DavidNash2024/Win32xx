@@ -19,6 +19,7 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnDestroy();
 	virtual void OnFileOpen();
 	virtual void OnFilePrint();
 	virtual void OnFileSave();

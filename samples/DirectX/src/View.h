@@ -37,6 +37,7 @@ protected:
 	// CWnd member function overrides
 	virtual HWND Create(CWnd* pParent = 0);
 	virtual	void OnCreate();
+	virtual void OnDestroy();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -19,9 +19,9 @@ public:
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 	
 protected:
+	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlNormal;

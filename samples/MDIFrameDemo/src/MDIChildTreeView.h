@@ -11,13 +11,12 @@ class CViewTree : public CTreeView
 public:
 	CViewTree();
 	virtual ~CViewTree();
+	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlNormal;
-
 };
 
 
@@ -33,7 +32,6 @@ protected:
 
 private:
 	CViewTree m_TreeView;
-
 };
 
 #endif  //MDICHILDTREEVIEW_H

@@ -54,9 +54,6 @@ INT_PTR CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Give focus to the Send Edit box
 		SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
 		break;
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
 	}
 
 	// Pass unhandled messages on to parent DialogProc
@@ -84,6 +81,11 @@ void CClientDialog::OnClientDisconnect()
 		m_EditIP6Address.EnableWindow( TRUE );
 		m_RadioIP6.EnableWindow( TRUE );
 	}
+}
+
+void CClientDialog::OnDestroy()
+{
+	PostQuitMessage(0);
 }
 
 void CClientDialog::LoadCommonControlsEx()

@@ -98,6 +98,7 @@ namespace Win32xx
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
+		virtual void OnClose();
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -284,6 +285,11 @@ namespace Win32xx
 					SetTimer(IDLE_TIMER_ID, 1000, 0);
 			}
 		    return OnInitDialog();
+		case WM_CLOSE:	
+			{
+				OnClose();
+				return 0L;
+			}	
 	    case WM_COMMAND:
 	        switch (LOWORD (wParam))
 	        {
@@ -520,6 +526,11 @@ namespace Win32xx
 	{
 		// Override to customize OnCancel behaviour
 		EndDialog(IDCANCEL);
+	}
+	
+	inline void CDialog::OnClose()
+	{
+		EndDialog(0);
 	}
 
 	inline BOOL CDialog::OnInitDialog()

@@ -97,7 +97,7 @@ LRESULT CSimpleMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-
+//		Add case statements for each messages to be handled here
 //	}
 
 	// Do default processing for other messages

@@ -46,6 +46,11 @@ CViewList::~CViewList()
 	ImageList_Destroy(m_himlSmall);
 }
 
+void CViewList::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
+}
+
 void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
@@ -124,14 +129,9 @@ void CViewList::InsertItems()
 
 LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
+//	switch(uMsg)
+//	{
+//	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
 }
@@ -162,6 +162,11 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvis.item = tvi;
 
 	return InsertItem(tvis);
+}
+
+void CViewTree::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
 }
 
 void CViewTree::OnInitialUpdate()
@@ -208,14 +213,9 @@ void CViewTree::PreCreate(CREATESTRUCT &cs)
 
 LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch(uMsg)
-	{
-	case WM_DESTROY:
-		{
-			SetImageList(NULL, LVSIL_SMALL);
-			break;
-		}
-	}
+//	switch(uMsg)
+//	{
+//	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
 }

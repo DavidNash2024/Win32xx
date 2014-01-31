@@ -182,9 +182,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_DESTROY:
-		OnDestroy();
-		break;
 	case WM_SIZE:
 		OnSize();
 		break;	// and also do default processing for this message
