@@ -459,6 +459,7 @@ namespace Win32xx
 		CDC*  GetDC() const;
 		CDC*  GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		CWnd* GetDesktopWindow() const;
+		int	  GetDlgCtrlID() const;
 		CWnd* GetDlgItem(int nIDDlgItem) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		CString GetDlgItemText(int nIDDlgItem) const;
@@ -2195,6 +2196,13 @@ namespace Win32xx
 		return FromHandle( ::GetDesktopWindow() );
 	}
 
+	inline int CWnd::GetDlgCtrlID() const
+	// Retrieves the control ID value for any child window
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::GetDlgCtrlID(m_hWnd);
+	}
+
 	inline CWnd* CWnd::GetDlgItem(int nIDDlgItem) const
 	// The GetDlgItem function retrieves a handle to a control in the dialog box.
 	{
@@ -2397,7 +2405,7 @@ namespace Win32xx
 	// The IsWindow function determines whether the window exists.
 	{
 		return ::IsWindow(m_hWnd);
-	}
+	}	
 
 	inline void  CWnd::MapWindowPoints(CWnd* pWndTo, POINT& pt) const
 	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one

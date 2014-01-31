@@ -812,18 +812,6 @@ namespace Win32xx
 		SendMessage(WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
 	}
 
-/*	inline HWND CMenuBar::GetActiveMDIChild()
-	{
-		HWND hwndMDIChild = NULL;
-		if (IsMDIFrame())
-		{
-		//	hwndMDIChild = (HWND)::SendMessage(m_pFrame->GetView()->GetHwnd(), WM_MDIGETACTIVE, 0L, 0L);
-			hwndMDIChild = (HWND)m_pFrame->GetView()->SendMessage(WM_MDIGETACTIVE, 0L, 0L);
-		}
-
-		return hwndMDIChild;
-	} */
-
 	inline CWnd* CMenuBar::GetActiveMDIChild()
 	{
 		CWnd* pMDIChild = NULL;

@@ -27,6 +27,7 @@ Changes in detail
 -----------------
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
+- Added CWnd::GetDlgCtrlID
 - Added CWnd::OnClose
 - Added CWnd::OnDestroy
 - Modified CFile::OpenFileDialog   		Added Title argument	
