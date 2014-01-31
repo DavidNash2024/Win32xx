@@ -55,7 +55,7 @@ BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_MINTOTRAY:
+	case IDM_MINTOTRAY:	
 		Minimize();
 		return TRUE;
 	case IDM_FILE_EXIT:
@@ -101,6 +101,19 @@ void CView::OnSize()
 	Invalidate();
 }
 
+LRESULT CView::OnSysCommand(WPARAM wParam, LPARAM lParam)
+{
+	// Maximize and Minimuze requests end up here
+
+	if (wParam == SC_MINIMIZE)	// User pressed minimize button
+	{
+		Minimize();
+		return 0L;
+	}
+
+	return WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
+}	
+
 void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 {
 	// For a NOTIFYICONDATA with uVersion= 0, wParam and lParam have the following values:
@@ -124,15 +137,9 @@ void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 
 		switch (uSelected)
 		{
-		case IDM_MIN_RESTORE:
-			Restore();
-			break;
-		case IDM_MIN_ABOUT:
-			OnAbout();
-			break;
-		case IDM_MIN_EXIT:
-			Destroy();
-			break;
+		case IDM_MIN_RESTORE: Restore(); break;
+		case IDM_MIN_ABOUT:   OnAbout(); break;
+		case IDM_MIN_EXIT:    Destroy(); break;
 		}
     }
 }
@@ -173,22 +180,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	switch(uMsg)
 	{
-	case WM_DESTROY:
-		OnDestroy();
-		return 0;
-	case WM_SIZE:
-		OnSize();
-		break;
-	case WM_SYSCOMMAND:
-		if (wParam == SC_MINIMIZE)	// User pressed minimize button
-		{
-			Minimize();
-			return 0;
-		}
-		break;
-	case MSG_TRAYICON:
-		OnTrayIcon(wParam, lParam);
-		break;
+	case WM_SIZE:       OnSize(); 	break;
+	case WM_SYSCOMMAND: return OnSysCommand(wParam, lParam);
+	case MSG_TRAYICON:  OnTrayIcon(wParam, lParam); 	break;
 	}
 
 	// pass unhandled messages on for default processing

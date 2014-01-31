@@ -25,6 +25,7 @@ public:
 
 protected:
 	virtual void OnCreate();
+	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual void OnSize();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

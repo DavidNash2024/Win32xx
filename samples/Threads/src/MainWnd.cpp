@@ -52,6 +52,26 @@ void CMainWindow::OnCreate()
 	}
 }
 
+void CMainWindow::OnClose()
+{
+	// Close each thread window.
+	// The thread is then terminated with a WM_QUIT when its window is destroyed.
+	std::vector<TestWndPtr>::iterator iter;
+	for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
+	{
+		if ((*iter)->IsWindow())
+			(*iter)->SendMessage(WM_CLOSE, 0, 0);
+	}
+
+	Destroy();
+}
+
+void CMainWindow::OnDestroy()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
 void CMainWindow::OnAllWindowsCreated()
 {
 	CString str;
@@ -59,45 +79,23 @@ void CMainWindow::OnAllWindowsCreated()
 	TRACE(str);
 }
 
+void CMainWindow::OnWindowCreated()
+{
+	// Message recieved when a test window is created
+	CString str;
+	++m_nWindowsCreated;
+	str.Format( _T("Created Window %d\n"), m_nWindowsCreated );
+	TRACE(str);
+	if (m_nWindowsCreated == m_nTestWin)
+		OnAllWindowsCreated();
+}
+
 LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_COMMAND:
-		if (HIWORD(wParam) == EN_SETFOCUS)
-			SetFocus();
-		break;
-
-	case WM_CLOSE:
-		{
-			// Close each thread window.
-			// The thread is then terminated with a WM_QUIT when its window is destroyed.
-			std::vector<TestWndPtr>::iterator iter;
-			for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
-			{
-				if ((*iter)->IsWindow())
-					(*iter)->SendMessage(WM_CLOSE, 0, 0);
-			}
-		}
-		break;
-
-	case WM_DESTROY:
-		{
-			// Terminate the primary thread.
-			::PostQuitMessage(0);
-		}
-		break;
-
 	case WM_WINDOWCREATED:
-		{
-			// Message recieved when a test window is created
-			CString str;
-			++m_nWindowsCreated;
-			str.Format( _T("Created Window %d\n"), m_nWindowsCreated );
-			TRACE(str);
-			if (m_nWindowsCreated == m_nTestWin)
-				OnAllWindowsCreated();
-		}
+		OnWindowCreated();
 		break;
 	}
 

@@ -532,6 +532,12 @@ HIMAGELIST CMyListView::GetImageList(BOOL bLarge)
 		return m_hSmallImageList;
 }
 
+void CMyListView::OnDestroy()
+{
+	m_pItems.clear();
+	m_csfCurFolder.Delete();
+}
+
 void CMyListView::OnInitialUpdate()
 {
 	//Set the image lists
@@ -619,11 +625,6 @@ LRESULT CMyListView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			if(m_ccm2.GetIContextMenu2())
 				m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
 		}
-		break;
-	case WM_DESTROY:
-		// Cleanup
-		m_pItems.clear();
-		m_csfCurFolder.Delete();
 		break;
 	}
 

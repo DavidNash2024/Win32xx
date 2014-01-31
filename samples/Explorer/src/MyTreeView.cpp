@@ -356,6 +356,11 @@ BOOL CMyTreeView::GetRootItems()
 	return FALSE;
 }
 
+void CMyTreeView::OnDestroy()
+{
+	m_pItems.clear();
+}
+
 void CMyTreeView::OnInitialUpdate()
 {
 	//Set the image list
@@ -438,10 +443,6 @@ LRESULT CMyTreeView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
 		}
 		break;
-		case WM_DESTROY:
-			// Cleanup
-			m_pItems.clear();
-			break;
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

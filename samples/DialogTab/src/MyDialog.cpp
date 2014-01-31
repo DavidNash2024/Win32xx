@@ -126,15 +126,19 @@ CMyDialog::~CMyDialog()
 
 INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_DESTROY:
-		::PostQuitMessage(0);
-		break;
-	}
+//	switch (uMsg)
+//	{
+//
+//	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
+}
+
+void CMyDialog::OnDestroy()
+{
+	// End the application
+	::PostQuitMessage(0);
 }
 
 BOOL CMyDialog::OnInitDialog()

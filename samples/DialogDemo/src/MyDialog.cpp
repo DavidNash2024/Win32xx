@@ -72,6 +72,13 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+void CMyDialog::OnDestroy()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+
 BOOL CMyDialog::OnInitDialog()
 {
 	// Set the Icon

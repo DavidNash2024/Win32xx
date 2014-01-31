@@ -23,6 +23,7 @@ public:
 	void ViewReport();
 
 protected:
+	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);

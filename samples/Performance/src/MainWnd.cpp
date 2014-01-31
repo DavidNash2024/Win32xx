@@ -55,6 +55,13 @@ void CMainWindow::OnCreate()
 	m_Edit.SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
 }
 
+void CMainWindow::OnDestroy()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+
 void CMainWindow::OnInitialUpdate()
 {
 	CMyDialog MyDialog(IDD_DIALOG1, this);
@@ -144,11 +151,6 @@ LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	switch (uMsg)
 	{
-	case WM_DESTROY:
-		// End the program.
-		::PostQuitMessage(0);
-		break;
-
 	case WM_SIZE:
 		OnSize();
 		break;

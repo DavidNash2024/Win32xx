@@ -16,6 +16,12 @@ CMyDialog::~CMyDialog()
 {
 }
 
+void CMyDialog::OnDestroy()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
 BOOL CMyDialog::OnInitDialog()
 {
 	// Set the Icon

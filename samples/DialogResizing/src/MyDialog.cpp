@@ -10,7 +10,7 @@
 CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
 	: CDialog(nResID, pParent)
 {
-	m_hInstRichEdit = SafeLoadSystemLibrary(_T("RICHED32.DLL"));
+	m_hInstRichEdit = LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)
  		::MessageBox(NULL, _T("CMyDialog::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
 }
@@ -64,6 +64,12 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
     } //switch (LOWORD(wParam))
 
 	return FALSE;
+}
+
+void CMyDialog::OnDestroy()
+{
+	// End the application
+	::PostQuitMessage(0);
 }
 
 BOOL CMyDialog::OnInitDialog()

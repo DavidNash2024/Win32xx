@@ -31,6 +31,20 @@ BOOL CTestWindow::InitInstance()
 	return TRUE;	// return TRUE to run the message loop
 }
 
+void CTestWindow::OnClose()
+{
+	CString str;
+	str.Format( _T("Closing test Window %d\n"), m_nWindow );
+	TRACE(str);
+
+	Destroy();
+}
+void CTestWindow::OnDestroy()
+{
+	// Terminate the thread.
+	::PostQuitMessage(0);
+}
+
 void CTestWindow::OnInitialUpdate()
 {
 	// Get a reference to the CMainWnd object
@@ -42,25 +56,4 @@ void CTestWindow::OnInitialUpdate()
 	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
 }
 
-LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-	case WM_CLOSE:
-		{
-			CString str;
-			str.Format( _T("Closing test Window %d\n"), m_nWindow );
-			TRACE(str);
-		}
-		break;
-
-	case WM_DESTROY:
-		// Terminate the thread.
-		::PostQuitMessage(0);
-		break;
-
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
 

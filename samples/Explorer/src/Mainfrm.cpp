@@ -194,12 +194,10 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_CLOSE:
-		OnClose();
-		break;
-	}
+//	switch (uMsg)
+//	{
+//
+//	}
 
 	// pass any unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

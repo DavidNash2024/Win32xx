@@ -16,9 +16,12 @@ public:
 	virtual ~CMainWindow() {}
 	virtual HWND Create(CWnd* pParent = 0);
 	virtual void OnAllWindowsCreated();
+	virtual void OnWindowCreated();
 
 protected:
+	virtual void OnClose();
 	virtual void OnCreate();
+	virtual void OnDestroy();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

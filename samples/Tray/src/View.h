@@ -5,7 +5,6 @@
 #define VIEW_H
 
 
-
 class CView : public CWnd
 {
 public:
@@ -22,6 +21,7 @@ protected:
 	virtual void OnDraw(CDC* pDC);	
 	virtual void OnInitialUpdate();
 	virtual void OnSize();
+	virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnTrayIcon(WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

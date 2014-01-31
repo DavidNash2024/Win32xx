@@ -26,7 +26,7 @@ LRESULT CSimpleView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_SIZE:
 		// Force the window to be repainted
-		::InvalidateRect(m_hWnd, NULL, TRUE);
+		Invalidate();
 		break;		// Also do default processing
 	}
 

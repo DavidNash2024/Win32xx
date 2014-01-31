@@ -24,6 +24,7 @@ public:
 	void SetStatic(BOOL IsSlider, int nPos);
 
 protected:
+	virtual void OnDestroy();
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 

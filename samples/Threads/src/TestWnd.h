@@ -18,8 +18,9 @@ protected:
 
 	// Override CWnd member functions
 	virtual HWND Create(CWnd* pWndParent = 0);
+	virtual void OnClose();
+	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	enum Constants

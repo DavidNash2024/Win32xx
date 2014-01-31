@@ -16,6 +16,11 @@ CMyDialog::~CMyDialog()
 {
 }
 
+void CMyDialog::OnDestroy()
+{
+	::PostQuitMessage(0);
+}
+
 INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Pass resizing messages on to the resizer
