@@ -80,7 +80,7 @@
 //	  CClientDC dcClient(this)
 //    CMemDC dcMem(&dcClient);
 //	  dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
-//    CPen* pOldPen = CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//    CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
 //	  CMemDC.MoveTo(0, 0);
 //    CMemDC.LineTo(50, 50);
 //	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);

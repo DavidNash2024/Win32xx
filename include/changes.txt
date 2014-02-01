@@ -1013,11 +1013,11 @@ Incompatibilities with previous versions
    WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 - WndProcDefault now takes 3 arguments, not 4:
    WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- DialogProc now takes 3 arguements, not 4:
+- DialogProc now takes 3 arguments, not 4:
    DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- DialogProcDefault now takes 3 arguements, not 4:
+- DialogProcDefault now takes 3 arguments, not 4:
    DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- CFrame::AddToolbarBand now requires three arguements
+- CFrame::AddToolbarBand now requires three arguments
 - The various CRect functions use references to RECT rather than pointers
 - CWnd::IsVisable has been renamed to CWnd::IsWindowVisible
 - CWnd::IsEnabled has been renamed to CWnd::IsWindowEnabled
@@ -1026,10 +1026,9 @@ Version 6.5
 ===========
 Major Changes
 -------------
-* Added StaticLibrary example
-   This example has the code to build Win32++ into a a static library, and also
-   demonstrates the use of Precompiled Headers. More experienced users might
-   prefer this approach as it provides for much faster compile times.
+* Precompiled Headers
+   Samples now demonstrates the use of Precompiled Headers. More experienced
+   users might prefer this approach as it provides for much faster compile times.
 * Added CTab class. 
    This class is used by CContainer and CTabbedMDI, and can also be used as a
    view window.
@@ -1171,8 +1170,7 @@ Incompatibilities with previous versions
    to use the original Win32 API function instead of the Win32++ version.
 * CSplitter has been superseded by CDocker. Use a CDocker with the
    DS_NO_UNDOCK and DS_NO_CAPTION styles to duplicate the behaviour of 
-   CSplitter. CSplitter will be retained for backwards compatibility, as
-   well as for those who require its 'immediate' mode.
+   CSplitter.
    
 
 Version 6.3
@@ -1180,8 +1178,7 @@ Version 6.3
 
 Major Changes
 -------------
-* Added support for docking. CDocker is now recommended over CSplitter for 
-   splitter apps.     
+* Added support for docking.
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
 * MDI child windows now require a view window. The use of a view window is 
    now the same for Frames, MDI children, and dockables. The MDI demo example
@@ -1336,12 +1333,7 @@ New Features
    output the debug/output pane of the various IDE's. This is now also 
    compatible with debuggers, should you choose to use them. Previously the 
    tracing created a separate window to display text.
-
-* Added an immediate mode to CSplitter. There is now the choice of resizing
-   the panes while the splitter bar is being dragged, or defer the resizing
-   until the splitter bar drag is complete (as before). CSplitter's 
-   constructor now requires no arguments, making the class simpler to use.
-   
+  
 * Automatically detects the XP theme used (Default, Silver or Olive), and
    adjusts the theme colors accordingly.
    

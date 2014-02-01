@@ -14,31 +14,20 @@ class CView : public CWnd
 public:
     CView() {}
     virtual ~CView() {}
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-    {
-        switch (uMsg)
-        {
-        case WM_DESTROY:
-            //End the program when window is destroyed
-            ::PostQuitMessage(0);
-            break;
-        }
-
-        //Use the default message handling for remaining messages
-        return WndProcDefault(uMsg, wParam, lParam);
-    }
+    virtual void OnDestroy() { PostQuitMessage(0); }	// Ends the program
 };
+
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
-    CWinApp MyApp;
+    CWinApp theApp;
 	
     // Create our view window
-    CView m_View;
-    m_View.Create();
+    CView MyWin;
+    MyWin.Create();
 
     // Run the application's message loop
-    return MyApp.Run();
+    return theApp.Run();
 }

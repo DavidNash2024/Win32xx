@@ -20,7 +20,7 @@ public:
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	// Start Win32++
-	CWinApp MyApp;
+	CWinApp theApp;
 
 	// Create a CMyWindow object
 	CMyWindow MyWindow;
@@ -29,7 +29,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	MyWindow.Create();
 
 	// Run the application's message loop
-	return MyApp.Run();
+	return theApp.Run();
 }
 
 

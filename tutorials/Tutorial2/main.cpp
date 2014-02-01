@@ -42,8 +42,8 @@ BOOL CSimpleApp::InitInstance()
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
-    CSimpleApp MyApp;
+    CSimpleApp theApp;
 
 	// Run the application
-    return MyApp.Run();
+    return theApp.Run();
 }
