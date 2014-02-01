@@ -273,13 +273,13 @@ void CClientDialog::OnStartClient()
 				}
 
 				// Retrieve the local port number
-				CString strPort = m_EditPort.GetWindowText();
+				UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), NULL, FALSE);
 
 				// Temporarily disable the Connect/Disconnect button
 				m_ButtonConnect.EnableWindow(FALSE);
 
 				// Connect to the server
-				if (0 != m_Client.Connect(strAddr, strPort) )
+				if (0 != m_Client.Connect(strAddr, port) )
 				{
 					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );
@@ -363,7 +363,7 @@ void CClientDialog::OnSend()
 			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
 			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
-			CString strPort = m_EditPort.GetWindowText();
+			UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), NULL, FALSE);
 			CString strSend = m_EditSend.GetWindowText();
 
 			// Retrieve the IP Address
@@ -381,7 +381,7 @@ void CClientDialog::OnSend()
 				strAddr = A2T( inet_ntoa(addr) );
 			}
 
-			if (SOCKET_ERROR == m_Client.SendTo( T2A(strSend), strSend.GetLength(), 0, strAddr, strPort ))
+			if (SOCKET_ERROR == m_Client.SendTo( T2A(strSend), strSend.GetLength(), 0, strAddr, port ))
 				m_EditStatus.SetWindowText( _T("SendTo Failed") );
 		}
 		break;

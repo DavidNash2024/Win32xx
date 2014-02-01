@@ -6,11 +6,13 @@ Bug Fixes
 * Corrected variable initialisation in CMenuMetrics
 * Adjusted text position in Windows 7 menus.
 * Several minor bug fixes to CString
-* CSocket now works for WinCE
-* CSocket send and receive functions now use char and support binary data.
 * Fixed CMenu::GetMenuString
 	 
 New Features and Enhancements
+* Updated CSocket
+   - now supports WinCE
+   - send and receive functions now use char and support binary data.
+   - port arguments are now UINT, not LPCTSTR
 * TRACE now accepts both ANSI and Unicode strings.
 * CFile functions are now virtual
 * Frames now use IDW_READY for the "Ready" string
@@ -33,6 +35,8 @@ Changes in detail
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
 - Modified CMDIChild::OnClose           now returns void.
+- Modified CSocket::Bind                port is now UINT
+- Modified CSocket::Connect             port is now UINT
 - Modified CSocket::Receive             uses char instead of TCHAR
 - Modified CSocket::RecieveFrom         uses char instead of TCHAR
 - Modified CSocket::Send                uses char instead of TCHAR

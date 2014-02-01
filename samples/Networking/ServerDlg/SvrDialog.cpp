@@ -435,15 +435,15 @@ BOOL CSvrDialog::StartServer()
 	}
 
 	// Retrieve the local port number
-	CString strPort = m_EditPort.GetWindowText();
+	UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), NULL, FALSE);
 
 	// Bind to the socket
 	Append(IDC_EDIT_STATUS, _T("Binding to socket"));
 	CString str;
-	str.Format( _T("Addr %s, Port %s, type %s"), strAddr.c_str(), strPort.c_str(), (m_SocketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
+	str.Format( _T("Addr %s, Port %u, type %s"), strAddr.c_str(), port, (m_SocketType == SOCK_STREAM)?_T("TCP"):_T("UDP") );
 	Append(IDC_EDIT_STATUS, str);
 
-	int RetVal = m_MainSocket.Bind( strAddr, strPort );
+	int RetVal = m_MainSocket.Bind( strAddr, port );
 	if ( RetVal != 0 )
 	{
 		Append(IDC_EDIT_STATUS, _T("Bind failed"));

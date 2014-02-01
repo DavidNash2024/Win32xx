@@ -133,9 +133,9 @@ namespace Win32xx
 
 		// Operations
 		virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen);
-		virtual int  Bind(LPCTSTR addr, LPCTSTR port);
+		virtual int  Bind(LPCTSTR addr, UINT port);
 		virtual int  Bind(const struct sockaddr* name, int namelen);
-		virtual int  Connect(LPCTSTR addr, LPCTSTR port);
+		virtual int  Connect(LPCTSTR addr, UINT port);
 		virtual int  Connect(const struct sockaddr* name, int namelen);
 		virtual bool Create( int family, int type, int protocol = IPPROTO_IP);
 		virtual void Disconnect();
@@ -148,7 +148,7 @@ namespace Win32xx
 		virtual int  Receive(char* buf, int len, int flags);
 		virtual int  ReceiveFrom(char* buf, int len, int flags, struct sockaddr* from, int* fromlen);
 		virtual int  Send(const char* buf, int len, int flags);
-		virtual int  SendTo(const char* send, int len, int flags, LPCTSTR addr, LPCTSTR port);
+		virtual int  SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port);
 		virtual int  SendTo(const char* buf, int len, int flags, const struct sockaddr* to, int tolen);
 
 		virtual void StartEvents();
@@ -244,7 +244,7 @@ namespace Win32xx
 			TRACE("Accept failed\n");
 	}
 
-	inline int CSocket::Bind(LPCTSTR addr, LPCTSTR port)
+	inline int CSocket::Bind(LPCTSTR addr, UINT port)
 	// The bind function associates a local address with the socket.
 	{
 		int RetVal = 0;
@@ -257,8 +257,10 @@ namespace Win32xx
 			ADDRINFO Hints= {0};
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
+			CString csPort;
+			csPort.Format(_T("%u"), port);
 
-			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
+			RetVal = GetAddrInfo(addr, csPort, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
 				TRACE("GetAddrInfo failed\n");
@@ -284,14 +286,7 @@ namespace Win32xx
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
-			int nPort = -1;
-            nPort = atoi( T2A(port) );
-			if (-1 == nPort)
-			{
-				TRACE("Invalid port number\n");
-				return SOCKET_ERROR;
-			}
-			clientService.sin_port = htons( (u_short)nPort );
+			clientService.sin_port = htons( (u_short)port );
 
 			RetVal = ::bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( 0 != RetVal )
@@ -311,7 +306,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline int CSocket::Connect(LPCTSTR addr, LPCTSTR port)
+	inline int CSocket::Connect(LPCTSTR addr, UINT port)
 	// The Connect function establishes a connection to the socket.
 	{
 		int RetVal = 0;
@@ -325,7 +320,9 @@ namespace Win32xx
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
 
-			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
+			CString csPort;
+			csPort.Format(_T("%u"), port);
+			RetVal = GetAddrInfo(addr, csPort, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
 				TRACE("getaddrinfo failed\n");
@@ -351,14 +348,7 @@ namespace Win32xx
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
-			int nPort = -1;
-			nPort = atoi( T2A(port) );
-			if (-1 == nPort)
-			{
-				TRACE("Invalid port number\n");
-				return SOCKET_ERROR;
-			}
-			clientService.sin_port = htons( (u_short)nPort );
+			clientService.sin_port = htons( (u_short)port );
 
 			RetVal = ::connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( 0 != RetVal )
@@ -658,7 +648,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline int CSocket::SendTo(const char* send, int len, int flags, LPCTSTR addr, LPCTSTR port)
+	inline int CSocket::SendTo(const char* send, int len, int flags, LPCTSTR addr, UINT port)
 	// The sendto function sends data to a specific destination.
 	{
 		int RetVal = 0;
@@ -671,8 +661,10 @@ namespace Win32xx
 			ADDRINFO Hints= {0};
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
+			CString csPort;
+			csPort.Format(_T("%u"), port);
 
-			RetVal = GetAddrInfo(addr, port, &Hints, &AddrInfo);
+			RetVal = GetAddrInfo(addr, csPort, &Hints, &AddrInfo);
 			if (RetVal != 0)
 			{
 				TRACE("GetAddrInfo failed\n");
@@ -697,14 +689,7 @@ namespace Win32xx
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
 			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
-			int nPort = -1;
-            nPort = atoi( T2A(port));
-			if (-1 == nPort)
-			{
-				TRACE("Invalid port number\n");
-				return SOCKET_ERROR;
-			}
-			clientService.sin_port = htons( (u_short)nPort );
+			clientService.sin_port = htons( (u_short)port );
 
 			RetVal = ::sendto( m_Socket, send, len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
