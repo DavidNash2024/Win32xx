@@ -119,7 +119,6 @@ namespace Win32xx
 		BOOL  PressButton(int idButton, BOOL fPress) const;
 		void  SaveRestore(BOOL fSave, TBSAVEPARAMS* ptbsp) const;
 		void  SetButtonInfo(int idButton, int idButtonNew, int iImage, BYTE Style = 0, BYTE State = 0) const;
-		BOOL  SetButtonImage(int idButton, int iImage) const;
 		BOOL  SetBitmapSize(int cx, int cy) const;
 		BOOL  SetButtonSize(int cx, int cy) const;
 		BOOL  SetButtonState(int idButton, UINT State) const;
@@ -1052,25 +1051,6 @@ namespace Win32xx
 		tbbi.fsState = State ? State : tb.fsState;
 
 		SendMessage(TB_SETBUTTONINFO, idButton, (LPARAM) &tbbi);
-	}
-
-	inline BOOL CToolBar::SetButtonImage(int idButton, int iImage) const
-	// Sets the buttons image from the toolbar's imagelist. iImage specifies the
-	// index of the image in the imagelist.
-	{
-		assert(::IsWindow(m_hWnd));
-
-		TBBUTTONINFO tbbi = {0};
-		tbbi.cbSize = sizeof(TBBUTTONINFO);
-		tbbi.dwMask = TBIF_IMAGE | TBIF_COMMAND;
-		tbbi.iImage = iImage;
-		tbbi.idCommand = idButton;
-
-		// Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
-		//        i.e. Win95 with IE4 / NT with IE4   or later
-		return (BOOL)SendMessage(TB_SETBUTTONINFO, idButton, (LPARAM) &tbbi);
-	//	return (BOOL)SendMessage(TB_CHANGEBITMAP, (WPARAM) (int) idButton, (LPARAM) MAKELPARAM (iImage, 0));
-
 	}
 
 	inline BOOL CToolBar::SetButtonState(int idButton, UINT State) const
