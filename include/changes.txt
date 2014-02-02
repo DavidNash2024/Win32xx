@@ -25,7 +25,8 @@ New Features and Enhancements
 * CFrame no longer requires the number of images in the toolbar bitmap to 
   equal the number of toolbar buttons. The width of the button bitmap is
   now assumed to be equal to its height or a minimum of 16.
-* Added CToolbar::SetButtonImage.
+* CToolbar::SetButtonInfo can be used to change a toolbar button's image 
+  and command ID.
 
 
 
@@ -33,7 +34,7 @@ Changes in detail
 -----------------
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
-- Added CToolbar::SetButtonImage
+- Added CToolbar::SetButtonInfo
 - Added CWnd::GetDlgCtrlID
 - Added CWnd::OnClose
 - Added CWnd::OnDestroy
