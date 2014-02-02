@@ -193,15 +193,16 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		int iNumButtons = 0;
-		std::vector<UINT>::iterator iter;
-		for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
-			if ((*iter) != 0) ++iNumButtons;
+		CBitmap Bitmap(ToolBarID);
+		assert (Bitmap.GetHandle());
+		BITMAP bm = Bitmap.GetBitmapData();
+		int iImageWidth  = MAX(bm.bmHeight, 16);
+		int iImages = bm.bmWidth / iImageWidth;
 
 		TBADDBITMAP tbab = {0};
 		tbab.hInst = GetApp()->GetResourceHandle();
 		tbab.nID   = ToolBarID;
-		int iResult = (int)SendMessage(TB_ADDBITMAP, iNumButtons, (LPARAM)&tbab);
+		int iResult = (int)SendMessage(TB_ADDBITMAP, iImages, (LPARAM)&tbab);
 
 		if (-1 != iResult)
 			m_OldToolBarID = ToolBarID;
@@ -407,12 +408,12 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
 	}
-	
+
 	inline HIMAGELIST CToolBar::GetHotImageList() const
 	// Retrieves the image list that a toolbar control uses to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);	
+		return (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
 	}
 
 	inline int CToolBar::GetHotItem() const
@@ -909,19 +910,20 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		int iNumButtons = 0;
-		std::vector<UINT>::iterator iter;
-		for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
-			if ((*iter) != 0) ++iNumButtons;
+		CBitmap Bitmap(NewToolBarID);
+		assert (Bitmap.GetHandle());
+		BITMAP bm = Bitmap.GetBitmapData();
+		int iImageWidth  = MAX(bm.bmHeight, 16);
+		int iImages = bm.bmWidth / iImageWidth;
 
 		TBREPLACEBITMAP tbrb = {0};
 		tbrb.hInstNew = GetApp()->GetResourceHandle();
 		tbrb.hInstOld = GetApp()->GetResourceHandle();
 		tbrb.nIDNew = NewToolBarID;
 		tbrb.nIDOld = m_OldToolBarID;
-		tbrb.nButtons  = iNumButtons;
+		tbrb.nButtons  = iImages;
 
-		BOOL bResult = (BOOL)SendMessage(TB_REPLACEBITMAP, iNumButtons, (LPARAM)&tbrb);
+		BOOL bResult = (BOOL)SendMessage(TB_REPLACEBITMAP, iImages, (LPARAM)&tbrb);
 		if (bResult)
 			m_OldToolBarID = NewToolBarID;
 
@@ -943,14 +945,6 @@ namespace Win32xx
 		CBitmap Bitmap(nID);
 		assert (Bitmap.GetHandle());
 		BITMAP bm = Bitmap.GetBitmapData();
-
-	//	int iNumButtons = 0;
-	//	std::vector<UINT>::iterator iter;
-	//	for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
-	//	{
-	//		if ((*iter) != 0) 
-	//			++iNumButtons;
-	//	}
 
 		int iImageHeight = bm.bmHeight;
 		int iImageWidth  = MAX(bm.bmHeight, 16);
@@ -1042,15 +1036,18 @@ namespace Win32xx
 		BOOL bSucceeded = GetButton(CommandToIndex(idButton), &tb);
 		assert(bSucceeded);
 
-		TBBUTTONINFO tbbi = {0};
-		tbbi.cbSize = sizeof(TBBUTTONINFO);
-		tbbi.dwMask = TBIF_COMMAND | TBIF_IMAGE | TBIF_STYLE | TBIF_STATE;
-		tbbi.idCommand = idButtonNew;
-		tbbi.iImage = iImage; 
-		tbbi.fsStyle = Style ? Style : tb.fsStyle;
-		tbbi.fsState = State ? State : tb.fsState;
+        if (bSucceeded)
+        {
+            TBBUTTONINFO tbbi = {0};
+            tbbi.cbSize = sizeof(TBBUTTONINFO);
+            tbbi.dwMask = TBIF_COMMAND | TBIF_IMAGE | TBIF_STYLE | TBIF_STATE;
+            tbbi.idCommand = idButtonNew;
+            tbbi.iImage = iImage;
+            tbbi.fsStyle = Style ? Style : tb.fsStyle;
+            tbbi.fsState = State ? State : tb.fsState;
 
-		SendMessage(TB_SETBUTTONINFO, idButton, (LPARAM) &tbbi);
+            SendMessage(TB_SETBUTTONINFO, idButton, (LPARAM) &tbbi);
+        }
 	}
 
 	inline BOOL CToolBar::SetButtonState(int idButton, UINT State) const
@@ -1222,7 +1219,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot);
 	}
-	
+
 	inline int CToolBar::SetHotItem(int iHot) const
 	// Sets the hot item in a toolbar.
 	{

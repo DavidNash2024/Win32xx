@@ -19,7 +19,7 @@ CViewTree::~CViewTree()
 	ImageList_Destroy(m_himlNormal);
 }
 
-void CView::OnDestroy()
+void CViewTree::OnDestroy()
 {
 	SetImageList(NULL, LVSIL_SMALL);
 }
