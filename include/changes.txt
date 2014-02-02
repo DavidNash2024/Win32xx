@@ -22,6 +22,10 @@ New Features and Enhancements
 * CWnd::CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
    the menu parameter to specify a menu for a parent window, or a window ID
    for a child window.
+* CFrame no longer requires the number of images in the toolbar bitmap to 
+  equal the number of toolbar buttons. The width of the button bitmap is
+  now assumed to be equal to its height or a minimum of 16.
+* Added CToolbar::SetButtonImage.
 
 
 
@@ -29,6 +33,7 @@ Changes in detail
 -----------------
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
+- Added CToolbar::SetButtonImage
 - Added CWnd::GetDlgCtrlID
 - Added CWnd::OnClose
 - Added CWnd::OnDestroy

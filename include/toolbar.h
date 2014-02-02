@@ -118,6 +118,7 @@ namespace Win32xx
 		BOOL  MoveButton(UINT uOldPos, UINT uNewPos) const;
 		BOOL  PressButton(int idButton, BOOL fPress) const;
 		void  SaveRestore(BOOL fSave, TBSAVEPARAMS* ptbsp) const;
+		BOOL  SetButtonImage(int idButton, int iImage) const;
 		BOOL  SetBitmapSize(int cx, int cy) const;
 		BOOL  SetButtonSize(int cx, int cy) const;
 		BOOL  SetButtonState(int idButton, UINT State) const;
@@ -943,16 +944,16 @@ namespace Win32xx
 		assert (Bitmap.GetHandle());
 		BITMAP bm = Bitmap.GetBitmapData();
 
-		int iNumButtons = 0;
-		std::vector<UINT>::iterator iter;
-		for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
-		{
-			if ((*iter) != 0) 
-				++iNumButtons;
-		}
+	//	int iNumButtons = 0;
+	//	std::vector<UINT>::iterator iter;
+	//	for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
+	//	{
+	//		if ((*iter) != 0) 
+	//			++iNumButtons;
+	//	}
 
-		int iImageWidth  = bm.bmWidth / iNumButtons;
 		int iImageHeight = bm.bmHeight;
+		int iImageWidth  = MAX(bm.bmHeight, 16);
 
 		// Set the bitmap size first
 		SetBitmapSize(iImageWidth, iImageHeight);
@@ -1030,6 +1031,22 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy));
+	}
+
+	inline BOOL CToolBar::SetButtonImage(int idButton, int iImage) const
+	// Sets the buttons image from the toolbar's imagelist. iImage specifies the
+	// index of the image in the imagelist.
+	{
+		assert(::IsWindow(m_hWnd));
+
+		TBBUTTONINFO tbbi = {0};
+		tbbi.cbSize = sizeof(TBBUTTONINFO);
+		tbbi.dwMask = TBIF_IMAGE;
+		tbbi.iImage = iImage;
+
+		// Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
+		//        i.e. Win95 with IE4 / NT with IE4   or later
+		return (BOOL)SendMessage(TB_SETBUTTONINFO, idButton, (LPARAM) &tbbi);
 	}
 
 	inline BOOL CToolBar::SetButtonState(int idButton, UINT State) const
@@ -1218,8 +1235,8 @@ namespace Win32xx
 
 	inline BOOL CToolBar::SetImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
-	// Assumes the width of the button image = bitmap_size / buttons
-	// Assumes buttons have been already been added via AdddToolBarButton
+	// Assumes the width of the button image = height, minimum width = 16
+	// Assumes buttons have been already been added via AddToolBarButton
 	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
 	// The color mask is ignored for 32bit bitmap resources
 	// The Hot and disabled bitmap resources can be 0
@@ -1246,8 +1263,8 @@ namespace Win32xx
 			assert(Bitmap.GetHandle());
 
 			BITMAP bm = Bitmap.GetBitmapData();
-			int iImageWidth  = bm.bmWidth / iNumButtons;
 			int iImageHeight = bm.bmHeight;
+			int iImageWidth  = MAX(bm.bmHeight, 16);
 
 			HIMAGELIST himlToolBar    = (HIMAGELIST)SendMessage(TB_GETIMAGELIST,    0L, 0L);
 			HIMAGELIST himlToolBarHot = (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);

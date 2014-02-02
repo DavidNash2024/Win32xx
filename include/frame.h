@@ -1931,8 +1931,8 @@ namespace Win32xx
 			return (UINT)m_vMenuIcons.size();	// No valid images, so nothing to do!
 
 		BITMAP bm = Bitmap.GetBitmapData();
-		int iImageWidth  = bm.bmWidth / iImages;
 		int iImageHeight = bm.bmHeight;
+		int iImageWidth  = MAX(bm.bmHeight, 16);		
 
 		// Create the ImageList if required
 		if (NULL == m_himlMenu)
@@ -3593,8 +3593,8 @@ namespace Win32xx
 
 	inline void CFrame::SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
-	// Assumes the width of the button image = bitmap_size / buttons
-	// Assumes buttons have been already been added via AdddToolBarButton
+	// Assumes the width of the button image = height, minimum width = 16
+	// Assumes buttons have been already been added via AddToolBarButton
 	// The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
 	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
 	// The color mask is ignored for 32bit bitmap resources
