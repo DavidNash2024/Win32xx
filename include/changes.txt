@@ -1,33 +1,38 @@
-Version 7.3.1
-=============
+Version 7.4
+===========
 Bug Fixes
 ---------
-* The dockbar's parent for dock containers was set incorrectly. The wrong 
-   dockbar could be destroyed when a dock container was destroyed.   
+* The DockBar's parent for dock containers was set incorrectly. The wrong 
+   DockBar could be destroyed when a dock container was destroyed.   
 * Corrected variable initialisation in CMenuMetrics
 * Adjusted text position in Windows 7 menus.
-* Several minor bug fixes to CString
+* Several bug fixes to CString
 * Fixed CMenu::GetMenuString
 	 
 New Features and Enhancements
 -----------------------------
-* Updated CSocket
+* Added CImageList
+* Updated CSocket:
    - now supports WinCE
    - send and receive functions now use char and support binary data.
    - port arguments are now UINT, not LPCTSTR
+* Updated CFrame
+   - Frames now use IDW_READY for the "Ready" string
+   - CFrame no longer requires the number of images in the ToolBar bitmap to
+      equal the number of ToolBar buttons. The width of the button bitmap is
+      now assumed to be equal to its height or a minimum of 16.
+* Updated CWnd
+   - Added OnClose. It is called automatically when a window asks to be closed.
+   - Added OnDestroy. It is called automatically when a window is destroyed.
+   - CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
+      the menu parameter to specify a menu for a parent window, or a window ID
+      for a child window.
+* Updated CFile:
+   - CFile functions are now virtual.
+   - OpenFileDialog and SaveFileDialog allow the dialog title to be specified.
 * TRACE now accepts both ANSI and Unicode strings.
-* CFile functions are now virtual
-* Frames now use IDW_READY for the "Ready" string
 * Added project files for VS2013
-* Added CWnd::OnClose. Called automatically when a window asks to be closed.
-* Added CWnd::OnDestroy. Called automatically when a window is destroyed.
-* CWnd::CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
-   the menu parameter to specify a menu for a parent window, or a window ID
-   for a child window.
-* CFrame no longer requires the number of images in the toolbar bitmap to 
-  equal the number of toolbar buttons. The width of the button bitmap is
-  now assumed to be equal to its height or a minimum of 16.
-* CToolBar::SetButtonInfo can now be used to change a toolbar button's 
+* CToolBar::SetButtonInfo can now be used to change a ToolBar button's 
   image and command ID.
 
 
@@ -77,7 +82,7 @@ New Features and Enhancements
 	  without Aero continue to use the Win32++ theme for popup menus.
 	- Frames now honour the current window theme's menu and status fonts.
 	- the frame's appearance changes dynamically to reflect changes to the window theme.
-	- minor adjustment to the rebar theme colours for the "Modern" theme.
+	- minor adjustment to the ReBar theme colours for the "Modern" theme.
 	
 * Extended CWebBrowser
 	The CWebBrower class has been extended to wrap the member functions of

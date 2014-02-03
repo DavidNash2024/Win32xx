@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.3.1
+// Win32++   Pre-release Version 7.4
 // Released: Not officially released
 //
 //      David Nash
@@ -635,8 +635,6 @@ namespace Win32xx
 			style |= CCS_NODIVIDER | CCS_NORESIZE;
 			SetWindowLongPtr(GWL_STYLE, style);
 		}
-
-		SetButtons(m_vToolBarData);
 
 		// Set rows of text to zero
 		SendMessage(TB_SETMAXTEXTROWS, 0L, 0L);

@@ -41,6 +41,7 @@ typedef  unsigned char  byte;
 #include <file.h>
 #include <frame.h>
 #include <gdi.h>
+#include <imagelist.h>
 #include <listview.h>
 #include <mdi.h>
 #include <propertysheet.h>

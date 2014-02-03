@@ -22,9 +22,9 @@ HWND CMainWindow::Create(CWnd* pParent /*= 0*/)
 
 	// Create the main window
 	CRect rc(20, 50, 400, 300);
-	
+
 	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		rc, pParent, NULL);
+		rc, pParent, 0);
 }
 
 void CMainWindow::CreateTestWindows(int nWindows)

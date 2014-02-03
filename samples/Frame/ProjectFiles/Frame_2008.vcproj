@@ -293,6 +293,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\imagelist.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\listview.h"
 				>
 			</File>

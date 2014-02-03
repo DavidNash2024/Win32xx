@@ -1,4 +1,4 @@
-// Win32++   Pre-release Version 7.3.1
+// Win32++   Pre-release Version 7.4
 // Released: Not officially released
 //
 //      David Nash
@@ -90,7 +90,7 @@
   #pragma option -w-8019			// code has no effect
   #pragma option -w-8026            // functions with exception specifications are not expanded inline
   #pragma option -w-8027		    // function not expanded inline
-  #pragma option -w-8030			// Temporary used for 'rhs'	
+  #pragma option -w-8030			// Temporary used for 'rhs'
   #define STRICT 1
 #endif
 
@@ -201,6 +201,7 @@ namespace Win32xx
 	class CBitmap;
 	class CBrush;
 	class CFont;
+	class CImageList;
 	class CPalette;
 	class CPen;
 	class CRgn;
@@ -219,6 +220,7 @@ namespace Win32xx
 	typedef Shared_Ptr<CBitmap> BitmapPtr;
 	typedef Shared_Ptr<CBrush> BrushPtr;
 	typedef Shared_Ptr<CFont> FontPtr;
+	typedef Shared_Ptr<CImageList> ImageListPtr;
 	typedef Shared_Ptr<CPalette> PalettePtr;
 	typedef Shared_Ptr<CPen> PenPtr;
 	typedef Shared_Ptr<CRgn> RgnPtr;
@@ -238,6 +240,12 @@ namespace Win32xx
 	struct CompareGDI		// The comparison function object used by CWinApp::m_mapGDI
 	{
 		bool operator()(HGDIOBJ const a, const HGDIOBJ b) const
+			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
+	};
+
+	struct CompareHIMAGELIST // The comparison function object used by CWinApp::m_mapHIMAGELIST
+	{
+		bool operator()(HIMAGELIST const a, const HIMAGELIST b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
@@ -261,6 +269,7 @@ namespace Win32xx
 
 		std::vector<DCPtr> vTmpDCs;		// A vector of temporary CDC pointers
 		std::vector<GDIPtr> vTmpGDIs;	// A vector of temporary CGDIObject pointers
+		std::vector<ImageListPtr> vTmpImageLists;	// A vector of temporary CImageList pointers
 		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
 
@@ -320,6 +329,7 @@ namespace Win32xx
 		friend class CDC;
 		friend class CDialog;
 		friend class CGDIObject;
+		friend class CImageList;
 		friend class CMenu;
 		friend class CMenuBar;
 		friend class CPropertyPage;
@@ -331,6 +341,7 @@ namespace Win32xx
 		friend CBitmap* FromHandle(HBITMAP hBitmap);
 		friend CBrush* FromHandle(HBRUSH hBrush);
 		friend CFont* FromHandle(HFONT hFont);
+		friend CImageList* FromHandle(HIMAGELIST hImageList); 
 		friend CPalette* FromHandle(HPALETTE hPalette);
 		friend CPen* FromHandle(HPEN hPen);
 		friend CRgn* FromHandle(HRGN hRgn);
@@ -364,11 +375,13 @@ namespace Win32xx
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 		CDC* GetCDCFromMap(HDC hDC);
 		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);
+		CImageList* GetCImageListFromMap(HIMAGELIST hImageList);
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 
 		void	AddTmpDC(CDC* pDC);
 		void	AddTmpGDI(CGDIObject* pObject);
+		void    AddTmpImageList(HIMAGELIST hImageList);
 		CMenu*	AddTmpMenu(HMENU hMenu);
 		CWnd*	AddTmpWnd(HWND hWnd);
 		void	CleanupTemps();
@@ -379,6 +392,7 @@ namespace Win32xx
 
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
 		std::map<HGDIOBJ, CGDIObject*, CompareGDI> m_mapGDI;	// maps GDI handles to CGDIObjects.
+		std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST> m_mapHIMAGELIST;	// maps HIMAGELIST to CImageList.
 		std::map<HMENU, CMenu*, CompareHMENU> m_mapHMENU;	// maps menu handles to CMenu objects
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
@@ -621,6 +635,7 @@ namespace Win32xx
 
 #include "gdi.h"
 #include "menu.h"
+#include "imagelist.h"
 
 namespace Win32xx
 {
@@ -767,6 +782,24 @@ namespace Win32xx
 		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
 	}
 
+	inline void CWinApp::AddTmpImageList(HIMAGELIST hImageList)
+	{
+		// The temporary CImageList are removed by CleanupTemps
+		assert(hImageList);
+		assert(!GetCImageListFromMap(hImageList));
+
+		CImageList* pImageList = new CImageList;
+		pImageList->m_hImageList = hImageList;
+		m_csMapLock.Lock();
+		m_mapHIMAGELIST.insert(std::make_pair(hImageList, pImageList));
+		m_csMapLock.Release();
+		pImageList->m_IsTmpImageList = TRUE;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpImageLists.push_back(pImageList); // save pImageList as a smart pointer
+	}
+
 #ifndef _WIN32_WCE
 	inline CMenu* CWinApp::AddTmpMenu(HMENU hMenu)
 	{
@@ -855,6 +888,22 @@ namespace Win32xx
 
 		m_csMapLock.Release();
 		return pObject;
+	}
+
+	inline CImageList* CWinApp::GetCImageListFromMap(HIMAGELIST hImageList)
+	{
+		std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST>::iterator m;
+
+		// Find the CMenu pointer mapped to this HMENU
+		CImageList* pImageList = 0;
+		m_csMapLock.Lock();
+		m = m_mapHIMAGELIST.find(hImageList);
+
+		if (m != m_mapHIMAGELIST.end())
+			pImageList = m->second;
+
+		m_csMapLock.Release();
+		return pImageList;
 	}
 
 	inline CMenu* CWinApp::GetCMenuFromMap(HMENU hMenu)
@@ -1081,7 +1130,7 @@ namespace Win32xx
 		::ZeroMemory(m_pcs.get(), sizeof(CREATESTRUCT));
 		::ZeroMemory(m_pwc.get(), sizeof(WNDCLASS));
 	}
-	
+
 	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL), m_IsTmpWnd(FALSE)
 	{
 		if (hWnd == HWND_TOP || hWnd == HWND_TOPMOST || hWnd == HWND_BOTTOM || hWnd == HWND_NOTOPMOST)
@@ -1291,7 +1340,7 @@ namespace Win32xx
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-		HMENU hMenu = pParent? (HMENU)nID : ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
+		HMENU hMenu = pParent? (HMENU)(INT_PTR)nID : ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
 
 		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
 	}
@@ -2405,7 +2454,7 @@ namespace Win32xx
 	// The IsWindow function determines whether the window exists.
 	{
 		return ::IsWindow(m_hWnd);
-	}	
+	}
 
 	inline void  CWnd::MapWindowPoints(CWnd* pWndTo, POINT& pt) const
 	// The MapWindowPoints function converts (maps) a set of points from a coordinate space relative to one
