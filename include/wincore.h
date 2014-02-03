@@ -848,6 +848,7 @@ namespace Win32xx
 
 		pTLSData->vTmpDCs.clear();
 		pTLSData->vTmpGDIs.clear();
+		pTLSData->vTmpImageLists.clear();
 		pTLSData->vTmpWnds.clear();
 
 

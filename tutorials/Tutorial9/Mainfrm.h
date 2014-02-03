@@ -5,6 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
+#include "targetver.h"
 #include "frame.h"
 #include "file.h"
 #include "View.h"

@@ -5,7 +5,7 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-
+#include "targetver.h"
 #include "wincore.h"
 #include <vector>
 

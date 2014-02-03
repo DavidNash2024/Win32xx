@@ -72,7 +72,7 @@ namespace Win32xx
 		BOOL Create(CImageList* pImageList);
 #endif
 
-		//ImageList Operations
+		//Operations
 		void Attach(HIMAGELIST hImageList);
 		BOOL BeginDrag(int nImage, CPoint ptHotSpot) const;
 		void DeleteImageList();
@@ -322,8 +322,8 @@ namespace Win32xx
 	//   Draws the image, blending 50 percent with the blend color specified by rgbFg. 
 	//   This value has no effect if the image list does not contain a mask.
 	// ILD_MASK 	Draws the mask.
-	// ILD_NORMAL	Draws the image using the background color for the image list. 
-	//   If the background color is the CLR_NONE value, the image is drawn transparently using the mask.
+	// ILD_NORMAL	Draws the image using the background color for the image list. If the 
+	//				background color is the CLR_NONE value, the image is drawn transparently using the mask.
 	// ILD_TRANSPARENT 		Draws the image transparently using the mask, regardless of the background color. 
 	//						This value has no effect if the image list does not contain a mask.
 	// ILD_IMAGE	If the overlay does not require a mask to be drawn set the ILD_IMAGE flag. 

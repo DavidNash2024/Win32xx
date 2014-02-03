@@ -2,6 +2,7 @@
 // View.cpp
 //  Definitions for the CView class
 
+#include "targetver.h"
 #include "view.h"
 #include "GDI.h"
 #include "file.h"

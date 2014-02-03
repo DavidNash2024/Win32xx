@@ -1,6 +1,7 @@
 //////////////////////////////////////
 // ScribbleApp.cpp
 
+#include "targetver.h"
 #include "ScribbleApp.h"
 
 CScribbleApp::CScribbleApp()
