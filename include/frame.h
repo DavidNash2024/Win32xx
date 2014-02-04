@@ -513,7 +513,7 @@ namespace Win32xx
 		CFont m_fntStatusBar;				// StatusBar font
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
-		LPCTSTR m_OldStatus[3];				// Array of TCHAR pointers;
+		CString m_OldStatus[3];				// Array of CString holding old status;
 		CString m_strKeyName;				// CString for Registry key name
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
@@ -930,10 +930,13 @@ namespace Win32xx
 						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
 						DrawDC.LineTo(rcRect.left, rcRect.bottom);
 
-						TCHAR str[80] = _T("");
+						CString str;
 						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
-						if ((nLength > 0) && (nLength < 80))
-							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str);
+						if (nLength > 0) 
+						{
+							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
+							str.ReleaseBuffer();
+						}
 
 						// Draw highlight text
 						CFont* pFont = GetFont();
@@ -2560,25 +2563,28 @@ namespace Win32xx
 
 			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 			{
+				CString PathName;
+				CString SubKey;
 				for (UINT i = 0; i < m_nMaxMRU; ++i)
 				{
 					DWORD dwType = REG_SZ;
 					DWORD dwBufferSize = 0;
-					TCHAR szSubKey[10] = _T("");
-					wsprintf(szSubKey, _T("File %d\0"), i+1);
+					SubKey.Format(_T("File %d"), i+1);
 
-					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, NULL, &dwBufferSize))
+					if (ERROR_SUCCESS != RegQueryValueEx(hKey, SubKey, NULL, &dwType, NULL, &dwBufferSize))
 						throw CWinException(_T("RegQueryValueEx failed\n"));
-
-					std::vector<TCHAR> PathName( dwBufferSize, _T('\0') );
-					TCHAR* pTCharArray = &PathName[0];
 
 					// load the entry from the registry
-					if (ERROR_SUCCESS != RegQueryValueEx(hKey, szSubKey, NULL, &dwType, (LPBYTE)pTCharArray, &dwBufferSize))
+					if (ERROR_SUCCESS != RegQueryValueEx(hKey, SubKey, NULL, &dwType, (LPBYTE)PathName.GetBuffer(dwBufferSize), &dwBufferSize))
+					{
+						PathName.ReleaseBuffer();
 						throw CWinException(_T("RegQueryValueEx failed\n"));
+					}
+					
+					PathName.ReleaseBuffer();
 
-					if ( lstrlen( pTCharArray ) )
-						vMRUEntries.push_back( pTCharArray );
+					if (PathName.GetLength() > 0)
+						vMRUEntries.push_back( PathName );
 				}
 
 				// successfully loaded all MRU values, so store them
@@ -3309,15 +3315,16 @@ namespace Win32xx
 					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 						throw CWinException(_T("RegCreateKeyEx failed"));
 
+					CString SubKey;
+					CString strPathName;
 					for (UINT i = 0; i < m_nMaxMRU; ++i)
 					{
-						TCHAR szSubKey[10];
-						wsprintf(szSubKey, _T("File %d\0"), i+1);
-						CString strPathName;
+						SubKey.Format(_T("File %d"), i+1);
+						
 						if (i < m_vMRUEntries.size())
 							strPathName = m_vMRUEntries[i];
 
-						if (ERROR_SUCCESS != RegSetValueEx(hKey, szSubKey, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
+						if (ERROR_SUCCESS != RegSetValueEx(hKey, SubKey, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
 							throw CWinException(_T("RegSetValueEx failed"));
 					}
 
@@ -3433,9 +3440,9 @@ namespace Win32xx
 	{
 		if (::IsWindow(GetStatusBar()))
 		{
-			LPCTSTR Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? _T("\tCAP") : _T("");
-			LPCTSTR Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? _T("\tNUM") : _T("");
-			LPCTSTR Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? _T("\tSCRL"): _T("");
+			CString Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? _T("\tCAP") : _T("");
+			CString Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? _T("\tNUM") : _T("");
+			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? _T("\tSCRL"): _T("");
 
 			// Only update indicators if the text has changed
 			if (Status1 != m_OldStatus[0]) 	GetStatusBar().SetPartText(1, (Status1));
@@ -3742,9 +3749,9 @@ namespace Win32xx
 				}
 
 				// Prefix the string with its number
-				TCHAR tVal[5];
-				wsprintf(tVal, _T("%d "), n+1);
-				strMRUArray[n] = tVal + strMRUArray[n];
+				CString strVal;
+				strVal.Format(_T("%d "), n+1);
+				strMRUArray[n] = strVal + strMRUArray[n];
 				MaxMRUArrayIndex = n;
 			}
 		}

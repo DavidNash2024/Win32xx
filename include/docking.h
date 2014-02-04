@@ -93,9 +93,10 @@ namespace Win32xx
 
 	struct ContainerInfo
 	{
-		TCHAR szTitle[MAX_MENU_STRING];
+		CString Title;
 		int iImage;
 		CDockContainer* pContainer;
+		ContainerInfo() : iImage(0), pContainer(0) {}
 	};
 
 	///////////////////////////////////////
@@ -3703,9 +3704,9 @@ namespace Win32xx
 
 		if (this == m_pContainerParent)
 		{
-			ContainerInfo ci = {0};
+			ContainerInfo ci;
 			ci.pContainer = pContainer;
-			lstrcpy(ci.szTitle, pContainer->GetTabText());
+			ci.Title = pContainer->GetTabText();
 			ci.iImage = ImageList_AddIcon(GetImageList(), pContainer->GetTabIcon());
 			int iNewPage = (int)m_vContainerInfo.size();
 			m_vContainerInfo.push_back(ci);
@@ -3715,7 +3716,7 @@ namespace Win32xx
 				TCITEM tie = {0};
 				tie.mask = TCIF_TEXT | TCIF_IMAGE;
 				tie.iImage = ci.iImage;
-				tie.pszText = m_vContainerInfo[iNewPage].szTitle;
+				tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
 				TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
 
 				SetTabSize();
@@ -3806,7 +3807,7 @@ namespace Win32xx
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 			dc.CreateFontIndirect(&info.lfStatusFont);
-			TempSize = dc.GetTextExtentPoint32(iter->szTitle, lstrlen(iter->szTitle));
+			TempSize = dc.GetTextExtentPoint32(iter->Title, lstrlen(iter->Title));
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
 		}
@@ -3837,9 +3838,9 @@ namespace Win32xx
 	{
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
 
-		ContainerInfo ci = {0};
+		ContainerInfo ci;
 		ci.pContainer = this;
-		lstrcpy(ci.szTitle, GetTabText());
+		ci.Title = GetTabText();
 		ci.iImage = ImageList_AddIcon(GetImageList(), GetTabIcon());
 		m_vContainerInfo.push_back(ci);
 
@@ -3874,7 +3875,7 @@ namespace Win32xx
 			TCITEM tie = {0};
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = i;
-			tie.pszText = m_vContainerInfo[i].szTitle;
+			tie.pszText = (LPTSTR)m_vContainerInfo[i].Title.c_str();
 			TabCtrl_InsertItem(m_hWnd, i, &tie);
 		}
 	}

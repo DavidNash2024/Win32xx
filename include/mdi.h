@@ -261,10 +261,10 @@ namespace Win32xx
 						strMenuItem += _T(" ...");
 					}
 
-					TCHAR szMenuString[MAX_MENU_STRING+1];
-					wsprintf(szMenuString, _T("&%d %s"), nWindow+1, strMenuItem.c_str());
+					CString MenuString;
+					MenuString.Format(_T("&%d %s"), nWindow+1, strMenuItem.c_str());
 
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, szMenuString);
+					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
 
 					if (GetActiveMDIChild() == (*v).get())
 						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
@@ -605,9 +605,9 @@ namespace Win32xx
 		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
-		TCHAR szClassName[MAX_STRING_SIZE + 1] = _T("Win32++ MDI Child");
+		CString ClassName = _T("Win32++ MDI Child");
 		if (m_pcs->lpszClass)
-			lstrcpyn(szClassName, m_pcs->lpszClass, MAX_STRING_SIZE);
+			ClassName = m_pcs->lpszClass;
 
 		// Set the window style
 		DWORD dwStyle;
@@ -635,7 +635,7 @@ namespace Win32xx
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the window
-		if (!CreateEx(dwExStyle, szClassName, m_pcs->lpszName, dwStyle, x, y,
+		if (!CreateEx(dwExStyle, ClassName, m_pcs->lpszName, dwStyle, x, y,
 			cx, cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 

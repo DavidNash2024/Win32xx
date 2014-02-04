@@ -510,12 +510,14 @@ namespace Win32xx
 
 				if (rcItem.Width() >= 24)
 				{
-					TCHAR szText[30];
+					CString str;
+					int nSize = 30;
 					TCITEM tcItem = {0};
 					tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
-					tcItem.cchTextMax = 30;
-					tcItem.pszText = szText;
+					tcItem.cchTextMax = nSize;
+					tcItem.pszText = str.GetBuffer(nSize);
 					TabCtrl_GetItem(m_hWnd, i, &tcItem);
+					str.ReleaseBuffer();
 					int xImage;
 					int yImage;
 					int yOffset = 0;
@@ -537,7 +539,7 @@ namespace Win32xx
 						rcText.left += iImageSize;
 
 					rcText.left += iPadding;
-					dcMem.DrawText(szText, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					dcMem.DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 				}
 			}
 		}
@@ -630,11 +632,10 @@ namespace Win32xx
 		// Add the menu items
 		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
 		{
-			TCHAR szMenuString[MAX_MENU_STRING+1];
-			TCHAR szTabText[MAX_MENU_STRING];
-			lstrcpyn(szTabText, GetAllTabs()[u].szTabText, MAX_MENU_STRING -4);
-			wsprintf(szMenuString, _T("&%d %s"), u+1, szTabText);
-			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +u, szMenuString);
+			CString MenuString;
+			CString TabText = GetAllTabs()[u].szTabText;
+			MenuString.Format(_T("&%d %s"), u+1, TabText.c_str());
+			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +u, MenuString);
 		}
 		if (GetAllTabs().size() >= 10)
 			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));

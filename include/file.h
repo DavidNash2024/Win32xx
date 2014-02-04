@@ -350,8 +350,7 @@ namespace Win32xx
 		int nBuffSize = ::GetFullPathName(pszFileName, 0, 0, 0);
 		if (nBuffSize > 0)
 		{
-			TCHAR* pBuff = m_FilePath.GetBuffer(nBuffSize);
-			::GetFullPathName(pszFileName, nBuffSize, pBuff, &pFileName);
+			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), &pFileName);
 			m_FilePath.ReleaseBuffer();
 			m_FileName = pFileName;
 			int nPos = m_FileName.ReverseFind(_T("."));
