@@ -169,6 +169,7 @@
 #define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to CToolBar
 #define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
 #define UWM_CLEANUPTEMPS	(WM_APP + 19)	// Message - posted to cleanup temporary CDCs
+#define UWM_TBWINDOWPOSCHANGING (WM_APP + 20) // Message - Sent to parent. Toolbar is resizing
 
 
 // Automatically include the Win32xx namespace

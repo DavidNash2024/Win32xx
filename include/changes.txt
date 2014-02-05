@@ -39,6 +39,7 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+- Added CFrame::CustomDrawToolBar
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
 - Added CToolBar::SetButtonInfo
@@ -59,6 +60,9 @@ Changes in detail
 - Modified CString  operator [] 		now accepts const
 - Modified CWnd::CreateEx               now uses HMENU instead of CMenu*
 - Modified CWnd::DeferWindowPos			now uses CWnd* for second argument
+- Removed CToolBar::GetToolBarTheme
+- Removed CToolBar::SetToolBarTheme
+- Removed CToolBar::OnCustomDraw
 
 Added IDW_READY resource for ready string.
 Added VS2013 project files

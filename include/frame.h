@@ -123,6 +123,16 @@ namespace Win32xx
 		COLORREF clrOutline;	// Colour for border outline
 	};
 
+	struct ToolBarTheme
+	{
+		BOOL UseThemes;			// TRUE if themes are used
+		COLORREF clrHot1;		// Colour 1 for hot button
+		COLORREF clrHot2;		// Colour 2 for hot button
+		COLORREF clrPressed1;	// Colour 1 for pressed button
+		COLORREF clrPressed2;	// Colour 2 for pressed button
+		COLORREF clrOutline;	// Colour for border outline
+	};
+
 	// define some structs and enums from uxtheme.h and vssym32.h
 	typedef struct _MARGINS
 	{
@@ -273,7 +283,6 @@ namespace Win32xx
 		void DrawAllMDIButtons(CDC& DrawDC);
 		void DrawMDIButton(CDC& DrawDC, int iButton, UINT uState);
 		void ExitMenu();
-	//	HWND GetActiveMDIChild();
 		CWnd* GetActiveMDIChild();
 		void GrabFocus();
 		BOOL IsMDIChildMaxed() const;
@@ -400,7 +409,7 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual MenuTheme& GetMenuTheme() const			{ return (MenuTheme&) m_ThemeMenu; }
 		virtual ReBarTheme& GetReBarTheme()	const		{ return (ReBarTheme&)GetReBar().GetReBarTheme(); }
-		virtual ToolBarTheme& GetToolBarTheme() const	{ return (ToolBarTheme&)GetToolBar().GetToolBarTheme(); }
+	//	virtual ToolBarTheme& GetToolBarTheme() const	{ return (ToolBarTheme&)GetToolBar().GetToolBarTheme(); }
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the menubar, rebar,
@@ -435,6 +444,7 @@ namespace Win32xx
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolBar();
+		virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
 		virtual void DrawMenuItem(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis);
@@ -521,6 +531,8 @@ namespace Win32xx
 		CRect m_rcPosition;					// CRect of the starting window position
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
+		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
+		ToolBarTheme m_ToolBarTheme;		// The ToolBar theme structure
 
 	};  // class CFrame
 
@@ -1859,7 +1871,8 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseReBar(FALSE),
 		                m_bUseThemes(TRUE), m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(0), 
-		                m_himlMenuDis(0), m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1)
+		                m_himlMenuDis(0), m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1),
+						m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
 		m_strStatusText = LoadString(IDW_READY);
@@ -2140,6 +2153,195 @@ namespace Win32xx
 		{
 			TRACE("Warning ... No resource IDs assigned to the toolbar\n");
 		}
+	}
+
+	inline LRESULT CFrame::CustomDrawToolBar(NMHDR* pNMHDR)
+	// With CustomDraw we manually control the drawing of each toolbar button
+	{
+		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+		CToolBar* pTB = (CToolBar*)FromHandle(pNMHDR->hwndFrom);
+		ToolBarTheme TBTheme = m_ToolBarTheme;
+
+		switch (lpNMCustomDraw->nmcd.dwDrawStage)
+		{
+		// Begin paint cycle
+		case CDDS_PREPAINT:
+			// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
+			return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
+
+		// An item is about to be drawn
+		case CDDS_ITEMPREPAINT:
+			{
+				CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
+				CRect rcRect = lpNMCustomDraw->nmcd.rc;
+				int nState = lpNMCustomDraw->nmcd.uItemState;
+				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+				DWORD dwTBStyle = (DWORD)pTB->SendMessage(TB_GETSTYLE, 0L, 0L);
+				int nStyle = pTB->GetButtonStyle(dwItem);
+
+				int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
+				TBBUTTON tbb = {0};
+				pTB->SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
+				int iImage = (int)tbb.dwData;
+
+				// Calculate text size
+				std::vector<TCHAR> vText(MAX_MENU_STRING, _T('\0'));
+				TCHAR* pszText = &vText[0];
+				CSize TextSize;
+				if (pTB->HasText())	// Does any button have text?
+				{
+					DrawDC.SelectObject(pTB->GetFont());
+					if (pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)pszText)> 0)
+					{
+						TextSize = DrawDC.GetTextExtentPoint32(pszText, lstrlen(pszText));
+					}
+				}
+
+				// Draw outline rectangle
+				if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
+				{
+					DrawDC.CreatePen(PS_SOLID, 1, TBTheme.clrOutline);
+					DrawDC.MoveTo(rcRect.left, rcRect.top);
+					DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
+					DrawDC.LineTo(rcRect.right-1, rcRect.bottom-1);
+					DrawDC.LineTo(rcRect.right-1, rcRect.top);
+					DrawDC.LineTo(rcRect.left, rcRect.top);
+				}
+
+				// Draw filled gradient background
+				rcRect.InflateRect(-1, -1);
+				if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(dwItem) & TBSTATE_PRESSED))
+				{
+					DrawDC.GradientFill(TBTheme.clrPressed1, TBTheme.clrPressed2, rcRect, FALSE);
+				}
+				else if (nState & CDIS_HOT)
+				{
+					DrawDC.GradientFill(TBTheme.clrHot1, TBTheme.clrHot2, rcRect, FALSE);
+				}
+
+				// Get the appropriate image list depending on the button state
+				HIMAGELIST himlToolBar;
+				if (nState & CDIS_DISABLED)
+				{
+					himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
+				}
+				else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
+				{
+					himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
+					if (0 == himlToolBar)
+						himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETIMAGELIST, 0L, 0L);
+				}
+				else
+				{
+					himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETIMAGELIST, 0L, 0L);
+				}
+
+				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
+
+				// Calculate image position
+				int cxImage = 0;
+				int cyImage = 0;
+				ImageList_GetIconSize(himlToolBar, &cxImage, &cyImage);
+
+				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
+				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+				if (dwTBStyle & TBSTYLE_LIST)
+				{
+					xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
+					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+				}
+
+				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
+				if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
+				{
+					// Calculate the dropdown arrow position
+					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
+					int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (cyImage)/2;
+					if (dwTBStyle & TBSTYLE_LIST)
+					{
+						xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
+						yAPos =	(rcRect.bottom - rcRect.top +1)/2 + ((nStyle & TBSTYLE_DROPDOWN)?0:1);
+					}
+
+					xImage -= (nStyle & TBSTYLE_DROPDOWN)?((dwTBStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((dwTBStyle & TBSTYLE_LIST)? 0:4);
+
+					// Draw separate background for dropdown arrow
+					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
+					{
+						CRect rcArrowBkgnd = rcRect;
+						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
+						DrawDC.GradientFill(TBTheme.clrPressed1, TBTheme.clrPressed2, rcArrowBkgnd, FALSE);
+					}
+
+					m_bDrawArrowBkgrnd = FALSE;
+
+					// Manually draw the dropdown arrow
+					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
+					for (int i = 2; i >= 0; --i)
+					{
+						DrawDC.MoveTo(xAPos -i-1, yAPos - i+1);
+						DrawDC.LineTo(xAPos +i,   yAPos - i+1);
+					}
+
+					// Draw line between icon and dropdown arrow
+					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
+					{
+						DrawDC.CreatePen(PS_SOLID, 1, TBTheme.clrOutline);
+						DrawDC.MoveTo(rcRect.right - 13, rcRect.top);
+						DrawDC.LineTo(rcRect.right - 13, rcRect.bottom);
+					}
+				}
+
+				// Draw the button image
+				if (xImage > 0)
+				{
+					ImageList_Draw(himlToolBar, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
+				}
+
+				//Draw Text
+				if (lstrlen(pszText) > 0)
+				{
+					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
+					CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
+
+					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
+					int yOffset = yImage + cyImage +1;
+
+					if (dwTBStyle & TBSTYLE_LIST)
+					{
+						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
+						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
+						rcText.right = MIN(rcText.right,  rcRect.right - xOffset);
+					}
+
+					OffsetRect(&rcText, xOffset, yOffset);
+
+					int iMode = DrawDC.SetBkMode(TRANSPARENT);
+					DrawDC.SelectObject(pTB->GetFont());
+
+					if (nState & (CDIS_DISABLED))
+					{
+						// Draw text twice for embossed look
+						rcText.OffsetRect(1, 1);
+						DrawDC.SetTextColor(RGB(255,255,255));
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
+						rcText.OffsetRect(-1, -1);
+						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
+					}
+					else
+					{
+						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
+					}
+					DrawDC.SetBkMode(iMode);
+
+				}
+				DrawDC.Detach();
+			}
+			return CDRF_SKIPDEFAULT;  // No further drawing
+		}
+		return 0L;
 	}
 
 	inline void CFrame::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
@@ -2973,6 +3175,36 @@ namespace Win32xx
 			RecalcLayout();
 			Invalidate();
 			break;
+		case NM_CUSTOMDRAW:
+			{
+				CWnd* pWnd = FromHandle(((LPNMHDR)lParam)->hwndFrom);
+				if (dynamic_cast<CToolBar*>(pWnd))
+				{
+					if (((LPNMHDR)lParam)->hwndFrom != GetMenuBar().GetHwnd())
+					{
+						TRACE("Custrom Draw from a Toolbar\n");
+						return CustomDrawToolBar((LPNMHDR)lParam);
+					}
+				}
+				
+				TRACE("Got Custom Draw in Frame\n");
+				if (((LPNMHDR)lParam)->hwndFrom == GetMenuBar().GetHwnd())
+					TRACE("Custom Draw from Menubar\n");
+
+				if (((LPNMHDR)lParam)->hwndFrom == GetReBar().GetHwnd())
+					TRACE("Custom Draw from Rebar\n");
+			}
+			break;
+		case TBN_DROPDOWN:	// Press of Dropdown botton on ToolBar
+			{
+				int iItem = ((LPNMTOOLBAR) lParam)->iItem;
+				CToolBar* pTB = (CToolBar*)FromHandle(((LPNMHDR)lParam)->hwndFrom);
+				assert(pTB);
+
+				// a boolean expression
+				m_bDrawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
+			}
+			break;
 	//	case RBN_LAYOUTCHANGED:
 	//		if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
 	//			GetReBar().MoveBandsLeft();
@@ -3526,7 +3758,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
-					GetToolBar().SetToolBarTheme(tt);
+				//	GetToolBar().SetToolBarTheme(tt);
+					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
 					GetReBar().SetReBarTheme(tr);
@@ -3539,7 +3772,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
-					GetToolBar().SetToolBarTheme(tt);
+				//	GetToolBar().SetToolBarTheme(tt);
+					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
 					GetReBar().SetReBarTheme(tr);
@@ -3552,7 +3786,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
 
-					GetToolBar().SetToolBarTheme(tt);
+				//	GetToolBar().SetToolBarTheme(tt);
+					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
 					GetReBar().SetReBarTheme(tr);
@@ -3566,7 +3801,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
 
-					GetToolBar().SetToolBarTheme(tt);
+				//	GetToolBar().SetToolBarTheme(tt);
+					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
 					GetReBar().SetReBarTheme(tr);
@@ -3580,7 +3816,8 @@ namespace Win32xx
 					ToolBarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
 
-					GetToolBar().SetToolBarTheme(tt);
+				//	GetToolBar().SetToolBarTheme(tt);
+					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
 					GetReBar().SetReBarTheme(tr);
@@ -3857,7 +4094,7 @@ namespace Win32xx
 			}
 		case UWM_GETTOOLBARTHEME:
 			{
-				ToolBarTheme& tt = GetToolBarTheme();
+				ToolBarTheme& tt = m_ToolBarTheme;
 				return (LRESULT)&tt;
 			}
 		} // switch uMsg

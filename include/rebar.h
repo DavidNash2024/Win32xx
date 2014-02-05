@@ -40,7 +40,7 @@
 
 #include "wincore.h"
 #include "gdi.h"
-#include "controls.h"
+
 
 namespace Win32xx
 {
@@ -705,6 +705,21 @@ namespace Win32xx
 				HWND hToolBar = (HWND)wParam;
 				LPSIZE pToolBarSize = (LPSIZE)lParam;
 				ResizeBand(GetBand(hToolBar), *pToolBarSize);
+			}
+			break;
+		case UWM_TBWINDOWPOSCHANGING:
+			{
+				// Adjust size for toolbars inside a rebar
+				{
+					ReBarTheme* pTheme = (ReBarTheme*)SendMessage(UWM_GETREBARTHEME, 0, 0);
+					CToolBar* pTB = (CToolBar*)FromHandle((HWND)wParam);
+
+					if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
+					{
+						LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+						pWinPos->cx = pTB->GetMaxSize().cx+2;
+					}
+				}
 			}
 			break;
 		}

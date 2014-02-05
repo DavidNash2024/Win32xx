@@ -40,22 +40,10 @@
 
 #include "wincore.h"
 #include "gdi.h"
-#include "rebar.h"
 
 
 namespace Win32xx
 {
-
-	struct ToolBarTheme
-	{
-		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrHot1;		// Colour 1 for hot button
-		COLORREF clrHot2;		// Colour 2 for hot button
-		COLORREF clrPressed1;	// Colour 1 for pressed button
-		COLORREF clrPressed2;	// Colour 2 for pressed button
-		COLORREF clrOutline;	// Colour for border outline
-	};
-
 
 	////////////////////////////////////
 	// Declaration of the CToolBar class
@@ -138,16 +126,11 @@ namespace Win32xx
 
 		// Attributes
 		std::vector<UINT>& GetToolBarData() const {return (std::vector <UINT> &)m_vToolBarData;}
-		ToolBarTheme& GetToolBarTheme() {return m_Theme;}
-		void SetToolBarTheme(ToolBarTheme& Theme);
 
 	protected:
 	// Overridables
 		virtual void OnCreate();
 		virtual void OnDestroy();
-		virtual void OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
-		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -159,8 +142,6 @@ namespace Win32xx
 		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for toolbar buttons
 		std::map<CString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
-		ToolBarTheme m_Theme;				// The theme structure
-		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn
 
 	};  // class CToolBar
 
@@ -176,9 +157,8 @@ namespace Win32xx
 	////////////////////////////////////
 	// Definitions for the CToolBar class
 	//
-	inline CToolBar::CToolBar() : m_OldToolBarID(0), m_bDrawArrowBkgrnd(FALSE)
+	inline CToolBar::CToolBar() : m_OldToolBarID(0)
 	{
-		ZeroMemory(&m_Theme, sizeof(ToolBarTheme));
 	}
 
 	inline CToolBar::~CToolBar()
@@ -640,193 +620,6 @@ namespace Win32xx
 		SendMessage(TB_SETMAXTEXTROWS, 0L, 0L);
 	}
 
-	inline LRESULT CToolBar::OnCustomDraw(NMHDR* pNMHDR)
-	// With CustomDraw we manually control the drawing of each toolbar button
-	{
-		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-
-		switch (lpNMCustomDraw->nmcd.dwDrawStage)
-		{
-		// Begin paint cycle
-		case CDDS_PREPAINT:
-			// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
-			return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
-
-		// An item is about to be drawn
-		case CDDS_ITEMPREPAINT:
-			{
-				CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
-				CRect rcRect = lpNMCustomDraw->nmcd.rc;
-				int nState = lpNMCustomDraw->nmcd.uItemState;
-				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
-				DWORD dwTBStyle = (DWORD)SendMessage(TB_GETSTYLE, 0L, 0L);
-				int nStyle = GetButtonStyle(dwItem);
-
-				int nButton = (int)SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
-				TBBUTTON tbb = {0};
-				SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
-				int iImage = (int)tbb.dwData;
-
-				// Calculate text size
-				std::vector<TCHAR> vText(MAX_MENU_STRING, _T('\0'));
-				TCHAR* pszText = &vText[0];
-				CSize TextSize;
-				if (HasText())	// Does any button have text?
-				{
-					DrawDC.SelectObject(GetFont());
-					if (SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)pszText)> 0)
-					{
-						TextSize = DrawDC.GetTextExtentPoint32(pszText, lstrlen(pszText));
-					}
-				}
-
-				// Draw outline rectangle
-				if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
-				{
-					DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-					DrawDC.MoveTo(rcRect.left, rcRect.top);
-					DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
-					DrawDC.LineTo(rcRect.right-1, rcRect.bottom-1);
-					DrawDC.LineTo(rcRect.right-1, rcRect.top);
-					DrawDC.LineTo(rcRect.left, rcRect.top);
-				}
-
-				// Draw filled gradient background
-				rcRect.InflateRect(-1, -1);
-				if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
-				{
-					DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcRect, FALSE);
-				}
-				else if (nState & CDIS_HOT)
-				{
-					DrawDC.GradientFill(m_Theme.clrHot1, m_Theme.clrHot2, rcRect, FALSE);
-				}
-
-				// Get the appropriate image list depending on the button state
-				HIMAGELIST himlToolBar;
-				if (nState & CDIS_DISABLED)
-				{
-					himlToolBar = (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
-				}
-				else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
-				{
-					himlToolBar = (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
-					if (0 == himlToolBar)
-						himlToolBar = (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L);
-				}
-				else
-				{
-					himlToolBar = (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L);
-				}
-
-				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
-
-				// Calculate image position
-				int cxImage = 0;
-				int cyImage = 0;
-				ImageList_GetIconSize(himlToolBar, &cxImage, &cyImage);
-
-				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
-				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
-				if (dwTBStyle & TBSTYLE_LIST)
-				{
-					xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
-					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
-				}
-
-				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
-				if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
-				{
-					// Calculate the dropdown arrow position
-					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
-					int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (cyImage)/2;
-					if (dwTBStyle & TBSTYLE_LIST)
-					{
-						xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
-						yAPos =	(rcRect.bottom - rcRect.top +1)/2 + ((nStyle & TBSTYLE_DROPDOWN)?0:1);
-					}
-
-					xImage -= (nStyle & TBSTYLE_DROPDOWN)?((dwTBStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((dwTBStyle & TBSTYLE_LIST)? 0:4);
-
-					// Draw separate background for dropdown arrow
-					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
-					{
-						CRect rcArrowBkgnd = rcRect;
-						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-						DrawDC.GradientFill(m_Theme.clrPressed1, m_Theme.clrPressed2, rcArrowBkgnd, FALSE);
-					}
-
-					m_bDrawArrowBkgrnd = FALSE;
-
-					// Manually draw the dropdown arrow
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
-					for (int i = 2; i >= 0; --i)
-					{
-						DrawDC.MoveTo(xAPos -i-1, yAPos - i+1);
-						DrawDC.LineTo(xAPos +i,   yAPos - i+1);
-					}
-
-					// Draw line between icon and dropdown arrow
-					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
-					{
-						DrawDC.CreatePen(PS_SOLID, 1, m_Theme.clrOutline);
-						DrawDC.MoveTo(rcRect.right - 13, rcRect.top);
-						DrawDC.LineTo(rcRect.right - 13, rcRect.bottom);
-					}
-				}
-
-				// Draw the button image
-				if (xImage > 0)
-				{
-					ImageList_Draw(himlToolBar, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
-				}
-
-				//Draw Text
-				if (lstrlen(pszText) > 0)
-				{
-					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
-					CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
-
-					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
-					int yOffset = yImage + cyImage +1;
-
-					if (dwTBStyle & TBSTYLE_LIST)
-					{
-						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
-						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
-						rcText.right = MIN(rcText.right,  rcRect.right - xOffset);
-					}
-
-					OffsetRect(&rcText, xOffset, yOffset);
-
-					int iMode = DrawDC.SetBkMode(TRANSPARENT);
-					DrawDC.SelectObject(GetFont());
-
-					if (nState & (CDIS_DISABLED))
-					{
-						// Draw text twice for embossed look
-						rcText.OffsetRect(1, 1);
-						DrawDC.SetTextColor(RGB(255,255,255));
-						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
-						rcText.OffsetRect(-1, -1);
-						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
-					}
-					else
-					{
-						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
-					}
-					DrawDC.SetBkMode(iMode);
-
-				}
-				DrawDC.Detach();
-			}
-			return CDRF_SKIPDEFAULT;  // No further drawing
-		}
-		return 0L;
-	}
-
 	inline void CToolBar::OnDestroy()
 	{
 		HIMAGELIST himlToolBar    = (HIMAGELIST)SendMessage(TB_GETIMAGELIST,    0L, 0L);
@@ -835,50 +628,6 @@ namespace Win32xx
 		ImageList_Destroy(himlToolBar);
 		ImageList_Destroy(himlToolBarHot);
 		ImageList_Destroy(himlToolBarDis);
-	}
-
-	inline LRESULT CToolBar::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
-	// Notifications sent to the parent window are reflected back here
-	{
-		UNREFERENCED_PARAMETER(wParam);
-
-		switch (((LPNMHDR)lParam)->code)
-		{
-			case NM_CUSTOMDRAW:
-			{
-				if ((m_Theme.UseThemes) && (GetComCtlVersion() > 470))
-					return OnCustomDraw((LPNMHDR) lParam);
-			}
-			break;
-
-			case TBN_DROPDOWN:
-			{
-				int iItem = ((LPNMTOOLBAR) lParam)->iItem;
-
-				// a boolean expression
-				m_bDrawArrowBkgrnd = (GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
-			}
-			break;
-		}
-		return 0L;
-	}
-
-	inline void CToolBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(wParam);
-
-		// Adjust size for toolbars inside a rebar
-		CWnd* pParent = GetParent();
-		if (lstrcmp(pParent->GetClassName(), _T("ReBarWindow32")) == 0)
-		{
-			ReBarTheme* pTheme = (ReBarTheme*)pParent->SendMessage(UWM_GETREBARTHEME, 0, 0);
-
-			if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
-			{
-				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-				pWinPos->cx = GetMaxSize().cx+2;
-			}
-		}
 	}
 
 	inline void CToolBar::PreCreate(CREATESTRUCT &cs)
@@ -1336,19 +1085,6 @@ namespace Win32xx
 		return (BOOL)SendMessage(TB_SETPADDING, 0L, (WPARAM)MAKELONG(cx, cy));
 	}
 
-	inline void CToolBar::SetToolBarTheme(ToolBarTheme& Theme)
-	{
-		m_Theme.UseThemes   = Theme.UseThemes;
-		m_Theme.clrHot1     = Theme.clrHot1;
-		m_Theme.clrHot2     = Theme.clrHot2;
-		m_Theme.clrPressed1 = Theme.clrPressed1;
-		m_Theme.clrPressed2 = Theme.clrPressed2;
-		m_Theme.clrOutline  = Theme.clrOutline;
-
-		if (IsWindow())
-			Invalidate();
-	}
-
 	inline void CToolBar::SetToolTips(CToolTip* pToolTip) const
 	// Associates a ToolTip control with a toolbar.
 	{
@@ -1361,13 +1097,11 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case UWM_GETTOOLBARTHEME:
-			{
-				ToolBarTheme& tt = GetToolBarTheme();
-				return (LRESULT)&tt;
-			}
 		case WM_WINDOWPOSCHANGING:
-			OnWindowPosChanging(wParam, lParam);
+			{
+			//	Required by Rebar controls to adjust Toolbar window size
+				GetParent()->SendMessageW(UWM_TBWINDOWPOSCHANGING, (WPARAM)m_hWnd, lParam);
+			}
 			break;
 		}
 

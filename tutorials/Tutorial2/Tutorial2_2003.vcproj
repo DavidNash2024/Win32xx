@@ -39,6 +39,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib"
 				OutputFile=".\Release/Tutorial2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -102,6 +103,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
+				AdditionalDependencies="comctl32.lib"
 				OutputFile=".\Debug/Tutorial2.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
