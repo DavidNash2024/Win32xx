@@ -94,7 +94,6 @@ namespace Win32xx
 		UINT GetBarHeight() const;
 		BOOL GetBarInfo(REBARINFO& rbi) const;
 		HWND GetMenuBar() {return m_hMenuBar;}
-		ReBarTheme& GetReBarTheme() {return m_Theme;}
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
 		UINT GetSizeofRBBI() const;
@@ -104,7 +103,6 @@ namespace Win32xx
 		BOOL SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL SetBarInfo(REBARINFO& rbi) const;
 		void SetMenuBar(HWND hMenuBar) {m_hMenuBar = hMenuBar;}
-		void SetReBarTheme(ReBarTheme& Theme);
 		void SetToolTips(CToolTip* pToolTip) const;
 
 	protected:
@@ -118,7 +116,6 @@ namespace Win32xx
 		CReBar(const CReBar&);				// Disable copy construction
 		CReBar& operator = (const CReBar&); // Disable assignment operator
 
-		ReBarTheme m_Theme;
 		BOOL m_bIsDragging;
 		HWND m_hMenuBar;
 		LPARAM m_Orig_lParam;
@@ -137,7 +134,6 @@ namespace Win32xx
 	//
 	inline CReBar::CReBar() : m_bIsDragging(FALSE), m_hMenuBar(0), m_Orig_lParam(0L)
 	{
-		ZeroMemory(&m_Theme, sizeof(ReBarTheme));
 	}
 
 	inline CReBar::~CReBar()
@@ -334,10 +330,11 @@ namespace Win32xx
 	inline BOOL CReBar::OnEraseBkgnd(CDC* pDC)
 	{
 		BOOL Erase = TRUE;
-		if (!m_Theme.UseThemes)
+		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		if (! pTheme || !pTheme->UseThemes)
 			Erase = FALSE;
 
-		if (!m_Theme.clrBkgnd1 && !m_Theme.clrBkgnd2 && !m_Theme.clrBand1 && !m_Theme.clrBand2)
+		if (!pTheme->clrBkgnd1 && !pTheme->clrBkgnd2 && !pTheme->clrBand1 && !pTheme->clrBand2)
 			Erase = FALSE;
 
 		if (Erase)
@@ -352,15 +349,15 @@ namespace Win32xx
 
 			// Draw to ReBar background to the memory DC
 			rcReBar.right = 600;
-			MemDC.GradientFill(m_Theme.clrBkgnd1, m_Theme.clrBkgnd2, rcReBar, TRUE);
+			MemDC.GradientFill(pTheme->clrBkgnd1, pTheme->clrBkgnd2, rcReBar, TRUE);
 			if (BarWidth >= 600)
 			{
 				rcReBar.left = 600;
 				rcReBar.right = BarWidth;
-				MemDC.SolidFill(m_Theme.clrBkgnd2, rcReBar);
+				MemDC.SolidFill(pTheme->clrBkgnd2, rcReBar);
 			}
 
-			if (m_Theme.clrBand1 || m_Theme.clrBand2)
+			if (pTheme->clrBand1 || pTheme->clrBand2)
 			{
 				// Draw the individual band backgrounds
 				for (int nBand = 0 ; nBand < GetBandCount(); ++nBand)
@@ -392,20 +389,20 @@ namespace Win32xx
 							SourceDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
 							CRect rcBorder = GetBandBorders(nBand);
 							rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-							SourceDC.SolidFill(m_Theme.clrBand1, rcDraw);
+							SourceDC.SolidFill(pTheme->clrBand1, rcDraw);
 							rcDraw.top = rcDraw.bottom;
 							rcDraw.bottom = rcBand.bottom;
-							SourceDC.GradientFill(m_Theme.clrBand1, m_Theme.clrBand2, rcDraw, FALSE);
+							SourceDC.GradientFill(pTheme->clrBand1, pTheme->clrBand2, rcDraw, FALSE);
 
 							// Set Curve amount for rounded edges
-							int Curve = m_Theme.RoundBorders? 12 : 0;
+							int Curve = pTheme->RoundBorders? 12 : 0;
 
 							// Create our mask for rounded edges using RoundRect
 							CMemDC MaskDC(pDC);
 							MaskDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
 
 							rcDraw.top = rcBand.top;
-							if (!m_Theme.FlatStyle)
+							if (!pTheme->FlatStyle)
 								::InflateRect(&rcDraw, 1, 1);
 
 							int left = rcDraw.left;
@@ -415,7 +412,7 @@ namespace Win32xx
 							int cx = rcDraw.right - rcBand.left + xPad;
 							int cy = rcDraw.bottom - rcBand.top;
 
-							if (m_Theme.FlatStyle)
+							if (pTheme->FlatStyle)
 							{
 								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
 								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
@@ -444,7 +441,7 @@ namespace Win32xx
 				}
 			}
 
-			if (m_Theme.UseLines)
+			if (pTheme->UseLines)
 			{
 				// Draw lines between bands
 				for (int j = 0; j < GetBandCount()-1; ++j)
@@ -591,31 +588,6 @@ namespace Win32xx
 		return (BOOL)SendMessage(RB_SETBARINFO, 0L, (LPARAM)&rbi);
 	}
 
-	inline void CReBar::SetReBarTheme(ReBarTheme& Theme)
-	{
-		m_Theme.UseThemes    = Theme.UseThemes;
-		m_Theme.clrBkgnd1    = Theme.clrBkgnd1;
-		m_Theme.clrBkgnd2    = Theme.clrBkgnd2;
-		m_Theme.clrBand1     = Theme.clrBand1;
-		m_Theme.clrBand2     = Theme.clrBand2;
-		m_Theme.BandsLeft    = Theme.BandsLeft;
-		m_Theme.LockMenuBand = Theme.LockMenuBand;
-		m_Theme.ShortBands   = Theme.ShortBands;
-		m_Theme.UseLines     = Theme.UseLines;
-		m_Theme.FlatStyle    = Theme.FlatStyle;
-		m_Theme.RoundBorders = Theme.RoundBorders;
-
-		if (IsWindow())
-		{
-			if (m_Theme.LockMenuBand)
-				ShowGripper(GetBand(m_hMenuBar), FALSE);
-			else
-				ShowGripper(GetBand(m_hMenuBar), TRUE);
-		
-			Invalidate();
-		}
-	}
-
 	inline BOOL CReBar::ShowBand(int nBand, BOOL fShow) const
 	// Show or hide a band
 	{
@@ -663,18 +635,22 @@ namespace Win32xx
 	}
 
 	inline LRESULT CReBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
+	{	
+	
 		switch (uMsg)
 		{
 		case WM_MOUSEMOVE:
-			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
 			{
-				// We want to lock the first row in place, but allow other bands to move!
-				// Use move messages to limit the resizing of bands
-				int y = GET_Y_LPARAM(lParam);
+				ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+				if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
+				{
+					// We want to lock the first row in place, but allow other bands to move!
+					// Use move messages to limit the resizing of bands
+					int y = GET_Y_LPARAM(lParam);
 
-				if (y <= GetRowHeight(0))
-					return 0L;	// throw this message away
+					if (y <= GetRowHeight(0))
+						return 0L;	// throw this message away
+				}
 			}
 			break;
 		case WM_LBUTTONDOWN:
@@ -682,24 +658,22 @@ namespace Win32xx
 			m_bIsDragging = TRUE;
 			break;
 		case WM_LBUTTONUP:
-			if (m_Theme.UseThemes && m_Theme.LockMenuBand)
 			{
-				// Use move messages to limit the resizing of bands
-				int y = GET_Y_LPARAM(lParam);
-
-				if (y <= GetRowHeight(0))
+				ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+				if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 				{
-					// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
-					lParam = m_Orig_lParam;
+					// Use move messages to limit the resizing of bands
+					int y = GET_Y_LPARAM(lParam);
+
+					if (y <= GetRowHeight(0))
+					{
+						// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
+						lParam = m_Orig_lParam;
+					}
 				}
+				m_bIsDragging = FALSE;
 			}
-			m_bIsDragging = FALSE;
 			break;
-		case UWM_GETREBARTHEME:
-			{
-				ReBarTheme& rm = GetReBarTheme();
-				return (LRESULT)&rm;
-			}
 		case UWM_TOOLBAR_RESIZE:
 			{
 				HWND hToolBar = (HWND)wParam;
@@ -711,7 +685,7 @@ namespace Win32xx
 			{
 				// Adjust size for toolbars inside a rebar
 				{
-					ReBarTheme* pTheme = (ReBarTheme*)SendMessage(UWM_GETREBARTHEME, 0, 0);
+					ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
 					CToolBar* pTB = (CToolBar*)FromHandle((HWND)wParam);
 
 					if (pTheme && pTheme->UseThemes && pTheme->ShortBands)

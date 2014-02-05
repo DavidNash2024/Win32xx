@@ -41,7 +41,7 @@ private:
 	void OnUseLines();
 	void OnViewArrows();
 	void OnViewCards();
-	void SetReBarTheme(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
+	void SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
 
 	CView m_View;
 	CToolBar Arrows;

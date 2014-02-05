@@ -407,22 +407,42 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
 		virtual void RecalcLayout();
-		virtual MenuTheme& GetMenuTheme() const			{ return (MenuTheme&) m_ThemeMenu; }
-		virtual ReBarTheme& GetReBarTheme()	const		{ return (ReBarTheme&)GetReBar().GetReBarTheme(); }
-	//	virtual ToolBarTheme& GetToolBarTheme() const	{ return (ToolBarTheme&)GetToolBar().GetToolBarTheme(); }
-		void SetToolBarTheme(ToolBarTheme tbt) { m_ToolBarTheme = tbt; GetToolBar().GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN); }
-		ToolBarTheme GetToolBarTheme() const { return m_ToolBarTheme; }
 
 		// Virtual Attributes
-		// If you need to modify the default behaviour of the menubar, rebar,
-		// statusbar or toolbar, inherit from those classes, and override
+		// If you need to modify the default behaviour of the MenuBar, ReBar,
+		// StatusBar or ToolBar, inherit from those classes, and override
 		// the following attribute functions.
 		virtual CMenuBar& GetMenuBar() const		{ return (CMenuBar&)m_MenuBar; }
 		virtual CReBar& GetReBar() const			{ return (CReBar&)m_ReBar; }
 		virtual CStatusBar& GetStatusBar() const	{ return (CStatusBar&)m_StatusBar; }
 		virtual CToolBar& GetToolBar() const		{ return (CToolBar&)m_ToolBar; }
 
+		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
+		MenuTheme& GetMenuTheme() const				{ return (MenuTheme&)m_ThemeMenu; }
+		ReBarTheme& GetReBarTheme() const			{ return (ReBarTheme&)m_ReBarTheme; }
+		ToolBarTheme& GetToolBarTheme() const		{ return (ToolBarTheme&)m_ToolBarTheme; }
+		void SetReBarTheme(ReBarTheme rbt) 
+		{ 
+			m_ReBarTheme = rbt; 
+			if (IsWindow())
+			{
+				int nBand = GetReBar().GetBand(GetMenuBar());
+				if (m_ReBarTheme.LockMenuBand)
+					GetReBar().ShowGripper(nBand, FALSE);
+				else
+					GetReBar().ShowGripper(nBand, TRUE);
+		
+				Invalidate();
+			}
+		}
+		void SetToolBarTheme(ToolBarTheme tbt) 
+		{ 
+			m_ToolBarTheme = tbt;
+			if (GetToolBar().IsWindow())
+				GetToolBar().GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN); 
+		}
+		
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
 		CMenu& GetFrameMenu() const					{ return (CMenu&)m_Menu; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
@@ -534,7 +554,10 @@ namespace Win32xx
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
-		ToolBarTheme m_ToolBarTheme;		// The ToolBar theme structure
+		MenuTheme m_MenuBarTheme;			// struct of theme info for the Menu or MenuBar
+		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
+		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
+		
 
 	};  // class CFrame
 
@@ -596,10 +619,8 @@ namespace Win32xx
 		m_bExitAfter = FALSE;
 		m_OldMousePos = GetCursorPos();
 
-	//	HWND hMaxMDIChild = NULL;
 		CWnd* pMaxMDIChild = NULL;
 		if (IsMDIChildMaxed())
-	//		hMaxMDIChild = GetActiveMDIChild();
 			pMaxMDIChild = GetActiveMDIChild();
 
 		// Load the submenu
@@ -1877,6 +1898,9 @@ namespace Win32xx
 						m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
+		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
+		ZeroMemory(&m_ToolBarTheme, sizeof(m_ToolBarTheme));
+
 		m_strStatusText = LoadString(IDW_READY);
 
 		// Do either InitCommonControls or InitCommonControlsEx
@@ -1885,9 +1909,6 @@ namespace Win32xx
 		// By default, we use the rebar if we can
 		if (GetComCtlVersion() > 470)
 			m_bUseReBar = TRUE;
-
-		for (int i = 0 ; i < 3 ; ++i)
-			m_OldStatus[i] = _T('\0');
 
 		NONCLIENTMETRICS nm = {0};
 		nm.cbSize = GetSizeofNonClientMetrics();
@@ -2043,7 +2064,7 @@ namespace Win32xx
 		SetMenuBarBandSize();
 		GetReBar().SetMenuBar(GetMenuBar());
 
-		if (GetReBar().GetReBarTheme().LockMenuBand)
+		if (m_ReBarTheme.LockMenuBand)
 			GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), FALSE);
 	}
 
@@ -2133,7 +2154,7 @@ namespace Win32xx
 
 		if (IsReBarSupported() && m_bUseReBar)
 		{
-			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().LockMenuBand)
+			if (m_ReBarTheme.UseThemes && m_ReBarTheme.LockMenuBand)
 			{
 				// Hide gripper for single toolbar
 				if (GetReBar().GetBandCount() <= 2)
@@ -3184,17 +3205,9 @@ namespace Win32xx
 				{
 					if (((LPNMHDR)lParam)->hwndFrom != GetMenuBar().GetHwnd())
 					{
-						TRACE("Custrom Draw from a Toolbar\n");
 						return CustomDrawToolBar((LPNMHDR)lParam);
 					}
 				}
-				
-				TRACE("Got Custom Draw in Frame\n");
-				if (((LPNMHDR)lParam)->hwndFrom == GetMenuBar().GetHwnd())
-					TRACE("Custom Draw from Menubar\n");
-
-				if (((LPNMHDR)lParam)->hwndFrom == GetReBar().GetHwnd())
-					TRACE("Custom Draw from Rebar\n");
 			}
 			break;
 		case TBN_DROPDOWN:	// Press of Dropdown botton on ToolBar
@@ -3212,7 +3225,7 @@ namespace Win32xx
 	//			GetReBar().MoveBandsLeft();
 	//		break;
 		case RBN_MINMAX:
-			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().ShortBands)
+			if (m_ReBarTheme.UseThemes && m_ReBarTheme.ShortBands)
 				return 1L;	// Suppress maximise or minimise rebar band
 			break;
 
@@ -3453,7 +3466,7 @@ namespace Win32xx
 		// Adjust rebar bands
 		if (IsReBarUsed())
 		{
-			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
+			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
 				GetReBar().MoveBandsLeft();
 
 			if (IsMenuBarUsed())
@@ -3646,7 +3659,7 @@ namespace Win32xx
 		RB.GetBandInfo(nBand, rbbi);
 
 		int Width;
-		if ((GetReBar().GetReBarTheme().UseThemes) && (GetReBar().GetReBarTheme().LockMenuBand))
+		if ((m_ReBarTheme.UseThemes) && (m_ReBarTheme.LockMenuBand))
 			Width = rcClient.Width() - rcBorder.Width() - 2;
 		else
 			Width = GetMenuBar().GetMaxSize().cx;
@@ -3764,7 +3777,8 @@ namespace Win32xx
 					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
-					GetReBar().SetReBarTheme(tr);
+				//	GetReBar().SetReBarTheme(tr);
+					m_ReBarTheme = tr;
 				}
 				break;
 
@@ -3778,7 +3792,8 @@ namespace Win32xx
 					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
-					GetReBar().SetReBarTheme(tr);
+				//	GetReBar().SetReBarTheme(tr);
+					m_ReBarTheme = tr;
 				}
 				break;
 			case Blue:
@@ -3792,7 +3807,8 @@ namespace Win32xx
 					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
-					GetReBar().SetReBarTheme(tr);
+				//	GetReBar().SetReBarTheme(tr);
+					m_ReBarTheme = tr;
 				}
 				break;
 
@@ -3807,7 +3823,8 @@ namespace Win32xx
 					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
-					GetReBar().SetReBarTheme(tr);
+				//	GetReBar().SetReBarTheme(tr);
+					m_ReBarTheme = tr;
 				}
 				break;
 
@@ -3822,7 +3839,8 @@ namespace Win32xx
 					m_ToolBarTheme = tt;
 					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
 
-					GetReBar().SetReBarTheme(tr);
+				//	GetReBar().SetReBarTheme(tr);
+					m_ReBarTheme = tr;
 				}
 				break;
 			}
@@ -3831,7 +3849,8 @@ namespace Win32xx
 		{
 			// Use a classic style by default
 			ReBarTheme tr = {T, 0, 0, 0, 0, F, T, T, F, F, F};
-			GetReBar().SetReBarTheme(tr);
+		//	GetReBar().SetReBarTheme(tr);
+			m_ReBarTheme = tr;
 		}
 
 		RecalcLayout();
@@ -3908,7 +3927,7 @@ namespace Win32xx
 
 		if (GetReBar().IsWindow())
 		{
-			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
+			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
 				GetReBar().MoveBandsLeft();
 		}
 
@@ -3960,7 +3979,7 @@ namespace Win32xx
 
 		if (GetReBar().IsWindow())
 		{
-			if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
+			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
 				GetReBar().MoveBandsLeft();
 		}
 
@@ -4086,13 +4105,13 @@ namespace Win32xx
 			break;
 		case UWM_GETMENUTHEME:
 			{
-				MenuTheme& tm = GetMenuTheme();
-				return (LRESULT)&tm;
+				MenuTheme& mt = GetMenuTheme();
+				return (LRESULT)&mt;
 			}
 		case UWM_GETREBARTHEME:
 			{
-				ReBarTheme& rm = GetReBarTheme();
-				return (LRESULT)&rm;
+				ReBarTheme& rt = m_ReBarTheme;
+				return (LRESULT)&rt;
 			}
 		case UWM_GETTOOLBARTHEME:
 			{

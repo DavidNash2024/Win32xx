@@ -40,7 +40,9 @@ New Features and Enhancements
 Changes in detail
 -----------------
 - Added CFrame::CustomDrawToolBar
+- Added CFrame::GetReBarTheme
 - Added CFrame::GetToolBarTheme
+- Added CFrame::SetReBarTheme
 - Added CFrame::SetToolBarTheme
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
@@ -62,6 +64,8 @@ Changes in detail
 - Modified CString  operator [] 		now accepts const
 - Modified CWnd::CreateEx               now uses HMENU instead of CMenu*
 - Modified CWnd::DeferWindowPos			now uses CWnd* for second argument
+- Removed CReBar::GetReBarTheme
+- Removed CReBar::SetReBarTheme
 - Removed CToolBar::GetToolBarTheme
 - Removed CToolBar::SetToolBarTheme
 - Removed CToolBar::OnCustomDraw
