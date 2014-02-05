@@ -139,7 +139,7 @@ namespace Win32xx
 		CToolBar(const CToolBar&);				// Disable copy construction
 		CToolBar& operator = (const CToolBar&); // Disable assignment operator
 
-		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for toolbar buttons
+		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for ToolBar buttons
 		std::map<CString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 
@@ -166,7 +166,7 @@ namespace Win32xx
 	}
 
 	inline int CToolBar::AddBitmap(UINT ToolBarID)
-	// Adds one or more images to the list of button images available for a toolbar.
+	// Adds one or more images to the list of button images available for a ToolBar.
 
 	// Note: AddBitmap supports a maximum colour depth of 8 bits (256 colours)
 	//       For more colours, use an ImageList instead
@@ -191,14 +191,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::AddButton(UINT nID, BOOL bEnabled /* = TRUE */)
-	// Adds Resource IDs to toolbar buttons.
+	// Adds Resource IDs to ToolBar buttons.
 	// A resource ID of 0 is a separator
 	{
 		assert(::IsWindow(m_hWnd));
 
 		m_vToolBarData.push_back(nID);
 
-		// TBBUTTON structure for each button in the toolbar
+		// TBBUTTON structure for each button in the ToolBar
 		TBBUTTON tbb = {0};
 
 		std::vector<UINT>::iterator iter;
@@ -221,26 +221,26 @@ namespace Win32xx
 			tbb.fsStyle = TBSTYLE_BUTTON;
 		}
 
-		// Add the button to the toolbar
+		// Add the button to the ToolBar
 		return (BOOL)SendMessage(TB_ADDBUTTONS, 1L, (LPARAM)&tbb);
 	}
 
 	inline BOOL CToolBar::AddButtons(UINT uNumButtons, LPTBBUTTON lpButtons) const
-	// Adds one or more buttons to a toolbar.
+	// Adds one or more buttons to a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_ADDBUTTONS, (LPARAM)uNumButtons, (WPARAM)lpButtons);
 	}
 
 	inline int CToolBar::AddString(UINT nStringID) const
-	// Adds a new string, passed as a resource ID, to the toolbar's internal list of strings.
+	// Adds a new string, passed as a resource ID, to the ToolBar's internal list of strings.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_ADDSTRING, (LPARAM)GetApp()->GetResourceHandle(), (WPARAM)nStringID);
 	}
 
 	inline int CToolBar::AddStrings(LPCTSTR lpszStrings) const
-	// Adds a new string or strings to the list of strings available for a toolbar control.
+	// Adds a new string or strings to the list of strings available for a ToolBar control.
 	// Strings in the buffer must be separated by a null character. You must ensure that the last string has two null terminators.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -248,14 +248,14 @@ namespace Win32xx
 	}
 
 	inline void CToolBar::Autosize() const
-	// Causes a toolbar to be resized.
+	// Causes a ToolBar to be resized.
 	{
 		assert(::IsWindow(m_hWnd));
 		SendMessage(TB_AUTOSIZE, 0L, 0L);
 	}
 
 	inline void CToolBar::CheckButton(int idButton, BOOL fCheck) const
-	// Checks or unchecks a given button in a toolbar.
+	// Checks or unchecks a given button in a ToolBar.
 	// When a button is checked, it is displayed in the pressed state.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -272,7 +272,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::DeleteButton(int iButton) const
-	// Deletes a button from the toolbar.
+	// Deletes a button from the ToolBar.
 	// iButton is the Zero-based index of the button to delete.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -287,7 +287,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::DisableButton(int idButton) const
-	// Disables the specified button in a toolbar
+	// Disables the specified button in a ToolBar
 	// An example of idButton would be IDM_FILE_OPEN
 	{
 		assert(::IsWindow(m_hWnd));
@@ -295,28 +295,28 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::EnableButton(int idButton) const
-	// Enables the specified button in a toolbar
+	// Enables the specified button in a ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_ENABLEBUTTON, (WPARAM)idButton, (LPARAM) MAKELONG(TRUE,0 ));
 	}
 
 	inline BOOL CToolBar::GetButton(int iButton, LPTBBUTTON lpButton) const
-	// Recieves the TBBUTTON structure information from the specified button
+	// Receives the TBBUTTON structure information from the specified button
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_GETBUTTON, (LPARAM)iButton, (WPARAM)lpButton);
 	}
 
 	inline int CToolBar::GetButtonCount() const
-	// Retrieves a count of the buttons currently in the toolbar
+	// Retrieves a count of the buttons currently in the ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_BUTTONCOUNT, 0L, 0L);
 	}
 
 	inline DWORD CToolBar::GetButtonSize() const
-	// Retrieves the current width and height of toolbar buttons, in pixels.
+	// Retrieves the current width and height of ToolBar buttons, in pixels.
 	// Returns a DWORD value that contains the width and height values in the low word and high word, respectively.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -339,8 +339,8 @@ namespace Win32xx
 	}
 
 	inline BYTE CToolBar::GetButtonStyle(int idButton) const
-	//	Get the the style of the toolbar control. The following button styles are supported:
-	//	TBSTYLE_BUTTON		Standard pushbutton (default)
+	//	Get the the style of the ToolBar control. The following button styles are supported:
+	//	TBSTYLE_BUTTON		Standard push button (default)
 	//	TBSTYLE_SEP			Separator
 	//	TBSTYLE_CHECK		Auto check-box button
 	//	TBSTYLE_GROUP		Marks the start of a group of buttons
@@ -359,7 +359,7 @@ namespace Win32xx
 	}
 
 	inline CString CToolBar::GetButtonText(int idButton) const
-	// Retrieves the display text of a button on a toolbar.
+	// Retrieves the display text of a button on a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 
@@ -372,7 +372,7 @@ namespace Win32xx
 	}
 
 	inline int CToolBar::GetCommandID(int iIndex) const
-	// Retrieves information about the specified button in a toolbar
+	// Retrieves information about the specified button in a ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
 		TBBUTTON tbb = {0};
@@ -383,35 +383,35 @@ namespace Win32xx
 	}
 
 	inline HIMAGELIST CToolBar::GetDisabledImageList() const
-	// Retrieves the image list that a toolbar control uses to display inactive buttons.
+	// Retrieves the image list that a ToolBar control uses to display inactive buttons.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
 	}
 
 	inline HIMAGELIST CToolBar::GetHotImageList() const
-	// Retrieves the image list that a toolbar control uses to display hot buttons.
+	// Retrieves the image list that a ToolBar control uses to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
 	}
 
 	inline int CToolBar::GetHotItem() const
-	// Retrieves the index of the hot item in a toolbar, or -1 if no hot item is set.
+	// Retrieves the index of the hot item in a ToolBar, or -1 if no hot item is set.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_GETHOTITEM, 0L, 0L);
 	}
 
 	inline HIMAGELIST CToolBar::GetImageList() const
-	// Retrieves the image list that a toolbar control uses to display buttons in their default state.
+	// Retrieves the image list that a ToolBar control uses to display buttons in their default state.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L);
 	}
 
 	inline CRect CToolBar::GetItemRect(int iIndex) const
-	// Retrieves the bounding rectangle of a button in a toolbar
+	// Retrieves the bounding rectangle of a button in a ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
 		CRect rc;
@@ -424,7 +424,7 @@ namespace Win32xx
 	}
 
 	inline CSize CToolBar::GetMaxSize() const
-	// Retrieves the total size of all of the visible buttons and separators in the toolbar
+	// Retrieves the total size of all of the visible buttons and separators in the ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
 		CSize sz;
@@ -449,7 +449,7 @@ namespace Win32xx
 	}
 
 	inline CRect CToolBar::GetRect(int idButton) const
-	// Retrieves the bounding rectangle for a specified toolbar button.
+	// Retrieves the bounding rectangle for a specified ToolBar button.
 	{
 		assert(::IsWindow(m_hWnd));
 		CRect rc;
@@ -458,21 +458,21 @@ namespace Win32xx
 	}
 
 	inline int CToolBar::GetRows() const
-	// Retrieves the number of rows of buttons in a toolbar with the TBSTYLE_WRAPABLE style.
+	// Retrieves the number of rows of buttons in a ToolBar with the TBSTYLE_WRAPABLE style.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_GETROWS, 0L, 0L);
 	}
 
 	inline int CToolBar::GetTextRows() const
-	// Retrieves the maximum number of text rows that can be displayed on a toolbar button.
+	// Retrieves the maximum number of text rows that can be displayed on a ToolBar button.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_GETTEXTROWS, 0L, 0L);
 	}
 
 	inline CToolTip* CToolBar::GetToolTips() const
-	// Retrieves the handle to the ToolTip control, if any, associated with the toolbar.
+	// Retrieves the handle to the ToolTip control, if any, associated with the ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (CToolTip*)FromHandle( (HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L) );
@@ -494,14 +494,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::HideButton(int idButton, BOOL fShow) const
-	//Hides or shows the specified button in a toolbar.
+	//Hides or shows the specified button in a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_HIDEBUTTON, (WPARAM)idButton, (LPARAM)MAKELONG (fShow, 0));
 	}
 
 	inline int CToolBar::HitTest() const
-	// Determines where a point lies in a toolbar control.
+	// Determines where a point lies in a ToolBar control.
 
 	// We do our own hit test since TB_HITTEST is a bit buggy,
 	// and also doesn't work at all on earliest versions of Win95
@@ -524,49 +524,49 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::Indeterminate(int idButton, BOOL fIndeterminate) const
-	//Hides or shows the specified button in a toolbar.
+	//Hides or shows the specified button in a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_INDETERMINATE, (WPARAM)idButton, (LPARAM)MAKELONG (fIndeterminate, 0));
 	}
 
 	inline BOOL CToolBar::InsertButton(int iButton, LPTBBUTTON lpButton) const
-	// Inserts a button in a toolbar.
+	// Inserts a button in a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_INSERTBUTTON, (WPARAM)iButton, (LPARAM)lpButton);
 	}
 
 	inline BOOL CToolBar::IsButtonHidden(int idButton) const
-	// Determines whether the specified button in a toolbar is hidden.
+	// Determines whether the specified button in a ToolBar is hidden.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_ISBUTTONHIDDEN, (WPARAM)idButton, 0L);
 	}
 
 	inline BOOL CToolBar::IsButtonHighlighted(int idButton) const
-	// Checks the highlight state of a toolbar button.
+	// Checks the highlight state of a ToolBar button.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_ISBUTTONHIGHLIGHTED, (WPARAM)idButton, 0L);
 	}
 
 	inline BOOL CToolBar::IsButtonIndeterminate(int idButton) const
-	// Determines whether the specified button in a toolbar is indeterminate.
+	// Determines whether the specified button in a ToolBar is indeterminate.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_ISBUTTONINDETERMINATE, (WPARAM)idButton, 0L);
 	}
 
 	inline BOOL CToolBar::IsButtonPressed(int idButton) const
-	// Determines whether the specified button in a toolbar is pressed.
+	// Determines whether the specified button in a ToolBar is pressed.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_ISBUTTONPRESSED, (WPARAM)idButton, 0L);
 	}
 
 	inline int CToolBar::MapAccelerator(TCHAR chAccel) const
-	// Determines whether the specified button in a toolbar is pressed.
+	// Determines whether the specified button in a ToolBar is pressed.
 	{
 		assert(::IsWindow(m_hWnd));
 		int uButtonID;
@@ -580,7 +580,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::MarkButton(int idButton) const
-	// Sets the highlight state of a given button in a toolbar control.
+	// Sets the highlight state of a given button in a ToolBar control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_MARKBUTTON, (WPARAM)idButton, 0L);
@@ -599,8 +599,8 @@ namespace Win32xx
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
-		// allows buttons to have a separate dropdown arrow
-		// Note: TBN_DROPDOWN notification is sent by a toolbar control when the user clicks a dropdown button
+		// allows buttons to have a separate drop-down arrow
+		// Note: TBN_DROPDOWN notification is sent by a ToolBar control when the user clicks a drop-down button
 		SendMessage(TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
 
 		// Turn of Double click processing (i.e. treat a double click as two single clicks)
@@ -608,7 +608,7 @@ namespace Win32xx
 		dwStyle &= 	~CS_DBLCLKS;
 		SetClassLongPtr(GCL_STYLE, dwStyle);
 
-		// Add extra styles for toolbars inside a rebar
+		// Add extra styles for ToolBars inside a ReBar
 		if (lstrcmp(GetParent()->GetClassName(), _T("ReBarWindow32")) == 0)
 		{
 			DWORD style = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -643,7 +643,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::PressButton(int idButton, BOOL fPress) const
-	// Presses or releases the specified button in a toolbar.
+	// Presses or releases the specified button in a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_PRESSBUTTON, (WPARAM)idButton, (LPARAM)MAKELONG(fPress, 0));
@@ -678,7 +678,7 @@ namespace Win32xx
 	}
 
 	inline void CToolBar::SaveRestore(BOOL fSave, TBSAVEPARAMS* ptbsp) const
-	// Presses or releases the specified button in a toolbar.
+	// Presses or releases the specified button in a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		SendMessage(TB_PRESSBUTTON, (WPARAM)fSave, (LPARAM)ptbsp);
@@ -709,7 +709,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::SetBitmapSize(int cx, int cy) const
-	// Sets the size of the bitmapped images to be added to a toolbar.
+	// Sets the size of the bitmapped images to be added to a ToolBar.
 
 	// Needs to be used when the image size is not the default 16 x 15
 	// Call this function before using AddBitmap or ReplaceBitmap
@@ -719,7 +719,7 @@ namespace Win32xx
 	}
 
 	inline int CToolBar::SetButtons(const std::vector<UINT>& vToolBarData) const
-	// Assigns a resource ID to each toolbar button
+	// Assigns a resource ID to each ToolBar button
 	{
 		assert(::IsWindow(m_hWnd));
 
@@ -735,7 +735,7 @@ namespace Win32xx
 
 		if (iNumButtons > 0)
 		{
-			// TBBUTTON structure for each button in the toolbar
+			// TBBUTTON structure for each button in the ToolBar
 			TBBUTTON tbb = {0};
 
 			for (UINT j = 0 ; j < iNumButtons; ++j)
@@ -755,7 +755,7 @@ namespace Win32xx
 					tbb.fsStyle = TBSTYLE_BUTTON;
 				}
 
-				// Add the button to the toolbar
+				// Add the button to the ToolBar
 				if (SendMessage(TB_ADDBUTTONS, 1L, (LPARAM)&tbb))
 					iImages++;
 				else
@@ -767,8 +767,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
-	// Sets the size of the buttons to be added to a toolbar
-	// The size can be set only before adding any buttons to the toolbar
+	// Sets the size of the buttons to be added to a ToolBar
+	// The size can be set only before adding any buttons to the ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy));
@@ -814,8 +814,8 @@ namespace Win32xx
  	}
 
 	inline BOOL CToolBar::SetButtonStyle(int idButton, BYTE Style) const
-	//	The the style of the toolbar control. The following button styles are supported:
-	//	TBSTYLE_BUTTON		Standard pushbutton (default)
+	//	The the style of the ToolBar control. The following button styles are supported:
+	//	TBSTYLE_BUTTON		Standard push button (default)
 	//	TBSTYLE_SEP			Separator
 	//	TBSTYLE_CHECK		Auto check-box button
 	//	TBSTYLE_GROUP		Marks the start of a group of buttons
@@ -837,7 +837,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::SetButtonText(int idButton, LPCTSTR szText)
-	// This rather convoluted approach to setting toolbar button text supports
+	// This rather convoluted approach to setting ToolBar button text supports
 	// all versions of Windows, including Win95 with COMCTL32.DLL version 4.0
 	{
 		assert(::IsWindow(m_hWnd));
@@ -924,7 +924,7 @@ namespace Win32xx
 		tbbi.cx = (WORD)nWidth;
 		BOOL bResult = (BOOL)SendMessage(TB_SETBUTTONINFO, (WPARAM)idButton, (LPARAM)&tbbi);
 
-		// Send a changed message to the parent (used by the rebar)
+		// Send a changed message to the parent (used by the ReBar)
 		SIZE MaxSize = GetMaxSize();
 		GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
@@ -932,28 +932,28 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::SetCommandID(int iIndex, int idButton) const
-	// Sets the command identifier of a toolbar button
+	// Sets the command identifier of a ToolBar button
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETCMDID, iIndex, idButton);
 	}
 
 	inline HIMAGELIST CToolBar::SetDisableImageList(HIMAGELIST himlNewDisabled) const
-	// Sets the image list that the toolbar control will use to display disabled buttons.
+	// Sets the ImageList that the ToolBar control will use to display disabled buttons.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlNewDisabled);
 	}
 
 	inline DWORD CToolBar::SetDrawTextFlags(DWORD dwMask, DWORD dwDTFlags) const
-	// Sets the text drawing flags for the toolbar.
+	// Sets the text drawing flags for the ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (DWORD)SendMessage(TB_SETDRAWTEXTFLAGS, (WPARAM)dwMask, (LPARAM)dwDTFlags);
 	}
 
 	inline DWORD CToolBar::SetExtendedStyle(DWORD dwExStyle) const
-	// Sets the text drawing flags for the toolbar.
+	// Sets the text drawing flags for the ToolBar.
 	// Extended styles include: TBSTYLE_EX_DRAWDDARROWS, TBSTYLE_EX_HIDECLIPPEDBUTTONS, TBSTYLE_EX_DOUBLEBUFFER and TBSTYLE_EX_MIXEDBUTTONS
 	{
 		assert(::IsWindow(m_hWnd));
@@ -961,28 +961,28 @@ namespace Win32xx
 	}
 
 	inline HIMAGELIST CToolBar::SetHotImageList(HIMAGELIST himlNewHot) const
-	// Sets the image list that the toolbar control will use to display hot buttons.
+	// Sets the image list that the ToolBar control will use to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot);
 	}
 
 	inline int CToolBar::SetHotItem(int iHot) const
-	// Sets the hot item in a toolbar.
+	// Sets the hot item in a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (int)SendMessage(TB_SETHOTITEM, (WPARAM)iHot, 0L);
 	}
 
 	inline HIMAGELIST CToolBar::SetImageList(HIMAGELIST himlNew) const
-	// Sets the image list that the toolbar will use to display buttons that are in their default state.
+	// Sets the image list that the ToolBar will use to display buttons that are in their default state.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNew);
 	}
 
 	inline BOOL CToolBar::SetImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
-	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
+	// Either sets the ImageList or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = height, minimum width = 16
 	// Assumes buttons have been already been added via AddToolBarButton
 	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
@@ -994,7 +994,7 @@ namespace Win32xx
 		// ToolBar ImageLists require Comctl32.dll version 4.7 or later
 		if (GetComCtlVersion() < 470)
 		{
-			// We are using COMCTL32.DLL version 4.0, so we can't use an imagelist.
+			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
 			// Instead we simply set the bitmap.
 			return SetBitmap(ToolBarID);
 		}
@@ -1056,7 +1056,7 @@ namespace Win32xx
 				SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolBarDis);
 			}
 
-			// Inform the parent of the change (rebar needs this)
+			// Inform the parent of the change (ReBar needs this)
 			SIZE MaxSize = GetMaxSize();
 			GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 		}
@@ -1065,28 +1065,28 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::SetIndent(int iIndent) const
-	// Sets the indentation for the first button in a toolbar control.
+	// Sets the indentation for the first button in a ToolBar control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETINDENT, (WPARAM)iIndent, 0L);
 	}
 
 	inline BOOL CToolBar::SetMaxTextRows(int iMaxRows) const
-	// Sets the maximum number of text rows displayed on a toolbar button.
+	// Sets the maximum number of text rows displayed on a ToolBar button.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETMAXTEXTROWS, (WPARAM)iMaxRows, 0L);
 	}
 
 	inline BOOL CToolBar::SetPadding(int cx, int cy) const
-	// Sets the padding for a toolbar control.
+	// Sets the padding for a ToolBar control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETPADDING, 0L, (WPARAM)MAKELONG(cx, cy));
 	}
 
 	inline void CToolBar::SetToolTips(CToolTip* pToolTip) const
-	// Associates a ToolTip control with a toolbar.
+	// Associates a ToolTip control with a ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
@@ -1099,8 +1099,8 @@ namespace Win32xx
 		{
 		case WM_WINDOWPOSCHANGING:
 			{
-			//	Required by Rebar controls to adjust Toolbar window size
-				GetParent()->SendMessageW(UWM_TBWINDOWPOSCHANGING, (WPARAM)m_hWnd, lParam);
+			//	Required by ReBar controls to adjust ToolBar window size
+				GetParent()->SendMessage(UWM_TBWINDOWPOSCHANGING, (WPARAM)m_hWnd, lParam);
 			}
 			break;
 		}

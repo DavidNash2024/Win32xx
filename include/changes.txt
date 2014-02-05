@@ -40,6 +40,8 @@ New Features and Enhancements
 Changes in detail
 -----------------
 - Added CFrame::CustomDrawToolBar
+- Added CFrame::GetToolBarTheme
+- Added CFrame::SetToolBarTheme
 - Added CRect operator LPCRECT()
 - Added CTab::SetFont
 - Added CToolBar::SetButtonInfo

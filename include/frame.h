@@ -410,6 +410,8 @@ namespace Win32xx
 		virtual MenuTheme& GetMenuTheme() const			{ return (MenuTheme&) m_ThemeMenu; }
 		virtual ReBarTheme& GetReBarTheme()	const		{ return (ReBarTheme&)GetReBar().GetReBarTheme(); }
 	//	virtual ToolBarTheme& GetToolBarTheme() const	{ return (ToolBarTheme&)GetToolBar().GetToolBarTheme(); }
+		void SetToolBarTheme(ToolBarTheme tbt) { m_ToolBarTheme = tbt; GetToolBar().GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN); }
+		ToolBarTheme GetToolBarTheme() const { return m_ToolBarTheme; }
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the menubar, rebar,
