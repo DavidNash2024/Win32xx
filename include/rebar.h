@@ -40,6 +40,7 @@
 
 #include "wincore.h"
 #include "gdi.h"
+#include "controls.h"
 
 
 namespace Win32xx
@@ -686,13 +687,9 @@ namespace Win32xx
 				// Adjust size for toolbars inside a rebar
 				{
 					ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
-					CToolBar* pTB = (CToolBar*)FromHandle((HWND)wParam);
-
-					if (pTheme && pTheme->UseThemes && pTheme->ShortBands)
-					{
-						LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-						pWinPos->cx = pTB->GetMaxSize().cx+2;
-					}
+				
+					// A boolean expression
+					return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
 				}
 			}
 			break;

@@ -41,6 +41,7 @@
 
 #include "wincore.h"
 #include "commctrl.h"
+#include "controls.h"
 
 namespace Win32xx
 {

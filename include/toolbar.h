@@ -40,6 +40,7 @@
 
 #include "wincore.h"
 #include "gdi.h"
+#include "controls.h"
 
 
 namespace Win32xx
@@ -1100,7 +1101,11 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGING:
 			{
 			//	Required by ReBar controls to adjust ToolBar window size
-				GetParent()->SendMessage(UWM_TBWINDOWPOSCHANGING, (WPARAM)m_hWnd, lParam);
+				if ( GetParent()->SendMessage(UWM_TBWINDOWPOSCHANGING, (WPARAM)m_hWnd, lParam) )
+				{
+					LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+					pWinPos->cx = GetMaxSize().cx+2;
+				}
 			}
 			break;
 		}

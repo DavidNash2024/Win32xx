@@ -42,6 +42,8 @@
 
 #include "wincore.h"
 #include "commctrl.h"
+#include "controls.h"
+
 
 // Disable macros from Windowsx.h
 #undef GetNextSibling
