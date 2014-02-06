@@ -331,7 +331,7 @@ namespace Win32xx
 	{
 		BOOL Erase = TRUE;
 		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
-		if (! pTheme || !pTheme->UseThemes)
+		if (!pTheme || !pTheme->UseThemes)
 			Erase = FALSE;
 
 		if (!pTheme->clrBkgnd1 && !pTheme->clrBkgnd2 && !pTheme->clrBand1 && !pTheme->clrBand2)

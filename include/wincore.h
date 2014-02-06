@@ -1501,8 +1501,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		CString str;
-		LPTSTR szStr = str.GetBuffer(MAX_STRING_SIZE+1);
-		::GetClassName(m_hWnd, szStr, MAX_STRING_SIZE+1);
+		::GetClassName(m_hWnd, str.GetBuffer(MAX_STRING_SIZE), MAX_STRING_SIZE);
 		str.ReleaseBuffer();
 		return str;
 	}
@@ -1514,8 +1513,7 @@ namespace Win32xx
 
 		int nLength = ::GetWindowTextLength(::GetDlgItem(m_hWnd, nIDDlgItem));
 		CString str;
-		LPTSTR szStr = str.GetBuffer(nLength+1);
-		::GetDlgItemText(m_hWnd, nIDDlgItem, szStr, nLength+1);
+		::GetDlgItemText(m_hWnd, nIDDlgItem, str.GetBuffer(nLength), nLength+1);
 		str.ReleaseBuffer();
 		return str;
 	}
@@ -1527,15 +1525,15 @@ namespace Win32xx
 
 		int nLength = ::GetWindowTextLength(m_hWnd);
 		CString str;
-		LPTSTR szStr = str.GetBuffer(nLength+1);
-		::GetWindowText(m_hWnd, szStr, nLength+1);
+		::GetWindowText(m_hWnd, str.GetBuffer(nLength), nLength+1);
 		str.ReleaseBuffer();
 		return str;
 	}
 
 	inline void CWnd::OnClose()
 	// Called in response to WM_CLOSE. Override to suppress destroying the window
-	// A WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking the red X
+	// A WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking X
+	//  in the top right corner. Usually, only top level windows send a WM_CLOSE.
 	{
 		::DestroyWindow(m_hWnd);
 	}

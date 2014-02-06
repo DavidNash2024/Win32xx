@@ -53,7 +53,6 @@ void CMainFrame::AddCombo()
 
 void CMainFrame::ChooseColor(UINT nColor)
 {
-	CMenuBar& MB = GetMenuBar();
 	m_nColor = nColor;
 
 	switch (nColor)
@@ -66,7 +65,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -78,7 +76,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -90,7 +87,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -102,7 +98,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -114,7 +109,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -126,7 +120,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -138,7 +131,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -150,7 +142,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 		break;
@@ -162,7 +153,6 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetToolBarTheme(tt);
 
 			MenuTheme mt = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
-			MB.SetMenuBarTheme(mt);
 			SetMenuTheme(mt);
 		}
 	}

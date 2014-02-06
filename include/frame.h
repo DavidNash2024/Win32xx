@@ -252,15 +252,12 @@ namespace Win32xx
 		CMenuBar();
 		virtual ~CMenuBar();
 		virtual void SetMenu(HMENU hMenu);
-		virtual void SetMenuBarTheme(MenuTheme& Theme);
 
 		HMENU GetMenu() const {return m_hTopMenu;}
-		MenuTheme& GetMenuBarTheme() {return m_ThemeMenu;}
 
 	protected:
 	//Overridables
 		virtual void OnCreate();
-		virtual LRESULT OnCustomDraw(NMHDR* pNMHDR);
 		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
@@ -310,7 +307,6 @@ namespace Win32xx
 		int   m_nHotItem;		// hot item
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		CPoint m_OldMousePos;	// old Mouse position
-		MenuTheme m_ThemeMenu;	// Theme structure
 		CFrame* m_pFrame;       // Pointer to the frame
 
 	};  // class CMenuBar
@@ -419,30 +415,11 @@ namespace Win32xx
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
-		MenuTheme& GetMenuTheme() const				{ return (MenuTheme&)m_ThemeMenu; }
+		MenuTheme& GetMenuBarTheme() const			{ return (MenuTheme&)m_MenuBarTheme; }
 		ReBarTheme& GetReBarTheme() const			{ return (ReBarTheme&)m_ReBarTheme; }
 		ToolBarTheme& GetToolBarTheme() const		{ return (ToolBarTheme&)m_ToolBarTheme; }
-		void SetReBarTheme(ReBarTheme rbt) 
-		{ 
-			m_ReBarTheme = rbt; 
-			if (IsWindow())
-			{
-				int nBand = GetReBar().GetBand(GetMenuBar());
-				if (m_ReBarTheme.LockMenuBand)
-					GetReBar().ShowGripper(nBand, FALSE);
-				else
-					GetReBar().ShowGripper(nBand, TRUE);
-		
-				Invalidate();
-			}
-		}
-		void SetToolBarTheme(ToolBarTheme tbt) 
-		{ 
-			m_ToolBarTheme = tbt;
-			if (GetToolBar().IsWindow())
-				GetToolBar().GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN); 
-		}
-		
+		void SetReBarTheme(ReBarTheme rbt); 
+		void SetToolBarTheme(ToolBarTheme tbt);
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
 		CMenu& GetFrameMenu() const					{ return (CMenu&)m_Menu; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
@@ -453,9 +430,9 @@ namespace Win32xx
 		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme& Theme);
 		void SetView(CWnd& wndView);
-		BOOL IsMenuBarUsed() const		{ return (GetMenuBar() != 0); }
-		BOOL IsReBarSupported() const	{ return (GetComCtlVersion() > 470); }
-		BOOL IsReBarUsed() const		{ return (GetReBar() != 0); }
+		BOOL IsMenuBarUsed() const					{ return (GetMenuBar() != 0); }
+		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
+		BOOL IsReBarUsed() const					{ return (GetReBar() != 0); }
 
 	protected:
 		// Override these functions as required
@@ -466,6 +443,7 @@ namespace Win32xx
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
 		virtual void CreateToolBar();
+		virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
 		virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
 		virtual void DrawMenuItem(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis);
@@ -523,7 +501,6 @@ namespace Win32xx
 		BOOL m_bUseToolBar;					// set to TRUE if the toolbar is used
 		BOOL m_bShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
 		BOOL m_bShowToolBar;				// A flag to indicate if the ToolBar should be displayed
-		MenuTheme m_ThemeMenu;				// Theme structure for popup menus
 		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
 		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
 
@@ -554,11 +531,10 @@ namespace Win32xx
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
-		MenuTheme m_MenuBarTheme;			// struct of theme info for the Menu or MenuBar
+		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
 		
-
 	};  // class CFrame
 
 }
@@ -585,8 +561,6 @@ namespace Win32xx
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 		m_hPopupMenu	= 0;
-
-		ZeroMemory(&m_ThemeMenu, sizeof(MenuTheme));
 	}
 
 	inline CMenuBar::~CMenuBar()
@@ -898,109 +872,6 @@ namespace Win32xx
 
 		m_pFrame = (CFrame*)GetAncestor();
 		assert(m_pFrame);
-	}
-
-	inline LRESULT CMenuBar::OnCustomDraw(NMHDR* pNMHDR)
-	// CustomDraw is used to render the MenuBar's toolbar buttons
-	{
-		if (m_ThemeMenu.UseThemes)
-		{
-			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-
-			switch (lpNMCustomDraw->nmcd.dwDrawStage)
-			{
-			// Begin paint cycle
-			case CDDS_PREPAINT:
-				// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
-				return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
-
-			// An item is about to be drawn
-			case CDDS_ITEMPREPAINT:
-				{
-					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
-					CRect rcRect = lpNMCustomDraw->nmcd.rc;
-					int nState = lpNMCustomDraw->nmcd.uItemState;
-					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
-
-					// Leave a pixel gap above and below the drawn rectangle
-					if (IsAeroThemed())
-						rcRect.InflateRect(0, -2);
-					else
-						rcRect.InflateRect(0, -1);
-
-					if (IsMDIChildMaxed() && (0 == dwItem))
-					// Draw over MDI Max button
-					{
-						HICON hIcon = (HICON)GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
-						if (NULL == hIcon)
-							hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
-
-						int cx = ::GetSystemMetrics (SM_CXSMICON);
-						int cy = ::GetSystemMetrics (SM_CYSMICON);
-						int y = 1 + (GetWindowRect().Height() - cy)/2;
-						int x = (rcRect.Width() - cx)/2;
-						DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
-
-						DrawDC.Detach();
-						return CDRF_SKIPDEFAULT;  // No further drawing
-					}
-
-					else if (nState & (CDIS_HOT | CDIS_SELECTED))
-					{
-						if ((nState & CDIS_SELECTED) || (GetButtonState(dwItem) & TBSTATE_PRESSED))
-						{
-							DrawDC.GradientFill(m_ThemeMenu.clrPressed1, m_ThemeMenu.clrPressed2, rcRect, FALSE);
-						}
-						else if (nState & CDIS_HOT)
-						{
-							DrawDC.GradientFill(m_ThemeMenu.clrHot1, m_ThemeMenu.clrHot2, rcRect, FALSE);
-						}
-
-						// Draw border
-						DrawDC.CreatePen(PS_SOLID, 1, m_ThemeMenu.clrOutline);
-						DrawDC.MoveTo(rcRect.left, rcRect.bottom);
-						DrawDC.LineTo(rcRect.left, rcRect.top);
-						DrawDC.LineTo(rcRect.right-1, rcRect.top);
-						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
-						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
-						DrawDC.LineTo(rcRect.left, rcRect.bottom);
-
-						CString str;
-						int nLength = (int)SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
-						if (nLength > 0) 
-						{
-							SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
-							str.ReleaseBuffer();
-						}
-
-						// Draw highlight text
-						CFont* pFont = GetFont();
-						DrawDC.SelectObject(pFont);
-
-						rcRect.bottom += 1;
-						int iMode = DrawDC.SetBkMode(TRANSPARENT);
-						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-
-						DrawDC.SetBkMode(iMode);
-						DrawDC.Detach();
-						return CDRF_SKIPDEFAULT;  // No further drawing
-					}
-					DrawDC.Detach();
-				}
-				return CDRF_DODEFAULT ;   // Do default drawing
-
-			// Painting cycle has completed
-			case CDDS_POSTPAINT:
-				// Draw MDI Minimise, Restore and Close buttons
-				{
-					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
-					DrawAllMDIButtons(DrawDC);
-					DrawDC.Detach();
-				}
-				break;
-			}
-		}
-		return 0L;
 	}
 
 	inline void CMenuBar::OnKeyDown(WPARAM wParam, LPARAM lParam)
@@ -1338,11 +1209,6 @@ namespace Win32xx
 
 		switch (((LPNMHDR)lParam)->code)
 		{
-		case NM_CUSTOMDRAW:
-			{
-				return OnCustomDraw((LPNMHDR) lParam);
-			}
-
 		case TBN_DROPDOWN:
 			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
 			PostMessage(UWM_POPUPMENU, 0L, 0L);
@@ -1470,7 +1336,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CMenuBar::SetMenuBarTheme(MenuTheme& Theme)
+/*	inline void CMenuBar::SetMenuBarTheme(MenuTheme& Theme)
 	{
 		m_ThemeMenu.UseThemes   = Theme.UseThemes;
 		m_ThemeMenu.clrHot1     = Theme.clrHot1;
@@ -1481,7 +1347,7 @@ namespace Win32xx
 
 		if (IsWindow())
 			Invalidate();
-	}
+	} */
 
 	inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
@@ -1576,11 +1442,6 @@ namespace Win32xx
 				return 0L;
 			}
 			break;
-		case UWM_GETMENUTHEME:
-			{
-				MenuTheme& tm = GetMenuBarTheme();
-				return (LRESULT)&tm;
-			}
 		case WM_WINDOWPOSCHANGED:
 			OnWindowPosChanged();
 			break;
@@ -1897,7 +1758,7 @@ namespace Win32xx
 		                m_himlMenuDis(0), m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1),
 						m_bDrawArrowBkgrnd(FALSE)
 	{
-		ZeroMemory(&m_ThemeMenu, sizeof(m_ThemeMenu));
+		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
 		ZeroMemory(&m_ToolBarTheme, sizeof(m_ToolBarTheme));
 
@@ -2178,6 +2039,109 @@ namespace Win32xx
 		}
 	}
 
+	inline LRESULT CFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
+	// CustomDraw is used to render the MenuBar's toolbar buttons
+	{
+		if (m_MenuBarTheme.UseThemes)
+		{
+			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+
+			switch (lpNMCustomDraw->nmcd.dwDrawStage)
+			{
+			// Begin paint cycle
+			case CDDS_PREPAINT:
+				// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
+				return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
+
+			// An item is about to be drawn
+			case CDDS_ITEMPREPAINT:
+				{
+					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
+					CRect rcRect = lpNMCustomDraw->nmcd.rc;
+					int nState = lpNMCustomDraw->nmcd.uItemState;
+					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+
+					// Leave a pixel gap above and below the drawn rectangle
+					if (IsAeroThemed())
+						rcRect.InflateRect(0, -2);
+					else
+						rcRect.InflateRect(0, -1);
+
+					if (GetMenuBar().IsMDIChildMaxed() && (0 == dwItem))
+					// Draw over MDI Max button
+					{
+						HICON hIcon = (HICON)GetMenuBar().GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
+						if (NULL == hIcon)
+							hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+
+						int cx = ::GetSystemMetrics (SM_CXSMICON);
+						int cy = ::GetSystemMetrics (SM_CYSMICON);
+						int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy)/2;
+						int x = (rcRect.Width() - cx)/2;
+						DrawDC.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+
+						DrawDC.Detach();
+						return CDRF_SKIPDEFAULT;  // No further drawing
+					}
+
+					else if (nState & (CDIS_HOT | CDIS_SELECTED))
+					{
+						if ((nState & CDIS_SELECTED) || (GetMenuBar().GetButtonState(dwItem) & TBSTATE_PRESSED))
+						{
+							DrawDC.GradientFill(m_MenuBarTheme.clrPressed1, m_MenuBarTheme.clrPressed2, rcRect, FALSE);
+						}
+						else if (nState & CDIS_HOT)
+						{
+							DrawDC.GradientFill(m_MenuBarTheme.clrHot1, m_MenuBarTheme.clrHot2, rcRect, FALSE);
+						}
+
+						// Draw border
+						DrawDC.CreatePen(PS_SOLID, 1, m_MenuBarTheme.clrOutline);
+						DrawDC.MoveTo(rcRect.left, rcRect.bottom);
+						DrawDC.LineTo(rcRect.left, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.top);
+						DrawDC.LineTo(rcRect.right-1, rcRect.bottom);
+						DrawDC.MoveTo(rcRect.right-1, rcRect.bottom);
+						DrawDC.LineTo(rcRect.left, rcRect.bottom);
+
+						CString str;
+						int nLength = (int)GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
+						if (nLength > 0) 
+						{
+							GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
+							str.ReleaseBuffer();
+						}
+
+						// Draw highlight text
+						CFont* pFont = GetMenuBar().GetFont();
+						DrawDC.SelectObject(pFont);
+
+						rcRect.bottom += 1;
+						int iMode = DrawDC.SetBkMode(TRANSPARENT);
+						DrawDC.DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+
+						DrawDC.SetBkMode(iMode);
+						DrawDC.Detach();
+						return CDRF_SKIPDEFAULT;  // No further drawing
+					}
+					DrawDC.Detach();
+				}
+				return CDRF_DODEFAULT ;   // Do default drawing
+
+			// Painting cycle has completed
+			case CDDS_POSTPAINT:
+				// Draw MDI Minimise, Restore and Close buttons
+				{
+					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
+					GetMenuBar().DrawAllMDIButtons(DrawDC);
+					DrawDC.Detach();
+				}
+				break;
+			}
+		}
+		return 0L;
+	}
+
 	inline LRESULT CFrame::CustomDrawToolBar(NMHDR* pNMHDR)
 	// With CustomDraw we manually control the drawing of each toolbar button
 	{
@@ -2371,7 +2335,7 @@ namespace Win32xx
 	{
 		MenuItemData* pmid = (MenuItemData*)pdis->itemData;
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
-		MenuTheme tm = GetMenuTheme();
+		MenuTheme tm = GetMenuBarTheme();
 		CDC DrawDC(pdis->hDC);
 
 		if (IsAeroThemed() && m_pMenuMetrics->IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
@@ -2452,7 +2416,7 @@ namespace Win32xx
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			CRect rcDraw = pdis->rcItem;
 			CDC* pDrawDC = FromHandle(pdis->hDC);
-			MenuTheme tm = GetMenuTheme();
+			MenuTheme tm = GetMenuBarTheme();
 
 			if ((bSelected) && (!bDisabled))
 			{
@@ -2475,7 +2439,7 @@ namespace Win32xx
 	{
 		CRect rc = pdis->rcItem;
 		UINT fType = ((MenuItemData*)pdis->itemData)->mii.fType;
-		MenuTheme tm = GetMenuTheme();
+		MenuTheme tm = GetMenuBarTheme();
 		CRect rcBk;
 		CDC* pDrawDC = FromHandle(pdis->hDC);
 
@@ -3203,10 +3167,10 @@ namespace Win32xx
 				CWnd* pWnd = FromHandle(((LPNMHDR)lParam)->hwndFrom);
 				if (dynamic_cast<CToolBar*>(pWnd))
 				{
-					if (((LPNMHDR)lParam)->hwndFrom != GetMenuBar().GetHwnd())
-					{
+					if (((LPNMHDR)lParam)->hwndFrom == GetMenuBar().GetHwnd())
+						return CustomDrawMenuBar((LPNMHDR)lParam);
+					else
 						return CustomDrawToolBar((LPNMHDR)lParam);
-					}
 				}
 			}
 			break;
@@ -3672,15 +3636,32 @@ namespace Win32xx
 
 	inline void CFrame::SetMenuTheme(MenuTheme& Theme)
 	{
-		m_ThemeMenu.UseThemes   = Theme.UseThemes;
-		m_ThemeMenu.clrHot1     = Theme.clrHot1;
-		m_ThemeMenu.clrHot2     = Theme.clrHot2;
-		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
-		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
-		m_ThemeMenu.clrOutline  = Theme.clrOutline;
+		// Sets the theme colors for the MenuBar and the popup Menu items
+		// Note: If Aero Themes are supported, they are used for popup menu items instead
+		m_MenuBarTheme.UseThemes   = Theme.UseThemes;
+		m_MenuBarTheme.clrHot1     = Theme.clrHot1;
+		m_MenuBarTheme.clrHot2     = Theme.clrHot2;
+		m_MenuBarTheme.clrPressed1 = Theme.clrPressed1;
+		m_MenuBarTheme.clrPressed2 = Theme.clrPressed2;
+		m_MenuBarTheme.clrOutline  = Theme.clrOutline;
 
-		GetMenuBar().SetMenuBarTheme(Theme); // Sets the theme for MenuBar buttons
-		Invalidate();
+		if (GetMenuBar().IsWindow())
+			GetMenuBar().Invalidate();
+	}
+
+	inline void CFrame::SetReBarTheme(ReBarTheme rbt) 
+	{ 
+		m_ReBarTheme = rbt; 
+		if (IsWindow())
+		{
+			int nBand = GetReBar().GetBand(GetMenuBar());
+			if (m_ReBarTheme.LockMenuBand)
+				GetReBar().ShowGripper(nBand, FALSE);
+			else
+				GetReBar().ShowGripper(nBand, TRUE);
+	
+			Invalidate();
+		}
 	}
 
 	inline void CFrame::SetStatusIndicators()
@@ -3885,6 +3866,13 @@ namespace Win32xx
 		AddToolBarButton( 0 );				// Separator
 		AddToolBarButton( IDM_HELP_ABOUT );
 */
+	}
+
+	inline void CFrame::SetToolBarTheme(ToolBarTheme tbt)
+	{ 
+		m_ToolBarTheme = tbt;
+		if (GetToolBar().IsWindow())
+			GetToolBar().GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN); 
 	}
 
 	inline void CFrame::SetView(CWnd& wndView)
@@ -4105,7 +4093,7 @@ namespace Win32xx
 			break;
 		case UWM_GETMENUTHEME:
 			{
-				MenuTheme& mt = GetMenuTheme();
+				MenuTheme& mt = m_MenuBarTheme;
 				return (LRESULT)&mt;
 			}
 		case UWM_GETREBARTHEME:
