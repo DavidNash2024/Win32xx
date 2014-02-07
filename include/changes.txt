@@ -23,6 +23,7 @@ New Features and Enhancements
       now assumed to be equal to its height or a minimum of 16.
    - The code for ToolBar and MenuBar themes has been moved to CFrame, making it
       easier to override.
+   - ToolBars for DockContainers automatically use the Frame's ToolBar theme.
 * Updated CWnd
    - Added OnClose. It is called automatically when a window asks to be closed.
    - Added OnDestroy. It is called automatically when a window is destroyed.

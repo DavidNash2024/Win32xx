@@ -46,21 +46,6 @@
 namespace Win32xx
 {
 
-	struct ReBarTheme
-	{
-		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrBkgnd1;		// Colour 1 for rebar background
-		COLORREF clrBkgnd2;		// Colour 2 for rebar background
-		COLORREF clrBand1;		// Colour 1 for rebar band background. Use NULL if not required
-		COLORREF clrBand2;		// Colour 2 for rebar band background. Use NULL if not required
-		BOOL FlatStyle;			// Bands are rendered with flat rather than raised style
-		BOOL BandsLeft;			// Position bands left on rearrange
-		BOOL LockMenuBand;		// Lock MenuBar's band in dedicated top row, without gripper
-		BOOL RoundBorders;		// Use rounded band borders
-		BOOL ShortBands;        // Allows bands to be shorter than maximum available width
-		BOOL UseLines;			// Displays horizontal lines between bands
-	};
-
 	////////////////////////////////////
 	// Declaration of the CReBar class
 	//

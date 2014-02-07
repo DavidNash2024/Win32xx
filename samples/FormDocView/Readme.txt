@@ -1,5 +1,5 @@
-FormDemo Example
-================
+FormDocView Example
+=========ddd=======
 This program has a frame window which includes a Tool Bar and 
 Status Bar.  A modeless dialog is used as the view window of our frame.
 

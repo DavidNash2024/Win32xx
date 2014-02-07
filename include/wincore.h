@@ -1395,6 +1395,11 @@ namespace Win32xx
 			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
 			if (wc.lpfnWndProc != GetApp()->m_Callback)
 			{
+				// Remove any CWnd from the map previously added by FromHandle
+				CWnd* pWnd = GetApp()->GetCWndFromMap(m_hWnd);
+				assert(pWnd != this);
+				if (pWnd) pWnd->Cleanup();
+
 				Subclass(m_hWnd);
 
 				// Send a message to force the HWND to be added to the map
@@ -1438,9 +1443,10 @@ namespace Win32xx
 	// Reverse an Attach
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(0 != m_PrevWindowProc);	// Only a subclassed window can be detached
+		assert(m_PrevWindowProc);	// Only previously attached CWnds can be detached
 
 		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+	
 		HWND hWnd = m_hWnd;
 		Cleanup();
 

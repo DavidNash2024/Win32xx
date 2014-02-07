@@ -4151,6 +4151,15 @@ namespace Win32xx
 						m_strTooltip = _T("");
 				}
 			}
+		case NM_CUSTOMDRAW:
+			{				
+				if (((LPNMHDR)lParam)->hwndFrom == GetToolBar().GetHwnd())
+				{
+					// Pass Toolbar's custom draw up to CFrame
+					CWnd* pWnd = FromHandle(((LPNMHDR)lParam)->hwndFrom);
+					return GetAncestor()->SendMessage(WM_NOTIFY, wParam, lParam);
+				}
+			}
 			break;
 		} // switch LPNMHDR
 

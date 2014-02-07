@@ -169,10 +169,6 @@ void CContainClasses::SetupToolBar()
 
 	// Add the ComboBarEx control to the toolbar
 	AddCombo();
-
-	// Match the Container's ToolBar theme to the MainFrame's toolbar theme
-	ToolBarTheme tt = GetContainerApp().GetMainFrame().GetToolBar().GetToolBarTheme();
-	GetToolBar().SetToolBarTheme(tt);
 }
 
 

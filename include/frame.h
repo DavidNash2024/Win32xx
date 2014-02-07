@@ -114,18 +114,6 @@ namespace Win32xx
 	// Declarations of structures for themes
 	//
 	
-	// defines colors for the MenuBar and popup menues.
-	// The popup menu colors are replaced by the Aero theme if available (Vista and above)
-	struct MenuTheme
-	{
-		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrHot1;		// Colour 1 for top menu. Color of selected menu item
-		COLORREF clrHot2;		// Colour 2 for top menu. Color of checkbox
-		COLORREF clrPressed1;	// Colour 1 for pressed top menu and side bar
-		COLORREF clrPressed2;	// Colour 2 for pressed top menu and side bar
-		COLORREF clrOutline;	// Colour for border outline
-	};
-
 	// define some structs and enums from uxtheme.h and vssym32.h
 	typedef struct _MARGINS
 	{

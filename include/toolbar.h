@@ -46,16 +46,6 @@
 namespace Win32xx
 {
 
-	struct ToolBarTheme
-	{
-		BOOL UseThemes;			// TRUE if themes are used
-		COLORREF clrHot1;		// Colour 1 for hot button
-		COLORREF clrHot2;		// Colour 2 for hot button
-		COLORREF clrPressed1;	// Colour 1 for pressed button
-		COLORREF clrPressed2;	// Colour 2 for pressed button
-		COLORREF clrOutline;	// Colour for border outline
-	};
-
 	////////////////////////////////////
 	// Declaration of the CToolBar class
 	//
