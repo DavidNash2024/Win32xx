@@ -667,7 +667,7 @@ namespace Win32xx
 				ResizeBand(GetBand(hToolBar), *pToolBarSize);
 			}
 			break;
-		case UWM_TBWINDOWPOSCHANGING:
+		case UWM_TBWINPOSCHANGING:
 			{
 				// Adjust size for toolbars inside a rebar
 				{

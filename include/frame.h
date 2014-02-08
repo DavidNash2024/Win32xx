@@ -239,16 +239,24 @@ namespace Win32xx
 	protected:
 	//Overridables
 		virtual void OnCreate();
-		virtual void OnKeyDown(WPARAM wParam, LPARAM lParam);
-		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
-		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnExitMenuLoop(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnInitMenuLoop(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnKeyDown(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual void OnMenuChar(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void OnMouseLeave();
-		virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual void OnSysCommand(WPARAM wParam, LPARAM lParam);
-		virtual void OnWindowPosChanged();
+		virtual LRESULT OnSysKeyDown(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysKeyUp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -257,7 +265,7 @@ namespace Win32xx
 		CMenuBar(const CMenuBar&);				// Disable copy construction
 		CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
 		void DoAltKey(WORD KeyCode);
-		void DoPopupMenu();
+		LRESULT OnPopupMenu();
 		void DrawAllMDIButtons(CDC& DrawDC);
 		void DrawMDIButton(CDC& DrawDC, int iButton, UINT uState);
 		void ExitMenu();
@@ -435,22 +443,24 @@ namespace Win32xx
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
-		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnExitMenuLoop();
-		virtual void OnHelp();
-		virtual void OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnExitMenuLoop(WPARAM wParam, LPARAM lParam);
+		virtual void	OnHelp();
+		virtual LRESULT OnHelp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
-		virtual void OnMenuSelect(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMenuSelect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void OnSetFocus();
-		virtual void OnSysColorChange();
+		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
-		virtual	void OnTimer(WPARAM wParam);
+		virtual	LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
 		virtual void OnViewStatusBar();
 		virtual void OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -564,7 +574,7 @@ namespace Win32xx
 			::MessageBeep(MB_OK);
 	}
 
-	inline void CMenuBar::DoPopupMenu()
+	inline LRESULT CMenuBar::OnPopupMenu()
 	{
 		if (m_bKeyMode)
 			// Simulate a down arrow key press
@@ -646,6 +656,8 @@ namespace Win32xx
 		// Re-establish Focus
 		if (m_bKeyMode)
 			GrabFocus();
+
+		return 0L;
 	}
 
 	inline void CMenuBar::DrawAllMDIButtons(CDC& DrawDC)
@@ -855,7 +867,28 @@ namespace Win32xx
 		assert(m_pFrame);
 	}
 
-	inline void CMenuBar::OnKeyDown(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenuBar::OnDrawItem(WPARAM wParam, LPARAM lParam)
+	{
+		m_pFrame->OnDrawItem(wParam, lParam);
+		return TRUE; // handled
+	}
+
+	inline LRESULT CMenuBar::OnExitMenuLoop(WPARAM wParam, LPARAM lParam)
+	{
+		if (m_bExitAfter)
+			ExitMenu();
+		m_pFrame->OnExitMenuLoop(wParam, lParam);
+		
+		return CToolBar::WndProcDefault(WM_EXITMENULOOP, wParam, lParam);
+	}
+
+	inline LRESULT CMenuBar::OnInitMenuLoop(WPARAM wParam, LPARAM lParam)
+	{
+		m_pFrame->OnInitMenuPopup(wParam, lParam);
+		return CToolBar::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+	}
+
+	inline LRESULT CMenuBar::OnKeyDown(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -904,11 +937,23 @@ namespace Win32xx
 			}
 			break;
 		} // switch (wParam)
+
+		return 0L;	// Discard these messages
 	}
 
-	inline void CMenuBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenuBar::OnKillFocus(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
+		ExitMenu();
+		return 0;
+	}
+
+	inline LRESULT CMenuBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
+	{
+		// Do default processing first
+		CallWindowProc(GetPrevWindowProc(), WM_LBUTTONDOWN, wParam, lParam);
 
 		GrabFocus();
 		m_nMDIButton = 0;
@@ -943,9 +988,11 @@ namespace Win32xx
 				}
 			}
 		}
+
+		return 0L;
 	}
 
-	inline void CMenuBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenuBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		CPoint pt;
@@ -986,6 +1033,14 @@ namespace Win32xx
 		}
 		m_nMDIButton = 0;
 		ExitMenu();
+
+		return CToolBar::WndProcDefault(WM_LBUTTONUP, wParam, lParam);
+	}
+
+	inline LRESULT CMenuBar::OnMeasureItem(WPARAM wParam, LPARAM lParam)
+	{
+		m_pFrame->OnMeasureItem(wParam, lParam);
+		return TRUE; // handled
 	}
 
 	inline BOOL CMenuBar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1118,7 +1173,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline void CMenuBar::OnMouseLeave()
+	inline LRESULT CMenuBar::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
 		if (IsMDIFrame())
 		{
@@ -1131,9 +1186,11 @@ namespace Win32xx
 				DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
 			}
 		}
+
+		return CWnd::WndProcDefault(WM_MOUSELEAVE, wParam, lParam);
 	}
 
-	inline void CMenuBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenuBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
@@ -1182,6 +1239,8 @@ namespace Win32xx
 				}
 			}
 		}
+
+		return CWnd::WndProcDefault(WM_MOUSEMOVE, wParam, lParam);
 	}
 
 	inline LRESULT CMenuBar::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
@@ -1233,8 +1292,52 @@ namespace Win32xx
 		return 0L;
 	} // CMenuBar::OnNotify(...)
 
-	inline void CMenuBar::OnWindowPosChanged()
+	inline void CMenuBar::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	{
+		if (SC_KEYMENU == wParam)
+		{
+			if (0 == lParam)
+			{
+				// Alt/F10 key toggled
+				GrabFocus();
+				m_bKeyMode = TRUE;
+				int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
+				SetHotItem(nMaxedOffset);
+			}
+			else
+				// Handle key pressed with Alt held down
+				DoAltKey((WORD)lParam);
+		}
+	}
+
+	inline LRESULT CMenuBar::OnSysKeyDown(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(lParam);
+
+		if ((VK_MENU == wParam) || (VK_F10 == wParam))
+			return 0L;
+
+		return CToolBar::WndProcDefault(WM_SYSKEYDOWN, wParam, lParam);
+	}
+
+	inline LRESULT CMenuBar::OnSysKeyUp(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(lParam);
+
+		if ((VK_MENU == wParam) || (VK_F10 == wParam))
+		{
+			ExitMenu();
+			return 0L;
+		}
+		
+		return CToolBar::WndProcDefault(WM_SYSKEYUP, wParam, lParam);
+	}	
+	
+	inline LRESULT CMenuBar::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		InvalidateRect(&m_MDIRect[0], TRUE);
 		InvalidateRect(&m_MDIRect[1], TRUE);
 		InvalidateRect(&m_MDIRect[2], TRUE);
@@ -1242,6 +1345,14 @@ namespace Win32xx
 			CClientDC MenuBarDC(this);
 			DrawAllMDIButtons(MenuBarDC);
 		}
+
+		return CToolBar::WndProcDefault(WM_WINDOWPOSCHANGED, wParam, lParam);
+	}
+
+	inline LRESULT CMenuBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+	{
+		// Bypass CToolBar::WndProcDefault for this message
+		return CWnd::WndProcDefault(WM_WINDOWPOSCHANGING, wParam, lParam);
 	}
 
 	inline void CMenuBar::PreCreate(CREATESTRUCT &cs)
@@ -1350,85 +1461,28 @@ namespace Win32xx
 		return CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
 	}
 
-	inline void CMenuBar::OnSysCommand(WPARAM wParam, LPARAM lParam)
-	{
-		if (SC_KEYMENU == wParam)
-		{
-			if (0 == lParam)
-			{
-				// Alt/F10 key toggled
-				GrabFocus();
-				m_bKeyMode = TRUE;
-				int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
-				SetHotItem(nMaxedOffset);
-			}
-			else
-				// Handle key pressed with Alt held down
-				DoAltKey((WORD)lParam);
-		}
-	}
-
 	inline LRESULT CMenuBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-		case WM_CHAR:
-			return 0L;  // Discard these messages
-		case WM_DRAWITEM:
-			m_pFrame->OnDrawItem(wParam, lParam);
-			return TRUE; // handled
-		case WM_EXITMENULOOP:
-			if (m_bExitAfter)
-				ExitMenu();
-			m_pFrame->OnExitMenuLoop();
-			break;
-		case WM_INITMENUPOPUP:
-			m_pFrame->OnInitMenuPopup(wParam, lParam);
-			break;
-		case WM_KEYDOWN:
-			OnKeyDown(wParam, lParam);
-			return 0L;	// Discard these messages
-		case WM_KILLFOCUS:
-			ExitMenu();
-			return 0L;
-		case WM_LBUTTONDOWN:
-			// Do default processing first
-			CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
+		case WM_CHAR:				return 0L;  // Discard these messages
+		case WM_DRAWITEM:			return OnDrawItem(wParam, lParam);
+		case WM_EXITMENULOOP:		return OnExitMenuLoop(wParam, lParam);
+		case WM_INITMENUPOPUP:		return OnInitMenuLoop(wParam, lParam);
+		case WM_KEYDOWN:			return OnKeyDown(wParam, lParam);
+		case WM_KILLFOCUS:			return OnKillFocus(wParam, lParam);
+		case WM_LBUTTONDOWN:		return OnLButtonDown(wParam, lParam);
+		case WM_LBUTTONUP:			return OnLButtonUp(wParam, lParam);
+		case WM_MEASUREITEM:		return OnMeasureItem(wParam, lParam);
+		case WM_MOUSELEAVE:			return OnMouseLeave(wParam, lParam);
+		case WM_MOUSEMOVE:			return OnMouseMove(wParam, lParam);
+		case WM_SYSKEYDOWN:			return OnSysKeyDown(wParam, lParam);
+		case WM_SYSKEYUP:			return OnSysKeyUp(wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
 
-			OnLButtonDown(wParam, lParam);
-			return 0L;
-		case WM_LBUTTONUP:
-			OnLButtonUp(wParam, lParam);
-			break;
-		case WM_MEASUREITEM:
-			m_pFrame->OnMeasureItem(wParam, lParam);
-			return TRUE; // handled
-		case WM_MOUSELEAVE:
-			OnMouseLeave();
-			break;
-		case WM_MOUSEMOVE:
-			OnMouseMove(wParam, lParam);
-			break;
-		case UWM_POPUPMENU:
-			DoPopupMenu();
-			return 0L;
-		case WM_SYSKEYDOWN:
-			if ((VK_MENU == wParam) || (VK_F10 == wParam))
-				return 0L;
-			break;
-		case WM_SYSKEYUP:
-			if ((VK_MENU == wParam) || (VK_F10 == wParam))
-			{
-				ExitMenu();
-				return 0L;
-			}
-			break;
-		case WM_WINDOWPOSCHANGED:
-			OnWindowPosChanged();
-			break;
-		case WM_WINDOWPOSCHANGING:
-			// Bypass CToolBar::WndProcDefault for this message
-			return CWnd::WndProcDefault(uMsg, wParam, lParam);
+		// Messages defined by Win32++
+		case UWM_POPUPMENU:			return OnPopupMenu();
 
 		} // switch (uMsg)
 
@@ -2867,7 +2921,7 @@ namespace Win32xx
 		pmis->itemHeight = cyMax;
 	}
 
-	inline void CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
 		DefWindowProc(WM_ACTIVATE, wParam, lParam);
@@ -2901,6 +2955,8 @@ namespace Win32xx
 			if (GetView()->IsWindow())
 				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
+
+		return 0L;
 	}
 
 	inline void CFrame::OnClose()
@@ -2983,7 +3039,7 @@ namespace Win32xx
 			SetTimer(ID_STATUS_TIMER, 200, NULL);
 
 		// Reposition the child windows
-		OnSysColorChange();
+		OnSysColorChange(0, 0);
 		RecalcLayout();
 	}
 
@@ -3007,7 +3063,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline void CFrame::OnExitMenuLoop()
+	inline LRESULT CFrame::OnExitMenuLoop(WPARAM wParam, LPARAM lParam)
 	{
 		if (m_bUseThemes)
 		{
@@ -3027,6 +3083,18 @@ namespace Win32xx
 
 			m_vMenuItemData.clear();
 		}
+
+		return CWnd::WndProcDefault(WM_EXITMENULOOP, wParam, lParam);
+	}
+
+	inline LRESULT CFrame::OnHelp(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
+		OnHelp();
+
+		return TRUE;
 	}
 
 	inline void CFrame::OnHelp()
@@ -3046,10 +3114,10 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
 		// The system menu shouldn't be owner drawn
-		if (HIWORD(lParam)) return;
+		if (HIWORD(lParam)) CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
 		if (m_bUseThemes)
 		{
@@ -3087,6 +3155,8 @@ namespace Win32xx
 				}
 			}
 		}
+
+		return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 	}
 
 	inline LRESULT CFrame::OnMeasureItem(WPARAM wParam, LPARAM lParam)
@@ -3112,7 +3182,7 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_MENUCHAR, wParam, lParam);
 	}
 
-	inline void CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
 	{
 		// Set the StatusBar text when we hover over a menu
 		// Only popup submenus have status strings
@@ -3128,6 +3198,8 @@ namespace Win32xx
 
 			SetStatusText();
 		}
+
+		return 0L;
 	}
 
 	inline LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -3213,13 +3285,26 @@ namespace Win32xx
 
 	} // CFrame::Onotify(...)
 
-	inline void CFrame::OnSetFocus()
+	inline LRESULT CFrame::OnSetFocus(WPARAM wParam, LPARAM lParam)
 	{
 		SetStatusText();
+		return CWnd::DefWindowProcW(WM_SETFOCUS, wParam, lParam);
 	}
 
-	inline void CFrame::OnSysColorChange()
+	inline LRESULT CFrame::OnSize(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+		
+		RecalcLayout();
+		return 0L;
+	}
+
+	inline LRESULT CFrame::OnSysColorChange(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		// Honour theme color changes
 		if (GetReBar().IsWindow())
 		{
@@ -3268,6 +3353,8 @@ namespace Win32xx
 
 		// Forward the message to the view window
 		m_pView->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
+
+		return 0L;
 	}
 
 	inline LRESULT CFrame::OnSysCommand(WPARAM wParam, LPARAM lParam)
@@ -3284,8 +3371,10 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
 	}
 
-	inline void CFrame::OnTimer(WPARAM wParam)
+	inline LRESULT CFrame::OnTimer(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(lParam);
+
 		if (ID_STATUS_TIMER == wParam)
 		{
 			if (m_bShowMenuStatus)
@@ -3341,6 +3430,8 @@ namespace Win32xx
 			if (m_bShowIndicatorStatus)
 				SetStatusIndicators();
 		}
+
+		return 0L;
 	}
 
 	inline void CFrame::OnViewStatusBar()
@@ -3735,11 +3826,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
-				//	GetToolBar().SetToolBarTheme(tt);
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-
-				//	GetReBar().SetReBarTheme(tr);
+					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3750,11 +3838,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
-				//	GetToolBar().SetToolBarTheme(tt);
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-
-				//	GetReBar().SetReBarTheme(tr);
+					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3765,11 +3850,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
 
-				//	GetToolBar().SetToolBarTheme(tt);
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-
-				//	GetReBar().SetReBarTheme(tr);
+					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3781,11 +3863,8 @@ namespace Win32xx
 					ReBarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
 					MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
 
-				//	GetToolBar().SetToolBarTheme(tt);
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-
-				//	GetReBar().SetReBarTheme(tr);
+					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3797,11 +3876,8 @@ namespace Win32xx
 					ToolBarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
 
-				//	GetToolBar().SetToolBarTheme(tt);
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm); // Sets the theme for popup menus and MenuBar
-
-				//	GetReBar().SetReBarTheme(tr);
+					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3811,7 +3887,6 @@ namespace Win32xx
 		{
 			// Use a classic style by default
 			ReBarTheme tr = {T, 0, 0, 0, 0, F, T, T, F, F, F};
-		//	GetReBar().SetReBarTheme(tr);
 			m_ReBarTheme = tr;
 		}
 
@@ -4035,58 +4110,26 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_ACTIVATE:
-			OnActivate(wParam, lParam);
-			return 0L;
-		case WM_ERASEBKGND:
-			return 0L;
-		case WM_HELP:
-			OnHelp();
-			return 0L;
-		case WM_MENUCHAR:
-			return OnMenuChar(wParam, lParam);
-		case WM_MENUSELECT:
-			OnMenuSelect(wParam, lParam);
-			return 0L;
-		case WM_SETFOCUS:
-			OnSetFocus();
-			break;
-		case WM_SIZE:
-			RecalcLayout();
-			return 0L;
-		case WM_SYSCOLORCHANGE:		// Changing themes trigger this
-			OnSysColorChange();
-			return 0L;
-		case WM_SYSCOMMAND:
-			return OnSysCommand(wParam, lParam);
-		case WM_TIMER:
-			OnTimer(wParam);
-			return 0L;
-		case WM_DRAWITEM:		// Owner draw menu items
-			return OnDrawItem(wParam, lParam);
-		case WM_INITMENUPOPUP:
-			OnInitMenuPopup(wParam, lParam);
-			break;
-		case WM_MEASUREITEM:
-			return OnMeasureItem(wParam, lParam);
-		case WM_EXITMENULOOP:
-			OnExitMenuLoop();
-			break;
-		case UWM_GETMENUTHEME:
-			{
-				MenuTheme& mt = m_MenuBarTheme;
-				return (LRESULT)&mt;
-			}
-		case UWM_GETREBARTHEME:
-			{
-				ReBarTheme& rt = m_ReBarTheme;
-				return (LRESULT)&rt;
-			}
-		case UWM_GETTOOLBARTHEME:
-			{
-				ToolBarTheme& tt = m_ToolBarTheme;
-				return (LRESULT)&tt;
-			}
+		case WM_ACTIVATE:		return OnActivate(wParam, lParam);
+		case WM_DRAWITEM:		return OnDrawItem(wParam, lParam);
+		case WM_ERASEBKGND:		return 0L;
+		case WM_EXITMENULOOP:	return OnExitMenuLoop(wParam, lParam);
+		case WM_HELP:			return OnHelp(wParam, lParam);
+		case WM_INITMENUPOPUP:	return OnInitMenuPopup(wParam, lParam);
+		case WM_MENUCHAR:		return OnMenuChar(wParam, lParam);
+		case WM_MEASUREITEM:	return OnMeasureItem(wParam, lParam);
+		case WM_MENUSELECT:		return OnMenuSelect(wParam, lParam);
+		case WM_SETFOCUS:		return OnSetFocus(wParam, lParam);
+		case WM_SIZE:			return OnSize(wParam, lParam);	
+		case WM_SYSCOLORCHANGE:	return OnSysColorChange(wParam, lParam);
+		case WM_SYSCOMMAND:		return OnSysCommand(wParam, lParam);
+		case WM_TIMER:			return OnTimer(wParam, lParam);	
+
+		// Messages defined by Win32++
+		case UWM_GETMENUTHEME:		return (LRESULT)&m_MenuBarTheme;
+		case UWM_GETREBARTHEME:		return (LRESULT)&m_ReBarTheme;
+		case UWM_GETTOOLBARTHEME:	return (LRESULT)&m_ToolBarTheme;
+		
 		} // switch uMsg
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);

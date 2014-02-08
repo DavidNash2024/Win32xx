@@ -1101,7 +1101,7 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGING:
 			{
 			//	Required by ReBar controls to adjust ToolBar window size
-				if ( GetParent()->SendMessage(UWM_TBWINDOWPOSCHANGING, (WPARAM)m_hWnd, lParam) )
+				if ( GetParent()->SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
 				{
 					LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 					pWinPos->cx = GetMaxSize().cx+2;

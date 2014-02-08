@@ -176,6 +176,8 @@ namespace Win32xx
 
 	protected:
 		virtual void OnCreate();
+		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual void OnMouseLeave(WPARAM wParam, LPARAM lParam);
@@ -229,6 +231,12 @@ namespace Win32xx
 			void SetDock(CDocker* pDock)	{m_pDock = pDock;}
 			void SetWidth(int nWidth)		{m_DockBarWidth = nWidth;}
 
+		protected:
+			virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnSetCursor(WPARAM wParam, LPARAM lParam);
+
 		private:
 			CDockBar(const CDockBar&);				// Disable copy construction
 			CDockBar& operator = (const CDockBar&); // Disable assignment operator
@@ -263,21 +271,23 @@ namespace Win32xx
 
 		protected:
 			virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
-			virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
-			virtual void    OnMouseActivate(WPARAM wParam, LPARAM lParam);
-			virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
-			virtual void    OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
+			virtual LRESULT	OnLButtonUp(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT	OnMouseActivate(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
-			virtual void    OnNCMouseLeave(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnNCMouseLeave(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCMouseMove(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCPaint(WPARAM wParam, LPARAM lParam);
-			virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 			virtual void    PreRegisterClass(WNDCLASS& wc);
 			virtual void    PreCreate(CREATESTRUCT& cs);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
+			void MouseMove(WPARAM wParam, LPARAM lParam);
 			CDockClient(const CDockClient&);				// Disable copy construction
 			CDockClient& operator = (const CDockClient&); // Disable assignment operator
 
@@ -458,18 +468,20 @@ namespace Win32xx
 
 	protected:
 		virtual CDocker* NewDockerFromID(int idDock);
-		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
-		virtual void OnCaptionTimer(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnCreate();
 		virtual void OnDestroy();
-		virtual void OnDockDestroyed(WPARAM wParam, LPARAM lParam);
-		virtual void OnExitSizeMove(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDockActivated(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDockDestroyed(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnExitSizeMove(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnNCLButtonDblClick(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void OnSetFocus(WPARAM wParam, LPARAM lParam);
-		virtual void OnSysColorChange(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
-		virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -563,6 +575,38 @@ namespace Win32xx
 		pDC->PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
 	}
 
+	inline LRESULT CDocker::CDockBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
+	{
+		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
+		{
+			SendNotify(UWM_BAR_START);
+			SetCapture();
+		}
+
+		return CWnd::WndProcDefault(WM_LBUTTONDOWN, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::CDockBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
+	{
+		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == this))
+		{
+			SendNotify(UWM_BAR_END);
+			ReleaseCapture();
+		}
+
+		return CWnd::WndProcDefault(WM_LBUTTONUP, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::CDockBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == this))
+		{
+			SendNotify(UWM_BAR_MOVE);
+		}
+
+		return CWnd::WndProcDefault(WM_MOUSEMOVE, wParam, lParam);
+	}
+
 	inline void CDocker::CDockBar::PreCreate(CREATESTRUCT &cs)
 	{
 		// Create a child window, initially hidden
@@ -594,62 +638,39 @@ namespace Win32xx
 		m_brBackground.CreateSolidBrush(color);
 	}
 
-	inline LRESULT CDocker::CDockBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockBar::OnSetCursor(WPARAM wParam, LPARAM lParam)
 	{
+		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
 		{
-			switch (uMsg)
-			{
-			case WM_SETCURSOR:
-				{
-					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
-					{
-						HCURSOR hCursor;
-						DWORD dwSide = GetDock()->GetDockStyle() & 0xF;
-						if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
-							hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH));
-						else
-							hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV));
+			HCURSOR hCursor;
+			DWORD dwSide = GetDock()->GetDockStyle() & 0xF;
+			if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
+				hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITH));
+			else
+				hCursor = LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_SPLITV));
 
-						if (hCursor) SetCursor(hCursor);
-						else TRACE("**WARNING** Missing cursor resource for slider bar\n");
+			if (hCursor) SetCursor(hCursor);
+			else TRACE("**WARNING** Missing cursor resource for slider bar\n");
 
-						return TRUE;
-					}
-					else
-						SetCursor(LoadCursor(NULL, IDC_ARROW));
-				}
-				break;
-
-			case WM_ERASEBKGND:
-				return 0;
-
-			case WM_LBUTTONDOWN:
-				{
-					if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
-					{
-						SendNotify(UWM_BAR_START);
-						SetCapture();
-					}
-				}
-				break;
-
-			case WM_LBUTTONUP:
-				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == this))
-				{
-					SendNotify(UWM_BAR_END);
-					ReleaseCapture();
-				}
-				break;
-
-			case WM_MOUSEMOVE:
-				if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == this))
-				{
-					SendNotify(UWM_BAR_MOVE);
-				}
-				break;
-			}
+			return TRUE;
 		}
+		else
+			SetCursor(LoadCursor(NULL, IDC_ARROW));
 
+		return CWnd::WndProcDefault(WM_SETCURSOR, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::CDockBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{	
+		switch (uMsg)
+		{
+		case WM_SETCURSOR:		return OnSetCursor(wParam, lParam);
+		case WM_ERASEBKGND:		return 0L;
+		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
+		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
+		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
+		}
+		
 		// pass unhandled messages on for default processing
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
@@ -880,7 +901,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::CDockClient::OnNCCalcSize(WPARAM& wParam, LPARAM& lParam)
+	inline LRESULT CDocker::CDockClient::OnNCCalcSize(WPARAM& wParam, LPARAM& lParam)
 	{
 		// Sets the non-client area (and hence sets the client area)
 		// This function modifies lParam
@@ -895,6 +916,8 @@ namespace Win32xx
 				rc->top += m_pDock->m_NCHeight;
 			}
 		}
+
+		return CWnd::WndProcDefault(WM_NCCALCSIZE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCHitTest(WPARAM wParam, LPARAM lParam)
@@ -918,6 +941,38 @@ namespace Win32xx
 			}
 		}
 		return CWnd::WndProcDefault(WM_NCHITTEST, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::CDockClient::OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam)
+	{
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		{
+			if ((HTCLOSE == wParam) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+			{
+				m_IsClosePressed = TRUE;
+				SetCapture();
+			}
+
+			m_bCaptionPressed = TRUE;
+			m_Oldpt.x = GET_X_LPARAM(lParam);
+			m_Oldpt.y = GET_Y_LPARAM(lParam);
+			if (m_pDock->IsDocked())
+			{
+				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+				ScreenToClient(pt);
+				m_pView->SetFocus();
+
+				// Update the close button
+				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+				{
+					CWindowDC dc(this);
+					DrawCloseButton(dc, m_bOldFocus);
+				}
+
+				return 0L;
+			}
+		}
+		return CWnd::WndProcDefault(WM_NCLBUTTONDBLCLK, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCLButtonDown(WPARAM wParam, LPARAM lParam)
@@ -952,32 +1007,37 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_NCLBUTTONDOWN, wParam, lParam);
 	}
 
-	inline void CDocker::CDockClient::OnLButtonUp(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockClient::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
+		ReleaseCapture();
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 		{
-			m_bCaptionPressed = FALSE;
-			if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
+			CWindowDC dc(this);
+			DrawCloseButton(dc, m_bOldFocus);
+			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
 			{
-				// Destroy the docker
-				if (dynamic_cast<CDockContainer*>(m_pDock->GetView()))
+				m_bCaptionPressed = FALSE;
+				if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
 				{
-					CDockContainer* pContainer = ((CDockContainer*)m_pDock->GetView())->GetActiveContainer();
-					CDocker* pDock = m_pDock->GetDockFromView(pContainer);
-					pDock->GetDockClient().SetClosePressed();
-					m_pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
-					pDock->Destroy();
-				}
-				else
-				{
-					m_pDock->Hide();
-					m_pDock->Destroy();
+					// Destroy the docker
+					if (dynamic_cast<CDockContainer*>(m_pDock->GetView()))
+					{
+						CDockContainer* pContainer = ((CDockContainer*)m_pDock->GetView())->GetActiveContainer();
+						CDocker* pDock = m_pDock->GetDockFromView(pContainer);
+						pDock->GetDockClient().SetClosePressed();
+						m_pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
+						pDock->Destroy();
+					}
+					else
+					{
+						m_pDock->Hide();
+						m_pDock->Destroy();
+					}
 				}
 			}
 		}
+
+		return CWnd::WndProcDefault(WM_LBUTTONUP, wParam, lParam);
 	}
 
 	inline void CDocker::CDockClient::OnLButtonDown(WPARAM wParam, LPARAM lParam)
@@ -991,37 +1051,18 @@ namespace Win32xx
 		DrawCloseButton(dc, m_bOldFocus);
 	}
 
-	inline void CDocker::CDockClient::OnMouseActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockClient::OnMouseActivate(WPARAM wParam, LPARAM lParam)
 	// Focus changed, so redraw the captions
 	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCK_ACTIVATED, 0, 0);
 		}
+
+		return CWnd::WndProcDefault(WM_MOUSEACTIVATE, wParam, lParam);
 	}
 
-	inline void CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
-	{
-		OnNCMouseMove(wParam, lParam);
-	}
-
-	inline void CDocker::CDockClient::OnNCMouseLeave(WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
-		m_IsTracking = FALSE;
-		CWindowDC dc(this);
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
-			DrawCloseButton(dc, m_bOldFocus);
-
-		m_IsTracking = FALSE;
-	}
-
-	inline LRESULT CDocker::CDockClient::OnNCMouseMove(WPARAM wParam, LPARAM lParam)
+	inline void CDocker::CDockClient::MouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		if (!m_IsTracking)
 		{
@@ -1039,7 +1080,8 @@ namespace Win32xx
 			{
 				// Discard phantom mouse move messages
 				if ( (m_Oldpt.x == GET_X_LPARAM(lParam) ) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
-					return 0L;
+				//	return 0L;
+					return;
 
 				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_bCaptionPressed))
 				{
@@ -1058,7 +1100,30 @@ namespace Win32xx
 
 			m_bCaptionPressed = FALSE;
 		}
+	}
+	
+	inline LRESULT CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		MouseMove(wParam, lParam);
 		return CWnd::WndProcDefault(WM_MOUSEMOVE, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::CDockClient::OnNCMouseLeave(WPARAM wParam, LPARAM lParam)
+	{
+		m_IsTracking = FALSE;
+		CWindowDC dc(this);
+		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
+			DrawCloseButton(dc, m_bOldFocus);
+
+		m_IsTracking = FALSE;
+
+		return CWnd::WndProcDefault(WM_NCMOUSELEAVE, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::CDockClient::OnNCMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		MouseMove(wParam, lParam);
+		return CWnd::WndProcDefault(WM_NCMOUSEMOVE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCPaint(WPARAM wParam, LPARAM lParam)
@@ -1075,14 +1140,13 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_NCPAINT, wParam, lParam);
 	}
 
-	inline void CDocker::CDockClient::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockClient::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
 		// Reposition the View window to cover the DockClient's client area
 		CRect rc = GetClientRect();
 		m_pView->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+
+		return CWnd::WndProcDefault(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
 
 	inline void CDocker::CDockClient::PreRegisterClass(WNDCLASS& wc)
@@ -1131,50 +1195,17 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_LBUTTONUP:
-			{
-				ReleaseCapture();
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
-				{
-					CWindowDC dc(this);
-					DrawCloseButton(dc, m_bOldFocus);
-					OnLButtonUp(wParam, lParam);
-				}
-			}
-			break;
-
-		case WM_MOUSEACTIVATE:
-			OnMouseActivate(wParam, lParam);
-			break;
-
-		case WM_MOUSEMOVE:
-			OnMouseMove(wParam, lParam);
-			break;
-
-		case WM_NCCALCSIZE:
-			OnNCCalcSize(wParam, lParam);
-			break;
-
-		case WM_NCHITTEST:
-			return OnNCHitTest(wParam, lParam);
-
-		case WM_NCLBUTTONDBLCLK:
-		case WM_NCLBUTTONDOWN:
-			return OnNCLButtonDown(wParam, lParam);
-
-		case WM_NCMOUSEMOVE:
-			return OnNCMouseMove(wParam, lParam);
-
-		case WM_NCPAINT:
-			return OnNCPaint(wParam, lParam);
-
-		case WM_NCMOUSELEAVE:
-			OnNCMouseLeave(wParam, lParam);
-			break;
-
-		case WM_WINDOWPOSCHANGED:
-			OnWindowPosChanged(wParam, lParam);
-			break;
+		case WM_LBUTTONUP:			return OnLButtonUp(wParam, lParam);
+		case WM_MOUSEACTIVATE:		return OnMouseActivate(wParam, lParam);
+		case WM_MOUSEMOVE:			return OnMouseMove(wParam, lParam);
+		case WM_NCCALCSIZE:			return OnNCCalcSize(wParam, lParam);
+		case WM_NCHITTEST:			return OnNCHitTest(wParam, lParam);
+		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(wParam, lParam);
+		case WM_NCLBUTTONDOWN:		return OnNCLButtonDown(wParam, lParam);	
+		case WM_NCMOUSEMOVE:		return OnNCMouseMove(wParam, lParam);
+		case WM_NCPAINT:			return OnNCPaint(wParam, lParam);
+		case WM_NCMOUSELEAVE:		return OnNCMouseLeave(wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -2552,7 +2583,7 @@ namespace Win32xx
 		return pDock;
 	}
 
-	inline void CDocker::OnActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnActivate(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -2569,12 +2600,12 @@ namespace Win32xx
 			nhdr.code = UWM_FRAMELOSTFOCUS;
 			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
+
+		return CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
 	}
 
-	inline void CDocker::OnCaptionTimer(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnTimer(WPARAM wParam, LPARAM lParam)
 	{
-		UNREFERENCED_PARAMETER(lParam);
-
 		if (this == GetDockAncestor())
 		{
 			if (wParam == 1)
@@ -2588,6 +2619,8 @@ namespace Win32xx
 				}
 			}
 		}
+
+		return CWnd::WndProcDefault(WM_TIMER, wParam, lParam);
 	}
 
 	inline void CDocker::OnCreate()
@@ -2671,7 +2704,7 @@ namespace Win32xx
 			GetDockAncestor()->PostMessage(UWM_DOCK_DESTROYED, (WPARAM)this, 0L);
 	}
 
-	inline void CDocker::OnDockDestroyed(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnDockDestroyed(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -2687,9 +2720,11 @@ namespace Win32xx
 				break;
 			}
 		}
+
+		return CWnd::WndProcDefault(UWM_DOCK_DESTROYED, wParam, lParam);
 	}
 
-	inline void CDocker::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2697,6 +2732,14 @@ namespace Win32xx
 		m_BlockMove = FALSE;
 		m_bIsDragging = FALSE;
 		SendNotify(UWM_DOCK_END);
+
+		return CWnd::WndProcDefault(WM_EXITSIZEMOVE, wParam, lParam);
+	}
+
+	inline LRESULT CDocker::OnNCLButtonDblClick(WPARAM wParam, LPARAM lParam)
+	{
+		m_bIsDragging = FALSE;
+		return CWnd::WndProcDefault(WM_NCLBUTTONDBLCLK, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -2877,7 +2920,7 @@ namespace Win32xx
 		RecalcDockLayout();
 	}
 
-	inline void CDocker::OnSetFocus(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnSetFocus(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2898,9 +2941,11 @@ namespace Win32xx
 			nhdr.code = NM_SETFOCUS;
 			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
+
+		return CWnd::WndProcDefault(WM_SETFOCUS, wParam, lParam);
 	}
 
-	inline void CDocker::OnSysColorChange(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnSysColorChange(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2924,6 +2969,8 @@ namespace Win32xx
 			// Set the splitter bar colour for the docker ancestor
 			SetBarColor(rgbColour);
 		}
+
+		return CWnd::WndProcDefault(WM_SYSCOLORCHANGE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnSysCommand(WPARAM wParam, LPARAM lParam)
@@ -2972,7 +3019,7 @@ namespace Win32xx
 		return CWnd::WndProcDefault(WM_WINDOWPOSCHANGING, wParam, lParam);
 	}
 
-	inline void CDocker::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
@@ -2996,6 +3043,8 @@ namespace Win32xx
 			// Reposition the dock children
 			if (IsUndocked() && IsWindowVisible() && !m_bIsClosing) RecalcDockLayout();
 		}
+
+		return CWnd::WndProcDefault(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
 
 	inline void CDocker::PreCreate(CREATESTRUCT &cs)
@@ -3641,44 +3690,31 @@ namespace Win32xx
 		pDock->BringWindowToTop();
 	}
 
+	inline LRESULT CDocker::OnDockActivated(WPARAM wParam, LPARAM lParam)
+	{
+		DrawAllCaptions();
+		SetTimer(1, 100, NULL);
+		return CWnd::WndProcDefault(UWM_DOCK_ACTIVATED, wParam, lParam);
+	}
+
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-		case WM_ACTIVATE:
-			OnActivate(wParam, lParam);
-			break;
-		case WM_SYSCOMMAND:
-			return OnSysCommand(wParam, lParam);
+		case WM_ACTIVATE:			return OnActivate(wParam, lParam);
+		case WM_SYSCOMMAND:			return OnSysCommand(wParam, lParam);
+		case WM_EXITSIZEMOVE:		return OnExitSizeMove(wParam, lParam);
+		case WM_NCLBUTTONDBLCLK :	return OnNCLButtonDblClick(wParam, lParam);
+		case WM_SETFOCUS:			return OnSetFocus(wParam, lParam);
+		case WM_SYSCOLORCHANGE:		return OnSysColorChange(wParam, lParam);
+		case WM_TIMER:				return OnTimer(wParam, lParam);
+		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 
-		case WM_EXITSIZEMOVE:
-			OnExitSizeMove(wParam, lParam);
-			break;
-		case WM_WINDOWPOSCHANGING:
-			return OnWindowPosChanging(wParam, lParam);
-
-		case WM_WINDOWPOSCHANGED:
-			OnWindowPosChanged(wParam, lParam);
-			break;
-		case WM_SETFOCUS:
-			OnSetFocus(wParam, lParam);
-			break;
-		case WM_TIMER:
-			OnCaptionTimer(wParam, lParam);
-			break;
-		case UWM_DOCK_DESTROYED:
-			OnDockDestroyed(wParam, lParam);
-			break;
-		case UWM_DOCK_ACTIVATED:
-			DrawAllCaptions();
-			SetTimer(1, 100, NULL);
-			break;
-		case WM_SYSCOLORCHANGE:
-			OnSysColorChange(wParam, lParam);
-			break;
-		case WM_NCLBUTTONDBLCLK :
-			m_bIsDragging = FALSE;
-			break;
+		// Messages defined by Win32++
+		case UWM_DOCK_ACTIVATED:	return OnDockActivated(wParam, lParam);
+		case UWM_DOCK_DESTROYED:	return OnDockDestroyed(wParam, lParam);
+		
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -3936,6 +3972,21 @@ namespace Win32xx
 		return 0L;
 	}
 
+	inline LRESULT CDockContainer::OnSetFocus(WPARAM wParam, LPARAM lParam)
+	{
+		GetActiveView()->SetFocus();
+		return CTab::WndProcDefault(WM_SETFOCUS, wParam, lParam);
+	}
+
+	inline LRESULT CDockContainer::OnSize(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
+		RecalcLayout();
+		return 0;
+	}
+
 	inline void CDockContainer::PreCreate(CREATESTRUCT &cs)
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
@@ -3966,7 +4017,6 @@ namespace Win32xx
 		int iTab = GetContainerIndex(pWnd);
 		if (iTab > 0)
 		{
-		//	DeleteItem(iTab);
 			TabCtrl_DeleteItem(m_hWnd, iTab);
 		}
 
@@ -4081,27 +4131,13 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_SIZE:
-			RecalcLayout();
-			return 0;
+		case WM_SIZE:		return OnSize(wParam, lParam);
+		case WM_SETFOCUS:	return OnSetFocus(wParam, lParam);
 
 	// The following are called in CTab::WndProcDefault
-	//	case WM_LBUTTONDOWN:
-	//		OnLButtonDown(wParam, lParam);
-	//		break;
-	//	case WM_LBUTTONUP:
-	//		OnLButtonUp(wParam, lParam);
-	//		break;
-	//	case WM_MOUSELEAVE:
-	//		OnMouseLeave(wParam, lParam);
-	//		break;
-
-		case WM_SETFOCUS:
-			{
-				// Pass focus on to the current view
-				GetActiveView()->SetFocus();
-			}
-			break;
+	//	case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
+	//	case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
+	//	case WM_MOUSELEAVE:		OnMouseLeave(wParam, lParam);
 		}
 
 		// pass unhandled messages on to CTab for processing
@@ -4151,16 +4187,22 @@ namespace Win32xx
 						m_strTooltip = _T("");
 				}
 			}
+			break;
 		case NM_CUSTOMDRAW:
 			{				
 				if (((LPNMHDR)lParam)->hwndFrom == GetToolBar().GetHwnd())
 				{
 					// Pass Toolbar's custom draw up to CFrame
-					CWnd* pWnd = FromHandle(((LPNMHDR)lParam)->hwndFrom);
 					return GetAncestor()->SendMessage(WM_NOTIFY, wParam, lParam);
 				}
 			}
 			break;
+			// Send the focus change notifications to the grandparent
+			case NM_KILLFOCUS:
+			case NM_SETFOCUS:
+			case UWM_FRAMELOSTFOCUS:
+				GetParent()->GetParent()->SendMessage(WM_NOTIFY, wParam, lParam);
+				break;
 		} // switch LPNMHDR
 
 		return 0L;
@@ -4209,18 +4251,6 @@ namespace Win32xx
 		{
 		case WM_SIZE:
 			RecalcLayout();
-			break;
-		case WM_NOTIFY:
-			switch (((LPNMHDR)lParam)->code)
-			{
-			// Send the focus change notifications to the grandparent
-			case NM_KILLFOCUS:
-			case NM_SETFOCUS:
-			case UWM_FRAMELOSTFOCUS:
-				GetParent()->GetParent()->SendMessage(WM_NOTIFY, wParam, lParam);
-				break;
-			}
-
 			break;
 		}
 
