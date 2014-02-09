@@ -40,9 +40,8 @@ void CDockTree::OnInitialUpdate()
 
 	// Set the color of the splitter bar
 	CMainFrame& MainFrame = GetSplitApp().GetMainFrame();
-	CReBar& RB = MainFrame.GetReBar();
-	if (RB.GetReBarTheme().UseThemes && RB.GetReBarTheme().clrBkgnd1 != 0)
-		SetBarColor(RB.GetReBarTheme().clrBkgnd1);
+	if (MainFrame.GetReBarTheme().UseThemes && MainFrame.GetReBarTheme().clrBkgnd1 != 0)
+		SetBarColor(MainFrame.GetReBarTheme().clrBkgnd1);
 	else
 		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 }

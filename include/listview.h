@@ -336,21 +336,19 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		CString t;
+		CString str;
 		if (nTextMax > 0)
 		{
-			std::vector<TCHAR> vTChar(nTextMax +1, _T('\0'));
-			TCHAR* pszText = &vTChar.front();
 			LVITEM lvi = {0};
 			lvi.iItem = iItem;
 			lvi.iSubItem = iSubItem;
 			lvi.mask = LVIF_TEXT;
 			lvi.cchTextMax = nTextMax;
-			lvi.pszText = pszText;
+			lvi.pszText = str.GetBuffer(nTextMax);
 			ListView_GetItem( m_hWnd, &lvi );
-			t = lvi.pszText;
+			str.ReleaseBuffer();
 		}
-		return t;
+		return str;
 	}
 
 	inline int CListView::GetNextItem( int iItem, int iFlags ) const

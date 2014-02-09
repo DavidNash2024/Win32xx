@@ -80,7 +80,7 @@
 //    int nLength = ::GetWindowTextLength(m_hWnd);
 //    std::vector<TCHAR> vTChar( nLength+1, _T('\0') );
 //    TCHAR* pTCharArray = &vTChar.front();
-//    ::GetWindowText(m_hWnd, pTCharArray, nLength); 
+//    ::GetWindowText(m_hWnd, pTCharArray, nLength+1); 
 //
 // Alternatively we could use a CString.
 //    int nLength = ::GetWindowTextLength(m_hWnd);

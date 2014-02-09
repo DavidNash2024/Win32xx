@@ -118,17 +118,17 @@ namespace Win32xx
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
-		void AdjustRect(BOOL fLarger, RECT *prc) const;
-		int  GetCurFocus() const;
-		int  GetCurSel() const;
-		BOOL GetItem(int iItem, LPTCITEM pitem) const;
-		int  GetItemCount() const;
-		int  HitTest(TCHITTESTINFO& info) const;
-		void SetCurFocus(int iItem) const;
-		int  SetCurSel(int iItem) const;
+		void  AdjustRect(BOOL fLarger, RECT *prc) const;
+		int	  GetCurFocus() const;
+		int	  GetCurSel() const;
+		BOOL  GetItem(int iItem, LPTCITEM pitem) const;
+		int   GetItemCount() const;
+		int   HitTest(TCHITTESTINFO& info) const;
+		void  SetCurFocus(int iItem) const;
+		int   SetCurSel(int iItem) const;
 		DWORD SetItemSize(int cx, int cy) const;
-		int  SetMinTabWidth(int cx) const;
-		void SetPadding(int cx, int cy) const;
+		int   SetMinTabWidth(int cx) const;
+		void  SetPadding(int cx, int cy) const;
 
 	protected:
 		virtual void	DrawCloseButton(CDC& DrawDC);
@@ -137,12 +137,19 @@ namespace Win32xx
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnCreate();
 		virtual void	OnDestroy();
-		virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
-		virtual void    OnLButtonUp(WPARAM wParam, LPARAM lParam);
-		virtual void    OnMouseLeave(WPARAM wParam, LPARAM lParam);
-		virtual void    OnMouseMove(WPARAM wParam, LPARAM lParam);
+		virtual BOOL    OnEraseBkgnd(CDC*) { return TRUE;}
+		virtual LRESULT OnEraseBkgnd(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonDblClk(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnKillFocus(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnPaint(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void	NotifyChanged();
 		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
@@ -204,7 +211,7 @@ namespace Win32xx
 		virtual void	OnCreate();
 		virtual void    OnDestroy();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void    OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -249,7 +256,7 @@ namespace Win32xx
 	inline void CTab::CSelectDialog::OnOK()
 	{
 		int iSelect = (int)SendDlgItemMessage(IDC_LIST, LB_GETCURSEL, 0, 0);
-		if (iSelect != LB_ERR) 
+		if (iSelect != LB_ERR)
 			EndDialog(iSelect);
 		else
 			EndDialog(-2);
@@ -275,7 +282,7 @@ namespace Win32xx
 	inline CTab::~CTab()
 	{
 		ImageList_Destroy(m_himlTab);
-		
+
 		if (IsMenu(m_hListMenu)) ::DestroyMenu(m_hListMenu);
 	}
 
@@ -626,7 +633,7 @@ namespace Win32xx
 	{
 		if (IsMenu(m_hListMenu))
 			::DestroyMenu(m_hListMenu);
-		
+
 		m_hListMenu = CreatePopupMenu();
 
 		// Add the menu items
@@ -737,7 +744,7 @@ namespace Win32xx
 	inline void CTab::OnCreate()
 	{
 		SetFont(&m_Font, TRUE);
-		
+
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
 			TabCtrl_SetImageList(m_hWnd, m_himlTab);
@@ -757,7 +764,23 @@ namespace Win32xx
 		SelectPage(0);
 	}
 
-	inline void CTab::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
+	inline void CTab::OnDestroy()
+	{
+		for (int i = GetItemCount()-1; i >= 0; --i)
+		{
+			RemoveTabPage(i);
+		}
+	}
+
+	inline LRESULT CTab::OnEraseBkgnd(WPARAM wParam, LPARAM lParam)
+	{
+		if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
+			return 0;
+
+		return FinalWindowProc(WM_ERASEBKGND, wParam, lParam);
+	}
+
+	inline LRESULT CTab::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	{
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 
@@ -775,9 +798,11 @@ namespace Win32xx
 		{
 			ShowListMenu();
 		}
+
+		return FinalWindowProc(WM_LBUTTONDOWN, wParam, lParam);
 	}
 
-	inline void CTab::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
+	inline LRESULT CTab::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
 		ReleaseCapture();
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -789,18 +814,22 @@ namespace Win32xx
 		}
 
 		m_IsClosePressed = FALSE;
+
+		return FinalWindowProc(WM_LBUTTONUP, wParam, lParam);
 	}
 
-	inline void CTab::OnMouseLeave(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline LRESULT CTab::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
 		CClientDC dc(this);
 		DrawCloseButton(dc);
 		DrawListButton(dc);
 
 		m_IsTracking = FALSE;
+
+		return FinalWindowProc(WM_MOUSELEAVE, wParam, lParam);
 	}
 
-	inline void CTab::OnMouseMove(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline LRESULT CTab::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		if (!m_IsListMenuActive && m_IsListPressed)
 		{
@@ -820,6 +849,8 @@ namespace Win32xx
 		CClientDC dc(this);
 		DrawCloseButton(dc);
 		DrawListButton(dc);
+
+		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
 	}
 
 	inline LRESULT CTab::OnNCHitTest(WPARAM wParam, LPARAM lParam)
@@ -853,6 +884,52 @@ namespace Win32xx
 		}
 
 		return 0L;
+	}
+
+	inline LRESULT CTab::OnKillFocus(WPARAM wParam, LPARAM lParam)
+	{
+		m_IsClosePressed = FALSE;
+		return FinalWindowProc(WM_KILLFOCUS, wParam, lParam);
+	}
+
+	inline LRESULT CTab::OnLButtonDblClk(WPARAM wParam, LPARAM lParam)
+	{
+		return OnLButtonDown(wParam, lParam);
+	}
+
+	inline LRESULT CTab::OnPaint(WPARAM wParam, LPARAM lParam)
+	{
+		if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
+		{
+			// Remove all pending paint requests
+			PAINTSTRUCT ps;
+			::BeginPaint(m_hWnd, &ps);
+			::EndPaint(m_hWnd, &ps);
+
+			// Now call our local Paint
+			Paint();
+			return 0L;
+		}
+
+		return FinalWindowProc(WM_PAINT, wParam, lParam);
+	}
+
+	inline LRESULT CTab::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	{
+		RecalcLayout();
+		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
+	}
+
+	inline LRESULT CTab::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+	{
+		// A little hack to reduce tab flicker
+		if (IsWindowVisible() && (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
+		{
+			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+			pWinPos->flags |= SWP_NOREDRAW;
+		}
+
+		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);
 	}
 
 	inline void CTab::Paint()
@@ -990,7 +1067,7 @@ namespace Win32xx
 		{
 			if (nPage != GetCurSel())
 				SetCurSel(nPage);
-			
+
 			ShowActiveView(m_vTabPageInfo[nPage].pView);
 		}
 	}
@@ -1058,7 +1135,7 @@ namespace Win32xx
 			TabCtrl_SetItem(m_hWnd, i, &tci);
 			m_vTabPageInfo[i].iImage = iImage;
 		}
-	}	
+	}
 
 	inline void CTab::SetTabsAtTop(BOOL bTop)
 	// Positions the tabs at the top or bottom of the control
@@ -1088,7 +1165,7 @@ namespace Win32xx
 			nItemWidth = MAX(nItemWidth, 0);
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
 			NotifyChanged();
-		} 
+		}
 	}
 
 	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
@@ -1125,7 +1202,7 @@ namespace Win32xx
 				// The tab control is already created, so create the new view too
 				GetActiveView()->Create(this);
 			}
-	
+
 			// Position the View over the tab control's display area
 			CRect rc = GetClientRect();
 			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
@@ -1141,7 +1218,7 @@ namespace Win32xx
 		{
 			m_IsListPressed = TRUE;
 			HMENU hMenu = GetListMenu();
-	
+
 			CPoint pt(GetListRect().left, GetListRect().top + GetTabHeight());
 			ClientToScreen(pt);
 
@@ -1207,26 +1284,18 @@ namespace Win32xx
 			Item1.cchTextMax = nLength;
 			Item1.pszText = &vTChar1.front();
 			GetItem(nTab1, &Item1);
-			
+
 			TCITEM Item2 = {0};
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = nLength;
 			Item2.pszText = &vTChar2.front();
 			GetItem(nTab2, &Item2);
-			
+
 			TabCtrl_SetItem(m_hWnd, nTab1, &Item2);
-			TabCtrl_SetItem(m_hWnd, nTab2, &Item1); 
+			TabCtrl_SetItem(m_hWnd, nTab2, &Item1);
 			m_vTabPageInfo[nTab1] = T2;
 			m_vTabPageInfo[nTab2] = T1;
 			SelectPage(nPage);
-		}
-	}
-
-	inline void CTab::OnDestroy()
-	{
-		for (int i = GetItemCount()-1; i >= 0; --i)
-		{
-			RemoveTabPage(i);
 		}
 	}
 
@@ -1234,55 +1303,17 @@ namespace Win32xx
 	{
 		switch(uMsg)
 		{
-		case WM_PAINT:
-			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
-			{
-				// Remove all pending paint requests
-				PAINTSTRUCT ps;
-				::BeginPaint(m_hWnd, &ps);
-				::EndPaint(m_hWnd, &ps);
-
-				// Now call our local Paint
-				Paint();
-				return 0;
-			}
-			break;
-		case WM_ERASEBKGND:
-			if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
-				return 0;
-			break;
-		case WM_KILLFOCUS:
-			m_IsClosePressed = FALSE;
-			break;
-		case WM_LBUTTONDBLCLK:
-		case WM_LBUTTONDOWN:
-			OnLButtonDown(wParam, lParam);
-			break;
-		case WM_LBUTTONUP:
-			OnLButtonUp(wParam, lParam);
-			break;
-		case WM_MOUSEMOVE:
-			OnMouseMove(wParam, lParam);
-			break;
-		case WM_MOUSELEAVE:
-			OnMouseLeave(wParam, lParam);
-			break;
-		case WM_NCHITTEST:
-			return OnNCHitTest(wParam, lParam);
-
-		case WM_WINDOWPOSCHANGING:
-			// A little hack to reduce tab flicker
-			if (IsWindowVisible() && (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
-			{
-				LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-				pWinPos->flags |= SWP_NOREDRAW;
-			}
-
-			break;
-
-		case WM_WINDOWPOSCHANGED:
-			RecalcLayout();
-			break;
+		case WM_PAINT:				return OnPaint(wParam, lParam);
+		case WM_ERASEBKGND:			return OnEraseBkgnd(wParam, lParam);
+		case WM_KILLFOCUS:			return OnKillFocus(wParam, lParam);
+		case WM_LBUTTONDBLCLK:		return OnLButtonDblClk(wParam, lParam);
+		case WM_LBUTTONDOWN:		return OnLButtonDown(wParam, lParam);
+		case WM_LBUTTONUP:			return OnLButtonUp(wParam, lParam);
+		case WM_MOUSEMOVE:			return OnMouseMove(wParam, lParam);
+		case WM_MOUSELEAVE:			return OnMouseLeave(wParam, lParam);
+		case WM_NCHITTEST:			return OnNCHitTest(wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
 		}
 
 		// pass unhandled messages on for default processing
@@ -1564,9 +1595,10 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CTabbedMDI::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
+	inline LRESULT CTabbedMDI::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
 		RecalcLayout();
+		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
 
 	inline void CTabbedMDI::RecalcLayout()
@@ -1665,9 +1697,7 @@ namespace Win32xx
 	{
 		switch(uMsg)
 		{
-		case WM_WINDOWPOSCHANGED:
-			OnWindowPosChanged(wParam, lParam);
-			break;
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);

@@ -104,6 +104,8 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual void OnClose();
 		virtual void OnCreate();
+		virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		// Its unlikely you would need to override these functions
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -136,6 +138,11 @@ namespace Win32xx
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			CMDIFrame* GetMDIFrame() const { return (CMDIFrame*)GetParent(); }
 
+		protected:
+			virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
+
 		private:
 			CMDIClient(const CMDIClient&);				// Disable copy construction
 			CMDIClient& operator = (const CMDIClient&); // Disable assignment operator
@@ -167,12 +174,12 @@ namespace Win32xx
 
 	protected:
 		// These are the functions you might wish to override
-		virtual void OnClose();
-		virtual void OnViewStatusBar();
-		virtual void OnViewToolBar();
-		virtual void OnWindowPosChanged();
-		virtual void RecalcLayout();
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual void    OnClose();
+		virtual void    OnViewStatusBar();
+		virtual void    OnViewToolBar();
+		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		virtual void    RecalcLayout();
+		virtual BOOL    PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -372,8 +379,10 @@ namespace Win32xx
 		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 	}
 
-	inline void CMDIFrame::OnWindowPosChanged()
+	inline LRESULT CMDIFrame::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
+		// MDI Child or MDI frame has been resized
+
 		if (IsMenuBarUsed())
 		{
 			// Refresh MenuBar Window
@@ -381,6 +390,8 @@ namespace Win32xx
 			GetMenuBar().SetMenu(hMenu);
 			UpdateCheckMarks();
 		}
+
+		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
 
 	inline BOOL CMDIFrame::PreTranslateMessage(MSG* pMsg)
@@ -508,12 +519,9 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_WINDOWPOSCHANGED:
-			// MDI Child or MDI frame has been resized
-			OnWindowPosChanged();
-			break; // Continue with default processing
-
-		} // switch uMsg
+		case WM_WINDOWPOSCHANGED:	return (wParam, lParam);
+		}
+		
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
@@ -533,39 +541,45 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
+	inline LRESULT CMDIFrame::CMDIClient::OnMDIActivate(WPARAM wParam, LPARAM lParam)
+	{
+		// Suppress redraw to avoid flicker when activating maximised MDI children
+		SendMessage(WM_SETREDRAW, FALSE, 0L);
+		LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
+		SendMessage(WM_SETREDRAW, TRUE, 0L);
+		RedrawWindow(0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+
+		return lr;
+	}
+
+	inline LRESULT CMDIFrame::CMDIClient::OnMDIDestroy(WPARAM wParam, LPARAM lParam)
+	{
+		// Do default processing first
+		CallWindowProc(GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
+
+		// Now remove MDI child
+		GetMDIFrame()->RemoveMDIChild((HWND) wParam);
+
+		return 0L;
+	}
+
+	inline LRESULT CMDIFrame::CMDIClient::OnMDISetMenu(WPARAM wParam, LPARAM lParam)
+	{
+		if (GetMDIFrame()->IsMenuBarUsed())
+		{
+			return 0L;
+		}
+
+		return FinalWindowProc(WM_MDISETMENU, wParam, lParam);
+	}
+
 	inline LRESULT CMDIFrame::CMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-		case WM_MDIDESTROY:
-			{
-				// Do default processing first
-				CallWindowProc(GetPrevWindowProc(), uMsg, wParam, lParam);
-
-				// Now remove MDI child
-				GetMDIFrame()->RemoveMDIChild((HWND) wParam);
-			}
-			return 0; // Discard message
-
-		case WM_MDISETMENU:
-			{
-				if (GetMDIFrame()->IsMenuBarUsed())
-				{
-					return 0L;
-				}
-			}
-			break;
-
-		case WM_MDIACTIVATE:
-			{
-				// Suppress redraw to avoid flicker when activating maximised MDI children
-				SendMessage(WM_SETREDRAW, FALSE, 0L);
-				LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
-				SendMessage(WM_SETREDRAW, TRUE, 0L);
-				RedrawWindow(0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
-
-				return lr;
-			}
+		case WM_MDIACTIVATE: return OnMDIActivate(wParam, lParam);
+		case WM_MDIDESTROY:	return OnMDIDestroy(wParam, lParam);
+		case WM_MDISETMENU:	return OnMDISetMenu(wParam, lParam);
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
@@ -751,39 +765,45 @@ namespace Win32xx
 		}
 	}
 
+	inline LRESULT CMDIChild::OnMDIActivate(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+
+		// This child is being activated
+		if (lParam == (LPARAM) m_hWnd)
+		{
+			GetMDIFrame()->m_hActiveMDIChild = m_hWnd;
+			// Set the menu to child default menu
+			if (m_hChildMenu)
+				GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);
+			if (m_hChildAccel)
+				GetApp()->SetAccelerators(m_hChildAccel, this);
+		}
+
+		// No child is being activated
+		if (0 == lParam)
+		{
+			GetMDIFrame()->m_hActiveMDIChild = NULL;
+			// Set the menu to frame's original menu
+			GetMDIFrame()->UpdateFrameMenu(GetMDIFrame()->GetFrameMenu());
+			GetApp()->SetAccelerators(GetMDIFrame()->GetFrameAccel(), this);
+		}
+			
+		return 0L;
+	}
+
+	inline LRESULT CMDIChild::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	{
+		RecalcLayout();
+		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
+	}
+
 	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-		case WM_MDIACTIVATE:
-			{
-				// This child is being activated
-				if (lParam == (LPARAM) m_hWnd)
-				{
-					GetMDIFrame()->m_hActiveMDIChild = m_hWnd;
-					// Set the menu to child default menu
-					if (m_hChildMenu)
-						GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);
-					if (m_hChildAccel)
-						GetApp()->SetAccelerators(m_hChildAccel, this);
-				}
-
-				// No child is being activated
-				if (0 == lParam)
-				{
-					GetMDIFrame()->m_hActiveMDIChild = NULL;
-					// Set the menu to frame's original menu
-					GetMDIFrame()->UpdateFrameMenu(GetMDIFrame()->GetFrameMenu());
-					GetApp()->SetAccelerators(GetMDIFrame()->GetFrameAccel(), this);
-				}
-			}
-			return 0L ;
-
-		case WM_WINDOWPOSCHANGED:
-			{
-				RecalcLayout();
-				break;
-			}
+		case WM_MDIACTIVATE:		return OnMDIActivate(wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}

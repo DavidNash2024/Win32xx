@@ -70,7 +70,7 @@ namespace Win32xx
 		BOOL ShowGripper(int nBand, BOOL fShow) const;
 		BOOL ShowBand(int nBand, BOOL fShow) const;
 		BOOL SizeToRect(CRect& rect) const;
-		
+
 		// Attributes
 		int  GetBand(const HWND hWnd) const;
 		CRect GetBandBorders(int nBand) const;
@@ -94,6 +94,11 @@ namespace Win32xx
 	protected:
 	//Overridables
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
+		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnTBWinPosChanging(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnToolBarResize(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -442,7 +447,7 @@ namespace Win32xx
 			// Copy the Memory DC to the window's DC
 			pDC->BitBlt(0, 0, BarWidth, BarHeight, &MemDC, 0, 0, SRCCOPY);
 		}
-		
+
 		return Erase;
 	}
 
@@ -501,6 +506,70 @@ namespace Win32xx
 				}
 			}
 		}
+	}
+
+	inline LRESULT CReBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
+	{
+		m_Orig_lParam = lParam;	// Store the x,y position
+		m_bIsDragging = TRUE;
+		
+		return FinalWindowProc(WM_LBUTTONDOWN, wParam, lParam);
+	}
+
+	inline LRESULT CReBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
+	{
+		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
+		{
+			// Use move messages to limit the resizing of bands
+			int y = GET_Y_LPARAM(lParam);
+
+			if (y <= GetRowHeight(0))
+			{
+				// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
+				lParam = m_Orig_lParam;
+			}
+		}
+		m_bIsDragging = FALSE;
+
+		return FinalWindowProc(WM_LBUTTONUP, wParam, lParam);
+	}
+
+	inline LRESULT CReBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	{
+		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
+		{
+			// We want to lock the first row in place, but allow other bands to move!
+			// Use move messages to limit the resizing of bands
+			int y = GET_Y_LPARAM(lParam);
+
+			if (y <= GetRowHeight(0))
+				return 0L;	// throw this message away
+		}
+
+		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
+	}
+
+	inline LRESULT CReBar::OnToolBarResize(WPARAM wParam, LPARAM lParam)
+	{
+		HWND hToolBar = (HWND)wParam;
+		LPSIZE pToolBarSize = (LPSIZE)lParam;
+		ResizeBand(GetBand(hToolBar), *pToolBarSize);
+
+		return FinalWindowProc(UWM_TOOLBAR_RESIZE, wParam, lParam);
+	}
+
+	inline LRESULT CReBar::OnTBWinPosChanging(WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
+		// Adjust size for toolbars inside a rebar
+		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+
+		// A boolean expression
+		return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
 	}
 
 	inline BOOL CReBar::ResizeBand(int nBand, const CSize& sz) const
@@ -613,7 +682,7 @@ namespace Win32xx
 	}
 
 	inline void CReBar::SetToolTips(CToolTip* pToolTip) const
-	// Associates a ToolTip control with the rebar control. 
+	// Associates a ToolTip control with the rebar control.
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
@@ -621,63 +690,17 @@ namespace Win32xx
 	}
 
 	inline LRESULT CReBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{	
-	
+	{
+
 		switch (uMsg)
 		{
-		case WM_MOUSEMOVE:
-			{
-				ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
-				if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
-				{
-					// We want to lock the first row in place, but allow other bands to move!
-					// Use move messages to limit the resizing of bands
-					int y = GET_Y_LPARAM(lParam);
+		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
+		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
+		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 
-					if (y <= GetRowHeight(0))
-						return 0L;	// throw this message away
-				}
-			}
-			break;
-		case WM_LBUTTONDOWN:
-			m_Orig_lParam = lParam;	// Store the x,y position
-			m_bIsDragging = TRUE;
-			break;
-		case WM_LBUTTONUP:
-			{
-				ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
-				if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
-				{
-					// Use move messages to limit the resizing of bands
-					int y = GET_Y_LPARAM(lParam);
-
-					if (y <= GetRowHeight(0))
-					{
-						// Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
-						lParam = m_Orig_lParam;
-					}
-				}
-				m_bIsDragging = FALSE;
-			}
-			break;
-		case UWM_TOOLBAR_RESIZE:
-			{
-				HWND hToolBar = (HWND)wParam;
-				LPSIZE pToolBarSize = (LPSIZE)lParam;
-				ResizeBand(GetBand(hToolBar), *pToolBarSize);
-			}
-			break;
-		case UWM_TBWINPOSCHANGING:
-			{
-				// Adjust size for toolbars inside a rebar
-				{
-					ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
-				
-					// A boolean expression
-					return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
-				}
-			}
-			break;
+		// Messages defined by Win32++
+		case UWM_TOOLBAR_RESIZE:	return OnToolBarResize(wParam, lParam);
+		case UWM_TBWINPOSCHANGING:	return OnTBWinPosChanging(wParam, lParam);
 		}
 
 		// pass unhandled messages on for default processing

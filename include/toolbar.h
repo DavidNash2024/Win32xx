@@ -132,6 +132,7 @@ namespace Win32xx
 	// Overridables
 		virtual void OnCreate();
 		virtual void OnDestroy();
+		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -631,6 +632,19 @@ namespace Win32xx
 		ImageList_Destroy(himlToolBarDis);
 	}
 
+	inline LRESULT CToolBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+	{
+	//	Used by ReBar controls to adjust ToolBar window size
+	
+		if ( GetParent()->SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
+		{
+			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+			pWinPos->cx = GetMaxSize().cx+2;
+		}
+
+		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);
+	}
+
 	inline void CToolBar::PreCreate(CREATESTRUCT &cs)
 	{
 		// Sets the CREATESTRUCT parameters prior to window creation
@@ -1098,16 +1112,7 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_WINDOWPOSCHANGING:
-			{
-			//	Required by ReBar controls to adjust ToolBar window size
-				if ( GetParent()->SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
-				{
-					LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-					pWinPos->cx = GetMaxSize().cx+2;
-				}
-			}
-			break;
+		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
 		}
 
 		// pass unhandled messages on for default processing

@@ -1360,13 +1360,11 @@ namespace Win32xx
 			Destroy();
 
 			// Ensure a window class is registered
-			std::vector<TCHAR> vTChar( MAX_STRING_SIZE+1, _T('\0') );
-			TCHAR* ClassName = &vTChar[0];
+			CString ClassName;
 			if (0 == lpszClassName || 0 == lstrlen(lpszClassName) )
-				lstrcpyn (ClassName, _T("Win32++ Window"), MAX_STRING_SIZE);
+				ClassName = _T("Win32++ Window");
 			else
-				// Create our own local copy of szClassName.
-				lstrcpyn(ClassName, lpszClassName, MAX_STRING_SIZE);
+				ClassName = lpszClassName;
 
 			WNDCLASS wc = {0};
 			wc.lpszClassName = ClassName;
@@ -1457,7 +1455,11 @@ namespace Win32xx
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
-		return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+	//	return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+		if (m_PrevWindowProc)
+			return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
+		else
+			return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
 	inline CWnd* CWnd::GetAncestor(UINT gaFlags /*= GA_ROOTOWNER*/) const
@@ -1940,14 +1942,12 @@ namespace Win32xx
 
 		//	switch (uMsg)
 		//	{
-		//	case MESSAGE1:		// Some Windows API message
-		//		OnMessage1();	// A user defined function
-		//		break;			// Also do default processing
-		//	case MESSAGE2:
-		//		OnMessage2();
-		//		return x;		// Don't do default processing, but instead return
-		//						//  a value recommended by the Windows API documentation
+		//	case MESSAGE1:	return OnMessage1();
+		//	case MESSAGE2:  return OnMessage2();
 		//	}
+
+		// The message functions should return a value recomended by the Windows API documention. 
+		// Alternativly, return FinalWindowProc to continue with default processing.
 
 		// Always pass unhandled messages on to WndProcDefault
 		return WndProcDefault(uMsg, wParam, lParam);
@@ -2077,9 +2077,9 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
-		if (m_PrevWindowProc)
-			return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
-		else
+	//	if (m_PrevWindowProc)
+	//		return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
+	//	else
 			return FinalWindowProc(uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
