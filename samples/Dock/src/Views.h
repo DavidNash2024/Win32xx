@@ -17,6 +17,8 @@ public:
 
 protected:
 	virtual void OnDraw(CDC* pDC);
+	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
@@ -43,7 +45,6 @@ public:
 protected:
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
-	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

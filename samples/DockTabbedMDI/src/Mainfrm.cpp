@@ -304,14 +304,20 @@ void CMainFrame::SetupToolBar()
 	AddMenuIcon(IDM_FILE_NEWTREE, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW), IMAGE_ICON, 0, 0, LR_SHARED));
 }
 
- LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnMouseActivate(WPARAM wParam, LPARAM lParam)
+{
+	// Store the active docker before processing the menu events
+	m_pLastActiveDocker = m_DockTabbedMDI.GetActiveDocker();
+	
+	return MA_ACTIVATE;
+}
+
+
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_MOUSEACTIVATE:
-		// Store the active docker before processing the menu events
-		m_pLastActiveDocker = m_DockTabbedMDI.GetActiveDocker();
-		break;
+	case WM_MOUSEACTIVATE:	return OnMouseActivate(wParam, lParam);
 	}
 
 	// Always pass unhandled messages on to WndProcDefault

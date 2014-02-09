@@ -519,7 +519,7 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_WINDOWPOSCHANGED:	return (wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 		}
 		
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);

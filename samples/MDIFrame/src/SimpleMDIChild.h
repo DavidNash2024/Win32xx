@@ -13,6 +13,7 @@ class CSimpleView : public CWnd
 public:
 	CSimpleView();
 	virtual void OnDraw(CDC* pDC);
+	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	
 	COLORREF GetColor() {return m_Color;}

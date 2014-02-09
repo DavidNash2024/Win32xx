@@ -31,24 +31,12 @@ BOOL CViewText::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_EDIT_COPY:
-		OnEditCopy();
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		OnEditPaste();
-		return TRUE;
-	case IDM_EDIT_CUT:
-		OnEditCut();
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		OnEditDelete();
-		return TRUE;
-	case IDM_EDIT_REDO:
-		OnEditRedo();
-		return TRUE;
-	case IDM_EDIT_UNDO:
-		OnEditUndo();
-		return TRUE;
+	case IDM_EDIT_COPY:		OnEditCopy();	return TRUE;
+	case IDM_EDIT_PASTE:	OnEditPaste();	return TRUE;
+	case IDM_EDIT_CUT:		OnEditCut();	return TRUE;
+	case IDM_EDIT_DELETE:	OnEditDelete();	return TRUE;
+	case IDM_EDIT_REDO:		OnEditRedo();	return TRUE;
+	case IDM_EDIT_UNDO:		OnEditUndo();	return TRUE;
 	}
 
 	// return FALSE for unhandled commands

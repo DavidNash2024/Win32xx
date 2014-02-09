@@ -20,12 +20,12 @@ public:
 	virtual CRect GetImageRect();
 
 protected:
-	virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
-	virtual void OnDraw(CDC* pDC);	
-	virtual void OnInitialUpdate();
-	virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
-	virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void    OnDraw(CDC* pDC);	
+	virtual void    OnInitialUpdate();
+	virtual LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnVScroll(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+	virtual void    PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

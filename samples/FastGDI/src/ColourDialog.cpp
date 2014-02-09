@@ -51,7 +51,7 @@ void CColourDialog::OnGrayScale()
 		TintBitmap(&m_bmPreview, m_cRed, m_cGreen, m_cBlue);
 	}
 
-	OnPaintPreview();
+	PaintPreview();
 }
 
 BOOL CColourDialog::OnInitDialog()
@@ -86,19 +86,14 @@ INT_PTR CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-	case WM_HSCROLL:
-		OnHScroll(wParam, lParam);
-		break;
-
-	case WM_PAINT:
-		OnPaintPreview();
-		return 0;
+	case WM_HSCROLL:	return OnHScroll(wParam, lParam);
+	case WM_PAINT:		return OnPaint(wParam, lParam);
 	}
 
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
+LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(wParam);
 
@@ -134,7 +129,9 @@ void CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
 		GrayScaleBitmap(&m_bmPreview);
 
-	OnPaintPreview();
+	PaintPreview();
+
+	return 0L;
 }
 
 void CColourDialog::OnOK()
@@ -147,7 +144,16 @@ void CColourDialog::OnOK()
 	CDialog::OnOK();
 }
 
-void CColourDialog::OnPaintPreview()
+LRESULT CColourDialog::OnPaint(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
+	PaintPreview();
+	return 0L;
+}
+
+void CColourDialog::PaintPreview()
 // Displays the bitmap in the display area of our dialog
 {
 	BITMAP bm;

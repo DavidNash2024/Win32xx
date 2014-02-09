@@ -13,15 +13,16 @@ public:
 	void CreateImagePreviews(HBITMAP hbmImage);
 	
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnInitDialog();
-	virtual void OnOK();
+	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual BOOL    OnInitDialog();
+	virtual void    OnOK();
+	virtual LRESULT OnPaint(WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	void OnGrayScale();
-	void OnHScroll(WPARAM wParam, LPARAM lParam);
-	void OnPaintPreview();
+	LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
+	void    PaintPreview();
 
 	// CWnd object for the dialog controls to attach to
 	CWnd m_RedSlider;

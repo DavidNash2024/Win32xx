@@ -27,13 +27,14 @@ public:
 	void LoadDefaultMDIs();
 	
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnCreate();
-	virtual void OnInitialUpdate();
-	virtual void OnMenuUpdate(UINT nID);
-	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual BOOL SaveRegistrySettings();
-	virtual void SetupToolBar();
+	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void    OnCreate();
+	virtual void    OnInitialUpdate();
+	virtual void    OnMenuUpdate(UINT nID);
+	virtual LRESULT OnMouseActivate(WPARAM wParam, LPARAM lParam);
+	virtual void    PreCreate(CREATESTRUCT &cs);
+	virtual BOOL    SaveRegistrySettings();
+	virtual void    SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

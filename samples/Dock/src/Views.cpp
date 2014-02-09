@@ -17,17 +17,30 @@ void CViewSimple::OnDraw(CDC* pDC)
 	pDC->DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
+LRESULT CViewSimple::OnSize(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
+	Invalidate();
+	return 0L;
+}
+
+LRESULT CViewSimple::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
+	Invalidate();
+	return 0L;
+}
+
 LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-	case WM_SIZE:
-		Invalidate();
-		break;
-	
-	case WM_WINDOWPOSCHANGED:
-		Invalidate();
-		break;
+	case WM_SIZE:				return OnSize(wParam, lParam);
+	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
@@ -203,12 +216,6 @@ void CViewTree::OnInitialUpdate()
 	// Expand some tree-view items
 	Expand(htiRoot, TVE_EXPAND);
 	Expand(htiCTreeViewApp, TVE_EXPAND); 
-}
-
-void CViewTree::PreCreate(CREATESTRUCT &cs)
-{
-	cs.style = TVS_NOTOOLTIPS|WS_CHILD;
-	cs.lpszClass = WC_TREEVIEW;
 }
 
 LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

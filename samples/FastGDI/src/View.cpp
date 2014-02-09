@@ -102,7 +102,7 @@ void CView::OnInitialUpdate()
 	ShowScrollBar(SB_BOTH, FALSE);
 }
 
-void CView::OnHScroll(WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnHScroll(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 	int xNewPos;
@@ -152,9 +152,11 @@ void CView::OnHScroll(WPARAM wParam, LPARAM lParam)
 	si.fMask  = SIF_POS;
 	si.nPos   = m_xCurrentScroll;
 	SetScrollInfo(SB_HORZ, si, TRUE);
+
+	return 0L;
 }
 
-void CView::OnVScroll(WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnVScroll(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 	int yNewPos;
@@ -204,9 +206,11 @@ void CView::OnVScroll(WPARAM wParam, LPARAM lParam)
 	si.fMask  = SIF_POS;
 	si.nPos   = m_yCurrentScroll;
 	SetScrollInfo(SB_VERT, si, TRUE);
+
+	return 0L;
 }
 
-void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
@@ -268,6 +272,8 @@ void CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	}
 	else
 		Invalidate();	// Keep the text centered in the window
+
+	return 0L;
 }
 
 void CView::PreCreate(CREATESTRUCT &cs)
@@ -285,17 +291,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_WINDOWPOSCHANGED:
-		OnWindowPosChanged(wParam, lParam);
-		break;
-
-	case WM_HSCROLL:
-		OnHScroll(wParam, lParam);
-		break;
-
-	case WM_VSCROLL:
-		OnVScroll(wParam, lParam);
-        break;
+	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+	case WM_HSCROLL:			return OnHScroll(wParam, lParam);
+	case WM_VSCROLL:			return OnVScroll(wParam, lParam);
 	}
 
 	// Pass unhandled messages on for default processing
