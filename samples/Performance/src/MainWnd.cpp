@@ -8,7 +8,7 @@
 #include "resource.h"
 
 
-CMainWindow::CMainWindow() : m_nTestMessages(0), m_nTestWindows(0)
+CMainWindow::CMainWindow() : m_nTestMessages(0), m_nTestWindows(0), m_nWindowsCreated(0)
 {
 }
 
@@ -68,12 +68,24 @@ void CMainWindow::OnInitialUpdate()
 	MyDialog.DoModal();
 }
 
-void CMainWindow::OnSize()
+LRESULT CMainWindow::OnSize()
 {
 	CRect r = GetClientRect();
 
 	// Resize the edit window when the main window is resized
 	m_Edit.MoveWindow(0, 0, r.right - r.left, r.bottom - r.top, TRUE);
+
+	return 0L;
+}
+
+
+LRESULT CMainWindow::OnWindowCreated()
+{
+	// Message recieved when a test window is created
+	if (++m_nWindowsCreated == m_nTestWindows)
+		OnAllWindowsCreated();
+	
+	return 0L;
 }
 
 void CMainWindow::OnAllWindowsCreated()
@@ -147,19 +159,10 @@ void CMainWindow::SendText(LPCTSTR str)
 
 LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	static int nWindowsCreated = 0;
-
 	switch (uMsg)
 	{
-	case WM_SIZE:
-		OnSize();
-		break;
-
-	case WM_WINDOWCREATED:
-		// Message recieved when a test window is created
-		if (++nWindowsCreated == m_nTestWindows)
-			OnAllWindowsCreated();
-		break;
+	case WM_SIZE:			return OnSize();
+	case WM_WINDOWCREATED:	return OnWindowCreated();
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

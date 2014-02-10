@@ -47,7 +47,7 @@ LRESULT CMDIChildMax::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_SIZE:
 			Invalidate();
-			break;  // Continue with default processing
+			return 0L;  // Continue with default processing
 
 	}
 	return WndProcDefault(uMsg, wParam, lParam);

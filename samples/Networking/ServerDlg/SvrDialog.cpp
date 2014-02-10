@@ -121,15 +121,9 @@ INT_PTR CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// respond to the user defined message posted to the dialog
 	switch (uMsg)
 	{
-	case USER_ACCEPT:
-		OnSocketAccept();
-		break;
-	case USER_DISCONNECT:
-		OnSocketDisconnect((CServerSocket*)wParam);
-		break;
-	case USER_RECEIVE:
-		OnSocketReceive((CServerSocket*)wParam);
-		break;
+	case USER_ACCEPT:		return OnSocketAccept();
+	case USER_DISCONNECT:	return OnSocketDisconnect(wParam);
+	case USER_RECEIVE:		return OnSocketReceive(wParam);
  	}
 
 	// Pass unhandled messages on to parent DialogProc
@@ -180,28 +174,6 @@ void CSvrDialog::LoadCommonControlsEx()
 void CSvrDialog::OnDestroy()
 {
 	PostQuitMessage(0);
-}
-
-void CSvrDialog::OnSocketDisconnect(CServerSocket* pClient)
-{
-	// Respond to a socket disconnect notification
-	Append(IDC_EDIT_STATUS, _T("Client disconnected"));
-
-
-	// Allocate an iterator for our CServerSocket map
-	std::map< ServerSocketPtr, TCPClientDlgPtr >::iterator Iter;
-
-	for (Iter = m_ConnectedClients.begin(); Iter != m_ConnectedClients.end(); ++Iter)
-	{
-		if (Iter->first.get() == pClient)
-			break;
-	}
-
-	// delete the CServerSocket, and remove its pointer
-	if (Iter != m_ConnectedClients.end())
-	{
-		m_ConnectedClients.erase(Iter);
-	}
 }
 
 BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -336,7 +308,7 @@ void CSvrDialog::OnSend()
 	}
 }
 
-void CSvrDialog::OnSocketAccept()
+BOOL CSvrDialog::OnSocketAccept()
 {
 	// Accept the connection from the client
 	ServerSocketPtr pClient = new CServerSocket;
@@ -345,7 +317,7 @@ void CSvrDialog::OnSocketAccept()
 	{
 		TRACE("Failed to accept connection from client\n");
 		TRACE(m_MainSocket.GetLastError());
-		return;
+		return TRUE;
 	}
 
 	pClient->StartEvents();
@@ -366,10 +338,39 @@ void CSvrDialog::OnSocketAccept()
 
 	// Update the dialog
 	Append(IDC_EDIT_STATUS, _T("Client Connected"));
+
+	return TRUE;
 }
 
-void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
+BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
 {
+	CServerSocket* pClient = (CServerSocket*)wParam;
+
+	// Respond to a socket disconnect notification
+	Append(IDC_EDIT_STATUS, _T("Client disconnected"));
+
+
+	// Allocate an iterator for our CServerSocket map
+	std::map< ServerSocketPtr, TCPClientDlgPtr >::iterator Iter;
+
+	for (Iter = m_ConnectedClients.begin(); Iter != m_ConnectedClients.end(); ++Iter)
+	{
+		if (Iter->first.get() == pClient)
+			break;
+	}
+
+	// delete the CServerSocket, and remove its pointer
+	if (Iter != m_ConnectedClients.end())
+	{
+		m_ConnectedClients.erase(Iter);
+	}
+
+	return TRUE;
+}
+
+BOOL CSvrDialog::OnSocketReceive(WPARAM wParam)
+{
+	CServerSocket* pClient = (CServerSocket*)wParam;
 	std::vector<char> vChar(1025, '\0');
 	char* bufArray = &vChar.front(); // char array with 1025 elements
 
@@ -402,6 +403,8 @@ void CSvrDialog::OnSocketReceive(CServerSocket* pClient)
 		break;
 	}
 	Append(IDC_EDIT_RECEIVE, A2T(bufArray));
+
+	return TRUE;
 }
 
 BOOL CSvrDialog::StartServer()

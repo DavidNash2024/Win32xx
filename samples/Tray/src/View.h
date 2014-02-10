@@ -14,16 +14,16 @@ public:
 	void Restore();
 
 protected:
-	virtual void OnAbout();
-	virtual void OnCreate();
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnDestroy();
-	virtual void OnDraw(CDC* pDC);	
-	virtual void OnInitialUpdate();
-	virtual void OnSize();
+	virtual void    OnAbout();
+	virtual void    OnCreate();
+	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void    OnDestroy();
+	virtual void    OnDraw(CDC* pDC);	
+	virtual void    OnInitialUpdate();
+	virtual LRESULT OnSize();
 	virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnTrayIcon(WPARAM wParam, LPARAM lParam);
-	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual LRESULT OnTrayIcon(WPARAM wParam, LPARAM lParam);
+	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

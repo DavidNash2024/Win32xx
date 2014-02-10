@@ -23,17 +23,17 @@ public:
 	LPPICTURE GetPicture() { return m_pPicture; }
 
 protected:
-	virtual void OnDraw(CDC* pDC);
-	virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
-	virtual void OnInitialUpdate();
-	virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
-	virtual void OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void    OnDraw(CDC* pDC);
+	virtual LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
+	virtual void    OnInitialUpdate();
+	virtual LRESULT OnVScroll(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+	virtual void    PreCreate(CREATESTRUCT &cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	LPPICTURE m_pPicture;
-	CBrush m_Brush;
+	CBrush	m_Brush;
 	OLECHAR m_OleString[MAX_STRING_SIZE];
 	BSTR    m_BStrString;
 	int m_xCurrentScroll;

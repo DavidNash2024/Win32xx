@@ -204,9 +204,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_LBUTTONDOWN: OnLButtonDown(lParam); break;
-	case WM_MOUSEMOVE: OnMouseMove(wParam, lParam); break;
-    case WM_LBUTTONUP: OnLButtonUp(lParam); break;
+	case WM_LBUTTONDOWN: OnLButtonDown(lParam);			break;
+	case WM_MOUSEMOVE:   OnMouseMove(wParam, lParam);	break;
+    case WM_LBUTTONUP:   OnLButtonUp(lParam);			break;
 	}
 
 	//Use the default message handling for remaining messages

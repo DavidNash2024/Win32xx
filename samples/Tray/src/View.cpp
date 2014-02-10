@@ -95,10 +95,11 @@ void CView::OnInitialUpdate()
 	TRACE("OnInitialUpdate\n");
 }
 
-void CView::OnSize()
+LRESULT CView::OnSize()
 {
 	// Force the window to be repainted during resizing
 	Invalidate();
+	return 0L;
 }
 
 LRESULT CView::OnSysCommand(WPARAM wParam, LPARAM lParam)
@@ -111,16 +112,16 @@ LRESULT CView::OnSysCommand(WPARAM wParam, LPARAM lParam)
 		return 0L;
 	}
 
-	return WndProcDefault(WM_SYSCOMMAND, wParam, lParam);
+	return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
 }	
 
-void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 {
 	// For a NOTIFYICONDATA with uVersion= 0, wParam and lParam have the following values:
 	// The wParam parameter contains the identifier of the taskbar icon in which the event occurred.
 	// The lParam parameter holds the mouse or keyboard message associated with the event.
     if (wParam != IDW_MAIN)
-		return;
+		return 0L;
 
 	if (lParam == WM_LBUTTONUP)
     {
@@ -142,6 +143,8 @@ void CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 		case IDM_MIN_EXIT:    Destroy(); break;
 		}
     }
+
+	return 0;
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -180,9 +183,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	switch(uMsg)
 	{
-	case WM_SIZE:       OnSize(); 	break;
+	case WM_SIZE:       return OnSize();
 	case WM_SYSCOMMAND: return OnSysCommand(wParam, lParam);
-	case MSG_TRAYICON:  OnTrayIcon(wParam, lParam); 	break;
+	case MSG_TRAYICON:  return OnTrayIcon(wParam, lParam);
 	}
 
 	// pass unhandled messages on for default processing

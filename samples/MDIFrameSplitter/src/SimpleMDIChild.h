@@ -12,12 +12,14 @@ class CSimpleView : public CWnd
 {
 public:
 	CSimpleView();
-	virtual void OnDraw(CDC* pDC);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
 	COLORREF GetColor() {return m_Color;}
 	void SetColor(COLORREF color) { m_Color = color; }
 
+protected:
+	virtual void OnDraw(CDC* pDC);
+	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	
 private:
 	COLORREF m_Color;
 };
@@ -46,8 +48,9 @@ public:
 	virtual ~CSimpleMDIChild();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnInitialUpdate();
+	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void    OnInitialUpdate();
+	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

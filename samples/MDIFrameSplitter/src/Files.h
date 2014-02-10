@@ -12,12 +12,14 @@ class CViewFiles : public CListView
 public:
 	CViewFiles();
 	virtual ~CViewFiles();
+
+protected:
 	virtual int  AddItem(LPCTSTR szText, int nImage);
 	virtual void InsertItems();
+	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	HIMAGELIST m_himlSmall;

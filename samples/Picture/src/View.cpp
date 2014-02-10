@@ -120,7 +120,7 @@ void CView::OnInitialUpdate()
 	}
 }
 
-void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 {
 	int xNewPos;
 
@@ -168,9 +168,11 @@ void CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 	si.fMask  = SIF_POS;
 	si.nPos   = m_xCurrentScroll;
 	SetScrollInfo(SB_HORZ, si, TRUE);
+
+	return 0L;
 }
 
-void CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
 {
 	int yNewPos;
 
@@ -219,9 +221,11 @@ void CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
 	si.fMask  = SIF_POS;
 	si.nPos   = m_yCurrentScroll;
 	SetScrollInfo(SB_VERT, si, TRUE);
+
+	return 0;
 }
 
-void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 {
 	if (m_pPicture)
 	{
@@ -275,6 +279,8 @@ void CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 		CClientDC dcView(this);
 		Paint(dcView);
 	}
+
+	return 0L;
 }
 
 void CView::Paint(HDC hDC)
@@ -328,17 +334,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_WINDOWPOSCHANGED:
-		OnWindowPosChanged(wParam, lParam);
-		break;
-
-	case WM_HSCROLL:
-		OnHScroll(wParam, lParam);
-		break;
-
-	case WM_VSCROLL:
-		OnVScroll(wParam, lParam);
-        break;
+	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+	case WM_HSCROLL:			return OnHScroll(wParam, lParam);
+	case WM_VSCROLL:			return OnVScroll(wParam, lParam);
 	}
 
 	// Pass unhandled messages on for default processing

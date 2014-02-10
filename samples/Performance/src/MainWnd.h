@@ -27,7 +27,8 @@ protected:
 	virtual void OnCreate();
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
-	virtual void OnSize();
+	virtual LRESULT OnSize();
+	virtual LRESULT OnWindowCreated();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
@@ -38,11 +39,11 @@ private:
 	};
 
 	std::vector<TestWindowPtr> m_pCTestWindows;	// A vector CTestWindow smart pointers
-//	HWND  m_hEdit;			// Handle to the edit window
 	CEdit m_Edit;			// Handle to the edit window
 	CFont m_Font;			// A font for the edit window
 	int m_nTestMessages;	// Number of test messages to be sent
 	int m_nTestWindows;		// Number of test windows to create
+	int m_nWindowsCreated;	// Number of windows created
 };
 
 

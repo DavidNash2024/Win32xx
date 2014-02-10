@@ -84,13 +84,20 @@ void CMDIChildText::OnInitialUpdate()
 	SetIconSmall(IDI_TEXT);
 }
 
+LRESULT CMDIChildText::OnSetFocus(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
+	m_TextView.SetFocus();
+	return 0L;
+}
+
 LRESULT CMDIChildText::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_SETFOCUS:
-		m_TextView.SetFocus();
-		break;
+	case WM_SETFOCUS:	return OnSetFocus(wParam, lParam);
 	}
 
 	// Do default processing for other messages

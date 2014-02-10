@@ -35,9 +35,9 @@ private:
 	};
 
 	void DrawLine(int x, int y);
-	void OnLButtonDown(LPARAM lParam);
-	void OnLButtonUp(LPARAM lParam);
-	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonDown(LPARAM lParam);
+	LRESULT OnLButtonUp(LPARAM lParam);
+	LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 	void StorePoint(int x, int y, bool PenDown);
 
 	CBrush m_Brush;

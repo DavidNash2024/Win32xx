@@ -41,26 +41,59 @@ INT_PTR CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case USER_CONNECT:
-		OnClientConnect();
-		break;
-	case USER_DISCONNECT:
-		OnClientDisconnect();
-		break;
-	case USER_RECEIVE:
-		OnClientReceive();
-		break;
-	case WM_ACTIVATE:
-		// Give focus to the Send Edit box
-		SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
-		break;
+	case WM_ACTIVATE:		return OnActivate(wParam, lParam);
+	case USER_CONNECT:		return OnSocketConnect();
+	case USER_DISCONNECT:	return OnSocketDisconnect();
+	case USER_RECEIVE:		return OnSocketReceive();
 	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-void CClientDialog::OnClientDisconnect()
+LRESULT CClientDialog::OnActivate(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
+	// Give focus to the Send Edit box
+	SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
+
+	return TRUE;
+}
+
+void CClientDialog::OnDestroy()
+{
+	PostQuitMessage(0);
+}
+
+BOOL CClientDialog::OnSocketConnect()
+{
+	// Called when the connection to the server is established
+	m_bClientConnected = TRUE;
+	m_ButtonConnect.EnableWindow( TRUE );
+
+	// Move focus to the Send Edit box
+	SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
+	SetForegroundWindow();
+
+	// Update the dialog
+	m_IP4Address.EnableWindow( FALSE );
+	m_EditIP6Address.EnableWindow( FALSE );
+	m_ButtonSend.EnableWindow( TRUE );
+	m_EditSend.EnableWindow( TRUE );
+	m_EditPort.EnableWindow( FALSE );
+	m_RadioIP4.EnableWindow( FALSE );
+	m_RadioIP6.EnableWindow( FALSE );
+	m_RadioTCP.EnableWindow( FALSE );
+	m_RadioUDP.EnableWindow( FALSE );
+	m_EditStatus.SetWindowText( _T("Connected to server") );
+	m_ButtonConnect.SetWindowText( _T("Disconnect") );
+
+	return TRUE;
+}
+
+BOOL CClientDialog::OnSocketDisconnect()
 {
 	// Called when the socket is disconnected from the server
 	m_bClientConnected = FALSE;
@@ -81,11 +114,25 @@ void CClientDialog::OnClientDisconnect()
 		m_EditIP6Address.EnableWindow( TRUE );
 		m_RadioIP6.EnableWindow( TRUE );
 	}
+
+	return TRUE;
 }
 
-void CClientDialog::OnDestroy()
+BOOL CClientDialog::OnSocketReceive()
 {
-	PostQuitMessage(0);
+	// Called when the socket has data to receive
+	std::vector<CHAR> vChar( 1025, '\0' );
+	CHAR* buf = &vChar.front();	// CHAR array with 1025 elements initialised to '\0'
+	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
+	if (SOCKET_ERROR == size)
+	{
+		Append( IDC_EDIT_STATUS, _T("Receive failed.") );
+		return size;
+	}
+
+	Append( IDC_EDIT_RECEIVE, A2T(buf) );
+	
+	return TRUE;
 }
 
 void CClientDialog::LoadCommonControlsEx()
@@ -127,47 +174,6 @@ void CClientDialog::LoadCommonControlsEx()
 		if (hComCtl)
 			::FreeLibrary(hComCtl);
 	}
-}
-
-
-void CClientDialog::OnClientConnect()
-{
-	// Called when the connection to the server is established
-	m_bClientConnected = TRUE;
-	m_ButtonConnect.EnableWindow( TRUE );
-
-	// Move focus to the Send Edit box
-	SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
-	SetForegroundWindow();
-
-	// Update the dialog
-	m_IP4Address.EnableWindow( FALSE );
-	m_EditIP6Address.EnableWindow( FALSE );
-	m_ButtonSend.EnableWindow( TRUE );
-	m_EditSend.EnableWindow( TRUE );
-	m_EditPort.EnableWindow( FALSE );
-	m_RadioIP4.EnableWindow( FALSE );
-	m_RadioIP6.EnableWindow( FALSE );
-	m_RadioTCP.EnableWindow( FALSE );
-	m_RadioUDP.EnableWindow( FALSE );
-	m_EditStatus.SetWindowText( _T("Connected to server") );
-	m_ButtonConnect.SetWindowText( _T("Disconnect") );
-}
-
-int CClientDialog::OnClientReceive()
-{
-	// Called when the socket has data to receive
-	std::vector<CHAR> vChar( 1025, '\0' );
-	CHAR* buf = &vChar.front();	// CHAR array with 1025 elements initialised to '\0'
-	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
-	if (SOCKET_ERROR == size)
-	{
-		Append( IDC_EDIT_STATUS, _T("Receive failed.") );
-		return size;
-	}
-
-	Append( IDC_EDIT_RECEIVE, A2T(buf) );
-	return size;
 }
 
 BOOL CClientDialog::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -387,5 +393,4 @@ void CClientDialog::OnSend()
 		break;
 	}
 }
-
 

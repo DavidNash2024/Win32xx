@@ -10,6 +10,10 @@
 class CViewRect : public CWnd
 {
 public:
+	virtual void OnCreate();
+	virtual void OnDestroy();
+	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

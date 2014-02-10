@@ -15,9 +15,10 @@ public:
 	CClientDialog(UINT nResID, CWnd* pParent = NULL);
 	virtual ~CClientDialog();
 
-	void OnClientDisconnect();
-	void OnClientConnect();
-	int OnClientReceive();
+	LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
+	BOOL OnSocketDisconnect();
+	BOOL OnSocketConnect();
+	BOOL OnSocketReceive();
 
 protected:
 	virtual void OnDestroy();

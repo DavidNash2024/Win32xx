@@ -50,9 +50,9 @@ public:
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
 	void LoadCommonControlsEx();
-	void OnSocketDisconnect(CServerSocket* pClient);
-	void OnSocketReceive(CServerSocket* pClient);
-	void OnSocketAccept();
+	BOOL OnSocketDisconnect(WPARAM wParam);
+	BOOL OnSocketReceive(WPARAM wParam);
+	BOOL OnSocketAccept();
 	void OnSend();
 	void OnStartServer();
 	BOOL StartServer();
