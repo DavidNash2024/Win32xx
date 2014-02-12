@@ -258,20 +258,18 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		CString t;
+		CString str;
 		if (nTextMax > 0)
 		{
 			TVITEM tvi = {0};
 			tvi.hItem = hItem;
 			tvi.mask = TVIF_TEXT;
 			tvi.cchTextMax = nTextMax;
-			std::vector<TCHAR> vTChar(nTextMax +1, _T('\0'));
-			TCHAR* pTCharArray = &vTChar.front();
-			tvi.pszText = pTCharArray;
+			tvi.pszText = str.GetBuffer(nTextMax);
 			SendMessage(TVM_GETITEM, 0L, (LPARAM)&tvi);
-			t = tvi.pszText;
+			str.ReleaseBuffer();
 		}
-		return t;
+		return str;
 	}
 
 	inline HTREEITEM CTreeView::GetLastVisible() const

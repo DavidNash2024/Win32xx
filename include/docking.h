@@ -4135,8 +4135,6 @@ namespace Win32xx
 		{
 		case WM_SIZE:			return OnSize(wParam, lParam);
 		case WM_SETFOCUS:		return OnSetFocus(wParam, lParam);
-
-
 		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSELEAVE:		return OnMouseLeave(wParam, lParam);

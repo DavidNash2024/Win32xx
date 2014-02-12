@@ -1428,19 +1428,6 @@ namespace Win32xx
 		}
 	}
 
-/*	inline void CMenuBar::SetMenuBarTheme(MenuTheme& Theme)
-	{
-		m_ThemeMenu.UseThemes   = Theme.UseThemes;
-		m_ThemeMenu.clrHot1     = Theme.clrHot1;
-		m_ThemeMenu.clrHot2     = Theme.clrHot2;
-		m_ThemeMenu.clrPressed1 = Theme.clrPressed1;
-		m_ThemeMenu.clrPressed2 = Theme.clrPressed2;
-		m_ThemeMenu.clrOutline  = Theme.clrOutline;
-
-		if (IsWindow())
-			Invalidate();
-	} */
-
 	inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		assert(GetApp());
@@ -2207,17 +2194,19 @@ namespace Win32xx
 				int iImage = (int)tbb.dwData;
 
 				// Calculate text size
-				std::vector<TCHAR> vText(MAX_MENU_STRING, _T('\0'));
-				TCHAR* pszText = &vText[0];
+				CString str;
 				CSize TextSize;
 				if (pTB->HasText())	// Does any button have text?
 				{
 					DrawDC.SelectObject(pTB->GetFont());
-					if (pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)pszText)> 0)
+					LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
+					str.ReleaseBuffer();
+					if (lr> 0)
 					{
-						TextSize = DrawDC.GetTextExtentPoint32(pszText, lstrlen(pszText));
+						TextSize = DrawDC.GetTextExtentPoint32(str, lstrlen(str));
 					}
 				}
+
 
 				// Draw outline rectangle
 				if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
@@ -2321,7 +2310,7 @@ namespace Win32xx
 				}
 
 				//Draw Text
-				if (lstrlen(pszText) > 0)
+				if (lstrlen(str) > 0)
 				{
 					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
 					CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
@@ -2346,15 +2335,15 @@ namespace Win32xx
 						// Draw text twice for embossed look
 						rcText.OffsetRect(1, 1);
 						DrawDC.SetTextColor(RGB(255,255,255));
-						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
+						DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT);
 						rcText.OffsetRect(-1, -1);
 						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT);
+						DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT);
 					}
 					else
 					{
 						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-						DrawDC.DrawText(pszText, lstrlen(pszText), rcText, DT_LEFT | DT_END_ELLIPSIS);
+						DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT | DT_END_ELLIPSIS);
 					}
 					DrawDC.SetBkMode(iMode);
 

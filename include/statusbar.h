@@ -129,13 +129,11 @@ namespace Win32xx
 		
 		// Get size of Text array
 		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
+		CString str;
 
-		std::vector<TCHAR> Text( iChars +1, _T('\0') );
-		TCHAR* pTextArray = &Text[0];
-
-		SendMessage(SB_GETTEXT, iPart, (LPARAM)pTextArray);
-		PaneText = pTextArray;			
-		return PaneText;
+		SendMessage(SB_GETTEXT, iPart, (LPARAM)str.GetBuffer(iChars));
+		str.ReleaseBuffer();
+		return str;
 	}
 
 	inline BOOL CStatusBar::IsSimple()

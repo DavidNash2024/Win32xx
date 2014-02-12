@@ -676,14 +676,14 @@ namespace Win32xx
 		{
 			CClientDC dcClient(this);
 			dcClient.SelectObject(&m_Font);
-			std::vector<TCHAR> vTitle(MAX_MENU_STRING, _T('\0'));
-			TCHAR* pszTitle = &vTitle.front();
+			CString str;
 			TCITEM tcItem = {0};
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
 			tcItem.cchTextMax = MAX_MENU_STRING;
-			tcItem.pszText = pszTitle;
+			tcItem.pszText = str.GetBuffer(MAX_MENU_STRING);
 			TabCtrl_GetItem(m_hWnd, i, &tcItem);
-			CSize TempSize = dcClient.GetTextExtentPoint32(pszTitle, lstrlen(pszTitle));
+			str.ReleaseBuffer();
+			CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
 
 			int iImageSize = 0;
 			int iPadding = 6;
@@ -1174,14 +1174,11 @@ namespace Win32xx
 		if (nTab < GetAllTabs().size())
 		{
 			TCITEM Item = {0};
-			std::vector<TCHAR> vTChar(MAX_MENU_STRING+1, _T('\0'));
-			TCHAR* pTChar = &vTChar.front();
-			lstrcpyn(pTChar, szText, MAX_MENU_STRING);
 			Item.mask = TCIF_TEXT;
-			Item.pszText = pTChar;
+			Item.pszText = (LPTSTR)szText;
 
 			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))
-				lstrcpyn(m_vTabPageInfo[nTab].szTabText, pTChar, MAX_MENU_STRING);
+				lstrcpyn(m_vTabPageInfo[nTab].szTabText, szText, MAX_MENU_STRING);
 		}
 	}
 
@@ -1276,20 +1273,22 @@ namespace Win32xx
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
 			int nLength = 30;
-			std::vector<TCHAR> vTChar1( nLength+1, _T('\0') );	// vector for TCHAR array
-			std::vector<TCHAR> vTChar2( nLength+1, _T('\0') );	// vector for TCHAR array
+			CString str1;
+			CString str2;
 
 			TCITEM Item1 = {0};
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = nLength;
-			Item1.pszText = &vTChar1.front();
+			Item1.pszText = str1.GetBuffer(nLength);
 			GetItem(nTab1, &Item1);
+			str1.ReleaseBuffer();
 
 			TCITEM Item2 = {0};
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = nLength;
-			Item2.pszText = &vTChar2.front();
+			Item2.pszText = str2.GetBuffer(nLength);
 			GetItem(nTab2, &Item2);
+			str2.ReleaseBuffer();
 
 			TabCtrl_SetItem(m_hWnd, nTab1, &Item2);
 			TabCtrl_SetItem(m_hWnd, nTab2, &Item1);
