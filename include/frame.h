@@ -247,14 +247,16 @@ namespace Win32xx
 		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
-		virtual void OnMenuChar(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-		virtual void OnSysCommand(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysKeyDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysKeyUp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
+		virtual LRESULT OnTBNHotItemChange(LPNMTBHOTITEM pNMHI);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -446,11 +448,11 @@ namespace Win32xx
 		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual void OnCreate();
+		virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
 		virtual void OnDestroy();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnExitMenuLoop(WPARAM wParam, LPARAM lParam);
-		virtual void	OnHelp();
-		virtual LRESULT OnHelp(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT	OnHelp();
 		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
@@ -460,7 +462,13 @@ namespace Win32xx
 		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
+		virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
+		virtual LRESULT OnRBNMinMax(LPNMHDR pNMHDR);
+		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
+		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual	LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnUndocked();
 		virtual void OnViewStatusBar();
 		virtual void OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -850,12 +858,14 @@ namespace Win32xx
 		return (m_pFrame->IsMDIFrame());
 	}
 
-	inline void CMenuBar::OnMenuChar(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenuBar::OnMenuChar(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
 		if (!m_bMenuActive)
 			DoAltKey(LOWORD(wParam));
+
+		return FinalWindowProc(WM_MENUCHAR, wParam, lParam);
 	}
 
 	inline void CMenuBar::OnCreate()
@@ -879,13 +889,13 @@ namespace Win32xx
 			ExitMenu();
 		m_pFrame->OnExitMenuLoop(wParam, lParam);
 		
-		return FinalWindowProc(WM_EXITMENULOOP, wParam, lParam);
+		return 0L;
 	}
 
 	inline LRESULT CMenuBar::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
 		m_pFrame->OnInitMenuPopup(wParam, lParam);
-		return FinalWindowProc(WM_INITMENUPOPUP, wParam, lParam);
+		return 0L;
 	}
 
 	inline LRESULT CMenuBar::OnKeyDown(WPARAM wParam, LPARAM lParam)
@@ -1034,7 +1044,7 @@ namespace Win32xx
 		m_nMDIButton = 0;
 		ExitMenu();
 
-		return FinalWindowProc(WM_LBUTTONUP, wParam, lParam);
+		return 0L;
 	}
 
 	inline LRESULT CMenuBar::OnMeasureItem(WPARAM wParam, LPARAM lParam)
@@ -1249,50 +1259,14 @@ namespace Win32xx
 
 		switch (((LPNMHDR)lParam)->code)
 		{
-		case TBN_DROPDOWN:
-			// Always use PostMessage for USER_POPUPMENU (not SendMessage)
-			PostMessage(UWM_POPUPMENU, 0L, 0L);
-			break;
+		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR) lParam);
+		case TBN_HOTITEMCHANGE:	return OnTBNHotItemChange((LPNMTBHOTITEM) lParam);
+		}
 
-		case TBN_HOTITEMCHANGE:
-			// This is the notification that a hot item change is about to occur
-			// This is used to bring up a new popup menu when required
-			{
-				CPoint pt = GetCursorPos();
-				if (this == WindowFromPoint(pt))	// MenuBar window must be on top
-				{
-					DWORD flag = ((LPNMTBHOTITEM)lParam)->dwFlags;
-					if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
-					{
-						int nButton = HitTest();
-						if ((m_bMenuActive) && (nButton != m_nHotItem))
-						{
-							SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
-							m_nHotItem = nButton;
-							SendMessage(WM_CANCELMODE, 0L, 0L);
-
-							//Always use PostMessage for USER_POPUPMENU (not SendMessage)
-							PostMessage(UWM_POPUPMENU, 0L, 0L);
-						}
-						m_nHotItem = nButton;
-					}
-
-					// Handle escape from popup menu
-					if ((flag & HICF_LEAVING) && m_bKeyMode)
-					{
-						m_nHotItem = ((LPNMTBHOTITEM)lParam)->idOld;
-						PostMessage(TB_SETHOTITEM, m_nHotItem, 0L);
-					}
-
-				}
-				break;
-			} //case TBN_HOTITEMCHANGE:
-
-		} // switch(((LPNMHDR)lParam)->code)
 		return 0L;
-	} // CMenuBar::OnNotify(...)
+	}
 
-	inline void CMenuBar::OnSysCommand(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMenuBar::OnSysCommand(WPARAM wParam, LPARAM lParam)
 	{
 		if (SC_KEYMENU == wParam)
 		{
@@ -1308,6 +1282,8 @@ namespace Win32xx
 				// Handle key pressed with Alt held down
 				DoAltKey((WORD)lParam);
 		}
+
+		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
 	}
 
 	inline LRESULT CMenuBar::OnSysKeyDown(WPARAM wParam, LPARAM lParam)
@@ -1331,7 +1307,52 @@ namespace Win32xx
 		}
 		
 		return FinalWindowProc(WM_SYSKEYUP, wParam, lParam);
-	}	
+	}
+
+	inline LRESULT CMenuBar::OnTBNDropDown(LPNMTOOLBAR pNMTB)
+	{
+		UNREFERENCED_PARAMETER(pNMTB);
+
+		// Always use PostMessage for USER_POPUPMENU (not SendMessage)
+		PostMessage(UWM_POPUPMENU, 0L, 0L);
+
+		return 0L;
+	}
+
+	inline LRESULT CMenuBar::OnTBNHotItemChange(LPNMTBHOTITEM pNMHI)
+	{
+		// This is the notification that a hot item change is about to occur
+		// This is used to bring up a new popup menu when required
+		
+		CPoint pt = GetCursorPos();
+		if (this == WindowFromPoint(pt))	// MenuBar window must be on top
+		{
+			DWORD flag = pNMHI->dwFlags;
+			if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
+			{
+				int nButton = HitTest();
+				if ((m_bMenuActive) && (nButton != m_nHotItem))
+				{
+					SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
+					m_nHotItem = nButton;
+					SendMessage(WM_CANCELMODE, 0L, 0L);
+
+					//Always use PostMessage for USER_POPUPMENU (not SendMessage)
+					PostMessage(UWM_POPUPMENU, 0L, 0L);
+				}
+				m_nHotItem = nButton;
+			}
+
+			// Handle escape from popup menu
+			if ((flag & HICF_LEAVING) && m_bKeyMode)
+			{
+				m_nHotItem = pNMHI->idOld;
+				PostMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+			}
+		}
+
+		return 0L;
+	}
 	
 	inline LRESULT CMenuBar::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
@@ -2926,7 +2947,7 @@ namespace Win32xx
 			NMHDR nhdr={0};
 			nhdr.hwndFrom = m_hOldFocus;
 			nhdr.idFrom = idCtrl;
-			nhdr.code = UWM_FRAMELOSTFOCUS;
+			nhdr.code = UWN_FRAMELOSTFOCUS;
 			if (GetView()->IsWindow())
 				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
@@ -2940,7 +2961,7 @@ namespace Win32xx
 			NMHDR nhdr={0};
 			nhdr.hwndFrom = m_hOldFocus;
 			nhdr.idFrom = idCtrl;
-			nhdr.code = UWM_FRAMEGOTFOCUS;
+			nhdr.code = UWN_FRAMEGOTFOCUS;
 			if (GetView()->IsWindow())
 				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
 		}
@@ -3032,6 +3053,22 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)
+	{
+		// CustomDraw notification from WM_NOTIFY
+
+		CWnd* pWnd = FromHandle(pNMHDR->hwndFrom);
+		if (dynamic_cast<CToolBar*>(pWnd))
+		{
+			if (pNMHDR->hwndFrom == GetMenuBar().GetHwnd())
+				return CustomDrawMenuBar(pNMHDR);
+			else
+				return CustomDrawToolBar(pNMHDR);
+		}
+
+		return 0L;
+	}
+
 	inline void CFrame::OnDestroy()
 	{
 		SetMenu(NULL);
@@ -3054,6 +3091,9 @@ namespace Win32xx
 
 	inline LRESULT CFrame::OnExitMenuLoop(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		if (m_bUseThemes)
 		{
 			for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
@@ -3073,20 +3113,10 @@ namespace Win32xx
 			m_vMenuItemData.clear();
 		}
 
-		return FinalWindowProc(WM_EXITMENULOOP, wParam, lParam);
+		return 0L;
 	}
 
-	inline LRESULT CFrame::OnHelp(WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
-		OnHelp();
-
-		return TRUE;
-	}
-
-	inline void CFrame::OnHelp()
+	inline LRESULT CFrame::OnHelp()
 	{
 		// Ensure only one dialog displayed even for multiple hits of the F1 button
 		if (!m_AboutDialog.IsWindow())
@@ -3101,6 +3131,8 @@ namespace Win32xx
 
 			::SetFocus(hPrevFocus);
 		}
+
+		return TRUE;
 	}
 
 	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
@@ -3127,7 +3159,7 @@ namespace Win32xx
 
 				// Send message for menu updates
 				UINT menuItem = pMenu->GetMenuItemID(i);
-				SendMessage(UWM_UPDATE_COMMAND, (WPARAM)menuItem, 0);
+				SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0);
 
 				// Specify owner-draw for the menu item type
 				if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
@@ -3145,7 +3177,7 @@ namespace Win32xx
 			}
 		}
 
-		return FinalWindowProc(WM_INITMENUPOPUP, wParam, lParam);
+		return 0L;
 	}
 
 	inline LRESULT CFrame::OnMeasureItem(WPARAM wParam, LPARAM lParam)
@@ -3168,6 +3200,7 @@ namespace Win32xx
 			GetMenuBar().OnMenuChar(wParam, lParam);
 			return -1L;
 		}
+
 		return FinalWindowProc(WM_MENUCHAR, wParam, lParam);
 	}
 
@@ -3195,89 +3228,124 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
-		switch (((LPNMHDR)lParam)->code)
+		LPNMHDR pNMHDR = (LPNMHDR)lParam;
+		switch (pNMHDR->code)
 		{
-		case UWM_UNDOCKED:
-			m_hOldFocus = 0;
-			break;
-		case RBN_HEIGHTCHANGE:
-			RecalcLayout();
-			Invalidate();
-			break;
-		case NM_CUSTOMDRAW:
-			{
-				CWnd* pWnd = FromHandle(((LPNMHDR)lParam)->hwndFrom);
-				if (dynamic_cast<CToolBar*>(pWnd))
-				{
-					if (((LPNMHDR)lParam)->hwndFrom == GetMenuBar().GetHwnd())
-						return CustomDrawMenuBar((LPNMHDR)lParam);
-					else
-						return CustomDrawToolBar((LPNMHDR)lParam);
-				}
-			}
-			break;
-		case TBN_DROPDOWN:	// Press of Dropdown botton on ToolBar
-			{
-				int iItem = ((LPNMTOOLBAR) lParam)->iItem;
-				CToolBar* pTB = (CToolBar*)FromHandle(((LPNMHDR)lParam)->hwndFrom);
-				assert(pTB);
-
-				// a boolean expression
-				m_bDrawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
-			}
-			break;
-	//	case RBN_LAYOUTCHANGED:
-	//		if (GetReBar().GetReBarTheme().UseThemes && GetReBar().GetReBarTheme().BandsLeft)
-	//			GetReBar().MoveBandsLeft();
-	//		break;
-		case RBN_MINMAX:
-			if (m_ReBarTheme.UseThemes && m_ReBarTheme.ShortBands)
-				return 1L;	// Suppress maximise or minimise rebar band
-			break;
-
-		// Display tooltips for the toolbar
-		case TTN_GETDISPINFO:
-			if (GetToolBar().IsWindow())
-			{
-				CToolBar* pToolBar = 0;
-				if (IsReBarUsed())
-				{
-					// Get the ToolBar's CWnd
-					CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
-					if (pWnd && (lstrcmp(pWnd->GetClassName(), _T("ToolbarWindow32")) == 0))
-					{
-						pToolBar = (CToolBar*)pWnd;
-					}
-				}
-
-				if (pToolBar)
-				{
-					LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
-					int iIndex =  pToolBar->HitTest();
-					if (iIndex >= 0)
-					{
-						int nID = pToolBar->GetCommandID(iIndex);
-						if (nID > 0)
-						{
-							m_strTooltip = LoadString(nID);
-							lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
-						}
-						else
-							m_strTooltip = _T("");
-					}
-				}
-			}
-			break;
-		} // switch LPNMHDR
+		case NM_CUSTOMDRAW:		return OnCustomDraw(pNMHDR);
+		case RBN_HEIGHTCHANGE:	return OnRBNHeightChange(pNMHDR);
+		case RBN_LAYOUTCHANGED:	return OnRBNLayoutChanged(pNMHDR);
+		case RBN_MINMAX:		return OnRBNMinMax(pNMHDR);
+		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR) lParam);
+		case TTN_GETDISPINFO:	return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
+		case UWN_UNDOCKED:		return OnUndocked();
+		}
 
 		return 0L;
+	}
 
-	} // CFrame::Onotify(...)
+	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
+	{
+		// Notifcation sent by Rebar
+
+		UNREFERENCED_PARAMETER(pNMHDR);
+
+		RecalcLayout();
+		Invalidate();
+
+		return 0L;
+	}
+
+	inline LRESULT CFrame::OnRBNLayoutChanged(LPNMHDR pNMHDR)
+	{
+		// Notification ot rebar layout change
+
+		UNREFERENCED_PARAMETER(pNMHDR);
+
+		if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
+			GetReBar().MoveBandsLeft();
+		
+		return 0L;
+	}
+
+	inline LRESULT CFrame::OnRBNMinMax(LPNMHDR pNMHDR)
+	{
+		// Notifcation sent by Rebar
+
+		UNREFERENCED_PARAMETER(pNMHDR);
+
+		if (m_ReBarTheme.UseThemes && m_ReBarTheme.ShortBands)
+			return 1L;	// Suppress maximise or minimise rebar band
+		
+		return 0L;
+	}
+
+	inline LRESULT CFrame::OnTBNDropDown(LPNMTOOLBAR pNMTB)
+	{	
+		// Press of Dropdown botton on ToolBar
+			
+		int iItem = pNMTB->iItem;
+		CToolBar* pTB = (CToolBar*)FromHandle(pNMTB->hdr.hwndFrom);
+		assert(pTB);
+
+		// a boolean expression
+		m_bDrawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
+				
+		return 0L;
+	}
+
+	inline LRESULT CFrame::OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI)
+	{
+		// Tool tip notification for the toolbar
+		
+		if (GetToolBar().IsWindow())
+		{
+			CToolBar* pToolBar = 0;
+			if (IsReBarUsed())
+			{
+				// Get the ToolBar's CWnd
+				CWnd* pWnd = FromHandle(GetReBar().HitTest(GetCursorPos()));
+				if (dynamic_cast<CToolBar*> (pWnd))
+				{
+					pToolBar = (CToolBar*)pWnd;
+				}
+			}
+
+			if (pToolBar)
+			{
+				LPNMTTDISPINFO lpDispInfo = pNMTDI;
+				int iIndex =  pToolBar->HitTest();
+				if (iIndex >= 0)
+				{
+					int nID = pToolBar->GetCommandID(iIndex);
+					if (nID > 0)
+					{
+						m_strTooltip = LoadString(nID);
+						lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
+					}
+					else
+						m_strTooltip = _T("");
+				}
+			}
+		}
+			
+		return 0L;
+	}
+
+	inline LRESULT CFrame::OnUndocked()
+	{
+		// Notification from CDocker recieved via OnNotify
+
+		m_hOldFocus = 0;
+		return 0;
+	}
 
 	inline LRESULT CFrame::OnSetFocus(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
 		SetStatusText();
-		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
+		return 0L;
 	}
 
 	inline LRESULT CFrame::OnSize(WPARAM wParam, LPARAM lParam)
@@ -3357,6 +3425,7 @@ namespace Win32xx
 		if (SC_MINIMIZE == wParam)
 			m_hOldFocus = ::GetFocus();
 
+		// Pass remaining system commands on for default processing
 		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
 	}
 
@@ -4103,7 +4172,7 @@ namespace Win32xx
 		case WM_DRAWITEM:		return OnDrawItem(wParam, lParam);
 		case WM_ERASEBKGND:		return 0L;
 		case WM_EXITMENULOOP:	return OnExitMenuLoop(wParam, lParam);
-		case WM_HELP:			return OnHelp(wParam, lParam);
+		case WM_HELP:			return OnHelp();
 		case WM_INITMENUPOPUP:	return OnInitMenuPopup(wParam, lParam);
 		case WM_MENUCHAR:		return OnMenuChar(wParam, lParam);
 		case WM_MEASUREITEM:	return OnMeasureItem(wParam, lParam);

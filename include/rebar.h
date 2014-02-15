@@ -356,7 +356,7 @@ namespace Win32xx
 					if (IsBandVisible(nBand))
 					{
 						if (nBand != GetBand(m_hMenuBar))
-						{
+						{						
 							// Determine the size of this band
 							CRect rcBand = GetBandRect(nBand);
 
@@ -557,7 +557,7 @@ namespace Win32xx
 		LPSIZE pToolBarSize = (LPSIZE)lParam;
 		ResizeBand(GetBand(hToolBar), *pToolBarSize);
 
-		return FinalWindowProc(UWM_TOOLBAR_RESIZE, wParam, lParam);
+		return FinalWindowProc(UWM_TOOLBARRESIZE, wParam, lParam);
 	}
 
 	inline LRESULT CReBar::OnTBWinPosChanging(WPARAM wParam, LPARAM lParam)
@@ -699,7 +699,7 @@ namespace Win32xx
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_TOOLBAR_RESIZE:	return OnToolBarResize(wParam, lParam);
+		case UWM_TOOLBARRESIZE:	return OnToolBarResize(wParam, lParam);
 		case UWM_TBWINPOSCHANGING:	return OnTBWinPosChanging(wParam, lParam);
 		}
 

@@ -48,6 +48,7 @@ Changes in detail
 - Added CFrame::SetReBarTheme
 - Added CFrame::SetToolBarTheme
 - Added CRect operator LPCRECT()
+- Added CString operator += (TCHAR)
 - Added CTab::SetFont
 - Added CToolBar::SetButtonInfo
 - Added CWnd::GetDlgCtrlID

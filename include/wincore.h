@@ -150,27 +150,27 @@
 
 
 // Messages defined by Win32++
-#define UWM_POPUPMENU		(WM_APP + 1)	// Message - creates the menubar popup menu
-#define UWM_DOCK_START		(WM_APP + 2)	// Notification - about to start undocking
-#define UWM_DOCK_MOVE		(WM_APP + 3)	// Notification - undocked docker is being moved
-#define UWM_DOCK_END		(WM_APP + 4)	// Notification - docker has been docked
-#define UWM_BAR_START		(WM_APP + 5)	// Notification - docker bar selected for move
-#define UWM_BAR_MOVE		(WM_APP + 6)	// Notification - docker bar moved
-#define UWM_BAR_END			(WM_APP + 7)	// Notification - end of docker bar move
-#define UWM_UNDOCKED		(WM_APP + 8)	// Notification - sent by docker when undocked
-#define UWM_FRAMELOSTFOCUS	(WM_APP + 9)    // Notification - sent by frame to view window when focus lost
-#define UWM_FRAMEGOTFOCUS	(WM_APP + 10)   // Notification - sent by frame to view window when focus acquired
-#define UWM_DOCK_DESTROYED	(WM_APP + 11)	// Message - posted when docker is destroyed
-#define UWM_TAB_CHANGED     (WM_APP + 12)	// Notification - tab layout changed
-#define UWM_TOOLBAR_RESIZE  (WM_APP + 13)   // Message - sent by toolbar to parent. Used by the rebar
-#define UWM_UPDATE_COMMAND  (WM_APP + 14)   // Message - sent before a menu is displayed. Used by OnUpdate
-#define UWM_DOCK_ACTIVATED  (WM_APP + 15)   // Message - sent to dock ancestor when a docker is activated or deactivated.
-#define UWM_GETMENUTHEME    (WM_APP + 16)	// Message - returns a pointer to MenuTheme
-#define UWM_GETREBARTHEME   (WM_APP + 17)	// Message - returns a pointer to CToolBar
-#define UWM_GETTOOLBARTHEME (WM_APP + 18)   // Message - returns a pointer to ToolBarTheme
-#define UWM_CLEANUPTEMPS	(WM_APP + 19)	// Message - posted to cleanup temporary CDCs
-#define UWM_TBWINPOSCHANGING (WM_APP + 20)	// Message - Sent to parent. Toolbar is resizing
-
+#define UWM_POPUPMENU		 (WM_APP + 1)	// Message - creates the menubar popup menu
+#define UWM_DOCKDESTROYED	 (WM_APP + 2)	// Message - posted when docker is destroyed
+#define UWM_TOOLBARRESIZE    (WM_APP + 3)   // Message - sent by toolbar to parent. Used by the rebar
+#define UWM_UPDATECOMMAND    (WM_APP + 4)   // Message - sent before a menu is displayed. Used by OnUpdate
+#define UWM_DOCKACTIVATED    (WM_APP + 5)   // Message - sent to dock ancestor when a docker is activated or deactivated.
+#define UWM_GETMENUTHEME     (WM_APP + 6)	// Message - returns a pointer to MenuTheme
+#define UWM_GETREBARTHEME    (WM_APP + 7)	// Message - returns a pointer to CToolBar
+#define UWM_GETTOOLBARTHEME  (WM_APP + 8)   // Message - returns a pointer to ToolBarTheme
+#define UWM_CLEANUPTEMPS	 (WM_APP + 9)	// Message - posted to cleanup temporary CDCs
+#define UWM_TBWINPOSCHANGING (WM_APP + 10)	// Message - Sent to parent. Toolbar is resizing
+#define UWN_BARSTART		 (WM_APP + 11)	// Notification - docker bar selected for move
+#define UWN_BARMOVE			 (WM_APP + 12)	// Notification - docker bar moved
+#define UWN_BAREND			 (WM_APP + 13)	// Notification - end of docker bar move
+#define UWN_DOCKSTART		 (WM_APP + 14)	// Notification - about to start undocking
+#define UWN_DOCKMOVE		 (WM_APP + 15)	// Notification - undocked docker is being moved
+#define UWN_DOCKEND			 (WM_APP + 16)	// Notification - docker has been docked
+#define UWN_DOCKSETFOCUS     (WM_APP + 17)  // Notification - dock set focus 
+#define UWN_FRAMELOSTFOCUS	 (WM_APP + 18)  // Notification - sent by frame to view window when focus lost
+#define UWN_FRAMEGOTFOCUS	 (WM_APP + 19)  // Notification - sent by frame to view window when focus acquired
+#define UWN_TABCHANGED       (WM_APP + 20)	// Notification - tab layout changed
+#define UWN_UNDOCKED		 (WM_APP + 21)	// Notification - sent by docker when undocked
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -2070,7 +2070,7 @@ namespace Win32xx
 			}
 			break;				// Do default processing when message not already processed
 
-		case UWM_UPDATE_COMMAND:
+		case UWM_UPDATECOMMAND:
 			OnMenuUpdate((UINT)wParam); // Perform menu updates
 		break;
 

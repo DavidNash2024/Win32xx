@@ -129,6 +129,7 @@ namespace Win32xx
 		CString& operator += (const CString& str);
 		CString& operator += (LPCSTR szText);
 		CString& operator += (LPCWSTR szText);
+		CString& operator += (const TCHAR ch);
 
 		// Attributes
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
@@ -293,6 +294,12 @@ namespace Win32xx
 	inline CString& CString::operator += (LPCWSTR szText)
 	{
 		m_str.append(W2T(szText));
+		return *this;
+	}
+
+	inline CString& CString::operator += (const TCHAR ch)
+	{
+		m_str.append(1,ch);
 		return *this;
 	}
 
@@ -945,7 +952,7 @@ namespace Win32xx
 	{
 		return string1.Compare(pszText) <= 0;
 	}
-	
+
 	inline bool operator >= (const CString& string1, LPCTSTR pszText)
 	{
 		return string1.Compare(pszText) >= 0;

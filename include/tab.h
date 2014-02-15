@@ -148,6 +148,7 @@ namespace Win32xx
 		virtual LRESULT OnPaint(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void	NotifyChanged();
@@ -737,7 +738,7 @@ namespace Win32xx
 	{
 		NMHDR nmhdr = {0};
 		nmhdr.hwndFrom = m_hWnd;
-		nmhdr.code = UWM_TAB_CHANGED;
+		nmhdr.code = UWN_TABCHANGED;
 		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
@@ -872,17 +873,21 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
-		switch (((LPNMHDR)lParam)->code)
+		LPNMHDR pNMHDR = (LPNMHDR)lParam;
+		switch (pNMHDR->code)
 		{
-		case TCN_SELCHANGE:
-			{
-				// Display the newly selected tab page
-				int nPage = GetCurSel();
-				ShowActiveView(m_vTabPageInfo[nPage].pView);
-			}
-			break;
+		case TCN_SELCHANGE:	return OnTCNSelChange(pNMHDR);
 		}
 
+		return 0L;
+	}
+
+	inline LRESULT CTab::OnTCNSelChange(LPNMHDR pNMHDR)
+	{
+		// Display the newly selected tab page
+		int nPage = GetCurSel();
+		ShowActiveView(m_vTabPageInfo[nPage].pView);
+		
 		return 0L;
 	}
 
@@ -1588,7 +1593,7 @@ namespace Win32xx
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
-		if (pnmhdr->code == UWM_TAB_CHANGED)
+		if (pnmhdr->code == UWN_TABCHANGED)
 			RecalcLayout();
 
 		return 0L;

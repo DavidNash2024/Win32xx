@@ -868,21 +868,22 @@ namespace Win32xx
 		m = m_StringMap.find(sString);
 		if (m_StringMap.end() == m)
 		{
+			CString str;
 			if (0 == m_StringMap.size())
 			{
 				// Place a blank string first in the string table, in case some
 				// buttons don't have text
-				TCHAR szString[3] = _T(" ");
-				szString[2] = _T('\0');		// Double-null terminate
-				SendMessage(TB_ADDSTRING, 0L, (LPARAM)szString);
+
+				str = _T(" ");
+				str += _T('\0');	// Double-null terminate
+				SendMessage(TB_ADDSTRING, 0L, (LPARAM)str.c_str());
 			}
 
 			// No index for this string exists, so create it now
-			TCHAR szBuf[80] = _T("");
-			lstrcpyn(szBuf, szText, 79);
-			szBuf[lstrlen(szBuf)+1] = _T('\0');		// Double-null terminate
+			str = szText;
+			str += _T('\0');		// Double-null terminate
 
-			iString = (int)SendMessage(TB_ADDSTRING, 0L, (LPARAM)szBuf);
+			iString = (int)SendMessage(TB_ADDSTRING, 0L, (LPARAM)str.c_str());
 			if (-1 == iString )
 				Succeeded = FALSE;
 
@@ -941,7 +942,7 @@ namespace Win32xx
 
 		// Send a changed message to the parent (used by the ReBar)
 		SIZE MaxSize = GetMaxSize();
-		GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+		GetParent()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 		return bResult;
 	}
@@ -1073,7 +1074,7 @@ namespace Win32xx
 
 			// Inform the parent of the change (ReBar needs this)
 			SIZE MaxSize = GetMaxSize();
-			GetParent()->SendMessage(UWM_TOOLBAR_RESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+			GetParent()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 		}
 
 		return TRUE;

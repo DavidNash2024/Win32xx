@@ -326,7 +326,7 @@ namespace Win32xx
 		{
 			// Resize the vector and assign null char to each element
 			int length = (int)wcslen(pWStr)+1;
-			m_vAnsiArray.assign(length, '\0');
+			m_vAnsiArray.assign(2*length, '\0');
 
 			// Fill our vector with the converted char array
 			WideCharToMultiByte(CP_ACP, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
