@@ -20,15 +20,18 @@ CMyDialog::~CMyDialog()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
+void CMyDialog::OnDestroy()
+{
+	TRACE("Dialog inside DLL destroyed\n");
+	::PostQuitMessage(0);
+}
+
 INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_DESTROY:
-		TRACE("Dialog inside DLL destroyed\n");
-		::PostQuitMessage(0);
-		break;
-	}
+//	switch (uMsg)
+//	{
+
+//	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -40,28 +43,14 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
     {
-	case IDC_BUTTON1:
-		OnButton();
-		return TRUE;
-	case IDC_RADIO1:
-		OnRadio1();
-		return TRUE;
-	case IDC_RADIO2:
-		OnRadio2();
-		return TRUE;
-	case IDC_RADIO3:
-		OnRadio3();
-		return TRUE;
-	case IDC_CHECK1:
-		OnCheck1();
-		return TRUE;
-	case IDC_CHECK2:
-		OnCheck2();
-		return TRUE;
-	case IDC_CHECK3:
-		OnCheck3();
-		return TRUE;
-    } //switch (LOWORD(wParam))
+	case IDC_BUTTON1:	OnButton();		return TRUE;
+	case IDC_RADIO1:	OnRadio1();		return TRUE;
+	case IDC_RADIO2:	OnRadio2();		return TRUE;
+	case IDC_RADIO3:	OnRadio3();		return TRUE;
+	case IDC_CHECK1:	OnCheck1();		return TRUE;
+	case IDC_CHECK2:	OnCheck2();		return TRUE;
+	case IDC_CHECK3:	OnCheck3();		return TRUE;
+    }
 
 	return FALSE;
 }

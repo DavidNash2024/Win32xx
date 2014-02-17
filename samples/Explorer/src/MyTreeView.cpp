@@ -111,83 +111,92 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 	}
 }
 
+LRESULT CMyTreeView::OnNMRClick(LPNMHDR pNMHDR)
+{
+	UNREFERENCED_PARAMETER(pNMHDR);
+
+	CPoint ptScreen;
+	::GetCursorPos(&ptScreen);
+	DoContextMenu(ptScreen);
+
+	return 0L;
+}
+
+LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
+{
+	TreeItemData* pItem = (TreeItemData*)pDI->item.lParam;
+
+	//do we need to supply the text?
+	if(pDI->item.mask & TVIF_TEXT)
+	{
+		SHFILEINFO sfi = {0};
+
+		//get the display name of the item
+		if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
+			::lstrcpyn(pDI->item.pszText, sfi.szDisplayName, pDI->item.cchTextMax -1);
+	}
+
+	//do we need to supply the unselected image?
+	if(pDI->item.mask & TVIF_IMAGE)
+	{
+		SHFILEINFO sfi = {0};
+
+		//get the unselected image for this item
+		if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_LINKOVERLAY))
+			pDI->item.iImage = sfi.iIcon;
+	}
+
+	//do we need to supply the selected image?
+	if(pDI->item.mask & TVIF_SELECTEDIMAGE)
+	{
+		SHFILEINFO sfi = {0};
+
+		//get the selected image for this item
+		if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_OPENICON))
+			pDI->item.iSelectedImage = sfi.iIcon;
+	}
+
+	return 0L;
+}
+
+
+LRESULT CMyTreeView::OnTVNExpanding(LPNMTREEVIEW pNMTV)
+{
+	switch(pNMTV->action)
+	{
+	case TVE_EXPAND:
+		{
+			UINT ExpandedOnce = pNMTV->itemNew.state & TVIS_EXPANDEDONCE;
+			if (!ExpandedOnce)
+				GetChildItems(pNMTV->itemNew.hItem);
+		}
+		break;
+	}
+
+	return 0L;
+}
+
+LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
+{
+	TreeItemData* pItem = (TreeItemData*)pNMTV->itemNew.lParam;
+
+	CMyListView* LeftView = GetExplorerApp().GetMainFrame().GetListView();
+	LeftView->DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
+
+	return 0L;
+}
+
 LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
 {
 	LPNMHDR  lpnmh = (LPNMHDR) lParam;
 
 	switch(lpnmh->code)
 	{
-	case NM_RCLICK:
-		{
-			CPoint ptScreen;
-			::GetCursorPos(&ptScreen);
-			DoContextMenu(ptScreen);
-		}
-		break;
-	case TVN_GETDISPINFO:
-		{
-			LPNMTVDISPINFO lpdi = (LPNMTVDISPINFO)lParam;
-			TreeItemData* pItem = (TreeItemData*)lpdi->item.lParam;
-
-			//do we need to supply the text?
-			if(lpdi->item.mask & TVIF_TEXT)
-			{
-				SHFILEINFO sfi = {0};
-
-				//get the display name of the item
-				if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-					::lstrcpyn(lpdi->item.pszText, sfi.szDisplayName, lpdi->item.cchTextMax -1);
-			}
-
-			//do we need to supply the unselected image?
-			if(lpdi->item.mask & TVIF_IMAGE)
-			{
-				SHFILEINFO sfi = {0};
-
-				//get the unselected image for this item
-				if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_LINKOVERLAY))
-					lpdi->item.iImage = sfi.iIcon;
-			}
-
-			//do we need to supply the selected image?
-			if(lpdi->item.mask & TVIF_SELECTEDIMAGE)
-			{
-				SHFILEINFO sfi = {0};
-
-				//get the selected image for this item
-				if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_OPENICON))
-					lpdi->item.iSelectedImage = sfi.iIcon;
-			}
-		}
-		break;
-
-	case TVN_ITEMEXPANDING:
-		{
-			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
-
-			switch(pnmtv->action)
-			{
-			case TVE_EXPAND:
-				{
-					UINT ExpandedOnce = pnmtv->itemNew.state & TVIS_EXPANDEDONCE;
-					if (!ExpandedOnce)
-						GetChildItems(pnmtv->itemNew.hItem);
-				}
-				break;
-			}
-		}
-		break;
-
-	case TVN_SELCHANGED:
-		{
-			LPNMTREEVIEW pnmtv = (LPNMTREEVIEW)lParam;
-			TreeItemData* pItem = (TreeItemData*)pnmtv->itemNew.lParam;
-
-			CMyListView* LeftView = GetExplorerApp().GetMainFrame().GetListView();
-			LeftView->DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
-		}
-		break;
-	} // switch(lpnmh->code)
+	case NM_RCLICK:			return OnNMRClick(lpnmh);
+	case TVN_GETDISPINFO:	return OnTVNGetDispInfo((LPNMTVDISPINFO)lParam);
+	case TVN_ITEMEXPANDING:	return OnTVNExpanding((LPNMTREEVIEW)lParam);
+	case TVN_SELCHANGED:	return OnTVNSelChanged((LPNMTREEVIEW)lParam);
+	}
 
 	return 0;
 }

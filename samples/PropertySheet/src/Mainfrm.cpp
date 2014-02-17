@@ -32,47 +32,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_MODELESS:
-		// Permit only one Modeless property sheet
-		if (!m_ModelessPS.IsWindow())
-		{
-			m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-			m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-			m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
-			m_ModelessPS.Create(this);
-		}
-		return TRUE;
-	case IDM_MODAL:
-		{
-			CMyPropertySheet mps(_T("Modal Property Sheet"), this);
-			mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-			mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-			mps.DoModal();
-		}
-		return TRUE;
-	case IDM_WIZARD:
-		{
-			CMyPropertySheet mps(NULL, this);
-			mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-			mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-			mps.SetWizardMode(TRUE);
-			mps.DoModal();
-		}
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_EXIT:		 OnFileExit();		return TRUE;
+	case IDM_MODELESS:		 OnModeless();		return TRUE;
+	case IDM_MODAL:			 OnModal();			return TRUE;
+	case IDM_WIZARD:		 OnWizard();		return TRUE;
+	case IDW_VIEW_STATUSBAR: OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:	 OnHelp();			return TRUE;
 	}
 
 	return FALSE;
@@ -95,12 +61,47 @@ void CMainFrame::OnCreate()
 	CFrame::OnCreate();
 }
 
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
 void CMainFrame::OnInitialUpdate()
 {
 	// The frame is now created.
 	// Place any additional startup code here.
 
 	TRACE("Frame created\n");
+}
+
+void CMainFrame::OnModeless()
+{
+	// Permit only one Modeless property sheet
+	if (!m_ModelessPS.IsWindow())
+	{
+		m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
+		m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+		m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
+		m_ModelessPS.Create(this);
+	}
+}
+
+void CMainFrame::OnModal()
+{
+	CMyPropertySheet mps(_T("Modal Property Sheet"), this);
+	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
+	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+	mps.DoModal();
+}
+
+void CMainFrame::OnWizard()
+{
+	CMyPropertySheet mps(NULL, this);
+	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
+	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+	mps.SetWizardMode(TRUE);
+	mps.DoModal();
 }
 
 void CMainFrame::SetupToolBar()

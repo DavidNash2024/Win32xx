@@ -19,6 +19,7 @@ protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void    OnDestroy();
 	virtual void    OnDraw(CDC* pDC);	
+	virtual void	OnFileExit();
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnSize();
 	virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);

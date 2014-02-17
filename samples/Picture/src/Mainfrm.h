@@ -18,6 +18,7 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileExit();
 	virtual void OnFileNew();
 	virtual void OnFileOpen();
 	virtual void OnFileSaveAs();

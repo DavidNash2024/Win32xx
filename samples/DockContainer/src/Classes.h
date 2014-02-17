@@ -34,8 +34,10 @@ class CContainClasses : public CDockContainer
 public:
 	CContainClasses();
 	virtual ~CContainClasses() {}
-	void AddCombo();
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM /*lParam*/);
+	virtual void AddCombo();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnFileNew();
+	virtual void OnHelpAbout();
 	virtual void SetupToolBar();
 
 private:

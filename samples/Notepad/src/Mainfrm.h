@@ -18,18 +18,6 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void OnDropFiles(HDROP hDropInfo);
-	void OnEditCut();
-	void OnEditCopy();
-	void OnEditPaste();
-	void OnEditDelete();
-	void OnEditRedo();
-	void OnEditUndo();
-	void OnFileNew();
-	void OnFileOpen();
-	void OnFilePrint();
-	void OnFileSaveAs();
-	void OnFileSave();
 	BOOL ReadFile(LPCTSTR szFileName);
 	void SetFileName(LPCTSTR szFullFileName);
 	void SetWindowTitle();
@@ -40,6 +28,20 @@ public:
 protected:
 	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnDropFiles(HDROP hDropInfo);
+	virtual void OnEditCut();
+	virtual void OnEditCopy();
+	virtual void OnEditPaste();
+	virtual void OnEditDelete();
+	virtual void OnEditRedo();
+	virtual void OnEditUndo();
+	virtual void OnFileMRU(WPARAM wParam);
+	virtual void OnFileExit();
+	virtual void OnFileNew();
+	virtual void OnFileOpen();
+	virtual void OnFilePrint();
+	virtual void OnFileSaveAs();
+	virtual void OnFileSave();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolBar();

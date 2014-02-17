@@ -33,33 +33,35 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_DOCK_DEFAULT:
-		SetRedraw(FALSE);	// Suppress drawing to the frame window
-		m_DockView.CloseAllDockers();
-		LoadDefaultDockers();
-		SetRedraw(TRUE);	// Re-enable drawing to the frame window
-		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
-		return TRUE;
-	case IDM_DOCK_CLOSEALL:
-		m_DockView.CloseAllDockers();
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	case IDM_DOCK_DEFAULT:		OnDockDefault();	return TRUE;
+	case IDM_DOCK_CLOSEALL:		OnDockCloseAll();	return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
 	}
 
 	return FALSE;
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+}
+
+void CMainFrame::OnDockDefault()
+{
+	SetRedraw(FALSE);	// Suppress drawing to the frame window
+	m_DockView.CloseAllDockers();
+	LoadDefaultDockers();
+	SetRedraw(TRUE);	// Re-enable drawing to the frame window
+	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
+}
+
+void CMainFrame::OnDockCloseAll()
+{
+	m_DockView.CloseAllDockers();
 }
 
 void CMainFrame::OnCreate()

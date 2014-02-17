@@ -31,69 +31,51 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		m_View.ClearPoints();
-		m_strPathName = _T("");
-		return TRUE;
-	case IDM_FILE_OPEN:
-		OnFileOpen();
-		return TRUE;
-	case IDM_FILE_SAVE:
-		OnFileSave();
-		return TRUE;
-	case IDM_FILE_SAVEAS:
-		OnFileSaveAs();
-		return TRUE;
-	case IDM_FILE_PRINT:
-		OnFilePrint();
-		return TRUE;
-	case IDM_PEN_RED:
-		TRACE("Red pen selected\n");
-		m_View.SetPen(RGB(255,0,0));
-		return TRUE;
-	case IDM_PEN_BLUE:
-		TRACE("Blue pen selected\n");
-		m_View.SetPen(RGB(0,0,255));
-		return TRUE;
-	case IDM_PEN_GREEN:
-		TRACE("Green pen selected\n");
-		m_View.SetPen(RGB(0,196,0));
-		return TRUE;
-	case IDM_PEN_BLACK:
-		TRACE("Black pen selected\n");
-		m_View.SetPen(RGB(0,0,0));
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
-	case IDM_FILE_EXIT:
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
+	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
+	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
+	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
+	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
+	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
+	case IDM_PEN_RED:			OnPenRed();			return TRUE;
+	case IDM_PEN_BLUE:			OnPenBlue();		return TRUE;
+	case IDM_PEN_GREEN:			OnPenGreen();		return TRUE;
+	case IDM_PEN_BLACK:			OnPenBlack();		return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	
 	case IDW_FILE_MRU_FILE1:
 	case IDW_FILE_MRU_FILE2:
 	case IDW_FILE_MRU_FILE3:
 	case IDW_FILE_MRU_FILE4:
-	case IDW_FILE_MRU_FILE5:
-		{
-			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			CString strMRUText = GetMRUEntry(nMRUIndex);
-
-			if (m_View.FileOpen(strMRUText))
-				m_strPathName = strMRUText;
-			else
-				RemoveMRUEntry(strMRUText);
-
-			return TRUE;
-		}
+	case IDW_FILE_MRU_FILE5:	OnFileMRU(wParam);	return TRUE;
 	}
 
 	return FALSE;
+}
+
+void CMainFrame::OnFileExit()
+{
+	// Exit application
+	::PostQuitMessage(0);
+}
+
+void CMainFrame::OnFileMRU(WPARAM wParam)
+{
+	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+	CString strMRUText = GetMRUEntry(nMRUIndex);
+
+	if (m_View.FileOpen(strMRUText))
+		m_strPathName = strMRUText;
+	else
+		RemoveMRUEntry(strMRUText);
+}
+
+void CMainFrame::OnFileNew()
+{
+	m_View.ClearPoints();
+	m_strPathName = _T("");
 }
 
 void CMainFrame::OnFileOpen()
@@ -279,6 +261,30 @@ void CMainFrame::OnInitialUpdate()
 		m_View.FileOpen((W2T(lpArgv[1])));
 	}
 */
+}
+
+void CMainFrame::OnPenBlack()
+{
+	TRACE("Black pen selected\n");
+	m_View.SetPen(RGB(0,0,0));
+}
+
+void CMainFrame::OnPenBlue()
+{
+	TRACE("Blue pen selected\n");
+	m_View.SetPen(RGB(0,0,255));
+}
+
+void CMainFrame::OnPenGreen()
+{
+	TRACE("Green pen selected\n");
+	m_View.SetPen(RGB(0,196,0));
+}
+
+void CMainFrame::OnPenRed()
+{
+	TRACE("Red pen selected\n");
+	m_View.SetPen(RGB(255,0,0));
 }
 
 void CMainFrame::SetupToolBar()

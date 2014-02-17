@@ -54,63 +54,29 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		// For ComCtl versions 4.71 and older
-		OnFileNew();
-		return TRUE;
-	case IDM_FILE_NEWVIEW:
-		AddMDIChild(new CMDIChildSimple);	// CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_NEWRECT:
-		AddMDIChild(new CMDIChildRect);	// CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_NEWTEXT:
-		AddMDIChild(new CMDIChildText);	// CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_NEWMAX:
-		AddMDIChild(new CMDIChildMax);	// CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_NEWTREE:
-		AddMDIChild(new CMDIChildTreeView);	// CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_NEWLIST:
-		AddMDIChild(new CMDIChildListView);	// CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_CLOSE:	// Ask the active MDI window to close
-		GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);	
-		return TRUE;
-	case IDM_FILE_EXIT:
-		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		UpdateCheckMarks();
-		break;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		UpdateCheckMarks();
-		break;
-	case IDW_MDI_ARRANGE:
-		MDIIconArrange();
-		break;
-	case IDW_MDI_CASCADE:
-		MDICascade();
-		break;
-	case IDW_MDI_CLOSEALL:
-		RemoveAllMDIChildren();
-		break;
-	case IDW_MDI_TILE:
-		MDITile();
-		break;
+	case IDM_FILE_NEW:		 OnFileNew();			 return TRUE;
+	case IDM_FILE_NEWVIEW:	 OnFileNewView();		 return TRUE;
+	case IDM_FILE_NEWRECT:	 OnFileNewRect();		 return TRUE;
+	case IDM_FILE_NEWTEXT:	 OnFileNewText();		 return TRUE;
+	case IDM_FILE_NEWMAX:	 OnFileNewMax();		 return TRUE;
+	case IDM_FILE_NEWTREE:	 OnFileNewTree();		 return TRUE;
+	case IDM_FILE_NEWLIST:	 OnFileNewList();		 return TRUE;
+	case IDM_FILE_CLOSE:	 OnFileClose();			 return TRUE;
+	case IDM_FILE_EXIT:		 OnFileExit();			 return TRUE;
+	case IDM_HELP_ABOUT:	 OnHelp();				 return TRUE;
+	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		 return TRUE;
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		 return TRUE;
+	case IDW_MDI_ARRANGE:	 MDIIconArrange();		 return TRUE;
+	case IDW_MDI_CASCADE:	 MDICascade();			 return TRUE;
+	case IDW_MDI_CLOSEALL:	 RemoveAllMDIChildren(); return TRUE;
+	case IDW_MDI_TILE:		 MDITile();				 return TRUE;
 	default:    // Pass to active child...
 		{
 			if (GetActiveMDIChild())
 				GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
 		}
 		break ;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
+
 	}
 
 	return FALSE;
@@ -130,6 +96,48 @@ void CMainMDIFrame::OnCreate()
 
 	// call the base class function
 	CMDIFrame::OnCreate();
+}
+
+void CMainMDIFrame::OnFileClose()
+{
+	// Ask the active MDI window to close
+	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+}
+
+void CMainMDIFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+void CMainMDIFrame::OnFileNewList()
+{
+	AddMDIChild(new CMDIChildListView);	// CMDIFrame::RemoveMDIChild deletes this pointer
+}
+
+void CMainMDIFrame::OnFileNewMax()
+{
+	AddMDIChild(new CMDIChildMax);	// This pointer is stored in a Shared_Ptr
+}
+
+void CMainMDIFrame::OnFileNewRect()
+{
+	AddMDIChild(new CMDIChildRect);	// This pointer is stored in a Shared_Ptr
+}
+
+void CMainMDIFrame::OnFileNewText()
+{
+	AddMDIChild(new CMDIChildText);	// This pointer is stored in a Shared_Ptr
+}
+
+void CMainMDIFrame::OnFileNewTree()
+{
+	AddMDIChild(new CMDIChildTreeView);	// This pointer is stored in a Shared_Ptr
+}
+
+void CMainMDIFrame::OnFileNewView()
+{
+	AddMDIChild(new CMDIChildSimple);	// This pointer is stored in a Shared_Ptr
 }
 
 LRESULT CMainMDIFrame::OnNotify(WPARAM wParam, LPARAM lParam)

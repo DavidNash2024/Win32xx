@@ -2888,6 +2888,8 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnTimer(WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(lParam);
+
 		if (this == GetDockAncestor())
 		{
 			if (wParam == 1)
@@ -4007,6 +4009,8 @@ namespace Win32xx
 
 	inline LRESULT CDockContainer::OnTCNSelChange(LPNMHDR pNMHDR)
 	{
+		UNREFERENCED_PARAMETER(pNMHDR);
+
 		// Display the newly selected tab page
 		int nPage = GetCurSel();
 		SelectPage(nPage);

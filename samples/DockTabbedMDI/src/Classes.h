@@ -2,6 +2,7 @@
 // Classes.h - Declaration of CViewClasses, CContainClasses,
 //              and CDockClasses classes
 
+
 #ifndef CLASSES_H
 #define CLASSES_H
 
@@ -16,7 +17,7 @@ public:
 	CViewClasses();
 	virtual ~CViewClasses();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
-
+	
 protected:
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
@@ -33,8 +34,10 @@ class CContainClasses : public CDockContainer
 public:
 	CContainClasses();
 	virtual ~CContainClasses() {}
-	void AddCombo();
+	virtual void AddCombo();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void OnFileNew();
+	virtual void OnHelpAbout();
 	virtual void SetupToolBar();
 
 private:

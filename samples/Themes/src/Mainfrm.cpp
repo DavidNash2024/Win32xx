@@ -253,77 +253,29 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_MODERN:
-		ChooseColor(IDM_MODERN);
-		return TRUE;
-	case IDM_BLUE:
-		ChooseColor(IDM_BLUE);
-		return TRUE;
-	case IDM_GREY:
-		ChooseColor(IDM_GREY);
-		return TRUE;
-	case IDM_OLIVE:
-		ChooseColor(IDM_OLIVE);
-		return TRUE;
-	case IDM_OCHRE:
-		ChooseColor(IDM_OCHRE);
-		return TRUE;
-	case IDM_MAUVE:
-		ChooseColor(IDM_MAUVE);
-		return TRUE;
-	case IDM_PINK:
-		ChooseColor(IDM_PINK);
-		return TRUE;
-	case IDM_GOLD:
-		ChooseColor(IDM_GOLD);
-		return TRUE;
-	case IDM_BLACK:
-		ChooseColor(IDM_BLACK);
-		return TRUE;
-	case IDM_USE_THEMES:
-		OnUseThemes();
-		return TRUE;
-	case IDM_BAND_COLORS:
-		OnBandColors();
-		return TRUE;
-	case IDM_FLAT_STYLE:
-		OnFlatStyle();
-		return TRUE;
-	case IDM_LEFT_BANDS:
-		OnLeftBands();
-		return TRUE;
-	case IDM_LOCK_MENUBAR:
-		OnLockMenuBar();
-		return TRUE;
-	case IDM_ROUND_BORDERS:
-		OnRoundBorders();
-		return TRUE;
-	case IDM_SHORT_BANDS:
-		OnShortBands();
-		return TRUE;
-	case IDM_USE_LINES:
-		OnUseLines();
-		return TRUE;
-	case IDM_VIEW_ARROWS:
-		OnViewArrows();
-		break;
-	case IDM_VIEW_CARDS:
-		OnViewCards();
-		break;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_EXIT:		 OnFileExit();				return TRUE;
+	case IDM_MODERN:		 ChooseColor(IDM_MODERN);	return TRUE;
+	case IDM_BLUE:			 ChooseColor(IDM_BLUE);		return TRUE;
+	case IDM_GREY:			 ChooseColor(IDM_GREY);		return TRUE;
+	case IDM_OLIVE:			 ChooseColor(IDM_OLIVE);	return TRUE;
+	case IDM_OCHRE:			 ChooseColor(IDM_OCHRE);	return TRUE;
+	case IDM_MAUVE:			 ChooseColor(IDM_MAUVE);	return TRUE;
+	case IDM_PINK:			 ChooseColor(IDM_PINK);		return TRUE;
+	case IDM_GOLD:			 ChooseColor(IDM_GOLD);		return TRUE;
+	case IDM_BLACK:			 ChooseColor(IDM_BLACK);	return TRUE;
+	case IDM_USE_THEMES:	 OnUseThemes();				return TRUE;
+	case IDM_BAND_COLORS:	 OnBandColors();			return TRUE;
+	case IDM_FLAT_STYLE:	 OnFlatStyle();				return TRUE;
+	case IDM_LEFT_BANDS:	 OnLeftBands();				return TRUE;
+	case IDM_LOCK_MENUBAR:	 OnLockMenuBar();			return TRUE;
+	case IDM_ROUND_BORDERS:	 OnRoundBorders();			return TRUE;
+	case IDM_SHORT_BANDS:	 OnShortBands();			return TRUE;
+	case IDM_USE_LINES:		 OnUseLines();				return TRUE;
+	case IDM_VIEW_ARROWS:	 OnViewArrows();			return TRUE;
+	case IDM_VIEW_CARDS:	 OnViewCards();				return TRUE;
+	case IDW_VIEW_STATUSBAR: OnViewStatusBar();			return TRUE;
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();			return TRUE;
+	case IDM_HELP_ABOUT:	 OnHelp();					return TRUE;
 	}
 
 	return FALSE;
@@ -371,6 +323,12 @@ void CMainFrame::OnCreate()
 	}
 	else
 		MessageBox(_T("Some Theme features are not supported on this Operating System"), _T("Warning"), MB_ICONWARNING);
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
 }
 
 void CMainFrame::OnInitialUpdate()

@@ -66,9 +66,9 @@ BEGIN
     END
     POPUP "&Layout"
     BEGIN
-        MENUITEM "&Default Layout",             IDM_LAYOUT_DEFAULT
-        MENUITEM "Close All &Containers",       IDM_LAYOUT_CLOSE_DOCKERS
-        MENUITEM "Close All &MDI Children",     IDM_LAYOUT_CLOSE_MDIS
+        MENUITEM "&Default Layout",             IDM_DEFAULT_LAYOUT
+        MENUITEM "Close All &Containers",       IDM_CLOSE_DOCKERS
+        MENUITEM "Close All &MDI Children",     IDM_CLOSE_MDIS
     END
     POPUP "&Help"
     BEGIN
@@ -229,9 +229,9 @@ BEGIN
     IDM_FILE_NEWLIST        "Create List-View MDI Child"
     IDM_CONTAINER_TOP       "Place Tabs at the top of the containers"
     IDM_TABBEDMDI_TOP       "Place Tabs at the top of the MDITab"
-    IDM_LAYOUT_DEFAULT      "Restore default dock layout"
-    IDM_LAYOUT_CLOSE_DOCKERS "Close all docked and undocked windows"
-    IDM_LAYOUT_CLOSE_MDIS   "Close all MDI Children"
+    IDM_DEFAULT_LAYOUT      "Restore default dock layout"
+    IDM_CLOSE_DOCKERS       "Close all docked and undocked windows"
+    IDM_CLOSE_MDIS          "Close all MDI Children"
 END
 
 STRINGTABLE 

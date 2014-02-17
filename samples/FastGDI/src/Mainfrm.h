@@ -9,7 +9,6 @@
 #include "ColourDialog.h"
 
 
-
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {
@@ -23,6 +22,7 @@ protected:
 	virtual void OnAdjustImage();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileExit();
 	virtual void OnFileSave();
 	virtual void OnFileSaveAs();
 	virtual void OnFileNew();

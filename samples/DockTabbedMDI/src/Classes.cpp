@@ -2,6 +2,7 @@
 // Classes.cpp - Definitions for the CViewClasses, CContainClasses
 //               and CDockClasses classes
 
+
 #include "stdafx.h"
 #include "Classes.h"
 #include "resource.h"
@@ -33,6 +34,11 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvis.item = tvi;
 
 	return InsertItem(tvis);
+}
+
+void CViewClasses::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
 }
 
 void CViewClasses::OnInitialUpdate()
@@ -76,11 +82,6 @@ void CViewClasses::PreCreate(CREATESTRUCT &cs)
 {
 	cs.style = TVS_NOTOOLTIPS|WS_CHILD;
 	cs.lpszClass = WC_TREEVIEW;
-}
-
-void CViewClasses::OnDestroy()
-{
-	SetImageList(NULL, LVSIL_SMALL);
 }
 
 
@@ -129,25 +130,30 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		TRACE("File New\n");
-		break;
-	case IDM_FILE_OPEN:
-		TRACE("File Open\n");
-		break;
-	case IDM_FILE_SAVE:
-		TRACE("FILE Save\n");
-		break;
+	case IDM_FILE_NEW:		OnFileNew();	return TRUE;
+	case IDM_HELP_ABOUT:	OnHelpAbout();	return TRUE;
 	}
 
 	return FALSE;
+}
+
+void CContainClasses::OnFileNew()
+{
+	TRACE("File New\n");
+	MessageBox(_T("File New"), _T("Button Pressed"), MB_OK);
+}
+
+void CContainClasses::OnHelpAbout()
+{
+	// Send a message to the frame requesting the help dialog
+	GetTabbedMDIApp().GetMainFrame().SendMessage(WM_HELP);
 }
 
 void CContainClasses::SetupToolBar()
 {
 	// Set the Bitmap resource for the toolbar
 	GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-
+	
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW         );
 	AddToolBarButton( IDM_FILE_OPEN, FALSE );

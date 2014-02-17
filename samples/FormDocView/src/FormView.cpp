@@ -57,25 +57,13 @@ BOOL CFormView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (wpLo)
 	{
-    case IDC_BUTTON1:
-		OnButton();
-		return TRUE;
-    
+    case IDC_BUTTON1:	OnButton();		return TRUE;
+	case ID_CHECK_A:	OnCheckA();		return TRUE;
+    case ID_CHECK_B:	OnCheckB();		return TRUE;
+    case ID_CHECK_C:	OnCheckC();		return TRUE;
 	case ID_RADIO_A:
-    case ID_RADIO_B:
-    case ID_RADIO_C:
-		OnRangeOfIds_Radio(wpLo - ID_RADIO_A);
-		return TRUE;
-    
-	case ID_CHECK_A:
-		OnCheckA();
-		return TRUE;
-    case ID_CHECK_B:
-		OnCheckB();
-		return TRUE;
-    case ID_CHECK_C:
-		OnCheckC();
-		return TRUE;
+    case ID_RADIO_B:	// intentionally blank
+    case ID_RADIO_C:	OnRangeOfIds_Radio(wpLo - ID_RADIO_A);	return TRUE;
 	} 
   
 	return FALSE;

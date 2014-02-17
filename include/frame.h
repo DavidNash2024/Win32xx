@@ -1073,6 +1073,7 @@ namespace Win32xx
 					SendMessage(WM_CANCELMODE, 0L, 0L);
 					SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
 					SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+					ExitMenu();
 					break;
 
 				case VK_LEFT:

@@ -25,6 +25,40 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
+void CMainFrame::LoadDefaultDockers()
+{
+	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
+
+	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
+
+	// Add the parent dockers
+	CDocker* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);
+	CDocker* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
+
+	// Add the remaining dockers
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
+	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
+
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
+	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
+}
+
+void CMainFrame::LoadDefaultMDIs()
+{
+	// Add some MDI tabs
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
+	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
+	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
+	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
+	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"), ID_MDI_FILES);
+
+	if (pTabbedMDI->IsWindow())
+		pTabbedMDI->SetActiveMDITab(0);
+}
+
 void CMainFrame::OnFileNew()
 {
 	// Creates the popup menu when the "New" toolbar button is pressed
@@ -47,6 +81,47 @@ void CMainFrame::OnFileNew()
 
 	// Release the menu resource
 	::DestroyMenu(hTopMenu);
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+void CMainFrame::OnFileNewSimple()
+{
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	assert(pTabbedMDI);
+	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple"), ID_MDI_SIMPLE);
+}
+
+void CMainFrame::OnFileNewRect()
+{
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	assert(pTabbedMDI);
+	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
+}
+
+void CMainFrame::OnFileNewList()
+{
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	assert(pTabbedMDI);
+	pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
+}
+
+void CMainFrame::OnFileNewText()
+{
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	assert(pTabbedMDI);
+	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
+}
+
+void CMainFrame::OnFileNewTree()
+{
+	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	assert(pTabbedMDI);
+	pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
 }
 
 void CMainFrame::OnContainerTabsAtTop()
@@ -84,38 +159,17 @@ void CMainFrame::OnMDITabsAtTop()
 	::CheckMenuItem(GetFrameMenu(), IDM_TABBEDMDI_TOP, uCheck);
 }
 
-void CMainFrame::LoadDefaultDockers()
+void CMainFrame::OnDefaultLayout()
 {
-	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
+	SetRedraw(FALSE);
 
-	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
+	m_DockTabbedMDI.CloseAllDockers();
+	m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
+	LoadDefaultDockers();
+	LoadDefaultMDIs();
 
-	// Add the parent dockers
-	CDocker* pDockRight  = m_DockTabbedMDI.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);
-	CDocker* pDockBottom = m_DockTabbedMDI.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
-
-	// Add the remaining dockers
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
-	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
-
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
-	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
-}
-
-void CMainFrame::LoadDefaultMDIs()
-{
-	// Add some MDI tabs
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
-	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
-	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
-	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
-	pTabbedMDI->AddMDIChild(new CViewFiles, _T("Files"), ID_MDI_FILES);
-
-	if (pTabbedMDI->IsWindow())
-		pTabbedMDI->SetActiveMDITab(0);
+	SetRedraw(TRUE);
+	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -125,62 +179,21 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		OnFileNew();
-		return TRUE;
-	case IDM_FILE_NEWSIMPLE:
-		pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple"), ID_MDI_SIMPLE);
-		return TRUE;
-	case IDM_FILE_NEWRECT:
-		pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
-		return TRUE;
-	case IDM_FILE_NEWTEXT:
-		pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
-		return TRUE;
-	case IDM_FILE_NEWTREE:
-		pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
-		return TRUE;
-	case IDM_FILE_NEWLIST:
-		pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
-		return TRUE;
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostQuitMessage(0);
-		return TRUE;
-	case IDM_CONTAINER_TOP:
-		OnContainerTabsAtTop();
-		return TRUE;
-	case IDM_TABBEDMDI_TOP:
-		OnMDITabsAtTop();
-		return TRUE;
-	case IDM_LAYOUT_DEFAULT:
-		SetRedraw(FALSE);
-
-		m_DockTabbedMDI.CloseAllDockers();
-		m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
-		LoadDefaultDockers();
-		LoadDefaultMDIs();
-
-		SetRedraw(TRUE);
-		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-
-		return TRUE;
-	case IDM_LAYOUT_CLOSE_DOCKERS:
-		m_DockTabbedMDI.CloseAllDockers();
-		return TRUE;
-	case IDM_LAYOUT_CLOSE_MDIS:
-		m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_CLOSE_DOCKERS:		OnCloseDockers();		return TRUE;
+	case IDM_CLOSE_MDIS:		OnCloseMDIs();			return TRUE;
+	case IDM_CONTAINER_TOP:		OnContainerTabsAtTop();	return TRUE;
+	case IDM_DEFAULT_LAYOUT:	OnDefaultLayout();		return TRUE;
+	case IDM_FILE_NEW:			OnFileNew();			return TRUE;
+	case IDM_FILE_NEWSIMPLE:	OnFileNewSimple();		return TRUE;
+	case IDM_FILE_NEWRECT:		OnFileNewRect();		return TRUE;
+	case IDM_FILE_NEWTEXT:		OnFileNewText();		return TRUE;
+	case IDM_FILE_NEWTREE:		OnFileNewTree();		return TRUE;
+	case IDM_FILE_NEWLIST:		OnFileNewList();		return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();			return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();				return TRUE;
+	case IDM_TABBEDMDI_TOP:		OnMDITabsAtTop();		return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();		return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();		return TRUE;
 
 	default:
 		// Pass the command on to the view window of the last active docker
@@ -225,6 +238,16 @@ void CMainFrame::OnInitialUpdate()
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
+}
+
+void CMainFrame::OnCloseDockers()
+{
+	m_DockTabbedMDI.CloseAllDockers();
+}
+
+void CMainFrame::OnCloseMDIs()
+{
+	m_DockTabbedMDI.GetTabbedMDI()->CloseAllMDIChildren();
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)

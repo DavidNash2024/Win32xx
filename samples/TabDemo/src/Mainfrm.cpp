@@ -76,6 +76,12 @@ void CMainFrame::OnFileClose()
 		m_View.RemoveTabPage(iTab);
 }
 
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
 void CMainFrame::OnFileNew()
 {
 	// Creates the popup menu when the "New" toolbar button is pressed

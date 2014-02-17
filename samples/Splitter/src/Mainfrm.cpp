@@ -25,26 +25,20 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_VIEW_TEXT:
-		OnViewText();
-		break;
-	case IDM_VIEW_LIST:
-		OnViewList();
-		break;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	case IDM_VIEW_TEXT:			OnViewText();		return TRUE;
+	case IDM_VIEW_LIST:			OnViewList();		return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
 	}
 	return FALSE;
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
 }
 
 void CMainFrame::OnInitialUpdate()

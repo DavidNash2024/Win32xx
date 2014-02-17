@@ -45,9 +45,9 @@
 #define IDM_FILE_NEWLIST                145
 #define IDM_CONTAINER_TOP               146
 #define IDM_TABBEDMDI_TOP               147
-#define IDM_LAYOUT_DEFAULT              148      
-#define IDM_LAYOUT_CLOSE_DOCKERS        149
-#define IDM_LAYOUT_CLOSE_MDIS           150
+#define IDM_DEFAULT_LAYOUT              148      
+#define IDM_CLOSE_DOCKERS               149
+#define IDM_CLOSE_MDIS                  150
 
 // Next default values for new objects
 // 

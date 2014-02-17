@@ -28,10 +28,19 @@ public:
 	
 protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void	OnCloseMDIs();
 	virtual void    OnCreate();
+	virtual void	OnFileExit();
+	virtual void	OnFileNewSimple();
+	virtual void	OnFileNewRect();
+	virtual void	OnFileNewList();
+	virtual void	OnFileNewText();
+	virtual void	OnFileNewTree();
 	virtual void    OnInitialUpdate();
+	virtual void	OnDefaultLayout();
 	virtual void    OnMenuUpdate(UINT nID);
 	virtual LRESULT OnMouseActivate(WPARAM wParam, LPARAM lParam);
+	virtual void	OnCloseDockers();
 	virtual void    PreCreate(CREATESTRUCT &cs);
 	virtual BOOL    SaveRegistrySettings();
 	virtual void    SetupToolBar();

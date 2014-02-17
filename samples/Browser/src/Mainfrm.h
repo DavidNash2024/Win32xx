@@ -15,21 +15,33 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	virtual void ConnectEvents();
-	virtual CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_View; }
-	virtual IConnectionPoint* GetConnectionPoint(REFIID riid);
-	virtual void OnBeforeNavigate2(DISPPARAMS* pDispParams);
-	virtual void OnCommandStateChange(DISPPARAMS* pDispParams);
-	virtual void OnDocumentBegin(DISPPARAMS* pDispParams);
-	virtual void OnDocumentComplete(DISPPARAMS* pDispParams);
-	virtual void OnDownloadBegin(DISPPARAMS* pDispParams);
-	virtual void OnDownloadComplete(DISPPARAMS* pDispParams);
-	virtual void OnNavigateComplete2(DISPPARAMS* pDispParams);
-	virtual void OnNewWindow2(DISPPARAMS* pDispParams);
-	virtual void OnProgressChange(DISPPARAMS* pDispParams);
-	virtual void OnPropertyChange(DISPPARAMS* pDispParams);
-	virtual void OnStatusTextChange(DISPPARAMS* pDispParams);
-	virtual void OnTitleChange(DISPPARAMS* pDispParams);
+	void ConnectEvents();
+	CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_View; }
+	IConnectionPoint* GetConnectionPoint(REFIID riid);
+	void OnBeforeNavigate2(DISPPARAMS* pDispParams);
+	void OnCommandStateChange(DISPPARAMS* pDispParams);
+	void OnDocumentBegin(DISPPARAMS* pDispParams);
+	void OnDocumentComplete(DISPPARAMS* pDispParams);
+	void OnDownloadBegin(DISPPARAMS* pDispParams);
+	void OnDownloadComplete(DISPPARAMS* pDispParams);
+	void OnNavigateComplete2(DISPPARAMS* pDispParams);
+	void OnNewWindow2(DISPPARAMS* pDispParams);
+	void OnProgressChange(DISPPARAMS* pDispParams);
+	void OnPropertyChange(DISPPARAMS* pDispParams);
+	void OnStatusTextChange(DISPPARAMS* pDispParams);
+	void OnTitleChange(DISPPARAMS* pDispParams);
+	void OnFileExit();
+	void OnEditCut();
+	void OnEditCopy();
+	void OnEditPaste();
+	void OnEditDelete();
+	void OnHelpAbout();
+	void OnForward();
+	void OnBack();
+	void OnRefresh();
+	void OnHome();
+	void OnStop();
+
 
 protected:
 	void AddComboBoxBand(int Listbox_Height);

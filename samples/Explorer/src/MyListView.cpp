@@ -288,115 +288,126 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 	}
 }
 
-LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
 {
-	LPNMHDR  pnmh = (LPNMHDR) lParam;
+	UNREFERENCED_PARAMETER(pNMHDR);
 
-	switch(pnmh->code)
+	CPoint ptScreen;
+	::GetCursorPos(&ptScreen);
+	DoContextMenu(ptScreen);
+
+	return 0L;
+}
+
+LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
+{
+	ListItemData*   pItem = (ListItemData*)pdi->item.lParam;
+
+	//do we need to supply the text?
+	if(pdi->item.mask & LVIF_TEXT)
 	{
-	case NM_RCLICK:
+		TCHAR szFileName[MAX_PATH];
+		GetFullFileName(pItem->GetFullPidl().GetPidl(), szFileName);
+
+		ULONG ulAttr = SFGAO_CANDELETE | SFGAO_FOLDER;
+		pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelPidl(), ulAttr);
+
+		HANDLE hFile;
+
+		//A trick to help get a quick response from CreateFile
+		if (ulAttr & SFGAO_CANDELETE)
+			hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
+				OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
+		else
+			hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
+				0, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
+
+		TCHAR szText[32];
+		int nMaxLength = sizeof(szText)/sizeof(szText[0])-1;
+
+		switch(pdi->item.iSubItem)
 		{
-			CPoint ptScreen;
-			::GetCursorPos(&ptScreen);
-			DoContextMenu(ptScreen);
-		}
-		break;
-	case LVN_GETDISPINFO:
-		{
-			NMLVDISPINFO*   pdi = (NMLVDISPINFO*)lParam;
-			ListItemData*   pItem = (ListItemData*)pdi->item.lParam;
-
-			//do we need to supply the text?
-			if(pdi->item.mask & LVIF_TEXT)
-			{
-    			TCHAR szFileName[MAX_PATH];
-				GetFullFileName(pItem->GetFullPidl().GetPidl(), szFileName);
-
-				ULONG ulAttr = SFGAO_CANDELETE | SFGAO_FOLDER;
-				pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelPidl(), ulAttr);
-
-				HANDLE hFile;
-
-				//A trick to help get a quick response from CreateFile
-				if (ulAttr & SFGAO_CANDELETE)
-					hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
-						OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
-				else
-					hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
-						0, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
-
-				TCHAR szText[32];
-				int nMaxLength = sizeof(szText)/sizeof(szText[0])-1;
-
-				switch(pdi->item.iSubItem)
-				{
-				case 0:  //name
-					{
-						SHFILEINFO sfi = {0};
-						//get the display name of the item
-						if (pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
-							::lstrcpyn(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
-					}
-					break;
-				case 1: //Size
-					{
-						TCHAR szSize[32];
-
-						//report the size files and not folders
-						if ((hFile != INVALID_HANDLE_VALUE)&&(~ulAttr & SFGAO_FOLDER))
-						{
-							GetFileSizeText(hFile, szSize);
-							::lstrcpyn(pdi->item.pszText, szSize, nMaxLength -1);
-						}
-						else
-							::lstrcpy(pdi->item.pszText, _T(""));
-					}
-					break;
-				case 2: //Type
-					{
-						SHFILEINFO sfi = {0};
-						if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
-							::lstrcpyn(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
-					}
-					break;
-				case 3: //Modified
-					{
-						if (hFile != INVALID_HANDLE_VALUE)
-						{
-							GetLastWriteTime(hFile, szText);
-							::lstrcpyn(pdi->item.pszText, szText, nMaxLength -1);
-						}
-						else
-							::lstrcpy(pdi->item.pszText, _T(""));
-					}
-					break;
-				}
-				if (hFile != INVALID_HANDLE_VALUE)
-					::CloseHandle(hFile);
-			}
-
-			//do we need to supply the unselected image?
-			if(pdi->item.mask & LVIF_IMAGE)
+		case 0:  //name
 			{
 				SHFILEINFO sfi = {0};
-
-				//get the unselected image for this item
-				if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
-					pdi->item.iImage = sfi.iIcon;
+				//get the display name of the item
+				if (pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
+					::lstrcpyn(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
 			}
-		}
-		break;
+			break;
+		case 1: //Size
+			{
+				TCHAR szSize[32];
 
- 	case NM_DBLCLK:
-	case NM_RETURN:
-		{
-			//get the item that has the focus
-			int nItem = (int)::SendMessage(m_hWnd, LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
-
-			if(nItem != -1)
-				DoDefault(nItem);
+				//report the size files and not folders
+				if ((hFile != INVALID_HANDLE_VALUE)&&(~ulAttr & SFGAO_FOLDER))
+				{
+					GetFileSizeText(hFile, szSize);
+					::lstrcpyn(pdi->item.pszText, szSize, nMaxLength -1);
+				}
+				else
+					::lstrcpy(pdi->item.pszText, _T(""));
+			}
+			break;
+		case 2: //Type
+			{
+				SHFILEINFO sfi = {0};
+				if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
+					::lstrcpyn(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
+			}
+			break;
+		case 3: //Modified
+			{
+				if (hFile != INVALID_HANDLE_VALUE)
+				{
+					GetLastWriteTime(hFile, szText);
+					::lstrcpyn(pdi->item.pszText, szText, nMaxLength -1);
+				}
+				else
+					::lstrcpy(pdi->item.pszText, _T(""));
+			}
+			break;
 		}
-		break;
+		if (hFile != INVALID_HANDLE_VALUE)
+			::CloseHandle(hFile);
+	}
+
+	//do we need to supply the unselected image?
+	if(pdi->item.mask & LVIF_IMAGE)
+	{
+		SHFILEINFO sfi = {0};
+
+		//get the unselected image for this item
+		if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
+			pdi->item.iImage = sfi.iIcon;
+	}
+
+	return 0L;
+}
+
+LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
+{
+	UNREFERENCED_PARAMETER(pNMHDR);
+
+	//get the item that has the focus
+	int nItem = (int)::SendMessage(m_hWnd, LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
+
+	if(nItem != -1)
+		DoDefault(nItem);
+
+	return 0L;
+}
+
+LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
+{
+	LPNMHDR  pNMHDR = (LPNMHDR) lParam;
+
+	switch(pNMHDR->code)
+	{
+	case NM_RCLICK:			return OnNMRClick(pNMHDR);
+	case LVN_GETDISPINFO:	return OnLVNDispInfo((NMLVDISPINFO*)lParam);
+ 	case NM_DBLCLK:			return OnNMReturn(pNMHDR);
+	case NM_RETURN:			return OnNMReturn(pNMHDR);
 	}
 	return 0;
 }

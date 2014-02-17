@@ -62,74 +62,51 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		OnFileNew();
-		return TRUE;
-	case IDM_FILE_OPEN:
-		OnFileOpen();
-		return TRUE;
-	case IDM_FILE_SAVE:
-		OnFileSave();
-		return TRUE;
-	case IDM_FILE_SAVEAS:
-		OnFileSaveAs();
-		return TRUE;
-	case IDM_FILE_PRINT:
-		OnFilePrint();
-		return TRUE;
-	case IDM_EDIT_COPY:
-		OnEditCopy();
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		OnEditPaste();
-		return TRUE;
-	case IDM_EDIT_CUT:
-		OnEditCut();
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		OnEditDelete();
-		return TRUE;
-	case IDM_EDIT_REDO:
-		OnEditRedo();
-		return TRUE;
-	case IDM_EDIT_UNDO:
-		OnEditUndo();
-		return TRUE;
-	case IDM_FILE_EXIT:
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
-			case IDW_FILE_MRU_FILE1:
+	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
+	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
+	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
+	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
+	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
+	case IDM_EDIT_COPY:			OnEditCopy();		return TRUE;
+	case IDM_EDIT_PASTE:		OnEditPaste();		return TRUE;
+	case IDM_EDIT_CUT:			OnEditCut();		return TRUE;
+	case IDM_EDIT_DELETE:		OnEditDelete();		return TRUE;
+	case IDM_EDIT_REDO:			OnEditRedo();		return TRUE;
+	case IDM_EDIT_UNDO:			OnEditUndo();		return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+
+	case IDW_FILE_MRU_FILE1:
 	case IDW_FILE_MRU_FILE2:
 	case IDW_FILE_MRU_FILE3:
 	case IDW_FILE_MRU_FILE4:
-	case IDW_FILE_MRU_FILE5:
-		{
-			UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-			CString strMRUText = GetMRUEntry(nMRUIndex);
-
-			if (ReadFile(strMRUText))
-				m_strPathName = strMRUText;
-			else
-				RemoveMRUEntry(strMRUText);
-
-			SetWindowTitle();
-			return TRUE;
-		}
-
-	} // switch cmd
+	case IDW_FILE_MRU_FILE5:	OnFileMRU(wParam);	return TRUE;
+	}
 
 	return FALSE;
-} // CMainFrame::OnCommand(...)
+}
 
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+void CMainFrame::OnFileMRU(WPARAM wParam)
+{
+	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+	CString strMRUText = GetMRUEntry(nMRUIndex);
+
+	if (ReadFile(strMRUText))
+		m_strPathName = strMRUText;
+	else
+		RemoveMRUEntry(strMRUText);
+
+	SetWindowTitle();
+}
 
 void CMainFrame::OnFileNew()
 {
@@ -290,7 +267,9 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 	TCHAR szFileName[_MAX_PATH];
 	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
 
+	m_strPathName = szFileName;
 	ReadFile(szFileName);
+	SetWindowTitle();
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
@@ -400,9 +379,11 @@ void CMainFrame::SetWindowTitle()
 {
     CString Title;
 
-	if (m_strPathName == _T("")) Title = _T("TextEdit - Untitled");
-
-	else Title = _T("TextEdit - ") + m_strPathName;
+	if (m_strPathName == _T("")) 
+		Title = _T("TextEdit");
+	else 
+		Title = m_strPathName + _T(" - TextEdit");
+	
 	SetWindowText(Title);
 }
 

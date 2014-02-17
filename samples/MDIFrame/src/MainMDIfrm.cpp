@@ -65,54 +65,27 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		AddMDIChild(new CSimpleMDIChild); // CMDIFrame::RemoveMDIChild deletes this pointer
-		return TRUE;
-	case IDM_FILE_CLOSE:          // Close the active MDI window
-		GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-		return TRUE;
-	case IDM_FILE_OPEN:
-		OnFileOpen();
-		return TRUE;
-	case IDM_FILE_SAVE:
-		// Refer to the tutorial for an example of OnFileSave()
-		return TRUE;
-	case IDM_FILE_SAVEAS:
-		// Refer to the tutorial for an example of OnFileSaveAs()
-		return TRUE;
-	case IDM_FILE_PRINT:
-		OnFilePrint();
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		break;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		break;
-	case IDW_MDI_ARRANGE:
-		MDIIconArrange();
-		break;
-	case IDW_MDI_CASCADE:
-		MDICascade();
-		break;
-	case IDW_MDI_CLOSEALL:
-		RemoveAllMDIChildren();
-		break;
-	case IDW_MDI_TILE:
-		MDITile();
-		break;
-	default:    // Pass to active child...
+	case IDM_FILE_NEW:		AddMDIChild(new CSimpleMDIChild); return TRUE;
+	case IDM_FILE_CLOSE:		OnFileClose();				return TRUE;
+	case IDM_FILE_OPEN:			OnFileOpen();				return TRUE;
+	case IDM_FILE_SAVE:			OnFileSave();				return TRUE;
+	case IDM_FILE_SAVEAS:		OnFileSave();				return TRUE;
+	case IDM_FILE_PRINT:		OnFilePrint();				return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();			return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();			return TRUE;
+	case IDW_MDI_ARRANGE:		MDIIconArrange();			return TRUE;
+	case IDW_MDI_CASCADE:		MDICascade();				return TRUE;
+	case IDW_MDI_CLOSEALL:		RemoveAllMDIChildren();		return TRUE;
+	case IDW_MDI_TILE:			MDITile();					return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();				return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();					return TRUE;
+	default:
 		{
+			// Pass to active child...
 			if (GetActiveMDIChild())
 				GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
 		}
 		break ;
-	case IDM_FILE_EXIT:
-		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
 	}
 	return FALSE;
 }
@@ -131,6 +104,16 @@ void CMainMDIFrame::OnCreate()
 
 	// call the base class function
 	CMDIFrame::OnCreate();
+}
+
+void CMainMDIFrame::OnFileClose()
+{
+	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+}
+
+void CMainMDIFrame::OnFileExit()
+{
+	::PostQuitMessage(0);
 }
 
 void CMainMDIFrame::SetupToolBar()

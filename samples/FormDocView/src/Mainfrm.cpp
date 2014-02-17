@@ -40,6 +40,12 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	return TRUE;
 }
 
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
 void CMainFrame::OnMenuUpdate(UINT nID)
 {
 	// Update the check state of the various menu items
@@ -67,37 +73,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     
 	switch(LOWORD(wParam))
 	{
-	case ID_CHECK_A:
-		m_SdiView.OnCheckA();
-		return TRUE;
-	case ID_CHECK_B:
-		m_SdiView.OnCheckB();
-		return TRUE;
-	case ID_CHECK_C:
-		m_SdiView.OnCheckC();
-		return TRUE;
-
+	case ID_CHECK_A:		 m_SdiView.OnCheckA();	return TRUE;
+	case ID_CHECK_B:		 m_SdiView.OnCheckB();	return TRUE;
+	case ID_CHECK_C:		 m_SdiView.OnCheckC();	return TRUE;
+	case IDM_FILE_EXIT:		 OnFileExit();			return TRUE;
+	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		return TRUE;
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		return TRUE;
+    case IDM_HELP_ABOUT:	 OnHelp();				return TRUE;
 	case ID_RADIO_A:
-	case ID_RADIO_B:
-	case ID_RADIO_C:
-		m_SdiView.OnRangeOfIds_Radio(wpLo - ID_RADIO_A);
-		return TRUE;
-
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-
-    case IDM_HELP_ABOUT:
-      // Display the help dialog
-      OnHelp();
-      return TRUE;
+	case ID_RADIO_B:		// intentionally blank
+	case ID_RADIO_C:		m_SdiView.OnRangeOfIds_Radio(wpLo - ID_RADIO_A);	return TRUE;
     }
 
   return FALSE;

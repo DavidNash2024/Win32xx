@@ -19,9 +19,17 @@ public:
 	virtual ~CMainMDIFrame();
 
 protected:
-	virtual void OnFileNew();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileClose();
+	virtual void OnFileExit();
+	virtual void OnFileNew();
+	virtual void OnFileNewList();
+	virtual void OnFileNewMax();
+	virtual void OnFileNewRect();
+	virtual void OnFileNewText();
+	virtual void OnFileNewTree();
+	virtual void OnFileNewView();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolBar();

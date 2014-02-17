@@ -22,16 +22,8 @@ INT_PTR CButtonDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	// Set the background color of the dialog
-	case WM_CTLCOLORDLG:
-		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
-		break;
-	
-	// Set the background color of static controls
-	case WM_CTLCOLORSTATIC:
-		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
-		break;
-	
+	case WM_CTLCOLORDLG:	return OnCtlColorDlg(wParam, lParam);
+	case WM_CTLCOLORSTATIC:	return OnCtlColorStatic(wParam, lParam);	
 	}
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -68,6 +60,25 @@ BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	return FALSE;
 }
+
+INT_PTR CButtonDialog::OnCtlColorDlg(WPARAM wParam, LPARAM lParam)
+{
+	// Set the background color of the dialog
+	if (IsXPThemed()) 
+		return (INT_PTR)m_Brush.GetHandle();
+	else;
+		return FinalWindowProc(WM_CTLCOLORDLG, wParam, lParam);
+}
+
+INT_PTR CButtonDialog::OnCtlColorStatic(WPARAM wParam, LPARAM lParam)
+{
+	// Set the background color of static controls
+	if (IsXPThemed()) 
+		return (INT_PTR)m_Brush.GetHandle();
+	else
+		return FinalWindowProc(WM_CTLCOLORSTATIC, wParam, lParam);
+}
+
 
 /////////////////////////////////////////////
 // Definitions for the CComboBoxDialog class

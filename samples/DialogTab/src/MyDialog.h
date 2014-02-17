@@ -15,6 +15,8 @@ public:
 	~CButtonDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR OnCtlColorDlg(WPARAM wParam, LPARAM lParam);
+	virtual INT_PTR OnCtlColorStatic(WPARAM wParam, LPARAM lParam);
 
 private:
 	CBrush m_Brush;

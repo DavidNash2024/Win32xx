@@ -23,6 +23,7 @@ protected:
 	virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual void OnMenuUpdate(UINT nID);

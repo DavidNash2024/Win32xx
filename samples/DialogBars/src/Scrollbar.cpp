@@ -19,60 +19,62 @@ void CMyScrollBar::OnInitialUpdate()
 	SetScroll(0);
 }
 
+LRESULT CMyScrollBar::OnHScroll(WPARAM wParam, LPARAM lParam)
+{
+	// Get a reference to the MyDialog object
+	CMyDialog& MyDialog = GetDialogApp().GetDialog();
+
+	GetScrollInfo(&m_si);
+
+	switch (LOWORD (wParam))
+	{
+	// user clicked left arrow
+	case SB_LINELEFT:
+		m_si.nPos -= 1;
+		break;
+
+	// user clicked right arrow
+	case SB_LINERIGHT:
+		m_si.nPos += 1;
+		break;
+
+	// user clicked the scroll bar shaft left of the scroll box
+	case SB_PAGELEFT:
+		m_si.nPos -= m_si.nPage;
+		break;
+
+	// user clicked the scroll bar shaft right of the scroll box
+	case SB_PAGERIGHT:
+		m_si.nPos += m_si.nPage;
+		break;
+
+	// user dragged the scroll box
+	case SB_THUMBTRACK:
+		m_si.nPos = m_si.nTrackPos;
+		break;
+
+	default :
+		break;
+	}
+
+	MyDialog.SetScroll(m_si.nPos);			// Set the scroll bar position
+	MyDialog.SetSlider(m_si.nPos);			// Set the slider position
+	MyDialog.SetProgress(m_si.nPos);		// Set the progress bar position
+	MyDialog.SetStatic(FALSE, m_si.nPos);	// Set the static text
+
+	return 0L;
+}
+
 LRESULT CMyScrollBar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
 	switch (uMsg)
 	{
-	case WM_HSCROLL:
-		{
-			// Get a reference to the MyDialog object
-			CMyDialog& MyDialog = GetDialogApp().GetDialog();
-
-			GetScrollInfo(&m_si);
-
-			switch (LOWORD (wParam))
-			{
-			// user clicked left arrow
-			case SB_LINELEFT:
-				m_si.nPos -= 1;
-				break;
-
-			// user clicked right arrow
-			case SB_LINERIGHT:
-				m_si.nPos += 1;
-				break;
-
-			// user clicked the scroll bar shaft left of the scroll box
-			case SB_PAGELEFT:
-				m_si.nPos -= m_si.nPage;
-				break;
-
-			// user clicked the scroll bar shaft right of the scroll box
-			case SB_PAGERIGHT:
-				m_si.nPos += m_si.nPage;
-				break;
-
-			// user dragged the scroll box
-			case SB_THUMBTRACK:
-				m_si.nPos = m_si.nTrackPos;
-				break;
-
-			default :
-				break;
-			}
-
-			MyDialog.SetScroll(m_si.nPos);			// Set the scroll bar position
-			MyDialog.SetSlider(m_si.nPos);			// Set the slider position
-			MyDialog.SetProgress(m_si.nPos);		// Set the progress bar position
-			MyDialog.SetStatic(FALSE, m_si.nPos);	// Set the static text
-
-			break;
-		}
+	case WM_HSCROLL:	return OnHScroll(wParam, lParam);
 	}
 
-	return 0;
+	return 0L;
 }
 
 void CMyScrollBar::SetScroll(int nPos)

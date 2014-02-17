@@ -130,18 +130,23 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:
-		TRACE("File New\n");
-		break;
-	case IDM_FILE_OPEN:
-		TRACE("File Open\n");
-		break;
-	case IDM_FILE_SAVE:
-		TRACE("FILE Save\n");
-		break;
+	case IDM_FILE_NEW:		OnFileNew();	return TRUE;
+	case IDM_HELP_ABOUT:	OnHelpAbout();	return TRUE;
 	}
 
 	return FALSE;
+}
+
+void CContainClasses::OnFileNew()
+{
+	TRACE("File New\n");
+	MessageBox(_T("File New"), _T("Button Pressed"), MB_OK);
+}
+
+void CContainClasses::OnHelpAbout()
+{
+	// Send a message to the frame requesting the help dialog
+	GetContainerApp().GetMainFrame().SendMessage(WM_HELP);
 }
 
 void CContainClasses::SetupToolBar()

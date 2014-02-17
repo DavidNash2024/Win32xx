@@ -884,6 +884,8 @@ namespace Win32xx
 
 	inline LRESULT CTab::OnTCNSelChange(LPNMHDR pNMHDR)
 	{
+		UNREFERENCED_PARAMETER(pNMHDR);
+
 		// Display the newly selected tab page
 		int nPage = GetCurSel();
 		ShowActiveView(m_vTabPageInfo[nPage].pView);

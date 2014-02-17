@@ -19,7 +19,11 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
+	virtual void OnModal();
+	virtual void OnModeless();
+	virtual void OnWizard();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

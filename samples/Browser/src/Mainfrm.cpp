@@ -122,69 +122,105 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 	}
 }
 
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	PostMessage(WM_CLOSE, 0, 0);
+}
+
+void CMainFrame::OnHelpAbout()
+{
+	// Display the help dialog
+	OnHelp();
+}
+
+void CMainFrame::OnBack()
+{
+	m_View.GoBack();
+}
+
+void CMainFrame::OnForward()
+{
+	m_View.GoForward();
+}
+
+void CMainFrame::OnRefresh()
+{
+	m_View.Refresh();
+}
+
+void CMainFrame::OnStop()
+{
+	m_View.Stop();
+}
+
+void CMainFrame::OnHome()
+{
+	m_View.GoHome();
+}
+
+void CMainFrame::OnEditCut()
+{
+	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
+
+	if (GetFocus() == pEdit)
+		pEdit->Cut();
+	else
+		m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+}
+
+void CMainFrame::OnEditCopy()
+{
+	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
+
+	if (GetFocus() == pEdit)
+		pEdit->Copy();
+	else
+		m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+}
+
+void CMainFrame::OnEditPaste()
+{
+	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
+
+	if (GetFocus() == pEdit)
+		pEdit->Paste();
+	else
+		m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+}
+
+void CMainFrame::OnEditDelete()
+{
+	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
+
+	if (GetFocus() == pEdit)
+			pEdit->Clear();
+#if !defined(__GNUC__)
+	else
+		m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+#endif
+
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
 
-	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
-
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		// End the application
-		PostMessage(WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
-	case IDM_BACK:
-		m_View.GoBack();
-		return TRUE;
-	case IDM_FORWARD:
-		m_View.GoForward();
-		return TRUE;
-	case IDM_REFRESH:
-		m_View.Refresh();
-		return TRUE;
-	case IDM_STOP:
-		m_View.Stop();
-		return TRUE;
-	case IDM_HOME:
-		m_View.GoHome();
-		return TRUE;
-	case IDM_EDIT_CUT:
-		if (GetFocus() == pEdit)
-			pEdit->Cut();
-		else
-			m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
-		return TRUE;
-	case IDM_EDIT_COPY:
-		if (GetFocus() == pEdit)
-			pEdit->Copy();
-		else
-			m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
-		return TRUE;
-	case IDM_EDIT_PASTE:
-		if (GetFocus() == pEdit)
-			pEdit->Paste();
-		else
-			m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
-		return TRUE;
-	case IDM_EDIT_DELETE:
-		if (GetFocus() == pEdit)
-			pEdit->Clear();
-#if !defined(__GNUC__)
-		else
-			m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
-#endif
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
+	case IDM_FILE_EXIT:		 OnFileExit();		return TRUE;
+	case IDM_HELP_ABOUT:	 OnHelpAbout();		return TRUE;
+	case IDM_BACK:			 OnBack();			return TRUE;
+	case IDM_FORWARD:		 OnForward();		return TRUE;
+	case IDM_REFRESH:		 OnRefresh();		return TRUE;
+	case IDM_STOP:			 OnStop();			return TRUE;
+	case IDM_HOME:			 OnHome();			return TRUE;
+	case IDM_EDIT_CUT:		 OnEditCut();		return TRUE;
+	case IDM_EDIT_COPY:		 OnEditCopy();		return TRUE;
+	case IDM_EDIT_PASTE:	 OnEditPaste();		return TRUE;
+	case IDM_EDIT_DELETE:	 OnEditDelete();	return TRUE;
+	case IDW_VIEW_STATUSBAR: OnViewStatusBar(); return TRUE;
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar(); 	return TRUE;
 	}
 
 	// Handle notification WM_COMMAND from ComboboxEx

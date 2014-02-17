@@ -55,16 +55,9 @@ BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_MINTOTRAY:	
-		Minimize();
-		return TRUE;
-	case IDM_FILE_EXIT:
-		// End the application
-		PostQuitMessage(0);
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnAbout();
-		return TRUE;
+	case IDM_MINTOTRAY:		Minimize();		return TRUE;
+	case IDM_FILE_EXIT:		OnFileExit();	return TRUE;
+	case IDM_HELP_ABOUT:	OnAbout();		return TRUE;
 	}
 
 	return FALSE;
@@ -85,6 +78,12 @@ void CView::OnDraw(CDC* pDC)
 	CRect rc = GetClientRect();
 	CString cs = LoadString(IDW_MAIN);
 	pDC->DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+}
+
+void CView::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
 }
 
 void CView::OnInitialUpdate()

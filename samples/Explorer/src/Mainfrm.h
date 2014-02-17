@@ -26,7 +26,13 @@ protected:
 	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnFileExit();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+	virtual void OnViewLargeIcon();
+	virtual void OnViewList();
+	virtual void OnViewReport();
+	virtual void OnViewSmallIcon();
+	virtual void OnShowHidden();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

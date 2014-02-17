@@ -19,6 +19,9 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
+	virtual void OnDockCloseAll();
+	virtual void OnDockDefault();
+	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual BOOL SaveRegistrySettings();

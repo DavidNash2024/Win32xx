@@ -32,35 +32,14 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_OPEN:
-		// Refer to the tutorial for an example of OnFileOpen
-		OnFileOpen();
-		return TRUE;
-	case IDM_FILE_SAVE:
-		// Refer to the tutorial for an example of OnFileSave
-		OnFileSave();
-		return TRUE;
-	case IDM_FILE_SAVEAS:
-		// Refer to the tutorial for an example of OnFileSaveAs
-		OnFileSave();
-		return TRUE;
-	case IDM_FILE_PRINT:
-		OnFilePrint();
-		return TRUE;
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_OPEN:		 OnFileOpen();		return TRUE;
+	case IDM_FILE_SAVE:		 OnFileSave();		return TRUE;
+	case IDM_FILE_SAVEAS:	 OnFileSave();		return TRUE;
+	case IDM_FILE_PRINT:	 OnFilePrint();		return TRUE;
+	case IDM_FILE_EXIT:		 OnFileExit();		return TRUE;
+	case IDW_VIEW_STATUSBAR: OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:	 OnHelp();			return TRUE;
 	}
 
 	return FALSE;
@@ -80,6 +59,12 @@ void CMainFrame::OnCreate()
 
 	// call the base class function
 	CFrame::OnCreate();
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
 }
 
 void CMainFrame::OnInitialUpdate()

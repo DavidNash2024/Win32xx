@@ -87,51 +87,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
-
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		OnHelp();
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_VIEW_LARGEICON:
-		GetListView()->ViewLargeIcons();
-		pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
-		return TRUE;
-	case IDM_VIEW_SMALLICON:
-		GetListView()->ViewSmallIcons();
-		pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
-		return TRUE;
-	case IDM_VIEW_LIST:
-		GetListView()->ViewList();
-		pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
-		return TRUE;
-	case IDM_VIEW_REPORT:
-		GetListView()->ViewReport();
-		pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
-		return TRUE;
-	case IDM_SHOW_HIDDEN:
-		m_bShowHidden = !m_bShowHidden;
-		pViewMenu->CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_bShowHidden)? MF_CHECKED : MF_UNCHECKED);
-
-		// Refresh the Listview display
-		GetListView()->DoDisplay();
-		return TRUE;
-	case IDM_VIEWMENU:
-		// This Command is recieved if Comctl32.dll version is below 4.7
-		DoPopupMenu();
-		return TRUE;
-	} // switch cmd
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_VIEW_LARGEICON:	OnViewLargeIcon();	return TRUE;
+	case IDM_VIEW_SMALLICON:	OnViewSmallIcon();	return TRUE;
+	case IDM_VIEW_LIST:			OnViewList();		return TRUE;
+	case IDM_VIEW_REPORT:		OnViewReport();		return TRUE;
+	case IDM_SHOW_HIDDEN:		OnShowHidden();		return TRUE;
+	case IDM_VIEWMENU:			DoPopupMenu();		return TRUE;	// This Command is recieved if Comctl32.dll version is below 4.7
+	}
 
 	return FALSE;
 
@@ -141,6 +109,62 @@ void CMainFrame::OnCreate()
 {
 	// call the base OnCreate function
 	CFrame::OnCreate();
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+
+void CMainFrame::OnViewLargeIcon()
+{
+	// Handle the the View submenu
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+
+	GetListView()->ViewLargeIcons();
+	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
+} 
+
+void CMainFrame::OnViewList()
+{
+	// Handle the the View submenu
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+
+	GetListView()->ViewList();
+	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
+}
+
+void CMainFrame::OnViewReport()
+{
+	// Handle the the View submenu
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+
+	GetListView()->ViewReport();
+	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+}
+
+void CMainFrame::OnViewSmallIcon()
+{
+	// Handle the the View submenu
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+
+	GetListView()->ViewSmallIcons();
+	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
+
+}
+
+void CMainFrame::OnShowHidden()
+{
+	// Handle the the View submenu
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+
+	m_bShowHidden = !m_bShowHidden;
+	pViewMenu->CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_bShowHidden)? MF_CHECKED : MF_UNCHECKED);
+
+	// Refresh the Listview display
+	GetListView()->DoDisplay();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
