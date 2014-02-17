@@ -67,7 +67,7 @@ void CMainFrame::OnFileMRU(WPARAM wParam)
 	CString strMRUText = GetMRUEntry(nMRUIndex);
 
 	if (m_View.FileOpen(strMRUText))
-		m_strPathName = strMRUText;
+		m_PathName = strMRUText;
 	else
 		RemoveMRUEntry(strMRUText);
 }
@@ -75,7 +75,7 @@ void CMainFrame::OnFileMRU(WPARAM wParam)
 void CMainFrame::OnFileNew()
 {
 	m_View.ClearPoints();
-	m_strPathName = _T("");
+	m_PathName = _T("");
 }
 
 void CMainFrame::OnFileOpen()
@@ -89,20 +89,20 @@ void CMainFrame::OnFileOpen()
 		if (m_View.FileOpen(str))
 		{
 			// Save the filename
-			m_strPathName = str;
+			m_PathName = str;
 			AddMRUEntry(str);
 		}
 		else
-			m_strPathName=_T("");
+			m_PathName=_T("");
 	}
 }
 
 void CMainFrame::OnFileSave()
 {
-	if (m_strPathName == _T(""))
+	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_strPathName);
+		m_View.FileSave(m_PathName);
 }
 
 void CMainFrame::OnFileSaveAs()
@@ -113,7 +113,7 @@ void CMainFrame::OnFileSaveAs()
 	// Store the PlotPoint data in the file
 	if (!str.IsEmpty())
 	{
-		m_strPathName = str;
+		m_PathName = str;
 
 		// Save the file name
 		m_View.FileSave(str);

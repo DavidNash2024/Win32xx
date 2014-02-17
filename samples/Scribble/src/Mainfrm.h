@@ -39,7 +39,7 @@ private:
 	};
 
 	CView m_View;
-	CString m_strPathName;
+	CString m_PathName;
 
 };
 

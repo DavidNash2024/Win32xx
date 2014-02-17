@@ -9,7 +9,13 @@
 // Declaration of CViewMax
 class CViewMax : public CWnd
 {
+public:
+	CViewMax() {}
+	virtual ~CViewMax() {}
+
+protected:
 	virtual void OnDraw(CDC* pDC);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 // Declaration of CMDIChildMax
@@ -22,7 +28,6 @@ public:
 protected:
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CViewMax m_MaxView;

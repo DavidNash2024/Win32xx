@@ -15,6 +15,18 @@ void CViewMax::OnDraw(CDC* pDC)
 	pDC->DrawText(_T("Maxed Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
+LRESULT CViewMax::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+		case WM_SIZE:
+			Invalidate();
+			return 0L;
+
+	}
+	return WndProcDefault(uMsg, wParam, lParam);
+}
+
 
 // CMDIChildMax definitions
 CMDIChildMax::CMDIChildMax()
@@ -41,14 +53,3 @@ void CMDIChildMax::PreCreate(CREATESTRUCT &cs)
 	cs.style = WS_MAXIMIZE;
 }
 
-LRESULT CMDIChildMax::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-		case WM_SIZE:
-			Invalidate();
-			break;  // Continue with default processing
-
-	}
-	return WndProcDefault(uMsg, wParam, lParam);
-}

@@ -21,50 +21,77 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	// Process the messages from the Menu and Tool Bar
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-		return TRUE;
-	case IDM_FILE_NEW:
-		::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_FILE_OPEN:
-		::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_FILE_SAVE:
-		::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_FILE_SAVEAS:
-		::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_FILE_PRINT:
-		::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
-		return TRUE;
-	case IDM_PEN_RED:
-		m_View.SetPen(RGB(255,0,0));
-		return TRUE;
-	case IDM_PEN_BLUE:
-		m_View.SetPen(RGB(0,0,255));
-		return TRUE;
-	case IDM_PEN_GREEN:
-		m_View.SetPen(RGB(0,196,0));
-		return TRUE;
-	case IDM_PEN_BLACK:
-		m_View.SetPen(RGB(0,0,0));
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
+	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
+	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
+	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
+	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
+	case IDM_PEN_RED:			OnPenRed();			return TRUE;
+	case IDM_PEN_BLUE:			OnPenBlue();		return TRUE;
+	case IDM_PEN_GREEN:			OnPenGreen();		return TRUE;
+	case IDM_PEN_BLACK:			OnPenBlack();		return TRUE;
+	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
+	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
 	}
 
 	return FALSE;
+}
+
+void CMainFrame::OnFileExit()
+{
+	// End the application
+	::PostQuitMessage(0);
+}
+
+void CMainFrame::OnFileNew()
+{
+	::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
+}
+
+void CMainFrame::OnFileOpen()
+{
+	::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
+}
+
+void CMainFrame::OnFilePrint()
+{
+	::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+}
+
+void CMainFrame::OnFileSave()
+{
+	::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
+}
+
+void CMainFrame::OnFileSaveAs()
+{
+	::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
+}
+
+void CMainFrame::OnPenBlack()
+{
+	TRACE("Black pen selected\n");
+	m_View.SetPen(RGB(0,0,0));
+}
+
+void CMainFrame::OnPenBlue()
+{
+	TRACE("Blue pen selected\n");
+	m_View.SetPen(RGB(0,0,255));
+}
+
+void CMainFrame::OnPenGreen()
+{
+	TRACE("Green pen selected\n");
+	m_View.SetPen(RGB(0,196,0));
+}
+
+void CMainFrame::OnPenRed()
+{
+	TRACE("Red pen selected\n");
+	m_View.SetPen(RGB(255,0,0));
 }
 
 void CMainFrame::SetupToolBar()
