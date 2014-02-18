@@ -170,8 +170,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileExit()
 {
-	// End the appliaction
-	::PostQuitMessage(0);
+	// End the application
+	Destroy();
 }
 
 void CMainFrame::OnFileOpen()

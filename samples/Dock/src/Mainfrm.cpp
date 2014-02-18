@@ -47,7 +47,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+	Destroy();
 }
 
 void CMainFrame::OnDockDefault()

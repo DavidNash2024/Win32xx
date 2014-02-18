@@ -23,7 +23,6 @@ public:
 
 protected:
 	virtual void OnInitialUpdate();
-	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCreate();
 	virtual void OnFileExit();

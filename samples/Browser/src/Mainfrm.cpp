@@ -125,7 +125,7 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 void CMainFrame::OnFileExit()
 {
 	// End the application
-	PostMessage(WM_CLOSE, 0, 0);
+	Destroy();
 }
 
 void CMainFrame::OnHelpAbout()

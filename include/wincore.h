@@ -1455,7 +1455,6 @@ namespace Win32xx
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
-	//	return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 		if (m_PrevWindowProc)
 			return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
 		else

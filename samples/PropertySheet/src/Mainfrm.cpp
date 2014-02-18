@@ -64,7 +64,7 @@ void CMainFrame::OnCreate()
 void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostQuitMessage(0);
+	Destroy();
 }
 
 void CMainFrame::OnInitialUpdate()

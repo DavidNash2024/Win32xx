@@ -111,9 +111,10 @@ void CMainMDIFrame::OnFileClose()
 	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
-void CMainMDIFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
-	::PostQuitMessage(0);
+	// End the application
+	Destroy();
 }
 
 void CMainMDIFrame::SetupToolBar()

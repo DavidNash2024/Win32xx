@@ -65,8 +65,6 @@ private:
 	HIMAGELIST m_hSmallImageList;
 	CContextMenu2 m_ccm2;
 	std::vector <TreeItemDataPtr> m_pItems;
-public:
-	DWORD m_dwThreadID;
 
 };
 

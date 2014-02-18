@@ -2974,13 +2974,7 @@ namespace Win32xx
 	{
 		// Called in response to a WM_CLOSE message for the frame.
 		ShowWindow(SW_HIDE);
-		SaveRegistrySettings();
 
-		GetMenuBar().Destroy();
-		GetToolBar().Destroy();
-		GetReBar().Destroy();
-		GetStatusBar().Destroy();
-		GetView()->Destroy();
 		Destroy();
 	}
 
@@ -3074,6 +3068,14 @@ namespace Win32xx
 	{
 		SetMenu(NULL);
 		KillTimer(ID_STATUS_TIMER);
+		SaveRegistrySettings();
+
+		GetMenuBar().Destroy();
+		GetToolBar().Destroy();
+		GetReBar().Destroy();
+		GetStatusBar().Destroy();
+		GetView()->Destroy();
+
 		::PostQuitMessage(0);	// Terminates the application
 	}
 

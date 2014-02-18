@@ -34,7 +34,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_EXIT:
 		// End the application
-		::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
+		Destroy();
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
 		m_DockView.CloseAllDockers();

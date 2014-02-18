@@ -92,7 +92,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostQuitMessage(0);
+	Destroy();
 }
 
 void CMainFrame::OnFileMRU(WPARAM wParam)

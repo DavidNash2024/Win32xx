@@ -104,10 +104,10 @@ void CMainMDIFrame::OnFileClose()
 	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
-void CMainMDIFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostQuitMessage(0);
+	Destroy();
 }
 
 void CMainMDIFrame::OnFileNewList()

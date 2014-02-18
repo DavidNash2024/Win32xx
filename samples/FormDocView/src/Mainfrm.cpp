@@ -43,7 +43,7 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostQuitMessage(0);
+	Destroy();
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)

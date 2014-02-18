@@ -75,14 +75,6 @@ void CMainFrame::OnInitialUpdate()
 	// m_LeftPane.SetDragAutoResize(FALSE);
 }
 
-void CMainFrame::OnClose()
-{
-	// Destroying the TreeView triggers shutdown of the Treeview thread.
-	GetTreeView()->Destroy();
-
-	CFrame::OnClose();
-}
-
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
@@ -114,9 +106,8 @@ void CMainFrame::OnCreate()
 void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostQuitMessage(0);
+	Destroy();
 }
-
 
 void CMainFrame::OnViewLargeIcon()
 {

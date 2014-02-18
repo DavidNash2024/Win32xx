@@ -95,10 +95,10 @@ void CMainMDIFrame::OnFileClose()
 	GetActiveMDIChild()->SendMessage(WM_CLOSE, 0, 0);
 }
 
-void CMainMDIFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
 	// End the application
-	::PostQuitMessage(0);
+	Destroy();
 }
 
 void CMainMDIFrame::OnFileNew()
