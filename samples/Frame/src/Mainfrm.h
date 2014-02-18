@@ -14,15 +14,15 @@ public:
 	virtual ~CMainFrame();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnCreate();
-	virtual void OnFileExit();
-	virtual void OnFileOpen();
-	virtual void OnFilePrint();
-	virtual void OnFileSave();
-	virtual void OnInitialUpdate();
+	virtual BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual void	OnCreate();
+	virtual void	OnFileExit();
+	virtual void	OnFileOpen();
+	virtual void	OnFilePrint();
+	virtual void	OnFileSave();
+	virtual void	OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetupToolBar();
+	virtual void	SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

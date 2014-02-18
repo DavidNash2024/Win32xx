@@ -2420,7 +2420,7 @@ namespace Win32xx
 			DrawMenuItemBkgnd(pdis);
 
 			// Draw Checkmark or icon
-			if (pmid->mii.fState & MFS_CHECKED)
+			if (pdis->itemState & ODS_CHECKED)
 				DrawMenuItemCheckmark(pdis);
 			else
 				DrawMenuItemIcon(pdis);

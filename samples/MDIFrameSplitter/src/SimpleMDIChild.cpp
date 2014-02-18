@@ -79,45 +79,34 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
     // Respond to menu and toolbar input
 
 	UNREFERENCED_PARAMETER(lParam);
-	CDockSimple* pDockSimple = (CDockSimple*)GetView();
-	CSimpleView* pView = (CSimpleView*)pDockSimple->GetView();
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_COLOR_BLACK:
-		pView->SetColor(RGB(0,0,0));
-		pView->Invalidate();
-		return TRUE;
-	case IDM_COLOR_RED:
-		pView->SetColor(RGB(255, 0, 0));
-		pView->Invalidate();
-		return TRUE;
-	case IDM_COLOR_GREEN:
-		pView->SetColor(RGB(0, 255, 0));
-		pView->Invalidate();
-		return TRUE;
-	case IDM_COLOR_BLUE:
-		pView->SetColor(RGB(0, 0, 255));
-		pView->Invalidate();
-		return TRUE;
-	case IDM_COLOR_WHITE:
-		pView->SetColor(RGB(255, 255, 255));
-		pView->Invalidate();
-		return TRUE; 
+	case IDM_COLOR_BLACK:	OnColor(RGB(0,0,0));		return TRUE;
+	case IDM_COLOR_RED:		OnColor(RGB(255,0,0));		return TRUE;
+	case IDM_COLOR_GREEN:	OnColor(RGB(0,255,0));		return TRUE;
+	case IDM_COLOR_BLUE:	OnColor(RGB(0,0,255));		return TRUE;
+	case IDM_COLOR_WHITE:	OnColor(RGB(255,255,255));	return TRUE;
 	} 
 
 	return FALSE;
 }
 
+void CSimpleMDIChild::OnColor(COLORREF rgb)
+{
+	CDockSimple* pDockSimple = (CDockSimple*)GetView();
+	CSimpleView* pView = (CSimpleView*)pDockSimple->GetView();
+	pView->SetColor(rgb);
+	pView->Invalidate();
+}
+
 LRESULT CSimpleMDIChild::OnSize(WPARAM wParam, LPARAM lParam)
 {
-	UNREFERENCED_PARAMETER(wParam);
-	UNREFERENCED_PARAMETER(lParam);
-
 	CDocker* pDock = (CDocker*)GetView();
 	pDock->RecalcDockLayout();
 
-	return 0L;
+	// Pass the message on for default processing
+	return FinalWindowProc(WM_SIZE, wParam, lParam);
 }
 
 LRESULT CSimpleMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
