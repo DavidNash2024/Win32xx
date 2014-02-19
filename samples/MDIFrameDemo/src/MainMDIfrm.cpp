@@ -104,9 +104,9 @@ void CMainMDIFrame::OnFileClose()
 	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
-void CMainFrame::OnFileExit()
+void CMainMDIFrame::OnFileExit()
 {
-	// End the application
+	// The application ends when the frame is destroyed
 	Destroy();
 }
 

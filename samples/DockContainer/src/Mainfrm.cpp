@@ -33,7 +33,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:
-		// End the application
+		// The application ends when the frame is destroyed
 		Destroy();
 		return TRUE;
 	case IDM_DOCK_DEFAULT:

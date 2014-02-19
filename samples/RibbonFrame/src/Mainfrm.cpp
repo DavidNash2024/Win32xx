@@ -31,7 +31,7 @@ CMainFrame::~CMainFrame()
 	DestroyRibbon();
 }
 
-STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
+STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
 	// This function is called when a ribbon button is pressed. 
 	// Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation 
@@ -40,73 +40,21 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 	{
 		switch(nCmdID)
 		{
-		case IDC_CMD_NEW:
-			OnFileNew();
-			break;
-		case IDC_CMD_OPEN:
-			OnFileOpen();
-			break;
-		case IDC_CMD_SAVE:
-			OnFileSave();
-			break;
-		case IDC_CMD_SAVE_AS:
-			OnFileSaveAs();
-			break;
-		case IDC_CMD_PRINT:
-			OnFilePrint();
-			 break;
-		case IDC_CMD_COPY:
-			TRACE("Copy\n");
-			break;
-		case IDC_CMD_CUT:
-			TRACE("Cut\n");
-			break;
-		case IDC_CMD_PASTE:
-			TRACE("Paste\n");
-			break;
-		case IDC_CMD_ABOUT:
-			OnHelp();
-			break;
-		case IDC_CMD_EXIT:
-			PostQuitMessage(0);
-			break;
-		case IDC_MRULIST:
-			if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
-			{	
-				UINT uSelectedMRUItem = ppropvarValue->ulVal;
-				MRUFileOpen(uSelectedMRUItem);
-			}
-			break;
-		case IDC_PEN_COLOR:  // DropdownColorPicker button pressed
-			{			
-				if (ppropvarValue != NULL)
-				{
-					// Retrieve color type.	
-					UINT type = ppropvarValue->uintVal;	
-				
-					// The Ribbon framework passes color as additional property if the color type is RGB.
-					if (type == UI_SWATCHCOLORTYPE_RGB && pCommandExecutionProperties != NULL)
-					{
-						// Retrieve color.
-						PROPVARIANT var;
-						if (0 <= pCommandExecutionProperties->GetValue(UI_PKEY_Color, &var))
-						{	
-							UINT color = var.uintVal;
-							m_View.SetPen((COLORREF)color);
-						}
-					}
-				}
-			}
-			break;
-		case IDC_RICHFONT:
-			TRACE("Font dialog button\n");
-			break;
-		case IDC_RIBBONHELP:
-			OnHelp();
-			break;
-		case IDC_CUSTOMIZE_QAT:
-			TRACE("Customize Quick Access ToolBar\n");
-			break;
+		case IDC_CMD_NEW:		OnFileNew();		break;
+		case IDC_CMD_OPEN:		OnFileOpen();		break;
+		case IDC_CMD_SAVE:		OnFileSave();		break;
+		case IDC_CMD_SAVE_AS:	OnFileSaveAs();		break;
+		case IDC_CMD_PRINT:		OnFilePrint();		break;
+		case IDC_CMD_COPY:		TRACE("Copy\n");	break;
+		case IDC_CMD_CUT:		TRACE("Cut\n");		break;
+		case IDC_CMD_PASTE:		TRACE("Paste\n");	break;
+		case IDC_CMD_ABOUT:		OnHelp();			break;
+		case IDC_CMD_EXIT:		OnFileExit();		break;
+		case IDC_RICHFONT:		TRACE("Font dialog\n");		break;
+		case IDC_RIBBONHELP:	OnHelp();					break;
+		case IDC_MRULIST:		OnMRUList(key, ppropvarValue);		break;
+		case IDC_PEN_COLOR: OnPenColor(ppropvarValue, pCmdExProp);	break;
+		case IDC_CUSTOMIZE_QAT:	TRACE("Customize Quick Access ToolBar\n");	break;
 		default:
 			{
 				CString str;
@@ -128,6 +76,38 @@ void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 		m_PathName = strMRUText;
 	else
 		RemoveMRUEntry(strMRUText);
+}
+
+void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
+{
+	if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
+	{
+		UINT uSelectedMRUItem = ppropvarValue->ulVal;
+		MRUFileOpen(uSelectedMRUItem);
+	}
+}
+
+void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
+{
+	 // DropdownColorPicker button pressed
+			
+	if (ppropvarValue != NULL)
+	{
+		// Retrieve color type.	
+		UINT type = ppropvarValue->uintVal;	
+	
+		// The Ribbon framework passes color as additional property if the color type is RGB.
+		if (type == UI_SWATCHCOLORTYPE_RGB && pCmdExProp != NULL)
+		{
+			// Retrieve color.
+			PROPVARIANT var;
+			if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
+			{	
+				UINT color = var.uintVal;
+				m_View.SetPen((COLORREF)color);
+			}
+		}
+	}		
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)

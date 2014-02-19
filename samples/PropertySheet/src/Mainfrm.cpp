@@ -63,7 +63,7 @@ void CMainFrame::OnCreate()
 
 void CMainFrame::OnFileExit()
 {
-	// End the application
+	// The application ends when the frame is destroyed
 	Destroy();
 }
 

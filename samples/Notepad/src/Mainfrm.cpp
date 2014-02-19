@@ -56,6 +56,19 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
+void CMainFrame::OnClose()
+{
+	//Check for unsaved text
+	BOOL bChanged = (BOOL)m_RichView.SendMessage(EM_GETMODIFY, 0, 0);
+	if (bChanged)
+		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
+			OnFileSave();
+
+	// End the application
+	//Destroy();
+	DestroyWindow(*this);
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
@@ -88,10 +101,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+void CMainFrame::OnDropFiles(HDROP hDropInfo)
+{
+	TCHAR szFileName[_MAX_PATH];
+	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+
+	m_strPathName = szFileName;
+	ReadFile(szFileName);
+	SetWindowTitle();
+}
 
 void CMainFrame::OnFileExit()
 {
-	// End the application
+	// The application ends when the frame is destroyed
 	Destroy();
 }
 
@@ -249,27 +271,6 @@ void CMainFrame::OnEditRedo()
 void CMainFrame::OnEditUndo()
 {
 	m_RichView.SendMessage(EM_UNDO, 0, 0);
-}
-
-void CMainFrame::OnClose()
-{
-	//Check for unsaved text
-	BOOL bChanged = (BOOL)m_RichView.SendMessage(EM_GETMODIFY, 0, 0);
-	if (bChanged)
-		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
-			OnFileSave();
-
-	CFrame::OnClose();
-}
-
-void CMainFrame::OnDropFiles(HDROP hDropInfo)
-{
-	TCHAR szFileName[_MAX_PATH];
-	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
-
-	m_strPathName = szFileName;
-	ReadFile(szFileName);
-	SetWindowTitle();
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)

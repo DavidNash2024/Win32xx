@@ -57,7 +57,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileExit()
 {
-	// End the application
+	// The application ends when the frame is destroyed
 	Destroy();
 }
 
