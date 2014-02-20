@@ -57,8 +57,12 @@
 
 // Use the Dialog generic program as the starting point for your own dialog
 // applications.
-// The DlgSubclass sample demonstrates how to use subclassing to customise
+// The DialogDemo sample demonstrates how to use subclassing to customise
 // the behaviour of common controls in a dialog.
+
+// Note: The following functions often used with dialogs are provided by CWnd:
+//  GetDlgCtrlID, GetDlgItem, GetDlgItemInt, GetDlgItemText, GetNextDlgGroupItem,
+//  GetNextDlgTabItem, SendDlgItemMessage, SetDlgItemInt, SetDlgItemText 
 
 
 #ifndef _WIN32XX_DIALOG_H_
@@ -104,6 +108,12 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
 
 		// Can't override these functions
+		DWORD GetDefID() const;
+		void GotoDlgCtrl(CWnd* pWndCtrl);
+		BOOL MapDialogRect(LPRECT pRect) const;
+		void NextDlgCtrl() const;
+		void PrevDlgCtrl() const;
+		void SetDefID(UINT nID);
 		static INT_PTR CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	#ifndef _WIN32_WCE
@@ -581,6 +591,54 @@ namespace Win32xx
 	// Allows the parent of the dialog to be set before the dialog is created
 	{
 		m_hParent = pParent? pParent->GetHwnd() : NULL;
+	}
+
+	inline DWORD CDialog::GetDefID() const
+	// Retrieves the identifier of the default push button control for the dialog. 
+	{
+		assert(::IsWindow(m_hWnd));
+		DWORD dwID = 0;
+		LRESULT LR = SendMessage(DM_GETDEFID, 0, 0);
+		if (DC_HASDEFID == HIWORD(LR))
+			dwID = LOWORD(LR);
+
+		return dwID;	
+	}
+
+	inline void CDialog::GotoDlgCtrl(CWnd* pWndCtrl)
+	// Sets the keyboard focuse to the specified control
+	{
+		assert(::IsWindow(m_hWnd));
+		assert(pWndCtrl->IsWindow());
+		SendMessage(WM_NEXTDLGCTL, (WPARAM)pWndCtrl->GetHwnd(), TRUE);
+	}
+
+	inline BOOL CDialog::MapDialogRect(LPRECT pRect) const
+	// Converts the dialog box units to screen units (pixels).
+	{
+		assert(::IsWindow(m_hWnd));
+		return ::MapDialogRect(m_hWnd, pRect);
+	}
+
+	inline void CDialog::NextDlgCtrl() const
+	// Sets the keyboard focus to the next dialog control
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(WM_NEXTDLGCTL, FALSE, FALSE);
+	}
+
+	inline void CDialog::PrevDlgCtrl() const
+	// Sets the keyboard focus to the previous dialog control
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(WM_NEXTDLGCTL, TRUE, FALSE);
+	}
+
+	inline void CDialog::SetDefID(UINT nID)
+	// Changes the identifier of the default push button for a dialog box.
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(DM_SETDEFID, (WPARAM) nID, 0);
 	}
 
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

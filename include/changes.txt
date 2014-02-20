@@ -36,7 +36,10 @@ New Features and Enhancements
    - OpenFileDialog and SaveFileDialog allow the dialog title to be specified.
 * Updated CToolBar
    - SetButtonInfo can now be used to change a ToolBar button's image and 
-      command ID.  
+      command ID.
+* Updated CDialog
+   - Added GetDefID, GotoDlgCtrl, MapDialogRect, NextDlgCtrl, PrevDlgCtrl
+	  and SetDefID	  
 * TRACE now accepts both ANSI and Unicode strings.
 * Added project files for VS2013
 * Win32++ now has a tidier approach to the switch statements used in WndProc,
@@ -44,9 +47,22 @@ New Features and Enhancements
   with older code. Users are encourage to adopt this style to keep the code
   in large switch statements tidy.
 
-
+Incompatibilities with previous versions
+----------------------------------------
+* The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
+* Programs with frames should now use the IDW_READY resource for "Ready". Add IDW_READY
+   as a string resource to resource.rc
+* GetReBarTheme and GetToolBarTheme have been moved to CFrame 
+   
+   
 Changes in detail
 -----------------
+- Added CDialog::GetDefID
+- Added CDialog::GotoDlgCtrl
+- Added CDialog::MapDialogRect
+- Added CDialog::NextDlgCtrl
+- Added CDialog::PrevDlgCtrl
+- Added CDialog::SetDefID
 - Added CDocker::OnBarStart
 - Added CDocker::OnBarMove
 - Added CDocker::OnBarEnd
@@ -123,11 +139,6 @@ Added IDW_READY resource for ready string.
 Added VS2013 project files
 Updated the tutorials to take advantage of the new features.
 
-Incompatibilities with previous versions
-----------------------------------------
-* The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
-* Programs with frames should now use the IDW_READY resource for "Ready". Add IDW_READY
-   as a string resource to resource.rc
 
 
 Version 7.3

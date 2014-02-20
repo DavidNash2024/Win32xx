@@ -11,6 +11,7 @@ CView::CView()
 }
 
 void CView::OnDraw(CDC* pDC)
+// OnDraw is called when part or all of the window needs to be redrawn
 {
 	CRect rc = GetClientRect();
 
@@ -19,8 +20,8 @@ void CView::OnDraw(CDC* pDC)
 }
 
 void CView::OnInitialUpdate()
+// OnInitialUpdate is called immediately after the window is created
 {
-	// OnInitialUpdate is called immediately after the window is created
 	TRACE("View window created\n");
 }
 
@@ -41,7 +42,7 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	// take more precise control over the type of window we create.
 
 	// Set the Window Class name
-	wc.lpszClassName = _T("View");
+	wc.lpszClassName = _T("Win32++ View");
 
 	// Set a background brush to white
 	wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
@@ -54,6 +55,7 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// All window messages for this window pass through WndProc
 {
 	switch (uMsg)
 	{

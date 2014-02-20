@@ -12,7 +12,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		// Start Win32++
 		CFrameApp theApp;
 
-		// Run the application
+		// Run the application and the message loop
 		return theApp.Run();
 	}
 	
