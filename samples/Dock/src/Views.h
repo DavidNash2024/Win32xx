@@ -48,7 +48,7 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	HIMAGELIST m_himlNormal;
+	CImageList m_imlNormal;
 };
 
 class CViewList : public CListView
@@ -65,7 +65,7 @@ public:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	HIMAGELIST m_himlSmall;
+	CImageList m_imlSmall;
 };
 
 

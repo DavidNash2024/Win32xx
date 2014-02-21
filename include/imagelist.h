@@ -73,6 +73,9 @@ namespace Win32xx
 #endif
 
 		//Operations
+		int Add(CBitmap* pbmImage, CBitmap* pbmMask) ;
+		int Add(CBitmap* pbmImage, COLORREF crMask);
+		int Add(HICON hIcon);
 		void Attach(HIMAGELIST hImageList);
 		BOOL BeginDrag(int nImage, CPoint ptHotSpot) const;
 		void DeleteImageList();
@@ -166,6 +169,32 @@ namespace Win32xx
 		}
 
 		return Success;
+	}
+
+	inline int CImageList::Add(CBitmap* pbmImage, CBitmap* pbmMask) 
+	// Adds an image or images to an image list. The pbmMask parameter can be NULL.
+	{
+		assert (m_hImageList);
+		assert (pbmImage);
+		HBITMAP hbmMask = pbmMask? (HBITMAP)*pbmMask : 0;
+		return ImageList_Add(m_hImageList, (HBITMAP)*pbmImage, hbmMask ); 
+	} 
+		
+	inline int CImageList::Add(CBitmap* pbmImage, COLORREF crMask) 
+	// Adds an image or images to an image list, generating a mask from the specified bitmap.
+	{ 
+		assert (m_hImageList);
+		assert (pbmImage);
+		return ImageList_AddMasked(m_hImageList, (HBITMAP)*pbmImage, crMask);
+	}
+		
+	inline int CImageList::Add(HICON hIcon) 
+	// Adds an Icon to the image list
+	{ 
+		assert (m_hImageList);
+		
+		// Append the icon to the image list
+		return ImageList_ReplaceIcon(m_hImageList, -1, hIcon); 
 	}
 
 	inline void CImageList::Attach(HIMAGELIST hImageList)

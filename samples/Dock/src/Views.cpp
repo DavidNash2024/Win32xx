@@ -49,14 +49,13 @@ LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////////////////
 // CViewList functions
-CViewList::CViewList() : m_himlSmall(0)
+CViewList::CViewList()
 {
 }
 
 CViewList::~CViewList()
 {
 	if (IsWindow()) DeleteAllItems();
-	ImageList_Destroy(m_himlSmall);
 }
 
 void CViewList::OnDestroy()
@@ -67,10 +66,10 @@ void CViewList::OnDestroy()
 void CViewList::OnInitialUpdate()
 {
 	// Set the image lists
-	m_himlSmall = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	CBitmap bmImage(IDB_FILEVIEW);
-	ImageList_AddMasked(m_himlSmall, bmImage, RGB(255, 0, 255));
-	SetImageList(m_himlSmall, LVSIL_SMALL);
+	m_imlSmall.Add( &bmImage, RGB(255, 0, 255) );
+	SetImageList(&m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -151,14 +150,13 @@ LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////////////////
 // CViewTree functions
-CViewTree::CViewTree() : m_himlNormal(0)
+CViewTree::CViewTree()
 {
 }
 
 CViewTree::~CViewTree()
 {
 	if (IsWindow()) DeleteAllItems();
-	ImageList_Destroy(m_himlNormal);
 }
 
 
@@ -185,10 +183,10 @@ void CViewTree::OnDestroy()
 void CViewTree::OnInitialUpdate()
 {
 	//set the image lists
-	m_himlNormal = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	CBitmap bmImage(IDB_CLASSVIEW);
-	ImageList_AddMasked(m_himlNormal, bmImage, RGB(255, 0, 0));
-	SetImageList(m_himlNormal, LVSIL_NORMAL);
+	m_imlNormal.Add( &bmImage, RGB(255, 0, 0) );
+	SetImageList(&m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

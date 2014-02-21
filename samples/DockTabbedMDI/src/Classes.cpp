@@ -11,14 +11,13 @@
 
 ///////////////////////////////////////////////
 // CViewClasses functions
-CViewClasses::CViewClasses() : m_himlNormal(0)
+CViewClasses::CViewClasses()
 {
 }
 
 CViewClasses::~CViewClasses()
 {
 	if (IsWindow()) DeleteAllItems();
-	ImageList_Destroy(m_himlNormal);
 }
 
 HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
@@ -44,11 +43,10 @@ void CViewClasses::OnDestroy()
 void CViewClasses::OnInitialUpdate()
 {
 	//set the image lists
-	m_himlNormal = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
-	ImageList_AddMasked(m_himlNormal, hbm, RGB(255, 0, 0));
-	SetImageList(m_himlNormal, LVSIL_NORMAL);
-	::DeleteObject(hbm);
+	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+	CBitmap bm(IDB_CLASSVIEW);
+	m_imlNormal.Add( &bm, RGB(255, 0, 0) );
+	SetImageList(&m_imlNormal,  LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -88,7 +86,7 @@ void CViewClasses::PreCreate(CREATESTRUCT &cs)
 
 ///////////////////////////////////////////////
 // CContainClasses functions
-CContainClasses::CContainClasses() 
+CContainClasses::CContainClasses()
 {
 	SetTabText(_T("ClassView"));
 	SetTabIcon(IDI_CLASSVIEW);
@@ -98,26 +96,26 @@ CContainClasses::CContainClasses()
 
 void CContainClasses::AddCombo()
 {
-	int nComboWidth = 120; 
+	int nComboWidth = 120;
 	CToolBar& TB = GetToolBar();
 	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
-	 
-	// Adjust button width and convert to separator   
+
+	// Adjust button width and convert to separator
 	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
 	TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
-	 
-	// Determine the size and position of the ComboBox 
-	int nIndex = TB.CommandToIndex(IDM_FILE_SAVE); 
-	CRect rect = TB.GetItemRect(nIndex); 
-	 
-	// Create the ComboboxEx window 
+
+	// Determine the size and position of the ComboBox
+	int nIndex = TB.CommandToIndex(IDM_FILE_SAVE);
+	CRect rect = TB.GetItemRect(nIndex);
+
+	// Create the ComboboxEx window
 	m_ComboBoxEx.Create(&TB);
 	m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
 	// Adjust the toolbar height to accomodate the ComboBoxEx control
 	CRect rc = m_ComboBoxEx.GetWindowRect();
 	GetToolBar().SendMessage(TB_SETBUTTONSIZE, 0, (LPARAM) MAKELONG (rc.Height(), rc.Height()));
-	
+
 	// Add the ComboBox's items
 	m_ComboBoxEx.AddItems();
 }
@@ -153,22 +151,22 @@ void CContainClasses::SetupToolBar()
 {
 	// Set the Bitmap resource for the toolbar
 	GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-	
+
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW         );
 	AddToolBarButton( IDM_FILE_OPEN, FALSE );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_FILE_SAVE, FALSE );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_EDIT_CUT         );
 	AddToolBarButton( IDM_EDIT_COPY        );
 	AddToolBarButton( IDM_EDIT_PASTE       );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_FILE_PRINT, FALSE );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_HELP_ABOUT       );
 
@@ -179,9 +177,9 @@ void CContainClasses::SetupToolBar()
 
 /////////////////////////////////////////////////
 //  Definitions for the CDockClasses class
-CDockClasses::CDockClasses() 
-{ 
-	SetView(m_Classes); 
+CDockClasses::CDockClasses()
+{
+	SetView(m_Classes);
 }
 
 void CDockClasses::OnInitialUpdate()

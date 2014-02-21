@@ -174,8 +174,6 @@ void CMainFrame::OnDefaultLayout()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
-
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
@@ -331,7 +329,7 @@ LRESULT CMainFrame::OnMouseActivate(WPARAM wParam, LPARAM lParam)
 {
 	// Store the active docker before processing the menu events
 	m_pLastActiveDocker = m_DockTabbedMDI.GetActiveDocker();
-	
+
 	return MA_ACTIVATE;
 }
 

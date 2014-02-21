@@ -3779,7 +3779,7 @@ namespace Win32xx
 			ContainerInfo ci;
 			ci.pContainer = pContainer;
 			ci.Title = pContainer->GetTabText();
-			ci.iImage = ImageList_AddIcon(GetImageList(), pContainer->GetTabIcon());
+			ci.iImage = GetImageList().Add( pContainer->GetTabIcon() );
 			int iNewPage = (int)m_vContainerInfo.size();
 			m_vContainerInfo.push_back(ci);
 
@@ -3913,7 +3913,7 @@ namespace Win32xx
 		ContainerInfo ci;
 		ci.pContainer = this;
 		ci.Title = GetTabText();
-		ci.iImage = ImageList_AddIcon(GetImageList(), GetTabIcon());
+		ci.iImage = GetImageList().Add( GetTabIcon() );
 		m_vContainerInfo.push_back(ci);
 
 		// Create the page window

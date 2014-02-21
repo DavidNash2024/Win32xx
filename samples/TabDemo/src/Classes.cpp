@@ -10,24 +10,22 @@
 
 ///////////////////////////////////////////////
 // CViewClasses functions
-CViewClasses::CViewClasses() : m_himlNormal(0)
+CViewClasses::CViewClasses()
 {
 }
 
 CViewClasses::~CViewClasses()
 {
 	if (IsWindow()) DeleteAllItems();
-	ImageList_Destroy(m_himlNormal);
 }
 
 void CViewClasses::OnInitialUpdate()
 {
 	//set the image lists
-	m_himlNormal = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_CLASSVIEW));
-	ImageList_AddMasked(m_himlNormal, hbm, RGB(255, 0, 0));
-	SetImageList(m_himlNormal, LVSIL_NORMAL);
-	::DeleteObject(hbm);
+	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+	CBitmap bmImage(IDB_CLASSVIEW);
+	m_imlNormal.Add( &bmImage, RGB(255, 0, 0) );
+	SetImageList(&m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

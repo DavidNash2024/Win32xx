@@ -141,12 +141,12 @@ namespace Win32xx
 		CWnd* 	GetComboBoxCtrl() const;
 		CEdit* 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
-		HIMAGELIST GetImageList() const;
+		CImageList* GetImageList() const;
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
 		BOOL 	HasEditChanged () const;
 		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
 		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
-		HIMAGELIST SetImageList(HIMAGELIST himl) const;
+		CImageList* SetImageList(CImageList* pNew) const;
 		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
 
 	protected:
@@ -196,20 +196,20 @@ namespace Win32xx
 		virtual ~CHeader() {}
 
 		// Attributes
-		HIMAGELIST GetImageList() const;
+		CImageList* GetImageList() const;
 		BOOL GetItem(int nPos, HDITEM* pHeaderItem) const;
 		int GetItemCount() const;
 		CRect GetItemRect(int nIndex) const;
 		BOOL GetOrderArray(LPINT piArray, int iCount);
 		int OrderToIndex(int nOrder) const;
-		HIMAGELIST SetImageList(HIMAGELIST himl);
+		CImageList* SetImageList(CImageList* pNew);
 		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
 		BOOL SetOrderArray(int iCount, LPINT piArray);
 		int GetBitmapMargin() const;
 		int SetBitmapMargin(int nWidth);
 
 		// Operations
-		HIMAGELIST CreateDragImage(int nIndex);
+		CImageList* CreateDragImage(int nIndex);
 		BOOL DeleteItem(int nPos);
 		int InsertItem(int nPos, HDITEM* phdi);
 		BOOL Layout(HDLAYOUT* pHeaderLayout);
@@ -843,11 +843,11 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_GETEXTENDEDSTYLE, 0, 0);
 	}
 
-	inline HIMAGELIST CComboBoxEx::GetImageList() const
+	inline CImageList* CComboBoxEx::GetImageList() const
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0, 0);
+		return FromHandle( (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0, 0) );
 	}
 
 	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM* pCBItem) const
@@ -878,11 +878,12 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
 	}
 
-	inline HIMAGELIST CComboBoxEx::SetImageList(HIMAGELIST himl) const
+	inline CImageList* CComboBoxEx::SetImageList(CImageList* pNew) const
 	// Sets an image list for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)himl);
+		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
+		return FromHandle( (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)himlNew) );
 	}
 
 	inline BOOL CComboBoxEx::SetItem(PCOMBOBOXEXITEM lpcCBItem) const
@@ -1007,10 +1008,10 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CHeader class
 	//
-	inline HIMAGELIST CHeader::CreateDragImage(int nIndex)
+	inline CImageList* CHeader::CreateDragImage(int nIndex)
 	{
 		assert(IsWindow());
-		return Header_CreateDragImage(m_hWnd, nIndex);
+		return FromHandle( Header_CreateDragImage(m_hWnd, nIndex) );
 	}
 
 	inline BOOL CHeader::DeleteItem(int nPos)
@@ -1019,10 +1020,10 @@ namespace Win32xx
 		return Header_DeleteItem(m_hWnd, nPos);
 	}
 
-	inline HIMAGELIST CHeader::GetImageList() const
+	inline CImageList* CHeader::GetImageList() const
 	{
 		assert(IsWindow());
-		return Header_GetImageList(m_hWnd);
+		return FromHandle( Header_GetImageList(m_hWnd) );
 	}
 
 	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
@@ -1083,10 +1084,11 @@ namespace Win32xx
 	}
 #endif
 
-	inline HIMAGELIST CHeader::SetImageList(HIMAGELIST himl)
+	inline CImageList* CHeader::SetImageList(CImageList* pNew)
 	{
 		assert(IsWindow());
-		return Header_SetImageList(m_hWnd, himl);
+		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
+		return FromHandle( Header_SetImageList(m_hWnd, himlNew) );
 	}
 
 	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)

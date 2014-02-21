@@ -111,7 +111,7 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
-		HIMAGELIST GetImageList() const { return m_himlTab; }
+		CImageList& GetImageList() const { return (CImageList&)m_imlTab; }
 		BOOL GetShowButtons() const { return m_bShowButtons; }
 		int GetTabHeight() const { return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
@@ -170,7 +170,7 @@ namespace Win32xx
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<WndPtr> m_vTabViews;
 		CFont m_Font;
-		HIMAGELIST m_himlTab;
+		CImageList m_imlTab;
 		HMENU m_hListMenu;
 		CWnd* m_pActiveView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
@@ -271,7 +271,7 @@ namespace Win32xx
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
 		// Create and assign the image list
-		m_himlTab = ImageList_Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+		m_imlTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
 		NONCLIENTMETRICS info = {0};
@@ -282,8 +282,6 @@ namespace Win32xx
 
 	inline CTab::~CTab()
 	{
-		ImageList_Destroy(m_himlTab);
-
 		if (IsMenu(m_hListMenu)) ::DestroyMenu(m_hListMenu);
 	}
 
@@ -299,7 +297,7 @@ namespace Win32xx
 		tpi.idTab = idTab;
 		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING);
 		if (hIcon)
-			tpi.iImage = ImageList_AddIcon(GetImageList(), hIcon);
+			tpi.iImage = GetImageList().Add(hIcon);
 		else
 			tpi.iImage = -1;
 
@@ -529,11 +527,11 @@ namespace Win32xx
 					int xImage;
 					int yImage;
 					int yOffset = 0;
-					if (ImageList_GetIconSize(m_himlTab, &xImage, &yImage))
+					if ( m_imlTab.GetIconSize(&xImage, &yImage) )
 						yOffset = (rcItem.Height() - yImage)/2;
 
 					// Draw the icon
-					ImageList_Draw(m_himlTab, tcItem.iImage, dcMem, rcItem.left+5, rcItem.top+yOffset, ILD_NORMAL);
+					m_imlTab.Draw( &dcMem, tcItem.iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
 					// Draw the text
 					dcMem.SelectObject(&m_Font);
@@ -748,7 +746,7 @@ namespace Win32xx
 
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
-			TabCtrl_SetImageList(m_hWnd, m_himlTab);
+			TabCtrl_SetImageList(m_hWnd, m_imlTab);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -1112,7 +1110,7 @@ namespace Win32xx
 		else
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
-			TabCtrl_SetImageList(m_hWnd, m_himlTab);
+			TabCtrl_SetImageList(m_hWnd, m_imlTab);
 		}
 
 		RecalcLayout();
@@ -1133,11 +1131,11 @@ namespace Win32xx
 		GetItem(i, &tci);
 		if (tci.iImage >= 0)
 		{
-			ImageList_ReplaceIcon(GetImageList(), i, hIcon);
+			GetImageList().Replace(i, hIcon);
 		}
 		else
 		{
-			int iImage = ImageList_AddIcon(GetImageList(), hIcon);
+			int iImage = GetImageList().Add(hIcon);
 			tci.iImage = iImage;
 			TabCtrl_SetItem(m_hWnd, i, &tci);
 			m_vTabPageInfo[i].iImage = iImage;

@@ -9,24 +9,22 @@
 
 ///////////////////////////////////////////////
 // CViewFiles functions
-CViewFiles::CViewFiles() : m_himlSmall(0)
+CViewFiles::CViewFiles()
 {
 }
 
 CViewFiles::~CViewFiles()
 {
 	if (IsWindow()) DeleteAllItems();
-	ImageList_Destroy(m_himlSmall);
 }
 
 void CViewFiles::OnInitialUpdate()
 {
 	// Set the image lists
-	m_himlSmall = ImageList_Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(IDB_FILEVIEW));
-	ImageList_AddMasked(m_himlSmall, hbm, RGB(255, 0, 255));
-	SetImageList(m_himlSmall, LVSIL_SMALL);
-	::DeleteObject(hbm);
+	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+	CBitmap bm(IDB_FILEVIEW);
+	m_imlSmall.Add( &bm, RGB(255, 0, 255) );
+	SetImageList(&m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

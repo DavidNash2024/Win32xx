@@ -2253,20 +2253,20 @@ namespace Win32xx
 				}
 
 				// Get the appropriate image list depending on the button state
-				HIMAGELIST himlToolBar;
+				CImageList* pimlToolBar;
 				if (nState & CDIS_DISABLED)
 				{
-					himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
+					pimlToolBar = pTB->GetDisabledImageList();
 				}
 				else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 				{
-					himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
-					if (0 == himlToolBar)
-						himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETIMAGELIST, 0L, 0L);
+					pimlToolBar = pTB->GetHotImageList();
+					if (0 == pimlToolBar)
+						pimlToolBar = pTB->GetImageList();
 				}
 				else
 				{
-					himlToolBar = (HIMAGELIST)pTB->SendMessage(TB_GETIMAGELIST, 0L, 0L);
+					pimlToolBar = pTB->GetImageList();
 				}
 
 				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
@@ -2274,7 +2274,7 @@ namespace Win32xx
 				// Calculate image position
 				int cxImage = 0;
 				int cyImage = 0;
-				ImageList_GetIconSize(himlToolBar, &cxImage, &cyImage);
+				pimlToolBar->GetIconSize(&cxImage, &cyImage);
 
 				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
 				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
@@ -2328,7 +2328,7 @@ namespace Win32xx
 				// Draw the button image
 				if (xImage > 0)
 				{
-					ImageList_Draw(himlToolBar, iImage, DrawDC, xImage, yImage, ILD_TRANSPARENT);
+					pimlToolBar->Draw(&DrawDC, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
 				}
 
 				//Draw Text

@@ -82,10 +82,10 @@ namespace Win32xx
 		BYTE  GetButtonStyle(int idButton) const;
 		CString GetButtonText(int idButton) const;
 		int   GetCommandID(int iIndex) const;
-		HIMAGELIST GetDisabledImageList() const;
+		CImageList* GetDisabledImageList() const;
 		int   GetHotItem() const;
-		HIMAGELIST GetHotImageList() const;
-		HIMAGELIST GetImageList() const;
+		CImageList* GetHotImageList() const;
+		CImageList* GetImageList() const;
 		CRect GetItemRect(int iIndex) const;
 		CSize GetMaxSize() const;
 		DWORD GetPadding() const;
@@ -114,12 +114,12 @@ namespace Win32xx
 		BOOL  SetButtonStyle(int idButton, BYTE Style) const;
 		BOOL  SetButtonWidth(int idButton, int nWidth) const;
 		BOOL  SetCommandID(int iIndex, int idButton) const;
-		HIMAGELIST SetDisableImageList(HIMAGELIST himlNewDisabled) const;
+		CImageList* SetDisableImageList(CImageList* pNewDisabled) const;
 		DWORD SetDrawTextFlags(DWORD dwMask, DWORD dwDTFlags) const;
 		DWORD SetExtendedStyle(DWORD dwExStyle) const;
-		HIMAGELIST SetHotImageList(HIMAGELIST himlNewHot) const;
+		CImageList* SetHotImageList(CImageList* pNewHot) const;
 		int   SetHotItem(int iHot) const;
-		HIMAGELIST SetImageList(HIMAGELIST himlNew) const;
+		CImageList* SetImageList(CImageList* pNew) const;
 		BOOL  SetIndent(int iIndent) const;
 		BOOL  SetMaxTextRows(int iMaxRows) const;
 		BOOL  SetPadding(int cx, int cy) const;
@@ -193,14 +193,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::AddButton(UINT nID, BOOL bEnabled /* = TRUE */)
-	// Adds Resource IDs to ToolBar buttons.
+	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
 		assert(::IsWindow(m_hWnd));
 
 		m_vToolBarData.push_back(nID);
 
-		// TBBUTTON structure for each button in the ToolBar
+		// TBBUTTON structure for each button in the toolbar
 		TBBUTTON tbb = {0};
 
 		std::vector<UINT>::iterator iter;
@@ -223,7 +223,7 @@ namespace Win32xx
 			tbb.fsStyle = TBSTYLE_BUTTON;
 		}
 
-		// Add the button to the ToolBar
+		// Add the button to the toolbar
 		return (BOOL)SendMessage(TB_ADDBUTTONS, 1L, (LPARAM)&tbb);
 	}
 
@@ -384,18 +384,18 @@ namespace Win32xx
 		return tbb.idCommand;
 	}
 
-	inline HIMAGELIST CToolBar::GetDisabledImageList() const
+	inline CImageList* CToolBar::GetDisabledImageList() const
 	// Retrieves the image list that a ToolBar control uses to display inactive buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
+		return FromHandle( (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L) );
 	}
 
-	inline HIMAGELIST CToolBar::GetHotImageList() const
+	inline CImageList* CToolBar::GetHotImageList() const
 	// Retrieves the image list that a ToolBar control uses to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
+		return FromHandle( (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L) );
 	}
 
 	inline int CToolBar::GetHotItem() const
@@ -405,11 +405,11 @@ namespace Win32xx
 		return (int)SendMessage(TB_GETHOTITEM, 0L, 0L);
 	}
 
-	inline HIMAGELIST CToolBar::GetImageList() const
+	inline CImageList* CToolBar::GetImageList() const
 	// Retrieves the image list that a ToolBar control uses to display buttons in their default state.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L);
+		return FromHandle( (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L) );
 	}
 
 	inline CRect CToolBar::GetItemRect(int iIndex) const
@@ -954,11 +954,12 @@ namespace Win32xx
 		return (BOOL)SendMessage(TB_SETCMDID, iIndex, idButton);
 	}
 
-	inline HIMAGELIST CToolBar::SetDisableImageList(HIMAGELIST himlNewDisabled) const
+	inline CImageList* CToolBar::SetDisableImageList(CImageList* pNewDisabled) const
 	// Sets the ImageList that the ToolBar control will use to display disabled buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlNewDisabled);
+		HIMAGELIST himlNewDisabled = pNewDisabled ? pNewDisabled->GetHandle() : 0;
+		return FromHandle( (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlNewDisabled) );
 	}
 
 	inline DWORD CToolBar::SetDrawTextFlags(DWORD dwMask, DWORD dwDTFlags) const
@@ -976,11 +977,12 @@ namespace Win32xx
 		return (DWORD)SendMessage(TB_SETEXTENDEDSTYLE, 0L, (LPARAM)dwExStyle);
 	}
 
-	inline HIMAGELIST CToolBar::SetHotImageList(HIMAGELIST himlNewHot) const
+	inline CImageList* CToolBar::SetHotImageList(CImageList* pNewHot) const
 	// Sets the image list that the ToolBar control will use to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot);
+		HIMAGELIST himlNewHot = pNewHot ? pNewHot->GetHandle() : 0;
+		return FromHandle( (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot) );
 	}
 
 	inline int CToolBar::SetHotItem(int iHot) const
@@ -990,11 +992,12 @@ namespace Win32xx
 		return (int)SendMessage(TB_SETHOTITEM, (WPARAM)iHot, 0L);
 	}
 
-	inline HIMAGELIST CToolBar::SetImageList(HIMAGELIST himlNew) const
+	inline CImageList* CToolBar::SetImageList(CImageList* pNew) const
 	// Sets the image list that the ToolBar will use to display buttons that are in their default state.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNew);
+		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
+		return FromHandle( (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNew) );
 	}
 
 	inline BOOL CToolBar::SetImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
