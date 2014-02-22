@@ -184,10 +184,12 @@ namespace Win32xx
 		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
 		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		std::vector<ContainerInfo> m_vContainerInfo;
+		std::vector<ContainerInfo> m_vContainerInfo;	// vector of ContainerInfo structs
+		std::vector<UINT> m_vToolBarData;				// vector of resource IDs for ToolBar buttons
 		CString m_strTabText;
 		CString m_csCaption;
 		CViewPage m_ViewPage;
@@ -3808,6 +3810,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
+		m_vToolBarData.push_back(nID);
 		GetToolBar().AddButton(nID, bEnabled);
 	}
 
@@ -3925,12 +3928,13 @@ namespace Win32xx
 		style |= CCS_NODIVIDER ;
 		GetToolBar().SetWindowLongPtr(GWL_STYLE, style);
 		SetupToolBar();
-		if (GetToolBar().GetToolBarData().size() > 0)
+		if (m_vToolBarData.size() > 0)
 		{
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			if (!GetToolBar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+		//		GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+				SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
 			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
@@ -4166,6 +4170,70 @@ namespace Win32xx
 		pContainer->SetTabText(szText);
 
 		CTab::SetTabText(nTab, szText);
+	}
+
+	inline void CDockContainer::SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
+	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
+	// Assumes the width of the button image = height, minimum width = 16
+	// The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
+	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
+	// The Hot and disabled bitmap resources can be 0
+	{
+		// ToolBar ImageLists require Comctl32.dll version 4.7 or later
+		if (GetComCtlVersion() < 470)
+		{
+			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
+			// Instead we simply set the bitmap.
+			GetToolBar().SetBitmap(ToolBarID);
+			return;
+		}
+
+		// Set the button images
+		CBitmap Bitmap(ToolBarID);
+		assert(Bitmap.GetHandle());
+
+		BITMAP bm = Bitmap.GetBitmapData();
+		int iImageHeight = bm.bmHeight;
+		int iImageWidth  = MAX(bm.bmHeight, 16);
+
+		HIMAGELIST himlToolBar;   
+		HIMAGELIST himlToolBarHot;
+		HIMAGELIST himlToolBarDis;
+		
+		himlToolBar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, 0/* iNumButtons*/, 0);
+		assert(himlToolBar);
+
+		ImageList_AddMasked(himlToolBar, Bitmap, crMask);
+		GetToolBar().SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlToolBar);
+
+		if (ToolBarHotID)
+		{
+			CBitmap BitmapHot(ToolBarHotID);
+			assert(BitmapHot);
+
+			himlToolBarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, 0/*iNumButtons*/, 0);
+			assert(himlToolBarHot);
+
+			ImageList_AddMasked(himlToolBarHot, BitmapHot, crMask);
+			GetToolBar().SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlToolBarHot);
+		}
+
+		if (ToolBarDisabledID)
+		{
+			CBitmap BitmapDisabled(ToolBarDisabledID);
+			assert(BitmapDisabled);
+
+			himlToolBarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, 0/*iNumButtons*/, 0);
+			assert(himlToolBarDis);
+
+			ImageList_AddMasked(himlToolBarDis, BitmapDisabled, crMask);
+			GetToolBar().SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolBarDis);
+		}
+		else
+		{
+			himlToolBarDis = CreateDisabledImageList(himlToolBar);
+			GetToolBar().SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolBarDis);
+		}	
 	}
 
 	inline void CDockContainer::SetView(CWnd& Wnd)

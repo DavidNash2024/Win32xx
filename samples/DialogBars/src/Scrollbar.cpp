@@ -21,6 +21,8 @@ void CMyScrollBar::OnInitialUpdate()
 
 LRESULT CMyScrollBar::OnHScroll(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	// Get a reference to the MyDialog object
 	CMyDialog& MyDialog = GetDialogApp().GetDialog();
 

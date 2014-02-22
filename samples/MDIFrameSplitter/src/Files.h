@@ -22,7 +22,7 @@ protected:
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 
 private:
-	HIMAGELIST m_himlSmall;
+	CImageList m_imlSmall;
 };
 
 // Declaration of the CContainFiles class

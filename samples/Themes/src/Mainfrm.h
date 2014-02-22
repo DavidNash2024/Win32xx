@@ -45,11 +45,13 @@ private:
 	void SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
 
 	CView m_View;
-	CToolBar Arrows;
-	CToolBar Cards;
+	CToolBar m_Arrows;
+	CToolBar m_Cards;
 	CMyCombo m_ComboBoxEx;
 	std::vector<UINT> m_vBandIDs;
 	std::vector<UINT> m_vBandStyles;
+	CImageList m_ArrowImages;
+	CImageList m_CardImages;
 
 	UINT m_nColor;
 	BOOL m_bUseThemes;

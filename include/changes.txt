@@ -37,6 +37,7 @@ New Features and Enhancements
 * Updated CToolBar
    - SetButtonInfo can now be used to change a ToolBar button's image and 
       command ID.
+   - Functions now use CImageList* instead of HIMAGELIST
 * Updated CDialog
    - Added GetDefID, GotoDlgCtrl, MapDialogRect, NextDlgCtrl, PrevDlgCtrl
 	  and SetDefID.
@@ -83,6 +84,7 @@ Changes in detail
 - Added CDockContainer::OnLButtonUp
 - Added CDockContainer::OnMouseLeave
 - Added CDockContainer::OnTCNSelChange
+- Added CDockContainer::SetToolBarImages
 - Added CFrame::CustomDrawToolBar
 - Added CFrame::GetReBarTheme
 - Added CFrame::GetToolBarTheme
@@ -94,6 +96,7 @@ Changes in detail
 - Added CFrame::OnTTNGetDispInfo
 - Added CFrame::OnUndocked
 - Added CFrame::SetReBarTheme
+- Added CFrame::SetToolBarImages
 - Added CFrame::SetToolBarTheme
 - Added CMDIChild::OnMDIActivate
 - Added CMDIChild::OnWindowPosChanged
@@ -151,6 +154,8 @@ Changes in detail
 - Removed CToolBar::GetToolBarTheme
 - Removed CToolBar::SetToolBarTheme
 - Removed CToolBar::OnCustomDraw
+- Removed CToolBar::SetButtons
+- Removed CToolBar::SetImages
 - Renamed CFrame::GetMenuTheme to CFrame::GetMenuBarTheme
 - Renamed CFrame::SetMenuTheme to CFrame::SetMenuBarTheme
 

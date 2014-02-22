@@ -214,7 +214,7 @@ namespace Win32xx
 
 		if (GetApp())
 		{
-			// Allocate an iterator for our HDC map
+			// Allocate an iterator for our HMENU map
 			std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
 
 			CWinApp* pApp = GetApp();

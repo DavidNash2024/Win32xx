@@ -406,20 +406,20 @@ namespace Win32xx
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
-		MenuTheme& GetMenuBarTheme() const			{ return (MenuTheme&)m_MenuBarTheme; }
-		ReBarTheme& GetReBarTheme() const			{ return (ReBarTheme&)m_ReBarTheme; }
-		ToolBarTheme& GetToolBarTheme() const		{ return (ToolBarTheme&)m_ToolBarTheme; }
-		void SetReBarTheme(ReBarTheme rbt); 
-		void SetToolBarTheme(ToolBarTheme tbt);
+		MenuTheme* GetMenuBarTheme()				{ return &m_MenuBarTheme; }
+		ReBarTheme* GetReBarTheme()					{ return &m_ReBarTheme; }
+		ToolBarTheme* GetToolBarTheme()				{ return &m_ToolBarTheme; }
+		void SetReBarTheme(ReBarTheme* pRBT); 
+		void SetToolBarTheme(ToolBarTheme* pTBT);
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		CMenu& GetFrameMenu() const					{ return (CMenu&)m_Menu; }
+		CMenu& GetFrameMenu()						{ return (CMenu&)m_Menu; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
 		CWnd* GetView() const						{ return m_pView; }
 		CString GetMRUEntry(UINT nIndex);
 		void SetFrameMenu(INT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
-		void SetMenuTheme(MenuTheme& Theme);
+		void SetMenuTheme(MenuTheme* pMBT);
 		void SetView(CWnd& wndView);
 		BOOL IsMenuBarUsed() const					{ return (GetMenuBar() != 0); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
@@ -477,6 +477,9 @@ namespace Win32xx
 		virtual BOOL SaveRegistrySettings();
 		virtual void SetMenuBarBandSize();
 		virtual UINT SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
+		virtual void SetTBImageList(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask);
+		virtual void SetTBImageListDis(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask);
+		virtual void SetTBImageListHot(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask);
 		virtual void SetupToolBar();
 		virtual void SetTheme();
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
@@ -511,6 +514,7 @@ namespace Win32xx
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
 		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entries
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
+		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for ToolBar buttons
 		CDialog m_AboutDialog;				// Help about dialog
 		CMenuBar m_MenuBar;					// CMenuBar object
 		CReBar m_ReBar;						// CReBar object
@@ -533,6 +537,9 @@ namespace Win32xx
 		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
+		CImageList m_ToolBarImages;
+		CImageList m_ToolBarDisabledImages;
+		CImageList m_ToolBarHotImages;
 		
 	};  // class CFrame
 
@@ -2017,6 +2024,8 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
+		m_vToolBarData.push_back(nID);
+
 		GetToolBar().AddButton(nID, bEnabled);
 
 		if(0 != szText)
@@ -2067,7 +2076,7 @@ namespace Win32xx
 			}
 		}
 
-		if (GetToolBar().GetToolBarData().size() > 0)
+		if (m_vToolBarData.size() > 0)
 		{
 			// Set the toolbar images (if not already set in SetupToolBar)
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
@@ -2075,7 +2084,7 @@ namespace Win32xx
 				SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
 			// Add the icons for popup menu
-			AddMenuIcons(GetToolBar().GetToolBarData(), RGB(192, 192, 192), IDW_MAIN, 0);
+			AddMenuIcons(m_vToolBarData, RGB(192, 192, 192), IDW_MAIN, 0);
 		}
 		else
 		{
@@ -2213,7 +2222,7 @@ namespace Win32xx
 				int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
 				TBBUTTON tbb = {0};
 				pTB->SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
-				int iImage = (int)tbb.dwData;
+				int iImage = (int)tbb.iBitmap;
 
 				// Calculate text size
 				CString str;
@@ -2381,7 +2390,7 @@ namespace Win32xx
 	{
 		MenuItemData* pmid = (MenuItemData*)pdis->itemData;
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
-		MenuTheme tm = GetMenuBarTheme();
+		MenuTheme* pMBT = GetMenuBarTheme();
 		CDC DrawDC(pdis->hDC);
 
 		if (IsAeroThemed() && m_pMenuMetrics->IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
@@ -2394,7 +2403,7 @@ namespace Win32xx
 		if (IsAeroThemed())
 			m_pMenuMetrics->DrawThemeBackground(pdis->hDC, MENU_POPUPGUTTER, 0, &rcGutter, NULL);
 		else
-			DrawDC.GradientFill(tm.clrPressed1, tm.clrPressed2, rcGutter, TRUE);
+			DrawDC.GradientFill(pMBT->clrPressed1, pMBT->clrPressed2, rcGutter, TRUE);
 
 		if (pmid->mii.fType & MFT_SEPARATOR)
 		{
@@ -2462,13 +2471,13 @@ namespace Win32xx
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			CRect rcDraw = pdis->rcItem;
 			CDC* pDrawDC = FromHandle(pdis->hDC);
-			MenuTheme tm = GetMenuBarTheme();
+			MenuTheme* pMBT = GetMenuBarTheme();
 
 			if ((bSelected) && (!bDisabled))
 			{
 				// draw selected item background
-				pDrawDC->CreateSolidBrush(tm.clrHot1);
-				pDrawDC->CreatePen(PS_SOLID, 1, tm.clrOutline);
+				pDrawDC->CreateSolidBrush(pMBT->clrHot1);
+				pDrawDC->CreatePen(PS_SOLID, 1, pMBT->clrOutline);
 				pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 			}
 			else
@@ -2485,7 +2494,7 @@ namespace Win32xx
 	{
 		CRect rc = pdis->rcItem;
 		UINT fType = ((MenuItemData*)pdis->itemData)->mii.fType;
-		MenuTheme tm = GetMenuBarTheme();
+		MenuTheme* pMBT = GetMenuBarTheme();
 		CRect rcBk;
 		CDC* pDrawDC = FromHandle(pdis->hDC);
 
@@ -2507,8 +2516,8 @@ namespace Win32xx
 			int top = rc.top + (rc.Height() - Icony)/2;
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
-			pDrawDC->CreateSolidBrush(tm.clrHot2);
-			pDrawDC->CreatePen(PS_SOLID, 1, tm.clrOutline);
+			pDrawDC->CreateSolidBrush(pMBT->clrHot2);
+			pDrawDC->CreatePen(PS_SOLID, 1, pMBT->clrOutline);
 
 			// Draw the checkmark's background rectangle
 			pDrawDC->Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
@@ -3264,7 +3273,7 @@ namespace Win32xx
 
 		UNREFERENCED_PARAMETER(pNMHDR);
 
-		if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
+		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
 			GetReBar().MoveBandsLeft();
 		
 		return 0L;
@@ -3767,24 +3776,24 @@ namespace Win32xx
 		RB.SetBandInfo(nBand, rbbi);
 	}
 
-	inline void CFrame::SetMenuTheme(MenuTheme& Theme)
+	inline void CFrame::SetMenuTheme(MenuTheme* pMBT)
 	{
 		// Sets the theme colors for the MenuBar and the popup Menu items
 		// Note: If Aero Themes are supported, they are used for popup menu items instead
-		m_MenuBarTheme.UseThemes   = Theme.UseThemes;
-		m_MenuBarTheme.clrHot1     = Theme.clrHot1;
-		m_MenuBarTheme.clrHot2     = Theme.clrHot2;
-		m_MenuBarTheme.clrPressed1 = Theme.clrPressed1;
-		m_MenuBarTheme.clrPressed2 = Theme.clrPressed2;
-		m_MenuBarTheme.clrOutline  = Theme.clrOutline;
+		m_MenuBarTheme.UseThemes   = pMBT->UseThemes;
+		m_MenuBarTheme.clrHot1     = pMBT->clrHot1;
+		m_MenuBarTheme.clrHot2     = pMBT->clrHot2;
+		m_MenuBarTheme.clrPressed1 = pMBT->clrPressed1;
+		m_MenuBarTheme.clrPressed2 = pMBT->clrPressed2;
+		m_MenuBarTheme.clrOutline  = pMBT->clrOutline;
 
 		if (GetMenuBar().IsWindow())
 			GetMenuBar().Invalidate();
 	}
 
-	inline void CFrame::SetReBarTheme(ReBarTheme rbt) 
+	inline void CFrame::SetReBarTheme(ReBarTheme* pRBT) 
 	{ 
-		m_ReBarTheme = rbt; 
+		m_ReBarTheme = *pRBT; 
 		if (IsWindow())
 		{
 			int nBand = GetReBar().GetBand(GetMenuBar());
@@ -3888,7 +3897,7 @@ namespace Win32xx
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
+					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3900,7 +3909,7 @@ namespace Win32xx
 					MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
+					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3912,7 +3921,7 @@ namespace Win32xx
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
 
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
+					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3925,7 +3934,7 @@ namespace Win32xx
 					MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
 
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
+					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3938,7 +3947,7 @@ namespace Win32xx
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
 
 					m_ToolBarTheme = tt;
-					SetMenuTheme(tm);	// Sets the theme for popup menus and MenuBar
+					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
 					m_ReBarTheme = tr;
 				}
 				break;
@@ -3954,16 +3963,130 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	inline void CFrame::SetTBImageList(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask)
+	{
+		// Get the image size
+		CBitmap bm(nID);
+		assert(bm.GetHandle());
+		BITMAP bmData = bm.GetBitmapData();
+		int cy = bmData.bmHeight;
+		int cx = MAX(bmData.bmHeight, 16);
+
+		// Set the toolbar's image list
+		pImageList->Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+		pImageList->Add( &bm, crMask );
+		pToolBar->SetImageList(pImageList);
+
+		// Inform the Rebar of the change to the Toolbar
+		if (GetReBar().IsWindow())
+		{
+			SIZE MaxSize = pToolBar->GetMaxSize();
+			GetReBar().SendMessage(UWM_TOOLBARRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+		}
+	}
+
+	inline void CFrame::SetTBImageListDis(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask)
+	{
+		// Get the image size
+		CBitmap bm(nID);
+		assert(bm.GetHandle());
+		BITMAP bmData = bm.GetBitmapData();
+		int cy = bmData.bmHeight;
+		int cx = MAX(bmData.bmHeight, 16);
+
+		// Set the toolbar's image list
+		pImageList->Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+		pImageList->Add( &bm, crMask );
+		pToolBar->SetDisableImageList(pImageList);
+
+		// Inform the Rebar of the change to the Toolbar
+		if (GetReBar().IsWindow())
+		{
+			SIZE MaxSize = pToolBar->GetMaxSize();
+			GetReBar().SendMessage(UWM_TOOLBARRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+		}
+	}
+
+	inline void CFrame::SetTBImageListHot(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask)
+	{
+		// Get the image size
+		CBitmap bm(nID);
+		assert(bm.GetHandle());
+		BITMAP bmData = bm.GetBitmapData();
+		int cy = bmData.bmHeight;
+		int cx = MAX(bmData.bmHeight, 16);
+
+		// Set the toolbar's image list
+		pImageList->Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+		pImageList->Add( &bm, crMask );
+		pToolBar->SetHotImageList(pImageList);
+
+		// Inform the Rebar of the change to the Toolbar
+		if (GetReBar().IsWindow())
+		{
+			SIZE MaxSize = pToolBar->GetMaxSize();
+			GetReBar().SendMessage(UWM_TOOLBARRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+		}
+	}
+
 	inline void CFrame::SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = height, minimum width = 16
-	// Assumes buttons have been already been added via AddToolBarButton
 	// The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
 	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
-	// The color mask is ignored for 32bit bitmap resources
 	// The Hot and disabled bitmap resources can be 0
 	{
-		GetToolBar().SetImages(crMask, ToolBarID, ToolBarHotID, ToolBarDisabledID);
+		if (GetComCtlVersion() < 470)
+		{
+			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
+			// Instead we simply set the bitmap.
+			GetToolBar().SetBitmap(ToolBarID);
+			return;
+		}
+
+		// Set the button images
+		CBitmap Bitmap(ToolBarID);
+		assert(Bitmap.GetHandle());
+
+		BITMAP bm = Bitmap.GetBitmapData();
+		int iImageHeight = bm.bmHeight;
+		int iImageWidth  = MAX(bm.bmHeight, 16);
+
+		m_ToolBarImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
+		m_ToolBarImages.Add(&Bitmap, crMask);
+		GetToolBar().SetImageList(&m_ToolBarImages);
+
+		if (ToolBarHotID)
+		{
+			CBitmap BitmapHot(ToolBarHotID);
+			assert(BitmapHot.GetHandle());
+
+			m_ToolBarHotImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, 0, 0 );
+			m_ToolBarHotImages.Add(&BitmapHot, crMask);
+			GetToolBar().SetHotImageList(&m_ToolBarHotImages);
+		}
+
+		if (ToolBarDisabledID)
+		{
+			CBitmap BitmapDisabled(ToolBarDisabledID);
+			assert(BitmapDisabled.GetHandle());
+
+			m_ToolBarDisabledImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, 0, 0);
+			m_ToolBarDisabledImages.Add(&BitmapDisabled, crMask);
+			GetToolBar().SetDisableImageList(&m_ToolBarDisabledImages);
+		}
+		else
+		{
+			m_ToolBarDisabledImages.Attach( CreateDisabledImageList(m_ToolBarImages.GetHandle()) );
+			GetToolBar().SetDisableImageList(&m_ToolBarDisabledImages);
+		}  
+
+		// Inform the Rebar of the change to the Toolbar
+		if (GetReBar().IsWindow())
+		{
+			SIZE MaxSize = GetToolBar().GetMaxSize();
+			GetReBar().SendMessage(UWM_TOOLBARRESIZE, (WPARAM)GetToolBar().GetHwnd(), (LPARAM)&MaxSize);
+		}	
 	}
 
 	inline void CFrame::SetupToolBar()
@@ -3985,9 +4108,9 @@ namespace Win32xx
 */
 	}
 
-	inline void CFrame::SetToolBarTheme(ToolBarTheme tbt)
+	inline void CFrame::SetToolBarTheme(ToolBarTheme* pTBT)
 	{ 
-		m_ToolBarTheme = tbt;
+		m_ToolBarTheme = *pTBT;
 		if (GetToolBar().IsWindow())
 			GetToolBar().GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN); 
 	}
@@ -4039,8 +4162,6 @@ namespace Win32xx
 		// Reposition the Windows
 		RecalcLayout();
 	}
-
-
 
 	inline void CFrame::ShowStatusBar(BOOL bShow)
 	{

@@ -459,7 +459,10 @@ namespace Win32xx
 			if (IsMenuBarUsed())
 				GetMenuBar().SetMenu(GetFrameMenu());
 			else
-				SetMenu(FromHandle(GetFrameMenu()));
+			{
+				CMenu& FrameMenu = GetFrameMenu();
+				SetMenu( &FrameMenu );
+			}
 
 			GetApp()->SetAccelerators(GetFrameAccel(), this);
 		}

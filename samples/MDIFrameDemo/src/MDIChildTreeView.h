@@ -16,7 +16,7 @@ public:
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:
-	HIMAGELIST m_himlNormal;
+	CImageList m_imlNormal;
 };
 
 

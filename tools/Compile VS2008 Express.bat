@@ -44,7 +44,7 @@ vcbuild /rebuild Explorer\ProjectFiles\Explorer_2008.vcproj release             
 vcbuild /rebuild FastGDI\ProjectFiles\FastGDI_2008.vcproj debug                     >>"..\output\VS2008.log"
 vcbuild /rebuild FastGDI\ProjectFiles\FastGDI_2008.vcproj release                   >>"..\output\VS2008.log"
 vcbuild /rebuild FormDocView\ProjectFiles\FormDemo_2008.vcproj debug                >>"..\output\VS2008.log"
-vcbuild /rebuild FormDocViewemo\ProjectFiles\FormDemo_2008.vcproj release           >>"..\output\VS2008.log"
+vcbuild /rebuild FormDocView\ProjectFiles\FormDemo_2008.vcproj release              >>"..\output\VS2008.log"
 vcbuild /rebuild Frame\ProjectFiles\Frame_2008.vcproj debug                         >>"..\output\VS2008.log"
 vcbuild /rebuild Frame\ProjectFiles\Frame_2008.vcproj release                       >>"..\output\VS2008.log"
 vcbuild /rebuild GDIPlus\ProjectFiles\GDIPlus_2008.vcproj debug                     >>"..\output\VS2008.log"

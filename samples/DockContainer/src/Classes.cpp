@@ -150,7 +150,7 @@ void CContainClasses::OnHelpAbout()
 void CContainClasses::SetupToolBar()
 {
 	// Set the Bitmap resource for the toolbar
-	GetToolBar().SetImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+	SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 	
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW         );

@@ -61,9 +61,7 @@ namespace Win32xx
 		virtual void Destroy();
 		virtual BOOL ReplaceBitmap(UINT NewToolBarID);
 		virtual BOOL SetBitmap(UINT nID);
-		virtual int  SetButtons(const std::vector<UINT>& vToolBarData) const;
 		virtual BOOL SetButtonText(int idButton, LPCTSTR szText);
-		virtual BOOL SetImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
 
 		// Wrappers for Win32 API functions
 		BOOL  AddButtons(UINT uNumButtons, LPTBBUTTON lpButtons) const;
@@ -125,9 +123,6 @@ namespace Win32xx
 		BOOL  SetPadding(int cx, int cy) const;
 		void  SetToolTips(CToolTip* pToolTip) const;
 
-		// Attributes
-		std::vector<UINT>& GetToolBarData() const {return (std::vector <UINT> &)m_vToolBarData;}
-
 	protected:
 	// Overridables
 		virtual void OnCreate();
@@ -141,7 +136,6 @@ namespace Win32xx
 		CToolBar(const CToolBar&);				// Disable copy construction
 		CToolBar& operator = (const CToolBar&); // Disable assignment operator
 
-		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for ToolBar buttons
 		std::map<CString, int> m_StringMap;	// a map of strings used in SetButtonText
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 
@@ -198,17 +192,16 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		m_vToolBarData.push_back(nID);
+		// Count toolbar buttons with Command IDs
+		int nImages = 0;
+		for (int i = 0; i < GetButtonCount(); i++)
+		{
+			if (GetCommandID(i) > 0)
+				nImages++;
+		}
 
 		// TBBUTTON structure for each button in the toolbar
 		TBBUTTON tbb = {0};
-
-		std::vector<UINT>::iterator iter;
-		int iImages = 0;
-		for(iter = m_vToolBarData.begin(); iter < m_vToolBarData.end(); ++iter)
-			if (0 != *iter) iImages++;
-
-		ZeroMemory(&tbb, sizeof(TBBUTTON));
 
 		if (0 == nID)
 		{
@@ -216,8 +209,7 @@ namespace Win32xx
 		}
 		else
 		{
-			tbb.dwData  = iImages -1;
-			tbb.iBitmap = iImages -1;
+			tbb.iBitmap = nImages;
 			tbb.idCommand = nID;
 			tbb.fsState = bEnabled? TBSTATE_ENABLED : 0;
 			tbb.fsStyle = TBSTYLE_BUTTON;
@@ -624,12 +616,6 @@ namespace Win32xx
 
 	inline void CToolBar::OnDestroy()
 	{
-		HIMAGELIST himlToolBar    = (HIMAGELIST)SendMessage(TB_GETIMAGELIST,    0L, 0L);
-		HIMAGELIST himlToolBarHot = (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
-		HIMAGELIST himlToolBarDis = (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
-		ImageList_Destroy(himlToolBar);
-		ImageList_Destroy(himlToolBarHot);
-		ImageList_Destroy(himlToolBarDis);
 	}
 
 	inline LRESULT CToolBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
@@ -731,54 +717,6 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_SETBITMAPSIZE, 0L, MAKELONG(cx, cy));
-	}
-
-	inline int CToolBar::SetButtons(const std::vector<UINT>& vToolBarData) const
-	// Assigns a resource ID to each ToolBar button
-	{
-		assert(::IsWindow(m_hWnd));
-
-		int iImages = 0;
-		UINT iNumButtons = (UINT)vToolBarData.size();
-
-		// Remove any existing buttons
-		while (SendMessage(TB_BUTTONCOUNT,  0L, 0L) > 0)
-		{
-			if(!SendMessage(TB_DELETEBUTTON, 0L, 0L))
-				break;
-		}
-
-		if (iNumButtons > 0)
-		{
-			// TBBUTTON structure for each button in the ToolBar
-			TBBUTTON tbb = {0};
-
-			for (UINT j = 0 ; j < iNumButtons; ++j)
-			{
-				ZeroMemory(&tbb, sizeof(TBBUTTON));
-
-				if (0 == vToolBarData[j])
-				{
-					tbb.fsStyle = TBSTYLE_SEP;
-				}
-				else
-				{
-					tbb.dwData  = iImages;
-					tbb.iBitmap = iImages;
-					tbb.idCommand = vToolBarData[j];
-					tbb.fsState = TBSTATE_ENABLED;
-					tbb.fsStyle = TBSTYLE_BUTTON;
-				}
-
-				// Add the button to the ToolBar
-				if (SendMessage(TB_ADDBUTTONS, 1L, (LPARAM)&tbb))
-					iImages++;
-				else
-					break;
-			}
-		}
-
-		return iImages;
 	}
 
 	inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
@@ -998,89 +936,6 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
 		return FromHandle( (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNew) );
-	}
-
-	inline BOOL CToolBar::SetImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
-	// Either sets the ImageList or adds/replaces bitmap depending on ComCtl32.dll version
-	// Assumes the width of the button image = height, minimum width = 16
-	// Assumes buttons have been already been added via AddToolBarButton
-	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255);
-	// The color mask is ignored for 32bit bitmap resources
-	// The Hot and disabled bitmap resources can be 0
-	{
-		assert(::IsWindow(m_hWnd));
-
-		// ToolBar ImageLists require Comctl32.dll version 4.7 or later
-		if (GetComCtlVersion() < 470)
-		{
-			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
-			// Instead we simply set the bitmap.
-			return SetBitmap(ToolBarID);
-		}
-
-		int iNumButtons = 0;
-		std::vector<UINT>::iterator iter;
-		for (iter = GetToolBarData().begin(); iter < GetToolBarData().end(); ++iter)
-			if ((*iter) != 0) ++iNumButtons;
-
-		if (iNumButtons > 0)
-		{
-			// Set the button images
-			CBitmap Bitmap(ToolBarID);
-			assert(Bitmap.GetHandle());
-
-			BITMAP bm = Bitmap.GetBitmapData();
-			int iImageHeight = bm.bmHeight;
-			int iImageWidth  = MAX(bm.bmHeight, 16);
-
-			HIMAGELIST himlToolBar    = (HIMAGELIST)SendMessage(TB_GETIMAGELIST,    0L, 0L);
-			HIMAGELIST himlToolBarHot = (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
-			HIMAGELIST himlToolBarDis = (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
-			ImageList_Destroy(himlToolBar);
-			ImageList_Destroy(himlToolBarHot);
-			ImageList_Destroy(himlToolBarDis);
-
-			himlToolBar = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-			assert(himlToolBar);
-
-			ImageList_AddMasked(himlToolBar, Bitmap, crMask);
-			SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlToolBar);
-
-			if (ToolBarHotID)
-			{
-				CBitmap BitmapHot(ToolBarHotID);
-				assert(BitmapHot);
-
-				himlToolBarHot = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-				assert(himlToolBarHot);
-
-				ImageList_AddMasked(himlToolBarHot, BitmapHot, crMask);
-				SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlToolBarHot);
-			}
-
-			if (ToolBarDisabledID)
-			{
-				CBitmap BitmapDisabled(ToolBarDisabledID);
-				assert(BitmapDisabled);
-
-				himlToolBarDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iNumButtons, 0);
-				assert(himlToolBarDis);
-
-				ImageList_AddMasked(himlToolBarDis, BitmapDisabled, crMask);
-				SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolBarDis);
-			}
-			else
-			{
-				himlToolBarDis = CreateDisabledImageList(himlToolBar);
-				SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlToolBarDis);
-			}
-
-			// Inform the parent of the change (ReBar needs this)
-			SIZE MaxSize = GetMaxSize();
-			GetParent()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
-		}
-
-		return TRUE;
 	}
 
 	inline BOOL CToolBar::SetIndent(int iIndent) const

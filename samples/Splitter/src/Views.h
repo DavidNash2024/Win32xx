@@ -41,7 +41,7 @@ public:
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:
-	HIMAGELIST m_himlNormal;
+	CImageList m_imlNormal;
 
 };
 
@@ -57,7 +57,7 @@ public:
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 
 private:
-	HIMAGELIST m_himlSmall;
+	CImageList m_imlSmall;
 
 };
 
