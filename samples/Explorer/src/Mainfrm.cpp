@@ -25,9 +25,9 @@ void CMainFrame::DoPopupMenu()
 	// Creates the popup menu for the "View Menu" toolbar button
 
 	// Position the popup menu
-	CToolBar& TB = GetToolBar();
-	CRect rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
-	TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+	CToolBar* pTB = GetToolBar();
+	CRect rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_VIEWMENU));
+	pTB->MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
@@ -167,7 +167,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
  		//Menu for dropdown toolbar button
 		case TBN_DROPDOWN:
 		{
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar().GetHwnd())
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar()->GetHwnd())
 				DoPopupMenu();
 		}
 
@@ -202,8 +202,8 @@ void CMainFrame::SetupToolBar()
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
-		CToolBar& TB = GetToolBar();
-		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+		CToolBar* pTB = GetToolBar();
+		pTB->SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 	}
 }
 

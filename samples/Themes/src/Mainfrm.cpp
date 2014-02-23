@@ -30,18 +30,18 @@ void CMainFrame::AddCombo()
 {
 	// We'll be placing the ComboBoxEx control over the 'File Save' toolbar button
 	int nComboWidth = 120;
-	CToolBar& TB = GetToolBar();
-	if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
+	CToolBar* pTB = GetToolBar();
+	if (pTB->CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
-	TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);	// Convert the button to a separator
-	TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
+	pTB->SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);	// Convert the button to a separator
+	pTB->SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
 
 	// Determine the size and position of the ComboBox
-	int nIndex = TB.CommandToIndex(IDM_FILE_SAVE);
-	CRect rc = TB.GetItemRect(nIndex);
+	int nIndex = pTB->CommandToIndex(IDM_FILE_SAVE);
+	CRect rc = pTB->GetItemRect(nIndex);
 
 	// Create and position the ComboboxEx window
-	m_ComboBoxEx.Create(&TB);
+	m_ComboBoxEx.Create(pTB);
 	m_ComboBoxEx.SetWindowPos(NULL, rc, SWP_NOACTIVATE);
 
 	// Set ComboBox Height
@@ -302,19 +302,19 @@ void CMainFrame::OnCreate()
 		ChooseColor(m_nColor);
 		
 		// Set the band styles and positions
-		for (int i = 0; i < GetReBar().GetBandCount(); ++i)
+		for (int i = 0; i < GetReBar()->GetBandCount(); ++i)
 		{
 			if (i < (int)m_vBandStyles.size())
 			{
 				// Move the band to the correct position
-				int iFrom = GetReBar().IDToIndex(m_vBandIDs[i]);
-				GetReBar().MoveBand(iFrom, i);
+				int iFrom = GetReBar()->IDToIndex(m_vBandIDs[i]);
+				GetReBar()->MoveBand(iFrom, i);
 
 				// Set the band's style
 				REBARBANDINFO rbbi = {0};
 				rbbi.fMask = RBBIM_STYLE;
 				rbbi.fStyle = m_vBandStyles[i];
-				GetReBar().SetBandInfo(i, rbbi);
+				GetReBar()->SetBandInfo(i, rbbi);
 			}
 		}
 
@@ -361,10 +361,10 @@ void CMainFrame::OnUseThemes()
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->UseThemes = m_bUseThemes;
 		SetReBarTheme(pRBT);
-		int nBand = GetReBar().GetBand(GetMenuBar());
-		GetReBar().ShowGripper(nBand, !m_bUseThemes);
+		int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
+		GetReBar()->ShowGripper(nBand, !m_bUseThemes);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -378,7 +378,7 @@ void CMainFrame::OnBandColors()
 		GetFrameMenu().CheckMenuItem(IDM_BAND_COLORS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ChooseColor(m_nColor);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -393,7 +393,7 @@ void CMainFrame::OnFlatStyle()
 		pRBT->FlatStyle = m_bFlatStyle;
 		SetReBarTheme(pRBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -408,7 +408,7 @@ void CMainFrame::OnLeftBands()
 		pRBT->BandsLeft = m_bBandsLeft;
 		SetReBarTheme(pRBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -423,9 +423,9 @@ void CMainFrame::OnLockMenuBar()
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->LockMenuBand = m_bLockMenuBand;
 		SetReBarTheme(pRBT);
-		GetReBar().MoveBand(GetReBar().GetBand(GetMenuBar()), 0);	// Move the MenuBar to band 0
+		GetReBar()->MoveBand(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), 0);	// Move the MenuBar to band 0
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -440,7 +440,7 @@ void CMainFrame::OnRoundBorders()
 		pRBT->RoundBorders = m_bRoundBorders;
 		SetReBarTheme(pRBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -455,7 +455,7 @@ void CMainFrame::OnShortBands()
 		pRBT->ShortBands = m_bShortBands;
 		SetReBarTheme(pRBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -470,7 +470,7 @@ void CMainFrame::OnUseLines()
 		pRBT->UseLines = m_bUseLines;
 		SetReBarTheme(pRBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 }
@@ -503,7 +503,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 		CString strKeyName = GetRegistryKeyName();
 		CString strKey = _T("Software\\");
 		strKey += strKeyName + (_T("\\Theme Settings"));
-		int nBands = GetReBar().GetBandCount();
+		int nBands = GetReBar()->GetBandCount();
 
 		RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
 		REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
@@ -528,7 +528,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 
 		for (int i = 0; i < nBands; i++)
 		{
-			GetReBar().GetBandInfo(i, rbbi);
+			GetReBar()->GetBandInfo(i, rbbi);
 			UINT nID = rbbi.wID;
 			UINT nStyle = rbbi.fStyle;
 
@@ -622,10 +622,10 @@ void CMainFrame::ShowArrows(BOOL bShow)
 		UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
 
 		GetFrameMenu().CheckMenuItem(IDM_VIEW_ARROWS, uCheck);
-		GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(m_Arrows), bShow);
+		GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(m_Arrows), bShow);
 
 		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-			GetReBar().MoveBandsLeft();
+			GetReBar()->MoveBandsLeft();
 	}
 }
 
@@ -636,10 +636,10 @@ void CMainFrame::ShowCards(BOOL bShow)
 		UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
 
 		GetFrameMenu().CheckMenuItem(IDM_VIEW_CARDS, uCheck);
-		GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(m_Cards), bShow);
+		GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(m_Cards), bShow);
 
 		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-			GetReBar().MoveBandsLeft();
+			GetReBar()->MoveBandsLeft();
 	}
 }
 

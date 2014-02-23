@@ -96,6 +96,9 @@ Changes in detail
 - Added CFrame::OnTTNGetDispInfo
 - Added CFrame::OnUndocked
 - Added CFrame::SetReBarTheme
+- Added CFrame::SetTBImageList
+- Added CFrame::SetTBImageListDis
+- Added CFrame::SetTBImageListHot
 - Added CFrame::SetToolBarImages
 - Added CFrame::SetToolBarTheme
 - Added CMDIChild::OnMDIActivate
@@ -111,6 +114,7 @@ Changes in detail
 - Added CTab::OnWindowPosChanged
 - Added CTab::OnWindowPosChanging
 - Added CTab::SetFont
+- Added CToolBar::Customize
 - Added CToolBar::SetButtonInfo
 - Added CWnd::GetDlgCtrlID
 - Added CWnd::OnClose
@@ -119,6 +123,10 @@ Changes in detail
 - Modified CComboBoxEx::SetImageList
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
+- Modified CFrame::CMenuBar				returns pointer
+- Modified CFrame::CReBar				returns pointer
+- Modified CFrame::CStatusBar			returns pointer
+- Modified CFrame::CToolBar				returns pointer
 - Modified CHeader::GetImageList
 - Modified CHeader::SetImageList
 - Modified CHeader::CreateDragImage

@@ -95,9 +95,9 @@ void CMainFrame::OnFileExit()
 
 void CMainFrame::OnFileNew()
 {
-	CToolBar& TB = GetToolBar();
-	TB.DisableButton(IDM_FILE_SAVEAS);
-	TB.DisableButton(IDM_IMAGE_ADJUST);
+	CToolBar* pTB = GetToolBar();
+	pTB->DisableButton(IDM_FILE_SAVEAS);
+	pTB->DisableButton(IDM_IMAGE_ADJUST);
 	m_MyView.FileOpen(NULL);
 	m_MyView.Invalidate();
 
@@ -119,9 +119,9 @@ void CMainFrame::OnFileOpen()
 		AddMRUEntry(str);
 
 		// Turn on the ToolBar adjust button
-		CToolBar& TB = GetToolBar();
-		TB.EnableButton(IDM_FILE_SAVEAS);
-		TB.EnableButton(IDM_IMAGE_ADJUST);
+		CToolBar* pTB = GetToolBar();
+		pTB->EnableButton(IDM_FILE_SAVEAS);
+		pTB->EnableButton(IDM_IMAGE_ADJUST);
 		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
 		// Resize the frame to match the bitmap
@@ -147,13 +147,13 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	CString strMRUText = GetMRUEntry(nMRUIndex);
-	CToolBar& TB = GetToolBar();
+	CToolBar* pTB = GetToolBar();
 
 	if (m_MyView.FileOpen(strMRUText))
 	{
 		m_PathName = strMRUText;
-		TB.EnableButton(IDM_FILE_SAVEAS);
-		TB.EnableButton(IDM_IMAGE_ADJUST);
+		pTB->EnableButton(IDM_FILE_SAVEAS);
+		pTB->EnableButton(IDM_IMAGE_ADJUST);
 
 		// Adjust the window size
 		CRect rcImage = GetMyView().GetImageRect();
@@ -162,8 +162,8 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	else
 	{
 		RemoveMRUEntry(strMRUText);
-		TB.DisableButton(IDM_FILE_SAVEAS);
-		TB.DisableButton(IDM_IMAGE_ADJUST);
+		pTB->DisableButton(IDM_FILE_SAVEAS);
+		pTB->DisableButton(IDM_IMAGE_ADJUST);
 	}
 
 	// Resize the frame to match the bitmap

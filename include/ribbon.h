@@ -122,7 +122,7 @@ namespace Win32xx
 
 		CRibbonFrame() : m_uRibbonHeight(0) {}
 		virtual ~CRibbonFrame() {}
-		virtual CRect GetViewRect() const;
+		virtual CRect GetViewRect();
 		virtual void OnCreate();
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
@@ -292,23 +292,23 @@ namespace Win32xx
 	// Definitions for the CRibbonFrame class
 	//
 
-	inline CRect CRibbonFrame::GetViewRect() const
+	inline CRect CRibbonFrame::GetViewRect()
 	{
 		// Get the frame's client area
 		CRect rcFrame = GetClientRect();
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (GetStatusBar().IsWindowVisible() || !IsWindowVisible())
-			rcStatus = GetStatusBar().GetWindowRect();
+		if (GetStatusBar()->IsWindowVisible() || !IsWindowVisible())
+			rcStatus = GetStatusBar()->GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
 		CRect rcTop;
 		if (IsReBarSupported() && m_bUseReBar)
-			rcTop = GetReBar().GetWindowRect();
+			rcTop = GetReBar()->GetWindowRect();
 		else
-			if (m_bUseToolBar && GetToolBar().IsWindowVisible())
-				rcTop = GetToolBar().GetWindowRect();
+			if (m_bUseToolBar && GetToolBar()->IsWindowVisible())
+				rcTop = GetToolBar()->GetWindowRect();
 
 		// Return client size less the rebar and status windows
 		int top = rcFrame.top + rcTop.Height() + m_uRibbonHeight;

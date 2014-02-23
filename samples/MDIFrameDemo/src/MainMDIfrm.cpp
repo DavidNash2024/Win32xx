@@ -34,9 +34,9 @@ void CMainMDIFrame::OnFileNew()
 	// Creates the popup menu when the "New" toolbar button is pressed
 
 	// Position the popup menu
-	CToolBar& TB = GetToolBar();
-	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
-	TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+	CToolBar* pTB = GetToolBar();
+	RECT rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_FILE_NEW));
+	pTB->MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
@@ -149,7 +149,7 @@ LRESULT CMainMDIFrame::OnNotify(WPARAM wParam, LPARAM lParam)
  		//Menu for dropdown toolbar button
 		case TBN_DROPDOWN:
 		{
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar())
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar()->GetHwnd())
 				OnFileNew();
 		}
 		break;
@@ -192,7 +192,7 @@ void CMainMDIFrame::SetupToolBar()
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
-		GetToolBar().SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
+		GetToolBar()->SetButtonStyle(IDM_FILE_NEW, BTNS_WHOLEDROPDOWN);
 	}
 }
 

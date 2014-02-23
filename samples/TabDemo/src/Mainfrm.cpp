@@ -87,9 +87,9 @@ void CMainFrame::OnFileNew()
 	// Creates the popup menu when the "New" toolbar button is pressed
 
 	// Position the popup menu
-	CToolBar& TB = GetToolBar();
-	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
-	::MapWindowPoints(GetToolBar(), NULL, (LPPOINT)&rc, 2);
+	CToolBar* pTB = GetToolBar();
+	RECT rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_FILE_NEW));
+	pTB->MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);

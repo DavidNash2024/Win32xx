@@ -29,11 +29,8 @@ CMainFrame::~CMainFrame()
 
 void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
-	// Get the reference to the rebar object
-	CReBar& RB = GetReBar();
-
 	// Create the ComboboxEx window
-	m_ComboboxEx.Create(&GetReBar());
+	m_ComboboxEx.Create(GetReBar());
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi = {0};
@@ -48,7 +45,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = (LPTSTR)_T("Address");
 
-	RB.InsertBand(-1, rbbi);
+	GetReBar()->InsertBand(-1, rbbi);
 }
 
 void CMainFrame::ConnectEvents()
@@ -95,9 +92,9 @@ void CMainFrame::OnBeforeNavigate2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 {
-	CToolBar& TB = GetToolBar();
+	CToolBar* pTB = GetToolBar();
 
-	if (GetToolBar().IsWindow())
+	if (pTB->IsWindow())
 	{
 		if ((pDispParams) && (pDispParams->cArgs == 2))
 		{
@@ -109,11 +106,11 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 					switch (nCommand)
 					{
 					case 1: // Navigate forward:
-						bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+						bEnable ? pTB->EnableButton(IDM_FORWARD) : pTB->DisableButton(IDM_FORWARD);
 
 						break;
 					case 2: // Navigate back:
-						bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+						bEnable ? pTB->EnableButton(IDM_BACK) : pTB->DisableButton(IDM_BACK);
 						break;
 					}
 				}
@@ -261,7 +258,7 @@ void CMainFrame::OnCreate()
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)
 {
 	UNREFERENCED_PARAMETER(pDispParams);
-	GetStatusBar().SetPartText(0, _T("Done"));
+	GetStatusBar()->SetPartText(0, _T("Done"));
 }
 
 void CMainFrame::OnDownloadBegin(DISPPARAMS* pDispParams)
@@ -380,14 +377,14 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 {
 	LPOLESTR lpStatusText = pDispParams->rgvarg->bstrVal;
 
-	if (GetStatusBar().IsWindow() && lpStatusText)
+	if (GetStatusBar()->IsWindow() && lpStatusText)
 	{
 		if (lstrcmp(W2T(lpStatusText), _T("")))
 		{
-			GetStatusBar().SetPartText(0, W2T(lpStatusText));
+			GetStatusBar()->SetPartText(0, W2T(lpStatusText));
 		}
 		else
-			GetStatusBar().SetPartText(0, _T("Done"));
+			GetStatusBar()->SetPartText(0, _T("Done"));
 	}
 }
 

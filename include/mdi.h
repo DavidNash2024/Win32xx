@@ -386,8 +386,8 @@ namespace Win32xx
 		if (IsMenuBarUsed())
 		{
 			// Refresh MenuBar Window
-			HMENU hMenu= GetMenuBar().GetMenu();
-			GetMenuBar().SetMenu(hMenu);
+			HMENU hMenu= GetMenuBar()->GetMenu();
+			GetMenuBar()->SetMenu(hMenu);
 			UpdateCheckMarks();
 		}
 
@@ -457,7 +457,7 @@ namespace Win32xx
 		else
 		{
 			if (IsMenuBarUsed())
-				GetMenuBar().SetMenu(GetFrameMenu());
+				GetMenuBar()->SetMenu(GetFrameMenu());
 			else
 			{
 				CMenu& FrameMenu = GetFrameMenu();
@@ -484,10 +484,10 @@ namespace Win32xx
 		{
 			HMENU hMenu = GetActiveMDIChild()->m_hChildMenu;
 
-			UINT uCheck = GetToolBar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
+			UINT uCheck = GetToolBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			::CheckMenuItem(hMenu, IDW_VIEW_TOOLBAR, uCheck);
 
-			uCheck = GetStatusBar().IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
+			uCheck = GetStatusBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			::CheckMenuItem (hMenu, IDW_VIEW_STATUSBAR, uCheck);
 		}
 	}
@@ -506,7 +506,7 @@ namespace Win32xx
 				if (IsMenuBarUsed())
 				{
 					AppendMDIMenu(hMenuWindow);
-					GetMenuBar().SetMenu(hMenu);
+					GetMenuBar()->SetMenu(hMenu);
 				}
 				else
 				{

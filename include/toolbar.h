@@ -70,6 +70,7 @@ namespace Win32xx
 		void  Autosize() const;
 		void  CheckButton(int idButton, BOOL fCheck) const;
 		int   CommandToIndex(int idButton) const;
+		void  Customize() const;
 		BOOL  DeleteButton(int iButton) const;
 		BOOL  DisableButton(int idButton) const;
 		BOOL  EnableButton(int idButton) const;
@@ -263,6 +264,15 @@ namespace Win32xx
 
 		// returns -1 on fail
 		return (int)SendMessage(TB_COMMANDTOINDEX, (WPARAM)idButton, 0L);
+	}
+
+	inline void CToolBar::Customize() const
+	// Displays the Customize Toolbar dialog box. The toolbar must handle the TBN_QUERYINSERT 
+	// and TBN_QUERYDELETE notifications for the Customize Toolbar dialog box to appear.
+	// Requires the CCS_ADJUSTABLE style to be set when the toolbar is created.
+	{
+		assert(::IsWindow(m_hWnd));
+		SendMessage(TB_CUSTOMIZE, 0, 0);
 	}
 
 	inline BOOL CToolBar::DeleteButton(int iButton) const

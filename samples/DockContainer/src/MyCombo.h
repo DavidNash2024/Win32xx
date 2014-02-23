@@ -13,13 +13,14 @@ public:
 	CMyCombo();
 	virtual ~CMyCombo();
 	BOOL AddItems();
+	virtual void OnDestroy();
 	void SetImages(int nImages, UINT ImageID);
 
 protected:
 	virtual void PreCreate(CREATESTRUCT &cs);
 
 private:
-	HIMAGELIST m_himlImages;
+	CImageList m_imlImages;
 };
 
 
