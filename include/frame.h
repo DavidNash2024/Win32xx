@@ -399,14 +399,14 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
 		// StatusBar or ToolBar, inherit from those classes, and override
 		// the following attribute functions.
-		virtual CMenuBar* GetMenuBar()				{ return &m_MenuBar; }
-		virtual CReBar* GetReBar()			 		{ return &m_ReBar; }
-		virtual CStatusBar* GetStatusBar()			{ return &m_StatusBar; }
-		virtual CToolBar* GetToolBar()				{ return &m_ToolBar; }
+		virtual CMenuBar* GetMenuBar() 				{ return &m_MenuBar; }
+		virtual CReBar* GetReBar() 	 				{ return &m_ReBar; }
+		virtual CStatusBar* GetStatusBar() 			{ return &m_StatusBar; }
+		virtual CToolBar* GetToolBar() 				{ return &m_ToolBar; }
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
-		MenuTheme* GetMenuBarTheme()				{ return &m_MenuBarTheme; }
+		MenuTheme* GetMenuBarTheme() 				{ return &m_MenuBarTheme; }
 		ReBarTheme* GetReBarTheme()					{ return &m_ReBarTheme; }
 		ToolBarTheme* GetToolBarTheme()				{ return &m_ToolBarTheme; }
 		void SetReBarTheme(ReBarTheme* pRBT); 
@@ -465,6 +465,7 @@ namespace Win32xx
 		virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
 		virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
 		virtual LRESULT OnRBNMinMax(LPNMHDR pNMHDR);
+		virtual LRESULT OnHotItemChange(LPNMTBHOTITEM pTBHotItem);
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual	LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
@@ -503,8 +504,8 @@ namespace Win32xx
 		BOOL m_bUseToolBar;					// set to TRUE if the toolbar is used
 		BOOL m_bShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
 		BOOL m_bShowToolBar;				// A flag to indicate if the ToolBar should be displayed
-		HIMAGELIST m_himlMenu;				// Imagelist of menu icons
-		HIMAGELIST m_himlMenuDis;			// Imagelist of disabled menu icons
+		CImageList m_imlMenu;				// Imagelist of menu icons
+		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
 
 	private:
 		CFrame(const CFrame&);				// Disable copy construction
@@ -1806,9 +1807,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseReBar(FALSE),
-		                m_bUseThemes(TRUE), m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_himlMenu(0), 
-		                m_himlMenuDis(0), m_AboutDialog(IDW_ABOUT), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1),
-						m_bDrawArrowBkgrnd(FALSE)
+		                m_bUseThemes(TRUE), m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
+						m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
@@ -1832,28 +1832,24 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		if (m_himlMenu)		ImageList_Destroy(m_himlMenu);
-		if (m_himlMenuDis)	ImageList_Destroy(m_himlMenuDis);
 	}
 
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon)
 	{
 		// Create a new ImageList if required
-		if (NULL == m_himlMenu)
+		if (NULL == m_imlMenu.GetHandle())
 		{
-			if (m_himlMenu) ImageList_Destroy(m_himlMenu);
-			m_himlMenu = ImageList_Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 0);
+			m_imlMenu.Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 0);
 			m_vMenuIcons.clear();
 		}
 
-		if (ImageList_AddIcon(m_himlMenu, hIcon) != -1)
+		if (m_imlMenu.Add(hIcon) != -1)
 		{
 			m_vMenuIcons.push_back(nID_MenuItem);
 
 			// Recreate the Disabled imagelist
-			if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
-			m_himlMenuDis = NULL;
-			m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
+			m_imlMenuDis.DeleteImageList();
+			m_imlMenuDis.Attach( CreateDisabledImageList(m_imlMenu.GetHandle() ) );
 
 			return TRUE;
 		}
@@ -1887,9 +1883,9 @@ namespace Win32xx
 		int iImageWidth  = MAX(bm.bmHeight, 16);		
 
 		// Create the ImageList if required
-		if (NULL == m_himlMenu)
+		if (NULL == m_imlMenu.GetHandle() )
 		{
-			m_himlMenu = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+					m_imlMenu.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 			m_vMenuIcons.clear();
 		}
 		else
@@ -1897,7 +1893,7 @@ namespace Win32xx
 			int Oldcx;
 			int Oldcy;
 
-			ImageList_GetIconSize(m_himlMenu, &Oldcx, &Oldcy);
+			m_imlMenu.GetIconSize(&Oldcx, &Oldcy);
 			if (iImageHeight != Oldcy)
 			{
 				TRACE("Unable to add icons. The new icons are a different size to the old ones\n");
@@ -1915,13 +1911,13 @@ namespace Win32xx
 		}
 
 		// Add the images to the ImageList
-		ImageList_AddMasked(m_himlMenu, Bitmap, crMask);
+		m_imlMenu.Add(&Bitmap, crMask);
 
 		// Create the Disabled imagelist
 		if (ToolBarDisabledID)
 		{
-			if (0 != m_himlMenuDis)
-				m_himlMenuDis = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+			m_imlMenuDis.DeleteImageList();
+			m_imlMenuDis.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 
 			CBitmap BitmapDisabled(ToolBarDisabledID);
 			BITMAP bmDis = BitmapDisabled.GetBitmapData();
@@ -1932,18 +1928,17 @@ namespace Win32xx
 			// Normal and Disabled icons must be the same size
 			if ((iImageWidthDis == iImageWidth) && (iImageHeightDis == iImageHeight))
 			{
-				ImageList_AddMasked(m_himlMenu, BitmapDisabled, crMask);
+				m_imlMenuDis.Add(&BitmapDisabled, crMask);
 			}
 			else
 			{
-				ImageList_Destroy(m_himlMenuDis);
-				m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
+				m_imlMenuDis.Attach( CreateDisabledImageList(m_imlMenu.GetHandle() ) );
 			}
 		}
 		else
 		{
-			if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
-			m_himlMenuDis = CreateDisabledImageList(m_himlMenu);
+			m_imlMenuDis.DeleteImageList();
+			m_imlMenuDis.Attach( CreateDisabledImageList(m_imlMenu.GetHandle() ) );
 		}
 
 		// return the number of menu icons
@@ -2565,7 +2560,7 @@ namespace Win32xx
 
 	inline void CFrame::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
 	{
-		if (!m_himlMenu)
+		if ( 0 == m_imlMenu.GetHandle() )
 			return;
 
 		// Get icon size
@@ -2590,10 +2585,11 @@ namespace Win32xx
 		if (iImage >= 0 )
 		{
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			if ((bDisabled) && (m_himlMenuDis))
-				ImageList_Draw(m_himlMenuDis, iImage, pdis->hDC, rc.left, rc.top, ILD_TRANSPARENT);
+			CDC* pDC = FromHandle(pdis->hDC);
+			if ((bDisabled) && (m_imlMenuDis.GetHandle()))
+				m_imlMenuDis.Draw(pDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
 			else
-				ImageList_Draw(m_himlMenu, iImage, pdis->hDC, rc.left, rc.top, ILD_TRANSPARENT);
+				m_imlMenu.Draw(pDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
 		}
 	}
 
@@ -3159,6 +3155,64 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	inline LRESULT CFrame::OnHotItemChange(LPNMTBHOTITEM pTBHotItem)
+	// Hot item change notification from ToolBar.
+	{	
+		UNREFERENCED_PARAMETER(pTBHotItem);
+
+		if (m_bShowMenuStatus)
+		{
+			// Get the toolbar the point is over
+			CToolBar* pToolBar = 0;
+			if (IsReBarUsed())
+			{
+				// Get the ToolBar's CWnd
+				CWnd* pWnd = FromHandle(GetReBar()->HitTest(GetCursorPos()));
+				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)) && !(dynamic_cast<CMenuBar*>(pWnd)))
+					pToolBar = (CToolBar*)pWnd;
+			}
+			else
+			{
+				CWnd* pWnd = WindowFromPoint(GetCursorPos());
+				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
+					pToolBar = (CToolBar*)pWnd;
+			}
+
+			if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar))
+			{
+				// Which toolbar button is the mouse cursor hovering over?
+				int nButton = pToolBar->HitTest();
+				if (nButton >= 0)
+				{
+					int nID = pToolBar->GetCommandID(nButton);
+					// Only update the statusbar if things have changed
+					if (nID != m_nOldID)
+					{
+						if (nID != 0)
+							m_strStatusText = LoadString(nID);
+						else
+							m_strStatusText = LoadString(IDW_READY);
+
+						if (GetStatusBar()->IsWindow())
+							SetStatusText();
+					}
+					m_nOldID = nID;
+				}
+			}
+			else
+			{
+				if (m_nOldID != -1)
+				{
+					m_strStatusText = LoadString(IDW_READY);
+					SetStatusText();
+				}
+				m_nOldID = -1;
+			}
+		}
+
+		return 0L;
+	}
+
 	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
 		// The system menu shouldn't be owner drawn
@@ -3262,6 +3316,7 @@ namespace Win32xx
 		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR) lParam);
 		case TTN_GETDISPINFO:	return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
 		case UWN_UNDOCKED:		return OnUndocked();
+		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam); 
 		}
 
 		return 0L;
@@ -3459,7 +3514,7 @@ namespace Win32xx
 
 		if (ID_STATUS_TIMER == wParam)
 		{
-			if (m_bShowMenuStatus)
+			if ((m_bShowMenuStatus) && ( m_strStatusText != LoadString(IDW_READY) ) )
 			{
 				// Get the toolbar the point is over
 				CToolBar* pToolBar = 0;
@@ -3507,7 +3562,7 @@ namespace Win32xx
 					}
 					m_nOldID = -1;
 				}
-			}
+			} 
 
 			if (m_bShowIndicatorStatus)
 				SetStatusIndicators();
@@ -3749,10 +3804,8 @@ namespace Win32xx
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
 	{
 		// Remove any existing menu icons
-		if (m_himlMenu) ImageList_Destroy(m_himlMenu);
-		if (m_himlMenuDis) ImageList_Destroy(m_himlMenuDis);
-		m_himlMenu = NULL;
-		m_himlMenuDis = NULL;
+		m_imlMenu.DeleteImageList();
+		m_imlMenuDis.DeleteImageList();
 		m_vMenuIcons.clear();
 
 		// Exit if no ToolBarID is specified

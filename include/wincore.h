@@ -1989,7 +1989,7 @@ namespace Win32xx
 			return 0L;
 		case WM_DESTROY:
 			OnDestroy();
-			return 0L;
+			break;	// Note: Some controls require default processing.
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object

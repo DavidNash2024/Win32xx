@@ -23,6 +23,7 @@ void CViewTree::OnDestroy()
 	SetImageList(NULL, LVSIL_SMALL);
 }
 
+
 void CViewTree::OnInitialUpdate()
 {
 	//set the image lists
