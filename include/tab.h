@@ -746,7 +746,7 @@ namespace Win32xx
 
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
-			TabCtrl_SetImageList(m_hWnd, m_imlTab);
+			TabCtrl_SetImageList(m_hWnd, m_imlTab.GetHandle());
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -1110,7 +1110,7 @@ namespace Win32xx
 		else
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
-			TabCtrl_SetImageList(m_hWnd, m_imlTab);
+			TabCtrl_SetImageList(m_hWnd, m_imlTab.GetHandle());
 		}
 
 		RecalcLayout();

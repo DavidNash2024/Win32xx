@@ -14,6 +14,7 @@ class CMainWindow : public CWnd
 public:
 	CMainWindow();
 	virtual ~CMainWindow() {}
+	virtual void AppendText(LPCTSTR szStr);
 	virtual HWND Create(CWnd* pParent = 0);
 	virtual void OnAllWindowsCreated();
 	virtual void OnWindowCreated();
@@ -32,8 +33,10 @@ private:
 	};
 
 	std::vector<TestWndPtr> m_vTestWnd;	// A vector of CTestWin smart pointers
-	int m_nTestWin;						// Number of additional test windows to be created
+	int m_nTestWnd;						// Number of additional test windows to be created
 	int m_nWindowsCreated;				// Count of windows actually created
+	CEdit m_EditWnd;
+	CFont m_Font;
 };
 
 

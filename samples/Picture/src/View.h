@@ -24,6 +24,7 @@ public:
 
 protected:
 	virtual void    OnDraw(CDC* pDC);
+	virtual LRESULT OnDropFiles(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnVScroll(WPARAM wParam, LPARAM lParam);

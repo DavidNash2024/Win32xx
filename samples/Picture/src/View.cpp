@@ -80,8 +80,8 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 	{
 		GetParent()->SetWindowText(szFile);
-		CMainFrame& Frame = GetPicApp().GetMainFrame();
-		Frame.AdjustFrameRect(GetImageRect());
+		CMainFrame* pMainFrame = GetPicApp()->GetMainFrame();
+		pMainFrame->AdjustFrameRect(GetImageRect());
 		Invalidate();
 		return TRUE;
 	}
@@ -100,11 +100,40 @@ void CView::OnDraw(CDC* pDC)
 	Paint(*pDC);
 }
 
+
+LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+
+	HDROP hDrop = (HDROP)wParam;
+	UINT nLength = DragQueryFile(hDrop, 0, 0, 0);
+
+	if (nLength > 0)
+	{
+		CString FileName;
+		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
+		FileName.ReleaseBuffer();
+
+		if ( LoadPictureFile(FileName) )
+		{
+			CRect rcImage = GetImageRect();
+			GetPicApp()->GetMainFrame()->AdjustFrameRect(rcImage);
+		}
+		else
+			NewPictureFile();
+
+		DragFinish(hDrop);
+	}
+	return 0L;
+}
+
 void CView::OnInitialUpdate()
 {
 	// Set the window background to black
 	m_Brush.CreateSolidBrush(RGB(0,0,0));
 	SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
+
+	DragAcceptFiles(TRUE);
 
 	// Load picture at startup
 	TCHAR szPath[MAX_STRING_SIZE];
@@ -114,9 +143,9 @@ void CView::OnInitialUpdate()
 
 	if (LoadPictureFile(szPath))
 	{
-		CMainFrame& Frame = GetPicApp().GetMainFrame();
+		CMainFrame* pMainFrame = GetPicApp()->GetMainFrame();
 		CRect rcImage = GetImageRect();
-		Frame.AdjustFrameRect(rcImage);
+		pMainFrame->AdjustFrameRect(rcImage);
 	}
 }
 
@@ -334,9 +363,10 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+	case WM_DROPFILES:			return OnDropFiles(wParam, lParam);
 	case WM_HSCROLL:			return OnHScroll(wParam, lParam);
 	case WM_VSCROLL:			return OnVScroll(wParam, lParam);
+	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 	}
 
 	// Pass unhandled messages on for default processing

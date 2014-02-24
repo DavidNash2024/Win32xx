@@ -49,11 +49,11 @@ void CMyDialog::OnOK()
 	// Get the number of test messages to send
 	int nTestMessages = GetDlgItemInt(IDC_MESSAGES, NULL, FALSE);
 
-	// Get a reference to the CMainWindow object
-	CMainWindow& MainWnd = ((CPerformanceApp*)GetApp())->GetMainWnd();
+	// Get a pointer to the CMainWindow object
+	CMainWindow* pMainWnd = GetPerfApp()->GetMainWnd();
 	
-	MainWnd.SetTestMessages(nTestMessages);
-	MainWnd.CreateTestWindows(nWindows);
+	pMainWnd->SetTestMessages(nTestMessages);
+	pMainWnd->CreateTestWindows(nWindows);
 
 	// End the dialog
 	EndDialog(IDOK);

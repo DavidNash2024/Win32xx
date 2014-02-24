@@ -180,7 +180,7 @@ LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
 {
 	TreeItemData* pItem = (TreeItemData*)pNMTV->itemNew.lParam;
 
-	CMyListView* LeftView = GetExplorerApp().GetMainFrame().GetListView();
+	CMyListView* LeftView = GetExplorerApp()->GetMainFrame()->GetListView();
 	LeftView->DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 
 	return 0L;

@@ -15,15 +15,15 @@ public:
 	CDialogApp(); 
 	virtual ~CDialogApp();
 	virtual BOOL InitInstance();
-	CSvrDialog& GetDialog() {return m_SvrDialog;}
+	CSvrDialog* GetDialog() {return &m_SvrDialog;}
 
 private:
 	CSvrDialog m_SvrDialog;
 };
 
 
-// returns a reference to the CDialogApp object
-inline CDialogApp& GetDlgApp() { return *((CDialogApp*)GetApp()); }
+// returns a pointer to the CDialogApp object
+inline CDialogApp* GetDlgApp() { return (CDialogApp*)GetApp(); }
 
 
 #endif // define DIALOGAPP_H

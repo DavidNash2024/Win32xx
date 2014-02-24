@@ -15,15 +15,15 @@ public:
 	CPictureApp();
 	virtual ~CPictureApp();
 	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+	CMainFrame* GetMainFrame() { return &m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-// returns a reference to the CPictureApp object
-inline CPictureApp& GetPicApp() { return *((CPictureApp*)GetApp()); }
+// returns a pointer to the CPictureApp object
+inline CPictureApp* GetPicApp() { return (CPictureApp*)GetApp(); }
 
 
 #endif // define PICTUREAPP_H

@@ -13,7 +13,7 @@ public:
     CMDIFrameApp();
     virtual ~CMDIFrameApp() {}
 	virtual BOOL InitInstance();
-	CMainMDIFrame& GetMDIFrame() { return m_MainMDIFrame; }
+	CMainMDIFrame* GetMDIFrame() { return &m_MainMDIFrame; }
 
 private:
     CMainMDIFrame m_MainMDIFrame;
@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a reference to the CMDIFrameApp object
-inline CMDIFrameApp& GetMDIApp() { return *((CMDIFrameApp*)GetApp()); }
+// returns a pointer to the CMDIFrameApp object
+inline CMDIFrameApp* GetMDIApp() { return (CMDIFrameApp*)GetApp(); }
 
 
 #endif // MDIFRAMEAPP_H

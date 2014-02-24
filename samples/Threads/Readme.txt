@@ -15,4 +15,5 @@ Features demonstrated in this example
 * How to create windows in different threads
 * Using PostMessage to communicate information between threads
 * Using PostQuitMessage to end a GUI thread
+* Using an Edit control as a child window to display text
 

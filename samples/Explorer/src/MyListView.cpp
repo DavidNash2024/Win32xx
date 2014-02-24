@@ -185,7 +185,7 @@ void CMyListView::DoDefault(int iItem)
 
 							if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
 							{
-								GetExplorerApp().GetMainFrame().GetTreeView()->SelectFromListView(pInfo->GetFullPidl());
+								GetExplorerApp()->GetMainFrame()->GetTreeView()->SelectFromListView(pInfo->GetFullPidl());
 							}
 							else
 							{
@@ -417,7 +417,7 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 	CEnumIDList cEnum;
 
 	int grFlags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
-	if ( GetExplorerApp().GetMainFrame().GetShowHidden() )
+	if ( GetExplorerApp()->GetMainFrame()->GetShowHidden() )
 		grFlags |= SHCONTF_INCLUDEHIDDEN;
 
 	if(SUCCEEDED(cPFolder.EnumObjects(NULL, grFlags, cEnum)))

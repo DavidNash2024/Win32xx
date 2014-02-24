@@ -77,7 +77,7 @@ BOOL CColourDialog::OnInitDialog()
 
 	// Create the two image previews
 	m_Preview.AttachDlgItem(IDC_PREVIEW, this);
-	CreateImagePreviews(GetFrameApp().GetMainFrame().GetMyView().GetImage());
+	CreateImagePreviews(GetFrameApp()->GetMainFrame()->GetMyView().GetImage());
 
 	return TRUE;
 }
@@ -136,10 +136,11 @@ LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 
 void CColourDialog::OnOK()
 {
-	// Get a reference to our CMainFrame object
-	CMainFrame& MainFrame = GetFrameApp().GetMainFrame();
+	// Get a pointer to our CMainFrame object
+	CMainFrame* pMainFrame = GetFrameApp()->GetMainFrame();
+	
 	BOOL bGray = SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0);
-	MainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue, bGray);
+	pMainFrame->ModifyBitmap(m_cRed, m_cGreen, m_cBlue, bGray);
 
 	CDialog::OnOK();
 }

@@ -15,7 +15,7 @@ public:
     CDockingApp();
     virtual ~CDockingApp() {}
 	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_MainFrame; }
+	CMainFrame* GetMainFrame() { return &m_MainFrame; }
 
 private:
     CMainFrame m_MainFrame;
@@ -23,8 +23,8 @@ private:
 };
 
 
-// returns a reference to the CDockingApp object
-inline CDockingApp& GetDockApp() { return *((CDockingApp*)GetApp()); }
+// returns a pointer to the CDockingApp object
+inline CDockingApp* GetDockApp() { return (CDockingApp*)GetApp(); }
 
 
 #endif // DOCKINGAPP_H

@@ -116,7 +116,7 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{
-		// Add case statements for each messages to be handled here
+//		Add case statements for each messages to be handled here
 //	}
 
 	// pass unhandled messages on for default processing

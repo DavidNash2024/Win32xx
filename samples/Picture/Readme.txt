@@ -11,4 +11,5 @@ Features demonstrated in this example
 * Automatic resizing of the frame to accommodate the picture size when loaded
 * Use of scroll bars
 * Use of file open dialogs
-* Implementation of a Most Recently Used (MRU) List in the File menu.
+* Use of a Most Recently Used (MRU) List in the File menu.
+* Use of drag and drop.

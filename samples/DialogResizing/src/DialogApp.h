@@ -14,14 +14,14 @@ public:
 	CDialogApp(); 
 	virtual ~CDialogApp();
 	virtual BOOL InitInstance();
-	CMyDialog& GetDialog() {return m_MyDialog;}
+	CMyDialog* GetDialog() {return &m_MyDialog;}
 
 private:
 	CMyDialog m_MyDialog;
 };
 
-// returns a reference to the CDialogApp object
-inline CDialogApp& GetDialogApp() { return *((CDialogApp*)GetApp()); }
+// returns a pointer to the CDialogApp object
+inline CDialogApp* GetDialogApp() { return (CDialogApp*)GetApp(); }
 
 
 #endif // define DIALOGAPP_H

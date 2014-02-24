@@ -14,7 +14,7 @@ class CCustomControlApp : public CWinApp
 public:
 	CCustomControlApp();
 	virtual ~CCustomControlApp();
-	CMyDialog& GetDialog() {return m_MyDialog;}
+	CMyDialog* GetDialog() {return &m_MyDialog;}
 	virtual BOOL InitInstance();
 
 private:
@@ -22,8 +22,8 @@ private:
 };
 
 
-// returns a reference to the CCustomControlApp object
-inline CCustomControlApp& GetDlgApp() { return *((CCustomControlApp*)GetApp()); }
+// returns a pointer to the CCustomControlApp object
+inline CCustomControlApp* GetDlgApp() { return (CCustomControlApp*)GetApp(); }
 
 
 #endif // define CUSTOMCONTROLAPP_H

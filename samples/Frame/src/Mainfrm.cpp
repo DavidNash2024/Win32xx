@@ -115,7 +115,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	// Process notification messages sent by child windows
 //	switch(((LPNMHDR)lParam)->code)
 //	{
- 		//Add case statments for each notification message here
+//		Add case statements for each notification message here
 //	}
 
 	// Some notifications should return a value when handled

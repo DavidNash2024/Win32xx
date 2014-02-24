@@ -15,14 +15,14 @@ public:
 	CExplorerApp();
 	virtual ~CExplorerApp();
 	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+	CMainFrame* GetMainFrame() { return &m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
-// returns a reference to the CExplorerApp object
-inline CExplorerApp& GetExplorerApp() { return *((CExplorerApp*)GetApp()); }
+// returns a pointer to the CExplorerApp object
+inline CExplorerApp* GetExplorerApp() { return (CExplorerApp*)GetApp(); }
 
 
 #endif  //EXPLORERAPP_H

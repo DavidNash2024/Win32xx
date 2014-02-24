@@ -14,14 +14,15 @@ public:
     CDXApp();
     virtual ~CDXApp() {}
 	virtual BOOL InitInstance();
+	CMainFrame* GetMainFrame() { return &m_Frame; }
 
 private:
     CMainFrame m_Frame;
 };
 
 
-// returns a reference to the CDXApp object
-inline CDXApp& GetDXApp() { return *((CDXApp*)GetApp()); }
+// returns a pointer to the CDXApp object
+inline CDXApp* GetDXApp() { return (CDXApp*)GetApp(); }
 
 
 #endif

@@ -144,7 +144,7 @@ void CContainClasses::OnFileNew()
 void CContainClasses::OnHelpAbout()
 {
 	// Send a message to the frame requesting the help dialog
-	GetContainerApp().GetMainFrame().SendMessage(WM_HELP);
+	GetContainerApp()->GetMainFrame()->SendMessage(WM_HELP);
 }
 
 void CContainClasses::SetupToolBar()

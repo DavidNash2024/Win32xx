@@ -14,15 +14,15 @@ public:
     CSimpleApp();
     virtual ~CSimpleApp() {}
 	virtual BOOL InitInstance();
-	CView& GetView() { return m_View; }
+	CView* GetView() { return &m_View; }
 
 private:
     CView m_View;
 };
 
 
-// returns a reference to the CSimpleApp object
-inline CSimpleApp& GetSimpleApp() { return *((CSimpleApp*)GetApp()); }
+// returns a pointer to the CSimpleApp object
+inline CSimpleApp* GetSimpleApp() { return (CSimpleApp*)GetApp(); }
 
 
 #endif

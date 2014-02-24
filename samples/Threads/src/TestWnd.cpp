@@ -18,7 +18,7 @@ HWND CTestWindow::Create(CWnd* pParent)
 	CString Title;
 	Title.Format( _T("Test Window %d"), m_nWindow );
 	return CreateEx(0L, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		70 + 20*m_nWindow, 120 + 20*m_nWindow, 300, 200, NULL, NULL);
+		380 + 20*m_nWindow, 40 + 20*m_nWindow, 300, 200, NULL, NULL);
 }
 
 BOOL CTestWindow::InitInstance()
@@ -33,27 +33,33 @@ BOOL CTestWindow::InitInstance()
 
 void CTestWindow::OnClose()
 {
+	CMainWindow* pMainWnd = GetThreadApp()->GetMainWnd();
 	CString str;
-	str.Format( _T("Closing test Window %d\n"), m_nWindow );
-	TRACE(str);
+	str.Format( _T("Closing test Window %d"), m_nWindow );
+	pMainWnd->AppendText(str);
 
 	Destroy();
 }
 void CTestWindow::OnDestroy()
 {
 	// Terminate the thread.
+
+	CMainWindow* pMainWnd = GetThreadApp()->GetMainWnd();
+	CString str(_T("Terminating the thread"));
+	pMainWnd->AppendText(str);
+
 	::PostQuitMessage(0);
 }
 
 void CTestWindow::OnInitialUpdate()
 {
-	// Get a reference to the CMainWnd object
-	CMainWindow& MainWnd = ((CThreadApp*)GetApp())->GetMainWnd();
+	// Get a pointer to the CMainWindow object
+	CMainWindow* pMainWnd = GetThreadApp()->GetMainWnd();
 
 	// Post a message to MainWnd when the window is created. The MainWnd window
 	//  is in a different thread, so PostMessage is preferred over SendMessage.
 	//  SendMessage would wait for the MainWnd thread to respond.
-	::PostMessage(MainWnd.GetHwnd(), WM_WINDOWCREATED, 0, 0);
+	::PostMessage(pMainWnd->GetHwnd(), WM_WINDOWCREATED, 0, 0);
 }
 
 

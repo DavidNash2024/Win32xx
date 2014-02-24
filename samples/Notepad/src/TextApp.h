@@ -14,15 +14,15 @@ public:
 	CTextApp(); 
 	virtual ~CTextApp()  {}
 	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+	CMainFrame* GetMainFrame() { return &m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-// returns a reference to the CTextApp object
-inline CTextApp& GetTextApp() { return *((CTextApp*)GetApp()); }
+// returns a pointer to the CTextApp object
+inline CTextApp* GetTextApp() { return (CTextApp*)GetApp(); }
 
 
 #endif // define TEXTAPP_H
