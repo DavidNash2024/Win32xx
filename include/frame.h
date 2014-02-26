@@ -248,7 +248,7 @@ namespace Win32xx
 		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
-		virtual BOOL OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual BOOL	OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
@@ -259,8 +259,8 @@ namespace Win32xx
 		virtual LRESULT OnTBNHotItemChange(LPNMTBHOTITEM pNMHI);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void	PreCreate(CREATESTRUCT &cs);
+		virtual void	PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -412,7 +412,7 @@ namespace Win32xx
 		void SetReBarTheme(ReBarTheme* pRBT); 
 		void SetToolBarTheme(ToolBarTheme* pTBT);
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		CMenu& GetFrameMenu()						{ return (CMenu&)m_Menu; }
+		CMenu* GetFrameMenu()						{ return &m_Menu; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
 		CWnd* GetView() const						{ return m_pView; }
@@ -441,7 +441,7 @@ namespace Win32xx
 		virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pdis);
-		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
+		virtual int  GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem);
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
@@ -539,9 +539,9 @@ namespace Win32xx
 		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
-		CImageList m_ToolBarImages;
-		CImageList m_ToolBarDisabledImages;
-		CImageList m_ToolBarHotImages;
+		CImageList m_ToolBarImages;			// Image list for the ToolBar buttons
+		CImageList m_ToolBarDisabledImages;	// Image list for the Disabled ToolBar buttons
+		CImageList m_ToolBarHotImages;		// Image list for the Hot ToolBar buttons
 		
 	};  // class CFrame
 
@@ -2640,10 +2640,10 @@ namespace Win32xx
 		}
 	}
 
-	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
+	inline int CFrame::GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
 	{
-		int nMenuItemCount = GetMenuItemCount(hMenu);
+		int nMenuItemCount = pMenu->GetMenuItemCount();
 		MENUITEMINFO mii = {0};
 		mii.cbSize = GetSizeofMenuItemInfo();
 
@@ -2661,7 +2661,7 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			if (::GetMenuItemInfo(hMenu, nItem, TRUE, &mii) && (lstrlen(szStr) <= MAX_MENU_STRING))
+			if (pMenu->GetMenuItemInfo(nItem, &mii, TRUE) && (lstrlen(szStr) <= MAX_MENU_STRING))
 			{
 				// Strip out any & characters
 				int j = 0;
@@ -3031,8 +3031,8 @@ namespace Win32xx
 		}
 		else
 		{
-			GetFrameMenu().CheckMenuItem(IDW_VIEW_TOOLBAR, MF_UNCHECKED);
-			GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
+			GetFrameMenu()->CheckMenuItem(IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			GetFrameMenu()->EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
 
 		// Create the status bar
@@ -3456,7 +3456,7 @@ namespace Win32xx
 			// Update the MenuBar font and button size
 			m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
 			GetMenuBar()->SetFont(&m_fntMenuBar, TRUE);
-			GetMenuBar()->SetMenu(GetFrameMenu());
+			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
 
 			// Update the MenuBar band size
 			int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
@@ -3787,7 +3787,7 @@ namespace Win32xx
 
 		if (IsMenuBarUsed())
 		{
-			GetMenuBar()->SetMenu(GetFrameMenu());
+			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
 			BOOL bShow = (hMenu != NULL);	// boolean expression
 			ShowMenu(bShow);
 		}
@@ -4286,7 +4286,7 @@ namespace Win32xx
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		int nFileItem = 0;  // We place the MRU items under the left most menu item
-		CMenu* pFileMenu = GetFrameMenu().GetSubMenu(nFileItem);
+		CMenu* pFileMenu = GetFrameMenu()->GetSubMenu(nFileItem);
 
 		if (pFileMenu)
 		{

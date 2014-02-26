@@ -115,7 +115,7 @@ namespace Win32xx
 		CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
 
 		CWnd* m_pView;				// pointer to the View CWnd object
-		HMENU m_hChildMenu;
+		CMenu m_ChildMenu;
 		HACCEL m_hChildAccel;
 	};
 
@@ -185,9 +185,9 @@ namespace Win32xx
 	private:
 		CMDIFrame(const CMDIFrame&);				// Disable copy construction
 		CMDIFrame& operator = (const CMDIFrame&); // Disable assignment operator
-		void AppendMDIMenu(HMENU hMenuWindow);
+		void AppendMDIMenu(CMenu* pMenuWindow);
 		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		void UpdateFrameMenu(HMENU hMenu);
+		void UpdateFrameMenu(CMenu* pMenu);
 
 		CMDIClient m_MDIClient;
 		std::vector <MDIChildPtr> m_vMDIChild;
@@ -221,26 +221,26 @@ namespace Win32xx
 		return pMDIChild.get();
 	}
 
-	inline void CMDIFrame::AppendMDIMenu(HMENU hMenuWindow)
+	inline void CMDIFrame::AppendMDIMenu(CMenu* pMenuWindow)
 	{
 		// Adds the additional menu items the the "Window" submenu when
 		//  MDI child windows are created
 
-		if (!IsMenu(hMenuWindow))
+		if (!pMenuWindow->GetHandle())
 			return;
 
 		// Delete previously appended items
-		int nItems = ::GetMenuItemCount(hMenuWindow);
-		UINT uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
+		int nItems = pMenuWindow->GetMenuItemCount();
+		UINT uLastID = pMenuWindow->GetMenuItemID(--nItems);
 		if ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
 		{
 			while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
 			{
-				::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
-				uLastID = ::GetMenuItemID(hMenuWindow, --nItems);
+				pMenuWindow->DeleteMenu(nItems, MF_BYPOSITION);
+				uLastID = pMenuWindow->GetMenuItemID(--nItems);
 			}
 			//delete the separator too
-			::DeleteMenu(hMenuWindow, nItems, MF_BYPOSITION);
+			pMenuWindow->DeleteMenu(nItems, MF_BYPOSITION);
 		}
 
 		int nWindow = 0;
@@ -254,7 +254,7 @@ namespace Win32xx
 			{
 				// Add Separator
 				if (0 == nWindow)
-					::AppendMenu(hMenuWindow, MF_SEPARATOR, 0, NULL);
+					pMenuWindow->AppendMenu(MF_SEPARATOR, 0, (LPCTSTR)NULL);
 
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
@@ -271,17 +271,17 @@ namespace Win32xx
 					CString MenuString;
 					MenuString.Format(_T("&%d %s"), nWindow+1, strMenuItem.c_str());
 
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
+					pMenuWindow->AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
 
 					if (GetActiveMDIChild() == (*v).get())
-						::CheckMenuItem(hMenuWindow, IDW_FIRSTCHILD+nWindow, MF_CHECKED);
+						pMenuWindow->CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					++nWindow;
 				}
 				else if (9 == nWindow)
 				// For the 10th MDI child, add this menu item and return
 				{
-					::AppendMenu(hMenuWindow, MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
+					pMenuWindow->AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
 					return;
 				}
 			}
@@ -386,8 +386,7 @@ namespace Win32xx
 		if (IsMenuBarUsed())
 		{
 			// Refresh MenuBar Window
-			HMENU hMenu= GetMenuBar()->GetMenu();
-			GetMenuBar()->SetMenu(hMenu);
+			GetMenuBar()->SetMenu(GetMenuBar()->GetMenu());
 			UpdateCheckMarks();
 		}
 
@@ -449,20 +448,17 @@ namespace Win32xx
 
 		if (GetActiveMDIChild())
 		{
-			if (GetActiveMDIChild()->m_hChildMenu)
-				UpdateFrameMenu(GetActiveMDIChild()->m_hChildMenu);
+			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
+				UpdateFrameMenu(&GetActiveMDIChild()->m_ChildMenu);
 			if (GetActiveMDIChild()->m_hChildAccel)
 				GetApp()->SetAccelerators(GetActiveMDIChild()->m_hChildAccel, this);
 		}
 		else
 		{
 			if (IsMenuBarUsed())
-				GetMenuBar()->SetMenu(GetFrameMenu());
+				GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
 			else
-			{
-				CMenu& FrameMenu = GetFrameMenu();
-				SetMenu( &FrameMenu );
-			}
+				SetMenu( GetFrameMenu() );
 
 			GetApp()->SetAccelerators(GetFrameAccel(), this);
 		}
@@ -480,37 +476,37 @@ namespace Win32xx
 
 	inline void CMDIFrame::UpdateCheckMarks()
 	{
-		if ((GetActiveMDIChild()) && GetActiveMDIChild()->m_hChildMenu)
+		if ((GetActiveMDIChild()) && GetActiveMDIChild()->m_ChildMenu.GetHandle())
 		{
-			HMENU hMenu = GetActiveMDIChild()->m_hChildMenu;
+		//	CMenu Menu = GetActiveMDIChild()->m_ChildMenu;
 
 			UINT uCheck = GetToolBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
-			::CheckMenuItem(hMenu, IDW_VIEW_TOOLBAR, uCheck);
+			GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_TOOLBAR, uCheck);
 
 			uCheck = GetStatusBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
-			::CheckMenuItem (hMenu, IDW_VIEW_STATUSBAR, uCheck);
+			GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_STATUSBAR, uCheck);
 		}
 	}
 
-	inline void CMDIFrame::UpdateFrameMenu(HMENU hMenu)
+	inline void CMDIFrame::UpdateFrameMenu(CMenu* pMenu)
 	{
-		int nMenuItems = GetMenuItemCount(hMenu);
+		int nMenuItems = pMenu->GetMenuItemCount();
 		if (nMenuItems > 0)
 		{
 			// The Window menu is typically second from the right
 			int nWindowItem = MAX (nMenuItems -2, 0);
-			HMENU hMenuWindow = ::GetSubMenu (hMenu, nWindowItem);
+			CMenu* pMenuWindow = pMenu->GetSubMenu(nWindowItem);
 
-			if (hMenuWindow)
+			if (pMenuWindow)
 			{
 				if (IsMenuBarUsed())
 				{
-					AppendMDIMenu(hMenuWindow);
-					GetMenuBar()->SetMenu(hMenu);
+					AppendMDIMenu(pMenuWindow);
+					GetMenuBar()->SetMenu(pMenu->GetHandle());
 				}
 				else
 				{
-					GetView()->SendMessage (WM_MDISETMENU, (WPARAM) hMenu, (LPARAM)hMenuWindow);
+					GetView()->SendMessage (WM_MDISETMENU, (WPARAM)pMenu->GetHandle(), (LPARAM)pMenuWindow->GetHandle());
 					DrawMenuBar();
 				}
 			}
@@ -591,7 +587,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CMDIChild class
 	//
-	inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildMenu(NULL)
+	inline CMDIChild::CMDIChild() : m_pView(NULL)
 	{
 		// Set the MDI Child's menu and accelerator in the constructor, like this ...
 		//   HMENU hChildMenu = LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView"));
@@ -603,9 +599,6 @@ namespace Win32xx
 	{
 		if (IsWindow())
 			GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
-
-		if (m_hChildMenu)
-			::DestroyMenu(m_hChildMenu);
 	}
 
 	inline HWND CMDIChild::Create(CWnd* pParent /*= NULL*/)
@@ -666,8 +659,8 @@ namespace Win32xx
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-		if (m_hChildMenu)
-			GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);
+		if (m_ChildMenu.GetHandle())
+			GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
 		if (m_hChildAccel)
 			GetApp()->SetAccelerators(m_hChildAccel, this);
 
@@ -729,7 +722,7 @@ namespace Win32xx
 
 	inline void CMDIChild::SetHandles(HMENU hMenu, HACCEL hAccel)
 	{
-		m_hChildMenu = hMenu;
+		m_ChildMenu.Attach(hMenu);
 		m_hChildAccel = hAccel;
 
 		// Note: It is valid to call SetChildMenu before the window is created
@@ -738,8 +731,8 @@ namespace Win32xx
 			CWnd* pWnd = GetMDIFrame()->GetActiveMDIChild();
 			if (pWnd == this)
 			{
-				if (m_hChildMenu)
-					GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);
+				if (m_ChildMenu.GetHandle())
+					GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
 
 				if (m_hChildAccel)
 					GetApp()->SetAccelerators(m_hChildAccel, GetMDIFrame());
@@ -777,8 +770,8 @@ namespace Win32xx
 		{
 			GetMDIFrame()->m_hActiveMDIChild = m_hWnd;
 			// Set the menu to child default menu
-			if (m_hChildMenu)
-				GetMDIFrame()->UpdateFrameMenu(m_hChildMenu);
+			if (m_ChildMenu.GetHandle())
+				GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
 			if (m_hChildAccel)
 				GetApp()->SetAccelerators(m_hChildAccel, this);
 		}
@@ -788,7 +781,7 @@ namespace Win32xx
 		{
 			GetMDIFrame()->m_hActiveMDIChild = NULL;
 			// Set the menu to frame's original menu
-			GetMDIFrame()->UpdateFrameMenu(GetMDIFrame()->GetFrameMenu());
+			GetMDIFrame()->UpdateFrameMenu( GetMDIFrame()->GetFrameMenu() );
 			GetApp()->SetAccelerators(GetMDIFrame()->GetFrameAccel(), this);
 		}
 			

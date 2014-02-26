@@ -889,6 +889,8 @@ namespace Win32xx
 		si.nPos   = m_yScrollPos;
 		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
 
+		// Note: calls to SetScrollInfo may have changed the client rect, so
+		// we get it again.
 		rcCurrent = m_pParent->GetClientRect();
 
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );

@@ -122,7 +122,7 @@ void CMainFrame::OnFileOpen()
 		CToolBar* pTB = GetToolBar();
 		pTB->EnableButton(IDM_FILE_SAVEAS);
 		pTB->EnableButton(IDM_IMAGE_ADJUST);
-		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+		GetFrameMenu()->EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
 		// Resize the frame to match the bitmap
 		if (GetMyView().GetImage())
@@ -226,13 +226,13 @@ inline void CMainFrame::OnMenuUpdate(UINT nID)
 	switch(nID)
 	{
 	case IDM_FILE_SAVE:
-		EnableMenuItem(GetFrameMenu(), IDM_FILE_SAVE, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		GetFrameMenu()->EnableMenuItem(IDM_FILE_SAVE, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
 	case IDM_FILE_SAVEAS:
-		EnableMenuItem(GetFrameMenu(), IDM_FILE_SAVEAS, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		GetFrameMenu()->EnableMenuItem(IDM_FILE_SAVEAS, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
 	case IDM_IMAGE_ADJUST:
-		EnableMenuItem(GetFrameMenu(), IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		GetFrameMenu()->EnableMenuItem(IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
 	}
 }

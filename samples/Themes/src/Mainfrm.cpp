@@ -161,18 +161,18 @@ void CMainFrame::ChooseColor(UINT nColor)
 	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Theme"));
 	if (nFileItem >= 0)
 	{
-		CMenu* pThemeMenu = GetFrameMenu().GetSubMenu(nFileItem);
+		CMenu* pThemeMenu = GetFrameMenu()->GetSubMenu(nFileItem);
 		pThemeMenu->CheckMenuRadioItem(IDM_BLUE, IDM_MODERN, nColor, 0);
 	}
 
-	GetFrameMenu().CheckMenuItem(IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_BAND_COLORS,   m_bBandColors? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_FLAT_STYLE,    m_bFlatStyle? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_LEFT_BANDS,    m_bBandsLeft? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_LOCK_MENUBAR,  m_bLockMenuBand? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_ROUND_BORDERS, m_bRoundBorders? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_SHORT_BANDS,   m_bShortBands? MF_CHECKED : MF_UNCHECKED);
-	GetFrameMenu().CheckMenuItem(IDM_USE_LINES,     m_bUseLines? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_USE_THEMES,    m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_BAND_COLORS,   m_bBandColors? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_FLAT_STYLE,    m_bFlatStyle? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_LEFT_BANDS,    m_bBandsLeft? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_LOCK_MENUBAR,  m_bLockMenuBand? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_ROUND_BORDERS, m_bRoundBorders? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_SHORT_BANDS,   m_bShortBands? MF_CHECKED : MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_USE_LINES,     m_bUseLines? MF_CHECKED : MF_UNCHECKED);
 	RecalcLayout();
 }
 
@@ -357,7 +357,7 @@ void CMainFrame::OnUseThemes()
 	{
 		m_bUseThemes = !m_bUseThemes;
 		BOOL bCheck = m_bUseThemes;
-		GetFrameMenu().CheckMenuItem(IDM_USE_THEMES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_USE_THEMES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->UseThemes = m_bUseThemes;
 		SetReBarTheme(pRBT);
@@ -375,7 +375,7 @@ void CMainFrame::OnBandColors()
 	{
 		m_bBandColors = !m_bBandColors;
 		BOOL bCheck = m_bBandColors;
-		GetFrameMenu().CheckMenuItem(IDM_BAND_COLORS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_BAND_COLORS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ChooseColor(m_nColor);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -388,7 +388,7 @@ void CMainFrame::OnFlatStyle()
 	{
 		m_bFlatStyle = !m_bFlatStyle;
 		BOOL bCheck = m_bFlatStyle;
-		GetFrameMenu().CheckMenuItem(IDM_FLAT_STYLE, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_FLAT_STYLE, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->FlatStyle = m_bFlatStyle;
 		SetReBarTheme(pRBT);
@@ -403,7 +403,7 @@ void CMainFrame::OnLeftBands()
 	{
 		m_bBandsLeft = !m_bBandsLeft;
 		BOOL bCheck = m_bBandsLeft;
-		GetFrameMenu().CheckMenuItem(IDM_LEFT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_LEFT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->BandsLeft = m_bBandsLeft;
 		SetReBarTheme(pRBT);
@@ -419,7 +419,7 @@ void CMainFrame::OnLockMenuBar()
 	{
 		m_bLockMenuBand = !m_bLockMenuBand;
 		BOOL bCheck = m_bLockMenuBand;
-		GetFrameMenu().CheckMenuItem(IDM_LOCK_MENUBAR, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_LOCK_MENUBAR, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->LockMenuBand = m_bLockMenuBand;
 		SetReBarTheme(pRBT);
@@ -435,7 +435,7 @@ void CMainFrame::OnRoundBorders()
 	{
 		m_bRoundBorders = !m_bRoundBorders;
 		BOOL bCheck = m_bRoundBorders;
-		GetFrameMenu().CheckMenuItem(IDM_ROUND_BORDERS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_ROUND_BORDERS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->RoundBorders = m_bRoundBorders;
 		SetReBarTheme(pRBT);
@@ -450,7 +450,7 @@ void CMainFrame::OnShortBands()
 	{
 		m_bShortBands = !m_bShortBands;
 		BOOL bCheck = m_bShortBands;
-		GetFrameMenu().CheckMenuItem(IDM_SHORT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_SHORT_BANDS, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->ShortBands = m_bShortBands;
 		SetReBarTheme(pRBT);
@@ -465,7 +465,7 @@ void CMainFrame::OnUseLines()
 	{
 		m_bUseLines = !m_bUseLines;
 		BOOL bCheck = m_bUseLines;
-		GetFrameMenu().CheckMenuItem(IDM_USE_LINES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(IDM_USE_LINES, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 		ReBarTheme* pRBT = GetReBarTheme();
 		pRBT->UseLines = m_bUseLines;
 		SetReBarTheme(pRBT);
@@ -621,7 +621,7 @@ void CMainFrame::ShowArrows(BOOL bShow)
 	{
 		UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
 
-		GetFrameMenu().CheckMenuItem(IDM_VIEW_ARROWS, uCheck);
+		GetFrameMenu()->CheckMenuItem(IDM_VIEW_ARROWS, uCheck);
 		GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(m_Arrows), bShow);
 
 		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
@@ -635,7 +635,7 @@ void CMainFrame::ShowCards(BOOL bShow)
 	{
 		UINT uCheck = bShow? MF_CHECKED: MF_UNCHECKED;
 
-		GetFrameMenu().CheckMenuItem(IDM_VIEW_CARDS, uCheck);
+		GetFrameMenu()->CheckMenuItem(IDM_VIEW_CARDS, uCheck);
 		GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(m_Cards), bShow);
 
 		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)

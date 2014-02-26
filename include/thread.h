@@ -70,13 +70,16 @@
 //    (both GUI and worker threads).
 // 7) Avoid using sleep to synchronise threads. Generally speaking, the various wait 
 //    functions (e.g. WaitForSingleObject) will be better for this.
+// 8) Use PostQuitMessage to end a GUI thread. For worker threads, allow the thread's starting
+//    function to complete.
 
 // About Threads:
 // Each program that executes has a "process" allocated to it. A process has one or more
 // threads. Threads run independently of each other. It is the job of the operating system
 // to manage the running of the threads, and do the task switching between threads as required.
 // Systems with multiple CPUs will be able to run as many threads simultaneously as there are
-// CPUs. 
+// CPUs. Systems with a single CPU will use context switching to give the appearance that 
+// the threads are running concurrently.
 
 // Threads behave like a program within a program. When the main thread starts, the application 
 // runs the WinMain function and ends when WinMain ends. When another thread starts, it too

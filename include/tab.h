@@ -92,7 +92,7 @@ namespace Win32xx
 		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
-		virtual HMENU GetListMenu();
+		virtual CMenu* GetListMenu();
 		virtual BOOL GetTabsAtTop() const;
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
@@ -171,7 +171,7 @@ namespace Win32xx
 		std::vector<WndPtr> m_vTabViews;
 		CFont m_Font;
 		CImageList m_imlTab;
-		HMENU m_hListMenu;
+		CMenu m_ListMenu;
 		CWnd* m_pActiveView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
 		BOOL m_IsTracking;
@@ -198,7 +198,7 @@ namespace Win32xx
 		virtual int   GetMDIChildCount() const;
 		virtual int   GetMDIChildID(int nTab) const;
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
-		virtual HMENU GetListMenu() const { return GetTab().GetListMenu(); }
+		virtual CMenu* GetListMenu() const { return GetTab().GetListMenu(); }
 		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
 		virtual BOOL LoadRegistrySettings(CString strRegistryKeyName);
 		virtual void RecalcLayout();
@@ -267,7 +267,7 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_hListMenu(NULL), m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
+	inline CTab::CTab() : m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
 		// Create and assign the image list
@@ -282,7 +282,6 @@ namespace Win32xx
 
 	inline CTab::~CTab()
 	{
-		if (IsMenu(m_hListMenu)) ::DestroyMenu(m_hListMenu);
 	}
 
 	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
@@ -628,12 +627,10 @@ namespace Win32xx
 		return rcClose;
 	}
 
-	inline HMENU CTab::GetListMenu()
+	inline CMenu* CTab::GetListMenu()
 	{
-		if (IsMenu(m_hListMenu))
-			::DestroyMenu(m_hListMenu);
-
-		m_hListMenu = CreatePopupMenu();
+		m_ListMenu.DestroyMenu();
+		m_ListMenu.CreatePopupMenu();
 
 		// Add the menu items
 		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
@@ -641,17 +638,17 @@ namespace Win32xx
 			CString MenuString;
 			CString TabText = GetAllTabs()[u].szTabText;
 			MenuString.Format(_T("&%d %s"), u+1, TabText.c_str());
-			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +u, MenuString);
+			m_ListMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +u, MenuString);
 		}
 		if (GetAllTabs().size() >= 10)
-			AppendMenu(m_hListMenu, MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
+			m_ListMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
 
 		// Add a checkmark to the menu
 		int iSelected = GetCurSel();
 		if (iSelected < 9)
-			CheckMenuItem(m_hListMenu, iSelected, MF_BYPOSITION|MF_CHECKED);
+			m_ListMenu.CheckMenuItem(iSelected, MF_BYPOSITION|MF_CHECKED);
 
-		return m_hListMenu;
+		return &m_ListMenu;
 	}
 
 	inline CRect CTab::GetListRect() const
@@ -1219,16 +1216,15 @@ namespace Win32xx
 		if (!m_IsListPressed)
 		{
 			m_IsListPressed = TRUE;
-			HMENU hMenu = GetListMenu();
 
 			CPoint pt(GetListRect().left, GetListRect().top + GetTabHeight());
 			ClientToScreen(pt);
 
-			// Choosing the frame's hwnd for the menu's messages will automatically theme the popup menu
-			HWND MenuHwnd = GetAncestor()->GetHwnd();
+			// Choosing the frame's CWnd for the menu's messages will automatically theme the popup menu
+			CWnd* pFrame = GetAncestor();
 			int nPage = 0;
 			m_IsListMenuActive = TRUE;
-			nPage = TrackPopupMenuEx(hMenu, TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, MenuHwnd, NULL) - IDW_FIRSTCHILD;
+			nPage = GetListMenu()->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, pFrame, NULL) - IDW_FIRSTCHILD;
 			if ((nPage >= 0) && (nPage < 9)) SelectPage(nPage);
 			if (nPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;

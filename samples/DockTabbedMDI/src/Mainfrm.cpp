@@ -60,9 +60,8 @@ void CMainFrame::LoadDefaultMDIs()
 }
 
 void CMainFrame::OnFileNew()
+// Creates the popup menu when the "New" toolbar button is pressed
 {
-	// Creates the popup menu when the "New" toolbar button is pressed
-
 	// Position the popup menu
 	CToolBar* pTB = GetToolBar();
 	RECT rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_FILE_NEW));
@@ -73,14 +72,11 @@ void CMainFrame::OnFileNew()
 	tpm.rcExclude = rc;
 
 	// Load the popup menu
-	HMENU hTopMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDM_NEWMENU));
-	HMENU hPopupMenu = ::GetSubMenu(hTopMenu, 0);
+	CMenu TopMenu(IDM_NEWMENU);
+	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	::TrackPopupMenuEx(hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, m_hWnd, &tpm);
-
-	// Release the menu resource
-	::DestroyMenu(hTopMenu);
+	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, this, &tpm);
 }
 
 void CMainFrame::OnFileExit()
@@ -143,7 +139,7 @@ void CMainFrame::OnContainerTabsAtTop()
 
 	// Set the menu checkmark
 	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;
-	::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, uCheck);
+	GetFrameMenu()->CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
 }
 
 void CMainFrame::OnMDITabsAtTop()
@@ -156,7 +152,7 @@ void CMainFrame::OnMDITabsAtTop()
 
 	// Set the menu checkmark
 	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;
-	::CheckMenuItem(GetFrameMenu(), IDM_TABBEDMDI_TOP, uCheck);
+	GetFrameMenu()->CheckMenuItem(IDM_TABBEDMDI_TOP, uCheck);
 }
 
 void CMainFrame::OnDefaultLayout()
@@ -255,9 +251,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	if (nID >= IDM_EDIT_UNDO && nID <= IDM_EDIT_DELETE)
 	{
 		CWnd* pWnd = 0;
-		CMenu Menu;
-		Menu.Attach(GetFrameMenu());
-		CMenu* pEditMenu = Menu.GetSubMenu(1);
+		CMenu* pEditMenu = GetFrameMenu()->GetSubMenu(1);
 
 		if (m_pLastActiveDocker)
 		{
@@ -270,7 +264,6 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		// Enable the Edit menu items for CViewText windows, disable them otherwise
 		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;
 		pEditMenu->EnableMenuItem(nID, MF_BYCOMMAND | Flags);
-		Menu.Detach();
 	}
 }
 
@@ -315,7 +308,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 
 	// Remove the checkmark for container tabs at top
-	::CheckMenuItem(GetFrameMenu(), IDM_CONTAINER_TOP, MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_FILE_NEWSIMPLE, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_SIMPLE), IMAGE_ICON, 0, 0, LR_SHARED));

@@ -139,7 +139,7 @@ void CMainFrame::OnShowButtons()
 	BOOL bShow = m_View.GetShowButtons();
 	m_View.SetShowButtons(!bShow);
 	UINT uCheck = bShow? MF_UNCHECKED : MF_CHECKED;
-	::CheckMenuItem(GetFrameMenu(), IDM_TAB_BUTTONS, uCheck);
+	GetFrameMenu()->CheckMenuItem(IDM_TAB_BUTTONS, uCheck);
 	m_View.RedrawWindow();
 }
 
@@ -149,7 +149,7 @@ void CMainFrame::OnTabsAtTop()
 	m_View.SetTabsAtTop(!bTop);
 	
 	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;
-	::CheckMenuItem(GetFrameMenu(), IDM_TAB_TOP, uCheck);
+	GetFrameMenu()->CheckMenuItem(IDM_TAB_TOP, uCheck);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
@@ -180,7 +180,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT        );
 
 	// Set the Checkmarks in the menu
-	::CheckMenuItem(GetFrameMenu(), IDM_TAB_BUTTONS, MF_UNCHECKED);
+	GetFrameMenu()->CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_NEW_FILES, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));

@@ -52,7 +52,7 @@ namespace Win32xx
 
 	///////////////////////////////////////
 	// Declaration of the CImageList class, which manages ImageLists.
-	// An image list is a collection of images of the same size, each of 
+	// An image list is a collection of images of the same size, each of
 	//  which can be referred to by its index.
 	//
 	class CImageList
@@ -171,30 +171,30 @@ namespace Win32xx
 		return Success;
 	}
 
-	inline int CImageList::Add(CBitmap* pbmImage, CBitmap* pbmMask) 
+	inline int CImageList::Add(CBitmap* pbmImage, CBitmap* pbmMask)
 	// Adds an image or images to an image list. The pbmMask parameter can be NULL.
 	{
 		assert (m_hImageList);
 		assert (pbmImage);
 		HBITMAP hbmMask = pbmMask? (HBITMAP)*pbmMask : 0;
-		return ImageList_Add(m_hImageList, (HBITMAP)*pbmImage, hbmMask ); 
-	} 
-		
-	inline int CImageList::Add(CBitmap* pbmImage, COLORREF crMask) 
+		return ImageList_Add(m_hImageList, (HBITMAP)*pbmImage, hbmMask );
+	}
+
+	inline int CImageList::Add(CBitmap* pbmImage, COLORREF crMask)
 	// Adds an image or images to an image list, generating a mask from the specified bitmap.
-	{ 
+	{
 		assert (m_hImageList);
 		assert (pbmImage);
 		return ImageList_AddMasked(m_hImageList, (HBITMAP)*pbmImage, crMask);
 	}
-		
-	inline int CImageList::Add(HICON hIcon) 
+
+	inline int CImageList::Add(HICON hIcon)
 	// Adds an Icon to the image list
-	{ 
+	{
 		assert (m_hImageList);
-		
+
 		// Append the icon to the image list
-		return ImageList_ReplaceIcon(m_hImageList, -1, hIcon); 
+		return ImageList_ReplaceIcon(m_hImageList, -1, hIcon);
 	}
 
 	inline void CImageList::Attach(HIMAGELIST hImageList)
@@ -224,13 +224,13 @@ namespace Win32xx
 	//
 	// Possible flag values:
 	// ILC_COLOR	Use the default behavior if none of the other ILC_COLOR* flags is specified.
-	// ILC_COLOR4	Use a 4-bit (16-color) device-independent bitmap (DIB) section as the bitmap for the image list. 
-	// ILC_COLOR8	Use an 8-bit DIB section. The colors used for the color table are the same colors as the halftone palette. 
+	// ILC_COLOR4	Use a 4-bit (16-color) device-independent bitmap (DIB) section as the bitmap for the image list.
+	// ILC_COLOR8	Use an 8-bit DIB section. The colors used for the color table are the same colors as the halftone palette.
 	// ILC_COLOR16	Use a 16-bit (32/64k-color) DIB section.
 	// ILC_COLOR24	Use a 24-bit DIB section.
 	// ILC_COLOR32  Use a 32-bit DIB section.
 	// ILC_COLORDDB	Use a device-dependent bitmap.
-	// ILC_MASK		Use a mask. The image list contains two bitmaps, one of which is a monochrome bitmap used as a mask. 
+	// ILC_MASK		Use a mask. The image list contains two bitmaps, one of which is a monochrome bitmap used as a mask.
 	//				If this value is not included, the image list contains only one bitmap.
 	{
 		assert(NULL == m_hImageList);
@@ -239,16 +239,16 @@ namespace Win32xx
 		if (m_hImageList)
 			AddToMap();
 
-		return (BOOL)m_hImageList;
+		return ( m_hImageList!= 0 );
 	}
 
 	inline BOOL CImageList::Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask)
 	// Creates a new image list.
 	//
-	// cx		The width of each image. 
+	// cx		The width of each image.
 	// nGrow	The number of images by which the image list can grow when the system needs to make room for new images.
-	// crMask	The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black, 
-	//			and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated. 
+	// crMask	The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
+	//			and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
 	{
 		assert(NULL == m_hImageList);
 
@@ -259,10 +259,10 @@ namespace Win32xx
 	inline BOOL CImageList::Create(LPCTSTR lpszBitmapID, int cx, int nGrow, COLORREF crMask)
 	// Creates a new image list.
 	//
-	// cx		The width of each image. 
+	// cx		The width of each image.
 	// nGrow	The number of images by which the image list can grow when the system needs to make room for new images.
-	// crMask	The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black, 
-	//			and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated. 
+	// crMask	The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
+	//			and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
 	{
 		assert(NULL == m_hImageList);
 		m_hImageList = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
@@ -270,7 +270,7 @@ namespace Win32xx
 		if (m_hImageList)
 			AddToMap();
 
-		return (BOOL)m_hImageList;
+		return ( m_hImageList!= 0 );
 	}
 
 #if (_WIN32_IE >= 0x0400)
@@ -283,7 +283,7 @@ namespace Win32xx
 		if (m_hImageList)
 			AddToMap();
 
-		return (BOOL)m_hImageList;
+		return ( m_hImageList!= 0 );
 	}
 #endif
 
@@ -307,25 +307,25 @@ namespace Win32xx
 	}
 
 	inline BOOL CImageList::DragEnter(CWnd* pWndLock, CPoint point) const
-	// Displays the drag image at the specified position within the window. 
+	// Displays the drag image at the specified position within the window.
 	{
 		assert(m_hImageList);
 		return ImageList_DragEnter(*pWndLock, point.x, point.y);
 	}
 
 	inline BOOL CImageList::DragLeave(CWnd* pWndLock) const
-	// Unlocks the specified window and hides the drag image, allowing the window to be updated. 
+	// Unlocks the specified window and hides the drag image, allowing the window to be updated.
 	{
 		return ImageList_DragLeave(*pWndLock);
 	}
 
 	inline BOOL CImageList::DragMove(CPoint pt) const
-	// Moves the image that is being dragged during a drag-and-drop operation. 
-	// This function is typically called in response to a WM_MOUSEMOVE message. 
+	// Moves the image that is being dragged during a drag-and-drop operation.
+	// This function is typically called in response to a WM_MOUSEMOVE message.
 	{
 		return ImageList_DragMove(pt.x, pt.y);
 	}
- 
+
 	inline BOOL CImageList::DragShowNolock(BOOL bShow) const
 	// Shows or hides the drag image during a drag operation, without locking the window.
 	{
@@ -340,22 +340,22 @@ namespace Win32xx
 	}
 
 	inline BOOL CImageList::DrawEx(CDC* pDC, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const
-	// Draws an image list item in the specified device context. The function uses the specified drawing style 
-	// and blends the image with the specified color. 
+	// Draws an image list item in the specified device context. The function uses the specified drawing style
+	// and blends the image with the specified color.
 	//
 	// nStyle can have the following values:
-	// ILD_BLEND25, ILD_FOCUS	
-	//   Draws the image, blending 25 percent with the blend color specified by rgbFg. 
+	// ILD_BLEND25, ILD_FOCUS
+	//   Draws the image, blending 25 percent with the blend color specified by rgbFg.
 	// 	 This value has no effect if the image list does not contain a mask.
 	// ILD_BLEND50, ILD_SELECTED, ILD_BLEND
-	//   Draws the image, blending 50 percent with the blend color specified by rgbFg. 
+	//   Draws the image, blending 50 percent with the blend color specified by rgbFg.
 	//   This value has no effect if the image list does not contain a mask.
 	// ILD_MASK 	Draws the mask.
-	// ILD_NORMAL	Draws the image using the background color for the image list. If the 
+	// ILD_NORMAL	Draws the image using the background color for the image list. If the
 	//				background color is the CLR_NONE value, the image is drawn transparently using the mask.
-	// ILD_TRANSPARENT 		Draws the image transparently using the mask, regardless of the background color. 
+	// ILD_TRANSPARENT 		Draws the image transparently using the mask, regardless of the background color.
 	//						This value has no effect if the image list does not contain a mask.
-	// ILD_IMAGE	If the overlay does not require a mask to be drawn set the ILD_IMAGE flag. 
+	// ILD_IMAGE	If the overlay does not require a mask to be drawn set the ILD_IMAGE flag.
 	//				This causes ImageList_DrawEx to just draw the image, ignoring the mask.
 	{
 		assert(m_hImageList);
