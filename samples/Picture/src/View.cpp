@@ -5,14 +5,12 @@
 
 #include "stdafx.h"
 #include "PictureApp.h"
-#include "Mainfrm.h"
 #include "view.h"
 #include "resource.h"
 
 #define HIMETRIC_INCH	2540
 
-CView::CView() : m_pPicture(NULL),m_BStrString(NULL),
-					m_xCurrentScroll(0), m_yCurrentScroll(0)
+CView::CView() : m_pPicture(NULL), m_xCurrentScroll(0), m_yCurrentScroll(0)
 {
 	::CoInitialize(NULL);
 }
@@ -79,9 +77,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 	{
-		GetParent()->SetWindowText(szFile);
-		CMainFrame* pMainFrame = GetPicApp()->GetMainFrame();
-		pMainFrame->AdjustFrameRect(GetImageRect());
+		GetParent()->SendMessageW(UWM_FILELOADED, 0, (LPARAM)szFile);
 		Invalidate();
 		return TRUE;
 	}
@@ -90,7 +86,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 		TRACE("Failed to load picture\n");
 
 		// Set Frame title back to default
-		GetParent()->SetWindowText(LoadString(IDW_MAIN).c_str());
+		GetParent()->SendMessageW(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
 		return FALSE;
 	}
 }
@@ -114,12 +110,7 @@ LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
 		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
 		FileName.ReleaseBuffer();
 
-		if ( LoadPictureFile(FileName) )
-		{
-			CRect rcImage = GetImageRect();
-			GetPicApp()->GetMainFrame()->AdjustFrameRect(rcImage);
-		}
-		else
+		if ( !LoadPictureFile(FileName) )
 			NewPictureFile();
 
 		DragFinish(hDrop);
@@ -133,20 +124,8 @@ void CView::OnInitialUpdate()
 	m_Brush.CreateSolidBrush(RGB(0,0,0));
 	SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
 
+	// Support Drag and Drop on this window
 	DragAcceptFiles(TRUE);
-
-	// Load picture at startup
-	TCHAR szPath[MAX_STRING_SIZE];
-	TCHAR szFile[] = _T("/PongaFern.jpg");
-	GetCurrentDirectory(MAX_STRING_SIZE - lstrlen(szFile) , szPath);
-	lstrcat(szPath, _T("./PongaFern.jpg"));
-
-	if (LoadPictureFile(szPath))
-	{
-		CMainFrame* pMainFrame = GetPicApp()->GetMainFrame();
-		CRect rcImage = GetImageRect();
-		pMainFrame->AdjustFrameRect(rcImage);
-	}
 }
 
 LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)

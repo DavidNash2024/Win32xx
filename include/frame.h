@@ -2807,52 +2807,44 @@ namespace Win32xx
 		HKEY hKey = NULL;
 		BOOL bRet = FALSE;
 
-		try
+		m_nMaxMRU = MIN(nMaxMRU, 16);
+		std::vector<CString> vMRUEntries;
+		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
+
+		if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 		{
-			m_nMaxMRU = MIN(nMaxMRU, 16);
-			std::vector<CString> vMRUEntries;
-			CString strKey = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
-
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
+			CString PathName;
+			CString SubKey;
+			for (UINT i = 0; i < m_nMaxMRU; ++i)
 			{
-				CString PathName;
-				CString SubKey;
-				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				DWORD dwType = REG_SZ;
+				DWORD dwBufferSize = 0;
+				SubKey.Format(_T("File %d"), i+1);
+
+				if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKey, NULL, &dwType, NULL, &dwBufferSize))
 				{
-					DWORD dwType = REG_SZ;
-					DWORD dwBufferSize = 0;
-					SubKey.Format(_T("File %d"), i+1);
-
-					if (ERROR_SUCCESS != RegQueryValueEx(hKey, SubKey, NULL, &dwType, NULL, &dwBufferSize))
-						throw CWinException(_T("RegQueryValueEx failed\n"));
-
 					// load the entry from the registry
-					if (ERROR_SUCCESS != RegQueryValueEx(hKey, SubKey, NULL, &dwType, (LPBYTE)PathName.GetBuffer(dwBufferSize), &dwBufferSize))
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKey, NULL, &dwType, (LPBYTE)PathName.GetBuffer(dwBufferSize), &dwBufferSize))
 					{
 						PathName.ReleaseBuffer();
-						throw CWinException(_T("RegQueryValueEx failed\n"));
+
+						if (PathName.GetLength() > 0)
+							vMRUEntries.push_back( PathName );
 					}
-					
-					PathName.ReleaseBuffer();
-
-					if (PathName.GetLength() > 0)
-						vMRUEntries.push_back( PathName );
+					else
+					{
+						PathName.ReleaseBuffer();
+						TRACE(_T("CFrame::LoadRegistryMRUSettings: RegQueryValueEx failed\n"));
+						if (hKey)
+							RegCloseKey(hKey);
+					}
 				}
-
-				// successfully loaded all MRU values, so store them
-				m_vMRUEntries = vMRUEntries;
-				RegCloseKey(hKey);
-				bRet = TRUE;
 			}
-		}
 
-		catch(const CWinException& e)
-		{
-			TRACE("Failed to load MRU values from registry\n");
-			e.what();
-
-			if (hKey)
-				RegCloseKey(hKey);
+			// successfully loaded all MRU values, so store them
+			m_vMRUEntries = vMRUEntries;
+			RegCloseKey(hKey);
+			bRet = TRUE;
 		}
 
 		return bRet;
@@ -3742,10 +3734,12 @@ namespace Win32xx
 						SubKey.Format(_T("File %d"), i+1);
 						
 						if (i < m_vMRUEntries.size())
+						{
 							strPathName = m_vMRUEntries[i];
 
-						if (ERROR_SUCCESS != RegSetValueEx(hKey, SubKey, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
-							throw CWinException(_T("RegSetValueEx failed"));
+							if (ERROR_SUCCESS != RegSetValueEx(hKey, SubKey, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
+								throw CWinException(_T("RegSetValueEx failed"));
+						}
 					}
 
 					RegCloseKey(hKey);

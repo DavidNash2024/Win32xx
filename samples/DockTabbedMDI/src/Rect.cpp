@@ -36,9 +36,11 @@ LRESULT CViewRect::OnSize(WPARAM wParam, LPARAM lParam)
 }
 
 LRESULT CViewRect::OnTimer(WPARAM wParam, LPARAM lParam)
+// Display a random rectangle
 {
-	 // Display a random rectangle
-
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+	
 	int nRed, nGreen, nBlue;
 	int xLeft, xRight, yTop, yBottom;
 	xLeft   = rand () % m_cxClientMax;

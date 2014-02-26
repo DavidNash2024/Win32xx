@@ -3,7 +3,8 @@
 
 #include "stdafx.h"
 #include "resource.h"
-#include "mainfrm.h"
+#include "PictureApp.h"
+#include "Mainfrm.h"
 
 
 // Definitions for the CMainFrame class
@@ -17,6 +18,9 @@ CMainFrame::CMainFrame()
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
 	LoadRegistrySettings(_T("Win32++\\Picture Sample"));
+
+	// Load the settings from the registry with 4 MRU entries
+	LoadRegistryMRUSettings(4);
 }
 
 CMainFrame::~CMainFrame()
@@ -40,6 +44,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+
+	case IDW_FILE_MRU_FILE1:
+	case IDW_FILE_MRU_FILE2:
+	case IDW_FILE_MRU_FILE3:
+	case IDW_FILE_MRU_FILE4:
+	case IDW_FILE_MRU_FILE5:	OnFileMRU(wParam);	return TRUE;
 	}
 
 	return FALSE;
@@ -56,6 +66,19 @@ void CMainFrame::OnFileExit()
 	Destroy();
 }
 
+void CMainFrame::OnFileMRU(WPARAM wParam)
+{
+	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+	CString strMRUText = GetMRUEntry(nMRUIndex);
+
+	if (!m_View.LoadPictureFile(strMRUText))
+	{
+		RemoveMRUEntry(strMRUText);
+		m_View.NewPictureFile();
+		MessageBox(_T("Failed to load File"), _T("Error"), MB_OK);
+	}
+}
+
 void CMainFrame::OnFileNew()
 {
 	m_View.NewPictureFile();
@@ -70,22 +93,54 @@ void CMainFrame::OnFileOpen()
 	if (!str.IsEmpty())
 	{
 		m_View.LoadPictureFile(str);
-		CRect rcImage = m_View.GetImageRect();
-		AdjustFrameRect(rcImage);
 	}
+}
+
+LRESULT CMainFrame::OnFileLoaded(LPCTSTR szFile)
+{
+	SetWindowText(szFile);
+	AdjustFrameRect(m_View.GetImageRect());
+	AddMRUEntry(szFile);
+	return 0L;	 
 }
 
 void CMainFrame::OnFileSaveAs()
 {
 	if (m_View.GetPicture())
 	{
-		TCHAR szFilter[] = _T("*.bmp\0");
+		SHORT Type;
+		m_View.GetPicture()->get_Type(&Type);
+		TCHAR* szFilter = NULL;
+		TCHAR* szExt = NULL;
+
+		// Note: iPicture doesn't convert between file types
+		switch(Type)
+		{
+		case PICTYPE_BITMAP:
+			szFilter = _T("Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0"); 
+			szExt = _T("bmp");
+			break;
+		case PICTYPE_METAFILE:
+			szFilter = _T("Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0");
+			szExt = _T("wmf");
+			break;
+		case PICTYPE_ICON:
+			szFilter = _T("Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0");
+			szExt = _T("ico");
+			break;
+		case PICTYPE_ENHMETAFILE:
+			szFilter = _T("Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0");
+			szExt = _T("emf");
+			break;
+		}
+	
 		CFile File;
-		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, _T("Open File"), szFilter, _T("bmp"), this);
+		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, _T("Save File"), szFilter, szExt, this);
 		
 		if (!str.IsEmpty())
 		{
 			m_View.SavePicture(str);
+			AddMRUEntry(str);
 		}
 	}
 }
@@ -114,10 +169,18 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-//		Add case statements for each messages to be handled here
-//	}
+	switch (uMsg)
+	{
+	// A message defined in PictureApp.h
+	case UWM_FILELOADED: return OnFileLoaded((LPCTSTR) lParam);
+	/*	{
+			LPCTSTR szFile = (LPCTSTR)lParam;
+			SetWindowText(szFile);
+			AdjustFrameRect(m_View.GetImageRect());
+			AddMRUEntry(szFile);
+			return 0L;
+		} */
+	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

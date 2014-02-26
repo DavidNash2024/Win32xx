@@ -259,7 +259,7 @@ namespace Win32xx
 		case WM_DESTROY:
 			{
 				OnDestroy();
-				return 0L;
+				break;
 			}
 
 		case WM_NOTIFY:

@@ -327,6 +327,9 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::OnMouseActivate(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
 	// Store the active docker before processing the menu events
 	m_pLastActiveDocker = m_DockTabbedMDI.GetActiveDocker();
 

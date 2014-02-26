@@ -43,7 +43,7 @@ devenv /build Debug Explorer\ProjectFiles\Explorer_2005.sln                     
 devenv /build Release Explorer\ProjectFiles\Explorer_2005.sln                   >>"..\output\VS2005.log"
 devenv /build Debug FastGDI\ProjectFiles\FastGDI_2005.sln                       >>"..\output\VS2005.log"
 devenv /build Release FastGDI\ProjectFiles\FastGDI_2005.sln                     >>"..\output\VS2005.log"
-devenv /build Debug FormDDocView\ProjectFiles\FormDemo_2005.sln                 >>"..\output\VS2005.log"
+devenv /build Debug FormDocView\ProjectFiles\FormDemo_2005.sln                  >>"..\output\VS2005.log"
 devenv /build Release FormDocView\ProjectFiles\FormDemo_2005.sln                >>"..\output\VS2005.log"
 devenv /build Debug Frame\ProjectFiles\Frame_2005.sln                           >>"..\output\VS2005.log"
 devenv /build Release Frame\ProjectFiles\Frame_2005.sln                         >>"..\output\VS2005.log"

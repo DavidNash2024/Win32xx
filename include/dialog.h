@@ -328,7 +328,7 @@ namespace Win32xx
 
 		case WM_DESTROY:
 			OnDestroy();
-			return 0L;
+			break;
 		case WM_NOTIFY:
 			{
 				// Do Notification reflection if it came from a CWnd object
@@ -889,6 +889,8 @@ namespace Win32xx
 		si.nPos   = m_yScrollPos;
 		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
 
+		rcCurrent = m_pParent->GetClientRect();
+
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
     	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
     	if (!m_rcMax.IsRectEmpty())
@@ -942,7 +944,6 @@ namespace Win32xx
 			{
 				CWnd* pWnd = FromHandle((*iter).hWnd);
 				CWnd *pWndPrev = pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
-			//	HWND hWnd = pWndPrev ? pWndPrev->GetHwnd():NULL;
 				pWnd->SetWindowPos(pWndPrev, rc, SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
 			}
