@@ -101,7 +101,7 @@ LRESULT CMainFrame::OnFileLoaded(LPCTSTR szFile)
 	SetWindowText(szFile);
 	AdjustFrameRect(m_View.GetImageRect());
 	AddMRUEntry(szFile);
-	return 0L;	 
+	return 0L;
 }
 
 void CMainFrame::OnFileSaveAs()
@@ -110,33 +110,33 @@ void CMainFrame::OnFileSaveAs()
 	{
 		SHORT Type;
 		m_View.GetPicture()->get_Type(&Type);
-		TCHAR* szFilter = NULL;
-		TCHAR* szExt = NULL;
+        CString Filter;
+        CString Ext;
 
 		// Note: iPicture doesn't convert between file types
 		switch(Type)
 		{
 		case PICTYPE_BITMAP:
-			szFilter = _T("Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0"); 
-			szExt = _T("bmp");
+			Filter = _T("Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0");
+			Ext = _T("bmp");
 			break;
 		case PICTYPE_METAFILE:
-			szFilter = _T("Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0");
-			szExt = _T("wmf");
+			Filter = _T("Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0");
+			Ext = _T("wmf");
 			break;
 		case PICTYPE_ICON:
-			szFilter = _T("Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0");
-			szExt = _T("ico");
+			Filter = _T("Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0");
+			Ext = _T("ico");
 			break;
 		case PICTYPE_ENHMETAFILE:
-			szFilter = _T("Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0");
-			szExt = _T("emf");
+			Filter = _T("Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0");
+			Ext = _T("emf");
 			break;
 		}
-	
+
 		CFile File;
-		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, _T("Save File"), szFilter, szExt, this);
-		
+		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, _T("Save File"), Filter, Ext, this);
+
 		if (!str.IsEmpty())
 		{
 			m_View.SavePicture(str);
@@ -146,12 +146,12 @@ void CMainFrame::OnFileSaveAs()
 }
 
 void CMainFrame::SetupToolBar()
-{	
+{
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW   );
 	AddToolBarButton( IDM_FILE_OPEN  );
 	AddToolBarButton( IDM_FILE_SAVE  );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_EDIT_CUT,   FALSE );
 	AddToolBarButton( IDM_EDIT_COPY,  FALSE );
@@ -159,7 +159,7 @@ void CMainFrame::SetupToolBar()
 
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_FILE_PRINT, FALSE );
-	
+
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
 
@@ -173,13 +173,6 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// A message defined in PictureApp.h
 	case UWM_FILELOADED: return OnFileLoaded((LPCTSTR) lParam);
-	/*	{
-			LPCTSTR szFile = (LPCTSTR)lParam;
-			SetWindowText(szFile);
-			AdjustFrameRect(m_View.GetImageRect());
-			AddMRUEntry(szFile);
-			return 0L;
-		} */
 	}
 
 	// pass unhandled messages on for default processing

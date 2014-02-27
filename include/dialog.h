@@ -761,6 +761,8 @@ namespace Win32xx
     	m_rcMin = rcMin;
     	m_rcMax = rcMax;
 
+		m_vResizeData.clear();
+
 		// Add scroll bar support to the parent window
 		DWORD dwStyle = (DWORD)m_pParent->GetClassLongPtr(GCL_STYLE);
 		dwStyle |= WS_HSCROLL | WS_VSCROLL;

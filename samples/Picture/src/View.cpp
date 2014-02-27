@@ -77,7 +77,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 	{
-		GetParent()->SendMessageW(UWM_FILELOADED, 0, (LPARAM)szFile);
+		GetParent()->SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
 		Invalidate();
 		return TRUE;
 	}
@@ -86,7 +86,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 		TRACE("Failed to load picture\n");
 
 		// Set Frame title back to default
-		GetParent()->SendMessageW(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
+		GetParent()->SendMessage(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
 		return FALSE;
 	}
 }

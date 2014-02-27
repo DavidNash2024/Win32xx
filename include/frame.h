@@ -2194,190 +2194,192 @@ namespace Win32xx
 	inline LRESULT CFrame::CustomDrawToolBar(NMHDR* pNMHDR)
 	// With CustomDraw we manually control the drawing of each toolbar button
 	{
-		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-		CToolBar* pTB = (CToolBar*)FromHandle(pNMHDR->hwndFrom);
-		ToolBarTheme TBTheme = m_ToolBarTheme;
-
-		switch (lpNMCustomDraw->nmcd.dwDrawStage)
+		if (m_ToolBarTheme.UseThemes)
 		{
-		// Begin paint cycle
-		case CDDS_PREPAINT:
-			// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
-			return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
+			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+			CToolBar* pTB = (CToolBar*)FromHandle(pNMHDR->hwndFrom);
 
-		// An item is about to be drawn
-		case CDDS_ITEMPREPAINT:
+			switch (lpNMCustomDraw->nmcd.dwDrawStage)
 			{
-				CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
-				CRect rcRect = lpNMCustomDraw->nmcd.rc;
-				int nState = lpNMCustomDraw->nmcd.uItemState;
-				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
-				DWORD dwTBStyle = (DWORD)pTB->SendMessage(TB_GETSTYLE, 0L, 0L);
-				int nStyle = pTB->GetButtonStyle(dwItem);
+			// Begin paint cycle
+			case CDDS_PREPAINT:
+				// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
+				return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
 
-				int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
-				TBBUTTON tbb = {0};
-				pTB->SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
-				int iImage = (int)tbb.iBitmap;
-
-				// Calculate text size
-				CString str;
-				CSize TextSize;
-				if (pTB->HasText())	// Does any button have text?
+			// An item is about to be drawn
+			case CDDS_ITEMPREPAINT:
 				{
-					DrawDC.SelectObject(pTB->GetFont());
-					LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
-					str.ReleaseBuffer();
-					if (lr> 0)
+					CDC DrawDC(lpNMCustomDraw->nmcd.hdc);
+					CRect rcRect = lpNMCustomDraw->nmcd.rc;
+					int nState = lpNMCustomDraw->nmcd.uItemState;
+					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+					DWORD dwTBStyle = (DWORD)pTB->SendMessage(TB_GETSTYLE, 0L, 0L);
+					int nStyle = pTB->GetButtonStyle(dwItem);
+
+					int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
+					TBBUTTON tbb = {0};
+					pTB->SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
+					int iImage = (int)tbb.iBitmap;
+
+					// Calculate text size
+					CString str;
+					CSize TextSize;
+					if (pTB->HasText())	// Does any button have text?
 					{
-						TextSize = DrawDC.GetTextExtentPoint32(str, lstrlen(str));
-					}
-				}
-
-
-				// Draw outline rectangle
-				if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
-				{
-					DrawDC.CreatePen(PS_SOLID, 1, TBTheme.clrOutline);
-					DrawDC.MoveTo(rcRect.left, rcRect.top);
-					DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
-					DrawDC.LineTo(rcRect.right-1, rcRect.bottom-1);
-					DrawDC.LineTo(rcRect.right-1, rcRect.top);
-					DrawDC.LineTo(rcRect.left, rcRect.top);
-				}
-
-				// Draw filled gradient background
-				rcRect.InflateRect(-1, -1);
-				if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(dwItem) & TBSTATE_PRESSED))
-				{
-					DrawDC.GradientFill(TBTheme.clrPressed1, TBTheme.clrPressed2, rcRect, FALSE);
-				}
-				else if (nState & CDIS_HOT)
-				{
-					DrawDC.GradientFill(TBTheme.clrHot1, TBTheme.clrHot2, rcRect, FALSE);
-				}
-
-				// Get the appropriate image list depending on the button state
-				CImageList* pimlToolBar;
-				if (nState & CDIS_DISABLED)
-				{
-					pimlToolBar = pTB->GetDisabledImageList();
-				}
-				else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
-				{
-					pimlToolBar = pTB->GetHotImageList();
-					if (0 == pimlToolBar)
-						pimlToolBar = pTB->GetImageList();
-				}
-				else
-				{
-					pimlToolBar = pTB->GetImageList();
-				}
-
-				BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
-
-				// Calculate image position
-				int cxImage = 0;
-				int cyImage = 0;
-				pimlToolBar->GetIconSize(&cxImage, &cyImage);
-
-				int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
-				int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
-				if (dwTBStyle & TBSTYLE_LIST)
-				{
-					xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
-					yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
-				}
-
-				// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
-				if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
-				{
-					// Calculate the dropdown arrow position
-					int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
-					int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (cyImage)/2;
-					if (dwTBStyle & TBSTYLE_LIST)
-					{
-						xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
-						yAPos =	(rcRect.bottom - rcRect.top +1)/2 + ((nStyle & TBSTYLE_DROPDOWN)?0:1);
+						DrawDC.SelectObject(pTB->GetFont());
+						LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
+						str.ReleaseBuffer();
+						if (lr> 0)
+						{
+							TextSize = DrawDC.GetTextExtentPoint32(str, lstrlen(str));
+						}
 					}
 
-					xImage -= (nStyle & TBSTYLE_DROPDOWN)?((dwTBStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((dwTBStyle & TBSTYLE_LIST)? 0:4);
 
-					// Draw separate background for dropdown arrow
-					if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
+					// Draw outline rectangle
+					if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 					{
-						CRect rcArrowBkgnd = rcRect;
-						rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-						DrawDC.GradientFill(TBTheme.clrPressed1, TBTheme.clrPressed2, rcArrowBkgnd, FALSE);
+						DrawDC.CreatePen(PS_SOLID, 1, m_ToolBarTheme.clrOutline);
+						DrawDC.MoveTo(rcRect.left, rcRect.top);
+						DrawDC.LineTo(rcRect.left, rcRect.bottom-1);
+						DrawDC.LineTo(rcRect.right-1, rcRect.bottom-1);
+						DrawDC.LineTo(rcRect.right-1, rcRect.top);
+						DrawDC.LineTo(rcRect.left, rcRect.top);
 					}
 
-					m_bDrawArrowBkgrnd = FALSE;
-
-					// Manually draw the dropdown arrow
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
-					for (int i = 2; i >= 0; --i)
+					// Draw filled gradient background
+					rcRect.InflateRect(-1, -1);
+					if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(dwItem) & TBSTATE_PRESSED))
 					{
-						DrawDC.MoveTo(xAPos -i-1, yAPos - i+1);
-						DrawDC.LineTo(xAPos +i,   yAPos - i+1);
+						DrawDC.GradientFill(m_ToolBarTheme.clrPressed1, m_ToolBarTheme.clrPressed2, rcRect, FALSE);
+					}
+					else if (nState & CDIS_HOT)
+					{
+						DrawDC.GradientFill(m_ToolBarTheme.clrHot1, m_ToolBarTheme.clrHot2, rcRect, FALSE);
 					}
 
-					// Draw line between icon and dropdown arrow
-					if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
+					// Get the appropriate image list depending on the button state
+					CImageList* pimlToolBar;
+					if (nState & CDIS_DISABLED)
 					{
-						DrawDC.CreatePen(PS_SOLID, 1, TBTheme.clrOutline);
-						DrawDC.MoveTo(rcRect.right - 13, rcRect.top);
-						DrawDC.LineTo(rcRect.right - 13, rcRect.bottom);
+						pimlToolBar = pTB->GetDisabledImageList();
 					}
-				}
-
-				// Draw the button image
-				if (xImage > 0)
-				{
-					pimlToolBar->Draw(&DrawDC, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
-				}
-
-				//Draw Text
-				if (lstrlen(str) > 0)
-				{
-					int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
-					CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
-
-					int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
-					int yOffset = yImage + cyImage +1;
-
-					if (dwTBStyle & TBSTYLE_LIST)
+					else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 					{
-						xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
-						yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
-						rcText.right = MIN(rcText.right,  rcRect.right - xOffset);
-					}
-
-					OffsetRect(&rcText, xOffset, yOffset);
-
-					int iMode = DrawDC.SetBkMode(TRANSPARENT);
-					DrawDC.SelectObject(pTB->GetFont());
-
-					if (nState & (CDIS_DISABLED))
-					{
-						// Draw text twice for embossed look
-						rcText.OffsetRect(1, 1);
-						DrawDC.SetTextColor(RGB(255,255,255));
-						DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT);
-						rcText.OffsetRect(-1, -1);
-						DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-						DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT);
+						pimlToolBar = pTB->GetHotImageList();
+						if (0 == pimlToolBar)
+							pimlToolBar = pTB->GetImageList();
 					}
 					else
 					{
-						DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
-						DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT | DT_END_ELLIPSIS);
+						pimlToolBar = pTB->GetImageList();
 					}
-					DrawDC.SetBkMode(iMode);
 
+					BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
+
+					// Calculate image position
+					int cxImage = 0;
+					int cyImage = 0;
+					pimlToolBar->GetIconSize(&cxImage, &cyImage);
+
+					int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
+					int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+					if (dwTBStyle & TBSTYLE_LIST)
+					{
+						xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
+						yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+					}
+
+					// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
+					if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
+					{
+						// Calculate the dropdown arrow position
+						int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
+						int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (cyImage)/2;
+						if (dwTBStyle & TBSTYLE_LIST)
+						{
+							xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
+							yAPos =	(rcRect.bottom - rcRect.top +1)/2 + ((nStyle & TBSTYLE_DROPDOWN)?0:1);
+						}
+
+						xImage -= (nStyle & TBSTYLE_DROPDOWN)?((dwTBStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((dwTBStyle & TBSTYLE_LIST)? 0:4);
+
+						// Draw separate background for dropdown arrow
+						if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
+						{
+							CRect rcArrowBkgnd = rcRect;
+							rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
+							DrawDC.GradientFill(m_ToolBarTheme.clrPressed1, m_ToolBarTheme.clrPressed2, rcArrowBkgnd, FALSE);
+						}
+
+						m_bDrawArrowBkgrnd = FALSE;
+
+						// Manually draw the dropdown arrow
+						DrawDC.CreatePen(PS_SOLID, 1, RGB(0,0,0));
+						for (int i = 2; i >= 0; --i)
+						{
+							DrawDC.MoveTo(xAPos -i-1, yAPos - i+1);
+							DrawDC.LineTo(xAPos +i,   yAPos - i+1);
+						}
+
+						// Draw line between icon and dropdown arrow
+						if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
+						{
+							DrawDC.CreatePen(PS_SOLID, 1, m_ToolBarTheme.clrOutline);
+							DrawDC.MoveTo(rcRect.right - 13, rcRect.top);
+							DrawDC.LineTo(rcRect.right - 13, rcRect.bottom);
+						}
+					}
+
+					// Draw the button image
+					if (xImage > 0)
+					{
+						pimlToolBar->Draw(&DrawDC, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
+					}
+
+					//Draw Text
+					if (lstrlen(str) > 0)
+					{
+						int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
+						CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
+
+						int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
+						int yOffset = yImage + cyImage +1;
+
+						if (dwTBStyle & TBSTYLE_LIST)
+						{
+							xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
+							yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
+							rcText.right = MIN(rcText.right,  rcRect.right - xOffset);
+						}
+
+						OffsetRect(&rcText, xOffset, yOffset);
+
+						int iMode = DrawDC.SetBkMode(TRANSPARENT);
+						DrawDC.SelectObject(pTB->GetFont());
+
+						if (nState & (CDIS_DISABLED))
+						{
+							// Draw text twice for embossed look
+							rcText.OffsetRect(1, 1);
+							DrawDC.SetTextColor(RGB(255,255,255));
+							DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT);
+							rcText.OffsetRect(-1, -1);
+							DrawDC.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
+							DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT);
+						}
+						else
+						{
+							DrawDC.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+							DrawDC.DrawText(str, lstrlen(str), rcText, DT_LEFT | DT_END_ELLIPSIS);
+						}
+						DrawDC.SetBkMode(iMode);
+
+					}
+					DrawDC.Detach();
 				}
-				DrawDC.Detach();
+				return CDRF_SKIPDEFAULT;  // No further drawing
 			}
-			return CDRF_SKIPDEFAULT;  // No further drawing
 		}
 		return 0L;
 	}
@@ -2413,7 +2415,7 @@ namespace Win32xx
 			{
 				CRect rc = pdis->rcItem;
 				CRect rcSep = pdis->rcItem;
-				rcSep.left = m_pMenuMetrics->GetGutterRect(rc).Width() + 2;
+				rcSep.left = m_pMenuMetrics->GetGutterRect(rc).Width();
 				DrawDC.SolidFill(RGB(255,255,255), rcSep);
 				rcSep.top += (rc.bottom - rc.top)/2;
 				DrawDC.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
@@ -4011,12 +4013,6 @@ namespace Win32xx
 				}
 				break;
 			}
-		}
-		else
-		{
-			// Use a classic style by default
-			ReBarTheme tr = {T, 0, 0, 0, 0, F, T, T, F, F, F};
-			m_ReBarTheme = tr;
 		}
 
 		RecalcLayout();
