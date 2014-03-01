@@ -7,10 +7,10 @@
 // include the Resource IDs defined by Win32++
 #include "default_resource.h"
 
-#define IDS_APP_TITLE           100
-#define IDI_SIMPLERIBBON        101
-#define IDI_SMALL               102
-#define IDC_SIMPLERIBBON        103
+#define IDS_APP_TITLE           120
+#define IDI_SIMPLERIBBON        121
+#define IDI_SMALL               122
+#define IDC_SIMPLERIBBON        123
 
 // Next default values for new objects
 // 

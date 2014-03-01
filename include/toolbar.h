@@ -267,7 +267,7 @@ namespace Win32xx
 	}
 
 	inline void CToolBar::Customize() const
-	// Displays the Customize Toolbar dialog box. The toolbar must handle the TBN_QUERYINSERT 
+	// Displays the Customize Toolbar dialog box. The parent must handle the TBN_QUERYINSERT 
 	// and TBN_QUERYDELETE notifications for the Customize Toolbar dialog box to appear.
 	// Requires the CCS_ADJUSTABLE style to be set when the toolbar is created.
 	{
@@ -824,14 +824,14 @@ namespace Win32xx
 
 				str = _T(" ");
 				str += _T('\0');	// Double-null terminate
-				SendMessage(TB_ADDSTRING, 0L, (LPARAM)str.c_str());
+				AddStrings(str);
 			}
 
 			// No index for this string exists, so create it now
 			str = szText;
 			str += _T('\0');		// Double-null terminate
 
-			iString = (int)SendMessage(TB_ADDSTRING, 0L, (LPARAM)str.c_str());
+			iString = AddStrings(str);
 			if (-1 == iString )
 				Succeeded = FALSE;
 

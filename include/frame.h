@@ -2016,7 +2016,7 @@ namespace Win32xx
 		GetReBar()->InsertBand(-1, rbbi);
 	}
 
-	inline void CFrame::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText)
+	inline void CFrame::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
@@ -3307,7 +3307,7 @@ namespace Win32xx
 		case RBN_HEIGHTCHANGE:	return OnRBNHeightChange(pNMHDR);
 		case RBN_LAYOUTCHANGED:	return OnRBNLayoutChanged(pNMHDR);
 		case RBN_MINMAX:		return OnRBNMinMax(pNMHDR);
-		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR) lParam);
+		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR)lParam);
 		case TTN_GETDISPINFO:	return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
 		case UWN_UNDOCKED:		return OnUndocked();
 		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam); 
@@ -3367,37 +3367,35 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI)
+	// Tool tip notification for the toolbar
 	{
 		// Tool tip notification for the toolbar
 		
-		if (GetToolBar()->IsWindow())
-		{
-			CToolBar* pToolBar = 0;
-			if (IsReBarUsed())
-			{
-				// Get the ToolBar's CWnd
-				CWnd* pWnd = FromHandle(GetReBar()->HitTest(GetCursorPos()));
-				if (dynamic_cast<CToolBar*> (pWnd))
-				{
-					pToolBar = (CToolBar*)pWnd;
-				}
-			}
+		CToolBar* pToolBar = 0;
 
-			if (pToolBar)
+		// Find the ToolBar that generated the tooltip
+		CPoint pt(GetMessagePos());
+		CWnd* pWnd = WindowFromPoint(pt);
+		if (dynamic_cast<CToolBar*> (pWnd))
+		{
+			pToolBar = (CToolBar*)pWnd;
+		}
+
+		// Set the tooltip's text from the ToolBar button's CommandID
+		if (pToolBar)
+		{
+			LPNMTTDISPINFO lpDispInfo = pNMTDI;
+			int iIndex =  pToolBar->HitTest();
+			if (iIndex >= 0)
 			{
-				LPNMTTDISPINFO lpDispInfo = pNMTDI;
-				int iIndex =  pToolBar->HitTest();
-				if (iIndex >= 0)
+				int nID = pToolBar->GetCommandID(iIndex);
+				if (nID > 0)
 				{
-					int nID = pToolBar->GetCommandID(iIndex);
-					if (nID > 0)
-					{
-						m_strTooltip = LoadString(nID);
-						lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
-					}
-					else
-						m_strTooltip = _T("");
+					m_strTooltip = LoadString(nID);
+					lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
 				}
+				else
+					m_strTooltip = _T("");
 			}
 		}
 			
@@ -3726,6 +3724,10 @@ namespace Win32xx
 
 				try
 				{
+					// Delete Old MRUs
+					RegDeleteKey(HKEY_CURRENT_USER, strKeyName);
+
+					// Add Current MRUs
 					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 						throw CWinException(_T("RegCreateKeyEx failed"));
 

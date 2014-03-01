@@ -107,7 +107,7 @@ namespace Win32xx
 		CPoint(POINT pt)					{ x = pt.x ; y = pt.y; }
 		CPoint(POINTS pts)					{ x = pts.x; y = pts.y; }
 		CPoint(SIZE sz)						{ x = sz.cx; y = sz.cy; }
-		CPoint(DWORD dw)					{ x = (short) LOWORD(dw); y = (short) HIWORD(dw); }
+		CPoint(LPARAM dwPos)				{ x = GET_X_LPARAM(dwPos); y = GET_Y_LPARAM(dwPos); }
 
 		void Offset(int dx, int dy)			{ x += dx; y += dy; }
 		void Offset(POINT pt)				{ x += pt.x; y += pt.y; }

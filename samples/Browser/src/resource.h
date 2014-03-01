@@ -9,35 +9,35 @@
 
 
 //Resource IDs for menu items and ToolBar items
-#define IDM_FILE_NEW                    101
-#define IDM_FILE_OPEN                   102
-#define IDM_FILE_SAVE                   103
-#define IDM_FILE_SAVEAS                 104
-#define IDM_FILE_PRINT                  105
-#define IDM_FILE_CLOSE                  106
-#define IDM_FILE_EXIT                   107
-#define IDM_EDIT_UNDO                   110
-#define IDM_EDIT_REDO                   111
-#define IDM_EDIT_CUT                    112
-#define IDM_EDIT_COPY                   113
-#define IDM_EDIT_PASTE                  114
-#define IDM_EDIT_DELETE                 115
-#define IDM_HELP_ABOUT                  120
+#define IDM_FILE_NEW                    121
+#define IDM_FILE_OPEN                   122
+#define IDM_FILE_SAVE                   123
+#define IDM_FILE_SAVEAS                 124
+#define IDM_FILE_PRINT                  125
+#define IDM_FILE_CLOSE                  126
+#define IDM_FILE_EXIT                   127
+#define IDM_EDIT_UNDO                   130
+#define IDM_EDIT_REDO                   131
+#define IDM_EDIT_CUT                    132
+#define IDM_EDIT_COPY                   133
+#define IDM_EDIT_PASTE                  134
+#define IDM_EDIT_DELETE                 135
+#define IDM_HELP_ABOUT                  140
 
-#define IDM_BACK                        121
-#define IDM_FORWARD                     122
-#define IDM_REFRESH                     123
-#define IDM_STOP                        124
-#define IDM_HOME                        125
+#define IDM_BACK                        141
+#define IDM_FORWARD                     142
+#define IDM_REFRESH                     143
+#define IDM_STOP                        144
+#define IDM_HOME                        145
 
-#define IDB_TOOLBAR24_NORM              130
-#define IDB_TOOLBAR24_HOT               131
-#define IDB_TOOLBAR24_DIS               132
-#define IDB_TOOLBAR32_NORM              133
-#define IDB_TOOLBAR32_HOT               134
-#define IDB_TOOLBAR32_DIS               135
+#define IDB_TOOLBAR24_NORM              150
+#define IDB_TOOLBAR24_HOT               151
+#define IDB_TOOLBAR24_DIS               152
+#define IDB_TOOLBAR32_NORM              153
+#define IDB_TOOLBAR32_HOT               154
+#define IDB_TOOLBAR32_DIS               155
 
-#define IDC_COMBOBOXEX                  140
+#define IDC_COMBOBOXEX                  160
 
 // Next default values for new objects
 // 

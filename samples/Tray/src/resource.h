@@ -7,16 +7,16 @@
 #include "default_resource.h"
 
 // Main menu items
-#define IDM_FILE_EXIT		  110
-#define IDM_MINTOTRAY		  111
-#define IDM_HELP_ABOUT	  112
+#define IDM_FILE_EXIT		  120
+#define IDM_MINTOTRAY		  121
+#define IDM_HELP_ABOUT	      122
 
 
 // Minimized menu items
-#define IDM_MINIMIZED		  113
-#define IDM_MIN_RESTORE	  114
-#define IDM_MIN_ABOUT		  115
-#define	IDM_MIN_EXIT		  116
+#define IDM_MINIMIZED		  123
+#define IDM_MIN_RESTORE	      124
+#define IDM_MIN_ABOUT		  125
+#define	IDM_MIN_EXIT		  126
 
 
 #define MSG_TRAYICON (WM_USER+0)

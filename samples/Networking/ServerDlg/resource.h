@@ -7,20 +7,20 @@
 #include "default_resource.h"
 
 // Server Dialog
-#define IDD_SERVER                              110
-#define IDC_EDIT_STATUS                         111
-#define IDC_EDIT_PORT                           112
-#define IDC_EDIT_SEND                           113
-#define IDC_EDIT_RECEIVE                        114
-#define IDC_BUTTON_START                        115
-#define IDC_BUTTON_SEND                         116
-#define IDC_RADIO_TCP                           117
-#define IDC_RADIO_UDP                           118
-#define IDC_RADIO_IPV4                          119
-#define IDC_RADIO_IPV6                          120
-#define IDC_IPADDRESS                           121
-#define IDC_EDIT_IPV6ADDRESS                    122
-#define IDC_RADIO_GROUP                         124
+#define IDD_SERVER                              120
+#define IDC_EDIT_STATUS                         121
+#define IDC_EDIT_PORT                           122
+#define IDC_EDIT_SEND                           123
+#define IDC_EDIT_RECEIVE                        124
+#define IDC_BUTTON_START                        125
+#define IDC_BUTTON_SEND                         126
+#define IDC_RADIO_TCP                           127
+#define IDC_RADIO_UDP                           128
+#define IDC_RADIO_IPV4                          129
+#define IDC_RADIO_IPV6                          130
+#define IDC_IPADDRESS                           131
+#define IDC_EDIT_IPV6ADDRESS                    132
+#define IDC_RADIO_GROUP                         134
 
 // Chat Dialog
 #define IDD_CHAT                                140

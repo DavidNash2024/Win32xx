@@ -100,6 +100,7 @@ IDW_MAIN                ICON                    "res/Docking.ico"
 IDI_CLASSVIEW           ICON                    "res/classview.ico"
 IDI_FILEVIEW            ICON                    "res/fileview.ico"
 IDI_RECT                ICON                    "res/rect.ico"
+IDI_SIMPLE              ICON                    "res/simple.ico"
 IDI_TEXT                ICON                    "res/text.ico"
 
 /////////////////////////////////////////////////////////////////////////////

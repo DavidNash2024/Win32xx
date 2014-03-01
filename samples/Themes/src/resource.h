@@ -8,62 +8,62 @@
 
 
 //Resource IDs for menu items and ToolBar items
-#define IDM_FILE_NEW                    101
-#define IDM_FILE_OPEN                   102
-#define IDM_FILE_SAVE                   103
-#define IDM_FILE_SAVEAS                 104
-#define IDM_FILE_PRINT                  105
-#define IDM_FILE_CLOSE                  106
-#define IDM_FILE_EXIT                   107
-#define IDM_EDIT_UNDO                   110
-#define IDM_EDIT_REDO                   111
-#define IDM_EDIT_CUT                    112
-#define IDM_EDIT_COPY                   113
-#define IDM_EDIT_PASTE                  114
-#define IDM_EDIT_DELETE                 115
-#define IDM_HELP_ABOUT                  120
+#define IDM_FILE_NEW                    121
+#define IDM_FILE_OPEN                   122
+#define IDM_FILE_SAVE                   123
+#define IDM_FILE_SAVEAS                 124
+#define IDM_FILE_PRINT                  125
+#define IDM_FILE_CLOSE                  126
+#define IDM_FILE_EXIT                   127
+#define IDM_EDIT_UNDO                   130
+#define IDM_EDIT_REDO                   131
+#define IDM_EDIT_CUT                    132
+#define IDM_EDIT_COPY                   133
+#define IDM_EDIT_PASTE                  134
+#define IDM_EDIT_DELETE                 135
+#define IDM_HELP_ABOUT                  140
 
-#define IDB_TOOLBAR_NORM                130
-#define IDB_TOOLBAR_HOT                 131
-#define IDB_TOOLBAR_DIS                 132
-#define IDB_TOOLBAR_SML                 133
-#define IDB_ARROWS                      134
-#define IDB_CARDS                       135
-#define IDB_STATUS                      136
+#define IDB_TOOLBAR_NORM                150
+#define IDB_TOOLBAR_HOT                 151
+#define IDB_TOOLBAR_DIS                 152
+#define IDB_TOOLBAR_SML                 153
+#define IDB_ARROWS                      154
+#define IDB_CARDS                       155
+#define IDB_STATUS                      156
 
-#define IDC_ARROWS                      137
-#define IDC_CARDS                       138
+#define IDC_ARROWS                      157
+#define IDC_CARDS                       158
 
-#define IDM_ARROW_LEFT                  140
-#define IDM_ARROW_RIGHT                 141
+#define IDM_ARROW_LEFT                  160
+#define IDM_ARROW_RIGHT                 161
 
-#define IDM_CARD_CLUB                   150
-#define IDM_CARD_DIAMOND                151
-#define IDM_CARD_HEART                  152
-#define IDM_CARD_SPADE                  153
+#define IDM_CARD_CLUB                   170
+#define IDM_CARD_DIAMOND                171
+#define IDM_CARD_HEART                  172
+#define IDM_CARD_SPADE                  173
 
-#define IDC_COMBOBOXEX                  155
-#define IDM_VIEW_ARROWS                 156
-#define IDM_VIEW_CARDS                  157
+#define IDC_COMBOBOXEX                  175
+#define IDM_VIEW_ARROWS                 176
+#define IDM_VIEW_CARDS                  177
 
-#define IDM_BLUE                        160
-#define IDM_GREY                        161
-#define IDM_OLIVE                       162
-#define IDM_OCHRE                       163
-#define IDM_MAUVE                       164
-#define IDM_PINK                        165
-#define IDM_GOLD                        166
-#define IDM_BLACK                       167
-#define IDM_MODERN                      168
+#define IDM_BLUE                        180
+#define IDM_GREY                        181
+#define IDM_OLIVE                       182
+#define IDM_OCHRE                       183
+#define IDM_MAUVE                       184
+#define IDM_PINK                        185
+#define IDM_GOLD                        186
+#define IDM_BLACK                       187
+#define IDM_MODERN                      188
 
-#define IDM_USE_THEMES                  170
-#define IDM_BAND_COLORS                 171
-#define IDM_FLAT_STYLE                  172
-#define IDM_LEFT_BANDS                  173
-#define IDM_LOCK_MENUBAR                174
-#define IDM_ROUND_BORDERS               175
-#define IDM_SHORT_BANDS                 176
-#define IDM_USE_LINES                   177
+#define IDM_USE_THEMES                  190
+#define IDM_BAND_COLORS                 191
+#define IDM_FLAT_STYLE                  192
+#define IDM_LEFT_BANDS                  193
+#define IDM_LOCK_MENUBAR                194
+#define IDM_ROUND_BORDERS               195
+#define IDM_SHORT_BANDS                 196
+#define IDM_USE_LINES                   197
 
 // Next default values for new objects
 // 
