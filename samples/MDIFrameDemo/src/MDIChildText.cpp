@@ -22,8 +22,10 @@ CViewText::~CViewText()
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 }
 
-void CViewText::OnCreate()
+int CViewText::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
+
 	//Set font
 	if (!m_Font)
 	{
@@ -32,6 +34,7 @@ void CViewText::OnCreate()
 	}
 	
 	SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0L);
+	return 0;
 }
 
 void CViewText::PreCreate(CREATESTRUCT &cs)
@@ -72,9 +75,11 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 }
 
 
-void CMDIChildText::OnCreate()
+int CMDIChildText::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
 	m_TextView.Create(this);
+	return 0;
 }
 
 void CMDIChildText::OnInitialUpdate()

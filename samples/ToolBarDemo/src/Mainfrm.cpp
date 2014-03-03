@@ -69,7 +69,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -81,7 +81,7 @@ void CMainFrame::OnCreate()
 	// m_bUseThemes = FALSE;            // Don't use themes
 
 	// call the base class function
-	CFrame::OnCreate();
+	CFrame::OnCreate(pcs);
 
 	// Add the CCS_ADJUSTABLE style to the ToolBar
 	DWORD dwStyle = GetToolBar()->GetWindowLongPtr(GWL_STYLE);
@@ -89,6 +89,8 @@ void CMainFrame::OnCreate()
 
 	// Untick the Large Icons menu item
 	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);
+
+	return 0;
 }
 
 LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)

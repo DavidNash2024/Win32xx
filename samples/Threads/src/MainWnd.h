@@ -21,7 +21,7 @@ public:
 
 protected:
 	virtual void OnClose();
-	virtual void OnCreate();
+	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDestroy();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

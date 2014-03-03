@@ -42,7 +42,7 @@ void CMyDialog::OnOK()
 
 	// Create a generic keyboard event structure
 
-#ifdef INPUT	// Not supported on some old ms compilers
+#ifdef INPUT_KEYBOARD	// Not supported on some old ms compilers
 
 	INPUT ip;
 	ip.type = INPUT_KEYBOARD;

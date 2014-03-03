@@ -48,6 +48,7 @@ codeblocks.exe --rebuild Splitter\ProjectFiles\Splitter.cbp                 >>".
 codeblocks.exe --rebuild TabDemo\ProjectFiles\TabDemo.cbp                   >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Themes\ProjectFiles\Themes.cbp                     >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Threads\ProjectFiles\Threads.cbp                   >>"..\output\CodeBlocks.log"
+codeblocks.exe --rebuild ToolBarDemo\ProjectFiles\ToolBarDemo.cbp           >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Tray\ProjectFiles\Tray.cbp                         >>"..\output\CodeBlocks.log"
 
 REM: Copy the executables to the testing directories
@@ -84,6 +85,7 @@ copy Splitter\ProjectFiles\Microsoft\Debug\Splitter.exe                 "..\outp
 copy TabDemo\ProjectFiles\Microsoft\Debug\TabDemo.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Microsoft\Debug\Themes.exe                     "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Microsoft\Debug\Threads.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
+copy ToolBarDemo\ProjectFiles\Microsoft\Debug\ToolBarDemo.exe           "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Microsoft\Debug\Tray.exe                         "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\VS2003\Release"
@@ -118,6 +120,7 @@ copy Splitter\ProjectFiles\Microsoft\Release\Splitter.exe                 "..\ou
 copy TabDemo\ProjectFiles\Microsoft\Release\TabDemo.exe                   "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Microsoft\Release\Themes.exe                     "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Microsoft\Release\Threads.exe                   "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
+copy ToolBarDemo\ProjectFiles\Microsoft\Release\ToolBarDemo.exe           "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Microsoft\Release\Tray.exe                         "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 
 
@@ -155,6 +158,7 @@ copy Splitter\ProjectFiles\Borland\Debug\Splitter.exe                 "..\output
 copy TabDemo\ProjectFiles\Borland\Debug\TabDemo.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Borland\Debug\Themes.exe                     "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Borland\Debug\Threads.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
+copy ToolBarDemo\ProjectFiles\Borland\Debug\ToolBarDemo.exe           "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Debug\Tray.exe                         "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\Borland\Release"
@@ -189,6 +193,7 @@ copy Splitter\ProjectFiles\Borland\Release\Splitter.exe                 "..\outp
 copy TabDemo\ProjectFiles\Borland\Release\TabDemo.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Borland\Release\Themes.exe                     "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Borland\Release\Threads.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
+copy ToolBarDemo\ProjectFiles\Borland\Release\ToolBarDemo.exe           "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Release\Tray.exe                         "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 
 
@@ -226,6 +231,7 @@ copy Splitter\ProjectFiles\GNU\Debug\Splitter.exe                 "..\output\Min
 copy TabDemo\ProjectFiles\GNU\Debug\TabDemo.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\GNU\Debug\Themes.exe                     "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Debug\Threads.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
+copy ToolBarDemo\ProjectFiles\GNU\Debug\ToolBarDemo.exe           "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\GNU\Debug\Tray.exe                         "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\MinGW\Release"
@@ -260,6 +266,7 @@ copy Splitter\ProjectFiles\GNU\Release\Splitter.exe                 "..\output\M
 copy TabDemo\ProjectFiles\GNU\Release\TabDemo.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\GNU\Release\Themes.exe                     "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Release\Threads.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
+copy ToolBarDemo\ProjectFiles\GNU\Release\ToolBarDemo.exe           "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\GNU\Debug\Tray.exe                           "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 
 

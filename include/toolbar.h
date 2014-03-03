@@ -126,7 +126,7 @@ namespace Win32xx
 
 	protected:
 	// Overridables
-		virtual void OnCreate();
+		virtual void OnAttach();
 		virtual void OnDestroy();
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -608,7 +608,7 @@ namespace Win32xx
 	}
 
 
-	inline void CToolBar::OnCreate()
+	inline void CToolBar::OnAttach()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);

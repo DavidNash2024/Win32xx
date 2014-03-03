@@ -53,8 +53,10 @@ HWND CMainWindow::Create(CWnd* pParent)
 		rc, pParent, 0);
 }
 
-void CMainWindow::OnCreate()
+int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
+
 	// Create the Edit child window to display text
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL;
 	m_EditWnd.CreateEx(0, _T("Edit"), NULL, dwStyle, CRect(0,0,0,0), this, 0);
@@ -82,6 +84,8 @@ void CMainWindow::OnCreate()
 	{
 		(*iter)->ResumeThread();
 	}
+
+	return 0;
 }
 
 void CMainWindow::OnClose()

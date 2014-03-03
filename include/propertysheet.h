@@ -158,7 +158,6 @@ namespace Win32xx
 		CString m_Title;
 		std::vector<PropertyPagePtr> m_vPages;	// vector of CPropertyPage
 		std::vector<PROPSHEETPAGE> m_vPSP;		// vector of PROPSHEETPAGE
-		BOOL m_bInitialUpdate;
 		PROPSHEETHEADER m_PSH;
 	};
 
@@ -626,7 +625,6 @@ namespace Win32xx
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(LoadString(nIDCaption));
-		m_bInitialUpdate = FALSE;
 
 #ifdef _WIN32_WCE
 		m_PSH.dwSize = sizeof(PROPSHEETHEADER);
@@ -647,7 +645,6 @@ namespace Win32xx
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(pszCaption);
-		m_bInitialUpdate = FALSE;
 
 #ifdef _WIN32_WCE
 		m_PSH.dwSize = PROPSHEETHEADER_V1_SIZE;
@@ -725,7 +722,6 @@ namespace Win32xx
 				assert(w);
 
 				w->Attach(hwnd);
-				w->OnCreate();
 			}
 			break;
 		}
@@ -936,22 +932,7 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-
-		case WM_WINDOWPOSCHANGED:
-			{
-				LPWINDOWPOS lpWinPos = (LPWINDOWPOS)lParam;
-				if (lpWinPos->flags & SWP_SHOWWINDOW)
-				{
-					if (!m_bInitialUpdate)
-						// The first window positioning with the window visible
-						OnInitialUpdate();
-					m_bInitialUpdate = TRUE;
-				}
-			}
-			break;
-
 		case WM_DESTROY:
-			m_bInitialUpdate = FALSE;
 			OnDestroy();
 			break;
 

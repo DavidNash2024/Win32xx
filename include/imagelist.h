@@ -39,7 +39,14 @@
 // imagelist.h
 //  Declaration of the CImageList class
 
-
+// The CImageList class manages an image list.
+// An image list is a collection of images of the same size, each of which
+// can be referred to by its index. Image lists are used to efficiently manage
+// large sets of icons or bitmaps. All images in an image list are contained
+// in a single, wide bitmap in screen device format. An image list can also 
+// include a monochrome bitmap that contains masks that are used to draw
+// images transparently.
+ 
 #if !defined(_WIN32XX_IMAGELIST_H_)
 #define _WIN32XX_IMAGELIST_H_
 
@@ -61,7 +68,7 @@ namespace Win32xx
 
 	public:
 		//Construction
-		CImageList() : m_hImageList(0), m_IsTmpImageList(FALSE) {}
+		CImageList();
 		~CImageList();
 
 		//Initialization
@@ -116,6 +123,11 @@ namespace Win32xx
 	///////////////////////////////////////
 	// Definitions for the CImageList class
 	//
+
+	inline CImageList::CImageList() : m_hImageList(0), m_IsTmpImageList(FALSE)
+	{
+	}
+
 	inline CImageList::~CImageList()
 	{
 		if (m_hImageList)

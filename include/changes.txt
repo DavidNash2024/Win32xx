@@ -11,11 +11,21 @@ Bug Fixes
 	 
 New Features and Enhancements
 -----------------------------
-* Added CImageList
+* Added CImageList. CImageList manages a collection of images (Image List).
 * Added ToolBarDemo Sample. 
    - demonstrates ToolBar customization.
    - demonstrates adding and removing ToolBar buttons.
    - demonstrates saving and restoring ToolBar layout.
+   - demonstrates changing the ToolBar's image list.
+* Updated CWnd:
+   - Modified OnCreate. It now provides a LPCREATSTRUCT. Any function overriding
+      OnCreate will need to be modified too. 
+   - Added OnAttach. It is called when a window is attached to a CWnd.
+   - Added OnClose. It is called when a window asks to be closed (WM_CLOSE).
+   - Added OnDestroy. It is called when a window is destroyed (WM_DESTROY).
+   - CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
+      the menu parameter to specify a menu for a parent window, or a window ID
+      for a child window.   
 * Updated CSocket:
    - now supports WinCE
    - send and receive functions now use char and support binary data.
@@ -29,12 +39,7 @@ New Features and Enhancements
       easier to customize. Also, the notifications (from WM_NOTIFY) are handled in
 	  virtual functions, making them easier to override.   
    - ToolBars for DockContainers automatically use the Frame's ToolBar theme.
-* Updated CWnd:
-   - Added OnClose. It is called automatically when a window asks to be closed.
-   - Added OnDestroy. It is called automatically when a window is destroyed.
-   - CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
-      the menu parameter to specify a menu for a parent window, or a window ID
-      for a child window.
+   - We can now specify the index of the image in AddToolbarButton.
 * Updated CFile:
    - CFile functions are now virtual.
    - OpenFileDialog and SaveFileDialog allow the dialog title to be specified.
@@ -43,6 +48,7 @@ New Features and Enhancements
       command ID.
    - Functions now use CImageList* instead of HIMAGELIST
    - Added support for ToolBar customization.
+   - AddButton now also allows us to specify the image's index.
 * Updated CDialog
    - Added GetDefID, GotoDlgCtrl, MapDialogRect, NextDlgCtrl, PrevDlgCtrl
 	  and SetDefID.
@@ -55,11 +61,13 @@ New Features and Enhancements
 
 Incompatibilities with previous versions
 ----------------------------------------
+* The definition of OnCreate has changed to provide a LPCREATESRUCT. This 
+   change also will need to be made in any class overriding OnCreate.
 * The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
-* Programs with frames should now use the IDW_READY resource for "Ready". Add IDW_READY
-   as a string resource to resource.rc
+* Programs with frames should now use the IDW_READY resource for "Ready". 
+   Add IDW_READY as a string resource to resource.rc
 * GetReBarTheme and GetToolBarTheme have been moved to CFrame 
-* Some function have been modified. See below for details.
+* Other functions have been modified. See below for details.
    
    
 Changes in detail
@@ -122,13 +130,14 @@ Changes in detail
 - Added CToolBar::Customize
 - Added CToolBar::SetButtonInfo
 - Added CWnd::GetDlgCtrlID
+- Added CWnd::OnAttach
 - Added CWnd::OnClose
 - Added CWnd::OnDestroy
 - Modified CComboBoxEx::GetImageList
 - Modified CComboBoxEx::SetImageList
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
-- Modified CFrame::AddToolBarButton
+- Modified CFrame::AddToolBarButton		now also accepts image index
 - Modified CFrame::CMenuBar				returns pointer
 - Modified CFrame::CReBar				returns pointer
 - Modified CFrame::CStatusBar			returns pointer
@@ -153,7 +162,7 @@ Changes in detail
 - Modified CTreeView::GetImageList
 - Modified CTreeView::SetImageList
 - Modified CTreeView::CreateDragImage
-- Modified CToolBar::AddButton
+- Modified CToolBar::AddButton			
 - Modified CToolBar::GetDisabledImageList
 - Modified CToolBar::GetHotImageList
 - Modified CToolBar::GetImageList
@@ -162,6 +171,7 @@ Changes in detail
 - Modified CToolBar::SetImageList
 - Modified CWnd::CreateEx               now uses HMENU instead of CMenu*
 - Modified CWnd::DeferWindowPos			now uses CWnd* for second argument
+- Modified CWnd::OnCreate               now accepts LPCREATESTRUCT
 - Removed CMenuBar::GetMenuTheme
 - Removed CMenuBar::SetMenuTheme
 - Removed CReBar::GetReBarTheme
@@ -177,7 +187,6 @@ Changes in detail
 Added IDW_READY resource for ready string.
 Added VS2013 project files
 Updated the tutorials to take advantage of the new features.
-
 
 
 Version 7.3

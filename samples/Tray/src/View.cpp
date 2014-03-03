@@ -30,13 +30,15 @@ void CView::OnAbout()
 	MessageBox(_T("Tray Example: Demonstrates minimizing a window to the tray."), _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
 }
 
-void CView::OnCreate()
+int CView::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate is called automatically during window creation when a
 	// WM_CREATE message received.
 
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
+
+	UNREFERENCED_PARAMETER(pcs);
 
 	// Set the window's icon
 	SetIconSmall(IDW_MAIN);
@@ -45,6 +47,8 @@ void CView::OnCreate()
 	SetWindowText(LoadString(IDW_MAIN).c_str());		// Window title
 
 	TRACE("OnCreate\n");
+
+	return 0;
 }
 
 BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)

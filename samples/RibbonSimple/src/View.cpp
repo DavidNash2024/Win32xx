@@ -8,13 +8,15 @@
 
 // Definitions for the CView class
 
-void CView::OnCreate()
+int CView::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate is called automatically during window creation when a
 	// WM_CREATE message received.
 
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
+
+	UNREFERENCED_PARAMETER(pcs);
 
 	TRACE("OnCreate\n");
 	
@@ -33,6 +35,7 @@ void CView::OnCreate()
 			TRACE("Failed to create ribbon\n");
 	}
 
+	return 0;
 }
 
 void CView::OnDestroy()

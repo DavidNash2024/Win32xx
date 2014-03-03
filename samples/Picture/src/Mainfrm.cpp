@@ -55,9 +55,9 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
-	CFrame::OnCreate();
+	return CFrame::OnCreate(pcs);
 }
 
 void CMainFrame::OnFileExit()

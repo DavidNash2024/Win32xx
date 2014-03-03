@@ -35,7 +35,7 @@ HWND CView::Create(CWnd* pParent)
 	return 0;
 }
 
-void CView::OnCreate()
+int CView::OnCreate(LPCREATESTRUCT pcs)
 {
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
@@ -53,6 +53,8 @@ void CView::OnCreate()
 	}
 	else
 		TRACE("Failed to initialize DirectX\n");
+
+	return 0;
 }
 
 void CView::OnDestroy()

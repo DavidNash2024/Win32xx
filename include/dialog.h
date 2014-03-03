@@ -206,14 +206,18 @@ namespace Win32xx
 		: m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
 		m_hParent = pParent? pParent->GetHwnd() : NULL;
-		::InitCommonControls();
+		
+		// Initialize the common controls.
+		LoadCommonControls();
 	}
 
 	inline CDialog::CDialog(UINT nResID, CWnd* pParent/* = NULL*/)
 		: m_IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
 		m_hParent = pParent? pParent->GetHwnd() : NULL;
-		::InitCommonControls();
+		
+		// Initialize the common controls.
+		LoadCommonControls();
 	}
 
 	//For indirect dialogs - created from a dialog box template in memory.
@@ -221,7 +225,9 @@ namespace Win32xx
 		: m_IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
 		m_hParent = pParent? pParent->GetHwnd() : NULL;
-		::InitCommonControls();
+		
+		// Initialize the common controls.
+		LoadCommonControls();
 	}
 
 	inline CDialog::~CDialog()

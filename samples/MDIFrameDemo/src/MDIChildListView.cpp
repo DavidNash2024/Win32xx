@@ -114,9 +114,11 @@ CMDIChildListView::~CMDIChildListView()
 {
 }
 
-void CMDIChildListView::OnCreate()
+int CMDIChildListView::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
 	m_ListView.Create(this);
+	return 0;
 }
 
 void CMDIChildListView::OnInitialUpdate()

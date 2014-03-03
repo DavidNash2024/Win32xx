@@ -9,7 +9,6 @@ public:
 
 protected:
 	virtual void OnInitialUpdate();
-
 };
 
 

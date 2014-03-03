@@ -31,14 +31,14 @@
 #define IDM_SHOW_HIDDEN                 154
 #define IDM_VIEWMENU                    155
 
-#define IDS_COLUMN1                     140
-#define IDS_COLUMN2                     141
-#define IDS_COLUMN3                     142
-#define IDS_COLUMN4                     143
+#define IDS_COLUMN1                     160
+#define IDS_COLUMN2                     161
+#define IDS_COLUMN3                     162
+#define IDS_COLUMN4                     163
 
-#define IDB_TOOLBAR_NORM                150
-#define IDB_TOOLBAR_HOT                 151
-#define IDB_TOOLBAR_DIS                 152
+#define IDB_TOOLBAR_NORM                164
+#define IDB_TOOLBAR_HOT                 165
+#define IDB_TOOLBAR_DIS                 166
 
 // Next default values for new objects
 // 

@@ -281,7 +281,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -294,7 +294,7 @@ void CMainFrame::OnCreate()
 	// m_bUseToolBar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
-	CFrame::OnCreate();
+	CFrame::OnCreate(pcs);
 
 	if (IsReBarSupported())
 	{
@@ -323,6 +323,8 @@ void CMainFrame::OnCreate()
 	}
 	else
 		MessageBox(_T("Some Theme features are not supported on this Operating System"), _T("Warning"), MB_ICONWARNING);
+
+	return 0;
 }
 
 void CMainFrame::OnFileExit()

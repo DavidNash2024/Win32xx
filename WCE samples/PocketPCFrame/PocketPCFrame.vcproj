@@ -739,15 +739,23 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\Win32++\include\dialog.h"
+				RelativePath="..\..\include\dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\wceframe.h"
+				RelativePath="..\..\include\wceframe.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
+				RelativePath="..\..\include\webbrowser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\winutils.h"
 				>
 			</File>
 		</Filter>

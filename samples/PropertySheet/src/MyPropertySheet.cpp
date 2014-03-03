@@ -154,7 +154,7 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, CWnd* pParent /
 	SetIcon(IDI_DIALOG);
 }
 
-inline void CMyPropertySheet::OnCreate()
+void CMyPropertySheet::OnInitialUpdate()
 {
 	// Adjust layout for modeless property sheet
 	if ((IsModeless()) && !(IsWizard()))
@@ -178,10 +178,7 @@ inline void CMyPropertySheet::OnCreate()
 		dwStyle &= ~WS_SYSMENU;
 		SetWindowLongPtr(GWL_STYLE, dwStyle);
 	}
-}
 
-void CMyPropertySheet::OnInitialUpdate()
-{
 	CenterWindow();
 }
 

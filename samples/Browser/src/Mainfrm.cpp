@@ -247,12 +247,13 @@ void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 	TRACE("OnDocumentBegin\n");
 }
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Call the base function first
-	CFrame::OnCreate();
+	CFrame::OnCreate(pcs);
 
 	ConnectEvents();
+	return 0;
 }
 
 void CMainFrame::OnDocumentComplete(DISPPARAMS* pDispParams)

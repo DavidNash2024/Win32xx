@@ -135,7 +135,7 @@ namespace Win32xx
 		virtual void	DrawListButton(CDC& DrawDC);
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
-		virtual void    OnCreate();
+		virtual void    OnAttach();
 		virtual void	OnDestroy();
 		virtual BOOL    OnEraseBkgnd(CDC*) { return TRUE;}
 		virtual LRESULT OnEraseBkgnd(WPARAM wParam, LPARAM lParam);
@@ -209,7 +209,7 @@ namespace Win32xx
 	protected:
 		virtual HWND    Create(CWnd* pParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
-		virtual void	OnCreate();
+		virtual void 	OnAttach();
 		virtual void    OnDestroy();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
@@ -737,7 +737,7 @@ namespace Win32xx
 		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
-	inline void CTab::OnCreate()
+	inline void CTab::OnAttach()
 	{
 		SetFont(&m_Font, TRUE);
 
@@ -1534,15 +1534,18 @@ namespace Win32xx
 					}
 				}
 
-				// Load Active MDI Tab from the registry
-				strSubKey = _T("Active MDI Tab");
-				int nTab;
-				dwType = REG_DWORD;
-				BufferSize = sizeof(int);
-				if(ERROR_SUCCESS == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nTab, &BufferSize))
-					SetActiveMDITab(nTab);
-				else
-					SetActiveMDITab(0);
+				if (bResult)
+				{
+					// Load Active MDI Tab from the registry
+					strSubKey = _T("Active MDI Tab");
+					int nTab;
+					dwType = REG_DWORD;
+					BufferSize = sizeof(int);
+					if(ERROR_SUCCESS == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nTab, &BufferSize))
+						SetActiveMDITab(nTab);
+					else
+						SetActiveMDITab(0);
+				}
 
 				RegCloseKey(hKey);
 			}
@@ -1574,7 +1577,7 @@ namespace Win32xx
 		return pView;
 	}
 
-	inline void CTabbedMDI::OnCreate()
+	inline void CTabbedMDI::OnAttach()
 	{
 		GetTab().Create(this);
 		GetTab().SetFixedWidth(TRUE);

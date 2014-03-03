@@ -29,7 +29,7 @@ public:
 protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void	OnCloseMDIs();
-	virtual void    OnCreate();
+	virtual int     OnCreate(LPCREATESTRUCT pcs);
 	virtual void	OnFileExit();
 	virtual void	OnFileNewSimple();
 	virtual void	OnFileNewRect();

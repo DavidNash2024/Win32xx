@@ -82,7 +82,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainMDIFrame::OnCreate()
+int CMainMDIFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -95,7 +95,7 @@ void CMainMDIFrame::OnCreate()
 	// m_bUseToolBar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
-	CMDIFrame::OnCreate();
+	return CMDIFrame::OnCreate(pcs);
 }
 
 void CMainMDIFrame::OnFileClose()

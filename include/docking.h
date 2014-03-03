@@ -123,7 +123,7 @@ namespace Win32xx
 			virtual CToolBar* GetToolBar()	{return &m_ToolBar;}
 			virtual CWnd* GetView() const	{return m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-			virtual void OnCreate();
+			virtual int OnCreate(LPCREATESTRUCT pcs);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS &wc);
 			virtual void RecalcLayout();
@@ -175,7 +175,7 @@ namespace Win32xx
 		void SetView(CWnd& Wnd);
 
 	protected:
-		virtual void OnCreate();
+		virtual void OnAttach();
 		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
@@ -356,7 +356,7 @@ namespace Win32xx
 			CTargetCentre();
 			virtual ~CTargetCentre();
 			virtual void OnDraw(CDC* pDC);
-			virtual void OnCreate();
+			virtual int  OnCreate(LPCREATESTRUCT pcs);
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_bIsOverContainer; }
 
@@ -475,7 +475,7 @@ namespace Win32xx
 	protected:
 		virtual CDocker* NewDockerFromID(int idDock);
 		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
-		virtual void OnCreate();
+		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual LRESULT OnBarEnd(LPDRAGPOS pdp);
 		virtual LRESULT OnBarMove(LPDRAGPOS pdp);
@@ -1449,8 +1449,10 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::CTargetCentre::OnCreate()
+	inline int CDocker::CTargetCentre::OnCreate(LPCREATESTRUCT pcs)
 	{
+		UNREFERENCED_PARAMETER(pcs);
+
 		// Use a region to create an irregularly shapped window
 		POINT ptArray[16] = { {0,29}, {22, 29}, {29, 22}, {29, 0},
 		                      {58, 0}, {58, 22}, {64, 29}, {87, 29},
@@ -1460,6 +1462,7 @@ namespace Win32xx
 		CRgn rgnPoly;
 		rgnPoly.CreatePolygonRgn(ptArray, 16, WINDING);
 		SetWindowRgn(&rgnPoly, FALSE);
+		return 0;
 	}
 
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
@@ -2662,8 +2665,9 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CDocker::OnCreate()
+	inline int CDocker::OnCreate(LPCREATESTRUCT pcs)
 	{
+		UNREFERENCED_PARAMETER(pcs);
 
 #if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
 		if (GetParent()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
@@ -2702,6 +2706,8 @@ namespace Win32xx
 
 		// Set the caption height based on text height
 		m_NCHeight = MAX(20, GetTextHeight() + 5);
+
+		return 0;
 	}
 
 	inline void CDocker::OnDestroy()
@@ -3914,7 +3920,7 @@ namespace Win32xx
 */
 	}
 
-	inline void CDockContainer::OnCreate()
+	inline void CDockContainer::OnAttach()
 	{
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
 
@@ -4268,10 +4274,13 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline void CDockContainer::CViewPage::OnCreate()
+	inline int CDockContainer::CViewPage::OnCreate(LPCREATESTRUCT pcs)
 	{
+		UNREFERENCED_PARAMETER(pcs);
 		if (m_pView)
 			m_pView->Create(this);
+		
+		return 0;
 	}
 
 	inline LRESULT CDockContainer::CViewPage::OnNotify(WPARAM wParam, LPARAM lParam)

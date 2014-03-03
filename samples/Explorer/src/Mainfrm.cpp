@@ -98,10 +98,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 } // CMainFrame::OnCommand(...)
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// call the base OnCreate function
-	CFrame::OnCreate();
+	return CFrame::OnCreate(pcs);
 }
 
 void CMainFrame::OnFileExit()

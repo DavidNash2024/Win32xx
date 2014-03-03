@@ -40,8 +40,10 @@ void CMainWindow::CreateTestWindows(int nWindows)
 	}
 }
 
-void CMainWindow::OnCreate()
+int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
+
 	CRect r = GetClientRect();
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
 
@@ -53,6 +55,8 @@ void CMainWindow::OnCreate()
 	m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 	m_Edit.SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
+
+	return 0;
 }
 
 void CMainWindow::OnDestroy()

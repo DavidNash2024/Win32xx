@@ -15,17 +15,17 @@
 #define IDC_CHECK1						133
 #define IDC_CHECK2						134
 #define IDC_CHECK3						135
-#define IDC_EDIT1						130
-#define IDC_LIST1						131
-#define IDC_BUTTON1						132
-#define IDC_BUTTON2                     133
-#define IDC_RICHEDIT1					134
-#define IDC_STATIC1                     130
-#define IDC_STATIC2                     131
-#define IDC_STATIC3                     132
-#define IDC_STATIC4  					133
-#define IDC_HOTKEY1                     140
-#define IDB_BITMAP1                     141
+#define IDC_EDIT1						140
+#define IDC_LIST1						141
+#define IDC_BUTTON1						142
+#define IDC_BUTTON2                     143
+#define IDC_RICHEDIT1					144
+#define IDC_STATIC1                     150
+#define IDC_STATIC2                     151
+#define IDC_STATIC3                     152
+#define IDC_STATIC4  					153
+#define IDC_HOTKEY1                     160
+#define IDB_BITMAP1                     161
 
 // Next default values for new objects
 // 

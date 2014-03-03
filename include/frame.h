@@ -238,7 +238,7 @@ namespace Win32xx
 
 	protected:
 	//Overridables
-		virtual void OnCreate();
+		virtual void OnAttach();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnExitMenuLoop(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
@@ -447,7 +447,7 @@ namespace Win32xx
 		virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
 		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
-		virtual void OnCreate();
+		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
 		virtual void OnDestroy();
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
@@ -510,7 +510,7 @@ namespace Win32xx
 	private:
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
-		void LoadCommonControls();
+	//	void LoadCommonControls();
 		CSize GetTBImageSize(CBitmap* pbm);
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -569,6 +569,7 @@ namespace Win32xx
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 		m_hPopupMenu	= 0;
+		m_pFrame		= 0;
 	}
 
 	inline CMenuBar::~CMenuBar()
@@ -864,7 +865,7 @@ namespace Win32xx
 
 	inline BOOL CMenuBar::IsMDIFrame() const
 	{
-		return (m_pFrame->IsMDIFrame());
+		return (m_pFrame && m_pFrame->IsMDIFrame());
 	}
 
 	inline LRESULT CMenuBar::OnMenuChar(WPARAM wParam, LPARAM lParam)
@@ -877,7 +878,7 @@ namespace Win32xx
 		return FinalWindowProc(WM_MENUCHAR, wParam, lParam);
 	}
 
-	inline void CMenuBar::OnCreate()
+	inline void CMenuBar::OnAttach()
 	{
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
@@ -2756,7 +2757,7 @@ namespace Win32xx
 		return CString(ThemeName);
 	}
 
-	inline void CFrame::LoadCommonControls()
+/*	inline void CFrame::LoadCommonControls()
 	{
 		HMODULE hComCtl = 0;
 
@@ -2800,7 +2801,7 @@ namespace Win32xx
 			throw;
 		}
 	}
-
+*/
 	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
 		// Load the MRU list from the registry
@@ -2989,10 +2990,11 @@ namespace Win32xx
 		Destroy();
 	}
 
-	inline void CFrame::OnCreate()
+	inline int CFrame::OnCreate(LPCREATESTRUCT pcs)
+	// This is called when the frame window is being created.
+	// Override this in CMainFrame if you wish to modify what happens here	
 	{
-		// This is called when the frame window is being created.
-		// Override this in CMainFrame if you wish to modify what happens here
+		UNREFERENCED_PARAMETER(pcs);
 
 		// Set the icon
 		SetIconLarge(IDW_MAIN);
@@ -3057,6 +3059,8 @@ namespace Win32xx
 		// Reposition the child windows
 		OnSysColorChange(0, 0);
 		RecalcLayout();
+
+		return 0;
 	}
 
 	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)

@@ -103,7 +103,7 @@ void CMainFrame::OnFileNew()
 	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, this, &tpm);
 }
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pCreateStruct)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -116,9 +116,11 @@ void CMainFrame::OnCreate()
 	// m_bUseToolBar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
-	CFrame::OnCreate();
+	CFrame::OnCreate(pCreateStruct);
 	m_View.SetFixedWidth(TRUE);
 	m_View.SetOwnerDraw(TRUE);
+
+	return 0;
 }
 
 void CMainFrame::OnInitialUpdate()

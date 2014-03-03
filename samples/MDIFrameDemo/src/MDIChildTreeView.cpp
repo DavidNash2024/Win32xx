@@ -91,9 +91,11 @@ CMDIChildTreeView::~CMDIChildTreeView()
 {
 }
 
-void CMDIChildTreeView::OnCreate()
+int CMDIChildTreeView::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
 	m_TreeView.Create(this);
+	return 0;
 }
 
 void CMDIChildTreeView::OnInitialUpdate()

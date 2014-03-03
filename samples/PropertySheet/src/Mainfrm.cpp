@@ -44,7 +44,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnCreate()
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -58,7 +58,7 @@ void CMainFrame::OnCreate()
 	// m_bUseCustomDraw = FALSE;		// Don't use custom draw for menu items
 
 	// call the base class function
-	CFrame::OnCreate();
+	return CFrame::OnCreate(pcs);
 }
 
 void CMainFrame::OnFileExit()

@@ -103,7 +103,7 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual void OnClose();
-		virtual void OnCreate();
+		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		// Its unlikely you would need to override these functions
@@ -705,12 +705,16 @@ namespace Win32xx
 		MDIDestroy();
 	}
 
-	inline void CMDIChild::OnCreate()
+	inline int CMDIChild::OnCreate(LPCREATESTRUCT pcs)
 	{
+		UNREFERENCED_PARAMETER(pcs);
+
 		// Create the view window
 		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
 		GetView()->Create(this);
 		RecalcLayout();
+
+		return 0;
 	}
 
 	inline void CMDIChild::RecalcLayout()

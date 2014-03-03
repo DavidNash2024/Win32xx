@@ -683,6 +683,64 @@ namespace Win32xx
 
   #endif // #ifndef _WIN32_WCE
 
+  #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
+
+	inline void LoadCommonControls()
+	{
+		HMODULE hComCtl = 0;
+
+		try
+		{
+			// Load the Common Controls DLL
+			hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+			if (!hComCtl)
+				throw CWinException(_T("Failed to load COMCTL32.DLL"));
+
+			if (GetComCtlVersion() > 470)
+			{
+				// Declare a pointer to the InItCommonControlsEx function
+				typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
+				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+
+				// Load the full set of common controls
+				INITCOMMONCONTROLSEX InitStruct = {0};
+				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+				InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
+							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
+
+				// Call InitCommonControlsEx
+				if(!((*pfnInit)(&InitStruct)))
+					throw CWinException(_T("InitCommonControlsEx failed"));
+			}
+			else
+			{
+				::InitCommonControls();
+			}
+
+			::FreeLibrary(hComCtl);
+		}
+
+		catch (const CWinException &e)
+		{
+			e.what();
+			if (hComCtl)
+				::FreeLibrary(hComCtl);
+
+			throw;
+		}
+	}
+
+  #else
+
+	inline void LoadCommonControls()
+	{
+		//  For WinCE
+		::InitCommonControls();		
+	}
+
+  #endif
+
+
   // Required for WinCE
   #ifndef lstrcpyn
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)

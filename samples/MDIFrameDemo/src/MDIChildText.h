@@ -11,7 +11,7 @@ class CViewText : public CWnd
 public:
 	CViewText();
 	virtual ~CViewText();
-	virtual void OnCreate();
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 	virtual void PreCreate(CREATESTRUCT &cs);
 
 private:
@@ -28,7 +28,7 @@ public:
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnCreate();
+	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

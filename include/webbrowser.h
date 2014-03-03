@@ -196,7 +196,8 @@ namespace Win32xx
 		void Stop();
 
 	protected:
-		virtual void OnCreate();
+		virtual void OnAttach();
+		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual void OnSize(int width, int height);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -773,9 +774,17 @@ namespace Win32xx
 		}
 	}
 
-	inline void CWebBrowser::OnCreate()
+	inline void CWebBrowser::OnAttach()
 	{
+		if (NULL == m_pIWebBrowser2)
+			AddWebBrowserControl();
+	}
+
+	inline int CWebBrowser::OnCreate(LPCREATESTRUCT pcs)
+	{
+		UNREFERENCED_PARAMETER(pcs);
 		AddWebBrowserControl();
+		return 0;
 	}
 
 	inline void CWebBrowser::OnDestroy()

@@ -16,7 +16,7 @@ public:
 protected:
 	LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
 	BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
-	void	OnCreate();
+	int 	OnCreate(LPCREATESTRUCT pcs);
 	LRESULT OnCustHelp(LPNMHDR pNMHDR);
 	LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);
 	void	OnFileExit();

@@ -15,7 +15,7 @@ public:
 
 protected:
 	virtual void    OnAbout();
-	virtual void    OnCreate();
+	virtual int     OnCreate(LPCREATESTRUCT pcs);
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void    OnDestroy();
 	virtual void    OnDraw(CDC* pDC);	

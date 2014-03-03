@@ -62,7 +62,7 @@ BEGIN
     END
     POPUP "&ToolBar"
     BEGIN
-		MENUITEM "&Default ToolBar"             IDM_TOOLBAR_DEFAULT
+		MENUITEM "&Default ToolBar",            IDM_TOOLBAR_DEFAULT
 		MENUITEM "&Large Icons",                IDM_TOOLBAR_BIGICONS, CHECKED
         MENUITEM "&Customize",                  IDM_TOOLBAR_CUSTOMIZE
     END
@@ -134,12 +134,12 @@ END
 // TEXTINCLUDE
 //
 
-1 TEXTINCLUDE 
+1 TEXTINCLUDE
 BEGIN
     "resource.h\0"
 END
 
-2 TEXTINCLUDE 
+2 TEXTINCLUDE
 BEGIN
     "#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
     "#include ""windows.h""\r\n"
@@ -147,7 +147,7 @@ BEGIN
     "\0"
 END
 
-3 TEXTINCLUDE 
+3 TEXTINCLUDE
 BEGIN
     "\r\n"
     "\0"

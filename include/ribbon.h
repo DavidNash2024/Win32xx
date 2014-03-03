@@ -123,7 +123,7 @@ namespace Win32xx
 		CRibbonFrame() : m_uRibbonHeight(0) {}
 		virtual ~CRibbonFrame() {}
 		virtual CRect GetViewRect();
-		virtual void OnCreate();
+		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 		virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
@@ -322,13 +322,15 @@ namespace Win32xx
 		return rcView;
 	}
 
-	inline void CRibbonFrame::OnCreate()
+	inline int CRibbonFrame::OnCreate(LPCREATESTRUCT pcs)
 	{
 		// OnCreate is called automatically during window creation when a
 		// WM_CREATE message received.
 
 		// Tasks such as setting the icon, creating child windows, or anything
 		// associated with creating windows are normally performed here.
+
+		UNREFERENCED_PARAMETER(pcs);
 
 		if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
 		{		
@@ -337,14 +339,16 @@ namespace Win32xx
 				m_bUseReBar = FALSE;			// Don't use rebars
 				m_bUseToolBar = FALSE;			// Don't use a toolbar
 
-				CFrame::OnCreate();
+				CFrame::OnCreate(pcs);
 				SetMenu(NULL);
 			}		
 		}
 		else 
 		{
-			CFrame::OnCreate();
+			CFrame::OnCreate(pcs);
 		}
+
+		return 0;
 	}
 
 	inline void CRibbonFrame::OnDestroy()

@@ -589,9 +589,10 @@ namespace Win32xx
 	protected:
 		// Override these functions as required
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void OnAttach();
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
-		virtual void OnCreate();
+		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual void OnDraw(CDC* pDC);
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
@@ -1180,7 +1181,8 @@ namespace Win32xx
 
 		Subclass(hWnd);		// Set the window's callback to CWnd::StaticWindowProc
 		AddToMap();			// Store the CWnd pointer in the HWND map
-		OnCreate();
+		
+		OnAttach();
 		OnInitialUpdate();
 
 		return TRUE;
@@ -1402,8 +1404,9 @@ namespace Win32xx
 
 				// Send a message to force the HWND to be added to the map
 				SendMessage(WM_NULL, 0L, 0L);
-
-				OnCreate(); // We missed the WM_CREATE message, so call OnCreate now
+				
+				// Override this to perform tasks after the window is attached.
+				OnAttach();			
 			}
 
 			// Clear the CWnd pointer from TLS
@@ -1563,11 +1566,22 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline void CWnd::OnCreate()
+	inline void CWnd::OnAttach()
+	{
+		// This function is called when a windows is attached to a CWnd.
+		// Override it in your derived class to automatically perform tasks
+		//  when the window is attached.
+	}
+
+	inline int CWnd::OnCreate(LPCREATESTRUCT pcs)
 	{
 		// This function is called when a WM_CREATE message is received
 		// Override it in your derived class to automatically perform tasks
 		//  during window creation.
+		// Return 0 to continue creating the window.
+
+		UNREFERENCED_PARAMETER (pcs);
+		return 0;
 	}
 
 	inline void CWnd::OnDestroy()
@@ -1985,8 +1999,7 @@ namespace Win32xx
 			}
 			break;  // Note: Some MDI commands require default processing
 		case WM_CREATE:
-			OnCreate();
-			return 0L;
+			return OnCreate((LPCREATESTRUCT) lParam);
 		case WM_DESTROY:
 			OnDestroy();
 			break;	// Note: Some controls require default processing.

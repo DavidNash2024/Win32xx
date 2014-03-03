@@ -19,7 +19,7 @@ public:
 	UINT GetRibbonHeight() { return m_uRibbonHeight; }
 
 protected:
-	virtual void OnCreate();
+	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDestroy();
 	virtual void OnDraw(CDC* pDC);	
 	virtual void OnInitialUpdate();
