@@ -11,7 +11,7 @@ CMainMDIFrame::CMainMDIFrame()
 {
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\MDI Frame"));
+	LoadRegistrySettings(_T("Win32++\\MDIFrameSplitter"));
 }
 
 CMainMDIFrame::~CMainMDIFrame()

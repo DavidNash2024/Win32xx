@@ -25,6 +25,9 @@ CMainFrame::~CMainFrame()
 }
 
 LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
+// Called when the user has begun customizing a toolbar. Here we save
+// a copy of the ToolBar layout so it can be restored when the user
+// selects the reset button.
 {
 	CToolBar* pToolBar = (CToolBar*)FromHandle(pNMTB->hdr.hwndFrom);
 	assert (dynamic_cast<CToolBar*> (pToolBar));
@@ -76,7 +79,6 @@ void CMainFrame::OnCreate()
 	// m_bShowMenuStatus = FALSE;		// Don't show toolbar or menu status
 	// m_bUseReBar = FALSE;				// Don't use rebars
 	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolBar = FALSE;			// Don't use a toolbar
 
 	// call the base class function
 	CFrame::OnCreate();
@@ -85,7 +87,17 @@ void CMainFrame::OnCreate()
 	DWORD dwStyle = GetToolBar()->GetWindowLongPtr(GWL_STYLE);
 	GetToolBar()->SetWindowLongPtr(GWL_STYLE, CCS_ADJUSTABLE|dwStyle);
 
+	// Untick the Large Icons menu item
 	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);
+}
+
+LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
+// Called when the help button on the customize dialog is pressed
+{
+	UNREFERENCED_PARAMETER(pNMHDR);
+	MessageBox(_T("Help Button Pressed"), _T("Help"), MB_ICONINFORMATION | MB_OK);
+
+	return 0L;
 }
 
 void CMainFrame::OnFileExit()
@@ -93,7 +105,6 @@ void CMainFrame::OnFileExit()
 	// The application ends when the frame is destroyed
 	Destroy();
 }
-
 
 void CMainFrame::OnInitialUpdate()
 {
@@ -149,7 +160,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
 	case TBN_QUERYDELETE:	return OnQueryDelete(pNMTB);
 	case TBN_QUERYINSERT:	return OnQueryInsert(pNMTB);
-	case TBN_CUSTHELP:		TRACE("TBN_CUSTHELP \n"); break;
+	case TBN_CUSTHELP:		return OnCustHelp((LPNMHDR)lParam);
 	case TBN_GETBUTTONINFO: return OnGetButtonInfo(pNMTB);
 	case TBN_BEGINADJUST:	return OnBeginAdjust(pNMTB);
 	case TBN_ENDADJUST:		TRACE("TBN_ENDADJUST \n");return TRUE;
@@ -162,6 +173,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 }
 
 LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
+// Called once for each button during toolbar customization to populate the list
+// of available buttons. Return FALSE when all buttons have been added.
 {
 	// An array of TBBUTTON that contains all possible buttons
 	TBBUTTON ButtonInfo[] =
@@ -205,6 +218,8 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 }
 
 LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
+// Called when a button may be deleted from a toolbar while the user is customizing the toolbar.
+// Return TRUE to permit button deletion, and FALSE to prevent it.
 {
 	UNREFERENCED_PARAMETER(pNMTB);
 
@@ -213,6 +228,8 @@ LRESULT CMainFrame::OnQueryDelete(LPNMTOOLBAR pNMTB)
 }
 
 LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
+// Called when a button may be inserted to the left of the specified button while the user 
+//  is customizing a toolbar. Return TRUE to permit button deletion, and FALSE to prevent it.
 {
 	UNREFERENCED_PARAMETER(pNMTB);
 
@@ -220,76 +237,9 @@ LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
 	return TRUE;
 }
 
-LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
-{
-	UNREFERENCED_PARAMETER(pNMTB);
-
-	// Reposition the toolbar
-	RecalcLayout();
-
-	return TRUE;
-}
-
-void CMainFrame::SaveTBDefault()
-{
-	int nCount = GetToolBar()->GetButtonCount();
-
-	for (int i = 0; i < nCount; i++)
-	{
-		TBBUTTON tbb;
-		GetToolBar()->GetButton(i, &tbb);
-		m_vTBBDefault.push_back(tbb);
-	}
-}
-
-void CMainFrame::OnTBCustomize()
-{
-	// Customize CFrame's Toolbar
-	GetToolBar()->Customize();
-}
-
-void CMainFrame::OnTBDefault()
-{
-	// Remove all current buttons
-	int nCount = GetToolBar()->GetButtonCount();
-	for (int i = nCount - 1; i >= 0; i--)
-	{
-		GetToolBar()->DeleteButton(i);
-	}
-	
-	// Restore buttons from info stored in m_vTBBDefault
-	int nDefaultCount = m_vTBBDefault.size();
-	for (int i = 0; i < nDefaultCount; i++)
-	{
-		TBBUTTON tbb = m_vTBBDefault[i];
-		GetToolBar()->InsertButton(i, &tbb);
-	}
-
-	RecalcLayout();
-}
-
-void CMainFrame::OnTBBigIcons()
-{
-	m_bBigIcons = !m_bBigIcons;
-
-	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_bBigIcons ? MF_CHECKED : MF_UNCHECKED));
-
-	if (m_bBigIcons)
-	{
-		// Set Large Images. 3 Imagelists - Normal, Hot and Disabled
-		SetToolBarImages(RGB(192,192,192), IDB_NORMAL, IDB_HOT, IDB_DISABLED);
-	}
-	else
-	{
-		// Set Small icons
-		GetToolBar()->SetHotImageList(0);
-		GetToolBar()->SetDisableImageList(0);
-		SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-	}
-}
-
 LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
-// Restores the Toolbar to the settings saved in OnBeginAdjust
+// Called when the user presses the Reset button on teh ToolBAr customize dialog.
+// Here we restore the Toolbar to the settings saved in OnBeginAdjust.
 {
 	CToolBar* pToolBar = (CToolBar*)FromHandle(pNMTB->hdr.hwndFrom);
 	assert (dynamic_cast<CToolBar*> (pToolBar));
@@ -303,15 +253,88 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
 	
 	// Restore buttons from info stored in m_vTBBReset
 	int nResetCount = m_vTBBReset.size();
-	for (int i = 0; i < nResetCount; i++)
+	for (int j = 0; j < nResetCount; j++)
 	{
-		TBBUTTON tbb = m_vTBBReset[i];
-		pToolBar->InsertButton(i, &tbb);
+		TBBUTTON tbb = m_vTBBReset[j];
+		pToolBar->InsertButton(j, &tbb);
 	}
 
 	RecalcLayout();
 
     return TRUE;
+}
+
+LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
+// Called when the toolbar has been changed during customization.
+{
+	UNREFERENCED_PARAMETER(pNMTB);
+
+	// Reposition the toolbar
+	RecalcLayout();
+
+	return TRUE;
+}
+
+void CMainFrame::OnTBBigIcons()
+// Toggle the Image size for the ToolBar by changing Image Lists.
+{
+	m_bBigIcons = !m_bBigIcons;
+
+	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_bBigIcons ? MF_CHECKED : MF_UNCHECKED));
+
+	if (m_bBigIcons)
+	{
+		// Set Large Images. 3 Imagelists - Normal, Hot and Disabled
+		SetToolBarImages(RGB(192,192,192), IDB_NORMAL, IDB_HOT, IDB_DISABLED);
+	}
+	else
+	{
+		// Set Small icons
+		SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+	}
+
+	RecalcLayout();
+	GetToolBar()->Invalidate();
+}
+
+void CMainFrame::OnTBCustomize()
+{
+	// Customize CFrame's Toolbar
+	GetToolBar()->Customize();
+}
+
+void CMainFrame::OnTBDefault()
+// Set the Toolbar back to its intial settings.
+{
+	// Remove all current buttons
+	int nCount = GetToolBar()->GetButtonCount();
+	for (int i = nCount - 1; i >= 0; i--)
+	{
+		GetToolBar()->DeleteButton(i);
+	}
+	
+	// Restore buttons from info stored in m_vTBBDefault
+	int nDefaultCount = m_vTBBDefault.size();
+	for (int j = 0; j < nDefaultCount; j++)
+	{
+		TBBUTTON tbb = m_vTBBDefault[j];
+		GetToolBar()->InsertButton(j, &tbb);
+	}
+
+	RecalcLayout();
+}
+
+void CMainFrame::SaveTBDefault()
+// Saves the initial Toolbar configuration in a vector of TBBUTTON
+{
+	int nCount = GetToolBar()->GetButtonCount();
+
+	for (int i = 0; i < nCount; i++)
+	{
+		TBBUTTON tbb;
+		GetToolBar()->GetButton(i, &tbb);
+		m_vTBBDefault.push_back(tbb);
+	}
 }
 
 void CMainFrame::SetupToolBar()

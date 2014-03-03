@@ -19,7 +19,6 @@ Features demonstrated in this example
 * Customizing the ToolBar using window's ToolBar customize feature.
 * Adding and removing buttons from a ToolBar
 * Saving and restoring the ToolBar information
-* Changing a ToolBars image lists.
 * Loading Normal, Hot and Disabled image lists for the ToolBar.
 
 

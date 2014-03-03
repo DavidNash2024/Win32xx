@@ -129,15 +129,15 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_FILE_OPEN  );
 	AddToolBarButton( IDM_FILE_SAVE  );
 	
-	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( 0 );						// Separator
 	AddToolBarButton( IDM_EDIT_CUT,   FALSE );	// disabled button
 	AddToolBarButton( IDM_EDIT_COPY,  FALSE );	// disabled button
 	AddToolBarButton( IDM_EDIT_PASTE, FALSE );	// disabled button
 	
-	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( 0 );						// Separator
 	AddToolBarButton( IDM_FILE_PRINT );
 	
-	AddToolBarButton( 0 );				// Separator
+	AddToolBarButton( 0 );						// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
 }
 

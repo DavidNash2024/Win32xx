@@ -188,6 +188,8 @@ BEGIN
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
 	IDM_TOOLBAR_CUSTOMIZE   "Customize the ToolBar"
+	IDM_TOOLBAR_DEFAULT     "Return the ToolBar buttons back to Default"
+	IDM_TOOLBAR_BIGICONS    "Toggle Big Icons On or Off"
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 

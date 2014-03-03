@@ -432,7 +432,7 @@ namespace Win32xx
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID);
-		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0);
+		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0, int iImage = -1);
 		virtual void CreateToolBar();
 		virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
 		virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
@@ -1885,7 +1885,7 @@ namespace Win32xx
 		// Create the ImageList if required
 		if (NULL == m_imlMenu.GetHandle() )
 		{
-					m_imlMenu.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
+			m_imlMenu.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
 			m_vMenuIcons.clear();
 		}
 		else
@@ -2016,13 +2016,13 @@ namespace Win32xx
 		GetReBar()->InsertBand(-1, rbbi);
 	}
 
-	inline void CFrame::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */)
+	inline void CFrame::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */, int iImage /* = -1 */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
 		m_vToolBarData.push_back(nID);
 
-		GetToolBar()->AddButton(nID, bEnabled);
+		GetToolBar()->AddButton(nID, bEnabled, iImage);
 
 		if(0 != szText)
 			GetToolBar()->SetButtonText(nID, szText);
@@ -4035,13 +4035,6 @@ namespace Win32xx
 		pImageList->Add( &bm, crMask );
 		pToolBar->SetImageList(pImageList);
 
-		// Automatocally create a disabled image list
-		if (GetToolBar()->GetDisabledImageList() == NULL)
-		{
-			m_ToolBarDisabledImages.Attach( CreateDisabledImageList(m_ToolBarImages.GetHandle()) );
-			GetToolBar()->SetDisableImageList(&m_ToolBarDisabledImages);
-		}
-
 		// Inform the Rebar of the change to the Toolbar
 		if (GetReBar()->IsWindow())
 		{
@@ -4054,15 +4047,24 @@ namespace Win32xx
 	// Sets the Disabled Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
-		// Get the image size
-		CBitmap bm(nID);
-		CSize sz = GetTBImageSize(&bm);
+		if (nID)
+		{
+			// Get the image size
+			CBitmap bm(nID);
+			CSize sz = GetTBImageSize(&bm);
 
-		// Set the toolbar's image list
-		pImageList->DeleteImageList();
-		pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-		pImageList->Add( &bm, crMask );
-		pToolBar->SetDisableImageList(pImageList);
+			// Set the toolbar's image list
+			pImageList->DeleteImageList();
+			pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+			pImageList->Add( &bm, crMask );
+			pToolBar->SetDisableImageList(pImageList);
+		}
+		else
+		{
+			pImageList->DeleteImageList();
+			pImageList->Attach( CreateDisabledImageList(m_ToolBarImages.GetHandle()) );
+			pToolBar->SetDisableImageList(pImageList);
+		}
 
 		// Inform the Rebar of the change to the Toolbar
 		if (GetReBar()->IsWindow())
@@ -4076,15 +4078,23 @@ namespace Win32xx
 	// Sets the Hot Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
-		// Get the image size
-		CBitmap bm(nID);
-		CSize sz = GetTBImageSize(&bm);
+		if (nID)
+		{
+			// Get the image size
+			CBitmap bm(nID);
+			CSize sz = GetTBImageSize(&bm);
 
-		// Set the toolbar's image list
-		pImageList->DeleteImageList();
-		pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-		pImageList->Add( &bm, crMask );
-		pToolBar->SetHotImageList(pImageList);
+			// Set the toolbar's image list
+			pImageList->DeleteImageList();
+			pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+			pImageList->Add( &bm, crMask );
+			pToolBar->SetHotImageList(pImageList);
+		}
+		else
+		{
+			pImageList->DeleteImageList();
+			pToolBar->SetHotImageList(0);
+		}
 
 		// Inform the Rebar of the change to the Toolbar
 		if (GetReBar()->IsWindow())
@@ -4111,17 +4121,9 @@ namespace Win32xx
 		}
 
 		// Set the button images
-		SetTBImageList(GetToolBar(), &m_ToolBarImages, ToolBarID, crMask);
-
-		if (ToolBarHotID)
-		{
-			SetTBImageListHot(GetToolBar(), &m_ToolBarHotImages, ToolBarHotID, crMask);
-		}
-
-		if (ToolBarDisabledID)
-		{
-			SetTBImageListDis(GetToolBar(), &m_ToolBarDisabledImages, ToolBarDisabledID, crMask);
-		}
+		SetTBImageList(GetToolBar(),    &m_ToolBarImages, ToolBarID, crMask);
+		SetTBImageListHot(GetToolBar(), &m_ToolBarHotImages, ToolBarHotID, crMask);
+		SetTBImageListDis(GetToolBar(), &m_ToolBarDisabledImages, ToolBarDisabledID, crMask);
 	}
 
 	inline void CFrame::SetupToolBar()
@@ -4132,13 +4134,16 @@ namespace Win32xx
 		AddToolBarButton( IDM_FILE_NEW   );
 		AddToolBarButton( IDM_FILE_OPEN  );
 		AddToolBarButton( IDM_FILE_SAVE  );
-		AddToolBarButton( 0 );				// Separator
-		AddToolBarButton( IDM_EDIT_CUT   );
-		AddToolBarButton( IDM_EDIT_COPY  );
-		AddToolBarButton( IDM_EDIT_PASTE );
-		AddToolBarButton( 0 );				// Separator
+		
+		AddToolBarButton( 0 );						// Separator
+		AddToolBarButton( IDM_EDIT_CUT,   FALSE );	// disabled button
+		AddToolBarButton( IDM_EDIT_COPY,  FALSE );	// disabled button
+		AddToolBarButton( IDM_EDIT_PASTE, FALSE );	// disabled button
+		
+		AddToolBarButton( 0 );						// Separator
 		AddToolBarButton( IDM_FILE_PRINT );
-		AddToolBarButton( 0 );				// Separator
+		
+		AddToolBarButton( 0 );						// Separator
 		AddToolBarButton( IDM_HELP_ABOUT );
 */
 	}

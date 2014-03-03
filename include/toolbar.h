@@ -57,7 +57,7 @@ namespace Win32xx
 
 		// Operations
 		virtual int  AddBitmap(UINT ToolBarID);
-		virtual BOOL AddButton(UINT nID, BOOL bEnabled = TRUE);
+		virtual BOOL AddButton(UINT nID, BOOL bEnabled = TRUE, int iImage = -1);
 		virtual void Destroy();
 		virtual BOOL ReplaceBitmap(UINT NewToolBarID);
 		virtual BOOL SetBitmap(UINT nID);
@@ -187,18 +187,28 @@ namespace Win32xx
 		return iResult;
 	}
 
-	inline BOOL CToolBar::AddButton(UINT nID, BOOL bEnabled /* = TRUE */)
-	// Adds Resource IDs to toolbar buttons.
-	// A resource ID of 0 is a separator
+	inline BOOL CToolBar::AddButton(UINT nID, BOOL bEnabled /* = TRUE */, int iImage /* = -1 */)
+	// Adds buttons to the Toolbar. It provides a convenient alternative to AddButtons.
+	// A resource ID of 0 is a separator.  iImage is the index of the image in the ImageList. 
+	// The default is -1 in which case the image based on the button's position is chosen.
 	{
 		assert(::IsWindow(m_hWnd));
 
 		// Count toolbar buttons with Command IDs
 		int nImages = 0;
-		for (int i = 0; i < GetButtonCount(); i++)
+
+		if (iImage == -1)
 		{
-			if (GetCommandID(i) > 0)
-				nImages++;
+			// choose the image based on the number of buttons already used
+			for (int i = 0; i < GetButtonCount(); i++)
+			{
+				if (GetCommandID(i) > 0)
+					nImages++;
+			}
+		}
+		else
+		{
+			nImages = iImage;
 		}
 
 		// TBBUTTON structure for each button in the toolbar
@@ -528,14 +538,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::Indeterminate(int idButton, BOOL fIndeterminate) const
-	//Hides or shows the specified button in a ToolBar.
+	// Sets or clears the indeterminate state of the specified button in a toolbar.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_INDETERMINATE, (WPARAM)idButton, (LPARAM)MAKELONG (fIndeterminate, 0));
 	}
 
 	inline BOOL CToolBar::InsertButton(int iButton, LPTBBUTTON lpButton) const
-	// Inserts a button in a ToolBar.
+	// Inserts a button to the left of iButton.
 	{
 		assert(::IsWindow(m_hWnd));
 		return (BOOL)SendMessage(TB_INSERTBUTTON, (WPARAM)iButton, (LPARAM)lpButton);

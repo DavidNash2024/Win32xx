@@ -7,14 +7,13 @@
 #include "resource.h"
 
 
-CMyCombo::CMyCombo() : m_himlImages(NULL)
+CMyCombo::CMyCombo()
 {
 	SetImages(3, IDB_STATUS);
 }
 
 CMyCombo::~CMyCombo()
 {
-	ImageList_Destroy(m_himlImages);
 }
 
 void CMyCombo::PreCreate(CREATESTRUCT &cs)
@@ -61,27 +60,22 @@ BOOL CMyCombo::AddItems()
     }
 
 	// Assign the existing image list to the ComboBoxEx control
-    SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)m_himlImages);
+	SetImageList(&m_imlImages);
 
     return TRUE;
 }
 
 void CMyCombo::SetImages(int nImages, UINT ImageID)
 {
-	if (m_himlImages)
-	{
-		ImageList_Destroy(m_himlImages);
-		m_himlImages = NULL;
-	}
+	m_imlImages.DeleteImageList();
 
-	HBITMAP hbm = LoadBitmap(MAKEINTRESOURCE(ImageID));
-	BITMAP bm = {0};
-	::GetObject(hbm, sizeof(BITMAP), &bm);
-	int iImageWidth  = bm.bmWidth / nImages;
-	int iImageHeight = bm.bmHeight;
+	CBitmap bm(ImageID);
+	BITMAP bmData = bm.GetBitmapData();
+	int iImageWidth  = bmData.bmWidth / nImages;
+	int iImageHeight = bmData.bmHeight;	
+
 	COLORREF crMask = RGB(255,0,255);
-	m_himlImages = ImageList_Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, nImages, 0);
-	ImageList_AddMasked(m_himlImages, hbm, crMask);
-	::DeleteObject(hbm);
+	m_imlImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, nImages, 0);
+	m_imlImages.Add(&bm, crMask);
 }
 

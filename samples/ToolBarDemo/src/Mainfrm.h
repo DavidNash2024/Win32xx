@@ -14,26 +14,27 @@ public:
 	virtual ~CMainFrame();
 
 protected:
-	virtual LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
-	virtual BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void	OnCreate();
-	virtual LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);
-	virtual void	OnFileExit();
-	virtual void	OnFileOpen();
-	virtual void	OnFilePrint();
-	virtual void	OnFileSave();
-	virtual void	OnInitialUpdate();
-	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnQueryDelete(LPNMTOOLBAR pNMTB);
-	virtual LRESULT OnQueryInsert(LPNMTOOLBAR pNMTB);
-	virtual LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
-	virtual void	OnTBBigIcons();
-	virtual void	OnTBCustomize();
-	virtual void	OnTBDefault();
-	virtual LRESULT	OnReset(LPNMTOOLBAR pNMTB);
-	virtual void    SaveTBDefault();
-	virtual void	SetupToolBar();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
+	BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
+	void	OnCreate();
+	LRESULT OnCustHelp(LPNMHDR pNMHDR);
+	LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);
+	void	OnFileExit();
+	void	OnFileOpen();
+	void	OnFilePrint();
+	void	OnFileSave();
+	void	OnInitialUpdate();
+	LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+	LRESULT OnQueryDelete(LPNMTOOLBAR pNMTB);
+	LRESULT OnQueryInsert(LPNMTOOLBAR pNMTB);
+	LRESULT	OnReset(LPNMTOOLBAR pNMTB);
+	LRESULT OnToolBarChange(LPNMTOOLBAR pNMTB);
+	void	OnTBBigIcons();
+	void	OnTBCustomize();
+	void	OnTBDefault();
+	void    SaveTBDefault();
+	void	SetupToolBar();
+	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_View;
