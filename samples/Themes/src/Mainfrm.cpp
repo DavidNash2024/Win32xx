@@ -598,12 +598,12 @@ void CMainFrame::SetupToolBar()
 	if (IsReBarSupported())
 	{
 		// Add the Arrows toolbar
-		AddToolBarBand(m_Arrows, 0, IDC_ARROWS);
+		AddToolBarBand(&m_Arrows, 0, IDC_ARROWS);
 		m_Arrows.AddButton(IDM_ARROW_LEFT);
 		m_Arrows.AddButton(IDM_ARROW_RIGHT);
 
 		// Add the Cards toolbar
-		AddToolBarBand(m_Cards, 0, IDB_CARDS);
+		AddToolBarBand(&m_Cards, 0, IDB_CARDS);
 		m_Cards.AddButton(IDM_CARD_CLUB);
 		m_Cards.AddButton(IDM_CARD_DIAMOND);
 		m_Cards.AddButton(IDM_CARD_HEART);

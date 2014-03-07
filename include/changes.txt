@@ -103,9 +103,8 @@ Changes in detail
 - Added CDockContainer::OnMouseLeave
 - Added CDockContainer::OnTCNSelChange
 - Added CDockContainer::SetToolBarImages
+- Added CFrame::CustomDrawMenuBar
 - Added CFrame::CustomDrawToolBar
-- Added CFrame::GetReBarTheme
-- Added CFrame::GetToolBarTheme
 - Added CFrame::OnCustomDraw
 - Added CFrame::OnRBNHeightChange
 - Added CFrame::OnRBNLayoutChanged
@@ -145,11 +144,14 @@ Changes in detail
 - Modified CDialog::DoModeless
 - Modified CFile::OpenFileDialog   		Added Title argument	
 - Modified CFile::SaveFileDialog		Added Title argument
+- Modified CFrame::AddToolBarBand
 - Modified CFrame::AddToolBarButton		now also accepts image index
-- Modified CFrame::CMenuBar				returns pointer
-- Modified CFrame::CReBar				returns pointer
-- Modified CFrame::CStatusBar			returns pointer
-- Modified CFrame::CToolBar				returns pointer
+- Modified CFrame::GetReBarTheme
+- Modified CFrame::GetToolBarTheme
+- Modified CFrame::GetMenuBar			returns pointer
+- Modified CFrame::GetReBar				returns pointer
+- Modified CFrame::GetStatusBar			returns pointer
+- Modified CFrame::GetToolBar			returns pointer
 - Modified CHeader::GetImageList
 - Modified CHeader::SetImageList
 - Modified CHeader::CreateDragImage

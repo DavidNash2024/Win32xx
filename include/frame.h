@@ -431,7 +431,7 @@ namespace Win32xx
 		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
-		virtual void AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID);
+		virtual void AddToolBarBand(CToolBar* pTB, DWORD dwStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0, int iImage = -1);
 		virtual void CreateToolBar();
 		virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
@@ -1985,16 +1985,16 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	inline void CFrame::AddToolBarBand(CToolBar& TB, DWORD dwStyle, UINT nID)
+	inline void CFrame::AddToolBarBand(CToolBar* pTB, DWORD dwStyle, UINT nID)
 	{
 		// Adds a ToolBar to the rebar control
 
 		// Create the ToolBar Window
-		TB.Create(GetReBar());
+		pTB->Create(GetReBar());
 
 		// Fill the REBARBAND structure
 		REBARBANDINFO rbbi = {0};
-		CSize sz = TB.GetMaxSize();
+		CSize sz = pTB->GetMaxSize();
 
 		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
 		rbbi.cyMinChild = sz.cy;
@@ -2003,7 +2003,7 @@ namespace Win32xx
 		rbbi.cxMinChild = sz.cx +2;
 
 		rbbi.fStyle     = dwStyle;
-		rbbi.hwndChild  = TB;
+		rbbi.hwndChild  = pTB->GetHwnd();
 		rbbi.wID        = nID;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
@@ -2050,7 +2050,7 @@ namespace Win32xx
 	inline void CFrame::CreateToolBar()
 	{
 		if (IsReBarSupported() && m_bUseReBar)
-			AddToolBarBand(*GetToolBar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
+			AddToolBarBand(GetToolBar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
 		else
 			GetToolBar()->Create(this);	// Create the toolbar without a rebar
 
@@ -3407,7 +3407,7 @@ namespace Win32xx
 
 	inline LRESULT CFrame::OnUndocked()
 	{
-		// Notification from CDocker recieved via OnNotify
+		// Notification from CDocker received via OnNotify
 
 		m_hOldFocus = 0;
 		return 0;

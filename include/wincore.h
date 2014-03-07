@@ -1175,6 +1175,7 @@ namespace Win32xx
 		// Cleanup any previous attachment
 		if (m_PrevWindowProc)
 			Detach();
+		
 		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
 		if (pWnd)
 			pWnd->Cleanup();
@@ -1297,40 +1298,32 @@ namespace Win32xx
 			RegisterClass(*m_pwc);
 			m_pcs->lpszClass = m_pwc->lpszClassName;
 		}
-
-		// Set the CREATESTRUCT parameters
-		PreCreate(*m_pcs);
-
-		// Set the Window Class Name
-		if (!m_pcs->lpszClass)
+		else
 			m_pcs->lpszClass = _T("Win32++ Window");
 
 		// Set Parent
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-		if (!hWndParent && m_pcs->hwndParent)
-			hWndParent = m_pcs->hwndParent;
 
-		// Set the window style
-		DWORD dwStyle;
+		// Set a reasonable default window style
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		if (m_pcs->style)
-			dwStyle = m_pcs->style;
-		else
-			dwStyle = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
-
-		// Set window size and position
-		int x  = (m_pcs->cx || m_pcs->cy)? m_pcs->x  : CW_USEDEFAULT;
-		int cx = (m_pcs->cx || m_pcs->cy)? m_pcs->cx : CW_USEDEFAULT;
-		int y  = (m_pcs->cx || m_pcs->cy)? m_pcs->y  : CW_USEDEFAULT;
-		int cy = (m_pcs->cx || m_pcs->cy)? m_pcs->cy : CW_USEDEFAULT;
+		m_pcs->style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+		
+		// Set a reasonable default window position
+		m_pcs->x  = CW_USEDEFAULT;
+		m_pcs->cx = CW_USEDEFAULT;
+		m_pcs->y  = CW_USEDEFAULT;
+		m_pcs->cy = CW_USEDEFAULT;
+	
+		// Allow the CREATESTRUCT parameters to be modified
+		PreCreate(*m_pcs);
 
 		// Create the window
 #ifndef _WIN32_WCE
-		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
-				cx, cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, m_pcs->style, m_pcs->x, m_pcs->y,
+				m_pcs->cx, m_pcs->cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
 #else
-		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, x, y,
-				cx, cy, hWndParent, 0, m_pcs->lpCreateParams);
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, m_pcs->style, m_pcs->x, m_pcs->y,
+				m_pcs->cx, m_pcs->cy, hWndParent, 0, m_pcs->lpCreateParams);
 #endif
 
 		return m_hWnd;
@@ -1568,17 +1561,19 @@ namespace Win32xx
 
 	inline void CWnd::OnAttach()
 	{
-		// This function is called when a windows is attached to a CWnd.
-		// Override it in your derived class to automatically perform tasks
-		//  when the window is attached.
+		// This function is called when a window is attached to the CWnd.
+		// Override it to automatically perform tasks when the window is attached.
+		// Note:  Window controls are attached.
 	}
 
 	inline int CWnd::OnCreate(LPCREATESTRUCT pcs)
 	{
 		// This function is called when a WM_CREATE message is received
-		// Override it in your derived class to automatically perform tasks
-		//  during window creation.
+		// Override it to automatically perform tasks during window creation.
 		// Return 0 to continue creating the window.
+		
+		// Note: Window controls don't call OnCreate. They are sublcassed (attached)
+		//  after their window is created.
 
 		UNREFERENCED_PARAMETER (pcs);
 		return 0;
@@ -1586,7 +1581,7 @@ namespace Win32xx
 
 	inline void CWnd::OnDestroy()
 	{
-		// This function is called when a window is destroyed
+		// This function is called when a window is destroyed.
 		// Override it to do additional tasks, such as ending the application
 		//  with PostQuitMessage.
 	}
@@ -1743,59 +1738,37 @@ namespace Win32xx
 	inline void CWnd::PreCreate(CREATESTRUCT& cs)
 	// Called by CWnd::Create to set some window parameters
 	{
-		// Test if Win32++ has been started
-		assert(GetApp());	// Test if Win32++ has been started
-
-		m_pcs->cx             = cs.cx;
-		m_pcs->cy             = cs.cy;
-		m_pcs->dwExStyle      = cs.dwExStyle;
-		m_pcs->hInstance      = GetApp()->GetInstanceHandle();
-		m_pcs->hMenu          = cs.hMenu;
-		m_pcs->hwndParent     = cs.hwndParent;
-		m_pcs->lpCreateParams = cs.lpCreateParams;
-		m_pcs->lpszClass      = cs.lpszClass;
-		m_pcs->lpszName       = cs.lpszName;
-		m_pcs->style          = cs.style;
-		m_pcs->x              = cs.x;
-		m_pcs->y              = cs.y;
-
-		// Override this function in your derived class to set the
-		// CREATESTRUCT values prior to window creation.
-		// The cs.lpszClass parameter should NOT be specified if the
-		// PreRegisterClass function is used to create a window class.
+		UNREFERENCED_PARAMETER(cs);
+		
+		// Override this function to set the CREATESTRUCT values prior to window creation.
+		// Here we set the initial values for the following:
+		//  window styles (WS_VISABLE, WS_CHILD, WS_WS_MAXIMIZEBOX etc.)
+		//  window extended styles
+		//  window position
+		//  window menu
+		//  window class name
+		//  window name (caption)		
 	}
 
 	inline void CWnd::PreRegisterClass(WNDCLASS& wc)
-	// Called by CWnd::Create to set some window parameters
-	//  Useful for setting the background brush and cursor
+	// Called by CWnd::Create to set some window parameters.
+	// Used to set the window type (ClassName) and for setting the background brush and cursor.
 	{
-		// Test if Win32++ has been started
-		assert( GetApp() );
+		UNREFERENCED_PARAMETER(wc);
 
-		m_pwc->style			= wc.style;
-		m_pwc->lpfnWndProc		= CWnd::StaticWindowProc;
-		m_pwc->cbClsExtra		= wc.cbClsExtra;
-		m_pwc->cbWndExtra		= wc.cbWndExtra;
-		m_pwc->hInstance		= GetApp()->GetInstanceHandle();
-		m_pwc->hIcon			= wc.hIcon;
-		m_pwc->hCursor			= wc.hCursor;
-		m_pwc->hbrBackground	= wc.hbrBackground;
-		m_pwc->lpszMenuName		= wc.lpszMenuName;
-		m_pwc->lpszClassName	= wc.lpszClassName;
-
-		// Override this function in your derived class to set the
-		// WNDCLASS values prior to window creation.
+		// Override this function to set the WNDCLASS values prior to window creation.
+		// for example, for a ToolBar, we use this:
+		// wc.lpszClassName = TOOLBARCLASSNAME;
 
 		// ADDITIONAL NOTES:
 		// 1) The lpszClassName must be set for this function to take effect.
-		// 2) The lpfnWndProc is always CWnd::StaticWindowProc.
-		// 3) No other defaults are set, so the following settings might prove useful
+		// 2) No other defaults are set, so the following settings might prove useful
 		//     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 		//     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 		//     wc.hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
-		// 4) The styles that can be set here are WNDCLASS styles. These are a different
+		// 3) The styles that can be set here are WNDCLASS styles. These are a different
 		//     set of styles to those set by CREATESTRUCT (used in PreCreate).
-		// 5) RegisterClassEx is not used because its not supported on WinCE.
+		// 4) RegisterClassEx is not used because its not supported on WinCE.
 		//     To set a small icon for the window, use SetIconSmall.
 	}
 

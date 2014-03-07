@@ -111,7 +111,7 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
-		CImageList& GetImageList() const { return (CImageList&)m_imlTab; }
+		CImageList* GetImageList() { return &m_imlTab; }
 		BOOL GetShowButtons() const { return m_bShowButtons; }
 		int GetTabHeight() const { return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
@@ -296,7 +296,7 @@ namespace Win32xx
 		tpi.idTab = idTab;
 		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING);
 		if (hIcon)
-			tpi.iImage = GetImageList().Add(hIcon);
+			tpi.iImage = GetImageList()->Add(hIcon);
 		else
 			tpi.iImage = -1;
 
@@ -1128,11 +1128,11 @@ namespace Win32xx
 		GetItem(i, &tci);
 		if (tci.iImage >= 0)
 		{
-			GetImageList().Replace(i, hIcon);
+			GetImageList()->Replace(i, hIcon);
 		}
 		else
 		{
-			int iImage = GetImageList().Add(hIcon);
+			int iImage = GetImageList()->Add(hIcon);
 			tci.iImage = iImage;
 			TabCtrl_SetItem(m_hWnd, i, &tci);
 			m_vTabPageInfo[i].iImage = iImage;
