@@ -89,7 +89,7 @@ namespace Win32xx
 		HIMAGELIST Detach();
 		BOOL DragEnter(CWnd* pWndLock, CPoint point) const;
 		BOOL DragLeave(CWnd* pWndLock) const;
-		BOOL DragMove(CPoint pt)	const;
+		BOOL DragMove(CPoint pt) const;
 		BOOL DragShowNolock(BOOL bShow) const;
 		BOOL Draw(CDC* pDC, int nImage, POINT pt, UINT nStyle) const;
 		BOOL DrawEx(CDC* pDC, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
@@ -105,8 +105,6 @@ namespace Win32xx
 		BOOL GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const;
 
 		//Operators
-		BOOL operator != (const CImageList& ImageList) const;
-		BOOL operator == (const CImageList& ImageList) const;
 		operator HIMAGELIST () const;
 
 	private:
@@ -158,13 +156,13 @@ namespace Win32xx
 
 		if (GetApp())
 		{
-			// Allocate an iterator for our HDC map
+			// Allocate an iterator for our HIMAGELIST map
 			std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST>::iterator m;
 
 			CWinApp* pApp = GetApp();
 			if (pApp)
 			{
-				// Erase the CDC pointer entry from the map
+				// Erase the CImageList pointer entry from the map
 				pApp->m_csMapLock.Lock();
 				for (m = pApp->m_mapHIMAGELIST.begin(); m != pApp->m_mapHIMAGELIST.end(); ++m)
 				{
@@ -212,16 +210,12 @@ namespace Win32xx
 	inline void CImageList::Attach(HIMAGELIST hImageList)
 	// Attaches an existing ImageList to this CImageList
 	{
-		if (m_hImageList != NULL && m_hImageList != hImageList)
-		{
-			ImageList_Destroy(Detach());
-		}
+		assert(hImageList);
+		assert( 0 == m_hImageList );
+		assert( 0 == GetApp()->GetCImageListFromMap(hImageList) );
 
-		if (hImageList)
-		{
-			m_hImageList = hImageList;
-			AddToMap();
-		}
+		m_hImageList = hImageList;
+		AddToMap();
 	}
 
 	inline BOOL CImageList::BeginDrag(int nImage, CPoint ptHotSpot) const
@@ -429,20 +423,8 @@ namespace Win32xx
 		return m_hImageList;
 	}
 
-	inline BOOL CImageList::operator != (const CImageList& ImageList) const
-	// Returns TRUE if the two ImageList objects are not equal.
-	{
-		return ImageList.m_hImageList != m_hImageList;
-	}
-
-	inline BOOL CImageList::operator == (const CImageList& ImageList) const
-	// Returns TRUE of the two ImageList object are equal
-	{
-		return ImageList.m_hImageList == m_hImageList;
-	}
-
 	inline CImageList::operator HIMAGELIST () const
-	// Retrieves the menu's handle.
+	// Retrieves the image list's handle.
 	{
 		return m_hImageList;
 	}

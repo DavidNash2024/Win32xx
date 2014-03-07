@@ -12,7 +12,7 @@
 class CClientDialog : public CDialog
 {
 public:
-	CClientDialog(UINT nResID, CWnd* pParent = NULL);
+	CClientDialog(UINT nResID);
 	virtual ~CClientDialog();
 
 	LRESULT OnActivate(WPARAM wParam, LPARAM lParam);

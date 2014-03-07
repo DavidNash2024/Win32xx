@@ -9,7 +9,7 @@
 /////////////////////////////////////////////
 // Definitions for the CButtonDialog class
 //
-CButtonDialog::CButtonDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent) 
+CButtonDialog::CButtonDialog(UINT nResID) : CDialog(nResID) 
 {
 	m_Brush.CreateSolidBrush(RGB(255, 255, 255));
 }
@@ -83,7 +83,7 @@ INT_PTR CButtonDialog::OnCtlColorStatic(WPARAM wParam, LPARAM lParam)
 /////////////////////////////////////////////
 // Definitions for the CComboBoxDialog class
 //
-CComboBoxDialog::CComboBoxDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent) 
+CComboBoxDialog::CComboBoxDialog(UINT nResID) : CDialog(nResID) 
 {
 	m_Brush.CreateSolidBrush(RGB(255, 255, 255));
 }
@@ -127,7 +127,7 @@ BOOL CComboBoxDialog::OnInitDialog()
 /////////////////////////////////////////
 // Definitions for the CMyDialog class
 //
-CMyDialog::CMyDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent)
+CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
 }
 

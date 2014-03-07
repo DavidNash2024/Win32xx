@@ -7,8 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
-	: CDialog(nResID, pParent)
+CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)

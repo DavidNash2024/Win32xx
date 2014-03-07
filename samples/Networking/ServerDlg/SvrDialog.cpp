@@ -9,8 +9,7 @@
 
 /////////////////////////////////////////////
 // Definitions for the CTCPClientDlg class
-CTCPClientDlg::CTCPClientDlg(UINT nResID, CWnd* pParent) :
-				CDialog(nResID, pParent), m_pSocket(0)
+CTCPClientDlg::CTCPClientDlg(UINT nResID) : CDialog(nResID), m_pSocket(0)
 {
 }
 
@@ -84,8 +83,8 @@ void CTCPClientDlg::Send()
 
 /////////////////////////////////////////////
 // Definitions for the CSvrDialog class
-CSvrDialog::CSvrDialog(UINT nResID, CWnd* pParent) : CDialog(nResID, pParent),
-              m_bServerStarted(FALSE), m_SocketType(SOCK_STREAM)
+CSvrDialog::CSvrDialog(UINT nResID) : CDialog(nResID), m_bServerStarted(FALSE), 
+                                      m_SocketType(SOCK_STREAM)
 {
 	// Add support for the IP Address control
 	// It requires Win95 with IE4 intergrated or a later version of Windows OS.
@@ -323,9 +322,9 @@ BOOL CSvrDialog::OnSocketAccept()
 	pClient->StartEvents();
 
 	// Create the new chat dialog
-	TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT, this);
+	TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT);
 	pDialog->m_pSocket = pClient;
-	pDialog->DoModeless();
+	pDialog->DoModeless(this);
 
 	// Reposition the chat dialog
 	CRect rc = pDialog->GetWindowRect();

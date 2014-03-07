@@ -894,12 +894,9 @@ namespace Win32xx
 	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.
 	{
 		assert(m_pData);
-
-		if (m_pData->hGDIObject != NULL && m_pData->hGDIObject != hObject)
-		{
-			::DeleteObject(Detach());
-		}
-
+		assert(hObject);
+		assert(0 == m_pData->hGDIObject);
+		
 		CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
 		if (pObject)
 		{

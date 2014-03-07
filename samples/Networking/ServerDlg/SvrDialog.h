@@ -18,7 +18,7 @@ typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 class CTCPClientDlg : public CDialog
 {
 public:
-	CTCPClientDlg(UINT nResID, CWnd* pParent = NULL);
+	CTCPClientDlg(UINT nResID);
 	virtual ~CTCPClientDlg() {}
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnClose();
@@ -46,7 +46,7 @@ private:
 class CSvrDialog : public CDialog
 {
 public:
-	CSvrDialog(UINT nResID, CWnd* pParent = NULL);
+	CSvrDialog(UINT nResID);
 	virtual ~CSvrDialog();
 	void Append(int nID, LPCTSTR buf);
 	void LoadCommonControlsEx();

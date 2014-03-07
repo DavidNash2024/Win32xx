@@ -267,7 +267,7 @@ copy TabDemo\ProjectFiles\GNU\Release\TabDemo.exe                   "..\output\M
 copy Themes\ProjectFiles\GNU\Release\Themes.exe                     "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Release\Threads.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\GNU\Release\ToolBarDemo.exe           "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
-copy Tray\ProjectFiles\GNU\Debug\Tray.exe                           "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
+copy Tray\ProjectFiles\GNU\\Release\Tray.exe                        "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 
 
 REM: Pop the directory change off the stack

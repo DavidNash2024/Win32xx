@@ -7,8 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
-	: CDialog(nResID, pParent)
+CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
 	m_hInstRichEdit = LoadLibrary(_T("RICHED32.DLL"));
     if (!m_hInstRichEdit)
@@ -76,8 +75,8 @@ BOOL CMyDialog::OnInitDialog()
 	AttachItem(IDC_RICHEDIT2, m_RichEdit2);
 
 	// Put some text in the edit boxes
-	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
-	SetDlgItemText(IDC_RICHEDIT2, _T("Rich Edit Window"));
+	m_RichEdit1.SetWindowText(_T("Rich Edit Window"));
+	m_RichEdit2.SetWindowText(_T("Rich Edit Window"));
 
 	// Initialize dialog resizing
 	m_Resizer.Initialize( this, CRect(0, 0, 300, 200) ); 

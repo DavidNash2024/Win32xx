@@ -68,8 +68,8 @@ void CMainWindow::OnDestroy()
 
 void CMainWindow::OnInitialUpdate()
 {
-	CMyDialog MyDialog(IDD_DIALOG1, this);
-	MyDialog.DoModal();
+	CMyDialog MyDialog(IDD_DIALOG1);
+	MyDialog.DoModal(this);
 }
 
 LRESULT CMainWindow::OnSize()

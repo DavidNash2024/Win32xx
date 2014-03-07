@@ -672,6 +672,7 @@ namespace Win32xx
 		// GetSysColor(COLOR_BTNFACE)	// Default Grey
 		// RGB(196, 215, 250)			// Default Blue
 
+		m_brBackground.DeleteObject();
 		m_brBackground.CreateSolidBrush(color);
 	}
 

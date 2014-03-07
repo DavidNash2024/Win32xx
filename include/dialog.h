@@ -82,17 +82,16 @@ namespace Win32xx
 	class CDialog : public CWnd
 	{
 	public:
-		CDialog(UINT nResID, CWnd* pParent = NULL);
-		CDialog(LPCTSTR lpszResName, CWnd* pParent = NULL);
-		CDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent = NULL);
+		CDialog(UINT nResID);
+		CDialog(LPCTSTR lpszResName);
+		CDialog(LPCDLGTEMPLATE lpTemplate);
 		virtual ~CDialog();
 
 		// You probably won't need to override these functions
 		virtual void AttachItem(int nID, CWnd& Wnd);
-		virtual HWND Create(CWnd* pParent = NULL);
-		virtual INT_PTR DoModal();
-		virtual HWND DoModeless();
-		virtual void SetDlgParent(CWnd* pParent);
+		virtual INT_PTR DoModal(CWnd* pParent = NULL);
+		virtual HWND DoModeless(CWnd* pParent = NULL);
+		virtual HWND Create(CWnd* pParent = NULL) { return DoModeless(pParent); }
 		BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return (NULL != m_lpTemplate); }
 
@@ -127,7 +126,6 @@ namespace Win32xx
 		BOOL m_IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
 		LPCDLGTEMPLATE m_lpTemplate;	// the dialog template for indirect dialogs
-		HWND m_hParent;					// handle to the dialogs's parent window
 	};
 
 
@@ -202,30 +200,24 @@ namespace Win32xx
     ////////////////////////////////////
 	// Definitions for the CDialog class
 	//
-	inline CDialog::CDialog(LPCTSTR lpszResName, CWnd* pParent/* = NULL*/)
-		: m_IsModal(TRUE), m_lpszResName(lpszResName), m_lpTemplate(NULL)
+	inline CDialog::CDialog(LPCTSTR lpszResName) : m_IsModal(TRUE), 
+						m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
-		m_hParent = pParent? pParent->GetHwnd() : NULL;
-		
 		// Initialize the common controls.
 		LoadCommonControls();
 	}
 
-	inline CDialog::CDialog(UINT nResID, CWnd* pParent/* = NULL*/)
-		: m_IsModal(TRUE), m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
+	inline CDialog::CDialog(UINT nResID) : m_IsModal(TRUE), 
+						m_lpszResName(MAKEINTRESOURCE (nResID)), m_lpTemplate(NULL)
 	{
-		m_hParent = pParent? pParent->GetHwnd() : NULL;
-		
 		// Initialize the common controls.
 		LoadCommonControls();
 	}
 
 	//For indirect dialogs - created from a dialog box template in memory.
-	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate, CWnd* pParent/* = NULL*/)
-		: m_IsModal(TRUE), m_lpszResName(NULL), m_lpTemplate(lpTemplate)
+	inline CDialog::CDialog(LPCDLGTEMPLATE lpTemplate) : m_IsModal(TRUE), 
+						m_lpszResName(NULL), m_lpTemplate(lpTemplate)
 	{
-		m_hParent = pParent? pParent->GetHwnd() : NULL;
-		
 		// Initialize the common controls.
 		LoadCommonControls();
 	}
@@ -245,15 +237,6 @@ namespace Win32xx
 	// Attach a dialog item to a CWnd
 	{
 		Wnd.AttachDlgItem(nID, this);
-	}
-
-	inline HWND CDialog::Create(CWnd* pParent /* = NULL */)
-	{
-		// Allow a dialog to be used as a child window
-
-		assert(GetApp());
-		SetDlgParent(pParent);
-		return DoModeless();
 	}
 
 	inline INT_PTR CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -411,7 +394,7 @@ namespace Win32xx
 
 	} // INT_PTR CALLBACK CDialog::DialogProc(...)
 
-	inline INT_PTR CDialog::DoModal()
+	inline INT_PTR CDialog::DoModal(CWnd* pParent /* = NULL */)
 	{
 		// Create a modal dialog
 		// A modal dialog box must be closed by the user before the application continues
@@ -437,17 +420,18 @@ namespace Win32xx
 			}
 		#endif
 
+			HWND hParent = pParent? pParent->m_hWnd : 0;
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 			pTLSData->pCWnd = this;
 
 			// Create a modal dialog
 			if (IsIndirect())
-				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, m_hParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
-				nResult = ::DialogBox(hInstance, m_lpszResName, m_hParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBox(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -479,7 +463,7 @@ namespace Win32xx
 		return nResult;
 	}
 
-	inline HWND CDialog::DoModeless()
+	inline HWND CDialog::DoModeless(CWnd* pParent /* = 0 */)
 	{
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
@@ -495,16 +479,17 @@ namespace Win32xx
 			pTLSData->pCWnd = this;
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+			HWND hParent = pParent? pParent->m_hWnd : 0;
 
 			// Create a modeless dialog
 			if (IsIndirect())
-				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, m_hParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
 
-				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, m_hParent, (DLGPROC)CDialog::StaticDialogProc);
+				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -593,12 +578,6 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline void CDialog::SetDlgParent(CWnd* pParent)
-	// Allows the parent of the dialog to be set before the dialog is created
-	{
-		m_hParent = pParent? pParent->GetHwnd() : NULL;
-	}
-
 	inline DWORD CDialog::GetDefID() const
 	// Retrieves the identifier of the default push button control for the dialog. 
 	{
@@ -612,7 +591,7 @@ namespace Win32xx
 	}
 
 	inline void CDialog::GotoDlgCtrl(CWnd* pWndCtrl)
-	// Sets the keyboard focuse to the specified control
+	// Sets the keyboard focus to the specified control
 	{
 		assert(::IsWindow(m_hWnd));
 		assert(pWndCtrl->IsWindow());
@@ -627,14 +606,14 @@ namespace Win32xx
 	}
 
 	inline void CDialog::NextDlgCtrl() const
-	// Sets the keyboard focus to the next dialog control
+	// Sets the keyboard focus to the next dialog control.
 	{
 		assert(::IsWindow(m_hWnd));
 		SendMessage(WM_NEXTDLGCTL, FALSE, FALSE);
 	}
 
 	inline void CDialog::PrevDlgCtrl() const
-	// Sets the keyboard focus to the previous dialog control
+	// Sets the keyboard focus to the previous dialog control.
 	{
 		assert(::IsWindow(m_hWnd));
 		SendMessage(WM_NEXTDLGCTL, TRUE, FALSE);

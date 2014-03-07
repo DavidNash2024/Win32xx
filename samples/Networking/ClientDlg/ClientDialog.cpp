@@ -7,8 +7,8 @@
 
 
 // Definitions for the CMyDialog class
-CClientDialog::CClientDialog(UINT nResID, CWnd* pParent) :
-		CDialog(nResID, pParent), m_bClientConnected(FALSE), m_SocketType(SOCK_STREAM)
+CClientDialog::CClientDialog(UINT nResID) : CDialog(nResID), 
+                   m_bClientConnected(FALSE), m_SocketType(SOCK_STREAM)
 {
 	// Add support for the IP Address control
 	// It requires Win95 with IE4 intergrated or a later version of Windows OS.

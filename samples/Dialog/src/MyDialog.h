@@ -10,7 +10,7 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID, CWnd* pParent = NULL);
+	CMyDialog(UINT nResID);
 	virtual ~CMyDialog();
 
 protected:

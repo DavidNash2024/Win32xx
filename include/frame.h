@@ -1807,9 +1807,9 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseReBar(FALSE),
-		                m_bUseThemes(TRUE), m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
-						m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE)
+	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bShowIndicatorStatus(TRUE), m_bShowMenuStatus(TRUE), m_bUseThemes(TRUE), 
+		                      m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
+						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE)
 	{
 		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
@@ -1821,14 +1821,7 @@ namespace Win32xx
 		LoadCommonControls();
 
 		// By default, we use the rebar if we can
-		if (GetComCtlVersion() > 470)
-			m_bUseReBar = TRUE;
-
-		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
-		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+		m_bUseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
 	}
 
 	inline CFrame::~CFrame()
@@ -2996,6 +2989,13 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(pcs);
 
+		// Set the fonts
+		NONCLIENTMETRICS nm = {0};
+		nm.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
+		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+
 		// Set the icon
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
@@ -3144,8 +3144,7 @@ namespace Win32xx
 			if (hPrevFocus == GetMenuBar()->GetHwnd())
 				hPrevFocus = m_hWnd;
 
-			m_AboutDialog.SetDlgParent(this);
-			m_AboutDialog.DoModal();
+			m_AboutDialog.DoModal(this);
 
 			::SetFocus(hPrevFocus);
 		}
@@ -3450,6 +3449,7 @@ namespace Win32xx
 		NONCLIENTMETRICS nm = {0};
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		m_fntStatusBar.DeleteObject();
 		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
 		GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);
 		SetStatusText();
@@ -3458,6 +3458,7 @@ namespace Win32xx
 		if (GetMenuBar()->IsWindow())
 		{
 			// Update the MenuBar font and button size
+			m_fntMenuBar.DeleteObject();
 			m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
 			GetMenuBar()->SetFont(&m_fntMenuBar, TRUE);
 			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );

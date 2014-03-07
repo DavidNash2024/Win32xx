@@ -168,8 +168,6 @@ namespace Win32xx
 		BOOL SetMenuItemInfo(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos = FALSE);
 
 		//Operators
-		BOOL operator != (const CMenu& menu) const;
-		BOOL operator == (const CMenu& menu) const;
 		operator HMENU () const;
 
 	private:
@@ -258,16 +256,12 @@ namespace Win32xx
 	inline void CMenu::Attach(HMENU hMenu)
 	// Attaches an existing menu to this CMenu
 	{
-		if (m_hMenu != NULL && m_hMenu != hMenu)
-		{
-			::DestroyMenu(Detach());
-		}
+		assert( ::IsMenu(hMenu) );
+		assert( 0 == m_hMenu );
+		assert( 0 == GetApp()->GetCMenuFromMap(hMenu) );
 
-		if (hMenu)
-		{
-			m_hMenu = hMenu;
-			AddToMap();
-		}
+		m_hMenu = hMenu;
+		AddToMap();
 	}
 	
 	inline UINT CMenu::CheckMenuItem(UINT uIDCheckItem, UINT uCheck)
@@ -558,18 +552,6 @@ namespace Win32xx
 		assert(IsMenu(m_hMenu));
 		HWND hWnd = pWnd? pWnd->GetHwnd() : 0;
 		return ::TrackPopupMenuEx(m_hMenu, uFlags, x, y, hWnd, lptpm);
-	}
-
-	inline BOOL CMenu::operator != (const CMenu& menu) const
-	// Returns TRUE if the two menu objects are not equal.
-	{
-		return menu.m_hMenu != m_hMenu;
-	}
-
-	inline BOOL CMenu::operator == (const CMenu& menu) const
-	// Returns TRUE of the two menu object are equal
-	{
-		return menu.m_hMenu == m_hMenu;
 	}
 
 	inline CMenu::operator HMENU () const
