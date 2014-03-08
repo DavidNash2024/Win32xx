@@ -122,6 +122,15 @@ Changes in detail
 - Added CMDIChild::OnWindowPosChanged
 - Added CRect operator LPCRECT()
 - Added CString operator += (TCHAR)
+- Added CTab::DeleteAllItems	
+- Added CTab::DeleteItem		
+- Added CTab::DeselectAll		
+- Added CTab::GetExtendedStyle
+- Added CTab::GetItemRect
+- Added CTab::GetRowCount		
+- Added CTab::GetToolTips		
+- Added CTab::HighlightItem		
+- Added CTab::InsertItem		
 - Added CTab::OnPaint
 - Added CTab::OnEraseBkgnd
 - Added CTab::OnKillFocus
@@ -130,7 +139,13 @@ Changes in detail
 - Added CTab::OnTCNSelChange
 - Added CTab::OnWindowPosChanged
 - Added CTab::OnWindowPosChanging
+- Added CTab::RemoveImage	
 - Added CTab::SetFont
+- Added CTab::SetExtendedStyle	
+- Added CTab::SetImageList		
+- Added CTab::SetItem			
+- Added CTab::SetItemExtra		
+- Added CTab::SetToopTips	
 - Added CToolBar::Customize
 - Added CToolBar::SetButtonInfo
 - Added CWnd::GetDlgCtrlID

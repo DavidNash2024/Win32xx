@@ -2024,9 +2024,8 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC dc((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(&dc);
-				dc.Detach();
+				CDC* pDC = FromHandle((HDC)wParam);
+				BOOL bResult = OnEraseBkgnd(pDC);
 				if (bResult) return TRUE;
 			}
 			break;

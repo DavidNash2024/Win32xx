@@ -78,7 +78,7 @@ namespace Win32xx
 	{
 	public:
 		CComboBox() {}
-		virtual ~CComboBox() { ::InitCommonControls(); }
+		virtual ~CComboBox() {}
 
 		int   AddString(LPCTSTR lpszString) const;
 		void  Clear() const;
@@ -128,13 +128,7 @@ namespace Win32xx
 	class CComboBoxEx : public CComboBox
 	{
 	public:
-		CComboBoxEx()
-		{
-			INITCOMMONCONTROLSEX icce;
-			icce.dwSize = sizeof(INITCOMMONCONTROLSEX);
-			icce.dwICC = ICC_USEREX_CLASSES;
-			::InitCommonControlsEx(&icce);
-		}
+		CComboBoxEx() {}
 		virtual ~CComboBoxEx() {}
 
 		int  	DeleteItem(int nIndex ) const;
@@ -158,13 +152,7 @@ namespace Win32xx
 	class CDateTime : public CWnd
 	{
 	public:
-		CDateTime()
-		{
-			INITCOMMONCONTROLSEX icce;
-			icce.dwSize = sizeof(INITCOMMONCONTROLSEX);
-			icce.dwICC = ICC_DATE_CLASSES;
-			::InitCommonControlsEx(&icce);
-		}
+		CDateTime() {}
 		virtual ~CDateTime() {}
 
 		COLORREF GetMonthCalColor(int iColor) const;
@@ -186,13 +174,7 @@ namespace Win32xx
 	class CHeader : public CWnd
 	{
 	public:
-		CHeader()
-		{
-			INITCOMMONCONTROLSEX icex;
-			icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-			icex.dwICC = ICC_WIN95_CLASSES;
-			::InitCommonControlsEx(&icex);
-		}
+		CHeader() {}
 		virtual ~CHeader() {}
 
 		// Attributes
@@ -232,7 +214,7 @@ namespace Win32xx
 	class CHotKey : public CWnd
 	{
 	public:
-		CHotKey() { ::InitCommonControls(); }
+		CHotKey() {}
 		virtual ~CHotKey() {}
 
 		DWORD GetHotKey() const;
@@ -248,13 +230,7 @@ namespace Win32xx
 	class CIPAddress : public CWnd
 	{
 	public:
-		CIPAddress()
-		{
-			INITCOMMONCONTROLSEX icex;
-			icex.dwSize = sizeof(INITCOMMONCONTROLSEX);
-			icex.dwICC = ICC_INTERNET_CLASSES;
-			::InitCommonControlsEx(&icex);
-		}
+		CIPAddress() {}
 		virtual ~CIPAddress() {}
 
 		void ClearAddress();
@@ -275,13 +251,7 @@ namespace Win32xx
 	class CMonthCalendar : public CWnd
 	{
 	public:
-		CMonthCalendar()
-		{
-			INITCOMMONCONTROLSEX icex;
-			icex.dwSize = sizeof(icex);
-			icex.dwICC  = ICC_DATE_CLASSES;
-			InitCommonControlsEx(&icex);
-		}
+		CMonthCalendar() {}
 		virtual ~CMonthCalendar() {}
 
 		// Attributes
@@ -316,7 +286,7 @@ namespace Win32xx
 	class CProgressBar : public CWnd
 	{
 	public:
-		CProgressBar() { ::InitCommonControls(); }
+		CProgressBar() {}
 		virtual ~CProgressBar() {}
 
 		int  GetPos() const;
@@ -355,7 +325,7 @@ namespace Win32xx
 	class CSlider : public CWnd
 	{
 	public:
-		CSlider() { ::InitCommonControls(); }
+		CSlider() {}
 		virtual ~CSlider() {}
 
 		void ClearSel() const;
@@ -397,7 +367,7 @@ namespace Win32xx
 	class CSpinButton : public CWnd
 	{
 	public:
-		CSpinButton() { ::InitCommonControls(); }
+		CSpinButton() {}
 		virtual ~CSpinButton() {}
 
 		int  GetAccel(int cAccels, LPUDACCEL paAccels) const;

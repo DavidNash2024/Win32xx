@@ -153,7 +153,7 @@ namespace Win32xx
 		virtual ~CMDIFrame() {}
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
-		virtual CMDIClient& GetMDIClient() const { return (CMDIClient&)m_MDIClient; }
+		virtual CMDIClient* GetMDIClient()  { return &m_MDIClient; }
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -162,7 +162,7 @@ namespace Win32xx
 		// These functions aren't virtual, so don't override them
 		std::vector <MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
 		CMDIChild* GetActiveMDIChild() const;
-		BOOL IsMDIChildMaxed() const;
+		BOOL IsMDIChildMaxed();
 		void MDICascade(int nType = 0) const;
 		void MDIIconArrange() const;
 		void MDIMaximize() const;
@@ -208,7 +208,7 @@ namespace Win32xx
 	//
 	inline CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
-		SetView(GetMDIClient());
+		SetView(*GetMDIClient());
 	}
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(MDIChildPtr pMDIChild)
@@ -290,7 +290,7 @@ namespace Win32xx
 
 	inline LRESULT CMDIFrame::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefFrameProc(m_hWnd, GetMDIClient(), uMsg, wParam, lParam);
+		return ::DefFrameProc(m_hWnd, *GetMDIClient(), uMsg, wParam, lParam);
 	}
 
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
@@ -298,10 +298,10 @@ namespace Win32xx
 		return (CMDIChild*)FromHandle(m_hActiveMDIChild);
 	}
 
-	inline BOOL CMDIFrame::IsMDIChildMaxed() const
+	inline BOOL CMDIFrame::IsMDIChildMaxed()
 	{
 		BOOL bMaxed = FALSE;
-		GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
+		GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
@@ -468,7 +468,7 @@ namespace Win32xx
 	{
 		assert ( pChild->IsWindow() );
 
-		GetMDIClient().SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
+		GetMDIClient()->SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
 
 		// Verify
 		assert ( m_hActiveMDIChild == pChild->GetHwnd() );

@@ -84,6 +84,7 @@ namespace Win32xx
 			int IDC_LIST;
 
 		};
+
 	public:
 		CTab();
 		virtual ~CTab();
@@ -111,30 +112,46 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
-		CImageList* GetImageList() { return &m_imlTab; }
+		CImageList* GetImageList()	{ return &m_imlTab; }
 		BOOL GetShowButtons() const { return m_bShowButtons; }
-		int GetTabHeight() const { return m_nTabHeight; }
+		int GetTabHeight() const	{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
-		void  AdjustRect(BOOL fLarger, RECT *prc) const;
-		int	  GetCurFocus() const;
-		int	  GetCurSel() const;
-		BOOL  GetItem(int iItem, LPTCITEM pitem) const;
-		int   GetItemCount() const;
-		int   HitTest(TCHITTESTINFO& info) const;
-		void  SetCurFocus(int iItem) const;
-		int   SetCurSel(int iItem) const;
-		DWORD SetItemSize(int cx, int cy) const;
-		int   SetMinTabWidth(int cx) const;
-		void  SetPadding(int cx, int cy) const;
+		void		AdjustRect(BOOL fLarger, RECT *prc) const;
+		BOOL		DeleteAllItems() const;
+		BOOL		DeleteItem(int iItem) const;
+		void		DeselectAll(UINT fExcludeFocus) const;
+		int			GetCurFocus() const;
+		int			GetCurSel() const;
+		DWORD		GetExtendedStyle() const;
+	//	CImageList* GetImageList() const;
+		BOOL		GetItem(int iItem, LPTCITEM pitem) const;
+		int			GetItemCount() const;
+		BOOL		GetItemRect(int iItem, LPRECT prc) const;
+		int			GetRowCount() const;
+		CToolTip*	GetToolTips() const;
+		BOOL		HighlightItem(INT idItem, WORD fHighlight) const;
+		int			HitTest(TCHITTESTINFO& info) const;
+		int			InsertItem(int iItem, const LPTCITEM pItem) const;
+		void		RemoveImage(int iImage) const;
+		void		SetCurFocus(int iItem) const;
+		int			SetCurSel(int iItem) const;
+		DWORD		SetExtendedStyle(DWORD dwExStyle) const;
+		CImageList* SetImageList(CImageList* pImageList) const;
+		BOOL		SetItem(int iItem, LPTCITEM pitem) const;
+		BOOL		SetItemExtra(int cb) const;
+		DWORD		SetItemSize(int cx, int cy) const;
+		int			SetMinTabWidth(int cx) const;
+		void		SetPadding(int cx, int cy) const;
+		void		SetToolTips(CToolTip* pToolTip) const;
 
 	protected:
-		virtual void	DrawCloseButton(CDC& DrawDC);
-		virtual void	DrawListButton(CDC& DrawDC);
-		virtual void	DrawTabs(CDC& dcMem);
-		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
+		virtual void	DrawCloseButton(CDC* pDrawDC);
+		virtual void	DrawListButton(CDC* pDrawDC);
+		virtual void	DrawTabs(CDC* pDCMem);
+		virtual void	DrawTabBorders(CDC* pDCMem, CRect& rcTab);
 		virtual void    OnAttach();
 		virtual void	OnDestroy();
 		virtual BOOL    OnEraseBkgnd(CDC*) { return TRUE;}
@@ -330,7 +347,7 @@ namespace Win32xx
 		return AddTabPage(pView, szTabText, (HICON)0, 0);
 	}
 
-	inline void CTab::DrawCloseButton(CDC& DrawDC)
+	inline void CTab::DrawCloseButton(CDC* pDrawDC)
 	{
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
@@ -354,67 +371,67 @@ namespace Win32xx
 			{
 			case 0:
 				{
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 
-					DrawDC.MoveTo(rcClose.left, rcClose.bottom);
-					DrawDC.LineTo(rcClose.right, rcClose.bottom);
-					DrawDC.LineTo(rcClose.right, rcClose.top);
-					DrawDC.LineTo(rcClose.left, rcClose.top);
-					DrawDC.LineTo(rcClose.left, rcClose.bottom);
+					pDrawDC->MoveTo(rcClose.left, rcClose.bottom);
+					pDrawDC->LineTo(rcClose.right, rcClose.bottom);
+					pDrawDC->LineTo(rcClose.right, rcClose.top);
+					pDrawDC->LineTo(rcClose.left, rcClose.top);
+					pDrawDC->LineTo(rcClose.left, rcClose.bottom);
 					break;
 				}
 
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					DrawDC.MoveTo(rcClose.left, rcClose.bottom);
-					DrawDC.LineTo(rcClose.right, rcClose.bottom);
-					DrawDC.LineTo(rcClose.right, rcClose.top);
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					DrawDC.LineTo(rcClose.left, rcClose.top);
-					DrawDC.LineTo(rcClose.left, rcClose.bottom);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					pDrawDC->MoveTo(rcClose.left, rcClose.bottom);
+					pDrawDC->LineTo(rcClose.right, rcClose.bottom);
+					pDrawDC->LineTo(rcClose.right, rcClose.top);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					pDrawDC->LineTo(rcClose.left, rcClose.top);
+					pDrawDC->LineTo(rcClose.left, rcClose.bottom);
 				}
 
 				break;
 			case 2:
 				{
 					// Draw outline, black on top, white on bottom
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					DrawDC.MoveTo(rcClose.left, rcClose.bottom);
-					DrawDC.LineTo(rcClose.right, rcClose.bottom);
-					DrawDC.LineTo(rcClose.right, rcClose.top);
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					DrawDC.LineTo(rcClose.left, rcClose.top);
-					DrawDC.LineTo(rcClose.left, rcClose.bottom);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					pDrawDC->MoveTo(rcClose.left, rcClose.bottom);
+					pDrawDC->LineTo(rcClose.right, rcClose.bottom);
+					pDrawDC->LineTo(rcClose.right, rcClose.top);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					pDrawDC->LineTo(rcClose.left, rcClose.top);
+					pDrawDC->LineTo(rcClose.left, rcClose.bottom);
 				}
 				break;
 			}
 
 			// Manually draw close button
-			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+			pDrawDC->CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			DrawDC.MoveTo(rcClose.left + 3, rcClose.top +3);
-			DrawDC.LineTo(rcClose.right - 2, rcClose.bottom -2);
+			pDrawDC->MoveTo(rcClose.left + 3, rcClose.top +3);
+			pDrawDC->LineTo(rcClose.right - 2, rcClose.bottom -2);
 
-			DrawDC.MoveTo(rcClose.left + 4, rcClose.top +3);
-			DrawDC.LineTo(rcClose.right - 2, rcClose.bottom -3);
+			pDrawDC->MoveTo(rcClose.left + 4, rcClose.top +3);
+			pDrawDC->LineTo(rcClose.right - 2, rcClose.bottom -3);
 
-			DrawDC.MoveTo(rcClose.left + 3, rcClose.top +4);
-			DrawDC.LineTo(rcClose.right - 3, rcClose.bottom -2);
+			pDrawDC->MoveTo(rcClose.left + 3, rcClose.top +4);
+			pDrawDC->LineTo(rcClose.right - 3, rcClose.bottom -2);
 
-			DrawDC.MoveTo(rcClose.right -3, rcClose.top +3);
-			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -2);
+			pDrawDC->MoveTo(rcClose.right -3, rcClose.top +3);
+			pDrawDC->LineTo(rcClose.left + 2, rcClose.bottom -2);
 
-			DrawDC.MoveTo(rcClose.right -3, rcClose.top +4);
-			DrawDC.LineTo(rcClose.left + 3, rcClose.bottom -2);
+			pDrawDC->MoveTo(rcClose.right -3, rcClose.top +4);
+			pDrawDC->LineTo(rcClose.left + 3, rcClose.bottom -2);
 
-			DrawDC.MoveTo(rcClose.right -4, rcClose.top +3);
-			DrawDC.LineTo(rcClose.left + 2, rcClose.bottom -3);
+			pDrawDC->MoveTo(rcClose.right -4, rcClose.top +3);
+			pDrawDC->LineTo(rcClose.left + 2, rcClose.bottom -3);
 		}
 	}
 
-	inline void CTab::DrawListButton(CDC& DrawDC)
+	inline void CTab::DrawListButton(CDC* pDrawDC)
 	{
 		// The list button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
@@ -439,79 +456,79 @@ namespace Win32xx
 			{
 			case 0:
 				{
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 
-					DrawDC.MoveTo(rcList.left, rcList.bottom);
-					DrawDC.LineTo(rcList.right, rcList.bottom);
-					DrawDC.LineTo(rcList.right, rcList.top);
-					DrawDC.LineTo(rcList.left, rcList.top);
-					DrawDC.LineTo(rcList.left, rcList.bottom);
+					pDrawDC->MoveTo(rcList.left, rcList.bottom);
+					pDrawDC->LineTo(rcList.right, rcList.bottom);
+					pDrawDC->LineTo(rcList.right, rcList.top);
+					pDrawDC->LineTo(rcList.left, rcList.top);
+					pDrawDC->LineTo(rcList.left, rcList.bottom);
 					break;
 				}
 
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					DrawDC.MoveTo(rcList.left, rcList.bottom);
-					DrawDC.LineTo(rcList.right, rcList.bottom);
-					DrawDC.LineTo(rcList.right, rcList.top);
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					DrawDC.LineTo(rcList.left, rcList.top);
-					DrawDC.LineTo(rcList.left, rcList.bottom);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					pDrawDC->MoveTo(rcList.left, rcList.bottom);
+					pDrawDC->LineTo(rcList.right, rcList.bottom);
+					pDrawDC->LineTo(rcList.right, rcList.top);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					pDrawDC->LineTo(rcList.left, rcList.top);
+					pDrawDC->LineTo(rcList.left, rcList.bottom);
 				}
 
 				break;
 			case 2:
 				{
 					// Draw outline, black on top, white on bottom
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					DrawDC.MoveTo(rcList.left, rcList.bottom);
-					DrawDC.LineTo(rcList.right, rcList.bottom);
-					DrawDC.LineTo(rcList.right, rcList.top);
-					DrawDC.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					DrawDC.LineTo(rcList.left, rcList.top);
-					DrawDC.LineTo(rcList.left, rcList.bottom);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					pDrawDC->MoveTo(rcList.left, rcList.bottom);
+					pDrawDC->LineTo(rcList.right, rcList.bottom);
+					pDrawDC->LineTo(rcList.right, rcList.top);
+					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					pDrawDC->LineTo(rcList.left, rcList.top);
+					pDrawDC->LineTo(rcList.left, rcList.bottom);
 				}
 				break;
 			}
 
 			// Manually draw list button
-			DrawDC.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+			pDrawDC->CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
 			int MaxLength = (int)(0.65 * rcList.Width());
 			int topGap = 1 + rcList.Height()/3;
 			for (int i = 0; i <= MaxLength/2; i++)
 			{
 				int Length = MaxLength - 2*i;
-				DrawDC.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
-				DrawDC.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
+				pDrawDC->MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
+				pDrawDC->LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
 			}
 		}
 	}
 
-	inline void CTab::DrawTabs(CDC& dcMem)
+	inline void CTab::DrawTabs(CDC* pDCMem)
 	{
 		// Draw the tab buttons:
 		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); ++i)
 		{
 			CRect rcItem;
-			TabCtrl_GetItemRect(m_hWnd, i, &rcItem);
+			GetItemRect(i, &rcItem);
 			if (!rcItem.IsRectEmpty())
 			{
-				if (i == TabCtrl_GetCurSel(m_hWnd))
+				if (i == GetCurSel())
 				{
-					dcMem.CreateSolidBrush(RGB(248,248,248));
-					dcMem.SetBkColor(RGB(248,248,248));
+					pDCMem->CreateSolidBrush(RGB(248,248,248));
+					pDCMem->SetBkColor(RGB(248,248,248));
 				}
 				else
 				{
-					dcMem.CreateSolidBrush(RGB(200,200,200));
-					dcMem.SetBkColor(RGB(200,200,200));
+					pDCMem->CreateSolidBrush(RGB(200,200,200));
+					pDCMem->SetBkColor(RGB(200,200,200));
 				}
 
-				dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-				dcMem.RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+				pDCMem->CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+				pDCMem->RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
 
 				if (rcItem.Width() >= 24)
 				{
@@ -521,7 +538,7 @@ namespace Win32xx
 					tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
 					tcItem.cchTextMax = nSize;
 					tcItem.pszText = str.GetBuffer(nSize);
-					TabCtrl_GetItem(m_hWnd, i, &tcItem);
+					GetItem(i, &tcItem);
 					str.ReleaseBuffer();
 					int xImage;
 					int yImage;
@@ -530,10 +547,10 @@ namespace Win32xx
 						yOffset = (rcItem.Height() - yImage)/2;
 
 					// Draw the icon
-					m_imlTab.Draw( &dcMem, tcItem.iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
+					m_imlTab.Draw(pDCMem, tcItem.iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
 					// Draw the text
-					dcMem.SelectObject(&m_Font);
+					pDCMem->SelectObject(&m_Font);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -544,19 +561,19 @@ namespace Win32xx
 						rcText.left += iImageSize;
 
 					rcText.left += iPadding;
-					dcMem.DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					pDCMem->DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 				}
 			}
 		}
 	}
 
-	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
+	inline void CTab::DrawTabBorders(CDC* pDCMem, CRect& rcTab)
 	{
 		BOOL IsBottomTab = (BOOL)GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
 
 		// Draw a lighter rectangle touching the tab buttons
 		CRect rcItem;
-		TabCtrl_GetItemRect(m_hWnd, 0, &rcItem);
+		GetItemRect(0, &rcItem);
 		int left = rcItem.left +1;
 		int right = rcTab.right;
 		int top = rcTab.bottom;
@@ -568,39 +585,39 @@ namespace Win32xx
 			top = bottom -3;
 		}
 
-		dcMem.CreateSolidBrush(RGB(248,248,248));
-		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
+		pDCMem->CreateSolidBrush(RGB(248,248,248));
+		pDCMem->CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		if (!rcItem.IsRectEmpty())
 		{
-			dcMem.Rectangle(left, top, right, bottom);
+			pDCMem->Rectangle(left, top, right, bottom);
 
 			// Draw a darker line below the rectangle
-			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+			pDCMem->CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
 			if (IsBottomTab)
 			{
-				dcMem.MoveTo(left-1, bottom);
-				dcMem.LineTo(right, bottom);
+				pDCMem->MoveTo(left-1, bottom);
+				pDCMem->LineTo(right, bottom);
 			}
 			else
 			{
-				dcMem.MoveTo(left-1, top-1);
-				dcMem.LineTo(right, top-1);
+				pDCMem->MoveTo(left-1, top-1);
+				pDCMem->LineTo(right, top-1);
 			}
 
 			// Draw a lighter line over the darker line for the selected tab
-			dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-			TabCtrl_GetItemRect(m_hWnd, TabCtrl_GetCurSel(m_hWnd), &rcItem);
+			pDCMem->CreatePen(PS_SOLID, 1, RGB(248,248,248));
+			GetItemRect(GetCurSel(), &rcItem);
 			OffsetRect(&rcItem, 1, 1);
 
 			if (IsBottomTab)
 			{
-				dcMem.MoveTo(rcItem.left, bottom);
-				dcMem.LineTo(rcItem.right, bottom);
+				pDCMem->MoveTo(rcItem.left, bottom);
+				pDCMem->LineTo(rcItem.right, bottom);
 			}
 			else
 			{
-				dcMem.MoveTo(rcItem.left, top-1);
-				dcMem.LineTo(rcItem.right, top-1);
+				pDCMem->MoveTo(rcItem.left, top-1);
+				pDCMem->LineTo(rcItem.right, top-1);
 			}
 		}
 	}
@@ -668,7 +685,7 @@ namespace Win32xx
 	{
 		CSize Size;
 
-		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); i++)
+		for (int i = 0; i < GetItemCount(); i++)
 		{
 			CClientDC dcClient(this);
 			dcClient.SelectObject(&m_Font);
@@ -677,7 +694,7 @@ namespace Win32xx
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
 			tcItem.cchTextMax = MAX_MENU_STRING;
 			tcItem.pszText = str.GetBuffer(MAX_MENU_STRING);
-			TabCtrl_GetItem(m_hWnd, i, &tcItem);
+			GetItem(i, &tcItem);
 			str.ReleaseBuffer();
 			CSize TempSize = dcClient.GetTextExtentPoint32(str, lstrlen(str));
 
@@ -785,7 +802,7 @@ namespace Win32xx
 			m_IsClosePressed = TRUE;
 			SetCapture();
 			CClientDC dc(this);
-			DrawCloseButton(dc);
+			DrawCloseButton(&dc);
 		}
 		else
 			m_IsClosePressed = FALSE;
@@ -817,8 +834,8 @@ namespace Win32xx
 	inline LRESULT CTab::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
 		CClientDC dc(this);
-		DrawCloseButton(dc);
-		DrawListButton(dc);
+		DrawCloseButton(&dc);
+		DrawListButton(&dc);
 
 		m_IsTracking = FALSE;
 
@@ -843,8 +860,8 @@ namespace Win32xx
 		}
 
 		CClientDC dc(this);
-		DrawCloseButton(dc);
-		DrawListButton(dc);
+		DrawCloseButton(&dc);
+		DrawListButton(&dc);
 
 		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
 	}
@@ -965,23 +982,20 @@ namespace Win32xx
 
 		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
 		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
-		::CombineRgn(rgnClip, rgnSrc1, rgnSrc2, RGN_DIFF);
+		rgnClip.CombineRgn(&rgnSrc1, &rgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
 		dcMem.SelectClipRgn(&rgnClip);
-		HWND hWndParent = ::GetParent(m_hWnd);
-		CDC dcParent = ::GetDC(hWndParent);
-		HBRUSH hBrush = (HBRUSH) SendMessage(hWndParent, WM_CTLCOLORDLG, (WPARAM)dcParent.GetHDC(), (LPARAM)hWndParent);
-		::SelectObject(dcMem, hBrush);
+		dcMem.CreateSolidBrush( GetSysColor(COLOR_BTNFACE) );
 		dcMem.PaintRgn(&rgnClip);
 
 		// Draw the tab buttons on the memory DC:
-		DrawTabs(dcMem);
+		DrawTabs(&dcMem);
 
 		// Draw buttons and tab borders
-		DrawCloseButton(dcMem);
-		DrawListButton(dcMem);
-		DrawTabBorders(dcMem, rcTab);
+		DrawCloseButton(&dcMem);
+		DrawListButton(&dcMem);
+		DrawTabBorders(&dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
 		dcView.SelectClipRgn(&rgnClip);
@@ -1231,7 +1245,7 @@ namespace Win32xx
 		}
 
 		CClientDC dc(this);
-		DrawListButton(dc);
+		DrawListButton(&dc);
 	}
 
 	inline void CTab::ShowListDialog()
@@ -1322,69 +1336,196 @@ namespace Win32xx
 
 	// Wrappers for Win32 Macros
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc) const
+	// Calculates a tab control's display area given a window rectangle, or calculates 
+	//  the window rectangle that would correspond to a specified display area.
 	{
 		assert(::IsWindow(m_hWnd));
 		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
 	}
 
+	inline BOOL CTab::DeleteAllItems() const
+	// Removes all items from a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_DeleteAllItems(m_hWnd);
+	}
+
+	inline BOOL CTab::DeleteItem(int iItem) const
+	// Removes an item from a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_DeleteItem(m_hWnd, iItem);
+	}
+
+	inline void CTab::DeselectAll(UINT fExcludeFocus) const
+	// Resets items in a tab control, clearing any that were set to the TCIS_BUTTONPRESSED state.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_DeselectAll(m_hWnd, fExcludeFocus);
+	}
+
 	inline int CTab::GetCurFocus() const
+	// Returns the index of the item that has the focus in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetCurFocus(m_hWnd);
 	}
 
 	inline int CTab::GetCurSel() const
+	// Determines the currently selected tab in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetCurSel(m_hWnd);
 	}
 
+	inline DWORD CTab::GetExtendedStyle() const
+	// Retrieves the extended styles that are currently in use for the tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_GetExtendedStyle(m_hWnd);
+	}
+
+//	inline CImageList* CTab::GetImageList() const
+//	// Retrieves the image list associated with a tab control.
+//	{
+//		assert(::IsWindow(m_hWnd));
+//		return FromHandle( TabCtrl_GetImageList(m_hWnd) );
+//	}
+	
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
+	// Retrieves information about a tab in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
 	}
 
 	inline int CTab::GetItemCount() const
+	// Retrieves the number of tabs in the tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetItemCount(m_hWnd);
 	}
 
+	inline BOOL CTab::GetItemRect(int iItem, LPRECT prc) const
+	// Retrieves the bounding rectangle for a tab in a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_GetItemRect(m_hWnd, iItem, prc);
+	}
+
+	inline int CTab::GetRowCount() const
+	// Retrieves the current number of rows of tabs in a tab control.
+	{
+		assert(::IsWindow(m_hWnd));		
+		return TabCtrl_GetRowCount(m_hWnd);
+	}
+
+	inline CToolTip* CTab::GetToolTips() const
+	// Retrieves a pointer to the ToolTip control associated with a tab control.
+	{
+		assert(::IsWindow(m_hWnd));	
+		return (CToolTip*)FromHandle( TabCtrl_GetToolTips(m_hWnd) );
+	}
+
+	inline BOOL CTab::HighlightItem(INT idItem, WORD fHighlight) const
+	// Sets the highlight state of a tab item.
+	{
+		assert(::IsWindow(m_hWnd));	
+		return TabCtrl_HighlightItem(m_hWnd, idItem, fHighlight);
+	}
+
 	inline int CTab::HitTest(TCHITTESTINFO& info) const
+	// Determines which tab, if any, is at a specified screen position.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_HitTest(m_hWnd, &info);
 	}
 
+	inline int CTab::InsertItem(int iItem, const LPTCITEM pItem) const
+	// Inserts a new tab in a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		assert(pItem);
+		return TabCtrl_InsertItem(m_hWnd, iItem, pItem);
+	}
+
+	inline void CTab::RemoveImage(int iImage) const
+	// Removes an image from a tab control's image list.
+	{
+		assert(::IsWindow(m_hWnd));
+		TabCtrl_RemoveImage(m_hWnd, iImage);
+	}
+
 	inline void CTab::SetCurFocus(int iItem) const
+	// Sets the focus to a specified tab in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		TabCtrl_SetCurFocus(m_hWnd, iItem);
 	}
 
 	inline int CTab::SetCurSel(int iItem) const
+	// Selects a tab in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetCurSel(m_hWnd, iItem);
 	}
 
+	inline DWORD CTab::SetExtendedStyle(DWORD dwExStyle) const
+	// Sets the extended styles that the tab control will use.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_SetExtendedStyle(m_hWnd, dwExStyle);
+	}
+
+	inline CImageList* CTab::SetImageList(CImageList* pImageList) const
+	// Assigns an image list to a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		assert (pImageList);
+		return (CImageList*)FromHandle( TabCtrl_SetImageList( m_hWnd, pImageList->GetHandle() ) );
+	}
+
+	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const
+	// Sets some or all of a tab's attributes.
+	{
+		assert(::IsWindow(m_hWnd));
+		assert(pItem);
+		return TabCtrl_SetItem(m_hWnd, iItem, pItem);
+	}
+
+	inline BOOL CTab::SetItemExtra(int cb) const
+	// Sets the number of bytes per tab reserved for application-defined data in a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_SetItemExtra(m_hWnd, cb);
+	}
+
 	inline DWORD CTab::SetItemSize(int cx, int cy) const
+	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
 	}
 
 	inline int CTab::SetMinTabWidth(int cx) const
+	// Sets the minimum width of items in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
 	}
 
 	inline void CTab::SetPadding(int cx, int cy) const
+	// Sets the amount of space (padding) around each tab's icon and label in a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
 		TabCtrl_SetPadding(m_hWnd, cx, cy);
+	}
+
+	inline void CTab::SetToolTips(CToolTip* pToolTip) const
+	// Assigns a ToolTip control to a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return TabCtrl_SetToolTips(m_hWnd, pToolTip->GetHwnd() );
 	}
 
 	////////////////////////////////////////
