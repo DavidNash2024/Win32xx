@@ -192,10 +192,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	default:
 		// Pass the command on to the view window of the last active docker
 		{
-			if (m_pLastActiveDocker == &m_DockTabbedMDI)
-				m_DockTabbedMDI.GetTabbedMDI()->GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
-			else if (m_pLastActiveDocker->IsDocked())
-				m_pLastActiveDocker->GetContainer()->GetActiveView()->SendMessage(WM_COMMAND, wParam, lParam);
+			if ( this == GetFocus() )
+			{
+				// Selecting a menu item brings focus to the frame
+				if (m_pLastActiveDocker == &m_DockTabbedMDI)
+					m_DockTabbedMDI.GetTabbedMDI()->GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+				else if (m_pLastActiveDocker->IsDocked())
+					m_pLastActiveDocker->GetContainer()->GetActiveView()->SendMessage(WM_COMMAND, wParam, lParam);
+			}
+			else
+			{
+				// Frame doesn't have focus, so send the command to the window that does.
+				GetFocus()->SendMessage(WM_COMMAND, wParam, lParam);
+			}
 		}
 	}
 

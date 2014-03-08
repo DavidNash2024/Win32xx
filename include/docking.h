@@ -1392,6 +1392,7 @@ namespace Win32xx
 		CRect rcTarget = rcHint;
 		pDockTarget->ClientToScreen(rcTarget);
 
+		m_bmBlueTint.DeleteObject();
 		m_bmBlueTint.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
 		CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
 		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
