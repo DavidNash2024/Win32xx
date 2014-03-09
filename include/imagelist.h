@@ -135,7 +135,9 @@ namespace Win32xx
 				::ImageList_Destroy(m_hImageList);
 			}
 
+			GetApp()->m_csMapLock.Lock();
 			RemoveFromMap();
+			GetApp()->m_csMapLock.Release();
 		}
 	}
 
@@ -296,7 +298,10 @@ namespace Win32xx
 	inline void CImageList::DeleteImageList()
 	// Destroys an image list.
 	{
+		GetApp()->m_csMapLock.Lock();
 		RemoveFromMap();
+		GetApp()->m_csMapLock.Release();
+		
 		ImageList_Destroy(m_hImageList);
 		m_hImageList = 0;
 	}
@@ -308,7 +313,11 @@ namespace Win32xx
 		assert(m_hImageList);
 		HIMAGELIST hImageList = m_hImageList;
 		m_hImageList = 0;
+		
+		GetApp()->m_csMapLock.Lock();
 		RemoveFromMap();
+		GetApp()->m_csMapLock.Release();
+
 		return hImageList;
 	}
 

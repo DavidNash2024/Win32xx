@@ -738,6 +738,8 @@ namespace Win32xx
 			(*iter)->vTmpMenus.clear();
 #endif
 			(*iter)->vTmpWnds.clear();
+			(*iter)->vTmpGDIs.clear();
+			(*iter)->vTmpImageLists.clear();
 		}
 
 		// Check that all CWnd windows are destroyed
@@ -853,10 +855,10 @@ namespace Win32xx
 		pTLSData->vTmpImageLists.clear();
 		pTLSData->vTmpWnds.clear();
 
-
 	#ifndef _WIN32_WCE
 		pTLSData->vTmpMenus.clear();
 	#endif
+
 	}
 
 	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)

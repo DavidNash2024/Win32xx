@@ -189,7 +189,9 @@ namespace Win32xx
 				::DestroyMenu(m_hMenu);
 			}
 			
+			GetApp()->m_csMapLock.Lock();
 			RemoveFromMap();
+			GetApp()->m_csMapLock.Release();
 		}
 
 		m_vSubMenus.clear();
@@ -309,8 +311,10 @@ namespace Win32xx
 			::DestroyMenu(m_hMenu);
 		
 		m_hMenu = 0;
-		RemoveFromMap();
 		m_vSubMenus.clear();
+		GetApp()->m_csMapLock.Lock();
+		RemoveFromMap();
+		GetApp()->m_csMapLock.Release();
 	}
 
 	inline HMENU CMenu::Detach()
@@ -320,8 +324,11 @@ namespace Win32xx
 		assert(IsMenu(m_hMenu));
 		HMENU hMenu = m_hMenu;
 		m_hMenu = 0;
-		RemoveFromMap();
 		m_vSubMenus.clear();
+		GetApp()->m_csMapLock.Lock();
+		RemoveFromMap();
+		GetApp()->m_csMapLock.Release();
+
 		return hMenu;
 	}
 

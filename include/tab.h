@@ -1105,7 +1105,6 @@ namespace Win32xx
 	// Sets the font and adjusts the tab height to match
 	{
 		assert(pFont);
-		m_Font = *pFont;
 		int HeightGap = 5;
 		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
 		CWnd::SetFont(pFont, bRedraw);

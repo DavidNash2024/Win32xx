@@ -919,7 +919,12 @@ namespace Win32xx
 
 		if (m_pData->hGDIObject)
 		{
-			::DeleteObject(Detach());
+			GetApp()->m_csMapLock.Lock();
+			RemoveFromMap();
+			GetApp()->m_csMapLock.Release();
+	
+			::DeleteObject(m_pData->hGDIObject);
+			m_pData->hGDIObject = 0;
 		}
 	}
 
@@ -929,19 +934,18 @@ namespace Win32xx
 		assert(m_pData);
 		assert(m_pData->hGDIObject);
 
-		GetApp()->m_csMapLock.Lock();
 		HGDIOBJ hObject = m_pData->hGDIObject;
 
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
+				GetApp()->m_csMapLock.Lock();
 				RemoveFromMap();
+				GetApp()->m_csMapLock.Release();
 				delete m_pData;
 			}
 		}
-
-		GetApp()->m_csMapLock.Release();
 
 		// Assign values to our data members
 		m_pData = new DataMembers;
@@ -974,11 +978,13 @@ namespace Win32xx
 			{
 				if (m_pData->bRemoveObject)
 					::DeleteObject(m_pData->hGDIObject);
-			}
 
-			RemoveFromMap();
-			delete m_pData;
-			m_pData = 0;
+				GetApp()->m_csMapLock.Lock();
+				RemoveFromMap();
+				GetApp()->m_csMapLock.Release();
+				delete m_pData;
+				m_pData = 0;
+			}
 		}
 	}
 
@@ -1988,19 +1994,18 @@ namespace Win32xx
 		assert(m_pData);
 		assert(m_pData->hDC);
 
-		GetApp()->m_csMapLock.Lock();
 		HDC hDC = m_pData->hDC;
 
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
+				GetApp()->m_csMapLock.Lock();
 				RemoveFromMap();
+				GetApp()->m_csMapLock.Release();
 				delete m_pData;
 			}
 		}
-
-		GetApp()->m_csMapLock.Release();
 
 		// Assign values to our data members
 		m_pData = new DataMembers;
@@ -2278,7 +2283,10 @@ namespace Win32xx
 	{
 		if (m_pData->hDC)
 		{
+			GetApp()->m_csMapLock.Lock();
 			RemoveFromMap();
+			GetApp()->m_csMapLock.Release();
+			
 			if (m_pData->bRemoveHDC)
 			{
 				// Return the DC back to its initial state
