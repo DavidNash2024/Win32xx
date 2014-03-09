@@ -895,6 +895,8 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(hObject);
+		
+		// Assert if a HGDIOBJ is already attached. 
 		assert(0 == m_pData->hGDIObject);
 		
 		CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
@@ -928,14 +930,13 @@ namespace Win32xx
 		assert(m_pData->hGDIObject);
 
 		GetApp()->m_csMapLock.Lock();
-		RemoveFromMap();
 		HGDIOBJ hObject = m_pData->hGDIObject;
-		m_pData->hGDIObject = 0;
 
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
+				RemoveFromMap();
 				delete m_pData;
 			}
 		}
@@ -1976,8 +1977,7 @@ namespace Win32xx
 			m_pData->hWnd = hWnd;
 #endif
 
-			if (m_pData->hWnd == 0)
-				AddToMap();
+			AddToMap();
 			m_pData->nSavedDCState = ::SaveDC(hDC);
 		}
 	}
@@ -1989,14 +1989,13 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		GetApp()->m_csMapLock.Lock();
-		RemoveFromMap();
 		HDC hDC = m_pData->hDC;
-		m_pData->hDC = 0;
 
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
+				RemoveFromMap();
 				delete m_pData;
 			}
 		}

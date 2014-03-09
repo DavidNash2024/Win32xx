@@ -953,7 +953,7 @@ namespace Win32xx
 
 	inline void CTab::Paint()
 	{
-		// Microsoft's drawing for a tab control is rubbish, so we do our own.
+		// Microsoft's drawing for a tab control has quite a bit of flicker, so we do our own.
 		// We use double buffering and regions to eliminate flicker
 
 		// Create the memory DC and bitmap
@@ -1033,6 +1033,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::RemoveTabPage(int nPage)
+	// Removes a tab and its view page
 	{
 		if ((nPage < 0) || (nPage > (int)m_vTabPageInfo.size() -1))
 			return;
@@ -1078,6 +1079,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SelectPage(int nPage)
+	// Selects the tab and the view page
 	{
 		if ((nPage >= 0) && (nPage < GetItemCount()))
 		{

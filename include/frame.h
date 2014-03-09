@@ -389,7 +389,7 @@ namespace Win32xx
 		// Override these functions as required
 		virtual void AdjustFrameRect(RECT rcView);
 		virtual CString GetThemeName() const;
-		virtual CRect GetViewRect();
+		virtual CRect GetViewRect() const;
 		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
 		virtual void SetStatusText();
@@ -399,20 +399,20 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
 		// StatusBar or ToolBar, inherit from those classes, and override
 		// the following attribute functions.
-		virtual CMenuBar* GetMenuBar() 				{ return &m_MenuBar; }
-		virtual CReBar* GetReBar() 	 				{ return &m_ReBar; }
-		virtual CStatusBar* GetStatusBar() 			{ return &m_StatusBar; }
-		virtual CToolBar* GetToolBar() 				{ return &m_ToolBar; }
+		virtual CMenuBar* GetMenuBar()	const		{ return (CMenuBar*)&m_MenuBar; }
+		virtual CReBar* GetReBar() const			{ return (CReBar*)&m_ReBar; }
+		virtual CStatusBar* GetStatusBar() const	{ return (CStatusBar*)&m_StatusBar; }
+		virtual CToolBar* GetToolBar() const		{ return (CToolBar*)&m_ToolBar; }
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
-		MenuTheme* GetMenuBarTheme() 				{ return &m_MenuBarTheme; }
-		ReBarTheme* GetReBarTheme()					{ return &m_ReBarTheme; }
-		ToolBarTheme* GetToolBarTheme()				{ return &m_ToolBarTheme; }
+		MenuTheme* GetMenuBarTheme() const			{ return (MenuTheme*)&m_MenuBarTheme; }
+		ReBarTheme* GetReBarTheme()	const			{ return (ReBarTheme*)&m_ReBarTheme; }
+		ToolBarTheme* GetToolBarTheme()	const		{ return (ToolBarTheme*)&m_ToolBarTheme; }
 		void SetReBarTheme(ReBarTheme* pRBT); 
 		void SetToolBarTheme(ToolBarTheme* pTBT);
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		CMenu* GetFrameMenu()						{ return &m_Menu; }
+		CMenu* GetFrameMenu() const					{ return (CMenu*)&m_Menu; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
 		CWnd* GetView() const						{ return m_pView; }
@@ -510,7 +510,6 @@ namespace Win32xx
 	private:
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
-	//	void LoadCommonControls();
 		CSize GetTBImageSize(CBitmap* pbm);
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -1822,6 +1821,13 @@ namespace Win32xx
 
 		// By default, we use the rebar if we can
 		m_bUseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
+
+		// Set the fonts
+		NONCLIENTMETRICS nm = {0};
+		nm.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
+		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
 	}
 
 	inline CFrame::~CFrame()
@@ -2694,7 +2700,7 @@ namespace Win32xx
 		return CSize(cx, cy);
 	}
 
-	inline CRect CFrame::GetViewRect()
+	inline CRect CFrame::GetViewRect() const
 	{
 		// Get the frame's client area
 		CRect rcFrame = GetClientRect();
@@ -2981,13 +2987,6 @@ namespace Win32xx
 	// Override this in CMainFrame if you wish to modify what happens here	
 	{
 		UNREFERENCED_PARAMETER(pcs);
-
-		// Set the fonts
-		NONCLIENTMETRICS nm = {0};
-		nm.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
-		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
 
 		// Set the icon
 		SetIconLarge(IDW_MAIN);

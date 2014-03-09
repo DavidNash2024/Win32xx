@@ -153,7 +153,7 @@ namespace Win32xx
 		virtual ~CMDIFrame() {}
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
-		virtual CMDIClient* GetMDIClient()  { return &m_MDIClient; }
+		virtual CMDIClient* GetMDIClient() const { return (CMDIClient*)&m_MDIClient; }
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -162,7 +162,7 @@ namespace Win32xx
 		// These functions aren't virtual, so don't override them
 		std::vector <MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
 		CMDIChild* GetActiveMDIChild() const;
-		BOOL IsMDIChildMaxed();
+		BOOL IsMDIChildMaxed() const;
 		void MDICascade(int nType = 0) const;
 		void MDIIconArrange() const;
 		void MDIMaximize() const;
@@ -298,7 +298,7 @@ namespace Win32xx
 		return (CMDIChild*)FromHandle(m_hActiveMDIChild);
 	}
 
-	inline BOOL CMDIFrame::IsMDIChildMaxed()
+	inline BOOL CMDIFrame::IsMDIChildMaxed() const
 	{
 		BOOL bMaxed = FALSE;
 		GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);

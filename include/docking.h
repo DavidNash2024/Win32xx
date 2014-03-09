@@ -232,7 +232,7 @@ namespace Win32xx
 			virtual void SetColor(COLORREF color);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-			CDocker* GetDock()				{return m_pDock;}
+			CDocker* GetDock() const		{return m_pDock;}
 			int GetWidth() const			{return m_DockBarWidth;}
 			void SetDock(CDocker* pDock)	{m_pDock = pDock;}
 			void SetWidth(int nWidth)		{m_DockBarWidth = nWidth;}
@@ -264,7 +264,7 @@ namespace Win32xx
 			virtual void Draw3DBorder(RECT& Rect);
 			virtual void DrawCaption(WPARAM wParam);
 			virtual void DrawCloseButton(CDC& DrawDC, BOOL bFocus);
-			virtual CRect GetCloseRect();
+			virtual CRect GetCloseRect() const;
 			virtual void SendNotify(UINT nMessageID);
 
 			CString& GetCaption() const		{ return (CString&)m_csCaption; }
@@ -444,9 +444,9 @@ namespace Win32xx
 		virtual BOOL VerifyDockers();
 
 		// Attributes
-		virtual CDockBar* GetDockBar()			{return &m_DockBar;}
-		virtual CDockClient* GetDockClient()	{return &m_DockClient;}
-		virtual CDockHint* GetDockHint() const	{return &m_pDockAncestor->m_DockHint;}
+		virtual CDockBar* GetDockBar() const		{return (CDockBar*)&m_DockBar;}
+		virtual CDockClient* GetDockClient() const	{return (CDockClient*)&m_DockClient;}
+		virtual CDockHint* GetDockHint() const		{return &m_pDockAncestor->m_DockHint;}
 
 
 		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
@@ -459,7 +459,7 @@ namespace Win32xx
 		CWnd* GetView() const				{return m_DockClient.GetView();}
 		BOOL IsChildOfDocker(CWnd* pWnd) const;
 		BOOL IsDocked() const;
-		BOOL IsDragAutoResize();
+		BOOL IsDragAutoResize() const;
 		BOOL IsRelated(CWnd* pWnd) const;
 		BOOL IsUndocked() const;
 		void SetBarColor(COLORREF color) {GetDockBar()->SetColor(color);}
@@ -728,7 +728,7 @@ namespace Win32xx
 		dc.LineTo(1, rcw.Height()-2);
 	}
 
-	inline CRect CDocker::CDockClient::GetCloseRect()
+	inline CRect CDocker::CDockClient::GetCloseRect() const
 	{
 		// Calculate the close rect position in screen co-ordinates
 		CRect rcClose;
@@ -2399,7 +2399,7 @@ namespace Win32xx
 		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline BOOL CDocker::IsDragAutoResize()
+	inline BOOL CDocker::IsDragAutoResize() const
 	{
 		return m_bDragAutoResize;
 	}
