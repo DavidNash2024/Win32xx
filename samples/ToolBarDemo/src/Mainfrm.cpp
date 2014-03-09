@@ -104,8 +104,8 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
 
 void CMainFrame::OnFileExit()
 {
-	// The application ends when the frame is destroyed
-	Destroy();
+	// Issue a close request to the frame
+	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
 void CMainFrame::OnInitialUpdate()

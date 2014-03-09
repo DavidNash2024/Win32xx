@@ -654,6 +654,8 @@ namespace Win32xx
 			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 			::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 		}
+		else
+			lstrcpyn(m_szErrorString, pszText, MAX_STRING_SIZE);
 	}
 
 	inline DWORD CWinException::GetError() const throw ()

@@ -89,8 +89,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 void CMainFrame::OnFileExit()
 {
-	// The application ends when the frame is destroyed
-	Destroy();
+	// Issue a close request to the frame
+	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
 void CMainFrame::OnFileNew()

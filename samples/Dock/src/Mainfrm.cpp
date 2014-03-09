@@ -46,8 +46,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileExit()
 {
-	// The application ends when the frame is destroyed
-	Destroy();
+	// Issue a close request to the frame
+	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 }
 
 void CMainFrame::OnDockDefault()

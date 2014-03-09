@@ -3275,26 +3275,29 @@ namespace Win32xx
 
 		if (szRegistryKeyName)
 		{
-			// Fill the DockInfo vector with the docking information
-			for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
-			{
-				DockInfo di	 = {0};
-				di.DockID	 = (*iter)->GetDockID();
-				di.DockStyle = (*iter)->GetDockStyle();
-				di.DockSize  = (*iter)->GetDockSize();
-				di.Rect		 = (*iter)->GetWindowRect();
-				if ((*iter)->GetDockParent())
-					di.DockParentID = (*iter)->GetDockParent()->GetDockID();
-
-				vDockInfo.push_back(di);
-			}
-
-			CString strKeyName = _T("Software\\") + CString(szRegistryKeyName);
 			HKEY hKey = NULL;
 			HKEY hKeyDock = NULL;
+			CString strKeyName = _T("Software\\") + CString(szRegistryKeyName);
 
 			try
 			{
+				// Fill the DockInfo vector with the docking information
+				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
+				{
+					DockInfo di	 = {0};
+					if (! (*iter)->IsWindow())
+						throw (CWinException(_T("Can't save Docker in registry. \n")));;
+
+					di.DockID	 = (*iter)->GetDockID();
+					di.DockStyle = (*iter)->GetDockStyle();
+					di.DockSize  = (*iter)->GetDockSize();
+					di.Rect		 = (*iter)->GetWindowRect();
+					if ((*iter)->GetDockParent())
+						di.DockParentID = (*iter)->GetDockParent()->GetDockID();
+
+					vDockInfo.push_back(di);
+				}
+
 				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
