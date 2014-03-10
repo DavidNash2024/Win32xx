@@ -38,12 +38,15 @@ BEGIN
     BEGIN
         MENUITEM "New Files Tab",               IDM_NEW_FILES
         MENUITEM "New Classes Tab",             IDM_NEW_CLASSES
-        MENUITEM "Close Tab",                   IDM_FILE_CLOSE
+        MENUITEM "Close Tab",                   IDM_CLOSE_TAB
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&Options"
     BEGIN
+        MENUITEM "Owner Draw",                  IDM_TAB_DRAW, CHECKED
+		MENUITEM "Fixed Tab Width",             IDM_TAB_FIXED, CHECKED
+		MENUITEM SEPARATOR
         MENUITEM "Tabs at Top",                 IDM_TAB_TOP, CHECKED
         MENUITEM "Show Buttons",                IDM_TAB_BUTTONS, CHECKED
     END
@@ -121,8 +124,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, 
-                                                    NOINVERT
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, SHIFT, CONTROL, NOINVERT
     VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
 
@@ -187,6 +189,10 @@ BEGIN
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
+	IDM_NEW_TAB             "Add a new tab"
+	IDM_CLOSE_TAB           "Close the tab"
+    IDM_TAB_DRAW            "Enable Owner Draw"
+    IDM_TAB_FIXED           "Use fixed width tabs"
     IDM_TAB_TOP             "Place tabs at the top of the control"
     IDM_TAB_BUTTONS         "Show the list and close buttons"
     IDM_HELP_ABOUT          "Display Information about this program"

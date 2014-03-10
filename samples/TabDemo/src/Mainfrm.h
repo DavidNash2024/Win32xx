@@ -19,12 +19,17 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pCreateStruct);
-	virtual void OnFileClose();
 	virtual void OnFileExit();
-	virtual void OnFileNew();
 	virtual void OnInitialUpdate();
+	virtual void OnMenuUpdate(UINT nID);
+	virtual void OnNewClassesTab();
+	virtual void OnNewFilesTab();
+	virtual void OnNewTab();
 	virtual void OnShowButtons();
 	virtual void OnTabsAtTop();
+	virtual void OnTabClose();
+	virtual void OnTabFixedWidth();
+	virtual void OnTabOwnerDraw();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

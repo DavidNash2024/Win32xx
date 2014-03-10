@@ -44,8 +44,6 @@ New Features and Enhancements
    - CFile functions are now virtual.
    - OpenFileDialog and SaveFileDialog allow the dialog's title to be specified.
 * Updated CToolBar
-   - The parent of the dialog (if any) is set when the dialog is created (with
-      DoModal or DoModeless), rather than when the CDialog is constructed.
    - SetButtonInfo can now be used to change a ToolBar button's image and 
       command ID.
    - Functions now use CImageList* instead of HIMAGELIST
@@ -54,12 +52,19 @@ New Features and Enhancements
 * Updated CDialog
    - Added GetDefID, GotoDlgCtrl, MapDialogRect, NextDlgCtrl, PrevDlgCtrl
 	  and SetDefID.
+   - The constructor no longer sets the Dialog's parent. The parent of the dialog 
+      (if any) is set when the dialog is created (with DoModal or DoModeless).  
+* Updated CTab.
+   - CTab now provides wrapper functions for all the Tab control macros.
 * TRACE now accepts both ANSI and Unicode strings.
 * Added project files for VS2013
 * Win32++ now has a tidier approach to the switch statements used in WndProc,
   OnNotify, OnNotifyReflect and OnCommand. It is fully backwards compatible
   with older code. Users are encourage to adopt this style to keep the code
   in large switch statements tidy.
+* Expanded the help documentation
+   - Updated the docking information to make it clearer.
+   - Add a FAQ.
 
 Incompatibilities with previous versions
 ----------------------------------------

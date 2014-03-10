@@ -2978,7 +2978,7 @@ namespace Win32xx
 	{
 		// Called in response to a WM_CLOSE message for the frame.
 		ShowWindow(SW_HIDE);
-	//	SaveRegistrySettings();
+		SaveRegistrySettings();
 		Destroy();
 	}
 
@@ -3073,7 +3073,6 @@ namespace Win32xx
 
 	inline void CFrame::OnDestroy()
 	{
-		SaveRegistrySettings();
 		SetMenu(NULL);
 		KillTimer(ID_STATUS_TIMER);
 
@@ -4217,6 +4216,7 @@ namespace Win32xx
 
 		// Reposition the Windows
 		RecalcLayout();
+		RedrawWindow();
 	}
 
 	inline void CFrame::ShowToolBar(BOOL bShow)
@@ -4248,6 +4248,7 @@ namespace Win32xx
 
 		// Reposition the Windows
 		RecalcLayout();
+		RedrawWindow();
 	}
 
 	inline void CFrame::UpdateMRUMenu()

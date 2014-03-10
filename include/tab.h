@@ -82,7 +82,6 @@ namespace Win32xx
 
 			std::vector<CString> m_vItems;
 			int IDC_LIST;
-
 		};
 
 	public:
@@ -112,9 +111,10 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
-		CImageList* GetImageList()	{ return &m_imlTab; }
-		BOOL GetShowButtons() const { return m_bShowButtons; }
-		int GetTabHeight() const	{ return m_nTabHeight; }
+		CImageList* GetImageList() const	{ return (CImageList*)&m_imlTab; }
+		CFont* GetFont() const				{ return (CFont*)&m_Font; }
+		BOOL GetShowButtons() const		{ return m_bShowButtons; }
+		int GetTabHeight() const		{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
@@ -126,7 +126,6 @@ namespace Win32xx
 		int			GetCurFocus() const;
 		int			GetCurSel() const;
 		DWORD		GetExtendedStyle() const;
-	//	CImageList* GetImageList() const;
 		BOOL		GetItem(int iItem, LPTCITEM pitem) const;
 		int			GetItemCount() const;
 		BOOL		GetItemRect(int iItem, LPRECT prc) const;
@@ -287,14 +286,6 @@ namespace Win32xx
 	inline CTab::CTab() : m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
-		// Create and assign the image list
-		m_imlTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
-
-		// Set the tab control's font
-		NONCLIENTMETRICS info = {0};
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		m_Font.CreateFontIndirect(&info.lfStatusFont);
 	}
 
 	inline CTab::~CTab()
@@ -326,7 +317,7 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = tpi.iImage;
 			tie.pszText = tpi.szTabText;
-			TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
+			InsertItem(iNewPage, &tie);
 
 			SetTabSize();
 			SelectPage(iNewPage);
@@ -510,7 +501,7 @@ namespace Win32xx
 	inline void CTab::DrawTabs(CDC* pDCMem)
 	{
 		// Draw the tab buttons:
-		for (int i = 0; i < TabCtrl_GetItemCount(m_hWnd); ++i)
+		for (int i = 0; i < GetItemCount(); ++i)
 		{
 			CRect rcItem;
 			GetItemRect(i, &rcItem);
@@ -756,11 +747,20 @@ namespace Win32xx
 
 	inline void CTab::OnAttach()
 	{
+		// Create and assign the image list
+		m_imlTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+
+		// Set the tab control's font
+		NONCLIENTMETRICS info = {0};
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		m_Font.CreateFontIndirect(&info.lfStatusFont);
+
 		SetFont(&m_Font, TRUE);
 
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
-			TabCtrl_SetImageList(m_hWnd, m_imlTab.GetHandle());
+			SetImageList(&m_imlTab);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -769,7 +769,7 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vTabPageInfo[i].iImage;
 			tie.pszText = m_vTabPageInfo[i].szTabText;
-			TabCtrl_InsertItem(m_hWnd, i, &tie);
+			InsertItem(i, &tie);
 		}
 
 		int HeightGap = 5;
@@ -974,7 +974,7 @@ namespace Win32xx
 		//  less the region belonging to the individual tab view's client area
 		CRgn rgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
 		CRect rcTab = GetClientRect();
-		TabCtrl_AdjustRect(m_hWnd, FALSE, &rcTab);
+		AdjustRect(FALSE, &rcTab);
 		if (rcTab.Height() < 0)
 			rcTab.top = rcTab.bottom;
 		if (rcTab.Width() < 0)
@@ -1024,7 +1024,7 @@ namespace Win32xx
 
 				// Position the View over the tab control's display area
 				CRect rc = GetClientRect();
-				TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+				AdjustRect(FALSE, &rc);
 				GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 			}
 			else
@@ -1039,14 +1039,14 @@ namespace Win32xx
 			return;
 
 		// Remove the tab
-		TabCtrl_DeleteItem(m_hWnd, nPage);
+		DeleteItem(nPage);
 
 		// Remove the TapPageInfo entry
 		std::vector<TabPageInfo>::iterator itTPI = m_vTabPageInfo.begin() + nPage;
 		CWnd* pView = (*itTPI).pView;
 		int iImage = (*itTPI).iImage;
 		if (iImage >= 0)
-			TabCtrl_RemoveImage(m_hWnd, iImage);
+			RemoveImage(iImage);
 
 		if (pView == m_pActiveView)
 			m_pActiveView = 0;
@@ -1117,12 +1117,14 @@ namespace Win32xx
 		if (bEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
-			TabCtrl_SetImageList(m_hWnd, NULL);
+			
+			// Remove image list for owner drawn tabs
+			SetImageList(NULL);
 		}
 		else
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
-			TabCtrl_SetImageList(m_hWnd, m_imlTab.GetHandle());
+			SetImageList(&m_imlTab);
 		}
 
 		RecalcLayout();
@@ -1149,7 +1151,7 @@ namespace Win32xx
 		{
 			int iImage = GetImageList()->Add(hIcon);
 			tci.iImage = iImage;
-			TabCtrl_SetItem(m_hWnd, i, &tci);
+			SetItem(i, &tci);
 			m_vTabPageInfo[i].iImage = iImage;
 		}
 	}
@@ -1173,7 +1175,7 @@ namespace Win32xx
 		if (GetItemCount() > 0)
 		{
 			CRect rc = GetClientRect();
-			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+			AdjustRect(FALSE, &rc);
 
 			int xGap = 2;
 			if (m_bShowButtons) xGap += GetCloseRect().Width() + GetListRect().Width() +2;
@@ -1194,7 +1196,7 @@ namespace Win32xx
 			Item.mask = TCIF_TEXT;
 			Item.pszText = (LPTSTR)szText;
 
-			if (TabCtrl_SetItem(m_hWnd, nTab, &Item))
+			if (SetItem(nTab, &Item))
 				lstrcpyn(m_vTabPageInfo[nTab].szTabText, szText, MAX_MENU_STRING);
 		}
 	}
@@ -1219,7 +1221,7 @@ namespace Win32xx
 
 			// Position the View over the tab control's display area
 			CRect rc = GetClientRect();
-			TabCtrl_AdjustRect(m_hWnd, FALSE, &rc);
+			AdjustRect(FALSE, &rc);
 			GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
 			GetActiveView()->SetFocus();
 		}
@@ -1306,8 +1308,8 @@ namespace Win32xx
 			GetItem(nTab2, &Item2);
 			str2.ReleaseBuffer();
 
-			TabCtrl_SetItem(m_hWnd, nTab1, &Item2);
-			TabCtrl_SetItem(m_hWnd, nTab2, &Item1);
+			SetItem(nTab1, &Item2);
+			SetItem(nTab2, &Item1);
 			m_vTabPageInfo[nTab1] = T2;
 			m_vTabPageInfo[nTab2] = T1;
 			SelectPage(nPage);
@@ -1386,13 +1388,6 @@ namespace Win32xx
 		return TabCtrl_GetExtendedStyle(m_hWnd);
 	}
 
-//	inline CImageList* CTab::GetImageList() const
-//	// Retrieves the image list associated with a tab control.
-//	{
-//		assert(::IsWindow(m_hWnd));
-//		return FromHandle( TabCtrl_GetImageList(m_hWnd) );
-//	}
-	
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
 	// Retrieves information about a tab in a tab control.
 	{
@@ -1482,8 +1477,8 @@ namespace Win32xx
 	// Assigns an image list to a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert (pImageList);
-		return (CImageList*)FromHandle( TabCtrl_SetImageList( m_hWnd, pImageList->GetHandle() ) );
+		HIMAGELIST himl = pImageList? pImageList->GetHandle() : NULL;
+		return (CImageList*)FromHandle( TabCtrl_SetImageList( m_hWnd, himl ) );
 	}
 
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const

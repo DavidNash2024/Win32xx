@@ -3807,7 +3807,7 @@ namespace Win32xx
 				tie.mask = TCIF_TEXT | TCIF_IMAGE;
 				tie.iImage = ci.iImage;
 				tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
-				TabCtrl_InsertItem(m_hWnd, iNewPage, &tie);
+				InsertItem(iNewPage, &tie);
 
 				SetTabSize();
 			}
@@ -3927,7 +3927,17 @@ namespace Win32xx
 
 	inline void CDockContainer::OnAttach()
 	{
-		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+		assert(GetView());			// Use SetView in the constructor to set the view window
+
+		// Create and assign the tab's image list
+		GetImageList()->Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+
+		// Set the tab control's font
+		NONCLIENTMETRICS info = {0};
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		GetFont()->CreateFontIndirect(&info.lfStatusFont);
+		SetFont(GetFont());
 
 		ContainerInfo ci;
 		ci.pContainer = this;
@@ -3967,7 +3977,7 @@ namespace Win32xx
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = i;
 			tie.pszText = (LPTSTR)m_vContainerInfo[i].Title.c_str();
-			TabCtrl_InsertItem(m_hWnd, i, &tie);
+			InsertItem(i, &tie);
 		}
 	}
 
@@ -4082,7 +4092,7 @@ namespace Win32xx
 		int iTab = GetContainerIndex(pWnd);
 		if (iTab > 0)
 		{
-			TabCtrl_DeleteItem(m_hWnd, iTab);
+			DeleteItem(iTab);
 		}
 
 		// Remove the ContainerInfo entry
@@ -4094,7 +4104,7 @@ namespace Win32xx
 			{
 				iImage = (*iter).iImage;
 				if (iImage >= 0)
-					TabCtrl_RemoveImage(m_hWnd, iImage);
+					RemoveImage(iImage);
 
 				m_vContainerInfo.erase(iter);
 				break;

@@ -22,8 +22,12 @@
 #define IDM_EDIT_COPY                   133
 #define IDM_EDIT_PASTE                  134
 #define IDM_EDIT_DELETE                 135
-#define IDM_TAB_TOP                     136
-#define IDM_TAB_BUTTONS                 137
+#define IDM_CLOSE_TAB                   181
+#define IDM_NEW_TAB                     180
+#define IDM_TAB_DRAW                    136
+#define IDM_TAB_FIXED                   137
+#define IDM_TAB_TOP                     138
+#define IDM_TAB_BUTTONS                 139
 #define IDM_HELP_ABOUT                  140
 
 #define IDM_NEWMENU                     141
