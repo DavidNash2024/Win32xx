@@ -3576,11 +3576,14 @@ namespace Win32xx
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
-		// Set the original window position
-		cs.x  = m_rcPosition.left;
-		cs.y  = m_rcPosition.top;
-		cs.cx = m_rcPosition.Width();
-		cs.cy = m_rcPosition.Height();
+		if (m_rcPosition.Width() > 0)
+		{
+			// Set the original window position
+			cs.x  = m_rcPosition.left;
+			cs.y  = m_rcPosition.top;
+			cs.cx = m_rcPosition.Width();
+			cs.cy = m_rcPosition.Height();
+		}
 	}
 
 	inline void CFrame::PreRegisterClass(WNDCLASS &wc)

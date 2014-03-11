@@ -17,7 +17,7 @@ public:
 
 protected:
 	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	void OnCreate();
+	int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CButton m_Button;

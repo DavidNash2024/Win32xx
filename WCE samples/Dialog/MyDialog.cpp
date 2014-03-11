@@ -4,8 +4,8 @@
 
 
 
-CMyDialog::CMyDialog(UINT nResID, CWnd* pParent)
-	: CDialog(nResID, pParent)
+CMyDialog::CMyDialog(UINT nResID)
+	: CDialog(nResID)
 {
 }
 

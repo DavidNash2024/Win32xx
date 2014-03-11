@@ -9,9 +9,10 @@ CMainWin::CMainWin()
 	::InitCommonControls();
 }
 
-void CMainWin::OnCreate()
+int CMainWin::OnCreate(LPCREATESTRUCT pcs)
 {
 	m_Button.Create(this);
+	return 0;
 }
 
 LRESULT CMainWin::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

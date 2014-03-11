@@ -3797,7 +3797,7 @@ namespace Win32xx
 			ContainerInfo ci;
 			ci.pContainer = pContainer;
 			ci.Title = pContainer->GetTabText();
-			ci.iImage = GetImageList()->Add( pContainer->GetTabIcon() );
+			ci.iImage = GetODImageList()->Add( pContainer->GetTabIcon() );
 			int iNewPage = (int)m_vContainerInfo.size();
 			m_vContainerInfo.push_back(ci);
 
@@ -3930,19 +3930,19 @@ namespace Win32xx
 		assert(GetView());			// Use SetView in the constructor to set the view window
 
 		// Create and assign the tab's image list
-		GetImageList()->Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+		GetODImageList()->Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
 		NONCLIENTMETRICS info = {0};
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		GetFont()->CreateFontIndirect(&info.lfStatusFont);
-		SetFont(GetFont());
+		GetTabFont()->CreateFontIndirect(&info.lfStatusFont);
+		SetFont(GetTabFont());
 
 		ContainerInfo ci;
 		ci.pContainer = this;
 		ci.Title = GetTabText();
-		ci.iImage = GetImageList()->Add( GetTabIcon() );
+		ci.iImage = GetODImageList()->Add( GetTabIcon() );
 		m_vContainerInfo.push_back(ci);
 
 		// Create the page window

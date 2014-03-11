@@ -1751,7 +1751,7 @@ namespace Win32xx
 		//  window position
 		//  window menu
 		//  window class name
-		//  window name (caption)		
+		//  window name (caption)
 	}
 
 	inline void CWnd::PreRegisterClass(WNDCLASS& wc)

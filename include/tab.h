@@ -111,8 +111,8 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
-		CImageList* GetImageList() const	{ return (CImageList*)&m_imlTab; }
-		CFont* GetFont() const				{ return (CFont*)&m_Font; }
+		CImageList* GetODImageList() const	{ return (CImageList*)&m_imlODTab; }
+		CFont* GetTabFont() const		{ return (CFont*)&m_TabFont; }
 		BOOL GetShowButtons() const		{ return m_bShowButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
@@ -126,6 +126,7 @@ namespace Win32xx
 		int			GetCurFocus() const;
 		int			GetCurSel() const;
 		DWORD		GetExtendedStyle() const;
+		CImageList* GetImageList() const;
 		BOOL		GetItem(int iItem, LPTCITEM pitem) const;
 		int			GetItemCount() const;
 		BOOL		GetItemRect(int iItem, LPRECT prc) const;
@@ -185,8 +186,8 @@ namespace Win32xx
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<WndPtr> m_vTabViews;
-		CFont m_Font;
-		CImageList m_imlTab;
+		CFont m_TabFont;
+		CImageList m_imlODTab;	// Image List for Owner Draw Tabs
 		CMenu m_ListMenu;
 		CWnd* m_pActiveView;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
@@ -304,7 +305,7 @@ namespace Win32xx
 		tpi.idTab = idTab;
 		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING);
 		if (hIcon)
-			tpi.iImage = GetImageList()->Add(hIcon);
+			tpi.iImage = GetODImageList()->Add(hIcon);
 		else
 			tpi.iImage = -1;
 
@@ -534,14 +535,14 @@ namespace Win32xx
 					int xImage;
 					int yImage;
 					int yOffset = 0;
-					if ( m_imlTab.GetIconSize(&xImage, &yImage) )
+					if ( m_imlODTab.GetIconSize(&xImage, &yImage) )
 						yOffset = (rcItem.Height() - yImage)/2;
 
 					// Draw the icon
-					m_imlTab.Draw(pDCMem, tcItem.iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
+					m_imlODTab.Draw(pDCMem, tcItem.iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
 					// Draw the text
-					pDCMem->SelectObject(&m_Font);
+					pDCMem->SelectObject(&m_TabFont);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -679,7 +680,7 @@ namespace Win32xx
 		for (int i = 0; i < GetItemCount(); i++)
 		{
 			CClientDC dcClient(this);
-			dcClient.SelectObject(&m_Font);
+			dcClient.SelectObject(&m_TabFont);
 			CString str;
 			TCITEM tcItem = {0};
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
@@ -712,7 +713,7 @@ namespace Win32xx
 	inline int CTab::GetTextHeight() const
 	{
 		CClientDC dcClient(this);
-		dcClient.SelectObject(&m_Font);
+		dcClient.SelectObject(&m_TabFont);
 		CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
@@ -748,19 +749,19 @@ namespace Win32xx
 	inline void CTab::OnAttach()
 	{
 		// Create and assign the image list
-		m_imlTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+		m_imlODTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
 		NONCLIENTMETRICS info = {0};
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		m_Font.CreateFontIndirect(&info.lfStatusFont);
+		m_TabFont.CreateFontIndirect(&info.lfStatusFont);
 
-		SetFont(&m_Font, TRUE);
+		SetFont(&m_TabFont, TRUE);
 
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
-			SetImageList(&m_imlTab);
+			SetImageList(&m_imlODTab);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -1124,7 +1125,7 @@ namespace Win32xx
 		else
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
-			SetImageList(&m_imlTab);
+			SetImageList(&m_imlODTab);
 		}
 
 		RecalcLayout();
@@ -1145,11 +1146,11 @@ namespace Win32xx
 		GetItem(i, &tci);
 		if (tci.iImage >= 0)
 		{
-			GetImageList()->Replace(i, hIcon);
+			GetODImageList()->Replace(i, hIcon);
 		}
 		else
 		{
-			int iImage = GetImageList()->Add(hIcon);
+			int iImage = GetODImageList()->Add(hIcon);
 			tci.iImage = iImage;
 			SetItem(i, &tci);
 			m_vTabPageInfo[i].iImage = iImage;
@@ -1386,6 +1387,13 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetExtendedStyle(m_hWnd);
+	}
+
+	inline CImageList* CTab::GetImageList() const
+	// Retrieves the image list associated with a tab control.
+	{
+		assert(::IsWindow(m_hWnd));
+		return FromHandle( TabCtrl_GetImageList(m_hWnd) );
 	}
 
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
