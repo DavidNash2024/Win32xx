@@ -229,7 +229,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 void CMainFrame::OnInitialUpdate()
 {
-	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE|DS_FIXED_RESIZE);
+	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
 
 	// Load dock settings
 	if (!m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName()))

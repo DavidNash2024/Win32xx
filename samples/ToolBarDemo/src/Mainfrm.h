@@ -18,6 +18,7 @@ protected:
 	BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
 	int 	OnCreate(LPCREATESTRUCT pcs);
 	LRESULT OnCustHelp(LPNMHDR pNMHDR);
+	LRESULT OnEndAdjust(LPNMHDR pNMHDR);
 	LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);
 	void	OnFileExit();
 	void	OnFileOpen();

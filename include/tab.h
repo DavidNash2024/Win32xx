@@ -490,7 +490,7 @@ namespace Win32xx
 
 			int MaxLength = (int)(0.65 * rcList.Width());
 			int topGap = 1 + rcList.Height()/3;
-			for (int i = 0; i <= MaxLength/2; i++)
+			for (int i = 0; i <= MaxLength/2; ++i)
 			{
 				int Length = MaxLength - 2*i;
 				pDrawDC->MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
@@ -677,7 +677,7 @@ namespace Win32xx
 	{
 		CSize Size;
 
-		for (int i = 0; i < GetItemCount(); i++)
+		for (int i = 0; i < GetItemCount(); ++i)
 		{
 			CClientDC dcClient(this);
 			dcClient.SelectObject(&m_TabFont);
@@ -902,7 +902,7 @@ namespace Win32xx
 		// Display the newly selected tab page
 		int nPage = GetCurSel();
 		ShowActiveView(m_vTabPageInfo[nPage].pView);
-		
+
 		return 0L;
 	}
 
@@ -1118,7 +1118,7 @@ namespace Win32xx
 		if (bEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
-			
+
 			// Remove image list for owner drawn tabs
 			SetImageList(NULL);
 		}
@@ -1340,7 +1340,7 @@ namespace Win32xx
 
 	// Wrappers for Win32 Macros
 	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc) const
-	// Calculates a tab control's display area given a window rectangle, or calculates 
+	// Calculates a tab control's display area given a window rectangle, or calculates
 	//  the window rectangle that would correspond to a specified display area.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -1365,7 +1365,7 @@ namespace Win32xx
 	// Resets items in a tab control, clearing any that were set to the TCIS_BUTTONPRESSED state.
 	{
 		assert(::IsWindow(m_hWnd));
-		return TabCtrl_DeselectAll(m_hWnd, fExcludeFocus);
+		TabCtrl_DeselectAll(m_hWnd, fExcludeFocus);
 	}
 
 	inline int CTab::GetCurFocus() const
@@ -1420,21 +1420,21 @@ namespace Win32xx
 	inline int CTab::GetRowCount() const
 	// Retrieves the current number of rows of tabs in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));		
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_GetRowCount(m_hWnd);
 	}
 
 	inline CToolTip* CTab::GetToolTips() const
 	// Retrieves a pointer to the ToolTip control associated with a tab control.
 	{
-		assert(::IsWindow(m_hWnd));	
+		assert(::IsWindow(m_hWnd));
 		return (CToolTip*)FromHandle( TabCtrl_GetToolTips(m_hWnd) );
 	}
 
 	inline BOOL CTab::HighlightItem(INT idItem, WORD fHighlight) const
 	// Sets the highlight state of a tab item.
 	{
-		assert(::IsWindow(m_hWnd));	
+		assert(::IsWindow(m_hWnd));
 		return TabCtrl_HighlightItem(m_hWnd, idItem, fHighlight);
 	}
 

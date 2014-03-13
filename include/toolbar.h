@@ -200,7 +200,7 @@ namespace Win32xx
 		if (iImage == -1)
 		{
 			// choose the image based on the number of buttons already used
-			for (int i = 0; i < GetButtonCount(); i++)
+			for (int i = 0; i < GetButtonCount(); ++i)
 			{
 				if (GetCommandID(i) > 0)
 					nImages++;
@@ -862,7 +862,7 @@ namespace Win32xx
 			tbb.iString = iString;
 
 			// Turn off ToolBar drawing
-			SendMessage(WM_SETREDRAW, FALSE, 0L);
+			SetRedraw(FALSE);
 
 			if (Succeeded)
 				Succeeded = (BOOL)SendMessage(TB_DELETEBUTTON, iIndex, 0L);
@@ -875,7 +875,7 @@ namespace Win32xx
 				SendMessage(TB_SETMAXTEXTROWS, 1L, 0L);
 
 			// Turn on ToolBar drawing
-			SendMessage(WM_SETREDRAW, TRUE, 0L);
+			SetRedraw(TRUE);
 		}
 		// Redraw button
 		CRect r = GetItemRect(iIndex);

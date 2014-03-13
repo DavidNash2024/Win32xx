@@ -147,32 +147,14 @@ STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* p
 		if (UI_VIEWTYPE_RIBBON == typeId)
 		{
 			switch (verb)
-			{           
-				// The view was newly created.
-			case UI_VIEWVERB_CREATE:
+			{           				
+			case UI_VIEWVERB_CREATE:	// The view was newly created.
 				hr = S_OK;
 				break;
-
-				// The view has been resized.  For the Ribbon view, the application should
-				// call GetHeight to determine the height of the ribbon.
-			case UI_VIEWVERB_SIZE:
-				{
-					IUIRibbon* pRibbon = NULL;
-					UINT uRibbonHeight;
-
-					hr = ((IUnknown*)pView)->QueryInterface(IID_PPV_ARGS(&pRibbon));
-					if (SUCCEEDED(hr))
-					{
-						// Call to the framework to determine the desired height of the Ribbon.
-						hr = pRibbon->GetHeight(&uRibbonHeight);
-						m_uRibbonHeight = uRibbonHeight;
-						pRibbon->Release();
-						// Use the ribbon height to position controls in the client area of the window.
-					}
-				}
-				break;
-				// The view was destroyed.
-			case UI_VIEWVERB_DESTROY:
+			case UI_VIEWVERB_SIZE:		//	The ribbon's size has changed			
+				hr = S_OK;
+				break;			
+			case UI_VIEWVERB_DESTROY:	// The view was destroyed.
 				hr = S_OK;
 				break;
 			}

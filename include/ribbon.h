@@ -85,7 +85,8 @@ namespace Win32xx
 		
 		bool virtual CreateRibbon(CWnd* pWnd);
 		void virtual DestroyRibbon();
-		IUIFramework* GetRibbonFramework() { return m_pRibbonFramework; }
+		IUIFramework* GetRibbonFramework() const { return m_pRibbonFramework; }
+		UINT GetRibbonHeight() const;
 
 	private:
 		IUIFramework* m_pRibbonFramework;
@@ -120,21 +121,17 @@ namespace Win32xx
 
 		typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
 
-		CRibbonFrame() : m_uRibbonHeight(0) {}
+		CRibbonFrame() {}
 		virtual ~CRibbonFrame() {}
-		virtual CRect GetViewRect();
+		virtual CRect GetViewRect() const;
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 		virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
 		virtual void UpdateMRUMenu();
 		
-		UINT GetRibbonHeight() const { return m_uRibbonHeight; }
-
 	private:
 		std::vector<RecentFilesPtr> m_vRecentFiles;
-		void SetRibbonHeight(UINT uRibbonHeight) { m_uRibbonHeight = uRibbonHeight; }
-		UINT m_uRibbonHeight;
 	};
 
 }
@@ -226,7 +223,6 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(verb);
 		UNREFERENCED_PARAMETER(uReasonCode);
 
-
 		return E_NOTIMPL;
 	}
 
@@ -286,13 +282,30 @@ namespace Win32xx
 			m_pRibbonFramework = NULL;
 		}
 	}
+
+	inline UINT CRibbon::GetRibbonHeight() const
+	{
+		HRESULT hr = E_FAIL;
+		IUIRibbon* pRibbon = NULL;
+		UINT uRibbonHeight = 0;
+
+		hr = GetRibbonFramework()->GetView(0, IID_PPV_ARGS(&pRibbon));
+		if (SUCCEEDED(hr))
+		{
+			// Call to the framework to determine the desired height of the Ribbon.
+			hr = pRibbon->GetHeight(&uRibbonHeight);
+			pRibbon->Release();
+		}
+
+		return uRibbonHeight;
+	}
 	
 	
 	//////////////////////////////////////////////
 	// Definitions for the CRibbonFrame class
 	//
 
-	inline CRect CRibbonFrame::GetViewRect()
+	inline CRect CRibbonFrame::GetViewRect() const
 	{
 		// Get the frame's client area
 		CRect rcFrame = GetClientRect();
@@ -311,7 +324,7 @@ namespace Win32xx
 				rcTop = GetToolBar()->GetWindowRect();
 
 		// Return client size less the rebar and status windows
-		int top = rcFrame.top + rcTop.Height() + m_uRibbonHeight;
+		int top = rcFrame.top + rcTop.Height() + GetRibbonHeight();
 		int left = rcFrame.left;
 		int right = rcFrame.right;
 		int bottom = rcFrame.Height() - (rcStatus.Height());
@@ -333,7 +346,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(pcs);
 
 		if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
-		{		
+		{	
 			if (CreateRibbon(this))
 			{
 				m_bUseReBar = FALSE;			// Don't use rebars
@@ -360,6 +373,7 @@ namespace Win32xx
 	inline STDMETHODIMP CRibbonFrame::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 	{
 		UNREFERENCED_PARAMETER(viewId);
+		UNREFERENCED_PARAMETER(pView);
 		UNREFERENCED_PARAMETER(uReasonCode);
 
 		HRESULT hr = E_NOTIMPL;
@@ -368,34 +382,14 @@ namespace Win32xx
 		if (UI_VIEWTYPE_RIBBON == typeId)
 		{
 			switch (verb)
-			{           
-				// The view was newly created.
-			case UI_VIEWVERB_CREATE:
+			{           			
+			case UI_VIEWVERB_CREATE:	// The view was newly created.
 				hr = S_OK;
 				break;
-
-				// The view has been resized.  For the Ribbon view, the application should
-				// call GetHeight to determine the height of the ribbon.
-			case UI_VIEWVERB_SIZE:
-				{
-					IUIRibbon* pRibbon = NULL;
-					UINT uRibbonHeight;
-
-					hr = pView->QueryInterface(IID_PPV_ARGS(&pRibbon));
-					if (SUCCEEDED(hr))
-					{
-						// Call to the framework to determine the desired height of the Ribbon.
-						hr = pRibbon->GetHeight(&uRibbonHeight);
-						SetRibbonHeight(uRibbonHeight);
-						pRibbon->Release();
-
-						RecalcLayout();
-						// Use the ribbon height to position controls in the client area of the window.
-					}
-				}
+			case UI_VIEWVERB_SIZE:		// Ribbon size has changed
+				RecalcLayout();
 				break;
-				// The view was destroyed.
-			case UI_VIEWVERB_DESTROY:
+			case UI_VIEWVERB_DESTROY:	// The view was destroyed.
 				hr = S_OK;
 				break;
 			}

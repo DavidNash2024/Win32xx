@@ -3684,11 +3684,11 @@ namespace Win32xx
 		int yOffset = 0;
 		int xOffset;
 		int Index;
-		for (int Row=0; Row < pbmi->bmiHeader.biHeight; Row++)
+		for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
 		{
 			xOffset = 0;
 
-			for (int Column=0; Column < pbmi->bmiHeader.biWidth; Column++)
+			for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
 			{
 				// Calculate Index
 				Index = yOffset + xOffset;
@@ -3741,11 +3741,11 @@ namespace Win32xx
 		int xOffset;
 		int Index;
 
-		for (int Row=0; Row < pbmi->bmiHeader.biHeight; Row++)
+		for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
 		{
 			xOffset = 0;
 
-			for (int Column=0; Column < pbmi->bmiHeader.biWidth; Column++)
+			for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
 			{
 				// Calculate Index
 				Index = yOffset + xOffset;

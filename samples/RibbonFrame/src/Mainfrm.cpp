@@ -53,7 +53,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
 		case IDC_RICHFONT:		TRACE("Font dialog\n");		break;
 		case IDC_RIBBONHELP:	OnHelp();					break;
 		case IDC_MRULIST:		OnMRUList(key, ppropvarValue);		break;
-		case IDC_PEN_COLOR: OnPenColor(ppropvarValue, pCmdExProp);	break;
+		case IDC_PEN_COLOR:		OnPenColor(ppropvarValue, pCmdExProp);	break;
 		case IDC_CUSTOMIZE_QAT:	TRACE("Customize Quick Access ToolBar\n");	break;
 		default:
 			{
@@ -123,16 +123,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
 	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
 	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
-	case IDM_PEN_BLACK:			OnPenBlack();		return TRUE;
-	case IDM_PEN_BLUE:			OnPenBlue();		return TRUE;
-	case IDM_PEN_GREEN:			OnPenGreen();		return TRUE;
-	case IDM_PEN_RED:			OnPenRed();			return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
 	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	//	::PostMessage(m_hWnd, WM_CLOSE, 0, 0);
-	//	return TRUE;
 	case IDW_FILE_MRU_FILE1:
 	case IDW_FILE_MRU_FILE2:
 	case IDW_FILE_MRU_FILE3:
@@ -302,30 +296,6 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 	TRACE("Frame created\n");
-}
-
-void CMainFrame::OnPenBlack()
-{
-	TRACE("Black pen selected\n");
-	m_View.SetPen(RGB(0,0,0));
-}
-
-void CMainFrame::OnPenBlue()
-{
-	TRACE("Blue pen selected\n");
-	m_View.SetPen(RGB(0,0,255));
-}
-
-void CMainFrame::OnPenGreen()
-{
-	TRACE("Green pen selected\n");
-	m_View.SetPen(RGB(0,196,0));
-}
-
-void CMainFrame::OnPenRed()
-{
-	TRACE("Red pen selected\n");
-	m_View.SetPen(RGB(255,0,0));
 }
 
 STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 

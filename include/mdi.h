@@ -543,9 +543,9 @@ namespace Win32xx
 	inline LRESULT CMDIFrame::CMDIClient::OnMDIActivate(WPARAM wParam, LPARAM lParam)
 	{
 		// Suppress redraw to avoid flicker when activating maximised MDI children
-		SendMessage(WM_SETREDRAW, FALSE, 0L);
+		SetRedraw(FALSE);
 		LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
-		SendMessage(WM_SETREDRAW, TRUE, 0L);
+		SetRedraw(TRUE);
 		RedrawWindow(0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		return lr;
@@ -641,7 +641,7 @@ namespace Win32xx
 		DWORD dwExStyle = m_pcs->dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
-		pParent->SendMessage(WM_SETREDRAW, FALSE, 0L);
+		pParent->SetRedraw(FALSE);
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the window
@@ -653,7 +653,7 @@ namespace Win32xx
 			ShowWindow(SW_MAXIMIZE);
 
 		// Turn redraw back on
-		pParent->SendMessage(WM_SETREDRAW, TRUE, 0L);
+		pParent->SetRedraw(TRUE);
 		pParent->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Ensure bits revealed by round corners (XP themes) are redrawn

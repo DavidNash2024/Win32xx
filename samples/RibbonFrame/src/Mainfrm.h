@@ -29,10 +29,6 @@ protected:
 	virtual void OnFilePrint();
 	virtual void OnInitialUpdate();
 	virtual void OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue);
-	virtual void OnPenBlack();
-	virtual void OnPenBlue();
-	virtual void OnPenGreen();
-	virtual void OnPenRed();
 	virtual void OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

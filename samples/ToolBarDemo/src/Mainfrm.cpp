@@ -102,21 +102,18 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
 	return 0L;
 }
 
+LRESULT CMainFrame::OnEndAdjust(LPNMHDR pNMHDR)
+// Called when the user has stopped customizing a toolbar.
+{
+	UNREFERENCED_PARAMETER(pNMHDR);
+
+	return TRUE;
+}
+
 void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
-}
-
-void CMainFrame::OnInitialUpdate()
-{
-	// The frame is now created.
-	// Place any additional startup code here.
-
-	TRACE("Frame created\n");
-
-	//Store the current ToolBar
-	SaveTBDefault();
 }
 
 void CMainFrame::OnFileOpen()
@@ -153,6 +150,17 @@ void CMainFrame::OnFilePrint()
 	// Add your own code here. Refer to the tutorial for additional information 
 }
 
+void CMainFrame::OnInitialUpdate()
+{
+	// The frame is now created.
+	// Place any additional startup code here.
+
+	TRACE("Frame created\n");
+
+	//Store the current ToolBar
+	SaveTBDefault();
+}
+
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 // Process notification messages sent by child windows
 {
@@ -165,7 +173,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	case TBN_CUSTHELP:		return OnCustHelp((LPNMHDR)lParam);
 	case TBN_GETBUTTONINFO: return OnGetButtonInfo(pNMTB);
 	case TBN_BEGINADJUST:	return OnBeginAdjust(pNMTB);
-	case TBN_ENDADJUST:		TRACE("TBN_ENDADJUST \n");return TRUE;
+	case TBN_ENDADJUST:		return OnEndAdjust((LPNMHDR)lParam);
 	case TBN_TOOLBARCHANGE:	return OnToolBarChange(pNMTB);
 	case TBN_RESET:			return OnReset(pNMTB); 
 	}

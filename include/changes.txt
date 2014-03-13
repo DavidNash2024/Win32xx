@@ -126,6 +126,7 @@ Changes in detail
 - Added CMDIChild::OnMDIActivate
 - Added CMDIChild::OnWindowPosChanged
 - Added CRect operator LPCRECT()
+- Added CRibbon::GetRibbonHeight
 - Added CString operator += (TCHAR)
 - Added CTab::DeleteAllItems	
 - Added CTab::DeleteItem		
@@ -208,6 +209,7 @@ Changes in detail
 - Removed CMenuBar::SetMenuTheme
 - Removed CReBar::GetReBarTheme
 - Removed CReBar::SetReBarTheme
+- Removed CRibbonFrame::GetRibbonHeight
 - Removed CToolBar::GetToolBarTheme
 - Removed CToolBar::SetToolBarTheme
 - Removed CToolBar::OnCustomDraw
