@@ -1529,7 +1529,7 @@ namespace Win32xx
 	// Assigns a ToolTip control to a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return TabCtrl_SetToolTips(m_hWnd, pToolTip->GetHwnd() );
+		TabCtrl_SetToolTips(m_hWnd, pToolTip->GetHwnd() );
 	}
 
 	////////////////////////////////////////

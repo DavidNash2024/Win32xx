@@ -13,8 +13,11 @@ In this project we have the following different types of MDI children available:
  - A ListView view window
  - A Treeview view window
  
-Classes titled CMDIChildXXXX are inherited from CMDIChildr. Classes titled 
+Classes titled CMDIChildXXXX are inherited from CMDIChild. Classes titled 
 CViewXXXX are the various view windows inherited from CWnd.
+
+The Simple view window will present a dialog box asking if it is OK to
+close the window, before it is destroyed.
 
 
 Features demonstrated in this example
@@ -26,9 +29,10 @@ Features demonstrated in this example
    - Use/don't use a rebar in the frame.
    - Use/don't use themes.
    - Use/don't use a toolbar in the frame.
-* Setting the MDI Frame's toolbar.  
+* Setting the MDI Frame's toolbar. 
+* Having different types of MDI children (different views) in the MDI Frame. 
 * Setting the view window for the CMDIChid.
-* Setting the separate menu for the CMDIChild.
+* Setting a separate menu and icon for each CMDIChild.
 * Responding to the MDI specific commands in CMDIFrame::OnCommand
 * Using several different types of MDI children
    - Each MDI child type has a different menu and icon

@@ -14,6 +14,7 @@ Features demonstrated in this example
 * Using a modeless dialog as a view window for the frame.
 * Implementing a Doc/View architecture much like MFC.
 * Saving the dialog's settings in the registry.
+* Use of OnMenuUpdate to update check state of menu items
 
 
 About Dialogs
