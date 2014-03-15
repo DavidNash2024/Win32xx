@@ -1,6 +1,5 @@
 The contents of the folders within Win32++
 ==========================================
-3rd Party Software	Contains software developed by other authors
 help             	Contains the documentation of Win32++.
 include          	Contains the set of files that make up the Win32++ library.
 new projects     	A set of projects to be used in your new projects. 
@@ -9,5 +8,3 @@ samples          	A set of sample projects that demonstrate the various features
 tools            	A set of useful batch files for Win32++.
 tutorials        	The code for the tutorials described in the Win32++ documentation.
 WCE samples      	A set of sample projects that demonstrate using Win32++ on WinCE.
-
-

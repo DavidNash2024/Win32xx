@@ -13,11 +13,15 @@ Win32++ supports the following compilers and development environments:
 * Microsoft Visual C++ 2005 Express Edition
 * Microsoft Visual C++ 2008 Express Edition
 * Microsoft Visual C++ 2010 Express Edition
+* Microsoft Visual C++ 2012 Express Edition
+* Microsoft Visual C++ 2013 Express Edition
 * Microsoft Visual Studio 6.0
 * Microsoft Visual Studio.net 2003
 * Microsoft Visual Studio.net 2005
 * Microsoft Visual Studio.net 2008
 * Microsoft Visual Studio.net 2010
+* Microsoft Visual Studio.net 2012
+* Microsoft Visual Studio.net 2013
 * MinGW compiler
 
 Win32++ supports the following operating systems
@@ -31,6 +35,9 @@ Win32++ supports the following operating systems
 * Windows Vista	(32bit and 64bit)
 * Windows 2008 Server (32bit and 64bit)
 * Windows 7 (32 bit and 64 bit)
+* Windows 8 (32 bit and 64 bit)
+* Windows 8.1 (32 bit and 64 bit)
+* Windows 2012 Server
 * Windows CE from WCE400 (Windows mobile 2003) to WCE600 (Windows mobile 6)
 
 
@@ -98,6 +105,7 @@ The sample applications include:
  * TaskDialog - Demonstrates the use of task dialogs (available on Vista and above).
  * Themes - Demonstrates how to customise the colours for rebar and toolbar controls.
  * Threads - Demonstrates multi-threaded Windows.
+ * ToolBarDemo - Demonstrates how to customize a toolbar.
  * Tray - Demonstrates how to "minimise" an application to the system tray.  
  * WinCE samples - A small collection of samples for Windows CE
 

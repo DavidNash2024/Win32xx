@@ -708,8 +708,8 @@ Changes in detail
 - Added several functions to CSize
 - Added many functions to CRect 
   
-The problem with the previous the text functions
-------------------------------------------------
+The problem with the previous text functions
+--------------------------------------------
 While the previous text conversion functions generally worked well, there were
 ambiguities about usage, and corner cases where they produced undesirable 
 results. For example:
