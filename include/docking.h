@@ -3141,22 +3141,22 @@ namespace Win32xx
 			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 				rcChild.right = rcChild.left + (int)DockSize;
 				break;
 			case DS_DOCKED_RIGHT:
-				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 				rcChild.left = rcChild.right - (int)DockSize;
 				break;
 			case DS_DOCKED_TOP:
-				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.bottom = rcChild.top + (int)DockSize;
 				break;
 			case DS_DOCKED_BOTTOM:
-				if (!(GetDockStyle() & DS_FIXED_RESIZE))
+			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.top = rcChild.bottom - (int)DockSize;
 				break;

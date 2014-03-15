@@ -755,6 +755,7 @@ namespace Win32xx
 		m_mapHWND.clear();
 		m_mapGDI.clear();
 		m_mapHDC.clear();
+		m_mapHIMAGELIST.clear();
 		m_mapHMENU.clear();
 
 		// Do remaining tidy up
