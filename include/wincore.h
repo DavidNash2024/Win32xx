@@ -1,5 +1,5 @@
-// Win32++   Version 7.4
-// Released: 16th March 2014
+// Win32++   Version 7.4.1
+// Not officially released yet.
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -87,7 +87,6 @@
 #endif
 
 #ifdef __BORLANDC__
-  #pragma option -w-8019			// code has no effect
   #pragma option -w-8026            // functions with exception specifications are not expanded inline
   #pragma option -w-8027		    // function not expanded inline
   #pragma option -w-8030			// Temporary used for 'rhs'
@@ -96,7 +95,6 @@
 
 #ifdef __GNUC__
   #pragma GCC diagnostic ignored "-Wmissing-braces"
-  #pragma GCC diagnostic ignored "-Wunused-value"
 #endif
 
 #ifdef _WIN32_WCE
@@ -966,10 +964,13 @@ namespace Win32xx
 		while (status != 0)
 		{
 			// While idle, perform idle processing until OnIdle returns FALSE
-			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) == TRUE)
+			// Exclude some messages to avoid calling OnIdle unnecessarily
+			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && (Msg.message != WM_TIMER) && 
+				/* (Msg.message != WM_MOUSEMOVE) && (Msg.message != WM_SETCURSOR)  && */ OnIdle(lCount) == TRUE)
 			{
 				++lCount;
 			}
+
 
 			lCount = 0;
 

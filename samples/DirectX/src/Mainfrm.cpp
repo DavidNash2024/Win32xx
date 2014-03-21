@@ -63,6 +63,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 void CMainFrame::OnDestroy()
 {
+	// End the view's thread
 	PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
 	::WaitForSingleObject(m_View.GetThread(), INFINITE);
 	
