@@ -114,7 +114,7 @@ void CMainMDIFrame::OnFileClose()
 void CMainMDIFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+	PostMessage(WM_CLOSE);
 }
 
 void CMainMDIFrame::SetupToolBar()

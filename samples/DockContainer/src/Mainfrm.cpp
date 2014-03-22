@@ -34,7 +34,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
 	case IDM_FILE_EXIT:
 		// Issue a close request to the frame
-		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+		PostMessage(WM_CLOSE);
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
 		m_DockView.CloseAllDockers();

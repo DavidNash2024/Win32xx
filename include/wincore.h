@@ -373,9 +373,9 @@ namespace Win32xx
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 
-		void	AddTmpDC(CDC* pDC);
+		CDC*	AddTmpDC(HDC hDC);
 		void	AddTmpGDI(CGDIObject* pObject);
-		void    AddTmpImageList(HIMAGELIST hImageList);
+		CImageList*    AddTmpImageList(HIMAGELIST hImageList);
 		CMenu*	AddTmpMenu(HMENU hMenu);
 		CWnd*	AddTmpWnd(HWND hWnd);
 		void	CleanupTemps();
@@ -762,15 +762,21 @@ namespace Win32xx
 		SetnGetThis((CWinApp*)-1);
 	}
 
-	inline void CWinApp::AddTmpDC(CDC* pDC)
+	inline CDC* CWinApp::AddTmpDC(HDC hDC)
 	{
 		// The temporary CDCs are created by GetDC and GetWindowDC
 		// The temporary CDCs are removed by CleanupTemps
-		assert(pDC);
+		assert(hDC);
+
+		CDC* pDC = new CDC;
+		pDC->m_pData->hDC = hDC;
+		pDC->m_pData->bIsTmpHDC = TRUE;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
+
+		return pDC;
 	}
 
 	inline void CWinApp::AddTmpGDI(CGDIObject* pObject)
@@ -778,12 +784,16 @@ namespace Win32xx
 		// The temporary CGDIObjects are removed by CleanupTemps
 		assert(pObject);
 
+		m_csMapLock.Lock();
+		m_mapGDI.insert(std::make_pair(pObject->GetHandle(), pObject));
+		m_csMapLock.Release();
+		
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpGDIs.push_back(pObject); // save pObject as a smart pointer
 	}
 
-	inline void CWinApp::AddTmpImageList(HIMAGELIST hImageList)
+	inline CImageList* CWinApp::AddTmpImageList(HIMAGELIST hImageList)
 	{
 		// The temporary CImageList are removed by CleanupTemps
 		assert(hImageList);
@@ -799,6 +809,8 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->vTmpImageLists.push_back(pImageList); // save pImageList as a smart pointer
+
+		return pImageList;
 	}
 
 #ifndef _WIN32_WCE

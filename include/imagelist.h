@@ -155,13 +155,15 @@ namespace Win32xx
 	// Returns the CImageList object associated with the ImageList handle (HIMAGELIST).
 	{
 		assert( GetApp() );
+
 		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-		if ((hImageList != 0) && pImageList == 0)
+		if ((hImageList != 0) && (pImageList == 0))
 		{
-			GetApp()->AddTmpImageList(hImageList);
-			pImageList = GetApp()->GetCImageListFromMap(hImageList);
+			pImageList = GetApp()->AddTmpImageList(hImageList);
+			pImageList->AddToMap();
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 		}
+
 		return pImageList;
 	}
 

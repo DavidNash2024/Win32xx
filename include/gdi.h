@@ -104,7 +104,7 @@
 //     or deleting the device context as appropriate.
 //  * When the destructor for CBitmap, CBrush, CPalette, CPen and CRgn are called,
 //     the destructor is called deleting their GDI object.
-//  * When the CDC object' destructor is called, any GDI objects created by one of
+//  * When the CDC object's destructor is called, any GDI objects created by one of
 //     the CDC member functions (CDC::CreatePen for example) will be deleted.
 //  * Bitmaps can only be selected into one device context at a time.
 //  * Palettes use SelectPalatte to select them into device the context.
@@ -683,10 +683,16 @@ namespace Win32xx
 	public:
 		CClientDC(const CWnd* pWnd)
 		{
-			if (pWnd) assert(pWnd->IsWindow());
-			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
-			Attach(::GetDC(hWnd), hWnd);
+			if (pWnd)
+			{
+				assert(pWnd->IsWindow());
+				Attach(::GetDC(*pWnd), *pWnd);
+			}
+			else
+				Attach(::GetDC(GetDesktopWindow()), 0);
+		
 		}
+
 		virtual ~CClientDC() {}
 	};
 
@@ -1053,8 +1059,9 @@ namespace Win32xx
 	//  when the temporary CBitmap is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hBitmap);
 		CBitmap* pBitmap = (CBitmap*)GetApp()->GetCGDIObjectFromMap(hBitmap);
-		if (hBitmap != 0 && pBitmap == 0)
+		if (pBitmap == 0)
 		{
 			pBitmap = new CBitmap;
 			GetApp()->AddTmpGDI(pBitmap);
@@ -1279,8 +1286,10 @@ namespace Win32xx
 	//  when the temporary CBrush is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hBrush);
+
 		CBrush* pBrush = (CBrush*)GetApp()->GetCGDIObjectFromMap(hBrush);
-		if (hBrush != 0 && pBrush == 0)
+		if (pBrush == 0)
 		{
 			pBrush = new CBrush;
 			GetApp()->AddTmpGDI(pBrush);
@@ -1397,8 +1406,10 @@ namespace Win32xx
 	//  when the temporary CFont is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hFont);
+
 		CFont* pFont = (CFont*)GetApp()->GetCGDIObjectFromMap(hFont);
-		if (hFont != 0 && pFont == 0)
+		if (pFont == 0)
 		{
 			pFont = new CFont;
 			GetApp()->AddTmpGDI(pFont);
@@ -1524,8 +1535,10 @@ namespace Win32xx
 	//  when the temporary CPalette is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hPalette);
+
 		CPalette* pPalette = (CPalette*)GetApp()->GetCGDIObjectFromMap(hPalette);
-		if (hPalette != 0 && pPalette == 0)
+		if (pPalette == 0)
 		{
 			pPalette = new CPalette;
 			GetApp()->AddTmpGDI(pPalette);
@@ -1653,8 +1666,10 @@ namespace Win32xx
 	//  when the temporary CPen is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hPen);
+
 		CPen* pPen = (CPen*)GetApp()->GetCGDIObjectFromMap(hPen);
-		if (hPen != 0 && pPen == 0)
+		if (pPen == 0)
 		{
 			pPen = new CPen;
 			GetApp()->AddTmpGDI(pPen);
@@ -1747,8 +1762,10 @@ namespace Win32xx
 	//  when the temporary CRgn is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hRgn);
+
 		CRgn* pRgn = (CRgn*)GetApp()->GetCGDIObjectFromMap(hRgn);
-		if (hRgn != 0 && pRgn == 0)
+		if (pRgn == 0)
 		{
 			pRgn = new CRgn;
 			GetApp()->AddTmpGDI(pRgn);
@@ -2058,13 +2075,13 @@ namespace Win32xx
 	//  temporary CDC is deconstructed.
 	{
 		assert( GetApp() );
+		assert(hDC);
+
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (hDC != 0 && pDC == 0)
+		if (pDC == 0)
 		{
-			pDC = new CDC;
-			GetApp()->AddTmpDC(pDC);
-			pDC->m_pData->hDC = hDC;
-			pDC->m_pData->bIsTmpHDC = TRUE;
+			pDC = GetApp()->AddTmpDC(hDC);
+			pDC->AddToMap();
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 		}
 		return pDC;
@@ -2211,10 +2228,9 @@ namespace Win32xx
 	// The HDC is removed when the CDC is destroyed
 	{
 		assert( GetApp() );
-		CDC* pDC = new CDC;
-		pDC->m_pData->hDC = hDC;
-		GetApp()->AddTmpDC(pDC);
-		pDC->m_pData->bIsTmpHDC = FALSE;
+		assert(hDC);
+		
+		CDC* pDC = FromHandle(hDC);
 		pDC->m_pData->hWnd = hWnd;
 		return pDC;
 	}

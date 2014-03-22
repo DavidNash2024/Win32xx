@@ -211,11 +211,12 @@ namespace Win32xx
 	// Returns the CMenu object associated with the menu handle (HMENU).
 	{
 		assert( GetApp() );
+
 		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-		if (::IsMenu(hMenu) && pMenu == 0)
+		if ((hMenu != 0) && (pMenu == 0))
 		{
-			GetApp()->AddTmpMenu(hMenu);
-			pMenu = GetApp()->GetCMenuFromMap(hMenu);
+			pMenu = GetApp()->AddTmpMenu(hMenu);
+			pMenu->AddToMap();
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 		}
 		return pMenu;

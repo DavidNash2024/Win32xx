@@ -29,7 +29,7 @@ LRESULT CViewRect::OnSize(WPARAM wParam, LPARAM lParam)
 		m_cxClientMax = LOWORD (lParam) ;
 		if (m_cxClientMax < 1)
 			m_cxClientMax = 1;
-		
+
 		m_cyClientMax = HIWORD (lParam) ;
 		if (m_cyClientMax < 1)
 			m_cyClientMax = 1;
@@ -43,7 +43,7 @@ LRESULT CViewRect::OnTimer(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
-	
+
 	int nRed, nGreen, nBlue;
 	int xLeft, xRight, yTop, yBottom;
 	xLeft   = rand () % m_cxClientMax;

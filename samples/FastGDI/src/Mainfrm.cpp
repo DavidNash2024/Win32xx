@@ -41,8 +41,8 @@ void CMainFrame::OnAdjustImage()
 
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 {
-	TintBitmap(FromHandle(GetMyView().GetImage()), cRed, cGreen, cBlue);
-	if (bGray) 	GrayScaleBitmap(FromHandle(GetMyView().GetImage()));
+	TintBitmap(CBitmap::FromHandle(GetMyView().GetImage()), cRed, cGreen, cBlue);
+	if (bGray) 	GrayScaleBitmap(CBitmap::FromHandle(GetMyView().GetImage()));
 
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
@@ -90,7 +90,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+	PostMessage(WM_CLOSE);
 }
 
 void CMainFrame::OnFileNew()

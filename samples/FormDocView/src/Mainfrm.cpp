@@ -43,7 +43,7 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+	PostMessage(WM_CLOSE);
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)

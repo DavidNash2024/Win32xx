@@ -220,7 +220,7 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	CClientDC dcDesktop(NULL);
 	m_bmPreview.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
 	m_bmPreviewOrig.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
-	MemDC.SelectObject(FromHandle(hbmImage));
+	MemDC.SelectObject(CBitmap::FromHandle(hbmImage));
 	Dest1DC.SelectObject(&m_bmPreview);
 	Dest2DC.SelectObject(&m_bmPreviewOrig);
 
