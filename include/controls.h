@@ -817,7 +817,7 @@ namespace Win32xx
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return FromHandle( (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0, 0) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0, 0) );
 	}
 
 	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM* pCBItem) const
@@ -853,7 +853,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
-		return FromHandle( (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)himlNew) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0, (LPARAM)himlNew) );
 	}
 
 	inline BOOL CComboBoxEx::SetItem(PCOMBOBOXEXITEM lpcCBItem) const
@@ -893,7 +893,7 @@ namespace Win32xx
 	inline CFont* CDateTime::GetMonthCalFont() const
 	{
 		assert(IsWindow());
-		return FromHandle((HFONT)DateTime_GetMonthCalFont(m_hWnd));
+		return ::FromHandle((HFONT)DateTime_GetMonthCalFont(m_hWnd));
 	}
 
 	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
@@ -981,7 +981,7 @@ namespace Win32xx
 	inline CImageList* CHeader::CreateDragImage(int nIndex)
 	{
 		assert(IsWindow());
-		return FromHandle( Header_CreateDragImage(m_hWnd, nIndex) );
+		return CImageList::FromHandle( Header_CreateDragImage(m_hWnd, nIndex) );
 	}
 
 	inline BOOL CHeader::DeleteItem(int nPos)
@@ -993,7 +993,7 @@ namespace Win32xx
 	inline CImageList* CHeader::GetImageList() const
 	{
 		assert(IsWindow());
-		return FromHandle( Header_GetImageList(m_hWnd) );
+		return CImageList::FromHandle( Header_GetImageList(m_hWnd) );
 	}
 
 	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
@@ -1058,7 +1058,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
-		return FromHandle( Header_SetImageList(m_hWnd, himlNew) );
+		return CImageList::FromHandle( Header_SetImageList(m_hWnd, himlNew) );
 	}
 
 	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)

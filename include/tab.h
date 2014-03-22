@@ -1393,7 +1393,7 @@ namespace Win32xx
 	// Retrieves the image list associated with a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( TabCtrl_GetImageList(m_hWnd) );
+		return CImageList::FromHandle( TabCtrl_GetImageList(m_hWnd) );
 	}
 
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
@@ -1486,7 +1486,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himl = pImageList? pImageList->GetHandle() : NULL;
-		return (CImageList*)FromHandle( TabCtrl_SetImageList( m_hWnd, himl ) );
+		return CImageList::FromHandle( TabCtrl_SetImageList( m_hWnd, himl ) );
 	}
 
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const

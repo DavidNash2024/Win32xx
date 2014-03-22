@@ -187,7 +187,7 @@ namespace Win32xx
 	// Retrieves the handle to the normal or state image list associated with a tree-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( TreeView_GetImageList( m_hWnd, iImageType ) );
+		return CImageList::FromHandle( TreeView_GetImageList( m_hWnd, iImageType ) );
 	}
 
 	inline UINT CTreeView::GetIndent() const
@@ -388,7 +388,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;	
-		return FromHandle( TreeView_SetImageList( m_hWnd, himlNew, nType ) );
+		return CImageList::FromHandle( TreeView_SetImageList( m_hWnd, himlNew, nType ) );
 	}
 
 	inline void CTreeView::SetIndent(int indent) const
@@ -511,7 +511,7 @@ namespace Win32xx
 	// An application can display the image when dragging the item by using the image list functions.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( TreeView_CreateDragImage( m_hWnd, hItem ) );
+		return CImageList::FromHandle( TreeView_CreateDragImage( m_hWnd, hItem ) );
 	}
 
 	inline BOOL CTreeView::DeleteAllItems() const

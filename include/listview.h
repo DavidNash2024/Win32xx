@@ -271,7 +271,7 @@ namespace Win32xx
 	// Retrieves the handle to an image list used for drawing list-view items.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( ListView_GetImageList( m_hWnd, nImageType ) );
+		return CImageList::FromHandle( ListView_GetImageList( m_hWnd, nImageType ) );
 	}
 
 	inline BOOL CListView::GetItem( LVITEM& Item ) const
@@ -543,7 +543,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;		
-		return FromHandle( ListView_SetImageList( m_hWnd, himlNew, iImageListType ) );
+		return CImageList::FromHandle( ListView_SetImageList( m_hWnd, himlNew, iImageListType ) );
 	}
 
 	inline BOOL CListView::SetItem( LVITEM& Item ) const
@@ -706,7 +706,7 @@ namespace Win32xx
 	// Creates a drag image list for the specified item.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( ListView_CreateDragImage( m_hWnd, iItem, &pt ) );
+		return CImageList::FromHandle( ListView_CreateDragImage( m_hWnd, iItem, &pt ) );
 	}
 
 	inline BOOL CListView::DeleteAllItems( ) const

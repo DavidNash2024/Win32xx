@@ -148,6 +148,8 @@
 
 
 // Messages defined by Win32++
+const UINT UWM_CLEANUPTEMPS = RegisterWindowMessage(_T("UWM_CLEANUPTEMPS")); // Message - posted to cleanup temporary CDCs, CWnds etc.
+
 #define UWM_POPUPMENU		 (WM_APP + 1)	// Message - creates the menubar popup menu
 #define UWM_DOCKDESTROYED	 (WM_APP + 2)	// Message - posted when docker is destroyed
 #define UWM_TOOLBARRESIZE    (WM_APP + 3)   // Message - sent by toolbar to parent. Used by the rebar
@@ -156,7 +158,7 @@
 #define UWM_GETMENUTHEME     (WM_APP + 6)	// Message - returns a pointer to MenuTheme
 #define UWM_GETREBARTHEME    (WM_APP + 7)	// Message - returns a pointer to CToolBar
 #define UWM_GETTOOLBARTHEME  (WM_APP + 8)   // Message - returns a pointer to ToolBarTheme
-#define UWM_CLEANUPTEMPS	 (WM_APP + 9)	// Message - posted to cleanup temporary CDCs
+//#define UWM_CLEANUPTEMPS	 (WM_APP + 9)	// Message - posted to cleanup temporary CDCs, CWnds etc.
 #define UWM_TBWINPOSCHANGING (WM_APP + 10)	// Message - Sent to parent. Toolbar is resizing
 #define UWN_BARSTART		 (WM_APP + 11)	// Notification - docker bar selected for move
 #define UWN_BARMOVE			 (WM_APP + 12)	// Notification - docker bar moved
@@ -325,30 +327,23 @@ namespace Win32xx
 	class CWinApp
 	{
 		// Provide these access to CWinApp's private members:
+		friend class CBitmap;
+		friend class CBrush;
 		friend class CDC;
 		friend class CDialog;
 		friend class CGDIObject;
+		friend class CFont;
 		friend class CImageList;
 		friend class CMenu;
 		friend class CMenuBar;
+		friend class CPalette;
+		friend class CPen;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
+		friend class CRgn;
 		friend class CTaskDialog;
 		friend class CWnd;
 		friend CWinApp* GetApp();
-		friend CGDIObject* FromHandle(HGDIOBJ hObject);
-		friend CBitmap* FromHandle(HBITMAP hBitmap);
-		friend CBrush* FromHandle(HBRUSH hBrush);
-		friend CFont* FromHandle(HFONT hFont);
-		friend CImageList* FromHandle(HIMAGELIST hImageList); 
-		friend CPalette* FromHandle(HPALETTE hPalette);
-		friend CPen* FromHandle(HPEN hPen);
-		friend CRgn* FromHandle(HRGN hRgn);
-		friend CDC* FromHandle(HDC hDC);
-		friend CWnd* FromHandle(HWND hWnd);
-#ifndef _WIN32_WCE
-		friend CMenu* FromHandle(HMENU hMenu);
-#endif
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -440,6 +435,7 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
+		static  CWnd* FromHandle(HWND hWnd);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -964,9 +960,12 @@ namespace Win32xx
 		while (status != 0)
 		{
 			// While idle, perform idle processing until OnIdle returns FALSE
-			// Exclude some messages to avoid calling OnIdle unnecessarily
-			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && (Msg.message != WM_TIMER) && 
-				/* (Msg.message != WM_MOUSEMOVE) && (Msg.message != WM_SETCURSOR)  && */ OnIdle(lCount) == TRUE)
+			// Exclude some messages to avoid calling OnIdle excessively
+			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && 
+								(Msg.message != WM_TIMER) && 
+								(Msg.message != WM_MOUSEMOVE) && 
+								(Msg.message != WM_SETCURSOR) &&  
+								OnIdle(lCount) == TRUE  )
 			{
 				++lCount;
 			}
@@ -978,10 +977,18 @@ namespace Win32xx
 			if ((status = ::GetMessage(&Msg, NULL, 0, 0)) == -1)
 				return -1;
 
-			if (!PreTranslateMessage(Msg))
+			if (Msg.message == UWM_CLEANUPTEMPS)
 			{
-				::TranslateMessage(&Msg);
-				::DispatchMessage(&Msg);
+				CleanupTemps();
+				TRACE("CleanupTemps called\n");
+			}
+			else
+			{
+				if (!PreTranslateMessage(Msg))
+				{
+					::TranslateMessage(&Msg);
+					::DispatchMessage(&Msg);
+				}
 			}
 		}
 
@@ -990,8 +997,8 @@ namespace Win32xx
 
 	inline BOOL CWinApp::OnIdle(LONG lCount)
 	{
-		if (lCount == 0)
-			CleanupTemps();
+		UNREFERENCED_PARAMETER(lCount);
+		TRACE("OnIdle \n");
 
 		return FALSE;
 	}
@@ -1284,7 +1291,9 @@ namespace Win32xx
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
 	{
-		if ( GetApp() ) RemoveFromMap();
+		if ( GetApp() )
+			RemoveFromMap();
+
 		m_hWnd = NULL;
 		m_PrevWindowProc = NULL;
 		m_IsTmpWnd = FALSE;
@@ -1429,11 +1438,11 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-		if (m_IsTmpWnd)
-			m_hWnd = NULL;
-
-		if (IsWindow())
-			::DestroyWindow(m_hWnd);
+		if (!m_IsTmpWnd)
+		{
+			if (IsWindow())
+				::DestroyWindow(m_hWnd);
+		}
 
 		// Return the CWnd to its default state
 		Cleanup();
@@ -1461,6 +1470,20 @@ namespace Win32xx
 			return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
 		else
 			return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
+	}
+
+	inline CWnd* CWnd::FromHandle(HWND hWnd)
+	// Returns the CWnd object associated with the window handle
+	{
+		assert( GetApp() );
+		CWnd* pWnd = hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
+		if ( hWnd != NULL && pWnd == 0 )
+		{
+			pWnd = GetApp()->AddTmpWnd(hWnd);
+			::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
+		}
+
+		return pWnd;
 	}
 
 	inline CWnd* CWnd::GetAncestor(UINT gaFlags /*= GA_ROOTOWNER*/) const
@@ -1952,12 +1975,6 @@ namespace Win32xx
 
     	switch (uMsg)
 		{
-		case UWM_CLEANUPTEMPS:
-			{
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				pTLSData->vTmpWnds.clear();
-			}
-			break;
 		case WM_CLOSE:
 			{
 				OnClose();
@@ -2030,7 +2047,7 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = FromHandle((HDC)wParam);
+				CDC* pDC = CDC::FromHandle((HDC)wParam);
 				BOOL bResult = OnEraseBkgnd(pDC);
 				if (bResult) return TRUE;
 			}
@@ -2084,7 +2101,7 @@ namespace Win32xx
 	// information about the painting.
 	{
         assert(::IsWindow(m_hWnd));
-		return FromHandle(::BeginPaint(m_hWnd, &ps));
+		return CDC::FromHandle(::BeginPaint(m_hWnd, &ps));
 	}
 
 	inline BOOL CWnd::BringWindowToTop() const
@@ -2273,7 +2290,7 @@ namespace Win32xx
 	// Retrieves the font with which the window is currently drawing its text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle((HFONT)SendMessage(WM_GETFONT, 0, 0));
+		return CFont::FromHandle((HFONT)SendMessage(WM_GETFONT, 0, 0));
 	}
 
 	inline HICON CWnd::GetIcon(BOOL bBigIcon) const
@@ -2895,7 +2912,7 @@ namespace Win32xx
 	// The GetMenu function retrieves a handle to the menu assigned to the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle(::GetMenu(m_hWnd));
+		return CMenu::FromHandle(::GetMenu(m_hWnd));
 	}
 
 	inline int CWnd::GetScrollPos(int nBar) const
@@ -2919,7 +2936,7 @@ namespace Win32xx
 	// or the control menu) for copying and modifying.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle(::GetSystemMenu(m_hWnd, bRevert));
+		return CMenu::FromHandle(::GetSystemMenu(m_hWnd, bRevert));
 	}
 
 	inline CWnd* CWnd::GetTopWindow() const

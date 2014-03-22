@@ -270,18 +270,12 @@ namespace Win32xx
 				if (wParam == IDLE_TIMER_ID)
 					GetApp()->CleanupTemps();
 			return 0L;
-		case UWM_CLEANUPTEMPS:
-			{
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				pTLSData->vTmpWnds.clear();
-			}
-			break;
 	    case WM_INITDIALOG:
 			{
 				// Center the dialog
 				CenterWindow();
 				if (IsModal())
-					SetTimer(IDLE_TIMER_ID, 1000, 0);
+					SetTimer(IDLE_TIMER_ID, 5000, 0);
 			}
 		    return OnInitDialog();
 		case WM_CLOSE:	
@@ -364,7 +358,7 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = FromHandle((HDC)wParam);
+				CDC* pDC = CDC::FromHandle((HDC)wParam);
 				BOOL bResult = OnEraseBkgnd(pDC);
 				if (bResult) return TRUE;
 			}
@@ -711,7 +705,7 @@ namespace Win32xx
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.	
 	{
-		AddChild(FromHandle(hWnd), corner, dwStyle);
+		AddChild(CWnd::FromHandle(hWnd), corner, dwStyle);
 	}
 
 	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -930,7 +924,7 @@ namespace Win32xx
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
-				CWnd* pWnd = FromHandle((*iter).hWnd);
+				CWnd* pWnd = CWnd::FromHandle((*iter).hWnd);
 				CWnd *pWndPrev = pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
 				pWnd->SetWindowPos(pWndPrev, rc, SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;

@@ -400,14 +400,14 @@ namespace Win32xx
 	// Retrieves the image list that a ToolBar control uses to display inactive buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L) );
 	}
 
 	inline CImageList* CToolBar::GetHotImageList() const
 	// Retrieves the image list that a ToolBar control uses to display hot buttons.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L) );
 	}
 
 	inline int CToolBar::GetHotItem() const
@@ -421,7 +421,7 @@ namespace Win32xx
 	// Retrieves the image list that a ToolBar control uses to display buttons in their default state.
 	{
 		assert(::IsWindow(m_hWnd));
-		return FromHandle( (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L) );
 	}
 
 	inline CRect CToolBar::GetItemRect(int iIndex) const
@@ -917,7 +917,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himlNewDisabled = pNewDisabled ? pNewDisabled->GetHandle() : 0;
-		return FromHandle( (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlNewDisabled) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlNewDisabled) );
 	}
 
 	inline DWORD CToolBar::SetDrawTextFlags(DWORD dwMask, DWORD dwDTFlags) const
@@ -940,7 +940,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himlNewHot = pNewHot ? pNewHot->GetHandle() : 0;
-		return FromHandle( (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlNewHot) );
 	}
 
 	inline int CToolBar::SetHotItem(int iHot) const
@@ -955,7 +955,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
-		return FromHandle( (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNew) );
+		return CImageList::FromHandle( (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNew) );
 	}
 
 	inline BOOL CToolBar::SetIndent(int iIndent) const

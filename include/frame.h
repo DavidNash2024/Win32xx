@@ -2105,7 +2105,7 @@ namespace Win32xx
 			// An item is about to be drawn
 			case CDDS_ITEMPREPAINT:
 				{
-					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
+					CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
 					CRect rcRect = lpNMCustomDraw->nmcd.rc;
 					int nState = lpNMCustomDraw->nmcd.uItemState;
 					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -2178,7 +2178,7 @@ namespace Win32xx
 			case CDDS_POSTPAINT:
 				// Draw MDI Minimise, Restore and Close buttons
 				{
-					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
+					CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
 					GetMenuBar()->DrawAllMDIButtons(pDrawDC);
 				}
 				break;
@@ -2205,7 +2205,7 @@ namespace Win32xx
 			// An item is about to be drawn
 			case CDDS_ITEMPREPAINT:
 				{
-					CDC* pDrawDC = FromHandle(lpNMCustomDraw->nmcd.hdc);
+					CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
 					CRect rcRect = lpNMCustomDraw->nmcd.rc;
 					int nState = lpNMCustomDraw->nmcd.uItemState;
 					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -2384,7 +2384,7 @@ namespace Win32xx
 		MenuItemData* pmid = (MenuItemData*)pdis->itemData;
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
 		MenuTheme* pMBT = GetMenuBarTheme();
-		CDC* pDrawDC = FromHandle(pdis->hDC);
+		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
 
 		if (IsAeroThemed() && m_pMenuMetrics->IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
 		{
@@ -2461,7 +2461,7 @@ namespace Win32xx
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			CRect rcDraw = pdis->rcItem;
-			CDC* pDrawDC = FromHandle(pdis->hDC);
+			CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
 			MenuTheme* pMBT = GetMenuBarTheme();
 
 			if ((bSelected) && (!bDisabled))
@@ -2487,7 +2487,7 @@ namespace Win32xx
 		UINT fType = ((MenuItemData*)pdis->itemData)->mii.fType;
 		MenuTheme* pMBT = GetMenuBarTheme();
 		CRect rcBk;
-		CDC* pDrawDC = FromHandle(pdis->hDC);
+		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
 
 		if (IsAeroThemed())
 		{
@@ -2513,7 +2513,7 @@ namespace Win32xx
 			// Draw the checkmark's background rectangle
 			pDrawDC->Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 
-			CMemDC MemDC(FromHandle(pdis->hDC));
+			CMemDC MemDC(CDC::FromHandle(pdis->hDC));
 			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 			MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
@@ -2532,8 +2532,8 @@ namespace Win32xx
 
 			// Draw a white or black check mark as required
 			// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-			CMemDC MaskDC(FromHandle(pdis->hDC));
-			MaskDC.CreateCompatibleBitmap(FromHandle(pdis->hDC), cxCheck, cyCheck);
+			CMemDC MaskDC(CDC::FromHandle(pdis->hDC));
+			MaskDC.CreateCompatibleBitmap(CDC::FromHandle(pdis->hDC), cxCheck, cyCheck);
 			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, &MaskDC, 0, 0, WHITENESS);
 
 			if ((pdis->itemState & ODS_SELECTED))  // && (!tm.UseThemes))
@@ -2580,7 +2580,7 @@ namespace Win32xx
 		if (iImage >= 0 )
 		{
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			CDC* pDC = FromHandle(pdis->hDC);
+			CDC* pDC = CDC::FromHandle(pdis->hDC);
 			if ((bDisabled) && (m_imlMenuDis.GetHandle()))
 				m_imlMenuDis.Draw(pDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
 			else
@@ -3208,7 +3208,7 @@ namespace Win32xx
 
 		if (m_bUseThemes)
 		{
-			CMenu* pMenu = FromHandle((HMENU)wParam);
+			CMenu* pMenu = CMenu::FromHandle((HMENU)wParam);
 
 			for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
 			{
@@ -3277,7 +3277,7 @@ namespace Win32xx
 		if (m_bShowMenuStatus)
 		{
 			int nID = LOWORD (wParam);
-			CMenu* pMenu = FromHandle((HMENU) lParam);
+			CMenu* pMenu = CMenu::FromHandle((HMENU) lParam);
 
 			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				m_strStatusText = LoadString(nID);

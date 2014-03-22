@@ -1,6 +1,23 @@
 Version 7.4.1
 =============
 
+* The framework no longer uses OnIdle internally.
+
+
+Changes in detail
+-----------------
+Added CBitmap::FromHandle
+Added CBrush::FromHandle
+Added CDC::FromHandle
+Added CFont::FromHandle
+Added CImageList::FromHandle
+Added CMenu::FromHandle
+Added CPalette::FromHandle
+Added CPen::FromHandle
+Added CRgn::FromHandle
+Added CWnd::FromHandle
+
+Removed ::FromHandle (all versions)
 
 Version 7.4
 ===========

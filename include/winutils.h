@@ -442,22 +442,6 @@ namespace Win32xx
 	// Global Functions
 	//
 
-	inline CWnd* FromHandle(HWND hWnd)
-	// Returns the CWnd object associated with the window handle
-	{
-		assert( GetApp() );
-		CWnd* pWnd = hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
-		if ( hWnd != NULL && pWnd == 0 )
-		{
-			GetApp()->AddTmpWnd(hWnd);
-			pWnd = GetApp()->GetCWndFromMap(hWnd);
-			::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
-		}
-
-		return pWnd;
-	}
-
-	
 	inline CWinApp* GetApp()
 	// Returns a pointer to the CWinApp derived class
 	{

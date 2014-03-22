@@ -221,13 +221,6 @@ namespace Win32xx
 
 		switch (uMsg)
 	    {
-		case UWM_CLEANUPTEMPS:
-			{
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-				pTLSData->vTmpWnds.clear();
-			}
-			break;
-
 	    case WM_INITDIALOG:
 		    return OnInitDialog();
 
@@ -307,7 +300,7 @@ namespace Win32xx
 			
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = FromHandle((HDC)wParam);
+				CDC* pDC = CDC::FromHandle((HDC)wParam);
 				BOOL bResult = OnEraseBkgnd(pDC);
 				if (bResult) return TRUE;
 			}

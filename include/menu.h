@@ -125,6 +125,7 @@ namespace Win32xx
 		void CreatePopupMenu();
 		void DestroyMenu();
 		HMENU Detach();
+		static CMenu* FromHandle(HMENU hMenu);
 		HMENU GetHandle() const;
 		BOOL LoadMenu(LPCTSTR lpszResourceName);
 		BOOL LoadMenu(UINT uIDResource);
@@ -204,6 +205,20 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Lock();
 		GetApp()->m_mapHMENU.insert(std::make_pair(m_hMenu, this));
 		GetApp()->m_csMapLock.Release();
+	}
+
+	inline CMenu* CMenu::FromHandle(HMENU hMenu)
+	// Returns the CMenu object associated with the menu handle (HMENU).
+	{
+		assert( GetApp() );
+		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
+		if (::IsMenu(hMenu) && pMenu == 0)
+		{
+			GetApp()->AddTmpMenu(hMenu);
+			pMenu = GetApp()->GetCMenuFromMap(hMenu);
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pMenu;
 	}
 
 	inline BOOL CMenu::RemoveFromMap()
@@ -561,23 +576,6 @@ namespace Win32xx
 		return m_hMenu;
 	}
 	
-	
-	///////////////////////////////////////
-	// Global functions
-	//
-	
-	inline CMenu* FromHandle(HMENU hMenu)
-	// Returns the CMenu object associated with the menu handle (HMENU).
-	{
-		assert( GetApp() );
-		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-		if (::IsMenu(hMenu) && pMenu == 0)
-		{
-			GetApp()->AddTmpMenu(hMenu);
-			pMenu = GetApp()->GetCMenuFromMap(hMenu);
-		}
-		return pMenu;
-	}
 
 }	// namespace Win32xx
 

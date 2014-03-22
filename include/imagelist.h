@@ -97,6 +97,7 @@ namespace Win32xx
 		BOOL Replace(int nImage, CBitmap* pbmImage,  CBitmap* pbmMask) const;
 		int Replace(int nImage, HICON hIcon) const;
 		HIMAGELIST GetHandle() const;
+		static CImageList* FromHandle(HIMAGELIST hImageList);
 
 		//Attributes
 		HICON GetIcon(int iImage, UINT nFlags) const;
@@ -148,6 +149,20 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Lock();
 		GetApp()->m_mapHIMAGELIST.insert(std::make_pair(m_hImageList, this));
 		GetApp()->m_csMapLock.Release();
+	}
+
+	inline CImageList* CImageList::FromHandle(HIMAGELIST hImageList)
+	// Returns the CImageList object associated with the ImageList handle (HIMAGELIST).
+	{
+		assert( GetApp() );
+		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
+		if ((hImageList != 0) && pImageList == 0)
+		{
+			GetApp()->AddTmpImageList(hImageList);
+			pImageList = GetApp()->GetCImageListFromMap(hImageList);
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pImageList;
 	}
 
 	inline BOOL CImageList::RemoveFromMap()
@@ -432,23 +447,6 @@ namespace Win32xx
 		return m_hImageList;
 	}
 
-
-	///////////////////////////////////////
-	// Global functions
-	//
-
-	inline CImageList* FromHandle(HIMAGELIST hImageList)
-	// Returns the CImageList object associated with the ImageList handle (HIMAGELIST).
-	{
-		assert( GetApp() );
-		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-		if ((hImageList != 0) && pImageList == 0)
-		{
-			GetApp()->AddTmpImageList(hImageList);
-			pImageList = GetApp()->GetCImageListFromMap(hImageList);
-		}
-		return pImageList;
-	}
 
 }	// namespace Win32xx
 

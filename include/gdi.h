@@ -154,20 +154,12 @@ namespace Win32xx
 	//
 	class CGDIObject
 	{
-		friend CBitmap* FromHandle(HBITMAP hBitmap);
-		friend CBrush* FromHandle(HBRUSH hBrush);
-		friend CDC* FromHandle(HDC hDC);
-		friend CFont* FromHandle(HFONT hFont);
-		friend CPalette* FromHandle(HPALETTE hPalette);
-		friend CPen* FromHandle(HPEN hPen);
-		friend CRgn* FromHandle(HRGN hRgn);
-
 	public:
 		struct DataMembers	// A structure that contains the data members for CGDIObject
 		{
 			HGDIOBJ hGDIObject;
 			long	Count;
-			BOOL	bRemoveObject;
+			BOOL	bIsTmpObject;
 		};
 		CGDIObject();
 		CGDIObject(const CGDIObject& rhs);
@@ -203,6 +195,7 @@ namespace Win32xx
 		CBitmap(int nID);
 		operator HBITMAP() const;
 		~CBitmap();
+		static CBitmap* FromHandle(HBITMAP hBitmap);
 
 		// Create and load methods
 		BOOL LoadBitmap(LPCTSTR lpszName);
@@ -240,6 +233,7 @@ namespace Win32xx
 		CBrush(COLORREF crColor);
 		operator HBRUSH() const;
 		~CBrush();
+		static CBrush* FromHandle(HBRUSH hBrush);
 
 		HBRUSH CreateSolidBrush(COLORREF crColor);
 		HBRUSH CreatePatternBrush(CBitmap* pBitmap);
@@ -266,6 +260,7 @@ namespace Win32xx
 		CFont(const LOGFONT* lpLogFont);
 		operator HFONT() const;
 		~CFont();
+		static CFont* FromHandle(HFONT hFont);
 
 		// Create methods
 		HFONT CreateFontIndirect(const LOGFONT* lpLogFont);
@@ -295,6 +290,7 @@ namespace Win32xx
 		CPalette(HPALETTE hPalette);
 		operator HPALETTE() const;
 		~CPalette();
+		static CPalette* FromHandle(HPALETTE hPalette);
 
 		// Create methods
 		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);
@@ -333,6 +329,7 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 		operator HPEN() const;
 		~CPen();
+		static CPen* FromHandle(HPEN hPen);
 
 		HPEN CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
 		HPEN CreatePenIndirect(LPLOGPEN lpLogPen);
@@ -356,6 +353,7 @@ namespace Win32xx
 		CRgn(HRGN hRgn);
 		operator HRGN() const;
 		~CRgn ();
+		static CRgn* FromHandle(HRGN hRgn);
 
 		// Create methods
 		HRGN CreateRectRgn(int x1, int y1, int x2, int y2);
@@ -395,7 +393,6 @@ namespace Win32xx
 	{
 		friend class CWinApp;
 		friend class CWnd;
-		friend CDC* FromHandle(HDC hDC);
 
 	public:
 		struct DataMembers	// A structure that contains the data members for CDC
@@ -403,7 +400,7 @@ namespace Win32xx
 			std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
 			HDC		hDC;			// The HDC belonging to this CDC
 			long	Count;			// Reference count
-			BOOL	bRemoveHDC;		// Delete/Release the HDC on destruction
+			BOOL	bIsTmpHDC;		// Delete/Release the HDC on destruction
 			HWND	hWnd;			// The HWND of a Window or Client window DC
 			int		nSavedDCState;	// The save state of the HDC.
 		};
@@ -414,6 +411,7 @@ namespace Win32xx
 		virtual ~CDC();
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
+		static CDC* FromHandle(HDC hDC);
 
 		void Attach(HDC hDC, HWND hWnd = 0);
 		void Destroy();
@@ -714,7 +712,11 @@ namespace Win32xx
 			Attach(::BeginPaint(pWnd->GetHwnd(), &m_ps), m_hWnd);
 		}
 
-		virtual ~CPaintDC()	{ ::EndPaint(m_hWnd, &m_ps); }
+		virtual ~CPaintDC()	
+		{ 
+			::EndPaint(m_hWnd, &m_ps); 
+			Detach();
+		}
 
 	private:
 		HWND m_hWnd;
@@ -838,7 +840,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
-		m_pData->bRemoveObject = TRUE;
+		m_pData->bIsTmpObject = FALSE;
 	}
 
 	inline CGDIObject::CGDIObject(const CGDIObject& rhs)
@@ -947,7 +949,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
-		m_pData->bRemoveObject = TRUE;
+		m_pData->bIsTmpObject = FALSE;
 
 		return hObject;
 	}
@@ -972,7 +974,7 @@ namespace Win32xx
 		{
 			if (m_pData->hGDIObject != NULL)
 			{
-				if (m_pData->bRemoveObject)
+				if (!m_pData->bIsTmpObject)
 					::DeleteObject(m_pData->hGDIObject);
 
 				RemoveFromMap();
@@ -1042,6 +1044,25 @@ namespace Win32xx
 
 	inline CBitmap::~CBitmap()
 	{
+	}
+
+	inline CBitmap* CBitmap::FromHandle(HBITMAP hBitmap)
+	// Returns the CBitmap associated with the Bitmap handle
+	// If a CBitmap object doesn't already exist, a temporary CBitmap object is created.
+	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed
+	//  when the temporary CBitmap is deconstructed.
+	{
+		assert( GetApp() );
+		CBitmap* pBitmap = (CBitmap*)GetApp()->GetCGDIObjectFromMap(hBitmap);
+		if (hBitmap != 0 && pBitmap == 0)
+		{
+			pBitmap = new CBitmap;
+			GetApp()->AddTmpGDI(pBitmap);
+			pBitmap->m_pData->hGDIObject = hBitmap;
+			pBitmap->m_pData->bIsTmpObject = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pBitmap;
 	}
 
 	inline BOOL CBitmap::LoadBitmap(int nID)
@@ -1251,6 +1272,25 @@ namespace Win32xx
 	{
 	}
 
+	inline CBrush* CBrush::FromHandle(HBRUSH hBrush)
+	// Returns the CBrush associated with the Brush handle
+	// If a CBrush object doesn't already exist, a temporary CBrush object is created.
+	// The HBRUSH belonging to a temporary CBrush is not released or destroyed
+	//  when the temporary CBrush is deconstructed.
+	{
+		assert( GetApp() );
+		CBrush* pBrush = (CBrush*)GetApp()->GetCGDIObjectFromMap(hBrush);
+		if (hBrush != 0 && pBrush == 0)
+		{
+			pBrush = new CBrush;
+			GetApp()->AddTmpGDI(pBrush);
+			pBrush->m_pData->hGDIObject = hBrush;
+			pBrush->m_pData->bIsTmpObject = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pBrush;
+	}
+
 	inline HBRUSH CBrush::CreateSolidBrush(COLORREF crColor)
 	// Creates a logical brush that has the specified solid color.
 	{
@@ -1348,6 +1388,25 @@ namespace Win32xx
 
 	inline CFont::~CFont()
 	{
+	}
+
+	inline CFont* CFont::FromHandle(HFONT hFont)
+	// Returns the CFont associated with the Font handle
+	// If a CFont object doesn't already exist, a temporary CFont object is created.
+	// The HFONT belonging to a temporary CFont is not released or destroyed
+	//  when the temporary CFont is deconstructed.
+	{
+		assert( GetApp() );
+		CFont* pFont = (CFont*)GetApp()->GetCGDIObjectFromMap(hFont);
+		if (hFont != 0 && pFont == 0)
+		{
+			pFont = new CFont;
+			GetApp()->AddTmpGDI(pFont);
+			pFont->m_pData->hGDIObject = hFont;
+			pFont->m_pData->bIsTmpObject = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pFont;
 	}
 
 	inline HFONT CFont::CreateFontIndirect(const LOGFONT* lpLogFont)
@@ -1456,6 +1515,25 @@ namespace Win32xx
 
 	inline CPalette::~CPalette ()
 	{
+	}
+
+	inline CPalette* CPalette::FromHandle(HPALETTE hPalette)
+	// Returns the CPalette associated with the palette handle
+	// If a CPalette object doesn't already exist, a temporary CPalette object is created.
+	// The HPALETTE belonging to a temporary CPalette is not released or destroyed
+	//  when the temporary CPalette is deconstructed.
+	{
+		assert( GetApp() );
+		CPalette* pPalette = (CPalette*)GetApp()->GetCGDIObjectFromMap(hPalette);
+		if (hPalette != 0 && pPalette == 0)
+		{
+			pPalette = new CPalette;
+			GetApp()->AddTmpGDI(pPalette);
+			pPalette->m_pData->hGDIObject = hPalette;
+			pPalette->m_pData->bIsTmpObject = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pPalette;
 	}
 
 	inline HPALETTE CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
@@ -1568,6 +1646,25 @@ namespace Win32xx
 	{
 	}
 
+	inline CPen* CPen::FromHandle(HPEN hPen)
+	// Returns the CPen associated with the HPEN.
+	// If a CPen object doesn't already exist, a temporary CPen object is created.
+	// The HPEN belonging to a temporary CPen is not released or destroyed
+	//  when the temporary CPen is deconstructed.
+	{
+		assert( GetApp() );
+		CPen* pPen = (CPen*)GetApp()->GetCGDIObjectFromMap(hPen);
+		if (hPen != 0 && pPen == 0)
+		{
+			pPen = new CPen;
+			GetApp()->AddTmpGDI(pPen);
+			pPen->m_pData->hGDIObject = hPen;
+			pPen->m_pData->bIsTmpObject = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pPen;
+	}
+
 	inline HPEN CPen::CreatePen(int nPenStyle, int nWidth, COLORREF crColor)
 	// Creates a logical pen that has the specified style, width, and color.
 	{
@@ -1641,6 +1738,25 @@ namespace Win32xx
 
 	inline CRgn::~CRgn()
 	{
+	}
+
+	inline CRgn* CRgn::FromHandle(HRGN hRgn)
+	// Returns the CRgn associated with the HRGN.
+	// If a CRgn object doesn't already exist, a temporary CRgn object is created.
+	// The HRGN belonging to a temporary CRgn is not released or destroyed
+	//  when the temporary CRgn is deconstructed.
+	{
+		assert( GetApp() );
+		CRgn* pRgn = (CRgn*)GetApp()->GetCGDIObjectFromMap(hRgn);
+		if (hRgn != 0 && pRgn == 0)
+		{
+			pRgn = new CRgn;
+			GetApp()->AddTmpGDI(pRgn);
+			pRgn->m_pData->hGDIObject = hRgn;
+			pRgn->m_pData->bIsTmpObject = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pRgn;
 	}
 
 	inline HRGN CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
@@ -1851,7 +1967,7 @@ namespace Win32xx
 		// Assign values to our data members
 		m_pData->hDC = 0;
 		m_pData->Count = 1L;
-		m_pData->bRemoveHDC = TRUE;
+		m_pData->bIsTmpHDC = FALSE;
 		m_pData->hWnd = 0;
 	}
 
@@ -1885,7 +2001,7 @@ namespace Win32xx
 			// Assign values to our data members
 			m_pData->hDC = hDC;
 			m_pData->Count = 1L;
-			m_pData->bRemoveHDC = TRUE;
+			m_pData->bIsTmpHDC = FALSE;
 			m_pData->nSavedDCState = ::SaveDC(hDC);
 #ifndef _WIN32_WCE
 			m_pData->hWnd = ::WindowFromDC(hDC);
@@ -1933,6 +2049,25 @@ namespace Win32xx
 	inline CDC::~CDC ()
 	{
 		Release();
+	}
+
+	inline CDC* CDC::FromHandle(HDC hDC)
+	// Returns the CDC object associated with the device context handle
+	// If a CDC object doesn't already exist, a temporary CDC object is created.
+	// The HDC belonging to a temporary CDC is not released or destroyed when the
+	//  temporary CDC is deconstructed.
+	{
+		assert( GetApp() );
+		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+		if (hDC != 0 && pDC == 0)
+		{
+			pDC = new CDC;
+			GetApp()->AddTmpDC(pDC);
+			pDC->m_pData->hDC = hDC;
+			pDC->m_pData->bIsTmpHDC = TRUE;
+			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+		}
+		return pDC;
 	}
 
 	inline void CDC::AddToMap()
@@ -2003,7 +2138,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hDC = 0;
 		m_pData->Count = 1L;
-		m_pData->bRemoveHDC = TRUE;
+		m_pData->bIsTmpHDC = FALSE;
 		m_pData->hWnd = 0;
 
 		return hDC;
@@ -2079,7 +2214,7 @@ namespace Win32xx
 		CDC* pDC = new CDC;
 		pDC->m_pData->hDC = hDC;
 		GetApp()->AddTmpDC(pDC);
-		pDC->m_pData->bRemoveHDC = TRUE;
+		pDC->m_pData->bIsTmpHDC = FALSE;
 		pDC->m_pData->hWnd = hWnd;
 		return pDC;
 	}
@@ -2130,8 +2265,6 @@ namespace Win32xx
 
 	inline void CDC::Release()
 	{
-		GetApp()->m_csMapLock.Lock();
-
 		if (m_pData->Count)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
@@ -2141,8 +2274,6 @@ namespace Win32xx
 				m_pData = 0;
 			}
 		}
-
-		GetApp()->m_csMapLock.Release();
 	}
 
 	inline BOOL CDC::RemoveFromMap()
@@ -2277,7 +2408,7 @@ namespace Win32xx
 		{
 			RemoveFromMap();
 			
-			if (m_pData->bRemoveHDC)
+			if (!m_pData->bIsTmpHDC)
 			{
 				// Return the DC back to its initial state
 				::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
@@ -2291,7 +2422,7 @@ namespace Win32xx
 
 				m_pData->hDC = 0;
 				m_pData->hWnd = 0;
-				m_pData->bRemoveHDC = TRUE;
+				m_pData->bIsTmpHDC = FALSE;
 			}
 		}
 	}
@@ -2749,7 +2880,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(pBitmap);
 
-		return FromHandle( (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap) );
+		return CBitmap::FromHandle( (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap) );
 	}
 
 	inline CBrush* CDC::SelectObject(const CBrush* pBrush)
@@ -2758,7 +2889,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(pBrush);
 
-		return FromHandle( (HBRUSH)::SelectObject(m_pData->hDC, *pBrush) );
+		return CBrush::FromHandle( (HBRUSH)::SelectObject(m_pData->hDC, *pBrush) );
 	}
 
 	inline CFont* CDC::SelectObject(const CFont* pFont)
@@ -2767,7 +2898,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(pFont);
 
-		return FromHandle( (HFONT)::SelectObject(m_pData->hDC, *pFont) );
+		return CFont::FromHandle( (HFONT)::SelectObject(m_pData->hDC, *pFont) );
 	}
 
 	inline CPalette* CDC::SelectObject(const CPalette* pPalette)
@@ -2776,7 +2907,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(pPalette);
 
-		return FromHandle( (HPALETTE)::SelectObject(m_pData->hDC, *pPalette) );
+		return CPalette::FromHandle( (HPALETTE)::SelectObject(m_pData->hDC, *pPalette) );
 	}
 
 	inline CPen* CDC::SelectObject(const CPen* pPen)
@@ -2785,7 +2916,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(pPen);
 
-		return FromHandle( (HPEN)::SelectObject(m_pData->hDC, *pPen) );
+		return CPen::FromHandle( (HPEN)::SelectObject(m_pData->hDC, *pPen) );
 	}
 
 	inline CPalette* CDC::SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd)
@@ -2794,7 +2925,7 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		assert(pPalette);
 
-		return FromHandle( (HPALETTE)::SelectPalette(m_pData->hDC, *pPalette, bForceBkgnd) );
+		return CPalette::FromHandle( (HPALETTE)::SelectPalette(m_pData->hDC, *pPalette, bForceBkgnd) );
 	}
 #ifndef _WIN32_WCE
 	inline BOOL CDC::PtVisible(int X, int Y)
@@ -3828,137 +3959,6 @@ namespace Win32xx
 		return himlDisabled;
 	}
 #endif
-
-	////////////////////////////////////////////
-	// Global Function Definitions
-	//
-
-	inline CDC* FromHandle(HDC hDC)
-	// Returns the CDC object associated with the device context handle
-	// If a CDC object doesn't already exist, a temporary CDC object is created.
-	// The HDC belonging to a temporary CDC is not released or destroyed when the
-	//  temporary CDC is deconstructed.
-	{
-		assert( GetApp() );
-		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (hDC != 0 && pDC == 0)
-		{
-			pDC = new CDC;
-			GetApp()->AddTmpDC(pDC);
-			pDC->m_pData->hDC = hDC;
-			pDC->m_pData->bRemoveHDC = FALSE;
-		}
-		return pDC;
-	}
-
-	inline CBitmap* FromHandle(HBITMAP hBitmap)
-	// Returns the CBitmap associated with the Bitmap handle
-	// If a CBitmap object doesn't already exist, a temporary CBitmap object is created.
-	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed
-	//  when the temporary CBitmap is deconstructed.
-	{
-		assert( GetApp() );
-		CBitmap* pBitmap = (CBitmap*)GetApp()->GetCGDIObjectFromMap(hBitmap);
-		if (hBitmap != 0 && pBitmap == 0)
-		{
-			pBitmap = new CBitmap;
-			GetApp()->AddTmpGDI(pBitmap);
-			pBitmap->m_pData->hGDIObject = hBitmap;
-			pBitmap->m_pData->bRemoveObject = FALSE;
-		}
-		return pBitmap;
-	}
-
-	inline CBrush* FromHandle(HBRUSH hBrush)
-	// Returns the CBrush associated with the Brush handle
-	// If a CBrush object doesn't already exist, a temporary CBrush object is created.
-	// The HBRUSH belonging to a temporary CBrush is not released or destroyed
-	//  when the temporary CBrush is deconstructed.
-	{
-		assert( GetApp() );
-		CBrush* pBrush = (CBrush*)GetApp()->GetCGDIObjectFromMap(hBrush);
-		if (hBrush != 0 && pBrush == 0)
-		{
-			pBrush = new CBrush;
-			GetApp()->AddTmpGDI(pBrush);
-			pBrush->m_pData->hGDIObject = hBrush;
-			pBrush->m_pData->bRemoveObject = FALSE;
-		}
-		return pBrush;
-	}
-
-	inline CFont* FromHandle(HFONT hFont)
-	// Returns the CFont associated with the Font handle
-	// If a CFont object doesn't already exist, a temporary CFont object is created.
-	// The HFONT belonging to a temporary CFont is not released or destroyed
-	//  when the temporary CFont is deconstructed.
-	{
-		assert( GetApp() );
-		CFont* pFont = (CFont*)GetApp()->GetCGDIObjectFromMap(hFont);
-		if (hFont != 0 && pFont == 0)
-		{
-			pFont = new CFont;
-			GetApp()->AddTmpGDI(pFont);
-			pFont->m_pData->hGDIObject = hFont;
-			pFont->m_pData->bRemoveObject = FALSE;
-		}
-		return pFont;
-	}
-
-	inline CPalette* FromHandle(HPALETTE hPalette)
-	// Returns the CPalette associated with the palette handle
-	// If a CPalette object doesn't already exist, a temporary CPalette object is created.
-	// The HPALETTE belonging to a temporary CPalette is not released or destroyed
-	//  when the temporary CPalette is deconstructed.
-	{
-		assert( GetApp() );
-		CPalette* pPalette = (CPalette*)GetApp()->GetCGDIObjectFromMap(hPalette);
-		if (hPalette != 0 && pPalette == 0)
-		{
-			pPalette = new CPalette;
-			GetApp()->AddTmpGDI(pPalette);
-			pPalette->m_pData->hGDIObject = hPalette;
-			pPalette->m_pData->bRemoveObject = FALSE;
-		}
-		return pPalette;
-	}
-
-	inline CPen* FromHandle(HPEN hPen)
-	// Returns the CPen associated with the HPEN.
-	// If a CPen object doesn't already exist, a temporary CPen object is created.
-	// The HPEN belonging to a temporary CPen is not released or destroyed
-	//  when the temporary CPen is deconstructed.
-	{
-		assert( GetApp() );
-		CPen* pPen = (CPen*)GetApp()->GetCGDIObjectFromMap(hPen);
-		if (hPen != 0 && pPen == 0)
-		{
-			pPen = new CPen;
-			GetApp()->AddTmpGDI(pPen);
-			pPen->m_pData->hGDIObject = hPen;
-			pPen->m_pData->bRemoveObject = FALSE;
-		}
-		return pPen;
-	}
-
-	inline CRgn* FromHandle(HRGN hRgn)
-	// Returns the CRgn associated with the HRGN.
-	// If a CRgn object doesn't already exist, a temporary CRgn object is created.
-	// The HRGN belonging to a temporary CRgn is not released or destroyed
-	//  when the temporary CRgn is deconstructed.
-	{
-		assert( GetApp() );
-		CRgn* pRgn = (CRgn*)GetApp()->GetCGDIObjectFromMap(hRgn);
-		if (hRgn != 0 && pRgn == 0)
-		{
-			pRgn = new CRgn;
-			GetApp()->AddTmpGDI(pRgn);
-			pRgn->m_pData->hGDIObject = hRgn;
-			pRgn->m_pData->bRemoveObject = FALSE;
-		}
-		return pRgn;
-	}
-
 
 
 } // namespace Win32xx
