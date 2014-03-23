@@ -893,7 +893,7 @@ namespace Win32xx
 	inline CFont* CDateTime::GetMonthCalFont() const
 	{
 		assert(IsWindow());
-		return ::FromHandle((HFONT)DateTime_GetMonthCalFont(m_hWnd));
+		return CFont::FromHandle((HFONT)DateTime_GetMonthCalFont(m_hWnd));
 	}
 
 	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)

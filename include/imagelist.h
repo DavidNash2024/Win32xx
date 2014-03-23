@@ -159,8 +159,17 @@ namespace Win32xx
 		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
 		if ((hImageList != 0) && (pImageList == 0))
 		{
-			pImageList = GetApp()->AddTmpImageList(hImageList);
-			pImageList->AddToMap();
+			pImageList = new CImageList;
+			pImageList->m_hImageList = hImageList;
+			GetApp()->m_csMapLock.Lock();
+			GetApp()->m_mapHIMAGELIST.insert(std::make_pair(hImageList, pImageList));
+			GetApp()->m_csMapLock.Release();
+			pImageList->m_IsTmpImageList = TRUE;
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpImageLists.push_back(pImageList);
+
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 		}
 

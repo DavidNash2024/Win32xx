@@ -821,13 +821,6 @@ namespace Win32xx
 	};
 
 
-	CBitmap* FromHandle(HBITMAP hBitmap);
-	CBrush* FromHandle(HBRUSH hBrush);
-	CFont* FromHandle(HFONT hFont);
-	CPalette* FromHandle(HPALETTE hPalette);
-	CPen* FromHandle(HPEN hPen);
-	CRgn* FromHandle(HRGN hRgn);
-
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1064,7 +1057,11 @@ namespace Win32xx
 		if (pBitmap == 0)
 		{
 			pBitmap = new CBitmap;
-			GetApp()->AddTmpGDI(pBitmap);
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpGDIs.push_back(pBitmap);
+			
 			pBitmap->m_pData->hGDIObject = hBitmap;
 			pBitmap->m_pData->bIsTmpObject = TRUE;
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -1292,7 +1289,11 @@ namespace Win32xx
 		if (pBrush == 0)
 		{
 			pBrush = new CBrush;
-			GetApp()->AddTmpGDI(pBrush);
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpGDIs.push_back(pBrush);
+			
 			pBrush->m_pData->hGDIObject = hBrush;
 			pBrush->m_pData->bIsTmpObject = TRUE;
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -1412,7 +1413,11 @@ namespace Win32xx
 		if (pFont == 0)
 		{
 			pFont = new CFont;
-			GetApp()->AddTmpGDI(pFont);
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpGDIs.push_back(pFont);
+
 			pFont->m_pData->hGDIObject = hFont;
 			pFont->m_pData->bIsTmpObject = TRUE;
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -1541,7 +1546,11 @@ namespace Win32xx
 		if (pPalette == 0)
 		{
 			pPalette = new CPalette;
-			GetApp()->AddTmpGDI(pPalette);
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpGDIs.push_back(pPalette);
+
 			pPalette->m_pData->hGDIObject = hPalette;
 			pPalette->m_pData->bIsTmpObject = TRUE;
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -1672,7 +1681,11 @@ namespace Win32xx
 		if (pPen == 0)
 		{
 			pPen = new CPen;
-			GetApp()->AddTmpGDI(pPen);
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpGDIs.push_back(pPen);
+
 			pPen->m_pData->hGDIObject = hPen;
 			pPen->m_pData->bIsTmpObject = TRUE;
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -1768,7 +1781,11 @@ namespace Win32xx
 		if (pRgn == 0)
 		{
 			pRgn = new CRgn;
-			GetApp()->AddTmpGDI(pRgn);
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpGDIs.push_back(pRgn);
+
 			pRgn->m_pData->hGDIObject = hRgn;
 			pRgn->m_pData->bIsTmpObject = TRUE;
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -2080,8 +2097,15 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (pDC == 0)
 		{
-			pDC = GetApp()->AddTmpDC(hDC);
-			pDC->AddToMap();
+			pDC = new CDC;
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
+
+			pDC->m_pData->hDC = hDC;
+			pDC->m_pData->bIsTmpHDC = TRUE;
+
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 		}
 		return pDC;
@@ -2228,9 +2252,15 @@ namespace Win32xx
 	// The HDC is removed when the CDC is destroyed
 	{
 		assert( GetApp() );
-		assert(hDC);
-		
-		CDC* pDC = FromHandle(hDC);
+
+		CDC* pDC = new CDC;
+		pDC->m_pData->hDC = hDC;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
+
+		pDC->m_pData->bIsTmpHDC = FALSE;
 		pDC->m_pData->hWnd = hWnd;
 		return pDC;
 	}

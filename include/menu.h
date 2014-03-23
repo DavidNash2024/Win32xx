@@ -215,8 +215,17 @@ namespace Win32xx
 		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
 		if ((hMenu != 0) && (pMenu == 0))
 		{
-			pMenu = GetApp()->AddTmpMenu(hMenu);
-			pMenu->AddToMap();
+			pMenu = new CMenu;
+			pMenu->m_hMenu = hMenu;
+			GetApp()->m_csMapLock.Lock();
+			GetApp()->m_mapHMENU.insert(std::make_pair(hMenu, pMenu));
+			GetApp()->m_csMapLock.Release();
+			pMenu->m_IsTmpMenu = TRUE;
+
+			// Ensure this thread has the TLS index set
+			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			pTLSData->vTmpMenus.push_back(pMenu); 
+
 			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 		}
 		return pMenu;
