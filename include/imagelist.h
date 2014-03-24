@@ -93,6 +93,7 @@ namespace Win32xx
 		BOOL DragShowNolock(BOOL bShow) const;
 		BOOL Draw(CDC* pDC, int nImage, POINT pt, UINT nStyle) const;
 		BOOL DrawEx(CDC* pDC, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
+		BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pimldp);
 		BOOL Remove(int nImage) const;
 		BOOL Replace(int nImage, CBitmap* pbmImage,  CBitmap* pbmMask) const;
 		int Replace(int nImage, HICON hIcon) const;
@@ -156,21 +157,31 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 
+		// Find an existing pernament CImageList from the map
 		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-		if ((hImageList != 0) && (pImageList == 0))
-		{
-			pImageList = new CImageList;
-			pImageList->m_hImageList = hImageList;
-			GetApp()->m_csMapLock.Lock();
-			GetApp()->m_mapHIMAGELIST.insert(std::make_pair(hImageList, pImageList));
-			GetApp()->m_csMapLock.Release();
-			pImageList->m_IsTmpImageList = TRUE;
-
-			// Ensure this thread has the TLS index set
+		if ((0 != hImageList) && (0 == pImageList))
+		{		
+			// Find any existing temporary CImageList for the HIMAGELIST
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpImageLists.push_back(pImageList);
+			std::vector <ImageListPtr>::iterator v;
+			for (v = pTLSData->vTmpImageLists.begin(); v != pTLSData->vTmpImageLists.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hImageList )
+				{
+					pImageList = (*v).get();
+					break;
+				}
+			}
 
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			if (0 == pImageList)
+			{
+				pImageList = new CImageList;
+				pImageList->m_hImageList = hImageList;
+				pImageList->m_IsTmpImageList = TRUE;
+				pTLSData->vTmpImageLists.push_back(pImageList);
+
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 
 		return pImageList;
@@ -395,6 +406,12 @@ namespace Win32xx
 	{
 		assert(m_hImageList);
 		return ImageList_DrawEx(m_hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
+	}
+
+	inline BOOL CImageList::DrawIndirect(IMAGELISTDRAWPARAMS* pimldp)
+	{
+		assert(m_hImageList);
+		return ImageList_DrawIndirect(pimldp);
 	}
 
 	inline HICON CImageList::GetIcon(int iImage, UINT nFlags) const

@@ -4283,7 +4283,7 @@ namespace Win32xx
 	{
 		CDockContainer* pContainer = (CDockContainer*)GetParent();
 		BOOL bResult = FALSE;
-		if (pContainer && pContainer->GetActiveContainer())
+		if (pContainer && pContainer->GetActiveContainer() && pContainer->GetActiveContainer()->IsWindow())
 			bResult = (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 
 		return bResult;

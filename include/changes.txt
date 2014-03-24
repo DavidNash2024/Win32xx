@@ -10,6 +10,7 @@ Added CBitmap::FromHandle
 Added CBrush::FromHandle
 Added CDC::FromHandle
 Added CFont::FromHandle
+Added CImageList::DrawIndirect
 Added CImageList::FromHandle
 Added CMenu::FromHandle
 Added CPalette::FromHandle

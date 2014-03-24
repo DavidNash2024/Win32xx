@@ -1207,7 +1207,7 @@ namespace Win32xx
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
 	{
-		if ( GetApp() )
+		if ( GetApp() && !m_IsTmpWnd )
 			RemoveFromMap();
 
 		m_hWnd = NULL;
@@ -1392,19 +1392,33 @@ namespace Win32xx
 	// Returns the CWnd object associated with the window handle
 	{
 		assert( GetApp() );
+		
+		// Find any existing pernament CWnd from the map
 		CWnd* pWnd = hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
-		if ( hWnd != NULL && pWnd == 0 )
+		if ( NULL != hWnd && 0 == pWnd )
 		{
-			pWnd = new CWnd;
-			pWnd->m_hWnd = hWnd;
-			pWnd->AddToMap();
-			pWnd->m_IsTmpWnd = TRUE;
-
-			// Ensure this thread has the TLS index set
+			// Find any existing temporary CWnd for the HWND
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpWnds.push_back(pWnd);
+			std::vector <WndPtr>::iterator v;
+			for (v = pTLSData->vTmpWnds.begin(); v != pTLSData->vTmpWnds.end(); ++v)
+			{
+				if ( (*v)->GetHwnd() == hWnd )
+				{
+					pWnd = (*v).get();
+					break;
+				}
+			}
 
-			::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
+			if (0 == pWnd)
+			{
+				// No exiting CWnd for this HWND, so create one
+				pWnd = new CWnd;
+				pWnd->m_hWnd = hWnd;
+				pWnd->m_IsTmpWnd = TRUE;
+				pTLSData->vTmpWnds.push_back(pWnd);
+
+				::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 
 		return pWnd;
@@ -1971,8 +1985,9 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = CDC::FromHandle((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(pDC);
+				CDC dc((HDC)wParam);
+				BOOL bResult = OnEraseBkgnd(&dc);
+				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;

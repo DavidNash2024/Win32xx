@@ -974,9 +974,11 @@ namespace Win32xx
 			if (m_pData->hGDIObject != NULL)
 			{
 				if (!m_pData->bIsTmpObject)
+				{
 					::DeleteObject(m_pData->hGDIObject);
+					RemoveFromMap();
+				}
 
-				RemoveFromMap();
 				delete m_pData;
 				m_pData = 0;
 			}
@@ -1053,18 +1055,31 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 		assert(hBitmap);
-		CBitmap* pBitmap = (CBitmap*)GetApp()->GetCGDIObjectFromMap(hBitmap);
-		if (pBitmap == 0)
+		
+		CBitmap* pBitmap = static_cast<CBitmap*>( GetApp()->GetCGDIObjectFromMap(hBitmap) );
+		if (0 == pBitmap)
 		{
-			pBitmap = new CBitmap;
-
-			// Ensure this thread has the TLS index set
+			// Find any existing temporary CBitmap for the HBitmap
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpGDIs.push_back(pBitmap);
-			
-			pBitmap->m_pData->hGDIObject = hBitmap;
-			pBitmap->m_pData->bIsTmpObject = TRUE;
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			std::vector <GDIPtr>::iterator v;
+			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hBitmap )
+				{
+					pBitmap = static_cast<CBitmap*>( (*v).get() );
+					break;
+				}
+			}
+
+			if (0 == pBitmap)
+			{
+				pBitmap = new CBitmap;
+				pTLSData->vTmpGDIs.push_back(pBitmap);
+				
+				pBitmap->m_pData->hGDIObject = hBitmap;
+				pBitmap->m_pData->bIsTmpObject = TRUE;
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pBitmap;
 	}
@@ -1285,18 +1300,30 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hBrush);
 
-		CBrush* pBrush = (CBrush*)GetApp()->GetCGDIObjectFromMap(hBrush);
-		if (pBrush == 0)
+		CBrush* pBrush = static_cast<CBrush*>( GetApp()->GetCGDIObjectFromMap(hBrush) );
+		if (0 == pBrush)
 		{
-			pBrush = new CBrush;
-
-			// Ensure this thread has the TLS index set
+			// Find any existing temporary CBrush for the HBRUSH
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpGDIs.push_back(pBrush);
-			
-			pBrush->m_pData->hGDIObject = hBrush;
-			pBrush->m_pData->bIsTmpObject = TRUE;
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			std::vector <GDIPtr>::iterator v;
+			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hBrush )
+				{
+					pBrush = static_cast<CBrush*>( (*v).get() );
+					break;
+				}
+			}
+
+			if (0 == pBrush)
+			{
+				pBrush = new CBrush;
+				pTLSData->vTmpGDIs.push_back(pBrush);
+				
+				pBrush->m_pData->hGDIObject = hBrush;
+				pBrush->m_pData->bIsTmpObject = TRUE;
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pBrush;
 	}
@@ -1409,18 +1436,30 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hFont);
 
-		CFont* pFont = (CFont*)GetApp()->GetCGDIObjectFromMap(hFont);
-		if (pFont == 0)
-		{
-			pFont = new CFont;
-
-			// Ensure this thread has the TLS index set
+		CFont* pFont = static_cast<CFont*>( GetApp()->GetCGDIObjectFromMap(hFont) );
+		if (0 == pFont)
+		{	
+			// Find any existing temporary CFont for the HFONT
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpGDIs.push_back(pFont);
+			std::vector <GDIPtr>::iterator v;
+			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hFont )
+				{
+					pFont = static_cast<CFont*>( (*v).get() );
+					break;
+				}
+			}
 
-			pFont->m_pData->hGDIObject = hFont;
-			pFont->m_pData->bIsTmpObject = TRUE;
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			if (0 == pFont)
+			{
+				pFont = new CFont;
+				pTLSData->vTmpGDIs.push_back(pFont);
+				pFont->m_pData->hGDIObject = hFont;
+				pFont->m_pData->bIsTmpObject = TRUE;
+				
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pFont;
 	}
@@ -1542,18 +1581,30 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hPalette);
 
-		CPalette* pPalette = (CPalette*)GetApp()->GetCGDIObjectFromMap(hPalette);
-		if (pPalette == 0)
-		{
-			pPalette = new CPalette;
-
-			// Ensure this thread has the TLS index set
+		CPalette* pPalette = static_cast<CPalette*>( GetApp()->GetCGDIObjectFromMap(hPalette) );
+		if (0 == pPalette)
+		{	
+			// Find any existing temporary CPalette for the HPALETTE
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpGDIs.push_back(pPalette);
+			std::vector <GDIPtr>::iterator v;
+			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hPalette )
+				{
+					pPalette = static_cast<CPalette*>( (*v).get() );
+					break;
+				}
+			}
 
-			pPalette->m_pData->hGDIObject = hPalette;
-			pPalette->m_pData->bIsTmpObject = TRUE;
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			if (0 == pPalette)
+			{
+				pPalette = new CPalette;
+				pTLSData->vTmpGDIs.push_back(pPalette);
+				pPalette->m_pData->hGDIObject = hPalette;
+				pPalette->m_pData->bIsTmpObject = TRUE;
+				
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pPalette;
 	}
@@ -1677,18 +1728,30 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hPen);
 
-		CPen* pPen = (CPen*)GetApp()->GetCGDIObjectFromMap(hPen);
-		if (pPen == 0)
+		CPen* pPen = static_cast<CPen*>( GetApp()->GetCGDIObjectFromMap(hPen) );
+		if (0 == pPen)
 		{
-			pPen = new CPen;
-
-			// Ensure this thread has the TLS index set
+			// Find any existing temporary CPen for the HPEN
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpGDIs.push_back(pPen);
+			std::vector <GDIPtr>::iterator v;
+			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hPen )
+				{
+					pPen = static_cast<CPen*>( (*v).get() );
+					break;
+				}
+			}
 
-			pPen->m_pData->hGDIObject = hPen;
-			pPen->m_pData->bIsTmpObject = TRUE;
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			if (0 == pPen)
+			{
+				pPen = new CPen;
+				pTLSData->vTmpGDIs.push_back(pPen);
+				pPen->m_pData->hGDIObject = hPen;
+				pPen->m_pData->bIsTmpObject = TRUE;
+				
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pPen;
 	}
@@ -1777,18 +1840,30 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hRgn);
 
-		CRgn* pRgn = (CRgn*)GetApp()->GetCGDIObjectFromMap(hRgn);
-		if (pRgn == 0)
+		CRgn* pRgn = static_cast<CRgn*>( GetApp()->GetCGDIObjectFromMap(hRgn) );
+		if (0 == pRgn)
 		{
-			pRgn = new CRgn;
-
-			// Ensure this thread has the TLS index set
+			// Find any existing temporary CRgn for the HRGN
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpGDIs.push_back(pRgn);
+			std::vector <GDIPtr>::iterator v;
+			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
+			{
+				if ( (*v)->GetHandle() == hRgn )
+				{
+					pRgn = static_cast<CRgn*>( (*v).get() );
+					break;
+				}
+			}
 
-			pRgn->m_pData->hGDIObject = hRgn;
-			pRgn->m_pData->bIsTmpObject = TRUE;
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			if (0 == pRgn)
+			{
+				pRgn = new CRgn;
+				pTLSData->vTmpGDIs.push_back(pRgn);
+				pRgn->m_pData->hGDIObject = hRgn;
+				pRgn->m_pData->bIsTmpObject = TRUE;
+
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pRgn;
 	}
@@ -2094,19 +2169,32 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hDC);
 
+		// Find an existing pernament CDC from the map
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (pDC == 0)
-		{
-			pDC = new CDC;
-
-			// Ensure this thread has the TLS index set
+		if (0 == pDC)
+		{		
+			// Find any existing temporary CDC for the HDC
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
-
-			pDC->m_pData->hDC = hDC;
-			pDC->m_pData->bIsTmpHDC = TRUE;
-
-			::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			std::vector <DCPtr>::iterator v;
+			for (v = pTLSData->vTmpDCs.begin(); v != pTLSData->vTmpDCs.end(); ++v)
+			{
+				if ( (*v)->GetHDC() == hDC )
+				{
+					pDC = (*v).get();
+					break;
+				}
+			}
+			
+			if (0 == pDC)
+			{
+				// No exiting CDC for this HDC, so create one
+				pDC = new CDC;
+				pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
+				pDC->m_pData->hDC = hDC;
+				pDC->m_pData->bIsTmpHDC = TRUE;
+		
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
+			}
 		}
 		return pDC;
 	}
@@ -2451,11 +2539,11 @@ namespace Win32xx
 	// default state, ready for reuse.
 	{
 		if (m_pData->hDC)
-		{
-			RemoveFromMap();
-			
+		{		
 			if (!m_pData->bIsTmpHDC)
 			{
+				RemoveFromMap();
+
 				// Return the DC back to its initial state
 				::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
 
