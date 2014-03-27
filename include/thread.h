@@ -233,7 +233,7 @@ namespace Win32xx
 	// When the thread starts, it runs this function.
 	{
 		// Get the pointer for this CMyThread object
-		CThread* pThread = (CThread*)pCThread;
+		CThread* pThread = static_cast<CThread*>pCThread;
 
 		if (pThread->InitInstance())
 			return pThread->MessageLoop();

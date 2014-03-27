@@ -669,17 +669,17 @@ namespace Win32xx
 
 		assert( GetApp() );
 
-		CTaskDialog* t = (CTaskDialog*)GetApp()->GetCWndFromMap(hWnd);
+		CTaskDialog* t = static_cast<CTaskDialog*>(GetApp()->GetCWndFromMap(hWnd));
 		if (0 == t)
 		{
 			// The CTaskDialog pointer wasn't found in the map, so add it now
 
 			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 			assert(pTLSData);
 
 			// Retrieve pointer to CTaskDialog object from Thread Local Storage TLS
-			t = (CTaskDialog*)(pTLSData->pCWnd);
+			t = static_cast<CTaskDialog*>(pTLSData->pCWnd);
 			assert(t);
 			pTLSData->pCWnd = NULL;
 

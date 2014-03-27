@@ -146,6 +146,8 @@ namespace Win32xx
 	private:
 		CListView(const CListView&);				// Disable copy construction
 		CListView& operator = (const CListView&); // Disable assignment operator
+		CHeader m_Header;
+		CEdit m_Edit;
 	};
 
 }
@@ -229,7 +231,14 @@ namespace Win32xx
 	// Retrieves the handle to the edit control being used to edit a list-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CEdit*)FromHandle(ListView_GetEditControl( m_hWnd ));
+		HWND hWnd = ListView_GetEditControl(m_hWnd);
+		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
+
+		if (pEdit->GetHwnd()) pEdit->Detach();
+		
+		if (hWnd) pEdit->Attach(hWnd);
+		
+		return hWnd? pEdit : NULL;
 	}
 
 	inline DWORD CListView::GetExtendedStyle( ) const
@@ -243,7 +252,14 @@ namespace Win32xx
 	// Retrieves the handle to the header control used by a list-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CHeader*)FromHandle(ListView_GetHeader( m_hWnd ));
+		CHeader* pHeader = const_cast<CHeader*>(&m_Header);
+		if (NULL == m_Header.GetHwnd())
+		{
+			HWND hWnd = ListView_GetHeader(m_hWnd);
+			pHeader->Attach(hWnd);
+		}
+
+		return pHeader;
 	}
 
 	inline HCURSOR CListView::GetHotCursor( )
@@ -421,7 +437,7 @@ namespace Win32xx
 	// Retrieves the ToolTip control that the list-view control uses to display ToolTips.
 	{
 		assert(::IsWindow(m_hWnd));
-		return(CToolTip*)FromHandle(ListView_GetToolTips( m_hWnd ) );
+		return static_cast<CToolTip*>(FromHandlePermanent(ListView_GetToolTips(m_hWnd)));
 	}
 
 	inline int CListView::GetTopIndex( ) const
@@ -676,7 +692,7 @@ namespace Win32xx
 		assert(pToolTip);
 
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return (CToolTip*) FromHandle( (HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L) );
+		return static_cast<CToolTip*>(FromHandlePermanent((HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L)));
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const
@@ -734,7 +750,14 @@ namespace Win32xx
 	// Begins in-place editing of the specified list-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CEdit*)FromHandle( ListView_EditLabel( m_hWnd, iItem ) );
+		HWND hWnd = ListView_EditLabel( m_hWnd, iItem );
+		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
+
+		if (pEdit->GetHwnd()) pEdit->Detach();
+		
+		if (hWnd) pEdit->Attach(hWnd);
+		
+		return hWnd? pEdit : NULL;
 	}
 
 	inline BOOL CListView::EnsureVisible( int iItem, BOOL fPartialOK ) const

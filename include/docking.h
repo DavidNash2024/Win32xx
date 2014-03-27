@@ -444,23 +444,23 @@ namespace Win32xx
 		virtual BOOL VerifyDockers();
 
 		// Attributes
-		virtual CDockBar* GetDockBar() const		{return (CDockBar*)&m_DockBar;}
-		virtual CDockClient* GetDockClient() const	{return (CDockClient*)&m_DockClient;}
-		virtual CDockHint* GetDockHint() const		{return &m_pDockAncestor->m_DockHint;}
+		virtual CDockBar* GetDockBar() const		{ return const_cast<CDockBar*>(&m_DockBar); }
+		virtual CDockClient* GetDockClient() const	{ return const_cast<CDockClient*>(&m_DockClient); }
+		virtual CDockHint* GetDockHint() const		{ return &m_pDockAncestor->m_DockHint; }
 
 
 		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
 		int GetBarWidth() const				{return m_DockBar.GetWidth();}
 		CString& GetCaption() const			{return m_DockClient.GetCaption();}
-		std::vector <CDocker*> & GetDockChildren() const {return (std::vector <CDocker*> &)m_vDockChildren;}
+		std::vector <CDocker*> & GetDockChildren() const {return const_cast< std::vector<CDocker*>& >(m_vDockChildren);}
 		int GetDockID() const				{return m_nDockID;}
 		CDocker* GetDockParent() const		{return m_pDockParent;}
 		DWORD GetDockStyle() const			{return m_DockStyle;}
 		CWnd* GetView() const				{return m_DockClient.GetView();}
-		BOOL IsChildOfDocker(CWnd* pWnd) const;
+		BOOL IsChildOfDocker(const CWnd* pWnd) const;
 		BOOL IsDocked() const;
 		BOOL IsDragAutoResize() const;
-		BOOL IsRelated(CWnd* pWnd) const;
+		BOOL IsRelated(const CWnd* pWnd) const;
 		BOOL IsUndocked() const;
 		void SetBarColor(COLORREF color) {GetDockBar()->SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar()->SetWidth(nWidth);}
@@ -1038,7 +1038,7 @@ namespace Win32xx
 					// Destroy the docker
 					if (dynamic_cast<CDockContainer*>(m_pDock->GetView()))
 					{
-						CDockContainer* pContainer = ((CDockContainer*)m_pDock->GetView())->GetActiveContainer();
+						CDockContainer* pContainer = (static_cast<CDockContainer*>(m_pDock->GetView()))->GetActiveContainer();
 						CDocker* pDock = m_pDock->GetDockFromView(pContainer);
 						pDock->GetDockClient()->SetClosePressed();
 						m_pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
@@ -1100,7 +1100,8 @@ namespace Win32xx
 
 				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_bCaptionPressed))
 				{
-					CDocker* pDock = (CDocker*)GetParent();
+					CDocker* pDock = static_cast<CDocker*>(GetParent());
+					assert(dynamic_cast<CDocker*>(pDock));
 					if (pDock)
 						pDock->Undock(GetCursorPos());
 				}
@@ -1469,7 +1470,7 @@ namespace Win32xx
 
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = (CDocker*)FromHandle(pDragPos->hdr.hwndFrom);
+		CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(pDragPos->hdr.hwndFrom));
 		if (NULL == pDockDrag) return FALSE;
 
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
@@ -1571,7 +1572,7 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetLeft::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = (CDocker*)FromHandle(pDragPos->hdr.hwndFrom);
+		CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(pDragPos->hdr.hwndFrom));
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
@@ -1615,7 +1616,7 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetTop::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = (CDocker*)FromHandle(pDragPos->hdr.hwndFrom);
+		CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(pDragPos->hdr.hwndFrom));
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
@@ -1659,7 +1660,7 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetRight::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = (CDocker*)FromHandle(pDragPos->hdr.hwndFrom);
+		CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(pDragPos->hdr.hwndFrom));
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
@@ -1703,7 +1704,7 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetBottom::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = (CDocker*)FromHandle(pDragPos->hdr.hwndFrom);
+		CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(pDragPos->hdr.hwndFrom));
 		if (NULL == pDockDrag) return FALSE;
 
 		CPoint pt = pDragPos->ptPos;
@@ -1875,7 +1876,7 @@ namespace Win32xx
 						{
 							// Not in a docking zone, so clean up
 							NMHDR nmhdr = pDragPos->hdr;
-							CDocker* pDockDrag = (CDocker*)FromHandle(nmhdr.hwndFrom);
+							CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(nmhdr.hwndFrom));
 							if (pDockDrag)
 							{
 								if (pDockDrag->m_BlockMove)
@@ -2049,14 +2050,15 @@ namespace Win32xx
 	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
 	// Add a container to an existing container
 	{
-		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (dynamic_cast<CDockContainer*>(pDock->GetView())))
+		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (static_cast<CDockContainer*>(pDock->GetView())))
 		{
+			assert(dynamic_cast<CDockContainer*>(pDock->GetView()));
 			// Transfer any dock children to this docker
 			pDock->MoveDockChildren(this);
 
 			// Transfer container children to the target container
-			CDockContainer* pContainer = (CDockContainer*)GetView();
-			CDockContainer* pContainerSource = (CDockContainer*)pDock->GetView();
+			CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
+			CDockContainer* pContainerSource = static_cast<CDockContainer*>(pDock->GetView());
 
 			if (pContainerSource->GetAllContainers().size() > 1)
 			{
@@ -2079,7 +2081,7 @@ namespace Win32xx
 				}
 			}
 
-			pContainer->AddContainer((CDockContainer*)pDock->GetView());
+			pContainer->AddContainer(static_cast<CDockContainer*>(pDock->GetView()));
 			pDock->m_pDockParent = this;
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
@@ -2154,7 +2156,7 @@ namespace Win32xx
 	inline void CDocker::DrawHashBar(HWND hBar, POINT Pos)
 	// Draws a hashed bar while the splitter bar is being dragged
 	{
-		CDocker* pDock = ((CDockBar*)FromHandle(hBar))->GetDock();
+		CDocker* pDock = (static_cast<CDockBar*>(FromHandlePermanent(hBar)))->GetDock();
 		if (NULL == pDock) return;
 
 		BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
@@ -2182,11 +2184,8 @@ namespace Win32xx
 
 	inline CDockContainer* CDocker::GetContainer() const
 	{
-		CDockContainer* pContainer = NULL;
-		if (dynamic_cast<CDockContainer*>(GetView()))
-			pContainer = (CDockContainer*)GetView();
-
-		return pContainer;
+		// returns NULL if not a CDockContainer*
+		return dynamic_cast<CDockContainer*>(GetView());
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
@@ -2197,7 +2196,7 @@ namespace Win32xx
 		while (pWnd && (pDock == NULL))
 		{
 			if (IsRelated(pWnd))
-				pDock = (CDocker*)pWnd;
+				pDock = static_cast<CDocker*>(pWnd);
 
 			pWnd = pWnd->GetParent();
 		}
@@ -2229,7 +2228,7 @@ namespace Win32xx
 				if (pWnd == pAncestor)
 					pDockTest = GetDockAncestor();
 				else
-					pDockTest = (CDocker*)pWnd;
+					pDockTest = static_cast<CDocker*>(pWnd);
 
 				CRect rc = pDockTest->GetClientRect();
 				pDockTest->ClientToScreen(rc);
@@ -2255,7 +2254,7 @@ namespace Win32xx
 				pDockParent = pDockTest;
 				CPoint ptLocal = pt;
 				pDockParent->ScreenToClient(ptLocal);
-				pDockTest = (CDocker*)pDockParent->ChildWindowFromPoint(ptLocal);
+				pDockTest = static_cast<CDocker*>(pDockParent->ChildWindowFromPoint(ptLocal));
 				assert (pDockTest != pDockParent);
 			}
 
@@ -2340,7 +2339,9 @@ namespace Win32xx
 	{
 		CTabbedMDI* pTabbedMDI = NULL;
 		if (dynamic_cast<CTabbedMDI*>(GetView()))
-			pTabbedMDI = (CTabbedMDI*)GetView();
+		{
+			pTabbedMDI = static_cast<CTabbedMDI*>(GetView());
+		}
 
 		return pTabbedMDI;
 	}
@@ -2361,7 +2362,7 @@ namespace Win32xx
 	inline void CDocker::Hide()
 	{
 		// Undocks a docker (if needed) and hides it.
-		// Do unhide the docker, dock it.
+		// To unhide the docker, dock it.
 
 		if (IsDocked())
 		{
@@ -2381,12 +2382,12 @@ namespace Win32xx
 		ShowWindow(SW_HIDE);
 	}
 
-	inline BOOL CDocker::IsChildOfDocker(CWnd* pWnd) const
+	inline BOOL CDocker::IsChildOfDocker(const CWnd* pWnd) const
 	// returns true if the specified window is a child of this docker
 	{
 		while ((pWnd != NULL) && (pWnd != GetDockAncestor()))
 		{
-			if (pWnd == (CWnd*)this) return TRUE;
+			if ( pWnd == this ) return TRUE;
 			if (IsRelated(pWnd)) break;
 			pWnd = pWnd->GetParent();
 		}
@@ -2404,7 +2405,7 @@ namespace Win32xx
 		return m_bDragAutoResize;
 	}
 
-	inline BOOL CDocker::IsRelated(CWnd* pWnd) const
+	inline BOOL CDocker::IsRelated(const CWnd* pWnd) const
 	// Returns TRUE if the hWnd is a docker within this dock family
 	{
 		if (GetDockAncestor() == pWnd) return TRUE;
@@ -2699,7 +2700,7 @@ namespace Win32xx
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 		CWnd* pFrame = GetDockAncestor()->GetAncestor();
-		ReBarTheme* pTheme = (ReBarTheme*)pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0));
 
 		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
 				rgbColour =pTheme->clrBkgnd2;
@@ -2723,7 +2724,7 @@ namespace Win32xx
 
 		if (dynamic_cast<CDockContainer*>(GetView()) && IsUndocked())
 		{
-			CDockContainer* pContainer = (CDockContainer*)GetView();
+			CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
 			if (pContainer->GetAllContainers().size() > 1)
 			{
 				// This container has children, so destroy them now
@@ -2754,7 +2755,7 @@ namespace Win32xx
 	inline LRESULT CDocker::OnDockDestroyed(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
-		CDocker* pDock = (CDocker*)wParam;
+		CDocker* pDock = reinterpret_cast<CDocker*>(wParam);
 
 		assert( this == GetDockAncestor() );
 		std::vector<DockPtr>::iterator iter;
@@ -2789,7 +2790,8 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnDockEnd(LPDRAGPOS pdp)
 	{
-		CDocker* pDock = (CDocker*)FromHandle(pdp->hdr.hwndFrom);
+		CDocker* pDock = static_cast<CDocker*>(FromHandlePermanent(pdp->hdr.hwndFrom));
+		assert(dynamic_cast<CDocker*>(pDock));
 		if (NULL == pDock) return 0L;
 
 		UINT DockZone = pdp->DockZone;
@@ -2810,8 +2812,9 @@ namespace Win32xx
 		case DS_DOCKED_CONTAINER:
 			{
 				DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
-				CDockContainer* pContainer = (CDockContainer*)GetView();
-				int nPage = pContainer->GetContainerIndex((CDockContainer*)pDock->GetView());
+				CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
+				assert(dynamic_cast<CDockContainer*>(pContainer));
+				int nPage = pContainer->GetContainerIndex(static_cast<CDockContainer*>(pDock->GetView()));
 				pContainer->SelectPage(nPage);
 			}
 			break;
@@ -2928,7 +2931,7 @@ namespace Win32xx
 		POINT pt = pdp->ptPos;
 		ScreenToClient(pt);
 
-		CDocker* pDock = ((CDockBar*)FromHandle(pdp->hdr.hwndFrom))->GetDock();
+		CDocker* pDock = (static_cast<CDockBar*>(FromHandlePermanent(pdp->hdr.hwndFrom)))->GetDock();
 		if (NULL == pDock) return;
 
 		RECT rcDock = pDock->GetWindowRect();
@@ -3003,7 +3006,7 @@ namespace Win32xx
 		{
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 			CWnd* pFrame = GetDockAncestor()->GetAncestor();
-			ReBarTheme* pTheme = (ReBarTheme*)pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0);
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0));
 
 			if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
 				rgbColour = pTheme->clrBkgnd2;
@@ -3478,7 +3481,7 @@ namespace Win32xx
 		GetDockClient()->SetView(wndView);
 		if (dynamic_cast<CDockContainer*>(pWnd))
 		{
-			CDockContainer* pContainer = (CDockContainer*)&wndView;
+			CDockContainer* pContainer = static_cast<CDockContainer*>(&wndView);
 			SetCaption(pContainer->GetDockCaption().c_str());
 		}
 	}
@@ -3656,7 +3659,10 @@ namespace Win32xx
 			while ((0 == pDockNew) && (iter < AllContainers.end()))
 			{
 				if ((*iter).pContainer != pContainer)
-					pDockNew = (CDocker*)FromHandle(::GetParent((*iter).pContainer->GetParent()->GetHwnd()));
+				{
+					pDockNew = static_cast<CDocker*>(FromHandlePermanent(::GetParent((*iter).pContainer->GetParent()->GetHwnd())));
+					assert(dynamic_cast<CDocker*>(pDockNew));
+				}
 
 				++iter;
 			}
@@ -3664,12 +3670,13 @@ namespace Win32xx
 			if (pDockNew)
 			{
 				// Move containers from the old docker to the new docker
-				CDockContainer* pContainerNew = (CDockContainer*)pDockNew->GetView();
+				CDockContainer* pContainerNew = static_cast<CDockContainer*>(pDockNew->GetView());
+				assert(dynamic_cast<CDockContainer*>(pContainerNew));
 				for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 				{
 					if ((*iter).pContainer != pContainer)
 					{
-						CDockContainer* pChildContainer = (CDockContainer*)(*iter).pContainer;
+						CDockContainer* pChildContainer = static_cast<CDockContainer*>((*iter).pContainer);
 						pContainer->RemoveContainer(pChildContainer);
 						if (pContainerNew != pChildContainer)
 						{
@@ -3725,7 +3732,8 @@ namespace Win32xx
 		else
 		{
 			// This is a child container, so simply remove it from the parent
-			CDockContainer* pContainerParent = (CDockContainer*)GetView();
+			CDockContainer* pContainerParent = static_cast<CDockContainer*>(GetView());
+			assert(dynamic_cast<CDockContainer*>(pContainerParent));
 			pContainerParent->RemoveContainer(pContainer);
 			pContainerParent->SetTabSize();
 			pContainerParent->SetFocus();
@@ -3834,7 +3842,7 @@ namespace Win32xx
 	{
 		CDockContainer* pContainer = NULL;
 		if (nPage < m_vContainerInfo.size())
-			pContainer = (CDockContainer*)m_vContainerInfo[nPage].pContainer;
+			pContainer = m_vContainerInfo[nPage].pContainer;
 
 		return pContainer;
 	}
@@ -4011,7 +4019,7 @@ namespace Win32xx
 
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
-			CDocker* pDock = (CDocker*)FromHandle(::GetParent(GetParent()->GetHwnd()));
+			CDocker* pDock = static_cast<CDocker*>(FromHandlePermanent(::GetParent(GetParent()->GetHwnd())));
 			if (dynamic_cast<CDocker*>(pDock))
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
@@ -4152,10 +4160,10 @@ namespace Win32xx
 				pNewContainer->GetViewPage()->GetView()->SetFocus();
 
 				// Adjust the docking caption
-				CDocker* pDock = (CDocker*)FromHandle(::GetParent(::GetParent(m_hWnd)));
+				CDocker* pDock = static_cast<CDocker*>(FromHandlePermanent(::GetParent(::GetParent(m_hWnd))));
 				if (dynamic_cast<CDocker*>(pDock))
 				{
-					pDock->SetCaption(pNewContainer->GetDockCaption().c_str());
+					pDock->SetCaption(pNewContainer->GetDockCaption());
 					pDock->RedrawWindow();
 				}
 
@@ -4281,7 +4289,8 @@ namespace Win32xx
 	// Declaration of the nested CViewPage class
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
-		CDockContainer* pContainer = (CDockContainer*)GetParent();
+		CDockContainer* pContainer = static_cast<CDockContainer*>(GetParent());
+		assert(dynamic_cast<CDockContainer*>(pContainer));
 		BOOL bResult = FALSE;
 		if (pContainer && pContainer->GetActiveContainer() && pContainer->GetActiveContainer()->IsWindow())
 			bResult = (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);

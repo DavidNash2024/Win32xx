@@ -251,7 +251,7 @@ namespace Win32xx
 	// Retrieves the handle to any ToolTip control associated with the rebar control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CToolTip*)FromHandle( (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L) );
+		return static_cast<CToolTip*>(FromHandlePermanent( (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L)));
 	}
 
 	inline int CReBar::HitTest(RBHITTESTINFO& rbht)
@@ -321,7 +321,7 @@ namespace Win32xx
 	inline BOOL CReBar::OnEraseBkgnd(CDC* pDC)
 	{
 		BOOL Erase = TRUE;
-		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
 		if (!pTheme || !pTheme->UseThemes)
 			Erase = FALSE;
 
@@ -518,7 +518,7 @@ namespace Win32xx
 
 	inline LRESULT CReBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
-		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
 		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 		{
 			// Use move messages to limit the resizing of bands
@@ -537,7 +537,7 @@ namespace Win32xx
 
 	inline LRESULT CReBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
 		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 		{
 			// We want to lock the first row in place, but allow other bands to move!
@@ -566,7 +566,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		// Adjust size for toolbars inside a rebar
-		ReBarTheme* pTheme = (ReBarTheme*)GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0);
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
 
 		// A boolean expression
 		return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );

@@ -489,7 +489,7 @@ namespace Win32xx
 	// Retrieves the handle to the ToolTip control, if any, associated with the ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CToolTip*)FromHandle( (HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L) );
+		return static_cast<CToolTip*>(FromHandlePermanent((HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L)));
 	}
 
 	inline BOOL CToolBar::HasText() const
@@ -980,7 +980,8 @@ namespace Win32xx
 	}
 
 	inline void CToolBar::SetToolTips(CToolTip* pToolTip) const
-	// Associates a ToolTip control with a ToolBar.
+	// Associates a ToolTip control with a ToolBar. This should be done before
+	//  adding any buttons to the ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;

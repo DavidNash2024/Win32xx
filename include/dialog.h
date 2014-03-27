@@ -551,7 +551,7 @@ namespace Win32xx
 			// Process dialog keystrokes for modeless dialogs
 			if (!IsModal())
 			{
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 				if (NULL == pTLSData->hHook)
 				{
 					if (IsDialogMessage(pMsg))
@@ -622,15 +622,15 @@ namespace Win32xx
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Find the CWnd pointer mapped to this HWND
-		CDialog* w = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
+		CDialog* w = static_cast<CDialog*>(FromHandlePermanent(hWnd));
 		if (0 == w)
 		{
 			// The HWND wasn't in the map, so add it now
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			w = (CDialog*)pTLSData->pCWnd;
+			w = static_cast<CDialog*>(pTLSData->pCWnd);
 			assert(w);
 			pTLSData->pCWnd = NULL;
 
@@ -647,18 +647,18 @@ namespace Win32xx
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		// Used by Modal Dialogs to PreTranslate Messages
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 
 		if (nCode == MSGF_DIALOGBOX)
 		{
-			MSG* lpMsg = (MSG*) lParam;
+			MSG* lpMsg = reinterpret_cast<MSG*>(lParam);
 
 			// only pre-translate keyboard events
 			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST))
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{
-					CDialog* pDialog = (CDialog*)GetApp()->GetCWndFromMap(hWnd);
+					CDialog* pDialog = static_cast<CDialog*>(FromHandlePermanent(hWnd));
 					if (pDialog && (lstrcmp(pDialog->GetClassName(), _T("#32770")) == 0))	// only for dialogs
 					{
 						pDialog->PreTranslateMessage(lpMsg);

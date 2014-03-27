@@ -203,6 +203,7 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		UINT	GetPidlLength(LPITEMIDLIST pidl);
 		CAXWindow	m_AXContainer;		// The ActiveX Container
 		IWebBrowser2*	m_pIWebBrowser2;// Interface to the ActiveX web browser control
 	};
@@ -213,26 +214,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-	/////////////////////////////////////////
-	// Global functions
-	//
-	inline UINT GetPidlLength(LPITEMIDLIST pidl)
-	{
-		assert(pidl);
-		UINT cbPidl = sizeof(pidl->mkid.cb);
-		while(pidl && pidl->mkid.cb)
-		{
-			cbPidl += pidl->mkid.cb;
-
-			// Walk to next item
-			BYTE* ptr = (BYTE*)pidl;
-			ptr += pidl->mkid.cb;
-			pidl = (LPITEMIDLIST)ptr;
-		}
-
-		return cbPidl;
-	}
-
 
 	/////////////////////////////////////////
 	// Definitions for the CAXWindow class
@@ -876,6 +857,23 @@ namespace Win32xx
 		CString str(bstr);
 		SysFreeString(bstr);
 		return str;
+	}
+
+	inline UINT CWebBrowser::GetPidlLength(LPITEMIDLIST pidl)
+	{
+		assert(pidl);
+		UINT cbPidl = sizeof(pidl->mkid.cb);
+		while(pidl && pidl->mkid.cb)
+		{
+			cbPidl += pidl->mkid.cb;
+
+			// Walk to next item
+			BYTE* ptr = (BYTE*)pidl;
+			ptr += pidl->mkid.cb;
+			pidl = (LPITEMIDLIST)ptr;
+		}
+
+		return cbPidl;
 	}
 
 	inline BOOL CWebBrowser::GetOffline() const

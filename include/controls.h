@@ -146,6 +146,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_COMBOBOXEX; }
+	
+	private:
+		CEdit m_Edit;
+		CComboBox m_ComboBox;
 	};
 
 
@@ -796,14 +800,27 @@ namespace Win32xx
 	// Retrieves the handle to the child combo box control.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(CBEM_GETCOMBOCONTROL, 0, 0));
+		CComboBox* pComboBox = const_cast<CComboBox*>(&m_ComboBox);
+		HWND hWnd = reinterpret_cast<HWND>(SendMessage(CBEM_GETCOMBOCONTROL, 0, 0));
+		assert(hWnd);
+
+		if (!pComboBox->GetHwnd())
+			pComboBox->Attach(hWnd);
+		
+		return pComboBox;
 	}
 
 	inline CEdit* CComboBoxEx::GetEditCtrl() const
 	// Retrieves the handle to the edit control portion of the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (CEdit*)FromHandle((HWND)SendMessage(CBEM_GETEDITCONTROL, 0, 0));
+		HWND hWnd = reinterpret_cast<HWND>(SendMessage(CBEM_GETEDITCONTROL, 0, 0));
+		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
+		
+		if (!pEdit->GetHwnd())
+			pEdit->Attach(hWnd);
+		
+		return pEdit;
 	}
 
 	inline DWORD CComboBoxEx::GetExtendedStyle() const
@@ -1573,7 +1590,7 @@ namespace Win32xx
 	// Retrieves the handle to the ToolTip control assigned to the trackbar, if any.
 	{
 		assert(IsWindow());
-		return (CToolTip*)FromHandle((HWND)SendMessage(TBM_GETTOOLTIPS, 0, 0));
+		return static_cast<CToolTip*>(FromHandlePermanent((HWND)SendMessage(TBM_GETTOOLTIPS, 0, 0)));
 	}
 
 	inline CWnd* CSlider::SetBuddy(CWnd* pBuddy, BOOL fLocation /*= TRUE*/ ) const

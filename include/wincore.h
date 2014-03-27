@@ -197,6 +197,7 @@ namespace Win32xx
 	class CDC;
 	class CGDIObject;
 	class CMenu;
+	class CMenuBar;
 	class CWinApp;
 	class CWnd;
 	class CBitmap;
@@ -265,7 +266,7 @@ namespace Win32xx
 	struct TLSData			// Used for Thread Local Storage (TLS)
 	{
 		CWnd* pCWnd;		// pointer to CWnd object for Window creation
-		CWnd* pMenuBar;		// pointer to CMenuBar object used for the WH_MSGFILTER hook
+		CMenuBar* pMenuBar;	// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 
 		std::vector<DCPtr> vTmpDCs;		// A vector of temporary CDC pointers
@@ -373,7 +374,7 @@ namespace Win32xx
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		void	CleanupTemps();
-		DWORD	GetTlsIndex() const {return m_dwTlsIndex;}
+		DWORD GetTlsIndex() const { return m_dwTlsIndex; }
 		void	SetCallback();
 		TLSData* SetTlsIndex();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -429,7 +430,8 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
-		static  CWnd* FromHandle(HWND hWnd);
+		static	CWnd* FromHandle(HWND hWnd);
+		static  CWnd* FromHandlePermanent(HWND hWnd);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
@@ -704,10 +706,10 @@ namespace Win32xx
 
 			// Assign the special CWnds used by SetWindowPos
 			m_csMapLock.Lock();
-			m_mapHWND.insert(std::make_pair(HWND_TOP, (CWnd*)&wndTop));
-			m_mapHWND.insert(std::make_pair(HWND_TOPMOST, (CWnd*)&wndTopMost));
-			m_mapHWND.insert(std::make_pair(HWND_NOTOPMOST, (CWnd*)&wndNoTopMost));
-			m_mapHWND.insert(std::make_pair(HWND_BOTTOM, (CWnd*)&wndBottom));
+			m_mapHWND.insert( std::make_pair( HWND_TOP, const_cast<CWnd*>(&wndTop) ) );
+			m_mapHWND.insert( std::make_pair( HWND_TOPMOST, const_cast<CWnd*>(&wndTopMost) ) );
+			m_mapHWND.insert( std::make_pair( HWND_NOTOPMOST, const_cast<CWnd*>(&wndNoTopMost) ) );
+			m_mapHWND.insert( std::make_pair( HWND_BOTTOM, const_cast<CWnd*>(&wndBottom) ) );
 			GetApp()->m_csMapLock.Release();
 		}
 
@@ -753,14 +755,14 @@ namespace Win32xx
 			::TlsFree(m_dwTlsIndex);
 		}
 
-		SetnGetThis((CWinApp*)-1);
+		SetnGetThis(reinterpret_cast<CWinApp*>(-1));
 	}
 
 	inline void CWinApp::CleanupTemps()
 	// Removes all Temporary CWnds and CMenus belonging to this thread
 	{
 		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 		assert(pTLSData);
 
 		pTLSData->vTmpDCs.clear();
@@ -1013,7 +1015,7 @@ namespace Win32xx
 
 		static CWinApp* pWinApp = 0;
 
-		if ((CWinApp*)-1 == pThis)
+		if (reinterpret_cast<CWinApp*>(-1) == pThis)
 			pWinApp = 0;
 		else if (0 == pWinApp)
 			pWinApp = pThis;
@@ -1035,7 +1037,7 @@ namespace Win32xx
 
 	inline TLSData* CWinApp::SetTlsIndex()
 	{
-		TLSData* pTLSData = (TLSData*)::TlsGetValue(GetTlsIndex());
+		TLSData* pTLSData = static_cast<TLSData*>(::TlsGetValue(GetTlsIndex()));
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
@@ -1394,7 +1396,7 @@ namespace Win32xx
 		assert( GetApp() );
 		
 		// Find any existing pernament CWnd from the map
-		CWnd* pWnd = hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
+		CWnd* pWnd = FromHandlePermanent(hWnd);
 		if ( NULL != hWnd && 0 == pWnd )
 		{
 			// Find any existing temporary CWnd for the HWND
@@ -1422,6 +1424,12 @@ namespace Win32xx
 		}
 
 		return pWnd;
+	}
+
+	inline CWnd* CWnd::FromHandlePermanent(HWND hWnd)
+	{
+		assert( GetApp() );
+		return hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
 	}
 
 	inline CWnd* CWnd::GetAncestor(UINT gaFlags /*= GA_ROOTOWNER*/) const
@@ -1862,7 +1870,7 @@ namespace Win32xx
 			// The CWnd pointer wasn't found in the map, so add it now
 
 			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS

@@ -136,7 +136,7 @@ namespace Win32xx
 			virtual ~CMDIClient() {}
 			virtual HWND Create(CWnd* pParent = NULL);
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-			CMDIFrame* GetMDIFrame() const { return (CMDIFrame*)GetParent(); }
+			CMDIFrame* GetMDIFrame() const { return static_cast<CMDIFrame*>(GetParent()); }
 
 		protected:
 			virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
@@ -153,7 +153,7 @@ namespace Win32xx
 		virtual ~CMDIFrame() {}
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
-		virtual CMDIClient* GetMDIClient() const { return (CMDIClient*)&m_MDIClient; }
+		virtual CMDIClient* GetMDIClient() const { return const_cast<CMDIClient*>(&m_MDIClient); }
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -295,7 +295,7 @@ namespace Win32xx
 
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
 	{
-		return (CMDIChild*)FromHandle(m_hActiveMDIChild);
+		return static_cast<CMDIChild*>(FromHandle(m_hActiveMDIChild));
 	}
 
 	inline BOOL CMDIFrame::IsMDIChildMaxed() const
@@ -669,7 +669,7 @@ namespace Win32xx
 
 	inline CMDIFrame* CMDIChild::GetMDIFrame() const
 	{
-		CMDIFrame* pMDIFrame = (CMDIFrame*)GetParent()->GetParent();
+		CMDIFrame* pMDIFrame = static_cast<CMDIFrame*>(GetParent()->GetParent());
 		assert(dynamic_cast<CMDIFrame*>(pMDIFrame));
 		return pMDIFrame;
 	}

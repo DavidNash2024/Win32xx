@@ -111,8 +111,8 @@ namespace Win32xx
 
 		// Attributes
 		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
-		CImageList* GetODImageList() const	{ return (CImageList*)&m_imlODTab; }
-		CFont* GetTabFont() const		{ return (CFont*)&m_TabFont; }
+		CImageList* GetODImageList() const	{ return const_cast<CImageList*>(&m_imlODTab); }
+		CFont* GetTabFont() const		{ return const_cast<CFont*>(&m_TabFont); }
 		BOOL GetShowButtons() const		{ return m_bShowButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
@@ -1428,7 +1428,7 @@ namespace Win32xx
 	// Retrieves a pointer to the ToolTip control associated with a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CToolTip*)FromHandle( TabCtrl_GetToolTips(m_hWnd) );
+		return static_cast<CToolTip*>(FromHandle(TabCtrl_GetToolTips(m_hWnd)));
 	}
 
 	inline BOOL CTab::HighlightItem(INT idItem, WORD fHighlight) const

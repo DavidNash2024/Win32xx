@@ -17,6 +17,7 @@ Added CPalette::FromHandle
 Added CPen::FromHandle
 Added CRgn::FromHandle
 Added CWnd::FromHandle
+Added CWnd::FromHandlePernament
 
 Removed ::FromHandle (all versions)
 

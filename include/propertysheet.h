@@ -577,11 +577,11 @@ namespace Win32xx
 		{
 		case PSPCB_CREATE:
 			{
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 				assert(pTLSData);
 
 				// Store the CPropertyPage pointer in Thread Local Storage
-				pTLSData->pCWnd = (CWnd*)ppsp->lParam;
+				pTLSData->pCWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
 			}
 			break;
 		}
@@ -594,12 +594,12 @@ namespace Win32xx
 		assert( GetApp() );
 
 		// Find matching CWnd pointer for this HWND
-		CPropertyPage* pPage = (CPropertyPage*)GetApp()->GetCWndFromMap(hwndDlg);
+		CPropertyPage* pPage = static_cast<CPropertyPage*>(FromHandlePermanent(hwndDlg));
 		if (0 == pPage)
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
-			TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
-			pPage = (CPropertyPage*)pTLSData->pCWnd;
+			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+			pPage = static_cast<CPropertyPage*>(pTLSData->pCWnd);
 
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
@@ -707,10 +707,10 @@ namespace Win32xx
 		case PSCB_INITIALIZED:
 			{
 				// Retrieve pointer to CWnd object from Thread Local Storage
-				TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 				assert(pTLSData);
 
-				CPropertySheet* w = (CPropertySheet*)pTLSData->pCWnd;
+				CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pCWnd);
 				assert(w);
 
 				w->Attach(hwnd);
@@ -806,7 +806,7 @@ namespace Win32xx
 		if (m_hWnd != NULL)
 		{
 			HWND hPage = (HWND)SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L);
-			pPage = (CPropertyPage*)FromHandle(hPage);
+			pPage = static_cast<CPropertyPage*>(FromHandlePermanent(hPage));
 		}
 
 		return pPage;

@@ -124,6 +124,7 @@ namespace Win32xx
 	private:
 		CTreeView(const CTreeView&);				// Disable copy construction
 		CTreeView& operator = (const CTreeView&); // Disable assignment operator
+		CEdit m_Edit;
 
 	};
 	
@@ -173,7 +174,14 @@ namespace Win32xx
 	// Retrieves the handle to the edit control being used to edit a tree-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CEdit*)FromHandle(TreeView_GetEditControl(m_hWnd));
+		HWND hWnd = TreeView_GetEditControl(m_hWnd);
+		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
+
+		if (pEdit->GetHwnd()) pEdit->Detach();
+		
+		if (hWnd) pEdit->Attach(hWnd);
+		
+		return hWnd? pEdit : NULL;
 	}
 
 	inline HTREEITEM CTreeView::GetFirstVisible() const
@@ -354,7 +362,7 @@ namespace Win32xx
 	// Retrieves the handle to the child ToolTip control used by a tree-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (CToolTip*) FromHandle( TreeView_GetToolTips( m_hWnd ) );
+		return static_cast<CToolTip*>(FromHandlePermanent(TreeView_GetToolTips(m_hWnd)));
 	}
 
 	inline UINT CTreeView::GetVisibleCount() const
@@ -500,7 +508,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return (CToolTip*) FromHandle( TreeView_SetToolTips( m_hWnd, hToolTip ) );
+		return static_cast<CToolTip*>(FromHandlePermanent(TreeView_SetToolTips(m_hWnd, hToolTip)));
 	}
 
 	// Operations

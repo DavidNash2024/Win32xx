@@ -399,20 +399,20 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
 		// StatusBar or ToolBar, inherit from those classes, and override
 		// the following attribute functions.
-		virtual CMenuBar* GetMenuBar()	const		{ return (CMenuBar*)&m_MenuBar; }
-		virtual CReBar* GetReBar() const			{ return (CReBar*)&m_ReBar; }
-		virtual CStatusBar* GetStatusBar() const	{ return (CStatusBar*)&m_StatusBar; }
-		virtual CToolBar* GetToolBar() const		{ return (CToolBar*)&m_ToolBar; }
+		virtual CMenuBar* GetMenuBar()	const		{ return const_cast<CMenuBar*>(&m_MenuBar); }
+		virtual CReBar* GetReBar() const			{ return const_cast<CReBar*>(&m_ReBar); }
+		virtual CStatusBar* GetStatusBar() const	{ return const_cast<CStatusBar*>(&m_StatusBar); }
+		virtual CToolBar* GetToolBar() const		{ return const_cast<CToolBar*>(&m_ToolBar); }
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
-		MenuTheme* GetMenuBarTheme() const			{ return (MenuTheme*)&m_MenuBarTheme; }
-		ReBarTheme* GetReBarTheme()	const			{ return (ReBarTheme*)&m_ReBarTheme; }
-		ToolBarTheme* GetToolBarTheme()	const		{ return (ToolBarTheme*)&m_ToolBarTheme; }
+		MenuTheme* GetMenuBarTheme() const			{ return const_cast<MenuTheme*>(&m_MenuBarTheme); }
+		ReBarTheme* GetReBarTheme()	const			{ return const_cast<ReBarTheme*>(&m_ReBarTheme); }
+		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_ToolBarTheme); }
 		void SetReBarTheme(ReBarTheme* pRBT); 
 		void SetToolBarTheme(ToolBarTheme* pTBT);
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		CMenu* GetFrameMenu() const					{ return (CMenu*)&m_Menu; }
+		CMenu* GetFrameMenu() const					{ return const_cast<CMenu*>(&m_Menu); }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
 		CWnd* GetView() const						{ return m_pView; }
@@ -634,7 +634,7 @@ namespace Win32xx
 		//  the popup menu. Messages are sent to StaticMsgHook.
 
 		// Remove any remaining hook first
-		TLSData* pTLSData = (TLSData*)::TlsGetValue(GetApp()->GetTlsIndex());
+		TLSData* pTLSData = static_cast<TLSData*>(::TlsGetValue(GetApp()->GetTlsIndex()));
 		pTLSData->pMenuBar = this;
 		if (pTLSData->hHook != NULL)
 			::UnhookWindowsHookEx(pTLSData->hHook);
@@ -882,8 +882,8 @@ namespace Win32xx
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
-		m_pFrame = (CFrame*)GetAncestor();
-		assert(m_pFrame);
+		m_pFrame = static_cast<CFrame*>(GetAncestor());
+		assert(dynamic_cast<CFrame*>(m_pFrame));
 	}
 
 	inline LRESULT CMenuBar::OnDrawItem(WPARAM wParam, LPARAM lParam)
@@ -1462,10 +1462,10 @@ namespace Win32xx
 	inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		assert(GetApp());
-		MSG* pMsg = (MSG*)lParam;
-		TLSData* pTLSData = (TLSData*)TlsGetValue(GetApp()->GetTlsIndex());
+		MSG* pMsg = reinterpret_cast<MSG*>(lParam);
+		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 		assert(pTLSData);
-		CMenuBar* pMenuBar = (CMenuBar*)pTLSData->pMenuBar;
+		CMenuBar* pMenuBar = pTLSData->pMenuBar;
 
 		if (pMenuBar && (MSGF_MENU == nCode))
 		{
@@ -2193,7 +2193,7 @@ namespace Win32xx
 		if (m_ToolBarTheme.UseThemes)
 		{
 			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-			CToolBar* pTB = (CToolBar*)FromHandle(pNMHDR->hwndFrom);
+			CToolBar* pTB = static_cast<CToolBar*>(FromHandle(pNMHDR->hwndFrom));
 
 			switch (lpNMCustomDraw->nmcd.dwDrawStage)
 			{
@@ -2381,7 +2381,7 @@ namespace Win32xx
 
 	inline void CFrame::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
 	{
-		MenuItemData* pmid = (MenuItemData*)pdis->itemData;
+		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
 		MenuTheme* pMBT = GetMenuBarTheme();
 		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
@@ -2484,7 +2484,8 @@ namespace Win32xx
 	// Draws the checkmark or radiocheck transparently
 	{
 		CRect rc = pdis->rcItem;
-		UINT fType = ((MenuItemData*)pdis->itemData)->mii.fType;
+		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
+		UINT fType = pmid->mii.fType;
 		MenuTheme* pMBT = GetMenuBarTheme();
 		CRect rcBk;
 		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
@@ -2492,7 +2493,6 @@ namespace Win32xx
 		if (IsAeroThemed())
 		{
 			int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
-			MenuItemData* pmid = (MenuItemData*)pdis->itemData;
 			CRect rcCheckBackground = m_pMenuMetrics->GetCheckBackgroundRect(pdis->rcItem);
 			m_pMenuMetrics->DrawThemeBackground(pdis->hDC, MENU_POPUPCHECKBACKGROUND, m_pMenuMetrics->ToCheckBackgroundStateId(iStateId), &rcCheckBackground, NULL);
 			CRect rcCheck = m_pMenuMetrics->GetCheckRect(pdis->rcItem);
@@ -2590,7 +2590,8 @@ namespace Win32xx
 
 	inline void CFrame::DrawMenuItemText(LPDRAWITEMSTRUCT pdis)
 	{
-		LPCTSTR ItemText = ((MenuItemData*)pdis->itemData)->GetItemText();
+		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
+		LPCTSTR ItemText = pmid->GetItemText();
 		BOOL bDisabled = pdis->itemState & ODS_GRAYED;
 		COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 
@@ -2903,7 +2904,7 @@ namespace Win32xx
 		int cxTotal = 0;
 		int cyMax = 0;
 
-		MenuItemData* pmid = (MenuItemData*)pmis->itemData;
+		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pmis->itemData);
 		assert(::IsMenu(pmid->hMenu));	// Does itemData contain a valid MenuItemData struct?
 
 		// Add icon/check width
@@ -3157,13 +3158,13 @@ namespace Win32xx
 				// Get the ToolBar's CWnd
 				CWnd* pWnd = FromHandle(GetReBar()->HitTest(GetCursorPos()));
 				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)) && !(dynamic_cast<CMenuBar*>(pWnd)))
-					pToolBar = (CToolBar*)pWnd;
+					pToolBar = static_cast<CToolBar*>(pWnd);
 			}
 			else
 			{
 				CWnd* pWnd = WindowFromPoint(GetCursorPos());
 				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
-					pToolBar = (CToolBar*)pWnd;
+					pToolBar = static_cast<CToolBar*>(pWnd);
 			}
 
 			if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar))
@@ -3351,7 +3352,7 @@ namespace Win32xx
 		// Press of Dropdown botton on ToolBar
 			
 		int iItem = pNMTB->iItem;
-		CToolBar* pTB = (CToolBar*)FromHandle(pNMTB->hdr.hwndFrom);
+		CToolBar* pTB = static_cast<CToolBar*>(FromHandle(pNMTB->hdr.hwndFrom));
 		assert(pTB);
 
 		// a boolean expression
@@ -3372,7 +3373,7 @@ namespace Win32xx
 		CWnd* pWnd = WindowFromPoint(pt);
 		if (dynamic_cast<CToolBar*> (pWnd))
 		{
-			pToolBar = (CToolBar*)pWnd;
+			pToolBar = static_cast<CToolBar*>(pWnd);
 		}
 
 		// Set the tooltip's text from the ToolBar button's CommandID
@@ -3509,15 +3510,15 @@ namespace Win32xx
 				if (IsReBarUsed())
 				{
 					// Get the ToolBar's CWnd
-					CWnd* pWnd = FromHandle(GetReBar()->HitTest(GetCursorPos()));
+					CWnd* pWnd = FromHandlePermanent(GetReBar()->HitTest(GetCursorPos()));
 					if (pWnd && (dynamic_cast<CToolBar*>(pWnd)) && !(dynamic_cast<CMenuBar*>(pWnd)))
-						pToolBar = (CToolBar*)pWnd;
+						pToolBar = static_cast<CToolBar*>(pWnd);
 				}
 				else
 				{
 					CWnd* pWnd = WindowFromPoint(GetCursorPos());
 					if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
-						pToolBar = (CToolBar*)pWnd;
+						pToolBar = static_cast<CToolBar*>(pWnd);
 				}
 
 				if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar))
