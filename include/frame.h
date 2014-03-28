@@ -2750,51 +2750,6 @@ namespace Win32xx
 		return CString(ThemeName);
 	}
 
-/*	inline void CFrame::LoadCommonControls()
-	{
-		HMODULE hComCtl = 0;
-
-		try
-		{
-			// Load the Common Controls DLL
-			hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-			if (!hComCtl)
-				throw CWinException(_T("Failed to load COMCTL32.DLL"));
-
-			if (GetComCtlVersion() > 470)
-			{
-				// Declare a pointer to the InItCommonControlsEx function
-				typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
-				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
-
-				// Load the full set of common controls
-				INITCOMMONCONTROLSEX InitStruct = {0};
-				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-				InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
-							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
-
-				// Call InitCommonControlsEx
-				if(!((*pfnInit)(&InitStruct)))
-					throw CWinException(_T("InitCommonControlsEx failed"));
-			}
-			else
-			{
-				::InitCommonControls();
-			}
-
-			::FreeLibrary(hComCtl);
-		}
-
-		catch (const CWinException &e)
-		{
-			e.what();
-			if (hComCtl)
-				::FreeLibrary(hComCtl);
-
-			throw;
-		}
-	}
-*/
 	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	{
 		// Load the MRU list from the registry
@@ -3576,8 +3531,10 @@ namespace Win32xx
 	{
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+		CWindowDC dcDesktop(NULL);
 
-		if (m_rcPosition.Width() > 0)
+		// Does the window fit on the desktop?
+		if (RectVisible(dcDesktop, &m_rcPosition) && (m_rcPosition.Width() > 0))
 		{
 			// Set the original window position
 			cs.x  = m_rcPosition.left;

@@ -1504,8 +1504,10 @@ namespace Win32xx
 		if ((rcLeft.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
+
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockDrag->m_dwDockZone = DS_DOCKED_LEFT;
+
 			return TRUE;
 		}
 		else if ((rcTop.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
@@ -1518,8 +1520,10 @@ namespace Win32xx
 		else if ((rcRight.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
 		{
 			pDockDrag->m_BlockMove = TRUE;
+
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockDrag->m_dwDockZone = DS_DOCKED_RIGHT;
+
 			return TRUE;
 		}
 		else if ((rcBottom.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
@@ -2639,6 +2643,7 @@ namespace Win32xx
 	{
 		CPoint pt = pdp->ptPos;
 		ScreenToClient(pt);
+
 
 		if (pt != m_OldPoint)
 		{

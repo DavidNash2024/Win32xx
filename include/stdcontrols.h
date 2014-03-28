@@ -77,6 +77,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc);
+
+	private:
+		CButton(const CButton&);				// Disable copy construction
+		CButton& operator = (const CButton&);	// Disable assignment operator
 	};
 
 	class CEdit : public CWnd
@@ -139,6 +143,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc);
+
+	private:
+		CEdit(const CEdit&);				// Disable copy construction
+		CEdit& operator = (const CEdit&);	// Disable assignment operator
 	};
 
 	class CListBox : public CWnd
@@ -198,6 +206,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc);
+
+	private:
+		CListBox(const CListBox&);				// Disable copy construction
+		CListBox& operator = (const CListBox&);	// Disable assignment operator
 	};
 
 	class CStatic : public CWnd
@@ -220,6 +232,9 @@ namespace Win32xx
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc);
 
+	private:
+		CStatic(const CStatic&);				// Disable copy construction
+		CStatic& operator = (const CStatic&);	// Disable assignment operator
 	};
 
 }

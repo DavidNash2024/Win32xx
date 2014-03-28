@@ -82,6 +82,7 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 	std::vector<TestWndPtr>::iterator iter;
 	for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
 	{
+		(*iter)->CreateThread(CREATE_SUSPENDED);
 		(*iter)->ResumeThread();
 	}
 

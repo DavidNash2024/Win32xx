@@ -89,9 +89,9 @@
 #ifndef _WIN32XX_WINTHREAD_H_
 #define _WIN32XX_WINTHREAD_H_
 
-
-#include <process.h>
-
+#ifndef _WIN32_WCE
+  #include <process.h>
+#endif
 
 namespace Win32xx
 {
@@ -103,7 +103,6 @@ namespace Win32xx
 	{
 	public:
 		CThread();
-		CThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
 		virtual ~CThread();
 		
 		// Overridables
@@ -111,6 +110,7 @@ namespace Win32xx
 		virtual int MessageLoop();
 
 		// Operations
+		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
 		HANDLE	GetThread()	const;
 		int		GetThreadID() const;
 		int		GetThreadPriority() const;
@@ -121,11 +121,12 @@ namespace Win32xx
 	private:
 		CThread(const CThread&);				// Disable copy construction
 		CThread& operator = (const CThread&);	// Disable assignment operator
-		void CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag);
+
 		static	UINT WINAPI StaticThreadCallback(LPVOID pCThread);
 
 		HANDLE m_hThread;			// Handle of this thread
 		UINT m_nThreadID;			// ID of this thread
+		DWORD m_dwThreadID;			// ID of this thread
 	};
 	
 }
@@ -140,19 +141,7 @@ namespace Win32xx
 	//
 	inline CThread::CThread() : m_hThread(0), m_nThreadID(0)
 	{
-		CreateThread(0, 0, CREATE_SUSPENDED);
-	}
-
-	inline CThread::CThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
-		: m_hThread(0), m_nThreadID(0)
-										
-	{
-		// Valid argument values:
-		// pSecurityAttributes		Either a pointer to SECURITY_ATTRIBUTES or 0
-		// stack_size				Either the stack size or 0
-		// initflag					Either CREATE_SUSPENDED or 0
-		
-		CreateThread(pSecurityAttributes, stack_size, initflag);
+	//	CreateThread(0, 0, CREATE_SUSPENDED);
 	}
 
 	inline CThread::~CThread()
@@ -169,10 +158,18 @@ namespace Win32xx
 		::CloseHandle(m_hThread);
 	}
 
-	inline void CThread::CreateThread(LPSECURITY_ATTRIBUTES pSecurityAttributes, unsigned stack_size, unsigned initflag)
+	inline void CThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
 	{
-		// NOTE:  By default, the thread is created in the default state.
-		m_hThread = (HANDLE)_beginthreadex(pSecurityAttributes, stack_size, CThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
+		// Valid argument values:
+		// initflag					Either CREATE_SUSPENDED or 0
+		// stack_size				Either the stack size or 0
+		// pSecurityAttributes		Either a pointer to SECURITY_ATTRIBUTES or 0
+
+#ifdef _WIN32_WCE
+		m_hThread = (HANDLE)::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)CThread::StaticThreadCallback, (LPVOID) this, initflag, &m_dwThreadID);
+#else
+		m_hThread = (HANDLE)::_beginthreadex(pSecurityAttributes, stack_size, CThread::StaticThreadCallback, (LPVOID) this, initflag, &m_nThreadID);
+#endif
 
 		if (0 == m_hThread)
 			throw CWinException(_T("Failed to create thread"));
@@ -187,6 +184,11 @@ namespace Win32xx
 	inline int CThread::GetThreadID() const 
 	{
 		assert(m_hThread);
+
+#ifdef _WIN32_WCE
+		return m_dwThreadID;
+#endif
+
 		return m_nThreadID;
 	}
 
@@ -233,7 +235,7 @@ namespace Win32xx
 	// When the thread starts, it runs this function.
 	{
 		// Get the pointer for this CMyThread object
-		CThread* pThread = static_cast<CThread*>pCThread;
+		CThread* pThread = static_cast<CThread*>(pCThread);
 
 		if (pThread->InitInstance())
 			return pThread->MessageLoop();

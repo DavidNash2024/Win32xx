@@ -1,8 +1,20 @@
 Version 7.4.1
 =============
 
+New Features and Enhancements
+-----------------------------
+* FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
+   CImageList and CMenu have been moved from global to their classes.
 * The framework no longer uses OnIdle internally.
+* Frames repositioned if registry values places them off screen 
 
+Incompatibilities with previous version
+---------------------------------------
+* FromHandle is no longer global. For example, we now use CDC::FromHandle 
+   for CDC's FromHandle.
+* CThread no longer creates the thread in its constructor. Use CreateThread
+   to create the thread.
+	
 
 Changes in detail
 -----------------
@@ -16,6 +28,7 @@ Added CMenu::FromHandle
 Added CPalette::FromHandle
 Added CPen::FromHandle
 Added CRgn::FromHandle
+Added CThread::CreateThread
 Added CWnd::FromHandle
 Added CWnd::FromHandlePernament
 

@@ -31,6 +31,7 @@ HWND CView::Create(CWnd* pParent)
 {
 	// Called by CFrame::OnCreate. 
 	// The window is created when the thread resumes.
+	CreateThread(CREATE_SUSPENDED);
 	StartThread(pParent);
 	return 0;
 }

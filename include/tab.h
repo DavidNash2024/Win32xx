@@ -981,7 +981,7 @@ namespace Win32xx
 		if (rcTab.Width() < 0)
 			rcTab.left = rcTab.right;
 
-		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right, rcTab.bottom);
+		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right-1, rcTab.bottom);
 		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		rgnClip.CombineRgn(&rgnSrc1, &rgnSrc2, RGN_DIFF);
 
@@ -1000,7 +1000,21 @@ namespace Win32xx
 
 		// Now copy our from our memory DC to the window DC
 		dcView.SelectClipRgn(&rgnClip);
-		dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), &dcMem, 0, 0, SRCCOPY);
+
+		BOOL RTL = FALSE;
+
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+#endif
+
+		if (RTL)
+		{
+			// BitBlt offset bitmap copies by one for Right-To-Left layout 
+			dcView.BitBlt(0, 0, 1, rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
+			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
+		}
+		else
+			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)

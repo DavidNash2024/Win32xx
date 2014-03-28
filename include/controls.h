@@ -71,6 +71,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = ANIMATE_CLASS; }
+	
+	private:
+		CAnimation(const CAnimation&);				// Disable copy construction
+		CAnimation& operator = (const CAnimation&); // Disable assignment operator
 	};
 
 
@@ -122,6 +126,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("ComboBox"); }
+
+	private:
+		CComboBox(const CComboBox&);				// Disable copy construction
+		CComboBox& operator = (const CComboBox&);	// Disable assignment operator
 	};
 
 
@@ -148,6 +156,8 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_COMBOBOXEX; }
 	
 	private:
+		CComboBoxEx(const CComboBoxEx&);				// Disable copy construction
+		CComboBoxEx& operator = (const CComboBoxEx&);	// Disable assignment operator
 		CEdit m_Edit;
 		CComboBox m_ComboBox;
 	};
@@ -173,6 +183,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
+
+	private:
+		CDateTime(const CDateTime&);				// Disable copy construction
+		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
 	};
 
 	class CHeader : public CWnd
@@ -213,6 +227,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_HEADER ; }
+
+	private:
+		CHeader(const CHeader&);				// Disable copy construction
+		CHeader& operator = (const CHeader&);	// Disable assignment operator
 	};
 
 	class CHotKey : public CWnd
@@ -229,6 +247,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = HOTKEY_CLASS; }
+
+	private:
+		CHotKey(const CHotKey&);				// Disable copy construction
+		CHotKey& operator = (const CHotKey&);	// Disable assignment operator
 	};
 
 	class CIPAddress : public CWnd
@@ -250,6 +272,9 @@ namespace Win32xx
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_IPADDRESS; }
 
+	private:
+		CIPAddress(const CIPAddress&);				// Disable copy construction
+		CIPAddress& operator = (const CIPAddress&);	// Disable assignment operator
 	};
 
 	class CMonthCalendar : public CWnd
@@ -285,6 +310,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = MONTHCAL_CLASS; }
+
+	private:
+		CMonthCalendar(const CMonthCalendar&);				// Disable copy construction
+		CMonthCalendar& operator = (const CMonthCalendar&);	// Disable assignment operator
 	};
 
 	class CProgressBar : public CWnd
@@ -304,6 +333,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = PROGRESS_CLASS; }
+
+	private:
+		CProgressBar(const CProgressBar&);				// Disable copy construction
+		CProgressBar& operator = (const CProgressBar&);	// Disable assignment operator
 	};
 
 	class CScrollBar : public CWnd
@@ -324,6 +357,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("SCROLLBAR"); ; }
+
+	private:
+		CScrollBar(const CScrollBar&);				// Disable copy construction
+		CScrollBar& operator = (const CScrollBar&);	// Disable assignment operator
 	};
 
 	class CSlider : public CWnd
@@ -364,6 +401,10 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TRACKBAR_CLASS; }
+
+	private:
+		CSlider(const CSlider&);				// Disable copy construction
+		CSlider& operator = (const CSlider&);	// Disable assignment operator
 	};
 
 
@@ -389,6 +430,10 @@ namespace Win32xx
 		// Overridables
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
+
+	private:
+		CSpinButton(const CSpinButton&);				// Disable copy construction
+		CSpinButton& operator = (const CSpinButton&);	// Disable assignment operator
 	};
 
 	class CToolTip : public CWnd
@@ -449,6 +494,8 @@ namespace Win32xx
 		}
 
 	private:
+		CToolTip(const CToolTip&);				// Disable copy construction
+		CToolTip& operator = (const CToolTip&);	// Disable assignment operator
 		void LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT_PTR nIDTool) const;
 	};
 
