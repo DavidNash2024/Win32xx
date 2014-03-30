@@ -734,8 +734,15 @@ namespace Win32xx
 	public:
 		CWindowDC(const CWnd* pWnd)
 		{
-			if (pWnd) assert(pWnd->IsWindow());
-			HWND hWnd = pWnd? pWnd->GetHwnd() : GetDesktopWindow();
+			HWND hWnd = 0;
+			if (pWnd)
+			{
+				assert(pWnd->IsWindow());
+				hWnd = pWnd->GetHwnd();
+			}
+			else
+				hWnd = GetDesktopWindow();
+
 			Attach(::GetWindowDC(hWnd), hWnd);
 		}
 		virtual ~CWindowDC() {}
@@ -2173,23 +2180,19 @@ namespace Win32xx
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (0 == pDC)
 		{		
-			// Find any existing temporary CDC for the HDC
+			// Find any existing temporary CWnd for the HWND
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <DCPtr>::iterator v;
-			for (v = pTLSData->vTmpDCs.begin(); v != pTLSData->vTmpDCs.end(); ++v)
-			{
-				if ( (*v)->GetHDC() == hDC )
-				{
-					pDC = (*v).get();
-					break;
-				}
-			}
+			std::map<HDC, DCPtr, CompareHDC>::iterator m;
+			m = pTLSData->TmpDCs.find(hDC);
+	
+			if (m != pTLSData->TmpDCs.end())
+				pDC = m->second.get();
 			
 			if (0 == pDC)
 			{
 				// No exiting CDC for this HDC, so create one
 				pDC = new CDC;
-				pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
+				pTLSData->TmpDCs.insert(std::make_pair(hDC, pDC));
 				pDC->m_pData->hDC = hDC;
 				pDC->m_pData->bIsTmpHDC = TRUE;
 		
@@ -2336,8 +2339,8 @@ namespace Win32xx
 	}
 
 	inline CDC* CDC::AddTempHDC(HDC hDC, HWND hWnd)
-	// Returns the CDC object associated with the device context handle
-	// The HDC is removed when the CDC is destroyed
+	// Used by GetDC and GetWindowDC to add a temporary 
+	// CDC pointer with the specified hWnd.
 	{
 		assert( GetApp() );
 

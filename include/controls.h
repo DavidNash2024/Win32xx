@@ -71,7 +71,7 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = ANIMATE_CLASS; }
-	
+
 	private:
 		CAnimation(const CAnimation&);				// Disable copy construction
 		CAnimation& operator = (const CAnimation&); // Disable assignment operator
@@ -140,7 +140,7 @@ namespace Win32xx
 		virtual ~CComboBoxEx() {}
 
 		int  	DeleteItem(int nIndex ) const;
-		CWnd* 	GetComboBoxCtrl() const;
+		CComboBox* 	GetComboBoxCtrl() const;
 		CEdit* 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
 		CImageList* GetImageList() const;
@@ -154,39 +154,12 @@ namespace Win32xx
 	protected:
 		// Overridables
 		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_COMBOBOXEX; }
-	
+
 	private:
 		CComboBoxEx(const CComboBoxEx&);				// Disable copy construction
 		CComboBoxEx& operator = (const CComboBoxEx&);	// Disable assignment operator
 		CEdit m_Edit;
 		CComboBox m_ComboBox;
-	};
-
-
-	class CDateTime : public CWnd
-	{
-	public:
-		CDateTime() {}
-		virtual ~CDateTime() {}
-
-		COLORREF GetMonthCalColor(int iColor) const;
-		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
-		BOOL SetFormat(LPCTSTR pstrFormat);
-		CMonthCalendar* GetMonthCalCtrl() const;
-		CFont* GetMonthCalFont() const;
-		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
-		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
-		BOOL SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray);
-		DWORD GetTime(LPSYSTEMTIME pTimeDest) const;
-		BOOL SetTime(DWORD flag, LPSYSTEMTIME pTimeNew = NULL);
-
-	protected:
-		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
-
-	private:
-		CDateTime(const CDateTime&);				// Disable copy construction
-		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
 	};
 
 	class CHeader : public CWnd
@@ -314,6 +287,33 @@ namespace Win32xx
 	private:
 		CMonthCalendar(const CMonthCalendar&);				// Disable copy construction
 		CMonthCalendar& operator = (const CMonthCalendar&);	// Disable assignment operator
+	};
+
+	class CDateTime : public CWnd
+	{
+	public:
+		CDateTime() {}
+		virtual ~CDateTime() {}
+
+		COLORREF GetMonthCalColor(int iColor) const;
+		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
+		BOOL SetFormat(LPCTSTR pstrFormat);
+		CMonthCalendar* GetMonthCalCtrl() const;
+		CFont* GetMonthCalFont() const;
+		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
+		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
+		BOOL SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray);
+		DWORD GetTime(LPSYSTEMTIME pTimeDest) const;
+		BOOL SetTime(DWORD flag, LPSYSTEMTIME pTimeNew = NULL);
+
+	protected:
+		// Overridables
+		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
+
+	private:
+		CDateTime(const CDateTime&);				// Disable copy construction
+		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
+		CMonthCalendar m_MonthCalendar;
 	};
 
 	class CProgressBar : public CWnd
@@ -843,7 +843,7 @@ namespace Win32xx
 		return (int)SendMessage(CBEM_DELETEITEM, (WPARAM)nIndex, 0);
 	}
 
-	inline CWnd* CComboBoxEx::GetComboBoxCtrl() const
+	inline CComboBox* CComboBoxEx::GetComboBoxCtrl() const
 	// Retrieves the handle to the child combo box control.
 	{
 		assert(IsWindow());
@@ -853,7 +853,7 @@ namespace Win32xx
 
 		if (!pComboBox->GetHwnd())
 			pComboBox->Attach(hWnd);
-		
+
 		return pComboBox;
 	}
 
@@ -863,10 +863,10 @@ namespace Win32xx
 		assert(IsWindow());
 		HWND hWnd = reinterpret_cast<HWND>(SendMessage(CBEM_GETEDITCONTROL, 0, 0));
 		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
-		
+
 		if (!pEdit->GetHwnd())
 			pEdit->Attach(hWnd);
-		
+
 		return pEdit;
 	}
 
@@ -951,7 +951,14 @@ namespace Win32xx
 	inline CMonthCalendar* CDateTime::GetMonthCalCtrl() const
 	{
 		assert(IsWindow());
-		return (CMonthCalendar*)FromHandle((HWND)DateTime_GetMonthCal(m_hWnd));
+		HWND hWnd = reinterpret_cast<HWND>(DateTime_GetMonthCal(m_hWnd));
+
+        CMonthCalendar* pMonth = const_cast<CMonthCalendar*>(&m_MonthCalendar);
+		if (pMonth->GetHwnd()) pMonth->Detach();
+
+		if (hWnd) pMonth->Attach(hWnd);
+
+		return hWnd? pMonth : NULL;
 	}
 
 	inline CFont* CDateTime::GetMonthCalFont() const

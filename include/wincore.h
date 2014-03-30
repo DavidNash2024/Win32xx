@@ -269,14 +269,15 @@ namespace Win32xx
 		CMenuBar* pMenuBar;	// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 
-		std::vector<DCPtr> vTmpDCs;		// A vector of temporary CDC pointers
-		std::vector<GDIPtr> vTmpGDIs;	// A vector of temporary CGDIObject pointers
-		std::vector<ImageListPtr> vTmpImageLists;	// A vector of temporary CImageList pointers
-		std::vector<WndPtr> vTmpWnds;	// A vector of temporary CWnd pointers
-		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}
+		std::vector<DCPtr> vTmpDCs;					// Temporary CDC pointers with hWnd
+		std::map<HDC, DCPtr, CompareHDC> TmpDCs;	// Temporary CDC pointers
+		std::vector<GDIPtr> vTmpGDIs;				// Temporary CGDIObject pointers
+		std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST> TmpImageLists;	// Temporary CImageList pointers
+		std::map<HWND, WndPtr, CompareHWND> TmpWnds;	// Temporary CWnd pointers
+		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}	// Constructor
 
 #ifndef _WIN32_WCE
-		std::vector<MenuPtr> vTmpMenus;	// A vector of temporary CMenu pointers
+		std::map<HMENU, MenuPtr, CompareHMENU> TmpMenus;	// Temporary CMenu pointers
 #endif
 	};
 
@@ -722,32 +723,34 @@ namespace Win32xx
 
 	inline CWinApp::~CWinApp()
 	{
+		// Ensure all temporary objects are destroyed before CWinApp is deconstructed
+		// These maps contain smart pointers, so clearing them calls the destructor 
+		// on their contents.
 		std::vector<TLSDataPtr>::iterator iter;
 		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
 		{
+			(*iter)->TmpDCs.clear();
 			(*iter)->vTmpDCs.clear();
-#ifndef _WIN32_WCE
-			(*iter)->vTmpMenus.clear();
-#endif
-			(*iter)->vTmpWnds.clear();
+			(*iter)->TmpWnds.clear();
 			(*iter)->vTmpGDIs.clear();
-			(*iter)->vTmpImageLists.clear();
+			(*iter)->TmpImageLists.clear();
+#ifndef _WIN32_WCE
+			(*iter)->TmpMenus.clear();
+#endif
 		}
 
-		// Check that all CWnd windows are destroyed
+		// Forcibly destroy any remaining windows now. Windows created from 
+		//  static CWnds or dangling pointers are destroyed here. 
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
 			HWND hWnd = (*m).first;
 			if (::IsWindow(hWnd))
+			{
 				::DestroyWindow(hWnd);
-		}
-		m_mapHWND.clear();
-		m_mapGDI.clear();
-		m_mapHDC.clear();
-		m_mapHIMAGELIST.clear();
-		m_mapHMENU.clear();
-
+			}
+		}  
+		
 		// Do remaining tidy up
 		if (m_dwTlsIndex != TLS_OUT_OF_INDEXES)
 		{
@@ -765,13 +768,14 @@ namespace Win32xx
 		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 		assert(pTLSData);
 
+		pTLSData->TmpDCs.clear();
 		pTLSData->vTmpDCs.clear();
 		pTLSData->vTmpGDIs.clear();
-		pTLSData->vTmpImageLists.clear();
-		pTLSData->vTmpWnds.clear();
+		pTLSData->TmpImageLists.clear();
+		pTLSData->TmpWnds.clear();
 
 	#ifndef _WIN32_WCE
-		pTLSData->vTmpMenus.clear();
+		pTLSData->TmpMenus.clear();
 	#endif
 
 	}
@@ -1401,15 +1405,11 @@ namespace Win32xx
 		{
 			// Find any existing temporary CWnd for the HWND
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <WndPtr>::iterator v;
-			for (v = pTLSData->vTmpWnds.begin(); v != pTLSData->vTmpWnds.end(); ++v)
-			{
-				if ( (*v)->GetHwnd() == hWnd )
-				{
-					pWnd = (*v).get();
-					break;
-				}
-			}
+			std::map<HWND, WndPtr, CompareHWND>::iterator m;
+			m = pTLSData->TmpWnds.find(hWnd);
+	
+			if (m != pTLSData->TmpWnds.end())
+				pWnd = m->second.get();
 
 			if (0 == pWnd)
 			{
@@ -1417,7 +1417,7 @@ namespace Win32xx
 				pWnd = new CWnd;
 				pWnd->m_hWnd = hWnd;
 				pWnd->m_IsTmpWnd = TRUE;
-				pTLSData->vTmpWnds.push_back(pWnd);
+				pTLSData->TmpWnds.insert(std::make_pair(hWnd, pWnd));
 
 				::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
 			}

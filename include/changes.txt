@@ -3,15 +3,21 @@ Version 7.4.1
 
 New Features and Enhancements
 -----------------------------
-* FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
-   CImageList and CMenu have been moved from global to their classes.
+* Updated FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
+   CImageList and CMenu. They have been moved from global to their classes.
+* CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.
+   Unlike CWnd::FromHandle, this function never creates a new CWnd, so it can 
+   be used to help avoid accidentally down casting a CWnd.
+* The frameworks takes a stricter approach to casting. For the most part,
+    c-style casts have been replaced with C++ style casts.   
 * The framework no longer uses OnIdle internally.
-* Frames repositioned if registry values places them off screen 
+* Frames placed are in the default position, if the co-ordinates retrieved from
+   registry would place them off screen. 
 
 Incompatibilities with previous version
 ---------------------------------------
-* FromHandle is no longer global. For example, we now use CDC::FromHandle 
-   for CDC's FromHandle.
+* The various FromHandle functions are longer global. For example, we now 
+   use CDC::FromHandle for CDC's FromHandle.
 * CThread no longer creates the thread in its constructor. Use CreateThread
    to create the thread.
 	

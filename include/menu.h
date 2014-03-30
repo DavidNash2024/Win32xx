@@ -218,22 +218,18 @@ namespace Win32xx
 		{		
 			// Find any existing temporary CMenu for the HMENU
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <MenuPtr>::iterator v;
-			for (v = pTLSData->vTmpMenus.begin(); v != pTLSData->vTmpMenus.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hMenu )
-				{
-					pMenu = (*v).get();
-					break;
-				}
-			}
+			std::map<HMENU, MenuPtr, CompareHMENU>::iterator m;
+			m = pTLSData->TmpMenus.find(hMenu);
+	
+			if (m != pTLSData->TmpMenus.end())
+				pMenu = m->second.get();
 
 			if (0 == pMenu)
 			{
 				pMenu = new CMenu;
 				pMenu->m_hMenu = hMenu;
 				pMenu->m_IsTmpMenu = TRUE;
-				pTLSData->vTmpMenus.push_back(pMenu); 
+				pTLSData->TmpMenus.insert(std::make_pair(hMenu, pMenu));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}

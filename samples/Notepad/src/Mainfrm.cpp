@@ -64,9 +64,8 @@ void CMainFrame::OnClose()
 		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
 			OnFileSave();
 
-	// End the application
-	//Destroy();
-	DestroyWindow(*this);
+	// Call the base function
+	CFrame::OnClose();
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)

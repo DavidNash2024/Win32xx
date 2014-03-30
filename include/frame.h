@@ -3531,7 +3531,7 @@ namespace Win32xx
 	{
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-		CWindowDC dcDesktop(NULL);
+		CWindowDC dcDesktop(0);
 
 		// Does the window fit on the desktop?
 		if (RectVisible(dcDesktop, &m_rcPosition) && (m_rcPosition.Width() > 0))
@@ -3540,7 +3540,7 @@ namespace Win32xx
 			cs.x  = m_rcPosition.left;
 			cs.y  = m_rcPosition.top;
 			cs.cx = m_rcPosition.Width();
-			cs.cy = m_rcPosition.Height();
+			cs.cy = m_rcPosition.Height(); 
 		}
 	}
 

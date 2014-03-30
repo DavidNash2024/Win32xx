@@ -2242,7 +2242,7 @@ namespace Win32xx
 					break;
 				}
 			}
-
+			if (pWnd == pWnd->GetWindow(GW_HWNDLAST)) break;
 			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
 		}
 
@@ -3140,55 +3140,59 @@ namespace Win32xx
 
 		// Step 1: Calculate the position of each Docker child, DockBar, and Client window.
 		//   The Client area = the docker rect minus the area of dock children and the dock bar (splitter bar).
-		for (UINT u = 0; u < m_vDockChildren.size(); ++u)
+		std::vector<CDocker*>::iterator iter;
+		for (iter = m_vDockChildren.begin(); iter < m_vDockChildren.end(); ++iter)
 		{
 			CRect rcChild = rc;
-			double DockSize = m_vDockChildren[u]->m_DockStartSize;;
+			double DockSize = (*iter)->m_DockStartSize;
 
 			// Calculate the size of the Docker children
-			switch (m_vDockChildren[u]->GetDockStyle() & 0xF)
+			switch ((*iter)->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
+
 				rcChild.right = rcChild.left + (int)DockSize;
 				break;
 			case DS_DOCKED_RIGHT:
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
+
 				rcChild.left = rcChild.right - (int)DockSize;
 				break;
 			case DS_DOCKED_TOP:
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+
 				rcChild.bottom = rcChild.top + (int)DockSize;
 				break;
 			case DS_DOCKED_BOTTOM:
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN(m_vDockChildren[u]->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				rcChild.top = rcChild.bottom - (int)DockSize;
 				break;
 			}
 
-			if (m_vDockChildren[u]->IsDocked())
+			if ((*iter)->IsDocked())
 			{
 				// Position this docker's children
-				hdwp = m_vDockChildren[u]->DeferWindowPos(hdwp, NULL, rcChild, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
-				m_vDockChildren[u]->m_rcChild = rcChild;
+				hdwp = (*iter)->DeferWindowPos(hdwp, NULL, rcChild, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
+				(*iter)->m_rcChild = rcChild;
 
 				rc.SubtractRect(rc, rcChild);
 
 				// Calculate the dimensions of the splitter bar
 				CRect rcBar = rc;
-				DWORD DockSide = m_vDockChildren[u]->GetDockStyle() & 0xF;
+				DWORD DockSide = (*iter)->GetDockStyle() & 0xF;
 
-				if (DS_DOCKED_LEFT   == DockSide) rcBar.right  = rcBar.left + m_vDockChildren[u]->GetBarWidth();
-				if (DS_DOCKED_RIGHT  == DockSide) rcBar.left   = rcBar.right - m_vDockChildren[u]->GetBarWidth();
-				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + m_vDockChildren[u]->GetBarWidth();
-				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - m_vDockChildren[u]->GetBarWidth();
+				if (DS_DOCKED_LEFT   == DockSide) rcBar.right  = rcBar.left + (*iter)->GetBarWidth();
+				if (DS_DOCKED_RIGHT  == DockSide) rcBar.left   = rcBar.right - (*iter)->GetBarWidth();
+				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + (*iter)->GetBarWidth();
+				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - (*iter)->GetBarWidth();
 
 				// Save the splitter bar position. We will reposition it later.
-				m_vDockChildren[u]->m_rcBar = rcBar;
+				(*iter)->m_rcBar = rcBar;
 				rc.SubtractRect(rc, rcBar);
 			}
 		}
@@ -3205,9 +3209,9 @@ namespace Win32xx
 		}
 
 		// Step 3: Now recurse through the docker's children. They might have children of their own.
-		for (UINT v = 0; v < m_vDockChildren.size(); ++v)
+		for (iter = m_vDockChildren.begin(); iter < m_vDockChildren.end(); ++iter)
 		{
-			m_vDockChildren[v]->RecalcDockChildLayout(m_vDockChildren[v]->m_rcChild);
+			(*iter)->RecalcDockChildLayout((*iter)->m_rcChild);
 		}
 	}
 
@@ -3497,19 +3501,24 @@ namespace Win32xx
 		// Promote our first child to replace ourself
 		if (m_pDockParent)
 		{
-			for (UINT u = 0 ; u < m_pDockParent->m_vDockChildren.size(); ++u)
+			std::vector<CDocker*>::iterator iter;
+			std::vector<CDocker*>& vChild = m_pDockParent->m_vDockChildren;
+		
+			for (iter = vChild.begin(); iter < vChild.end(); ++iter)
 			{
-				if (m_pDockParent->m_vDockChildren[u] == this)
+				if ((*iter) == this)
 				{
 					if (m_vDockChildren.size() > 0)
 						// swap our first child for ourself as a child of the parent
-						m_pDockParent->m_vDockChildren[u] = m_vDockChildren[0];
+						(*iter) = m_vDockChildren[0];
 					else
 						// remove ourself as a child of the parent
-						m_pDockParent->m_vDockChildren.erase(m_pDockParent->m_vDockChildren.begin() + u);
+						vChild.erase(iter);
+					
+					// Done
 					break;
-				}
-			}
+				} 
+			} 
 		}
 
 		// Transfer styles and data and children to the child docker

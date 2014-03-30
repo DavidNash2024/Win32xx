@@ -160,25 +160,21 @@ namespace Win32xx
 		// Find an existing pernament CImageList from the map
 		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
 		if ((0 != hImageList) && (0 == pImageList))
-		{		
+		{
 			// Find any existing temporary CImageList for the HIMAGELIST
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <ImageListPtr>::iterator v;
-			for (v = pTLSData->vTmpImageLists.begin(); v != pTLSData->vTmpImageLists.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hImageList )
-				{
-					pImageList = (*v).get();
-					break;
-				}
-			}
+			std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST>::iterator m;
+			m = pTLSData->TmpImageLists.find(hImageList);
+	
+			if (m != pTLSData->TmpImageLists.end())
+				pImageList = m->second.get();
 
 			if (0 == pImageList)
 			{
 				pImageList = new CImageList;
 				pImageList->m_hImageList = hImageList;
 				pImageList->m_IsTmpImageList = TRUE;
-				pTLSData->vTmpImageLists.push_back(pImageList);
+				pTLSData->TmpImageLists.insert(std::make_pair(hImageList, pImageList));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
