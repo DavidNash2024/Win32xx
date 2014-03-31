@@ -2219,12 +2219,11 @@ namespace Win32xx
 	// Retrieves the Docker whose view window contains the specified point
 	{
 		// Step 1: Find the top level Docker the point is over
+		// Start at the DockAncestor's Ancestor and work up the Z order
 		CDocker* pDockTop = NULL;
-		CWnd* pAncestor = GetDockAncestor()->GetAncestor();
-
-		// Iterate through all top level windows
-		CWnd* pWnd = GetWindow(GW_HWNDFIRST);
-		while(pWnd)
+		CWnd* pAncestor = GetDockAncestor()->GetAncestor();	
+		CWnd* pWnd = GetDockAncestor()->GetAncestor();
+		do
 		{
 			if (IsRelated(pWnd) || pWnd == pAncestor)
 			{
@@ -2239,12 +2238,11 @@ namespace Win32xx
 				if ((this != pDockTest) && rc.PtInRect(pt))
 				{
 					pDockTop = pDockTest;
-					break;
 				}
 			}
-			if (pWnd == pWnd->GetWindow(GW_HWNDLAST)) break;
-			pWnd = pWnd->GetWindow(GW_HWNDNEXT);
-		}
+			pWnd = pWnd->GetWindow(GW_HWNDPREV);
+		
+		} while (pWnd != pWnd->GetWindow(GW_HWNDFIRST));
 
 		// Step 2: Find the docker child whose view window has the point
 		CDocker* pDockTarget = NULL;

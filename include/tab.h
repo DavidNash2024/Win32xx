@@ -957,6 +957,12 @@ namespace Win32xx
 		// Microsoft's drawing for a tab control has quite a bit of flicker, so we do our own.
 		// We use double buffering and regions to eliminate flicker
 
+		BOOL RTL = FALSE;
+
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+#endif
+
 		// Create the memory DC and bitmap
 		CClientDC dcView(this);
 		CMemDC dcMem(&dcView);
@@ -980,8 +986,9 @@ namespace Win32xx
 			rcTab.top = rcTab.bottom;
 		if (rcTab.Width() < 0)
 			rcTab.left = rcTab.right;
-
-		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right-1, rcTab.bottom);
+		
+		int offset = -1; // Required for RTL layout
+		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);		
 		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		rgnClip.CombineRgn(&rgnSrc1, &rgnSrc2, RGN_DIFF);
 
@@ -1001,12 +1008,6 @@ namespace Win32xx
 		// Now copy our from our memory DC to the window DC
 		dcView.SelectClipRgn(&rgnClip);
 
-		BOOL RTL = FALSE;
-
-#ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
-#endif
-
 		if (RTL)
 		{
 			// BitBlt offset bitmap copies by one for Right-To-Left layout 
@@ -1014,7 +1015,7 @@ namespace Win32xx
 			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
 		}
 		else
-			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
+			dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), &dcMem, 0, 0, SRCCOPY);
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)

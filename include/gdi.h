@@ -1063,25 +1063,21 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hBitmap);
 		
-		CBitmap* pBitmap = static_cast<CBitmap*>( GetApp()->GetCGDIObjectFromMap(hBitmap) );
+		CBitmap* pBitmap = static_cast<CBitmap*>(GetApp()->GetCGDIObjectFromMap(hBitmap));
 		if (0 == pBitmap)
 		{
 			// Find any existing temporary CBitmap for the HBitmap
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <GDIPtr>::iterator v;
-			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hBitmap )
-				{
-					pBitmap = static_cast<CBitmap*>( (*v).get() );
-					break;
-				}
-			}
+			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
+			m = pTLSData->TmpGDIs.find(hBitmap);
+	
+			if (m != pTLSData->TmpGDIs.end())
+				pBitmap = static_cast<CBitmap*>(m->second.get());
 
 			if (0 == pBitmap)
 			{
 				pBitmap = new CBitmap;
-				pTLSData->vTmpGDIs.push_back(pBitmap);
+				pTLSData->TmpGDIs.insert(std::make_pair(hBitmap, pBitmap));
 				
 				pBitmap->m_pData->hGDIObject = hBitmap;
 				pBitmap->m_pData->bIsTmpObject = TRUE;
@@ -1307,25 +1303,21 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hBrush);
 
-		CBrush* pBrush = static_cast<CBrush*>( GetApp()->GetCGDIObjectFromMap(hBrush) );
+		CBrush* pBrush =  static_cast<CBrush*>(GetApp()->GetCGDIObjectFromMap(hBrush));
 		if (0 == pBrush)
 		{
 			// Find any existing temporary CBrush for the HBRUSH
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <GDIPtr>::iterator v;
-			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hBrush )
-				{
-					pBrush = static_cast<CBrush*>( (*v).get() );
-					break;
-				}
-			}
+			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
+			m = pTLSData->TmpGDIs.find(hBrush);
+	
+			if (m != pTLSData->TmpGDIs.end())
+				pBrush = static_cast<CBrush*>(m->second.get());
 
 			if (0 == pBrush)
 			{
 				pBrush = new CBrush;
-				pTLSData->vTmpGDIs.push_back(pBrush);
+				pTLSData->TmpGDIs.insert(std::make_pair(hBrush, pBrush));
 				
 				pBrush->m_pData->hGDIObject = hBrush;
 				pBrush->m_pData->bIsTmpObject = TRUE;
@@ -1448,20 +1440,16 @@ namespace Win32xx
 		{	
 			// Find any existing temporary CFont for the HFONT
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <GDIPtr>::iterator v;
-			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hFont )
-				{
-					pFont = static_cast<CFont*>( (*v).get() );
-					break;
-				}
-			}
+			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
+			m = pTLSData->TmpGDIs.find(hFont);
+	
+			if (m != pTLSData->TmpGDIs.end())
+				pFont = static_cast<CFont*>(m->second.get());
 
 			if (0 == pFont)
 			{
 				pFont = new CFont;
-				pTLSData->vTmpGDIs.push_back(pFont);
+				pTLSData->TmpGDIs.insert(std::make_pair(hFont, pFont));
 				pFont->m_pData->hGDIObject = hFont;
 				pFont->m_pData->bIsTmpObject = TRUE;
 				
@@ -1593,20 +1581,16 @@ namespace Win32xx
 		{	
 			// Find any existing temporary CPalette for the HPALETTE
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <GDIPtr>::iterator v;
-			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hPalette )
-				{
-					pPalette = static_cast<CPalette*>( (*v).get() );
-					break;
-				}
-			}
+			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
+			m = pTLSData->TmpGDIs.find(hPalette);
+	
+			if (m != pTLSData->TmpGDIs.end())
+				pPalette = static_cast<CPalette*>(m->second.get());
 
 			if (0 == pPalette)
 			{
 				pPalette = new CPalette;
-				pTLSData->vTmpGDIs.push_back(pPalette);
+				pTLSData->TmpGDIs.insert(std::make_pair(hPalette, pPalette));
 				pPalette->m_pData->hGDIObject = hPalette;
 				pPalette->m_pData->bIsTmpObject = TRUE;
 				
@@ -1740,20 +1724,16 @@ namespace Win32xx
 		{
 			// Find any existing temporary CPen for the HPEN
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <GDIPtr>::iterator v;
-			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hPen )
-				{
-					pPen = static_cast<CPen*>( (*v).get() );
-					break;
-				}
-			}
+			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
+			m = pTLSData->TmpGDIs.find(hPen);
+	
+			if (m != pTLSData->TmpGDIs.end())
+				pPen = static_cast<CPen*>(m->second.get());
 
 			if (0 == pPen)
 			{
 				pPen = new CPen;
-				pTLSData->vTmpGDIs.push_back(pPen);
+				pTLSData->TmpGDIs.insert(std::make_pair(hPen, pPen));
 				pPen->m_pData->hGDIObject = hPen;
 				pPen->m_pData->bIsTmpObject = TRUE;
 				
@@ -1852,20 +1832,16 @@ namespace Win32xx
 		{
 			// Find any existing temporary CRgn for the HRGN
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
-			std::vector <GDIPtr>::iterator v;
-			for (v = pTLSData->vTmpGDIs.begin(); v != pTLSData->vTmpGDIs.end(); ++v)
-			{
-				if ( (*v)->GetHandle() == hRgn )
-				{
-					pRgn = static_cast<CRgn*>( (*v).get() );
-					break;
-				}
-			}
+			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
+			m = pTLSData->TmpGDIs.find(hRgn);
+	
+			if (m != pTLSData->TmpGDIs.end())
+				pRgn = static_cast<CRgn*>(m->second.get());
 
 			if (0 == pRgn)
 			{
 				pRgn = new CRgn;
-				pTLSData->vTmpGDIs.push_back(pRgn);
+				pTLSData->TmpGDIs.insert(std::make_pair(hRgn, pRgn));
 				pRgn->m_pData->hGDIObject = hRgn;
 				pRgn->m_pData->bIsTmpObject = TRUE;
 

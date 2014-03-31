@@ -269,9 +269,9 @@ namespace Win32xx
 		CMenuBar* pMenuBar;	// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hHook;		// WH_MSGFILTER hook for CMenuBar and Modeless Dialogs
 
-		std::vector<DCPtr> vTmpDCs;					// Temporary CDC pointers with hWnd
-		std::map<HDC, DCPtr, CompareHDC> TmpDCs;	// Temporary CDC pointers
-		std::vector<GDIPtr> vTmpGDIs;				// Temporary CGDIObject pointers
+		std::vector<DCPtr> vTmpDCs;						// Temporary CDC pointers with hWnd
+		std::map<HDC, DCPtr, CompareHDC> TmpDCs;		// Temporary CDC pointers
+		std::map<HGDIOBJ, GDIPtr, CompareGDI> TmpGDIs;	// Temporary CGDIObject pointers
 		std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST> TmpImageLists;	// Temporary CImageList pointers
 		std::map<HWND, WndPtr, CompareHWND> TmpWnds;	// Temporary CWnd pointers
 		TLSData() : pCWnd(0), pMenuBar(0), hHook(0) {}	// Constructor
@@ -732,7 +732,7 @@ namespace Win32xx
 			(*iter)->TmpDCs.clear();
 			(*iter)->vTmpDCs.clear();
 			(*iter)->TmpWnds.clear();
-			(*iter)->vTmpGDIs.clear();
+			(*iter)->TmpGDIs.clear();
 			(*iter)->TmpImageLists.clear();
 #ifndef _WIN32_WCE
 			(*iter)->TmpMenus.clear();
@@ -770,7 +770,7 @@ namespace Win32xx
 
 		pTLSData->TmpDCs.clear();
 		pTLSData->vTmpDCs.clear();
-		pTLSData->vTmpGDIs.clear();
+		pTLSData->TmpGDIs.clear();
 		pTLSData->TmpImageLists.clear();
 		pTLSData->TmpWnds.clear();
 

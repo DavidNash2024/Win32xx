@@ -87,10 +87,7 @@ namespace Win32xx
 	{
 	public:
 		// Construction
-		CEdit() 
-		{
-			TRACE("CEdit Constructor\n");
-		}
+		CEdit() {}
 		virtual ~CEdit() {}
 
 		// Attributes
