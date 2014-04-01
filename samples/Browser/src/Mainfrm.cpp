@@ -202,7 +202,6 @@ void CMainFrame::OnEditDelete()
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
-
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:		 OnFileExit();		return TRUE;

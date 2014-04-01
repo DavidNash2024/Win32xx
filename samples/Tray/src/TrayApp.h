@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CTrayApp object
-inline CTrayApp* GetTrayApp() { return (CTrayApp*)GetApp(); }
+inline CTrayApp* GetTrayApp() { return static_cast<CTrayApp*>(GetApp()); }
 
 
 #endif // TRAYAPP_H

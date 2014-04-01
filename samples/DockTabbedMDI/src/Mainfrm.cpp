@@ -48,7 +48,7 @@ void CMainFrame::LoadDefaultDockers()
 void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
@@ -87,35 +87,35 @@ void CMainFrame::OnFileExit()
 
 void CMainFrame::OnFileNewSimple()
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple"), ID_MDI_SIMPLE);
 }
 
 void CMainFrame::OnFileNewRect()
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 }
 
 void CMainFrame::OnFileNewList()
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
 }
 
 void CMainFrame::OnFileNewText()
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 }
 
 void CMainFrame::OnFileNewTree()
 {
-	CTabbedMDI* pTabbedMDI = (CTabbedMDI*)m_DockTabbedMDI.GetView();
+	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
 }

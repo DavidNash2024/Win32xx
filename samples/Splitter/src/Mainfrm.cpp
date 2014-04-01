@@ -50,13 +50,13 @@ void CMainFrame::OnInitialUpdate()
 	CRect rcView = GetViewRect();
 
 	// Add the bottom pane first. It is a child of the main pane.
-	m_pDockTree = (CDockTree*)m_MainView.AddDockedChild(new CDockTree, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2);
+	m_pDockTree = static_cast<CDockTree*>(m_MainView.AddDockedChild(new CDockTree, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2));
 
 	// Add the bottom right pane. It is a child of the bottom pane 
-	m_pDockList = (CDockList*)m_pDockTree->AddDockedChild(new CDockList, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
+	m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
 
 	// Add the top right pane. It is a child of the main pane.
-	m_pDockText = (CDockText*)m_MainView.AddDockedChild(new CDockText, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2);
+	m_pDockText = static_cast<CDockText*>(m_MainView.AddDockedChild(new CDockText, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
 
 }
 

@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CRibbonFrameApp object
-inline CRibbonFrameApp* GetSimpleApp() { return (CRibbonFrameApp*)GetApp(); }
+inline CRibbonFrameApp* GetSimpleApp() { return static_cast<CRibbonFrameApp*>(GetApp()); }
 
 
 #endif

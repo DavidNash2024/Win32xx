@@ -20,7 +20,7 @@ private:
 };
 
 // returns a pointer to the CDialogApp object
-inline CDialogApp* GetDialogApp() { return (CDialogApp*)GetApp(); }
+inline CDialogApp* GetDialogApp() { return static_cast<CDialogApp*>(GetApp()); }
 
 
 #endif // define DIALOGAPP_H

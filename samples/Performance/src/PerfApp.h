@@ -23,7 +23,7 @@ private:
 
 
 // returns a pointer to the CPerformanceApp object
-inline CPerformanceApp* GetPerfApp() { return (CPerformanceApp*)GetApp(); }
+inline CPerformanceApp* GetPerfApp() { return static_cast<CPerformanceApp*>(GetApp()); }
 
 
 #endif  //PERFAPP_H

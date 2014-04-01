@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CSplitterApp object
-inline CSplitterApp* GetSplitApp() { return (CSplitterApp*)GetApp(); }
+inline CSplitterApp* GetSplitApp() { return static_cast<CSplitterApp*>(GetApp()); }
 
 
 #endif // define EFRAMEAPP_H

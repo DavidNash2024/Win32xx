@@ -22,7 +22,7 @@ private:
 };
 
 // returns a pointer to the CExplorerApp object
-inline CExplorerApp* GetExplorerApp() { return (CExplorerApp*)GetApp(); }
+inline CExplorerApp* GetExplorerApp() { return static_cast<CExplorerApp*>(GetApp()); }
 
 
 #endif  //EXPLORERAPP_H

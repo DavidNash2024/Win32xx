@@ -24,8 +24,8 @@ CMyTreeView::~CMyTreeView()
 int CALLBACK CMyTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
 	UNREFERENCED_PARAMETER(lParamSort);
-	TreeItemData* pItem1 = (TreeItemData*)lParam1;
-	TreeItemData* pItem2 = (TreeItemData*)lParam2;
+	TreeItemData* pItem1 = reinterpret_cast<TreeItemData*>(lParam1);
+	TreeItemData* pItem2 = reinterpret_cast<TreeItemData*>(lParam2);
 	HRESULT hr;
 
 	hr = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
@@ -61,7 +61,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 	if(GetItem(tvItem))
 	{
 		HRESULT        hr;
-		TreeItemData*  pInfo = (TreeItemData*)tvItem.lParam;
+		TreeItemData*  pInfo = reinterpret_cast<TreeItemData*>(tvItem.lParam);
 		CContextMenu cm;
 		CShellFolder sf;
 
@@ -124,7 +124,7 @@ LRESULT CMyTreeView::OnNMRClick(LPNMHDR pNMHDR)
 
 LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 {
-	TreeItemData* pItem = (TreeItemData*)pDI->item.lParam;
+	TreeItemData* pItem = reinterpret_cast<TreeItemData*>(pDI->item.lParam);
 
 	//do we need to supply the text?
 	if(pDI->item.mask & TVIF_TEXT)
@@ -178,7 +178,7 @@ LRESULT CMyTreeView::OnTVNExpanding(LPNMTREEVIEW pNMTV)
 
 LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
 {
-	TreeItemData* pItem = (TreeItemData*)pNMTV->itemNew.lParam;
+	TreeItemData* pItem = reinterpret_cast<TreeItemData*>(pNMTV->itemNew.lParam);
 
 	CMyListView* LeftView = GetExplorerApp()->GetMainFrame()->GetListView();
 	LeftView->DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
@@ -266,7 +266,7 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 	//turn redawing off in the TreeView. This will speed things up as we add items
 	SendMessage(WM_SETREDRAW, FALSE, 0);
 
-	TreeItemData* pItem = (TreeItemData*)tvItem.lParam;
+	TreeItemData* pItem = reinterpret_cast<TreeItemData*>(tvItem.lParam);
 	CShellFolder cParentFolder;
 	HRESULT        hr;
 
@@ -410,7 +410,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 			return FALSE;
 
 		//Get the TreeItemData pointer from the item's lParam
-		TreeItemData* pTD = (TreeItemData*)tvItem.lParam;
+		TreeItemData* pTD = reinterpret_cast<TreeItemData*>(tvItem.lParam);
 
 		//Compare the pidls
 		if (pTD->GetFullCpidl() == cpidlFull)

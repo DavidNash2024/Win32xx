@@ -21,7 +21,7 @@ private:
 
 
 // returns a pointer to the CThreadApp object
-inline CThreadApp* GetThreadApp() { return (CThreadApp*)GetApp(); }
+inline CThreadApp* GetThreadApp() { return static_cast<CThreadApp*>(GetApp()); }
 
 
 #endif  //THREADAPP_H

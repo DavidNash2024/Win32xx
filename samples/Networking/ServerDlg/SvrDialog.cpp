@@ -343,7 +343,7 @@ BOOL CSvrDialog::OnSocketAccept()
 
 BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
 {
-	CServerSocket* pClient = (CServerSocket*)wParam;
+	CServerSocket* pClient = reinterpret_cast<CServerSocket*>(wParam);
 
 	// Respond to a socket disconnect notification
 	Append(IDC_EDIT_STATUS, _T("Client disconnected"));
@@ -369,7 +369,7 @@ BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
 
 BOOL CSvrDialog::OnSocketReceive(WPARAM wParam)
 {
-	CServerSocket* pClient = (CServerSocket*)wParam;
+	CServerSocket* pClient = reinterpret_cast<CServerSocket*>(wParam);
 	std::vector<char> vChar(1025, '\0');
 	char* bufArray = &vChar.front(); // char array with 1025 elements
 

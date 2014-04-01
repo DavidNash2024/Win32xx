@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CTextApp object
-inline CTextApp* GetTextApp() { return (CTextApp*)GetApp(); }
+inline CTextApp* GetTextApp() { return static_cast<CTextApp*>(GetApp()); }
 
 
 #endif // define TEXTAPP_H

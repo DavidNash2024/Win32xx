@@ -12,8 +12,8 @@
 int CALLBACK CMyListView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
 {
 	UNREFERENCED_PARAMETER(lParamSort);
-	ListItemData*  pItem1 = (ListItemData*)lParam1;
-	ListItemData*  pItem2 = (ListItemData*)lParam2;
+	ListItemData*  pItem1 = reinterpret_cast<ListItemData*>(lParam1);
+	ListItemData*  pItem2 = reinterpret_cast<ListItemData*>(lParam2);
 
 	HRESULT hr = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelPidl(), pItem2->GetRelPidl());
 
@@ -153,7 +153,7 @@ void CMyListView::DoDefault(int iItem)
 	if(GetItem(lvItem))
 	{
 		HRESULT        hr;
-		ListItemData*  pInfo = (ListItemData*)lvItem.lParam;
+		ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
 		CShellFolder csFolder;
 		CContextMenu ccm;
 		csFolder = pInfo->GetParentFolder();
@@ -238,7 +238,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 		lvItem.iItem = piItems[i];
 		if(GetItem(lvItem))
 		{
-			ListItemData*  pInfo = (ListItemData*)lvItem.lParam;
+			ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
 			pidlArray[i] = pInfo->GetRelPidl();
 		}
 	}
@@ -301,7 +301,7 @@ LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
 
 LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 {
-	ListItemData*   pItem = (ListItemData*)pdi->item.lParam;
+	ListItemData*   pItem = reinterpret_cast<ListItemData*>(pdi->item.lParam);
 
 	//do we need to supply the text?
 	if(pdi->item.mask & LVIF_TEXT)
@@ -405,7 +405,7 @@ LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
 	switch(pNMHDR->code)
 	{
 	case NM_RCLICK:			return OnNMRClick(pNMHDR);
-	case LVN_GETDISPINFO:	return OnLVNDispInfo((NMLVDISPINFO*)lParam);
+	case LVN_GETDISPINFO:	return OnLVNDispInfo(reinterpret_cast<NMLVDISPINFO*>(lParam));
  	case NM_DBLCLK:			return OnNMReturn(pNMHDR);
 	case NM_RETURN:			return OnNMReturn(pNMHDR);
 	}

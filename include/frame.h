@@ -3260,7 +3260,7 @@ namespace Win32xx
 		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR)lParam);
 		case TTN_GETDISPINFO:	return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
 		case UWN_UNDOCKED:		return OnUndocked();
-		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam); 
+		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam);
 		}
 
 		return 0L;
@@ -3814,7 +3814,7 @@ namespace Win32xx
 	inline void CFrame::SetReBarTheme(ReBarTheme* pRBT) 
 	{ 
 		m_ReBarTheme = *pRBT; 
-		if (IsWindow())
+	/*	if (IsWindow())
 		{
 			int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
 			if (m_ReBarTheme.LockMenuBand)
@@ -3823,7 +3823,7 @@ namespace Win32xx
 				GetReBar()->ShowGripper(nBand, TRUE);
 	
 			Invalidate();
-		}
+		} */
 	}
 
 	inline void CFrame::SetStatusIndicators()

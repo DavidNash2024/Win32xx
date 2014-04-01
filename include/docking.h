@@ -2216,7 +2216,9 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::GetDockFromPoint(POINT pt) const
-	// Retrieves the Docker whose view window contains the specified point
+	// Retrieves the Docker whose view window contains the specified point.
+	// Used when dragging undocked dockers over other dockers to provide
+	// the docker which needs to display the dock targets and dock hints.
 	{
 		// Step 1: Find the top level Docker the point is over
 		// Start at the DockAncestor's Ancestor and work up the Z order

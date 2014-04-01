@@ -17,8 +17,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame();
 	virtual ~CMainFrame();
-	CMyListView* GetListView() const {return (CMyListView*)m_RightPane->GetView();}
-	CMyTreeView* GetTreeView() const {return (CMyTreeView*)m_LeftPane.GetView();}
+	CMyListView* GetListView() const {return static_cast<CMyListView*>(m_RightPane->GetView());}
+	CMyTreeView* GetTreeView() const {return static_cast<CMyTreeView*>(m_LeftPane.GetView());}
 	BOOL GetShowHidden() {return m_bShowHidden;}
 
 protected:

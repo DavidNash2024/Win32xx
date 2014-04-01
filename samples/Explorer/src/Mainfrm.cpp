@@ -60,7 +60,7 @@ void CMainFrame::OnInitialUpdate()
 	// Add the right window pane
 	int Width = (int) (GetWindowRect().Width() * 0.7);
 	DWORD dwDockStyle = DS_DOCKED_RIGHT  | DS_NO_UNDOCK | DS_NO_CAPTION;
-	m_RightPane = (CRightPane*)m_LeftPane.AddDockedChild(new CRightPane, dwDockStyle, Width);
+	m_RightPane = static_cast<CRightPane*>(m_LeftPane.AddDockedChild(new CRightPane, dwDockStyle, Width));
 
 	// All windows are now created, so populate the treeview
 	GetTreeView()->GetRootItems();

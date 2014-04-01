@@ -29,7 +29,7 @@ LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
 // a copy of the ToolBar layout so it can be restored when the user
 // selects the reset button.
 {
-	CToolBar* pToolBar = (CToolBar*)FromHandle(pNMTB->hdr.hwndFrom);
+	CToolBar* pToolBar = static_cast<CToolBar*>(FromHandle(pNMTB->hdr.hwndFrom));
 	assert (dynamic_cast<CToolBar*> (pToolBar));
 	
 	int nResetCount = pToolBar->GetButtonCount();
@@ -251,7 +251,7 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
 // Called when the user presses the Reset button on teh ToolBAr customize dialog.
 // Here we restore the Toolbar to the settings saved in OnBeginAdjust.
 {
-	CToolBar* pToolBar = (CToolBar*)FromHandle(pNMTB->hdr.hwndFrom);
+	CToolBar* pToolBar = static_cast<CToolBar*>(FromHandle(pNMTB->hdr.hwndFrom));
 	assert (dynamic_cast<CToolBar*> (pToolBar));
 
 	// Remove all current buttons

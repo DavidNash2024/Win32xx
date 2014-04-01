@@ -23,7 +23,7 @@ private:
 
 
 // returns a pointer to the CCustomControlApp object
-inline CCustomControlApp* GetDlgApp() { return (CCustomControlApp*)GetApp(); }
+inline CCustomControlApp* GetDlgApp() { return static_cast<CCustomControlApp*>(GetApp()); }
 
 
 #endif // define CUSTOMCONTROLAPP_H

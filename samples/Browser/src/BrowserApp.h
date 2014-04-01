@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CBrowserApp object
-inline CBrowserApp* GetBrowserApp() { return (CBrowserApp*)GetApp(); }
+inline CBrowserApp* GetBrowserApp() { return static_cast<CBrowserApp*>(GetApp()); }
 
 
 #endif // BROWSERAPP_H

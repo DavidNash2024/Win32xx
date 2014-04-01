@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CFastGDIApp object
-inline CFastGDIApp* GetFrameApp() { return (CFastGDIApp*)GetApp(); }
+inline CFastGDIApp* GetFrameApp() { return static_cast<CFastGDIApp*>(GetApp()); }
 
 
 #endif // define FASTGDIAPP_H

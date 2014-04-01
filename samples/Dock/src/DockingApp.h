@@ -24,7 +24,7 @@ private:
 
 
 // returns a pointer to the CDockingApp object
-inline CDockingApp* GetDockApp() { return (CDockingApp*)GetApp(); }
+inline CDockingApp* GetDockApp() { return static_cast<CDockingApp*>(GetApp()); }
 
 
 #endif // DOCKINGAPP_H

@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CTabbedMDIApp object
-inline CTabbedMDIApp* GetTabbedMDIApp() { return (CTabbedMDIApp*)GetApp(); }
+inline CTabbedMDIApp* GetTabbedMDIApp() { return static_cast<CTabbedMDIApp*>(GetApp()); }
 
 
 #endif // TABBEDMDIAPP_H

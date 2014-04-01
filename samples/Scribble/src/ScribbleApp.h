@@ -23,7 +23,7 @@ private:
 
 
 // returns a reference to the CScribbleApp object
-inline CScribbleApp* GetScribbleApp() { return (CScribbleApp*)GetApp(); }
+inline CScribbleApp* GetScribbleApp() { return static_cast<CScribbleApp*>(GetApp()); }
 
 
 #endif //SCRIBBLEAPP_H

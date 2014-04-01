@@ -46,7 +46,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
 	case EN_DROPFILES:
 		{
-			ENDROPFILES* ENDrop = (ENDROPFILES*)lParam;
+			ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
 			HDROP hDropInfo = (HDROP) ENDrop->hDrop;
 			OnDropFiles(hDropInfo);
 		}

@@ -1246,10 +1246,13 @@ namespace Win32xx
 		m_pcs->style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
 		
 		// Set a reasonable default window position
-		m_pcs->x  = CW_USEDEFAULT;
-		m_pcs->cx = CW_USEDEFAULT;
-		m_pcs->y  = CW_USEDEFAULT;
-		m_pcs->cy = CW_USEDEFAULT;
+		if (NULL == pParent)
+		{
+			m_pcs->x  = CW_USEDEFAULT;
+			m_pcs->cx = CW_USEDEFAULT;
+			m_pcs->y  = CW_USEDEFAULT;
+			m_pcs->cy = CW_USEDEFAULT;
+		}
 	
 		// Allow the CREATESTRUCT parameters to be modified
 		PreCreate(*m_pcs);

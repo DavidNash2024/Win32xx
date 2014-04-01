@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CDockContainerApp object
-inline CDockContainerApp* GetContainerApp() { return (CDockContainerApp*)GetApp(); }
+inline CDockContainerApp* GetContainerApp() { return static_cast<CDockContainerApp*>(GetApp()); }
 
 
 #endif // CONTAINERAPP_H
