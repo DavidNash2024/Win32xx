@@ -1328,11 +1328,6 @@ namespace Win32xx
 			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
 			if (wc.lpfnWndProc != GetApp()->m_Callback)
 			{
-				// Remove any CWnd from the map previously added by FromHandle
-				CWnd* pWnd = GetApp()->GetCWndFromMap(m_hWnd);
-				assert(pWnd != this);
-				if (pWnd) pWnd->Cleanup();
-
 				Subclass(m_hWnd);
 
 				// Send a message to force the HWND to be added to the map

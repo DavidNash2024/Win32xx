@@ -947,6 +947,10 @@ namespace Win32xx
 		{
 			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 			pWinPos->flags |= SWP_NOREDRAW;
+
+			// Do a manual paint when OnDraw isn't called.
+			if (GetWindowRect().Height() < GetTabHeight())
+				Paint();
 		}
 
 		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);
@@ -958,7 +962,6 @@ namespace Win32xx
 		// We use double buffering and regions to eliminate flicker
 
 		BOOL RTL = FALSE;
-
 #ifdef WS_EX_LAYOUTRTL
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
 #endif

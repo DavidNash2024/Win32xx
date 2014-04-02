@@ -6,13 +6,14 @@ New Features and Enhancements
 * Updated FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
    CImageList and CMenu. They have been moved from global to their classes.
 * CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.
-   Unlike CWnd::FromHandle, this function never creates a new CWnd, so it can 
-   be used to help avoid accidentally down casting a CWnd.
+   Unlike CWnd::FromHandle, this function never creates a new CWnd. It returns
+   NULL if the window handle is not found in the map of permanent CWnds.
 * The frameworks takes a stricter approach to casting. For the most part,
     c-style casts have been replaced with C++ style casts.   
 * The framework no longer uses OnIdle internally.
 * Frames placed are in the default position, if the co-ordinates retrieved from
-   registry would place them off screen. 
+   registry would place them off screen.
+* Added RTL_Layout support for CTabs and CDockers.  
 
 Incompatibilities with previous version
 ---------------------------------------

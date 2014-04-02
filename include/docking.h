@@ -1252,6 +1252,14 @@ namespace Win32xx
 
 	inline RECT CDocker::CDockHint::CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide)
 	{
+		assert(pDockTarget);
+		assert(pDockDrag);
+
+		BOOL RTL = FALSE;
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+#endif
+
 		// Calculate the hint window's position for inner docking
 		CRect rcHint = pDockTarget->GetDockClient()->GetWindowRect();
 		if (pDockTarget->GetDockClient()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
@@ -1276,10 +1284,14 @@ namespace Win32xx
 		switch (uDockSide)
 		{
 		case DS_DOCKED_LEFT:
-			rcHint.right = rcHint.left + Width;
+			if (RTL)	rcHint.left = rcHint.right - Width;
+			else		rcHint.right = rcHint.left + Width;
+
 			break;
 		case DS_DOCKED_RIGHT:
-			rcHint.left = rcHint.right - Width;
+			if (RTL)	rcHint.right = rcHint.left + Width;
+			else		rcHint.left = rcHint.right - Width;
+
 			break;
 		case DS_DOCKED_TOP:
 			rcHint.bottom = rcHint.top + Width;
@@ -1294,6 +1306,8 @@ namespace Win32xx
 
 	inline RECT CDocker::CDockHint::CalcHintRectOuter(CDocker* pDockDrag, UINT uDockSide)
 	{
+		assert(pDockDrag);
+
 		// Calculate the hint window's position for outer docking
 		CDocker* pDockTarget = pDockDrag->GetDockAncestor();
 		CRect rcHint = pDockTarget->GetClientRect();
@@ -1302,6 +1316,11 @@ namespace Win32xx
 
 		int Width;
 		CRect rcDockDrag = pDockDrag->GetWindowRect();
+
+		BOOL RTL = FALSE;
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+#endif
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if ((uDockSide == DS_DOCKED_LEFTMOST) || (uDockSide  == DS_DOCKED_RIGHTMOST))
@@ -1321,10 +1340,14 @@ namespace Win32xx
 		switch (uDockSide)
 		{
 		case DS_DOCKED_LEFTMOST:
-			rcHint.right = rcHint.left + Width;
+			if(RTL)	rcHint.left = rcHint.right - Width;
+			else	rcHint.right = rcHint.left + Width;
+
 			break;
 		case DS_DOCKED_RIGHTMOST:
-			rcHint.left = rcHint.right - Width;
+			if(RTL)	rcHint.right = rcHint.left + Width;
+			else	rcHint.left = rcHint.right - Width;
+
 			break;
 		case DS_DOCKED_TOPMOST:
 			rcHint.bottom = rcHint.top + Width;
@@ -2946,16 +2969,25 @@ namespace Win32xx
 		int iBarWidth    = pDock->GetDockBar()->GetWidth();
 		int DockSize;
 
+		BOOL RTL = FALSE;
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+#endif
+
 		switch (pDock->GetDockStyle() & 0xF)
 		{
 		case DS_DOCKED_LEFT:
-			DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
+			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
+			else     DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
+
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
 			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)pDock->m_pDockParent->GetWindowRect().Width());
 			break;
 		case DS_DOCKED_RIGHT:
-			DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
+			if (RTL)  DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
+			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);		
+
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
 			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)pDock->m_pDockParent->GetWindowRect().Width());
@@ -3131,6 +3163,12 @@ namespace Win32xx
 		// 3) The docker's client area contains the docker's caption (if any) and the docker's view window.
 
 		// Note: All top level dockers are undocked, including the dock ancestor.
+		
+		BOOL RTL = FALSE;
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+#endif		
+		
 		if (IsDocked())
 		{
 			rc.OffsetRect(-rc.left, -rc.top);
@@ -3153,13 +3191,17 @@ namespace Win32xx
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
-				rcChild.right = rcChild.left + (int)DockSize;
+				if (RTL)	rcChild.left = rcChild.right - (int)DockSize;
+				else		rcChild.right = rcChild.left + (int)DockSize;
+
 				break;
 			case DS_DOCKED_RIGHT:
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
-				rcChild.left = rcChild.right - (int)DockSize;
+				if (RTL)	rcChild.right = rcChild.left + (int)DockSize;
+				else		rcChild.left = rcChild.right - (int)DockSize;
+
 				break;
 			case DS_DOCKED_TOP:
 			//	if (!(GetDockStyle() & DS_FIXED_RESIZE))
@@ -3185,9 +3227,19 @@ namespace Win32xx
 				// Calculate the dimensions of the splitter bar
 				CRect rcBar = rc;
 				DWORD DockSide = (*iter)->GetDockStyle() & 0xF;
+			
+				if (DS_DOCKED_LEFT   == DockSide)
+				{
+					if (RTL) rcBar.left   = rcBar.right - (*iter)->GetBarWidth();
+					else	 rcBar.right  = rcBar.left + (*iter)->GetBarWidth();
+				}
 
-				if (DS_DOCKED_LEFT   == DockSide) rcBar.right  = rcBar.left + (*iter)->GetBarWidth();
-				if (DS_DOCKED_RIGHT  == DockSide) rcBar.left   = rcBar.right - (*iter)->GetBarWidth();
+				if (DS_DOCKED_RIGHT  == DockSide)
+				{
+					if (RTL) rcBar.right  = rcBar.left + (*iter)->GetBarWidth();
+					else	 rcBar.left   = rcBar.right - (*iter)->GetBarWidth();	
+				}
+
 				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + (*iter)->GetBarWidth();
 				if (DS_DOCKED_BOTTOM == DockSide) rcBar.top    = rcBar.bottom - (*iter)->GetBarWidth();
 
@@ -3213,6 +3265,7 @@ namespace Win32xx
 		{
 			(*iter)->RecalcDockChildLayout((*iter)->m_rcChild);
 		}
+		
 	}
 
 	inline void CDocker::RecalcDockLayout()
