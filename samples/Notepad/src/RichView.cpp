@@ -38,10 +38,9 @@ void CRichView::PreCreate(CREATESTRUCT &cs)
 
 void CRichView::OnInitialUpdate(void)
 {
-	//Before EM_LIMITTEXT is called, the default limit for the amount
-	//of text a user can enter in an edit control is 32,767 characters
 	//increase the text limit of the rich edit window
-	SendMessage(EM_LIMITTEXT, (WPARAM)1.0e9, 0);
+	SendMessage(EM_LIMITTEXT, (WPARAM)-1, 0);
+	SendMessage(EM_EXLIMITTEXT, 0, (LPARAM)-1);
 
 	//Determine which messages will be passed to the parent
 	UINT uMask = ENM_KEYEVENTS | ENM_DROPFILES ;

@@ -63,9 +63,9 @@ namespace Win32xx
 		BOOL GetColumnOrderArray( LPINT piArray, int iCount = -1 );
 		int GetColumnWidth( int iCol ) const;
 		int GetCountPerPage( ) const;
-		CEdit* GetEditControl( ) const;
+		HWND GetEditControl( ) const;
 		DWORD GetExtendedStyle( ) const;
-		CHeader* GetHeader( ) const;
+		HWND GetHeader( ) const;
 		HCURSOR GetHotCursor( );
 		int GetHotItem( ) const;
 		DWORD GetHoverTime( ) const;
@@ -127,7 +127,7 @@ namespace Win32xx
 		BOOL DeleteAllItems( ) const;
 		BOOL DeleteColumn( int iCol ) const;
 		BOOL DeleteItem( int iItem ) const;
-		CEdit* EditLabel( int iItem ) const;
+		HWND EditLabel( int iItem ) const;
 		BOOL EnsureVisible( int iItem, BOOL fPartialOK ) const;
 		int FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
 		int HitTest( LVHITTESTINFO& HitTestInfo ) const;
@@ -144,10 +144,8 @@ namespace Win32xx
 		BOOL Update( int iItem ) const;
 
 	private:
-		CListView(const CListView&);				// Disable copy construction
+		CListView(const CListView&);			  // Disable copy construction
 		CListView& operator = (const CListView&); // Disable assignment operator
-		CHeader m_Header;
-		CEdit m_Edit;
 	};
 
 }
@@ -227,18 +225,11 @@ namespace Win32xx
 		return ListView_GetCountPerPage( m_hWnd );
 	}
 
-	inline CEdit* CListView::GetEditControl( ) const
+	inline HWND CListView::GetEditControl( ) const
 	// Retrieves the handle to the edit control being used to edit a list-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd = ListView_GetEditControl(m_hWnd);
-		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
-
-		if (pEdit->GetHwnd()) pEdit->Detach();
-		
-		if (hWnd) pEdit->Attach(hWnd);
-		
-		return hWnd? pEdit : NULL;
+		return ListView_GetEditControl(m_hWnd);
 	}
 
 	inline DWORD CListView::GetExtendedStyle( ) const
@@ -248,18 +239,11 @@ namespace Win32xx
 		return ListView_GetExtendedListViewStyle( m_hWnd );
 	}
 
-	inline CHeader* CListView::GetHeader( ) const
+	inline HWND CListView::GetHeader( ) const
 	// Retrieves the handle to the header control used by a list-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		CHeader* pHeader = const_cast<CHeader*>(&m_Header);
-		if (NULL == m_Header.GetHwnd())
-		{
-			HWND hWnd = ListView_GetHeader(m_hWnd);
-			pHeader->Attach(hWnd);
-		}
-
-		return pHeader;
+		return ListView_GetHeader(m_hWnd);
 	}
 
 	inline HCURSOR CListView::GetHotCursor( )
@@ -746,18 +730,11 @@ namespace Win32xx
 		return ListView_DeleteItem( m_hWnd, iItem );
 	}
 
-	inline CEdit* CListView::EditLabel( int iItem ) const
+	inline HWND CListView::EditLabel( int iItem ) const
 	// Begins in-place editing of the specified list-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd = ListView_EditLabel( m_hWnd, iItem );
-		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
-
-		if (pEdit->GetHwnd()) pEdit->Detach();
-		
-		if (hWnd) pEdit->Attach(hWnd);
-		
-		return hWnd? pEdit : NULL;
+		return ListView_EditLabel( m_hWnd, iItem );
 	}
 
 	inline BOOL CListView::EnsureVisible( int iItem, BOOL fPartialOK ) const

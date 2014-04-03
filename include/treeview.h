@@ -64,7 +64,7 @@ namespace Win32xx
 		HTREEITEM GetChild(HTREEITEM hItem) const;
 		UINT  GetCount() const;
 		HTREEITEM GetDropHiLightItem() const;
-		CEdit* GetEditControl() const;
+		HWND GetEditControl() const;
 		HTREEITEM GetFirstVisible() const;
 		CImageList* GetImageList(int iImageType) const;
 		UINT  GetIndent() const;
@@ -124,7 +124,6 @@ namespace Win32xx
 	private:
 		CTreeView(const CTreeView&);				// Disable copy construction
 		CTreeView& operator = (const CTreeView&); // Disable assignment operator
-		CEdit m_Edit;
 
 	};
 	
@@ -170,18 +169,11 @@ namespace Win32xx
 		return TreeView_GetDropHilight(m_hWnd);
 	}
 
-	inline CEdit* CTreeView::GetEditControl() const
+	inline HWND CTreeView::GetEditControl() const
 	// Retrieves the handle to the edit control being used to edit a tree-view item's text.
 	{
 		assert(::IsWindow(m_hWnd));
-		HWND hWnd = TreeView_GetEditControl(m_hWnd);
-		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
-
-		if (pEdit->GetHwnd()) pEdit->Detach();
-		
-		if (hWnd) pEdit->Attach(hWnd);
-		
-		return hWnd? pEdit : NULL;
+		return TreeView_GetEditControl(m_hWnd);
 	}
 
 	inline HTREEITEM CTreeView::GetFirstVisible() const

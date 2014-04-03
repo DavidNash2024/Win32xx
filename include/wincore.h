@@ -1015,7 +1015,8 @@ namespace Win32xx
 	{
 		// This function stores the 'this' pointer in a static variable.
 		// Once stored, it can be used later to return the 'this' pointer.
-		// CWinApp's Destructor calls this function with a value of -1.
+		// CWinApp's constructor call this functiom and sets the static variable.
+		// CWinApp's destructor calls this function with a value of -1.
 
 		static CWinApp* pWinApp = 0;
 

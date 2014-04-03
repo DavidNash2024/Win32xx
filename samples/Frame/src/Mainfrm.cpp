@@ -121,6 +121,18 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
+void CMainFrame::PreCreate(CREATESTRUCT &cs)
+{
+	// This function is called before the frame is created.
+	// It provides an opportunity to modify the various CREATESTRUCT
+	// parameters used in the frame window's creation.
+	
+	// Call base clase to set defaults
+	CFrame::PreCreate(cs);
+	
+	// cs.style &=  ~WS_VISIBLE;	// Remove the WS_VISIBLE style. The frame will be initially hidden.
+}
+
 void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons

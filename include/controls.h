@@ -140,8 +140,8 @@ namespace Win32xx
 		virtual ~CComboBoxEx() {}
 
 		int  	DeleteItem(int nIndex ) const;
-		CComboBox* 	GetComboBoxCtrl() const;
-		CEdit* 	GetEditCtrl() const;
+		HWND 	GetComboBoxCtrl() const;
+		HWND 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
 		CImageList* GetImageList() const;
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
@@ -158,8 +158,6 @@ namespace Win32xx
 	private:
 		CComboBoxEx(const CComboBoxEx&);				// Disable copy construction
 		CComboBoxEx& operator = (const CComboBoxEx&);	// Disable assignment operator
-		CEdit m_Edit;
-		CComboBox m_ComboBox;
 	};
 
 	class CHeader : public CWnd
@@ -298,7 +296,7 @@ namespace Win32xx
 		COLORREF GetMonthCalColor(int iColor) const;
 		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
 		BOOL SetFormat(LPCTSTR pstrFormat);
-		CMonthCalendar* GetMonthCalCtrl() const;
+		HWND GetMonthCalCtrl() const;
 		CFont* GetMonthCalFont() const;
 		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
 		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
@@ -313,7 +311,6 @@ namespace Win32xx
 	private:
 		CDateTime(const CDateTime&);				// Disable copy construction
 		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
-		CMonthCalendar m_MonthCalendar;
 	};
 
 	class CProgressBar : public CWnd
@@ -843,31 +840,18 @@ namespace Win32xx
 		return (int)SendMessage(CBEM_DELETEITEM, (WPARAM)nIndex, 0);
 	}
 
-	inline CComboBox* CComboBoxEx::GetComboBoxCtrl() const
+	inline HWND CComboBoxEx::GetComboBoxCtrl() const
 	// Retrieves the handle to the child combo box control.
 	{
 		assert(IsWindow());
-		CComboBox* pComboBox = const_cast<CComboBox*>(&m_ComboBox);
-		HWND hWnd = reinterpret_cast<HWND>(SendMessage(CBEM_GETCOMBOCONTROL, 0, 0));
-		assert(hWnd);
-
-		if (!pComboBox->GetHwnd())
-			pComboBox->Attach(hWnd);
-
-		return pComboBox;
+		return reinterpret_cast<HWND>(SendMessage(CBEM_GETCOMBOCONTROL, 0, 0));
 	}
 
-	inline CEdit* CComboBoxEx::GetEditCtrl() const
+	inline HWND CComboBoxEx::GetEditCtrl() const
 	// Retrieves the handle to the edit control portion of the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		HWND hWnd = reinterpret_cast<HWND>(SendMessage(CBEM_GETEDITCONTROL, 0, 0));
-		CEdit* pEdit = const_cast<CEdit*>(&m_Edit);
-
-		if (!pEdit->GetHwnd())
-			pEdit->Attach(hWnd);
-
-		return pEdit;
+		return reinterpret_cast<HWND>(SendMessage(CBEM_GETEDITCONTROL, 0, 0));
 	}
 
 	inline DWORD CComboBoxEx::GetExtendedStyle() const
@@ -948,17 +932,10 @@ namespace Win32xx
 		return DateTime_SetFormat(m_hWnd, pszFormat);
 	}
 
-	inline CMonthCalendar* CDateTime::GetMonthCalCtrl() const
+	inline HWND CDateTime::GetMonthCalCtrl() const
 	{
 		assert(IsWindow());
-		HWND hWnd = reinterpret_cast<HWND>(DateTime_GetMonthCal(m_hWnd));
-
-        CMonthCalendar* pMonth = const_cast<CMonthCalendar*>(&m_MonthCalendar);
-		if (pMonth->GetHwnd()) pMonth->Detach();
-
-		if (hWnd) pMonth->Attach(hWnd);
-
-		return hWnd? pMonth : NULL;
+		return reinterpret_cast<HWND>(DateTime_GetMonthCal(m_hWnd));
 	}
 
 	inline CFont* CDateTime::GetMonthCalFont() const

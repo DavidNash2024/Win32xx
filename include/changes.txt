@@ -1,5 +1,7 @@
 Version 7.4.1
 =============
+Bug Fixes:
+* The drop-down lists for combo boxes are now displayed correctly.
 
 New Features and Enhancements
 -----------------------------
@@ -9,15 +11,17 @@ New Features and Enhancements
    Unlike CWnd::FromHandle, this function never creates a new CWnd. It returns
    NULL if the window handle is not found in the map of permanent CWnds.
 * The frameworks takes a stricter approach to casting. For the most part,
-    c-style casts have been replaced with C++ style casts.   
+    c-style casts have been replaced with C++ style casts. Any down-casts from
+    CWnd to a CWnd derived type (e.g. CWnds from FromHandle) are asserted with
+	dynamic_cast to ensure they are correct.	
 * The framework no longer uses OnIdle internally.
-* Frames placed are in the default position, if the co-ordinates retrieved from
-   registry would place them off screen.
+* Frames placed are in the default position, if the co-ordinates retrieved 
+   from registry would place them off screen.
 * Added RTL_Layout support for CTabs and CDockers.  
 
 Incompatibilities with previous version
 ---------------------------------------
-* The various FromHandle functions are longer global. For example, we now 
+* The various FromHandle functions are no longer global. For example, we now 
    use CDC::FromHandle for CDC's FromHandle.
 * CThread no longer creates the thread in its constructor. Use CreateThread
    to create the thread.
@@ -37,7 +41,14 @@ Added CPen::FromHandle
 Added CRgn::FromHandle
 Added CThread::CreateThread
 Added CWnd::FromHandle
-Added CWnd::FromHandlePernament
+Added CWnd::FromHandlePermanent
+Modified CComboBoxEx::GetComboBoxCtrl
+Modified CComboBoxEx::GetEditCtrl
+Modified CDateTime::GetMonthCalCtrl
+Modified CListView::GetEditControl
+Modified CListView::GetHeader
+Modified CListView::EditLabel
+Modified CTreeView::EditLabel
 
 Removed ::FromHandle (all versions)
 
@@ -571,7 +582,6 @@ This version has some additional bug fixes:
 Version 7.1.2
 =============
 This version has some additional bug fixes: 
-* CDC Attach and CDC(HDC hDC) now succeed when the HDC is already attached to another CDC.
 * Fixed a resource leak in CTab::Paint which affected CTab, CTabbedMDI and CDockContainer
 * Tabs without owner draw now display their icons.
 * A CDC can now be reused after its HDC has been detached.
@@ -1012,8 +1022,7 @@ Updated FormDemo sample
 Incompatibilities with previous versions
 ----------------------------------------
 * The OnPaint function definition has changed to:
-    virtual void OnPaint(CDC& dc); 
-  The older OnPaint function will be ignored.	
+    virtual void OnPaint(CDC& dc); 	
 * The stricter testing with asserts might reveal previously hidden errors in 
    user's code.
 * Some CSocket functions take TCHAR as an argument instead of char.
@@ -1132,10 +1141,6 @@ Changes
    directly from the file in Win32++\include. To build the static libraries,
    see below. 
    
-* A set of projects have been supplied to build the Win32++ into a static 
-   library. These projects are contained within the Win32++\Library Projects 
-   folder. The lib file created is placed within the lib directory.
-
 * The projects are now configured to take advantage of precompiled headers.
    
 * A set of tools is now provided in the tools folder. They include a set of 
@@ -1336,7 +1341,7 @@ Incompatiblities with previous versions
   function may now be required particularly for CFrame::OnNotify.
 - The OnCommand handlers for OnViewStatusbar and OnViewToolbar have been removed
   from CFrame, and should be added to CMainFrame::OnCommand if required.
-- CDocker has been renamed to CDocker
+- CDockable has been renamed to CDocker
 - dockable.h has been renamed to docking.h      
    
 Version 6.4.1
