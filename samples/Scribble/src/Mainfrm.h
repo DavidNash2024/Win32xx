@@ -17,6 +17,7 @@ public:
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnFileExit();
 	virtual void OnFileMRU(WPARAM wParam);
 	virtual void OnFileNew();

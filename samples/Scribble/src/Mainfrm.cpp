@@ -55,6 +55,22 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
+{
+	// OnCreate controls the way the frame is created.
+	// Overriding CFrame::Oncreate is optional.
+	// The default for the following variables is TRUE
+
+	// m_bUseIndicatorStatus = FALSE;	// Don't show statusbar indicators
+	// m_bUseMenuStatus = FALSE;		// Don't show toolbar or menu status
+	// m_bUseReBar = FALSE;				// Don't use rebars
+	// m_bUseThemes = FALSE;            // Don't use themes
+	// m_bUseToolBar = FALSE;			// Don't use a toolbar
+
+	// call the base class function
+	return CFrame::OnCreate(pcs);
+}
+
 void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame

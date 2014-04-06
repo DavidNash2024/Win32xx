@@ -2,6 +2,7 @@ Version 7.4.1
 =============
 Bug Fixes:
 * The drop-down lists for combo boxes are now displayed correctly.
+* Fix for Toolbars on Win95
 
 New Features and Enhancements
 -----------------------------
@@ -49,6 +50,8 @@ Modified CListView::GetEditControl
 Modified CListView::GetHeader
 Modified CListView::EditLabel
 Modified CTreeView::EditLabel
+Renamed CFrame::m_bShowIndicatorStatus  to CFrame::m_bUseIndicatorStatus
+Renamed CFrame::m_bShowMenuStatus       to CFrame::m_bUseMenuStatus
 
 Removed ::FromHandle (all versions)
 
@@ -1168,8 +1171,9 @@ Changes
 
 Version 6.6
 ===========
-Changes
--------
+
+New Features
+------------
 * The number of arguments have changed for WndProc and WndProcDefault.
   - The HWND parameter has been dropped in both of these functions. It's
     presence was redundant and possibly confusing. Users will need to modify
@@ -1223,26 +1227,12 @@ Changes
 * Updated the DockContainer and DockTabbedMDI examples    
   - These examples now demonstrate how to theme a container's toolbar.   
    
-      
-Incompatibilities with previous versions
-----------------------------------------
-- WndProc now takes 3 arguments, not 4:
-   WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- WndProcDefault now takes 3 arguments, not 4:
-   WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- DialogProc now takes 3 arguments, not 4:
-   DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- DialogProcDefault now takes 3 arguments, not 4:
-   DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-- CFrame::AddToolbarBand now requires three arguments
-- The various CRect functions use references to RECT rather than pointers
-- CWnd::IsVisable has been renamed to CWnd::IsWindowVisible
-- CWnd::IsEnabled has been renamed to CWnd::IsWindowEnabled
 
 Version 6.5
 ===========
-Major Changes
--------------
+
+New Features
+------------
 * Precompiled Headers
    Samples now demonstrates the use of Precompiled Headers. More experienced
    users might prefer this approach as it provides for much faster compile times.
@@ -1290,70 +1280,12 @@ Major Changes
    these macros. It also avoids clashes between the macro definitions of 
    min and max, and the STL definitions of min and max.
    
-All Changes
------------
-Added CTab class
-Added CTabbedMDI class
-Added TabDemo example
-Added Docking TabbedMDI example
-Added CFrame::SetupToolbar
-Added CFrame::m_bUseToolbar
-Added CContainer::SetupToolbar
-Added CDocker::GetDockTopLevel
-Added CDocker::GetContainer
-Added CDocker::GetTabbedMDI
-Added CDocker::IsRelated
-Added CDocker::LoadRegistrySettings
-Added CDocker::NewDockerFromID
-Added CDocker::SaveRegistrySettings
-Added CToolbar::GetToolbarData
-Added CWnd::GetClassString
-Added CWnd::IsFrame
-Added CWnd::IsMenubar
-Added CWnd::IsRebar
-Added CWnd::IsTabbedMDI
-Added CWnd::IsToolbar
-Changed CFrame::SetToolbarImages
-Changed CToolbar::SetImages
-Changed CToolbar::SetBitmap
-Changed CToolbar::AddBitmap
-Changed CToolbar::ReplaceBitmap
-Renamed CDockable to CDocker
-Renamed CDocker::CheckDockables       to CDocker::VerifyDockers
-Renamed CFrame::OnFrameDrawItem       to CFrame::OnDrawItem
-Renamed CFrame::OnFrameExitMenuLoop   to CFrame::OnExitMenuLoop
-Renamed CFrame::OnFrameInitMenuPopup  to CFrame::OnInitMenuPopup
-Renamed CFrame::OnFrameMeasureItem    to CFrame::OnMeasureItem
-Renamed CFrame::OnFrameClose          to CFrame::OnClose
-Renamed CFrame::OnFrameNotify         to CFrame::OnNotify
-Renamed CFrame::OnFrameSetFocus       to CFrame::OnSetFocus
-Renamed CFrame::OnFrameSysColorChange to CFrame::OnSysColorChange
-Renamed CFrame::OnFrameTimer          to CFrame::OnTimer
-Removed	OnFrameCommand
-
-Incompatiblities with previous versions
----------------------------------------
-- Many of the functions associated with adding toolbars to frames have changed.
-  CFrame::SetupToolbar should be overridden to perform toolbar configuration.
-  Refer to the Themes example for a demonstration of how to add multiple toolbars
-  to a frame.
-- The renaming of the CFrame::OnXXXX may affect overloading. Calling the base
-  function may now be required particularly for CFrame::OnNotify.
-- The OnCommand handlers for OnViewStatusbar and OnViewToolbar have been removed
-  from CFrame, and should be added to CMainFrame::OnCommand if required.
-- CDockable has been renamed to CDocker
-- dockable.h has been renamed to docking.h      
    
-Version 6.4.1
-=============
-This release has the following bug fixes:
-- Assertions in CContainer reported by VS2005(express) and VS2008(express)
-- Definition of OPENFILENAME_SIZE_VERSION_400 added for VS6 
-
+   
 Version 6.4
 ===========
 
-Major Changes
+New Features
 ------------
 * Docking:
   - Added tabbed docking container with optional toolbar
@@ -1365,35 +1297,14 @@ Major Changes
   - Added Close All Dockables and Default Dock Layout to docking examples
   - Added Win98 and WinME support for docking. 
 * Added Region support to CDC class.
-* Notepad example enhancements:
-  - Now capable of handling Unicode text
+* Update the Notepad sample to handle Unicode text.
 * Themes example now demonstrates a ComboBoxEx control in its toolbar  
  
-
-Fixes
------
-Various fixes to docking, including:
- - Fixed Z order of undocked windows
- - Fixed focus for child windows
- - Improved undocking
- - Reduced flicker
- - Better sizing of docked windows
- 
-Incompatibilities with previous versions
-----------------------------------------
-* CWnd::m_hWndParent has been removed. Use GetParent() in its place.
-* Some functions have been added to CWnd which have the same name as their 
-   Win32 counterparts. Prefix functions with the global scope specifier '::' 
-   to use the original Win32 API function instead of the Win32++ version.
-* CSplitter has been superseded by CDocker. Use a CDocker with the
-   DS_NO_UNDOCK and DS_NO_CAPTION styles to duplicate the behaviour of 
-   CSplitter.
-   
 
 Version 6.3
 ===========
 
-Major Changes
+New Features
 -------------
 * Added support for docking.
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
@@ -1408,34 +1319,10 @@ Major Changes
     another.
 * The Frame now stores which child window had focus before it is de-activated,
     and returns focus to this child when the frame application is reactivated.    
-    
-    
-Fixes
------    
-* CFrame now supports Extra Large fonts in the menu and status bar. Also, font
-    size can be changed while the application is running.
-* 16Bit colours (and grey-scale) are now rendered properly
-* Tabbing now works for modeless dialogs and property sheets
-   (uses PreTranslateMessage).            
-
-
-Incompatibilities with previous versions
-----------------------------------------
-* MDI Child windows now require a view. Refer to the MDI Demo example for an
-   example of how to add views to a MDI child.
-* Some functions have been added to CWnd which have the same name as their 
-   Win32 counterparts. Prefix functions with the global scope specifier '::' 
-   to use the original Win32 API function instead of the Win32++ version.
-
+     
 
 Version 6.2
 ===========
-
-Changes
--------
-* The default colour scheme has been changed from blue to grey. 
-  The blue, olive and silver colour schemes continue to be used on Windows XP
-  with themes enabled. 
 
 New Features
 ------------
@@ -1484,37 +1371,15 @@ or CSize struct can be used respectively.
 
 * Extended the CRebar, CToolbar and CStatusbar classes.
 
-
-Version 6.0.2
-=============
-
-New Features
-------------
 * Added support for x64 applications.
-
 Win32++ can now be used to build 64 bit applications. The manifest file has 
 been modified to support both 32bit and 64bit applications. The new manifest
-should be used for any 64 bit applications that use common controls.
-
-Users are encouraged to use the modern Win64 API functions like:
+should be used for any 64 bit applications that use common controls. Users are 
+encouraged to use the modern Win64 API functions like:
 GetWindowLongPtr, SetWindowLongPtr, GetClassLongPtr and SetClassLongPtr.
 Win32++ will convert these back to their Win32 API counterparts if required.
 
-
-Version 6.0.1
-=============
-Added    CFrame::SetMenuIcons
-Added    CFrame::SetToolbarImages
-Removed  CToolbar::SetToolbarImageList
-Added    CToolbar::SetBitmap
-Moved    CreateDisabledImageList to CFrame::CreateDisabledImageList
-Modified CFrame::AddMenuIcons
-
-New Features:
-------------
 * 32 bit bitmaps are now supported for toolbars (requires XP or Vista)
-* SetMenuIcons and AddMenuIcons now also accept a bitmap for disabled icons
-   in addition to the bitmap for normal icons.
 
 
 Version 6.0

@@ -266,16 +266,25 @@ namespace Win32xx
 
 		switch (uMsg)
 	    {
-			case WM_TIMER:
-				if (wParam == IDLE_TIMER_ID)
-					GetApp()->CleanupTemps();
+		case WM_TIMER:
+			// A timer used for Modal dialogs
+			if (wParam == IDLE_TIMER_ID)
+			{
+				GetApp()->CleanupTemps();
+				LONG lCount = 0;
+			//	MSG Msg = {0};
+				while ( /*!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) &&*/ GetApp()->OnIdle(lCount) == TRUE )
+				{
+					++lCount;
+				}
+			}
 			return 0L;
 	    case WM_INITDIALOG:
 			{
 				// Center the dialog
 				CenterWindow();
 				if (IsModal())
-					SetTimer(IDLE_TIMER_ID, 5000, 0);
+					SetTimer(IDLE_TIMER_ID, 1000, 0);
 			}
 		    return OnInitDialog();
 		case WM_CLOSE:	
@@ -405,11 +414,9 @@ namespace Win32xx
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 		#ifndef _WIN32_WCE
-			BOOL IsHookedHere = FALSE;
-			if (NULL == pTLSData->hHook )
+			if (NULL == pTLSData->hMsgHook )
 			{
-				pTLSData->hHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
-				IsHookedHere = TRUE;
+				pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 			}
 		#endif
 
@@ -433,10 +440,10 @@ namespace Win32xx
 			GetApp()->CleanupTemps();
 
 		#ifndef _WIN32_WCE
-			if (IsHookedHere)
+			if (NULL != pTLSData->hMsgHook )
 			{
-				::UnhookWindowsHookEx(pTLSData->hHook);
-				pTLSData->hHook = NULL;
+				::UnhookWindowsHookEx(pTLSData->hMsgHook);
+				pTLSData->hMsgHook = NULL;
 			}
 		#endif
 
@@ -552,7 +559,7 @@ namespace Win32xx
 			if (!IsModal())
 			{
 				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
-				if (NULL == pTLSData->hHook)
+				if (NULL == pTLSData->hMsgHook)
 				{
 					if (IsDialogMessage(pMsg))
 						return TRUE;
@@ -643,6 +650,7 @@ namespace Win32xx
 
 	} // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 
+
 #ifndef _WIN32_WCE
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
@@ -668,7 +676,7 @@ namespace Win32xx
 			}
 		}
 
-		return ::CallNextHookEx(pTLSData->hHook, nCode, wParam, lParam);
+		return ::CallNextHookEx(pTLSData->hMsgHook, nCode, wParam, lParam);
 	}
 #endif
 
