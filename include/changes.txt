@@ -6,19 +6,32 @@ Bug Fixes:
 
 New Features and Enhancements
 -----------------------------
+* Updated CThread.
+   - A new constructor has been added to facilitate worker threads. This 
+     constructor allows users to specify the thread's callback function and
+     a LPVOID pParams parameter.
+   - Threads are now longer created in CThreads constructor. Instead, they are 
+	  created with CreateThread. This provides more control over if and when
+	  the thread is created.
+* Updated CFrame
+   - A worker thread has replaced a timer to display status bar updates.
+   - If the co-ordinates retrieved from registry would place the frame off
+      screen, the frame is repositioned.	
+* Updated CDocker and CTab
+   - CTabs and CDockers now support the WS_EX_LAYOUTRTL extended style. This
+      style creates a window whose horizontal origin is on the right edge to 
+	  better suite Arabic and Hebrew languages.
 * Updated FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
    CImageList and CMenu. They have been moved from global to their classes.
 * CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.
    Unlike CWnd::FromHandle, this function never creates a new CWnd. It returns
    NULL if the window handle is not found in the map of permanent CWnds.
-* The frameworks takes a stricter approach to casting. For the most part,
+* The framework now takes a stricter approach to casting. For the most part,
     c-style casts have been replaced with C++ style casts. Any down-casts from
     CWnd to a CWnd derived type (e.g. CWnds from FromHandle) are asserted with
-	dynamic_cast to ensure they are correct.	
-* The framework no longer uses OnIdle internally.
-* Frames placed are in the default position, if the co-ordinates retrieved 
-   from registry would place them off screen.
-* Added RTL_Layout support for CTabs and CDockers.  
+	dynamic_cast to ensure they are correct.   
+* The framework no longer uses OnIdle internally. OnIdle is still supported,
+    but users might want to consider using worker threads instead.  
 
 Incompatibilities with previous version
 ---------------------------------------

@@ -17,6 +17,7 @@ public:
 	virtual ~CMainFrame();
 	void ConnectEvents();
 	CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_View; }
+	CEdit* GetComboEdit() const { return m_ComboboxEx.GetEdit(); }
 	IConnectionPoint* GetConnectionPoint(REFIID riid);
 	void OnBeforeNavigate2(DISPPARAMS* pDispParams);
 	void OnCommandStateChange(DISPPARAMS* pDispParams);

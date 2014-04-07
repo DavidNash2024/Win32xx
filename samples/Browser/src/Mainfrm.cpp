@@ -158,45 +158,38 @@ void CMainFrame::OnHome()
 
 void CMainFrame::OnEditCut()
 {
-	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
-
-	if (GetFocus() == pEdit)
-		pEdit->Cut();
+	if (GetFocus() == GetComboEdit())
+		GetComboEdit()->Cut();
 	else
 		m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 }
 
 void CMainFrame::OnEditCopy()
 {
-	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
-
-	if (GetFocus() == pEdit)
-		pEdit->Copy();
+	if (GetFocus() == GetComboEdit())
+		GetComboEdit()->Copy();
 	else
 		m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 }
 
 void CMainFrame::OnEditPaste()
 {
-	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
-
-	if (GetFocus() == pEdit)
-		pEdit->Paste();
+	if (GetFocus() == GetComboEdit())
+		GetComboEdit()->Paste();
 	else
 		m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 }
 
 void CMainFrame::OnEditDelete()
 {
-	CEdit* pEdit = m_ComboboxEx.GetEditCtrl();
-
-	if (GetFocus() == pEdit)
-			pEdit->Clear();
-#if !defined(__GNUC__)
-	else
-		m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+#if defined(__GNUC__)
+	OLECMDID OLECMDID_DELETE = (OLECMDID)33;
 #endif
 
+	if (GetFocus() == GetComboEdit())
+		GetComboEdit()->Clear();
+	else
+		m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)

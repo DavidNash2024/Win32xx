@@ -54,9 +54,9 @@
 // them to be accessed or sent messages.
 
 // CFrame is responsible for creating a "frame" window. This window has a
-// menu and and several child windows, including a toolbar (usualy hosted
+// menu and and several child windows, including a toolbar (usually hosted
 // within a rebar), a status bar, and a view positioned over the frame
-// window's non-client area. The "view" window is a seperate CWnd object
+// window's non-client area. The "view" window is a separate CWnd object
 // assigned to the frame with the SetView function.
 
 // When compiling an application with these classes, it will need to be linked
@@ -78,6 +78,7 @@
 #include "statusbar.h"
 #include "toolbar.h"
 #include "rebar.h"
+#include "thread.h"
 #include "default_resource.h"
 
 #ifndef RBN_MINMAX
@@ -469,7 +470,6 @@ namespace Win32xx
 		virtual LRESULT OnHotItemChange(LPNMTBHOTITEM pTBHotItem);
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
-		virtual	LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnUndocked();
 		virtual void OnViewStatusBar();
 		virtual void OnViewToolBar();
@@ -491,16 +491,11 @@ namespace Win32xx
 		virtual void UpdateMRUMenu();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		enum Constants
-		{
-			ID_STATUS_TIMER = 1,
-		};
-
 		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
 		CString m_strStatusText;			// CString for status text
 		CImageList m_imlMenu;				// Imagelist of menu icons
 		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
-        BOOL m_bUseIndicatorStatus;		// set to TRUE to see indicators in status bar
+        BOOL m_bUseIndicatorStatus;			// set to TRUE to see indicators in status bar
 		BOOL m_bUseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseReBar;					// set to TRUE if ReBars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
@@ -512,6 +507,8 @@ namespace Win32xx
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
+		static UINT WINAPI StaticStatusProc(LPVOID pParam);	// Callback for status bar update thread
+
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
 		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entries
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
@@ -532,6 +529,7 @@ namespace Win32xx
 		CString m_strKeyName;				// CString for Registry key name
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
+		Shared_Ptr<CThread> m_pStatusThread;// Smart pointer for StatusBar update thread
 		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
@@ -541,6 +539,7 @@ namespace Win32xx
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
+		HANDLE m_StopEvent;					// Event signaled to stop the status update thread
 		
 	};  // class CFrame
 
@@ -1808,7 +1807,8 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bUseIndicatorStatus(TRUE), m_bUseMenuStatus(TRUE), m_bUseThemes(TRUE), 
 		                      m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
-						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE)
+						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE),
+							  m_StopEvent(0)
 	{
 		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
@@ -1853,6 +1853,8 @@ namespace Win32xx
 
 			return TRUE;
 		}
+
+		if (m_StopEvent) CloseHandle(m_StopEvent);
 
 		return FALSE;
 	}
@@ -2993,6 +2995,14 @@ namespace Win32xx
 		GetStatusBar()->SetFont(&m_fntStatusBar, FALSE);
 		ShowStatusBar(m_bShowStatusBar);
 
+		// Start thread for Status updates
+		if (m_bUseIndicatorStatus || m_bUseMenuStatus)
+		{
+			m_StopEvent = CreateEvent(NULL, TRUE, FALSE, _T("Stop Thread"));
+			m_pStatusThread = new CThread(CFrame::StaticStatusProc, this);
+			m_pStatusThread->CreateThread();
+		}
+
 		// Create the view window
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
 		GetView()->Create(this);
@@ -3000,10 +3010,6 @@ namespace Win32xx
 		// Disable XP themes for the menubar
 		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or WinVersion < Vista
 			GetMenuBar()->SetWindowTheme(L" ", L" ");
-
-		// Start timer for Status updates
-		if (m_bUseIndicatorStatus || m_bUseMenuStatus)
-			SetTimer(ID_STATUS_TIMER, 200, NULL);
 
 		// Reposition the child windows
 		OnSysColorChange(0, 0);
@@ -3031,7 +3037,11 @@ namespace Win32xx
 	{
 		SetMenu(NULL);
 		KillTimer(IDLE_TIMER_ID);
+			
+		SetEvent(m_StopEvent);
 
+		WaitForSingleObject(m_pStatusThread->GetThread(), INFINITE);
+		
 		GetMenuBar()->Destroy();
 		GetToolBar()->Destroy();
 		GetReBar()->Destroy();
@@ -3506,18 +3516,6 @@ namespace Win32xx
 
 		if (m_bUseIndicatorStatus)
 			SetStatusIndicators();
-	}
-
-	inline LRESULT CFrame::OnTimer(WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(lParam);
-
-		if (ID_STATUS_TIMER == wParam)
-		{
-			UpdateStatusBar();
-		} 
-
-		return 0L;
 	}
 
 	inline void CFrame::OnViewStatusBar()
@@ -4217,6 +4215,24 @@ namespace Win32xx
 		RedrawWindow();
 	}
 
+	inline UINT WINAPI CFrame::StaticStatusProc(LPVOID pParam)
+	// ThreadProc for the status update thread.
+	{
+		// Called when the statusbar thread starts
+		CFrame* pFrame = static_cast<CFrame*>(pParam);
+
+		for(;;)
+		{
+			if (WAIT_TIMEOUT == WaitForSingleObject(pFrame->m_StopEvent, 200))
+				pFrame->UpdateStatusBar();
+			else
+				break;
+		}
+
+		TRACE("Thread has ended\n");
+		return 0;
+	}
+
 	inline void CFrame::UpdateMRUMenu()
 	{
 		if (0 >= m_nMaxMRU) return;
@@ -4309,7 +4325,6 @@ namespace Win32xx
 		case WM_SIZE:			return OnSize(wParam, lParam);	
 		case WM_SYSCOLORCHANGE:	return OnSysColorChange(wParam, lParam);
 		case WM_SYSCOMMAND:		return OnSysCommand(wParam, lParam);
-		case WM_TIMER:			return OnTimer(wParam, lParam);	
 
 		// Messages defined by Win32++
 		case UWM_GETMENUTHEME:		return (LRESULT)&m_MenuBarTheme;
