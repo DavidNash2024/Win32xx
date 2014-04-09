@@ -1257,7 +1257,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
 		// Calculate the hint window's position for inner docking
@@ -1319,7 +1319,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
@@ -2971,7 +2971,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
 		switch (pDock->GetDockStyle() & 0xF)
@@ -3166,7 +3166,7 @@ namespace Win32xx
 		
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif		
 		
 		if (IsDocked())

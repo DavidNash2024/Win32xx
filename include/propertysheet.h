@@ -581,7 +581,7 @@ namespace Win32xx
 				assert(pTLSData);
 
 				// Store the CPropertyPage pointer in Thread Local Storage
-				pTLSData->pCWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
+				pTLSData->pWnd = reinterpret_cast<CWnd*>(ppsp->lParam);
 			}
 			break;
 		}
@@ -599,7 +599,7 @@ namespace Win32xx
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
 			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
-			pPage = static_cast<CPropertyPage*>(pTLSData->pCWnd);
+			pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
 			// Set the hWnd members and call DialogProc for this message
 			pPage->m_hWnd = hwndDlg;
@@ -710,7 +710,7 @@ namespace Win32xx
 				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 				assert(pTLSData);
 
-				CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pCWnd);
+				CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
 				assert(w);
 
 				w->Attach(hwnd);
@@ -755,7 +755,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 		// Store the 'this' pointer in Thread Local Storage
-		pTLSData->pCWnd = this;
+		pTLSData->pWnd = this;
 
 		// Create the property sheet
 		ipResult = PropertySheet(ppsph);

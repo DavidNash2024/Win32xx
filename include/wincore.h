@@ -265,7 +265,8 @@ namespace Win32xx
 
 	struct TLSData			// Used for Thread Local Storage (TLS)
 	{
-		CWnd* pCWnd;		// pointer to CWnd object for Window creation
+		CWnd* pWnd;			// pointer to CWnd object for Window creation
+		CWnd* pMainWnd;		// pointer to the main window for the thread (usually CFrame)
 		CMenuBar* pMenuBar;	// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hMsgHook;		// WH_MSGFILTER hook for CMenuBar and Modal Dialogs
 
@@ -274,7 +275,7 @@ namespace Win32xx
 		std::map<HGDIOBJ, GDIPtr, CompareGDI> TmpGDIs;	// Temporary CGDIObject pointers
 		std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST> TmpImageLists;	// Temporary CImageList pointers
 		std::map<HWND, WndPtr, CompareHWND> TmpWnds;	// Temporary CWnd pointers
-		TLSData() : pCWnd(0), pMenuBar(0), hMsgHook(0) {}	// Constructor
+		TLSData() : pWnd(0), pMenuBar(0), hMsgHook(0) {}	// Constructor
 
 #ifndef _WIN32_WCE
 		std::map<HMENU, MenuPtr, CompareHMENU> TmpMenus;	// Temporary CMenu pointers
@@ -333,6 +334,7 @@ namespace Win32xx
 		friend class CBrush;
 		friend class CDC;
 		friend class CDialog;
+		friend class CFrame;
 		friend class CGDIObject;
 		friend class CFont;
 		friend class CImageList;
@@ -1315,7 +1317,7 @@ namespace Win32xx
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the CWnd pointer in thread local storage
-			pTLSData->pCWnd = this;
+			pTLSData->pWnd = this;
 
 			// Create window
 			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
@@ -1339,7 +1341,7 @@ namespace Win32xx
 			}
 
 			// Clear the CWnd pointer from TLS
-			pTLSData->pCWnd = NULL;
+			pTLSData->pWnd = NULL;
 		}
 
 		catch (const CWinException &e)
@@ -1873,9 +1875,9 @@ namespace Win32xx
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			w = pTLSData->pCWnd;
+			w = pTLSData->pWnd;
 			assert(w);				// pTLSData->pCWnd is assigned in CreateEx
-			pTLSData->pCWnd = NULL;
+			pTLSData->pWnd = NULL;
 
 			// Store the CWnd pointer in the HWND map
 			w->m_hWnd = hWnd;

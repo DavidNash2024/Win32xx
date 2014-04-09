@@ -422,7 +422,7 @@ namespace Win32xx
 
 			HWND hParent = pParent? pParent->m_hWnd : 0;
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
-			pTLSData->pCWnd = this;
+			pTLSData->pWnd = this;
 
 			// Create a modal dialog
 			if (IsIndirect())
@@ -436,7 +436,7 @@ namespace Win32xx
 
 			// Tidy up
 			m_hWnd = NULL;
-			pTLSData->pCWnd = NULL;
+			pTLSData->pWnd = NULL;
 			GetApp()->CleanupTemps();
 
 		#ifndef _WIN32_WCE
@@ -476,7 +476,7 @@ namespace Win32xx
 			TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 			// Store the CWnd pointer in Thread Local Storage
-			pTLSData->pCWnd = this;
+			pTLSData->pWnd = this;
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 			HWND hParent = pParent? pParent->m_hWnd : 0;
@@ -493,7 +493,7 @@ namespace Win32xx
 			}
 
 			// Tidy up
-			pTLSData->pCWnd = NULL;
+			pTLSData->pWnd = NULL;
 
 			// Now handle dialog creation failure
 			if (!m_hWnd)
@@ -637,9 +637,9 @@ namespace Win32xx
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			w = static_cast<CDialog*>(pTLSData->pCWnd);
+			w = static_cast<CDialog*>(pTLSData->pWnd);
 			assert(w);
-			pTLSData->pCWnd = NULL;
+			pTLSData->pWnd = NULL;
 
 			// Store the Window pointer into the HWND map
 			w->m_hWnd = hWnd;

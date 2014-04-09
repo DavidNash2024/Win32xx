@@ -963,7 +963,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) | WS_EX_LAYOUTRTL);
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
 		// Create the memory DC and bitmap

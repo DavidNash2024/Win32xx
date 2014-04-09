@@ -507,6 +507,8 @@ namespace Win32xx
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
+
+		static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
 		static UINT WINAPI StaticStatusProc(LPVOID pParam);	// Callback for status bar update thread
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -540,6 +542,7 @@ namespace Win32xx
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
 		HANDLE m_StopEvent;					// Event signaled to stop the status update thread
+		HHOOK m_KbdHook;				//
 		
 	};  // class CFrame
 
@@ -1808,7 +1811,7 @@ namespace Win32xx
 	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bUseIndicatorStatus(TRUE), m_bUseMenuStatus(TRUE), m_bUseThemes(TRUE), 
 		                      m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
 						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE),
-							  m_StopEvent(0)
+							  m_StopEvent(0), m_KbdHook(0)
 	{
 		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
@@ -1828,6 +1831,10 @@ namespace Win32xx
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
 		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+
+		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		pTLSData->pMainWnd = this;
+		::SetWindowsHookEx(WH_KEYBOARD, KeyboardProc, NULL, ::GetCurrentThreadId());
 	}
 
 	inline CFrame::~CFrame()
@@ -2995,8 +3002,8 @@ namespace Win32xx
 		GetStatusBar()->SetFont(&m_fntStatusBar, FALSE);
 		ShowStatusBar(m_bShowStatusBar);
 
-		// Start thread for Status updates
-		if (m_bUseIndicatorStatus || m_bUseMenuStatus)
+		// Start thread for Status updates for Win2000 and above
+		if ((2500 <= GetWinVersion()) && (m_bUseIndicatorStatus || m_bUseMenuStatus))
 		{
 			m_StopEvent = CreateEvent(NULL, TRUE, FALSE, _T("Stop Thread"));
 			m_pStatusThread = new CThread(CFrame::StaticStatusProc, this);
@@ -3040,7 +3047,8 @@ namespace Win32xx
 			
 		SetEvent(m_StopEvent);
 
-		WaitForSingleObject(m_pStatusThread->GetThread(), INFINITE);
+		if (m_pStatusThread.get())
+			WaitForSingleObject(m_pStatusThread->GetThread(), INFINITE);
 		
 		GetMenuBar()->Destroy();
 		GetToolBar()->Destroy();
@@ -3817,16 +3825,6 @@ namespace Win32xx
 	inline void CFrame::SetReBarTheme(ReBarTheme* pRBT) 
 	{ 
 		m_ReBarTheme = *pRBT; 
-	/*	if (IsWindow())
-		{
-			int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
-			if (m_ReBarTheme.LockMenuBand)
-				GetReBar()->ShowGripper(nBand, FALSE);
-			else
-				GetReBar()->ShowGripper(nBand, TRUE);
-	
-			Invalidate();
-		} */
 	}
 
 	inline void CFrame::SetStatusIndicators()
@@ -4215,18 +4213,33 @@ namespace Win32xx
 		RedrawWindow();
 	}
 
+	inline LRESULT CALLBACK CFrame::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+	{
+		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
+		assert(dynamic_cast<CFrame*>(pFrame));
+		
+		if (HC_ACTION == nCode)
+		{
+			if ((wParam ==  VK_CAPITAL) || (wParam == VK_NUMLOCK) || (wParam == VK_SCROLL))
+			{
+				pFrame->UpdateStatusBar();
+			}
+		}
+
+		return ::CallNextHookEx(pFrame->m_KbdHook, nCode, wParam, lParam);
+	}
+
 	inline UINT WINAPI CFrame::StaticStatusProc(LPVOID pParam)
 	// ThreadProc for the status update thread.
 	{
 		// Called when the statusbar thread starts
 		CFrame* pFrame = static_cast<CFrame*>(pParam);
 
-		for(;;)
+		// Loop until the StopEvent is signaled
+		while ( WaitForSingleObject(pFrame->m_StopEvent, 1000) == WAIT_TIMEOUT)
 		{
-			if (WAIT_TIMEOUT == WaitForSingleObject(pFrame->m_StopEvent, 200))
-				pFrame->UpdateStatusBar();
-			else
-				break;
+			pFrame->UpdateStatusBar();
 		}
 
 		TRACE("Thread has ended\n");
