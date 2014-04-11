@@ -393,9 +393,7 @@ namespace Win32xx
 		virtual CRect GetViewRect() const;
 		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
-		virtual void SetStatusText();
 		virtual void RecalcLayout();
-		virtual void UpdateStatusBar();
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
@@ -423,6 +421,10 @@ namespace Win32xx
 		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme* pMBT);
 		void SetView(CWnd& wndView);
+		CString GetStatusText() const				{ return m_strStatusText; }
+		void SetStatusText(LPCTSTR szText);
+		CString GetTitle() const					{ return GetWindowText(); }
+		void SetTitle(LPCTSTR szText)				{ SetWindowText(szText); }
 		BOOL IsMenuBarUsed() const					{ return (m_MenuBar.IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (m_ReBar.IsWindow()); }
@@ -467,7 +469,6 @@ namespace Win32xx
 		virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
 		virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
 		virtual LRESULT OnRBNMinMax(LPNMHDR pNMHDR);
-		virtual LRESULT OnHotItemChange(LPNMTBHOTITEM pTBHotItem);
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual LRESULT OnUndocked();
@@ -492,7 +493,6 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
-		CString m_strStatusText;			// CString for status text
 		CImageList m_imlMenu;				// Imagelist of menu icons
 		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
         BOOL m_bUseIndicatorStatus;			// set to TRUE to see indicators in status bar
@@ -508,7 +508,7 @@ namespace Win32xx
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
 
-		static LRESULT CALLBACK KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
+		static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
 		static UINT WINAPI StaticStatusProc(LPVOID pParam);	// Callback for status bar update thread
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -529,6 +529,7 @@ namespace Win32xx
 		CRect m_rcPosition;					// CRect of the starting window position
 		CString m_OldStatus[3];				// Array of CString holding old status;
 		CString m_strKeyName;				// CString for Registry key name
+		CString m_strStatusText;			// CString for status text
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
 		Shared_Ptr<CThread> m_pStatusThread;// Smart pointer for StatusBar update thread
@@ -884,7 +885,8 @@ namespace Win32xx
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
-		m_pFrame = static_cast<CFrame*>(GetAncestor());
+		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		m_pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
 		assert(dynamic_cast<CFrame*>(m_pFrame));
 	}
 
@@ -1832,13 +1834,16 @@ namespace Win32xx
 		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
 		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
 
+		// Start the keyboard hook
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 		pTLSData->pMainWnd = this;
-		::SetWindowsHookEx(WH_KEYBOARD, KeyboardProc, NULL, ::GetCurrentThreadId());
+		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 	}
 
 	inline CFrame::~CFrame()
 	{
+		if (m_StopEvent) CloseHandle(m_StopEvent);
+		if (m_KbdHook) UnhookWindowsHookEx(m_KbdHook);
 	}
 
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon)
@@ -1860,8 +1865,6 @@ namespace Win32xx
 
 			return TRUE;
 		}
-
-		if (m_StopEvent) CloseHandle(m_StopEvent);
 
 		return FALSE;
 	}
@@ -3002,6 +3005,9 @@ namespace Win32xx
 		GetStatusBar()->SetFont(&m_fntStatusBar, FALSE);
 		ShowStatusBar(m_bShowStatusBar);
 
+		if (m_bUseIndicatorStatus)
+			SetStatusIndicators();
+
 		// Start thread for Status updates for Win2000 and above
 		if ((2500 <= GetWinVersion()) && (m_bUseIndicatorStatus || m_bUseMenuStatus))
 		{
@@ -3044,8 +3050,9 @@ namespace Win32xx
 	{
 		SetMenu(NULL);
 		KillTimer(IDLE_TIMER_ID);
-			
-		SetEvent(m_StopEvent);
+		
+		if(m_StopEvent)
+			SetEvent(m_StopEvent);
 
 		if (m_pStatusThread.get())
 			WaitForSingleObject(m_pStatusThread->GetThread(), INFINITE);
@@ -3115,64 +3122,6 @@ namespace Win32xx
 		}
 
 		return TRUE;
-	}
-
-	inline LRESULT CFrame::OnHotItemChange(LPNMTBHOTITEM pTBHotItem)
-	// Hot item change notification from ToolBar.
-	{	
-		UNREFERENCED_PARAMETER(pTBHotItem);
-
-		if (m_bUseMenuStatus)
-		{
-			// Get the toolbar the point is over
-			CToolBar* pToolBar = 0;
-			if (IsReBarUsed())
-			{
-				// Get the ToolBar's CWnd
-				CWnd* pWnd = FromHandle(GetReBar()->HitTest(GetCursorPos()));
-				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)) && !(dynamic_cast<CMenuBar*>(pWnd)))
-					pToolBar = static_cast<CToolBar*>(pWnd);
-			}
-			else
-			{
-				CWnd* pWnd = WindowFromPoint(GetCursorPos());
-				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
-					pToolBar = static_cast<CToolBar*>(pWnd);
-			}
-
-			if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar))
-			{
-				// Which toolbar button is the mouse cursor hovering over?
-				int nButton = pToolBar->HitTest();
-				if (nButton >= 0)
-				{
-					int nID = pToolBar->GetCommandID(nButton);
-					// Only update the statusbar if things have changed
-					if (nID != m_nOldID)
-					{
-						if (nID != 0)
-							m_strStatusText = LoadString(nID);
-						else
-							m_strStatusText = LoadString(IDW_READY);
-
-						if (GetStatusBar()->IsWindow())
-							SetStatusText();
-					}
-					m_nOldID = nID;
-				}
-			}
-			else
-			{
-				if (m_nOldID != -1)
-				{
-					m_strStatusText = LoadString(IDW_READY);
-					SetStatusText();
-				}
-				m_nOldID = -1;
-			}
-		}
-
-		return 0L;
 	}
 
 	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
@@ -3248,17 +3197,15 @@ namespace Win32xx
 	{
 		// Set the StatusBar text when we hover over a menu
 		// Only popup submenus have status strings
-		if (m_bUseMenuStatus)
+		if (m_bUseMenuStatus && GetStatusBar()->IsWindow())
 		{
 			int nID = LOWORD (wParam);
 			CMenu* pMenu = CMenu::FromHandle((HMENU) lParam);
 
 			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
-				m_strStatusText = LoadString(nID);
+				GetStatusBar()->SetWindowText(LoadString(nID));
 			else
-				m_strStatusText = LoadString(IDW_READY);
-
-			SetStatusText();
+				GetStatusBar()->SetWindowText(m_strStatusText);
 		}
 
 		return 0L;
@@ -3278,7 +3225,7 @@ namespace Win32xx
 		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR)lParam);
 		case TTN_GETDISPINFO:	return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
 		case UWN_UNDOCKED:		return OnUndocked();
-		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam);
+//		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam);
 		}
 
 		return 0L;
@@ -3335,19 +3282,12 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI)
-	// Tool tip notification for the toolbar
+	// Tool tip notification from the toolbar
 	{
-		// Tool tip notification for the toolbar
-		
-		CToolBar* pToolBar = 0;
-
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
 		CWnd* pWnd = WindowFromPoint(pt);
-		if (dynamic_cast<CToolBar*> (pWnd))
-		{
-			pToolBar = static_cast<CToolBar*>(pWnd);
-		}
+		CToolBar* pToolBar = dynamic_cast<CToolBar*> (pWnd);
 
 		// Set the tooltip's text from the ToolBar button's CommandID
 		if (pToolBar)
@@ -3383,7 +3323,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		SetStatusText();
+		SetStatusIndicators();	
 		return 0L;
 	}
 
@@ -3409,16 +3349,20 @@ namespace Win32xx
 				GetReBar()->SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 			}
 		}
-
-		// Update the status bar font and text
+		
 		NONCLIENTMETRICS nm = {0};
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		m_fntStatusBar.DeleteObject();
-		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
-		GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);
-		SetStatusText();
-
+		
+		if (GetStatusBar()->IsWindow())
+		{
+			// Update the status bar font and text
+			m_fntStatusBar.DeleteObject();
+			m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+			GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);		
+			GetStatusBar()->SetWindowText(m_strStatusText);
+			SetStatusIndicators();
+		}
 
 		if (GetMenuBar()->IsWindow())
 		{
@@ -3470,62 +3414,6 @@ namespace Win32xx
 		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
 	}
 
-	inline void CFrame::UpdateStatusBar()
-	{
-		if ((m_bUseMenuStatus) && ( m_strStatusText != LoadString(IDW_READY) ) )
-		{
-			// Get the toolbar the point is over
-			CToolBar* pToolBar = 0;
-			if (IsReBarUsed())
-			{
-				// Get the ToolBar's CWnd
-				CWnd* pWnd = FromHandlePermanent(GetReBar()->HitTest(GetCursorPos()));
-				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)) && !(dynamic_cast<CMenuBar*>(pWnd)))
-					pToolBar = static_cast<CToolBar*>(pWnd);
-			}
-			else
-			{
-				CWnd* pWnd = WindowFromPoint(GetCursorPos());
-				if (pWnd && (dynamic_cast<CToolBar*>(pWnd)))
-					pToolBar = static_cast<CToolBar*>(pWnd);
-			}
-
-			if ((pToolBar) && (WindowFromPoint(GetCursorPos()) == pToolBar))
-			{
-				// Which toolbar button is the mouse cursor hovering over?
-				int nButton = pToolBar->HitTest();
-				if (nButton >= 0)
-				{
-					int nID = pToolBar->GetCommandID(nButton);
-					// Only update the statusbar if things have changed
-					if (nID != m_nOldID)
-					{
-						if (nID != 0)
-							m_strStatusText = LoadString(nID);
-						else
-							m_strStatusText = LoadString(IDW_READY);
-
-						if (GetStatusBar()->IsWindow())
-							SetStatusText();
-					}
-					m_nOldID = nID;
-				}
-			}
-			else
-			{
-				if (m_nOldID != -1)
-				{
-					m_strStatusText = LoadString(IDW_READY);
-					SetStatusText();
-				}
-				m_nOldID = -1;
-			}
-		} 
-
-		if (m_bUseIndicatorStatus)
-			SetStatusIndicators();
-	}
-
 	inline void CFrame::OnViewStatusBar()
 	{
 		m_bShowStatusBar = !m_bShowStatusBar;
@@ -3572,7 +3460,8 @@ namespace Win32xx
 		{
 			GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar()->Invalidate();
-			SetStatusText();
+			GetStatusBar()->SetWindowText(m_strStatusText);
+			SetStatusIndicators();
 		}
 
 		// Resize the rebar or toolbar
@@ -3829,8 +3718,24 @@ namespace Win32xx
 
 	inline void CFrame::SetStatusIndicators()
 	{
-		if (GetStatusBar()->IsWindow())
-		{
+		if (GetStatusBar()->IsWindow() && (m_bUseIndicatorStatus))
+		{	
+			// Calculate the width of the text indicators
+			CClientDC dcStatus(GetStatusBar());
+			CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP "), lstrlen(_T("\tCAP ")));
+			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM "), lstrlen(_T("\tNUM ")));
+			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL "), lstrlen(_T("\tSCRL ")));
+
+			// Get the coordinates of the parent window's client area.
+			CRect rcClient = GetClientRect();
+			int width = MAX(300, rcClient.right);
+
+			// Create 4 panes
+			GetStatusBar()->SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
+			GetStatusBar()->SetPartWidth(1, csCAP.cx);
+			GetStatusBar()->SetPartWidth(2, csNUM.cx);
+			GetStatusBar()->SetPartWidth(3, csSCRL.cx);
+		
 			CString Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? _T("\tCAP") : _T("");
 			CString Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? _T("\tNUM") : _T("");
 			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? _T("\tSCRL"): _T("");
@@ -3846,31 +3751,12 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::SetStatusText()
+	inline void CFrame::SetStatusText(LPCTSTR szText)
 	{
+		m_strStatusText = szText;
+
 		if (GetStatusBar()->IsWindow())
 		{
-			if (m_bUseIndicatorStatus)
-			{
-				// Calculate the width of the text indicators
-				CClientDC dcStatus(GetStatusBar());
-				CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP "), lstrlen(_T("\tCAP ")));
-				CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM "), lstrlen(_T("\tNUM ")));
-				CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL "), lstrlen(_T("\tSCRL ")));
-
-				// Get the coordinates of the parent window's client area.
-				CRect rcClient = GetClientRect();
-				int width = MAX(300, rcClient.right);
-
-				// Create 4 panes
-				GetStatusBar()->SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
-				GetStatusBar()->SetPartWidth(1, csCAP.cx);
-				GetStatusBar()->SetPartWidth(2, csNUM.cx);
-				GetStatusBar()->SetPartWidth(3, csSCRL.cx);
-
-				SetStatusIndicators();
-			}
-
 			// Place text in the 1st pane
 			GetStatusBar()->SetPartText(0, m_strStatusText);
 		}
@@ -4213,7 +4099,7 @@ namespace Win32xx
 		RedrawWindow();
 	}
 
-	inline LRESULT CALLBACK CFrame::KeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
@@ -4223,7 +4109,7 @@ namespace Win32xx
 		{
 			if ((wParam ==  VK_CAPITAL) || (wParam == VK_NUMLOCK) || (wParam == VK_SCROLL))
 			{
-				pFrame->UpdateStatusBar();
+				pFrame->SetStatusIndicators();
 			}
 		}
 
@@ -4239,7 +4125,7 @@ namespace Win32xx
 		// Loop until the StopEvent is signaled
 		while ( WaitForSingleObject(pFrame->m_StopEvent, 1000) == WAIT_TIMEOUT)
 		{
-			pFrame->UpdateStatusBar();
+			pFrame->SetStatusIndicators();
 		}
 
 		TRACE("Thread has ended\n");

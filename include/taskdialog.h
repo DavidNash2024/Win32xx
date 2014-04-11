@@ -244,7 +244,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp()->SetTlsIndex();
 
 		// Store the CWnd pointer in thread local storage
-		pTLSData->pCWnd = this;
+		pTLSData->pWnd = this;
 
 		// Declare a pointer to the TaskDialogIndirect function
 		HMODULE hComCtl = LoadLibrary(_T("COMCTL32.DLL"));
@@ -679,9 +679,9 @@ namespace Win32xx
 			assert(pTLSData);
 
 			// Retrieve pointer to CTaskDialog object from Thread Local Storage TLS
-			t = static_cast<CTaskDialog*>(pTLSData->pCWnd);
+			t = static_cast<CTaskDialog*>(pTLSData->pWnd);
 			assert(t);
-			pTLSData->pCWnd = NULL;
+			pTLSData->pWnd = NULL;
 
 			// Store the CTaskDialog pointer in the HWND map
 			t->m_hWnd = hWnd;

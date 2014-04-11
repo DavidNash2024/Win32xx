@@ -57,6 +57,12 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
+	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
+	// m_bUseReBar = FALSE;				// Don't use a ReBar
+	// m_bUseThemes = FALSE;            // Don't use themes
+	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
+	
 	return CFrame::OnCreate(pcs);
 }
 

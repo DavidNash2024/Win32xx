@@ -14,9 +14,11 @@ New Features and Enhancements
 	  created with CreateThread. This provides more control over if and when
 	  the thread is created.
 * Updated CFrame
-   - A worker thread has replaced a timer to display status bar updates.
+   - A keyboard hook now retrieves indicator status, removing the need for
+      a timer. 
    - If the co-ordinates retrieved from registry would place the frame off
-      screen, the frame is repositioned.	
+      screen, the frame is repositioned.
+   - Added GetTitle, SetTitle, GetStatusText and SetStatusText functions.	  
 * Updated CDocker and CTab
    - CTabs and CDockers now support the WS_EX_LAYOUTRTL extended style. This
       style creates a window whose horizontal origin is on the right edge to 
@@ -46,6 +48,9 @@ Changes in detail
 Added CBitmap::FromHandle
 Added CBrush::FromHandle
 Added CDC::FromHandle
+Added CFrame::GetTitle
+Added CFrame::SetTitle
+Added CFrame::GetStatusText
 Added CFont::FromHandle
 Added CImageList::DrawIndirect
 Added CImageList::FromHandle
@@ -59,6 +64,7 @@ Added CWnd::FromHandlePermanent
 Modified CComboBoxEx::GetComboBoxCtrl
 Modified CComboBoxEx::GetEditCtrl
 Modified CDateTime::GetMonthCalCtrl
+Modified CFrame::SetStatusText
 Modified CListView::GetEditControl
 Modified CListView::GetHeader
 Modified CListView::EditLabel
