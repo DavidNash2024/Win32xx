@@ -750,7 +750,7 @@ namespace Win32xx
 			// Navigate to an empty page
 			if (SUCCEEDED(hr))
 			{
-				m_pIWebBrowser2->Navigate((OLECHAR*)L"about:blank", 0, 0, 0, 0);
+				Navigate(_T("about:blank"));
 			}
 		}
 	}

@@ -105,9 +105,13 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 	TCHAR szFileName[_MAX_PATH];
 	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
 
-	m_strPathName = szFileName;
-	ReadFile(szFileName);
-	SetWindowTitle();
+	if (ReadFile(szFileName))
+	{
+		m_strPathName = szFileName;
+		ReadFile(szFileName);
+		SetWindowTitle();
+		AddMRUEntry(szFileName);
+	}
 }
 
 void CMainFrame::OnFileExit()

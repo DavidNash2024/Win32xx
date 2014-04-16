@@ -3225,7 +3225,6 @@ namespace Win32xx
 		case TBN_DROPDOWN:		return OnTBNDropDown((LPNMTOOLBAR)lParam);
 		case TTN_GETDISPINFO:	return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
 		case UWN_UNDOCKED:		return OnUndocked();
-//		case TBN_HOTITEMCHANGE:	return OnHotItemChange((LPNMTBHOTITEM)lParam);
 		}
 
 		return 0L;

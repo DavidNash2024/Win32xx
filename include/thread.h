@@ -253,6 +253,7 @@ namespace Win32xx
 	{
 		// Get the pointer for this CMyThread object
 		CThread* pThread = static_cast<CThread*>(pCThread);
+		assert(dynamic_cast<CThread*>(pThread));
 
 		if (pThread->InitInstance())
 			return pThread->MessageLoop();
