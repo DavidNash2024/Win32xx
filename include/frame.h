@@ -78,7 +78,6 @@
 #include "statusbar.h"
 #include "toolbar.h"
 #include "rebar.h"
-#include "thread.h"
 #include "default_resource.h"
 
 #ifndef RBN_MINMAX
@@ -532,7 +531,7 @@ namespace Win32xx
 		CString m_strStatusText;			// CString for status text
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
-		Shared_Ptr<CThread> m_pStatusThread;// Smart pointer for StatusBar update thread
+		Shared_Ptr<CWinThread> m_pStatusThread;// Smart pointer for StatusBar update thread
 		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
@@ -2721,12 +2720,12 @@ namespace Win32xx
 
 		// Get the statusbar's window area
 		CRect rcStatus;
-		if (GetStatusBar()->IsWindowVisible() || !IsWindowVisible())
+		if (GetStatusBar()->IsWindow() && (GetStatusBar()->IsWindowVisible() || !IsWindowVisible()))
 			rcStatus = GetStatusBar()->GetWindowRect();
 
 		// Get the top rebar or toolbar's window area
 		CRect rcTop;
-		if (IsReBarSupported() && m_bUseReBar)
+		if (IsReBarSupported() && m_bUseReBar && GetReBar()->IsWindow())
 			rcTop = GetReBar()->GetWindowRect();
 		else
 			if (GetToolBar()->IsWindow() && GetToolBar()->IsWindowVisible())
@@ -3012,7 +3011,7 @@ namespace Win32xx
 		if ((2500 <= GetWinVersion()) && (m_bUseIndicatorStatus || m_bUseMenuStatus))
 		{
 			m_StopEvent = CreateEvent(NULL, TRUE, FALSE, _T("Stop Thread"));
-			m_pStatusThread = new CThread(CFrame::StaticStatusProc, this);
+			m_pStatusThread = new CWinThread(CFrame::StaticStatusProc, this);
 			m_pStatusThread->CreateThread();
 		}
 
@@ -3469,7 +3468,7 @@ namespace Win32xx
 			GetReBar()->SendMessage(WM_SIZE, 0L, 0L);
 			GetReBar()->Invalidate();
 		}
-		else if (m_bUseToolBar && m_bShowToolBar)
+		else if (m_bUseToolBar && m_bShowToolBar && GetToolBar()->IsWindow())
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Resize the View window
@@ -4120,9 +4119,10 @@ namespace Win32xx
 	{
 		// Called when the statusbar thread starts
 		CFrame* pFrame = static_cast<CFrame*>(pParam);
+		assert(dynamic_cast<CFrame*>(pFrame));
 
 		// Loop until the StopEvent is signaled
-		while ( WaitForSingleObject(pFrame->m_StopEvent, 1000) == WAIT_TIMEOUT)
+		while ( WaitForSingleObject(pFrame->m_StopEvent, 500) == WAIT_TIMEOUT)
 		{
 			pFrame->SetStatusIndicators();
 		}

@@ -6,18 +6,15 @@
 #define TESTWND_H
 
 
-class CTestWindow : public CWnd, public CThread
+class CTestWindow : public CWnd
 {
 public:
 	CTestWindow(int nWindow);
 	virtual ~CTestWindow() {}
 
-protected:
-	// Override CThread member functions
-	virtual BOOL InitInstance();
-
-	// Override CWnd member functions
 	virtual HWND Create(CWnd* pWndParent = 0);
+
+protected:
 	virtual void OnClose();
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();

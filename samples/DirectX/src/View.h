@@ -17,11 +17,13 @@ struct CUSTOMVERTEX
 };
 
 
-class CView : public CWnd, public CThread
+class CView : public CWnd
 {
 public:
-	CView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL), m_pParent(NULL) {}
+	CView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL) {}
 	virtual ~CView();
+
+	virtual HWND Create(CWnd* pParent = 0);
 	virtual HRESULT InitD3D(HWND hWnd);
 	virtual HRESULT InitGeometry();
 	virtual void Render();
@@ -29,13 +31,6 @@ public:
 	virtual void SetupMatrices();
 
 protected:
-	// CThread member function overrides
-	virtual void StartThread(CWnd* pParent);
-	virtual BOOL InitInstance();
-	virtual int MessageLoop();
-
-	// CWnd member function overrides
-	virtual HWND Create(CWnd* pParent = 0);
 	virtual	int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDestroy();
 	virtual void PreCreate(CREATESTRUCT &cs);
@@ -46,7 +41,6 @@ private:
 	LPDIRECT3DDEVICE9 m_pd3dDevice;		// Our rendering device
 	LPDIRECT3DVERTEXBUFFER9 m_pVB;      // Buffer to hold vertices
 	D3DPRESENT_PARAMETERS m_d3dpp;
-	CWnd* m_pParent;
 };
 
 

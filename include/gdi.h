@@ -719,9 +719,9 @@ namespace Win32xx
 		}
 
 		virtual ~CPaintDC()	
-		{ 
-			::EndPaint(m_hWnd, &m_ps); 
+		{
 			Detach();
+			::EndPaint(m_hWnd, &m_ps); 
 		}
 
 	private:

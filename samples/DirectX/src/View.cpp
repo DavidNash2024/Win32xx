@@ -30,14 +30,16 @@ CView::~CView()
 HWND CView::Create(CWnd* pParent)
 {
 	// Called by CFrame::OnCreate. 
-	// The window is created when the thread resumes.
-	CreateThread(CREATE_SUSPENDED);
-	StartThread(pParent);
-	return 0;
+
+	UNREFERENCED_PARAMETER(pParent);
+	ShowWindow();
+	return m_hWnd;
 }
 
 int CView::OnCreate(LPCREATESTRUCT pcs)
 {
+	UNREFERENCED_PARAMETER(pcs);
+
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
@@ -186,7 +188,7 @@ void CView::SetupMatrices()
 //-----------------------------------------------------------------------------
 void CView::Render()
 {
-	if ( WAIT_TIMEOUT == WaitForSingleObject(GetThread(), 1) )
+//	if ( WAIT_TIMEOUT == WaitForSingleObject(GetThread(), 1) )
 	{
 		if (IsWindow())
 		{
@@ -196,7 +198,7 @@ void CView::Render()
 			case D3D_OK:
 				{
 					CRect rcClient = GetClientRect();
-					bool bNeedResize = m_d3dpp.BackBufferWidth != rcClient.Width() || m_d3dpp.BackBufferHeight != rcClient.Height();
+					bool bNeedResize = (int)m_d3dpp.BackBufferWidth != rcClient.Width() || (int)m_d3dpp.BackBufferHeight != rcClient.Height();
 					if (bNeedResize)
 					{
 						m_d3dpp.BackBufferWidth		= rcClient.Width();
@@ -246,41 +248,6 @@ void CView::Render()
 		}
 	}
 }
-
-void CView::StartThread(CWnd* pParent)
-{
-	m_pParent = pParent;
-	ResumeThread();
-}
-
-BOOL CView::InitInstance()
-{
-	// This function runs when the thread starts
-
-	// Create the view window
-	CWnd::Create(m_pParent);
-
-	m_pParent->PostMessage(UWM_VIEWCREATED, 0, 0);
-
-	return TRUE;	// return TRUE to run the message loop
-}
-
-int CView::MessageLoop()
-// Here we override CThread::MessageLoop to accommodate the special needs of DirectX
-{
-	MSG Msg = {0};
-	while( Msg.message!=WM_QUIT )
-	{
-		if( PeekMessage(&Msg, NULL, 0U, 0U, PM_REMOVE))
-		{
-			::TranslateMessage(&Msg);
-			::DispatchMessage(&Msg);
-		}
-		else
-			Render();
-	}
-	return LOWORD(Msg.wParam);
-} 
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

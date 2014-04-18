@@ -4,6 +4,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
+#include "ViewThread.h"
 #include "View.h"
 
 // User defined window message
@@ -30,7 +31,7 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CView m_View;
+	CViewThread m_ViewThread;
 };
 
 #endif //MAINFRM_H

@@ -10,9 +10,19 @@ For Dev-C++ you will need the DirecX v9.0c DevPak
 Microsoft makes the the DirectX Software Development Kit available for download
 without charge.
 
+In this example we do things a little differently:
+- CMainFrame has a CViewThread member variable. CViewThread inherits from
+   CWinThread.
+- CViewThread has a member CView variable for our view window. This CView is 
+   set as the view window in CMainFrame's constructor.
+- The CViewThread thread is started in CMainFrame::OnCreate. Once the view's
+   thread is started we then call CFrame::OnCreate.
+- The view window is created automatically when the view thread starts.
+- The view window runs a customized message loop. The message loop
+   calls CView::Render to perform the DirectX drawing.
 
 Features demonstrated in this example
 =====================================
 * Displaying a moving DirectX picture in a view window.  
 * Putting a view window in a separate thread.
-* Adding a view window from a separate thread to a frame.
+* Customizing a threads message loop.

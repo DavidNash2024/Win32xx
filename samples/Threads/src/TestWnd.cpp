@@ -21,16 +21,6 @@ HWND CTestWindow::Create(CWnd* pParent)
 		380 + 20*m_nWindow, 40 + 20*m_nWindow, 300, 200, NULL, NULL);
 }
 
-BOOL CTestWindow::InitInstance()
-{
-	// This function runs when the thread starts
-
-	// Create a test window for this thread
-	Create();
-
-	return TRUE;	// return TRUE to run the message loop
-}
-
 void CTestWindow::OnClose()
 {
 	CMainWindow* pMainWnd = GetThreadApp()->GetMainWnd();

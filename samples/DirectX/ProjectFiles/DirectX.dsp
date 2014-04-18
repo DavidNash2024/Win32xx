@@ -110,6 +110,10 @@ SOURCE=..\src\StdAfx.cpp
 
 SOURCE=..\src\View.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=..\src\ViewThread.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -133,6 +137,10 @@ SOURCE=..\src\stdafx.h
 # Begin Source File
 
 SOURCE=..\src\View.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ViewThread.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

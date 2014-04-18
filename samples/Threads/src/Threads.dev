@@ -1,9 +1,9 @@
 [Project]
 FileName=Threads.dev
 Name=Threads
-UnitCount=7
+UnitCount=9
 Type=0
-Ver=1
+Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
@@ -12,7 +12,7 @@ ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D NDEBUG_@@__@@_
-Linker=-lcomctl32_@@_-lWs2_32_@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@__@@_
 IsCpp=1
 Icon=
 ExeOutput=.\Dev-C++
@@ -27,7 +27,9 @@ CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
-CompilerSettings=0000000000000000000000
+CompilerSettings=0000000000000000000000000
+LogOutput=
+LogOutputEnabled=0
 
 [Unit1]
 FileName=main.cpp
@@ -100,7 +102,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit8]
-FileName=Thread.cpp
+FileName=MyThread.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -110,7 +112,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit9]
-FileName=Thread.h
+FileName=MyThread.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -137,7 +139,7 @@ Build=1
 LanguageID=1033
 CharsetID=1252
 CompanyName=
-FileVersion=
+FileVersion=0.1.1.1
 FileDescription=Developed using the Dev-C++ IDE
 InternalName=
 LegalCopyright=
@@ -146,6 +148,7 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+SyncProduct=0
 
 [Unit13]
 FileName=Threads.rc

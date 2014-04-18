@@ -70,17 +70,17 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 	for (int i = 1 ; i <= m_nTestWnd ; i++)
 	{
 		// Create the Test Window and store the CTestWindow pointer
-		CTestWindow* pTestWin = new CTestWindow(i);
+		CMyThread* pMyThread = new CMyThread(i);
 
 		CString str;
 		str.Format( _T("Thread %d started "), i );
 		AppendText(str);
 
-		m_vTestWnd.push_back(pTestWin);
+		m_vMyThread.push_back(pMyThread);
 	}
 
-	std::vector<TestWndPtr>::iterator iter;
-	for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
+	std::vector<MyThreadPtr>::iterator iter;
+	for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
 	{
 		(*iter)->CreateThread(CREATE_SUSPENDED);
 		(*iter)->ResumeThread();
@@ -92,12 +92,13 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 void CMainWindow::OnClose()
 {
 	// Close each thread window.
-	// The thread is then terminated with a WM_QUIT when its window is destroyed.
-	std::vector<TestWndPtr>::iterator iter;
-	for (iter = m_vTestWnd.begin(); iter < m_vTestWnd.end(); ++iter)
+	// The thread is then terminated with PostWuitMessage when its window is destroyed.
+
+	std::vector<MyThreadPtr>::iterator iter;
+	for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
 	{
-		if ((*iter)->IsWindow())
-			(*iter)->SendMessage(WM_CLOSE, 0, 0);
+		if ((*iter)->GetTestWnd()->IsWindow())
+			(*iter)->GetTestWnd()->SendMessage(WM_CLOSE, 0, 0);
 	}
 
 	Destroy();

@@ -133,6 +133,9 @@
 			<File
 				RelativePath="..\src\View.cpp">
 			</File>
+			<File
+				RelativePath="..\src\ViewThread.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
@@ -152,6 +155,9 @@
 			</File>
 			<File
 				RelativePath="..\src\View.h">
+			</File>
+			<File
+				RelativePath="..\src\ViewThread.h">
 			</File>
 		</Filter>
 		<Filter

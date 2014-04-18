@@ -38,6 +38,7 @@
     <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\..\..\include\winutils.h" />
     <ClInclude Include="..\src\MainWnd.h" />
+    <ClInclude Include="..\src\MyThread.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TestWnd.h" />
     <ClInclude Include="..\src\ThreadApp.h" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MainWnd.cpp" />
+    <ClCompile Include="..\src\MyThread.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

@@ -12,7 +12,7 @@ CMainFrame::CMainFrame()
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	//Set m_View as the view window of the frame
-	SetView(m_View);
+	SetView(m_ViewThread.GetView());
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -57,6 +57,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// m_bUseThemes = FALSE;            // Don't use themes
 	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
 
+	m_ViewThread.SetFrame(this);
+
+	// Create the thread for the view window
+	m_ViewThread.CreateThread();
+	WaitForInputIdle(m_ViewThread.GetThread(), INFINITE);
+
 	// call the base class function
 	return CFrame::OnCreate(pcs);
 }
@@ -64,8 +70,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 void CMainFrame::OnDestroy()
 {
 	// End the view's thread
-	PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
-	::WaitForSingleObject(m_View.GetThread(), INFINITE);
+	PostThreadMessage(m_ViewThread.GetThreadID(), WM_QUIT, 0, 0);
+	::WaitForSingleObject(m_ViewThread.GetThread(), INFINITE);
 	
 	// Call the base function
 	CFrame::OnDestroy();
@@ -155,12 +161,9 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-//	case WM_DESTROY:
-//		PostThreadMessage(m_View.GetThreadID(), WM_QUIT, 0, 0);
-//		::WaitForSingleObject(m_View.GetThread(), INFINITE);
-//		break;
 	case UWM_VIEWCREATED:
-		RecalcLayout();
+	//	RecalcLayout();
+		TRACE("View Window created\n");
 		break;
 	}
 

@@ -113,6 +113,9 @@
 #include <stdio.h>
 #include <tchar.h>
 #include <shlwapi.h>
+#ifndef _WIN32_WCE
+  #include <process.h>
+#endif
 #include "shared_ptr.h"
 //#include "winutils.h"			// included later in this file
 //#include "cstring.h"			// included later in this file
@@ -323,11 +326,58 @@ namespace Win32xx
 		TCHAR m_szErrorString[MAX_STRING_SIZE];
 	};
 
+	// Typedef for _beginthreadex's callback function
+	typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
+
+	//////////////////////////////////////
+	// Declaration of the CWinThread class
+	//
+	class CWinThread
+	{
+	public:
+		CWinThread();
+		CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam);
+		virtual ~CWinThread();
+
+		// Overridables
+		virtual BOOL InitInstance();
+		virtual int MessageLoop();
+		virtual BOOL OnIdle(LONG lCount);
+		virtual BOOL PreTranslateMessage(MSG Msg);
+
+		// Operations
+		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
+		HANDLE	GetThread()	const;
+		int		GetThreadID() const;
+		int		GetThreadPriority() const;
+		DWORD	ResumeThread() const;
+		HACCEL	GetAccelerators() const { return m_hAccel; }
+		CWnd*	GetAcceleratorsWindow() const { return m_pWndAccel; }
+		void	SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
+		BOOL	SetThreadPriority(int nPriority) const;
+		DWORD	SuspendThread() const;
+
+	private:
+		CWinThread(const CWinThread&);				// Disable copy construction
+		CWinThread& operator = (const CWinThread&);	// Disable assignment operator
+
+		void CleanupTemps();
+		static	UINT WINAPI StaticThreadProc(LPVOID pCThread);
+
+		PFNTHREADPROC m_pfnThreadProc;	// Callback function for worker threads
+		LPVOID m_pThreadParams;			// Thread parameter for worker threads
+		HANDLE m_hThread;				// Handle of this thread
+		UINT m_nThreadID;				// ID of this thread
+		DWORD m_dwThreadID;				// ID of this thread
+		HACCEL m_hAccel;				// handle to the accelerator table		
+		CWnd* m_pWndAccel;				// handle to the window for accelerator keys
+
+	};
 
 	///////////////////////////////////
 	// Declaration of the CWinApp class
 	//
-	class CWinApp
+	class CWinApp : public CWinThread
 	{
 		// Provide these access to CWinApp's private members:
 		friend class CBitmap;
@@ -346,6 +396,7 @@ namespace Win32xx
 		friend class CPropertySheet;
 		friend class CRgn;
 		friend class CTaskDialog;
+		friend class CWinThread;
 		friend class CWnd;
 		friend CWinApp* GetApp();
 
@@ -355,17 +406,12 @@ namespace Win32xx
 		CWinApp();
 		virtual ~CWinApp();
 
-		HACCEL GetAccelerators() const { return m_hAccel; }
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
-		void SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
 		void SetResourceHandle(HINSTANCE hResource);
 
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
-		virtual int  MessageLoop();
-		virtual BOOL OnIdle(LONG lCount);
-		virtual BOOL PreTranslateMessage(MSG Msg);
 		virtual int Run();
 
 	private:
@@ -395,8 +441,6 @@ namespace Win32xx
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsIndex;				// Thread Local Storage index
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
-		HACCEL m_hAccel;				// handle to the accelerator table
-		CWnd* m_pWndAccel;				// handle to the window for accelerator keys
 
 	};
 
@@ -418,6 +462,7 @@ namespace Win32xx
 	friend class CPropertyPage;
 	friend class CTaskDialog;
 	friend class CWinApp;
+	friend class CWinThread;
 
 	public:
 		CWnd();				// Constructor
@@ -668,6 +713,239 @@ namespace Win32xx
 		return "CWinException thrown";
 	}
 
+	///////////////////////////////////////
+	// Definitions for the CWinThread class
+	//
+	inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_hThread(0), 
+		                               m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
+	{
+	}
+
+	inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
+		                m_pThreadParams(0), m_hThread(0), m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
+	{
+		m_pfnThreadProc = pfnThreadProc;
+		m_pThreadParams = pParam;
+	}
+
+	inline CWinThread::~CWinThread()
+	{
+		if (m_hThread)
+		{
+			// A thread's state is set to signalled when the thread terminates.
+			// If your thread is still running at this point, you have a bug.
+			if (0 != WaitForSingleObject(m_hThread, 0))
+			{
+				TRACE("*** Error *** Ending CWinThread before ending its thread\n");
+				assert(FALSE);
+			}
+
+			// Close the thread's handle
+			::CloseHandle(m_hThread);
+		}
+	}
+
+	inline void CWinThread::CleanupTemps()
+	// Removes all Temporary CWnds and CMenus belonging to this thread
+	{
+		// Retrieve the pointer to the TLS Data
+		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		assert(pTLSData);
+
+		pTLSData->TmpDCs.clear();
+		pTLSData->vTmpDCs.clear();
+		pTLSData->TmpGDIs.clear();
+		pTLSData->TmpImageLists.clear();
+		pTLSData->TmpWnds.clear();
+
+	#ifndef _WIN32_WCE
+		pTLSData->TmpMenus.clear();
+	#endif
+
+	}
+
+	inline void CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
+	{
+		// Valid argument values:
+		// initflag					Either CREATE_SUSPENDED or 0
+		// stack_size				Either the stack size or 0
+		// pSecurityAttributes		Either a pointer to SECURITY_ATTRIBUTES or 0
+
+		if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
+		if (NULL == m_pThreadParams) m_pThreadParams = this;
+
+#ifdef _WIN32_WCE
+		m_hThread = (HANDLE)::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_dwThreadID);
+#else
+		m_hThread = (HANDLE)::_beginthreadex(pSecurityAttributes, stack_size, (unsigned int (__stdcall *)(void *))m_pfnThreadProc, m_pThreadParams, initflag, &m_nThreadID);
+#endif
+
+		if (0 == m_hThread)
+			throw CWinException(_T("Failed to create thread"));
+	}
+
+	inline HANDLE CWinThread::GetThread() const
+	{
+		assert(m_hThread);
+		return m_hThread;
+	}
+
+	inline int CWinThread::GetThreadID() const
+	{
+		assert(m_hThread);
+
+#ifdef _WIN32_WCE
+		return m_dwThreadID;
+#endif
+
+		return m_nThreadID;
+	}
+
+	inline int CWinThread::GetThreadPriority() const
+	{
+		assert(m_hThread);
+		return ::GetThreadPriority(m_hThread);
+	}
+
+	inline BOOL CWinThread::InitInstance()
+	{
+		// Override this function to perform tasks when the thread starts.
+
+		// return TRUE to run a message loop, otherwise return FALSE.
+		// A thread with a window must run a message loop.
+		return FALSE;
+	}
+
+	inline int CWinThread::MessageLoop()
+	{
+		// This gets any messages queued for the application, and dispatches them.
+		MSG Msg = {0};
+		int status = 1;
+		LONG lCount = 0;
+
+		while (status != 0)
+		{
+			// While idle, perform idle processing until OnIdle returns FALSE
+			// Exclude some messages to avoid calling OnIdle excessively
+			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && 
+								(Msg.message != WM_TIMER) && 
+								(Msg.message != WM_MOUSEMOVE) && 
+								(Msg.message != WM_SETCURSOR) &&  
+								OnIdle(lCount) == TRUE  )
+			{
+				++lCount;
+			}
+
+
+			lCount = 0;
+
+			// Now wait until we get a message
+			if ((status = ::GetMessage(&Msg, NULL, 0, 0)) == -1)
+				return -1;
+
+			if (Msg.message == UWM_CLEANUPTEMPS)
+			{
+				CleanupTemps();
+				TRACE("CleanupTemps called\n");
+			}
+			else
+			{
+				if (!PreTranslateMessage(Msg))
+				{
+					::TranslateMessage(&Msg);
+					::DispatchMessage(&Msg);
+				}
+			}
+		}
+
+		return LOWORD(Msg.wParam);
+	}
+
+	inline BOOL CWinThread::OnIdle(LONG lCount)
+	{
+		UNREFERENCED_PARAMETER(lCount);
+		TRACE("OnIdle \n");
+
+		return FALSE;
+	}
+
+	inline BOOL CWinThread::PreTranslateMessage(MSG Msg)
+	{
+		// This functions is called by the MessageLoop. It processes the
+		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
+		// keyboard and mouse events.
+
+		BOOL Processed = FALSE;
+
+		// only pre-translate mouse and keyboard input events
+		if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
+			(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
+		{
+			// Process keyboard accelerators
+			if (GetAcceleratorsWindow() && ::TranslateAccelerator(*GetAcceleratorsWindow(), GetAccelerators(), &Msg))
+				Processed = TRUE;
+			else
+			{
+				// Search the chain of parents for pretranslated messages.
+				for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+				{
+					CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
+					if (pWnd)
+					{
+						Processed = pWnd->PreTranslateMessage(&Msg);
+						if(Processed)
+							break;
+					}
+				}
+			}
+		}
+
+		return Processed;
+	}
+
+	inline DWORD CWinThread::ResumeThread() const
+	{
+		assert(m_hThread);
+		return ::ResumeThread(m_hThread);
+	}
+
+	inline void CWinThread::SetAccelerators(HACCEL hAccel, CWnd* pWndAccel)
+	// nID is the resource ID of the accelerator table
+	// pWndAccel is the window pointer for translated messages
+	{
+		assert (hAccel);
+		assert (pWndAccel);
+
+		m_pWndAccel = pWndAccel;
+		m_hAccel = hAccel;
+	}
+
+	inline BOOL CWinThread::SetThreadPriority(int nPriority) const
+	{
+		assert(m_hThread);
+		return ::SetThreadPriority(m_hThread, nPriority);
+	}
+
+
+	inline DWORD CWinThread::SuspendThread() const
+	{
+		assert(m_hThread);
+		return ::SuspendThread(m_hThread);
+	}
+
+	inline UINT WINAPI CWinThread::StaticThreadProc(LPVOID pCThread)
+	// When the thread starts, it runs this function.
+	{
+		// Get the pointer for this CMyThread object
+		CWinThread* pThread = static_cast<CWinThread*>(pCThread);
+		assert(dynamic_cast<CWinThread*>(pThread));
+
+		if (pThread->InitInstance())
+			return pThread->MessageLoop();
+
+		return 0;
+	}
+
 
 	////////////////////////////////////
 	// Definitions for the CWinApp class
@@ -675,7 +953,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You must run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_Callback(NULL), m_hAccel(0), m_pWndAccel(0)
+	inline CWinApp::CWinApp() : m_Callback(NULL)//, m_hAccel(0), m_pWndAccel(0)
 	{
 		try
 		{
@@ -874,92 +1152,6 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline int CWinApp::MessageLoop()
-	{
-		// This gets any messages queued for the application, and dispatches them.
-		MSG Msg = {0};
-		int status = 1;
-		LONG lCount = 0;
-
-		while (status != 0)
-		{
-			// While idle, perform idle processing until OnIdle returns FALSE
-			// Exclude some messages to avoid calling OnIdle excessively
-			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && 
-								(Msg.message != WM_TIMER) && 
-								(Msg.message != WM_MOUSEMOVE) && 
-								(Msg.message != WM_SETCURSOR) &&  
-								OnIdle(lCount) == TRUE  )
-			{
-				++lCount;
-			}
-
-
-			lCount = 0;
-
-			// Now wait until we get a message
-			if ((status = ::GetMessage(&Msg, NULL, 0, 0)) == -1)
-				return -1;
-
-			if (Msg.message == UWM_CLEANUPTEMPS)
-			{
-				CleanupTemps();
-				TRACE("CleanupTemps called\n");
-			}
-			else
-			{
-				if (!PreTranslateMessage(Msg))
-				{
-					::TranslateMessage(&Msg);
-					::DispatchMessage(&Msg);
-				}
-			}
-		}
-
-		return LOWORD(Msg.wParam);
-	}
-
-	inline BOOL CWinApp::OnIdle(LONG lCount)
-	{
-		UNREFERENCED_PARAMETER(lCount);
-		TRACE("OnIdle \n");
-
-		return FALSE;
-	}
-
-	inline BOOL CWinApp::PreTranslateMessage(MSG Msg)
-	{
-		// This functions is called by the MessageLoop. It processes the
-		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
-		// keyboard and mouse events.
-
-		BOOL Processed = FALSE;
-
-		// only pre-translate mouse and keyboard input events
-		if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
-			(Msg.message >= WM_MOUSEFIRST && Msg.message <= WM_MOUSELAST))
-		{
-			// Process keyboard accelerators
-			if (m_pWndAccel && ::TranslateAccelerator(*m_pWndAccel, m_hAccel, &Msg))
-				Processed = TRUE;
-			else
-			{
-				// Search the chain of parents for pretranslated messages.
-				for (HWND hWnd = Msg.hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
-				{
-					CWnd* pWnd = GetCWndFromMap(hWnd);
-					if (pWnd)
-					{
-						Processed = pWnd->PreTranslateMessage(&Msg);
-						if(Processed)
-							break;
-					}
-				}
-			}
-		}
-
-		return Processed;
-	}
 
 	inline int CWinApp::Run()
 	{
@@ -975,17 +1167,6 @@ namespace Win32xx
 			::PostQuitMessage(-1);
 			return -1;
 		}
-	}
-
-	inline void CWinApp::SetAccelerators(HACCEL hAccel, CWnd* pWndAccel)
-	// nID is the resource ID of the accelerator table
-	// pWndAccel is the window pointer for translated messages
-	{
-		assert (hAccel);
-		assert (pWndAccel);
-
-		m_pWndAccel = pWndAccel;
-		m_hAccel = hAccel;
 	}
 
 	inline void CWinApp::SetCallback()

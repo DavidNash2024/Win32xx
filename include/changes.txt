@@ -6,13 +6,18 @@ Bug Fixes:
 
 New Features and Enhancements
 -----------------------------
-* Updated CThread.
-   - A new constructor has been added to facilitate worker threads. This 
+* Updated the approach to using threads
+   - CWinThread is used in place of CThread.
+   - CWinApp now inherits from CWinThread.
+   - GUI threads are now implemented without multiple inheritance. Refer to
+     the Threads and DirectX samples for an example of how to create GUI
+	 threads.
+   - CWinThread provides a constructor to facilitate worker threads. This 
      constructor allows users to specify the thread's callback function and
      a LPVOID pParams parameter.
-   - Threads are now longer created in CThreads constructor. Instead, they are 
-	  created with CreateThread. This provides more control over if and when
-	  the thread is created.
+   - The thread is now created using the CreateThread function rather than 
+     being automatically created in the constructor. This provides more control
+	 over if and when the thread is created.
 * Updated CFrame
    - A keyboard hook is used to retrieve keyboard indicators (NUM, CAPS, SCRL),
       removing the need for a timer. 

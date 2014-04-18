@@ -99,6 +99,10 @@ SOURCE=..\src\MainWnd.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\MyThread.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\TestWnd.cpp
 # End Source File
 # Begin Source File
@@ -112,6 +116,10 @@ SOURCE=..\src\ThreadApp.cpp
 # Begin Source File
 
 SOURCE=..\src\MainWnd.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyThread.h
 # End Source File
 # Begin Source File
 
