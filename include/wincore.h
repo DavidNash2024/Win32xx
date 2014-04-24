@@ -121,6 +121,8 @@
 //#include "cstring.h"			// included later in this file
 //#include "gdi.h"				// included later in this file
 //#include "menu.h"				// included later in this file
+//#include "imagelist.h"		// included later in this file
+
 
 // For compilers lacking Win64 support
 #ifndef  GetWindowLongPtr
@@ -408,7 +410,14 @@ namespace Win32xx
 
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
-		void SetResourceHandle(HINSTANCE hResource);
+		HCURSOR LoadCursor(LPCTSTR lpszResourceName) const;
+		HCURSOR LoadCursor(int nIDCursor) const;
+		HCURSOR LoadStandardCursor(LPCTSTR lpszCursorName) const;
+		HICON	LoadIcon(LPCTSTR lpszResourceName) const;
+		HICON	LoadIcon(int nIDIcon) const;
+		HICON   LoadStandardIcon(LPCTSTR lpszIconName) const;
+		HCURSOR SetCursor(HCURSOR hCursor) const;
+		void	SetResourceHandle(HINSTANCE hResource);
 
 		// These are the functions you might wish to override
 		virtual BOOL InitInstance();
@@ -1152,6 +1161,46 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	inline HCURSOR CWinApp::LoadCursor(LPCTSTR lpszResourceName) const
+	// Loads the cursor resource from the resource script (resource.rc)
+	{
+		return ::LoadCursor(GetApp()->GetResourceHandle(), lpszResourceName);
+	}
+
+	inline HCURSOR CWinApp::LoadCursor(int nIDCursor) const
+	// Loads the cursor resource from the resource script (resource.rc)
+	{
+		return ::LoadCursor(GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIDCursor));
+	}
+
+	inline HCURSOR CWinApp::LoadStandardCursor(LPCTSTR lpszCursorName) const
+	// Returns the handle of a standard cursor. Standard cursors include:
+	// IDC_APPSTARTING, IDC_ARROW, IDC_CROSS, IDC_HAND, IDC_HELP, IDC_IBEAM, IDC_NO, IDC_SIZEALL, 
+	// IDC_SIZENESW, IDC_SIZENS, IDC_SIZENWSE, IDC_SIZEWE, IDC_UPARROW, IDC_WAIT
+	{
+		return ::LoadCursor(0, lpszCursorName);
+	}
+
+	inline HICON CWinApp::LoadIcon(LPCTSTR lpszResourceName) const
+	// Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values
+	// For other icon sizes, use the LoadImage windows API function.
+	{
+		return ::LoadIcon(GetApp()->GetResourceHandle(), lpszResourceName);
+	}
+
+	inline HICON CWinApp::LoadIcon(int nIDIcon) const
+	// Loads the icon resource whose size conforms to the SM_CXICON and SM_CYICON system metric values
+	{
+		return ::LoadIcon(GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIDIcon));
+	}
+
+	inline HICON CWinApp::LoadStandardIcon(LPCTSTR lpszIconName) const
+	// Returns the handle of a standard Icon. Standard Icons include:
+	// IDI_APPLICATION, IDI_ASTERISK, IDI_ERROR, IDI_EXCLAMATION, 
+	// IDI_HAND, IDI_INFORMATION, IDI_QUESTION, IDI_WARNING
+	{
+		return ::LoadIcon(0, lpszIconName);
+	}
 
 	inline int CWinApp::Run()
 	{
@@ -1192,6 +1241,15 @@ namespace Win32xx
 		assert(wcDefault.lpfnWndProc);	// Assert fails when running UNICODE build on ANSI OS.
 		m_Callback = wcDefault.lpfnWndProc;
 		::UnregisterClass(szClassName, GetInstanceHandle());
+	}
+
+	inline HCURSOR CWinApp::SetCursor(HCURSOR hCursor) const
+	// Sets the current cursor and returns the previous one.
+	// Note:The cursor will be set to the window's class cursor (if one is set) each time the 
+	//  mouse is moved over the window. You can specify different cursors for different
+	//  conditions while processing WM_SETCURSOR
+	{
+		return ::SetCursor(hCursor);
 	}
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)

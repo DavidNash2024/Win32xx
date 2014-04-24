@@ -455,20 +455,6 @@ namespace Win32xx
 		return pt;
 	}
 
-	inline HBITMAP LoadBitmap (LPCTSTR lpszName)
-	{
-		assert(GetApp());
-
-		HBITMAP hBitmap = (HBITMAP)::LoadImage (GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		return hBitmap;
-	}
-
-	inline HBITMAP LoadBitmap (int nID)
-	{
-		return LoadBitmap(MAKEINTRESOURCE(nID));
-	}
-
-
 	inline void TRACE(LPCSTR str)
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	{
