@@ -18,8 +18,8 @@ public:
 	void SetFrame(CFrame* pFrame) { m_pFrame = pFrame; }
 
 private:
-	CView m_View;
-	CFrame* m_pFrame;
+	CView m_View;		// CMainFrame's View window
+	CFrame* m_pFrame;	// Pointer to CMainFrame
 };
 
 

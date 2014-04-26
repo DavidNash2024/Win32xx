@@ -408,6 +408,11 @@ namespace Win32xx
 		CWinApp();
 		virtual ~CWinApp();
 
+		// Overridables
+		virtual BOOL InitInstance();
+		virtual int Run();
+
+		// Operations
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		HCURSOR LoadCursor(LPCTSTR lpszResourceName) const;
@@ -419,10 +424,6 @@ namespace Win32xx
 		HCURSOR SetCursor(HCURSOR hCursor) const;
 		void	SetResourceHandle(HINSTANCE hResource);
 
-		// These are the functions you might wish to override
-		virtual BOOL InitInstance();
-		virtual int Run();
-
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
@@ -432,9 +433,9 @@ namespace Win32xx
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		void	CleanupTemps();
-		DWORD GetTlsIndex() const { return m_dwTlsIndex; }
+		TLSData* GetTlsData() const; 
 		void	SetCallback();
-		TLSData* SetTlsIndex();
+		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
@@ -448,7 +449,7 @@ namespace Win32xx
 		CCriticalSection m_csAppStart;	// thread synchronisation for application startup
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
-		DWORD m_dwTlsIndex;				// Thread Local Storage index
+		DWORD m_dwTlsData;				// Thread Local Storage data
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
@@ -758,7 +759,7 @@ namespace Win32xx
 	// Removes all Temporary CWnds and CMenus belonging to this thread
 	{
 		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		assert(pTLSData);
 
 		pTLSData->TmpDCs.clear();
@@ -950,7 +951,10 @@ namespace Win32xx
 		assert(dynamic_cast<CWinThread*>(pThread));
 
 		if (pThread->InitInstance())
+		{
+			GetApp()->SetTlsData();
 			return pThread->MessageLoop();
+		}
 
 		return 0;
 	}
@@ -969,8 +973,8 @@ namespace Win32xx
 			m_csAppStart.Lock();
 			assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
 
-			m_dwTlsIndex = ::TlsAlloc();
-			if (m_dwTlsIndex == TLS_OUT_OF_INDEXES)
+			m_dwTlsData = ::TlsAlloc();
+			if (m_dwTlsData == TLS_OUT_OF_INDEXES)
 			{
 				// We only get here in the unlikely event that all TLS indexes are already allocated by this app
 				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
@@ -1041,10 +1045,10 @@ namespace Win32xx
 		}  
 		
 		// Do remaining tidy up
-		if (m_dwTlsIndex != TLS_OUT_OF_INDEXES)
+		if (m_dwTlsData != TLS_OUT_OF_INDEXES)
 		{
-			::TlsSetValue(GetTlsIndex(), NULL);
-			::TlsFree(m_dwTlsIndex);
+			::TlsSetValue(m_dwTlsData, NULL);
+			::TlsFree(m_dwTlsData);
 		}
 
 		SetnGetThis(reinterpret_cast<CWinApp*>(-1));
@@ -1054,7 +1058,7 @@ namespace Win32xx
 	// Removes all Temporary CWnds and CMenus belonging to this thread
 	{
 		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		assert(pTLSData);
 
 		pTLSData->TmpDCs.clear();
@@ -1150,6 +1154,11 @@ namespace Win32xx
 
 		m_csMapLock.Release();
 		return pWnd;
+	}
+
+	inline TLSData* CWinApp::GetTlsData() const 
+	{
+		return static_cast<TLSData*>(TlsGetValue(GetApp()->m_dwTlsData));
 	}
 
 	inline BOOL CWinApp::InitInstance()
@@ -1281,9 +1290,9 @@ namespace Win32xx
 		m_hResource = hResource;
 	}
 
-	inline TLSData* CWinApp::SetTlsIndex()
+	inline TLSData* CWinApp::SetTlsData()
 	{
-		TLSData* pTLSData = static_cast<TLSData*>(::TlsGetValue(GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
@@ -1292,7 +1301,7 @@ namespace Win32xx
 			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
 			m_csTLSLock.Release();
 
-			::TlsSetValue(GetTlsIndex(), pTLSData);
+			::TlsSetValue(m_dwTlsData, pTLSData);
 		}
 
 		return pTLSData;
@@ -1347,7 +1356,7 @@ namespace Win32xx
 
 		// Ensure this thread has the TLS index set
 		// Note: Perform the attach from the same thread as the window's message loop
-		GetApp()->SetTlsIndex();
+		GetApp()->SetTlsData();
 
 		// Cleanup any previous attachment
 		if (m_PrevWindowProc)
@@ -1553,7 +1562,7 @@ namespace Win32xx
 				throw CWinException(_T("Failed to register window class"));
 
 			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 
 			// Store the CWnd pointer in thread local storage
 			pTLSData->pWnd = this;
@@ -1644,7 +1653,7 @@ namespace Win32xx
 		if ( NULL != hWnd && 0 == pWnd )
 		{
 			// Find any existing temporary CWnd for the HWND
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HWND, WndPtr, CompareHWND>::iterator m;
 			m = pTLSData->TmpWnds.find(hWnd);
 	
@@ -2110,7 +2119,7 @@ namespace Win32xx
 			// The CWnd pointer wasn't found in the map, so add it now
 
 			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+			TLSData* pTLSData = GetApp()->GetTlsData();
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS

@@ -411,7 +411,7 @@ namespace Win32xx
 			m_IsModal=TRUE;
 
 			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 
 		#ifndef _WIN32_WCE
 			if (NULL == pTLSData->hMsgHook )
@@ -473,7 +473,7 @@ namespace Win32xx
 			m_IsModal=FALSE;
 
 			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 
 			// Store the CWnd pointer in Thread Local Storage
 			pTLSData->pWnd = this;
@@ -558,7 +558,7 @@ namespace Win32xx
 			// Process dialog keystrokes for modeless dialogs
 			if (!IsModal())
 			{
-				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+				TLSData* pTLSData = GetApp()->GetTlsData();
 				if (NULL == pTLSData->hMsgHook)
 				{
 					if (IsDialogMessage(pMsg))
@@ -633,7 +633,7 @@ namespace Win32xx
 		if (0 == w)
 		{
 			// The HWND wasn't in the map, so add it now
-			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+			TLSData* pTLSData = GetApp()->GetTlsData();
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
@@ -655,7 +655,7 @@ namespace Win32xx
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	{
 		// Used by Modal Dialogs to PreTranslate Messages
-		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 
 		if (nCode == MSGF_DIALOGBOX)
 		{

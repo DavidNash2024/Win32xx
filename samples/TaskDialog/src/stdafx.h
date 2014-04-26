@@ -47,6 +47,7 @@ typedef  unsigned char  byte;
 #include <propertysheet.h>
 #include <rebar.h>
 //#include <ribbon.h>
+#include <rich_edit.h>
 #include <socket.h>
 #include <statusbar.h>
 #include <stdcontrols.h>

@@ -217,7 +217,7 @@ namespace Win32xx
 		if ((0 != hMenu) && (0 == pMenu))
 		{		
 			// Find any existing temporary CMenu for the HMENU
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HMENU, MenuPtr, CompareHMENU>::iterator m;
 			m = pTLSData->TmpMenus.find(hMenu);
 	

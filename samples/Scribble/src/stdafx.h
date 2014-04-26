@@ -39,7 +39,6 @@ typedef  unsigned char  byte;
 #include <dialog.h>
 #include <docking.h>
 #include <file.h>
-#include <file.h>
 #include <frame.h>
 #include <gdi.h>
 #include <imagelist.h>
@@ -48,9 +47,11 @@ typedef  unsigned char  byte;
 #include <propertysheet.h>
 #include <rebar.h>
 //#include <ribbon.h>
+#include <rich_edit.h>
 #include <socket.h>
 #include <statusbar.h>
 #include <stdcontrols.h>
+#include <taskdialog.h>
 #include <toolbar.h>
 #include <treeview.h>
 #include <webbrowser.h>

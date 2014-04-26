@@ -193,7 +193,7 @@ namespace Win32xx
 
 		// Fill the NewPartWidths vector with the new width of the StatusBar parts
 		int NewPartsCount = MAX(iPart+1, PartsCount);	
-		std::vector<int> NewPartWidths(NewPartsCount, 0);;
+		std::vector<int> NewPartWidths(NewPartsCount, 0);
 		NewPartWidths = PartWidths;
 		int* pNewPartWidthArray = &NewPartWidths[0];
 		

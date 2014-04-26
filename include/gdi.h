@@ -1067,7 +1067,7 @@ namespace Win32xx
 		if (0 == pBitmap)
 		{
 			// Find any existing temporary CBitmap for the HBitmap
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
 			m = pTLSData->TmpGDIs.find(hBitmap);
 	
@@ -1307,7 +1307,7 @@ namespace Win32xx
 		if (0 == pBrush)
 		{
 			// Find any existing temporary CBrush for the HBRUSH
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
 			m = pTLSData->TmpGDIs.find(hBrush);
 	
@@ -1439,7 +1439,7 @@ namespace Win32xx
 		if (0 == pFont)
 		{	
 			// Find any existing temporary CFont for the HFONT
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
 			m = pTLSData->TmpGDIs.find(hFont);
 	
@@ -1580,7 +1580,7 @@ namespace Win32xx
 		if (0 == pPalette)
 		{	
 			// Find any existing temporary CPalette for the HPALETTE
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
 			m = pTLSData->TmpGDIs.find(hPalette);
 	
@@ -1723,7 +1723,7 @@ namespace Win32xx
 		if (0 == pPen)
 		{
 			// Find any existing temporary CPen for the HPEN
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
 			m = pTLSData->TmpGDIs.find(hPen);
 	
@@ -1831,7 +1831,7 @@ namespace Win32xx
 		if (0 == pRgn)
 		{
 			// Find any existing temporary CRgn for the HRGN
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
 			m = pTLSData->TmpGDIs.find(hRgn);
 	
@@ -2157,7 +2157,7 @@ namespace Win32xx
 		if (0 == pDC)
 		{		
 			// Find any existing temporary CWnd for the HWND
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HDC, DCPtr, CompareHDC>::iterator m;
 			m = pTLSData->TmpDCs.find(hDC);
 	
@@ -2324,7 +2324,7 @@ namespace Win32xx
 		pDC->m_pData->hDC = hDC;
 
 		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		TLSData* pTLSData = GetApp()->SetTlsData();
 		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
 
 		pDC->m_pData->bIsTmpHDC = FALSE;

@@ -6,6 +6,7 @@ Bug Fixes:
 
 New Features and Enhancements
 -----------------------------
+* Added CRichEdit. This class provides support for Rich Edit controls
 * Updated the approach to using threads
    - CWinThread is used in place of CThread.
    - CWinApp now inherits from CWinThread.

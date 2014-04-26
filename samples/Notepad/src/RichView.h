@@ -5,7 +5,7 @@
 #define RICHVIEW_H
 
 
-class CRichView : public CWnd
+class CRichView : public CRichEdit
 {
 public:
 	CRichView(void);
@@ -17,7 +17,7 @@ protected:
 	virtual void OnInitialUpdate();
 
 private:
-	HMODULE m_hInstRichEdit;
+//	HMODULE m_hInstRichEdit;
 	CFont   m_Font;
 
 };

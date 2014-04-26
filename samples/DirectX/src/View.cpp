@@ -15,6 +15,11 @@
 #include "resource.h"
 
 
+CView::CView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
+{
+	m_hCreateEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
+}
+
 CView::~CView()
 {
 	if(m_pVB != NULL)
@@ -32,16 +37,12 @@ HWND CView::Create(CWnd* pParent)
 	// Called by CFrame::OnCreate. 
 
 	UNREFERENCED_PARAMETER(pParent);
-	ShowWindow();
 	return m_hWnd;
 }
 
 int CView::OnCreate(LPCREATESTRUCT pcs)
 {
 	UNREFERENCED_PARAMETER(pcs);
-
-	SetIconLarge(IDW_MAIN);
-	SetIconSmall(IDW_MAIN);
 
 	// Initialize Direct3D
 	if( SUCCEEDED( InitD3D( m_hWnd ) ) )
@@ -57,6 +58,9 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	else
 		TRACE("Failed to initialize DirectX\n");
 
+	// Signal the event to indicate the window is created
+	SetEvent(m_hCreateEvent);
+	
 	return 0;
 }
 

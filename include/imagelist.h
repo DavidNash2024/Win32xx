@@ -162,7 +162,7 @@ namespace Win32xx
 		if ((0 != hImageList) && (0 == pImageList))
 		{
 			// Find any existing temporary CImageList for the HIMAGELIST
-			TLSData* pTLSData = GetApp()->SetTlsIndex();
+			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST>::iterator m;
 			m = pTLSData->TmpImageLists.find(hImageList);
 	

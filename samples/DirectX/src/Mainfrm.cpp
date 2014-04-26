@@ -59,9 +59,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 	m_ViewThread.SetFrame(this);
 
-	// Create the thread for the view window
+	// Create and start the thread for the view window
 	m_ViewThread.CreateThread();
-	WaitForInputIdle(m_ViewThread.GetThread(), INFINITE);
+	
+	// Wait for the View window to be created
+	WaitForSingleObject(m_ViewThread.GetView().GetCreateEvent(), INFINITE);
 
 	// call the base class function
 	return CFrame::OnCreate(pcs);

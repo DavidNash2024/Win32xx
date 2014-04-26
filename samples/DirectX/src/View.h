@@ -20,7 +20,7 @@ struct CUSTOMVERTEX
 class CView : public CWnd
 {
 public:
-	CView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL) {}
+	CView();
 	virtual ~CView();
 
 	virtual HWND Create(CWnd* pParent = 0);
@@ -29,6 +29,8 @@ public:
 	virtual void Render();
 	virtual void SetupDefaultRenderStates();
 	virtual void SetupMatrices();
+
+	HANDLE GetCreateEvent() const { return m_hCreateEvent; }
 
 protected:
 	virtual	int  OnCreate(LPCREATESTRUCT pcs);
@@ -41,6 +43,7 @@ private:
 	LPDIRECT3DDEVICE9 m_pd3dDevice;		// Our rendering device
 	LPDIRECT3DVERTEXBUFFER9 m_pVB;      // Buffer to hold vertices
 	D3DPRESENT_PARAMETERS m_d3dpp;
+	HANDLE m_hCreateEvent;
 };
 
 

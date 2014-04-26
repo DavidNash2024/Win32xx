@@ -636,7 +636,7 @@ namespace Win32xx
 		//  the popup menu. Messages are sent to StaticMsgHook.
 
 		// Remove any remaining hook first
-		TLSData* pTLSData = static_cast<TLSData*>(::TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		pTLSData->pMenuBar = this;
 		if (pTLSData->hMsgHook != NULL)
 			::UnhookWindowsHookEx(pTLSData->hMsgHook);
@@ -884,7 +884,7 @@ namespace Win32xx
 		// We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
-		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		m_pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
 		assert(dynamic_cast<CFrame*>(m_pFrame));
 	}
@@ -1466,7 +1466,7 @@ namespace Win32xx
 	{
 		assert(GetApp());
 		MSG* pMsg = reinterpret_cast<MSG*>(lParam);
-		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		assert(pTLSData);
 		CMenuBar* pMenuBar = pTLSData->pMenuBar;
 
@@ -1834,7 +1834,7 @@ namespace Win32xx
 		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
 
 		// Start the keyboard hook
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		TLSData* pTLSData = GetApp()->SetTlsData();
 		pTLSData->pMainWnd = this;
 		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 	}
@@ -3054,7 +3054,7 @@ namespace Win32xx
 			SetEvent(m_StopEvent);
 
 		if (m_pStatusThread.get())
-			WaitForSingleObject(m_pStatusThread->GetThread(), INFINITE);
+			WaitForSingleObject(m_pStatusThread->GetThread(), 1000);
 		
 		GetMenuBar()->Destroy();
 		GetToolBar()->Destroy();
@@ -3392,7 +3392,8 @@ namespace Win32xx
 		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
-		m_pView->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
+		if (m_pView->IsWindow())
+			m_pView->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
 
 		return 0L;
 	}
@@ -4099,7 +4100,7 @@ namespace Win32xx
 
 	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	{
-		TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+		TLSData* pTLSData = GetApp()->GetTlsData();
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
 		assert(dynamic_cast<CFrame*>(pFrame));
 		

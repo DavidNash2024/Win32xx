@@ -3,28 +3,15 @@
 
 #include "stdafx.h"
 #include "richview.h"
-#include <richedit.h>
+//#include <richedit.h>
 
 
-CRichView::CRichView(void) : m_hInstRichEdit(NULL)
+CRichView::CRichView()
 {
-	// Changed from RichEdit v1.0 to RichEdit v2.0 for Unicode support!
-
-	m_hInstRichEdit = ::LoadLibrary(_T("Riched20.dll")); // RichEdit ver 2.0
-    if (!m_hInstRichEdit)
-    {
-		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load Riched20.dll"), _T(""), MB_ICONWARNING);
-    }
 }
 
-CRichView::~CRichView(void)
+CRichView::~CRichView()
 {
-	// Destroy the window before freeing the DLL
-	Destroy();
-
-	// Now do remaining clean up
-	if (m_hInstRichEdit)
-		::FreeLibrary(m_hInstRichEdit);
 }
 
 void CRichView::PreCreate(CREATESTRUCT &cs)

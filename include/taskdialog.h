@@ -241,7 +241,7 @@ namespace Win32xx
 		m_tc.hwndParent = pParent? pParent->GetHwnd() : NULL;
 
 		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		TLSData* pTLSData = GetApp()->SetTlsData();
 
 		// Store the CWnd pointer in thread local storage
 		pTLSData->pWnd = this;
@@ -675,7 +675,7 @@ namespace Win32xx
 			// The CTaskDialog pointer wasn't found in the map, so add it now
 
 			// Retrieve the pointer to the TLS Data
-			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+			TLSData* pTLSData = GetApp()->GetTlsData();
 			assert(pTLSData);
 
 			// Retrieve pointer to CTaskDialog object from Thread Local Storage TLS

@@ -577,7 +577,7 @@ namespace Win32xx
 		{
 		case PSPCB_CREATE:
 			{
-				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+				TLSData* pTLSData = GetApp()->GetTlsData();
 				assert(pTLSData);
 
 				// Store the CPropertyPage pointer in Thread Local Storage
@@ -598,7 +598,7 @@ namespace Win32xx
 		if (0 == pPage)
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
-			TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+			TLSData* pTLSData = GetApp()->GetTlsData();
 			pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
 			// Set the hWnd members and call DialogProc for this message
@@ -707,7 +707,7 @@ namespace Win32xx
 		case PSCB_INITIALIZED:
 			{
 				// Retrieve pointer to CWnd object from Thread Local Storage
-				TLSData* pTLSData = static_cast<TLSData*>(TlsGetValue(GetApp()->GetTlsIndex()));
+				TLSData* pTLSData = GetApp()->GetTlsData();
 				assert(pTLSData);
 
 				CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
@@ -752,7 +752,7 @@ namespace Win32xx
 		assert(!::IsWindow(m_hWnd));
 
 		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsIndex();
+		TLSData* pTLSData = GetApp()->SetTlsData();
 
 		// Store the 'this' pointer in Thread Local Storage
 		pTLSData->pWnd = this;
