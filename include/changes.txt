@@ -21,7 +21,7 @@ New Features and Enhancements
 	 control over if and when the thread is created.
 * Updated CWinApp
    - CWinApp now inherits from CWinThread. Some member functions were moved
-     to CWinThread.
+     from CWinApp to CWinThread.
    - Added wrapper functions for loading and setting the cursor, and loading 
 	 icons.	   
 * Updated CFrame
@@ -34,6 +34,9 @@ New Features and Enhancements
    - CTabs and CDockers now support the WS_EX_LAYOUTRTL extended style. This
      style creates a window whose horizontal origin is on the right edge to 
 	 better suite Arabic and Hebrew languages.
+* Updated CDialog
+   - Added support for OnIdle in modal dialogs (modeless dialogs already had
+     OnIdle support).  	 
 * Updated FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
    CImageList and CMenu. They have been moved from global to their classes.
 * CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.

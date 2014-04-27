@@ -74,7 +74,6 @@
 	#define SWP_NOCOPYBITS      0x0100
 #endif
 
-#define IDLE_TIMER_ID 300
 
 namespace Win32xx
 {
@@ -266,25 +265,10 @@ namespace Win32xx
 
 		switch (uMsg)
 	    {
-		case WM_TIMER:
-			// A timer used for Modal dialogs
-			if (wParam == IDLE_TIMER_ID)
-			{
-				GetApp()->CleanupTemps();
-				LONG lCount = 0;
-			//	MSG Msg = {0};
-				while ( /*!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) &&*/ GetApp()->OnIdle(lCount) == TRUE )
-				{
-					++lCount;
-				}
-			}
-			return 0L;
 	    case WM_INITDIALOG:
 			{
 				// Center the dialog
 				CenterWindow();
-				if (IsModal())
-					SetTimer(IDLE_TIMER_ID, 1000, 0);
 			}
 		    return OnInitDialog();
 		case WM_CLOSE:	
@@ -653,9 +637,29 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
+	// Used by Modal Dialogs for idle processing and PreTranslateMessage
 	{
-		// Used by Modal Dialogs to PreTranslate Messages
 		TLSData* pTLSData = GetApp()->GetTlsData();
+		MSG Msg = {0};
+		LONG lCount = 0;
+
+		// While idle, perform idle processing until OnIdle returns FALSE
+		// Exclude some messages to avoid calling OnIdle excessively
+		while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && 
+							(Msg.message != WM_TIMER) && 
+							(Msg.message != WM_MOUSEMOVE) && 
+							(Msg.message != WM_SETCURSOR) &&  
+								GetApp()->OnIdle(lCount) == TRUE  )
+		{
+			++lCount;
+		}
+		lCount = 0;
+
+		if (Msg.message == UWM_CLEANUPTEMPS)
+		{
+			GetApp()->CleanupTemps();
+			TRACE("CleanupTemps called\n");
+		}
 
 		if (nCode == MSGF_DIALOGBOX)
 		{

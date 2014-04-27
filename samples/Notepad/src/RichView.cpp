@@ -26,12 +26,11 @@ void CRichView::PreCreate(CREATESTRUCT &cs)
 void CRichView::OnInitialUpdate(void)
 {
 	//increase the text limit of the rich edit window
-	SendMessage(EM_LIMITTEXT, (WPARAM)-1, 0);
-	SendMessage(EM_EXLIMITTEXT, 0, (LPARAM)-1);
+	LimitText(-1);
 
 	//Determine which messages will be passed to the parent
-	UINT uMask = ENM_KEYEVENTS | ENM_DROPFILES ;
-	SendMessage(EM_SETEVENTMASK, 0, uMask);
+	DWORD dwMask = ENM_KEYEVENTS | ENM_DROPFILES ;
+	SetEventMask(dwMask);
 
 	SetFontDefaults();
 }

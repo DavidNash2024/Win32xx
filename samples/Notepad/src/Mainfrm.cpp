@@ -59,8 +59,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnClose()
 {
 	//Check for unsaved text
-	BOOL bChanged = (BOOL)m_RichView.SendMessage(EM_GETMODIFY, 0, 0);
-	if (bChanged)
+	if ( m_RichView.GetModify() )
 		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
 			OnFileSave();
 
@@ -139,7 +138,7 @@ void CMainFrame::OnFileNew()
 	m_strPathName = _T("");
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
-	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
+	m_RichView.SetModify(FALSE);
 }
 
 void CMainFrame::OnFilePrint()
@@ -197,7 +196,7 @@ void CMainFrame::OnFilePrint()
 		// Default the range of text to print as the entire document.
 		fr.chrg.cpMin = 0;
 		fr.chrg.cpMax = -1;
-		m_RichView.SendMessage(EM_FORMATRANGE, true, (LPARAM)&fr);
+		m_RichView.FormatRange(&fr, TRUE);
 
 		// Set up the print job (standard printing stuff here).
 		DOCINFO di;
@@ -210,11 +209,9 @@ void CMainFrame::OnFilePrint()
 
 		// Start the document.
 		::StartDoc(hPrinterDC, &di);
-		GETTEXTLENGTHEX tl;
-		tl.flags = GTL_NUMCHARS;
 
 		// Find out real size of document in characters.
-		lTextLength = (LONG)m_RichView.SendMessage(EM_GETTEXTLENGTHEX, (WPARAM)&tl, 0L);
+		lTextLength = m_RichView.GetTextLengthEx(GTL_NUMCHARS);
 
 		do
 		{
@@ -224,9 +221,8 @@ void CMainFrame::OnFilePrint()
 			// Print as much text as can fit on a page. The return value is
 			// the index of the first character on the next page. Using TRUE
 			// for the wParam parameter causes the text to be printed.
-			lTextPrinted = (LONG)::SendMessage(m_RichView.GetHwnd(), EM_FORMATRANGE, true, (LPARAM)&fr);
-
-			m_RichView.SendMessage(EM_DISPLAYBAND, 0, (LPARAM)&fr.rc);
+			lTextPrinted = m_RichView.FormatRange(&fr, TRUE);
+			m_RichView.DisplayBand(&fr.rc);
 
 			// Print last page.
 			::EndPage(hPrinterDC);
@@ -235,14 +231,14 @@ void CMainFrame::OnFilePrint()
 			// to start printing at the first character of the next page.
 			if (lTextPrinted < lTextLength)
 			{
-				fr.chrg.cpMin = (LONG)lTextPrinted;
+				fr.chrg.cpMin = lTextPrinted;
 				fr.chrg.cpMax = -1;
 			}
 		}
 		while (lTextPrinted < lTextLength);
 
 		// Tell the control to release cached information.
-		m_RichView.SendMessage(EM_FORMATRANGE, false, 0L);
+		m_RichView.FormatRange(&fr, FALSE);
 
 		::EndDoc (hPrinterDC);
 
@@ -253,27 +249,27 @@ void CMainFrame::OnFilePrint()
 
 void CMainFrame::OnEditCut()
 {
-	m_RichView.SendMessage(WM_CUT, 0, 0);
+	m_RichView.Cut();
 }
 void CMainFrame::OnEditCopy()
 {
-	m_RichView.SendMessage(WM_COPY, 0, 0);
+	m_RichView.Copy();
 }
 void CMainFrame::OnEditPaste()
 {
-	m_RichView.SendMessage(EM_PASTESPECIAL, CF_TEXT, 0);
+	m_RichView.PasteSpecial(CF_TEXT);
 }
 void CMainFrame::OnEditDelete()
 {
-	m_RichView.SendMessage(WM_CLEAR, 0, 0);
+	m_RichView.Clear();
 }
 void CMainFrame::OnEditRedo()
 {
-	m_RichView.SendMessage(EM_REDO, 0, 0);
+	m_RichView.Redo();
 }
 void CMainFrame::OnEditUndo()
 {
-	m_RichView.SendMessage(EM_UNDO, 0, 0);
+	m_RichView.Undo();
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
@@ -294,10 +290,10 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	EDITSTREAM es;
 	es.dwCookie =  (DWORD_PTR) File.GetHandle();
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
-	m_RichView.SendMessage(EM_STREAMIN, SF_TEXT, (LPARAM)&es);
+	m_RichView.StreamIn(SF_TEXT, es);
 
 	//Clear the modified text flag
-	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
+	m_RichView.SetModify(FALSE);
 
 	return TRUE;
 }
@@ -319,11 +315,10 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 	es.dwCookie =  (DWORD_PTR) File.GetHandle();
 	es.dwError = 0;
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamOutCallback;
-
-	m_RichView.SendMessage(EM_STREAMOUT, SF_TEXT, (LPARAM)&es);
+	m_RichView.StreamOut(SF_TEXT, es);
 
 	//Clear the modified text flag
-	m_RichView.SendMessage(EM_SETMODIFY, FALSE, 0);
+	m_RichView.SetModify(FALSE);
 
 	return TRUE;
 }

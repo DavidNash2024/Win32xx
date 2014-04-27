@@ -313,6 +313,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\rich_edit.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\shared_ptr.h"
 				>
 			</File>

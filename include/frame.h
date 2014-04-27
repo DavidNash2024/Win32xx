@@ -506,9 +506,7 @@ namespace Win32xx
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
-
 		static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
-		static UINT WINAPI StaticStatusProc(LPVOID pParam);	// Callback for status bar update thread
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
 		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entries
@@ -531,7 +529,6 @@ namespace Win32xx
 		CString m_strStatusText;			// CString for status text
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
-		Shared_Ptr<CWinThread> m_pStatusThread;// Smart pointer for StatusBar update thread
 		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
@@ -541,8 +538,7 @@ namespace Win32xx
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
-		HANDLE m_StopEvent;					// Event signaled to stop the status update thread
-		HHOOK m_KbdHook;				//
+		HHOOK m_KbdHook;					// Keyboard hook.
 		
 	};  // class CFrame
 
@@ -1811,8 +1807,7 @@ namespace Win32xx
 	//
 	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bUseIndicatorStatus(TRUE), m_bUseMenuStatus(TRUE), m_bUseThemes(TRUE), 
 		                      m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
-						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE),
-							  m_StopEvent(0), m_KbdHook(0)
+						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE), m_KbdHook(0)
 	{
 		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
@@ -1841,7 +1836,6 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		if (m_StopEvent) CloseHandle(m_StopEvent);
 		if (m_KbdHook) UnhookWindowsHookEx(m_KbdHook);
 	}
 
@@ -3007,14 +3001,6 @@ namespace Win32xx
 		if (m_bUseIndicatorStatus)
 			SetStatusIndicators();
 
-		// Start thread for Status updates for Win2000 and above
-		if ((2500 <= GetWinVersion()) && (m_bUseIndicatorStatus || m_bUseMenuStatus))
-		{
-			m_StopEvent = CreateEvent(NULL, TRUE, FALSE, _T("Stop Thread"));
-			m_pStatusThread = new CWinThread(CFrame::StaticStatusProc, this);
-			m_pStatusThread->CreateThread();
-		}
-
 		// Create the view window
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
 		GetView()->Create(this);
@@ -3048,13 +3034,6 @@ namespace Win32xx
 	inline void CFrame::OnDestroy()
 	{
 		SetMenu(NULL);
-		KillTimer(IDLE_TIMER_ID);
-		
-		if(m_StopEvent)
-			SetEvent(m_StopEvent);
-
-		if (m_pStatusThread.get())
-			WaitForSingleObject(m_pStatusThread->GetThread(), 1000);
 		
 		GetMenuBar()->Destroy();
 		GetToolBar()->Destroy();
@@ -4113,23 +4092,6 @@ namespace Win32xx
 		}
 
 		return ::CallNextHookEx(pFrame->m_KbdHook, nCode, wParam, lParam);
-	}
-
-	inline UINT WINAPI CFrame::StaticStatusProc(LPVOID pParam)
-	// ThreadProc for the status update thread.
-	{
-		// Called when the statusbar thread starts
-		CFrame* pFrame = static_cast<CFrame*>(pParam);
-		assert(dynamic_cast<CFrame*>(pFrame));
-
-		// Loop until the StopEvent is signaled
-		while ( WaitForSingleObject(pFrame->m_StopEvent, 500) == WAIT_TIMEOUT)
-		{
-			pFrame->SetStatusIndicators();
-		}
-
-		TRACE("Thread has ended\n");
-		return 0;
 	}
 
 	inline void CFrame::UpdateMRUMenu()
