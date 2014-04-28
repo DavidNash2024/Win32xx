@@ -48,7 +48,6 @@
 // Notes: 1) The Windows 7 SDK must be installed and its directories added to the IDE
 //        2) The ribbon only works on OS Windows 7 and above
 
-//#include <strsafe.h>
 #include <UIRibbon.h>					// Contained within the Windows 7 SDK	
 #include <UIRibbonPropertyHelpers.h>
 
@@ -310,12 +309,12 @@ namespace Win32xx
 		// Get the frame's client area
 		CRect rcFrame = GetClientRect();
 
-		// Get the statusbar's window area
+		// Get the StatusBar's window area
 		CRect rcStatus;
 		if (GetStatusBar()->IsWindowVisible() || !IsWindowVisible())
 			rcStatus = GetStatusBar()->GetWindowRect();
 
-		// Get the top rebar or toolbar's window area
+		// Get the top ReBar or ToolBar's window area
 		CRect rcTop;
 		if (IsReBarSupported() && m_bUseReBar)
 			rcTop = GetReBar()->GetWindowRect();
@@ -323,7 +322,7 @@ namespace Win32xx
 			if (m_bUseToolBar && GetToolBar()->IsWindowVisible())
 				rcTop = GetToolBar()->GetWindowRect();
 
-		// Return client size less the rebar and status windows
+		// Return client size less the ReBar and status windows
 		int top = rcFrame.top + rcTop.Height() + GetRibbonHeight();
 		int left = rcFrame.left;
 		int right = rcFrame.right;
@@ -349,8 +348,8 @@ namespace Win32xx
 		{	
 			if (CreateRibbon(this))
 			{
-				m_bUseReBar = FALSE;			// Don't use rebars
-				m_bUseToolBar = FALSE;			// Don't use a toolbar
+				m_bUseReBar = FALSE;			// Don't use a ReBar
+				m_bUseToolBar = FALSE;			// Don't use a ToolBar
 
 				CFrame::OnCreate(pcs);
 				SetMenu(NULL);
@@ -459,7 +458,7 @@ namespace Win32xx
 			{
 				lstrcpynW(m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
 			}
-			else // Provide a reasonable fallback.
+			else // Provide a reasonable fall back.
 			{
 				lstrcpynW(m_wszDisplayName, m_wszFullPath, MAX_PATH);
 			}

@@ -51,6 +51,7 @@ typedef  unsigned char  byte;
 #include <socket.h>
 #include <statusbar.h>
 #include <stdcontrols.h>
+//#include <taskdialog.h>
 #include <toolbar.h>
 #include <treeview.h>
 #include <webbrowser.h>

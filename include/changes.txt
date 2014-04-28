@@ -60,6 +60,7 @@ Incompatibilities with previous version
 
 Changes in detail
 -----------------
+Added CRichEdit
 Added CWinThread
 Added CBitmap::FromHandle
 Added CBrush::FromHandle
@@ -156,7 +157,7 @@ New Features and Enhancements
 * Updated CDialog
    - Added GetDefID, GotoDlgCtrl, MapDialogRect, NextDlgCtrl, PrevDlgCtrl
 	  and SetDefID.
-   - The constructor no longer sets the Dialog's parent. The parent of the dialog 
+   - The constructor no longer sets the dialog's parent. The parent of the dialog 
       (if any) is set when the dialog is created (with DoModal or DoModeless).  
 * Updated CTab.
    - CTab now provides wrapper functions for all the Tab control macros.
@@ -174,7 +175,7 @@ Incompatibilities with previous versions
 ----------------------------------------
 * The definition of OnCreate has changed to provide a LPCREATESRUCT. This 
    change will also need to be made in any class overriding OnCreate.
-* The constructor of CDialog has changed. It no longer sets the Dialog's
+* The constructor of CDialog has changed. It no longer sets the dialog's
    parent. This is set (if needed) by DoModal or DoModeless.   
 * The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
 * Programs with frames should now use the IDW_READY resource for "Ready". 
@@ -470,10 +471,6 @@ Changes in detail
 - Renamed 	CFrame::DrawCheckmark to DrawMenuCheckmark
 
 
-Incompatibilities with previous versions
-----------------------------------------
-
-
 Version 7.2
 ===========
 
@@ -483,15 +480,15 @@ New Features and Enhancements
    The CString class is intended to provide much of the same functionality
    as the CString class provided with MFC/ATL.
 * Added CMenu
-	The CMenu class is intended to provide much of the same functionality
-    as the CMenu class provided with MFC. The library now standardises on
-    using pointers to CMenu, instead of HMENU.	
+   The CMenu class is intended to provide much of the same functionality
+   as the CMenu class provided with MFC. The library now standardises on
+   using pointers to CMenu, instead of HMENU.	
 * Added CFile
-	This class provides a convenient wrapper for functions dealing with files.
+   This class provides a convenient wrapper for functions dealing with files.
 * Added Idle processing.
-	The Idle processing is used by the Win32++ library for some internal 
-	processing. It is also available for use by users, and is used in much the
-	same way as OnIdle processing in MFC.
+   The Idle processing is used by the Win32++ library for some internal 
+   processing. It is also available for use by users, and is used in much the
+   same way as OnIdle processing in MFC.
 * Enhanced the CDC class, and added CWindowDC, CClientDC, CMemDC, CPaintDC
    and CMetaFileDC. The creation of the various different types of CDCs has
    been simplified, and the CDC functions now use CDC pointers instead of
@@ -593,7 +590,7 @@ Changes in detail
 
 Incompatibilities with previous versions
 ----------------------------------------
-* The Win32++ now uses Run Time Type Information (RTTI). Older Microsoft
+* Win32++ now uses Run Time Type Information (RTTI). Older Microsoft
   compilers (Visual Studio 2003 and earlier) may need to enable the option to
   support RTTI.
 * LoadString now returns a CString.
@@ -671,7 +668,6 @@ New Features and Enhancements
 	W2OLE		WCHAR to OLE
 	W2T			WCHAR to TCHAR
    Refer to the help documentation for instructions on using these functions.
-* Added CLoadString (and LoadString) to return a string resource. 
 * OnEraseBkgnd is now called automatically when a CWnd's background needs
    erasing. Return TRUE to prevent default erasure.
 * Scribble Tutorial now demonstrates the use of command line arguments
@@ -811,33 +807,6 @@ Changes in detail
 - Added several functions to CSize
 - Added many functions to CRect 
   
-The problem with the previous text functions
---------------------------------------------
-While the previous text conversion functions generally worked well, there were
-ambiguities about usage, and corner cases where they produced undesirable 
-results. For example:
-// Problem 1
-// This worked well
-   ExampleFunction(CharToTChar(pAnsi1));
-
-// But this failed to produce expected results
-   ExampleFunction(CharToTChar(pAnsi1), CharToTChar(pAnsi2));
-
-Problem 2
-// This worked as expected
-   LPCTSTR pStr = CharToTChar(pAnsi1);
-
-// But this fails to work as expected
-   LPCTSTR pStr1 = CharToTChar(pAnsi1);
-   LPCTSTR pStr2 = CharToTChar(pAnsi2);
-
-The new text conversion functions (classes) resolve problem 1 and render all of
-problem 2's usage invalid (making usage less ambiguous).   
-
-Refer to the "Text Conversions" topic in the "Using Win32++" section of the 
-help documentation that ships with Win32++ for information on how to use the
-new functions. 
-
 Incompatibilities with previous versions
 ----------------------------------------
 * The old text conversion functions have been replaced with a set of new functions
@@ -1131,33 +1100,18 @@ Bug Fixes:
 - Fixed TCharToString
 - Dockers can now be used as the view for CMDIChild
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * Support has been added for the Windows Ribbon Framework available on 
    Windows 7 operating systems. The RibbonFrame and RibbonSimple samples 
    demonstrates how to implement the ribbon. RibbonFrame reverts back to 
    using the traditional Toolbar and Menubar if the operating system doesn't
-   support the ribbon framework.
-   
+   support the ribbon framework.  
 * Helper classes have been added for the standard controls, namely the Button,
    Edit, Listbox, and Static controls.
-   
 * Dockers can now be hidden and unhidden. Refer to the Splitter sample for a
    demonstration of this feature.
-   
 * Modal dialogs now support pretranslated messages.          
-
-
-Other Changes
--------------
-Removed CSplitter class
-
-Added RibbonFrame sample
-Added RibbonSimple sample
-
-Added 'Compile VS2005 Express'  tool
-Added 'Compile VS2008 Express'  tool
-Added 'Compile VS2010 Express'  tool
 
 
 Version 6.7
@@ -1169,8 +1123,8 @@ Bug fixes:
 - The close button on docked dockers now works.
 - Fixed PreTranslateMessage 
 
-Changes
--------
+New Features and Enhancements
+-----------------------------
 * The directory layout of Win32++ has changed. It now contains the following
   folders:
    help             The help for Win32++
@@ -1219,8 +1173,8 @@ Changes
 Version 6.6
 ===========
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * The number of arguments have changed for WndProc and WndProcDefault.
   - The HWND parameter has been dropped in both of these functions. It's
     presence was redundant and possibly confusing. Users will need to modify
@@ -1250,7 +1204,7 @@ New Features
      an opportunity to modify the check state of the menu items.
 * Enhancements to frames
   - The style of the rebarband is now specified in AddToolbarBand. This 
-     facilities saving and restoring toolbar settings from the registry (as 
+     facilities saving and restoring ToolBar settings from the registry (as 
      demonstrated in the Themes example.)  
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
      registry.
@@ -1272,14 +1226,14 @@ New Features
 * Updated the picture example.
   - Added Scroll bars.  
 * Updated the DockContainer and DockTabbedMDI examples    
-  - These examples now demonstrate how to theme a container's toolbar.   
+  - These examples now demonstrate how to theme a container's ToolBar.   
    
 
 Version 6.5
 ===========
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * Precompiled Headers
    Samples now demonstrates the use of Precompiled Headers. More experienced
    users might prefer this approach as it provides for much faster compile times.
@@ -1303,173 +1257,156 @@ New Features
    - Containers can display their tabs at the top or bottom of the window.
    - Containers can also display a tab list button.
    - Docker and container objects are destroyed when their window is closed.
-   - CContainer::SetupToolbar can be used to specify the toolbar's resource IDs.
+   - CContainer::SetupToolbar can be used to specify the ToolBar's resource IDs.
    - Dockers and containers can save their layout in and load their layout from
       the registry.     
 * Improvements to toolbars
    - Resource IDs should be specified in SetupToolbar, rather than CMainFrame's
       constructor.
-   - Other configurations for the toolbar such as disabled buttons and alternate
+   - Other configurations for the ToolBar such as disabled buttons and alternate
       bitmaps should be specified in SetupToolbar, rather than in OnCreate.
    - Configuration of additional toolbars if any should also be done in
       SetupToolbar.  Refer to the Themes example for a demonstration of this.
    - CToolbar now holds the vector of Resource IDs, which can be retrieved
       with the GetToolbarData function. There is no need to specify a vector
       when adding additional toolbars.
-   - There is now no need to specify the number of toolbar buttons in the
+   - There is now no need to specify the number of ToolBar buttons in the
       AddBitmap, ReplaceBitmap, SetBitmap and SetImages functions.
-   - The AddToolbarButton can now add a toolbar button which is initially
+   - The AddToolbarButton can now add a ToolBar button which is initially
       disabled.
-   - There is no need to call SetButtons when adding additional toolbars.
-   - Tooltips for all toolbars in the rebar are now displayed.      
+   - There is no need to call SetButtons when adding additional ToolBars.
+   - Tooltips for all ToolBars in the ReBar are now displayed.      
 * MIN and MAX macros have been defined and can be used in place of min and max.
    This avoids incompatibilities between the way different compliers support
    these macros. It also avoids clashes between the macro definitions of 
    min and max, and the STL definitions of min and max.
-   
-   
+     
    
 Version 6.4
 ===========
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * Docking:
-  - Added tabbed docking container with optional toolbar
+  - Added tabbed docking container with optional ToolBar
   - Added close button to the caption of docked windows
-  - Added 'outer' docking  ie. docking at the side of the frame rather 
+  - Added 'outer' docking  i.e. docking at the side of the frame rather 
       than inside another Docker.
   - Added a second docking example demonstrating containers
   - Added save/restore dock layout to docking examples
   - Added Close All Dockables and Default Dock Layout to docking examples
   - Added Win98 and WinME support for docking. 
 * Added Region support to CDC class.
-* Update the Notepad sample to handle Unicode text.
-* Themes example now demonstrates a ComboBoxEx control in its toolbar  
+* Updated the Notepad sample to handle Unicode text.
+* Themes example now demonstrates a ComboBoxEx control in its ToolBar  
  
 
 Version 6.3
 ===========
 
-New Features
--------------
+New Features and Enhancements
+-----------------------------
 * Added support for docking.
 * Added the Fast GDI demo. This demonstrates the use of the TintBitmap function.
 * MDI child windows now require a view window. The use of a view window is 
    now the same for Frames, MDI children, and dockables. The MDI demo example
    has been extended to include ListView and TreeView views.
 * Added message translation. This allows modeless dialogs and propertysheets
-    to process the tab (and other) keys.
+   to process the tab (and other) keys.
 * Added a CWnd::Destroy function. This returns a CWnd back to its default
-    state ready to be reused.
+   state ready to be reused.
 * SetView can now be used to change the frame's view from one CWnd to 
-    another.
+   another.
 * The Frame now stores which child window had focus before it is de-activated,
-    and returns focus to this child when the frame application is reactivated.    
+   and returns focus to this child when the frame application is reactivated.    
      
 
 Version 6.2
 ===========
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * Frame applications now store the window size and position in the registry.
-To enable this, set the m_KeyName member variable in CMainFrame's constructor.
-This member variable can be used to reflect the company name and application
-name, for example:
-  m_KeyName = _T("SomeCompany\\SomeApp");
-  
+   To enable this, set the m_KeyName member variable in CMainFrame's 
+   constructor. This member variable can be used to reflect the company name
+   and application name, for example:  m_KeyName = _T("SomeCompany\\SomeApp");
 * Frame applications now provide a Most Recently Used (MRU) list. This list is 
-stored in the registry.
-
+   stored in the registry.
 * Extended CWnd
-CWnd now includes functions which wrap many of the Windows API functions that 
-affect to windows. 
+   CWnd now includes functions which wrap many of the Windows API functions
+   that affect to windows. 
 
 
 Version 6.1
 ===========
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * All Win32++ code has been moved to header files.
-This simplifies the use of Win32++. To add Win32++ to a project, simply 
-include the appropriate Win32++ header files in your code. There is no longer
-any need to add the Win32++ files to the project, although doing so may
-still prove useful under some circumstances. Depending on the compiler/IDE
-used, adding the Win32++ header files to the project may add the various 
-Win32++ classes to the class view.
- 
+   This simplifies the use of Win32++. To add Win32++ to a project, simply 
+   include the appropriate Win32++ header files in your code. There is no
+   longer any need to add the Win32++ files to the project, although doing so
+   may still prove useful under some circumstances. Depending on the 
+   compiler/IDE used, adding the Win32++ header files to the project may add
+   the various Win32++ classes to the class view.
 * Added CListView class.
-This class encapsulates the various messages and macros used by the Win32/64 
-API to manage the List-View common control. You can inherit from this class
-when creating your own List-View control in a window, or attaching a 
-List-View control from a dialog.
-
+   This class encapsulates the various messages and macros used by the Win32/64 
+   API to manage the List-View common control. You can inherit from this class
+   when creating your own List-View control in a window, or attaching a 
+  List-View control from a dialog.
 * Added CTreeView class.
-This class encapsulates the various messages and macros used by the Win32/64 
-API to manage the Tree-View common control. You can inherit from this class
-when creating your own Tree-View control in a window, or attaching a 
-Tree-View control from a dialog.
-
+   This class encapsulates the various messages and macros used by the 
+   Win32/64 API to manage the Tree-View common control. You can inherit from
+   this class when creating your own Tree-View control in a window, or 
+   attaching a Tree-View control from a dialog.
 * Added CPoint CRect and CSize classes
-The CPoint, CRect and CSize classes can be used anywhere a POINT, RECT
-or CSize struct can be used respectively.
-
+   The CPoint, CRect and CSize classes can be used anywhere a POINT, RECT
+   or CSize struct can be used respectively.
 * Extended the CRebar, CToolbar and CStatusbar classes.
-
 * Added support for x64 applications.
-Win32++ can now be used to build 64 bit applications. The manifest file has 
-been modified to support both 32bit and 64bit applications. The new manifest
-should be used for any 64 bit applications that use common controls. Users are 
-encouraged to use the modern Win64 API functions like:
-GetWindowLongPtr, SetWindowLongPtr, GetClassLongPtr and SetClassLongPtr.
-Win32++ will convert these back to their Win32 API counterparts if required.
-
+   Win32++ can now be used to build 64 bit applications. The manifest file has 
+   been modified to support both 32bit and 64bit applications. The new manifest
+   should be used for any 64 bit applications that use common controls. Users
+   are encouraged to use the modern Win64 API functions like:
+   GetWindowLongPtr, SetWindowLongPtr, GetClassLongPtr and SetClassLongPtr.
+   Win32++ will convert these back to their Win32 API counterparts if required.
 * 32 bit bitmaps are now supported for toolbars (requires XP or Vista)
 
 
 Version 6.0
 ===========
 
-New Features
-------------
+New Features and Enhancements
+-----------------------------
 * Win32++ now also directly supports the Windows CE operating systems. 
    Windows CE is the operating system used on such things as Pocket PCs, 
    embedded systems and SmartPhones. The Win32++ examples for Windows CE
    include the project files for eMbedded Visual C++ 4.0, and Visual 
-   Studio 2005.
-   
+   Studio 2005. 
 * Added Networking support. Win32++ now includes a CSocket class which
    encapsulates much of the Winsock API. This class is capable of monitoring
    network events, such as connection requests from clients, and notification
    that the socket has data ready to be received. Command line and dialog
    examples are provide to demonstrate how the class can be used to create
    TCP/IP (and UDP/IP) servers and clients.
-  
 * Added a CDC class. This class simplifies the drawing to device contexts. 
    This class can be used anywhere we would normally use a handle to a 
    device context (HDC). Its features include:
    - Automates the selection of GDI objects into the device context.
    - Automates the destruction of GDI objects.
    - Automates the deletion or release of the device contexts.
-   
 * PreRegisterClass can now be used to set the WNDCLASS parameters before the
    window class is registered. This provides a convenient way to set a window's
-   background brush or cursor.
-   
+   background brush or cursor. 
 * Improvements to tracing. It now uses OutputDebugString to send the trace
    output the debug/output pane of the various IDE's. This is now also 
    compatible with debuggers, should you choose to use them. Previously the 
-   tracing created a separate window to display text.
-  
+   tracing created a separate window to display text. 
 * Automatically detects the XP theme used (Default, Silver or Olive), and
-   adjusts the theme colors accordingly.
-   
+   adjusts the theme colors accordingly.   
 * Added project files for Borland's Turbo C++ 2006. This is a free compiler
    available from Borland. It can be downloaded here: 
    http://www.codegear.com/downloads/free/turbo
-
 * Enhanced the tutorial. It now also demonstrates file operations and printing.
 
   
@@ -1516,7 +1453,7 @@ Version 5.3
 ===========
 * Owner drawn drop down menu items with icons.  CMenubar::SetIcons is
    used to determine which menu items display an icon. By default, the
-   framework uses the toolbar's bitmap and resource IDs for displaying 
+   framework uses the ToolBar's bitmap and resource IDs for displaying 
    icons. Override CFrame::SetButtons to change this behavior.
 * Automatic subclassing for windows using Windows API defined window classes.
    Now when a window is based on predefined window classes, like the 
@@ -1540,9 +1477,9 @@ Version 5.1
 * Existing windows can be subclassed and converted to CWnd objects using Attach
 * Dialog items can be sublcassed and converted to CWnd objects, using 
    AttachDlgItem.
-* Improvements to CToolbar. The toolbar uses image lists which support using 
+* Improvements to CToolbar. The ToolBar uses image lists which support using 
   separate bitmaps for normal, hot and disabled buttons. Text can be added
-  to toolbar buttons, and the style can be set.
+  to ToolBar buttons, and the style can be set.
 * Improvements to CStatusbar.  
 * Notifications from common controls are reflected back to the CWnd object that
   generated them. 
