@@ -233,7 +233,7 @@ namespace Win32xx
 	}
 
 	inline void CRichEdit::Copy() const
-	// copy the current selection to the clipboard in CF_TEXT format.
+	// Copy the current selection to the clipboard in CF_TEXT format.
 	{
 		assert(IsWindow());
 		SendMessage(WM_COPY, 0, 0);
@@ -355,7 +355,7 @@ namespace Win32xx
 	}
 
 	inline int CRichEdit::GetLineCount() const
-	// Gets the number of lines.
+	// Gets the number of lines in a multiline edit control.
 	{
 		assert(IsWindow());
 		return SendMessage(EM_GETLINECOUNT, 0, 0);

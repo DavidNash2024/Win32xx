@@ -75,7 +75,6 @@ Added CMenu::FromHandle
 Added CPalette::FromHandle
 Added CPen::FromHandle
 Added CRgn::FromHandle
-Added CThread::CreateThread
 Added CWinApp::LoadCursor
 Added CWinApp::LoadIcon
 Added CWinApp::LoadStandardCursor
@@ -89,7 +88,6 @@ Modified CDateTime::GetMonthCalCtrl
 Modified CFrame::SetStatusText
 Modified CListView::GetEditControl
 Modified CListView::GetHeader
-Modified CListView::EditLabel
 Modified CTreeView::EditLabel
 Moved CWinApp::GetAccelerators to CWinThread
 Moved CWinApp::InitInstance to CWinThread

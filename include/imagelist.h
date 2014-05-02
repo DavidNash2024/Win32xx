@@ -405,6 +405,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CImageList::DrawIndirect(IMAGELISTDRAWPARAMS* pimldp)
+	// Draws an image list image based on an IMAGELISTDRAWPARAMS structure.
 	{
 		assert(m_hImageList);
 		return ImageList_DrawIndirect(pimldp);

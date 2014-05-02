@@ -649,7 +649,7 @@ namespace Win32xx
 							(Msg.message != WM_TIMER) && 
 							(Msg.message != WM_MOUSEMOVE) && 
 							(Msg.message != WM_SETCURSOR) &&  
-								GetApp()->OnIdle(lCount) == TRUE  )
+								GetApp()->OnIdle(lCount) == TRUE )
 		{
 			++lCount;
 		}

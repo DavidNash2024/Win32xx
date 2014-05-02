@@ -372,7 +372,7 @@ namespace Win32xx
 		UINT m_nThreadID;				// ID of this thread
 		DWORD m_dwThreadID;				// ID of this thread
 		HACCEL m_hAccel;				// handle to the accelerator table		
-		CWnd* m_pWndAccel;				// handle to the window for accelerator keys
+		CWnd* m_pWndAccel;				// pointer to the window for accelerator keys
 
 	};
 
@@ -1055,7 +1055,7 @@ namespace Win32xx
 	}
 
 	inline void CWinApp::CleanupTemps()
-	// Removes all Temporary CWnds and CMenus belonging to this thread
+	// Removes all temporaries belonging to this thread
 	{
 		// Retrieve the pointer to the TLS Data
 		TLSData* pTLSData = GetApp()->GetTlsData();

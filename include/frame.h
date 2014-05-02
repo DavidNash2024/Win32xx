@@ -3215,7 +3215,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(pNMHDR);
 
 		RecalcLayout();
-		Invalidate();
+		RedrawWindow();
 
 		return 0L;
 	}

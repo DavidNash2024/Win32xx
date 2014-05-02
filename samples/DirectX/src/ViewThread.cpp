@@ -30,7 +30,7 @@ BOOL CViewThread::InitInstance()
 }
 
 int CViewThread::MessageLoop()
-// Here we override CThread::MessageLoop to accommodate the special needs of DirectX
+// Here we override CWinThread::MessageLoop to accommodate the special needs of DirectX
 {
 	MSG Msg = {0};
 	while( Msg.message!=WM_QUIT )
