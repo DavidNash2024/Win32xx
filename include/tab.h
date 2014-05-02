@@ -1605,7 +1605,7 @@ namespace Win32xx
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES;
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the MDICLIENT view window
