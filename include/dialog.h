@@ -658,7 +658,6 @@ namespace Win32xx
 		if (Msg.message == UWM_CLEANUPTEMPS)
 		{
 			GetApp()->CleanupTemps();
-			TRACE("CleanupTemps called\n");
 		}
 
 		if (nCode == MSGF_DIALOGBOX)

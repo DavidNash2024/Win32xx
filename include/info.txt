@@ -121,12 +121,18 @@ controls.h        | CAnimation       | Win32, Win64      | Adds support for the
 				  |	CSlider          |                   | Slider, Spin button.
 				  |	CSpinButton      |                   |
 ------------------+------------------+-------------------+---------------------				  
+cstring.h         | CString          | Win32, Win64      | Adds support for
+                  |                  | and WinCE         | text strings.
+------------------+------------------+-------------------+---------------------				  
 dialog.h          | CDialog          | Win32, Win64      | Adds dialog support.
-                  | CResizer         | WinCE for CDialog |
+                  | CResizer         | WinCE for CDialog |				  
 ------------------+------------------+-------------------+---------------------
 docking.h         | CDocker          | Win32, Win64      | Adds support for
                   | CDockContainer   |                   | docking windows and
                   |                  |                   | splitter windows. 
+------------------+------------------+-------------------+---------------------
+file.h            | CFile            | Win32, Win64      | Adds support disk
+                  |                  | and WinCE         | input and output				  
 ------------------+------------------+-------------------+---------------------                   
 frame.h           | CMenubar         | Win32, Win64      | Adds support for
                   | CFrame           |                   | frames. Frames use a
@@ -161,7 +167,10 @@ rebar.h           | CRebar           | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Rebar control.                  
 ------------------+------------------+-------------------+---------------------
 ribbon.h          | CRibbon          | Win32, Win64      | Adds support for the 
-                  | CRibbonFrame     |                   | Windows 7 ribbon.                  
+                  | CRibbonFrame     |                   | Windows 7 ribbon.     
+------------------+------------------+-------------------+---------------------
+rich_edit.h       | CRichEdit        | Win32, Win64      | Adds support Rich  
+                  |                  |                   | Edit control.     				  
 ------------------+------------------+-------------------+---------------------
 shared_ptr.h      | Shared_Ptr       | Win32, Win64,     | Add a smart pointer
                   |                  | and WinCE         | for use in vectors.
@@ -184,9 +193,6 @@ tab.h             | CTab             | Win32, Win64      | Adds support for tab
 taskdialog.h      | CTaskDialog      | Win32, Win64      | Adds support for tab
                   |                  |                   | task dialogs.                   
 ------------------+------------------+-------------------+---------------------
-thread.h          | CThread          | Win32, Win64      | Adds support for
-                  |                  | and WinCE         | threads.
-------------------+------------------+-------------------+---------------------
 toolbar.h         | CToolbar         | Win32, Win64      | Adds support for a
                   |                  | and WinCE         | Toolbar control.
 ------------------+------------------+-------------------+---------------------
@@ -202,8 +208,9 @@ webbrowser.h      | CAXWindow        | Win32, Win64      | Adds support for an
 ------------------+------------------+-------------------+---------------------
 wincore.h         | CCriticalSection | Win32, Win64,     | The core set of 
                   | CWinApp          | and WinCE         | classes required for
-                  | CWinException    |                   | all Win32++ 
-                  | CWnd             |                   | applications. 
+                  | CWinException    |                   | all Win32++
+				  | CWinThread       |                   | applications. 
+                  | CWnd             |                   |  
 ------------------+------------------+-------------------+---------------------
 winutils.h        | CPoint           | Win32, Win64,     | Additional utility
                   | CRect            | and WinCE         | classes.

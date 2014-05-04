@@ -418,8 +418,12 @@ void CMainFrame::SetupToolBar()
     int BitsPerPixel = GetDesktopWindow()->GetDC()->GetDeviceCaps(BITSPIXEL);
 	if (GetWinVersion() >= 2501 && BitsPerPixel == 32)
 	{
-		// Use 32bit bitmaps for XP and above (support for 32bit bitmaps began with XP)
-		SetToolBarImages(RGB(0,0,0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
+		// Load the 32bit bitmaps if we can, otherwise load 24bit ones.
+		CBitmap bm(IDB_TOOLBAR32_NORM);
+		if (bm.GetHandle())
+			SetToolBarImages(RGB(0,0,0), IDB_TOOLBAR32_NORM, IDB_TOOLBAR32_HOT, IDB_TOOLBAR32_DIS);
+		else
+			SetToolBarImages(RGB(255,0,255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 	}
 	else
 	{

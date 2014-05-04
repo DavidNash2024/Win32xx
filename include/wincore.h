@@ -856,7 +856,6 @@ namespace Win32xx
 			if (Msg.message == UWM_CLEANUPTEMPS)
 			{
 				CleanupTemps();
-				TRACE("CleanupTemps called\n");
 			}
 			else
 			{
@@ -874,7 +873,6 @@ namespace Win32xx
 	inline BOOL CWinThread::OnIdle(LONG lCount)
 	{
 		UNREFERENCED_PARAMETER(lCount);
-		TRACE("OnIdle \n");
 
 		return FALSE;
 	}

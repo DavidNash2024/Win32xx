@@ -46,8 +46,8 @@ New Features and Enhancements
    c-style casts have been replaced with C++ style casts. Any down-casts from
    CWnd to a CWnd derived type (e.g. CWnds from FromHandle) are asserted with
    dynamic_cast to ensure they are correct.   
-* The framework no longer uses OnIdle internally. OnIdle is still supported,
-   but users might want to consider using worker threads instead.  
+* The framework no longer uses OnIdle internally. There is no need to call
+   CWinApp::OnIdle when when overriding OnIdle.  
 
 Incompatibilities with previous version
 ---------------------------------------
