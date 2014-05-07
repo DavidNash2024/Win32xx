@@ -19,6 +19,9 @@
     <ClCompile Include="..\src\TabDemoApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MyDialog.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\dialog.h">
@@ -116,6 +119,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\winutils.h">
       <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyDialog.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

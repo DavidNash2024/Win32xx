@@ -1,9 +1,9 @@
 [Project]
 FileName=TabDemo_DEBUG.dev
 Name=TabDemo
-UnitCount=11
+UnitCount=13
 Type=0
-Ver=1
+Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
@@ -28,6 +28,8 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000001000000001000000
+LogOutput=
+LogOutputEnabled=0
 
 [Unit1]
 FileName=TabDemoApp.cpp
@@ -155,4 +157,25 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+SyncProduct=0
+
+[Unit12]
+FileName=MyDialog.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=MyDialog.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

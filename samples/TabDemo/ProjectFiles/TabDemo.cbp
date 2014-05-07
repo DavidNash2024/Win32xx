@@ -8,20 +8,20 @@
 		<Option compiler="bcc" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland\debug\TabDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland\Debug" />
-				<Option object_output="Borland\Debug" />
+				<Option output="Borland/debug/TabDemo.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland/Debug" />
+				<Option object_output="Borland/Debug" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
-					<Add directory="..\..\..\include" />
+					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Borland\BCC55\Include" />
-					<Add directory="..\..\..\include" />
+					<Add directory="C:/Borland/BCC55/Include" />
+					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="cw32mt" />
@@ -30,20 +30,20 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland\Release\TabDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Borland\Release" />
-				<Option object_output="Borland\Release" />
+				<Option output="Borland/Release/TabDemo.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Borland/Release" />
+				<Option object_output="Borland/Release" />
 				<Option type="0" />
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\..\include" />
+					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Borland\BCC55\Include" />
-					<Add directory="..\..\..\include" />
+					<Add directory="C:/Borland/BCC55/Include" />
+					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="comctl32" />
@@ -52,9 +52,9 @@
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft\Debug\TabDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Microsoft\Debug" />
-				<Option object_output="Microsoft\Debug" />
+				<Option output="Microsoft/Debug/TabDemo.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft/Debug" />
+				<Option object_output="Microsoft/Debug" />
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
@@ -68,12 +68,12 @@
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
 					<Add option="/D_WINDOWS" />
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\..\include" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\..\include" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="/DEBUG" />
@@ -84,13 +84,13 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft\Release\TabDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="Microsoft\Release" />
-				<Option object_output="Microsoft\Release" />
+				<Option output="Microsoft/Release/TabDemo.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="Microsoft/Release" />
+				<Option object_output="Microsoft/Release" />
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
@@ -102,12 +102,12 @@
 					<Add option="/DWIN32" />
 					<Add option="/DNDEBUG" />
 					<Add option="/D_WINDOWS" />
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\..\include" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Include" />
-					<Add directory="..\..\..\include" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Include" />
+					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add library="ComCtl32" />
@@ -117,13 +117,13 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
-					<Add directory="C:\Program Files\Microsoft Platform SDK\Lib" />
+					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU\Debug\TabDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="GNU\Debug" />
-				<Option object_output="GNU\Debug" />
+				<Option output="GNU/Debug/TabDemo.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Debug" />
+				<Option object_output="GNU/Debug" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
@@ -132,10 +132,10 @@
 					<Add option="-g3" />
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
-					<Add directory="..\..\..\include" />
+					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\..\include" />
+					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-Wl,--enable-auto-import" />
@@ -147,18 +147,18 @@
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU\Release\TabDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="GNU\Release" />
-				<Option object_output="GNU\Release" />
+				<Option output="GNU/Release/TabDemo.exe" prefix_auto="0" extension_auto="0" />
+				<Option working_dir="GNU/Release" />
+				<Option object_output="GNU/Release" />
 				<Option type="0" />
 				<Option compiler="gcc" />
 				<Compiler>
 					<Add option="-Wall" />
 					<Add option="-DNDEBUG" />
-					<Add directory="..\..\..\include" />
+					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
-					<Add directory="..\..\..\include" />
+					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
 					<Add option="-Wl,--enable-auto-import" />
@@ -173,23 +173,26 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="..\src\Classes.cpp" />
-		<Unit filename="..\src\Classes.h" />
-		<Unit filename="..\src\Files.cpp" />
-		<Unit filename="..\src\Files.h" />
-		<Unit filename="..\src\Mainfrm.cpp" />
-		<Unit filename="..\src\Mainfrm.h" />
-		<Unit filename="..\src\Readme.txt" />
-		<Unit filename="..\src\Resource.rc">
+		<Unit filename="../src/Classes.cpp" />
+		<Unit filename="../src/Classes.h" />
+		<Unit filename="../src/Files.cpp" />
+		<Unit filename="../src/Files.h" />
+		<Unit filename="../src/Mainfrm.cpp" />
+		<Unit filename="../src/Mainfrm.h" />
+		<Unit filename="../src/MyDialog.cpp" />
+		<Unit filename="../src/MyDialog.h" />
+		<Unit filename="../src/Readme.txt" />
+		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="..\src\TabDemoApp.cpp" />
-		<Unit filename="..\src\TabDemoApp.h" />
-		<Unit filename="..\src\main.cpp" />
-		<Unit filename="..\src\resource.h" />
+		<Unit filename="../src/TabDemoApp.cpp" />
+		<Unit filename="../src/TabDemoApp.h" />
+		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/resource.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />
+			<envvars />
 		</Extensions>
 	</Project>
 </CodeBlocks_project_file>

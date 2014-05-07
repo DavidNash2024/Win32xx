@@ -1,5 +1,5 @@
-// Win32++   Version 7.4.1
-// Not officially released yet.
+// Win32++   Version 7.5
+// Released: 7th May 2014
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

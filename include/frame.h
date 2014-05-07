@@ -1,5 +1,5 @@
-// Win32++   Version 7.4.1
-// Not officially released yet.
+// Win32++   Version 7.5
+// Released: 7th May 2014
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2127,7 +2127,7 @@ namespace Win32xx
 					{
 						HICON hIcon = (HICON)GetMenuBar()->GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
 						if (NULL == hIcon)
-							hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
+							hIcon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
 						int cx = ::GetSystemMetrics (SM_CXSMICON);
 						int cy = ::GetSystemMetrics (SM_CYSMICON);

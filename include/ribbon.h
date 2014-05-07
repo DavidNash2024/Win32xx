@@ -1,5 +1,5 @@
-// Win32++   Version 7.4.1
-// Not officially released yet.
+// Win32++   Version 7.5
+// Released: 7th May 2014
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -256,6 +256,8 @@ namespace Win32xx
 		::CoCreateInstance(CLSID_UIRibbonFramework, NULL, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&m_pRibbonFramework));
 
 		// Connect the host application to the Ribbon framework.
+
+		assert(m_pRibbonFramework);
 		HRESULT hr = m_pRibbonFramework->Initialize(pWnd->GetHwnd(), this);
 		if (FAILED(hr))
 		{
@@ -288,12 +290,15 @@ namespace Win32xx
 		IUIRibbon* pRibbon = NULL;
 		UINT uRibbonHeight = 0;
 
-		hr = GetRibbonFramework()->GetView(0, IID_PPV_ARGS(&pRibbon));
-		if (SUCCEEDED(hr))
+		if (GetRibbonFramework())
 		{
-			// Call to the framework to determine the desired height of the Ribbon.
-			hr = pRibbon->GetHeight(&uRibbonHeight);
-			pRibbon->Release();
+			hr = GetRibbonFramework()->GetView(0, IID_PPV_ARGS(&pRibbon));
+			if (SUCCEEDED(hr))
+			{
+				// Call to the framework to determine the desired height of the Ribbon.
+				hr = pRibbon->GetHeight(&uRibbonHeight);
+				pRibbon->Release();
+			}
 		}
 
 		return uRibbonHeight;

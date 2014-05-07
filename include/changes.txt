@@ -1,4 +1,4 @@
-Version 7.4.1
+Version 7.5
 =============
 Bug Fixes:
 * The drop-down lists for combo boxes are now displayed correctly.
@@ -35,19 +35,13 @@ New Features and Enhancements
      style creates a window whose horizontal origin is on the right edge to 
 	 better suite Arabic and Hebrew languages.
 * Updated CDialog
-   - Added support for OnIdle in modal dialogs (modeless dialogs already had
-     OnIdle support).  	 
+   - Added support for OnIdle in modal dialogs. Modeless dialogs already have
+     OnIdle support.  	 
 * Updated FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
    CImageList and CMenu. They have been moved from global to their classes.
 * CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.
    Unlike CWnd::FromHandle, this function never creates a new CWnd. It returns
    NULL if the window handle is not found in the map of permanent CWnds.
-* The framework now takes a stricter approach to casting. For the most part,
-   c-style casts have been replaced with C++ style casts. Any down-casts from
-   CWnd to a CWnd derived type (e.g. CWnds from FromHandle) are asserted with
-   dynamic_cast to ensure they are correct.   
-* The framework no longer uses OnIdle internally. There is no need to call
-   CWinApp::OnIdle when when overriding OnIdle.  
 
 Incompatibilities with previous version
 ---------------------------------------

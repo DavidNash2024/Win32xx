@@ -7,6 +7,7 @@
 
 #include "Classes.h"
 #include "Files.h"
+#include "MyDialog.h"
 
 
 // Declaration of the CMainFrame class
@@ -23,6 +24,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void OnNewClassesTab();
+	virtual void OnNewDialogTab();
 	virtual void OnNewFilesTab();
 	virtual void OnNewTab();
 	virtual void OnShowButtons();

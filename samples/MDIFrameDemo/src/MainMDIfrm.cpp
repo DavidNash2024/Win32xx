@@ -181,12 +181,12 @@ void CMainMDIFrame::SetupToolBar()
 	SetToolBarImages(RGB(192,192,192), IDB_TOOLBAR_NORM, IDB_TOOLBAR_HOT, IDB_TOOLBAR_DIS);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWVIEW, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_VIEW)));
-	AddMenuIcon(IDM_FILE_NEWRECT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_RECT)));
-	AddMenuIcon(IDM_FILE_NEWMAX,  ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_MAX)));
-	AddMenuIcon(IDM_FILE_NEWTEXT, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_TEXT)));
-	AddMenuIcon(IDM_FILE_NEWLIST, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILES)));
-	AddMenuIcon(IDM_FILE_NEWTREE, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSES)));
+	AddMenuIcon(IDM_FILE_NEWVIEW, GetApp()->LoadIcon(IDI_VIEW));
+	AddMenuIcon(IDM_FILE_NEWRECT, GetApp()->LoadIcon(IDI_RECT));
+	AddMenuIcon(IDM_FILE_NEWMAX, GetApp()->LoadIcon(IDI_MAX));
+	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp()->LoadIcon(IDI_TEXT));
+	AddMenuIcon(IDM_FILE_NEWLIST, GetApp()->LoadIcon(IDI_FILES));
+	AddMenuIcon(IDM_FILE_NEWTREE, GetApp()->LoadIcon(IDI_CLASSES));
 
 	// Configure the "New" toolbar button to bring up a menu
 	// Setting this style requires comctl32.dll version 4.72 or later

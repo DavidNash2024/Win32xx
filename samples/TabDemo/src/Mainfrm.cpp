@@ -35,6 +35,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
 	case IDM_NEW_FILES:			OnNewFilesTab();	return TRUE;
 	case IDM_NEW_CLASSES:		OnNewClassesTab();	return TRUE;
+	case IDM_NEW_DIALOG:		OnNewDialogTab();	return TRUE;
 	case IDM_NEW_TAB:			OnNewTab();			return TRUE;
 	case IDM_TAB_FIXED:         OnTabFixedWidth();	return TRUE;
 	case IDM_TAB_DRAW:          OnTabOwnerDraw();	return TRUE;
@@ -84,6 +85,8 @@ void CMainFrame::OnInitialUpdate()
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	m_View.AddTabPage(new CMyDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+
 	m_View.SelectPage(0);
 
 	// PreCreate initially set the window as invisible, so show it now.
@@ -138,6 +141,11 @@ void CMainFrame::OnNewFilesTab()
 void CMainFrame::OnNewClassesTab()
 {
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+}
+
+void CMainFrame::OnNewDialogTab()
+{
+	m_View.AddTabPage(new CMyDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
 }
 
 void CMainFrame::OnNewTab()
@@ -225,8 +233,9 @@ void CMainFrame::SetupToolBar()
 	GetFrameMenu()->CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_NEW_FILES, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW)));
-	AddMenuIcon(IDM_NEW_CLASSES, ::LoadIcon(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW)));
+	AddMenuIcon(IDM_NEW_FILES, GetApp()->LoadIcon(IDI_FILEVIEW));
+	AddMenuIcon(IDM_NEW_CLASSES, GetApp()->LoadIcon(IDI_CLASSVIEW));
+	AddMenuIcon(IDM_NEW_DIALOG, GetApp()->LoadIcon(IDI_DIALOGVIEW));
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
