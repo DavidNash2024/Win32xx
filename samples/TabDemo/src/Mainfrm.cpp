@@ -85,7 +85,7 @@ void CMainFrame::OnInitialUpdate()
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-	m_View.AddTabPage(new CMyDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+	m_View.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
 
 	m_View.SelectPage(0);
 
@@ -145,7 +145,7 @@ void CMainFrame::OnNewClassesTab()
 
 void CMainFrame::OnNewDialogTab()
 {
-	m_View.AddTabPage(new CMyDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+	m_View.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
 }
 
 void CMainFrame::OnNewTab()

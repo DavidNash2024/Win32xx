@@ -44,6 +44,9 @@ CDocker* CDockTabbedMDI::NewDockerFromID(int idDock)
 	case ID_DOCK_TEXT2:
 		pDock = new CDockText;
 		break;
+	case ID_DOCK_DIALOG:
+		pDock = new CDockDialog;
+		break;
 	default:
 		TRACE("Unknown Dock ID\n");
 		break;

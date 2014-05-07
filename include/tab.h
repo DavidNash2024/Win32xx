@@ -1292,13 +1292,13 @@ namespace Win32xx
 
 		// Display the modal dialog. The dialog is defined in the dialog template rather
 		// than in the resource script (rc) file.
-		CSelectDialog MyDialog((LPCDLGTEMPLATE) dlg_Template);
+		CSelectDialog SelectDialog((LPCDLGTEMPLATE) dlg_Template);
 		for(UINT u = 0; u < GetAllTabs().size(); ++u)
 		{
-			MyDialog.AddItem(GetAllTabs()[u].szTabText);
+			SelectDialog.AddItem(GetAllTabs()[u].szTabText);
 		}
 
-		int iSelected = (int)MyDialog.DoModal();
+		int iSelected = (int)SelectDialog.DoModal();
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 

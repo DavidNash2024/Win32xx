@@ -115,6 +115,10 @@ SOURCE=..\src\MyCombo.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\MyDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\MyTabbedMDI.cpp
 # End Source File
 # Begin Source File
@@ -168,6 +172,10 @@ SOURCE=..\src\Mainfrm.h
 # Begin Source File
 
 SOURCE=..\src\MyCombo.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyDialog.h
 # End Source File
 # Begin Source File
 

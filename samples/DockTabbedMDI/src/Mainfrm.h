@@ -11,6 +11,7 @@
 #include "DockTabbedMDI.h"
 #include "Text.h"
 #include "Output.h"
+#include "MyDialog.h"
 #include "Simple.h"
 
 

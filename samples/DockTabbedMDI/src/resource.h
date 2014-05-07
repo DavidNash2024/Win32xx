@@ -32,9 +32,10 @@
 // Icons for container tabs
 #define IDI_SIMPLE                      133
 #define IDI_RECT                        134
-#define IDI_CLASSVIEW                   135
-#define IDI_FILEVIEW                    136
-#define IDI_TEXT                        137
+#define IDI_DIALOGVIEW                  135
+#define IDI_CLASSVIEW                   136
+#define IDI_FILEVIEW                    137
+#define IDI_TEXT                        138
 
 // Menu Resource
 #define IDM_NEWMENU                     140
@@ -48,6 +49,25 @@
 #define IDM_DEFAULT_LAYOUT              148      
 #define IDM_CLOSE_DOCKERS               149
 #define IDM_CLOSE_MDIS                  150
+
+//Resource IDs for the dialog
+#define IDD_MYDIALOG                    161
+#define IDC_RADIO1						162
+#define IDC_RADIO2						163
+#define IDC_RADIO3						164
+#define IDC_CHECK1						165
+#define IDC_CHECK2						166
+#define IDC_CHECK3						167
+#define IDC_EDIT1						170
+#define IDC_LIST1						171
+#define IDC_BUTTON1						172
+#define IDC_RICHEDIT1					173
+#define IDC_RICHEDIT2					174
+#define IDC_STATIC1                     180
+#define IDC_STATIC2                     181
+#define IDC_STATIC3                     182
+#define IDC_HOTKEY1                     183
+#define IDB_BITMAP1                     184
 
 // Next default values for new objects
 // 

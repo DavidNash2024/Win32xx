@@ -43,6 +43,21 @@ BEGIN
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
+    POPUP "&Edit"
+    BEGIN
+        MENUITEM "Undo\tCtrl+Z",                IDM_EDIT_UNDO, GRAYED
+        MENUITEM "Redo\tShift+Ctrl+Z",          IDM_EDIT_REDO, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "Cut\tCtrl+X",                 IDM_EDIT_CUT, GRAYED
+        MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
+        MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
+        MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
+    END
+    POPUP "&View"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
     POPUP "&Options"
     BEGIN
         MENUITEM "Owner Draw",                  IDM_TAB_DRAW, CHECKED
@@ -50,11 +65,6 @@ BEGIN
 		MENUITEM SEPARATOR
         MENUITEM "Tabs at Top",                 IDM_TAB_TOP, CHECKED
         MENUITEM "Show Buttons",                IDM_TAB_BUTTONS, CHECKED
-    END
-    POPUP "&View"
-    BEGIN
-        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
     POPUP "&Help"
     BEGIN

@@ -1,5 +1,5 @@
 ///////////////////////////////////////
-// MyDialog.cpp
+// CViewDialog.cpp
 
 #include "stdafx.h"
 #include "MyDialog.h"
@@ -53,10 +53,6 @@ BOOL CViewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
 BOOL CViewDialog::OnInitDialog()
 {
-	// Set the Icon
-	SetIconLarge(IDW_MAIN);
-	SetIconSmall(IDW_MAIN);
-
 	// Attach CWnd objects to the dialog items
 	AttachItem(IDC_BUTTON1,	m_Button);
 	AttachItem(IDC_CHECK1,	m_CheckA);
@@ -133,4 +129,30 @@ void CViewDialog::OnRadio3()
 {
 	SetDlgItemText(IDC_STATIC3, _T("Radio 3"));
 	TRACE("Radio 3\n");
+}
+
+
+//////////////////////////////////////////////
+//  Definitions for the CContainDialog class
+CContainDialog::CContainDialog() : m_ViewDialog(IDD_MYDIALOG)
+{
+	SetView(m_ViewDialog); 
+	SetDockCaption (_T("Dialog View - Docking container"));
+	SetTabText(_T("Dialog"));
+	SetTabIcon(IDI_DIALOGVIEW);
+} 
+
+
+//////////////////////////////////////////////
+//  Definitions for the CDockDialog class
+CDockDialog::CDockDialog()
+{
+	// Set the view window to our edit control
+	SetView(m_View);
+}
+
+void CDockDialog::OnInitialUpdate()
+{
+	// Set the width of the splitter bar
+	SetBarWidth(8);
 }

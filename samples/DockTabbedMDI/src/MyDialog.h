@@ -1,9 +1,8 @@
 ///////////////////////////////////////
-// MyDialog.h
+// CViewDialog.h
 
 #ifndef MYDIALOG_H
 #define MYDIALOG_H
-
 
 
 // Declaration of the CViewDialog class
@@ -52,6 +51,30 @@ private:
 	CButton1	m_Button;
 	CRichEdit1	m_RichEdit1;
 	CRichEdit2	m_RichEdit2;
+};
+
+// Declaration of the CContainDialog class
+class CContainDialog : public CDockContainer
+{
+public:
+	CContainDialog();
+	~CContainDialog() {}
+
+private:
+	CViewDialog m_ViewDialog;
+};
+
+// Declaration of the CDockDialog class
+class CDockDialog : public CDocker
+{
+public:
+	CDockDialog();
+	virtual ~CDockDialog() {}
+	virtual void OnInitialUpdate();
+
+private:
+	CContainDialog m_View;
+
 };
 
 #endif //MYDIALOG_H

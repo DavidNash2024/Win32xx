@@ -20,7 +20,8 @@ enum DockIDs
 	ID_DOCK_TEXT1 = 7,
 	ID_DOCK_TEXT2 = 8,
 	ID_DOCK_BROWSER = 9,
-	ID_DOCK_RECT = 10
+	ID_DOCK_RECT = 10,
+	ID_DOCK_DIALOG = 11
 };
 
 // Declaration of the CDockTabbedMDI class

@@ -192,6 +192,7 @@
         <FILE FILENAME="..\src\Files.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Files" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\main.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="main" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Mainfrm.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Mainfrm" FORMNAME="" DESIGNCLASS=""/>
+		<FILE FILENAME="..\src\MyDialog.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="Mainfrm" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\TabDemoApp.cpp" CONTAINERID="CCompiler" LOCALCOMMAND="" UNITNAME="TabDemoApp" FORMNAME="" DESIGNCLASS=""/>
         <FILE FILENAME="..\src\Resource.rc" CONTAINERID="RCCompiler" LOCALCOMMAND="" UNITNAME="Resource.rc" FORMNAME="Resource.res" DESIGNCLASS=""/>
       </FILELIST>

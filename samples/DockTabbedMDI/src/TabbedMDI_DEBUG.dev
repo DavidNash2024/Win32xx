@@ -1,9 +1,9 @@
 [Project]
 FileName=TabbedMDI_DEBUG.dev
 Name=TabbedMDI
-UnitCount=27
+UnitCount=29
 Type=0
-Ver=1
+Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
@@ -28,6 +28,8 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000001000000001000000
+LogOutput=
+LogOutputEnabled=0
 
 [Unit2]
 FileName=Classes.cpp
@@ -136,6 +138,7 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+SyncProduct=0
 
 [Unit16]
 FileName=MyTabbedMDI.cpp
@@ -317,7 +320,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=DockTabbedMDI.cpp
+FileName=MyDialog.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -327,7 +330,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=DockTabbedMDI.h
+FileName=MyDialog.h
 CompileCpp=1
 Folder=Header
 Compile=1

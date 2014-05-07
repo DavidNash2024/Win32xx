@@ -207,6 +207,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyDialog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyTabbedMDI.cpp"
 				>
 			</File>
@@ -278,6 +282,10 @@
 			</File>
 			<File
 				RelativePath="..\src\MyCombo.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyDialog.h"
 				>
 			</File>
 			<File
