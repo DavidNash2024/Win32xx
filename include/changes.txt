@@ -42,6 +42,8 @@ New Features and Enhancements
 * CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.
    Unlike CWnd::FromHandle, this function never creates a new CWnd. It returns
    NULL if the window handle is not found in the map of permanent CWnds.
+* Updated the TabDemo and DockTabbedMDI samples. These now demonstrate using a
+   dialog as the view window for the tab or docker.   
 
 Incompatibilities with previous version
 ---------------------------------------
