@@ -1,5 +1,5 @@
-// Win32++   Version 7.5
-// Released: 7th May 2014
+// Win32++   Version 7.5.1
+// Pre-release version
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -3777,7 +3777,7 @@ namespace Win32xx
 			case Modern:
 				{
 					ToolBarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};
 					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 
 					m_ToolBarTheme = tt;
@@ -3789,7 +3789,7 @@ namespace Win32xx
 			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 				{
 					ToolBarTheme tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
-					ReBarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, F, T, T, T, F};
 					MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 
 					m_ToolBarTheme = tt;
@@ -3801,7 +3801,7 @@ namespace Win32xx
 				{
 					// Used for XP default (blue) color scheme
 					ToolBarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-					ReBarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, F, T, T, T, F};
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
 
 					m_ToolBarTheme = tt;
@@ -3814,7 +3814,7 @@ namespace Win32xx
 				{
 					// Used for XP Silver color scheme
 					ToolBarTheme tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-					ReBarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, F, T, T, T, F};
 					MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
 
 					m_ToolBarTheme = tt;
@@ -3826,7 +3826,7 @@ namespace Win32xx
 			case Olive:
 				{
 					// Used for XP Olive color scheme
-					ReBarTheme tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, T, T, T, T, F};
+					ReBarTheme tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, F, T, T, T, F};
 					ToolBarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
 

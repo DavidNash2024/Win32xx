@@ -1,5 +1,5 @@
-// Win32++   Version 7.5
-// Released: 7th May 2014
+// Win32++   Version 7.5.1
+// Pre-release version
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -654,7 +654,7 @@ namespace Win32xx
 	inline void CToolBar::PreCreate(CREATESTRUCT &cs)
 	{
 		// Sets the CREATESTRUCT parameters prior to window creation
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
+		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 	}
 
 	inline void CToolBar::PreRegisterClass(WNDCLASS &wc)
