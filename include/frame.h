@@ -1968,7 +1968,7 @@ namespace Win32xx
 		rbbi.cx         = sz.cx;
 		rbbi.cyMinChild = MenuBar_Height;
 		rbbi.cyMaxChild = MenuBar_Height;
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS ;
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 		rbbi.hwndChild  = GetMenuBar()->GetHwnd();
 		rbbi.wID        = IDW_MENUBAR;
 
@@ -2284,7 +2284,7 @@ namespace Win32xx
 					int cyImage = 0;
 					pimlToolBar->GetIconSize(&cxImage, &cyImage);
 
-					int yImage = (rcRect.bottom - rcRect.top - cyImage - TextSize.cy +2)/2;
+					int yImage = (rcRect.bottom + rcRect.top - cyImage - TextSize.cy )/2;
 					int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
 					if (dwTBStyle & TBSTYLE_LIST)
 					{

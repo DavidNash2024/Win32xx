@@ -445,13 +445,20 @@ namespace Win32xx
 		SendMessage(TB_GETMAXSIZE, 0L, (LPARAM)&sz);
 
 		// This fixes a Windows bug calculating the size when TBSTYLE_DROPDOWN is used.
-		int xMaxSize = 0;
+		int cxMaxSize = 0;
+		int cyMaxSize = 0;
 		for (int i= 0 ; i < GetButtonCount(); ++i)
 		{
-			xMaxSize += GetItemRect(i).Width();
+			CRect rcItem = GetItemRect(i);
+			cxMaxSize += rcItem.Width();
+			cyMaxSize += rcItem.Height();
 		}
 
-		sz.cx = xMaxSize;
+		if (GetWindowLongPtr(GWL_STYLE) & CCS_VERT)
+			sz.cy = cyMaxSize;
+		else
+			sz.cx = cxMaxSize;
+
 		return sz;
 	}
 

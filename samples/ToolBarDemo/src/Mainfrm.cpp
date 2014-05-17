@@ -248,7 +248,7 @@ LRESULT CMainFrame::OnQueryInsert(LPNMTOOLBAR pNMTB)
 }
 
 LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
-// Called when the user presses the Reset button on teh ToolBAr customize dialog.
+// Called when the user presses the Reset button on teh ToolBar customize dialog.
 // Here we restore the Toolbar to the settings saved in OnBeginAdjust.
 {
 	CToolBar* pToolBar = static_cast<CToolBar*>(FromHandle(pNMTB->hdr.hwndFrom));

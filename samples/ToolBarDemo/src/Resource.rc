@@ -81,6 +81,10 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDW_MAIN                ICON                    "res/Star.ico"
+IDI_TOP                 ICON                    "res/Top.ico"
+IDI_LEFT                ICON                    "res/Left.ico"
+IDI_RIGHT               ICON                    "res/Right.ico"
+IDI_BOTTOM              ICON                    "res/Bottom.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -191,6 +195,14 @@ BEGIN
 	IDM_TOOLBAR_DEFAULT     "Return the ToolBar buttons back to Default"
 	IDM_TOOLBAR_BIGICONS    "Toggle Big Icons On or Off"
     IDM_HELP_ABOUT          "Display Information about this program"
+END
+
+STRINGTABLE
+BEGIN
+    IDM_TOP                 "Place ToolBar at Top"
+    IDM_LEFT                "Place ToolBar at Left"
+    IDM_RIGHT               "Place ToolBar at Right"
+    IDM_BOTTOM              "Place ToolBar at Bottom"
 END
 
 STRINGTABLE

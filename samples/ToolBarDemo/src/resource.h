@@ -23,9 +23,17 @@
 #define IDM_TOOLBAR_BIGICONS            137
 #define IDM_TOOLBAR_CUSTOMIZE           138
 #define IDM_HELP_ABOUT                  140
+#define IDM_TOP                         141
+#define IDM_LEFT                        142
+#define IDM_RIGHT                       143
+#define IDM_BOTTOM                      144
 #define IDB_NORMAL                      150
 #define IDB_DISABLED                    151
 #define IDB_HOT                         152
+#define IDI_TOP                         160
+#define IDI_LEFT                        161
+#define IDI_RIGHT                       162
+#define IDI_BOTTOM                      163
 
 
 // Next default values for new objects
