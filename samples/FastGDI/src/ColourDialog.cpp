@@ -138,7 +138,7 @@ void CColourDialog::OnOK()
 {
 	// Get a pointer to our CMainFrame object
 	CMainFrame* pMainFrame = GetFrameApp()->GetMainFrame();
-	
+
 	BOOL bGray = SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0);
 	pMainFrame->ModifyBitmap(m_cRed, m_cGreen, m_cBlue, bGray);
 

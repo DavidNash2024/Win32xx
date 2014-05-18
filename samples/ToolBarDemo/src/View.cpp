@@ -6,8 +6,6 @@
 #include "view.h"
 #include "resource.h"
 
-#define UWM_CREATED		 (WM_APP + 1)	// Message posted when window is created
-
 CView::CView()
 {
 }
@@ -84,7 +82,6 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS
 					| TBSTYLE_FLAT | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER ;
 
-//	dwStyle |= CCS_LEFT;
 	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
 
 	// Add the ToolBar buttons
@@ -95,9 +92,8 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 		{ 2, IDM_RIGHT,		TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
 		{ 3, IDM_BOTTOM,	TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 }
 	};
-	m_ToolBar.AddButtons(4, ButtonInfo);  
+	m_ToolBar.AddButtons(4, ButtonInfo);
 	
-	PostMessage(UWM_CREATED);
 	return 0;
 }
 
@@ -105,9 +101,25 @@ void CView::OnDraw(CDC* pDC)
 // OnDraw is called when part or all of the window needs to be redrawn
 {
 	CRect rc = GetClientRect();
+	CRect rcTB = m_ToolBar.GetWindowRect();
 
-	// Centre some text in our view window
-	pDC->DrawText(_T("View Window"), -1, rc, DT_CENTER |  DT_VCENTER |  DT_SINGLELINE);
+	// Calculate the view rect excluding the ToolBar rect
+	ClientToScreen(rc);
+	if (rc.Width() == rcTB.Width())
+	{
+		if (rc.top == rcTB.top)	rc.top += rcTB.Height();
+		else					rc.bottom -= rcTB.Height(); 
+	}
+	else
+	{
+		if (rc.left == rcTB.left)	rc.left += rcTB.Width();
+		else						rc.right -= rcTB.Width();
+	}
+
+	ScreenToClient(rc);
+
+	// Display some text in our view window
+	pDC->DrawText(_T("\nPress the arrows to change the inner toolbar's orientation,\n or choose customize toolbar from the ToolBar menu item to modify the toolbar in the frame."), -1, rc, DT_CENTER | DT_WORDBREAK);
 }
 
 void CView::OnInitialUpdate()
@@ -163,7 +175,7 @@ void CView::RecalcLayout()
 {
 	CRect rcView = GetClientRect();
 	
-	// Position the toolbar
+	// Position the toolbar at the top, left, right or bottom of the view.
 	int cxTB = m_ToolBar.GetMaxSize().cx;
 	int cyTB = m_ToolBar.GetMaxSize().cy;
 	int cxClient = GetClientRect().Width();
@@ -195,6 +207,8 @@ void CView::RecalcLayout()
 		m_ToolBar.PressButton(IDM_TOP, TRUE);
 		break;
 	}
+
+	Invalidate();
 }
 
 // Note: Vertical toolbars require each button to have TBSTATE_WRAP, set for group buttons to work.
@@ -216,12 +230,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_SIZE:
 		RecalcLayout();
 		Invalidate();
-		break;
-		
-	case UWM_CREATED:
-		// Simulate a mouse click on the first button
-		m_ToolBar.SendMessage(WM_LBUTTONDOWN);
-		m_ToolBar.SendMessage(WM_LBUTTONUP);
 		break;
 	}
 

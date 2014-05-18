@@ -434,7 +434,7 @@ namespace Win32xx
 		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
-		virtual void AddToolBarBand(CToolBar* pTB, DWORD dwStyle, UINT nID);
+		virtual void AddToolBarBand(CToolBar* pTB, DWORD dwBandStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0, int iImage = -1);
 		virtual void CreateToolBar();
 		virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
@@ -506,6 +506,7 @@ namespace Win32xx
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
+		CRect ExcludeChildRect(CRect& rcClient, CWnd* pChild) const;
 		static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -1951,30 +1952,17 @@ namespace Win32xx
 	}
 
 	inline void CFrame::AddMenuBarBand()
-	{
-		// Adds a MenuBar to the rebar control
+	// Adds a MenuBar to the rebar control	
+	{		
 		REBARBANDINFO rbbi = {0};
-		CSize sz = GetMenuBar()->GetMaxSize();
 
-		// Calculate the MenuBar height from the menu font
-		CSize csMenuBar;
-		CClientDC dcMenuBar(GetMenuBar());
-		dcMenuBar.SelectObject(GetMenuBar()->GetFont());
-		csMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
-		int MenuBar_Height = csMenuBar.cy + 6;
-
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
-		rbbi.cxMinChild = sz.cx;
-		rbbi.cx         = sz.cx;
-		rbbi.cyMinChild = MenuBar_Height;
-		rbbi.cyMaxChild = MenuBar_Height;
-		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
+		rbbi.fMask      = RBBIM_STYLE | RBBIM_CHILD | RBBIM_ID;
+		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT;
 		rbbi.hwndChild  = GetMenuBar()->GetHwnd();
 		rbbi.wID        = IDW_MENUBAR;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
 		GetReBar()->InsertBand(-1, rbbi);
-		SetMenuBarBandSize();
 		GetReBar()->SetMenuBar(GetMenuBar()->GetHwnd());
 
 		if (m_ReBarTheme.LockMenuBand)
@@ -1996,24 +1984,18 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	inline void CFrame::AddToolBarBand(CToolBar* pTB, DWORD dwStyle, UINT nID)
+	inline void CFrame::AddToolBarBand(CToolBar* pTB, DWORD dwBandStyle, UINT nID)
+	// Adds a ToolBar to the rebar control
 	{
-		// Adds a ToolBar to the rebar control
-
 		// Create the ToolBar Window
-		pTB->Create(GetReBar());
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT	| CCS_NODIVIDER | CCS_NORESIZE | CCS_NOPARENTALIGN;
+		pTB->CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), GetReBar(), 0);
 
 		// Fill the REBARBAND structure
 		REBARBANDINFO rbbi = {0};
-		CSize sz = pTB->GetMaxSize();
 
-		rbbi.fMask      = RBBIM_CHILDSIZE | RBBIM_STYLE |  RBBIM_CHILD | RBBIM_SIZE | RBBIM_ID;
-		rbbi.cyMinChild = sz.cy;
-		rbbi.cyMaxChild = sz.cy;
-		rbbi.cx         = sz.cx +2;
-		rbbi.cxMinChild = sz.cx +2;
-
-		rbbi.fStyle     = dwStyle;
+		rbbi.fMask      = RBBIM_STYLE |  RBBIM_CHILD | RBBIM_ID;
+		rbbi.fStyle     = dwBandStyle;
 		rbbi.hwndChild  = pTB->GetHwnd();
 		rbbi.wID        = nID;
 
@@ -2642,6 +2624,34 @@ namespace Win32xx
 		}
 	}
 
+	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, CWnd* pChild) const
+	// Calculates the remaining client rect when a child window is excluded.
+	// Note: Assumes the child window touches 3 of the client rect's borders
+	//  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar())
+	{
+		ClientToScreen(rcClient);
+		CRect rcChildWindow = pChild->GetWindowRect();
+
+		if (rcClient.Width() == rcChildWindow.Width())
+		{
+			if (rcClient.top == rcChildWindow.top)	
+				rcClient.top += rcChildWindow.Height();
+			else
+				rcClient.bottom -= rcChildWindow.Height(); 
+		}
+		else
+		{
+			if (rcClient.left == rcChildWindow.left)
+				rcClient.left += rcChildWindow.Width();
+			else
+				rcClient.right -= rcChildWindow.Width();
+		}
+
+		ScreenToClient(rcClient);
+
+		return rcClient;
+	}
+
 	inline int CFrame::GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
 	{
@@ -2709,32 +2719,18 @@ namespace Win32xx
 
 	inline CRect CFrame::GetViewRect() const
 	{
-		// Get the frame's client area
-		CRect rcFrame = GetClientRect();
+		CRect rcClient = GetClientRect();
 
-		// Get the statusbar's window area
-		CRect rcStatus;
-		if (GetStatusBar()->IsWindow() && (GetStatusBar()->IsWindowVisible() || !IsWindowVisible()))
-			rcStatus = GetStatusBar()->GetWindowRect();
+		if (GetStatusBar()->IsWindow() && (GetStatusBar()->IsWindowVisible()))
+			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-		// Get the top rebar or toolbar's window area
-		CRect rcTop;
 		if (IsReBarSupported() && m_bUseReBar && GetReBar()->IsWindow())
-			rcTop = GetReBar()->GetWindowRect();
+			rcClient = ExcludeChildRect(rcClient, GetReBar());
 		else
 			if (GetToolBar()->IsWindow() && GetToolBar()->IsWindowVisible())
-				rcTop = GetToolBar()->GetWindowRect();
+				rcClient = ExcludeChildRect(rcClient, GetToolBar());
 
-		// Return client size less the rebar and status windows
-		int top = rcFrame.top + rcTop.Height();
-		int left = rcFrame.left;
-		int right = rcFrame.right;
-		int bottom = rcFrame.Height() - (rcStatus.Height());
-		if ((bottom <= top) ||( right <= left))
-			top = left = right = bottom = 0;
-
-		CRect rcView(left, top, right, bottom);
-		return rcView;
+		return rcClient;
 	}
 
 	inline CString CFrame::GetThemeName() const
@@ -3450,17 +3446,8 @@ namespace Win32xx
 		else if (m_bUseToolBar && m_bShowToolBar && GetToolBar()->IsWindow())
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
 
-		// Resize the View window
-		CRect rClient = GetViewRect();
-		if ((rClient.bottom - rClient.top) >= 0)
-		{
-			int x  = rClient.left;
-			int y  = rClient.top;
-			int cx = rClient.Width();
-			int cy = rClient.Height();
-
-			pView->SetWindowPos( NULL, x, y, cx, cy, SWP_SHOWWINDOW|SWP_ASYNCWINDOWPOS );
-		}
+		// Position the view window
+		pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
 
 		// Adjust rebar bands
 		if (IsReBarUsed())

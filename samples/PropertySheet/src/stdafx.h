@@ -18,8 +18,6 @@
 // Specify Win32xx specific predefinitions here
 //#define NO_USING_NAMESPACE		// Don't use Win32xx namespace
 
-typedef  unsigned char  byte;
-
 #if defined(_MSC_VER) && _MSC_VER == 1200 	// For Visual Studio 6
   #pragma warning (disable : 4786)	// identifier was truncated
   #pragma warning (disable : 4702)	// unreachable code (bugs in Microsoft's STL)

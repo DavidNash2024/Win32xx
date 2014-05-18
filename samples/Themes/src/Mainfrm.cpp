@@ -316,6 +316,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 				rbbi.fStyle = m_vBandStyles[i];
 				GetReBar()->SetBandInfo(i, rbbi);
 			}
+
+			GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), !m_bLockMenuBand);
 		}
 
 		ShowArrows(m_bShowArrows);
@@ -426,6 +428,7 @@ void CMainFrame::OnLockMenuBar()
 		pRBT->LockMenuBand = m_bLockMenuBand;
 		SetReBarTheme(pRBT);
 		GetReBar()->MoveBand(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), 0);	// Move the MenuBar to band 0
+		GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), !m_bLockMenuBand);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();

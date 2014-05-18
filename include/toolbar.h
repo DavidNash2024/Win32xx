@@ -623,22 +623,6 @@ namespace Win32xx
 		// allows buttons to have a separate drop-down arrow
 		// Note: TBN_DROPDOWN notification is sent by a ToolBar control when the user clicks a drop-down button
 		SendMessage(TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
-
-		// Turn of Double click processing (i.e. treat a double click as two single clicks)
-		DWORD dwStyle = (DWORD)GetClassLongPtr(GCL_STYLE);
-		dwStyle &= 	~CS_DBLCLKS;
-		SetClassLongPtr(GCL_STYLE, dwStyle);
-
-		// Add extra styles for ToolBars inside a ReBar
-		if (lstrcmp(GetParent()->GetClassName(), _T("ReBarWindow32")) == 0)
-		{
-			DWORD style = (DWORD)GetWindowLongPtr(GWL_STYLE);
-			style |= CCS_NODIVIDER | CCS_NORESIZE;
-			SetWindowLongPtr(GWL_STYLE, style);
-		}
-
-		// Set rows of text to zero
-		SendMessage(TB_SETMAXTEXTROWS, 0L, 0L);
 	}
 
 	inline void CToolBar::OnDestroy()

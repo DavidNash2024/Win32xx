@@ -153,8 +153,6 @@
 
 
 // Messages defined by Win32++
-const UINT UWM_CLEANUPTEMPS = RegisterWindowMessage(_T("UWM_CLEANUPTEMPS")); // Message - posted to cleanup temporary CDCs, CWnds etc.
-
 #define UWM_POPUPMENU		 (WM_APP + 1)	// Message - creates the menubar popup menu
 #define UWM_DOCKDESTROYED	 (WM_APP + 2)	// Message - posted when docker is destroyed
 #define UWM_TOOLBARRESIZE    (WM_APP + 3)   // Message - sent by toolbar to parent. Used by the rebar
@@ -195,6 +193,8 @@ namespace Win32xx {}
 
 namespace Win32xx
 {
+	// Registered messages defined by Win32++
+	const UINT UWM_CLEANUPTEMPS = RegisterWindowMessage(_T("UWM_CLEANUPTEMPS")); // Message - posted to cleanup temporary CDCs, CWnds etc.
 
 	////////////////////////////////////////////////
 	// Forward declarations.
