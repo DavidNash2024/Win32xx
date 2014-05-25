@@ -15,8 +15,7 @@
 // Resource ID for frame "Ready"
 #define IDW_READY                        55
 
-// Resource IDs for the Command Bands
-#define IDW_CMD_BANDS                    56
+// Resource IDs for the ReBar Bands
 #define IDW_MENUBAR                      57
 #define IDW_TOOLBAR                      58
 

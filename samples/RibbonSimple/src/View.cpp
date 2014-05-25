@@ -138,29 +138,29 @@ STDMETHODIMP CView::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTY
 
 STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 {
-		UNREFERENCED_PARAMETER(viewId);
-		UNREFERENCED_PARAMETER(uReasonCode);
+	UNREFERENCED_PARAMETER(viewId);
+	UNREFERENCED_PARAMETER(uReasonCode);
 
-		HRESULT hr = E_NOTIMPL;
+	HRESULT hr = E_NOTIMPL;
 
-		// Checks to see if the view that was changed was a Ribbon view.
-		if (UI_VIEWTYPE_RIBBON == typeId)
-		{
-			switch (verb)
-			{           				
-			case UI_VIEWVERB_CREATE:	// The view was newly created.
-				hr = S_OK;
-				break;
-			case UI_VIEWVERB_SIZE:		//	The ribbon's size has changed			
-				hr = S_OK;
-				break;			
-			case UI_VIEWVERB_DESTROY:	// The view was destroyed.
-				hr = S_OK;
-				break;
-			}
-		}  
+	// Checks to see if the view that was changed was a Ribbon view.
+	if (UI_VIEWTYPE_RIBBON == typeId)
+	{
+		switch (verb)
+		{           				
+		case UI_VIEWVERB_CREATE:	// The view was newly created.
+			hr = S_OK;
+			break;
+		case UI_VIEWVERB_SIZE:		//	The ribbon's size has changed			
+			hr = S_OK;
+			break;			
+		case UI_VIEWVERB_DESTROY:	// The view was destroyed.
+			hr = S_OK;
+			break;
+		}
+	}  
 
-		return hr; 
+	return hr; 
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

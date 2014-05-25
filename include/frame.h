@@ -427,6 +427,7 @@ namespace Win32xx
 		BOOL IsMenuBarUsed() const					{ return (m_MenuBar.IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (m_ReBar.IsWindow()); }
+		CRect ExcludeChildRect(CRect& rcClient, CWnd* pChild) const;
 
 	protected:
 		// Override these functions as required
@@ -506,7 +507,6 @@ namespace Win32xx
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
-		CRect ExcludeChildRect(CRect& rcClient, CWnd* pChild) const;
 		static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam); 
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -3452,7 +3452,7 @@ namespace Win32xx
 		// Adjust rebar bands
 		if (IsReBarUsed())
 		{
-			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
+			if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
 				GetReBar()->MoveBandsLeft();
 
 			if (IsMenuBarUsed())

@@ -14,8 +14,9 @@ The other ToolBar options include:
 * Resetting the ToolBar back to its default layout.
 
 There is also a ToolBar displayed over the view window. This ToolBar will
-align itself to the Top, Left, Right or Bottom edge depending which 
-button is pressed.
+align itself to the Top, Left, Right or Bottom edge depending on which 
+button is pressed. This Toolbar is a child window of the view window,
+so the code to create and position it is in the View.cpp file.
   
 
 Features demonstrated in this example

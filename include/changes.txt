@@ -1,7 +1,13 @@
 Version 7.5.1
 =============
 
-Added vertical (movable) toolbars to Toolbar demo sample
+New Features and Enhancements
+-----------------------------
+* Added support for vertical toolbars
+   - Vertical toolbars demonstrated in the toolbar sample
+* Added support for vertical rebars containing toolbars
+   - Vertical rebars demonstrated in the rebar sample
+
 
 Version 7.5
 =============

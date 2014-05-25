@@ -637,6 +637,7 @@ namespace Win32xx
 		{
 			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 			pWinPos->cx = GetMaxSize().cx+2;
+			pWinPos->cy = GetMaxSize().cy+2;
 		}
 
 		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);

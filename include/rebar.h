@@ -325,29 +325,24 @@ namespace Win32xx
 		if (!pTheme || !pTheme->UseThemes)
 			Erase = FALSE;
 
-		if (!pTheme->clrBkgnd1 && !pTheme->clrBkgnd2 && !pTheme->clrBand1 && !pTheme->clrBand2)
+		if (pTheme && !pTheme->clrBkgnd1 && !pTheme->clrBkgnd2 && !pTheme->clrBand1 && !pTheme->clrBand2)
 			Erase = FALSE;
 
 		if (Erase)
 		{
-			CRect rcReBar = GetClientRect();
-			int BarWidth = rcReBar.Width();
-			int BarHeight = rcReBar.Height();
+			CRgn Region;
 
-			// Create and set up our memory DC
+			// Create our memory DC
+			CRect rcReBar = GetClientRect();
 			CMemDC MemDC(pDC);
-			MemDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
+			MemDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
 
 			// Draw to ReBar background to the memory DC
-			rcReBar.right = 600;
+			MemDC.SolidFill(pTheme->clrBkgnd2, rcReBar);
+			CRect rcBkGnd = rcReBar;
+			rcBkGnd.right = 600;
 			MemDC.GradientFill(pTheme->clrBkgnd1, pTheme->clrBkgnd2, rcReBar, TRUE);
-			if (BarWidth >= 600)
-			{
-				rcReBar.left = 600;
-				rcReBar.right = BarWidth;
-				MemDC.SolidFill(pTheme->clrBkgnd2, rcReBar);
-			}
-
+			
 			if (pTheme->clrBand1 || pTheme->clrBand2)
 			{
 				// Draw the individual band backgrounds
@@ -359,6 +354,15 @@ namespace Win32xx
 						{						
 							// Determine the size of this band
 							CRect rcBand = GetBandRect(nBand);
+							rcBand.InflateRect(1, -1, 0, 0);
+
+							BOOL IsVertical = GetWindowLongPtr(GWL_STYLE) & CCS_VERT;
+							if (IsVertical)
+							{
+								int right = rcBand.right;
+								rcBand.right = rcBand.bottom;
+								rcBand.bottom = right;
+							}
 
 							// Determine the size of the child window
 							REBARBANDINFO rbbi = {0};
@@ -367,42 +371,42 @@ namespace Win32xx
 							GetBandInfo(nBand, rbbi);
 							CRect rcChild;
 							::GetWindowRect(rbbi.hwndChild, &rcChild);
-							int ChildWidth = rcChild.right - rcChild.left;
+							ScreenToClient(rcChild);
 
 							// Determine our drawing rectangle
 							CRect rcDraw = rcBand;
-							rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
+							if (IsVertical)
+								rcDraw.bottom = rcChild.bottom;
+							else
+								rcDraw.right = rcChild.right;
+
+						//	rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
 							int xPad = IsXPThemed()? 2: 0;
 							rcDraw.left -= xPad;
 
 							// Fill the Source CDC with the band's background
 							CMemDC SourceDC(pDC);
-							SourceDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
-							CRect rcBorder = GetBandBorders(nBand);
-							rcDraw.right = rcBand.left + ChildWidth + rcBorder.left;
-							SourceDC.SolidFill(pTheme->clrBand1, rcDraw);
-							rcDraw.top = rcDraw.bottom;
-							rcDraw.bottom = rcBand.bottom;
-							SourceDC.GradientFill(pTheme->clrBand1, pTheme->clrBand2, rcDraw, FALSE);
+							SourceDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+							SourceDC.GradientFill(pTheme->clrBand1, pTheme->clrBand2, rcDraw, IsVertical);
 
 							// Set Curve amount for rounded edges
 							int Curve = pTheme->RoundBorders? 12 : 0;
 
 							// Create our mask for rounded edges using RoundRect
 							CMemDC MaskDC(pDC);
-							MaskDC.CreateCompatibleBitmap(pDC, BarWidth, BarHeight);
+							MaskDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
 
-							rcDraw.top = rcBand.top;
-							if (!pTheme->FlatStyle)
-								::InflateRect(&rcDraw, 1, 1);
+						//	rcDraw.top = rcBand.top;
+						//	if (!pTheme->FlatStyle)
+						//		::InflateRect(&rcDraw, 1, 1);
 
 							int left = rcDraw.left;
 							int right = rcDraw.right;
 							int top = rcDraw.top;
 							int bottom = rcDraw.bottom;
-							int cx = rcDraw.right - rcBand.left + xPad;
-							int cy = rcDraw.bottom - rcBand.top;
-
+							int cx = rcDraw.Width();// + xPad;
+							int cy = rcDraw.Height();
+				
 							if (pTheme->FlatStyle)
 							{
 								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
@@ -411,7 +415,7 @@ namespace Win32xx
 							}
 							else
 							{
-								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
+								MaskDC.SolidFill(RGB(0,0,0), CRect(left, top, cx, cy));
 								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
 							}
@@ -422,11 +426,11 @@ namespace Win32xx
 							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
 
 							// Extra drawing to prevent jagged edge while moving bands
-							if (m_bIsDragging)
-							{
-								CClientDC ReBarDC(this);
-								ReBarDC.BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, &MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
-							}
+						//	if (m_bIsDragging)
+						//	{
+						//		CWindowDC ReBarDC(this);
+						//		ReBarDC.BitBlt(rcDraw.right - ChildWidth, rcDraw.top, ChildWidth, cy, &MemDC, rcDraw.right - ChildWidth, rcDraw.top, SRCCOPY);
+						//	}
 						}
 					}
 				}
@@ -445,7 +449,7 @@ namespace Win32xx
 			}
 
 			// Copy the Memory DC to the window's DC
-			pDC->BitBlt(0, 0, BarWidth, BarHeight, &MemDC, 0, 0, SRCCOPY);
+			pDC->BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), &MemDC, 0, 0, SRCCOPY);
 		}
 
 		return Erase;
@@ -455,7 +459,7 @@ namespace Win32xx
 	// Sets the CREATESTRUCT paramaters prior to window creation
 	{
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
-                         CCS_NODIVIDER | RBS_VARHEIGHT | RBS_BANDBORDERS ;
+                         CCS_NODIVIDER | RBS_VARHEIGHT;// | RBS_BANDBORDERS ;
 
 		cs.cy = 100;
 	}

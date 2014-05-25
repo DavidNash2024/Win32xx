@@ -151,13 +151,13 @@ namespace Win32xx
 		BOOL CopyRect(RECT rc)						{ return ::CopyRect(this, &rc); }
 		BOOL DeflateRect(int x, int y)				{ return ::InflateRect(this, -x, -y); }
 		BOOL DeflateRect(SIZE size)					{ return ::InflateRect(this, -size.cx, -size.cy); }
-		BOOL DeflateRect(RECT rc)					{ return ::InflateRect(this, rc.left - rc.right, rc.top - rc.bottom); }
-		BOOL DeflateRect(int l, int t, int r, int b){ return ::InflateRect(this, l - r, t - b); }
+		void DeflateRect(RECT rc)					{ left += rc.left; top += rc.top; right -= rc.right; bottom -= rc.bottom; }
+		void DeflateRect(int l, int t, int r, int b){ left += l; top += t; right -= r; bottom -= b; }
 		BOOL EqualRect(RECT rc) const				{ return ::EqualRect(&rc, this); }
 		BOOL InflateRect(int dx, int dy)			{ return ::InflateRect(this, dx, dy); }
 		BOOL InflateRect(SIZE sz)					{ return ::InflateRect(this, sz.cx, sz.cy); }
-		BOOL InflateRect(RECT rc)					{ return ::InflateRect(this, rc.right - rc.left, rc.bottom - rc.top); }
-		BOOL InflateRect(int l, int t, int r, int b){ return ::InflateRect(this, r - l, b - t); }
+		void InflateRect(RECT rc)					{ left -= rc.left; top -= rc.top; right += rc.right; bottom += rc.bottom; }
+		void InflateRect(int l, int t, int r, int b){ left -= l; top -= t; right += r; bottom += b; }
 		BOOL IntersectRect(RECT rc1, RECT rc2)		{ return ::IntersectRect(this, &rc1, &rc2); }
 		BOOL IsRectEmpty() const					{ return ::IsRectEmpty(this);}
 		BOOL IsRectNull() const						{ return (left == 0 && right == 0 && top == 0 && bottom == 0); }
