@@ -636,8 +636,8 @@ namespace Win32xx
 		if ( GetParent()->SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
 		{
 			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
-			pWinPos->cx = GetMaxSize().cx+2;
-			pWinPos->cy = GetMaxSize().cy+2;
+			pWinPos->cx = GetMaxSize().cx;
+			pWinPos->cy = GetMaxSize().cy;
 		}
 
 		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);

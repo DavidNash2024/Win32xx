@@ -354,7 +354,6 @@ namespace Win32xx
 						{						
 							// Determine the size of this band
 							CRect rcBand = GetBandRect(nBand);
-							rcBand.InflateRect(1, -1, 0, 0);
 
 							BOOL IsVertical = GetWindowLongPtr(GWL_STYLE) & CCS_VERT;
 							if (IsVertical)
@@ -374,15 +373,22 @@ namespace Win32xx
 							ScreenToClient(rcChild);
 
 							// Determine our drawing rectangle
+							int StartPad = IsXPThemed()? 2: 0;
+							int EndPad = 4;
 							CRect rcDraw = rcBand;
 							if (IsVertical)
-								rcDraw.bottom = rcChild.bottom;
+							{
+								rcDraw.top -= StartPad;
+								rcDraw.bottom = rcChild.bottom + EndPad;
+							}
 							else
-								rcDraw.right = rcChild.right;
+							{
+								rcDraw.left -= StartPad;
+								rcDraw.right = rcChild.right + EndPad;
+							}
 
-						//	rcDraw.bottom = rcDraw.top + (rcBand.bottom - rcBand.top)/2;
-							int xPad = IsXPThemed()? 2: 0;
-							rcDraw.left -= xPad;
+							if (!pTheme->FlatStyle)
+								::InflateRect(&rcDraw, 1, 1);
 
 							// Fill the Source CDC with the band's background
 							CMemDC SourceDC(pDC);
@@ -395,10 +401,6 @@ namespace Win32xx
 							// Create our mask for rounded edges using RoundRect
 							CMemDC MaskDC(pDC);
 							MaskDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
-
-						//	rcDraw.top = rcBand.top;
-						//	if (!pTheme->FlatStyle)
-						//		::InflateRect(&rcDraw, 1, 1);
 
 							int left = rcDraw.left;
 							int right = rcDraw.right;
@@ -415,7 +417,7 @@ namespace Win32xx
 							}
 							else
 							{
-								MaskDC.SolidFill(RGB(0,0,0), CRect(left, top, cx, cy));
+								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
 								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
 							}

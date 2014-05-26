@@ -35,6 +35,19 @@
 ////////////////////////////////////////////////////////
 
 
+// Acknowledgements:
+// ================
+// A special thanks to James Brown and Jeff Glatt for publishing tutorials
+// on docking and making these freely available. This code uses some of the
+// ideas presented in those tutorials.
+// 
+// Catch22 Docking Tutorials by James Brown:
+// http://www.catch22.net/tuts
+// 
+// Docking Toolbars in Plain C by Jeff Glatt
+// http://www.codeproject.com/Articles/10224/Docking-Toolbars-in-Plain-C
+
+
 ///////////////////////////////////////////////////////
 // docking.h
 //  Declaration of the CDocker class
