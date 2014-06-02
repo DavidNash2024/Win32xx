@@ -445,6 +445,7 @@ namespace Win32xx
 		virtual void DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pdis);
+		virtual BOOL DrawReBarBkgnd(CDC* pDC, CReBar* pReBar);
 		virtual int  GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem);
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
@@ -2624,6 +2625,140 @@ namespace Win32xx
 		}
 	}
 
+	inline BOOL CFrame::DrawReBarBkgnd(CDC* pDC, CReBar* pReBar)
+	// Draws the ReBar's background when ReBar themes are enabled.
+	// Return TRUE to supress default background drawing.	
+	{
+		BOOL Erase = TRUE;
+		ReBarTheme* pTheme = GetReBarTheme();
+		if (!pTheme || !pTheme->UseThemes)
+			Erase = FALSE;
+
+		if (pTheme && !pTheme->clrBkgnd1 && !pTheme->clrBkgnd2 && !pTheme->clrBand1 && !pTheme->clrBand2)
+			Erase = FALSE;	
+
+		if (Erase)
+		{
+			CRgn Region;
+
+			// Create our memory DC
+			CRect rcReBar = pReBar->GetClientRect();
+			CMemDC MemDC(pDC);
+			MemDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+
+			// Draw to ReBar background to the memory DC
+			MemDC.SolidFill(pTheme->clrBkgnd2, rcReBar);
+			CRect rcBkGnd = rcReBar;
+			rcBkGnd.right = 600;
+			MemDC.GradientFill(pTheme->clrBkgnd1, pTheme->clrBkgnd2, rcReBar, TRUE);
+			
+			if (pTheme->clrBand1 || pTheme->clrBand2)
+			{
+				// Draw the individual band backgrounds
+				for (int nBand = 0 ; nBand < pReBar->GetBandCount(); ++nBand)
+				{
+					if (pReBar->IsBandVisible(nBand))
+					{
+						if (nBand != pReBar->GetBand(*GetMenuBar()))
+						{						
+							// Determine the size of this band
+							CRect rcBand = pReBar->GetBandRect(nBand);
+
+							BOOL IsVertical = pReBar->GetWindowLongPtr(GWL_STYLE) & CCS_VERT;
+							if (IsVertical)
+							{
+								int right = rcBand.right;
+								rcBand.right = rcBand.bottom;
+								rcBand.bottom = right;
+							}
+
+							// Determine the size of the child window
+							REBARBANDINFO rbbi = {0};
+							rbbi.cbSize = pReBar->GetSizeofRBBI();
+							rbbi.fMask = RBBIM_CHILD ;
+							pReBar->GetBandInfo(nBand, rbbi);
+							CRect rcChild;
+							::GetWindowRect(rbbi.hwndChild, &rcChild);
+							ScreenToClient(rcChild);
+
+							// Determine our drawing rectangle
+							int StartPad = IsXPThemed()? 2: 0;
+							int EndPad = 4;
+							CRect rcDraw = rcBand;
+							if (IsVertical)
+							{
+								rcDraw.top -= StartPad;
+								rcDraw.bottom = rcChild.bottom + EndPad;
+							}
+							else
+							{
+								rcDraw.left -= StartPad;
+								rcDraw.right = rcChild.right + EndPad;
+							}
+
+							if (!pTheme->FlatStyle)
+								::InflateRect(&rcDraw, 1, 1);
+
+							// Fill the Source CDC with the band's background
+							CMemDC SourceDC(pDC);
+							SourceDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+							SourceDC.GradientFill(pTheme->clrBand1, pTheme->clrBand2, rcDraw, IsVertical);
+
+							// Set Curve amount for rounded edges
+							int Curve = pTheme->RoundBorders? 12 : 0;
+
+							// Create our mask for rounded edges using RoundRect
+							CMemDC MaskDC(pDC);
+							MaskDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+
+							int left = rcDraw.left;
+							int right = rcDraw.right;
+							int top = rcDraw.top;
+							int bottom = rcDraw.bottom;
+							int cx = rcDraw.Width();// + xPad;
+							int cy = rcDraw.Height();
+				
+							if (pTheme->FlatStyle)
+							{
+								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
+								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
+								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
+							}
+							else
+							{
+								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
+								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
+								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
+							}
+
+							// Copy Source DC to Memory DC using the RoundRect mask
+							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
+							MemDC.BitBlt(left, top, cx, cy, &MaskDC,   left, top, SRCAND);
+							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
+						}
+					}
+				}
+			}
+
+			if (pTheme->UseLines)
+			{
+				// Draw lines between bands
+				for (int j = 0; j < pReBar->GetBandCount()-1; ++j)
+				{
+					rcReBar = pReBar->GetBandRect(j);
+					rcReBar.left = MAX(0, rcReBar.left - 4);
+					rcReBar.bottom +=2;
+					MemDC.DrawEdge(rcReBar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+				}
+			}
+
+			// Copy the Memory DC to the window's DC
+			pDC->BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), &MemDC, 0, 0, SRCCOPY);
+		}
+
+		return Erase;
+	}
+
 	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, CWnd* pChild) const
 	// Calculates the remaining client rect when a child window is excluded.
 	// Note: Assumes the child window touches 3 of the client rect's borders
@@ -4177,6 +4312,7 @@ namespace Win32xx
 		case UWM_GETMENUTHEME:		return (LRESULT)&m_MenuBarTheme;
 		case UWM_GETREBARTHEME:		return (LRESULT)&m_ReBarTheme;
 		case UWM_GETTOOLBARTHEME:	return (LRESULT)&m_ToolBarTheme;
+		case UWN_DRAWRBBKGND:       return DrawReBarBkgnd((CDC*) wParam, (CReBar*) lParam);
 		
 		} // switch uMsg
 

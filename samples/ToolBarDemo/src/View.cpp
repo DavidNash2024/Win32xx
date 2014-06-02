@@ -29,7 +29,7 @@ BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 void CView::OnBottom()
 {
 	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
-	
+
 	dwStyle &= ~(CCS_VERT);
 	dwStyle |= CCS_BOTTOM;
 	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
@@ -39,7 +39,7 @@ void CView::OnBottom()
 void CView::OnLeft()
 {
 	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
-	
+
 	dwStyle &= ~(CCS_BOTTOM);
 	dwStyle |= CCS_LEFT;
 	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
@@ -93,7 +93,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 		{ 3, IDM_BOTTOM,	TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 }
 	};
 	m_ToolBar.AddButtons(4, ButtonInfo);
-	
+
 	return 0;
 }
 
@@ -108,7 +108,7 @@ void CView::OnDraw(CDC* pDC)
 	if (rc.Width() == rcTB.Width())
 	{
 		if (rc.top == rcTB.top)	rc.top += rcTB.Height();
-		else					rc.bottom -= rcTB.Height(); 
+		else					rc.bottom -= rcTB.Height();
 	}
 	else
 	{
@@ -173,14 +173,12 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 
 void CView::RecalcLayout()
 {
-	CRect rcView = GetClientRect();
-	
 	// Position the toolbar at the top, left, right or bottom of the view.
 	int cxTB = m_ToolBar.GetMaxSize().cx;
 	int cyTB = m_ToolBar.GetMaxSize().cy;
 	int cxClient = GetClientRect().Width();
 	int cyClient = GetClientRect().Height();
-	
+
 	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
 	dwStyle &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
 

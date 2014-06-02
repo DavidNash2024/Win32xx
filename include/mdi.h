@@ -311,39 +311,39 @@ namespace Win32xx
 		// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.
 
 		assert(::IsWindow(m_hWnd));
-		GetView()->SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
+		GetMDIClient()->SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
 	}
 
 	inline void CMDIFrame::MDIIconArrange() const
 	{
 		assert(::IsWindow(m_hWnd));
-		GetView()->SendMessage(WM_MDIICONARRANGE, 0L, 0L);
+		GetMDIClient()->SendMessage(WM_MDIICONARRANGE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDIMaximize() const
 	{
 		assert(::IsWindow(m_hWnd));
-		GetView()->SendMessage(WM_MDIMAXIMIZE, 0L, 0L);
+		GetMDIClient()->SendMessage(WM_MDIMAXIMIZE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDINext() const
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hMDIChild = GetActiveMDIChild()->GetHwnd();
-		GetView()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
+		GetMDIClient()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
 	}
 
 	inline void CMDIFrame::MDIPrev() const
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hMDIChild = GetActiveMDIChild()->GetHwnd();
-		GetView()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
+		GetMDIClient()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
 	}
 
 	inline void CMDIFrame::MDIRestore() const
 	{
 		assert(::IsWindow(m_hWnd));
-		GetView()->SendMessage(WM_MDIRESTORE, 0L, 0L);
+		GetMDIClient()->SendMessage(WM_MDIRESTORE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDITile(int nType /* = 0*/) const
@@ -354,7 +354,7 @@ namespace Win32xx
 		// MDITILE_VERTICAL		Tiles MDI child windows so that one window appears beside another.
 
 		assert(::IsWindow(m_hWnd));
-		GetView()->SendMessage(WM_MDITILE, (WPARAM)nType, 0L);
+		GetMDIClient()->SendMessage(WM_MDITILE, (WPARAM)nType, 0L);
 	}
 
 	inline void CMDIFrame::OnClose()

@@ -146,6 +146,8 @@ BOOL CMyDialog::OnEraseBkgnd(CDC* pDC)
 	// Adding a gripper to a resizable dialog is a bit of a hack, but since it
 	// is often done, here is one method of doing it safely.
 
+	UNREFERENCED_PARAMETER(pDC);
+
 	// Draw the dialog's background manually
 	CRect rc = GetClientRect();
 	CClientDC dcClient(this);	
