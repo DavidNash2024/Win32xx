@@ -331,7 +331,6 @@ namespace Win32xx
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
                          CCS_NODIVIDER | RBS_VARHEIGHT | RBS_BANDBORDERS ;
 
-		cs.cy = 100;
 	}
 
 	inline void CReBar::PreRegisterClass(WNDCLASS &wc)

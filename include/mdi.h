@@ -153,7 +153,7 @@ namespace Win32xx
 		virtual ~CMDIFrame() {}
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
-		virtual CMDIClient* GetMDIClient() const { return const_cast<CMDIClient*>(&m_MDIClient); }
+		virtual CWnd* GetMDIClient() const { return (CWnd*)(&m_MDIClient); }
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -216,7 +216,7 @@ namespace Win32xx
 		assert(NULL != pMDIChild.get()); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(pMDIChild);
-		pMDIChild->Create(GetView());
+		pMDIChild->Create(GetMDIClient());
 
 		return pMDIChild.get();
 	}
@@ -478,8 +478,6 @@ namespace Win32xx
 	{
 		if ((GetActiveMDIChild()) && GetActiveMDIChild()->m_ChildMenu.GetHandle())
 		{
-		//	CMenu Menu = GetActiveMDIChild()->m_ChildMenu;
-
 			UINT uCheck = GetToolBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
 			GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_TOOLBAR, uCheck);
 
@@ -506,7 +504,7 @@ namespace Win32xx
 				}
 				else
 				{
-					GetView()->SendMessage (WM_MDISETMENU, (WPARAM)pMenu->GetHandle(), (LPARAM)pMenuWindow->GetHandle());
+					GetMDIClient()->SendMessage (WM_MDISETMENU, (WPARAM)pMenu->GetHandle(), (LPARAM)pMenuWindow->GetHandle());
 					DrawMenuBar();
 				}
 			}
@@ -529,7 +527,7 @@ namespace Win32xx
 		assert(pParent != 0);
 
 		CLIENTCREATESTRUCT clientcreate ;
-		clientcreate.hWindowMenu  = m_hWnd;
+		clientcreate.hWindowMenu  = 0;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
@@ -729,7 +727,7 @@ namespace Win32xx
 		m_ChildMenu.Attach(hMenu);
 		m_hChildAccel = hAccel;
 
-		// Note: It is valid to call SetChildMenu before the window is created
+		// Note: It is valid to call SetHandles before the window is created
 		if (IsWindow())
 		{
 			CWnd* pWnd = GetMDIFrame()->GetActiveMDIChild();

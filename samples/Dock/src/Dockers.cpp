@@ -11,7 +11,7 @@
 //  Definitions for the CDockSimple class
 CDockSimple::CDockSimple()
 {
-	// Set the view window to our edit control
+	// Set the view window for the simple docker
 	SetView(m_View);
 }
 
@@ -83,7 +83,7 @@ void CDockText::OnInitialUpdate()
 //  Definitions for the CDockClasses class
 CDockClasses::CDockClasses()
 {
-	// Set the view window to our edit control
+	// Set the view window to our TreeView control
 	SetView(m_View);
 }
 
@@ -100,7 +100,7 @@ void CDockClasses::OnInitialUpdate()
 //  Definitions for the CDockFiles class
 CDockFiles::CDockFiles()
 {
-	// Set the view window to our edit control
+	// Set the view window to our ListView control
 	SetView(m_View);
 }
 

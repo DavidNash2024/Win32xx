@@ -2629,15 +2629,19 @@ namespace Win32xx
 	// Draws the ReBar's background when ReBar themes are enabled.
 	// Return TRUE to supress default background drawing.	
 	{
-		BOOL Erase = TRUE;
+		BOOL IsDrawn = TRUE;
+
+		if (!pDC || !pReBar)
+			IsDrawn = FALSE;
+
 		ReBarTheme* pTheme = GetReBarTheme();
 		if (!pTheme || !pTheme->UseThemes)
-			Erase = FALSE;
+			IsDrawn = FALSE;
 
 		if (pTheme && !pTheme->clrBkgnd1 && !pTheme->clrBkgnd2 && !pTheme->clrBand1 && !pTheme->clrBand2)
-			Erase = FALSE;	
+			IsDrawn = FALSE;	
 
-		if (Erase)
+		if (IsDrawn)
 		{
 			CRgn Region;
 
@@ -2756,7 +2760,7 @@ namespace Win32xx
 			pDC->BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), &MemDC, 0, 0, SRCCOPY);
 		}
 
-		return Erase;
+		return IsDrawn;
 	}
 
 	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, CWnd* pChild) const
