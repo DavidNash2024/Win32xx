@@ -78,6 +78,7 @@
 #include "statusbar.h"
 #include "toolbar.h"
 #include "rebar.h"
+#include "docking.h"
 #include "default_resource.h"
 
 #ifndef RBN_MINMAX
@@ -312,7 +313,7 @@ namespace Win32xx
 	class CMenuMetrics
 	{
 	public:
-		CMenuMetrics(CFrame* pFrame);
+		CMenuMetrics(CWnd* pFrame);
 		~CMenuMetrics();
 
 		CRect GetCheckBackgroundRect(CRect rcItem);
@@ -339,7 +340,7 @@ namespace Win32xx
 		HANDLE  OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
 
 		HANDLE  m_hTheme;				// Theme handle
-		CFrame* m_pFrame;				// Pointer to the frame window
+		CWnd* m_pFrame;					// Pointer to the frame window
 		HMODULE m_hmodUXTheme;			// Module handle to the UXTheme dll
 
 		CMargins m_marCheck;			// Check margins
@@ -377,7 +378,7 @@ namespace Win32xx
 	//////////////////////////////////
 	// Declaration of the CFrame class
 	//
-	class CFrame : public CWnd
+	class CFrame : public CDocker
 	{
 		friend class CMenuBar;
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
@@ -1509,7 +1510,7 @@ namespace Win32xx
 	} // LRESULT CMenuBar::WndProcDefault(...)
 
 
-	inline CMenuMetrics::CMenuMetrics(CFrame* pFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0),
+	inline CMenuMetrics::CMenuMetrics(CWnd* pFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0),
 												 m_pfnDrawThemeText(0), m_pfnGetThemePartSize(0), m_pfnGetThemeInt(0), m_pfnGetThemeMargins(0),
 												 m_pfnGetThemeTextExtent(0), m_pfnIsThemeBGPartTransparent(0), m_pfnOpenThemeData(0)
 	{
@@ -2692,13 +2693,14 @@ namespace Win32xx
 							if (IsVertical)
 							{
 								rcDraw.top -= StartPad;
-								rcDraw.bottom = rcChild.bottom + EndPad;
+								rcDraw.bottom = rcChild.Height() + EndPad;
+
 							}
 							else
 							{
 								rcDraw.left -= StartPad;
-								rcDraw.right = rcChild.right + EndPad;
-							}
+								rcDraw.right = rcChild.Width() + EndPad;
+							} 
 
 							if (!pTheme->FlatStyle)
 								::InflateRect(&rcDraw, 1, 1);
@@ -2860,7 +2862,7 @@ namespace Win32xx
 	{
 		CRect rcClient = GetClientRect();
 
-		if (GetStatusBar()->IsWindow() && (GetStatusBar()->IsWindowVisible()))
+		if (GetStatusBar()->IsWindow() && m_bShowStatusBar)
 			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
 		if (IsReBarSupported() && m_bUseReBar && GetReBar()->IsWindow())
@@ -3340,7 +3342,7 @@ namespace Win32xx
 		case UWN_UNDOCKED:		return OnUndocked();
 		}
 
-		return 0L;
+		return CDocker::OnNotify(wParam, lParam);
 	}
 
 	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
@@ -4107,8 +4109,8 @@ namespace Win32xx
 	{
 		if (m_pView != &wndView)
 		{
-			// Destroy the existing view window (if any)
-			if (m_pView) m_pView->Destroy();
+			// Hide the existing view window (if any)
+			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
 
 			// Assign the view window
 			m_pView = &wndView;
@@ -4117,7 +4119,15 @@ namespace Win32xx
 			{
 				// The frame is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-				GetView()->Create(this);
+
+				if (!GetView()->IsWindow())
+					GetView()->Create(this);
+				else
+				{
+					GetView()->SetParent(this);
+					GetView()->ShowWindow();
+				}
+				
 				RecalcLayout();
 			}
 		}
@@ -4320,7 +4330,7 @@ namespace Win32xx
 		
 		} // switch uMsg
 
-		return CWnd::WndProcDefault(uMsg, wParam, lParam);
+		return CDocker::WndProcDefault(uMsg, wParam, lParam);
 	} // LRESULT CFrame::WndProcDefault(...)
 
 

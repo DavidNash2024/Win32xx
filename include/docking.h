@@ -60,7 +60,6 @@
 #include "gdi.h"
 #include "toolbar.h"
 #include "tab.h"
-#include "frame.h"
 #include "default_resource.h"
 
 
@@ -460,6 +459,7 @@ namespace Win32xx
 		virtual CDockBar* GetDockBar() const		{ return const_cast<CDockBar*>(&m_DockBar); }
 		virtual CDockClient* GetDockClient() const	{ return const_cast<CDockClient*>(&m_DockClient); }
 		virtual CDockHint* GetDockHint() const		{ return &m_pDockAncestor->m_DockHint; }
+		virtual CRect GetViewRect() const			{ return GetClientRect(); }
 
 
 		std::vector <DockPtr> & GetAllDockers() const {return GetDockAncestor()->m_vAllDockers;}
@@ -1323,7 +1323,7 @@ namespace Win32xx
 
 		// Calculate the hint window's position for outer docking
 		CDocker* pDockTarget = pDockDrag->GetDockAncestor();
-		CRect rcHint = pDockTarget->GetClientRect();
+		CRect rcHint = pDockTarget->GetViewRect();
 		if (pDockTarget->GetDockClient()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
 
@@ -1630,9 +1630,11 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-			CRect rc = pDockTarget->GetWindowRect();
+		//	CRect rc = pDockTarget->GetWindowRect();
+			CRect rc = pDockTarget->GetViewRect();
+			pDockTarget->ClientToScreen(rc);
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
-			SetWindowPos(&wndTopMost, rc.left + 10, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, rc.left + 8, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 
 		CRect rcLeft(0, 0, cxImage, cyImage);
@@ -1674,9 +1676,11 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-			CRect rc = pDockTarget->GetWindowRect();
+		//	CRect rc = pDockTarget->GetWindowRect();
+			CRect rc = pDockTarget->GetViewRect();
+			pDockTarget->ClientToScreen(rc);
 			int xMid = rc.left + (rc.Width() - cxImage)/2;
-			SetWindowPos(&wndTopMost, xMid, rc.top + 10, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, xMid, rc.top + 8, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 
 		CRect rcTop(0, 0, cxImage, cyImage);
@@ -1718,9 +1722,11 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-			CRect rc = pDockTarget->GetWindowRect();
+		//	CRect rc = pDockTarget->GetWindowRect();
+			CRect rc = pDockTarget->GetViewRect();
+			pDockTarget->ClientToScreen(rc);
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
-			SetWindowPos(&wndTopMost, rc.right - 10 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, rc.right - 8 - cxImage, yMid, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 
 		CRect rcRight(0, 0, cxImage, cyImage);
@@ -1762,9 +1768,11 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-			CRect rc = pDockTarget->GetWindowRect();
+		//	CRect rc = pDockTarget->GetWindowRect();
+			CRect rc = pDockTarget->GetViewRect();
+			pDockTarget->ClientToScreen(rc);
 			int xMid = rc.left + (rc.Width() - cxImage)/2;
-			SetWindowPos(&wndTopMost, xMid, rc.bottom - 10 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
+			SetWindowPos(&wndTopMost, xMid, rc.bottom - 8 - cyImage, cxImage, cyImage, SWP_NOACTIVATE|SWP_SHOWWINDOW);
 		}
 		CRect rcBottom(0, 0, cxImage, cyImage);
 		ScreenToClient(pt);
@@ -3263,7 +3271,8 @@ namespace Win32xx
 		}
 
 		// Step 2: Position the Dock client and dock bar
-		hdwp = GetDockClient()->DeferWindowPos(hdwp, NULL, rc, SWP_SHOWWINDOW |SWP_FRAMECHANGED);
+		if (GetDockClient()->IsWindow())
+			hdwp = GetDockClient()->DeferWindowPos(hdwp, NULL, rc, SWP_SHOWWINDOW |SWP_FRAMECHANGED);
 		EndDeferWindowPos(hdwp);
 
 		// Position the dockbar. Only docked dockers have a dock bar.
@@ -3286,7 +3295,7 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 		{
-			CRect rc = GetTopmostDocker()->GetClientRect();
+			CRect rc = GetTopmostDocker()->GetViewRect();
 			GetTopmostDocker()->RecalcDockChildLayout(rc);
 			GetTopmostDocker()->UpdateWindow();
 		}
@@ -3505,8 +3514,11 @@ namespace Win32xx
 	// Sets the height of the caption
 	{
 		m_NCHeight = nHeight;
-		RedrawWindow();
-		RecalcDockLayout();
+		if (IsWindow())
+		{
+			RedrawWindow();
+			RecalcDockLayout();
+		}
 	}
 
 	inline void CDocker::SetDockSize(int DockSize)
@@ -3706,7 +3718,7 @@ namespace Win32xx
 		}
 
 		RecalcDockLayout();
-        if ((pDockUndockedFrom) && (pDockUndockedFrom->GetTopmostDocker() != GetTopmostDocker()))
+		if ((pDockUndockedFrom) && (pDockUndockedFrom->GetTopmostDocker() != GetTopmostDocker()))
 			pDockUndockedFrom->RecalcDockLayout();
 	}
 

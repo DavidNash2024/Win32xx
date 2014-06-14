@@ -3,14 +3,21 @@ Version 7.5.1
 
 New Features and Enhancements
 -----------------------------
+* CFrames now inherit from CDocker (rather than CWnd)  
+   - Provides built in dock support for Frames
+   - Allows docking support for standard MDI Frames 
 * Added support for vertical toolbars
    - Vertical toolbars demonstrated in the toolbar sample
 * Added support for vertical rebars containing toolbars
    - Vertical rebars demonstrated in the rebar sample
+* Add DockMDI sample
+   This sample demonstrates docking with a standard MDI frame 
+   
 
 Changes in detail
 -----------------   
-Added CFrame::DrawReBarBkgnd   
+Added CFrame::DrawReBarBkgnd
+Added CDocker::GetViewRect  
 
 Version 7.5
 =============

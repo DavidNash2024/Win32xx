@@ -747,17 +747,25 @@ namespace Win32xx
 	{
 		if (m_pView != &wndView)
 		{
-			// Destroy the existing view window (if any)
-			if (m_pView) m_pView->Destroy();
+			// Hide the existing view window (if any)
+			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
 
 			// Assign the view window
 			m_pView = &wndView;
 
 			if (m_hWnd)
 			{
-				// The frame is already created, so create and position the new view too
+				// The MDIChild is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
-				GetView()->Create(this);
+
+				if (!GetView()->IsWindow())
+					GetView()->Create(this);
+				else
+				{
+					GetView()->SetParent(this);
+					GetView()->ShowWindow();
+				}
+				
 				RecalcLayout();
 			}
 		}
