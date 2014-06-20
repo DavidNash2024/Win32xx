@@ -10,12 +10,13 @@ New Features and Enhancements
    - Vertical toolbars demonstrated in the toolbar sample
 * Added support for vertical rebars containing toolbars
    - Vertical rebars demonstrated in the rebar sample
-* Add DockMDI sample
+* Added DockMDI sample
    This sample demonstrates docking with a standard MDI frame 
    
 
 Changes in detail
------------------   
+----------------- 
+Modified CFrame  - now inherits from CWnd  
 Added CFrame::DrawReBarBkgnd
 Added CDocker::GetViewRect  
 

@@ -4075,7 +4075,7 @@ namespace Win32xx
 			// Add tabs for each view.
 			TCITEM tie = {0};
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
-			tie.iImage = i;
+			tie.iImage = m_vContainerInfo[i].iImage;
 			tie.pszText = (LPTSTR)m_vContainerInfo[i].Title.c_str();
 			InsertItem(i, &tie);
 		}

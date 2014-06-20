@@ -675,7 +675,7 @@ namespace Win32xx
 
 	}; // class CWnd
 
-	// Special CWnd objects used by SetWindowPos
+	// Special CWnd objects used by SetWindowPos ans DeferWindowPos
 	static const CWnd wndTop(HWND_TOP);
 	static const CWnd wndTopMost(HWND_TOPMOST);
 	static const CWnd wndBottom(HWND_BOTTOM);
@@ -997,7 +997,7 @@ namespace Win32xx
 			m_hResource = m_hInstance;
 			SetCallback();
 
-			// Assign the special CWnds used by SetWindowPos
+			// Assign the special CWnds used by SetWindowPos and DeferWindowPos
 			m_csMapLock.Lock();
 			m_mapHWND.insert( std::make_pair( HWND_TOP, const_cast<CWnd*>(&wndTop) ) );
 			m_mapHWND.insert( std::make_pair( HWND_TOPMOST, const_cast<CWnd*>(&wndTopMost) ) );
@@ -2353,6 +2353,7 @@ namespace Win32xx
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
+	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
         assert(::IsWindow(m_hWnd));
 		HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
@@ -2361,6 +2362,7 @@ namespace Win32xx
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
+	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
