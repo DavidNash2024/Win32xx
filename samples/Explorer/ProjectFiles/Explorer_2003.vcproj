@@ -154,6 +154,9 @@
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h">
+			</File>
+			<File
 				RelativePath="..\src\MyListView.h">
 			</File>
 			<File

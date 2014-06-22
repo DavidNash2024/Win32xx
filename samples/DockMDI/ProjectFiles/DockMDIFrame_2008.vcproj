@@ -313,6 +313,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\propertysheet.h"
 				>
 			</File>

@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\..\include\listview.h" />
     <ClInclude Include="..\..\..\include\mdi.h" />
     <ClInclude Include="..\..\..\include\menu.h" />
+    <ClInclude Include="..\..\..\include\menubar.h" />
     <ClInclude Include="..\..\..\include\propertysheet.h" />
     <ClInclude Include="..\..\..\include\rebar.h" />
     <ClInclude Include="..\..\..\include\ribbon.h" />

@@ -22,6 +22,7 @@
     <ClInclude Include="..\..\..\include\listview.h" />
     <ClInclude Include="..\..\..\include\mdi.h" />
     <ClInclude Include="..\..\..\include\menu.h" />
+    <ClInclude Include="..\..\..\include\menubar.h" />
     <ClInclude Include="..\..\..\include\propertysheet.h" />
     <ClInclude Include="..\..\..\include\rebar.h" />
     <ClInclude Include="..\..\..\include\ribbon.h" />
@@ -31,7 +32,6 @@
     <ClInclude Include="..\..\..\include\stdcontrols.h" />
     <ClInclude Include="..\..\..\include\tab.h" />
     <ClInclude Include="..\..\..\include\taskdialog.h" />
-    <ClInclude Include="..\..\..\include\thread.h" />
     <ClInclude Include="..\..\..\include\toolbar.h" />
     <ClInclude Include="..\..\..\include\treeview.h" />
     <ClInclude Include="..\..\..\include\webbrowser.h" />
@@ -39,6 +39,7 @@
     <ClInclude Include="..\..\..\include\winutils.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\MainMDIfrm.h" />
+    <ClInclude Include="..\src\MDIFrameApp.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\SimpleMDIChild.h" />
     <ClInclude Include="..\src\stdafx.h" />

@@ -102,9 +102,6 @@
     <ClInclude Include="..\..\..\include\taskdialog.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\thread.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -112,6 +109,9 @@
       <Filter>Win32++</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\include\winutils.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\menubar.h">
       <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>

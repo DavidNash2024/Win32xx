@@ -107,9 +107,6 @@
     <ClInclude Include="..\..\..\include\taskdialog.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\thread.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\toolbar.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     <ClInclude Include="..\..\..\include\winutils.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\menubar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">
@@ -132,6 +132,8 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Include="..\src\Ribbon.xml" />
+    <CustomBuild Include="..\src\Ribbon.xml">
+      <Filter>Source Files</Filter>
+    </CustomBuild>
   </ItemGroup>
 </Project>

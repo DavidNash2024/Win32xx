@@ -114,6 +114,7 @@
     <ClInclude Include="..\src\Files.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\menubar.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

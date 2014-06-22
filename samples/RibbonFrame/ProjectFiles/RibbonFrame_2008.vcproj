@@ -224,6 +224,28 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\Ribbon.xml"
+				>
+				<FileConfiguration
+					Name="Debug|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+						Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
+					/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32"
+					>
+					<Tool
+						Name="VCCustomBuildTool"
+						CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
+						Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
+					/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath="..\src\RibbonApp.cpp"
 				>
 			</File>
@@ -309,6 +331,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\propertysheet.h"
 				>
 			</File>
@@ -345,10 +371,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\thread.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>
@@ -374,28 +396,6 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 		</Filter>
-		<File
-			RelativePath="..\src\Ribbon.xml"
-			>
-			<FileConfiguration
-				Name="Debug|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-			<FileConfiguration
-				Name="Release|Win32"
-				>
-				<Tool
-					Name="VCCustomBuildTool"
-					CommandLine="uicc.exe ..\src\Ribbon.xml ..\src\Ribbon.bml /header:..\src\RibbonUI.h /res:..\src\RibbonUI.rc&#x0D;&#x0A;"
-					Outputs="Ribbon.bml;RibbonUI.rc;RibbonUI.h"
-				/>
-			</FileConfiguration>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

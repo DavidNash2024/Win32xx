@@ -166,6 +166,9 @@
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h">
+			</File>
+			<File
 				RelativePath="..\src\MyCombo.h">
 			</File>
 			<File

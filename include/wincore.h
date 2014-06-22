@@ -158,23 +158,24 @@
 #define UWM_TOOLBARRESIZE    (WM_APP + 3)   // Message - sent by toolbar to parent. Used by the rebar
 #define UWM_UPDATECOMMAND    (WM_APP + 4)   // Message - sent before a menu is displayed. Used by OnUpdate
 #define UWM_DOCKACTIVATED    (WM_APP + 5)   // Message - sent to dock ancestor when a docker is activated or deactivated.
-#define UWM_GETMENUTHEME     (WM_APP + 6)	// Message - returns a pointer to MenuTheme
-#define UWM_GETREBARTHEME    (WM_APP + 7)	// Message - returns a pointer to CToolBar
-#define UWM_GETTOOLBARTHEME  (WM_APP + 8)   // Message - returns a pointer to ToolBarTheme
-#define UWN_DRAWRBBKGND      (WM_APP + 9)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
+#define UWM_GETFRAMEVIEW     (WM_APP + 6)   // Message - returns the HWND of the frame's view window
+#define UWM_GETMENUTHEME     (WM_APP + 7)	// Message - returns a pointer to MenuTheme
+#define UWM_GETREBARTHEME    (WM_APP + 8)	// Message - returns a pointer to CToolBar
+#define UWM_GETTOOLBARTHEME  (WM_APP + 9)   // Message - returns a pointer to ToolBarTheme
+#define UWN_DRAWRBBKGND      (WM_APP + 10)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
 //#define UWM_CLEANUPTEMPS	 (WM_APP + 9)	// Message - posted to cleanup temporary CDCs, CWnds etc.
-#define UWM_TBWINPOSCHANGING (WM_APP + 10)	// Message - Sent to parent. Toolbar is resizing
-#define UWN_BARSTART		 (WM_APP + 11)	// Notification - docker bar selected for move
-#define UWN_BARMOVE			 (WM_APP + 12)	// Notification - docker bar moved
-#define UWN_BAREND			 (WM_APP + 13)	// Notification - end of docker bar move
-#define UWN_DOCKSTART		 (WM_APP + 14)	// Notification - about to start undocking
-#define UWN_DOCKMOVE		 (WM_APP + 15)	// Notification - undocked docker is being moved
-#define UWN_DOCKEND			 (WM_APP + 16)	// Notification - docker has been docked
-#define UWN_DOCKSETFOCUS     (WM_APP + 17)  // Notification - dock set focus 
-#define UWN_FRAMELOSTFOCUS	 (WM_APP + 18)  // Notification - sent by frame to view window when focus lost
-#define UWN_FRAMEGOTFOCUS	 (WM_APP + 19)  // Notification - sent by frame to view window when focus acquired
-#define UWN_TABCHANGED       (WM_APP + 20)	// Notification - tab layout changed
-#define UWN_UNDOCKED		 (WM_APP + 21)	// Notification - sent by docker when undocked
+#define UWM_TBWINPOSCHANGING (WM_APP + 11)	// Message - Sent to parent. Toolbar is resizing
+#define UWN_BARSTART		 (WM_APP + 12)	// Notification - docker bar selected for move
+#define UWN_BARMOVE			 (WM_APP + 13)	// Notification - docker bar moved
+#define UWN_BAREND			 (WM_APP + 14)	// Notification - end of docker bar move
+#define UWN_DOCKSTART		 (WM_APP + 15)	// Notification - about to start undocking
+#define UWN_DOCKMOVE		 (WM_APP + 16)	// Notification - undocked docker is being moved
+#define UWN_DOCKEND			 (WM_APP + 17)	// Notification - docker has been docked
+#define UWN_DOCKSETFOCUS     (WM_APP + 18)  // Notification - dock set focus 
+#define UWN_FRAMELOSTFOCUS	 (WM_APP + 19)  // Notification - sent by frame to view window when focus lost
+#define UWN_FRAMEGOTFOCUS	 (WM_APP + 20)  // Notification - sent by frame to view window when focus acquired
+#define UWN_TABCHANGED       (WM_APP + 21)	// Notification - tab layout changed
+#define UWN_UNDOCKED		 (WM_APP + 22)	// Notification - sent by docker when undocked
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step

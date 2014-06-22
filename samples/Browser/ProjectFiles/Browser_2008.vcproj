@@ -345,10 +345,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\thread.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>

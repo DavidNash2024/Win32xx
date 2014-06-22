@@ -155,7 +155,6 @@
     <ClInclude Include="..\..\..\include\stdcontrols.h" />
     <ClInclude Include="..\..\..\include\tab.h" />
     <ClInclude Include="..\..\..\include\taskdialog.h" />
-    <ClInclude Include="..\..\..\include\thread.h" />
     <ClInclude Include="..\..\..\include\toolbar.h" />
     <ClInclude Include="..\..\..\include\treeview.h" />
     <ClInclude Include="..\..\..\include\webbrowser.h" />

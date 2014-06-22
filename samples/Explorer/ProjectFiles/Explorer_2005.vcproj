@@ -243,6 +243,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyListView.h"
 				>
 			</File>

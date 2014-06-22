@@ -154,6 +154,8 @@ namespace Win32xx
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
 		virtual CWnd* GetMDIClient() const { return (CWnd*)(&m_MDIClient); }
+		virtual CMDIChild* GetActiveMDIChild() const;
+		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
@@ -161,8 +163,6 @@ namespace Win32xx
 
 		// These functions aren't virtual, so don't override them
 		std::vector <MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
-		CMDIChild* GetActiveMDIChild() const;
-		BOOL IsMDIChildMaxed() const;
 		void MDICascade(int nType = 0) const;
 		void MDIIconArrange() const;
 		void MDIMaximize() const;

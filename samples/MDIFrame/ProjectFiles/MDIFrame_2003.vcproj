@@ -145,6 +145,9 @@
 				RelativePath="..\src\MDIFrameApp.h">
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h">
+			</File>
+			<File
 				RelativePath="..\src\resource.h">
 			</File>
 			<File

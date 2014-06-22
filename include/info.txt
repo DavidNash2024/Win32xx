@@ -134,7 +134,7 @@ docking.h         | CDocker          | Win32, Win64      | Adds support for
 file.h            | CFile            | Win32, Win64      | Adds support disk
                   |                  | and WinCE         | input and output				  
 ------------------+------------------+-------------------+---------------------                   
-frame.h           | CMenubar         | Win32, Win64      | Adds support for
+frame.h           | CMenuMetrics     | Win32, Win64      | Adds support for
                   | CFrame           |                   | frames. Frames use a
                   |                  |                   | toolbar and menubar
                   |                  |                   | inside a rebar, and 
@@ -159,6 +159,9 @@ mdi.h             | CMDIFrame        | Win32, Win64      | Adds support for MDI
 ------------------+------------------+-------------------+---------------------
 menu.h            | CMenu            | Win32, Win64      | A helper class for
                   |                  |                   | menus.           
+------------------+------------------+-------------------+---------------------
+menubar.h         | CMenuBar         | Win32, Win64      | Provides a menu for
+                  |                  |                   | use in a rebar.           
 ------------------+------------------+-------------------+---------------------
 propertysheet.h   | CPropertySheet   | Win32, Win64      | Adds property sheet
                   | CPropertyPage    | and WinCE         | support.

@@ -261,6 +261,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyCombo.h"
 				>
 			</File>

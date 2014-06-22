@@ -187,6 +187,9 @@
 				RelativePath="..\..\..\include\listview.h">
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h">
+			</File>
+			<File
 				RelativePath="..\..\..\include\rebar.h">
 			</File>
 			<File

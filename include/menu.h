@@ -108,7 +108,6 @@ namespace Win32xx
 
 	class CMenu
 	{
-		friend class CWinApp;
 
 	public:
 		//Construction

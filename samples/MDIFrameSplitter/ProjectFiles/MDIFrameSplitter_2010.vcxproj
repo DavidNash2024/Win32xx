@@ -19,32 +19,24 @@
     <ClInclude Include="..\..\..\include\file.h" />
     <ClInclude Include="..\..\..\include\frame.h" />
     <ClInclude Include="..\..\..\include\gdi.h" />
+    <ClInclude Include="..\..\..\include\imagelist.h" />
     <ClInclude Include="..\..\..\include\listview.h" />
     <ClInclude Include="..\..\..\include\mdi.h" />
     <ClInclude Include="..\..\..\include\menu.h" />
+    <ClInclude Include="..\..\..\include\menubar.h" />
     <ClInclude Include="..\..\..\include\propertysheet.h" />
     <ClInclude Include="..\..\..\include\rebar.h" />
-    <ClInclude Include="..\..\..\include\ribbon.h" />
+    <ClInclude Include="..\..\..\include\rich_edit.h" />
     <ClInclude Include="..\..\..\include\shared_ptr.h" />
     <ClInclude Include="..\..\..\include\socket.h" />
     <ClInclude Include="..\..\..\include\statusbar.h" />
     <ClInclude Include="..\..\..\include\stdcontrols.h" />
     <ClInclude Include="..\..\..\include\tab.h" />
-    <ClInclude Include="..\..\..\include\taskdialog.h" />
-    <ClInclude Include="..\..\..\include\thread.h" />
     <ClInclude Include="..\..\..\include\toolbar.h" />
     <ClInclude Include="..\..\..\include\treeview.h" />
     <ClInclude Include="..\..\..\include\webbrowser.h" />
     <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\..\..\include\winutils.h" />
-    <ClInclude Include="..\..\Win32++\include\dialog.h" />
-    <ClInclude Include="..\..\Win32++\include\frame.h" />
-    <ClInclude Include="..\..\Win32++\include\gdi.h" />
-    <ClInclude Include="..\..\Win32++\include\mdi.h" />
-    <ClInclude Include="..\..\Win32++\include\rebar.h" />
-    <ClInclude Include="..\..\Win32++\include\statusbar.h" />
-    <ClInclude Include="..\..\Win32++\include\toolbar.h" />
-    <ClInclude Include="..\..\Win32++\include\wincore.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\MainMDIfrm.h" />
     <ClInclude Include="..\src\Output.h" />
@@ -66,6 +58,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\include\release notes.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

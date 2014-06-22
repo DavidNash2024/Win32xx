@@ -385,6 +385,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\propertysheet.h"
 				>
 			</File>
@@ -418,10 +422,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\taskdialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\thread.h"
 				>
 			</File>
 			<File

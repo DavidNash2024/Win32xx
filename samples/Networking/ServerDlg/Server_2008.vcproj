@@ -256,6 +256,10 @@
 				RelativePath=".\Resource.rc"
 				>
 			</File>
+			<File
+				RelativePath=".\res\Win32++.manifest"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"
@@ -305,6 +309,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\menubar.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\propertysheet.h"
 				>
 			</File>
@@ -341,10 +349,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\thread.h"
-				>
-			</File>
-			<File
 				RelativePath="..\..\..\include\toolbar.h"
 				>
 			</File>
@@ -365,10 +369,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath=".\res\Win32++.manifest"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>
