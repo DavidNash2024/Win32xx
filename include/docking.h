@@ -2901,7 +2901,7 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
-		if (GetView()->IsWindow())
+		if (GetView() && GetView()->IsWindow())
 			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
 		
 		return 0L;
@@ -2911,7 +2911,7 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
-		if (GetView()->IsWindow())
+		if (GetView() && GetView()->IsWindow())
 			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
 	
 		return 0L;

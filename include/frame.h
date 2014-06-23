@@ -1656,19 +1656,16 @@ namespace Win32xx
 
 							// Determine our drawing rectangle
 							int StartPad = IsXPThemed()? 2: 0;
-							int EndPad = 4;
 							CRect rcDraw = rcBand;
+							CRect rcBorders = pReBar->GetBandBorders(nBand);
 							if (IsVertical)
 							{
-								rcDraw.top -= StartPad;
-								rcDraw.bottom = rcChild.Height() + EndPad;
-
+								rcDraw.bottom = rcDraw.top + rcChild.Height() + rcBorders.top;
 							}
 							else
 							{
-								rcDraw.left -= StartPad;
-								rcDraw.right = rcChild.Width() + EndPad;
-							} 
+								rcDraw.right = rcDraw.left + rcChild.Width() + rcBorders.left;
+							}
 
 							if (!pTheme->FlatStyle)
 								::InflateRect(&rcDraw, 1, 1);
