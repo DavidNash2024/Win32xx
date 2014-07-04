@@ -1013,7 +1013,7 @@ namespace Win32xx
 	inline void CFrame::CreateToolBar()
 	{
 		if (IsReBarSupported() && m_bUseReBar)
-			AddToolBarBand(GetToolBar(), RBBS_BREAK, IDW_TOOLBAR);	// Create the toolbar inside rebar
+			AddToolBarBand(GetToolBar(), RBBS_BREAK|RBBS_GRIPPERALWAYS, IDW_TOOLBAR);	// Create the toolbar inside rebar
 		else
 			GetToolBar()->Create(this);	// Create the toolbar without a rebar
 
@@ -1655,16 +1655,17 @@ namespace Win32xx
 							ScreenToClient(rcChild);
 
 							// Determine our drawing rectangle
-							int StartPad = IsXPThemed()? 2: 0;
-							CRect rcDraw = rcBand;
+							int StartPad = IsXPThemed()? 2: 0;							CRect rcDraw = rcBand;
 							CRect rcBorders = pReBar->GetBandBorders(nBand);
 							if (IsVertical)
 							{
 								rcDraw.bottom = rcDraw.top + rcChild.Height() + rcBorders.top;
+								rcDraw.top -= StartPad;
 							}
 							else
 							{
 								rcDraw.right = rcDraw.left + rcChild.Width() + rcBorders.left;
+								rcDraw.left -= StartPad;
 							}
 
 							if (!pTheme->FlatStyle)

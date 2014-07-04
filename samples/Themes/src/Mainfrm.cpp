@@ -155,6 +155,19 @@ void CMainFrame::ChooseColor(UINT nColor)
 			MenuTheme mt = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
 		}
+		break;
+	default:
+		{
+			m_nColor = IDM_MODERN;
+			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
+
+			ToolBarTheme tt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+			SetToolBarTheme(&tt);
+
+			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+			SetMenuTheme(&mt);
+		}
+		break;
 	}
 
 	// Check the appropriate menu item
@@ -316,9 +329,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 				rbbi.fStyle = m_vBandStyles[i];
 				GetReBar()->SetBandInfo(i, rbbi);
 			}
-
-			GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), !m_bLockMenuBand);
 		}
+	
+		// Set the MenuBar's position and gripper
+		int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
+		GetReBar()->ShowGripper(nBand, !m_bLockMenuBand);
+		if (m_bLockMenuBand)
+			GetReBar()->MoveBand(nBand, 0);
 
 		ShowArrows(m_bShowArrows);
 		ShowCards(m_bShowCards);

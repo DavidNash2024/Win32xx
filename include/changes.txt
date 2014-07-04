@@ -16,7 +16,7 @@ New Features and Enhancements
 
 Changes in detail
 ----------------- 
-Modified CFrame  - now inherits from CWnd  
+Modified CFrame  - now inherits from CDocker 
 Added CFrame::DrawReBarBkgnd
 Added CDocker::GetViewRect  
 

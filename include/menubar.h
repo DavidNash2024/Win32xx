@@ -973,7 +973,7 @@ namespace Win32xx
 	inline LRESULT CMenuBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
 	{
 		// Bypass CToolBar::WndProcDefault for this message
-		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
+		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);
 	}
 
 	inline void CMenuBar::PreCreate(CREATESTRUCT &cs)
