@@ -78,14 +78,22 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
+LRESULT CHyperlink::OnSetCursor()
+{
+	// Must use ::SetCursor here. CStatic::SetCursor does not do the same thing. 
+	::SetCursor(m_hCursor);
+	
+	return 1L;	// Non-zero return prevents default processing
+}
+
 LRESULT CHyperlink::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_LBUTTONDOWN:  OnLButtonDown();		break;
 	case WM_LBUTTONUP:	  OnLButtonUp(lParam);	break;
-	case WM_SETCURSOR:	  SetCursor(m_hCursor); return 1L;	// Non-zero return prevents default processing
-	case WM_NCHITTEST:	  return HTCLIENT;					// Claim that the mouse is in a client area
+	case WM_SETCURSOR:	  return OnSetCursor();	
+	case WM_NCHITTEST:	  return HTCLIENT;		// Claim that the mouse is in a client area
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

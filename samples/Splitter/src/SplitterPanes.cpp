@@ -37,13 +37,6 @@ void CDockTree::OnInitialUpdate()
 {
 	// Set the width of the splitter bar
 	SetBarWidth(12);
-
-	// Set the color of the splitter bar
-	CMainFrame* pMainFrame = GetSplitApp()->GetMainFrame();
-	if (pMainFrame->GetReBarTheme()->UseThemes && pMainFrame->GetReBarTheme()->clrBkgnd1 != 0)
-		SetBarColor(pMainFrame->GetReBarTheme()->clrBkgnd1);
-	else
-		SetBarColor(GetSysColor(COLOR_BTNFACE)); 
 }
 
 CDockList::CDockList() 

@@ -949,56 +949,68 @@ namespace Win32xx
 	// Definitions for the CStatic class
 	//
 	inline HBITMAP CStatic::GetBitmap() const
-	// Returns the handle to the bitmap for the static control
+	// Returns the handle to the bitmap for the static control set by CStatic::SetBitmap
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HBITMAP)SendMessage(STM_GETIMAGE, IMAGE_BITMAP, 0);
 	}
 
 	inline HCURSOR CStatic::GetCursor() const
-	// Returns the handle to the icon for the static control
+	// Returns the handle to the cursor for the static control set by CStatic::SetCursor
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HCURSOR)SendMessage(STM_GETIMAGE, IMAGE_CURSOR, 0);
 	}
 
 	inline HENHMETAFILE CStatic::GetEnhMetaFile() const
-	// Returns the handle to the enhanced meta-file for the static control
+	// Returns the handle to the enhanced meta-file for the static control set by CStatic::SetEnhMetaFile
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HENHMETAFILE)SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0);
 	}
 
 	inline HICON CStatic::GetIcon() const
-	// Returns the handle to the icon for the static control
+	// Returns the handle to the icon for the static control set by CStatic::SetIcon
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HICON)SendMessage(STM_GETIMAGE, IMAGE_ICON, 0);
 	}
 
 	inline HBITMAP CStatic::SetBitmap(HBITMAP hBitmap) const
-	// Sets the handle to the bitmap for the static control
+	// Associates a new bitmap with the static control.
+	// The bitmap will be drawn in the upper-left corner and the static 
+	//  control will be resized to the size of the bitmap. 
+	// This function requires the SS_BITMAP style
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HBITMAP)SendMessage(STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
 	}
 
 	inline HCURSOR CStatic::SetCursor(HCURSOR hCursor) const
-	// Sets the handle to the cursor for the static control
+	// Associates a new cursor image with the static control. 
+	// The cursor will be drawn in the upper-left corner and the static 
+	//  control will be resized to the size of the cursor. 
+	// This function requires the SS_ICON style
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HCURSOR)SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor);
 	}
 
 	inline HENHMETAFILE CStatic::SetEnhMetaFile(HENHMETAFILE hMetaFile) const
-	// Sets the handle to the enhanced meta-file for the static control
+	// Associates a new enhanced metafile image with the static control. 
+	// The enhanced metafile will be drawn in the upper-left corner and the static 
+	//  control will be resized to the size of the enhanced metafile. 
+	// This function requires the SS_ENHMETAFILE style
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HENHMETAFILE)SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, (LPARAM)hMetaFile);
 	}
 
 	inline HICON CStatic::SetIcon(HICON hIcon) const
-	// Sets the handle to the icon for the static control
+	// Associates a new icon image with the static control. 
+	// The icon will be drawn in the upper-left corner and the static 
+	//  control will be resized to the size of the icon. 
+	// This function requires the SS_ICON style
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HICON)SendMessage(STM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);

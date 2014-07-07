@@ -17,6 +17,7 @@ public:
 	virtual void OnInitialUpdate();
 	void OnLButtonDown();
 	void OnLButtonUp(LPARAM lParam);
+	LRESULT OnSetCursor();
 
 protected:
 	virtual void OpenUrl();
