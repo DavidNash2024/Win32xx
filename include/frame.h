@@ -811,6 +811,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon)
+	// Adds an icon to an internal ImageList for use with popup menu items.
 	{
 		// Create a new ImageList if required
 		if (NULL == m_imlMenu.GetHandle())
@@ -940,6 +941,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
+	// Adds an entry to the Most Recently Used (MRU) list.
 	{
 		// Erase possible duplicate entries from vector
 		RemoveMRUEntry(szMRUEntry);
@@ -1011,6 +1013,8 @@ namespace Win32xx
 	}
 
 	inline void CFrame::CreateToolBar()
+	// Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand 
+	//  if the frame uses a rebar.
 	{
 		if (IsReBarSupported() && m_bUseReBar)
 			AddToolBarBand(GetToolBar(), RBBS_BREAK|RBBS_GRIPPERALWAYS, IDW_TOOLBAR);	// Create the toolbar inside rebar
@@ -1338,6 +1342,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
+	// Called by OnDrawItem to render the popup menu items.
 	{
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
@@ -1406,6 +1411,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis)
+	// Called by DrawMenuItem to render the popup menu background
 	{
 		// Draw the item background
 		CRect rcSelection = m_pMenuMetrics->GetSelectionRect(pdis->rcItem);
@@ -1512,6 +1518,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
+	// Called by DrawMenuItem to draw icons in popup menus
 	{
 		if ( 0 == m_imlMenu.GetHandle() )
 			return;
@@ -1547,6 +1554,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::DrawMenuItemText(LPDRAWITEMSTRUCT pdis)
+	// Called by DrawMenuItem to render the text for popup menus.
 	{
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
 		LPCTSTR ItemText = pmid->GetItemText();
@@ -1596,7 +1604,7 @@ namespace Win32xx
 
 	inline BOOL CFrame::DrawReBarBkgnd(CDC* pDC, CReBar* pReBar)
 	// Draws the ReBar's background when ReBar themes are enabled.
-	// Return TRUE to supress default background drawing.	
+	// Returns TRUE when the default background drawing is suppressed.	
 	{
 		BOOL IsDrawn = TRUE;
 
@@ -1801,6 +1809,7 @@ namespace Win32xx
 	}
 
 	inline CString CFrame::GetMRUEntry(UINT nIndex)
+	// Returns a MRU entry given its index.
 	{
 		CString strPathName;
 		if (nIndex < m_vMRUEntries.size())
@@ -1814,6 +1823,7 @@ namespace Win32xx
 	}
 
 	inline CSize CFrame::GetTBImageSize(CBitmap* pbm)
+	// Returns the size of a bitmap image
 	{
 		assert(pbm);
 		assert(pbm->GetHandle());
@@ -1825,6 +1835,7 @@ namespace Win32xx
 	}
 
 	inline CRect CFrame::GetViewRect() const
+	// Returns the dimensions of the view window. 
 	{
 		CRect rcClient = GetClientRect();
 
@@ -1841,8 +1852,8 @@ namespace Win32xx
 	}
 
 	inline CString CFrame::GetThemeName() const
+	// Returns the XP theme name	
 	{
-		// Returns the XP theme name
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 		WCHAR ThemeName[31] = L"";
 		if(hMod)
@@ -1860,9 +1871,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
+	// Load the MRU list from the registry
 	{
-		// Load the MRU list from the registry
-
 		assert(!m_strKeyName.IsEmpty()); // KeyName must be set before calling LoadRegistryMRUSettings
 		HKEY hKey = NULL;
 		BOOL bRet = FALSE;
@@ -1911,6 +1921,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+	// Loads various frame settings from the registry
 	{
 		assert (NULL != szKeyName);
 		m_strKeyName = szKeyName;
@@ -1964,6 +1975,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::MeasureMenuItem(MEASUREITEMSTRUCT *pmis)
+	// Determines the size of the popup menus
 	{
 		int cxTotal = 0;
 		int cyMax = 0;
@@ -2002,6 +2014,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	// Called when the frame is activated (WM_ACTIVATE received)
 	{
 		// Do default processing first
 		DefWindowProc(WM_ACTIVATE, wParam, lParam);
@@ -2040,8 +2053,8 @@ namespace Win32xx
 	}
 
 	inline void CFrame::OnClose()
+	// Called in response to a WM_CLOSE message for the frame.
 	{
-		// Called in response to a WM_CLOSE message for the frame.
 		ShowWindow(SW_HIDE);
 		SaveRegistrySettings();
 		Destroy();
@@ -2120,8 +2133,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)
+	// Handles CustomDraw notification from WM_NOTIFY.	
 	{
-		// CustomDraw notification from WM_NOTIFY
 		CWnd* pWnd = FromHandle(pNMHDR->hwndFrom);
 		if (dynamic_cast<CToolBar*>(pWnd))
 		{
@@ -2135,6 +2148,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::OnDestroy()
+	// Called when the frame is about to be destroyed (WM_DESTROY received)
 	{
 		SetMenu(NULL);
 		
@@ -2161,6 +2175,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnExitMenuLoop(WPARAM wParam, LPARAM lParam)
+	// Called when the menu's modal loop has ended (WM_EXITMENULOOP received)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2188,6 +2203,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnHelp()
+	// Called to display help (WM_HELP recieved or selected via menu)
 	{
 		// Ensure only one dialog displayed even for multiple hits of the F1 button
 		if (!m_AboutDialog.IsWindow())
@@ -2206,6 +2222,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	// Called when the menu's modal loop begins (WM_INITMENUPOPUP recieved)
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
@@ -2263,6 +2280,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnMenuChar(WPARAM wParam, LPARAM lParam)
+	// Called when a menu is active, and a key is pressed other than an accelerator.
 	{
 		if ((IsMenuBarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 		{
@@ -2275,6 +2293,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
+	// Called when a menu item is selected.
 	{
 		// Set the StatusBar text when we hover over a menu
 		// Only popup submenus have status strings
@@ -2293,6 +2312,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+	// Called when a notification from a child window (WM_NOTIFY) is received.
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
@@ -2312,9 +2332,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
+	// Called when the rebar's height changes
 	{
-		// Notifcation sent by Rebar
-
 		UNREFERENCED_PARAMETER(pNMHDR);
 
 		RecalcLayout();
@@ -2323,9 +2342,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnRBNLayoutChanged(LPNMHDR pNMHDR)
+	// Notification of rebar layout change.
 	{
-		// Notification ot rebar layout change
-
 		UNREFERENCED_PARAMETER(pNMHDR);
 
 		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
@@ -2335,9 +2353,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnRBNMinMax(LPNMHDR pNMHDR)
+	// Notification of a rebar band minimized or maximized
 	{
-		// Notifcation sent by Rebar
-
 		UNREFERENCED_PARAMETER(pNMHDR);
 
 		if (m_ReBarTheme.UseThemes && m_ReBarTheme.ShortBands)
@@ -2347,9 +2364,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnTBNDropDown(LPNMTOOLBAR pNMTB)
-	{	
-		// Press of Dropdown botton on ToolBar
-			
+	// Press of Dropdown botton on ToolBar
+	{				
 		int iItem = pNMTB->iItem;
 		CToolBar* pTB = static_cast<CToolBar*>(FromHandle(pNMTB->hdr.hwndFrom));
 		assert(pTB);
@@ -2390,9 +2406,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnUndocked()
+	// Notification of undocked from CDocker received via OnNotify
 	{
-		// Notification from CDocker received via OnNotify
-
 		m_hOldFocus = 0;
 		return 0;
 	}
@@ -2507,6 +2522,7 @@ namespace Win32xx
 	}
 
   	inline void CFrame::PreCreate(CREATESTRUCT& cs)
+	// Sets frame window creation paramaters prior to the frame window's creation
 	{
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
@@ -2524,12 +2540,14 @@ namespace Win32xx
 	}
 
 	inline void CFrame::PreRegisterClass(WNDCLASS &wc)
+	// Set the frame's class parameters prior to the frame window's creation
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Win32++ Frame");
 	}
 
 	inline void CFrame::RecalcLayout()
+	// Repositions the frame's child windows
 	{
 		CWnd* pView = GetView();
 		if ((!pView) || (!pView->GetHwnd()))
@@ -2568,6 +2586,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
+	// Removes an entry from the MRU list
 	{
 		std::vector<CString>::iterator it;
 		for (it = m_vMRUEntries.begin(); it != m_vMRUEntries.end(); ++it)
@@ -2583,8 +2602,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::SaveRegistrySettings()
+	// Saves various frame window settings in the registry
 	{
-		// Store the window position in the registry
 		if (!m_strKeyName.IsEmpty())
 		{
 			CString strKeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
@@ -2595,6 +2614,7 @@ namespace Win32xx
 				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw CWinException(_T("RegCreateKeyEx failed"));
 
+				// Store the window position in the registry
 				WINDOWPLACEMENT Wndpl = {0};
 				Wndpl.length = sizeof(WINDOWPLACEMENT);
 
@@ -2698,9 +2718,9 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
+	// Sets the frame's menu from a Resource ID.
+	// A resource ID of 0 removes the menu from the frame.	
 	{
-		// Sets the frame's menu from a Resource ID.
-		// A resource ID of 0 removes the menu from the frame.
 		HMENU hMenu = 0;
 		if (ID_MENU != 0)
 		{
@@ -2713,8 +2733,8 @@ namespace Win32xx
  	}
 
 	inline void CFrame::SetFrameMenu(HMENU hMenu)
+	// Sets the frame's menu.
 	{
-		// Sets the frame's menu from a HMENU.
 		m_Menu.Attach(hMenu);
 
 		if (IsMenuBarUsed())
@@ -2728,6 +2748,7 @@ namespace Win32xx
  	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
+	// Sets the menu icons. Any previous menu icons are removed.
 	{
 		// Remove any existing menu icons
 		m_imlMenu.DeleteImageList();
@@ -2742,10 +2763,9 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetMenuBarBandSize()
+	// Sets the minimum width of the MenuBar band to the width of the rebar
+	// This prevents other bands from moving to this MenuBar's row.	
 	{
-		// Sets the minimum width of the MenuBar band to the width of the rebar
-		// This prevents other bands from moving to this MenuBar's row.
-
 		CRect rcClient = GetClientRect();
 		CReBar* RB = GetReBar();
 		int nBand = RB->GetBand(GetMenuBar()->GetHwnd());
@@ -2768,9 +2788,9 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetMenuTheme(MenuTheme* pMBT)
+	// Sets the theme colors for the MenuBar and the popup Menu items
+	// Note: If Aero Themes are supported, they are used for popup menu items instead	
 	{
-		// Sets the theme colors for the MenuBar and the popup Menu items
-		// Note: If Aero Themes are supported, they are used for popup menu items instead
 		m_MenuBarTheme.UseThemes   = pMBT->UseThemes;
 		m_MenuBarTheme.clrHot1     = pMBT->clrHot1;
 		m_MenuBarTheme.clrHot2     = pMBT->clrHot2;
@@ -2783,11 +2803,13 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetReBarTheme(ReBarTheme* pRBT) 
+	// Stores the rebar's theme colors
 	{ 
 		m_ReBarTheme = *pRBT; 
 	}
 
 	inline void CFrame::SetStatusIndicators()
+	// Creates 4 panes in the status bar and displays status and key states.
 	{
 		if (GetStatusBar()->IsWindow() && (m_bUseIndicatorStatus))
 		{	
@@ -2823,6 +2845,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetStatusText(LPCTSTR szText)
+	// Stores the status text and displays it in the StatusBar
 	{
 		m_strStatusText = szText;
 
@@ -2834,10 +2857,10 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetTheme()
+	// Sets the theme colors for the frame's rebar, toolbar and menubar
+	// Note: To modify theme colors, override this function in CMainframe,
+	//        and make any modifications there.
 	{
-		// Note: To modify theme colors, override this function in CMainframe,
-		//        and make any modifications there.
-
 		// Avoid themes if using less than 16 bit colors
 		CClientDC DesktopDC(NULL);
 		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
@@ -2868,7 +2891,7 @@ namespace Win32xx
 
 			switch (Theme)
 			{
-			case Modern:
+			case Modern:	// A pale blue color scheme suitable for Windows 7 and 8
 				{
 					ToolBarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};
@@ -3064,6 +3087,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::SetToolBarTheme(ToolBarTheme* pTBT)
+	// Stores the tool bar's theme colors
 	{ 
 		m_ToolBarTheme = *pTBT;
 		if (GetToolBar()->IsWindow())
@@ -3100,6 +3124,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::ShowMenu(BOOL bShow)
+	// Hides or shows the menu
 	{
 		if (bShow)
 		{
@@ -3127,6 +3152,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::ShowStatusBar(BOOL bShow)
+	// Hides or shows the status bar
 	{
 		if (bShow)
 		{
@@ -3147,6 +3173,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::ShowToolBar(BOOL bShow)
+	// Hides or shows the tool bar
 	{
 		if (bShow)
 		{
@@ -3179,6 +3206,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+	// Called by the keyboard hook to update status information
 	{
 		TLSData* pTLSData = GetApp()->GetTlsData();
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
@@ -3196,6 +3224,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::UpdateMRUMenu()
+	// Updates the menu item information for the Most Recently Used (MRU) list.
 	{
 		if (0 >= m_nMaxMRU) return;
 
@@ -3271,6 +3300,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Handle the frame's window messages.
 	{
 		switch (uMsg)
 		{

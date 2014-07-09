@@ -35,6 +35,8 @@ LRESULT CView::OnLButtonDown(LPARAM lParam)
 
 LRESULT CView::OnLButtonUp(LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	//Release the capture on the mouse
 	ReleaseCapture();
 

@@ -18,6 +18,8 @@ CMainFrame::~CMainFrame()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(lParam);
+
 	// Process the messages from the Menu and Tool Bar
 	switch (LOWORD(wParam))
 	{
