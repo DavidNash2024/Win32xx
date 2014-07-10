@@ -989,10 +989,10 @@ namespace Win32xx
 					::DeleteObject(m_pData->hGDIObject);
 					RemoveFromMap();
 				}
-
-				delete m_pData;
-				m_pData = 0;
 			}
+
+			delete m_pData;
+			m_pData = 0;
 		}
 	}
 

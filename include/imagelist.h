@@ -157,7 +157,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 
-		// Find an existing pernament CImageList from the map
+		// Find an existing permanent CImageList from the map
 		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
 		if ((0 != hImageList) && (0 == pImageList))
 		{
