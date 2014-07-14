@@ -298,7 +298,7 @@ namespace Win32xx
 	//////////////////////////////////
 	// Declaration of the CFrame class
 	//
-	class CFrame : public CDocker
+	class CFrame : public CWnd
 	{
 		friend class CMenuBar;
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
@@ -2328,7 +2328,7 @@ namespace Win32xx
 		case UWN_UNDOCKED:		return OnUndocked();
 		}
 
-		return CDocker::OnNotify(wParam, lParam);
+		return 0L;
 	}
 
 	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
@@ -3327,8 +3327,8 @@ namespace Win32xx
 		
 		} // switch uMsg
 
-		return CDocker::WndProcDefault(uMsg, wParam, lParam);
-	} // LRESULT CFrame::WndProcDefault(...)
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
+	}
 
 
 } // namespace Win32xx

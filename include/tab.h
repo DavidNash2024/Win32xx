@@ -215,8 +215,8 @@ namespace Win32xx
 		virtual int   GetMDIChildCount() const;
 		virtual int   GetMDIChildID(int nTab) const;
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
-		virtual CMenu* GetListMenu() const { return GetTab().GetListMenu(); }
-		virtual CTab& GetTab() const	{return (CTab&)m_Tab;}
+		virtual CMenu* GetListMenu() const { return GetTab()->GetListMenu(); }
+		virtual CTab* GetTab() const	{return (CTab*)&m_Tab;}
 		virtual BOOL LoadRegistrySettings(CString strRegistryKeyName);
 		virtual void RecalcLayout();
 		virtual BOOL SaveRegistrySettings(CString strRegistryKeyName);
@@ -1554,7 +1554,7 @@ namespace Win32xx
 	// Definitions for the CTabbedMDI class
 	inline CTabbedMDI::CTabbedMDI()
 	{
-		GetTab().SetShowButtons(TRUE);
+		GetTab()->SetShowButtons(TRUE);
 	}
 
 	inline CTabbedMDI::~CTabbedMDI()
@@ -1566,7 +1566,7 @@ namespace Win32xx
 		assert(pView);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
-		GetTab().AddTabPage(WndPtr(pView), szTabText, 0, idMDIChild);
+		GetTab()->AddTabPage(WndPtr(pView), szTabText, 0, idMDIChild);
 
 		// Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
 		if (IsWindow())
@@ -1577,9 +1577,9 @@ namespace Win32xx
 
 	inline void CTabbedMDI::CloseActiveMDI()
 	{
-		int nTab = GetTab().GetCurSel();
+		int nTab = GetTab()->GetCurSel();
 		if (nTab >= 0)
-			GetTab().RemoveTabPage(nTab);
+			GetTab()->RemoveTabPage(nTab);
 
 		RecalcLayout();
 	}
@@ -1588,13 +1588,13 @@ namespace Win32xx
 	{
 		while (GetMDIChildCount() > 0)
 		{
-			GetTab().RemoveTabPage(0);
+			GetTab()->RemoveTabPage(0);
 		}
 	}
 
 	inline void CTabbedMDI::CloseMDIChild(int nTab)
 	{
-		GetTab().RemoveTabPage(nTab);
+		GetTab()->RemoveTabPage(nTab);
 
 		if (GetActiveMDIChild())
 			GetActiveMDIChild()->RedrawWindow();
@@ -1619,10 +1619,10 @@ namespace Win32xx
 	inline CWnd* CTabbedMDI::GetActiveMDIChild() const
 	{
 		CWnd* pView = NULL;
-		int nTab = GetTab().GetCurSel();
+		int nTab = GetTab()->GetCurSel();
 		if (nTab >= 0)
 		{
-			TabPageInfo tbi = GetTab().GetTabPageInfo(nTab);
+			TabPageInfo tbi = GetTab()->GetTabPageInfo(nTab);
 			pView = tbi.pView;
 		}
 
@@ -1631,33 +1631,33 @@ namespace Win32xx
 
 	inline int CTabbedMDI::GetActiveMDITab() const
 	{
-		return GetTab().GetCurSel();
+		return GetTab()->GetCurSel();
 	}
 
 	inline CWnd* CTabbedMDI::GetMDIChild(int nTab) const
 	{
 		assert(nTab >= 0);
 		assert(nTab < GetMDIChildCount());
-		return GetTab().GetTabPageInfo(nTab).pView;
+		return GetTab()->GetTabPageInfo(nTab).pView;
 	}
 
 	inline int CTabbedMDI::GetMDIChildCount() const
 	{
-		return (int) GetTab().GetAllTabs().size();
+		return (int) GetTab()->GetAllTabs().size();
 	}
 
 	inline int   CTabbedMDI::GetMDIChildID(int nTab) const
 	{
 		assert(nTab >= 0);
 		assert(nTab < GetMDIChildCount());
-		return GetTab().GetTabPageInfo(nTab).idTab;
+		return GetTab()->GetTabPageInfo(nTab).idTab;
 	}
 
 	inline LPCTSTR CTabbedMDI::GetMDIChildTitle(int nTab) const
 	{
 		assert(nTab >= 0);
 		assert(nTab < GetMDIChildCount());
-		return GetTab().GetTabPageInfo(nTab).szTabText;
+		return GetTab()->GetTabPageInfo(nTab).szTabText;
 	}
 
 	inline BOOL CTabbedMDI::LoadRegistrySettings(CString strRegistryKeyName)
@@ -1742,9 +1742,9 @@ namespace Win32xx
 
 	inline void CTabbedMDI::OnAttach()
 	{
-		GetTab().Create(this);
-		GetTab().SetFixedWidth(TRUE);
-		GetTab().SetOwnerDraw(TRUE);
+		GetTab()->Create(this);
+		GetTab()->SetFixedWidth(TRUE);
+		GetTab()->SetOwnerDraw(TRUE);
 	}
 
 	inline void CTabbedMDI::OnDestroy()
@@ -1769,18 +1769,18 @@ namespace Win32xx
 
 	inline void CTabbedMDI::RecalcLayout()
 	{
-		if (GetTab().IsWindow())
+		if (GetTab()->IsWindow())
 		{
-			if (GetTab().GetItemCount() >0)
+			if (GetTab()->GetItemCount() >0)
 			{
 				CRect rcClient = GetClientRect();
-				GetTab().SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
-				GetTab().UpdateWindow();
+				GetTab()->SetWindowPos(NULL, rcClient, SWP_SHOWWINDOW);
+				GetTab()->UpdateWindow();
 			}
 			else
 			{
 				CRect rcClient = GetClientRect();
-				GetTab().SetWindowPos(NULL, rcClient, SWP_HIDEWINDOW);
+				GetTab()->SetWindowPos(NULL, rcClient, SWP_HIDEWINDOW);
 				Invalidate();
 			}
 		}
@@ -1807,7 +1807,7 @@ namespace Win32xx
 				{
 					CString strSubKey;
 					strSubKey.Format(_T("MDI Child %d"), i);
-					TabPageInfo pdi = GetTab().GetTabPageInfo(i);
+					TabPageInfo pdi = GetTab()->GetTabPageInfo(i);
 					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, strSubKey, 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo)))
 						throw (CWinException(_T("RegSetValueEx Failed")));
 				}
@@ -1847,16 +1847,16 @@ namespace Win32xx
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
 	{
 		assert(pWnd);
-		int nPage = GetTab().GetTabIndex(pWnd);
+		int nPage = GetTab()->GetTabIndex(pWnd);
 		if (nPage >= 0)
-			GetTab().SelectPage(nPage);
+			GetTab()->SelectPage(nPage);
 	}
 
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(GetTab().IsWindow());
-		GetTab().SelectPage(iTab);
+		assert(GetTab()->IsWindow());
+		GetTab()->SelectPage(iTab);
 	}
 
 	inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

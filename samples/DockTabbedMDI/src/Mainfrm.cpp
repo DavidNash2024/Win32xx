@@ -148,8 +148,8 @@ void CMainFrame::OnMDITabsAtTop()
 {
 	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
 
-	BOOL bTop = pTabbedMDI->GetTab().GetTabsAtTop();
-	pTabbedMDI->GetTab().SetTabsAtTop(!bTop);
+	BOOL bTop = pTabbedMDI->GetTab()->GetTabsAtTop();
+	pTabbedMDI->GetTab()->SetTabsAtTop(!bTop);
 
 	// Set the menu checkmark
 	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;

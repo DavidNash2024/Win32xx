@@ -22,6 +22,7 @@ public:
 	CMyTabbedMDI();
 	virtual ~CMyTabbedMDI() {}
 	virtual CWnd* NewMDIChildFromID(int idMDIChild);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 #endif

@@ -40,3 +40,29 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
 	return pView;
 }
 
+LRESULT CMyTabbedMDI::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	UINT_PTR nIDTimer = 101;
+
+	switch(uMsg)
+	{
+	case WM_PARENTNOTIFY:
+		{
+			if (LOWORD(wParam) == WM_LBUTTONDOWN)	
+				SetTimer(nIDTimer, 100, NULL);	
+		}
+		break;
+	case WM_TIMER:
+		if (wParam == nIDTimer)
+		{
+			KillTimer(nIDTimer);
+
+			// return focus to active child when tab is pressed
+			GetActiveMDIChild()->SetFocus();
+		}
+		break;
+	}
+
+	return WndProcDefault(uMsg, wParam, lParam);
+}
+
