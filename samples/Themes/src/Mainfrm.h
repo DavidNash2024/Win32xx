@@ -50,6 +50,7 @@ private:
 	CMyCombo m_ComboBoxEx;
 	std::vector<UINT> m_vBandIDs;
 	std::vector<UINT> m_vBandStyles;
+	std::vector<UINT> m_vBandSizes;
 	CImageList m_ArrowImages;
 	CImageList m_CardImages;
 

@@ -235,6 +235,10 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 			wsprintf(szSubKey, _T("Band Style %d\0"), i+1);
 			UINT nStyle = GetRegDwordFromOpenKey(hKey, szSubKey);
 			m_vBandStyles.push_back(nStyle);
+
+			wsprintf(szSubKey, _T("Band Size %d\0"), i+1);
+			UINT nSize = GetRegDwordFromOpenKey(hKey, szSubKey);
+			m_vBandSizes.push_back(nSize);
 		}
 
 		RegCloseKey(hKey);
@@ -329,6 +333,16 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 				rbbi.fStyle = m_vBandStyles[i];
 				GetReBar()->SetBandInfo(i, rbbi);
 			}
+		
+			if (i < (int)m_vBandSizes.size())
+			{
+				// Set the band's size
+				REBARBANDINFO rbbi = {0};
+				rbbi.fMask = RBBIM_SIZE;
+				rbbi.cx = m_vBandSizes[i];
+				GetReBar()->SetBandInfo(i, rbbi);
+			}
+
 		}
 	
 		// Set the MenuBar's position and gripper
@@ -546,19 +560,22 @@ BOOL CMainFrame::SaveRegistrySettings()
 
 		// Save the rebar band settings
 		REBARBANDINFO rbbi = {0};
-		rbbi.fMask = RBBIM_ID|RBBIM_STYLE;
+		rbbi.fMask = RBBIM_ID|RBBIM_STYLE|RBBIM_SIZE;
 
 		for (int i = 0; i < nBands; i++)
 		{
 			GetReBar()->GetBandInfo(i, rbbi);
 			UINT nID = rbbi.wID;
 			UINT nStyle = rbbi.fStyle;
+			UINT nSize = rbbi.cx;
 
 			TCHAR szSubKey[16];
 			wsprintf(szSubKey, _T("Band ID %d\0"), i+1);
 			RegSetValueEx(hKey, szSubKey, 0, REG_DWORD, (LPBYTE)&nID, sizeof(DWORD));
 			wsprintf(szSubKey, _T("Band Style %d\0"), i+1);
 			RegSetValueEx(hKey, szSubKey, 0, REG_DWORD, (LPBYTE)&nStyle, sizeof(DWORD));
+			wsprintf(szSubKey, _T("Band Size %d\0"), i+1);
+			RegSetValueEx(hKey, szSubKey, 0, REG_DWORD, (LPBYTE)&nSize, sizeof(DWORD));
 		}
 
 		RegCloseKey(hKey);

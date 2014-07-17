@@ -15,7 +15,7 @@ The other ToolBar options include:
 
 There is also a ToolBar displayed over the view window. This ToolBar will
 align itself to the Top, Left, Right or Bottom edge depending on which 
-button is pressed. This Toolbar is a child window of the view window,
+button is pressed. This ToolBar is a child window of the view window,
 so the code to create and position it is in the View.cpp file.
   
 

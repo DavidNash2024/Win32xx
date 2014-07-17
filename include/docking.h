@@ -285,7 +285,7 @@ namespace Win32xx
 			void SetCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
 			void SetClosePressed()			{ m_IsClosePressed = TRUE; }
-			void SetView(CWnd& Wnd)			{ m_pView = &Wnd; }
+			void SetView(CWnd& wndView);
 
 		protected:
 			virtual void    OnLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -1218,6 +1218,33 @@ namespace Win32xx
 		m_Backgnd1 = Backgnd1;
 		m_Foregnd2 = Foregnd2;
 		m_Backgnd2 = Backgnd2;
+	}
+
+	inline void CDocker::CDockClient::SetView(CWnd& wndView)
+	{
+		if (m_pView != &wndView)
+		{
+			// Hide the existing view window (if any)
+			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
+
+			// Assign the view window
+			m_pView = &wndView;
+
+			if (m_hWnd)
+			{
+				// The frame is already created, so create and position the new view too
+				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+
+				if (!GetView()->IsWindow())
+					GetView()->Create(this);
+				else
+				{
+					GetView()->SetParent(this);
+					GetView()->ShowWindow();
+				}
+				
+			}
+		}
 	}
 
 	inline LRESULT CDocker::CDockClient::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4466,20 +4493,32 @@ namespace Win32xx
 	inline void CDockContainer::CViewPage::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
-		// Assign the view window
-		m_pView = &wndView;
-
-		if (m_hWnd)
+		if (m_pView != &wndView)
 		{
-			if (!m_pView->IsWindow())
-			{
-				// The container is already created, so create and position the new view too
-				GetView()->Create(this);
-			}
+			// Hide the existing view window (if any)
+			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
 
-			RecalcLayout();
+			// Assign the view window
+			m_pView = &wndView;
+
+			if (m_hWnd)
+			{
+				// The frame is already created, so create and position the new view too
+				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+
+				if (!GetView()->IsWindow())
+					GetView()->Create(this);
+				else
+				{
+					GetView()->SetParent(this);
+					GetView()->ShowWindow();
+				}
+				
+				RecalcLayout();
+			}
 		}
 	}
+
 
 	inline LRESULT CDockContainer::CViewPage::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{

@@ -160,7 +160,7 @@
 #define UWM_DOCKACTIVATED    (WM_APP + 5)   // Message - sent to dock ancestor when a docker is activated or deactivated.
 #define UWM_GETFRAMEVIEW     (WM_APP + 6)   // Message - returns the HWND of the frame's view window
 #define UWM_GETMENUTHEME     (WM_APP + 7)	// Message - returns a pointer to MenuTheme
-#define UWM_GETREBARTHEME    (WM_APP + 8)	// Message - returns a pointer to CToolBar
+#define UWM_GETREBARTHEME    (WM_APP + 8)	// Message - returns a pointer to ReBarTheme
 #define UWM_GETTOOLBARTHEME  (WM_APP + 9)   // Message - returns a pointer to ToolBarTheme
 #define UWN_DRAWRBBKGND      (WM_APP + 10)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
 //#define UWM_CLEANUPTEMPS	 (WM_APP + 9)	// Message - posted to cleanup temporary CDCs, CWnds etc.

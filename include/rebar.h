@@ -410,15 +410,18 @@ namespace Win32xx
 
 	inline LRESULT CReBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
-		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
+		if (m_bIsDragging)
 		{
-			// We want to lock the first row in place, but allow other bands to move!
-			// Use move messages to limit the resizing of bands
-			int y = GET_Y_LPARAM(lParam);
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
+			if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
+			{
+				// We want to lock the first row in place, but allow other bands to move!
+				// Use move messages to limit the resizing of bands
+				int y = GET_Y_LPARAM(lParam);
 
-			if (y <= GetRowHeight(0))
-				return 0L;	// throw this message away
+				if (y <= GetRowHeight(0))
+					return 0L;	// throw this message away
+			}
 		}
 
 		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);

@@ -8,11 +8,16 @@ New Features and Enhancements
   The following classes support switching views:
    - Frames
    - MDI Children
+   - Dockers
+   - DockContainers
  
 * Added support for vertical toolbars
    - Vertical toolbars demonstrated in the toolbar sample
 * Added support for vertical rebars containing toolbars
    - Vertical rebars demonstrated in the rebar sample
+   
+* The Themes sample now demonstrates how to save a band's size
+   and position in the registry.   
    
 
 Changes in detail
@@ -24,6 +29,7 @@ Modified CTabbedMDI::GetTab			now returns CWnd*
 Added user defined messages:
 UWM_GETFRAMEVIEW:		Used by CFrame.  Returns the view window's HWND 
 case UWN_DRAWRBBKGND:   Used by CFrame.  Called for rebar background redrawing
+
 
 
 Version 7.5.1
