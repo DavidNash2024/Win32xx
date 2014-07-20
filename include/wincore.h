@@ -51,11 +51,14 @@
 // 2) CWinException: This class is used internally by Win32++ to handle
 //            exceptions. You can also use it to throw and catch exceptions.
 //
-// 3) WinApp: This class is used start Win32++ and run the message loop. You
+// 3) CWinApp: This class is used start Win32++ and run the message loop. You
 //            should inherit from this class to start Win32++ in your own
 //            application.
 //
-// 4) CWnd:   This class is used to represent a window. It provides a means
+// 4) CWinThread: This class is the parent class for CWinApp. It is also the
+//            class used to create additional GUI and worker threads. 
+//
+// 5) CWnd:   This class is used to represent a window. It provides a means
 //            of creating the window, and handling its messages. Inherit
 //            from this class to define and control windows.
 //
@@ -730,11 +733,16 @@ namespace Win32xx
 	//
 	inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_hThread(0), 
 		                               m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
+	// Override CWinThread and use this constructor for GUI threads. 
+	// InitInstance will be called when the thread runs.
 	{
 	}
 
 	inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
 		                m_pThreadParams(0), m_hThread(0), m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
+	// Use CWinThread directly and call this constructor for worker threads.
+	// Specify the function to run when the thread starts. 
+	// Specifying pParam for a worker thread is optional.  
 	{
 		m_pfnThreadProc = pfnThreadProc;
 		m_pThreadParams = pParam;
@@ -1045,6 +1053,7 @@ namespace Win32xx
 		}  
 		
 		// Do remaining tidy up
+		m_vTLSData.clear();
 		if (m_dwTlsData != TLS_OUT_OF_INDEXES)
 		{
 			::TlsSetValue(m_dwTlsData, NULL);

@@ -10,6 +10,9 @@ New Features and Enhancements
    - MDI Children
    - Dockers
    - DockContainers
+   
+* Updated Dockers
+   - The drawing of dock targets now honours the DS_NO_DOCKCHILD_XXX styles   
  
 * Added support for vertical toolbars
    - Vertical toolbars demonstrated in the toolbar sample

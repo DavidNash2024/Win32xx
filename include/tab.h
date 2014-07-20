@@ -822,7 +822,11 @@ namespace Win32xx
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
 		{
-			RemoveTabPage(GetCurSel());
+			int nPage = GetCurSel();
+			RemoveTabPage(nPage);
+			if (nPage > 0)
+				SelectPage(nPage -1);
+			
 			if (GetActiveView())
 				GetActiveView()->RedrawWindow();
 		}

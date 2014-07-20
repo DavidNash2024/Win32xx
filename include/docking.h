@@ -1487,12 +1487,24 @@ namespace Win32xx
 
 	inline void CDocker::CTargetCentre::OnDraw(CDC* pDC)
 	{
+		// Load the target bitmaps
 		CBitmap bmCentre(IDW_SDCENTER);
 		CBitmap bmLeft(IDW_SDLEFT);
 		CBitmap bmRight(IDW_SDRIGHT);
 		CBitmap bmTop(IDW_SDTOP);
 		CBitmap bmBottom(IDW_SDBOTTOM);
 
+		// Grey out invalid dock targets
+		DWORD dwStyle = m_pOldDockTarget->GetDockStyle() & 0x00f0;
+		switch (dwStyle)
+		{
+		case DS_NO_DOCKCHILD_LEFT:	 TintBitmap(&bmLeft, 150, 150, 150); break;
+		case DS_NO_DOCKCHILD_TOP:	 TintBitmap(&bmTop, 150, 150, 150); break;
+		case DS_NO_DOCKCHILD_RIGHT:	 TintBitmap(&bmRight, 150, 150, 150); break;
+		case DS_NO_DOCKCHILD_BOTTOM: TintBitmap(&bmBottom, 150, 150, 150); break;
+		}
+
+		// Draw the dock targets
 		if (bmCentre.GetHandle())	pDC->DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
 		else TRACE("Missing docking resource: Target Centre\n");
 
@@ -1650,6 +1662,9 @@ namespace Win32xx
 			return FALSE;
 		}
 
+		if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT)
+			return FALSE;
+
 		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
@@ -1657,7 +1672,6 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-		//	CRect rc = pDockTarget->GetWindowRect();
 			CRect rc = pDockTarget->GetViewRect();
 			pDockTarget->ClientToScreen(rc);
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
@@ -1668,7 +1682,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((rcLeft.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
+		if (rcLeft.PtInRect(pt))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFTMOST);
@@ -1696,6 +1710,9 @@ namespace Win32xx
 			return FALSE;
 		}
 
+		if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP)
+			return FALSE;
+
 		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
@@ -1703,7 +1720,6 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-		//	CRect rc = pDockTarget->GetWindowRect();
 			CRect rc = pDockTarget->GetViewRect();
 			pDockTarget->ClientToScreen(rc);
 			int xMid = rc.left + (rc.Width() - cxImage)/2;
@@ -1714,7 +1730,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((rcTop.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
+		if (rcTop.PtInRect(pt))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOPMOST);
@@ -1742,6 +1758,9 @@ namespace Win32xx
 			return FALSE;
 		}
 
+		if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT)
+			return FALSE;
+
 		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
@@ -1749,7 +1768,6 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-		//	CRect rc = pDockTarget->GetWindowRect();
 			CRect rc = pDockTarget->GetViewRect();
 			pDockTarget->ClientToScreen(rc);
 			int yMid = rc.top + (rc.Height() - cyImage)/2;
@@ -1760,7 +1778,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((rcRight.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
+		if (rcRight.PtInRect(pt))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHTMOST);
@@ -1788,6 +1806,9 @@ namespace Win32xx
 			return FALSE;
 		}
 
+		if (pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM)
+			return FALSE;
+
 		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
@@ -1795,7 +1816,6 @@ namespace Win32xx
 		if (!IsWindow())
 		{
 			Create();
-		//	CRect rc = pDockTarget->GetWindowRect();
 			CRect rc = pDockTarget->GetViewRect();
 			pDockTarget->ClientToScreen(rc);
 			int xMid = rc.left + (rc.Width() - cxImage)/2;
@@ -1805,7 +1825,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Test if our cursor is in one of the docking zones
-		if ((rcBottom.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
+		if (rcBottom.PtInRect(pt))
 		{
 			pDockDrag->m_BlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOMMOST);
@@ -4120,7 +4140,6 @@ namespace Win32xx
 		m_nTabPressed = HitTest(info);
 
 		return FinalWindowProc(WM_LBUTTONDOWN, wParam, lParam);
-	//	return 0L;
 	}
 
 	inline LRESULT CDockContainer::OnLButtonUp(WPARAM wParam, LPARAM lParam)
@@ -4242,10 +4261,10 @@ namespace Win32xx
 		pWnd->GetViewPage()->SetParent(pWnd);
 		pWnd->m_pContainerParent = pWnd;
 
-		// Display the first page
-		m_iCurrentPage = 0;
+		// Display next lowest page
+		m_iCurrentPage = MAX(iTab -1, 0);
 		if (IsWindow())
-			SelectPage(0);
+			SelectPage(m_iCurrentPage);
 	}
 
 	inline void CDockContainer::SelectPage(int nPage)

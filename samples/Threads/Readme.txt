@@ -3,9 +3,9 @@ Threads Example
 This project demonstrates the ability of Win32++ to create windows in
 different threads. Each thread containing a window runs a message loop.
 
-The CTestWindow class inherits from both CWnd and CThread. When the class is
-instantiated, a new thread is created in the suspended state. When the thread
-is resumed, it runs the InitInstance function which creates the window.
+The CMyThread class inherits from CWinThread. After this class is instantiated, 
+CreateThread is used to create the thread. When the thread runs, the 
+InitInstance function is called and the TestWindow is created.
 
 
 Features demonstrated in this example

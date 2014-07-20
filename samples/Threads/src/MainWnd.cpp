@@ -69,7 +69,6 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 	// Create each CMyThread object
 	for (int i = 1 ; i <= m_nTestWnd ; i++)
 	{
-		// Create the Test Window and store the CTestWindow pointer
 		CMyThread* pMyThread = new CMyThread(i);
 
 		CString str;
@@ -79,6 +78,8 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 		m_vMyThread.push_back(pMyThread);
 	}
 
+	// Create the threads belonging to the MyThread objects
+	// Each thread creates a TestWindow when it runs 
 	std::vector<MyThreadPtr>::iterator iter;
 	for (iter = m_vMyThread.begin(); iter < m_vMyThread.end(); ++iter)
 	{

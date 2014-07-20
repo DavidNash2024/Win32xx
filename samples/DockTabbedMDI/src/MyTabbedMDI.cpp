@@ -48,8 +48,17 @@ LRESULT CMyTabbedMDI::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_PARENTNOTIFY:
 		{
-			if (LOWORD(wParam) == WM_LBUTTONDOWN)	
-				SetTimer(nIDTimer, 100, NULL);	
+			if (LOWORD(wParam) == WM_LBUTTONDOWN)
+			{
+				// Test if we are over a tab. If so, set at timer.
+				CPoint pt = GetCursorPos();
+				ScreenToClient(pt);
+				TCHITTESTINFO info = {0};
+				info.pt = pt;
+				GetTab()->HitTest(info);
+				if (info.flags != TCHT_NOWHERE) 
+					SetTimer(nIDTimer, 100, NULL);
+			}
 		}
 		break;
 	case WM_TIMER:
