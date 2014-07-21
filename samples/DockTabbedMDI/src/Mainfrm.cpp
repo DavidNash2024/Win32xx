@@ -189,6 +189,24 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_TABBEDMDI_TOP:		OnMDITabsAtTop();		return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();		return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();		return TRUE;
+	case IDW_FIRSTCHILD:
+	case IDW_FIRSTCHILD +1:
+	case IDW_FIRSTCHILD +2:
+	case IDW_FIRSTCHILD +3:
+	case IDW_FIRSTCHILD +4:
+	case IDW_FIRSTCHILD +5:
+	case IDW_FIRSTCHILD +6:
+	case IDW_FIRSTCHILD +7:
+	case IDW_FIRSTCHILD +8:
+		{
+			int nTab = LOWORD(wParam) - IDW_FIRSTCHILD;
+			m_DockTabbedMDI.GetTabbedMDI()->SetActiveMDITab(nTab);
+			return TRUE;
+		}
+	case IDW_FIRSTCHILD +9:
+		{
+			m_DockTabbedMDI.GetTabbedMDI()->ShowListDialog();
+		}
 
 	default:
 		// Pass the command on to the view window of the last active docker
@@ -240,8 +258,22 @@ void CMainFrame::OnInitialUpdate()
 	if (!m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultMDIs();
 
+	// Add a "Window" menu item, positioned 2nd from the right.
+	int nMenuPos = GetFrameMenu()->GetMenuItemCount() -1;
+	CMenu* pWinMenu = m_DockTabbedMDI.GetTabbedMDI()->GetListMenu();
+	GetFrameMenu()->InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)pWinMenu->GetHandle(), _T("&Window"));
+	GetMenuBar()->SetMenu(*GetFrameMenu());
+
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
+}
+
+LRESULT CMainFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+{
+	// Update the "Window" menu 
+	m_DockTabbedMDI.GetTabbedMDI()->GetListMenu();
+
+	return CFrame::OnInitMenuPopup(wParam, lParam);
 }
 
 void CMainFrame::OnCloseDockers()

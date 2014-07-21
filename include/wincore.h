@@ -166,7 +166,6 @@
 #define UWM_GETREBARTHEME    (WM_APP + 8)	// Message - returns a pointer to ReBarTheme
 #define UWM_GETTOOLBARTHEME  (WM_APP + 9)   // Message - returns a pointer to ToolBarTheme
 #define UWN_DRAWRBBKGND      (WM_APP + 10)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
-//#define UWM_CLEANUPTEMPS	 (WM_APP + 9)	// Message - posted to cleanup temporary CDCs, CWnds etc.
 #define UWM_TBWINPOSCHANGING (WM_APP + 11)	// Message - Sent to parent. Toolbar is resizing
 #define UWN_BARSTART		 (WM_APP + 12)	// Notification - docker bar selected for move
 #define UWN_BARMOVE			 (WM_APP + 13)	// Notification - docker bar moved

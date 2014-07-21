@@ -39,3 +39,4 @@ Features demonstrated in this example
 * Displaying tabs at the top or bottom of the TabbedMDI.
 * The use of several docking styles.
 * Saving the dock layout and TabbedMDI layout in the registry.
+* Adding "Window" menu items to the frame menu, updated in runtime.

@@ -107,6 +107,8 @@ namespace Win32xx
 		virtual void SetTabIcon(int i, HICON hIcon);
 		virtual void SetTabsAtTop(BOOL bTop);
 		virtual void SetTabText(UINT nTab, LPCTSTR szText);
+		virtual void ShowListDialog();
+		virtual void ShowListMenu();
 		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
@@ -173,8 +175,6 @@ namespace Win32xx
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void	PreRegisterClass(WNDCLASS &wc);
 		virtual void    SetTabSize();
-		virtual void	ShowListDialog();
-		virtual void	ShowListMenu();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -216,6 +216,7 @@ namespace Win32xx
 		virtual int   GetMDIChildID(int nTab) const;
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
 		virtual CMenu* GetListMenu() const { return GetTab()->GetListMenu(); }
+		virtual void   ShowListDialog() { GetTab()->ShowListDialog(); }
 		virtual CTab* GetTab() const	{return (CTab*)&m_Tab;}
 		virtual BOOL LoadRegistrySettings(CString strRegistryKeyName);
 		virtual void RecalcLayout();
@@ -638,8 +639,14 @@ namespace Win32xx
 
 	inline CMenu* CTab::GetListMenu()
 	{
-		m_ListMenu.DestroyMenu();
-		m_ListMenu.CreatePopupMenu();
+		if (!IsMenu(m_ListMenu))
+			m_ListMenu.CreatePopupMenu();
+
+		// Remove any current menu items
+		while (m_ListMenu.GetMenuItemCount() > 0)
+		{
+			m_ListMenu.RemoveMenu(0, MF_BYPOSITION);
+		}
 
 		// Add the menu items
 		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
@@ -1302,7 +1309,7 @@ namespace Win32xx
 			SelectDialog.AddItem(GetAllTabs()[u].szTabText);
 		}
 
-		int iSelected = (int)SelectDialog.DoModal();
+		int iSelected = (int)SelectDialog.DoModal(this);
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 

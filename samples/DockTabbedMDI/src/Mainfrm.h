@@ -38,6 +38,7 @@ protected:
 	virtual void	OnFileNewText();
 	virtual void	OnFileNewTree();
 	virtual void    OnInitialUpdate();
+	virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 	virtual void	OnDefaultLayout();
 	virtual void    OnMenuUpdate(UINT nID);
 	virtual LRESULT OnMouseActivate(WPARAM wParam, LPARAM lParam);
