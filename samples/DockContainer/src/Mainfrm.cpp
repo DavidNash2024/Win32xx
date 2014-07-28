@@ -37,8 +37,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		PostMessage(WM_CLOSE);
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
+		SetRedraw(FALSE);
 		m_DockView.CloseAllDockers();
 		LoadDefaultDockers();
+		SetRedraw(TRUE);
+		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		return TRUE;
 	case IDM_DOCK_CLOSEALL:
 		m_DockView.CloseAllDockers();

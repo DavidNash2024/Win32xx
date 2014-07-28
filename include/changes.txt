@@ -12,12 +12,13 @@ New Features and Enhancements
    - DockContainers
    
 * Updated Dockers
-   - The drawing of dock targets now honours the DS_NO_DOCKCHILD_XXX styles   
+   - The drawing of dock targets now honours the DS_NO_DOCKCHILD_XXX styles
+   - Click and drag on the tabs to swap the order of DockContainers   
  
 * Added support for vertical toolbars
    - Vertical toolbars demonstrated in the toolbar sample
 
-   * Added support for vertical rebars containing toolbars
+* Added support for vertical rebars containing toolbars
    - Vertical rebars demonstrated in the rebar sample
  
 * The Themes sample now demonstrates how to save a band's size and position 

@@ -166,6 +166,7 @@ namespace Win32xx
 		virtual void SelectPage(int nPage);
 		virtual void SetTabSize();
 		virtual void SetupToolBar();
+		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
 		CDockContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
@@ -2528,7 +2529,6 @@ namespace Win32xx
 		if (szRegistryKeyName)
 		{
 			std::vector<DockInfo> vDockList;
-			std::vector<int> vActiveContainers;
 
 			CString strKey = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
 			HKEY hKey = 0;
@@ -2548,20 +2548,6 @@ namespace Win32xx
 					vDockList.push_back(di);
 					i++;
 					strSubKey.Format(_T("DockChild%d"), i);
-				}
-
-				dwType = REG_DWORD;
-				BufferSize = sizeof(int);
-				int nID;
-				i = 0;
-				strSubKey.Format(_T("ActiveContainer%d"), i);
-
-				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nID, &BufferSize))
-				{
-					vActiveContainers.push_back(nID);
-					i++;
-					strSubKey.Format(_T("ActiveContainer%d"), i);
 				}
 
 				RegCloseKey(hKey);
@@ -2636,20 +2622,76 @@ namespace Win32xx
 				}
 			}
 
-			std::vector<int>::iterator iterID;
-			for (iterID = vActiveContainers.begin(); iterID < vActiveContainers.end(); ++iterID)
+			// Restore Dock container tab order and active container
+			strKey = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
+			hKey = 0;
+			RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey);
+			if (hKey)
 			{
-				CDocker* pDocker = GetDockFromID(*iterID);
-				if (pDocker)
-				{
-					CDockContainer* pContainer = pDocker->GetContainer();
-					if (pContainer)
+				UINT uContainer = 0;
+				CString strSubKey;
+				strSubKey.Format(_T("DockContainer%u"), uContainer);
+				HKEY hContainerKey = 0;
+				while ( 0 == RegOpenKeyEx(hKey, strSubKey, 0, KEY_READ, &hContainerKey) )
+				{			
+					DWORD dwType = REG_DWORD;
+					DWORD BufferSize = sizeof(int);
+
+					// Load tab order
+					UINT nTab = 0;
+					UINT nTabID;
+					std::vector<UINT> vTabOrder;
+					CString strTabKey;
+					strTabKey.Format(_T("Tab%u"), nTab);
+					while ( 0 == RegQueryValueEx(hContainerKey, strTabKey, NULL, &dwType, (LPBYTE)&nTabID, &BufferSize) )
 					{
-						int nPage = pContainer->GetContainerIndex(pContainer);
-						if (nPage >= 0)
-							pContainer->SelectPage(nPage);
+						vTabOrder.push_back(nTabID);
+						strTabKey.Format(_T("Tab%u"), ++nTab);
 					}
+
+					// Set tab order
+					UINT nParentID;
+					if ( 0 == RegQueryValueEx(hContainerKey, _T("Parent Container"), NULL, &dwType, (LPBYTE)&nParentID, &BufferSize) )
+					{
+						CDockContainer* pParentContainer = GetDockFromID(nParentID)->GetContainer();
+						if (pParentContainer)
+						{
+							for (UINT uTab = 0; uTab < vTabOrder.size(); ++uTab)
+							{
+								CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(uTab));
+								UINT uOldID = pOldDocker->GetDockID();
+
+								std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
+								UINT uOldTab = it - vTabOrder.begin();
+								
+								if (uTab != uOldTab)
+									pParentContainer->SwapTabs(uTab, uOldTab);
+							}
+						}
+					}
+
+					// Set the active container
+					UINT nActiveContainer;
+					if (0 == RegQueryValueEx(hContainerKey, _T("Active Container"), NULL, &dwType, (LPBYTE)&nActiveContainer, &BufferSize))
+					{
+						CDocker* pDocker = GetDockFromID(nActiveContainer);
+						if (pDocker)
+						{
+							CDockContainer* pContainer = pDocker->GetContainer();
+							if (pContainer)
+							{
+								int nPage = pContainer->GetContainerIndex(pContainer);
+								if (nPage >= 0)
+									pContainer->SelectPage(nPage);
+							}
+						}
+					}
+
+					RegCloseKey(hContainerKey);
+					strSubKey.Format(_T("DockContainer%u"), ++uContainer);
 				}
+
+				RegCloseKey(hKey);
 			}
 		}
 
@@ -3386,11 +3428,15 @@ namespace Win32xx
 		{
 			CDockContainer* pContainer = (*itSort)->GetContainer();
 
-			for (UINT i = 1; i < pContainer->GetAllContainers().size(); ++i)
+			for (UINT i = 0; i < pContainer->GetAllContainers().size(); ++i)
 			{
 				CDockContainer* pChild = pContainer->GetContainerFromIndex(i);
-				CDocker* pDock = GetDockFromView(pChild);
-				vSorted.push_back(pDock);
+
+				if (pChild != pContainer)
+				{
+					CDocker* pDock = GetDockFromView(pChild);
+					vSorted.push_back(pDock);
+				}
 			}
 		}
 
@@ -3411,6 +3457,7 @@ namespace Win32xx
 		{
 			HKEY hKey = NULL;
 			HKEY hKeyDock = NULL;
+			HKEY hKeyContainer = NULL;
 			CString strKeyName = _T("Software\\") + CString(szRegistryKeyName);
 
 			try
@@ -3435,7 +3482,7 @@ namespace Win32xx
 				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-				RegDeleteKey(hKey, _T("Dock Windows"));
+				RegDeleteTree(hKey, _T("Dock Windows"));
 				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
@@ -3449,20 +3496,51 @@ namespace Win32xx
 						throw (CWinException(_T("RegSetValueEx failed")));
 				}
 
-				// Add Active Container to the registry
-				int i = 0;
+				// Add dock container info to the registry
+				UINT u = 0;
 				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
 				{
 					CDockContainer* pContainer = (*iter)->GetContainer();
 
-					if (pContainer && (pContainer == pContainer->GetActiveContainer()))
+					if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
+					{
+						CString strSubKey;
+						strSubKey.Format(_T("DockContainer%u"), u++);
+						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, strSubKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
+							throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+						// Store the container group's parent
+						int nID = GetDockFromView(pContainer)->GetDockID();
+						if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, _T("Parent Container"), 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
+							throw (CWinException(_T("RegSetValueEx failed")));
+
+						// Store the active (selected) container
+						nID = GetDockFromView(pContainer->GetActiveContainer())->GetDockID();
+						if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, _T("Active Container"), 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
+							throw (CWinException(_T("RegSetValueEx failed")));
+
+						// Store the tab order
+						for (UINT u1 = 0; u1 < pContainer->GetAllContainers().size(); ++u1)
+						{
+							strSubKey.Format(_T("Tab%u"), u1);
+							CDockContainer* pTab = pContainer->GetContainerFromIndex(u1);
+							int nTabID = GetDockFromView(pTab)->GetDockID();
+
+							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, strSubKey, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
+								throw (CWinException(_T("RegSetValueEx failed")));
+						}
+
+						RegCloseKey(hKeyContainer);
+					}
+
+			/*		if (pContainer && (pContainer == pContainer->GetActiveContainer()))
 					{
 						CString strSubKey;
 						strSubKey.Format(_T("ActiveContainer%d"), i++);
 						int nID = GetDockFromView(pContainer)->GetDockID();
 						if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
 							throw (CWinException(_T("RegSetValueEx failed")));
-					}
+					} */
 				}
 
 				RegCloseKey(hKeyDock);
@@ -4236,10 +4314,7 @@ namespace Win32xx
 
 		// Remove the tab
 		int iTab = GetContainerIndex(pWnd);
-		if (iTab > 0)
-		{
-			DeleteItem(iTab);
-		}
+		DeleteItem(iTab);
 
 		// Remove the ContainerInfo entry
 		std::vector<ContainerInfo>::iterator iter;
@@ -4291,9 +4366,12 @@ namespace Win32xx
 				AdjustRect(FALSE, &rc);
 
 				// Swap the pages over
-				CDockContainer* pOldContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 				CDockContainer* pNewContainer = m_vContainerInfo[nPage].pContainer;
-				pOldContainer->GetViewPage()->ShowWindow(SW_HIDE);
+				for (std::vector<ContainerInfo>::iterator it = m_vContainerInfo.begin(); it != m_vContainerInfo.end(); ++it)
+				{
+					(*it).pContainer->GetViewPage()->ShowWindow(SW_HIDE);
+				}
+
 				pNewContainer->GetViewPage()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
 				pNewContainer->GetViewPage()->GetView()->SetFocus();
 
@@ -4407,6 +4485,37 @@ namespace Win32xx
 		GetViewPage()->SetView(Wnd);
 	}
 
+	inline void CDockContainer::SwapTabs(UINT nTab1, UINT nTab2)
+	{
+		if ((nTab1 < GetAllContainers().size()) && (nTab2 < GetAllContainers().size()) && (nTab1 != nTab2))
+		{
+			ContainerInfo CI1 = m_vContainerInfo[nTab1];
+			ContainerInfo CI2 = m_vContainerInfo[nTab2];
+			int nLength = 30;
+			CString str1;
+			CString str2;
+
+			TCITEM Item1 = {0};
+			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+			Item1.cchTextMax = nLength;
+			Item1.pszText = str1.GetBuffer(nLength);
+			GetItem(nTab1, &Item1);
+			str1.ReleaseBuffer();
+
+			TCITEM Item2 = {0};
+			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
+			Item2.cchTextMax = nLength;
+			Item2.pszText = str2.GetBuffer(nLength);
+			GetItem(nTab2, &Item2);
+			str2.ReleaseBuffer(); 
+
+			SetItem(nTab1, &Item2);
+			SetItem(nTab2, &Item1);
+			m_vContainerInfo[nTab1] = CI2;
+			m_vContainerInfo[nTab2] = CI1;
+		}
+	}
+
 	inline LRESULT CDockContainer::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -4416,6 +4525,26 @@ namespace Win32xx
 		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSELEAVE:		return OnMouseLeave(wParam, lParam);
+		case WM_MOUSEMOVE:
+			{
+				if (IsLeftButtonDown())
+				{				
+					CPoint pt((DWORD)lParam);
+					TCHITTESTINFO info = {0};
+					info.pt = pt;
+					int nTab = HitTest(info);
+					if (nTab >= 0)
+					{
+						if (nTab !=  m_nTabPressed)
+						{
+							SwapTabs(nTab, m_nTabPressed);
+							m_nTabPressed = nTab;
+							SelectPage(nTab);
+						}
+					}
+				}
+			}
+			break;
 		}
 
 		// pass unhandled messages on to CTab for processing

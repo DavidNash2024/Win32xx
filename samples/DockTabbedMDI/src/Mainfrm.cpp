@@ -37,8 +37,6 @@ void CMainFrame::LoadDefaultDockers()
 
 	// Add the remaining dockers
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 250, ID_DOCK_FILES1);
-//	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
-//	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
 	pDockRight->AddDockedChild(new CDockDialog, DS_DOCKED_CONTAINER | dwStyle, 250, ID_DOCK_DIALOG);
 
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
@@ -262,10 +260,16 @@ void CMainFrame::OnInitialUpdate()
 	int nMenuPos = GetFrameMenu()->GetMenuItemCount() -1;
 	CMenu* pWinMenu = m_DockTabbedMDI.GetTabbedMDI()->GetListMenu();
 	GetFrameMenu()->InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)pWinMenu->GetHandle(), _T("&Window"));
-	GetMenuBar()->SetMenu(*GetFrameMenu());
+
+	// Update the menu
+	if (IsReBarUsed())
+		GetMenuBar()->SetMenu(*GetFrameMenu());
+	else
+		DrawMenuBar();
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
+	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 
 LRESULT CMainFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
