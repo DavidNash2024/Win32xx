@@ -171,6 +171,7 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
 		virtual void	NotifyChanged();
+		virtual void	NotifyDragged();
 		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void	PreRegisterClass(WNDCLASS &wc);
@@ -753,6 +754,14 @@ namespace Win32xx
 		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
+	inline void CTab::NotifyDragged()
+	{
+		NMHDR nmhdr = {0};
+		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.code = UWN_TABDRAGGED;
+		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+	}
+
 	inline void CTab::OnAttach()
 	{
 		// Create and assign the image list
@@ -870,6 +879,9 @@ namespace Win32xx
 			_TrackMouseEvent(&TrackMouseEventStruct);
 			m_IsTracking = TRUE;
 		}
+
+		if (IsLeftButtonDown())
+			NotifyDragged();
 
 		CClientDC dc(this);
 		DrawCloseButton(&dc);
@@ -1234,6 +1246,8 @@ namespace Win32xx
 	inline void CTab::ShowActiveView(CWnd* pView)
 	// Sets or changes the View window displayed within the tab page
 	{
+		if (pView != m_pActiveView)
+		{
 		// Hide the old view
 		if (GetActiveView() && (GetActiveView()->IsWindow()))
 			GetActiveView()->ShowWindow(SW_HIDE);
@@ -1254,6 +1268,7 @@ namespace Win32xx
 			AdjustRect(FALSE, &rc);
 			GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
 			GetActiveView()->SetFocus();
+		}
 		}
 	}
 
@@ -1317,7 +1332,6 @@ namespace Win32xx
 	{
 		if ((nTab1 < GetAllTabs().size()) && (nTab2 < GetAllTabs().size()) && (nTab1 != nTab2))
 		{
-			int nPage = GetCurSel();
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
 			int nLength = 30;
@@ -1342,7 +1356,6 @@ namespace Win32xx
 			SetItem(nTab2, &Item1);
 			m_vTabPageInfo[nTab1] = T2;
 			m_vTabPageInfo[nTab2] = T1;
-			SelectPage(nPage);
 		}
 	}
 
@@ -1768,6 +1781,24 @@ namespace Win32xx
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
 		if (pnmhdr->code == UWN_TABCHANGED)
 			RecalcLayout();
+
+		if (pnmhdr->code == UWN_TABDRAGGED)
+		{
+			CPoint pt = GetCursorPos();
+			GetTab()->ScreenToClient(pt);
+
+			TCHITTESTINFO info = {0};
+			info.pt = pt;
+			int nTab = GetTab()->HitTest(info);
+			if (nTab >= 0)
+			{
+				if (nTab !=  GetActiveMDITab())
+				{
+					GetTab()->SwapTabs(nTab, GetActiveMDITab());
+					SetActiveMDITab(nTab);
+				}
+			}
+		}
 
 		return 0L;
 	}
