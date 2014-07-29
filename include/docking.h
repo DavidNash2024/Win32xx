@@ -40,10 +40,10 @@
 // A special thanks to James Brown and Jeff Glatt for publishing tutorials
 // on docking and making these freely available. This code uses some of the
 // ideas presented in those tutorials.
-// 
+//
 // Catch22 Docking Tutorials by James Brown:
 // http://www.catch22.net/tuts
-// 
+//
 // Docking Toolbars in Plain C by Jeff Glatt
 // http://www.codeproject.com/Articles/10224/Docking-Toolbars-in-Plain-C
 
@@ -205,7 +205,7 @@ namespace Win32xx
 		std::vector<UINT> m_vToolBarData;				// vector of resource IDs for ToolBar buttons
 		CString m_strTabText;
 		CString m_csCaption;
-		CImageList m_imlToolBar;   
+		CImageList m_imlToolBar;
 		CImageList m_imlToolBarHot;
 		CImageList m_imlToolBarDis;
 		CViewPage m_ViewPage;
@@ -691,7 +691,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CDocker::CDockBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{	
+	{
 		switch (uMsg)
 		{
 		case WM_SETCURSOR:		return OnSetCursor(wParam, lParam);
@@ -700,7 +700,7 @@ namespace Win32xx
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
 		}
-		
+
 		// pass unhandled messages on for default processing
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
@@ -1133,7 +1133,7 @@ namespace Win32xx
 
 		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
 	}
-	
+
 	inline LRESULT CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		return MouseMove(wParam, lParam);
@@ -1243,7 +1243,6 @@ namespace Win32xx
 					GetView()->SetParent(this);
 					GetView()->ShowWindow();
 				}
-				
 			}
 		}
 	}
@@ -1258,7 +1257,7 @@ namespace Win32xx
 		case WM_NCCALCSIZE:			return OnNCCalcSize(wParam, lParam);
 		case WM_NCHITTEST:			return OnNCHitTest(wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(wParam, lParam);
-		case WM_NCLBUTTONDOWN:		return OnNCLButtonDown(wParam, lParam);	
+		case WM_NCLBUTTONDOWN:		return OnNCLButtonDown(wParam, lParam);
 		case WM_NCMOUSEMOVE:		return OnNCMouseMove(wParam, lParam);
 		case WM_NCPAINT:			return OnNCPaint(wParam, lParam);
 		case WM_NCMOUSELEAVE:		return OnNCMouseLeave(wParam, lParam);
@@ -2315,7 +2314,7 @@ namespace Win32xx
 		// Step 1: Find the top level Docker the point is over
 		// Start at the DockAncestor's Ancestor and work up the Z order
 		CDocker* pDockTop = NULL;
-		CWnd* pAncestor = GetDockAncestor()->GetAncestor();	
+		CWnd* pAncestor = GetDockAncestor()->GetAncestor();
 		CWnd* pWnd = GetDockAncestor()->GetAncestor();
 		do
 		{
@@ -2335,7 +2334,7 @@ namespace Win32xx
 				}
 			}
 			pWnd = pWnd->GetWindow(GW_HWNDPREV);
-		
+
 		} while (pWnd != pWnd->GetWindow(GW_HWNDFIRST));
 
 		// Step 2: Find the docker child whose view window has the point
@@ -2633,7 +2632,7 @@ namespace Win32xx
 				strSubKey.Format(_T("DockContainer%u"), uContainer);
 				HKEY hContainerKey = 0;
 				while ( 0 == RegOpenKeyEx(hKey, strSubKey, 0, KEY_READ, &hContainerKey) )
-				{			
+				{
 					DWORD dwType = REG_DWORD;
 					DWORD BufferSize = sizeof(int);
 
@@ -2663,7 +2662,7 @@ namespace Win32xx
 
 								std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
 								UINT uOldTab = it - vTabOrder.begin();
-								
+
 								if (uTab != uOldTab)
 									pParentContainer->SwapTabs(uTab, uOldTab);
 							}
@@ -2992,7 +2991,7 @@ namespace Win32xx
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
 		if (GetView() && GetView()->IsWindow())
 			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
-		
+
 		return 0L;
 	}
 
@@ -3002,7 +3001,7 @@ namespace Win32xx
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
 		if (GetView() && GetView()->IsWindow())
 			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
-	
+
 		return 0L;
 	}
 
@@ -3016,7 +3015,7 @@ namespace Win32xx
 	{
 		if (GetDockAncestor()->IsWindow())
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
-	
+
 		return 0L;
 	}
 
@@ -3096,7 +3095,7 @@ namespace Win32xx
 			break;
 		case DS_DOCKED_RIGHT:
 			if (RTL)  DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
-			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);		
+			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
@@ -3273,12 +3272,12 @@ namespace Win32xx
 		// 3) The docker's client area contains the docker's caption (if any) and the docker's view window.
 
 		// Note: All top level dockers are undocked, including the dock ancestor.
-		
+
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
-#endif		
-		
+#endif
+
 		if (IsDocked())
 		{
 			rc.OffsetRect(-rc.left, -rc.top);
@@ -3337,7 +3336,7 @@ namespace Win32xx
 				// Calculate the dimensions of the splitter bar
 				CRect rcBar = rc;
 				DWORD DockSide = (*iter)->GetDockStyle() & 0xF;
-			
+
 				if (DS_DOCKED_LEFT   == DockSide)
 				{
 					if (RTL) rcBar.left   = rcBar.right - (*iter)->GetBarWidth();
@@ -3347,7 +3346,7 @@ namespace Win32xx
 				if (DS_DOCKED_RIGHT  == DockSide)
 				{
 					if (RTL) rcBar.right  = rcBar.left + (*iter)->GetBarWidth();
-					else	 rcBar.left   = rcBar.right - (*iter)->GetBarWidth();	
+					else	 rcBar.left   = rcBar.right - (*iter)->GetBarWidth();
 				}
 
 				if (DS_DOCKED_TOP    == DockSide) rcBar.bottom = rcBar.top + (*iter)->GetBarWidth();
@@ -3376,7 +3375,7 @@ namespace Win32xx
 		{
 			(*iter)->RecalcDockChildLayout((*iter)->m_rcChild);
 		}
-		
+
 	}
 
 	inline void CDocker::RecalcDockLayout()
@@ -3482,9 +3481,17 @@ namespace Win32xx
 				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
-				RegDeleteTree(hKey, _T("Dock Windows"));
 				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				// Remove existing DockContainer SubKeys
+				UINT uDockContainer = 0;
+				CString strSubKey;
+				strSubKey.Format(_T("DockContainer%u"), uDockContainer);
+				while (0 == RegDeleteKey(hKeyDock, strSubKey) )
+				{
+					strSubKey.Format(_T("DockContainer%u"), ++uDockContainer);
+				}
 
 				// Add the Dock windows information to the registry
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
@@ -3497,7 +3504,7 @@ namespace Win32xx
 				}
 
 				// Add dock container info to the registry
-				UINT u = 0;
+				UINT u1 = 0;
 				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
 				{
 					CDockContainer* pContainer = (*iter)->GetContainer();
@@ -3505,7 +3512,7 @@ namespace Win32xx
 					if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
 					{
 						CString strSubKey;
-						strSubKey.Format(_T("DockContainer%u"), u++);
+						strSubKey.Format(_T("DockContainer%u"), u1++);
 						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, strSubKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
 							throw (CWinException(_T("RegCreateKeyEx Failed")));
 
@@ -3520,10 +3527,10 @@ namespace Win32xx
 							throw (CWinException(_T("RegSetValueEx failed")));
 
 						// Store the tab order
-						for (UINT u1 = 0; u1 < pContainer->GetAllContainers().size(); ++u1)
+						for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
 						{
-							strSubKey.Format(_T("Tab%u"), u1);
-							CDockContainer* pTab = pContainer->GetContainerFromIndex(u1);
+							strSubKey.Format(_T("Tab%u"), u2);
+							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
 							int nTabID = GetDockFromView(pTab)->GetDockID();
 
 							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, strSubKey, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
@@ -3706,7 +3713,7 @@ namespace Win32xx
 		{
 			std::vector<CDocker*>::iterator iter;
 			std::vector<CDocker*>& vChild = m_pDockParent->m_vDockChildren;
-		
+
 			for (iter = vChild.begin(); iter < vChild.end(); ++iter)
 			{
 				if ((*iter) == this)
@@ -3717,11 +3724,11 @@ namespace Win32xx
 					else
 						// remove ourself as a child of the parent
 						vChild.erase(iter);
-					
+
 					// Done
 					break;
-				} 
-			} 
+				}
+			}
 		}
 
 		// Transfer styles and data and children to the child docker
@@ -3993,7 +4000,7 @@ namespace Win32xx
 		// Messages defined by Win32++
 		case UWM_DOCKACTIVATED:		return OnDockActivated(wParam, lParam);
 		case UWM_DOCKDESTROYED:		return OnDockDestroyed(wParam, lParam);
-		
+
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -4445,7 +4452,7 @@ namespace Win32xx
 		BITMAP bm = Bitmap.GetBitmapData();
 		int cy = bm.bmHeight;
 		int cx  = MAX(bm.bmHeight, 16);
- 	
+
 		m_imlToolBar.DeleteImageList();
 		m_imlToolBar.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
 		m_imlToolBar.Add( &Bitmap, crMask );
@@ -4477,7 +4484,7 @@ namespace Win32xx
 			m_imlToolBarDis.DeleteImageList();
 			m_imlToolBarDis.Attach( CreateDisabledImageList( m_imlToolBar.GetHandle() ) );
 			GetToolBar()->SetDisableImageList( &m_imlToolBarDis );
-		}	
+		}
 	}
 
 	inline void CDockContainer::SetView(CWnd& Wnd)
@@ -4507,7 +4514,7 @@ namespace Win32xx
 			Item2.cchTextMax = nLength;
 			Item2.pszText = str2.GetBuffer(nLength);
 			GetItem(nTab2, &Item2);
-			str2.ReleaseBuffer(); 
+			str2.ReleaseBuffer();
 
 			SetItem(nTab1, &Item2);
 			SetItem(nTab2, &Item1);
@@ -4528,7 +4535,7 @@ namespace Win32xx
 		case WM_MOUSEMOVE:
 			{
 				if (IsLeftButtonDown())
-				{				
+				{
 					CPoint pt((DWORD)lParam);
 					TCHITTESTINFO info = {0};
 					info.pt = pt;
@@ -4570,7 +4577,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(pcs);
 		if (m_pView)
 			m_pView->Create(this);
-		
+
 		return 0;
 	}
 
@@ -4600,7 +4607,7 @@ namespace Win32xx
 			}
 			break;
 		case NM_CUSTOMDRAW:
-			{				
+			{
 				if (((LPNMHDR)lParam)->hwndFrom == GetToolBar()->GetHwnd())
 				{
 					// Pass Toolbar's custom draw up to CFrame
@@ -4661,7 +4668,7 @@ namespace Win32xx
 					GetView()->SetParent(this);
 					GetView()->ShowWindow();
 				}
-				
+
 				RecalcLayout();
 			}
 		}

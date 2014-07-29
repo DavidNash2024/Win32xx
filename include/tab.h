@@ -1248,27 +1248,27 @@ namespace Win32xx
 	{
 		if (pView != m_pActiveView)
 		{
-		// Hide the old view
-		if (GetActiveView() && (GetActiveView()->IsWindow()))
-			GetActiveView()->ShowWindow(SW_HIDE);
+			// Hide the old view
+			if (GetActiveView() && (GetActiveView()->IsWindow()))
+				GetActiveView()->ShowWindow(SW_HIDE);
 
-		// Assign the view window
-		m_pActiveView = pView;
+			// Assign the view window
+			m_pActiveView = pView;
 
-		if (m_pActiveView && m_hWnd)
-		{
-			if (!m_pActiveView->IsWindow())
+			if (m_pActiveView && m_hWnd)
 			{
-				// The tab control is already created, so create the new view too
-				GetActiveView()->Create(this);
-			}
+				if (!m_pActiveView->IsWindow())
+				{
+					// The tab control is already created, so create the new view too
+					GetActiveView()->Create(this);
+				}
 
-			// Position the View over the tab control's display area
-			CRect rc = GetClientRect();
-			AdjustRect(FALSE, &rc);
-			GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
-			GetActiveView()->SetFocus();
-		}
+				// Position the View over the tab control's display area
+				CRect rc = GetClientRect();
+				AdjustRect(FALSE, &rc);
+				GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
+				GetActiveView()->SetFocus();
+			}
 		}
 	}
 

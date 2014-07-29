@@ -65,7 +65,7 @@ void CSimpleMDIChild::OnInitialUpdate()
 	SetIconSmall(IDI_VIEW);
 
 	// Add Child dockers
-	DWORD dwStyle = DS_CLIENTEDGE | DS_NO_CAPTION | DS_NO_UNDOCK;
+	DWORD dwStyle = DS_CLIENTEDGE | DS_NO_UNDOCK;
 	m_View.SetDockStyle(dwStyle);
 	CDocker* pDockLeft  = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | dwStyle, 200, 0);
 	CDocker* pDockRight = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | dwStyle, 200, 0);

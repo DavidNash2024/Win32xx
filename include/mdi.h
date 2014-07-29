@@ -126,9 +126,9 @@ namespace Win32xx
 	class CMDIFrame : public CFrame
 	{
 		friend class CMDIChild;     // CMDIChild uses m_hOrigMenu
-		typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
 	public:
+		
 		class CMDIClient : public CWnd  // a nested class within CMDIFrame
 		{
 		public:

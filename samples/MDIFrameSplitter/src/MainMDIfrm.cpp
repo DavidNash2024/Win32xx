@@ -140,10 +140,20 @@ void CMainMDIFrame::SetupToolBar()
 
 LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-//		Add case statements for each messages to be handled here
-//	}
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:
+		// Called when a MDI child is activated with a mouse click
+ 		{
+			// Redraw all MDI children to update docker caption
+			std::vector<MDIChildPtr>::iterator iter;
+			for (iter = GetAllMDIChildren().begin(); iter < GetAllMDIChildren().end(); ++iter)
+			{
+				(*iter)->RedrawWindow();
+			}
+		}
+		break;
+	}
 
 //	pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
