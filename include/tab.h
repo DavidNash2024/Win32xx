@@ -1335,22 +1335,18 @@ namespace Win32xx
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
 			int nLength = 30;
-			CString str1;
-			CString str2;
 
 			TCITEM Item1 = {0};
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = nLength;
-			Item1.pszText = str1.GetBuffer(nLength);
+			Item1.pszText = T1.szTabText;
 			GetItem(nTab1, &Item1);
-			str1.ReleaseBuffer();
 
 			TCITEM Item2 = {0};
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = nLength;
-			Item2.pszText = str2.GetBuffer(nLength);
+			Item2.pszText = T2.szTabText;
 			GetItem(nTab2, &Item2);
-			str2.ReleaseBuffer();
 
 			SetItem(nTab1, &Item2);
 			SetItem(nTab2, &Item1);

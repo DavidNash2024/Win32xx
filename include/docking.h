@@ -4498,23 +4498,18 @@ namespace Win32xx
 		{
 			ContainerInfo CI1 = m_vContainerInfo[nTab1];
 			ContainerInfo CI2 = m_vContainerInfo[nTab2];
-			int nLength = 30;
-			CString str1;
-			CString str2;
 
 			TCITEM Item1 = {0};
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-			Item1.cchTextMax = nLength;
-			Item1.pszText = str1.GetBuffer(nLength);
+			Item1.cchTextMax = CI1.Title.GetLength()+1;
+			Item1.pszText = const_cast<LPTSTR>(CI1.Title.c_str());
 			GetItem(nTab1, &Item1);
-			str1.ReleaseBuffer();
 
 			TCITEM Item2 = {0};
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
-			Item2.cchTextMax = nLength;
-			Item2.pszText = str2.GetBuffer(nLength);
+			Item2.cchTextMax = CI2.Title.GetLength()+1;
+			Item2.pszText = const_cast<LPTSTR>(CI2.Title.c_str());
 			GetItem(nTab2, &Item2);
-			str2.ReleaseBuffer();
 
 			SetItem(nTab1, &Item2);
 			SetItem(nTab2, &Item1);

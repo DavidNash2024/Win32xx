@@ -368,7 +368,7 @@ namespace Win32xx
 
 	inline BOOL CMenuBar::IsMDIFrame() const
 	{
-		return (BOOL)GetMDIClient();
+		return (GetMDIClient() != 0);
 	}
 
 	inline LRESULT CMenuBar::OnMenuChar(WPARAM wParam, LPARAM lParam)
