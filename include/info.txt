@@ -9,10 +9,8 @@ dsp       | A project file used by Visual Studio 6
 dsw       | A project file used by Visual Studio 6
 sln       | A project file used by Visual Studio 2003, VS2005 or VS2008
 vcproj    | A project file used by Visual Studio 2003, VS2005 or VS2008
-vcxproj   | A project file used by Visual Studio 2010
-filters   | A supplementary project file used by Visual Studio 2010
-bdsproj   | A project file used by Borland Developer Studio 2006 
-bpf       | A project file used by Borland Developer Studio 2006 
+vcxproj   | A project file used by Visual Studio 2010 and above
+filters   | An additional project file used by Visual Studio 2010 and above
 vcp       | A project file used by eMbedded Visual C++
 vcw       | A project file used by eMbedded Visual C++
 dev       | A project file used by Dev-C++
@@ -31,8 +29,6 @@ Supported Compilers and Integrated Development Environments (IDEs)
 ==================================================================
 Win32++ supports the following:
 * Borland Compiler Version 5.5
-* Borland Developer Studio 2006
-* Borland Turbo C++ 2006
 * CodeBlocks
 * Dev-C++
 * MinGW GCC Compiler
@@ -115,11 +111,14 @@ Components of Win32++
 ==================+==================+===================+=====================
 controls.h        | CAnimation       | Win32, Win64      | Adds support for the
                   | CComboBox        | and WinCE         | following controls:
-				  |	CComboBoxEx      |                   | Animation, ComboBox, 
-				  |	CProgressBar     |                   | ComboBoxEx, Progress
-				  | CScrollBar       |                   | bar, Scroll bar,
-				  |	CSlider          |                   | Slider, Spin button.
-				  |	CSpinButton      |                   |
+				  |	CComboBoxEx      |                   | Animation, ComboBox,
+				  | CDateTime        |                   | ComboBoxEx, 
+                  | CIPAddress       |                   | DateTime, IPAddress, 
+				  |	CProgressBar     |                   | ProgressBar,
+				  | CScrollBar       |                   | Scroll bar, Slider
+				  |	CSlider          |                   | Spin button,
+				  |	CSpinButton      |                   | and ToolTip.
+				  |	CToolTip         |                   | 		  
 ------------------+------------------+-------------------+---------------------				  
 cstring.h         | CString          | Win32, Win64      | Adds support for
                   |                  | and WinCE         | text strings.
