@@ -12,13 +12,17 @@ New Features and Enhancements
    
 * Updated Dockers
    - Only valid dock targets are displayed (honours DS_NO_DOCKCHILD_XXX)
-   - Enabled click and drag tab swaps for DockContainers and TabbedMDIs
+   - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs
    - Parent dockers now have a minimum size.
    - The DockTabbedMDI sample now includes a Window menu.
+   - Dock containers with one tab now hide the tab. 
  
 * Added support for vertical ToolBars and ReBars
-   - Vertical ToolBars demonstrated in the ToolBar sample
-   - Vertical ReBars and ToolBars demonstrated in the ReBar sample
+   - These are demonstrated in the ReBar and ToolBar samples. 
+   
+* Added samples
+   - ToolBar sample demonstrates vertical ToolBars and customizing ToolBars
+   - Rebar sample demonstrates a vertical ReBar containing a vertical ToolBar.   
  
 * The Themes sample now demonstrates how to save a band's size and position 
   in the registry.
@@ -910,19 +914,16 @@ Version 5.3
    used to determine which menu items display an icon. By default, the
    framework uses the ToolBar's bitmap and resource IDs for displaying 
    icons. Override CFrame::SetButtons to change this behavior.
-* Automatic subclassing for windows using Windows API defined window classes.
-   Now when a window is based on predefined window classes, like the 
-   common controls (e.g. list-view, tree-view, richedit), the window is
-   automatically subclassed. There is now no need to call the subclass
-   function in user code.   
+* Automatic subclassing for all windows controls such as List-View, 
+   ToolBar, Richedit etc.
 
-
+   
 Version 5.2
 ===========
 * Added a separate HINSTANCE for resources. This provides for multilingual
    support, when resources are loaded via a DLL.
 * Added the Internet Browser example. It demonstrates how to host an ActiveX
-   control in a Win32++ window. It requires ATL.
+   control in a Win32++ window.
 * Added the Performance example. This program now also conducts a simple 
    performance test to measure the efficiency of the message handling. 
 

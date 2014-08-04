@@ -43,7 +43,7 @@
 namespace Win32xx
 {
 
-// The CMenuBar class provides a menu inside a rebar control.  
+// The CMenuBar class provides a menu inside a rebar control.
 // CMenuBar inherits from CToolBar.
 
 
@@ -94,12 +94,12 @@ namespace Win32xx
 		CMenuBar(const CMenuBar&);				// Disable copy construction
 		CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
 		void DoAltKey(WORD KeyCode);
-		void DrawMDIButton(CDC* pDrawDC, int iButton, UINT uState);		
+		void DrawMDIButton(CDC* pDrawDC, int iButton, UINT uState);
 		void ExitMenu();
 		void GrabFocus();
 		BOOL IsMDIChildMaxed() const;
 		BOOL IsMDIFrame() const;
-		LRESULT OnPopupMenu();		
+		LRESULT OnPopupMenu();
 		void ReleaseFocus();
 		void SetHotItem(int nHot);
 		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
@@ -401,7 +401,7 @@ namespace Win32xx
 		if (m_bExitAfter)
 			ExitMenu();
 		m_pFrame->SendMessage(WM_EXITMENULOOP, wParam, lParam);
-		
+
 		return 0L;
 	}
 
@@ -905,7 +905,7 @@ namespace Win32xx
 			ExitMenu();
 			return 0L;
 		}
-		
+
 		return FinalWindowProc(WM_SYSKEYUP, wParam, lParam);
 	}
 
@@ -923,7 +923,7 @@ namespace Win32xx
 	{
 		// This is the notification that a hot item change is about to occur
 		// This is used to bring up a new popup menu when required
-		
+
 		CPoint pt = GetCursorPos();
 		if (this == WindowFromPoint(pt))	// MenuBar window must be on top
 		{
@@ -953,7 +953,7 @@ namespace Win32xx
 
 		return 0L;
 	}
-	
+
 	inline LRESULT CMenuBar::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -967,6 +967,7 @@ namespace Win32xx
 			DrawAllMDIButtons(&MenuBarDC);
 		}
 
+		RedrawWindow();
 		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
 

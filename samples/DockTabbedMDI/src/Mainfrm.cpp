@@ -47,7 +47,7 @@ void CMainFrame::LoadDefaultDockers()
 void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
-	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
+	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
 	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);

@@ -4069,6 +4069,7 @@ namespace Win32xx
 				// Set the parent container relationships
 				pContainer->GetViewPage()->SetParent(this);
 				pContainer->GetViewPage()->ShowWindow(SW_HIDE);
+				RecalcLayout();
 			}
 		}
 	}
@@ -4365,7 +4366,10 @@ namespace Win32xx
 		// Display next lowest page
 		m_iCurrentPage = MAX(iTab -1, 0);
 		if (IsWindow())
+		{
 			SelectPage(m_iCurrentPage);
+			RecalcLayout();
+		}
 	}
 
 	inline void CDockContainer::SelectPage(int nPage)
@@ -4434,8 +4438,13 @@ namespace Win32xx
 		if (rc.Width() < 0 )
 			rc.SetRectEmpty();
 
-		int nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
-		int nItemHeight = MAX(20, GetTextHeight() + 5);
+		int nItemWidth = 0;
+		int nItemHeight = 1;
+		if (GetItemCount() != 1)
+		{
+			nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
+			nItemHeight = MAX(20, GetTextHeight() + 5);
+		}
 		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, nItemHeight));
 	}
 
