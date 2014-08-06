@@ -284,16 +284,12 @@ void CMainFrame::RecalcLayout()
 
 void CMainFrame::SetReBarPos()
 {
-	int nReBarHeight = 0;
+	int cxRB = 0;
 	for (UINT u = 0 ; u < m_ReBar.GetRowCount(); ++u)
-		nReBarHeight += m_ReBar.GetRowHeight(u);
-		
-	int top = GetReBar()->IsWindow()? GetReBar()->GetWindowRect().Height() : GetToolBar()->GetWindowRect().Height();
-	int bottom  = GetClientRect().Height() - GetStatusBar()->GetWindowRect().Height();
-	int cxRB = nReBarHeight;
-	int cyRB = MIN(nReBarHeight, bottom - top);
-	int cxClient = GetClientRect().Width();
-	int cyClient = GetClientRect().Height() - top - GetStatusBar()->GetWindowRect().Height();
+		cxRB += m_ReBar.GetRowHeight(u);
+
+	CRect rc = CFrame::GetViewRect();
+	int cyRB = MIN(cxRB, rc.Height());
 
 	DWORD dwStyle = m_ReBar.GetWindowLongPtr(GWL_STYLE);
 	dwStyle &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
@@ -301,19 +297,19 @@ void CMainFrame::SetReBarPos()
 	switch(dwStyle)
 	{
 	case CCS_LEFT:
-		m_ReBar.SetWindowPos(NULL, 0, top, cxRB, cyClient, SWP_SHOWWINDOW);
+		m_ReBar.SetWindowPos(NULL, 0, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
 		m_ToolBar.PressButton(IDM_LEFT, TRUE);
 		break;
 	case CCS_RIGHT:
-		m_ReBar.SetWindowPos(NULL, cxClient - cxRB, top, cxRB, cyClient, SWP_SHOWWINDOW);
+		m_ReBar.SetWindowPos(NULL, rc.Width() - cxRB, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
 		m_ToolBar.PressButton(IDM_RIGHT, TRUE);
 		break;
 	case CCS_BOTTOM:
-		m_ReBar.SetWindowPos(NULL, 0, bottom - cyRB, cxClient, cyRB, SWP_SHOWWINDOW);
+		m_ReBar.SetWindowPos(NULL, 0, rc.bottom - cyRB, rc.Width(), cyRB, SWP_SHOWWINDOW);
 		m_ToolBar.PressButton(IDM_BOTTOM, TRUE);
 		break;
 	default:
-		m_ReBar.SetWindowPos(NULL, 0, top, cxClient, cyRB, SWP_SHOWWINDOW);	
+		m_ReBar.SetWindowPos(NULL, 0, rc.top, rc.Width(), cyRB, SWP_SHOWWINDOW);	
 		m_ToolBar.PressButton(IDM_TOP, TRUE);
 		break;
 	}

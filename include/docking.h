@@ -337,7 +337,6 @@ namespace Win32xx
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual void OnDraw(CDC* pDC);
 			virtual void PreCreate(CREATESTRUCT &cs);
-			virtual void ShowHintWindow(CDocker* pDockTarget, CRect rcHint);
 
 		private:
 			CDockHint(const CDockHint&);				// Disable copy construction
@@ -1424,7 +1423,39 @@ namespace Win32xx
 			else
 				return;
 
-			ShowHintWindow(pDockTarget, rcHint);
+			// Save the Dock window's blue tinted bitmap
+			CClientDC dcDesktop(NULL);
+			CMemDC dcMem(&dcDesktop);
+			CRect rcBitmap = rcHint;
+			CRect rcTarget = rcHint;
+			pDockTarget->ClientToScreen(rcTarget);
+
+			m_bmBlueTint.DeleteObject();
+			m_bmBlueTint.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+			CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
+			dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
+			dcMem.SelectObject(pOldBitmap);
+			TintBitmap(&m_bmBlueTint, -64, -24, +128);
+
+			// Create the Hint window
+			if (!IsWindow())
+			{
+				Create(pDockTarget);
+			}
+
+			// Adjust hint shape for containter in container docking
+			if ((uDockSide & DS_DOCKED_CONTAINER) && rcHint.Height() > 50)
+			{
+				CRgn Rgn;
+				Rgn.CreateRectRgn(rcHint.left, rcHint.top, rcHint.right, rcHint.bottom-25);
+				CRgn Rgn2;
+				Rgn2.CreateRectRgn(5, rcHint.bottom -25, 60, rcHint.bottom);
+				Rgn.CombineRgn(&Rgn2, RGN_OR);
+				SetWindowRgn(&Rgn, FALSE);
+			}
+
+			pDockTarget->ClientToScreen(rcHint);
+			SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 		}
 	}
 
@@ -1445,32 +1476,6 @@ namespace Win32xx
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 
 		cs.lpszClass = _T("Win32++ DockHint");
-	}
-
-	inline void CDocker::CDockHint::ShowHintWindow(CDocker* pDockTarget, CRect rcHint)
-	{
-		// Save the Dock window's blue tinted bitmap
-		CClientDC dcDesktop(NULL);
-		CMemDC dcMem(&dcDesktop);
-		CRect rcBitmap = rcHint;
-		CRect rcTarget = rcHint;
-		pDockTarget->ClientToScreen(rcTarget);
-
-		m_bmBlueTint.DeleteObject();
-		m_bmBlueTint.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
-		CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
-		dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-		dcMem.SelectObject(pOldBitmap);
-		TintBitmap(&m_bmBlueTint, -64, -24, +128);
-
-		// Create the Hint window
-		if (!IsWindow())
-		{
-			Create(pDockTarget);
-		}
-
-		pDockTarget->ClientToScreen(rcHint);
-		SetWindowPos(NULL, rcHint, SWP_SHOWWINDOW|SWP_NOZORDER|SWP_NOACTIVATE);
 	}
 
 
@@ -3386,7 +3391,7 @@ namespace Win32xx
 		if (IsDocked())
 		{
 			// The SWP_NOCOPYBITS forces a redraw of the dock bar.
-			GetDockBar()->SetWindowPos(NULL, m_rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS );
+			GetDockBar()->SetWindowPos(NULL, m_rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
 		}
 
 		// Step 3: Now recurse through the docker's children. They might have children of their own.
@@ -3394,7 +3399,6 @@ namespace Win32xx
 		{
 			(*iter)->RecalcDockChildLayout((*iter)->m_rcChild);
 		}
-
 	}
 
 	inline void CDocker::RecalcDockLayout()
@@ -4332,6 +4336,7 @@ namespace Win32xx
 			AdjustRect(FALSE, &rc);
 			CDockContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 			pContainer->GetViewPage()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
+			RedrawWindow(NULL, NULL, RDW_INVALIDATE|RDW_NOCHILDREN);
 		}
 	}
 
