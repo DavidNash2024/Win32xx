@@ -11,7 +11,7 @@ New Features and Enhancements
    - DockContainers
    
 * Updated Dockers
-   - Only valid dock targets are displayed (honours DS_NO_DOCKCHILD_XXX)
+   - Invalid dock targets are hidden or greyed (invalidated by DS_NO_DOCKCHILD)
    - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs
    - Parent dockers now have a minimum size.
    - The DockTabbedMDI sample now includes a Window menu.
@@ -32,8 +32,11 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added CFrame::DrawReBarBkgnd
+Added CDockContainer::OnMouseMove
+Added CDockContainer::SetHideSingleTab
+Added CDockContainer::SwapTabs
 Added CDocker::GetViewRect
-Modified CTabbedMDI::GetTab			now returns CWnd*
+Modified CTabbedMDI::GetTab				now returns CWnd*
 
 Added user defined messages:
 UWM_GETFRAMEVIEW:		Used by CFrame.  Returns the view window's HWND 

@@ -63,6 +63,7 @@ BEGIN
     BEGIN
         MENUITEM "MDI Tabs at Top",             IDM_TABBEDMDI_TOP, CHECKED
         MENUITEM "Container Tabs at Top",       IDM_CONTAINER_TOP, CHECKED
+        MENUITEM "Hide Single Container Tab",   IDM_HIDE_SINGLE_TAB, CHECKED
     END
     POPUP "&Layout"
     BEGIN

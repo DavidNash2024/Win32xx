@@ -8,7 +8,8 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_pLastActiveDocker(0)
+CMainFrame::CMainFrame() : m_pLastActiveDocker(0), m_bContainerTabsAtTop(FALSE), 
+                           m_bHideSingleTab(TRUE), m_bMDITabsAtTop(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -56,6 +57,7 @@ void CMainFrame::LoadDefaultMDIs()
 
 	if (pTabbedMDI->IsWindow())
 		pTabbedMDI->SetActiveMDITab(0);
+
 }
 
 void CMainFrame::OnFileNew()
@@ -122,35 +124,43 @@ void CMainFrame::OnFileNewTree()
 void CMainFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
-	BOOL bTop = FALSE;
+	SetContainerTabsAtTop(!m_bContainerTabsAtTop);
+}
+
+void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
+{
+	m_bContainerTabsAtTop = bTop;
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
 	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
 	{
 		CDockContainer* pContainer = (*iter)->GetContainer();
-		if (pContainer)
+		if (pContainer && pContainer->IsWindow())
 		{
-			bTop = pContainer->GetTabsAtTop();
-			pContainer->SetTabsAtTop(!bTop);
+			pContainer->SetTabsAtTop(bTop);
 		}
 	}
 
 	// Set the menu checkmark
-	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;
+	UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
 	GetFrameMenu()->CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
 }
 
 void CMainFrame::OnMDITabsAtTop()
 // Reposition TabbedMDI's tabs
 {
-	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
+	SetMDITabsAtTop(!m_bMDITabsAtTop);
+}
 
-	BOOL bTop = pTabbedMDI->GetTab()->GetTabsAtTop();
-	pTabbedMDI->GetTab()->SetTabsAtTop(!bTop);
+void CMainFrame::SetMDITabsAtTop(BOOL bTop)
+{
+	m_bMDITabsAtTop = bTop;
+	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
+	pTabbedMDI->GetTab()->SetTabsAtTop(bTop);
 
 	// Set the menu checkmark
-	UINT uCheck = (bTop)? MF_UNCHECKED : MF_CHECKED;
+	UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
 	GetFrameMenu()->CheckMenuItem(IDM_TABBEDMDI_TOP, uCheck);
 }
 
@@ -163,6 +173,8 @@ void CMainFrame::OnDefaultLayout()
 	LoadDefaultDockers();
 	LoadDefaultMDIs();
 
+	SetContainerTabsAtTop(m_bContainerTabsAtTop);
+	HideSingleContainerTab(m_bHideSingleTab);
 	SetRedraw(TRUE);
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
@@ -184,6 +196,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_NEWLIST:		OnFileNewList();		return TRUE;
 	case IDM_FILE_EXIT:			OnFileExit();			return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();				return TRUE;
+	case IDM_HIDE_SINGLE_TAB:	OnHideSingleTab();		return TRUE;
 	case IDM_TABBEDMDI_TOP:		OnMDITabsAtTop();		return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();		return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();		return TRUE;
@@ -244,6 +257,32 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CFrame::OnCreate(pcs);
 }
 
+void CMainFrame::OnHideSingleTab()
+{
+	HideSingleContainerTab(!m_bHideSingleTab);
+}
+
+void CMainFrame::HideSingleContainerTab(BOOL bHide)
+{
+	m_bHideSingleTab = bHide;
+	std::vector<DockPtr>::iterator iter;
+
+	// Set the Tab position for each container
+	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
+	{
+		CDockContainer* pContainer = (*iter)->GetContainer();
+		if (pContainer && pContainer->IsWindow())
+		{
+			pContainer->SetHideSingleTab(bHide);
+		}
+	}
+
+	// Set the menu checkmark
+	UINT uCheck = (bHide)? MF_CHECKED : MF_UNCHECKED;
+	GetFrameMenu()->CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
+}
+
+
 void CMainFrame::OnInitialUpdate()
 {
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
@@ -255,6 +294,9 @@ void CMainFrame::OnInitialUpdate()
 	// Load MDI child settings
 	if (!m_DockTabbedMDI.GetTabbedMDI()->LoadRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultMDIs();
+
+	// Hide the container's tab if it has just one tab
+	HideSingleContainerTab(m_bHideSingleTab);
 
 	// Add a "Window" menu item, positioned 2nd from the right.
 	int nMenuPos = GetFrameMenu()->GetMenuItemCount() -1;

@@ -46,9 +46,10 @@
 #define IDM_FILE_NEWLIST                145
 #define IDM_CONTAINER_TOP               146
 #define IDM_TABBEDMDI_TOP               147
-#define IDM_DEFAULT_LAYOUT              148      
-#define IDM_CLOSE_DOCKERS               149
-#define IDM_CLOSE_MDIS                  150
+#define IDM_HIDE_SINGLE_TAB             148
+#define IDM_DEFAULT_LAYOUT              149      
+#define IDM_CLOSE_DOCKERS               150
+#define IDM_CLOSE_MDIS                  151
 
 //Resource IDs for the dialog
 #define IDD_MYDIALOG                    161

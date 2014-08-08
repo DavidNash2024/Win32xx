@@ -75,9 +75,9 @@
 #define DS_NO_RESIZE			0x0100  // Prevent resizing
 #define DS_NO_CAPTION			0x0200  // Prevent display of caption when docked
 #define DS_NO_CLOSE				0x0400	// Prevent closing of a docker while docked
-#define DS_NO_UNDOCK			0x0800  // Prevent undocking and dock closing
+#define DS_NO_UNDOCK			0x0800  // Prevent undocking of a docker
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
-#define DS_FIXED_RESIZE			0x2000	// Perform a fixed resize instead of a proportional resize on dock children
+//#define DS_FIXED_RESIZE			0x2000	// Perform a fixed resize instead of a proportional resize on dock children
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
 #define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
 #define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
@@ -180,6 +180,7 @@ namespace Win32xx
 		CWnd* GetView()					{ return GetViewPage()->GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
+		void SetHideSingleTab(BOOL bHide); 
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabIcon(int i, HICON hIcon) { CTab::SetTabIcon(i, hIcon); }
@@ -192,6 +193,7 @@ namespace Win32xx
 		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseMove(LPARAM lParam, WPARAM wParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
@@ -213,6 +215,7 @@ namespace Win32xx
 		CDockContainer* m_pContainerParent;
 		HICON m_hTabIcon;
 		int m_nTabPressed;
+		BOOL m_bHideingleTab;
 
 	};
 
@@ -1054,11 +1057,15 @@ namespace Win32xx
 						CDockContainer* pContainer = (static_cast<CDockContainer*>(m_pDock->GetView()))->GetActiveContainer();
 						CDocker* pDock = m_pDock->GetDockFromView(pContainer);
 						pDock->GetDockClient()->SetClosePressed();
+						DWORD dwStyle = pDock->GetDockStyle() & ~DS_NO_UNDOCK;
+						pDock->SetDockStyle(dwStyle);
 						m_pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
 						pDock->Destroy();
 					}
 					else
 					{
+						DWORD dwStyle = m_pDock->GetDockStyle() & ~DS_NO_UNDOCK;
+						m_pDock->SetDockStyle(dwStyle);
 						m_pDock->Hide();
 						m_pDock->Destroy();
 					}
@@ -2956,8 +2963,12 @@ namespace Win32xx
 				DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
 				CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
 				assert(dynamic_cast<CDockContainer*>(pContainer));
-				int nPage = pContainer->GetContainerIndex(static_cast<CDockContainer*>(pDock->GetView()));
-				pContainer->SelectPage(nPage);
+				
+				// Put the new container at Tab 0
+				for (int i = pContainer->GetItemCount()-1; i > 0; --i)
+					pContainer->SwapTabs(i, i-1);
+				
+				pContainer->SelectPage(0);
 			}
 			break;
 		case DS_DOCKED_LEFTMOST:
@@ -4032,7 +4043,8 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CDockContainer class
-	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0), m_nTabPressed(-1)
+	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0), 
+		                                m_nTabPressed(-1), m_bHideingleTab(FALSE)
 	{
 		m_pContainerParent = this;
 	}
@@ -4430,6 +4442,13 @@ namespace Win32xx
 		SelectPage(nPage);
 	}
 
+	inline void CDockContainer::SetHideSingleTab(BOOL bHide)
+	// Only display tabs if there are two or more.
+	{	
+		m_bHideingleTab = bHide;
+		RecalcLayout();	
+	}
+
 	inline void CDockContainer::SetTabIcon(UINT nID_Icon)
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID_Icon), IMAGE_ICON, 0, 0, LR_SHARED);
@@ -4445,7 +4464,7 @@ namespace Win32xx
 
 		int nItemWidth = 0;
 		int nItemHeight = 1;
-		if (GetItemCount() != 1)
+		if ((GetItemCount() != 1) || !m_bHideingleTab)
 		{
 			nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
 			nItemHeight = MAX(20, GetTextHeight() + 5);
@@ -4551,6 +4570,28 @@ namespace Win32xx
 		}
 	}
 
+	inline LRESULT CDockContainer::OnMouseMove(LPARAM lParam, WPARAM wParam)
+	{
+		if (IsLeftButtonDown())
+		{
+			CPoint pt((DWORD)lParam);
+			TCHITTESTINFO info = {0};
+			info.pt = pt;
+			int nTab = HitTest(info);
+			if (nTab >= 0)
+			{
+				if (nTab !=  m_nTabPressed)
+				{
+					SwapTabs(nTab, m_nTabPressed);
+					m_nTabPressed = nTab;
+					SelectPage(nTab);
+				}
+			}
+		}
+
+		return CTab::WndProcDefault(WM_MOUSEMOVE, wParam, lParam);
+	}
+
 	inline LRESULT CDockContainer::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -4560,8 +4601,8 @@ namespace Win32xx
 		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSELEAVE:		return OnMouseLeave(wParam, lParam);
-		case WM_MOUSEMOVE:
-			{
+		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
+		/*	{
 				if (IsLeftButtonDown())
 				{
 					CPoint pt((DWORD)lParam);
@@ -4579,7 +4620,7 @@ namespace Win32xx
 					}
 				}
 			}
-			break;
+			break; */
 		}
 
 		// pass unhandled messages on to CTab for processing

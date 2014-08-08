@@ -21,11 +21,15 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	void HideSingleContainerTab(BOOL bHide);
 	void OnFileNew();
 	void OnContainerTabsAtTop();
+	void OnHideSingleTab();
 	void OnMDITabsAtTop();
 	void LoadDefaultDockers();
 	void LoadDefaultMDIs();
+	void SetContainerTabsAtTop(BOOL bTop);
+	void SetMDITabsAtTop(BOOL bTop);
 	
 protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
@@ -51,6 +55,9 @@ protected:
 private:
 	CDockTabbedMDI m_DockTabbedMDI;
 	CDocker* m_pLastActiveDocker;
+	BOOL m_bContainerTabsAtTop;
+	BOOL m_bHideSingleTab;
+	BOOL m_bMDITabsAtTop;
 };
 
 #endif //MAINFRM_H
