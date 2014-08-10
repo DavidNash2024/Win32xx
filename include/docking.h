@@ -193,7 +193,7 @@ namespace Win32xx
 		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMouseMove(LPARAM lParam, WPARAM wParam);
+		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
@@ -2670,13 +2670,16 @@ namespace Win32xx
 							for (UINT uTab = 0; uTab < vTabOrder.size(); ++uTab)
 							{
 								CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(uTab));
-								UINT uOldID = pOldDocker->GetDockID();
+								if (pOldDocker)
+								{
+									UINT uOldID = pOldDocker->GetDockID();
 
-								std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
-								UINT uOldTab = it - vTabOrder.begin();
+									std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
+									UINT uOldTab = it - vTabOrder.begin();
 
-								if (uTab != uOldTab)
-									pParentContainer->SwapTabs(uTab, uOldTab);
+									if (uTab != uOldTab)
+										pParentContainer->SwapTabs(uTab, uOldTab);
+								}
 							}
 						}
 					}
@@ -3495,6 +3498,23 @@ namespace Win32xx
 
 			try
 			{
+				// Create/Open the App's registry key
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					throw (CWinException(_T("RegCreateKeyEx Failed")));
+
+				// Remove Old Docking info ...
+				// Remove existing DockContainer SubKeys
+				UINT uDockContainer = 0;
+				CString strSubKey;
+				strSubKey.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
+				while (0 == RegDeleteKey(hKey, strSubKey) )
+				{
+					strSubKey.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
+				}
+
+				// Remove the Dock Windows key
+				RegDeleteKey(hKey, _T("Dock Windows"));
+
 				// Fill the DockInfo vector with the docking information
 				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
 				{
@@ -3512,20 +3532,8 @@ namespace Win32xx
 					vDockInfo.push_back(di);
 				}
 
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
-
 				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
-
-				// Remove existing DockContainer SubKeys
-				UINT uDockContainer = 0;
-				CString strSubKey;
-				strSubKey.Format(_T("DockContainer%u"), uDockContainer);
-				while (0 == RegDeleteKey(hKeyDock, strSubKey) )
-				{
-					strSubKey.Format(_T("DockContainer%u"), ++uDockContainer);
-				}
 
 				// Add the Dock windows information to the registry
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
@@ -3573,15 +3581,6 @@ namespace Win32xx
 
 						RegCloseKey(hKeyContainer);
 					}
-
-			/*		if (pContainer && (pContainer == pContainer->GetActiveContainer()))
-					{
-						CString strSubKey;
-						strSubKey.Format(_T("ActiveContainer%d"), i++);
-						int nID = GetDockFromView(pContainer)->GetDockID();
-						if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
-							throw (CWinException(_T("RegSetValueEx failed")));
-					} */
 				}
 
 				RegCloseKey(hKeyDock);
@@ -3595,11 +3594,18 @@ namespace Win32xx
 				{
 					if (hKeyDock)
 					{
+						// Remove existing DockContainer SubKeys
+						UINT uDockContainer = 0;
+						CString strSubKey;
+						strSubKey.Format(_T("DockContainer%u"), uDockContainer);
+						while (0 == RegDeleteKey(hKeyDock, strSubKey) )
+						{
+							strSubKey.Format(_T("DockContainer%u"), ++uDockContainer);
+						}
 						RegDeleteKey(hKeyDock, _T("Dock Windows"));
 						RegCloseKey(hKeyDock);
 					}
 
-					RegDeleteKey(HKEY_CURRENT_USER, strKeyName);
 					RegCloseKey(hKey);
 				}
 
@@ -4570,7 +4576,8 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CDockContainer::OnMouseMove(LPARAM lParam, WPARAM wParam)
+
+	inline LRESULT CDockContainer::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
 		if (IsLeftButtonDown())
 		{
@@ -4589,7 +4596,7 @@ namespace Win32xx
 			}
 		}
 
-		return CTab::WndProcDefault(WM_MOUSEMOVE, wParam, lParam);
+		return CTab::OnMouseMove(wParam, lParam);
 	}
 
 	inline LRESULT CDockContainer::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4602,26 +4609,7 @@ namespace Win32xx
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSELEAVE:		return OnMouseLeave(wParam, lParam);
 		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
-		/*	{
-				if (IsLeftButtonDown())
-				{
-					CPoint pt((DWORD)lParam);
-					TCHITTESTINFO info = {0};
-					info.pt = pt;
-					int nTab = HitTest(info);
-					if (nTab >= 0)
-					{
-						if (nTab !=  m_nTabPressed)
-						{
-							SwapTabs(nTab, m_nTabPressed);
-							m_nTabPressed = nTab;
-							SelectPage(nTab);
-						}
-					}
-				}
-			}
-			break; */
-		}
+		} 
 
 		// pass unhandled messages on to CTab for processing
 		return CTab::WndProcDefault(uMsg, wParam, lParam);

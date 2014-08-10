@@ -15,7 +15,7 @@ New Features and Enhancements
    - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs
    - Parent dockers now have a minimum size.
    - The DockTabbedMDI sample now includes a Window menu.
-   - Dock containers with one tab now hide the tab.
+   - Dock containers with one tab now can hide the tab.
    - Improved hinting for container within container docking
  
 * Added support for vertical ToolBars and ReBars
