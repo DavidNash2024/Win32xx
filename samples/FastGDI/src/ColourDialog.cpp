@@ -36,7 +36,7 @@ void CColourDialog::OnGrayScale()
 {
 	// Update the colour of the preview image
 	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
-		GrayScaleBitmap(&m_bmPreview);
+		m_bmPreview.GrayScaleBitmap();
 	else
 	{
 		// Copy m_hbmPreviewOrig to m_hbmPreview
@@ -47,8 +47,7 @@ void CColourDialog::OnGrayScale()
 		Mem2DC.BitBlt(0, 0, 239-16, 201-16, &Mem1DC, 0, 0, SRCCOPY);
 		Mem1DC.SelectObject(pOldBitmap1);
 		Mem2DC.SelectObject(pOldBitmap2);
-
-		TintBitmap(&m_bmPreview, m_cRed, m_cGreen, m_cBlue);
+		m_bmPreview.TintBitmap(m_cRed, m_cGreen, m_cBlue);
 	}
 
 	PaintPreview();
@@ -124,10 +123,10 @@ LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	Mem2DC.SelectObject(pBitmapOld2);
 
 	// Update the colour of the preview image
-	TintBitmap(&m_bmPreview, m_cRed, m_cGreen, m_cBlue);
+	m_bmPreview.TintBitmap(m_cRed, m_cGreen, m_cBlue);
 
 	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
-		GrayScaleBitmap(&m_bmPreview);
+		m_bmPreview.GrayScaleBitmap();
 
 	PaintPreview();
 

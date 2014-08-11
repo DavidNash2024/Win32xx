@@ -41,8 +41,12 @@ void CMainFrame::OnAdjustImage()
 
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 {
-	TintBitmap(CBitmap::FromHandle(GetMyView().GetImage()), cRed, cGreen, cBlue);
-	if (bGray) 	GrayScaleBitmap(CBitmap::FromHandle(GetMyView().GetImage()));
+	CBitmap* pBitmap = CBitmap::FromHandle(GetMyView().GetImage());
+	pBitmap->TintBitmap(cRed, cGreen, cBlue);
+	if (bGray)
+	{
+		pBitmap->GrayScaleBitmap();
+	}
 
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }

@@ -1442,7 +1442,7 @@ namespace Win32xx
 			CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
 			dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 			dcMem.SelectObject(pOldBitmap);
-			TintBitmap(&m_bmBlueTint, -64, -24, +128);
+			m_bmBlueTint.TintBitmap(-64, -24, +128);
 
 			// Create the Hint window
 			if (!IsWindow())
@@ -1454,9 +1454,10 @@ namespace Win32xx
 			if ((uDockSide & DS_DOCKED_CONTAINER) && rcHint.Height() > 50)
 			{
 				CRgn Rgn;
-				Rgn.CreateRectRgn(rcHint.left, rcHint.top, rcHint.right, rcHint.bottom-25);
+				Rgn.CreateRectRgn(0, 0, rcHint.Width(), rcHint.Height() -25);
+				assert(Rgn.GetHandle());
 				CRgn Rgn2;
-				Rgn2.CreateRectRgn(5, rcHint.bottom -25, 60, rcHint.bottom);
+				Rgn2.CreateRectRgn(5, rcHint.Height() -25, 60, rcHint.Height());
 				Rgn.CombineRgn(&Rgn2, RGN_OR);
 				SetWindowRgn(&Rgn, FALSE);
 			}
@@ -1510,10 +1511,10 @@ namespace Win32xx
 		DWORD dwStyle = m_pOldDockTarget->GetDockStyle() & 0x00f0;
 		switch (dwStyle)
 		{
-		case DS_NO_DOCKCHILD_LEFT:	 TintBitmap(&bmLeft, 150, 150, 150); break;
-		case DS_NO_DOCKCHILD_TOP:	 TintBitmap(&bmTop, 150, 150, 150); break;
-		case DS_NO_DOCKCHILD_RIGHT:	 TintBitmap(&bmRight, 150, 150, 150); break;
-		case DS_NO_DOCKCHILD_BOTTOM: TintBitmap(&bmBottom, 150, 150, 150); break;
+		case DS_NO_DOCKCHILD_LEFT:	 bmLeft.TintBitmap(150, 150, 150); break;
+		case DS_NO_DOCKCHILD_TOP:	 bmTop.TintBitmap(150, 150, 150); break;
+		case DS_NO_DOCKCHILD_RIGHT:	 bmRight.TintBitmap(150, 150, 150); break;
+		case DS_NO_DOCKCHILD_BOTTOM: bmBottom.TintBitmap(150, 150, 150); break;
 		}
 
 		// Draw the dock targets
@@ -4540,7 +4541,8 @@ namespace Win32xx
 		else
 		{
 			m_imlToolBarDis.DeleteImageList();
-			m_imlToolBarDis.Attach( CreateDisabledImageList( m_imlToolBar.GetHandle() ) );
+		//	m_imlToolBarDis.Attach( CreateDisabledImageList( m_imlToolBar.GetHandle() ) );
+			m_imlToolBarDis.CreateDisabledImageList(&m_imlToolBar);
 			GetToolBar()->SetDisableImageList( &m_imlToolBarDis );
 		}
 	}

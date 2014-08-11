@@ -79,6 +79,10 @@ namespace Win32xx
 		BOOL Create(CImageList* pImageList);
 #endif
 
+#ifndef _WIN32_WCE
+		BOOL CreateDisabledImageList(CImageList* pimlNormal);
+#endif
+
 		//Operations
 		int Add(CBitmap* pbmImage, CBitmap* pbmMask) ;
 		int Add(CBitmap* pbmImage, COLORREF crMask);
@@ -473,6 +477,71 @@ namespace Win32xx
 	}
 
 
+#ifndef _WIN32_WCE
+
+	inline BOOL CImageList::CreateDisabledImageList(CImageList* pimlNormal)
+	{
+		assert(NULL == m_hImageList);
+		assert(pimlNormal);
+	
+		int nCount = pimlNormal->GetImageCount();
+		if (0 != nCount)
+		{
+			int cx, cy;
+			pimlNormal->GetIconSize(&cx, &cy);
+
+			// Create the disabled ImageList
+			Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
+
+			// Process each image in the ImageList
+			for (int i = 0 ; i < nCount; ++i)
+			{
+				CClientDC DesktopDC(NULL);
+				CMemDC MemDC(NULL);
+				MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
+				CRect rc;
+				rc.SetRect(0, 0, cx, cx);
+
+				// Set the mask color to grey for the new ImageList
+				COLORREF crMask = RGB(200, 199, 200);
+				if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
+				{
+					HPALETTE hPal = (HPALETTE)GetCurrentObject(DesktopDC, OBJ_PAL);
+					UINT Index = GetNearestPaletteIndex(hPal, crMask);
+					if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
+				}
+
+				MemDC.SolidFill(crMask, rc);
+
+				// Draw the image on the memory DC
+				pimlNormal->Draw(&MemDC, i, CPoint(0,0), ILD_NORMAL);
+
+				// Convert colored pixels to gray
+				for (int x = 0 ; x < cx; ++x)
+				{
+					for (int y = 0; y < cy; ++y)
+					{
+						COLORREF clr = ::GetPixel(MemDC, x, y);
+
+						if (clr != crMask)
+						{
+							BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
+							MemDC.SetPixel(x, y, RGB(byGray, byGray, byGray));
+						}
+					}
+				}
+
+				// Detach the bitmap so we can use it.
+				CBitmap Bitmap = MemDC.DetachBitmap();
+				Add(&Bitmap, crMask);
+			}
+		}
+
+		return ( m_hImageList!= 0 );
+	}
+
+
+#endif
 }	// namespace Win32xx
 
 #endif	// _WIN32XX_MENU_H_

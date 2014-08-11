@@ -140,15 +140,6 @@
 namespace Win32xx
 {
 
-	/////////////////////////////////////////////////////////////////
-	// Declarations for some global functions in the Win32xx namespace
-	//
-#ifndef _WIN32_WCE
-	void GrayScaleBitmap(CBitmap* pbmSource);
-	void TintBitmap(CBitmap* pbmSource, int cRed, int cGreen, int cBlue);
-	HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal);
-#endif
-
 	///////////////////////////////////////////////
 	// Declarations for the CGDIObject class
 	//
@@ -211,6 +202,8 @@ namespace Win32xx
 		HBITMAP CreateDIBitmap(CDC* pDC, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 		HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
 		HBITMAP CreateBitmapIndirect(LPBITMAP lpBitmap);
+		void GrayScaleBitmap();
+		void TintBitmap (int cRed, int cGreen, int cBlue);
 		int GetDIBits(CDC* pDC, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
 		int SetDIBits(CDC* pDC, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
 		CSize GetBitmapDimensionEx() const;
@@ -1235,6 +1228,132 @@ namespace Win32xx
 			Attach(hBitmap);
 			return hBitmap;
 		}
+
+		inline void CBitmap::GrayScaleBitmap()
+		{
+			// Create our LPBITMAPINFO object
+			CBitmapInfoPtr pbmi(this);
+
+			// Create the reference DC for GetDIBits to use
+			CMemDC MemDC(NULL);
+
+			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
+			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
+			byte* pByteArray = &vBits[0];
+
+			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
+
+			int yOffset = 0;
+			int xOffset;
+			int Index;
+
+			for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
+			{
+				xOffset = 0;
+
+				for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
+				{
+					// Calculate Index
+					Index = yOffset + xOffset;
+
+					BYTE byGray = (BYTE) ((pByteArray[Index] + pByteArray[Index+1]*6 + pByteArray[Index+2] *3)/10);
+					pByteArray[Index]   = byGray;
+					pByteArray[Index+1] = byGray;
+					pByteArray[Index+2] = byGray;
+
+					// Increment the horizontal offset
+					xOffset += pbmi->bmiHeader.biBitCount >> 3;
+				}
+
+				// Increment vertical offset
+				yOffset += nWidthBytes;
+			}
+
+			// Save the modified colour back into our source DDB
+			MemDC.SetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+		}
+
+		inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
+		// Modifies the colour of the supplied Device Dependant Bitmap, by the colour
+		// correction values specified. The correction values can range from -255 to +255.
+		// This function gains its speed by accessing the bitmap colour information
+		// directly, rather than using GetPixel/SetPixel.
+		{
+			// Create our LPBITMAPINFO object
+			CBitmapInfoPtr pbmi(this);
+			pbmi->bmiHeader.biBitCount = 24;
+
+			// Create the reference DC for GetDIBits to use
+			CMemDC MemDC(NULL);
+
+			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
+			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
+			byte* pByteArray = &vBits[0];
+
+			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
+
+			// Ensure sane colour correction values
+			cBlue  = MIN(cBlue, 255);
+			cBlue  = MAX(cBlue, -255);
+			cRed   = MIN(cRed, 255);
+			cRed   = MAX(cRed, -255);
+			cGreen = MIN(cGreen, 255);
+			cGreen = MAX(cGreen, -255);
+
+			// Pre-calculate the RGB modification values
+			int b1 = 256 - cBlue;
+			int g1 = 256 - cGreen;
+			int r1 = 256 - cRed;
+
+			int b2 = 256 + cBlue;
+			int g2 = 256 + cGreen;
+			int r2 = 256 + cRed;
+
+			// Modify the colour
+			int yOffset = 0;
+			int xOffset;
+			int Index;
+			for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
+			{
+				xOffset = 0;
+
+				for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
+				{
+					// Calculate Index
+					Index = yOffset + xOffset;
+
+					// Adjust the colour values
+					if (cBlue > 0)
+						pByteArray[Index]   = (BYTE)(cBlue + (((pByteArray[Index] *b1)) >>8));
+					else if (cBlue < 0)
+						pByteArray[Index]   = (BYTE)((pByteArray[Index] *b2) >>8);
+
+					if (cGreen > 0)
+						pByteArray[Index+1] = (BYTE)(cGreen + (((pByteArray[Index+1] *g1)) >>8));
+					else if (cGreen < 0)
+						pByteArray[Index+1] = (BYTE)((pByteArray[Index+1] *g2) >>8);
+
+					if (cRed > 0)
+						pByteArray[Index+2] = (BYTE)(cRed + (((pByteArray[Index+2] *r1)) >>8));
+					else if (cRed < 0)
+						pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
+
+					// Increment the horizontal offset
+					xOffset += pbmi->bmiHeader.biBitCount >> 3;
+				}
+
+				// Increment vertical offset
+				yOffset += nWidthBytes;
+			}
+
+			// Save the modified colour back into our source DDB
+			MemDC.SetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+		}
+
 #endif // !_WIN32_WCE
 
 		inline HBITMAP CBitmap::CreateDIBSection(CDC* pDC, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
@@ -3881,200 +4000,6 @@ namespace Win32xx
 		return ::TextOut(m_pData->hDC, x, y, lpszString, nCount);
 	}
 
-#endif
-
-
-
-	/////////////////////////////////////////////////////////////////
-	// Definitions for some global functions in the Win32xx namespace
-	//
-
-#ifndef _WIN32_WCE
-	inline void TintBitmap (CBitmap* pbmSource, int cRed, int cGreen, int cBlue)
-	// Modifies the colour of the supplied Device Dependant Bitmap, by the colour
-	// correction values specified. The correction values can range from -255 to +255.
-	// This function gains its speed by accessing the bitmap colour information
-	// directly, rather than using GetPixel/SetPixel.
-	{
-		// Create our LPBITMAPINFO object
-		CBitmapInfoPtr pbmi(pbmSource);
-		pbmi->bmiHeader.biBitCount = 24;
-
-		// Create the reference DC for GetDIBits to use
-		CMemDC MemDC(NULL);
-
-		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-		MemDC.GetDIBits(pbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
-		byte* pByteArray = &vBits[0];
-
-		MemDC.GetDIBits(pbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
-
-		// Ensure sane colour correction values
-		cBlue  = MIN(cBlue, 255);
-		cBlue  = MAX(cBlue, -255);
-		cRed   = MIN(cRed, 255);
-		cRed   = MAX(cRed, -255);
-		cGreen = MIN(cGreen, 255);
-		cGreen = MAX(cGreen, -255);
-
-		// Pre-calculate the RGB modification values
-		int b1 = 256 - cBlue;
-		int g1 = 256 - cGreen;
-		int r1 = 256 - cRed;
-
-		int b2 = 256 + cBlue;
-		int g2 = 256 + cGreen;
-		int r2 = 256 + cRed;
-
-		// Modify the colour
-		int yOffset = 0;
-		int xOffset;
-		int Index;
-		for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
-		{
-			xOffset = 0;
-
-			for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
-			{
-				// Calculate Index
-				Index = yOffset + xOffset;
-
-				// Adjust the colour values
-				if (cBlue > 0)
-					pByteArray[Index]   = (BYTE)(cBlue + (((pByteArray[Index] *b1)) >>8));
-				else if (cBlue < 0)
-					pByteArray[Index]   = (BYTE)((pByteArray[Index] *b2) >>8);
-
-				if (cGreen > 0)
-					pByteArray[Index+1] = (BYTE)(cGreen + (((pByteArray[Index+1] *g1)) >>8));
-				else if (cGreen < 0)
-					pByteArray[Index+1] = (BYTE)((pByteArray[Index+1] *g2) >>8);
-
-				if (cRed > 0)
-					pByteArray[Index+2] = (BYTE)(cRed + (((pByteArray[Index+2] *r1)) >>8));
-				else if (cRed < 0)
-					pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
-
-				// Increment the horizontal offset
-				xOffset += pbmi->bmiHeader.biBitCount >> 3;
-			}
-
-			// Increment vertical offset
-			yOffset += nWidthBytes;
-		}
-
-		// Save the modified colour back into our source DDB
-		MemDC.SetDIBits(pbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-	}
-
-	inline void GrayScaleBitmap(CBitmap* pbmSource)
-	{
-		// Create our LPBITMAPINFO object
-		CBitmapInfoPtr pbmi(pbmSource);
-
-		// Create the reference DC for GetDIBits to use
-		CMemDC MemDC(NULL);
-
-		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-		MemDC.GetDIBits(pbmSource, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
-		byte* pByteArray = &vBits[0];
-
-		MemDC.GetDIBits(pbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-		UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
-
-		int yOffset = 0;
-		int xOffset;
-		int Index;
-
-		for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
-		{
-			xOffset = 0;
-
-			for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
-			{
-				// Calculate Index
-				Index = yOffset + xOffset;
-
-				BYTE byGray = (BYTE) ((pByteArray[Index] + pByteArray[Index+1]*6 + pByteArray[Index+2] *3)/10);
-				pByteArray[Index]   = byGray;
-				pByteArray[Index+1] = byGray;
-				pByteArray[Index+2] = byGray;
-
-				// Increment the horizontal offset
-				xOffset += pbmi->bmiHeader.biBitCount >> 3;
-			}
-
-			// Increment vertical offset
-			yOffset += nWidthBytes;
-		}
-
-		// Save the modified colour back into our source DDB
-		MemDC.SetDIBits(pbmSource, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-	}
-
-	inline HIMAGELIST CreateDisabledImageList(HIMAGELIST himlNormal)
-	// Returns a greyed image list, created from hImageList
-	{
-		int cx, cy;
-		int nCount = ImageList_GetImageCount(himlNormal);
-		if (0 == nCount)
-			return NULL;
-
-		ImageList_GetIconSize(himlNormal, &cx, &cy);
-
-		// Create the disabled ImageList
-		HIMAGELIST himlDisabled = ImageList_Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
-
-		// Process each image in the ImageList
-		for (int i = 0 ; i < nCount; ++i)
-		{
-			CClientDC DesktopDC(NULL);
-			CMemDC MemDC(NULL);
-			MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
-			CRect rc;
-			rc.SetRect(0, 0, cx, cx);
-
-			// Set the mask color to grey for the new ImageList
-			COLORREF crMask = RGB(200, 199, 200);
-			if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
-			{
-				HPALETTE hPal = (HPALETTE)GetCurrentObject(DesktopDC, OBJ_PAL);
-				UINT Index = GetNearestPaletteIndex(hPal, crMask);
-				if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
-			}
-
-			MemDC.SolidFill(crMask, rc);
-
-			// Draw the image on the memory DC
-			ImageList_SetBkColor(himlNormal, crMask);
-			ImageList_Draw(himlNormal, i, MemDC, 0, 0, ILD_NORMAL);
-
-			// Convert colored pixels to gray
-			for (int x = 0 ; x < cx; ++x)
-			{
-				for (int y = 0; y < cy; ++y)
-				{
-					COLORREF clr = ::GetPixel(MemDC, x, y);
-
-					if (clr != crMask)
-					{
-						BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
-						MemDC.SetPixel(x, y, RGB(byGray, byGray, byGray));
-					}
-
-				}
-			}
-
-			// Detach the bitmap so we can use it.
-			CBitmap Bitmap = MemDC.DetachBitmap();
-			ImageList_AddMasked(himlDisabled, Bitmap, crMask);
-		}
-
-		return himlDisabled;
-	}
 #endif
 
 

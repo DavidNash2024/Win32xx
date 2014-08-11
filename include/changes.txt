@@ -36,7 +36,10 @@ Added CDockContainer::OnMouseMove
 Added CDockContainer::SetHideSingleTab
 Added CDockContainer::SwapTabs
 Added CDocker::GetViewRect
-Modified CTabbedMDI::GetTab				now returns CWnd*
+Modified CTabbedMDI::GetTab			now returns CWnd*
+Moved ::TintBitmap 					to CBitmap::TintBitmap
+Moved ::GrayScaleBitmap 			to CBitmap::GrayScaleBitmap
+Moved ::CreateDisabledImageList 	to CImageList::CreateDisabledImageList
 
 Added user defined messages:
 UWM_GETFRAMEVIEW:		Used by CFrame.  Returns the view window's HWND 
