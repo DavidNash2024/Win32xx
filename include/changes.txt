@@ -22,6 +22,7 @@ New Features and Enhancements
    - These are demonstrated in the ReBar and ToolBar samples. 
    
 * Added samples
+   - DateTime sample demonstrates CDateTime and CMonthCalendar. 
    - ToolBar sample demonstrates vertical ToolBars and customizing ToolBars
    - Rebar sample demonstrates a vertical ReBar containing a vertical ToolBar.   
  

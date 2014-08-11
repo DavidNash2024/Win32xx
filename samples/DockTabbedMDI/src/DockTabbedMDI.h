@@ -31,7 +31,6 @@ public:
 	CDockTabbedMDI();
 	virtual ~CDockTabbedMDI() {}
 
-	virtual CMyTabbedMDI* GetTabbedMDI() { return &m_View; }
 	virtual CDocker* NewDockerFromID(int idDock);
 	virtual void OnInitialUpdate();
 
