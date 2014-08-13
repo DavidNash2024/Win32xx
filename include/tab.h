@@ -191,6 +191,7 @@ namespace Win32xx
 		CImageList m_imlODTab;	// Image List for Owner Draw Tabs
 		CMenu m_ListMenu;
 		CWnd* m_pActiveView;
+		CPoint m_OldMousePos;
 		BOOL m_bShowButtons;	// Show or hide the close and list button
 		BOOL m_IsTracking;
 		BOOL m_IsClosePressed;
@@ -865,6 +866,17 @@ namespace Win32xx
 
 	inline LRESULT CTab::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
+		CPoint pt;
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
+
+		// Skip if mouse hasn't moved
+		if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
+			return FALSE;
+
+		m_OldMousePos.x = pt.x;
+		m_OldMousePos.y = pt.y;
+
 		if (!m_IsListMenuActive && m_IsListPressed)
 		{
 			m_IsListPressed = FALSE;

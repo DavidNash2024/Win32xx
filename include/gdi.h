@@ -1276,7 +1276,7 @@ namespace Win32xx
 		}
 
 		inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
-		// Modifies the colour of the supplied Device Dependant Bitmap, by the colour
+		// Modifies the colour of the Device Dependant Bitmap, by the colour
 		// correction values specified. The correction values can range from -255 to +255.
 		// This function gains its speed by accessing the bitmap colour information
 		// directly, rather than using GetPixel/SetPixel.

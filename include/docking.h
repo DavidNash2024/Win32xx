@@ -216,7 +216,7 @@ namespace Win32xx
 		HICON m_hTabIcon;
 		int m_nTabPressed;
 		BOOL m_bHideingleTab;
-
+		CPoint m_OldMousePos;
 	};
 
 	typedef struct DRAGPOS
@@ -4581,6 +4581,17 @@ namespace Win32xx
 
 	inline LRESULT CDockContainer::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
+		CPoint pt;
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
+
+		// Skip if mouse hasn't moved
+		if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
+			return FALSE;
+
+		m_OldMousePos.x = pt.x;
+		m_OldMousePos.y = pt.y;
+
 		if (IsLeftButtonDown())
 		{
 			CPoint pt((DWORD)lParam);

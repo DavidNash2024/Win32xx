@@ -11,7 +11,7 @@ New Features and Enhancements
    - DockContainers
    
 * Updated Dockers
-   - Invalid dock targets are hidden or greyed (invalidated by DS_NO_DOCKCHILD)
+   - Dock targets invalidated by DS_NO_DOCKCHILD_XXXX are hidden or greyed 
    - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs
    - Parent dockers now have a minimum size.
    - The DockTabbedMDI sample now includes a Window menu.
