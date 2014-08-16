@@ -2676,7 +2676,7 @@ namespace Win32xx
 									UINT uOldID = pOldDocker->GetDockID();
 
 									std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
-									UINT uOldTab = it - vTabOrder.begin();
+									UINT uOldTab = (UINT)(it - vTabOrder.begin());
 
 									if (uTab != uOldTab)
 										pParentContainer->SwapTabs(uTab, uOldTab);

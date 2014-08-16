@@ -243,43 +243,12 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::RecalcLayout()
 {
-	CWnd* pView = GetView();
-	if ((!pView) || (!pView->GetHwnd()))
-		return;
-
-	// Resize the status bar
-	if (GetStatusBar()->IsWindow() && m_bShowStatusBar)
-	{
-		GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
-		GetStatusBar()->Invalidate();
-		SetStatusIndicators();
-	}
-
-	// Resize the rebar or toolbar
-	if (IsReBarUsed())
-	{
-		GetReBar()->SendMessage(WM_SIZE, 0L, 0L);
-		GetReBar()->Invalidate();
-	}
-	else if (m_bUseToolBar && m_bShowToolBar && GetToolBar()->IsWindow())
-		GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
-
 	// Position the additional rebar at the top, left, right or bottom of the view.
 	if (m_ReBar.IsWindow())
 		SetReBarPos();
-	
-	// Position the view window
-	pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
 
-	// Adjust rebar bands
-	if (IsReBarUsed())
-	{
-		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-			GetReBar()->MoveBandsLeft();
-
-		if (IsMenuBarUsed())
-			SetMenuBarBandSize();
-	}
+	// Reposition the frame's ReBar, StatusBar, and View window.
+	CFrame::RecalcLayout();
 }
 
 void CMainFrame::SetReBarPos()

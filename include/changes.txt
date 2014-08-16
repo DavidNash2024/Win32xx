@@ -24,7 +24,9 @@ New Features and Enhancements
 * Added samples
    - DateTime sample demonstrates CDateTime and CMonthCalendar. 
    - ToolBar sample demonstrates vertical ToolBars and customizing ToolBars
-   - Rebar sample demonstrates a vertical ReBar containing a vertical ToolBar.   
+   - Rebar sample demonstrates a vertical ReBar containing a vertical ToolBar.
+   - StatusBar sample. Demonstrates colored StatusBar with a hyperlink,
+     a progress bar, an icon and an owner drawn part.   
  
 * The Themes sample now demonstrates how to save a band's size and position 
   in the registry.

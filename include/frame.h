@@ -2456,8 +2456,10 @@ namespace Win32xx
 			// Update the status bar font and text
 			m_fntStatusBar.DeleteObject();
 			m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
-			GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);		
-			GetStatusBar()->SetWindowText(m_strStatusText);
+			GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);
+			if (m_bUseMenuStatus)
+				GetStatusBar()->SetWindowText(m_strStatusText);
+			
 			SetStatusIndicators();
 		}
 
@@ -2561,7 +2563,9 @@ namespace Win32xx
 		{
 			GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar()->Invalidate();
-			GetStatusBar()->SetWindowText(m_strStatusText);
+			if (m_bUseMenuStatus)	
+				GetStatusBar()->SetWindowText(m_strStatusText);
+			
 			SetStatusIndicators();
 		}
 
@@ -2822,7 +2826,7 @@ namespace Win32xx
 			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM "), lstrlen(_T("\tNUM ")));
 			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL "), lstrlen(_T("\tSCRL ")));
 
-			// Get the coordinates of the parent window's client area.
+			// Get the coordinates of the window's client area.
 			CRect rcClient = GetClientRect();
 			int width = MAX(300, rcClient.right);
 

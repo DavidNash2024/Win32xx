@@ -322,7 +322,7 @@ namespace Win32xx
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to supress default background drawing.
-		return GetParent()->SendMessage(UWN_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this);
+		return (TRUE == GetParent()->SendMessage(UWN_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
 
 	inline void CReBar::PreCreate(CREATESTRUCT &cs)

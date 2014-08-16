@@ -1148,9 +1148,20 @@ namespace Win32xx
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (bEnabled)
+		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_FIXEDWIDTH);
+			
+			// Remove Image list for fixed width and Owner drawn tabs
+			if (dwStyle & TCS_OWNERDRAWFIXED)
+				SetImageList(NULL);
+			else
+				SetImageList(&m_imlODTab);
+		}
 		else
+		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_FIXEDWIDTH);
+			SetImageList(&m_imlODTab);
+		}
 
 		RecalcLayout();
 	}
@@ -1171,9 +1182,12 @@ namespace Win32xx
 		if (bEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
-
-			// Remove image list for owner drawn tabs
-			SetImageList(NULL);
+		
+			// Remove Image list for tabs with both fixed width and Owner drawn tabs
+			if (dwStyle & TCS_FIXEDWIDTH)
+				SetImageList(NULL);
+			else
+				SetImageList(&m_imlODTab);
 		}
 		else
 		{
@@ -1236,7 +1250,9 @@ namespace Win32xx
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			nItemWidth = MAX(nItemWidth, 0);
+
 			SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
+
 			NotifyChanged();
 		}
 	}
