@@ -77,7 +77,7 @@
 #define DS_NO_CLOSE				0x0400	// Prevent closing of a docker while docked
 #define DS_NO_UNDOCK			0x0800  // Prevent undocking of a docker
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
-//#define DS_FIXED_RESIZE			0x2000	// Perform a fixed resize instead of a proportional resize on dock children
+#define DS_FIXED_RESIZE			0x2000	// Perform a fixed resize instead of a proportional resize on dock children
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
 #define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
 #define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
@@ -3313,54 +3313,81 @@ namespace Win32xx
 			CRect rcChild = rc;
 			double DockSize = (*iter)->m_DockStartSize;
 			int minSize = 30;
+			int BarWidth = GetDockBar()->GetWidth();
+			int leftsum = 0;
+			int topsum = 0;
+
+			// Sum the width or height of child dockers for fixed resize
+			if ((*iter)->GetDockStyle() & DS_FIXED_RESIZE)
+			{
+				std::vector<CDocker*>::iterator itChild;
+				for (itChild = m_vDockChildren.begin(); itChild < m_vDockChildren.end(); ++itChild)
+				{
+					switch ((*itChild)->GetDockStyle() & 0xF)
+					{
+					case DS_DOCKED_LEFT:
+						leftsum += (*itChild)->GetWindowRect().Width();
+						break;
+					case DS_DOCKED_TOP:
+						topsum += (*itChild)->GetWindowRect().Height();
+						break;
+					}
+				}
+			}
 
 			// Calculate the size of the Docker children
 			switch ((*iter)->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
+				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
 				if (RTL)
 				{
 					rcChild.left = rcChild.right - (int)DockSize;
-					rcChild.left = MIN(rcChild.left, GetWindowRect().Width() -minSize);
-					rcChild.left = MAX(rcChild.left, minSize + GetDockBar()->GetWidth());
+					rcChild.left = MIN(rcChild.left, GetWindowRect().Width() - minSize);
+					rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
 				}
 				else
 				{
 					rcChild.right = rcChild.left + (int)DockSize;
-					rcChild.right = MIN(rcChild.right, GetWindowRect().Width() -minSize - GetDockBar()->GetWidth());
+					rcChild.right = MIN(rcChild.right, GetWindowRect().Width() - minSize - BarWidth);
 					rcChild.right = MAX(rcChild.right, minSize);
 				}
 				break;
 			case DS_DOCKED_RIGHT:
-				DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
+				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
 				if (RTL)
 				{
 					rcChild.right = rcChild.left + (int)DockSize;
-					rcChild.right = MIN(rcChild.right, GetWindowRect().Width() -minSize - GetDockBar()->GetWidth());
+					rcChild.right = MIN(rcChild.right, GetWindowRect().Width() - minSize - BarWidth);
 					rcChild.right = MAX(rcChild.right, minSize);
 				}
 				else
 				{
 					rcChild.left = rcChild.right - (int)DockSize;
-					rcChild.left = MIN(rcChild.left, GetWindowRect().Width() -minSize);
-					rcChild.left = MAX(rcChild.left, minSize + GetDockBar()->GetWidth());
+					rcChild.left = MIN(rcChild.left, GetWindowRect().Width() - minSize);
+					rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
 				}
 
 				break;
 			case DS_DOCKED_TOP:
-				DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+				
 				rcChild.bottom = rcChild.top + (int)DockSize;
-				rcChild.bottom = MIN(rcChild.bottom, GetWindowRect().Height() -minSize - GetDockBar()->GetWidth());
+				rcChild.bottom = MIN(rcChild.bottom, GetWindowRect().Height() -minSize - BarWidth);
 				rcChild.bottom = MAX(rcChild.bottom, minSize);
 				break;
 			case DS_DOCKED_BOTTOM:
-				DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
+				
 				rcChild.top = rcChild.bottom - (int)DockSize;
-				rcChild.top = MIN(rcChild.top, GetWindowRect().Height() -minSize);
-				rcChild.top = MAX(rcChild.top, minSize + GetDockBar()->GetWidth());
+				rcChild.top = MIN(rcChild.top, GetWindowRect().Height() - minSize);
+				rcChild.top = MAX(rcChild.top, minSize + BarWidth + topsum);
 				break;
 			}
 

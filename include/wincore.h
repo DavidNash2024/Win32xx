@@ -426,6 +426,8 @@ namespace Win32xx
 		HICON	LoadIcon(LPCTSTR lpszResourceName) const;
 		HICON	LoadIcon(int nIDIcon) const;
 		HICON   LoadStandardIcon(LPCTSTR lpszIconName) const;
+		HANDLE  LoadImage(LPCTSTR lpszResourceName, UINT uType, int cx, int  cy, UINT fuLoad = LR_DEFAULTCOLOR) const;
+		HANDLE  LoadImage(int nIDImage, UINT uType, int cx, int cy, UINT fuLoad = LR_DEFAULTCOLOR) const;
 		HCURSOR SetCursor(HCURSOR hCursor) const;
 		void	SetResourceHandle(HINSTANCE hResource);
 
@@ -1218,6 +1220,26 @@ namespace Win32xx
 	// IDI_HAND, IDI_INFORMATION, IDI_QUESTION, IDI_WARNING
 	{
 		return ::LoadIcon(0, lpszIconName);
+	}
+
+	inline HANDLE CWinApp::LoadImage(LPCTSTR lpszResourceName, UINT uType, int cx, int cy, UINT fuLoad) const
+	// Loads an icon, cursor, animated cursor, or bitmap
+	// uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON
+	// cx and cy are the desired width and height in pixels
+	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE, 
+	//   LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
+	{
+		return ::LoadImage(GetApp()->GetResourceHandle(), lpszResourceName, uType, cx, cy, fuLoad);
+	}
+
+	inline HANDLE CWinApp::LoadImage(int nIDImage, UINT uType, int cx, int cy, UINT fuLoad) const
+	// Loads an icon, cursor, animated cursor, or bitmap
+	// uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON
+	// cx and cy are the desired width and height in pixels
+	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE, 
+	//   LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
+	{
+		return ::LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIDImage), uType, cx, cy, fuLoad);
 	}
 
 	inline int CWinApp::Run()

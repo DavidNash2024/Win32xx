@@ -17,9 +17,9 @@ CView::~CView()
 
 BOOL CView::FileOpen(LPCTSTR szFilename)
 {
+	m_bmImage.DeleteObject();
 	if (szFilename)
-	{
-		m_bmImage.DeleteObject();
+	{		
 		m_bmImage.LoadImage(szFilename, 0, 0, LR_LOADFROMFILE);
 	}
 

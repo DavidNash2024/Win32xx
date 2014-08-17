@@ -11,25 +11,30 @@ New Features and Enhancements
    - DockContainers
    
 * Updated Dockers
-   - Dock targets invalidated by DS_NO_DOCKCHILD_XXXX are hidden or greyed 
-   - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs
+   - Dock targets invalidated by DS_NO_DOCKCHILD_XXXX are hidden or greyed.
+   - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs.
    - Parent dockers now have a minimum size.
-   - The DockTabbedMDI sample now includes a Window menu.
-   - Dock containers with one tab now can hide the tab.
-   - Improved hinting for container within container docking
+   - Added support for DS_FIXED_RESIZE.
+   - Dock containers with a single tab can hide the tab.
+   - Improved hinting for container within container docking.
  
 * Added support for vertical ToolBars and ReBars
-   - These are demonstrated in the ReBar and ToolBar samples. 
+   - Vertical ToolBars and ReBars are now supported and themed correctly by CFrame.
+      These are demonstrated in the ReBar and ToolBar samples. 
    
-* Added samples
-   - DateTime sample demonstrates CDateTime and CMonthCalendar. 
-   - ToolBar sample demonstrates vertical ToolBars and customizing ToolBars
-   - Rebar sample demonstrates a vertical ReBar containing a vertical ToolBar.
-   - StatusBar sample. Demonstrates colored StatusBar with a hyperlink,
-     a progress bar, an icon and an owner drawn part.   
- 
-* The Themes sample now demonstrates how to save a band's size and position 
-  in the registry.
+* Updated the samples
+   - Added DateTime sample to demonstrate CDateTime and CMonthCalendar. 
+   - Added ToolBar sample. It demonstrates customizing ToolBars by dynamically
+      adding or removing ToolBar buttons. It also demonstrates an additional
+	  ToolBar which can be positioned at the top, bottom, left or right of the
+	  view window.
+   - Added ReBar sample. It demonstrates an additional ReBar which can be 
+      positioned at the top, bottom, left or right of the view window.
+   - Added StatusBar sample. It demonstrates a colored StatusBar with a
+      hyperlink, a progress bar, an icon and an owner drawn part.
+   - The DockTabbedMDI sample now includes a Window menu.	 
+   - The Themes sample now demonstrates how to save a band's size and position 
+      in the registry.
    
 
 Changes in detail
@@ -39,6 +44,7 @@ Added CDockContainer::OnMouseMove
 Added CDockContainer::SetHideSingleTab
 Added CDockContainer::SwapTabs
 Added CDocker::GetViewRect
+Added CWinApp::LoadImage
 Modified CTabbedMDI::GetTab			now returns CWnd*
 Moved ::TintBitmap 					to CBitmap::TintBitmap
 Moved ::GrayScaleBitmap 			to CBitmap::GrayScaleBitmap

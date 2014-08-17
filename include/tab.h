@@ -870,12 +870,7 @@ namespace Win32xx
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
 
-		// Skip if mouse hasn't moved
-		if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
-			return FALSE;
 
-		m_OldMousePos.x = pt.x;
-		m_OldMousePos.y = pt.y;
 
 		if (!m_IsListMenuActive && m_IsListPressed)
 		{
@@ -892,8 +887,15 @@ namespace Win32xx
 			m_IsTracking = TRUE;
 		}
 
-		if (IsLeftButtonDown())
-			NotifyDragged();
+		// Skip if mouse hasn't moved
+		if ((pt.x != m_OldMousePos.x) || (pt.y != m_OldMousePos.y))
+		{
+			if (IsLeftButtonDown())
+				NotifyDragged();
+		}
+
+		m_OldMousePos.x = pt.x;
+		m_OldMousePos.y = pt.y;
 
 		CClientDC dc(this);
 		DrawCloseButton(&dc);

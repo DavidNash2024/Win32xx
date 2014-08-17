@@ -96,7 +96,7 @@ void CMainFrame::LoadDefaultDockers()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
+	DWORD dwStyle = DS_CLIENTEDGE | DS_FIXED_RESIZE; // The style added to each docker
 
 	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_LEFT | dwStyle, 200, ID_DOCK_CLASSES1);
 	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES2);
