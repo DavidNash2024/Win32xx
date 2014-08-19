@@ -10,6 +10,12 @@ New Features and Enhancements
    - Dockers
    - DockContainers
    
+* Updated Frames
+   - The IDW_INDICATOR_CAPS, IDW_INDICATOR_NUM and IDW_INDICATOR_SCRL string
+      resources are now used to define the status indicators. These string
+	  resources should be added to the resource script (resource.rc). Refer
+	  to resouce.rc in the frame sample for an example.
+   
 * Updated Dockers
    - Dock targets invalidated by DS_NO_DOCKCHILD_XXXX are hidden or greyed.
    - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs.
@@ -54,6 +60,11 @@ Added user defined messages:
 UWM_GETFRAMEVIEW:		Used by CFrame.  Returns the view window's HWND 
 UWN_DRAWRBBKGND:        Used by CFrame.  Called for ReBar background redrawing
 UWN_TABDRAGGED:         Used by CTabbedMDI. Called when a CTab's tab is dragged
+
+Added string resources for frames (defined in resouce.rc)
+IDW_INDICATOR_CAPS
+IDW_INDICATOR_NUM
+IDW_INDICATOR_SCRL
 
 
 Version 7.5.1

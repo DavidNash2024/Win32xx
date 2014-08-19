@@ -2822,9 +2822,12 @@ namespace Win32xx
 		{	
 			// Calculate the width of the text indicators
 			CClientDC dcStatus(GetStatusBar());
-			CSize csCAP  = dcStatus.GetTextExtentPoint32(_T("\tCAP "), lstrlen(_T("\tCAP ")));
-			CSize csNUM  = dcStatus.GetTextExtentPoint32(_T("\tNUM "), lstrlen(_T("\tNUM ")));
-			CSize csSCRL = dcStatus.GetTextExtentPoint32(_T("\tSCRL "), lstrlen(_T("\tSCRL ")));
+			CString CAP = LoadString(IDW_INDICATOR_CAPS);
+			CString NUM = LoadString(IDW_INDICATOR_NUM);
+			CString SCRL = LoadString(IDW_INDICATOR_SCRL);
+			CSize csCAP  = dcStatus.GetTextExtentPoint32(CAP, lstrlen(CAP)+1);
+			CSize csNUM  = dcStatus.GetTextExtentPoint32(NUM, lstrlen(NUM)+1);
+			CSize csSCRL = dcStatus.GetTextExtentPoint32(SCRL, lstrlen(SCRL)+1);
 
 			// Get the coordinates of the window's client area.
 			CRect rcClient = GetClientRect();

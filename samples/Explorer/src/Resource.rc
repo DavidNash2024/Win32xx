@@ -177,6 +177,9 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                 "Simple Explorer"
+	IDW_INDICATOR_CAPS       "CAP"
+    IDW_INDICATOR_NUM        "NUM"
+    IDW_INDICATOR_SCRL       "SCRL"
     IDW_READY                "Ready"	
 END
 
@@ -227,8 +230,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	  SC_NEXTWINDOW           "Select Next Window"
-	  SC_PREVWINDOW           "Select Previous Window"
+	SC_NEXTWINDOW           "Select Next Window"
+	SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

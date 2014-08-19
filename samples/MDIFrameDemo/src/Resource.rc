@@ -394,7 +394,10 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "MDI Demo"
-	IDW_READY               "Ready"
+	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_NUM       "NUM"
+    IDW_INDICATOR_SCRL      "SCRL"
+    IDW_READY               "Ready"
 END
 
 STRINGTABLE
