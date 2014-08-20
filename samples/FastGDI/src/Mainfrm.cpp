@@ -131,8 +131,7 @@ void CMainFrame::OnFileOpen()
 		// Resize the frame to match the bitmap
 		if (GetMyView().GetImage())
 		{
-			GetMyView().ShowScrollBar(SB_HORZ, FALSE);
-			GetMyView().ShowScrollBar(SB_VERT, FALSE);
+			GetMyView().ShowScrollBar(SB_BOTH, FALSE);
 			CRect rcImage = GetMyView().GetImageRect();
 			AdjustFrameRect(rcImage);
 		}
@@ -173,8 +172,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	// Resize the frame to match the bitmap
 	if (GetMyView().GetImage())
 	{
-		GetMyView().ShowScrollBar(SB_HORZ, FALSE);
-		GetMyView().ShowScrollBar(SB_VERT, FALSE);
+		GetMyView().ShowScrollBar(SB_BOTH, FALSE);
 		CRect rcImage = GetMyView().GetImageRect();
 		AdjustFrameRect(rcImage);
 	}
@@ -260,10 +258,20 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
-		//Additional messages to be handled go here
-//	}
+	switch (uMsg)
+	{
+		case WM_SIZE:
+		{
+			// Remove scrollbars and redraw the view if the frame is maximized
+			if (wParam == SIZE_MAXIMIZED)
+			{
+				GetView()->ShowScrollBar(SB_BOTH, FALSE);
+				GetView()->Invalidate();
+			}
+			
+			break;
+		}
+	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

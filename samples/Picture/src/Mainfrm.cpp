@@ -179,9 +179,19 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// A message defined in PictureApp.h
 	case UWM_FILELOADED: return OnFileLoaded((LPCTSTR) lParam);
+	case WM_SIZE:
+		{
+			// Remove scrollbars and redraw the view if the frame is maximized
+			if (wParam == SIZE_MAXIMIZED)
+			{
+				GetView()->ShowScrollBar(SB_BOTH, FALSE);
+				GetView()->Invalidate();
+			}
+			
+			break;
+		}
 	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
 }
-
