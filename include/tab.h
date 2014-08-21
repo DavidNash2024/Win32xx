@@ -52,10 +52,11 @@ namespace Win32xx
 
 	struct TabPageInfo
 	{
-		TCHAR szTabText[MAX_MENU_STRING];
+		CString TabText;	// The tab's text
 		int iImage;			// index of this tab's image
-		int idTab;			// identifier for this tab (optional)
+		int idTab;			// identifier for this tab (used by TabbedMDI)
 		CWnd* pView;		// pointer to the view window
+		TabPageInfo() : iImage(0), idTab(0), pView(0) {}	// constructor
 	};
 
 	class CTab : public CWnd
@@ -303,10 +304,10 @@ namespace Win32xx
 
 		m_vTabViews.push_back(pView);
 
-		TabPageInfo tpi = {0};
+		TabPageInfo tpi;
 		tpi.pView = pView.get();
 		tpi.idTab = idTab;
-		lstrcpyn(tpi.szTabText, szTabText, MAX_MENU_STRING);
+		tpi.TabText = szTabText;
 		if (hIcon)
 			tpi.iImage = GetODImageList()->Add(hIcon);
 		else
@@ -320,7 +321,7 @@ namespace Win32xx
 			TCITEM tie = {0};
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = tpi.iImage;
-			tie.pszText = tpi.szTabText;
+			tie.pszText = (LPTSTR)tpi.TabText.c_str();
 			InsertItem(iNewPage, &tie);
 
 			SetTabSize();
@@ -654,7 +655,7 @@ namespace Win32xx
 		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
 		{
 			CString MenuString;
-			CString TabText = GetAllTabs()[u].szTabText;
+			CString TabText = GetAllTabs()[u].TabText;
 			MenuString.Format(_T("&%d %s"), u+1, TabText.c_str());
 			m_ListMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +u, MenuString);
 		}
@@ -786,7 +787,7 @@ namespace Win32xx
 			TCITEM tie = {0};
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vTabPageInfo[i].iImage;
-			tie.pszText = m_vTabPageInfo[i].szTabText;
+			tie.pszText = (LPTSTR)m_vTabPageInfo[i].TabText.c_str();
 			InsertItem(i, &tie);
 		}
 
@@ -1269,7 +1270,7 @@ namespace Win32xx
 			Item.pszText = (LPTSTR)szText;
 
 			if (SetItem(nTab, &Item))
-				lstrcpyn(m_vTabPageInfo[nTab].szTabText, szText, MAX_MENU_STRING);
+				m_vTabPageInfo[nTab].TabText = szText;
 		}
 	}
 
@@ -1351,7 +1352,7 @@ namespace Win32xx
 		CSelectDialog SelectDialog((LPCDLGTEMPLATE) dlg_Template);
 		for(UINT u = 0; u < GetAllTabs().size(); ++u)
 		{
-			SelectDialog.AddItem(GetAllTabs()[u].szTabText);
+			SelectDialog.AddItem(GetAllTabs()[u].TabText);
 		}
 
 		int iSelected = (int)SelectDialog.DoModal(this);
@@ -1369,13 +1370,13 @@ namespace Win32xx
 			TCITEM Item1 = {0};
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = nLength;
-			Item1.pszText = T1.szTabText;
+			Item1.pszText = (LPTSTR)T1.TabText.c_str();
 			GetItem(nTab1, &Item1);
 
 			TCITEM Item2 = {0};
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = nLength;
-			Item2.pszText = T2.szTabText;
+			Item2.pszText = (LPTSTR)T2.TabText.c_str();
 			GetItem(nTab2, &Item2);
 
 			SetItem(nTab1, &Item2);
@@ -1707,7 +1708,7 @@ namespace Win32xx
 	{
 		assert(nTab >= 0);
 		assert(nTab < GetMDIChildCount());
-		return GetTab()->GetTabPageInfo(nTab).szTabText;
+		return GetTab()->GetTabPageInfo(nTab).TabText;
 	}
 
 	inline BOOL CTabbedMDI::LoadRegistrySettings(CString strRegistryKeyName)
@@ -1716,27 +1717,37 @@ namespace Win32xx
 
 		if (!strRegistryKeyName.IsEmpty())
 		{
-			CString strKey = _T("Software\\") + strRegistryKeyName + _T("\\MDI Children");
+			CString KeyName = _T("Software\\") + strRegistryKeyName + _T("\\MDI Children");
 			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey);
+			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
 			if (hKey)
 			{
-				DWORD dwType = REG_BINARY;
-				DWORD BufferSize = sizeof(TabPageInfo);
-				TabPageInfo tbi = {0};
+				DWORD dwDWORD = REG_DWORD;
+				DWORD dwSZ = REG_SZ;
+				DWORD dwIntSize = sizeof(int);
+				int idTab;
 				int i = 0;
-				CString strSubKey;
-				strSubKey.Format(_T("MDI Child %d"), i);
+				CString SubKey;
+				CString TabText;
+				SubKey.Format(_T("ID%d"), i);
 
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&tbi, &BufferSize))
+				while (0 == RegQueryValueEx(hKey, SubKey, 0, &dwDWORD, (LPBYTE)&idTab, &dwIntSize))
 				{
-					CWnd* pWnd = NewMDIChildFromID(tbi.idTab);
+					SubKey.Format(_T("Text%d"), i);
+					DWORD dwBufferSize = 0;
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKey, NULL, &dwSZ, 0, &dwBufferSize))
+					{
+						RegQueryValueEx(hKey, SubKey, NULL, &dwSZ, (LPBYTE)TabText.GetBuffer(dwBufferSize), &dwBufferSize);
+						TabText.ReleaseBuffer();
+					}
+
+					CWnd* pWnd = NewMDIChildFromID(idTab);
 					if (pWnd)
 					{
-						AddMDIChild(pWnd, tbi.szTabText, tbi.idTab);
+						AddMDIChild(pWnd, TabText, idTab);
 						i++;
-						strSubKey.Format(_T("MDI Child %d"), i);
+						SubKey.Format(_T("ID%d"), i);
 						bResult = TRUE;
 					}
 					else
@@ -1750,11 +1761,9 @@ namespace Win32xx
 				if (bResult)
 				{
 					// Load Active MDI Tab from the registry
-					strSubKey = _T("Active MDI Tab");
+					SubKey = _T("Active MDI Tab");
 					int nTab;
-					dwType = REG_DWORD;
-					BufferSize = sizeof(int);
-					if(ERROR_SUCCESS == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&nTab, &BufferSize))
+					if(ERROR_SUCCESS == RegQueryValueEx(hKey, SubKey, NULL, &dwDWORD, (LPBYTE)&nTab, &dwIntSize))
 						SetActiveMDITab(nTab);
 					else
 						SetActiveMDITab(0);
@@ -1858,13 +1867,13 @@ namespace Win32xx
 	{
 		if (!strRegistryKeyName.IsEmpty())
 		{
-			CString strKeyName = _T("Software\\") + strRegistryKeyName;
+			CString KeyName = _T("Software\\") + strRegistryKeyName;
 			HKEY hKey = NULL;
 			HKEY hKeyMDIChild = NULL;
 
 			try
 			{
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				RegDeleteKey(hKey, _T("MDI Children"));
@@ -1873,17 +1882,23 @@ namespace Win32xx
 
 				for (int i = 0; i < GetMDIChildCount(); ++i)
 				{
-					CString strSubKey;
-					strSubKey.Format(_T("MDI Child %d"), i);
+					CString SubKey;
 					TabPageInfo pdi = GetTab()->GetTabPageInfo(i);
-					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, strSubKey, 0, REG_BINARY, (LPBYTE)&pdi, sizeof(TabPageInfo)))
+
+					SubKey.Format(_T("ID%d"), i);
+					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKey, 0, REG_DWORD, (LPBYTE)&pdi.idTab, sizeof(int)))
+						throw (CWinException(_T("RegSetValueEx Failed")));
+
+					SubKey.Format(_T("Text%d"), i);
+					CString TabText = GetTab()->GetTabPageInfo(i).TabText;
+					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKey, 0, REG_SZ, (LPBYTE)TabText.c_str(), (1 + TabText.GetLength() )*sizeof(TCHAR)))
 						throw (CWinException(_T("RegSetValueEx Failed")));
 				}
 
 				// Add Active Tab to the registry
-				CString strSubKey = _T("Active MDI Tab");
+				CString SubKey = _T("Active MDI Tab");
 				int nTab = GetActiveMDITab();
-				if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, strSubKey, 0, REG_DWORD, (LPBYTE)&nTab, sizeof(int)))
+				if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKey, 0, REG_DWORD, (LPBYTE)&nTab, sizeof(int)))
 					throw (CWinException(_T("RegSetValueEx failed")));
 
 				RegCloseKey(hKeyMDIChild);
@@ -1900,7 +1915,7 @@ namespace Win32xx
 						RegCloseKey(hKeyMDIChild);
 					}
 
-					RegDeleteKey(HKEY_CURRENT_USER, strKeyName);
+					RegDeleteKey(HKEY_CURRENT_USER, KeyName);
 					RegCloseKey(hKey);
 				}
 

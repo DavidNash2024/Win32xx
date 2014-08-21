@@ -2542,24 +2542,24 @@ namespace Win32xx
 		{
 			std::vector<DockInfo> vDockList;
 
-			CString strKey = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
+			CString KeyName = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
 			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey);
+			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
 			if (hKey)
 			{
 				DWORD dwType = REG_BINARY;
 				DWORD BufferSize = sizeof(DockInfo);
 				DockInfo di;
 				int i = 0;
-				CString strSubKey;
-				strSubKey.Format(_T("DockChild%d"), i);
+				CString SubKey;
+				SubKey.Format(_T("DockChild%d"), i);
 
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, strSubKey, NULL, &dwType, (LPBYTE)&di, &BufferSize))
+				while (0 == RegQueryValueEx(hKey, SubKey, NULL, &dwType, (LPBYTE)&di, &BufferSize))
 				{
 					vDockList.push_back(di);
 					i++;
-					strSubKey.Format(_T("DockChild%d"), i);
+					SubKey.Format(_T("DockChild%d"), i);
 				}
 
 				RegCloseKey(hKey);
@@ -2635,16 +2635,16 @@ namespace Win32xx
 			}
 
 			// Restore Dock container tab order and active container
-			strKey = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
+			KeyName = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
 			hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey);
+			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
 			if (hKey)
 			{
 				UINT uContainer = 0;
-				CString strSubKey;
-				strSubKey.Format(_T("DockContainer%u"), uContainer);
+				CString SubKey;
+				SubKey.Format(_T("DockContainer%u"), uContainer);
 				HKEY hContainerKey = 0;
-				while ( 0 == RegOpenKeyEx(hKey, strSubKey, 0, KEY_READ, &hContainerKey) )
+				while ( 0 == RegOpenKeyEx(hKey, SubKey, 0, KEY_READ, &hContainerKey) )
 				{
 					DWORD dwType = REG_DWORD;
 					DWORD BufferSize = sizeof(int);
@@ -2703,7 +2703,7 @@ namespace Win32xx
 					}
 
 					RegCloseKey(hContainerKey);
-					strSubKey.Format(_T("DockContainer%u"), ++uContainer);
+					SubKey.Format(_T("DockContainer%u"), ++uContainer);
 				}
 
 				RegCloseKey(hKey);
@@ -3522,22 +3522,22 @@ namespace Win32xx
 			HKEY hKey = NULL;
 			HKEY hKeyDock = NULL;
 			HKEY hKeyContainer = NULL;
-			CString strKeyName = _T("Software\\") + CString(szRegistryKeyName);
+			CString KeyName = _T("Software\\") + CString(szRegistryKeyName);
 
 			try
 			{
 				// Create/Open the App's registry key
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 				// Remove Old Docking info ...
 				// Remove existing DockContainer SubKeys
 				UINT uDockContainer = 0;
-				CString strSubKey;
-				strSubKey.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
-				while (0 == RegDeleteKey(hKey, strSubKey) )
+				CString SubKey;
+				SubKey.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
+				while (0 == RegDeleteKey(hKey, SubKey) )
 				{
-					strSubKey.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
+					SubKey.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
 				}
 
 				// Remove the Dock Windows key
@@ -3567,9 +3567,9 @@ namespace Win32xx
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
 				{
 					DockInfo di = vDockInfo[u];
-					CString strSubKey;
-					strSubKey.Format(_T("DockChild%u"), u);
-					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, strSubKey, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
+					CString SubKey;
+					SubKey.Format(_T("DockChild%u"), u);
+					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, SubKey, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
 						throw (CWinException(_T("RegSetValueEx failed")));
 				}
 
@@ -3581,9 +3581,9 @@ namespace Win32xx
 
 					if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
 					{
-						CString strSubKey;
-						strSubKey.Format(_T("DockContainer%u"), u1++);
-						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, strSubKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
+						CString SubKey;
+						SubKey.Format(_T("DockContainer%u"), u1++);
+						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, SubKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
 							throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 						// Store the container group's parent
@@ -3599,11 +3599,11 @@ namespace Win32xx
 						// Store the tab order
 						for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
 						{
-							strSubKey.Format(_T("Tab%u"), u2);
+							SubKey.Format(_T("Tab%u"), u2);
 							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
 							int nTabID = GetDockFromView(pTab)->GetDockID();
 
-							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, strSubKey, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
+							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, SubKey, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
 								throw (CWinException(_T("RegSetValueEx failed")));
 						}
 
@@ -3624,11 +3624,11 @@ namespace Win32xx
 					{
 						// Remove existing DockContainer SubKeys
 						UINT uDockContainer = 0;
-						CString strSubKey;
-						strSubKey.Format(_T("DockContainer%u"), uDockContainer);
-						while (0 == RegDeleteKey(hKeyDock, strSubKey) )
+						CString SubKey;
+						SubKey.Format(_T("DockContainer%u"), uDockContainer);
+						while (0 == RegDeleteKey(hKeyDock, SubKey) )
 						{
-							strSubKey.Format(_T("DockContainer%u"), ++uDockContainer);
+							SubKey.Format(_T("DockContainer%u"), ++uDockContainer);
 						}
 						RegDeleteKey(hKeyDock, _T("Dock Windows"));
 						RegCloseKey(hKeyDock);

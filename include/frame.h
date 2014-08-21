@@ -826,7 +826,6 @@ namespace Win32xx
 
 			// Recreate the Disabled imagelist
 			m_imlMenuDis.DeleteImageList();
-		//	m_imlMenuDis.Attach( CreateDisabledImageList(m_imlMenu.GetHandle()) );
 			m_imlMenuDis.CreateDisabledImageList(&m_imlMenu);
 
 			return TRUE;
@@ -910,14 +909,12 @@ namespace Win32xx
 			}
 			else
 			{
-			//	m_imlMenuDis.Attach( CreateDisabledImageList(m_imlMenu.GetHandle()) );
 				m_imlMenuDis.CreateDisabledImageList(&m_imlMenu);
 			}
 		}
 		else
 		{
 			m_imlMenuDis.DeleteImageList();
-		//	m_imlMenuDis.Attach( CreateDisabledImageList(m_imlMenu.GetHandle()) );
 			m_imlMenuDis.CreateDisabledImageList(&m_imlMenu);
 		}
 
