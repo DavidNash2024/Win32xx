@@ -66,9 +66,19 @@ namespace Win32xx
 	{
 		friend class CWinApp;
 
+		struct DataMembers	// A structure that contains the data members
+		{
+			HIMAGELIST	hImageList;
+			BOOL		bIsTmpImageList;
+			long		Count;
+		};
+
 	public:
 		//Construction
 		CImageList();
+		CImageList(const CImageList& rhs);
+		CImageList& operator = (const CImageList& rhs);
+		void operator = (const HIMAGELIST hImageLIst);
 		~CImageList();
 
 		//Initialization
@@ -114,13 +124,11 @@ namespace Win32xx
 		operator HIMAGELIST () const;
 
 	private:
-		CImageList(const CImageList&);				// Disable copy construction
-		CImageList& operator = (const CImageList&);	// Disable assignment operator
 		void AddToMap();
+		void Release();
 		BOOL RemoveFromMap();
 
-		HIMAGELIST m_hImageList;
-		BOOL m_IsTmpImageList;
+		DataMembers* m_pData; 
 	};
 
 
@@ -128,31 +136,53 @@ namespace Win32xx
 	// Definitions for the CImageList class
 	//
 
-	inline CImageList::CImageList() : m_hImageList(0), m_IsTmpImageList(FALSE)
+	inline CImageList::CImageList()
 	{
+		m_pData = new DataMembers;
+		m_pData->hImageList = 0;
+		m_pData->Count = 1L;
+		m_pData->bIsTmpImageList = FALSE;
+	}
+
+	inline CImageList::CImageList(const CImageList& rhs)
+	// Note: A copy of a CImageList is a clone of the original.
+	//       Both objects manipulate the one HIMAGELIST.
+	{
+		m_pData = rhs.m_pData;
+		InterlockedIncrement(&m_pData->Count);
+	}
+
+	inline CImageList& CImageList::operator = (const CImageList& rhs)
+	// Note: A copy of a CImageList is a clone of the original.
+	{
+		if (this != &rhs)
+		{
+			InterlockedIncrement(&rhs.m_pData->Count);
+			Release();
+			m_pData = rhs.m_pData;
+		}
+
+		return *this;
+	}
+
+	inline void CImageList::operator = (const HIMAGELIST hImageLIst)
+	{
+		Attach(hImageLIst);
 	}
 
 	inline CImageList::~CImageList()
 	{
-		if (m_hImageList)
-		{
-			if (!m_IsTmpImageList)
-			{
-				::ImageList_Destroy(m_hImageList);
-			}
-
-			RemoveFromMap();
-		}
+		Release();
 	}
 
 	inline void CImageList::AddToMap()
 	// Store the HIMAGELIST and CImageList pointer in the HIMAGELIST map
 	{
 		assert( GetApp() );
-		assert(m_hImageList);
+		assert(m_pData->hImageList);
 
 		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapHIMAGELIST.insert(std::make_pair(m_hImageList, this));
+		GetApp()->m_mapHIMAGELIST.insert(std::make_pair(m_pData->hImageList, this));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -176,8 +206,8 @@ namespace Win32xx
 			if (0 == pImageList)
 			{
 				pImageList = new CImageList;
-				pImageList->m_hImageList = hImageList;
-				pImageList->m_IsTmpImageList = TRUE;
+				pImageList->m_pData->hImageList = hImageList;
+				pImageList->m_pData->bIsTmpImageList = TRUE;
 				pTLSData->TmpImageLists.insert(std::make_pair(hImageList, pImageList));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -221,45 +251,59 @@ namespace Win32xx
 	inline int CImageList::Add(CBitmap* pbmImage, CBitmap* pbmMask)
 	// Adds an image or images to an image list. The pbmMask parameter can be NULL.
 	{
-		assert (m_hImageList);
+		assert(m_pData);
+		assert (m_pData->hImageList);
 		assert (pbmImage);
 		HBITMAP hbmMask = pbmMask? (HBITMAP)*pbmMask : 0;
-		return ImageList_Add(m_hImageList, (HBITMAP)*pbmImage, hbmMask );
+		return ImageList_Add(m_pData->hImageList, (HBITMAP)*pbmImage, hbmMask );
 	}
 
 	inline int CImageList::Add(CBitmap* pbmImage, COLORREF crMask)
 	// Adds an image or images to an image list, generating a mask from the specified bitmap.
 	{
-		assert (m_hImageList);
+		assert(m_pData);
+		assert (m_pData->hImageList);
 		assert (pbmImage);
-		return ImageList_AddMasked(m_hImageList, (HBITMAP)*pbmImage, crMask);
+		return ImageList_AddMasked(m_pData->hImageList, (HBITMAP)*pbmImage, crMask);
 	}
 
 	inline int CImageList::Add(HICON hIcon)
 	// Adds an Icon to the image list
 	{
-		assert (m_hImageList);
+		assert(m_pData);
+		assert (m_pData->hImageList);
 
 		// Append the icon to the image list
-		return ImageList_ReplaceIcon(m_hImageList, -1, hIcon);
+		return ImageList_ReplaceIcon(m_pData->hImageList, -1, hIcon);
 	}
 
 	inline void CImageList::Attach(HIMAGELIST hImageList)
 	// Attaches an existing ImageList to this CImageList
 	{
 		assert(hImageList);
-		assert( 0 == m_hImageList );
-		assert( 0 == GetApp()->GetCImageListFromMap(hImageList) );
+		assert(m_pData);
+		assert( 0 == m_pData->hImageList );
 
-		m_hImageList = hImageList;
-		AddToMap();
+		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
+		if (pImageList)
+		{
+			delete m_pData;
+			m_pData = pImageList->m_pData;
+			InterlockedIncrement(&m_pData->Count);
+		}
+		else
+		{
+			m_pData->hImageList = hImageList;
+			AddToMap();
+		}
 	}
 
 	inline BOOL CImageList::BeginDrag(int nImage, CPoint ptHotSpot) const
 	// Begins dragging an image.
 	{
-		assert(m_hImageList);
-		return ImageList_BeginDrag(m_hImageList, nImage, ptHotSpot.x, ptHotSpot.y);
+		assert(m_pData);
+		assert(m_pData->hImageList);
+		return ImageList_BeginDrag(m_pData->hImageList, nImage, ptHotSpot.x, ptHotSpot.y);
 	}
 
 	inline BOOL CImageList::Create(int cx, int cy, UINT nFlags, int nInitial, int nGrow)
@@ -276,13 +320,14 @@ namespace Win32xx
 	// ILC_MASK		Use a mask. The image list contains two bitmaps, one of which is a monochrome bitmap used as a mask.
 	//				If this value is not included, the image list contains only one bitmap.
 	{
-		assert(NULL == m_hImageList);
-		m_hImageList = ImageList_Create(cx, cy, nFlags, nInitial, nGrow);
+		assert(m_pData);
+		assert(NULL == m_pData->hImageList);
+		m_pData->hImageList = ImageList_Create(cx, cy, nFlags, nInitial, nGrow);
 
-		if (m_hImageList)
+		if (m_pData->hImageList)
 			AddToMap();
 
-		return ( m_hImageList!= 0 );
+		return ( m_pData->hImageList!= 0 );
 	}
 
 	inline BOOL CImageList::Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask)
@@ -293,7 +338,8 @@ namespace Win32xx
 	// crMask	The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
 	//			and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
 	{
-		assert(NULL == m_hImageList);
+		assert(m_pData);
+		assert(NULL == m_pData->hImageList);
 
 		LPCTSTR lpszBitmapID = MAKEINTRESOURCE (nBitmapID);
 		return Create(lpszBitmapID, cx, nGrow, crMask);
@@ -307,13 +353,14 @@ namespace Win32xx
 	// crMask	The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
 	//			and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
 	{
-		assert(NULL == m_hImageList);
-		m_hImageList = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
+		assert(m_pData);
+		assert(NULL == m_pData->hImageList);
+		m_pData->hImageList = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
 
-		if (m_hImageList)
+		if (m_pData->hImageList)
 			AddToMap();
 
-		return ( m_hImageList!= 0 );
+		return ( m_pData->hImageList!= 0 );
 	}
 
 #if (_WIN32_IE >= 0x0400)
@@ -321,33 +368,51 @@ namespace Win32xx
 	// Creates a duplicate ImageList
 	{
 		assert(pImageList);
-		m_hImageList = ImageList_Duplicate(pImageList->m_hImageList);
+		assert(m_pData);
+		m_pData->hImageList = ImageList_Duplicate(pImageList->GetHandle());
 
-		if (m_hImageList)
+		if (m_pData->hImageList)
 			AddToMap();
 
-		return ( m_hImageList!= 0 );
+		return ( m_pData->hImageList!= 0 );
 	}
 #endif
 
 	inline void CImageList::DeleteImageList()
 	// Destroys an image list.
 	{
-		RemoveFromMap();
-		
-		ImageList_Destroy(m_hImageList);
-		m_hImageList = 0;
+		assert(m_pData);
+		if (m_pData->hImageList)
+		{
+			RemoveFromMap();
+			
+			ImageList_Destroy(m_pData->hImageList);
+			m_pData->hImageList = 0;
+		}
 	}
 
 	inline HIMAGELIST CImageList::Detach()
 	// Detaches the HIMAGELIST from this CImageList. If the HIMAGELIST is not detached it will be
 	// destroyed when this CImageList is deconstructed.
 	{
-		assert(m_hImageList);
-		HIMAGELIST hImageList = m_hImageList;
-		m_hImageList = 0;
-		
-		RemoveFromMap();
+		assert(m_pData);
+		assert(m_pData->hImageList);
+		HIMAGELIST hImageList = m_pData->hImageList;
+
+		if (m_pData->Count)
+		{
+			if (InterlockedDecrement(&m_pData->Count) == 0)
+			{
+				RemoveFromMap();
+				delete m_pData;
+			}
+		}
+
+		// Assign values to our data members
+		m_pData = new DataMembers;
+		m_pData->hImageList = 0;
+		m_pData->Count = 1L;
+		m_pData->bIsTmpImageList = FALSE;	
 
 		return hImageList;
 	}
@@ -355,7 +420,7 @@ namespace Win32xx
 	inline BOOL CImageList::DragEnter(CWnd* pWndLock, CPoint point) const
 	// Displays the drag image at the specified position within the window.
 	{
-		assert(m_hImageList);
+		assert(m_pData->hImageList);
 		return ImageList_DragEnter(*pWndLock, point.x, point.y);
 	}
 
@@ -381,8 +446,8 @@ namespace Win32xx
 	inline BOOL CImageList::Draw(CDC* pDC, int nImage, POINT pt, UINT nStyle) const
 	// Draws an image list item in the specified device context.
 	{
-		assert(m_hImageList);
-		return ImageList_Draw(m_hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, nStyle);
+		assert(m_pData->hImageList);
+		return ImageList_Draw(m_pData->hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, nStyle);
 	}
 
 	inline BOOL CImageList::DrawEx(CDC* pDC, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const
@@ -404,76 +469,96 @@ namespace Win32xx
 	// ILD_IMAGE	If the overlay does not require a mask to be drawn set the ILD_IMAGE flag.
 	//				This causes ImageList_DrawEx to just draw the image, ignoring the mask.
 	{
-		assert(m_hImageList);
-		return ImageList_DrawEx(m_hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
+		assert(m_pData->hImageList);
+		return ImageList_DrawEx(m_pData->hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
 	}
 
 	inline BOOL CImageList::DrawIndirect(IMAGELISTDRAWPARAMS* pimldp)
 	// Draws an image list image based on an IMAGELISTDRAWPARAMS structure.
 	{
-		assert(m_hImageList);
+		assert(m_pData->hImageList);
 		return ImageList_DrawIndirect(pimldp);
 	}
 
 	inline HICON CImageList::GetIcon(int iImage, UINT nFlags) const
 	// Creates an icon from an image and mask in an image list.
 	{
-		assert(m_hImageList);
-		return ImageList_GetIcon(m_hImageList, iImage, nFlags);
+		assert(m_pData->hImageList);
+		return ImageList_GetIcon(m_pData->hImageList, iImage, nFlags);
 	}
 
 	inline BOOL CImageList::GetIconSize(int* cx, int* cy) const
 	// Retrieves the dimensions of images in an image list.
 	{
-		assert(m_hImageList);
-		return ImageList_GetIconSize(m_hImageList, cx, cy);
+		assert(m_pData->hImageList);
+		return ImageList_GetIconSize(m_pData->hImageList, cx, cy);
 	}
 
 	inline int CImageList::GetImageCount() const
 	// Retrieves the number of images in an image list.
 	{
-		assert(m_hImageList);
-		return ImageList_GetImageCount(m_hImageList);
+		assert(m_pData->hImageList);
+		return ImageList_GetImageCount(m_pData->hImageList);
 	}
 
 	inline BOOL CImageList::GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const
 	// Retrieves information about an image.
 	{
-		assert(m_hImageList);
-		return ImageList_GetImageInfo(m_hImageList, nImage, pImageInfo);
+		assert(m_pData->hImageList);
+		return ImageList_GetImageInfo(m_pData->hImageList, nImage, pImageInfo);
 	}
 
 	inline BOOL CImageList::Remove(int nImage) const
 	// Removes an image from an image list.
 	{
-		assert(m_hImageList);
-		return ImageList_Remove(m_hImageList, nImage);
+		assert(m_pData->hImageList);
+		return ImageList_Remove(m_pData->hImageList, nImage);
 	}
 
 	inline BOOL CImageList::Replace(int nImage, CBitmap* pbmImage,  CBitmap* pbmMask) const
 	// Replaces an image in an image list with a new image.
 	{
-		assert (m_hImageList);
-		return ImageList_Replace(m_hImageList, nImage, *pbmImage, *pbmMask);
+		assert (m_pData->hImageList);
+		return ImageList_Replace(m_pData->hImageList, nImage, *pbmImage, *pbmMask);
 	}
 
 	inline int CImageList::Replace(int nImage, HICON hIcon) const
 	// Replaces an image with an icon or cursor.
 	{
-		assert (m_hImageList);
-		return ImageList_ReplaceIcon(m_hImageList, nImage, hIcon);
+		assert (m_pData->hImageList);
+		return ImageList_ReplaceIcon(m_pData->hImageList, nImage, hIcon);
 	}
 
 	inline HIMAGELIST CImageList::GetHandle() const
 	// Returns the HIMAGELIST assigned to this CImageList
 	{
-		return m_hImageList;
+		return m_pData->hImageList;
 	}
 
 	inline CImageList::operator HIMAGELIST () const
 	// Retrieves the image list's handle.
 	{
-		return m_hImageList;
+		return m_pData->hImageList;
+	}
+
+	inline void CImageList::Release()
+	{
+		assert(m_pData);
+
+		if (InterlockedDecrement(&m_pData->Count) == 0)
+		{
+			if (m_pData->hImageList != NULL)
+			{
+				if (!m_pData->bIsTmpImageList)
+				{
+					::DeleteObject(m_pData->hImageList);
+					RemoveFromMap();
+				}
+			}
+
+			delete m_pData;
+			m_pData = 0;
+		}
 	}
 
 
@@ -481,7 +566,7 @@ namespace Win32xx
 
 	inline BOOL CImageList::CreateDisabledImageList(CImageList* pimlNormal)
 	{
-		assert(NULL == m_hImageList);
+		assert(NULL == m_pData->hImageList);
 		assert(pimlNormal);
 	
 		int nCount = pimlNormal->GetImageCount();
@@ -537,7 +622,7 @@ namespace Win32xx
 			}
 		}
 
-		return ( m_hImageList!= 0 );
+		return ( m_pData->hImageList!= 0 );
 	}
 
 

@@ -155,8 +155,8 @@ namespace Win32xx
 		CGDIObject();
 		CGDIObject(const CGDIObject& rhs);
 		virtual ~CGDIObject();
-		CGDIObject& operator = ( const CGDIObject& rhs );
-		void operator = (HGDIOBJ hObject);
+		CGDIObject& operator = (const CGDIObject& rhs);
+		void operator = (const HGDIOBJ hObject);
 
 		void	Attach(HGDIOBJ hObject);
 		void	DeleteObject();
@@ -874,11 +874,9 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline void CGDIObject::operator = (HGDIOBJ hObject)
+	inline void CGDIObject::operator = (const HGDIOBJ hObject)
 	{
-		assert(m_pData);
-		assert (m_pData->hGDIObject == NULL);
-		m_pData->hGDIObject = hObject;
+		Attach(hObject);
 	}
 
 	inline void CGDIObject::AddToMap()

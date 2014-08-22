@@ -1884,17 +1884,17 @@ namespace Win32xx
 		if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 		{
 			CString PathName;
-			CString SubKey;
+			CString SubKeyName;
 			for (UINT i = 0; i < m_nMaxMRU; ++i)
 			{
 				DWORD dwType = REG_SZ;
 				DWORD dwBufferSize = 0;
-				SubKey.Format(_T("File %d"), i+1);
+				SubKeyName.Format(_T("File %d"), i+1);
 
-				if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKey, NULL, &dwType, NULL, &dwBufferSize))
+				if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKeyName, NULL, &dwType, NULL, &dwBufferSize))
 				{
 					// load the entry from the registry
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKey, NULL, &dwType, (LPBYTE)PathName.GetBuffer(dwBufferSize), &dwBufferSize))
+					if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKeyName, NULL, &dwType, (LPBYTE)PathName.GetBuffer(dwBufferSize), &dwBufferSize))
 					{
 						PathName.ReleaseBuffer();
 
@@ -2610,12 +2610,12 @@ namespace Win32xx
 	{
 		if (!m_strKeyName.IsEmpty())
 		{
-			CString strKeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
+			CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
 			HKEY hKey = NULL;
 
 			try
 			{
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw CWinException(_T("RegCreateKeyEx failed"));
 
 				// Store the window position in the registry
@@ -2660,7 +2660,7 @@ namespace Win32xx
 				if (hKey)
 				{
 					// Roll back the registry changes by deleting this subkey
-					RegDeleteKey(HKEY_CURRENT_USER ,strKeyName);
+					RegDeleteKey(HKEY_CURRENT_USER ,KeyName);
 					RegCloseKey(hKey);
 				}
 
@@ -2671,29 +2671,29 @@ namespace Win32xx
 			// Store the MRU entries in the registry
 			if (m_nMaxMRU > 0)
 			{
-				CString strKeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
+				CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
 				HKEY hKey = NULL;
 
 				try
 				{
 					// Delete Old MRUs
-					RegDeleteKey(HKEY_CURRENT_USER, strKeyName);
+					RegDeleteKey(HKEY_CURRENT_USER, KeyName);
 
 					// Add Current MRUs
-					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, strKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
 						throw CWinException(_T("RegCreateKeyEx failed"));
 
-					CString SubKey;
+					CString SubKeyName;
 					CString strPathName;
 					for (UINT i = 0; i < m_nMaxMRU; ++i)
 					{
-						SubKey.Format(_T("File %d"), i+1);
+						SubKeyName.Format(_T("File %d"), i+1);
 						
 						if (i < m_vMRUEntries.size())
 						{
 							strPathName = m_vMRUEntries[i];
 
-							if (ERROR_SUCCESS != RegSetValueEx(hKey, SubKey, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
+							if (ERROR_SUCCESS != RegSetValueEx(hKey, SubKeyName, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
 								throw CWinException(_T("RegSetValueEx failed"));
 						}
 					}
@@ -2708,7 +2708,7 @@ namespace Win32xx
 					if (hKey)
 					{
 						// Roll back the registry changes by deleting this subkey
-						RegDeleteKey(HKEY_CURRENT_USER ,strKeyName);
+						RegDeleteKey(HKEY_CURRENT_USER ,KeyName);
 						RegCloseKey(hKey);
 					}
 

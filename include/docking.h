@@ -2551,15 +2551,15 @@ namespace Win32xx
 				DWORD BufferSize = sizeof(DockInfo);
 				DockInfo di;
 				int i = 0;
-				CString SubKey;
-				SubKey.Format(_T("DockChild%d"), i);
+				CString SubKeyName;
+				SubKeyName.Format(_T("DockChild%d"), i);
 
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, SubKey, NULL, &dwType, (LPBYTE)&di, &BufferSize))
+				while (0 == RegQueryValueEx(hKey, SubKeyName, NULL, &dwType, (LPBYTE)&di, &BufferSize))
 				{
 					vDockList.push_back(di);
 					i++;
-					SubKey.Format(_T("DockChild%d"), i);
+					SubKeyName.Format(_T("DockChild%d"), i);
 				}
 
 				RegCloseKey(hKey);
@@ -2641,10 +2641,10 @@ namespace Win32xx
 			if (hKey)
 			{
 				UINT uContainer = 0;
-				CString SubKey;
-				SubKey.Format(_T("DockContainer%u"), uContainer);
+				CString SubKeyName;
+				SubKeyName.Format(_T("DockContainer%u"), uContainer);
 				HKEY hContainerKey = 0;
-				while ( 0 == RegOpenKeyEx(hKey, SubKey, 0, KEY_READ, &hContainerKey) )
+				while ( 0 == RegOpenKeyEx(hKey, SubKeyName, 0, KEY_READ, &hContainerKey) )
 				{
 					DWORD dwType = REG_DWORD;
 					DWORD BufferSize = sizeof(int);
@@ -2703,7 +2703,7 @@ namespace Win32xx
 					}
 
 					RegCloseKey(hContainerKey);
-					SubKey.Format(_T("DockContainer%u"), ++uContainer);
+					SubKeyName.Format(_T("DockContainer%u"), ++uContainer);
 				}
 
 				RegCloseKey(hKey);
@@ -3533,11 +3533,11 @@ namespace Win32xx
 				// Remove Old Docking info ...
 				// Remove existing DockContainer SubKeys
 				UINT uDockContainer = 0;
-				CString SubKey;
-				SubKey.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
-				while (0 == RegDeleteKey(hKey, SubKey) )
+				CString SubKeyName;
+				SubKeyName.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
+				while (0 == RegDeleteKey(hKey, SubKeyName) )
 				{
-					SubKey.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
+					SubKeyName.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
 				}
 
 				// Remove the Dock Windows key
@@ -3567,9 +3567,9 @@ namespace Win32xx
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
 				{
 					DockInfo di = vDockInfo[u];
-					CString SubKey;
-					SubKey.Format(_T("DockChild%u"), u);
-					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, SubKey, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
+					CString SubKeyName;
+					SubKeyName.Format(_T("DockChild%u"), u);
+					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, SubKeyName, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
 						throw (CWinException(_T("RegSetValueEx failed")));
 				}
 
@@ -3581,9 +3581,9 @@ namespace Win32xx
 
 					if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
 					{
-						CString SubKey;
-						SubKey.Format(_T("DockContainer%u"), u1++);
-						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, SubKey, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
+						CString SubKeyName;
+						SubKeyName.Format(_T("DockContainer%u"), u1++);
+						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, SubKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
 							throw (CWinException(_T("RegCreateKeyEx Failed")));
 
 						// Store the container group's parent
@@ -3599,11 +3599,11 @@ namespace Win32xx
 						// Store the tab order
 						for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
 						{
-							SubKey.Format(_T("Tab%u"), u2);
+							SubKeyName.Format(_T("Tab%u"), u2);
 							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
 							int nTabID = GetDockFromView(pTab)->GetDockID();
 
-							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, SubKey, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
+							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, SubKeyName, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
 								throw (CWinException(_T("RegSetValueEx failed")));
 						}
 
@@ -3624,11 +3624,11 @@ namespace Win32xx
 					{
 						// Remove existing DockContainer SubKeys
 						UINT uDockContainer = 0;
-						CString SubKey;
-						SubKey.Format(_T("DockContainer%u"), uDockContainer);
-						while (0 == RegDeleteKey(hKeyDock, SubKey) )
+						CString SubKeyName;
+						SubKeyName.Format(_T("DockContainer%u"), uDockContainer);
+						while (0 == RegDeleteKey(hKeyDock, SubKeyName) )
 						{
-							SubKey.Format(_T("DockContainer%u"), ++uDockContainer);
+							SubKeyName.Format(_T("DockContainer%u"), ++uDockContainer);
 						}
 						RegDeleteKey(hKeyDock, _T("Dock Windows"));
 						RegCloseKey(hKeyDock);
