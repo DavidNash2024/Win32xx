@@ -61,8 +61,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
-			ToolBarTheme tt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(225, 230, 255), RGB(240, 242, 250)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 			SetMenuTheme(&mt);
@@ -72,8 +75,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
 
-			ToolBarTheme tt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(150,190,245), RGB(196,215,250)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
 			SetMenuTheme(&mt);
@@ -83,8 +89,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
 
-			ToolBarTheme tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(210, 210, 200), RGB(238, 236, 224)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
 			SetMenuTheme(&mt);
@@ -94,8 +103,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
 
-			ToolBarTheme tt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(160, 180, 80), RGB(180, 200, 100)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
@@ -105,8 +117,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
 
-			ToolBarTheme tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(230, 180, 0), RGB(240, 210, 90)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
@@ -116,8 +131,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
 
-			ToolBarTheme tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(248, 132, 12), RGB(248, 198, 10)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
@@ -127,8 +145,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
 
-			ToolBarTheme tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(255, 130, 190), RGB(250, 205, 235)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
@@ -138,8 +159,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(210, 128, 155), RGB(230, 160, 190), RGB(230, 158, 188), RGB(110, 100, 125) );
 
-			ToolBarTheme tt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(210, 128, 155), RGB(230, 160, 190)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
@@ -149,8 +173,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 		{
 			SetReBarColors( RGB(128, 138 ,176), RGB(98, 108 ,136), RGB(77, 87, 97), RGB(7, 17, 27) );
 
-			ToolBarTheme tt = {TRUE, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(128, 138 ,176), RGB(98, 108 ,136)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
 			SetMenuTheme(&mt);
@@ -161,8 +188,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 			m_nColor = IDM_MODERN;
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
-			ToolBarTheme tt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-			SetToolBarTheme(&tt);
+			StatusBarTheme sbt = {TRUE, RGB(225, 230, 255), RGB(240, 242, 250)};
+			SetStatusBarTheme (&sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+			SetToolBarTheme(&tbt);
 
 			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 			SetMenuTheme(&mt);

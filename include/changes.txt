@@ -3,6 +3,10 @@ Version 7.5.2
 
 New Features and Enhancements
 -----------------------------
+* Added StatusBar themes.
+   StatusBars can fill the background with a color gradient. The two 
+   colors can be specified by SetStatusBarTheme.
+   
 * Switching between views is now supported, using SetView
   The following classes support switching views:
    - Frames
@@ -11,22 +15,23 @@ New Features and Enhancements
    - DockContainers
    
 * Updated Frames
-   - The IDW_INDICATOR_CAPS, IDW_INDICATOR_NUM and IDW_INDICATOR_SCRL string
-      resources are now used to define the status indicators. These string
+   - IDW_INDICATOR_CAPS, IDW_INDICATOR_NUM and IDW_INDICATOR_SCRL string
+      resources are used to define the status indicators. These string
 	  resources should be added to the resource script (resource.rc). Refer
-	  to resouce.rc in the frame sample for an example.
+	  to resource.rc in the frame sample for an example.
    
 * Updated Dockers
    - Dock targets invalidated by DS_NO_DOCKCHILD_XXXX are hidden or greyed.
    - Click and drag tab swaps to swap them for DockContainers and TabbedMDIs.
-   - Parent dockers now have a minimum size.
-   - Added support for DS_FIXED_RESIZE.
+   - Parent dockers have a minimum size.
+   - Added support for DS_FIXED_RESIZE. Normally dock children are resized 
+      proportionally, but with this style the size of dock children is fixed.
    - Dock containers with a single tab can hide the tab.
    - Improved hinting for container within container docking.
  
 * Added support for vertical ToolBars and ReBars
-   - Vertical ToolBars and ReBars are now supported and themed correctly by CFrame.
-      These are demonstrated in the ReBar and ToolBar samples. 
+   - Vertical ToolBars and ReBars can be themed by CFrame. These are 
+      demonstrated in the ReBar and ToolBar samples. 
    
 * Updated the samples
    - Added DateTime sample to demonstrate CDateTime and CMonthCalendar. 
@@ -34,32 +39,35 @@ New Features and Enhancements
       adding or removing ToolBar buttons. It also demonstrates an additional
 	  ToolBar which can be positioned at the top, bottom, left or right of the
 	  view window.
-   - Added ReBar sample. It demonstrates an additional ReBar which can be 
-      positioned at the top, bottom, left or right of the view window.
+   - Added ReBar sample. It demonstrates an additional ReBar which contains 
+      a ToolBar and can be positioned at the top, bottom, left or right of the
+      view window.
    - Added StatusBar sample. It demonstrates a colored StatusBar with a
       hyperlink, a progress bar, an icon and an owner drawn part.
-   - The DockTabbedMDI sample now includes a Window menu.	 
-   - The Themes sample now demonstrates how to save a band's size and position 
+   - A window menu has been added to the DockTabbedMDI sample.	 
+   - The Themes sample demonstrates how to save a band's size and position 
       in the registry.
    
 
 Changes in detail
 -----------------
 Added CFrame::DrawReBarBkgnd
+Added CFrame::DrawStatusBarBkgnd
 Added CDockContainer::OnMouseMove
 Added CDockContainer::SetHideSingleTab
 Added CDockContainer::SwapTabs
 Added CDocker::GetViewRect
 Added CWinApp::LoadImage
-Modified CTabbedMDI::GetTab			now returns CWnd*
+Modified CTabbedMDI::GetTab			returns CWnd*
 Moved ::TintBitmap 					to CBitmap::TintBitmap
 Moved ::GrayScaleBitmap 			to CBitmap::GrayScaleBitmap
 Moved ::CreateDisabledImageList 	to CImageList::CreateDisabledImageList
 
 Added user defined messages:
-UWM_GETFRAMEVIEW:		Used by CFrame.  Returns the view window's HWND 
-UWN_DRAWRBBKGND:        Used by CFrame.  Called for ReBar background redrawing
-UWN_TABDRAGGED:         Used by CTabbedMDI. Called when a CTab's tab is dragged
+UWM_GETFRAMEVIEW:	Used by CFrame.  Returns the view window's HWND 
+UWN_DRAWRBBKGND:    Used by CFrame.  Called for ReBar background redrawing
+UWN_DRAWSBBKGND:    Used by CFrame.  Called for StatusBar background redrawing
+UWN_TABDRAGGED:     Used by CTabbedMDI. Called when a CTab's tab is dragged
 
 Added string resources for frames (defined in resouce.rc)
 IDW_INDICATOR_CAPS

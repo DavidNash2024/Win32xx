@@ -184,12 +184,6 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-void CMainFrame::RecalcLayout()
-{
-	CFrame::RecalcLayout();
-
-}
-
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)

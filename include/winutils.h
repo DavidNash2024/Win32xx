@@ -34,6 +34,12 @@
 //
 ////////////////////////////////////////////////////////
 
+
+///////////////////////////////////////////////////////
+// winutils.h
+//  Declaration of the following classes:
+//  CPoint, CRect, and CSize
+
 #ifndef _WIN32XX_WINUTILS_H_
 #define _WIN32XX_WINUTILS_H_
 
@@ -58,7 +64,6 @@ namespace Win32xx
 	// Forward declarations
 	class CPoint;
 	class CRect;
-	CWinApp* GetApp();
 
 
 	/////////////////////////////////////////
@@ -425,6 +430,14 @@ namespace Win32xx
 		BOOL RoundBorders;		// Use rounded band borders
 		BOOL ShortBands;        // Allows bands to be shorter than maximum available width
 		BOOL UseLines;			// Displays horizontal lines between bands
+	};
+
+	// Defines the theme colors and options for the StatusBar
+	struct StatusBarTheme
+	{
+		BOOL UseThemes;			// TRUE if themes are used
+		COLORREF clrBkgnd1;		// Colour 1 for statusbar background
+		COLORREF clrBkgnd2;		// Colour 2 for statusbar background
 	};
 
 	// Defines the theme colors for the ToolBar

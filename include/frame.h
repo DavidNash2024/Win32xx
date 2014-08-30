@@ -329,8 +329,10 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		MenuTheme* GetMenuBarTheme() const			{ return const_cast<MenuTheme*>(&m_MenuBarTheme); }
 		ReBarTheme* GetReBarTheme()	const			{ return const_cast<ReBarTheme*>(&m_ReBarTheme); }
+		StatusBarTheme* GetStatusBarTheme()	const	{ return const_cast<StatusBarTheme*>(&m_StatusBarTheme); }
 		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_ToolBarTheme); }
-		void SetReBarTheme(ReBarTheme* pRBT); 
+		void SetReBarTheme(ReBarTheme* pRBT);
+		void SetStatusBarTheme(StatusBarTheme* pSBT);
 		void SetToolBarTheme(ToolBarTheme* pTBT);
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
 		CMenu* GetFrameMenu() const					{ return const_cast<CMenu*>(&m_Menu); }
@@ -368,6 +370,7 @@ namespace Win32xx
 		virtual void DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis);
 		virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pdis);
 		virtual BOOL DrawReBarBkgnd(CDC* pDC, CReBar* pReBar);
+		virtual BOOL DrawStatusBarBkgnd(CDC* pDC, CStatusBar* pStatusBar);
 		virtual int  GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem);
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
@@ -455,6 +458,7 @@ namespace Win32xx
 		CString m_XPThemeName;				// CString for Windows Theme Name
 		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
 		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
+		StatusBarTheme m_StatusBarTheme;	// struct of theme info for the StatusBar
 		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
@@ -1739,6 +1743,27 @@ namespace Win32xx
 		return IsDrawn;
 	}
 
+	inline BOOL CFrame::DrawStatusBarBkgnd(CDC* pDC, CStatusBar* pStatusBar)
+	// Draws the StatusBar's background when ReBar themes are enabled.
+	// Returns TRUE when the default background drawing is suppressed.	
+	{
+		BOOL IsDrawn = FALSE;
+
+		// The background can be set here if XP themes are enabled 
+		if (::IsXPThemed())
+		{
+			StatusBarTheme* pTheme = GetStatusBarTheme();
+			if (pTheme->UseThemes)
+			{
+				// Fill the background with a color gradient
+				pDC->GradientFill(pTheme->clrBkgnd1, pTheme->clrBkgnd2, pStatusBar->GetClientRect(), TRUE); 
+				IsDrawn = TRUE;
+			}
+		}
+
+		return IsDrawn;
+	}
+
 	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, CWnd* pChild) const
 	// Calculates the remaining client rect when a child window is excluded.
 	// Note: Assumes the child window touches 3 of the client rect's borders
@@ -2812,6 +2837,12 @@ namespace Win32xx
 		m_ReBarTheme = *pRBT; 
 	}
 
+	inline void CFrame::SetStatusBarTheme(StatusBarTheme* pSBT) 
+	// Stores the statusbar's theme colors
+	{ 
+		m_StatusBarTheme = *pSBT; 
+	}
+
 	inline void CFrame::SetStatusIndicators()
 	// Creates 4 panes in the status bar and displays status and key states.
 	{
@@ -2900,63 +2931,73 @@ namespace Win32xx
 			{
 			case Modern:	// A pale blue color scheme suitable for Windows 7 and 8
 				{
-					ToolBarTheme tt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-					ReBarTheme tr = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};
-					MenuTheme tm = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+					MenuTheme mt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+					ReBarTheme rbt = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(225, 230, 255), RGB(240, 242, 250)};
+					ToolBarTheme tbt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 
-					m_ToolBarTheme = tt;
-					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
-					m_ReBarTheme = tr;
+					SetMenuTheme(&mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(&rbt);
+					SetStatusBarTheme(&sbt);
+					SetToolBarTheme(&tbt);
 				}
 				break;
 
 			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 				{
-					ToolBarTheme tt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
-					ReBarTheme tr = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, F, T, T, T, F};
-					MenuTheme tm = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+					MenuTheme mt = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};				
+					ReBarTheme rbt = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(212, 208, 200), RGB(212, 208, 200)};
+					ToolBarTheme tbt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
 
-					m_ToolBarTheme = tt;
-					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
-					m_ReBarTheme = tr;
+					SetMenuTheme(&mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(&rbt);
+					SetStatusBarTheme(&sbt);
+					SetToolBarTheme(&tbt);
 				}
 				break;
 			case Blue:
 				{
 					// Used for XP default (blue) color scheme
-					ToolBarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
-					ReBarTheme tr = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, F, T, T, T, F};
-					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
+					MenuTheme mt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};		
+					ReBarTheme rbt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(150,190,245), RGB(196,215,250)};
+					ToolBarTheme tbt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 
-					m_ToolBarTheme = tt;
-					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
-					m_ReBarTheme = tr;
+					SetMenuTheme(&mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(&rbt);
+					SetStatusBarTheme(&sbt);
+					SetToolBarTheme(&tbt);
 				}
 				break;
 
 			case Silver:
 				{
 					// Used for XP Silver color scheme
-					ToolBarTheme tt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-					ReBarTheme tr = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, F, T, T, T, F};
-					MenuTheme tm = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
+					MenuTheme mt = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
+					ReBarTheme rbt = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(225, 220, 240), RGB(240, 240, 245)};
+					ToolBarTheme tbt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 
-					m_ToolBarTheme = tt;
-					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
-					m_ReBarTheme = tr;
+					SetMenuTheme(&mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(&rbt);
+					SetStatusBarTheme(&sbt);
+					SetToolBarTheme(&tbt);
 				}
 				break;
 
 			case Olive:
 				{
 					// Used for XP Olive color scheme
-					ReBarTheme tr = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, F, T, T, T, F};
-					ToolBarTheme tt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
-					MenuTheme tm = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
+					MenuTheme mt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
+					ReBarTheme rbt = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(215, 216, 182), RGB(242, 242, 230)};
+					ToolBarTheme tbt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 
-					m_ToolBarTheme = tt;
-					SetMenuTheme(&tm);	// Sets the theme for popup menus and MenuBar
-					m_ReBarTheme = tr;
+					SetMenuTheme(&mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(&rbt);
+					SetStatusBarTheme(&sbt);
+					SetToolBarTheme(&tbt);
 				}
 				break;
 			}
@@ -3331,6 +3372,7 @@ namespace Win32xx
 		case UWM_GETREBARTHEME:		return (LRESULT)&m_ReBarTheme;
 		case UWM_GETTOOLBARTHEME:	return (LRESULT)&m_ToolBarTheme;
 		case UWN_DRAWRBBKGND:       return DrawReBarBkgnd((CDC*) wParam, (CReBar*) lParam);
+		case UWN_DRAWSBBKGND:       return DrawStatusBarBkgnd((CDC*) wParam, (CStatusBar*) lParam);
 		
 		} // switch uMsg
 

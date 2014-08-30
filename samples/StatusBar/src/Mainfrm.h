@@ -28,7 +28,6 @@ protected:
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void	PreCreate(CREATESTRUCT &cs);
 	virtual void	SetupToolBar();
-	virtual void	RecalcLayout();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
