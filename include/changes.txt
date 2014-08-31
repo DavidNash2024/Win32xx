@@ -53,6 +53,8 @@ Changes in detail
 -----------------
 Added CFrame::DrawReBarBkgnd
 Added CFrame::DrawStatusBarBkgnd
+Added CFrame::GetStatusBarTheme
+Added CFrame::SetStatusBarTheme
 Added CDockContainer::OnMouseMove
 Added CDockContainer::SetHideSingleTab
 Added CDockContainer::SwapTabs

@@ -173,6 +173,10 @@ SOURCE="..\..\..\include\toolbar.h"
 
 SOURCE="..\..\..\include\wincore.h"
 # End Source File
+# Begin Source File
+
+SOURCE=..\..\..\include\winutils.h
+# End Source File
 # End Group
 # End Target
 # End Project

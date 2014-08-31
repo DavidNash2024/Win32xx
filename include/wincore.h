@@ -280,13 +280,14 @@ namespace Win32xx
 		CWnd* pMainWnd;		// pointer to the main window for the thread (usually CFrame)
 		CMenuBar* pMenuBar;	// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hMsgHook;		// WH_MSGFILTER hook for CMenuBar and Modal Dialogs
+		long nDlgHooks;		// Number of Dialog MSG hooks
 
 		std::vector<DCPtr> vTmpDCs;						// Temporary CDC pointers with hWnd
 		std::map<HDC, DCPtr, CompareHDC> TmpDCs;		// Temporary CDC pointers
 		std::map<HGDIOBJ, GDIPtr, CompareGDI> TmpGDIs;	// Temporary CGDIObject pointers
 		std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST> TmpImageLists;	// Temporary CImageList pointers
 		std::map<HWND, WndPtr, CompareHWND> TmpWnds;	// Temporary CWnd pointers
-		TLSData() : pWnd(0), pMenuBar(0), hMsgHook(0) {}	// Constructor
+		TLSData() : pWnd(0), pMainWnd(0), pMenuBar(0), hMsgHook(0), nDlgHooks(0) {}	// Constructor
 
 #ifndef _WIN32_WCE
 		std::map<HMENU, MenuPtr, CompareHMENU> TmpMenus;	// Temporary CMenu pointers

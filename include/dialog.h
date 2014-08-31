@@ -402,6 +402,7 @@ namespace Win32xx
 			{
 				pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 			}
+			InterlockedIncrement(&pTLSData->nDlgHooks);
 		#endif
 
 			HWND hParent = pParent? pParent->m_hWnd : 0;
@@ -424,11 +425,13 @@ namespace Win32xx
 			GetApp()->CleanupTemps();
 
 		#ifndef _WIN32_WCE
-			if (NULL != pTLSData->hMsgHook )
+			InterlockedDecrement(&pTLSData->nDlgHooks);
+			if (0 == pTLSData->nDlgHooks)
 			{
 				::UnhookWindowsHookEx(pTLSData->hMsgHook);
 				pTLSData->hMsgHook = NULL;
 			}
+
 		#endif
 
 			if (nResult == -1)
@@ -550,11 +553,8 @@ namespace Win32xx
 				}
 				else
 				{
-					// A modal message loop is running so we can't do IsDialogMessage.
-					// Avoid having modal dialogs create other windows, because those
-					// windows will then use the modal dialog's special message loop.
-					// If you need the dialog to create another window, put it in a
-					// different thread.
+					// A modal message loop is running which performs IsDialogMessage
+					// for us.
 				}
 			}
 		}
