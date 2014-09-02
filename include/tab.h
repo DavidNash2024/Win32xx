@@ -97,6 +97,8 @@ namespace Win32xx
 		virtual BOOL GetTabsAtTop() const;
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
+		virtual int GetTabImageID(UINT nTab) const;
+		virtual CString CTab::GetTabText(UINT nTab) const;
 		virtual int GetTextHeight() const;
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int nPage);
@@ -528,22 +530,16 @@ namespace Win32xx
 
 				if (rcItem.Width() >= 24)
 				{
-					CString str;
-					int nSize = 30;
-					TCITEM tcItem = {0};
-					tcItem.mask = TCIF_TEXT | TCIF_IMAGE;
-					tcItem.cchTextMax = nSize;
-					tcItem.pszText = str.GetBuffer(nSize);
-					GetItem(i, &tcItem);
-					str.ReleaseBuffer();
-					int xImage;
-					int yImage;
+					CString str = GetTabText(i);
+					int iImage = GetTabImageID(i);
+					int cxImage;
+					int cyImage;
 					int yOffset = 0;
-					if ( m_imlODTab.GetIconSize(&xImage, &yImage) )
-						yOffset = (rcItem.Height() - yImage)/2;
+					if ( m_imlODTab.GetIconSize(&cxImage, &cyImage) )
+						yOffset = (rcItem.Height() - cyImage)/2;
 
 					// Draw the icon
-					m_imlODTab.Draw(pDCMem, tcItem.iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
+					m_imlODTab.Draw(pDCMem, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
 					// Draw the text
 					pDCMem->SelectObject(&m_TabFont);
@@ -553,7 +549,7 @@ namespace Win32xx
 
 					int iImageSize = 20;
 					int iPadding = 4;
-					if (tcItem.iImage >= 0)
+					if (iImage >= 0)
 						rcText.left += iImageSize;
 
 					rcText.left += iPadding;
@@ -746,6 +742,18 @@ namespace Win32xx
 		assert (nTab < m_vTabPageInfo.size());
 
 		return m_vTabPageInfo[nTab];
+	}
+
+	inline int CTab::GetTabImageID(UINT nTab) const
+	{
+		assert (nTab < m_vTabPageInfo.size());
+		return m_vTabPageInfo[nTab].iImage;
+	}
+
+	inline CString CTab::GetTabText(UINT nTab) const
+	{
+		assert (nTab < m_vTabPageInfo.size());
+		return m_vTabPageInfo[nTab].TabText;
 	}
 
 	inline void CTab::NotifyChanged()

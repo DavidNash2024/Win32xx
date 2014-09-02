@@ -161,6 +161,8 @@ namespace Win32xx
 		virtual int GetContainerIndex(CDockContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
 		virtual CViewPage* GetViewPage()	{ return &m_ViewPage; }
+		virtual int GetTabImageID(UINT nTab) const;
+		virtual CString GetTabText(UINT nTab) const;
 		virtual void RecalcLayout();
 		virtual void RemoveContainer(CDockContainer* pWnd);
 		virtual void SelectPage(int nPage);
@@ -4206,6 +4208,18 @@ namespace Win32xx
 		}
 
 		return Size;
+	}
+
+	inline int CDockContainer::GetTabImageID(UINT nTab) const
+	{
+		assert (nTab < GetAllContainers().size());
+		return GetAllContainers()[nTab].iImage;
+	}
+
+	inline CString CDockContainer::GetTabText(UINT nTab) const
+	{
+		assert (nTab < GetAllContainers().size());
+		return GetAllContainers()[nTab].Title;
 	}
 
 	inline void CDockContainer::SetupToolBar()
