@@ -1,5 +1,5 @@
-Version 7.5.2
-=============
+Version 7.6
+===========
 
 New Features and Enhancements
 -----------------------------
@@ -43,11 +43,12 @@ New Features and Enhancements
       a ToolBar and can be positioned at the top, bottom, left or right of the
       view window.
    - Added StatusBar sample. It demonstrates a colored StatusBar with a
-      hyperlink, a progress bar, an icon and an owner drawn part.
-   - A window menu has been added to the DockTabbedMDI sample.	 
-   - The Themes sample demonstrates how to save a band's size and position 
-      in the registry.
-   
+      hyperlink, a progress bar, an icon and an owner drawn part.	  
+   - A window menu has been added to the DockTabbedMDI sample.
+   - The Themes sample demonstrates how to save a rebar's band sizes and 
+      positions in the registry.
+   - The Themes sample demonstrates StatusBar themes.	  
+
 
 Changes in detail
 -----------------
@@ -60,10 +61,10 @@ Added CDockContainer::SetHideSingleTab
 Added CDockContainer::SwapTabs
 Added CDocker::GetViewRect
 Added CWinApp::LoadImage
-Modified CTabbedMDI::GetTab			returns CWnd*
-Moved ::TintBitmap 					to CBitmap::TintBitmap
-Moved ::GrayScaleBitmap 			to CBitmap::GrayScaleBitmap
-Moved ::CreateDisabledImageList 	to CImageList::CreateDisabledImageList
+Modified CTabbedMDI::GetTab			 returns CWnd*
+Moved ::TintBitmap 					 to CBitmap::TintBitmap
+Moved ::GrayScaleBitmap 			 to CBitmap::GrayScaleBitmap
+Moved ::CreateDisabledImageList 	 to CImageList::CreateDisabledImageList
 
 Added user defined messages:
 UWM_GETFRAMEVIEW:	Used by CFrame.  Returns the view window's HWND 
@@ -75,6 +76,12 @@ Added string resources for frames (defined in resouce.rc)
 IDW_INDICATOR_CAPS
 IDW_INDICATOR_NUM
 IDW_INDICATOR_SCRL
+
+Incompatibilities with previous version
+---------------------------------------
+IDW_INDICATOR_CAPS, IDW_INDICATOR_NUM and IDW_INDICATOR_SCRL string
+resources are now used to define the status indicators. They should be
+added to resource.rc
 
 
 Version 7.5.1

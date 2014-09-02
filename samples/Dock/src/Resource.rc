@@ -45,6 +45,12 @@ BEGIN
     END
     POPUP "&Docking"
     BEGIN
+        MENUITEM "&Proporotianal Resize",       IDM_PROP_RESIZE, CHECKED
+        MENUITEM "&3D Border",                  IDM_3DBORDER, CHECKED
+        MENUITEM "&UnDockable",                 IDM_UNDOCKABLE, CHECKED
+        MENUITEM "&Prevent Resizing",           IDM_NO_RESIZE, CHECKED
+        MENUITEM "&No Dock Left or Right",      IDM_NO_DOCK_LR, CHECKED
+        MENUITEM SEPARATOR
         MENUITEM "&Default Layout",             IDM_DOCK_DEFAULT
         MENUITEM "&Close All",                  IDM_DOCK_CLOSEALL
     END

@@ -84,10 +84,15 @@ void CMainFrame::OnModeless()
 		m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
 		m_ModelessPS.Create(this);
 	}
+	else
+		m_ModelessPS.SetForegroundWindow();
 }
 
 void CMainFrame::OnModal()
 {
+	if (m_ModelessPS.IsWindow())
+		m_ModelessPS.Destroy();
+
 	CMyPropertySheet mps(_T("Modal Property Sheet"), this);
 	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));

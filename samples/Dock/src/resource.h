@@ -34,8 +34,13 @@
 #define IDB_FILEVIEW                    155
 
 // Menu Resource
-#define IDM_DOCK_DEFAULT                160
-#define IDM_DOCK_CLOSEALL               161
+#define IDM_PROP_RESIZE                 160
+#define IDM_3DBORDER                    161
+#define IDM_UNDOCKABLE                  162
+#define IDM_NO_RESIZE                   163
+#define IDM_NO_DOCK_LR                  164
+#define IDM_DOCK_DEFAULT                167
+#define IDM_DOCK_CLOSEALL               168
 
 // Next default values for new objects
 // 

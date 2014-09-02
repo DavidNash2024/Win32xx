@@ -12,6 +12,12 @@ CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
+	m_bProportionalResize = FALSE;
+	m_b3DBorder = TRUE;
+	m_bUndockable = TRUE;
+	m_bUnMoveable = FALSE;
+	m_bNoDockLR = FALSE;
+
 	//Set m_DockView as the view window of the frame
 	SetView(m_DockView);
 
@@ -36,6 +42,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
 	case IDM_DOCK_DEFAULT:		OnDockDefault();	return TRUE;
 	case IDM_DOCK_CLOSEALL:		OnDockCloseAll();	return TRUE;
+	case IDM_PROP_RESIZE:       OnPropResize();		return TRUE;
+	case IDM_3DBORDER:			On3DBorder();		return TRUE;
+	case IDM_UNDOCKABLE:		OnUndockable();		return TRUE;
+	case IDM_NO_RESIZE:			OnNoResize();		return TRUE;
+	case IDM_NO_DOCK_LR:		OnNoDockLR();		return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
@@ -57,6 +68,58 @@ void CMainFrame::OnDockDefault()
 	LoadDefaultDockers();
 	SetRedraw(TRUE);	// Re-enable drawing to the frame window
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
+}
+
+void CMainFrame::OnPropResize()
+{
+	m_bProportionalResize = !m_bProportionalResize;
+	SetDockStyles();
+}
+
+void CMainFrame::On3DBorder()
+{
+	m_b3DBorder = !m_b3DBorder;
+	SetDockStyles();
+}
+
+void CMainFrame::OnUndockable()
+{
+	m_bUndockable = !m_bUndockable;
+	SetDockStyles();
+}
+
+void CMainFrame::OnMenuUpdate(UINT nID)
+{
+	switch(nID)
+	{
+	case IDM_PROP_RESIZE:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bProportionalResize ? MF_CHECKED : MF_UNCHECKED));
+		break;
+	case IDM_3DBORDER:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_b3DBorder ? MF_CHECKED : MF_UNCHECKED));
+		break;
+	case IDM_UNDOCKABLE:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bUndockable ? MF_CHECKED : MF_UNCHECKED));
+		break;
+	case IDM_NO_RESIZE:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bUnMoveable ? MF_CHECKED : MF_UNCHECKED));
+		break;
+	case IDM_NO_DOCK_LR:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoDockLR ? MF_CHECKED : MF_UNCHECKED));
+		break;
+	}	
+}
+
+void CMainFrame::OnNoResize()
+{
+	m_bUnMoveable = !m_bUnMoveable;
+	SetDockStyles();
+}
+
+void CMainFrame::OnNoDockLR()
+{
+	m_bNoDockLR = !m_bNoDockLR;
+	SetDockStyles();
 }
 
 void CMainFrame::OnDockCloseAll()
@@ -124,6 +187,29 @@ BOOL CMainFrame::SaveRegistrySettings()
 		return m_DockView.SaveRegistrySettings(GetRegistryKeyName());
 	else
 		return FALSE;
+}
+
+void CMainFrame::SetDockStyles()
+{
+	std::vector<DockPtr> AllDockers = m_DockView.GetAllDockers();
+	std::vector<DockPtr>::iterator iter;
+
+	for (iter = AllDockers.begin(); iter < AllDockers.end(); ++iter)
+	{
+		DWORD dwStyle = (*iter)->GetDockStyle();
+		
+		// Filter unwanted styles
+		dwStyle &= 0xF400F;
+	
+		// Add styles selected from the menu
+		if (!m_bProportionalResize) dwStyle |= DS_FIXED_RESIZE;
+		if (m_b3DBorder)			dwStyle |= DS_CLIENTEDGE;
+		if (!m_bUndockable)			dwStyle |= DS_NO_UNDOCK;
+		if (m_bUnMoveable)			dwStyle |= DS_NO_RESIZE;
+		if (m_bNoDockLR)			dwStyle |= DS_NO_DOCKCHILD_LEFT;// | DS_NO_DOCKCHILD_RIGHT;
+
+		(*iter)->SetDockStyle(dwStyle);
+	}
 }
 
 void CMainFrame::SetupToolBar()

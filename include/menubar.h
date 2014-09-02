@@ -1,3 +1,6 @@
+// Win32++   Version 7.6
+// Pre-release version
+//
 //      David Nash
 //      email: dnash@bigpond.net.au
 //      url: https://sourceforge.net/projects/win32-framework

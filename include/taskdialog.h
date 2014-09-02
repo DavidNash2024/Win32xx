@@ -1,4 +1,4 @@
-// Win32++   Version 7.5.1
+// Win32++   Version 7.6
 // Pre-release version
 //
 //      David Nash
