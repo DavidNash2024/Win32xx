@@ -133,7 +133,7 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
-	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
+	for (iter = m_DockTabbedMDI.GetAllDockChildren()->begin(); iter < m_DockTabbedMDI.GetAllDockChildren()->end(); ++iter)
 	{
 		CDockContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer && pContainer->IsWindow())
@@ -268,7 +268,7 @@ void CMainFrame::HideSingleContainerTab(BOOL bHide)
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
-	for (iter = m_DockTabbedMDI.GetAllDockers().begin(); iter < m_DockTabbedMDI.GetAllDockers().end(); ++iter)
+	for (iter = m_DockTabbedMDI.GetAllDockChildren()->begin(); iter < m_DockTabbedMDI.GetAllDockChildren()->end(); ++iter)
 	{
 		CDockContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer && pContainer->IsWindow())

@@ -26,10 +26,11 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual void OnPropResize();
 	virtual void On3DBorder();
-	virtual void OnUndockable();
+	virtual void OnNoUndocking();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void OnNoResize();
 	virtual void OnNoDockLR();
+	virtual void OnNoDockClose();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolBar();
@@ -38,9 +39,10 @@ private:
 	CDockSimple m_DockView;
 	BOOL m_bProportionalResize;
 	BOOL m_b3DBorder;
-	BOOL m_bUndockable;
-	BOOL m_bUnMoveable;
+	BOOL m_bNoUndocking;
+	BOOL m_bNoResize;
 	BOOL m_bNoDockLR;
+	BOOL m_bNoDockClose;
 };
 
 #endif //MAINFRM_H

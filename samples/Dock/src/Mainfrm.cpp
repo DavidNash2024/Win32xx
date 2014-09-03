@@ -14,9 +14,10 @@ CMainFrame::CMainFrame()
 
 	m_bProportionalResize = FALSE;
 	m_b3DBorder = TRUE;
-	m_bUndockable = TRUE;
-	m_bUnMoveable = FALSE;
+	m_bNoUndocking = FALSE;
+	m_bNoResize = FALSE;
 	m_bNoDockLR = FALSE;
+	m_bNoDockClose = FALSE;
 
 	//Set m_DockView as the view window of the frame
 	SetView(m_DockView);
@@ -44,9 +45,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_DOCK_CLOSEALL:		OnDockCloseAll();	return TRUE;
 	case IDM_PROP_RESIZE:       OnPropResize();		return TRUE;
 	case IDM_3DBORDER:			On3DBorder();		return TRUE;
-	case IDM_UNDOCKABLE:		OnUndockable();		return TRUE;
+	case IDM_NO_UNDOCK:			OnNoUndocking();	return TRUE;
 	case IDM_NO_RESIZE:			OnNoResize();		return TRUE;
 	case IDM_NO_DOCK_LR:		OnNoDockLR();		return TRUE;
+	case IDM_NO_DOCK_CLOSE:		OnNoDockClose();	return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
@@ -82,9 +84,9 @@ void CMainFrame::On3DBorder()
 	SetDockStyles();
 }
 
-void CMainFrame::OnUndockable()
+void CMainFrame::OnNoUndocking()
 {
-	m_bUndockable = !m_bUndockable;
+	m_bNoUndocking = !m_bNoUndocking;
 	SetDockStyles();
 }
 
@@ -98,21 +100,24 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	case IDM_3DBORDER:
 		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_b3DBorder ? MF_CHECKED : MF_UNCHECKED));
 		break;
-	case IDM_UNDOCKABLE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bUndockable ? MF_CHECKED : MF_UNCHECKED));
+	case IDM_NO_UNDOCK:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoUndocking ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bUnMoveable ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_DOCK_LR:
 		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoDockLR ? MF_CHECKED : MF_UNCHECKED));
+		break;
+	case IDM_NO_DOCK_CLOSE:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoDockClose ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	}	
 }
 
 void CMainFrame::OnNoResize()
 {
-	m_bUnMoveable = !m_bUnMoveable;
+	m_bNoResize = !m_bNoResize;
 	SetDockStyles();
 }
 
@@ -121,6 +126,13 @@ void CMainFrame::OnNoDockLR()
 	m_bNoDockLR = !m_bNoDockLR;
 	SetDockStyles();
 }
+
+void CMainFrame::OnNoDockClose()
+{
+	m_bNoDockClose = !m_bNoDockClose;
+	SetDockStyles();
+	RedrawWindow();
+} 
 
 void CMainFrame::OnDockCloseAll()
 {
@@ -151,6 +163,9 @@ void CMainFrame::OnInitialUpdate()
 	if (!m_DockView.LoadRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
+	// Adjust dockstyles as per menu selections
+	SetDockStyles();
+
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow();
 }
@@ -159,17 +174,18 @@ void CMainFrame::LoadDefaultDockers()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-	DWORD dwStyle = DS_CLIENTEDGE | DS_FIXED_RESIZE; // The style added to each docker
+	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, 200, ID_DOCK_CLASSES1);
+	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, 200, ID_DOCK_CLASSES2);
+	CDocker* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP, 100, ID_DOCK_TEXT1);
+	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, 100, ID_DOCK_TEXT2);
 
-	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_LEFT | dwStyle, 200, ID_DOCK_CLASSES1);
-	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES2);
-	CDocker* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP | dwStyle, 100, ID_DOCK_TEXT1);
-	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT2);
+	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES1);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES2);
+	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE1);
+	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE2);
 
-	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_DOCK_FILES1);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM | dwStyle, 150, ID_DOCK_FILES2);
-	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_DOCK_SIMPLE1);
-	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT | dwStyle, 100, ID_DOCK_SIMPLE2);
+	// Adjust dockstyles as per menu selections
+	SetDockStyles();
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
@@ -191,10 +207,9 @@ BOOL CMainFrame::SaveRegistrySettings()
 
 void CMainFrame::SetDockStyles()
 {
-	std::vector<DockPtr> AllDockers = m_DockView.GetAllDockers();
-	std::vector<DockPtr>::iterator iter;
+	std::vector<CDocker*>::iterator iter;
 
-	for (iter = AllDockers.begin(); iter < AllDockers.end(); ++iter)
+	for (iter = m_DockView.GetAllDockers()->begin(); iter < m_DockView.GetAllDockers()->end(); ++iter)
 	{
 		DWORD dwStyle = (*iter)->GetDockStyle();
 		
@@ -204,9 +219,10 @@ void CMainFrame::SetDockStyles()
 		// Add styles selected from the menu
 		if (!m_bProportionalResize) dwStyle |= DS_FIXED_RESIZE;
 		if (m_b3DBorder)			dwStyle |= DS_CLIENTEDGE;
-		if (!m_bUndockable)			dwStyle |= DS_NO_UNDOCK;
-		if (m_bUnMoveable)			dwStyle |= DS_NO_RESIZE;
-		if (m_bNoDockLR)			dwStyle |= DS_NO_DOCKCHILD_LEFT;// | DS_NO_DOCKCHILD_RIGHT;
+		if (m_bNoUndocking)			dwStyle |= DS_NO_UNDOCK;
+		if (m_bNoResize)			dwStyle |= DS_NO_RESIZE;
+		if (m_bNoDockLR)			dwStyle |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
+		if (m_bNoDockClose)			dwStyle |= DS_NO_CLOSE;
 
 		(*iter)->SetDockStyle(dwStyle);
 	}

@@ -47,21 +47,32 @@ New Features and Enhancements
    - A window menu has been added to the DockTabbedMDI sample.
    - The Themes sample demonstrates how to save a rebar's band sizes and 
       positions in the registry.
-   - The Themes sample demonstrates StatusBar themes.	  
-
+   - The Themes sample demonstrates StatusBar themes.
+   - The Dock sample demonstrates various dock styles including:
+     - Proportional Resize
+	 - 3D Border
+	 - Disable Undocking
+	 - Disable Resizing
+	 - Disable Dock closing
+	 - Disable docking on the left or right
+	 
 
 Changes in detail
 -----------------
-Added CFrame::DrawReBarBkgnd
-Added CFrame::DrawStatusBarBkgnd
-Added CFrame::GetStatusBarTheme
-Added CFrame::SetStatusBarTheme
 Added CDockContainer::OnMouseMove
 Added CDockContainer::SetHideSingleTab
 Added CDockContainer::SwapTabs
 Added CDocker::GetViewRect
+Added CFrame::DrawReBarBkgnd
+Added CFrame::DrawStatusBarBkgnd
+Added CFrame::GetStatusBarTheme
+Added CFrame::SetStatusBarTheme
+Added CTab::GetTabImageID
+Added CTab::GetTabText
 Added CWinApp::LoadImage
 Modified CTabbedMDI::GetTab			 returns CWnd*
+Modified CDocker::GetAllDockers      returns pointer to CDocker* vector
+Modified CDocker::GetDockChildren    returns pointer to CDocker* vector
 Moved ::TintBitmap 					 to CBitmap::TintBitmap
 Moved ::GrayScaleBitmap 			 to CBitmap::GrayScaleBitmap
 Moved ::CreateDisabledImageList 	 to CImageList::CreateDisabledImageList

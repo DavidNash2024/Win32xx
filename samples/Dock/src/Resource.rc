@@ -47,9 +47,10 @@ BEGIN
     BEGIN
         MENUITEM "&Proporotianal Resize",       IDM_PROP_RESIZE, CHECKED
         MENUITEM "&3D Border",                  IDM_3DBORDER, CHECKED
-        MENUITEM "&UnDockable",                 IDM_UNDOCKABLE, CHECKED
-        MENUITEM "&Prevent Resizing",           IDM_NO_RESIZE, CHECKED
-        MENUITEM "&No Dock Left or Right",      IDM_NO_DOCK_LR, CHECKED
+        MENUITEM "Prevent &Undocking",          IDM_NO_UNDOCK, CHECKED
+        MENUITEM "Prevent &Resizing",           IDM_NO_RESIZE, CHECKED
+        MENUITEM "Prevent Dock &Left or Right", IDM_NO_DOCK_LR, CHECKED
+		MENUITEM "Prevent Dock Close",          IDM_NO_DOCK_CLOSE, CHECKED
         MENUITEM SEPARATOR
         MENUITEM "&Default Layout",             IDM_DOCK_DEFAULT
         MENUITEM "&Close All",                  IDM_DOCK_CLOSEALL
