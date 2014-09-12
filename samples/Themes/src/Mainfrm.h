@@ -25,6 +25,7 @@ protected:
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
+	virtual void OnMenuUpdate(UINT nID);
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolBar();

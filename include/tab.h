@@ -98,7 +98,7 @@ namespace Win32xx
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
 		virtual int GetTabImageID(UINT nTab) const;
-		virtual CString CTab::GetTabText(UINT nTab) const;
+		virtual CString GetTabText(UINT nTab) const;
 		virtual int GetTextHeight() const;
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int nPage);
@@ -852,7 +852,7 @@ namespace Win32xx
 			RemoveTabPage(nPage);
 			if (nPage > 0)
 				SelectPage(nPage -1);
-			
+
 			if (GetActiveView())
 				GetActiveView()->RedrawWindow();
 		}
@@ -1035,9 +1035,9 @@ namespace Win32xx
 			rcTab.top = rcTab.bottom;
 		if (rcTab.Width() < 0)
 			rcTab.left = rcTab.right;
-		
+
 		int offset = -1; // Required for RTL layout
-		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);		
+		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);
 		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
 		rgnClip.CombineRgn(&rgnSrc1, &rgnSrc2, RGN_DIFF);
 
@@ -1059,7 +1059,7 @@ namespace Win32xx
 
 		if (RTL)
 		{
-			// BitBlt offset bitmap copies by one for Right-To-Left layout 
+			// BitBlt offset bitmap copies by one for Right-To-Left layout
 			dcView.BitBlt(0, 0, 1, rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
 			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
 		}
@@ -1092,7 +1092,7 @@ namespace Win32xx
 				AdjustRect(FALSE, &rc);
 				GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 			}
-		
+
 			RedrawWindow(NULL, NULL, RDW_INVALIDATE|RDW_NOCHILDREN);
 		}
 	}
@@ -1161,7 +1161,7 @@ namespace Win32xx
 		if (bEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_FIXEDWIDTH);
-			
+
 			// Remove Image list for fixed width and Owner drawn tabs
 			if (dwStyle & TCS_OWNERDRAWFIXED)
 				SetImageList(NULL);
@@ -1193,7 +1193,7 @@ namespace Win32xx
 		if (bEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
-		
+
 			// Remove Image list for tabs with both fixed width and Owner drawn tabs
 			if (dwStyle & TCS_FIXEDWIDTH)
 				SetImageList(NULL);

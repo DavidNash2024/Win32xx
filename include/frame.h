@@ -387,6 +387,7 @@ namespace Win32xx
 		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMenuSelect(WPARAM wParam, LPARAM lParam);
+		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
@@ -1611,6 +1612,8 @@ namespace Win32xx
 	// Draws the ReBar's background when ReBar themes are enabled.
 	// Returns TRUE when the default background drawing is suppressed.
 	{
+		assert(pReBar->IsWindow());
+
 		BOOL IsDrawn = TRUE;
 
 		if (!pDC || !pReBar)
@@ -1625,6 +1628,7 @@ namespace Win32xx
 
 		if (IsDrawn)
 		{
+			BOOL IsVertical = pReBar->GetWindowLongPtr(GWL_STYLE) & CCS_VERT;		
 			CRgn Region;
 
 			// Create our memory DC
@@ -1650,7 +1654,6 @@ namespace Win32xx
 							// Determine the size of this band
 							CRect rcBand = pReBar->GetBandRect(nBand);
 
-							BOOL IsVertical = pReBar->GetWindowLongPtr(GWL_STYLE) & CCS_VERT;
 							if (IsVertical)
 							{
 								int right = rcBand.right;
@@ -1730,10 +1733,18 @@ namespace Win32xx
 				// Draw lines between bands
 				for (int j = 0; j < pReBar->GetBandCount()-1; ++j)
 				{
-					rcReBar = pReBar->GetBandRect(j);
-					rcReBar.left = MAX(0, rcReBar.left - 4);
-					rcReBar.bottom +=2;
-					MemDC.DrawEdge(rcReBar, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+					CRect rcRand = pReBar->GetBandRect(j);
+					if (IsVertical)
+					{
+						rcRand.top = MAX(0, rcReBar.top - 4);
+						rcRand.right +=2;					
+					}
+					else
+					{
+						rcRand.left = MAX(0, rcReBar.left - 4);
+						rcRand.bottom +=2;
+					}
+					MemDC.DrawEdge(rcRand, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 				}
 			}
 
@@ -2335,6 +2346,20 @@ namespace Win32xx
 		}
 
 		return 0L;
+	}
+
+	inline void CFrame::OnMenuUpdate(UINT nID)
+	{
+		// Update the check buttons before displaying the menu
+		switch(nID)
+		{
+		case IDW_VIEW_STATUSBAR:
+			GetFrameMenu()->CheckMenuItem(nID, m_bShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
+			break;
+		case IDW_VIEW_TOOLBAR:
+			GetFrameMenu()->CheckMenuItem(nID, m_bShowToolBar ? MF_CHECKED : MF_UNCHECKED);
+			break;
+		}	
 	}
 
 	inline LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -3200,13 +3225,11 @@ namespace Win32xx
 	{
 		if (bShow)
 		{
-			m_Menu.CheckMenuItem(IDW_VIEW_STATUSBAR, MF_CHECKED);
 			GetStatusBar()->ShowWindow(SW_SHOW);
 			m_bShowStatusBar = TRUE;
 		}
 		else
 		{
-			m_Menu.CheckMenuItem(IDW_VIEW_STATUSBAR, MF_UNCHECKED);
 			GetStatusBar()->ShowWindow(SW_HIDE);
 			m_bShowStatusBar = FALSE;
 		}
@@ -3221,7 +3244,6 @@ namespace Win32xx
 	{
 		if (bShow)
 		{
-			m_Menu.CheckMenuItem(IDW_VIEW_TOOLBAR, MF_CHECKED);
 			if (IsReBarUsed())
 				GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), TRUE);
 			else
@@ -3230,7 +3252,6 @@ namespace Win32xx
 		}
 		else
 		{
-			m_Menu.CheckMenuItem(IDW_VIEW_TOOLBAR, MF_UNCHECKED);
 			if (IsReBarUsed())
 				GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), FALSE);
 			else
