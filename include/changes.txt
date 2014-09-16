@@ -83,7 +83,7 @@ UWN_DRAWRBBKGND:    Used by CFrame.  Called for ReBar background redrawing
 UWN_DRAWSBBKGND:    Used by CFrame.  Called for StatusBar background redrawing
 UWN_TABDRAGGED:     Used by CTabbedMDI. Called when a CTab's tab is dragged
 
-Added string resources for frames (defined in resouce.rc)
+Added string resources for frames (defined in resource.rc)
 IDW_INDICATOR_CAPS
 IDW_INDICATOR_NUM
 IDW_INDICATOR_SCRL

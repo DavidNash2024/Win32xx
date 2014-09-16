@@ -1756,7 +1756,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::DrawStatusBarBkgnd(CDC* pDC, CStatusBar* pStatusBar)
-	// Draws the StatusBar's background when ReBar themes are enabled.
+	// Draws the StatusBar's background when StatusBar themes are enabled.
 	// Returns TRUE when the default background drawing is suppressed.
 	{
 		BOOL IsDrawn = FALSE;

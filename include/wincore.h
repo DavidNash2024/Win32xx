@@ -1225,7 +1225,7 @@ namespace Win32xx
 	}
 
 	inline HANDLE CWinApp::LoadImage(LPCTSTR lpszResourceName, UINT uType, int cx, int cy, UINT fuLoad) const
-	// Loads an icon, cursor, animated cursor, or bitmap
+	// Loads an icon, cursor, animated cursor, or bitmap image
 	// uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON
 	// cx and cy are the desired width and height in pixels
 	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE, 

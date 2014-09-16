@@ -978,8 +978,8 @@ namespace Win32xx
 
 	inline HBITMAP CStatic::SetBitmap(HBITMAP hBitmap) const
 	// Associates a new bitmap with the static control.
-	// The bitmap will be drawn in the upper-left corner and the static 
-	//  control will be resized to the size of the bitmap. 
+	// The bitmap will be drawn in the upper-left corner, and the static 
+	//  control will be resized to the size of the bitmap.
 	// This function requires the SS_BITMAP style
 	{
 		assert(::IsWindow(m_hWnd));

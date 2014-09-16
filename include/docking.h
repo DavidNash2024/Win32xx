@@ -4590,7 +4590,6 @@ namespace Win32xx
 		else
 		{
 			m_imlToolBarDis.DeleteImageList();
-		//	m_imlToolBarDis.Attach( CreateDisabledImageList( m_imlToolBar.GetHandle() ) );
 			m_imlToolBarDis.CreateDisabledImageList(&m_imlToolBar);
 			GetToolBar()->SetDisableImageList( &m_imlToolBarDis );
 		}
