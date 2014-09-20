@@ -301,7 +301,7 @@ namespace Win32xx
 	class CA2W
 	{
 	public:
-		CA2W(LPCSTR pStr) : m_pStr(pStr)
+		CA2W(LPCSTR pStr, UINT codePage = CP_ACP) : m_pStr(pStr)
 		{
 			if (pStr)
 			{
@@ -310,7 +310,7 @@ namespace Win32xx
 				m_vWideArray.assign(length, L'\0');
 
 				// Fill our vector with the converted WCHAR array
-				MultiByteToWideChar(CP_ACP, 0, pStr, -1, &m_vWideArray[0], length);
+				MultiByteToWideChar(codePage, 0, pStr, -1, &m_vWideArray[0], length);
 			}
 		}
 		~CA2W() {}
@@ -327,14 +327,20 @@ namespace Win32xx
 	class CW2A
 	{
 	public:
-		CW2A(LPCWSTR pWStr) : m_pWStr(pWStr)
+		CW2A(LPCWSTR pWStr, UINT codePage = CP_ACP) : m_pWStr(pWStr)
+		// Usage:
+		//   CW2A ansiString(L"Some Text");
+		//   CW2A utf8String(L"Some Text", CP_UTF8);
+		//
+		// or
+		//   SetWindowTextA( W2A(L"Some Text") ); The ANSI version of SetWindowText
 		{
 			// Resize the vector and assign null char to each element
 			int length = (int)wcslen(pWStr)+1;
 			m_vAnsiArray.assign(2*length, '\0');
 
 			// Fill our vector with the converted char array
-			WideCharToMultiByte(CP_ACP, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
+			WideCharToMultiByte(codePage, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
 		}
 
 		~CW2A() {}
