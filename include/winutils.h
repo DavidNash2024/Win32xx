@@ -306,7 +306,7 @@ namespace Win32xx
 			if (pStr)
 			{
 				// Resize the vector and assign null WCHAR to each element
-				int length = (int)strlen(pStr)+1;
+				int length = MultiByteToWideChar(codePage, 0, pStr, -1, NULL, 0) + 1;
 				m_vWideArray.assign(length, L'\0');
 
 				// Fill our vector with the converted WCHAR array
@@ -336,8 +336,8 @@ namespace Win32xx
 		//   SetWindowTextA( W2A(L"Some Text") ); The ANSI version of SetWindowText
 		{
 			// Resize the vector and assign null char to each element
-			int length = (int)wcslen(pWStr)+1;
-			m_vAnsiArray.assign(2*length, '\0');
+			int length = WideCharToMultiByte(codePage, 0, pWStr, -1, NULL, 0, NULL, NULL) + 1;
+			m_vAnsiArray.assign(length, '\0');
 
 			// Fill our vector with the converted char array
 			WideCharToMultiByte(codePage, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
