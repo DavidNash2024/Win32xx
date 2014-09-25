@@ -179,7 +179,6 @@ void CMyPropertySheet::OnInitialUpdate()
 		SetWindowLongPtr(GWL_STYLE, dwStyle);
 	}
 
-	CenterWindow();
 }
 
 LRESULT CMyPropertySheet::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
