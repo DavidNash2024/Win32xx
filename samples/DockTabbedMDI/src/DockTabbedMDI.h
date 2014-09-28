@@ -32,7 +32,7 @@ public:
 	virtual ~CDockTabbedMDI() {}
 
 	virtual CDocker* NewDockerFromID(int idDock);
-	virtual void OnInitialUpdate();
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CMyTabbedMDI m_View;

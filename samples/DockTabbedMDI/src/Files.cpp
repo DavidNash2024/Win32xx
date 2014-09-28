@@ -117,10 +117,12 @@ CDockFiles::CDockFiles()
 	SetView(m_Files); 
 }
 
-void CDockFiles::OnInitialUpdate()
+int CDockFiles::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
+
+	return CDocker::OnCreate(pcs);
 }
 
 

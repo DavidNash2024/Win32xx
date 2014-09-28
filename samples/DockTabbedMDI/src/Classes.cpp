@@ -182,10 +182,12 @@ CDockClasses::CDockClasses()
 	SetView(m_Classes);
 }
 
-void CDockClasses::OnInitialUpdate()
+int CDockClasses::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
+
+	return CDocker::OnCreate(pcs);
 }
 
 

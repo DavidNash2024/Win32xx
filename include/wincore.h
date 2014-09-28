@@ -1,5 +1,5 @@
-// Win32++   Version 7.6
-// Released: 19th September 2014
+// Win32++   Version 7.6.1 Beta
+// 
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -201,6 +201,7 @@ namespace Win32xx
 {
 	// Registered messages defined by Win32++
 	const UINT UWM_CLEANUPTEMPS = RegisterWindowMessage(_T("UWM_CLEANUPTEMPS")); // Message - posted to cleanup temporary CDCs, CWnds etc.
+	const UINT UWM_WINDOWCREATED = RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Message - posted when a window is created or attached.
 
 	////////////////////////////////////////////////
 	// Forward declarations.
@@ -1403,7 +1404,7 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 		
 		OnAttach();
-		OnInitialUpdate();
+		PostMessage(UWM_WINDOWCREATED);
 
 		return TRUE;
 	}
@@ -1634,7 +1635,7 @@ namespace Win32xx
 		}
 
 		// Window creation is complete. Now call OnInitialUpdate
-		OnInitialUpdate();
+		PostMessage(UWM_WINDOWCREATED);
 
 		return m_hWnd;
 	}
@@ -2200,6 +2201,11 @@ namespace Win32xx
 	// All WndProc functions should pass unhandled window messages to this function
 	{
 		LRESULT lr = 0L;
+		if (UWM_WINDOWCREATED == uMsg)
+		{
+			OnInitialUpdate();
+			return 0L;
+		}
 
     	switch (uMsg)
 		{

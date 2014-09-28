@@ -51,7 +51,7 @@ class CDockClasses : public CDocker
 public:
 	CDockClasses(); 
 	virtual ~CDockClasses() {}
-	virtual void OnInitialUpdate();
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CContainClasses m_Classes;

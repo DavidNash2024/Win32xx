@@ -23,7 +23,7 @@ class CRightPane : public CDocker
 {
 public:
     CRightPane() { SetView(m_View); }
-	virtual void OnInitialUpdate();
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CMyListView m_View;

@@ -42,7 +42,7 @@ public:
 
 protected:
 	virtual CDocker* NewDockerFromID(int nID);
-	virtual void OnInitialUpdate();
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewSimple m_View;

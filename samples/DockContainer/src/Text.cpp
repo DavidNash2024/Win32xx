@@ -59,10 +59,12 @@ CDockText::CDockText()
 	SetView(m_View);
 }
 
-void CDockText::OnInitialUpdate()
+int CDockText::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
+
+	return CDocker::OnCreate(pcs);
 }
 
 

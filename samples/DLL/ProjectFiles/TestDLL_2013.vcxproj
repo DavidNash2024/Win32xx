@@ -161,6 +161,9 @@
     <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\..\..\include\winutils.h" />
   </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

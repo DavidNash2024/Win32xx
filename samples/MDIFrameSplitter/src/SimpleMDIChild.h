@@ -31,10 +31,6 @@ public:
 	CDockSimple() {SetView(m_View);}
 	virtual ~CDockSimple() {}
 
-protected:
-//	virtual CDocker* NewDockerFromID(int nID);
-//	virtual void OnInitialUpdate();
-
 private:
 	CSimpleView m_View;
 

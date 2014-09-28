@@ -12,19 +12,18 @@ CDockSimple::CDockSimple()
 	SetView(m_View);
 }
 
-void CDockSimple::OnInitialUpdate()
-{
-}
 
 CDockText::CDockText() 
 {
 	SetView(m_View);
 }
 
-void CDockText::OnInitialUpdate()
+int CDockText::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(6);
+
+	return CDocker::OnCreate(pcs);
 }
 
 
@@ -33,20 +32,25 @@ CDockTree::CDockTree()
 	SetView(m_View);
 }
 
-void CDockTree::OnInitialUpdate() 
+int CDockTree::OnCreate(LPCREATESTRUCT pcs) 
 {
 	// Set the width of the splitter bar
 	SetBarWidth(12);
+
+	return CDocker::OnCreate(pcs);
 }
+
 
 CDockList::CDockList() 
 {
 	SetView(m_View);
 }
 
-void CDockList::OnInitialUpdate()
+int CDockList::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(6);
+
+	return CDocker::OnCreate(pcs);
 }
 

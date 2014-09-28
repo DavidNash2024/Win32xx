@@ -52,12 +52,14 @@ CDocker* CDockSimple::NewDockerFromID(int nID)
 	return pDock;
 }
 
-void CDockSimple::OnInitialUpdate()
+int CDockSimple::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
 
 	SetCaption (_T("Simple View - Docking"));
+
+	return CDocker::OnCreate(pcs);
 }
 
 
@@ -69,12 +71,14 @@ CDockText::CDockText()
 	SetView(m_View);
 }
 
-void CDockText::OnInitialUpdate()
+int CDockText::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
 
 	SetCaption (_T("Text View - Docking"));
+
+	return CDocker::OnCreate(pcs);
 }
 
 
@@ -87,12 +91,14 @@ CDockClasses::CDockClasses()
 	SetView(m_View);
 }
 
-void CDockClasses::OnInitialUpdate()
+int CDockClasses::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
 
 	SetCaption (_T("Class View - Docking"));
+
+	return CDocker::OnCreate(pcs);
 }
 
 
@@ -104,10 +110,12 @@ CDockFiles::CDockFiles()
 	SetView(m_View);
 }
 
-void CDockFiles::OnInitialUpdate()
+int CDockFiles::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
 
 	SetCaption (_T("Files View - Docking"));
+
+	return CDocker::OnCreate(pcs);
 }

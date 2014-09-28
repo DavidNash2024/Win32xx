@@ -92,10 +92,12 @@ CDocker* CDockSimple::NewDockerFromID(int nID)
 	return pDock;
 }
 
-void CDockSimple::OnInitialUpdate()
+int CDockSimple::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
+
+	return CDocker::OnCreate(pcs);
 }
 
 

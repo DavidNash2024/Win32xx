@@ -1,3 +1,17 @@
+Version 7.6.1
+=============
+
+Bug Fixes:
+- In some circumstances, CTab would assert when used in a CDialog.
+- ReBarDemo now resizes properly.
+- CenterWindow now works to center the PropertySheets in the PropertySheet sample.
+
+New Features and Enhancements
+* OnInitialUpdate delayed until after window is created.
+   OnInitialUpdate is now called after the window creation has fully completed. 
+   Code which needs to run before this should be put in OnCreate.
+   Note: Calls to CDocker::SetBarWidth should be made in OnCreate, not OnInitialUpdate.   
+
 Version 7.6
 ===========
 

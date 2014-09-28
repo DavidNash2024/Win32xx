@@ -1,5 +1,5 @@
-// Win32++   Version 7.6
-// Released: 19th September 2014
+// Win32++   Version 7.6.1 Beta
+// 
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -761,7 +761,9 @@ namespace Win32xx
 		NMHDR nmhdr = {0};
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWN_TABCHANGED;
-		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+		
+		if (GetParent()->IsWindow())
+			GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
 	inline void CTab::NotifyDragged()
@@ -775,9 +777,11 @@ namespace Win32xx
 	inline void CTab::OnAttach()
 	{
 		// Create and assign the image list
+		m_imlODTab.DeleteImageList();
 		m_imlODTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
+		m_TabFont.DeleteObject();
 		NONCLIENTMETRICS info = {0};
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);

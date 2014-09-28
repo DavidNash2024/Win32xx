@@ -248,6 +248,10 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

@@ -1,5 +1,5 @@
 Win32++   Version 7.6
-Released: 19th September 2014
+
 
      David Nash
      email: dnash@bigpond.net.au
