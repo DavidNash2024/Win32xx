@@ -1386,20 +1386,14 @@ namespace Win32xx
 	// Subclass an existing window and attach it to a CWnd
 	{
 		assert( GetApp() );
-		assert(::IsWindow(hWnd));
+		assert( ::IsWindow(hWnd) );
+		assert( !IsWindow() );
 
 		// Ensure this thread has the TLS index set
 		// Note: Perform the attach from the same thread as the window's message loop
 		GetApp()->SetTlsData();
-
-		// Cleanup any previous attachment
-		if (m_PrevWindowProc)
-			Detach();
-		
-		CWnd* pWnd = GetApp()->GetCWndFromMap(hWnd);
-		if (pWnd)
-			pWnd->Cleanup();
-
+	
+		Cleanup();			// Cleanup any previous attachment
 		Subclass(hWnd);		// Set the window's callback to CWnd::StaticWindowProc
 		AddToMap();			// Store the CWnd pointer in the HWND map
 		
