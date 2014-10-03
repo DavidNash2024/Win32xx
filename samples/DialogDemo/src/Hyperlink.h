@@ -14,7 +14,7 @@ class CHyperlink :	public CStatic
 public:
 	CHyperlink();
 	virtual ~CHyperlink();
-	virtual void OnInitialUpdate();
+	virtual void OnAttach();
 	void OnLButtonDown();
 	void OnLButtonUp(LPARAM lParam);
 	LRESULT OnSetCursor();

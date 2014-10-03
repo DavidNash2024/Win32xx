@@ -19,7 +19,7 @@ CHyperlink::~CHyperlink()
 {
 }
 
-void CHyperlink::OnInitialUpdate()
+void CHyperlink::OnAttach()
 {
 	CFont* pFont = GetFont();
 	LOGFONT lf = pFont->GetLogFont();
