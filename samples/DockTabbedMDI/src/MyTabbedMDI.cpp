@@ -53,7 +53,8 @@ LRESULT CMyTabbedMDI::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				// Test if we are over a tab. If so, set at timer.
 				CPoint pt = GetCursorPos();
 				ScreenToClient(pt);
-				TCHITTESTINFO info = {0};
+				TCHITTESTINFO info;
+				ZeroMemory(&info, sizeof(TCHITTESTINFO));
 				info.pt = pt;
 				GetTab()->HitTest(info);
 				if (info.flags != TCHT_NOWHERE) 

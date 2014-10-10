@@ -293,7 +293,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVITEM lvi = {0};
+		LVITEM lvi;
+		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
 		lvi.mask = LVIF_PARAM;
 		ListView_GetItem(m_hWnd, &lvi);
@@ -339,7 +340,8 @@ namespace Win32xx
 		CString str;
 		if (nTextMax > 0)
 		{
-			LVITEM lvi = {0};
+			LVITEM lvi;
+			ZeroMemory(&lvi, sizeof(LVITEM));
 			lvi.iItem = iItem;
 			lvi.iSubItem = iSubItem;
 			lvi.mask = LVIF_TEXT;
@@ -364,7 +366,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		UINT nWorkAreas = 0;
-		ListView_GetWorkAreas( m_hWnd, nWorkAreas, NULL );
+		ListView_GetNumberOfWorkAreas( m_hWnd, &nWorkAreas );
 		return nWorkAreas;
 	}
 
@@ -572,7 +574,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVITEM lvi = {0};
+		LVITEM lvi;
+		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
 		lvi.iSubItem = iSubItem;
 		lvi.mask = nMask;
@@ -605,7 +608,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVITEM lvi = {0};
+		LVITEM lvi;
+		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
 		lvi.lParam = dwData;
 		lvi.mask = LVIF_PARAM;
@@ -764,7 +768,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVHITTESTINFO hti = {0};
+		LVHITTESTINFO hti;
+		ZeroMemory(&hti, sizeof(LVHITTESTINFO));
 		hti.flags = *pFlags;
 		hti.pt = pt;
 		return ListView_HitTest( m_hWnd, &hti );
@@ -783,7 +788,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVCOLUMN lvc = {0};
+		LVCOLUMN lvc;
+		ZeroMemory(&lvc, sizeof(LVCOLUMN));
 		lvc.mask = LVCF_TEXT|LVCF_ORDER|LVCF_FMT;
 		if (-1 != iWidth)
 		{
@@ -815,7 +821,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVITEM lvi = {0};
+		LVITEM lvi;
+		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
 		lvi.pszText = (LPTSTR)pszText;
 		lvi.mask = LVIF_TEXT;
@@ -827,7 +834,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		LVITEM lvi = {0};
+		LVITEM lvi;
+		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
 		lvi.pszText = (LPTSTR)pszText;
 		lvi.iImage = iImage;

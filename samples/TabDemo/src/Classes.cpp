@@ -57,13 +57,15 @@ void CViewClasses::OnInitialUpdate()
 
 HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 {
-	TVITEM tvi = {0};
+	TVITEM tvi;
+	ZeroMemory(&tvi, sizeof(TVITEM));
 	tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 	tvi.iImage = iImage;
 	tvi.iSelectedImage = iImage;
 	tvi.pszText = (LPTSTR)szText;
 
-	TVINSERTSTRUCT tvis = {0};
+	TVINSERTSTRUCT tvis;
+	ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
 	tvis.hParent = hParent;
 	tvis.item = tvi;
 

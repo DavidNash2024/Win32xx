@@ -148,7 +148,8 @@ namespace Win32xx
 
 		for (int nBand = 0; nBand < GetBandCount(); ++nBand)
 		{
-			REBARBANDINFO rbbi = {0};
+			REBARBANDINFO rbbi;
+			ZeroMemory(&rbbi, GetSizeofRBBI());
 			rbbi.cbSize = GetSizeofRBBI();
 			rbbi.fMask = RBBIM_CHILD;
 			GetBandInfo(nBand, rbbi);
@@ -271,14 +272,16 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		// Get the rebar band with the point
-		RBHITTESTINFO rbhti = {0};
+		RBHITTESTINFO rbhti;
+		ZeroMemory(&rbhti, sizeof(RBHITTESTINFO));
 		rbhti.pt = pt;
 		int iBand = HitTest(rbhti);
 
 		if (iBand >= 0)
 		{
 			// Get the rebar band's hWnd
-			REBARBANDINFO rbbi = {0};
+			REBARBANDINFO rbbi;
+			ZeroMemory(&rbbi, GetSizeofRBBI());
 			rbbi.cbSize = GetSizeofRBBI();
 			rbbi.fMask = RBBIM_CHILD;
 			GetBandInfo(iBand, rbbi);
@@ -310,7 +313,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, GetSizeofRBBI());
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
@@ -453,7 +457,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, GetSizeofRBBI());
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 
@@ -472,7 +477,8 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		assert(pBackground);
 
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, GetSizeofRBBI());
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
@@ -489,7 +495,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, GetSizeofRBBI());
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_COLORS;
 		rbbi.clrFore = clrFore;
@@ -531,7 +538,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, GetSizeofRBBI());
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);

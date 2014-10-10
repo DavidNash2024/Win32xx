@@ -44,7 +44,8 @@ BOOL CMyCombo::AddItems()
     int MaxItems = 3;
 	for(int i = 0; i < MaxItems; ++i)
 	{
-		COMBOBOXEXITEM cbei = {0};
+		COMBOBOXEXITEM cbei;
+		ZeroMemory(&cbei, sizeof(COMBOBOXEXITEM));
 		cbei.mask = CBEIF_TEXT | CBEIF_INDENT | CBEIF_IMAGE| CBEIF_SELECTEDIMAGE;
         cbei.iItem          = i;
         cbei.pszText        = IInf[i].pszText;

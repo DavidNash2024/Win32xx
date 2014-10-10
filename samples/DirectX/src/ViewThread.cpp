@@ -32,7 +32,8 @@ BOOL CViewThread::InitInstance()
 int CViewThread::MessageLoop()
 // Here we override CWinThread::MessageLoop to accommodate the special needs of DirectX
 {
-	MSG Msg = {0};
+	MSG Msg;
+	ZeroMemory(&Msg, sizeof(MSG));
 	while( Msg.message!=WM_QUIT )
 	{
 		if( PeekMessage(&Msg, NULL, 0U, 0U, PM_REMOVE))

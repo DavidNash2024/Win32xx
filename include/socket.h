@@ -254,7 +254,8 @@ namespace Win32xx
 
 #ifdef GetAddrInfo	// Skip the following code block for older development environments
 
-			ADDRINFO Hints= {0};
+			ADDRINFO Hints;
+			ZeroMemory(&Hints, sizeof(ADDRINFO));
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
 			CString csPort;
@@ -316,7 +317,8 @@ namespace Win32xx
 
 #ifdef GetAddrInfo	// Skip the following code block for older development environments
 
-			ADDRINFO Hints= {0};
+			ADDRINFO Hints;
+			ZeroMemory(&Hints, sizeof(ADDRINFO));
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
 
@@ -658,7 +660,8 @@ namespace Win32xx
 
 #ifdef GetAddrInfo	// Skip the following code block for older development environments
 
-			ADDRINFO Hints= {0};
+			ADDRINFO Hints;
+			ZeroMemory(&Hints, sizeof(ADDRINFO));
 			Hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
 			ADDRINFO *AddrInfo;
 			CString csPort;

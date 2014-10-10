@@ -350,7 +350,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 				GetReBar()->MoveBand(iFrom, i);
 
 				// Set the band's style
-				REBARBANDINFO rbbi = {0};
+				REBARBANDINFO rbbi;
+				ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 				rbbi.fMask = RBBIM_STYLE;
 				rbbi.fStyle = m_vBandStyles[i];
 				GetReBar()->SetBandInfo(i, rbbi);
@@ -359,7 +360,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 			if (i < (int)m_vBandSizes.size())
 			{
 				// Set the band's size
-				REBARBANDINFO rbbi = {0};
+				REBARBANDINFO rbbi;
+				ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 				rbbi.fMask = RBBIM_SIZE;
 				rbbi.cx = m_vBandSizes[i];
 				GetReBar()->SetBandInfo(i, rbbi);
@@ -608,7 +610,8 @@ BOOL CMainFrame::SaveRegistrySettings()
 		RegSetValueEx(hKey, _T("NumBands"), 0, REG_DWORD, (LPBYTE)&nBands, sizeof(DWORD));
 
 		// Save the rebar band settings
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 		rbbi.fMask = RBBIM_ID|RBBIM_STYLE|RBBIM_SIZE;
 
 		for (int i = 0; i < nBands; i++)
@@ -638,7 +641,8 @@ void CMainFrame::SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF
 {
 	if (IsReBarSupported())
 	{
-		ReBarTheme rt = {0};
+		ReBarTheme rt;
+		ZeroMemory(&rt, sizeof(ReBarTheme));
 		rt.UseThemes = m_bUseThemes;
 		rt.clrBkgnd1 = clrBkGnd1;
 		rt.clrBkgnd2 = clrBkGnd2;

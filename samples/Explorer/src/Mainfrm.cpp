@@ -38,7 +38,8 @@ void CMainFrame::DoPopupMenu()
 	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
 
 	// Put a radio check in the currently checked item
-	MENUITEMINFO mii = {0};
+	MENUITEMINFO mii;
+	ZeroMemory(&mii, sizeof(MENUITEMINFO));
 	for (int i = 3 ; i < 7 ; i++)
 	{
 		ZeroMemory(&mii, GetSizeofMenuItemInfo());

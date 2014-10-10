@@ -170,7 +170,8 @@ LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
 	// Reset the scroll bar.
-	SCROLLINFO si = {0};
+	SCROLLINFO si;
+	ZeroMemory(&si, sizeof(SCROLLINFO));
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.fMask  = SIF_POS;
@@ -222,7 +223,8 @@ LRESULT CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
 	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
 	// Reset the scroll bar.
-	SCROLLINFO si = {0};
+	SCROLLINFO si;
+	ZeroMemory(&si, sizeof(SCROLLINFO));
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.cbSize = sizeof(si);
@@ -245,7 +247,8 @@ LRESULT CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 		CRect rcView = GetClientRect();
 		AdjustWindowRectEx(&rcView, dwStyle, FALSE, dwExStyle);
 
-		SCROLLINFO si = {0};
+		SCROLLINFO si;
+		ZeroMemory(&si, sizeof(SCROLLINFO));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 		si.nMin   = 0;

@@ -33,19 +33,20 @@ BOOL CMyCombo::AddItems()
         int iSelectedImage;
         int iIndent;
         LPTSTR pszText;
-    } ITEMINFO, *PITEMINFO;
+    } ITEMINFO;
 
     ITEMINFO IInf[ ] =
 	{
         { 0, 0,  0, (LPTSTR)_T("Item 1")},
         { 1, 1,  0, (LPTSTR)_T("Item 2")},
-        { 2, 2,  0, (LPTSTR)_T("Item 3")},
+        { 2, 2,  0, (LPTSTR)_T("Item 3")}
     };
 
     int MaxItems = 3;
 	for(int i = 0; i < MaxItems; ++i)
 	{
-		COMBOBOXEXITEM cbei = {0};
+		COMBOBOXEXITEM cbei;
+		ZeroMemory(&cbei, sizeof(COMBOBOXEXITEM));
 		cbei.mask = CBEIF_TEXT | CBEIF_INDENT | CBEIF_IMAGE| CBEIF_SELECTEDIMAGE;
         cbei.iItem          = i;
         cbei.pszText        = IInf[i].pszText;

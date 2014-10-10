@@ -273,7 +273,8 @@ void CClientDialog::OnStartClient()
 				{
 					DWORD dwAddr = 0;
 					m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
-					in_addr addr = {0};
+					in_addr addr;
+					ZeroMemory(&addr, sizeof(in_addr));
 					addr.S_un.S_addr = htonl(dwAddr);
 					strAddr = A2T( inet_ntoa(addr) );
 				}
@@ -382,7 +383,8 @@ void CClientDialog::OnSend()
 			{
 				DWORD dwAddr = 0;
 				m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
-				in_addr addr = {0};
+				in_addr addr;
+				ZeroMemory(&addr, sizeof(in_addr));
 				addr.S_un.S_addr = htonl(dwAddr);
 				strAddr = A2T( inet_ntoa(addr) );
 			}

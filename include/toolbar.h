@@ -176,7 +176,8 @@ namespace Win32xx
 		int iImageWidth  = MAX(bm.bmHeight, 16);
 		int iImages = bm.bmWidth / iImageWidth;
 
-		TBADDBITMAP tbab = {0};
+		TBADDBITMAP tbab;
+		ZeroMemory(&tbab, sizeof(TBADDBITMAP));
 		tbab.hInst = GetApp()->GetResourceHandle();
 		tbab.nID   = ToolBarID;
 		int iResult = (int)SendMessage(TB_ADDBITMAP, iImages, (LPARAM)&tbab);
@@ -212,7 +213,8 @@ namespace Win32xx
 		}
 
 		// TBBUTTON structure for each button in the toolbar
-		TBBUTTON tbb = {0};
+		TBBUTTON tbb;
+		ZeroMemory(&tbb, sizeof(TBBUTTON));
 
 		if (0 == nID)
 		{
@@ -366,7 +368,8 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		int iIndex = CommandToIndex(idButton);
-		TBBUTTON tbb = {0};
+		TBBUTTON tbb;
+		ZeroMemory(&tbb, sizeof(TBBUTTON));
 		SendMessage(TB_GETBUTTON, iIndex, (LPARAM) &tbb);
 
 		return tbb.fsStyle;
@@ -389,7 +392,8 @@ namespace Win32xx
 	// Retrieves information about the specified button in a ToolBar
 	{
 		assert(::IsWindow(m_hWnd));
-		TBBUTTON tbb = {0};
+		TBBUTTON tbb;
+		ZeroMemory(&tbb, sizeof(TBBUTTON));
 		SendMessage(TB_GETBUTTON, iIndex, (WPARAM) &tbb);
 
 		// returns zero if failed
@@ -676,7 +680,8 @@ namespace Win32xx
 		int iImageWidth  = MAX(bm.bmHeight, 16);
 		int iImages = bm.bmWidth / iImageWidth;
 
-		TBREPLACEBITMAP tbrb = {0};
+		TBREPLACEBITMAP tbrb;
+		ZeroMemory(&tbrb, sizeof(TBREPLACEBITMAP));
 		tbrb.hInstNew = GetApp()->GetResourceHandle();
 		tbrb.hInstOld = GetApp()->GetResourceHandle();
 		tbrb.nIDNew = NewToolBarID;
@@ -744,13 +749,15 @@ namespace Win32xx
 	// The ID must be changed for the image to be changed.
 	{
 		// Retrieve existing state and style
-		TBBUTTON tb = {0};
+		TBBUTTON tb;
+		ZeroMemory(&tb, sizeof(TBBUTTON));
 		BOOL bSucceeded = GetButton(CommandToIndex(idButton), &tb);
 		assert(bSucceeded);
 
         if (bSucceeded)
         {
-            TBBUTTONINFO tbbi = {0};
+            TBBUTTONINFO tbbi;
+			ZeroMemory(&tbbi, sizeof(TBBUTTONINFO));
             tbbi.cbSize = sizeof(TBBUTTONINFO);
             tbbi.dwMask = TBIF_COMMAND | TBIF_IMAGE | TBIF_STYLE | TBIF_STATE;
             tbbi.idCommand = idButtonNew;
@@ -791,7 +798,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		TBBUTTONINFO tbbi = {0};
+		TBBUTTONINFO tbbi;
+		ZeroMemory(&tbbi, sizeof(TBBUTTONINFO));
 		tbbi.cbSize = sizeof(TBBUTTONINFO);
 		tbbi.dwMask = TBIF_STYLE;
 		tbbi.fsStyle = Style;
@@ -848,7 +856,8 @@ namespace Win32xx
 
 		if (Succeeded)
 		{
-			TBBUTTON tbb = {0};
+			TBBUTTON tbb;
+			ZeroMemory(&tbb, sizeof(TBBUTTON));
 			Succeeded = (BOOL)SendMessage(TB_GETBUTTON, iIndex, (LPARAM)&tbb);
 
 			tbb.iString = iString;
@@ -884,7 +893,8 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		TBBUTTONINFO tbbi = {0};
+		TBBUTTONINFO tbbi;
+		ZeroMemory(&tbbi, sizeof(TBBUTTONINFO));
 		tbbi.cbSize = sizeof(TBBUTTONINFO);
 		tbbi.dwMask = TBIF_SIZE;
 		tbbi.cx = (WORD)nWidth;

@@ -23,7 +23,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		m_bmImage.LoadImage(szFilename, 0, 0, LR_LOADFROMFILE);
 	}
 
-	return (BOOL)m_bmImage.GetHandle();
+	return (bool)m_bmImage.GetHandle();
 }
 
 BOOL CView::FileSave(LPCTSTR pszFile)
@@ -46,7 +46,8 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 
 		LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
-		BITMAPFILEHEADER hdr = {0};
+		BITMAPFILEHEADER hdr;
+		ZeroMemory(&hdr, sizeof(BITMAPFILEHEADER));
 		hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"
 		hdr.bfSize = (DWORD) (sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
 		hdr.bfOffBits = (DWORD) sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD);
@@ -144,7 +145,8 @@ LRESULT CView::OnHScroll(WPARAM wParam, LPARAM lParam)
 	ScrollWindowEx(-xDelta, 0,  NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
 	// Reset the scroll bar.
-	SCROLLINFO si = {0};
+	SCROLLINFO si;
+	ZeroMemory(&si, sizeof(SCROLLINFO));
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.cbSize = sizeof(si);
@@ -198,7 +200,8 @@ LRESULT CView::OnVScroll(WPARAM wParam, LPARAM lParam)
 	ScrollWindowEx(0, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
 
 	// Reset the scroll bar.
-	SCROLLINFO si = {0};
+	SCROLLINFO si;
+	ZeroMemory(&si, sizeof(SCROLLINFO));
 	si.cbSize = sizeof(si);
 	si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 	si.cbSize = sizeof(si);
@@ -224,7 +227,8 @@ LRESULT CView::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 		CRect rcView = GetClientRect();
 		AdjustWindowRectEx(&rcView, dwStyle, FALSE, dwExStyle);
 
-		SCROLLINFO si = {0};
+		SCROLLINFO si;
+		ZeroMemory(&si, sizeof(SCROLLINFO));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 		si.nMin   = 0;

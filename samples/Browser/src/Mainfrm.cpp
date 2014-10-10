@@ -33,7 +33,8 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	m_ComboboxEx.Create(GetReBar());
 
 	// Put the window in a new rebar band
-	REBARBANDINFO rbbi = {0};
+	REBARBANDINFO rbbi;
+	ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 	rbbi.cbSize		= sizeof(REBARBANDINFO);
 	rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
 	rbbi.cyMinChild = Listbox_Height;
@@ -325,7 +326,8 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 					CString str = m_ComboboxEx.GetWindowText();
 
 					// Insert text into the list box.
-					COMBOBOXEXITEM CBXitem = {0};
+					COMBOBOXEXITEM CBXitem;
+					ZeroMemory(&CBXitem, sizeof(COMBOBOXEXITEM));
 					CBXitem.mask = CBEIF_TEXT;
 					CBXitem.pszText = (LPTSTR)str.c_str();
 					m_ComboboxEx.InsertItem(&CBXitem);

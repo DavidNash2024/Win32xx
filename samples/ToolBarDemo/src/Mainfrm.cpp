@@ -138,7 +138,8 @@ void CMainFrame::OnFileSave()
 void CMainFrame::OnFilePrint()
 {
 	// Bring up a dialog to choose the printer
-	PRINTDLG pd = {0};
+	PRINTDLG pd;
+	ZeroMemory(&pd, sizeof(PRINTDLG));
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
 	pd.hwndOwner = m_hWnd;

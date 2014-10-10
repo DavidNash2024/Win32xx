@@ -124,7 +124,7 @@ HRESULT CView::InitGeometry()
     {
         { -1.0f,-1.0f, 0.0f, 0xffff0000, },
         {  1.0f,-1.0f, 0.0f, 0xff0000ff, },
-        {  0.0f, 1.0f, 0.0f, 0xffffffff, },
+        {  0.0f, 1.0f, 0.0f, 0xffffffff, }
     };
 
     // Create the vertex buffer.

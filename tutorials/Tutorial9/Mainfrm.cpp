@@ -113,7 +113,8 @@ void CMainFrame::OnFilePrint()
 	MemDC.BitBlt(0, 0, Width, Height, &dcView, 0, 0, SRCCOPY);
 
 	// Bring up a dialog to choose the printer
-	PRINTDLG pd = {0};
+	PRINTDLG pd;
+	ZeroMemory(&pd, sizeof(PRINTDLG));
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
 	pd.hwndOwner = m_hWnd;
@@ -142,7 +143,8 @@ void CMainFrame::OnFilePrint()
 	if (0 > StartPage(pd.hDC))
 		throw CWinException(_T("StartPage failed"));
 
-	BITMAPINFOHEADER bi = {0};
+	BITMAPINFOHEADER bi;
+	ZeroMemory(&bi, sizeof(BITMAPINFOHEADER));
 	bi.biSize = sizeof(BITMAPINFOHEADER);
 	bi.biHeight = Height;
 	bi.biWidth = Width;

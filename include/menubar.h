@@ -111,7 +111,7 @@ namespace Win32xx
 		{
 			MDI_MIN = 0,
 			MDI_RESTORE = 1,
-			MDI_CLOSE = 2,
+			MDI_CLOSE = 2
 		};
 
 		BOOL  m_bExitAfter;		// Exit after Popup menu ends
@@ -1027,7 +1027,8 @@ namespace Win32xx
 		{
 			// Create an extra button for the MDI child system menu
 			// Later we will custom draw the window icon over this button
-			TBBUTTON tbb = {0};
+			TBBUTTON tbb;
+			ZeroMemory(&tbb, sizeof(TBBUTTON));
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
 			tbb.iString = (INT_PTR)_T(" ");
@@ -1038,7 +1039,8 @@ namespace Win32xx
 		for (int i = 0 ; i < ::GetMenuItemCount(hMenu); ++i)
 		{
 			// Assign the ToolBar Button struct
-			TBBUTTON tbb = {0};
+			TBBUTTON tbb;
+			ZeroMemory(&tbb, sizeof(TBBUTTON));
 			tbb.idCommand = i  + nMaxedOffset;	// Each button needs a unique ID
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;

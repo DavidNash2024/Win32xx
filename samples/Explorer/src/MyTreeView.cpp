@@ -54,7 +54,8 @@ void CMyTreeView::DoContextMenu(CPoint& ptScreen)
 
 void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 {
-	TVITEM tvItem = {0};
+	TVITEM tvItem;
+	ZeroMemory(&tvItem, sizeof(TVITEM));
 	tvItem.mask = TVIF_PARAM;
 	tvItem.hItem = hItem;
 
@@ -95,7 +96,8 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 
 						if(idCmd)
 						{
-							CMINVOKECOMMANDINFO  cmi = {0};
+							CMINVOKECOMMANDINFO  cmi;
+							ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
 							cmi.hwnd = m_hWnd;
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
@@ -129,7 +131,8 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 	//do we need to supply the text?
 	if(pDI->item.mask & TVIF_TEXT)
 	{
-		SHFILEINFO sfi = {0};
+		SHFILEINFO sfi;
+		ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
 		//get the display name of the item
 		if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
@@ -139,7 +142,8 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 	//do we need to supply the unselected image?
 	if(pDI->item.mask & TVIF_IMAGE)
 	{
-		SHFILEINFO sfi = {0};
+		SHFILEINFO sfi;
+		ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
 		//get the unselected image for this item
 		if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_LINKOVERLAY))
@@ -149,7 +153,8 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
 	//do we need to supply the selected image?
 	if(pDI->item.mask & TVIF_SELECTEDIMAGE)
 	{
-		SHFILEINFO sfi = {0};
+		SHFILEINFO sfi;
+		ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
 		//get the selected image for this item
 		if(pItem->GetFullCpidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON | SHGFI_OPENICON))
@@ -212,9 +217,11 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
 		//enumerate the item's PIDLs
 		while(S_OK == (cEnum.Next(1, cpidlRel, ulFetched)) && ulFetched)
 		{
-			TVITEM         tvItem = {0};
-			TVINSERTSTRUCT tvInsert = {0};
+			TVITEM         tvItem;
+			TVINSERTSTRUCT tvInsert;
 			ULONG          ulAttribs;
+			ZeroMemory(&tvItem, sizeof(TVITEM));			
+			ZeroMemory(&tvInsert, sizeof(TVINSERTSTRUCT));
 
 			//fill in the TV_ITEM structure for this item
 			tvItem.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
@@ -254,7 +261,8 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
 
 BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 {
-	TVITEM tvItem = {0};
+	TVITEM tvItem;
+	ZeroMemory(&tvItem, sizeof(TVITEM));
 	tvItem.mask = TVIF_PARAM;
 	tvItem.hItem = hParentItem;
 	if (!GetItem(tvItem))
@@ -315,9 +323,11 @@ BOOL CMyTreeView::GetRootItems()
 	cpidlDesk.SHGetSpecialFolderLocation(NULL, CSIDL_DESKTOP);
 	if (cpidlDesk.GetPidl())
 	{
-		TV_ITEM           tvItem = {0};
-		TV_INSERTSTRUCT   tvInsert = {0};
+		TV_ITEM           tvItem;
+		TV_INSERTSTRUCT   tvInsert;
 		HTREEITEM         hParentItem;
+		ZeroMemory(&tvItem, sizeof(TV_ITEM));
+		ZeroMemory(&tvInsert, sizeof(TV_INSERTSTRUCT));				
 
 		//fill in the TVITEM structure for this item
 		tvItem.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
@@ -388,7 +398,8 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 	HTREEITEM hItem = GetSelection();
 
 	//Set parent item's has Children flag
-	TVITEM tvItem = {0};
+	TVITEM tvItem;
+	ZeroMemory(&tvItem, sizeof(TVITEM));
 	tvItem.mask = TVIF_CHILDREN;
 	tvItem.cChildren = 1;
 	tvItem.hItem = hItem;
@@ -403,7 +414,8 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 	while (hChild != NULL)
 	{
 		//Get the TVITEM structure for this item
-		TVITEM tvItem = {0};
+		TVITEM tvItem;
+		ZeroMemory(&tvItem, sizeof(TVITEM));
 		tvItem.mask = TVIF_PARAM;
 		tvItem.hItem = hChild;
 		if(!GetItem(tvItem))

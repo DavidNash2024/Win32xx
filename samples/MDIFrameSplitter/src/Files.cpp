@@ -36,7 +36,8 @@ void CViewFiles::OnInitialUpdate()
 
 int CViewFiles::AddItem(LPCTSTR szText, int nImage)
 {
-	LVITEM lvi = {0};
+	LVITEM lvi;
+	ZeroMemory(&lvi, sizeof(LVITEM));
 	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
 	lvi.iImage = nImage;
 	lvi.pszText = (LPTSTR)szText;
@@ -50,7 +51,8 @@ void CViewFiles::SetColumns()
 	DeleteAllItems();
 
 	//initialise the columns
-	LV_COLUMN lvColumn = {0};
+	LV_COLUMN lvColumn;
+	ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
 	lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 	lvColumn.fmt = LVCFMT_LEFT;
 	lvColumn.cx = 120;
@@ -64,7 +66,8 @@ void CViewFiles::SetColumns()
 
 BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 {
-	LVITEM lvi1 = {0};
+	LVITEM lvi1;
+	ZeroMemory(&lvi1, sizeof(LVITEM));
 	lvi1.mask = LVIF_TEXT;
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;

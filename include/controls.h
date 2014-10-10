@@ -478,7 +478,7 @@ namespace Win32xx
 		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle);
 #endif
 #if (defined TTM_SETWINDOWTHEME) && (WINVER >= 0x0501)
-		HRESULT SetWindowTheme(LPCWSTR lpstrTheme);
+		void SetWindowTheme(LPCWSTR lpstrTheme);
 #endif
 
 	protected:
@@ -1911,7 +1911,8 @@ namespace Win32xx
 		assert(IsWindow());
 		assert(pWnd);
 		assert(lpToolInfo);
-		TTHITTESTINFO hti = {0};
+		TTHITTESTINFO hti;
+		ZeroMemory(&hti, sizeof(TTHITTESTINFO));
 		hti.hwnd = pWnd->GetHwnd();
 		hti.pt = pt;
 		hti.ti = *lpToolInfo;
@@ -2071,7 +2072,7 @@ namespace Win32xx
 #endif
 
 #if (defined TTM_SETWINDOWTHEME) && (WINVER >= 0x0501)
-	inline HRESULT CToolTip::SetWindowTheme(LPCWSTR lpstrTheme)
+	inline void CToolTip::SetWindowTheme(LPCWSTR lpstrTheme)
 	// Sets the visual style of a ToolTip control.
 	{
 		assert(IsWindow());

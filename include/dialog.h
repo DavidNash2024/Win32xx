@@ -640,7 +640,8 @@ namespace Win32xx
 	// Used by Modal Dialogs for idle processing and PreTranslateMessage
 	{
 		TLSData* pTLSData = GetApp()->GetTlsData();
-		MSG Msg = {0};
+		MSG Msg;
+		ZeroMemory(&Msg, sizeof(MSG));
 		LONG lCount = 0;
 
 		// While idle, perform idle processing until OnIdle returns FALSE
@@ -800,7 +801,8 @@ namespace Win32xx
 		m_pParent->ScrollWindow(-xDelta, 0, NULL, NULL);
 
 		// Reset the scroll bar.
-		SCROLLINFO si = {0};
+		SCROLLINFO si;
+		ZeroMemory(&si, sizeof(SCROLLINFO));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_POS;
 		si.nPos   = m_xScrollPos;
@@ -849,7 +851,8 @@ namespace Win32xx
 		m_pParent->ScrollWindow(0, -yDelta, NULL, NULL);
 
 		// Reset the scroll bar.
-		SCROLLINFO si = {0};
+		SCROLLINFO si;
+		ZeroMemory(&si, sizeof(SCROLLINFO));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_POS;
 		si.nPos   = m_yScrollPos;
@@ -868,7 +871,8 @@ namespace Win32xx
 		// Adjust the scrolling if required
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
 		m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_rcMin.Height() - rcCurrent.Height()) );
-		SCROLLINFO si = {0};
+		SCROLLINFO si;
+		ZeroMemory(&si, sizeof(SCROLLINFO));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 		si.nMax   =	m_rcMin.Width();

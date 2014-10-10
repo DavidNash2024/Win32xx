@@ -692,7 +692,8 @@ namespace Win32xx
 				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
 
 				// Load the full set of common controls
-				INITCOMMONCONTROLSEX InitStruct = {0};
+				INITCOMMONCONTROLSEX InitStruct;
+				ZeroMemory(&InitStruct, sizeof(INITCOMMONCONTROLSEX));
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 				InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
 							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;

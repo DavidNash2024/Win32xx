@@ -223,7 +223,7 @@ void CMainFrame::OnInitialUpdate()
 inline void CMainFrame::OnMenuUpdate(UINT nID)
 // Called when menu items are about to be displayed
 {
-	BOOL IsImageLoaded = (BOOL)GetMyView().GetImage();
+	bool IsImageLoaded = GetMyView().GetImage();
 
 	switch(nID)
 	{

@@ -798,7 +798,8 @@ namespace Win32xx
 			m_bOldFocus = bFocus;
 
 			// Set the font for the title
-			NONCLIENTMETRICS info = {0};
+			NONCLIENTMETRICS info;
+			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 			dcMem.CreateFontIndirect(&info.lfStatusFont);
@@ -1105,7 +1106,8 @@ namespace Win32xx
 	{
 		if (!m_IsTracking)
 		{
-			TRACKMOUSEEVENT TrackMouseEventStruct = {0};
+			TRACKMOUSEEVENT TrackMouseEventStruct;
+			ZeroMemory(&TrackMouseEventStruct, sizeof(TRACKMOUSEEVENT));
 			TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 			TrackMouseEventStruct.dwFlags = TME_LEAVE|TME_NONCLIENT;
 			TrackMouseEventStruct.hwndTrack = m_hWnd;
@@ -2457,7 +2459,8 @@ namespace Win32xx
 
 	inline int CDocker::GetTextHeight()
 	{
-		NONCLIENTMETRICS nm = {0};
+		NONCLIENTMETRICS nm;
+		ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		LOGFONT lf = nm.lfStatusFont;
@@ -2767,11 +2770,12 @@ namespace Win32xx
 
 			// Send a notification of focus lost
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nhdr={0};
-			nhdr.hwndFrom = m_hOldFocus;
-			nhdr.idFrom = idCtrl;
-			nhdr.code = UWN_FRAMELOSTFOCUS;
-			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+			NMHDR nmhdr;
+			ZeroMemory(&nmhdr, sizeof(NMHDR));
+			nmhdr.hwndFrom = m_hOldFocus;
+			nmhdr.idFrom = idCtrl;
+			nmhdr.code = UWN_FRAMELOSTFOCUS;
+			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
 		}
 
 		return CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
@@ -3163,11 +3167,12 @@ namespace Win32xx
 		{
 			// Send a notification to top level window
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nhdr={0};
-			nhdr.hwndFrom = m_hOldFocus;
-			nhdr.idFrom = idCtrl;
-			nhdr.code = UWN_DOCKSETFOCUS;
-			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+			NMHDR nmhdr;
+			ZeroMemory(&nmhdr, sizeof(NMHDR));
+			nmhdr.hwndFrom = m_hOldFocus;
+			nmhdr.idFrom = idCtrl;
+			nmhdr.code = UWN_DOCKSETFOCUS;
+			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
 		}
 
 		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
@@ -3556,7 +3561,8 @@ namespace Win32xx
 				// Fill the DockInfo vector with the docking information
 				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
 				{
-					DockInfo di	 = {0};
+					DockInfo di;
+					ZeroMemory(&di, sizeof(DockInfo));
 					if (! (*iter)->IsWindow())
 						throw (CWinException(_T("Can't save Docker in registry. \n")));;
 
@@ -3898,7 +3904,8 @@ namespace Win32xx
 		m_Undocking = FALSE;
 
 		// Send the undock notification to the frame
-		NMHDR nmhdr = {0};
+		NMHDR nmhdr;
+		ZeroMemory(&nmhdr, sizeof(NMHDR));
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWN_UNDOCKED;
 		nmhdr.idFrom = m_nDockID;
@@ -4114,7 +4121,8 @@ namespace Win32xx
 
 			if (m_hWnd)
 			{
-				TCITEM tie = {0};
+				TCITEM tie;
+				ZeroMemory(&tie, sizeof(TCITEM));
 				tie.mask = TCIF_TEXT | TCIF_IMAGE;
 				tie.iImage = ci.iImage;
 				tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
@@ -4206,7 +4214,8 @@ namespace Win32xx
 		{
 			CSize TempSize;
 			CClientDC dc(this);
-			NONCLIENTMETRICS info = {0};
+			NONCLIENTMETRICS info;
+			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 			dc.CreateFontIndirect(&info.lfStatusFont);
@@ -4257,7 +4266,8 @@ namespace Win32xx
 		GetODImageList()->Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
-		NONCLIENTMETRICS info = {0};
+		NONCLIENTMETRICS info;
+		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 		GetTabFont()->CreateFontIndirect(&info.lfStatusFont);
@@ -4297,7 +4307,8 @@ namespace Win32xx
 		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
 		{
 			// Add tabs for each view.
-			TCITEM tie = {0};
+			TCITEM tie;
+			ZeroMemory(&tie, sizeof(TCITEM));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vContainerInfo[i].iImage;
 			tie.pszText = (LPTSTR)m_vContainerInfo[i].Title.c_str();
@@ -4312,7 +4323,8 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 
 		CPoint pt((DWORD)lParam);
-		TCHITTESTINFO info = {0};
+		TCHITTESTINFO info;
+		ZeroMemory(&info, sizeof(TCHITTESTINFO));
 		info.pt = pt;
 		m_nTabPressed = HitTest(info);
 
@@ -4607,13 +4619,15 @@ namespace Win32xx
 			ContainerInfo CI1 = m_vContainerInfo[nTab1];
 			ContainerInfo CI2 = m_vContainerInfo[nTab2];
 
-			TCITEM Item1 = {0};
+			TCITEM Item1;
+			ZeroMemory(&Item1, sizeof(TCITEM));
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = CI1.Title.GetLength()+1;
 			Item1.pszText = const_cast<LPTSTR>(CI1.Title.c_str());
 			GetItem(nTab1, &Item1);
 
-			TCITEM Item2 = {0};
+			TCITEM Item2;
+			ZeroMemory(&Item2, sizeof(TCITEM));
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = CI2.Title.GetLength()+1;
 			Item2.pszText = const_cast<LPTSTR>(CI2.Title.c_str());
@@ -4643,7 +4657,8 @@ namespace Win32xx
 		if (IsLeftButtonDown())
 		{
 			CPoint pt((DWORD)lParam);
-			TCHITTESTINFO info = {0};
+			TCHITTESTINFO info;
+			ZeroMemory(&info, sizeof(TCHITTESTINFO));
 			info.pt = pt;
 			int nTab = HitTest(info);
 			if (nTab >= 0)

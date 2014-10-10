@@ -171,7 +171,8 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	m_ToolBar.AddButtons(5, ButtonInfo);
 
 	// Fill the REBARBAND structure
-	REBARBANDINFO rbbi = {0};
+	REBARBANDINFO rbbi;
+	ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 	rbbi.fMask      = RBBIM_CHILD |RBBIM_CHILDSIZE| RBBIM_ID | RBBIM_SIZE | RBBIM_STYLE;
 	rbbi.fStyle     = RBBS_BREAK;
 	rbbi.hwndChild  = m_ToolBar.GetHwnd();
@@ -210,7 +211,8 @@ void CMainFrame::OnFileSave()
 void CMainFrame::OnFilePrint()
 {
 	// Bring up a dialog to choose the printer
-	PRINTDLG pd = {0};
+	PRINTDLG pd;
+	ZeroMemory(&pd, sizeof(PRINTDLG));
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
 	pd.hwndOwner = m_hWnd;

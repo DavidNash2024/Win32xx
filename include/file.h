@@ -232,7 +232,8 @@ namespace Win32xx
 
 		int MaxPath = 260; // Should be a const int but VS6 can't handle it.
 
-		OPENFILENAME ofn = {0};
+		OPENFILENAME ofn;
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
 #if defined OPENFILENAME_SIZE_VERSION_400
@@ -288,7 +289,8 @@ namespace Win32xx
 
 		int MaxPath = 260; // Should be a const int but VS6 can't handle it.
 
-		OPENFILENAME ofn = {0};
+		OPENFILENAME ofn;
+		ZeroMemory(&ofn, sizeof(OPENFILENAME));
 		ofn.lStructSize = sizeof(OPENFILENAME);
 
 #if defined OPENFILENAME_SIZE_VERSION_400

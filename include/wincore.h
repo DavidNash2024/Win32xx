@@ -242,7 +242,7 @@ namespace Win32xx
 	enum Constants			// Defines the maximum size for TCHAR strings
 	{
 		MAX_MENU_STRING = 80,
-		MAX_STRING_SIZE = 255,
+		MAX_STRING_SIZE = 255
 	};
 
 	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
@@ -844,7 +844,8 @@ namespace Win32xx
 	inline int CWinThread::MessageLoop()
 	{
 		// This gets any messages queued for the application, and dispatches them.
-		MSG Msg = {0};
+		MSG Msg;
+		ZeroMemory(&Msg, sizeof(MSG));
 		int status = 1;
 		LONG lCount = 0;
 
@@ -1002,8 +1003,10 @@ namespace Win32xx
 	#ifdef _WIN32_WCE
 			m_hInstance = (HINSTANCE)GetModuleHandle(0);
 	#else
-			MEMORY_BASIC_INFORMATION mbi = {0};
-			VirtualQuery( (LPCVOID)SetnGetThis, &mbi, sizeof(mbi) );
+			MEMORY_BASIC_INFORMATION mbi;
+			ZeroMemory(&mbi, sizeof(MEMORY_BASIC_INFORMATION));
+			static int Address = 0;
+			VirtualQuery( &Address, &mbi, sizeof(mbi) );
 			assert(mbi.AllocationBase);
 			m_hInstance = (HINSTANCE)mbi.AllocationBase;
 	#endif
@@ -1267,7 +1270,8 @@ namespace Win32xx
 		// address of CWnd::StaticWindowProc.
 		// This technique works for all Window versions, including WinCE.
 
-		WNDCLASS wcDefault = {0};
+		WNDCLASS wcDefault;
+		ZeroMemory(&wcDefault, sizeof(WNDCLASS));
 
 		LPCTSTR szClassName		= _T("Win32++ Temporary Window Class");
 		wcDefault.hInstance		= GetInstanceHandle();
@@ -1398,7 +1402,7 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 		
 		OnAttach();
-		PostMessage(UWM_WINDOWCREATED);
+		OnInitialUpdate();
 
 		return TRUE;
 	}
@@ -1464,7 +1468,9 @@ namespace Win32xx
 		if (pfnGetMonitorInfo && pfnMonitorFromWindow)
 		{
 			HMONITOR hActiveMonitor = pfnMonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
-			MONITORINFO mi = { sizeof(mi), 0};
+			MONITORINFO mi;
+			ZeroMemory(&mi, sizeof(MONITORINFO));
+			mi.cbSize = sizeof(MONITORINFO);
 
 			if(pfnGetMonitorInfo(hActiveMonitor, &mi))
 			{
@@ -1580,7 +1586,8 @@ namespace Win32xx
 			else
 				ClassName = lpszClassName;
 
-			WNDCLASS wc = {0};
+			WNDCLASS wc;
+			ZeroMemory(&wc, sizeof(WNDCLASS));
 			wc.lpszClassName = ClassName;
 			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
@@ -2044,7 +2051,8 @@ namespace Win32xx
 		assert( (0 != lstrlen(wc.lpszClassName) && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
 
 		// Check to see if this classname is already registered
-		WNDCLASS wcTest = {0};
+		WNDCLASS wcTest;
+		ZeroMemory(&wcTest, sizeof(WNDCLASS));
 		BOOL Done = FALSE;
 
 		if (::GetClassInfo(GetApp()->GetInstanceHandle(), wc.lpszClassName, &wcTest))
@@ -3332,7 +3340,7 @@ namespace Win32xx
 
   #endif
 
-}; // namespace Win32xx
+} // namespace Win32xx
 
 
 #endif // _WIN32XX_WINCORE_H_

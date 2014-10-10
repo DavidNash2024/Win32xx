@@ -86,7 +86,8 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 
 					if(idCmd)
 					{
-						CMINVOKECOMMANDINFO  cmi = {0};
+						CMINVOKECOMMANDINFO  cmi;
+						ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 						cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
 						cmi.hwnd = ::GetParent(m_hWnd);
 						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
@@ -146,7 +147,8 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
 
 void CMyListView::DoDefault(int iItem)
 {
-	LVITEM   lvItem = {0};
+	LVITEM   lvItem;
+	ZeroMemory(&lvItem, sizeof(LVITEM));
 	lvItem.mask = LVIF_PARAM;
 	lvItem.iItem = iItem;
 
@@ -189,7 +191,8 @@ void CMyListView::DoDefault(int iItem)
 							}
 							else
 							{
-								CMINVOKECOMMANDINFO  cmi = {0};
+								CMINVOKECOMMANDINFO  cmi;
+								ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 								cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
 								cmi.hwnd = ::GetParent(m_hWnd);
 								cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
@@ -233,7 +236,8 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 
 	for(UINT i = 0; i < cbItems; ++i)
 	{
-		LVITEM lvItem = {0};
+		LVITEM lvItem;
+		ZeroMemory(&lvItem, sizeof(LVITEM));
 		lvItem.mask = LVIF_PARAM;
 		lvItem.iItem = piItems[i];
 		if(GetItem(lvItem))
@@ -268,7 +272,8 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 
 						if(idCmd)
 						{
-							CMINVOKECOMMANDINFO  cmi = {0};
+							CMINVOKECOMMANDINFO  cmi;
+							ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
 							cmi.hwnd = ::GetParent(m_hWnd);
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
@@ -329,7 +334,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 		{
 		case 0:  //name
 			{
-				SHFILEINFO sfi = {0};
+				SHFILEINFO sfi;
+				ZeroMemory(&sfi, sizeof(SHFILEINFO));
 				//get the display name of the item
 				if (pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
 					::lstrcpyn(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
@@ -351,7 +357,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 			break;
 		case 2: //Type
 			{
-				SHFILEINFO sfi = {0};
+				SHFILEINFO sfi;
+				ZeroMemory(&sfi, sizeof(SHFILEINFO));
 				if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_TYPENAME))
 					::lstrcpyn(pdi->item.pszText, sfi.szTypeName, pdi->item.cchTextMax -1);
 			}
@@ -375,7 +382,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
 	//do we need to supply the unselected image?
 	if(pdi->item.mask & LVIF_IMAGE)
 	{
-		SHFILEINFO sfi = {0};
+		SHFILEINFO sfi;
+		ZeroMemory(&sfi, sizeof(SHFILEINFO));
 
 		//get the unselected image for this item
 		if(pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_SYSICONINDEX | SHGFI_SMALLICON))
@@ -428,7 +436,8 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 		//enumerate the item's PIDLs
 		while(S_OK == (cEnum.Next(1, cpidlRel, ulFetched)) && ulFetched)
 		{
-			LVITEM lvItem = {0};
+			LVITEM lvItem;
+			ZeroMemory(&lvItem, sizeof(LVITEM));
 			ULONG  ulAttr;
 
 			//fill in the TV_ITEM structure for this item
@@ -557,7 +566,8 @@ void CMyListView::OnInitialUpdate()
 
 	//Set up the colmns for report mode
 	TCHAR szText[256];
-	LVCOLUMN lvc = {0};
+	LVCOLUMN lvc;
+	ZeroMemory(&lvc, sizeof(LVCOLUMN));
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 	int iColumns = 4;	//Number of columns
 	int ColSize[4] = {150, 70, 100, 120}; // width of columns in pixels

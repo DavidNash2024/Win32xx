@@ -655,6 +655,7 @@ namespace Win32xx
 		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
 		int   GetTextCharacterExtra() const;
 		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
+		CSize GetTextExtentPoint32(CString& str) const;
 		BOOL  GrayString(CBrush* pBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
 		int   SetTextCharacterExtra(int nCharExtra) const;
 		int   SetTextJustification(int nBreakExtra, int nBreakCount) const;
@@ -1188,7 +1189,8 @@ namespace Win32xx
 		{
 			assert(m_pData);
 			assert(m_pData->hGDIObject != NULL);
-			BITMAP bmp = {0};
+			BITMAP bmp;
+			ZeroMemory(&bmp, sizeof(BITMAP));
 			::GetObject(m_pData->hGDIObject, sizeof(BITMAP), &bmp);
 			return bmp;
 		}
@@ -1512,7 +1514,8 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
-		LOGBRUSH LogBrush = {0};
+		LOGBRUSH LogBrush;
+		ZeroMemory(&LogBrush, sizeof(LOGBRUSH));
 		::GetObject (m_pData->hGDIObject, sizeof(LOGBRUSH), &LogBrush);
 		return LogBrush;
 	}
@@ -1592,7 +1595,8 @@ namespace Win32xx
 	inline HFONT CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, CDC* pDC /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
 	// Creates a font of a specified typeface and point size.
 	{
-		LOGFONT logFont = { 0 };
+		LOGFONT logFont;
+		ZeroMemory(&logFont, sizeof(LOGFONT));
 		logFont.lfCharSet = DEFAULT_CHARSET;
 		logFont.lfHeight = nPointSize;
 
@@ -1660,7 +1664,8 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
-		LOGFONT LogFont = {0};
+		LOGFONT LogFont;
+		ZeroMemory(&LogFont, sizeof(LOGFONT));
 		::GetObject(m_pData->hGDIObject, sizeof(LOGFONT), &LogFont);
 		return LogFont;
 	}
@@ -1888,7 +1893,8 @@ namespace Win32xx
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
 
-		LOGPEN LogPen = {0};
+		LOGPEN LogPen;
+		ZeroMemory(&LogPen, sizeof(LOGPEN));
 		::GetObject(m_pData->hGDIObject, sizeof(LOGPEN), &LogPen);
 		return LogPen;
 	}
@@ -1909,7 +1915,8 @@ namespace Win32xx
 		assert(m_pData);
 		assert(m_pData->hGDIObject != NULL);
 
-		EXTLOGPEN ExLogPen = {0};
+		EXTLOGPEN ExLogPen;
+		ZeroMemory(&ExLogPen, sizeof(EXTLOGPEN));
 		::GetObject(m_pData->hGDIObject, sizeof(EXTLOGPEN), &ExLogPen);
 		return ExLogPen;
 	}
@@ -2667,7 +2674,8 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HBITMAP hbm = (HBITMAP)::GetCurrentObject(m_pData->hDC, OBJ_BITMAP);
-		BITMAP bm = {0};
+		BITMAP bm;
+		ZeroMemory(&bm, sizeof(BITMAP));
 		::GetObject(hbm, sizeof(bm), &bm);
 		return bm;
 	}
@@ -2824,7 +2832,8 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HBRUSH hBrush = (HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH);
-		LOGBRUSH lBrush = {0};
+		LOGBRUSH lBrush;
+		ZeroMemory(&lBrush, sizeof(LOGBRUSH));
 		::GetObject(hBrush, sizeof(lBrush), &lBrush);
 		return lBrush;
 	}
@@ -2880,7 +2889,8 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HFONT hFont = (HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT);
-		LOGFONT lFont = {0};
+		LOGFONT lFont;
+		ZeroMemory(&lFont, sizeof(LOGFONT));
 		::GetObject(hFont, sizeof(lFont), &lFont);
 		return lFont;
 	}
@@ -2914,7 +2924,8 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HPEN hPen = (HPEN)::GetCurrentObject(m_pData->hDC, OBJ_PEN);
-		LOGPEN lPen = {0};
+		LOGPEN lPen;
+		ZeroMemory(&lPen, sizeof(LOGPEN));
 		::GetObject(hPen, sizeof(lPen), &lPen);
 		return lPen;
 	}
@@ -3939,6 +3950,13 @@ namespace Win32xx
 		CSize sz;
 		::GetTextExtentPoint32(m_pData->hDC, lpszString, nCount, &sz);
 		return sz;
+	}
+
+	inline CSize CDC::GetTextExtentPoint32(CString& str) const
+	// Computes the width and height of the specified string of text
+	{
+		CSize sz;
+		return GetTextExtentPoint32(str.c_str(), str.GetLength());
 	}
 
 	inline CSize CDC::GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const

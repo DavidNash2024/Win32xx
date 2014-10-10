@@ -159,14 +159,14 @@ namespace Win32xx
 		MC_CHECKMARKNORMAL = 1,
 		MC_CHECKMARKDISABLED = 2,
 		MC_BULLETNORMAL = 3,
-		MC_BULLETDISABLED = 4,
+		MC_BULLETDISABLED = 4
 	};
 
 	enum POPUPCHECKBACKGROUNDSTATES
 	{
 		MCB_DISABLED = 1,
 		MCB_NORMAL = 2,
-		MCB_BITMAP = 3,
+		MCB_BITMAP = 3
 	};
 
 	enum POPUPITEMSTATES
@@ -174,13 +174,13 @@ namespace Win32xx
 		MPI_NORMAL = 1,
 		MPI_HOT = 2,
 		MPI_DISABLED = 3,
-		MPI_DISABLEDHOT = 4,
+		MPI_DISABLEDHOT = 4
 	};
 
 	enum POPUPSUBMENUSTATES
 	{
 		MSM_NORMAL = 1,
-		MSM_DISABLED = 2,
+		MSM_DISABLED = 2
 	};
 
 	enum MENUPARTS
@@ -204,7 +204,7 @@ namespace Win32xx
 		MENU_SYSTEMCLOSE = 17,
 		MENU_SYSTEMMAXIMIZE = 18,
 		MENU_SYSTEMMINIMIZE = 19,
-		MENU_SYSTEMRESTORE = 20,
+		MENU_SYSTEMRESTORE = 20
 	};
 
 
@@ -694,7 +694,8 @@ namespace Win32xx
 		else
 		{
 			// Get the font used in menu items
-			NONCLIENTMETRICS nm = {0};
+			NONCLIENTMETRICS nm;
+			ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
 			nm.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
 
@@ -705,7 +706,6 @@ namespace Win32xx
 			// Calculate the size of the text
 			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
 			sizeText = DesktopDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
-		//	sizeText.cx += m_marText.Width();
 			sizeText.cx += m_marText.cxRightWidth;
 			sizeText.cy += m_marText.Height();
 		}
@@ -799,7 +799,8 @@ namespace Win32xx
 		m_bUseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
 
 		// Set the fonts
-		NONCLIENTMETRICS nm = {0};
+		NONCLIENTMETRICS nm;
+		ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
@@ -931,7 +932,8 @@ namespace Win32xx
 	inline void CFrame::AddMenuBarBand()
 	// Adds a MenuBar to the rebar control
 	{
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 
 		rbbi.fMask      = RBBIM_STYLE | RBBIM_CHILD | RBBIM_ID;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT;
@@ -970,7 +972,8 @@ namespace Win32xx
 		pTB->CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), GetReBar(), 0);
 
 		// Fill the REBARBAND structure
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 
 		rbbi.fMask      = RBBIM_STYLE |  RBBIM_CHILD | RBBIM_ID;
 		rbbi.fStyle     = dwBandStyle;
@@ -1181,7 +1184,8 @@ namespace Win32xx
 					int nStyle = pTB->GetButtonStyle(dwItem);
 
 					int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
-					TBBUTTON tbb = {0};
+					TBBUTTON tbb;
+					ZeroMemory(&tbb, sizeof(TBBUTTON));
 					pTB->SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
 					int iImage = (int)tbb.iBitmap;
 
@@ -1662,8 +1666,8 @@ namespace Win32xx
 							}
 
 							// Determine the size of the child window
-							REBARBANDINFO rbbi = {0};
-							rbbi.cbSize = pReBar->GetSizeofRBBI();
+							REBARBANDINFO rbbi;
+							ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 							rbbi.fMask = RBBIM_CHILD ;
 							pReBar->GetBandInfo(nBand, rbbi);
 							CRect rcChild;
@@ -1808,7 +1812,8 @@ namespace Win32xx
 	// Returns the position of the menu item, given it's name
 	{
 		int nMenuItemCount = pMenu->GetMenuItemCount();
-		MENUITEMINFO mii = {0};
+		MENUITEMINFO mii;
+		ZeroMemory(&mii, sizeof(MENUITEMINFO));
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; ++nItem)
@@ -2064,12 +2069,13 @@ namespace Win32xx
 
 			// Send a notification to the view window
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nhdr={0};
-			nhdr.hwndFrom = m_hOldFocus;
-			nhdr.idFrom = idCtrl;
-			nhdr.code = UWN_FRAMELOSTFOCUS;
+			NMHDR nmhdr;
+			ZeroMemory(&nmhdr, sizeof(NMHDR));
+			nmhdr.hwndFrom = m_hOldFocus;
+			nmhdr.idFrom = idCtrl;
+			nmhdr.code = UWN_FRAMELOSTFOCUS;
 			if (GetView()->IsWindow())
-				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
 		}
 		else
 		{
@@ -2078,12 +2084,13 @@ namespace Win32xx
 
 			// Send a notification to the view window
 			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nhdr={0};
-			nhdr.hwndFrom = m_hOldFocus;
-			nhdr.idFrom = idCtrl;
-			nhdr.code = UWN_FRAMEGOTFOCUS;
+			NMHDR nmhdr;
+			ZeroMemory(&nmhdr, sizeof(NMHDR));
+			nmhdr.hwndFrom = m_hOldFocus;
+			nmhdr.idFrom = idCtrl;
+			nmhdr.code = UWN_FRAMEGOTFOCUS;
 			if (GetView()->IsWindow())
-				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nhdr);
+				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
 		}
 
 		return 0L;
@@ -2222,7 +2229,8 @@ namespace Win32xx
 			for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 			{
 				// Undo OwnerDraw and put the text back
-				MENUITEMINFO mii = {0};
+				MENUITEMINFO mii;
+				ZeroMemory(&mii, sizeof(MENUITEMINFO));
 				mii.cbSize = GetSizeofMenuItemInfo();
 
 				mii.fMask = MIIM_TYPE | MIIM_DATA;
@@ -2273,7 +2281,8 @@ namespace Win32xx
 				MenuItemData* pItem = new MenuItemData;			// deleted in OnExitMenuLoop
 				m_vMenuItemData.push_back(ItemDataPtr(pItem));	// Store pItem in smart pointer for later automatic deletion
 
-				MENUITEMINFO mii = {0};
+				MENUITEMINFO mii;
+				ZeroMemory(&mii, sizeof(MENUITEMINFO));
 				mii.cbSize = GetSizeofMenuItemInfo();
 
 				// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
@@ -2495,7 +2504,8 @@ namespace Win32xx
 			}
 		}
 
-		NONCLIENTMETRICS nm = {0};
+		NONCLIENTMETRICS nm;
+		ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
 		nm.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
 
@@ -2521,7 +2531,8 @@ namespace Win32xx
 
 			// Update the MenuBar band size
 			int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
-			REBARBANDINFO rbbi = {0};
+			REBARBANDINFO rbbi;
+			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 			CClientDC dcMenuBar(GetMenuBar());
 			dcMenuBar.SelectObject(GetMenuBar()->GetFont());
 			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
@@ -2670,7 +2681,8 @@ namespace Win32xx
 					throw CWinException(_T("RegCreateKeyEx failed"));
 
 				// Store the window position in the registry
-				WINDOWPLACEMENT Wndpl = {0};
+				WINDOWPLACEMENT Wndpl;
+				ZeroMemory(&Wndpl, sizeof(WINDOWPLACEMENT));
 				Wndpl.length = sizeof(WINDOWPLACEMENT);
 
 				if (GetWindowPlacement(Wndpl))
@@ -2826,7 +2838,8 @@ namespace Win32xx
 		int nBand = RB->GetBand(GetMenuBar()->GetHwnd());
 		CRect rcBorder = RB->GetBandBorders(nBand);
 
-		REBARBANDINFO rbbi = {0};
+		REBARBANDINFO rbbi;
+		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 		RB->GetBandInfo(nBand, rbbi);
 
@@ -3321,7 +3334,8 @@ namespace Win32xx
 		}
 
 		// Set MRU menu items
-		MENUITEMINFO mii = {0};
+		MENUITEMINFO mii;
+		ZeroMemory(&mii, sizeof(MENUITEMINFO));
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		int nFileItem = 0;  // We place the MRU items under the left most menu item
