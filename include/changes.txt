@@ -10,7 +10,21 @@ New Features and Enhancements
 * OnInitialUpdate delayed until after window is created.
    OnInitialUpdate is now called after the window creation has fully completed. 
    Code which needs to run before this should be put in OnCreate.
-   Note: Calls to CDocker::SetBarWidth should be made in OnCreate, not OnInitialUpdate.   
+   Note: Calls to CDocker::SetBarWidth should be made in OnCreate, not OnInitialUpdate.
+
+* Updated CRect.
+   CRect has been updated to emulate the CRect provided with ATL and MFC
+
+
+Changes in detail
+-----------------
+Modified CRect::CopyRect
+Modified CRect::DeflateRect
+Modified CRect::EqualRect
+Modified CRect::InflateRect
+Modified CRect::IntersectRect
+Modified CRect::SubtractRect
+Modified CRect::UnionRect
 
 Version 7.6
 ===========

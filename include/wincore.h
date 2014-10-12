@@ -1,5 +1,5 @@
 // Win32++   Version 7.6.1 Beta
-// 
+//
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -38,7 +38,7 @@
 ///////////////////////////////////////////////////////
 // wincore.h
 //  Declaration of the following classes:
-//  CWinThread, CWinApp, CWnd, CWinException, 
+//  CWinThread, CWinApp, CWnd, CWinException,
 //  CCriticalSection.
 //
 // This file contains the declarations for the core set of classes required to
@@ -56,7 +56,7 @@
 //            application.
 //
 // 4) CWinThread: This class is the parent class for CWinApp. It is also the
-//            class used to create additional GUI and worker threads. 
+//            class used to create additional GUI and worker threads.
 //
 // 5) CWnd:   This class is used to represent a window. It provides a means
 //            of creating the window, and handling its messages. Inherit
@@ -174,7 +174,7 @@
 #define UWN_DOCKSTART		 (WM_APP + 16)	// Notification - about to start undocking
 #define UWN_DOCKMOVE		 (WM_APP + 17)	// Notification - undocked docker is being moved
 #define UWN_DOCKEND			 (WM_APP + 18)	// Notification - docker has been docked
-#define UWN_DOCKSETFOCUS     (WM_APP + 19)  // Notification - dock set focus 
+#define UWN_DOCKSETFOCUS     (WM_APP + 19)  // Notification - dock set focus
 #define UWN_FRAMELOSTFOCUS	 (WM_APP + 20)  // Notification - sent by frame to view window when focus lost
 #define UWN_FRAMEGOTFOCUS	 (WM_APP + 21)  // Notification - sent by frame to view window when focus acquired
 #define UWN_TABCHANGED       (WM_APP + 22)	// Notification - tab size or position changed
@@ -379,7 +379,7 @@ namespace Win32xx
 		HANDLE m_hThread;				// Handle of this thread
 		UINT m_nThreadID;				// ID of this thread
 		DWORD m_dwThreadID;				// ID of this thread
-		HACCEL m_hAccel;				// handle to the accelerator table		
+		HACCEL m_hAccel;				// handle to the accelerator table
 		CWnd* m_pWndAccel;				// pointer to the window for accelerator keys
 
 	};
@@ -443,7 +443,7 @@ namespace Win32xx
 		CMenu* GetCMenuFromMap(HMENU hMenu);
 		CWnd* GetCWndFromMap(HWND hWnd);
 		void	CleanupTemps();
-		TLSData* GetTlsData() const; 
+		TLSData* GetTlsData() const;
 		void	SetCallback();
 		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -736,9 +736,9 @@ namespace Win32xx
 	///////////////////////////////////////
 	// Definitions for the CWinThread class
 	//
-	inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_hThread(0), 
+	inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_hThread(0),
 		                               m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
-	// Override CWinThread and use this constructor for GUI threads. 
+	// Override CWinThread and use this constructor for GUI threads.
 	// InitInstance will be called when the thread runs.
 	{
 	}
@@ -746,8 +746,8 @@ namespace Win32xx
 	inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
 		                m_pThreadParams(0), m_hThread(0), m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
 	// Use CWinThread directly and call this constructor for worker threads.
-	// Specify the function to run when the thread starts. 
-	// Specifying pParam for a worker thread is optional.  
+	// Specify the function to run when the thread starts.
+	// Specifying pParam for a worker thread is optional.
 	{
 		m_pfnThreadProc = pfnThreadProc;
 		m_pThreadParams = pParam;
@@ -853,10 +853,10 @@ namespace Win32xx
 		{
 			// While idle, perform idle processing until OnIdle returns FALSE
 			// Exclude some messages to avoid calling OnIdle excessively
-			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && 
-								(Msg.message != WM_TIMER) && 
-								(Msg.message != WM_MOUSEMOVE) && 
-								(Msg.message != WM_SETCURSOR) &&  
+			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) &&
+								(Msg.message != WM_TIMER) &&
+								(Msg.message != WM_MOUSEMOVE) &&
+								(Msg.message != WM_SETCURSOR) &&
 								OnIdle(lCount) == TRUE  )
 			{
 				++lCount;
@@ -1033,7 +1033,7 @@ namespace Win32xx
 	inline CWinApp::~CWinApp()
 	{
 		// Ensure all temporary objects are destroyed before CWinApp is deconstructed
-		// These maps contain smart pointers, so clearing them calls the destructor 
+		// These maps contain smart pointers, so clearing them calls the destructor
 		// on their contents.
 		std::vector<TLSDataPtr>::iterator iter;
 		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
@@ -1048,8 +1048,8 @@ namespace Win32xx
 #endif
 		}
 
-		// Forcibly destroy any remaining windows now. Windows created from 
-		//  static CWnds or dangling pointers are destroyed here. 
+		// Forcibly destroy any remaining windows now. Windows created from
+		//  static CWnds or dangling pointers are destroyed here.
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
@@ -1058,8 +1058,8 @@ namespace Win32xx
 			{
 				::DestroyWindow(hWnd);
 			}
-		}  
-		
+		}
+
 		// Do remaining tidy up
 		m_vTLSData.clear();
 		if (m_dwTlsData != TLS_OUT_OF_INDEXES)
@@ -1173,7 +1173,7 @@ namespace Win32xx
 		return pWnd;
 	}
 
-	inline TLSData* CWinApp::GetTlsData() const 
+	inline TLSData* CWinApp::GetTlsData() const
 	{
 		return static_cast<TLSData*>(TlsGetValue(GetApp()->m_dwTlsData));
 	}
@@ -1201,7 +1201,7 @@ namespace Win32xx
 
 	inline HCURSOR CWinApp::LoadStandardCursor(LPCTSTR lpszCursorName) const
 	// Returns the handle of a standard cursor. Standard cursors include:
-	// IDC_APPSTARTING, IDC_ARROW, IDC_CROSS, IDC_HAND, IDC_HELP, IDC_IBEAM, IDC_NO, IDC_SIZEALL, 
+	// IDC_APPSTARTING, IDC_ARROW, IDC_CROSS, IDC_HAND, IDC_HELP, IDC_IBEAM, IDC_NO, IDC_SIZEALL,
 	// IDC_SIZENESW, IDC_SIZENS, IDC_SIZENWSE, IDC_SIZEWE, IDC_UPARROW, IDC_WAIT
 	{
 		return ::LoadCursor(0, lpszCursorName);
@@ -1222,7 +1222,7 @@ namespace Win32xx
 
 	inline HICON CWinApp::LoadStandardIcon(LPCTSTR lpszIconName) const
 	// Returns the handle of a standard Icon. Standard Icons include:
-	// IDI_APPLICATION, IDI_ASTERISK, IDI_ERROR, IDI_EXCLAMATION, 
+	// IDI_APPLICATION, IDI_ASTERISK, IDI_ERROR, IDI_EXCLAMATION,
 	// IDI_HAND, IDI_INFORMATION, IDI_QUESTION, IDI_WARNING
 	{
 		return ::LoadIcon(0, lpszIconName);
@@ -1232,7 +1232,7 @@ namespace Win32xx
 	// Loads an icon, cursor, animated cursor, or bitmap image
 	// uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON
 	// cx and cy are the desired width and height in pixels
-	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE, 
+	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
 	//   LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
 	{
 		return ::LoadImage(GetApp()->GetResourceHandle(), lpszResourceName, uType, cx, cy, fuLoad);
@@ -1242,7 +1242,7 @@ namespace Win32xx
 	// Loads an icon, cursor, animated cursor, or bitmap
 	// uType is the image type. It can be IMAGE_BITMAP, IMAGE_CURSOR or IMAGE_ICON
 	// cx and cy are the desired width and height in pixels
-	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE, 
+	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
 	//   LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
 	{
 		return ::LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIDImage), uType, cx, cy, fuLoad);
@@ -1292,7 +1292,7 @@ namespace Win32xx
 
 	inline HCURSOR CWinApp::SetCursor(HCURSOR hCursor) const
 	// Sets the current cursor and returns the previous one.
-	// Note:The cursor will be set to the window's class cursor (if one is set) each time the 
+	// Note:The cursor will be set to the window's class cursor (if one is set) each time the
 	//  mouse is moved over the window. You can specify different cursors for different
 	//  conditions while processing WM_SETCURSOR
 	{
@@ -1396,11 +1396,11 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		// Note: Perform the attach from the same thread as the window's message loop
 		GetApp()->SetTlsData();
-	
+
 		Cleanup();			// Cleanup any previous attachment
 		Subclass(hWnd);		// Set the window's callback to CWnd::StaticWindowProc
 		AddToMap();			// Store the CWnd pointer in the HWND map
-		
+
 		OnAttach();
 		OnInitialUpdate();
 
@@ -1529,7 +1529,7 @@ namespace Win32xx
 		// Set a reasonable default window style
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
 		m_pcs->style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
-		
+
 		// Set a reasonable default window position
 		if (NULL == pParent)
 		{
@@ -1538,7 +1538,7 @@ namespace Win32xx
 			m_pcs->y  = CW_USEDEFAULT;
 			m_pcs->cy = CW_USEDEFAULT;
 		}
-	
+
 		// Allow the CREATESTRUCT parameters to be modified
 		PreCreate(*m_pcs);
 
@@ -1618,9 +1618,9 @@ namespace Win32xx
 
 				// Send a message to force the HWND to be added to the map
 				SendMessage(WM_NULL, 0L, 0L);
-				
+
 				// Override this to perform tasks after the window is attached.
-				OnAttach();			
+				OnAttach();
 			}
 
 			// Clear the CWnd pointer from TLS
@@ -1661,7 +1661,7 @@ namespace Win32xx
 		assert(m_PrevWindowProc);	// Only previously attached CWnds can be detached
 
 		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
-	
+
 		HWND hWnd = m_hWnd;
 		Cleanup();
 
@@ -1682,7 +1682,7 @@ namespace Win32xx
 	// Returns the CWnd object associated with the window handle
 	{
 		assert( GetApp() );
-		
+
 		// Find any existing pernament CWnd from the map
 		CWnd* pWnd = FromHandlePermanent(hWnd);
 		if ( NULL != hWnd && 0 == pWnd )
@@ -1691,7 +1691,7 @@ namespace Win32xx
 			TLSData* pTLSData = GetApp()->SetTlsData();
 			std::map<HWND, WndPtr, CompareHWND>::iterator m;
 			m = pTLSData->TmpWnds.find(hWnd);
-	
+
 			if (m != pTLSData->TmpWnds.end())
 				pWnd = m->second.get();
 
@@ -1830,7 +1830,7 @@ namespace Win32xx
 		// This function is called when a WM_CREATE message is received
 		// Override it to automatically perform tasks during window creation.
 		// Return 0 to continue creating the window.
-		
+
 		// Note: Window controls don't call OnCreate. They are sublcassed (attached)
 		//  after their window is created.
 
@@ -1998,7 +1998,7 @@ namespace Win32xx
 	// Called by CWnd::Create to set some window parameters
 	{
 		UNREFERENCED_PARAMETER(cs);
-		
+
 		// Override this function to set the CREATESTRUCT values prior to window creation.
 		// Here we set the initial values for the following:
 		//  window styles (WS_VISABLE, WS_CHILD, WS_WS_MAXIMIZEBOX etc.)
@@ -2192,7 +2192,7 @@ namespace Win32xx
 		//	case MESSAGE2:  return OnMessage2();
 		//	}
 
-		// The message functions should return a value recomended by the Windows API documention. 
+		// The message functions should return a value recomended by the Windows API documention.
 		// Alternativly, return FinalWindowProc to continue with default processing.
 
 		// Always pass unhandled messages on to WndProcDefault
