@@ -236,12 +236,12 @@ namespace Win32xx
 		CMenuMetrics(CWnd* pFrame);
 		~CMenuMetrics();
 
-		CRect GetCheckBackgroundRect(CRect rcItem);
-		CRect GetCheckRect(CRect rcItem);
-		CRect GetGutterRect(CRect rcItem);
-		CRect GetSelectionRect(CRect rcItem);
-		CRect GetSeperatorRect(CRect rcItem);
-		CRect GetTextRect(CRect rcItem);
+		CRect GetCheckBackgroundRect(const CRect& rcItem);
+		CRect GetCheckRect(const CRect& rcItem);
+		CRect GetGutterRect(const CRect& rcItem);
+		CRect GetSelectionRect(const CRect& rcItem);
+		CRect GetSeperatorRect(const CRect& rcItem);
+		CRect GetTextRect(const CRect& rcItem);
 		CSize GetTextSize(MenuItemData* pmd);
 		void  Initialize();
 		int   ToItemStateId(UINT uItemState);
@@ -630,7 +630,7 @@ namespace Win32xx
 		return NULL;
 	}
 
-	inline CRect CMenuMetrics::GetCheckBackgroundRect(CRect rcItem)
+	inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& rcItem)
 	{
 		int x = rcItem.left + m_marCheckBackground.cxLeftWidth;
 		int y = rcItem.top  + m_marCheckBackground.cyTopHeight;
@@ -640,7 +640,7 @@ namespace Win32xx
 		return CRect(x, y, x + cx, y + cy);
 	}
 
-	inline CRect CMenuMetrics::GetGutterRect(CRect rcItem)
+	inline CRect CMenuMetrics::GetGutterRect(const CRect& rcItem)
 	{
 		int x = rcItem.left;
 		int y = rcItem.top;
@@ -650,7 +650,7 @@ namespace Win32xx
 		return CRect(x, y, x + cx, y + cy);
 	}
 
-	inline CRect CMenuMetrics::GetCheckRect(CRect rcItem)
+	inline CRect CMenuMetrics::GetCheckRect(const CRect& rcItem)
 	{
 		int x = rcItem.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
 		int y = rcItem.top  + m_marCheckBackground.cyTopHeight + m_marCheck.cyTopHeight;
@@ -658,7 +658,7 @@ namespace Win32xx
 		return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
 	}
 
-	inline CRect CMenuMetrics::GetSelectionRect(CRect rcItem)
+	inline CRect CMenuMetrics::GetSelectionRect(const CRect& rcItem)
 	{
 		int x = rcItem.left + m_marItem.cxLeftWidth;
 		int y = rcItem.top;
@@ -666,7 +666,7 @@ namespace Win32xx
 		return CRect(x, y, rcItem.right - m_marItem.cxRightWidth, y + rcItem.Height());
 	}
 
-	inline CRect CMenuMetrics::GetSeperatorRect(CRect rcItem)
+	inline CRect CMenuMetrics::GetSeperatorRect(const CRect& rcItem)
 	{
 		int left = GetGutterRect(rcItem).right;
 		int top  = rcItem.top;
@@ -716,7 +716,7 @@ namespace Win32xx
 		return sizeText;
 	}
 
-	inline CRect CMenuMetrics::GetTextRect(CRect rcItem)
+	inline CRect CMenuMetrics::GetTextRect(const CRect& rcItem)
 	{
 		int left    = GetGutterRect(rcItem).Width() + m_marText.cxLeftWidth;
 		int top     = rcItem.top + m_marText.cyTopHeight;

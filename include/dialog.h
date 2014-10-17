@@ -650,7 +650,7 @@ namespace Win32xx
 							(Msg.message != WM_TIMER) && 
 							(Msg.message != WM_MOUSEMOVE) && 
 							(Msg.message != WM_SETCURSOR) &&  
-								GetApp()->OnIdle(lCount) == TRUE )
+								GetApp()->OnIdle(lCount) != FALSE )
 		{
 			++lCount;
 		}
@@ -955,3 +955,4 @@ namespace Win32xx
 
 #endif // _WIN32XX_DIALOG_H_
 
+ 

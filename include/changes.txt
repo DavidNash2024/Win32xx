@@ -25,6 +25,7 @@ Modified CRect::InflateRect
 Modified CRect::IntersectRect
 Modified CRect::SubtractRect
 Modified CRect::UnionRect
+renamed cstring.h to c_string.h
 
 Version 7.6
 ===========

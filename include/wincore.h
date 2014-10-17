@@ -121,7 +121,7 @@
 #endif
 #include "shared_ptr.h"
 //#include "winutils.h"			// included later in this file
-//#include "cstring.h"			// included later in this file
+//#include "c_string.h"			// included later in this file
 //#include "gdi.h"				// included later in this file
 //#include "menu.h"				// included later in this file
 //#include "imagelist.h"		// included later in this file
@@ -467,7 +467,7 @@ namespace Win32xx
 }
 
 #include "winutils.h"
-#include "cstring.h"
+#include "c_string.h"
 
 
 namespace Win32xx
@@ -857,7 +857,7 @@ namespace Win32xx
 								(Msg.message != WM_TIMER) &&
 								(Msg.message != WM_MOUSEMOVE) &&
 								(Msg.message != WM_SETCURSOR) &&
-								OnIdle(lCount) == TRUE  )
+								OnIdle(lCount) != FALSE  )
 			{
 				++lCount;
 			}
@@ -1581,7 +1581,7 @@ namespace Win32xx
 
 			// Ensure a window class is registered
 			CString ClassName;
-			if (0 == lpszClassName || 0 == lstrlen(lpszClassName) )
+			if (0 == lpszClassName || _T('\0') == lpszClassName[0] )
 				ClassName = _T("Win32++ Window");
 			else
 				ClassName = lpszClassName;
@@ -2394,7 +2394,7 @@ namespace Win32xx
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
-	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
+	// The DeferWindowPos function updates the specified multiple-window â€“ position structure for the window.
 	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
         assert(::IsWindow(m_hWnd));
@@ -2403,7 +2403,7 @@ namespace Win32xx
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, const CWnd* pInsertAfter, const RECT& rc, UINT uFlags) const
-	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
+	// The DeferWindowPos function updates the specified multiple-window â€“ position structure for the window.
 	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(::IsWindow(m_hWnd));
@@ -3345,3 +3345,4 @@ namespace Win32xx
 
 #endif // _WIN32XX_WINCORE_H_
 
+ 

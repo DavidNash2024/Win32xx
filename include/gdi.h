@@ -768,7 +768,7 @@ namespace Win32xx
 		void CreateEnhanced(CDC* pDCRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
 		{
 			HDC hDC = pDCRef? pDCRef->GetHDC() : NULL;
-			::CreateEnhMetaFile(hDC, lpszFileName, lpBounds, lpszDescription);
+			Attach(::CreateEnhMetaFile(hDC, lpszFileName, lpBounds, lpszDescription));
 			assert(GetHDC());
 		}
 		HMETAFILE Close() {	return ::CloseMetaFile(GetHDC()); }
@@ -4023,3 +4023,4 @@ namespace Win32xx
 
 #endif // _WIN32XX_GDI_H_
 
+ 

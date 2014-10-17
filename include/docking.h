@@ -2258,7 +2258,7 @@ namespace Win32xx
 	inline void CDocker::DrawAllCaptions()
 	{
 		std::vector<DockPtr>::iterator iter;
-		for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); iter++)
+		for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); ++iter)
 		{
 			if ((*iter)->IsDocked())
 				(*iter)->GetDockClient()->DrawCaption((WPARAM)1);
@@ -2383,7 +2383,7 @@ namespace Win32xx
 
 		if (GetDockAncestor())
 		{
-			for (v = GetDockAncestor()->m_vAllDockChildren.begin(); v != GetDockAncestor()->m_vAllDockChildren.end(); v++)
+			for (v = GetDockAncestor()->m_vAllDockChildren.begin(); v != GetDockAncestor()->m_vAllDockChildren.end(); ++v)
 			{
 				if (n_DockID == (*v)->GetDockID())
 					return (*v).get();
