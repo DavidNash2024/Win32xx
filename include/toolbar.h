@@ -1,5 +1,5 @@
 // Win32++   Version 7.6.1 Beta
-// 
+//
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -190,7 +190,7 @@ namespace Win32xx
 
 	inline BOOL CToolBar::AddButton(UINT nID, BOOL bEnabled /* = TRUE */, int iImage /* = -1 */)
 	// Adds buttons to the Toolbar. It provides a convenient alternative to AddButtons.
-	// A resource ID of 0 is a separator.  iImage is the index of the image in the ImageList. 
+	// A resource ID of 0 is a separator.  iImage is the index of the image in the ImageList.
 	// The default is -1 in which case the image based on the button's position is chosen.
 	{
 		assert(::IsWindow(m_hWnd));
@@ -279,7 +279,7 @@ namespace Win32xx
 	}
 
 	inline void CToolBar::Customize() const
-	// Displays the Customize Toolbar dialog box. The parent must handle the TBN_QUERYINSERT 
+	// Displays the Customize Toolbar dialog box. The parent must handle the TBN_QUERYINSERT
 	// and TBN_QUERYDELETE notifications for the Customize Toolbar dialog box to appear.
 	// Requires the CCS_ADJUSTABLE style to be set when the toolbar is created.
 	{
@@ -636,7 +636,7 @@ namespace Win32xx
 	inline LRESULT CToolBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
 	{
 	//	Used by ReBar controls to adjust ToolBar window size
-	
+
 		if ( GetParent()->SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
 		{
 			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
@@ -1004,4 +1004,3 @@ namespace Win32xx
 } // namespace Win32xx
 
 #endif // #ifndef _WIN32XX_TOOLBAR_H_
- 

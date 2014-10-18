@@ -4023,4 +4023,3 @@ namespace Win32xx
 
 #endif // _WIN32XX_GDI_H_
 
- 

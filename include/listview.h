@@ -473,7 +473,7 @@ namespace Win32xx
 	// This macro should only be used for list-view controls with the LVS_EX_CHECKBOXES style.
 	{
 		assert(::IsWindow(m_hWnd));
-		ListView_SetItemState(m_hWnd, iItem, INDEXTOSTATEIMAGEMASK((fCheck==TRUE)?2:1),LVIS_STATEIMAGEMASK);
+		ListView_SetItemState(m_hWnd, iItem, INDEXTOSTATEIMAGEMASK((fCheck!=FALSE)?2:1),LVIS_STATEIMAGEMASK);
 	}
 
 	inline BOOL CListView::SetColumn( int iCol, const LVCOLUMN& Column ) const

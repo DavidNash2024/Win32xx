@@ -955,4 +955,3 @@ namespace Win32xx
 
 #endif // _WIN32XX_DIALOG_H_
 
- 

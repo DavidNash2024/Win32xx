@@ -685,9 +685,10 @@ namespace Win32xx
 
 		int nCount = 0;
 		size_t pos = 0;
+		size_t len = lstrlen(pszText);
 		while ((pos = m_str.find(pszText, pos)) != std::string::npos)
 		{
-			m_str.erase(pos, lstrlen(pszText));
+			m_str.erase(pos, len);
 			++nCount;
 		}
 		return nCount;
@@ -718,9 +719,10 @@ namespace Win32xx
 
 		int nCount = 0;
 		size_t pos = 0;
+		size_t len = lstrlen(pszOld);
 		while ((pos = m_str.find(pszOld, pos)) != std::string::npos)
 		{
-			m_str.replace(pos, lstrlen(pszOld), pszNew);
+			m_str.replace(pos, len, pszNew);
 			pos += lstrlen(pszNew);
 			++nCount;
 		}

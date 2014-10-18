@@ -528,10 +528,10 @@ namespace Win32xx
 		void DrawAllCaptions();
 		void DrawHashBar(HWND hBar, POINT Pos);
 		void ConvertToChild(HWND hWndParent);
-		void ConvertToPopup(RECT rc);
+		void ConvertToPopup(const CRect& rc);
 		void MoveDockChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
-		void RecalcDockChildLayout(CRect rc);
+		void RecalcDockChildLayout(CRect& rc);
 		void ResizeDockers(LPDRAGPOS pdp);
 		CDocker* SeparateFromDock();
 		void SendNotify(UINT nMessageID);
@@ -3295,7 +3295,7 @@ namespace Win32xx
 		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	}
 
-	inline void CDocker::RecalcDockChildLayout(CRect rc)
+	inline void CDocker::RecalcDockChildLayout(CRect& rc)
 	{
 		// This function positions the Docker's dock children, the Dockers client area
 		//  and draws the dockbar bars.
@@ -3853,7 +3853,7 @@ namespace Win32xx
 		GetDockBar()->SetParent(FromHandle(hWndParent));
 	}
 
-	inline void CDocker::ConvertToPopup(RECT rc)
+	inline void CDocker::ConvertToPopup(const CRect& rc)
 	{
 		// Change the window to an "undocked" style
 		ShowWindow(SW_HIDE);

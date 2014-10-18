@@ -3345,4 +3345,3 @@ namespace Win32xx
 
 #endif // _WIN32XX_WINCORE_H_
 
- 
