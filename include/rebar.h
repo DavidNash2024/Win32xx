@@ -210,7 +210,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		// REBARINFO describes overall rebar control characteristics
-		rbi.cbSize = GetSizeofRBBI();
+		rbi.cbSize = sizeof(REBARINFO);
 		return (BOOL)SendMessage(RB_GETBARINFO, 0L, (LPARAM)&rbi);
 	}
 
