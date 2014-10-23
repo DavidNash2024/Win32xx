@@ -522,7 +522,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 
-		rbi.cbSize = GetSizeofRBBI();
+		rbi.cbSize = sizeof(REBARINFO);
 		return (BOOL)SendMessage(RB_SETBARINFO, 0L, (LPARAM)&rbi);
 	}
 
