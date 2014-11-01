@@ -1879,7 +1879,7 @@ namespace Win32xx
 	}
 
 	inline HPEN CPen::CreatePenIndirect(LPLOGPEN lpLogPen)
-	// Creates a logical cosmetic pen that has the style, width, and color specified in a structure.
+	// Creates a logical pen that has the style, width, and color specified in a structure.
 	{
 		assert(m_pData);
 		HPEN hPen = ::CreatePenIndirect(lpLogPen);
@@ -3280,7 +3280,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CDC::PolyDraw(const POINT* lpPoints, const BYTE* lpTypes, int nCount) const
-	// Draws a set of line segments and Bzier curves.
+	// Draws a set of line segments and Bezier curves.
 	{
 		assert(m_pData->hDC);
 		return ::PolyDraw(m_pData->hDC, lpPoints, lpTypes, nCount);
@@ -3314,7 +3314,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CDC::PolyBezierTo(const POINT* lpPoints, int nCount) const
-	// Draws one or more Bzier curves.
+	// Draws one or more Bezier curves.
 	{
 		assert(m_pData->hDC);
 		return ::PolyBezierTo(m_pData->hDC, lpPoints, nCount );
