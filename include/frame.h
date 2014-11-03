@@ -2166,8 +2166,7 @@ namespace Win32xx
 		GetView()->Create(this);
 
 		// Disable XP themes for the menubar
-		if ( m_bUseThemes || (GetWinVersion() < 2600)  )	// themes or WinVersion < Vista
-			GetMenuBar()->SetWindowTheme(L" ", L" ");
+		GetMenuBar()->SetWindowTheme(L" ", L" ");
 
 		// Reposition the child windows
 		OnSysColorChange(0, 0);
@@ -2224,25 +2223,22 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		if (m_bUseThemes)
+		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
 		{
-			for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
-			{
-				// Undo OwnerDraw and put the text back
-				MENUITEMINFO mii;
-				ZeroMemory(&mii, sizeof(MENUITEMINFO));
-				mii.cbSize = GetSizeofMenuItemInfo();
+			// Undo OwnerDraw and put the text back
+			MENUITEMINFO mii;
+			ZeroMemory(&mii, sizeof(MENUITEMINFO));
+			mii.cbSize = GetSizeofMenuItemInfo();
 
-				mii.fMask = MIIM_TYPE | MIIM_DATA;
-				mii.fType = m_vMenuItemData[nItem]->mii.fType;
-				mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
-				mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
-				mii.dwItemData = 0;
-				::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
-			}
-
-			m_vMenuItemData.clear();
+			mii.fMask = MIIM_TYPE | MIIM_DATA;
+			mii.fType = m_vMenuItemData[nItem]->mii.fType;
+			mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
+			mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
+			mii.dwItemData = 0;
+			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
 		}
+
+		m_vMenuItemData.clear();
 
 		return 0L;
 	}
@@ -2272,43 +2268,40 @@ namespace Win32xx
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam)) CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
-		if (m_bUseThemes)
+		CMenu* pMenu = CMenu::FromHandle((HMENU)wParam);
+
+		for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
 		{
-			CMenu* pMenu = CMenu::FromHandle((HMENU)wParam);
+			MenuItemData* pItem = new MenuItemData;			// deleted in OnExitMenuLoop
+			m_vMenuItemData.push_back(ItemDataPtr(pItem));	// Store pItem in smart pointer for later automatic deletion
 
-			for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
+			MENUITEMINFO mii;
+			ZeroMemory(&mii, sizeof(MENUITEMINFO));
+			mii.cbSize = GetSizeofMenuItemInfo();
+
+			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
+			mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
+			mii.dwTypeData = pItem->GetItemText();	// assign TCHAR pointer, text is assigned by GetMenuItemInfo
+			mii.cch = MAX_MENU_STRING -1;
+
+			// Send message for menu updates
+			UINT menuItem = pMenu->GetMenuItemID(i);
+			SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0);
+
+			// Specify owner-draw for the menu item type
+			if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
 			{
-				MenuItemData* pItem = new MenuItemData;			// deleted in OnExitMenuLoop
-				m_vMenuItemData.push_back(ItemDataPtr(pItem));	// Store pItem in smart pointer for later automatic deletion
-
-				MENUITEMINFO mii;
-				ZeroMemory(&mii, sizeof(MENUITEMINFO));
-				mii.cbSize = GetSizeofMenuItemInfo();
-
-				// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
-				mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
-				mii.dwTypeData = pItem->GetItemText();	// assign TCHAR pointer, text is assigned by GetMenuItemInfo
-				mii.cch = MAX_MENU_STRING -1;
-
-				// Send message for menu updates
-				UINT menuItem = pMenu->GetMenuItemID(i);
-				SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0);
-
-				// Specify owner-draw for the menu item type
-				if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
+				if (0 == mii.dwItemData)
 				{
-					if (0 == mii.dwItemData)
-					{
-						pItem->hMenu = *pMenu;
-						pItem->nPos = i;
-						pItem->mii = mii;
-						mii.dwItemData = (DWORD_PTR)pItem;
-						mii.fType |= MFT_OWNERDRAW;
-						pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
-					}
+					pItem->hMenu = *pMenu;
+					pItem->nPos = i;
+					pItem->mii = mii;
+					mii.dwItemData = (DWORD_PTR)pItem;
+					mii.fType |= MFT_OWNERDRAW;
+					pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
 				}
 			}
-		}
+		}	
 
 		return 0L;
 	}
@@ -3035,6 +3028,13 @@ namespace Win32xx
 				}
 				break;
 			}
+		}
+		else
+		{
+			// Set a default menu theme. This allows the menu to display icons.
+			// The colours specified here are used for Windows XP and below.
+			MenuTheme mt = {FALSE, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+			SetMenuTheme(&mt);  // Sets the theme for popup menus and MenuBar
 		}
 
 		RecalcLayout();

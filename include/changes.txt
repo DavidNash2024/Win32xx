@@ -11,6 +11,7 @@ New Features and Enhancements
    OnInitialUpdate is now called after the window creation has fully completed. 
    Code which needs to run before this should be put in OnCreate.
    Note: Calls to CDocker::SetBarWidth should be made in OnCreate, not OnInitialUpdate.
+* CFrame now displays menu icons when themes are disabled.   
 
 * Updated CRect.
    CRect has been updated to emulate the CRect provided with ATL and MFC
