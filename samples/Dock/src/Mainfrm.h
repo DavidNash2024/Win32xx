@@ -22,6 +22,7 @@ protected:
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDockCloseAll();
 	virtual void OnDockDefault();
+	virtual void OnDynamicResize();
 	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
 	virtual void OnPropResize();
@@ -43,6 +44,7 @@ private:
 	BOOL m_bNoResize;
 	BOOL m_bNoDockLR;
 	BOOL m_bNoDockClose;
+	BOOL m_bDynamicResize;
 };
 
 #endif //MAINFRM_H

@@ -40,6 +40,7 @@
 #define IDM_NO_RESIZE                   163
 #define IDM_NO_DOCK_LR                  164
 #define IDM_NO_DOCK_CLOSE               165
+#define IDM_DYNAMIC_RESIZE              166
 #define IDM_DOCK_DEFAULT                167
 #define IDM_DOCK_CLOSEALL               168
 

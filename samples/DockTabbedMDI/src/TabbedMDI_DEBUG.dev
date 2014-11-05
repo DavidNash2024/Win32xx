@@ -241,7 +241,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=Simple.cpp
+FileName=MyDialog.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -310,7 +310,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit27]
-FileName=Simple.h
+FileName=MyDialog.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -320,7 +320,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=MyDialog.cpp
+FileName=Browser.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -330,7 +330,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=MyDialog.h
+FileName=Browser.h
 CompileCpp=1
 Folder=Header
 Compile=1

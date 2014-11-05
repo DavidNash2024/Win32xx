@@ -12,7 +12,7 @@
 #include "Text.h"
 #include "Output.h"
 #include "MyDialog.h"
-#include "Simple.h"
+#include "Browser.h"
 
 
 // Declaration of the CMainFrame class

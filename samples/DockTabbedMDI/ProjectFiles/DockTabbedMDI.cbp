@@ -173,6 +173,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Unit filename="../src/Browser.cpp" />
+		<Unit filename="../src/Browser.h" />
 		<Unit filename="../src/Classes.cpp" />
 		<Unit filename="../src/Classes.h" />
 		<Unit filename="../src/DockTabbedMDI.cpp" />
@@ -194,8 +196,6 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/Simple.cpp" />
-		<Unit filename="../src/Simple.h" />
 		<Unit filename="../src/TabbedMDIApp.cpp" />
 		<Unit filename="../src/TabbedMDIApp.h" />
 		<Unit filename="../src/Text.cpp" />

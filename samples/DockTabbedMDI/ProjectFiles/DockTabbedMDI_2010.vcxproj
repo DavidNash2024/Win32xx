@@ -37,6 +37,7 @@
     <ClInclude Include="..\..\..\include\webbrowser.h" />
     <ClInclude Include="..\..\..\include\wincore.h" />
     <ClInclude Include="..\..\..\include\winutils.h" />
+    <ClInclude Include="..\src\Browser.h" />
     <ClInclude Include="..\src\Classes.h" />
     <ClInclude Include="..\src\DockTabbedMDI.h" />
     <ClInclude Include="..\src\Files.h" />
@@ -47,7 +48,6 @@
     <ClInclude Include="..\src\Output.h" />
     <ClInclude Include="..\src\Rect.h" />
     <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\Simple.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TabbedMDIApp.h" />
     <ClInclude Include="..\src\Text.h" />
@@ -56,6 +56,7 @@
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Browser.cpp" />
     <ClCompile Include="..\src\Classes.cpp" />
     <ClCompile Include="..\src\DockTabbedMDI.cpp" />
     <ClCompile Include="..\src\Files.cpp" />
@@ -66,7 +67,6 @@
     <ClCompile Include="..\src\MyTabbedMDI.cpp" />
     <ClCompile Include="..\src\Output.cpp" />
     <ClCompile Include="..\src\Rect.cpp" />
-    <ClCompile Include="..\src\Simple.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>

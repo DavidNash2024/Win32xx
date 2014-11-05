@@ -26,11 +26,11 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
 	case ID_MDI_TEXT:
 		pView = new CViewText;
 		break;
-	case ID_MDI_SIMPLE:
-		pView = new CViewSimple;
-		break;
 	case ID_MDI_RECT:
 		pView = new CViewRect;
+		break;
+	case ID_MDI_WEB:
+		pView = new CViewWeb;
 		break;
 	default:
 		TRACE("Unknown TabbedMDI id\n");

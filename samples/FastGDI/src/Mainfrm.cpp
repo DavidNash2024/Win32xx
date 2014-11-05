@@ -112,7 +112,7 @@ void CMainFrame::OnFileNew()
 void CMainFrame::OnFileOpen()
 {
 	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Scribble Files (*.bmp)\0*.bmp\0\0"), this);
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), this);
 	if (!str.IsEmpty())
 	{
 		// Load the bitmap
@@ -223,7 +223,7 @@ void CMainFrame::OnInitialUpdate()
 inline void CMainFrame::OnMenuUpdate(UINT nID)
 // Called when menu items are about to be displayed
 {
-	bool IsImageLoaded = GetMyView().GetImage();
+	bool IsImageLoaded = (GetMyView().GetImage() != 0);
 
 	switch(nID)
 	{

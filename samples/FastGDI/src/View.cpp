@@ -23,7 +23,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 		m_bmImage.LoadImage(szFilename, 0, 0, LR_LOADFROMFILE);
 	}
 
-	return (bool)m_bmImage.GetHandle();
+	return (m_bmImage.GetHandle()!= 0);
 }
 
 BOOL CView::FileSave(LPCTSTR pszFile)

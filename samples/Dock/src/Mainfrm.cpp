@@ -18,6 +18,7 @@ CMainFrame::CMainFrame()
 	m_bNoResize = FALSE;
 	m_bNoDockLR = FALSE;
 	m_bNoDockClose = FALSE;
+	m_bDynamicResize = TRUE;
 
 	//Set m_DockView as the view window of the frame
 	SetView(m_DockView);
@@ -49,6 +50,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_NO_RESIZE:			OnNoResize();		return TRUE;
 	case IDM_NO_DOCK_LR:		OnNoDockLR();		return TRUE;
 	case IDM_NO_DOCK_CLOSE:		OnNoDockClose();	return TRUE;
+	case IDM_DYNAMIC_RESIZE:	OnDynamicResize();	return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
@@ -112,6 +114,9 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	case IDM_NO_DOCK_CLOSE:
 		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoDockClose ? MF_CHECKED : MF_UNCHECKED));
 		break;
+	case IDM_DYNAMIC_RESIZE:
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bDynamicResize ? MF_CHECKED : MF_UNCHECKED));
+		break;
 	}	
 }
 
@@ -137,6 +142,19 @@ void CMainFrame::OnNoDockClose()
 void CMainFrame::OnDockCloseAll()
 {
 	m_DockView.CloseAllDockers();
+}
+
+void CMainFrame::OnDynamicResize()
+{
+	// Dragging the docker's splitter bar will either dynamicly resize the dockers
+	// during the dragging, or simply display a hashed splitter bar.
+	std::vector<CDocker*>::iterator iter;
+	m_bDynamicResize = !m_bDynamicResize;
+
+	for (iter = m_DockView.GetAllDockers()->begin(); iter < m_DockView.GetAllDockers()->end(); ++iter)
+	{
+		(*iter)->SetDragAutoResize(m_bDynamicResize);
+	}
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT pcs)

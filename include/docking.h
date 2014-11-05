@@ -3034,7 +3034,10 @@ namespace Win32xx
 		if (GetDockAncestor()->IsWindow())
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
 		if (GetView() && GetView()->IsWindow())
+		{
 			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
+			RedrawWindow();
+		}
 
 		return 0L;
 	}

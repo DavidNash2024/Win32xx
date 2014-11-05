@@ -49,7 +49,7 @@ void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	CTabbedMDI* pTabbedMDI = m_DockTabbedMDI.GetTabbedMDI();
-	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple View"), ID_MDI_SIMPLE);
+	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
@@ -90,7 +90,7 @@ void CMainFrame::OnFileNewSimple()
 {
 	CTabbedMDI* pTabbedMDI = static_cast<CTabbedMDI*>(m_DockTabbedMDI.GetView());
 	assert(pTabbedMDI);
-	pTabbedMDI->AddMDIChild(new CViewSimple, _T("Simple"), ID_MDI_SIMPLE);
+	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
 }
 
 void CMainFrame::OnFileNewRect()
