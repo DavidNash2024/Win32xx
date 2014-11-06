@@ -530,9 +530,8 @@ namespace Win32xx
 			CWnd* pMDIClient = GetMDIClient();
 			CWnd* pMDIChild = GetActiveMDIChild();
 			assert(pMDIClient);
-			assert(pMDIChild);
 
-			if (IsMDIChildMaxed())
+			if (pMDIChild && IsMDIChildMaxed())
 			{
 				CPoint pt = GetCursorPos();
 				ScreenToClient(pt);
