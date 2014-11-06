@@ -27,6 +27,7 @@ Modified CRect::SubtractRect
 Modified CRect::UnionRect
 renamed cstring.h to c_string.h
 
+
 Version 7.6
 ===========
 
@@ -233,14 +234,6 @@ Removed ::FromHandle   (all versions)
 
 Version 7.4
 ===========
-Bug Fixes
----------
-* The DockBar's parent for dock containers was set incorrectly. The wrong 
-   DockBar could be destroyed when a dock container was destroyed.   
-* Corrected variable initialisation in CMenuMetrics
-* Adjusted text position in Windows 7 menus.
-* Several bug fixes to CString
-* Fixed CMenu::GetMenuString
 	 
 New Features and Enhancements
 -----------------------------
@@ -289,171 +282,6 @@ New Features and Enhancements
       (if any) is set when the dialog is created (with DoModal or DoModeless).  
 * Updated CTab.
    - CTab now provides wrapper functions for all the Tab control macros.
-* TRACE now accepts both ANSI and Unicode strings.
-* Added project files for VS2013
-* Win32++ now has a tidier approach to the switch statements used in WndProc,
-  OnNotify, OnNotifyReflect and OnCommand. It is fully backwards compatible
-  with older code. Users are encourage to adopt this style to keep the code
-  in large switch statements tidy.
-* Expanded the help documentation
-   - Updated the docking information to make it clearer.
-   - Add a FAQ.
-
-Incompatibilities with previous versions
-----------------------------------------
-* The definition of OnCreate has changed to provide a LPCREATESRUCT. This 
-   change will also need to be made in any class overriding OnCreate.
-* The constructor of CDialog has changed. It no longer sets the dialog's
-   parent. This is set (if needed) by DoModal or DoModeless.   
-* The CSocket functions: Receive; ReceiveFrom; Send; and SendTo now use char
-* Programs with frames should now use the IDW_READY resource for "Ready". 
-   Add IDW_READY as a string resource to resource.rc
-* GetReBarTheme and GetToolBarTheme have been moved to CFrame 
-* Other functions have been modified. See below for details.
-   
-   
-Changes in detail
------------------
-- Added LoadCommonControls
-- Added CDialog::GetDefID
-- Added CDialog::GotoDlgCtrl
-- Added CDialog::MapDialogRect
-- Added CDialog::NextDlgCtrl
-- Added CDialog::PrevDlgCtrl
-- Added CDialog::SetDefID
-- Added CDocker::OnBarStart
-- Added CDocker::OnBarMove
-- Added CDocker::OnBarEnd
-- Added CDocker::OnDockActivated
-- Added CDocker::OnDockDestroyed
-- Added CDocker::OnDockStart
-- Added CDocker::OnDockMove
-- Added CDocker::OnDockEnd
-- Added CDocker::OnDockSetFocus
-- Added CDocker::OnFrameGotFocus
-- Added CDocker::OnFrameLostFocus
-- Added CDocker::OnNCLButtonDblClk
-- Added CDocker::OnTimer
-- Added CDockContainer::OnSize
-- Added CDockContainer::OnSetFocus
-- Added CDockContainer::OnLButtonDown
-- Added CDockContainer::OnLButtonUp
-- Added CDockContainer::OnMouseLeave
-- Added CDockContainer::OnTCNSelChange
-- Added CDockContainer::SetToolBarImages
-- Added CFrame::CustomDrawMenuBar
-- Added CFrame::CustomDrawToolBar
-- Added CFrame::OnCustomDraw
-- Added CFrame::OnRBNHeightChange
-- Added CFrame::OnRBNLayoutChanged
-- Added CFrame::OnRBNMinMax
-- Added CFrame::OnTBNDropDown
-- Added CFrame::OnTTNGetDispInfo
-- Added CFrame::OnUndocked
-- Added CFrame::SetReBarTheme
-- Added CFrame::SetTBImageList
-- Added CFrame::SetTBImageListDis
-- Added CFrame::SetTBImageListHot
-- Added CFrame::SetToolBarImages
-- Added CFrame::SetToolBarTheme
-- Added CMDIChild::OnMDIActivate
-- Added CMDIChild::OnWindowPosChanged
-- Added CRect operator LPCRECT()
-- Added CRibbon::GetRibbonHeight
-- Added CString operator += (TCHAR)
-- Added CTab::DeleteAllItems	
-- Added CTab::DeleteItem		
-- Added CTab::DeselectAll		
-- Added CTab::GetExtendedStyle
-- Added CTab::GetItemRect
-- Added CTab::GetRowCount		
-- Added CTab::GetToolTips		
-- Added CTab::HighlightItem		
-- Added CTab::InsertItem		
-- Added CTab::OnPaint
-- Added CTab::OnEraseBkgnd
-- Added CTab::OnKillFocus
-- Added CTab::OnLButtonDblClk
-- Added CTab::OnLButtonDown
-- Added CTab::OnTCNSelChange
-- Added CTab::OnWindowPosChanged
-- Added CTab::OnWindowPosChanging
-- Added CTab::RemoveImage	
-- Added CTab::SetFont
-- Added CTab::SetExtendedStyle	
-- Added CTab::SetImageList		
-- Added CTab::SetItem			
-- Added CTab::SetItemExtra		
-- Added CTab::SetToopTips	
-- Added CToolBar::Customize
-- Added CToolBar::SetButtonInfo
-- Added CWnd::GetDlgCtrlID
-- Added CWnd::OnAttach
-- Added CWnd::OnClose
-- Added CWnd::OnDestroy
-- Modified CComboBoxEx::GetImageList
-- Modified CComboBoxEx::SetImageList
-- Modified CDialog::CDialog
-- Modified CDialog::DoModal
-- Modified CDialog::DoModeless
-- Modified CFile::OpenFileDialog   		Added Title argument	
-- Modified CFile::SaveFileDialog		Added Title argument
-- Modified CFrame::AddToolBarBand
-- Modified CFrame::AddToolBarButton		now also accepts image index
-- Modified CFrame::GetReBarTheme
-- Modified CFrame::GetToolBarTheme
-- Modified CFrame::GetMenuBar			returns pointer
-- Modified CFrame::GetReBar				returns pointer
-- Modified CFrame::GetStatusBar			returns pointer
-- Modified CFrame::GetToolBar			returns pointer
-- Modified CHeader::GetImageList
-- Modified CHeader::SetImageList
-- Modified CHeader::CreateDragImage
-- Modified CListView::GetImageList
-- Modified CListView::CListView::SetImageList
-- Modified CListView::CListView::CreateDragImage
-- Modified CMDIChild::OnClose           now returns void.
-- Modified CSocket::Bind                port is now UINT
-- Modified CSocket::Connect             port is now UINT
-- Modified CSocket::Receive             uses char instead of TCHAR
-- Modified CSocket::RecieveFrom         uses char instead of TCHAR
-- Modified CSocket::Send                uses char instead of TCHAR
-- Modified CSocket::SendTo              uses char instead of TCHAR
-- Modified CString  operator == 		now accepts const
-- Modified CString  operator != 		now accepts const
-- Modified CString  operator [] 		now accepts const
-- Modified CTab::GetImageList
-- Modified CTreeView::GetImageList
-- Modified CTreeView::SetImageList
-- Modified CTreeView::CreateDragImage
-- Modified CToolBar::AddButton			
-- Modified CToolBar::GetDisabledImageList
-- Modified CToolBar::GetHotImageList
-- Modified CToolBar::GetImageList
-- Modified CToolBar::SetDisableImageList
-- Modified CToolBar::SetHotImageList
-- Modified CToolBar::SetImageList
-- Modified CWnd::CreateEx               now uses HMENU instead of CMenu*
-- Modified CWnd::DeferWindowPos			now uses CWnd* for second argument
-- Modified CWnd::OnCreate               now accepts LPCREATESTRUCT
-- Removed CDialog::SetDlgParent
-- Removed CFrame::LoadCommonControls    
-- Removed CMenuBar::GetMenuTheme
-- Removed CMenuBar::SetMenuTheme
-- Removed CReBar::GetReBarTheme
-- Removed CReBar::SetReBarTheme
-- Removed CRibbonFrame::GetRibbonHeight
-- Removed CToolBar::GetToolBarTheme
-- Removed CToolBar::SetToolBarTheme
-- Removed CToolBar::OnCustomDraw
-- Removed CToolBar::SetButtons
-- Removed CToolBar::SetImages
-- Renamed CFrame::GetMenuTheme to CFrame::GetMenuBarTheme
-- Renamed CFrame::SetMenuTheme to CFrame::SetMenuBarTheme
-
-Added IDW_READY resource for ready string.
-Added VS2013 project files
-Updated the tutorials to take advantage of the new features.
 
 
 Version 7.3

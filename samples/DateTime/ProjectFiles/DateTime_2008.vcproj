@@ -249,6 +249,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\res\Win32++.manifest"
+				>
+			</File>
+			<File
 				RelativePath="..\src\res\Zapotec.bmp"
 				>
 			</File>
@@ -257,11 +261,11 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\..\include\controls.h"
+				RelativePath="..\..\..\include\c_string.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\cstring.h"
+				RelativePath="..\..\..\include\controls.h"
 				>
 			</File>
 			<File
@@ -361,10 +365,6 @@
 				>
 			</File>
 		</Filter>
-		<File
-			RelativePath="..\src\res\Win32++.manifest"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

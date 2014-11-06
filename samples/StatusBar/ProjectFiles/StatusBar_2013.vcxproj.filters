@@ -45,9 +45,6 @@
     <ClInclude Include="..\..\..\include\controls.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\cstring.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -125,6 +122,9 @@
     </ClInclude>
     <ClInclude Include="..\src\Hyperlink.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\c_string.h">
+      <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

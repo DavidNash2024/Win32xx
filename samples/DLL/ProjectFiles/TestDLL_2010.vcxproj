@@ -134,7 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\controls.h" />
-    <ClInclude Include="..\..\..\include\cstring.h" />
+    <ClInclude Include="..\..\..\include\c_string.h" />
     <ClInclude Include="..\..\..\include\default_resource.h" />
     <ClInclude Include="..\..\..\include\dialog.h" />
     <ClInclude Include="..\..\..\include\docking.h" />

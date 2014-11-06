@@ -95,6 +95,8 @@ BOOL CMyDialog::OnInitDialog()
 
 LRESULT CMyDialog::OnNotify(WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(wParam);
+
 	switch (((LPNMHDR)lParam)->code)
 	{
 	case DTN_DATETIMECHANGE:

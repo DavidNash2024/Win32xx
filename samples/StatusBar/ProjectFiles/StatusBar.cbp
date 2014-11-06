@@ -198,7 +198,6 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../../../include/cstring.h" />
 		<Unit filename="../../../include/dialog.h" />
 		<Unit filename="../../../include/frame.h" />
 		<Unit filename="../../../include/gdi.h" />
