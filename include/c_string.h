@@ -1,5 +1,5 @@
-// Win32++   Version 7.6.1 Beta
-// 
+// Win32++   Version 7.6.1
+// Released 7th November 2014
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -125,7 +125,7 @@ namespace Win32xx
 		bool     operator == (LPCTSTR pszText) const;
 		bool     operator != (LPCTSTR pszText) const;
 				 operator LPCTSTR() const;
-		TCHAR    operator [] (int nIndex) const;
+		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
 		CString& operator += (LPCSTR szText);
 		CString& operator += (LPCWSTR szText);
@@ -272,7 +272,7 @@ namespace Win32xx
 		return m_str.c_str();
 	}
 
-	inline TCHAR CString::operator [] (int nIndex) const
+	inline TCHAR& CString::operator [] (int nIndex)
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
