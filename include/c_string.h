@@ -39,8 +39,8 @@
 // Thanks to Adam Szulc for his initial CString code.
 
 ////////////////////////////////////////////////////////
-// cstring.h
-//  Declaration of the cstring.h
+// c_string.h
+//  Declaration of the CString class
 
 // This class is intended to provide a simple alternative to the MFC/ATL
 // CString class that ships with Microsoft compilers. The CString class

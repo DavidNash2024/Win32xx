@@ -746,7 +746,7 @@ namespace Win32xx
 	inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
 		                m_pThreadParams(0), m_hThread(0), m_nThreadID(0), m_hAccel(0), m_pWndAccel(0)
 	// Use CWinThread directly and call this constructor for worker threads.
-	// Specify the function to run when the thread starts.
+	// Specify a pointer to the function to run when the thread starts.
 	// Specifying pParam for a worker thread is optional.
 	{
 		m_pfnThreadProc = pfnThreadProc;
@@ -1303,7 +1303,7 @@ namespace Win32xx
 	{
 		// This function stores the 'this' pointer in a static variable.
 		// Once stored, it can be used later to return the 'this' pointer.
-		// CWinApp's constructor call this functiom and sets the static variable.
+		// CWinApp's constructor calls this function and sets the static variable.
 		// CWinApp's destructor calls this function with a value of -1.
 
 		static CWinApp* pWinApp = 0;
@@ -1509,7 +1509,6 @@ namespace Win32xx
 	inline HWND CWnd::Create(CWnd* pParent /* = NULL */)
 	// Creates the window. This is the default method of window creation.
 	{
-
 		// Test if Win32++ has been started
 		assert( GetApp() );
 
@@ -1570,7 +1569,6 @@ namespace Win32xx
 	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam /*= NULL*/)
 	// Creates the window by specifying all the window creation parameters
 	{
-
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
