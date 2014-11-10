@@ -6,11 +6,16 @@
 #include "ExplorerApp.h"
 #include "SplitterPanes.h"
 
-int CRightPane::OnCreate(LPCREATESTRUCT pcs)
+CLeftPane::CLeftPane()
+{ 
+	SetView(m_View);
+}
+
+CRightPane::CRightPane()
 {
+	SetView(m_View);
+
 	// Set the width of the splitter bar
 	SetBarWidth(6);
-
-	return CDocker::OnCreate(pcs);
 }
 

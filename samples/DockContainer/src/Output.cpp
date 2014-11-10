@@ -46,14 +46,8 @@ CDockOutput::CDockOutput()
 {
 	// Set the view window to our edit control
 	SetView(m_View);
-}
 
-int CDockOutput::OnCreate(LPCREATESTRUCT pcs)
-{
 	// Set the width of the splitter bar
 	SetBarWidth(8);
-
-	return CDocker::OnCreate(pcs);
 }
-
 

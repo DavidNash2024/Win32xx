@@ -40,7 +40,6 @@ class CDockFiles : public CDocker
 public:
 	CDockFiles(); 
 	virtual ~CDockFiles() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CContainFiles m_Files;

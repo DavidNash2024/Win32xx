@@ -1,5 +1,5 @@
-// Win32++   Version 7.6.1
-// Released 7th November 2014
+// Win32++   Version 7.6.2 beta
+// Pre-release version
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2669,21 +2669,25 @@ namespace Win32xx
 					UINT nParentID;
 					if ( 0 == RegQueryValueEx(hContainerKey, _T("Parent Container"), NULL, &dwType, (LPBYTE)&nParentID, &BufferSize) )
 					{
-						CDockContainer* pParentContainer = GetDockFromID(nParentID)->GetContainer();
-						if (pParentContainer)
+						CDocker* pDock = GetDockFromID(nParentID);
+						if (pDock)
 						{
-							for (UINT uTab = 0; uTab < vTabOrder.size(); ++uTab)
+							CDockContainer* pParentContainer = pDock->GetContainer();
+							if (pParentContainer)
 							{
-								CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(uTab));
-								if (pOldDocker)
+								for (UINT uTab = 0; uTab < vTabOrder.size(); ++uTab)
 								{
-									UINT uOldID = pOldDocker->GetDockID();
+									CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(uTab));
+									if (pOldDocker)
+									{
+										UINT uOldID = pOldDocker->GetDockID();
 
-									std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
-									UINT uOldTab = (UINT)(it - vTabOrder.begin());
+										std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
+										UINT uOldTab = (UINT)(it - vTabOrder.begin());
 
-									if (uTab != uOldTab)
-										pParentContainer->SwapTabs(uTab, uOldTab);
+										if (uTab != uOldTab)
+											pParentContainer->SwapTabs(uTab, uOldTab);
+									}
 								}
 							}
 						}

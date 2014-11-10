@@ -70,7 +70,6 @@ class CDockDialog : public CDocker
 public:
 	CDockDialog();
 	virtual ~CDockDialog() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CContainDialog m_View;

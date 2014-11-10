@@ -30,9 +30,7 @@ class CDockTabbedMDI : public CDocker
 public:
 	CDockTabbedMDI();
 	virtual ~CDockTabbedMDI() {}
-
 	virtual CDocker* NewDockerFromID(int idDock);
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CMyTabbedMDI m_View;

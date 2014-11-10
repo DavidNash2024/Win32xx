@@ -118,15 +118,9 @@ CContainFiles::CContainFiles()
 //  Definitions for the CDockFiles class
 CDockFiles::CDockFiles() 
 { 
-	SetView(m_Files); 
-}
+	SetView(m_Files);
 
-int CDockFiles::OnCreate(LPCREATESTRUCT pcs)
-{
 	// Set the width of the splitter bar
 	SetBarWidth(8);
-
-	return CDocker::OnCreate(pcs);
 }
-
 

@@ -12,7 +12,8 @@
 class CLeftPane : public CDocker
 {
 public:
-    CLeftPane() { SetView(m_View); }
+    CLeftPane();
+	virtual ~CLeftPane() {}
 
 private:
 	CMyTreeView m_View;
@@ -22,8 +23,8 @@ private:
 class CRightPane : public CDocker
 {
 public:
-    CRightPane() { SetView(m_View); }
-	virtual int OnCreate(LPCREATESTRUCT pcs);
+    CRightPane();
+	virtual ~CRightPane() {}
 
 private:
 	CMyListView m_View;

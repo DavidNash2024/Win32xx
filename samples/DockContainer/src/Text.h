@@ -42,7 +42,6 @@ class CDockText : public CDocker
 public:
 	CDockText();
 	virtual ~CDockText() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CContainText m_View;

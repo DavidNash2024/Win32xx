@@ -42,7 +42,6 @@ public:
 
 protected:
 	virtual CDocker* NewDockerFromID(int nID);
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewSimple m_View;

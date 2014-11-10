@@ -30,7 +30,6 @@ public:
 
 protected:
 	virtual CDocker* NewDockerFromID(int nID);
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewSimple m_View;
@@ -43,7 +42,6 @@ class CDockClasses : public CDocker
 public:
 	CDockClasses();
 	virtual ~CDockClasses() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewTree m_View;
@@ -56,7 +54,6 @@ class CDockFiles : public CDocker
 public:
 	CDockFiles();
 	virtual ~CDockFiles() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewList m_View;
@@ -69,7 +66,6 @@ class CDockText : public CDocker
 public:
 	CDockText();
 	virtual ~CDockText() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewText m_View;

@@ -53,6 +53,9 @@ CDockSimple::CDockSimple()
 {
 	// Set the view window to our edit control
 	SetView(m_View);
+
+	// Set the width of the splitter bar
+	SetBarWidth(8);
 }
 
 CDocker* CDockSimple::NewDockerFromID(int nID)
@@ -91,13 +94,4 @@ CDocker* CDockSimple::NewDockerFromID(int nID)
 
 	return pDock;
 }
-
-int CDockSimple::OnCreate(LPCREATESTRUCT pcs)
-{
-	// Set the width of the splitter bar
-	SetBarWidth(8);
-
-	return CDocker::OnCreate(pcs);
-}
-
 

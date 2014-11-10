@@ -48,7 +48,6 @@ class CDockOutput : public CDocker
 public:
 	CDockOutput();
 	virtual ~CDockOutput() {}
-	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CContainOutput m_View;

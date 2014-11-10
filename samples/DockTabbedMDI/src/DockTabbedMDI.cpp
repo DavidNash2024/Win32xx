@@ -13,6 +13,9 @@ CDockTabbedMDI::CDockTabbedMDI()
 {
 	// Set the view window to our edit control
 	SetView(m_View);
+
+	// Set the width of the splitter bar
+	SetBarWidth(8);
 }
 
 CDocker* CDockTabbedMDI::NewDockerFromID(int idDock)
@@ -54,13 +57,4 @@ CDocker* CDockTabbedMDI::NewDockerFromID(int idDock)
 
 	return pDock;
 }
-
-int CDockTabbedMDI::OnCreate(LPCREATESTRUCT pcs)
-{
-	// Set the width of the splitter bar
-	SetBarWidth(8);
-
-	return CDocker::OnCreate(pcs);
-}
-
 
