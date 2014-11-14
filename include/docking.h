@@ -2172,15 +2172,15 @@ namespace Win32xx
 			CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
 			CDockContainer* pContainerSource = static_cast<CDockContainer*>(pDock->GetView());
 
-			if (pContainerSource->GetAllContainers().size() > 1)
+			std::vector<ContainerInfo>::reverse_iterator riter;
+			std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
+			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
 			{
-				// The container we're about to add has children, so transfer those first
-				std::vector<ContainerInfo>::reverse_iterator riter;
-				std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
-				for ( riter = AllContainers.rbegin() ; riter < AllContainers.rend() -1; ++riter )
+				// Move any container children across first			
+				CDockContainer* pContainerChild = (*riter).pContainer;
+				if (pContainerChild != pContainerSource)
 				{
 					// Remove child container from pContainerSource
-					CDockContainer* pContainerChild = (*riter).pContainer;
 					pContainerChild->ShowWindow(SW_HIDE);
 					pContainerSource->RemoveContainer(pContainerChild);
 
@@ -2193,7 +2193,7 @@ namespace Win32xx
 				}
 			}
 
-			pContainer->AddContainer(static_cast<CDockContainer*>(pDock->GetView()));
+			pContainer->AddContainer(pContainerSource);
 			pDock->m_pDockParent = this;
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
@@ -2984,12 +2984,7 @@ namespace Win32xx
 			{
 				DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
 				CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
-				assert(dynamic_cast<CDockContainer*>(pContainer));
-				
-				// Put the new container at Tab 0
-				for (int i = pContainer->GetItemCount()-1; i > 0; --i)
-					pContainer->SwapTabs(i, i-1);
-				
+				assert(dynamic_cast<CDockContainer*>(pContainer));				
 				pContainer->SelectPage(0);
 			}
 			break;
