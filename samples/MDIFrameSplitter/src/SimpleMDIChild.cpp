@@ -55,23 +55,27 @@ CSimpleMDIChild::~CSimpleMDIChild()
 {
 }
 
-void CSimpleMDIChild::OnInitialUpdate()
+int CSimpleMDIChild::OnCreate(LPCREATESTRUCT pcs)
 {
     // Set the window caption
-	SetWindowText(_T("Simple Window"));
+	SetWindowText( _T("Simple Window") );
 	
     // Set the window icons
     SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
 
+	return CMDIChild::OnCreate(pcs);
+}
+
+void CSimpleMDIChild::OnInitialUpdate()
+{
 	// Add Child dockers
 	DWORD dwStyle = DS_CLIENTEDGE | DS_NO_UNDOCK;
 	m_View.SetDockStyle(dwStyle);
 	CDocker* pDockLeft  = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | dwStyle, 200, 0);
 	CDocker* pDockRight = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | dwStyle, 200, 0);
 	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);
-	
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);	
 }
 
 BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)

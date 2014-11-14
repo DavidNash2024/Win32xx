@@ -57,14 +57,16 @@ CSimpleMDIChild::~CSimpleMDIChild()
 {
 }
 
-void CSimpleMDIChild::OnInitialUpdate()
+int CSimpleMDIChild::OnCreate(LPCREATESTRUCT pcs)
 {
     // Set the window caption
-	::SetWindowText(m_hWnd, _T("Simple Window"));
+	SetWindowText( _T("Simple Window") );
 	
     // Set the window icons
     SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
+
+	return CMDIChild::OnCreate(pcs);
 }
 
 BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)

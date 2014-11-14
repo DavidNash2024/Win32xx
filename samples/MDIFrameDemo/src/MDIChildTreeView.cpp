@@ -97,13 +97,11 @@ int CMDIChildTreeView::OnCreate(LPCREATESTRUCT pcs)
 {
 	UNREFERENCED_PARAMETER(pcs);
 	m_TreeView.Create(this);
-	return 0;
-}
 
-void CMDIChildTreeView::OnInitialUpdate()
-{
 	SetWindowText(_T("Tree-View Window"));
 	SetIconLarge(IDI_CLASSES);
 	SetIconSmall(IDI_CLASSES);
+	
+	return 0;
 }
 

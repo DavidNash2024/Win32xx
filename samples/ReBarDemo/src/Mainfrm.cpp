@@ -276,7 +276,8 @@ void CMainFrame::RecalcLayout()
 			SetReBarPos();
 
 		// Position the view window
-		pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+	//	pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+		RecalcDockLayout();
 
 		// Adjust rebar bands
 		if (IsReBarUsed())

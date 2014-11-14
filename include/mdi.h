@@ -128,24 +128,20 @@ namespace Win32xx
 		friend class CMDIChild;     // CMDIChild uses m_hOrigMenu
 
 	public:
-		
-		class CMDIClient : public CWnd  // a nested class within CMDIFrame
+		// A nested class inside CMDIFrame
+		class CDockMDIClient : public CDocker::CDockClient
 		{
 		public:
-			CMDIClient() {}
-			virtual ~CMDIClient() {}
-			virtual HWND Create(CWnd* pParent = NULL);
-			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+			CDockMDIClient() {}
+			virtual ~CDockMDIClient() {}
 			CMDIFrame* GetMDIFrame() const { return static_cast<CMDIFrame*>(GetParent()); }
 
 		protected:
-			virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
-
-		private:
-			CMDIClient(const CMDIClient&);				// Disable copy construction
-			CMDIClient& operator = (const CMDIClient&); // Disable assignment operator
+			HWND Create(CWnd* pParent);
+			LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
+			LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
+			LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
+			LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
 
 
@@ -153,8 +149,9 @@ namespace Win32xx
 		virtual ~CMDIFrame() {}
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
-		virtual CWnd* GetMDIClient() const { return (CWnd*)(&m_MDIClient); }
 		virtual CMDIChild* GetActiveMDIChild() const;
+		virtual CDockClient* GetDockClient() const	{ return (CDockClient*)(&m_DockMDIClient); }
+		virtual CWnd* GetMDIClient() const { return (CWnd*)(GetDockClient()); }
 		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -189,8 +186,9 @@ namespace Win32xx
 		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(CMenu* pMenu);
 
-		CMDIClient m_MDIClient;
+	//	CMDIClient m_MDIClient;
 		std::vector <MDIChildPtr> m_vMDIChild;
+		CDockMDIClient m_DockMDIClient;
 		HWND m_hActiveMDIChild;
 	};
 
@@ -208,7 +206,9 @@ namespace Win32xx
 	//
 	inline CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
-		SetView(*GetMDIClient());
+	//	SetView(*GetMDIClient());
+	//	GetDockClient()->SetDock(this);
+		SetView(*GetDockClient());
 	}
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(MDIChildPtr pMDIChild)
@@ -522,7 +522,11 @@ namespace Win32xx
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline HWND CMDIFrame::CMDIClient::Create(CWnd* pParent)
+
+	/////////////////////////////////////
+	//Definitions for the CDockMDIChild class
+	//
+	inline HWND CMDIFrame::CDockMDIClient::Create(CWnd* pParent)
 	{
 		assert(pParent != 0);
 
@@ -538,7 +542,7 @@ namespace Win32xx
 		return m_hWnd;
 	}
 
-	inline LRESULT CMDIFrame::CMDIClient::OnMDIActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIActivate(WPARAM wParam, LPARAM lParam)
 	{
 		// Suppress redraw to avoid flicker when activating maximised MDI children
 		SetRedraw(FALSE);
@@ -549,7 +553,7 @@ namespace Win32xx
 		return lr;
 	}
 
-	inline LRESULT CMDIFrame::CMDIClient::OnMDIDestroy(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIDestroy(WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
 		CallWindowProc(GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
@@ -560,7 +564,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CMDIFrame::CMDIClient::OnMDISetMenu(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::OnMDISetMenu(WPARAM wParam, LPARAM lParam)
 	{
 		if (GetMDIFrame()->IsMenuBarUsed())
 		{
@@ -570,7 +574,7 @@ namespace Win32xx
 		return FinalWindowProc(WM_MDISETMENU, wParam, lParam);
 	}
 
-	inline LRESULT CMDIFrame::CMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{

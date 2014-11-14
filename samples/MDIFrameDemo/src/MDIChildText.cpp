@@ -79,14 +79,12 @@ int CMDIChildText::OnCreate(LPCREATESTRUCT pcs)
 {
 	UNREFERENCED_PARAMETER(pcs);
 	m_TextView.Create(this);
-	return 0;
-}
 
-void CMDIChildText::OnInitialUpdate()
-{
 	SetWindowText(_T("Text Window"));
 	SetIconLarge(IDI_TEXT);
 	SetIconSmall(IDI_TEXT);
+	
+	return 0;
 }
 
 LRESULT CMDIChildText::OnSetFocus(WPARAM wParam, LPARAM lParam)

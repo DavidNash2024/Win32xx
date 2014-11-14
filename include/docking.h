@@ -474,7 +474,7 @@ namespace Win32xx
 		int GetDockID() const				{return m_nDockID;}
 		CDocker* GetDockParent() const		{return m_pDockParent;}
 		DWORD GetDockStyle() const			{return m_DockStyle;}
-		CWnd* GetView() const				{return m_DockClient.GetView();}
+		CWnd* GetView() const				{return GetDockClient()->GetView();}
 		BOOL IsChildOfDocker(const CWnd* pWnd) const;
 		BOOL IsDocked() const;
 		BOOL IsDragAutoResize() const;
@@ -2082,7 +2082,7 @@ namespace Win32xx
 
 		std::vector <DockPtr>::iterator v;
 
-		SetRedraw(FALSE);
+		if (IsWindow()) SetRedraw(FALSE);
 		for (v = GetAllDockChildren()->begin(); v != GetAllDockChildren()->end(); ++v)
 		{
 			// The CDocker is destroyed when the window is destroyed
@@ -2091,7 +2091,7 @@ namespace Win32xx
 		}
 
 		GetDockChildren()->clear();
-		SetRedraw(TRUE);
+		if (IsWindow()) SetRedraw(TRUE);
 
 		// Delete any child containers this container might have
 		if (GetContainer())

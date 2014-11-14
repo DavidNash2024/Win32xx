@@ -32,7 +32,6 @@ public:
 
 protected:
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnInitialUpdate();
 
 private:
 	CViewList m_ListView;

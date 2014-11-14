@@ -47,11 +47,13 @@ CMDIChildSimple::~CMDIChildSimple()
 {
 }
 
-void CMDIChildSimple::OnInitialUpdate()
+int CMDIChildSimple::OnCreate(LPCREATESTRUCT pcs)
 {
 	SetWindowText(_T("Simple Window"));
 	SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
+
+	return CMDIChild::OnCreate(pcs);
 }
 
 void CMDIChildSimple::OnClose()

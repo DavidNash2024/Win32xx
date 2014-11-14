@@ -94,10 +94,12 @@ CMDIChildRect::~CMDIChildRect()
 {
 }
 
-void CMDIChildRect::OnInitialUpdate()
+int CMDIChildRect::OnCreate(LPCREATESTRUCT pcs)
 {
 	SetWindowText(_T("Rectangle Window"));
 	SetIconLarge(IDI_RECT);
 	SetIconSmall(IDI_RECT);
+
+	return CMDIChild::OnCreate(pcs);
 }
 

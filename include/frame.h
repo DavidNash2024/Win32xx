@@ -298,7 +298,7 @@ namespace Win32xx
 	//////////////////////////////////
 	// Declaration of the CFrame class
 	//
-	class CFrame : public CWnd
+	class CFrame : public CDocker
 	{
 		friend class CMenuBar;
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
@@ -339,7 +339,7 @@ namespace Win32xx
 		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_ToolBarTheme); }
 		CString GetStatusText() const				{ return m_strStatusText; }
 		CString GetTitle() const					{ return GetWindowText(); }
-		CWnd* GetView() const						{ return m_pView; }
+	//	CWnd* GetView() const						{ return m_pView; }
 		BOOL IsMenuBarUsed() const					{ return (m_MenuBar.IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (m_ReBar.IsWindow()); }
@@ -351,7 +351,7 @@ namespace Win32xx
 		void SetStatusText(LPCTSTR szText);
 		void SetTitle(LPCTSTR szText)				{ SetWindowText(szText); }
 		void SetToolBarTheme(ToolBarTheme* pTBT);
-		void SetView(CWnd& wndView);
+	//	void SetView(CWnd& wndView);
 
 	protected:
 		// Override these functions as required
@@ -2000,7 +2000,7 @@ namespace Win32xx
 				m_bShowToolBar = dwToolBar & 1;
 
 				RegCloseKey(hKey);
-				bRet = TRUE;
+				bRet = CDocker::LoadRegistrySettings(szKeyName);
 			}
 		}
 
@@ -2163,13 +2163,17 @@ namespace Win32xx
 
 		// Create the view window
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-		GetView()->Create(this);
+		GetDockClient()->SetDock(this);
+		GetDockClient()->Create(this);
+		if (GetView() != GetDockClient())
+			GetView()->Create(GetDockClient());
 
 		// Disable XP themes for the menubar
 		GetMenuBar()->SetWindowTheme(L" ", L" ");
 
 		// Reposition the child windows
 		OnSysColorChange(0, 0);
+				
 		RecalcLayout();
 
 		return 0;
@@ -2381,7 +2385,7 @@ namespace Win32xx
 		case UWN_UNDOCKED:		return OnUndocked();
 		}
 
-		return 0L;
+		return CDocker::OnNotify(wParam, lParam);
 	}
 
 	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
@@ -2545,8 +2549,8 @@ namespace Win32xx
 		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
-		if (m_pView->IsWindow())
-			m_pView->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
+		if (GetView()->IsWindow())
+			GetView()->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
 
 		return 0L;
 	}
@@ -2631,7 +2635,8 @@ namespace Win32xx
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
-		pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+		//	pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+		RecalcDockLayout();
 
 		// Adjust rebar bands
 		if (IsReBarUsed())
@@ -2774,7 +2779,7 @@ namespace Win32xx
 			}
 		}
 
-		return TRUE;
+		return CDocker::SaveRegistrySettings(GetRegistryKeyName());
 	}
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)
@@ -3176,7 +3181,7 @@ namespace Win32xx
 			GetToolBar()->GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
 
-	inline void CFrame::SetView(CWnd& wndView)
+/*	inline void CFrame::SetView(CWnd& wndView)
 	// Sets or changes the View window displayed within the frame
 	{
 		if (m_pView != &wndView)
@@ -3203,7 +3208,7 @@ namespace Win32xx
 				RecalcLayout();
 			}
 		}
-	}
+	} */
 
 	inline void CFrame::ShowMenu(BOOL bShow)
 	// Hides or shows the menu
@@ -3396,6 +3401,7 @@ namespace Win32xx
 		case WM_SIZE:			return OnSize(wParam, lParam);
 		case WM_SYSCOLORCHANGE:	return OnSysColorChange(wParam, lParam);
 		case WM_SYSCOMMAND:		return OnSysCommand(wParam, lParam);
+		case WM_WINDOWPOSCHANGED: return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 
 		// Messages defined by Win32++
 		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView()->GetHwnd() : NULL);
@@ -3407,7 +3413,8 @@ namespace Win32xx
 
 		} // switch uMsg
 
-		return CWnd::WndProcDefault(uMsg, wParam, lParam);
+		return CDocker::WndProcDefault(uMsg, wParam, lParam);
+	//	return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 

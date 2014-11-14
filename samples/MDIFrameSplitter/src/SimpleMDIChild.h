@@ -46,6 +46,7 @@ public:
 protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void	OnColor(COLORREF rgb);
+	virtual int     OnCreate(LPCREATESTRUCT pcs);
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

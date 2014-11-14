@@ -28,7 +28,6 @@ public:
 
 protected:
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnInitialUpdate();
 
 private:
 	CViewTree m_TreeView;

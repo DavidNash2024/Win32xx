@@ -1,6 +1,14 @@
 Version 7.6.2
 =============
 
+New Features and Enhancements
+-----------------------------
+* Frames now directly support docking
+   CFrames now inherits from CDocker. Users can now add dockers directly to
+   the frame, rather than adding them to the frame's view.   
+
+* MDI Frames directly support docking
+   Users have the option of combining a classic MDI Frame with docking.
 
 Version 7.6.1
 =============

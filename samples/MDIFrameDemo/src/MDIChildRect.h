@@ -30,7 +30,7 @@ public:
 	virtual ~CMDIChildRect();
 
 protected:
-	virtual void OnInitialUpdate();
+	virtual int OnCreate(LPCREATESTRUCT pcs);
 
 private:
 	CViewRect m_RectView;
