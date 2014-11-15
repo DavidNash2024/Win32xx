@@ -453,9 +453,9 @@ namespace Win32xx
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
 		virtual void Hide();
-		virtual BOOL LoadRegistrySettings(LPCTSTR szRegistryKeyName);
+		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void RecalcDockLayout();
-		virtual BOOL SaveRegistrySettings(LPCTSTR szRegistryKeyName);
+		virtual BOOL SaveDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
 		virtual void UndockContainer(CDockContainer* pContainer, CPoint pt, BOOL bShowUndocked);
 		virtual BOOL VerifyDockers();
@@ -2536,7 +2536,7 @@ namespace Win32xx
 		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
 	}
 
-	inline BOOL CDocker::LoadRegistrySettings(LPCTSTR szRegistryKeyName)
+	inline BOOL CDocker::LoadDockRegistrySettings(LPCTSTR szRegistryKeyName)
 	// Recreates the docker layout based on information stored in the registry.
 	// Assumes the DockAncestor window is already created.
 	{
@@ -3524,7 +3524,7 @@ namespace Win32xx
 		return vSorted;
 	}
 
-	inline BOOL CDocker::SaveRegistrySettings(LPCTSTR szRegistryKeyName)
+	inline BOOL CDocker::SaveDockRegistrySettings(LPCTSTR szRegistryKeyName)
 	// Stores the docking configuration in the registry
 	// NOTE: This function assumes that each docker has a unique DockID
 	{
@@ -4111,36 +4111,34 @@ namespace Win32xx
 	inline void CDockContainer::AddContainer(CDockContainer* pContainer)
 	{
 		assert(pContainer);
+		assert(this == m_pContainerParent); // Must be performed by parent container
 
-		if (this == m_pContainerParent)
+		ContainerInfo ci;
+		ci.pContainer = pContainer;
+		ci.Title = pContainer->GetTabText();
+		ci.iImage = GetODImageList()->Add( pContainer->GetTabIcon() );
+		int iNewPage = (int)m_vContainerInfo.size();
+		m_vContainerInfo.push_back(ci);
+
+		if (m_hWnd)
 		{
-			ContainerInfo ci;
-			ci.pContainer = pContainer;
-			ci.Title = pContainer->GetTabText();
-			ci.iImage = GetODImageList()->Add( pContainer->GetTabIcon() );
-			int iNewPage = (int)m_vContainerInfo.size();
-			m_vContainerInfo.push_back(ci);
+			TCITEM tie;
+			ZeroMemory(&tie, sizeof(TCITEM));
+			tie.mask = TCIF_TEXT | TCIF_IMAGE;
+			tie.iImage = ci.iImage;
+			tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
+			InsertItem(iNewPage, &tie);
 
-			if (m_hWnd)
-			{
-				TCITEM tie;
-				ZeroMemory(&tie, sizeof(TCITEM));
-				tie.mask = TCIF_TEXT | TCIF_IMAGE;
-				tie.iImage = ci.iImage;
-				tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
-				InsertItem(iNewPage, &tie);
+			SetTabSize();
+		}
 
-				SetTabSize();
-			}
-
-			pContainer->m_pContainerParent = this;
-			if (pContainer->IsWindow())
-			{
-				// Set the parent container relationships
-				pContainer->GetViewPage()->SetParent(this);
-				pContainer->GetViewPage()->ShowWindow(SW_HIDE);
-				RecalcLayout();
-			}
+		pContainer->m_pContainerParent = this;
+		if (pContainer->IsWindow())
+		{
+			// Set the parent container relationships
+			pContainer->GetViewPage()->SetParent(this);
+			pContainer->GetViewPage()->ShowWindow(SW_HIDE);
+			RecalcLayout();
 		}
 	}
 

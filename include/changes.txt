@@ -4,11 +4,30 @@ Version 7.6.2
 New Features and Enhancements
 -----------------------------
 * Frames now directly support docking
-   CFrames now inherits from CDocker. Users can now add dockers directly to
-   the frame, rather than adding them to the frame's view.   
+   Previously CFrames implemented docking through the view window. Now CFrame 
+   inherits from CDocker and implements docking directly. Users can now add
+   dockers to a frame that doesn't use a docker as the view window.    
 
 * MDI Frames directly support docking
-   Users have the option of combining a classic MDI Frame with docking.
+   Dockers can now be added to classic MDI Frames. Code to add dockers to a
+   MDI frame might look like this:
+   
+	void CMainMDIFrame::OnInitialUpdate()
+	{
+		TRACE("MDI Frame started \n");
+		//The frame is now created.
+		//Place any additional startup code here.
+
+		DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
+		int DockWidth = 150;
+		AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);
+		AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, DockWidth);
+	}
+	
+Changes in detail
+-----------------
+Renamed CDocker::LoadRegistrySettings to CDocker::LoadDockRegistrySettings
+Renamed CDocker::SaveRegistrySettings to CDocker::SaveDockRegistrySettings	
 
 Version 7.6.1
 =============
@@ -22,7 +41,6 @@ New Features and Enhancements
 * OnInitialUpdate delayed until after window is created.
    OnInitialUpdate is now called after the window creation has fully completed. 
    Code which needs to run before this should be put in OnCreate.
-   Note: Calls to CDocker::SetBarWidth should be made in OnCreate, not OnInitialUpdate.
 * CFrame now displays menu icons when themes are disabled.   
 * CRect has been updated to emulate the CRect provided with ATL and MFC
 * DynamicResize option add to the Dock sample    

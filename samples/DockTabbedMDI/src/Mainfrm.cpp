@@ -288,7 +288,7 @@ void CMainFrame::OnInitialUpdate()
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
 
 	// Load dock settings
-	if (!m_DockTabbedMDI.LoadRegistrySettings(GetRegistryKeyName()))
+	if (!m_DockTabbedMDI.LoadDockRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
 	// Load MDI child settings
@@ -369,7 +369,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 	CFrame::SaveRegistrySettings();
 
 	// Save the docker settings
-	m_DockTabbedMDI.SaveRegistrySettings(GetRegistryKeyName());
+	m_DockTabbedMDI.SaveDockRegistrySettings(GetRegistryKeyName());
 
 	// Save the tabbedMDI settings
 	m_DockTabbedMDI.GetTabbedMDI()->SaveRegistrySettings(GetRegistryKeyName());

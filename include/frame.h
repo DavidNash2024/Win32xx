@@ -2000,7 +2000,7 @@ namespace Win32xx
 				m_bShowToolBar = dwToolBar & 1;
 
 				RegCloseKey(hKey);
-				bRet = CDocker::LoadRegistrySettings(szKeyName);
+				bRet = TRUE;
 			}
 		}
 
@@ -2779,7 +2779,7 @@ namespace Win32xx
 			}
 		}
 
-		return CDocker::SaveRegistrySettings(GetRegistryKeyName());
+		return TRUE;
 	}
 
 	inline void CFrame::SetFrameMenu(INT ID_MENU)

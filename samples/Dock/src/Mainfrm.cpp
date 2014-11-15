@@ -178,7 +178,7 @@ void CMainFrame::OnInitialUpdate()
 	m_DockView.SetDockStyle(DS_CLIENTEDGE);
 
 	// Load dock settings
-	if (!m_DockView.LoadRegistrySettings(GetRegistryKeyName()))
+	if (!m_DockView.LoadDockRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
 	// Adjust dockstyles as per menu selections
@@ -218,7 +218,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 BOOL CMainFrame::SaveRegistrySettings()
 {
 	if (CFrame::SaveRegistrySettings())
-		return m_DockView.SaveRegistrySettings(GetRegistryKeyName());
+		return m_DockView.SaveDockRegistrySettings(GetRegistryKeyName());
 	else
 		return FALSE;
 }
