@@ -154,7 +154,7 @@ namespace Win32xx
 	public:
 		CDockContainer();
 		virtual ~CDockContainer();
-		virtual void AddContainer(CDockContainer* pContainer);
+		virtual void AddContainer(CDockContainer* pContainer, BOOL bInsert = FALSE);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE);
 		virtual CDockContainer* GetContainerFromIndex(UINT nPage);
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
@@ -530,6 +530,7 @@ namespace Win32xx
 		void ConvertToChild(HWND hWndParent);
 		void ConvertToPopup(const CRect& rc);
 		void MoveDockChildren(CDocker* pDockTarget);
+		void MoveDockInContainerChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
 		void RecalcDockChildLayout(CRect& rc);
 		void ResizeDockers(LPDRAGPOS pdp);
@@ -2165,8 +2166,9 @@ namespace Win32xx
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (static_cast<CDockContainer*>(pDock->GetView())))
 		{
 			assert(dynamic_cast<CDockContainer*>(pDock->GetView()));
+			
 			// Transfer any dock children to this docker
-			pDock->MoveDockChildren(this);
+			pDock->MoveDockInContainerChildren(this);
 
 			// Transfer container children to the target container
 			CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
@@ -2176,24 +2178,18 @@ namespace Win32xx
 			std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
 			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
 			{
-				// Move any container children across first			
 				CDockContainer* pContainerChild = (*riter).pContainer;
 				if (pContainerChild != pContainerSource)
 				{
 					// Remove child container from pContainerSource
 					pContainerChild->ShowWindow(SW_HIDE);
 					pContainerSource->RemoveContainer(pContainerChild);
-
-					// Add child container to this container
-					pContainer->AddContainer(pContainerChild);
-
 					CDocker* pDockChild = GetDockFromView(pContainerChild);
 					pDockChild->SetParent(this);
 					pDockChild->m_pDockParent = this;
 				}
 			}
 
-			pContainer->AddContainer(pContainerSource);
 			pDock->m_pDockParent = this;
 			pDock->m_BlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
@@ -2201,6 +2197,12 @@ namespace Win32xx
 			pDock->SetDockStyle(dwDockStyle);
 			pDock->SetParent(this);
 			pDock->GetDockBar()->SetParent(GetDockAncestor());
+		
+			// Insert the containers in reverse order
+			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
+			{
+				pContainer->AddContainer( (*riter).pContainer, TRUE);
+			}
 		}
 	}
 
@@ -2737,6 +2739,20 @@ namespace Win32xx
 			(*iter)->GetDockBar()->SetParent(pDockTarget);
 		}
 		GetDockChildren()->clear();
+	}
+
+	inline void CDocker::MoveDockInContainerChildren(CDocker* pDockTarget)
+	{
+		std::vector<CDocker*>::iterator iter;
+
+		while (GetDockChildren()->size() > 0)
+		{
+			iter = GetDockChildren()->begin();
+			CDocker* pDock = *iter;			
+			DWORD dwDockStyle = pDock->GetDockStyle() | DS_DOCKED_CONTAINER;
+			pDock->SeparateFromDock();
+			pDockTarget->DockInContainer( pDock, dwDockStyle );
+		}
 	}
 
 	inline CDocker* CDocker::NewDockerFromID(int nID)
@@ -4108,7 +4124,9 @@ namespace Win32xx
 			DestroyIcon(m_hTabIcon);
 	}
 
-	inline void CDockContainer::AddContainer(CDockContainer* pContainer)
+	inline void CDockContainer::AddContainer(CDockContainer* pContainer, BOOL bInsert /* = FALSE */)
+	// Adds a container to the group. Set bInsert to TRUE to insert the container as the 
+	//  first tab, or FALSE to add it as the last tab.
 	{
 		assert(pContainer);
 		assert(this == m_pContainerParent); // Must be performed by parent container
@@ -4117,8 +4135,16 @@ namespace Win32xx
 		ci.pContainer = pContainer;
 		ci.Title = pContainer->GetTabText();
 		ci.iImage = GetODImageList()->Add( pContainer->GetTabIcon() );
-		int iNewPage = (int)m_vContainerInfo.size();
-		m_vContainerInfo.push_back(ci);
+		int iNewPage = 0;
+		if (bInsert)
+		{
+			m_vContainerInfo.insert(m_vContainerInfo.begin(), ci);
+		}
+		else
+		{
+			iNewPage = (int)m_vContainerInfo.size();
+			m_vContainerInfo.push_back(ci);
+		}
 
 		if (m_hWnd)
 		{
@@ -4128,7 +4154,7 @@ namespace Win32xx
 			tie.iImage = ci.iImage;
 			tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
 			InsertItem(iNewPage, &tie);
-
+			SelectPage(iNewPage);
 			SetTabSize();
 		}
 

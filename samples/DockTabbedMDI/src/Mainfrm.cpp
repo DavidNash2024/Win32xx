@@ -282,7 +282,6 @@ void CMainFrame::HideSingleContainerTab(BOOL bHide)
 	GetFrameMenu()->CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
 }
 
-
 void CMainFrame::OnInitialUpdate()
 {
 	m_DockTabbedMDI.SetDockStyle(DS_CLIENTEDGE);
