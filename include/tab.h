@@ -115,7 +115,7 @@ namespace Win32xx
 		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
-		std::vector <TabPageInfo>& GetAllTabs() const { return (std::vector <TabPageInfo>&) m_vTabPageInfo; }
+		std::vector <TabPageInfo>* GetAllTabs() const { return (std::vector <TabPageInfo>*) &m_vTabPageInfo; }
 		CImageList* GetODImageList() const	{ return const_cast<CImageList*>(&m_imlODTab); }
 		CFont* GetTabFont() const		{ return const_cast<CFont*>(&m_TabFont); }
 		BOOL GetShowButtons() const		{ return m_bShowButtons; }
@@ -649,14 +649,14 @@ namespace Win32xx
 		}
 
 		// Add the menu items
-		for(UINT u = 0; u < MIN(GetAllTabs().size(), 9); ++u)
+		for(UINT u = 0; u < MIN(GetAllTabs()->size(), 9); ++u)
 		{
 			CString MenuString;
-			CString TabText = GetAllTabs()[u].TabText;
+			CString TabText = (*GetAllTabs())[u].TabText;
 			MenuString.Format(_T("&%d %s"), u+1, TabText.c_str());
 			m_ListMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +u, MenuString);
 		}
-		if (GetAllTabs().size() >= 10)
+		if (GetAllTabs()->size() >= 10)
 			m_ListMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD +9, _T("More Windows"));
 
 		// Add a checkmark to the menu
@@ -927,7 +927,7 @@ namespace Win32xx
 	inline LRESULT CTab::OnNCHitTest(WPARAM wParam, LPARAM lParam)
 	{
 		// Ensure we have an arrow cursor when the tab has no view window
-		if (0 == GetAllTabs().size())
+		if (0 == GetAllTabs()->size())
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 		// Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
@@ -1283,7 +1283,7 @@ namespace Win32xx
 	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
 	{
 		// Allows the text to be changed on an existing tab
-		if (nTab < GetAllTabs().size())
+		if (nTab < GetAllTabs()->size())
 		{
 			TCITEM Item;
 			ZeroMemory(&Item, sizeof(TCITEM));
@@ -1371,9 +1371,9 @@ namespace Win32xx
 		// Display the modal dialog. The dialog is defined in the dialog template rather
 		// than in the resource script (rc) file.
 		CSelectDialog SelectDialog((LPCDLGTEMPLATE) dlg_Template);
-		for(UINT u = 0; u < GetAllTabs().size(); ++u)
+		for(UINT u = 0; u < GetAllTabs()->size(); ++u)
 		{
-			SelectDialog.AddItem(GetAllTabs()[u].TabText);
+			SelectDialog.AddItem((*GetAllTabs())[u].TabText);
 		}
 
 		int iSelected = (int)SelectDialog.DoModal(this);
@@ -1382,7 +1382,7 @@ namespace Win32xx
 
 	inline void CTab::SwapTabs(UINT nTab1, UINT nTab2)
 	{
-		if ((nTab1 < GetAllTabs().size()) && (nTab2 < GetAllTabs().size()) && (nTab1 != nTab2))
+		if ((nTab1 < GetAllTabs()->size()) && (nTab2 < GetAllTabs()->size()) && (nTab1 != nTab2))
 		{
 			TabPageInfo T1 = GetTabPageInfo(nTab1);
 			TabPageInfo T2 = GetTabPageInfo(nTab2);
@@ -1717,7 +1717,7 @@ namespace Win32xx
 
 	inline int CTabbedMDI::GetMDIChildCount() const
 	{
-		return (int) GetTab()->GetAllTabs().size();
+		return (int) GetTab()->GetAllTabs()->size();
 	}
 
 	inline int   CTabbedMDI::GetMDIChildID(int nTab) const

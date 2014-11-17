@@ -132,7 +132,7 @@ namespace Win32xx
 		public:
 			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
-			virtual CToolBar* GetToolBar()	{return &m_ToolBar;}
+			virtual CToolBar* GetToolBar() const	{return (CToolBar*)&m_ToolBar;}
 			virtual CWnd* GetView() const	{return m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual int OnCreate(LPCREATESTRUCT pcs);
@@ -160,7 +160,7 @@ namespace Win32xx
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CDockContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
-		virtual CViewPage* GetViewPage()	{ return &m_ViewPage; }
+		virtual CViewPage* GetViewPage() const	{ return (CViewPage*)&m_ViewPage; }
 		virtual int GetTabImageID(UINT nTab) const;
 		virtual CString GetTabText(UINT nTab) const;
 		virtual void RecalcLayout();
@@ -173,13 +173,13 @@ namespace Win32xx
 		// Attributes
 		CDockContainer* GetActiveContainer() const {return GetContainerFromView(GetActiveView());}
 		CWnd* GetActiveView() const;
-		std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
+		std::vector<ContainerInfo>* GetAllContainers() const {return &m_pContainerParent->m_vContainerInfo;}
 		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
 		CString& GetDockCaption() const	{ return (CString&)m_csCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_strTabText; }
-		virtual CToolBar* GetToolBar() 	{ return GetViewPage()->GetToolBar(); }
-		CWnd* GetView()					{ return GetViewPage()->GetView(); }
+		virtual CToolBar* GetToolBar()	const { return GetViewPage()->GetToolBar(); }
+		CWnd* GetView()	const			{ return GetViewPage()->GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 		void SetHideSingleTab(BOOL bHide); 
@@ -2097,7 +2097,7 @@ namespace Win32xx
 		// Delete any child containers this container might have
 		if (GetContainer())
 		{
-			std::vector<ContainerInfo> AllContainers = GetContainer()->GetAllContainers();
+			std::vector<ContainerInfo> AllContainers = *GetContainer()->GetAllContainers();
 			std::vector<ContainerInfo>::iterator iter;
 			for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
 			{
@@ -2175,7 +2175,7 @@ namespace Win32xx
 			CDockContainer* pContainerSource = static_cast<CDockContainer*>(pDock->GetView());
 
 			std::vector<ContainerInfo>::reverse_iterator riter;
-			std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
+			std::vector<ContainerInfo> AllContainers = *pContainerSource->GetAllContainers();
 			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
 			{
 				CDockContainer* pContainerChild = (*riter).pContainer;
@@ -2903,12 +2903,12 @@ namespace Win32xx
 		if (dynamic_cast<CDockContainer*>(GetView()) && IsUndocked())
 		{
 			CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
-			if (pContainer->GetAllContainers().size() > 1)
+			if (pContainer->GetAllContainers()->size() > 1)
 			{
 				// This container has children, so destroy them now
-				std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
+				std::vector<ContainerInfo> * pAllContainers = pContainer->GetAllContainers();
 				std::vector<ContainerInfo>::iterator iter;
-				for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
+				for (iter = pAllContainers->begin(); iter < pAllContainers->end(); ++iter)
 				{
 					if ((*iter).pContainer != pContainer)
 					{
@@ -3525,7 +3525,7 @@ namespace Win32xx
 		{
 			CDockContainer* pContainer = (*itSort)->GetContainer();
 
-			for (UINT i = 0; i < pContainer->GetAllContainers().size(); ++i)
+			for (UINT i = 0; i < pContainer->GetAllContainers()->size(); ++i)
 			{
 				CDockContainer* pChild = pContainer->GetContainerFromIndex(i);
 
@@ -3631,7 +3631,7 @@ namespace Win32xx
 							throw (CWinException(_T("RegSetValueEx failed")));
 
 						// Store the tab order
-						for (UINT u2 = 0; u2 < pContainer->GetAllContainers().size(); ++u2)
+						for (UINT u2 = 0; u2 < pContainer->GetAllContainers()->size(); ++u2)
 						{
 							SubKeyName.Format(_T("Tab%u"), u2);
 							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
@@ -3981,7 +3981,7 @@ namespace Win32xx
 			// Choose a new docker from among the dockers for child containers
 			CDocker* pDockNew = 0;
 			CDocker* pDockOld = GetDockFromView(pContainer);
-			std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
+			std::vector<ContainerInfo> AllContainers = *pContainer->GetAllContainers();
 			std::vector<ContainerInfo>::iterator iter = AllContainers.begin();
 			while ((0 == pDockNew) && (iter < AllContainers.end()))
 			{
@@ -4205,7 +4205,7 @@ namespace Win32xx
 
 		std::vector<ContainerInfo>::iterator iter;
 		CDockContainer* pViewContainer = 0;
-		for (iter = GetAllContainers().begin(); iter != GetAllContainers().end(); ++iter)
+		for (iter = GetAllContainers()->begin(); iter != GetAllContainers()->end(); ++iter)
 		{
 			CDockContainer* pContainer = (*iter).pContainer;
 			if (pContainer->GetView() == pView)
@@ -4255,14 +4255,14 @@ namespace Win32xx
 
 	inline int CDockContainer::GetTabImageID(UINT nTab) const
 	{
-		assert (nTab < GetAllContainers().size());
-		return GetAllContainers()[nTab].iImage;
+		assert (nTab < GetAllContainers()->size());
+		return (*GetAllContainers())[nTab].iImage;
 	}
 
 	inline CString CDockContainer::GetTabText(UINT nTab) const
 	{
-		assert (nTab < GetAllContainers().size());
-		return GetAllContainers()[nTab].Title;
+		assert (nTab < GetAllContainers()->size());
+		return (*GetAllContainers())[nTab].Title;
 	}
 
 	inline void CDockContainer::SetupToolBar()
@@ -4640,7 +4640,7 @@ namespace Win32xx
 
 	inline void CDockContainer::SwapTabs(UINT nTab1, UINT nTab2)
 	{
-		if ((nTab1 < GetAllContainers().size()) && (nTab2 < GetAllContainers().size()) && (nTab1 != nTab2))
+		if ((nTab1 < GetAllContainers()->size()) && (nTab2 < GetAllContainers()->size()) && (nTab1 != nTab2))
 		{
 			ContainerInfo CI1 = m_vContainerInfo[nTab1];
 			ContainerInfo CI2 = m_vContainerInfo[nTab2];
