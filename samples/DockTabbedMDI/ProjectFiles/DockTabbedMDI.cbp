@@ -177,8 +177,6 @@
 		<Unit filename="../src/Browser.h" />
 		<Unit filename="../src/Classes.cpp" />
 		<Unit filename="../src/Classes.h" />
-		<Unit filename="../src/DockTabbedMDI.cpp" />
-		<Unit filename="../src/DockTabbedMDI.h" />
 		<Unit filename="../src/Files.cpp" />
 		<Unit filename="../src/Files.h" />
 		<Unit filename="../src/Mainfrm.cpp" />

@@ -4,9 +4,6 @@
     <ClCompile Include="..\src\Classes.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\DockTabbedMDI.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Files.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -65,9 +62,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\listview.h">
       <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\DockTabbedMDI.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Mainfrm.h">
       <Filter>Header Files</Filter>

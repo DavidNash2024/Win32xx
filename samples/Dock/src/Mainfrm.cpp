@@ -20,8 +20,8 @@ CMainFrame::CMainFrame()
 	m_bNoDockClose = FALSE;
 	m_bDynamicResize = TRUE;
 
-	//Set m_DockView as the view window of the frame
-	SetView(m_DockView);
+	//Set m_View as the view window of the frame
+	SetView(m_View);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -68,7 +68,7 @@ void CMainFrame::OnFileExit()
 void CMainFrame::OnDockDefault()
 {
 	SetRedraw(FALSE);	// Suppress drawing to the frame window
-	m_DockView.CloseAllDockers();
+	CloseAllDockers();
 	LoadDefaultDockers();
 	SetRedraw(TRUE);	// Re-enable drawing to the frame window
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
@@ -141,7 +141,7 @@ void CMainFrame::OnNoDockClose()
 
 void CMainFrame::OnDockCloseAll()
 {
-	m_DockView.CloseAllDockers();
+	CloseAllDockers();
 }
 
 void CMainFrame::OnDynamicResize()
@@ -151,7 +151,7 @@ void CMainFrame::OnDynamicResize()
 	std::vector<CDocker*>::iterator iter;
 	m_bDynamicResize = !m_bDynamicResize;
 
-	for (iter = m_DockView.GetAllDockers()->begin(); iter < m_DockView.GetAllDockers()->end(); ++iter)
+	for (iter = GetAllDockers()->begin(); iter < GetAllDockers()->end(); ++iter)
 	{
 		(*iter)->SetDragAutoResize(m_bDynamicResize);
 	}
@@ -175,10 +175,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 void CMainFrame::OnInitialUpdate()
 {
-	m_DockView.SetDockStyle(DS_CLIENTEDGE);
+	SetDockStyle(DS_CLIENTEDGE);
 
 	// Load dock settings
-	if (!m_DockView.LoadDockRegistrySettings(GetRegistryKeyName()))
+	if (!LoadDockRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
 	// Adjust dockstyles as per menu selections
@@ -192,10 +192,10 @@ void CMainFrame::LoadDefaultDockers()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-	CDocker* pDockLeft   = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, 200, ID_DOCK_CLASSES1);
-	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, 200, ID_DOCK_CLASSES2);
-	CDocker* pDockTop    = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_TOP, 100, ID_DOCK_TEXT1);
-	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, 100, ID_DOCK_TEXT2);
+	CDocker* pDockLeft   = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, 200, ID_DOCK_CLASSES1);
+	CDocker* pDockRight  = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, 200, ID_DOCK_CLASSES2);
+	CDocker* pDockTop    = AddDockedChild(new CDockText, DS_DOCKED_TOP, 100, ID_DOCK_TEXT1);
+	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, 100, ID_DOCK_TEXT2);
 
 	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES1);
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES2);
@@ -218,7 +218,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 BOOL CMainFrame::SaveRegistrySettings()
 {
 	if (CFrame::SaveRegistrySettings())
-		return m_DockView.SaveDockRegistrySettings(GetRegistryKeyName());
+		return SaveDockRegistrySettings(GetRegistryKeyName());
 	else
 		return FALSE;
 }
@@ -227,7 +227,7 @@ void CMainFrame::SetDockStyles()
 {
 	std::vector<CDocker*>::iterator iter;
 
-	for (iter = m_DockView.GetAllDockers()->begin(); iter < m_DockView.GetAllDockers()->end(); ++iter)
+	for (iter = GetAllDockers()->begin(); iter < GetAllDockers()->end(); ++iter)
 	{
 		DWORD dwStyle = (*iter)->GetDockStyle();
 		

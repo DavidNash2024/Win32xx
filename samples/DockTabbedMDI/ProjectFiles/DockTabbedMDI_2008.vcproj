@@ -189,10 +189,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\DockTabbedMDI.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Files.cpp"
 				>
 			</File>
@@ -268,10 +264,6 @@
 			</File>
 			<File
 				RelativePath="..\src\DockContainer.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\DockTabbedMDI.h"
 				>
 			</File>
 			<File

@@ -12,8 +12,8 @@ CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
-	//Set m_DockView as the view window of the frame
-	SetView(m_DockView);
+	//Set m_View as the view window of the frame
+	SetView(m_View);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -23,6 +23,43 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	// Destructor for CMainFrame.
+}
+
+CDocker* CMainFrame::NewDockerFromID(int nID)
+{
+	CDocker* pDock = NULL;
+	switch(nID)
+	{
+	case ID_DOCK_CLASSES1:
+		pDock = new CDockClasses;
+		break;
+	case ID_DOCK_CLASSES2:
+		pDock = new CDockClasses;					
+		break;
+	case ID_DOCK_FILES1:
+		pDock = new CDockFiles;
+		break;
+	case ID_DOCK_FILES2:
+		pDock = new CDockFiles;
+		break;
+	case ID_DOCK_OUTPUT1:
+		pDock = new CDockOutput;
+		break;
+	case ID_DOCK_OUTPUT2:
+		pDock = new CDockOutput;
+		break;
+	case ID_DOCK_TEXT1:
+		pDock = new CDockText;
+		break;
+	case ID_DOCK_TEXT2:
+		pDock = new CDockText;
+		break;
+	default:
+		TRACE("Unknown Dock ID\n");
+		break;
+	}
+
+	return pDock;
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -38,13 +75,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 		return TRUE;
 	case IDM_DOCK_DEFAULT:
 		SetRedraw(FALSE);
-		m_DockView.CloseAllDockers();
+		CloseAllDockers();
 		LoadDefaultDockers();
 		SetRedraw(TRUE);
 		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		return TRUE;
 	case IDM_DOCK_CLOSEALL:
-		m_DockView.CloseAllDockers();
+		CloseAllDockers();
 		return TRUE;
 	case IDW_VIEW_STATUSBAR:
 		OnViewStatusBar();
@@ -79,10 +116,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 void CMainFrame::OnInitialUpdate()
 {
-	m_DockView.SetDockStyle(DS_CLIENTEDGE);
+	SetDockStyle(DS_CLIENTEDGE);
 
 	// Load dock settings
-	if (!m_DockView.LoadDockRegistrySettings(GetRegistryKeyName()))
+	if (!LoadDockRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
 	// PreCreate initially set the window as invisible, so show it now.
@@ -96,8 +133,8 @@ void CMainFrame::LoadDefaultDockers()
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 	
 	// Add the parent dockers
-	CDocker* pDockRight  = m_DockView.AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);	
-	CDocker* pDockBottom = m_DockView.AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
+	CDocker* pDockRight  = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);	
+	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
 
 	// Add the remaining dockers
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
@@ -121,7 +158,7 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 BOOL CMainFrame::SaveRegistrySettings()
 {
 	if (CFrame::SaveRegistrySettings())
-		return m_DockView.SaveDockRegistrySettings(GetRegistryKeyName());
+		return SaveDockRegistrySettings(GetRegistryKeyName());
 	else
 		return FALSE;
 }

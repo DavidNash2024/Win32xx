@@ -37,7 +37,7 @@ protected:
 	virtual void SetupToolBar();
 
 private:
-	CDockSimple m_DockView;
+	CViewSimple m_View;
 	BOOL m_bProportionalResize;
 	BOOL m_b3DBorder;
 	BOOL m_bNoUndocking;

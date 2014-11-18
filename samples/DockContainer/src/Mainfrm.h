@@ -21,6 +21,7 @@ public:
 	void LoadDefaultDockers();
 	
 protected:
+	virtual CDocker* NewDockerFromID(int nID);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnInitialUpdate();
@@ -29,7 +30,7 @@ protected:
 	virtual void SetupToolBar();
 
 private:
-	CDockSimple m_DockView;
+	CViewSimple m_View;
 
 };
 

@@ -25,7 +25,7 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CDockSimple m_MainView;
+	CViewSimple m_MainView;
 	CDockText* m_pDockText;
 	CDockTree* m_pDockTree;
 	CDockList* m_pDockList;

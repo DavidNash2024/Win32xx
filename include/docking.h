@@ -488,6 +488,7 @@ namespace Win32xx
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockSize(int DockSize);
 		void SetDragAutoResize(BOOL bAutoResize);
+		BOOL SetRedraw(BOOL bRedraw = TRUE);
 		void SetView(CWnd& wndView);
 
 	protected:
@@ -567,6 +568,7 @@ namespace Win32xx
 		int m_DockStartSize;
 		int m_nDockID;
 		int m_nTimerCount;
+		int m_nRedrawCount;
 		int m_NCHeight;
 		DWORD m_dwDockZone;
 		double m_DockSizeRatio;
@@ -1858,7 +1860,8 @@ namespace Win32xx
 	//
 	inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockActive(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
 		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
-		            m_nTimerCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
+		            m_nTimerCount(0), m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), 
+					m_DockStyle(0), m_hOldFocus(0)
 	{
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
@@ -3906,6 +3909,14 @@ namespace Win32xx
 		m_DockStyle &= ~DS_DOCKED_CONTAINER;
 
 		return pDockUndockedFrom;
+	}
+
+	inline BOOL CDocker::SetRedraw(BOOL bRedraw /* = TRUE*/)
+	{
+		// Allows nested calls to SetRedraw.
+		bRedraw? ++m_nRedrawCount : --m_nRedrawCount ;
+
+		return (BOOL)SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0); 
 	}
 
 	inline void CDocker::SetUndockPosition(CPoint pt)

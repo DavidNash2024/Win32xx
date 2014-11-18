@@ -45,18 +45,18 @@ void CMainFrame::OnInitialUpdate()
 {
 	// Set the styles for splitter panes
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
-	m_MainView.SetDockStyle(dwStyle);
+	SetDockStyle(dwStyle);
 
 	CRect rcView = GetViewRect();
 
 	// Add the bottom pane first. It is a child of the main pane.
-	m_pDockTree = static_cast<CDockTree*>(m_MainView.AddDockedChild(new CDockTree, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2));
+	m_pDockTree = static_cast<CDockTree*>(AddDockedChild(new CDockTree, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2));
 
 	// Add the bottom right pane. It is a child of the bottom pane 
 	m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
 
 	// Add the top right pane. It is a child of the main pane.
-	m_pDockText = static_cast<CDockText*>(m_MainView.AddDockedChild(new CDockText, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
+	m_pDockText = static_cast<CDockText*>(AddDockedChild(new CDockText, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
 
 }
 
@@ -86,7 +86,7 @@ void CMainFrame::OnViewText()
 	}
 	else
 	{
-		m_MainView.Dock(m_pDockText, dwStyle | DS_DOCKED_RIGHT);
+		Dock(m_pDockText, dwStyle | DS_DOCKED_RIGHT);
 		GetFrameMenu()->CheckMenuItem(IDM_VIEW_TEXT, MF_CHECKED);
 	}
 }

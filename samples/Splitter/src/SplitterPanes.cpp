@@ -7,11 +7,6 @@
 #include "SplitterPanes.h"
 
 
-CDockSimple::CDockSimple() 
-{
-	SetView(m_View);
-}
-
 
 CDockText::CDockText() 
 {

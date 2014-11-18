@@ -39,7 +39,6 @@
     <ClInclude Include="..\..\..\include\winutils.h" />
     <ClInclude Include="..\src\Browser.h" />
     <ClInclude Include="..\src\Classes.h" />
-    <ClInclude Include="..\src\DockTabbedMDI.h" />
     <ClInclude Include="..\src\Files.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MyCombo.h" />
@@ -58,7 +57,6 @@
   <ItemGroup>
     <ClCompile Include="..\src\Browser.cpp" />
     <ClCompile Include="..\src\Classes.cpp" />
-    <ClCompile Include="..\src\DockTabbedMDI.cpp" />
     <ClCompile Include="..\src\Files.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />

@@ -99,10 +99,6 @@ SOURCE=..\src\Classes.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\DockTabbedMDI.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Files.cpp
 # End Source File
 # Begin Source File
@@ -160,10 +156,6 @@ SOURCE=..\src\Classes.h
 # Begin Source File
 
 SOURCE=..\src\DockContainer.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\DockTabbedMDI.h
 # End Source File
 # Begin Source File
 

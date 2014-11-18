@@ -1,7 +1,7 @@
 [Project]
 FileName=TabbedMDI_RELEASE.dev
 Name=TabbedMDI
-UnitCount=29
+UnitCount=27
 Type=0
 Ver=2
 ObjFiles=
@@ -152,7 +152,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=DockTabbedMDI.cpp
+FileName=MyTabbedMDI.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -181,16 +181,6 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=MyTabbedMDI.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
 FileName=Rect.cpp
 CompileCpp=1
 Folder=Source
@@ -200,8 +190,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit18]
+[Unit17]
 FileName=TabbedMDIApp.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit18]
+FileName=MyTabbedMDI.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -230,26 +230,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit19]
-FileName=DockTabbedMDI.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit20]
-FileName=MyTabbedMDI.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit21]
 FileName=Rect.h
 CompileCpp=1
 Folder=Header
@@ -259,7 +239,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit22]
+[Unit20]
 FileName=MyCombo.cpp
 CompileCpp=1
 Folder=Source
@@ -269,7 +249,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit23]
+[Unit21]
 FileName=MyCombo.h
 CompileCpp=1
 Folder=Header
@@ -279,7 +259,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit24]
+[Unit22]
 FileName=StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -289,7 +269,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit25]
+[Unit23]
 FileName=stdafx.h
 CompileCpp=1
 Folder=Header
@@ -299,7 +279,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit26]
+[Unit24]
 FileName=MyDialog.cpp
 CompileCpp=1
 Folder=Source
@@ -309,8 +289,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit27]
+[Unit25]
 FileName=MyDialog.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit26]
+FileName=Browser.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit27]
+FileName=Browser.h
 CompileCpp=1
 Folder=Header
 Compile=1

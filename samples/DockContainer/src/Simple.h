@@ -33,19 +33,4 @@ protected:
 };
 
 
-// Declaration of the CDockSimple class
-class CDockSimple : public CDocker
-{
-public:
-	CDockSimple();
-	virtual ~CDockSimple() {}
-
-protected:
-	virtual CDocker* NewDockerFromID(int nID);
-
-private:
-	CViewSimple m_View;
-
-};
-
 #endif // SIMPLE_H

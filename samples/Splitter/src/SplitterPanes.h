@@ -4,19 +4,8 @@
 #ifndef SPLITTERPANES_H
 #define SPLITTERPANES_H
 
-
 #include "Views.h"
 
-
-class CDockSimple : public CDocker
-{
-public:
-	CDockSimple(); 
-	virtual ~CDockSimple() {}
-
-private:
-	CViewSimple m_View;
-};
 
 class CDockText : public CDocker
 {
