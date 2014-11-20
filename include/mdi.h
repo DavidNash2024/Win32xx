@@ -172,6 +172,7 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual void    OnClose();
+		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual void    OnViewStatusBar();
 		virtual void    OnViewToolBar();
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
@@ -363,6 +364,22 @@ namespace Win32xx
 		{
 			CFrame::OnClose();
 		}
+	}
+
+	inline LRESULT CMDIFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	// Called when the menu's modal loop begins (WM_INITMENUPOPUP recieved)
+	{
+		if (IsMDIChildMaxed())
+		{
+			CWnd* pMaxMDIChild = GetActiveMDIChild();
+			assert(pMaxMDIChild);
+
+			// Suppress owner drawing of the MDI child's system menu
+			if (::GetSystemMenu(*pMaxMDIChild, FALSE) == (HMENU) wParam)
+				return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+		}
+
+		return CFrame::OnInitMenuPopup(wParam, lParam);
 	}
 
 	inline void CMDIFrame::OnViewStatusBar()

@@ -2270,7 +2270,8 @@ namespace Win32xx
 	// Called when the menu's modal loop begins (WM_INITMENUPOPUP recieved)
 	{
 		// The system menu shouldn't be owner drawn
-		if (HIWORD(lParam)) CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+		if (HIWORD(lParam)) 
+			return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
 		CMenu* pMenu = CMenu::FromHandle((HMENU)wParam);
 
