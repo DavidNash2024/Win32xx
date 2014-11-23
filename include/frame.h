@@ -339,7 +339,6 @@ namespace Win32xx
 		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_ToolBarTheme); }
 		CString GetStatusText() const				{ return m_strStatusText; }
 		CString GetTitle() const					{ return GetWindowText(); }
-	//	CWnd* GetView() const						{ return m_pView; }
 		BOOL IsMenuBarUsed() const					{ return (m_MenuBar.IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (m_ReBar.IsWindow()); }
@@ -351,7 +350,6 @@ namespace Win32xx
 		void SetStatusText(LPCTSTR szText);
 		void SetTitle(LPCTSTR szText)				{ SetWindowText(szText); }
 		void SetToolBarTheme(ToolBarTheme* pTBT);
-	//	void SetView(CWnd& wndView);
 
 	protected:
 		// Override these functions as required
@@ -2149,7 +2147,7 @@ namespace Win32xx
 		}
 		else
 		{
-			GetFrameMenu()->CheckMenuItem(IDW_VIEW_TOOLBAR, MF_UNCHECKED);
+			m_bShowToolBar = FALSE;
 			GetFrameMenu()->EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
 
@@ -3182,35 +3180,6 @@ namespace Win32xx
 			GetToolBar()->GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
 
-/*	inline void CFrame::SetView(CWnd& wndView)
-	// Sets or changes the View window displayed within the frame
-	{
-		if (m_pView != &wndView)
-		{
-			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
-
-			// Assign the view window
-			m_pView = &wndView;
-
-			if (m_hWnd)
-			{
-				// The frame is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-
-				if (!GetView()->IsWindow())
-					GetView()->Create(this);
-				else
-				{
-					GetView()->SetParent(this);
-					GetView()->ShowWindow();
-				}
-
-				RecalcLayout();
-			}
-		}
-	} */
-
 	inline void CFrame::ShowMenu(BOOL bShow)
 	// Hides or shows the menu
 	{
@@ -3242,51 +3211,57 @@ namespace Win32xx
 	inline void CFrame::ShowStatusBar(BOOL bShow)
 	// Hides or shows the status bar
 	{
-		if (bShow)
+		if (GetStatusBar()->IsWindow())
 		{
-			GetStatusBar()->ShowWindow(SW_SHOW);
-			m_bShowStatusBar = TRUE;
-		}
-		else
-		{
-			GetStatusBar()->ShowWindow(SW_HIDE);
-			m_bShowStatusBar = FALSE;
-		}
+			if (bShow)
+			{
+				GetStatusBar()->ShowWindow(SW_SHOW);
+				m_bShowStatusBar = TRUE;
+			}
+			else
+			{
+				GetStatusBar()->ShowWindow(SW_HIDE);
+				m_bShowStatusBar = FALSE;
+			}
 
-		// Reposition the Windows
-		RecalcLayout();
-		RedrawWindow();
+			// Reposition the Windows
+			RecalcLayout();
+			RedrawWindow();
+		}
 	}
 
 	inline void CFrame::ShowToolBar(BOOL bShow)
 	// Hides or shows the tool bar
 	{
-		if (bShow)
+		if (GetToolBar()->IsWindow())
 		{
-			if (IsReBarUsed())
-				GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), TRUE);
+			if (bShow)
+			{
+				if (IsReBarUsed())
+					GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), TRUE);
+				else
+					GetToolBar()->ShowWindow(SW_SHOW);
+				m_bShowToolBar = TRUE;
+			}
 			else
-				GetToolBar()->ShowWindow(SW_SHOW);
-			m_bShowToolBar = TRUE;
-		}
-		else
-		{
-			if (IsReBarUsed())
-				GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), FALSE);
-			else
-				GetToolBar()->ShowWindow(SW_HIDE);
-			m_bShowToolBar = FALSE;
-		}
+			{
+				if (IsReBarUsed())
+					GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), FALSE);
+				else
+					GetToolBar()->ShowWindow(SW_HIDE);
+				m_bShowToolBar = FALSE;
+			}
 
-		if (GetReBar()->IsWindow())
-		{
-			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
-				GetReBar()->MoveBandsLeft();
-		}
+			if (GetReBar()->IsWindow())
+			{
+				if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
+					GetReBar()->MoveBandsLeft();
+			}
 
-		// Reposition the Windows
-		RecalcLayout();
-		RedrawWindow();
+			// Reposition the Windows
+			RecalcLayout();
+			RedrawWindow();
+		}
 	}
 
 	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)

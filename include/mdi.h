@@ -495,11 +495,17 @@ namespace Win32xx
 	{
 		if ((GetActiveMDIChild()) && GetActiveMDIChild()->m_ChildMenu.GetHandle())
 		{
-			UINT uCheck = GetToolBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
-			GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_TOOLBAR, uCheck);
+			if (GetToolBar()->IsWindow())
+			{
+				UINT uCheck = GetToolBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
+				GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_TOOLBAR, uCheck);
+			}
 
-			uCheck = GetStatusBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
-			GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_STATUSBAR, uCheck);
+			if (GetStatusBar()->IsWindow())
+			{
+				UINT uCheck = GetStatusBar()->IsWindowVisible()? MF_CHECKED : MF_UNCHECKED;
+				GetActiveMDIChild()->m_ChildMenu.CheckMenuItem(IDW_VIEW_STATUSBAR, uCheck);
+			}
 		}
 	}
 

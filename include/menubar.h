@@ -1084,6 +1084,7 @@ namespace Win32xx
 		case WM_INITMENUPOPUP:		return OnInitMenuPopup(wParam, lParam);
 		case WM_KEYDOWN:			return OnKeyDown(wParam, lParam);
 		case WM_KILLFOCUS:			return OnKillFocus(wParam, lParam);
+		case WM_LBUTTONDBLCLK:		return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONDOWN:		return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONUP:			return OnLButtonUp(wParam, lParam);
 		case WM_MEASUREITEM:		return OnMeasureItem(wParam, lParam);
