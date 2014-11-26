@@ -593,7 +593,7 @@ namespace Win32xx
 
 				case VK_LEFT:
 					// Use default processing if inside a Sub Menu
-				    if ((m_hSelMenu) &&(m_hSelMenu != m_hPopupMenu))
+					if ((m_hSelMenu) &&(m_hSelMenu != m_hPopupMenu))
 						return FALSE;
 
 					SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));

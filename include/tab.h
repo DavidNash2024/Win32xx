@@ -223,9 +223,9 @@ namespace Win32xx
 		virtual CMenu* GetListMenu() const { return GetTab()->GetListMenu(); }
 		virtual void   ShowListDialog() { GetTab()->ShowListDialog(); }
 		virtual CTab* GetTab() const	{return (CTab*)&m_Tab;}
-		virtual BOOL LoadRegistrySettings(CString strRegistryKeyName);
+		virtual BOOL LoadRegistrySettings(const CString& strRegistryKeyName);
 		virtual void RecalcLayout();
-		virtual BOOL SaveRegistrySettings(CString strRegistryKeyName);
+		virtual BOOL SaveRegistrySettings(const CString& strRegistryKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
 		virtual void SetActiveMDITab(int nTab);
 
@@ -1734,7 +1734,7 @@ namespace Win32xx
 		return GetTab()->GetTabPageInfo(nTab).TabText;
 	}
 
-	inline BOOL CTabbedMDI::LoadRegistrySettings(CString strRegistryKeyName)
+	inline BOOL CTabbedMDI::LoadRegistrySettings(const CString& strRegistryKeyName)
 	{
 		BOOL bResult = FALSE;
 
@@ -1887,7 +1887,7 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CTabbedMDI::SaveRegistrySettings(CString strRegistryKeyName)
+	inline BOOL CTabbedMDI::SaveRegistrySettings(const CString& strRegistryKeyName)
 	{
 		if (!strRegistryKeyName.IsEmpty())
 		{

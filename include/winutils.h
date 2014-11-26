@@ -575,25 +575,24 @@ namespace Win32xx
 
 	inline UINT GetSizeofMenuItemInfo()
 	{
-		UINT uSize = sizeof(MENUITEMINFO);
 		// For Win95 and NT, cbSize needs to be 44
 		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
-			uSize = 44;
+			return CCSIZEOF_STRUCT(MENUITEMINFO, cch);
 
-		return uSize;
+		return sizeof(MENUITEMINFO);
 	}
 
 	inline UINT GetSizeofNonClientMetrics()
 	{
 		// This function correctly determines the sizeof NONCLIENTMETRICS
-		UINT uSize = sizeof (NONCLIENTMETRICS);
 
   #if (WINVER >= 0x0600)
-		if (GetWinVersion() < 2600 && (uSize > 500))	// Is OS version less than Vista
-			uSize -= sizeof(int);		// Adjust size back to correct value
+		// Is OS version less than Vista, adjust size to correct value
+		if (GetWinVersion() < 2600)
+			return CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
   #endif
 
-		return uSize;
+		return sizeof(NONCLIENTMETRICS);
 	}
 
 	

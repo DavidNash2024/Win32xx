@@ -26,8 +26,12 @@ New Features and Enhancements
 	
 Changes in detail
 -----------------
+Added CMDIFrame::GetActiveMenu
+Removed CFrame::GetView
+Removed CFrame::SetView
+Removed CMDIFrame::UpdateCheckMarks
 Renamed CDocker::LoadRegistrySettings to CDocker::LoadDockRegistrySettings
-Renamed CDocker::SaveRegistrySettings to CDocker::SaveDockRegistrySettings	
+Renamed CDocker::SaveRegistrySettings to CDocker::SaveDockRegistrySettings
 
 Version 7.6.1
 =============

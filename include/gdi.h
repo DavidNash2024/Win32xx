@@ -416,6 +416,7 @@ namespace Win32xx
 		CFont* SelectObject(const CFont* pFont);
 		CPalette* SelectObject(const CPalette* pPalette);
 		CPen* SelectObject(const CPen* pPen);
+		void RealizePalette() const;
 
 #ifndef _WIN32_WCE
 		void operator = (const HDC hDC);
@@ -1233,27 +1234,28 @@ namespace Win32xx
 		{
 			// Create our LPBITMAPINFO object
 			CBitmapInfoPtr pbmi(this);
+			BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
 
 			// Create the reference DC for GetDIBits to use
 			CMemDC MemDC(NULL);
 
 			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-			std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
+			MemDC.GetDIBits(this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
 			byte* pByteArray = &vBits[0];
 
-			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-			UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
+			MemDC.GetDIBits(this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
 			int yOffset = 0;
 			int xOffset;
 			int Index;
 
-			for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
+			for (int Row=0; Row < bmiHeader.biHeight; ++Row)
 			{
 				xOffset = 0;
 
-				for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
+				for (int Column=0; Column < bmiHeader.biWidth; ++Column)
 				{
 					// Calculate Index
 					Index = yOffset + xOffset;
@@ -1264,7 +1266,7 @@ namespace Win32xx
 					pByteArray[Index+2] = byGray;
 
 					// Increment the horizontal offset
-					xOffset += pbmi->bmiHeader.biBitCount >> 3;
+					xOffset += bmiHeader.biBitCount >> 3;
 				}
 
 				// Increment vertical offset
@@ -1272,7 +1274,7 @@ namespace Win32xx
 			}
 
 			// Save the modified colour back into our source DDB
-			MemDC.SetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			MemDC.SetDIBits(this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		}
 
 		inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
@@ -1283,18 +1285,20 @@ namespace Win32xx
 		{
 			// Create our LPBITMAPINFO object
 			CBitmapInfoPtr pbmi(this);
-			pbmi->bmiHeader.biBitCount = 24;
+			BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
+
+			bmiHeader.biBitCount = 24;
 
 			// Create the reference DC for GetDIBits to use
 			CMemDC MemDC(NULL);
 
 			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-			std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
+			MemDC.GetDIBits(this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
 			byte* pByteArray = &vBits[0];
 
-			MemDC.GetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-			UINT nWidthBytes = pbmi->bmiHeader.biSizeImage/pbmi->bmiHeader.biHeight;
+			MemDC.GetDIBits(this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
 			// Ensure sane colour correction values
 			cBlue  = MIN(cBlue, 255);
@@ -1317,11 +1321,11 @@ namespace Win32xx
 			int yOffset = 0;
 			int xOffset;
 			int Index;
-			for (int Row=0; Row < pbmi->bmiHeader.biHeight; ++Row)
+			for (int Row=0; Row < bmiHeader.biHeight; ++Row)
 			{
 				xOffset = 0;
 
-				for (int Column=0; Column < pbmi->bmiHeader.biWidth; ++Column)
+				for (int Column=0; Column < bmiHeader.biWidth; ++Column)
 				{
 					// Calculate Index
 					Index = yOffset + xOffset;
@@ -1343,7 +1347,7 @@ namespace Win32xx
 						pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
 
 					// Increment the horizontal offset
-					xOffset += pbmi->bmiHeader.biBitCount >> 3;
+					xOffset += bmiHeader.biBitCount >> 3;
 				}
 
 				// Increment vertical offset
@@ -1351,7 +1355,7 @@ namespace Win32xx
 			}
 
 			// Save the modified colour back into our source DDB
-			MemDC.SetDIBits(this, 0, pbmi->bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			MemDC.SetDIBits(this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		}
 
 #endif // !_WIN32_WCE
@@ -2433,7 +2437,7 @@ namespace Win32xx
 
 		// Create the Mask memory DC
 		CMemDC dcMask(this);
-        dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
+		dcMask.CreateBitmap(cx, cy, 1, 1, NULL);
 		dcMask.BitBlt(0, 0, cx, cy, &dcImage, 0, 0, SRCCOPY);
 
 		// Mask the image to 'this' DC
@@ -3172,6 +3176,14 @@ namespace Win32xx
 
 		return CPalette::FromHandle( (HPALETTE)::SelectPalette(m_pData->hDC, *pPalette, bForceBkgnd) );
 	}
+
+	inline void CDC::RealizePalette() const
+	// Use this to realize changes to the device context palette.
+	{
+		assert(m_pData->hDC);
+		::RealizePalette(m_pData->hDC);
+	}
+
 #ifndef _WIN32_WCE
 	inline BOOL CDC::PtVisible(int X, int Y)
 	// Determines whether the specified point is within the clipping region of a device context.

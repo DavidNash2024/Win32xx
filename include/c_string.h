@@ -719,11 +719,12 @@ namespace Win32xx
 
 		int nCount = 0;
 		size_t pos = 0;
-		size_t len = lstrlen(pszOld);
+		size_t lenOld = lstrlen(pszOld);
+		size_t lenNew = lstrlen(pszNew);
 		while ((pos = m_str.find(pszOld, pos)) != std::string::npos)
 		{
-			m_str.replace(pos, len, pszNew);
-			pos += lstrlen(pszNew);
+			m_str.replace(pos, lenOld, pszNew);
+			pos += lenNew;
 			++nCount;
 		}
 		return nCount;

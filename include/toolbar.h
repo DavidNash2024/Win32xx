@@ -683,7 +683,7 @@ namespace Win32xx
 		TBREPLACEBITMAP tbrb;
 		ZeroMemory(&tbrb, sizeof(TBREPLACEBITMAP));
 		tbrb.hInstNew = GetApp()->GetResourceHandle();
-		tbrb.hInstOld = GetApp()->GetResourceHandle();
+		tbrb.hInstOld = tbrb.hInstNew;
 		tbrb.nIDNew = NewToolBarID;
 		tbrb.nIDOld = m_OldToolBarID;
 		tbrb.nButtons  = iImages;

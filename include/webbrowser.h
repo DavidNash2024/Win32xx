@@ -54,7 +54,7 @@ namespace Win32xx
 		virtual ~CAXWindow();
 		virtual void Activate(BOOL fFocus);
 		virtual void CreateControl(BSTR bstrClsid);
-		virtual void CreateControl(CLSID clsid);
+		virtual void CreateControl(REFCLSID clsid);
 		virtual void Remove();
 		virtual void SetParent(HWND hWndParent);
 		virtual void SetLocation(int x, int y, int width, int height);
@@ -254,7 +254,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CAXWindow::CreateControl(CLSID clsid)
+	inline void CAXWindow::CreateControl(REFCLSID clsid)
 	{
 		CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void**)&m_pUnk);
 

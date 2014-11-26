@@ -158,7 +158,7 @@ namespace Win32xx
         virtual void AddChild(CWnd* pWnd, Alignment corner, DWORD dwStyle);
 		virtual void AddChild(HWND hWnd, Alignment corner, DWORD dwStyle);
 		virtual void HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    	virtual void Initialize(CWnd* pParent, RECT rcMin, RECT rcMax = CRect(0,0,0,0));
+    	virtual void Initialize(CWnd* pParent, const RECT& rcMin, const RECT& rcMax = CRect(0,0,0,0));
 		virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
 		virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
 		virtual void RecalcLayout();
@@ -740,7 +740,7 @@ namespace Win32xx
 		}
 	}
 
-    void inline CResizer::Initialize(CWnd* pParent, RECT rcMin, RECT rcMax)
+    void inline CResizer::Initialize(CWnd* pParent, const RECT& rcMin, const RECT& rcMax)
 	// Sets up the Resizer by specifying the parent window (usually a dialog),
 	//  and the minimum and maximum allowed rectangle sizes.
     {

@@ -325,7 +325,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 
-		IRichEditOle* pRichEditOle;
+		IRichEditOle* pRichEditOle = NULL;
 		SendMessage(EM_GETOLEINTERFACE, 0, (LPARAM)pRichEditOle);
 		return pRichEditOle;
 	}

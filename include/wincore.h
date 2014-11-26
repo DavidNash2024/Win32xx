@@ -2046,7 +2046,7 @@ namespace Win32xx
 	//  window class prior to window creation
 	{
 		assert( GetApp() );
-		assert( (0 != lstrlen(wc.lpszClassName) && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
+		assert( ('\0' != wc.lpszClassName[0] && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
 
 		// Check to see if this classname is already registered
 		WNDCLASS wcTest;

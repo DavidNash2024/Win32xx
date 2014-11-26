@@ -82,6 +82,7 @@
 #include "docking.h"
 #include "default_resource.h"
 
+
 #ifndef RBN_MINMAX
   #define RBN_MINMAX (RBN_FIRST - 21)
 #endif
@@ -239,6 +240,7 @@ namespace Win32xx
 		CRect GetCheckBackgroundRect(const CRect& rcItem);
 		CRect GetCheckRect(const CRect& rcItem);
 		CRect GetGutterRect(const CRect& rcItem);
+		CSize GetItemSize(MenuItemData* pmd);
 		CRect GetSelectionRect(const CRect& rcItem);
 		CRect GetSeperatorRect(const CRect& rcItem);
 		CRect GetTextRect(const CRect& rcItem);
@@ -308,7 +310,7 @@ namespace Win32xx
 		virtual ~CFrame();
 
 		// Override these functions as required
-		virtual void AdjustFrameRect(RECT rcView);
+		virtual void AdjustFrameRect(const RECT& rcView);
 		virtual CString GetThemeName() const;
 		virtual CRect GetViewRect() const;
 		virtual BOOL IsMDIChildMaxed() const { return FALSE; }
@@ -339,6 +341,7 @@ namespace Win32xx
 		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_ToolBarTheme); }
 		CString GetStatusText() const				{ return m_strStatusText; }
 		CString GetTitle() const					{ return GetWindowText(); }
+	//	CWnd* GetView() const						{ return m_pView; }
 		BOOL IsMenuBarUsed() const					{ return (m_MenuBar.IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (m_ReBar.IsWindow()); }
@@ -350,6 +353,7 @@ namespace Win32xx
 		void SetStatusText(LPCTSTR szText);
 		void SetTitle(LPCTSTR szText)				{ SetWindowText(szText); }
 		void SetToolBarTheme(ToolBarTheme* pTBT);
+	//	void SetView(CWnd& wndView);
 
 	protected:
 		// Override these functions as required
@@ -420,7 +424,7 @@ namespace Win32xx
 		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
 		CImageList m_imlMenu;				// Imagelist of menu icons
 		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
-        BOOL m_bUseIndicatorStatus;			// set to TRUE to see indicators in status bar
+		BOOL m_bUseIndicatorStatus;			// set to TRUE to see indicators in status bar
 		BOOL m_bUseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_bUseReBar;					// set to TRUE if ReBars are to be used
 		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
@@ -656,6 +660,35 @@ namespace Win32xx
 		return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
 	}
 
+	inline CSize CMenuMetrics::GetItemSize(MenuItemData* pmd)
+	{
+		CSize size;
+
+		// Add icon/check width
+		size.cx += m_sizeCheck.cx + m_marCheckBackground.Width() + m_marCheck.Width();
+
+		if (pmd->mii.fType & MFT_SEPARATOR) {
+			// separator height
+			size.cy = m_sizeSeparator.cy + m_marItem.Height();
+		} else {
+			// Add check background horizontal padding.
+			size.cx += m_marCheckBackground.Width();
+
+			// Add selection margin padding.
+			size.cx += m_marItem.Width();
+
+			// Account for text size
+			CSize sizeText = GetTextSize(pmd);
+			size.cx += sizeText.cx;
+			size.cy = MAX(size.cy, sizeText.cy);
+
+			// Account for icon or check height
+			size.cy = MAX(size.cy, m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height());
+		}
+
+		return size;
+	}
+
 	inline CRect CMenuMetrics::GetSelectionRect(const CRect& rcItem)
 	{
 		int x = rcItem.left + m_marItem.cxLeftWidth;
@@ -692,17 +725,17 @@ namespace Win32xx
 		else
 		{
 			// Get the font used in menu items
-			NONCLIENTMETRICS nm;
-			ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
-			nm.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(nm), &nm, 0);
+			NONCLIENTMETRICS info;
+			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
+			info.cbSize = GetSizeofNonClientMetrics();
+			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 
 			// Default menu items are bold, so take this into account
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
-				nm.lfMenuFont.lfWeight = FW_BOLD;
+				info.lfMenuFont.lfWeight = FW_BOLD;
 
 			// Calculate the size of the text
-			DesktopDC.CreateFontIndirect(&nm.lfMenuFont);
+			DesktopDC.CreateFontIndirect(&info.lfMenuFont);
 			sizeText = DesktopDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
 			sizeText.cx += m_marText.cxRightWidth;
 			sizeText.cy += m_marText.Height();
@@ -780,8 +813,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bUseIndicatorStatus(TRUE), m_bUseMenuStatus(TRUE), m_bUseThemes(TRUE),
-		                      m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
-						      m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE), m_KbdHook(0)
+							  m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
+							  m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE), m_KbdHook(0)
 	{
 		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
 		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
@@ -797,12 +830,12 @@ namespace Win32xx
 		m_bUseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
 
 		// Set the fonts
-		NONCLIENTMETRICS nm;
-		ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
-		nm.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
-		m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+		NONCLIENTMETRICS info;
+		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
+		m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
 
 		// Start the keyboard hook
 		TLSData* pTLSData = GetApp()->SetTlsData();
@@ -996,7 +1029,7 @@ namespace Win32xx
 		if (!IsWindow()) TRACE("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n");
 	}
 
-	inline void CFrame::AdjustFrameRect(RECT rcView)
+	inline void CFrame::AdjustFrameRect(const RECT& rcView)
 	// Adjust the size of the frame to accommodate the View window's dimensions
 	{
 		// Adjust for the view styles
@@ -1060,48 +1093,48 @@ namespace Win32xx
 	inline LRESULT CFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
 	// CustomDraw is used to render the MenuBar's toolbar buttons
 	{
-		if (m_MenuBarTheme.UseThemes)
+		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+
+		switch (lpNMCustomDraw->nmcd.dwDrawStage)
 		{
-			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+		// Begin paint cycle
+		case CDDS_PREPAINT:
+			// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
+			return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
 
-			switch (lpNMCustomDraw->nmcd.dwDrawStage)
+		// An item is about to be drawn
+		case CDDS_ITEMPREPAINT:
 			{
-			// Begin paint cycle
-			case CDDS_PREPAINT:
-				// Send NM_CUSTOMDRAW item draw, and post-paint notification messages.
-				return CDRF_NOTIFYITEMDRAW | CDRF_NOTIFYPOSTPAINT ;
+				CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
+				CRect rcRect = lpNMCustomDraw->nmcd.rc;
+				int nState = lpNMCustomDraw->nmcd.uItemState;
+				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
 
-			// An item is about to be drawn
-			case CDDS_ITEMPREPAINT:
+				if (IsMDIChildMaxed() && (0 == dwItem))
+				// Draw over MDI Max button
 				{
-					CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
-					CRect rcRect = lpNMCustomDraw->nmcd.rc;
-					int nState = lpNMCustomDraw->nmcd.uItemState;
-					DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+					HICON hIcon = (HICON)GetMenuBar()->GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
+					if (NULL == hIcon)
+						hIcon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
+					int cx = ::GetSystemMetrics (SM_CXSMICON);
+					int cy = ::GetSystemMetrics (SM_CYSMICON);
+					int y = 1 + (GetMenuBar()->GetWindowRect().Height() - cy)/2;
+					int x = (rcRect.Width() - cx)/2;
+					pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+
+					return CDRF_SKIPDEFAULT;  // No further drawing
+				}
+
+				if (m_MenuBarTheme.UseThemes)
+				{
 					// Leave a pixel gap above and below the drawn rectangle
 					if (IsAeroThemed())
 						rcRect.InflateRect(0, -2);
 					else
 						rcRect.InflateRect(0, -1);
 
-					if (IsMDIChildMaxed() && (0 == dwItem))
-					// Draw over MDI Max button
-					{
-						HICON hIcon = (HICON)GetMenuBar()->GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
-						if (NULL == hIcon)
-							hIcon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
-
-						int cx = ::GetSystemMetrics (SM_CXSMICON);
-						int cy = ::GetSystemMetrics (SM_CYSMICON);
-						int y = 1 + (GetMenuBar()->GetWindowRect().Height() - cy)/2;
-						int x = (rcRect.Width() - cx)/2;
-						pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
-
-						return CDRF_SKIPDEFAULT;  // No further drawing
-					}
-
-					else if (nState & (CDIS_HOT | CDIS_SELECTED))
+					if (nState & (CDIS_HOT | CDIS_SELECTED))
 					{
 						if ((nState & CDIS_SELECTED) || (GetMenuBar()->GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
@@ -1135,24 +1168,25 @@ namespace Win32xx
 
 						rcRect.bottom += 1;
 						int iMode = pDrawDC->SetBkMode(TRANSPARENT);
-						pDrawDC->DrawText(str, lstrlen(str), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+						pDrawDC->DrawText(str, str.GetLength(), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
 						pDrawDC->SetBkMode(iMode);
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
 				}
-				return CDRF_DODEFAULT ;   // Do default drawing
-
-			// Painting cycle has completed
-			case CDDS_POSTPAINT:
-				// Draw MDI Minimise, Restore and Close buttons
-				{
-					CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
-					GetMenuBar()->DrawAllMDIButtons(pDrawDC);
-				}
-				break;
 			}
+			return CDRF_DODEFAULT ;   // Do default drawing
+
+		// Painting cycle has completed
+		case CDDS_POSTPAINT:
+			// Draw MDI Minimise, Restore and Close buttons
+			{
+				CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
+				GetMenuBar()->DrawAllMDIButtons(pDrawDC);
+			}
+			break;
 		}
+
 		return 0L;
 	}
 
@@ -1197,7 +1231,7 @@ namespace Win32xx
 						str.ReleaseBuffer();
 						if (lr> 0)
 						{
-							TextSize = pDrawDC->GetTextExtentPoint32(str, lstrlen(str));
+							TextSize = pDrawDC->GetTextExtentPoint32(str, str.GetLength());
 						}
 					}
 
@@ -1304,7 +1338,7 @@ namespace Win32xx
 					}
 
 					//Draw Text
-					if (lstrlen(str) > 0)
+					if (!str.IsEmpty())
 					{
 						int iWidth = rcRect.right - rcRect.left - ((nStyle & TBSTYLE_DROPDOWN)?13:0);
 						CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
@@ -1329,15 +1363,15 @@ namespace Win32xx
 							// Draw text twice for embossed look
 							rcText.OffsetRect(1, 1);
 							pDrawDC->SetTextColor(RGB(255,255,255));
-							pDrawDC->DrawText(str, lstrlen(str), rcText, DT_LEFT);
+							pDrawDC->DrawText(str, str.GetLength(), rcText, DT_LEFT);
 							rcText.OffsetRect(-1, -1);
 							pDrawDC->SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-							pDrawDC->DrawText(str, lstrlen(str), rcText, DT_LEFT);
+							pDrawDC->DrawText(str, str.GetLength(), rcText, DT_LEFT);
 						}
 						else
 						{
 							pDrawDC->SetTextColor(GetSysColor(COLOR_BTNTEXT));
-							pDrawDC->DrawText(str, lstrlen(str), rcText, DT_LEFT | DT_END_ELLIPSIS);
+							pDrawDC->DrawText(str, str.GetLength(), rcText, DT_LEFT | DT_END_ELLIPSIS);
 						}
 						pDrawDC->SetBkMode(iMode);
 
@@ -1574,7 +1608,8 @@ namespace Win32xx
 
 		// find the position of tab character
 		int nTab = -1;
-		for(int i = 0; i < lstrlen(ItemText); ++i)
+		int len = lstrlen(ItemText);
+		for(int i = 0; i < len; ++i)
 		{
 			if(_T('\t') == ItemText[i])
 			{
@@ -1614,8 +1649,6 @@ namespace Win32xx
 	// Draws the ReBar's background when ReBar themes are enabled.
 	// Returns TRUE when the default background drawing is suppressed.
 	{
-		assert(pReBar->IsWindow());
-
 		BOOL IsDrawn = TRUE;
 
 		if (!pDC || !pReBar)
@@ -1630,7 +1663,9 @@ namespace Win32xx
 
 		if (IsDrawn)
 		{
-			BOOL IsVertical = pReBar->GetWindowLongPtr(GWL_STYLE) & CCS_VERT;		
+			assert(pReBar->IsWindow());
+
+			BOOL IsVertical = pReBar->GetWindowLongPtr(GWL_STYLE) & CCS_VERT;
 			CRgn Region;
 
 			// Create our memory DC
@@ -1739,7 +1774,7 @@ namespace Win32xx
 					if (IsVertical)
 					{
 						rcRand.top = MAX(0, rcReBar.top - 4);
-						rcRand.right +=2;					
+						rcRand.right +=2;
 					}
 					else
 					{
@@ -1828,11 +1863,12 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			if (pMenu->GetMenuItemInfo(nItem, &mii, TRUE) && (lstrlen(szStr) <= MAX_MENU_STRING))
+			int len = lstrlen(szStr);
+			if (pMenu->GetMenuItemInfo(nItem, &mii, TRUE) && (len <= MAX_MENU_STRING))
 			{
 				// Strip out any & characters
 				int j = 0;
-				for (int i = 0; i < lstrlen(szStr); ++i)
+				for (int i = 0; i < len; ++i)
 				{
 					if (szStr[i] != _T('&'))
 						szStripped[j++] = szStr[i];
@@ -2017,40 +2053,14 @@ namespace Win32xx
 	inline void CFrame::MeasureMenuItem(MEASUREITEMSTRUCT *pmis)
 	// Determines the size of the popup menus
 	{
-		int cxTotal = 0;
-		int cyMax = 0;
-
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pmis->itemData);
 		assert(::IsMenu(pmid->hMenu));	// Does itemData contain a valid MenuItemData struct?
 
-		// Add icon/check width
-		cxTotal += m_pMenuMetrics->m_sizeCheck.cx + m_pMenuMetrics->m_marCheckBackground.Width() + m_pMenuMetrics->m_marCheck.Width();
-
-		if (pmid->mii.fType & MFT_SEPARATOR)
-		{
-			// separator height
-			cyMax = m_pMenuMetrics->m_sizeSeparator.cy + m_pMenuMetrics->m_marItem.Height();
-		}
-		else
-		{
-			// Add check background horizontal padding.
-			cxTotal += m_pMenuMetrics->m_marCheckBackground.cxLeftWidth + m_pMenuMetrics->m_marCheckBackground.cxRightWidth;
-
-			// Add selection margin padding.
-			cxTotal += m_pMenuMetrics->m_marItem.cxLeftWidth + m_pMenuMetrics->m_marItem.cxRightWidth;
-
-			// Account for text size
-			CSize sizeText = m_pMenuMetrics->GetTextSize(pmid);
-			cxTotal += sizeText.cx;
-			cyMax = MAX(cyMax, sizeText.cy);
-
-			// Account for icon or check height
-			cyMax = MAX(cyMax, m_pMenuMetrics->m_sizeCheck.cy + m_pMenuMetrics->m_marCheckBackground.Height() + m_pMenuMetrics->m_marCheck.Height());
-		}
+		CSize size = m_pMenuMetrics->GetItemSize(pmid);
 
 		// Return the composite sizes.
-		pmis->itemWidth = cxTotal;
-		pmis->itemHeight = cyMax;
+		pmis->itemWidth = size.cx;
+		pmis->itemHeight = size.cy;
 	}
 
 	inline LRESULT CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
@@ -2171,7 +2181,7 @@ namespace Win32xx
 
 		// Reposition the child windows
 		OnSysColorChange(0, 0);
-				
+
 		RecalcLayout();
 
 		return 0;
@@ -2268,7 +2278,7 @@ namespace Win32xx
 	// Called when the menu's modal loop begins (WM_INITMENUPOPUP recieved)
 	{
 		// The system menu shouldn't be owner drawn
-		if (HIWORD(lParam)) 
+		if (HIWORD(lParam))
 			return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
 		CMenu* pMenu = CMenu::FromHandle((HMENU)wParam);
@@ -2304,7 +2314,7 @@ namespace Win32xx
 					pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
 				}
 			}
-		}	
+		}
 
 		return 0L;
 	}
@@ -2362,9 +2372,10 @@ namespace Win32xx
 			GetFrameMenu()->CheckMenuItem(nID, m_bShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		case IDW_VIEW_TOOLBAR:
+			GetFrameMenu()->EnableMenuItem(nID, m_bUseToolBar ? MF_ENABLED : MF_DISABLED);
 			GetFrameMenu()->CheckMenuItem(nID, m_bShowToolBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
-		}	
+		}
 	}
 
 	inline LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -2500,16 +2511,16 @@ namespace Win32xx
 			}
 		}
 
-		NONCLIENTMETRICS nm;
-		ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
-		nm.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
+		NONCLIENTMETRICS info;
+		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 
 		if (GetStatusBar()->IsWindow())
 		{
 			// Update the status bar font and text
 			m_fntStatusBar.DeleteObject();
-			m_fntStatusBar.CreateFontIndirect(&nm.lfStatusFont);
+			m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
 			GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);
 			if (m_bUseMenuStatus)
 				GetStatusBar()->SetWindowText(m_strStatusText);
@@ -2521,7 +2532,7 @@ namespace Win32xx
 		{
 			// Update the MenuBar font and button size
 			m_fntMenuBar.DeleteObject();
-			m_fntMenuBar.CreateFontIndirect(&nm.lfMenuFont);
+			m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
 			GetMenuBar()->SetFont(&m_fntMenuBar, TRUE);
 			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
 
@@ -2577,11 +2588,11 @@ namespace Win32xx
 
 	inline void CFrame::OnViewToolBar()
 	{
-		m_bShowToolBar = !m_bShowToolBar;
+		m_bShowToolBar = m_bUseToolBar ? !m_bShowToolBar : FALSE;
 		ShowToolBar(m_bShowToolBar);
 	}
 
-  	inline void CFrame::PreCreate(CREATESTRUCT& cs)
+	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	// Sets frame window creation paramaters prior to the frame window's creation
 	{
 		// Set the frame window styles
@@ -2794,7 +2805,7 @@ namespace Win32xx
 		}
 
 		SetFrameMenu(hMenu);
- 	}
+	}
 
 	inline void CFrame::SetFrameMenu(HMENU hMenu)
 	// Sets the frame's menu.
@@ -2809,7 +2820,7 @@ namespace Win32xx
 		}
 		else
 			SetMenu(&m_Menu);
- 	}
+	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
 	// Sets the menu icons. Any previous menu icons are removed.
@@ -3180,6 +3191,35 @@ namespace Win32xx
 			GetToolBar()->GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
 
+/*	inline void CFrame::SetView(CWnd& wndView)
+	// Sets or changes the View window displayed within the frame
+	{
+		if (m_pView != &wndView)
+		{
+			// Hide the existing view window (if any)
+			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
+
+			// Assign the view window
+			m_pView = &wndView;
+
+			if (m_hWnd)
+			{
+				// The frame is already created, so create and position the new view too
+				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+
+				if (!GetView()->IsWindow())
+					GetView()->Create(this);
+				else
+				{
+					GetView()->SetParent(this);
+					GetView()->ShowWindow();
+				}
+
+				RecalcLayout();
+			}
+		}
+	} */
+
 	inline void CFrame::ShowMenu(BOOL bShow)
 	// Hides or shows the menu
 	{
@@ -3223,11 +3263,11 @@ namespace Win32xx
 				GetStatusBar()->ShowWindow(SW_HIDE);
 				m_bShowStatusBar = FALSE;
 			}
-
-			// Reposition the Windows
-			RecalcLayout();
-			RedrawWindow();
 		}
+
+		// Reposition the Windows
+		RecalcLayout();
+		RedrawWindow();
 	}
 
 	inline void CFrame::ShowToolBar(BOOL bShow)
@@ -3251,17 +3291,17 @@ namespace Win32xx
 					GetToolBar()->ShowWindow(SW_HIDE);
 				m_bShowToolBar = FALSE;
 			}
-
-			if (GetReBar()->IsWindow())
-			{
-				if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
-					GetReBar()->MoveBandsLeft();
-			}
-
-			// Reposition the Windows
-			RecalcLayout();
-			RedrawWindow();
 		}
+
+		if (GetReBar()->IsWindow())
+		{
+			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
+				GetReBar()->MoveBandsLeft();
+		}
+
+		// Reposition the Windows
+		RecalcLayout();
+		RedrawWindow();
 	}
 
 	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)

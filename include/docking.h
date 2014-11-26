@@ -298,7 +298,7 @@ namespace Win32xx
 			virtual LRESULT	OnLButtonUp(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT	OnMouseActivate(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnNCCalcSize(WPARAM& wParam, LPARAM& lParam);
+			virtual LRESULT OnNCCalcSize(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -311,7 +311,7 @@ namespace Win32xx
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
-			LRESULT MouseMove(WPARAM wParam, LPARAM lParam);
+			LRESULT MouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			CDockClient(const CDockClient&);				// Disable copy construction
 			CDockClient& operator = (const CDockClient&);	// Disable assignment operator
 
@@ -437,7 +437,7 @@ namespace Win32xx
 		CDocker();
 		virtual ~CDocker();
 		virtual CDocker* AddDockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, int nDockID = 0);
-		virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, RECT rc, int nDockID = 0);
+		virtual CDocker* AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, const RECT& rc, int nDockID = 0);
 		virtual void Close();
 		virtual void CloseAllDockers();
 		virtual void Dock(CDocker* pDocker, UINT uDockSide);
@@ -823,15 +823,15 @@ namespace Win32xx
 
 			// Draw the rectangle
 			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
+			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDock->m_NCHeight + rcAdjust);
 
 			// Display the caption
-			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE)? 0 : GetSystemMetrics(SM_CXSMICON);
-			CRect rcText(4 +rcAdjust, rcAdjust, rc.Width() -4 - cx -rcAdjust, m_pDock->m_NCHeight +rcAdjust);
-			dcMem.DrawText(m_csCaption, m_csCaption.GetLength(), rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE) ? 0 : GetSystemMetrics(SM_CXSMICON);
+			CRect rcText(4 + rcAdjust, rcAdjust, rc.Width() - 4 - cx - rcAdjust, m_pDock->m_NCHeight + rcAdjust);
+			dcMem.DrawText(m_csCaption, m_csCaption.GetLength(), rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
 
 			// Draw the close button
-			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+			if (!(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				DrawCloseButton(dcMem, bFocus);
 
 			// Draw the 3D border
@@ -940,12 +940,10 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CDocker::CDockClient::OnNCCalcSize(WPARAM& wParam, LPARAM& lParam)
+	inline LRESULT CDocker::CDockClient::OnNCCalcSize(WPARAM wParam, LPARAM lParam)
 	{
 		// Sets the non-client area (and hence sets the client area)
 		// This function modifies lParam
-
-		UNREFERENCED_PARAMETER(wParam);
 
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
@@ -1105,7 +1103,7 @@ namespace Win32xx
 		return FinalWindowProc(WM_MOUSEACTIVATE, wParam, lParam);
 	}
 
-	inline LRESULT CDocker::CDockClient::MouseMove(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::CDockClient::MouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (!m_IsTracking)
 		{
@@ -1145,12 +1143,12 @@ namespace Win32xx
 			m_bCaptionPressed = FALSE;
 		}
 
-		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		return MouseMove(wParam, lParam);
+		return MouseMove(WM_MOUSEMOVE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCMouseLeave(WPARAM wParam, LPARAM lParam)
@@ -1167,7 +1165,7 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockClient::OnNCMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		return MouseMove(wParam, lParam);
+		return MouseMove(WM_NCMOUSEMOVE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnNCPaint(WPARAM wParam, LPARAM lParam)
@@ -1315,14 +1313,16 @@ namespace Win32xx
 #endif
 
 		// Calculate the hint window's position for inner docking
-		CRect rcHint = pDockTarget->GetDockClient()->GetWindowRect();
-		if (pDockTarget->GetDockClient()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+		CDockClient* pDockClient = pDockTarget->GetDockClient();
+		CRect rcHint = pDockClient->GetWindowRect();
+
+		if (pDockClient->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
 		pDockTarget->ScreenToClient(rcHint);
 
 		int Width;
 		CRect rcDockDrag = pDockDrag->GetWindowRect();
-		CRect rcDockTarget = pDockTarget->GetDockClient()->GetWindowRect();
+		CRect rcDockTarget = pDockClient->GetWindowRect();
 		if ((uDockSide  == DS_DOCKED_LEFT) || (uDockSide  == DS_DOCKED_RIGHT))
 		{
 			Width = rcDockDrag.Width();
@@ -1376,20 +1376,21 @@ namespace Win32xx
 		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
+		int BarWidth = pDockDrag->GetBarWidth();
+		CRect rcDockClient = pDockTarget->GetDockClient()->GetClientRect();
+
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if ((uDockSide == DS_DOCKED_LEFTMOST) || (uDockSide  == DS_DOCKED_RIGHTMOST))
 		{
 			Width = rcDockDrag.Width();
-			int BarWidth = pDockDrag->GetBarWidth();
-			if (Width >= pDockTarget->GetDockClient()->GetClientRect().Width() - pDockDrag->GetBarWidth())
-				Width = MAX(pDockTarget->GetDockClient()->GetClientRect().Width()/2 - BarWidth, BarWidth);
+			if (Width >= rcDockClient.Width() - BarWidth)
+				Width = MAX(rcDockClient.Width()/2 - BarWidth, BarWidth);
 		}
 		else
 		{
 			Width = rcDockDrag.Height();
-			int BarWidth = pDockDrag->GetBarWidth();
-			if (Width >= pDockTarget->GetDockClient()->GetClientRect().Height() - pDockDrag->GetBarWidth())
-				Width = MAX(pDockTarget->GetDockClient()->GetClientRect().Height()/2 - BarWidth, BarWidth);
+			if (Width >= rcDockClient.Height() - BarWidth)
+				Width = MAX(rcDockClient.Height()/2 - BarWidth, BarWidth);
 		}
 		switch (uDockSide)
 		{
@@ -1865,7 +1866,7 @@ namespace Win32xx
 	{
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
-		m_vAllDockers.push_back(this);
+		GetAllDockers()->push_back(this);
 	}
 
 	inline CDocker::~CDocker()
@@ -1893,8 +1894,8 @@ namespace Win32xx
 		assert(pDocker);
 
 		// Store the Docker's pointer in the DockAncestor's vector for later deletion
-		GetDockAncestor()->m_vAllDockChildren.push_back(DockPtr(pDocker));
-		GetDockAncestor()->m_vAllDockers.push_back(pDocker);
+		GetAllDockChildren()->push_back(DockPtr(pDocker));
+		GetDockAncestor()->GetAllDockers()->push_back(pDocker);
 
 		pDocker->SetDockStyle(dwDockStyle);
 		pDocker->m_nDockID = nDockID;
@@ -1945,14 +1946,14 @@ namespace Win32xx
 		return pDocker;
 	}
 
-	inline CDocker* CDocker::AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, RECT rc, int nDockID /* = 0*/)
+	inline CDocker* CDocker::AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, const RECT& rc, int nDockID /* = 0*/)
 	// This function creates the docker, and adds it to the docker hierarchy as undocked
 	{
 		assert(pDocker);
 
 		// Store the Docker's pointer in the DockAncestor's vector for later deletion
-		GetDockAncestor()->m_vAllDockChildren.push_back(DockPtr(pDocker));
-		GetDockAncestor()->m_vAllDockers.push_back(pDocker);
+		GetAllDockChildren()->push_back(DockPtr(pDocker));
+		GetDockAncestor()->GetAllDockers()->push_back(pDocker);
 
 		pDocker->SetDockSize(DockSize);
 		pDocker->SetDockStyle(dwDockStyle & 0XFFFFFF0);
@@ -2337,7 +2338,7 @@ namespace Win32xx
 		// Start at the DockAncestor's Ancestor and work up the Z order
 		CDocker* pDockTop = NULL;
 		CWnd* pAncestor = GetDockAncestor()->GetAncestor();
-		CWnd* pWnd = GetDockAncestor()->GetAncestor();
+		CWnd* pWnd = pAncestor;
 		do
 		{
 			if (IsRelated(pWnd) || pWnd == pAncestor)
@@ -2388,7 +2389,7 @@ namespace Win32xx
 
 		if (GetDockAncestor())
 		{
-			for (v = GetDockAncestor()->m_vAllDockChildren.begin(); v != GetDockAncestor()->m_vAllDockChildren.end(); ++v)
+			for (v = GetAllDockChildren()->begin(); v != GetAllDockChildren()->end(); ++v)
 			{
 				if (n_DockID == (*v)->GetDockID())
 					return (*v).get();
@@ -2464,11 +2465,11 @@ namespace Win32xx
 
 	inline int CDocker::GetTextHeight()
 	{
-		NONCLIENTMETRICS nm;
-		ZeroMemory(&nm, sizeof(NONCLIENTMETRICS));
-		nm.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, 0, &nm, 0);
-		LOGFONT lf = nm.lfStatusFont;
+		NONCLIENTMETRICS info;
+		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
+		info.cbSize = GetSizeofNonClientMetrics();
+		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		LOGFONT lf = info.lfStatusFont;
 
 		CClientDC dc(this);
 		dc.CreateFontIndirect(&lf);
@@ -2949,11 +2950,12 @@ namespace Win32xx
 			}
 		}
 
-		for (std::vector<CDocker*>::iterator it = GetDockAncestor()->m_vAllDockers.begin(); it < GetDockAncestor()->m_vAllDockers.end(); ++it)
+		std::vector <CDocker*> *pDockers = GetDockAncestor()->GetAllDockers();
+		for (std::vector<CDocker*>::iterator it = pDockers->begin(); it < pDockers->end(); ++it)
 		{
 			if ((*it) == pDock)
 			{
-				GetDockAncestor()->m_vAllDockers.erase(it);
+				pDockers->erase(it);
 				break;
 			}
 		}
@@ -3129,14 +3131,16 @@ namespace Win32xx
 		RECT rcDock = pDock->GetWindowRect();
 		ScreenToClient(rcDock);
 
-		double dBarWidth = pDock->GetDockBar()->GetWidth();
 		int iBarWidth    = pDock->GetDockBar()->GetWidth();
+		double dBarWidth = iBarWidth;
 		int DockSize;
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
+
+		CRect rcDockParent = pDock->m_pDockParent->GetWindowRect();
 
 		switch (pDock->GetDockStyle() & 0xF)
 		{
@@ -3146,7 +3150,7 @@ namespace Win32xx
 
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)pDock->m_pDockParent->GetWindowRect().Width());
+			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Width());
 			break;
 		case DS_DOCKED_RIGHT:
 			if (RTL)  DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
@@ -3154,19 +3158,19 @@ namespace Win32xx
 
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)pDock->m_pDockParent->GetWindowRect().Width());
+			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Width());
 			break;
 		case DS_DOCKED_TOP:
 			DockSize = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)pDock->m_pDockParent->GetWindowRect().Height());
+			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Height());
 			break;
 		case DS_DOCKED_BOTTOM:
 			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)pDock->m_pDockParent->GetWindowRect().Height());
+			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Height());
 			break;
 		}
 
@@ -3764,23 +3768,18 @@ namespace Win32xx
 		if (IsDocked())
 		{
 			assert (m_pDockParent);
+			CRect rc = m_pDockParent->GetWindowRect();
 			switch (GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Width());
-				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Width());
-				break;
 			case DS_DOCKED_RIGHT:
-				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Width());
-				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Width());
+				m_DockStartSize = MIN(DockSize,rc.Width());
+				m_DockSizeRatio = ((double)m_DockStartSize)/((double)rc.Width());
 				break;
 			case DS_DOCKED_TOP:
-				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Height());
-				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Height());
-				break;
 			case DS_DOCKED_BOTTOM:
-				m_DockStartSize = MIN(DockSize,m_pDockParent->GetWindowRect().Height());
-				m_DockSizeRatio = ((double)m_DockStartSize)/((double)m_pDockParent->GetWindowRect().Height());
+				m_DockStartSize = MIN(DockSize,rc.Height());
+				m_DockSizeRatio = ((double)m_DockStartSize)/((double)rc.Height());
 				break;
 			}
 
