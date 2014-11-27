@@ -16,7 +16,7 @@
 				<Compiler>
 					<Add option="-tWM" />
 					<Add option="-w-par" />
-					<Add option="-D_DEBUG" />
+					<Add option="-DNDEBUG" />
 					<Add directory="../../../include" />
 				</Compiler>
 				<ResourceCompiler>
