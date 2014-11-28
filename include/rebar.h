@@ -135,7 +135,7 @@ namespace Win32xx
 	// Deletes a band from a rebar control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (BOOL)SendMessage(RB_DELETEBAND, nBand, 0L);
+		return (BOOL)SendMessage(RB_DELETEBAND, (WPARAM)nBand, 0L);
 	}
 
 	inline int CReBar::GetBand(HWND hWnd) const
@@ -166,7 +166,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		CRect rc;
-		SendMessage(RB_GETBANDBORDERS, nBand, (LPARAM)&rc);
+		SendMessage(RB_GETBANDBORDERS, (WPARAM)nBand, (LPARAM)&rc);
 		return rc;
 	}
 
@@ -185,7 +185,7 @@ namespace Win32xx
 
 		// REBARBANDINFO describes individual BAND characteristics
 		rbbi.cbSize = GetSizeofRBBI();
-		return (BOOL)SendMessage(RB_GETBANDINFO, nBand, (LPARAM)&rbbi);
+		return (BOOL)SendMessage(RB_GETBANDINFO, (WPARAM)nBand, (LPARAM)&rbbi);
 	}
 
 	inline CRect CReBar::GetBandRect(int i) const
@@ -193,7 +193,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		CRect rc;
-		SendMessage(RB_GETRECT, i, (LPARAM)&rc);
+		SendMessage(RB_GETRECT, (WPARAM)i, (LPARAM)&rc);
 		return rc;
 	}
 
@@ -225,7 +225,7 @@ namespace Win32xx
 	// Retrieves the height of a specified row in a rebar control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (int)SendMessage(RB_GETROWHEIGHT, nRow, 0L);
+		return (int)SendMessage(RB_GETROWHEIGHT, (WPARAM)nRow, 0L);
 	}
 
 	inline UINT CReBar::GetSizeofRBBI() const
@@ -305,7 +305,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		rbbi.cbSize = GetSizeofRBBI();
-		return (BOOL)SendMessage(RB_INSERTBAND, nBand, (LPARAM)&rbbi);
+		return (BOOL)SendMessage(RB_INSERTBAND, (WPARAM)nBand, (LPARAM)&rbbi);
 	}
 
 	inline BOOL CReBar::IsBandVisible(int nBand) const
@@ -395,7 +395,7 @@ namespace Win32xx
 
 	inline LRESULT CReBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0L, 0L));
 		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 		{
 			// Use move messages to limit the resizing of bands
@@ -416,7 +416,7 @@ namespace Win32xx
 	{
 		if (m_bIsDragging)
 		{
-			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0L, 0L));
 			if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 			{
 				// We want to lock the first row in place, but allow other bands to move!
@@ -446,7 +446,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		// Adjust size for toolbars inside a rebar
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0, 0));
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0L, 0L));
 
 		// A boolean expression
 		return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
@@ -485,7 +485,7 @@ namespace Win32xx
 		rbbi.fMask  |= RBBIM_BACKGROUND;
 		rbbi.hbmBack = *pBackground;
 
-		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
+		return (BOOL)SendMessage(RB_SETBANDINFO, (WPARAM)nBand, (LPARAM)&rbbi);
 	}
 
 	inline BOOL CReBar::SetBandColor(int nBand, COLORREF clrFore, COLORREF clrBack) const
@@ -502,7 +502,7 @@ namespace Win32xx
 		rbbi.clrFore = clrFore;
 		rbbi.clrBack = clrBack;
 
-		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
+		return (BOOL)SendMessage(RB_SETBANDINFO, (WPARAM)nBand, (LPARAM)&rbbi);
 	}
 
 	inline BOOL CReBar::SetBandInfo(int nBand, REBARBANDINFO& rbbi) const
@@ -513,7 +513,7 @@ namespace Win32xx
 
 		// REBARBANDINFO describes individual BAND characteristics0
 		rbbi.cbSize = GetSizeofRBBI();
-		return (BOOL)SendMessage(RB_SETBANDINFO, nBand, (LPARAM)&rbbi);
+		return (BOOL)SendMessage(RB_SETBANDINFO, (WPARAM)nBand, (LPARAM)&rbbi);
 	}
 
 	inline BOOL CReBar::SetBarInfo(REBARINFO& rbi) const
@@ -562,7 +562,7 @@ namespace Win32xx
 	// The rebar bands will be arranged and wrapped as necessary to fit the rectangle.
 	{
 		assert(::IsWindow(m_hWnd));
-		return (BOOL)SendMessage(RB_SIZETORECT, 0, (LPARAM) (LPRECT)rect);
+		return (BOOL)SendMessage(RB_SIZETORECT, 0L, (LPARAM) (LPRECT)rect);
 	}
 
 	inline void CReBar::SetToolTips(CToolTip* pToolTip) const
@@ -570,7 +570,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
-		SendMessage(RB_SETTOOLTIPS, WPARAM(hToolTip), 0);
+		SendMessage(RB_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
 	}
 
 	inline LRESULT CReBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

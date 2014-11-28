@@ -201,63 +201,63 @@ namespace Win32xx
 	// Determines whether a rich edit control can paste a specified clipboard format.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_CANPASTE, 0, 0));
+		return (TRUE == SendMessage(EM_CANPASTE, 0L, 0L));
 	}
 
 	inline BOOL CRichEdit::CanRedo() const
 	// Determines whether there are any actions in the control redo queue.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_CANREDO, 0, 0));
+		return (TRUE == SendMessage(EM_CANREDO, 0L, 0L));
 	}
 
 	inline BOOL CRichEdit::CanUndo() const
 	// Determines whether there are any actions in an edit control's undo queue.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_CANUNDO, 0, 0));
+		return (TRUE == SendMessage(EM_CANUNDO, 0L, 0L));
 	}
 
 	inline int CRichEdit::CharFromPos(CPoint pt) const
 	// Gets information about the character closest to a specified point in the client area of an edit control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_CHARFROMPOS, (WPARAM)&pt, 0);
+		return (int)SendMessage(EM_CHARFROMPOS, (WPARAM)&pt, 0L);
 	}
 
 	inline void CRichEdit::Clear() const
 	// Delete (clear) the current selection
 	{
 		assert(IsWindow());
-		SendMessage(WM_CLEAR, 0, 0);
+		SendMessage(WM_CLEAR, 0L, 0L);
 	}
 
 	inline void CRichEdit::Copy() const
 	// Copy the current selection to the clipboard in CF_TEXT format.
 	{
 		assert(IsWindow());
-		SendMessage(WM_COPY, 0, 0);
+		SendMessage(WM_COPY, 0L, 0L);
 	}
 
 	inline void CRichEdit::Cut() const
 	// Delete (cut) the current selection, if any, in the edit control and copy the deleted text to the clipboard in CF_TEXT format.
 	{
 		assert(IsWindow());
-		SendMessage(WM_CUT, 0, 0);
+		SendMessage(WM_CUT, 0L, 0L);
 	}
 
 	inline BOOL CRichEdit::DisplayBand(LPRECT pDisplayRect) const
 	// Displays a portion of the contents of a rich edit control, as previously formatted for a device using the EM_FORMATRANGE message.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_DISPLAYBAND, 0, (LPARAM)pDisplayRect));
+		return (TRUE == SendMessage(EM_DISPLAYBAND, 0L, (LPARAM)pDisplayRect));
 	}
 
 	inline void CRichEdit::EmptyUndoBuffer() const
 	// Resets the undo flag of the rich edit control. The undo flag is set whenever an operation within the edit control can be undone.
 	{
 		assert(IsWindow());
-		SendMessage(EM_EMPTYUNDOBUFFER, 0, 0);
+		SendMessage(EM_EMPTYUNDOBUFFER, 0L, 0L);
 	}
 
 	inline long CRichEdit::FindText(DWORD dwFlags, FINDTEXTEX* pFindTextEx) const
@@ -310,14 +310,14 @@ namespace Win32xx
 	// Retrieves the event mask. The event mask specifies which notification messages the control sends to its parent window.
 	{
 		assert(IsWindow());
-		return (long)SendMessage(EM_GETEVENTMASK, 0, 0);
+		return (long)SendMessage(EM_GETEVENTMASK, 0L, 0L);
 	}
 
 	inline int CRichEdit::GetFirstVisibleLine() const
 	// Gets the zero-based index of the uppermost visible line.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_GETFIRSTVISIBLELINE, 0, 0);
+		return (int)SendMessage(EM_GETFIRSTVISIBLELINE, 0L, 0L);
 	}
 
 	inline IRichEditOle* CRichEdit::GetIRichEditOle() const
@@ -326,7 +326,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		IRichEditOle* pRichEditOle = NULL;
-		SendMessage(EM_GETOLEINTERFACE, 0, (LPARAM)pRichEditOle);
+		SendMessage(EM_GETOLEINTERFACE, 0L, (LPARAM)pRichEditOle);
 		return pRichEditOle;
 	}
 
@@ -334,7 +334,7 @@ namespace Win32xx
 	// Gets the current text limit for the edit control.
 	{
 		assert(IsWindow());
-		return (long)SendMessage(EM_GETLIMITTEXT, 0, 0);
+		return (long)SendMessage(EM_GETLIMITTEXT, 0L, 0L);
 	}
 
 	inline int CRichEdit::GetLine(int nIndex, LPTSTR lpszBuffer) const
@@ -358,35 +358,35 @@ namespace Win32xx
 	// Gets the number of lines in a multiline edit control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_GETLINECOUNT, 0, 0);
+		return (int)SendMessage(EM_GETLINECOUNT, 0L, 0L);
 	}
 
 	inline BOOL CRichEdit::GetModify() const
 	// Retrieves a flag than indicates whether the contents of the edit control have been modified.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_GETMODIFY, 0, 0));
+		return (TRUE == SendMessage(EM_GETMODIFY, 0L, 0L));
 	}
 
 	inline UINT CRichEdit::GetOptions() const
 	// Retrieves the rich edit control options.
 	{
 		assert(IsWindow());
-		return (UINT)SendMessage(EM_GETOPTIONS, 0, 0);
+		return (UINT)SendMessage(EM_GETOPTIONS, 0L, 0L);
 	}
 
 	inline DWORD CRichEdit::GetParaFormat(PARAFORMAT& pf) const
 	// Retrieves the paragraph formatting of the current selection.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(EM_GETPARAFORMAT, 0, (LPARAM)&pf);
+		return (DWORD)SendMessage(EM_GETPARAFORMAT, 0L, (LPARAM)&pf);
 	}
 
 	inline DWORD CRichEdit::GetParaFormat(PARAFORMAT2& pf) const
 	// Retrieves the paragraph formatting of the current selection.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(EM_GETPARAFORMAT, 0, (LPARAM)&pf);
+		return (DWORD)SendMessage(EM_GETPARAFORMAT, 0L, (LPARAM)&pf);
 	}
 
 	inline void CRichEdit::GetRect(LPRECT lpRect) const
@@ -394,21 +394,21 @@ namespace Win32xx
 	// rectangle into which text can be drawn.
 	{
 		assert(IsWindow());
-		SendMessage(EM_GETRECT, 0, (LPARAM)lpRect);
+		SendMessage(EM_GETRECT, 0L, (LPARAM)lpRect);
 	}
 
 	inline UNDONAMEID CRichEdit::GetRedoName() const
 	// Retrieves the type of the next action, if any, in the control's redo queue.
 	{
 		assert(IsWindow());
-		return (UNDONAMEID)SendMessage(EM_GETREDONAME, 0, 0);
+		return (UNDONAMEID)SendMessage(EM_GETREDONAME, 0L, 0L);
 	}
 
 	inline void CRichEdit::GetSel(CHARRANGE& cr) const
 	// Retrieves the starting and ending character positions of the selection.
 	{
 		assert(IsWindow());
-		SendMessage(EM_EXGETSEL, 0, (LPARAM)&cr);
+		SendMessage(EM_EXGETSEL, 0L, (LPARAM)&cr);
 	}
 
 	inline void CRichEdit::GetSel(long& nStartChar, long& nEndChar) const
@@ -417,7 +417,7 @@ namespace Win32xx
 		assert(IsWindow());
 		CHARRANGE cr;
 
-		SendMessage(EM_EXGETSEL, 0, (LPARAM)&cr);
+		SendMessage(EM_EXGETSEL, 0L, (LPARAM)&cr);
 		nStartChar = cr.cpMin;
 		nEndChar   = cr.cpMax;
 	}
@@ -441,14 +441,14 @@ namespace Win32xx
 	// Retrieves the type of contents in the current selection.
 	{
 		assert(IsWindow());
-		return (WORD)SendMessage(EM_SELECTIONTYPE, 0, 0);
+		return (WORD)SendMessage(EM_SELECTIONTYPE, 0L, 0L);
 	}
 
 	inline long CRichEdit::GetSelText(LPSTR lpBuf) const
 	// Gets the text of the current selection.
 	{
 		assert(IsWindow());
-		return (long)SendMessage(EM_GETSELTEXT, 0, (LPARAM)lpBuf);
+		return (long)SendMessage(EM_GETSELTEXT, 0L, (LPARAM)lpBuf);
 	}
 
 	inline CString CRichEdit::GetSelText() const
@@ -457,7 +457,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		CString str;
-		int nBuff = (int)SendMessage(EM_GETSELTEXT, 0, 0);
+		int nBuff = (int)SendMessage(EM_GETSELTEXT, 0L, 0L);
 		SendMessage(EM_GETSELTEXT, 0, (LPARAM)str.GetBuffer(nBuff));
 		str.ReleaseBuffer();
 		return str;
@@ -467,7 +467,7 @@ namespace Win32xx
 	// Retrieves the length of the text, in characters. Does not include the terminating null character.
 	{
 		assert(IsWindow());
-		return (long)SendMessage(WM_GETTEXTLENGTH, 0, 0);
+		return (long)SendMessage(WM_GETTEXTLENGTH, 0L, 0L);
 	}
 
 	inline long CRichEdit::GetTextLengthEx(DWORD dwFlags, UINT uCodePage /* = -1 */) const
@@ -478,14 +478,14 @@ namespace Win32xx
 		gtle.flags = dwFlags;
 		gtle.codepage = uCodePage;
 
-		return (long)SendMessage(EM_GETTEXTLENGTHEX, (WPARAM)&gtle, 0);
+		return (long)SendMessage(EM_GETTEXTLENGTHEX, (WPARAM)&gtle, 0L);
 	}
 
 	inline UINT CRichEdit::GetTextMode() const
 	// Retrieves the current text mode and undo level.
 	{
 		assert(IsWindow());
-		return (UINT)SendMessage(EM_GETTEXTMODE, 0, 0);
+		return (UINT)SendMessage(EM_GETTEXTMODE, 0L, 0L);
 	}
 
 	inline int CRichEdit::GetTextRange(int nFirst, int nLast, CString& refString) const
@@ -509,7 +509,7 @@ namespace Win32xx
 	// Retrieves the type of the next undo action, if any.
 	{
 		assert(IsWindow());
-		return (UNDONAMEID)SendMessage(EM_GETREDONAME, 0, 0);
+		return (UNDONAMEID)SendMessage(EM_GETREDONAME, 0L, 0L);
 	}
 
 	inline void CRichEdit::HideSelection(BOOL bHide, BOOL bPerm) const
@@ -521,7 +521,7 @@ namespace Win32xx
 			SetOptions(ECOOP_SET, ECO_NOHIDESEL);
 		}
 
-		SendMessage(EM_HIDESELECTION, (WPARAM)bHide, 0);
+		SendMessage(EM_HIDESELECTION, (WPARAM)bHide, 0L);
 	}
 
 	inline void CRichEdit::LimitText(long nChars /* = 0 */) const
@@ -535,21 +535,21 @@ namespace Win32xx
 	// Determines which line contains the given character.
 	{
 		assert(IsWindow());
-		return (long)SendMessage(EM_EXLINEFROMCHAR, 0, (LPARAM)nIndex);
+		return (long)SendMessage(EM_EXLINEFROMCHAR, 0L, (LPARAM)nIndex);
 	}
 
 	inline int CRichEdit::LineIndex(int nLine /* = -1 */) const
 	// Retrieves the character index of a given line.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_LINEINDEX, nLine, 0);
+		return (int)SendMessage(EM_LINEINDEX, (WPARAM)nLine, 0L);
 	}
 
 	inline int CRichEdit::LineLength(int nLine /* = -1 */) const
 	// Retrieves the length of a given line.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_LINELENGTH, nLine, 0);
+		return (int)SendMessage(EM_LINELENGTH, (WPARAM)nLine, 0L);
 	}
 
 	inline void CRichEdit::LineScroll(int nLines, int nChars /* = 0 */) const
@@ -563,7 +563,7 @@ namespace Win32xx
 	// Inserts the contents of the Clipboard.
 	{
 		assert(IsWindow());
-		SendMessage(WM_PASTE, 0, 0);
+		SendMessage(WM_PASTE, 0L, 0L);
 	}
 
 	inline void CRichEdit::PasteSpecial(UINT nClipFormat, DWORD dwAspect /* = 0 */, HMETAFILE hMF /* = 0 */) const
@@ -581,7 +581,7 @@ namespace Win32xx
 	// Retrieves the client area coordinates of a specified character.
 	{
 		assert(IsWindow());
-		DWORD dwPos = (DWORD)SendMessage(EM_POSFROMCHAR, 0, (LPARAM)nChar);
+		DWORD dwPos = (DWORD)SendMessage(EM_POSFROMCHAR, 0L, (LPARAM)nChar);
 		return CPoint(LOWORD(dwPos), HIWORD(dwPos));
 	}
 
@@ -589,7 +589,7 @@ namespace Win32xx
 	// Redoes the next action in the control's redo queue.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_REDO, 0, 0));
+		return (TRUE == SendMessage(EM_REDO, 0L, 0L));
 	}
 
 	inline void CRichEdit::ReplaceSel(LPCTSTR lpszNewText, BOOL bCanUndo /* = FALSE */) const
@@ -603,14 +603,14 @@ namespace Win32xx
 	// Forces the sending of a request resize notifications.
 	{
 		assert(IsWindow());
-		SendMessage(EM_REQUESTRESIZE, 0, 0);
+		SendMessage(EM_REQUESTRESIZE, 0L, 0L);
 	}
 
 	inline BOOL CRichEdit::SetAutoURLDetect(BOOL bEnable /* = TRUE */) const
 	// Indicates if the auto URL detection is active.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_AUTOURLDETECT, (WPARAM)bEnable, 0));
+		return (TRUE == SendMessage(EM_AUTOURLDETECT, (WPARAM)bEnable, 0L));
 	}
 
 	inline COLORREF CRichEdit::SetBackgroundColor(BOOL bSysColor, COLORREF cr) const
@@ -624,35 +624,35 @@ namespace Win32xx
 	// Sets the current default character formatting attributes.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf));
+		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0L, (LPARAM)&cf));
 	}
 
 	inline BOOL CRichEdit::SetDefaultCharFormat(CHARFORMAT2& cf) const
 	// Sets the current default character formatting attributes.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf));
+		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0L, (LPARAM)&cf));
 	}
 
 	inline DWORD CRichEdit::SetEventMask(DWORD dwEventMask) const
 	// Sets the event mask. The event mask specifies which notification messages the control sends to its parent window.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(EM_SETEVENTMASK, 0, dwEventMask);
+		return (DWORD)SendMessage(EM_SETEVENTMASK, 0L, (LPARAM)dwEventMask);
 	}
 
 	inline void CRichEdit::SetModify(BOOL bModified /* = TRUE */) const
 	// Sets or clears the modification flag. The modification flag indicates whether the text has been modified.
 	{
 		assert(IsWindow());
-		SendMessage(EM_SETMODIFY, bModified, 0);
+		SendMessage(EM_SETMODIFY, (WPARAM)bModified, 0L);
 	}
 
 	inline BOOL CRichEdit::SetOLECallback(IRichEditOleCallback* pCallback) const
 	// Sets the IRichEditOleCallback COM object.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETOLECALLBACK, 0, (LPARAM)pCallback));
+		return (TRUE == SendMessage(EM_SETOLECALLBACK, 0L, (LPARAM)pCallback));
 	}
 
 	inline void CRichEdit::SetOptions(WORD wOp, DWORD dwFlags) const
@@ -669,28 +669,28 @@ namespace Win32xx
 	// Sets the paragraph formatting attributes in the current selection.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETPARAFORMAT, 0, (LPARAM)&pf));
+		return (TRUE == SendMessage(EM_SETPARAFORMAT, 0L, (LPARAM)&pf));
 	}
 
 	inline BOOL CRichEdit::SetParaFormat(PARAFORMAT2& pf) const
 	// Sets the paragraph formatting attributes in the current selection.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETPARAFORMAT, 0, (LPARAM)&pf));
+		return (TRUE == SendMessage(EM_SETPARAFORMAT, 0L, (LPARAM)&pf));
 	}
 
 	inline BOOL CRichEdit::SetReadOnly(BOOL bReadOnly /* = TRUE*/) const
 	// Sets or removes the read-only style.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETREADONLY, (WPARAM)bReadOnly, 0));
+		return (TRUE == SendMessage(EM_SETREADONLY, (WPARAM)bReadOnly, 0L));
 	}
 
 	inline void CRichEdit::SetRect(LPCRECT lpRect) const
 	// Sets the formatting rectangle. The formatting rectangle is the limiting rectangle into which the control draws the text.
 	{
 		assert(IsWindow());
-		SendMessage(EM_SETRECT, 0, (LPARAM)lpRect);
+		SendMessage(EM_SETRECT, 0L, (LPARAM)lpRect);
 	}
 
 	inline void CRichEdit::SetSel(long nStartChar, long nEndChar) const
@@ -701,28 +701,28 @@ namespace Win32xx
 		CHARRANGE cr;
 		cr.cpMin = nStartChar;
 		cr.cpMax = nEndChar;
-		SendMessage(EM_EXSETSEL, 0, (LPARAM)&cr);
+		SendMessage(EM_EXSETSEL, 0L, (LPARAM)&cr);
 	}
 
 	inline void CRichEdit::SetSel(CHARRANGE& cr) const
 	// Selects a range of characters.
 	{
 		assert(IsWindow());
-		SendMessage(EM_EXSETSEL, 0, (LPARAM)&cr);
+		SendMessage(EM_EXSETSEL, 0L, (LPARAM)&cr);
 	}
 
 	inline BOOL CRichEdit::SetSelectionCharFormat(CHARFORMAT& cf) const
 	// Sets the character formatting attributes in the current selection.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf));
+		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0L, (LPARAM)&cf));
 	}
 
 	inline BOOL CRichEdit::SetSelectionCharFormat(CHARFORMAT2& cf) const
 	// Sets the character formatting attributes in the current selection.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf));
+		return (TRUE == SendMessage(EM_SETCHARFORMAT, 0L, (LPARAM)&cf));
 	}
 
 	inline BOOL CRichEdit::SetTargetDevice(HDC hDC, long lLineWidth) const
@@ -743,7 +743,7 @@ namespace Win32xx
 	// Sets the text mode or undo level of the rich edit control. The message fails if the control contains text.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_SETTEXTMODE, (WPARAM)fMode, 0));
+		return (TRUE == SendMessage(EM_SETTEXTMODE, (WPARAM)fMode, 0L));
 	}
 
 	inline UINT CRichEdit::SetUndoLimit(UINT nLimit) const
@@ -751,21 +751,21 @@ namespace Win32xx
 	// This member function fails if the control contains text.
 	{
 		assert(IsWindow());
-		return (UINT)SendMessage(EM_SETUNDOLIMIT, (WPARAM)nLimit, 0);
+		return (UINT)SendMessage(EM_SETUNDOLIMIT, (WPARAM)nLimit, 0L);
 	}
 
 	inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT& cf) const
 	// Sets the character formatting attributes in the current word.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf);
+		return (BOOL)SendMessage(EM_SETCHARFORMAT, 0L, (LPARAM)&cf);
 	}
 
 	inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT2& cf) const
 	// Sets the character formatting attributes in the current word.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_SETCHARFORMAT, 0, (LPARAM)&cf);
+		return (BOOL)SendMessage(EM_SETCHARFORMAT, 0L, (LPARAM)&cf);
 	}
 
 	inline void CRichEdit::StopGroupTyping() const
@@ -773,7 +773,7 @@ namespace Win32xx
 	// The control stores the next typing action, if any, into a new action in the undo queue.
 	{
 		assert(IsWindow());
-		SendMessage(EM_STOPGROUPTYPING, 0, 0);
+		SendMessage(EM_STOPGROUPTYPING, 0L, 0L);
 	}
 
 	inline long CRichEdit::StreamIn(int nFormat, EDITSTREAM& es) const
@@ -794,7 +794,7 @@ namespace Win32xx
 	// Reverses the last editing operation.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_UNDO, 0, 0));
+		return (TRUE == SendMessage(EM_UNDO, 0L, 0L));
 	}
 
 }

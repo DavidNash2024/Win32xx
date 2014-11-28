@@ -3719,14 +3719,14 @@ namespace Win32xx
 				if (dwDockStyle & DS_CLIENTEDGE)
 				{
 					DWORD dwExStyle = (DWORD)GetDockClient()->GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
-					GetDockClient()->SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
+					GetDockClient()->SetWindowLongPtr(GWL_EXSTYLE, (LONG_PTR)dwExStyle);
 					GetDockClient()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
 				}
 				else
 				{
 					DWORD dwExStyle = (DWORD)GetDockClient()->GetWindowLongPtr(GWL_EXSTYLE);
 					dwExStyle &= ~WS_EX_CLIENTEDGE;
-					GetDockClient()->SetWindowLongPtr(GWL_EXSTYLE, dwExStyle);
+					GetDockClient()->SetWindowLongPtr(GWL_EXSTYLE, (LONG_PTR)dwExStyle);
 					GetDockClient()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
 				}
 			}
@@ -3878,7 +3878,7 @@ namespace Win32xx
 		// Change the window to an "undocked" style
 		ShowWindow(SW_HIDE);
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		SetWindowLongPtr(GWL_STYLE, (LONG_PTR)dwStyle);
 
 		// Change the window's parent and reposition it
 		GetDockBar()->ShowWindow(SW_HIDE);
@@ -3915,7 +3915,7 @@ namespace Win32xx
 		// Allows nested calls to SetRedraw.
 		bRedraw? ++m_nRedrawCount : --m_nRedrawCount ;
 
-		return (BOOL)SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0); 
+		return (BOOL)SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L); 
 	}
 
 	inline void CDocker::SetUndockPosition(CPoint pt)
@@ -3938,7 +3938,7 @@ namespace Win32xx
 		nmhdr.code = UWN_UNDOCKED;
 		nmhdr.idFrom = m_nDockID;
 		CWnd* pFrame = GetDockAncestor()->GetAncestor();
-		pFrame->SendMessage(WM_NOTIFY, m_nDockID, (LPARAM)&nmhdr);
+		pFrame->SendMessage(WM_NOTIFY, (WPARAM)m_nDockID, (LPARAM)&nmhdr);
 
 		// Initiate the window move
 		SetCursorPos(pt.x, pt.y);
@@ -4040,7 +4040,7 @@ namespace Win32xx
 					CRect rc = pDockOld->GetWindowRect();
 					pDockNew->ShowWindow(SW_HIDE);
 					DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-					pDockNew->SetWindowLongPtr(GWL_STYLE, dwStyle);
+					pDockNew->SetWindowLongPtr(GWL_STYLE, (LONG_PTR)dwStyle);
 					pDockNew->m_pDockParent = 0;
 					pDockNew->SetParent(0);
 					pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
@@ -4322,7 +4322,7 @@ namespace Win32xx
 		GetToolBar()->Create(GetViewPage());
 		DWORD style = (DWORD)GetToolBar()->GetWindowLongPtr(GWL_STYLE);
 		style |= CCS_NODIVIDER ;
-		GetToolBar()->SetWindowLongPtr(GWL_STYLE, style);
+		GetToolBar()->SetWindowLongPtr(GWL_STYLE, (LONG_PTR)style);
 		SetupToolBar();
 		if (m_vToolBarData.size() > 0)
 		{

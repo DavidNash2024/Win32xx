@@ -567,7 +567,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		DWORD dwID = 0;
-		LRESULT LR = SendMessage(DM_GETDEFID, 0, 0);
+		LRESULT LR = SendMessage(DM_GETDEFID, 0L, 0L);
 		if (DC_HASDEFID == HIWORD(LR))
 			dwID = LOWORD(LR);
 
@@ -607,7 +607,7 @@ namespace Win32xx
 	// Changes the identifier of the default push button for a dialog box.
 	{
 		assert(::IsWindow(m_hWnd));
-		SendMessage(DM_SETDEFID, (WPARAM) nID, 0);
+		SendMessage(DM_SETDEFID, (WPARAM)nID, 0L);
 	}
 
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)

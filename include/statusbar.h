@@ -99,7 +99,7 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		assert(iParts <= 256);	
 		
-		return (BOOL)SendMessage(SB_SETPARTS, iParts, (LPARAM)iPaneWidths);		
+		return (BOOL)SendMessage(SB_SETPARTS, (WPARAM)iParts, (LPARAM)iPaneWidths);		
 	}
 
 	inline int CStatusBar::GetParts()
@@ -129,10 +129,10 @@ namespace Win32xx
 		CString PaneText;
 		
 		// Get size of Text array
-		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
+		int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, (WPARAM)iPart, 0L));
 		CString str;
 
-		SendMessage(SB_GETTEXT, iPart, (LPARAM)str.GetBuffer(iChars));
+		SendMessage(SB_GETTEXT, (WPARAM)iPart, (LPARAM)str.GetBuffer(iChars));
 		str.ReleaseBuffer();
 		return str;
 	}
@@ -172,8 +172,8 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 		
 		BOOL bResult = FALSE;
-		if (SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
-			bResult = (BOOL)SendMessage(SB_SETTEXT, iPart | Style, (LPARAM)szText);
+		if ((int)SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
+			bResult = (BOOL)SendMessage(SB_SETTEXT, (WPARAM)(iPart | Style), (LPARAM)szText);
 
 		return bResult;
 	}
@@ -197,7 +197,7 @@ namespace Win32xx
 		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
 		std::vector<int> PartWidths(PartsCount, 0);
 		int* pPartWidthArray = &PartWidths[0];
-		SendMessage(SB_GETPARTS, PartsCount, (LPARAM)pPartWidthArray);
+		SendMessage(SB_GETPARTS, (WPARAM)PartsCount, (LPARAM)pPartWidthArray);
 
 		// Fill the NewPartWidths vector with the new width of the StatusBar parts
 		int NewPartsCount = MAX(iPart+1, PartsCount);	
@@ -216,7 +216,7 @@ namespace Win32xx
 		}
 
 		// Set the StatusBar parts with our new parts count and part widths
-		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, NewPartsCount, (LPARAM)pNewPartWidthArray);
+		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, (WPARAM)NewPartsCount, (LPARAM)pNewPartWidthArray);
 
 		return bResult;
 	}

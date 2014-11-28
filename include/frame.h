@@ -1218,7 +1218,7 @@ namespace Win32xx
 					int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
 					TBBUTTON tbb;
 					ZeroMemory(&tbb, sizeof(TBBUTTON));
-					pTB->SendMessage(TB_GETBUTTON, nButton, (LPARAM)&tbb);
+					pTB->SendMessage(TB_GETBUTTON, (WPARAM)nButton, (LPARAM)&tbb);
 					int iImage = (int)tbb.iBitmap;
 
 					// Calculate text size
@@ -2299,7 +2299,7 @@ namespace Win32xx
 
 			// Send message for menu updates
 			UINT menuItem = pMenu->GetMenuItemID(i);
-			SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0);
+			SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0L);
 
 			// Specify owner-draw for the menu item type
 			if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
@@ -3226,14 +3226,14 @@ namespace Win32xx
 		if (bShow)
 		{
 			if (IsReBarUsed())
-				GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(GetMenuBar()->GetHwnd()), TRUE);
+				GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(GetMenuBar()->GetHwnd()), TRUE);
 			else
 				SetMenu(&m_Menu);
 		}
 		else
 		{
 			if (IsReBarUsed())
-				GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(GetMenuBar()->GetHwnd()), FALSE);
+				GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(GetMenuBar()->GetHwnd()), FALSE);
 			else
 				SetMenu(NULL);
 		}
@@ -3278,7 +3278,7 @@ namespace Win32xx
 			if (bShow)
 			{
 				if (IsReBarUsed())
-					GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), TRUE);
+					GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(*GetToolBar()), TRUE);
 				else
 					GetToolBar()->ShowWindow(SW_SHOW);
 				m_bShowToolBar = TRUE;
@@ -3286,7 +3286,7 @@ namespace Win32xx
 			else
 			{
 				if (IsReBarUsed())
-					GetReBar()->SendMessage(RB_SHOWBAND, GetReBar()->GetBand(*GetToolBar()), FALSE);
+					GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(*GetToolBar()), FALSE);
 				else
 					GetToolBar()->ShowWindow(SW_HIDE);
 				m_bShowToolBar = FALSE;

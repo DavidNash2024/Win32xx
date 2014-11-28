@@ -471,7 +471,7 @@ namespace Win32xx
 			MDIChildPtr pMDIChild = m_vMDIChild[i];
 
 			// Ask the window to close. If it is destroyed, RemoveMDIChild gets called.
-			pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);	
+			pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0L);	
 
 			if (pMDIChild->IsWindow())
 				bResult = FALSE;
