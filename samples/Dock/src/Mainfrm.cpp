@@ -206,6 +206,43 @@ void CMainFrame::LoadDefaultDockers()
 	SetDockStyles();
 }
 
+CDocker* CMainFrame::NewDockerFromID(int nID)
+{
+	CDocker* pDock = NULL;
+	switch(nID)
+	{
+	case ID_DOCK_CLASSES1:
+		pDock = new CDockClasses;
+		break;
+	case ID_DOCK_CLASSES2:
+		pDock = new CDockClasses;					
+		break;
+	case ID_DOCK_FILES1:
+		pDock = new CDockFiles;
+		break;
+	case ID_DOCK_FILES2:
+		pDock = new CDockFiles;
+		break;
+	case ID_DOCK_SIMPLE1:
+		pDock = new CDockSimple;
+		break;
+	case ID_DOCK_SIMPLE2:
+		pDock = new CDockSimple;
+		break;
+	case ID_DOCK_TEXT1:
+		pDock = new CDockText;
+		break;
+	case ID_DOCK_TEXT2:
+		pDock = new CDockText;
+		break;
+	default:
+		TRACE("Unknown Dock ID\n");
+		break;
+	}
+
+	return pDock;
+}
+
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
 {
 	// Call the base class function first

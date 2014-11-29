@@ -2593,7 +2593,7 @@ namespace Win32xx
 					}
 					else
 					{
-						TRACE("Failed to add dockers without parents from registry");
+						TRACE("Failed to add dockers without parents from registry\n");
 						bResult = FALSE;
 					}
 				}
@@ -2627,7 +2627,7 @@ namespace Win32xx
 						}
 						else
 						{
-							TRACE("Failed to add dockers with parents from registry");
+							TRACE("Failed to add dockers with parents from registry\n");
 							bResult = FALSE;
 						}
 
@@ -2638,7 +2638,7 @@ namespace Win32xx
 
 				if (!bFound)
 				{
-					TRACE("Orphaned dockers stored in registry ");
+					TRACE("Orphaned dockers stored in registry\n");
 					bResult = FALSE;
 					break;
 				}

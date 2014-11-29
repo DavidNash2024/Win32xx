@@ -294,7 +294,7 @@ namespace Win32xx
 			{
 				if (!m_pData->bIsTmpMenu)
 				{
-					::DeleteObject(m_pData->hMenu);
+					::DestroyMenu(m_pData->hMenu);
 					RemoveFromMap();
 				}
 			}

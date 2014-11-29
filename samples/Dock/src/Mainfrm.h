@@ -7,6 +7,17 @@
 
 #include "Dockers.h"
 
+enum DockIDs
+{
+	ID_DOCK_CLASSES1 = 1,
+	ID_DOCK_CLASSES2 = 2,
+	ID_DOCK_FILES1 = 3,
+	ID_DOCK_FILES2 = 4,
+	ID_DOCK_SIMPLE1 = 5,
+	ID_DOCK_SIMPLE2 = 6,
+	ID_DOCK_TEXT1 = 7,
+	ID_DOCK_TEXT2 = 8
+};
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
@@ -18,6 +29,7 @@ public:
 	void SetDockStyles();
 
 protected:
+	virtual CDocker* NewDockerFromID(int nID);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDockCloseAll();

@@ -551,7 +551,7 @@ namespace Win32xx
 			{
 				if (!m_pData->bIsTmpImageList)
 				{
-					::DeleteObject(m_pData->hImageList);
+					ImageList_Destroy(m_pData->hImageList);
 					RemoveFromMap();
 				}
 			}
