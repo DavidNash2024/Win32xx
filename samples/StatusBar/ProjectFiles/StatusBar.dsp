@@ -95,6 +95,10 @@ SOURCE=..\src\FrameApp.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\Hyperlink.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\main.cpp
 # End Source File
 # Begin Source File
@@ -120,6 +124,10 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\FrameApp.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\Hyperlink.h
 # End Source File
 # Begin Source File
 

@@ -3,7 +3,7 @@ FileName=Notepad_RELEASE.dev
 Name=Notepad
 UnitCount=9
 Type=0
-Ver=1
+Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
@@ -26,8 +26,10 @@ UseCustomMakefile=0
 CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
-CompilerSet=0
-CompilerSettings=0000000000000000000000
+CompilerSet=3
+CompilerSettings=0000000100000000000000000
+LogOutput=
+LogOutputEnabled=0
 
 [VersionInfo]
 Major=0
@@ -46,6 +48,7 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+SyncProduct=0
 
 [Unit1]
 FileName=TextApp.h
@@ -135,5 +138,4 @@ Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
-
 

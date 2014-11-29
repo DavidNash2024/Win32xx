@@ -58,12 +58,12 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
-					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/GR" />
 					<Add option="/W3" />
 					<Add option="/Zi" />
+					<Add option="/MTd" />
 					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
@@ -84,6 +84,7 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
+					<Add library="Shell32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -117,6 +118,7 @@
 					<Add library="Advapi32" />
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
+					<Add library="Shell32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -198,6 +200,8 @@
 		</VirtualTargets>
 		<Unit filename="../src/FrameApp.cpp" />
 		<Unit filename="../src/FrameApp.h" />
+		<Unit filename="../src/Hyperlink.cpp" />
+		<Unit filename="../src/Hyperlink.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyStatusBar.cpp" />

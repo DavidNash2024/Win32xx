@@ -32,7 +32,7 @@ void CMyStatusBar::OnAttach()
 BOOL CMyStatusBar::OnEraseBkgnd(CDC* pDC)
 {
 	// The background can be set here if XP themes are enabled 
-	if (::IsXPThemed())
+	if (IsXPThemed())
 	{
 		// Fill the background with a color gradient
 		pDC->GradientFill(RGB(125, 230, 255), RGB(250, 150, 150), GetClientRect(), TRUE); 
