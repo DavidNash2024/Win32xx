@@ -7,11 +7,6 @@
 #include "resource.h"
 
 
-//For Visual C++ 6 and without a modern SDK
-#ifndef DWORD_PTR
-#define DWORD_PTR DWORD
-#endif
-
 
 // definitions for the CMainFrame class
 CMainFrame::CMainFrame()
@@ -355,7 +350,7 @@ void CMainFrame::OnFileSaveAs()
 	CString Filters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
 	CFile File;
 	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), Filters, _T("txt"), this);
-	
+
 	if (!str.IsEmpty())
 	{
 		WriteFile(str);
@@ -378,11 +373,11 @@ void CMainFrame::SetWindowTitle()
 {
     CString Title;
 
-	if (m_strPathName == _T("")) 
+	if (m_strPathName == _T(""))
 		Title = _T("TextEdit");
-	else 
+	else
 		Title = m_strPathName + _T(" - TextEdit");
-	
+
 	SetWindowText(Title);
 }
 

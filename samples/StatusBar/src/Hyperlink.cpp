@@ -19,7 +19,7 @@ CHyperlink::~CHyperlink()
 {
 }
 
-void CHyperlink::OnInitialUpdate()
+void CHyperlink::OnAttach()
 {
 	SetWindowText(_T("Win32++"));
 	NONCLIENTMETRICS ncm;
@@ -48,7 +48,8 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 		ClientToScreen(pt);
 		CRect rc = GetWindowRect(); 
 
-		if (rc.PtInRect(pt)) OpenUrl();
+		if (rc.PtInRect(pt)) 
+			OpenUrl();
 	}
 }
 
@@ -60,8 +61,8 @@ void CHyperlink::OpenUrl()
 	{
 		m_bUrlVisited = TRUE;
 
-		// redraw the window to update the color
-		Invalidate();
+		// redraw the StatusBar to update the color
+		GetParent()->RedrawWindow();
 	}
 }
 
