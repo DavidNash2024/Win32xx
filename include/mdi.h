@@ -239,6 +239,7 @@ namespace Win32xx
 				pMenuWindow->DeleteMenu(nItems, MF_BYPOSITION);
 				uLastID = pMenuWindow->GetMenuItemID(--nItems);
 			}
+			
 			//delete the separator too
 			pMenuWindow->DeleteMenu(nItems, MF_BYPOSITION);
 		}

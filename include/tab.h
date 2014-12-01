@@ -210,7 +210,7 @@ namespace Win32xx
 	public:
 		CTabbedMDI();
 		virtual ~CTabbedMDI();
-		virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild = 0);
+		virtual CWnd* AddMDIChild(WndPtr pView, LPCTSTR szTabText, int idMDIChild = 0);
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
@@ -1635,9 +1635,9 @@ namespace Win32xx
 	{
 	}
 
-	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
+	inline CWnd* CTabbedMDI::AddMDIChild(WndPtr pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
 	{
-		assert(pView);
+		assert(pView.get()); // Cannot add Null CWnd*
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
 		GetTab()->AddTabPage(WndPtr(pView), szTabText, 0, idMDIChild);
@@ -1646,7 +1646,7 @@ namespace Win32xx
 		if (IsWindow())
 			GetParent()->SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
-		return pView;
+		return pView.get();
 	}
 
 	inline void CTabbedMDI::CloseActiveMDI()
