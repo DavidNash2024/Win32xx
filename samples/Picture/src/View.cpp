@@ -118,7 +118,7 @@ LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-void CView::OnInitialUpdate()
+int CView::OnCreate(LPCREATESTRUCT pcs)
 {
 	// Set the window background to black
 	m_Brush.CreateSolidBrush(RGB(0,0,0));
@@ -126,6 +126,8 @@ void CView::OnInitialUpdate()
 
 	// Support Drag and Drop on this window
 	DragAcceptFiles(TRUE);
+
+	return CWnd::OnCreate(pcs);
 }
 
 LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)

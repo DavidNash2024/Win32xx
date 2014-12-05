@@ -22,3 +22,5 @@ Features demonstrated in this example
 * Setting the view window for the CMDIChid.
 * Setting the separate menu for the CMDIChild.
 * Responding to the MDI specific commands in CMDIFrame::OnCommand
+* Using a CMDIFrame as a Docker
+* Adding other Dockers to the CMDIFrame

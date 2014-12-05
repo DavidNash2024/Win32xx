@@ -96,7 +96,7 @@ void CView::OnDraw(CDC* pDC)
 
 void CView::OnInitialUpdate()
 {
-	// OnInitialUpdate is called immediately after the window is created
+	// OnInitialUpdate is called after the window is created
 	TRACE("View window created\n");
 
 	ShowScrollBar(SB_BOTH, FALSE);

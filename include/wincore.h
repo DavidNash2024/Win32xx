@@ -1,5 +1,5 @@
-// Win32++   Version 7.6.2 beta
-// Pre-release version
+// Win32++   Version 7.7
+// Released 5th December 2014
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1402,7 +1402,7 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 
 		OnAttach();
-		OnInitialUpdate();
+		PostMessage(UWM_WINDOWCREATED);;
 
 		return TRUE;
 	}
@@ -2255,9 +2255,11 @@ namespace Win32xx
 
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
-				if (lr) return lr;
+			//	if (lr) return lr;
+			//	return 0L;
+				return lr;
 			}
-			break;
+			
 
 		case WM_PAINT:
 			{

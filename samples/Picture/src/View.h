@@ -26,7 +26,7 @@ protected:
 	virtual void    OnDraw(CDC* pDC);
 	virtual LRESULT OnDropFiles(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
-	virtual void    OnInitialUpdate();
+	virtual int     OnCreate(LPCREATESTRUCT pcs);
 	virtual LRESULT OnVScroll(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual void    PreCreate(CREATESTRUCT &cs);

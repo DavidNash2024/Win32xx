@@ -25,7 +25,7 @@ class.
 Features demonstrated in this example
 =====================================
 * Use of CFrame to provide a frame window
-* Use of a CDocker as the view window for the frame
+* Use of CFrame as a docker
 * Use of RichEdit, ListView and TreeView windows as view windows for CDocker.
 * The use of several docking styles.
 * Saving the dock layout in the registry.

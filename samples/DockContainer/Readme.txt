@@ -20,7 +20,7 @@ and CDockContainer classes.
 Features demonstrated in this example
 =====================================
 * Use of CFrame to provide a frame window.
-* Use of a CDocker as the view window for the frame.
+* Use of CFrame as a docker.
 * Use of CContainer as a view window for CDocker.
 * Use of RichEdit, ListView and TreeViews as view windows for CDockContainer.
 * Use of the container's optional toolbar.

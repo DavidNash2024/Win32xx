@@ -518,6 +518,9 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		break;
 	}
 
+	if ((nID >= IDM_BLUE) && (nID <= IDM_MODERN))
+		GetFrameMenu()->CheckMenuItem(nID, (nID == m_nColor)? MF_CHECKED : MF_UNCHECKED);
+
 	// Call the base class member function
 	CFrame::OnMenuUpdate(nID);
 }

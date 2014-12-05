@@ -27,6 +27,7 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added CMDIFrame::GetActiveMenu
+Modified CTabbedMDI::AddMIDChild
 Removed CFrame::GetView
 Removed CFrame::SetView
 Removed CMDIFrame::UpdateCheckMarks
