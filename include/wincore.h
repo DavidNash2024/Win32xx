@@ -2238,8 +2238,8 @@ namespace Win32xx
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
-
-				if (lstrcmp(GetClassName(), _T("ReBarWindow32")) != 0)	// Skip notification reflection for rebars to avoid double handling
+				
+				if (m_PrevWindowProc == 0)	// Skip notification reflection for rebars and tabs to avoid double handling
 				{
 					if (pWndFrom != NULL)
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
@@ -2255,11 +2255,9 @@ namespace Win32xx
 
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);
-			//	if (lr) return lr;
-			//	return 0L;
-				return lr;
-			}
-			
+				if (lr) return lr;
+				break;
+			}		
 
 		case WM_PAINT:
 			{
@@ -2321,10 +2319,7 @@ namespace Win32xx
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure
-	//	if (m_PrevWindowProc)
-	//		return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
-	//	else
-			return FinalWindowProc(uMsg, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 
 	} // LRESULT CWnd::WindowProc(...)
 
