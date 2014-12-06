@@ -1863,21 +1863,24 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			int len = lstrlen(szStr);
-			if (pMenu->GetMenuItemInfo(nItem, &mii, TRUE) && (len <= MAX_MENU_STRING))
+			if (pMenu->GetMenuItemInfo(nItem, &mii, TRUE))
 			{
-				// Strip out any & characters
-				int j = 0;
-				for (int i = 0; i < len; ++i)
+				int len = lstrlen(szStr);
+				if (len <= MAX_MENU_STRING)
 				{
-					if (szStr[i] != _T('&'))
-						szStripped[j++] = szStr[i];
-				}
-				szStripped[j] = _T('\0');	// Append null tchar
+					// Strip out any & characters
+					int j = 0;
+					for (int i = 0; i < len; ++i)
+					{
+						if (szStr[i] != _T('&'))
+							szStripped[j++] = szStr[i];
+					}
+					szStripped[j] = _T('\0');	// Append null tchar
 
-				// Compare the strings
-				if (0 == lstrcmp(szStripped, szItem))
-					return nItem;
+					// Compare the strings
+					if (0 == lstrcmp(szStripped, szItem))
+						return nItem;
+				}
 			}
 		}
 
