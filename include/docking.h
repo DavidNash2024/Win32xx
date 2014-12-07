@@ -1273,6 +1273,7 @@ namespace Win32xx
 		case WM_NCMOUSEMOVE:		return OnNCMouseMove(wParam, lParam);
 		case WM_NCPAINT:			return OnNCPaint(wParam, lParam);
 		case WM_NCMOUSELEAVE:		return OnNCMouseLeave(wParam, lParam);
+		case WM_NOTIFY:				return m_pDock->SendMessage(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 		}
 

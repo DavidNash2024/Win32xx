@@ -14,7 +14,8 @@ BOOL CViewThread::InitInstance()
 	// This function runs when the thread starts
 
 	// Create the view window
-	if (m_View.CreateEx(0, 0, 0, WS_CHILD, CRect(50,50,400,400), m_pFrame, 0))
+	//  Note: m_pFrame->GetDockClient() is the parent of the view window
+	if (m_View.CreateEx(0, 0, 0, WS_CHILD, CRect(0,0,1,1), m_pFrame->GetDockClient(), 0))
 	{
 		m_pFrame->PostMessage(UWM_VIEWCREATED, 0, 0);
 	}

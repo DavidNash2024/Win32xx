@@ -57,6 +57,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// m_bUseThemes = FALSE;            // Don't use themes
 	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
 
+	// call the base class function
+	CFrame::OnCreate(pcs);
+	
 	m_ViewThread.SetFrame(this);
 
 	// Create and start the thread for the view window
@@ -65,8 +68,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Wait for the View window to be created
 	WaitForSingleObject(m_ViewThread.GetView().GetCreateEvent(), INFINITE);
 
-	// call the base class function
-	return CFrame::OnCreate(pcs);
+	return 0;
 }
 
 void CMainFrame::OnDestroy()
