@@ -379,6 +379,8 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;
 		pEditMenu->EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
+
+	CFrame::OnMenuUpdate(nID);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)

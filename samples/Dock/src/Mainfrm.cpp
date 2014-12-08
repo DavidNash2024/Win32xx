@@ -117,7 +117,9 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	case IDM_DYNAMIC_RESIZE:
 		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bDynamicResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
-	}	
+	}
+
+	CFrame::OnMenuUpdate(nID);
 }
 
 void CMainFrame::OnNoResize()

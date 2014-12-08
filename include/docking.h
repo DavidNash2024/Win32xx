@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Released 5th December 2014
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -493,7 +493,7 @@ namespace Win32xx
 
 	protected:
 		virtual CDocker* NewDockerFromID(int idDock);
-		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
+	//	virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual LRESULT OnBarEnd(LPDRAGPOS pdp);
@@ -2784,7 +2784,7 @@ namespace Win32xx
 		return pDock;
 	}
 
-	inline LRESULT CDocker::OnActivate(WPARAM wParam, LPARAM lParam)
+/*	inline LRESULT CDocker::OnActivate(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -2804,7 +2804,7 @@ namespace Win32xx
 		}
 
 		return CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
-	}
+	} */
 
 	inline LRESULT CDocker::OnBarStart(LPDRAGPOS pdp)
 	{
@@ -3045,7 +3045,7 @@ namespace Win32xx
 		if (GetDockAncestor()->IsWindow())
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
 		if (GetView() && GetView()->IsWindow())
-			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
+			GetView()->SendMessage(WM_NOTIFY, wParam, lParam); 
 
 		return 0L;
 	}
@@ -3091,8 +3091,8 @@ namespace Win32xx
 		case UWN_DOCKMOVE:		return OnDockMove(pdp);
 		case UWN_DOCKEND:		return OnDockEnd(pdp);
 		case UWN_DOCKSETFOCUS:	return OnDockSetFocus();
-		case UWN_FRAMEGOTFOCUS:	return OnFrameGotFocus(wParam, lParam);
-		case UWN_FRAMELOSTFOCUS: return OnFrameLostFocus(wParam, lParam);
+	//	case UWN_FRAMEGOTFOCUS:	return OnFrameGotFocus(wParam, lParam);
+	//	case UWN_FRAMELOSTFOCUS: return OnFrameLostFocus(wParam, lParam);
 		}
 		return 0L;
 	}
@@ -4101,7 +4101,7 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_ACTIVATE:			return OnActivate(wParam, lParam);
+	//	case WM_ACTIVATE:			return OnActivate(wParam, lParam);
 		case WM_SYSCOMMAND:			return OnSysCommand(wParam, lParam);
 		case WM_EXITSIZEMOVE:		return OnExitSizeMove(wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(wParam, lParam);

@@ -131,6 +131,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		}
 	}
 
+	CFrame::OnMenuUpdate(nID);
 }
 
 void CMainFrame::OnNewFilesTab()
