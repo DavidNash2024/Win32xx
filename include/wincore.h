@@ -2239,7 +2239,9 @@ namespace Win32xx
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
 				
-				if (m_PrevWindowProc == 0)	// Skip notification reflection for rebars and tabs to avoid double handling
+				// Skip notification reflection for rebars and tabs to avoid double handling
+				CString ClassName = GetClassName();
+				if ( (ClassName != _T("ReBarWindow32")) && (ClassName != _T("SysTabControl32")) )
 				{
 					if (pWndFrom != NULL)
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);

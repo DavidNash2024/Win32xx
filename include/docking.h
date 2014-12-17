@@ -551,7 +551,6 @@ namespace Win32xx
 		CTargetBottom	m_TargetBottom;
 		CDocker*		m_pDockParent;
 		CDocker*		m_pDockAncestor;
-		CDocker*		m_pDockActive;
 
 		std::vector <CDocker*> m_vDockChildren;		// Docker's immediate children
 		std::vector <DockPtr> m_vAllDockChildren;	// All decendants of the DockAncestor (only for the DockAncestor)
@@ -1860,10 +1859,9 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDocker class
 	//
-	inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockActive(NULL), m_BlockMove(FALSE), m_Undocking(FALSE),
-		            m_bIsClosing(FALSE), m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
-		            m_nTimerCount(0), m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), 
-					m_DockStyle(0), m_hOldFocus(0)
+	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE), m_bIsClosing(FALSE), 
+		            m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0), m_nTimerCount(0), 
+					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
 	{
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;

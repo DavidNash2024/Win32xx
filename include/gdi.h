@@ -2459,7 +2459,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp()->SetTlsData();
 		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
 
-		pDC->m_pData->bIsTmpHDC = FALSE;
+		pDC->m_pData->bIsTmpHDC = FALSE; // Only FromHandle require bIsTmpHDC = TRUE
 		pDC->m_pData->hWnd = hWnd;
 		return pDC;
 	}
