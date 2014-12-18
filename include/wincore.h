@@ -174,12 +174,9 @@
 #define UWN_DOCKSTART		 (WM_APP + 16)	// Notification - about to start undocking
 #define UWN_DOCKMOVE		 (WM_APP + 17)	// Notification - undocked docker is being moved
 #define UWN_DOCKEND			 (WM_APP + 18)	// Notification - docker has been docked
-#define UWN_DOCKSETFOCUS     (WM_APP + 19)  // Notification - dock set focus
-#define UWN_FRAMELOSTFOCUS	 (WM_APP + 20)  // Notification - sent by frame to view window when focus lost
-#define UWN_FRAMEGOTFOCUS	 (WM_APP + 21)  // Notification - sent by frame to view window when focus acquired
-#define UWN_TABCHANGED       (WM_APP + 22)	// Notification - tab size or position changed
-#define UWN_TABDRAGGED       (WM_APP + 23)	// Notification - tab is being dragged
-#define UWN_UNDOCKED		 (WM_APP + 24)	// Notification - sent by docker when undocked
+#define UWN_TABCHANGED       (WM_APP + 19)	// Notification - tab size or position changed
+#define UWN_TABDRAGGED       (WM_APP + 20)	// Notification - tab is being dragged
+#define UWN_UNDOCKED		 (WM_APP + 21)	// Notification - sent by docker when undocked
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step

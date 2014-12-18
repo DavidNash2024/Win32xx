@@ -2069,40 +2069,27 @@ namespace Win32xx
 	inline LRESULT CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
 	// Called when the frame is activated (WM_ACTIVATE received)
 	{
-		// Do default processing first
-		DefWindowProc(WM_ACTIVATE, wParam, lParam);
-
+		// Perform default processing first
+		CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
+		
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
 			// Save the hwnd of the window which currently has focus
 			// (this must be CFrame window itself or a child window
 			if (!IsIconic()) m_hOldFocus = ::GetFocus();
-
-			// Send a notification to the view window
-			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nmhdr;
-			ZeroMemory(&nmhdr, sizeof(NMHDR));
-			nmhdr.hwndFrom = m_hOldFocus;
-			nmhdr.idFrom = idCtrl;
-			nmhdr.code = UWN_FRAMELOSTFOCUS;
-			if (GetView()->IsWindow())
-				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
 		}
 		else
 		{
 			// Now set the focus to the appropriate child window
 			if (m_hOldFocus) ::SetFocus(m_hOldFocus);
-
-			// Send a notification to the view window
-			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nmhdr;
-			ZeroMemory(&nmhdr, sizeof(NMHDR));
-			nmhdr.hwndFrom = m_hOldFocus;
-			nmhdr.idFrom = idCtrl;
-			nmhdr.code = UWN_FRAMEGOTFOCUS;
-			if (GetView()->IsWindow())
-				GetView()->SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
 		}
+
+		// Update DockClient captions
+		PostMessage(UWM_DOCKACTIVATED);
+
+		// Also update DockClient captions if the view is a docker
+		if (dynamic_cast<CDocker*>(GetView()))
+			GetView()->PostMessage(UWM_DOCKACTIVATED);
 
 		return 0L;
 	}
@@ -3433,7 +3420,6 @@ namespace Win32xx
 		} // switch uMsg
 
 		return CDocker::WndProcDefault(uMsg, wParam, lParam);
-	//	return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 

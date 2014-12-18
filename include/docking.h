@@ -198,7 +198,6 @@ namespace Win32xx
 		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
@@ -493,7 +492,6 @@ namespace Win32xx
 
 	protected:
 		virtual CDocker* NewDockerFromID(int idDock);
-	//	virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
 		virtual LRESULT OnBarEnd(LPDRAGPOS pdp);
@@ -506,11 +504,8 @@ namespace Win32xx
 		virtual LRESULT OnDockSetFocus();
 		virtual LRESULT OnDockStart(LPDRAGPOS pdp);
 		virtual LRESULT OnExitSizeMove(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnFrameGotFocus(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnFrameLostFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
@@ -2782,28 +2777,6 @@ namespace Win32xx
 		return pDock;
 	}
 
-/*	inline LRESULT CDocker::OnActivate(WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(lParam);
-
-		// Only top level undocked dockers get this message
-		if (LOWORD(wParam) == WA_INACTIVE)
-		{
-			GetTopmostDocker()->m_hOldFocus = ::GetFocus();
-
-			// Send a notification of focus lost
-			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nmhdr;
-			ZeroMemory(&nmhdr, sizeof(NMHDR));
-			nmhdr.hwndFrom = m_hOldFocus;
-			nmhdr.idFrom = idCtrl;
-			nmhdr.code = UWN_FRAMELOSTFOCUS;
-			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
-		}
-
-		return CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
-	} */
-
 	inline LRESULT CDocker::OnBarStart(LPDRAGPOS pdp)
 	{
 		CPoint pt = pdp->ptPos;
@@ -3038,29 +3011,6 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDocker::OnFrameGotFocus(WPARAM wParam, LPARAM lParam)
-	{
-		if (GetDockAncestor()->IsWindow())
-			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
-		if (GetView() && GetView()->IsWindow())
-			GetView()->SendMessage(WM_NOTIFY, wParam, lParam); 
-
-		return 0L;
-	}
-
-	inline LRESULT CDocker::OnFrameLostFocus(WPARAM wParam, LPARAM lParam)
-	{
-		if (GetDockAncestor()->IsWindow())
-			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
-		if (GetView() && GetView()->IsWindow())
-		{
-			GetView()->SendMessage(WM_NOTIFY, wParam, lParam);
-			RedrawWindow();
-		}
-
-		return 0L;
-	}
-
 	inline LRESULT CDocker::OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam)
 	{
 		m_bIsDragging = FALSE;
@@ -3088,9 +3038,6 @@ namespace Win32xx
 		case UWN_DOCKSTART:		return OnDockStart(pdp);
 		case UWN_DOCKMOVE:		return OnDockMove(pdp);
 		case UWN_DOCKEND:		return OnDockEnd(pdp);
-		case UWN_DOCKSETFOCUS:	return OnDockSetFocus();
-	//	case UWN_FRAMEGOTFOCUS:	return OnFrameGotFocus(wParam, lParam);
-	//	case UWN_FRAMELOSTFOCUS: return OnFrameLostFocus(wParam, lParam);
 		}
 		return 0L;
 	}
@@ -3174,32 +3121,6 @@ namespace Win32xx
 		}
 
 		RecalcDockLayout();
-	}
-
-	inline LRESULT CDocker::OnSetFocus(WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
-		if (IsUndocked() && m_hOldFocus)
-			::SetFocus(m_hOldFocus);
-		else
-			// Pass focus on the the view window
-			GetView()->SetFocus();
-
-		if ((this == GetTopmostDocker()) && (this != GetDockAncestor()))
-		{
-			// Send a notification to top level window
-			int idCtrl = ::GetDlgCtrlID(m_hOldFocus);
-			NMHDR nmhdr;
-			ZeroMemory(&nmhdr, sizeof(NMHDR));
-			nmhdr.hwndFrom = m_hOldFocus;
-			nmhdr.idFrom = idCtrl;
-			nmhdr.code = UWN_DOCKSETFOCUS;
-			SendMessage(WM_NOTIFY, (WPARAM)idCtrl, (LPARAM)&nmhdr);
-		}
-
-		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnSysColorChange(WPARAM wParam, LPARAM lParam)
@@ -4099,11 +4020,9 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-	//	case WM_ACTIVATE:			return OnActivate(wParam, lParam);
 		case WM_SYSCOMMAND:			return OnSysCommand(wParam, lParam);
 		case WM_EXITSIZEMOVE:		return OnExitSizeMove(wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(wParam, lParam);
-		case WM_SETFOCUS:			return OnSetFocus(wParam, lParam);
 		case WM_SYSCOLORCHANGE:		return OnSysColorChange(wParam, lParam);
 		case WM_TIMER:				return OnTimer(wParam, lParam);
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
@@ -4417,12 +4336,6 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDockContainer::OnSetFocus(WPARAM wParam, LPARAM lParam)
-	{
-		GetActiveView()->SetFocus();
-		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
-	}
-
 	inline LRESULT CDockContainer::OnSize(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -4715,7 +4628,6 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_SIZE:			return OnSize(wParam, lParam);
-		case WM_SETFOCUS:		return OnSetFocus(wParam, lParam);
 		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSELEAVE:		return OnMouseLeave(wParam, lParam);
@@ -4783,12 +4695,6 @@ namespace Win32xx
 				}
 			}
 			break;
-			// Send the focus change notifications to the grandparent
-			case NM_KILLFOCUS:
-			case NM_SETFOCUS:
-			case UWN_FRAMELOSTFOCUS:
-				GetParent()->GetParent()->SendMessage(WM_NOTIFY, wParam, lParam);
-				break;
 		} // switch LPNMHDR
 
 		return 0L;

@@ -1,5 +1,5 @@
-Version 7.6.2
-=============
+Version 7.7
+===========
 
 New Features and Enhancements
 -----------------------------
@@ -28,6 +28,11 @@ Changes in detail
 -----------------
 Added CMDIFrame::GetActiveMenu
 Modified CTabbedMDI::AddMIDChild
+Removed CDocker::OnDockSetFocus
+Removed CDocker::OnFrameGotFocus
+Removed CDocker::OnFrameLostFocus
+Removed CDocker::OnSetFocus
+Removed CDockContainer::OnSetFocus
 Removed CFrame::GetView
 Removed CFrame::SetView
 Removed CMDIFrame::UpdateCheckMarks
