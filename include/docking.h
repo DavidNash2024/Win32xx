@@ -279,7 +279,7 @@ namespace Win32xx
 			CDockClient();
 			virtual ~CDockClient() {}
 			virtual void Draw3DBorder(RECT& Rect);
-			virtual void DrawCaption(WPARAM wParam);
+			virtual void DrawCaption();
 			virtual void DrawCloseButton(CDC& DrawDC, BOOL bFocus);
 			virtual CRect GetCloseRect() const;
 			virtual void SendNotify(UINT nMessageID);
@@ -501,7 +501,6 @@ namespace Win32xx
 		virtual LRESULT OnDockDestroyed(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDockEnd(LPDRAGPOS pdp);
 		virtual LRESULT OnDockMove(LPDRAGPOS pdp);
-		virtual LRESULT OnDockSetFocus();
 		virtual LRESULT OnDockStart(LPDRAGPOS pdp);
 		virtual LRESULT OnExitSizeMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam);
@@ -771,7 +770,7 @@ namespace Win32xx
 		return rcClose;
 	}
 
-	inline void CDocker::CDockClient::DrawCaption(WPARAM wParam)
+	inline void CDocker::CDockClient::DrawCaption()
 	{
 		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
@@ -779,11 +778,7 @@ namespace Win32xx
 			m_bOldFocus = FALSE;
 
 			// Acquire the DC for our NonClient painting
-			CDC* pDC;
-			if ((wParam != 1) && (bFocus == m_bOldFocus))
-				pDC = GetDCEx((HRGN)wParam, DCX_WINDOW|DCX_INTERSECTRGN|DCX_PARENTCLIP);
-			else
-				pDC	= GetWindowDC();
+			CDC* pDC = GetWindowDC();
 
 			// Create and set up our memory DC
 			CRect rc = GetWindowRect();
@@ -1091,7 +1086,7 @@ namespace Win32xx
 	{
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
-			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
+			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE, 0, 0);
 		}
 
 		return FinalWindowProc(WM_MOUSEACTIVATE, wParam, lParam);
@@ -1169,7 +1164,7 @@ namespace Win32xx
 			if (m_pDock->IsDocked())
 			{
 				DefWindowProc(WM_NCPAINT, wParam, lParam);
-				DrawCaption(wParam);
+				DrawCaption();
 				return 0;
 			}
 		}
@@ -1239,8 +1234,8 @@ namespace Win32xx
 
 			if (m_hWnd)
 			{
-				// The frame is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+				// The docker is already created, so create and position the new view too
+				assert(GetView());			// Use SetView in the constructor to set the view window
 
 				if (!GetView()->IsWindow())
 					GetView()->Create(this);
@@ -2261,7 +2256,7 @@ namespace Win32xx
 		for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); ++iter)
 		{
 			if ((*iter)->IsDocked())
-				(*iter)->GetDockClient()->DrawCaption((WPARAM)1);
+				(*iter)->GetDockClient()->DrawCaption();
 		}
 	}
 
@@ -2854,7 +2849,7 @@ namespace Win32xx
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 		CWnd* pFrame = GetDockAncestor()->GetAncestor();
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0));
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETRBTHEME, 0, 0));
 
 		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
 				rgbColour =pTheme->clrBkgnd2;
@@ -3017,14 +3012,6 @@ namespace Win32xx
 		return FinalWindowProc(WM_NCLBUTTONDBLCLK, wParam, lParam);
 	}
 
-	inline LRESULT CDocker::OnDockSetFocus()
-	{
-		if (GetDockAncestor()->IsWindow())
-			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATED, 0, 0);
-
-		return 0L;
-	}
-
 	inline LRESULT CDocker::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -3132,7 +3119,7 @@ namespace Win32xx
 		{
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
 			CWnd* pFrame = GetDockAncestor()->GetAncestor();
-			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETREBARTHEME, 0, 0));
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETRBTHEME, 0, 0));
 
 			if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
 				rgbColour = pTheme->clrBkgnd2;
@@ -4013,7 +4000,7 @@ namespace Win32xx
 	{
 		DrawAllCaptions();
 		SetTimer(1, 100, NULL);
-		return CWnd::WndProcDefault(UWM_DOCKACTIVATED, wParam, lParam);
+		return CWnd::WndProcDefault(UWM_DOCKACTIVATE, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4029,7 +4016,7 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_DOCKACTIVATED:		return OnDockActivated(wParam, lParam);
+		case UWM_DOCKACTIVATE:		return OnDockActivated(wParam, lParam);
 		case UWM_DOCKDESTROYED:		return OnDockDestroyed(wParam, lParam);
 
 		}

@@ -332,16 +332,15 @@ namespace Win32xx
 		CRect ExcludeChildRect(CRect& rcClient, CWnd* pChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
 		CMenu* GetFrameMenu() const					{ return const_cast<CMenu*>(&m_Menu); }
-		MenuTheme* GetMenuBarTheme() const			{ return const_cast<MenuTheme*>(&m_MenuBarTheme); }
+		MenuTheme* GetMenuBarTheme() const			{ return const_cast<MenuTheme*>(&m_MBTheme); }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetMRUEntry(UINT nIndex);
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
-		ReBarTheme* GetReBarTheme()	const			{ return const_cast<ReBarTheme*>(&m_ReBarTheme); }
-		StatusBarTheme* GetStatusBarTheme()	const	{ return const_cast<StatusBarTheme*>(&m_StatusBarTheme); }
-		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_ToolBarTheme); }
+		ReBarTheme* GetReBarTheme()	const			{ return const_cast<ReBarTheme*>(&m_RBTheme); }
+		StatusBarTheme* GetStatusBarTheme()	const	{ return const_cast<StatusBarTheme*>(&m_SBTheme); }
+		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_TBTheme); }
 		CString GetStatusText() const				{ return m_strStatusText; }
 		CString GetTitle() const					{ return GetWindowText(); }
-	//	CWnd* GetView() const						{ return m_pView; }
 		BOOL IsMenuBarUsed() const					{ return (m_MenuBar.IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (m_ReBar.IsWindow()); }
@@ -353,7 +352,6 @@ namespace Win32xx
 		void SetStatusText(LPCTSTR szText);
 		void SetTitle(LPCTSTR szText)				{ SetWindowText(szText); }
 		void SetToolBarTheme(ToolBarTheme* pTBT);
-	//	void SetView(CWnd& wndView);
 
 	protected:
 		// Override these functions as required
@@ -459,10 +457,10 @@ namespace Win32xx
 		CString m_strStatusText;			// CString for status text
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
-		MenuTheme m_MenuBarTheme;			// struct of theme info for the popup Menu and MenuBar
-		ReBarTheme m_ReBarTheme;			// struct of theme info for the ReBar
-		StatusBarTheme m_StatusBarTheme;	// struct of theme info for the StatusBar
-		ToolBarTheme m_ToolBarTheme;		// struct of theme info for the ToolBar
+		MenuTheme m_MBTheme;				// struct of theme info for the popup Menu and MenuBar
+		ReBarTheme m_RBTheme;				// struct of theme info for the ReBar
+		StatusBarTheme m_SBTheme;			// struct of theme info for the StatusBar
+		ToolBarTheme m_TBTheme;				// struct of theme info for the ToolBar
 		HACCEL m_hAccel;					// handle to the frame's accelerator table
 		CWnd* m_pView;						// pointer to the View CWnd object
 		UINT m_nMaxMRU;						// maximum number of MRU entries
@@ -816,10 +814,10 @@ namespace Win32xx
 							  m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
 							  m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE), m_KbdHook(0)
 	{
-		ZeroMemory(&m_MenuBarTheme, sizeof(m_MenuBarTheme));
-		ZeroMemory(&m_ReBarTheme, sizeof(m_ReBarTheme));
-		ZeroMemory(&m_StatusBarTheme, sizeof(m_StatusBarTheme));
-		ZeroMemory(&m_ToolBarTheme, sizeof(m_ToolBarTheme));
+		ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
+		ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
+		ZeroMemory(&m_SBTheme, sizeof(m_SBTheme));
+		ZeroMemory(&m_TBTheme, sizeof(m_TBTheme));
 
 		m_strStatusText = LoadString(IDW_READY);
 
@@ -975,7 +973,7 @@ namespace Win32xx
 		GetReBar()->InsertBand(-1, rbbi);
 		GetReBar()->SetMenuBar(GetMenuBar()->GetHwnd());
 
-		if (m_ReBarTheme.LockMenuBand)
+		if (m_RBTheme.LockMenuBand)
 			GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), FALSE);
 	}
 
@@ -1065,7 +1063,7 @@ namespace Win32xx
 
 		if (IsReBarSupported() && m_bUseReBar)
 		{
-			if (m_ReBarTheme.UseThemes && m_ReBarTheme.LockMenuBand)
+			if (m_RBTheme.UseThemes && m_RBTheme.LockMenuBand)
 			{
 				// Hide gripper for single toolbar
 				if (GetReBar()->GetBandCount() <= 2)
@@ -1126,7 +1124,7 @@ namespace Win32xx
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 
-				if (m_MenuBarTheme.UseThemes)
+				if (m_MBTheme.UseThemes)
 				{
 					// Leave a pixel gap above and below the drawn rectangle
 					if (IsAeroThemed())
@@ -1138,15 +1136,15 @@ namespace Win32xx
 					{
 						if ((nState & CDIS_SELECTED) || (GetMenuBar()->GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							pDrawDC->GradientFill(m_MenuBarTheme.clrPressed1, m_MenuBarTheme.clrPressed2, rcRect, FALSE);
+							pDrawDC->GradientFill(m_MBTheme.clrPressed1, m_MBTheme.clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							pDrawDC->GradientFill(m_MenuBarTheme.clrHot1, m_MenuBarTheme.clrHot2, rcRect, FALSE);
+							pDrawDC->GradientFill(m_MBTheme.clrHot1, m_MBTheme.clrHot2, rcRect, FALSE);
 						}
 
 						// Draw border
-						pDrawDC->CreatePen(PS_SOLID, 1, m_MenuBarTheme.clrOutline);
+						pDrawDC->CreatePen(PS_SOLID, 1, m_MBTheme.clrOutline);
 						pDrawDC->MoveTo(rcRect.left, rcRect.bottom);
 						pDrawDC->LineTo(rcRect.left, rcRect.top);
 						pDrawDC->LineTo(rcRect.right-1, rcRect.top);
@@ -1193,7 +1191,7 @@ namespace Win32xx
 	inline LRESULT CFrame::CustomDrawToolBar(NMHDR* pNMHDR)
 	// With CustomDraw we manually control the drawing of each toolbar button
 	{
-		if ((m_ToolBarTheme.UseThemes) && (GetComCtlVersion() > 470))
+		if ((m_TBTheme.UseThemes) && (GetComCtlVersion() > 470))
 		{
 			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 			CToolBar* pTB = static_cast<CToolBar*>(FromHandle(pNMHDR->hwndFrom));
@@ -1239,7 +1237,7 @@ namespace Win32xx
 					// Draw outline rectangle
 					if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 					{
-						pDrawDC->CreatePen(PS_SOLID, 1, m_ToolBarTheme.clrOutline);
+						pDrawDC->CreatePen(PS_SOLID, 1, m_TBTheme.clrOutline);
 						pDrawDC->MoveTo(rcRect.left, rcRect.top);
 						pDrawDC->LineTo(rcRect.left, rcRect.bottom-1);
 						pDrawDC->LineTo(rcRect.right-1, rcRect.bottom-1);
@@ -1251,11 +1249,11 @@ namespace Win32xx
 					rcRect.InflateRect(-1, -1);
 					if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(dwItem) & TBSTATE_PRESSED))
 					{
-						pDrawDC->GradientFill(m_ToolBarTheme.clrPressed1, m_ToolBarTheme.clrPressed2, rcRect, FALSE);
+						pDrawDC->GradientFill(m_TBTheme.clrPressed1, m_TBTheme.clrPressed2, rcRect, FALSE);
 					}
 					else if (nState & CDIS_HOT)
 					{
-						pDrawDC->GradientFill(m_ToolBarTheme.clrHot1, m_ToolBarTheme.clrHot2, rcRect, FALSE);
+						pDrawDC->GradientFill(m_TBTheme.clrHot1, m_TBTheme.clrHot2, rcRect, FALSE);
 					}
 
 					// Get the appropriate image list depending on the button state
@@ -1309,7 +1307,7 @@ namespace Win32xx
 						{
 							CRect rcArrowBkgnd = rcRect;
 							rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-							pDrawDC->GradientFill(m_ToolBarTheme.clrPressed1, m_ToolBarTheme.clrPressed2, rcArrowBkgnd, FALSE);
+							pDrawDC->GradientFill(m_TBTheme.clrPressed1, m_TBTheme.clrPressed2, rcArrowBkgnd, FALSE);
 						}
 
 						m_bDrawArrowBkgrnd = FALSE;
@@ -1325,7 +1323,7 @@ namespace Win32xx
 						// Draw line between icon and dropdown arrow
 						if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
 						{
-							pDrawDC->CreatePen(PS_SOLID, 1, m_ToolBarTheme.clrOutline);
+							pDrawDC->CreatePen(PS_SOLID, 1, m_TBTheme.clrOutline);
 							pDrawDC->MoveTo(rcRect.right - 13, rcRect.top);
 							pDrawDC->LineTo(rcRect.right - 13, rcRect.bottom);
 						}
@@ -2085,11 +2083,11 @@ namespace Win32xx
 		}
 
 		// Update DockClient captions
-		PostMessage(UWM_DOCKACTIVATED);
+		PostMessage(UWM_DOCKACTIVATE);
 
 		// Also update DockClient captions if the view is a docker
 		if (dynamic_cast<CDocker*>(GetView()))
-			GetView()->PostMessage(UWM_DOCKACTIVATED);
+			GetView()->PostMessage(UWM_DOCKACTIVATE);
 
 		return 0L;
 	}
@@ -2414,7 +2412,7 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(pNMHDR);
 
-		if (m_ReBarTheme.UseThemes && m_ReBarTheme.ShortBands)
+		if (m_RBTheme.UseThemes && m_RBTheme.ShortBands)
 			return 1L;	// Suppress maximise or minimise rebar band
 
 		return 0L;
@@ -2842,7 +2840,7 @@ namespace Win32xx
 		RB->GetBandInfo(nBand, rbbi);
 
 		int Width;
-		if ((m_ReBarTheme.UseThemes) && (m_ReBarTheme.LockMenuBand))
+		if ((m_RBTheme.UseThemes) && (m_RBTheme.LockMenuBand))
 			Width = rcClient.Width() - rcBorder.Width() - 2;
 		else
 			Width = GetMenuBar()->GetMaxSize().cx;
@@ -2857,7 +2855,7 @@ namespace Win32xx
 	// Sets the theme colors for the MenuBar and the popup Menu items
 	// Note: If Aero Themes are supported, they are used for popup menu items instead
 	{
-		m_MenuBarTheme = *pMBT;
+		m_MBTheme = *pMBT;
 
 		if (GetMenuBar()->IsWindow())
 			GetMenuBar()->Invalidate();
@@ -2866,13 +2864,13 @@ namespace Win32xx
 	inline void CFrame::SetReBarTheme(ReBarTheme* pRBT)
 	// Stores the rebar's theme colors
 	{
-		m_ReBarTheme = *pRBT;
+		m_RBTheme = *pRBT;
 	}
 
 	inline void CFrame::SetStatusBarTheme(StatusBarTheme* pSBT)
 	// Stores the statusbar's theme colors
 	{
-		m_StatusBarTheme = *pSBT;
+		m_SBTheme = *pSBT;
 	}
 
 	inline void CFrame::SetStatusIndicators()
@@ -3064,7 +3062,7 @@ namespace Win32xx
 		if (GetReBar()->IsWindow())
 		{
 			SIZE MaxSize = pToolBar->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
 		}
 	}
 
@@ -3095,7 +3093,7 @@ namespace Win32xx
 		if (GetReBar()->IsWindow())
 		{
 			SIZE MaxSize = pToolBar->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
 		}
 	}
 
@@ -3125,7 +3123,7 @@ namespace Win32xx
 		if (GetReBar()->IsWindow())
 		{
 			SIZE MaxSize = pToolBar->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
 		}
 	}
 
@@ -3176,39 +3174,10 @@ namespace Win32xx
 	inline void CFrame::SetToolBarTheme(ToolBarTheme* pTBT)
 	// Stores the tool bar's theme colors
 	{
-		m_ToolBarTheme = *pTBT;
+		m_TBTheme = *pTBT;
 		if (GetToolBar()->IsWindow())
 			GetToolBar()->GetParent()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
-
-/*	inline void CFrame::SetView(CWnd& wndView)
-	// Sets or changes the View window displayed within the frame
-	{
-		if (m_pView != &wndView)
-		{
-			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
-
-			// Assign the view window
-			m_pView = &wndView;
-
-			if (m_hWnd)
-			{
-				// The frame is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-
-				if (!GetView()->IsWindow())
-					GetView()->Create(this);
-				else
-				{
-					GetView()->SetParent(this);
-					GetView()->ShowWindow();
-				}
-
-				RecalcLayout();
-			}
-		}
-	} */
 
 	inline void CFrame::ShowMenu(BOOL bShow)
 	// Hides or shows the menu
@@ -3230,7 +3199,7 @@ namespace Win32xx
 
 		if (GetReBar()->IsWindow())
 		{
-			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
+			if (m_RBTheme.UseThemes && m_RBTheme.BandsLeft)
 				GetReBar()->MoveBandsLeft();
 		}
 
@@ -3285,7 +3254,7 @@ namespace Win32xx
 
 		if (GetReBar()->IsWindow())
 		{
-			if (m_ReBarTheme.UseThemes && m_ReBarTheme.BandsLeft)
+			if (m_RBTheme.UseThemes && m_RBTheme.BandsLeft)
 				GetReBar()->MoveBandsLeft();
 		}
 
@@ -3411,9 +3380,10 @@ namespace Win32xx
 
 		// Messages defined by Win32++
 		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView()->GetHwnd() : NULL);
-		case UWM_GETMENUTHEME:		return (LRESULT)&m_MenuBarTheme;
-		case UWM_GETREBARTHEME:		return (LRESULT)&m_ReBarTheme;
-		case UWM_GETTOOLBARTHEME:	return (LRESULT)&m_ToolBarTheme;
+		case UWM_GETMBTHEME:		return (LRESULT)&m_MBTheme;
+		case UWM_GETRBTHEME:		return (LRESULT)&m_RBTheme;
+		case UWM_GETSBTHEME:		return (LRESULT)&m_SBTheme;
+		case UWM_GETTBTHEME:		return (LRESULT)&m_TBTheme;
 		case UWN_DRAWRBBKGND:       return DrawReBarBkgnd((CDC*) wParam, (CReBar*) lParam);
 		case UWN_DRAWSBBKGND:       return DrawStatusBarBkgnd((CDC*) wParam, (CStatusBar*) lParam);
 

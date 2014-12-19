@@ -1,12 +1,18 @@
 Version 7.7
 ===========
 
+Bug Fixes:
+* Reference counting of CImageList objects
+* Container in container docking
+* Double notifications from tab controls
+
 New Features and Enhancements
 -----------------------------
 * Frames now directly support docking
    Previously CFrames implemented docking through the view window. Now CFrame 
    inherits from CDocker and implements docking directly. Users can now add
-   dockers to a frame that doesn't use a docker as the view window.    
+   dockers to a frame that doesn't use a docker as the view window. 
+   Alternatively users can implement docking through the view window as before.   
 
 * MDI Frames directly support docking
    Dockers can now be added to classic MDI Frames. Code to add dockers to a
@@ -14,14 +20,15 @@ New Features and Enhancements
    
 	void CMainMDIFrame::OnInitialUpdate()
 	{
-		TRACE("MDI Frame started \n");
-		//The frame is now created.
-		//Place any additional startup code here.
-
+		// Add some dockers
 		DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 		int DockWidth = 150;
 		AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);
 		AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, DockWidth);
+		
+		// Add some MDI children
+		AddMDIChild(new CSimpleMDIChild);
+		AddMDIChild(new CSimpleMDIChild); 		
 	}
 	
 Changes in detail
@@ -33,11 +40,17 @@ Removed CDocker::OnFrameGotFocus
 Removed CDocker::OnFrameLostFocus
 Removed CDocker::OnSetFocus
 Removed CDockContainer::OnSetFocus
-Removed CFrame::GetView
-Removed CFrame::SetView
+Removed CFrame::GetView (now inherits from CDocker::GetView)
+Removed CFrame::SetView (now inherits from CDocker::SetView)
 Removed CMDIFrame::UpdateCheckMarks
 Renamed CDocker::LoadRegistrySettings to CDocker::LoadDockRegistrySettings
 Renamed CDocker::SaveRegistrySettings to CDocker::SaveDockRegistrySettings
+
+Removed user defined messages:
+UWN_DOCKSETFOCUS
+UWN_FRAMELOSTFOCUS
+UWN_FRAMEGOTFOCUS
+
 
 Version 7.6.1
 =============

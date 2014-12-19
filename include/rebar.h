@@ -395,7 +395,7 @@ namespace Win32xx
 
 	inline LRESULT CReBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0L, 0L));
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETRBTHEME, 0L, 0L));
 		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 		{
 			// Use move messages to limit the resizing of bands
@@ -416,7 +416,7 @@ namespace Win32xx
 	{
 		if (m_bIsDragging)
 		{
-			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0L, 0L));
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETRBTHEME, 0L, 0L));
 			if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
 			{
 				// We want to lock the first row in place, but allow other bands to move!
@@ -437,7 +437,7 @@ namespace Win32xx
 		LPSIZE pToolBarSize = (LPSIZE)lParam;
 		ResizeBand(GetBand(hToolBar), *pToolBarSize);
 
-		return FinalWindowProc(UWM_TOOLBARRESIZE, wParam, lParam);
+		return FinalWindowProc(UWM_TBRESIZE, wParam, lParam);
 	}
 
 	inline LRESULT CReBar::OnTBWinPosChanging(WPARAM wParam, LPARAM lParam)
@@ -446,7 +446,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		// Adjust size for toolbars inside a rebar
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETREBARTHEME, 0L, 0L));
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETRBTHEME, 0L, 0L));
 
 		// A boolean expression
 		return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
@@ -583,7 +583,7 @@ namespace Win32xx
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_TOOLBARRESIZE:	return OnToolBarResize(wParam, lParam);
+		case UWM_TBRESIZE:	return OnToolBarResize(wParam, lParam);
 		case UWM_TBWINPOSCHANGING:	return OnTBWinPosChanging(wParam, lParam);
 		}
 

@@ -354,9 +354,9 @@ namespace Win32xx
 
 	inline void CMenuBar::GrabFocus()
 	{
-		if (::GetFocus() != m_hWnd)
+		if (GetFocus() != this)
 			m_hPrevFocus = ::SetFocus(m_hWnd);
-		::SetCapture(m_hWnd);
+		SetCapture();
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 

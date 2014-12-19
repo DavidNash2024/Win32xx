@@ -565,6 +565,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
 	inline BOOL CImageList::CreateDisabledImageList(CImageList* pimlNormal)
+	// Creates a gray scale image list from the specified color image list.
 	{
 		assert(NULL == m_pData->hImageList);
 		assert(pimlNormal);

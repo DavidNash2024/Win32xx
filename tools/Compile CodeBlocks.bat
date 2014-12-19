@@ -12,9 +12,9 @@ call CleanTutorials
 
 REM: Change the directory to the parent (Pushes the directory change on to the stack)
 pushd ..\Samples
-if exist "..\output\Borland" rmdir /s /q "Win32++\output\Borland"
-if exist "..\output\VS2003" rmdir /s /q "Win32++\output\VS2003"
-if exist "..\output\MinGW" rmdir /s /q "Win32++\output\MinGW"
+if exist "..\output\Borland" rmdir /s /q "..\output\Borland"
+if exist "..\output\VS2003" rmdir /s /q "..\output\VS2003"
+if exist "..\output\MinGW" rmdir /s /q "..\output\MinGW"
 
 
 REM: Compile the code

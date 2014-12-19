@@ -902,7 +902,7 @@ namespace Win32xx
 
 		// Send a changed message to the parent (used by the ReBar)
 		SIZE MaxSize = GetMaxSize();
-		GetParent()->SendMessage(UWM_TOOLBARRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+		GetParent()->SendMessage(UWM_TBRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 		return bResult;
 	}
