@@ -216,7 +216,7 @@ namespace Win32xx
 		CDockContainer* m_pContainerParent;
 		HICON m_hTabIcon;
 		int m_nTabPressed;
-		BOOL m_bHideingleTab;
+		BOOL m_bHideSingleTab;
 		CPoint m_OldMousePos;
 	};
 
@@ -566,7 +566,6 @@ namespace Win32xx
 		DWORD m_dwDockZone;
 		double m_DockSizeRatio;
 		DWORD m_DockStyle;
-		HWND m_hOldFocus;
 
 	}; // class CDocker
 
@@ -1851,7 +1850,7 @@ namespace Win32xx
 	//
 	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE), m_bIsClosing(FALSE), 
 		            m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0), m_nTimerCount(0), 
-					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), m_hOldFocus(0)
+					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0)
 	{
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
@@ -2144,7 +2143,6 @@ namespace Win32xx
 
 		// Redraw the docked windows
 		GetAncestor()->SetForegroundWindow();
-		GetTopmostDocker()->m_hOldFocus = pDocker->GetView()->GetHwnd();
 		pDocker->GetView()->SetFocus();
 
 		GetTopmostDocker()->SetRedraw(FALSE);
@@ -3806,7 +3804,6 @@ namespace Win32xx
 		if (!pDockUndockedFrom && (m_vDockChildren.size() > 0))
 			pDockUndockedFrom = m_vDockChildren[0];
 
-		GetTopmostDocker()->m_hOldFocus = 0;
 		PromoteFirstChild();
 		m_pDockParent = 0;
 
@@ -3887,7 +3884,6 @@ namespace Win32xx
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
 
-		GetTopmostDocker()->m_hOldFocus = 0;
 		CDocker* pDockUndockedFrom = GetDockFromView(pContainer->GetContainerParent());
 		pDockUndockedFrom->ShowWindow(SW_HIDE);
 		if (GetView() == pContainer)
@@ -4028,7 +4024,7 @@ namespace Win32xx
 	//////////////////////////////////////
 	// Declaration of the CDockContainer class
 	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0), 
-		                                m_nTabPressed(-1), m_bHideingleTab(FALSE)
+		                                m_nTabPressed(-1), m_bHideSingleTab(FALSE)
 	{
 		m_pContainerParent = this;
 	}
@@ -4448,7 +4444,7 @@ namespace Win32xx
 	inline void CDockContainer::SetHideSingleTab(BOOL bHide)
 	// Only display tabs if there are two or more.
 	{	
-		m_bHideingleTab = bHide;
+		m_bHideSingleTab = bHide;
 		RecalcLayout();	
 	}
 
@@ -4467,7 +4463,7 @@ namespace Win32xx
 
 		int nItemWidth = 0;
 		int nItemHeight = 1;
-		if ((GetItemCount() != 1) || !m_bHideingleTab)
+		if ((GetItemCount() != 1) || !m_bHideSingleTab)
 		{
 			nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
 			nItemHeight = MAX(20, GetTextHeight() + 5);

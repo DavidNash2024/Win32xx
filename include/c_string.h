@@ -140,6 +140,8 @@ namespace Win32xx
 		BSTR     AllocSysString() const;
 		void	 AppendFormat(LPCTSTR pszFormat,...);
 		void	 AppendFormat(UINT nFormatID, ...);
+		int      Collate(LPCTSTR pszText) const;
+		int		 CollateNoCase(LPCTSTR pszText) const;		
 		int      Compare(LPCTSTR pszText) const;
 		int      CompareNoCase(LPCTSTR pszText) const;
 		int      Delete(int nIndex, int nCount = 1);
@@ -186,8 +188,6 @@ namespace Win32xx
 		void     Truncate(int nNewLength);
 
 #ifndef _WIN32_WCE
-		int      Collate(LPCTSTR pszText) const;
-		int		 CollateNoCase(LPCTSTR pszText) const;
 		bool	 GetEnvironmentVariable(LPCTSTR pszVar);
 #endif
 
@@ -339,34 +339,44 @@ namespace Win32xx
 		}
 	}
 
-#ifndef _WIN32_WCE
 	inline int CString::Collate(LPCTSTR pszText) const
 	// Performs a case sensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
-		return _tcscoll(m_str.c_str(), pszText);
+        int res = CompareString(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
+		
+		assert(res);
+		if 		(res == CSTR_LESS_THAN) return -1;
+		else if (res == CSTR_GREATER_THAN) return 1;
+		
+		return 0;
 	}
 
 	inline int CString::CollateNoCase(LPCTSTR pszText) const
 	// Performs a case insensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
-		return _tcsicoll(m_str.c_str(), pszText);
+        int res = CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, pszText, -1);
+		
+		assert(res);
+		if 		(res == CSTR_LESS_THAN) return -1;
+		else if (res == CSTR_GREATER_THAN) return 1;
+		
+		return 0;
 	}
-#endif	// _WIN32_WCE
 
 	inline int CString::Compare(LPCTSTR pszText) const
 	// Performs a case sensitive comparison of the two strings.
 	{
 		assert(pszText);
-		return _tcscmp(m_str.data(), pszText);
+        return lstrcmp(m_str.data(), pszText);
 	}
 
 	inline int CString::CompareNoCase(LPCTSTR pszText) const
 	// Performs a case insensitive comparison of the two strings.
 	{
 		assert(pszText);
-		return _tcsicmp(m_str.data(), pszText);
+        return lstrcmpi(m_str.data(), pszText);
 	}
 
 	inline int CString::Delete(int nIndex, int nCount /* = 1 */)
