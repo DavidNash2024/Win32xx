@@ -12,13 +12,13 @@ CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
-	m_bProportionalResize = FALSE;
-	m_b3DBorder = TRUE;
-	m_bNoUndocking = FALSE;
-	m_bNoResize = FALSE;
-	m_bNoDockLR = FALSE;
-	m_bNoDockClose = FALSE;
-	m_bDynamicResize = TRUE;
+	m_UseProportionalResize = FALSE;
+	m_Use3DBorder = TRUE;
+	m_DisableUndocking = FALSE;
+	m_DisableResize = FALSE;
+	m_DisableDockLR = FALSE;
+	m_DisableDockClose = FALSE;
+	m_UseDynamicResize = TRUE;
 
 	//Set m_View as the view window of the frame
 	SetView(m_View);
@@ -76,19 +76,19 @@ void CMainFrame::OnDockDefault()
 
 void CMainFrame::OnPropResize()
 {
-	m_bProportionalResize = !m_bProportionalResize;
+	m_UseProportionalResize = !m_UseProportionalResize;
 	SetDockStyles();
 }
 
 void CMainFrame::On3DBorder()
 {
-	m_b3DBorder = !m_b3DBorder;
+	m_Use3DBorder = !m_Use3DBorder;
 	SetDockStyles();
 }
 
 void CMainFrame::OnNoUndocking()
 {
-	m_bNoUndocking = !m_bNoUndocking;
+	m_DisableUndocking = !m_DisableUndocking;
 	SetDockStyles();
 }
 
@@ -97,25 +97,25 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	switch(nID)
 	{
 	case IDM_PROP_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bProportionalResize ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_UseProportionalResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_3DBORDER:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_b3DBorder ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_Use3DBorder ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_UNDOCK:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoUndocking ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableUndocking ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoResize ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_DOCK_LR:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoDockLR ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockLR ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_DOCK_CLOSE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bNoDockClose ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockClose ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_DYNAMIC_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_bDynamicResize ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_UseDynamicResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	}
 
@@ -124,19 +124,19 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 
 void CMainFrame::OnNoResize()
 {
-	m_bNoResize = !m_bNoResize;
+	m_DisableResize = !m_DisableResize;
 	SetDockStyles();
 }
 
 void CMainFrame::OnNoDockLR()
 {
-	m_bNoDockLR = !m_bNoDockLR;
+	m_DisableDockLR = !m_DisableDockLR;
 	SetDockStyles();
 }
 
 void CMainFrame::OnNoDockClose()
 {
-	m_bNoDockClose = !m_bNoDockClose;
+	m_DisableDockClose = !m_DisableDockClose;
 	SetDockStyles();
 	RedrawWindow();
 } 
@@ -151,11 +151,11 @@ void CMainFrame::OnDynamicResize()
 	// Dragging the docker's splitter bar will either dynamicly resize the dockers
 	// during the dragging, or simply display a hashed splitter bar.
 	std::vector<CDocker*>::iterator iter;
-	m_bDynamicResize = !m_bDynamicResize;
+	m_UseDynamicResize = !m_UseDynamicResize;
 
 	for (iter = GetAllDockers()->begin(); iter < GetAllDockers()->end(); ++iter)
 	{
-		(*iter)->SetDragAutoResize(m_bDynamicResize);
+		(*iter)->SetDragAutoResize(m_UseDynamicResize);
 	}
 }
 
@@ -165,11 +165,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
-	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
-	// m_bUseReBar = FALSE;				// Don't use a ReBar
-	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
+	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
+	// m_UseReBar = FALSE;				// Don't use a ReBar
+	// m_UseThemes = FALSE;				// Don't use themes
+	// m_UseToolBar = FALSE;			// Don't use a ToolBar
 
 	// call the base class function
 	return CFrame::OnCreate(pcs);
@@ -274,12 +274,12 @@ void CMainFrame::SetDockStyles()
 		dwStyle &= 0xF400F;
 	
 		// Add styles selected from the menu
-		if (!m_bProportionalResize) dwStyle |= DS_FIXED_RESIZE;
-		if (m_b3DBorder)			dwStyle |= DS_CLIENTEDGE;
-		if (m_bNoUndocking)			dwStyle |= DS_NO_UNDOCK;
-		if (m_bNoResize)			dwStyle |= DS_NO_RESIZE;
-		if (m_bNoDockLR)			dwStyle |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
-		if (m_bNoDockClose)			dwStyle |= DS_NO_CLOSE;
+		if (!m_UseProportionalResize) dwStyle |= DS_FIXED_RESIZE;
+		if (m_Use3DBorder)			dwStyle |= DS_CLIENTEDGE;
+		if (m_DisableUndocking)			dwStyle |= DS_NO_UNDOCK;
+		if (m_DisableResize)			dwStyle |= DS_NO_RESIZE;
+		if (m_DisableDockLR)			dwStyle |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
+		if (m_DisableDockClose)			dwStyle |= DS_NO_CLOSE;
 
 		(*iter)->SetDockStyle(dwStyle);
 	}

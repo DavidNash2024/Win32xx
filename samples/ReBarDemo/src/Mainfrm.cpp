@@ -31,7 +31,7 @@ CRect CMainFrame::GetViewRect() const
 	if (GetStatusBar()->IsWindow() && (GetStatusBar()->IsWindowVisible()))
 		rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-	if (IsReBarSupported() && m_bUseReBar && GetReBar()->IsWindow())
+	if (IsReBarSupported() && m_UseReBar && GetReBar()->IsWindow())
 		rcClient = ExcludeChildRect(rcClient, GetReBar());
 	else
 		if (GetToolBar()->IsWindow() && GetToolBar()->IsWindowVisible())
@@ -133,10 +133,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
-	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
-	// m_bUseReBar = FALSE;				// Don't use a ReBar
-	// m_bUseThemes = FALSE;            // Don't use themes
+	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
+	// m_UseReBar = FALSE;				// Don't use a ReBar
+	// m_UseThemes = FALSE;				// Don't use themes
 
 	// call the base class function
 	CFrame::OnCreate(pcs);
@@ -252,11 +252,11 @@ void CMainFrame::RecalcLayout()
 			return;
 
 		// Resize the status bar
-		if (GetStatusBar()->IsWindow() && m_bShowStatusBar)
+		if (GetStatusBar()->IsWindow() && m_ShowStatusBar)
 		{
 			GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar()->Invalidate();
-			if (m_bUseMenuStatus)
+			if (m_UseMenuStatus)
 				GetStatusBar()->SetWindowText(GetStatusText());
 
 			SetStatusIndicators();
@@ -268,7 +268,7 @@ void CMainFrame::RecalcLayout()
 			GetReBar()->SendMessage(WM_SIZE, 0L, 0L);
 			GetReBar()->Invalidate();
 		}
-		else if (m_bUseToolBar && m_bShowToolBar && GetToolBar()->IsWindow())
+		else if (m_UseToolBar && m_ShowToolBar && GetToolBar()->IsWindow())
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the additional rebar at the top, left, right or bottom of the view.
@@ -276,7 +276,6 @@ void CMainFrame::RecalcLayout()
 			SetReBarPos();
 
 		// Position the view window
-	//	pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
 		RecalcDockLayout();
 
 		// Adjust rebar bands

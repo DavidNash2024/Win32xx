@@ -7,9 +7,9 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_nColor(IDM_BLUE), m_bUseThemes(TRUE), m_bBandColors(TRUE), m_bFlatStyle(FALSE),
-							m_bBandsLeft(TRUE), m_bLockMenuBand(TRUE), m_bRoundBorders(TRUE),
-                            m_bShortBands(TRUE), m_bUseLines(FALSE), m_bShowArrows(TRUE), m_bShowCards(TRUE)
+CMainFrame::CMainFrame() : m_nColor(IDM_BLUE), m_UseThemes(TRUE), m_UseBandColors(TRUE), m_UseFlatStyle(FALSE),
+							m_KeepBandsLeft(TRUE), m_LockMenuBand(TRUE), m_UseRoundBorders(TRUE),
+                            m_UseShortBands(TRUE), m_UseLines(FALSE), m_ShowArrows(TRUE), m_ShowCards(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -234,16 +234,16 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
 	{
 		m_nColor = GetRegDwordFromOpenKey(hKey, _T("ColorStyle"));
-		m_bUseThemes = GetRegDwordFromOpenKey(hKey, _T("UseThemes")) & 1;
-		m_bBandColors = GetRegDwordFromOpenKey(hKey, _T("UseBandColors")) & 1;
-		m_bFlatStyle = GetRegDwordFromOpenKey(hKey, _T("UseFlatStyle")) & 1;
-		m_bBandsLeft = GetRegDwordFromOpenKey(hKey, _T("PutBandsLeft")) & 1;
-		m_bLockMenuBand = GetRegDwordFromOpenKey(hKey, _T("LockMenuBand")) & 1;
-		m_bRoundBorders = GetRegDwordFromOpenKey(hKey, _T("UseRoundBorders")) & 1;
-		m_bShortBands = GetRegDwordFromOpenKey(hKey, _T("UseShortBands")) & 1;
-		m_bUseLines = GetRegDwordFromOpenKey(hKey, _T("UseLines")) & 1;
-		m_bShowArrows = GetRegDwordFromOpenKey(hKey, _T("ShowArrows")) & 1;
-		m_bShowCards = GetRegDwordFromOpenKey(hKey, _T("ShowCards")) & 1;
+		m_UseThemes = GetRegDwordFromOpenKey(hKey, _T("UseThemes")) & 1;
+		m_UseBandColors = GetRegDwordFromOpenKey(hKey, _T("UseBandColors")) & 1;
+		m_UseFlatStyle = GetRegDwordFromOpenKey(hKey, _T("UseFlatStyle")) & 1;
+		m_KeepBandsLeft = GetRegDwordFromOpenKey(hKey, _T("PutBandsLeft")) & 1;
+		m_LockMenuBand = GetRegDwordFromOpenKey(hKey, _T("LockMenuBand")) & 1;
+		m_UseRoundBorders = GetRegDwordFromOpenKey(hKey, _T("UseRoundBorders")) & 1;
+		m_UseShortBands = GetRegDwordFromOpenKey(hKey, _T("UseShortBands")) & 1;
+		m_UseLines = GetRegDwordFromOpenKey(hKey, _T("UseLines")) & 1;
+		m_ShowArrows = GetRegDwordFromOpenKey(hKey, _T("ShowArrows")) & 1;
+		m_ShowCards = GetRegDwordFromOpenKey(hKey, _T("ShowCards")) & 1;
 		int nBands = GetRegDwordFromOpenKey(hKey, _T("NumBands"));
 
 		// Retrieve the band styles and IDs
@@ -269,16 +269,16 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		// Choose reasonable default values
 		m_nColor = IDM_OLIVE;
-		m_bUseThemes = TRUE;
-		m_bBandColors = TRUE;
-		m_bFlatStyle = FALSE;
-		m_bBandsLeft = TRUE;
-		m_bLockMenuBand = TRUE;
-		m_bRoundBorders = TRUE;
-		m_bShortBands = TRUE;
-		m_bUseLines = FALSE;;
-		m_bShowArrows = TRUE;
-		m_bShowCards = TRUE;
+		m_UseThemes = TRUE;
+		m_UseBandColors = TRUE;
+		m_UseFlatStyle = FALSE;
+		m_KeepBandsLeft = TRUE;
+		m_LockMenuBand = TRUE;
+		m_UseRoundBorders = TRUE;
+		m_UseShortBands = TRUE;
+		m_UseLines = FALSE;;
+		m_ShowArrows = TRUE;
+		m_ShowCards = TRUE;
 	}
 
 	return TRUE;
@@ -326,11 +326,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
-	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
-	// m_bUseReBar = FALSE;				// Don't use a ReBar
-	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
+	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
+	// m_UseReBar = FALSE;				// Don't use a ReBar
+	// m_UseThemes = FALSE;				// Don't use themes
+	// m_UseToolBar = FALSE;			// Don't use a ToolBar
 
 	// call the base class function
 	CFrame::OnCreate(pcs);
@@ -371,12 +371,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	
 		// Set the MenuBar's position and gripper
 		int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
-		GetReBar()->ShowGripper(nBand, !m_bLockMenuBand);
-		if (m_bLockMenuBand)
+		GetReBar()->ShowGripper(nBand, !m_LockMenuBand);
+		if (m_LockMenuBand)
 			GetReBar()->MoveBand(nBand, 0);
 
-		ShowArrows(m_bShowArrows);
-		ShowCards(m_bShowCards);
+		ShowArrows(m_ShowArrows);
+		ShowCards(m_ShowCards);
 	}
 	else
 		MessageBox(_T("Some Theme features are not supported on this Operating System"), _T("Warning"), MB_ICONWARNING);
@@ -414,12 +414,12 @@ void CMainFrame::OnUseThemes()
 {
 	if (IsReBarSupported())
 	{
-		m_bUseThemes = !m_bUseThemes;
+		m_UseThemes = !m_UseThemes;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->UseThemes = m_bUseThemes;
+		pRBT->UseThemes = m_UseThemes;
 		SetReBarTheme(pRBT);
 		int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
-		GetReBar()->ShowGripper(nBand, !m_bUseThemes);
+		GetReBar()->ShowGripper(nBand, !m_UseThemes);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -430,7 +430,7 @@ void CMainFrame::OnBandColors()
 {
 	if (IsReBarSupported())
 	{
-		m_bBandColors = !m_bBandColors;
+		m_UseBandColors = !m_UseBandColors;
 		ChooseColor(m_nColor);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -441,9 +441,9 @@ void CMainFrame::OnFlatStyle()
 {
 	if (IsReBarSupported())
 	{
-		m_bFlatStyle = !m_bFlatStyle;
+		m_UseFlatStyle = !m_UseFlatStyle;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->FlatStyle = m_bFlatStyle;
+		pRBT->FlatStyle = m_UseFlatStyle;
 		SetReBarTheme(pRBT);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -454,9 +454,9 @@ void CMainFrame::OnLeftBands()
 {
 	if (IsReBarSupported())
 	{
-		m_bBandsLeft = !m_bBandsLeft;
+		m_KeepBandsLeft = !m_KeepBandsLeft;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->BandsLeft = m_bBandsLeft;
+		pRBT->BandsLeft = m_KeepBandsLeft;
 		SetReBarTheme(pRBT);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -468,12 +468,12 @@ void CMainFrame::OnLockMenuBar()
 {
 	if (IsReBarSupported())
 	{
-		m_bLockMenuBand = !m_bLockMenuBand;
+		m_LockMenuBand = !m_LockMenuBand;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->LockMenuBand = m_bLockMenuBand;
+		pRBT->LockMenuBand = m_LockMenuBand;
 		SetReBarTheme(pRBT);
 		GetReBar()->MoveBand(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), 0);	// Move the MenuBar to band 0
-		GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), !m_bLockMenuBand);
+		GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), !m_LockMenuBand);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -487,34 +487,34 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	switch(nID)
 	{
 	case IDM_USE_THEMES:
-		GetFrameMenu()->CheckMenuItem(nID, m_bUseThemes? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_UseThemes? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_BAND_COLORS:
-		GetFrameMenu()->CheckMenuItem(nID, m_bBandColors? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_UseBandColors? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_FLAT_STYLE:
-		GetFrameMenu()->CheckMenuItem(nID, m_bFlatStyle? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_UseFlatStyle? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_LEFT_BANDS:
-		GetFrameMenu()->CheckMenuItem(nID, m_bBandsLeft? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_KeepBandsLeft? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_LOCK_MENUBAR:
-		GetFrameMenu()->CheckMenuItem(nID, m_bLockMenuBand? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_LockMenuBand? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_ROUND_BORDERS:
-		GetFrameMenu()->CheckMenuItem(nID, m_bRoundBorders? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_UseRoundBorders? MF_CHECKED : MF_UNCHECKED);
 		break;	
 	case IDM_SHORT_BANDS:
-		GetFrameMenu()->CheckMenuItem(nID, m_bShortBands? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_UseShortBands? MF_CHECKED : MF_UNCHECKED);
 		break;	
 	case IDM_USE_LINES:
-		GetFrameMenu()->CheckMenuItem(nID, m_bUseLines? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_UseLines? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_VIEW_ARROWS:
-		GetFrameMenu()->CheckMenuItem(nID, m_bShowArrows? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_ShowArrows? MF_CHECKED : MF_UNCHECKED);
 		break;
 	case IDM_VIEW_CARDS:
-		GetFrameMenu()->CheckMenuItem(nID, m_bShowCards? MF_CHECKED : MF_UNCHECKED);
+		GetFrameMenu()->CheckMenuItem(nID, m_ShowCards? MF_CHECKED : MF_UNCHECKED);
 		break;
 	}
 
@@ -529,9 +529,9 @@ void CMainFrame::OnRoundBorders()
 {
 	if (IsReBarSupported())
 	{
-		m_bRoundBorders = !m_bRoundBorders;
+		m_UseRoundBorders = !m_UseRoundBorders;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->RoundBorders = m_bRoundBorders;
+		pRBT->RoundBorders = m_UseRoundBorders;
 		SetReBarTheme(pRBT);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -542,9 +542,9 @@ void CMainFrame::OnShortBands()
 {
 	if (IsReBarSupported())
 	{
-		m_bShortBands = !m_bShortBands;
+		m_UseShortBands = !m_UseShortBands;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->ShortBands = m_bShortBands;
+		pRBT->ShortBands = m_UseShortBands;
 		SetReBarTheme(pRBT);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -555,9 +555,9 @@ void CMainFrame::OnUseLines()
 {
 	if (IsReBarSupported())
 	{
-		m_bUseLines = !m_bUseLines;
+		m_UseLines = !m_UseLines;
 		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->UseLines = m_bUseLines;
+		pRBT->UseLines = m_UseLines;
 		SetReBarTheme(pRBT);
 
 		GetReBar()->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -569,8 +569,8 @@ void CMainFrame::OnViewArrows()
 {
 	if (IsReBarSupported())
 	{
-		m_bShowArrows = !m_bShowArrows;
-		ShowArrows(m_bShowArrows);
+		m_ShowArrows = !m_ShowArrows;
+		ShowArrows(m_ShowArrows);
 	}
 }
 
@@ -578,8 +578,8 @@ void CMainFrame::OnViewCards()
 {
 	if (IsReBarSupported())
 	{
-		m_bShowCards = !m_bShowCards;
-		ShowCards(m_bShowCards);
+		m_ShowCards = !m_ShowCards;
+		ShowCards(m_ShowCards);
 	}
 }
 
@@ -600,16 +600,16 @@ BOOL CMainFrame::SaveRegistrySettings()
 
 		// Save the theme settings
 		RegSetValueEx(hKey, _T("ColorStyle"), 0, REG_DWORD, (LPBYTE)&m_nColor, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("UseThemes"), 0, REG_DWORD, (LPBYTE)&m_bUseThemes, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("UseBandColors"), 0, REG_DWORD, (LPBYTE)&m_bBandColors, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("UseFlatStyle"), 0, REG_DWORD, (LPBYTE)&m_bFlatStyle, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("PutBandsLeft"), 0, REG_DWORD, (LPBYTE)&m_bBandsLeft, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("LockMenuBand"), 0, REG_DWORD, (LPBYTE)&m_bLockMenuBand, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("UseRoundBorders"), 0, REG_DWORD, (LPBYTE)&m_bRoundBorders, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("UseShortBands"), 0, REG_DWORD, (LPBYTE)&m_bShortBands, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("UseLines"), 0, REG_DWORD, (LPBYTE)&m_bUseLines, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("ShowArrows"), 0, REG_DWORD, (LPBYTE)&m_bShowArrows, sizeof(DWORD));
-		RegSetValueEx(hKey, _T("ShowCards"), 0, REG_DWORD, (LPBYTE)&m_bShowCards, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("UseThemes"), 0, REG_DWORD, (LPBYTE)&m_UseThemes, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("UseBandColors"), 0, REG_DWORD, (LPBYTE)&m_UseBandColors, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("UseFlatStyle"), 0, REG_DWORD, (LPBYTE)&m_UseFlatStyle, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("PutBandsLeft"), 0, REG_DWORD, (LPBYTE)&m_KeepBandsLeft, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("LockMenuBand"), 0, REG_DWORD, (LPBYTE)&m_LockMenuBand, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("UseRoundBorders"), 0, REG_DWORD, (LPBYTE)&m_UseRoundBorders, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("UseShortBands"), 0, REG_DWORD, (LPBYTE)&m_UseShortBands, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("UseLines"), 0, REG_DWORD, (LPBYTE)&m_UseLines, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("ShowArrows"), 0, REG_DWORD, (LPBYTE)&m_ShowArrows, sizeof(DWORD));
+		RegSetValueEx(hKey, _T("ShowCards"), 0, REG_DWORD, (LPBYTE)&m_ShowCards, sizeof(DWORD));
 		RegSetValueEx(hKey, _T("NumBands"), 0, REG_DWORD, (LPBYTE)&nBands, sizeof(DWORD));
 
 		// Save the rebar band settings
@@ -646,19 +646,19 @@ void CMainFrame::SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF
 	{
 		ReBarTheme rt;
 		ZeroMemory(&rt, sizeof(ReBarTheme));
-		rt.UseThemes = m_bUseThemes;
+		rt.UseThemes = m_UseThemes;
 		rt.clrBkgnd1 = clrBkGnd1;
 		rt.clrBkgnd2 = clrBkGnd2;
 		rt.clrBand1  = clrBand1;
 		rt.clrBand2  = clrBand2;
-		rt.FlatStyle = m_bFlatStyle;
-		rt.BandsLeft = m_bBandsLeft;
-		rt.LockMenuBand = m_bLockMenuBand;
-		rt.RoundBorders = m_bRoundBorders;
-		rt.ShortBands = m_bShortBands;
-		rt.UseLines = m_bUseLines;
+		rt.FlatStyle = m_UseFlatStyle;
+		rt.BandsLeft = m_KeepBandsLeft;
+		rt.LockMenuBand = m_LockMenuBand;
+		rt.RoundBorders = m_UseRoundBorders;
+		rt.ShortBands = m_UseShortBands;
+		rt.UseLines = m_UseLines;
 
-		if (!m_bBandColors)
+		if (!m_UseBandColors)
 		{
 			rt.clrBand1 = 0;
 			rt.clrBand2 = 0;

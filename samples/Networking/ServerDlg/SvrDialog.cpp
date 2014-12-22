@@ -83,7 +83,7 @@ void CTCPClientDlg::Send()
 
 /////////////////////////////////////////////
 // Definitions for the CSvrDialog class
-CSvrDialog::CSvrDialog(UINT nResID) : CDialog(nResID), m_bServerStarted(FALSE), 
+CSvrDialog::CSvrDialog(UINT nResID) : CDialog(nResID), m_IsServerStarted(FALSE), 
                                       m_SocketType(SOCK_STREAM)
 {
 	// Add support for the IP Address control
@@ -238,7 +238,7 @@ void CSvrDialog::OnStartServer()
 	// Respond to the Start/Stop Button press
 	TRACE("Start/Stop Button Pressed\n");
 
-	if (!m_bServerStarted)
+	if (!m_IsServerStarted)
 	{
 		// Attempt to start the server
 		if (!StartServer())
@@ -286,7 +286,7 @@ void CSvrDialog::OnStartServer()
 			m_EditIP6Address.EnableWindow(TRUE);
 		}
 	}
-	m_bServerStarted = !m_bServerStarted;
+	m_IsServerStarted = !m_IsServerStarted;
 }
 
 void CSvrDialog::OnSend()

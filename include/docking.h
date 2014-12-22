@@ -95,6 +95,8 @@
   #define WM_NCMOUSELEAVE 0x000002A2
 #endif
 
+#define TIMER_ID 2102
+
 namespace Win32xx
 {
 	// Class declarations
@@ -182,7 +184,7 @@ namespace Win32xx
 		CWnd* GetView()	const			{ return GetViewPage()->GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
-		void SetHideSingleTab(BOOL bHide); 
+		void SetHideSingleTab(BOOL HideSingle); 
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabIcon(int i, HICON hIcon) { CTab::SetTabIcon(i, hIcon); }
@@ -216,7 +218,7 @@ namespace Win32xx
 		CDockContainer* m_pContainerParent;
 		HICON m_hTabIcon;
 		int m_nTabPressed;
-		BOOL m_bHideSingleTab;
+		BOOL m_IsHideSingleTab;
 		CPoint m_OldMousePos;
 	};
 
@@ -319,8 +321,8 @@ namespace Win32xx
 			CDocker* m_pDock;
 			CWnd* m_pView;
 			BOOL m_IsClosePressed;
-			BOOL m_bOldFocus;
-			BOOL m_bCaptionPressed;
+			BOOL m_IsOldFocusStored;
+			BOOL m_IsCaptionPressed;
 			BOOL m_IsTracking;
 			COLORREF m_Foregnd1;
 			COLORREF m_Backgnd1;
@@ -374,13 +376,13 @@ namespace Win32xx
 			virtual void OnDraw(CDC* pDC);
 			virtual int  OnCreate(LPCREATESTRUCT pcs);
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
-			BOOL IsOverContainer() { return m_bIsOverContainer; }
+			BOOL IsOverContainer() { return m_IsOverContainer; }
 
 		private:
 			CTargetCentre(const CTargetCentre&);				// Disable copy construction
 			CTargetCentre& operator = (const CTargetCentre&); // Disable assignment operator
 
-			BOOL m_bIsOverContainer;
+			BOOL m_IsOverContainer;
 			CDocker* m_pOldDockTarget;
 		};
 
@@ -553,14 +555,13 @@ namespace Win32xx
 		CRect m_rcBar;
 		CRect m_rcChild;
 
-		BOOL m_BlockMove;
-		BOOL m_Undocking;
-		BOOL m_bIsClosing;
-		BOOL m_bIsDragging;
-		BOOL m_bDragAutoResize;
+		BOOL m_IsBlockMove;
+		BOOL m_IsUndocking;
+		BOOL m_IsClosing;
+		BOOL m_IsDragging;
+		BOOL m_IsDragAutoResize;
 		int m_DockStartSize;
 		int m_nDockID;
-		int m_nTimerCount;
 		int m_nRedrawCount;
 		int m_NCHeight;
 		DWORD m_dwDockZone;
@@ -710,7 +711,7 @@ namespace Win32xx
 	// Definitions for the CDockClient class nested within CDocker
 	//
 	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_IsClosePressed(FALSE),
-						m_bOldFocus(FALSE), m_bCaptionPressed(FALSE), m_IsTracking(FALSE)
+						m_IsOldFocusStored(FALSE), m_IsCaptionPressed(FALSE), m_IsTracking(FALSE)
 	{
 		m_Foregnd1 = RGB(32,32,32);
 		m_Backgnd1 = RGB(190,207,227);
@@ -774,7 +775,7 @@ namespace Win32xx
 		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
 		{
 			BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
-			m_bOldFocus = FALSE;
+			m_IsOldFocusStored = FALSE;
 
 			// Acquire the DC for our NonClient painting
 			CDC* pDC = GetWindowDC();
@@ -786,7 +787,7 @@ namespace Win32xx
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
 			dcMem.CreateCompatibleBitmap(pDC, Width, Height);
-			m_bOldFocus = bFocus;
+			m_IsOldFocusStored = bFocus;
 
 			// Set the font for the title
 			NONCLIENTMETRICS info;
@@ -978,7 +979,7 @@ namespace Win32xx
 				SetCapture();
 			}
 
-			m_bCaptionPressed = TRUE;
+			m_IsCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDock->IsDocked())
@@ -991,7 +992,7 @@ namespace Win32xx
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CWindowDC dc(this);
-					DrawCloseButton(dc, m_bOldFocus);
+					DrawCloseButton(dc, m_IsOldFocusStored);
 				}
 
 				return 0L;
@@ -1010,7 +1011,7 @@ namespace Win32xx
 				SetCapture();
 			}
 
-			m_bCaptionPressed = TRUE;
+			m_IsCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDock->IsDocked())
@@ -1023,7 +1024,7 @@ namespace Win32xx
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CWindowDC dc(this);
-					DrawCloseButton(dc, m_bOldFocus);
+					DrawCloseButton(dc, m_IsOldFocusStored);
 				}
 
 				return 0L;
@@ -1038,10 +1039,10 @@ namespace Win32xx
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 		{
 			CWindowDC dc(this);
-			DrawCloseButton(dc, m_bOldFocus);
+			DrawCloseButton(dc, m_IsOldFocusStored);
 			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
 			{
-				m_bCaptionPressed = FALSE;
+				m_IsCaptionPressed = FALSE;
 				if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
 				{
 					// Destroy the docker
@@ -1077,7 +1078,7 @@ namespace Win32xx
 		m_IsClosePressed = FALSE;
 		ReleaseCapture();
 		CWindowDC dc(this);
-		DrawCloseButton(dc, m_bOldFocus);
+		DrawCloseButton(dc, m_IsOldFocusStored);
 	}
 
 	inline LRESULT CDocker::CDockClient::OnMouseActivate(WPARAM wParam, LPARAM lParam)
@@ -1112,7 +1113,7 @@ namespace Win32xx
 				if ( (m_Oldpt.x == GET_X_LPARAM(lParam) ) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
 					return 0L;
 
-				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_bCaptionPressed))
+				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_IsCaptionPressed))
 				{
 					CDocker* pDock = static_cast<CDocker*>(GetParent());
 					assert(dynamic_cast<CDocker*>(pDock));
@@ -1124,11 +1125,11 @@ namespace Win32xx
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CWindowDC dc(this);
-					DrawCloseButton(dc, m_bOldFocus);
+					DrawCloseButton(dc, m_IsOldFocusStored);
 				}
 			}
 
-			m_bCaptionPressed = FALSE;
+			m_IsCaptionPressed = FALSE;
 		}
 
 		return FinalWindowProc(uMsg, wParam, lParam);
@@ -1144,7 +1145,7 @@ namespace Win32xx
 		m_IsTracking = FALSE;
 		CWindowDC dc(this);
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
-			DrawCloseButton(dc, m_bOldFocus);
+			DrawCloseButton(dc, m_IsOldFocusStored);
 
 		m_IsTracking = FALSE;
 
@@ -1488,7 +1489,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CTargetCentre class nested within CDocker
 	//
-	inline CDocker::CTargetCentre::CTargetCentre() : m_bIsOverContainer(FALSE), m_pOldDockTarget(0)
+	inline CDocker::CTargetCentre::CTargetCentre() : m_IsOverContainer(FALSE), m_pOldDockTarget(0)
 	{
 	}
 
@@ -1560,7 +1561,7 @@ namespace Win32xx
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_bIsOverContainer = (dynamic_cast<CDockContainer*>(pDockTarget->GetView()) != NULL);
+		m_IsOverContainer = (dynamic_cast<CDockContainer*>(pDockTarget->GetView()) != NULL);
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();
@@ -1586,7 +1587,7 @@ namespace Win32xx
 		// Test if our cursor is in one of the docking zones
 		if ((rcLeft.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_LEFT))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFT);
 			pDockDrag->m_dwDockZone = DS_DOCKED_LEFT;
@@ -1595,14 +1596,14 @@ namespace Win32xx
 		}
 		else if ((rcTop.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_TOP))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOP);
 			pDockDrag->m_dwDockZone = DS_DOCKED_TOP;
 			return TRUE;
 		}
 		else if ((rcRight.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_RIGHT))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHT);
 			pDockDrag->m_dwDockZone = DS_DOCKED_RIGHT;
@@ -1611,14 +1612,14 @@ namespace Win32xx
 		}
 		else if ((rcBottom.PtInRect(pt)) && !(pDockTarget->GetDockStyle() & DS_NO_DOCKCHILD_BOTTOM))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOM);
 			pDockDrag->m_dwDockZone = DS_DOCKED_BOTTOM;
 			return TRUE;
 		}
 		else if ((rcMiddle.PtInRect(pt)) && (IsOverContainer()))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_CONTAINER);
 			pDockDrag->m_dwDockZone = DS_DOCKED_CONTAINER;
 			return TRUE;
@@ -1692,7 +1693,7 @@ namespace Win32xx
 		// Test if our cursor is in one of the docking zones
 		if (rcLeft.PtInRect(pt))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_LEFTMOST);
 			pDockDrag->m_dwDockZone = DS_DOCKED_LEFTMOST;
 			return TRUE;
@@ -1740,7 +1741,7 @@ namespace Win32xx
 		// Test if our cursor is in one of the docking zones
 		if (rcTop.PtInRect(pt))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_TOPMOST);
 			pDockDrag->m_dwDockZone = DS_DOCKED_TOPMOST;
 			return TRUE;
@@ -1788,7 +1789,7 @@ namespace Win32xx
 		// Test if our cursor is in one of the docking zones
 		if (rcRight.PtInRect(pt))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_RIGHTMOST);
 			pDockDrag->m_dwDockZone = DS_DOCKED_RIGHTMOST;
 			return TRUE;
@@ -1835,7 +1836,7 @@ namespace Win32xx
 		// Test if our cursor is in one of the docking zones
 		if (rcBottom.PtInRect(pt))
 		{
-			pDockDrag->m_BlockMove = TRUE;
+			pDockDrag->m_IsBlockMove = TRUE;
 			pDockTarget->GetDockHint()->DisplayHint(pDockTarget, pDockDrag, DS_DOCKED_BOTTOMMOST);
 			pDockDrag->m_dwDockZone = DS_DOCKED_BOTTOMMOST;
 			return TRUE;
@@ -1848,8 +1849,8 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDocker class
 	//
-	inline CDocker::CDocker() : m_pDockParent(NULL), m_BlockMove(FALSE), m_Undocking(FALSE), m_bIsClosing(FALSE), 
-		            m_bIsDragging(FALSE), m_bDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0), m_nTimerCount(0), 
+	inline CDocker::CDocker() : m_pDockParent(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), m_IsClosing(FALSE), 
+		            m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
 					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0)
 	{
 		// Assume this docker is the DockAncestor for now.
@@ -1985,12 +1986,12 @@ namespace Win32xx
 							CDocker* pDockDrag = static_cast<CDocker*>(FromHandlePermanent(nmhdr.hwndFrom));
 							if (pDockDrag)
 							{
-								if (pDockDrag->m_BlockMove)
+								if (pDockDrag->m_IsBlockMove)
 									pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
 
 								GetDockHint()->Destroy();
 								pDockDrag->m_dwDockZone = 0;
-								pDockDrag->m_BlockMove = FALSE;
+								pDockDrag->m_IsBlockMove = FALSE;
 							}
 						}
 					}
@@ -2079,7 +2080,7 @@ namespace Win32xx
 		for (v = GetAllDockChildren()->begin(); v != GetAllDockChildren()->end(); ++v)
 		{
 			// The CDocker is destroyed when the window is destroyed
-			(*v)->m_bIsClosing = TRUE;
+			(*v)->m_IsClosing = TRUE;
 			(*v)->Destroy();	// Destroy the window
 		}
 
@@ -2116,7 +2117,7 @@ namespace Win32xx
 		assert(pDocker);
 
 		pDocker->m_pDockParent = this;
-		pDocker->m_BlockMove = FALSE;
+		pDocker->m_IsBlockMove = FALSE;
 		pDocker->SetDockStyle(DockStyle);
 		m_vDockChildren.push_back(pDocker);
 		pDocker->ConvertToChild(m_hWnd);
@@ -2182,7 +2183,7 @@ namespace Win32xx
 			}
 
 			pDock->m_pDockParent = this;
-			pDock->m_BlockMove = FALSE;
+			pDock->m_IsBlockMove = FALSE;
 			pDock->ShowWindow(SW_HIDE);
 			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
 			pDock->SetDockStyle(dwDockStyle);
@@ -2211,7 +2212,7 @@ namespace Win32xx
 
 		// Set the dock styles
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
-		pDocker->m_BlockMove = FALSE;
+		pDocker->m_IsBlockMove = FALSE;
 		pDocker->SetWindowLongPtr(GWL_STYLE, dwStyle);
 		pDocker->ShowWindow(SW_HIDE);
 		pDocker->SetDockStyle(dwDockStyle);
@@ -2502,12 +2503,12 @@ namespace Win32xx
 
 	inline BOOL CDocker::IsDocked() const
 	{
-		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
+		return (((m_DockStyle&0xF) || (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_IsUndocking); // Boolean expression
 	}
 
 	inline BOOL CDocker::IsDragAutoResize() const
 	{
-		return m_bDragAutoResize;
+		return m_IsDragAutoResize;
 	}
 
 	inline BOOL CDocker::IsRelated(const CWnd* pWnd) const
@@ -2526,7 +2527,7 @@ namespace Win32xx
 
 	inline BOOL CDocker::IsUndocked() const
 	{
-		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_Undocking); // Boolean expression
+		return (!((m_DockStyle&0xF)|| (m_DockStyle & DS_DOCKED_CONTAINER)) && !m_IsUndocking); // Boolean expression
 	}
 
 	inline BOOL CDocker::LoadDockRegistrySettings(LPCTSTR szRegistryKeyName)
@@ -2997,8 +2998,8 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		m_BlockMove = FALSE;
-		m_bIsDragging = FALSE;
+		m_IsBlockMove = FALSE;
+		m_IsDragging = FALSE;
 		SendNotify(UWN_DOCKEND);
 
 		return 0L;
@@ -3006,7 +3007,7 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam)
 	{
-		m_bIsDragging = FALSE;
+		m_IsDragging = FALSE;
 		return FinalWindowProc(WM_NCLBUTTONDBLCLK, wParam, lParam);
 	}
 
@@ -3033,15 +3034,10 @@ namespace Win32xx
 
 		if (this == GetDockAncestor())
 		{
-			if (wParam == 1)
+			if (wParam == TIMER_ID)
 			{
 				DrawAllCaptions();
-				m_nTimerCount++;
-				if (m_nTimerCount == 10)
-				{
-					KillTimer(wParam);
-					m_nTimerCount = 0;
-				}
+				KillTimer(wParam);
 			}
 		}
 
@@ -3144,7 +3140,7 @@ namespace Win32xx
 			// An undocked docker is being moved
 			{
 				BOOL bResult = FALSE;
-				m_bIsDragging = TRUE;
+				m_IsDragging = TRUE;
 				SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 				if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &bResult, 0))
@@ -3163,7 +3159,7 @@ namespace Win32xx
 			break;
 		case SC_CLOSE:
 			// The close button is pressed on an undocked docker
-			m_bIsClosing = TRUE;
+			m_IsClosing = TRUE;
 			break;
 		}
 		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
@@ -3172,7 +3168,7 @@ namespace Win32xx
 	inline LRESULT CDocker::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
 	{
 		// Suspend dock drag moving while over dock zone
-		if (m_BlockMove)
+		if (m_IsBlockMove)
 		{
         	LPWINDOWPOS pWndPos = (LPWINDOWPOS)lParam;
 			pWndPos->flags |= SWP_NOMOVE|SWP_FRAMECHANGED;
@@ -3186,25 +3182,25 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
-		if (m_bIsDragging)
+		if (m_IsDragging)
 		{
 			// Send a Move notification to the parent
 			if ( IsLeftButtonDown() )
 			{
 				LPWINDOWPOS wPos = (LPWINDOWPOS)lParam;
-				if ((!(wPos->flags & SWP_NOMOVE)) || m_BlockMove)
+				if ((!(wPos->flags & SWP_NOMOVE)) || m_IsBlockMove)
 					SendNotify(UWN_DOCKMOVE);
 			}
 			else
 			{
 				CloseAllTargets();
-				m_BlockMove = FALSE;
+				m_IsBlockMove = FALSE;
 			}
 		}
 		else if (this == GetTopmostDocker())
 		{
 			// Reposition the dock children
-			if (IsUndocked() && IsWindowVisible() && !m_bIsClosing) RecalcDockLayout();
+			if (IsUndocked() && IsWindowVisible() && !m_IsClosing) RecalcDockLayout();
 		}
 
 		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
@@ -3611,7 +3607,7 @@ namespace Win32xx
 				GetDockHint()->Destroy();
 
 			CloseAllTargets();
-			m_BlockMove = FALSE;
+			m_IsBlockMove = FALSE;
 		}
 	}
 
@@ -3699,7 +3695,7 @@ namespace Win32xx
 
 	inline void CDocker::SetDragAutoResize(BOOL bAutoResize)
 	{
-		m_bDragAutoResize = bAutoResize;
+		m_IsDragAutoResize = bAutoResize;
 	}
 
 	inline void CDocker::SetView(CWnd& wndView)
@@ -3824,7 +3820,7 @@ namespace Win32xx
 
 	inline void CDocker::SetUndockPosition(CPoint pt)
 	{
-		m_Undocking = TRUE;
+		m_IsUndocking = TRUE;
 		CRect rc;
 		rc = GetDockClient()->GetWindowRect();
 		CRect rcTest = rc;
@@ -3833,7 +3829,7 @@ namespace Win32xx
 			rc.SetRect(pt.x - rc.Width()/2, pt.y - m_NCHeight/2, pt.x + rc.Width()/2, pt.y - m_NCHeight/2 + rc.Height());
 
 		ConvertToPopup(rc);
-		m_Undocking = FALSE;
+		m_IsUndocking = FALSE;
 
 		// Send the undock notification to the frame
 		NMHDR nmhdr;
@@ -3995,7 +3991,7 @@ namespace Win32xx
 	inline LRESULT CDocker::OnDockActivated(WPARAM wParam, LPARAM lParam)
 	{
 		DrawAllCaptions();
-		SetTimer(1, 100, NULL);
+		SetTimer(TIMER_ID, 100, NULL);
 		return CWnd::WndProcDefault(UWM_DOCKACTIVATE, wParam, lParam);
 	}
 
@@ -4024,7 +4020,7 @@ namespace Win32xx
 	//////////////////////////////////////
 	// Declaration of the CDockContainer class
 	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0), 
-		                                m_nTabPressed(-1), m_bHideSingleTab(FALSE)
+		                                m_nTabPressed(-1), m_IsHideSingleTab(FALSE)
 	{
 		m_pContainerParent = this;
 	}
@@ -4441,10 +4437,10 @@ namespace Win32xx
 		SelectPage(nPage);
 	}
 
-	inline void CDockContainer::SetHideSingleTab(BOOL bHide)
+	inline void CDockContainer::SetHideSingleTab(BOOL HideSingle)
 	// Only display tabs if there are two or more.
 	{	
-		m_bHideSingleTab = bHide;
+		m_IsHideSingleTab = HideSingle;
 		RecalcLayout();	
 	}
 
@@ -4463,7 +4459,7 @@ namespace Win32xx
 
 		int nItemWidth = 0;
 		int nItemHeight = 1;
-		if ((GetItemCount() != 1) || !m_bHideSingleTab)
+		if ((GetItemCount() != 1) || !m_IsHideSingleTab)
 		{
 			nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
 			nItemHeight = MAX(20, GetTextHeight() + 5);

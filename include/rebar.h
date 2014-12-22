@@ -107,7 +107,7 @@ namespace Win32xx
 		CReBar(const CReBar&);				// Disable copy construction
 		CReBar& operator = (const CReBar&); // Disable assignment operator
 
-		BOOL m_bIsDragging;
+		BOOL m_IsDragging;
 		HWND m_hMenuBar;
 		LPARAM m_Orig_lParam;
 	};
@@ -123,7 +123,7 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CReBar class
 	//
-	inline CReBar::CReBar() : m_bIsDragging(FALSE), m_hMenuBar(0), m_Orig_lParam(0L)
+	inline CReBar::CReBar() : m_IsDragging(FALSE), m_hMenuBar(0), m_Orig_lParam(0L)
 	{
 	}
 
@@ -326,7 +326,7 @@ namespace Win32xx
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to supress default background drawing.
-		return (TRUE == GetParent()->SendMessage(UWN_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this));
+		return (TRUE == GetParent()->SendMessage(UWM_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
 
 	inline void CReBar::PreCreate(CREATESTRUCT &cs)
@@ -388,7 +388,7 @@ namespace Win32xx
 	inline LRESULT CReBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
 	{
 		m_Orig_lParam = lParam;	// Store the x,y position
-		m_bIsDragging = TRUE;
+		m_IsDragging = TRUE;
 		
 		return FinalWindowProc(WM_LBUTTONDOWN, wParam, lParam);
 	}
@@ -407,14 +407,14 @@ namespace Win32xx
 				lParam = m_Orig_lParam;
 			}
 		}
-		m_bIsDragging = FALSE;
+		m_IsDragging = FALSE;
 
 		return FinalWindowProc(WM_LBUTTONUP, wParam, lParam);
 	}
 
 	inline LRESULT CReBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
 	{
-		if (m_bIsDragging)
+		if (m_IsDragging)
 		{
 			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent()->SendMessage(UWM_GETRBTHEME, 0L, 0L));
 			if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)

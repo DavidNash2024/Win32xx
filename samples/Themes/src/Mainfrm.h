@@ -56,16 +56,16 @@ private:
 	CImageList m_CardImages;
 
 	UINT m_nColor;
-	BOOL m_bUseThemes;
-	BOOL m_bBandColors;
-	BOOL m_bFlatStyle;
-	BOOL m_bBandsLeft;
-	BOOL m_bLockMenuBand;
-	BOOL m_bRoundBorders;
-	BOOL m_bShortBands;
-	BOOL m_bUseLines;
-	BOOL m_bShowArrows;
-	BOOL m_bShowCards;
+	BOOL m_UseThemes;
+	BOOL m_UseBandColors;
+	BOOL m_UseFlatStyle;
+	BOOL m_KeepBandsLeft;
+	BOOL m_LockMenuBand;
+	BOOL m_UseRoundBorders;
+	BOOL m_UseShortBands;
+	BOOL m_UseLines;
+	BOOL m_ShowArrows;
+	BOOL m_ShowCards;
 };
 
 #endif //MAINFRM_H

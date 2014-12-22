@@ -114,10 +114,10 @@ namespace Win32xx
 			MDI_CLOSE = 2
 		};
 
-		BOOL  m_bExitAfter;		// Exit after Popup menu ends
-		BOOL  m_bKeyMode;		// keyboard navigation mode
-		BOOL  m_bMenuActive;	// popup menu active
-		BOOL  m_bSelPopup;		// a popup (cascade) menu is selected
+		BOOL  m_IsExitAfter;		// Exit after Popup menu ends
+		BOOL  m_IsKeyMode;		// keyboard navigation mode
+		BOOL  m_IsMenuActive;	// popup menu active
+		BOOL  m_IsSelPopup;		// a popup (cascade) menu is selected
 		HMENU m_hPopupMenu;		// handle to the popup menu
 		HMENU m_hSelMenu;		// handle to the cascaded popup menu
 		HMENU m_hTopMenu;		// handle to the top level menu
@@ -143,13 +143,13 @@ namespace Win32xx
 	//
 	inline CMenuBar::CMenuBar()
 	{
-		m_bExitAfter	= FALSE;
+		m_IsExitAfter	= FALSE;
 		m_hTopMenu		= NULL;
 		m_nHotItem		= -1;
-		m_bSelPopup		= FALSE;
+		m_IsSelPopup	= FALSE;
 		m_hSelMenu		= NULL;
-		m_bMenuActive	= FALSE;
-		m_bKeyMode		= FALSE;
+		m_IsMenuActive	= FALSE;
+		m_IsKeyMode		= FALSE;
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 		m_hPopupMenu	= 0;
@@ -167,9 +167,9 @@ namespace Win32xx
 		if (SendMessage(TB_MAPACCELERATOR, KeyCode, (LPARAM) &ID))
 		{
 			GrabFocus();
-			m_bKeyMode = TRUE;
+			m_IsKeyMode = TRUE;
 			SetHotItem(ID);
-			m_bMenuActive = TRUE;
+			m_IsMenuActive = TRUE;
 			PostMessage(UWM_POPUPMENU, 0L, 0L);
 		}
 		else
@@ -318,8 +318,8 @@ namespace Win32xx
 	inline void CMenuBar::ExitMenu()
 	{
 		ReleaseFocus();
-		m_bKeyMode = FALSE;
-		m_bMenuActive = FALSE;
+		m_IsKeyMode = FALSE;
+		m_IsMenuActive = FALSE;
 		SendMessage(TB_PRESSBUTTON, (WPARAM)m_nHotItem, (LPARAM)MAKELONG (FALSE, 0));
 		SetHotItem(-1);
 
@@ -378,7 +378,7 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(lParam);
 
-		if (!m_bMenuActive)
+		if (!m_IsMenuActive)
 			DoAltKey(LOWORD(wParam));
 
 		return FinalWindowProc(WM_MENUCHAR, wParam, lParam);
@@ -401,7 +401,7 @@ namespace Win32xx
 
 	inline LRESULT CMenuBar::OnExitMenuLoop(WPARAM wParam, LPARAM lParam)
 	{
-		if (m_bExitAfter)
+		if (m_IsExitAfter)
 			ExitMenu();
 		m_pFrame->SendMessage(WM_EXITMENULOOP, wParam, lParam);
 
@@ -450,7 +450,7 @@ namespace Win32xx
 
 		default:
 			// Handle Accelerator keys with Alt toggled down
-			if (m_bKeyMode)
+			if (m_IsKeyMode)
 			{
 				UINT ID;
 				if (SendMessage(TB_MAPACCELERATOR, wParam, (LPARAM) &ID))
@@ -574,7 +574,7 @@ namespace Win32xx
 		switch(uMsg)
 		{
 		case WM_KEYDOWN:
-			m_bExitAfter = FALSE;
+			m_IsExitAfter = FALSE;
 			{
 				switch (wParam)
 				{
@@ -583,8 +583,8 @@ namespace Win32xx
 					if ((m_hSelMenu) &&(m_hSelMenu != m_hPopupMenu))
 						return FALSE;
 
-					m_bMenuActive = FALSE;
-					m_bKeyMode = TRUE;
+					m_IsMenuActive = FALSE;
+					m_IsKeyMode = TRUE;
 					SendMessage(WM_CANCELMODE, 0L, 0L);
 					SendMessage(TB_PRESSBUTTON, (WPARAM)m_nHotItem, (LPARAM)MAKELONG(FALSE, 0));
 					SendMessage(TB_SETHOTITEM, (WPARAM)m_nHotItem, 0L);
@@ -609,7 +609,7 @@ namespace Win32xx
 
 				case VK_RIGHT:
 					// Use default processing to open Sub Menu
-					if (m_bSelPopup)
+					if (m_IsSelPopup)
 						return FALSE;
 
 					SendMessage(TB_PRESSBUTTON, (WPARAM)m_nHotItem, (LPARAM)MAKELONG(FALSE, 0));
@@ -624,7 +624,7 @@ namespace Win32xx
 					break;
 
 				case VK_RETURN:
-					m_bExitAfter = TRUE;
+					m_IsExitAfter = TRUE;
 					break;
 
 				} // switch (wParam)
@@ -634,12 +634,12 @@ namespace Win32xx
 			return FALSE;
 
 		case WM_CHAR:
-			m_bExitAfter = TRUE;
+			m_IsExitAfter = TRUE;
 			return FALSE;
 
 		case WM_LBUTTONDOWN:
 			{
-				m_bExitAfter = TRUE;
+				m_IsExitAfter = TRUE;
 				if (HitTest() >= 0)
 				{
 					// Cancel popup when we hit a button a second time
@@ -662,14 +662,14 @@ namespace Win32xx
 					pMDIChild->PostMessage(WM_SYSCOMMAND, nID, 0L);
 			}
 
-			m_bExitAfter = TRUE;
+			m_IsExitAfter = TRUE;
 			return FALSE;
 
 		case WM_MENUSELECT:
 			{
 				// store info about selected item
 				m_hSelMenu = (HMENU)lParam;
-				m_bSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
+				m_IsSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
 
 				// Reflect message back to the frame window
 				GetAncestor()->SendMessage(WM_MENUSELECT, wParam, lParam);
@@ -784,12 +784,12 @@ namespace Win32xx
 
 	inline LRESULT CMenuBar::OnPopupMenu()
 	{
-		if (m_bKeyMode)
+		if (m_IsKeyMode)
 			// Simulate a down arrow key press
 			PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
 
-		m_bKeyMode = FALSE;
-		m_bExitAfter = FALSE;
+		m_IsKeyMode = FALSE;
+		m_IsExitAfter = FALSE;
 		m_OldMousePos = GetCursorPos();
 
 		CWnd* pMaxMDIChild = NULL;
@@ -817,9 +817,9 @@ namespace Win32xx
 		SendMessage(TB_SETHOTITEM, (WPARAM)m_nHotItem, 0L);
 		SendMessage(TB_PRESSBUTTON, (WPARAM)m_nHotItem, (LPARAM)MAKELONG(TRUE, 0));
 
-		m_bSelPopup = FALSE;
+		m_IsSelPopup = FALSE;
 		m_hSelMenu = NULL;
-		m_bMenuActive = TRUE;
+		m_IsMenuActive = TRUE;
 
 		// We hook mouse input to process mouse and keyboard input during
 		//  the popup menu. Messages are sent to StaticMsgHook.
@@ -845,7 +845,7 @@ namespace Win32xx
 			xPos, rc.bottom, m_hWnd, &tpm);
 
 		// We get here once the TrackPopupMenuEx has ended
-		m_bMenuActive = FALSE;
+		m_IsMenuActive = FALSE;
 
 		// Remove the message hook
 		::UnhookWindowsHookEx(pTLSData->hMsgHook);
@@ -862,7 +862,7 @@ namespace Win32xx
 		}
 
 		// Re-establish Focus
-		if (m_bKeyMode)
+		if (m_IsKeyMode)
 			GrabFocus();
 
 		return 0L;
@@ -876,7 +876,7 @@ namespace Win32xx
 			{
 				// Alt/F10 key toggled
 				GrabFocus();
-				m_bKeyMode = TRUE;
+				m_IsKeyMode = TRUE;
 				int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 				SetHotItem(nMaxedOffset);
 			}
@@ -933,7 +933,7 @@ namespace Win32xx
 			if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))
 			{
 				int nButton = HitTest();
-				if ((m_bMenuActive) && (nButton != m_nHotItem))
+				if ((m_IsMenuActive) && (nButton != m_nHotItem))
 				{
 					SendMessage(TB_PRESSBUTTON, (WPARAM)m_nHotItem, (LPARAM)MAKELONG(FALSE, 0));
 					m_nHotItem = nButton;
@@ -946,7 +946,7 @@ namespace Win32xx
 			}
 
 			// Handle escape from popup menu
-			if ((flag & HICF_LEAVING) && m_bKeyMode)
+			if ((flag & HICF_LEAVING) && m_IsKeyMode)
 			{
 				m_nHotItem = pNMHI->idOld;
 				PostMessage(TB_SETHOTITEM, (WPARAM)m_nHotItem, 0L);

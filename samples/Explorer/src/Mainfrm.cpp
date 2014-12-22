@@ -6,7 +6,7 @@
 #include "resource.h"
 
 
-CMainFrame::CMainFrame()  : m_bShowHidden(FALSE)
+CMainFrame::CMainFrame()  : m_ShowHidden(FALSE)
 {
 	// Set m_MainView as the view window of the frame
 	SetView(m_LeftPane);
@@ -101,11 +101,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
-	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
-	// m_bUseReBar = FALSE;				// Don't use a ReBar
-	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
+	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
+	// m_UseReBar = FALSE;				// Don't use a ReBar
+	// m_UseThemes = FALSE;				// Don't use themes
+	// m_UseToolBar = FALSE;			// Don't use a ToolBar
 	
 	// call the base OnCreate function
 	return CFrame::OnCreate(pcs);
@@ -159,8 +159,8 @@ void CMainFrame::OnShowHidden()
 	// Handle the the View submenu
 	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
 
-	m_bShowHidden = !m_bShowHidden;
-	pViewMenu->CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_bShowHidden)? MF_CHECKED : MF_UNCHECKED);
+	m_ShowHidden = !m_ShowHidden;
+	pViewMenu->CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_ShowHidden)? MF_CHECKED : MF_UNCHECKED);
 
 	// Refresh the Listview display
 	GetListView()->DoDisplay();

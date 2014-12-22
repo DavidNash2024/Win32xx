@@ -8,8 +8,8 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_pLastActiveDocker(0), m_bContainerTabsAtTop(FALSE), 
-                           m_bHideSingleTab(TRUE), m_bMDITabsAtTop(TRUE)
+CMainFrame::CMainFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE), 
+                           m_IsHideSingleTab(TRUE), m_IsMDITabsAtTop(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -122,12 +122,12 @@ void CMainFrame::OnFileNewTree()
 void CMainFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
-	SetContainerTabsAtTop(!m_bContainerTabsAtTop);
+	SetContainerTabsAtTop(!m_IsContainerTabsAtTop);
 }
 
 void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 {
-	m_bContainerTabsAtTop = bTop;
+	m_IsContainerTabsAtTop = bTop;
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
@@ -148,12 +148,12 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 void CMainFrame::OnMDITabsAtTop()
 // Reposition TabbedMDI's tabs
 {
-	SetMDITabsAtTop(!m_bMDITabsAtTop);
+	SetMDITabsAtTop(!m_IsMDITabsAtTop);
 }
 
 void CMainFrame::SetMDITabsAtTop(BOOL bTop)
 {
-	m_bMDITabsAtTop = bTop;
+	m_IsMDITabsAtTop = bTop;
 	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
 	pTabbedMDI->GetTab()->SetTabsAtTop(bTop);
 
@@ -211,8 +211,8 @@ void CMainFrame::OnDefaultLayout()
 	LoadDefaultDockers();
 	LoadDefaultMDIs();
 
-	SetContainerTabsAtTop(m_bContainerTabsAtTop);
-	HideSingleContainerTab(m_bHideSingleTab);
+	SetContainerTabsAtTop(m_IsContainerTabsAtTop);
+	HideSingleContainerTab(m_IsHideSingleTab);
 	SetRedraw(TRUE);
 	RedrawWindow();
 }
@@ -273,11 +273,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
-	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
-	// m_bUseReBar = FALSE;				// Don't use a ReBar
-	// m_bUseThemes = FALSE;            // Don't use themes
-	// m_bUseToolBar = FALSE;			// Don't use a ToolBar
+	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
+	// m_UseReBar = FALSE;				// Don't use a ReBar
+	// m_UseThemes = FALSE;				// Don't use themes
+	// m_UseToolBar = FALSE;			// Don't use a ToolBar
 
 	// call the base class function
 	return CFrame::OnCreate(pcs);
@@ -285,12 +285,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 void CMainFrame::OnHideSingleTab()
 {
-	HideSingleContainerTab(!m_bHideSingleTab);
+	HideSingleContainerTab(!m_IsHideSingleTab);
 }
 
-void CMainFrame::HideSingleContainerTab(BOOL bHide)
+void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 {
-	m_bHideSingleTab = bHide;
+	m_IsHideSingleTab = HideSingle;
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
@@ -299,12 +299,12 @@ void CMainFrame::HideSingleContainerTab(BOOL bHide)
 		CDockContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer && pContainer->IsWindow())
 		{
-			pContainer->SetHideSingleTab(bHide);
+			pContainer->SetHideSingleTab(HideSingle);
 		}
 	}
 
 	// Set the menu checkmark
-	UINT uCheck = (bHide)? MF_CHECKED : MF_UNCHECKED;
+	UINT uCheck = (HideSingle)? MF_CHECKED : MF_UNCHECKED;
 	GetFrameMenu()->CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
 }
 
@@ -322,7 +322,7 @@ void CMainFrame::OnInitialUpdate()
 		LoadDefaultMDIs();
 
 	// Hide the container's tab if it has just one tab
-	HideSingleContainerTab(m_bHideSingleTab);
+	HideSingleContainerTab(m_IsHideSingleTab);
 
 	// Add a "Window" menu item, positioned 2nd from the right.
 	int nMenuPos = GetFrameMenu()->GetMenuItemCount() -1;

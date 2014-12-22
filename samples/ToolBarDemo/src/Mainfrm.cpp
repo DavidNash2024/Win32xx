@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_bBigIcons(FALSE)
+CMainFrame::CMainFrame() : m_UseBigIcons(FALSE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -75,10 +75,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
-	// m_bUseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_bUseMenuStatus = FALSE;		// Don't show menu descriptions in the StatusBar
-	// m_bUseReBar = FALSE;				// Don't use a ReBar
-	// m_bUseThemes = FALSE;            // Don't use themes
+	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
+	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
+	// m_UseReBar = FALSE;				// Don't use a ReBar
+	// m_UseThemes = FALSE;				// Don't use themes
 
 	// call the base class function
 	CFrame::OnCreate(pcs);
@@ -289,11 +289,11 @@ LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
 void CMainFrame::OnTBBigIcons()
 // Toggle the Image size for the ToolBar by changing Image Lists.
 {
-	m_bBigIcons = !m_bBigIcons;
+	m_UseBigIcons = !m_UseBigIcons;
 
-	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_bBigIcons ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_UseBigIcons ? MF_CHECKED : MF_UNCHECKED));
 
-	if (m_bBigIcons)
+	if (m_UseBigIcons)
 	{
 		// Set Large Images. 3 Imagelists - Normal, Hot and Disabled
 		SetToolBarImages(RGB(192,192,192), IDB_NORMAL, IDB_HOT, IDB_DISABLED);

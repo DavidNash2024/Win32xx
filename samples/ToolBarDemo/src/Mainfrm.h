@@ -41,7 +41,7 @@ private:
 	CView m_View;
 	std::vector<TBBUTTON>	m_vTBBDefault;
 	std::vector<TBBUTTON>	m_vTBBReset;
-	BOOL	m_bBigIcons;
+	BOOL	m_UseBigIcons;
 };
 
 #endif //MAINFRM_H

@@ -147,7 +147,7 @@ namespace Win32xx
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to supress default background drawing.
-		return (TRUE == GetParent()->SendMessage(UWN_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
+		return (TRUE == GetParent()->SendMessage(UWM_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
 
 	inline void CStatusBar::PreCreate(CREATESTRUCT &cs)

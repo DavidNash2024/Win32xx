@@ -8,7 +8,7 @@
 
 // Definitions for the CMyDialog class
 CClientDialog::CClientDialog(UINT nResID) : CDialog(nResID), 
-                   m_bClientConnected(FALSE), m_SocketType(SOCK_STREAM)
+                   m_IsClientConnected(FALSE), m_SocketType(SOCK_STREAM)
 {
 	// Add support for the IP Address control
 	// It requires Win95 with IE4 intergrated or a later version of Windows OS.
@@ -70,7 +70,7 @@ void CClientDialog::OnDestroy()
 BOOL CClientDialog::OnSocketConnect()
 {
 	// Called when the connection to the server is established
-	m_bClientConnected = TRUE;
+	m_IsClientConnected = TRUE;
 	m_ButtonConnect.EnableWindow( TRUE );
 
 	// Move focus to the Send Edit box
@@ -96,7 +96,7 @@ BOOL CClientDialog::OnSocketConnect()
 BOOL CClientDialog::OnSocketDisconnect()
 {
 	// Called when the socket is disconnected from the server
-	m_bClientConnected = FALSE;
+	m_IsClientConnected = FALSE;
 	m_ButtonConnect.EnableWindow( TRUE );
 
 	// Update the dialog
@@ -248,7 +248,7 @@ void CClientDialog::OnStartClient()
 	lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
 	int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
-	if (!m_bClientConnected)
+	if (!m_IsClientConnected)
 	{
 		switch(m_SocketType)
 		{
@@ -324,7 +324,7 @@ void CClientDialog::OnStartClient()
 				m_ButtonConnect.SetWindowText( _T("Disconnect") );
 				m_EditStatus.SetWindowText( _T("Ready to Send") );
 				SendMessage( WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE );
-				m_bClientConnected = TRUE;
+				m_IsClientConnected = TRUE;
 			}
 			break;
 		}
@@ -350,7 +350,7 @@ void CClientDialog::OnStartClient()
 			m_RadioIP6.EnableWindow(TRUE);
 			m_EditIP6Address.EnableWindow(TRUE);
 		}
-		m_bClientConnected = FALSE;
+		m_IsClientConnected = FALSE;
 	}
 }
 

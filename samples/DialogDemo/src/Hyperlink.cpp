@@ -4,7 +4,7 @@
 #include "stdafx.h"
 #include "Hyperlink.h"
 
-CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
+CHyperlink::CHyperlink() : m_IsUrlVisited(FALSE), m_IsClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
                             m_crNotVisited(RGB(0,0,255))
 {
 	// Create the cursor
@@ -30,15 +30,15 @@ void CHyperlink::OnAttach()
 void CHyperlink::OnLButtonDown()
 {
 	SetCapture();
-	m_bClicked = TRUE;
+	m_IsClicked = TRUE;
 }
 
 void CHyperlink::OnLButtonUp(LPARAM lParam)
 {
 	ReleaseCapture();
-	if(m_bClicked)
+	if(m_IsClicked)
 	{
-		m_bClicked = FALSE;
+		m_IsClicked = FALSE;
 		CPoint pt;
 		pt.x = (short)LOWORD(lParam);
 		pt.y = (short)HIWORD(lParam);
@@ -55,7 +55,7 @@ void CHyperlink::OpenUrl()
 
 	if( (int)(LRESULT)::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL ) > 32)
 	{
-		m_bUrlVisited = TRUE;
+		m_IsUrlVisited = TRUE;
 
 		// redraw the window to update the color
 		Invalidate();
@@ -70,7 +70,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	if (uMsg ==  WM_CTLCOLORSTATIC)
 	{
 		CDC* pDC = CDC::FromHandle((HDC)wParam);
-		pDC->SetTextColor( m_bUrlVisited? m_crVisited : m_crNotVisited);
+		pDC->SetTextColor( m_IsUrlVisited? m_crVisited : m_crNotVisited);
 		pDC->SetBkMode(TRANSPARENT);
 		pDC->SelectObject(&m_UrlFont);
 		return (LRESULT)GetSysColorBrush(COLOR_BTNFACE);

@@ -25,8 +25,8 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	BOOL	m_bUrlVisited;
-	BOOL	m_bClicked;
+	BOOL	m_IsUrlVisited;
+	BOOL	m_IsClicked;
 	COLORREF m_crVisited;
 	COLORREF m_crNotVisited;
 	HCURSOR m_hCursor;

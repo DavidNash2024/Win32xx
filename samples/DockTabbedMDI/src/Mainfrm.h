@@ -35,7 +35,7 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void HideSingleContainerTab(BOOL bHide);
+	void HideSingleContainerTab(BOOL HideSingle);
 	void OnFileNew();
 	void OnContainerTabsAtTop();
 	void OnHideSingleTab();
@@ -70,9 +70,9 @@ protected:
 private:
 	CMyTabbedMDI m_MyTabbedMDI;
 	CDocker* m_pLastActiveDocker;
-	BOOL m_bContainerTabsAtTop;
-	BOOL m_bHideSingleTab;
-	BOOL m_bMDITabsAtTop;
+	BOOL m_IsContainerTabsAtTop;
+	BOOL m_IsHideSingleTab;
+	BOOL m_IsMDITabsAtTop;
 };
 
 #endif //MAINFRM_H

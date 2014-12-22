@@ -422,13 +422,13 @@ namespace Win32xx
 		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
 		CImageList m_imlMenu;				// Imagelist of menu icons
 		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
-		BOOL m_bUseIndicatorStatus;			// set to TRUE to see indicators in status bar
-		BOOL m_bUseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
-		BOOL m_bUseReBar;					// set to TRUE if ReBars are to be used
-		BOOL m_bUseThemes;					// set to TRUE if themes are to be used
-		BOOL m_bUseToolBar;					// set to TRUE if the toolbar is used
-		BOOL m_bShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
-		BOOL m_bShowToolBar;				// A flag to indicate if the ToolBar should be displayed
+		BOOL m_UseIndicatorStatus;			// set to TRUE to see indicators in status bar
+		BOOL m_UseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
+		BOOL m_UseReBar;					// set to TRUE if ReBars are to be used
+		BOOL m_UseThemes;					// set to TRUE if themes are to be used
+		BOOL m_UseToolBar;					// set to TRUE if the toolbar is used
+		BOOL m_ShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
+		BOOL m_ShowToolBar;					// A flag to indicate if the ToolBar should be displayed
 
 	private:
 		CFrame(const CFrame&);				// Disable copy construction
@@ -466,7 +466,7 @@ namespace Win32xx
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
-		BOOL m_bDrawArrowBkgrnd;			// True if a separate arrow background is to be drawn on toolbar
+		BOOL m_DrawArrowBkgrnd;				// True if a separate arrow background is to be drawn on toolbar
 		HHOOK m_KbdHook;					// Keyboard hook.
 
 	};  // class CFrame
@@ -810,9 +810,9 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_pMenuMetrics(0), m_bUseIndicatorStatus(TRUE), m_bUseMenuStatus(TRUE), m_bUseThemes(TRUE),
-							  m_bUseToolBar(TRUE), m_bShowStatusBar(TRUE), m_bShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
-							  m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_bDrawArrowBkgrnd(FALSE), m_KbdHook(0)
+	inline CFrame::CFrame() : m_pMenuMetrics(0), m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE), m_UseThemes(TRUE),
+							  m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
+							  m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_DrawArrowBkgrnd(FALSE), m_KbdHook(0)
 	{
 		ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
 		ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
@@ -825,7 +825,7 @@ namespace Win32xx
 		LoadCommonControls();
 
 		// By default, we use the rebar if we can
-		m_bUseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
+		m_UseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
 
 		// Set the fonts
 		NONCLIENTMETRICS info;
@@ -1054,14 +1054,14 @@ namespace Win32xx
 	// Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand
 	//  if the frame uses a rebar.
 	{
-		if (IsReBarSupported() && m_bUseReBar)
+		if (IsReBarSupported() && m_UseReBar)
 			AddToolBarBand(GetToolBar(), RBBS_BREAK|RBBS_GRIPPERALWAYS, IDW_TOOLBAR);	// Create the toolbar inside rebar
 		else
 			GetToolBar()->Create(this);	// Create the toolbar without a rebar
 
 		SetupToolBar();
 
-		if (IsReBarSupported() && m_bUseReBar)
+		if (IsReBarSupported() && m_UseReBar)
 		{
 			if (m_RBTheme.UseThemes && m_RBTheme.LockMenuBand)
 			{
@@ -1303,14 +1303,14 @@ namespace Win32xx
 						xImage -= (nStyle & TBSTYLE_DROPDOWN)?((dwTBStyle & TBSTYLE_LIST)? (IsXPThemed()?-4:0):6):((dwTBStyle & TBSTYLE_LIST)? 0:4);
 
 						// Draw separate background for dropdown arrow
-						if ((m_bDrawArrowBkgrnd) && (nState & CDIS_HOT))
+						if ((m_DrawArrowBkgrnd) && (nState & CDIS_HOT))
 						{
 							CRect rcArrowBkgnd = rcRect;
 							rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
 							pDrawDC->GradientFill(m_TBTheme.clrPressed1, m_TBTheme.clrPressed2, rcArrowBkgnd, FALSE);
 						}
 
-						m_bDrawArrowBkgrnd = FALSE;
+						m_DrawArrowBkgrnd = FALSE;
 
 						// Manually draw the dropdown arrow
 						pDrawDC->CreatePen(PS_SOLID, 1, RGB(0,0,0));
@@ -1916,10 +1916,10 @@ namespace Win32xx
 	{
 		CRect rcClient = GetClientRect();
 
-		if (GetStatusBar()->IsWindow() && m_bShowStatusBar)
+		if (GetStatusBar()->IsWindow() && m_ShowStatusBar)
 			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-		if (IsReBarSupported() && m_bUseReBar && GetReBar()->IsWindow())
+		if (IsReBarSupported() && m_UseReBar && GetReBar()->IsWindow())
 			rcClient = ExcludeChildRect(rcClient, GetReBar());
 		else
 			if (GetToolBar()->IsWindow() && GetToolBar()->IsWindowVisible())
@@ -2031,8 +2031,8 @@ namespace Win32xx
 				m_rcPosition.left = dwLeft;
 				m_rcPosition.bottom = m_rcPosition.top + dwHeight;
 				m_rcPosition.right = m_rcPosition.left + dwWidth;
-				m_bShowStatusBar = dwStatusBar & 1;
-				m_bShowToolBar = dwToolBar & 1;
+				m_ShowStatusBar = dwStatusBar & 1;
+				m_ShowToolBar = dwToolBar & 1;
 
 				RegCloseKey(hKey);
 				bRet = TRUE;
@@ -2121,7 +2121,7 @@ namespace Win32xx
 		SetTheme();
 
 		// Create the rebar and menubar
-		if (IsReBarSupported() && m_bUseReBar)
+		if (IsReBarSupported() && m_UseReBar)
 		{
 			// Create the rebar
 			GetReBar()->Create(this);
@@ -2138,23 +2138,23 @@ namespace Win32xx
 		UpdateMRUMenu();
 
 		// Create the ToolBar
-		if (m_bUseToolBar)
+		if (m_UseToolBar)
 		{
 			CreateToolBar();
-			ShowToolBar(m_bShowToolBar);
+			ShowToolBar(m_ShowToolBar);
 		}
 		else
 		{
-			m_bShowToolBar = FALSE;
+			m_ShowToolBar = FALSE;
 			GetFrameMenu()->EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
 
 		// Create the status bar
 		GetStatusBar()->Create(this);
 		GetStatusBar()->SetFont(&m_fntStatusBar, FALSE);
-		ShowStatusBar(m_bShowStatusBar);
+		ShowStatusBar(m_ShowStatusBar);
 
-		if (m_bUseIndicatorStatus)
+		if (m_UseIndicatorStatus)
 			SetStatusIndicators();
 
 		// Create the view window
@@ -2337,7 +2337,7 @@ namespace Win32xx
 	{
 		// Set the StatusBar text when we hover over a menu
 		// Only popup submenus have status strings
-		if (m_bUseMenuStatus && GetStatusBar()->IsWindow())
+		if (m_UseMenuStatus && GetStatusBar()->IsWindow())
 		{
 			int nID = LOWORD (wParam);
 			CMenu* pMenu = CMenu::FromHandle((HMENU) lParam);
@@ -2357,11 +2357,11 @@ namespace Win32xx
 		switch(nID)
 		{
 		case IDW_VIEW_STATUSBAR:
-			GetFrameMenu()->CheckMenuItem(nID, m_bShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
+			GetFrameMenu()->CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		case IDW_VIEW_TOOLBAR:
-			GetFrameMenu()->EnableMenuItem(nID, m_bUseToolBar ? MF_ENABLED : MF_DISABLED);
-			GetFrameMenu()->CheckMenuItem(nID, m_bShowToolBar ? MF_CHECKED : MF_UNCHECKED);
+			GetFrameMenu()->EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
+			GetFrameMenu()->CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		}
 	}
@@ -2426,7 +2426,7 @@ namespace Win32xx
 		assert(pTB);
 
 		// a boolean expression
-		m_bDrawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
+		m_DrawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
 
 		return 0L;
 	}
@@ -2510,7 +2510,7 @@ namespace Win32xx
 			m_fntStatusBar.DeleteObject();
 			m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
 			GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);
-			if (m_bUseMenuStatus)
+			if (m_UseMenuStatus)
 				GetStatusBar()->SetWindowText(m_strStatusText);
 
 			SetStatusIndicators();
@@ -2570,14 +2570,14 @@ namespace Win32xx
 
 	inline void CFrame::OnViewStatusBar()
 	{
-		m_bShowStatusBar = !m_bShowStatusBar;
-		ShowStatusBar(m_bShowStatusBar);
+		m_ShowStatusBar = !m_ShowStatusBar;
+		ShowStatusBar(m_ShowStatusBar);
 	}
 
 	inline void CFrame::OnViewToolBar()
 	{
-		m_bShowToolBar = m_bUseToolBar ? !m_bShowToolBar : FALSE;
-		ShowToolBar(m_bShowToolBar);
+		m_ShowToolBar = m_UseToolBar ? !m_ShowToolBar : FALSE;
+		ShowToolBar(m_ShowToolBar);
 	}
 
 	inline void CFrame::PreCreate(CREATESTRUCT& cs)
@@ -2613,11 +2613,11 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		if (GetStatusBar()->IsWindow() && m_bShowStatusBar)
+		if (GetStatusBar()->IsWindow() && m_ShowStatusBar)
 		{
 			GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar()->Invalidate();
-			if (m_bUseMenuStatus)
+			if (m_UseMenuStatus)
 				GetStatusBar()->SetWindowText(m_strStatusText);
 
 			SetStatusIndicators();
@@ -2629,7 +2629,7 @@ namespace Win32xx
 			GetReBar()->SendMessage(WM_SIZE, 0L, 0L);
 			GetReBar()->Invalidate();
 		}
-		else if (m_bUseToolBar && m_bShowToolBar && GetToolBar()->IsWindow())
+		else if (m_UseToolBar && m_ShowToolBar && GetToolBar()->IsWindow())
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
@@ -2701,8 +2701,8 @@ namespace Win32xx
 				}
 
 				// Store the ToolBar and statusbar states
-				DWORD dwShowToolBar = m_bShowToolBar;
-				DWORD dwShowStatusBar = m_bShowStatusBar;
+				DWORD dwShowToolBar = m_ShowToolBar;
+				DWORD dwShowStatusBar = m_ShowStatusBar;
 
 				if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("ToolBar"), 0, REG_DWORD, (LPBYTE)&dwShowToolBar, sizeof(DWORD)))
 					throw CWinException(_T("RegSetValueEx failed"));
@@ -2876,7 +2876,7 @@ namespace Win32xx
 	inline void CFrame::SetStatusIndicators()
 	// Creates 4 panes in the status bar and displays status and key states.
 	{
-		if (GetStatusBar()->IsWindow() && (m_bUseIndicatorStatus))
+		if (GetStatusBar()->IsWindow() && (m_UseIndicatorStatus))
 		{
 			// Calculate the width of the text indicators
 			CClientDC dcStatus(GetStatusBar());
@@ -2932,12 +2932,12 @@ namespace Win32xx
 		// Avoid themes if using less than 16 bit colors
 		CClientDC DesktopDC(NULL);
 		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
-			m_bUseThemes = FALSE;
+			m_UseThemes = FALSE;
 
 		BOOL T = TRUE;
 		BOOL F = FALSE;
 
-		if (m_bUseThemes)
+		if (m_UseThemes)
 		{
 			// Retrieve the XP theme name
 			m_XPThemeName = GetThemeName();
@@ -3215,12 +3215,12 @@ namespace Win32xx
 			if (bShow)
 			{
 				GetStatusBar()->ShowWindow(SW_SHOW);
-				m_bShowStatusBar = TRUE;
+				m_ShowStatusBar = TRUE;
 			}
 			else
 			{
 				GetStatusBar()->ShowWindow(SW_HIDE);
-				m_bShowStatusBar = FALSE;
+				m_ShowStatusBar = FALSE;
 			}
 		}
 
@@ -3240,7 +3240,7 @@ namespace Win32xx
 					GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(*GetToolBar()), TRUE);
 				else
 					GetToolBar()->ShowWindow(SW_SHOW);
-				m_bShowToolBar = TRUE;
+				m_ShowToolBar = TRUE;
 			}
 			else
 			{
@@ -3248,7 +3248,7 @@ namespace Win32xx
 					GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(*GetToolBar()), FALSE);
 				else
 					GetToolBar()->ShowWindow(SW_HIDE);
-				m_bShowToolBar = FALSE;
+				m_ShowToolBar = FALSE;
 			}
 		}
 
@@ -3384,8 +3384,8 @@ namespace Win32xx
 		case UWM_GETRBTHEME:		return (LRESULT)&m_RBTheme;
 		case UWM_GETSBTHEME:		return (LRESULT)&m_SBTheme;
 		case UWM_GETTBTHEME:		return (LRESULT)&m_TBTheme;
-		case UWN_DRAWRBBKGND:       return DrawReBarBkgnd((CDC*) wParam, (CReBar*) lParam);
-		case UWN_DRAWSBBKGND:       return DrawStatusBarBkgnd((CDC*) wParam, (CStatusBar*) lParam);
+		case UWM_DRAWRBBKGND:       return DrawReBarBkgnd((CDC*) wParam, (CReBar*) lParam);
+		case UWM_DRAWSBBKGND:       return DrawStatusBarBkgnd((CDC*) wParam, (CStatusBar*) lParam);
 
 		} // switch uMsg
 

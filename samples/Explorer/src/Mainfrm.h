@@ -19,7 +19,7 @@ public:
 	virtual ~CMainFrame();
 	CMyListView* GetListView() const {return static_cast<CMyListView*>(m_RightPane->GetView());}
 	CMyTreeView* GetTreeView() const {return static_cast<CMyTreeView*>(m_LeftPane.GetView());}
-	BOOL GetShowHidden() {return m_bShowHidden;}
+	BOOL GetShowHidden() {return m_ShowHidden;}
 
 protected:
 	virtual void OnInitialUpdate();
@@ -40,7 +40,7 @@ protected:
 private:
 	CLeftPane m_LeftPane;
 	CRightPane* m_RightPane;
-	BOOL m_bShowHidden;
+	BOOL m_ShowHidden;
 };
 
 #endif  //MAINFRM_H

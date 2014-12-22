@@ -45,6 +45,13 @@ Removed CFrame::SetView (now inherits from CDocker::SetView)
 Removed CMDIFrame::UpdateCheckMarks
 Renamed CDocker::LoadRegistrySettings to CDocker::LoadDockRegistrySettings
 Renamed CDocker::SaveRegistrySettings to CDocker::SaveDockRegistrySettings
+Renamed CFrame::m_bUseIndicatorStatus to CFrame::m_UseIndicatorStatus
+Renamed CFrame::m_bUseMenuStatus      to CFrame::m_UseMenuStatus
+Renamed CFrame::m_bUseReBar           to CFrame::m_UseReBar
+Renamed CFrame::m_bUseThemes          to CFrame::m_UseThemes
+Renamed CFrame::m_bUseToolBar         to CFrame::m_UseToolBar
+Renamed CFrame::m_bShowStatusBar      to CFrame::m_ShowStatusBar
+Renamed CFrame::m_bShowToolBar        to CFrame::m_ShowToolBar
 
 Removed user defined messages:
 UWN_DOCKSETFOCUS

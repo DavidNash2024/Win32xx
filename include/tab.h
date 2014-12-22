@@ -118,7 +118,7 @@ namespace Win32xx
 		std::vector <TabPageInfo>* GetAllTabs() const { return (std::vector <TabPageInfo>*) &m_vTabPageInfo; }
 		CImageList* GetODImageList() const	{ return const_cast<CImageList*>(&m_imlODTab); }
 		CFont* GetTabFont() const		{ return const_cast<CFont*>(&m_TabFont); }
-		BOOL GetShowButtons() const		{ return m_bShowButtons; }
+		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
@@ -195,7 +195,7 @@ namespace Win32xx
 		CMenu m_ListMenu;
 		CWnd* m_pActiveView;
 		CPoint m_OldMousePos;
-		BOOL m_bShowButtons;	// Show or hide the close and list button
+		BOOL m_IsShowingButtons;	// Show or hide the close and list button
 		BOOL m_IsTracking;
 		BOOL m_IsClosePressed;
 		BOOL m_IsListPressed;
@@ -290,7 +290,7 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
-	inline CTab::CTab() : m_pActiveView(NULL), m_bShowButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
+	inline CTab::CTab() : m_pActiveView(NULL), m_IsShowingButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
 	}
@@ -351,7 +351,7 @@ namespace Win32xx
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
-		if (!m_bShowButtons) return;
+		if (!m_IsShowingButtons) return;
 		if (!GetActiveView()) return;
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH)) return;
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)) return;
@@ -435,7 +435,7 @@ namespace Win32xx
 		// The list button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
-		if (!m_bShowButtons) return;
+		if (!m_IsShowingButtons) return;
 		if (!GetActiveView()) return;
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH)) return;
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)) return;
@@ -1222,7 +1222,7 @@ namespace Win32xx
 
 	inline void CTab::SetShowButtons(BOOL bShow)
 	{
-		m_bShowButtons = bShow;
+		m_IsShowingButtons = bShow;
 		RecalcLayout();
 	}
 
@@ -1269,7 +1269,7 @@ namespace Win32xx
 			AdjustRect(FALSE, &rc);
 
 			int xGap = 2;
-			if (m_bShowButtons) xGap += GetCloseRect().Width() + GetListRect().Width() +2;
+			if (m_IsShowingButtons) xGap += GetCloseRect().Width() + GetListRect().Width() +2;
 
 			int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
 			nItemWidth = MAX(nItemWidth, 0);

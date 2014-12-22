@@ -34,7 +34,7 @@ public:
 	void OnSend();
 
 	CClientSocket m_Client;
-	BOOL m_bClientConnected;
+	BOOL m_IsClientConnected;
 	int  m_SocketType;
 
 	// Nested classes for this dialog's child windows

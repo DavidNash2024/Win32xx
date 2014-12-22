@@ -159,8 +159,8 @@
 // WM_APP range: 0x8000 through 0xBFFF
 #define UWM_DOCKACTIVATE     (WM_APP + 0x3F01)  // Message - sent to dock ancestor when a docker is activated or deactivated.
 #define UWM_DOCKDESTROYED	 (WM_APP + 0x3F02)	// Message - posted when docker is destroyed
-#define UWN_DRAWRBBKGND      (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
-#define UWN_DRAWSBBKGND      (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.
+#define UWM_DRAWRBBKGND      (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
+#define UWM_DRAWSBBKGND      (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.
 #define UWM_GETFRAMEVIEW     (WM_APP + 0x3F05)  // Message - returns the HWND of the frame's view window
 #define UWM_GETMBTHEME       (WM_APP + 0x3F06)	// Message - returns a pointer to MenuBarTheme 
 #define UWM_GETRBTHEME       (WM_APP + 0x3F07)	// Message - returns a pointer to ReBarTheme
