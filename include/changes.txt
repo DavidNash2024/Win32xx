@@ -2,7 +2,7 @@ Version 7.7
 ===========
 
 Bug Fixes:
-* Reference counting of CImageList objects
+* Deletion of the HIMAGELIST managed by CImageList.
 * Container in container docking
 * Double notifications from tab controls
 
@@ -34,12 +34,12 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added CMDIFrame::GetActiveMenu
+Added CTab::OnSetFocus
 Modified CTabbedMDI::AddMIDChild
 Removed CDocker::OnDockSetFocus
 Removed CDocker::OnFrameGotFocus
 Removed CDocker::OnFrameLostFocus
 Removed CDocker::OnSetFocus
-Removed CDockContainer::OnSetFocus
 Removed CFrame::GetView (now inherits from CDocker::GetView)
 Removed CFrame::SetView (now inherits from CDocker::SetView)
 Removed CMDIFrame::UpdateCheckMarks

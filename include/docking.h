@@ -95,7 +95,8 @@
   #define WM_NCMOUSELEAVE 0x000002A2
 #endif
 
-#define TIMER_ID 2102
+#define TIMER_ID1 2101
+#define TIMER_ID2 2102
 
 namespace Win32xx
 {
@@ -199,6 +200,7 @@ namespace Win32xx
 		virtual LRESULT OnMouseLeave(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -986,7 +988,8 @@ namespace Win32xx
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				ScreenToClient(pt);
-				m_pView->SetFocus();
+				if (!GetView()->IsChild(GetFocus()))
+					GetView()->SetFocus();
 
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
@@ -1018,7 +1021,8 @@ namespace Win32xx
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				ScreenToClient(pt);
-				m_pView->SetFocus();
+				if (!GetView()->IsChild(GetFocus()))
+					GetView()->SetFocus();
 
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
@@ -1030,6 +1034,7 @@ namespace Win32xx
 				return 0L;
 			}
 		}
+
 		return CWnd::WndProcDefault(WM_NCLBUTTONDOWN, wParam, lParam);
 	}
 
@@ -1175,7 +1180,7 @@ namespace Win32xx
 	{
 		// Reposition the View window to cover the DockClient's client area
 		CRect rc = GetClientRect();
-		m_pView->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+		GetView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 
 		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
@@ -3034,7 +3039,7 @@ namespace Win32xx
 
 		if (this == GetDockAncestor())
 		{
-			if (wParam == TIMER_ID)
+			if (wParam == TIMER_ID1 || wParam == TIMER_ID2)
 			{
 				DrawAllCaptions();
 				KillTimer(wParam);
@@ -3990,8 +3995,13 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnDockActivated(WPARAM wParam, LPARAM lParam)
 	{
+		// Redraw captions to take account of focus change
 		DrawAllCaptions();
-		SetTimer(TIMER_ID, 100, NULL);
+
+		// The focus change for some controls can be delayed
+		SetTimer(TIMER_ID1, 200, NULL);
+		SetTimer(TIMER_ID2, 800, NULL);
+		
 		return CWnd::WndProcDefault(UWM_DOCKACTIVATE, wParam, lParam);
 	}
 
@@ -4315,6 +4325,21 @@ namespace Win32xx
 		return 0L;
 	}
 
+	inline LRESULT CDockContainer::OnSetFocus(WPARAM wParam, LPARAM lParam)
+	{
+		// Sets the focus to the active view (or its child)
+		CWnd* pPrevFocus = FromHandle((HWND)wParam);
+		if (GetActiveView()->IsChild(pPrevFocus))
+		{
+			// return focus back to the child of the active view that had it before
+			pPrevFocus->SetFocus();
+		}
+		else
+			GetActiveView()->SetFocus();
+		
+		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
+	}
+
 	inline LRESULT CDockContainer::OnSize(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -4606,11 +4631,12 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_SIZE:			return OnSize(wParam, lParam);
 		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
 		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
 		case WM_MOUSELEAVE:		return OnMouseLeave(wParam, lParam);
 		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
+		case WM_SETFOCUS:		return OnSetFocus(wParam, lParam);
+		case WM_SIZE:			return OnSize(wParam, lParam);		
 		} 
 
 		// pass unhandled messages on to CTab for processing

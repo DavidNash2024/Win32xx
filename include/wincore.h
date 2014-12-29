@@ -2664,6 +2664,7 @@ namespace Win32xx
 	// of a parent window's CWnd.
 	{
 		assert(::IsWindow(m_hWnd));
+		assert(pChild);
 		return ::IsChild(m_hWnd, pChild->GetHwnd());
 	}
 

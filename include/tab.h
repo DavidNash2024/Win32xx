@@ -170,6 +170,7 @@ namespace Win32xx
 		virtual LRESULT OnPaint(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCHitTest(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
@@ -991,6 +992,20 @@ namespace Win32xx
 		return FinalWindowProc(WM_PAINT, wParam, lParam);
 	}
 
+	inline LRESULT CTab::OnSetFocus(WPARAM wParam, LPARAM lParam)
+	{
+		// Prevent the tab control from grabbing focus when we have a view
+		if (GetActiveView() && !m_IsClosePressed)
+		{
+			// return focus back to the child window that had it before
+			CWnd* pPrevFocus = FromHandle((HWND)wParam);
+			if (IsChild(pPrevFocus))
+				pPrevFocus->SetFocus();				
+		}
+
+		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
+	}
+
 	inline LRESULT CTab::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
 	{
 		RecalcLayout();
@@ -1422,6 +1437,7 @@ namespace Win32xx
 		case WM_MOUSEMOVE:			return OnMouseMove(wParam, lParam);
 		case WM_MOUSELEAVE:			return OnMouseLeave(wParam, lParam);
 		case WM_NCHITTEST:			return OnNCHitTest(wParam, lParam);
+		case WM_SETFOCUS:			return OnSetFocus(wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
 		}

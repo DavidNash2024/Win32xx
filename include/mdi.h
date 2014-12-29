@@ -758,7 +758,7 @@ namespace Win32xx
 	{
 		// Resize the View window
 		CRect rc = GetClientRect();
-		m_pView->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+		GetView()->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 	}
 
 	inline void CMDIChild::SetHandles(HMENU hMenu, HACCEL hAccel)
