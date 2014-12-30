@@ -54,7 +54,8 @@ void CView::NewPictureFile()
 		m_pPicture = NULL;
 	}
 
-	GetParent()->SetWindowText(LoadString(IDW_MAIN).c_str());
+	CMainFrame* pFrame = GetPicApp()->GetMainFrame();
+	pFrame->SetWindowText(LoadString(IDW_MAIN).c_str());
 	Invalidate();
 }
 
@@ -77,7 +78,8 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 	{
-		GetParent()->SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
+		CMainFrame* pFrame = GetPicApp()->GetMainFrame();
+		pFrame->SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
 		Invalidate();
 		return TRUE;
 	}
@@ -86,9 +88,22 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 		TRACE("Failed to load picture\n");
 
 		// Set Frame title back to default
-		GetParent()->SendMessage(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
+		CMainFrame* pFrame = GetPicApp()->GetMainFrame();
+		pFrame->SendMessage(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
 		return FALSE;
 	}
+}
+
+int CView::OnCreate(LPCREATESTRUCT pcs)
+{
+	// Set the window background to black
+	m_Brush.CreateSolidBrush(RGB(0,0,0));
+	SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
+
+	// Support Drag and Drop on this window
+	DragAcceptFiles(TRUE);
+
+	return CWnd::OnCreate(pcs);
 }
 
 void CView::OnDraw(CDC* pDC)
@@ -116,18 +131,6 @@ LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
 		DragFinish(hDrop);
 	}
 	return 0L;
-}
-
-int CView::OnCreate(LPCREATESTRUCT pcs)
-{
-	// Set the window background to black
-	m_Brush.CreateSolidBrush(RGB(0,0,0));
-	SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
-
-	// Support Drag and Drop on this window
-	DragAcceptFiles(TRUE);
-
-	return CWnd::OnCreate(pcs);
 }
 
 LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)

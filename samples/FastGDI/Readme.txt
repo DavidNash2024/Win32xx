@@ -5,6 +5,8 @@ the bitmap data directly. This provides a rapid technique for changing the
 colour in a device context associated with a window. Traditional GDI techniques
 using GetPixel and SetPixel are much slower.
 
+This program can load, modify and save bitmap files. It does not load other
+image types.
 
 Features demonstrated in this example
 =====================================
@@ -16,3 +18,4 @@ Features demonstrated in this example
 * Use of double buffering to render GDI quickly.
 * Automatically resize the frame to match the image size when its loaded.
 * Use of scroll bars.
+* Use of drag and drop

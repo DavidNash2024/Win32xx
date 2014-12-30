@@ -102,8 +102,9 @@ void CMainFrame::OnFileNew()
 	CToolBar* pTB = GetToolBar();
 	pTB->DisableButton(IDM_FILE_SAVEAS);
 	pTB->DisableButton(IDM_IMAGE_ADJUST);
-	m_MyView.FileOpen(NULL);
-	m_MyView.Invalidate();
+	GetMyView().FileOpen(NULL);
+	GetMyView().ShowScrollBar(SB_BOTH, FALSE);
+	GetMyView().Invalidate();
 
 	// Set the caption
 	SetWindowText(_T("FastGDI"));

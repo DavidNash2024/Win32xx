@@ -2,6 +2,7 @@
 // MyPropertySheet.cpp
 
 #include "stdafx.h"
+#include "PropertySheetApp.h"
 #include "Mainfrm.h"
 #include "MyPropertySheet.h"
 #include "resource.h"
@@ -17,8 +18,11 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent()->GetHwnd(), m_hWnd);
-		break;
+		{
+			CMainFrame* pFrame = GetPSApp()->GetMainFrame();
+			PropSheet_Changed(pFrame->GetHwnd(), m_hWnd);
+			break;
+		}
 
 	default:
 		break;
@@ -114,8 +118,11 @@ INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
-		PropSheet_Changed(GetParent()->GetHwnd(), m_hWnd);
-		break;
+		{
+			CMainFrame* pFrame = GetPSApp()->GetMainFrame();
+			PropSheet_Changed(pFrame->GetHwnd(), m_hWnd);
+			break;
+		}
 
 	default:
 		break;

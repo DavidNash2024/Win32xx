@@ -3,6 +3,7 @@
 //  Definitions for the CView class
 
 #include "stdafx.h"
+#include "FastGDIApp.h"
 #include "view.h"
 #include "resource.h"
 
@@ -17,6 +18,8 @@ CView::~CView()
 
 BOOL CView::FileOpen(LPCTSTR szFilename)
 {
+	// Only bitmap images (bmp files) can be loaded
+	
 	m_bmImage.DeleteObject();
 	if (szFilename)
 	{		
@@ -94,12 +97,50 @@ void CView::OnDraw(CDC* pDC)
 	}
 }
 
+LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+
+	HDROP hDrop = (HDROP)wParam;
+	UINT nLength = DragQueryFile(hDrop, 0, 0, 0);
+
+	if (nLength > 0)
+	{
+		CString FileName;
+		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
+		FileName.ReleaseBuffer();
+		DragFinish(hDrop);
+		
+		if ( FileOpen(FileName) )
+		{
+			CRect rcImage = GetImageRect();
+			CMainFrame* pFrame = GetFrameApp()->GetMainFrame();
+			assert(pFrame);
+			pFrame->AdjustFrameRect(rcImage);
+			TRACE("Loaded file "); TRACE(FileName); TRACE("\n");
+		}
+		else
+		{
+			TRACE ("Failed to load "); TRACE(FileName); TRACE("\n");
+			ShowScrollBar(SB_BOTH, FALSE);
+			Invalidate();
+		}
+
+		RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);		
+	}
+	
+	return 0L;
+}
+
 void CView::OnInitialUpdate()
 {
 	// OnInitialUpdate is called after the window is created
 	TRACE("View window created\n");
 
 	ShowScrollBar(SB_BOTH, FALSE);
+
+	// Support Drag and Drop on this window
+	DragAcceptFiles(TRUE);
 }
 
 LRESULT CView::OnHScroll(WPARAM wParam, LPARAM lParam)
@@ -294,9 +335,10 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+	case WM_DROPFILES:			return OnDropFiles(wParam, lParam);
 	case WM_HSCROLL:			return OnHScroll(wParam, lParam);
 	case WM_VSCROLL:			return OnVScroll(wParam, lParam);
+	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
 	}
 
 	// Pass unhandled messages on for default processing
