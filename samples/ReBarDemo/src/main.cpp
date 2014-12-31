@@ -2,7 +2,7 @@
 // main.cpp
 
 #include "stdafx.h"
-#include "FrameApp.h"
+#include "ReBarApp.h"
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

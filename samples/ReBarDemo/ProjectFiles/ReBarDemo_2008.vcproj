@@ -181,15 +181,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\FrameApp.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ReBarApp.cpp"
 				>
 			</File>
 			<File
@@ -223,11 +223,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\src\FrameApp.h"
+				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\Mainfrm.h"
+				RelativePath="..\src\ReBarApp.h"
 				>
 			</File>
 			<File

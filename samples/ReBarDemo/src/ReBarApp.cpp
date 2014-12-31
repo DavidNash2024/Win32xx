@@ -2,7 +2,7 @@
 //FrameApp.cpp
 
 #include "stdafx.h"
-#include "FrameApp.h"
+#include "ReBarApp.h"
 
 
 // Definitions for the CReBarDemoApp class

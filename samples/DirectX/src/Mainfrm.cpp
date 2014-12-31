@@ -59,8 +59,6 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 	// call the base class function
 	CFrame::OnCreate(pcs);
-	
-	m_ViewThread.SetFrame(this);
 
 	// Create and start the thread for the view window
 	m_ViewThread.CreateThread();

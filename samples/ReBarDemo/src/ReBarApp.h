@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////
 // FrameApp.h
 
-#ifndef FRAMEAPP_H
-#define FRAMEAPP_H
+#ifndef REBARAPP_H
+#define REBARAPP_H
 
 #include "Mainfrm.h"
 
@@ -22,8 +22,8 @@ private:
 
 
 // a useful function that returns a pointer to the CReBarDemoApp object
-inline CReBarDemoApp* GetFrameApp() { return static_cast<CReBarDemoApp*>(GetApp()); }
+inline CReBarDemoApp* GetReBarApp() { return static_cast<CReBarDemoApp*>(GetApp()); }
 
 
-#endif // define FRAMEAPP_H
+#endif // define REBARAPP_H
 
