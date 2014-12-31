@@ -183,10 +183,6 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\src\FrameApp.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Hyperlink.cpp"
 				>
 			</File>
@@ -200,6 +196,10 @@
 			</File>
 			<File
 				RelativePath="..\src\MyStatusBar.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\StatusBarApp.cpp"
 				>
 			</File>
 			<File
@@ -233,10 +233,6 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\src\FrameApp.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Hyperlink.h"
 				>
 			</File>
@@ -250,6 +246,10 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\StatusBarApp.h"
 				>
 			</File>
 			<File

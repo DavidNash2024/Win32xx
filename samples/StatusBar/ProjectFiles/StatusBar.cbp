@@ -207,8 +207,6 @@
 		<Unit filename="../../../include/toolbar.h" />
 		<Unit filename="../../../include/wincore.h" />
 		<Unit filename="../../../include/winutils.h" />
-		<Unit filename="../src/FrameApp.cpp" />
-		<Unit filename="../src/FrameApp.h" />
 		<Unit filename="../src/Hyperlink.cpp" />
 		<Unit filename="../src/Hyperlink.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
@@ -218,6 +216,8 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/StatusBarApp.cpp" />
+		<Unit filename="../src/StatusBarApp.h" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />

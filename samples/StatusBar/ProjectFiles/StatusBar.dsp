@@ -91,10 +91,6 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=..\src\FrameApp.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Hyperlink.cpp
 # End Source File
 # Begin Source File
@@ -111,6 +107,10 @@ SOURCE=..\src\MyStatusBar.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\StatusBarApp.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -121,10 +121,6 @@ SOURCE=..\src\View.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=..\src\FrameApp.h
-# End Source File
 # Begin Source File
 
 SOURCE=..\src\Hyperlink.h
@@ -140,6 +136,10 @@ SOURCE=..\src\MyStatusBar.h
 # Begin Source File
 
 SOURCE=..\src\resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\StatusBarApp.h
 # End Source File
 # Begin Source File
 

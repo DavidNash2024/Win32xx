@@ -2,25 +2,25 @@
 //FrameApp.cpp
 
 #include "stdafx.h"
-#include "FrameApp.h"
+#include "StatusBarApp.h"
 
 
-// Definitions for the CFrameApp class
-CFrameApp::CFrameApp()
+// Definitions for the CStatusBarApp class
+CStatusBarApp::CStatusBarApp()
 {
 }
 
-CFrameApp::~CFrameApp()
+CStatusBarApp::~CStatusBarApp()
 {
 }
 
-BOOL CFrameApp::InitInstance()
+BOOL CStatusBarApp::InitInstance()
 {
 	//Create the Frame Window
-	if (!m_Frame.Create())	
+	if (!m_Frame.Create())
 	{
 		// We get here if the Frame creation fails
-		
+
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
 		return FALSE; // returning FALSE ends the application
 	}

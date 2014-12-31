@@ -5,16 +5,16 @@
 #include "ReBarApp.h"
 
 
-// Definitions for the CReBarDemoApp class
-CReBarDemoApp::CReBarDemoApp()
+// Definitions for the CReBarApp class
+CReBarApp::CReBarApp()
 {
 }
 
-CReBarDemoApp::~CReBarDemoApp()
+CReBarApp::~CReBarApp()
 {
 }
 
-BOOL CReBarDemoApp::InitInstance()
+BOOL CReBarApp::InitInstance()
 {
 	//Create the Frame Window
 	if (!m_Frame.Create())	

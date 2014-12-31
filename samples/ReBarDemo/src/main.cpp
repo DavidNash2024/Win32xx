@@ -10,7 +10,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	try
 	{
 		// Start Win32++
-		CReBarDemoApp theApp;
+		CReBarApp theApp;
 
 		// Run the application and the message loop
 		return theApp.Run();

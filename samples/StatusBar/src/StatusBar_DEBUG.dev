@@ -32,26 +32,6 @@ LogOutput=
 LogOutputEnabled=0
 
 [Unit1]
-FileName=FrameApp.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
-FileName=FrameApp.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit3]
 FileName=main.cpp
 CompileCpp=1
 Folder=Source
@@ -61,7 +41,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit2]
 FileName=Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -71,7 +51,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit5]
+[Unit3]
 FileName=Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -81,7 +61,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit4]
 FileName=resource.h
 CompileCpp=1
 Folder=Header
@@ -91,8 +71,9 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit5]
 FileName=Resource.rc
+CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
@@ -100,7 +81,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit6]
 FileName=View.cpp
 CompileCpp=1
 Folder=Source
@@ -110,17 +91,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit7]
 FileName=View.h
-CompileCpp=1
 Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit10]
+[Unit8]
 FileName=MyStatusBar.cpp
 CompileCpp=1
 Folder=Source
@@ -130,7 +111,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
+[Unit9]
 FileName=MyStatusBar.h
 CompileCpp=1
 Folder=Header
@@ -140,7 +121,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
+[Unit10]
 FileName=Hyperlink.cpp
 CompileCpp=1
 Folder=Source
@@ -150,7 +131,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
+[Unit11]
 FileName=Hyperlink.h
 CompileCpp=1
 Folder=Header
@@ -160,7 +141,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
+[Unit12]
 FileName=StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -170,8 +151,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit15]
+[Unit13]
 FileName=stdafx.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=targetver.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=StatusBarApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -200,9 +201,9 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=targetver.h
+FileName=StatusBarApp.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000

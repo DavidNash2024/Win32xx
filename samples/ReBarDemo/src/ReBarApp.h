@@ -7,12 +7,12 @@
 #include "Mainfrm.h"
 
 
-// Declaration of the CReBarDemoApp class
-class CReBarDemoApp : public CWinApp
+// Declaration of the CReBarApp class
+class CReBarApp : public CWinApp
 {
 public:
-	CReBarDemoApp();
-	virtual ~CReBarDemoApp();
+	CReBarApp();
+	virtual ~CReBarApp();
 	virtual BOOL InitInstance();
 	CMainFrame* GetMainFrame() { return &m_Frame; }
 
@@ -21,8 +21,8 @@ private:
 };
 
 
-// a useful function that returns a pointer to the CReBarDemoApp object
-inline CReBarDemoApp* GetReBarApp() { return static_cast<CReBarDemoApp*>(GetApp()); }
+// a useful function that returns a pointer to the CReBarApp object
+inline CReBarApp* GetReBarApp() { return static_cast<CReBarApp*>(GetApp()); }
 
 
 #endif // define REBARAPP_H
