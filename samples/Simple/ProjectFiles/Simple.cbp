@@ -15,6 +15,7 @@
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
+					<Add option="-v" />
 					<Add option="-w-par" />
 					<Add option="-D_DEBUG" />
 					<Add directory="../../../include" />

@@ -18,6 +18,7 @@
 				<Compiler>
 					<Add option="-tWM" />
 					<Add option="-tWD" />
+					<Add option="-v" />
 					<Add option="-D_DEBUG" />
 					<Add directory="../../../include" />
 				</Compiler>
