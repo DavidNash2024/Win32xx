@@ -673,8 +673,10 @@ namespace Win32xx
 					CDialog* pDialog = static_cast<CDialog*>(FromHandlePermanent(hWnd));
 					if (pDialog && (lstrcmp(pDialog->GetClassName(), _T("#32770")) == 0))	// only for dialogs
 					{
-						pDialog->PreTranslateMessage(lpMsg);
-						break;
+						if (pDialog->PreTranslateMessage(lpMsg))
+							return 1; // Eat the message
+
+						break;	// Pass the message on
 					}
 				}
 			}
