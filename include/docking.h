@@ -2071,8 +2071,18 @@ namespace Win32xx
 	inline void CDocker::Close()
 	{
 		// Destroy the docker
-		Hide();
-		Destroy();
+		if (dynamic_cast<CDockContainer*>(GetView()))
+		{
+			CDockContainer* pContainer = (static_cast<CDockContainer*>(GetView()))->GetActiveContainer();
+			CDocker* pDock = GetDockFromView(pContainer);
+			UndockContainer(pContainer, GetCursorPos(), FALSE);
+			pDock->Destroy();
+		}
+		else
+		{
+			Hide();
+			Destroy();
+		}
 	}
 
 	inline void CDocker::CloseAllDockers()
@@ -2271,7 +2281,6 @@ namespace Win32xx
 		if (NULL == pDock) return;
 
 		BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
-
 		CClientDC dcBar(this);
 
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -2791,7 +2800,6 @@ namespace Win32xx
 	{
 		CPoint pt = pdp->ptPos;
 		ScreenToClient(pt);
-
 
 		if (pt != m_OldPoint)
 		{
