@@ -293,7 +293,6 @@ namespace Win32xx
 			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
 			void SetCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
-			void SetClosePressed()			{ m_IsClosePressed = TRUE; }
 			void SetView(CWnd& wndView);
 
 		protected:
@@ -1051,22 +1050,15 @@ namespace Win32xx
 				if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
 				{
 					// Destroy the docker
-					if (dynamic_cast<CDockContainer*>(m_pDock->GetView()))
+					if (m_pDock->GetContainer())
 					{
-						CDockContainer* pContainer = (static_cast<CDockContainer*>(m_pDock->GetView()))->GetActiveContainer();
+						CDockContainer* pContainer = m_pDock->GetContainer()->GetActiveContainer();
 						CDocker* pDock = m_pDock->GetDockFromView(pContainer);
-						pDock->GetDockClient()->SetClosePressed();
-						DWORD dwStyle = pDock->GetDockStyle() & ~DS_NO_UNDOCK;
-						pDock->SetDockStyle(dwStyle);
-						m_pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
-						pDock->Destroy();
+						pDock->Close();
 					}
 					else
 					{
-						DWORD dwStyle = m_pDock->GetDockStyle() & ~DS_NO_UNDOCK;
-						m_pDock->SetDockStyle(dwStyle);
-						m_pDock->Hide();
-						m_pDock->Destroy();
+						m_pDock->Close();
 					}
 				}
 			}
@@ -2911,7 +2903,7 @@ namespace Win32xx
 
 		GetDockBar()->Destroy();
 
-		// Post a destroy docker message
+		// Post a docker destroyed message
 		if ( GetDockAncestor()->IsWindow() )
 			GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, (WPARAM)this, 0L);
 	}
@@ -3237,7 +3229,7 @@ namespace Win32xx
 		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	}
 
-inline void CDocker::RecalcDockChildLayout(CRect& rc)
+	inline void CDocker::RecalcDockChildLayout(CRect& rc)
 	{
 		// This function positions the Docker's dock children, the Dockers client area
 		//  and draws the dockbar bars.
@@ -3254,8 +3246,7 @@ inline void CDocker::RecalcDockChildLayout(CRect& rc)
 #ifdef WS_EX_LAYOUTRTL
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
-
-		
+	
 		if (IsDocked())
 		{
 			rc.OffsetRect(-rc.left, -rc.top);
@@ -3271,7 +3262,7 @@ inline void CDocker::RecalcDockChildLayout(CRect& rc)
 			CRect rcChild = rc;
 			double DockSize = (*iter)->m_DockStartSize;
 			int minSize = 30;
-			int BarWidth = GetDockBar()->GetWidth();
+		/*	int BarWidth = GetDockBar()->GetWidth();
 			int leftsum = 0;
 			int topsum = 0;
 
@@ -3291,7 +3282,7 @@ inline void CDocker::RecalcDockChildLayout(CRect& rc)
 						break;
 					}
 				}
-			}
+			} */
 
 			// Calculate the size of the Docker children
 			switch ((*iter)->GetDockStyle() & 0xF)
@@ -3304,15 +3295,15 @@ inline void CDocker::RecalcDockChildLayout(CRect& rc)
 				{
 					rcChild.left = rcChild.right - (int)DockSize;
 					rcChild.left = MIN(rcChild.left, GetViewRect().Width() - minSize);
-					rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
+				//	rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
 					rcChild.left = MIN(rcChild.left, rc.left);
 				}
 				else
 				{
 					rcChild.right = rcChild.left + (int)DockSize;
-					rcChild.right = MIN(rcChild.right, GetViewRect().Width() - minSize - BarWidth);
-					rcChild.right = MAX(rcChild.right, minSize);
-					rcChild.right = MIN(rcChild.right, rc.right);
+				//	rcChild.right = MIN(rcChild.right, GetViewRect().Width() - minSize - BarWidth);
+				//	rcChild.right = MAX(rcChild.right, minSize);
+					rcChild.right = MIN(rcChild.right, rc.right - minSize);
 				}
 				break;
 			case DS_DOCKED_RIGHT:
@@ -3322,16 +3313,16 @@ inline void CDocker::RecalcDockChildLayout(CRect& rc)
 				if (RTL)
 				{
 					rcChild.right = rcChild.left + (int)DockSize;
-					rcChild.right = MIN(rcChild.right, GetViewRect().Width() - minSize - BarWidth);
+				//	rcChild.right = MIN(rcChild.right, GetViewRect().Width() - minSize - BarWidth);
 					rcChild.right = MAX(rcChild.right, minSize);
 					rcChild.right = MAX(rcChild.right, rc.right);
 				}
 				else
 				{
 					rcChild.left = rcChild.right - (int)DockSize;
-					rcChild.left = MIN(rcChild.left, GetViewRect().Width() - minSize);
-					rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
-					rcChild.left = MAX(rcChild.left, rc.left);
+				//	rcChild.left = MIN(rcChild.left, GetViewRect().Width() - minSize);
+				//	rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
+					rcChild.left = MAX(rcChild.left, rc.left + minSize);
 				}
 
 				break;
@@ -3340,18 +3331,18 @@ inline void CDocker::RecalcDockChildLayout(CRect& rc)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetViewRect().Height()), rcChild.Height());
 				
 				rcChild.bottom = rcChild.top + (int)DockSize;	
-				rcChild.bottom = MIN(rcChild.bottom, GetWindowRect().Height() -minSize - BarWidth);
-				rcChild.bottom = MAX(rcChild.bottom, minSize);
-				rcChild.bottom = MIN(rcChild.bottom, rc.bottom);
+			//	rcChild.bottom = MIN(rcChild.bottom, GetWindowRect().Height() -minSize - BarWidth);
+			//	rcChild.bottom = MAX(rcChild.bottom, minSize);
+				rcChild.bottom = MIN(rcChild.bottom, rc.bottom - minSize);
 				break;
 			case DS_DOCKED_BOTTOM:
 				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetViewRect().Height()), rcChild.Height());
 				
 				rcChild.top = rcChild.bottom - (int)DockSize;
-				rcChild.top = MIN(rcChild.top, GetWindowRect().Height() - minSize);
-				rcChild.top = MAX(rcChild.top, minSize + BarWidth + topsum);
-				rcChild.top = MAX(rcChild.top, rc.top);
+			//	rcChild.top = MIN(rcChild.top, GetWindowRect().Height() - minSize);
+			//	rcChild.top = MAX(rcChild.top, minSize + BarWidth + topsum);
+				rcChild.top = MAX(rcChild.top, rc.top + minSize);
 				break;
 			}
 

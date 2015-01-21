@@ -2664,8 +2664,8 @@ namespace Win32xx
 	// of a parent window's CWnd.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pChild);
-		return ::IsChild(m_hWnd, pChild->GetHwnd());
+		HWND hwndChild = pChild? pChild->GetHwnd() : 0;
+		return ::IsChild(m_hWnd, hwndChild);
 	}
 
 	inline BOOL CWnd::IsDialogMessage(LPMSG lpMsg) const
