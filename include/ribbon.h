@@ -426,7 +426,7 @@ namespace Win32xx
 				++iCurrentFile;
 			}
 
-			SAFEARRAYBOUND sab = {iCurrentFile,0};
+			SAFEARRAYBOUND sab = {(ULONG)iCurrentFile, 0};
 			SafeArrayRedim(psa, &sab);
 			hr = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
 

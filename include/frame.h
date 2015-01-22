@@ -2730,8 +2730,8 @@ namespace Win32xx
 			// Store the MRU entries in the registry
 			if (m_nMaxMRU > 0)
 			{
-				CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
-				HKEY hKey = NULL;
+				KeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
+				hKey = NULL;
 
 				try
 				{

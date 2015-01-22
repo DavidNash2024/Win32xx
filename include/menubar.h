@@ -521,9 +521,7 @@ namespace Win32xx
 	inline LRESULT CMenuBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
-		CPoint pt;
-		pt.x = GET_X_LPARAM(lParam);
-		pt.y = GET_Y_LPARAM(lParam);
+		UNREFERENCED_PARAMETER(lParam);
 
 		if (IsMDIFrame())
 		{

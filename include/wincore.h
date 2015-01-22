@@ -1420,14 +1420,12 @@ namespace Win32xx
 	{
 
 	// required for multi-monitor support with Dev-C++ and VC6
-	#ifndef _WIN32_WCE
-	#ifndef MONITOR_DEFAULTTONEAREST
-		#define MONITOR_DEFAULTTONEAREST    0x00000002
-	#endif
-	#ifndef HMONITOR
+#ifndef _WIN32_WCE
+  #ifndef MONITOR_DEFAULTTONEAREST
+	#define MONITOR_DEFAULTTONEAREST    0x00000002
+
 		DECLARE_HANDLE(HMONITOR);
-	#endif
-	#ifndef MONITORINFO
+
 		typedef struct tagMONITORINFO
 		{
 			DWORD   cbSize;
@@ -1435,8 +1433,9 @@ namespace Win32xx
 			RECT    rcWork;
 			DWORD   dwFlags;
 		} MONITORINFO, *LPMONITORINFO;
-	#endif	// MONITOR_DEFAULTTONEAREST
-	#endif	// _WIN32_WCE
+
+  #endif	// MONITOR_DEFAULTTONEAREST
+#endif	// _WIN32_WCE
 
 		assert(::IsWindow(m_hWnd));
 
@@ -2308,7 +2307,7 @@ namespace Win32xx
 			{
 			//	if (m_PrevWindowProc) break; // Suppress for subclassed windows
 
-				LRESULT lr = MessageReflect(m_hWnd, uMsg, wParam, lParam);
+				lr = MessageReflect(m_hWnd, uMsg, wParam, lParam);
 				if (lr) return lr;	// Message processed so return
 			}
 			break;				// Do default processing when message not already processed

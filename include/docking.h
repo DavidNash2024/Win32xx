@@ -2608,7 +2608,6 @@ namespace Win32xx
 			while (vDockList.size() > 0)
 			{
 				bool bFound = false;
-				std::vector<DockInfo>::iterator iter;
 				for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
 				{
 					DockInfo di = *iter;
@@ -2885,13 +2884,13 @@ namespace Win32xx
 			{
 				// This container has children, so destroy them now
 				std::vector<ContainerInfo> * pAllContainers = pContainer->GetAllContainers();
-				std::vector<ContainerInfo>::iterator iter;
-				for (iter = pAllContainers->begin(); iter < pAllContainers->end(); ++iter)
+				std::vector<ContainerInfo>::iterator iter1;
+				for (iter1 = pAllContainers->begin(); iter1 < pAllContainers->end(); ++iter1)
 				{
-					if ((*iter).pContainer != pContainer)
+					if ((*iter1).pContainer != pContainer)
 					{
 						// Reset container parent before destroying the dock window
-						CDocker* pDock = GetDockFromView((*iter).pContainer);
+						CDocker* pDock = GetDockFromView((*iter1).pContainer);
 						if (pContainer->IsWindow())
 							pContainer->SetParent(pDock->GetDockClient());
 
@@ -3262,87 +3261,61 @@ namespace Win32xx
 			CRect rcChild = rc;
 			double DockSize = (*iter)->m_DockStartSize;
 			int minSize = 30;
-		/*	int BarWidth = GetDockBar()->GetWidth();
-			int leftsum = 0;
-			int topsum = 0;
-
-			// Sum the width or height of child dockers for fixed resize
-			if ((*iter)->GetDockStyle() & DS_FIXED_RESIZE)
-			{
-				std::vector<CDocker*>::iterator itChild;
-				for (itChild = m_vDockChildren.begin(); itChild < m_vDockChildren.end(); ++itChild)
-				{
-					switch ((*itChild)->GetDockStyle() & 0xF)
-					{
-					case DS_DOCKED_LEFT:
-						leftsum += (*itChild)->GetViewRect().Width();
-						break;
-					case DS_DOCKED_TOP:
-						topsum += (*itChild)->GetViewRect().Height();
-						break;
-					}
-				}
-			} */
 
 			// Calculate the size of the Docker children
 			switch ((*iter)->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
 				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN((*iter)->m_DockSizeRatio*(GetViewRect().Width()), rcChild.Width());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
 				if (RTL)
 				{
 					rcChild.left = rcChild.right - (int)DockSize;
-					rcChild.left = MIN(rcChild.left, GetViewRect().Width() - minSize);
-				//	rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
-					rcChild.left = MIN(rcChild.left, rc.left);
+					rcChild.left = MIN(rcChild.left, rc.right - minSize);
+					rcChild.left = MAX(rcChild.left, rc.left + minSize);
 				}
 				else
 				{
 					rcChild.right = rcChild.left + (int)DockSize;
-				//	rcChild.right = MIN(rcChild.right, GetViewRect().Width() - minSize - BarWidth);
-				//	rcChild.right = MAX(rcChild.right, minSize);
+					rcChild.right = MAX(rcChild.right, rc.left + minSize);
 					rcChild.right = MIN(rcChild.right, rc.right - minSize);
 				}
 				break;
 			case DS_DOCKED_RIGHT:
 				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN((*iter)->m_DockSizeRatio*(GetViewRect().Width()), rcChild.Width());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
 				if (RTL)
 				{
 					rcChild.right = rcChild.left + (int)DockSize;
-				//	rcChild.right = MIN(rcChild.right, GetViewRect().Width() - minSize - BarWidth);
-					rcChild.right = MAX(rcChild.right, minSize);
-					rcChild.right = MAX(rcChild.right, rc.right);
+					rcChild.right = MAX(rcChild.right, rc.left + minSize);
+					rcChild.right = MIN(rcChild.right, rc.right - minSize);
 				}
 				else
 				{
-					rcChild.left = rcChild.right - (int)DockSize;
-				//	rcChild.left = MIN(rcChild.left, GetViewRect().Width() - minSize);
-				//	rcChild.left = MAX(rcChild.left, minSize + BarWidth + leftsum);
+					rcChild.left = rcChild.right - (int)DockSize;				
+					rcChild.left = MIN(rcChild.left, rc.right - minSize);
 					rcChild.left = MAX(rcChild.left, rc.left + minSize);
 				}
 
 				break;
 			case DS_DOCKED_TOP:
 				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN((*iter)->m_DockSizeRatio*(GetViewRect().Height()), rcChild.Height());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				
-				rcChild.bottom = rcChild.top + (int)DockSize;	
-			//	rcChild.bottom = MIN(rcChild.bottom, GetWindowRect().Height() -minSize - BarWidth);
-			//	rcChild.bottom = MAX(rcChild.bottom, minSize);
+				rcChild.bottom = rcChild.top + (int)DockSize;				
+				rcChild.bottom = MAX(rcChild.bottom, rc.top + minSize);
 				rcChild.bottom = MIN(rcChild.bottom, rc.bottom - minSize);
 				break;
 			case DS_DOCKED_BOTTOM:
 				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
-					DockSize = MIN((*iter)->m_DockSizeRatio*(GetViewRect().Height()), rcChild.Height());
+					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				
-				rcChild.top = rcChild.bottom - (int)DockSize;
-			//	rcChild.top = MIN(rcChild.top, GetWindowRect().Height() - minSize);
-			//	rcChild.top = MAX(rcChild.top, minSize + BarWidth + topsum);
+				rcChild.top = rcChild.bottom - (int)DockSize;				
+				rcChild.top = MIN(rcChild.top, rc.bottom - minSize);
 				rcChild.top = MAX(rcChild.top, rc.top + minSize);
+				
 				break;
 			}
 
@@ -3391,7 +3364,6 @@ namespace Win32xx
 			rcBar.IntersectRect(m_rcBar, GetDockParent()->GetViewRect());
 			
 			// The SWP_NOCOPYBITS forces a redraw of the dock bar.
-		//	GetDockBar()->SetWindowPos(NULL, m_rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
 			GetDockBar()->SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
 		}
 
@@ -3527,7 +3499,6 @@ namespace Win32xx
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
 				{
 					DockInfo di = vDockInfo[u];
-					CString SubKeyName;
 					SubKeyName.Format(_T("DockChild%u"), u);
 					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, SubKeyName, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
 						throw (CWinException(_T("RegSetValueEx failed")));
@@ -3541,7 +3512,6 @@ namespace Win32xx
 
 					if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
 					{
-						CString SubKeyName;
 						SubKeyName.Format(_T("DockContainer%u"), u1++);
 						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, SubKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
 							throw (CWinException(_T("RegCreateKeyEx Failed")));
@@ -4621,10 +4591,9 @@ namespace Win32xx
 
 		if (IsLeftButtonDown())
 		{
-			CPoint pt((DWORD)lParam);
 			TCHITTESTINFO info;
 			ZeroMemory(&info, sizeof(TCHITTESTINFO));
-			info.pt = pt;
+			info.pt = CPoint((DWORD)lParam);
 			int nTab = HitTest(info);
 			if (nTab >= 0)
 			{
