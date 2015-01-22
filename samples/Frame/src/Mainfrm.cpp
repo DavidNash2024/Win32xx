@@ -128,6 +128,9 @@ void CMainFrame::PreCreate(CREATESTRUCT &cs)
 	// It provides an opportunity to modify the various CREATESTRUCT
 	// parameters used in the frame window's creation.
 	
+	// The WS_EX_LAYOUTRTL style requires Windows 2000 or above in targetver.h
+	// cs.dwExStyle = WS_EX_LAYOUTRTL;		// Set Right-To-Left Window Layout
+	
 	// Call base clase to set defaults
 	CFrame::PreCreate(cs);
 	

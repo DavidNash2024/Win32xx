@@ -274,8 +274,8 @@ void CMainFrame::SetDockStyles()
 		dwStyle &= 0xF400F;
 	
 		// Add styles selected from the menu
-		if (!m_UseProportionalResize) dwStyle |= DS_FIXED_RESIZE;
-		if (m_Use3DBorder)			dwStyle |= DS_CLIENTEDGE;
+		if (!m_UseProportionalResize)	dwStyle |= DS_FIXED_RESIZE;
+		if (m_Use3DBorder)				dwStyle |= DS_CLIENTEDGE;
 		if (m_DisableUndocking)			dwStyle |= DS_NO_UNDOCK;
 		if (m_DisableResize)			dwStyle |= DS_NO_RESIZE;
 		if (m_DisableDockLR)			dwStyle |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
