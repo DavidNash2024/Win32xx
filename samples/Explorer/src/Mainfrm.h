@@ -17,8 +17,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame();
 	virtual ~CMainFrame();
-	CMyListView* GetListView() const {return static_cast<CMyListView*>(m_RightPane->GetView());}
-	CMyTreeView* GetTreeView() const {return static_cast<CMyTreeView*>(m_LeftPane.GetView());}
+	CMyListView* GetListView() const {return static_cast<CMyListView*>(m_RightPane.GetView());}
+	CMyTreeView* GetTreeView() const {return static_cast<CMyTreeView*>(m_pLeftPane->GetView());}
 	BOOL GetShowHidden() {return m_ShowHidden;}
 
 protected:
@@ -38,8 +38,8 @@ protected:
 	void DoPopupMenu();
 
 private:
-	CLeftPane m_LeftPane;
-	CRightPane* m_RightPane;
+	CLeftPane* m_pLeftPane;
+	CRightPane m_RightPane;
 	BOOL m_ShowHidden;
 };
 

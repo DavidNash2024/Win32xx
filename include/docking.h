@@ -77,7 +77,7 @@
 #define DS_NO_CLOSE				0x0400	// Prevent closing of a docker while docked
 #define DS_NO_UNDOCK			0x0800  // Prevent undocking of a docker
 #define DS_CLIENTEDGE			0x1000  // Has a 3D border when docked
-#define DS_FIXED_RESIZE			0x2000	// Perform a fixed resize instead of a proportional resize on dock children
+#define DS_NO_FIXED_RESIZE		0x2000	// Perform a proportional resize instead of a fixed size resize on dock children
 #define DS_DOCKED_CONTAINER		0x4000  // Dock a container within a container
 #define DS_DOCKED_LEFTMOST      0x10000 // Leftmost outer docking
 #define DS_DOCKED_RIGHTMOST     0x20000 // Rightmost outer docking
@@ -3266,7 +3266,7 @@ namespace Win32xx
 			switch ((*iter)->GetDockStyle() & 0xF)
 			{
 			case DS_DOCKED_LEFT:
-				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
 				if (RTL)
@@ -3283,7 +3283,7 @@ namespace Win32xx
 				}
 				break;
 			case DS_DOCKED_RIGHT:
-				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Width()), rcChild.Width());
 
 				if (RTL)
@@ -3301,7 +3301,7 @@ namespace Win32xx
 
 				break;
 			case DS_DOCKED_TOP:
-				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				
 				rcChild.bottom = rcChild.top + (int)DockSize;				
@@ -3309,7 +3309,7 @@ namespace Win32xx
 				rcChild.bottom = MIN(rcChild.bottom, rc.bottom - minSize);
 				break;
 			case DS_DOCKED_BOTTOM:
-				if (!((*iter)->GetDockStyle() & DS_FIXED_RESIZE))
+				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 				
 				rcChild.top = rcChild.bottom - (int)DockSize;				

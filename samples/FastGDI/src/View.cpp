@@ -122,10 +122,10 @@ LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
 		else
 		{
 			TRACE ("Failed to load "); TRACE(FileName); TRACE("\n");
-			ShowScrollBar(SB_BOTH, FALSE);
 			Invalidate();
 		}
 
+		ShowScrollBar(SB_BOTH, FALSE);
 		RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);		
 	}
 	

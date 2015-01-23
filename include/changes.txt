@@ -31,6 +31,10 @@ New Features and Enhancements
 		AddMDIChild(new CSimpleMDIChild); 		
 	}
 	
+* Dockers now default to fixed size resizing instead of proportional size 
+   resizing for dock children. The DS_FIXED_RESIZE style has been replaced with
+   DS_NO_FIXED_RESIZE.	
+	
 Changes in detail
 -----------------
 Added CMDIFrame::GetActiveMenu
@@ -57,6 +61,11 @@ Removed user defined messages:
 UWN_DOCKSETFOCUS
 UWN_FRAMELOSTFOCUS
 UWN_FRAMEGOTFOCUS
+
+Changed dock styles
+Added   DS_NO_FIXED_RESIZE
+Removed DS_FIXED_RESIZE
+
 
 
 Version 7.6.1

@@ -6,10 +6,10 @@
 #include "resource.h"
 
 
-CMainFrame::CMainFrame()  : m_ShowHidden(FALSE)
+CMainFrame::CMainFrame()  : m_pLeftPane(0), m_ShowHidden(FALSE)
 {
 	// Set m_MainView as the view window of the frame
-	SetView(m_LeftPane);
+	SetView(m_RightPane);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -59,9 +59,9 @@ void CMainFrame::DoPopupMenu()
 void CMainFrame::OnInitialUpdate()
 {
 	// Add the right window pane
-	int Width = (int) (GetWindowRect().Width() * 0.7);
-	DWORD dwDockStyle = DS_DOCKED_RIGHT  | DS_NO_UNDOCK | DS_NO_CAPTION;
-	m_RightPane = static_cast<CRightPane*>(m_LeftPane.AddDockedChild(new CRightPane, dwDockStyle, Width));
+	int Width = (int) (GetWindowRect().Width() * 0.3);
+	DWORD dwDockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
+	m_pLeftPane = static_cast<CLeftPane*>(m_RightPane.AddDockedChild(new CLeftPane, dwDockStyle, Width));
 
 	// All windows are now created, so populate the treeview
 	GetTreeView()->GetRootItems();
@@ -74,7 +74,7 @@ void CMainFrame::OnInitialUpdate()
 	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
 	// Uncomment the following to use a hash bar and disable of auto resizing 
-	// m_LeftPane.SetDragAutoResize(FALSE);
+	// m_RightPane.SetDragAutoResize(FALSE);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
