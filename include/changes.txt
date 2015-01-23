@@ -3,8 +3,9 @@ Version 7.7
 
 Bug Fixes:
 * Deletion of the HIMAGELIST managed by CImageList.
-* Container in container docking
-* Double notifications from tab controls
+* Container in container docking.
+* Double notifications from tab controls.
+* CDocker::Close can now be used to close any child docker.
 
 New Features and Enhancements
 -----------------------------
@@ -30,6 +31,9 @@ New Features and Enhancements
 		AddMDIChild(new CSimpleMDIChild);
 		AddMDIChild(new CSimpleMDIChild); 		
 	}
+	
+* Added DockMDI sample.	
+  This sample demonstrates adding Dockers to MDI Frames.
 	
 * Dockers now default to fixed size resizing instead of proportional size 
    resizing for dock children. The DS_FIXED_RESIZE style has been replaced with
@@ -65,7 +69,6 @@ UWN_FRAMEGOTFOCUS
 Changed dock styles
 Added   DS_NO_FIXED_RESIZE
 Removed DS_FIXED_RESIZE
-
 
 
 Version 7.6.1

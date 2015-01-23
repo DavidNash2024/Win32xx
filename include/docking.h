@@ -2062,21 +2062,13 @@ namespace Win32xx
 
 	inline void CDocker::Close()
 	{
-		// Destroy the docker
-		CDockContainer* pContainer = GetContainer();
-
-		if (pContainer)
+		if (IsDocked())
 		{
-			if (pContainer == pContainer->GetContainerParent())
-				UndockContainer(pContainer, GetCursorPos(), FALSE);			
-			else
-				pContainer->GetContainerParent()->RemoveContainer(pContainer);
-		}
-		else
-		{
+			// Undock the docker and hide it
 			Hide();
 		}
 
+		// Destroy the docker and its children
 		Destroy();
 	}
 
@@ -2481,11 +2473,14 @@ namespace Win32xx
 
 		if (IsDocked())
 		{
-			if (dynamic_cast<CDockContainer*>(GetView()))
+			CDockContainer* pContainer = GetContainer();
+
+			if (pContainer)
 			{
-				CDockContainer* pContainer = GetContainer();
-				CDocker* pDock = GetDockFromView(pContainer->GetContainerParent());
-				pDock->UndockContainer(pContainer, GetCursorPos(), FALSE);
+				if (pContainer == pContainer->GetContainerParent())
+					UndockContainer(pContainer, GetCursorPos(), FALSE);			
+				else
+					pContainer->GetContainerParent()->RemoveContainer(pContainer);
 			}
 			else
 			{
