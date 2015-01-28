@@ -16,7 +16,7 @@ void CView::OnDraw(CDC* pDC)
 	CRect rc = GetClientRect();
 
 	// Display some text in our view window
-	pDC->DrawText(_T("\nPress the arrows to change the rebar's orientation"), -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	pDC->DrawText(_T("Press the arrows to change the rebar's orientation"), -1, rc,  DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 void CView::OnInitialUpdate()

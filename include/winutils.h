@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Release Date: TBA
+// Release Date: 29th January 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

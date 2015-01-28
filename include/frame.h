@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Release Date: TBA
+// Release Date: 29th January 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2633,7 +2633,6 @@ namespace Win32xx
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
-		//	pView->SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
 		RecalcDockLayout();
 
 		// Adjust rebar bands
