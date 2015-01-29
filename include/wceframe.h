@@ -112,7 +112,7 @@ namespace Win32xx
 		virtual ~CWceFrame();
 		virtual void AddToolBarButton(UINT nID);
 		CRect GetViewRect() const;
-		CCmdBar& GetMenuBar() const {return (CCmdBar&)m_MenuBar;}
+		CCmdBar* GetMenuBar() const {return const_cast<CCmdBar*>(&m_MenuBar);}
 		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual int  OnCreate(LPCREATESTRUCT pcs);		
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -261,7 +261,7 @@ namespace Win32xx
 
 #ifndef SHELL_AYGSHELL
 		// Reduce the size of the client rectangle, by the commandbar height
-		r.top += m_MenuBar.GetHeight();
+		r.top += GetMenuBar()->GetHeight();
 #endif
 
 		return r;
@@ -270,7 +270,7 @@ namespace Win32xx
 	inline int CWceFrame::OnCreate(LPCREATESTRUCT pcs)
 	{
 		// Create the Commandbar
-		m_MenuBar.Create(m_hWnd);
+		GetMenuBar()->Create(m_hWnd);
 
 		// Set the keyboard accelerators
 		HACCEL hAccel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
@@ -282,7 +282,7 @@ namespace Win32xx
 
 #ifndef SHELL_AYGSHELL
 		// Add close button
-		m_MenuBar.AddAdornments(0);
+		GetMenuBar()->AddAdornments(0);
 #endif
 
 		return 0;
@@ -319,7 +319,7 @@ namespace Win32xx
 
 	inline void CWceFrame::RecalcLayout()
 	{
-		HWND hwndCB = m_MenuBar.GetHwnd();
+		HWND hwndCB = GetMenuBar()->GetHwnd();
 		if (hwndCB)
 		{
 			CRect rc;			// Desktop window size
@@ -373,10 +373,10 @@ namespace Win32xx
 			}
 
 			// Add the bitmap
-			GetMenuBar().AddBitmap(IDW_MAIN, iImages , 16, 16);
+			GetMenuBar()->AddBitmap(IDW_MAIN, iImages , 16, 16);
 
 			// Add the buttons
-			GetMenuBar().AddButtons(iNumButtons, tbbArray);
+			GetMenuBar()->AddButtons(iNumButtons, tbbArray);
 		}
 	}
 

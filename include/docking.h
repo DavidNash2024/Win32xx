@@ -471,8 +471,8 @@ namespace Win32xx
 		std::vector <DockPtr> * GetAllDockChildren() const {return const_cast< std::vector<DockPtr>* >(&GetDockAncestor()->m_vAllDockChildren);}
 		std::vector <CDocker*> * GetDockChildren()	const {return const_cast< std::vector<CDocker*>* >(&m_vDockChildren);}
 		std::vector <CDocker*> * GetAllDockers()	const {return const_cast< std::vector<CDocker*>* >(&m_vAllDockers);}
-		int GetBarWidth() const				{return m_DockBar.GetWidth();}
-		CString& GetCaption() const			{return m_DockClient.GetCaption();}
+		int GetBarWidth() const				{return GetDockBar()->GetWidth();}
+		CString& GetCaption() const			{return GetDockClient()->GetCaption();}
 		int GetDockID() const				{return m_nDockID;}
 		CDocker* GetDockParent() const		{return m_pDockParent;}
 		DWORD GetDockStyle() const			{return m_DockStyle;}
@@ -4694,7 +4694,7 @@ namespace Win32xx
 		if (GetToolBar()->IsWindow())
 		{
 			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
-			CRect rcToolBar = m_ToolBar.GetClientRect();
+			CRect rcToolBar = GetToolBar()->GetClientRect();
 			rc.top += rcToolBar.Height();
 		}
 
