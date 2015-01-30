@@ -32,6 +32,12 @@ New Features and Enhancements
 		AddMDIChild(new CSimpleMDIChild); 		
 	}
 	
+* Windows created by CWnd::Create can now be initially created as maximized or
+   minimized by specifying the WS_MAXIMIZE or WS_MINIMIZE styles in PreCreate,
+   even though this is not supported by the CreateWindowEx Windows API function.
+   
+* Frames now load the show state (maximized or normal) from the registry.   
+	
 * Added DockMDI sample.	
   This sample demonstrates adding Dockers to MDI Frames.
 	
@@ -41,6 +47,7 @@ New Features and Enhancements
 	
 Changes in detail
 -----------------
+Added CFrame::m_ShowCmd      (loaded from the registry: SW_MAXIMIZE or SW_SHOW)
 Added CMDIFrame::GetActiveMenu
 Added CTab::OnSetFocus
 Modified CTabbedMDI::AddMIDChild

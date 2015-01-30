@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Release Date: 29th January 2015
+// Release Date: 1st February 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -422,6 +422,8 @@ namespace Win32xx
 		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
 		CImageList m_imlMenu;				// Imagelist of menu icons
 		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
+		CRect m_rcPosition;					// Starting window position retrieved from registry
+		DWORD m_ShowCmd;					// Initial show state retrieved from registry
 		BOOL m_UseIndicatorStatus;			// set to TRUE to see indicators in status bar
 		BOOL m_UseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_UseReBar;					// set to TRUE if ReBars are to be used
@@ -451,7 +453,6 @@ namespace Win32xx
 		CImageList m_ToolBarImages;			// Image list for the ToolBar buttons
 		CImageList m_ToolBarDisabledImages;	// Image list for the Disabled ToolBar buttons
 		CImageList m_ToolBarHotImages;		// Image list for the Hot ToolBar buttons
-		CRect m_rcPosition;					// CRect of the starting window position
 		CString m_OldStatus[3];				// Array of CString holding old status;
 		CString m_strKeyName;				// CString for Registry key name
 		CString m_strStatusText;			// CString for status text
@@ -465,7 +466,6 @@ namespace Win32xx
 		CWnd* m_pView;						// pointer to the View CWnd object
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
-		int m_nOldID;						// The previous ToolBar ID displayed in the statusbar
 		BOOL m_DrawArrowBkgrnd;				// True if a separate arrow background is to be drawn on toolbar
 		HHOOK m_KbdHook;					// Keyboard hook.
 
@@ -810,9 +810,10 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_pMenuMetrics(0), m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE), m_UseThemes(TRUE),
-							  m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE), m_AboutDialog(IDW_ABOUT),
-							  m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0), m_nOldID(-1), m_DrawArrowBkgrnd(FALSE), m_KbdHook(0)
+	inline CFrame::CFrame() : m_pMenuMetrics(0), m_ShowCmd(SW_SHOW), m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE),
+							  m_UseThemes(TRUE), m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE),
+							  m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
+							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0)
 	{
 		ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
 		ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
@@ -1059,6 +1060,9 @@ namespace Win32xx
 		else
 			GetToolBar()->Create(this);	// Create the toolbar without a rebar
 
+		// Set a default ImageList for the ToolBar
+		SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+		
 		SetupToolBar();
 
 		if (IsReBarSupported() && m_UseReBar)
@@ -1073,12 +1077,6 @@ namespace Win32xx
 
 		if (m_vToolBarData.size() > 0)
 		{
-			// Set the toolbar images (if not already set in SetupToolBar)
-			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-
-			if (!GetToolBar()->SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-
 			// Add the icons for popup menu
 			AddMenuIcons(m_vToolBarData, RGB(192, 192, 192), IDW_MAIN, 0);
 		}
@@ -2013,7 +2011,7 @@ namespace Win32xx
 			{
 				DWORD dwType = REG_BINARY;
 				DWORD BufferSize = sizeof(DWORD);
-				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwStatusBar, dwToolBar;
+				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwShowCmd, dwStatusBar, dwToolBar;
 				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize))
@@ -2021,6 +2019,8 @@ namespace Win32xx
 				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize))
+					throw CWinException(_T("RegQueryValueEx Failed"));
+				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("ShowCmd"), NULL, &dwType, (LPBYTE)&dwShowCmd, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("StatusBar"), NULL, &dwType, (LPBYTE)&dwStatusBar, &BufferSize))
 					throw CWinException(_T("RegQueryValueEx Failed"));
@@ -2031,8 +2031,11 @@ namespace Win32xx
 				m_rcPosition.left = dwLeft;
 				m_rcPosition.bottom = m_rcPosition.top + dwHeight;
 				m_rcPosition.right = m_rcPosition.left + dwWidth;
+				m_ShowCmd = dwShowCmd;
 				m_ShowStatusBar = dwStatusBar & 1;
 				m_ShowToolBar = dwToolBar & 1;
+
+				m_ShowCmd = (SW_MAXIMIZE == m_ShowCmd)?  SW_MAXIMIZE : SW_SHOW;
 
 				RegCloseKey(hKey);
 				bRet = TRUE;
@@ -2585,6 +2588,9 @@ namespace Win32xx
 	{
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
+		
+		if (m_ShowCmd == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
+
 		CWindowDC dcDesktop(0);
 
 		// Does the window fit on the desktop?
@@ -2688,6 +2694,7 @@ namespace Win32xx
 					DWORD dwLeft = MAX(rc.left, 0);
 					DWORD dwWidth = MAX(rc.Width(), 100);
 					DWORD dwHeight = MAX(rc.Height(), 50);
+					DWORD dwShowCmd = Wndpl.showCmd;
 
 					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
 						throw CWinException(_T("RegSetValueEx failed"));
@@ -2696,6 +2703,8 @@ namespace Win32xx
 					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
 						throw CWinException(_T("RegSetValueEx failed"));
 					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
+						throw CWinException(_T("RegSetValueEx failed"));
+					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("ShowCmd"), 0, REG_DWORD, (LPBYTE)&dwShowCmd, sizeof(DWORD)))
 						throw CWinException(_T("RegSetValueEx failed"));
 				}
 

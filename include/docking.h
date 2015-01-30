@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Release Date: 29th January 2015
+// Release Date: 1st February 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2145,13 +2145,16 @@ namespace Win32xx
 		}
 
 		// Redraw the docked windows
-		GetAncestor()->SetForegroundWindow();
-		pDocker->GetView()->SetFocus();
-
-		GetTopmostDocker()->SetRedraw(FALSE);
-		RecalcDockLayout();
-		GetTopmostDocker()->SetRedraw(TRUE);
-		GetTopmostDocker()->RedrawWindow();
+		if (GetAncestor()->IsWindowVisible())
+		{
+			GetAncestor()->SetForegroundWindow();
+		
+			pDocker->GetView()->SetFocus();
+			GetTopmostDocker()->SetRedraw(FALSE);
+			RecalcDockLayout();
+			GetTopmostDocker()->SetRedraw(TRUE);
+			GetTopmostDocker()->RedrawWindow();
+		}
 	}
 
 	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
@@ -2865,6 +2868,9 @@ namespace Win32xx
 
 	inline void CDocker::OnDestroy()
 	{
+		KillTimer(TIMER_ID1);
+		KillTimer(TIMER_ID2);
+
 		// Destroy any dock children first
 		std::vector<CDocker*>::iterator iter;
 		for (iter = GetDockChildren()->begin(); iter < GetDockChildren()->end(); ++iter)

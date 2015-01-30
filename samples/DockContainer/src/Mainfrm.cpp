@@ -123,7 +123,7 @@ void CMainFrame::OnInitialUpdate()
 		LoadDefaultDockers();
 
 	// PreCreate initially set the window as invisible, so show it now.
-	ShowWindow();
+	ShowWindow(m_ShowCmd);
 }
 
 void CMainFrame::LoadDefaultDockers()

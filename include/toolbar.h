@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Release Date: 29th January 2015
+// Release Date: 1st February 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -745,8 +745,7 @@ namespace Win32xx
 	}
 
 	inline void CToolBar::SetButtonInfo(int idButton, int idButtonNew, int iImage, BYTE Style /* = 0 */, BYTE State /* = 0 */) const
-	// Use this to change the buttons image and ID.
-	// The ID must be changed for the image to be changed.
+	// Use this to change a button's Command ID. It can also be used to change a button's image.
 	{
 		// Retrieve existing state and style
 		TBBUTTON tb;

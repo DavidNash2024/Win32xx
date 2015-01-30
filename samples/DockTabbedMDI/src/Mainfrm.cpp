@@ -336,7 +336,8 @@ void CMainFrame::OnInitialUpdate()
 		DrawMenuBar();
 
 	// PreCreate initially set the window as invisible, so show it now.
-	ShowWindow();
+	ShowWindow(m_ShowCmd);
+	
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 
@@ -427,11 +428,11 @@ void CMainFrame::SetupToolBar()
 	GetFrameMenu()->CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWSIMPLE, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_SIMPLE), IMAGE_ICON, 0, 0, LR_SHARED));
-	AddMenuIcon(IDM_FILE_NEWRECT, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_RECT), IMAGE_ICON, 0, 0, LR_SHARED));
-	AddMenuIcon(IDM_FILE_NEWTEXT, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_TEXT), IMAGE_ICON, 0, 0, LR_SHARED));
-	AddMenuIcon(IDM_FILE_NEWLIST, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_FILEVIEW), IMAGE_ICON, 0, 0, LR_SHARED));
-	AddMenuIcon(IDM_FILE_NEWTREE, (HICON)LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDI_CLASSVIEW), IMAGE_ICON, 0, 0, LR_SHARED));
+	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp()->LoadIcon(IDI_SIMPLE));
+	AddMenuIcon(IDM_FILE_NEWRECT, GetApp()->LoadIcon(IDI_RECT));
+	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp()->LoadIcon(IDI_TEXT));
+	AddMenuIcon(IDM_FILE_NEWLIST, GetApp()->LoadIcon(IDI_FILEVIEW));
+	AddMenuIcon(IDM_FILE_NEWTREE, GetApp()->LoadIcon(IDI_CLASSVIEW));
 }
 
 LRESULT CMainFrame::OnMouseActivate(WPARAM wParam, LPARAM lParam)

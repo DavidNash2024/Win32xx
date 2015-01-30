@@ -1,5 +1,5 @@
 // Win32++   Version 7.7
-// Release Date: 29th January 2015
+// Release Date: 1st February 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1539,10 +1539,20 @@ namespace Win32xx
 		// Allow the CREATESTRUCT parameters to be modified
 		PreCreate(*m_pcs);
 
+		DWORD dwStyle = m_pcs->style & ~WS_VISIBLE; 
+
 		// Create the window
 #ifndef _WIN32_WCE
-		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, m_pcs->style, m_pcs->x, m_pcs->y,
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, m_pcs->x, m_pcs->y,
 				m_pcs->cx, m_pcs->cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
+		
+		if (m_pcs->style & WS_VISIBLE)
+		{
+			if		(m_pcs->style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
+			else if (m_pcs->style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
+			else	ShowWindow();
+		}
+
 #else
 		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, m_pcs->style, m_pcs->x, m_pcs->y,
 				m_pcs->cx, m_pcs->cy, hWndParent, 0, m_pcs->lpCreateParams);

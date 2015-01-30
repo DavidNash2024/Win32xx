@@ -111,6 +111,35 @@ void CMainFrame::OnInitialUpdate()
 	
 }
 
+void CMainFrame::OnUpdateCheckA(UINT nID)
+{
+	BOOL bCheck = GetDoc()->GetCheckA();
+	GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+}
+
+void CMainFrame::OnUpdateCheckB(UINT nID)
+{
+	BOOL bCheck = GetDoc()->GetCheckB();
+	GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+}
+
+void CMainFrame::OnUpdateCheckC(UINT nID)
+{
+	BOOL bCheck = GetDoc()->GetCheckC();
+	GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+}
+
+void CMainFrame::OnUpdateRangeOfIds_Radio(UINT nID)
+{
+	UINT adjId = nID - ID_RADIO_A;
+	UINT curRadio = GetDoc()->GetRadio();
+	BOOL bCheck = (curRadio == adjId);
+	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
+	CMenu* pRadioMenu = GetFrameMenu()->GetSubMenu(nFileItem);
+	if (bCheck)  
+		pRadioMenu->CheckMenuRadioItem(ID_RADIO_A, ID_RADIO_C, nID, 0);
+}
+
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	CFrame::PreCreate(cs);
@@ -153,31 +182,3 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
-void CMainFrame::OnUpdateCheckA(UINT nID)
-{
-	BOOL bCheck = GetDoc()->GetCheckA();
-	GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
-}
-
-void CMainFrame::OnUpdateCheckB(UINT nID)
-{
-	BOOL bCheck = GetDoc()->GetCheckB();
-	GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
-}
-
-void CMainFrame::OnUpdateCheckC(UINT nID)
-{
-	BOOL bCheck = GetDoc()->GetCheckC();
-	GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
-}
-
-void CMainFrame::OnUpdateRangeOfIds_Radio(UINT nID)
-{
-	UINT adjId = nID - ID_RADIO_A;
-	UINT curRadio = GetDoc()->GetRadio();
-	BOOL bCheck = (curRadio == adjId);
-	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
-	CMenu* pRadioMenu = GetFrameMenu()->GetSubMenu(nFileItem);
-	if (bCheck)  
-		pRadioMenu->CheckMenuRadioItem(ID_RADIO_A, ID_RADIO_C, nID, 0);
-}
