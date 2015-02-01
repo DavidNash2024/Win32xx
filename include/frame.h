@@ -2198,11 +2198,12 @@ namespace Win32xx
 	{
 		SetMenu(NULL);
 
+		CDocker::OnDestroy();
 		GetMenuBar()->Destroy();
 		GetToolBar()->Destroy();
 		GetReBar()->Destroy();
 		GetStatusBar()->Destroy();
-		GetView()->Destroy();
+		GetView()->Destroy();		
 
 		::PostQuitMessage(0);	// Terminates the application
 	}
