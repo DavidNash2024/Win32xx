@@ -1,5 +1,5 @@
-// Win32++   Version 7.7
-// Release Date: 1st February 2015
+// Win32++   Version 7.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -410,6 +410,8 @@ namespace Win32xx
 		void Destroy();
 		HDC  Detach();
 		HDC GetHDC() const { return m_pData->hDC; }
+		BOOL RestoreDC(int nSavedDC) const;
+		int SaveDC() const;
 		CPalette* SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd);
 		CBitmap* SelectObject(const CBitmap* pBitmap);
 		CBrush* SelectObject(const CBrush* pBrush);
@@ -2546,6 +2548,17 @@ namespace Win32xx
 			}
 		}
 		return Success;
+	}
+
+	inline BOOL CDC::RestoreDC(int nSavedDC) const
+	{
+		assert(m_pData->hDC);
+		return ::RestoreDC(m_pData->hDC, nSavedDC);
+	}
+	inline int CDC::SaveDC() const
+	{
+		assert(m_pData->hDC);
+		return ::SaveDC(m_pData->hDC);
 	}
 
 	inline void CDC::SolidFill(COLORREF Color, const RECT& rc)

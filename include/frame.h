@@ -1,5 +1,5 @@
-// Win32++   Version 7.7
-// Release Date: 1st February 2015
+// Win32++   Version 7.7.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1067,6 +1067,9 @@ namespace Win32xx
 
 		if (IsReBarSupported() && m_UseReBar)
 		{
+			SIZE MaxSize = GetToolBar()->GetMaxSize();
+			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)GetToolBar()->GetHwnd(), (LPARAM)&MaxSize);
+			
 			if (GetReBarTheme()->UseThemes && GetReBarTheme()->LockMenuBand)
 			{
 				// Hide gripper for single toolbar
@@ -1142,7 +1145,9 @@ namespace Win32xx
 						}
 
 						// Draw border
-						pDrawDC->CreatePen(PS_SOLID, 1, GetMenuBarTheme()->clrOutline);
+						int nSavedDC = pDrawDC->SaveDC();
+						CPen Pen(PS_SOLID, 1, GetMenuBarTheme()->clrOutline);
+						pDrawDC->SelectObject(&Pen);
 						pDrawDC->MoveTo(rcRect.left, rcRect.bottom);
 						pDrawDC->LineTo(rcRect.left, rcRect.top);
 						pDrawDC->LineTo(rcRect.right-1, rcRect.top);
@@ -1163,10 +1168,10 @@ namespace Win32xx
 						pDrawDC->SelectObject(pFont);
 
 						rcRect.bottom += 1;
-						int iMode = pDrawDC->SetBkMode(TRANSPARENT);
+						pDrawDC->SetBkMode(TRANSPARENT);
 						pDrawDC->DrawText(str, str.GetLength(), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-						pDrawDC->SetBkMode(iMode);
+						pDrawDC->RestoreDC(nSavedDC);
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
 				}
@@ -1386,6 +1391,7 @@ namespace Win32xx
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
 		MenuTheme* pMBT = GetMenuBarTheme();
 		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
+		int nSavedDC = pDrawDC->SaveDC();
 
 		if (IsAeroThemed() && m_pMenuMetrics->IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
 		{
@@ -1446,6 +1452,8 @@ namespace Win32xx
 			CRect rc = pdis->rcItem;
 			::ExcludeClipRect(pdis->hDC, rc.left, rc.top, rc.right, rc.bottom);
 		}
+
+		pDrawDC->RestoreDC(nSavedDC);
 	}
 
 	inline void CFrame::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis)
@@ -1469,8 +1477,10 @@ namespace Win32xx
 			if ((bSelected) && (!bDisabled))
 			{
 				// draw selected item background
-				pDrawDC->CreateSolidBrush(pMBT->clrHot1);
-				pDrawDC->CreatePen(PS_SOLID, 1, pMBT->clrOutline);
+				CBrush Brush(pMBT->clrHot1);
+				pDrawDC->SelectObject(&Brush);
+				CPen Pen(PS_SOLID, 1, pMBT->clrOutline);
+				pDrawDC->SelectObject(&Pen);
 				pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 			}
 			else
@@ -1509,8 +1519,10 @@ namespace Win32xx
 			int top = rc.top + (rc.Height() - Icony)/2;
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
-			pDrawDC->CreateSolidBrush(pMBT->clrHot2);
-			pDrawDC->CreatePen(PS_SOLID, 1, pMBT->clrOutline);
+			CBrush Brush(pMBT->clrHot2);
+			pDrawDC->SelectObject(&Brush);
+			CPen Pen(PS_SOLID, 1, pMBT->clrOutline);
+			pDrawDC->SelectObject(&Pen);
 
 			// Draw the checkmark's background rectangle
 			pDrawDC->Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
@@ -1548,7 +1560,7 @@ namespace Win32xx
 			else
 			{
 				// Draw a black checkmark
-				int BullitOffset = ((MFT_RADIOCHECK == fType)/* && tm.UseThemes*/)? 1 : 0;
+				int BullitOffset = (MFT_RADIOCHECK == fType)? 1 : 0;
 				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, &MemDC, 0, 0, SRCAND);
 				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, &MaskDC, 0, 0, SRCAND);
 			}
