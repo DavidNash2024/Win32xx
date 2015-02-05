@@ -259,7 +259,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 
-		// Find an existing pernament CMenu from the map
+		// Find an existing permanent CMenu from the map
 		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
 		if ((0 != hMenu) && (0 == pMenu))
 		{		

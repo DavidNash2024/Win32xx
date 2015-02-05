@@ -114,7 +114,7 @@ namespace Win32xx
 			MDI_CLOSE = 2
 		};
 
-		BOOL  m_IsExitAfter;		// Exit after Popup menu ends
+		BOOL  m_IsExitAfter;	// Exit after Popup menu ends
 		BOOL  m_IsKeyMode;		// keyboard navigation mode
 		BOOL  m_IsMenuActive;	// popup menu active
 		BOOL  m_IsSelPopup;		// a popup (cascade) menu is selected

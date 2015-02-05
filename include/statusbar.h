@@ -146,7 +146,7 @@ namespace Win32xx
 	inline BOOL CStatusBar::OnEraseBkgnd(CDC* pDC)
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
-		// Return TRUE to supress default background drawing.
+		// Return TRUE to suppress default background drawing.
 		return (TRUE == GetParent()->SendMessage(UWM_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
 

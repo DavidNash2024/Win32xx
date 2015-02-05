@@ -550,8 +550,8 @@ namespace Win32xx
 		CDocker*		m_pDockAncestor;
 
 		std::vector <CDocker*> m_vDockChildren;		// Docker's immediate children
-		std::vector <DockPtr> m_vAllDockChildren;	// All decendants of the DockAncestor (only for the DockAncestor)
-		std::vector <CDocker*> m_vAllDockers;		// DockAncestor + all decendants (only for the DockAncestor)
+		std::vector <DockPtr> m_vAllDockChildren;	// All descendants of the DockAncestor (only for the DockAncestor)
+		std::vector <CDocker*> m_vAllDockers;		// DockAncestor + all descendants (only for the DockAncestor)
 
 		CRect m_rcBar;
 		CRect m_rcChild;
@@ -1446,7 +1446,7 @@ namespace Win32xx
 				Create(pDockTarget);
 			}
 
-			// Adjust hint shape for containter in container docking
+			// Adjust hint shape for container in container docking
 			if ((uDockSide & DS_DOCKED_CONTAINER) && rcHint.Height() > 50)
 			{
 				CRgn Rgn;
@@ -1871,7 +1871,7 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::AddDockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, int nDockID /* = 0*/)
-	// This function creates the docker, and adds it to the docker heirachy as docked
+	// This function creates the docker, and adds it to the docker hierarchy as docked
 	{
 		// Create the docker window as a child of the frame window.
 		// This permanently sets the frame window as the docker window's owner,

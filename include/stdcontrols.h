@@ -268,7 +268,7 @@ namespace Win32xx
 	}
 
 	inline HCURSOR CButton::GetCursor() const
-	// returns the handle to the cursor associated withe the button
+	// returns the handle to the cursor associated with the button
 	{
 		assert(::IsWindow(m_hWnd));
 		return (HCURSOR)SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0L);

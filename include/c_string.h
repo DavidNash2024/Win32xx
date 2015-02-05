@@ -493,7 +493,7 @@ namespace Win32xx
 	}
 
 	inline LPTSTR CString::GetBuffer(int nMinBufLength)
-	// Creates a buffer of nMinBufLength charaters (+1 extra for NULL termination) and returns
+	// Creates a buffer of nMinBufLength characters (+1 extra for NULL termination) and returns
 	// a pointer to this buffer. This buffer can be used by any function which accepts a LPTSTR.
 	// Care must be taken not to exceed the length of the buffer. Use ReleaseBuffer to safely
 	// copy this buffer back to the CString object.

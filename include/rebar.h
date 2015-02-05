@@ -325,12 +325,12 @@ namespace Win32xx
 	inline BOOL CReBar::OnEraseBkgnd(CDC* pDC)
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
-		// Return TRUE to supress default background drawing.
+		// Return TRUE to suppress default background drawing.
 		return (TRUE == GetParent()->SendMessage(UWM_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
 
 	inline void CReBar::PreCreate(CREATESTRUCT &cs)
-	// Sets the CREATESTRUCT paramaters prior to window creation
+	// Sets the CREATESTRUCT parameters prior to window creation
 	{
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
                          CCS_NODIVIDER | RBS_VARHEIGHT | RBS_BANDBORDERS ;

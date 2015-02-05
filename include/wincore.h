@@ -1689,7 +1689,7 @@ namespace Win32xx
 	{
 		assert( GetApp() );
 
-		// Find any existing pernament CWnd from the map
+		// Find any existing permanent CWnd from the map
 		CWnd* pWnd = FromHandlePermanent(hWnd);
 		if ( NULL != hWnd && 0 == pWnd )
 		{
@@ -2198,8 +2198,8 @@ namespace Win32xx
 		//	case MESSAGE2:  return OnMessage2();
 		//	}
 
-		// The message functions should return a value recomended by the Windows API documention.
-		// Alternativly, return FinalWindowProc to continue with default processing.
+		// The message functions should return a value recommended by the Windows API documentation.
+		// Alternatively, return FinalWindowProc to continue with default processing.
 
 		// Always pass unhandled messages on to WndProcDefault
 		return WndProcDefault(uMsg, wParam, lParam);

@@ -45,13 +45,13 @@
 // single view window. Refer to mdi.h for frames that support several
 // child windows.
 
-// CFrame also includes each of the following classes as members:
+// CFrame also uses each of the following classes:
 // * CReBar for managing the frame's rebar control.
 // * CMenuBar for managing the menu inside the rebar.
 // * CToolBar for managing the frame's toolbar.
 // * CStatusBar for managing the frame's status bar.
-// In each case these members are exposed by a GetXXX function, allowing
-// them to be accessed or sent messages.
+// In each case the members for these classes are exposed by a GetXXX 
+// function, allowing them to be accessed or sent messages.
 
 // CFrame is responsible for creating a "frame" window. This window has a
 // menu and and several child windows, including a toolbar (usually hosted
@@ -873,7 +873,7 @@ namespace Win32xx
 
 	inline UINT CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
 	// Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
-	// Note:  If existing are a different size to the new ones, the old ones will be removed!
+	// Note:  If existing images are a different size to the new ones, the old ones will be removed!
 	//        The ToolBarDisabledID is ignored unless ToolBarID and ToolBarDisabledID bitmaps are the same size.
 	{
 		// Count the MenuData entries excluding separators
@@ -2260,7 +2260,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnHelp()
-	// Called to display help (WM_HELP recieved or selected via menu)
+	// Called to display help (WM_HELP received or selected via menu)
 	{
 		// Ensure only one dialog displayed even for multiple hits of the F1 button
 		if (!m_AboutDialog.IsWindow())
@@ -2279,7 +2279,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
-	// Called when the menu's modal loop begins (WM_INITMENUPOPUP recieved)
+	// Called when the menu's modal loop begins (WM_INITMENUPOPUP received)
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam))
@@ -2597,7 +2597,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::PreCreate(CREATESTRUCT& cs)
-	// Sets frame window creation paramaters prior to the frame window's creation
+	// Sets frame window creation parameters prior to the frame window's creation
 	{
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;

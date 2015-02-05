@@ -386,7 +386,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMDIFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
-	// Called when the menu's modal loop begins (WM_INITMENUPOPUP recieved)
+	// Called when the menu's modal loop begins (WM_INITMENUPOPUP received)
 	{
 		if (IsMDIChildMaxed())
 		{

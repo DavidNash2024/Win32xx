@@ -1866,7 +1866,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		assert(pWnd);
-		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed Tooltip is 80 characters for Windows XP and below
+		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed ToolTip is 80 characters for Windows XP and below
 		TOOLINFO ti;
 		LoadToolInfo(ti, pWnd, nIDTool);
 		ti.lpszText = pszText;

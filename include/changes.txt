@@ -2,7 +2,7 @@ Version 7.7.1
 =============
 
 Bug Fixes
-* Toolbar buttons with text are now sized correctly.
+* Rebar bands holding Toolbar buttons with text are now sized correctly.
 
 Changes in detail
 -----------------

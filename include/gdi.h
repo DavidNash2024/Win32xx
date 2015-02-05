@@ -2286,7 +2286,7 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(hDC);
 
-		// Find an existing pernament CDC from the map
+		// Find an existing permanent CDC from the map
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
 		if (0 == pDC)
 		{
@@ -3332,7 +3332,7 @@ namespace Win32xx
 		return ::PolylineTo(m_pData->hDC, lpPoints, nCount);
 	}
 	inline BOOL CDC::PolyBezier(const POINT* lpPoints, int nCount) const
-	// Draws one or more Bzier curves.
+	// Draws one or more Bezier curves.
 	{
 		assert(m_pData->hDC);
 		return ::PolyBezier(m_pData->hDC, lpPoints, nCount);
@@ -4009,14 +4009,14 @@ namespace Win32xx
 	}
 
 	inline int CDC::GetTextCharacterExtra() const
-	// Retrieves the current intercharacter spacing for the device context
+	// Retrieves the current inter-character spacing for the device context
 	{
 		assert(m_pData->hDC);
 		return ::GetTextCharacterExtra(m_pData->hDC);
 	}
 
 	inline int CDC::SetTextCharacterExtra(int nCharExtra) const
-	// Sets the intercharacter spacing
+	// Sets the inter-character spacing
 	{
 		assert(m_pData->hDC);
 		return ::SetTextCharacterExtra(m_pData->hDC, nCharExtra);
