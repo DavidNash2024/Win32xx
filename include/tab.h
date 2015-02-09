@@ -311,7 +311,7 @@ namespace Win32xx
 		tpi.pView = pView.get();
 		tpi.idTab = idTab;
 		tpi.TabText = szTabText;
-		if (hIcon)
+		if (hIcon != 0)
 			tpi.iImage = GetODImageList()->Add(hIcon);
 		else
 			tpi.iImage = -1;
@@ -319,7 +319,7 @@ namespace Win32xx
 		int iNewPage = (int)m_vTabPageInfo.size();
 		m_vTabPageInfo.push_back(tpi);
 
-		if (m_hWnd)
+		if (m_hWnd != 0)
 		{
 			TCITEM tie;
 			ZeroMemory(&tie, sizeof(TCITEM));
@@ -928,7 +928,7 @@ namespace Win32xx
 	inline LRESULT CTab::OnNCHitTest(WPARAM wParam, LPARAM lParam)
 	{
 		// Ensure we have an arrow cursor when the tab has no view window
-		if (0 == GetAllTabs()->size())
+		if (GetAllTabs()->size() == 0)
 			SetCursor(LoadCursor(NULL, IDC_ARROW));
 
 		// Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
@@ -1044,7 +1044,7 @@ namespace Win32xx
 		CRect rcClient = GetClientRect();
 		dcMem.CreateCompatibleBitmap(&dcView, rcClient.Width(), rcClient.Height());
 
-		if (0 == GetItemCount())
+		if (GetItemCount() == 0)
 		{
 			// No tabs, so simply display a grey background and exit
 			COLORREF rgbDialog = GetSysColor(COLOR_BTNFACE);
@@ -1759,7 +1759,7 @@ namespace Win32xx
 			CString KeyName = _T("Software\\") + strRegistryKeyName + _T("\\MDI Children");
 			HKEY hKey = 0;
 			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
-			if (hKey)
+			if (hKey != 0)
 			{
 				DWORD dwDWORD = REG_DWORD;
 				DWORD dwSZ = REG_SZ;
@@ -1947,7 +1947,7 @@ namespace Win32xx
 			catch (const CWinException& e)
 			{
 				// Roll back the registry changes by deleting the subkeys
-				if (hKey)
+				if (hKey != 0)
 				{
 					if (hKeyMDIChild)
 					{

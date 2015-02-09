@@ -524,7 +524,7 @@ namespace Win32xx
 	{
 		// Load the Common Controls DLL
 		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-		if (!hComCtl)
+		if (hComCtl == 0)
 			return 0;
 
 		int ComCtlVer = 400;
@@ -614,14 +614,14 @@ namespace Win32xx
 
 	inline BOOL IsAeroThemed()
 	{
-		BOOL bIsAeroThemed = FALSE;
+		BOOL IsAeroThemed = FALSE;
 
 		// Test if Windows version is XP or greater
 		if (GetWinVersion() >= 2501)
 		{
 			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 
-			if(hMod)
+			if(hMod != 0)
 			{
 				// Declare pointers to IsCompositionActive function
 				FARPROC pIsCompositionActive = ::GetProcAddress(hMod, "IsCompositionActive");
@@ -630,25 +630,25 @@ namespace Win32xx
 				{
 					if(pIsCompositionActive())
 					{
-						bIsAeroThemed = TRUE;
+						IsAeroThemed = TRUE;
 					}
 				}
 				::FreeLibrary(hMod);
 			}
 		}
 
-		return bIsAeroThemed;
+		return IsAeroThemed;
 	}
 
 	inline BOOL IsXPThemed()
 	{
-		BOOL bIsXPThemed = FALSE;
+		BOOL IsXPThemed = FALSE;
 
 		// Test if Windows version is XP or greater
 		if (GetWinVersion() >= 2501)
 		{
 			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-			if(hMod)
+			if(hMod != 0)
 			{
 				// Declare pointers to functions
 				FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
@@ -659,14 +659,14 @@ namespace Win32xx
 					if(pIsAppThemed() && pIsThemeActive())
 					{
 						// Test if ComCtl32 dll used is version 6 or later
-						bIsXPThemed = (GetComCtlVersion() >= 600);
+						IsXPThemed = (GetComCtlVersion() >= 600);
 					}
 				}
 				::FreeLibrary(hMod);
 			}
 		}
 
-		return bIsXPThemed;
+		return IsXPThemed;
 	}
 
   #endif // #ifndef _WIN32_WCE
@@ -681,7 +681,7 @@ namespace Win32xx
 		{
 			// Load the Common Controls DLL
 			hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-			if (!hComCtl)
+			if (hComCtl == 0)
 				throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
 			if (GetComCtlVersion() > 470)
@@ -712,7 +712,7 @@ namespace Win32xx
 		catch (const CWinException &e)
 		{
 			e.what();
-			if (hComCtl)
+			if (hComCtl != 0)
 				::FreeLibrary(hComCtl);
 
 			throw;

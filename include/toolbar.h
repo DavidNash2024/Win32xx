@@ -216,7 +216,7 @@ namespace Win32xx
 		TBBUTTON tbb;
 		ZeroMemory(&tbb, sizeof(TBBUTTON));
 
-		if (0 == nID)
+		if (nID == 0)
 		{
 			tbb.fsStyle = TBSTYLE_SEP;
 		}
@@ -826,7 +826,7 @@ namespace Win32xx
 		if (m_StringMap.end() == m)
 		{
 			CString str;
-			if (0 == m_StringMap.size())
+			if (m_StringMap.size() == 0)
 			{
 				// Place a blank string first in the string table, in case some
 				// buttons don't have text
@@ -871,7 +871,7 @@ namespace Win32xx
 				Succeeded = (BOOL)SendMessage(TB_INSERTBUTTON, (WPARAM)iIndex, (LPARAM)&tbb);
 
 			// Ensure the button now includes some text rows
-			if (0 == SendMessage(TB_GETTEXTROWS, 0L, 0L))
+			if (SendMessage(TB_GETTEXTROWS, 0L, 0L) == 0)
 				SendMessage(TB_SETMAXTEXTROWS, 1L, 0L);
 
 			// Turn on ToolBar drawing

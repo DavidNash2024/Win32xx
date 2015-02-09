@@ -11,14 +11,14 @@
 CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-    if (!m_hInstRichEdit)
+    if (m_hInstRichEdit == 0)
  		::MessageBox(NULL,_T("CMyDialog::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
 }
 
 CMyDialog::CMyDialog(LPCTSTR lpszResName) : CDialog(lpszResName)
 {
 	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-	if (!m_hInstRichEdit)
+	if (m_hInstRichEdit == 0)
 		::MessageBox(NULL, _T("CMyDialog::CMyDialog  Failed to load RICHED32.DLL"), _T("Error"), MB_ICONWARNING);
 }
 

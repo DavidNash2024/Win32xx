@@ -150,7 +150,7 @@ namespace Win32xx
 		{
 			HGDIOBJ hGDIObject;
 			long	Count;
-			BOOL	bIsTmpObject;
+			BOOL	IsTmpObject;
 		};
 		CGDIObject();
 		CGDIObject(const CGDIObject& rhs);
@@ -393,7 +393,7 @@ namespace Win32xx
 			std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
 			HDC		hDC;			// The HDC belonging to this CDC
 			long	Count;			// Reference count
-			BOOL	bIsTmpHDC;		// Delete/Release the HDC on destruction
+			BOOL	IsTmpHDC;		// Delete/Release the HDC on destruction
 			HWND	hWnd;			// The HWND of a Window or Client window DC
 			int		nSavedDCState;	// The save state of the HDC.
 		};
@@ -756,12 +756,12 @@ namespace Win32xx
 		CMetaFileDC() : m_hMF(0), m_hEMF(0) {}
 		virtual ~CMetaFileDC()
 		{
-			if (m_hMF)
+			if (m_hMF != 0)
 			{
 				::CloseMetaFile(GetHDC());
 				::DeleteMetaFile(m_hMF);
 			}
-			if (m_hEMF)
+			if (m_hEMF != 0)
 			{
 				::CloseEnhMetaFile(GetHDC());
 				::DeleteEnhMetaFile(m_hEMF);
@@ -847,7 +847,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpObject = FALSE;
+		m_pData->IsTmpObject = FALSE;
 	}
 
 	inline CGDIObject::CGDIObject(const CGDIObject& rhs)
@@ -924,7 +924,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 
-		if (m_pData->hGDIObject)
+		if (m_pData->hGDIObject != 0)
 		{
 			RemoveFromMap();
 
@@ -941,7 +941,7 @@ namespace Win32xx
 
 		HGDIOBJ hObject = m_pData->hGDIObject;
 
-		if (m_pData->Count)
+		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
@@ -954,7 +954,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hGDIObject = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpObject = FALSE;
+		m_pData->IsTmpObject = FALSE;
 
 		return hObject;
 	}
@@ -979,7 +979,7 @@ namespace Win32xx
 		{
 			if (m_pData->hGDIObject != NULL)
 			{
-				if (!m_pData->bIsTmpObject)
+				if (!m_pData->IsTmpObject)
 				{
 					::DeleteObject(m_pData->hGDIObject);
 					RemoveFromMap();
@@ -1063,7 +1063,7 @@ namespace Win32xx
 		assert(hBitmap);
 
 		CBitmap* pBitmap = static_cast<CBitmap*>(GetApp()->GetCGDIObjectFromMap(hBitmap));
-		if (0 == pBitmap)
+		if (!pBitmap)
 		{
 			// Find any existing temporary CBitmap for the HBitmap
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -1073,13 +1073,13 @@ namespace Win32xx
 			if (m != pTLSData->TmpGDIs.end())
 				pBitmap = static_cast<CBitmap*>(m->second.get());
 
-			if (0 == pBitmap)
+			if (!pBitmap)
 			{
 				pBitmap = new CBitmap;
 				pTLSData->TmpGDIs.insert(std::make_pair(hBitmap, pBitmap));
 
 				pBitmap->m_pData->hGDIObject = hBitmap;
-				pBitmap->m_pData->bIsTmpObject = TRUE;
+				pBitmap->m_pData->IsTmpObject = TRUE;
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
 		}
@@ -1099,7 +1099,7 @@ namespace Win32xx
 		assert(m_pData);
 
 		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
-		if (hBitmap)
+		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
 		}
@@ -1119,7 +1119,7 @@ namespace Win32xx
 		assert(m_pData);
 
 		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
-		if (hBitmap)
+		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
 		}
@@ -1137,7 +1137,7 @@ namespace Win32xx
 		assert(m_pData);
 
 		HBITMAP hBitmap = ::LoadBitmap(NULL, MAKEINTRESOURCE(nIDBitmap));
-		if (hBitmap)
+		if (hBitmap != 0)
 		{
 			Attach( ::LoadBitmap(NULL, MAKEINTRESOURCE(nIDBitmap)) );
 		}
@@ -1433,7 +1433,7 @@ namespace Win32xx
 		assert(hBrush);
 
 		CBrush* pBrush =  static_cast<CBrush*>(GetApp()->GetCGDIObjectFromMap(hBrush));
-		if (0 == pBrush)
+		if (!pBrush)
 		{
 			// Find any existing temporary CBrush for the HBRUSH
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -1443,13 +1443,13 @@ namespace Win32xx
 			if (m != pTLSData->TmpGDIs.end())
 				pBrush = static_cast<CBrush*>(m->second.get());
 
-			if (0 == pBrush)
+			if (!pBrush)
 			{
 				pBrush = new CBrush;
 				pTLSData->TmpGDIs.insert(std::make_pair(hBrush, pBrush));
 
 				pBrush->m_pData->hGDIObject = hBrush;
-				pBrush->m_pData->bIsTmpObject = TRUE;
+				pBrush->m_pData->IsTmpObject = TRUE;
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
 		}
@@ -1566,7 +1566,7 @@ namespace Win32xx
 		assert(hFont);
 
 		CFont* pFont = static_cast<CFont*>( GetApp()->GetCGDIObjectFromMap(hFont) );
-		if (0 == pFont)
+		if (!pFont)
 		{
 			// Find any existing temporary CFont for the HFONT
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -1576,12 +1576,12 @@ namespace Win32xx
 			if (m != pTLSData->TmpGDIs.end())
 				pFont = static_cast<CFont*>(m->second.get());
 
-			if (0 == pFont)
+			if (!pFont)
 			{
 				pFont = new CFont;
 				pTLSData->TmpGDIs.insert(std::make_pair(hFont, pFont));
 				pFont->m_pData->hGDIObject = hFont;
-				pFont->m_pData->bIsTmpObject = TRUE;
+				pFont->m_pData->IsTmpObject = TRUE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -1709,7 +1709,7 @@ namespace Win32xx
 		assert(hPalette);
 
 		CPalette* pPalette = static_cast<CPalette*>( GetApp()->GetCGDIObjectFromMap(hPalette) );
-		if (0 == pPalette)
+		if (!pPalette)
 		{
 			// Find any existing temporary CPalette for the HPALETTE
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -1719,12 +1719,12 @@ namespace Win32xx
 			if (m != pTLSData->TmpGDIs.end())
 				pPalette = static_cast<CPalette*>(m->second.get());
 
-			if (0 == pPalette)
+			if (!pPalette)
 			{
 				pPalette = new CPalette;
 				pTLSData->TmpGDIs.insert(std::make_pair(hPalette, pPalette));
 				pPalette->m_pData->hGDIObject = hPalette;
-				pPalette->m_pData->bIsTmpObject = TRUE;
+				pPalette->m_pData->IsTmpObject = TRUE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -1852,7 +1852,7 @@ namespace Win32xx
 		assert(hPen);
 
 		CPen* pPen = static_cast<CPen*>( GetApp()->GetCGDIObjectFromMap(hPen) );
-		if (0 == pPen)
+		if (!pPen)
 		{
 			// Find any existing temporary CPen for the HPEN
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -1862,12 +1862,12 @@ namespace Win32xx
 			if (m != pTLSData->TmpGDIs.end())
 				pPen = static_cast<CPen*>(m->second.get());
 
-			if (0 == pPen)
+			if (!pPen)
 			{
 				pPen = new CPen;
 				pTLSData->TmpGDIs.insert(std::make_pair(hPen, pPen));
 				pPen->m_pData->hGDIObject = hPen;
-				pPen->m_pData->bIsTmpObject = TRUE;
+				pPen->m_pData->IsTmpObject = TRUE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -1962,7 +1962,7 @@ namespace Win32xx
 		assert(hRgn);
 
 		CRgn* pRgn = static_cast<CRgn*>( GetApp()->GetCGDIObjectFromMap(hRgn) );
-		if (0 == pRgn)
+		if (!pRgn)
 		{
 			// Find any existing temporary CRgn for the HRGN
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -1972,12 +1972,12 @@ namespace Win32xx
 			if (m != pTLSData->TmpGDIs.end())
 				pRgn = static_cast<CRgn*>(m->second.get());
 
-			if (0 == pRgn)
+			if (!pRgn)
 			{
 				pRgn = new CRgn;
 				pTLSData->TmpGDIs.insert(std::make_pair(hRgn, pRgn));
 				pRgn->m_pData->hGDIObject = hRgn;
-				pRgn->m_pData->bIsTmpObject = TRUE;
+				pRgn->m_pData->IsTmpObject = TRUE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -2193,7 +2193,7 @@ namespace Win32xx
 		// Assign values to our data members
 		m_pData->hDC = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpHDC = FALSE;
+		m_pData->IsTmpHDC = FALSE;
 		m_pData->hWnd = 0;
 	}
 
@@ -2227,7 +2227,7 @@ namespace Win32xx
 			// Assign values to our data members
 			m_pData->hDC = hDC;
 			m_pData->Count = 1L;
-			m_pData->bIsTmpHDC = FALSE;
+			m_pData->IsTmpHDC = FALSE;
 			m_pData->nSavedDCState = ::SaveDC(hDC);
 #ifndef _WIN32_WCE
 			m_pData->hWnd = ::WindowFromDC(hDC);
@@ -2288,7 +2288,7 @@ namespace Win32xx
 
 		// Find an existing permanent CDC from the map
 		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (0 == pDC)
+		if (!pDC)
 		{
 			// Find any existing temporary CWnd for the HWND
 			TLSData* pTLSData = GetApp()->SetTlsData();
@@ -2298,13 +2298,13 @@ namespace Win32xx
 			if (m != pTLSData->TmpDCs.end())
 				pDC = m->second.get();
 
-			if (0 == pDC)
+			if (!pDC)
 			{
 				// No exiting CDC for this HDC, so create one
 				pDC = new CDC;
 				pTLSData->TmpDCs.insert(std::make_pair(hDC, pDC));
 				pDC->m_pData->hDC = hDC;
-				pDC->m_pData->bIsTmpHDC = TRUE;
+				pDC->m_pData->IsTmpHDC = TRUE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -2367,7 +2367,7 @@ namespace Win32xx
 
 		HDC hDC = m_pData->hDC;
 
-		if (m_pData->Count)
+		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
@@ -2380,7 +2380,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hDC = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpHDC = FALSE;
+		m_pData->IsTmpHDC = FALSE;
 		m_pData->hWnd = 0;
 
 		return hDC;
@@ -2393,7 +2393,7 @@ namespace Win32xx
 		assert(m_pData->hDC == NULL);
 		HDC hdcSource = (pDC == NULL)? NULL : pDC->GetHDC();
 		HDC hDC = ::CreateCompatibleDC(hdcSource);
-		if (hDC)
+		if (hDC != 0)
 		{
 			m_pData->hDC = hDC;
 			AddToMap();
@@ -2406,7 +2406,7 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateDC(lpszDriver, lpszDevice, lpszOutput, pInitData);
-		if (hDC)
+		if (hDC != 0)
 		{
 			m_pData->hDC = hDC;
 			AddToMap();
@@ -2419,7 +2419,7 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateIC(lpszDriver, lpszDevice, lpszOutput, pInitData);
-		if (hDC)
+		if (hDC != 0)
 		{
 			m_pData->hDC = hDC;
 			AddToMap();
@@ -2461,7 +2461,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp()->SetTlsData();
 		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
 
-		pDC->m_pData->bIsTmpHDC = FALSE; // Only FromHandle require bIsTmpHDC = TRUE
+		pDC->m_pData->IsTmpHDC = FALSE; // Only FromHandle require bIsTmpHDC = TRUE
 		pDC->m_pData->hWnd = hWnd;
 		return pDC;
 	}
@@ -2512,7 +2512,7 @@ namespace Win32xx
 
 	inline void CDC::Release()
 	{
-		if (m_pData->Count)
+		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
@@ -2662,9 +2662,9 @@ namespace Win32xx
 	// Deletes or releases the device context and returns the CDC object to its
 	// default state, ready for reuse.
 	{
-		if (m_pData->hDC)
+		if (m_pData->hDC != 0)
 		{
-			if (!m_pData->bIsTmpHDC)
+			if (!m_pData->IsTmpHDC)
 			{
 				RemoveFromMap();
 
@@ -2672,7 +2672,7 @@ namespace Win32xx
 				::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
 
 				// We need to release a Window DC, and delete a memory DC
-				if (m_pData->hWnd)
+				if (m_pData->hWnd != 0)
 					::ReleaseDC(m_pData->hWnd, m_pData->hDC);
 				else
 					if (!::DeleteDC(m_pData->hDC))
@@ -2680,7 +2680,7 @@ namespace Win32xx
 
 				m_pData->hDC = 0;
 				m_pData->hWnd = 0;
-				m_pData->bIsTmpHDC = FALSE;
+				m_pData->IsTmpHDC = FALSE;
 			}
 		}
 	}

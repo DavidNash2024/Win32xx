@@ -476,7 +476,7 @@ namespace Win32xx
 		{
 			DWORD dwResult = ::FormatMessage(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, pszTemp, 0, &args);
 
-			if (0 == dwResult || 0 == pszTemp )
+			if ( dwResult == 0 || pszTemp == 0 )
 				throw std::bad_alloc();
 
 			m_str = pszTemp;

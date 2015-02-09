@@ -254,7 +254,7 @@ namespace Win32xx
 			if ((*v)->GetWindowLongPtr(GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
 			{
 				// Add Separator
-				if (0 == nWindow)
+				if (nWindow == 0)
 					pMenuWindow->AppendMenu(MF_SEPARATOR, 0, (LPCTSTR)NULL);
 
 				// Add a menu entry for each MDI child (up to 9)
@@ -792,7 +792,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (m_hWnd)
+			if (m_hWnd != 0)
 			{
 				// The MDIChild is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
@@ -826,7 +826,7 @@ namespace Win32xx
 		}
 
 		// No child is being activated
-		if (0 == lParam)
+		if (lParam == 0)
 		{
 			GetMDIFrame()->m_hActiveMDIChild = NULL;
 			// Set the menu to frame's original menu

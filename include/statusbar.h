@@ -205,7 +205,7 @@ namespace Win32xx
 		NewPartWidths = PartWidths;
 		int* pNewPartWidthArray = &NewPartWidths[0];
 		
-		if (0 == iPart)
+		if (iPart == 0)
 			pNewPartWidthArray[iPart] = iWidth;
 		else
 		{

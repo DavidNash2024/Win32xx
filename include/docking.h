@@ -1229,7 +1229,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (m_hWnd)
+			if (m_hWnd != 0)
 			{
 				// The docker is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in the constructor to set the view window
@@ -1638,7 +1638,7 @@ namespace Win32xx
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
-		if (m_bmImage)
+		if (m_bmImage != 0)
 			pDC->DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
 		else
 			TRACE("Missing docking resource\n");
@@ -2695,7 +2695,7 @@ namespace Win32xx
 
 					// Set the active container
 					UINT nActiveContainer;
-					if (0 == RegQueryValueEx(hContainerKey, _T("Active Container"), NULL, &dwType, (LPBYTE)&nActiveContainer, &BufferSize))
+					if (RegQueryValueEx(hContainerKey, _T("Active Container"), NULL, &dwType, (LPBYTE)&nActiveContainer, &BufferSize) == 0)
 					{
 						CDocker* pDocker = GetDockFromID(nActiveContainer);
 						if (pDocker)
@@ -4021,7 +4021,7 @@ namespace Win32xx
 
 	inline CDockContainer::~CDockContainer()
 	{
-		if (m_hTabIcon)
+		if (m_hTabIcon != 0)
 			DestroyIcon(m_hTabIcon);
 	}
 
@@ -4047,7 +4047,7 @@ namespace Win32xx
 			m_vContainerInfo.push_back(ci);
 		}
 
-		if (m_hWnd)
+		if (m_hWnd != 0)
 		{
 			TCITEM tie;
 			ZeroMemory(&tie, sizeof(TCITEM));
@@ -4718,7 +4718,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (m_hWnd)
+			if (m_hWnd != 0)
 			{
 				// The frame is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window

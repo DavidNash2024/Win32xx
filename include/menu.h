@@ -113,7 +113,7 @@ namespace Win32xx
 		{
 			std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
 			HMENU hMenu;
-			BOOL bIsTmpMenu;
+			BOOL IsTmpMenu;
 			long Count;
 		};			
 
@@ -197,7 +197,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hMenu = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpMenu = FALSE;	
+		m_pData->IsTmpMenu = FALSE;	
 	}
 
 	inline CMenu::CMenu(UINT nID) 
@@ -205,7 +205,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hMenu = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpMenu = FALSE;
+		m_pData->IsTmpMenu = FALSE;
 
 		HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
 		Attach(menu);
@@ -271,11 +271,11 @@ namespace Win32xx
 			if (m != pTLSData->TmpMenus.end())
 				pMenu = m->second.get();
 
-			if (0 == pMenu)
+			if (!pMenu)
 			{
 				pMenu = new CMenu;
 				pMenu->m_pData->hMenu = hMenu;
-				pMenu->m_pData->bIsTmpMenu = TRUE;
+				pMenu->m_pData->IsTmpMenu = TRUE;
 				pTLSData->TmpMenus.insert(std::make_pair(hMenu, pMenu));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -292,7 +292,7 @@ namespace Win32xx
 		{
 			if (m_pData->hMenu != NULL)
 			{
-				if (!m_pData->bIsTmpMenu)
+				if (!m_pData->IsTmpMenu)
 				{
 					::DestroyMenu(m_pData->hMenu);
 					RemoveFromMap();
@@ -440,7 +440,7 @@ namespace Win32xx
 		assert(IsMenu(m_pData->hMenu));
 		HMENU hMenu = m_pData->hMenu;
 		
-		if (m_pData->Count)
+		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
@@ -452,7 +452,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hMenu = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpMenu = FALSE;	
+		m_pData->IsTmpMenu = FALSE;	
 
 		return hMenu;
 	}
@@ -574,7 +574,7 @@ namespace Win32xx
 		assert(IsMenu(m_pData->hMenu));
 		CMenu* pMenu = new CMenu;
 		pMenu->m_pData->hMenu = ::GetSubMenu(m_pData->hMenu, nPos);
-		pMenu->m_pData->bIsTmpMenu = TRUE;
+		pMenu->m_pData->IsTmpMenu = TRUE;
 		m_pData->vSubMenus.push_back(pMenu);
 		return pMenu;
 	}
@@ -612,7 +612,7 @@ namespace Win32xx
 		assert(NULL == m_pData->hMenu);
 		assert(lpszResourceName);
 		m_pData->hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), lpszResourceName);
-		if (m_pData->hMenu) AddToMap();
+		if (m_pData->hMenu != 0) AddToMap();
 		return NULL != m_pData->hMenu;
 	}
 
@@ -622,7 +622,7 @@ namespace Win32xx
 		assert(m_pData);
 		assert(NULL == m_pData->hMenu);
 		m_pData->hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(uIDResource));
-		if (m_pData->hMenu) AddToMap();
+		if (m_pData->hMenu != 0) AddToMap();
 		return NULL != m_pData->hMenu;
 	}
 

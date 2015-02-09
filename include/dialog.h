@@ -427,7 +427,7 @@ namespace Win32xx
 
 		#ifndef _WIN32_WCE
 			InterlockedDecrement(&pTLSData->nDlgHooks);
-			if (0 == pTLSData->nDlgHooks)
+			if (pTLSData->nDlgHooks == 0)
 			{
 				::UnhookWindowsHookEx(pTLSData->hMsgHook);
 				pTLSData->hMsgHook = NULL;
@@ -615,7 +615,7 @@ namespace Win32xx
 	{
 		// Find the CWnd pointer mapped to this HWND
 		CDialog* w = static_cast<CDialog*>(FromHandlePermanent(hWnd));
-		if (0 == w)
+		if (w == 0)
 		{
 			// The HWND wasn't in the map, so add it now
 			TLSData* pTLSData = GetApp()->GetTlsData();
@@ -732,12 +732,12 @@ namespace Win32xx
 			break;
 
 		case WM_HSCROLL:
-			if (0 == lParam)
+			if (lParam == 0)
 				OnHScroll(wParam, lParam);
 			break;
 
 		case WM_VSCROLL:
-			if (0 == lParam)
+			if (lParam == 0)
 				OnVScroll(wParam, lParam);
 			break;
 		}

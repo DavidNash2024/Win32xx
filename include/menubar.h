@@ -507,7 +507,7 @@ namespace Win32xx
 				}
 
 				// Bring up the MDI Child window's system menu when the icon is pressed
-				if (0 == HitTest())
+				if (HitTest() == 0)
 				{
 					m_nHotItem = 0;
 					PostMessage(UWM_POPUPMENU, 0L, 0L);
@@ -870,7 +870,7 @@ namespace Win32xx
 	{
 		if (SC_KEYMENU == wParam)
 		{
-			if (0 == lParam)
+			if (lParam == 0)
 			{
 				// Alt/F10 key toggled
 				GrabFocus();

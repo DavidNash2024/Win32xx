@@ -670,7 +670,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CTaskDialog* t = static_cast<CTaskDialog*>(GetApp()->GetCWndFromMap(hWnd));
-		if (0 == t)
+		if (t == 0)
 		{
 			// The CTaskDialog pointer wasn't found in the map, so add it now
 

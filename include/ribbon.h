@@ -439,7 +439,7 @@ namespace Win32xx
 	inline void CRibbonFrame::UpdateMRUMenu()
 	{
 		// Suppress UpdateMRUMenu when ribbon is used
-		if (0 != GetRibbonFramework()) return;
+		if (GetRibbonFramework() != 0) return;
 
 		CFrame::UpdateMRUMenu();
 	}

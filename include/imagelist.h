@@ -69,7 +69,7 @@ namespace Win32xx
 		struct DataMembers	// A structure that contains the data members
 		{
 			HIMAGELIST	hImageList;
-			BOOL		bIsTmpImageList;
+			BOOL		IsTmpImageList;
 			long		Count;
 		};
 
@@ -141,7 +141,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hImageList = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpImageList = FALSE;
+		m_pData->IsTmpImageList = FALSE;
 	}
 
 	inline CImageList::CImageList(const CImageList& rhs)
@@ -203,11 +203,11 @@ namespace Win32xx
 			if (m != pTLSData->TmpImageLists.end())
 				pImageList = m->second.get();
 
-			if (0 == pImageList)
+			if (!pImageList)
 			{
 				pImageList = new CImageList;
 				pImageList->m_pData->hImageList = hImageList;
-				pImageList->m_pData->bIsTmpImageList = TRUE;
+				pImageList->m_pData->IsTmpImageList = TRUE;
 				pTLSData->TmpImageLists.insert(std::make_pair(hImageList, pImageList));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -371,7 +371,7 @@ namespace Win32xx
 		assert(m_pData);
 		m_pData->hImageList = ImageList_Duplicate(pImageList->GetHandle());
 
-		if (m_pData->hImageList)
+		if (m_pData->hImageList != 0)
 			AddToMap();
 
 		return ( m_pData->hImageList!= 0 );
@@ -382,7 +382,7 @@ namespace Win32xx
 	// Destroys an image list.
 	{
 		assert(m_pData);
-		if (m_pData->hImageList)
+		if (m_pData->hImageList != 0)
 		{
 			RemoveFromMap();
 			
@@ -399,7 +399,7 @@ namespace Win32xx
 		assert(m_pData->hImageList);
 		HIMAGELIST hImageList = m_pData->hImageList;
 
-		if (m_pData->Count)
+		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
@@ -412,7 +412,7 @@ namespace Win32xx
 		m_pData = new DataMembers;
 		m_pData->hImageList = 0;
 		m_pData->Count = 1L;
-		m_pData->bIsTmpImageList = FALSE;	
+		m_pData->IsTmpImageList = FALSE;	
 
 		return hImageList;
 	}
@@ -549,7 +549,7 @@ namespace Win32xx
 		{
 			if (m_pData->hImageList != NULL)
 			{
-				if (!m_pData->bIsTmpImageList)
+				if (!m_pData->IsTmpImageList)
 				{
 					ImageList_Destroy(m_pData->hImageList);
 					RemoveFromMap();
@@ -571,7 +571,7 @@ namespace Win32xx
 		assert(pimlNormal);
 	
 		int nCount = pimlNormal->GetImageCount();
-		if (0 != nCount)
+		if (nCount > 0)
 		{
 			int cx, cy;
 			pimlNormal->GetIconSize(&cx, &cy);

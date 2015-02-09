@@ -758,7 +758,7 @@ namespace Win32xx
 		{
 			// A thread's state is set to signalled when the thread terminates.
 			// If your thread is still running at this point, you have a bug.
-			if (0 != WaitForSingleObject(m_hThread, 0))
+			if (WaitForSingleObject(m_hThread, 0) != 0)
 			{
 				TRACE("*** Error *** Ending CWinThread before ending its thread\n");
 				assert(FALSE);
@@ -804,7 +804,7 @@ namespace Win32xx
 		m_hThread = (HANDLE)::_beginthreadex(pSecurityAttributes, stack_size, (unsigned int (__stdcall *)(void *))m_pfnThreadProc, m_pThreadParams, initflag, &m_nThreadID);
 #endif
 
-		if (0 == m_hThread)
+		if (m_hThread == 0)
 			throw CWinException(_T("Failed to create thread"));
 	}
 
@@ -1309,7 +1309,7 @@ namespace Win32xx
 
 		if (reinterpret_cast<CWinApp*>(-1) == pThis)
 			pWinApp = 0;
-		else if (0 == pWinApp)
+		else if (!pWinApp)
 			pWinApp = pThis;
 
 		return pWinApp;
@@ -1587,7 +1587,7 @@ namespace Win32xx
 
 			// Ensure a window class is registered
 			CString ClassName;
-			if (0 == lpszClassName || _T('\0') == lpszClassName[0] )
+			if (lpszClassName == 0 || lpszClassName[0] == _T('\0'))
 				ClassName = _T("Win32++ Window");
 			else
 				ClassName = lpszClassName;
@@ -1599,7 +1599,7 @@ namespace Win32xx
 			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
 			// Register the window class (if not already registered)
-			if (!RegisterClass(wc))
+			if (RegisterClass(wc) == 0)
 				throw CWinException(_T("Failed to register window class"));
 
 			// Ensure this thread has the TLS index set
@@ -1613,7 +1613,7 @@ namespace Win32xx
 									hWndParent, nIDorHMenu, GetApp()->GetInstanceHandle(), lpParam);
 
 			// Now handle window creation failure
-			if (!m_hWnd)
+			if (m_hWnd == 0)
 				throw CWinException(_T("Failed to Create Window"));
 
 			// Automatically subclass predefined window class types
@@ -1701,7 +1701,7 @@ namespace Win32xx
 			if (m != pTLSData->TmpWnds.end())
 				pWnd = m->second.get();
 
-			if (0 == pWnd)
+			if (!pWnd)
 			{
 				// No exiting CWnd for this HWND, so create one
 				pWnd = new CWnd;
@@ -1734,7 +1734,7 @@ namespace Win32xx
 		GETANCESTOR* pfnGetAncestor = NULL;
 		HMODULE hModule = ::LoadLibrary(_T("USER32.DLL"));
 
-		if (hModule)
+		if (hModule != 0)
 		{
 			// Declare a pointer to the GetAncestor function
 #ifndef _WIN32_WCE
@@ -2124,7 +2124,7 @@ namespace Win32xx
 		HICON hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
 
-		if (hIconLarge)
+		if (hIconLarge != 0)
 			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (hIconLarge));
 		else
 			TRACE("**WARNING** SetIconLarge Failed\n");
@@ -2141,7 +2141,7 @@ namespace Win32xx
 		HICON hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
-		if (hIconSmall)
+		if (hIconSmall != 0)
 			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (hIconSmall));
 		else
 			TRACE("**WARNING** SetIconSmall Failed\n");
@@ -2156,7 +2156,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		CWnd* w = GetApp()->GetCWndFromMap(hWnd);
-		if (0 == w)
+		if (w == 0)
 		{
 			// The CWnd pointer wasn't found in the map, so add it now
 
@@ -2230,10 +2230,10 @@ namespace Win32xx
 					lr = pWnd->OnCommand(wParam, lParam);
 
 				// Handle user commands
-				if (!lr)
+				if (0L == lr)
 					lr =  OnCommand(wParam, lParam);
 
-				if (lr) return 0L;
+				if (0L != lr) return 0L;
 			}
 			break;  // Note: Some MDI commands require default processing
 		case WM_CREATE:
@@ -2264,8 +2264,8 @@ namespace Win32xx
 				}
 
 				// Handle user notifications
-				if (!lr) lr = OnNotify(wParam, lParam);
-				if (lr) return lr;
+				if (lr == 0L) lr = OnNotify(wParam, lParam);
+				if (lr != 0L) return lr;
 				break;
 			}		
 
@@ -2318,7 +2318,7 @@ namespace Win32xx
 			//	if (m_PrevWindowProc) break; // Suppress for subclassed windows
 
 				lr = MessageReflect(m_hWnd, uMsg, wParam, lParam);
-				if (lr) return lr;	// Message processed so return
+				if (lr != 0L) return lr;	// Message processed so return
 			}
 			break;				// Do default processing when message not already processed
 
@@ -3016,7 +3016,7 @@ namespace Win32xx
 #ifndef	_WIN32_WCE
 
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
-		if(hMod)
+		if(hMod != 0)
 		{
 			typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);
 			PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(hMod, "SetWindowTheme");

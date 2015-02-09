@@ -1350,7 +1350,7 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		DWORD dwLimit;
 
-		if (pMinRange != NULL)
+		if (pMinRange)
 		{
 			memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 			dwLimit = GDTR_MIN;

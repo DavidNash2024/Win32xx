@@ -596,7 +596,7 @@ namespace Win32xx
 
 		// Find matching CWnd pointer for this HWND
 		CPropertyPage* pPage = static_cast<CPropertyPage*>(FromHandlePermanent(hwndDlg));
-		if (0 == pPage)
+		if (!pPage)
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
 			TLSData* pTLSData = GetApp()->GetTlsData();

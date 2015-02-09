@@ -497,10 +497,10 @@ namespace Win32xx
 	{
 		assert(m_pFrame);
 
-		if (!m_hmodUXTheme)
+		if (m_hmodUXTheme == 0)
 			m_hmodUXTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
 
-		if (m_hmodUXTheme)
+		if (m_hmodUXTheme != 0)
 		{
 			m_pfnCloseThemeData			  = (CLOSETHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "CloseThemeData");
 			m_pfnDrawThemeBackground	  = (DRAWTHEMEBACKGROUND*)::GetProcAddress(m_hmodUXTheme, "DrawThemeBackground");
@@ -513,7 +513,7 @@ namespace Win32xx
 			m_pfnOpenThemeData			  = (OPENTHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "OpenThemeData");
 		}
 
-		if (m_hTheme)
+		if (m_hTheme != 0)
 		{
 			CloseThemeData();
 			m_hTheme = 0;
@@ -521,7 +521,7 @@ namespace Win32xx
 
 		m_hTheme = OpenThemeData(*m_pFrame, VSCLASS_MENU);
 
-		if (m_hTheme)
+		if (m_hTheme != 0)
 		{
 			int iBorderSize = 0;	// Border space between item text and accelerator
 			int iBgBorderSize = 0;	// Border space between item text and gutter
@@ -551,10 +551,10 @@ namespace Win32xx
 
 	inline CMenuMetrics::~CMenuMetrics()
 	{
-		if (m_hTheme)
+		if (m_hTheme != 0)
 			CloseThemeData();
 
-		if (m_hmodUXTheme)
+		if (m_hmodUXTheme != 0)
 			::FreeLibrary(m_hmodUXTheme);
 	}
 
@@ -757,13 +757,13 @@ namespace Win32xx
 
 	inline int CMenuMetrics::ToItemStateId(UINT uItemState)
 	{
-		const bool      fDisabled   = ((uItemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
-		const bool      fHot        = ((uItemState & (ODS_HOTLIGHT | ODS_SELECTED)) != 0);
+		const bool      IsDisabled   = ((uItemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
+		const bool      IsHot        = ((uItemState & (ODS_HOTLIGHT | ODS_SELECTED)) != 0);
 		POPUPITEMSTATES iState;
 
-		if (fDisabled)
-			iState = (fHot ? MPI_DISABLEDHOT : MPI_DISABLED);
-		else if (fHot)
+		if (IsDisabled)
+			iState = (IsHot ? MPI_DISABLEDHOT : MPI_DISABLED);
+		else if (IsHot)
 			iState = MPI_HOT;
 		else
 			iState= MPI_NORMAL;
@@ -844,7 +844,7 @@ namespace Win32xx
 
 	inline CFrame::~CFrame()
 	{
-		if (m_KbdHook) UnhookWindowsHookEx(m_KbdHook);
+		if (m_KbdHook != 0) UnhookWindowsHookEx(m_KbdHook);
 	}
 
 	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon)
@@ -928,7 +928,7 @@ namespace Win32xx
 		m_imlMenu.Add(&Bitmap, crMask);
 
 		// Create the Disabled imagelist
-		if (ToolBarDisabledID)
+		if (ToolBarDisabledID != 0)
 		{
 			m_imlMenuDis.DeleteImageList();
 			m_imlMenuDis.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
@@ -1268,7 +1268,7 @@ namespace Win32xx
 					else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 					{
 						pimlToolBar = pTB->GetHotImageList();
-						if (0 == pimlToolBar)
+						if (pimlToolBar == 0)
 							pimlToolBar = pTB->GetImageList();
 					}
 					else
@@ -1886,7 +1886,7 @@ namespace Win32xx
 					szStripped[j] = _T('\0');	// Append null tchar
 
 					// Compare the strings
-					if (0 == lstrcmp(szStripped, szItem))
+					if (lstrcmp(szStripped, szItem) == 0)
 						return nItem;
 				}
 			}
@@ -1943,7 +1943,7 @@ namespace Win32xx
 	{
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
 		WCHAR ThemeName[31] = L"";
-		if(hMod)
+		if(hMod != 0)
 		{
 			typedef HRESULT (__stdcall *PFNGETCURRENTTHEMENAME)(LPWSTR pszThemeFileName, int cchMaxNameChars,
 				LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
@@ -1992,7 +1992,7 @@ namespace Win32xx
 					{
 						PathName.ReleaseBuffer();
 						TRACE(_T("CFrame::LoadRegistryMRUSettings: RegQueryValueEx failed\n"));
-						if (hKey)
+						if (hKey != 0)
 							RegCloseKey(hKey);
 					}
 				}
@@ -2059,7 +2059,7 @@ namespace Win32xx
 			TRACE("Failed to load values from registry, using defaults!\n");
 			e.what();
 
-			if (hKey)
+			if (hKey != 0)
 				RegCloseKey(hKey);
 		}
 
@@ -2094,7 +2094,7 @@ namespace Win32xx
 		else
 		{
 			// Now set the focus to the appropriate child window
-			if (m_hOldFocus) ::SetFocus(m_hOldFocus);
+			if (m_hOldFocus != 0) ::SetFocus(m_hOldFocus);
 		}
 
 		// Update DockClient captions
@@ -2308,7 +2308,7 @@ namespace Win32xx
 			// Specify owner-draw for the menu item type
 			if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
 			{
-				if (0 == mii.dwItemData)
+				if (mii.dwItemData == 0)
 				{
 					pItem->hMenu = *pMenu;
 					pItem->nPos = i;
@@ -2785,7 +2785,7 @@ namespace Win32xx
 				{
 					TRACE("Failed to save registry MRU settings\n");
 
-					if (hKey)
+					if (hKey != 0)
 					{
 						// Roll back the registry changes by deleting this subkey
 						RegDeleteKey(HKEY_CURRENT_USER ,KeyName);
@@ -3091,7 +3091,7 @@ namespace Win32xx
 	// Sets the Disabled Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
-		if (nID)
+		if (nID != 0)
 		{
 			// Get the image size
 			CBitmap bm(nID);
@@ -3122,7 +3122,7 @@ namespace Win32xx
 	// Sets the Hot Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
-		if (nID)
+		if (nID != 0)
 		{
 			// Get the image size
 			CBitmap bm(nID);

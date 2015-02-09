@@ -41,7 +41,7 @@ BOOL CFormApp::InitInstance()
 	m_Frame.Create();
 
 	//End the program if the frame window creation fails
-	if (!m_Frame.GetHwnd())
+	if (m_Frame.GetHwnd() == 0)
 	{
 		::MessageBox(NULL, _T("Failed to create Frame window"), _T("ERROR"), MB_ICONERROR);
 		return FALSE;

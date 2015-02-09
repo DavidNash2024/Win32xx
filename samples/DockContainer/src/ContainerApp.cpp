@@ -18,7 +18,7 @@ CDockContainerApp::~CDockContainerApp()
 BOOL CDockContainerApp::InitInstance()
 {
 	//Create the Frame Window
-	if (!m_Frame.Create())	
+	if (m_Frame.Create() == 0)	
 	{
 		// We get here if the Frame creation fails
 		

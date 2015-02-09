@@ -202,11 +202,11 @@ namespace Win32xx
 		// Initialise the Windows Socket services
 		WSADATA wsaData;
 
-		if (0 != ::WSAStartup(MAKEWORD(2,2), &wsaData))
+		if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
 			throw CWinException(_T("WSAStartup failed"));
 
 		m_hWS2_32 = LoadLibrary(_T("WS2_32.dll"));
-		if (0 == m_hWS2_32)
+		if (m_hWS2_32 == 0)
 			throw CWinException(_T("Failed to load WS2_2.dll"));
 
 #ifdef _WIN32_WCE
@@ -547,7 +547,7 @@ namespace Win32xx
 	inline int  CSocket::GetPeerName(struct sockaddr* name, int* namelen)
 	{
 		int Result = ::getpeername(m_Socket, name, namelen);
-		if (0 != Result)
+		if (Result != 0)
 			TRACE("GetPeerName failed\n");
 
 		return Result;
@@ -556,7 +556,7 @@ namespace Win32xx
 	inline int  CSocket::GetSockName(struct sockaddr* name, int* namelen)
 	{
 		int Result = ::getsockname(m_Socket, name, namelen);
-		if (0 != Result)
+		if (Result != 0)
 			TRACE("GetSockName Failed\n");
 
 		return Result;
@@ -565,7 +565,7 @@ namespace Win32xx
 	inline int  CSocket::GetSockOpt(int level, int optname, char* optval, int* optlen)
 	{
 		int Result = ::getsockopt(m_Socket, level, optname, optval, optlen);
-		if (0 != Result)
+		if (Result != 0)
 			TRACE("GetSockOpt Failed\n");
 
 		return Result;
@@ -589,7 +589,7 @@ namespace Win32xx
 	inline int CSocket::ioCtlSocket(long cmd, u_long* argp)
 	{
 		int Result = ::ioctlsocket(m_Socket, cmd, argp);
-		if (0 != Result)
+		if (Result != 0)
 			TRACE("ioCtlSocket Failed\n");
 
 		return Result;
@@ -612,7 +612,7 @@ namespace Win32xx
 	inline int CSocket::Listen(int backlog /*= SOMAXCONN*/)
 	{
 		int Result = ::listen(m_Socket, backlog);
-		if (0 != Result)
+		if (Result != 0)
 			TRACE("Listen Failed\n");
 
 		return Result;
@@ -705,7 +705,7 @@ namespace Win32xx
 	inline int CSocket::SetSockOpt(int level, int optname, const char* optval, int optlen)
 	{
 		int Result = ::setsockopt(m_Socket, level, optname, optval, optlen);
-		if (0 != Result)
+		if (Result != 0)
 			TRACE("SetSockOpt failed\n");
 
 		return Result;
@@ -727,7 +727,7 @@ namespace Win32xx
 	inline void CSocket::StopEvents()
 	{
 		// Terminates the event thread gracefully (if possible)
-		if (m_hEventThread)
+		if (m_hEventThread != 0)
 		{
 			::SetThreadPriority(m_hEventThread, THREAD_PRIORITY_HIGHEST);
 			::SetEvent(m_StopRequest);

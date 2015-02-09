@@ -124,7 +124,7 @@ namespace Win32xx
 	// Closes the file associated with this object. Closed file can no longer be read or written to.
 	{
 		BOOL bResult = TRUE;
-		if (m_hFile)
+		if (m_hFile != 0)
 			bResult = CloseHandle(m_hFile);
 
 		m_hFile = 0;
@@ -204,7 +204,7 @@ namespace Win32xx
 	inline BOOL CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
 	// Prepares a file to be written to or read from.
 	{
-		if (m_hFile) Close();
+		if (m_hFile != 0) Close();
 
 		m_hFile = ::CreateFile(pszFileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, nOpenFlags, FILE_ATTRIBUTE_NORMAL, NULL);
 
@@ -214,7 +214,7 @@ namespace Win32xx
 			m_hFile = 0;
 		}
 
-		if (m_hFile)
+		if (m_hFile != 0)
 		{
 			SetFilePath(pszFileName);
 		}
