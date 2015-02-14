@@ -257,7 +257,7 @@ namespace Win32xx
 	// returns the style of the button
 	{
 		assert(::IsWindow(m_hWnd));
-		return (UINT)GetWindowLongPtr(GWL_STYLE) & 0xff;
+		return (UINT)GetWindowLongPtr(GWL_STYLE) & 0xFFFF;
 	}
 
 	inline int CButton::GetCheck() const
