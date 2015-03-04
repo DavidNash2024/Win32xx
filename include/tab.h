@@ -1327,12 +1327,13 @@ namespace Win32xx
 				if (!m_pActiveView->IsWindow())
 				{
 					// The tab control is already created, so create the new view too
-					GetActiveView()->Create(this);
+					GetActiveView()->Create(GetParent());
 				}
 
 				// Position the View over the tab control's display area
 				CRect rc = GetClientRect();
 				AdjustRect(FALSE, &rc);
+                MapWindowPoints(GetParent(), rc);
 				GetActiveView()->SetWindowPos(0, rc, SWP_SHOWWINDOW);
 				GetActiveView()->SetFocus();
 			}
