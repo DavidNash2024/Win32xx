@@ -412,13 +412,6 @@ namespace Win32xx
 		HDC GetHDC() const { return m_pData->hDC; }
 		BOOL RestoreDC(int nSavedDC) const;
 		int SaveDC() const;
-		CPalette* SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd);
-		CBitmap* SelectObject(const CBitmap* pBitmap);
-		CBrush* SelectObject(const CBrush* pBrush);
-		CFont* SelectObject(const CFont* pFont);
-		CPalette* SelectObject(const CPalette* pPalette);
-		CPen* SelectObject(const CPen* pPen);
-		void RealizePalette() const;
 
 #ifndef _WIN32_WCE
 		void operator = (const HDC hDC);
@@ -440,11 +433,13 @@ namespace Win32xx
 
 		CBitmap DetachBitmap();
 		BITMAP  GetBitmapData() const;
+		CBitmap* GetCurrentBitmap() const;
 		BOOL LoadBitmap(UINT nID);
 		BOOL LoadBitmap(LPCTSTR lpszName);
 		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
+		CBitmap* SelectObject(const CBitmap* pBitmap);
 
 #ifndef _WIN32_WCE
 		void CreateBitmapIndirect(LPBITMAP pBitmap);
@@ -456,7 +451,9 @@ namespace Win32xx
 		// Create and Select Brushes
 		void CreatePatternBrush(CBitmap* pBitmap);
 		void CreateSolidBrush(COLORREF rbg);
+		CBrush* GetCurrentBrush() const;
 		LOGBRUSH GetLogBrush() const;
+		CBrush* SelectObject(const CBrush* pBrush);
 
 #ifndef _WIN32_WCE
 		void CreateBrushIndirect(LPLOGBRUSH pLogBrush);
@@ -467,7 +464,9 @@ namespace Win32xx
 
 		// Create and Select Fonts
 		void CreateFontIndirect(LPLOGFONT plf);
+		CFont* GetCurrentFont() const;
 		LOGFONT GetLogFont() const;
+		CFont* SelectObject(const CFont* pFont);
 
 #ifndef _WIN32_WCE
 		void CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
@@ -476,15 +475,25 @@ namespace Win32xx
   							DWORD fdwPitchAndFamily, LPCTSTR lpszFace);
 #endif
 
+		// Create and Select Palettes
+		void CreateHalftonePalette();
+		void CreatePalette(LPLOGPALETTE pLogPalette);
+		CPalette* GetCurrentPalette() const;
+		CPalette* SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd);
+		void RealizePalette() const;
+		
 		// Create and Select Pens
 		void CreatePen(int nStyle, int nWidth, COLORREF rgb);
 		void CreatePenIndirect(LPLOGPEN pLogPen);
+		CPen* GetCurrentPen() const;
 		LOGPEN GetLogPen() const;
+		CPen* SelectObject(const CPen* pPen);
 
-		// Create Select Regions
+		// Create Regions
 		int CreateRectRgn(int left, int top, int right, int bottom);
 		int CreateRectRgnIndirect(const RECT& rc);
 		int CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData);
+
 #ifndef _WIN32_WCE
 		int CreateEllipticRgn(int left, int top, int right, int bottom);
 		int CreateEllipticRgnIndirect(const RECT& rc);
@@ -580,7 +589,7 @@ namespace Win32xx
 		COLORREF SetDCBrushColor(COLORREF crColor) const;
 #endif
 
-		// Clipping Functions
+		// Clipping and Region Functions
 		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect);
 		int  ExcludeClipRect(const RECT& rc);
 		int  GetClipBox(RECT& rc);
@@ -1749,6 +1758,7 @@ namespace Win32xx
 		assert(pDC);
 		HPALETTE hPalette = ::CreateHalftonePalette(pDC->GetHDC());
 		Attach(hPalette);
+		::RealizePalette(pDC->GetHDC());
 		return hPalette;
 	}
 #endif // !_WIN32_WCE
@@ -2697,6 +2707,13 @@ namespace Win32xx
 		return bm;
 	}
 
+	inline CBitmap* CDC::GetCurrentBitmap() const
+	// Retrieves a pointer to the currently selected bitmap object
+	{
+		assert(m_pData->hDC);
+		return CBitmap::FromHandle((HBITMAP)::GetCurrentObject(m_pData->hDC, OBJ_BITMAP));
+	}
+
 	inline BOOL CDC::LoadBitmap(UINT nID)
 	// Loads a bitmap from the resource and selects it into the device context
 	// Returns TRUE if successful
@@ -2759,6 +2776,15 @@ namespace Win32xx
 		return bResult;
 	}
 
+	inline CBitmap* CDC::SelectObject(const CBitmap* pBitmap)
+	// Use this to attach an existing bitmap.
+	{
+		assert(m_pData->hDC);
+		assert(pBitmap);
+
+		return CBitmap::FromHandle( (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap) );
+	}
+
 #ifndef _WIN32_WCE
 	inline void CDC::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 	// creates and selects a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
@@ -2774,6 +2800,58 @@ namespace Win32xx
 
 
 	// Brush functions
+
+	inline void CDC::CreatePatternBrush(CBitmap* pBitmap)
+	// Creates the brush with the specified pattern, and selects it into the device context.
+	{
+		assert(m_pData->hDC);
+		assert(pBitmap);
+
+		CBrush* pBrush = new CBrush;
+		pBrush->CreatePatternBrush(pBitmap);
+		m_pData->m_vGDIObjects.push_back(pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
+	}
+
+	inline void CDC::CreateSolidBrush(COLORREF rgb)
+	// Creates the brush with the specified color, and selects it into the device context.
+	{
+		assert(m_pData->hDC);
+
+		CBrush* pBrush = new CBrush;
+		pBrush->CreateSolidBrush(rgb);
+		m_pData->m_vGDIObjects.push_back(pBrush);
+		::SelectObject(m_pData->hDC, *pBrush);
+	}
+
+	inline CBrush* CDC::GetCurrentBrush() const
+	// Retrieves a pointer to the currently selected brush object
+	{
+		assert(m_pData->hDC);
+		return CBrush::FromHandle((HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH));
+	}
+
+	inline LOGBRUSH CDC::GetLogBrush() const
+	// Retrieves the current brush information
+	{
+		assert(m_pData->hDC);
+
+		HBRUSH hBrush = (HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH);
+		LOGBRUSH lBrush;
+		ZeroMemory(&lBrush, sizeof(LOGBRUSH));
+		::GetObject(hBrush, sizeof(lBrush), &lBrush);
+		return lBrush;
+	}
+
+	inline CBrush* CDC::SelectObject(const CBrush* pBrush)
+	// Use this to attach an existing brush.
+	{
+		assert(m_pData->hDC);
+		assert(pBrush);
+
+		return CBrush::FromHandle( (HBRUSH)::SelectObject(m_pData->hDC, *pBrush) );
+	}
+
 #ifndef _WIN32_WCE
 	inline void CDC::CreateBrushIndirect(LPLOGBRUSH pLogBrush)
 	// Creates the brush and selects it into the device context.
@@ -2820,43 +2898,47 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreatePatternBrush(CBitmap* pBitmap)
-	// Creates the brush with the specified pattern, and selects it into the device context.
-	{
-		assert(m_pData->hDC);
-		assert(pBitmap);
-
-		CBrush* pBrush = new CBrush;
-		pBrush->CreatePatternBrush(pBitmap);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
-	}
-
-	inline void CDC::CreateSolidBrush(COLORREF rgb)
-	// Creates the brush with the specified color, and selects it into the device context.
-	{
-		assert(m_pData->hDC);
-
-		CBrush* pBrush = new CBrush;
-		pBrush->CreateSolidBrush(rgb);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
-	}
-
-	inline LOGBRUSH CDC::GetLogBrush() const
-	// Retrieves the current brush information
-	{
-		assert(m_pData->hDC);
-
-		HBRUSH hBrush = (HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH);
-		LOGBRUSH lBrush;
-		ZeroMemory(&lBrush, sizeof(LOGBRUSH));
-		::GetObject(hBrush, sizeof(lBrush), &lBrush);
-		return lBrush;
-	}
-
 
 	// Font functions
+	inline void CDC::CreateFontIndirect(LPLOGFONT plf)
+	// Creates a logical font and selects it into the device context.
+	{
+		assert(m_pData->hDC);
+
+		CFont* pFont = new CFont;
+		pFont->CreateFontIndirect(plf);
+		m_pData->m_vGDIObjects.push_back(pFont);
+		::SelectObject(m_pData->hDC, *pFont);
+	}
+
+	inline CFont* CDC::GetCurrentFont() const
+	// Retrieves a pointer to the current font object
+	{
+		assert(m_pData->hDC);
+		return CFont::FromHandle((HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT));
+	}
+
+	inline LOGFONT CDC::GetLogFont() const
+	// Retrieves the current font information.
+	{
+		assert(m_pData->hDC);
+
+		HFONT hFont = (HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT);
+		LOGFONT lFont;
+		ZeroMemory(&lFont, sizeof(LOGFONT));
+		::GetObject(hFont, sizeof(lFont), &lFont);
+		return lFont;
+	}
+
+	inline CFont* CDC::SelectObject(const CFont* pFont)
+	// Use this to attach an existing font.
+	{
+		assert(m_pData->hDC);
+		assert(pFont);
+
+		return CFont::FromHandle( (HFONT)::SelectObject(m_pData->hDC, *pFont) );
+	}
+
 #ifndef _WIN32_WCE
 	inline void CDC::CreateFont (
 					int nHeight,               // height of font
@@ -2889,27 +2971,51 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::CreateFontIndirect(LPLOGFONT plf)
-	// Creates a logical font and selects it into the device context.
+	// Palette functions
+	inline void CDC::CreateHalftonePalette()
+	// Creates and selects halftone palette
 	{
 		assert(m_pData->hDC);
 
-		CFont* pFont = new CFont;
-		pFont->CreateFontIndirect(plf);
-		m_pData->m_vGDIObjects.push_back(pFont);
-		::SelectObject(m_pData->hDC, *pFont);
+		CPalette* pPalette = new CPalette;
+		pPalette->CreateHalftonePalette(this);
+		m_pData->m_vGDIObjects.push_back(pPalette);
+		::SelectObject(m_pData->hDC, *pPalette);
+		::RealizePalette(m_pData->hDC);
+	}
+	inline void CDC::CreatePalette(LPLOGPALETTE pLogPalette)
+	// Creates and selects a palette
+	{
+		assert(m_pData->hDC);
+
+		CPalette* pPalette = new CPalette;
+		pPalette->CreatePalette(pLogPalette);
+		m_pData->m_vGDIObjects.push_back(pPalette);
+		::SelectObject(m_pData->hDC, *pPalette);
+		::RealizePalette(m_pData->hDC);
 	}
 
-	inline LOGFONT CDC::GetLogFont() const
-	// Retrieves the current font information.
+	inline CPalette* CDC::GetCurrentPalette() const
+	// Retrieves a pointer to the currently selected palette
 	{
 		assert(m_pData->hDC);
+		return CPalette::FromHandle((HPALETTE)::GetCurrentObject(m_pData->hDC, OBJ_PAL));
+	}
 
-		HFONT hFont = (HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT);
-		LOGFONT lFont;
-		ZeroMemory(&lFont, sizeof(LOGFONT));
-		::GetObject(hFont, sizeof(lFont), &lFont);
-		return lFont;
+	inline CPalette* CDC::SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd)
+	// Use this to attach an existing palette.
+	{
+		assert(m_pData->hDC);
+		assert(pPalette);
+
+		return CPalette::FromHandle( (HPALETTE)::SelectPalette(m_pData->hDC, *pPalette, bForceBkgnd) );
+	}
+
+	inline void CDC::RealizePalette() const
+	// Use this to realize changes to the device context palette.
+	{
+		assert(m_pData->hDC);
+		::RealizePalette(m_pData->hDC);
 	}
 
 	// Pen functions
@@ -2935,6 +3041,13 @@ namespace Win32xx
 		::SelectObject(m_pData->hDC, *pPen);
 	}
 
+	inline CPen* CDC::GetCurrentPen() const
+	// Retrieves a pointer to the currently selected pen
+	{
+		assert(m_pData->hDC);
+		return CPen::FromHandle((HPEN)::GetCurrentObject(m_pData->hDC, OBJ_PEN));
+	}
+
 	inline LOGPEN CDC::GetLogPen() const
 	// Retrieves the current pen information as a LOGPEN
 	{
@@ -2945,6 +3058,15 @@ namespace Win32xx
 		ZeroMemory(&lPen, sizeof(LOGPEN));
 		::GetObject(hPen, sizeof(lPen), &lPen);
 		return lPen;
+	}
+
+	inline CPen* CDC::SelectObject(const CPen* pPen)
+	// Use this to attach an existing pen.
+	{
+		assert(m_pData->hDC);
+		assert(pPen);
+
+		return CPen::FromHandle( (HPEN)::SelectObject(m_pData->hDC, *pPen) );
 	}
 
 	// Region functions
@@ -3134,70 +3256,7 @@ namespace Win32xx
 		assert(pRgn);
 		return ::ExtSelectClipRgn(m_pData->hDC, *pRgn, fnMode);
 	}
-#endif
 
-	inline CBitmap* CDC::SelectObject(const CBitmap* pBitmap)
-	// Use this to attach an existing bitmap.
-	{
-		assert(m_pData->hDC);
-		assert(pBitmap);
-
-		return CBitmap::FromHandle( (HBITMAP)::SelectObject(m_pData->hDC, *pBitmap) );
-	}
-
-	inline CBrush* CDC::SelectObject(const CBrush* pBrush)
-	// Use this to attach an existing brush.
-	{
-		assert(m_pData->hDC);
-		assert(pBrush);
-
-		return CBrush::FromHandle( (HBRUSH)::SelectObject(m_pData->hDC, *pBrush) );
-	}
-
-	inline CFont* CDC::SelectObject(const CFont* pFont)
-	// Use this to attach an existing font.
-	{
-		assert(m_pData->hDC);
-		assert(pFont);
-
-		return CFont::FromHandle( (HFONT)::SelectObject(m_pData->hDC, *pFont) );
-	}
-
-	inline CPalette* CDC::SelectObject(const CPalette* pPalette)
-	// Use this to attach an existing Palette.
-	{
-		assert(m_pData->hDC);
-		assert(pPalette);
-
-		return CPalette::FromHandle( (HPALETTE)::SelectObject(m_pData->hDC, *pPalette) );
-	}
-
-	inline CPen* CDC::SelectObject(const CPen* pPen)
-	// Use this to attach an existing pen.
-	{
-		assert(m_pData->hDC);
-		assert(pPen);
-
-		return CPen::FromHandle( (HPEN)::SelectObject(m_pData->hDC, *pPen) );
-	}
-
-	inline CPalette* CDC::SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd)
-	// Use this to attach an existing palette.
-	{
-		assert(m_pData->hDC);
-		assert(pPalette);
-
-		return CPalette::FromHandle( (HPALETTE)::SelectPalette(m_pData->hDC, *pPalette, bForceBkgnd) );
-	}
-
-	inline void CDC::RealizePalette() const
-	// Use this to realize changes to the device context palette.
-	{
-		assert(m_pData->hDC);
-		::RealizePalette(m_pData->hDC);
-	}
-
-#ifndef _WIN32_WCE
 	inline BOOL CDC::PtVisible(int X, int Y)
 	// Determines whether the specified point is within the clipping region of a device context.
 	{

@@ -5,8 +5,19 @@ Bug Fixes
 * Rebar bands holding Toolbar buttons with text are now sized correctly.
 * Tab controls now support tabbing to child dialogs.
 
+New Features and enhancements
+-----------------------------
+* Updated CDC
+
 Changes in detail
 -----------------
+Added CDC::CreateHalftonePalette
+Added CDC::CreatePalette
+Added CDC::GetCurrentBitmap
+Added CDC::GetCurrentBrush
+Added CDC::GetCurrentFont
+Added CDC::GetCurrentPalette
+Added CDC::GetCurrentPen
 Added CDC::RestoreDC
 Added CDC::SaveDC
 
