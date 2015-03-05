@@ -1,4 +1,4 @@
-Some .CHM files may not render properly on Windows XP, Windows Vista and Windows 7.
+Some .CHM files may not render properly on Windows XP, Windows Vista, Windows 7 and Windows 8.1
 
 When attempting to open a Compiled HTML Help (.CHM) file, the file may open but display one of the following messages instead of the expected content:
 

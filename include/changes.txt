@@ -11,8 +11,11 @@ New Features and enhancements
 
 Changes in detail
 -----------------
+Added CDC::BeginPath
 Added CDC::CreateHalftonePalette
 Added CDC::CreatePalette
+Added CDC::EndPath
+Added CDC::GetClipPath
 Added CDC::GetCurrentBitmap
 Added CDC::GetCurrentBrush
 Added CDC::GetCurrentFont
@@ -20,6 +23,7 @@ Added CDC::GetCurrentPalette
 Added CDC::GetCurrentPen
 Added CDC::RestoreDC
 Added CDC::SaveDC
+Added CDC::SelectClipPath
 
 
 Version 7.7

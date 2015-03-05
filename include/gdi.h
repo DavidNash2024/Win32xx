@@ -600,9 +600,13 @@ namespace Win32xx
 		int  SelectClipRgn(CRgn* pRgn);
 
 #ifndef _WIN32_WCE
+		BOOL BeginPath();
+		BOOL EndPath();
 		int  ExtSelectClipRgn(CRgn* pRgn, int fnMode);
+		int	 GetPath(POINT* pPoints, BYTE* pTypes, int nCount) const;
 		int  OffsetClipRgn(int nXOffset, int nYOffset);
 		BOOL PtVisible(int X, int Y);
+		BOOL SelectClipPath(int nMode);
 #endif
 
         // Co-ordinate Functions
@@ -2972,17 +2976,6 @@ namespace Win32xx
 #endif
 
 	// Palette functions
-	inline void CDC::CreateHalftonePalette()
-	// Creates and selects halftone palette
-	{
-		assert(m_pData->hDC);
-
-		CPalette* pPalette = new CPalette;
-		pPalette->CreateHalftonePalette(this);
-		m_pData->m_vGDIObjects.push_back(pPalette);
-		::SelectObject(m_pData->hDC, *pPalette);
-		::RealizePalette(m_pData->hDC);
-	}
 	inline void CDC::CreatePalette(LPLOGPALETTE pLogPalette)
 	// Creates and selects a palette
 	{
@@ -3017,6 +3010,22 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		::RealizePalette(m_pData->hDC);
 	}
+
+#ifndef _WIN32_WCE
+
+	inline void CDC::CreateHalftonePalette()
+	// Creates and selects halftone palette
+	{
+		assert(m_pData->hDC);
+
+		CPalette* pPalette = new CPalette;
+		pPalette->CreateHalftonePalette(this);
+		m_pData->m_vGDIObjects.push_back(pPalette);
+		::SelectObject(m_pData->hDC, *pPalette);
+		::RealizePalette(m_pData->hDC);
+	}
+
+#endif
 
 	// Pen functions
 	inline void CDC::CreatePen (int nStyle, int nWidth, COLORREF rgb)
@@ -3233,7 +3242,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CDC::RectVisible(const RECT& rc)
-	// Determines whether any part of the specified rectangle lies within the clipping region of a device context.
+	// Determines whether any part of the specified rectangle lies within the 
+	// clipping region of a device context.
 	{
 		assert(m_pData->hDC);
 		return ::RectVisible (m_pData->hDC, &rc);
@@ -3249,12 +3259,37 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
+	inline BOOL CDC::BeginPath()
+	// Opens a path bracket in the device context.
+	{
+		assert(m_pData->hDC);
+		return ::BeginPath(m_pData->hDC);
+	}
+	
+	inline BOOL CDC::EndPath()
+	// Closes a path bracket and selects the path defined by the bracket into the device context.
+	{
+		assert(m_pData->hDC);
+		return ::EndPath(m_pData->hDC);
+	}
+
 	inline int CDC::ExtSelectClipRgn(CRgn* pRgn, int fnMode)
 	// Combines the specified region with the current clipping region using the specified mode.
 	{
 		assert(m_pData->hDC);
 		assert(pRgn);
 		return ::ExtSelectClipRgn(m_pData->hDC, *pRgn, fnMode);
+	}
+
+	inline int CDC::GetPath(POINT* pPoints, BYTE* pTypes, int nCount) const
+	// Retrieves the coordinates defining the endpoints of lines and the control points of curves found in the path
+	//  that is selected into the device context.
+	// pPoints: An array of POINT structures that receives the line endpoints and curve control points, in logical coordinates.
+	// pTypes: Pointer to an array of bytes that receives the vertex types (PT_MOVETO, PT_LINETO or PT_BEZIERTO).
+	// nCount: The total number of POINT structures that can be stored in the array pointed to by lpPoints.
+	{
+		assert(m_pData->hDC);
+		return ::GetPath(m_pData->hDC, pPoints, pTypes, nCount);
 	}
 
 	inline BOOL CDC::PtVisible(int X, int Y)
@@ -3269,6 +3304,14 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::OffsetClipRgn (m_pData->hDC, nXOffset, nYOffset);
+	}
+
+	inline BOOL CDC::SelectClipPath(int nMode)
+	// Selects the current path as a clipping region for the device context, combining 
+	// the new region with any existing clipping region using the specified mode.
+	{
+		assert(m_pData->hDC);
+		return ::SelectClipPath(m_pData->hDC, nMode);
 	}
 #endif
 
