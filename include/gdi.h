@@ -476,12 +476,17 @@ namespace Win32xx
 #endif
 
 		// Create and Select Palettes
-		void CreateHalftonePalette();
 		void CreatePalette(LPLOGPALETTE pLogPalette);
 		CPalette* GetCurrentPalette() const;
+		COLORREF GetNearestColor(COLORREF crColor) const;
 		CPalette* SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd);
 		void RealizePalette() const;
 		
+#ifndef _WIN32_WCE
+		void CreateHalftonePalette();
+		BOOL UpdateColors() const;
+#endif
+
 		// Create and Select Pens
 		void CreatePen(int nStyle, int nWidth, COLORREF rgb);
 		void CreatePenIndirect(LPLOGPEN pLogPen);
@@ -513,12 +518,14 @@ namespace Win32xx
 		COLORREF GetPixel(POINT pt) const;
 		COLORREF SetPixel(int x, int y, COLORREF crColor) const;
 		COLORREF SetPixel(POINT pt, COLORREF crColor) const;
+
 #ifndef _WIN32_WCE
 		BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
 		BOOL Arc(RECT& rc, POINT ptStart, POINT ptEnd) const;
 		BOOL ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
 		BOOL ArcTo(RECT& rc, POINT ptStart, POINT ptEnd) const;
 		BOOL AngleArc(int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const;
+		BOOL CloseFigure() const;
 		int  GetArcDirection() const;
 		int  SetArcDirection(int nArcDirection) const;
 		BOOL PolyDraw(const POINT* lpPoints, const BYTE* lpTypes, int nCount) const;
@@ -556,24 +563,33 @@ namespace Win32xx
 		BOOL DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const;
 		BOOL DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const;
 		BOOL FillRgn(CRgn* pRgn, CBrush* pBrush) const;
-		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical);
-		void SolidFill(COLORREF Color, const RECT& rc);
+		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const;
+		void SolidFill(COLORREF Color, const RECT& rc) const;
 
 #ifndef _WIN32_WCE
 		BOOL DrawIcon(int x, int y, HICON hIcon) const;
 		BOOL DrawIcon(POINT point, HICON hIcon) const;
 		BOOL FrameRect(const RECT& rc, CBrush* pBrush) const;
+		BOOL FrameRgn(CRgn* pRgn, CBrush* pBrush, int nWidth, int nHeight) const;
 		BOOL PaintRgn(CRgn* pRgn) const;
 #endif
 
 		// Bitmap Functions
-		void DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask);
-		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
-			           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
+		void DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask) const;
+		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, 
+			               int XSrc, int YSrc, int nSrcWidth, int nSrcHeight, 
+						   CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
+		
 		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
 		BOOL BitBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
-		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const;
-
+		BOOL MaskBlt(int nXDest, int nYDest, int nWidth, int nHeight, CDC* pSrc, 
+			               int nXSrc, int nYSrc, CBitmap* pMask, int xMask, int  yMask,
+						   DWORD dwRop) const;
+		
+		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, 
+			               int xSrc, int ySrc, int nSrcWidth, int nSrcHeight,
+						   DWORD dwRop) const;
+				
 #ifndef _WIN32_WCE
 		int  GetDIBits(CBitmap* pBitmap, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
 		int  SetDIBits(CBitmap* pBitmap, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const;
@@ -581,6 +597,9 @@ namespace Win32xx
 		int  SetStretchBltMode(int iStretchMode) const;
 		BOOL FloodFill(int x, int y, COLORREF crColor) const;
 		BOOL ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType) const;
+		BOOL TransparentBlt(int x, int y, int nWidth, int hHeight, CDC* pSrcDC,
+			               int xSrc, int ySrc, int nWidthSrc, int nHeightSrc,
+						   UINT crTransparent) const;
 #endif
 
 		// Brush Functions
@@ -590,23 +609,25 @@ namespace Win32xx
 #endif
 
 		// Clipping and Region Functions
-		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect);
-		int  ExcludeClipRect(const RECT& rc);
-		int  GetClipBox(RECT& rc);
-		int  GetClipRgn(HRGN hrgn);
-		int  IntersectClipRect(int Left, int Top, int Right, int Bottom);
-		int  IntersectClipRect(const RECT& rc);
-		BOOL RectVisible(const RECT& rc);
-		int  SelectClipRgn(CRgn* pRgn);
+		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect) const;
+		int  ExcludeClipRect(const RECT& rc) const;
+		int  GetClipBox(RECT& rc) const;
+		int  GetClipRgn(HRGN hrgn) const;
+		int  IntersectClipRect(int Left, int Top, int Right, int Bottom) const;
+		int  IntersectClipRect(const RECT& rc) const;
+		BOOL RectVisible(const RECT& rc) const;
+		int  SelectClipRgn(CRgn* pRgn) const;
 
 #ifndef _WIN32_WCE
-		BOOL BeginPath();
-		BOOL EndPath();
-		int  ExtSelectClipRgn(CRgn* pRgn, int fnMode);
+		BOOL BeginPath() const;
+		BOOL EndPath() const;
+		int  ExtSelectClipRgn(CRgn* pRgn, int fnMode) const;
+		BOOL FlattenPath() const;
 		int	 GetPath(POINT* pPoints, BYTE* pTypes, int nCount) const;
-		int  OffsetClipRgn(int nXOffset, int nYOffset);
-		BOOL PtVisible(int X, int Y);
-		BOOL SelectClipPath(int nMode);
+		int  OffsetClipRgn(int nXOffset, int nYOffset) const;
+		BOOL PtVisible(int X, int Y) const;
+		BOOL SelectClipPath(int nMode) const;
+		BOOL WidenPath() const;
 #endif
 
         // Co-ordinate Functions
@@ -2442,7 +2463,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask)
+	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask) const
 	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
 	// Suitable for use with a Window DC or a memory DC
 	{
@@ -2480,7 +2501,7 @@ namespace Win32xx
 		return pDC;
 	}
 
-	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical)
+	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const
 	// An efficient color gradient filler compatible with all Windows operating systems
 	{
 		int Width = rc.right - rc.left;
@@ -2575,7 +2596,7 @@ namespace Win32xx
 		return ::SaveDC(m_pData->hDC);
 	}
 
-	inline void CDC::SolidFill(COLORREF Color, const RECT& rc)
+	inline void CDC::SolidFill(COLORREF Color, const RECT& rc) const
 	// Fills a rectangle with a solid color
 	{
 		COLORREF OldColor = SetBkColor(Color);
@@ -2988,6 +3009,14 @@ namespace Win32xx
 		::RealizePalette(m_pData->hDC);
 	}
 
+	inline COLORREF CDC::GetNearestColor(COLORREF crColor) const
+	// Retrieves a color value identifying a color from the system palette that will be
+	//  displayed when the specified color value is used.
+	{
+		assert(m_pData->hDC);
+		return GetNearestColor(crColor);
+	}
+
 	inline CPalette* CDC::GetCurrentPalette() const
 	// Retrieves a pointer to the currently selected palette
 	{
@@ -3023,6 +3052,14 @@ namespace Win32xx
 		m_pData->m_vGDIObjects.push_back(pPalette);
 		::SelectObject(m_pData->hDC, *pPalette);
 		::RealizePalette(m_pData->hDC);
+	}
+
+	inline BOOL CDC::UpdateColors() const
+	// Updates the client area of the specified device context by remapping the current colors in the
+	//  client area to the currently realized logical palette.
+	{
+		assert(m_pData->hDC);
+		return ::UpdateColors(m_pData->hDC);
 	}
 
 #endif
@@ -3197,28 +3234,28 @@ namespace Win32xx
 #endif
 
 	// Clipping functions
-	inline int CDC::ExcludeClipRect(int Left, int Top, int Right, int BottomRect)
+	inline int CDC::ExcludeClipRect(int Left, int Top, int Right, int BottomRect) const
 	// Creates a new clipping region that consists of the existing clipping region minus the specified rectangle.
 	{
 		assert(m_pData->hDC);
 		return ::ExcludeClipRect(m_pData->hDC, Left, Top, Right, BottomRect);
 	}
 
-	inline int CDC::ExcludeClipRect(const RECT& rc)
+	inline int CDC::ExcludeClipRect(const RECT& rc) const
 	// Creates a new clipping region that consists of the existing clipping region minus the specified rectangle.
 	{
 		assert(m_pData->hDC);
 		return ::ExcludeClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline int CDC::GetClipBox (RECT& rc)
+	inline int CDC::GetClipBox (RECT& rc) const
 	// Retrieves the dimensions of the tightest bounding rectangle that can be drawn around the current visible area on the device.
 	{
 		assert(m_pData->hDC);
 		return ::GetClipBox(m_pData->hDC, &rc);
 	}
 
-	inline int CDC::GetClipRgn(HRGN hrgn)
+	inline int CDC::GetClipRgn(HRGN hrgn) const
 	// Retrieves a handle identifying the current application-defined clipping region for the specified device context.
 	// hrgn: A handle to an existing region before the function is called.
 	//       After the function returns, this parameter is a handle to a copy of the current clipping region.
@@ -3227,29 +3264,29 @@ namespace Win32xx
 		return ::GetClipRgn(m_pData->hDC, hrgn);
 	}
 
-	inline int CDC::IntersectClipRect(int Left, int Top, int Right, int Bottom)
+	inline int CDC::IntersectClipRect(int Left, int Top, int Right, int Bottom) const
 	// Creates a new clipping region from the intersection of the current clipping region and the specified rectangle.
 	{
 		assert(m_pData->hDC);
 		return ::IntersectClipRect(m_pData->hDC, Left, Top, Right, Bottom);
 	}
 
-	inline int CDC::IntersectClipRect(const RECT& rc)
+	inline int CDC::IntersectClipRect(const RECT& rc) const
 	// Creates a new clipping region from the intersection of the current clipping region and the specified rectangle.
 	{
 		assert(m_pData->hDC);
 		return ::IntersectClipRect(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline BOOL CDC::RectVisible(const RECT& rc)
-	// Determines whether any part of the specified rectangle lies within the 
+	inline BOOL CDC::RectVisible(const RECT& rc) const
+	// Determines whether any part of the specified rectangle lies within the
 	// clipping region of a device context.
 	{
 		assert(m_pData->hDC);
 		return ::RectVisible (m_pData->hDC, &rc);
 	}
 
-	inline int CDC::SelectClipRgn(CRgn* pRgn)
+	inline int CDC::SelectClipRgn(CRgn* pRgn) const
 	// Selects a region as the current clipping region for the specified device context.
 	// Note: Only a copy of the selected region is used.
 	//       To remove a device-context's clipping region, specify a NULL region handle.
@@ -3259,21 +3296,21 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CDC::BeginPath()
+	inline BOOL CDC::BeginPath() const
 	// Opens a path bracket in the device context.
 	{
 		assert(m_pData->hDC);
 		return ::BeginPath(m_pData->hDC);
 	}
-	
-	inline BOOL CDC::EndPath()
+
+	inline BOOL CDC::EndPath() const
 	// Closes a path bracket and selects the path defined by the bracket into the device context.
 	{
 		assert(m_pData->hDC);
 		return ::EndPath(m_pData->hDC);
 	}
 
-	inline int CDC::ExtSelectClipRgn(CRgn* pRgn, int fnMode)
+	inline int CDC::ExtSelectClipRgn(CRgn* pRgn, int fnMode) const
 	// Combines the specified region with the current clipping region using the specified mode.
 	{
 		assert(m_pData->hDC);
@@ -3281,37 +3318,53 @@ namespace Win32xx
 		return ::ExtSelectClipRgn(m_pData->hDC, *pRgn, fnMode);
 	}
 
+	inline BOOL CDC::FlattenPath() const
+	// Transforms any curves in the path that is selected into the device context, turning each
+	//  curve into a sequence of lines.
+	{
+		assert(m_pData->hDC);
+		return ::FlattenPath(m_pData->hDC);
+	}
+
 	inline int CDC::GetPath(POINT* pPoints, BYTE* pTypes, int nCount) const
 	// Retrieves the coordinates defining the endpoints of lines and the control points of curves found in the path
 	//  that is selected into the device context.
 	// pPoints: An array of POINT structures that receives the line endpoints and curve control points, in logical coordinates.
 	// pTypes: Pointer to an array of bytes that receives the vertex types (PT_MOVETO, PT_LINETO or PT_BEZIERTO).
-	// nCount: The total number of POINT structures that can be stored in the array pointed to by lpPoints.
+	// nCount: The total number of POINT structures that can be stored in the array pointed to by pPoints.
 	{
 		assert(m_pData->hDC);
 		return ::GetPath(m_pData->hDC, pPoints, pTypes, nCount);
 	}
 
-	inline BOOL CDC::PtVisible(int X, int Y)
+	inline BOOL CDC::PtVisible(int X, int Y) const
 	// Determines whether the specified point is within the clipping region of a device context.
 	{
 		assert(m_pData->hDC);
 		return ::PtVisible (m_pData->hDC, X, Y);
 	}
 
-	inline int CDC::OffsetClipRgn(int nXOffset, int nYOffset)
+	inline int CDC::OffsetClipRgn(int nXOffset, int nYOffset) const
 	// Moves the clipping region of a device context by the specified offsets.
 	{
 		assert(m_pData->hDC);
 		return ::OffsetClipRgn (m_pData->hDC, nXOffset, nYOffset);
 	}
 
-	inline BOOL CDC::SelectClipPath(int nMode)
-	// Selects the current path as a clipping region for the device context, combining 
+	inline BOOL CDC::SelectClipPath(int nMode) const
+	// Selects the current path as a clipping region for the device context, combining
 	// the new region with any existing clipping region using the specified mode.
 	{
 		assert(m_pData->hDC);
 		return ::SelectClipPath(m_pData->hDC, nMode);
+	}
+
+	inline BOOL CDC::WidenPath() const
+	// Redefines the current path as the area that would be painted if the path were
+	// stroked using the pen currently selected into the device context. 
+	{
+		assert(m_pData->hDC);
+		return ::WidenPath(m_pData->hDC);
 	}
 #endif
 
@@ -3390,6 +3443,13 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::AngleArc(m_pData->hDC, x, y, nRadius, fStartAngle, fSweepAngle);
+	}
+
+	inline BOOL CDC::CloseFigure() const
+	// Closes the figure by drawing a line from the current position to the first point of the figure.
+	{
+		assert(m_pData->hDC);
+		return ::CloseFigure(m_pData->hDC);
 	}
 
 	inline int CDC::GetArcDirection() const
@@ -3655,12 +3715,21 @@ namespace Win32xx
 		return (BOOL)::FrameRect(m_pData->hDC, &rc, *pBrush);
 	}
 
+	inline BOOL CDC::FrameRgn(CRgn* pRgn, CBrush* pBrush, int nWidth, int nHeight) const
+	// Draws a border around the specified region by using the specified brush.
+	{
+		assert(m_pData->hDC);
+		assert(pRgn);
+		assert(pBrush);
+		return (BOOL)::FrameRgn(m_pData->hDC, *pRgn, *pBrush, nWidth, nHeight);
+	}
+
 	inline BOOL CDC::PaintRgn(CRgn* pRgn) const
 	// Paints the specified region by using the brush currently selected into the device context.
 	{
 		assert(m_pData->hDC);
 		assert(pRgn);
-		return ::PaintRgn(m_pData->hDC, *pRgn);
+		return (BOOL)::PaintRgn(m_pData->hDC, *pRgn);
 	}
 #endif
 
@@ -3688,8 +3757,38 @@ namespace Win32xx
 		return ::BitBlt(m_pData->hDC, x, y, nWidth, nHeight, pSrcDC->GetHDC(), xSrc, ySrc, dwRop);
 	}
 
+	inline BOOL CDC::MaskBlt(int nXDest, int nYDest, int nWidth, int nHeight, CDC* pSrc, int nXSrc, int nYSrc, CBitmap* pMask, int xMask, int yMask, DWORD dwRop) const
+	// Combines the color data for the source and destination bitmaps using the specified mask and raster operation.
+	//  nXDest    x-coord of destination upper-left corner
+	//  nYDest    y-coord of destination upper-left corner
+	//  nWidth    width of source and destination
+	//  nHeight   height of source and destination
+	//  pSrc      pointer to source DC
+	//  nXSrc     x-coord of upper-left corner of source
+	//  nYSrc     y-coord of upper-left corner of source
+	//  pMask     pointer to monochrome bit mask
+	//  xMask     horizontal offset into mask bitmap
+	//  yMask     vertical offset into mask bitmap
+	//  dwRop     raster operation code
+	{
+		assert(m_pData->hDC);
+		assert(pSrc);
+		assert(pMask);
+		return ::MaskBlt(m_pData->hDC, nXDest, nYDest, nWidth, nHeight, pSrc->GetHDC(), nXSrc, nYSrc, *pMask, xMask, yMask, dwRop);
+	}
+
 	inline BOOL CDC::StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, int nSrcWidth, int nSrcHeight, DWORD dwRop) const
 	// Copies a bitmap from a source rectangle into a destination rectangle, stretching or compressing the bitmap to fit the dimensions of the destination rectangle, if necessary.
+	//  x            x-coord of destination upper-left corner
+	//  y            y-coord of destination upper-left corner
+    //  nWidth       width of destination rectangle
+	//  nHeight      height of destination rectangle
+	//  pSrcDC       handle to source DC
+	//  xSrc         x-coord of source upper-left corner
+	//  ySrc         y-coord of source upper-left corner
+	//  nSrcWidth    width of source rectangle
+	//  nSrcHeight   height of source rectangle
+	//  dwRop        raster operation code
 	{
 		assert(m_pData->hDC);
 		assert(pSrcDC);
@@ -3728,6 +3827,28 @@ namespace Win32xx
 		return ::SetStretchBltMode(m_pData->hDC, iStretchMode);
 	}
 
+	inline BOOL CDC::TransparentBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, 
+		                             int nWidthSrc, int nHeightSrc, UINT crTransparent) const
+	// Performs a bit-block transfer of the color data corresponding to a rectangle
+	// of pixels from the specified source device context into a destination device context.
+
+	//  x             x-coord of destination upper-left corner
+	//  y             y-coord of destination upper-left corner
+	//  nWidth        width of destination rectangle
+	//  hHeight       height of destination rectangle
+	//  pSrcDC        pointer to source DC
+	//  xSrc          x-coord of source upper-left corner
+	//  ySrc          y-coord of source upper-left corner
+	//  nWidthSrc     width of source rectangle
+	//  nHeightSrc    height of source rectangle
+	//  crTransparent color to make transparent
+	
+	{
+		assert(m_pData->hDC);
+		assert(pSrcDC);
+		return ::TransparentBlt(m_pData->hDC, x, y, nWidth, nHeight, pSrcDC->GetHDC(), xSrc, ySrc, nWidthSrc, nHeightSrc, crTransparent);
+	}
+
 	inline BOOL CDC::FloodFill(int x, int y, COLORREF crColor) const
 	// Fills an area of the display surface with the current brush.
 	{
@@ -3742,7 +3863,9 @@ namespace Win32xx
 		assert(m_pData->hDC);
 		return ::ExtFloodFill(m_pData->hDC, x, y, crColor, nFillType );
 	}
-
+#endif
+	
+#ifndef _WIN32_WCE
 	// co-ordinate functions
 	inline BOOL CDC::DPtoLP(LPPOINT lpPoints, int nCount) const
 	// Converts device coordinates into logical coordinates.

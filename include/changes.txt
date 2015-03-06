@@ -8,22 +8,34 @@ Bug Fixes
 New Features and enhancements
 -----------------------------
 * Updated CDC
+   - Added palette support.
+   - Added path support.
+   - Added MaskBlt and TransparentBlt functions
+   - Now able to retrieve GDI objects currently selected in the device context.
 
 Changes in detail
 -----------------
 Added CDC::BeginPath
+Added CDC::CloseFigure
 Added CDC::CreateHalftonePalette
 Added CDC::CreatePalette
 Added CDC::EndPath
+Added CDC::FrameRgn
+Added CDC::FlattenPath
 Added CDC::GetClipPath
 Added CDC::GetCurrentBitmap
 Added CDC::GetCurrentBrush
 Added CDC::GetCurrentFont
 Added CDC::GetCurrentPalette
 Added CDC::GetCurrentPen
+Added CDC::GetNearestColor
+Added CDC::MaskBlt
 Added CDC::RestoreDC
 Added CDC::SaveDC
 Added CDC::SelectClipPath
+Added CDC::TransparentBlt
+Added CDC::UpdateColors
+Added CDC::WidenPath
 
 
 Version 7.7
