@@ -20,22 +20,43 @@ Added CDC::CloseFigure
 Added CDC::CreateHalftonePalette
 Added CDC::CreatePalette
 Added CDC::EndPath
+Added CDC::EnumObjects
+Added CDC::FlattenPath 
 Added CDC::FrameRgn
 Added CDC::FlattenPath
 Added CDC::GetClipPath
+Added CDC::GetCharABCWidths 
+Added CDC::GetCHarABCWidthsI
+Added CDC::GetCharacterPlacement 
+Added CDC::GetCharWidth
+Added CDC::GetCharWidthI
+Added CDC::GetColorAdjustment
 Added CDC::GetCurrentBitmap
 Added CDC::GetCurrentBrush
 Added CDC::GetCurrentFont
 Added CDC::GetCurrentPalette
 Added CDC::GetCurrentPen
+Added CDC::GetFontData
+Added CDC::GetFontLanguageInfo
+Added CDC::GetGlyphOutline
+Added CDC::GetKerningPairs	 
+Added CDC::GetMiterLimit
 Added CDC::GetNearestColor
+Added CDC::GetPolyFillMode 
+Added CDC::GetROP2
+Added CDC::GradientFill
 Added CDC::MaskBlt
 Added CDC::RestoreDC
 Added CDC::SaveDC
 Added CDC::SelectClipPath
+Added CDC::SetColorAdjustment 
+Added CDC::SetMapperFlags
+Added CDC::SetMiterLimit
+Added CDC::SetPolyFillMode  
 Added CDC::TransparentBlt
 Added CDC::UpdateColors
 Added CDC::WidenPath
+
 
 
 Version 7.7

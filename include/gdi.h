@@ -477,14 +477,10 @@ namespace Win32xx
 
 		// Create and Select Palettes
 		void CreatePalette(LPLOGPALETTE pLogPalette);
-		CPalette* GetCurrentPalette() const;
-		COLORREF GetNearestColor(COLORREF crColor) const;
 		CPalette* SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd);
-		void RealizePalette() const;
-		
+
 #ifndef _WIN32_WCE
 		void CreateHalftonePalette();
-		BOOL UpdateColors() const;
 #endif
 
 		// Create and Select Pens
@@ -507,6 +503,9 @@ namespace Win32xx
 #endif
 
 		// Wrappers for WinAPI functions
+#ifndef _WIN32_WCE
+		int EnumObjects(int nObjectType, GOBJENUMPROC lpObjectFunc, LPARAM lParam) const;
+#endif
 
 		// Point and Line Drawing Functions
 		CPoint GetCurrentPosition() const;
@@ -518,6 +517,7 @@ namespace Win32xx
 		COLORREF GetPixel(POINT pt) const;
 		COLORREF SetPixel(int x, int y, COLORREF crColor) const;
 		COLORREF SetPixel(POINT pt, COLORREF crColor) const;
+		int SetROP2(int iDrawMode) const;
 
 #ifndef _WIN32_WCE
 		BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
@@ -526,6 +526,7 @@ namespace Win32xx
 		BOOL ArcTo(RECT& rc, POINT ptStart, POINT ptEnd) const;
 		BOOL AngleArc(int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const;
 		BOOL CloseFigure() const;
+		int  GetROP2() const;
 		int  GetArcDirection() const;
 		int  SetArcDirection(int nArcDirection) const;
 		BOOL PolyDraw(const POINT* lpPoints, const BYTE* lpTypes, int nCount) const;
@@ -557,13 +558,16 @@ namespace Win32xx
 #endif
 
 		// Fill and Image Drawing functions
-		BOOL FillRect(const RECT& rc, CBrush* pBrushr) const;
-		BOOL InvertRect(const RECT& rc) const;
-		BOOL DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth, UINT istepIfAniCur, CBrush* pFlickerFreeDraw, UINT diFlags) const;
 		BOOL DrawEdge(const RECT& rc, UINT nEdge, UINT nFlags) const;
+		BOOL DrawIconEx(int xLeft, int yTop, HICON hIcon, int cxWidth, int cyWidth,
+			            UINT istepIfAniCur, CBrush* pFlickerFreeDraw, UINT diFlags) const;
+
 		BOOL DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const;
+		BOOL FillRect(const RECT& rc, CBrush* pBrushr) const;
 		BOOL FillRgn(CRgn* pRgn, CBrush* pBrush) const;
 		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const;
+		BOOL GradientFill(PTRIVERTEX pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode) const;
+		BOOL InvertRect(const RECT& rc) const;
 		void SolidFill(COLORREF Color, const RECT& rc) const;
 
 #ifndef _WIN32_WCE
@@ -571,32 +575,38 @@ namespace Win32xx
 		BOOL DrawIcon(POINT point, HICON hIcon) const;
 		BOOL FrameRect(const RECT& rc, CBrush* pBrush) const;
 		BOOL FrameRgn(CRgn* pRgn, CBrush* pBrush, int nWidth, int nHeight) const;
+		int  GetPolyFillMode() const;
 		BOOL PaintRgn(CRgn* pRgn) const;
+		int  SetPolyFillMode(int iPolyFillMode) const;
 #endif
 
 		// Bitmap Functions
-		void DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask) const;
-		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, 
-			               int XSrc, int YSrc, int nSrcWidth, int nSrcHeight, 
-						   CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
-		
-		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
 		BOOL BitBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, DWORD dwRop) const;
-		BOOL MaskBlt(int nXDest, int nYDest, int nWidth, int nHeight, CDC* pSrc, 
+		void DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask) const;
+		BOOL MaskBlt(int nXDest, int nYDest, int nWidth, int nHeight, CDC* pSrc,
 			               int nXSrc, int nYSrc, CBitmap* pMask, int xMask, int  yMask,
 						   DWORD dwRop) const;
-		
-		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, 
+
+		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
+		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight,
+			               int XSrc, int YSrc, int nSrcWidth, int nSrcHeight,
+						   CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
+
+		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC,
 			               int xSrc, int ySrc, int nSrcWidth, int nSrcHeight,
 						   DWORD dwRop) const;
-				
+
 #ifndef _WIN32_WCE
-		int  GetDIBits(CBitmap* pBitmap, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const;
-		int  SetDIBits(CBitmap* pBitmap, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const;
-		int  GetStretchBltMode() const;
-		int  SetStretchBltMode(int iStretchMode) const;
-		BOOL FloodFill(int x, int y, COLORREF crColor) const;
 		BOOL ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType) const;
+		BOOL FloodFill(int x, int y, COLORREF crColor) const;
+		int  GetDIBits(CBitmap* pBitmap, UINT uStartScan, UINT cScanLines, LPVOID lpvBits,
+			            LPBITMAPINFO lpbi, UINT uUsage) const;
+
+		int  GetStretchBltMode() const;
+		int  SetDIBits(CBitmap* pBitmap, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits,
+			            LPBITMAPINFO lpbi, UINT fuColorUse) const;
+
+		int  SetStretchBltMode(int iStretchMode) const;
 		BOOL TransparentBlt(int x, int y, int nWidth, int hHeight, CDC* pSrcDC,
 			               int xSrc, int ySrc, int nWidthSrc, int nHeightSrc,
 						   UINT crTransparent) const;
@@ -606,6 +616,34 @@ namespace Win32xx
 #ifdef GetDCBrushColor
 		COLORREF GetDCBrushColor() const;
 		COLORREF SetDCBrushColor(COLORREF crColor) const;
+#endif
+
+		// Font Functions
+#ifndef _WIN32_WCE
+		DWORD GetFontData(DWORD dwTable, DWORD dwOffset, LPVOID pvBuffer,  DWORD cbData) const;
+		DWORD GetFontLanguageInfo() const;
+		DWORD GetGlyphOutline(UINT uChar, UINT uFormat, LPGLYPHMETRICS pgm, DWORD cbBuffer,
+			                  LPVOID pvBuffer, CONST MAT2 *lpmat2) const;
+
+		DWORD GetKerningPairs(DWORD nNumPairs, LPKERNINGPAIR pkrnpair) const;
+		DWORD SetMapperFlags(DWORD dwFlag) const;
+#endif
+
+		// Palette and color functions
+		CPalette* GetCurrentPalette() const;
+		COLORREF GetNearestColor(COLORREF crColor) const;
+		void RealizePalette() const;
+
+#ifndef _WIN32_WCE
+		BOOL GetColorAdjustment(LPCOLORADJUSTMENT pCA) const;
+		BOOL SetColorAdjustment(CONST COLORADJUSTMENT* pCA) const;
+		BOOL UpdateColors() const;
+#endif
+
+#ifndef _WIN32_WCE
+		// Pen Functions
+		BOOL GetMiterLimit(PFLOAT peLimit) const;
+		BOOL SetMiterLimit(FLOAT eNewLimit, PFLOAT peOldLimit) const;
 #endif
 
 		// Clipping and Region Functions
@@ -674,21 +712,26 @@ namespace Win32xx
 		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
 
 		// Text Functions
-		int  DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const;
-		BOOL ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
+		int   DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const;
+		BOOL  ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
 		COLORREF GetBkColor() const;
-		int  GetBkMode() const;
-		UINT GetTextAlign() const;
-		int  GetTextFace(int nCount, LPTSTR lpszFacename) const;
+		int   GetBkMode() const;
+		UINT  GetTextAlign() const;
+		int   GetTextFace(int nCount, LPTSTR lpszFacename) const;
 		COLORREF GetTextColor() const;
 		BOOL  GetTextMetrics(TEXTMETRIC& Metrics) const;
 		COLORREF SetBkColor(COLORREF crColor) const;
-		int  SetBkMode(int iBkMode) const;
+		int   SetBkMode(int iBkMode) const;
 		UINT  SetTextAlign(UINT nFlags) const;
 		COLORREF SetTextColor(COLORREF crColor) const;
 
 #ifndef _WIN32_WCE
 		int   DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const;
+		DWORD GetCharacterPlacement(LPCTSTR pString, int nCount, int nMaxExtent,
+		                            LPGCP_RESULTS pResults, DWORD dwFlags) const;
+
+		BOOL  GetCharABCWidths(UINT uFirstChar, UINT uLastChar, LPABC pABC) const;
+		BOOL  GetCharWidth(UINT iFirstChar, UINT iLastChar, float* pBuffer) const;
 		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
 		int   GetTextCharacterExtra() const;
 		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
@@ -698,7 +741,12 @@ namespace Win32xx
 		int   SetTextJustification(int nBreakExtra, int nBreakCount) const;
 		CSize TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
 		BOOL  TextOut(int x, int y, LPCTSTR lpszString, int nCount = -1) const;
-#endif
+
+  #ifdef GetGlyphIndices
+		BOOL  GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC pABC) const;
+		BOOL  GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pgi, int* pBuffer) const;
+  #endif //GetGlyphIndices
+#endif  // _WIN32_WCE
 
 	private:
 		void AddToMap();
@@ -721,7 +769,6 @@ namespace Win32xx
 			}
 			else
 				Attach(::GetDC(GetDesktopWindow()), 0);
-
 		}
 
 		virtual ~CClientDC() {}
@@ -2269,8 +2316,7 @@ namespace Win32xx
 #else
 			m_pData->hWnd = hWnd;
 #endif
-			if (m_pData->hWnd == 0)
-				AddToMap();
+			AddToMap();
 		}
 	}
 
@@ -2420,6 +2466,17 @@ namespace Win32xx
 
 		return hDC;
 	}
+
+#ifndef _WIN32_WCE
+	inline int CDC::EnumObjects(int nObjectType, GOBJENUMPROC lpObjectFunc, LPARAM lParam) const
+	// Enumerates the pens or brushes available for the device context. This
+	// function calls the application-defined callback function once for each available object,
+	// supplying data describing that object.
+	{
+		assert(m_pData->hDC);
+		return ::EnumObjects(m_pData->hDC, nObjectType, lpObjectFunc, lParam);
+	}
+#endif
 
 	// Initialization
 	inline BOOL CDC::CreateCompatibleDC(CDC* pDC)
@@ -3009,19 +3066,19 @@ namespace Win32xx
 		::RealizePalette(m_pData->hDC);
 	}
 
+	inline CPalette* CDC::GetCurrentPalette() const
+	// Retrieves a pointer to the currently selected palette
+	{
+		assert(m_pData->hDC);
+		return CPalette::FromHandle((HPALETTE)::GetCurrentObject(m_pData->hDC, OBJ_PAL));
+	}
+
 	inline COLORREF CDC::GetNearestColor(COLORREF crColor) const
 	// Retrieves a color value identifying a color from the system palette that will be
 	//  displayed when the specified color value is used.
 	{
 		assert(m_pData->hDC);
 		return GetNearestColor(crColor);
-	}
-
-	inline CPalette* CDC::GetCurrentPalette() const
-	// Retrieves a pointer to the currently selected palette
-	{
-		assert(m_pData->hDC);
-		return CPalette::FromHandle((HPALETTE)::GetCurrentObject(m_pData->hDC, OBJ_PAL));
 	}
 
 	inline CPalette* CDC::SelectPalette(const CPalette* pPalette, BOOL bForceBkgnd)
@@ -3052,6 +3109,20 @@ namespace Win32xx
 		m_pData->m_vGDIObjects.push_back(pPalette);
 		::SelectObject(m_pData->hDC, *pPalette);
 		::RealizePalette(m_pData->hDC);
+	}
+
+	inline BOOL CDC::GetColorAdjustment(LPCOLORADJUSTMENT pCA) const
+	// Retrieves the color adjustment values for the device context.
+	{
+		assert(m_pData->hDC);
+		return ::GetColorAdjustment(m_pData->hDC, pCA);
+	}
+
+	inline BOOL CDC::SetColorAdjustment(CONST COLORADJUSTMENT* pCA) const
+	// Sets the color adjustment values for the device context.
+	{
+		assert(m_pData->hDC);
+		return ::SetColorAdjustment(m_pData->hDC, pCA);
 	}
 
 	inline BOOL CDC::UpdateColors() const
@@ -3233,6 +3304,61 @@ namespace Win32xx
 	}
 #endif
 
+	// Font Functions
+#ifndef _WIN32_WCE
+	inline DWORD CDC::GetFontData(DWORD dwTable, DWORD dwOffset, LPVOID pvBuffer, DWORD cbData) const
+	// Retrieves font metric data for a TrueType font.
+	{
+		assert(m_pData->hDC);
+		return ::GetFontData(m_pData->hDC, dwTable, dwOffset, pvBuffer, cbData);
+	}
+
+	inline DWORD CDC::GetFontLanguageInfo() const
+	// Returns information about the currently selected font for the display context.
+	{
+		assert(m_pData->hDC);
+		return ::GetFontLanguageInfo(m_pData->hDC);
+	}
+
+	inline DWORD CDC::GetGlyphOutline(UINT uChar, UINT uFormat, LPGLYPHMETRICS pgm, DWORD cbBuffer,
+			                  LPVOID pvBuffer, CONST MAT2 *lpmat2) const
+	// Retrieves the outline or bitmap for a character in the TrueType font that is selected into the device context.
+	{
+		assert(m_pData->hDC);
+		return ::GetGlyphOutline(m_pData->hDC, uChar, uFormat, pgm, cbBuffer, pvBuffer, lpmat2);
+	}
+
+	inline DWORD CDC::GetKerningPairs(DWORD nNumPairs, LPKERNINGPAIR pkrnpair) const
+	// retrieves the character-kerning pairs for the currently selected font for the device context.
+	{
+		assert(m_pData->hDC);
+		return ::GetKerningPairs(m_pData->hDC, nNumPairs, pkrnpair);
+	}
+
+	inline DWORD CDC::SetMapperFlags(DWORD dwFlag) const
+	// Alters the algorithm the font mapper uses when it maps logical fonts to physical fonts.
+	{
+		assert(m_pData->hDC);
+		return ::SetMapperFlags(m_pData->hDC, dwFlag);
+	}
+
+	// Pen Functions
+	inline BOOL CDC::GetMiterLimit(PFLOAT peLimit) const
+	// Retrieves the miter limit for the device context. The miter limit is used when
+	// drawing geometric lines that have miter joins.
+	{
+		assert(m_pData->hDC);
+		return ::GetMiterLimit(m_pData->hDC, peLimit);
+	}
+
+	inline BOOL CDC::SetMiterLimit(FLOAT eNewLimit, PFLOAT peOldLimit) const
+	// Sets the limit for the length of miter joins for the device context.
+	{
+		assert(m_pData->hDC);
+		return ::SetMiterLimit(m_pData->hDC, eNewLimit, peOldLimit);
+	}
+#endif
+
 	// Clipping functions
 	inline int CDC::ExcludeClipRect(int Left, int Top, int Right, int BottomRect) const
 	// Creates a new clipping region that consists of the existing clipping region minus the specified rectangle.
@@ -3361,7 +3487,7 @@ namespace Win32xx
 
 	inline BOOL CDC::WidenPath() const
 	// Redefines the current path as the area that would be painted if the path were
-	// stroked using the pen currently selected into the device context. 
+	// stroked using the pen currently selected into the device context.
 	{
 		assert(m_pData->hDC);
 		return ::WidenPath(m_pData->hDC);
@@ -3377,6 +3503,20 @@ namespace Win32xx
 		::MoveToEx(m_pData->hDC, 0, 0, &pt);
 		::MoveToEx(m_pData->hDC, pt.x, pt.y, NULL);
 		return pt;
+	}
+
+	inline COLORREF CDC::GetPixel(int x, int y) const
+	// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates.
+	{
+		assert(m_pData->hDC);
+		return ::GetPixel(m_pData->hDC, x, y);
+	}
+
+	inline COLORREF CDC::GetPixel(POINT pt) const
+	// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates.
+	{
+		assert(m_pData->hDC);
+		return ::GetPixel(m_pData->hDC, pt.x, pt.y);
 	}
 
 	inline CPoint CDC::MoveTo(int x, int y) const
@@ -3405,6 +3545,21 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::LineTo(m_pData->hDC, pt.x, pt.y);
+	}
+
+	inline int CDC::SetROP2(int iDrawMode) const
+	// Sets the current foreground mix mode. GDI uses the foreground mix mode to
+	// combine pens and interiors of filled objects with the colors already on the screen.
+	{
+		assert(m_pData->hDC);
+		return ::SetROP2(m_pData->hDC, iDrawMode);
+	}
+
+	inline COLORREF CDC::SetPixel (int x, int y, COLORREF crColor) const
+	// Sets the pixel at the specified coordinates to the specified color.
+	{
+		assert(m_pData->hDC);
+		return ::SetPixel(m_pData->hDC, x, y, crColor);
 	}
 
 #ifndef _WIN32_WCE
@@ -3450,6 +3605,14 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::CloseFigure(m_pData->hDC);
+	}
+
+	inline int CDC::GetROP2() const
+	// Retrieves the foreground mix mode of the specified device context. The mix mode specifies how
+	// the pen or interior color and the color already on the screen are combined to yield a new color.
+	{
+		assert(m_pData->hDC);
+		return ::GetROP2(m_pData->hDC);
 	}
 
 	inline int CDC::GetArcDirection() const
@@ -3505,27 +3668,6 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 		return ::PolyBezierTo(m_pData->hDC, lpPoints, nCount );
-	}
-
-	inline COLORREF CDC::GetPixel(int x, int y) const
-	// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates.
-	{
-		assert(m_pData->hDC);
-		return ::GetPixel(m_pData->hDC, x, y);
-	}
-
-	inline COLORREF CDC::GetPixel(POINT pt) const
-	// Retrieves the red, green, blue (RGB) color value of the pixel at the specified coordinates.
-	{
-		assert(m_pData->hDC);
-		return ::GetPixel(m_pData->hDC, pt.x, pt.y);
-	}
-
-	inline COLORREF CDC::SetPixel (int x, int y, COLORREF crColor) const
-	// Sets the pixel at the specified coordinates to the specified color.
-	{
-		assert(m_pData->hDC);
-		return ::SetPixel(m_pData->hDC, x, y, crColor);
 	}
 
 	inline COLORREF CDC::SetPixel(POINT pt, COLORREF crColor) const
@@ -3692,6 +3834,13 @@ namespace Win32xx
 		return ::FillRgn(m_pData->hDC, *pRgn, *pBrush);
 	}
 
+	inline BOOL CDC::GradientFill(PTRIVERTEX pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode) const
+	// Fills rectangle and triangle structures. 
+	{
+		assert(m_pData->hDC);
+		return ::GradientFill(m_pData->hDC, pVertex, nVertex, pMesh, nMesh, ulMode);
+	}
+
 #ifndef _WIN32_WCE
 	inline BOOL CDC::DrawIcon(int x, int y, HICON hIcon) const
 	// Draws an icon or cursor.
@@ -3724,12 +3873,26 @@ namespace Win32xx
 		return (BOOL)::FrameRgn(m_pData->hDC, *pRgn, *pBrush, nWidth, nHeight);
 	}
 
+	inline int CDC::GetPolyFillMode() const
+	// Retrieves the current polygon fill mode.
+	{
+		assert(m_pData->hDC);
+		return ::GetPolyFillMode(m_pData->hDC);
+	}
+
 	inline BOOL CDC::PaintRgn(CRgn* pRgn) const
 	// Paints the specified region by using the brush currently selected into the device context.
 	{
 		assert(m_pData->hDC);
 		assert(pRgn);
 		return (BOOL)::PaintRgn(m_pData->hDC, *pRgn);
+	}
+
+	inline int CDC::SetPolyFillMode(int iPolyFillMode) const
+	// Sets the polygon fill mode for functions that fill polygons.
+	{
+		assert(m_pData->hDC);
+		return ::SetPolyFillMode(m_pData->hDC, iPolyFillMode);
 	}
 #endif
 
@@ -3827,7 +3990,7 @@ namespace Win32xx
 		return ::SetStretchBltMode(m_pData->hDC, iStretchMode);
 	}
 
-	inline BOOL CDC::TransparentBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc, 
+	inline BOOL CDC::TransparentBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc,
 		                             int nWidthSrc, int nHeightSrc, UINT crTransparent) const
 	// Performs a bit-block transfer of the color data corresponding to a rectangle
 	// of pixels from the specified source device context into a destination device context.
@@ -3842,7 +4005,7 @@ namespace Win32xx
 	//  nWidthSrc     width of source rectangle
 	//  nHeightSrc    height of source rectangle
 	//  crTransparent color to make transparent
-	
+
 	{
 		assert(m_pData->hDC);
 		assert(pSrcDC);
@@ -3864,7 +4027,7 @@ namespace Win32xx
 		return ::ExtFloodFill(m_pData->hDC, x, y, crColor, nFillType );
 	}
 #endif
-	
+
 #ifndef _WIN32_WCE
 	// co-ordinate functions
 	inline BOOL CDC::DPtoLP(LPPOINT lpPoints, int nCount) const
@@ -4193,6 +4356,28 @@ namespace Win32xx
 		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, lprc, nFormat, lpDTParams);
 	}
 
+	inline BOOL CDC::GetCharABCWidths(UINT uFirstChar, UINT uLastChar, LPABC pABC) const
+	// Retrieves the widths, in logical units, of consecutive characters in a specified range from the
+	// current TrueType font. This function succeeds only with TrueType fonts.
+	{
+		assert(m_pData->hDC);
+		return::GetCharABCWidths(m_pData->hDC, uFirstChar, uLastChar, pABC);
+	}
+
+	inline DWORD CDC::GetCharacterPlacement(LPCTSTR pString, int nCount, int nMaxExtent, LPGCP_RESULTS pResults, DWORD dwFlags) const
+	// Retrieves information about a character string, such as character widths, caret positioning, ordering within the string, and glyph rendering.
+	{
+		assert(m_pData->hDC);
+		return ::GetCharacterPlacement(m_pData->hDC, pString, nCount, nMaxExtent, pResults, dwFlags);
+	}
+
+	inline BOOL CDC::GetCharWidth(UINT iFirstChar, UINT iLastChar, float* pBuffer) const
+	// Retrieves the fractional widths of consecutive characters in a specified range from the current font.
+	{
+		assert(m_pData->hDC);
+		return ::GetCharWidthFloat(m_pData->hDC, iFirstChar, iLastChar, pBuffer);
+	}
+
 	inline CSize CDC::GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const
 	// Computes the width and height of the specified string of text
 	{
@@ -4265,6 +4450,23 @@ namespace Win32xx
 
 		return ::TextOut(m_pData->hDC, x, y, lpszString, nCount);
 	}
+
+  #ifdef GetGlyphIndices
+	inline BOOL CDC::GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC pABC) const
+	// Retrieves the widths, in logical units, of consecutive glyph indices in a specified range from the
+	// current TrueType font. This function succeeds only with TrueType fonts.
+	{
+		assert(m_pData->hDC);
+		return ::GetCharABCWidthsI(m_pData->hDC, giFirst, cgi, pgi, pABC);
+	}
+
+	inline BOOL CDC::GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pgi, int* pBuffer) const
+	// Retrieves the widths, in logical coordinates, of consecutive glyph indices in a specified range from the current font.
+	{
+		assert(m_pData->hDC);
+		return ::GetCharWidthI(m_pData->hDC, giFirst, cgi, pgi, pBuffer);
+	}
+  #endif
 
 #endif
 
