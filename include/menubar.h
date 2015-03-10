@@ -834,7 +834,7 @@ namespace Win32xx
 		// Display the shortcut menu
 		BOOL bRightToLeft = FALSE;
 
-#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 		bRightToLeft = ((GetAncestor()->GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
 #endif
 

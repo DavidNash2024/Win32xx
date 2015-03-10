@@ -570,9 +570,12 @@ namespace Win32xx
 		BOOL FillRect(const RECT& rc, CBrush* pBrushr) const;
 		BOOL FillRgn(CRgn* pRgn, CBrush* pBrush) const;
 		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const;
-		BOOL GradientFill(PTRIVERTEX pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode) const;
 		BOOL InvertRect(const RECT& rc) const;
 		void SolidFill(COLORREF Color, const RECT& rc) const;
+
+#if (WINVER >= 0x0410)
+		BOOL GradientFill(PTRIVERTEX pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode) const;
+#endif
 
 #ifndef _WIN32_WCE
 		BOOL DrawIcon(int x, int y, HICON hIcon) const;
@@ -611,13 +614,15 @@ namespace Win32xx
 			            LPBITMAPINFO lpbi, UINT fuColorUse) const;
 
 		int  SetStretchBltMode(int iStretchMode) const;
+  #if (WINVER >= 0x0410)
 		BOOL TransparentBlt(int x, int y, int nWidth, int hHeight, CDC* pSrcDC,
 			               int xSrc, int ySrc, int nWidthSrc, int nHeightSrc,
 						   UINT crTransparent) const;
+  #endif
 #endif
 
 		// Brush Functions
-#ifdef GetDCBrushColor
+#if (_WIN32_WINNT >= 0x0500)
 		COLORREF GetDCBrushColor() const;
 		COLORREF SetDCBrushColor(COLORREF crColor) const;
 #endif
@@ -746,10 +751,10 @@ namespace Win32xx
 		CSize TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
 		BOOL  TextOut(int x, int y, LPCTSTR lpszString, int nCount = -1) const;
 
-  #ifdef GetGlyphIndices
+  #if (_WIN32_WINNT >= 0x0500)
 		BOOL  GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC pABC) const;
 		BOOL  GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pgi, int* pBuffer) const;
-  #endif //GetGlyphIndices
+  #endif // (_WIN32_WINNT >= 0x0500)
 #endif  // _WIN32_WCE
 
 	private:
@@ -3204,7 +3209,7 @@ namespace Win32xx
 	// Selects a stock brush, pen, or font into the device context.
 	// nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
 	//                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,
-	//                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT. 
+	//                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT.
 	{
 		assert(m_pData->hDC);
 		HGDIOBJ hStockObject = ::GetStockObject(nIndex);
@@ -3315,7 +3320,7 @@ namespace Win32xx
 	}
 
 	// Brush Functions
-#ifdef GetDCBrushColor
+#if (_WIN32_WINNT >= 0x0500)
 	inline COLORREF CDC::GetDCBrushColor() const
 	{
 		assert(m_pData->hDC);
@@ -3859,12 +3864,14 @@ namespace Win32xx
 		return ::FillRgn(m_pData->hDC, *pRgn, *pBrush);
 	}
 
+  #if (WINVER >= 0x0410)
 	inline BOOL CDC::GradientFill(PTRIVERTEX pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, ULONG ulMode) const
-	// Fills rectangle and triangle structures. 
+	// Fills rectangle and triangle structures.
 	{
 		assert(m_pData->hDC);
 		return ::GradientFill(m_pData->hDC, pVertex, nVertex, pMesh, nMesh, ulMode);
 	}
+  #endif
 
 #ifndef _WIN32_WCE
 	inline BOOL CDC::DrawIcon(int x, int y, HICON hIcon) const
@@ -4015,6 +4022,7 @@ namespace Win32xx
 		return ::SetStretchBltMode(m_pData->hDC, iStretchMode);
 	}
 
+#if (WINVER >= 0x0410)
 	inline BOOL CDC::TransparentBlt(int x, int y, int nWidth, int nHeight, CDC* pSrcDC, int xSrc, int ySrc,
 		                             int nWidthSrc, int nHeightSrc, UINT crTransparent) const
 	// Performs a bit-block transfer of the color data corresponding to a rectangle
@@ -4036,6 +4044,7 @@ namespace Win32xx
 		assert(pSrcDC);
 		return ::TransparentBlt(m_pData->hDC, x, y, nWidth, nHeight, pSrcDC->GetHDC(), xSrc, ySrc, nWidthSrc, nHeightSrc, crTransparent);
 	}
+#endif
 
 	inline BOOL CDC::FloodFill(int x, int y, COLORREF crColor) const
 	// Fills an area of the display surface with the current brush.
@@ -4089,7 +4098,7 @@ namespace Win32xx
 	inline DWORD CDC::GetLayout() const
 	// Returns the layout of a device context (LAYOUT_RTL and LAYOUT_BITMAPORIENTATIONPRESERVED).
 	{
-#if defined(WINVER) && defined(GetLayout) && (WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 		return ::GetLayout(m_pData->hDC);
 #else
 		return 0;
@@ -4100,7 +4109,7 @@ namespace Win32xx
 	// changes the layout of a device context (DC).
 	// dwLayout values:  LAYOUT_RTL or LAYOUT_BITMAPORIENTATIONPRESERVED
 	{
-#if defined(WINVER) && defined (SetLayout) && (WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 		// Sets the layout of a device context
 		return ::SetLayout(m_pData->hDC, dwLayout);
 #else
@@ -4476,7 +4485,7 @@ namespace Win32xx
 		return ::TextOut(m_pData->hDC, x, y, lpszString, nCount);
 	}
 
-  #ifdef GetGlyphIndices
+  #if (_WIN32_WINNT >= 0x0500)
 	inline BOOL CDC::GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC pABC) const
 	// Retrieves the widths, in logical units, of consecutive glyph indices in a specified range from the
 	// current TrueType font. This function succeeds only with TrueType fonts.

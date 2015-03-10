@@ -1034,7 +1034,7 @@ namespace Win32xx
 		// We use double buffering and regions to eliminate flicker
 
 		BOOL RTL = FALSE;
-#ifdef WS_EX_LAYOUTRTL
+#if (WINVER >= 0x0500)
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 

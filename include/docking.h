@@ -759,7 +759,7 @@ namespace Win32xx
 		rcClose.right = rc.right - gap;
 		rcClose.left = rcClose.right - cx;
 
-#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 		{
 			rcClose.left = rc.left + gap;
@@ -1189,7 +1189,7 @@ namespace Win32xx
 		if (dwStyle & DS_CLIENTEDGE)
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
 
-#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 		if (m_pDock->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 			cs.dwExStyle |= WS_EX_LAYOUTRTL;
 #endif
@@ -1295,7 +1295,7 @@ namespace Win32xx
 		assert(pDockDrag);
 
 		BOOL RTL = FALSE;
-#ifdef WS_EX_LAYOUTRTL
+#if (WINVER >= 0x0500)
 		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
@@ -2825,7 +2825,7 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(pcs);
 
-#if defined(WINVER) && defined (WS_EX_LAYOUTRTL) && (WINVER >= 0x0500)
+#if (WINVER >= 0x0500)
 		if (GetParent()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 		{
 			DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
