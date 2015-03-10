@@ -902,7 +902,7 @@ namespace Win32xx
 		// Declare an iterator to step through the vector
 		std::vector<ResizeData>::iterator iter;
 
-    	for (iter = m_vResizeData.begin(); iter < m_vResizeData.end(); ++iter)
+    	for (iter = m_vResizeData.begin(); iter != m_vResizeData.end(); ++iter)
     	{
     		int left   = 0;
     		int top    = 0;

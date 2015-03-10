@@ -916,11 +916,12 @@ namespace Win32xx
 		}
 
 		// Add the resource IDs to the m_vMenuIcons vector
-		for (UINT j = 0 ; j < MenuData.size(); ++j)
+		std::vector<UINT>::const_iterator iter;
+		for (iter = MenuData.begin(); iter != MenuData.end(); ++iter)
 		{
-			if (MenuData[j] != 0)
+			if ((*iter) != 0)
 			{
-				m_vMenuIcons.push_back(MenuData[j]);
+				m_vMenuIcons.push_back(*iter);
 			}
 		}
 

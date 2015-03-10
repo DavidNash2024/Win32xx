@@ -826,7 +826,7 @@ namespace Win32xx
 	{
 		// This method is supported by the Borland 5.5 compiler
 		tString::iterator iter;
-		for (iter = m_str.begin(); iter < m_str.end(); ++iter)
+		for (iter = m_str.begin(); iter != m_str.end(); ++iter)
 		{
 			if (!_istspace(*iter))
 				break;

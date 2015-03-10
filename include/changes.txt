@@ -44,11 +44,13 @@ Added CDC::GetMiterLimit
 Added CDC::GetNearestColor
 Added CDC::GetPolyFillMode 
 Added CDC::GetROP2
+Added CDC::GetStockObject
 Added CDC::GradientFill
 Added CDC::MaskBlt
 Added CDC::RestoreDC
 Added CDC::SaveDC
 Added CDC::SelectClipPath
+Added CDC::SelectStockObject
 Added CDC::SetColorAdjustment 
 Added CDC::SetMapperFlags
 Added CDC::SetMiterLimit
@@ -56,7 +58,6 @@ Added CDC::SetPolyFillMode
 Added CDC::TransparentBlt
 Added CDC::UpdateColors
 Added CDC::WidenPath
-
 
 
 Version 7.7

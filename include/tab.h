@@ -115,7 +115,7 @@ namespace Win32xx
 		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
-		std::vector <TabPageInfo>* GetAllTabs() const { return (std::vector <TabPageInfo>*) &m_vTabPageInfo; }
+		std::vector<TabPageInfo>* GetAllTabs() const { return (std::vector <TabPageInfo>*) &m_vTabPageInfo; }
 		CImageList* GetODImageList() const	{ return const_cast<CImageList*>(&m_imlODTab); }
 		CFont* GetTabFont() const		{ return const_cast<CFont*>(&m_TabFont); }
 		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }

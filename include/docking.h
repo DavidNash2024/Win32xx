@@ -1859,11 +1859,11 @@ namespace Win32xx
 	{
 		GetDockBar()->Destroy();
 
-		std::vector <DockPtr>::iterator iter;
+		std::vector<DockPtr>::iterator iter;
 		if (GetDockAncestor() == this)
 		{
 			// Destroy all dock descendants of this dock ancestor
-			for (iter = GetAllDockChildren()->begin(); iter < GetAllDockChildren()->end(); ++iter)
+			for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); ++iter)
 			{
 				(*iter)->Destroy();
 			}
@@ -2094,7 +2094,7 @@ namespace Win32xx
 		{
 			std::vector<ContainerInfo> AllContainers = *GetContainer()->GetAllContainers();
 			std::vector<ContainerInfo>::iterator iter;
-			for (iter = AllContainers.begin(); iter < AllContainers.end(); ++iter)
+			for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 			{
 				if (GetContainer() != (*iter).pContainer)
 					GetContainer()->RemoveContainer((*iter).pContainer);
@@ -2377,7 +2377,7 @@ namespace Win32xx
 
 	inline CDocker* CDocker::GetDockFromID(int n_DockID) const
 	{
-		std::vector <DockPtr>::iterator v;
+		std::vector<DockPtr>::iterator v;
 
 		if (GetDockAncestor())
 		{
@@ -2524,7 +2524,7 @@ namespace Win32xx
 		if (GetDockAncestor() == pWnd) return TRUE;
 
 		std::vector<DockPtr>::iterator iter;
-		for (iter = GetAllDockChildren()->begin(); iter < GetAllDockChildren()->end(); ++iter)
+		for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); ++iter)
 		{
 			if ((*iter).get() == pWnd) return TRUE;
 		}
@@ -2573,7 +2573,7 @@ namespace Win32xx
 
 			// Add dockers without parents first
 			std::vector<DockInfo>::iterator iter;
-			for (iter = vDockList.begin(); iter < vDockList.end() ; ++iter)
+			for (iter = vDockList.begin(); iter != vDockList.end() ; ++iter)
 			{
 				DockInfo di = (*iter);
 				if (di.DockParentID == 0)
@@ -2606,7 +2606,7 @@ namespace Win32xx
 			while (vDockList.size() > 0)
 			{
 				bool bFound = false;
-				for (iter = vDockList.begin(); iter < vDockList.end(); ++iter)
+				for (iter = vDockList.begin(); iter != vDockList.end(); ++iter)
 				{
 					DockInfo di = *iter;
 					CDocker* pDockParent = GetDockFromID(di.DockParentID);
@@ -2729,7 +2729,7 @@ namespace Win32xx
 
 		// Transfer any dock children from the current docker to the target docker
 		std::vector<CDocker*>::iterator iter;
-		for (iter = GetDockChildren()->begin(); iter < GetDockChildren()->end(); ++iter)
+		for (iter = GetDockChildren()->begin(); iter != GetDockChildren()->end(); ++iter)
 		{
 			pDockTarget->GetDockChildren()->push_back(*iter);
 			(*iter)->m_pDockParent = pDockTarget;
@@ -2873,7 +2873,7 @@ namespace Win32xx
 
 		// Destroy any dock children first
 		std::vector<CDocker*>::iterator iter;
-		for (iter = GetDockChildren()->begin(); iter < GetDockChildren()->end(); ++iter)
+		for (iter = GetDockChildren()->begin(); iter != GetDockChildren()->end(); ++iter)
 		{
 			(*iter)->Destroy();
 		}
@@ -2915,7 +2915,7 @@ namespace Win32xx
 
 		assert( this == GetDockAncestor() );
 		std::vector<DockPtr>::iterator iter;
-		for (iter = GetAllDockChildren()->begin(); iter < GetAllDockChildren()->end(); ++iter)
+		for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); ++iter)
 		{
 			if ((*iter).get() == pDock)
 			{
@@ -2924,7 +2924,7 @@ namespace Win32xx
 			}
 		}
 
-		std::vector <CDocker*> *pDockers = GetDockAncestor()->GetAllDockers();
+		std::vector<CDocker*> *pDockers = GetDockAncestor()->GetAllDockers();
 		for (std::vector<CDocker*>::iterator it = pDockers->begin(); it < pDockers->end(); ++it)
 		{
 			if ((*it) == pDock)
@@ -3130,7 +3130,7 @@ namespace Win32xx
 
 			// Set the splitter bar colour for each docker descendant
 			std::vector<DockPtr>::iterator iter;
-			for (iter = GetAllDockChildren()->begin(); iter < GetAllDockChildren()->end(); ++iter)
+			for (iter = GetAllDockChildren()->begin(); iter != GetAllDockChildren()->end(); ++iter)
 				(*iter)->SetBarColor(rgbColour);
 
 			// Set the splitter bar colour for the docker ancestor
@@ -3257,7 +3257,7 @@ namespace Win32xx
 		// Step 1: Calculate the position of each Docker child, DockBar, and Client window.
 		//   The Client area = the docker rect minus the area of dock children and the dock bar (splitter bar).
 		std::vector<CDocker*>::iterator iter;
-		for (iter = m_vDockChildren.begin(); iter < m_vDockChildren.end(); ++iter)
+		for (iter = m_vDockChildren.begin(); iter != m_vDockChildren.end(); ++iter)
 		{
 			CRect rcChild = rc;
 			double DockSize = (*iter)->m_DockStartSize;
@@ -3476,7 +3476,7 @@ namespace Win32xx
 				RegDeleteKey(hKey, _T("Dock Windows"));
 
 				// Fill the DockInfo vector with the docking information
-				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
+				for (iter = vSorted.begin(); iter !=  vSorted.end(); ++iter)
 				{
 					DockInfo di;
 					ZeroMemory(&di, sizeof(DockInfo));
@@ -3507,7 +3507,7 @@ namespace Win32xx
 
 				// Add dock container info to the registry
 				UINT u1 = 0;
-				for (iter = vSorted.begin(); iter <  vSorted.end(); ++iter)
+				for (iter = vSorted.begin(); iter != vSorted.end(); ++iter)
 				{
 					CDockContainer* pContainer = (*iter)->GetContainer();
 
@@ -3708,7 +3708,7 @@ namespace Win32xx
 			std::vector<CDocker*>::iterator iter;
 			std::vector<CDocker*>& vChild = m_pDockParent->m_vDockChildren;
 
-			for (iter = vChild.begin(); iter < vChild.end(); ++iter)
+			for (iter = vChild.begin(); iter != vChild.end(); ++iter)
 			{
 				if ((*iter) == this)
 				{
@@ -3743,7 +3743,7 @@ namespace Win32xx
 			else
 			{
 				std::vector<CDocker*>::iterator iter;
-				for (iter = GetDockChildren()->begin() + 1; iter < GetDockChildren()->end(); ++iter)
+				for (iter = GetDockChildren()->begin() + 1; iter != GetDockChildren()->end(); ++iter)
 					(*iter)->ShowWindow(SW_HIDE);
 
 				pDockFirstChild->ConvertToPopup(GetWindowRect());

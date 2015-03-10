@@ -490,6 +490,10 @@ namespace Win32xx
 		LOGPEN GetLogPen() const;
 		CPen* SelectObject(const CPen* pPen);
 
+		// Retrieve and Select Stock Objects
+		HGDIOBJ GetStockObject(int nIndex) const;
+		HGDIOBJ SelectStockObject(int nIndex);
+
 		// Create Regions
 		int CreateRectRgn(int left, int top, int right, int bottom);
 		int CreateRectRgnIndirect(const RECT& rc);
@@ -3184,6 +3188,27 @@ namespace Win32xx
 		assert(pPen);
 
 		return CPen::FromHandle( (HPEN)::SelectObject(m_pData->hDC, *pPen) );
+	}
+
+	// Retrieve and Select Stock Objects
+	inline HGDIOBJ CDC::GetStockObject(int nIndex) const
+	// Retrieves a stock brush, pen, or font into the device context.
+	// nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
+	//                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,
+	//                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT.
+	{
+		return ::GetStockObject(nIndex);
+	}
+
+	inline HGDIOBJ CDC::SelectStockObject(int nIndex)
+	// Selects a stock brush, pen, or font into the device context.
+	// nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
+	//                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,
+	//                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT. 
+	{
+		assert(m_pData->hDC);
+		HGDIOBJ hStockObject = ::GetStockObject(nIndex);
+		return ::SelectObject(m_pData->hDC, hStockObject);
 	}
 
 	// Region functions

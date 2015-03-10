@@ -159,7 +159,7 @@ namespace Win32xx
 		virtual BOOL RemoveAllMDIChildren();
 
 		// These functions aren't virtual, so don't override them
-		std::vector <MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
+		std::vector<MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
 		void MDICascade(int nType = 0) const;
 		void MDIIconArrange() const;
 		void MDIMaximize() const;
@@ -188,7 +188,7 @@ namespace Win32xx
 		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		void UpdateFrameMenu(CMenu* pMenu);
 
-		std::vector <MDIChildPtr> m_vMDIChild;
+		std::vector<MDIChildPtr> m_vMDIChild;
 		CDockMDIClient m_DockMDIClient;
 		HWND m_hActiveMDIChild;
 	};
@@ -247,7 +247,7 @@ namespace Win32xx
 		int nWindow = 0;
 
 		// Allocate an iterator for our MDIChild vector
-		std::vector <MDIChildPtr>::iterator v;
+		std::vector<MDIChildPtr>::iterator v;
 
 		for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
 		{
@@ -484,7 +484,7 @@ namespace Win32xx
 	inline void CMDIFrame::RemoveMDIChild(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
-		std::vector <MDIChildPtr>::iterator v;
+		std::vector<MDIChildPtr>::iterator v;
 
 		for (v = m_vMDIChild.begin(); v!= m_vMDIChild.end(); ++v)
 		{

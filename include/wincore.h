@@ -1035,7 +1035,7 @@ namespace Win32xx
 		// These maps contain smart pointers, so clearing them calls the destructor
 		// on their contents.
 		std::vector<TLSDataPtr>::iterator iter;
-		for (iter = m_vTLSData.begin(); iter < m_vTLSData.end(); ++iter)
+		for (iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
 		{
 			(*iter)->TmpDCs.clear();
 			(*iter)->vTmpDCs.clear();

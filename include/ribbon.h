@@ -414,7 +414,7 @@ namespace Win32xx
 		
 		if (psa != NULL)
 		{
-			for (iter = FileNames.begin(); iter < FileNames.end(); ++iter)
+			for (iter = FileNames.begin(); iter != FileNames.end(); ++iter)
 			{
 				CString strCurrentFile = (*iter);
 				WCHAR wszCurrentFile[MAX_PATH] = {0L};
