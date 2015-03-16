@@ -1,5 +1,5 @@
-// Win32++   Version 7.7.1
-// Release Date: TBA
+﻿// Win32++   Version 7.8
+// Release Date: 17th March 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -115,8 +115,8 @@
 #include <commctrl.h>
 #include <stdio.h>
 #include <tchar.h>
-#include <shlwapi.h>
 #ifndef _WIN32_WCE
+  #include <shlwapi.h>
   #include <process.h>
 #endif
 #include "shared_ptr.h"
@@ -221,9 +221,6 @@ namespace Win32xx
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
-
-	// tStringStream is a TCHAR std::stringstream
-	typedef std::basic_stringstream<TCHAR> tStringStream;
 
 	// Some useful smart pointers
 	typedef Shared_Ptr<CDC> DCPtr;

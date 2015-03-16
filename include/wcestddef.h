@@ -5,7 +5,7 @@
 #pragma comment(linker, "/nodefaultlib:libcd.lib")
 
 
-#include <ceconfig.h>
+//#include <ceconfig.h>
 #if defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP)
   #define SHELL_AYGSHELL
 #endif

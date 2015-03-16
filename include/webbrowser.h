@@ -1,5 +1,5 @@
-// Win32++   Version 7.7.1
-// Release Date: TBA
+// Win32++   Version 7.8
+// Release Date: 17th March 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -204,8 +204,8 @@ namespace Win32xx
 
 	private:
 		UINT	GetPidlLength(LPITEMIDLIST pidl);
-		CAXWindow	m_AXContainer;		// The ActiveX Container
-		IWebBrowser2*	m_pIWebBrowser2;// Interface to the ActiveX web browser control
+		CAXWindow	  m_AXContainer;	// The ActiveX Container
+		IWebBrowser2* m_pIWebBrowser2;	// Interface to the ActiveX web browser control
 	};
 
 }

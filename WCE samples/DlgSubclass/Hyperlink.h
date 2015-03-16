@@ -30,7 +30,7 @@ private:
 	COLORREF m_crVisited;
 	COLORREF m_crNotVisited;
 	HCURSOR m_hCursor;
-	HFONT	m_hUrlFont;
+	CFont	m_UrlFont;
 };
 
 #endif // HYPERLINK_H

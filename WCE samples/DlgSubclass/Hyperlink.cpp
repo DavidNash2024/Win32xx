@@ -4,7 +4,7 @@
 #include "Hyperlink.h"
 
 CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
-                            m_crNotVisited(RGB(0,0,255)), m_hUrlFont(NULL)
+                            m_crNotVisited(RGB(0,0,255))
 {
 	// Create the cursor
 	m_hCursor = ::LoadCursor(NULL, IDC_HAND);
@@ -16,18 +16,16 @@ CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(
 
 CHyperlink::~CHyperlink()
 {
-	if (m_hUrlFont)  ::DeleteObject(m_hUrlFont);
 }
 
 BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd* pParent)
 {
 	BOOL bSuccess = CWnd::AttachDlgItem(nID, pParent);;
 
-	LOGFONT lf;
-	m_hUrlFont = (HFONT)::SendMessage( m_hWnd, WM_GETFONT, 0L, 0L);
-	::GetObject(m_hUrlFont, sizeof(LOGFONT), &lf);
+	CFont* pFont = GetFont();
+	LOGFONT lf = pFont->GetLogFont();
 	lf.lfUnderline = TRUE;
-	m_hUrlFont = ::CreateFontIndirect(&lf);
+	m_UrlFont.CreateFontIndirect(&lf);
 
 	return bSuccess;
 }
@@ -81,11 +79,12 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
 	if (uMsg ==  WM_CTLCOLORSTATIC)
 	{
-		HDC hDC = (HDC)wParam;
+		CDC dc((HDC)wParam);
 
-		::SetTextColor(hDC, m_bUrlVisited? m_crVisited : m_crNotVisited);
-		::SetBkMode(hDC, TRANSPARENT);
-		::SelectObject(hDC, m_hUrlFont);
+		dc.SetTextColor(m_bUrlVisited? m_crVisited : m_crNotVisited);
+		dc.SetBkMode(TRANSPARENT);
+		dc.SelectObject(&m_UrlFont);
+		dc.Detach();
 		return (LRESULT)::GetSysColorBrush(COLOR_BTNFACE);
 	}
 	return 0L;

@@ -1,5 +1,5 @@
-// Win32++   Version 7.7.1
-// Release Date: TBA
+// Win32++   Version 7.8
+// Release Date: 17th March 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -671,8 +671,6 @@ namespace Win32xx
 
   #endif // #ifndef _WIN32_WCE
 
-  #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
-
 	inline void LoadCommonControls()
 	{
 		HMODULE hComCtl = 0;
@@ -684,18 +682,22 @@ namespace Win32xx
 			if (hComCtl == 0)
 				throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
-			if (GetComCtlVersion() > 470)
-			{
-				// Declare a pointer to the InItCommonControlsEx function
-				typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
-				INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+			// Declare a pointer to the InItCommonControlsEx function
+			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
+#ifdef _WIN32_WCE
+			INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
+#else
+			INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+#endif
+
+			if (pfnInit)
+			{
 				// Load the full set of common controls
 				INITCOMMONCONTROLSEX InitStruct;
 				ZeroMemory(&InitStruct, sizeof(INITCOMMONCONTROLSEX));
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-				InitStruct.dwICC = ICC_COOL_CLASSES|ICC_DATE_CLASSES|ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|
-							ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES|ICC_WIN95_CLASSES;
+				InitStruct.dwICC = 0xffff;
 
 				// Call InitCommonControlsEx
 				if(!((*pfnInit)(&InitStruct)))
@@ -703,7 +705,15 @@ namespace Win32xx
 			}
 			else
 			{
-				::InitCommonControls();
+				typedef BOOL WINAPI INIT();
+
+#ifdef _WIN32_WCE
+				INIT* pfnInit = (INIT*)::GetProcAddress(hComCtl, _T("InitCommonControls"));
+#else
+				INIT* pfnInit = (INIT*)::GetProcAddress(hComCtl, "InitCommonControls");
+#endif
+
+				(*pfnInit)();
 			}
 
 			::FreeLibrary(hComCtl);
@@ -718,16 +728,6 @@ namespace Win32xx
 			throw;
 		}
 	}
-
-  #else
-
-	inline void LoadCommonControls()
-	{
-		//  For WinCE
-		::InitCommonControls();		
-	}
-
-  #endif
 
 
   // Required for WinCE

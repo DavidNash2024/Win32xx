@@ -1,5 +1,5 @@
-// Win32++   Version 7.7.1
-// Release Date: TBA
+// Win32++   Version 7.8
+// Release Date: 17th March 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -210,7 +210,6 @@ namespace Win32xx
 
 		if (INVALID_HANDLE_VALUE == m_hFile)
 		{
-			TRACE("Failed\n");
 			m_hFile = 0;
 		}
 

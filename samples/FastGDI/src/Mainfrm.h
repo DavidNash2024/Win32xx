@@ -17,6 +17,8 @@ public:
 	virtual ~CMainFrame();
 	CView& GetMyView() {return m_MyView;}
 	void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray);
+	BOOL LoadFile(CString& FileName);
+	void SaveFile(CString& str);
 
 protected:
 	virtual void OnAdjustImage();

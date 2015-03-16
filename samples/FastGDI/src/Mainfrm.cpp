@@ -32,7 +32,7 @@ void CMainFrame::OnAdjustImage()
 	if (GetMyView().GetImage())
 	{
 		// Initiate the Colour Adjust Dialog
-		CColourDialog Dialog(IDD_DIALOG1);
+		CColourDialog Dialog(IDD_DIALOG1, GetMyView().GetImage());
 		Dialog.DoModal();
 	}
 	else
@@ -41,11 +41,11 @@ void CMainFrame::OnAdjustImage()
 
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 {
-	CBitmap* pBitmap = CBitmap::FromHandle(GetMyView().GetImage());
-	pBitmap->TintBitmap(cRed, cGreen, cBlue);
+	GetMyView().GetImage().TintBitmap(cRed, cGreen, cBlue);
+	
 	if (bGray)
 	{
-		pBitmap->GrayScaleBitmap();
+		GetMyView().GetImage().GrayScaleBitmap();
 	}
 
 	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
@@ -102,7 +102,7 @@ void CMainFrame::OnFileNew()
 	CToolBar* pTB = GetToolBar();
 	pTB->DisableButton(IDM_FILE_SAVEAS);
 	pTB->DisableButton(IDM_IMAGE_ADJUST);
-	GetMyView().FileOpen(NULL);
+	GetMyView().LoadFileImage(NULL);
 	GetMyView().ShowScrollBar(SB_BOTH, FALSE);
 	GetMyView().Invalidate();
 
@@ -110,18 +110,16 @@ void CMainFrame::OnFileNew()
 	SetWindowText(_T("FastGDI"));
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::LoadFile(CString& FileName)
 {
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), this);
-	if (!str.IsEmpty())
-	{
-		// Load the bitmap
-		m_MyView.FileOpen(str);
+	// Load the bitmap
+	BOOL IsFileLoaded = m_MyView.LoadFileImage(FileName);
 
+	if (IsFileLoaded)
+	{
 		// Save the filename
-		m_PathName = str;
-		AddMRUEntry(str);
+		m_PathName = FileName;
+		AddMRUEntry(FileName);
 
 		// Turn on the ToolBar adjust button
 		CToolBar* pTB = GetToolBar();
@@ -143,6 +141,18 @@ void CMainFrame::OnFileOpen()
 		CString str = _T("FastGDI - ") + m_PathName;
 		SetWindowText(str);
 	}
+
+	return IsFileLoaded;
+}
+
+void CMainFrame::OnFileOpen()
+{
+	CFile File;
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), this);
+	if (!str.IsEmpty())
+	{
+		LoadFile(str);
+	}
 }
 
 BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
@@ -153,7 +163,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	CString strMRUText = GetMRUEntry(nMRUIndex);
 	CToolBar* pTB = GetToolBar();
 
-	if (m_MyView.FileOpen(strMRUText))
+	if (m_MyView.LoadFileImage(strMRUText))
 	{
 		m_PathName = strMRUText;
 		pTB->EnableButton(IDM_FILE_SAVEAS);
@@ -188,28 +198,22 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::OnFileSave()
 {
-	if (!m_PathName.IsEmpty())
-	{
-		CString str = m_PathName + _T("  already exists.\nDo you want to replace it?");
-
-		if (IDYES == MessageBox(str, _T("FileSaveAs"), MB_YESNO | MB_ICONWARNING))
-			m_MyView.FileSave(m_PathName);
-	}
+	SaveFile(m_PathName);
 }
 
 void CMainFrame::OnFileSaveAs()
 {
 	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), _T("bmp"), 0);
+	CString str = File.SaveFileDialog(0, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), _T("bmp"), 0);
+
 	if (!str.IsEmpty())
 	{
-		// Set the caption
-		m_PathName = str;
-		CString Title = _T("FastGDI - ") + m_PathName;
-		SetWindowText(Title);
+		CString str1 = str.Right(4);
+		str1.MakeLower();
+		if (str1 != _T(".bmp")) 
+			str += _T(".bmp");
 
-		// Save the file name
-		m_MyView.FileSave(str);
+		SaveFile(str);
 	}
 }
 
@@ -237,6 +241,32 @@ inline void CMainFrame::OnMenuUpdate(UINT nID)
 	case IDM_IMAGE_ADJUST:
 		GetFrameMenu()->EnableMenuItem(IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
+	}
+}
+
+void CMainFrame::SaveFile(CString& str)
+{
+	CFile File;
+	bool DoSave = TRUE;
+
+	if (File.Open(str, OPEN_EXISTING))
+	{
+		if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + str, MB_YESNO | MB_ICONWARNING))
+			DoSave = FALSE;
+	}
+
+	if (DoSave)
+	{
+		m_PathName = str;
+		
+		// Set the caption
+		CString Title = _T("FastGDI - ") + m_PathName;
+		SetWindowText(Title);		
+		
+		// Save the file
+		m_MyView.SaveFileImage(str);
+		AddMRUEntry(str);
+		TRACE("File Saved\n");
 	}
 }
 

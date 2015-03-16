@@ -14,9 +14,9 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
-	virtual BOOL FileOpen(LPCTSTR szFilename);
-	virtual BOOL FileSave(LPCTSTR pszFile);
-	HBITMAP GetImage() {return m_bmImage;}
+	virtual BOOL LoadFileImage(LPCTSTR szFilename);
+	virtual BOOL SaveFileImage(LPCTSTR pszFile);
+	CBitmap& GetImage() {return m_bmImage;}
 	virtual CRect GetImageRect();
 
 protected:

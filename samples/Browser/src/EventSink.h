@@ -40,8 +40,8 @@ public:
 	STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
 
 private:
-	ULONG		m_cRefs;		// ref count
-	CMainFrame*	m_pSink;		// Send the notifications here
+	ULONG		m_cRefs;	// ref count
+	CMainFrame*	m_pSink;	// Send the notifications here
 };
 
 #endif // EVENTSINK_H

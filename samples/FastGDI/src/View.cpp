@@ -16,7 +16,7 @@ CView::~CView()
 {
 }
 
-BOOL CView::FileOpen(LPCTSTR szFilename)
+BOOL CView::LoadFileImage(LPCTSTR szFilename)
 {
 	// Only bitmap images (bmp files) can be loaded
 	
@@ -29,7 +29,7 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 	return (m_bmImage.GetHandle()!= 0);
 }
 
-BOOL CView::FileSave(LPCTSTR pszFile)
+BOOL CView::SaveFileImage(LPCTSTR pszFile)
  {
 	 CFile File;
 	 BOOL bResult = FALSE;
@@ -69,7 +69,7 @@ BOOL CView::FileSave(LPCTSTR pszFile)
 CRect CView::GetImageRect()
 {
 	BITMAP bm;
-	::GetObject(m_bmImage, sizeof(BITMAP), &bm);
+	m_bmImage.GetObject(sizeof(BITMAP), &bm);
 
 	CRect rc;
 	rc.right = bm.bmWidth;
@@ -85,9 +85,8 @@ void CView::OnDraw(CDC* pDC)
 		// We have an image, so display it
 		CMemDC memDC(pDC);
 		CRect rcView = GetClientRect();
-		CBitmap* pOldBitmap = memDC.SelectObject(&m_bmImage);
+		memDC.SelectObject(&m_bmImage);
 		pDC->BitBlt(0, 0, rcView.Width(), rcView.Height(), &memDC, m_xCurrentScroll, m_yCurrentScroll, SRCCOPY);
-		memDC.SelectObject(pOldBitmap);
 	}
 	else
 	{
@@ -110,16 +109,11 @@ LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
 		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
 		FileName.ReleaseBuffer();
 		DragFinish(hDrop);
-		
-		if ( FileOpen(FileName) )
-		{
-			CRect rcImage = GetImageRect();
-			CMainFrame* pFrame = GetFrameApp()->GetMainFrame();
-			assert(pFrame);
-			pFrame->AdjustFrameRect(rcImage);
-			TRACE("Loaded file "); TRACE(FileName); TRACE("\n");
-		}
-		else
+
+		CMainFrame* pFrame = GetFrameApp()->GetMainFrame();
+		assert(pFrame);
+
+		if ( !pFrame->LoadFile(FileName) )	
 		{
 			TRACE ("Failed to load "); TRACE(FileName); TRACE("\n");
 			Invalidate();

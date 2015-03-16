@@ -8,9 +8,9 @@
 class CColourDialog : public CDialog
 {
 public:
-    CColourDialog(UINT nResID);
+    CColourDialog(UINT nResID, CBitmap& bmImage);
     virtual ~CColourDialog();
-	void CreateImagePreviews(HBITMAP hbmImage);
+	void CreateImagePreviews();
 	
 protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
@@ -33,6 +33,7 @@ private:
 	CWnd m_BlueEdit;
 	CWnd m_Preview;
 
+	CBitmap m_bmImage;
 	CBitmap m_bmPreview;
 	CBitmap m_bmPreviewOrig;
 	int m_cRed;

@@ -8,7 +8,7 @@
 #include "resource.h"
 
 
-CColourDialog::CColourDialog(UINT nResID) : CDialog(nResID)
+CColourDialog::CColourDialog(UINT nResID, CBitmap& bmImage) : CDialog(nResID), m_bmImage(bmImage)
 {
 	m_cRed = 0;
 	m_cGreen = 0;
@@ -41,12 +41,14 @@ void CColourDialog::OnGrayScale()
 	{
 		// Copy m_hbmPreviewOrig to m_hbmPreview
 		CMemDC Mem1DC(NULL);
-		CBitmap* pOldBitmap1 = Mem1DC.SelectObject(&m_bmPreviewOrig);
+		Mem1DC.SelectObject(&m_bmPreviewOrig);
 		CMemDC Mem2DC(NULL);
-		CBitmap* pOldBitmap2 = Mem2DC.SelectObject(&m_bmPreview);
-		Mem2DC.BitBlt(0, 0, 239-16, 201-16, &Mem1DC, 0, 0, SRCCOPY);
-		Mem1DC.SelectObject(pOldBitmap1);
-		Mem2DC.SelectObject(pOldBitmap2);
+		Mem2DC.SelectObject(&m_bmPreview);
+		int cx = m_Preview.GetWindowRect().Width();
+		int cy = m_Preview.GetWindowRect().Height();
+		Mem2DC.BitBlt(0, 0, cx, cy, &Mem1DC, 0, 0, SRCCOPY);
+
+		Mem2DC.DetachBitmap();	// Detach bitmap before modifying it
 		m_bmPreview.TintBitmap(m_cRed, m_cGreen, m_cBlue);
 	}
 
@@ -76,7 +78,7 @@ BOOL CColourDialog::OnInitDialog()
 
 	// Create the two image previews
 	m_Preview.AttachDlgItem(IDC_PREVIEW, this);
-	CreateImagePreviews(GetFrameApp()->GetMainFrame()->GetMyView().GetImage());
+	CreateImagePreviews();
 
 	return TRUE;
 }
@@ -94,6 +96,8 @@ INT_PTR CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 {
+	// Processes messages from the slider controls
+
 	UNREFERENCED_PARAMETER(wParam);
 
 	// Update the text for the colour's edit control
@@ -101,11 +105,11 @@ LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 	TCHAR Text[5];
 	wsprintf(Text, _T("%d\0"), nPos);
 
-	if ((HWND)lParam == m_RedSlider.GetHwnd())
+	if ((HWND)lParam == m_RedSlider)
 		m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
-	else if ((HWND)lParam == m_GreenSlider.GetHwnd())
+	else if ((HWND)lParam == m_GreenSlider)
 		m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
-	else if ((HWND)lParam == m_BlueSlider.GetHwnd())
+	else if ((HWND)lParam == m_BlueSlider)
 		m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
 
 	// Store the colour values
@@ -115,14 +119,15 @@ LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 
 	// Copy m_hbmPreviewOrig to m_hbmPreview
 	CMemDC Mem1DC(NULL);
-	CBitmap* pBitmapOld1 = Mem1DC.SelectObject(&m_bmPreviewOrig);
+	Mem1DC.SelectObject(&m_bmPreviewOrig);
 	CMemDC Mem2DC(NULL);
-	CBitmap* pBitmapOld2 = Mem2DC.SelectObject(&m_bmPreview);
-	Mem2DC.BitBlt(0, 0, 239-16, 201-16, &Mem1DC, 0, 0, SRCCOPY);
-	Mem1DC.SelectObject(pBitmapOld1);
-	Mem2DC.SelectObject(pBitmapOld2);
+	Mem2DC.SelectObject(&m_bmPreview);
+	int cx = m_Preview.GetWindowRect().Width();
+	int cy = m_Preview.GetWindowRect().Height();
+	Mem2DC.BitBlt(0, 0, cx, cy, &Mem1DC, 0, 0, SRCCOPY);
 
 	// Update the colour of the preview image
+	Mem2DC.DetachBitmap();	// Detach bitmap before modifying it
 	m_bmPreview.TintBitmap(m_cRed, m_cGreen, m_cBlue);
 
 	if (SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0))
@@ -157,7 +162,7 @@ void CColourDialog::PaintPreview()
 // Displays the bitmap in the display area of our dialog
 {
 	BITMAP bm;
-	::GetObject(m_bmPreview, sizeof(BITMAP), &bm);
+	m_bmPreview.GetObject( sizeof(BITMAP), &bm );
 
 	// Get the size of the destination display area
 	CRect rcView = m_Preview.GetClientRect();
@@ -178,17 +183,16 @@ void CColourDialog::PaintPreview()
 
 	CClientDC dcPreview(this);
 	CMemDC MemDC(&dcPreview);
-	CBitmap* pBitmapOld = MemDC.SelectObject(&m_bmPreview);
+	MemDC.SelectObject(&m_bmPreview);
 	dcPreview.BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, &MemDC, 0, 0, SRCCOPY);
-	MemDC.SelectObject(pBitmapOld);
 }
 
-void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
+void CColourDialog::CreateImagePreviews()
 // Creates the two Preview bitmaps: m_Preview and m_PreviewOrig
 {
 	// Get the size of the bitmap
 	BITMAP bm;
-	::GetObject(hbmImage, sizeof(BITMAP), &bm);
+	m_bmImage.GetObject(sizeof(BITMAP), &bm);
 
 	// Get the size of the destination display area
 	CRect rcView = m_Preview.GetClientRect();
@@ -219,7 +223,7 @@ void CColourDialog::CreateImagePreviews(HBITMAP hbmImage)
 	CClientDC dcDesktop(NULL);
 	m_bmPreview.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
 	m_bmPreviewOrig.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
-	MemDC.SelectObject(CBitmap::FromHandle(hbmImage));
+	MemDC.SelectObject(&m_bmImage);
 	Dest1DC.SelectObject(&m_bmPreview);
 	Dest2DC.SelectObject(&m_bmPreviewOrig);
 
