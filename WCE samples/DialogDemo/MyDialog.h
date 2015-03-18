@@ -13,9 +13,7 @@ public:
 	virtual ~CMyDialog();
 	void AddToEdit();
 	void AddToListBox();
-	void AddToProgressBar();
 	void AddToScrollBars();
-	void AddToSlider();
 	void AddToComboBox();
 	void AddToButton();
 

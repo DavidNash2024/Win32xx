@@ -409,7 +409,7 @@ namespace Win32xx
 	////////////////////////////////////////////////
 	// Declarations of structures for themes
 	//
-	
+
 	// Defines the theme colors for the MenuBar and popup menues.
 	// The popup menu colors are replaced by the Aero theme if available (Vista and above)
 	struct MenuTheme
@@ -421,7 +421,7 @@ namespace Win32xx
 		COLORREF clrPressed2;	// Colour 2 for pressed top menu and side bar
 		COLORREF clrOutline;	// Colour for border outline
 	};
-	
+
 	// Defines the theme colors and options for the ReBar
 	struct ReBarTheme
 	{
@@ -455,8 +455,8 @@ namespace Win32xx
 		COLORREF clrPressed1;	// Colour 1 for pressed button
 		COLORREF clrPressed2;	// Colour 2 for pressed button
 		COLORREF clrOutline;	// Colour for border outline
-	};	
-	
+	};
+
 	////////////////////////////////////////
 	// Global Functions
 	//
@@ -595,7 +595,7 @@ namespace Win32xx
 		return sizeof(NONCLIENTMETRICS);
 	}
 
-	
+
 
 	// A global function to report the state of the left mouse button
 	inline BOOL IsLeftButtonDown()
@@ -673,62 +673,54 @@ namespace Win32xx
 
 	inline void LoadCommonControls()
 	{
-		HMODULE hComCtl = 0;
+		// Load the Common Controls DLL
+		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+		if (hComCtl == 0)
+			hComCtl = ::LoadLibrary(_T("COMMCTRL.DLL"));
 
-		try
+		if (hComCtl)
 		{
-			// Load the Common Controls DLL
-			hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
-			if (hComCtl == 0)
-				throw CWinException(_T("Failed to load COMCTL32.DLL"));
-
-			// Declare a pointer to the InItCommonControlsEx function
+			// Declare a typedef for the InItCommonControlsEx function
 			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
-#ifdef _WIN32_WCE
-			INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
-#else
-			INIT_EX* pfnInit = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
-#endif
+  #ifdef _WIN32_WCE
+			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
+  #else
+			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+  #endif
 
-			if (pfnInit)
+			if (pfnInitEx)
 			{
 				// Load the full set of common controls
 				INITCOMMONCONTROLSEX InitStruct;
 				ZeroMemory(&InitStruct, sizeof(INITCOMMONCONTROLSEX));
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-				InitStruct.dwICC = 0xffff;
+				InitStruct.dwICC = ICC_WIN95_CLASSES|ICC_BAR_CLASSES|ICC_COOL_CLASSES|ICC_DATE_CLASSES;
 
-				// Call InitCommonControlsEx
-				if(!((*pfnInit)(&InitStruct)))
-					throw CWinException(_T("InitCommonControlsEx failed"));
+  #ifndef _WIN32_WCE
+				InitStruct.dwICC |= ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES;
+  #endif
+
+ 				// Call InitCommonControlsEx
+				(*pfnInitEx)(&InitStruct);
 			}
 			else
 			{
+				// Declare a typedef for the InItCommonControls function
 				typedef BOOL WINAPI INIT();
 
-#ifdef _WIN32_WCE
+  #ifdef _WIN32_WCE
 				INIT* pfnInit = (INIT*)::GetProcAddress(hComCtl, _T("InitCommonControls"));
-#else
+  #else
 				INIT* pfnInit = (INIT*)::GetProcAddress(hComCtl, "InitCommonControls");
-#endif
+  #endif
 
 				(*pfnInit)();
 			}
 
 			::FreeLibrary(hComCtl);
 		}
-
-		catch (const CWinException &e)
-		{
-			e.what();
-			if (hComCtl != 0)
-				::FreeLibrary(hComCtl);
-
-			throw;
-		}
 	}
-
 
   // Required for WinCE
   #ifndef lstrcpyn

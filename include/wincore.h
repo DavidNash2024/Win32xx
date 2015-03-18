@@ -1,4 +1,4 @@
-﻿// Win32++   Version 7.8
+// Win32++   Version 7.8
 // Release Date: 17th March 2015
 //
 //      David Nash
@@ -162,7 +162,7 @@
 #define UWM_DRAWRBBKGND      (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
 #define UWM_DRAWSBBKGND      (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.
 #define UWM_GETFRAMEVIEW     (WM_APP + 0x3F05)  // Message - returns the HWND of the frame's view window
-#define UWM_GETMBTHEME       (WM_APP + 0x3F06)	// Message - returns a pointer to MenuBarTheme 
+#define UWM_GETMBTHEME       (WM_APP + 0x3F06)	// Message - returns a pointer to MenuBarTheme
 #define UWM_GETRBTHEME       (WM_APP + 0x3F07)	// Message - returns a pointer to ReBarTheme
 #define UWM_GETSBTHEME       (WM_APP + 0x3F08)	// Message - returns a pointer to StatusBarTheme
 #define UWM_GETTBTHEME       (WM_APP + 0x3F09)  // Message - returns a pointer to ToolBarTheme
@@ -1536,13 +1536,13 @@ namespace Win32xx
 		// Allow the CREATESTRUCT parameters to be modified
 		PreCreate(*m_pcs);
 
-		DWORD dwStyle = m_pcs->style & ~WS_VISIBLE; 
+		DWORD dwStyle = m_pcs->style & ~WS_VISIBLE;
 
 		// Create the window
 #ifndef _WIN32_WCE
 		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, m_pcs->x, m_pcs->y,
 				m_pcs->cx, m_pcs->cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
-		
+
 		if (m_pcs->style & WS_VISIBLE)
 		{
 			if		(m_pcs->style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
@@ -2243,7 +2243,7 @@ namespace Win32xx
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
-				
+
 				// Skip notification reflection for rebars and tabs to avoid double handling
 				CString ClassName = GetClassName();
 				if ( (ClassName != _T("ReBarWindow32")) && (ClassName != _T("SysTabControl32")) )
@@ -2264,7 +2264,7 @@ namespace Win32xx
 				if (lr == 0L) lr = OnNotify(wParam, lParam);
 				if (lr != 0L) return lr;
 				break;
-			}		
+			}
 
 		case WM_PAINT:
 			{

@@ -13,8 +13,5 @@
 #define IDC_LIST1                       104
 #define IDC_SCROLLBAR1                  105
 #define IDC_SCROLLBAR2                  106
-#define IDC_SPIN1                       107
-#define IDC_SLIDER1                     108
-#define IDC_PROGRESS1                   109
 
 #define ID_TIMER                        120

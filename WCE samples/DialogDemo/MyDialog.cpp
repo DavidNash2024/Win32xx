@@ -73,15 +73,6 @@ void CMyDialog::AddToListBox()
 		ListBox_ResetContent(hwListBox); 
 }
 
-void CMyDialog::AddToProgressBar()
-{
-	//get the control window
-	HWND hwProgressBar = ::GetDlgItem(m_hWnd, IDC_PROGRESS1);
-	
-	//set progress bar position
-	SendMessage(hwProgressBar, PBM_SETPOS, (WPARAM)m_nCounter * 10, 0L);
-}
-
 void CMyDialog::AddToScrollBars()
 {
 	//get the control window
@@ -95,15 +86,6 @@ void CMyDialog::AddToScrollBars()
 	//set scroll bar position
 	ScrollBar_SetPos(hwScrollBarH, m_nCounter, TRUE);
 	ScrollBar_SetPos(hwScrollBarV, m_nCounter, TRUE);
-}
-
-void CMyDialog::AddToSlider()
-{
-	//get the control window
-	HWND hwSlider = ::GetDlgItem(m_hWnd, IDC_SLIDER1);
-	
-	//set slider position
-	SendMessage(hwSlider, TBM_SETPOS, TRUE, (WPARAM)m_nCounter * 10);
 }
 
 BOOL CMyDialog::OnInitDialog()
@@ -133,8 +115,6 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		AddToEdit();
 		AddToListBox();
 		AddToScrollBars();
-		AddToProgressBar();
-		AddToSlider();
 		AddToComboBox();
 		AddToButton();
     break;

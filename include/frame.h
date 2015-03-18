@@ -2820,6 +2820,8 @@ namespace Win32xx
 	inline void CFrame::SetFrameMenu(HMENU hMenu)
 	// Sets the frame's menu.
 	{
+		if (m_Menu.GetHandle()) m_Menu.Detach();
+		
 		m_Menu.Attach(hMenu);
 
 		if (IsMenuBarUsed())
