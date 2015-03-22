@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -136,7 +136,7 @@ namespace Win32xx
 		int			GetItemCount() const;
 		BOOL		GetItemRect(int iItem, LPRECT prc) const;
 		int			GetRowCount() const;
-		CToolTip*	GetToolTips() const;
+		HWND		GetToolTips() const;
 		BOOL		HighlightItem(INT idItem, WORD fHighlight) const;
 		int			HitTest(TCHITTESTINFO& info) const;
 		int			InsertItem(int iItem, const LPTCITEM pItem) const;
@@ -231,7 +231,7 @@ namespace Win32xx
 		virtual void SetActiveMDITab(int nTab);
 
 	protected:
-		virtual HWND    Create(CWnd* pParent);
+		virtual HWND    Create(HWND hWndParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void 	OnAttach();
 		virtual void    OnDestroy();
@@ -766,8 +766,8 @@ namespace Win32xx
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWN_TABCHANGED;
 		
-		if (GetParent()->IsWindow())
-			GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+		if (GetParent().IsWindow())
+			GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
 	inline void CTab::NotifyDragged()
@@ -776,7 +776,7 @@ namespace Win32xx
 		ZeroMemory(&nmhdr, sizeof(NMHDR));
 		nmhdr.hwndFrom = m_hWnd;
 		nmhdr.code = UWN_TABDRAGGED;
-		GetParent()->SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
 	inline void CTab::OnAttach()
@@ -998,9 +998,9 @@ namespace Win32xx
 		if (GetActiveView() && !m_IsClosePressed)
 		{
 			// return focus back to the child window that had it before
-			CWnd* pPrevFocus = FromHandle((HWND)wParam);
-			if (IsChild(pPrevFocus))
-				pPrevFocus->SetFocus();				
+			HWND hwndPrevFocus = (HWND)wParam;
+			if (IsChild(hwndPrevFocus))
+				::SetFocus(hwndPrevFocus);				
 		}
 
 		return FinalWindowProc(WM_SETFOCUS, wParam, lParam);
@@ -1328,7 +1328,7 @@ namespace Win32xx
 				if (!m_pActiveView->IsWindow())
 				{
 					// The tab control is already created, so create the new view too
-					GetActiveView()->Create(GetParent());
+					GetActiveView()->Create( GetParent() );
 				}
 
 				// Position the View over the tab control's display area
@@ -1352,10 +1352,9 @@ namespace Win32xx
 			ClientToScreen(pt);
 
 			// Choosing the frame's CWnd for the menu's messages will automatically theme the popup menu
-			CWnd* pFrame = GetAncestor();
 			int nPage = 0;
 			m_IsListMenuActive = TRUE;
-			nPage = GetListMenu()->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, pFrame, NULL) - IDW_FIRSTCHILD;
+			nPage = GetListMenu()->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, GetAncestor(), NULL) - IDW_FIRSTCHILD;
 			if ((nPage >= 0) && (nPage < 9)) SelectPage(nPage);
 			if (nPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;
@@ -1393,7 +1392,7 @@ namespace Win32xx
 			SelectDialog.AddItem((*GetAllTabs())[u].TabText);
 		}
 
-		int iSelected = (int)SelectDialog.DoModal(this);
+		int iSelected = (int)SelectDialog.DoModal(*this);
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 
@@ -1534,11 +1533,11 @@ namespace Win32xx
 		return TabCtrl_GetRowCount(m_hWnd);
 	}
 
-	inline CToolTip* CTab::GetToolTips() const
-	// Retrieves a pointer to the ToolTip control associated with a tab control.
+	inline HWND CTab::GetToolTips() const
+	// Retrieves a handle to the ToolTip control associated with a tab control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return static_cast<CToolTip*>(FromHandle(TabCtrl_GetToolTips(m_hWnd)));
+		return TabCtrl_GetToolTips(m_hWnd);
 	}
 
 	inline BOOL CTab::HighlightItem(INT idItem, WORD fHighlight) const
@@ -1662,7 +1661,7 @@ namespace Win32xx
 
 		// Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
 		if (IsWindow())
-			GetParent()->SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
+			GetParent().SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor().GetHwnd(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
 		return pView.get();
 	}
@@ -1692,13 +1691,12 @@ namespace Win32xx
 			GetActiveMDIChild()->RedrawWindow();
 	}
 
-	inline HWND CTabbedMDI::Create(CWnd* pParent /* = NULL*/)
+	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	{
 		CLIENTCREATESTRUCT clientcreate ;
 		clientcreate.hWindowMenu  = m_hWnd;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
-		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the MDICLIENT view window
 		if (!CreateEx(0, _T("MDICLIENT"), _T(""),
@@ -1842,7 +1840,7 @@ namespace Win32xx
 
 	inline void CTabbedMDI::OnAttach()
 	{
-		GetTab()->Create(this);
+		GetTab()->Create(*this);
 		GetTab()->SetFixedWidth(TRUE);
 		GetTab()->SetOwnerDraw(TRUE);
 	}

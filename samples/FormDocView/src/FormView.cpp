@@ -26,7 +26,7 @@ CFormView::~CFormView()
 
 HWND CFormView::Create(CWnd* pParent = 0)
 {
-	return DoModeless(pParent);
+	return DoModeless(*pParent);
 }
 
 INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

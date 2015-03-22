@@ -76,7 +76,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_BOTTOM));
 
 	// Create the ToolBar
-	m_ToolBar.Create(this);
+	m_ToolBar.Create(*this);
 	m_ToolBar.SetImageList(&m_ToolBarImages);
 
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS
@@ -136,7 +136,7 @@ inline LRESULT CView::OnNotify(WPARAM wParam, LPARAM lParam)
 	switch (pNMHDR->code)
 	{
 	// Pass the ToolBar's ToolTip info up to the frame
-	case TTN_GETDISPINFO: return GetParent()->SendMessage(WM_NOTIFY, wParam, lParam);
+	case TTN_GETDISPINFO: return GetParent().SendMessage(WM_NOTIFY, wParam, lParam);
 	}
 
 	return 0L;

@@ -58,9 +58,9 @@ void CColourDialog::OnGrayScale()
 BOOL CColourDialog::OnInitDialog()
 {
 	// Attach the Trackbar controls to CWnd objects
-	m_RedSlider.AttachDlgItem(IDC_SLIDER_RED, this);
-	m_GreenSlider.AttachDlgItem(IDC_SLIDER_GREEN, this);
-	m_BlueSlider.AttachDlgItem(IDC_SLIDER_BLUE, this);
+	m_RedSlider.AttachDlgItem(IDC_SLIDER_RED, *this);
+	m_GreenSlider.AttachDlgItem(IDC_SLIDER_GREEN, *this);
+	m_BlueSlider.AttachDlgItem(IDC_SLIDER_BLUE, *this);
 
 	// Set Trackbar ranges
 	m_RedSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
@@ -68,16 +68,16 @@ BOOL CColourDialog::OnInitDialog()
 	m_BlueSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
 
 	// Attach the Edit controls to CWnd objects
-	m_RedEdit.AttachDlgItem(IDC_EDIT_RED, this);
-	m_GreenEdit.AttachDlgItem(IDC_EDIT_GREEN, this);
-	m_BlueEdit.AttachDlgItem(IDC_EDIT_BLUE, this);
+	m_RedEdit.AttachDlgItem(IDC_EDIT_RED, *this);
+	m_GreenEdit.AttachDlgItem(IDC_EDIT_GREEN, *this);
+	m_BlueEdit.AttachDlgItem(IDC_EDIT_BLUE, *this);
 
 	m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
 	m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
 	m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
 
 	// Create the two image previews
-	m_Preview.AttachDlgItem(IDC_PREVIEW, this);
+	m_Preview.AttachDlgItem(IDC_PREVIEW, *this);
 	CreateImagePreviews();
 
 	return TRUE;
@@ -166,7 +166,7 @@ void CColourDialog::PaintPreview()
 
 	// Get the size of the destination display area
 	CRect rcView = m_Preview.GetClientRect();
-	m_Preview.MapWindowPoints(this, rcView);
+	m_Preview.MapWindowPoints(*this, rcView);
 
 	int nLeftDest;
 	int nTopDest;
@@ -196,7 +196,7 @@ void CColourDialog::CreateImagePreviews()
 
 	// Get the size of the destination display area
 	CRect rcView = m_Preview.GetClientRect();
-	m_Preview.MapWindowPoints(this, (LPPOINT)&rcView, 2);
+	m_Preview.MapWindowPoints(*this, (LPPOINT)&rcView, 2);
 
 	// Calculate the stretch values, preserving the aspect ratio
 	int nWidthDest;

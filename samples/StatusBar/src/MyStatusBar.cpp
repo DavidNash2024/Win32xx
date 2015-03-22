@@ -14,11 +14,11 @@ void CMyStatusBar::OnAttach()
 	SendMessage(SB_SETBKCOLOR, 0, RGB(125, 230, 255));
 
 	// Create the Hyperlink
-	m_Hyperlink.Create(this);
+	m_Hyperlink.Create(*this);
 	m_Hyperlink.SetWindowPos(NULL, CRect(3,3,100, 20), SWP_SHOWWINDOW);
 
 	// Create the ProgressBar
-	m_ProgressBar.Create(this);
+	m_ProgressBar.Create(*this);
 	CRect rcPart = GetPartRect(1);
 	m_ProgressBar.SetWindowPos(NULL, rcPart, SWP_SHOWWINDOW);
 

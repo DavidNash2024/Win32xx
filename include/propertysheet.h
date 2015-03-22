@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -333,7 +333,7 @@ namespace Win32xx
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
 	{
 		assert(::IsWindow(m_hWnd));
-		return GetParent()->GetDlgItem(iButton)->IsWindowEnabled();
+		return GetParent().GetDlgItem(iButton).IsWindowEnabled();
 	}
 
 	inline int CPropertyPage::OnApply()
@@ -502,8 +502,7 @@ namespace Win32xx
 		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
 			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
 		{
-			CWnd* pWndParent = GetParent();
-			if (pWndParent->SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
+			if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
 				return TRUE;
 		}
 
@@ -524,7 +523,7 @@ namespace Win32xx
 		// Returns the nonzero value from a page in the property sheet, or zero if no page returns a nonzero value.
 
 		assert(::IsWindow(m_hWnd));
-		return GetParent()->SendMessage(PSM_QUERYSIBLINGS, wParam, lParam);
+		return GetParent().SendMessage(PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
 	inline void CPropertyPage::SetModified(BOOL bChanged) const
@@ -534,9 +533,9 @@ namespace Win32xx
 		assert(::IsWindow(m_hWnd));
 
 		if (bChanged)
-			GetParent()->SendMessage(PSM_CHANGED, (WPARAM)m_hWnd, 0L);
+			GetParent().SendMessage(PSM_CHANGED, (WPARAM)m_hWnd, 0L);
 		else
-			GetParent()->SendMessage(PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
+			GetParent().SendMessage(PSM_UNCHANGED, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CPropertyPage::SetTitle(LPCTSTR szTitle)
@@ -595,7 +594,7 @@ namespace Win32xx
 		assert( GetApp() );
 
 		// Find matching CWnd pointer for this HWND
-		CPropertyPage* pPage = static_cast<CPropertyPage*>(FromHandlePermanent(hwndDlg));
+		CPropertyPage* pPage = static_cast<CPropertyPage*>(GetCWndPtr(hwndDlg));
 		if (!pPage)
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
@@ -807,7 +806,7 @@ namespace Win32xx
 		if (m_hWnd != NULL)
 		{
 			HWND hPage = (HWND)SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L);
-			pPage = static_cast<CPropertyPage*>(FromHandlePermanent(hPage));
+			pPage = static_cast<CPropertyPage*>(GetCWndPtr(hPage));
 		}
 
 		return pPage;

@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -368,7 +368,7 @@ namespace Win32xx
 
 		void ClearSel() const;
 		void ClearTics(BOOL bRedraw = FALSE ) const;
-		CWnd* GetBuddy(BOOL fLocation = TRUE ) const;
+		HWND GetBuddy(BOOL fLocation = TRUE ) const;
 		CRect GetChannelRect() const;
 		int  GetLineSize() const;
 		int  GetNumTics() const;
@@ -383,7 +383,7 @@ namespace Win32xx
 		int  GetTic(int nTic ) const;
 		int  GetTicPos(int nTic) const;
 		CToolTip* GetToolTips() const;
-		CWnd* SetBuddy(CWnd* pBuddy, BOOL fLocation = TRUE ) const;
+		HWND SetBuddy(HWND hBuddy, BOOL fLocation = TRUE ) const;
 		int  SetLineSize(int nSize) const;
 		int  SetPageSize(int nSize) const;
 		void SetPos(int nPos, BOOL bRedraw = FALSE) const;
@@ -414,12 +414,12 @@ namespace Win32xx
 
 		int  GetAccel(int cAccels, LPUDACCEL paAccels) const;
 		int  GetBase() const;
-		CWnd* GetBuddy() const;
+		HWND GetBuddy() const;
 		int  GetPos() const;
 		DWORD GetRange() const;
 		BOOL SetAccel(int cAccels, LPUDACCEL paAccels) const;
 		int  SetBase(int nBase) const;
-		CWnd* SetBuddy(CWnd* hwndBuddy) const;
+		HWND SetBuddy(HWND hwndBuddy) const;
 		int  SetPos(int nPos) const;
 		void SetRange(int nLower, int nUpper) const;
 
@@ -1514,11 +1514,11 @@ namespace Win32xx
 		SendMessage(TBM_CLEARTICS, (WPARAM)bRedraw, 0L);
 	}
 
-	inline CWnd* CSlider::GetBuddy(BOOL fLocation) const
+	inline HWND CSlider::GetBuddy(BOOL fLocation) const
 	// Retrieves the handle to the trackbar control buddy window at a given location.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(TBM_GETBUDDY, (WPARAM)fLocation, 0L));
+		return (HWND)SendMessage(TBM_GETBUDDY, (WPARAM)fLocation, 0L);
 	}
 
 	inline CRect CSlider::GetChannelRect() const
@@ -1621,14 +1621,14 @@ namespace Win32xx
 	// Retrieves the handle to the ToolTip control assigned to the trackbar, if any.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(FromHandlePermanent((HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L)));
+		return static_cast<CToolTip*>(GetCWndPtr((HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L)));
 	}
 
-	inline CWnd* CSlider::SetBuddy(CWnd* pBuddy, BOOL fLocation /*= TRUE*/ ) const
+	inline HWND CSlider::SetBuddy(HWND hBuddy, BOOL fLocation /*= TRUE*/ ) const
 	// Assigns a window as the buddy window for the trackbar control.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(TBM_SETBUDDY, (WPARAM)fLocation, (LPARAM)pBuddy->GetHwnd()));
+		return (HWND)SendMessage(TBM_SETBUDDY, (WPARAM)fLocation, (LPARAM)hBuddy);
 	}
 
 	inline int  CSlider::SetLineSize(int nSize) const
@@ -1721,11 +1721,11 @@ namespace Win32xx
 		return (int)SendMessage(UDM_GETBASE, 0L, 0L);
 	}
 
-	inline CWnd* CSpinButton::GetBuddy() const
+	inline HWND CSpinButton::GetBuddy() const
 	// Retrieves the handle to the current buddy window.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(UDM_GETBUDDY, 0L, 0L));
+		return (HWND)SendMessage(UDM_GETBUDDY, 0L, 0L);
 	}
 
 	inline int CSpinButton::GetPos() const
@@ -1766,11 +1766,11 @@ namespace Win32xx
 		return (int)SendMessage(UDM_SETBASE, (WPARAM)nBase, 0L);
 	}
 
-	inline CWnd* CSpinButton::SetBuddy(CWnd* pBuddy) const
+	inline HWND CSpinButton::SetBuddy(HWND hBuddy) const
 	// Sets the buddy window for the up-down control.
 	{
 		assert(IsWindow());
-		return FromHandle((HWND)SendMessage(UDM_SETBUDDY, (WPARAM)pBuddy->GetHwnd(), 0L));
+		return (HWND)SendMessage(UDM_SETBUDDY, (WPARAM)hBuddy, 0L);
 	}
 
 	inline int CSpinButton::SetPos(int nPos) const

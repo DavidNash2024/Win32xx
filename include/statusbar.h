@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -147,7 +147,7 @@ namespace Win32xx
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to suppress default background drawing.
-		return (TRUE == GetParent()->SendMessage(UWM_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
+		return (TRUE == GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
 
 	inline void CStatusBar::PreCreate(CREATESTRUCT &cs)

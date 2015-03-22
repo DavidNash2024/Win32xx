@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -139,8 +139,8 @@ namespace Win32xx
 		BOOL LoadMenuIndirect(const void* lpMenuTemplate);
 
 		//Menu Operations
-		BOOL TrackPopupMenu(UINT uFlags, int x, int y, CWnd* pWnd, LPCRECT lpRect = 0);
-		BOOL TrackPopupMenuEx(UINT uFlags, int x, int y, CWnd* pWnd, LPTPMPARAMS lptpm);
+		BOOL TrackPopupMenu(UINT uFlags, int x, int y, HWND hWnd, LPCRECT lpRect = 0);
+		BOOL TrackPopupMenuEx(UINT uFlags, int x, int y, HWND hWnd, LPTPMPARAMS lptpm);
 
 		//Menu Item Operations
 		BOOL AppendMenu(UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
@@ -696,21 +696,19 @@ namespace Win32xx
 		return ::SetMenuItemInfo(m_pData->hMenu, uItem, fByPos, lpMenuItemInfo);
 	}
 		
-	inline BOOL CMenu::TrackPopupMenu(UINT uFlags, int x, int y, CWnd* pWnd, LPCRECT lpRect /*= 0*/)
+	inline BOOL CMenu::TrackPopupMenu(UINT uFlags, int x, int y, HWND hWnd, LPCRECT lpRect /*= 0*/)
 	// Displays a shortcut menu at the specified location and tracks the selection of items on the menu.
 	{
 		assert(m_pData);
 		assert(IsMenu(m_pData->hMenu));
-		HWND hWnd = pWnd? pWnd->GetHwnd() : 0;
 		return ::TrackPopupMenu(m_pData->hMenu, uFlags, x, y, 0, hWnd, lpRect);
 	}
 
-	inline BOOL CMenu::TrackPopupMenuEx(UINT uFlags, int x, int y, CWnd* pWnd, LPTPMPARAMS lptpm)
+	inline BOOL CMenu::TrackPopupMenuEx(UINT uFlags, int x, int y, HWND hWnd, LPTPMPARAMS lptpm)
 	// Displays a shortcut menu at the specified location and tracks the selection of items on the shortcut menu.
 	{
 		assert(m_pData);
 		assert(IsMenu(m_pData->hMenu));
-		HWND hWnd = pWnd? pWnd->GetHwnd() : 0;
 		return ::TrackPopupMenuEx(m_pData->hMenu, uFlags, x, y, hWnd, lptpm);
 	}
 

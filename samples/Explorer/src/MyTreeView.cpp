@@ -88,11 +88,11 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 						cm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
 						UINT idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON ,
-							ptScreen.x, ptScreen.y, this, NULL);
+							ptScreen.x, ptScreen.y, *this, NULL);
 
 						//A Treeview control sometimes requires this to end the
 						// TrackPopupMenu properly
-						GetParent()->PostMessage(WM_CANCELMODE, 0, 0);
+						GetParent().PostMessage(WM_CANCELMODE, 0, 0);
 
 						if(idCmd)
 						{

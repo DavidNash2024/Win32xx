@@ -168,7 +168,7 @@ void CMyPropertySheet::OnInitialUpdate()
 	{
 		// Reposition windows
 		RECT rc = GetWindowRect();
-		RECT rcButton = GetDlgItem(IDOK)->GetWindowRect();
+		RECT rcButton = GetDlgItem(IDOK).GetWindowRect();
 		SetWindowPos(NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
 
 		// Remove buttons

@@ -50,7 +50,7 @@ HWND CMainWindow::Create(CWnd* pParent)
 	// Create the main window
 	CRect rc(20 , 50, 400, 500);
 	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		rc, pParent, 0);
+		rc, *pParent, 0);
 }
 
 int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
@@ -59,7 +59,7 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 
 	// Create the Edit child window to display text
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL;
-	m_EditWnd.CreateEx(0, _T("Edit"), NULL, dwStyle, CRect(0,0,0,0), this, 0);
+	m_EditWnd.CreateEx(0, _T("Edit"), NULL, dwStyle, CRect(0,0,0,0), *this, 0);
 
 	// Set the font for the Edit window
 	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,

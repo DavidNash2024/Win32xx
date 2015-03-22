@@ -58,9 +58,9 @@ BOOL CTCPClientDlg::OnInitDialog()
 {
 	SetForegroundWindow();
 
-	m_EditSend.AttachDlgItem(IDC_EDIT_SEND2, this);
-	m_EditReceive.AttachDlgItem(IDC_EDIT_RECEIVE2, this);
-	m_ButtonSend.AttachDlgItem(IDC_BUTTON_SEND2, this);
+	m_EditSend.AttachDlgItem(IDC_EDIT_SEND2, *this);
+	m_EditReceive.AttachDlgItem(IDC_EDIT_RECEIVE2, *this);
+	m_ButtonSend.AttachDlgItem(IDC_BUTTON_SEND2, *this);
 
 	return TRUE;
 }
@@ -204,18 +204,18 @@ BOOL CSvrDialog::OnInitDialog()
 	MoveWindow( rc.left-14, rc.top-14, rc.Width(), rc.Height(), TRUE );
 
 	// Attach CWnd objects to the dialog's children
-	m_IP4Address.AttachDlgItem( IDC_IPADDRESS, this );
-	m_EditIP6Address.AttachDlgItem( IDC_EDIT_IPV6ADDRESS, this );
-	m_EditStatus.AttachDlgItem( IDC_EDIT_STATUS, this );
-	m_EditPort.AttachDlgItem( IDC_EDIT_PORT, this );
-	m_EditSend.AttachDlgItem( IDC_EDIT_SEND, this );
-	m_EditReceive.AttachDlgItem( IDC_EDIT_RECEIVE, this );
-	m_ButtonStart.AttachDlgItem( IDC_BUTTON_START, this );
-	m_ButtonSend.AttachDlgItem( IDC_BUTTON_SEND, this );
-	m_RadioIP4.AttachDlgItem( IDC_RADIO_IPV4, this );
-	m_RadioIP6.AttachDlgItem( IDC_RADIO_IPV6, this );
-	m_RadioTCP.AttachDlgItem( IDC_RADIO_TCP, this );
-	m_RadioUDP.AttachDlgItem( IDC_RADIO_UDP, this );
+	m_IP4Address.AttachDlgItem( IDC_IPADDRESS, *this );
+	m_EditIP6Address.AttachDlgItem( IDC_EDIT_IPV6ADDRESS, *this );
+	m_EditStatus.AttachDlgItem( IDC_EDIT_STATUS, *this );
+	m_EditPort.AttachDlgItem( IDC_EDIT_PORT, *this );
+	m_EditSend.AttachDlgItem( IDC_EDIT_SEND, *this );
+	m_EditReceive.AttachDlgItem( IDC_EDIT_RECEIVE, *this );
+	m_ButtonStart.AttachDlgItem( IDC_BUTTON_START, *this );
+	m_ButtonSend.AttachDlgItem( IDC_BUTTON_SEND, *this );
+	m_RadioIP4.AttachDlgItem( IDC_RADIO_IPV4, *this );
+	m_RadioIP6.AttachDlgItem( IDC_RADIO_IPV6, *this );
+	m_RadioTCP.AttachDlgItem( IDC_RADIO_TCP, *this );
+	m_RadioUDP.AttachDlgItem( IDC_RADIO_UDP, *this );
 
 	// Set the initial state of the dialog
 	m_EditIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
@@ -324,7 +324,7 @@ BOOL CSvrDialog::OnSocketAccept()
 	// Create the new chat dialog
 	TCPClientDlgPtr pDialog = new CTCPClientDlg(IDD_CHAT);
 	pDialog->m_pSocket = pClient;
-	pDialog->DoModeless(this);
+	pDialog->DoModeless(*this);
 
 	// Reposition the chat dialog
 	CRect rc = pDialog->GetWindowRect();
@@ -397,7 +397,7 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wParam)
 			TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);
-			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND), TRUE );
+			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND).GetHwnd(), TRUE );
 		}
 		break;
 	}

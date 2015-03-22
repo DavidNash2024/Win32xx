@@ -78,7 +78,7 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 int CMDIChildText::OnCreate(LPCREATESTRUCT pcs)
 {
 	UNREFERENCED_PARAMETER(pcs);
-	m_TextView.Create(this);
+	m_TextView.Create(*this);
 
 	SetWindowText(_T("Text Window"));
 	SetIconLarge(IDI_TEXT);

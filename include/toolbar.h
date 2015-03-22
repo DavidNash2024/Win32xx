@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -500,7 +500,7 @@ namespace Win32xx
 	// Retrieves the handle to the ToolTip control, if any, associated with the ToolBar.
 	{
 		assert(::IsWindow(m_hWnd));
-		return static_cast<CToolTip*>(FromHandlePermanent((HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L)));
+		return static_cast<CToolTip*>(GetCWndPtr((HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L)));
 	}
 
 	inline BOOL CToolBar::HasText() const
@@ -637,7 +637,7 @@ namespace Win32xx
 	{
 	//	Used by ReBar controls to adjust ToolBar window size
 
-		if ( GetParent()->SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
+		if ( GetParent().SendMessage(UWM_TBWINPOSCHANGING, (WPARAM)m_hWnd, lParam) )
 		{
 			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 			pWinPos->cx = GetMaxSize().cx;
@@ -901,7 +901,7 @@ namespace Win32xx
 
 		// Send a changed message to the parent (used by the ReBar)
 		SIZE MaxSize = GetMaxSize();
-		GetParent()->SendMessage(UWM_TBRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
+		GetParent().SendMessage(UWM_TBRESIZE, (WPARAM)m_hWnd, (LPARAM)&MaxSize);
 
 		return bResult;
 	}

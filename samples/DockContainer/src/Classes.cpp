@@ -111,7 +111,7 @@ void CContainClasses::AddCombo()
 	CRect rect = pTB->GetItemRect(nIndex); 
 	 
 	// Create the ComboboxEx window 
-	m_ComboBoxEx.Create(pTB);
+	m_ComboBoxEx.Create(*pTB);
 	m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
 	// Adjust the toolbar height to accomodate the ComboBoxEx control

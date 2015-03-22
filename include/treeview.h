@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -357,7 +357,7 @@ namespace Win32xx
 	// Retrieves the handle to the child ToolTip control used by a tree-view control.
 	{
 		assert(::IsWindow(m_hWnd));
-		return static_cast<CToolTip*>(FromHandlePermanent(TreeView_GetToolTips(m_hWnd)));
+		return static_cast<CToolTip*>(GetCWndPtr(TreeView_GetToolTips(m_hWnd)));
 	}
 
 	inline UINT CTreeView::GetVisibleCount() const
@@ -507,7 +507,7 @@ namespace Win32xx
 	{
 		assert(::IsWindow(m_hWnd));
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return static_cast<CToolTip*>(FromHandlePermanent(TreeView_SetToolTips(m_hWnd, hToolTip)));
+		return static_cast<CToolTip*>(GetCWndPtr(TreeView_SetToolTips(m_hWnd, hToolTip)));
 	}
 
 	// Operations

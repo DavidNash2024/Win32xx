@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -87,7 +87,7 @@ namespace Win32xx
 		virtual ~CMDIChild();
 
 		// These are the functions you might wish to override
-		virtual HWND Create(CWnd* pParent = NULL);
+		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void RecalcLayout();
 
 		// These functions aren't virtual, and shouldn't be overridden
@@ -134,10 +134,10 @@ namespace Win32xx
 		public:
 			CDockMDIClient() {}
 			virtual ~CDockMDIClient() {}
-			CMDIFrame* GetMDIFrame() const { return static_cast<CMDIFrame*>(GetParent()); }
+			CMDIFrame* GetMDIFrame() const { return static_cast<CMDIFrame*>(GetCWndPtr(GetParent())); }
 
 		protected:
-			HWND Create(CWnd* pParent);
+			HWND Create(HWND hWndParent);
 			LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
 			LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
 			LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
@@ -217,7 +217,7 @@ namespace Win32xx
 		assert(NULL != pMDIChild.get()); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(pMDIChild);
-		pMDIChild->Create(GetMDIClient());
+		pMDIChild->Create(*GetMDIClient());
 
 		return pMDIChild.get();
 	}
@@ -310,7 +310,7 @@ namespace Win32xx
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
 	// Returns a pointer to the active MDI child
 	{
-		return static_cast<CMDIChild*>(FromHandle(m_hActiveMDIChild));
+		return static_cast<CMDIChild*>(GetCWndPtr(m_hActiveMDIChild));
 	}
 
 	inline BOOL CMDIFrame::IsMDIChildMaxed() const
@@ -562,15 +562,14 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CDockMDIChild class
 	//
-	inline HWND CMDIFrame::CDockMDIClient::Create(CWnd* pParent)
+	inline HWND CMDIFrame::CDockMDIClient::Create(HWND hWndParent)
 	{
-		assert(pParent != 0);
+		assert(hWndParent != 0);
 
 		CLIENTCREATESTRUCT clientcreate;
 		clientcreate.hWindowMenu  = 0;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
-		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Create the view window
 		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
@@ -636,10 +635,10 @@ namespace Win32xx
 	inline CMDIChild::~CMDIChild()
 	{
 		if (IsWindow())
-			GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+			GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 	}
 
-	inline HWND CMDIChild::Create(CWnd* pParent /*= NULL*/)
+	inline HWND CMDIChild::Create(HWND hWndParent /*= NULL*/)
 	// We create the MDI child window and then maximize if required.
 	// This technique avoids unnecessary flicker when creating maximized MDI children.
 	{
@@ -648,6 +647,7 @@ namespace Win32xx
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
+		CWnd* pParent = GetCWndPtr(hWndParent);
 		assert(pParent);
 		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
 		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
@@ -706,7 +706,7 @@ namespace Win32xx
 
 	inline CMDIFrame* CMDIChild::GetMDIFrame() const
 	{
-		CMDIFrame* pMDIFrame = static_cast<CMDIFrame*>(GetParent()->GetParent());
+		CMDIFrame* pMDIFrame = static_cast<CMDIFrame*>(GetCWndPtr(GetParent().GetParent()));
 		assert(dynamic_cast<CMDIFrame*>(pMDIFrame));
 		return pMDIFrame;
 	}
@@ -718,22 +718,22 @@ namespace Win32xx
 
 	inline void CMDIChild::MDIActivate() const
 	{
-		GetParent()->SendMessage(WM_MDIACTIVATE, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CMDIChild::MDIDestroy() const
 	{
-		GetParent()->SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CMDIChild::MDIMaximize() const
 	{
-		GetParent()->SendMessage(WM_MDIMAXIMIZE, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIMAXIMIZE, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CMDIChild::MDIRestore() const
 	{
-		GetParent()->SendMessage(WM_MDIRESTORE, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIRESTORE, (WPARAM)m_hWnd, 0L);
 	}
 
 	inline void CMDIChild::OnClose()
@@ -748,7 +748,7 @@ namespace Win32xx
 
 		// Create the view window
 		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
-		GetView()->Create(this);
+		GetView()->Create(*this);
 		RecalcLayout();
 
 		return 0;
@@ -798,10 +798,10 @@ namespace Win32xx
 				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
 
 				if (!GetView()->IsWindow())
-					GetView()->Create(this);
+					GetView()->Create(*this);
 				else
 				{
-					GetView()->SetParent(this);
+					GetView()->SetParent(*this);
 					GetView()->ShowWindow();
 				}
 				

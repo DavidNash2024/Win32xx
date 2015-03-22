@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -335,7 +335,7 @@ namespace Win32xx
 		CWnd* pMDIChild = NULL;
 		if (GetMDIClient())
 		{
-			pMDIChild = FromHandle((HWND)GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+			pMDIChild = GetCWndPtr((HWND)GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 		}
 
 		return pMDIChild;
@@ -345,7 +345,7 @@ namespace Win32xx
 	{
 		CWnd* pMDIClient = NULL;
 		HWND hWnd = reinterpret_cast<HWND>(m_pFrame->SendMessage(UWM_GETFRAMEVIEW, 0L, 0L));
-		CWnd* pWnd = FromHandle(hWnd);
+		CWnd* pWnd = GetCWndPtr(hWnd);
 		if (pWnd && pWnd->GetClassName() == _T("MDIClient"))
 			pMDIClient = pWnd;
 
@@ -354,7 +354,7 @@ namespace Win32xx
 
 	inline void CMenuBar::GrabFocus()
 	{
-		if (GetFocus() != this)
+		if (GetFocus() != *this)
 			m_hPrevFocus = ::SetFocus(m_hWnd);
 		SetCapture();
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
@@ -427,7 +427,7 @@ namespace Win32xx
 		case VK_SPACE:
 			ExitMenu();
 			// Bring up the system menu
-			GetAncestor()->PostMessage(WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
+			GetAncestor().PostMessage(WM_SYSCOMMAND, SC_KEYMENU, VK_SPACE);
 			break;
 
 		// Handle VK_DOWN,VK_UP and VK_RETURN together
@@ -670,7 +670,7 @@ namespace Win32xx
 				m_IsSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
 
 				// Reflect message back to the frame window
-				GetAncestor()->SendMessage(WM_MENUSELECT, wParam, lParam);
+				GetAncestor().SendMessage(WM_MENUSELECT, wParam, lParam);
 			}
 			return TRUE;
 
@@ -925,7 +925,7 @@ namespace Win32xx
 		// This is used to bring up a new popup menu when required
 
 		CPoint pt = GetCursorPos();
-		if (this == WindowFromPoint(pt))	// MenuBar window must be on top
+		if (*this == WindowFromPoint(pt))	// MenuBar window must be on top
 		{
 			DWORD flag = pNMHI->dwFlags;
 			if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))

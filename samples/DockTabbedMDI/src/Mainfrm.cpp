@@ -75,7 +75,7 @@ void CMainFrame::OnFileNew()
 	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, this, &tpm);
+	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
 void CMainFrame::OnFileExit()
@@ -260,7 +260,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	default:
 		{
 			// Pass the command on to the view window with focus
-			GetFocus()->SendMessage(WM_COMMAND, wParam, lParam);
+			GetFocus().SendMessage(WM_COMMAND, wParam, lParam);
 		}
 	}
 

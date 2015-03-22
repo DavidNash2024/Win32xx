@@ -137,7 +137,7 @@ LRESULT CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
 
         SetForegroundWindow();
 		CPoint pt = GetCursorPos();
-		UINT uSelected = pSubMenu->TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, this, NULL);
+		UINT uSelected = pSubMenu->TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, *this, NULL);
 
 		switch (uSelected)
 		{

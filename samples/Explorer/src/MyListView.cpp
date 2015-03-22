@@ -55,7 +55,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 	if(m_csfCurFolder.GetIShellFolder())
 	{
 		CContextMenu ccm;
-		hr = m_csfCurFolder.CreateViewObject(GetParent()->GetHwnd(), IID_IContextMenu, ccm);
+		hr = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
 
 		if(SUCCEEDED(hr))
 		{
@@ -82,7 +82,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 					ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
 					idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-						ptScreen.x, ptScreen.y, this, NULL);
+						ptScreen.x, ptScreen.y, *this, NULL);
 
 					if(idCmd)
 					{
@@ -268,7 +268,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 						ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 						UINT  idCmd;
 						idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-									ptScreen.x, ptScreen.y, this, NULL);
+									ptScreen.x, ptScreen.y, *this, NULL);
 
 						if(idCmd)
 						{

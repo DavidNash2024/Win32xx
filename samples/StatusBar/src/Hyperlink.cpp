@@ -62,7 +62,7 @@ void CHyperlink::OpenUrl()
 		m_IsUrlVisited = TRUE;
 
 		// redraw the StatusBar to update the color
-		GetParent()->RedrawWindow();
+		GetParent().RedrawWindow();
 	}
 }
 

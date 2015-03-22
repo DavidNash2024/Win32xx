@@ -30,7 +30,7 @@ CMainFrame::~CMainFrame()
 void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
 	// Create the ComboboxEx window
-	m_ComboboxEx.Create(GetReBar());
+	m_ComboboxEx.Create(*GetReBar());
 
 	// Put the window in a new rebar band
 	REBARBANDINFO rbbi;
@@ -159,7 +159,7 @@ void CMainFrame::OnHome()
 
 void CMainFrame::OnEditCut()
 {
-	if (GetFocus() == GetComboEdit())
+	if (GetFocus() == *GetComboEdit())
 		GetComboEdit()->Cut();
 	else
 		m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
@@ -167,7 +167,7 @@ void CMainFrame::OnEditCut()
 
 void CMainFrame::OnEditCopy()
 {
-	if (GetFocus() == GetComboEdit())
+	if (GetFocus() == *GetComboEdit())
 		GetComboEdit()->Copy();
 	else
 		m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
@@ -175,7 +175,7 @@ void CMainFrame::OnEditCopy()
 
 void CMainFrame::OnEditPaste()
 {
-	if (GetFocus() == GetComboEdit())
+	if (GetFocus() == *GetComboEdit())
 		GetComboEdit()->Paste();
 	else
 		m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
@@ -187,7 +187,7 @@ void CMainFrame::OnEditDelete()
 	OLECMDID OLECMDID_DELETE = (OLECMDID)33;
 #endif
 
-	if (GetFocus() == GetComboEdit())
+	if (GetFocus() == *GetComboEdit())
 		GetComboEdit()->Clear();
 	else
 		m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
@@ -417,7 +417,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HOME );
 
 	// Set the image lists for normal, hot and disabled buttons
-    int BitsPerPixel = GetDesktopWindow()->GetDC()->GetDeviceCaps(BITSPIXEL);
+    int BitsPerPixel = GetDesktopWindow().GetDC()->GetDeviceCaps(BITSPIXEL);
 	if (GetWinVersion() >= 2501 && BitsPerPixel == 32)
 	{
 		// Load the 32bit bitmaps if we can, otherwise load 24bit ones.

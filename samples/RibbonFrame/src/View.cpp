@@ -177,7 +177,7 @@ void CView::OnLButtonDown(LPARAM lParam)
 
 void CView::OnLButtonUp(LPARAM lParam)
 {
-	if (GetCapture() == this)
+	if (GetCapture() == *this)
 	{
 		//Release the capture on the mouse
 		::ReleaseCapture();
@@ -189,9 +189,9 @@ void CView::OnLButtonUp(LPARAM lParam)
 void CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
 {
 	// hold down the left mouse button and move mouse to draw lines.
-	if ( (wParam & MK_LBUTTON) && (GetCapture() == this) )
+	if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
 	{
-		if (GetCapture() == this)
+		if (GetCapture() == *this)
 		{
 			CString str;
 			str.Format( _T("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) );

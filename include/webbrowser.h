@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -736,7 +736,7 @@ namespace Win32xx
 	inline void CWebBrowser::AddWebBrowserControl()
 	{
 		GetAXWindow().CreateControl(CLSID_WebBrowser);
-		GetAXWindow().SetParent(m_hWnd);
+		GetAXWindow().SetParent(*this);
 		GetAXWindow().SetVisible(TRUE);
 		GetAXWindow().Activate(TRUE);
 

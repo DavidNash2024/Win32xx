@@ -47,7 +47,7 @@ void CMainMDIFrame::OnFileNew()
 	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, this, &tpm);
+	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
 BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)

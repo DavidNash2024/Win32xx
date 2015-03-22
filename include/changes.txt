@@ -1,3 +1,102 @@
+Version 7.9
+===========
+
+WARNING!  Early adopters are advised that this version has significant changes
+which introduces incompatibilities with previous versions.
+
+New Features and Enhancements
+-----------------------------
+* The FromHandle method of creating temporary CWnds has been obsoleted. 
+The FromHandle approach had the following disadvantages:
+ - It was very inefficient. It required one or more std::map lookups before  
+   creating a new CWnd on the heap.
+ - It required the newly created CWnds to be removed some indeterminate time
+   after being created. This was done in OnIdle.
+ - It encouraged an inappropriate reliance on raw pointers to CWnd objects.
+ - There was confusion about when the temporary CWnd was destroyed.
+The FromHandle approach has been replaced. CWnd member functions which 
+previously returned a CWnd pointer(CWnd*) now return CWnd. 
+Coding example: (The GetParent function now returns a CWnd)
+GetParent().SendMessage(SomeMessage, wParam, lParam);
+HWND hWnd = GetParent(); // operator overloading converts a CWnd to HWND
+ 
+* Many functions which previously used a CWnd* argument now use a HWND
+argument. This has the following advantages:
+ - These functions can be used directly for a HWND, CWnd or CWnd pointer.
+ - We no longer have to needlessly create temporary CWnds.
+Coding examples: (the Create function now has a HWND argument)
+Create(MyCWnd);	     // Uses operator overloading to convert from CWnd to HWND 
+Create(*this);       // We can de-reference any non-null pointer
+Create(m_hWnd);      // We can use a HWND directly
+Create(GetParent()); // Uses operator overloading to convert from CWnd to HWND
+Create();            // The created window has no parent window
+
+* Assistance with code migration
+- FromHandle is no longer used by Win32++ internally, but remains available in 
+  this version for the purpose of code migration. It issues a TRACE warning 
+  message if used.
+- GetCWndPtr can be used to retrieve the pointer to a previously assigned CWnd
+  given its HWND.
+- Note: Some virtual functions have changed. If you overrode Win32++'s virtual
+  functions, these may not get called if the definitions have changed.    
+
+  
+Changes in detail
+-----------------
+Modified CDialog::Create
+Modified CDialog::DoModal
+Modified CDialog::DoModeless
+Modified CDialog::GotoDlgCtrl
+Modified CDocker::IsChildOfDocker
+Modified CDocker::IsRelated
+Modified CMDIChild::Create
+Modified CMDIFrame::CDockMDIClient::Create
+Modified CMenu::TrackPopupMenu
+Modified CMenu::TrackPopupMenuEx
+Modified CTabbedMDI::Create
+Modified CResizer::AddChild
+Modified CSlider::GetBuddy
+Modified CSlider::SetBuddy
+Modified CSpinButton::GetBuddy
+Modified CSpinButton::SetBuddy
+Modified CTab::GetToolTips
+Modified CWnd::AttachDlgItem
+Modified CWnd::ChildFromPoint
+Modified CWnd::Create
+Modified CWnd::CreateEx
+Modified CWnd::GetActiveWindow
+Modified CWnd::GetAncestor
+Modified CWnd::GetFocus
+Modified CWnd::DeferWindowPos
+Modified CWnd::GetDecktopWindow
+Modified CWnd::GetDlgItem
+Modified CWnd::GetLastActivePopup
+Modified CWnd::GetNextDlgGroupItem
+Modified CWnd::GetNextDlgTabItem
+Modified CWnd::GetParent
+Modified CWnd::GetTopWindow
+Modified CWnd::GetWindow
+Modified CWnd::IsChild
+Modified CWnd::MapWindowPoints
+Modified CWnd::SetActiveWindow
+Modified CWnd::SetCapture
+Modified CWnd::SetFocus
+Modified CWnd::SetParent
+Modified CWnd::SetWindowPos
+Modified CWnd::WindowFromDC
+Modified CWnd::WindowFromPoint
+
+Removed static const CWnd wndTop(HWND_TOP);
+Removedstatic const CWnd wndTopMost(HWND_TOPMOST);
+Removedstatic const CWnd wndBottom(HWND_BOTTOM);
+Removedstatic const CWnd wndNoTopMost(HWND_NOTOPMOST);
+Removed CResizer::AddChild   (one of two)
+
+Renamed CWnd::FromHandlePermanent to CWnd::GetCWndPtr
+
+
+
+
 Version 7.8
 ===========
 

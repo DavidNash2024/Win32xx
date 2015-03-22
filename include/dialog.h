@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -88,9 +88,9 @@ namespace Win32xx
 
 		// You probably won't need to override these functions
 		virtual void AttachItem(int nID, CWnd& Wnd);
-		virtual INT_PTR DoModal(CWnd* pParent = NULL);
-		virtual HWND DoModeless(CWnd* pParent = NULL);
-		virtual HWND Create(CWnd* pParent = NULL) { return DoModeless(pParent); }
+		virtual HWND Create(HWND hWndParent = NULL) { return DoModeless(hWndParent); }
+		virtual INT_PTR DoModal(HWND hWndParent = NULL);
+		virtual HWND DoModeless(HWND hWndParent = NULL);	
 		BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return (NULL != m_lpTemplate); }
 
@@ -107,7 +107,7 @@ namespace Win32xx
 
 		// Can't override these functions
 		DWORD GetDefID() const;
-		void GotoDlgCtrl(CWnd* pWndCtrl);
+		void GotoDlgCtrl(HWND hWndCtrl);
 		BOOL MapDialogRect(LPRECT pRect) const;
 		void NextDlgCtrl() const;
 		void PrevDlgCtrl() const;
@@ -155,7 +155,6 @@ namespace Win32xx
 		CResizer() : m_pParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
 		virtual ~CResizer() {}
 
-        virtual void AddChild(CWnd* pWnd, Alignment corner, DWORD dwStyle);
 		virtual void AddChild(HWND hWnd, Alignment corner, DWORD dwStyle);
 		virtual void HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
     	virtual void Initialize(CWnd* pParent, const RECT& rcMin, const RECT& rcMax = CRect(0,0,0,0));
@@ -235,7 +234,7 @@ namespace Win32xx
 	inline void CDialog::AttachItem(int nID, CWnd& Wnd)
 	// Attach a dialog item to a CWnd
 	{
-		Wnd.AttachDlgItem(nID, this);
+		Wnd.AttachDlgItem(nID, *this);
 	}
 
 	inline INT_PTR CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -381,7 +380,7 @@ namespace Win32xx
 
 	} // INT_PTR CALLBACK CDialog::DialogProc(...)
 
-	inline INT_PTR CDialog::DoModal(CWnd* pParent /* = NULL */)
+	inline INT_PTR CDialog::DoModal(HWND hWndParent /* = NULL */)
 	{
 		// Create a modal dialog
 		// A modal dialog box must be closed by the user before the application continues
@@ -406,18 +405,17 @@ namespace Win32xx
 			InterlockedIncrement(&pTLSData->nDlgHooks);
 		#endif
 
-			HWND hParent = pParent? pParent->m_hWnd : 0;
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
 			pTLSData->pWnd = this;
 
 			// Create a modal dialog
 			if (IsIndirect())
-				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			else
 			{
 				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
 					hInstance = GetApp()->GetResourceHandle();
-				nResult = ::DialogBox(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
+				nResult = ::DialogBox(hInstance, m_lpszResName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 			}
 
 			// Tidy up
@@ -451,7 +449,7 @@ namespace Win32xx
 		return nResult;
 	}
 
-	inline HWND CDialog::DoModeless(CWnd* pParent /* = 0 */)
+	inline HWND CDialog::DoModeless(HWND hParent /* = 0 */)
 	{
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
@@ -467,7 +465,6 @@ namespace Win32xx
 			pTLSData->pWnd = this;
 
 			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
-			HWND hParent = pParent? pParent->m_hWnd : 0;
 
 			// Create a modeless dialog
 			if (IsIndirect())
@@ -575,12 +572,12 @@ namespace Win32xx
 		return dwID;	
 	}
 
-	inline void CDialog::GotoDlgCtrl(CWnd* pWndCtrl)
+	inline void CDialog::GotoDlgCtrl(HWND hWndCtrl)
 	// Sets the keyboard focus to the specified control
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pWndCtrl->IsWindow());
-		SendMessage(WM_NEXTDLGCTL, (WPARAM)pWndCtrl->GetHwnd(), TRUE);
+		assert(::IsWindow(hWndCtrl));
+		SendMessage(WM_NEXTDLGCTL, (WPARAM)hWndCtrl, TRUE);
 	}
 
 	inline BOOL CDialog::MapDialogRect(LPRECT pRect) const
@@ -614,7 +611,7 @@ namespace Win32xx
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Find the CWnd pointer mapped to this HWND
-		CDialog* w = static_cast<CDialog*>(FromHandlePermanent(hWnd));
+		CDialog* w = static_cast<CDialog*>(GetCWndPtr(hWnd));
 		if (w == 0)
 		{
 			// The HWND wasn't in the map, so add it now
@@ -671,7 +668,7 @@ namespace Win32xx
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{
-					CDialog* pDialog = static_cast<CDialog*>(FromHandlePermanent(hWnd));
+					CDialog* pDialog = static_cast<CDialog*>(GetCWndPtr(hWnd));
 					if (pDialog && (lstrcmp(pDialog->GetClassName(), _T("#32770")) == 0))	// only for dialogs
 					{
 						if (pDialog->PreTranslateMessage(lpMsg))
@@ -695,7 +692,7 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
 
-	void inline CResizer::AddChild(CWnd* pWnd, Alignment corner, DWORD dwStyle)
+	void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
 	//
@@ -708,20 +705,14 @@ namespace Win32xx
     	rd.corner = corner;
     	rd.bFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
     	rd.bFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
-		CRect rcInit = pWnd->GetWindowRect();
+		CRect rcInit;
+		::GetWindowRect(hWnd, &rcInit);
 		m_pParent->ScreenToClient(rcInit);
 		rd.rcInit = rcInit;
-		rd.hWnd = pWnd->GetHwnd();
+		rd.hWnd = hWnd;
 
 		m_vResizeData.insert(m_vResizeData.begin(), rd);
     }
-
-	void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
-    // Adds a child window (usually a dialog control) to the set of windows managed by
-	// the Resizer.	
-	{
-		AddChild(CWnd::FromHandle(hWnd), corner, dwStyle);
-	}
 
 	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
@@ -942,9 +933,10 @@ namespace Win32xx
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
-				CWnd* pWnd = CWnd::FromHandle((*iter).hWnd);
-				CWnd *pWndPrev = pWnd->GetWindow(GW_HWNDPREV); // Trick to maintain the original tab order.
-				pWnd->SetWindowPos(pWndPrev, rc, SWP_NOCOPYBITS);
+				HWND hWnd = (*iter).hWnd;
+				HWND hWndPrev = ::GetWindow(hWnd, GW_HWNDPREV); // Trick to maintain the original tab order.
+
+				::SetWindowPos((*iter).hWnd, hWndPrev, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
 			}
     	}

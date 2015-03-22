@@ -1,5 +1,5 @@
-// Win32++   Version 7.8
-// Release Date: 17th March 2015
+// Win32++   Version 7.9 alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -423,7 +423,7 @@ namespace Win32xx
 	// Retrieves the ToolTip control that the list-view control uses to display ToolTips.
 	{
 		assert(::IsWindow(m_hWnd));
-		return static_cast<CToolTip*>(FromHandlePermanent(ListView_GetToolTips(m_hWnd)));
+		return static_cast<CToolTip*>(GetCWndPtr(ListView_GetToolTips(m_hWnd)));
 	}
 
 	inline int CListView::GetTopIndex( ) const
@@ -680,7 +680,7 @@ namespace Win32xx
 		assert(pToolTip);
 
 		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return static_cast<CToolTip*>(FromHandlePermanent((HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L)));
+		return static_cast<CToolTip*>(GetCWndPtr((HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L)));
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const

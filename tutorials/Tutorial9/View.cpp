@@ -178,7 +178,7 @@ LRESULT CView::OnLButtonUp(LPARAM lParam)
 LRESULT CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
 {
 	// hold down the left mouse button and move mouse to draw lines.
-	if ( (wParam & MK_LBUTTON) && (GetCapture() == this) )
+	if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
 	{
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);

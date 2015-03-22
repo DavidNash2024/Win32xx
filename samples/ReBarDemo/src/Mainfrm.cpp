@@ -143,7 +143,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS 
 					 | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER | RBS_VARHEIGHT ;
-	m_ReBar.CreateEx(0, REBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), this, 0);
+	m_ReBar.CreateEx(0, REBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), *this, 0);
 
 	dwStyle |= TBSTYLE_FLAT;
 
@@ -156,7 +156,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 	// Create the ToolBar
 	dwStyle |= TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
-	m_ToolBar.CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), &m_ReBar, 0);
+	m_ToolBar.CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), m_ReBar, 0);
 	m_ToolBar.SetImageList(&m_ToolBarImages);
 
 	// Add the ToolBar buttons
