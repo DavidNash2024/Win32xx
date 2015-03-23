@@ -417,7 +417,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HOME );
 
 	// Set the image lists for normal, hot and disabled buttons
-    int BitsPerPixel = GetDesktopWindow().GetDC()->GetDeviceCaps(BITSPIXEL);
+    int BitsPerPixel = GetDesktopWindow().GetDC().GetDeviceCaps(BITSPIXEL);
 	if (GetWinVersion() >= 2501 && BitsPerPixel == 32)
 	{
 		// Load the 32bit bitmaps if we can, otherwise load 24bit ones.

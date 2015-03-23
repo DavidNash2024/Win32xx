@@ -724,7 +724,7 @@ namespace Win32xx
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
-		CWindowDC dc(this);
+		CWindowDC dc(*this);
 		CRect rcw = Rect;
 		dc.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_3DSHADOW));
 		dc.MoveTo(0, rcw.Height());
@@ -779,15 +779,15 @@ namespace Win32xx
 			m_IsOldFocusStored = FALSE;
 
 			// Acquire the DC for our NonClient painting
-			CDC* pDC = GetWindowDC();
+			CWindowDC dc(*this);
 
 			// Create and set up our memory DC
 			CRect rc = GetWindowRect();
-			CMemDC dcMem(pDC);
+			CMemDC dcMem(&dc);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
-			dcMem.CreateCompatibleBitmap(pDC, Width, Height);
+			dcMem.CreateCompatibleBitmap(&dc, Width, Height);
 			m_IsOldFocusStored = bFocus;
 
 			// Set the font for the title
@@ -829,10 +829,7 @@ namespace Win32xx
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
-			pDC->BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
-
-			// Required for Win98/WinME
-			pDC->Destroy();
+			dc.BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
 		}
 	}
 
@@ -993,7 +990,7 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CWindowDC dc(this);
+					CWindowDC dc(*this);
 					DrawCloseButton(dc, m_IsOldFocusStored);
 				}
 
@@ -1026,7 +1023,7 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CWindowDC dc(this);
+					CWindowDC dc(*this);
 					DrawCloseButton(dc, m_IsOldFocusStored);
 				}
 
@@ -1042,7 +1039,7 @@ namespace Win32xx
 		ReleaseCapture();
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 		{
-			CWindowDC dc(this);
+			CWindowDC dc(*this);
 			DrawCloseButton(dc, m_IsOldFocusStored);
 			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
 			{
@@ -1074,7 +1071,7 @@ namespace Win32xx
 
 		m_IsClosePressed = FALSE;
 		ReleaseCapture();
-		CWindowDC dc(this);
+		CWindowDC dc(*this);
 		DrawCloseButton(dc, m_IsOldFocusStored);
 	}
 
@@ -1121,7 +1118,7 @@ namespace Win32xx
 				// Update the close button
 				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
 				{
-					CWindowDC dc(this);
+					CWindowDC dc(*this);
 					DrawCloseButton(dc, m_IsOldFocusStored);
 				}
 			}
@@ -1140,7 +1137,7 @@ namespace Win32xx
 	inline LRESULT CDocker::CDockClient::OnNCMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
 		m_IsTracking = FALSE;
-		CWindowDC dc(this);
+		CWindowDC dc(*this);
 		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
 			DrawCloseButton(dc, m_IsOldFocusStored);
 
@@ -2272,7 +2269,7 @@ namespace Win32xx
 		if (NULL == pDock) return;
 
 		BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
-		CClientDC dcBar(this);
+		CClientDC dcBar(*this);
 
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
 		CBitmap bmHash;
@@ -2465,7 +2462,7 @@ namespace Win32xx
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 		LOGFONT lf = info.lfStatusFont;
 
-		CClientDC dc(this);
+		CClientDC dc(*this);
 		dc.CreateFontIndirect(&lf);
 		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
@@ -3487,7 +3484,7 @@ namespace Win32xx
 					DockInfo di;
 					ZeroMemory(&di, sizeof(DockInfo));
 					if (! (*iter)->IsWindow())
-						throw (CWinException(_T("Can't save Docker in registry. \n")));;
+						throw (CWinException(_T("Can't save Docker in registry. \n")));
 
 					di.DockID	 = (*iter)->GetDockID();
 					di.DockStyle = (*iter)->GetDockStyle();
@@ -4148,7 +4145,7 @@ namespace Win32xx
 		for (iter = m_vContainerInfo.begin(); iter != m_vContainerInfo.end(); ++iter)
 		{
 			CSize TempSize;
-			CClientDC dc(this);
+			CClientDC dc(*this);
 			NONCLIENTMETRICS info;
 			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 			info.cbSize = GetSizeofNonClientMetrics();

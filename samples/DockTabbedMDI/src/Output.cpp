@@ -31,7 +31,7 @@ void CViewOutput::OnInitialUpdate()
 	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 
-	SetFont(&m_Font, FALSE);
+	SetFont(m_Font, FALSE);
 	SetWindowText(_T("Read Only Output Window"));
 }
 

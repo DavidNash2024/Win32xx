@@ -11,9 +11,9 @@ CView::CView()
 
 void CView::DrawLine(int x, int y)
 {
-	CDC* pDC = GetDC();
-	pDC->MoveTo(m_OldPt.x, m_OldPt.y);
-	pDC->LineTo(x, y);
+	CClientDC dc(*this);
+	dc.MoveTo(m_OldPt.x, m_OldPt.y);
+	dc.LineTo(x, y);
 }
 
 void CView::OnDestroy()

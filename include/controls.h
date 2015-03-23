@@ -443,11 +443,11 @@ namespace Win32xx
 		int GetDelayTime(DWORD dwDuration) const;
 		void GetMargin(LPRECT lprc) const;
 		int GetMaxTipWidth() const;
-		void GetText(CString& str, CWnd* pWnd, UINT_PTR nIDTool = 0) const;
+		void GetText(CString& str, HWND hWnd, UINT_PTR nIDTool = 0) const;
 		COLORREF GetTipBkColor() const;
 		COLORREF GetTipTextColor() const;
 		int GetToolCount() const;
-		BOOL GetToolInfo(TOOLINFO& ToolInfo, CWnd* pWnd, UINT_PTR nIDTool = 0) const;
+		BOOL GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool = 0) const;
 		void SetDelayTime(UINT nDelay);
 		void SetDelayTime(DWORD dwDuration, int iTime);
 		void SetMargin(LPRECT lprc);
@@ -461,17 +461,17 @@ namespace Win32xx
 
 		//Operations
 		void Activate(BOOL bActivate);
-		BOOL AddTool(CWnd* pWnd, UINT nIDText, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0);
-		BOOL AddTool(CWnd* pWnd, LPCTSTR lpszText = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0);
-		void DelTool(CWnd* pWnd, UINT_PTR nIDTool = 0);
-		BOOL HitTest(CWnd* pWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
+		BOOL AddTool(HWND hWnd, UINT nIDText, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0);
+		BOOL AddTool(HWND hWnd, LPCTSTR lpszText = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0);
+		void DelTool(HWND hWnd, UINT_PTR nIDTool = 0);
+		BOOL HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
 		void Pop();
 		void RelayEvent(LPMSG lpMsg);
 
-		void SetToolRect(CWnd* pWnd, UINT_PTR nIDTool, LPCRECT lpRect);
+		void SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect);
 		void Update();
-		void UpdateTipText(LPCTSTR lpszText, CWnd* pWnd, UINT_PTR nIDTool = 0);
-		void UpdateTipText(UINT nIDText, CWnd* pWnd, UINT_PTR nIDTool = 0);
+		void UpdateTipText(LPCTSTR lpszText, HWND hWnd, UINT_PTR nIDTool = 0);
+		void UpdateTipText(UINT nIDText, HWND hWnd, UINT_PTR nIDTool = 0);
 
 #if (_WIN32_IE >=0x0500)
 		BOOL AdjustRect(LPRECT lprc, BOOL bLarger = TRUE);
@@ -493,7 +493,7 @@ namespace Win32xx
 	private:
 		CToolTip(const CToolTip&);				// Disable copy construction
 		CToolTip& operator = (const CToolTip&);	// Disable assignment operator
-		void LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT_PTR nIDTool) const;
+		void LoadToolInfo(TOOLINFO& ti, HWND hWnd, UINT_PTR nIDTool) const;
 	};
 
 
@@ -1621,7 +1621,7 @@ namespace Win32xx
 	// Retrieves the handle to the ToolTip control assigned to the trackbar, if any.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(GetCWndPtr((HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L)));
+		return static_cast<CToolTip*>(FromHandle((HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L)));
 	}
 
 	inline HWND CSlider::SetBuddy(HWND hBuddy, BOOL fLocation /*= TRUE*/ ) const
@@ -1804,13 +1804,12 @@ namespace Win32xx
 		SendMessage(TTM_ACTIVATE, (WPARAM)bActivate, 0L);
 	}
 
-	inline BOOL CToolTip::AddTool(CWnd* pWnd, UINT nIDText, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	inline BOOL CToolTip::AddTool(HWND hWnd, UINT nIDText, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
 	// Registers a tool with a ToolTip control.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.hinst = GetApp()->GetResourceHandle();
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
 		if (lpRectTool)
@@ -1818,25 +1817,24 @@ namespace Win32xx
 		return (BOOL)SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti);
 	}
 
-	inline BOOL CToolTip::AddTool(CWnd* pWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	inline BOOL CToolTip::AddTool(HWND hWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
 	// Registers a tool with a ToolTip control.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.lpszText = (LPTSTR)lpszText;
 		if (lpRectTool)
 			ti.rect = *lpRectTool;
 		return (BOOL)SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti);
 	}
 
-	inline void CToolTip::DelTool(CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	inline void CToolTip::DelTool(HWND hWnd, UINT_PTR nIDTool /*= 0*/)
 	// Removes a tool from a ToolTip control.
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		SendMessage(TTM_DELTOOL, 0L, (LPARAM)&ti);
 	}
 
@@ -1861,14 +1859,13 @@ namespace Win32xx
 		return (int)SendMessage(TTM_GETMAXTIPWIDTH, 0L, 0L);
 	}
 
-	inline void CToolTip::GetText(CString& str, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const
+	inline void CToolTip::GetText(CString& str, HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
 	// Retrieves the information a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed ToolTip is 80 characters for Windows XP and below
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.lpszText = pszText;
 		SendMessage(TTM_GETTEXT, 0L, (LPARAM)&ti);
 		str.ReleaseBuffer();
@@ -1895,35 +1892,32 @@ namespace Win32xx
 		return (int)SendMessage(TTM_GETTOOLCOUNT, 0L, 0L);
 	}
 
-	inline BOOL CToolTip::GetToolInfo(TOOLINFO& ToolInfo, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/) const
+	inline BOOL CToolTip::GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
 	// Retrieves the information that a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
-		assert(pWnd);
-		LoadToolInfo(ToolInfo, pWnd, nIDTool);
+		LoadToolInfo(ToolInfo, hWnd, nIDTool);
 		return (BOOL)SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo);
 	}
 
-	inline BOOL CToolTip::HitTest(CWnd* pWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
+	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
 	// Tests a point to determine whether it is within the bounding rectangle of the
 	//  specified tool and, if it is, retrieves information about the tool.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		assert(lpToolInfo);
 		TTHITTESTINFO hti;
 		ZeroMemory(&hti, sizeof(TTHITTESTINFO));
-		hti.hwnd = pWnd->GetHwnd();
+		hti.hwnd = hWnd;
 		hti.pt = pt;
 		hti.ti = *lpToolInfo;
 		return (BOOL)SendMessage(TTM_HITTEST, 0L, (LPARAM)&hti);
 	}
 
-	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, CWnd* pWnd, UINT_PTR nIDTool) const
+	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, HWND hWnd, UINT_PTR nIDTool) const
 	{
 		ZeroMemory(&ti, sizeof(TOOLINFO));
 		ti.cbSize = sizeof(TOOLINFO);
-		HWND hWnd = pWnd->GetHwnd();
 		if (nIDTool == 0)
 		{
 			ti.hwnd = ::GetParent(hWnd);
@@ -2003,14 +1997,13 @@ namespace Win32xx
 		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)lpToolInfo);
 	}
 
-	inline void CToolTip::SetToolRect(CWnd* pWnd, UINT_PTR nIDTool, LPCRECT lpRect)
+	inline void CToolTip::SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect)
 	// Sets a new bounding rectangle for a tool.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		assert(lpRect);
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.rect = *lpRect;
 		SendMessage(TTM_NEWTOOLRECT, 0L, (LPARAM)&ti);
 	}
@@ -2022,24 +2015,22 @@ namespace Win32xx
 		SendMessage(TTM_UPDATE, 0L, 0L);
 	}
 
-	inline void CToolTip::UpdateTipText(LPCTSTR lpszText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	inline void CToolTip::UpdateTipText(LPCTSTR lpszText, HWND hWnd, UINT_PTR nIDTool /*= 0*/)
 	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.lpszText = (LPTSTR)lpszText;
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
 
-	inline void CToolTip::UpdateTipText(UINT nIDText, CWnd* pWnd, UINT_PTR nIDTool /*= 0*/)
+	inline void CToolTip::UpdateTipText(UINT nIDText, HWND hWnd, UINT_PTR nIDTool /*= 0*/)
 	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
-		assert(pWnd);
 		TOOLINFO ti;
-		LoadToolInfo(ti, pWnd, nIDTool);
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.hinst = GetApp()->GetResourceHandle();
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);

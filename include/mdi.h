@@ -507,7 +507,7 @@ namespace Win32xx
 			if (IsMenuBarUsed())
 				GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
 			else
-				SetMenu( GetFrameMenu() );
+				SetMenu( *GetFrameMenu() );
 
 			GetApp()->SetAccelerators(GetFrameAccel(), this);
 		}

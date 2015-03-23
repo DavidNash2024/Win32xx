@@ -279,7 +279,6 @@ namespace Win32xx
 		HHOOK hMsgHook;		// WH_MSGFILTER hook for CMenuBar and Modal Dialogs
 		long nDlgHooks;		// Number of Dialog MSG hooks
 
-		std::vector<DCPtr> vTmpDCs;						// Temporary CDC pointers with hWnd
 		std::map<HDC, DCPtr, CompareHDC> TmpDCs;		// Temporary CDC pointers
 		std::map<HGDIOBJ, GDIPtr, CompareGDI> TmpGDIs;	// Temporary CGDIObject pointers
 		std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST> TmpImageLists;	// Temporary CImageList pointers
@@ -482,7 +481,6 @@ namespace Win32xx
 
 	public:
 		CWnd();				// Constructor
-		CWnd(HWND hWnd);	// Constructor
 		virtual ~CWnd();	// Destructor
 
 		// These virtual functions can be overridden
@@ -505,7 +503,7 @@ namespace Win32xx
 
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
-		CDC*  BeginPaint(PAINTSTRUCT& ps) const;
+		HDC   BeginPaint(PAINTSTRUCT& ps) const;
 		BOOL  BringWindowToTop() const;
 		LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
 		BOOL  CheckDlgButton(int nIDButton, UINT uCheck) const;
@@ -525,8 +523,8 @@ namespace Win32xx
 		ULONG_PTR GetClassLongPtr(int nIndex) const;
 		CString GetClassName() const;
 		CRect GetClientRect() const;
-		CDC*  GetDC() const;
-		CDC*  GetDCEx(HRGN hrgnClip, DWORD flags) const;
+		CDC   GetDC() const;
+		CDC   GetDCEx(HRGN hrgnClip, DWORD flags) const;
 		CWnd  GetDesktopWindow() const;
 		int	  GetDlgCtrlID() const;
 		CWnd  GetDlgItem(int nIDDlgItem) const;
@@ -540,16 +538,16 @@ namespace Win32xx
 		CWnd  GetParent() const;
 		BOOL  GetScrollInfo(int fnBar, SCROLLINFO& si) const;
 		CRect GetUpdateRect(BOOL bErase) const;
-		int GetUpdateRgn(CRgn* pRgn, BOOL bErase) const;
+		int GetUpdateRgn(HRGN hRgn, BOOL bErase) const;
 		CWnd  GetWindow(UINT uCmd) const;
-		CDC*  GetWindowDC() const;
+		CDC   GetWindowDC() const;
 		LONG_PTR GetWindowLongPtr(int nIndex) const;
 		CRect GetWindowRect() const;
 		CString GetWindowText() const;
 		int   GetWindowTextLength() const;
 		void  Invalidate(BOOL bErase = TRUE) const;
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
-		BOOL  InvalidateRgn(CRgn* pRgn, BOOL bErase = TRUE) const;
+		BOOL  InvalidateRgn(HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(HWND hwndChild) const;
 		BOOL  IsDialogMessage(LPMSG lpMsg) const;
 		UINT  IsDlgButtonChecked(int nIDButton) const;
@@ -565,8 +563,8 @@ namespace Win32xx
 		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, CRgn* pRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
-		int   ReleaseDC(CDC* pDC) const;
+		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+		int   ReleaseDC(HDC hDC) const;
 		BOOL  ScreenToClient(POINT& Point) const;
 		BOOL  ScreenToClient(RECT& rc) const;
 		LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
@@ -579,7 +577,7 @@ namespace Win32xx
 		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		CWnd  SetFocus() const;
-		void  SetFont(CFont* pFont, BOOL bRedraw = TRUE) const;
+		void  SetFont(HFONT hFont, BOOL bRedraw = TRUE) const;
 		BOOL  SetForegroundWindow() const;
 		HICON SetIcon(HICON hIcon, BOOL bBigIcon) const;
 		CWnd  SetParent(HWND hWndParent) const;
@@ -595,7 +593,7 @@ namespace Win32xx
 		BOOL  ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL  UpdateWindow() const;
 		BOOL  ValidateRect(LPCRECT prc) const;
-		BOOL  ValidateRgn(CRgn* pRgn) const;
+		BOOL  ValidateRgn(HRGN hRgn) const;
 		static CWnd WindowFromPoint(POINT pt);
 
   #ifndef _WIN32_WCE
@@ -605,7 +603,7 @@ namespace Win32xx
 		BOOL  DlgDirSelectEx(LPTSTR lpString, int nCount, int nIDListBox) const;
 		BOOL  DlgDirSelectComboBoxEx(LPTSTR lpString, int nCount, int nIDComboBox) const;
 		BOOL  DrawAnimatedRects(int idAni, RECT& rcFrom, RECT& rcTo) const;
-		BOOL  DrawCaption(CDC* pDC, RECT& rc, UINT uFlags) const;
+		BOOL  DrawCaption(HDC hDC, RECT& rc, UINT uFlags) const;
 		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd  GetLastActivePopup() const;
 		CMenu* GetMenu() const;
@@ -619,10 +617,10 @@ namespace Win32xx
 		BOOL  IsZoomed() const;
 		BOOL  LockWindowUpdate() const;
 		BOOL  OpenIcon() const;
-		void  Print(CDC* pDC, DWORD dwFlags) const;
-		BOOL  SetMenu(CMenu* pMenu) const;
+		void  Print(HDC hDC, DWORD dwFlags) const;
+		BOOL  SetMenu(HMENU hMenu) const;
 		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const;
-		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, CRgn* prgnUpdate, LPRECT lprcUpdate, UINT flags) const;
+		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const;
 		int   SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL  SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;
 		BOOL  SetWindowPlacement(const WINDOWPLACEMENT& wndpl) const;
@@ -630,7 +628,7 @@ namespace Win32xx
 		BOOL  ShowScrollBar(int nBar, BOOL bShow) const;
 		BOOL  ShowWindowAsync(int nCmdShow) const;
 		BOOL  UnLockWindowUpdate() const;
-		CWnd  WindowFromDC(CDC* pDC) const;
+		CWnd  WindowFromDC(HDC hDC) const;
 
     #ifndef WIN32_LEAN_AND_MEAN
 		void  DragAcceptFiles(BOOL fAccept) const;
@@ -666,6 +664,8 @@ namespace Win32xx
 	private:
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&); // Disable assignment operator
+		CWnd(HWND hWnd);				// Private constructor used internally
+
 		void AddToMap();
 		void Cleanup();
 		LRESULT MessageReflect(HWND hwndParent, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -774,7 +774,6 @@ namespace Win32xx
 		assert(pTLSData);
 
 		pTLSData->TmpDCs.clear();
-		pTLSData->vTmpDCs.clear();
 		pTLSData->TmpGDIs.clear();
 		pTLSData->TmpImageLists.clear();
 		pTLSData->TmpWnds.clear();
@@ -1035,7 +1034,6 @@ namespace Win32xx
 		for (iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
 		{
 			(*iter)->TmpDCs.clear();
-			(*iter)->vTmpDCs.clear();
 			(*iter)->TmpWnds.clear();
 			(*iter)->TmpGDIs.clear();
 			(*iter)->TmpImageLists.clear();
@@ -1075,7 +1073,6 @@ namespace Win32xx
 		assert(pTLSData);
 
 		pTLSData->TmpDCs.clear();
-		pTLSData->vTmpDCs.clear();
 		pTLSData->TmpGDIs.clear();
 		pTLSData->TmpImageLists.clear();
 		pTLSData->TmpWnds.clear();
@@ -1356,12 +1353,8 @@ namespace Win32xx
 
 	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL), m_IsTmpWnd(TRUE)
 	{
-	//	if (hWnd == HWND_TOP || hWnd == HWND_TOPMOST || hWnd == HWND_BOTTOM || hWnd == HWND_NOTOPMOST)
-	//	{
-			m_hWnd = hWnd;
-	//	}
-	//	else
-	//		Attach(hWnd);
+		// A private constructor, used internally.
+		m_hWnd = hWnd;
 	}
 
 	inline CWnd::~CWnd()
@@ -1398,7 +1391,7 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 
 		OnAttach();
-		PostMessage(UWM_WINDOWCREATED);;
+		PostMessage(UWM_WINDOWCREATED);
 
 		return TRUE;
 	}
@@ -2275,13 +2268,13 @@ namespace Win32xx
 
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
-					CPaintDC dc(this);
+					CPaintDC dc(*this);
 					OnDraw(&dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					CClientDC dc(this);
+					CClientDC dc(*this);
 					OnDraw(&dc);
 				}
 			}
@@ -2289,9 +2282,8 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC dc((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(&dc);
-				dc.Detach();
+				CDC* pDC = CDC::FromHandle((HDC)wParam);
+				BOOL bResult = OnEraseBkgnd(pDC);
 				if (bResult) return TRUE;
 			}
 			break;
@@ -2336,12 +2328,12 @@ namespace Win32xx
 	// Wrappers for Win32 API functions
 	//
 
-	inline CDC* CWnd::BeginPaint(PAINTSTRUCT& ps) const
+	inline HDC CWnd::BeginPaint(PAINTSTRUCT& ps) const
 	// The BeginPaint function prepares the specified window for painting and fills a PAINTSTRUCT structure with
-	// information about the painting.
+	// information about the painting. Consider using CPaintDC instead.
 	{
         assert(::IsWindow(m_hWnd));
-		return CDC::FromHandle(::BeginPaint(m_hWnd, &ps));
+		return ::BeginPaint(m_hWnd, &ps);
 	}
 
 	inline BOOL CWnd::BringWindowToTop() const
@@ -2478,20 +2470,23 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline CDC* CWnd::GetDC() const
-	// The GetDC function retrieves a handle to a display device context (DC) for the
-	// client area of the window.
+	inline CDC CWnd::GetDC() const
+	// The GetDC function retrieves the display device context (DC)
+	// for the client area of the window. Use like this:
+	// CDC dc = GetDC;
+	// Consider using a CClientDC instead.
 	{
 		assert(::IsWindow(m_hWnd));
-		return CDC::AddTempHDC(::GetDC(m_hWnd), m_hWnd);
+		return CDC(::GetDC(m_hWnd), m_hWnd);
 	}
 
-	inline CDC* CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
-	// The GetDCEx function retrieves a handle to a display device context (DC) for the
-	// client area or entire area of a window
+	inline CDC CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
+	// The GetDCEx function retrieves a display device context (DC) for the
+	// client area or entire area of a window. Use like this:
+	// CDC dc = GetDCEx(hrgnClip, flags);
 	{
 		assert(::IsWindow(m_hWnd));
-		return CDC::AddTempHDC(::GetDCEx(m_hWnd, hrgnClip, flags), m_hWnd);
+		return CDC(::GetDCEx(m_hWnd, hrgnClip, flags), m_hWnd);
 	}
 
 	inline CWnd CWnd::GetDesktopWindow() const
@@ -2591,12 +2586,10 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline int CWnd::GetUpdateRgn(CRgn* pRgn, BOOL bErase) const
+	inline int CWnd::GetUpdateRgn(HRGN hRgn, BOOL bErase) const
 	// The GetUpdateRgn function retrieves the update region of a window by copying it into the specified region.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pRgn);
-		HRGN hRgn = (HRGN)pRgn->GetHandle();
 		return ::GetUpdateRgn(m_hWnd, hRgn, bErase);
 	}
 
@@ -2610,12 +2603,14 @@ namespace Win32xx
 		return CWnd( ::GetWindow(m_hWnd, uCmd) );
 	}
 
-	inline CDC* CWnd::GetWindowDC() const
-	// The GetWindowDC function retrieves the device context (DC) for the entire
-	// window, including title bar, menus, and scroll bars.
+	inline CDC CWnd::GetWindowDC() const
+	// The GetWindowDC function retrieves the device context (DC) for the entire window, 
+	// including title bar, menus, and scroll bars. Use like this:
+	// CDC dc = GetWindowDC();
+	// Consider using a CWindowDC instead.
 	{
 		assert(::IsWindow(m_hWnd));
-		return CDC::AddTempHDC(::GetWindowDC(m_hWnd), m_hWnd);
+		return CDC(::GetWindowDC(m_hWnd), m_hWnd);
 	}
 
 	inline CRect CWnd::GetWindowRect() const
@@ -2653,14 +2648,13 @@ namespace Win32xx
 		return ::InvalidateRect(m_hWnd, lpRect, bErase);
 	}
 
-	inline BOOL CWnd::InvalidateRgn(CRgn* pRgn, BOOL bErase /*= TRUE*/) const
+	inline BOOL CWnd::InvalidateRgn(HRGN hRgn, BOOL bErase /*= TRUE*/) const
 	// The InvalidateRgn function invalidates the client area within the specified region
 	// by adding it to the current update region of a window. The invalidated region,
 	// along with all other areas in the update region, is marked for painting when the
 	// next WM_PAINT message occurs.
 	{
 		assert(::IsWindow(m_hWnd));
-		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
 		return ::InvalidateRgn(m_hWnd, hRgn, bErase);
 	}
 
@@ -2772,21 +2766,19 @@ namespace Win32xx
 		return ::PostMessage(hWnd, uMsg, wParam, lParam);
 	}
 
-	inline BOOL CWnd::RedrawWindow(LPCRECT lpRectUpdate, CRgn* pRgn, UINT flags) const
+	inline BOOL CWnd::RedrawWindow(LPCRECT lpRectUpdate, HRGN hRgn, UINT flags) const
 	// The RedrawWindow function updates the specified rectangle or region in a window's client area.
 	{
 		assert(::IsWindow(m_hWnd));
-		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
 		return ::RedrawWindow(m_hWnd, lpRectUpdate, hRgn, flags);
 	}
 
-	inline int CWnd::ReleaseDC(CDC* pDC) const
+	inline int CWnd::ReleaseDC(HDC hDC) const
 	// The ReleaseDC function releases a device context (DC), freeing it for use
 	// by other applications.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pDC);
-		return ::ReleaseDC(m_hWnd, pDC->GetHDC());
+		return ::ReleaseDC(m_hWnd, hDC);
 	}
 
 	inline BOOL CWnd::ScreenToClient(POINT& Point) const
@@ -2869,12 +2861,11 @@ namespace Win32xx
 		return CWnd( ::SetFocus(m_hWnd) );
 	}
 
-	inline void CWnd::SetFont(CFont* pFont, BOOL bRedraw /* = TRUE*/) const
+	inline void CWnd::SetFont(HFONT hFont, BOOL bRedraw /* = TRUE*/) const
 	// Specifies the font that the window will use when drawing text.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pFont);
-		SendMessage(WM_SETFONT, (WPARAM)pFont->GetHandle(), (LPARAM)bRedraw);
+		SendMessage(WM_SETFONT, (WPARAM)hFont, (LPARAM)bRedraw);
 	}
 
 	inline HICON CWnd::SetIcon(HICON hIcon, BOOL bBigIcon) const
@@ -3025,12 +3016,11 @@ namespace Win32xx
 		return ::ValidateRect(m_hWnd, prc);
 	}
 
-	inline BOOL CWnd::ValidateRgn(CRgn* pRgn) const
+	inline BOOL CWnd::ValidateRgn(HRGN hRgn) const
 	// The ValidateRgn function validates the client area within a region by
 	// removing the region from the current update region of the window.
 	{
 		assert(::IsWindow(m_hWnd));
-		HRGN hRgn = pRgn? (HRGN)pRgn->GetHandle() : NULL;
 		return ::ValidateRgn(m_hWnd, hRgn);
 	}
 
@@ -3101,12 +3091,11 @@ namespace Win32xx
 		return ::DrawAnimatedRects(m_hWnd, idAni, &rcFrom, &rcTo);
 	}
 
-	inline BOOL CWnd::DrawCaption(CDC* pDC, RECT& rc, UINT uFlags) const
+	inline BOOL CWnd::DrawCaption(HDC hDC, RECT& rc, UINT uFlags) const
 	// The DrawCaption function draws a window caption.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pDC);
-		return ::DrawCaption(m_hWnd, pDC->GetHDC(), &rc, uFlags);
+		return ::DrawCaption(m_hWnd, hDC, &rc, uFlags);
 	}
 
 	inline BOOL CWnd::EnableScrollBar(UINT uSBflags, UINT uArrows) const
@@ -3214,12 +3203,11 @@ namespace Win32xx
 		return ::OpenIcon(m_hWnd);
 	}
 
-	inline void CWnd::Print(CDC* pDC, DWORD dwFlags) const
+	inline void CWnd::Print(HDC hDC, DWORD dwFlags) const
 	// Requests that the window draw itself in the specified device context, most commonly in a printer device context.
 	{
 		assert(::IsWindow(m_hWnd));
-		assert(pDC);
-		SendMessage(m_hWnd, WM_PRINT, (WPARAM)pDC, (LPARAM)dwFlags);
+		SendMessage(m_hWnd, WM_PRINT, (WPARAM)hDC, (LPARAM)dwFlags);
 	}
 
 	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const
@@ -3229,20 +3217,19 @@ namespace Win32xx
 		return ::ScrollWindow(m_hWnd, XAmount, YAmount, lprcScroll, lprcClip);
 	}
 
-	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, CRgn* prgnUpdate, LPRECT lprcUpdate, UINT flags) const
+	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const
 	// The ScrollWindow function scrolls the contents of the window's client area.
 	{
 		assert(::IsWindow(m_hWnd));
-		HRGN hrgnUpdate = prgnUpdate? (HRGN)prgnUpdate->GetHandle() : NULL;
 		return ::ScrollWindowEx(m_hWnd, dx, dy, lprcScroll, lprcClip, hrgnUpdate, lprcUpdate, flags);
 	}
 
-	inline BOOL CWnd::SetMenu(CMenu* pMenu) const
+	inline BOOL CWnd::SetMenu(HMENU hMenu) const
 	// The SetMenu function assigns a menu to the specified window.
 	// A hMenu of NULL removes the menu.
 	{
 		assert(::IsWindow(m_hWnd));
-		return ::SetMenu(m_hWnd, pMenu? pMenu->GetHandle() : NULL);
+		return ::SetMenu(m_hWnd, hMenu);
 	}
 
 	inline int CWnd::SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL fRedraw) const
@@ -3306,11 +3293,10 @@ namespace Win32xx
 		return ::LockWindowUpdate(0);
 	}
 
-	inline CWnd CWnd::WindowFromDC(CDC* pDC) const
+	inline CWnd CWnd::WindowFromDC(HDC hDC) const
 	// The WindowFromDC function returns a handle to the window associated with the specified display device context (DC).
 	{
-		assert(pDC);
-		return CWnd( ::WindowFromDC(pDC->GetHDC()) );
+		return CWnd( ::WindowFromDC(hDC) );
 	}
 
 

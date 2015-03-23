@@ -54,7 +54,7 @@ LRESULT CViewRect::OnTimer(WPARAM wParam, LPARAM lParam)
 	nGreen  = rand () & 255;
 	nBlue   = rand () & 255;
 
-	CClientDC RectDC(this);
+	CClientDC RectDC(*this);
 	RectDC.CreateSolidBrush (RGB (nRed, nGreen, nBlue));
 
     int Left   = (xLeft < xRight) ? xLeft : xRight;

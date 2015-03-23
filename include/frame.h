@@ -1448,7 +1448,7 @@ namespace Win32xx
 			if (pmid->mii.hSubMenu)
 			{
 				CRect rcSubMenu = pdis->rcItem;
-				rcSubMenu.left = pdis->rcItem.right - m_pMenuMetrics->m_marItem.cxRightWidth - m_pMenuMetrics->m_marText.cxRightWidth;;
+				rcSubMenu.left = pdis->rcItem.right - m_pMenuMetrics->m_marItem.cxRightWidth - m_pMenuMetrics->m_marText.cxRightWidth;
 				m_pMenuMetrics->DrawThemeBackground(pdis->hDC, MENU_POPUPSUBMENU, m_pMenuMetrics->ToCheckStateId(pmid->mii.fType, iStateId), &rcSubMenu, NULL);
 			}
 
@@ -2170,7 +2170,7 @@ namespace Win32xx
 
 		// Create the status bar
 		GetStatusBar()->Create(*this);
-		GetStatusBar()->SetFont(&m_fntStatusBar, FALSE);
+		GetStatusBar()->SetFont(m_fntStatusBar, FALSE);
 		ShowStatusBar(m_ShowStatusBar);
 
 		if (m_UseIndicatorStatus)
@@ -2531,7 +2531,7 @@ namespace Win32xx
 			// Update the status bar font and text
 			m_fntStatusBar.DeleteObject();
 			m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
-			GetStatusBar()->SetFont(&m_fntStatusBar, TRUE);
+			GetStatusBar()->SetFont(m_fntStatusBar, TRUE);
 			if (m_UseMenuStatus)
 				GetStatusBar()->SetWindowText(m_strStatusText);
 
@@ -2543,14 +2543,14 @@ namespace Win32xx
 			// Update the MenuBar font and button size
 			m_fntMenuBar.DeleteObject();
 			m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
-			GetMenuBar()->SetFont(&m_fntMenuBar, TRUE);
+			GetMenuBar()->SetFont(m_fntMenuBar, TRUE);
 			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
 
 			// Update the MenuBar band size
 			int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
 			REBARBANDINFO rbbi;
 			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
-			CClientDC dcMenuBar(GetMenuBar());
+			CClientDC dcMenuBar(*GetMenuBar());
 			dcMenuBar.SelectObject(GetMenuBar()->GetFont());
 			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int MenuBar_Height = sizeMenuBar.cy + 6;
@@ -2836,7 +2836,7 @@ namespace Win32xx
 			ShowMenu(bShow);
 		}
 		else
-			SetMenu(&m_Menu);
+			SetMenu(m_Menu);
 	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
@@ -2908,7 +2908,7 @@ namespace Win32xx
 		if (GetStatusBar()->IsWindow() && (m_UseIndicatorStatus))
 		{
 			// Calculate the width of the text indicators
-			CClientDC dcStatus(GetStatusBar());
+			CClientDC dcStatus(*GetStatusBar());
 			CString CAP = LoadString(IDW_INDICATOR_CAPS);
 			CString NUM = LoadString(IDW_INDICATOR_NUM);
 			CString SCRL = LoadString(IDW_INDICATOR_SCRL);
@@ -3216,7 +3216,7 @@ namespace Win32xx
 			if (IsReBarUsed())
 				GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(GetMenuBar()->GetHwnd()), TRUE);
 			else
-				SetMenu(&m_Menu);
+				SetMenu(m_Menu);
 		}
 		else
 		{

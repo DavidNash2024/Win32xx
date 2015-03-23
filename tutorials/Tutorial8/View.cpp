@@ -27,7 +27,7 @@ void CView::ClearPoints()
 
 void CView::DrawLine(int x, int y)
 {
-	CClientDC dcClient(this);
+	CClientDC dcClient(*this);
 	dcClient.CreatePen(PS_SOLID, 1, m_points.back().color);
 	dcClient.MoveTo(m_points.back().x, m_points.back().y);
 	dcClient.LineTo(x, y);

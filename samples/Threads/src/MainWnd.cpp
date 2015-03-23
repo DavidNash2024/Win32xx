@@ -64,7 +64,7 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 	// Set the font for the Edit window
 	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-  	m_EditWnd.SetFont(&m_Font, FALSE);
+  	m_EditWnd.SetFont(m_Font, FALSE);
 
 	// Create each CMyThread object
 	for (int i = 1 ; i <= m_nTestWnd ; i++)

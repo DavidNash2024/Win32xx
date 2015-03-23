@@ -13,7 +13,7 @@ CView::CView()
 
 void CView::DrawLine(int x, int y)
 {
-	CClientDC dcClient(this);
+	CClientDC dcClient(*this);
 	dcClient.MoveTo(m_points.back().x, m_points.back().y);
 	dcClient.LineTo(x, y);
 }

@@ -150,7 +150,7 @@ BOOL CMyDialog::OnEraseBkgnd(CDC* pDC)
 
 	// Draw the dialog's background manually
 	CRect rc = GetClientRect();
-	CClientDC dcClient(this);	
+	CClientDC dcClient(*this);	
 	dcClient.SolidFill(GetSysColor(COLOR_3DFACE), rc);
 
 	// draw size grip

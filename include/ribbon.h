@@ -82,7 +82,7 @@ namespace Win32xx
 		STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue, 
 												 __out PROPVARIANT* ppropvarNewValue);	
 		
-		bool virtual CreateRibbon(CWnd* pWnd);
+		bool virtual CreateRibbon(HWND hWnd);
 		void virtual DestroyRibbon();
 		IUIFramework* GetRibbonFramework() const { return m_pRibbonFramework; }
 		UINT GetRibbonHeight() const;
@@ -248,7 +248,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline bool CRibbon::CreateRibbon(CWnd* pWnd)
+	inline bool CRibbon::CreateRibbon(HWND hWnd)
 	{	
 		::CoInitialize(NULL);
 
@@ -258,7 +258,7 @@ namespace Win32xx
 		// Connect the host application to the Ribbon framework.
 
 		assert(m_pRibbonFramework);
-		HRESULT hr = m_pRibbonFramework->Initialize(pWnd->GetHwnd(), this);
+		HRESULT hr = m_pRibbonFramework->Initialize(hWnd, this);
 		if (FAILED(hr))
 		{
 			return false;
@@ -351,7 +351,7 @@ namespace Win32xx
 
 		if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
 		{	
-			if (CreateRibbon(this))
+			if (CreateRibbon(*this))
 			{
 				m_UseReBar = FALSE;			// Don't use a ReBar
 				m_UseToolBar = FALSE;			// Don't use a ToolBar

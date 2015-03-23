@@ -687,7 +687,7 @@ namespace Win32xx
 
 		for (int i = 0; i < GetItemCount(); ++i)
 		{
-			CClientDC dcClient(this);
+			CClientDC dcClient(*this);
 			dcClient.SelectObject(&m_TabFont);
 			CString str;
 			TCITEM tcItem;
@@ -721,7 +721,7 @@ namespace Win32xx
 
 	inline int CTab::GetTextHeight() const
 	{
-		CClientDC dcClient(this);
+		CClientDC dcClient(*this);
 		dcClient.SelectObject(&m_TabFont);
 		CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
@@ -839,7 +839,7 @@ namespace Win32xx
 		{
 			m_IsClosePressed = TRUE;
 			SetCapture();
-			CClientDC dc(this);
+			CClientDC dc(*this);
 			DrawCloseButton(&dc);
 		}
 		else
@@ -875,7 +875,7 @@ namespace Win32xx
 
 	inline LRESULT CTab::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
-		CClientDC dc(this);
+		CClientDC dc(*this);
 		DrawCloseButton(&dc);
 		DrawListButton(&dc);
 
@@ -918,7 +918,7 @@ namespace Win32xx
 		m_OldMousePos.x = pt.x;
 		m_OldMousePos.y = pt.y;
 
-		CClientDC dc(this);
+		CClientDC dc(*this);
 		DrawCloseButton(&dc);
 		DrawListButton(&dc);
 
@@ -1039,7 +1039,7 @@ namespace Win32xx
 #endif
 
 		// Create the memory DC and bitmap
-		CClientDC dcView(this);
+		CClientDC dcView(*this);
 		CMemDC dcMem(&dcView);
 		CRect rcClient = GetClientRect();
 		dcMem.CreateCompatibleBitmap(&dcView, rcClient.Width(), rcClient.Height());
@@ -1210,7 +1210,7 @@ namespace Win32xx
 		assert(pFont);
 		int HeightGap = 5;
 		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
-		CWnd::SetFont(pFont, bRedraw);
+		CWnd::SetFont(*pFont, bRedraw);
 	}
 
 	inline void CTab::SetOwnerDraw(BOOL bEnabled)
@@ -1360,7 +1360,7 @@ namespace Win32xx
 			m_IsListMenuActive = FALSE;
 		}
 
-		CClientDC dc(this);
+		CClientDC dc(*this);
 		DrawListButton(&dc);
 	}
 

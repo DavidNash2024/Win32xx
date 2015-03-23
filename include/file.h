@@ -65,13 +65,13 @@ namespace Win32xx
 		virtual BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
 		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL, 
-						LPCTSTR pszFilter = NULL, CWnd* pOwnerWnd = NULL);
+						LPCTSTR pszFilter = NULL, HWND hOwnerWnd = NULL);
 		virtual UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
 		virtual CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
 						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
-						LPCTSTR pszFilter = NULL, LPCTSTR pszDefExt = NULL, CWnd* pOwnerWnd = NULL);
+						LPCTSTR pszFilter = NULL, LPCTSTR pszDefExt = NULL, HWND hOwnerWnd = NULL);
 		virtual ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
 		virtual void SeekToBegin();
 		virtual ULONGLONG SeekToEnd();
@@ -221,7 +221,7 @@ namespace Win32xx
 		return (m_hFile != 0);
 	}
 
-	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, CWnd* pOwnerWnd)
+	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, HWND hOwnerWnd)
 	// Displays the file open dialog. 
 	// Returns a CString containing either the selected file name or an empty CString.
 	{
@@ -240,7 +240,7 @@ namespace Win32xx
 			ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 #endif
 
-		ofn.hwndOwner = pOwnerWnd? pOwnerWnd->GetHwnd() : NULL;
+		ofn.hwndOwner = hOwnerWnd;
 		ofn.hInstance = GetApp()->GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
@@ -278,7 +278,7 @@ namespace Win32xx
 		return ::DeleteFile(pszFileName);
 	}
 
-	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, LPCTSTR pszDefExt, CWnd* pOwnerWnd)
+	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, LPCTSTR pszDefExt, HWND hOwnerWnd)
 	// Displays the SaveFileDialog.
 	// Returns a CString containing either the selected file name or an empty CString
 	{
@@ -297,7 +297,7 @@ namespace Win32xx
 			ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
 #endif
 
-		ofn.hwndOwner = pOwnerWnd? pOwnerWnd->GetHwnd() : NULL;
+		ofn.hwndOwner = hOwnerWnd;
 		ofn.hInstance = GetApp()->GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrFile = (LPTSTR)pszFilePathName;

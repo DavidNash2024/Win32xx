@@ -181,7 +181,7 @@ void CColourDialog::PaintPreview()
 		nTopDest = rcView.top + (rcView.Height() - bm.bmHeight)/2;
 	}
 
-	CClientDC dcPreview(this);
+	CClientDC dcPreview(*this);
 	CMemDC MemDC(&dcPreview);
 	MemDC.SelectObject(&m_bmPreview);
 	dcPreview.BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, &MemDC, 0, 0, SRCCOPY);

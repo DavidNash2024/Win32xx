@@ -9,7 +9,7 @@
 class CMyPropertySheet : public CPropertySheet
 {
 public:
-	CMyPropertySheet(LPCTSTR pszCaption = NULL, CWnd* pParent = NULL);
+	CMyPropertySheet(LPCTSTR pszCaption = NULL, HWND hParent = NULL);
 	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

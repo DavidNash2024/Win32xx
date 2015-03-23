@@ -492,7 +492,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CClientDC MenuBarDC(this);
+				CClientDC MenuBarDC(*this);
 				m_nMDIButton = -1;
 
 				if (m_MDIRect[0].PtInRect(pt)) m_nMDIButton = 0;
@@ -703,7 +703,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CClientDC MenuBarDC(this);
+				CClientDC MenuBarDC(*this);
 
 				DrawMDIButton(&MenuBarDC, MDI_MIN,     0);
 				DrawMDIButton(&MenuBarDC, MDI_RESTORE, 0);
@@ -724,7 +724,7 @@ namespace Win32xx
 		{
 			if (IsMDIChildMaxed())
 			{
-				CClientDC MenuBarDC(this);
+				CClientDC MenuBarDC(*this);
 				int MDIButton = -1;
 				if (m_MDIRect[0].PtInRect(pt)) MDIButton = 0;
 				if (m_MDIRect[1].PtInRect(pt)) MDIButton = 1;
@@ -963,7 +963,7 @@ namespace Win32xx
 		InvalidateRect(&m_MDIRect[1], TRUE);
 		InvalidateRect(&m_MDIRect[2], TRUE);
 		{
-			CClientDC MenuBarDC(this);
+			CClientDC MenuBarDC(*this);
 			DrawAllMDIButtons(&MenuBarDC);
 		}
 

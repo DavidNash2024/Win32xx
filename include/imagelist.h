@@ -101,8 +101,8 @@ namespace Win32xx
 		BOOL BeginDrag(int nImage, CPoint ptHotSpot) const;
 		void DeleteImageList();
 		HIMAGELIST Detach();
-		BOOL DragEnter(CWnd* pWndLock, CPoint point) const;
-		BOOL DragLeave(CWnd* pWndLock) const;
+		BOOL DragEnter(HWND hWndLock, CPoint point) const;
+		BOOL DragLeave(HWND hWndLock) const;
 		BOOL DragMove(CPoint pt) const;
 		BOOL DragShowNolock(BOOL bShow) const;
 		BOOL Draw(CDC* pDC, int nImage, POINT pt, UINT nStyle) const;
@@ -417,17 +417,17 @@ namespace Win32xx
 		return hImageList;
 	}
 
-	inline BOOL CImageList::DragEnter(CWnd* pWndLock, CPoint point) const
+	inline BOOL CImageList::DragEnter(HWND hWndLock, CPoint point) const
 	// Displays the drag image at the specified position within the window.
 	{
 		assert(m_pData->hImageList);
-		return ImageList_DragEnter(*pWndLock, point.x, point.y);
+		return ImageList_DragEnter(hWndLock, point.x, point.y);
 	}
 
-	inline BOOL CImageList::DragLeave(CWnd* pWndLock) const
+	inline BOOL CImageList::DragLeave(HWND hWndLock) const
 	// Unlocks the specified window and hides the drag image, allowing the window to be updated.
 	{
-		return ImageList_DragLeave(*pWndLock);
+		return ImageList_DragLeave(hWndLock);
 	}
 
 	inline BOOL CImageList::DragMove(CPoint pt) const

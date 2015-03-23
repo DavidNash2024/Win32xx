@@ -324,7 +324,7 @@ void CMainFrame::OnFileOpen()
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
 	CString Filters( _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
 	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), Filters, this);
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), Filters, *this);
 
 	if (!str.IsEmpty())
 	{
@@ -349,7 +349,7 @@ void CMainFrame::OnFileSaveAs()
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
 	CString Filters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
 	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), Filters, _T("txt"), this);
+	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), Filters, _T("txt"), *this);
 
 	if (!str.IsEmpty())
 	{

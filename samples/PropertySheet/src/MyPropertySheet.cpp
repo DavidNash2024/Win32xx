@@ -156,7 +156,7 @@ int CComboPage::OnSetActive()
 	return 0;
 }
 
-CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, CWnd* pParent /* = NULL*/) : CPropertySheet(pszCaption, pParent)
+CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /* = NULL*/) : CPropertySheet(pszCaption, hParent)
 {
 	SetIcon(IDI_DIALOG);
 }

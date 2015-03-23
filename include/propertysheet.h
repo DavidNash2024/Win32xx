@@ -117,13 +117,13 @@ namespace Win32xx
 	class CPropertySheet : public CWnd
 	{
 	public:
-		CPropertySheet(UINT nIDCaption, CWnd* pParent = NULL);
-		CPropertySheet(LPCTSTR pszCaption = NULL, CWnd* pParent = NULL);
+		CPropertySheet(UINT nIDCaption, HWND hParent = NULL);
+		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hParent = NULL);
 		virtual ~CPropertySheet() {}
 
 		// Operations
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
-		virtual HWND Create(CWnd* pParent = 0);
+		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyButton(int iButton);
 		virtual void Destroy();
@@ -285,13 +285,13 @@ namespace Win32xx
 			{
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
-					CPaintDC dc(this);
+					CPaintDC dc(*this);
 					OnDraw(&dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
-					CClientDC dc(this);
+					CClientDC dc(*this);
 					OnDraw(&dc);
 				}
 
@@ -300,9 +300,8 @@ namespace Win32xx
 			
 		case WM_ERASEBKGND:
 			{
-				CDC dc((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(&dc);
-				dc.Detach();
+				CDC* pDC = CDC::FromHandle((HDC)wParam);
+				BOOL bResult = OnEraseBkgnd(pDC);
 				if (bResult) return TRUE;
 			}
 			break;
@@ -613,7 +612,7 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CPropertySheet class
 	//
-	inline CPropertySheet::CPropertySheet(UINT nIDCaption, CWnd* pParent /* = NULL*/)
+	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(LoadString(nIDCaption));
@@ -628,12 +627,12 @@ namespace Win32xx
 #endif
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-		m_PSH.hwndParent       = pParent? pParent->GetHwnd() : 0;
+		m_PSH.hwndParent       = hParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
-	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, CWnd* pParent /* = NULL*/)
+	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hParent /* = NULL*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(pszCaption);
@@ -648,7 +647,7 @@ namespace Win32xx
 #endif
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
-		m_PSH.hwndParent       = pParent? pParent->GetHwnd() : 0;;
+		m_PSH.hwndParent       = hParent;
 		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
@@ -720,14 +719,14 @@ namespace Win32xx
 	}
 
 
-	inline HWND CPropertySheet::Create(CWnd* pParent /*= 0*/)
+	inline HWND CPropertySheet::Create(HWND hParent /*= 0*/)
 	// Creates a modeless Property Sheet
 	{
 		assert( GetApp() );
 
-		if (pParent)
+		if (hParent)
 		{
-			m_PSH.hwndParent = pParent->GetHwnd();
+			m_PSH.hwndParent = hParent;
 		}
 
 		BuildPageArray();

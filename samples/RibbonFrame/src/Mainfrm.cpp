@@ -151,7 +151,7 @@ void CMainFrame::OnFileExit()
 void CMainFrame::OnFileOpen()
 {
 	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), this);
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), *this);
 
 	if (!str.IsEmpty())
 	{
@@ -184,7 +184,7 @@ void CMainFrame::OnFileSave()
 void CMainFrame::OnFileSaveAs()
 {
 	CFile File;
-		CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), this);
+		CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), *this);
 
 	// Store the PlotPoint data in the file
 	if (!str.IsEmpty())
@@ -207,7 +207,7 @@ void CMainFrame::OnFilePrint()
 	int Height = rcView.Height();
 
 	// Copy the bitmap from the View window
-	CClientDC ViewDC(&m_View);
+	CClientDC ViewDC(m_View);
 	CMemDC MemDC(&ViewDC);
 	CBitmap bmView(::CreateCompatibleBitmap(ViewDC, Width, Height));
 	MemDC.SelectObject(&bmView);

@@ -399,7 +399,7 @@ namespace Win32xx
 		};
 
 		CDC();									// Constructs a new CDC without assigning a HDC
-		CDC(HDC hDC, HWND hWnd = 0);			// Assigns a HDC to a new CDC
+		CDC(HDC hDC, HWND hWnd = 0);			// Constructs a new CDC and assigns a HDC
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
 		virtual ~CDC();
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
@@ -759,7 +759,7 @@ namespace Win32xx
 
 	private:
 		void AddToMap();
-		static CDC* AddTempHDC(HDC hDC, HWND hWnd);
+	//	static CDC* AddTempHDC(HDC hDC, HWND hWnd);
 		void Release();
 		BOOL RemoveFromMap();
 
@@ -769,15 +769,12 @@ namespace Win32xx
 	class CClientDC : public CDC
 	{
 	public:
-		CClientDC(const CWnd* pWnd)
+		CClientDC(HWND hWnd)
 		{
-			if (pWnd)
-			{
-				assert(pWnd->IsWindow());
-				Attach(::GetDC(*pWnd), *pWnd);
-			}
-			else
-				Attach(::GetDC(GetDesktopWindow()), 0);
+			if (0 == hWnd) hWnd = GetDesktopWindow();
+
+			assert(::IsWindow(hWnd));
+			Attach(::GetDC(hWnd), hWnd);
 		}
 
 		virtual ~CClientDC() {}
@@ -802,11 +799,11 @@ namespace Win32xx
 	class CPaintDC : public CDC
 	{
 	public:
-		CPaintDC(const CWnd* pWnd)
+		CPaintDC(HWND hWnd)
 		{
-			assert(pWnd->IsWindow());
-			m_hWnd = pWnd->GetHwnd();
-			Attach(::BeginPaint(pWnd->GetHwnd(), &m_ps), m_hWnd);
+			assert(::IsWindow(hWnd));
+			m_hWnd = hWnd;
+			Attach(::BeginPaint(hWnd, &m_ps), hWnd);
 		}
 
 		virtual ~CPaintDC()
@@ -823,17 +820,11 @@ namespace Win32xx
 	class CWindowDC : public CDC
 	{
 	public:
-		CWindowDC(const CWnd* pWnd)
+		CWindowDC(HWND hWnd)
 		{
-			HWND hWnd = 0;
-			if (pWnd)
-			{
-				assert(pWnd->IsWindow());
-				hWnd = pWnd->GetHwnd();
-			}
-			else
-				hWnd = GetDesktopWindow();
+			if (0 == hWnd) hWnd = GetDesktopWindow();
 
+			assert(::IsWindow(hWnd));
 			Attach(::GetWindowDC(hWnd), hWnd);
 		}
 		virtual ~CWindowDC() {}
@@ -2288,7 +2279,7 @@ namespace Win32xx
 		m_pData->hWnd = 0;
 	}
 
-	inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
+inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// This constructor assigns an existing HDC to the CDC
 	// The HDC WILL be released or deleted when the CDC object is destroyed
 	// The hWnd parameter is only used in WindowsCE. It specifies the HWND of a Window or
@@ -2419,8 +2410,9 @@ namespace Win32xx
 	inline void CDC::Attach(HDC hDC, HWND hWnd /* = 0*/)
 	// Attaches a HDC to the CDC object.
 	// The HDC will be automatically deleted or released when the destructor is called.
-	// The hWnd parameter is only used on WindowsCE. It specifies the HWND of a Window or
-	// Window Client DC
+	// Window DCs and Client DCs have a HWND. This must be specified on WinCE, as WinCE
+	// doesn't support WindowFromDC. The alternative is to use CClientDC or CWindowDC
+	// as appropriate.
 	{
 		UNREFERENCED_PARAMETER(hWnd);
 		assert(m_pData);
@@ -2549,9 +2541,10 @@ namespace Win32xx
 		BitBlt(x, y, cx, cy, &dcImage, 0, 0, SRCINVERT);
 	}
 
-	inline CDC* CDC::AddTempHDC(HDC hDC, HWND hWnd)
-	// Used by GetDC and GetWindowDC to add a temporary
-	// CDC pointer with the specified hWnd.
+/*	inline CDC* CDC::AddTempHDC(HDC hDC, HWND hWnd)
+	// Used by GetDC, GetDCEx, and GetWindowDC to add a temporary CDC pointer
+	// with the specified hWnd. This HDC must be released when it is no longer
+	// required.
 	{
 		assert( GetApp() );
 
@@ -2565,7 +2558,7 @@ namespace Win32xx
 		pDC->m_pData->IsTmpHDC = FALSE; // Only FromHandle require bIsTmpHDC = TRUE
 		pDC->m_pData->hWnd = hWnd;
 		return pDC;
-	}
+	} */
 
 	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const
 	// An efficient color gradient filler compatible with all Windows operating systems
@@ -2885,7 +2878,7 @@ namespace Win32xx
 		CBitmap* pBitmap = new CBitmap;
 		pBitmap->CreateMappedBitmap(nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);;
+		::SelectObject(m_pData->hDC, *pBitmap);
 	}
 #endif // !_WIN32_WCE
 

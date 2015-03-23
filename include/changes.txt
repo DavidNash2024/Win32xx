@@ -87,9 +87,9 @@ Modified CWnd::WindowFromDC
 Modified CWnd::WindowFromPoint
 
 Removed static const CWnd wndTop(HWND_TOP);
-Removedstatic const CWnd wndTopMost(HWND_TOPMOST);
-Removedstatic const CWnd wndBottom(HWND_BOTTOM);
-Removedstatic const CWnd wndNoTopMost(HWND_NOTOPMOST);
+Removed static const CWnd wndTopMost(HWND_TOPMOST);
+Removed static const CWnd wndBottom(HWND_BOTTOM);
+Removed static const CWnd wndNoTopMost(HWND_NOTOPMOST);
 Removed CResizer::AddChild   (one of two)
 
 Renamed CWnd::FromHandlePermanent to CWnd::GetCWndPtr

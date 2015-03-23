@@ -82,7 +82,7 @@ void CMainFrame::OnModeless()
 		m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 		m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 		m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
-		m_ModelessPS.Create(this);
+		m_ModelessPS.Create(*this);
 	}
 	else
 		m_ModelessPS.SetForegroundWindow();
@@ -93,7 +93,7 @@ void CMainFrame::OnModal()
 	if (m_ModelessPS.IsWindow())
 		m_ModelessPS.Destroy();
 
-	CMyPropertySheet mps(_T("Modal Property Sheet"), this);
+	CMyPropertySheet mps(_T("Modal Property Sheet"), *this);
 	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 	mps.DoModal();
@@ -101,7 +101,7 @@ void CMainFrame::OnModal()
 
 void CMainFrame::OnWizard()
 {
-	CMyPropertySheet mps(NULL, this);
+	CMyPropertySheet mps(NULL, *this);
 	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 	mps.SetWizardMode(TRUE);

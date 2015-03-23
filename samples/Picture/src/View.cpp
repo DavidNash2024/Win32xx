@@ -36,7 +36,7 @@ CRect CView::GetImageRect()
 	}
 
 	// convert himetric to pixels
-	CClientDC dc(this);
+	CClientDC dc(*this);
 	int nWidth	= MulDiv(hmWidth, dc.GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
 	int nHeight	= MulDiv(hmHeight, dc.GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
 
@@ -292,7 +292,7 @@ LRESULT CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
 		m_yCurrentScroll = MAX(yNewPos, 0);
 
 		// Paint the window directly to eliminate flicker
-		CClientDC dcView(this);
+		CClientDC dcView(*this);
 		Paint(dcView);
 	}
 

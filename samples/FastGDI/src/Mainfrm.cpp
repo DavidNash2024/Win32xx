@@ -148,7 +148,7 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 void CMainFrame::OnFileOpen()
 {
 	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), this);
+	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), *this);
 	if (!str.IsEmpty())
 	{
 		LoadFile(str);

@@ -29,7 +29,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 
 	if (GetWinVersion() >= 2601)		// Ribbon only supported on Windows 7 and above
 	{
-		if (CreateRibbon(this))
+		if (CreateRibbon(*this))
 			TRACE("Ribbon Created Succesfully\n");
 		else
 			TRACE("Failed to create ribbon\n");
