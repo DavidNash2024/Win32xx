@@ -170,7 +170,7 @@ void CView::StorePoint(int x, int y, bool PenDown)
 void CView::OnLButtonDown(LPARAM lParam)
 {
  	// Capture mouse input.
- 	::SetCapture(m_hWnd);
+ 	SetCapture();
 
 	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 }

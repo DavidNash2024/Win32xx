@@ -497,7 +497,7 @@ namespace Win32xx
 
 	inline void CDialog::EndDialog(INT_PTR nResult)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 
 		if (IsModal())
 			::EndDialog(m_hWnd, nResult);
@@ -562,7 +562,7 @@ namespace Win32xx
 	inline DWORD CDialog::GetDefID() const
 	// Retrieves the identifier of the default push button control for the dialog. 
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		DWORD dwID = 0;
 		LRESULT LR = SendMessage(DM_GETDEFID, 0L, 0L);
 		if (DC_HASDEFID == HIWORD(LR))
@@ -574,7 +574,7 @@ namespace Win32xx
 	inline void CDialog::GotoDlgCtrl(HWND hWndCtrl)
 	// Sets the keyboard focus to the specified control
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		assert(::IsWindow(hWndCtrl));
 		SendMessage(WM_NEXTDLGCTL, (WPARAM)hWndCtrl, TRUE);
 	}
@@ -582,28 +582,28 @@ namespace Win32xx
 	inline BOOL CDialog::MapDialogRect(LPRECT pRect) const
 	// Converts the dialog box units to screen units (pixels).
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return ::MapDialogRect(m_hWnd, pRect);
 	}
 
 	inline void CDialog::NextDlgCtrl() const
 	// Sets the keyboard focus to the next dialog control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(WM_NEXTDLGCTL, FALSE, FALSE);
 	}
 
 	inline void CDialog::PrevDlgCtrl() const
 	// Sets the keyboard focus to the previous dialog control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(WM_NEXTDLGCTL, TRUE, FALSE);
 	}
 
 	inline void CDialog::SetDefID(UINT nID)
 	// Changes the identifier of the default push button for a dialog box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(DM_SETDEFID, (WPARAM)nID, 0L);
 	}
 

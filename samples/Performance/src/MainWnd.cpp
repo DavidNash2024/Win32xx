@@ -16,7 +16,7 @@ CMainWindow::~CMainWindow()
 {
 }
 
-HWND CMainWindow::Create(CWnd* pParent /*= 0*/)
+HWND CMainWindow::Create(HWND hParent /*= 0*/)
 {
 	CString str = _T("Main Window");
 
@@ -24,7 +24,7 @@ HWND CMainWindow::Create(CWnd* pParent /*= 0*/)
 	CRect rc(20, 50, 400, 300);
 
 	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		rc, *pParent, 0);
+		rc, hParent, 0);
 }
 
 void CMainWindow::CreateTestWindows(int nWindows)
@@ -49,7 +49,7 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 
 	// Create an Edit window over the client area of the main window
 	m_Edit.CreateEx(0L, _T("Edit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-						m_hWnd, NULL, NULL);
+						*this, NULL, NULL);
 
 	// Set a default font
 	m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,

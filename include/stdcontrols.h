@@ -249,84 +249,84 @@ namespace Win32xx
 	inline HBITMAP CButton::GetBitmap() const
 	// returns the handle to the bitmap associated with the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HBITMAP)SendMessage(BM_GETIMAGE, IMAGE_BITMAP, 0L);
 	}
 
 	inline UINT CButton::GetButtonStyle() const
 	// returns the style of the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (UINT)GetWindowLongPtr(GWL_STYLE) & 0xFFFF;
 	}
 
 	inline int CButton::GetCheck() const
 	// returns the check state of the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(BM_GETCHECK, 0L, 0L);
 	}
 
 	inline HCURSOR CButton::GetCursor() const
 	// returns the handle to the cursor associated with the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HCURSOR)SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0L);
 	}
 
 	inline HICON CButton::GetIcon() const
 	// returns the handle to the icon associated with the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HICON)SendMessage(BM_GETIMAGE, IMAGE_ICON, 0L);
 	}
 
 	inline UINT CButton::GetState() const
 	// returns the state of the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (UINT)SendMessage(BM_GETSTATE, 0L, 0L);
 	}
 
 	inline HBITMAP CButton::SetBitmap(HBITMAP hBitmap) const
 	// sets the bitmap associated with the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HBITMAP)SendMessage(BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
 	}
 
 	inline void CButton::SetButtonStyle(DWORD dwStyle, BOOL bRedraw) const
 	// sets the button style
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(BM_SETSTYLE, dwStyle, bRedraw);
 	}
 
 	inline void CButton::SetCheck(int nCheckState) const
 	// sets the button check state
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(BM_SETCHECK, (WPARAM)nCheckState, 0L);
 	}
 
 	inline HCURSOR CButton::SetCursor(HCURSOR hCursor) const
 	// sets the cursor associated with the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HCURSOR)SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor);
 	}
 
 	inline HICON CButton::SetIcon(HICON hIcon) const
 	// sets the icon associated with the button
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HICON)SendMessage( BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
 	}
 
 	inline void CButton::SetState(BOOL bHighlight) const
 	// sets the button state
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(BM_SETSTATE, bHighlight, 0L);
 	}
 
@@ -343,14 +343,14 @@ namespace Win32xx
 	inline BOOL CEdit::CanUndo() const
 	// Returns TRUE if the edit control operation can be undone.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(EM_CANUNDO, 0L, 0L);
 	}
 
 	inline int CEdit::CharFromPos(CPoint pt) const
 	// Returns the character index and line index of the character nearest the specified point.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_CHARFROMPOS, 0L, MAKELPARAM(pt.x, pt.y));
 	}
 
@@ -358,7 +358,7 @@ namespace Win32xx
 	// Returns the zero-based index of the first visible character in a single-line edit control 
 	//  or the zero-based index of the uppermost visible line in a multiline edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_GETFIRSTVISIBLELINE, 0L, 0L);
 	}
 
@@ -366,28 +366,28 @@ namespace Win32xx
 	// Returns a handle identifying the buffer containing the multiline edit control's text. 
 	//  It is not processed by single-line edit controls.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HLOCAL)SendMessage(EM_GETHANDLE, 0L, 0L);
 	}
 
 	inline UINT CEdit::GetLimitText() const
 	// Returns the current text limit, in characters.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (UINT)SendMessage(EM_GETLIMITTEXT, 0L, 0L);
 	}
 
 	inline int CEdit::GetLine(int nIndex, LPTSTR lpszBuffer) const
 	// Copies characters to a buffer and returns the number of characters copied.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_GETLINE, (WPARAM)nIndex, (LPARAM)lpszBuffer);
 	}
 
 	inline int CEdit::GetLine(int nIndex, LPTSTR lpszBuffer, int nMaxLength) const
 	// Copies characters to a buffer and returns the number of characters copied.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		*(LPWORD)lpszBuffer = (WORD)nMaxLength;
 		return (int)SendMessage(EM_GETLINE, (WPARAM)nIndex, (LPARAM)lpszBuffer);
 	}
@@ -395,56 +395,56 @@ namespace Win32xx
 	inline int CEdit::GetLineCount() const
 	// Returns the number of lines in the edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_GETLINECOUNT, 0L, 0L);
 	}
 
 	inline DWORD CEdit::GetMargins() const
 	// Returns the widths of the left and right margins.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (DWORD)SendMessage(EM_GETMARGINS, 0L, 0L);
 	}
 
 	inline BOOL CEdit::GetModify() const
 	// Returns a flag indicating whether the content of an edit control has been modified.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(EM_GETMODIFY, 0L, 0L);
 	}
 
 	inline TCHAR CEdit::GetPasswordChar() const
 	// Returns the character that edit controls use in conjunction with the ES_PASSWORD style.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (TCHAR)SendMessage(EM_GETPASSWORDCHAR, 0L, 0L);
 	}
 
 	inline void CEdit::GetRect(LPRECT lpRect) const
 	// Returns the coordinates of the formatting rectangle in an edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_GETRECT, 0L, (LPARAM)lpRect);
 	}
 
 	inline void CEdit::GetSel(int& nStartChar, int& nEndChar) const
 	// Returns the starting and ending character positions of the current selection in the edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_GETSEL, (WPARAM)&nStartChar,(LPARAM)&nEndChar);
 	}
 
 	inline DWORD CEdit::GetSel() const
 	// Returns the starting and ending character positions of the current selection in the edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (DWORD)SendMessage(EM_GETSEL, 0L, 0L);
 	}
 
 	inline CPoint CEdit::PosFromChar(UINT nChar) const
 	// Returns the client coordinates of the specified character.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return CPoint( (DWORD)SendMessage(EM_POSFROMCHAR, (WPARAM)nChar, 0L));
 	}
 
@@ -452,35 +452,35 @@ namespace Win32xx
 	// Sets a handle to the memory used as a text buffer, empties the undo buffer, 
 	//  resets the scroll positions to zero, and redraws the window.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETHANDLE, (WPARAM)hBuffer, 0L);
 	}
 
 	inline void CEdit::SetLimitText(UINT nMax) const
 	// Sets the maximum number of characters the user may enter in the edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETLIMITTEXT, (WPARAM)nMax, 0L);
 	}
 
 	inline void CEdit::SetMargins(UINT nLeft, UINT nRight) const
 	// Sets the widths of the left and right margins, and redraws the edit control to reflect the new margins.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETMARGINS, EC_LEFTMARGIN|EC_RIGHTMARGIN, MAKELONG(nLeft, nRight));
 	}
 
 	inline void CEdit::SetModify(BOOL bModified) const
 	// Sets or clears the modification flag to indicate whether the edit control has been modified.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETMODIFY, bModified, 0L);
 	}
 
 	inline void CEdit::EmptyUndoBuffer() const
 	// Empties the undo buffer and sets the undo flag retrieved by the EM_CANUNDO message to FALSE.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_EMPTYUNDOBUFFER, 0L, 0L);
 	}
 
@@ -488,7 +488,7 @@ namespace Win32xx
 	// Adds or removes soft line-break characters (two carriage returns and a line feed) to the ends of wrapped lines 
 	//  in a multiline edit control. It is not processed by single-line edit controls.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(EM_FMTLINES, bAddEOL, 0L);
 	}
 
@@ -496,7 +496,7 @@ namespace Win32xx
 	// Sets the text limit of an edit control. The text limit is the maximum amount of text, in TCHARs, 
 	//  that the user can type into the edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_LIMITTEXT, (WPARAM)nChars, 0L);
 	}
 
@@ -504,7 +504,7 @@ namespace Win32xx
 	// Returns the zero-based number of the line in a multiline edit control that contains a specified character index.
 	//  This message is the reverse of the EM_LINEINDEX message.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_LINEFROMCHAR, (WPARAM)nIndex, 0L);
 	}
 
@@ -512,7 +512,7 @@ namespace Win32xx
 	// Returns the character of a line in a multiline edit control. 
 	// This message is the reverse of the EM_LINEFROMCHAR message
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_LINEINDEX, (WPARAM)nLine, 0L);
 	}
 
@@ -520,14 +520,14 @@ namespace Win32xx
 	// Returns the length, in characters, of a single-line edit control. In a multiline edit control, 
 	//	returns the length, in characters, of a specified line.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(EM_LINELENGTH, (WPARAM)nLine, 0L);
 	}
 
 	inline void CEdit::LineScroll(int nLines, int nChars) const
 	// Scrolls the text vertically in a single-line edit control or horizontally in a multiline edit control.
 	{
-		assert(::IsWindow(m_hWnd)); 
+		assert(IsWindow()); 
 		SendMessage(EM_LINESCROLL, (WPARAM)nChars, (LPARAM)nLines);
 	}
 
@@ -535,42 +535,42 @@ namespace Win32xx
 	// Replaces the current selection with the text in an application-supplied buffer, sends the parent window 
 	//  EN_UPDATE and EN_CHANGE messages, and updates the undo buffer.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_REPLACESEL, (WPARAM) bCanUndo, (LPARAM)lpszNewText);
 	}
 
 	inline void CEdit::SetPasswordChar(TCHAR ch) const
 	// Defines the character that edit controls use in conjunction with the ES_PASSWORD style.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETPASSWORDCHAR, (WPARAM)ch, 0L);
 	}
 
 	inline BOOL CEdit::SetReadOnly(BOOL bReadOnly) const
 	// Sets or removes the read-only style (ES_READONLY) in an edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(EM_SETREADONLY, bReadOnly, 0L);
 	}
 
 	inline void CEdit::SetRect(LPCRECT lpRect) const
 	// Sets the formatting rectangle for the multiline edit control and redraws the window.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETRECT, 0L, (LPARAM)lpRect);
 	}
 
 	inline void CEdit::SetRectNP(LPCRECT lpRect) const
 	// Sets the formatting rectangle for the multiline edit control but does not redraw the window.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETRECTNP, 0L, (LPARAM)lpRect);
 	}
 
 	inline void CEdit::SetSel(DWORD dwSelection, BOOL bNoScroll) const
 	// Selects a range of characters in the edit control by setting the starting and ending positions to be selected.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_SETSEL, LOWORD(dwSelection), HIWORD(dwSelection));
 		if (!bNoScroll)
 			SendMessage(EM_SCROLLCARET, 0L, 0L);
@@ -579,8 +579,8 @@ namespace Win32xx
 	inline void CEdit::SetSel(int nStartChar, int nEndChar, BOOL bNoScroll) const
 	// Selects a range of characters in the edit control by setting the starting and ending positions to be selected.
 	{
-		assert(::IsWindow(m_hWnd));
-		SendMessage(m_hWnd, EM_SETSEL, nStartChar, nEndChar);
+		assert(IsWindow());
+		SendMessage(EM_SETSEL, nStartChar, nEndChar);
 		if (!bNoScroll)
 			SendMessage(EM_SCROLLCARET, 0L, 0L);
 	}
@@ -588,56 +588,56 @@ namespace Win32xx
 	inline BOOL CEdit::SetTabStops(int nTabStops, LPINT rgTabStops) const
 	// Sets tab-stop positions in the multiline edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(EM_SETTABSTOPS, (WPARAM)nTabStops, (LPARAM)rgTabStops);
 	}
 
 	inline BOOL CEdit::SetTabStops() const
 	// Sets tab-stop positions in the multiline edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage( EM_SETTABSTOPS, 0L, 0L);
 	}
 
 	inline BOOL CEdit::SetTabStops(const int& cxEachStop) const
 	// Sets tab-stop positions in the multiline edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(EM_SETTABSTOPS, (WPARAM)1, (LPARAM)(LPINT)&cxEachStop);
 	}
 
 	inline void CEdit::Clear() const
 	// Clears the current selection, if any, in an edit control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(WM_CLEAR, 0L, 0L);
 	}
 
 	inline void CEdit::Copy() const
 	// Copies text to the clipboard unless the style is ES_PASSWORD, in which case the message returns zero.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(WM_COPY, 0L, 0L);
 	}
 
 	inline void CEdit::Cut() const
 	// Cuts the selection to the clipboard, or deletes the character to the left of the cursor if there is no selection.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(WM_CUT, 0L, 0L);
 	}
 
 	inline void CEdit::Paste() const
 	// Pastes text from the clipboard into the edit control window at the caret position.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(WM_PASTE, 0L, 0L);
 	}
 
 	inline void CEdit::Undo() const
 	// Removes any text that was just inserted or inserts any deleted characters and sets the selection to the inserted text.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(EM_UNDO, 0L, 0L);
 	}
 
@@ -654,42 +654,42 @@ namespace Win32xx
 	inline int CListBox::GetCount() const
 	// Returns the number of items in the list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETCOUNT, 0L, 0L);
 	}
 
 	inline int CListBox::GetHorizontalExtent() const
 	// Returns the scrollable width, in pixels, of a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETHORIZONTALEXTENT,	0L, 0L);
 	}
 
 	inline DWORD CListBox::GetItemData(int nIndex) const
 	// Returns the value associated with the specified item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (DWORD)SendMessage(LB_GETITEMDATA, (WPARAM)nIndex, 0L);
 	}
 
 	inline void* CListBox::GetItemDataPtr(int nIndex) const
 	// Returns the value associated with the specified item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (LPVOID)SendMessage(LB_GETITEMDATA, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::GetItemHeight(int nIndex) const
 	// Returns the height, in pixels, of an item in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETITEMHEIGHT, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::GetItemRect(int nIndex, LPRECT lpRect) const
 	// Retrieves the client coordinates of the specified list box item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETITEMRECT, (WPARAM)nIndex, (LPARAM)lpRect);
 	}
 
@@ -697,42 +697,42 @@ namespace Win32xx
 	// Retrieves the locale of the list box. The high-order word contains the country/region code 
 	//  and the low-order word contains the language identifier.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (LCID)SendMessage(LB_GETLOCALE, 0L, 0L);
 	}
 
 	inline int CListBox::GetSel(int nIndex) const
 	// Returns the selection state of a list box item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETSEL, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::GetText(int nIndex, LPTSTR lpszBuffer) const
 	// Retrieves the string associated with a specified item and the length of the string.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETTEXT, (WPARAM)nIndex, (LPARAM)lpszBuffer);
 	}
 
 	inline int CListBox::GetTextLen(int nIndex) const
 	// Returns the length, in characters, of the string associated with a specified item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage( LB_GETTEXTLEN, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::GetTopIndex() const
 	// Returns the index of the first visible item in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETTOPINDEX, 0L, 0L);
 	}
 
 	inline UINT CListBox::ItemFromPoint(CPoint pt, BOOL& bOutside) const
 	// Retrieves the zero-based index of the item nearest the specified point in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		DWORD dw = (DWORD)SendMessage(LB_ITEMFROMPOINT, 0L, MAKELPARAM(pt.x, pt.y));
 		bOutside = !!HIWORD(dw);
 		return LOWORD(dw);
@@ -741,105 +741,105 @@ namespace Win32xx
 	inline void CListBox::SetColumnWidth(int cxWidth) const
 	// Sets the width, in pixels, of all columns in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(LB_SETCOLUMNWIDTH, (WPARAM)cxWidth, 0L);
 	}
 
 	inline void CListBox::SetHorizontalExtent(int cxExtent) const
 	// Sets the scrollable width, in pixels, of a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(LB_SETHORIZONTALEXTENT, (WPARAM)cxExtent, 0L);
 	}
 
 	inline int CListBox::SetItemData(int nIndex, DWORD dwItemData) const
 	// Associates a value with a list box item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)dwItemData);
 	}
 
 	inline int CListBox::SetItemDataPtr(int nIndex, void* pData) const
 	// Associates a value with a list box item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return SetItemData(nIndex, (DWORD)(DWORD_PTR)pData);
 	}
 
 	inline int CListBox::SetItemHeight(int nIndex, UINT cyItemHeight) const
 	// Sets the height, in pixels, of an item or items in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SETITEMHEIGHT, (WPARAM)nIndex, MAKELONG(cyItemHeight, 0));
 	}
 
 	inline LCID CListBox::SetLocale(LCID nNewLocale) const
 	// Sets the locale of a list box and returns the previous locale identifier.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (LCID)SendMessage(LB_SETLOCALE, (WPARAM)nNewLocale, 0L);
 	}
 
 	inline BOOL CListBox::SetTabStops(int nTabStops, LPINT rgTabStops) const
 	// Sets the tab stops to those specified in a specified array.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(LB_SETTABSTOPS, (WPARAM)nTabStops, (LPARAM)rgTabStops);
 	}
 
 	inline void CListBox::SetTabStops() const
 	// Sets the tab stops to those specified in a specified array.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(LB_SETTABSTOPS, 0L, 0L);
 	}
 
 	inline BOOL CListBox::SetTabStops(const int& cxEachStop) const
 	// Sets the tab stops to those specified in a specified array.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(LB_SETTABSTOPS, 1, (LPARAM)(LPINT)&cxEachStop);
 	}
 
 	inline int CListBox::SetTopIndex(int nIndex) const
 	// Scrolls the list box so the specified item is at the top of the visible range.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SETTOPINDEX, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::GetCurSel() const
 	// Returns the index of the currently selected item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETCURSEL, 0L, 0L);
 	}
 
 	inline int CListBox::SetCurSel(int nSelect) const
 	// Selects a specified list box item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SETCURSEL, (WPARAM)nSelect, 0L);
 	}
 
 	inline int CListBox::GetAnchorIndex() const
 	// Returns the index of the item that the mouse last selected.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETANCHORINDEX, 0L, 0L);
 	}
 
 	inline int CListBox::GetCaretIndex() const
 	// Returns the index of the item that has the focus rectangle.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETCARETINDEX, 0L, 0L);
 	}
 
 	inline int CListBox::GetSelCount() const
 	// Returns the number of selected items in a multiple-selection list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETSELCOUNT, 0L, 0L);
 	}
 
@@ -847,14 +847,14 @@ namespace Win32xx
 	// Creates an array of the indexes of all selected items in a multiple-selection list box 
 	//  and returns the total number of selected items.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_GETSELITEMS, (WPARAM)nMaxItems, (LPARAM)rgIndex);
 	}
 
 	inline int CListBox::SelItemRange(BOOL bSelect, int nFirstItem, int nLastItem) const
 	// Selects a specified range of items in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		if (bSelect)
 			return (int)SendMessage(LB_SELITEMRANGEEX, (WPARAM)nFirstItem, (LPARAM)nLastItem);
 		else
@@ -864,77 +864,77 @@ namespace Win32xx
 	inline void CListBox::SetAnchorIndex(int nIndex) const
 	// Sets the item that the mouse last selected to a specified item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(LB_SETANCHORINDEX, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::SetCaretIndex(int nIndex, BOOL bScroll) const
 	// Sets the focus rectangle to a specified list box item.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SETCARETINDEX, (WPARAM)nIndex, MAKELONG(bScroll, 0));
 	}
 
 	inline int CListBox::SetSel(int nIndex, BOOL bSelect) const
 	// Selects an item in a multiple-selection list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SETSEL, bSelect, (LPARAM)nIndex);
 	}
 
 	inline int CListBox::AddString(LPCTSTR lpszItem) const
 	// Adds a string to a list box and returns its index.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_ADDSTRING, 0L, (LPARAM)lpszItem);
 	}
 
 	inline int CListBox::DeleteString(UINT nIndex) const
 	// Removes a string from a list box and returns the number of strings remaining in the list.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_DELETESTRING, (WPARAM)nIndex, 0L);
 	}
 
 	inline int CListBox::Dir(UINT attr, LPCTSTR lpszWildCard) const
 	// Adds a list of filenames to a list box and returns the index of the last filename added.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_DIR, (WPARAM)attr, (LPARAM)lpszWildCard);
 	}
 
 	inline int CListBox::FindString(int nStartAfter, LPCTSTR lpszItem) const
 	// Returns the index of the first string in the list box that begins with a specified string.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_FINDSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem);
 	}
 
 	inline int CListBox::FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
 	// Returns the index of the string in the list box that is equal to a specified string.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszFind);
 	}
 
 	inline int CListBox::InsertString(int nIndex, LPCTSTR lpszItem) const
 	// Inserts a string at a specified index in a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_INSERTSTRING, (WPARAM)nIndex, (LPARAM)lpszItem);
 	}
 
 	inline void CListBox::ResetContent() const
 	// Removes all items from a list box.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(LB_RESETCONTENT, 0L, 0L);
 	}
 
 	inline int CListBox::SelectString(int nStartAfter, LPCTSTR lpszItem) const
 	// Selects the first string it finds that matches a specified prefix.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(LB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem);
 	}
 
@@ -951,28 +951,28 @@ namespace Win32xx
 	inline HBITMAP CStatic::GetBitmap() const
 	// Returns the handle to the bitmap for the static control set by CStatic::SetBitmap
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HBITMAP)SendMessage(STM_GETIMAGE, IMAGE_BITMAP, 0L);
 	}
 
 	inline HCURSOR CStatic::GetCursor() const
 	// Returns the handle to the cursor for the static control set by CStatic::SetCursor
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HCURSOR)SendMessage(STM_GETIMAGE, IMAGE_CURSOR, 0L);
 	}
 
 	inline HENHMETAFILE CStatic::GetEnhMetaFile() const
 	// Returns the handle to the enhanced meta-file for the static control set by CStatic::SetEnhMetaFile
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HENHMETAFILE)SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0L);
 	}
 
 	inline HICON CStatic::GetIcon() const
 	// Returns the handle to the icon for the static control set by CStatic::SetIcon
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HICON)SendMessage(STM_GETIMAGE, IMAGE_ICON, 0L);
 	}
 
@@ -982,7 +982,7 @@ namespace Win32xx
 	//  control will be resized to the size of the bitmap.
 	// This function requires the SS_BITMAP style
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HBITMAP)SendMessage(STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
 	}
 
@@ -992,7 +992,7 @@ namespace Win32xx
 	//  control will be resized to the size of the cursor. 
 	// This function requires the SS_ICON style
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HCURSOR)SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor);
 	}
 
@@ -1002,7 +1002,7 @@ namespace Win32xx
 	//  control will be resized to the size of the enhanced metafile. 
 	// This function requires the SS_ENHMETAFILE style
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HENHMETAFILE)SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, (LPARAM)hMetaFile);
 	}
 
@@ -1012,7 +1012,7 @@ namespace Win32xx
 	//  control will be resized to the size of the icon. 
 	// This function requires the SS_ICON style
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HICON)SendMessage(STM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
 	}
 

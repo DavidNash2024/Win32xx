@@ -144,13 +144,13 @@ namespace Win32xx
 	inline CCmdBar::~CCmdBar()
 	{
 		if (IsWindow())
-			::CommandBar_Destroy(m_hWnd);
+			::CommandBar_Destroy(*this);
 	}
 
 
 	inline BOOL CCmdBar::AddAdornments(DWORD dwFlags)
 	{
-		BOOL bReturn = CommandBar_AddAdornments(m_hWnd, dwFlags, 0);
+		BOOL bReturn = CommandBar_AddAdornments(*this, dwFlags, 0);
 
 		if (!bReturn)
 			throw CWinException(_T("AddAdornments failed"));
@@ -161,12 +161,12 @@ namespace Win32xx
 	inline int CCmdBar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight)
 	{
 		HINSTANCE hInst = GetApp()->GetInstanceHandle();
-		return 	CommandBar_AddBitmap(m_hWnd, hInst, idBitmap, iNumImages, iImageWidth, iImageHeight);
+		return 	CommandBar_AddBitmap(*this, hInst, idBitmap, iNumImages, iImageWidth, iImageHeight);
 	}
 
 	inline BOOL CCmdBar::AddButtons(int nButtons, TBBUTTON* pTBButton)
 	{
-		 BOOL bReturn = CommandBar_AddButtons(m_hWnd, nButtons, pTBButton);
+		 BOOL bReturn = CommandBar_AddButtons(*this, nButtons, pTBButton);
 		 if (!bReturn)
 			 throw CWinException(_T("Failed to add buttons to commandbar"));
 
@@ -188,31 +188,31 @@ namespace Win32xx
 
 		if (SHCreateMenuBar(&mbi))
 		{
-			m_hWnd = mbi.hwndMB;
+			*this = mbi.hwndMB;
 		}
 		else
 			throw CWinException(_T("Failed to create MenuBar"));
 		
 #else
-		m_hWnd = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
+		*this = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
 
-		if (m_hWnd == NULL)
+		if (*this == NULL)
 			throw CWinException(_T("Failed to create CommandBar"));
 
-		CommandBar_InsertMenubar(m_hWnd, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
+		CommandBar_InsertMenubar(*this, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
 #endif
-		return m_hWnd;
+		return *this;
 	}
 
 	inline int CCmdBar::GetHeight() const
 	{
-		return CommandBar_Height(m_hWnd);
+		return CommandBar_Height(*this);
 	}
 
 	inline HWND CCmdBar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton)
 	{
 		HINSTANCE hInst = GetApp()->GetInstanceHandle();
-		HWND hWnd = CommandBar_InsertComboBox(m_hWnd, hInst, iWidth, dwStyle, idComboBox, iButton);
+		HWND hWnd = CommandBar_InsertComboBox(*this, hInst, iWidth, dwStyle, idComboBox, iButton);
 
 		if (!hWnd)
 			throw CWinException(_T("InsertComboBox failed"));
@@ -222,12 +222,12 @@ namespace Win32xx
 
 	inline BOOL CCmdBar::IsVisible()
 	{
-		return ::CommandBar_IsVisible(m_hWnd);
+		return ::CommandBar_IsVisible(*this);
 	}
 
 	inline BOOL CCmdBar::Show(BOOL fShow)
 	{
-		return ::CommandBar_Show(m_hWnd, fShow);
+		return ::CommandBar_Show(*this, fShow);
 	}
 
 
@@ -257,7 +257,7 @@ namespace Win32xx
 	inline CRect CWceFrame::GetViewRect() const
 	{
 		CRect r;
-		::GetClientRect(m_hWnd, &r);
+		::GetClientRect(*this, &r);
 
 #ifndef SHELL_AYGSHELL
 		// Reduce the size of the client rectangle, by the commandbar height
@@ -270,7 +270,7 @@ namespace Win32xx
 	inline int CWceFrame::OnCreate(LPCREATESTRUCT pcs)
 	{
 		// Create the Commandbar
-		GetMenuBar()->Create(m_hWnd);
+		GetMenuBar()->Create(*this);
 
 		// Set the keyboard accelerators
 		HACCEL hAccel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
@@ -292,7 +292,7 @@ namespace Win32xx
 	{
 #ifdef SHELL_AYGSHELL
 		// Notify shell of our activate message
-		SHHandleWMActivate(m_hWnd, wParam, lParam, &m_sai, FALSE);
+		SHHandleWMActivate(*this, wParam, lParam, &m_sai, FALSE);
 
 		UINT fActive = LOWORD(wParam);
 		if ((fActive == WA_ACTIVE) || (fActive == WA_CLICKACTIVE))
@@ -394,7 +394,7 @@ namespace Win32xx
 #ifdef SHELL_AYGSHELL
 
 			case WM_SETTINGCHANGE:
-				SHHandleWMSettingChange(m_hWnd, wParam, lParam, &m_sai);
+				SHHandleWMSettingChange(*this, wParam, lParam, &m_sai);
      			break;
 #endif
 

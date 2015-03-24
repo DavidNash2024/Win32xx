@@ -66,13 +66,6 @@ namespace Win32xx
 	{
 		friend class CWinApp;
 
-		struct DataMembers	// A structure that contains the data members
-		{
-			HIMAGELIST	hImageList;
-			BOOL		IsTmpImageList;
-			long		Count;
-		};
-
 	public:
 		//Construction
 		CImageList();
@@ -124,6 +117,13 @@ namespace Win32xx
 		operator HIMAGELIST () const;
 
 	private:
+		struct DataMembers	// A structure that contains the data members
+		{
+			HIMAGELIST	hImageList;
+			BOOL		IsTmpImageList;
+			long		Count;
+		};
+
 		void AddToMap();
 		void Release();
 		BOOL RemoveFromMap();

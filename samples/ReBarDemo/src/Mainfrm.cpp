@@ -215,7 +215,7 @@ void CMainFrame::OnFilePrint()
 	ZeroMemory(&pd, sizeof(PRINTDLG));
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
-	pd.hwndOwner = m_hWnd;
+	pd.hwndOwner = *this;
 
 	// Retrieve the printer DC
 	PrintDlg( &pd );

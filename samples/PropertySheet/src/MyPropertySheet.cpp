@@ -20,7 +20,7 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		{
 			CMainFrame* pFrame = GetPSApp()->GetMainFrame();
-			PropSheet_Changed(pFrame->GetHwnd(), m_hWnd);
+			PropSheet_Changed(pFrame->GetHwnd(), GetHwnd());
 			break;
 		}
 
@@ -120,7 +120,7 @@ INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_COMMAND:
 		{
 			CMainFrame* pFrame = GetPSApp()->GetMainFrame();
-			PropSheet_Changed(pFrame->GetHwnd(), m_hWnd);
+			PropSheet_Changed(pFrame->GetHwnd(), GetHwnd());
 			break;
 		}
 

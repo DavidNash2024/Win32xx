@@ -2272,7 +2272,7 @@ namespace Win32xx
 			// Store the window handle that currently has keyboard focus
 			HWND hPrevFocus = ::GetFocus();
 			if (hPrevFocus == GetMenuBar()->GetHwnd())
-				hPrevFocus = m_hWnd;
+				hPrevFocus = GetHwnd();
 
 			m_AboutDialog.DoModal(*this);
 

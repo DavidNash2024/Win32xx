@@ -511,14 +511,14 @@ namespace Win32xx
 	// Closes an AVI clip.
 	{
 		assert(IsWindow());
-		return Animate_Close(m_hWnd);
+		return Animate_Close(*this);
 	}
 
 	inline BOOL CAnimation::Open(LPTSTR lpszName) const
 	// Opens an AVI clip and displays its first frame in an animation control.
 	{
 		assert(IsWindow());
-		return Animate_Open(m_hWnd, lpszName);
+		return Animate_Open(*this, lpszName);
 	}
 
 	inline BOOL CAnimation::Play(UINT wFrom, UINT wTo, UINT cRepeat) const
@@ -526,7 +526,7 @@ namespace Win32xx
 	//	in the background while the thread continues executing.
 	{
 		assert(IsWindow());
-		return Animate_Play(m_hWnd, wFrom, wTo, cRepeat);
+		return Animate_Play(*this, wFrom, wTo, cRepeat);
 	}
 
 	inline BOOL CAnimation::Seek(UINT wFrame) const
@@ -534,14 +534,14 @@ namespace Win32xx
 	// The control displays the clip in the background while the thread continues executing.
 	{
 		assert(IsWindow());
-		return Animate_Seek(m_hWnd, wFrame);
+		return Animate_Seek(*this, wFrame);
 	}
 
 	inline BOOL CAnimation::Stop() const
 	// Stops playing an AVI clip in an animation control.
 	{
 		assert(IsWindow());
-		return Animate_Stop(m_hWnd);
+		return Animate_Stop(*this);
 	}
 
 
@@ -917,61 +917,61 @@ namespace Win32xx
 	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
 	{
 		assert(IsWindow());
-		return (COLORREF)DateTime_GetMonthCalColor(m_hWnd, iColor);
+		return (COLORREF)DateTime_GetMonthCalColor(*this, iColor);
 	}
 
 	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr)
 	{
 		assert(IsWindow());
-		return (COLORREF)DateTime_SetMonthCalColor(m_hWnd, iColor, clr);
+		return (COLORREF)DateTime_SetMonthCalColor(*this, iColor, clr);
 	}
 
 	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat)
 	{
 		assert(IsWindow());
-		return DateTime_SetFormat(m_hWnd, pszFormat);
+		return DateTime_SetFormat(*this, pszFormat);
 	}
 
 	inline HWND CDateTime::GetMonthCalCtrl() const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HWND>(DateTime_GetMonthCal(m_hWnd));
+		return reinterpret_cast<HWND>(DateTime_GetMonthCal(*this));
 	}
 
 	inline CFont* CDateTime::GetMonthCalFont() const
 	{
 		assert(IsWindow());
-		return CFont::FromHandle((HFONT)DateTime_GetMonthCalFont(m_hWnd));
+		return CFont::FromHandle((HFONT)DateTime_GetMonthCalFont(*this));
 	}
 
 	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
 	{
 		assert(IsWindow());
-		DateTime_SetMonthCalFont(m_hWnd, hFont, MAKELONG(bRedraw, 0));
+		DateTime_SetMonthCalFont(*this, hFont, MAKELONG(bRedraw, 0));
 	}
 
 	inline DWORD CDateTime::GetRange(LPSYSTEMTIME lpSysTimeArray) const
 	{
 		assert(IsWindow());
-		return DateTime_GetRange(m_hWnd, lpSysTimeArray);
+		return DateTime_GetRange(*this, lpSysTimeArray);
 	}
 
 	inline BOOL CDateTime::SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray)
 	{
 		assert(IsWindow());
-		return DateTime_SetRange(m_hWnd, flags, lpSysTimeArray);
+		return DateTime_SetRange(*this, flags, lpSysTimeArray);
 	}
 
 	inline DWORD CDateTime::GetTime(LPSYSTEMTIME pTimeDest) const
 	{
 		assert(IsWindow());
-		return DateTime_GetSystemtime(m_hWnd, pTimeDest);
+		return DateTime_GetSystemtime(*this, pTimeDest);
 	}
 
 	inline BOOL CDateTime::SetTime(DWORD flag, LPSYSTEMTIME pTimeNew /*= NULL*/)
 	{
 		assert(IsWindow());
-		return DateTime_SetSystemtime(m_hWnd, flag, pTimeNew);
+		return DateTime_SetSystemtime(*this, flag, pTimeNew);
 	}
 
 
@@ -1029,76 +1029,76 @@ namespace Win32xx
 	inline CImageList* CHeader::CreateDragImage(int nIndex)
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( Header_CreateDragImage(m_hWnd, nIndex) );
+		return CImageList::FromHandle( Header_CreateDragImage(*this, nIndex) );
 	}
 
 	inline BOOL CHeader::DeleteItem(int nPos)
 	{
 		assert(IsWindow());
-		return Header_DeleteItem(m_hWnd, nPos);
+		return Header_DeleteItem(*this, nPos);
 	}
 
 	inline CImageList* CHeader::GetImageList() const
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( Header_GetImageList(m_hWnd) );
+		return CImageList::FromHandle( Header_GetImageList(*this) );
 	}
 
 	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
 	{
 		assert(IsWindow());
-		return Header_GetItem(m_hWnd, nPos, pHeaderItem);
+		return Header_GetItem(*this, nPos, pHeaderItem);
 	}
 
 	inline int CHeader::GetItemCount() const
 	{
 		assert(IsWindow());
-		return Header_GetItemCount(m_hWnd);
+		return Header_GetItemCount(*this);
 	}
 
 	inline CRect CHeader::GetItemRect(int nIndex) const
 	{
 		assert(IsWindow());
 		RECT rc;
-		Header_GetItemRect(m_hWnd, nIndex, &rc);
+		Header_GetItemRect(*this, nIndex, &rc);
 		return rc;
 	}
 
 	inline BOOL CHeader::GetOrderArray(LPINT piArray, int iCount)
 	{
 		assert(IsWindow());
-		return Header_GetOrderArray(m_hWnd, piArray, iCount);
+		return Header_GetOrderArray(*this, piArray, iCount);
 	}
 
 	inline int CHeader::InsertItem(int nPos, HDITEM* phdi)
 	{
 		assert(IsWindow());
-		return Header_InsertItem(m_hWnd, nPos, phdi);
+		return Header_InsertItem(*this, nPos, phdi);
 	}
 
 	inline BOOL CHeader::Layout(HDLAYOUT* pHeaderLayout)
 	{
 		assert(IsWindow());
-		return Header_Layout(m_hWnd, pHeaderLayout);
+		return Header_Layout(*this, pHeaderLayout);
 	}
 
 	inline int CHeader::OrderToIndex(int nOrder) const
 	{
 		assert(IsWindow());
-		return Header_OrderToIndex( m_hWnd, nOrder);
+		return Header_OrderToIndex( *this, nOrder);
 	}
 
 #ifdef Header_SetHotDivider
 	inline int CHeader::SetHotDivider(CPoint pt)
 	{
 		assert(IsWindow());
-		return Header_SetHotDivider(m_hWnd, TRUE, MAKELPARAM(pt.x, pt.y));
+		return Header_SetHotDivider(*this, TRUE, MAKELPARAM(pt.x, pt.y));
 	}
 
 	inline int CHeader::SetHotDivider(int nIndex)
 	{
 		assert(IsWindow());
-		return Header_SetHotDivider(m_hWnd, FALSE, nIndex);
+		return Header_SetHotDivider(*this, FALSE, nIndex);
 	}
 #endif
 
@@ -1106,56 +1106,56 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
-		return CImageList::FromHandle( Header_SetImageList(m_hWnd, himlNew) );
+		return CImageList::FromHandle( Header_SetImageList(*this, himlNew) );
 	}
 
 	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)
 	{
 		assert(IsWindow());
-		return Header_SetItem(m_hWnd, nPos, pHeaderItem);
+		return Header_SetItem(*this, nPos, pHeaderItem);
 	}
 
 	inline BOOL CHeader::SetOrderArray(int iCount, LPINT piArray)
 	{
 		assert(IsWindow());
-		return Header_SetOrderArray(m_hWnd, iCount, piArray);
+		return Header_SetOrderArray(*this, iCount, piArray);
 	}
 
 #ifdef Header_ClearFilter
 	inline int CHeader::ClearFilter(int nColumn)
 	{
 		assert(IsWindow());
-		return Header_ClearFilter(m_hWnd, nColumn);
+		return Header_ClearFilter(*this, nColumn);
 	}
 
 	inline int CHeader::ClearAllFilters()
 	{
 		assert(IsWindow());
-		return Header_ClearAllFilters(m_hWnd);
+		return Header_ClearAllFilters(*this);
 	}
 
 	inline int CHeader::EditFilter(int nColumn, BOOL bDiscardChanges)
 	{
 		assert(IsWindow());
-		return Header_EditFilter(m_hWnd, nColumn, LPARAM MAKELPARAM(bDiscardChanges, 0));
+		return Header_EditFilter(*this, nColumn, LPARAM MAKELPARAM(bDiscardChanges, 0));
 	}
 
 	inline int CHeader::GetBitmapMargin() const
 	{
 		assert(IsWindow());
-		return Header_GetBitmapMargin(m_hWnd);
+		return Header_GetBitmapMargin(*this);
 	}
 
 	inline int CHeader::SetBitmapMargin(int nWidth)
 	{
 		assert(IsWindow());
-		return Header_SetBitmapMargin(m_hWnd, nWidth);
+		return Header_SetBitmapMargin(*this, nWidth);
 	}
 
 	inline int CHeader::SetFilterChangeTimeout(DWORD dwTimeOut)
 	{
 		assert(IsWindow());
-		return Header_SetFilterChangeTimeout(m_hWnd, dwTimeOut);
+		return Header_SetFilterChangeTimeout(*this, dwTimeOut);
 	}
 #endif
 
@@ -1222,19 +1222,19 @@ namespace Win32xx
 	inline COLORREF CMonthCalendar::GetColor(int nRegion) const
 	{
 		assert(IsWindow());
-		return (COLORREF)MonthCal_GetColor(m_hWnd, nRegion);
+		return (COLORREF)MonthCal_GetColor(*this, nRegion);
 	}
 
 	inline BOOL CMonthCalendar::GetCurSel(LPSYSTEMTIME pDateTime) const
 	{
 		assert(IsWindow());
-		return MonthCal_GetCurSel(m_hWnd, pDateTime);
+		return MonthCal_GetCurSel(*this, pDateTime);
 	}
 
 	inline int CMonthCalendar::GetFirstDayOfWeek(BOOL* pbLocal /*= NULL*/) const
 	{
 		assert(IsWindow());
-		DWORD dwValue = MonthCal_GetFirstDayOfWeek(m_hWnd);
+		DWORD dwValue = MonthCal_GetFirstDayOfWeek(*this);
 
 		if (pbLocal)
 			*pbLocal = HIWORD(dwValue);
@@ -1245,21 +1245,21 @@ namespace Win32xx
 	inline int CMonthCalendar::GetMaxSelCount() const
 	{
 		assert(IsWindow());
-		return MonthCal_GetMaxSelCount(m_hWnd);
+		return MonthCal_GetMaxSelCount(*this);
 	}
 
 	inline CRect CMonthCalendar::GetMinReqRect() const
 	{
 		assert(IsWindow());
 		RECT rc;
-		MonthCal_GetMinReqRect(m_hWnd, &rc);
+		MonthCal_GetMinReqRect(*this, &rc);
 		return rc;
 	}
 
 	inline int CMonthCalendar::GetMonthDelta() const
 	{
 		assert(IsWindow());
-		return MonthCal_GetMonthDelta(m_hWnd);
+		return MonthCal_GetMonthDelta(*this);
 	}
 
 	inline int CMonthCalendar::GetMonthRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange, DWORD dwFlags) const
@@ -1268,7 +1268,7 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		int nCount = MonthCal_GetMonthRange(m_hWnd, dwFlags, MinMax);
+		int nCount = MonthCal_GetMonthRange(*this, dwFlags, MinMax);
 		return nCount;
 	}
 
@@ -1276,7 +1276,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
-		DWORD dwValue = MonthCal_GetRange(m_hWnd, &MinMax);
+		DWORD dwValue = MonthCal_GetRange(*this, &MinMax);
 		memcpy(pMinRange, &MinMax[0], sizeof(SYSTEMTIME));
 		memcpy(pMaxRange, &MinMax[1], sizeof(SYSTEMTIME));
 		return dwValue;
@@ -1288,43 +1288,43 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return (BOOL)MonthCal_GetSelRange(m_hWnd, &MinMax);
+		return (BOOL)MonthCal_GetSelRange(*this, &MinMax);
 	}
 
 	inline BOOL CMonthCalendar::GetToday(LPSYSTEMTIME pDateTime) const
 	{
 		assert(IsWindow());
-		return MonthCal_GetToday(m_hWnd, pDateTime);
+		return MonthCal_GetToday(*this, pDateTime);
 	}
 
 	inline DWORD CMonthCalendar::HitTest(PMCHITTESTINFO pMCHitTest)
 	{
 		assert(IsWindow());
-		return (DWORD)MonthCal_HitTest(m_hWnd, pMCHitTest);
+		return (DWORD)MonthCal_HitTest(*this, pMCHitTest);
 	}
 
 	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
 	{
 		assert(IsWindow());
-		return (COLORREF)MonthCal_SetColor(m_hWnd, nRegion, clr);
+		return (COLORREF)MonthCal_SetColor(*this, nRegion, clr);
 	}
 
 	inline BOOL CMonthCalendar::SetCurSel(const LPSYSTEMTIME pDateTime)
 	{
 		assert(IsWindow());
-		return MonthCal_SetCurSel(m_hWnd, pDateTime);
+		return MonthCal_SetCurSel(*this, pDateTime);
 	}
 
 	inline BOOL CMonthCalendar::SetDayState(int nMonths, LPMONTHDAYSTATE pStates)
 	{
 		assert(IsWindow());
-		return (BOOL)MonthCal_SetDayState(m_hWnd, nMonths, pStates);
+		return (BOOL)MonthCal_SetDayState(*this, nMonths, pStates);
 	}
 
 	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
 	{
 		assert(IsWindow());
-		DWORD dwValue = (DWORD)MonthCal_SetFirstDayOfWeek(m_hWnd, iDay);
+		DWORD dwValue = (DWORD)MonthCal_SetFirstDayOfWeek(*this, iDay);
 
 		if(pnOld)
 			*pnOld = LOWORD(dwValue);
@@ -1335,13 +1335,13 @@ namespace Win32xx
 	inline BOOL CMonthCalendar::SetMaxSelCount(int nMax)
 	{
 		assert(IsWindow());
-		return MonthCal_SetMaxSelCount(m_hWnd, nMax);
+		return MonthCal_SetMaxSelCount(*this, nMax);
 	}
 
 	inline int CMonthCalendar::SetMonthDelta(int iDelta)
 	{
 		assert(IsWindow());
-		return MonthCal_SetMonthDelta(m_hWnd, iDelta);
+		return MonthCal_SetMonthDelta(*this, iDelta);
 	}
 
 	inline BOOL CMonthCalendar::SetRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
@@ -1362,7 +1362,7 @@ namespace Win32xx
 			dwLimit |= GDTR_MAX;
 		}
 
-		return (BOOL)MonthCal_SetRange(m_hWnd, dwLimit, &MinMax);
+		return (BOOL)MonthCal_SetRange(*this, dwLimit, &MinMax);
 	}
 
 	inline BOOL CMonthCalendar::SetSelRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
@@ -1370,13 +1370,13 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return (BOOL)MonthCal_SetSelRange(m_hWnd, &MinMax);
+		return (BOOL)MonthCal_SetSelRange(*this, &MinMax);
 	}
 
 	inline void CMonthCalendar::SetToday(const LPSYSTEMTIME pDateTime)
 	{
 		assert(IsWindow());
-		MonthCal_SetToday(m_hWnd, pDateTime);
+		MonthCal_SetToday(*this, pDateTime);
 	}
 
 
@@ -1442,7 +1442,7 @@ namespace Win32xx
 	// Enables or disables the scroll bar arrows.
 	{
 		assert(IsWindow());
-		return ::EnableScrollBar(m_hWnd, SB_CTL, nArrowFlags);
+		return ::EnableScrollBar(*this, SB_CTL, nArrowFlags);
 	}
 
 	inline BOOL CScrollBar::GetScrollInfo(LPSCROLLINFO lpsi)  const
@@ -1450,21 +1450,21 @@ namespace Win32xx
 	// scrolling positions, the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
-		return ::GetScrollInfo(m_hWnd, SB_CTL, lpsi);
+		return ::GetScrollInfo(*this, SB_CTL, lpsi);
 	}
 
 	inline int CScrollBar::GetScrollPos()  const
 	// Retrieves the current position of the scroll box (thumb) in the scroll bar.
 	{
 		assert(IsWindow());
-		return ::GetScrollPos(m_hWnd, SB_CTL);
+		return ::GetScrollPos(*this, SB_CTL);
 	}
 
 	inline BOOL CScrollBar::GetScrollRange(LPINT lpMinPos, LPINT lpMaxPos )  const
 	// Retrieves the current minimum and maximum scroll box (thumb) positions for the scroll bar.
 	{
 		assert(IsWindow());
-		return ::GetScrollRange(m_hWnd, SB_CTL, lpMinPos, lpMaxPos);
+		return ::GetScrollRange(*this, SB_CTL, lpMinPos, lpMaxPos);
 	}
 
 	inline BOOL CScrollBar::SetScrollInfo(LPSCROLLINFO lpsi, BOOL bRedraw )  const
@@ -1472,7 +1472,7 @@ namespace Win32xx
 	// the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
-		return ::SetScrollInfo(m_hWnd, SB_CTL, lpsi, bRedraw);
+		return ::SetScrollInfo(*this, SB_CTL, lpsi, bRedraw);
 	}
 
 	inline int CScrollBar::SetScrollPos(int nPos, BOOL bRedraw)  const
@@ -1480,21 +1480,21 @@ namespace Win32xx
 	// redraws the scroll bar to reflect the new position of the scroll box.
 	{
 		assert(IsWindow());
-		return ::SetScrollPos(m_hWnd, SB_CTL, nPos, bRedraw);
+		return ::SetScrollPos(*this, SB_CTL, nPos, bRedraw);
 	}
 
 	inline BOOL CScrollBar::SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw )  const
 	// Sets the minimum and maximum scroll box positions for the scroll bar.
 	{
 		assert(IsWindow());
-		return ::SetScrollRange(m_hWnd, SB_CTL, nMinPos, nMaxPos, bRedraw);
+		return ::SetScrollRange(*this, SB_CTL, nMinPos, nMaxPos, bRedraw);
 	}
 
 	inline BOOL CScrollBar::ShowScrollBar(BOOL bShow)  const
 	// Shows or hides the scroll bar.
 	{
 		assert(IsWindow());
-		return ::ShowScrollBar(m_hWnd, SB_CTL, bShow);
+		return ::ShowScrollBar(*this, SB_CTL, bShow);
 	}
 
 	////////////////////////////////////////

@@ -89,7 +89,7 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 						CMINVOKECOMMANDINFO  cmi;
 						ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 						cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-						cmi.hwnd = ::GetParent(m_hWnd);
+						cmi.hwnd = GetParent();
 						cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
 						cmi.nShow = SW_SHOWNORMAL;
 						ccm.InvokeCommand(cmi);
@@ -166,7 +166,7 @@ void CMyListView::DoDefault(int iItem)
 		if(csFolder.GetIShellFolder())
 		{
 			Cpidl* pCpidl = &(pInfo->GetRelPidl());
-			hr = csFolder.GetUIObjectOf(m_hWnd, 1, pCpidl, IID_IContextMenu, 0, ccm);
+			hr = csFolder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
 
 			if(SUCCEEDED(hr))
 			{
@@ -194,7 +194,7 @@ void CMyListView::DoDefault(int iItem)
 								CMINVOKECOMMANDINFO  cmi;
 								ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 								cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-								cmi.hwnd = ::GetParent(m_hWnd);
+								cmi.hwnd = GetParent();
 								cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 								cmi.nShow = SW_SHOWNORMAL;
 								ccm.InvokeCommand(cmi);
@@ -254,7 +254,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 
 		if(m_csfCurFolder.GetIShellFolder())
 		{
-			hr = m_csfCurFolder.GetUIObjectOf(m_hWnd, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
+			hr = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
 
 			if(SUCCEEDED(hr))
 			{
@@ -275,7 +275,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
 							CMINVOKECOMMANDINFO  cmi;
 							ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-							cmi.hwnd = ::GetParent(m_hWnd);
+							cmi.hwnd = GetParent();
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 							cmi.nShow = SW_SHOWNORMAL;
 							ccm.InvokeCommand(cmi);
@@ -398,7 +398,7 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
 	UNREFERENCED_PARAMETER(pNMHDR);
 
 	//get the item that has the focus
-	int nItem = (int)::SendMessage(m_hWnd, LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
+	int nItem = (int)SendMessage(LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
 
 	if(nItem != -1)
 		DoDefault(nItem);

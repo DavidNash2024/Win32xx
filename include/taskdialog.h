@@ -69,7 +69,7 @@ namespace Win32xx
 		void AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast);
 		void ClickButton(int nButtonID) const;
 		void ClickRadioButton(int nRadioButtonID) const;
-		LRESULT DoModal(CWnd* pParent = NULL);
+		LRESULT DoModal(HWND hParent = NULL);
 		void ElevateButton(int nButtonID, BOOL bElevated);
 		void EnableButton(int nButtonID, BOOL bEnabled);
 		void EnableRadioButton(int nButtonID, BOOL bEnabled);
@@ -228,7 +228,7 @@ namespace Win32xx
 		SendMessage(TDM_CLICK_RADIO_BUTTON, (WPARAM)nRadioButtonID, 0);
 	}
 
-	inline LRESULT CTaskDialog::DoModal(CWnd* pParent /* = NULL */)
+	inline LRESULT CTaskDialog::DoModal(HWND hParent /* = NULL */)
 	// Creates and displays the Task Dialog.
 	{
 		assert (m_hWnd == NULL);
@@ -238,7 +238,7 @@ namespace Win32xx
 		m_tc.cButtons = m_vButtons.size();
 		m_tc.pRadioButtons = m_vRadioButtons.empty()? NULL : &m_vRadioButtons.front();
 		m_tc.cRadioButtons = m_vRadioButtons.size();
-		m_tc.hwndParent = pParent? pParent->GetHwnd() : NULL;
+		m_tc.hwndParent = hParent;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp()->SetTlsData();

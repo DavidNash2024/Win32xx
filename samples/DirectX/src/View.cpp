@@ -32,12 +32,12 @@ CView::~CView()
         m_pD3D->Release();
 }
 
-HWND CView::Create(CWnd* pParent)
+HWND CView::Create(HWND hParent)
 {
 	// Called by CFrame::OnCreate. 
 
-	UNREFERENCED_PARAMETER(pParent);
-	return m_hWnd;
+	UNREFERENCED_PARAMETER(hParent);
+	return 0;
 }
 
 int CView::OnCreate(LPCREATESTRUCT pcs)
@@ -45,7 +45,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	UNREFERENCED_PARAMETER(pcs);
 
 	// Initialize Direct3D
-	if( SUCCEEDED( InitD3D( m_hWnd ) ) )
+	if( SUCCEEDED( InitD3D( *this ) ) )
 	{
 		// Create the scene geometry
         if( SUCCEEDED( InitGeometry() ) )

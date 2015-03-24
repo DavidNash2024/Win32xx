@@ -319,7 +319,7 @@ namespace Win32xx
 		int iNewPage = (int)m_vTabPageInfo.size();
 		m_vTabPageInfo.push_back(tpi);
 
-		if (m_hWnd != 0)
+		if (IsWindow())
 		{
 			TCITEM tie;
 			ZeroMemory(&tie, sizeof(TCITEM));
@@ -763,7 +763,7 @@ namespace Win32xx
 	{
 		NMHDR nmhdr;
 		ZeroMemory(&nmhdr, sizeof(NMHDR));
-		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.hwndFrom = *this;
 		nmhdr.code = UWN_TABCHANGED;
 		
 		if (GetParent().IsWindow())
@@ -774,7 +774,7 @@ namespace Win32xx
 	{
 		NMHDR nmhdr;
 		ZeroMemory(&nmhdr, sizeof(NMHDR));
-		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.hwndFrom = *this;
 		nmhdr.code = UWN_TABDRAGGED;
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
@@ -903,7 +903,7 @@ namespace Win32xx
 			ZeroMemory(&TrackMouseEventStruct, sizeof(TRACKMOUSEEVENT));
 			TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 			TrackMouseEventStruct.dwFlags = TME_LEAVE;
-			TrackMouseEventStruct.hwndTrack = m_hWnd;
+			TrackMouseEventStruct.hwndTrack = *this;
 			_TrackMouseEvent(&TrackMouseEventStruct);
 			m_IsTracking = TRUE;
 		}
@@ -981,8 +981,8 @@ namespace Win32xx
 		{
 			// Remove all pending paint requests
 			PAINTSTRUCT ps;
-			::BeginPaint(m_hWnd, &ps);
-			::EndPaint(m_hWnd, &ps);
+			::BeginPaint(*this, &ps);
+			::EndPaint(*this, &ps);
 
 			// Now call our local Paint
 			Paint();
@@ -1323,7 +1323,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pActiveView = pView;
 
-			if (m_pActiveView && m_hWnd)
+			if (m_pActiveView && *this)
 			{
 				if (!m_pActiveView->IsWindow())
 				{
@@ -1452,193 +1452,193 @@ namespace Win32xx
 	// Calculates a tab control's display area given a window rectangle, or calculates
 	//  the window rectangle that would correspond to a specified display area.
 	{
-		assert(::IsWindow(m_hWnd));
-		TabCtrl_AdjustRect(m_hWnd, fLarger, prc);
+		assert(IsWindow());
+		TabCtrl_AdjustRect(*this, fLarger, prc);
 	}
 
 	inline BOOL CTab::DeleteAllItems() const
 	// Removes all items from a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_DeleteAllItems(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_DeleteAllItems(*this);
 	}
 
 	inline BOOL CTab::DeleteItem(int iItem) const
 	// Removes an item from a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_DeleteItem(m_hWnd, iItem);
+		assert(IsWindow());
+		return TabCtrl_DeleteItem(*this, iItem);
 	}
 
 	inline void CTab::DeselectAll(UINT fExcludeFocus) const
 	// Resets items in a tab control, clearing any that were set to the TCIS_BUTTONPRESSED state.
 	{
-		assert(::IsWindow(m_hWnd));
-		TabCtrl_DeselectAll(m_hWnd, fExcludeFocus);
+		assert(IsWindow());
+		TabCtrl_DeselectAll(*this, fExcludeFocus);
 	}
 
 	inline int CTab::GetCurFocus() const
 	// Returns the index of the item that has the focus in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetCurFocus(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_GetCurFocus(*this);
 	}
 
 	inline int CTab::GetCurSel() const
 	// Determines the currently selected tab in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetCurSel(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_GetCurSel(*this);
 	}
 
 	inline DWORD CTab::GetExtendedStyle() const
 	// Retrieves the extended styles that are currently in use for the tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetExtendedStyle(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_GetExtendedStyle(*this);
 	}
 
 	inline CImageList* CTab::GetImageList() const
 	// Retrieves the image list associated with a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return CImageList::FromHandle( TabCtrl_GetImageList(m_hWnd) );
+		assert(IsWindow());
+		return CImageList::FromHandle( TabCtrl_GetImageList(*this) );
 	}
 
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
 	// Retrieves information about a tab in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetItem(m_hWnd, iItem, pitem);
+		assert(IsWindow());
+		return TabCtrl_GetItem(*this, iItem, pitem);
 	}
 
 	inline int CTab::GetItemCount() const
 	// Retrieves the number of tabs in the tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetItemCount(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_GetItemCount(*this);
 	}
 
 	inline BOOL CTab::GetItemRect(int iItem, LPRECT prc) const
 	// Retrieves the bounding rectangle for a tab in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetItemRect(m_hWnd, iItem, prc);
+		assert(IsWindow());
+		return TabCtrl_GetItemRect(*this, iItem, prc);
 	}
 
 	inline int CTab::GetRowCount() const
 	// Retrieves the current number of rows of tabs in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetRowCount(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_GetRowCount(*this);
 	}
 
 	inline HWND CTab::GetToolTips() const
 	// Retrieves a handle to the ToolTip control associated with a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_GetToolTips(m_hWnd);
+		assert(IsWindow());
+		return TabCtrl_GetToolTips(*this);
 	}
 
 	inline BOOL CTab::HighlightItem(INT idItem, WORD fHighlight) const
 	// Sets the highlight state of a tab item.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_HighlightItem(m_hWnd, idItem, fHighlight);
+		assert(IsWindow());
+		return TabCtrl_HighlightItem(*this, idItem, fHighlight);
 	}
 
 	inline int CTab::HitTest(TCHITTESTINFO& info) const
 	// Determines which tab, if any, is at a specified screen position.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_HitTest(m_hWnd, &info);
+		assert(IsWindow());
+		return TabCtrl_HitTest(*this, &info);
 	}
 
 	inline int CTab::InsertItem(int iItem, const LPTCITEM pItem) const
 	// Inserts a new tab in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		assert(pItem);
-		return TabCtrl_InsertItem(m_hWnd, iItem, pItem);
+		return TabCtrl_InsertItem(*this, iItem, pItem);
 	}
 
 	inline void CTab::RemoveImage(int iImage) const
 	// Removes an image from a tab control's image list.
 	{
-		assert(::IsWindow(m_hWnd));
-		TabCtrl_RemoveImage(m_hWnd, iImage);
+		assert(IsWindow());
+		TabCtrl_RemoveImage(*this, iImage);
 	}
 
 	inline void CTab::SetCurFocus(int iItem) const
 	// Sets the focus to a specified tab in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		TabCtrl_SetCurFocus(m_hWnd, iItem);
+		assert(IsWindow());
+		TabCtrl_SetCurFocus(*this, iItem);
 	}
 
 	inline int CTab::SetCurSel(int iItem) const
 	// Selects a tab in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_SetCurSel(m_hWnd, iItem);
+		assert(IsWindow());
+		return TabCtrl_SetCurSel(*this, iItem);
 	}
 
 	inline DWORD CTab::SetExtendedStyle(DWORD dwExStyle) const
 	// Sets the extended styles that the tab control will use.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_SetExtendedStyle(m_hWnd, dwExStyle);
+		assert(IsWindow());
+		return TabCtrl_SetExtendedStyle(*this, dwExStyle);
 	}
 
 	inline CImageList* CTab::SetImageList(CImageList* pImageList) const
 	// Assigns an image list to a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		HIMAGELIST himl = pImageList? pImageList->GetHandle() : NULL;
-		return CImageList::FromHandle( TabCtrl_SetImageList( m_hWnd, himl ) );
+		return CImageList::FromHandle( TabCtrl_SetImageList( *this, himl ) );
 	}
 
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const
 	// Sets some or all of a tab's attributes.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		assert(pItem);
-		return TabCtrl_SetItem(m_hWnd, iItem, pItem);
+		return TabCtrl_SetItem(*this, iItem, pItem);
 	}
 
 	inline BOOL CTab::SetItemExtra(int cb) const
 	// Sets the number of bytes per tab reserved for application-defined data in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_SetItemExtra(m_hWnd, cb);
+		assert(IsWindow());
+		return TabCtrl_SetItemExtra(*this, cb);
 	}
 
 	inline DWORD CTab::SetItemSize(int cx, int cy) const
 	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_SetItemSize(m_hWnd, cx, cy);
+		assert(IsWindow());
+		return TabCtrl_SetItemSize(*this, cx, cy);
 	}
 
 	inline int CTab::SetMinTabWidth(int cx) const
 	// Sets the minimum width of items in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		return TabCtrl_SetMinTabWidth(m_hWnd, cx);
+		assert(IsWindow());
+		return TabCtrl_SetMinTabWidth(*this, cx);
 	}
 
 	inline void CTab::SetPadding(int cx, int cy) const
 	// Sets the amount of space (padding) around each tab's icon and label in a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		TabCtrl_SetPadding(m_hWnd, cx, cy);
+		assert(IsWindow());
+		TabCtrl_SetPadding(*this, cx, cy);
 	}
 
 	inline void CTab::SetToolTips(CToolTip* pToolTip) const
 	// Assigns a ToolTip control to a tab control.
 	{
-		assert(::IsWindow(m_hWnd));
-		TabCtrl_SetToolTips(m_hWnd, pToolTip->GetHwnd() );
+		assert(IsWindow());
+		TabCtrl_SetToolTips(*this, pToolTip->GetHwnd() );
 	}
 
 	////////////////////////////////////////
@@ -1694,7 +1694,7 @@ namespace Win32xx
 	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	{
 		CLIENTCREATESTRUCT clientcreate ;
-		clientcreate.hWindowMenu  = m_hWnd;
+		clientcreate.hWindowMenu  = *this;
 		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
 
@@ -1703,7 +1703,7 @@ namespace Win32xx
 			dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
 				throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
 
-		return m_hWnd;
+		return *this;
 	}
 
 	inline CWnd* CTabbedMDI::GetActiveMDIChild() const
@@ -1977,7 +1977,7 @@ namespace Win32xx
 
 	inline void CTabbedMDI::SetActiveMDITab(int iTab)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		assert(GetTab()->IsWindow());
 		GetTab()->SelectPage(iTab);
 	}

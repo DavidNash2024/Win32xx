@@ -109,14 +109,6 @@ namespace Win32xx
 	class CMenu
 	{
 	
-		struct DataMembers
-		{
-			std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
-			HMENU hMenu;
-			BOOL IsTmpMenu;
-			long Count;
-		};			
-
 	public:
 		//Construction
 		CMenu();
@@ -179,6 +171,14 @@ namespace Win32xx
 		operator HMENU () const;
 
 	private:
+		struct DataMembers
+		{
+			std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
+			HMENU hMenu;
+			BOOL IsTmpMenu;
+			long Count;
+		};			
+
 		void AddToMap();
 		void Release();
 		BOOL RemoveFromMap();

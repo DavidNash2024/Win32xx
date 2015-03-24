@@ -11,7 +11,7 @@ void CView::Minimize()
 {
     NOTIFYICONDATA nid = { 0 };
     nid.cbSize = sizeof(NOTIFYICONDATA);
-    nid.hWnd = m_hWnd;
+    nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;
     nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     nid.uCallbackMessage = MSG_TRAYICON;
@@ -171,7 +171,7 @@ void CView::Restore()
 {
     NOTIFYICONDATA nid = { 0 };
     nid.cbSize = sizeof(NOTIFYICONDATA);
-    nid.hWnd = m_hWnd;
+    nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;
     Shell_NotifyIcon(NIM_DELETE, &nid);
     ShowWindow(SW_SHOW);

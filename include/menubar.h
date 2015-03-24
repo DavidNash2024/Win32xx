@@ -355,7 +355,7 @@ namespace Win32xx
 	inline void CMenuBar::GrabFocus()
 	{
 		if (GetFocus() != *this)
-			m_hPrevFocus = ::SetFocus(m_hWnd);
+			m_hPrevFocus = SetFocus();
 		SetCapture();
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
@@ -840,7 +840,7 @@ namespace Win32xx
 
 		int xPos = bRightToLeft? rc.right : rc.left;
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
-			xPos, rc.bottom, m_hWnd, &tpm);
+			xPos, rc.bottom, *this, &tpm);
 
 		// We get here once the TrackPopupMenuEx has ended
 		m_IsMenuActive = FALSE;
@@ -1005,7 +1005,7 @@ namespace Win32xx
 
 	inline void CMenuBar::SetMenu(HMENU hMenu)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 
 		m_hTopMenu = hMenu;
 		int nMaxedOffset = (IsMDIChildMaxed()? 1:0);

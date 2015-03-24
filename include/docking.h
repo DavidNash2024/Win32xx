@@ -676,7 +676,7 @@ namespace Win32xx
 	{
 		// Send a splitter bar notification to the parent
 		m_DragPos.hdr.code = nMessageID;
-		m_DragPos.hdr.hwndFrom = m_hWnd;
+		m_DragPos.hdr.hwndFrom = GetHwnd();
 		m_DragPos.ptPos = GetCursorPos();
 		m_DragPos.ptPos.x += 1;
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
@@ -1094,7 +1094,7 @@ namespace Win32xx
 			ZeroMemory(&TrackMouseEventStruct, sizeof(TRACKMOUSEEVENT));
 			TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 			TrackMouseEventStruct.dwFlags = TME_LEAVE|TME_NONCLIENT;
-			TrackMouseEventStruct.hwndTrack = m_hWnd;
+			TrackMouseEventStruct.hwndTrack = *this;
 			_TrackMouseEvent(&TrackMouseEventStruct);
 			m_IsTracking = TRUE;
 		}
@@ -1198,7 +1198,7 @@ namespace Win32xx
 		// Fill the DragPos structure with data
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
-		DragPos.hdr.hwndFrom = m_hWnd;
+		DragPos.hdr.hwndFrom = GetHwnd();
 		DragPos.ptPos = GetCursorPos();
 
 		// Send a DragPos notification to the docker
@@ -1226,7 +1226,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (m_hWnd != 0)
+			if (IsWindow())
 			{
 				// The docker is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in the constructor to set the view window
@@ -1452,7 +1452,7 @@ namespace Win32xx
 				CRgn Rgn2;
 				Rgn2.CreateRectRgn(5, rcHint.Height() -25, 60, rcHint.Height());
 				Rgn.CombineRgn(&Rgn2, RGN_OR);
-				SetWindowRgn(&Rgn, FALSE);
+				SetWindowRgn(Rgn, FALSE);
 			}
 
 			pDockTarget->ClientToScreen(rcHint);
@@ -1542,7 +1542,7 @@ namespace Win32xx
 
 		CRgn rgnPoly;
 		rgnPoly.CreatePolygonRgn(ptArray, 16, WINDING);
-		SetWindowRgn(&rgnPoly, FALSE);
+		SetWindowRgn(rgnPoly, FALSE);
 		return 0;
 	}
 
@@ -2120,7 +2120,7 @@ namespace Win32xx
 		pDocker->m_IsBlockMove = FALSE;
 		pDocker->SetDockStyle(DockStyle);
 		m_vDockChildren.push_back(pDocker);
-		pDocker->ConvertToChild(m_hWnd);
+		pDocker->ConvertToChild(*this);
 
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if (((DockStyle & 0xF)  == DS_DOCKED_LEFT) || ((DockStyle &0xF)  == DS_DOCKED_RIGHT))
@@ -3584,7 +3584,7 @@ namespace Win32xx
 	{
 		DRAGPOS DragPos;
 		DragPos.hdr.code = nMessageID;
-		DragPos.hdr.hwndFrom = m_hWnd;
+		DragPos.hdr.hwndFrom = GetHwnd();
 		DragPos.ptPos = GetCursorPos();
 		DragPos.DockZone = m_dwDockZone;
 		m_dwDockZone = 0;
@@ -3826,7 +3826,7 @@ namespace Win32xx
 		// Send the undock notification to the frame
 		NMHDR nmhdr;
 		ZeroMemory(&nmhdr, sizeof(NMHDR));
-		nmhdr.hwndFrom = m_hWnd;
+		nmhdr.hwndFrom = GetHwnd();
 		nmhdr.code = UWN_UNDOCKED;
 		nmhdr.idFrom = m_nDockID;
 		CWnd* pFrame = GetCWndPtr(GetDockAncestor()->GetAncestor());
@@ -4052,7 +4052,7 @@ namespace Win32xx
 			m_vContainerInfo.push_back(ci);
 		}
 
-		if (m_hWnd != 0)
+		if (IsWindow())
 		{
 			TCITEM tie;
 			ZeroMemory(&tie, sizeof(TCITEM));
@@ -4432,7 +4432,8 @@ namespace Win32xx
 				pNewContainer->GetViewPage()->GetView()->SetFocus();
 
 				// Adjust the docking caption
-				CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(::GetParent(::GetParent(m_hWnd))));
+			//	CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(::GetParent(::GetParent(m_hWnd))));
+				CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
 				if (dynamic_cast<CDocker*>(pDock))
 				{
 					pDock->SetCaption(pNewContainer->GetDockCaption());
@@ -4723,7 +4724,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (m_hWnd != 0)
+			if (IsWindow())
 			{
 				// The frame is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window

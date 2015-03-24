@@ -45,7 +45,7 @@ void CMainMDIFrame::OnFilePrint()
 	PRINTDLG pd = {0};
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
-	pd.hwndOwner = m_hWnd;
+	pd.hwndOwner = *this;
 
 	// Retrieve the printer DC
 	PrintDlg( &pd );

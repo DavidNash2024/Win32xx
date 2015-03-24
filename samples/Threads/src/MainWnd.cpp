@@ -43,14 +43,14 @@ void CMainWindow::AppendText(LPCTSTR szStr)
 	TRACE(_T("\n"));
 }
 
-HWND CMainWindow::Create(CWnd* pParent)
+HWND CMainWindow::Create(HWND hParent)
 {
 	CString str = _T("Main Thread Window");
 
 	// Create the main window
 	CRect rc(20 , 50, 400, 500);
 	return CreateEx(WS_EX_TOPMOST, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
-		rc, *pParent, 0);
+		rc, hParent, 0);
 }
 
 int CMainWindow::OnCreate(LPCREATESTRUCT pcs)

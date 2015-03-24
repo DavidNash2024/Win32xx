@@ -143,7 +143,7 @@ void CMainFrame::OnFilePrint()
 	// Initialize PRINTDLG
 	ZeroMemory(&pd, sizeof(pd));
 	pd.lStructSize = sizeof(pd);
-	pd.hwndOwner   = m_hWnd;
+	pd.hwndOwner   = *this;
 	pd.hDevMode    = NULL;     // Don't forget to free or store hDevMode
 	pd.hDevNames   = NULL;     // Don't forget to free or store hDevNames
 	pd.Flags       = PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC;
@@ -152,7 +152,7 @@ void CMainFrame::OnFilePrint()
 	pd.nToPage     = 0xFFFF;
 	pd.nMinPage    = 1;
 	pd.nMaxPage    = 0xFFFF;
-	pd.hwndOwner = m_hWnd;
+	pd.hwndOwner = *this;
 
 	if (PrintDlg(&pd)==TRUE)
 	{

@@ -304,7 +304,7 @@ namespace Win32xx
 
 	inline LRESULT CMDIFrame::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefFrameProc(m_hWnd, *GetMDIClient(), uMsg, wParam, lParam);
+		return ::DefFrameProc(*this, *GetMDIClient(), uMsg, wParam, lParam);
 	}
 
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
@@ -325,28 +325,28 @@ namespace Win32xx
 	// Possible values for nType are:
 	// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.	
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		GetMDIClient()->SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
 	}
 
 	inline void CMDIFrame::MDIIconArrange() const
 	// Re-arranges the icons for minimized MDI children
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		GetMDIClient()->SendMessage(WM_MDIICONARRANGE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDIMaximize() const
 	// Maximize the MDI child
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		GetMDIClient()->SendMessage(WM_MDIMAXIMIZE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDINext() const
 	// Activates the next MDI child
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		HWND hMDIChild = GetActiveMDIChild()->GetHwnd();
 		GetMDIClient()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
 	}
@@ -354,7 +354,7 @@ namespace Win32xx
 	inline void CMDIFrame::MDIPrev() const
 	// Activates the previous MDI child
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		HWND hMDIChild = GetActiveMDIChild()->GetHwnd();
 		GetMDIClient()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
 	}
@@ -362,7 +362,7 @@ namespace Win32xx
 	inline void CMDIFrame::MDIRestore() const
 	// Restores a mimimized MDI child
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		GetMDIClient()->SendMessage(WM_MDIRESTORE, 0L, 0L);
 	}
 
@@ -373,7 +373,7 @@ namespace Win32xx
 		// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being tiled.
 		// MDITILE_VERTICAL		Tiles MDI child windows so that one window appears beside another.
 
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		GetMDIClient()->SendMessage(WM_MDITILE, (WPARAM)nType, 0L);
 	}
 
@@ -572,9 +572,7 @@ namespace Win32xx
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
-
-		return m_hWnd;
+		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 	}
 
 	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIActivate(WPARAM wParam, LPARAM lParam)
@@ -643,23 +641,23 @@ namespace Win32xx
 	// This technique avoids unnecessary flicker when creating maximized MDI children.
 	{
 		//Call PreCreate in case its overloaded
-		PreCreate(*m_pcs);
+		PreCreate(m_pData->cs);
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
 		CWnd* pParent = GetCWndPtr(hWndParent);
 		assert(pParent);
 		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
-		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
+		bMax = bMax | (m_pData->cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
 		CString ClassName = _T("Win32++ MDI Child");
-		if (m_pcs->lpszClass)
-			ClassName = m_pcs->lpszClass;
+		if (m_pData->cs.lpszClass)
+			ClassName = m_pData->cs.lpszClass;
 
 		// Set the window style
 		DWORD dwStyle;
-		dwStyle = m_pcs->style & ~WS_MAXIMIZE;
+		dwStyle = m_pData->cs.style & ~WS_MAXIMIZE;
 		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
 		// Set window size and position
@@ -667,23 +665,23 @@ namespace Win32xx
 		int	y = CW_USEDEFAULT;
 		int cx = CW_USEDEFAULT;
 		int cy = CW_USEDEFAULT;
-		if(m_pcs->cx && m_pcs->cy)
+		if(m_pData->cs.cx && m_pData->cs.cy)
 		{
-			x = m_pcs->x;
-			y = m_pcs->y;
-			cx = m_pcs->cx;
-			cy = m_pcs->cy;
+			x = m_pData->cs.x;
+			y = m_pData->cs.y;
+			cx = m_pData->cs.cx;
+			cy = m_pData->cs.cy;
 		}
 
 		// Set the extended style
-		DWORD dwExStyle = m_pcs->dwExStyle | WS_EX_MDICHILD;
+		DWORD dwExStyle = m_pData->cs.dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
 		pParent->SetRedraw(FALSE);
 
 		// Create the window
-		if (!CreateEx(dwExStyle, ClassName, m_pcs->lpszName, dwStyle, x, y,
-			cx, cy, pParent->GetHwnd(), m_pcs->hMenu, m_pcs->lpCreateParams))
+		if (!CreateEx(dwExStyle, ClassName, m_pData->cs.lpszName, dwStyle, x, y,
+			cx, cy, pParent->GetHwnd(), m_pData->cs.hMenu, m_pData->cs.lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)
@@ -713,27 +711,27 @@ namespace Win32xx
 
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefMDIChildProc(m_hWnd, uMsg, wParam, lParam);
+		return ::DefMDIChildProc(*this, uMsg, wParam, lParam);
 	}
 
 	inline void CMDIChild::MDIActivate() const
 	{
-		GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)GetHwnd(), 0L);
 	}
 
 	inline void CMDIChild::MDIDestroy() const
 	{
-		GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)GetHwnd(), 0L);
 	}
 
 	inline void CMDIChild::MDIMaximize() const
 	{
-		GetParent().SendMessage(WM_MDIMAXIMIZE, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIMAXIMIZE, (WPARAM)GetHwnd(), 0L);
 	}
 
 	inline void CMDIChild::MDIRestore() const
 	{
-		GetParent().SendMessage(WM_MDIRESTORE, (WPARAM)m_hWnd, 0L);
+		GetParent().SendMessage(WM_MDIRESTORE, (WPARAM)GetHwnd(), 0L);
 	}
 
 	inline void CMDIChild::OnClose()
@@ -792,7 +790,7 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (m_hWnd != 0)
+			if (*this != 0)
 			{
 				// The MDIChild is already created, so create and position the new view too
 				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
@@ -815,9 +813,9 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 
 		// This child is being activated
-		if (lParam == (LPARAM) m_hWnd)
+		if (lParam == (LPARAM) GetHwnd())
 		{
-			GetMDIFrame()->m_hActiveMDIChild = m_hWnd;
+			GetMDIFrame()->m_hActiveMDIChild = *this;
 			// Set the menu to child default menu
 			if (m_ChildMenu.GetHandle())
 				GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);

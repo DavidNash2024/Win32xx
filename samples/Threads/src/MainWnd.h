@@ -16,7 +16,7 @@ public:
 	CMainWindow();
 	virtual ~CMainWindow() {}
 	virtual void AppendText(LPCTSTR szStr);
-	virtual HWND Create(CWnd* pParent = 0);
+	virtual HWND Create(HWND hParent = 0);
 	virtual void OnAllWindowsCreated();
 	virtual void OnWindowCreated();
 

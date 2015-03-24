@@ -16,7 +16,7 @@ class CMainWindow : public CWnd
 public:
 	CMainWindow();
 	virtual ~CMainWindow();
-	virtual HWND Create(CWnd* pParent = 0);
+	virtual HWND Create(HWND hParent = 0);
 	virtual void CreateTestWindows(int nWindows);
 	virtual void OnAllWindowsCreated();
 	virtual void PerformanceTest();

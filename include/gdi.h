@@ -146,12 +146,6 @@ namespace Win32xx
 	class CGDIObject
 	{
 	public:
-		struct DataMembers	// A structure that contains the data members for CGDIObject
-		{
-			HGDIOBJ hGDIObject;
-			long	Count;
-			BOOL	IsTmpObject;
-		};
 		CGDIObject();
 		CGDIObject(const CGDIObject& rhs);
 		virtual ~CGDIObject();
@@ -165,6 +159,13 @@ namespace Win32xx
 		int		GetObject(int nCount, LPVOID pObject) const;
 
 	protected:
+		struct DataMembers	// A structure that contains the data members for CGDIObject
+		{
+			HGDIOBJ hGDIObject;
+			long	Count;
+			BOOL	IsTmpObject;
+		};
+
 		DataMembers* m_pData;
 
 	private:
@@ -388,16 +389,6 @@ namespace Win32xx
 		friend class CWnd;
 
 	public:
-		struct DataMembers	// A structure that contains the data members for CDC
-		{
-			std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
-			HDC		hDC;			// The HDC belonging to this CDC
-			long	Count;			// Reference count
-			BOOL	IsTmpHDC;		// Delete/Release the HDC on destruction
-			HWND	hWnd;			// The HWND of a Window or Client window DC
-			int		nSavedDCState;	// The save state of the HDC.
-		};
-
 		CDC();									// Constructs a new CDC without assigning a HDC
 		CDC(HDC hDC, HWND hWnd = 0);			// Constructs a new CDC and assigns a HDC
 		CDC(const CDC& rhs);					// Constructs a new copy of the CDC
@@ -758,6 +749,16 @@ namespace Win32xx
 #endif  // _WIN32_WCE
 
 	private:
+		struct DataMembers	// A structure that contains the data members for CDC
+		{
+			std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
+			HDC		hDC;			// The HDC belonging to this CDC
+			long	Count;			// Reference count
+			BOOL	IsTmpHDC;		// Delete/Release the HDC on destruction
+			HWND	hWnd;			// The HWND of a Window or Client window DC
+			int		nSavedDCState;	// The save state of the HDC.
+		};
+
 		void AddToMap();
 	//	static CDC* AddTempHDC(HDC hDC, HWND hWnd);
 		void Release();

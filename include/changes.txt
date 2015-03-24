@@ -31,45 +31,76 @@ Create(m_hWnd);      // We can use a HWND directly
 Create(GetParent()); // Uses operator overloading to convert from CWnd to HWND
 Create();            // The created window has no parent window
 
+* m_hWnd is now a private member variable of CWnd.
+  Use GetHwnd() or *this in place of m_hWnd.
+
 * Assistance with code migration
 - FromHandle is no longer used by Win32++ internally, but remains available in 
   this version for the purpose of code migration. It issues a TRACE warning 
   message if used.
 - GetCWndPtr can be used to retrieve the pointer to a previously assigned CWnd
   given its HWND.
-- Note: Some virtual functions have changed. If you overrode Win32++'s virtual
-  functions, these may not get called if the definitions have changed.    
+- Note: Some virtual function definitions have changed. If you override these 
+  functions, they may not get called.    
 
   
 Changes in detail
 -----------------
+The following virtual functions have been modified
+CWnd::Create
+CWnd::CreateEx
+
+Modified CClientDC::CClientDC
 Modified CDialog::Create
 Modified CDialog::DoModal
 Modified CDialog::DoModeless
 Modified CDialog::GotoDlgCtrl
 Modified CDocker::IsChildOfDocker
 Modified CDocker::IsRelated
+Modified CFile::OpenFileDialog
+Modified CFile::SaveFileDialog
+Modified CImageList::DragEnter
+Modified CImageList::DragLeave
 Modified CMDIChild::Create
 Modified CMDIFrame::CDockMDIClient::Create
 Modified CMenu::TrackPopupMenu
 Modified CMenu::TrackPopupMenuEx
-Modified CTabbedMDI::Create
+Modified CPaintDC::CPaintDC
+Modified CPropertySheet::CPropertySheet
+Modified CPropertySheet::Create
+Modified CRibbon::CreateRibbon
 Modified CResizer::AddChild
 Modified CSlider::GetBuddy
 Modified CSlider::SetBuddy
 Modified CSpinButton::GetBuddy
 Modified CSpinButton::SetBuddy
 Modified CTab::GetToolTips
+Modified CTabbedMDI::Create
+Modified CToolTip::AddTool
+Modified CToolTip::DelTool
+Modified CToolTip::GetText
+Modified CToolTip::GetToolInfo
+Modified CToolTip::SetToolRect
+Modified CToolTip::HitTest
+Modified CToolTip::UpdateTipText
+Modified CWindowDC::CWindowDC
 Modified CWnd::AttachDlgItem
+Modified CWnd::BeginPaint
 Modified CWnd::ChildFromPoint
 Modified CWnd::Create
 Modified CWnd::CreateEx
+Modified CWnd::DrawCaption
 Modified CWnd::GetActiveWindow
 Modified CWnd::GetAncestor
+Modified CWnd::GetDC
+Modified CWnd::GetDCEx
 Modified CWnd::GetFocus
 Modified CWnd::DeferWindowPos
 Modified CWnd::GetDecktopWindow
 Modified CWnd::GetDlgItem
+Modified CWnd::GetUpdateRgn
+Modified CWnd::GetWindowDC
+Modified CWnd::InvalidateRgn
 Modified CWnd::GetLastActivePopup
 Modified CWnd::GetNextDlgGroupItem
 Modified CWnd::GetNextDlgTabItem
@@ -78,13 +109,22 @@ Modified CWnd::GetTopWindow
 Modified CWnd::GetWindow
 Modified CWnd::IsChild
 Modified CWnd::MapWindowPoints
+Modified CWnd::Print
+Modified CWnd::RedrawWindow
+Modified CWnd::ReleaseDC
+Modified CWnd::ScrollWindowEx
 Modified CWnd::SetActiveWindow
 Modified CWnd::SetCapture
+Modified CWnd::SetFont
 Modified CWnd::SetFocus
+Modified CWnd::SetMenu
 Modified CWnd::SetParent
 Modified CWnd::SetWindowPos
+Modified CWnd::SetWindowRgn
+Modified CWnd::ValidateRgn
 Modified CWnd::WindowFromDC
 Modified CWnd::WindowFromPoint
+
 
 Removed static const CWnd wndTop(HWND_TOP);
 Removed static const CWnd wndTopMost(HWND_TOPMOST);

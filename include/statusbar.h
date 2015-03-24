@@ -96,7 +96,7 @@ namespace Win32xx
 	// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
 	//  to the border of the window
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		assert(iParts <= 256);	
 		
 		return (BOOL)SendMessage(SB_SETPARTS, (WPARAM)iParts, (LPARAM)iPaneWidths);		
@@ -104,19 +104,19 @@ namespace Win32xx
 
 	inline int CStatusBar::GetParts()
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (int)SendMessage(SB_GETPARTS, 0L, 0L);
 	}
 
 	inline HICON CStatusBar::GetPartIcon(int iPart)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (HICON)SendMessage(SB_GETICON, (WPARAM)iPart, 0L);
 	}
 
 	inline CRect CStatusBar::GetPartRect(int iPart)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		
 		CRect rc;
 		SendMessage(SB_GETRECT, (WPARAM)iPart, (LPARAM)&rc);
@@ -125,7 +125,7 @@ namespace Win32xx
 
 	inline CString CStatusBar::GetPartText(int iPart) const
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		CString PaneText;
 		
 		// Get size of Text array
@@ -139,7 +139,7 @@ namespace Win32xx
 
 	inline BOOL CStatusBar::IsSimple()
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
 	}
 
@@ -169,7 +169,7 @@ namespace Win32xx
 	//SBT_POPOUT		The text is drawn with a border to appear higher than the plane of the window.
 	//SBT_RTLREADING	The text will be displayed in the opposite direction to the text in the parent window.
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		
 		BOOL bResult = FALSE;
 		if ((int)SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
@@ -180,7 +180,7 @@ namespace Win32xx
 
 	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		return (BOOL)SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
 	}
 
@@ -190,7 +190,7 @@ namespace Win32xx
 		// with the specified width.
 		// A width of -1 for the last part sets the width to the border of the window.
 
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		assert(iPart >= 0 && iPart <= 255);
 
 		// Fill the PartWidths vector with the current width of the StatusBar parts
@@ -223,7 +223,7 @@ namespace Win32xx
 
 	inline void CStatusBar::SetSimple(BOOL fSimple /* = TRUE*/)
 	{
-		assert(::IsWindow(m_hWnd));
+		assert(IsWindow());
 		SendMessage(SB_SIMPLE, (WPARAM)fSimple, 0L);
 	}
 

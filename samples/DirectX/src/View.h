@@ -23,7 +23,7 @@ public:
 	CView();
 	virtual ~CView();
 
-	virtual HWND Create(CWnd* pParent = 0);
+	virtual HWND Create(HWND hParent = 0);
 	virtual HRESULT InitD3D(HWND hWnd);
 	virtual HRESULT InitGeometry();
 	virtual void Render();

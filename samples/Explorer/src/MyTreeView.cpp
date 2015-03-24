@@ -73,7 +73,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 
 		if(sf.GetIShellFolder())
 		{
-			hr = sf.GetUIObjectOf(m_hWnd, 1, &(pInfo->GetRelCpidl()), IID_IContextMenu, 0, cm);
+			hr = sf.GetUIObjectOf(*this, 1, &(pInfo->GetRelCpidl()), IID_IContextMenu, 0, cm);
 
 			if(SUCCEEDED(hr))
 			{
@@ -99,7 +99,7 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 							CMINVOKECOMMANDINFO  cmi;
 							ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
 							cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
-							cmi.hwnd = m_hWnd;
+							cmi.hwnd = GetHwnd();
 							cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
 							cmi.nShow = SW_SHOWNORMAL;
 							cm.InvokeCommand(cmi);
