@@ -208,9 +208,9 @@ void CMainFrame::OnFilePrint()
 
 	// Copy the bitmap from the View window
 	CClientDC ViewDC(m_View);
-	CMemDC MemDC(&ViewDC);
+	CMemDC MemDC(ViewDC);
 	CBitmap bmView(::CreateCompatibleBitmap(ViewDC, Width, Height));
-	MemDC.SelectObject(&bmView);
+	MemDC.SelectObject(bmView);
 	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
 
 	// Bring up a dialog to choose the printer

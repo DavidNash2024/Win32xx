@@ -24,9 +24,9 @@ CFormView::~CFormView()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
-HWND CFormView::Create(CWnd* pParent = 0)
+HWND CFormView::Create(HWND hParent = 0)
 {
-	return DoModeless(*pParent);
+	return DoModeless(hParent);
 }
 
 INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

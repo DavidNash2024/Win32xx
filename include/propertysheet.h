@@ -123,6 +123,11 @@ namespace Win32xx
 
 		// Operations
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
+
+#ifdef USE_OBSOLETE_CODE
+		virtual HWND Create(CWnd* pParent = 0);
+#endif
+
 		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyButton(int iButton);
@@ -286,13 +291,22 @@ namespace Win32xx
 				if (::GetUpdateRect(*this, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
+
+#ifdef USE_OBSOLETE_CODE
 					OnDraw(&dc);
+#endif
+					OnDraw(dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(*this);
+
+#ifdef USE_OBSOLETE_CODE
 					OnDraw(&dc);
+#endif
+
+					OnDraw(dc);
 				}
 
 				break;
@@ -300,8 +314,16 @@ namespace Win32xx
 			
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = CDC::FromHandle((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(pDC);
+				CDC dc((HDC)wParam);
+				BOOL bResult;
+
+#ifdef USE_OBSOLETE_CODE
+				bResult = OnEraseBkgnd(&dc);
+#endif
+
+				bResult = OnEraseBkgnd(dc);
+
+				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;
@@ -718,6 +740,29 @@ namespace Win32xx
 		}
 	}
 
+#ifdef USE_OBSOLETE_CODE
+	inline HWND CPropertySheet::Create(CWnd* pParent /*= 0*/)
+	// Creates a modeless Property Sheet
+	{
+		assert( GetApp() );
+
+		if (pParent)
+		{
+			m_PSH.hwndParent = pParent->GetHwnd();
+		}
+
+		BuildPageArray();
+		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();
+		m_PSH.ppsp = pPSPArray;
+
+		// Create a modeless Property Sheet
+		m_PSH.dwFlags &= ~PSH_WIZARD;
+		m_PSH.dwFlags |= PSH_MODELESS;
+		HWND hWnd = (HWND)CreatePropertySheet(&m_PSH);
+
+		return hWnd;
+	}
+#endif
 
 	inline HWND CPropertySheet::Create(HWND hParent /*= 0*/)
 	// Creates a modeless Property Sheet

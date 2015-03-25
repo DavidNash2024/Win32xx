@@ -336,13 +336,22 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
+
+#ifdef USE_OBSOLETE_CODE
 					OnDraw(&dc);
+#endif
+
+					OnDraw(dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(*this);
+
+#ifdef USE_OBSOLETE_CODE
 					OnDraw(&dc);
+#endif
+					OnDraw(dc);
 				}
 
 				break;
@@ -350,8 +359,15 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = CDC::FromHandle((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(pDC);
+				CDC dc((HDC)wParam);
+				BOOL bResult;
+
+#ifdef USE_OBSOLETE_CODE
+				bResult = OnEraseBkgnd(&dc);
+#endif
+				
+				bResult = OnEraseBkgnd(dc);
+				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;

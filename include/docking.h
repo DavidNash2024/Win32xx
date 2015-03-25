@@ -246,7 +246,7 @@ namespace Win32xx
 		public:
 			CDockBar();
 			virtual ~CDockBar();
-			virtual void OnDraw(CDC* pDC);
+			virtual void OnDraw(CDC& dc);
 			virtual void PreCreate(CREATESTRUCT &cs);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
@@ -342,7 +342,7 @@ namespace Win32xx
 			virtual RECT CalcHintRectInner(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual RECT CalcHintRectOuter(CDocker* pDockDrag, UINT uDockSide);
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
-			virtual void OnDraw(CDC* pDC);
+			virtual void OnDraw(CDC& dc);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
 		private:
@@ -358,7 +358,7 @@ namespace Win32xx
 		public:
 			CTarget() {}
 			virtual ~CTarget();
-			virtual void OnDraw(CDC* pDC);
+			virtual void OnDraw(CDC& dc);
 			virtual void PreCreate(CREATESTRUCT &cs);
 
 		protected:
@@ -374,7 +374,7 @@ namespace Win32xx
 		public:
 			CTargetCentre();
 			virtual ~CTargetCentre();
-			virtual void OnDraw(CDC* pDC);
+			virtual void OnDraw(CDC& dc);
 			virtual int  OnCreate(LPCREATESTRUCT pcs);
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_IsOverContainer; }
@@ -599,11 +599,11 @@ namespace Win32xx
 	{
 	}
 
-	inline void CDocker::CDockBar::OnDraw(CDC* pDC)
+	inline void CDocker::CDockBar::OnDraw(CDC& dc)
 	{
 		CRect rcClient = GetClientRect();
-		pDC->SelectObject(&m_brBackground);
-		pDC->PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
+		dc.SelectObject(m_brBackground);
+		dc.PatBlt(0, 0, rcClient.Width(), rcClient.Height(), PATCOPY);
 	}
 
 	inline LRESULT CDocker::CDockBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
@@ -783,11 +783,11 @@ namespace Win32xx
 
 			// Create and set up our memory DC
 			CRect rc = GetWindowRect();
-			CMemDC dcMem(&dc);
+			CMemDC dcMem(dc);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDock->m_NCHeight + rcAdjust;
-			dcMem.CreateCompatibleBitmap(&dc, Width, Height);
+			dcMem.CreateCompatibleBitmap(dc, Width, Height);
 			m_IsOldFocusStored = bFocus;
 
 			// Set the font for the title
@@ -829,7 +829,7 @@ namespace Win32xx
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
-			dc.BitBlt(rcAdjust, rcAdjust, Width, Height, &dcMem, rcAdjust, rcAdjust, SRCCOPY);
+			dc.BitBlt(rcAdjust, rcAdjust, Width, Height, dcMem, rcAdjust, rcAdjust, SRCCOPY);
 		}
 	}
 
@@ -1425,16 +1425,17 @@ namespace Win32xx
 
 			// Save the Dock window's blue tinted bitmap
 			CClientDC dcDesktop(NULL);
-			CMemDC dcMem(&dcDesktop);
+			CMemDC dcMem(dcDesktop);
 			CRect rcBitmap = rcHint;
 			CRect rcTarget = rcHint;
 			pDockTarget->ClientToScreen(rcTarget);
 
 			m_bmBlueTint.DeleteObject();
-			m_bmBlueTint.CreateCompatibleBitmap(&dcDesktop, rcBitmap.Width(), rcBitmap.Height());
-			CBitmap* pOldBitmap = dcMem.SelectObject(&m_bmBlueTint);
-			dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), &dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
-			dcMem.SelectObject(pOldBitmap);
+			m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
+		/*	CBitmap* pOldBitmap = */ dcMem.SelectObject(m_bmBlueTint);
+			dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
+			dcMem.DetachBitmap();
+		//	dcMem.SelectObject(pOldBitmap);
 			m_bmBlueTint.TintBitmap(-64, -24, +128);
 
 			// Create the Hint window
@@ -1460,13 +1461,13 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::CDockHint::OnDraw(CDC* pDC)
+	inline void CDocker::CDockHint::OnDraw(CDC& dc)
 	{
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
-		CMemDC MemDC(pDC);
-		MemDC.SelectObject(&m_bmBlueTint);
-		pDC->BitBlt(0, 0, rc.Width(), rc.Height(), &MemDC, 0, 0, SRCCOPY);
+		CMemDC MemDC(dc);
+		MemDC.SelectObject(m_bmBlueTint);
+		dc.BitBlt(0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
 	}
 
 	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT &cs)
@@ -1491,7 +1492,7 @@ namespace Win32xx
 	{
 	}
 
-	inline void CDocker::CTargetCentre::OnDraw(CDC* pDC)
+	inline void CDocker::CTargetCentre::OnDraw(CDC& dc)
 	{
 		// Load the target bitmaps
 		CBitmap bmCentre(IDW_SDCENTER);
@@ -1508,25 +1509,25 @@ namespace Win32xx
 		if (dwStyle & DS_NO_DOCKCHILD_BOTTOM) bmBottom.TintBitmap(150, 150, 150);
 
 		// Draw the dock targets
-		if (bmCentre.GetHandle())	pDC->DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
+		if (bmCentre.GetHandle())	dc.DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
 		else TRACE("Missing docking resource: Target Centre\n");
 
-		if (bmLeft.GetHandle()) pDC->DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
+		if (bmLeft.GetHandle()) dc.DrawBitmap(0, 29, 31, 29, bmLeft, RGB(255,0,255));
 		else TRACE("Missing docking resource: Target Left\n");
 
-		if (bmTop.GetHandle()) pDC->DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
+		if (bmTop.GetHandle()) dc.DrawBitmap(29, 0, 29, 31, bmTop, RGB(255,0,255));
 		else TRACE("Missing docking resource: Target Top\n");
 
-		if (bmRight.GetHandle()) pDC->DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
+		if (bmRight.GetHandle()) dc.DrawBitmap(55, 29, 31, 29, bmRight, RGB(255,0,255));
 		else TRACE("Missing docking resource: Target Right\n");
 
-		if (bmBottom.GetHandle()) pDC->DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
+		if (bmBottom.GetHandle()) dc.DrawBitmap(29, 55, 29, 31, bmBottom, RGB(255,0,255));
 		else TRACE("Missing docking resource: Target Bottom\n");
 
 		if (IsOverContainer())
 		{
 			CBitmap bmMiddle(IDW_SDMIDDLE);
-			pDC->DrawBitmap(31, 31, 25, 26, bmMiddle, RGB(255,0,255));
+			dc.DrawBitmap(31, 31, 25, 26, bmMiddle, RGB(255,0,255));
 		}
 	}
 
@@ -1629,14 +1630,14 @@ namespace Win32xx
 	{
 	}
 
-	inline void CDocker::CTarget::OnDraw(CDC* pDC)
+	inline void CDocker::CTarget::OnDraw(CDC& dc)
 	{
 		BITMAP bm = m_bmImage.GetBitmapData();
 		int cxImage = bm.bmWidth;
 		int cyImage = bm.bmHeight;
 
 		if (m_bmImage != 0)
-			pDC->DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
+			dc.DrawBitmap(0, 0, cxImage, cyImage, m_bmImage, RGB(255,0,255));
 		else
 			TRACE("Missing docking resource\n");
 	}
@@ -2276,7 +2277,7 @@ namespace Win32xx
 		CBrush brDithered;
 		bmHash.CreateBitmap(8, 8, 1, 1, HashPattern);
 		brDithered.CreatePatternBrush(&bmHash);
-		dcBar.SelectObject(&brDithered);
+		dcBar.SelectObject(brDithered);
 
 		CRect rc = GetCWndPtr(hBar)->GetWindowRect();
 		ScreenToClient(rc);

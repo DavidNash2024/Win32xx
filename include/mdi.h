@@ -87,6 +87,10 @@ namespace Win32xx
 		virtual ~CMDIChild();
 
 		// These are the functions you might wish to override
+#ifdef USE_OBSOLETE_CODE
+		virtual HWND Create(CWnd* pParent = NULL);
+#endif
+
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void RecalcLayout();
 
@@ -137,11 +141,16 @@ namespace Win32xx
 			CMDIFrame* GetMDIFrame() const { return static_cast<CMDIFrame*>(GetCWndPtr(GetParent())); }
 
 		protected:
-			HWND Create(HWND hWndParent);
-			LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
-			LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
-			LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
-			LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+#ifdef USE_OBSOLETE_CODE
+			virtual HWND Create(CWnd* pParent = NULL);
+#endif
+
+			virtual HWND Create(HWND hWndParent);
+			virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
 
 
@@ -562,6 +571,25 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CDockMDIChild class
 	//
+
+#ifdef USE_OBSOLETE_CODE
+	inline HWND CMDIFrame::CDockMDIClient::Create(CWnd* pParent)
+	{
+		assert(pParent != 0);
+
+		CLIENTCREATESTRUCT clientcreate;
+		clientcreate.hWindowMenu  = 0;
+		clientcreate.idFirstChild = IDW_FIRSTCHILD;
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
+
+		// Create the view window
+		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
+
+		return m_hWnd;
+	}
+#endif
+
 	inline HWND CMDIFrame::CDockMDIClient::Create(HWND hWndParent)
 	{
 		assert(hWndParent != 0);
@@ -635,6 +663,73 @@ namespace Win32xx
 		if (IsWindow())
 			GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 	}
+
+#ifdef USE_OBSOLETE_CODE
+	inline HWND CMDIChild::Create(CWnd* pParent /*= NULL*/)
+	// We create the MDI child window and then maximize if required.
+	// This technique avoids unnecessary flicker when creating maximized MDI children.
+	{
+		//Call PreCreate in case its overloaded
+		PreCreate(*m_pcs);
+
+		//Determine if the window should be created maximized
+		BOOL bMax = FALSE;
+		assert(pParent);
+		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
+		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
+
+		// Set the Window Class Name
+		CString ClassName = _T("Win32++ MDI Child");
+		if (m_pcs->lpszClass)
+			ClassName = m_pcs->lpszClass;
+
+		// Set the window style
+		DWORD dwStyle;
+		dwStyle = m_pcs->style & ~WS_MAXIMIZE;
+		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
+
+		// Set window size and position
+		int x = CW_USEDEFAULT;
+		int	y = CW_USEDEFAULT;
+		int cx = CW_USEDEFAULT;
+		int cy = CW_USEDEFAULT;
+		if(m_pcs->cx && m_pcs->cy)
+		{
+			x = m_pcs->x;
+			y = m_pcs->y;
+			cx = m_pcs->cx;
+			cy = m_pcs->cy;
+		}
+
+		// Set the extended style
+		DWORD dwExStyle = m_pcs->dwExStyle | WS_EX_MDICHILD;
+
+		// Turn off redraw while creating the window
+		pParent->SetRedraw(FALSE);
+
+		// Create the window
+		if (!CreateEx(dwExStyle, ClassName, m_pcs->lpszName, dwStyle, x, y,
+			cx, cy, pParent->GetHwnd(), m_pcs->hMenu, m_pcs->lpCreateParams))
+			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
+
+		if (bMax)
+			ShowWindow(SW_MAXIMIZE);
+
+		// Turn redraw back on
+		pParent->SetRedraw(TRUE);
+		pParent->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+
+		// Ensure bits revealed by round corners (XP themes) are redrawn
+		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
+
+		if (m_ChildMenu.GetHandle())
+			GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
+		if (m_hChildAccel)
+			GetApp()->SetAccelerators(m_hChildAccel, this);
+
+		return m_hWnd;
+	}
+#endif
 
 	inline HWND CMDIChild::Create(HWND hWndParent /*= NULL*/)
 	// We create the MDI child window and then maximize if required.

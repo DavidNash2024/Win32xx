@@ -41,12 +41,12 @@ void CColourDialog::OnGrayScale()
 	{
 		// Copy m_hbmPreviewOrig to m_hbmPreview
 		CMemDC Mem1DC(NULL);
-		Mem1DC.SelectObject(&m_bmPreviewOrig);
+		Mem1DC.SelectObject(m_bmPreviewOrig);
 		CMemDC Mem2DC(NULL);
-		Mem2DC.SelectObject(&m_bmPreview);
+		Mem2DC.SelectObject(m_bmPreview);
 		int cx = m_Preview.GetWindowRect().Width();
 		int cy = m_Preview.GetWindowRect().Height();
-		Mem2DC.BitBlt(0, 0, cx, cy, &Mem1DC, 0, 0, SRCCOPY);
+		Mem2DC.BitBlt(0, 0, cx, cy, Mem1DC, 0, 0, SRCCOPY);
 
 		Mem2DC.DetachBitmap();	// Detach bitmap before modifying it
 		m_bmPreview.TintBitmap(m_cRed, m_cGreen, m_cBlue);
@@ -119,12 +119,12 @@ LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
 
 	// Copy m_hbmPreviewOrig to m_hbmPreview
 	CMemDC Mem1DC(NULL);
-	Mem1DC.SelectObject(&m_bmPreviewOrig);
+	Mem1DC.SelectObject(m_bmPreviewOrig);
 	CMemDC Mem2DC(NULL);
-	Mem2DC.SelectObject(&m_bmPreview);
+	Mem2DC.SelectObject(m_bmPreview);
 	int cx = m_Preview.GetWindowRect().Width();
 	int cy = m_Preview.GetWindowRect().Height();
-	Mem2DC.BitBlt(0, 0, cx, cy, &Mem1DC, 0, 0, SRCCOPY);
+	Mem2DC.BitBlt(0, 0, cx, cy, Mem1DC, 0, 0, SRCCOPY);
 
 	// Update the colour of the preview image
 	Mem2DC.DetachBitmap();	// Detach bitmap before modifying it
@@ -182,9 +182,9 @@ void CColourDialog::PaintPreview()
 	}
 
 	CClientDC dcPreview(*this);
-	CMemDC MemDC(&dcPreview);
-	MemDC.SelectObject(&m_bmPreview);
-	dcPreview.BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, &MemDC, 0, 0, SRCCOPY);
+	CMemDC MemDC(dcPreview);
+	MemDC.SelectObject(m_bmPreview);
+	dcPreview.BitBlt(nLeftDest, nTopDest, bm.bmWidth, bm.bmHeight, MemDC, 0, 0, SRCCOPY);
 }
 
 void CColourDialog::CreateImagePreviews()
@@ -221,17 +221,17 @@ void CColourDialog::CreateImagePreviews()
 	CMemDC Dest2DC(NULL);
 	CMemDC MemDC(NULL);
 	CClientDC dcDesktop(NULL);
-	m_bmPreview.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
-	m_bmPreviewOrig.CreateCompatibleBitmap(&dcDesktop, nWidthDest, nHeightDest);
-	MemDC.SelectObject(&m_bmImage);
-	Dest1DC.SelectObject(&m_bmPreview);
-	Dest2DC.SelectObject(&m_bmPreviewOrig);
+	m_bmPreview.CreateCompatibleBitmap(dcDesktop, nWidthDest, nHeightDest);
+	m_bmPreviewOrig.CreateCompatibleBitmap(dcDesktop, nWidthDest, nHeightDest);
+	MemDC.SelectObject(m_bmImage);
+	Dest1DC.SelectObject(m_bmPreview);
+	Dest2DC.SelectObject(m_bmPreviewOrig);
 
 	// Stretch the bitmap to fit in the destination display area
 	Dest1DC.SetStretchBltMode(COLORONCOLOR);
-	Dest1DC.StretchBlt(0, 0, nWidthDest, nHeightDest, &MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+	Dest1DC.StretchBlt(0, 0, nWidthDest, nHeightDest, MemDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 
 	// Make a second copy of the bitmap
-	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, &Dest1DC, 0, 0, SRCCOPY);
+	Dest2DC.BitBlt(0, 0, nWidthDest, nHeightDest, Dest1DC, 0, 0, SRCCOPY);
 }
 

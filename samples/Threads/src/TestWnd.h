@@ -12,7 +12,7 @@ public:
 	CTestWindow(int nWindow);
 	virtual ~CTestWindow() {}
 
-	virtual HWND Create(CWnd* pWndParent = 0);
+	virtual HWND Create(HWND hWndParent = 0);
 
 protected:
 	virtual void OnClose();

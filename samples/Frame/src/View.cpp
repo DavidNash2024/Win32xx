@@ -10,13 +10,13 @@ CView::CView()
 {
 }
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 // OnDraw is called when part or all of the window needs to be redrawn
 {
 	CRect rc = GetClientRect();
 
 	// Centre some text in our view window
-	pDC->DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	dc.DrawText(_T("View Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 void CView::OnInitialUpdate()

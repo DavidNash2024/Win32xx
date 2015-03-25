@@ -76,7 +76,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CDC* pDC = CDC::FromHandle((HDC)wParam);
 		pDC->SetTextColor( m_IsUrlVisited? m_crVisited : m_crNotVisited);
 		pDC->SetBkMode(TRANSPARENT);
-		pDC->SelectObject(&m_UrlFont);
+		pDC->SelectObject(m_UrlFont);
 
 		// Return a NULL brush for a transparent background
 		return (LRESULT)GetStockObject(NULL_BRUSH);

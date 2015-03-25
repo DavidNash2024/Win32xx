@@ -141,12 +141,12 @@ void CMyDialog::OnRadio3()
 	TRACE("Radio 3\n");
 }
 
-BOOL CMyDialog::OnEraseBkgnd(CDC* pDC)
+BOOL CMyDialog::OnEraseBkgnd(CDC& dc)
 {
 	// Adding a gripper to a resizable dialog is a bit of a hack, but since it
 	// is often done, here is one method of doing it safely.
 
-	UNREFERENCED_PARAMETER(pDC);
+	UNREFERENCED_PARAMETER(dc);
 
 	// Draw the dialog's background manually
 	CRect rc = GetClientRect();

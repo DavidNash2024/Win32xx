@@ -487,6 +487,12 @@ namespace Win32xx
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, HWND hwndParent);
 		virtual void CenterWindow() const;
+
+#ifdef USE_OBSOLETE_CODE
+		virtual HWND Create(CWnd* pParent);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam = NULL);
+#endif
+
 		virtual HWND Create(HWND hParent = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam = NULL);
@@ -646,8 +652,14 @@ namespace Win32xx
 		virtual void OnClose();
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual void OnDestroy();
+		virtual void OnDraw(CDC& dc);
+		virtual BOOL OnEraseBkgnd(CDC& dc);
+
+#ifdef USE_OBSOLETE_CODE
 		virtual void OnDraw(CDC* pDC);
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
+#endif
+
 		virtual void OnInitialUpdate();
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -659,7 +671,9 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	//	HWND m_hWnd;					// handle to this object's window
+#ifdef USE_OBSOLETE_CODE
+		HWND m_hWnd;					// handle to this object's window
+#endif
 
 	private:
 		struct DataMembers	// A structure that contains the data members
@@ -685,8 +699,16 @@ namespace Win32xx
 		void Subclass(HWND hWnd);
 
 		Shared_Ptr<DataMembers> m_pData;
-		BOOL m_IsTmpWnd;				// True if this CWnd is a TmpWnd
+
+#ifndef USE_OBSOLETE_CODE
 		HWND m_hWnd;					// handle to this object's window
+#else
+		Shared_Ptr<WNDCLASS> m_pwc;		// defines initialisation parameters for PreRegisterClass
+		Shared_Ptr<CREATESTRUCT> m_pcs;	// defines initialisation parameters for PreCreate and Create
+		WNDPROC m_PrevWindowProc;		// pre-subclassed Window Procedure
+#endif
+		
+		BOOL m_IsTmpWnd;				// True if this CWnd is a TmpWnd
 
 	}; // class CWnd
 
@@ -1506,6 +1528,80 @@ namespace Win32xx
 		m_IsTmpWnd = FALSE;
 	}
 
+#ifdef USE_OBSOLETE_CODE
+
+	inline HWND CWnd::Create(CWnd* pParent /* = NULL */)
+	// Creates the window. This is the default method of window creation.
+	{
+		// Test if Win32++ has been started
+		assert( GetApp() );
+
+		// Set the WNDCLASS parameters
+		PreRegisterClass(*m_pwc);
+		if (m_pwc->lpszClassName)
+		{
+			RegisterClass(*m_pwc);
+			m_pcs->lpszClass = m_pwc->lpszClassName;
+		}
+		else
+			m_pcs->lpszClass = _T("Win32++ Window");
+
+		// Set Parent
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
+
+		// Set a reasonable default window style
+		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
+		m_pcs->style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+
+		// Set a reasonable default window position
+		if (NULL == pParent)
+		{
+			m_pcs->x  = CW_USEDEFAULT;
+			m_pcs->cx = CW_USEDEFAULT;
+			m_pcs->y  = CW_USEDEFAULT;
+			m_pcs->cy = CW_USEDEFAULT;
+		}
+
+		// Allow the CREATESTRUCT parameters to be modified
+		PreCreate(*m_pcs);
+
+		DWORD dwStyle = m_pcs->style & ~WS_VISIBLE;
+
+		// Create the window
+#ifndef _WIN32_WCE
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, m_pcs->x, m_pcs->y,
+				m_pcs->cx, m_pcs->cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
+
+		if (m_pcs->style & WS_VISIBLE)
+		{
+			if		(m_pcs->style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
+			else if (m_pcs->style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
+			else	ShowWindow();
+		}
+
+#else
+		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, m_pcs->style, m_pcs->x, m_pcs->y,
+				m_pcs->cx, m_pcs->cy, hWndParent, 0, m_pcs->lpCreateParams);
+#endif
+
+		return m_hWnd;
+	}
+
+	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam /*= NULL*/)
+	// Creates the window by specifying all the window creation parameters
+	{
+		int x = rc.left;
+		int y = rc.top;
+		int cx = rc.right - rc.left;
+		int cy = rc.bottom - rc.top;
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
+		HMENU hMenu = pParent? (HMENU)(INT_PTR)nID : ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
+
+		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
+	}
+
+#endif // USE_OBSOLETE_CODE
+
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Creates the window. This is the default method of window creation.
 	{
@@ -1856,6 +1952,28 @@ namespace Win32xx
 		//  with PostQuitMessage.
 	}
 
+	inline void CWnd::OnDraw(CDC& dc)
+	// Called when part of the client area of the window needs to be drawn
+	{
+		UNREFERENCED_PARAMETER(dc);
+
+	    // Override this function in your derived class to perform drawing tasks.
+	}
+
+	inline BOOL CWnd::OnEraseBkgnd(CDC& dc)
+	// Called when the background of the window's client area needs to be erased.
+	{
+		UNREFERENCED_PARAMETER(dc);
+
+	    // Override this function in your derived class to perform drawing tasks.
+
+		// Return Value: Return FALSE to also permit default erasure of the background
+		//				 Return TRUE to prevent default erasure of the background
+
+		return FALSE;
+	}
+
+#ifdef USE_OBSOLETE_CODE
 	inline void CWnd::OnDraw(CDC* pDC)
 	// Called when part of the client area of the window needs to be drawn
 	{
@@ -1876,7 +1994,7 @@ namespace Win32xx
 
 		return FALSE;
 	}
-
+#endif
 
 	inline void CWnd::OnInitialUpdate()
 	{
@@ -2285,21 +2403,38 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
+
+#ifdef USE_OBSOLETE_CODE
 					OnDraw(&dc);
+#endif
+
+					OnDraw(dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(*this);
+
+#ifdef USE_OBSOLETE_CODE
 					OnDraw(&dc);
+#endif
+
+					OnDraw(dc);
 				}
 			}
 			return 0L;
 
 		case WM_ERASEBKGND:
 			{
-				CDC* pDC = CDC::FromHandle((HDC)wParam);
-				BOOL bResult = OnEraseBkgnd(pDC);
+				CDC dc((HDC)wParam);
+				BOOL bResult;
+
+#ifdef USE_OBSOLETE_CODE
+				bResult = OnEraseBkgnd(&dc);
+#endif
+				
+				bResult = OnEraseBkgnd(dc);
+				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;

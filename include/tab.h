@@ -153,13 +153,18 @@ namespace Win32xx
 		void		SetToolTips(CToolTip* pToolTip) const;
 
 	protected:
-		virtual void	DrawCloseButton(CDC* pDrawDC);
-		virtual void	DrawListButton(CDC* pDrawDC);
-		virtual void	DrawTabs(CDC* pDCMem);
-		virtual void	DrawTabBorders(CDC* pDCMem, CRect& rcTab);
+		virtual void	DrawCloseButton(CDC& dcDraw);
+		virtual void	DrawListButton(CDC& dcDraw);
+		virtual void	DrawTabs(CDC& dcMem);
+		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnAttach();
 		virtual void	OnDestroy();
+
+#ifdef USE_OBSOLETE_CODE
 		virtual BOOL    OnEraseBkgnd(CDC*) { return TRUE;}
+#endif
+
+		virtual BOOL    OnEraseBkgnd(CDC&) { return TRUE;}
 		virtual LRESULT OnEraseBkgnd(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonDblClk(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
@@ -231,6 +236,10 @@ namespace Win32xx
 		virtual void SetActiveMDITab(int nTab);
 
 	protected:
+#ifdef USE_OBSOLETE_CODE
+		virtual HWND    Create(CWnd* pParent);
+#endif
+
 		virtual HWND    Create(HWND hWndParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void 	OnAttach();
@@ -347,7 +356,7 @@ namespace Win32xx
 		return AddTabPage(pView, szTabText, (HICON)0, 0);
 	}
 
-	inline void CTab::DrawCloseButton(CDC* pDrawDC)
+	inline void CTab::DrawCloseButton(CDC& dcDraw)
 	{
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
@@ -371,67 +380,67 @@ namespace Win32xx
 			{
 			case 0:
 				{
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 
-					pDrawDC->MoveTo(rcClose.left, rcClose.bottom);
-					pDrawDC->LineTo(rcClose.right, rcClose.bottom);
-					pDrawDC->LineTo(rcClose.right, rcClose.top);
-					pDrawDC->LineTo(rcClose.left, rcClose.top);
-					pDrawDC->LineTo(rcClose.left, rcClose.bottom);
+					dcDraw.MoveTo(rcClose.left, rcClose.bottom);
+					dcDraw.LineTo(rcClose.right, rcClose.bottom);
+					dcDraw.LineTo(rcClose.right, rcClose.top);
+					dcDraw.LineTo(rcClose.left, rcClose.top);
+					dcDraw.LineTo(rcClose.left, rcClose.bottom);
 					break;
 				}
 
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					pDrawDC->MoveTo(rcClose.left, rcClose.bottom);
-					pDrawDC->LineTo(rcClose.right, rcClose.bottom);
-					pDrawDC->LineTo(rcClose.right, rcClose.top);
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					pDrawDC->LineTo(rcClose.left, rcClose.top);
-					pDrawDC->LineTo(rcClose.left, rcClose.bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					dcDraw.MoveTo(rcClose.left, rcClose.bottom);
+					dcDraw.LineTo(rcClose.right, rcClose.bottom);
+					dcDraw.LineTo(rcClose.right, rcClose.top);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					dcDraw.LineTo(rcClose.left, rcClose.top);
+					dcDraw.LineTo(rcClose.left, rcClose.bottom);
 				}
 
 				break;
 			case 2:
 				{
 					// Draw outline, black on top, white on bottom
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					pDrawDC->MoveTo(rcClose.left, rcClose.bottom);
-					pDrawDC->LineTo(rcClose.right, rcClose.bottom);
-					pDrawDC->LineTo(rcClose.right, rcClose.top);
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					pDrawDC->LineTo(rcClose.left, rcClose.top);
-					pDrawDC->LineTo(rcClose.left, rcClose.bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					dcDraw.MoveTo(rcClose.left, rcClose.bottom);
+					dcDraw.LineTo(rcClose.right, rcClose.bottom);
+					dcDraw.LineTo(rcClose.right, rcClose.top);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					dcDraw.LineTo(rcClose.left, rcClose.top);
+					dcDraw.LineTo(rcClose.left, rcClose.bottom);
 				}
 				break;
 			}
 
 			// Manually draw close button
-			pDrawDC->CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+			dcDraw.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			pDrawDC->MoveTo(rcClose.left + 3, rcClose.top +3);
-			pDrawDC->LineTo(rcClose.right - 2, rcClose.bottom -2);
+			dcDraw.MoveTo(rcClose.left + 3, rcClose.top +3);
+			dcDraw.LineTo(rcClose.right - 2, rcClose.bottom -2);
 
-			pDrawDC->MoveTo(rcClose.left + 4, rcClose.top +3);
-			pDrawDC->LineTo(rcClose.right - 2, rcClose.bottom -3);
+			dcDraw.MoveTo(rcClose.left + 4, rcClose.top +3);
+			dcDraw.LineTo(rcClose.right - 2, rcClose.bottom -3);
 
-			pDrawDC->MoveTo(rcClose.left + 3, rcClose.top +4);
-			pDrawDC->LineTo(rcClose.right - 3, rcClose.bottom -2);
+			dcDraw.MoveTo(rcClose.left + 3, rcClose.top +4);
+			dcDraw.LineTo(rcClose.right - 3, rcClose.bottom -2);
 
-			pDrawDC->MoveTo(rcClose.right -3, rcClose.top +3);
-			pDrawDC->LineTo(rcClose.left + 2, rcClose.bottom -2);
+			dcDraw.MoveTo(rcClose.right -3, rcClose.top +3);
+			dcDraw.LineTo(rcClose.left + 2, rcClose.bottom -2);
 
-			pDrawDC->MoveTo(rcClose.right -3, rcClose.top +4);
-			pDrawDC->LineTo(rcClose.left + 3, rcClose.bottom -2);
+			dcDraw.MoveTo(rcClose.right -3, rcClose.top +4);
+			dcDraw.LineTo(rcClose.left + 3, rcClose.bottom -2);
 
-			pDrawDC->MoveTo(rcClose.right -4, rcClose.top +3);
-			pDrawDC->LineTo(rcClose.left + 2, rcClose.bottom -3);
+			dcDraw.MoveTo(rcClose.right -4, rcClose.top +3);
+			dcDraw.LineTo(rcClose.left + 2, rcClose.bottom -3);
 		}
 	}
 
-	inline void CTab::DrawListButton(CDC* pDrawDC)
+	inline void CTab::DrawListButton(CDC& dcDraw)
 	{
 		// The list button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
@@ -456,58 +465,58 @@ namespace Win32xx
 			{
 			case 0:
 				{
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(232, 228, 220));
 
-					pDrawDC->MoveTo(rcList.left, rcList.bottom);
-					pDrawDC->LineTo(rcList.right, rcList.bottom);
-					pDrawDC->LineTo(rcList.right, rcList.top);
-					pDrawDC->LineTo(rcList.left, rcList.top);
-					pDrawDC->LineTo(rcList.left, rcList.bottom);
+					dcDraw.MoveTo(rcList.left, rcList.bottom);
+					dcDraw.LineTo(rcList.right, rcList.bottom);
+					dcDraw.LineTo(rcList.right, rcList.top);
+					dcDraw.LineTo(rcList.left, rcList.top);
+					dcDraw.LineTo(rcList.left, rcList.bottom);
 					break;
 				}
 
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					pDrawDC->MoveTo(rcList.left, rcList.bottom);
-					pDrawDC->LineTo(rcList.right, rcList.bottom);
-					pDrawDC->LineTo(rcList.right, rcList.top);
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					pDrawDC->LineTo(rcList.left, rcList.top);
-					pDrawDC->LineTo(rcList.left, rcList.bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					dcDraw.MoveTo(rcList.left, rcList.bottom);
+					dcDraw.LineTo(rcList.right, rcList.bottom);
+					dcDraw.LineTo(rcList.right, rcList.top);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					dcDraw.LineTo(rcList.left, rcList.top);
+					dcDraw.LineTo(rcList.left, rcList.bottom);
 				}
 
 				break;
 			case 2:
 				{
 					// Draw outline, black on top, white on bottom
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					pDrawDC->MoveTo(rcList.left, rcList.bottom);
-					pDrawDC->LineTo(rcList.right, rcList.bottom);
-					pDrawDC->LineTo(rcList.right, rcList.top);
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					pDrawDC->LineTo(rcList.left, rcList.top);
-					pDrawDC->LineTo(rcList.left, rcList.bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					dcDraw.MoveTo(rcList.left, rcList.bottom);
+					dcDraw.LineTo(rcList.right, rcList.bottom);
+					dcDraw.LineTo(rcList.right, rcList.top);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					dcDraw.LineTo(rcList.left, rcList.top);
+					dcDraw.LineTo(rcList.left, rcList.bottom);
 				}
 				break;
 			}
 
 			// Manually draw list button
-			pDrawDC->CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
+			dcDraw.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
 			int MaxLength = (int)(0.65 * rcList.Width());
 			int topGap = 1 + rcList.Height()/3;
 			for (int i = 0; i <= MaxLength/2; ++i)
 			{
 				int Length = MaxLength - 2*i;
-				pDrawDC->MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
-				pDrawDC->LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
+				dcDraw.MoveTo(rcList.left +1 + (rcList.Width() - Length)/2, rcList.top +topGap +i);
+				dcDraw.LineTo(rcList.left +1 + (rcList.Width() - Length)/2 + Length, rcList.top +topGap +i);
 			}
 		}
 	}
 
-	inline void CTab::DrawTabs(CDC* pDCMem)
+	inline void CTab::DrawTabs(CDC& dcMem)
 	{
 		// Draw the tab buttons:
 		for (int i = 0; i < GetItemCount(); ++i)
@@ -518,17 +527,17 @@ namespace Win32xx
 			{
 				if (i == GetCurSel())
 				{
-					pDCMem->CreateSolidBrush(RGB(248,248,248));
-					pDCMem->SetBkColor(RGB(248,248,248));
+					dcMem.CreateSolidBrush(RGB(248,248,248));
+					dcMem.SetBkColor(RGB(248,248,248));
 				}
 				else
 				{
-					pDCMem->CreateSolidBrush(RGB(200,200,200));
-					pDCMem->SetBkColor(RGB(200,200,200));
+					dcMem.CreateSolidBrush(RGB(200,200,200));
+					dcMem.SetBkColor(RGB(200,200,200));
 				}
 
-				pDCMem->CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-				pDCMem->RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+				dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+				dcMem.RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
 
 				if (rcItem.Width() >= 24)
 				{
@@ -541,10 +550,10 @@ namespace Win32xx
 						yOffset = (rcItem.Height() - cyImage)/2;
 
 					// Draw the icon
-					m_imlODTab.Draw(pDCMem, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
+					m_imlODTab.Draw(dcMem, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
 					// Draw the text
-					pDCMem->SelectObject(&m_TabFont);
+					dcMem.SelectObject(m_TabFont);
 
 					// Calculate the size of the text
 					CRect rcText = rcItem;
@@ -555,13 +564,13 @@ namespace Win32xx
 						rcText.left += iImageSize;
 
 					rcText.left += iPadding;
-					pDCMem->DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
+					dcMem.DrawText(str, -1, rcText, DT_LEFT|DT_VCENTER|DT_SINGLELINE|DT_END_ELLIPSIS);
 				}
 			}
 		}
 	}
 
-	inline void CTab::DrawTabBorders(CDC* pDCMem, CRect& rcTab)
+	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
 	{
 		BOOL IsBottomTab = (BOOL)GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
 
@@ -579,39 +588,39 @@ namespace Win32xx
 			top = bottom -3;
 		}
 
-		pDCMem->CreateSolidBrush(RGB(248,248,248));
-		pDCMem->CreatePen(PS_SOLID, 1, RGB(248,248,248));
+		dcMem.CreateSolidBrush(RGB(248,248,248));
+		dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 		if (!rcItem.IsRectEmpty())
 		{
-			pDCMem->Rectangle(left, top, right, bottom);
+			dcMem.Rectangle(left, top, right, bottom);
 
 			// Draw a darker line below the rectangle
-			pDCMem->CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
+			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
 			if (IsBottomTab)
 			{
-				pDCMem->MoveTo(left-1, bottom);
-				pDCMem->LineTo(right, bottom);
+				dcMem.MoveTo(left-1, bottom);
+				dcMem.LineTo(right, bottom);
 			}
 			else
 			{
-				pDCMem->MoveTo(left-1, top-1);
-				pDCMem->LineTo(right, top-1);
+				dcMem.MoveTo(left-1, top-1);
+				dcMem.LineTo(right, top-1);
 			}
 
 			// Draw a lighter line over the darker line for the selected tab
-			pDCMem->CreatePen(PS_SOLID, 1, RGB(248,248,248));
+			dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
 			GetItemRect(GetCurSel(), &rcItem);
 			OffsetRect(&rcItem, 1, 1);
 
 			if (IsBottomTab)
 			{
-				pDCMem->MoveTo(rcItem.left, bottom);
-				pDCMem->LineTo(rcItem.right, bottom);
+				dcMem.MoveTo(rcItem.left, bottom);
+				dcMem.LineTo(rcItem.right, bottom);
 			}
 			else
 			{
-				pDCMem->MoveTo(rcItem.left, top-1);
-				pDCMem->LineTo(rcItem.right, top-1);
+				dcMem.MoveTo(rcItem.left, top-1);
+				dcMem.LineTo(rcItem.right, top-1);
 			}
 		}
 	}
@@ -688,7 +697,7 @@ namespace Win32xx
 		for (int i = 0; i < GetItemCount(); ++i)
 		{
 			CClientDC dcClient(*this);
-			dcClient.SelectObject(&m_TabFont);
+			dcClient.SelectObject(m_TabFont);
 			CString str;
 			TCITEM tcItem;
 			ZeroMemory(&tcItem, sizeof(TCITEM));
@@ -722,7 +731,7 @@ namespace Win32xx
 	inline int CTab::GetTextHeight() const
 	{
 		CClientDC dcClient(*this);
-		dcClient.SelectObject(&m_TabFont);
+		dcClient.SelectObject(m_TabFont);
 		CSize szText = dcClient.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
@@ -840,7 +849,7 @@ namespace Win32xx
 			m_IsClosePressed = TRUE;
 			SetCapture();
 			CClientDC dc(*this);
-			DrawCloseButton(&dc);
+			DrawCloseButton(dc);
 		}
 		else
 			m_IsClosePressed = FALSE;
@@ -876,8 +885,8 @@ namespace Win32xx
 	inline LRESULT CTab::OnMouseLeave(WPARAM wParam, LPARAM lParam)
 	{
 		CClientDC dc(*this);
-		DrawCloseButton(&dc);
-		DrawListButton(&dc);
+		DrawCloseButton(dc);
+		DrawListButton(dc);
 
 		m_IsTracking = FALSE;
 
@@ -919,8 +928,8 @@ namespace Win32xx
 		m_OldMousePos.y = pt.y;
 
 		CClientDC dc(*this);
-		DrawCloseButton(&dc);
-		DrawListButton(&dc);
+		DrawCloseButton(dc);
+		DrawListButton(dc);
 
 		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
 	}
@@ -1040,9 +1049,9 @@ namespace Win32xx
 
 		// Create the memory DC and bitmap
 		CClientDC dcView(*this);
-		CMemDC dcMem(&dcView);
+		CMemDC dcMem(dcView);
 		CRect rcClient = GetClientRect();
-		dcMem.CreateCompatibleBitmap(&dcView, rcClient.Width(), rcClient.Height());
+		dcMem.CreateCompatibleBitmap(dcView, rcClient.Width(), rcClient.Height());
 
 		if (GetItemCount() == 0)
 		{
@@ -1073,12 +1082,12 @@ namespace Win32xx
 		dcMem.PaintRgn(&rgnClip);
 
 		// Draw the tab buttons on the memory DC:
-		DrawTabs(&dcMem);
+		DrawTabs(dcMem);
 
 		// Draw buttons and tab borders
-		DrawCloseButton(&dcMem);
-		DrawListButton(&dcMem);
-		DrawTabBorders(&dcMem, rcTab);
+		DrawCloseButton(dcMem);
+		DrawListButton(dcMem);
+		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
 		dcView.SelectClipRgn(&rgnClip);
@@ -1086,11 +1095,11 @@ namespace Win32xx
 		if (RTL)
 		{
 			// BitBlt offset bitmap copies by one for Right-To-Left layout
-			dcView.BitBlt(0, 0, 1, rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
-			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), &dcMem, 1, 0, SRCCOPY);
+			dcView.BitBlt(0, 0, 1, rcClient.Height(), dcMem, 1, 0, SRCCOPY);
+			dcView.BitBlt(1, 0, rcClient.Width(), rcClient.Height(), dcMem, 1, 0, SRCCOPY);
 		}
 		else
-			dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), &dcMem, 0, 0, SRCCOPY);
+			dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
 	}
 
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
@@ -1361,7 +1370,7 @@ namespace Win32xx
 		}
 
 		CClientDC dc(*this);
-		DrawListButton(&dc);
+		DrawListButton(dc);
 	}
 
 	inline void CTab::ShowListDialog()
@@ -1690,6 +1699,24 @@ namespace Win32xx
 		if (GetActiveMDIChild())
 			GetActiveMDIChild()->RedrawWindow();
 	}
+
+#ifdef USE_OBSOLETE_CODE
+	inline HWND CTabbedMDI::Create(CWnd* pParent /* = NULL*/)
+	{
+		CLIENTCREATESTRUCT clientcreate ;
+		clientcreate.hWindowMenu  = m_hWnd;
+		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
+		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
+		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
+
+		// Create the MDICLIENT view window
+		if (!CreateEx(0, _T("MDICLIENT"), _T(""),
+			dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
+				throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
+
+		return m_hWnd;
+	}
+#endif
 
 	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	{

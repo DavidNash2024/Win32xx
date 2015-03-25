@@ -1148,7 +1148,7 @@ namespace Win32xx
 						// Draw border
 						int nSavedDC = pDrawDC->SaveDC();
 						CPen Pen(PS_SOLID, 1, GetMenuBarTheme()->clrOutline);
-						pDrawDC->SelectObject(&Pen);
+						pDrawDC->SelectObject(Pen);
 						pDrawDC->MoveTo(rcRect.left, rcRect.bottom);
 						pDrawDC->LineTo(rcRect.left, rcRect.top);
 						pDrawDC->LineTo(rcRect.right-1, rcRect.top);
@@ -1166,7 +1166,7 @@ namespace Win32xx
 
 						// Draw highlight text
 						CFont* pFont = GetMenuBar()->GetFont();
-						pDrawDC->SelectObject(pFont);
+						pDrawDC->SelectObject(*pFont);
 
 						rcRect.bottom += 1;
 						pDrawDC->SetBkMode(TRANSPARENT);
@@ -1183,8 +1183,9 @@ namespace Win32xx
 		case CDDS_POSTPAINT:
 			// Draw MDI Minimise, Restore and Close buttons
 			{
-				CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
-				GetMenuBar()->DrawAllMDIButtons(pDrawDC);
+				CDC dc(lpNMCustomDraw->nmcd.hdc);
+				GetMenuBar()->DrawAllMDIButtons(dc);
+				dc.Detach();
 			}
 			break;
 		}
@@ -1230,7 +1231,7 @@ namespace Win32xx
 						CSize TextSize;
 						if (pTB->HasText())	// Does any button have text?
 						{
-							pDrawDC->SelectObject(pTB->GetFont());
+							pDrawDC->SelectObject(*pTB->GetFont());
 							LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
 							str.ReleaseBuffer();
 							if (lr> 0)
@@ -1338,7 +1339,7 @@ namespace Win32xx
 						// Draw the button image
 						if (xImage > 0)
 						{
-							pimlToolBar->Draw(pDrawDC, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
+							pimlToolBar->Draw(*pDrawDC, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
 						}
 
 						//Draw Text
@@ -1360,7 +1361,7 @@ namespace Win32xx
 							OffsetRect(&rcText, xOffset, yOffset);
 
 							int iMode = pDrawDC->SetBkMode(TRANSPARENT);
-							pDrawDC->SelectObject(pTB->GetFont());
+							pDrawDC->SelectObject(*pTB->GetFont());
 
 							if (nState & (CDIS_DISABLED))
 							{
@@ -1482,9 +1483,9 @@ namespace Win32xx
 			{
 				// draw selected item background
 				CBrush Brush(pMBT->clrHot1);
-				pDrawDC->SelectObject(&Brush);
+				pDrawDC->SelectObject(Brush);
 				CPen Pen(PS_SOLID, 1, pMBT->clrOutline);
-				pDrawDC->SelectObject(&Pen);
+				pDrawDC->SelectObject(Pen);
 				pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 			}
 			else
@@ -1524,14 +1525,14 @@ namespace Win32xx
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
 			CBrush Brush(pMBT->clrHot2);
-			pDrawDC->SelectObject(&Brush);
+			pDrawDC->SelectObject(Brush);
 			CPen Pen(PS_SOLID, 1, pMBT->clrOutline);
-			pDrawDC->SelectObject(&Pen);
+			pDrawDC->SelectObject(Pen);
 
 			// Draw the checkmark's background rectangle
 			pDrawDC->Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 
-			CMemDC MemDC(pDrawDC);
+			CMemDC MemDC(*pDrawDC);
 			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 			MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
@@ -1550,23 +1551,23 @@ namespace Win32xx
 
 			// Draw a white or black check mark as required
 			// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-			CMemDC MaskDC(pDrawDC);
-			MaskDC.CreateCompatibleBitmap(pDrawDC, cxCheck, cyCheck);
-			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, &MaskDC, 0, 0, WHITENESS);
+			CMemDC MaskDC(*pDrawDC);
+			MaskDC.CreateCompatibleBitmap(*pDrawDC, cxCheck, cyCheck);
+			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 
 			if ((pdis->itemState & ODS_SELECTED))  // && (!tm.UseThemes))
 			{
 				// Draw a white checkmark
-				MemDC.BitBlt(0, 0, cxCheck, cyCheck, &MemDC, 0, 0, DSTINVERT);
-				MaskDC.BitBlt(0, 0, cxCheck, cyCheck, &MemDC, 0, 0, SRCAND);
-				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, &MaskDC, 0, 0, SRCPAINT);
+				MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
+				MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 			}
 			else
 			{
 				// Draw a black checkmark
 				int BullitOffset = (MFT_RADIOCHECK == fType)? 1 : 0;
-				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, &MemDC, 0, 0, SRCAND);
-				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, &MaskDC, 0, 0, SRCAND);
+				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 			}
 		}
 	}
@@ -1599,11 +1600,10 @@ namespace Win32xx
 		if (iImage >= 0 )
 		{
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			CDC* pDC = CDC::FromHandle(pdis->hDC);
 			if ((bDisabled) && (m_imlMenuDis.GetHandle()))
-				m_imlMenuDis.Draw(pDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
+				m_imlMenuDis.Draw(pdis->hDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
 			else
-				m_imlMenu.Draw(pDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
+				m_imlMenu.Draw(pdis->hDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
 		}
 	}
 
@@ -1682,8 +1682,8 @@ namespace Win32xx
 
 			// Create our memory DC
 			CRect rcReBar = pReBar->GetClientRect();
-			CMemDC MemDC(pDC);
-			MemDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+			CMemDC MemDC(*pDC);
+			MemDC.CreateCompatibleBitmap(*pDC, rcReBar.Width(), rcReBar.Height());
 
 			// Draw to ReBar background to the memory DC
 			MemDC.SolidFill(pTheme->clrBkgnd2, rcReBar);
@@ -1737,16 +1737,16 @@ namespace Win32xx
 								::InflateRect(&rcDraw, 1, 1);
 
 							// Fill the Source CDC with the band's background
-							CMemDC SourceDC(pDC);
-							SourceDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+							CMemDC SourceDC(*pDC);
+							SourceDC.CreateCompatibleBitmap(*pDC, rcReBar.Width(), rcReBar.Height());
 							SourceDC.GradientFill(pTheme->clrBand1, pTheme->clrBand2, rcDraw, IsVertical);
 
 							// Set Curve amount for rounded edges
 							int Curve = pTheme->RoundBorders? 12 : 0;
 
 							// Create our mask for rounded edges using RoundRect
-							CMemDC MaskDC(pDC);
-							MaskDC.CreateCompatibleBitmap(pDC, rcReBar.Width(), rcReBar.Height());
+							CMemDC MaskDC(*pDC);
+							MaskDC.CreateCompatibleBitmap(*pDC, rcReBar.Width(), rcReBar.Height());
 
 							int left = rcDraw.left;
 							int right = rcDraw.right;
@@ -1758,20 +1758,20 @@ namespace Win32xx
 							if (pTheme->FlatStyle)
 							{
 								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
-								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
+								MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
 								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
 							}
 							else
 							{
 								MaskDC.SolidFill(RGB(0,0,0), rcDraw);
 								MaskDC.RoundRect(left, top, right, bottom, Curve, Curve);
-								MaskDC.BitBlt(left, top, cx, cy, &MaskDC, left, top, PATINVERT);
+								MaskDC.BitBlt(left, top, cx, cy, MaskDC, left, top, PATINVERT);
 							}
 
 							// Copy Source DC to Memory DC using the RoundRect mask
-							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
-							MemDC.BitBlt(left, top, cx, cy, &MaskDC,   left, top, SRCAND);
-							MemDC.BitBlt(left, top, cx, cy, &SourceDC, left, top, SRCINVERT);
+							MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+							MemDC.BitBlt(left, top, cx, cy, MaskDC,   left, top, SRCAND);
+							MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
 						}
 					}
 				}
@@ -1798,7 +1798,7 @@ namespace Win32xx
 			}
 
 			// Copy the Memory DC to the window's DC
-			pDC->BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), &MemDC, 0, 0, SRCCOPY);
+			pDC->BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), MemDC, 0, 0, SRCCOPY);
 		}
 
 		return IsDrawn;
@@ -2551,7 +2551,7 @@ namespace Win32xx
 			REBARBANDINFO rbbi;
 			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 			CClientDC dcMenuBar(*GetMenuBar());
-			dcMenuBar.SelectObject(GetMenuBar()->GetFont());
+			dcMenuBar.SelectObject(*GetMenuBar()->GetFont());
 			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int MenuBar_Height = sizeMenuBar.cy + 6;
 			rbbi.fMask      = RBBIM_CHILDSIZE;
@@ -3405,7 +3405,7 @@ namespace Win32xx
 		case WM_SIZE:			return OnSize(wParam, lParam);
 		case WM_SYSCOLORCHANGE:	return OnSysColorChange(wParam, lParam);
 		case WM_SYSCOMMAND:		return OnSysCommand(wParam, lParam);
-		case WM_WINDOWPOSCHANGED: return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
+		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
 		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView()->GetHwnd() : NULL);

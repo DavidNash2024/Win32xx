@@ -20,7 +20,7 @@ public:
 	virtual CRect GetImageRect();
 
 protected:
-	virtual void    OnDraw(CDC* pDC);
+	virtual void    OnDraw(CDC& dc);
 	virtual LRESULT OnDropFiles(WPARAM wParam, LPARAM lParam);
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);

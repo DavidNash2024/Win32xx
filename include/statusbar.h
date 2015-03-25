@@ -53,7 +53,11 @@ namespace Win32xx
 		virtual ~CStatusBar() {}
 
 	// Overridables
+#ifdef USE_OBSOLETE_CODE
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
+#endif
+
+		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 
@@ -143,11 +147,20 @@ namespace Win32xx
 		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline BOOL CStatusBar::OnEraseBkgnd(CDC* pDC)
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to suppress default background drawing.
 		return (TRUE == GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
+	}
+#endif
+
+	inline BOOL CStatusBar::OnEraseBkgnd(CDC& dc)
+	{
+		// Permit the parent window to handle the drawing of the ReBar's background.
+		// Return TRUE to suppress default background drawing.
+		return (TRUE == GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc, (LPARAM)this));
 	}
 
 	inline void CStatusBar::PreCreate(CREATESTRUCT &cs)

@@ -26,7 +26,7 @@ public:
 	virtual ~CViewSimple() {}
 
 protected:
-	virtual void OnDraw(CDC* pDC);
+	virtual void OnDraw(CDC& dc);
 	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

@@ -93,7 +93,12 @@ namespace Win32xx
 
 	protected:
 	//Overridables
+
+#ifdef USE_OBSOLETE_CODE
 		virtual BOOL OnEraseBkgnd(CDC* pDC);
+#endif
+
+		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
@@ -322,12 +327,22 @@ namespace Win32xx
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline BOOL CReBar::OnEraseBkgnd(CDC* pDC)
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to suppress default background drawing.
 		return (TRUE == GetParent().SendMessage(UWM_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this));
 	}
+#endif
+
+	inline BOOL CReBar::OnEraseBkgnd(CDC& dc)
+	{
+		// Permit the parent window to handle the drawing of the ReBar's background.
+		// Return TRUE to suppress default background drawing.
+		return (TRUE == GetParent().SendMessage(UWM_DRAWRBBKGND, (WPARAM)&dc, (LPARAM)this));
+	}
+
 
 	inline void CReBar::PreCreate(CREATESTRUCT &cs)
 	// Sets the CREATESTRUCT parameters prior to window creation

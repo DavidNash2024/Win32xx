@@ -16,7 +16,7 @@ public:
 	void SetColor(COLORREF color) { m_Color = color; }
 
 protected:
-	virtual void OnDraw(CDC* pDC);
+	virtual void OnDraw(CDC& dc);
 	virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	

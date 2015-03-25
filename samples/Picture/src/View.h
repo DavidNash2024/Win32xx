@@ -23,7 +23,7 @@ public:
 	LPPICTURE GetPicture() { return m_pPicture; }
 
 protected:
-	virtual void    OnDraw(CDC* pDC);
+	virtual void    OnDraw(CDC& dc);
 	virtual LRESULT OnDropFiles(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
 	virtual int     OnCreate(LPCREATESTRUCT pcs);

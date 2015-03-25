@@ -10,12 +10,12 @@ CView::CView()
 {
 }
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 {
 	CRect rc = GetClientRect();
 
 	// Centre some text in our view window
-	pDC->DrawText(_T("Choose a theme from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+	dc.DrawText(_T("Choose a theme from the menu"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 void CView::OnInitialUpdate()

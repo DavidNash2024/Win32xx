@@ -19,9 +19,9 @@ CGDIPlusView::~CGDIPlusView()
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CGDIPlusView::DrawCappedLine(CDC* pDC) 
+void CGDIPlusView::DrawCappedLine(CDC& dc) 
 {
-	Graphics graphics(*pDC);
+	Graphics graphics(dc);
 	// Draw capped line, width 8
 	Pen penCapped(Color(255, 0, 0, 255), 8);
 	Status stat = penCapped.SetStartCap(LineCapArrowAnchor);
@@ -29,9 +29,9 @@ void CGDIPlusView::DrawCappedLine(CDC* pDC)
 	stat = graphics.DrawLine(&penCapped, 10, 175, 300, 175);
 }
 
-void CGDIPlusView::DrawGamaShapes(CDC* pDC)
+void CGDIPlusView::DrawGamaShapes(CDC& dc)
 {
-	Graphics graphics(*pDC);
+	Graphics graphics(dc);
 
 	// Draw Plygons with Gama Corrections
 	// Put the points of a polygon in an array.
@@ -69,9 +69,9 @@ void CGDIPlusView::DrawGamaShapes(CDC* pDC)
 	graphics.FillPath(&pthGrBrushGama, &pathGama);
 }
 
-void CGDIPlusView::DrawGradientElipse(CDC* pDC)
+void CGDIPlusView::DrawGradientElipse(CDC& dc)
 {
-	Graphics graphics(*pDC);
+	Graphics graphics(dc);
 
 	// Create a path that consists of a single ellipse.
 	GraphicsPath path;
@@ -91,26 +91,26 @@ void CGDIPlusView::DrawGradientElipse(CDC* pDC)
 	graphics.FillEllipse(&pthGrBrush, 0, 80, 140, 70);
 }
 
-void CGDIPlusView::DrawSolidElipse(CDC* pDC)
+void CGDIPlusView::DrawSolidElipse(CDC& dc)
 {
-	Graphics graphics(*pDC);
+	Graphics graphics(dc);
 
 	SolidBrush solidBrush(Color(255, 255, 0, 0));
 	graphics.FillEllipse(&solidBrush, 160, 84, 100, 60);
 }
 
-void CGDIPlusView::DrawSolidLine(CDC* pDC) 
+void CGDIPlusView::DrawSolidLine(CDC& dc) 
 {
-	Graphics graphics(*pDC);
+	Graphics graphics(dc);
 	
 	// Draw solid line
 	Pen      penLine(Color(255, 0, 0, 255));
 	graphics.DrawLine(&penLine, 10, 70, 200, 70);
 }
 
-void CGDIPlusView::DrawText(CDC* pDC) 
+void CGDIPlusView::DrawText(CDC& dc) 
 {
-	Graphics graphics(*pDC);
+	Graphics graphics(dc);
 
 	// Draw some text
 	SolidBrush  brush(Color(255, 0, 0, 255));
@@ -121,14 +121,14 @@ void CGDIPlusView::DrawText(CDC* pDC)
 	graphics.DrawString(L"GDI+  Example", -1, &font, pointF, &brush);
 }
 
-void CGDIPlusView::OnDraw(CDC* pDC)
+void CGDIPlusView::OnDraw(CDC& dc)
 {
-	DrawSolidLine(pDC);
-	DrawText(pDC);
-	DrawCappedLine(pDC);
-	DrawGradientElipse(pDC);
-	DrawSolidElipse(pDC);
-	DrawGamaShapes(pDC); 
+	DrawSolidLine(dc);
+	DrawText(dc);
+	DrawCappedLine(dc);
+	DrawGradientElipse(dc);
+	DrawSolidElipse(dc);
+	DrawGamaShapes(dc); 
 }
 
 void CGDIPlusView::OnInitialUpdate()

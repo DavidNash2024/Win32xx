@@ -61,7 +61,7 @@ namespace Win32xx
 		virtual ~CMenuBar();
 		virtual void SetMenu(HMENU hMenu);
 
-		void DrawAllMDIButtons(CDC* pDrawDC);
+		void DrawAllMDIButtons(CDC& dcDraw);
 		CWnd* GetMDIClient() const;
 		CWnd* GetActiveMDIChild() const;
 		HMENU GetMenu() const {return m_hTopMenu;}
@@ -97,7 +97,7 @@ namespace Win32xx
 		CMenuBar(const CMenuBar&);				// Disable copy construction
 		CMenuBar& operator = (const CMenuBar&); // Disable assignment operator
 		void DoAltKey(WORD KeyCode);
-		void DrawMDIButton(CDC* pDrawDC, int iButton, UINT uState);
+		void DrawMDIButton(CDC& dcDraw, int iButton, UINT uState);
 		void ExitMenu();
 		void GrabFocus();
 		BOOL IsMDIChildMaxed() const;
@@ -176,7 +176,7 @@ namespace Win32xx
 			::MessageBeep(MB_OK);
 	}
 
-	inline void CMenuBar::DrawAllMDIButtons(CDC* pDrawDC)
+	inline void CMenuBar::DrawAllMDIButtons(CDC& dcDraw)
 	{
 		if (!IsMDIFrame())
 			return;
@@ -209,13 +209,13 @@ namespace Win32xx
 				}
 			}
 
-			DrawMDIButton(pDrawDC, MDI_MIN, 0);
-			DrawMDIButton(pDrawDC, MDI_RESTORE, 0);
-			DrawMDIButton(pDrawDC, MDI_CLOSE, 0);
+			DrawMDIButton(dcDraw, MDI_MIN, 0);
+			DrawMDIButton(dcDraw, MDI_RESTORE, 0);
+			DrawMDIButton(dcDraw, MDI_CLOSE, 0);
 		}
 	}
 
-	inline void CMenuBar::DrawMDIButton(CDC* pDrawDC, int iButton, UINT uState)
+	inline void CMenuBar::DrawMDIButton(CDC& dcDraw, int iButton, UINT uState)
 	{
 		if (!IsRectEmpty(&m_MDIRect[iButton]))
 		{
@@ -224,92 +224,92 @@ namespace Win32xx
 			case 0:
 				{
 					// Draw a grey outline
-					pDrawDC->CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
-					pDrawDC->MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-					pDrawDC->LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					pDrawDC->LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					pDrawDC->LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					pDrawDC->LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, GetSysColor(COLOR_BTNFACE));
+					dcDraw.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					dcDraw.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					dcDraw.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					dcDraw.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					dcDraw.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			case 1:
 				{
 					// Draw outline, white at top, black on bottom
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					pDrawDC->MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-					pDrawDC->LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					pDrawDC->LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					pDrawDC->LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					pDrawDC->LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					dcDraw.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					dcDraw.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					dcDraw.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					dcDraw.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					dcDraw.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 
 				break;
 			case 2:
 				{
 					// Draw outline, black on top, white on bottom
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
-					pDrawDC->MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
-					pDrawDC->LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
-					pDrawDC->LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
-					pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
-					pDrawDC->LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
-					pDrawDC->LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(255, 255, 255));
+					dcDraw.MoveTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
+					dcDraw.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].bottom);
+					dcDraw.LineTo(m_MDIRect[iButton].right, m_MDIRect[iButton].top);
+					dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+					dcDraw.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].top);
+					dcDraw.LineTo(m_MDIRect[iButton].left, m_MDIRect[iButton].bottom);
 				}
 				break;
 			}
 
-			pDrawDC->CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
+			dcDraw.CreatePen(PS_SOLID, 1, RGB(0, 0, 0));
 
 			switch (iButton)
 			{
 			case MDI_MIN:
 				// Manually Draw Minimise button
-				pDrawDC->MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4);
-				pDrawDC->LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
+				dcDraw.MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -4);
+				dcDraw.LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 4);
 
-				pDrawDC->MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5);
-				pDrawDC->LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
+				dcDraw.MoveTo(m_MDIRect[0].left + 4, m_MDIRect[0].bottom -5);
+				dcDraw.LineTo(m_MDIRect[0].right - 4, m_MDIRect[0].bottom - 5);
 				break;
 			case MDI_RESTORE:
 				// Manually Draw Restore Button
-				pDrawDC->MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
-				pDrawDC->LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
-				pDrawDC->LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
-				pDrawDC->LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
-				pDrawDC->LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				dcDraw.MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
+				dcDraw.LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].bottom -4);
+				dcDraw.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -4);
+				dcDraw.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 7);
+				dcDraw.LineTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 7);
 
-				pDrawDC->MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 8);
-				pDrawDC->LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
+				dcDraw.MoveTo(m_MDIRect[1].left + 3, m_MDIRect[1].top + 8);
+				dcDraw.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].top + 8);
 
-				pDrawDC->MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 7);
-				pDrawDC->LineTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
-				pDrawDC->LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
-				pDrawDC->LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
-				pDrawDC->LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
+				dcDraw.MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 7);
+				dcDraw.LineTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 4);
+				dcDraw.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 4);
+				dcDraw.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].bottom -6);
+				dcDraw.LineTo(m_MDIRect[1].right - 6, m_MDIRect[1].bottom -6);
 
-				pDrawDC->MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 5);
-				pDrawDC->LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
+				dcDraw.MoveTo(m_MDIRect[1].left + 5, m_MDIRect[1].top + 5);
+				dcDraw.LineTo(m_MDIRect[1].right - 4, m_MDIRect[1].top + 5);
 				break;
 			case MDI_CLOSE:
 				// Manually Draw Close Button
-				pDrawDC->MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +5);
-				pDrawDC->LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
+				dcDraw.MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +5);
+				dcDraw.LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -3);
 
-				pDrawDC->MoveTo(m_MDIRect[2].left + 5, m_MDIRect[2].top +5);
-				pDrawDC->LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
+				dcDraw.MoveTo(m_MDIRect[2].left + 5, m_MDIRect[2].top +5);
+				dcDraw.LineTo(m_MDIRect[2].right - 4, m_MDIRect[2].bottom -4);
 
-				pDrawDC->MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +6);
-				pDrawDC->LineTo(m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
+				dcDraw.MoveTo(m_MDIRect[2].left + 4, m_MDIRect[2].top +6);
+				dcDraw.LineTo(m_MDIRect[2].right - 5, m_MDIRect[2].bottom -3);
 
-				pDrawDC->MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +5);
-				pDrawDC->LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
+				dcDraw.MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +5);
+				dcDraw.LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -3);
 
-				pDrawDC->MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +6);
-				pDrawDC->LineTo(m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
+				dcDraw.MoveTo(m_MDIRect[2].right -5, m_MDIRect[2].top +6);
+				dcDraw.LineTo(m_MDIRect[2].left + 4, m_MDIRect[2].bottom -3);
 
-				pDrawDC->MoveTo(m_MDIRect[2].right -6, m_MDIRect[2].top +5);
-				pDrawDC->LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
+				dcDraw.MoveTo(m_MDIRect[2].right -6, m_MDIRect[2].top +5);
+				dcDraw.LineTo(m_MDIRect[2].left + 3, m_MDIRect[2].bottom -4);
 				break;
 			}
 		}
@@ -501,9 +501,9 @@ namespace Win32xx
 
 				if (m_nMDIButton >= 0)
 				{
-					DrawMDIButton(&MenuBarDC, MDI_MIN,     (0 == m_nMDIButton)? 2 : 0);
-					DrawMDIButton(&MenuBarDC, MDI_RESTORE, (1 == m_nMDIButton)? 2 : 0);
-					DrawMDIButton(&MenuBarDC, MDI_CLOSE,   (2 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == m_nMDIButton)? 2 : 0);
+					DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == m_nMDIButton)? 2 : 0);
 				}
 
 				// Bring up the MDI Child window's system menu when the icon is pressed
@@ -705,9 +705,9 @@ namespace Win32xx
 			{
 				CClientDC MenuBarDC(*this);
 
-				DrawMDIButton(&MenuBarDC, MDI_MIN,     0);
-				DrawMDIButton(&MenuBarDC, MDI_RESTORE, 0);
-				DrawMDIButton(&MenuBarDC, MDI_CLOSE,   0);
+				DrawMDIButton(MenuBarDC, MDI_MIN,     0);
+				DrawMDIButton(MenuBarDC, MDI_RESTORE, 0);
+				DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
 			}
 		}
 
@@ -735,30 +735,30 @@ namespace Win32xx
 					// toggle the MDI button image pressed/unpressed as required
 					if (MDIButton >= 0)
 					{
-						DrawMDIButton(&MenuBarDC, MDI_MIN,     ((0 == MDIButton) && (0 == m_nMDIButton))? 2 : 0);
-						DrawMDIButton(&MenuBarDC, MDI_RESTORE, ((1 == MDIButton) && (1 == m_nMDIButton))? 2 : 0);
-						DrawMDIButton(&MenuBarDC, MDI_CLOSE,   ((2 == MDIButton) && (2 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(MenuBarDC, MDI_MIN,     ((0 == MDIButton) && (0 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(MenuBarDC, MDI_RESTORE, ((1 == MDIButton) && (1 == m_nMDIButton))? 2 : 0);
+						DrawMDIButton(MenuBarDC, MDI_CLOSE,   ((2 == MDIButton) && (2 == m_nMDIButton))? 2 : 0);
 					}
 					else
 					{
-						DrawMDIButton(&MenuBarDC, MDI_MIN,     0);
-						DrawMDIButton(&MenuBarDC, MDI_RESTORE, 0);
-						DrawMDIButton(&MenuBarDC, MDI_CLOSE,   0);
+						DrawMDIButton(MenuBarDC, MDI_MIN,     0);
+						DrawMDIButton(MenuBarDC, MDI_RESTORE, 0);
+						DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
 					}
 				}
 				else	// mouse moved without left mouse button held down
 				{
 					if (MDIButton >= 0)
 					{
-						DrawMDIButton(&MenuBarDC, MDI_MIN,     (0 == MDIButton)? 1 : 0);
-						DrawMDIButton(&MenuBarDC, MDI_RESTORE, (1 == MDIButton)? 1 : 0);
-						DrawMDIButton(&MenuBarDC, MDI_CLOSE,   (2 == MDIButton)? 1 : 0);
+						DrawMDIButton(MenuBarDC, MDI_MIN,     (0 == MDIButton)? 1 : 0);
+						DrawMDIButton(MenuBarDC, MDI_RESTORE, (1 == MDIButton)? 1 : 0);
+						DrawMDIButton(MenuBarDC, MDI_CLOSE,   (2 == MDIButton)? 1 : 0);
 					}
 					else
 					{
-						DrawMDIButton(&MenuBarDC, MDI_MIN,     0);
-						DrawMDIButton(&MenuBarDC, MDI_RESTORE, 0);
-						DrawMDIButton(&MenuBarDC, MDI_CLOSE,   0);
+						DrawMDIButton(MenuBarDC, MDI_MIN,     0);
+						DrawMDIButton(MenuBarDC, MDI_RESTORE, 0);
+						DrawMDIButton(MenuBarDC, MDI_CLOSE,   0);
 					}
 				}
 			}
@@ -964,7 +964,7 @@ namespace Win32xx
 		InvalidateRect(&m_MDIRect[2], TRUE);
 		{
 			CClientDC MenuBarDC(*this);
-			DrawAllMDIButtons(&MenuBarDC);
+			DrawAllMDIButtons(MenuBarDC);
 		}
 
 		RedrawWindow();

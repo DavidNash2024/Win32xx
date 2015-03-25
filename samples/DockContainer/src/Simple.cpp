@@ -11,11 +11,11 @@
 
 ///////////////////////////////////////////////
 // CViewSimple functions
-void CViewSimple::OnDraw(CDC* pDC)
+void CViewSimple::OnDraw(CDC& dc)
 {
 	//Centre some text in the window
 	CRect rc = GetClientRect();
-	pDC->DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 LRESULT CViewSimple::OnSize(WPARAM wParam, LPARAM lParam)

@@ -15,15 +15,15 @@ public:
 	CGDIPlusView();
 	virtual ~CGDIPlusView();
 
-	void DrawCappedLine(CDC* pDC);
-	void DrawGamaShapes(CDC* pDC);
-	void DrawGradientElipse(CDC* pDC);
-	void DrawSolidElipse(CDC* pDC);
-	void DrawSolidLine(CDC* pDC);
-	void DrawText(CDC* pDC);
+	void DrawCappedLine(CDC& dc);
+	void DrawGamaShapes(CDC& dc);
+	void DrawGradientElipse(CDC& dc);
+	void DrawSolidElipse(CDC& dc);
+	void DrawSolidLine(CDC& dc);
+	void DrawText(CDC& dc);
 
 protected:
-	virtual void OnDraw(CDC* pDC);
+	virtual void OnDraw(CDC& dc);
 	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void RegisterClass(WNDCLASS &wc);

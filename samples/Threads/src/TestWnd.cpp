@@ -11,9 +11,9 @@ CTestWindow::CTestWindow(int nWindow) : m_nWindow(nWindow)
 {
 }
 
-HWND CTestWindow::Create(CWnd* pParent)
+HWND CTestWindow::Create(HWND hParent)
 {
-	UNREFERENCED_PARAMETER(pParent);
+	UNREFERENCED_PARAMETER(hParent);
 
 	CString Title;
 	Title.Format( _T("Test Window %d"), m_nWindow );

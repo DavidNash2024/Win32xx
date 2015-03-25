@@ -73,7 +73,7 @@ void CView::OnDestroy()
 	::PostQuitMessage(0);
 }
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 {
 	// OnPaint is called automatically whenever a part of the
 	// window needs to be repainted.
@@ -81,7 +81,7 @@ void CView::OnDraw(CDC* pDC)
 	// Centre some text in our view window
 	CRect rc = GetClientRect();
 	CString cs = LoadString(IDW_MAIN);
-	pDC->DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+	dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnFileExit()

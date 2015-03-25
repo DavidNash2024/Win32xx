@@ -14,7 +14,7 @@ class CFormView : public CDialog
 public:
 	CFormView(UINT nResID);
 	virtual ~CFormView();
-	virtual HWND Create(CWnd* pParent);
+	virtual HWND Create(HWND hParent);
 
 	void OnRangeOfIds_Radio(UINT nIdAdjust);
 	void OnCheckA();

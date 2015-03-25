@@ -6,6 +6,22 @@ which introduces incompatibilities with previous versions.
 
 New Features and Enhancements
 -----------------------------
+* Many functions which previously used a CWnd* argument now use a HWND
+argument. This has the following advantages:
+ - These functions can be used directly for a HWND, CWnd or CWnd pointer.
+ - We no longer have to needlessly create temporary CWnds.
+Coding examples: (the Create function now has a HWND argument)
+ Create(MyCWnd);	  // Uses operator overloading to convert from CWnd to HWND 
+ Create(*this);       // We can de-reference any non-null pointer
+ Create(hWnd);        // We can use a HWND directly
+ Create(GetParent()); // Uses operator overloading to convert from CWnd to HWND
+ Create();            // The created window has no parent window
+
+* Many functions which previously used pointers to other Win32++ classes
+now use the relevant handle instead. These include CDC, CBitmap, CBrush,
+CFont, CPalette, CPen, CRgn, CImageList and CMenu. Each of these have operator
+overloading, so the class object can be used instead of the handle. 
+
 * The FromHandle method of creating temporary CWnds has been obsoleted. 
 The FromHandle approach had the following disadvantages:
  - It was very inefficient. It required one or more std::map lookups before  
@@ -17,40 +33,60 @@ The FromHandle approach had the following disadvantages:
 The FromHandle approach has been replaced. CWnd member functions which 
 previously returned a CWnd pointer(CWnd*) now return CWnd. 
 Coding example: (The GetParent function now returns a CWnd)
-GetParent().SendMessage(SomeMessage, wParam, lParam);
-HWND hWnd = GetParent(); // operator overloading converts a CWnd to HWND
+ GetParent().SendMessage(SomeMessage, wParam, lParam);
+ HWND hWnd = GetParent(); // operator overloading converts a CWnd to HWND
  
-* Many functions which previously used a CWnd* argument now use a HWND
-argument. This has the following advantages:
- - These functions can be used directly for a HWND, CWnd or CWnd pointer.
- - We no longer have to needlessly create temporary CWnds.
-Coding examples: (the Create function now has a HWND argument)
-Create(MyCWnd);	     // Uses operator overloading to convert from CWnd to HWND 
-Create(*this);       // We can de-reference any non-null pointer
-Create(m_hWnd);      // We can use a HWND directly
-Create(GetParent()); // Uses operator overloading to convert from CWnd to HWND
-Create();            // The created window has no parent window
-
 * m_hWnd is now a private member variable of CWnd.
   Use GetHwnd() or *this in place of m_hWnd.
 
 * Assistance with code migration
-- FromHandle is no longer used by Win32++ internally, but remains available in 
+1)For this version, a USE_OBSOLETE_CODE macro is provided to assist with 
+  code migration. It adds the older definitions of the following:
+  - CWnd::Create
+  - CWnd::OnDraw  
+  - CWnd::OnEraseBkgnd
+  - CWnd::m_hWnd is declared protected instead of private 
+  If used, this macro must be defined before including the Win32++ header files.
+  It can be placed in stdafx.h if precompiled headers are used. Even with this
+  macro you will need to use non-pointer versions of function arguments.  
+
+2)FromHandle is no longer used by Win32++ internally, but remains available in 
   this version for the purpose of code migration. It issues a TRACE warning 
   message if used.
-- GetCWndPtr can be used to retrieve the pointer to a previously assigned CWnd
-  given its HWND.
-- Note: Some virtual function definitions have changed. If you override these 
-  functions, they may not get called.    
+
+3)Other tips:
+  - GetCWndPtr can be used to retrieve the pointer to a known CWnd.
+  - Use GetHwnd() or *this in place of m_hWnd.
+  - Adjust your code to use the new versions of Create, OnDraw and OnEraseBkgnd.
 
   
 Changes in detail
 -----------------
 The following virtual functions have been modified
+CMDIChild::Create
+CPropertySheet::Create
+CTabbedMDI::Create
 CWnd::Create
 CWnd::CreateEx
+CWnd::OnDraw
+CWnd::OnEraseBkgnd
 
+Other changes:
+Modified CBitmap::CreateCompatibleBitmap
+Modified CBitmap::CreateDIBitmap
+Modified CBitmap::CreateDIBSection
+Modified CBitmap::GetDIBits
+Modified CBitmap::SetDIBits
 Modified CClientDC::CClientDC
+Modified CDC::BitBlt
+Modified CDC::CreateCompatibleDC
+Modified CDC::CreateCompatibleBitmap
+Modified CDC::CreateDIBitmap
+Modified CDC::CreateDIBSection
+Modified CDC::MaskBlt
+Modified CDC::SelectObject (all versions)
+Modified CDC::StretchBlt
+Modified CDC::TransparentBlt
 Modified CDialog::Create
 Modified CDialog::DoModal
 Modified CDialog::DoModeless
@@ -59,23 +95,33 @@ Modified CDocker::IsChildOfDocker
 Modified CDocker::IsRelated
 Modified CFile::OpenFileDialog
 Modified CFile::SaveFileDialog
+Modified CFont::CreatePointFont
+Modified CFont::CreatePointFontIndirect
+Modified CFrame::DrawReBarBkgnd
 Modified CImageList::DragEnter
 Modified CImageList::DragLeave
-Modified CMDIChild::Create
+Modified CImageList::Draw
+Modified CImageList::DrawEx
 Modified CMDIFrame::CDockMDIClient::Create
+Modified CMemDC::CMemDC
 Modified CMenu::TrackPopupMenu
 Modified CMenu::TrackPopupMenuEx
+Modified CMenuBar::DrawAllMDIButtons
+Modified CMetaFileDC::CreateEnhanced
 Modified CPaintDC::CPaintDC
+Modified CPalette::CreateHalftonePalette
 Modified CPropertySheet::CPropertySheet
-Modified CPropertySheet::Create
 Modified CRibbon::CreateRibbon
 Modified CResizer::AddChild
 Modified CSlider::GetBuddy
 Modified CSlider::SetBuddy
 Modified CSpinButton::GetBuddy
 Modified CSpinButton::SetBuddy
+Modified CTab::DrawCloseButton
+Modified CTab::DrawListButton
+Modified CTab::DrawTabs
+Modified CTab::DrawTabBorders
 Modified CTab::GetToolTips
-Modified CTabbedMDI::Create
 Modified CToolTip::AddTool
 Modified CToolTip::DelTool
 Modified CToolTip::GetText
@@ -87,8 +133,6 @@ Modified CWindowDC::CWindowDC
 Modified CWnd::AttachDlgItem
 Modified CWnd::BeginPaint
 Modified CWnd::ChildFromPoint
-Modified CWnd::Create
-Modified CWnd::CreateEx
 Modified CWnd::DrawCaption
 Modified CWnd::GetActiveWindow
 Modified CWnd::GetAncestor
@@ -125,7 +169,6 @@ Modified CWnd::ValidateRgn
 Modified CWnd::WindowFromDC
 Modified CWnd::WindowFromPoint
 
-
 Removed static const CWnd wndTop(HWND_TOP);
 Removed static const CWnd wndTopMost(HWND_TOPMOST);
 Removed static const CWnd wndBottom(HWND_BOTTOM);
@@ -133,8 +176,6 @@ Removed static const CWnd wndNoTopMost(HWND_NOTOPMOST);
 Removed CResizer::AddChild   (one of two)
 
 Renamed CWnd::FromHandlePermanent to CWnd::GetCWndPtr
-
-
 
 
 Version 7.8

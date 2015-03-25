@@ -106,9 +106,9 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	return CWnd::OnCreate(pcs);
 }
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 {
-	Paint(*pDC);
+	Paint(dc);
 }
 
 

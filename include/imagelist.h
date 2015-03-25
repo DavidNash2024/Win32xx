@@ -98,8 +98,8 @@ namespace Win32xx
 		BOOL DragLeave(HWND hWndLock) const;
 		BOOL DragMove(CPoint pt) const;
 		BOOL DragShowNolock(BOOL bShow) const;
-		BOOL Draw(CDC* pDC, int nImage, POINT pt, UINT nStyle) const;
-		BOOL DrawEx(CDC* pDC, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
+		BOOL Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const;
+		BOOL DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
 		BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pimldp);
 		BOOL Remove(int nImage) const;
 		BOOL Replace(int nImage, CBitmap* pbmImage,  CBitmap* pbmMask) const;
@@ -443,14 +443,14 @@ namespace Win32xx
 		return ImageList_DragShowNolock(bShow);
 	}
 
-	inline BOOL CImageList::Draw(CDC* pDC, int nImage, POINT pt, UINT nStyle) const
+	inline BOOL CImageList::Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const
 	// Draws an image list item in the specified device context.
 	{
 		assert(m_pData->hImageList);
-		return ImageList_Draw(m_pData->hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, nStyle);
+		return ImageList_Draw(m_pData->hImageList, nImage, hdc , pt.x, pt.y, nStyle);
 	}
 
-	inline BOOL CImageList::DrawEx(CDC* pDC, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const
+	inline BOOL CImageList::DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const
 	// Draws an image list item in the specified device context. The function uses the specified drawing style
 	// and blends the image with the specified color.
 	//
@@ -470,7 +470,7 @@ namespace Win32xx
 	//				This causes ImageList_DrawEx to just draw the image, ignoring the mask.
 	{
 		assert(m_pData->hImageList);
-		return ImageList_DrawEx(m_pData->hImageList, nImage, pDC->GetHDC() , pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
+		return ImageList_DrawEx(m_pData->hImageList, nImage, hdc, pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
 	}
 
 	inline BOOL CImageList::DrawIndirect(IMAGELISTDRAWPARAMS* pimldp)
@@ -584,7 +584,7 @@ namespace Win32xx
 			{
 				CClientDC DesktopDC(NULL);
 				CMemDC MemDC(NULL);
-				MemDC.CreateCompatibleBitmap(&DesktopDC, cx, cx);
+				MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
 				CRect rc;
 				rc.SetRect(0, 0, cx, cx);
 
@@ -600,7 +600,7 @@ namespace Win32xx
 				MemDC.SolidFill(crMask, rc);
 
 				// Draw the image on the memory DC
-				pimlNormal->Draw(&MemDC, i, CPoint(0,0), ILD_NORMAL);
+				pimlNormal->Draw(MemDC, i, CPoint(0,0), ILD_NORMAL);
 
 				// Convert colored pixels to gray
 				for (int x = 0 ; x < cx; ++x)

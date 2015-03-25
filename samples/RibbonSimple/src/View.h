@@ -19,7 +19,7 @@ public:
 protected:
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDestroy();
-	virtual void OnDraw(CDC* pDC);	
+	virtual void OnDraw(CDC& dc);	
 	virtual void OnInitialUpdate();
 	virtual void OnSize();
 	virtual void PreCreate(CREATESTRUCT& cs);

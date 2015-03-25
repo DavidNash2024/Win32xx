@@ -97,7 +97,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	return 0;
 }
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 // OnDraw is called when part or all of the window needs to be redrawn
 {
 	CRect rc = GetClientRect();
@@ -119,7 +119,7 @@ void CView::OnDraw(CDC* pDC)
 	ScreenToClient(rc);
 
 	// Display some text in our view window
-	pDC->DrawText(_T("\nPress the arrows to change the inner toolbar's orientation,\n or choose customize toolbar from the ToolBar menu item to modify the toolbar in the frame."), -1, rc, DT_CENTER | DT_WORDBREAK);
+	dc.DrawText(_T("\nPress the arrows to change the inner toolbar's orientation,\n or choose customize toolbar from the ToolBar menu item to modify the toolbar in the frame."), -1, rc, DT_CENTER | DT_WORDBREAK);
 }
 
 void CView::OnInitialUpdate()
