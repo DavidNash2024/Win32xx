@@ -69,6 +69,7 @@ namespace Win32xx
 	public:
 		//Construction
 		CImageList();
+		CImageList(HIMAGELIST himl);
 		CImageList(const CImageList& rhs);
 		CImageList& operator = (const CImageList& rhs);
 		void operator = (const HIMAGELIST hImageLIst);
@@ -79,16 +80,16 @@ namespace Win32xx
 		BOOL Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask);
 		BOOL Create(LPCTSTR lpszBitmapID, int cx, int nGrow, COLORREF crMask);
 #if (_WIN32_IE >= 0x0400)
-		BOOL Create(CImageList* pImageList);
+		BOOL Create(HIMAGELIST hImageList);
 #endif
 
 #ifndef _WIN32_WCE
-		BOOL CreateDisabledImageList(CImageList* pimlNormal);
+		BOOL CreateDisabledImageList(HIMAGELIST himlNormal);
 #endif
 
 		//Operations
-		int Add(CBitmap* pbmImage, CBitmap* pbmMask) ;
-		int Add(CBitmap* pbmImage, COLORREF crMask);
+		int Add(HBITMAP hbmImage, HBITMAP hbmMask) ;
+		int Add(HBITMAP hbmImage, COLORREF crMask);
 		int Add(HICON hIcon);
 		void Attach(HIMAGELIST hImageList);
 		BOOL BeginDrag(int nImage, CPoint ptHotSpot) const;
@@ -102,7 +103,7 @@ namespace Win32xx
 		BOOL DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
 		BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pimldp);
 		BOOL Remove(int nImage) const;
-		BOOL Replace(int nImage, CBitmap* pbmImage,  CBitmap* pbmMask) const;
+		BOOL Replace(int nImage, HBITMAP hbmImage, HBITMAP hbmMask) const;
 		int Replace(int nImage, HICON hIcon) const;
 		HIMAGELIST GetHandle() const;
 		static CImageList* FromHandle(HIMAGELIST hImageList);
@@ -142,6 +143,16 @@ namespace Win32xx
 		m_pData->hImageList = 0;
 		m_pData->Count = 1L;
 		m_pData->IsTmpImageList = FALSE;
+	}
+
+	inline CImageList::CImageList(HIMAGELIST himl)
+	{
+		m_pData = new DataMembers;
+		m_pData->hImageList = 0;
+		m_pData->Count = 1L;
+		m_pData->IsTmpImageList = FALSE;
+
+		Attach(himl);
 	}
 
 	inline CImageList::CImageList(const CImageList& rhs)
@@ -248,23 +259,20 @@ namespace Win32xx
 		return Success;
 	}
 
-	inline int CImageList::Add(CBitmap* pbmImage, CBitmap* pbmMask)
+	inline int CImageList::Add(HBITMAP hbmImage, HBITMAP hbmMask)
 	// Adds an image or images to an image list. The pbmMask parameter can be NULL.
 	{
 		assert(m_pData);
 		assert (m_pData->hImageList);
-		assert (pbmImage);
-		HBITMAP hbmMask = pbmMask? (HBITMAP)*pbmMask : 0;
-		return ImageList_Add(m_pData->hImageList, (HBITMAP)*pbmImage, hbmMask );
+		return ImageList_Add(m_pData->hImageList, hbmImage, hbmMask );
 	}
 
-	inline int CImageList::Add(CBitmap* pbmImage, COLORREF crMask)
+	inline int CImageList::Add(HBITMAP hbmImage, COLORREF crMask)
 	// Adds an image or images to an image list, generating a mask from the specified bitmap.
 	{
 		assert(m_pData);
 		assert (m_pData->hImageList);
-		assert (pbmImage);
-		return ImageList_AddMasked(m_pData->hImageList, (HBITMAP)*pbmImage, crMask);
+		return ImageList_AddMasked(m_pData->hImageList, hbmImage, crMask);
 	}
 
 	inline int CImageList::Add(HICON hIcon)
@@ -282,7 +290,16 @@ namespace Win32xx
 	{
 		assert(hImageList);
 		assert(m_pData);
-		assert( 0 == m_pData->hImageList );
+		
+		// Permit the object to be reused
+		if (m_pData->hImageList != 0)
+		{
+			Release();
+			m_pData = new DataMembers;
+			m_pData->hImageList = 0;
+			m_pData->Count = 1L;
+			m_pData->IsTmpImageList = FALSE;
+		}
 
 		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
 		if (pImageList)
@@ -364,15 +381,16 @@ namespace Win32xx
 	}
 
 #if (_WIN32_IE >= 0x0400)
-	inline BOOL CImageList::Create(CImageList* pImageList)
+	inline BOOL CImageList::Create(HIMAGELIST hImageList)
 	// Creates a duplicate ImageList
 	{
-		assert(pImageList);
 		assert(m_pData);
-		m_pData->hImageList = ImageList_Duplicate(pImageList->GetHandle());
+		HIMAGELIST himlCopy = ImageList_Duplicate(hImageList);
 
-		if (m_pData->hImageList != 0)
-			AddToMap();
+		if (himlCopy)
+		{
+			Attach(himlCopy);
+		}
 
 		return ( m_pData->hImageList!= 0 );
 	}
@@ -515,11 +533,11 @@ namespace Win32xx
 		return ImageList_Remove(m_pData->hImageList, nImage);
 	}
 
-	inline BOOL CImageList::Replace(int nImage, CBitmap* pbmImage,  CBitmap* pbmMask) const
+	inline BOOL CImageList::Replace(int nImage, HBITMAP hbmImage, HBITMAP hbmMask) const
 	// Replaces an image in an image list with a new image.
 	{
 		assert (m_pData->hImageList);
-		return ImageList_Replace(m_pData->hImageList, nImage, *pbmImage, *pbmMask);
+		return ImageList_Replace(m_pData->hImageList, nImage, hbmImage, hbmMask);
 	}
 
 	inline int CImageList::Replace(int nImage, HICON hIcon) const
@@ -564,17 +582,17 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-	inline BOOL CImageList::CreateDisabledImageList(CImageList* pimlNormal)
+	inline BOOL CImageList::CreateDisabledImageList(HIMAGELIST himlNormal)
 	// Creates a gray scale image list from the specified color image list.
 	{
 		assert(NULL == m_pData->hImageList);
-		assert(pimlNormal);
+		assert(himlNormal);
 	
-		int nCount = pimlNormal->GetImageCount();
+		int nCount = ImageList_GetImageCount(himlNormal);
 		if (nCount > 0)
 		{
 			int cx, cy;
-			pimlNormal->GetIconSize(&cx, &cy);
+			ImageList_GetIconSize(himlNormal, &cx, &cy);
 
 			// Create the disabled ImageList
 			Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
@@ -600,7 +618,7 @@ namespace Win32xx
 				MemDC.SolidFill(crMask, rc);
 
 				// Draw the image on the memory DC
-				pimlNormal->Draw(MemDC, i, CPoint(0,0), ILD_NORMAL);
+				ImageList_Draw(himlNormal, i, MemDC , 0, 0, ILD_NORMAL);
 
 				// Convert colored pixels to gray
 				for (int x = 0 ; x < cx; ++x)
@@ -619,7 +637,7 @@ namespace Win32xx
 
 				// Detach the bitmap so we can use it.
 				CBitmap Bitmap = MemDC.DetachBitmap();
-				Add(&Bitmap, crMask);
+				Add(Bitmap, crMask);
 			}
 		}
 

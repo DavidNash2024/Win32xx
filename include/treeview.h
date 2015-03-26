@@ -90,7 +90,7 @@ namespace Win32xx
 		UINT GetVisibleCount() const;
 		BOOL ItemHasChildren(HTREEITEM hItem) const;
 		COLORREF SetBkColor(COLORREF clrBk) const;
-		CImageList* SetImageList(CImageList* pNew, int nType) const;
+		CImageList* SetImageList(HIMAGELIST himlNew, int nType) const;
 		void SetIndent(int indent) const;
 		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) const;
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) const;
@@ -385,12 +385,11 @@ namespace Win32xx
 		return TreeView_SetBkColor( *this, clrBk );
 	}
 
-	inline CImageList* CTreeView::SetImageList(CImageList* pNew, int nType) const
+	inline CImageList* CTreeView::SetImageList(HIMAGELIST himlNew, int nType) const
 	// Sets the normal or state image list for a tree-view control
 	//  and redraws the control using the new images.
 	{
 		assert(IsWindow());
-		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;	
 		return CImageList::FromHandle( TreeView_SetImageList( *this, himlNew, nType ) );
 	}
 

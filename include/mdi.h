@@ -160,8 +160,8 @@ namespace Win32xx
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
 		virtual CMenu* GetActiveMenu() const;
-		virtual CDockClient* GetDockClient() const	{ return (CDockClient*)(&m_DockMDIClient); }
-		virtual CWnd* GetMDIClient() const { return (CWnd*)(GetDockClient()); }
+		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockMDIClient&>(m_DockMDIClient); }
+		virtual CWnd* GetMDIClient() const { return (CWnd*)(&GetDockClient()); }
 		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -216,7 +216,7 @@ namespace Win32xx
 	//
 	inline CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
-		SetView(*GetDockClient());
+		SetView(GetDockClient());
 	}
 
 	inline CMDIChild* CMDIFrame::AddMDIChild(MDIChildPtr pMDIChild)
@@ -302,7 +302,7 @@ namespace Win32xx
 	// Returns a pointer to the menu of the Active MDI Child if any,
 	// otherwise returns a pointer to the MDI Frame's menu
 	{
-		CMenu* pMenu = GetFrameMenu();
+		CMenu* pMenu = &GetFrameMenu();
 		
 		if(GetActiveMDIChild())
 			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
@@ -445,7 +445,7 @@ namespace Win32xx
 		if (IsMenuBarUsed())
 		{
 			// Refresh MenuBar Window
-			GetMenuBar()->SetMenu(GetMenuBar()->GetMenu());
+			GetMenuBar().SetMenu(GetMenuBar().GetMenu());
 		}
 
 		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
@@ -514,9 +514,9 @@ namespace Win32xx
 		else
 		{
 			if (IsMenuBarUsed())
-				GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
+				GetMenuBar().SetMenu( GetFrameMenu() );
 			else
-				SetMenu( *GetFrameMenu() );
+				SetMenu( GetFrameMenu() );
 
 			GetApp()->SetAccelerators(GetFrameAccel(), this);
 		}
@@ -546,7 +546,7 @@ namespace Win32xx
 				if (IsMenuBarUsed())
 				{
 					AppendMDIMenu(pMenuWindow);
-					GetMenuBar()->SetMenu(pMenu->GetHandle());
+					GetMenuBar().SetMenu(pMenu->GetHandle());
 				}
 				else
 				{
@@ -923,7 +923,7 @@ namespace Win32xx
 		{
 			GetMDIFrame()->m_hActiveMDIChild = NULL;
 			// Set the menu to frame's original menu
-			GetMDIFrame()->UpdateFrameMenu( GetMDIFrame()->GetFrameMenu() );
+			GetMDIFrame()->UpdateFrameMenu( &GetMDIFrame()->GetFrameMenu() );
 			GetApp()->SetAccelerators(GetMDIFrame()->GetFrameAccel(), this);
 		}
 			

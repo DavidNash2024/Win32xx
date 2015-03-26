@@ -25,9 +25,9 @@ void CMainFrame::DoPopupMenu()
 	// Creates the popup menu for the "View Menu" toolbar button
 
 	// Position the popup menu
-	CToolBar* pTB = GetToolBar();
-	CRect rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_VIEWMENU));
-	pTB->MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+	CToolBar& TB = GetToolBar();
+	CRect rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
+	TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
@@ -46,7 +46,7 @@ void CMainFrame::DoPopupMenu()
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		mii.fMask  = MIIM_STATE | MIIM_ID;
-		CMenu* pSubMenu = GetFrameMenu()->GetSubMenu(1);
+		CMenu* pSubMenu = GetFrameMenu().GetSubMenu(1);
 		pSubMenu->GetMenuItemInfo(i, &mii, TRUE);
 		if (mii.fState & MFS_CHECKED)
 			TopMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
@@ -67,10 +67,10 @@ void CMainFrame::OnInitialUpdate()
 	GetTreeView()->GetRootItems();
 
 	// Uncheck the hidden menu item
-	GetFrameMenu()->CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
 
 	// Place Radio button in view menu
-	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
 	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
 	// Uncomment the following to use a hash bar and disable of auto resizing 
@@ -120,7 +120,7 @@ void CMainFrame::OnFileExit()
 void CMainFrame::OnViewLargeIcon()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewLargeIcons();
 	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
@@ -129,7 +129,7 @@ void CMainFrame::OnViewLargeIcon()
 void CMainFrame::OnViewList()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewList();
 	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
@@ -138,7 +138,7 @@ void CMainFrame::OnViewList()
 void CMainFrame::OnViewReport()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewReport();
 	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
@@ -147,7 +147,7 @@ void CMainFrame::OnViewReport()
 void CMainFrame::OnViewSmallIcon()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewSmallIcons();
 	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
@@ -157,7 +157,7 @@ void CMainFrame::OnViewSmallIcon()
 void CMainFrame::OnShowHidden()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu()->GetSubMenu(1);
+	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	m_ShowHidden = !m_ShowHidden;
 	pViewMenu->CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_ShowHidden)? MF_CHECKED : MF_UNCHECKED);
@@ -175,7 +175,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
  		//Menu for dropdown toolbar button
 		case TBN_DROPDOWN:
 		{
-			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar()->GetHwnd())
+			if (((LPNMHDR)lParam)->hwndFrom == GetToolBar())
 				DoPopupMenu();
 		}
 
@@ -210,8 +210,8 @@ void CMainFrame::SetupToolBar()
 	// Setting this style requires comctl32.dll version 4.72 or later
 	if (GetComCtlVersion() >= 472)
 	{
-		CToolBar* pTB = GetToolBar();
-		pTB->SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+		CToolBar& TB = GetToolBar();
+		TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
 	}
 }
 

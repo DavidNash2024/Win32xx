@@ -61,7 +61,7 @@ BOOL CMyCombo::AddItems()
     }
 
 	// Assign the existing image list to the ComboBoxEx control
-	SetImageList(&m_imlImages);
+	SetImageList(m_imlImages);
 
     return TRUE;
 }
@@ -77,6 +77,6 @@ void CMyCombo::SetImages(int nImages, UINT ImageID)
 
 	COLORREF crMask = RGB(255,0,255);
 	m_imlImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, nImages, 0);
-	m_imlImages.Add(&bm, crMask);
+	m_imlImages.Add(bm, crMask);
 }
 

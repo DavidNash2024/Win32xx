@@ -99,9 +99,9 @@ void CMainFrame::OnFileExit()
 
 void CMainFrame::OnFileNew()
 {
-	CToolBar* pTB = GetToolBar();
-	pTB->DisableButton(IDM_FILE_SAVEAS);
-	pTB->DisableButton(IDM_IMAGE_ADJUST);
+	CToolBar& TB = GetToolBar();
+	TB.DisableButton(IDM_FILE_SAVEAS);
+	TB.DisableButton(IDM_IMAGE_ADJUST);
 	GetMyView().LoadFileImage(NULL);
 	GetMyView().ShowScrollBar(SB_BOTH, FALSE);
 	GetMyView().Invalidate();
@@ -122,10 +122,10 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 		AddMRUEntry(FileName);
 
 		// Turn on the ToolBar adjust button
-		CToolBar* pTB = GetToolBar();
-		pTB->EnableButton(IDM_FILE_SAVEAS);
-		pTB->EnableButton(IDM_IMAGE_ADJUST);
-		GetFrameMenu()->EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
+		CToolBar& TB = GetToolBar();
+		TB.EnableButton(IDM_FILE_SAVEAS);
+		TB.EnableButton(IDM_IMAGE_ADJUST);
+		GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
 		// Resize the frame to match the bitmap
 		if (GetMyView().GetImage())
@@ -161,13 +161,13 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	CString strMRUText = GetMRUEntry(nMRUIndex);
-	CToolBar* pTB = GetToolBar();
+	CToolBar& TB = GetToolBar();
 
 	if (m_MyView.LoadFileImage(strMRUText))
 	{
 		m_PathName = strMRUText;
-		pTB->EnableButton(IDM_FILE_SAVEAS);
-		pTB->EnableButton(IDM_IMAGE_ADJUST);
+		TB.EnableButton(IDM_FILE_SAVEAS);
+		TB.EnableButton(IDM_IMAGE_ADJUST);
 
 		// Adjust the window size
 		CRect rcImage = GetMyView().GetImageRect();
@@ -176,8 +176,8 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	else
 	{
 		RemoveMRUEntry(strMRUText);
-		pTB->DisableButton(IDM_FILE_SAVEAS);
-		pTB->DisableButton(IDM_IMAGE_ADJUST);
+		TB.DisableButton(IDM_FILE_SAVEAS);
+		TB.DisableButton(IDM_IMAGE_ADJUST);
 	}
 
 	// Resize the frame to match the bitmap
@@ -233,13 +233,13 @@ inline void CMainFrame::OnMenuUpdate(UINT nID)
 	switch(nID)
 	{
 	case IDM_FILE_SAVE:
-		GetFrameMenu()->EnableMenuItem(IDM_FILE_SAVE, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		GetFrameMenu().EnableMenuItem(IDM_FILE_SAVE, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
 	case IDM_FILE_SAVEAS:
-		GetFrameMenu()->EnableMenuItem(IDM_FILE_SAVEAS, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		GetFrameMenu().EnableMenuItem(IDM_FILE_SAVEAS, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
 	case IDM_IMAGE_ADJUST:
-		GetFrameMenu()->EnableMenuItem(IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
+		GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, IsImageLoaded? MF_ENABLED : MF_GRAYED);
 		break;
 	}
 }

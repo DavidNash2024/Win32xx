@@ -84,11 +84,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	CFrame::OnCreate(pcs);
 
 	// Add the CCS_ADJUSTABLE style to the ToolBar
-	DWORD dwStyle = GetToolBar()->GetWindowLongPtr(GWL_STYLE);
-	GetToolBar()->SetWindowLongPtr(GWL_STYLE, CCS_ADJUSTABLE|dwStyle);
+	DWORD dwStyle = GetToolBar().GetWindowLongPtr(GWL_STYLE);
+	GetToolBar().SetWindowLongPtr(GWL_STYLE, CCS_ADJUSTABLE|dwStyle);
 
 	// Untick the Large Icons menu item
-	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);
 
 	return 0;
 }
@@ -291,7 +291,7 @@ void CMainFrame::OnTBBigIcons()
 {
 	m_UseBigIcons = !m_UseBigIcons;
 
-	GetFrameMenu()->CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_UseBigIcons ? MF_CHECKED : MF_UNCHECKED));
+	GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_UseBigIcons ? MF_CHECKED : MF_UNCHECKED));
 
 	if (m_UseBigIcons)
 	{
@@ -305,23 +305,23 @@ void CMainFrame::OnTBBigIcons()
 	}
 
 	RecalcLayout();
-	GetToolBar()->Invalidate();
+	GetToolBar().Invalidate();
 }
 
 void CMainFrame::OnTBCustomize()
 {
 	// Customize CFrame's Toolbar
-	GetToolBar()->Customize();
+	GetToolBar().Customize();
 }
 
 void CMainFrame::OnTBDefault()
 // Set the Toolbar back to its intial settings.
 {
 	// Remove all current buttons
-	int nCount = GetToolBar()->GetButtonCount();
+	int nCount = GetToolBar().GetButtonCount();
 	for (int i = nCount - 1; i >= 0; i--)
 	{
-		GetToolBar()->DeleteButton(i);
+		GetToolBar().DeleteButton(i);
 	}
 	
 	// Restore buttons from info stored in m_vTBBDefault
@@ -329,7 +329,7 @@ void CMainFrame::OnTBDefault()
 	for (int j = 0; j < nDefaultCount; j++)
 	{
 		TBBUTTON tbb = m_vTBBDefault[j];
-		GetToolBar()->InsertButton(j, &tbb);
+		GetToolBar().InsertButton(j, &tbb);
 	}
 
 	RecalcLayout();
@@ -338,12 +338,12 @@ void CMainFrame::OnTBDefault()
 void CMainFrame::SaveTBDefault()
 // Saves the initial Toolbar configuration in a vector of TBBUTTON
 {
-	int nCount = GetToolBar()->GetButtonCount();
+	int nCount = GetToolBar().GetButtonCount();
 
 	for (int i = 0; i < nCount; i++)
 	{
 		TBBUTTON tbb;
-		GetToolBar()->GetButton(i, &tbb);
+		GetToolBar().GetButton(i, &tbb);
 		m_vTBBDefault.push_back(tbb);
 	}
 }

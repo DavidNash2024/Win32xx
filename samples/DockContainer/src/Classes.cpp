@@ -47,8 +47,8 @@ void CViewClasses::OnInitialUpdate()
 	//set the image lists
 	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	CBitmap bm(IDB_CLASSVIEW);
-	m_imlNormal.Add( &bm, RGB(255, 0, 0) );
-	SetImageList(&m_imlNormal, LVSIL_NORMAL);
+	m_imlNormal.Add( bm, RGB(255, 0, 0) );
+	SetImageList(m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

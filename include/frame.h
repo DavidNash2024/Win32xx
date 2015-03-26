@@ -322,16 +322,16 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
 		// StatusBar or ToolBar, inherit from those classes, and override
 		// the following attribute functions.
-		virtual CMenuBar* GetMenuBar()	const		{ return const_cast<CMenuBar*>(&m_MenuBar); }
-		virtual CReBar* GetReBar() const			{ return const_cast<CReBar*>(&m_ReBar); }
-		virtual CStatusBar* GetStatusBar() const	{ return const_cast<CStatusBar*>(&m_StatusBar); }
-		virtual CToolBar* GetToolBar() const		{ return const_cast<CToolBar*>(&m_ToolBar); }
+		virtual CMenuBar& GetMenuBar()	const		{ return const_cast<CMenuBar&>(m_MenuBar); }
+		virtual CReBar& GetReBar() const			{ return const_cast<CReBar&>(m_ReBar); }
+		virtual CStatusBar& GetStatusBar() const	{ return const_cast<CStatusBar&>(m_StatusBar); }
+		virtual CToolBar& GetToolBar() const		{ return const_cast<CToolBar&>(m_ToolBar); }
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
-		CRect ExcludeChildRect(CRect& rcClient, CWnd* pChild) const;
+		CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		CMenu* GetFrameMenu() const					{ return const_cast<CMenu*>(&m_Menu); }
+		CMenu& GetFrameMenu() const					{ return const_cast<CMenu&>(m_Menu); }
 		MenuTheme* GetMenuBarTheme() const			{ return const_cast<MenuTheme*>(&m_MBTheme); }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetMRUEntry(UINT nIndex);
@@ -341,9 +341,9 @@ namespace Win32xx
 		ToolBarTheme* GetToolBarTheme()	const		{ return const_cast<ToolBarTheme*>(&m_TBTheme); }
 		CString GetStatusText() const				{ return m_strStatusText; }
 		CString GetTitle() const					{ return GetWindowText(); }
-		BOOL IsMenuBarUsed() const					{ return (GetMenuBar()->IsWindow()); }
+		BOOL IsMenuBarUsed() const					{ return (GetMenuBar().IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
-		BOOL IsReBarUsed() const					{ return (GetReBar()->IsWindow()); }
+		BOOL IsReBarUsed() const					{ return (GetReBar().IsWindow()); }
 		void SetFrameMenu(INT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme* pMBT);
@@ -359,7 +359,7 @@ namespace Win32xx
 		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
-		virtual void AddToolBarBand(CToolBar* pTB, DWORD dwBandStyle, UINT nID);
+		virtual void AddToolBarBand(CToolBar& TB, DWORD dwBandStyle, UINT nID);
 		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0, int iImage = -1);
 		virtual void CreateToolBar();
 		virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
@@ -407,9 +407,9 @@ namespace Win32xx
 		virtual BOOL SaveRegistrySettings();
 		virtual void SetMenuBarBandSize();
 		virtual UINT SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
-		virtual void SetTBImageList(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask);
-		virtual void SetTBImageListDis(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask);
-		virtual void SetTBImageListHot(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask);
+		virtual void SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask);
+		virtual void SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask);
+		virtual void SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask);
 		virtual void SetupToolBar();
 		virtual void SetTheme();
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
@@ -863,7 +863,7 @@ namespace Win32xx
 
 			// Recreate the Disabled imagelist
 			m_imlMenuDis.DeleteImageList();
-			m_imlMenuDis.CreateDisabledImageList(&m_imlMenu);
+			m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
 
 			return TRUE;
 		}
@@ -926,7 +926,7 @@ namespace Win32xx
 		}
 
 		// Add the images to the ImageList
-		m_imlMenu.Add(&Bitmap, crMask);
+		m_imlMenu.Add(Bitmap, crMask);
 
 		// Create the Disabled imagelist
 		if (ToolBarDisabledID != 0)
@@ -943,17 +943,17 @@ namespace Win32xx
 			// Normal and Disabled icons must be the same size
 			if ((iImageWidthDis == iImageWidth) && (iImageHeightDis == iImageHeight))
 			{
-				m_imlMenuDis.Add(&BitmapDisabled, crMask);
+				m_imlMenuDis.Add(BitmapDisabled, crMask);
 			}
 			else
 			{
-				m_imlMenuDis.CreateDisabledImageList(&m_imlMenu);
+				m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
 			}
 		}
 		else
 		{
 			m_imlMenuDis.DeleteImageList();
-			m_imlMenuDis.CreateDisabledImageList(&m_imlMenu);
+			m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
 		}
 
 		// return the number of menu icons
@@ -968,15 +968,15 @@ namespace Win32xx
 
 		rbbi.fMask      = RBBIM_STYLE | RBBIM_CHILD | RBBIM_ID;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT;
-		rbbi.hwndChild  = GetMenuBar()->GetHwnd();
+		rbbi.hwndChild  = GetMenuBar();
 		rbbi.wID        = IDW_MENUBAR;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
-		GetReBar()->InsertBand(-1, rbbi);
-		GetReBar()->SetMenuBar(GetMenuBar()->GetHwnd());
+		GetReBar().InsertBand(-1, rbbi);
+		GetReBar().SetMenuBar(GetMenuBar());
 
 		if (GetReBarTheme()->LockMenuBand)
-			GetReBar()->ShowGripper(GetReBar()->GetBand(GetMenuBar()->GetHwnd()), FALSE);
+			GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), FALSE);
 	}
 
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
@@ -995,12 +995,12 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	inline void CFrame::AddToolBarBand(CToolBar* pTB, DWORD dwBandStyle, UINT nID)
+	inline void CFrame::AddToolBarBand(CToolBar& TB, DWORD dwBandStyle, UINT nID)
 	// Adds a ToolBar to the rebar control
 	{
 		// Create the ToolBar Window
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT	| CCS_NODIVIDER | CCS_NORESIZE | CCS_NOPARENTALIGN;
-		pTB->CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), *GetReBar(), 0);
+		TB.CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), GetReBar(), 0);
 
 		// Fill the REBARBAND structure
 		REBARBANDINFO rbbi;
@@ -1008,11 +1008,11 @@ namespace Win32xx
 
 		rbbi.fMask      = RBBIM_STYLE |  RBBIM_CHILD | RBBIM_ID;
 		rbbi.fStyle     = dwBandStyle;
-		rbbi.hwndChild  = pTB->GetHwnd();
+		rbbi.hwndChild  = TB;
 		rbbi.wID        = nID;
 
 		// Note: rbbi.cbSize is set inside the InsertBand function
-		GetReBar()->InsertBand(-1, rbbi);
+		GetReBar().InsertBand(-1, rbbi);
 	}
 
 	inline void CFrame::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */, int iImage /* = -1 */)
@@ -1021,10 +1021,10 @@ namespace Win32xx
 	{
 		m_vToolBarData.push_back(nID);
 
-		GetToolBar()->AddButton(nID, bEnabled, iImage);
+		GetToolBar().AddButton(nID, bEnabled, iImage);
 
 		if(0 != szText)
-			GetToolBar()->SetButtonText(nID, szText);
+			GetToolBar().SetButtonText(nID, szText);
 
 		if (!IsWindow()) TRACE("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n");
 	}
@@ -1059,7 +1059,7 @@ namespace Win32xx
 		if (IsReBarSupported() && m_UseReBar)
 			AddToolBarBand(GetToolBar(), RBBS_BREAK|RBBS_GRIPPERALWAYS, IDW_TOOLBAR);	// Create the toolbar inside rebar
 		else
-			GetToolBar()->Create(*this);	// Create the toolbar without a rebar
+			GetToolBar().Create(*this);	// Create the toolbar without a rebar
 
 		// Set a default ImageList for the ToolBar
 		SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
@@ -1068,14 +1068,14 @@ namespace Win32xx
 
 		if (IsReBarSupported() && m_UseReBar)
 		{
-			SIZE MaxSize = GetToolBar()->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)GetToolBar()->GetHwnd(), (LPARAM)&MaxSize);
+			SIZE MaxSize = GetToolBar().GetMaxSize();
+			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)GetToolBar().GetHwnd(), (LPARAM)&MaxSize);
 			
 			if (GetReBarTheme()->UseThemes && GetReBarTheme()->LockMenuBand)
 			{
 				// Hide gripper for single toolbar
-				if (GetReBar()->GetBandCount() <= 2)
-					GetReBar()->ShowGripper(GetReBar()->GetBand(GetToolBar()->GetHwnd()), FALSE);
+				if (GetReBar().GetBandCount() <= 2)
+					GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), FALSE);
 			}
 		}
 
@@ -1113,13 +1113,13 @@ namespace Win32xx
 				if (IsMDIChildMaxed() && (0 == dwItem))
 				// Draw over MDI Max button
 				{
-					HICON hIcon = (HICON)GetMenuBar()->GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
+					HICON hIcon = (HICON)GetMenuBar().GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
 					if (NULL == hIcon)
 						hIcon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
 					int cx = ::GetSystemMetrics (SM_CXSMICON);
 					int cy = ::GetSystemMetrics (SM_CYSMICON);
-					int y = 1 + (GetMenuBar()->GetWindowRect().Height() - cy)/2;
+					int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy)/2;
 					int x = (rcRect.Width() - cx)/2;
 					pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
@@ -1136,7 +1136,7 @@ namespace Win32xx
 
 					if (nState & (CDIS_HOT | CDIS_SELECTED))
 					{
-						if ((nState & CDIS_SELECTED) || (GetMenuBar()->GetButtonState(dwItem) & TBSTATE_PRESSED))
+						if ((nState & CDIS_SELECTED) || (GetMenuBar().GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
 							pDrawDC->GradientFill(GetMenuBarTheme()->clrPressed1, GetMenuBarTheme()->clrPressed2, rcRect, FALSE);
 						}
@@ -1157,15 +1157,15 @@ namespace Win32xx
 						pDrawDC->LineTo(rcRect.left, rcRect.bottom);
 
 						CString str;
-						int nLength = (int)GetMenuBar()->SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
+						int nLength = (int)GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
 						if (nLength > 0)
 						{
-							GetMenuBar()->SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
+							GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
 							str.ReleaseBuffer();
 						}
 
 						// Draw highlight text
-						CFont* pFont = GetMenuBar()->GetFont();
+						CFont* pFont = GetMenuBar().GetFont();
 						pDrawDC->SelectObject(*pFont);
 
 						rcRect.bottom += 1;
@@ -1184,7 +1184,7 @@ namespace Win32xx
 			// Draw MDI Minimise, Restore and Close buttons
 			{
 				CDC dc(lpNMCustomDraw->nmcd.hdc);
-				GetMenuBar()->DrawAllMDIButtons(dc);
+				GetMenuBar().DrawAllMDIButtons(dc);
 				dc.Detach();
 			}
 			break;
@@ -1698,7 +1698,7 @@ namespace Win32xx
 				{
 					if (pReBar->IsBandVisible(nBand))
 					{
-						if (nBand != pReBar->GetBand(*GetMenuBar()))
+						if (nBand != pReBar->GetBand(GetMenuBar()))
 						{
 							// Determine the size of this band
 							CRect rcBand = pReBar->GetBandRect(nBand);
@@ -1825,13 +1825,16 @@ namespace Win32xx
 		return IsDrawn;
 	}
 
-	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, CWnd* pChild) const
+	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, HWND hChild) const
 	// Calculates the remaining client rect when a child window is excluded.
 	// Note: Assumes the child window touches 3 of the client rect's borders
 	//  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar())
 	{
 		ClientToScreen(rcClient);
-		CRect rcChildWindow = pChild->GetWindowRect();
+	//	CRect rcChildWindow = Child.GetWindowRect();
+
+		CRect rcChildWindow;
+		::GetWindowRect(hChild, &rcChildWindow);
 
 		if (rcClient.Width() == rcChildWindow.Width())
 		{
@@ -1930,13 +1933,13 @@ namespace Win32xx
 	{
 		CRect rcClient = GetClientRect();
 
-		if (GetStatusBar()->IsWindow() && m_ShowStatusBar)
+		if (GetStatusBar().IsWindow() && m_ShowStatusBar)
 			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-		if (IsReBarSupported() && m_UseReBar && GetReBar()->IsWindow())
+		if (IsReBarSupported() && m_UseReBar && GetReBar().IsWindow())
 			rcClient = ExcludeChildRect(rcClient, GetReBar());
 		else
-			if (GetToolBar()->IsWindow() && GetToolBar()->IsWindowVisible())
+			if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
 				rcClient = ExcludeChildRect(rcClient, GetToolBar());
 
 		return rcClient;
@@ -2143,10 +2146,10 @@ namespace Win32xx
 		if (IsReBarSupported() && m_UseReBar)
 		{
 			// Create the rebar
-			GetReBar()->Create(*this);
+			GetReBar().Create(*this);
 
 			// Create the menu inside rebar
-			GetMenuBar()->Create(*GetReBar());
+			GetMenuBar().Create(GetReBar());
 			AddMenuBarBand();
 		}
 
@@ -2165,12 +2168,12 @@ namespace Win32xx
 		else
 		{
 			m_ShowToolBar = FALSE;
-			GetFrameMenu()->EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
+			GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
 
 		// Create the status bar
-		GetStatusBar()->Create(*this);
-		GetStatusBar()->SetFont(m_fntStatusBar, FALSE);
+		GetStatusBar().Create(*this);
+		GetStatusBar().SetFont(m_fntStatusBar, FALSE);
 		ShowStatusBar(m_ShowStatusBar);
 
 		if (m_UseIndicatorStatus)
@@ -2178,13 +2181,13 @@ namespace Win32xx
 
 		// Create the view window
 		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-		GetDockClient()->SetDock(this);
-		GetDockClient()->Create(*this);
-		if (GetView() != GetDockClient())
-			GetView()->Create(*GetDockClient());
+		GetDockClient().SetDock(this);
+		GetDockClient().Create(*this);
+		if (GetView() != &GetDockClient())
+			GetView()->Create(GetDockClient());
 
 		// Disable XP themes for the menubar
-		GetMenuBar()->SetWindowTheme(L" ", L" ");
+		GetMenuBar().SetWindowTheme(L" ", L" ");
 
 		// Reposition the child windows
 		OnSysColorChange(0, 0);
@@ -2200,7 +2203,7 @@ namespace Win32xx
 		CWnd* pWnd = GetCWndPtr(pNMHDR->hwndFrom);
 		if (dynamic_cast<CToolBar*>(pWnd))
 		{
-			if (pNMHDR->hwndFrom == GetMenuBar()->GetHwnd())
+			if (pNMHDR->hwndFrom == GetMenuBar())
 				return CustomDrawMenuBar(pNMHDR);
 			else
 				return CustomDrawToolBar(pNMHDR);
@@ -2215,10 +2218,10 @@ namespace Win32xx
 		SetMenu(NULL);
 
 		CDocker::OnDestroy();
-		GetMenuBar()->Destroy();
-		GetToolBar()->Destroy();
-		GetReBar()->Destroy();
-		GetStatusBar()->Destroy();
+		GetMenuBar().Destroy();
+		GetToolBar().Destroy();
+		GetReBar().Destroy();
+		GetStatusBar().Destroy();
 		GetView()->Destroy();		
 
 		::PostQuitMessage(0);	// Terminates the application
@@ -2271,7 +2274,7 @@ namespace Win32xx
 		{
 			// Store the window handle that currently has keyboard focus
 			HWND hPrevFocus = ::GetFocus();
-			if (hPrevFocus == GetMenuBar()->GetHwnd())
+			if (hPrevFocus == GetMenuBar().GetHwnd())
 				hPrevFocus = GetHwnd();
 
 			m_AboutDialog.DoModal(*this);
@@ -2345,7 +2348,7 @@ namespace Win32xx
 		if ((IsMenuBarUsed()) && (LOWORD(wParam)!= VK_SPACE))
 		{
 			// Activate MenuBar for key pressed with Alt key held down
-			GetMenuBar()->OnMenuChar(wParam, lParam);
+			GetMenuBar().OnMenuChar(wParam, lParam);
 			return -1L;
 		}
 
@@ -2357,15 +2360,15 @@ namespace Win32xx
 	{
 		// Set the StatusBar text when we hover over a menu
 		// Only popup submenus have status strings
-		if (m_UseMenuStatus && GetStatusBar()->IsWindow())
+		if (m_UseMenuStatus && GetStatusBar().IsWindow())
 		{
 			int nID = LOWORD (wParam);
 			CMenu* pMenu = CMenu::FromHandle((HMENU) lParam);
 
 			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
-				GetStatusBar()->SetWindowText(LoadString(nID));
+				GetStatusBar().SetWindowText(LoadString(nID));
 			else
-				GetStatusBar()->SetWindowText(m_strStatusText);
+				GetStatusBar().SetWindowText(m_strStatusText);
 		}
 
 		return 0L;
@@ -2377,11 +2380,11 @@ namespace Win32xx
 		switch(nID)
 		{
 		case IDW_VIEW_STATUSBAR:
-			GetFrameMenu()->CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
+			GetFrameMenu().CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		case IDW_VIEW_TOOLBAR:
-			GetFrameMenu()->EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
-			GetFrameMenu()->CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
+			GetFrameMenu().EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
+			GetFrameMenu().CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		}
 	}
@@ -2422,7 +2425,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(pNMHDR);
 
 		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-			GetReBar()->MoveBandsLeft();
+			GetReBar().MoveBandsLeft();
 
 		return 0L;
 	}
@@ -2513,11 +2516,11 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(lParam);
 
 		// Honour theme color changes
-		if (GetReBar()->IsWindow())
+		if (GetReBar().IsWindow())
 		{
-			for (int nBand = 0; nBand <= GetReBar()->GetBandCount(); ++nBand)
+			for (int nBand = 0; nBand <= GetReBar().GetBandCount(); ++nBand)
 			{
-				GetReBar()->SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
+				GetReBar().SetBandColor(nBand, GetSysColor(COLOR_BTNTEXT), GetSysColor(COLOR_BTNFACE));
 			}
 		}
 
@@ -2526,38 +2529,38 @@ namespace Win32xx
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 
-		if (GetStatusBar()->IsWindow())
+		if (GetStatusBar().IsWindow())
 		{
 			// Update the status bar font and text
 			m_fntStatusBar.DeleteObject();
 			m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
-			GetStatusBar()->SetFont(m_fntStatusBar, TRUE);
+			GetStatusBar().SetFont(m_fntStatusBar, TRUE);
 			if (m_UseMenuStatus)
-				GetStatusBar()->SetWindowText(m_strStatusText);
+				GetStatusBar().SetWindowText(m_strStatusText);
 
 			SetStatusIndicators();
 		}
 
-		if (GetMenuBar()->IsWindow())
+		if (GetMenuBar().IsWindow())
 		{
 			// Update the MenuBar font and button size
 			m_fntMenuBar.DeleteObject();
 			m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
-			GetMenuBar()->SetFont(m_fntMenuBar, TRUE);
-			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
+			GetMenuBar().SetFont(m_fntMenuBar, TRUE);
+			GetMenuBar().SetMenu( GetFrameMenu() );
 
 			// Update the MenuBar band size
-			int nBand = GetReBar()->GetBand(GetMenuBar()->GetHwnd());
+			int nBand = GetReBar().GetBand(GetMenuBar());
 			REBARBANDINFO rbbi;
 			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
-			CClientDC dcMenuBar(*GetMenuBar());
-			dcMenuBar.SelectObject(*GetMenuBar()->GetFont());
+			CClientDC dcMenuBar(GetMenuBar());
+			dcMenuBar.SelectObject(*GetMenuBar().GetFont());
 			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int MenuBar_Height = sizeMenuBar.cy + 6;
 			rbbi.fMask      = RBBIM_CHILDSIZE;
 			rbbi.cyMinChild = MenuBar_Height;
 			rbbi.cyMaxChild = MenuBar_Height;
-			GetReBar()->SetBandInfo(nBand, rbbi);
+			GetReBar().SetBandInfo(nBand, rbbi);
 		}
 
 		if (m_XPThemeName != GetThemeName())
@@ -2579,7 +2582,7 @@ namespace Win32xx
 	{
 		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenuBarUsed())
 		{
-			GetMenuBar()->OnSysCommand(wParam, lParam);
+			GetMenuBar().OnSysCommand(wParam, lParam);
 			return 0L;
 		}
 
@@ -2638,12 +2641,12 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		if (GetStatusBar()->IsWindow() && m_ShowStatusBar)
+		if (GetStatusBar().IsWindow() && m_ShowStatusBar)
 		{
-			GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
-			GetStatusBar()->Invalidate();
+			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
+			GetStatusBar().Invalidate();
 			if (m_UseMenuStatus)
-				GetStatusBar()->SetWindowText(m_strStatusText);
+				GetStatusBar().SetWindowText(m_strStatusText);
 
 			SetStatusIndicators();
 		}
@@ -2651,11 +2654,11 @@ namespace Win32xx
 		// Resize the rebar or toolbar
 		if (IsReBarUsed())
 		{
-			GetReBar()->SendMessage(WM_SIZE, 0L, 0L);
-			GetReBar()->Invalidate();
+			GetReBar().SendMessage(WM_SIZE, 0L, 0L);
+			GetReBar().Invalidate();
 		}
-		else if (m_UseToolBar && m_ShowToolBar && GetToolBar()->IsWindow())
-			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
+		else if (m_UseToolBar && m_ShowToolBar && GetToolBar().IsWindow())
+			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
 		RecalcDockLayout();
@@ -2664,7 +2667,7 @@ namespace Win32xx
 		if (IsReBarUsed())
 		{
 			if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-				GetReBar()->MoveBandsLeft();
+				GetReBar().MoveBandsLeft();
 
 			if (IsMenuBarUsed())
 				SetMenuBarBandSize();
@@ -2831,7 +2834,7 @@ namespace Win32xx
 
 		if (IsMenuBarUsed())
 		{
-			GetMenuBar()->SetMenu( GetFrameMenu()->GetHandle() );
+			GetMenuBar().SetMenu( GetFrameMenu() );
 			BOOL bShow = (hMenu != NULL);	// boolean expression
 			ShowMenu(bShow);
 		}
@@ -2859,25 +2862,25 @@ namespace Win32xx
 	// This prevents other bands from moving to this MenuBar's row.
 	{
 		CRect rcClient = GetClientRect();
-		CReBar* RB = GetReBar();
-		int nBand = RB->GetBand(GetMenuBar()->GetHwnd());
-		CRect rcBorder = RB->GetBandBorders(nBand);
+		CReBar& RB = GetReBar();
+		int nBand = RB.GetBand(GetMenuBar());
+		CRect rcBorder = RB.GetBandBorders(nBand);
 
 		REBARBANDINFO rbbi;
 		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
-		RB->GetBandInfo(nBand, rbbi);
+		RB.GetBandInfo(nBand, rbbi);
 
 		int Width;
 		if ((GetReBarTheme()->UseThemes) && (GetReBarTheme()->LockMenuBand))
 			Width = rcClient.Width() - rcBorder.Width() - 2;
 		else
-			Width = GetMenuBar()->GetMaxSize().cx;
+			Width = GetMenuBar().GetMaxSize().cx;
 
 		rbbi.cxMinChild = Width;
 		rbbi.cx         = Width;
 
-		RB->SetBandInfo(nBand, rbbi);
+		RB.SetBandInfo(nBand, rbbi);
 	}
 
 	inline void CFrame::SetMenuTheme(MenuTheme* pMBT)
@@ -2886,8 +2889,8 @@ namespace Win32xx
 	{
 		m_MBTheme = *pMBT;
 
-		if (GetMenuBar()->IsWindow())
-			GetMenuBar()->Invalidate();
+		if (GetMenuBar().IsWindow())
+			GetMenuBar().Invalidate();
 	}
 
 	inline void CFrame::SetReBarTheme(ReBarTheme* pRBT)
@@ -2905,10 +2908,10 @@ namespace Win32xx
 	inline void CFrame::SetStatusIndicators()
 	// Creates 4 panes in the status bar and displays status and key states.
 	{
-		if (GetStatusBar()->IsWindow() && (m_UseIndicatorStatus))
+		if (GetStatusBar().IsWindow() && (m_UseIndicatorStatus))
 		{
 			// Calculate the width of the text indicators
-			CClientDC dcStatus(*GetStatusBar());
+			CClientDC dcStatus(GetStatusBar());
 			CString CAP = LoadString(IDW_INDICATOR_CAPS);
 			CString NUM = LoadString(IDW_INDICATOR_NUM);
 			CString SCRL = LoadString(IDW_INDICATOR_SCRL);
@@ -2921,19 +2924,19 @@ namespace Win32xx
 			int width = MAX(300, rcClient.right);
 
 			// Create 4 panes
-			GetStatusBar()->SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
-			GetStatusBar()->SetPartWidth(1, csCAP.cx);
-			GetStatusBar()->SetPartWidth(2, csNUM.cx);
-			GetStatusBar()->SetPartWidth(3, csSCRL.cx);
+			GetStatusBar().SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
+			GetStatusBar().SetPartWidth(1, csCAP.cx);
+			GetStatusBar().SetPartWidth(2, csNUM.cx);
+			GetStatusBar().SetPartWidth(3, csSCRL.cx);
 
 			CString Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? CAP : CString("");
 			CString Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? NUM : CString("");
 			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? SCRL: CString("");
 
 			// Only update indicators if the text has changed
-			if (Status1 != m_OldStatus[0])  GetStatusBar()->SetPartText(1, (Status1));
-			if (Status2 != m_OldStatus[1])  GetStatusBar()->SetPartText(2, (Status2));
-			if (Status3 != m_OldStatus[2])  GetStatusBar()->SetPartText(3, (Status3));
+			if (Status1 != m_OldStatus[0])  GetStatusBar().SetPartText(1, (Status1));
+			if (Status2 != m_OldStatus[1])  GetStatusBar().SetPartText(2, (Status2));
+			if (Status3 != m_OldStatus[2])  GetStatusBar().SetPartText(3, (Status3));
 
 			m_OldStatus[0] = Status1;
 			m_OldStatus[1] = Status2;
@@ -2946,10 +2949,10 @@ namespace Win32xx
 	{
 		m_strStatusText = szText;
 
-		if (GetStatusBar()->IsWindow())
+		if (GetStatusBar().IsWindow())
 		{
 			// Place text in the 1st pane
-			GetStatusBar()->SetPartText(0, m_strStatusText);
+			GetStatusBar().SetPartText(0, m_strStatusText);
 		}
 	}
 
@@ -3072,7 +3075,7 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	inline void CFrame::SetTBImageList(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask)
+	inline void CFrame::SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	// A Disabled image list is created from ToolBarID if one doesn't already exist.
@@ -3082,20 +3085,20 @@ namespace Win32xx
 		CSize sz = GetTBImageSize(&bm);
 
 		// Set the toolbar's image list
-		pImageList->DeleteImageList();
-		pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-		pImageList->Add( &bm, crMask );
-		pToolBar->SetImageList(pImageList);
+		ImageList.DeleteImageList();
+		ImageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+		ImageList.Add(bm, crMask);
+		ToolBar.SetImageList(ImageList);
 
 		// Inform the Rebar of the change to the Toolbar
-		if (GetReBar()->IsWindow())
+		if (GetReBar().IsWindow())
 		{
-			SIZE MaxSize = pToolBar->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+			SIZE MaxSize = ToolBar.GetMaxSize();
+			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)ToolBar.GetHwnd(), (LPARAM)&MaxSize);
 		}
 	}
 
-	inline void CFrame::SetTBImageListDis(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask)
+	inline void CFrame::SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Disabled Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
@@ -3106,27 +3109,27 @@ namespace Win32xx
 			CSize sz = GetTBImageSize(&bm);
 
 			// Set the toolbar's image list
-			pImageList->DeleteImageList();
-			pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-			pImageList->Add( &bm, crMask );
-			pToolBar->SetDisableImageList(pImageList);
+			ImageList.DeleteImageList();
+			ImageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+			ImageList.Add(bm, crMask);
+			ToolBar.SetDisableImageList(ImageList);
 		}
 		else
 		{
-			pImageList->DeleteImageList();
-			pImageList->CreateDisabledImageList(&m_ToolBarImages);
-			pToolBar->SetDisableImageList(pImageList);
+			ImageList.DeleteImageList();
+			ImageList.CreateDisabledImageList(m_ToolBarImages);
+			ToolBar.SetDisableImageList(ImageList);
 		}
 
 		// Inform the Rebar of the change to the Toolbar
-		if (GetReBar()->IsWindow())
+		if (GetReBar().IsWindow())
 		{
-			SIZE MaxSize = pToolBar->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+			SIZE MaxSize = ToolBar.GetMaxSize();
+			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)ToolBar.GetHwnd(), (LPARAM)&MaxSize);
 		}
 	}
 
-	inline void CFrame::SetTBImageListHot(CToolBar* pToolBar, CImageList* pImageList, UINT nID, COLORREF crMask)
+	inline void CFrame::SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Hot Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
@@ -3137,22 +3140,22 @@ namespace Win32xx
 			CSize sz = GetTBImageSize(&bm);
 
 			// Set the toolbar's image list
-			pImageList->DeleteImageList();
-			pImageList->Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
-			pImageList->Add( &bm, crMask );
-			pToolBar->SetHotImageList(pImageList);
+			ImageList.DeleteImageList();
+			ImageList.Create(sz.cx, sz.cy, ILC_COLOR32 | ILC_MASK, 0, 0);
+			ImageList.Add(bm, crMask);
+			ToolBar.SetHotImageList(ImageList);
 		}
 		else
 		{
-			pImageList->DeleteImageList();
-			pToolBar->SetHotImageList(0);
+			ImageList.DeleteImageList();
+			ToolBar.SetHotImageList(0);
 		}
 
 		// Inform the Rebar of the change to the Toolbar
-		if (GetReBar()->IsWindow())
+		if (GetReBar().IsWindow())
 		{
-			SIZE MaxSize = pToolBar->GetMaxSize();
-			GetReBar()->SendMessage(UWM_TBRESIZE, (WPARAM)pToolBar->GetHwnd(), (LPARAM)&MaxSize);
+			SIZE MaxSize = ToolBar.GetMaxSize();
+			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)ToolBar.GetHwnd(), (LPARAM)&MaxSize);
 		}
 	}
 
@@ -3168,14 +3171,14 @@ namespace Win32xx
 		{
 			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
 			// Instead we simply set the bitmap.
-			GetToolBar()->SetBitmap(ToolBarID);
+			GetToolBar().SetBitmap(ToolBarID);
 			return;
 		}
 
 		// Set the button images
-		SetTBImageList(GetToolBar(),    &m_ToolBarImages, ToolBarID, crMask);
-		SetTBImageListHot(GetToolBar(), &m_ToolBarHotImages, ToolBarHotID, crMask);
-		SetTBImageListDis(GetToolBar(), &m_ToolBarDisabledImages, ToolBarDisabledID, crMask);
+		SetTBImageList(GetToolBar(),    m_ToolBarImages, ToolBarID, crMask);
+		SetTBImageListHot(GetToolBar(), m_ToolBarHotImages, ToolBarHotID, crMask);
+		SetTBImageListDis(GetToolBar(), m_ToolBarDisabledImages, ToolBarDisabledID, crMask);
 	}
 
 	inline void CFrame::SetupToolBar()
@@ -3204,8 +3207,8 @@ namespace Win32xx
 	// Stores the tool bar's theme colors
 	{
 		m_TBTheme = *pTBT;
-		if (GetToolBar()->IsWindow())
-			GetToolBar()->GetParent().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
+		if (GetToolBar().IsWindow())
+			GetToolBar().GetParent().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
 
 	inline void CFrame::ShowMenu(BOOL bShow)
@@ -3214,22 +3217,22 @@ namespace Win32xx
 		if (bShow)
 		{
 			if (IsReBarUsed())
-				GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(GetMenuBar()->GetHwnd()), TRUE);
+				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), TRUE);
 			else
 				SetMenu(m_Menu);
 		}
 		else
 		{
 			if (IsReBarUsed())
-				GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(GetMenuBar()->GetHwnd()), FALSE);
+				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), FALSE);
 			else
 				SetMenu(NULL);
 		}
 
-		if (GetReBar()->IsWindow())
+		if (GetReBar().IsWindow())
 		{
 			if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-				GetReBar()->MoveBandsLeft();
+				GetReBar().MoveBandsLeft();
 		}
 
 		// Reposition the Windows
@@ -3239,16 +3242,16 @@ namespace Win32xx
 	inline void CFrame::ShowStatusBar(BOOL bShow)
 	// Hides or shows the status bar
 	{
-		if (GetStatusBar()->IsWindow())
+		if (GetStatusBar().IsWindow())
 		{
 			if (bShow)
 			{
-				GetStatusBar()->ShowWindow(SW_SHOW);
+				GetStatusBar().ShowWindow(SW_SHOW);
 				m_ShowStatusBar = TRUE;
 			}
 			else
 			{
-				GetStatusBar()->ShowWindow(SW_HIDE);
+				GetStatusBar().ShowWindow(SW_HIDE);
 				m_ShowStatusBar = FALSE;
 			}
 		}
@@ -3261,30 +3264,30 @@ namespace Win32xx
 	inline void CFrame::ShowToolBar(BOOL bShow)
 	// Hides or shows the tool bar
 	{
-		if (GetToolBar()->IsWindow())
+		if (GetToolBar().IsWindow())
 		{
 			if (bShow)
 			{
 				if (IsReBarUsed())
-					GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(*GetToolBar()), TRUE);
+					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), TRUE);
 				else
-					GetToolBar()->ShowWindow(SW_SHOW);
+					GetToolBar().ShowWindow(SW_SHOW);
 				m_ShowToolBar = TRUE;
 			}
 			else
 			{
 				if (IsReBarUsed())
-					GetReBar()->SendMessage(RB_SHOWBAND, (WPARAM)GetReBar()->GetBand(*GetToolBar()), FALSE);
+					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), FALSE);
 				else
-					GetToolBar()->ShowWindow(SW_HIDE);
+					GetToolBar().ShowWindow(SW_HIDE);
 				m_ShowToolBar = FALSE;
 			}
 		}
 
-		if (GetReBar()->IsWindow())
+		if (GetReBar().IsWindow())
 		{
 			if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-				GetReBar()->MoveBandsLeft();
+				GetReBar().MoveBandsLeft();
 		}
 
 		// Reposition the Windows
@@ -3348,7 +3351,7 @@ namespace Win32xx
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		int nFileItem = 0;  // We place the MRU items under the left most menu item
-		CMenu* pFileMenu = GetFrameMenu()->GetSubMenu(nFileItem);
+		CMenu* pFileMenu = GetFrameMenu().GetSubMenu(nFileItem);
 
 		if (pFileMenu)
 		{

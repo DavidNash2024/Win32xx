@@ -148,7 +148,7 @@ namespace Win32xx
 		BOOL 	HasEditChanged () const;
 		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
 		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
-		CImageList* SetImageList(CImageList* pNew) const;
+		CImageList* SetImageList(HIMAGELIST himlNew) const;
 		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
 
 	protected:
@@ -173,7 +173,7 @@ namespace Win32xx
 		CRect GetItemRect(int nIndex) const;
 		BOOL GetOrderArray(LPINT piArray, int iCount);
 		int OrderToIndex(int nOrder) const;
-		CImageList* SetImageList(CImageList* pNew);
+		CImageList* SetImageList(HIMAGELIST himlNew);
 		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
 		BOOL SetOrderArray(int iCount, LPINT piArray);
 		int GetBitmapMargin() const;
@@ -896,11 +896,10 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
 	}
 
-	inline CImageList* CComboBoxEx::SetImageList(CImageList* pNew) const
+	inline CImageList* CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
 	// Sets an image list for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
 		return CImageList::FromHandle( (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew) );
 	}
 
@@ -1102,10 +1101,9 @@ namespace Win32xx
 	}
 #endif
 
-	inline CImageList* CHeader::SetImageList(CImageList* pNew)
+	inline CImageList* CHeader::SetImageList(HIMAGELIST himlNew)
 	{
 		assert(IsWindow());
-		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;
 		return CImageList::FromHandle( Header_SetImageList(*this, himlNew) );
 	}
 

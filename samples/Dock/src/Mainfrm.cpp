@@ -97,25 +97,25 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	switch(nID)
 	{
 	case IDM_PROP_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_UseProportionalResize ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_UseProportionalResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_3DBORDER:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_Use3DBorder ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_Use3DBorder ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_UNDOCK:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableUndocking ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableUndocking ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableResize ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_DOCK_LR:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockLR ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockLR ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_NO_DOCK_CLOSE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockClose ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockClose ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	case IDM_DYNAMIC_RESIZE:
-		GetFrameMenu()->CheckMenuItem(nID, MF_BYCOMMAND | (m_UseDynamicResize ? MF_CHECKED : MF_UNCHECKED));
+		GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_UseDynamicResize ? MF_CHECKED : MF_UNCHECKED));
 		break;
 	}
 

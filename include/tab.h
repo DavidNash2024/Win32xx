@@ -104,7 +104,7 @@ namespace Win32xx
 		virtual void RemoveTabPage(int nPage);
 		virtual void SelectPage(int nPage);
 		virtual void SetFixedWidth(BOOL bEnabled);
-		virtual void SetFont(CFont* pFont, BOOL bRedraw = 1);
+		virtual void SetFont(HFONT hFont, BOOL bRedraw = 1);
 		virtual void SetOwnerDraw(BOOL bEnabled);
 		virtual void SetShowButtons(BOOL bShow);
 		virtual void SetTabIcon(int i, HICON hIcon);
@@ -117,7 +117,7 @@ namespace Win32xx
 		// Attributes
 		std::vector<TabPageInfo>* GetAllTabs() const { return (std::vector <TabPageInfo>*) &m_vTabPageInfo; }
 		CImageList* GetODImageList() const	{ return const_cast<CImageList*>(&m_imlODTab); }
-		CFont* GetTabFont() const		{ return const_cast<CFont*>(&m_TabFont); }
+		CFont& GetTabFont() const		{ return const_cast<CFont&>(m_TabFont); }
 		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
@@ -144,7 +144,7 @@ namespace Win32xx
 		void		SetCurFocus(int iItem) const;
 		int			SetCurSel(int iItem) const;
 		DWORD		SetExtendedStyle(DWORD dwExStyle) const;
-		CImageList* SetImageList(CImageList* pImageList) const;
+		CImageList* SetImageList(HIMAGELIST himlNew) const;
 		BOOL		SetItem(int iItem, LPTCITEM pitem) const;
 		BOOL		SetItemExtra(int cb) const;
 		DWORD		SetItemSize(int cx, int cy) const;
@@ -802,11 +802,11 @@ namespace Win32xx
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 		m_TabFont.CreateFontIndirect(&info.lfStatusFont);
 
-		SetFont(&m_TabFont, TRUE);
+		SetFont(m_TabFont, TRUE);
 
 		// Assign ImageList unless we are owner drawn
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
-			SetImageList(&m_imlODTab);
+			SetImageList(m_imlODTab);
 
 		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
 		{
@@ -1074,12 +1074,12 @@ namespace Win32xx
 		int offset = -1; // Required for RTL layout
 		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);
 		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
-		rgnClip.CombineRgn(&rgnSrc1, &rgnSrc2, RGN_DIFF);
+		rgnClip.CombineRgn(rgnSrc1, rgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
-		dcMem.SelectClipRgn(&rgnClip);
+		dcMem.SelectClipRgn(rgnClip);
 		dcMem.CreateSolidBrush( GetSysColor(COLOR_BTNFACE) );
-		dcMem.PaintRgn(&rgnClip);
+		dcMem.PaintRgn(rgnClip);
 
 		// Draw the tab buttons on the memory DC:
 		DrawTabs(dcMem);
@@ -1090,7 +1090,7 @@ namespace Win32xx
 		DrawTabBorders(dcMem, rcTab);
 
 		// Now copy our from our memory DC to the window DC
-		dcView.SelectClipRgn(&rgnClip);
+		dcView.SelectClipRgn(rgnClip);
 
 		if (RTL)
 		{
@@ -1202,24 +1202,23 @@ namespace Win32xx
 			if (dwStyle & TCS_OWNERDRAWFIXED)
 				SetImageList(NULL);
 			else
-				SetImageList(&m_imlODTab);
+				SetImageList(m_imlODTab);
 		}
 		else
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_FIXEDWIDTH);
-			SetImageList(&m_imlODTab);
+			SetImageList(m_imlODTab);
 		}
 
 		RecalcLayout();
 	}
 
-	inline void CTab::SetFont(CFont* pFont, BOOL bRedraw /* = 1 */)
+	inline void CTab::SetFont(HFONT hFont, BOOL bRedraw /* = 1 */)
 	// Sets the font and adjusts the tab height to match
 	{
-		assert(pFont);
 		int HeightGap = 5;
 		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
-		CWnd::SetFont(*pFont, bRedraw);
+		CWnd::SetFont(hFont, bRedraw);
 	}
 
 	inline void CTab::SetOwnerDraw(BOOL bEnabled)
@@ -1234,12 +1233,12 @@ namespace Win32xx
 			if (dwStyle & TCS_FIXEDWIDTH)
 				SetImageList(NULL);
 			else
-				SetImageList(&m_imlODTab);
+				SetImageList(m_imlODTab);
 		}
 		else
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
-			SetImageList(&m_imlODTab);
+			SetImageList(m_imlODTab);
 		}
 
 		RecalcLayout();
@@ -1599,12 +1598,11 @@ namespace Win32xx
 		return TabCtrl_SetExtendedStyle(*this, dwExStyle);
 	}
 
-	inline CImageList* CTab::SetImageList(CImageList* pImageList) const
+	inline CImageList* CTab::SetImageList(HIMAGELIST himlNew) const
 	// Assigns an image list to a tab control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = pImageList? pImageList->GetHandle() : NULL;
-		return CImageList::FromHandle( TabCtrl_SetImageList( *this, himl ) );
+		return CImageList::FromHandle( TabCtrl_SetImageList( *this, himlNew ) );
 	}
 
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const

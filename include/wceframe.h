@@ -188,7 +188,7 @@ namespace Win32xx
 
 		if (SHCreateMenuBar(&mbi))
 		{
-			*this = mbi.hwndMB;
+			Attach(mbi.hwndMB);
 		}
 		else
 			throw CWinException(_T("Failed to create MenuBar"));

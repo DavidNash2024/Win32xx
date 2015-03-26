@@ -107,27 +107,27 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		{
 			BOOL bTop = m_View.GetTabsAtTop();
 			UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
-			GetFrameMenu()->CheckMenuItem(IDM_TAB_TOP, uCheck);
+			GetFrameMenu().CheckMenuItem(IDM_TAB_TOP, uCheck);
 		}
 		break;
 	case IDM_TAB_BUTTONS:
 		{
 			BOOL bShow = m_View.GetShowButtons();
 			UINT uCheck = (bShow)? MF_CHECKED : MF_UNCHECKED;
-			GetFrameMenu()->CheckMenuItem(IDM_TAB_BUTTONS, uCheck);
+			GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, uCheck);
 			UINT uEnable = (bDraw && bFixed)? MF_ENABLED : MF_DISABLED ;
-			GetFrameMenu()->EnableMenuItem(IDM_TAB_BUTTONS, uEnable);
+			GetFrameMenu().EnableMenuItem(IDM_TAB_BUTTONS, uEnable);
 		}
 		break;
 	case IDM_TAB_DRAW:
 		{
 			UINT uCheck = (bDraw)? MF_CHECKED : MF_UNCHECKED;
-			GetFrameMenu()->CheckMenuItem(IDM_TAB_DRAW, uCheck);
+			GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, uCheck);
 		}
 	case IDM_TAB_FIXED:
 		{
 			UINT uCheck = (bFixed)? MF_CHECKED : MF_UNCHECKED;
-			GetFrameMenu()->CheckMenuItem(IDM_TAB_FIXED, uCheck);
+			GetFrameMenu().CheckMenuItem(IDM_TAB_FIXED, uCheck);
 		}
 	}
 
@@ -154,9 +154,9 @@ void CMainFrame::OnNewTab()
 	// Creates the popup menu when the "New" toolbar button is pressed
 
 	// Position the popup menu
-	CToolBar* pTB = GetToolBar();
-	RECT rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_NEW_TAB));
-	pTB->MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+	CToolBar& TB = GetToolBar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_NEW_TAB));
+	TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
@@ -231,7 +231,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT        );
 
 	// Set the Checkmarks in the menu
-	GetFrameMenu()->CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_NEW_FILES, GetApp()->LoadIcon(IDI_FILEVIEW));

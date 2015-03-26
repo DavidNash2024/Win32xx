@@ -14,7 +14,7 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
-	virtual CStatusBar* GetStatusBar() const	{ return const_cast<CMyStatusBar*>(&m_MyStatusBar); }
+	virtual CStatusBar& GetStatusBar() const	{ return const_cast<CMyStatusBar&>(m_MyStatusBar); }
 
 protected:
 	virtual BOOL	OnCommand(WPARAM wParam, LPARAM lParam);

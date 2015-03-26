@@ -19,7 +19,7 @@ public:
 
 protected:
 	virtual void DrawLine(short x, short y);
-	virtual void OnDraw(CDC* pDC);	
+	virtual void OnDraw(CDC& dc);	
 	virtual void OnLButtonDown(WPARAM wParam, LPARAM lParam);
 	virtual void OnLButtonUp(WPARAM wParam, LPARAM lParam);
 	virtual void OnMouseMove(WPARAM wParam, LPARAM lParam);

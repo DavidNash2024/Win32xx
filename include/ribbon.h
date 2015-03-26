@@ -316,16 +316,16 @@ namespace Win32xx
 
 		// Get the StatusBar's window area
 		CRect rcStatus;
-		if (GetStatusBar()->IsWindowVisible() || !IsWindowVisible())
-			rcStatus = GetStatusBar()->GetWindowRect();
+		if (GetStatusBar().IsWindowVisible() || !IsWindowVisible())
+			rcStatus = GetStatusBar().GetWindowRect();
 
 		// Get the top ReBar or ToolBar's window area
 		CRect rcTop;
 		if (IsReBarSupported() && m_UseReBar)
-			rcTop = GetReBar()->GetWindowRect();
+			rcTop = GetReBar().GetWindowRect();
 		else
-			if (m_UseToolBar && GetToolBar()->IsWindowVisible())
-				rcTop = GetToolBar()->GetWindowRect();
+			if (m_UseToolBar && GetToolBar().IsWindowVisible())
+				rcTop = GetToolBar().GetWindowRect();
 
 		// Return client size less the ReBar and status windows
 		int top = rcFrame.top + rcTop.Height() + GetRibbonHeight();

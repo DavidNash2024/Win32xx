@@ -103,7 +103,7 @@ namespace Win32xx
 		DWORD SetHoverTime( DWORD dwHoverTime = (DWORD)-1 ) const;
 		CSize SetIconSpacing( int cx, int cy ) const;
 		CSize SetIconSpacing( CSize sz ) const;
-		CImageList* SetImageList( CImageList* pNew, int iImageListType ) const;
+		CImageList* SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
 		BOOL SetItem( LVITEM& pItem ) const;
 		BOOL SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
 						UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const;
@@ -540,11 +540,10 @@ namespace Win32xx
 		return CSize( ListView_SetIconSpacing( *this, sz.cx, sz.cy ) );
 	}
 
-	inline CImageList* CListView::SetImageList( CImageList* pNew, int iImageListType ) const
+	inline CImageList* CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
 	// Assigns an image list to a list-view control.
 	{
-		assert(IsWindow());
-		HIMAGELIST himlNew = pNew ? pNew->GetHandle() : 0;		
+		assert(IsWindow());	
 		return CImageList::FromHandle( ListView_SetImageList( *this, himlNew, iImageListType ) );
 	}
 

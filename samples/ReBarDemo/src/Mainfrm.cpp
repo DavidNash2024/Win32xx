@@ -28,17 +28,17 @@ CRect CMainFrame::GetViewRect() const
 {
 	CRect rcClient = GetClientRect();
 
-	if (GetStatusBar()->IsWindow() && (GetStatusBar()->IsWindowVisible()))
+	if (GetStatusBar().IsWindow() && (GetStatusBar().IsWindowVisible()))
 		rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-	if (IsReBarSupported() && m_UseReBar && GetReBar()->IsWindow())
+	if (IsReBarSupported() && m_UseReBar && GetReBar().IsWindow())
 		rcClient = ExcludeChildRect(rcClient, GetReBar());
 	else
-		if (GetToolBar()->IsWindow() && GetToolBar()->IsWindowVisible())
+		if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
 			rcClient = ExcludeChildRect(rcClient, GetToolBar());
 
 	if (m_ReBar.IsWindow())
-		rcClient = ExcludeChildRect(rcClient, const_cast<CReBar*>(&m_ReBar));
+		rcClient = ExcludeChildRect(rcClient, m_ReBar);
 
 	return rcClient;
 }
@@ -157,7 +157,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Create the ToolBar
 	dwStyle |= TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 	m_ToolBar.CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), m_ReBar, 0);
-	m_ToolBar.SetImageList(&m_ToolBarImages);
+	m_ToolBar.SetImageList(m_ToolBarImages);
 
 	// Add the ToolBar buttons
 	TBBUTTON ButtonInfo[] =
@@ -252,12 +252,12 @@ void CMainFrame::RecalcLayout()
 			return;
 
 		// Resize the status bar
-		if (GetStatusBar()->IsWindow() && m_ShowStatusBar)
+		if (GetStatusBar().IsWindow() && m_ShowStatusBar)
 		{
-			GetStatusBar()->SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
-			GetStatusBar()->Invalidate();
+			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
+			GetStatusBar().Invalidate();
 			if (m_UseMenuStatus)
-				GetStatusBar()->SetWindowText(GetStatusText());
+				GetStatusBar().SetWindowText(GetStatusText());
 
 			SetStatusIndicators();
 		}
@@ -265,11 +265,11 @@ void CMainFrame::RecalcLayout()
 		// Resize the rebar or toolbar
 		if (IsReBarUsed())
 		{
-			GetReBar()->SendMessage(WM_SIZE, 0L, 0L);
-			GetReBar()->Invalidate();
+			GetReBar().SendMessage(WM_SIZE, 0L, 0L);
+			GetReBar().Invalidate();
 		}
-		else if (m_UseToolBar && m_ShowToolBar && GetToolBar()->IsWindow())
-			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
+		else if (m_UseToolBar && m_ShowToolBar && GetToolBar().IsWindow())
+			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the additional rebar at the top, left, right or bottom of the view.
 		if (m_ReBar.IsWindow())
@@ -282,7 +282,7 @@ void CMainFrame::RecalcLayout()
 		if (IsReBarUsed())
 		{
 			if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
-				GetReBar()->MoveBandsLeft();
+				GetReBar().MoveBandsLeft();
 
 			if (IsMenuBarUsed())
 				SetMenuBarBandSize();

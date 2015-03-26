@@ -196,12 +196,12 @@ void CMainFrame::OnFilePrint()
 
 	// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
 	// Get the size of the image data
-	MemDC.GetDIBits(&bmView, 0, Height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+	MemDC.GetDIBits(bmView, 0, Height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
 	// Retrieve the image data
 	std::vector<byte> vBits(bi.biSizeImage, 0);	// a vector to hold the byte array
 	byte* pByteArray = &vBits.front();
-	MemDC.GetDIBits(&bmView, 0, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+	MemDC.GetDIBits(bmView, 0, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
 	// Determine the scaling factors required to print the bitmap and retain its original proportions.
 	float fLogPelsX1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSX);

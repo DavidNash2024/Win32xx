@@ -15,10 +15,10 @@ CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 
 void CMainFrame::DrawLine(short x, short y)
 {
-	CDC* pDC = GetDC();
-	pDC->CreatePen(PS_SOLID, 1, m_points.back().color);
-	pDC->MoveTo(m_points.back().x, m_points.back().y);
-	pDC->LineTo(x, y);
+	CDC dc = GetDC();
+	dc.CreatePen(PS_SOLID, 1, m_points.back().color);
+	dc.MoveTo(m_points.back().x, m_points.back().y);
+	dc.LineTo(x, y);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
@@ -34,7 +34,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	case IDM_HELP_ABOUT:
 		{
 			CDialog HelpDialog(IDW_ABOUT);
-			HelpDialog.DoModal(this);
+			HelpDialog.DoModal(*this);
 		}
 		return TRUE;
 
@@ -65,7 +65,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 	return FALSE;
 }
 
-void CMainFrame::OnDraw(CDC* pDC)
+void CMainFrame::OnDraw(CDC& dc)
 {
 	// Redraw our client area
 	if (m_points.size() > 0)
@@ -73,11 +73,11 @@ void CMainFrame::OnDraw(CDC* pDC)
 		bool bDraw = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			pDC->CreatePen(PS_SOLID, 1, m_points[i].color);
+			dc.CreatePen(PS_SOLID, 1, m_points[i].color);
 			if (bDraw)
-				pDC->LineTo(m_points[i].x, m_points[i].y);
+				dc.LineTo(m_points[i].x, m_points[i].y);
 			else
-				pDC->MoveTo(m_points[i].x, m_points[i].y);
+				dc.MoveTo(m_points[i].x, m_points[i].y);
 			
 			bDraw = m_points[i].PenDown;
 		}

@@ -77,7 +77,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 
 	// Create the ToolBar
 	m_ToolBar.Create(*this);
-	m_ToolBar.SetImageList(&m_ToolBarImages);
+	m_ToolBar.SetImageList(m_ToolBarImages);
 
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS
 					| TBSTYLE_FLAT | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER ;

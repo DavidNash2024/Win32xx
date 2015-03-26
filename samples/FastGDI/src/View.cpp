@@ -36,17 +36,17 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
 	 if (File.Open(pszFile, OPEN_ALWAYS))
 	 {
 		// Create our LPBITMAPINFO object
-		CBitmapInfoPtr pbmi(&m_bmImage);
+		CBitmapInfoPtr pbmi(m_bmImage);
 
 		// Create the reference DC for GetDIBits to use
 		CMemDC MemDC(NULL);
 
 		// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+		MemDC.GetDIBits(m_bmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 		std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
 		byte* lpvBits = &vBits.front();
 
-		MemDC.GetDIBits(&m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+		MemDC.GetDIBits(m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 
 		LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
 		BITMAPFILEHEADER hdr;

@@ -62,9 +62,9 @@ void CMainFrame::OnFileNew()
 // Creates the popup menu when the "New" toolbar button is pressed
 {
 	// Position the popup menu
-	CToolBar* pTB = GetToolBar();
-	RECT rc = pTB->GetItemRect(pTB->CommandToIndex(IDM_FILE_NEW));
-	pTB->ClientToScreen(rc);
+	CToolBar& TB = GetToolBar();
+	RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
+	TB.ClientToScreen(rc);
 
 	TPMPARAMS tpm;
 	tpm.cbSize = sizeof(TPMPARAMS);
@@ -142,7 +142,7 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 
 	// Set the menu checkmark
 	UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
-	GetFrameMenu()->CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
+	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
 }
 
 void CMainFrame::OnMDITabsAtTop()
@@ -159,7 +159,7 @@ void CMainFrame::SetMDITabsAtTop(BOOL bTop)
 
 	// Set the menu checkmark
 	UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
-	GetFrameMenu()->CheckMenuItem(IDM_TABBEDMDI_TOP, uCheck);
+	GetFrameMenu().CheckMenuItem(IDM_TABBEDMDI_TOP, uCheck);
 }
 
 CDocker* CMainFrame::NewDockerFromID(int idDock)
@@ -305,7 +305,7 @@ void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 
 	// Set the menu checkmark
 	UINT uCheck = (HideSingle)? MF_CHECKED : MF_UNCHECKED;
-	GetFrameMenu()->CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
+	GetFrameMenu().CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
 }
 
 
@@ -325,13 +325,13 @@ void CMainFrame::OnInitialUpdate()
 	HideSingleContainerTab(m_IsHideSingleTab);
 
 	// Add a "Window" menu item, positioned 2nd from the right.
-	int nMenuPos = GetFrameMenu()->GetMenuItemCount() -1;
+	int nMenuPos = GetFrameMenu().GetMenuItemCount() -1;
 	CMenu* pWinMenu = m_MyTabbedMDI.GetListMenu();
-	GetFrameMenu()->InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)pWinMenu->GetHandle(), _T("&Window"));
+	GetFrameMenu().InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)pWinMenu->GetHandle(), _T("&Window"));
 
 	// Update the menu
 	if (IsReBarUsed())
-		GetMenuBar()->SetMenu(*GetFrameMenu());
+		GetMenuBar().SetMenu(GetFrameMenu());
 	else
 		DrawMenuBar();
 
@@ -366,7 +366,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	if (nID >= IDM_EDIT_UNDO && nID <= IDM_EDIT_DELETE)
 	{
 		CWnd* pWnd = 0;
-		CMenu* pEditMenu = GetFrameMenu()->GetSubMenu(1);
+		CMenu* pEditMenu = GetFrameMenu().GetSubMenu(1);
 
 		if (m_pLastActiveDocker)
 		{
@@ -425,7 +425,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 
 	// Remove the checkmark for container tabs at top
-	GetFrameMenu()->CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
+	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp()->LoadIcon(IDI_SIMPLE));

@@ -46,8 +46,8 @@ void CViewList::OnInitialUpdate()
 	// Set the image lists
 	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	CBitmap bmImage(IDB_FILEVIEW);
-	m_imlSmall.Add( &bmImage, RGB(255, 0, 255) );
-	SetImageList(&m_imlSmall, LVSIL_SMALL);
+	m_imlSmall.Add( bmImage, RGB(255, 0, 255) );
+	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
@@ -137,8 +137,8 @@ void CViewTree::OnInitialUpdate()
 	//set the image lists
 	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	CBitmap bmImage(IDB_CLASSVIEW);
-	m_imlNormal.Add( &bmImage, RGB(255, 0, 0) );
-	SetImageList(&m_imlNormal, LVSIL_NORMAL);
+	m_imlNormal.Add( bmImage, RGB(255, 0, 0) );
+	SetImageList(m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
 	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);

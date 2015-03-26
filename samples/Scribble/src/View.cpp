@@ -40,7 +40,7 @@ void CView::OnDraw(CDC& dc)
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
 	MemDC.CreateCompatibleBitmap(dc, Width, Height);
-	MemDC.FillRect(GetClientRect(), &m_Brush);
+	MemDC.FillRect(GetClientRect(), m_Brush);
 
 	if (m_points.size() > 0)
 	{

@@ -61,7 +61,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// call the base class function
 	CFrame::OnCreate(pcs);
 
-	GetStatusBar()->SetWindowLongPtr(GWLP_ID, STATUS_ID);
+	GetStatusBar().SetWindowLongPtr(GWLP_ID, STATUS_ID);
 
 	return 0;
 }
@@ -77,7 +77,7 @@ LRESULT CMainFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
 		CDC* pDC = CDC::FromHandle(pDrawItem->hDC);
 	
 		// Set the font to italic
-		CFont* pFont = GetStatusBar()->GetFont();
+		CFont* pFont = GetStatusBar().GetFont();
 		LOGFONT lf = pFont->GetLogFont();
 		lf.lfItalic = TRUE;
 		pDC->CreateFontIndirect(&lf);
