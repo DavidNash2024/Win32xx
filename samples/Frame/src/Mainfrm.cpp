@@ -74,6 +74,8 @@ void CMainFrame::OnInitialUpdate()
 
 
 	TRACE("Frame created\n");
+
+	CFont myfont = GetFont();
 }
 
 void CMainFrame::OnFileOpen()

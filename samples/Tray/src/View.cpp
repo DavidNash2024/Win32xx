@@ -133,11 +133,11 @@ LRESULT CView::OnTrayIcon(WPARAM wParam, LPARAM lParam)
     else if (lParam == WM_RBUTTONUP)
     {
 		CMenu TopMenu(IDM_MINIMIZED);
-		CMenu* pSubMenu = TopMenu.GetSubMenu(0);
+		CMenu SubMenu = TopMenu.GetSubMenu(0);
 
         SetForegroundWindow();
 		CPoint pt = GetCursorPos();
-		UINT uSelected = pSubMenu->TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, *this, NULL);
+		UINT uSelected = SubMenu.TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, *this, NULL);
 
 		switch (uSelected)
 		{

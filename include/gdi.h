@@ -187,7 +187,10 @@ namespace Win32xx
 		CBitmap(int nID);
 		operator HBITMAP() const;
 		~CBitmap();
+
+#ifdef USE_OBSOLETE_CODE
 		static CBitmap* FromHandle(HBITMAP hBitmap);
+#endif
 
 		// Create and load methods
 		BOOL LoadBitmap(LPCTSTR lpszName);
@@ -227,7 +230,10 @@ namespace Win32xx
 		CBrush(COLORREF crColor);
 		operator HBRUSH() const;
 		~CBrush();
+
+#ifdef USE_OBSOLETE_CODE
 		static CBrush* FromHandle(HBRUSH hBrush);
+#endif
 
 		HBRUSH CreateSolidBrush(COLORREF crColor);
 		HBRUSH CreatePatternBrush(HBITMAP hBitmap);
@@ -254,7 +260,10 @@ namespace Win32xx
 		CFont(const LOGFONT* lpLogFont);
 		operator HFONT() const;
 		~CFont();
+
+#ifdef USE_OBSOLETE_CODE
 		static CFont* FromHandle(HFONT hFont);
+#endif
 
 		// Create methods
 		HFONT CreateFontIndirect(const LOGFONT* lpLogFont);
@@ -284,7 +293,10 @@ namespace Win32xx
 		CPalette(HPALETTE hPalette);
 		operator HPALETTE() const;
 		~CPalette();
+
+#ifdef USE_OBSOLETE_CODE
 		static CPalette* FromHandle(HPALETTE hPalette);
+#endif
 
 		// Create methods
 		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);
@@ -323,7 +335,10 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 		operator HPEN() const;
 		~CPen();
+
+#ifdef USE_OBSOLETE_CODE
 		static CPen* FromHandle(HPEN hPen);
+#endif
 
 		HPEN CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
 		HPEN CreatePenIndirect(LPLOGPEN lpLogPen);
@@ -347,7 +362,10 @@ namespace Win32xx
 		CRgn(HRGN hRgn);
 		operator HRGN() const;
 		~CRgn ();
+
+#ifdef USE_OBSOLETE_CODE
 		static CRgn* FromHandle(HRGN hRgn);
+#endif
 
 		// Create methods
 		HRGN CreateRectRgn(int x1, int y1, int x2, int y2);
@@ -395,7 +413,10 @@ namespace Win32xx
 		virtual ~CDC();
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
+
+#ifdef USE_OBSOLETE_CODE
 		static CDC* FromHandle(HDC hDC);
+#endif
 
 		void Attach(HDC hDC, HWND hWnd = 0);
 		void Destroy();
@@ -418,7 +439,7 @@ namespace Win32xx
 
 		// Create and Select Bitmaps
 		void CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
-
+		void CreateCompatibleBitmap(HDC hdc, int cx, int cy);
 		void CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
 										HANDLE hSection, DWORD dwOffset);
 		CBitmap DetachBitmap();
@@ -433,7 +454,6 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		void CreateBitmapIndirect(LPBITMAP pBitmap);
-		void CreateCompatibleBitmap(HDC hdc, int cx, int cy);
 		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
 										BITMAPINFO& bmi, UINT fuUsage);
 		void CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
@@ -1136,6 +1156,7 @@ namespace Win32xx
 	{
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CBitmap* CBitmap::FromHandle(HBITMAP hBitmap)
 	// Returns the CBitmap associated with the Bitmap handle
 	// If a CBitmap object doesn't already exist, a temporary CBitmap object is created.
@@ -1168,6 +1189,7 @@ namespace Win32xx
 		}
 		return pBitmap;
 	}
+#endif
 
 	inline BOOL CBitmap::LoadBitmap(int nID)
 	// Loads a bitmap from a resource using the resource ID.
@@ -1501,6 +1523,7 @@ namespace Win32xx
 	{
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CBrush* CBrush::FromHandle(HBRUSH hBrush)
 	// Returns the CBrush associated with the Brush handle
 	// If a CBrush object doesn't already exist, a temporary CBrush object is created.
@@ -1533,6 +1556,7 @@ namespace Win32xx
 		}
 		return pBrush;
 	}
+#endif
 
 	inline HBRUSH CBrush::CreateSolidBrush(COLORREF crColor)
 	// Creates a logical brush that has the specified solid color.
@@ -1633,6 +1657,7 @@ namespace Win32xx
 	{
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CFont* CFont::FromHandle(HFONT hFont)
 	// Returns the CFont associated with the Font handle
 	// If a CFont object doesn't already exist, a temporary CFont object is created.
@@ -1665,6 +1690,7 @@ namespace Win32xx
 		}
 		return pFont;
 	}
+#endif
 
 	inline HFONT CFont::CreateFontIndirect(const LOGFONT* lpLogFont)
 	// Creates a logical font that has the specified characteristics.
@@ -1773,6 +1799,7 @@ namespace Win32xx
 	{
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CPalette* CPalette::FromHandle(HPALETTE hPalette)
 	// Returns the CPalette associated with the palette handle
 	// If a CPalette object doesn't already exist, a temporary CPalette object is created.
@@ -1805,6 +1832,7 @@ namespace Win32xx
 		}
 		return pPalette;
 	}
+#endif
 
 	inline HPALETTE CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
 	// Creates a logical palette from the information in the specified LOGPALETTE structure.
@@ -1916,6 +1944,7 @@ namespace Win32xx
 	{
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CPen* CPen::FromHandle(HPEN hPen)
 	// Returns the CPen associated with the HPEN.
 	// If a CPen object doesn't already exist, a temporary CPen object is created.
@@ -1948,6 +1977,7 @@ namespace Win32xx
 		}
 		return pPen;
 	}
+#endif
 
 	inline HPEN CPen::CreatePen(int nPenStyle, int nWidth, COLORREF crColor)
 	// Creates a logical pen that has the specified style, width, and color.
@@ -2026,6 +2056,7 @@ namespace Win32xx
 	{
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CRgn* CRgn::FromHandle(HRGN hRgn)
 	// Returns the CRgn associated with the HRGN.
 	// If a CRgn object doesn't already exist, a temporary CRgn object is created.
@@ -2058,6 +2089,7 @@ namespace Win32xx
 		}
 		return pRgn;
 	}
+#endif
 
 	inline HRGN CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
 	// Creates a rectangular region.
@@ -2345,6 +2377,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		Release();
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CDC* CDC::FromHandle(HDC hDC)
 	// Returns the CDC object associated with the device context handle
 	// If a CDC object doesn't already exist, a temporary CDC object is created.
@@ -2379,6 +2412,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		}
 		return pDC;
 	}
+#endif
 
 	inline void CDC::AddToMap()
 	// Store the HDC and CDC pointer in the HDC map

@@ -74,19 +74,21 @@ LRESULT CMainFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
 	if (pDrawItem->CtlID == STATUS_ID) // Message comes from the status bar
 	{
 		CRect rcPart = pDrawItem->rcItem;
-		CDC* pDC = CDC::FromHandle(pDrawItem->hDC);
+		CDC dc;
+		dc.Attach(pDrawItem->hDC);
 	
 		// Set the font to italic
-		CFont* pFont = GetStatusBar().GetFont();
-		LOGFONT lf = pFont->GetLogFont();
+		CFont Font = GetStatusBar().GetFont();
+		LOGFONT lf = Font.GetLogFont();
 		lf.lfItalic = TRUE;
-		pDC->CreateFontIndirect(&lf);
+		dc.CreateFontIndirect(&lf);
 		
 		// Display the gradient background and text
-		pDC->GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), rcPart, TRUE);
-		pDC->SetTextColor(RGB(10,20,250));
-		pDC->SetBkMode(TRANSPARENT);
-		pDC->TextOut(rcPart.left,rcPart.top,_T("Owner Draw"), 10);
+		dc.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), rcPart, TRUE);
+		dc.SetTextColor(RGB(10,20,250));
+		dc.SetBkMode(TRANSPARENT);
+		dc.TextOut(rcPart.left,rcPart.top,_T("Owner Draw"), 10);
+		dc.Detach();
 	}
 
 	// Allow the frame to perform owner drawing menu items.

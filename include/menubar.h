@@ -126,7 +126,7 @@ namespace Win32xx
 		int   m_nHotItem;		// hot item
 		int   m_nMDIButton;		// the MDI button (MDIButtonType) pressed
 		CPoint m_OldMousePos;	// old Mouse position
-		CWnd* m_pFrame;         // Pointer to the frame
+		HWND  m_hFrame;         // Handle to the frame
 
 	};  // class CMenuBar
 
@@ -153,7 +153,7 @@ namespace Win32xx
 		m_hPrevFocus	= NULL;
 		m_nMDIButton    = 0;
 		m_hPopupMenu	= 0;
-		m_pFrame		= 0;
+		m_hFrame		= 0;
 	}
 
 	inline CMenuBar::~CMenuBar()
@@ -335,7 +335,8 @@ namespace Win32xx
 		CWnd* pMDIChild = NULL;
 		if (GetMDIClient())
 		{
-			pMDIChild = GetCWndPtr((HWND)GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+			HWND hMDIChild = (HWND)GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+			pMDIChild = GetCWndPtr(hMDIChild);
 		}
 
 		return pMDIChild;
@@ -344,7 +345,7 @@ namespace Win32xx
 	inline CWnd* CMenuBar::GetMDIClient() const
 	{
 		CWnd* pMDIClient = NULL;
-		HWND hWnd = reinterpret_cast<HWND>(m_pFrame->SendMessage(UWM_GETFRAMEVIEW, 0L, 0L));
+		HWND hWnd = reinterpret_cast<HWND>(::SendMessage(m_hFrame, UWM_GETFRAMEVIEW, 0L, 0L));
 		CWnd* pWnd = GetCWndPtr(hWnd);
 		if (pWnd && pWnd->GetClassName() == _T("MDIClient"))
 			pMDIClient = pWnd;
@@ -390,12 +391,12 @@ namespace Win32xx
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
 		TLSData* pTLSData = GetApp()->GetTlsData();
-		m_pFrame = pTLSData->pMainWnd;
+		m_hFrame = pTLSData->pMainWnd->GetHwnd();
 	}
 
 	inline LRESULT CMenuBar::OnDrawItem(WPARAM wParam, LPARAM lParam)
 	{
-		m_pFrame->SendMessage(WM_DRAWITEM, wParam, lParam);
+		::SendMessage(m_hFrame, WM_DRAWITEM, wParam, lParam);
 		return TRUE; // handled
 	}
 
@@ -403,14 +404,14 @@ namespace Win32xx
 	{
 		if (m_IsExitAfter)
 			ExitMenu();
-		m_pFrame->SendMessage(WM_EXITMENULOOP, wParam, lParam);
+		::SendMessage(m_hFrame, WM_EXITMENULOOP, wParam, lParam);
 
 		return 0L;
 	}
 
 	inline LRESULT CMenuBar::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
 	{
-		m_pFrame->SendMessage(WM_INITMENUPOPUP, wParam, lParam);
+		::SendMessage(m_hFrame, WM_INITMENUPOPUP, wParam, lParam);
 		return 0L;
 	}
 
@@ -562,7 +563,7 @@ namespace Win32xx
 
 	inline LRESULT CMenuBar::OnMeasureItem(WPARAM wParam, LPARAM lParam)
 	{
-		m_pFrame->SendMessage(WM_MEASUREITEM, wParam, lParam);
+		::SendMessage(m_hFrame, WM_MEASUREITEM, wParam, lParam);
 		return TRUE; // handled
 	}
 
@@ -653,9 +654,9 @@ namespace Win32xx
 			{
 				CWnd* pMDIChild = GetActiveMDIChild();
 				assert(pMDIChild);
-				CMenu* pChildMenu = pMDIChild->GetSystemMenu(FALSE);
+				CMenu ChildMenu = pMDIChild->GetSystemMenu(FALSE);
 
-				UINT nID = pChildMenu->GetDefaultItem(FALSE, 0);
+				UINT nID = ChildMenu.GetDefaultItem(FALSE, 0);
 				if (nID)
 					pMDIChild->PostMessage(WM_SYSCOMMAND, nID, 0L);
 			}
@@ -798,7 +799,7 @@ namespace Win32xx
 		int nMaxedOffset = IsMDIChildMaxed()? 1:0;
 		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - nMaxedOffset);
 		if (IsMDIChildMaxed() && (0 == m_nHotItem) )
-		m_hPopupMenu = ::GetSystemMenu(*pMaxMDIChild, FALSE);
+		m_hPopupMenu = pMaxMDIChild->GetSystemMenu(FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
 		CRect rc = GetItemRect(m_nHotItem);
@@ -852,7 +853,7 @@ namespace Win32xx
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
 		{
-			if (::GetSystemMenu(*pMaxMDIChild, FALSE) == m_hPopupMenu )
+			if (pMaxMDIChild->GetSystemMenu(FALSE) == m_hPopupMenu )
 			{
 				if (nID)
 					pMaxMDIChild->SendMessage(WM_SYSCOMMAND, (WPARAM)nID, 0L);

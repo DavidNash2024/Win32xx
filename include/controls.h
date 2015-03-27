@@ -143,12 +143,12 @@ namespace Win32xx
 		HWND 	GetComboBoxCtrl() const;
 		HWND 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
-		CImageList* GetImageList() const;
+		CImageList GetImageList();
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
 		BOOL 	HasEditChanged () const;
 		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
 		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
-		CImageList* SetImageList(HIMAGELIST himlNew) const;
+		CImageList SetImageList(HIMAGELIST himlNew);
 		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
 
 	protected:
@@ -158,6 +158,8 @@ namespace Win32xx
 	private:
 		CComboBoxEx(const CComboBoxEx&);				// Disable copy construction
 		CComboBoxEx& operator = (const CComboBoxEx&);	// Disable assignment operator
+		
+		CImageList m_ImageList;
 	};
 
 	class CHeader : public CWnd
@@ -167,20 +169,20 @@ namespace Win32xx
 		virtual ~CHeader() {}
 
 		// Attributes
-		CImageList* GetImageList() const;
+		CImageList GetImageList();
 		BOOL GetItem(int nPos, HDITEM* pHeaderItem) const;
 		int GetItemCount() const;
 		CRect GetItemRect(int nIndex) const;
 		BOOL GetOrderArray(LPINT piArray, int iCount);
 		int OrderToIndex(int nOrder) const;
-		CImageList* SetImageList(HIMAGELIST himlNew);
+		CImageList SetImageList(HIMAGELIST himlNew);
 		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
 		BOOL SetOrderArray(int iCount, LPINT piArray);
 		int GetBitmapMargin() const;
 		int SetBitmapMargin(int nWidth);
 
 		// Operations
-		CImageList* CreateDragImage(int nIndex);
+		CImageList CreateDragImage(int nIndex);
 		BOOL DeleteItem(int nPos);
 		int InsertItem(int nPos, HDITEM* phdi);
 		BOOL Layout(HDLAYOUT* pHeaderLayout);
@@ -202,6 +204,8 @@ namespace Win32xx
 	private:
 		CHeader(const CHeader&);				// Disable copy construction
 		CHeader& operator = (const CHeader&);	// Disable assignment operator
+
+		CImageList m_ImageList;
 	};
 
 	class CHotKey : public CWnd
@@ -297,7 +301,7 @@ namespace Win32xx
 		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
 		BOOL SetFormat(LPCTSTR pstrFormat);
 		HWND GetMonthCalCtrl() const;
-		CFont* GetMonthCalFont() const;
+		CFont GetMonthCalFont();
 		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
 		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
 		BOOL SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray);
@@ -311,6 +315,7 @@ namespace Win32xx
 	private:
 		CDateTime(const CDateTime&);				// Disable copy construction
 		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
+		CFont m_Font;								// Used by GetMonthCalFont
 	};
 
 	class CProgressBar : public CWnd
@@ -382,7 +387,7 @@ namespace Win32xx
 		CRect GetThumbRect() const;
 		int  GetTic(int nTic ) const;
 		int  GetTicPos(int nTic) const;
-		CToolTip* GetToolTips() const;
+		HWND GetToolTips() const;
 		HWND SetBuddy(HWND hBuddy, BOOL fLocation = TRUE ) const;
 		int  SetLineSize(int nSize) const;
 		int  SetPageSize(int nSize) const;
@@ -861,11 +866,13 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_GETEXTENDEDSTYLE, 0L, 0L);
 	}
 
-	inline CImageList* CComboBoxEx::GetImageList() const
+	inline CImageList CComboBoxEx::GetImageList()
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L) );
+		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM* pCBItem) const
@@ -896,11 +903,13 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
 	}
 
-	inline CImageList* CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
+	inline CImageList CComboBoxEx::SetImageList(HIMAGELIST himlNew)
 	// Sets an image list for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew) );
+		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CComboBoxEx::SetItem(PCOMBOBOXEXITEM lpcCBItem) const
@@ -937,10 +946,12 @@ namespace Win32xx
 		return reinterpret_cast<HWND>(DateTime_GetMonthCal(*this));
 	}
 
-	inline CFont* CDateTime::GetMonthCalFont() const
+	inline CFont CDateTime::GetMonthCalFont()
 	{
 		assert(IsWindow());
-		return CFont::FromHandle((HFONT)DateTime_GetMonthCalFont(*this));
+		HFONT hFont = (HFONT)DateTime_GetMonthCalFont(*this);
+		m_Font.Attach(hFont);
+		return m_Font;
 	}
 
 	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
@@ -1025,10 +1036,12 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CHeader class
 	//
-	inline CImageList* CHeader::CreateDragImage(int nIndex)
+	inline CImageList CHeader::CreateDragImage(int nIndex)
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( Header_CreateDragImage(*this, nIndex) );
+		HIMAGELIST himl = Header_CreateDragImage(*this, nIndex);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CHeader::DeleteItem(int nPos)
@@ -1037,10 +1050,12 @@ namespace Win32xx
 		return Header_DeleteItem(*this, nPos);
 	}
 
-	inline CImageList* CHeader::GetImageList() const
+	inline CImageList CHeader::GetImageList()
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( Header_GetImageList(*this) );
+		HIMAGELIST himl = Header_GetImageList(*this);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
@@ -1101,10 +1116,12 @@ namespace Win32xx
 	}
 #endif
 
-	inline CImageList* CHeader::SetImageList(HIMAGELIST himlNew)
+	inline CImageList CHeader::SetImageList(HIMAGELIST himlNew)
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( Header_SetImageList(*this, himlNew) );
+		HIMAGELIST himl = Header_SetImageList(*this, himlNew);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)
@@ -1615,11 +1632,11 @@ namespace Win32xx
 		return (int)SendMessage(TBM_GETTICPOS, (WPARAM)nTic, 0L);
 	}
 
-	inline CToolTip* CSlider::GetToolTips() const
+	inline HWND CSlider::GetToolTips() const
 	// Retrieves the handle to the ToolTip control assigned to the trackbar, if any.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(FromHandle((HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L)));
+		return (HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L);
 	}
 
 	inline HWND CSlider::SetBuddy(HWND hBuddy, BOOL fLocation /*= TRUE*/ ) const

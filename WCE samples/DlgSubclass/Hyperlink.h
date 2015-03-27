@@ -15,7 +15,7 @@ class CHyperlink :	public CWnd
 public:
 	CHyperlink();
 	virtual ~CHyperlink();
-	virtual BOOL AttachDlgItem(UINT nID, CWnd* pParent);
+	virtual BOOL AttachDlgItem(UINT nID, CWnd& Parent);
 	void OnLButtonDown();
 	void OnLButtonUp(LPARAM lParam);
 

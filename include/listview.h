@@ -69,7 +69,7 @@ namespace Win32xx
 		HCURSOR GetHotCursor( );
 		int GetHotItem( ) const;
 		DWORD GetHoverTime( ) const;
-		CImageList* GetImageList( int nImageType ) const;
+		CImageList GetImageList( int nImageType );
 		BOOL GetItem( LVITEM& lvItem ) const;
 		int GetItemCount( ) const;
 		DWORD_PTR GetItemData( int iItem ) const;
@@ -103,7 +103,7 @@ namespace Win32xx
 		DWORD SetHoverTime( DWORD dwHoverTime = (DWORD)-1 ) const;
 		CSize SetIconSpacing( int cx, int cy ) const;
 		CSize SetIconSpacing( CSize sz ) const;
-		CImageList* SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
+		CImageList SetImageList( HIMAGELIST himlNew, int iImageListType );
 		BOOL SetItem( LVITEM& pItem ) const;
 		BOOL SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
 						UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const;
@@ -123,7 +123,7 @@ namespace Win32xx
 
 		// Operations
 		BOOL Arrange( UINT nCode ) const;
-		CImageList* CreateDragImage( int iItem, CPoint& pt ) const;
+		CImageList CreateDragImage( int iItem, CPoint& pt );
 		BOOL DeleteAllItems( ) const;
 		BOOL DeleteColumn( int iCol ) const;
 		BOOL DeleteItem( int iItem ) const;
@@ -146,6 +146,8 @@ namespace Win32xx
 	private:
 		CListView(const CListView&);			  // Disable copy construction
 		CListView& operator = (const CListView&); // Disable assignment operator
+
+		CImageList m_ImageList;
 	};
 
 }
@@ -267,11 +269,13 @@ namespace Win32xx
 		return ListView_GetHoverTime( *this );
 	}
 
-	inline CImageList* CListView::GetImageList( int nImageType ) const
+	inline CImageList CListView::GetImageList( int nImageType )
 	// Retrieves the handle to an image list used for drawing list-view items.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( ListView_GetImageList( *this, nImageType ) );
+		HIMAGELIST himl = ListView_GetImageList( *this, nImageType );
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CListView::GetItem( LVITEM& Item ) const
@@ -540,11 +544,13 @@ namespace Win32xx
 		return CSize( ListView_SetIconSpacing( *this, sz.cx, sz.cy ) );
 	}
 
-	inline CImageList* CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
+	inline CImageList CListView::SetImageList( HIMAGELIST himlNew, int iImageListType )
 	// Assigns an image list to a list-view control.
 	{
-		assert(IsWindow());	
-		return CImageList::FromHandle( ListView_SetImageList( *this, himlNew, iImageListType ) );
+		assert(IsWindow());
+		HIMAGELIST himl = ListView_SetImageList( *this, himlNew, iImageListType );
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CListView::SetItem( LVITEM& Item ) const
@@ -705,11 +711,13 @@ namespace Win32xx
 		return ListView_Arrange( *this, nCode );
 	}
 
-	inline CImageList* CListView::CreateDragImage( int iItem, CPoint& pt ) const
+	inline CImageList CListView::CreateDragImage( int iItem, CPoint& pt )
 	// Creates a drag image list for the specified item.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( ListView_CreateDragImage( *this, iItem, &pt ) );
+		HIMAGELIST himl = ListView_CreateDragImage( *this, iItem, &pt );
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CListView::DeleteAllItems( ) const

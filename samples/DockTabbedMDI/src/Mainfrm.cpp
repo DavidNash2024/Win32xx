@@ -72,10 +72,10 @@ void CMainFrame::OnFileNew()
 
 	// Load the popup menu
 	CMenu TopMenu(IDM_NEWMENU);
-	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
+	CMenu PopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
 void CMainFrame::OnFileExit()
@@ -326,8 +326,8 @@ void CMainFrame::OnInitialUpdate()
 
 	// Add a "Window" menu item, positioned 2nd from the right.
 	int nMenuPos = GetFrameMenu().GetMenuItemCount() -1;
-	CMenu* pWinMenu = m_MyTabbedMDI.GetListMenu();
-	GetFrameMenu().InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)pWinMenu->GetHandle(), _T("&Window"));
+	CMenu WinMenu = m_MyTabbedMDI.GetListMenu();
+	GetFrameMenu().InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)WinMenu.GetHandle(), _T("&Window"));
 
 	// Update the menu
 	if (IsReBarUsed())
@@ -366,7 +366,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	if (nID >= IDM_EDIT_UNDO && nID <= IDM_EDIT_DELETE)
 	{
 		CWnd* pWnd = 0;
-		CMenu* pEditMenu = GetFrameMenu().GetSubMenu(1);
+		CMenu EditMenu = GetFrameMenu().GetSubMenu(1);
 
 		if (m_pLastActiveDocker)
 		{
@@ -378,7 +378,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 
 		// Enable the Edit menu items for CViewText windows, disable them otherwise
 		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;
-		pEditMenu->EnableMenuItem(nID, MF_BYCOMMAND | Flags);
+		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 
 	CFrame::OnMenuUpdate(nID);

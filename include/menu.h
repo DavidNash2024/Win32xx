@@ -125,7 +125,11 @@ namespace Win32xx
 		void CreatePopupMenu();
 		void DestroyMenu();
 		HMENU Detach();
+
+#ifdef USE_OBSOLETE_CODE
 		static CMenu* FromHandle(HMENU hMenu);
+#endif
+
 		HMENU GetHandle() const;
 		BOOL LoadMenu(LPCTSTR lpszResourceName);
 		BOOL LoadMenu(UINT uIDResource);
@@ -156,7 +160,7 @@ namespace Win32xx
 		UINT GetMenuState(UINT uID, UINT uFlags) const;
 		int GetMenuString(UINT uIDItem, LPTSTR lpString, int nMaxCount, UINT uFlags) const;
 		int GetMenuString(UINT uIDItem, CString& rString, UINT uFlags) const;
-		CMenu* GetSubMenu(int nPos);
+		CMenu GetSubMenu(int nPos);
 		BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
 		BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap);
 		BOOL InsertMenuItem(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos = FALSE);
@@ -265,6 +269,7 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Release();
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CMenu* CMenu::FromHandle(HMENU hMenu)
 	// Returns the CMenu object associated with the menu handle (HMENU).
 	{
@@ -294,6 +299,7 @@ namespace Win32xx
 		}
 		return pMenu;
 	}
+#endif
 
 	inline void CMenu::Release()
 	{
@@ -365,10 +371,10 @@ namespace Win32xx
 
 	inline void CMenu::Attach(HMENU hMenu)
 	// Attaches an existing menu to this CMenu
+	// The hMenu can be NULL
 	{
 		assert(m_pData);
-		assert(IsMenu(hMenu));
-
+		
 		// Permit the object to be reused
 		if (m_pData->hMenu != 0)
 		{
@@ -389,11 +395,9 @@ namespace Win32xx
 		else
 		{
 			m_pData->hMenu = hMenu;
-			AddToMap();
+			if (hMenu)
+				AddToMap();
 		}
-
-		m_pData->hMenu = hMenu;
-		AddToMap();
 	}
 	
 	inline UINT CMenu::CheckMenuItem(UINT uIDCheckItem, UINT uCheck)
@@ -456,7 +460,6 @@ namespace Win32xx
 	// destroyed when this CMenu is deconstructed.
 	{
 		assert(m_pData);
-		assert(IsMenu(m_pData->hMenu));
 		HMENU hMenu = m_pData->hMenu;
 		
 		if (m_pData->Count > 0)
@@ -586,7 +589,7 @@ namespace Win32xx
 		return n;
 	}
 
-	inline CMenu* CMenu::GetSubMenu(int nPos)
+	inline CMenu CMenu::GetSubMenu(int nPos)
 	// Retrieves the CMenu object of a pop-up menu.
 	{
 		assert(m_pData);
@@ -595,7 +598,7 @@ namespace Win32xx
 		pMenu->m_pData->hMenu = ::GetSubMenu(m_pData->hMenu, nPos);
 		pMenu->m_pData->IsTmpMenu = TRUE;
 		m_pData->vSubMenus.push_back(pMenu);
-		return pMenu;
+		return *pMenu;
 	}
 
 	inline BOOL CMenu::InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/)

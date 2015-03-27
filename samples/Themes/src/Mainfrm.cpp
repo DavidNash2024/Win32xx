@@ -201,11 +201,11 @@ void CMainFrame::ChooseColor(UINT nColor)
 	}
 
 	// Check the appropriate menu item
-	int nFileItem = GetMenuItemPos(&GetFrameMenu(), _T("Theme"));
+	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Theme"));
 	if (nFileItem >= 0)
 	{
-		CMenu* pThemeMenu = GetFrameMenu().GetSubMenu(nFileItem);
-		pThemeMenu->CheckMenuRadioItem(IDM_BLUE, IDM_MODERN, nColor, 0);
+		CMenu ThemeMenu = GetFrameMenu().GetSubMenu(nFileItem);
+		ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_MODERN, nColor, 0);
 	}
 
 	RecalcLayout();

@@ -164,10 +164,10 @@ void CMainFrame::OnNewTab()
 
 	// Load the popup menu
 	CMenu TopMenu(IDM_NEWMENU);
-	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
+	CMenu PopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
 void CMainFrame::OnShowButtons()

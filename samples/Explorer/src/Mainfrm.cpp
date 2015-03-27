@@ -35,7 +35,7 @@ void CMainFrame::DoPopupMenu()
 
 	// Load the popup menu
 	CMenu TopMenu(IDM_VIEWMENU);
-	CMenu* pPopupMenu = TopMenu.GetSubMenu(0);
+	CMenu PopupMenu = TopMenu.GetSubMenu(0);
 
 	// Put a radio check in the currently checked item
 	MENUITEMINFO mii;
@@ -46,14 +46,14 @@ void CMainFrame::DoPopupMenu()
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		mii.fMask  = MIIM_STATE | MIIM_ID;
-		CMenu* pSubMenu = GetFrameMenu().GetSubMenu(1);
-		pSubMenu->GetMenuItemInfo(i, &mii, TRUE);
+		CMenu SubMenu = GetFrameMenu().GetSubMenu(1);
+		SubMenu.GetMenuItemInfo(i, &mii, TRUE);
 		if (mii.fState & MFS_CHECKED)
 			TopMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
 	}
 
 	// Start the popup menu
-	pPopupMenu->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -70,8 +70,8 @@ void CMainFrame::OnInitialUpdate()
 	GetFrameMenu().CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
 
 	// Place Radio button in view menu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
-	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
+	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
 	// Uncomment the following to use a hash bar and disable of auto resizing 
 	// m_RightPane.SetDragAutoResize(FALSE);
@@ -120,47 +120,47 @@ void CMainFrame::OnFileExit()
 void CMainFrame::OnViewLargeIcon()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewLargeIcons();
-	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
+	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
 } 
 
 void CMainFrame::OnViewList()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewList();
-	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
+	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
 }
 
 void CMainFrame::OnViewReport()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewReport();
-	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 }
 
 void CMainFrame::OnViewSmallIcon()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewSmallIcons();
-	pViewMenu->CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
+	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
 
 }
 
 void CMainFrame::OnShowHidden()
 {
 	// Handle the the View submenu
-	CMenu* pViewMenu = GetFrameMenu().GetSubMenu(1);
+	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	m_ShowHidden = !m_ShowHidden;
-	pViewMenu->CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_ShowHidden)? MF_CHECKED : MF_UNCHECKED);
+	ViewMenu.CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_ShowHidden)? MF_CHECKED : MF_UNCHECKED);
 
 	// Refresh the Listview display
 	GetListView()->DoDisplay();

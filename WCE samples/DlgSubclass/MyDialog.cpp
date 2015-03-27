@@ -51,10 +51,10 @@ BOOL CMyDialog::OnInitDialog()
 	::SetDlgItemText(GetHwnd(), IDC_EDIT1, TEXT("Edit Control"));
 
 	// Turn our button into a MyButton object
-	m_Button.AttachDlgItem(IDC_BUTTON2, this);
+	m_Button.AttachDlgItem(IDC_BUTTON2, *this);
 
 	// Turn our static control into a hyperlink
-	m_Hyperlink.AttachDlgItem(IDC_STATIC4, this);
+	m_Hyperlink.AttachDlgItem(IDC_STATIC4, *this);
 
 	return true;
 }

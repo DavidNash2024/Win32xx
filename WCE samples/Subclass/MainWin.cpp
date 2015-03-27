@@ -11,7 +11,7 @@ CMainWin::CMainWin()
 
 int CMainWin::OnCreate(LPCREATESTRUCT pcs)
 {
-	m_Button.Create(this);
+	m_Button.Create(*this);
 	return 0;
 }
 

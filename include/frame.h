@@ -234,7 +234,7 @@ namespace Win32xx
 	class CMenuMetrics
 	{
 	public:
-		CMenuMetrics(CWnd* pFrame);
+		CMenuMetrics(HWND hFrame);
 		~CMenuMetrics();
 
 		CRect GetCheckBackgroundRect(const CRect& rcItem);
@@ -262,7 +262,7 @@ namespace Win32xx
 		HANDLE  OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
 
 		HANDLE  m_hTheme;				// Theme handle
-		CWnd* m_pFrame;					// Pointer to the frame window
+		HWND m_hFrame;					// Handle to the frame window
 		HMODULE m_hmodUXTheme;			// Module handle to the UXTheme dll
 
 		CMargins m_marCheck;			// Check margins
@@ -371,7 +371,7 @@ namespace Win32xx
 		virtual void DrawMenuItemText(LPDRAWITEMSTRUCT pdis);
 		virtual BOOL DrawReBarBkgnd(CDC* pDC, CReBar* pReBar);
 		virtual BOOL DrawStatusBarBkgnd(CDC* pDC, CStatusBar* pStatusBar);
-		virtual int  GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem);
+		virtual int  GetMenuItemPos(HMENU hMenu, LPCTSTR szItem);
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
@@ -483,19 +483,19 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CMenuMetrics class
 	//
-	inline CMenuMetrics::CMenuMetrics(CWnd* pFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0),
+	inline CMenuMetrics::CMenuMetrics(HWND hFrame) : m_hTheme(0), m_hmodUXTheme(0), m_pfnCloseThemeData(0), m_pfnDrawThemeBackground(0),
 												 m_pfnDrawThemeText(0), m_pfnGetThemePartSize(0), m_pfnGetThemeInt(0), m_pfnGetThemeMargins(0),
 												 m_pfnGetThemeTextExtent(0), m_pfnIsThemeBGPartTransparent(0), m_pfnOpenThemeData(0)
 	{
-		assert(pFrame);
-		m_pFrame = pFrame;
+		assert(hFrame);
+		m_hFrame = hFrame;
 
 		Initialize();
 	}
 
 	inline void CMenuMetrics::Initialize()
 	{
-		assert(m_pFrame);
+		assert(m_hFrame);
 
 		if (m_hmodUXTheme == 0)
 			m_hmodUXTheme = ::LoadLibrary(_T("UXTHEME.DLL"));
@@ -519,7 +519,7 @@ namespace Win32xx
 			m_hTheme = 0;
 		}
 
-		m_hTheme = OpenThemeData(*m_pFrame, VSCLASS_MENU);
+		m_hTheme = OpenThemeData(m_hFrame, VSCLASS_MENU);
 
 		if (m_hTheme != 0)
 		{
@@ -708,7 +708,7 @@ namespace Win32xx
 	inline CSize CMenuMetrics::GetTextSize(MenuItemData* pmd)
 	{
 		CSize sizeText;
-		assert(m_pFrame);
+		assert(m_hFrame);
 		CClientDC DesktopDC(NULL);
 		LPCTSTR szItemText = pmd->GetItemText();
 
@@ -1105,7 +1105,6 @@ namespace Win32xx
 		// An item is about to be drawn
 		case CDDS_ITEMPREPAINT:
 			{
-				CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
 				CRect rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
 				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -1113,7 +1112,10 @@ namespace Win32xx
 				if (IsMDIChildMaxed() && (0 == dwItem))
 				// Draw over MDI Max button
 				{
-					HICON hIcon = (HICON)GetMenuBar().GetActiveMDIChild()->SendMessage(WM_GETICON, ICON_SMALL, 0L);
+					CDC dcDraw;
+					dcDraw.Attach(lpNMCustomDraw->nmcd.hdc);
+					CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
+					HICON hIcon = (HICON)pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0L);
 					if (NULL == hIcon)
 						hIcon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
 
@@ -1121,8 +1123,9 @@ namespace Win32xx
 					int cy = ::GetSystemMetrics (SM_CYSMICON);
 					int y = 1 + (GetMenuBar().GetWindowRect().Height() - cy)/2;
 					int x = (rcRect.Width() - cx)/2;
-					pDrawDC->DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
+					dcDraw.DrawIconEx(x, y, hIcon, cx, cy, 0, NULL, DI_NORMAL);
 
+					dcDraw.Detach();
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 
@@ -1136,25 +1139,27 @@ namespace Win32xx
 
 					if (nState & (CDIS_HOT | CDIS_SELECTED))
 					{
+						CDC dcDraw;
+						dcDraw.Attach(lpNMCustomDraw->nmcd.hdc);
+
 						if ((nState & CDIS_SELECTED) || (GetMenuBar().GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							pDrawDC->GradientFill(GetMenuBarTheme()->clrPressed1, GetMenuBarTheme()->clrPressed2, rcRect, FALSE);
+							dcDraw.GradientFill(GetMenuBarTheme()->clrPressed1, GetMenuBarTheme()->clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							pDrawDC->GradientFill(GetMenuBarTheme()->clrHot1, GetMenuBarTheme()->clrHot2, rcRect, FALSE);
+							dcDraw.GradientFill(GetMenuBarTheme()->clrHot1, GetMenuBarTheme()->clrHot2, rcRect, FALSE);
 						}
 
 						// Draw border
-						int nSavedDC = pDrawDC->SaveDC();
 						CPen Pen(PS_SOLID, 1, GetMenuBarTheme()->clrOutline);
-						pDrawDC->SelectObject(Pen);
-						pDrawDC->MoveTo(rcRect.left, rcRect.bottom);
-						pDrawDC->LineTo(rcRect.left, rcRect.top);
-						pDrawDC->LineTo(rcRect.right-1, rcRect.top);
-						pDrawDC->LineTo(rcRect.right-1, rcRect.bottom);
-						pDrawDC->MoveTo(rcRect.right-1, rcRect.bottom);
-						pDrawDC->LineTo(rcRect.left, rcRect.bottom);
+						dcDraw.SelectObject(Pen);
+						dcDraw.MoveTo(rcRect.left, rcRect.bottom);
+						dcDraw.LineTo(rcRect.left, rcRect.top);
+						dcDraw.LineTo(rcRect.right-1, rcRect.top);
+						dcDraw.LineTo(rcRect.right-1, rcRect.bottom);
+						dcDraw.MoveTo(rcRect.right-1, rcRect.bottom);
+						dcDraw.LineTo(rcRect.left, rcRect.bottom);
 
 						CString str;
 						int nLength = (int)GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
@@ -1165,14 +1170,14 @@ namespace Win32xx
 						}
 
 						// Draw highlight text
-						CFont* pFont = GetMenuBar().GetFont();
-						pDrawDC->SelectObject(*pFont);
+						CFont Font = GetMenuBar().GetFont();
+						dcDraw.SelectObject(Font);
 
 						rcRect.bottom += 1;
-						pDrawDC->SetBkMode(TRANSPARENT);
-						pDrawDC->DrawText(str, str.GetLength(), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+						dcDraw.SetBkMode(TRANSPARENT);
+						dcDraw.DrawText(str, str.GetLength(), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
 
-						pDrawDC->RestoreDC(nSavedDC);
+						dcDraw.Detach();
 						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
 				}
@@ -1213,7 +1218,8 @@ namespace Win32xx
 				// An item is about to be drawn
 				case CDDS_ITEMPREPAINT:
 					{
-						CDC* pDrawDC = CDC::FromHandle(lpNMCustomDraw->nmcd.hdc);
+						CDC dcDraw;
+						dcDraw.Attach(lpNMCustomDraw->nmcd.hdc);
 						CRect rcRect = lpNMCustomDraw->nmcd.rc;
 						int nState = lpNMCustomDraw->nmcd.uItemState;
 						DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
@@ -1231,12 +1237,12 @@ namespace Win32xx
 						CSize TextSize;
 						if (pTB->HasText())	// Does any button have text?
 						{
-							pDrawDC->SelectObject(*pTB->GetFont());
+							dcDraw.SelectObject(pTB->GetFont());
 							LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
 							str.ReleaseBuffer();
 							if (lr> 0)
 							{
-								TextSize = pDrawDC->GetTextExtentPoint32(str, str.GetLength());
+								TextSize = dcDraw.GetTextExtentPoint32(str, str.GetLength());
 							}
 						}
 
@@ -1244,40 +1250,40 @@ namespace Win32xx
 						// Draw outline rectangle
 						if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 						{
-							pDrawDC->CreatePen(PS_SOLID, 1, GetToolBarTheme()->clrOutline);
-							pDrawDC->MoveTo(rcRect.left, rcRect.top);
-							pDrawDC->LineTo(rcRect.left, rcRect.bottom-1);
-							pDrawDC->LineTo(rcRect.right-1, rcRect.bottom-1);
-							pDrawDC->LineTo(rcRect.right-1, rcRect.top);
-							pDrawDC->LineTo(rcRect.left, rcRect.top);
+							dcDraw.CreatePen(PS_SOLID, 1, GetToolBarTheme()->clrOutline);
+							dcDraw.MoveTo(rcRect.left, rcRect.top);
+							dcDraw.LineTo(rcRect.left, rcRect.bottom-1);
+							dcDraw.LineTo(rcRect.right-1, rcRect.bottom-1);
+							dcDraw.LineTo(rcRect.right-1, rcRect.top);
+							dcDraw.LineTo(rcRect.left, rcRect.top);
 						}
 
 						// Draw filled gradient background
 						rcRect.InflateRect(-1, -1);
 						if ((nState & (CDIS_SELECTED|CDIS_CHECKED)) || (pTB->GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
-							pDrawDC->GradientFill(GetToolBarTheme()->clrPressed1, GetToolBarTheme()->clrPressed2, rcRect, FALSE);
+							dcDraw.GradientFill(GetToolBarTheme()->clrPressed1, GetToolBarTheme()->clrPressed2, rcRect, FALSE);
 						}
 						else if (nState & CDIS_HOT)
 						{
-							pDrawDC->GradientFill(GetToolBarTheme()->clrHot1, GetToolBarTheme()->clrHot2, rcRect, FALSE);
+							dcDraw.GradientFill(GetToolBarTheme()->clrHot1, GetToolBarTheme()->clrHot2, rcRect, FALSE);
 						}
 
 						// Get the appropriate image list depending on the button state
-						CImageList* pimlToolBar;
+						CImageList imlToolBar;
 						if (nState & CDIS_DISABLED)
 						{
-							pimlToolBar = pTB->GetDisabledImageList();
+							imlToolBar = pTB->GetDisabledImageList();
 						}
 						else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
 						{
-							pimlToolBar = pTB->GetHotImageList();
-							if (pimlToolBar == 0)
-								pimlToolBar = pTB->GetImageList();
+							imlToolBar = pTB->GetHotImageList();
+							if (imlToolBar.GetHandle() == 0)
+								imlToolBar = pTB->GetImageList();
 						}
 						else
 						{
-							pimlToolBar = pTB->GetImageList();
+							imlToolBar = pTB->GetImageList();
 						}
 
 						BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
@@ -1285,7 +1291,7 @@ namespace Win32xx
 						// Calculate image position
 						int cxImage = 0;
 						int cyImage = 0;
-						pimlToolBar->GetIconSize(&cxImage, &cyImage);
+						imlToolBar.GetIconSize(&cxImage, &cyImage);
 
 						int yImage = (rcRect.bottom + rcRect.top - cyImage - TextSize.cy )/2;
 						int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
@@ -1314,32 +1320,32 @@ namespace Win32xx
 							{
 								CRect rcArrowBkgnd = rcRect;
 								rcArrowBkgnd.left = rcArrowBkgnd.right - 13;
-								pDrawDC->GradientFill(GetToolBarTheme()->clrPressed1, GetToolBarTheme()->clrPressed2, rcArrowBkgnd, FALSE);
+								dcDraw.GradientFill(GetToolBarTheme()->clrPressed1, GetToolBarTheme()->clrPressed2, rcArrowBkgnd, FALSE);
 							}
 
 							m_DrawArrowBkgrnd = FALSE;
 
 							// Manually draw the dropdown arrow
-							pDrawDC->CreatePen(PS_SOLID, 1, RGB(0,0,0));
+							dcDraw.CreatePen(PS_SOLID, 1, RGB(0,0,0));
 							for (int i = 2; i >= 0; --i)
 							{
-								pDrawDC->MoveTo(xAPos -i-1, yAPos - i+1);
-								pDrawDC->LineTo(xAPos +i,   yAPos - i+1);
+								dcDraw.MoveTo(xAPos -i-1, yAPos - i+1);
+								dcDraw.LineTo(xAPos +i,   yAPos - i+1);
 							}
 
 							// Draw line between icon and dropdown arrow
 							if ((nStyle & TBSTYLE_DROPDOWN) && ((nState & CDIS_SELECTED) || nState & CDIS_HOT))
 							{
-								pDrawDC->CreatePen(PS_SOLID, 1, GetToolBarTheme()->clrOutline);
-								pDrawDC->MoveTo(rcRect.right - 13, rcRect.top);
-								pDrawDC->LineTo(rcRect.right - 13, rcRect.bottom);
+								dcDraw.CreatePen(PS_SOLID, 1, GetToolBarTheme()->clrOutline);
+								dcDraw.MoveTo(rcRect.right - 13, rcRect.top);
+								dcDraw.LineTo(rcRect.right - 13, rcRect.bottom);
 							}
 						}
 
 						// Draw the button image
 						if (xImage > 0)
 						{
-							pimlToolBar->Draw(*pDrawDC, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
+							imlToolBar.Draw(dcDraw, iImage, CPoint(xImage, yImage), ILD_TRANSPARENT);
 						}
 
 						//Draw Text
@@ -1360,27 +1366,29 @@ namespace Win32xx
 
 							OffsetRect(&rcText, xOffset, yOffset);
 
-							int iMode = pDrawDC->SetBkMode(TRANSPARENT);
-							pDrawDC->SelectObject(*pTB->GetFont());
+							int iMode = dcDraw.SetBkMode(TRANSPARENT);
+							dcDraw.SelectObject(pTB->GetFont());
 
 							if (nState & (CDIS_DISABLED))
 							{
 								// Draw text twice for embossed look
 								rcText.OffsetRect(1, 1);
-								pDrawDC->SetTextColor(RGB(255,255,255));
-								pDrawDC->DrawText(str, str.GetLength(), rcText, DT_LEFT);
+								dcDraw.SetTextColor(RGB(255,255,255));
+								dcDraw.DrawText(str, str.GetLength(), rcText, DT_LEFT);
 								rcText.OffsetRect(-1, -1);
-								pDrawDC->SetTextColor(GetSysColor(COLOR_GRAYTEXT));
-								pDrawDC->DrawText(str, str.GetLength(), rcText, DT_LEFT);
+								dcDraw.SetTextColor(GetSysColor(COLOR_GRAYTEXT));
+								dcDraw.DrawText(str, str.GetLength(), rcText, DT_LEFT);
 							}
 							else
 							{
-								pDrawDC->SetTextColor(GetSysColor(COLOR_BTNTEXT));
-								pDrawDC->DrawText(str, str.GetLength(), rcText, DT_LEFT | DT_END_ELLIPSIS);
+								dcDraw.SetTextColor(GetSysColor(COLOR_BTNTEXT));
+								dcDraw.DrawText(str, str.GetLength(), rcText, DT_LEFT | DT_END_ELLIPSIS);
 							}
-							pDrawDC->SetBkMode(iMode);
+							dcDraw.SetBkMode(iMode);
 
 						}
+
+						dcDraw.Detach();
 					}
 					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
@@ -1395,8 +1403,8 @@ namespace Win32xx
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
 		int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
 		MenuTheme* pMBT = GetMenuBarTheme();
-		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
-		int nSavedDC = pDrawDC->SaveDC();
+		CDC dcDraw;
+		dcDraw.Attach(pdis->hDC);
 
 		if (IsAeroThemed() && m_pMenuMetrics->IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
 		{
@@ -1408,7 +1416,7 @@ namespace Win32xx
 		if (IsAeroThemed())
 			m_pMenuMetrics->DrawThemeBackground(pdis->hDC, MENU_POPUPGUTTER, 0, &rcGutter, NULL);
 		else
-			pDrawDC->GradientFill(pMBT->clrPressed1, pMBT->clrPressed2, rcGutter, TRUE);
+			dcDraw.GradientFill(pMBT->clrPressed1, pMBT->clrPressed2, rcGutter, TRUE);
 
 		if (pmid->mii.fType & MFT_SEPARATOR)
 		{
@@ -1423,9 +1431,9 @@ namespace Win32xx
 				CRect rc = pdis->rcItem;
 				CRect rcSep = pdis->rcItem;
 				rcSep.left = m_pMenuMetrics->GetGutterRect(rc).Width();
-				pDrawDC->SolidFill(RGB(255,255,255), rcSep);
+				dcDraw.SolidFill(RGB(255,255,255), rcSep);
 				rcSep.top += (rc.bottom - rc.top)/2;
-				pDrawDC->DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
+				dcDraw.DrawEdge(rcSep,  EDGE_ETCHED, BF_TOP);
 			}
 		}
 		else
@@ -1458,7 +1466,7 @@ namespace Win32xx
 			::ExcludeClipRect(pdis->hDC, rc.left, rc.top, rc.right, rc.bottom);
 		}
 
-		pDrawDC->RestoreDC(nSavedDC);
+		dcDraw.Detach();
 	}
 
 	inline void CFrame::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis)
@@ -1476,24 +1484,27 @@ namespace Win32xx
 			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
 			BOOL bSelected = pdis->itemState & ODS_SELECTED;
 			CRect rcDraw = pdis->rcItem;
-			CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
+			CDC dcDraw;
+			dcDraw.Attach(pdis->hDC);
 			MenuTheme* pMBT = GetMenuBarTheme();
 
 			if ((bSelected) && (!bDisabled))
 			{
 				// draw selected item background
 				CBrush Brush(pMBT->clrHot1);
-				pDrawDC->SelectObject(Brush);
+				dcDraw.SelectObject(Brush);
 				CPen Pen(PS_SOLID, 1, pMBT->clrOutline);
-				pDrawDC->SelectObject(Pen);
-				pDrawDC->Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
+				dcDraw.SelectObject(Pen);
+				dcDraw.Rectangle(rcDraw.left, rcDraw.top, rcDraw.right, rcDraw.bottom);
 			}
 			else
 			{
 				// draw non-selected item background
 				rcDraw.left = m_pMenuMetrics->GetGutterRect(pdis->rcItem).Width();
-				pDrawDC->SolidFill(RGB(255,255,255), rcDraw);
+				dcDraw.SolidFill(RGB(255,255,255), rcDraw);
 			}
+
+			dcDraw.Detach();
 		}
 	}
 
@@ -1505,7 +1516,8 @@ namespace Win32xx
 		UINT fType = pmid->mii.fType;
 		MenuTheme* pMBT = GetMenuBarTheme();
 		CRect rcBk;
-		CDC* pDrawDC = CDC::FromHandle(pdis->hDC);
+		CDC dcDraw;
+		dcDraw.Attach(pdis->hDC);
 
 		if (IsAeroThemed())
 		{
@@ -1525,14 +1537,14 @@ namespace Win32xx
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
 			CBrush Brush(pMBT->clrHot2);
-			pDrawDC->SelectObject(Brush);
+			dcDraw.SelectObject(Brush);
 			CPen Pen(PS_SOLID, 1, pMBT->clrOutline);
-			pDrawDC->SelectObject(Pen);
+			dcDraw.SelectObject(Pen);
 
 			// Draw the checkmark's background rectangle
-			pDrawDC->Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
+			dcDraw.Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 
-			CMemDC MemDC(*pDrawDC);
+			CMemDC MemDC(dcDraw);
 			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 			MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
@@ -1551,8 +1563,8 @@ namespace Win32xx
 
 			// Draw a white or black check mark as required
 			// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
-			CMemDC MaskDC(*pDrawDC);
-			MaskDC.CreateCompatibleBitmap(*pDrawDC, cxCheck, cyCheck);
+			CMemDC MaskDC(dcDraw);
+			MaskDC.CreateCompatibleBitmap(dcDraw, cxCheck, cyCheck);
 			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 
 			if ((pdis->itemState & ODS_SELECTED))  // && (!tm.UseThemes))
@@ -1560,16 +1572,18 @@ namespace Win32xx
 				// Draw a white checkmark
 				MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
 				MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
+				dcDraw.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 			}
 			else
 			{
 				// Draw a black checkmark
 				int BullitOffset = (MFT_RADIOCHECK == fType)? 1 : 0;
 				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
-				pDrawDC->BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
+				dcDraw.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 			}
 		}
+
+		dcDraw.Detach();
 	}
 
 	inline void CFrame::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
@@ -1856,10 +1870,10 @@ namespace Win32xx
 		return rcClient;
 	}
 
-	inline int CFrame::GetMenuItemPos(CMenu* pMenu, LPCTSTR szItem)
+	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
 	{
-		int nMenuItemCount = pMenu->GetMenuItemCount();
+		int nMenuItemCount = ::GetMenuItemCount(hMenu);
 		MENUITEMINFO mii;
 		ZeroMemory(&mii, sizeof(MENUITEMINFO));
 		mii.cbSize = GetSizeofMenuItemInfo();
@@ -1878,7 +1892,7 @@ namespace Win32xx
 			mii.cch        = MAX_MENU_STRING;
 
 			// Fill the contents of szStr from the menu item
-			if (pMenu->GetMenuItemInfo(nItem, &mii, TRUE))
+			if (::GetMenuItemInfo(hMenu, nItem, TRUE, &mii))
 			{
 				int len = lstrlen(szStr);
 				if (len <= MAX_MENU_STRING)
@@ -2155,7 +2169,7 @@ namespace Win32xx
 
 		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
-		m_pMenuMetrics = new CMenuMetrics(this);
+		m_pMenuMetrics = new CMenuMetrics(*this);
 
 		UpdateMRUMenu();
 
@@ -2292,9 +2306,9 @@ namespace Win32xx
 		if (HIWORD(lParam))
 			return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
-		CMenu* pMenu = CMenu::FromHandle((HMENU)wParam);
+		CMenu Menu((HMENU)wParam);
 
-		for (UINT i = 0; i < pMenu->GetMenuItemCount(); ++i)
+		for (UINT i = 0; i < Menu.GetMenuItemCount(); ++i)
 		{
 			MenuItemData* pItem = new MenuItemData;			// deleted in OnExitMenuLoop
 			m_vMenuItemData.push_back(ItemDataPtr(pItem));	// Store pItem in smart pointer for later automatic deletion
@@ -2309,23 +2323,25 @@ namespace Win32xx
 			mii.cch = MAX_MENU_STRING -1;
 
 			// Send message for menu updates
-			UINT menuItem = pMenu->GetMenuItemID(i);
+			UINT menuItem = Menu.GetMenuItemID(i);
 			SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0L);
 
 			// Specify owner-draw for the menu item type
-			if (pMenu->GetMenuItemInfo(i, &mii, TRUE))
+			if (Menu.GetMenuItemInfo(i, &mii, TRUE))
 			{
 				if (mii.dwItemData == 0)
 				{
-					pItem->hMenu = *pMenu;
+					pItem->hMenu = Menu;
 					pItem->nPos = i;
 					pItem->mii = mii;
 					mii.dwItemData = (DWORD_PTR)pItem;
 					mii.fType |= MFT_OWNERDRAW;
-					pMenu->SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
+					Menu.SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
 				}
 			}
 		}
+
+		Menu.Detach();
 
 		return 0L;
 	}
@@ -2363,12 +2379,14 @@ namespace Win32xx
 		if (m_UseMenuStatus && GetStatusBar().IsWindow())
 		{
 			int nID = LOWORD (wParam);
-			CMenu* pMenu = CMenu::FromHandle((HMENU) lParam);
+			CMenu Menu((HMENU) lParam);
 
-			if ((pMenu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
+			if ((Menu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				GetStatusBar().SetWindowText(LoadString(nID));
 			else
 				GetStatusBar().SetWindowText(m_strStatusText);
+
+			Menu.Detach();
 		}
 
 		return 0L;
@@ -2554,7 +2572,7 @@ namespace Win32xx
 			REBARBANDINFO rbbi;
 			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
 			CClientDC dcMenuBar(GetMenuBar());
-			dcMenuBar.SelectObject(*GetMenuBar().GetFont());
+			dcMenuBar.SelectObject(GetMenuBar().GetFont());
 			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
 			int MenuBar_Height = sizeMenuBar.cy + 6;
 			rbbi.fMask      = RBBIM_CHILDSIZE;
@@ -3351,14 +3369,14 @@ namespace Win32xx
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		int nFileItem = 0;  // We place the MRU items under the left most menu item
-		CMenu* pFileMenu = GetFrameMenu().GetSubMenu(nFileItem);
+		CMenu FileMenu = GetFrameMenu().GetSubMenu(nFileItem);
 
-		if (pFileMenu)
+		if (FileMenu.GetHandle())
 		{
 			// Remove all but the first MRU Menu entry
 			for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
 			{
-				pFileMenu->DeleteMenu(u, MF_BYCOMMAND);
+				FileMenu.DeleteMenu(u, MF_BYCOMMAND);
 			}
 
 			int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
@@ -3374,10 +3392,10 @@ namespace Win32xx
 				BOOL bResult;
 				if (index == MaxMRUIndex)
 					// Replace the last MRU entry first
-					bResult = pFileMenu->SetMenuItemInfo(IDW_FILE_MRU_FILE1, &mii, FALSE);
+					bResult = FileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, &mii, FALSE);
 				else
 					// Insert the other MRU entries next
-					bResult = pFileMenu->InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, &mii, FALSE);
+					bResult = FileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, &mii, FALSE);
 
 				if (!bResult)
 				{

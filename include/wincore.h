@@ -498,7 +498,11 @@ namespace Win32xx
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
+
+#ifdef USE_OBSOLETE_CODE
 		static	CWnd* FromHandle(HWND hWnd);
+#endif
+
 		static  CWnd* GetCWndPtr(HWND hWnd);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
@@ -537,7 +541,7 @@ namespace Win32xx
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
 		CString GetDlgItemText(int nIDDlgItem) const;
 		CWnd  GetFocus() const;
-		CFont* GetFont() const;
+		CFont GetFont() const;
 		HICON GetIcon(BOOL bBigIcon) const;
 		CWnd  GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const;
 		CWnd  GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const;
@@ -612,13 +616,13 @@ namespace Win32xx
 		BOOL  DrawCaption(HDC hDC, RECT& rc, UINT uFlags) const;
 		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd  GetLastActivePopup() const;
-		CMenu* GetMenu() const;
+		CMenu GetMenu() const;
 		int   GetScrollPos(int nBar) const;
 		BOOL  GetScrollRange(int nBar, int& MinPos, int& MaxPos) const;
-		CMenu* GetSystemMenu(BOOL bRevert) const;
+		CMenu GetSystemMenu(BOOL bRevert) const;
 		CWnd  GetTopWindow() const;
 		BOOL  GetWindowPlacement(WINDOWPLACEMENT& pWndpl) const;
-		BOOL  HiliteMenuItem(CMenu* pMenu, UINT uItemHilite, UINT uHilite) const;
+		BOOL  HiliteMenuItem(HMENU hMenu, UINT uItemHilite, UINT uHilite) const;
 		BOOL  IsIconic() const;
 		BOOL  IsZoomed() const;
 		BOOL  LockWindowUpdate() const;
@@ -683,8 +687,12 @@ namespace Win32xx
 			WNDPROC		PrevWindowProc;
 			BOOL		IsTmpWnd;
 			Shared_Ptr<CFont>	font;
+  
+  #ifndef _WIN32_WCE
 			Shared_Ptr<CMenu>	menu;
 			Shared_Ptr<CMenu>	system_menu;
+  #endif
+
 		};
 
 		CWnd(const CWnd&);				// Disable copy construction
@@ -1783,6 +1791,7 @@ namespace Win32xx
 			return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CWnd* CWnd::FromHandle(HWND hWnd)
 	// Returns the CWnd object associated with the window handle
 	{
@@ -1816,6 +1825,7 @@ namespace Win32xx
 
 		return pWnd;
 	}
+#endif
 
 	inline CWnd* CWnd::GetCWndPtr(HWND hWnd)
 	{
@@ -2674,11 +2684,19 @@ namespace Win32xx
 		return CWnd( ::GetFocus() );
 	}
 
-	inline CFont* CWnd::GetFont() const
+	inline CFont CWnd::GetFont() const
 	// Retrieves the font with which the window is currently drawing its text.
 	{
 		assert(IsWindow());
-		return CFont::FromHandle((HFONT)SendMessage(WM_GETFONT, 0, 0));
+		assert(m_pData.get());
+		if (m_pData->font.get() == 0) 
+			m_pData->font = new CFont;
+
+		HFONT hFont = (HFONT)SendMessage(WM_GETFONT, 0, 0);
+		if (hFont)
+			m_pData->font->Attach(hFont);
+
+		return *m_pData->font.get();
 	}
 
 	inline HICON CWnd::GetIcon(BOOL bBigIcon) const
@@ -3264,11 +3282,17 @@ namespace Win32xx
 		return CWnd( ::GetLastActivePopup(m_hWnd) );
 	}
 
-	inline CMenu* CWnd::GetMenu() const
+	inline CMenu CWnd::GetMenu() const
 	// The GetMenu function retrieves a handle to the menu assigned to the window.
 	{
 		assert(IsWindow());
-		return CMenu::FromHandle(::GetMenu(m_hWnd));
+		assert(m_pData.get());
+		if (m_pData->menu.get() == 0) 
+			m_pData->menu = new CMenu;
+
+		m_pData->menu->Attach(::GetMenu(m_hWnd));
+
+		return *m_pData->menu.get();
 	}
 
 	inline int CWnd::GetScrollPos(int nBar) const
@@ -3287,12 +3311,19 @@ namespace Win32xx
 		return ::GetScrollRange(m_hWnd, nBar, &MinPos, &MaxPos );
 	}
 
-	inline CMenu* CWnd::GetSystemMenu(BOOL bRevert) const
+	inline CMenu CWnd::GetSystemMenu(BOOL bRevert) const
 	// The GetSystemMenu function allows the application to access the window menu (also known as the system menu
 	// or the control menu) for copying and modifying.
 	{
 		assert(IsWindow());
-		return CMenu::FromHandle(::GetSystemMenu(m_hWnd, bRevert));
+
+		assert(IsWindow());
+		assert(m_pData.get());
+		if (m_pData->system_menu.get() == 0) 
+			m_pData->system_menu = new CMenu;
+
+		m_pData->system_menu->Attach( ::GetSystemMenu(m_hWnd, bRevert) );
+		return *m_pData->system_menu.get();
 	}
 
 	inline CWnd CWnd::GetTopWindow() const
@@ -3311,12 +3342,11 @@ namespace Win32xx
 		return ::GetWindowPlacement(m_hWnd, &wndpl);
 	}
 
-	inline BOOL CWnd::HiliteMenuItem(CMenu* pMenu, UINT uItemHilite, UINT uHilite) const
+	inline BOOL CWnd::HiliteMenuItem(HMENU hMenu, UINT uItemHilite, UINT uHilite) const
 	// The HiliteMenuItem function highlights or removes the highlighting from an item in a menu bar.
 	{
 		assert(IsWindow());
-		assert(pMenu);
-		return ::HiliteMenuItem(m_hWnd, pMenu->GetHandle(), uItemHilite, uHilite);
+		return ::HiliteMenuItem(m_hWnd, hMenu, uItemHilite, uHilite);
 	}
 
 	inline BOOL CWnd::IsIconic() const

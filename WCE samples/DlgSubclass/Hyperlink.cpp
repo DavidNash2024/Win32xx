@@ -18,9 +18,9 @@ CHyperlink::~CHyperlink()
 {
 }
 
-BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd* pParent)
+BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd& Parent)
 {
-	BOOL bSuccess = CWnd::AttachDlgItem(nID, pParent);;
+	BOOL bSuccess = CWnd::AttachDlgItem(nID, Parent);;
 
 	CFont* pFont = GetFont();
 	LOGFONT lf = pFont->GetLogFont();
@@ -46,8 +46,8 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 		RECT rc;
 		pt.x = (short)LOWORD(lParam);
 		pt.y = (short)HIWORD(lParam);
-		::ClientToScreen(m_hWnd, &pt);
-		::GetWindowRect(m_hWnd, &rc);
+		ClientToScreen(pt);
+		rc = GetWindowRect();
 
 		if(PtInRect(&rc, pt))
 			OpenUrl();
@@ -83,7 +83,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		dc.SetTextColor(m_bUrlVisited? m_crVisited : m_crNotVisited);
 		dc.SetBkMode(TRANSPARENT);
-		dc.SelectObject(&m_UrlFont);
+		dc.SelectObject(m_UrlFont);
 		dc.Detach();
 		return (LRESULT)::GetSysColorBrush(COLOR_BTNFACE);
 	}

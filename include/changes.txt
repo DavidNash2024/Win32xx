@@ -9,8 +9,8 @@ Overview
 This version of Win32++ moves away from the use of pointers. Where before we 
 would use pointers to objects in Win32++ function calls, we now use the objects
 directly. The USE_OBSOLETE_CODE macro has been provided in this version to make
-code migration easier. Even with this macro you will need to use non-pointer 
-arguments in Win32++ function calls.
+code migration easier. Even with this macro defined, you will need to use 
+non-pointer arguments in Win32++ function calls.
 
 New Features and Enhancements
 -----------------------------
@@ -30,15 +30,13 @@ Note: CWnd has operator overloading. We can use the CWnd object in place
 of its corresponding HWND anywhere in code.  
 
 * Many functions which previously used pointers to other Win32++ classes
-now use the relevant handle instead. These include member functions for
+now also use the relevant handle instead. These include member functions for
 CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, CImageList and CMenu.
 Each of these classes have operator overloading, so the class object can be
 used instead of the handle. 
 
 * The FromHandle method of creating temporary CWnds has been obsoleted. 
 The FromHandle approach had the following disadvantages:
- - It was very inefficient. It required one or more std::map lookups before  
-   creating a new CWnd on the heap.
  - It required the newly created CWnds to be removed some indeterminate time
    after being created. This was done in OnIdle.
  - The running of OnIdle can be delayed indefinitely while windows runs
@@ -52,29 +50,73 @@ Coding example: (The GetParent function now returns a CWnd)
  GetParent().SendMessage(SomeMessage, wParam, lParam);
  HWND hWnd = GetParent(); // retrieve the parent window's HWND
  
-* m_hWnd is now a private member variable of CWnd.
-  Use GetHwnd() or *this in place of m_hWnd.
+* m_hWnd is now a private member variable of CWnd. Use GetHwnd() or *this in 
+place of m_hWnd. A protected m_hWnd had the following disadvantages
+ - It is unsafe. Users might be tempted to think they can set or modify m_hWnd.
+ - It prevents CWnd from being reference counted.
 
-* Assistance with code migration
-1)For this version, a USE_OBSOLETE_CODE macro is provided to assist with 
-  code migration. It adds the older definitions of the following:
+Step by step guide to code migration
+------------------------------------
+1) Define the USE_OBSOLETE_CODE For this version, a USE_OBSOLETE_CODE macro is 
+   provided to assist with code migration. It adds the older definitions of the
+   following:
   - CWnd::Create
   - CWnd::OnDraw  
   - CWnd::OnEraseBkgnd
-  - CWnd::m_hWnd is declared protected instead of private 
+  - CWnd::FromHandle
+  
+  - CDC::FromHandle
+  - CBitmap::FromHandle
+  - CBrush::FromHandle
+  - CFont::FromHandle
+  - CPalette::FromHandle
+  - CPen::FromHandle
+  - CRgn::FromHandle
+  - CImageList::FromHandle
+  - CMenu::FromHandle
+  
+  - CWnd::m_hWnd is declared protected instead of private
+  
   If used, this macro must be defined before including the Win32++ header files.
   It can be placed in stdafx.h if precompiled headers are used. Even with this
-  macro you will need to use non-pointer versions of function arguments.  
+  macro you will need to use non-pointer versions of function arguments.
 
-2)FromHandle is no longer used by Win32++ internally, but remains available in 
-  this version for the purpose of code migration. It issues a TRACE warning 
-  message if used.
+2) Replace pointers to Win32++ objects to their non-pointer equivalents.
+   This can be done by dereferencing the pointer (add a * before the pointer).   
 
-3)Other tips:
-  - GetCWndPtr can be used to retrieve the pointer to a known CWnd.
-  - Use GetHwnd() or *this in place of m_hWnd.
-  - Adjust your code to use the new versions of Create, OnDraw and OnEraseBkgnd.
+3) Use "." instead of "->" when using the return of Win32++ functions.
 
+4) At this stage your program should compile and run. The next step is to
+   remove dependence on the USE_OBSOLETE_CODE macro.
+   
+   a) Modify the definitions of any Create, OnDraw and OnEraseBkgnd functions.
+      If the definitions of these functions are incorrect, they won't get called
+	  automatically.
+	  
+   b) Replace the use of m_hWnd in your code with either *this or GetHwnd().
+   
+   c) Remove the use of FromHandle in your code. There might be better ways
+      but we can always use Attach and Detach in place of FromHandle.
+	  
+   d) Remove the definition of USE_OBSOLETE_CODE.	  
+
+Other tips:
+*) The following Win32++ classes are reference counted and can be safely copied.
+   CDC, CMenu, CImageList, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, CGDIObject.
+   This allows them to be safely passed by value in function calls. More
+   importantly, it also allows these to be safely returned from functions. 
+   Reference counting permits this:
+    CDC dc = GetDCEx(hrgnClip, flags);
+	CMenu PopupMenu = TopMenu.GetSubMenu(0);
+	CImageList imlHot = GetToolBar().GetHotImageList();
+    CFont myfont = GetFont();    
+   
+*) GetCWndPtr can be used to retrieve a CWnd pointer from the global map.
+
+*) There is no need to add use GetHwnd() or GetHandle() when using objects in 
+   functioning calls expecting a handle. The Win32++ classes use operator 
+   overloading to do these conversions automatically.
+   
   
 Changes in detail
 -----------------
@@ -87,6 +129,173 @@ CWnd::OnEraseBkgnd
 Other changes:
 Function which returned pointers to Win32++ objects now return Win32++ objects
 Functions arguments which were pointers to Win32++ objects are now handles.  
+
+Modified CBitmap::CreateCompatibleBitmap
+Modified CBitmap::CreateDIBitmap
+Modified CBitmap::CreateDIBSection
+Modified CBitmap::GetDIBits
+Modified CBitmap::SetDIBits
+Modified CBitmapInfoPtr::CBitmapInfoPtr
+Modified CBrush::CreatePatternBrush
+Modified CClientDC::CClientDC
+Modified CComboBoxEx::GetImageList
+Modified CComboBoxEx::SetImageList
+Modified CDC::BitBlt
+Modified CDC::CreateCompatibleDC
+Modified CDC::CreateCompatibleBitmap
+Modified CDC::CreateDIBitmap
+Modified CDC::CreateDIBSection
+Modified CDC::CreatePatternBrush
+Modified CDC::DrawIconEx
+Modified CDC::ExtSelectClipRgn
+Modified CDC::FillRect
+Modified CDC::FillRgn
+Modified CDC::FrameRect
+Modified CDC::FrameRgn
+Modified CDC::GetCurrentBitmap
+Modified CDC::GetCurrentBrush
+Modified CDC::GetCurrentFont
+Modified CDC::GetCurrentPalette
+Modified CDC::GetCurrentPen
+Modified CDC::GrayString
+Modified CDC::MaskBlt
+Modified CDC::GetDIBits
+Modified CDC::PaintRgn
+Modified CDC::SelectClipRgn
+Modified CDC::SelectObject (all versions)
+Modified CDC::SetDIBits
+Modified CDC::StretchBlt
+Modified CDC::TransparentBlt
+Modified CDateTime::GetMonthCalFont
+Modified CDialog::Create
+Modified CDialog::DoModal
+Modified CDialog::DoModeless
+Modified CDialog::GotoDlgCtrl
+Modified CDocker::GetDockBar		
+Modified CDocker::GetDockClient	
+Modified CDocker::GetDockHint
+Modified CDocker::IsChildOfDocker
+Modified CDocker::IsRelated
+Modified CFile::OpenFileDialog
+Modified CFile::SaveFileDialog
+Modified CFont::CreatePointFont
+Modified CFont::CreatePointFontIndirect
+Modified CFrame::AddToolBarBand
+Modified CFrame::DrawReBarBkgnd
+Modified CFrame::ExcludeChildRect
+Modified CFrame::GetFrameMenu
+Modified CFrame::GetMenuItemPos
+Modified CFrame::GetMenuBar
+Modified CFrame::GetReBar
+Modified CFrame::GetStatusBar
+Modified CFrame::GetToolBar
+Modified CFrame::SetTBImageList
+Modified CFrame::SetTBImageListDis
+Modified CFrame::SetTBImageListHot
+Modified CHeader::CreateDragImage
+Modified CHeader::GetImageList
+Modified CHeader::GetImageList
+Modified CImageList::Add
+Modified CImageList::DragEnter
+Modified CImageList::DragLeave
+Modified CImageList::Draw
+Modified CImageList::DrawEx
+Modified CListView::GetImageList
+Modified CListView::SetImageList
+Modified CMDIFrame::AppendMDIMenu
+Modified CMDIFrame::CDockMDIClient::Create
+Modified CMDIFrame::GetActiveMenu
+Modified CMDIFrame::GetDockClient
+Modified CMDIFrame::GetMDIClient
+Modified CMDIFrame::UpdateFrameMenu
+Modified CMemDC::CMemDC
+Modified CMenu::AppendMenu
+Modified CMenu::GetSubMenu
+Modified CMenu::InsertMenu
+Modified CMenu::ModifyMenu
+Modified CMenu::SetMenuItemBitmaps
+Modified CMenu::TrackPopupMenu
+Modified CMenu::TrackPopupMenuEx
+Modified CMenuBar::DrawAllMDIButtons
+Modified CMetaFileDC::CreateEnhanced
+Modified CPaintDC::CPaintDC
+Modified CPalette::CreateHalftonePalette
+Modified CPropertySheet::CPropertySheet
+Modified CRibbon::CreateRibbon
+Modified CResizer::AddChild
+Modified CRgn::CombineRgn
+Modified CRgn::CopyRgn
+Modified CRgn::EqualRgn
+Modified CSlider::GetBuddy
+Modified CSlider::SetBuddy
+Modified CSlider::GetToolTips
+Modified CSpinButton::GetBuddy
+Modified CSpinButton::SetBuddy
+Modified CTab::DrawCloseButton
+Modified CTab::DrawListButton
+Modified CTab::DrawTabs
+Modified CTab::DrawTabBorders
+Modified CTab::GetListMenu
+Modified CTab::GetTabFont
+Modified CTab::GetToolTips
+Modified CTab::SetFont
+Modified CTab::SetImageList
+Modified CTabbedMDI::GetListMenu
+Modified CToolBar::GetDisabledImageList
+Modified CToolBar::GetHotImageList
+Modified CToolBar::GetImageList
+Modified CToolBar::SetImageList
+Modified CToolBar::SetDisableImageList
+Modified CToolBar::SetHotImageList
+Modified CToolTip::AddTool
+Modified CToolTip::DelTool
+Modified CToolTip::GetText
+Modified CToolTip::GetToolInfo
+Modified CToolTip::SetToolRect
+Modified CToolTip::HitTest
+Modified CToolTip::UpdateTipText
+Modified CTreeView::GetImageList
+Modified CTreeView::SetImageList
+Modified CWindowDC::CWindowDC
+Modified CWnd::AttachDlgItem
+Modified CWnd::BeginPaint
+Modified CWnd::ChildFromPoint
+Modified CWnd::DrawCaption
+Modified CWnd::GetActiveWindow
+Modified CWnd::GetAncestor
+Modified CWnd::GetDC
+Modified CWnd::GetDCEx
+Modified CWnd::GetFocus
+Modified CWnd::DeferWindowPos
+Modified CWnd::GetDecktopWindow
+Modified CWnd::GetDlgItem
+Modified CWnd::GetUpdateRgn
+Modified CWnd::GetWindowDC
+Modified CWnd::HiliteMenuItem
+Modified CWnd::InvalidateRgn
+Modified CWnd::GetLastActivePopup
+Modified CWnd::GetNextDlgGroupItem
+Modified CWnd::GetNextDlgTabItem
+Modified CWnd::GetParent
+Modified CWnd::GetTopWindow
+Modified CWnd::GetWindow
+Modified CWnd::IsChild
+Modified CWnd::MapWindowPoints
+Modified CWnd::Print
+Modified CWnd::RedrawWindow
+Modified CWnd::ReleaseDC
+Modified CWnd::ScrollWindowEx
+Modified CWnd::SetActiveWindow
+Modified CWnd::SetCapture
+Modified CWnd::SetFont
+Modified CWnd::SetFocus
+Modified CWnd::SetMenu
+Modified CWnd::SetParent
+Modified CWnd::SetWindowPos
+Modified CWnd::SetWindowRgn
+Modified CWnd::ValidateRgn
+Modified CWnd::WindowFromDC
+Modified CWnd::WindowFromPoint
 
 Removed static const CWnd wndTop(HWND_TOP);
 Removed static const CWnd wndTopMost(HWND_TOPMOST);

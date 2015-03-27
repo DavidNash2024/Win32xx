@@ -93,7 +93,7 @@ namespace Win32xx
 		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
-		virtual CMenu* GetListMenu();
+		virtual CMenu& GetListMenu();
 		virtual BOOL GetTabsAtTop() const;
 		virtual int  GetTabIndex(CWnd* pWnd) const;
 		virtual TabPageInfo GetTabPageInfo(UINT nTab) const;
@@ -116,7 +116,7 @@ namespace Win32xx
 
 		// Attributes
 		std::vector<TabPageInfo>* GetAllTabs() const { return (std::vector <TabPageInfo>*) &m_vTabPageInfo; }
-		CImageList* GetODImageList() const	{ return const_cast<CImageList*>(&m_imlODTab); }
+		CImageList GetODImageList() const	{ return const_cast<CImageList&>(m_imlODTab); }
 		CFont& GetTabFont() const		{ return const_cast<CFont&>(m_TabFont); }
 		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
@@ -131,7 +131,7 @@ namespace Win32xx
 		int			GetCurFocus() const;
 		int			GetCurSel() const;
 		DWORD		GetExtendedStyle() const;
-		CImageList* GetImageList() const;
+		CImageList  GetImageList();
 		BOOL		GetItem(int iItem, LPTCITEM pitem) const;
 		int			GetItemCount() const;
 		BOOL		GetItemRect(int iItem, LPRECT prc) const;
@@ -144,7 +144,7 @@ namespace Win32xx
 		void		SetCurFocus(int iItem) const;
 		int			SetCurSel(int iItem) const;
 		DWORD		SetExtendedStyle(DWORD dwExStyle) const;
-		CImageList* SetImageList(HIMAGELIST himlNew) const;
+		CImageList  SetImageList(HIMAGELIST himlNew);
 		BOOL		SetItem(int iItem, LPTCITEM pitem) const;
 		BOOL		SetItemExtra(int cb) const;
 		DWORD		SetItemSize(int cx, int cy) const;
@@ -198,6 +198,7 @@ namespace Win32xx
 		std::vector<WndPtr> m_vTabViews;
 		CFont m_TabFont;
 		CImageList m_imlODTab;	// Image List for Owner Draw Tabs
+		CImageList m_ImageList;
 		CMenu m_ListMenu;
 		CWnd* m_pActiveView;
 		CPoint m_OldMousePos;
@@ -220,13 +221,13 @@ namespace Win32xx
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
-		virtual CWnd* GetActiveMDIChild() const;
+		virtual CWnd*  GetActiveMDIChild() const;
 		virtual int	  GetActiveMDITab() const;
 		virtual CWnd* GetMDIChild(int nTab) const;
 		virtual int   GetMDIChildCount() const;
 		virtual int   GetMDIChildID(int nTab) const;
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
-		virtual CMenu* GetListMenu() const { return GetTab()->GetListMenu(); }
+		virtual CMenu& GetListMenu() const { return GetTab()->GetListMenu(); }
 		virtual void   ShowListDialog() { GetTab()->ShowListDialog(); }
 		virtual CTab* GetTab() const	{return (CTab*)&m_Tab;}
 		virtual BOOL LoadRegistrySettings(const CString& strRegistryKeyName);
@@ -321,7 +322,7 @@ namespace Win32xx
 		tpi.idTab = idTab;
 		tpi.TabText = szTabText;
 		if (hIcon != 0)
-			tpi.iImage = GetODImageList()->Add(hIcon);
+			tpi.iImage = GetODImageList().Add(hIcon);
 		else
 			tpi.iImage = -1;
 
@@ -647,7 +648,7 @@ namespace Win32xx
 		return rcClose;
 	}
 
-	inline CMenu* CTab::GetListMenu()
+	inline CMenu& CTab::GetListMenu()
 	{
 		if (!IsMenu(m_ListMenu))
 			m_ListMenu.CreatePopupMenu();
@@ -674,7 +675,7 @@ namespace Win32xx
 		if (iSelected < 9)
 			m_ListMenu.CheckMenuItem(iSelected, MF_BYPOSITION|MF_CHECKED);
 
-		return &m_ListMenu;
+		return m_ListMenu;
 	}
 
 	inline CRect CTab::GetListRect() const
@@ -1260,11 +1261,11 @@ namespace Win32xx
 		GetItem(i, &tci);
 		if (tci.iImage >= 0)
 		{
-			GetODImageList()->Replace(i, hIcon);
+			GetODImageList().Replace(i, hIcon);
 		}
 		else
 		{
-			int iImage = GetODImageList()->Add(hIcon);
+			int iImage = GetODImageList().Add(hIcon);
 			tci.iImage = iImage;
 			SetItem(i, &tci);
 			m_vTabPageInfo[i].iImage = iImage;
@@ -1362,7 +1363,7 @@ namespace Win32xx
 			// Choosing the frame's CWnd for the menu's messages will automatically theme the popup menu
 			int nPage = 0;
 			m_IsListMenuActive = TRUE;
-			nPage = GetListMenu()->TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, GetAncestor(), NULL) - IDW_FIRSTCHILD;
+			nPage = GetListMenu().TrackPopupMenuEx(TPM_LEFTALIGN | TPM_TOPALIGN | TPM_RETURNCMD, pt.x, pt.y, GetAncestor(), NULL) - IDW_FIRSTCHILD;
 			if ((nPage >= 0) && (nPage < 9)) SelectPage(nPage);
 			if (nPage == 9) ShowListDialog();
 			m_IsListMenuActive = FALSE;
@@ -1506,11 +1507,13 @@ namespace Win32xx
 		return TabCtrl_GetExtendedStyle(*this);
 	}
 
-	inline CImageList* CTab::GetImageList() const
+	inline CImageList CTab::GetImageList()
 	// Retrieves the image list associated with a tab control.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( TabCtrl_GetImageList(*this) );
+		HIMAGELIST himl = TabCtrl_GetImageList(*this);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
@@ -1598,11 +1601,13 @@ namespace Win32xx
 		return TabCtrl_SetExtendedStyle(*this, dwExStyle);
 	}
 
-	inline CImageList* CTab::SetImageList(HIMAGELIST himlNew) const
+	inline CImageList CTab::SetImageList(HIMAGELIST himlNew)
 	// Assigns an image list to a tab control.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( TabCtrl_SetImageList( *this, himlNew ) );
+		HIMAGELIST himl = TabCtrl_SetImageList( *this, himlNew );
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const

@@ -134,10 +134,10 @@ void CMainFrame::OnUpdateRangeOfIds_Radio(UINT nID)
 	UINT adjId = nID - ID_RADIO_A;
 	UINT curRadio = GetDoc()->GetRadio();
 	BOOL bCheck = (curRadio == adjId);
-	int nFileItem = GetMenuItemPos(&GetFrameMenu(), _T("Select"));
-	CMenu* pRadioMenu = GetFrameMenu().GetSubMenu(nFileItem);
+	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
+	CMenu RadioMenu = GetFrameMenu().GetSubMenu(nFileItem);
 	if (bCheck)  
-		pRadioMenu->CheckMenuRadioItem(ID_RADIO_A, ID_RADIO_C, nID, 0);
+		RadioMenu.CheckMenuRadioItem(ID_RADIO_A, ID_RADIO_C, nID, 0);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)

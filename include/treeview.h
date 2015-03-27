@@ -66,7 +66,7 @@ namespace Win32xx
 		HTREEITEM GetDropHiLightItem() const;
 		HWND GetEditControl() const;
 		HTREEITEM GetFirstVisible() const;
-		CImageList* GetImageList(int iImageType) const;
+		CImageList GetImageList(int iImageType);
 		UINT  GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
 		BOOL GetItem(TVITEM& Item) const;
@@ -90,7 +90,7 @@ namespace Win32xx
 		UINT GetVisibleCount() const;
 		BOOL ItemHasChildren(HTREEITEM hItem) const;
 		COLORREF SetBkColor(COLORREF clrBk) const;
-		CImageList* SetImageList(HIMAGELIST himlNew, int nType) const;
+		CImageList SetImageList(HIMAGELIST himlNew, int nType);
 		void SetIndent(int indent) const;
 		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) const;
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) const;
@@ -105,7 +105,7 @@ namespace Win32xx
 		CToolTip* SetToolTips(CToolTip* pToolTip) const;
 
 // Operations
-		CImageList* CreateDragImage(HTREEITEM hItem) const;
+		CImageList CreateDragImage(HTREEITEM hItem);
 		BOOL DeleteAllItems() const;
 		BOOL DeleteItem(HTREEITEM hItem) const;
 		HWND EditLabel(HTREEITEM hItem) const;
@@ -124,6 +124,8 @@ namespace Win32xx
 	private:
 		CTreeView(const CTreeView&);				// Disable copy construction
 		CTreeView& operator = (const CTreeView&); // Disable assignment operator
+
+		CImageList m_ImageList;
 
 	};
 	
@@ -183,11 +185,13 @@ namespace Win32xx
 		return TreeView_GetFirstVisible(*this);
 	}
 
-	inline CImageList* CTreeView::GetImageList(int iImageType) const
+	inline CImageList CTreeView::GetImageList(int iImageType)
 	// Retrieves the handle to the normal or state image list associated with a tree-view control.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( TreeView_GetImageList( *this, iImageType ) );
+		HIMAGELIST himl = TreeView_GetImageList( *this, iImageType );
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline UINT CTreeView::GetIndent() const
@@ -385,12 +389,14 @@ namespace Win32xx
 		return TreeView_SetBkColor( *this, clrBk );
 	}
 
-	inline CImageList* CTreeView::SetImageList(HIMAGELIST himlNew, int nType) const
+	inline CImageList CTreeView::SetImageList(HIMAGELIST himlNew, int nType)
 	// Sets the normal or state image list for a tree-view control
 	//  and redraws the control using the new images.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( TreeView_SetImageList( *this, himlNew, nType ) );
+		HIMAGELIST himl = TreeView_SetImageList( *this, himlNew, nType );
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline void CTreeView::SetIndent(int indent) const
@@ -511,13 +517,15 @@ namespace Win32xx
 
 	// Operations
 
-	inline CImageList* CTreeView::CreateDragImage(HTREEITEM hItem) const
+	inline CImageList CTreeView::CreateDragImage(HTREEITEM hItem)
 	// Creates a dragging bitmap for the specified item in a tree-view control.
 	// It also creates an image list for the bitmap and adds the bitmap to the image list.
 	// An application can display the image when dragging the item by using the image list functions.
 	{
 		assert(IsWindow());
-		return CImageList::FromHandle( TreeView_CreateDragImage( *this, hItem ) );
+		HIMAGELIST himl = TreeView_CreateDragImage(*this, hItem);
+		m_ImageList.Attach(himl);
+		return m_ImageList;
 	}
 
 	inline BOOL CTreeView::DeleteAllItems() const

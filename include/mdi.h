@@ -159,9 +159,9 @@ namespace Win32xx
 
 		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
-		virtual CMenu* GetActiveMenu() const;
+		virtual CMenu GetActiveMenu() const;
 		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockMDIClient&>(m_DockMDIClient); }
-		virtual CWnd* GetMDIClient() const { return (CWnd*)(&GetDockClient()); }
+		virtual CWnd& GetMDIClient() const { return GetDockClient(); }
 		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -193,9 +193,9 @@ namespace Win32xx
 	private:
 		CMDIFrame(const CMDIFrame&);				// Disable copy construction
 		CMDIFrame& operator = (const CMDIFrame&); // Disable assignment operator
-		void AppendMDIMenu(CMenu* pMenuWindow);
+		void AppendMDIMenu(CMenu MenuWindow);
 		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		void UpdateFrameMenu(CMenu* pMenu);
+		void UpdateFrameMenu(CMenu Menu);
 
 		std::vector<MDIChildPtr> m_vMDIChild;
 		CDockMDIClient m_DockMDIClient;
@@ -226,31 +226,31 @@ namespace Win32xx
 		assert(NULL != pMDIChild.get()); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(pMDIChild);
-		pMDIChild->Create(*GetMDIClient());
+		pMDIChild->Create(GetMDIClient());
 
 		return pMDIChild.get();
 	}
 
-	inline void CMDIFrame::AppendMDIMenu(CMenu* pMenuWindow)
+	inline void CMDIFrame::AppendMDIMenu(CMenu MenuWindow)
 	// Adds the additional menu items the the "Window" submenu when
 	//  MDI child windows are created	
 	{
-		if (!pMenuWindow->GetHandle())
+		if (!MenuWindow.GetHandle())
 			return;
 
 		// Delete previously appended items
-		int nItems = pMenuWindow->GetMenuItemCount();
-		UINT uLastID = pMenuWindow->GetMenuItemID(--nItems);
+		int nItems = MenuWindow.GetMenuItemCount();
+		UINT uLastID = MenuWindow.GetMenuItemID(--nItems);
 		if ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
 		{
 			while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
 			{
-				pMenuWindow->DeleteMenu(nItems, MF_BYPOSITION);
-				uLastID = pMenuWindow->GetMenuItemID(--nItems);
+				MenuWindow.DeleteMenu(nItems, MF_BYPOSITION);
+				uLastID = MenuWindow.GetMenuItemID(--nItems);
 			}
 			
 			//delete the separator too
-			pMenuWindow->DeleteMenu(nItems, MF_BYPOSITION);
+			MenuWindow.DeleteMenu(nItems, MF_BYPOSITION);
 		}
 
 		int nWindow = 0;
@@ -264,7 +264,7 @@ namespace Win32xx
 			{
 				// Add Separator
 				if (nWindow == 0)
-					pMenuWindow->AppendMenu(MF_SEPARATOR, 0, (LPCTSTR)NULL);
+					MenuWindow.AppendMenu(MF_SEPARATOR, 0, (LPCTSTR)NULL);
 
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
@@ -281,39 +281,39 @@ namespace Win32xx
 					CString MenuString;
 					MenuString.Format(_T("&%d %s"), nWindow+1, strMenuItem.c_str());
 
-					pMenuWindow->AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
+					MenuWindow.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
 
 					if (GetActiveMDIChild() == (*v).get())
-						pMenuWindow->CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
+						MenuWindow.CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
 					++nWindow;
 				}
 				else if (9 == nWindow)
 				// For the 10th MDI child, add this menu item and return
 				{
-					pMenuWindow->AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
+					MenuWindow.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
 					return;
 				}
 			}
 		}
 	}
 
-	inline CMenu* CMDIFrame::GetActiveMenu() const
+	inline CMenu CMDIFrame::GetActiveMenu() const
 	// Returns a pointer to the menu of the Active MDI Child if any,
 	// otherwise returns a pointer to the MDI Frame's menu
 	{
-		CMenu* pMenu = &GetFrameMenu();
+		CMenu Menu = GetFrameMenu();
 		
 		if(GetActiveMDIChild())
 			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
-				pMenu = &GetActiveMDIChild()->m_ChildMenu;
+				Menu = GetActiveMDIChild()->m_ChildMenu;
 
-		return pMenu;
+		return Menu;
 	}
 
 	inline LRESULT CMDIFrame::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		return ::DefFrameProc(*this, *GetMDIClient(), uMsg, wParam, lParam);
+		return ::DefFrameProc(*this, GetMDIClient(), uMsg, wParam, lParam);
 	}
 
 	inline CMDIChild* CMDIFrame::GetActiveMDIChild() const
@@ -326,7 +326,7 @@ namespace Win32xx
 	// Returns TRUE if a MDI child is maximized
 	{
 		BOOL bMaxed = FALSE;
-		GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
+		GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
 		return bMaxed;
 	}
 
@@ -335,21 +335,21 @@ namespace Win32xx
 	// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.	
 	{
 		assert(IsWindow());
-		GetMDIClient()->SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
+		GetMDIClient().SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
 	}
 
 	inline void CMDIFrame::MDIIconArrange() const
 	// Re-arranges the icons for minimized MDI children
 	{
 		assert(IsWindow());
-		GetMDIClient()->SendMessage(WM_MDIICONARRANGE, 0L, 0L);
+		GetMDIClient().SendMessage(WM_MDIICONARRANGE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDIMaximize() const
 	// Maximize the MDI child
 	{
 		assert(IsWindow());
-		GetMDIClient()->SendMessage(WM_MDIMAXIMIZE, 0L, 0L);
+		GetMDIClient().SendMessage(WM_MDIMAXIMIZE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDINext() const
@@ -357,7 +357,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HWND hMDIChild = GetActiveMDIChild()->GetHwnd();
-		GetMDIClient()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
+		GetMDIClient().SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
 	}
 
 	inline void CMDIFrame::MDIPrev() const
@@ -365,14 +365,14 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HWND hMDIChild = GetActiveMDIChild()->GetHwnd();
-		GetMDIClient()->SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
+		GetMDIClient().SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
 	}
 
 	inline void CMDIFrame::MDIRestore() const
 	// Restores a mimimized MDI child
 	{
 		assert(IsWindow());
-		GetMDIClient()->SendMessage(WM_MDIRESTORE, 0L, 0L);
+		GetMDIClient().SendMessage(WM_MDIRESTORE, 0L, 0L);
 	}
 
 	inline void CMDIFrame::MDITile(int nType /* = 0*/) const
@@ -383,7 +383,7 @@ namespace Win32xx
 		// MDITILE_VERTICAL		Tiles MDI child windows so that one window appears beside another.
 
 		assert(IsWindow());
-		GetMDIClient()->SendMessage(WM_MDITILE, (WPARAM)nType, 0L);
+		GetMDIClient().SendMessage(WM_MDITILE, (WPARAM)nType, 0L);
 	}
 
 	inline void CMDIFrame::OnClose()
@@ -417,11 +417,11 @@ namespace Win32xx
 		switch(nID)
 		{
 		case IDW_VIEW_STATUSBAR:
-			GetActiveMenu()->CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
+			GetActiveMenu().CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		case IDW_VIEW_TOOLBAR:
-			GetActiveMenu()->EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
-			GetActiveMenu()->CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
+			GetActiveMenu().EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
+			GetActiveMenu().CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		}	
 	}
@@ -507,7 +507,7 @@ namespace Win32xx
 		if (GetActiveMDIChild())
 		{
 			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
-				UpdateFrameMenu(&GetActiveMDIChild()->m_ChildMenu);
+				UpdateFrameMenu(GetActiveMDIChild()->m_ChildMenu);
 			if (GetActiveMDIChild()->m_hChildAccel)
 				GetApp()->SetAccelerators(GetActiveMDIChild()->m_hChildAccel, this);
 		}
@@ -526,31 +526,31 @@ namespace Win32xx
 	{
 		assert ( pChild->IsWindow() );
 
-		GetMDIClient()->SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
+		GetMDIClient().SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
 
 		// Verify
 		assert ( m_hActiveMDIChild == pChild->GetHwnd() );
 	}
 
-	inline void CMDIFrame::UpdateFrameMenu(CMenu* pMenu)
+	inline void CMDIFrame::UpdateFrameMenu(CMenu Menu)
 	{
-		int nMenuItems = pMenu->GetMenuItemCount();
+		int nMenuItems = Menu.GetMenuItemCount();
 		if (nMenuItems > 0)
 		{
 			// The Window menu is typically second from the right
 			int nWindowItem = MAX (nMenuItems -2, 0);
-			CMenu* pMenuWindow = pMenu->GetSubMenu(nWindowItem);
+			CMenu MenuWindow = Menu.GetSubMenu(nWindowItem);
 
-			if (pMenuWindow)
+			if (MenuWindow.GetHandle())
 			{
 				if (IsMenuBarUsed())
 				{
-					AppendMDIMenu(pMenuWindow);
-					GetMenuBar().SetMenu(pMenu->GetHandle());
+					AppendMDIMenu(MenuWindow);
+					GetMenuBar().SetMenu(Menu);
 				}
 				else
 				{
-					GetMDIClient()->SendMessage (WM_MDISETMENU, (WPARAM)pMenu->GetHandle(), (LPARAM)pMenuWindow->GetHandle());
+					GetMDIClient().SendMessage(WM_MDISETMENU, (WPARAM)Menu.GetHandle(), (LPARAM)MenuWindow.GetHandle());
 					DrawMenuBar();
 				}
 			}
@@ -790,7 +790,7 @@ namespace Win32xx
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
 		if (m_ChildMenu.GetHandle())
-			GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
+			GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
 		if (m_hChildAccel)
 			GetApp()->SetAccelerators(m_hChildAccel, this);
 
@@ -866,7 +866,7 @@ namespace Win32xx
 			if (pWnd == this)
 			{
 				if (m_ChildMenu.GetHandle())
-					GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
+					GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
 
 				if (m_hChildAccel)
 					GetApp()->SetAccelerators(m_hChildAccel, GetMDIFrame());
@@ -913,7 +913,7 @@ namespace Win32xx
 			GetMDIFrame()->m_hActiveMDIChild = *this;
 			// Set the menu to child default menu
 			if (m_ChildMenu.GetHandle())
-				GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
+				GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
 			if (m_hChildAccel)
 				GetApp()->SetAccelerators(m_hChildAccel, this);
 		}
@@ -923,7 +923,7 @@ namespace Win32xx
 		{
 			GetMDIFrame()->m_hActiveMDIChild = NULL;
 			// Set the menu to frame's original menu
-			GetMDIFrame()->UpdateFrameMenu( &GetMDIFrame()->GetFrameMenu() );
+			GetMDIFrame()->UpdateFrameMenu( GetMDIFrame()->GetFrameMenu() );
 			GetApp()->SetAccelerators(GetMDIFrame()->GetFrameAccel(), this);
 		}
 			

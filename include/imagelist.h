@@ -106,7 +106,10 @@ namespace Win32xx
 		BOOL Replace(int nImage, HBITMAP hbmImage, HBITMAP hbmMask) const;
 		int Replace(int nImage, HICON hIcon) const;
 		HIMAGELIST GetHandle() const;
+
+#ifdef USE_OBSOLETE_CODE
 		static CImageList* FromHandle(HIMAGELIST hImageList);
+#endif
 
 		//Attributes
 		HICON GetIcon(int iImage, UINT nFlags) const;
@@ -197,6 +200,7 @@ namespace Win32xx
 		GetApp()->m_csMapLock.Release();
 	}
 
+#ifdef USE_OBSOLETE_CODE
 	inline CImageList* CImageList::FromHandle(HIMAGELIST hImageList)
 	// Returns the CImageList object associated with the ImageList handle (HIMAGELIST).
 	{
@@ -227,6 +231,7 @@ namespace Win32xx
 
 		return pImageList;
 	}
+#endif
 
 	inline BOOL CImageList::RemoveFromMap()
 	{
@@ -287,8 +292,8 @@ namespace Win32xx
 
 	inline void CImageList::Attach(HIMAGELIST hImageList)
 	// Attaches an existing ImageList to this CImageList
+	// hImageList can be NULL
 	{
-		assert(hImageList);
 		assert(m_pData);
 		
 		// Permit the object to be reused
@@ -311,7 +316,8 @@ namespace Win32xx
 		else
 		{
 			m_pData->hImageList = hImageList;
-			AddToMap();
+			if (hImageList)
+				AddToMap();
 		}
 	}
 
@@ -414,7 +420,6 @@ namespace Win32xx
 	// destroyed when this CImageList is deconstructed.
 	{
 		assert(m_pData);
-		assert(m_pData->hImageList);
 		HIMAGELIST hImageList = m_pData->hImageList;
 
 		if (m_pData->Count > 0)

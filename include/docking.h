@@ -4041,7 +4041,7 @@ namespace Win32xx
 		ContainerInfo ci;
 		ci.pContainer = pContainer;
 		ci.Title = pContainer->GetTabText();
-		ci.iImage = GetODImageList()->Add( pContainer->GetTabIcon() );
+		ci.iImage = GetODImageList().Add( pContainer->GetTabIcon() );
 		int iNewPage = 0;
 		if (bInsert)
 		{
@@ -4196,7 +4196,7 @@ namespace Win32xx
 		assert(GetView());			// Use SetView in the constructor to set the view window
 
 		// Create and assign the tab's image list
-		GetODImageList()->Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+		GetODImageList().Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
 		NONCLIENTMETRICS info;
@@ -4209,7 +4209,7 @@ namespace Win32xx
 		ContainerInfo ci;
 		ci.pContainer = this;
 		ci.Title = GetTabText();
-		ci.iImage = GetODImageList()->Add( GetTabIcon() );
+		ci.iImage = GetODImageList().Add( GetTabIcon() );
 		m_vContainerInfo.push_back(ci);
 
 		// Create the page window
