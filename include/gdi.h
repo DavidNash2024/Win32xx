@@ -997,29 +997,35 @@ namespace Win32xx
 	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.
 	{
 		assert(m_pData);
-		assert(hObject);
 
-		// Permit the object to be reused
-		if (m_pData->hGDIObject != 0)
+		if (hObject != m_pData->hGDIObject)
 		{
-			Release();
-			m_pData = new DataMembers;
-			m_pData->hGDIObject = 0;
-			m_pData->Count = 1L;
-			m_pData->IsTmpObject = FALSE;
-		}
+			// Release any existing GDI object
+			if (m_pData->hGDIObject != 0)
+			{
+				Release();
+				m_pData = new DataMembers;
+				m_pData->hGDIObject = 0;
+				m_pData->Count = 1L;
+				m_pData->IsTmpObject = FALSE;
+			}
 
-		CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
-		if (pObject)
-		{
-			delete m_pData;
-			m_pData = pObject->m_pData;
-			InterlockedIncrement(&m_pData->Count);
-		}
-		else
-		{
-			m_pData->hGDIObject = hObject;
-			AddToMap();
+			if (hObject)
+			{
+				// Add the GDI object to this CCGDIObject
+				CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
+				if (pObject)
+				{
+					delete m_pData;
+					m_pData = pObject->m_pData;
+					InterlockedIncrement(&m_pData->Count);
+				}
+				else
+				{
+					m_pData->hGDIObject = hObject;
+					AddToMap();
+				}
+			}
 		}
 	}
 
@@ -2437,28 +2443,43 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		UNREFERENCED_PARAMETER(hWnd);
 		assert(m_pData);
-		assert(0 == m_pData->hDC);
-		assert(hDC);
 
-		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (pDC)
+		if (hDC != m_pData->hDC)
 		{
-			delete m_pData;
-			m_pData = pDC->m_pData;
-			InterlockedIncrement(&m_pData->Count);
-		}
-		else
-		{
-			m_pData->hDC = hDC;
+			if (m_pData->hDC)
+			{
+				Release();
 
-#ifndef _WIN32_WCE
-			m_pData->hWnd = ::WindowFromDC(hDC);
-#else
-			m_pData->hWnd = hWnd;
-#endif
+				// Assign values to our data members
+				m_pData = new DataMembers;
+				m_pData->hDC = 0;
+				m_pData->Count = 1L;
+				m_pData->IsTmpHDC = FALSE;
+			}		
+			
+			if (hDC)
+			{
+				CDC* pDC = GetApp()->GetCDCFromMap(hDC);
+				if (pDC)
+				{
+					delete m_pData;
+					m_pData = pDC->m_pData;
+					InterlockedIncrement(&m_pData->Count);
+				}
+				else
+				{
+					m_pData->hDC = hDC;
 
-			AddToMap();
-			m_pData->nSavedDCState = ::SaveDC(hDC);
+		#ifndef _WIN32_WCE
+					m_pData->hWnd = ::WindowFromDC(hDC);
+		#else
+					m_pData->hWnd = hWnd;
+		#endif
+
+					AddToMap();
+					m_pData->nSavedDCState = ::SaveDC(hDC);
+				}
+			}
 		}
 	}
 

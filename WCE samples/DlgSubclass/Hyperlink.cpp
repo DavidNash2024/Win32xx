@@ -22,8 +22,7 @@ BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd& Parent)
 {
 	BOOL bSuccess = CWnd::AttachDlgItem(nID, Parent);;
 
-	CFont* pFont = GetFont();
-	LOGFONT lf = pFont->GetLogFont();
+	LOGFONT lf = GetFont().GetLogFont();
 	lf.lfUnderline = TRUE;
 	m_UrlFont.CreateFontIndirect(&lf);
 

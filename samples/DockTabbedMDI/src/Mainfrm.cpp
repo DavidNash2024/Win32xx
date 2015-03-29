@@ -48,7 +48,7 @@ void CMainFrame::LoadDefaultDockers()
 void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
-//	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
+	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
 	m_MyTabbedMDI.AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	m_MyTabbedMDI.AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	m_MyTabbedMDI.AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
@@ -339,12 +339,6 @@ void CMainFrame::OnInitialUpdate()
 	ShowWindow(m_ShowCmd);
 	
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-
-	for (int i = 0; i < 20; i++)
-	{
-		OnDefaultLayout();
-		Sleep (1000);
-	}
 }
 
 LRESULT CMainFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)

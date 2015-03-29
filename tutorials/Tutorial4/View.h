@@ -20,7 +20,7 @@ public:
 
 protected:
 	virtual void OnDestroy();
-	virtual void OnDraw(CDC* pDC);
+	virtual void OnDraw(CDC& dc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

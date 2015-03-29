@@ -171,7 +171,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 		break;
 	case IDM_BLACK:
 		{
-			SetReBarColors( RGB(128, 138 ,176), RGB(98, 108 ,136), RGB(77, 87, 97), RGB(7, 17, 27) );
+			SetReBarColors( RGB(7, 17, 27), RGB(57, 67, 77), RGB(118, 128 ,136), RGB(68, 78 ,86) );
 
 			StatusBarTheme sbt = {TRUE, RGB(128, 138 ,176), RGB(98, 108 ,136)};
 			SetStatusBarTheme (sbt);
@@ -209,6 +209,23 @@ void CMainFrame::ChooseColor(UINT nColor)
 	}
 
 	RecalcLayout();
+}
+
+LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
+// Set the text color for the menubar
+{
+	LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
+	
+	COLORREF clr;
+	if (m_nColor == IDM_BLACK)	clr = RGB(255,255,255);
+	else						clr = RGB(0, 0, 0);
+
+	// Set the text color for the custom draw's device context
+	CDC dcDraw(lpNMCustomDraw->nmcd.hdc);
+	dcDraw.SetTextColor(clr);
+	dcDraw.Detach();
+
+	return CFrame::CustomDrawMenuBar(pNMHDR);
 }
 
 DWORD CMainFrame::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)

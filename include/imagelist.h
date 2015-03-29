@@ -296,30 +296,35 @@ namespace Win32xx
 	{
 		assert(m_pData);
 
-		if (m_pData->hImageList)
+		if (hImageList != m_pData->hImageList)
 		{
-			Release();
-
-			// Assign values to our data members
-			m_pData = new DataMembers;
-			m_pData->hImageList = 0;
-			m_pData->Count = 1L;
-			m_pData->IsTmpImageList = FALSE;
-		}
-
-		if (hImageList)
-		{
-			CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-			if (pImageList)
+			// Release any existing ImageList
+			if (m_pData->hImageList)
 			{
-				delete m_pData;
-				m_pData = pImageList->m_pData;
-				InterlockedIncrement(&m_pData->Count);
+				Release();
+
+				// Assign values to our data members
+				m_pData = new DataMembers;
+				m_pData->hImageList = 0;
+				m_pData->Count = 1L;
+				m_pData->IsTmpImageList = FALSE;
 			}
-			else
+
+			if (hImageList)
 			{
-				m_pData->hImageList = hImageList;
-				AddToMap();
+				// Add the image list to this CImageList
+				CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
+				if (pImageList)
+				{
+					delete m_pData;
+					m_pData = pImageList->m_pData;
+					InterlockedIncrement(&m_pData->Count);
+				}
+				else
+				{
+					m_pData->hImageList = hImageList;
+					AddToMap();
+				}
 			}
 		}
 	}

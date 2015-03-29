@@ -18,7 +18,7 @@ void CView::DrawLine(int x, int y)
 	dcClient.LineTo(x, y);
 }
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 {
 	if (m_points.size() > 0)
 	{
@@ -26,8 +26,8 @@ void CView::OnDraw(CDC* pDC)
 
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			if (bDraw) pDC->LineTo(m_points[i].x, m_points[i].y);
-			else pDC->MoveTo(m_points[i].x, m_points[i].y);
+			if (bDraw) dc.LineTo(m_points[i].x, m_points[i].y);
+			else dc.MoveTo(m_points[i].x, m_points[i].y);
 			bDraw = m_points[i].PenDown;
 		}
 	}

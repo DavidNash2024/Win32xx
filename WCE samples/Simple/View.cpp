@@ -2,7 +2,7 @@
 #include "resource.h"
 
 
-void CView::OnDraw(CDC* pDC)
+void CView::OnDraw(CDC& dc)
 {
 	// Define a rectangle to contain some text
 	CRect rc = GetClientRect();
@@ -10,7 +10,7 @@ void CView::OnDraw(CDC* pDC)
 
 	// Draw some text in our rectangle
 	LPCTSTR szString = TEXT("Use Debug mode. Click here");
-	pDC->DrawText(szString, lstrlen(szString), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	dc.DrawText(szString, lstrlen(szString), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 

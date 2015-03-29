@@ -60,11 +60,11 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CMainFrame::OnDraw(CDC* pDC)
+void CMainFrame::OnDraw(CDC& dc)
 {
 	CRect rc = GetViewRect();
 	CString strHello = LoadString(IDS_HELLO);
-	pDC->DrawText(strHello, strHello.GetLength(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+	dc.DrawText(strHello, strHello.GetLength(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 

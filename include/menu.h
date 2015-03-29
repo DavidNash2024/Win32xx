@@ -375,29 +375,33 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		
-		// Permit the object to be reused
-		if (m_pData->hMenu != 0)
+		if (hMenu != m_pData->hMenu)
 		{
-			Release();
-			m_pData = new DataMembers;
-			m_pData->hMenu = 0;
-			m_pData->Count = 1L;
-			m_pData->IsTmpMenu = FALSE;
-		}
-
-		if (hMenu)
-		{
-			CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-			if (pMenu)
+			// Release any existing menu
+			if (m_pData->hMenu != 0)
 			{
-				delete m_pData;
-				m_pData = pMenu->m_pData;
-				InterlockedIncrement(&m_pData->Count);
+				Release();
+				m_pData = new DataMembers;
+				m_pData->hMenu = 0;
+				m_pData->Count = 1L;
+				m_pData->IsTmpMenu = FALSE;
 			}
-			else
+
+			if (hMenu)
 			{
-				m_pData->hMenu = hMenu;
-				AddToMap();
+				// Add the menu to this CMenu
+				CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
+				if (pMenu)
+				{
+					delete m_pData;
+					m_pData = pMenu->m_pData;
+					InterlockedIncrement(&m_pData->Count);
+				}
+				else
+				{
+					m_pData->hMenu = hMenu;
+					AddToMap();
+				}
 			}
 		}
 	}

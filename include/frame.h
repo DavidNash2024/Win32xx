@@ -1152,11 +1152,11 @@ namespace Win32xx
 						rcRect.InflateRect(0, -2);
 					else
 						rcRect.InflateRect(0, -1);
-
+					
+					CDC dcDraw;
+					dcDraw.Attach(lpNMCustomDraw->nmcd.hdc);
 					if (nState & (CDIS_HOT | CDIS_SELECTED))
 					{
-						CDC dcDraw;
-						dcDraw.Attach(lpNMCustomDraw->nmcd.hdc);
 
 						if ((nState & CDIS_SELECTED) || (GetMenuBar().GetButtonState(dwItem) & TBSTATE_PRESSED))
 						{
@@ -1176,26 +1176,26 @@ namespace Win32xx
 						dcDraw.LineTo(rcRect.right-1, rcRect.bottom);
 						dcDraw.MoveTo(rcRect.right-1, rcRect.bottom);
 						dcDraw.LineTo(rcRect.left, rcRect.bottom);
-
-						CString str;
-						int nLength = (int)GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
-						if (nLength > 0)
-						{
-							GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
-							str.ReleaseBuffer();
-						}
-
-						// Draw highlight text
-						CFont Font = GetMenuBar().GetFont();
-						dcDraw.SelectObject(Font);
-
-						rcRect.bottom += 1;
-						dcDraw.SetBkMode(TRANSPARENT);
-						dcDraw.DrawText(str, str.GetLength(), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
-
-						dcDraw.Detach();
-						return CDRF_SKIPDEFAULT;  // No further drawing
 					}
+
+					CString str;
+					int nLength = (int)GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
+					if (nLength > 0)
+					{
+						GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
+						str.ReleaseBuffer();
+					}
+					
+					// Draw highlight text
+					CFont Font = GetMenuBar().GetFont();
+					dcDraw.SelectObject(Font);
+
+					rcRect.bottom += 1;
+					dcDraw.SetBkMode(TRANSPARENT);
+					dcDraw.DrawText(str, str.GetLength(), rcRect, DT_VCENTER | DT_CENTER | DT_SINGLELINE);
+
+					dcDraw.Detach();
+					return CDRF_SKIPDEFAULT;  // No further drawing
 				}
 			}
 			return CDRF_DODEFAULT ;   // Do default drawing
