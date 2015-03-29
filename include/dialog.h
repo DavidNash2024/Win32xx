@@ -158,8 +158,8 @@ namespace Win32xx
 		virtual void AddChild(HWND hWnd, Alignment corner, DWORD dwStyle);
 		virtual void HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
     	virtual void Initialize(CWnd* pParent, const RECT& rcMin, const RECT& rcMax = CRect(0,0,0,0));
-		virtual void OnHScroll(WPARAM wParam, LPARAM lParam);
-		virtual void OnVScroll(WPARAM wParam, LPARAM lParam);
+		virtual void OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void RecalcLayout();
 		CRect GetMinRect() const { return m_rcMin; }
 		CRect GetMaxRect() const { return m_rcMax; }
@@ -739,12 +739,12 @@ namespace Win32xx
 
 		case WM_HSCROLL:
 			if (lParam == 0)
-				OnHScroll(wParam, lParam);
+				OnHScroll(uMsg, wParam, lParam);
 			break;
 
 		case WM_VSCROLL:
 			if (lParam == 0)
-				OnVScroll(wParam, lParam);
+				OnVScroll(uMsg, wParam, lParam);
 			break;
 		}
 	}
@@ -768,7 +768,7 @@ namespace Win32xx
 		m_pParent->SetClassLongPtr(GCL_STYLE, dwStyle);
     }
 
-	void inline CResizer::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
+	void inline CResizer::OnHScroll(UINT, WPARAM wParam, LPARAM)
 	{
 		int xNewPos;
 
@@ -818,7 +818,7 @@ namespace Win32xx
 		m_pParent->SetScrollInfo(SB_HORZ, si, TRUE);
 	}
 
-	void inline CResizer::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
+	void inline CResizer::OnVScroll(UINT, WPARAM wParam, LPARAM)
 	{
 		int yNewPos;
 

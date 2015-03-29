@@ -23,9 +23,9 @@ protected:
 
 private:
 	void DrawLine(int x, int y);
-	LRESULT OnLButtonDown(LPARAM lParam);
-	LRESULT OnLButtonUp(LPARAM lParam);
-	LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	POINT m_OldPt;
 };

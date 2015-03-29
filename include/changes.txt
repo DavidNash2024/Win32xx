@@ -63,19 +63,25 @@ Step by step guide to code migration
   - CWnd::Create
   - CWnd::OnDraw  
   - CWnd::OnEraseBkgnd
-  - CWnd::FromHandle
-  
-  - CDC::FromHandle
+ 
   - CBitmap::FromHandle
   - CBrush::FromHandle
+  - CDC::FromHandle  
   - CFont::FromHandle
+  - CImageList::FromHandle
+  - CMenu::FromHandle  
   - CPalette::FromHandle
   - CPen::FromHandle
   - CRgn::FromHandle
-  - CImageList::FromHandle
-  - CMenu::FromHandle
+  - CWnd::FromHandle  
   
   - CWnd::m_hWnd is declared protected instead of private
+  
+  - The messages handlers in CDocker and CFrame of the form:
+    - CDocker::OnMessageXX(WPARAM wParam, LPARAM lParam)
+    - CFrame::OnMessageXX(WPARAM wParam, LPARAM lParam)
+	- CMDIFrame::OnMessageXX(WPARAM wParam, LPARAM lParam)
+	- CMDIChild::OnMessageXX(WPARAM wParam, LPARAM lParam)
   
   If used, this macro must be defined before including the Win32++ header files.
   It can be placed in stdafx.h if precompiled headers are used. Even with this
@@ -98,7 +104,12 @@ Step by step guide to code migration
    c) Remove the use of FromHandle in your code. There might be better ways
       but we can always use Attach and Detach in place of FromHandle.
 	  
-   d) Remove the definition of USE_OBSOLETE_CODE.	  
+   d) Add the UINT parameter to the message handlers. For example:
+       OnSize(WPARAM wParam, LPARAM lParam)
+	   should now be:
+	   OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+            
+   e) Remove the definition of USE_OBSOLETE_CODE.  
 
 Other tips:
 *) The following Win32++ classes are reference counted and can be safely copied.
@@ -113,9 +124,9 @@ Other tips:
    
 *) GetCWndPtr can be used to retrieve a CWnd pointer from the global map.
 
-*) There is no need to add use GetHwnd() or GetHandle() when using objects in 
-   functioning calls expecting a handle. The Win32++ classes use operator 
-   overloading to do these conversions automatically.
+*) There is no need to add use GetHwnd(), GetHandle() or GetHDC() when using
+   objects in functioning calls expecting a handle. The Win32++ classes use
+   operator overloading to do these conversions automatically.
    
   
 Changes in detail
@@ -176,22 +187,51 @@ Modified CDocker::GetDockClient
 Modified CDocker::GetDockHint
 Modified CDocker::IsChildOfDocker
 Modified CDocker::IsRelated
+Modified CDocker::OnDockActivated
+Modified CDocker::OnDockDestroyed
+Modified CDocker::OnExitSizeMove
+Modified CDocker::OnNCLButtonDblClk
+Modified CDocker::OnSysColorChange
+Modified CDocker::OnSysCommand
+Modified CDocker::OnTimer
+Modified CDocker::OnWindowPosChanging
+Modified CDocker::OnWindowPosChanged
 Modified CFile::OpenFileDialog
 Modified CFile::SaveFileDialog
 Modified CFont::CreatePointFont
 Modified CFont::CreatePointFontIndirect
 Modified CFrame::AddToolBarBand
 Modified CFrame::DrawReBarBkgnd
+Modified CFrame::DrawStatusBarBkgnd
 Modified CFrame::ExcludeChildRect
 Modified CFrame::GetFrameMenu
 Modified CFrame::GetMenuItemPos
 Modified CFrame::GetMenuBar
+Modified CFrame::GetMenuTheme
 Modified CFrame::GetReBar
+Modified CFrame::GetReBarTheme
 Modified CFrame::GetStatusBar
+Modified CFrame::GetStatusBarTheme
 Modified CFrame::GetToolBar
+Modified CFrame::GetToolBarTheme
+Modified CFrame::OnActivate
+Modified CFrame::OnDrawItem
+Modified CFrame::OnExitMenuLoop
+Modified CFrame::OnInitMenuPopup
+Modified CFrame::OnMeasureItem
+Modified CFrame::OnMenuChar
+Modified CFrame::OnMenuSelect
+Modified CFrame::OnSetFocus
+Modified CFrame::OnSize
+Modified CFrame::OnSysColorChange
+Modified CFrame::OnSysCommand
+Modified CFrame::SetMenuTheme
+Modified CFrame::SetReBarTheme
+Modified CFrame::SetStatusBarTheme
 Modified CFrame::SetTBImageList
 Modified CFrame::SetTBImageListDis
 Modified CFrame::SetTBImageListHot
+Modified CFrame::SetToolBarTheme
 Modified CHeader::CreateDragImage
 Modified CHeader::GetImageList
 Modified CHeader::GetImageList
@@ -202,11 +242,15 @@ Modified CImageList::Draw
 Modified CImageList::DrawEx
 Modified CListView::GetImageList
 Modified CListView::SetImageList
+Modified CMDIChild::OnMDIActivate
+Modified CMDIChild::OnWindowPosChanged
 Modified CMDIFrame::AppendMDIMenu
 Modified CMDIFrame::CDockMDIClient::Create
 Modified CMDIFrame::GetActiveMenu
 Modified CMDIFrame::GetDockClient
 Modified CMDIFrame::GetMDIClient
+Modified CMDIFrame::OnInitMenuPopup
+Modified CMDIFrame::OnWindowPosChanged
 Modified CMDIFrame::UpdateFrameMenu
 Modified CMemDC::CMemDC
 Modified CMenu::AppendMenu
@@ -221,6 +265,14 @@ Modified CMetaFileDC::CreateEnhanced
 Modified CPaintDC::CPaintDC
 Modified CPalette::CreateHalftonePalette
 Modified CPropertySheet::CPropertySheet
+Modified CReBar::GetToolTips
+Modified CReBar::OnLButtonDown
+Modified CReBar::OnLButtonUp
+Modified CReBar::OnMouseMove
+Modified CReBar::OnTBWinPosChanging
+Modified CReBar::OnToolBarResize
+Modified CReBar::SetBandBitmap
+Modified CReBar::SetToolTips
 Modified CRibbon::CreateRibbon
 Modified CResizer::AddChild
 Modified CRgn::CombineRgn
@@ -229,6 +281,7 @@ Modified CRgn::EqualRgn
 Modified CSlider::GetBuddy
 Modified CSlider::SetBuddy
 Modified CSlider::GetToolTips
+Modified CSlider::SetToolTips
 Modified CSpinButton::GetBuddy
 Modified CSpinButton::SetBuddy
 Modified CTab::DrawCloseButton
@@ -238,9 +291,23 @@ Modified CTab::DrawTabBorders
 Modified CTab::GetListMenu
 Modified CTab::GetTabFont
 Modified CTab::GetToolTips
+Modified CTab::OnEraseBkgnd
+Modified CTab::OnLButtonDblClk
+Modified CTab::OnLButtonDown
+Modified CTab::OnLButtonUp
+Modified CTab::OnMouseLeave
+Modified CTab::OnMouseMove
+Modified CTab::OnKillFocus
+Modified CTab::OnPaint
+Modified CTab::OnNCHitTest
+Modified CTab::OnSetFocus
+Modified CTab::OnWindowPosChanged
+Modified CTab::OnWindowPosChanging
 Modified CTab::SetFont
 Modified CTab::SetImageList
+Modified CTab::SetToolTips
 Modified CTabbedMDI::GetListMenu
+Modified CTabbedMDI::OnWindowPosChanged
 Modified CToolBar::GetDisabledImageList
 Modified CToolBar::GetHotImageList
 Modified CToolBar::GetImageList
@@ -255,7 +322,9 @@ Modified CToolTip::SetToolRect
 Modified CToolTip::HitTest
 Modified CToolTip::UpdateTipText
 Modified CTreeView::GetImageList
+Modified CTreeView::GetToolTips
 Modified CTreeView::SetImageList
+Modified CTreeView::SetToolTips
 Modified CWindowDC::CWindowDC
 Modified CWnd::AttachDlgItem
 Modified CWnd::BeginPaint

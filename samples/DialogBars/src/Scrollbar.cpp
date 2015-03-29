@@ -19,8 +19,9 @@ void CMyScrollBar::OnInitialUpdate()
 	SetScroll(0);
 }
 
-LRESULT CMyScrollBar::OnHScroll(WPARAM wParam, LPARAM lParam)
+LRESULT CMyScrollBar::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(lParam);
 
 	// Get a pointer to the MyDialog object
@@ -73,7 +74,7 @@ LRESULT CMyScrollBar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	switch (uMsg)
 	{
-	case WM_HSCROLL:	return OnHScroll(wParam, lParam);
+	case WM_HSCROLL:	return OnHScroll(uMsg, wParam, lParam);
 	}
 
 	return 0L;

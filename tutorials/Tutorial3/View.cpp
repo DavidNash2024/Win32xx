@@ -22,7 +22,7 @@ void CView::OnDestroy()
 	::PostQuitMessage(0);
 }
 
-LRESULT CView::OnLButtonDown(LPARAM lParam)
+LRESULT CView::OnLButtonDown(UINT, WPARAM, LPARAM lParam)
 {
  	// Capture mouse input.
  	SetCapture();
@@ -33,7 +33,7 @@ LRESULT CView::OnLButtonDown(LPARAM lParam)
 	return 0L;
 }
 
-LRESULT CView::OnLButtonUp(LPARAM lParam)
+LRESULT CView::OnLButtonUp(UINT, WPARAM, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -43,7 +43,7 @@ LRESULT CView::OnLButtonUp(LPARAM lParam)
 	return 0L;
 }
 
-LRESULT CView::OnMouseMove(WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
 {
 	// hold down the left mouse button and move mouse to draw lines.
 	if (wParam & MK_LBUTTON)
@@ -60,9 +60,9 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_LBUTTONDOWN: return OnLButtonDown(lParam);
-	case WM_MOUSEMOVE:	 return OnMouseMove(wParam, lParam);
-    case WM_LBUTTONUP:	 return OnLButtonUp(lParam);
+	case WM_LBUTTONDOWN: return OnLButtonDown(uMsg, wParam, lParam);
+	case WM_MOUSEMOVE:	 return OnMouseMove(uMsg, wParam, lParam);
+    case WM_LBUTTONUP:	 return OnLButtonUp(uMsg, wParam, lParam);
 	}
 
 	//Use the default message handling for remaining messages

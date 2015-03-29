@@ -86,7 +86,7 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual int  OnOK();
 		virtual BOOL OnQueryCancel();
-		virtual BOOL OnQuerySiblings(WPARAM wParam, LPARAM lParam);
+		virtual BOOL OnQuerySiblings(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual int  OnSetActive();
 		virtual int  OnWizardBack();
 		virtual INT_PTR OnWizardFinish();
@@ -230,7 +230,7 @@ namespace Win32xx
 		    return OnInitDialog();
 
 		case PSM_QUERYSIBLINGS:
-			return (BOOL)OnQuerySiblings(wParam, lParam);
+			return (BOOL)OnQuerySiblings(uMsg, wParam, lParam);
 			
 		case WM_CLOSE:	
 			{
@@ -390,8 +390,9 @@ namespace Win32xx
 		return FALSE;    // Allow cancel to proceed
 	}
 
-	inline BOOL CPropertyPage::OnQuerySiblings(WPARAM wParam, LPARAM lParam)
+	inline BOOL CPropertyPage::OnQuerySiblings(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 

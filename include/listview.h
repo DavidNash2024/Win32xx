@@ -54,100 +54,99 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS &wc);
 
 		// Attributes
-		CSize ApproximateViewRect(CSize sz = CSize(-1, -1), int iCount = -1) const;
+		CSize	ApproximateViewRect(CSize sz = CSize(-1, -1), int iCount = -1) const;
 		COLORREF GetBkColor( ) const;
-		BOOL GetBkImage( LVBKIMAGE& lvbkImage ) const;
-		UINT GetCallbackMask( ) const;
-		BOOL GetCheckState( UINT nItem ) const;
-		BOOL GetColumn( int iCol, LVCOLUMN& Column ) const;
-		BOOL GetColumnOrderArray( LPINT piArray, int iCount = -1 );
-		int GetColumnWidth( int iCol ) const;
-		int GetCountPerPage( ) const;
-		HWND GetEditControl( ) const;
-		DWORD GetExtendedStyle( ) const;
-		HWND GetHeader( ) const;
+		BOOL	GetBkImage( LVBKIMAGE& lvbkImage ) const;
+		UINT	GetCallbackMask( ) const;
+		BOOL	GetCheckState( UINT nItem ) const;
+		BOOL	GetColumn( int iCol, LVCOLUMN& Column ) const;
+		BOOL	GetColumnOrderArray( LPINT piArray, int iCount = -1 );
+		int		GetColumnWidth( int iCol ) const;
+		int		GetCountPerPage( ) const;
+		HWND	GetEditControl( ) const;
+		DWORD	GetExtendedStyle( ) const;
+		HWND	GetHeader( ) const;
 		HCURSOR GetHotCursor( );
-		int GetHotItem( ) const;
-		DWORD GetHoverTime( ) const;
-		CImageList GetImageList( int nImageType );
-		BOOL GetItem( LVITEM& lvItem ) const;
-		int GetItemCount( ) const;
+		int		GetHotItem( ) const;
+		DWORD	GetHoverTime( ) const;
+		HIMAGELIST GetImageList( int nImageType ) const;
+		BOOL	GetItem( LVITEM& lvItem ) const;
+		int		GetItemCount( ) const;
 		DWORD_PTR GetItemData( int iItem ) const;
-		BOOL GetItemPosition( int iItem, CPoint& pt ) const;
-		BOOL GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
-		UINT GetItemState( int iItem, UINT nMask ) const;
+		BOOL	GetItemPosition( int iItem, CPoint& pt ) const;
+		BOOL	GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
+		UINT	GetItemState( int iItem, UINT nMask ) const;
 		CString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
-		int GetNextItem( int iItem, int iFlags ) const;
-		UINT GetNumberOfWorkAreas( ) const;
-		BOOL GetOrigin( CPoint& pt ) const;
-		UINT GetSelectedCount( ) const;
-		int GetSelectionMark( ) const;
-		int GetStringWidth( LPCTSTR pszString ) const;
-		BOOL GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const;
+		int		GetNextItem( int iItem, int iFlags ) const;
+		UINT	GetNumberOfWorkAreas( ) const;
+		BOOL	GetOrigin( CPoint& pt ) const;
+		UINT	GetSelectedCount( ) const;
+		int		GetSelectionMark( ) const;
+		int		GetStringWidth( LPCTSTR pszString ) const;
+		BOOL	GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const;
 		COLORREF GetTextBkColor( ) const;
 		COLORREF GetTextColor( ) const;
-		CToolTip* GetToolTips( ) const;
-		int GetTopIndex( ) const;
-		BOOL GetViewRect( CRect& rc ) const;
-		void GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const;
-		BOOL SetBkColor( COLORREF clrBk ) const;
-		BOOL SetBkImage( LVBKIMAGE& plvbkImage ) const;
-		BOOL SetCallbackMask( UINT nMask ) const;
-		void SetCheckState( int iItem, BOOL fCheck = TRUE ) const;
-		BOOL SetColumn( int iCol, const LVCOLUMN& pColumn ) const;
-		BOOL SetColumnOrderArray( int iCount, LPINT piArray ) const;
-		BOOL SetColumnWidth( int iCol, int cx ) const;
-		DWORD SetExtendedStyle( DWORD dwNewStyle ) const;
+		HWND	GetToolTips( ) const;
+		int		GetTopIndex( ) const;
+		BOOL	GetViewRect( CRect& rc ) const;
+		void	GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const;
+		BOOL	SetBkColor( COLORREF clrBk ) const;
+		BOOL	SetBkImage( LVBKIMAGE& plvbkImage ) const;
+		BOOL	SetCallbackMask( UINT nMask ) const;
+		void	SetCheckState( int iItem, BOOL fCheck = TRUE ) const;
+		BOOL	SetColumn( int iCol, const LVCOLUMN& pColumn ) const;
+		BOOL	SetColumnOrderArray( int iCount, LPINT piArray ) const;
+		BOOL	SetColumnWidth( int iCol, int cx ) const;
+		DWORD	SetExtendedStyle( DWORD dwNewStyle ) const;
 		HCURSOR SetHotCursor( HCURSOR hCursor ) const;
-		int SetHotItem( int nIndex ) const;
-		DWORD SetHoverTime( DWORD dwHoverTime = (DWORD)-1 ) const;
-		CSize SetIconSpacing( int cx, int cy ) const;
-		CSize SetIconSpacing( CSize sz ) const;
-		CImageList SetImageList( HIMAGELIST himlNew, int iImageListType );
-		BOOL SetItem( LVITEM& pItem ) const;
-		BOOL SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
+		int		SetHotItem( int nIndex ) const;
+		DWORD	SetHoverTime( DWORD dwHoverTime = (DWORD)-1 ) const;
+		CSize	SetIconSpacing( int cx, int cy ) const;
+		CSize	SetIconSpacing( CSize sz ) const;
+		HIMAGELIST SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
+		BOOL	SetItem( LVITEM& pItem ) const;
+		BOOL	SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
 						UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const;
-		void SetItemCount( int iCount ) const;
-		void SetItemCountEx( int iCount, DWORD dwFlags = LVSICF_NOINVALIDATEALL ) const;
-		BOOL SetItemData( int iItem, DWORD_PTR dwData ) const;
-		BOOL SetItemPosition( int iItem, CPoint& pt ) const;
-		BOOL SetItemState( int iItem, LVITEM& Item ) const;
-        void SetItemState( int iItem, UINT nState, UINT nMask ) const;
-		void SetItemText( int iItem, int iSubItem, LPCTSTR pszText ) const;
-		int SetSelectionMark( int iIndex ) const;
-		BOOL SetTextBkColor( COLORREF clrBkText ) const;
-		BOOL SetTextColor( COLORREF clrText ) const;
-		CToolTip* SetToolTips ( CToolTip* pToolTip ) const;
-		void SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const;
-		int SubItemHitTest( LVHITTESTINFO& htInfo ) const;
+		void	SetItemCount( int iCount ) const;
+		void	SetItemCountEx( int iCount, DWORD dwFlags = LVSICF_NOINVALIDATEALL ) const;
+		BOOL	SetItemData( int iItem, DWORD_PTR dwData ) const;
+		BOOL	SetItemPosition( int iItem, CPoint& pt ) const;
+		BOOL	SetItemState( int iItem, LVITEM& Item ) const;
+        void	SetItemState( int iItem, UINT nState, UINT nMask ) const;
+		void	SetItemText( int iItem, int iSubItem, LPCTSTR pszText ) const;
+		int		SetSelectionMark( int iIndex ) const;
+		BOOL	SetTextBkColor( COLORREF clrBkText ) const;
+		BOOL	SetTextColor( COLORREF clrText ) const;
+		HWND	SetToolTips ( HWND hToolTip ) const;
+		void	SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const;
+		int		SubItemHitTest( LVHITTESTINFO& htInfo ) const;
 
 		// Operations
-		BOOL Arrange( UINT nCode ) const;
-		CImageList CreateDragImage( int iItem, CPoint& pt );
-		BOOL DeleteAllItems( ) const;
-		BOOL DeleteColumn( int iCol ) const;
-		BOOL DeleteItem( int iItem ) const;
-		HWND EditLabel( int iItem ) const;
-		BOOL EnsureVisible( int iItem, BOOL fPartialOK ) const;
-		int FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
-		int HitTest( LVHITTESTINFO& HitTestInfo ) const;
-        int HitTest( CPoint pt, UINT* pFlags = NULL ) const;
-		int InsertColumn( int iCol, const LVCOLUMN& pColumn ) const;
-        int InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat = LVCFMT_LEFT,
+		BOOL	Arrange( UINT nCode ) const;
+		HIMAGELIST CreateDragImage( int iItem, CPoint& pt ) const;
+		BOOL	DeleteAllItems( ) const;
+		BOOL	DeleteColumn( int iCol ) const;
+		BOOL	DeleteItem( int iItem ) const;
+		HWND	EditLabel( int iItem ) const;
+		BOOL	EnsureVisible( int iItem, BOOL fPartialOK ) const;
+		int		FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
+		int		HitTest( LVHITTESTINFO& HitTestInfo ) const;
+        int		HitTest( CPoint pt, UINT* pFlags = NULL ) const;
+		int		InsertColumn( int iCol, const LVCOLUMN& pColumn ) const;
+        int		InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat = LVCFMT_LEFT,
 							int iWidth = -1, int iSubItem = -1 ) const;
-		int InsertItem( const LVITEM& pItem ) const;
-        int InsertItem( int iItem, LPCTSTR pszText ) const;
-        int InsertItem( int iItem, LPCTSTR pszText, int iImage ) const;
-		BOOL RedrawItems( int iFirst, int iLast ) const;
-		BOOL Scroll( CSize sz ) const;
-		BOOL SortItems( PFNLVCOMPARE pfnCompare, DWORD_PTR dwData ) const;
-		BOOL Update( int iItem ) const;
+		int		InsertItem( const LVITEM& pItem ) const;
+        int		InsertItem( int iItem, LPCTSTR pszText ) const;
+        int		InsertItem( int iItem, LPCTSTR pszText, int iImage ) const;
+		BOOL	RedrawItems( int iFirst, int iLast ) const;
+		BOOL	Scroll( CSize sz ) const;
+		BOOL	SortItems( PFNLVCOMPARE pfnCompare, DWORD_PTR dwData ) const;
+		BOOL	Update( int iItem ) const;
 
 	private:
 		CListView(const CListView&);			  // Disable copy construction
 		CListView& operator = (const CListView&); // Disable assignment operator
 
-		CImageList m_ImageList;
 	};
 
 }
@@ -269,13 +268,11 @@ namespace Win32xx
 		return ListView_GetHoverTime( *this );
 	}
 
-	inline CImageList CListView::GetImageList( int nImageType )
+	inline HIMAGELIST CListView::GetImageList( int nImageType ) const
 	// Retrieves the handle to an image list used for drawing list-view items.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = ListView_GetImageList( *this, nImageType );
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return ListView_GetImageList( *this, nImageType );
 	}
 
 	inline BOOL CListView::GetItem( LVITEM& Item ) const
@@ -423,11 +420,11 @@ namespace Win32xx
 		return ListView_GetTextColor( *this );
 	}
 
-	inline CToolTip* CListView::GetToolTips( ) const
+	inline HWND CListView::GetToolTips( ) const
 	// Retrieves the ToolTip control that the list-view control uses to display ToolTips.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(GetCWndPtr(ListView_GetToolTips(*this)));
+		return ListView_GetToolTips(*this);
 	}
 
 	inline int CListView::GetTopIndex( ) const
@@ -544,13 +541,11 @@ namespace Win32xx
 		return CSize( ListView_SetIconSpacing( *this, sz.cx, sz.cy ) );
 	}
 
-	inline CImageList CListView::SetImageList( HIMAGELIST himlNew, int iImageListType )
+	inline HIMAGELIST CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
 	// Assigns an image list to a list-view control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = ListView_SetImageList( *this, himlNew, iImageListType );
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return ListView_SetImageList( *this, himlNew, iImageListType );
 	}
 
 	inline BOOL CListView::SetItem( LVITEM& Item ) const
@@ -678,14 +673,11 @@ namespace Win32xx
 		return ListView_SetTextColor( *this, clrText );
 	}
 
-	inline CToolTip* CListView::SetToolTips( CToolTip* pToolTip ) const
+	inline HWND CListView::SetToolTips( HWND hToolTip ) const
 	// Sets the ToolTip control that the list-view control will use to display ToolTips.
 	{
 		assert(IsWindow());
-		assert(pToolTip);
-
-		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return static_cast<CToolTip*>(GetCWndPtr((HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L)));
+		return (HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const
@@ -711,13 +703,11 @@ namespace Win32xx
 		return ListView_Arrange( *this, nCode );
 	}
 
-	inline CImageList CListView::CreateDragImage( int iItem, CPoint& pt )
+	inline HIMAGELIST CListView::CreateDragImage( int iItem, CPoint& pt ) const
 	// Creates a drag image list for the specified item.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = ListView_CreateDragImage( *this, iItem, &pt );
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return ListView_CreateDragImage( *this, iItem, &pt );
 	}
 
 	inline BOOL CListView::DeleteAllItems( ) const

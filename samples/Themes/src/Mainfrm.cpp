@@ -62,13 +62,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
 			StatusBarTheme sbt = {TRUE, RGB(225, 230, 255), RGB(240, 242, 250)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_BLUE:	// ICY_BLUE Theme
@@ -76,13 +76,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
 
 			StatusBarTheme sbt = {TRUE, RGB(150,190,245), RGB(196,215,250)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 200)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_GREY:	// Grey Theme
@@ -90,13 +90,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(210, 210, 200), RGB(238, 236, 224), RGB(248, 247, 243), RGB(195, 195, 172) );
 
 			StatusBarTheme sbt = {TRUE, RGB(210, 210, 200), RGB(238, 236, 224)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(210, 210, 200), RGB(248, 247, 243), RGB(128, 128, 200)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_OLIVE:
@@ -104,13 +104,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(160, 180, 80), RGB(180, 200, 100), RGB(200, 220, 120), RGB(80, 159, 78) );
 
 			StatusBarTheme sbt = {TRUE, RGB(160, 180, 80), RGB(180, 200, 100)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(128, 128, 255)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(255, 200, 190), RGB(255, 210, 90), RGB(255, 230, 190), RGB(230, 160, 190), RGB(128, 128, 128)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_GOLD:
@@ -118,13 +118,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(230, 180, 0), RGB(240, 210, 90), RGB(255, 240, 150), RGB(180, 140, 50) );
 
 			StatusBarTheme sbt = {TRUE, RGB(230, 180, 0), RGB(240, 210, 90)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 210, 90), RGB(255, 240, 150), RGB(128, 128, 128)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_OCHRE:
@@ -132,13 +132,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(248, 132, 12), RGB(248, 198, 10), RGB(248, 210, 20), RGB(248, 141, 6) );
 
 			StatusBarTheme sbt = {TRUE, RGB(248, 132, 12), RGB(248, 198, 10)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_PINK:
@@ -146,13 +146,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(255, 130, 190), RGB(250, 205, 235), RGB(250, 205, 235), RGB(255, 120, 170) );
 
 			StatusBarTheme sbt = {TRUE, RGB(255, 130, 190), RGB(250, 205, 235)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(248, 147, 220), RGB(248, 153, 179), RGB(49, 106, 197)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(255, 130, 190), RGB(250, 205, 235), RGB(128, 128, 128)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_MAUVE:
@@ -160,13 +160,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(210, 128, 155), RGB(230, 160, 190), RGB(230, 158, 188), RGB(110, 100, 125) );
 
 			StatusBarTheme sbt = {TRUE, RGB(210, 128, 155), RGB(230, 160, 190)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(150,190,245), RGB(220,230,250), RGB(128, 128, 128)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	case IDM_BLACK:
@@ -174,13 +174,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(128, 138 ,176), RGB(98, 108 ,136), RGB(77, 87, 97), RGB(7, 17, 27) );
 
 			StatusBarTheme sbt = {TRUE, RGB(128, 138 ,176), RGB(98, 108 ,136)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	default:
@@ -189,13 +189,13 @@ void CMainFrame::ChooseColor(UINT nColor)
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
 			StatusBarTheme sbt = {TRUE, RGB(225, 230, 255), RGB(240, 242, 250)};
-			SetStatusBarTheme (&sbt);
+			SetStatusBarTheme (sbt);
 
 			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
-			SetToolBarTheme(&tbt);
+			SetToolBarTheme(tbt);
 
 			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
-			SetMenuTheme(&mt);
+			SetMenuTheme(mt);
 		}
 		break;
 	}
@@ -415,9 +415,9 @@ void CMainFrame::OnUseThemes()
 	if (IsReBarSupported())
 	{
 		m_UseThemes = !m_UseThemes;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->UseThemes = m_UseThemes;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.UseThemes = m_UseThemes;
+		SetReBarTheme(RBT);
 		int nBand = GetReBar().GetBand(GetMenuBar());
 		GetReBar().ShowGripper(nBand, !m_UseThemes);
 
@@ -442,9 +442,9 @@ void CMainFrame::OnFlatStyle()
 	if (IsReBarSupported())
 	{
 		m_UseFlatStyle = !m_UseFlatStyle;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->FlatStyle = m_UseFlatStyle;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.FlatStyle = m_UseFlatStyle;
+		SetReBarTheme(RBT);
 
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -455,9 +455,9 @@ void CMainFrame::OnLeftBands()
 	if (IsReBarSupported())
 	{
 		m_KeepBandsLeft = !m_KeepBandsLeft;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->BandsLeft = m_KeepBandsLeft;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.BandsLeft = m_KeepBandsLeft;
+		SetReBarTheme(RBT);
 
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -469,9 +469,9 @@ void CMainFrame::OnLockMenuBar()
 	if (IsReBarSupported())
 	{
 		m_LockMenuBand = !m_LockMenuBand;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->LockMenuBand = m_LockMenuBand;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.LockMenuBand = m_LockMenuBand;
+		SetReBarTheme(RBT);
 		GetReBar().MoveBand(GetReBar().GetBand(GetMenuBar()), 0);	// Move the MenuBar to band 0
 		GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), !m_LockMenuBand);
 
@@ -530,9 +530,9 @@ void CMainFrame::OnRoundBorders()
 	if (IsReBarSupported())
 	{
 		m_UseRoundBorders = !m_UseRoundBorders;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->RoundBorders = m_UseRoundBorders;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.RoundBorders = m_UseRoundBorders;
+		SetReBarTheme(RBT);
 
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -543,9 +543,9 @@ void CMainFrame::OnShortBands()
 	if (IsReBarSupported())
 	{
 		m_UseShortBands = !m_UseShortBands;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->ShortBands = m_UseShortBands;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.ShortBands = m_UseShortBands;
+		SetReBarTheme(RBT);
 
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -556,9 +556,9 @@ void CMainFrame::OnUseLines()
 	if (IsReBarSupported())
 	{
 		m_UseLines = !m_UseLines;
-		ReBarTheme* pRBT = GetReBarTheme();
-		pRBT->UseLines = m_UseLines;
-		SetReBarTheme(pRBT);
+		ReBarTheme RBT = GetReBarTheme();
+		RBT.UseLines = m_UseLines;
+		SetReBarTheme(RBT);
 
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
@@ -664,7 +664,7 @@ void CMainFrame::SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF
 			rt.clrBand2 = 0;
 		}
 
-		SetReBarTheme(&rt);
+		SetReBarTheme(rt);
 	}
 }
 
@@ -716,7 +716,7 @@ void CMainFrame::ShowArrows(BOOL bShow)
 	{
 		GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(m_Arrows), bShow);
 
-		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
+		if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
 			GetReBar().MoveBandsLeft();
 	}
 }
@@ -727,7 +727,7 @@ void CMainFrame::ShowCards(BOOL bShow)
 	{
 		GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(m_Cards), bShow);
 
-		if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
+		if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
 			GetReBar().MoveBandsLeft();
 	}
 }

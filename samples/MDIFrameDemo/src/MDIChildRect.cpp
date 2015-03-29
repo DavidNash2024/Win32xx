@@ -25,8 +25,10 @@ void CViewRect::OnDestroy()
 	KillTimer(1);
 }
 
-LRESULT CViewRect::OnSize(WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+
 	if (wParam != SIZE_MINIMIZED)
 	{
 		m_cxClientMax = LOWORD (lParam) ;
@@ -41,8 +43,9 @@ LRESULT CViewRect::OnSize(WPARAM wParam, LPARAM lParam)
 	return 0;
 }
 
-LRESULT CViewRect::OnTimer(WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -73,8 +76,8 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_TIMER:  return OnTimer(wParam, lParam);		// Display a random rectangle
-	case WM_SIZE:   return OnSize(wParam, lParam);		// If not minimized, save the window size
+	case WM_TIMER:  return OnTimer(uMsg, wParam, lParam);		// Display a random rectangle
+	case WM_SIZE:   return OnSize(uMsg, wParam, lParam);		// If not minimized, save the window size
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

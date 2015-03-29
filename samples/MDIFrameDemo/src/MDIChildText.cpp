@@ -87,8 +87,9 @@ int CMDIChildText::OnCreate(LPCREATESTRUCT pcs)
 	return 0;
 }
 
-LRESULT CMDIChildText::OnSetFocus(WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildText::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -100,7 +101,7 @@ LRESULT CMDIChildText::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_SETFOCUS:	return OnSetFocus(wParam, lParam);
+	case WM_SETFOCUS:	return OnSetFocus(uMsg, wParam, lParam);
 	}
 
 	// Do default processing for other messages

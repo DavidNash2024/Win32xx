@@ -48,7 +48,7 @@ void CMainFrame::LoadDefaultDockers()
 void CMainFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
-	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
+//	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
 	m_MyTabbedMDI.AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	m_MyTabbedMDI.AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	m_MyTabbedMDI.AddMDIChild(new CViewClasses, _T("Classes"), ID_MDI_CLASSES);
@@ -339,14 +339,20 @@ void CMainFrame::OnInitialUpdate()
 	ShowWindow(m_ShowCmd);
 	
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+
+	for (int i = 0; i < 20; i++)
+	{
+		OnDefaultLayout();
+		Sleep (1000);
+	}
 }
 
-LRESULT CMainFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Update the "Window" menu 
 	m_MyTabbedMDI.GetListMenu();
 
-	return CFrame::OnInitMenuPopup(wParam, lParam);
+	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 }
 
 void CMainFrame::OnCloseDockers()
@@ -435,8 +441,9 @@ void CMainFrame::SetupToolBar()
 	AddMenuIcon(IDM_FILE_NEWTREE, GetApp()->LoadIcon(IDI_CLASSVIEW));
 }
 
-LRESULT CMainFrame::OnMouseActivate(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -450,7 +457,7 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_MOUSEACTIVATE:	return OnMouseActivate(wParam, lParam);
+	case WM_MOUSEACTIVATE:	return OnMouseActivate(uMsg, wParam, lParam);
 	}
 
 	// Always pass unhandled messages on to WndProcDefault

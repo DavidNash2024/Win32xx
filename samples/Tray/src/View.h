@@ -21,9 +21,9 @@ protected:
 	virtual void    OnDraw(CDC& dc);	
 	virtual void	OnFileExit();
 	virtual void    OnInitialUpdate();
-	virtual LRESULT OnSize();
-	virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnTrayIcon(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -143,12 +143,12 @@ namespace Win32xx
 		HWND 	GetComboBoxCtrl() const;
 		HWND 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
-		CImageList GetImageList();
+		HIMAGELIST GetImageList() const;
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
 		BOOL 	HasEditChanged () const;
 		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
 		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
-		CImageList SetImageList(HIMAGELIST himlNew);
+		HIMAGELIST SetImageList(HIMAGELIST himlNew) const;
 		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
 
 	protected:
@@ -158,8 +158,6 @@ namespace Win32xx
 	private:
 		CComboBoxEx(const CComboBoxEx&);				// Disable copy construction
 		CComboBoxEx& operator = (const CComboBoxEx&);	// Disable assignment operator
-		
-		CImageList m_ImageList;
 	};
 
 	class CHeader : public CWnd
@@ -169,20 +167,20 @@ namespace Win32xx
 		virtual ~CHeader() {}
 
 		// Attributes
-		CImageList GetImageList();
+		HIMAGELIST GetImageList() const;
 		BOOL GetItem(int nPos, HDITEM* pHeaderItem) const;
 		int GetItemCount() const;
 		CRect GetItemRect(int nIndex) const;
 		BOOL GetOrderArray(LPINT piArray, int iCount);
 		int OrderToIndex(int nOrder) const;
-		CImageList SetImageList(HIMAGELIST himlNew);
+		HIMAGELIST SetImageList(HIMAGELIST himlNew) const;
 		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
 		BOOL SetOrderArray(int iCount, LPINT piArray);
 		int GetBitmapMargin() const;
 		int SetBitmapMargin(int nWidth);
 
 		// Operations
-		CImageList CreateDragImage(int nIndex);
+		HIMAGELIST CreateDragImage(int nIndex) const;
 		BOOL DeleteItem(int nPos);
 		int InsertItem(int nPos, HDITEM* phdi);
 		BOOL Layout(HDLAYOUT* pHeaderLayout);
@@ -204,8 +202,6 @@ namespace Win32xx
 	private:
 		CHeader(const CHeader&);				// Disable copy construction
 		CHeader& operator = (const CHeader&);	// Disable assignment operator
-
-		CImageList m_ImageList;
 	};
 
 	class CHotKey : public CWnd
@@ -398,7 +394,7 @@ namespace Win32xx
 		BOOL SetTic(int nTic) const;
 		void SetTicFreq(int nFreq)  const;
 		int  SetTipSide(int nLocation) const;
-		void SetToolTips(CToolTip* pToolTip) const;
+		void SetToolTips(HWND pToolTip) const;
 
 	protected:
 		// Overridables
@@ -866,13 +862,11 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_GETEXTENDEDSTYLE, 0L, 0L);
 	}
 
-	inline CImageList CComboBoxEx::GetImageList()
+	inline HIMAGELIST CComboBoxEx::GetImageList() const
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L);
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L);
 	}
 
 	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM* pCBItem) const
@@ -903,13 +897,11 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
 	}
 
-	inline CImageList CComboBoxEx::SetImageList(HIMAGELIST himlNew)
+	inline HIMAGELIST CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
 	// Sets an image list for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew);
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew);
 	}
 
 	inline BOOL CComboBoxEx::SetItem(PCOMBOBOXEXITEM lpcCBItem) const
@@ -1036,12 +1028,10 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CHeader class
 	//
-	inline CImageList CHeader::CreateDragImage(int nIndex)
+	inline HIMAGELIST CHeader::CreateDragImage(int nIndex) const
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = Header_CreateDragImage(*this, nIndex);
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return Header_CreateDragImage(*this, nIndex);
 	}
 
 	inline BOOL CHeader::DeleteItem(int nPos)
@@ -1050,12 +1040,10 @@ namespace Win32xx
 		return Header_DeleteItem(*this, nPos);
 	}
 
-	inline CImageList CHeader::GetImageList()
+	inline HIMAGELIST CHeader::GetImageList() const
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = Header_GetImageList(*this);
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return Header_GetImageList(*this);
 	}
 
 	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
@@ -1116,12 +1104,10 @@ namespace Win32xx
 	}
 #endif
 
-	inline CImageList CHeader::SetImageList(HIMAGELIST himlNew)
+	inline HIMAGELIST CHeader::SetImageList(HIMAGELIST himlNew) const
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = Header_SetImageList(*this, himlNew);
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return Header_SetImageList(*this, himlNew);
 	}
 
 	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)
@@ -1711,11 +1697,10 @@ namespace Win32xx
 		return (int)SendMessage(TBM_SETTIPSIDE, (WPARAM)nLocation, 0L);
 	}
 
-	inline void CSlider::SetToolTips(CToolTip* pToolTip) const
+	inline void CSlider::SetToolTips(HWND hToolTip) const
 	// Assigns a ToolTip control to the trackbar control.
 	{
 		assert(IsWindow());
-		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
 		SendMessage(TBM_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
 	}
 

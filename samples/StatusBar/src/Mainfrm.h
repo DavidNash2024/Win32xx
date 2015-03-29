@@ -19,7 +19,7 @@ public:
 protected:
 	virtual BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int		OnCreate(LPCREATESTRUCT pcs);
-	virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void	OnFileExit();
 	virtual void	OnFileOpen();
 	virtual void	OnFilePrint();

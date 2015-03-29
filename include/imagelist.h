@@ -295,29 +295,32 @@ namespace Win32xx
 	// hImageList can be NULL
 	{
 		assert(m_pData);
-		
-		// Permit the object to be reused
-		if (m_pData->hImageList != 0)
+
+		if (m_pData->hImageList)
 		{
 			Release();
+
+			// Assign values to our data members
 			m_pData = new DataMembers;
 			m_pData->hImageList = 0;
 			m_pData->Count = 1L;
 			m_pData->IsTmpImageList = FALSE;
 		}
 
-		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-		if (pImageList)
+		if (hImageList)
 		{
-			delete m_pData;
-			m_pData = pImageList->m_pData;
-			InterlockedIncrement(&m_pData->Count);
-		}
-		else
-		{
-			m_pData->hImageList = hImageList;
-			if (hImageList)
+			CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
+			if (pImageList)
+			{
+				delete m_pData;
+				m_pData = pImageList->m_pData;
+				InterlockedIncrement(&m_pData->Count);
+			}
+			else
+			{
+				m_pData->hImageList = hImageList;
 				AddToMap();
+			}
 		}
 	}
 

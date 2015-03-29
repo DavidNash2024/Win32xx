@@ -16,12 +16,12 @@ protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL    OnInitDialog();
 	virtual void    OnOK();
-	virtual LRESULT OnPaint(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	void OnGrayScale();
-	LRESULT OnHScroll(WPARAM wParam, LPARAM lParam);
+	LRESULT OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void    PaintPreview();
 
 	// CWnd object for the dialog controls to attach to

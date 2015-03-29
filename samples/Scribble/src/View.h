@@ -32,9 +32,9 @@ private:
 	};
 
 	void DrawLine(int x, int y);
-	void OnLButtonDown(LPARAM lParam);
-	void OnLButtonUp(LPARAM lParam);
-	void OnMouseMove(WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void StorePoint(int x, int y, bool PenDown);
 
 	CBrush m_Brush;

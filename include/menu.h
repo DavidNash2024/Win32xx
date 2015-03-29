@@ -385,18 +385,20 @@ namespace Win32xx
 			m_pData->IsTmpMenu = FALSE;
 		}
 
-		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-		if (pMenu)
+		if (hMenu)
 		{
-			delete m_pData;
-			m_pData = pMenu->m_pData;
-			InterlockedIncrement(&m_pData->Count);
-		}
-		else
-		{
-			m_pData->hMenu = hMenu;
-			if (hMenu)
+			CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
+			if (pMenu)
+			{
+				delete m_pData;
+				m_pData = pMenu->m_pData;
+				InterlockedIncrement(&m_pData->Count);
+			}
+			else
+			{
+				m_pData->hMenu = hMenu;
 				AddToMap();
+			}
 		}
 	}
 	

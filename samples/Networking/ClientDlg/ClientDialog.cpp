@@ -41,7 +41,7 @@ INT_PTR CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_ACTIVATE:		return OnActivate(wParam, lParam);
+	case WM_ACTIVATE:		return OnActivate(uMsg, wParam, lParam);
 	case USER_CONNECT:		return OnSocketConnect();
 	case USER_DISCONNECT:	return OnSocketDisconnect();
 	case USER_RECEIVE:		return OnSocketReceive();
@@ -51,8 +51,9 @@ INT_PTR CClientDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-LRESULT CClientDialog::OnActivate(WPARAM wParam, LPARAM lParam)
+LRESULT CClientDialog::OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 

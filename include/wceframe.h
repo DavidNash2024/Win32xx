@@ -113,7 +113,7 @@ namespace Win32xx
 		virtual void AddToolBarButton(UINT nID);
 		CRect GetViewRect() const;
 		CCmdBar* GetMenuBar() const {return const_cast<CCmdBar*>(&m_MenuBar);}
-		virtual void OnActivate(WPARAM wParam, LPARAM lParam);
+		virtual void OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual int  OnCreate(LPCREATESTRUCT pcs);		
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void RecalcLayout();
@@ -288,7 +288,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline void CWceFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	inline void CWceFrame::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
 	{
 #ifdef SHELL_AYGSHELL
 		// Notify shell of our activate message
@@ -388,7 +388,7 @@ namespace Win32xx
 				PostQuitMessage(0);
 				break;
 			case WM_ACTIVATE:
-				OnActivate(wParam, lParam);
+				OnActivate(uMsg, wParam, lParam);
      			break;
 
 #ifdef SHELL_AYGSHELL

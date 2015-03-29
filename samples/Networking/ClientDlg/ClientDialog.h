@@ -15,7 +15,7 @@ public:
 	CClientDialog(UINT nResID);
 	virtual ~CClientDialog();
 
-	LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
+	LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	BOOL OnSocketDisconnect();
 	BOOL OnSocketConnect();
 	BOOL OnSocketReceive();

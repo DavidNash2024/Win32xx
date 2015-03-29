@@ -21,9 +21,9 @@ public:
 	CHyperlink();
 	virtual ~CHyperlink();
 	virtual void OnAttach();
-	void OnLButtonDown();
-	void OnLButtonUp(LPARAM lParam);
-	LRESULT OnSetCursor();
+	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 protected:
 	virtual void OpenUrl();

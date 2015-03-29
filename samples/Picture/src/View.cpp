@@ -112,8 +112,9 @@ void CView::OnDraw(CDC& dc)
 }
 
 
-LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(lParam);
 
 	HDROP hDrop = (HDROP)wParam;
@@ -133,8 +134,11 @@ LRESULT CView::OnDropFiles(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CView::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+	UNREFERENCED_PARAMETER(lParam);
+
 	int xNewPos;
 
 	switch (LOWORD(wParam))
@@ -186,8 +190,11 @@ LRESULT CView::OnHScroll(WPARAM wParam, LPARAM /*lParam*/)
 	return 0L;
 }
 
-LRESULT CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
+LRESULT CView::OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+	UNREFERENCED_PARAMETER(lParam);
+
 	int yNewPos;
 
 	switch (LOWORD(wParam))
@@ -240,8 +247,12 @@ LRESULT CView::OnVScroll(WPARAM wParam, LPARAM /*lParam*/)
 	return 0;
 }
 
-LRESULT CView::OnWindowPosChanged(WPARAM /*wParam*/, LPARAM /*lParam*/)
+LRESULT CView::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+	UNREFERENCED_PARAMETER(wParam);
+	UNREFERENCED_PARAMETER(lParam);
+
 	if (m_pPicture)
 	{
 		CRect rcImage = GetImageRect();
@@ -350,10 +361,10 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_DROPFILES:			return OnDropFiles(wParam, lParam);
-	case WM_HSCROLL:			return OnHScroll(wParam, lParam);
-	case WM_VSCROLL:			return OnVScroll(wParam, lParam);
-	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+	case WM_DROPFILES:			return OnDropFiles(uMsg, wParam, lParam);
+	case WM_HSCROLL:			return OnHScroll(uMsg, wParam, lParam);
+	case WM_VSCROLL:			return OnVScroll(uMsg, wParam, lParam);
+	case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 	}
 
 	// Pass unhandled messages on for default processing

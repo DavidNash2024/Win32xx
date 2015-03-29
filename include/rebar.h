@@ -83,13 +83,13 @@ namespace Win32xx
 		UINT GetRowCount() const;
 		int  GetRowHeight(int nRow) const;
 		UINT GetSizeofRBBI() const;
-		CToolTip* GetToolTips() const;
-		BOOL SetBandBitmap(const int nBand, const CBitmap* pBackground) const;
+		HWND GetToolTips() const;
+		BOOL SetBandBitmap(const int nBand, HBITMAP hbmBackground) const;
 		BOOL SetBandColor(const int nBand, const COLORREF clrFore, const COLORREF clrBack) const;
 		BOOL SetBandInfo(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL SetBarInfo(REBARINFO& rbi) const;
 		void SetMenuBar(HWND hMenuBar) {m_hMenuBar = hMenuBar;}
-		void SetToolTips(CToolTip* pToolTip) const;
+		void SetToolTips(HWND hToolTip) const;
 
 	protected:
 	//Overridables
@@ -99,11 +99,11 @@ namespace Win32xx
 #endif
 
 		virtual BOOL OnEraseBkgnd(CDC& dc);
-		virtual LRESULT OnLButtonDown(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnLButtonUp(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnTBWinPosChanging(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnToolBarResize(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnTBWinPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnToolBarResize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -253,11 +253,11 @@ namespace Win32xx
 		return uSizeof;
 	}
 
-	inline CToolTip* CReBar::GetToolTips() const
+	inline HWND CReBar::GetToolTips() const
 	// Retrieves the handle to any ToolTip control associated with the rebar control.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(GetCWndPtr( (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L)));
+		return (HWND)SendMessage(RB_GETTOOLTIPS, 0L, 0L);
 	}
 
 	inline int CReBar::HitTest(RBHITTESTINFO& rbht)
@@ -400,15 +400,15 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CReBar::OnLButtonDown(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CReBar::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		m_Orig_lParam = lParam;	// Store the x,y position
 		m_IsDragging = TRUE;
 		
-		return FinalWindowProc(WM_LBUTTONDOWN, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CReBar::OnLButtonUp(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CReBar::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0L, 0L));
 		if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
@@ -424,10 +424,10 @@ namespace Win32xx
 		}
 		m_IsDragging = FALSE;
 
-		return FinalWindowProc(WM_LBUTTONUP, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CReBar::OnMouseMove(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CReBar::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (m_IsDragging)
 		{
@@ -443,20 +443,21 @@ namespace Win32xx
 			}
 		}
 
-		return FinalWindowProc(WM_MOUSEMOVE, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CReBar::OnToolBarResize(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CReBar::OnToolBarResize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		HWND hToolBar = (HWND)wParam;
 		LPSIZE pToolBarSize = (LPSIZE)lParam;
 		ResizeBand(GetBand(hToolBar), *pToolBarSize);
 
-		return FinalWindowProc(UWM_TBRESIZE, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CReBar::OnTBWinPosChanging(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CReBar::OnTBWinPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -486,11 +487,10 @@ namespace Win32xx
 		return SetBandInfo(nBand, rbbi );
 	}
 
-	inline BOOL CReBar::SetBandBitmap(int nBand, const CBitmap* pBackground) const
+	inline BOOL CReBar::SetBandBitmap(int nBand, HBITMAP hbmBackground) const
 	// Sets the band's bitmaps
 	{
 		assert(IsWindow());
-		assert(pBackground);
 
 		REBARBANDINFO rbbi;
 		ZeroMemory(&rbbi, GetSizeofRBBI());
@@ -498,7 +498,7 @@ namespace Win32xx
 		rbbi.fMask  = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
 		rbbi.fMask  |= RBBIM_BACKGROUND;
-		rbbi.hbmBack = *pBackground;
+		rbbi.hbmBack = hbmBackground;
 
 		return (BOOL)SendMessage(RB_SETBANDINFO, (WPARAM)nBand, (LPARAM)&rbbi);
 	}
@@ -580,11 +580,10 @@ namespace Win32xx
 		return (BOOL)SendMessage(RB_SIZETORECT, 0L, (LPARAM) (LPRECT)rect);
 	}
 
-	inline void CReBar::SetToolTips(CToolTip* pToolTip) const
+	inline void CReBar::SetToolTips(HWND hToolTip) const
 	// Associates a ToolTip control with the rebar control.
 	{
 		assert(IsWindow());
-		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
 		SendMessage(RB_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
 	}
 
@@ -593,13 +592,13 @@ namespace Win32xx
 
 		switch (uMsg)
 		{
-		case WM_MOUSEMOVE:		return OnMouseMove(wParam, lParam);
-		case WM_LBUTTONDOWN:	return OnLButtonDown(wParam, lParam);
-		case WM_LBUTTONUP:		return OnLButtonUp(wParam, lParam);
+		case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
+		case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);
+		case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_TBRESIZE:	return OnToolBarResize(wParam, lParam);
-		case UWM_TBWINPOSCHANGING:	return OnTBWinPosChanging(wParam, lParam);
+		case UWM_TBRESIZE:	return OnToolBarResize(uMsg, wParam, lParam);
+		case UWM_TBWINPOSCHANGING:	return OnTBWinPosChanging(uMsg, wParam, lParam);
 		}
 
 		// pass unhandled messages on for default processing

@@ -57,10 +57,10 @@ protected:
 	virtual void	OnFileNewText();
 	virtual void	OnFileNewTree();
 	virtual void    OnInitialUpdate();
-	virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void	OnDefaultLayout();
 	virtual void    OnMenuUpdate(UINT nID);
-	virtual LRESULT OnMouseActivate(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void	OnCloseDockers();
 	virtual void    PreCreate(CREATESTRUCT &cs);
 	virtual BOOL    SaveRegistrySettings();

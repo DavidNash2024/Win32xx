@@ -66,8 +66,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return 0;
 }
 
-LRESULT CMainFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+
 	// Perform the owner draw for Part 3 in the status bar
 	LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT) lParam;
 	

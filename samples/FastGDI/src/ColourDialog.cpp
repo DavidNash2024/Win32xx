@@ -87,17 +87,18 @@ INT_PTR CColourDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-	case WM_HSCROLL:	return OnHScroll(wParam, lParam);
-	case WM_PAINT:		return OnPaint(wParam, lParam);
+	case WM_HSCROLL:	return OnHScroll(uMsg, wParam, lParam);
+	case WM_PAINT:		return OnPaint(uMsg, wParam, lParam);
 	}
 
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-LRESULT CColourDialog::OnHScroll(WPARAM wParam, LPARAM lParam)
+LRESULT CColourDialog::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Processes messages from the slider controls
 
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 
 	// Update the text for the colour's edit control
@@ -149,8 +150,9 @@ void CColourDialog::OnOK()
 	CDialog::OnOK();
 }
 
-LRESULT CColourDialog::OnPaint(WPARAM wParam, LPARAM lParam)
+LRESULT CColourDialog::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 

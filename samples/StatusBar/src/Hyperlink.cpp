@@ -30,13 +30,15 @@ void CHyperlink::OnAttach()
 	m_UrlFont.CreateFontIndirect(&lf);
 }
 
-void CHyperlink::OnLButtonDown()
+LRESULT CHyperlink::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	SetCapture();
 	m_IsClicked = TRUE;
+
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-void CHyperlink::OnLButtonUp(LPARAM lParam)
+LRESULT CHyperlink::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	ReleaseCapture();
 	if(m_IsClicked)
@@ -51,6 +53,8 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 		if (rc.PtInRect(pt)) 
 			OpenUrl();
 	}
+
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 void CHyperlink::OpenUrl()
@@ -85,7 +89,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-LRESULT CHyperlink::OnSetCursor()
+LRESULT CHyperlink::OnSetCursor(UINT, WPARAM, LPARAM)
 {
 	// Must use ::SetCursor here. CStatic::SetCursor does not do the same thing. 
 	::SetCursor(m_hCursor);
@@ -97,9 +101,9 @@ LRESULT CHyperlink::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_LBUTTONDOWN:  OnLButtonDown();		break;
-	case WM_LBUTTONUP:	  OnLButtonUp(lParam);	break;
-	case WM_SETCURSOR:	  return OnSetCursor();	
+	case WM_LBUTTONDOWN:  return OnLButtonDown(uMsg, wParam, lParam);
+	case WM_LBUTTONUP:	  return OnLButtonUp(uMsg, wParam, lParam);
+	case WM_SETCURSOR:	  return OnSetCursor(uMsg, wParam, lParam);	
 	case WM_NCHITTEST:	  return HTCLIENT;		// Claim that the mouse is in a client area
 	}
 

@@ -89,24 +89,36 @@ void CMainFrame::OnInitialUpdate()
 	// Startup code goes here
 }
 
-void CMainFrame::OnLButtonDown(WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+	UNREFERENCED_PARAMETER(wParam);
+
 	// Capture mouse input.
 	SetCapture();
 
 	StorePoint(LOWORD(lParam), HIWORD(lParam), true);
+
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-void CMainFrame::OnLButtonUp(WPARAM /*wParam*/, LPARAM lParam)
+LRESULT CMainFrame::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+	UNREFERENCED_PARAMETER(wParam);
+
 	//Release the capture on the mouse
 	ReleaseCapture();
 
 	StorePoint(LOWORD(lParam), HIWORD(lParam), false);
+	
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-void CMainFrame::OnMouseMove(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
+
 	// hold down the left mouse button and move mouse to draw lines.
 	if (wParam & MK_LBUTTON)
 	{	
@@ -117,6 +129,8 @@ void CMainFrame::OnMouseMove(WPARAM wParam, LPARAM lParam)
 		DrawLine(LOWORD(lParam), HIWORD(lParam));
 		StorePoint(LOWORD(lParam), HIWORD(lParam), true);
 	}
+
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 void CMainFrame::SetPen(COLORREF color)
@@ -141,17 +155,9 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// a seperate function for each case keeps the code tidy.
 	switch (uMsg)
 	{
-	case WM_LBUTTONDOWN:
-		OnLButtonDown(wParam, lParam);
-		break;
-
-	case WM_MOUSEMOVE:
-		OnMouseMove(wParam, lParam);
-        break;
-
-    case WM_LBUTTONUP:
-		OnLButtonUp(wParam, lParam);
-		break;
+	case WM_LBUTTONDOWN:	return 	OnLButtonDown(uMsg, wParam, lParam);
+	case WM_MOUSEMOVE:		return 	OnMouseMove(uMsg, wParam, lParam);
+    case WM_LBUTTONUP:		return  OnLButtonUp(uMsg, wParam, lParam);
 	}
 
 	// Pass unhandled messages on to WndProcDefault

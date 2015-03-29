@@ -31,9 +31,9 @@ private:
 	};
 
 	void DrawLine(int x, int y);
-	LRESULT OnLButtonDown(LPARAM lParam);
-	LRESULT OnLButtonUp(LPARAM lParam);
-	LRESULT OnMouseMove(WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void StorePoint(int x, int y, bool PenDown);
 
 	vector<PlotPoint> m_points;	// Points of lines to draw

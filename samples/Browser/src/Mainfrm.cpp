@@ -42,7 +42,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	rbbi.cxMinChild = 200;
 	rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
-	rbbi.clrBack    = GetReBarTheme()->clrBand1;
+	rbbi.clrBack    = GetReBarTheme().clrBand1;
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
 	rbbi.lpText     = (LPTSTR)_T("Address");
 

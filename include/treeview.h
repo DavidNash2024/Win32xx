@@ -62,18 +62,18 @@ namespace Win32xx
 // Attributes
 		COLORREF GetBkColor() const;
 		HTREEITEM GetChild(HTREEITEM hItem) const;
-		UINT  GetCount() const;
+		UINT	GetCount() const;
 		HTREEITEM GetDropHiLightItem() const;
-		HWND GetEditControl() const;
+		HWND	GetEditControl() const;
 		HTREEITEM GetFirstVisible() const;
-		CImageList GetImageList(int iImageType);
-		UINT  GetIndent() const;
+		HIMAGELIST GetImageList(int iImageType) const;
+		UINT	GetIndent() const;
 		COLORREF GetInsertMarkColor() const;
-		BOOL GetItem(TVITEM& Item) const;
+		BOOL	GetItem(TVITEM& Item) const;
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
-		int  GetItemHeight() const;
-		BOOL GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
-		BOOL GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
+		int		GetItemHeight() const;
+		BOOL	GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
+		BOOL	GetItemRect(HTREEITEM hItem, CRect& rc, BOOL bTextOnly) const;
 		CString GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const;
 		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
@@ -83,49 +83,47 @@ namespace Win32xx
 		HTREEITEM GetPrevSibling(HTREEITEM hItem) const;
 		HTREEITEM GetPrevVisible(HTREEITEM hItem) const;
 		HTREEITEM GetRootItem() const;
-		int GetScrollTime() const;
+		int		GetScrollTime() const;
 		HTREEITEM GetSelection() const;
 		COLORREF GetTextColor() const;
-		CToolTip* GetToolTips() const;
-		UINT GetVisibleCount() const;
-		BOOL ItemHasChildren(HTREEITEM hItem) const;
+		HWND	GetToolTips() const;
+		UINT	GetVisibleCount() const;
+		BOOL	ItemHasChildren(HTREEITEM hItem) const;
 		COLORREF SetBkColor(COLORREF clrBk) const;
-		CImageList SetImageList(HIMAGELIST himlNew, int nType);
-		void SetIndent(int indent) const;
-		BOOL SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) const;
+		HIMAGELIST SetImageList(HIMAGELIST himlNew, int nType) const;
+		void	SetIndent(int indent) const;
+		BOOL	SetInsertMark(HTREEITEM hItem, BOOL fAfter = TRUE) const;
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) const;
-		BOOL SetItem(TVITEM& Item) const;
-		BOOL SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam) const;
-		BOOL SetItemData(HTREEITEM hItem, DWORD_PTR dwData) const;
-		int  SetItemHeight(SHORT cyItem) const;
-		BOOL SetItemImage(HTREEITEM hItem, int nImage, int nSelectedImage) const;
-		BOOL SetItemText(HTREEITEM hItem, LPCTSTR szText) const;
-		UINT SetScrollTime(UINT uScrollTime) const;
+		BOOL	SetItem(TVITEM& Item) const;
+		BOOL	SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam) const;
+		BOOL	SetItemData(HTREEITEM hItem, DWORD_PTR dwData) const;
+		int		SetItemHeight(SHORT cyItem) const;
+		BOOL	SetItemImage(HTREEITEM hItem, int nImage, int nSelectedImage) const;
+		BOOL	SetItemText(HTREEITEM hItem, LPCTSTR szText) const;
+		UINT	SetScrollTime(UINT uScrollTime) const;
 		COLORREF SetTextColor(COLORREF clrText) const;
-		CToolTip* SetToolTips(CToolTip* pToolTip) const;
+		HWND	SetToolTips(HWND hToolTip) const;
 
 // Operations
-		CImageList CreateDragImage(HTREEITEM hItem);
-		BOOL DeleteAllItems() const;
-		BOOL DeleteItem(HTREEITEM hItem) const;
-		HWND EditLabel(HTREEITEM hItem) const;
-		BOOL EndEditLabelNow(BOOL fCancel) const;
-		BOOL EnsureVisible(HTREEITEM hItem) const;
-		BOOL Expand(HTREEITEM hItem, UINT nCode) const;
+		HIMAGELIST CreateDragImage(HTREEITEM hItem) const;
+		BOOL	DeleteAllItems() const;
+		BOOL	DeleteItem(HTREEITEM hItem) const;
+		HWND	EditLabel(HTREEITEM hItem) const;
+		BOOL	EndEditLabelNow(BOOL fCancel) const;
+		BOOL	EnsureVisible(HTREEITEM hItem) const;
+		BOOL	Expand(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM HitTest(TVHITTESTINFO& ht) const;
 		HTREEITEM InsertItem(TVINSERTSTRUCT& tvIS) const;
-		BOOL Select(HTREEITEM hitem, UINT flag) const;
-		BOOL SelectDropTarget(HTREEITEM hItem) const;
-		BOOL SelectItem(HTREEITEM hItem) const;
-		BOOL SelectSetFirstVisible(HTREEITEM hItem) const;
-		BOOL SortChildren(HTREEITEM hItem, BOOL fRecurse) const;
-		BOOL SortChildrenCB(TVSORTCB& sort, BOOL fRecurse) const;
+		BOOL	Select(HTREEITEM hitem, UINT flag) const;
+		BOOL	SelectDropTarget(HTREEITEM hItem) const;
+		BOOL	SelectItem(HTREEITEM hItem) const;
+		BOOL	SelectSetFirstVisible(HTREEITEM hItem) const;
+		BOOL	SortChildren(HTREEITEM hItem, BOOL fRecurse) const;
+		BOOL	SortChildrenCB(TVSORTCB& sort, BOOL fRecurse) const;
 
 	private:
 		CTreeView(const CTreeView&);				// Disable copy construction
 		CTreeView& operator = (const CTreeView&); // Disable assignment operator
-
-		CImageList m_ImageList;
 
 	};
 	
@@ -185,13 +183,11 @@ namespace Win32xx
 		return TreeView_GetFirstVisible(*this);
 	}
 
-	inline CImageList CTreeView::GetImageList(int iImageType)
+	inline HIMAGELIST CTreeView::GetImageList(int iImageType) const
 	// Retrieves the handle to the normal or state image list associated with a tree-view control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = TreeView_GetImageList( *this, iImageType );
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return TreeView_GetImageList( *this, iImageType );
 	}
 
 	inline UINT CTreeView::GetIndent() const
@@ -357,11 +353,11 @@ namespace Win32xx
 		return TreeView_GetTextColor( *this );
 	}
 
-	inline CToolTip* CTreeView::GetToolTips() const
+	inline HWND CTreeView::GetToolTips() const
 	// Retrieves the handle to the child ToolTip control used by a tree-view control.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(GetCWndPtr(TreeView_GetToolTips(*this)));
+		return TreeView_GetToolTips(*this);
 	}
 
 	inline UINT CTreeView::GetVisibleCount() const
@@ -389,14 +385,12 @@ namespace Win32xx
 		return TreeView_SetBkColor( *this, clrBk );
 	}
 
-	inline CImageList CTreeView::SetImageList(HIMAGELIST himlNew, int nType)
+	inline HIMAGELIST CTreeView::SetImageList(HIMAGELIST himlNew, int nType) const
 	// Sets the normal or state image list for a tree-view control
 	//  and redraws the control using the new images.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = TreeView_SetImageList( *this, himlNew, nType );
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return TreeView_SetImageList( *this, himlNew, nType );
 	}
 
 	inline void CTreeView::SetIndent(int indent) const
@@ -507,25 +501,22 @@ namespace Win32xx
 		return TreeView_SetTextColor( *this, clrText );
 	}
 
-	inline CToolTip* CTreeView::SetToolTips(CToolTip* pToolTip) const
+	inline HWND CTreeView::SetToolTips(HWND hToolTip) const
 	// Sets a tree-view control's child ToolTip control.
 	{
 		assert(IsWindow());
-		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : 0;
-		return static_cast<CToolTip*>(GetCWndPtr(TreeView_SetToolTips(*this, hToolTip)));
+		return TreeView_SetToolTips(*this, hToolTip);
 	}
 
 	// Operations
 
-	inline CImageList CTreeView::CreateDragImage(HTREEITEM hItem)
+	inline HIMAGELIST CTreeView::CreateDragImage(HTREEITEM hItem) const
 	// Creates a dragging bitmap for the specified item in a tree-view control.
 	// It also creates an image list for the bitmap and adds the bitmap to the image list.
 	// An application can display the image when dragging the item by using the image list functions.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = TreeView_CreateDragImage(*this, hItem);
-		m_ImageList.Attach(himl);
-		return m_ImageList;
+		return TreeView_CreateDragImage(*this, hItem);
 	}
 
 	inline BOOL CTreeView::DeleteAllItems() const

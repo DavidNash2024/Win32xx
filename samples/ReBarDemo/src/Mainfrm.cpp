@@ -281,7 +281,7 @@ void CMainFrame::RecalcLayout()
 		// Adjust rebar bands
 		if (IsReBarUsed())
 		{
-			if (GetReBarTheme()->UseThemes && GetReBarTheme()->BandsLeft)
+			if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
 				GetReBar().MoveBandsLeft();
 
 			if (IsMenuBarUsed())

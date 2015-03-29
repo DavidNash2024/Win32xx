@@ -91,7 +91,7 @@ namespace Win32xx
 		CRect GetRect(int idButton) const;
 		int   GetRows() const;
 		int   GetTextRows() const;
-		CToolTip*  GetToolTips() const;
+		HWND  GetToolTips() const;
 		BOOL  HasText() const;
 		BOOL  HideButton(int idButton, BOOL fShow) const;
 		int   HitTest() const;
@@ -122,13 +122,13 @@ namespace Win32xx
 		BOOL  SetIndent(int iIndent) const;
 		BOOL  SetMaxTextRows(int iMaxRows) const;
 		BOOL  SetPadding(int cx, int cy) const;
-		void  SetToolTips(CToolTip* pToolTip) const;
+		void  SetToolTips(HWND hToolTip) const;
 
 	protected:
 	// Overridables
 		virtual void OnAttach();
 		virtual void OnDestroy();
-		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -506,11 +506,11 @@ namespace Win32xx
 		return (int)SendMessage(TB_GETTEXTROWS, 0L, 0L);
 	}
 
-	inline CToolTip* CToolBar::GetToolTips() const
+	inline HWND CToolBar::GetToolTips() const
 	// Retrieves the handle to the ToolTip control, if any, associated with the ToolBar.
 	{
 		assert(IsWindow());
-		return static_cast<CToolTip*>(GetCWndPtr((HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L)));
+		return (HWND)SendMessage(TB_GETTOOLTIPS, 0L, 0L);
 	}
 
 	inline BOOL CToolBar::HasText() const
@@ -643,7 +643,7 @@ namespace Win32xx
 	{
 	}
 
-	inline LRESULT CToolBar::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CToolBar::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	//	Used by ReBar controls to adjust ToolBar window size
 
@@ -654,7 +654,7 @@ namespace Win32xx
 			pWinPos->cy = GetMaxSize().cy;
 		}
 
-		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline void CToolBar::PreCreate(CREATESTRUCT &cs)
@@ -993,12 +993,11 @@ namespace Win32xx
 		return (BOOL)SendMessage(TB_SETPADDING, 0L, (LPARAM)MAKELONG(cx, cy));
 	}
 
-	inline void CToolBar::SetToolTips(CToolTip* pToolTip) const
+	inline void CToolBar::SetToolTips(HWND hToolTip) const
 	// Associates a ToolTip control with a ToolBar. This should be done before
 	//  adding any buttons to the ToolBar.
 	{
 		assert(IsWindow());
-		HWND hToolTip = pToolTip? pToolTip->GetHwnd() : (HWND)0;
 		SendMessage(TB_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
 	}
 
@@ -1006,7 +1005,7 @@ namespace Win32xx
 	{
 		switch (uMsg)
 		{
-		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
+		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);
 		}
 
 		// pass unhandled messages on for default processing

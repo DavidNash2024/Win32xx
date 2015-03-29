@@ -22,8 +22,9 @@ void CSimpleView::OnDraw(CDC& dc)
 	dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CSimpleView::OnSize(WPARAM wParam, LPARAM lParam)
+LRESULT CSimpleView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -34,7 +35,7 @@ LRESULT CSimpleView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_SIZE:	return OnSize(wParam, lParam);
+	case WM_SIZE:	return OnSize(uMsg, wParam, lParam);
 	}
 
 	// Do default processing for other messages
@@ -104,20 +105,20 @@ void CSimpleMDIChild::OnColor(COLORREF rgb)
 	pView->Invalidate();
 }
 
-LRESULT CSimpleMDIChild::OnSize(WPARAM wParam, LPARAM lParam)
+LRESULT CSimpleMDIChild::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	CDocker* pDock = (CDocker*)GetView();
 	pDock->RecalcDockLayout();
 
 	// Pass the message on for default processing
-	return FinalWindowProc(WM_SIZE, wParam, lParam);
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 LRESULT CSimpleMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_SIZE:	return OnSize(wParam, lParam);
+	case WM_SIZE:	return OnSize(uMsg, wParam, lParam);
 	}
 
 	// Do default processing for other messages

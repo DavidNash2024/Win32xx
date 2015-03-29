@@ -108,6 +108,8 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual void OnClose();
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		// Its unlikely you would need to override these functions
@@ -147,9 +149,9 @@ namespace Win32xx
 #endif
 
 			virtual HWND Create(HWND hWndParent);
-			virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMDIDestroy(WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMDISetMenu(WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDIDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam);
+			virtual LRESULT OnMDISetMenu(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		};
 
@@ -182,10 +184,12 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual void    OnClose();
 		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    OnMenuUpdate(UINT nID);
 		virtual void    OnViewStatusBar();
 		virtual void    OnViewToolBar();
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
 		virtual BOOL    PreTranslateMessage(MSG* pMsg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -557,11 +561,25 @@ namespace Win32xx
 		}
 	}
 
+	inline LRESULT CMDIFrame::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
+	{
+		return OnInitMenuPopup(wParam, lParam);
+	}
+
+	inline LRESULT CMDIFrame::OnWindowPosChanged(UINT, WPARAM wParam, LPARAM lParam)
+	{
+		return OnWindowPosChanged(wParam, lParam);
+	}
+
 	inline LRESULT CMDIFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
+#ifdef USE_OBSOLETE_CODE
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+#else
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
+#endif
 		}
 		
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
@@ -603,7 +621,7 @@ namespace Win32xx
 		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 	}
 
-	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		// Suppress redraw to avoid flicker when activating maximised MDI children
 		SetRedraw(FALSE);
@@ -614,7 +632,7 @@ namespace Win32xx
 		return lr;
 	}
 
-	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIDestroy(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIDestroy(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
 		CallWindowProc(GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
@@ -625,23 +643,23 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CMDIFrame::CDockMDIClient::OnMDISetMenu(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::CDockMDIClient::OnMDISetMenu(UINT uMsg,WPARAM wParam, LPARAM lParam)
 	{
 		if (GetMDIFrame()->IsMenuBarUsed())
 		{
 			return 0L;
 		}
 
-		return FinalWindowProc(WM_MDISETMENU, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CMDIFrame::CDockMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-		case WM_MDIACTIVATE: return OnMDIActivate(wParam, lParam);
-		case WM_MDIDESTROY:	return OnMDIDestroy(wParam, lParam);
-		case WM_MDISETMENU:	return OnMDISetMenu(wParam, lParam);
+		case WM_MDIACTIVATE: return OnMDIActivate(uMsg, wParam, lParam);
+		case WM_MDIDESTROY:	return OnMDIDestroy(uMsg, wParam, lParam);
+		case WM_MDISETMENU:	return OnMDISetMenu(uMsg, wParam, lParam);
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
@@ -723,7 +741,7 @@ namespace Win32xx
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
 		if (m_ChildMenu.GetHandle())
-			GetMDIFrame()->UpdateFrameMenu(&m_ChildMenu);
+			GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
 		if (m_hChildAccel)
 			GetApp()->SetAccelerators(m_hChildAccel, this);
 
@@ -936,12 +954,28 @@ namespace Win32xx
 		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
 	}
 
+	// For this version only, the current definitions use the obsolete ones.
+	inline LRESULT CMDIChild::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
+	{
+		return OnMDIActivate(wParam, lParam);
+	}
+
+	inline LRESULT CMDIChild::OnWindowPosChanged(UINT, WPARAM wParam, LPARAM lParam)
+	{
+		return OnWindowPosChanged(wParam, lParam);
+	}
+
 	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
+#ifdef USE_OBSOLETE_CODE
 		case WM_MDIACTIVATE:		return OnMDIActivate(wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+#else
+		case WM_MDIACTIVATE:		return OnMDIActivate(wParam, lParam);
+		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
+#endif
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
