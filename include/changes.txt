@@ -14,6 +14,41 @@ non-pointer arguments in Win32++ function calls.
 
 New Features and Enhancements
 -----------------------------
+* The FromHandle method of creating temporary CWnds has been obsoleted. 
+The FromHandle approach had the following disadvantages:
+ - It required the newly created CWnds to be removed some indeterminate time
+   after being created. This was done in OnIdle.
+ - The running of OnIdle can be delayed indefinitely while windows runs
+   any internal message loop, causing temporaries to accumulate. Internal
+   message loops are run while menus are active, for example.   
+ - It encouraged an inappropriate reliance on raw pointers to CWnd objects.
+ - There was confusion about when the temporary CWnd was destroyed.
+The FromHandle approach has been replaced. CWnd member functions which 
+previously returned a CWnd pointer(CWnd*) now return CWnd. 
+Coding examples: (The GetParent function now returns a CWnd)
+ GetParent().SendMessage(SomeMessage, wParam, lParam);
+ HWND hWnd = GetParent(); // retrieve the parent window's HWND
+ 
+* The FromHandle for the other types has been obsoleted as well. This includes:
+  - CBitmap::FromHandle
+  - CBrush::FromHandle
+  - CDC::FromHandle
+  - CFont::FromHandle
+  - CPalette:: FromHandle
+  - CPen::FromHandle
+  - CRgn::FromHandle
+  
+  Note: All versions of FromHandle are available if the USE_OBSOLETE_CODE
+  is defined.
+  
+ * Message handler functions have been standardised to the form:
+  LRESULT OnSomeMessage(UINT uMSg, WPARAM wParam, LPARAM lParam).
+ 
+  Note:
+  - OnCommand,  OnNotify and OnNotifyReflect remain unchanged.
+  - The older CFrame::OnMessageXX handlers are available if the 
+    USE_OBSOLETE_CODE is defined.
+ 
 * Many functions which previously used a CWnd* argument now use a HWND
 argument. This has the following advantages:
  - These functions can be used directly for a HWND, CWnd or CWnd pointer.
@@ -26,34 +61,15 @@ Coding examples: (the Create function now has a HWND argument)
  MyCwnd.Create(GetParent()); // The parent of this CWnd is the parent window
  MyCWnd.Create(Some_HWND);   // A window with the specified HWND is the parent window 
  MyCWnd.Create();            // The created window has no parent window
-Note: CWnd has operator overloading. We can use the CWnd object in place
-of its corresponding HWND anywhere in code.  
+ 
+ Note: CWnd has operator overloading. We can use the CWnd object in place
+ of its corresponding HWND anywhere in code.  
 
 * Many functions which previously used pointers to other Win32++ classes
 now also use the relevant handle instead. These include member functions for
 CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, CImageList and CMenu.
 Each of these classes have operator overloading, so the class object can be
-used instead of the handle. 
-
-* The FromHandle method of creating temporary CWnds has been obsoleted. 
-The FromHandle approach had the following disadvantages:
- - It required the newly created CWnds to be removed some indeterminate time
-   after being created. This was done in OnIdle.
- - The running of OnIdle can be delayed indefinitely while windows runs
-   any internal message loop, causing temporaries to accumulate. Internal
-   message loops are run while menus are active, for example.   
- - It encouraged an inappropriate reliance on raw pointers to CWnd objects.
- - There was confusion about when the temporary CWnd was destroyed.
-The FromHandle approach has been replaced. CWnd member functions which 
-previously returned a CWnd pointer(CWnd*) now return CWnd. 
-Coding example: (The GetParent function now returns a CWnd)
- GetParent().SendMessage(SomeMessage, wParam, lParam);
- HWND hWnd = GetParent(); // retrieve the parent window's HWND
- 
-* m_hWnd is now a private member variable of CWnd. Use GetHwnd() or *this in 
-place of m_hWnd. A protected m_hWnd had the following disadvantages
- - It is unsafe. Users might be tempted to think they can set or modify m_hWnd.
- - It prevents CWnd from being reference counted.
+used instead of the handle.  
 
 Step by step guide to code migration
 ------------------------------------
@@ -74,8 +90,6 @@ Step by step guide to code migration
   - CPen::FromHandle
   - CRgn::FromHandle
   - CWnd::FromHandle  
-  
-  - CWnd::m_hWnd is declared protected instead of private
   
   - The messages handlers in CDocker and CFrame of the form:
     - CDocker::OnMessageXX(WPARAM wParam, LPARAM lParam)
@@ -207,7 +221,7 @@ Modified CFrame::ExcludeChildRect
 Modified CFrame::GetFrameMenu
 Modified CFrame::GetMenuItemPos
 Modified CFrame::GetMenuBar
-Modified CFrame::GetMenuTheme
+Modified CFrame::GetMenuBarTheme
 Modified CFrame::GetReBar
 Modified CFrame::GetReBarTheme
 Modified CFrame::GetStatusBar
@@ -251,7 +265,6 @@ Modified CMDIFrame::GetDockClient
 Modified CMDIFrame::GetMDIClient
 Modified CMDIFrame::OnInitMenuPopup
 Modified CMDIFrame::OnWindowPosChanged
-Modified CMDIFrame::UpdateFrameMenu
 Modified CMemDC::CMemDC
 Modified CMenu::AppendMenu
 Modified CMenu::GetSubMenu
@@ -289,6 +302,7 @@ Modified CTab::DrawListButton
 Modified CTab::DrawTabs
 Modified CTab::DrawTabBorders
 Modified CTab::GetListMenu
+Modified CTab::GetODImageList
 Modified CTab::GetTabFont
 Modified CTab::GetToolTips
 Modified CTab::OnEraseBkgnd

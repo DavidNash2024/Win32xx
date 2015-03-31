@@ -416,7 +416,7 @@ namespace Win32xx
 
 	inline void CMDIFrame::OnMenuUpdate(UINT nID)
 	{
-		// Update the check buttons before displaying the menu
+		// Updates the check buttons before displaying the menu
 		
 		switch(nID)
 		{
@@ -688,22 +688,22 @@ namespace Win32xx
 	// This technique avoids unnecessary flicker when creating maximized MDI children.
 	{
 		//Call PreCreate in case its overloaded
-		PreCreate(*m_pcs);
+		PreCreate(m_pData->cs);
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
 		assert(pParent);
 		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
-		bMax = bMax | (m_pcs->style & WS_MAXIMIZE);
+		bMax = bMax | (m_pData->cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
 		CString ClassName = _T("Win32++ MDI Child");
-		if (m_pcs->lpszClass)
-			ClassName = m_pcs->lpszClass;
+		if (m_pData->cs.lpszClass)
+			ClassName = m_pData->cs.lpszClass;
 
 		// Set the window style
 		DWORD dwStyle;
-		dwStyle = m_pcs->style & ~WS_MAXIMIZE;
+		dwStyle = m_pData->cs.style & ~WS_MAXIMIZE;
 		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
 		// Set window size and position
@@ -711,23 +711,23 @@ namespace Win32xx
 		int	y = CW_USEDEFAULT;
 		int cx = CW_USEDEFAULT;
 		int cy = CW_USEDEFAULT;
-		if(m_pcs->cx && m_pcs->cy)
+		if(m_pData->cs.cx && m_pData->cs.cy)
 		{
-			x = m_pcs->x;
-			y = m_pcs->y;
-			cx = m_pcs->cx;
-			cy = m_pcs->cy;
+			x = m_pData->cs.x;
+			y = m_pData->cs.y;
+			cx = m_pData->cs.cx;
+			cy = m_pData->cs.cy;
 		}
 
 		// Set the extended style
-		DWORD dwExStyle = m_pcs->dwExStyle | WS_EX_MDICHILD;
+		DWORD dwExStyle = m_pData->cs.dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
 		pParent->SetRedraw(FALSE);
 
 		// Create the window
-		if (!CreateEx(dwExStyle, ClassName, m_pcs->lpszName, dwStyle, x, y,
-			cx, cy, pParent->GetHwnd(), m_pcs->hMenu, m_pcs->lpCreateParams))
+		if (!CreateEx(dwExStyle, ClassName, m_pData->cs.lpszName, dwStyle, x, y,
+			cx, cy, pParent->GetHwnd(), m_pData->cs.hMenu, m_pData->cs.lpCreateParams))
 			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
 
 		if (bMax)

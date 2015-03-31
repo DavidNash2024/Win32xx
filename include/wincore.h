@@ -675,17 +675,20 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-#ifdef USE_OBSOLETE_CODE
 		HWND m_hWnd;					// handle to this object's window
-#endif
 
 	private:
 		struct DataMembers	// A structure that contains the data members
 		{
-			CREATESTRUCT	cs;
-			WNDCLASS	wc;
-			WNDPROC		PrevWindowProc;
-			BOOL		IsTmpWnd;
+			DataMembers() : PrevWindowProc(NULL) // Constructor
+			{
+				::ZeroMemory(&cs, sizeof(CREATESTRUCT));
+				::ZeroMemory(&wc, sizeof(WNDCLASS));
+			}
+
+			CREATESTRUCT cs;
+			WNDCLASS	 wc;
+			WNDPROC		 PrevWindowProc;
 			Shared_Ptr<CFont>	font;
   
   #ifndef _WIN32_WCE
@@ -708,13 +711,11 @@ namespace Win32xx
 
 		Shared_Ptr<DataMembers> m_pData;
 
-#ifndef USE_OBSOLETE_CODE
-		HWND m_hWnd;					// handle to this object's window
-#else
-		Shared_Ptr<WNDCLASS> m_pwc;		// defines initialisation parameters for PreRegisterClass
-		Shared_Ptr<CREATESTRUCT> m_pcs;	// defines initialisation parameters for PreCreate and Create
-		WNDPROC m_PrevWindowProc;		// pre-subclassed Window Procedure
-#endif
+//#ifdef USE_OBSOLETE_CODE
+//		Shared_Ptr<WNDCLASS> m_pwc;		// defines initialisation parameters for PreRegisterClass
+//		Shared_Ptr<CREATESTRUCT> m_pcs;	// defines initialisation parameters for PreCreate and Create
+//		WNDPROC m_PrevWindowProc;		// pre-subclassed Window Procedure
+//#endif
 		
 		BOOL m_IsTmpWnd;				// True if this CWnd is a TmpWnd
 
@@ -1043,14 +1044,6 @@ namespace Win32xx
 
 			m_hResource = m_hInstance;
 			SetCallback();
-
-			// Assign the special CWnds used by SetWindowPos and DeferWindowPos
-	//		m_csMapLock.Lock();
-	//		m_mapHWND.insert( std::make_pair( HWND_TOP, const_cast<CWnd*>(&wndTop) ) );
-	//		m_mapHWND.insert( std::make_pair( HWND_TOPMOST, const_cast<CWnd*>(&wndTopMost) ) );
-	//		m_mapHWND.insert( std::make_pair( HWND_NOTOPMOST, const_cast<CWnd*>(&wndNoTopMost) ) );
-	//		m_mapHWND.insert( std::make_pair( HWND_BOTTOM, const_cast<CWnd*>(&wndBottom) ) );
-	//		GetApp()->m_csMapLock.Release();
 		}
 
 		catch (const CWinException &e)
@@ -1382,18 +1375,12 @@ namespace Win32xx
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 
 		m_pData = new DataMembers;
-		::ZeroMemory(&m_pData->cs, sizeof(CREATESTRUCT));
-		::ZeroMemory(&m_pData->wc, sizeof(WNDCLASS));
-		m_pData->PrevWindowProc = NULL;
 	}
 
 	inline CWnd::CWnd(HWND hWnd) : m_IsTmpWnd(TRUE)
 	{
 		// A private constructor, used internally.
 		m_pData = new DataMembers;
-		::ZeroMemory(&m_pData->cs, sizeof(CREATESTRUCT));
-		::ZeroMemory(&m_pData->wc, sizeof(WNDCLASS));
-		m_pData->PrevWindowProc = NULL;
 
 		m_hWnd = hWnd;
 	}
@@ -1545,51 +1532,51 @@ namespace Win32xx
 		assert( GetApp() );
 
 		// Set the WNDCLASS parameters
-		PreRegisterClass(*m_pwc);
-		if (m_pwc->lpszClassName)
+		PreRegisterClass(m_pData->wc);
+		if (m_pData->wc.lpszClassName)
 		{
-			RegisterClass(*m_pwc);
-			m_pcs->lpszClass = m_pwc->lpszClassName;
+			RegisterClass(m_pData->wc);
+			m_pData->cs.lpszClass = m_pData->wc.lpszClassName;
 		}
 		else
-			m_pcs->lpszClass = _T("Win32++ Window");
+			m_pData->cs.lpszClass = _T("Win32++ Window");
 
 		// Set Parent
 		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
 
 		// Set a reasonable default window style
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		m_pcs->style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+		m_pData->cs.style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
 
 		// Set a reasonable default window position
 		if (NULL == pParent)
 		{
-			m_pcs->x  = CW_USEDEFAULT;
-			m_pcs->cx = CW_USEDEFAULT;
-			m_pcs->y  = CW_USEDEFAULT;
-			m_pcs->cy = CW_USEDEFAULT;
+			m_pData->cs.x  = CW_USEDEFAULT;
+			m_pData->cs.cx = CW_USEDEFAULT;
+			m_pData->cs.y  = CW_USEDEFAULT;
+			m_pData->cs.cy = CW_USEDEFAULT;
 		}
 
 		// Allow the CREATESTRUCT parameters to be modified
-		PreCreate(*m_pcs);
+		PreCreate(m_pData->cs);
 
-		DWORD dwStyle = m_pcs->style & ~WS_VISIBLE;
+		DWORD dwStyle = m_pData->cs.style & ~WS_VISIBLE;
 
 		// Create the window
 #ifndef _WIN32_WCE
-		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, dwStyle, m_pcs->x, m_pcs->y,
-				m_pcs->cx, m_pcs->cy, hWndParent, m_pcs->hMenu, m_pcs->lpCreateParams);
+		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, dwStyle, m_pData->cs.x, m_pData->cs.y,
+				m_pData->cs.cx, m_pData->cs.cy, hWndParent, m_pData->cs.hMenu, m_pData->cs.lpCreateParams);
 
-		if (m_pcs->style & WS_VISIBLE)
+		if (m_pData->cs.style & WS_VISIBLE)
 		{
-			if		(m_pcs->style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
-			else if (m_pcs->style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
+			if		(m_pData->cs.style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
+			else if (m_pData->cs.style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
 			else	ShowWindow();
 		}
 
 #else
-		CreateEx(m_pcs->dwExStyle, m_pcs->lpszClass, m_pcs->lpszName, m_pcs->style, m_pcs->x, m_pcs->y,
-				m_pcs->cx, m_pcs->cy, hWndParent, 0, m_pcs->lpCreateParams);
+		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, m_pData->cs.style, m_pData->cs.x, m_pData->cs.y,
+				m_pData->cs.cx, m_pData->cs.cy, hWndParent, 0, m_pData->cs.lpCreateParams);
 #endif
 
 		return m_hWnd;
@@ -1828,13 +1815,14 @@ namespace Win32xx
 #endif
 
 	inline CWnd* CWnd::GetCWndPtr(HWND hWnd)
+	// Retrieves the pointer to the CWnd associated with the specified HWND.
 	{
 		assert( GetApp() );
 		return hWnd? GetApp()->GetCWndFromMap(hWnd) : 0;
 	}
 
 	inline CWnd CWnd::GetAncestor(UINT gaFlags /*= GA_ROOTOWNER*/) const
-	// The GetAncestor function retrieves a pointer to the ancestor (root parent)
+	// The GetAncestor function retrieves the ancestor (root parent)
 	// of the window. Supports Win95.
 	{
 		assert(IsWindow());
@@ -2490,8 +2478,8 @@ namespace Win32xx
 	//
 
 	inline HDC CWnd::BeginPaint(PAINTSTRUCT& ps) const
-	// The BeginPaint function prepares the specified window for painting and fills a PAINTSTRUCT structure with
-	// information about the painting. Consider using CPaintDC instead.
+	// The BeginPaint function prepares the specified window for painting and fills a PAINTSTRUCT
+	// structure with information about the painting. Consider using CPaintDC instead.
 	{
         assert(IsWindow());
 		return ::BeginPaint(m_hWnd, &ps);
@@ -2527,7 +2515,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::ChildWindowFromPoint(POINT pt) const
-	// determines which, if any, of the child windows belonging to a parent window contains
+	// Determines which, if any, of the child windows belonging to a parent window contains
 	// the specified point. The search is restricted to immediate child windows.
 	// Grandchildren, and deeper descendant windows are not searched.
 	{
@@ -2551,19 +2539,17 @@ namespace Win32xx
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
-	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
+	// The hWndInsertAfter can one of:  HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, or HWND_TOPMOST
 	{
         assert(IsWindow());
-	//	HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
 	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
-	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
+	// The hWndInsertAfter can one of:  HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, or HWND_TOPMOST
 	{
 		assert(IsWindow());
-	//	HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::DeferWindowPos(hWinPosInfo, m_hWnd, hWndInsertAfter, rc.left, rc.top, rc.right - rc.left, rc.bottom - rc.top, uFlags);
 	}
 
@@ -2599,14 +2585,14 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetActiveWindow() const
-	// The GetActiveWindow function retrieves a pointer to the active window attached to the calling
+	// The GetActiveWindow function retrieves the active window attached to the calling
 	// thread's message queue.
 	{
 		return CWnd(::GetActiveWindow() );
 	}
 
 	inline CWnd CWnd::GetCapture() const
-	// The GetCapture function retrieves a pointer to the window (if any) that has captured the mouse.
+	// The GetCapture function retrieves the window (if any) that has captured the mouse.
 	{
 		return CWnd( ::GetCapture() );
 	}
@@ -2651,7 +2637,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetDesktopWindow() const
-	// The GetDesktopWindow function retrieves a pointer to the desktop window.
+	// The GetDesktopWindow function retrieves the desktop window.
 	{
 		return CWnd( ::GetDesktopWindow() );
 	}
@@ -2678,7 +2664,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetFocus() const
-	// The GetFocus function retrieves a pointer to the window that has the keyboard focus, if the window
+	// The GetFocus function retrieves the window that has the keyboard focus, if the window
 	// is attached to the calling thread's message queue.
 	{
 		return CWnd( ::GetFocus() );
@@ -2707,7 +2693,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const
-	// The GetNextDlgGroupItem function retrieves a pointer to the first control in a group of controls that
+	// The GetNextDlgGroupItem function retrieves the first control in a group of controls that
 	// precedes (or follows) the specified control in a dialog box.
 	{
 		assert(IsWindow());
@@ -2715,7 +2701,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetNextDlgTabItem(HWND hCtl, BOOL bPrevious) const
-	// The GetNextDlgTabItem function retrieves a pointer to the first control that has the WS_TABSTOP style
+	// The GetNextDlgTabItem function retrieves the first control that has the WS_TABSTOP style
 	// that precedes (or follows) the specified control.
 	{
 		assert(IsWindow());
@@ -2723,7 +2709,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetParent() const
-	// The GetParent function retrieves a pointer to the specified window's parent or owner.
+	// The GetParent function retrieves the specified window's parent or owner.
 	{
 		assert(IsWindow());
 		return CWnd(::GetParent(m_hWnd));
@@ -2763,7 +2749,7 @@ namespace Win32xx
 	}
 
 	inline CWnd CWnd::GetWindow(UINT uCmd) const
-	// The GetWindow function retrieves a pointer to a window that has the specified
+	// The GetWindow function retrieves a window that has the specified
 	// relationship (Z-Order or owner) to the specified window.
 	// Possible uCmd values: GW_CHILD, GW_ENABLEDPOPUP, GW_HWNDFIRST, GW_HWNDLAST,
 	// GW_HWNDNEXT, GW_HWNDPREV, GW_OWNER

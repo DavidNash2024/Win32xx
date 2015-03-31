@@ -77,26 +77,26 @@
 // Coding Example with CDC classes ...
 //  void DrawLine()
 //  {
-//	  CClientDC dcClient(this)
-//    CMemDC dcMem(&dcClient);
-//	  dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
+//	  CClientDC dcClient(*this)
+//    CMemDC dcMem(dcClient);
+//	  dcMem.CreateCompatibleBitmap(dcClient, cx, cy);
 //    CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
 //	  CMemDC.MoveTo(0, 0);
 //    CMemDC.LineTo(50, 50);
-//	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);
+//	  dcClient.BitBlt(0, 0, cx, cy, CMemDC, 0, 0);
 //  }
 //
 // Coding Example with CDC classes and CPen ...
 //  void DrawLine()
 //  {
-//	  CClientDC dcClient(this)
-//    CMemDC CMemDC(&dcClient);
-//	  dcMem.CreateCompatibleBitmap(&dcClient, cx, cy);
+//	  CClientDC dcClient(*this)
+//    CMemDC CMemDC(dcClient);
+//	  dcMem.CreateCompatibleBitmap(dcClient, cx, cy);
 //    CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
-//    CPen* pOldPen = CMemDC.SelectObject(&MyPen);
+//    CPen* pOldPen = CMemDC.SelectObject(MyPen);
 //	  CMemDC.MoveTo(0, 0);
 //    CMemDC.LineTo(50, 50);
-//	  dcClient.BitBlt(0, 0, cx, cy, &CMemDC, 0, 0);
+//	  dcClient.BitBlt(0, 0, cx, cy, CMemDC, 0, 0);
 //  }
 
 // Notes:
@@ -109,11 +109,6 @@
 //  * Bitmaps can only be selected into one device context at a time.
 //  * Palettes use SelectPalatte to select them into device the context.
 //  * Regions use SelectClipRgn to select them into the device context.
-//  * The FromHandle function can be used to convert a GDI handle (HDC, HPEN,
-//     HBITMAP etc) to a pointer of the appropriate GDI class (CDC, CPen CBitmap etc).
-//     The FromHandle function creates a temporary object unless the HANDLE is already
-//     assigned to a GDI class. Temporary objects don't delete their GDI object when
-//     their destructor is called.
 //  * All the GDI classes are reference counted. This allows functions to safely
 //     pass these objects by value, as well as by pointer or by reference.
 
@@ -161,6 +156,9 @@ namespace Win32xx
 	protected:
 		struct DataMembers	// A structure that contains the data members for CGDIObject
 		{
+			// Constructor
+			DataMembers() : hGDIObject(0), Count(1L), IsTmpObject(FALSE) {}
+			
 			HGDIOBJ hGDIObject;
 			long	Count;
 			BOOL	IsTmpObject;
@@ -186,7 +184,7 @@ namespace Win32xx
 		CBitmap(LPCTSTR lpstr);
 		CBitmap(int nID);
 		operator HBITMAP() const;
-		~CBitmap();
+		virtual ~CBitmap();
 
 #ifdef USE_OBSOLETE_CODE
 		static CBitmap* FromHandle(HBITMAP hBitmap);
@@ -229,7 +227,7 @@ namespace Win32xx
 		CBrush(HBRUSH hBrush);
 		CBrush(COLORREF crColor);
 		operator HBRUSH() const;
-		~CBrush();
+		virtual ~CBrush();
 
 #ifdef USE_OBSOLETE_CODE
 		static CBrush* FromHandle(HBRUSH hBrush);
@@ -259,7 +257,7 @@ namespace Win32xx
 		CFont(HFONT hFont);
 		CFont(const LOGFONT* lpLogFont);
 		operator HFONT() const;
-		~CFont();
+		virtual ~CFont();
 
 #ifdef USE_OBSOLETE_CODE
 		static CFont* FromHandle(HFONT hFont);
@@ -292,7 +290,7 @@ namespace Win32xx
 		CPalette();
 		CPalette(HPALETTE hPalette);
 		operator HPALETTE() const;
-		~CPalette();
+		virtual ~CPalette();
 
 #ifdef USE_OBSOLETE_CODE
 		static CPalette* FromHandle(HPALETTE hPalette);
@@ -334,7 +332,7 @@ namespace Win32xx
 		CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
 #endif // !_WIN32_WCE
 		operator HPEN() const;
-		~CPen();
+		virtual ~CPen();
 
 #ifdef USE_OBSOLETE_CODE
 		static CPen* FromHandle(HPEN hPen);
@@ -361,7 +359,7 @@ namespace Win32xx
 		CRgn();
 		CRgn(HRGN hRgn);
 		operator HRGN() const;
-		~CRgn ();
+		virtual ~CRgn ();
 
 #ifdef USE_OBSOLETE_CODE
 		static CRgn* FromHandle(HRGN hRgn);
@@ -600,7 +598,7 @@ namespace Win32xx
 
 		// Bitmap Functions
 		BOOL BitBlt(int x, int y, int nWidth, int nHeight, HDC hdcSrc, int xSrc, int ySrc, DWORD dwRop) const;
-		void DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask) const;
+		void DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask) const;
 		BOOL MaskBlt(int nXDest, int nYDest, int nWidth, int nHeight, HDC hdcSrc,
 			               int nXSrc, int nYSrc, HBITMAP hbmMask, int xMask, int  yMask,
 						   DWORD dwRop) const;
@@ -771,6 +769,9 @@ namespace Win32xx
 	private:
 		struct DataMembers	// A structure that contains the data members for CDC
 		{
+			// Constructor
+			DataMembers() : hDC(0), Count(1L), IsTmpHDC(FALSE), hWnd(0), nSavedDCState(0) {}
+			
 			std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
 			HDC		hDC;			// The HDC belonging to this CDC
 			long	Count;			// Reference count
@@ -941,9 +942,6 @@ namespace Win32xx
 	// Constructs the CGDIObject
 	{
 		m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpObject = FALSE;
 	}
 
 	inline CGDIObject::CGDIObject(const CGDIObject& rhs)
@@ -1005,9 +1003,6 @@ namespace Win32xx
 			{
 				Release();
 				m_pData = new DataMembers;
-				m_pData->hGDIObject = 0;
-				m_pData->Count = 1L;
-				m_pData->IsTmpObject = FALSE;
 			}
 
 			if (hObject)
@@ -1059,11 +1054,7 @@ namespace Win32xx
 			}
 		}
 
-		// Assign values to our data members
 		m_pData = new DataMembers;
-		m_pData->hGDIObject = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpObject = FALSE;
 
 		return hObject;
 	}
@@ -1948,6 +1939,7 @@ namespace Win32xx
 
 	inline CPen::~CPen()
 	{
+		TRACE("Pen Destructor\n");
 	}
 
 #ifdef USE_OBSOLETE_CODE
@@ -2296,12 +2288,6 @@ namespace Win32xx
 	{
 		// Allocate memory for our data members
 		m_pData = new DataMembers;
-
-		// Assign values to our data members
-		m_pData->hDC = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpHDC = FALSE;
-		m_pData->hWnd = 0;
 	}
 
 inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
@@ -2333,8 +2319,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 			// Assign values to our data members
 			m_pData->hDC = hDC;
-			m_pData->Count = 1L;
-			m_pData->IsTmpHDC = FALSE;
 			m_pData->nSavedDCState = ::SaveDC(hDC);
 #ifndef _WIN32_WCE
 			m_pData->hWnd = ::WindowFromDC(hDC);
@@ -2452,9 +2436,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 				// Assign values to our data members
 				m_pData = new DataMembers;
-				m_pData->hDC = 0;
-				m_pData->Count = 1L;
-				m_pData->IsTmpHDC = FALSE;
 			}		
 			
 			if (hDC)
@@ -2502,10 +2483,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 		// Assign values to our data members
 		m_pData = new DataMembers;
-		m_pData->hDC = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpHDC = FALSE;
-		m_pData->hWnd = 0;
 
 		return hDC;
 	}
@@ -2562,14 +2539,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 #endif
 
-	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, CBitmap& Bitmap, COLORREF clrMask) const
+	inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP hBitmap, COLORREF clrMask) const
 	// Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
 	// Suitable for use with a Window DC or a memory DC
 	{
 		// Create the Image memory DC
 		CMemDC dcImage(*this);
 		dcImage.SetBkColor(clrMask);
-		dcImage.SelectObject(Bitmap);
+		::SelectObject(dcImage, hBitmap);
 
 		// Create the Mask memory DC
 		CMemDC dcMask(*this);

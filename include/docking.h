@@ -135,7 +135,7 @@ namespace Win32xx
 		public:
 			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
-			virtual CToolBar* GetToolBar() const	{return (CToolBar*)&m_ToolBar;}
+			virtual CToolBar& GetToolBar() const	{return (CToolBar&)m_ToolBar;}
 			virtual CWnd* GetView() const	{return m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual int OnCreate(LPCREATESTRUCT pcs);
@@ -181,7 +181,7 @@ namespace Win32xx
 		CString& GetDockCaption() const	{ return (CString&)m_csCaption; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_strTabText; }
-		virtual CToolBar* GetToolBar()	const { return GetViewPage()->GetToolBar(); }
+		virtual CToolBar& GetToolBar()	const { return GetViewPage()->GetToolBar(); }
 		CWnd* GetView()	const			{ return GetViewPage()->GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
@@ -4152,7 +4152,7 @@ namespace Win32xx
 	// A resource ID of 0 is a separator
 	{
 		m_vToolBarData.push_back(nID);
-		GetToolBar()->AddButton(nID, bEnabled);
+		GetToolBar().AddButton(nID, bEnabled);
 	}
 
 	inline CDockContainer* CDockContainer::GetContainerFromIndex(UINT nPage)
@@ -4288,22 +4288,22 @@ namespace Win32xx
 		GetViewPage()->Create(*this);
 
 		// Create the toolbar
-		GetToolBar()->Create(*GetViewPage());
-		DWORD style = (DWORD)GetToolBar()->GetWindowLongPtr(GWL_STYLE);
+		GetToolBar().Create(*GetViewPage());
+		DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
 		style |= CCS_NODIVIDER ;
-		GetToolBar()->SetWindowLongPtr(GWL_STYLE, (LONG_PTR)style);
+		GetToolBar().SetWindowLongPtr(GWL_STYLE, (LONG_PTR)style);
 		SetupToolBar();
 		if (m_vToolBarData.size() > 0)
 		{
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-			if (!GetToolBar()->SendMessage(TB_GETIMAGELIST,  0L, 0L))
+			if (!GetToolBar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
 				SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
-			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
+			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
 		else
-			GetToolBar()->Destroy();
+			GetToolBar().Destroy();
 
 		SetFixedWidth(TRUE);
 		SetOwnerDraw(TRUE);
@@ -4577,7 +4577,7 @@ namespace Win32xx
 		{
 			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
 			// Instead we simply set the bitmap.
-			GetToolBar()->SetBitmap(ToolBarID);
+			GetToolBar().SetBitmap(ToolBarID);
 			return;
 		}
 
@@ -4592,7 +4592,7 @@ namespace Win32xx
 		m_imlToolBar.DeleteImageList();
 		m_imlToolBar.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
 		m_imlToolBar.Add(Bitmap, crMask);
-		GetToolBar()->SetImageList(m_imlToolBar);
+		GetToolBar().SetImageList(m_imlToolBar);
 
 		if (ToolBarHotID)
 		{
@@ -4602,7 +4602,7 @@ namespace Win32xx
 			m_imlToolBarHot.DeleteImageList();
 			m_imlToolBarHot.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
 			m_imlToolBarHot.Add(BitmapHot, crMask);
-			GetToolBar()->SetHotImageList(m_imlToolBarHot);
+			GetToolBar().SetHotImageList(m_imlToolBarHot);
 		}
 
 		if (ToolBarDisabledID)
@@ -4613,13 +4613,13 @@ namespace Win32xx
 			m_imlToolBarDis.DeleteImageList();
 			m_imlToolBarDis.Create(cx, cy, ILC_COLOR32 | ILC_MASK, 0, 0);
 			m_imlToolBarDis.Add(BitmapDisabled, crMask);
-			GetToolBar()->SetDisableImageList( m_imlToolBarDis );
+			GetToolBar().SetDisableImageList( m_imlToolBarDis );
 		}
 		else
 		{
 			m_imlToolBarDis.DeleteImageList();
 			m_imlToolBarDis.CreateDisabledImageList(m_imlToolBar);
-			GetToolBar()->SetDisableImageList( m_imlToolBarDis );
+			GetToolBar().SetDisableImageList( m_imlToolBarDis );
 		}
 	}
 
@@ -4739,11 +4739,11 @@ namespace Win32xx
 		// Display tooltips for the toolbar
 		case TTN_GETDISPINFO:
 			{
-				int iIndex =  GetToolBar()->HitTest();
+				int iIndex =  GetToolBar().HitTest();
 				LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lParam;
 				if (iIndex >= 0)
 				{
-					int nID = GetToolBar()->GetCommandID(iIndex);
+					int nID = GetToolBar().GetCommandID(iIndex);
 					if (nID > 0)
 					{
 						m_strTooltip = LoadString(nID);
@@ -4756,7 +4756,7 @@ namespace Win32xx
 			break;
 		case NM_CUSTOMDRAW:
 			{
-				if (((LPNMHDR)lParam)->hwndFrom == GetToolBar()->GetHwnd())
+				if (((LPNMHDR)lParam)->hwndFrom == GetToolBar())
 				{
 					// Pass Toolbar's custom draw up to CFrame
 					return GetAncestor().SendMessage(WM_NOTIFY, wParam, lParam);
@@ -4777,10 +4777,10 @@ namespace Win32xx
 	inline void CDockContainer::CViewPage::RecalcLayout()
 	{
 		CRect rc = GetClientRect();
-		if (GetToolBar()->IsWindow())
+		if (GetToolBar().IsWindow())
 		{
-			GetToolBar()->SendMessage(TB_AUTOSIZE, 0L, 0L);
-			CRect rcToolBar = GetToolBar()->GetClientRect();
+			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+			CRect rcToolBar = GetToolBar().GetClientRect();
 			rc.top += rcToolBar.Height();
 		}
 

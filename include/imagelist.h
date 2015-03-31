@@ -123,6 +123,9 @@ namespace Win32xx
 	private:
 		struct DataMembers	// A structure that contains the data members
 		{
+			// Constructor
+			DataMembers() : hImageList(0), IsTmpImageList(FALSE), Count(1L) {}
+
 			HIMAGELIST	hImageList;
 			BOOL		IsTmpImageList;
 			long		Count;
@@ -143,18 +146,11 @@ namespace Win32xx
 	inline CImageList::CImageList()
 	{
 		m_pData = new DataMembers;
-		m_pData->hImageList = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpImageList = FALSE;
 	}
 
 	inline CImageList::CImageList(HIMAGELIST himl)
 	{
 		m_pData = new DataMembers;
-		m_pData->hImageList = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpImageList = FALSE;
-
 		Attach(himl);
 	}
 
@@ -302,12 +298,7 @@ namespace Win32xx
 			if (m_pData->hImageList)
 			{
 				Release();
-
-				// Assign values to our data members
 				m_pData = new DataMembers;
-				m_pData->hImageList = 0;
-				m_pData->Count = 1L;
-				m_pData->IsTmpImageList = FALSE;
 			}
 
 			if (hImageList)
@@ -439,11 +430,7 @@ namespace Win32xx
 			}
 		}
 
-		// Assign values to our data members
 		m_pData = new DataMembers;
-		m_pData->hImageList = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpImageList = FALSE;	
 
 		return hImageList;
 	}

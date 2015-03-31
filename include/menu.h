@@ -178,6 +178,9 @@ namespace Win32xx
 	private:
 		struct DataMembers
 		{
+			// Constructor
+			DataMembers() : hMenu(0), IsTmpMenu(FALSE), Count(1L) {}
+
 			std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
 			HMENU hMenu;
 			BOOL IsTmpMenu;
@@ -200,17 +203,11 @@ namespace Win32xx
 	inline CMenu::CMenu()
 	{
 		m_pData = new DataMembers;
-		m_pData->hMenu = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpMenu = FALSE;	
 	}
 
 	inline CMenu::CMenu(UINT nID) 
 	{
 		m_pData = new DataMembers;
-		m_pData->hMenu = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpMenu = FALSE;
 
 		HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
 		Attach(menu);
@@ -219,10 +216,6 @@ namespace Win32xx
 	inline CMenu::CMenu(HMENU hMenu)
 	{
 		m_pData = new DataMembers;
-		m_pData->hMenu = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpMenu = FALSE;
-
 		Attach(hMenu);
 	}
 
@@ -382,9 +375,6 @@ namespace Win32xx
 			{
 				Release();
 				m_pData = new DataMembers;
-				m_pData->hMenu = 0;
-				m_pData->Count = 1L;
-				m_pData->IsTmpMenu = FALSE;
 			}
 
 			if (hMenu)
@@ -478,9 +468,6 @@ namespace Win32xx
 		}		
 		
 		m_pData = new DataMembers;
-		m_pData->hMenu = 0;
-		m_pData->Count = 1L;
-		m_pData->IsTmpMenu = FALSE;	
 
 		return hMenu;
 	}

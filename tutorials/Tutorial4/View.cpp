@@ -30,8 +30,11 @@ void CView::OnDraw(CDC& dc)
 
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			if (bDraw) dc.LineTo(m_points[i].x, m_points[i].y);
-			else dc.MoveTo(m_points[i].x, m_points[i].y);
+			if (bDraw) 
+				dc.LineTo(m_points[i].x, m_points[i].y);
+			else
+				dc.MoveTo(m_points[i].x, m_points[i].y);
+			
 			bDraw = m_points[i].PenDown;
 		}
 	}
@@ -85,7 +88,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case WM_LBUTTONDOWN: return	OnLButtonDown(uMsg, wParam, lParam);
 	case WM_MOUSEMOVE:	 return OnMouseMove(uMsg, wParam, lParam);
-    case WM_LBUTTONUP:	 return OnLButtonUp(uMsg, wParam, lParam);
+	case WM_LBUTTONUP:	 return OnLButtonUp(uMsg, wParam, lParam);
 	}
 
 	//Use the default message handling for remaining messages
