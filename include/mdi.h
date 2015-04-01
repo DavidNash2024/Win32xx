@@ -753,6 +753,9 @@ namespace Win32xx
 	// We create the MDI child window and then maximize if required.
 	// This technique avoids unnecessary flicker when creating maximized MDI children.
 	{
+		if (m_pData.get() == 0)
+			m_pData = new DataMembers;
+
 		//Call PreCreate in case its overloaded
 		PreCreate(m_pData->cs);
 

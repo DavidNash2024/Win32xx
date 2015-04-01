@@ -367,7 +367,6 @@ namespace Win32xx
 #endif
 				
 				bResult = OnEraseBkgnd(dc);
-				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;

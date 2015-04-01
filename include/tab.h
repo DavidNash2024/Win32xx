@@ -131,7 +131,7 @@ namespace Win32xx
 		int			GetCurFocus() const;
 		int			GetCurSel() const;
 		DWORD		GetExtendedStyle() const;
-		HIMAGELIST  GetImageList() const;
+		CImageList  GetImageList() const;
 		BOOL		GetItem(int iItem, LPTCITEM pitem) const;
 		int			GetItemCount() const;
 		BOOL		GetItemRect(int iItem, LPRECT prc) const;
@@ -144,7 +144,7 @@ namespace Win32xx
 		void		SetCurFocus(int iItem) const;
 		int			SetCurSel(int iItem) const;
 		DWORD		SetExtendedStyle(DWORD dwExStyle) const;
-		HIMAGELIST  SetImageList(HIMAGELIST himlNew) const;
+		CImageList  SetImageList(HIMAGELIST himlNew) const;
 		BOOL		SetItem(int iItem, LPTCITEM pitem) const;
 		BOOL		SetItemExtra(int cb) const;
 		DWORD		SetItemSize(int cx, int cy) const;
@@ -1063,7 +1063,9 @@ namespace Win32xx
 
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
-		CRgn rgnSrc1 = ::CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
+		CRgn rgnSrc1;
+	//	rgnSrc1.CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
+		rgnSrc1.CreateRectRgnIndirect(rcClient);
 		CRect rcTab = GetClientRect();
 		AdjustRect(FALSE, &rcTab);
 		if (rcTab.Height() < 0)
@@ -1072,8 +1074,10 @@ namespace Win32xx
 			rcTab.left = rcTab.right;
 
 		int offset = -1; // Required for RTL layout
-		CRgn rgnSrc2 = ::CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);
-		CRgn rgnClip = ::CreateRectRgn(0, 0, 0, 0);
+		CRgn rgnSrc2;
+		rgnSrc2.CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);
+		CRgn rgnClip;
+		rgnClip.CreateRectRgn(0, 0, 0, 0);
 		rgnClip.CombineRgn(rgnSrc1, rgnSrc2, RGN_DIFF);
 
 		// Use the region in the memory DC to paint the grey background
@@ -1506,11 +1510,12 @@ namespace Win32xx
 		return TabCtrl_GetExtendedStyle(*this);
 	}
 
-	inline HIMAGELIST CTab::GetImageList() const
+	inline CImageList CTab::GetImageList() const
 	// Retrieves the image list associated with a tab control.
 	{
 		assert(IsWindow());
-		return TabCtrl_GetImageList(*this);
+		HIMAGELIST himl = TabCtrl_GetImageList(*this);
+		return CImageList(himl);
 	}
 
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
@@ -1598,11 +1603,12 @@ namespace Win32xx
 		return TabCtrl_SetExtendedStyle(*this, dwExStyle);
 	}
 
-	inline HIMAGELIST CTab::SetImageList(HIMAGELIST himlNew) const
+	inline CImageList CTab::SetImageList(HIMAGELIST himlNew) const
 	// Assigns an image list to a tab control.
 	{
 		assert(IsWindow());
-		return TabCtrl_SetImageList( *this, himlNew );
+		HIMAGELIST himl = TabCtrl_SetImageList( *this, himlNew );
+		return CImageList(himl);
 	}
 
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const

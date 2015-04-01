@@ -161,7 +161,7 @@
     <ClInclude Include="..\..\..\include\winutils.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\Resource.rc" />
+    <ResourceCompile Include="..\src\ResourceTest.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

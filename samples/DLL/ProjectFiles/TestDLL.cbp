@@ -175,7 +175,7 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../src/Resource.rc">
+		<Unit filename="../src/ResourceTest.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/main.cpp" />

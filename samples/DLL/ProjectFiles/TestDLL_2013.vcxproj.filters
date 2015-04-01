@@ -97,7 +97,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\Resource.rc">
+    <ResourceCompile Include="..\src\ResourceTest.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

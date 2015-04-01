@@ -138,9 +138,6 @@ namespace Win32xx
 		CToolBar& operator = (const CToolBar&); // Disable assignment operator
 
 		std::map<CString, int> m_StringMap;	// a map of strings used in SetButtonText
-		CImageList m_imlNormal;
-		CImageList m_imlDisabled;
-		CImageList m_imlHot;
 
 		UINT m_OldToolBarID;				// Bitmap Resource ID, used in AddBitmap/ReplaceBitmap
 
@@ -409,8 +406,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = (HIMAGELIST)SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L);
-		m_imlDisabled.Attach(himl);
-		return m_imlDisabled;
+		return CImageList(himl);
 	}
 
 	inline CImageList CToolBar::GetHotImageList()
@@ -418,8 +414,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = (HIMAGELIST)SendMessage(TB_GETHOTIMAGELIST, 0L, 0L);
-		m_imlHot.Attach(himl);
-		return m_imlHot;
+		return CImageList(himl);
 	}
 
 	inline int CToolBar::GetHotItem() const
@@ -434,8 +429,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = (HIMAGELIST)SendMessage(TB_GETIMAGELIST, 0L, 0L);
-		m_imlNormal.Attach(himl);
-		return m_imlNormal;
+		return CImageList(himl);
 	}
 
 	inline CRect CToolBar::GetItemRect(int iIndex) const
@@ -928,8 +922,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = (HIMAGELIST)SendMessage(TB_SETDISABLEDIMAGELIST, 0L, (LPARAM)himlDisabled);
-		m_imlDisabled.Attach(himl);
-		return m_imlDisabled;
+		return CImageList(himl);
 	}
 
 	inline DWORD CToolBar::SetDrawTextFlags(DWORD dwMask, DWORD dwDTFlags) const
@@ -952,8 +945,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = (HIMAGELIST)SendMessage(TB_SETHOTIMAGELIST, 0L, (LPARAM)himlHot);
-		m_imlHot.Attach(himl);
-		return m_imlHot;
+		return CImageList(himl);
 	}
 
 	inline int CToolBar::SetHotItem(int iHot) const
@@ -968,8 +960,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = (HIMAGELIST)SendMessage(TB_SETIMAGELIST, 0L, (LPARAM)himlNormal);
-		m_imlNormal.Attach(himl);
-		return m_imlNormal;
+		return CImageList(himl);
 	}
 
 	inline BOOL CToolBar::SetIndent(int iIndent) const

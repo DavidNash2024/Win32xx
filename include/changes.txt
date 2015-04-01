@@ -69,7 +69,18 @@ Coding examples: (the Create function now has a HWND argument)
 now also use the relevant handle instead. These include member functions for
 CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, CImageList and CMenu.
 Each of these classes have operator overloading, so the class object can be
-used instead of the handle.  
+used instead of the handle.
+
+* CDC, CBrush, CBitmap, CFont, CPalette, CPen, CRgn, CMenu and CImageList.
+ - These classes destroy the resource they manage when their destructor is
+   called, but only if Win32++ created it. This allows us to attach resources
+   provided by the operating system (HDCs, HFONTS, HIMAGELISTS etc.) without
+   having to detach them later to prevent them from being destroyed.
+ - These classes can be re-used. There is no need to detach the current
+   handle before assigning a new one.
+ - These classes use reference counting, so they can be safely copied. This
+   allows them to be returned by value from functions.
+   
 
 Step by step guide to code migration
 ------------------------------------
@@ -112,18 +123,16 @@ Step by step guide to code migration
    a) Modify the definitions of any Create, OnDraw and OnEraseBkgnd functions.
       If the definitions of these functions are incorrect, they won't get called
 	  automatically.
-	  
-   b) Replace the use of m_hWnd in your code with either *this or GetHwnd().
    
-   c) Remove the use of FromHandle in your code. There might be better ways
+   b) Remove the use of FromHandle in your code. There might be better ways
       but we can always use Attach and Detach in place of FromHandle.
 	  
-   d) Add the UINT parameter to the message handlers. For example:
+   c) Add the UINT parameter to the message handlers. For example:
        OnSize(WPARAM wParam, LPARAM lParam)
 	   should now be:
 	   OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
             
-   e) Remove the definition of USE_OBSOLETE_CODE.  
+   d) Remove the definition of USE_OBSOLETE_CODE.
 
 Other tips:
 *) The following Win32++ classes are reference counted and can be safely copied.

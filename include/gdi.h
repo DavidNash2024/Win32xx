@@ -157,11 +157,11 @@ namespace Win32xx
 		struct DataMembers	// A structure that contains the data members for CGDIObject
 		{
 			// Constructor
-			DataMembers() : hGDIObject(0), Count(1L), IsTmpObject(FALSE) {}
+			DataMembers() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
 			
 			HGDIOBJ hGDIObject;
 			long	Count;
-			BOOL	IsTmpObject;
+			BOOL	IsManagedObject;
 		};
 
 		DataMembers* m_pData;
@@ -178,6 +178,7 @@ namespace Win32xx
 	//
 	class CBitmap : public CGDIObject
 	{
+
 	  public:
 		CBitmap();
 		CBitmap(HBITMAP hBitmap);
@@ -403,6 +404,10 @@ namespace Win32xx
 	{
 		friend class CWinApp;
 		friend class CWnd;
+		friend class CClientDC;
+		friend class CMemDC;
+		friend class CPaintDC;
+		friend class CWindowDC;
 
 	public:
 		CDC();									// Constructs a new CDC without assigning a HDC
@@ -422,6 +427,11 @@ namespace Win32xx
 		HDC GetHDC() const { return m_pData->hDC; }
 		BOOL RestoreDC(int nSavedDC) const;
 		int SaveDC() const;
+
+		HGDIOBJ SelectObject(HGDIOBJ hObject) 
+		{
+			return ::SelectObject(m_pData->hDC, hObject);
+		}
 
 #ifndef _WIN32_WCE
 		void operator = (const HDC hDC);
@@ -448,7 +458,7 @@ namespace Win32xx
 		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
-		HBITMAP SelectObject(const CBitmap& Bitmap);
+	//	HBITMAP SelectObject(const CBitmap& Bitmap);
 
 #ifndef _WIN32_WCE
 		void CreateBitmapIndirect(LPBITMAP pBitmap);
@@ -462,7 +472,7 @@ namespace Win32xx
 		void CreateSolidBrush(COLORREF rbg);
 		HBRUSH GetCurrentBrush() const;
 		LOGBRUSH GetLogBrush() const;
-		HBRUSH SelectObject(const CBrush& Brush);
+	//	HBRUSH SelectObject(const CBrush& Brush);
 
 #ifndef _WIN32_WCE
 		void CreateBrushIndirect(LPLOGBRUSH pLogBrush);
@@ -475,7 +485,7 @@ namespace Win32xx
 		void CreateFontIndirect(LPLOGFONT plf);
 		HFONT GetCurrentFont() const;
 		LOGFONT GetLogFont() const;
-		HFONT SelectObject(const CFont& Font);
+	//	HFONT SelectObject(const CFont& Font);
 
 #ifndef _WIN32_WCE
 		void CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int fnWeight,
@@ -497,7 +507,7 @@ namespace Win32xx
 		void CreatePenIndirect(LPLOGPEN pLogPen);
 		HPEN GetCurrentPen() const;
 		LOGPEN GetLogPen() const;
-		HPEN SelectObject(const CPen& Pen);
+	//	HPEN SelectObject(const CPen& Pen);
 
 		// Retrieve and Select Stock Objects
 		HGDIOBJ GetStockObject(int nIndex) const;
@@ -770,12 +780,12 @@ namespace Win32xx
 		struct DataMembers	// A structure that contains the data members for CDC
 		{
 			// Constructor
-			DataMembers() : hDC(0), Count(1L), IsTmpHDC(FALSE), hWnd(0), nSavedDCState(0) {}
+			DataMembers() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
 			
 			std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
 			HDC		hDC;			// The HDC belonging to this CDC
 			long	Count;			// Reference count
-			BOOL	IsTmpHDC;		// Delete/Release the HDC on destruction
+			BOOL	IsManagedHDC;		// Delete/Release the HDC on destruction
 			HWND	hWnd;			// The HWND of a Window or Client window DC
 			int		nSavedDCState;	// The save state of the HDC.
 		};
@@ -797,6 +807,7 @@ namespace Win32xx
 
 			assert(::IsWindow(hWnd));
 			Attach(::GetDC(hWnd), hWnd);
+			m_pData->IsManagedHDC = TRUE;
 		}
 
 		virtual ~CClientDC() {}
@@ -808,6 +819,7 @@ namespace Win32xx
 		CMemDC(HDC hdc)
 		{
 			Attach(::CreateCompatibleDC(hdc));
+			m_pData->IsManagedHDC = TRUE;
 		}
 		virtual ~CMemDC() {}
 	};
@@ -820,11 +832,11 @@ namespace Win32xx
 			assert(::IsWindow(hWnd));
 			m_hWnd = hWnd;
 			Attach(::BeginPaint(hWnd, &m_ps), hWnd);
+			m_pData->IsManagedHDC = TRUE;
 		}
 
 		virtual ~CPaintDC()
 		{
-			Detach();
 			::EndPaint(m_hWnd, &m_ps);
 		}
 
@@ -842,6 +854,7 @@ namespace Win32xx
 
 			assert(::IsWindow(hWnd));
 			Attach(::GetWindowDC(hWnd), hWnd);
+			m_pData->IsManagedHDC = TRUE;
 		}
 		virtual ~CWindowDC() {}
 	};
@@ -864,7 +877,10 @@ namespace Win32xx
 				::DeleteEnhMetaFile(m_hEMF);
 			}
 		}
-		void Create(LPCTSTR lpszFilename = NULL) { Attach(::CreateMetaFile(lpszFilename)); }
+		void Create(LPCTSTR lpszFilename = NULL) 
+		{ 
+			Attach(::CreateMetaFile(lpszFilename));
+		}
 		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
 		{
 			Attach(::CreateEnhMetaFile(hdcRef, lpszFileName, lpBounds, lpszDescription));
@@ -992,7 +1008,6 @@ namespace Win32xx
 
 	inline void CGDIObject::Attach(HGDIOBJ hObject)
 	// Attaches a GDI HANDLE to the CGDIObject.
-	// The HGDIOBJ will be automatically deleted when the destructor is called unless it is detached.
 	{
 		assert(m_pData);
 
@@ -1038,24 +1053,24 @@ namespace Win32xx
 	}
 
 	inline HGDIOBJ CGDIObject::Detach()
-	// Detaches the HGDIOBJ from this object.
+	// Detaches the HGDIOBJ from all objects.
 	{
 		assert(m_pData);
 		assert(m_pData->hGDIObject);
 
 		HGDIOBJ hObject = m_pData->hGDIObject;
+		RemoveFromMap();
+		m_pData->hGDIObject = 0;
 
 		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
-			{
-				RemoveFromMap();
+			{			
 				delete m_pData;
 			}
 		}
 
 		m_pData = new DataMembers;
-
 		return hObject;
 	}
 
@@ -1079,11 +1094,12 @@ namespace Win32xx
 		{
 			if (m_pData->hGDIObject != NULL)
 			{
-				if (!m_pData->IsTmpObject)
+				if (m_pData->IsManagedObject)
 				{
 					::DeleteObject(m_pData->hGDIObject);
-					RemoveFromMap();
 				}
+				
+				RemoveFromMap();
 			}
 
 			delete m_pData;
@@ -1136,11 +1152,13 @@ namespace Win32xx
 	inline CBitmap::CBitmap(LPCTSTR lpszName)
 	{
 		LoadBitmap(lpszName);
+		m_pData->IsManagedObject = TRUE;
 	}
 
 	inline CBitmap::CBitmap(int nID)
 	{
 		LoadBitmap(nID);
+		m_pData->IsManagedObject = TRUE;
 	}
 
 	inline CBitmap::operator HBITMAP() const
@@ -1180,7 +1198,7 @@ namespace Win32xx
 				pTLSData->TmpGDIs.insert(std::make_pair(hBitmap, pBitmap));
 
 				pBitmap->m_pData->hGDIObject = hBitmap;
-				pBitmap->m_pData->IsTmpObject = TRUE;
+				pBitmap->m_pData->IsManagedObject = FALSE;
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
 		}
@@ -1204,6 +1222,7 @@ namespace Win32xx
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 		}
 		return (0 != hBitmap);	// boolean expression
 	}
@@ -1224,6 +1243,7 @@ namespace Win32xx
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 		}
 		return (0 != hBitmap);	// boolean expression
 	}
@@ -1242,6 +1262,7 @@ namespace Win32xx
 		if (hBitmap != 0)
 		{
 			Attach( ::LoadBitmap(NULL, MAKEINTRESOURCE(nIDBitmap)) );
+			m_pData->IsManagedObject = TRUE;
 		}
 		return (0 != hBitmap);	// boolean expression
 	}
@@ -1254,6 +1275,7 @@ namespace Win32xx
 			assert(m_pData);
 			HBITMAP hBitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 			return hBitmap;
 		}
 #endif // !_WIN32_WCE
@@ -1264,6 +1286,7 @@ namespace Win32xx
 			assert(m_pData);
 			HBITMAP hBitmap = ::CreateBitmap(nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 			return hBitmap;
 		}
 
@@ -1274,6 +1297,7 @@ namespace Win32xx
 			assert(m_pData);
 			HBITMAP hBitmap = ::CreateBitmapIndirect(lpBitmap);
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 			return hBitmap;
 		}
 #endif // !_WIN32_WCE
@@ -1284,6 +1308,7 @@ namespace Win32xx
 			assert(m_pData);
 			HBITMAP hBitmap = ::CreateCompatibleBitmap(hdc, nWidth, nHeight);
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 			return hBitmap;
 		}
 
@@ -1329,6 +1354,7 @@ namespace Win32xx
 			assert(m_pData);
 			HBITMAP hBitmap = ::CreateDIBitmap(hdc, lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 			return hBitmap;
 		}
 
@@ -1469,6 +1495,7 @@ namespace Win32xx
 			assert(m_pData);
 			HBITMAP hBitmap = ::CreateDIBSection(hdc, lpbmi, uColorUse, ppvBits, hSection, dwOffset);
 			Attach(hBitmap);
+			m_pData->IsManagedObject = TRUE;
 			return hBitmap;
 		}
 
@@ -1508,6 +1535,7 @@ namespace Win32xx
 	{
 		Attach( ::CreateSolidBrush(crColor) );
 		assert (m_pData->hGDIObject);
+		m_pData->IsManagedObject = TRUE;
 	}
 
 	inline CBrush::operator HBRUSH() const
@@ -1547,7 +1575,7 @@ namespace Win32xx
 				pTLSData->TmpGDIs.insert(std::make_pair(hBrush, pBrush));
 
 				pBrush->m_pData->hGDIObject = hBrush;
-				pBrush->m_pData->IsTmpObject = TRUE;
+				pBrush->m_pData->IsManagedObject = FALSE;
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
 		}
@@ -1561,6 +1589,7 @@ namespace Win32xx
 		assert(m_pData);
 		HBRUSH hBrush = ::CreateSolidBrush(crColor);
 		Attach(hBrush);
+		m_pData->IsManagedObject = TRUE;
 		return hBrush;
 	}
 
@@ -1571,6 +1600,7 @@ namespace Win32xx
 		assert(m_pData);
 		HBRUSH hBrush = ::CreateHatchBrush(nIndex, crColor);
 		Attach(hBrush);
+		m_pData->IsManagedObject = TRUE;
 		return hBrush;
 	}
 
@@ -1580,6 +1610,7 @@ namespace Win32xx
 		assert(m_pData);
 		HBRUSH hBrush = ::CreateBrushIndirect(lpLogBrush);
 		Attach(hBrush);
+		m_pData->IsManagedObject = TRUE;
 		return hBrush;
 	}
 
@@ -1589,6 +1620,7 @@ namespace Win32xx
 		assert(m_pData);
 		HBRUSH hBrush = ::CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
 		Attach(hBrush);
+		m_pData->IsManagedObject = TRUE;
 		return hBrush;
 	}
 
@@ -1598,6 +1630,7 @@ namespace Win32xx
 		assert(m_pData);
 		HBRUSH hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, nUsage);
 		Attach(hBrush);
+		m_pData->IsManagedObject = TRUE;
 		return hBrush;
 	}
 
@@ -1610,6 +1643,7 @@ namespace Win32xx
 		assert(m_pData);
 		HBRUSH hBrush = ::CreatePatternBrush(hBitmap);
 		Attach(hBrush);
+		m_pData->IsManagedObject = TRUE;
 		return hBrush;
 	}
 
@@ -1642,6 +1676,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		Attach( ::CreateFontIndirect(lpLogFont) );
+		m_pData->IsManagedObject = TRUE;
 	}
 
 	inline CFont::operator HFONT() const
@@ -1680,7 +1715,7 @@ namespace Win32xx
 				pFont = new CFont;
 				pTLSData->TmpGDIs.insert(std::make_pair(hFont, pFont));
 				pFont->m_pData->hGDIObject = hFont;
-				pFont->m_pData->IsTmpObject = TRUE;
+				pFont->m_pData->IsManagedObject = FALSE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -1695,6 +1730,7 @@ namespace Win32xx
 		assert(m_pData);
 		HFONT hFont = ::CreateFontIndirect(lpLogFont);
 		Attach(hFont);
+		m_pData->IsManagedObject = TRUE;
 		return hFont;
 	}
 
@@ -1758,6 +1794,7 @@ namespace Win32xx
 			dwPitchAndFamily, lpszFacename);
 
 		Attach(hFont);
+		m_pData->IsManagedObject = TRUE;
 		return hFont;
 	}
 #endif // #ifndef _WIN32_WCE
@@ -1822,7 +1859,7 @@ namespace Win32xx
 				pPalette = new CPalette;
 				pTLSData->TmpGDIs.insert(std::make_pair(hPalette, pPalette));
 				pPalette->m_pData->hGDIObject = hPalette;
-				pPalette->m_pData->IsTmpObject = TRUE;
+				pPalette->m_pData->IsManagedObject = FALSE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -1837,6 +1874,7 @@ namespace Win32xx
 		assert(m_pData);
 		HPALETTE hPalette = ::CreatePalette (lpLogPalette);
 		Attach(hPalette);
+		m_pData->IsManagedObject = TRUE;
 		return hPalette;
 	}
 
@@ -1848,6 +1886,7 @@ namespace Win32xx
 		HPALETTE hPalette = ::CreateHalftonePalette(hdc);
 		Attach(hPalette);
 		::RealizePalette(hdc);
+		m_pData->IsManagedObject = TRUE;
 		return hPalette;
 	}
 #endif // !_WIN32_WCE
@@ -1921,6 +1960,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		Attach( ::CreatePen(nPenStyle, nWidth, crColor) );
+		m_pData->IsManagedObject = TRUE;
 	}
 
 #ifndef _WIN32_WCE
@@ -1928,6 +1968,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		Attach( ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle) );
+		m_pData->IsManagedObject = TRUE;
 	}
 #endif // !_WIN32_WCE
 
@@ -1939,7 +1980,6 @@ namespace Win32xx
 
 	inline CPen::~CPen()
 	{
-		TRACE("Pen Destructor\n");
 	}
 
 #ifdef USE_OBSOLETE_CODE
@@ -1968,7 +2008,7 @@ namespace Win32xx
 				pPen = new CPen;
 				pTLSData->TmpGDIs.insert(std::make_pair(hPen, pPen));
 				pPen->m_pData->hGDIObject = hPen;
-				pPen->m_pData->IsTmpObject = TRUE;
+				pPen->m_pData->IsManagedObject = FALSE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -1983,6 +2023,7 @@ namespace Win32xx
 		assert(m_pData);
 		HPEN hPen = ::CreatePen(nPenStyle, nWidth, crColor);
 		Attach(hPen);
+		m_pData->IsManagedObject = TRUE;
 		return hPen;
 	}
 
@@ -1992,6 +2033,7 @@ namespace Win32xx
 		assert(m_pData);
 		HPEN hPen = ::CreatePenIndirect(lpLogPen);
 		Attach(hPen);
+		m_pData->IsManagedObject = TRUE;
 		return hPen;
 	}
 
@@ -2014,6 +2056,7 @@ namespace Win32xx
 		assert(m_pData);
 		HPEN hPen = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
 		Attach(hPen);
+		m_pData->IsManagedObject = TRUE;
 		return hPen;
 	}
 
@@ -2080,7 +2123,7 @@ namespace Win32xx
 				pRgn = new CRgn;
 				pTLSData->TmpGDIs.insert(std::make_pair(hRgn, pRgn));
 				pRgn->m_pData->hGDIObject = hRgn;
-				pRgn->m_pData->IsTmpObject = TRUE;
+				pRgn->m_pData->IsManagedObject = FALSE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -2095,6 +2138,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreateRectRgn(x1, y1, x2, y2);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2104,6 +2148,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreateRectRgnIndirect(&rc);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2114,6 +2159,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreateEllipticRgn(x1, y1, x2, y2);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2123,6 +2169,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreateEllipticRgnIndirect(&rc);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2132,6 +2179,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreatePolygonRgn(lpPoints, nCount, nMode);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2141,6 +2189,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreatePolyPolygonRgn(lpPoints, lpPolyCounts, nCount, nPolyFillMode);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2150,6 +2199,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2161,6 +2211,7 @@ namespace Win32xx
 		assert(hDC != NULL);
 		HRGN hRgn = ::PathToRegion(hDC);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2172,6 +2223,7 @@ namespace Win32xx
 		assert(m_pData);
 		HRGN hRgn = ::ExtCreateRegion(lpXForm, nCount, pRgnData);
 		Attach(hRgn);
+		m_pData->IsManagedObject = TRUE;
 		return hRgn;
 	}
 
@@ -2298,10 +2350,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 	// Note: this constructor permits a call like this:
 	// CDC MyCDC = SomeHDC;
-	//  or
-	// CDC MyCDC = ::CreateCompatibleDC(SomeHDC);
-	//  or
-	// CDC MyCDC = ::GetDC(SomeHWND);
 	{
 		UNREFERENCED_PARAMETER(hWnd);
 		assert(hDC);
@@ -2395,7 +2443,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 				pDC = new CDC;
 				pTLSData->TmpDCs.insert(std::make_pair(hDC, pDC));
 				pDC->m_pData->hDC = hDC;
-				pDC->m_pData->IsTmpHDC = TRUE;
+				pDC->m_pData->m_IsManagedHDC = FALSE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
@@ -2420,7 +2468,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 	inline void CDC::Attach(HDC hDC, HWND hWnd /* = 0*/)
 	// Attaches a HDC to the CDC object.
-	// The HDC will be automatically deleted or released when the destructor is called.
 	// Window DCs and Client DCs have a HWND. This must be specified on WinCE, as WinCE
 	// doesn't support WindowFromDC. The alternative is to use CClientDC or CWindowDC
 	// as appropriate.
@@ -2465,18 +2512,19 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline HDC CDC::Detach()
-	// Detaches the HDC from this object.
+	// Detaches the HDC from all CDC objects.
 	{
 		assert(m_pData);
 		assert(m_pData->hDC);
 
 		HDC hDC = m_pData->hDC;
+		RemoveFromMap();
+		m_pData->hDC = 0;
 
 		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
-				RemoveFromMap();
 				delete m_pData;
 			}
 		}
@@ -2507,6 +2555,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		if (hDC != 0)
 		{
 			m_pData->hDC = hDC;
+			m_pData->IsManagedHDC = TRUE;
 			AddToMap();
 		}
 		return (hDC != NULL);	// boolean expression
@@ -2520,6 +2569,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		if (hDC != 0)
 		{
 			m_pData->hDC = hDC;
+			m_pData->IsManagedHDC = TRUE;
 			AddToMap();
 		}
 		return (hDC != NULL);	// boolean expression
@@ -2533,6 +2583,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		if (hDC != 0)
 		{
 			m_pData->hDC = hDC;
+			m_pData->IsManagedHDC = TRUE;
 			AddToMap();
 		}
 		return (hDC != NULL);	// boolean expression
@@ -2754,14 +2805,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		// Select our new stock bitmap into the device context
 		HBITMAP hBitmap = (HBITMAP)::SelectObject(*this, *pBitmap);
 
-		// Detach the bitmap from our internally managed GDIObjects
-		std::vector<GDIPtr>::iterator it;
-		for (it = m_pData->m_vGDIObjects.begin(); it < m_pData->m_vGDIObjects.end(); ++it)
-		{
-			if((*it)->GetHandle() == hBitmap)
-				(*it)->Detach();
-		}
-
 		// Create a local CBitmap. We can return this by value because it is reference counted
 		CBitmap Bitmap(hBitmap);
 		return Bitmap;
@@ -2773,24 +2816,24 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		if (m_pData->hDC != 0)
 		{
-			if (!m_pData->IsTmpHDC)
+			RemoveFromMap();
+
+			// Return the DC back to its initial state
+			::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
+
+			if (m_pData->IsManagedHDC)
 			{
-				RemoveFromMap();
-
-				// Return the DC back to its initial state
-				::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
-
 				// We need to release a Window DC, and delete a memory DC
 				if (m_pData->hWnd != 0)
 					::ReleaseDC(m_pData->hWnd, m_pData->hDC);
 				else
 					if (!::DeleteDC(m_pData->hDC))
 						::ReleaseDC(NULL, m_pData->hDC);
-
-				m_pData->hDC = 0;
-				m_pData->hWnd = 0;
-				m_pData->IsTmpHDC = FALSE;
 			}
+
+			m_pData->hDC = 0;
+			m_pData->hWnd = 0;
+			m_pData->IsManagedHDC = FALSE;
 		}
 	}
 
@@ -2875,12 +2918,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return bResult;
 	}
 
-	inline HBITMAP CDC::SelectObject(const CBitmap& Bitmap)
-	// Use this to attach an existing bitmap.
-	{
-		assert(m_pData->hDC);
-		return (HBITMAP)::SelectObject(m_pData->hDC, Bitmap);
-	}
+//	inline HBITMAP CDC::SelectObject(const CBitmap& Bitmap)
+//	// Use this to attach an existing bitmap.
+//	{
+//		assert(m_pData->hDC);
+//		return (HBITMAP)::SelectObject(m_pData->hDC, Bitmap);
+//	}
 
 #ifndef _WIN32_WCE
 	inline void CDC::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
@@ -2939,12 +2982,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return lBrush;
 	}
 
-	inline HBRUSH CDC::SelectObject(const CBrush& Brush)
-	// Use this to attach an existing brush.
-	{
-		assert(m_pData->hDC);
-		return (HBRUSH)::SelectObject(m_pData->hDC, Brush);
-	}
+//	inline HBRUSH CDC::SelectObject(const CBrush& Brush)
+//	// Use this to attach an existing brush.
+//	{
+//		assert(m_pData->hDC);
+//		return (HBRUSH)::SelectObject(m_pData->hDC, Brush);
+//	}
 
 #ifndef _WIN32_WCE
 	inline void CDC::CreateBrushIndirect(LPLOGBRUSH pLogBrush)
@@ -3024,12 +3067,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return lFont;
 	}
 
-	inline HFONT CDC::SelectObject(const CFont& Font)
-	// Use this to attach an existing font.
-	{
-		assert(m_pData->hDC);
-		return (HFONT)::SelectObject(m_pData->hDC, Font);
-	}
+//	inline HFONT CDC::SelectObject(const CFont& Font)
+//	// Use this to attach an existing font.
+//	{
+//		assert(m_pData->hDC);
+//		return (HFONT)::SelectObject(m_pData->hDC, Font);
+//	}
 
 #ifndef _WIN32_WCE
 	inline void CDC::CreateFont (
@@ -3185,12 +3228,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return lPen;
 	}
 
-	inline HPEN CDC::SelectObject(const CPen& Pen)
-	// Use this to attach an existing pen.
-	{
-		assert(m_pData->hDC);
-		return (HPEN)::SelectObject(m_pData->hDC, Pen);
-	}
+//	inline HPEN CDC::SelectObject(const CPen& Pen)
+//	// Use this to attach an existing pen.
+//	{
+//		assert(m_pData->hDC);
+//		return (HPEN)::SelectObject(m_pData->hDC, Pen);
+//	}
 
 	// Retrieve and Select Stock Objects
 	inline HGDIOBJ CDC::GetStockObject(int nIndex) const

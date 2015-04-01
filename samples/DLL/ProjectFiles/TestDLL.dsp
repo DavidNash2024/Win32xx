@@ -103,7 +103,7 @@ SOURCE=..\src\main.cpp
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
-SOURCE=..\src\Resource.rc
+SOURCE=..\src\ResourceTest.rc
 # End Source File
 # End Group
 # End Target

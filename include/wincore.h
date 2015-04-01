@@ -509,7 +509,7 @@ namespace Win32xx
 
 		// Attributes
 		HWND GetHwnd() const				{ return m_hWnd; }
-		WNDPROC GetPrevWindowProc() const	{ assert(m_pData.get()); return m_pData->PrevWindowProc; }
+		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
 
 		// Wrappers for Win32 API functions
 		// These functions aren't virtual, and shouldn't be overridden
@@ -680,7 +680,7 @@ namespace Win32xx
 	private:
 		struct DataMembers	// A structure that contains the data members
 		{
-			DataMembers() : PrevWindowProc(NULL) // Constructor
+			DataMembers()	// Constructor
 			{
 				::ZeroMemory(&cs, sizeof(CREATESTRUCT));
 				::ZeroMemory(&wc, sizeof(WNDCLASS));
@@ -688,14 +688,6 @@ namespace Win32xx
 
 			CREATESTRUCT cs;
 			WNDCLASS	 wc;
-			WNDPROC		 PrevWindowProc;
-			Shared_Ptr<CFont>	font;
-  
-  #ifndef _WIN32_WCE
-			Shared_Ptr<CMenu>	menu;
-			Shared_Ptr<CMenu>	system_menu;
-  #endif
-
 		};
 
 		CWnd(const CWnd&);				// Disable copy construction
@@ -710,14 +702,7 @@ namespace Win32xx
 		void Subclass(HWND hWnd);
 
 		Shared_Ptr<DataMembers> m_pData;
-
-//#ifdef USE_OBSOLETE_CODE
-//		Shared_Ptr<WNDCLASS> m_pwc;		// defines initialisation parameters for PreRegisterClass
-//		Shared_Ptr<CREATESTRUCT> m_pcs;	// defines initialisation parameters for PreCreate and Create
-//		WNDPROC m_PrevWindowProc;		// pre-subclassed Window Procedure
-//#endif
-		
-		BOOL m_IsTmpWnd;				// True if this CWnd is a TmpWnd
+		WNDPROC	m_PrevWindowProc;
 
 	}; // class CWnd
 
@@ -1370,18 +1355,16 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL), m_IsTmpWnd(FALSE)
+	inline CWnd::CWnd() : m_hWnd(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
-
-		m_pData = new DataMembers;
+		//       m_pData is assigned in CWnd::Create(...)
 	}
 
-	inline CWnd::CWnd(HWND hWnd) : m_IsTmpWnd(TRUE)
+	inline CWnd::CWnd(HWND hWnd)
 	{
 		// A private constructor, used internally.
-		m_pData = new DataMembers;
-
+		
 		m_hWnd = hWnd;
 	}
 
@@ -1514,13 +1497,11 @@ namespace Win32xx
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
 	{
-		assert(m_pData.get());
-		if ( GetApp() && !m_IsTmpWnd )
+		if ( GetApp() )
 			RemoveFromMap();
 
 		m_hWnd = NULL;
-		m_pData->PrevWindowProc = NULL;
-		m_IsTmpWnd = FALSE;
+		m_PrevWindowProc = NULL;
 	}
 
 #ifdef USE_OBSOLETE_CODE
@@ -1530,6 +1511,8 @@ namespace Win32xx
 	{
 		// Test if Win32++ has been started
 		assert( GetApp() );
+		if (m_pData.get() == 0)
+			m_pData = new DataMembers;
 
 		// Set the WNDCLASS parameters
 		PreRegisterClass(m_pData->wc);
@@ -1602,7 +1585,9 @@ namespace Win32xx
 	{
 		// Test if Win32++ has been started
 		assert( GetApp() );
-		assert(m_pData.get());
+		
+		if (m_pData.get() == 0)
+			m_pData = new DataMembers;
 
 		// Set the WNDCLASS parameters
 		PreRegisterClass(m_pData->wc);
@@ -1742,7 +1727,7 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-		if (!m_IsTmpWnd)
+		if (GetCWndPtr(m_hWnd) == this)
 		{
 			if (IsWindow())
 				::DestroyWindow(m_hWnd);
@@ -1756,10 +1741,9 @@ namespace Win32xx
 	// Reverse an Attach
 	{
 		assert(IsWindow());
-		assert(m_pData.get());
-		assert(m_pData->PrevWindowProc);	// Only previously attached CWnds can be detached
+		assert(m_PrevWindowProc);	// Only previously attached CWnds can be detached
 
-		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_pData->PrevWindowProc);
+		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 
 		HWND hWnd = m_hWnd;
 		Cleanup();
@@ -1771,9 +1755,8 @@ namespace Win32xx
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
 	{
-		assert(m_pData.get());
-		if (m_pData->PrevWindowProc)
-			return ::CallWindowProc(m_pData->PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
+		if (m_PrevWindowProc)
+			return ::CallWindowProc(m_PrevWindowProc, m_hWnd, uMsg, wParam, lParam);
 		else
 			return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
@@ -1803,7 +1786,7 @@ namespace Win32xx
 				// No exiting CWnd for this HWND, so create one
 				pWnd = new CWnd;
 				pWnd->m_hWnd = hWnd;
-				pWnd->m_IsTmpWnd = TRUE;
+				pWnd->m_IsManagedHwnd = FALSE;
 				pTLSData->TmpWnds.insert(std::make_pair(hWnd, pWnd));
 
 				::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
@@ -2171,8 +2154,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CWnd::RegisterClass(WNDCLASS& wc)
-	// A private function used by the PreRegisterClass function to register a
-	//  window class prior to window creation
+	// A private function used by the CreateEx function to register a window
+	// class prior to window creation
 	{
 		assert( GetApp() );
 		assert( ('\0' != wc.lpszClassName[0] && ( lstrlen(wc.lpszClassName) <=  MAX_STRING_SIZE) ) );
@@ -2210,7 +2193,6 @@ namespace Win32xx
 
 		if (GetApp())
 		{
-
 			// Allocate an iterator for our HWND map
 			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
@@ -2303,9 +2285,8 @@ namespace Win32xx
 	// A private function used by CreateEx, Attach and AttachDlgItem
 	{
 		assert(::IsWindow(hWnd));
-		assert(m_pData.get());
 
-		m_pData->PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 		m_hWnd = hWnd;
 	}
 
@@ -2395,8 +2376,7 @@ namespace Win32xx
 			{
 				// Subclassed controls expect to do their own painting.
 				// CustomDraw or OwnerDraw are normally used to modify the drawing of controls.
-				assert(m_pData.get());
-				if (m_pData->PrevWindowProc) break;
+				if (m_PrevWindowProc) break;
 
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
@@ -2432,7 +2412,6 @@ namespace Win32xx
 #endif
 				
 				bResult = OnEraseBkgnd(dc);
-				dc.Detach();
 				if (bResult) return TRUE;
 			}
 			break;
@@ -2674,15 +2653,8 @@ namespace Win32xx
 	// Retrieves the font with which the window is currently drawing its text.
 	{
 		assert(IsWindow());
-		assert(m_pData.get());
-		if (m_pData->font.get() == 0) 
-			m_pData->font = new CFont;
-
 		HFONT hFont = (HFONT)SendMessage(WM_GETFONT, 0, 0);
-		if (hFont)
-			m_pData->font->Attach(hFont);
-
-		return *m_pData->font.get();
+		return CFont(hFont);
 	}
 
 	inline HICON CWnd::GetIcon(BOOL bBigIcon) const
@@ -3091,6 +3063,7 @@ namespace Win32xx
 		int iResult = ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
 		if (iResult && hRgn)
 			Rgn.Detach();	// The system owns the region now
+		
 		return iResult;
 	}
 
@@ -3272,13 +3245,7 @@ namespace Win32xx
 	// The GetMenu function retrieves a handle to the menu assigned to the window.
 	{
 		assert(IsWindow());
-		assert(m_pData.get());
-		if (m_pData->menu.get() == 0) 
-			m_pData->menu = new CMenu;
-
-		m_pData->menu->Attach(::GetMenu(m_hWnd));
-
-		return *m_pData->menu.get();
+		return CMenu(::GetMenu(m_hWnd));
 	}
 
 	inline int CWnd::GetScrollPos(int nBar) const
@@ -3302,14 +3269,7 @@ namespace Win32xx
 	// or the control menu) for copying and modifying.
 	{
 		assert(IsWindow());
-
-		assert(IsWindow());
-		assert(m_pData.get());
-		if (m_pData->system_menu.get() == 0) 
-			m_pData->system_menu = new CMenu;
-
-		m_pData->system_menu->Attach( ::GetSystemMenu(m_hWnd, bRevert) );
-		return *m_pData->system_menu.get();
+		return CMenu( ::GetSystemMenu(m_hWnd, bRevert) );
 	}
 
 	inline CWnd CWnd::GetTopWindow() const

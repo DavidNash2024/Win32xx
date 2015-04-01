@@ -143,12 +143,12 @@ namespace Win32xx
 		HWND 	GetComboBoxCtrl() const;
 		HWND 	GetEditCtrl() const;
 		DWORD 	GetExtendedStyle() const;
-		HIMAGELIST GetImageList() const;
+		CImageList GetImageList() const;
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
 		BOOL 	HasEditChanged () const;
 		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
 		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
-		HIMAGELIST SetImageList(HIMAGELIST himlNew) const;
+		CImageList SetImageList(HIMAGELIST himlNew) const;
 		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
 
 	protected:
@@ -167,32 +167,32 @@ namespace Win32xx
 		virtual ~CHeader() {}
 
 		// Attributes
-		HIMAGELIST GetImageList() const;
-		BOOL GetItem(int nPos, HDITEM* pHeaderItem) const;
-		int GetItemCount() const;
-		CRect GetItemRect(int nIndex) const;
-		BOOL GetOrderArray(LPINT piArray, int iCount);
-		int OrderToIndex(int nOrder) const;
-		HIMAGELIST SetImageList(HIMAGELIST himlNew) const;
-		BOOL SetItem(int nPos, HDITEM* pHeaderItem);
-		BOOL SetOrderArray(int iCount, LPINT piArray);
-		int GetBitmapMargin() const;
-		int SetBitmapMargin(int nWidth);
+		CImageList GetImageList() const;
+		BOOL	GetItem(int nPos, HDITEM* pHeaderItem) const;
+		int		GetItemCount() const;
+		CRect	GetItemRect(int nIndex) const;
+		BOOL	GetOrderArray(LPINT piArray, int iCount);
+		int		OrderToIndex(int nOrder) const;
+		CImageList SetImageList(HIMAGELIST himlNew) const;
+		BOOL	SetItem(int nPos, HDITEM* pHeaderItem);
+		BOOL	SetOrderArray(int iCount, LPINT piArray);
+		int		GetBitmapMargin() const;
+		int		SetBitmapMargin(int nWidth);
 
 		// Operations
-		HIMAGELIST CreateDragImage(int nIndex) const;
-		BOOL DeleteItem(int nPos);
-		int InsertItem(int nPos, HDITEM* phdi);
-		BOOL Layout(HDLAYOUT* pHeaderLayout);
+		CImageList CreateDragImage(int nIndex) const;
+		BOOL	DeleteItem(int nPos);
+		int		InsertItem(int nPos, HDITEM* phdi);
+		BOOL	Layout(HDLAYOUT* pHeaderLayout);
 #ifdef Header_SetHotDivider
-		int SetHotDivider(CPoint pt);
-		int SetHotDivider(int nIndex);
+		int		SetHotDivider(CPoint pt);
+		int		SetHotDivider(int nIndex);
 #endif
 #ifdef Header_ClearFilter
-		int ClearAllFilters();
-		int ClearFilter(int nColumn);
-		int EditFilter(int nColumn, BOOL bDiscardChanges);
-		int SetFilterChangeTimeout(DWORD dwTimeOut);
+		int		ClearAllFilters();
+		int		ClearFilter(int nColumn);
+		int		EditFilter(int nColumn, BOOL bDiscardChanges);
+		int		SetFilterChangeTimeout(DWORD dwTimeOut);
 #endif
 
 	protected:
@@ -310,8 +310,7 @@ namespace Win32xx
 
 	private:
 		CDateTime(const CDateTime&);				// Disable copy construction
-		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
-		CFont m_Font;								// Used by GetMonthCalFont
+		CDateTime& operator = (const CDateTime&);	// Disable assignment operator								// Used by GetMonthCalFont
 	};
 
 	class CProgressBar : public CWnd
@@ -441,23 +440,23 @@ namespace Win32xx
 		virtual ~CToolTip();
 
 		//Attributes
-		int GetDelayTime(DWORD dwDuration) const;
-		void GetMargin(LPRECT lprc) const;
-		int GetMaxTipWidth() const;
-		void GetText(CString& str, HWND hWnd, UINT_PTR nIDTool = 0) const;
+		int		GetDelayTime(DWORD dwDuration) const;
+		void	GetMargin(LPRECT lprc) const;
+		int		GetMaxTipWidth() const;
+		void	 GetText(CString& str, HWND hWnd, UINT_PTR nIDTool = 0) const;
 		COLORREF GetTipBkColor() const;
 		COLORREF GetTipTextColor() const;
-		int GetToolCount() const;
-		BOOL GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool = 0) const;
-		void SetDelayTime(UINT nDelay);
-		void SetDelayTime(DWORD dwDuration, int iTime);
-		void SetMargin(LPRECT lprc);
-		int SetMaxTipWidth(int iWidth);
-		void SetTipBkColor(COLORREF clr);
-		void SetTipTextColor(COLORREF clr);
-		void SetToolInfo(LPTOOLINFO lpToolInfo);
+		int		GetToolCount() const;
+		BOOL	GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool = 0) const;
+		void	SetDelayTime(UINT nDelay);
+		void	SetDelayTime(DWORD dwDuration, int iTime);
+		void	SetMargin(LPRECT lprc);
+		int		SetMaxTipWidth(int iWidth);
+		void	SetTipBkColor(COLORREF clr);
+		void	SetTipTextColor(COLORREF clr);
+		void	SetToolInfo(LPTOOLINFO lpToolInfo);
 #if (_WIN32_IE >=0x0500)
-		CSize GetBubbleSize(LPTOOLINFO lpToolInfo) const;
+		CSize	GetBubbleSize(LPTOOLINFO lpToolInfo) const;
 #endif
 
 		//Operations
@@ -862,11 +861,12 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_GETEXTENDEDSTYLE, 0L, 0L);
 	}
 
-	inline HIMAGELIST CComboBoxEx::GetImageList() const
+	inline CImageList CComboBoxEx::GetImageList() const
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L);
+		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L);
+		return CImageList(himl);
 	}
 
 	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM* pCBItem) const
@@ -897,11 +897,12 @@ namespace Win32xx
 		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
 	}
 
-	inline HIMAGELIST CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
+	inline CImageList CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
 	// Sets an image list for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew);
+		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew);
+		return CImageList(himl);
 	}
 
 	inline BOOL CComboBoxEx::SetItem(PCOMBOBOXEXITEM lpcCBItem) const
@@ -942,8 +943,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		HFONT hFont = (HFONT)DateTime_GetMonthCalFont(*this);
-		m_Font.Attach(hFont);
-		return m_Font;
+		return CFont(hFont);
 	}
 
 	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
@@ -1028,10 +1028,11 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CHeader class
 	//
-	inline HIMAGELIST CHeader::CreateDragImage(int nIndex) const
+	inline CImageList CHeader::CreateDragImage(int nIndex) const
 	{
 		assert(IsWindow());
-		return Header_CreateDragImage(*this, nIndex);
+		HIMAGELIST himl = Header_CreateDragImage(*this, nIndex);
+		return CImageList(himl);
 	}
 
 	inline BOOL CHeader::DeleteItem(int nPos)
@@ -1040,10 +1041,11 @@ namespace Win32xx
 		return Header_DeleteItem(*this, nPos);
 	}
 
-	inline HIMAGELIST CHeader::GetImageList() const
+	inline CImageList CHeader::GetImageList() const
 	{
 		assert(IsWindow());
-		return Header_GetImageList(*this);
+		HIMAGELIST himl = Header_GetImageList(*this);
+		return CImageList(himl);
 	}
 
 	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
@@ -1104,10 +1106,11 @@ namespace Win32xx
 	}
 #endif
 
-	inline HIMAGELIST CHeader::SetImageList(HIMAGELIST himlNew) const
+	inline CImageList CHeader::SetImageList(HIMAGELIST himlNew) const
 	{
 		assert(IsWindow());
-		return Header_SetImageList(*this, himlNew);
+		HIMAGELIST himl = Header_SetImageList(*this, himlNew);
+		return CImageList(himl);
 	}
 
 	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)

@@ -69,7 +69,7 @@ namespace Win32xx
 		HCURSOR GetHotCursor( );
 		int		GetHotItem( ) const;
 		DWORD	GetHoverTime( ) const;
-		HIMAGELIST GetImageList( int nImageType ) const;
+		CImageList GetImageList( int nImageType ) const;
 		BOOL	GetItem( LVITEM& lvItem ) const;
 		int		GetItemCount( ) const;
 		DWORD_PTR GetItemData( int iItem ) const;
@@ -103,7 +103,7 @@ namespace Win32xx
 		DWORD	SetHoverTime( DWORD dwHoverTime = (DWORD)-1 ) const;
 		CSize	SetIconSpacing( int cx, int cy ) const;
 		CSize	SetIconSpacing( CSize sz ) const;
-		HIMAGELIST SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
+		CImageList SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
 		BOOL	SetItem( LVITEM& pItem ) const;
 		BOOL	SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
 						UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const;
@@ -123,7 +123,7 @@ namespace Win32xx
 
 		// Operations
 		BOOL	Arrange( UINT nCode ) const;
-		HIMAGELIST CreateDragImage( int iItem, CPoint& pt ) const;
+		CImageList CreateDragImage( int iItem, CPoint& pt ) const;
 		BOOL	DeleteAllItems( ) const;
 		BOOL	DeleteColumn( int iCol ) const;
 		BOOL	DeleteItem( int iItem ) const;
@@ -268,11 +268,12 @@ namespace Win32xx
 		return ListView_GetHoverTime( *this );
 	}
 
-	inline HIMAGELIST CListView::GetImageList( int nImageType ) const
+	inline CImageList CListView::GetImageList( int nImageType ) const
 	// Retrieves the handle to an image list used for drawing list-view items.
 	{
 		assert(IsWindow());
-		return ListView_GetImageList( *this, nImageType );
+		HIMAGELIST himl = ListView_GetImageList( *this, nImageType );
+		return CImageList(himl);
 	}
 
 	inline BOOL CListView::GetItem( LVITEM& Item ) const
@@ -541,11 +542,12 @@ namespace Win32xx
 		return CSize( ListView_SetIconSpacing( *this, sz.cx, sz.cy ) );
 	}
 
-	inline HIMAGELIST CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
+	inline CImageList CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
 	// Assigns an image list to a list-view control.
 	{
 		assert(IsWindow());
-		return ListView_SetImageList( *this, himlNew, iImageListType );
+		HIMAGELIST himl = ListView_SetImageList( *this, himlNew, iImageListType );
+		return CImageList(himl);
 	}
 
 	inline BOOL CListView::SetItem( LVITEM& Item ) const
@@ -703,11 +705,12 @@ namespace Win32xx
 		return ListView_Arrange( *this, nCode );
 	}
 
-	inline HIMAGELIST CListView::CreateDragImage( int iItem, CPoint& pt ) const
+	inline CImageList CListView::CreateDragImage( int iItem, CPoint& pt ) const
 	// Creates a drag image list for the specified item.
 	{
 		assert(IsWindow());
-		return ListView_CreateDragImage( *this, iItem, &pt );
+		HIMAGELIST himl = ListView_CreateDragImage( *this, iItem, &pt );
+		return CImageList(himl);
 	}
 
 	inline BOOL CListView::DeleteAllItems( ) const

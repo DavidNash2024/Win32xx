@@ -1,13 +1,13 @@
 [Project]
 FileName=TestDLL_DEBUG.dev
 Name=TestDLL
-UnitCount=1
+UnitCount=2
 Type=0
-Ver=1
+Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=
+PrivateResource=TestDLL_DEBUG_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -28,6 +28,8 @@ IncludeVersionInfo=0
 SupportXPThemes=0
 CompilerSet=0
 CompilerSettings=0000001000000001000000
+LogOutput=
+LogOutputEnabled=0
 
 [Unit1]
 FileName=main.cpp
@@ -166,6 +168,7 @@ OriginalFilename=
 ProductName=
 ProductVersion=
 AutoIncBuildNr=0
+SyncProduct=0
 
 [Unit16]
 FileName=..\..\..\include\wincore.h
@@ -177,5 +180,12 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-
+[Unit2]
+FileName=ResourceTest.rc
+Folder=Resource
+Compile=1
+Link=0
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

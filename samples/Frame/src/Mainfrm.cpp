@@ -75,7 +75,11 @@ void CMainFrame::OnInitialUpdate()
 
 	TRACE("Frame created\n");
 
-	CFont myfont = GetFont();
+
+	CString cs;
+	cs.Format(_T("Size of CWnd is  %d"), sizeof(CWnd));
+
+	TRACE (cs);
 }
 
 void CMainFrame::OnFileOpen()

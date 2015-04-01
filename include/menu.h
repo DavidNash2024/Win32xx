@@ -179,11 +179,11 @@ namespace Win32xx
 		struct DataMembers
 		{
 			// Constructor
-			DataMembers() : hMenu(0), IsTmpMenu(FALSE), Count(1L) {}
+			DataMembers() : hMenu(0), IsManagedMenu(FALSE), Count(1L) {}
 
 			std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
 			HMENU hMenu;
-			BOOL IsTmpMenu;
+			BOOL IsManagedMenu;
 			long Count;
 		};			
 
@@ -211,6 +211,7 @@ namespace Win32xx
 
 		HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
 		Attach(menu);
+		m_pData->IsManagedMenu = TRUE;
 	}
 
 	inline CMenu::CMenu(HMENU hMenu)
@@ -302,11 +303,12 @@ namespace Win32xx
 		{
 			if (m_pData->hMenu != NULL)
 			{
-				if (!m_pData->IsTmpMenu)
+				if (m_pData->IsManagedMenu)
 				{
 					::DestroyMenu(m_pData->hMenu);
-					RemoveFromMap();
 				}
+				
+				RemoveFromMap();
 			}
 
 			delete m_pData;
@@ -326,16 +328,13 @@ namespace Win32xx
 			CWinApp* pApp = GetApp();
 			if (pApp)
 			{
-				// Erase the CDC pointer entry from the map
+				// Erase the Menu pointer entry from the map
 				pApp->m_csMapLock.Lock();
-				for (m = pApp->m_mapHMENU.begin(); m != pApp->m_mapHMENU.end(); ++m)
+				m = pApp->m_mapHMENU.find(m_pData->hMenu);
+				if (m != pApp->m_mapHMENU.end())
 				{
-					if (this == m->second)
-					{
-						pApp->m_mapHMENU.erase(m);
-						Success = TRUE;
-						break;
-					}
+					pApp->m_mapHMENU.erase(m);
+					Success = TRUE;
 				}
 
 				pApp->m_csMapLock.Release();
@@ -420,6 +419,7 @@ namespace Win32xx
 		assert(NULL == m_pData->hMenu);
 		m_pData->hMenu = ::CreateMenu();
 		AddToMap();
+		m_pData->IsManagedMenu = TRUE;
 	}
 
 	inline void CMenu::CreatePopupMenu()
@@ -429,6 +429,7 @@ namespace Win32xx
 		assert(NULL == m_pData->hMenu);
 		m_pData->hMenu = ::CreatePopupMenu();
 		AddToMap();
+		m_pData->IsManagedMenu = TRUE;
 	}
 	
 	inline BOOL CMenu::DeleteMenu(UINT uPosition, UINT uFlags)
@@ -444,25 +445,22 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		if (::IsMenu(m_pData->hMenu)) 
-			::DestroyMenu(m_pData->hMenu);
-		
-		m_pData->hMenu = 0;
-		m_pData->vSubMenus.clear();
-		RemoveFromMap();
+			::DestroyMenu( Detach() );
 	}
 
 	inline HMENU CMenu::Detach()
-	// Detaches the HMENU from this CMenu. If the HMENU is not detached it will be 
-	// destroyed when this CMenu is deconstructed.
+	// Detaches the HMENU from all CMenu objects.
 	{
 		assert(m_pData);
 		HMENU hMenu = m_pData->hMenu;
+		RemoveFromMap();
+		m_pData->hMenu = 0;
+		m_pData->vSubMenus.clear();
 		
 		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
-				RemoveFromMap();
 				delete m_pData;
 			}
 		}		
@@ -589,7 +587,7 @@ namespace Win32xx
 		assert(IsMenu(m_pData->hMenu));
 		CMenu* pMenu = new CMenu;
 		pMenu->m_pData->hMenu = ::GetSubMenu(m_pData->hMenu, nPos);
-		pMenu->m_pData->IsTmpMenu = TRUE;
+		pMenu->m_pData->IsManagedMenu = FALSE;
 		m_pData->vSubMenus.push_back(pMenu);
 		return *pMenu;
 	}

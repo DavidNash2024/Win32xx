@@ -124,10 +124,10 @@ namespace Win32xx
 		struct DataMembers	// A structure that contains the data members
 		{
 			// Constructor
-			DataMembers() : hImageList(0), IsTmpImageList(FALSE), Count(1L) {}
+			DataMembers() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
 
 			HIMAGELIST	hImageList;
-			BOOL		IsTmpImageList;
+			BOOL		IsManagedHiml;
 			long		Count;
 		};
 
@@ -152,6 +152,7 @@ namespace Win32xx
 	{
 		m_pData = new DataMembers;
 		Attach(himl);
+		m_pData->IsManagedHiml = TRUE;
 	}
 
 	inline CImageList::CImageList(const CImageList& rhs)
@@ -218,7 +219,7 @@ namespace Win32xx
 			{
 				pImageList = new CImageList;
 				pImageList->m_pData->hImageList = hImageList;
-				pImageList->m_pData->IsTmpImageList = TRUE;
+				pImageList->m_pData->IsManagedHiml = FALSE;
 				pTLSData->TmpImageLists.insert(std::make_pair(hImageList, pImageList));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
@@ -243,14 +244,11 @@ namespace Win32xx
 			{
 				// Erase the CImageList pointer entry from the map
 				pApp->m_csMapLock.Lock();
-				for (m = pApp->m_mapHIMAGELIST.begin(); m != pApp->m_mapHIMAGELIST.end(); ++m)
+				m = pApp->m_mapHIMAGELIST.find(m_pData->hImageList);
+				if (m != pApp->m_mapHIMAGELIST.end())
 				{
-					if (this == m->second)
-					{
-						pApp->m_mapHIMAGELIST.erase(m);
-						Success = TRUE;
-						break;
-					}
+					pApp->m_mapHIMAGELIST.erase(m);
+					Success = TRUE;
 				}
 
 				pApp->m_csMapLock.Release();
@@ -343,13 +341,19 @@ namespace Win32xx
 	//				If this value is not included, the image list contains only one bitmap.
 	{
 		assert(m_pData);
-		assert(NULL == m_pData->hImageList);
-		m_pData->hImageList = ImageList_Create(cx, cy, nFlags, nInitial, nGrow);
 
-		if (m_pData->hImageList)
-			AddToMap();
+		HIMAGELIST himlNew = ImageList_Create(cx, cy, nFlags, nInitial, nGrow);
 
-		return ( m_pData->hImageList!= 0 );
+		if (himlNew)
+		{
+		//	m_pData->hImageList = himlNew;
+		//	AddToMap();
+		
+			Attach(himlNew);
+			m_pData->IsManagedHiml = TRUE;
+		}
+
+		return ( himlNew != 0 );
 	}
 
 	inline BOOL CImageList::Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask)
@@ -377,12 +381,15 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(NULL == m_pData->hImageList);
-		m_pData->hImageList = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
+		HIMAGELIST himlNew = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
 
-		if (m_pData->hImageList)
-			AddToMap();
+		if (himlNew)
+		{
+			Attach(himlNew);
+			m_pData->IsManagedHiml = TRUE;
+		}
 
-		return ( m_pData->hImageList!= 0 );
+		return ( himlNew!= 0 );
 	}
 
 #if (_WIN32_IE >= 0x0400)
@@ -395,9 +402,10 @@ namespace Win32xx
 		if (himlCopy)
 		{
 			Attach(himlCopy);
+			m_pData->IsManagedHiml = TRUE;
 		}
 
-		return ( m_pData->hImageList!= 0 );
+		return ( himlCopy!= 0 );
 	}
 #endif
 
@@ -407,25 +415,22 @@ namespace Win32xx
 		assert(m_pData);
 		if (m_pData->hImageList != 0)
 		{
-			RemoveFromMap();
-			
-			ImageList_Destroy(m_pData->hImageList);
-			m_pData->hImageList = 0;
+			ImageList_Destroy(Detach());
 		}
 	}
 
 	inline HIMAGELIST CImageList::Detach()
-	// Detaches the HIMAGELIST from this CImageList. If the HIMAGELIST is not detached it will be
-	// destroyed when this CImageList is deconstructed.
+	// Detaches the HIMAGELIST from all CImageList objects.
 	{
 		assert(m_pData);
 		HIMAGELIST hImageList = m_pData->hImageList;
+		RemoveFromMap();
+		m_pData->hImageList = 0;
 
 		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
 			{
-				RemoveFromMap();
 				delete m_pData;
 			}
 		}
@@ -567,11 +572,12 @@ namespace Win32xx
 		{
 			if (m_pData->hImageList != NULL)
 			{
-				if (!m_pData->IsTmpImageList)
+				if (m_pData->IsManagedHiml)
 				{
-					ImageList_Destroy(m_pData->hImageList);
-					RemoveFromMap();
+					ImageList_Destroy(m_pData->hImageList);					
 				}
+
+				RemoveFromMap();
 			}
 
 			delete m_pData;
@@ -641,7 +647,7 @@ namespace Win32xx
 			}
 		}
 
-		return ( m_pData->hImageList!= 0 );
+		return ( m_pData->hImageList != 0 );
 	}
 
 
