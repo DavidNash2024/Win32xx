@@ -17,7 +17,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Frame"));
+	LoadRegistrySettings(_T("Win32++\\StatusBar Demo"));
 }
 
 CMainFrame::~CMainFrame()
@@ -90,7 +90,6 @@ LRESULT CMainFrame::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		dc.SetTextColor(RGB(10,20,250));
 		dc.SetBkMode(TRANSPARENT);
 		dc.TextOut(rcPart.left,rcPart.top,_T("Owner Draw"), 10);
-		dc.Detach();
 	}
 
 	// Allow the frame to perform owner drawing menu items.

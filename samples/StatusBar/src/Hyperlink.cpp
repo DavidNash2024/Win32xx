@@ -81,7 +81,6 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		dc.SetTextColor( m_IsUrlVisited? m_crVisited : m_crNotVisited);
 		dc.SetBkMode(TRANSPARENT);
 		dc.SelectObject(m_UrlFont);
-		dc.Detach();
 
 		// Return a NULL brush for a transparent background
 		return (LRESULT)GetStockObject(NULL_BRUSH);

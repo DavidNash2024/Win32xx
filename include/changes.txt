@@ -164,6 +164,8 @@ Other changes:
 Function which returned pointers to Win32++ objects now return Win32++ objects
 Functions arguments which were pointers to Win32++ objects are now handles.  
 
+Added CClientDCEx
+
 Modified CBitmap::CreateCompatibleBitmap
 Modified CBitmap::CreateDIBitmap
 Modified CBitmap::CreateDIBSection

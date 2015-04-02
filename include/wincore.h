@@ -221,6 +221,9 @@ namespace Win32xx
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
+#ifndef _WIN32_WCE
+	typedef std::basic_stringstream<TCHAR> tStringStream;
+#endif
 
 	// Some useful smart pointers
 	typedef Shared_Ptr<CDC> DCPtr;
@@ -240,6 +243,50 @@ namespace Win32xx
 		MAX_MENU_STRING = 80,
 		MAX_STRING_SIZE = 255
 	};
+
+	struct CDC_Data	// A structure that contains the data members for CDC
+	{
+		// Constructor
+		CDC_Data() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
+		
+		std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
+		HDC		hDC;			// The HDC belonging to this CDC
+		long	Count;			// Reference count
+		BOOL	IsManagedHDC;	// Delete/Release the HDC on destruction
+		HWND	hWnd;			// The HWND of a Window or Client window DC
+		int		nSavedDCState;	// The save state of the HDC.
+	};
+
+	struct CGDI_Data	// A structure that contains the data members for CGDIObject
+	{
+		// Constructor
+		CGDI_Data() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
+		
+		HGDIOBJ hGDIObject;
+		long	Count;
+		BOOL	IsManagedObject;
+	};
+
+	struct CIml_Data	// A structure that contains the data members for CImageList
+	{
+		// Constructor
+		CIml_Data() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
+
+		HIMAGELIST	hImageList;
+		BOOL		IsManagedHiml;
+		long		Count;
+	};
+
+	struct CMenu_Data	// A structure that contains the data members for CMenu
+	{
+		// Constructor
+		CMenu_Data() : hMenu(0), IsManagedMenu(FALSE), Count(1L) {}
+
+		std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
+		HMENU hMenu;
+		BOOL IsManagedMenu;
+		long Count;
+	};	
 
 	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
 	{
@@ -432,10 +479,19 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
+		
+		CDC_Data* GetCDCDataFromMap(HDC hDC);
+		CGDI_Data* GetCGDIDataFromMap(HGDIOBJ hObject);
+		CIml_Data* GetCImlDataFromMap(HIMAGELIST himl);
+		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
+
+#ifdef USE_OBSOLETE_CODE
 		CDC* GetCDCFromMap(HDC hDC);
 		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);
 		CImageList* GetCImageListFromMap(HIMAGELIST hImageList);
 		CMenu* GetCMenuFromMap(HMENU hMenu);
+#endif
+		
 		CWnd* GetCWndFromMap(HWND hWnd);
 		void	CleanupTemps();
 		TLSData* GetTlsData() const;
@@ -443,10 +499,18 @@ namespace Win32xx
 		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
+		std::map<HDC, CDC_Data*, CompareHDC> m_CDC_Data;
+		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_CGDI_Data;
+		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_CIml_Data;
+		std::map<HMENU, CMenu_Data*, CompareHMENU> m_CMenu_Data;
+
+#ifdef USE_OBSOLETE_CODE
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
 		std::map<HGDIOBJ, CGDIObject*, CompareGDI> m_mapGDI;	// maps GDI handles to CGDIObjects.
 		std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST> m_mapHIMAGELIST;	// maps HIMAGELIST to CImageList.
 		std::map<HMENU, CMenu*, CompareHMENU> m_mapHMENU;	// maps menu handles to CMenu objects
+#endif
+
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
@@ -1096,6 +1160,71 @@ namespace Win32xx
 
 	}
 
+	inline CDC_Data* CWinApp::GetCDCDataFromMap(HDC hDC)
+	{
+		std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
+
+		// Find the CDC data mapped to this HDC
+		CDC_Data* pCDCData = 0;
+		m_csMapLock.Lock();
+		m = m_CDC_Data.find(hDC);
+
+		if (m != m_CDC_Data.end())
+			pCDCData = m->second;
+
+		m_csMapLock.Release();
+		return pCDCData;
+	}
+
+	inline CGDI_Data* CWinApp::GetCGDIDataFromMap(HGDIOBJ hObject)
+	{
+		std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
+
+		// Find the CGDIObject data mapped to this HGDIOBJ
+		CGDI_Data* pCGDIData = 0;
+		m_csMapLock.Lock();
+		m = m_CGDI_Data.find(hObject);
+
+		if (m != m_CGDI_Data.end())
+			pCGDIData = m->second;
+
+		m_csMapLock.Release();
+		return pCGDIData;
+	}
+
+	inline CIml_Data* CWinApp::GetCImlDataFromMap(HIMAGELIST himl)
+	{
+		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
+		
+		// Find the CImageList data mapped to this HIMAGELIST
+		CIml_Data* pCImlData = 0;
+		m_csMapLock.Lock();
+		m = m_CIml_Data.find(himl);
+
+		if (m != m_CIml_Data.end())
+			pCImlData = m->second;
+
+		m_csMapLock.Release();
+		return pCImlData;
+	}
+
+	inline CMenu_Data* CWinApp::GetCMenuDataFromMap(HMENU hMenu)
+	{
+		std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
+
+		// Find the CMenu data mapped to this HMENU
+		CMenu_Data* pCMenuData = 0;
+		m_csMapLock.Lock();
+		m = m_CMenu_Data.find(hMenu);
+
+		if (m != m_CMenu_Data.end())
+			pCMenuData = m->second;
+
+		m_csMapLock.Release();
+		return pCMenuData;
+	}
+
+#ifdef USE_OBSOLETE_CODE
 	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
 	{
 		// Allocate an iterator for our HWND map
@@ -1161,6 +1290,7 @@ namespace Win32xx
 		m_csMapLock.Release();
 		return pMenu;
 	}
+#endif
 
 	inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
 	{
@@ -2600,10 +2730,9 @@ namespace Win32xx
 	// The GetDC function retrieves the display device context (DC)
 	// for the client area of the window. Use like this:
 	// CDC dc = GetDC;
-	// Consider using a CClientDC instead.
 	{
 		assert(IsWindow());
-		return CDC(::GetDC(m_hWnd), m_hWnd);
+		return CClientDC(m_hWnd);
 	}
 
 	inline CDC CWnd::GetDCEx(HRGN hrgnClip, DWORD flags) const
@@ -2612,7 +2741,7 @@ namespace Win32xx
 	// CDC dc = GetDCEx(hrgnClip, flags);
 	{
 		assert(IsWindow());
-		return CDC(::GetDCEx(m_hWnd, hrgnClip, flags), m_hWnd);
+		return CClientDCEx(m_hWnd, hrgnClip, flags);
 	}
 
 	inline CWnd CWnd::GetDesktopWindow() const
@@ -2734,10 +2863,9 @@ namespace Win32xx
 	// The GetWindowDC function retrieves the device context (DC) for the entire window, 
 	// including title bar, menus, and scroll bars. Use like this:
 	// CDC dc = GetWindowDC();
-	// Consider using a CWindowDC instead.
 	{
 		assert(IsWindow());
-		return CDC(::GetWindowDC(m_hWnd), m_hWnd);
+		return CWindowDC(m_hWnd);
 	}
 
 	inline CRect CWnd::GetWindowRect() const

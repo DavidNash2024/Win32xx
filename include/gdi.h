@@ -153,8 +153,8 @@ namespace Win32xx
 		HGDIOBJ GetHandle() const;
 		int		GetObject(int nCount, LPVOID pObject) const;
 
-	protected:
-		struct DataMembers	// A structure that contains the data members for CGDIObject
+//	protected:
+	/*	struct DataMembers	// A structure that contains the data members for CGDIObject
 		{
 			// Constructor
 			DataMembers() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
@@ -162,9 +162,9 @@ namespace Win32xx
 			HGDIOBJ hGDIObject;
 			long	Count;
 			BOOL	IsManagedObject;
-		};
+		}; */
 
-		DataMembers* m_pData;
+		CGDI_Data* m_pData;
 
 	private:
 		void	AddToMap();
@@ -404,10 +404,10 @@ namespace Win32xx
 	{
 		friend class CWinApp;
 		friend class CWnd;
-		friend class CClientDC;
-		friend class CMemDC;
-		friend class CPaintDC;
-		friend class CWindowDC;
+	//	friend class CClientDC;
+	//	friend class CMemDC;
+	//	friend class CPaintDC;
+	//	friend class CWindowDC;
 
 	public:
 		CDC();									// Constructs a new CDC without assigning a HDC
@@ -776,8 +776,8 @@ namespace Win32xx
   #endif // (_WIN32_WINNT >= 0x0500)
 #endif  // _WIN32_WCE
 
-	private:
-		struct DataMembers	// A structure that contains the data members for CDC
+	protected:
+	/*	struct DataMembers	// A structure that contains the data members for CDC
 		{
 			// Constructor
 			DataMembers() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
@@ -788,14 +788,17 @@ namespace Win32xx
 			BOOL	IsManagedHDC;		// Delete/Release the HDC on destruction
 			HWND	hWnd;			// The HWND of a Window or Client window DC
 			int		nSavedDCState;	// The save state of the HDC.
-		};
+		}; */
 
+		CDC_Data* m_pData;		// pointer to the class's data members
+
+	private:
 		void AddToMap();
 	//	static CDC* AddTempHDC(HDC hDC, HWND hWnd);
 		void Release();
 		BOOL RemoveFromMap();
 
-		DataMembers* m_pData;		// pointer to the class's data members
+	//	CDC_Data* m_pData;		// pointer to the class's data members
 	};
 
 	class CClientDC : public CDC
@@ -811,6 +814,21 @@ namespace Win32xx
 		}
 
 		virtual ~CClientDC() {}
+	};
+
+	class CClientDCEx : public CDC
+	{
+	public:
+		CClientDCEx(HWND hWnd, HRGN hrgnClip, DWORD flags)
+		{
+			if (0 == hWnd) hWnd = GetDesktopWindow();
+
+			assert(::IsWindow(hWnd));
+			Attach(::GetDCEx(hWnd, hrgnClip, flags), hWnd);
+			m_pData->IsManagedHDC = TRUE;
+		}
+
+		virtual ~CClientDCEx() {}
 	};
 
 	class CMemDC : public CDC
@@ -957,7 +975,7 @@ namespace Win32xx
 	inline CGDIObject::CGDIObject()
 	// Constructs the CGDIObject
 	{
-		m_pData = new DataMembers;
+		m_pData = new CGDI_Data;
 	}
 
 	inline CGDIObject::CGDIObject(const CGDIObject& rhs)
@@ -997,12 +1015,10 @@ namespace Win32xx
 	// Store the HDC and CDC pointer in the HDC map
 	{
 		assert( GetApp() );
-		GetApp()->m_csMapLock.Lock();
-
 		assert(m_pData->hGDIObject);
-		assert(!GetApp()->GetCGDIObjectFromMap(m_pData->hGDIObject));
-
-		GetApp()->m_mapGDI.insert(std::make_pair(m_pData->hGDIObject, this));
+		
+		GetApp()->m_csMapLock.Lock();
+		GetApp()->m_CGDI_Data.insert(std::make_pair(m_pData->hGDIObject, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -1017,17 +1033,17 @@ namespace Win32xx
 			if (m_pData->hGDIObject != 0)
 			{
 				Release();
-				m_pData = new DataMembers;
+				m_pData = new CGDI_Data;
 			}
 
 			if (hObject)
 			{
 				// Add the GDI object to this CCGDIObject
-				CGDIObject* pObject = GetApp()->GetCGDIObjectFromMap(hObject);
-				if (pObject)
+				CGDI_Data* pCGDIData = GetApp()->GetCGDIDataFromMap(hObject);
+				if (pCGDIData)
 				{
 					delete m_pData;
-					m_pData = pObject->m_pData;
+					m_pData = pCGDIData;
 					InterlockedIncrement(&m_pData->Count);
 				}
 				else
@@ -1070,7 +1086,7 @@ namespace Win32xx
 			}
 		}
 
-		m_pData = new DataMembers;
+		m_pData = new CGDI_Data;
 		return hObject;
 	}
 
@@ -1114,17 +1130,18 @@ namespace Win32xx
 		if( GetApp() )
 		{
 			// Allocate an iterator for our HDC map
-			std::map<HGDIOBJ, CGDIObject*, CompareGDI>::iterator m;
+			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
 			CWinApp* pApp = GetApp();
 			if (pApp)
 			{
 				// Erase the CGDIObject pointer entry from the map
 				pApp->m_csMapLock.Lock();
-				m = pApp->m_mapGDI.find(m_pData->hGDIObject);
-				if (m != pApp->m_mapGDI.end())
+
+				m = pApp->m_CGDI_Data.find(m_pData->hGDIObject);
+				if (m != pApp->m_CGDI_Data.end())
 				{
-					pApp->m_mapGDI.erase(m);
+					pApp->m_CGDI_Data.erase(m);
 					Success = TRUE;
 				}
 
@@ -2339,7 +2356,7 @@ namespace Win32xx
 	inline CDC::CDC()
 	{
 		// Allocate memory for our data members
-		m_pData = new DataMembers;
+		m_pData = new CDC_Data;
 	}
 
 inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
@@ -2351,30 +2368,8 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Note: this constructor permits a call like this:
 	// CDC MyCDC = SomeHDC;
 	{
-		UNREFERENCED_PARAMETER(hWnd);
-		assert(hDC);
-
-		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (pDC)
-		{
-			m_pData = pDC->m_pData;
-			InterlockedIncrement(&m_pData->Count);
-		}
-		else
-		{
-			// Allocate memory for our data members
-			m_pData = new DataMembers;
-
-			// Assign values to our data members
-			m_pData->hDC = hDC;
-			m_pData->nSavedDCState = ::SaveDC(hDC);
-#ifndef _WIN32_WCE
-			m_pData->hWnd = ::WindowFromDC(hDC);
-#else
-			m_pData->hWnd = hWnd;
-#endif
-			AddToMap();
-		}
+		m_pData = new CDC_Data;
+		Attach(hDC, hWnd);
 	}
 
 #ifndef _WIN32_WCE
@@ -2457,12 +2452,9 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert( GetApp() );
 		assert(m_pData->hDC);
+		
 		GetApp()->m_csMapLock.Lock();
-
-		assert(m_pData->hDC);
-		assert(!GetApp()->GetCDCFromMap(m_pData->hDC));
-
-		GetApp()->m_mapHDC.insert(std::make_pair(m_pData->hDC, this));
+		GetApp()->m_CDC_Data.insert(std::make_pair(m_pData->hDC, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -2482,16 +2474,16 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 				Release();
 
 				// Assign values to our data members
-				m_pData = new DataMembers;
+				m_pData = new CDC_Data;
 			}		
 			
 			if (hDC)
 			{
-				CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-				if (pDC)
+				CDC_Data* pCDCData = GetApp()->GetCDCDataFromMap(hDC);
+				if (pCDCData)
 				{
 					delete m_pData;
-					m_pData = pDC->m_pData;
+					m_pData = pCDCData;
 					InterlockedIncrement(&m_pData->Count);
 				}
 				else
@@ -2530,7 +2522,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		}
 
 		// Assign values to our data members
-		m_pData = new DataMembers;
+		m_pData = new CDC_Data;
 
 		return hDC;
 	}
@@ -2610,25 +2602,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
 	}
 
-/*	inline CDC* CDC::AddTempHDC(HDC hDC, HWND hWnd)
-	// Used by GetDC, GetDCEx, and GetWindowDC to add a temporary CDC pointer
-	// with the specified hWnd. This HDC must be released when it is no longer
-	// required.
-	{
-		assert( GetApp() );
-
-		CDC* pDC = new CDC;
-		pDC->m_pData->hDC = hDC;
-
-		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsData();
-		pTLSData->vTmpDCs.push_back(pDC); // save pDC as a smart pointer
-
-		pDC->m_pData->IsTmpHDC = FALSE; // Only FromHandle require bIsTmpHDC = TRUE
-		pDC->m_pData->hWnd = hWnd;
-		return pDC;
-	} */
-
 	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const
 	// An efficient color gradient filler compatible with all Windows operating systems
 	{
@@ -2692,18 +2665,18 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 		if( GetApp() )
 		{
-			// Allocate an iterator for our HDC map
-			std::map<HDC, CDC*, CompareHDC>::iterator m;
+			// Allocate an iterator for our Data map
+			std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
 			CWinApp* pApp = GetApp();
 			if (pApp)
 			{
-				// Erase the CDC pointer entry from the map
+				// Erase the CDC data entry from the map
 				pApp->m_csMapLock.Lock();
-				m = pApp->m_mapHDC.find(m_pData->hDC);
-				if (m != pApp->m_mapHDC.end())
+				m = pApp->m_CDC_Data.find(m_pData->hDC);
+				if (m != pApp->m_CDC_Data.end())
 				{
-					pApp->m_mapHDC.erase(m);
+					pApp->m_CDC_Data.erase(m);
 					Success = TRUE;
 				}
 
@@ -2818,11 +2791,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		{
 			RemoveFromMap();
 
-			// Return the DC back to its initial state
-			::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
-
 			if (m_pData->IsManagedHDC)
 			{
+				// Return the DC back to its initial state
+				::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
+
 				// We need to release a Window DC, and delete a memory DC
 				if (m_pData->hWnd != 0)
 					::ReleaseDC(m_pData->hWnd, m_pData->hDC);

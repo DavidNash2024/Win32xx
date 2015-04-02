@@ -176,7 +176,7 @@ namespace Win32xx
 		operator HMENU () const;
 
 	private:
-		struct DataMembers
+	/*	struct DataMembers
 		{
 			// Constructor
 			DataMembers() : hMenu(0), IsManagedMenu(FALSE), Count(1L) {}
@@ -185,12 +185,12 @@ namespace Win32xx
 			HMENU hMenu;
 			BOOL IsManagedMenu;
 			long Count;
-		};			
+		}; */			
 
 		void AddToMap();
 		void Release();
 		BOOL RemoveFromMap();
-		DataMembers* m_pData;
+		CMenu_Data* m_pData;
 	};
 
 } // namespace Win32xx
@@ -202,12 +202,12 @@ namespace Win32xx
 
 	inline CMenu::CMenu()
 	{
-		m_pData = new DataMembers;
+		m_pData = new CMenu_Data;
 	}
 
 	inline CMenu::CMenu(UINT nID) 
 	{
-		m_pData = new DataMembers;
+		m_pData = new CMenu_Data;
 
 		HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
 		Attach(menu);
@@ -216,7 +216,7 @@ namespace Win32xx
 
 	inline CMenu::CMenu(HMENU hMenu)
 	{
-		m_pData = new DataMembers;
+		m_pData = new CMenu_Data;
 		Attach(hMenu);
 	}
 
@@ -259,7 +259,7 @@ namespace Win32xx
 		assert(m_pData->hMenu);
 		
 		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapHMENU.insert(std::make_pair(m_pData->hMenu, this));
+		GetApp()->m_CMenu_Data.insert(std::make_pair(m_pData->hMenu, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -323,19 +323,27 @@ namespace Win32xx
 		if (GetApp())
 		{
 			// Allocate an iterator for our HMENU map
-			std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
+			std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
 			CWinApp* pApp = GetApp();
 			if (pApp)
 			{
 				// Erase the Menu pointer entry from the map
 				pApp->m_csMapLock.Lock();
-				m = pApp->m_mapHMENU.find(m_pData->hMenu);
-				if (m != pApp->m_mapHMENU.end())
+
+				m = pApp->m_CMenu_Data.find(m_pData->hMenu);
+				if (m != pApp->m_CMenu_Data.end())
 				{
-					pApp->m_mapHMENU.erase(m);
+					pApp->m_CMenu_Data.erase(m);
 					Success = TRUE;
 				}
+
+			//	m = pApp->m_mapHMENU.find(m_pData->hMenu);
+			//	if (m != pApp->m_mapHMENU.end())
+			//	{
+			//		pApp->m_mapHMENU.erase(m);
+			//		Success = TRUE;
+			//	}
 
 				pApp->m_csMapLock.Release();
 			}
@@ -373,17 +381,18 @@ namespace Win32xx
 			if (m_pData->hMenu != 0)
 			{
 				Release();
-				m_pData = new DataMembers;
+				m_pData = new CMenu_Data;
 			}
 
 			if (hMenu)
 			{
 				// Add the menu to this CMenu
-				CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-				if (pMenu)
+			//	CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
+				CMenu_Data* pCMenuData = GetApp()->GetCMenuDataFromMap(hMenu);
+				if (pCMenuData)
 				{
 					delete m_pData;
-					m_pData = pMenu->m_pData;
+					m_pData = pCMenuData;
 					InterlockedIncrement(&m_pData->Count);
 				}
 				else
@@ -465,7 +474,7 @@ namespace Win32xx
 			}
 		}		
 		
-		m_pData = new DataMembers;
+		m_pData = new CMenu_Data;
 
 		return hMenu;
 	}

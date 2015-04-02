@@ -223,7 +223,6 @@ LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
 	// Set the text color for the custom draw's device context
 	CDC dcDraw(lpNMCustomDraw->nmcd.hdc);
 	dcDraw.SetTextColor(clr);
-	dcDraw.Detach();
 
 	return CFrame::CustomDrawMenuBar(pNMHDR);
 }

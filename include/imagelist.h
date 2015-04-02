@@ -121,7 +121,7 @@ namespace Win32xx
 		operator HIMAGELIST () const;
 
 	private:
-		struct DataMembers	// A structure that contains the data members
+	/*	struct DataMembers	// A structure that contains the data members
 		{
 			// Constructor
 			DataMembers() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
@@ -129,13 +129,13 @@ namespace Win32xx
 			HIMAGELIST	hImageList;
 			BOOL		IsManagedHiml;
 			long		Count;
-		};
+		}; */
 
 		void AddToMap();
 		void Release();
 		BOOL RemoveFromMap();
 
-		DataMembers* m_pData; 
+		CIml_Data* m_pData; 
 	};
 
 
@@ -145,14 +145,14 @@ namespace Win32xx
 
 	inline CImageList::CImageList()
 	{
-		m_pData = new DataMembers;
+		m_pData = new CIml_Data;
 	}
 
 	inline CImageList::CImageList(HIMAGELIST himl)
 	{
-		m_pData = new DataMembers;
+		m_pData = new CIml_Data;
 		Attach(himl);
-		m_pData->IsManagedHiml = TRUE;
+	//	m_pData->IsManagedHiml = TRUE;
 	}
 
 	inline CImageList::CImageList(const CImageList& rhs)
@@ -193,7 +193,7 @@ namespace Win32xx
 		assert(m_pData->hImageList);
 
 		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapHIMAGELIST.insert(std::make_pair(m_pData->hImageList, this));
+		GetApp()->m_CIml_Data.insert(std::make_pair(m_pData->hImageList, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -236,18 +236,19 @@ namespace Win32xx
 
 		if (GetApp())
 		{
-			// Allocate an iterator for our HIMAGELIST map
-			std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST>::iterator m;
+			// Allocate an iterator for our CImageList data
+			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
 			CWinApp* pApp = GetApp();
 			if (pApp)
 			{
-				// Erase the CImageList pointer entry from the map
+				// Erase the CImageList data entry from the map
 				pApp->m_csMapLock.Lock();
-				m = pApp->m_mapHIMAGELIST.find(m_pData->hImageList);
-				if (m != pApp->m_mapHIMAGELIST.end())
+
+				m = pApp->m_CIml_Data.find(m_pData->hImageList);
+				if (m != pApp->m_CIml_Data.end())
 				{
-					pApp->m_mapHIMAGELIST.erase(m);
+					pApp->m_CIml_Data.erase(m);
 					Success = TRUE;
 				}
 
@@ -296,17 +297,18 @@ namespace Win32xx
 			if (m_pData->hImageList)
 			{
 				Release();
-				m_pData = new DataMembers;
+				m_pData = new CIml_Data;
 			}
 
 			if (hImageList)
 			{
 				// Add the image list to this CImageList
-				CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-				if (pImageList)
+			//	CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
+				CIml_Data* pCImlData = GetApp()->GetCImlDataFromMap(hImageList);
+				if (pCImlData)
 				{
 					delete m_pData;
-					m_pData = pImageList->m_pData;
+					m_pData = pCImlData;
 					InterlockedIncrement(&m_pData->Count);
 				}
 				else
@@ -435,7 +437,7 @@ namespace Win32xx
 			}
 		}
 
-		m_pData = new DataMembers;
+		m_pData = new CIml_Data;
 
 		return hImageList;
 	}

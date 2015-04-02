@@ -19,7 +19,7 @@ CMainFrame::CMainFrame()
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Frame"));
+	LoadRegistrySettings(_T("Win32++\\Ribbon Frame"));
 
 	// Load the settings from the registry with 4 MRU entries
 	LoadRegistryMRUSettings(4);
