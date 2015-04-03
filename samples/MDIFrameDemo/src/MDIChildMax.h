@@ -31,6 +31,7 @@ protected:
 
 private:
 	CViewMax m_MaxView;
+	CMenu m_Menu;
 };
 
 #endif  //MDICHILDMAX_H

@@ -37,9 +37,8 @@ LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CMDIChildSimple definitions
 CMDIChildSimple::CMDIChildSimple()
 {
-	HINSTANCE hResource = GetApp()->GetResourceHandle();
-	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuView"));
-	SetHandles(hChildMenu, NULL);
+	m_Menu.LoadMenu(_T("MdiMenuView"));
+	SetHandles(m_Menu, NULL);
 	SetView(m_View);
 }
 

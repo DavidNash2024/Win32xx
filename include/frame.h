@@ -50,7 +50,7 @@
 // * CMenuBar for managing the menu inside the rebar.
 // * CToolBar for managing the frame's toolbar.
 // * CStatusBar for managing the frame's status bar.
-// In each case the members for these classes are exposed by a GetXXX 
+// In each case the members for these classes are exposed by a GetXXX
 // function, allowing them to be accessed or sent messages.
 
 // CFrame is responsible for creating a "frame" window. This window has a
@@ -419,7 +419,7 @@ namespace Win32xx
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		// Obsolete declarations of message handlers
 		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
@@ -839,10 +839,10 @@ namespace Win32xx
 	///////////////////////////////////
 	// Definitions for the CFrame class
 	//
-	inline CFrame::CFrame() : m_pMenuMetrics(0), m_ShowCmd(SW_SHOW), m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE),
-							  m_UseThemes(TRUE), m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE),
-							  m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
-							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0)
+	inline CFrame::CFrame() : m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
+							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_pMenuMetrics(0), m_ShowCmd(SW_SHOW),
+							  m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE), m_UseThemes(TRUE),
+							  m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE)
 	{
 		ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
 		ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
@@ -1092,14 +1092,14 @@ namespace Win32xx
 
 		// Set a default ImageList for the ToolBar
 		SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
-		
+
 		SetupToolBar();
 
 		if (IsReBarSupported() && m_UseReBar)
 		{
 			SIZE MaxSize = GetToolBar().GetMaxSize();
 			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)GetToolBar().GetHwnd(), (LPARAM)&MaxSize);
-			
+
 			if (GetReBarTheme().UseThemes && GetReBarTheme().LockMenuBand)
 			{
 				// Hide gripper for single toolbar
@@ -1163,9 +1163,8 @@ namespace Win32xx
 						rcRect.InflateRect(0, -2);
 					else
 						rcRect.InflateRect(0, -1);
-					
-					CDC dcDraw;
-					dcDraw.Attach(lpNMCustomDraw->nmcd.hdc);
+
+					CDC dcDraw(lpNMCustomDraw->nmcd.hdc);
 					if (nState & (CDIS_HOT | CDIS_SELECTED))
 					{
 
@@ -1196,7 +1195,7 @@ namespace Win32xx
 						GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
 						str.ReleaseBuffer();
 					}
-					
+
 					// Draw highlight text
 					CFont Font = GetMenuBar().GetFont();
 					dcDraw.SelectObject(Font);
@@ -1230,7 +1229,7 @@ namespace Win32xx
 		{
 			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
 			CToolBar* pTB = static_cast<CToolBar*>(GetCWndPtr(pNMHDR->hwndFrom));
-			
+
 			if (pTB)
 			{
 				switch (lpNMCustomDraw->nmcd.dwDrawStage)
@@ -2115,7 +2114,7 @@ namespace Win32xx
 	{
 		// Perform default processing first
 		CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
-		
+
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
 			// Save the hwnd of the window which currently has focus
@@ -2246,7 +2245,7 @@ namespace Win32xx
 		GetToolBar().Destroy();
 		GetReBar().Destroy();
 		GetStatusBar().Destroy();
-		GetView()->Destroy();		
+		GetView()->Destroy();
 
 		::PostQuitMessage(0);	// Terminates the application
 	}
@@ -2635,7 +2634,7 @@ namespace Win32xx
 	{
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-		
+
 		if (m_ShowCmd == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
 
 		CWindowDC dcDesktop(0);

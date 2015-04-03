@@ -49,9 +49,8 @@ CSimpleMDIChild::CSimpleMDIChild()
 	SetView(m_View);
 	
 	// Set the menu for this MDI child
-	HINSTANCE hResource = GetApp()->GetResourceHandle();
-	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuView"));
-	SetHandles(hChildMenu, NULL);
+	m_Menu.LoadMenu(_T("MdiMenuView"));
+	SetHandles(m_Menu, NULL);
 }
 
 CSimpleMDIChild::~CSimpleMDIChild()

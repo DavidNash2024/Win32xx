@@ -107,9 +107,8 @@ void CViewList::InsertItems()
 // CMDIChildListView functions
 CMDIChildListView::CMDIChildListView()
 {
-	HINSTANCE hResource = GetApp()->GetResourceHandle();
-	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuList"));
-	SetHandles(hChildMenu, NULL);
+	m_Menu.LoadMenu(_T("MdiMenuList"));
+	SetHandles(m_Menu, NULL);
 	SetView(m_ListView);
 }
 

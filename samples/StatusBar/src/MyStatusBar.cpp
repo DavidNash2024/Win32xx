@@ -55,7 +55,7 @@ void CMyStatusBar::SetStatusParts()
 {
 	// Create the StatusBar parts
 	CRect rcClient = GetClientRect();
-	int width = MAX(260, rcClient.right);
+	int width = MAX(270, rcClient.right);
 	SetPartWidth(0, width - 210);
 	SetPartWidth(1, 100);
 	SetPartWidth(2, 20);

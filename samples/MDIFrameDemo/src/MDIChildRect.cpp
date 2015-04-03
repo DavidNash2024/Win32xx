@@ -87,9 +87,8 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CMDIChildRect definitions
 CMDIChildRect::CMDIChildRect()
 {
-	HINSTANCE hResource = GetApp()->GetResourceHandle();
-	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuRect"));
-	SetHandles(hChildMenu, NULL);
+	m_Menu.LoadMenu(_T("MdiMenuRect"));
+	SetHandles(m_Menu, NULL);
 	SetView(m_RectView);
 }
 

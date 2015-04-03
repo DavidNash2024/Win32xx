@@ -34,6 +34,7 @@ protected:
 
 private:
 	CViewRect m_RectView;
+	CMenu m_Menu;
 
 };
 

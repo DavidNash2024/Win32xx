@@ -2349,7 +2349,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		HICON hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
-		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
+		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), LR_SHARED));
 
 		if (hIconLarge != 0)
 			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (hIconLarge));
@@ -2366,7 +2366,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		HICON hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
-		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
+		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), LR_SHARED));
 
 		if (hIconSmall != 0)
 			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (hIconSmall));

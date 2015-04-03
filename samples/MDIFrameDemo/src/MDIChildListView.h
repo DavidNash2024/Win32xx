@@ -35,6 +35,7 @@ protected:
 
 private:
 	CViewList m_ListView;
+	CMenu m_Menu;
 
 };
 

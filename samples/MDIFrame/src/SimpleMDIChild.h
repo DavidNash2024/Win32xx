@@ -38,6 +38,7 @@ protected:
 
 private:
 	CSimpleView m_View;
+	CMenu m_Menu;
 };
 
 #endif  //MDICHILDVIEW_H

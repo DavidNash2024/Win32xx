@@ -37,6 +37,7 @@ protected:
 
 private:
 	CViewSimple m_View;
+	CMenu m_Menu;
 };
 
 #endif  //MDICHILDVIEW_H

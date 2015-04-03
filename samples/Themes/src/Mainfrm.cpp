@@ -179,7 +179,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 			ToolBarTheme tbt = {TRUE, RGB(49, 106, 197), RGB(64,177,230), RGB(27,65, 160), RGB(64,177,230), RGB(49, 106, 197)};
 			SetToolBarTheme(tbt);
 
-			MenuTheme mt = {TRUE, RGB(84,197,240), RGB(89, 136, 217), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
+			MenuTheme mt = {TRUE, RGB(27,65, 160), RGB(49, 106, 197), RGB(59, 126, 197), RGB(94,187,230), RGB(128, 128, 128)};
 			SetMenuTheme(mt);
 		}
 		break;

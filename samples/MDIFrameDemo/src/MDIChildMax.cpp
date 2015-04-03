@@ -31,9 +31,8 @@ LRESULT CViewMax::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // CMDIChildMax definitions
 CMDIChildMax::CMDIChildMax()
 {
-	HINSTANCE hResource = GetApp()->GetResourceHandle();
-	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuMax"));
-	SetHandles(hChildMenu, NULL);
+	m_Menu.LoadMenu(_T("MdiMenuMax"));
+	SetHandles(m_Menu, NULL);
 	SetView(m_MaxView);
 }
 

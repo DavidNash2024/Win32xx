@@ -34,7 +34,7 @@ protected:
 
 private:
 	CViewText m_TextView;
-
+	CMenu m_Menu;
 };
 
 #endif  //MDICHILDTEXT_H

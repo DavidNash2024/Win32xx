@@ -47,9 +47,8 @@ void CViewText::PreCreate(CREATESTRUCT &cs)
 
 CMDIChildText::CMDIChildText()
 {
-	HINSTANCE hResource = GetApp()->GetResourceHandle();
-	HMENU hChildMenu = LoadMenu(hResource, _T("MdiMenuText"));
-	SetHandles(hChildMenu, NULL);
+	m_Menu.LoadMenu(_T("MdiMenuText"));
+	SetHandles(m_Menu, NULL);
 	SetView(m_TextView);
 }
 

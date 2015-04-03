@@ -31,6 +31,7 @@ protected:
 
 private:
 	CViewTree m_TreeView;
+	CMenu m_Menu;
 };
 
 #endif  //MDICHILDTREEVIEW_H
