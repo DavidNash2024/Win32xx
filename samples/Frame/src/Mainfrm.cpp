@@ -51,11 +51,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// Overriding CFrame::Oncreate is optional.
 	// The default for the following variables is TRUE
 
-	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
-	// m_UseReBar = FALSE;				// Don't use a ReBar
-	// m_UseThemes = FALSE;				// Don't use themes
-	// m_UseToolBar = FALSE;			// Don't use a ToolBar
+	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
+	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
+	// SetUseReBar(FALSE);				// Don't use a ReBar
+	// SetUseThemes(FALSE);				// Don't use themes
+	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
 	return CFrame::OnCreate(pcs);
@@ -74,12 +74,6 @@ void CMainFrame::OnInitialUpdate()
 
 
 	TRACE("Frame created\n");
-
-
-	CString cs;
-	cs.Format(_T("Size of CWnd is  %d"), sizeof(CWnd));
-
-	TRACE (cs);
 }
 
 void CMainFrame::OnFileOpen()

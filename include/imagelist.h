@@ -193,7 +193,7 @@ namespace Win32xx
 		assert(m_pData->hImageList);
 
 		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_CIml_Data.insert(std::make_pair(m_pData->hImageList, m_pData));
+		GetApp()->m_mapCImlData.insert(std::make_pair(m_pData->hImageList, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -245,10 +245,10 @@ namespace Win32xx
 				// Erase the CImageList data entry from the map
 				pApp->m_csMapLock.Lock();
 
-				m = pApp->m_CIml_Data.find(m_pData->hImageList);
-				if (m != pApp->m_CIml_Data.end())
+				m = pApp->m_mapCImlData.find(m_pData->hImageList);
+				if (m != pApp->m_mapCImlData.end())
 				{
-					pApp->m_CIml_Data.erase(m);
+					pApp->m_mapCImlData.erase(m);
 					Success = TRUE;
 				}
 

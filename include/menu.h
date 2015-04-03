@@ -259,7 +259,7 @@ namespace Win32xx
 		assert(m_pData->hMenu);
 		
 		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_CMenu_Data.insert(std::make_pair(m_pData->hMenu, m_pData));
+		GetApp()->m_mapCMenuData.insert(std::make_pair(m_pData->hMenu, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
 
@@ -331,19 +331,12 @@ namespace Win32xx
 				// Erase the Menu pointer entry from the map
 				pApp->m_csMapLock.Lock();
 
-				m = pApp->m_CMenu_Data.find(m_pData->hMenu);
-				if (m != pApp->m_CMenu_Data.end())
+				m = pApp->m_mapCMenuData.find(m_pData->hMenu);
+				if (m != pApp->m_mapCMenuData.end())
 				{
-					pApp->m_CMenu_Data.erase(m);
+					pApp->m_mapCMenuData.erase(m);
 					Success = TRUE;
 				}
-
-			//	m = pApp->m_mapHMENU.find(m_pData->hMenu);
-			//	if (m != pApp->m_mapHMENU.end())
-			//	{
-			//		pApp->m_mapHMENU.erase(m);
-			//		Success = TRUE;
-			//	}
 
 				pApp->m_csMapLock.Release();
 			}

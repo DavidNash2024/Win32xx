@@ -79,13 +79,13 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
-	// The default for the following variables is TRUE
+	// Uncomment the lines below to change frame options.
 
-	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
-	// m_UseReBar = FALSE;				// Don't use a ReBar
-	// m_UseThemes = FALSE;				// Don't use themes
-	// m_UseToolBar = FALSE;			// Don't use a ToolBar
+	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
+	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
+	// SetUseReBar(FALSE);				// Don't use a ReBar
+	// SetUseThemes(FALSE);				// Don't use themes
+	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
 	return CFrame::OnCreate(pcs);

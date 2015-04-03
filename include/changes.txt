@@ -81,6 +81,12 @@ used instead of the handle.
  - These classes use reference counting, so they can be safely copied. This
    allows them to be returned by value from functions.
    
+ * The various CFrame protected member variables are now private. Setters
+   and getters are used to access them. Frame creation options that can be
+   set in CMainFrame::OnCreate are now CFrame member functions rather than
+   protected CFrame member variables. e.g. we now use SetUseThemes(FALSE)
+   in place of m_UseThemes = FALSE .   
+   
 
 Step by step guide to code migration
 ------------------------------------
@@ -165,6 +171,21 @@ Function which returned pointers to Win32++ objects now return Win32++ objects
 Functions arguments which were pointers to Win32++ objects are now handles.  
 
 Added CClientDCEx
+
+Added CFrame::GetShowStatusBar
+Added CFrame::GetShowCmd
+Added CFrame::GetShowToolBar
+Added CFrame::GetUseIndicatorStatus
+Added CFrame::GetUseMenuStatus
+Added CFrame::GetUseReBar
+Added CFrame::GetUseThemes
+Added CFrame::GetUseToolBar
+Added CFrame::SetShowCmd
+Added CFrame::SetUseIndicatorStatus
+Added CFrame::SetUseMenuStatus
+Added CFrame::SetUseReBar
+Added CFrame::SetUseThemes
+Added CFrame::SetUseToolBar
 
 Modified CBitmap::CreateCompatibleBitmap
 Modified CBitmap::CreateDIBitmap

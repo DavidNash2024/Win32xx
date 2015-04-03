@@ -421,11 +421,11 @@ namespace Win32xx
 		switch(nID)
 		{
 		case IDW_VIEW_STATUSBAR:
-			GetActiveMenu().CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
+			GetActiveMenu().CheckMenuItem(nID, GetShowStatusBar() ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		case IDW_VIEW_TOOLBAR:
-			GetActiveMenu().EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
-			GetActiveMenu().CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
+			GetActiveMenu().EnableMenuItem(nID, GetUseToolBar() ? MF_ENABLED : MF_DISABLED);
+			GetActiveMenu().CheckMenuItem(nID, GetShowToolBar() ? MF_CHECKED : MF_UNCHECKED);
 			break;
 		}	
 	}

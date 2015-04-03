@@ -302,7 +302,6 @@ namespace Win32xx
 	//
 	class CFrame : public CDocker
 	{
-		friend class CMenuBar;
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
 
 	public:
@@ -434,19 +433,20 @@ namespace Win32xx
 		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 
-
-		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
-		CImageList m_imlMenu;				// Imagelist of menu icons
-		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
-		CRect m_rcPosition;					// Starting window position retrieved from registry
-		DWORD m_ShowCmd;					// Initial show state retrieved from registry
-		BOOL m_UseIndicatorStatus;			// set to TRUE to see indicators in status bar
-		BOOL m_UseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
-		BOOL m_UseReBar;					// set to TRUE if ReBars are to be used
-		BOOL m_UseThemes;					// set to TRUE if themes are to be used
-		BOOL m_UseToolBar;					// set to TRUE if the toolbar is used
-		BOOL m_ShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
-		BOOL m_ShowToolBar;					// A flag to indicate if the ToolBar should be displayed
+		BOOL GetShowStatusBar() const { return m_ShowStatusBar; }
+		BOOL GetShowCmd() const { return m_ShowCmd; }
+		BOOL GetShowToolBar() const { return m_ShowToolBar; }
+		BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
+		BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
+		BOOL GetUseReBar() const { return m_UseReBar; }
+		BOOL GetUseThemes() const { return m_UseThemes; }
+		BOOL GetUseToolBar() const { return m_UseToolBar; }
+		void SetShowCmd(DWORD ShowCmd) { m_ShowCmd = ShowCmd; }
+		void SetUseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
+		void SetUseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
+		void SetUseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
+		void SetUseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
+		void SetUseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
 
 	private:
 		CFrame(const CFrame&);				// Disable copy construction
@@ -484,6 +484,19 @@ namespace Win32xx
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
 		BOOL m_DrawArrowBkgrnd;				// True if a separate arrow background is to be drawn on toolbar
 		HHOOK m_KbdHook;					// Keyboard hook.
+
+		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
+		CImageList m_imlMenu;				// Imagelist of menu icons
+		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
+		CRect m_rcPosition;					// Starting window position retrieved from registry
+		DWORD m_ShowCmd;					// Initial show state retrieved from registry
+		BOOL m_UseIndicatorStatus;			// set to TRUE to see indicators in status bar
+		BOOL m_UseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
+		BOOL m_UseReBar;					// set to TRUE if ReBars are to be used
+		BOOL m_UseThemes;					// set to TRUE if themes are to be used
+		BOOL m_UseToolBar;					// set to TRUE if the toolbar is used
+		BOOL m_ShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
+		BOOL m_ShowToolBar;					// A flag to indicate if the ToolBar should be displayed
 
 	};  // class CFrame
 

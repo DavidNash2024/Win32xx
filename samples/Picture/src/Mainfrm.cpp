@@ -57,11 +57,15 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
-	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
-	// m_UseReBar = FALSE;				// Don't use a ReBar
-	// m_UseThemes = FALSE;				// Don't use themes
-	// m_UseToolBar = FALSE;			// Don't use a ToolBar
+	// OnCreate controls the way the frame is created.
+	// Overriding CFrame::Oncreate is optional.
+	// Uncomment the lines below to change frame options.
+
+	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
+	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
+	// SetUseReBar(FALSE);				// Don't use a ReBar
+	// SetUseThemes(FALSE);				// Don't use themes
+	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 	
 	return CFrame::OnCreate(pcs);
 }

@@ -321,10 +321,10 @@ namespace Win32xx
 
 		// Get the top ReBar or ToolBar's window area
 		CRect rcTop;
-		if (IsReBarSupported() && m_UseReBar)
+		if (IsReBarSupported() && GetUseReBar() )
 			rcTop = GetReBar().GetWindowRect();
 		else
-			if (m_UseToolBar && GetToolBar().IsWindowVisible())
+			if (GetUseToolBar() && GetToolBar().IsWindowVisible())
 				rcTop = GetToolBar().GetWindowRect();
 
 		// Return client size less the ReBar and status windows
@@ -353,8 +353,8 @@ namespace Win32xx
 		{	
 			if (CreateRibbon(*this))
 			{
-				m_UseReBar = FALSE;			// Don't use a ReBar
-				m_UseToolBar = FALSE;			// Don't use a ToolBar
+				SetUseReBar(FALSE);			// Don't use a ReBar
+				SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 				CFrame::OnCreate(pcs);
 				SetMenu(NULL);

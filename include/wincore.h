@@ -252,7 +252,7 @@ namespace Win32xx
 		std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
 		HDC		hDC;			// The HDC belonging to this CDC
 		long	Count;			// Reference count
-		BOOL	IsManagedHDC;	// Delete/Release the HDC on destruction
+		bool	IsManagedHDC;	// Delete/Release the HDC on destruction
 		HWND	hWnd;			// The HWND of a Window or Client window DC
 		int		nSavedDCState;	// The save state of the HDC.
 	};
@@ -264,7 +264,7 @@ namespace Win32xx
 		
 		HGDIOBJ hGDIObject;
 		long	Count;
-		BOOL	IsManagedObject;
+		bool	IsManagedObject;
 	};
 
 	struct CIml_Data	// A structure that contains the data members for CImageList
@@ -273,7 +273,7 @@ namespace Win32xx
 		CIml_Data() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
 
 		HIMAGELIST	hImageList;
-		BOOL		IsManagedHiml;
+		bool		IsManagedHiml;
 		long		Count;
 	};
 
@@ -284,7 +284,7 @@ namespace Win32xx
 
 		std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
 		HMENU hMenu;
-		BOOL IsManagedMenu;
+		bool IsManagedMenu;
 		long Count;
 	};	
 
@@ -432,21 +432,15 @@ namespace Win32xx
 	class CWinApp : public CWinThread
 	{
 		// Provide these access to CWinApp's private members:
-		friend class CBitmap;
-		friend class CBrush;
 		friend class CDC;
 		friend class CDialog;
 		friend class CFrame;
 		friend class CGDIObject;
-		friend class CFont;
 		friend class CImageList;
 		friend class CMenu;
 		friend class CMenuBar;
-		friend class CPalette;
-		friend class CPen;
 		friend class CPropertyPage;
 		friend class CPropertySheet;
-		friend class CRgn;
 		friend class CTaskDialog;
 		friend class CWinThread;
 		friend class CWnd;
@@ -499,10 +493,10 @@ namespace Win32xx
 		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
-		std::map<HDC, CDC_Data*, CompareHDC> m_CDC_Data;
-		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_CGDI_Data;
-		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_CIml_Data;
-		std::map<HMENU, CMenu_Data*, CompareHMENU> m_CMenu_Data;
+		std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
+		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
+		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
+		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
 
 #ifdef USE_OBSOLETE_CODE
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
@@ -1167,9 +1161,9 @@ namespace Win32xx
 		// Find the CDC data mapped to this HDC
 		CDC_Data* pCDCData = 0;
 		m_csMapLock.Lock();
-		m = m_CDC_Data.find(hDC);
+		m = m_mapCDCData.find(hDC);
 
-		if (m != m_CDC_Data.end())
+		if (m != m_mapCDCData.end())
 			pCDCData = m->second;
 
 		m_csMapLock.Release();
@@ -1183,9 +1177,9 @@ namespace Win32xx
 		// Find the CGDIObject data mapped to this HGDIOBJ
 		CGDI_Data* pCGDIData = 0;
 		m_csMapLock.Lock();
-		m = m_CGDI_Data.find(hObject);
+		m = m_mapCGDIData.find(hObject);
 
-		if (m != m_CGDI_Data.end())
+		if (m != m_mapCGDIData.end())
 			pCGDIData = m->second;
 
 		m_csMapLock.Release();
@@ -1199,9 +1193,9 @@ namespace Win32xx
 		// Find the CImageList data mapped to this HIMAGELIST
 		CIml_Data* pCImlData = 0;
 		m_csMapLock.Lock();
-		m = m_CIml_Data.find(himl);
+		m = m_mapCImlData.find(himl);
 
-		if (m != m_CIml_Data.end())
+		if (m != m_mapCImlData.end())
 			pCImlData = m->second;
 
 		m_csMapLock.Release();
@@ -1215,9 +1209,9 @@ namespace Win32xx
 		// Find the CMenu data mapped to this HMENU
 		CMenu_Data* pCMenuData = 0;
 		m_csMapLock.Lock();
-		m = m_CMenu_Data.find(hMenu);
+		m = m_mapCMenuData.find(hMenu);
 
-		if (m != m_CMenu_Data.end())
+		if (m != m_mapCMenuData.end())
 			pCMenuData = m->second;
 
 		m_csMapLock.Release();

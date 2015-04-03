@@ -31,7 +31,7 @@ CRect CMainFrame::GetViewRect() const
 	if (GetStatusBar().IsWindow() && (GetStatusBar().IsWindowVisible()))
 		rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-	if (IsReBarSupported() && m_UseReBar && GetReBar().IsWindow())
+	if (IsReBarSupported() && GetUseReBar() && GetReBar().IsWindow())
 		rcClient = ExcludeChildRect(rcClient, GetReBar());
 	else
 		if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
@@ -131,12 +131,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
-	// The default for the following variables is TRUE
+	// Uncomment the lines below to change frame options.
 
-	// m_UseIndicatorStatus = FALSE;	// Don't show keyboard indicators in the StatusBar
-	// m_UseMenuStatus = FALSE;			// Don't show menu descriptions in the StatusBar
-	// m_UseReBar = FALSE;				// Don't use a ReBar
-	// m_UseThemes = FALSE;				// Don't use themes
+	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
+	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
+	// SetUseThemes(FALSE);				// Don't use themes
+	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
 	CFrame::OnCreate(pcs);
@@ -252,11 +252,11 @@ void CMainFrame::RecalcLayout()
 			return;
 
 		// Resize the status bar
-		if (GetStatusBar().IsWindow() && m_ShowStatusBar)
+		if (GetStatusBar().IsWindow() && GetShowStatusBar())
 		{
 			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar().Invalidate();
-			if (m_UseMenuStatus)
+			if (GetUseMenuStatus())
 				GetStatusBar().SetWindowText(GetStatusText());
 
 			SetStatusIndicators();
@@ -268,7 +268,7 @@ void CMainFrame::RecalcLayout()
 			GetReBar().SendMessage(WM_SIZE, 0L, 0L);
 			GetReBar().Invalidate();
 		}
-		else if (m_UseToolBar && m_ShowToolBar && GetToolBar().IsWindow())
+		else if (GetUseToolBar() && GetShowToolBar() && GetToolBar().IsWindow())
 			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the additional rebar at the top, left, right or bottom of the view.
