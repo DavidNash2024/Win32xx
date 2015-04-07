@@ -43,6 +43,9 @@ protected:
 	virtual void OnFileSaveAs();
 	virtual void OnFileSave();
 	virtual void OnInitialUpdate();
+	virtual void OnMenuUpdate(UINT nID);
+	virtual void OnOptionsFont();
+	virtual void OnOptionsWrap();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -50,6 +53,7 @@ protected:
 private:
 	CRichView m_RichView;
 	CString m_strPathName;
+	BOOL m_IsWrapped;
 };
 
 #endif //MAINFRM_H

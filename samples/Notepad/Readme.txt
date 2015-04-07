@@ -12,3 +12,5 @@ Features demonstrated in this example
 * Copy and paste
 * File drag and drop
 * Text file printing
+* Choosing the font.
+* Enabling and disabling word wrap

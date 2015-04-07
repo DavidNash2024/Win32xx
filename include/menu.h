@@ -176,21 +176,11 @@ namespace Win32xx
 		operator HMENU () const;
 
 	private:
-	/*	struct DataMembers
-		{
-			// Constructor
-			DataMembers() : hMenu(0), IsManagedMenu(FALSE), Count(1L) {}
-
-			std::vector<MenuPtr> vSubMenus;	// A vector of smart pointers to CMenu
-			HMENU hMenu;
-			BOOL IsManagedMenu;
-			long Count;
-		}; */			
-
 		void AddToMap();
 		void Release();
 		BOOL RemoveFromMap();
 		CMenu_Data* m_pData;
+		
 	};
 
 } // namespace Win32xx
@@ -380,7 +370,6 @@ namespace Win32xx
 			if (hMenu)
 			{
 				// Add the menu to this CMenu
-			//	CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
 				CMenu_Data* pCMenuData = GetApp()->GetCMenuDataFromMap(hMenu);
 				if (pCMenuData)
 				{

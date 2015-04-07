@@ -121,16 +121,6 @@ namespace Win32xx
 		operator HIMAGELIST () const;
 
 	private:
-	/*	struct DataMembers	// A structure that contains the data members
-		{
-			// Constructor
-			DataMembers() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
-
-			HIMAGELIST	hImageList;
-			BOOL		IsManagedHiml;
-			long		Count;
-		}; */
-
 		void AddToMap();
 		void Release();
 		BOOL RemoveFromMap();
@@ -260,7 +250,8 @@ namespace Win32xx
 	}
 
 	inline int CImageList::Add(HBITMAP hbmImage, HBITMAP hbmMask)
-	// Adds an image or images to an image list. The pbmMask parameter can be NULL.
+	// Adds an image or images to an image list, generating a mask from the specified bitmap. 
+	// The hbmMask parameter can be NULL.
 	{
 		assert(m_pData);
 		assert (m_pData->hImageList);
@@ -268,7 +259,7 @@ namespace Win32xx
 	}
 
 	inline int CImageList::Add(HBITMAP hbmImage, COLORREF crMask)
-	// Adds an image or images to an image list, generating a mask from the specified bitmap.
+	// Adds an image or images to an image list, using the specified color as the mask.
 	{
 		assert(m_pData);
 		assert (m_pData->hImageList);
@@ -303,7 +294,6 @@ namespace Win32xx
 			if (hImageList)
 			{
 				// Add the image list to this CImageList
-			//	CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
 				CIml_Data* pCImlData = GetApp()->GetCImlDataFromMap(hImageList);
 				if (pCImlData)
 				{

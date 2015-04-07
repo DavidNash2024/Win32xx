@@ -20,7 +20,9 @@
 #define IDM_EDIT_COPY                   133
 #define IDM_EDIT_PASTE                  134
 #define IDM_EDIT_DELETE                 135
-#define IDM_HELP_ABOUT                  140
+#define IDM_OPTIONS_FONT                140
+#define IDM_OPTIONS_WRAP                141
+#define IDM_HELP_ABOUT                  150
 
 // Next default values for new objects
 // 

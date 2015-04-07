@@ -1134,13 +1134,11 @@ namespace Win32xx
 	inline CBitmap::CBitmap(LPCTSTR lpszName)
 	{
 		LoadBitmap(lpszName);
-		SetManaged(true);
 	}
 
 	inline CBitmap::CBitmap(int nID)
 	{
 		LoadBitmap(nID);
-		SetManaged(true);
 	}
 
 	inline CBitmap::operator HBITMAP() const

@@ -9,7 +9,7 @@
 
 
 // definitions for the CMainFrame class
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_IsWrapped(FALSE)
 {
 	m_strPathName = _T("");
 	SetView(m_RichView);
@@ -82,6 +82,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_OPTIONS_WRAP:      OnOptionsWrap();	return TRUE;
+	case IDM_OPTIONS_FONT:		OnOptionsFont();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
 
 	case IDW_FILE_MRU_FILE1:
@@ -265,6 +267,63 @@ void CMainFrame::OnEditRedo()
 void CMainFrame::OnEditUndo()
 {
 	m_RichView.Undo();
+}
+
+void CMainFrame::OnMenuUpdate(UINT nID)
+{
+	if (nID == IDM_OPTIONS_WRAP)
+	{
+		GetFrameMenu().CheckMenuItem(nID, m_IsWrapped ? MF_CHECKED : MF_UNCHECKED);
+	}
+
+	CFrame::OnMenuUpdate(nID);
+}
+
+void CMainFrame::OnOptionsFont()
+{
+	// Retrieve the current character format
+	CHARFORMAT2 cf2;
+	ZeroMemory (&cf2, sizeof(cf2));
+	cf2.cbSize = sizeof(cf2);
+	cf2.dwMask = CFM_COLOR|CFM_FACE|CFM_EFFECTS;
+	m_RichView.GetDefaultCharFormat(cf2);
+
+	// Fill the LOGFONT struct from CHARFORMAT2
+	LOGFONT lf;
+	ZeroMemory(&lf, sizeof(lf));
+	lstrcpy(lf.lfFaceName, cf2.szFaceName);
+	lf.lfHeight = cf2.yHeight/15;
+	lf.lfWeight = (cf2.dwEffects & CFE_BOLD)? 700 : 400;
+	lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);
+
+	// Fill the CHOOSEFONT stucture
+	CHOOSEFONT cf;
+	ZeroMemory(&cf, sizeof(cf));
+	cf.lStructSize = sizeof(cf);
+	cf.hwndOwner = *this;
+	cf.lpLogFont = &lf;						// current logfont
+	cf.rgbColors = cf2.crTextColor;			// current text color
+	cf.lpLogFont = &lf;
+	cf.Flags = CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT;
+
+	if (ChooseFont(&cf))
+	{
+		// Set the Font
+		CFont RichFont(cf.lpLogFont);
+		m_RichView.SetFont(RichFont, TRUE);
+
+		// Set the font color
+		cf2.crTextColor = cf.rgbColors;
+		cf2.dwEffects = 0;
+		cf2.dwMask = CFM_COLOR;
+		m_RichView.SetDefaultCharFormat(cf2);
+	}
+}
+
+void CMainFrame::OnOptionsWrap()
+{
+	m_RichView.SetTargetDevice(NULL, m_IsWrapped);
+	m_IsWrapped = !m_IsWrapped;
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)

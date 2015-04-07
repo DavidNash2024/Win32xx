@@ -81,11 +81,16 @@ used instead of the handle.
  - These classes use reference counting, so they can be safely copied. This
    allows them to be returned by value from functions.
    
- * The various CFrame protected member variables are now private. Setters
+* The various CFrame protected member variables are now private. Setters
    and getters are used to access them. Frame creation options that can be
    set in CMainFrame::OnCreate are now CFrame member functions rather than
    protected CFrame member variables. e.g. we now use SetUseThemes(FALSE)
-   in place of m_UseThemes = FALSE .   
+   in place of m_UseThemes = FALSE .
+   
+* Updated Samples
+ - Added round window sample.
+ - Added choose font and word wrap options to notepad sample.
+ - Updated black theme in themes sample.
    
 
 Step by step guide to code migration
