@@ -18,7 +18,9 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
-	virtual void SetPen(COLORREF  Color);
+
+	COLORREF GetPenColor() { return m_PenColor; }
+	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
 protected:
 	virtual void OnDraw(CDC& dc);

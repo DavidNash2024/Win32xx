@@ -18,10 +18,12 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
-	virtual void ClearPoints();
-	virtual BOOL FileOpen(LPCTSTR szFilename);
-	virtual BOOL FileSave(LPCTSTR szFilename);
-	virtual void SetPen(COLORREF Color);
+	void ClearPoints();
+	BOOL FileOpen(LPCTSTR szFilename);
+	BOOL FileSave(LPCTSTR szFilename);
+	
+	COLORREF GetPenColor() { return m_PenColor; }
+	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
 protected:
 	virtual void OnDraw(CDC& dc);

@@ -91,6 +91,12 @@ used instead of the handle.
  - Added round window sample.
  - Added choose font and word wrap options to notepad sample.
  - Updated black theme in themes sample.
+ 
+* Updated the documentation
+  - Within Using Win32++
+    - Updated Graphics Device Intereface (GDI)
+	- Added ImageLists
+	- Added Menus
    
 
 Step by step guide to code migration

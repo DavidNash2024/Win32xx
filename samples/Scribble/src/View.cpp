@@ -151,11 +151,6 @@ BOOL CView::FileSave(LPCTSTR szFilename)
 	return bResult;
 }
 
-void CView::SetPen(COLORREF color)
-{
-	m_PenColor = color;
-}
-
 void CView::StorePoint(int x, int y, bool PenDown)
 {
 	PlotPoint P1;

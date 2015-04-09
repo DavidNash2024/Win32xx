@@ -338,9 +338,6 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 		return FALSE;
 	}
 
-	//Set default font and color
-	m_RichView.SetFontDefaults();
-
 	EDITSTREAM es;
 	es.dwCookie =  (DWORD_PTR) File.GetHandle();
 	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;

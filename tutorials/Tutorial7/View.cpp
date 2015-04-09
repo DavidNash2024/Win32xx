@@ -56,11 +56,6 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
-void CView::SetPen(COLORREF color)
-{
-	m_PenColor = color;
-}
-
 void CView::StorePoint(int x, int y, bool PenDown)
 {
 	PlotPoint P1;

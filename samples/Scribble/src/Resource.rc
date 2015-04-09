@@ -187,10 +187,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDM_PEN_RED              "Red Pen"
-    IDM_PEN_BLUE             "Blue Pen"
-    IDM_PEN_GREEN            "Green Pen"
-    IDM_PEN_BLACK            "Black Pen"
+    IDM_PEN_COLOR            "Select Pen Color"
 END
 
 STRINGTABLE

@@ -26,19 +26,11 @@ protected:
 	virtual void OnFileSaveAs();
 	virtual void OnFilePrint();
 	virtual void OnInitialUpdate();
-	virtual void OnPenBlack();
-	virtual void OnPenBlue();
-	virtual void OnPenGreen();
-	virtual void OnPenRed();
+	virtual void OnPenColor();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	enum Pens
-	{
-		RED, BLUE, GREEN, BLACK
-	};
-
 	CView m_View;
 	CString m_PathName;
 

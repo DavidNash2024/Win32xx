@@ -433,8 +433,8 @@ namespace Win32xx
 		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 
+		DWORD GetShowCmd() const { return m_ShowCmd; }
 		BOOL GetShowStatusBar() const { return m_ShowStatusBar; }
-		BOOL GetShowCmd() const { return m_ShowCmd; }
 		BOOL GetShowToolBar() const { return m_ShowToolBar; }
 		BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
 		BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }

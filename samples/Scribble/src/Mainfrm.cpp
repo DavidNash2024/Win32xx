@@ -36,10 +36,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
 	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
 	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
-	case IDM_PEN_RED:			OnPenRed();			return TRUE;
-	case IDM_PEN_BLUE:			OnPenBlue();		return TRUE;
-	case IDM_PEN_GREEN:			OnPenGreen();		return TRUE;
-	case IDM_PEN_BLACK:			OnPenBlack();		return TRUE;
+	case IDM_PEN_COLOR:			OnPenColor();		return TRUE;
 	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
 	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
 	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
@@ -281,28 +278,22 @@ void CMainFrame::OnInitialUpdate()
 */
 }
 
-void CMainFrame::OnPenBlack()
+void CMainFrame::OnPenColor()
 {
-	TRACE("Black pen selected\n");
-	m_View.SetPen(RGB(0,0,0));
-}
+	static COLORREF CustColors[16] = {0};	// array of custom colors
+	CHOOSECOLOR cc = {0};					// Structure used by ChooseColor
 
-void CMainFrame::OnPenBlue()
-{
-	TRACE("Blue pen selected\n");
-	m_View.SetPen(RGB(0,0,255));
-}
-
-void CMainFrame::OnPenGreen()
-{
-	TRACE("Green pen selected\n");
-	m_View.SetPen(RGB(0,196,0));
-}
-
-void CMainFrame::OnPenRed()
-{
-	TRACE("Red pen selected\n");
-	m_View.SetPen(RGB(255,0,0));
+	cc.lStructSize = sizeof(CHOOSECOLOR);
+	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
+	cc.rgbResult = m_View.GetPenColor();
+	cc.lpCustColors = CustColors;
+	cc.hwndOwner = *this;
+	
+	// Initiate the Choose Color dialog
+	if (ChooseColor(&cc)==TRUE) 
+	{
+		m_View.SetPenColor(cc.rgbResult);
+	}
 }
 
 void CMainFrame::SetupToolBar()
@@ -317,10 +308,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_EDIT_PASTE, FALSE );
 	AddToolBarButton( IDM_FILE_PRINT );
 	AddToolBarButton( 0 );				// Separator
-	AddToolBarButton( IDM_PEN_RED    );
-	AddToolBarButton( IDM_PEN_BLUE   );
-	AddToolBarButton( IDM_PEN_GREEN  );
-	AddToolBarButton( IDM_PEN_BLACK  );
+	AddToolBarButton( IDM_PEN_COLOR );
 	AddToolBarButton( 0 );				// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
 }

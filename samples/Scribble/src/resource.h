@@ -23,10 +23,7 @@
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
 
-#define IDM_PEN_RED                     150
-#define IDM_PEN_BLUE                    151
-#define IDM_PEN_GREEN                   152
-#define IDM_PEN_BLACK                   153
+#define IDM_PEN_COLOR                   150
 
 //Resource ID for the cursor
 #define IDC_CURSOR1                     160

@@ -13,10 +13,9 @@ CView::CView()
 
 void CView::OnColor()
 {
-	COLORREF CustColors[16];	// array of custom colors 
-	CHOOSECOLOR cc;				// Structure used by ChooseColor
+	static COLORREF CustColors[16] = {0};	// array of custom colors
+	CHOOSECOLOR cc = {0};			// Structure used by ChooseColor
 
-	ZeroMemory(&cc, sizeof(CHOOSECOLOR)); 
 	cc.lStructSize = sizeof(CHOOSECOLOR);
 	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
 	cc.rgbResult = m_Brush.GetLogBrush().lbColor;
@@ -191,6 +190,7 @@ LRESULT CView::OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass this message on for default processing
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
+
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// This function is our message procedure. We process the messages for
