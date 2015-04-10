@@ -14,16 +14,16 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
-	virtual CStatusBar& GetStatusBar() const	{ return const_cast<CMyStatusBar&>(m_MyStatusBar); }
+	BOOL	OnFileExit();
+	BOOL	OnFileOpen();
+	BOOL	OnFilePrint();
+	BOOL	OnFileSave();
 
 protected:
+	virtual CStatusBar& GetStatusBar() const	{ return const_cast<CMyStatusBar&>(m_MyStatusBar); }
 	virtual BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int		OnCreate(LPCREATESTRUCT pcs);
 	virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void	OnFileExit();
-	virtual void	OnFileOpen();
-	virtual void	OnFilePrint();
-	virtual void	OnFileSave();
 	virtual void	OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void	PreCreate(CREATESTRUCT &cs);

@@ -68,35 +68,35 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
-	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
-	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
-	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
-	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
-	case IDM_EDIT_COPY:			OnEditCopy();		return TRUE;
-	case IDM_EDIT_PASTE:		OnEditPaste();		return TRUE;
-	case IDM_EDIT_CUT:			OnEditCut();		return TRUE;
-	case IDM_EDIT_DELETE:		OnEditDelete();		return TRUE;
-	case IDM_EDIT_REDO:			OnEditRedo();		return TRUE;
-	case IDM_EDIT_UNDO:			OnEditUndo();		return TRUE;
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
-	case IDM_OPTIONS_WRAP:      OnOptionsWrap();	return TRUE;
-	case IDM_OPTIONS_FONT:		OnOptionsFont();	return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_FILE_NEW:			return OnFileNew();
+	case IDM_FILE_OPEN:			return OnFileOpen();
+	case IDM_FILE_SAVE:			return OnFileSave();
+	case IDM_FILE_SAVEAS:		return OnFileSaveAs();
+	case IDM_FILE_PRINT:		return OnFilePrint();
+	case IDM_EDIT_COPY:			return OnEditCopy();
+	case IDM_EDIT_PASTE:		return OnEditPaste();
+	case IDM_EDIT_CUT:			return OnEditCut();
+	case IDM_EDIT_DELETE:		return OnEditDelete();
+	case IDM_EDIT_REDO:			return OnEditRedo();
+	case IDM_EDIT_UNDO:			return OnEditUndo();
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_OPTIONS_WRAP:      return OnOptionsWrap();
+	case IDM_OPTIONS_FONT:		return OnOptionsFont();
+	case IDM_HELP_ABOUT:		return OnHelp();
 
 	case IDW_FILE_MRU_FILE1:
 	case IDW_FILE_MRU_FILE2:
 	case IDW_FILE_MRU_FILE3:
 	case IDW_FILE_MRU_FILE4:
-	case IDW_FILE_MRU_FILE5:	OnFileMRU(wParam);	return TRUE;
+	case IDW_FILE_MRU_FILE5:	return OnFileMRU(wParam);
 	}
 
 	return FALSE;
 }
 
-void CMainFrame::OnDropFiles(HDROP hDropInfo)
+BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
 	TCHAR szFileName[_MAX_PATH];
 	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
@@ -108,15 +108,18 @@ void CMainFrame::OnDropFiles(HDROP hDropInfo)
 		SetWindowTitle();
 		AddMRUEntry(szFileName);
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnFileMRU(WPARAM wParam)
+BOOL CMainFrame::OnFileMRU(WPARAM wParam)
 {
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	CString strMRUText = GetMRUEntry(nMRUIndex);
@@ -127,18 +130,20 @@ void CMainFrame::OnFileMRU(WPARAM wParam)
 		RemoveMRUEntry(strMRUText);
 
 	SetWindowTitle();
+	return TRUE;
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
 	m_RichView.SetWindowText(_T(""));
 	m_strPathName = _T("");
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
 	m_RichView.SetModify(FALSE);
+	return TRUE;
 }
 
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
 	PRINTDLG pd;
 
@@ -242,31 +247,44 @@ void CMainFrame::OnFilePrint()
 		// Delete DC when done.
 		::DeleteDC(hPrinterDC);
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnEditCut()
+BOOL CMainFrame::OnEditCut()
 {
 	m_RichView.Cut();
+	return TRUE;
 }
-void CMainFrame::OnEditCopy()
+
+BOOL CMainFrame::OnEditCopy()
 {
 	m_RichView.Copy();
+	return TRUE;
 }
-void CMainFrame::OnEditPaste()
+
+BOOL CMainFrame::OnEditPaste()
 {
 	m_RichView.PasteSpecial(CF_TEXT);
+	return TRUE;
 }
-void CMainFrame::OnEditDelete()
+
+BOOL CMainFrame::OnEditDelete()
 {
 	m_RichView.Clear();
+	return TRUE;
 }
-void CMainFrame::OnEditRedo()
+
+BOOL CMainFrame::OnEditRedo()
 {
 	m_RichView.Redo();
+	return TRUE;
 }
-void CMainFrame::OnEditUndo()
+
+BOOL CMainFrame::OnEditUndo()
 {
 	m_RichView.Undo();
+	return TRUE;
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -279,7 +297,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
-void CMainFrame::OnOptionsFont()
+BOOL CMainFrame::OnOptionsFont()
 {
 	// Retrieve the current character format
 	CHARFORMAT2 cf2;
@@ -318,12 +336,15 @@ void CMainFrame::OnOptionsFont()
 		cf2.dwMask = CFM_COLOR;
 		m_RichView.SetDefaultCharFormat(cf2);
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnOptionsWrap()
+BOOL CMainFrame::OnOptionsWrap()
 {
 	m_RichView.SetTargetDevice(NULL, m_IsWrapped);
 	m_IsWrapped = !m_IsWrapped;
+	return TRUE;
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
@@ -374,7 +395,7 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 	return TRUE;
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
@@ -389,17 +410,21 @@ void CMainFrame::OnFileOpen()
 		AddMRUEntry(str);
 		SetWindowTitle();
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
 	if (m_strPathName == _T(""))
 		OnFileSaveAs();
 	else
 		WriteFile(m_strPathName);
+
+	return TRUE;
 }
 
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
@@ -414,6 +439,8 @@ void CMainFrame::OnFileSaveAs()
 		AddMRUEntry(str);
 		SetWindowTitle();
 	}
+
+	return TRUE;
 }
 
 void CMainFrame::SetFileName(LPCTSTR szFilePathName)

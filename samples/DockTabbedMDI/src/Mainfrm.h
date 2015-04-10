@@ -35,11 +35,21 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
 	void HideSingleContainerTab(BOOL HideSingle);
-	void OnFileNew();
-	void OnContainerTabsAtTop();
-	void OnHideSingleTab();
-	void OnMDITabsAtTop();
+	BOOL OnCloseMDIs();
+	BOOL OnCloseDockers();
+	BOOL OnContainerTabsAtTop();
+	BOOL OnDefaultLayout();
+	BOOL OnFileNew();
+	BOOL OnFileExit();
+	BOOL OnFileNewSimple();
+	BOOL OnFileNewRect();
+	BOOL OnFileNewList();
+	BOOL OnFileNewText();
+	BOOL OnFileNewTree();
+	BOOL OnHideSingleTab();
+	BOOL OnMDITabsAtTop();
 	void LoadDefaultDockers();
 	void LoadDefaultMDIs();
 	void SetContainerTabsAtTop(BOOL bTop);
@@ -48,20 +58,11 @@ public:
 protected:
 	virtual CDocker* NewDockerFromID(int idDock);
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void	OnCloseMDIs();
 	virtual int     OnCreate(LPCREATESTRUCT pcs);
-	virtual void	OnFileExit();
-	virtual void	OnFileNewSimple();
-	virtual void	OnFileNewRect();
-	virtual void	OnFileNewList();
-	virtual void	OnFileNewText();
-	virtual void	OnFileNewTree();
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void	OnDefaultLayout();
 	virtual void    OnMenuUpdate(UINT nID);
 	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void	OnCloseDockers();
 	virtual void    PreCreate(CREATESTRUCT &cs);
 	virtual BOOL    SaveRegistrySettings();
 	virtual void    SetupToolBar();

@@ -387,8 +387,8 @@ namespace Win32xx
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual LRESULT OnUndocked();
-		virtual void OnViewStatusBar();
-		virtual void OnViewToolBar();
+		virtual BOOL OnViewStatusBar();
+		virtual BOOL OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
@@ -933,11 +933,8 @@ namespace Win32xx
 		}
 		else
 		{
-			int Oldcx;
-			int Oldcy;
-
-			m_imlMenu.GetIconSize(&Oldcx, &Oldcy);
-			if (iImageHeight != Oldcy)
+			CSize szImage = m_imlMenu.GetIconSize();
+			if (iImageHeight != szImage.cy)
 			{
 				TRACE("Unable to add icons. The new icons are a different size to the old ones\n");
 				return (UINT)m_vMenuIcons.size();
@@ -1312,24 +1309,22 @@ namespace Win32xx
 						BOOL IsWin95 = (1400 == (GetWinVersion()) || (2400 == GetWinVersion()));
 
 						// Calculate image position
-						int cxImage = 0;
-						int cyImage = 0;
-						imlToolBar.GetIconSize(&cxImage, &cyImage);
+						CSize szImage = imlToolBar.GetIconSize();
 
-						int yImage = (rcRect.bottom + rcRect.top - cyImage - TextSize.cy )/2;
-						int xImage = (rcRect.right + rcRect.left - cxImage)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+						int yImage = (rcRect.bottom + rcRect.top - szImage.cy - TextSize.cy )/2;
+						int xImage = (rcRect.right + rcRect.left - szImage.cx)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
 						if (dwTBStyle & TBSTYLE_LIST)
 						{
 							xImage = rcRect.left + (IsXPThemed()?2:4) + ((nState & CDIS_SELECTED)? 1:0);
-							yImage = (rcRect.bottom -rcRect.top - cyImage +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
+							yImage = (rcRect.bottom -rcRect.top - szImage.cy +2)/2 + ((nState & (CDIS_SELECTED|CDIS_CHECKED))? 1:0);
 						}
 
 						// Handle the TBSTYLE_DROPDOWN and BTNS_WHOLEDROPDOWN styles
 						if ((nStyle & TBSTYLE_DROPDOWN) || ((nStyle & 0x0080) && (!IsWin95)))
 						{
 							// Calculate the dropdown arrow position
-							int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + cxImage + 4)/2;
-							int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (cyImage)/2;
+							int xAPos = (nStyle & TBSTYLE_DROPDOWN)? rcRect.right -6 : (rcRect.right + rcRect.left + szImage.cx + 4)/2;
+							int yAPos = (nStyle & TBSTYLE_DROPDOWN)? (rcRect.bottom - rcRect.top +1)/2 : (szImage.cy)/2;
 							if (dwTBStyle & TBSTYLE_LIST)
 							{
 								xAPos = (nStyle & TBSTYLE_DROPDOWN)?rcRect.right -6:rcRect.right -5;
@@ -1378,11 +1373,11 @@ namespace Win32xx
 							CRect rcText(0, 0, MIN(TextSize.cx, iWidth), TextSize.cy);
 
 							int xOffset = (rcRect.right + rcRect.left - rcText.right + rcText.left - ((nStyle & TBSTYLE_DROPDOWN)? 11 : 1))/2;
-							int yOffset = yImage + cyImage +1;
+							int yOffset = yImage + szImage.cy +1;
 
 							if (dwTBStyle & TBSTYLE_LIST)
 							{
-								xOffset = rcRect.left + cxImage + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
+								xOffset = rcRect.left + szImage.cx + ((nStyle & TBSTYLE_DROPDOWN)?(IsXPThemed()?10:6): 6) + ((nState & CDIS_SELECTED)? 1:0);
 								yOffset = (2+rcRect.bottom - rcRect.top - rcText.bottom + rcText.top)/2 + ((nState & CDIS_SELECTED)? 1:0);
 								rcText.right = MIN(rcText.right,  rcRect.right - xOffset);
 							}
@@ -2617,16 +2612,18 @@ namespace Win32xx
 		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
 	}
 
-	inline void CFrame::OnViewStatusBar()
+	inline BOOL CFrame::OnViewStatusBar()
 	{
 		m_ShowStatusBar = !m_ShowStatusBar;
 		ShowStatusBar(m_ShowStatusBar);
+		return TRUE;
 	}
 
-	inline void CFrame::OnViewToolBar()
+	inline BOOL CFrame::OnViewToolBar()
 	{
 		m_ShowToolBar = m_UseToolBar ? !m_ShowToolBar : FALSE;
 		ShowToolBar(m_ShowToolBar);
+		return TRUE;
 	}
 
 	inline void CFrame::PreCreate(CREATESTRUCT& cs)

@@ -69,33 +69,38 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:
-		// Issue a close request to the frame
-		PostMessage(WM_CLOSE);
-		return TRUE;
-	case IDM_DOCK_DEFAULT:
-		SetRedraw(FALSE);
-		CloseAllDockers();
-		LoadDefaultDockers();
-		SetRedraw(TRUE);
-		RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
-		return TRUE;
-	case IDM_DOCK_CLOSEALL:
-		CloseAllDockers();
-		return TRUE;
-	case IDW_VIEW_STATUSBAR:
-		OnViewStatusBar();
-		return TRUE;
-	case IDW_VIEW_TOOLBAR:
-		OnViewToolBar();
-		return TRUE;
-	case IDM_HELP_ABOUT:
-		// Display the help dialog
-		OnHelp();
-		return TRUE;
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_DOCK_DEFAULT:		return OnDockDefault();
+	case IDM_DOCK_CLOSEALL:		return OnDockCloseAll();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_HELP_ABOUT:		return OnHelp();
 	}
 
 	return FALSE;
+}
+
+BOOL CMainFrame::OnDockDefault()
+{
+	SetRedraw(FALSE);
+	CloseAllDockers();
+	LoadDefaultDockers();
+	SetRedraw(TRUE);
+	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	return TRUE;
+}
+
+BOOL CMainFrame::OnDockCloseAll()
+{
+	CloseAllDockers();
+	return TRUE;
+}
+
+BOOL CMainFrame::OnFileExit()
+{
+	// Issue a close request to the frame
+	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT pcs)

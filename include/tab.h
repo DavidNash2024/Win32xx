@@ -543,11 +543,8 @@ namespace Win32xx
 				{
 					CString str = GetTabText(i);
 					int iImage = GetTabImageID(i);
-					int cxImage;
-					int cyImage;
-					int yOffset = 0;
-					if ( m_imlODTab.GetIconSize(&cxImage, &cyImage) )
-						yOffset = (rcItem.Height() - cyImage)/2;
+					CSize szImage = m_imlODTab.GetIconSize();	
+					int yOffset = (rcItem.Height() - szImage.cy)/2;
 
 					// Draw the icon
 					m_imlODTab.Draw(dcMem, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);

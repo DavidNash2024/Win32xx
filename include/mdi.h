@@ -186,8 +186,8 @@ namespace Win32xx
 		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    OnMenuUpdate(UINT nID);
-		virtual void    OnViewStatusBar();
-		virtual void    OnViewToolBar();
+		virtual BOOL    OnViewStatusBar();
+		virtual BOOL    OnViewToolBar();
 		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
@@ -430,16 +430,18 @@ namespace Win32xx
 		}	
 	}
 
-	inline void CMDIFrame::OnViewStatusBar()
+	inline BOOL CMDIFrame::OnViewStatusBar()
 	{
 		CFrame::OnViewStatusBar();
 		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		return TRUE;
 	}
 
-	inline void CMDIFrame::OnViewToolBar()
+	inline BOOL CMDIFrame::OnViewToolBar()
 	{
 		CFrame::OnViewToolBar();
 		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		return TRUE;
 	}
 
 	inline LRESULT CMDIFrame::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)

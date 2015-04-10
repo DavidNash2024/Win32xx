@@ -22,13 +22,13 @@ protected:
 	virtual void OnOK();
 
 private:
-	void OnButton();
-	void OnRadio1();
-	void OnRadio2();
-	void OnRadio3();
-	void OnCheck1();
-	void OnCheck2();
-	void OnCheck3();
+	BOOL OnButton();
+	BOOL OnRadio1();
+	BOOL OnRadio2();
+	BOOL OnRadio3();
+	BOOL OnCheck1();
+	BOOL OnCheck2();
+	BOOL OnCheck3();
 
 	CResizer m_Resizer;
 	HMODULE m_hInstRichEdit;

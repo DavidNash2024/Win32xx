@@ -18,18 +18,23 @@ public:
 	CMainMDIFrame(void);
 	virtual ~CMainMDIFrame();
 
+	BOOL OnFileClose();
+	BOOL OnFileExit();
+	BOOL OnFileNew();
+	BOOL OnFileNewList();
+	BOOL OnFileNewMax();
+	BOOL OnFileNewRect();
+	BOOL OnFileNewText();
+	BOOL OnFileNewTree();
+	BOOL OnFileNewView();
+	BOOL OnMDICascade() { MDICascade(); return TRUE; }
+	BOOL OnMDICloseAll() { RemoveAllMDIChildren(); return TRUE; }
+	BOOL OnMDIIconArrange() { MDIIconArrange(); return TRUE; }
+	BOOL OnMDITile() { MDITile(); return TRUE; }
+
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnFileClose();
-	virtual void OnFileExit();
-	virtual void OnFileNew();
-	virtual void OnFileNewList();
-	virtual void OnFileNewMax();
-	virtual void OnFileNewRect();
-	virtual void OnFileNewText();
-	virtual void OnFileNewTree();
-	virtual void OnFileNewView();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolBar();

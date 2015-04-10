@@ -11,7 +11,7 @@ CView::CView()
 	m_Brush.CreateSolidBrush( RGB(250, 230, 100) );
 }
 
-void CView::OnColor()
+BOOL CView::OnColor()
 {
 	static COLORREF CustColors[16] = {0};	// array of custom colors
 	CHOOSECOLOR cc = {0};			// Structure used by ChooseColor
@@ -29,6 +29,8 @@ void CView::OnColor()
 		SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
 		Invalidate();
 	}
+
+	return TRUE;
 }
 
 BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -37,8 +39,8 @@ BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_COLOR:		OnColor();		return TRUE;	
-	case IDM_EXIT:		OnExit();		return TRUE;
+	case IDM_COLOR:		return OnColor();
+	case IDM_EXIT:		return OnExit();
 	}
 
 	// return FALSE for unhandled commands
@@ -93,10 +95,12 @@ void CView::OnDraw(CDC& dc)
 	dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-void CView::OnExit()
+BOOL CView::OnExit()
 {
 	// Post a WM_CLOSE message to end the application
 	PostMessage(WM_CLOSE);
+
+	return TRUE;
 }
 
 void CView::OnInitialUpdate()

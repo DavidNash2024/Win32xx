@@ -29,7 +29,7 @@ void CMainMDIFrame::OnInitialUpdate()
 	//Place any additional startup code here.
 }
 
-void CMainMDIFrame::OnFileNew()
+BOOL CMainMDIFrame::OnFileNew()
 {
 	// Creates the popup menu when the "New" toolbar button is pressed
 
@@ -48,28 +48,30 @@ void CMainMDIFrame::OnFileNew()
 
 	// Start the popup menu
 	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+
+	return TRUE;
 }
 
 BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:		 OnFileNew();			 return TRUE;
-	case IDM_FILE_NEWVIEW:	 OnFileNewView();		 return TRUE;
-	case IDM_FILE_NEWRECT:	 OnFileNewRect();		 return TRUE;
-	case IDM_FILE_NEWTEXT:	 OnFileNewText();		 return TRUE;
-	case IDM_FILE_NEWMAX:	 OnFileNewMax();		 return TRUE;
-	case IDM_FILE_NEWTREE:	 OnFileNewTree();		 return TRUE;
-	case IDM_FILE_NEWLIST:	 OnFileNewList();		 return TRUE;
-	case IDM_FILE_CLOSE:	 OnFileClose();			 return TRUE;
-	case IDM_FILE_EXIT:		 OnFileExit();			 return TRUE;
-	case IDM_HELP_ABOUT:	 OnHelp();				 return TRUE;
-	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		 return TRUE;
-	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		 return TRUE;
-	case IDW_MDI_ARRANGE:	 MDIIconArrange();		 return TRUE;
-	case IDW_MDI_CASCADE:	 MDICascade();			 return TRUE;
-	case IDW_MDI_CLOSEALL:	 RemoveAllMDIChildren(); return TRUE;
-	case IDW_MDI_TILE:		 MDITile();				 return TRUE;
+	case IDM_FILE_NEW:		 return OnFileNew();
+	case IDM_FILE_NEWVIEW:	 return OnFileNewView();
+	case IDM_FILE_NEWRECT:	 return OnFileNewRect();
+	case IDM_FILE_NEWTEXT:	 return OnFileNewText();
+	case IDM_FILE_NEWMAX:	 return OnFileNewMax();
+	case IDM_FILE_NEWTREE:	 return OnFileNewTree();
+	case IDM_FILE_NEWLIST:	 return OnFileNewList();
+	case IDM_FILE_CLOSE:	 return OnFileClose();
+	case IDM_FILE_EXIT:		 return OnFileExit();
+	case IDM_HELP_ABOUT:	 return OnHelp();
+	case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:	 return OnViewToolBar();
+	case IDW_MDI_ARRANGE:	 return OnMDIIconArrange();
+	case IDW_MDI_CASCADE:	 return OnMDICascade();
+	case IDW_MDI_CLOSEALL:	 return OnMDICloseAll();
+	case IDW_MDI_TILE:		 return OnMDITile();
 	default:    // Pass to active child...
 		{
 			if (GetActiveMDIChild())
@@ -98,46 +100,56 @@ int CMainMDIFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CMDIFrame::OnCreate(pcs);
 }
 
-void CMainMDIFrame::OnFileClose()
+BOOL CMainMDIFrame::OnFileClose()
 {
 	// Ask the active MDI window to close
 	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileExit()
+BOOL CMainMDIFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNewList()
+BOOL CMainMDIFrame::OnFileNewList()
 {
-	AddMDIChild(new CMDIChildListView);	// CMDIFrame::RemoveMDIChild deletes this pointer
+	AddMDIChild(new CMDIChildListView);	// This pointer is stored in a Shared_Ptr
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNewMax()
+BOOL CMainMDIFrame::OnFileNewMax()
 {
 	AddMDIChild(new CMDIChildMax);	// This pointer is stored in a Shared_Ptr
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNewRect()
+BOOL CMainMDIFrame::OnFileNewRect()
 {
 	AddMDIChild(new CMDIChildRect);	// This pointer is stored in a Shared_Ptr
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNewText()
+BOOL CMainMDIFrame::OnFileNewText()
 {
 	AddMDIChild(new CMDIChildText);	// This pointer is stored in a Shared_Ptr
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNewTree()
+BOOL CMainMDIFrame::OnFileNewTree()
 {
 	AddMDIChild(new CMDIChildTreeView);	// This pointer is stored in a Shared_Ptr
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNewView()
+BOOL CMainMDIFrame::OnFileNewView()
 {
 	AddMDIChild(new CMDIChildSimple);	// This pointer is stored in a Shared_Ptr
+	return TRUE;
 }
 
 LRESULT CMainMDIFrame::OnNotify(WPARAM wParam, LPARAM lParam)

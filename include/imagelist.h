@@ -113,7 +113,7 @@ namespace Win32xx
 
 		//Attributes
 		HICON GetIcon(int iImage, UINT nFlags) const;
-		BOOL GetIconSize(int* cx, int* cy) const;
+		CSize GetIconSize() const;
 		int GetImageCount() const;
 		BOOL GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const;
 
@@ -502,11 +502,14 @@ namespace Win32xx
 		return ImageList_GetIcon(m_pData->hImageList, iImage, nFlags);
 	}
 
-	inline BOOL CImageList::GetIconSize(int* cx, int* cy) const
+	inline CSize CImageList::GetIconSize() const
 	// Retrieves the dimensions of images in an image list.
 	{
 		assert(m_pData->hImageList);
-		return ImageList_GetIconSize(m_pData->hImageList, cx, cy);
+		int cx = 0;
+		int cy = 0;
+		ImageList_GetIconSize(m_pData->hImageList, &cx, &cy);
+		return CSize(cx, cy);
 	}
 
 	inline int CImageList::GetImageCount() const

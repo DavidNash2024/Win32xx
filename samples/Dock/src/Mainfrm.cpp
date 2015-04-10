@@ -41,55 +41,60 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDM_DOCK_DEFAULT:		OnDockDefault();	return TRUE;
-	case IDM_DOCK_CLOSEALL:		OnDockCloseAll();	return TRUE;
-	case IDM_PROP_RESIZE:       OnPropResize();		return TRUE;
-	case IDM_3DBORDER:			On3DBorder();		return TRUE;
-	case IDM_NO_UNDOCK:			OnNoUndocking();	return TRUE;
-	case IDM_NO_RESIZE:			OnNoResize();		return TRUE;
-	case IDM_NO_DOCK_LR:		OnNoDockLR();		return TRUE;
-	case IDM_NO_DOCK_CLOSE:		OnNoDockClose();	return TRUE;
-	case IDM_DYNAMIC_RESIZE:	OnDynamicResize();	return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_DOCK_DEFAULT:		return OnDockDefault();
+	case IDM_DOCK_CLOSEALL:		return OnDockCloseAll();
+	case IDM_PROP_RESIZE:       return OnPropResize();
+	case IDM_3DBORDER:			return On3DBorder();
+	case IDM_NO_UNDOCK:			return OnNoUndocking();
+	case IDM_NO_RESIZE:			return OnNoResize();
+	case IDM_NO_DOCK_LR:		return OnNoDockLR();
+	case IDM_NO_DOCK_CLOSE:		return OnNoDockClose();
+	case IDM_DYNAMIC_RESIZE:	return OnDynamicResize();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_HELP_ABOUT:		return OnHelp();
 	}
 
 	return FALSE;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnDockDefault()
+BOOL CMainFrame::OnDockDefault()
 {
 	SetRedraw(FALSE);	// Suppress drawing to the frame window
 	CloseAllDockers();
 	LoadDefaultDockers();
 	SetRedraw(TRUE);	// Re-enable drawing to the frame window
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
+	return TRUE;
 }
 
-void CMainFrame::OnPropResize()
+BOOL CMainFrame::OnPropResize()
 {
 	m_UseProportionalResize = !m_UseProportionalResize;
 	SetDockStyles();
+	return TRUE;
 }
 
-void CMainFrame::On3DBorder()
+BOOL CMainFrame::On3DBorder()
 {
 	m_Use3DBorder = !m_Use3DBorder;
 	SetDockStyles();
+	return TRUE;
 }
 
-void CMainFrame::OnNoUndocking()
+BOOL CMainFrame::OnNoUndocking()
 {
 	m_DisableUndocking = !m_DisableUndocking;
 	SetDockStyles();
+	return TRUE;
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -122,31 +127,35 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
-void CMainFrame::OnNoResize()
+BOOL CMainFrame::OnNoResize()
 {
 	m_DisableResize = !m_DisableResize;
 	SetDockStyles();
+	return TRUE;
 }
 
-void CMainFrame::OnNoDockLR()
+BOOL CMainFrame::OnNoDockLR()
 {
 	m_DisableDockLR = !m_DisableDockLR;
 	SetDockStyles();
+	return TRUE;
 }
 
-void CMainFrame::OnNoDockClose()
+BOOL CMainFrame::OnNoDockClose()
 {
 	m_DisableDockClose = !m_DisableDockClose;
 	SetDockStyles();
 	RedrawWindow();
+	return TRUE;
 } 
 
-void CMainFrame::OnDockCloseAll()
+BOOL CMainFrame::OnDockCloseAll()
 {
 	CloseAllDockers();
+	return TRUE;
 }
 
-void CMainFrame::OnDynamicResize()
+BOOL CMainFrame::OnDynamicResize()
 {
 	// Dragging the docker's splitter bar will either dynamicly resize the dockers
 	// during the dragging, or simply display a hashed splitter bar.
@@ -157,6 +166,7 @@ void CMainFrame::OnDynamicResize()
 	{
 		(*iter)->SetDragAutoResize(m_UseDynamicResize);
 	}
+	return TRUE;
 }
 
 int CMainFrame::OnCreate(LPCREATESTRUCT pcs)

@@ -19,6 +19,9 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 	void LoadDefaultDockers();
+	BOOL OnDockCloseAll();
+	BOOL OnDockDefault();
+	BOOL OnFileExit();
 	
 protected:
 	virtual CDocker* NewDockerFromID(int nID);

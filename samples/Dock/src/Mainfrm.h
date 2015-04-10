@@ -25,25 +25,26 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	
 	void LoadDefaultDockers();
+	BOOL On3DBorder();
+	BOOL OnDockCloseAll();
+	BOOL OnDockDefault();
+	BOOL OnDynamicResize();
+	BOOL OnFileExit();
+	BOOL OnPropResize();
+	BOOL OnNoUndocking();
+	BOOL OnNoResize();
+	BOOL OnNoDockLR();
+	BOOL OnNoDockClose();
 	void SetDockStyles();
 
 protected:
 	virtual CDocker* NewDockerFromID(int nID);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnDockCloseAll();
-	virtual void OnDockDefault();
-	virtual void OnDynamicResize();
-	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
-	virtual void OnPropResize();
-	virtual void On3DBorder();
-	virtual void OnNoUndocking();
 	virtual void OnMenuUpdate(UINT nID);
-	virtual void OnNoResize();
-	virtual void OnNoDockLR();
-	virtual void OnNoDockClose();
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolBar();

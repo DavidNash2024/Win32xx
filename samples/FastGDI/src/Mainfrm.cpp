@@ -27,7 +27,7 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
-void CMainFrame::OnAdjustImage()
+BOOL CMainFrame::OnAdjustImage()
 {
 	if (GetMyView().GetImage())
 	{
@@ -37,6 +37,8 @@ void CMainFrame::OnAdjustImage()
 	}
 	else
 		MessageBox(_T("Open a Bitmap file first!"), _T("Error"), MB_OK);
+
+	return TRUE;
 }
 
 void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
@@ -57,19 +59,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
-	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
-	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
-	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
-	case IDM_IMAGE_ADJUST:		OnAdjustImage();	return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_FILE_NEW:			return OnFileNew();
+	case IDM_FILE_OPEN:			return OnFileOpen();
+	case IDM_FILE_SAVE:			return OnFileSave();
+	case IDM_FILE_SAVEAS:		return OnFileSaveAs();
+	case IDM_HELP_ABOUT:		return OnHelp();
+	case IDM_IMAGE_ADJUST:		return OnAdjustImage();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
 	case IDW_FILE_MRU_FILE1:
 	case IDW_FILE_MRU_FILE2:	// Intentionally blank
 	case IDW_FILE_MRU_FILE3:
-	case IDW_FILE_MRU_FILE4:	OnFileOpenMRU(wParam, lParam);	return TRUE;
+	case IDW_FILE_MRU_FILE4:	return OnFileOpenMRU(wParam, lParam);
 	}
 
 	return FALSE;
@@ -91,13 +93,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CFrame::OnCreate(pcs);
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
 	CToolBar& TB = GetToolBar();
 	TB.DisableButton(IDM_FILE_SAVEAS);
@@ -108,6 +111,8 @@ void CMainFrame::OnFileNew()
 
 	// Set the caption
 	SetWindowText(_T("FastGDI"));
+
+	return TRUE;
 }
 
 BOOL CMainFrame::LoadFile(CString& FileName)
@@ -145,7 +150,7 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 	return IsFileLoaded;
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
 	CFile File;
 	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), *this);
@@ -153,6 +158,8 @@ void CMainFrame::OnFileOpen()
 	{
 		LoadFile(str);
 	}
+
+	return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
@@ -196,12 +203,13 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	return TRUE;
 }
 
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
 	SaveFile(m_PathName);
+	return TRUE;
 }
 
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
 	CFile File;
 	CString str = File.SaveFileDialog(0, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), _T("bmp"), 0);
@@ -215,6 +223,8 @@ void CMainFrame::OnFileSaveAs()
 
 		SaveFile(str);
 	}
+
+	return TRUE;
 }
 
 void CMainFrame::OnInitialUpdate()

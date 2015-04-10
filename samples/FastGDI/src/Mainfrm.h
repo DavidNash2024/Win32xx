@@ -15,21 +15,22 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
 	CView& GetMyView() {return m_MyView;}
 	void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray);
+	BOOL OnAdjustImage();
+	BOOL OnFileExit();
+	BOOL OnFileSave();
+	BOOL OnFileSaveAs();
+	BOOL OnFileNew();
+	BOOL OnFileOpen();
+	BOOL OnFileOpenMRU(WPARAM wParam, LPARAM lParam);
 	BOOL LoadFile(CString& FileName);
 	void SaveFile(CString& str);
 
 protected:
-	virtual void OnAdjustImage();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnFileExit();
-	virtual void OnFileSave();
-	virtual void OnFileSaveAs();
-	virtual void OnFileNew();
-	virtual void OnFileOpen();
-	virtual BOOL OnFileOpenMRU(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void SetupToolBar();

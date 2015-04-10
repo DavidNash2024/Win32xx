@@ -17,14 +17,15 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
+	BOOL OnFileExit();
+	BOOL OnFileOpen();
+	BOOL OnFilePrint();
+	BOOL OnFileSave();
+
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDestroy();
-	virtual void OnFileExit();
-	virtual void OnFileOpen();
-	virtual void OnFilePrint();
-	virtual void OnFileSave();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 	virtual void SetupToolBar();

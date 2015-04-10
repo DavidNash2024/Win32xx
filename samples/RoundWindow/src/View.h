@@ -15,12 +15,12 @@ public:
 	virtual ~CView() {}
 
 protected:
-	virtual void OnColor();
+	virtual BOOL OnColor();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
 	virtual void OnDestroy();
 	virtual void OnDraw(CDC& dc);
-	virtual void OnExit();
+	virtual BOOL OnExit();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);

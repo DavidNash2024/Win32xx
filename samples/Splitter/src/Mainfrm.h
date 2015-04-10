@@ -14,12 +14,13 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
-	void OnViewList();
-	void OnViewText();
+	
+	BOOL OnFileExit();
+	BOOL OnViewList();
+	BOOL OnViewText();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

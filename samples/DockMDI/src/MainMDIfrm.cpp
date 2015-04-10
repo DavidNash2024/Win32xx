@@ -19,27 +19,31 @@ CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
-void CMainMDIFrame::OnFileOpen()
+BOOL CMainMDIFrame::OnFileOpen()
 {
 	// Bring up the file open dialog
 	CFile File;
 	CString str = File.OpenFileDialog(0, 0, 0, 0);
 
 	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
+	// Add your own code here. Refer to the tutorial for additional information
+
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileSave()
+BOOL CMainMDIFrame::OnFileSave()
 {
 	// Bring up the file save dialog.
 	CFile File;
 	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
 
 	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
+	// Add your own code here. Refer to the tutorial for additional information
+
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFilePrint()
+BOOL CMainMDIFrame::OnFilePrint()
 {
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd = {0};
@@ -51,7 +55,9 @@ void CMainMDIFrame::OnFilePrint()
 	PrintDlg( &pd );
 	
 	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
+	// Add your own code here. Refer to the tutorial for additional information
+
+	return TRUE;
 }
 
 void CMainMDIFrame::OnInitialUpdate()
@@ -75,20 +81,20 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:			OnFileNew();				return TRUE;
-	case IDM_FILE_CLOSE:		OnFileClose();				return TRUE;
-	case IDM_FILE_OPEN:			OnFileOpen();				return TRUE;
-	case IDM_FILE_SAVE:			OnFileSave();				return TRUE;
-	case IDM_FILE_SAVEAS:		OnFileSave();				return TRUE;
-	case IDM_FILE_PRINT:		OnFilePrint();				return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();			return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();			return TRUE;
-	case IDW_MDI_ARRANGE:		MDIIconArrange();			return TRUE;
-	case IDW_MDI_CASCADE:		MDICascade();				return TRUE;
-	case IDW_MDI_CLOSEALL:		RemoveAllMDIChildren();		return TRUE;
-	case IDW_MDI_TILE:			MDITile();					return TRUE;
-	case IDM_FILE_EXIT:			OnFileExit();				return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();					return TRUE;
+	case IDM_FILE_NEW:			return OnFileNew();
+	case IDM_FILE_CLOSE:		return OnFileClose();
+	case IDM_FILE_OPEN:			return OnFileOpen();
+	case IDM_FILE_SAVE:			return OnFileSave();
+	case IDM_FILE_SAVEAS:		return OnFileSave();
+	case IDM_FILE_PRINT:		return OnFilePrint();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDW_MDI_ARRANGE:		return OnMDIIconArrange();
+	case IDW_MDI_CASCADE:		return OnMDICascade();
+	case IDW_MDI_CLOSEALL:		return OnMDICloseAll();
+	case IDW_MDI_TILE:			return OnMDITile();
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_HELP_ABOUT:		return OnHelp();
 	default:
 		{
 			// Pass to active child...
@@ -117,21 +123,24 @@ int CMainMDIFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CMDIFrame::OnCreate(pcs);
 }
 
-void CMainMDIFrame::OnFileClose()
+BOOL CMainMDIFrame::OnFileClose()
 {
 	GetActiveMDIChild()->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileExit()
+BOOL CMainMDIFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	CMDIFrame::PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainMDIFrame::OnFileNew()
+BOOL CMainMDIFrame::OnFileNew()
 {
 	// Create a new MDI child
-	AddMDIChild(new CSimpleMDIChild); 
+	AddMDIChild(new CSimpleMDIChild);
+	return TRUE;
 }
 
 void CMainMDIFrame::SetupToolBar()

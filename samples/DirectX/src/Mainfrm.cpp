@@ -32,14 +32,14 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_OPEN:		 OnFileOpen();			return TRUE;
-	case IDM_FILE_SAVE:		 OnFileSave();			return TRUE;
-	case IDM_FILE_SAVEAS:	 OnFileSave();			return TRUE;
-	case IDM_FILE_PRINT:	 OnFilePrint();			return TRUE;
-	case IDM_FILE_EXIT:		 OnFileExit();			return TRUE;
-	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		return TRUE;
-	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		return TRUE;
-	case IDM_HELP_ABOUT:	 OnHelp();				return TRUE;
+	case IDM_FILE_OPEN:		 return OnFileOpen();
+	case IDM_FILE_SAVE:		 return OnFileSave();
+	case IDM_FILE_SAVEAS:	 return OnFileSave();
+	case IDM_FILE_PRINT:	 return OnFilePrint();
+	case IDM_FILE_EXIT:		 return OnFileExit();
+	case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:	 return OnViewToolBar();
+	case IDM_HELP_ABOUT:	 return OnHelp();
 	}
 
 	return FALSE;
@@ -87,13 +87,14 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created\n");
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
 	// Bring up the file open dialog
 	CFile File;
@@ -101,19 +102,22 @@ void CMainFrame::OnFileOpen()
 
 	// TODO:
 	// Add your own code here. Refer to the tutorial for additional information 
+	return TRUE;
 }
 
-void CMainFrame::OnFileSave()
+BOOL CMainFrame::OnFileSave()
 {
 	// Bring up the file save dialog.
 	CFile File;
 	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
 
 	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
+	// Add your own code here. Refer to the tutorial for additional information
+
+	return TRUE;
 }
 
-void CMainFrame::OnFilePrint()
+BOOL CMainFrame::OnFilePrint()
 {
 	// Bring up a dialog to choose the printer
 	PRINTDLG pd;
@@ -126,7 +130,9 @@ void CMainFrame::OnFilePrint()
 	PrintDlg( &pd );
 	
 	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information 
+	// Add your own code here. Refer to the tutorial for additional information
+
+	return TRUE;
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)

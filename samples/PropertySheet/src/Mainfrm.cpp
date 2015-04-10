@@ -32,13 +32,13 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:		 OnFileExit();		return TRUE;
-	case IDM_MODELESS:		 OnModeless();		return TRUE;
-	case IDM_MODAL:			 OnModal();			return TRUE;
-	case IDM_WIZARD:		 OnWizard();		return TRUE;
-	case IDW_VIEW_STATUSBAR: OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();	return TRUE;
-	case IDM_HELP_ABOUT:	 OnHelp();			return TRUE;
+	case IDM_FILE_EXIT:		 return OnFileExit();
+	case IDM_MODELESS:		 return OnModeless();
+	case IDM_MODAL:			 return OnModal();
+	case IDM_WIZARD:		 return OnWizard();
+	case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:	 return OnViewToolBar();
+	case IDM_HELP_ABOUT:	 return OnHelp();
 	}
 
 	return FALSE;
@@ -60,10 +60,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CFrame::OnCreate(pcs);
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -74,7 +75,7 @@ void CMainFrame::OnInitialUpdate()
 	TRACE("Frame created\n");
 }
 
-void CMainFrame::OnModeless()
+BOOL CMainFrame::OnModeless()
 {
 	// Permit only one Modeless property sheet
 	if (!m_ModelessPS.IsWindow())
@@ -86,9 +87,11 @@ void CMainFrame::OnModeless()
 	}
 	else
 		m_ModelessPS.SetForegroundWindow();
+
+	return TRUE;
 }
 
-void CMainFrame::OnModal()
+BOOL CMainFrame::OnModal()
 {
 	if (m_ModelessPS.IsWindow())
 		m_ModelessPS.Destroy();
@@ -97,15 +100,18 @@ void CMainFrame::OnModal()
 	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 	mps.DoModal();
+
+	return TRUE;
 }
 
-void CMainFrame::OnWizard()
+BOOL CMainFrame::OnWizard()
 {
 	CMyPropertySheet mps(NULL, *this);
 	mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
 	mps.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
 	mps.SetWizardMode(TRUE);
 	mps.DoModal();
+	return TRUE;
 }
 
 void CMainFrame::SetupToolBar()

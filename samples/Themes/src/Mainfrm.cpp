@@ -51,7 +51,7 @@ void CMainFrame::AddCombo()
 	RecalcLayout();
 }
 
-void CMainFrame::ChooseColor(UINT nColor)
+BOOL CMainFrame::ChooseColor(UINT nColor)
 {
 	m_nColor = nColor;
 
@@ -209,6 +209,7 @@ void CMainFrame::ChooseColor(UINT nColor)
 	}
 
 	RecalcLayout();
+	return TRUE;
 }
 
 LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
@@ -308,29 +309,29 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:		 OnFileExit();				return TRUE;
-	case IDM_MODERN:		 ChooseColor(IDM_MODERN);	return TRUE;
-	case IDM_BLUE:			 ChooseColor(IDM_BLUE);		return TRUE;
-	case IDM_GREY:			 ChooseColor(IDM_GREY);		return TRUE;
-	case IDM_OLIVE:			 ChooseColor(IDM_OLIVE);	return TRUE;
-	case IDM_OCHRE:			 ChooseColor(IDM_OCHRE);	return TRUE;
-	case IDM_MAUVE:			 ChooseColor(IDM_MAUVE);	return TRUE;
-	case IDM_PINK:			 ChooseColor(IDM_PINK);		return TRUE;
-	case IDM_GOLD:			 ChooseColor(IDM_GOLD);		return TRUE;
-	case IDM_BLACK:			 ChooseColor(IDM_BLACK);	return TRUE;
-	case IDM_USE_THEMES:	 OnUseThemes();				return TRUE;
-	case IDM_BAND_COLORS:	 OnBandColors();			return TRUE;
-	case IDM_FLAT_STYLE:	 OnFlatStyle();				return TRUE;
-	case IDM_LEFT_BANDS:	 OnLeftBands();				return TRUE;
-	case IDM_LOCK_MENUBAR:	 OnLockMenuBar();			return TRUE;
-	case IDM_ROUND_BORDERS:	 OnRoundBorders();			return TRUE;
-	case IDM_SHORT_BANDS:	 OnShortBands();			return TRUE;
-	case IDM_USE_LINES:		 OnUseLines();				return TRUE;
-	case IDM_VIEW_ARROWS:	 OnViewArrows();			return TRUE;
-	case IDM_VIEW_CARDS:	 OnViewCards();				return TRUE;
-	case IDW_VIEW_STATUSBAR: OnViewStatusBar();			return TRUE;
-	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();			return TRUE;
-	case IDM_HELP_ABOUT:	 OnHelp();					return TRUE;
+	case IDM_FILE_EXIT:		 return OnFileExit();
+	case IDM_MODERN:		 return ChooseColor(IDM_MODERN);
+	case IDM_BLUE:			 return ChooseColor(IDM_BLUE);
+	case IDM_GREY:			 return ChooseColor(IDM_GREY);
+	case IDM_OLIVE:			 return ChooseColor(IDM_OLIVE);
+	case IDM_OCHRE:			 return ChooseColor(IDM_OCHRE);
+	case IDM_MAUVE:			 return ChooseColor(IDM_MAUVE);
+	case IDM_PINK:			 return ChooseColor(IDM_PINK);
+	case IDM_GOLD:			 return ChooseColor(IDM_GOLD);
+	case IDM_BLACK:			 return ChooseColor(IDM_BLACK);
+	case IDM_USE_THEMES:	 return OnUseThemes();
+	case IDM_BAND_COLORS:	 return OnBandColors();
+	case IDM_FLAT_STYLE:	 return OnFlatStyle();
+	case IDM_LEFT_BANDS:	 return OnLeftBands();
+	case IDM_LOCK_MENUBAR:	 return OnLockMenuBar();
+	case IDM_ROUND_BORDERS:	 return OnRoundBorders();
+	case IDM_SHORT_BANDS:	 return OnShortBands();
+	case IDM_USE_LINES:		 return OnUseLines();
+	case IDM_VIEW_ARROWS:	 return OnViewArrows();
+	case IDM_VIEW_CARDS:	 return OnViewCards();
+	case IDW_VIEW_STATUSBAR: return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:	 return OnViewToolBar();
+	case IDM_HELP_ABOUT:	 return OnHelp();
 	}
 
 	return FALSE;
@@ -400,10 +401,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return 0;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -426,7 +428,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::OnUseThemes()
+BOOL CMainFrame::OnUseThemes()
 {
 	if (IsReBarSupported())
 	{
@@ -440,9 +442,11 @@ void CMainFrame::OnUseThemes()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnBandColors()
+BOOL CMainFrame::OnBandColors()
 {
 	if (IsReBarSupported())
 	{
@@ -452,8 +456,11 @@ void CMainFrame::OnBandColors()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
-void CMainFrame::OnFlatStyle()
+
+BOOL CMainFrame::OnFlatStyle()
 {
 	if (IsReBarSupported())
 	{
@@ -465,8 +472,11 @@ void CMainFrame::OnFlatStyle()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
-void CMainFrame::OnLeftBands()
+
+BOOL CMainFrame::OnLeftBands()
 {
 	if (IsReBarSupported())
 	{
@@ -478,9 +488,11 @@ void CMainFrame::OnLeftBands()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnLockMenuBar()
+BOOL CMainFrame::OnLockMenuBar()
 {
 	if (IsReBarSupported())
 	{
@@ -494,6 +506,8 @@ void CMainFrame::OnLockMenuBar()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -541,7 +555,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
-void CMainFrame::OnRoundBorders()
+BOOL CMainFrame::OnRoundBorders()
 {
 	if (IsReBarSupported())
 	{
@@ -553,8 +567,11 @@ void CMainFrame::OnRoundBorders()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
-void CMainFrame::OnShortBands()
+
+BOOL CMainFrame::OnShortBands()
 {
 	if (IsReBarSupported())
 	{
@@ -566,8 +583,11 @@ void CMainFrame::OnShortBands()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
-void CMainFrame::OnUseLines()
+
+BOOL CMainFrame::OnUseLines()
 {
 	if (IsReBarSupported())
 	{
@@ -579,24 +599,30 @@ void CMainFrame::OnUseLines()
 		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnViewArrows()
+BOOL CMainFrame::OnViewArrows()
 {
 	if (IsReBarSupported())
 	{
 		m_ShowArrows = !m_ShowArrows;
 		ShowArrows(m_ShowArrows);
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnViewCards()
+BOOL CMainFrame::OnViewCards()
 {
 	if (IsReBarSupported())
 	{
 		m_ShowCards = !m_ShowCards;
 		ShowCards(m_ShowCards);
 	}
+
+	return TRUE;
 }
 
 BOOL CMainFrame::SaveRegistrySettings()

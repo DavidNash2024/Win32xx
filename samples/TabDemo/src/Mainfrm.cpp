@@ -31,19 +31,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_CLOSE_TAB:			OnTabClose();		return TRUE;
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDM_NEW_FILES:			OnNewFilesTab();	return TRUE;
-	case IDM_NEW_CLASSES:		OnNewClassesTab();	return TRUE;
-	case IDM_NEW_DIALOG:		OnNewDialogTab();	return TRUE;
-	case IDM_NEW_TAB:			OnNewTab();			return TRUE;
-	case IDM_TAB_FIXED:         OnTabFixedWidth();	return TRUE;
-	case IDM_TAB_DRAW:          OnTabOwnerDraw();	return TRUE;
-	case IDM_TAB_TOP:			OnTabsAtTop();		return TRUE;
-	case IDM_TAB_BUTTONS:		OnShowButtons();	return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_CLOSE_TAB:			return OnTabClose();
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_NEW_FILES:			return OnNewFilesTab();
+	case IDM_NEW_CLASSES:		return OnNewClassesTab();
+	case IDM_NEW_DIALOG:		return OnNewDialogTab();
+	case IDM_NEW_TAB:			return OnNewTab();
+	case IDM_TAB_FIXED:         return OnTabFixedWidth();
+	case IDM_TAB_DRAW:          return OnTabOwnerDraw();
+	case IDM_TAB_TOP:			return OnTabsAtTop();
+	case IDM_TAB_BUTTONS:		return OnShowButtons();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_HELP_ABOUT:		return OnHelp();
 	}
 
 	return FALSE;
@@ -72,10 +72,12 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pCreateStruct)
 	return 0;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+
+	return TRUE;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -134,22 +136,25 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
-void CMainFrame::OnNewFilesTab()
+BOOL CMainFrame::OnNewFilesTab()
 {
 	m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	return TRUE;
 }
 
-void CMainFrame::OnNewClassesTab()
+BOOL CMainFrame::OnNewClassesTab()
 {
 	m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	return TRUE;
 }
 
-void CMainFrame::OnNewDialogTab()
+BOOL CMainFrame::OnNewDialogTab()
 {
 	m_View.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+	return TRUE;
 }
 
-void CMainFrame::OnNewTab()
+BOOL CMainFrame::OnNewTab()
 {
 	// Creates the popup menu when the "New" toolbar button is pressed
 
@@ -168,39 +173,46 @@ void CMainFrame::OnNewTab()
 
 	// Start the popup menu
 	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+	return TRUE;
 }
 
-void CMainFrame::OnShowButtons()
+BOOL CMainFrame::OnShowButtons()
 {
 	BOOL bShow = m_View.GetShowButtons();
 	m_View.SetShowButtons(!bShow);
 	m_View.RedrawWindow();
+	return TRUE;
 }
 
-void CMainFrame::OnTabClose()
+BOOL CMainFrame::OnTabClose()
 {
 	int iTab = m_View.GetCurSel();
 
 	if (iTab >= 0)
 		m_View.RemoveTabPage(iTab);
+
+	return TRUE;
 }
 
-void CMainFrame::OnTabFixedWidth()
+BOOL CMainFrame::OnTabFixedWidth()
 {
 	BOOL bFixed = m_View.GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH;
 	m_View.SetFixedWidth(!bFixed);
+	return TRUE;
 }
 
-void CMainFrame::OnTabOwnerDraw()
+BOOL CMainFrame::OnTabOwnerDraw()
 {
 	BOOL bDraw = m_View.GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED;
 	m_View.SetOwnerDraw(!bDraw);
+	return TRUE;
 }
 
-void CMainFrame::OnTabsAtTop()
+BOOL CMainFrame::OnTabsAtTop()
 {
 	BOOL bTop = m_View.GetTabsAtTop();
 	m_View.SetTabsAtTop(!bTop);
+	return TRUE;
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)

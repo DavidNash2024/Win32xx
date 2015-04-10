@@ -25,20 +25,22 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDM_VIEW_TEXT:			OnViewText();		return TRUE;
-	case IDM_VIEW_LIST:			OnViewList();		return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_VIEW_TEXT:			return OnViewText();
+	case IDM_VIEW_LIST:			return OnViewList();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_HELP_ABOUT:		return OnHelp();
 	}
 	return FALSE;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+
+	return TRUE;;
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -60,7 +62,7 @@ void CMainFrame::OnInitialUpdate()
 
 }
 
-void CMainFrame::OnViewList()
+BOOL CMainFrame::OnViewList()
 {
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 	if (m_pDockList->IsDocked())
@@ -73,9 +75,11 @@ void CMainFrame::OnViewList()
 		m_pDockTree->Dock(m_pDockList, dwStyle | DS_DOCKED_RIGHT);
 		GetFrameMenu().CheckMenuItem(IDM_VIEW_LIST, MF_CHECKED);
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnViewText()
+BOOL CMainFrame::OnViewText()
 {
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 
@@ -89,6 +93,8 @@ void CMainFrame::OnViewText()
 		Dock(m_pDockText, dwStyle | DS_DOCKED_RIGHT);
 		GetFrameMenu().CheckMenuItem(IDM_VIEW_TEXT, MF_CHECKED);
 	}
+
+	return TRUE;
 }
 
 void CMainFrame::SetupToolBar()

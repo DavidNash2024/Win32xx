@@ -130,23 +130,25 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:		OnFileNew();	return TRUE;
-	case IDM_HELP_ABOUT:	OnHelpAbout();	return TRUE;
+	case IDM_FILE_NEW:		return OnFileNew();
+	case IDM_HELP_ABOUT:	return OnHelpAbout();
 	}
 
 	return FALSE;
 }
 
-void CContainClasses::OnFileNew()
+BOOL CContainClasses::OnFileNew()
 {
 	TRACE("File New\n");
 	MessageBox(_T("File New"), _T("Button Pressed"), MB_OK);
+	return TRUE;
 }
 
-void CContainClasses::OnHelpAbout()
+BOOL CContainClasses::OnHelpAbout()
 {
 	// Send a message to the frame requesting the help dialog
 	GetContainerApp()->GetMainFrame()->SendMessage(WM_HELP);
+	return TRUE;
 }
 
 void CContainClasses::SetupToolBar()

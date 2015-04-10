@@ -44,13 +44,13 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
     {
-	case IDC_BUTTON1:	OnButton();		return TRUE;
-	case IDC_RADIO1:	OnRadio1();		return TRUE;
-	case IDC_RADIO2:	OnRadio2();		return TRUE;
-	case IDC_RADIO3:	OnRadio3();		return TRUE;
-	case IDC_CHECK1:	OnCheck1();		return TRUE;
-	case IDC_CHECK2:	OnCheck2();		return TRUE;
-	case IDC_CHECK3:	OnCheck3();		return TRUE;
+	case IDC_BUTTON1:	return OnButton();
+	case IDC_RADIO1:	return OnRadio1();
+	case IDC_RADIO2:	return OnRadio2();
+	case IDC_RADIO3:	return OnRadio3();
+	case IDC_CHECK1:	return OnCheck1();
+	case IDC_CHECK2:	return OnCheck2();
+	case IDC_CHECK3:	return OnCheck3();
     }
 
 	return FALSE;
@@ -93,46 +93,53 @@ void CMyDialog::OnOK()
 	CDialog::OnOK();
 }
 
-void CMyDialog::OnButton()
+BOOL CMyDialog::OnButton()
 {
 	SetStatic(_T("Button Pressed"));
 	TRACE("Button Pressed\n");
+	return TRUE;
 }
 
-void CMyDialog::OnCheck1()
+BOOL CMyDialog::OnCheck1()
 {
 	SetStatic(_T("Check Box 1"));
 	TRACE("Check Box 1\n");
+	return TRUE;
 }
 
-void CMyDialog::OnCheck2()
+BOOL CMyDialog::OnCheck2()
 {
 	SetStatic(_T("Check Box 2"));
 	TRACE("Check Box 2\n");
+	return TRUE;
 }
 
-void CMyDialog::OnCheck3()
+BOOL CMyDialog::OnCheck3()
 {
 	SetStatic(_T("Check Box 3"));
 	TRACE("Check Box 3\n");
+	return TRUE;
 }
 
-void CMyDialog::OnRadio1()
+BOOL CMyDialog::OnRadio1()
 {
 	SetStatic(_T("Radio 1"));
 	TRACE("Radio 1\n");
+	return TRUE;
 }
 
-void CMyDialog::OnRadio2()
+BOOL CMyDialog::OnRadio2()
 {
 	SetStatic(_T("Radio 2"));
 	TRACE("Radio 2\n");
+	return TRUE;
 }
 
-void CMyDialog::OnRadio3()
+BOOL CMyDialog::OnRadio3()
 {
 	SetStatic(_T("Radio 3"));
 	TRACE("Radio 3\n");
+	return TRUE;
 }
 
 void CMyDialog::SetStatic(LPCTSTR szString)

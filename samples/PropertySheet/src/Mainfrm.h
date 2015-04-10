@@ -16,14 +16,15 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
+	BOOL OnFileExit();	
+	BOOL OnModal();
+	BOOL OnModeless();
+	BOOL OnWizard();
+
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
-	virtual void OnModal();
-	virtual void OnModeless();
-	virtual void OnWizard();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

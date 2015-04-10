@@ -58,7 +58,7 @@ void CMainFrame::LoadDefaultMDIs()
 		m_MyTabbedMDI.SetActiveMDITab(0);
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 // Creates the popup menu when the "New" toolbar button is pressed
 {
 	// Position the popup menu
@@ -76,53 +76,61 @@ void CMainFrame::OnFileNew()
 
 	// Start the popup menu
 	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+	return TRUE;
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnFileNewSimple()
+BOOL CMainFrame::OnFileNewSimple()
 {
 	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
+	return TRUE;
 }
 
-void CMainFrame::OnFileNewRect()
+BOOL CMainFrame::OnFileNewRect()
 {
 	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
+	return TRUE;
 }
 
-void CMainFrame::OnFileNewList()
+BOOL CMainFrame::OnFileNewList()
 {
 	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
+	return TRUE;
 }
 
-void CMainFrame::OnFileNewText()
+BOOL CMainFrame::OnFileNewText()
 {
 	CTabbedMDI* pTabbedMDI =  &m_MyTabbedMDI;
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
+	return TRUE;
 }
 
-void CMainFrame::OnFileNewTree()
+BOOL CMainFrame::OnFileNewTree()
 {
 	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
 	assert(pTabbedMDI);
 	pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
+	return TRUE;
 }
 
-void CMainFrame::OnContainerTabsAtTop()
+BOOL CMainFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
 	SetContainerTabsAtTop(!m_IsContainerTabsAtTop);
+	return TRUE;
 }
 
 void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
@@ -145,10 +153,11 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
 }
 
-void CMainFrame::OnMDITabsAtTop()
+BOOL CMainFrame::OnMDITabsAtTop()
 // Reposition TabbedMDI's tabs
 {
 	SetMDITabsAtTop(!m_IsMDITabsAtTop);
+	return TRUE;
 }
 
 void CMainFrame::SetMDITabsAtTop(BOOL bTop)
@@ -202,7 +211,7 @@ CDocker* CMainFrame::NewDockerFromID(int idDock)
 	return pDock;
 }
 
-void CMainFrame::OnDefaultLayout()
+BOOL CMainFrame::OnDefaultLayout()
 {
 	SetRedraw(FALSE);
 
@@ -215,6 +224,7 @@ void CMainFrame::OnDefaultLayout()
 	HideSingleContainerTab(m_IsHideSingleTab);
 	SetRedraw(TRUE);
 	RedrawWindow();
+	return TRUE;
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -222,22 +232,22 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
 	{
-	case IDM_CLOSE_DOCKERS:		OnCloseDockers();		return TRUE;
-	case IDM_CLOSE_MDIS:		OnCloseMDIs();			return TRUE;
-	case IDM_CONTAINER_TOP:		OnContainerTabsAtTop();	return TRUE;
-	case IDM_DEFAULT_LAYOUT:	OnDefaultLayout();		return TRUE;
-	case IDM_FILE_NEW:			OnFileNew();			return TRUE;
-	case IDM_FILE_NEWSIMPLE:	OnFileNewSimple();		return TRUE;
-	case IDM_FILE_NEWRECT:		OnFileNewRect();		return TRUE;
-	case IDM_FILE_NEWTEXT:		OnFileNewText();		return TRUE;
-	case IDM_FILE_NEWTREE:		OnFileNewTree();		return TRUE;
-	case IDM_FILE_NEWLIST:		OnFileNewList();		return TRUE;
-	case IDM_FILE_EXIT:			OnFileExit();			return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();				return TRUE;
-	case IDM_HIDE_SINGLE_TAB:	OnHideSingleTab();		return TRUE;
-	case IDM_TABBEDMDI_TOP:		OnMDITabsAtTop();		return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();		return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();		return TRUE;
+	case IDM_CLOSE_DOCKERS:		return OnCloseDockers();
+	case IDM_CLOSE_MDIS:		return OnCloseMDIs();
+	case IDM_CONTAINER_TOP:		return OnContainerTabsAtTop();
+	case IDM_DEFAULT_LAYOUT:	return OnDefaultLayout();
+	case IDM_FILE_NEW:			return OnFileNew();
+	case IDM_FILE_NEWSIMPLE:	return OnFileNewSimple();
+	case IDM_FILE_NEWRECT:		return OnFileNewRect();
+	case IDM_FILE_NEWTEXT:		return OnFileNewText();
+	case IDM_FILE_NEWTREE:		return OnFileNewTree();
+	case IDM_FILE_NEWLIST:		return OnFileNewList();
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_HELP_ABOUT:		return OnHelp();
+	case IDM_HIDE_SINGLE_TAB:	return OnHideSingleTab();
+	case IDM_TABBEDMDI_TOP:		return OnMDITabsAtTop();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
 	case IDW_FIRSTCHILD:
 	case IDW_FIRSTCHILD +1:
 	case IDW_FIRSTCHILD +2:
@@ -255,6 +265,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_FIRSTCHILD +9:
 		{
 			m_MyTabbedMDI.ShowListDialog();
+			return TRUE;
 		}
 
 	default:
@@ -283,9 +294,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CFrame::OnCreate(pcs);
 }
 
-void CMainFrame::OnHideSingleTab()
+BOOL CMainFrame::OnHideSingleTab()
 {
 	HideSingleContainerTab(!m_IsHideSingleTab);
+	return TRUE;
 }
 
 void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
@@ -349,14 +361,16 @@ LRESULT CMainFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 }
 
-void CMainFrame::OnCloseDockers()
+BOOL CMainFrame::OnCloseDockers()
 {
 	CloseAllDockers();
+	return TRUE;
 }
 
-void CMainFrame::OnCloseMDIs()
+BOOL CMainFrame::OnCloseMDIs()
 {
 	m_MyTabbedMDI.CloseAllMDIChildren();
+	return TRUE;
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)

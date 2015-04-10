@@ -83,16 +83,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
-	case IDM_VIEW_LARGEICON:	OnViewLargeIcon();	return TRUE;
-	case IDM_VIEW_SMALLICON:	OnViewSmallIcon();	return TRUE;
-	case IDM_VIEW_LIST:			OnViewList();		return TRUE;
-	case IDM_VIEW_REPORT:		OnViewReport();		return TRUE;
-	case IDM_SHOW_HIDDEN:		OnShowHidden();		return TRUE;
-	case IDM_VIEWMENU:			DoPopupMenu();		return TRUE;	// This Command is recieved if Comctl32.dll version is below 4.7
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDM_HELP_ABOUT:		return OnHelp();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_VIEW_LARGEICON:	return OnViewLargeIcon();
+	case IDM_VIEW_SMALLICON:	return OnViewSmallIcon();
+	case IDM_VIEW_LIST:			return OnViewList();
+	case IDM_VIEW_REPORT:		return OnViewReport();
+	case IDM_SHOW_HIDDEN:		return OnShowHidden();
+	case IDM_VIEWMENU:			return OnViewMenu();
 	}
 
 	return FALSE;
@@ -115,50 +115,61 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CFrame::OnCreate(pcs);
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnViewLargeIcon()
+BOOL CMainFrame::OnViewLargeIcon()
 {
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewLargeIcons();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
+	return TRUE;
 } 
 
-void CMainFrame::OnViewList()
+BOOL CMainFrame::OnViewList()
 {
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewList();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
+	return TRUE;
 }
 
-void CMainFrame::OnViewReport()
+BOOL CMainFrame::OnViewMenu()
+{
+	// This Command is recieved if Comctl32.dll version is below 4.7
+	DoPopupMenu();
+	return TRUE;
+}
+
+BOOL CMainFrame::OnViewReport()
 {
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewReport();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+	return TRUE;
 }
 
-void CMainFrame::OnViewSmallIcon()
+BOOL CMainFrame::OnViewSmallIcon()
 {
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
 	GetListView()->ViewSmallIcons();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
-
+	return TRUE;
 }
 
-void CMainFrame::OnShowHidden()
+BOOL CMainFrame::OnShowHidden()
 {
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
@@ -168,6 +179,7 @@ void CMainFrame::OnShowHidden()
 
 	// Refresh the Listview display
 	GetListView()->DoDisplay();
+	return TRUE;
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)

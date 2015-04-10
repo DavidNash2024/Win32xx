@@ -14,8 +14,22 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
 	void AddCombo();
-	void ChooseColor(UINT nColor);
+	BOOL ChooseColor(UINT nColor);
+	DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
+	BOOL OnFileExit();
+	BOOL OnUseThemes();
+	BOOL OnBandColors();
+	BOOL OnFlatStyle();
+	BOOL OnLeftBands();
+	BOOL OnLockMenuBar();
+	BOOL OnRoundBorders();
+	BOOL OnShortBands();
+	BOOL OnUseLines();
+	BOOL OnViewArrows();
+	BOOL OnViewCards();
+	void SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
 	void ShowArrows(BOOL bShow);
 	void ShowCards(BOOL bShow);
 
@@ -24,7 +38,6 @@ protected:
 	virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnFileExit();
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -33,19 +46,6 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
-	void OnUseThemes();
-	void OnBandColors();
-	void OnFlatStyle();
-	void OnLeftBands();
-	void OnLockMenuBar();
-	void OnRoundBorders();
-	void OnShortBands();
-	void OnUseLines();
-	void OnViewArrows();
-	void OnViewCards();
-	void SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1, COLORREF clrBand2);
-
 	CView m_View;
 	CToolBar m_Arrows;
 	CToolBar m_Cards;

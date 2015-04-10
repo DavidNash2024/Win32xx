@@ -36,20 +36,20 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch(LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
-	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
-	case IDM_FILE_SAVE:			OnFileSaveAs();		return TRUE;
-	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDW_VIEW_STATUSBAR:	OnViewStatusBar();	return TRUE;
-	case IDW_VIEW_TOOLBAR:		OnViewToolBar();	return TRUE;
-	case IDM_HELP_ABOUT:		OnHelp();			return TRUE;
+	case IDM_FILE_NEW:			return OnFileNew();
+	case IDM_FILE_OPEN:			return OnFileOpen();
+	case IDM_FILE_SAVE:			return OnFileSaveAs();
+	case IDM_FILE_SAVEAS:		return OnFileSaveAs();
+	case IDM_FILE_EXIT:			return OnFileExit();
+	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
+	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
+	case IDM_HELP_ABOUT:		return OnHelp();
 
 	case IDW_FILE_MRU_FILE1:
 	case IDW_FILE_MRU_FILE2:
 	case IDW_FILE_MRU_FILE3:
 	case IDW_FILE_MRU_FILE4:
-	case IDW_FILE_MRU_FILE5:	OnFileMRU(wParam);	return TRUE;
+	case IDW_FILE_MRU_FILE5:	return OnFileMRU(wParam);
 	}
 
 	return FALSE;
@@ -70,13 +70,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	return CFrame::OnCreate(pcs);
 }
 
-void CMainFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
+	return TRUE;
 }
 
-void CMainFrame::OnFileMRU(WPARAM wParam)
+BOOL CMainFrame::OnFileMRU(WPARAM wParam)
 {
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	CString strMRUText = GetMRUEntry(nMRUIndex);
@@ -87,14 +88,17 @@ void CMainFrame::OnFileMRU(WPARAM wParam)
 		m_View.NewPictureFile();
 		MessageBox(_T("Failed to load File"), _T("Error"), MB_OK);
 	}
+
+	return TRUE;
 }
 
-void CMainFrame::OnFileNew()
+BOOL CMainFrame::OnFileNew()
 {
 	m_View.NewPictureFile();
+	return TRUE;
 }
 
-void CMainFrame::OnFileOpen()
+BOOL CMainFrame::OnFileOpen()
 {
 	TCHAR szFilter[] = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
 
@@ -104,6 +108,8 @@ void CMainFrame::OnFileOpen()
 	{
 		m_View.LoadPictureFile(str);
 	}
+
+	return TRUE;
 }
 
 LRESULT CMainFrame::OnFileLoaded(LPCTSTR szFile)
@@ -114,7 +120,7 @@ LRESULT CMainFrame::OnFileLoaded(LPCTSTR szFile)
 	return 0L;
 }
 
-void CMainFrame::OnFileSaveAs()
+BOOL CMainFrame::OnFileSaveAs()
 {
 	if (m_View.GetPicture())
 	{
@@ -153,6 +159,8 @@ void CMainFrame::OnFileSaveAs()
 			AddMRUEntry(str);
 		}
 	}
+
+	return TRUE;
 }
 
 void CMainFrame::SetupToolBar()

@@ -282,6 +282,8 @@ Modified CFrame::OnSetFocus
 Modified CFrame::OnSize
 Modified CFrame::OnSysColorChange
 Modified CFrame::OnSysCommand
+Modified CFrame::OnViewStatusBar
+Modified CFrame::OnViewToolBar
 Modified CFrame::SetMenuTheme
 Modified CFrame::SetReBarTheme
 Modified CFrame::SetStatusBarTheme
@@ -297,6 +299,7 @@ Modified CImageList::DragEnter
 Modified CImageList::DragLeave
 Modified CImageList::Draw
 Modified CImageList::DrawEx
+Modified CImageList::GetIconSize
 Modified CListView::GetImageList
 Modified CListView::SetImageList
 Modified CMDIChild::OnMDIActivate

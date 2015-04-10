@@ -15,15 +15,16 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
+	BOOL OnFileExit();
+	BOOL OnFileMRU(WPARAM wParam);
+	BOOL OnFileNew();
+	BOOL OnFileOpen();
+	BOOL OnFileSaveAs();
+
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(LPCREATESTRUCT pcs);
-	virtual void OnFileExit();
 	virtual LRESULT OnFileLoaded(LPCTSTR szFile);
-	virtual void OnFileMRU(WPARAM wParam);
-	virtual void OnFileNew();
-	virtual void OnFileOpen();
-	virtual void OnFileSaveAs();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

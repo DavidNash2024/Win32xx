@@ -17,12 +17,12 @@ public:
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnFileExit();
-	virtual void OnFileNew();
-	virtual void OnFileOpen();
-	virtual void OnFileSave();
-	virtual void OnFileSaveAs();
-	virtual void OnFilePrint();
+	virtual BOOL OnFileExit();
+	virtual BOOL OnFileNew();
+	virtual BOOL OnFileOpen();
+	virtual BOOL OnFileSave();
+	virtual BOOL OnFileSaveAs();
+	virtual BOOL OnFilePrint();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

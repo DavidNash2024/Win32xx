@@ -15,6 +15,7 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+	
 	void ConnectEvents();
 	CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_View; }
 	CEdit* GetComboEdit() const { return m_ComboboxEx.GetEdit(); }
@@ -31,17 +32,17 @@ public:
 	void OnPropertyChange(DISPPARAMS* pDispParams);
 	void OnStatusTextChange(DISPPARAMS* pDispParams);
 	void OnTitleChange(DISPPARAMS* pDispParams);
-	void OnFileExit();
-	void OnEditCut();
-	void OnEditCopy();
-	void OnEditPaste();
-	void OnEditDelete();
-	void OnHelpAbout();
-	void OnForward();
-	void OnBack();
-	void OnRefresh();
-	void OnHome();
-	void OnStop();
+	BOOL OnFileExit();
+	BOOL OnEditCut();
+	BOOL OnEditCopy();
+	BOOL OnEditPaste();
+	BOOL OnEditDelete();
+	BOOL OnHelpAbout();
+	BOOL OnForward();
+	BOOL OnBack();
+	BOOL OnRefresh();
+	BOOL OnHome();
+	BOOL OnStop();
 
 
 protected:
