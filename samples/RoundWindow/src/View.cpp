@@ -183,7 +183,8 @@ LRESULT CView::OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Respond to Right mouse button press
 {
 	// Create the menu
-	CMenu  Popup = CreatePopupMenu();
+	CMenu Popup;
+	Popup.CreatePopupMenu();
 	Popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
 	Popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
 	

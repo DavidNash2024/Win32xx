@@ -89,12 +89,14 @@ used instead of the handle.
    
 * Updated Samples
  - Added round window sample.
+ - Add DoubleBuffer sample.
  - Added choose font and word wrap options to notepad sample.
  - Updated black theme in themes sample.
  
 * Updated the documentation
   - Within Using Win32++
     - Updated Graphics Device Intereface (GDI)
+	- Added Bitmaps
 	- Added ImageLists
 	- Added Menus
    

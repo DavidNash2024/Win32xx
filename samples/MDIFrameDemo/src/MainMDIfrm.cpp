@@ -152,6 +152,30 @@ BOOL CMainMDIFrame::OnFileNewView()
 	return TRUE;
 }
 
+BOOL CMainMDIFrame::OnMDICascade()
+{ 
+	MDICascade(); 
+	return TRUE; 
+}
+
+BOOL CMainMDIFrame::OnMDICloseAll()
+{ 
+	RemoveAllMDIChildren(); 
+	return TRUE;
+}
+
+BOOL CMainMDIFrame::OnMDIIconArrange() 
+{
+	MDIIconArrange();
+	return TRUE; 
+}
+
+BOOL CMainMDIFrame::OnMDITile()
+{ 
+	MDITile(); 
+	return TRUE; 
+}
+
 LRESULT CMainMDIFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
 	// Notification from our dropdown button is recieved if Comctl32.dll version

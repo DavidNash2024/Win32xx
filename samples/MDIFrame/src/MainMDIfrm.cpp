@@ -132,6 +132,30 @@ BOOL CMainMDIFrame::OnFileNew()
 	return TRUE;
 }
 
+BOOL CMainMDIFrame::OnMDICascade()
+{
+	MDICascade(); 
+	return TRUE; 
+}
+
+BOOL CMainMDIFrame::OnMDICloseAll() 
+{
+	RemoveAllMDIChildren(); 
+	return TRUE; 
+}
+
+BOOL CMainMDIFrame::OnMDIIconArrange() 
+{ 
+	MDIIconArrange(); 
+	return TRUE; 
+}
+
+BOOL CMainMDIFrame::OnMDITile() 
+{
+	MDITile(); 
+	return TRUE; 
+}
+
 void CMainMDIFrame::SetupToolBar()
 {
 	// Define the resource IDs for the toolbar

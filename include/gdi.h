@@ -1143,7 +1143,6 @@ namespace Win32xx
 
 	inline CBitmap::operator HBITMAP() const
 	{
-		assert(GetHandle());
 		return (HBITMAP)GetHandle();
 	}
 

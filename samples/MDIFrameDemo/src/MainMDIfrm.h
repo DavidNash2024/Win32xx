@@ -27,10 +27,10 @@ public:
 	BOOL OnFileNewText();
 	BOOL OnFileNewTree();
 	BOOL OnFileNewView();
-	BOOL OnMDICascade() { MDICascade(); return TRUE; }
-	BOOL OnMDICloseAll() { RemoveAllMDIChildren(); return TRUE; }
-	BOOL OnMDIIconArrange() { MDIIconArrange(); return TRUE; }
-	BOOL OnMDITile() { MDITile(); return TRUE; }
+	BOOL OnMDICascade();
+	BOOL OnMDICloseAll();
+	BOOL OnMDIIconArrange();
+	BOOL OnMDITile();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

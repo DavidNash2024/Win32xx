@@ -1479,13 +1479,13 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL)
+	inline CWnd::CWnd() : m_hWnd(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		//       m_pData is assigned in CWnd::Create(...)
 	}
 
-	inline CWnd::CWnd(HWND hWnd)
+	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
 	{
 		// A private constructor, used internally.
 		
