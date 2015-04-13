@@ -277,6 +277,7 @@ namespace Win32xx
 		long		Count;
 	};
 
+#ifndef _WIN32_WCE
 	struct CMenu_Data	// A structure that contains the data members for CMenu
 	{
 		// Constructor
@@ -287,6 +288,7 @@ namespace Win32xx
 		bool IsManagedMenu;
 		long Count;
 	};	
+#endif
 
 	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
 	{
@@ -477,7 +479,9 @@ namespace Win32xx
 		CDC_Data* GetCDCDataFromMap(HDC hDC);
 		CGDI_Data* GetCGDIDataFromMap(HGDIOBJ hObject);
 		CIml_Data* GetCImlDataFromMap(HIMAGELIST himl);
+#ifndef _WIN32_WCE
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
+#endif
 
 #ifdef USE_OBSOLETE_CODE
 		CDC* GetCDCFromMap(HDC hDC);
@@ -496,7 +500,9 @@ namespace Win32xx
 		std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
 		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
+#ifndef _WIN32_WCE
 		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
+#endif
 
 #ifdef USE_OBSOLETE_CODE
 		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
@@ -1202,6 +1208,7 @@ namespace Win32xx
 		return pCImlData;
 	}
 
+#ifndef _WIN32_WCE
 	inline CMenu_Data* CWinApp::GetCMenuDataFromMap(HMENU hMenu)
 	{
 		std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
@@ -1217,6 +1224,7 @@ namespace Win32xx
 		m_csMapLock.Release();
 		return pCMenuData;
 	}
+#endif
 
 #ifdef USE_OBSOLETE_CODE
 	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
@@ -2348,8 +2356,13 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(IsWindow());
 
+#ifndef _WIN32_WCE
 		HICON hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), LR_SHARED));
+#else
+		HICON hIconLarge = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
+		::GetSystemMetrics (SM_CXICON), ::GetSystemMetrics (SM_CYICON), 0));
+#endif
 
 		if (hIconLarge != 0)
 			SendMessage (WM_SETICON, WPARAM (ICON_BIG), LPARAM (hIconLarge));
@@ -2365,8 +2378,13 @@ namespace Win32xx
 		assert( GetApp() );
 		assert(IsWindow());
 
+#ifndef _WIN32_WCE
 		HICON hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
 		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), LR_SHARED));
+#else
+		HICON hIconSmall = (HICON) (::LoadImage (GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIcon), IMAGE_ICON,
+		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
+#endif
 
 		if (hIconSmall != 0)
 			SendMessage (WM_SETICON, WPARAM (ICON_SMALL), LPARAM (hIconSmall));

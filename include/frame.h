@@ -378,7 +378,7 @@ namespace Win32xx
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
 		virtual void OnDestroy();
-		virtual LRESULT	OnHelp();
+		virtual BOOL OnHelp();
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
@@ -2284,7 +2284,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CFrame::OnHelp()
+	inline BOOL CFrame::OnHelp()
 	// Called to display help (WM_HELP received or selected via menu)
 	{
 		// Ensure only one dialog displayed even for multiple hits of the F1 button
