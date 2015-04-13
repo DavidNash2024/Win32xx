@@ -1,9 +1,6 @@
 Version 7.9
 ===========
 
-WARNING!  Early adopters are advised that this version has significant changes
-which introduces incompatibilities with previous versions.
-
 Overview
 --------
 This version of Win32++ moves away from the use of pointers. Where before we 
@@ -95,7 +92,7 @@ used instead of the handle.
  
 * Updated the documentation
   - Within Using Win32++
-    - Updated Graphics Device Intereface (GDI)
+    - Updated Graphics Device Interface (GDI)
 	- Added Bitmaps
 	- Added ImageLists
 	- Added Menus
@@ -132,7 +129,8 @@ Step by step guide to code migration
   macro you will need to use non-pointer versions of function arguments.
 
 2) Replace pointers to Win32++ objects to their non-pointer equivalents.
-   This can be done by dereferencing the pointer (add a * before the pointer).   
+   This could be done by dereferencing the pointer (add a * before the pointer),
+   or by removing the address-of operator & .   
 
 3) Use "." instead of "->" when using the return of Win32++ functions.
 
@@ -276,6 +274,7 @@ Modified CFrame::GetToolBarTheme
 Modified CFrame::OnActivate
 Modified CFrame::OnDrawItem
 Modified CFrame::OnExitMenuLoop
+Modified CFrame::OnHelp
 Modified CFrame::OnInitMenuPopup
 Modified CFrame::OnMeasureItem
 Modified CFrame::OnMenuChar

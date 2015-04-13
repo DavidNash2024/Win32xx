@@ -275,7 +275,7 @@ namespace Win32xx
 			{
 				pMenu = new CMenu;
 				pMenu->m_pData->hMenu = hMenu;
-				pMenu->m_pData->IsTmpMenu = TRUE;
+				pMenu->m_pData->IsManagedMenu = FALSE;
 				pTLSData->TmpMenus.insert(std::make_pair(hMenu, pMenu));
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);

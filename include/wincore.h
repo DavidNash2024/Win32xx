@@ -446,6 +446,15 @@ namespace Win32xx
 		friend class CTaskDialog;
 		friend class CWinThread;
 		friend class CWnd;
+
+#ifdef USE_OBSOLETE_CODE
+		friend class CBitmap;
+		friend class CBrush;
+		friend class CFont;
+		friend class CPalette;
+		friend class CPen;
+		friend class CRgn;
+#endif
 		friend CWinApp* GetApp();
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
@@ -767,6 +776,10 @@ namespace Win32xx
 
 		Shared_Ptr<DataMembers> m_pData;
 		WNDPROC	m_PrevWindowProc;
+
+	#ifdef USE_OBSOLETE_CODE
+		BOOL m_IsTmpWnd;
+	#endif
 
 	}; // class CWnd
 
@@ -1491,12 +1504,20 @@ namespace Win32xx
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		//       m_pData is assigned in CWnd::Create(...)
+
+	#ifdef USE_OBSOLETE_CODE
+		m_IsTmpWnd = FALSE;
+	#endif
 	}
 
 	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
 	{
 		// A private constructor, used internally.
-		
+	
+	#ifdef USE_OBSOLETE_CODE
+		m_IsTmpWnd = FALSE;
+	#endif
+
 		m_hWnd = hWnd;
 	}
 
@@ -1918,7 +1939,7 @@ namespace Win32xx
 				// No exiting CWnd for this HWND, so create one
 				pWnd = new CWnd;
 				pWnd->m_hWnd = hWnd;
-				pWnd->m_IsManagedHwnd = FALSE;
+				pWnd->m_IsTmpWnd = TRUE;
 				pTLSData->TmpWnds.insert(std::make_pair(hWnd, pWnd));
 
 				::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);

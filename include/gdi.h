@@ -140,6 +140,15 @@ namespace Win32xx
 	//
 	class CGDIObject
 	{
+#ifdef USE_OBSOLETE_CODE
+		friend class CBitmap;
+		friend class CBrush;
+		friend class CFont;
+		friend class CPalette;
+		friend class CPen;
+		friend class CRgn;
+#endif
+
 	public:
 		CGDIObject();
 		CGDIObject(const CGDIObject& rhs);
@@ -2331,7 +2340,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 				pDC = new CDC;
 				pTLSData->TmpDCs.insert(std::make_pair(hDC, pDC));
 				pDC->m_pData->hDC = hDC;
-				pDC->m_pData->m_IsManagedHDC = FALSE;
+				pDC->m_pData->IsManagedHDC = FALSE;
 
 				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
