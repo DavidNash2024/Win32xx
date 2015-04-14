@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2014  David Nash
+// Copyright (c) 2005-2015  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -2838,7 +2838,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(pcs);
 
 #if (WINVER >= 0x0500)
-		if (GetParent()->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		if (GetParent().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 		{
 			DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
 			SetWindowLongPtr(GWL_EXSTYLE, dwExStyle | WS_EX_LAYOUTRTL);

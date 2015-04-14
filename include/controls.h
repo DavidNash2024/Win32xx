@@ -1063,8 +1063,8 @@ namespace Win32xx
 	inline CRect CHeader::GetItemRect(int nIndex) const
 	{
 		assert(IsWindow());
-		RECT rc;
-		Header_GetItemRect(*this, nIndex, &rc);
+		CRect rc;
+		SendMessage(HDM_GETITEMRECT, (WPARAM)nIndex, (WPARAM)&rc);
 		return rc;
 	}
 
