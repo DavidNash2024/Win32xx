@@ -157,10 +157,10 @@ Other tips:
    This allows them to be safely passed by value in function calls. More
    importantly, it also allows these to be safely returned from functions. 
    Reference counting permits this:
-    CDC dc = GetDCEx(hrgnClip, flags);
-	CMenu PopupMenu = TopMenu.GetSubMenu(0);
-	CImageList imlHot = GetToolBar().GetHotImageList();
-    CFont myfont = GetFont();    
+    CDC dc = GetDCEx(hrgnClip, flags);            // GetDCEx returns CWnd
+	CMenu PopupMenu = TopMenu.GetSubMenu(0);      // GetSubMenu returns CMenu
+	CImageList iml = GetToolBar().GetImageList(); // GetImageList return CImageList
+    CFont myfont = GetFont();                     // GetFont returns CFont
    
 *) GetCWndPtr can be used to retrieve a CWnd pointer from the global map.
 

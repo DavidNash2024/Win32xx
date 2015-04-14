@@ -1,5 +1,5 @@
-Win32++   Version 7.9 alpha
-Release Date: TBA
+Win32++   Version 7.9
+Release Date: 14th April 2015
 
      David Nash
      email: dnash@bigpond.net.au

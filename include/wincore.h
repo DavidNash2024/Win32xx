@@ -1,5 +1,5 @@
-// Win32++   Version 7.9 alpha
-// Release Date: TBA
+// Win32++   Version 7.9
+// Release Date: 14th April 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1880,6 +1880,12 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
+
+#ifdef USE_OBSOLETE_CODE
+	if (m_IsTmpWnd)
+		return;
+#endif
+
 		if (GetCWndPtr(m_hWnd) == this)
 		{
 			if (IsWindow())
@@ -1942,7 +1948,7 @@ namespace Win32xx
 				pWnd->m_IsTmpWnd = TRUE;
 				pTLSData->TmpWnds.insert(std::make_pair(hWnd, pWnd));
 
-				::PostMessage(hWnd, UWM_CLEANUPTEMPS, 0, 0);
+				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
 			}
 		}
 
