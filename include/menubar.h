@@ -841,7 +841,7 @@ namespace Win32xx
 		BOOL bRightToLeft = FALSE;
 
 #if (WINVER >= 0x0500)
-		bRightToLeft = ((GetAncestor()->GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
+		bRightToLeft = ((GetAncestor().GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
 #endif
 
 		int xPos = bRightToLeft? rc.right : rc.left;
