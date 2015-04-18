@@ -1395,6 +1395,7 @@ namespace Win32xx
 	// cx and cy are the desired width and height in pixels
 	// fuLoad can be LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, LR_DEFAULTSIZE, LR_LOADFROMFILE,
 	//   LR_LOADMAP3DCOLORS, R_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED, LR_VGACOLOR.
+	// The image should be destroyed unless it is loaded with LR_SHARED
 	{
 		return ::LoadImage(GetApp()->GetResourceHandle(), MAKEINTRESOURCE (nIDImage), uType, cx, cy, fuLoad);
 	}

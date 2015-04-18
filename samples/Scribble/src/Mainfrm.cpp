@@ -243,49 +243,14 @@ BOOL CMainFrame::OnFilePrint()
 void CMainFrame::OnInitialUpdate()
 {
 	// Here we process the command line arguments, and automatically load a file if one is specified.
-	// GetCommandLineW retrieves our command line arguments.
-	// CommandLineToArgvW parses the command line arguements in to an array of strings
-	// The first string (lpArgv[0]) contains the name of our program
-	// The second string (lpArg[1]) contains an additional parameter (presumably a filename to load).
-	// CommandLineToArgvW is not supported in Win95, Win98 or WinME
+	// GetCommandLineArgs retrieves our command line arguments and stores them in a vector of CString.
 
-
-	// CommandLineToArgvW might not be supported, so use run-time dynamic linking to call the function
-	HMODULE hMod = LoadLibrary(_T("Shell32.dll"));
-	if (hMod)
-	{
-		// Get a pointer to the CommandLineToArgvW function
-		LPWSTR* (WINAPI* fpGetCommandLineW)(LPCWSTR, int*);
-		fpGetCommandLineW = (LPWSTR* (WINAPI*)(LPCWSTR, int*))::GetProcAddress(hMod, "CommandLineToArgvW");
-
-		if (fpGetCommandLineW)
-		{
-			int argCount = 0;
-			LPWSTR* lpArgv = (*fpGetCommandLineW)(::GetCommandLineW(), &argCount);
-
-			// The second argument (if any) contains our file name.
-			if (argCount >= 2)
-			{
-				m_View.FileOpen((W2T(lpArgv[1])));
-			}
-
-			LocalFree(lpArgv);
-		}
-
-		FreeLibrary(hMod);
-	} 
-
-/*	
-	// This works on Win2000 and above
-	int argCount = 0;
-	LPWSTR* lpArgv = ::CommandLineToArgvW(::GetCommandLineW(), &argCount);
-
+	std::vector<CString> args = GetCommandLineArgs();
 	// The second argument (if any) contains our file name.
-	if (argCount >= 2)
+	if (args.size() > 1)
 	{
-		m_View.FileOpen((W2T(lpArgv[1])));
+		m_View.FileOpen(args[1]);
 	}
-*/
 }
 
 BOOL CMainFrame::OnPenColor()

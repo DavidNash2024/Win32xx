@@ -399,7 +399,10 @@ namespace Win32xx
 	// Finds a character in the string.
 	{
 		assert(nIndex >= 0);
-		return (int)m_str.find(ch, nIndex);
+		size_t s = m_str.find(ch, nIndex);
+		
+		if (s == std::string::npos) return -1;
+		return (int)s;
 	}
 
 	inline int CString::Find(LPCTSTR pszText, int nIndex /* = 0 */) const
@@ -407,14 +410,20 @@ namespace Win32xx
 	{
 		assert(pszText);
 		assert(nIndex >= 0);
-		return (int)m_str.find(pszText, nIndex);
+		size_t s = m_str.find(pszText, nIndex);
+
+		if (s == std::string::npos) return -1;
+		return (int)s;
 	}
 
 	inline int CString::FindOneOf(LPCTSTR pszText) const
 	// Finds the first matching character from a set.
 	{
 		assert(pszText);
-		return (int)m_str.find_first_of(pszText);
+		size_t s = m_str.find_first_of(pszText);
+
+		if (s == std::string::npos) return -1;
+		return (int)s;
 	}
 
 	inline void CString::Format(LPCTSTR pszFormat,...)
@@ -977,6 +986,58 @@ namespace Win32xx
 		CString str;
 		str.LoadString(nID);
 		return str;
+	}
+
+	inline std::vector<CString> GetCommandLineArgs()
+	// Retrieves the command line arguments and stores them in a vector of CString.
+	// Similar to CommandLineToArgvW, but supports all versions of Windows,
+	// supports ANSI and Unicode, and doesn't require the user to use LocalFree.
+	{
+		std::vector<CString> CommandLineArgs;
+		CString CommandLine = GetCommandLine();
+		int index = 0;
+		int endPos = 0;
+
+		while (index < CommandLine.GetLength() )
+		{
+			// Is the argument quoted?
+			bool IsQuoted = (CommandLine[index] == _T('\"'));
+
+			if (IsQuoted)
+			{
+				// Find the terminating token (quote followed by space)
+				endPos = CommandLine.Find( _T("\" ") , index);
+				if (endPos == -1) endPos = CommandLine.GetLength()-1;
+
+				// Store the argument in the CString vector without the quotes.
+				CString s;
+				if (endPos - index < 2)
+					s = _T("\"\"");		// "" for a single quote or double quote argument
+				else
+					s = CommandLine.Mid(index +1, endPos - index -1);
+				
+				CommandLineArgs.push_back(s);
+				index = endPos + 2;
+			}
+			else
+			{
+				// Find the terminating token (space character)
+				endPos = CommandLine.Find( _T(' ') , index);
+				if (endPos == -1) endPos = CommandLine.GetLength();
+
+				// Store the argument in the CString vector.
+				CString s = CommandLine.Mid(index, endPos - index);
+				CommandLineArgs.push_back(s);
+				index = endPos + 1;
+			}
+			
+			// skip excess space characters
+			while (index < CommandLine.GetLength() && CommandLine[index] == _T(' '))
+				index++;
+		}
+
+		// CommandLineArgs is a vector of CString
+		return CommandLineArgs;
 	}
 
 
