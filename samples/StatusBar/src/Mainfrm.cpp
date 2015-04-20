@@ -90,10 +90,12 @@ LRESULT CMainFrame::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		dc.SetTextColor(RGB(10,20,250));
 		dc.SetBkMode(TRANSPARENT);
 		dc.TextOut(rcPart.left,rcPart.top,_T("Owner Draw"), 10);
+
+		return TRUE;
 	}
 
 	// Allow the frame to perform owner drawing menu items.
-	return CFrame::OnDrawItem(wParam, lParam);
+	return CFrame::OnDrawItem(uMsg, wParam, lParam);
 }
 
 BOOL CMainFrame::OnFileExit()

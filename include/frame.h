@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -419,19 +419,6 @@ namespace Win32xx
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// Obsolete declarations of message handlers
-		virtual LRESULT OnActivate(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnDrawItem(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnExitMenuLoop(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMeasureItem(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMenuChar(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMenuSelect(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSetFocus(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSize(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
 
 		DWORD GetShowCmd() const { return m_ShowCmd; }
 		BOOL GetShowStatusBar() const { return m_ShowStatusBar; }
@@ -1849,7 +1836,6 @@ namespace Win32xx
 	//  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar())
 	{
 		ClientToScreen(rcClient);
-	//	CRect rcChildWindow = Child.GetWindowRect();
 
 		CRect rcChildWindow;
 		::GetWindowRect(hChild, &rcChildWindow);
@@ -2104,7 +2090,7 @@ namespace Win32xx
 		pmis->itemHeight = size.cy;
 	}
 
-	inline LRESULT CFrame::OnActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the frame is activated (WM_ACTIVATE received)
 	{
 		// Perform default processing first
@@ -2208,7 +2194,7 @@ namespace Win32xx
 		GetMenuBar().SetWindowTheme(L" ", L" ");
 
 		// Reposition the child windows
-		OnSysColorChange(0, 0);
+		SendMessage(WM_SYSCOLORCHANGE);
 
 		RecalcLayout();
 
@@ -2245,7 +2231,7 @@ namespace Win32xx
 		::PostQuitMessage(0);	// Terminates the application
 	}
 
-	inline LRESULT CFrame::OnDrawItem(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
@@ -2258,7 +2244,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline LRESULT CFrame::OnExitMenuLoop(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnExitMenuLoop(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the menu's modal loop has ended (WM_EXITMENULOOP received)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -2303,7 +2289,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline LRESULT CFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the menu's modal loop begins (WM_INITMENUPOPUP received)
 	{
 		// The system menu shouldn't be owner drawn
@@ -2348,7 +2334,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CFrame::OnMeasureItem(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMeasureItem(UINT, WPARAM wParam, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
@@ -2360,7 +2346,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline LRESULT CFrame::OnMenuChar(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when a menu is active, and a key is pressed other than an accelerator.
 	{
 		if ((IsMenuBarUsed()) && (LOWORD(wParam)!= VK_SPACE))
@@ -2373,7 +2359,7 @@ namespace Win32xx
 		return FinalWindowProc(WM_MENUCHAR, wParam, lParam);
 	}
 
-	inline LRESULT CFrame::OnMenuSelect(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMenuSelect(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when a menu item is selected.
 	{
 		// Set the StatusBar text when we hover over a menu
@@ -2511,7 +2497,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline LRESULT CFrame::OnSetFocus(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2520,7 +2506,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CFrame::OnSize(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSize(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2529,7 +2515,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CFrame::OnSysColorChange(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2597,7 +2583,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CFrame::OnSysCommand(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenuBarUsed())
 		{
@@ -3409,84 +3395,11 @@ namespace Win32xx
 		DrawMenuBar();
 	}
 
-	// For this version only, the current definitions use the obsolete ones.
-	inline LRESULT CFrame::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnActivate(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnDrawItem(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnExitMenuLoop(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnExitMenuLoop(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnInitMenuPopup(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnMenuChar(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnMeasureItem(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnMeasureItem(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnMenuSelect(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnMenuSelect(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnSetFocus(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnSize(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnSize(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnSysColorChange(wParam, lParam);
-	}
-
-	inline LRESULT CFrame::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnSysCommand(wParam, lParam);
-	}
-
 	inline LRESULT CFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Handle the frame's window messages.
 	{
 		switch (uMsg)
 		{
-
-#ifdef USE_OBSOLETE_CODE
-		case WM_ACTIVATE:		return OnActivate(wParam, lParam);
-		case WM_DRAWITEM:		return OnDrawItem(wParam, lParam);
-		case WM_ERASEBKGND:		return 0L;
-		case WM_EXITMENULOOP:	return OnExitMenuLoop(wParam, lParam);
-		case WM_HELP:			return OnHelp();
-		case WM_INITMENUPOPUP:	return OnInitMenuPopup(wParam, lParam);
-		case WM_MENUCHAR:		return OnMenuChar(wParam, lParam);
-		case WM_MEASUREITEM:	return OnMeasureItem(wParam, lParam);
-		case WM_MENUSELECT:		return OnMenuSelect(wParam, lParam);
-		case WM_SETFOCUS:		return OnSetFocus(wParam, lParam);
-		case WM_SIZE:			return OnSize(wParam, lParam);
-		case WM_SYSCOLORCHANGE:	return OnSysColorChange(wParam, lParam);
-		case WM_SYSCOMMAND:		return OnSysCommand(wParam, lParam);
-		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
-#else
 		case WM_ACTIVATE:		return OnActivate(uMsg, wParam, lParam);
 		case WM_DRAWITEM:		return OnDrawItem(uMsg, wParam, lParam);
 		case WM_ERASEBKGND:		return 0L;
@@ -3501,7 +3414,6 @@ namespace Win32xx
 		case WM_SYSCOLORCHANGE:	return OnSysColorChange(uMsg, wParam, lParam);
 		case WM_SYSCOMMAND:		return OnSysCommand(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
-#endif
 
 		// Messages defined by Win32++
 		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView()->GetHwnd() : NULL);

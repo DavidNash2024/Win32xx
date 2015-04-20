@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -126,10 +126,6 @@ namespace Win32xx
 		void DestroyMenu();
 		HMENU Detach();
 
-#ifdef USE_OBSOLETE_CODE
-		static CMenu* FromHandle(HMENU hMenu);
-#endif
-
 		HMENU GetHandle() const;
 		BOOL LoadMenu(LPCTSTR lpszResourceName);
 		BOOL LoadMenu(UINT uIDResource);
@@ -252,38 +248,6 @@ namespace Win32xx
 		GetApp()->m_mapCMenuData.insert(std::make_pair(m_pData->hMenu, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline CMenu* CMenu::FromHandle(HMENU hMenu)
-	// Returns the CMenu object associated with the menu handle (HMENU).
-	{
-		assert( GetApp() );
-
-		// Find an existing permanent CMenu from the map
-		CMenu* pMenu = GetApp()->GetCMenuFromMap(hMenu);
-		if ((0 != hMenu) && (0 == pMenu))
-		{		
-			// Find any existing temporary CMenu for the HMENU
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HMENU, MenuPtr, CompareHMENU>::iterator m;
-			m = pTLSData->TmpMenus.find(hMenu);
-	
-			if (m != pTLSData->TmpMenus.end())
-				pMenu = m->second.get();
-
-			if (!pMenu)
-			{
-				pMenu = new CMenu;
-				pMenu->m_pData->hMenu = hMenu;
-				pMenu->m_pData->IsManagedMenu = FALSE;
-				pTLSData->TmpMenus.insert(std::make_pair(hMenu, pMenu));
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pMenu;
-	}
-#endif
 
 	inline void CMenu::Release()
 	{

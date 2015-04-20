@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -53,10 +53,6 @@ namespace Win32xx
 		virtual ~CStatusBar() {}
 
 	// Overridables
-#ifdef USE_OBSOLETE_CODE
-		virtual BOOL OnEraseBkgnd(CDC* pDC);
-#endif
-
 		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
@@ -146,15 +142,6 @@ namespace Win32xx
 		assert(IsWindow());
 		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline BOOL CStatusBar::OnEraseBkgnd(CDC* pDC)
-	{
-		// Permit the parent window to handle the drawing of the ReBar's background.
-		// Return TRUE to suppress default background drawing.
-		return (TRUE == GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)pDC, (LPARAM)this));
-	}
-#endif
 
 	inline BOOL CStatusBar::OnEraseBkgnd(CDC& dc)
 	{

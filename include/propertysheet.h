@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -123,11 +123,6 @@ namespace Win32xx
 
 		// Operations
 		virtual CPropertyPage* AddPage(CPropertyPage* pPage);
-
-#ifdef USE_OBSOLETE_CODE
-		virtual HWND Create(CWnd* pParent = 0);
-#endif
-
 		virtual HWND Create(HWND hParent = 0);
 		virtual INT_PTR CreatePropertySheet(LPCPROPSHEETHEADER ppsph);
 		virtual void DestroyButton(int iButton);
@@ -291,21 +286,12 @@ namespace Win32xx
 				if (::GetUpdateRect(*this, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
-
-#ifdef USE_OBSOLETE_CODE
-					OnDraw(&dc);
-#endif
 					OnDraw(dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(*this);
-
-#ifdef USE_OBSOLETE_CODE
-					OnDraw(&dc);
-#endif
-
 					OnDraw(dc);
 				}
 
@@ -316,11 +302,6 @@ namespace Win32xx
 			{
 				CDC dc((HDC)wParam);
 				BOOL bResult;
-
-#ifdef USE_OBSOLETE_CODE
-				bResult = OnEraseBkgnd(&dc);
-#endif
-
 				bResult = OnEraseBkgnd(dc);
 
 				if (bResult) return TRUE;
@@ -739,30 +720,6 @@ namespace Win32xx
 			break;
 		}
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline HWND CPropertySheet::Create(CWnd* pParent /*= 0*/)
-	// Creates a modeless Property Sheet
-	{
-		assert( GetApp() );
-
-		if (pParent)
-		{
-			m_PSH.hwndParent = pParent->GetHwnd();
-		}
-
-		BuildPageArray();
-		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();
-		m_PSH.ppsp = pPSPArray;
-
-		// Create a modeless Property Sheet
-		m_PSH.dwFlags &= ~PSH_WIZARD;
-		m_PSH.dwFlags |= PSH_MODELESS;
-		HWND hWnd = (HWND)CreatePropertySheet(&m_PSH);
-
-		return hWnd;
-	}
-#endif
 
 	inline HWND CPropertySheet::Create(HWND hParent /*= 0*/)
 	// Creates a modeless Property Sheet

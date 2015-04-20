@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -336,21 +336,12 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
-
-#ifdef USE_OBSOLETE_CODE
-					OnDraw(&dc);
-#endif
-
 					OnDraw(dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(*this);
-
-#ifdef USE_OBSOLETE_CODE
-					OnDraw(&dc);
-#endif
 					OnDraw(dc);
 				}
 
@@ -361,10 +352,6 @@ namespace Win32xx
 			{
 				CDC dc((HDC)wParam);
 				BOOL bResult;
-
-#ifdef USE_OBSOLETE_CODE
-				bResult = OnEraseBkgnd(&dc);
-#endif
 				
 				bResult = OnEraseBkgnd(dc);
 				if (bResult) return TRUE;
@@ -435,7 +422,6 @@ namespace Win32xx
 			// Tidy up
 			m_hWnd = NULL;
 			pTLSData->pWnd = NULL;
-			GetApp()->CleanupTemps();
 
 		#ifndef _WIN32_WCE
 			InterlockedDecrement(&pTLSData->nDlgHooks);
@@ -667,11 +653,6 @@ namespace Win32xx
 			++lCount;
 		}
 		lCount = 0;
-
-		if (Msg.message == UWM_CLEANUPTEMPS)
-		{
-			GetApp()->CleanupTemps();
-		}
 
 		if (nCode == MSGF_DIALOGBOX)
 		{

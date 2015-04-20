@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: Not officially released
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -518,17 +518,6 @@ namespace Win32xx
 		virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
-		// Obsolete declarations of message handlers
-		virtual LRESULT OnDockActivated(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnDockDestroyed(WPARAM wParam, LPARAM lParam);		
-		virtual LRESULT OnExitSizeMove(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSysColorChange(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSysCommand(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnTimer(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnWindowPosChanging(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 
 	private:
 		CDocker(const CDocker&);				// Disable copy construction
@@ -2922,8 +2911,9 @@ namespace Win32xx
 			GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, (WPARAM)this, 0L);
 	}
 
-	inline LRESULT CDocker::OnDockDestroyed(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
 		CDocker* pDock = reinterpret_cast<CDocker*>(wParam);
 
@@ -3015,8 +3005,9 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDocker::OnExitSizeMove(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnExitSizeMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
@@ -3027,10 +3018,10 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDocker::OnNCLButtonDblClk(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		m_IsDragging = FALSE;
-		return FinalWindowProc(WM_NCLBUTTONDBLCLK, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -3050,8 +3041,9 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDocker::OnTimer(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
 
 		if (this == GetDockAncestor())
@@ -3126,7 +3118,7 @@ namespace Win32xx
 		RecalcDockLayout();
 	}
 
-	inline LRESULT CDocker::OnSysColorChange(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -3153,10 +3145,10 @@ namespace Win32xx
 			SetBarColor(rgbColour);
 		}
 
-		return FinalWindowProc(WM_SYSCOLORCHANGE, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CDocker::OnSysCommand(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(wParam&0xFFF0)
 		{
@@ -3186,10 +3178,10 @@ namespace Win32xx
 			m_IsClosing = TRUE;
 			break;
 		}
-		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CDocker::OnWindowPosChanging(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Suspend dock drag moving while over dock zone
 		if (m_IsBlockMove)
@@ -3199,10 +3191,10 @@ namespace Win32xx
 			return 0;
 		}
 
-		return FinalWindowProc(WM_WINDOWPOSCHANGING, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline LRESULT CDocker::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
@@ -3227,7 +3219,7 @@ namespace Win32xx
 			if (IsUndocked() && IsWindowVisible() && !m_IsClosing) RecalcDockLayout();
 		}
 
-		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline void CDocker::PreCreate(CREATESTRUCT &cs)
@@ -3995,7 +3987,7 @@ namespace Win32xx
 		pDock->BringWindowToTop();
 	}
 
-	inline LRESULT CDocker::OnDockActivated(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Redraw captions to take account of focus change
 		DrawAllCaptions();
@@ -4004,73 +3996,13 @@ namespace Win32xx
 		SetTimer(TIMER_ID1, 200, NULL);
 		SetTimer(TIMER_ID2, 800, NULL);
 		
-		return CWnd::WndProcDefault(UWM_DOCKACTIVATE, wParam, lParam);
-	}
-
-
-	// For this version only, the current definitions use the obsolete ones.
-	inline LRESULT CDocker::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnSysCommand(wParam, lParam);
-	}
-	
-	inline LRESULT CDocker::OnExitSizeMove(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnExitSizeMove(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnNCLButtonDblClk(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnNCLButtonDblClk(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnSysColorChange(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnTimer(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnTimer(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnWindowPosChanging(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnWindowPosChanging(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnWindowPosChanged(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnWindowPosChanged(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnDockActivated(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnDockActivated(wParam, lParam);
-	}
-
-	inline LRESULT CDocker::OnDockDestroyed(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnDockDestroyed(wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-#ifdef USE_OBSOLETE_CODE
-		case WM_SYSCOMMAND:			return OnSysCommand(wParam, lParam);
-		case WM_EXITSIZEMOVE:		return OnExitSizeMove(wParam, lParam);
-		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(wParam, lParam);
-		case WM_SYSCOLORCHANGE:		return OnSysColorChange(wParam, lParam);
-		case WM_TIMER:				return OnTimer(wParam, lParam);
-		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(wParam, lParam);
-		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
-
-		// Messages defined by Win32++
-		case UWM_DOCKACTIVATE:		return OnDockActivated(wParam, lParam);
-		case UWM_DOCKDESTROYED:		return OnDockDestroyed(wParam, lParam);
-#else
 		case WM_SYSCOMMAND:			return OnSysCommand(uMsg, wParam, lParam);
 		case WM_EXITSIZEMOVE:		return OnExitSizeMove(uMsg, wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(uMsg, wParam, lParam);
@@ -4082,7 +4014,7 @@ namespace Win32xx
 		// Messages defined by Win32++
 		case UWM_DOCKACTIVATE:		return OnDockActivated(uMsg, wParam, lParam);
 		case UWM_DOCKDESTROYED:		return OnDockDestroyed(uMsg, wParam, lParam);
-#endif
+
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -4506,7 +4438,6 @@ namespace Win32xx
 				pNewContainer->GetViewPage()->GetView()->SetFocus();
 
 				// Adjust the docking caption
-			//	CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(::GetParent(::GetParent(m_hWnd))));
 				CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
 				if (dynamic_cast<CDocker*>(pDock))
 				{

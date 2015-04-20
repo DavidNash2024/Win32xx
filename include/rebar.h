@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -93,11 +93,6 @@ namespace Win32xx
 
 	protected:
 	//Overridables
-
-#ifdef USE_OBSOLETE_CODE
-		virtual BOOL OnEraseBkgnd(CDC* pDC);
-#endif
-
 		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -326,15 +321,6 @@ namespace Win32xx
 
 		return !(rbbi.fStyle & RBBS_HIDDEN);
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline BOOL CReBar::OnEraseBkgnd(CDC* pDC)
-	{
-		// Permit the parent window to handle the drawing of the ReBar's background.
-		// Return TRUE to suppress default background drawing.
-		return (TRUE == GetParent().SendMessage(UWM_DRAWRBBKGND, (WPARAM)pDC, (LPARAM)this));
-	}
-#endif
 
 	inline BOOL CReBar::OnEraseBkgnd(CDC& dc)
 	{

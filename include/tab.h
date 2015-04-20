@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -159,11 +159,6 @@ namespace Win32xx
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnAttach();
 		virtual void	OnDestroy();
-
-#ifdef USE_OBSOLETE_CODE
-		virtual BOOL    OnEraseBkgnd(CDC*) { return TRUE;}
-#endif
-
 		virtual BOOL    OnEraseBkgnd(CDC&) { return TRUE;}
 		virtual LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -236,10 +231,6 @@ namespace Win32xx
 		virtual void SetActiveMDITab(int nTab);
 
 	protected:
-#ifdef USE_OBSOLETE_CODE
-		virtual HWND    Create(CWnd* pParent);
-#endif
-
 		virtual HWND    Create(HWND hWndParent);
 		virtual CWnd*   NewMDIChildFromID(int idMDIChild);
 		virtual void 	OnAttach();
@@ -1700,24 +1691,6 @@ namespace Win32xx
 		if (GetActiveMDIChild())
 			GetActiveMDIChild()->RedrawWindow();
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline HWND CTabbedMDI::Create(CWnd* pParent /* = NULL*/)
-	{
-		CLIENTCREATESTRUCT clientcreate ;
-		clientcreate.hWindowMenu  = m_hWnd;
-		clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-		DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
-		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-
-		// Create the MDICLIENT view window
-		if (!CreateEx(0, _T("MDICLIENT"), _T(""),
-			dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate))
-				throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
-
-		return m_hWnd;
-	}
-#endif
 
 	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	{

@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -140,15 +140,6 @@ namespace Win32xx
 	//
 	class CGDIObject
 	{
-#ifdef USE_OBSOLETE_CODE
-		friend class CBitmap;
-		friend class CBrush;
-		friend class CFont;
-		friend class CPalette;
-		friend class CPen;
-		friend class CRgn;
-#endif
-
 	public:
 		CGDIObject();
 		CGDIObject(const CGDIObject& rhs);
@@ -187,10 +178,6 @@ namespace Win32xx
 		CBitmap(int nID);
 		operator HBITMAP() const;
 		virtual ~CBitmap();
-
-#ifdef USE_OBSOLETE_CODE
-		static CBitmap* FromHandle(HBITMAP hBitmap);
-#endif
 
 		// Create and load methods
 		BOOL LoadBitmap(LPCTSTR lpszName);
@@ -231,10 +218,6 @@ namespace Win32xx
 		operator HBRUSH() const;
 		virtual ~CBrush();
 
-#ifdef USE_OBSOLETE_CODE
-		static CBrush* FromHandle(HBRUSH hBrush);
-#endif
-
 		HBRUSH CreateSolidBrush(COLORREF crColor);
 		HBRUSH CreatePatternBrush(HBITMAP hBitmap);
 		LOGBRUSH GetLogBrush() const;
@@ -260,10 +243,6 @@ namespace Win32xx
 		CFont(const LOGFONT* lpLogFont);
 		operator HFONT() const;
 		virtual ~CFont();
-
-#ifdef USE_OBSOLETE_CODE
-		static CFont* FromHandle(HFONT hFont);
-#endif
 
 		// Create methods
 		HFONT CreateFontIndirect(const LOGFONT* lpLogFont);
@@ -293,10 +272,6 @@ namespace Win32xx
 		CPalette(HPALETTE hPalette);
 		operator HPALETTE() const;
 		virtual ~CPalette();
-
-#ifdef USE_OBSOLETE_CODE
-		static CPalette* FromHandle(HPALETTE hPalette);
-#endif
 
 		// Create methods
 		HPALETTE CreatePalette(LPLOGPALETTE lpLogPalette);
@@ -336,10 +311,6 @@ namespace Win32xx
 		operator HPEN() const;
 		virtual ~CPen();
 
-#ifdef USE_OBSOLETE_CODE
-		static CPen* FromHandle(HPEN hPen);
-#endif
-
 		HPEN CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
 		HPEN CreatePenIndirect(LPLOGPEN lpLogPen);
 		LOGPEN GetLogPen() const;
@@ -362,10 +333,6 @@ namespace Win32xx
 		CRgn(HRGN hRgn);
 		operator HRGN() const;
 		virtual ~CRgn ();
-
-#ifdef USE_OBSOLETE_CODE
-		static CRgn* FromHandle(HRGN hRgn);
-#endif
 
 		// Create methods
 		HRGN CreateRectRgn(int x1, int y1, int x2, int y2);
@@ -413,10 +380,6 @@ namespace Win32xx
 		virtual ~CDC();
 		operator HDC() const { return m_pData->hDC; }	// Converts a CDC to a HDC
 		CDC& operator = (const CDC& rhs);		// Assigns a CDC to an existing CDC
-
-#ifdef USE_OBSOLETE_CODE
-		static CDC* FromHandle(HDC hDC);
-#endif
 
 		void Attach(HDC hDC, HWND hWnd = 0);
 		void Destroy();
@@ -1159,41 +1122,6 @@ namespace Win32xx
 	{
 	}
 
-#ifdef USE_OBSOLETE_CODE
-	inline CBitmap* CBitmap::FromHandle(HBITMAP hBitmap)
-	// Returns the CBitmap associated with the Bitmap handle
-	// If a CBitmap object doesn't already exist, a temporary CBitmap object is created.
-	// The HBITMAP belonging to a temporary CBitmap is not released or destroyed
-	//  when the temporary CBitmap is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hBitmap);
-
-		CBitmap* pBitmap = static_cast<CBitmap*>(GetApp()->GetCGDIObjectFromMap(hBitmap));
-		if (!pBitmap)
-		{
-			// Find any existing temporary CBitmap for the HBitmap
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
-			m = pTLSData->TmpGDIs.find(hBitmap);
-
-			if (m != pTLSData->TmpGDIs.end())
-				pBitmap = static_cast<CBitmap*>(m->second.get());
-
-			if (!pBitmap)
-			{
-				pBitmap = new CBitmap;
-				pTLSData->TmpGDIs.insert(std::make_pair(hBitmap, pBitmap));
-
-				pBitmap->m_pData->hGDIObject = hBitmap;
-				pBitmap->m_pData->IsManagedObject = FALSE;
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pBitmap;
-	}
-#endif
-
 	inline BOOL CBitmap::LoadBitmap(int nID)
 	// Loads a bitmap from a resource using the resource ID.
 	{
@@ -1519,41 +1447,6 @@ namespace Win32xx
 	{
 	}
 
-#ifdef USE_OBSOLETE_CODE
-	inline CBrush* CBrush::FromHandle(HBRUSH hBrush)
-	// Returns the CBrush associated with the Brush handle
-	// If a CBrush object doesn't already exist, a temporary CBrush object is created.
-	// The HBRUSH belonging to a temporary CBrush is not released or destroyed
-	//  when the temporary CBrush is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hBrush);
-
-		CBrush* pBrush =  static_cast<CBrush*>(GetApp()->GetCGDIObjectFromMap(hBrush));
-		if (!pBrush)
-		{
-			// Find any existing temporary CBrush for the HBRUSH
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
-			m = pTLSData->TmpGDIs.find(hBrush);
-
-			if (m != pTLSData->TmpGDIs.end())
-				pBrush = static_cast<CBrush*>(m->second.get());
-
-			if (!pBrush)
-			{
-				pBrush = new CBrush;
-				pTLSData->TmpGDIs.insert(std::make_pair(hBrush, pBrush));
-
-				pBrush->m_pData->hGDIObject = hBrush;
-				pBrush->m_pData->IsManagedObject = FALSE;
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pBrush;
-	}
-#endif
-
 	inline HBRUSH CBrush::CreateSolidBrush(COLORREF crColor)
 	// Creates a logical brush that has the specified solid color.
 	{
@@ -1649,41 +1542,6 @@ namespace Win32xx
 	inline CFont::~CFont()
 	{
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline CFont* CFont::FromHandle(HFONT hFont)
-	// Returns the CFont associated with the Font handle
-	// If a CFont object doesn't already exist, a temporary CFont object is created.
-	// The HFONT belonging to a temporary CFont is not released or destroyed
-	//  when the temporary CFont is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hFont);
-
-		CFont* pFont = static_cast<CFont*>( GetApp()->GetCGDIObjectFromMap(hFont) );
-		if (!pFont)
-		{
-			// Find any existing temporary CFont for the HFONT
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
-			m = pTLSData->TmpGDIs.find(hFont);
-
-			if (m != pTLSData->TmpGDIs.end())
-				pFont = static_cast<CFont*>(m->second.get());
-
-			if (!pFont)
-			{
-				pFont = new CFont;
-				pTLSData->TmpGDIs.insert(std::make_pair(hFont, pFont));
-				pFont->m_pData->hGDIObject = hFont;
-				pFont->m_pData->IsManagedObject = FALSE;
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pFont;
-	}
-#endif
 
 	inline HFONT CFont::CreateFontIndirect(const LOGFONT* lpLogFont)
 	// Creates a logical font that has the specified characteristics.
@@ -1791,41 +1649,6 @@ namespace Win32xx
 	{
 	}
 
-#ifdef USE_OBSOLETE_CODE
-	inline CPalette* CPalette::FromHandle(HPALETTE hPalette)
-	// Returns the CPalette associated with the palette handle
-	// If a CPalette object doesn't already exist, a temporary CPalette object is created.
-	// The HPALETTE belonging to a temporary CPalette is not released or destroyed
-	//  when the temporary CPalette is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hPalette);
-
-		CPalette* pPalette = static_cast<CPalette*>( GetApp()->GetCGDIObjectFromMap(hPalette) );
-		if (!pPalette)
-		{
-			// Find any existing temporary CPalette for the HPALETTE
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
-			m = pTLSData->TmpGDIs.find(hPalette);
-
-			if (m != pTLSData->TmpGDIs.end())
-				pPalette = static_cast<CPalette*>(m->second.get());
-
-			if (!pPalette)
-			{
-				pPalette = new CPalette;
-				pTLSData->TmpGDIs.insert(std::make_pair(hPalette, pPalette));
-				pPalette->m_pData->hGDIObject = hPalette;
-				pPalette->m_pData->IsManagedObject = FALSE;
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pPalette;
-	}
-#endif
-
 	inline HPALETTE CPalette::CreatePalette(LPLOGPALETTE lpLogPalette)
 	// Creates a logical palette from the information in the specified LOGPALETTE structure.
 	{
@@ -1929,41 +1752,6 @@ namespace Win32xx
 	{
 	}
 
-#ifdef USE_OBSOLETE_CODE
-	inline CPen* CPen::FromHandle(HPEN hPen)
-	// Returns the CPen associated with the HPEN.
-	// If a CPen object doesn't already exist, a temporary CPen object is created.
-	// The HPEN belonging to a temporary CPen is not released or destroyed
-	//  when the temporary CPen is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hPen);
-
-		CPen* pPen = static_cast<CPen*>( GetApp()->GetCGDIObjectFromMap(hPen) );
-		if (!pPen)
-		{
-			// Find any existing temporary CPen for the HPEN
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
-			m = pTLSData->TmpGDIs.find(hPen);
-
-			if (m != pTLSData->TmpGDIs.end())
-				pPen = static_cast<CPen*>(m->second.get());
-
-			if (!pPen)
-			{
-				pPen = new CPen;
-				pTLSData->TmpGDIs.insert(std::make_pair(hPen, pPen));
-				pPen->m_pData->hGDIObject = hPen;
-				pPen->m_pData->IsManagedObject = FALSE;
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pPen;
-	}
-#endif
-
 	inline HPEN CPen::CreatePen(int nPenStyle, int nWidth, COLORREF crColor)
 	// Creates a logical pen that has the specified style, width, and color.
 	{
@@ -2036,41 +1824,6 @@ namespace Win32xx
 	inline CRgn::~CRgn()
 	{
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline CRgn* CRgn::FromHandle(HRGN hRgn)
-	// Returns the CRgn associated with the HRGN.
-	// If a CRgn object doesn't already exist, a temporary CRgn object is created.
-	// The HRGN belonging to a temporary CRgn is not released or destroyed
-	//  when the temporary CRgn is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hRgn);
-
-		CRgn* pRgn = static_cast<CRgn*>( GetApp()->GetCGDIObjectFromMap(hRgn) );
-		if (!pRgn)
-		{
-			// Find any existing temporary CRgn for the HRGN
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HGDIOBJ, GDIPtr, CompareGDI>::iterator m;
-			m = pTLSData->TmpGDIs.find(hRgn);
-
-			if (m != pTLSData->TmpGDIs.end())
-				pRgn = static_cast<CRgn*>(m->second.get());
-
-			if (!pRgn)
-			{
-				pRgn = new CRgn;
-				pTLSData->TmpGDIs.insert(std::make_pair(hRgn, pRgn));
-				pRgn->m_pData->hGDIObject = hRgn;
-				pRgn->m_pData->IsManagedObject = FALSE;
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pRgn;
-	}
-#endif
 
 	inline HRGN CRgn::CreateRectRgn(int x1, int y1, int x2, int y2)
 	// Creates a rectangular region.
@@ -2311,43 +2064,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		Release();
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline CDC* CDC::FromHandle(HDC hDC)
-	// Returns the CDC object associated with the device context handle
-	// If a CDC object doesn't already exist, a temporary CDC object is created.
-	// The HDC belonging to a temporary CDC is not released or destroyed when the
-	//  temporary CDC is deconstructed.
-	{
-		assert( GetApp() );
-		assert(hDC);
-
-		// Find an existing permanent CDC from the map
-		CDC* pDC = GetApp()->GetCDCFromMap(hDC);
-		if (!pDC)
-		{
-			// Find any existing temporary CWnd for the HWND
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HDC, DCPtr, CompareHDC>::iterator m;
-			m = pTLSData->TmpDCs.find(hDC);
-
-			if (m != pTLSData->TmpDCs.end())
-				pDC = m->second.get();
-
-			if (!pDC)
-			{
-				// No exiting CDC for this HDC, so create one
-				pDC = new CDC;
-				pTLSData->TmpDCs.insert(std::make_pair(hDC, pDC));
-				pDC->m_pData->hDC = hDC;
-				pDC->m_pData->IsManagedHDC = FALSE;
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-		return pDC;
-	}
-#endif
 
 	inline void CDC::AddToMap()
 	// Store the HDC and CDC pointer in the HDC map

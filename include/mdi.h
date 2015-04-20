@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -87,10 +87,6 @@ namespace Win32xx
 		virtual ~CMDIChild();
 
 		// These are the functions you might wish to override
-#ifdef USE_OBSOLETE_CODE
-		virtual HWND Create(CWnd* pParent = NULL);
-#endif
-
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void RecalcLayout();
 
@@ -110,8 +106,7 @@ namespace Win32xx
 		virtual int  OnCreate(LPCREATESTRUCT pcs);
 		virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMDIActivate(WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
+		
 		// Its unlikely you would need to override these functions
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -143,11 +138,6 @@ namespace Win32xx
 			CMDIFrame* GetMDIFrame() const { return static_cast<CMDIFrame*>(GetCWndPtr(GetParent())); }
 
 		protected:
-
-#ifdef USE_OBSOLETE_CODE
-			virtual HWND Create(CWnd* pParent = NULL);
-#endif
-
 			virtual HWND Create(HWND hWndParent);
 			virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnMDIDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -183,12 +173,10 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual void    OnClose();
-		virtual LRESULT OnInitMenuPopup(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    OnMenuUpdate(UINT nID);
 		virtual BOOL    OnViewStatusBar();
 		virtual BOOL    OnViewToolBar();
-		virtual LRESULT OnWindowPosChanged(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
 		virtual BOOL    PreTranslateMessage(MSG* pMsg);
@@ -398,7 +386,7 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMDIFrame::OnInitMenuPopup(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Called when the menu's modal loop begins (WM_INITMENUPOPUP received)
 	{
 		if (IsMDIChildMaxed())
@@ -411,7 +399,7 @@ namespace Win32xx
 				return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 		}
 
-		return CFrame::OnInitMenuPopup(wParam, lParam);
+		return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 	}
 
 	inline void CMDIFrame::OnMenuUpdate(UINT nID)
@@ -444,7 +432,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline LRESULT CMDIFrame::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIFrame::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// MDI Child or MDI frame has been resized
 
@@ -454,7 +442,7 @@ namespace Win32xx
 			GetMenuBar().SetMenu(GetMenuBar().GetMenu());
 		}
 
-		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline BOOL CMDIFrame::PreTranslateMessage(MSG* pMsg)
@@ -563,25 +551,11 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMDIFrame::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnInitMenuPopup(wParam, lParam);
-	}
-
-	inline LRESULT CMDIFrame::OnWindowPosChanged(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnWindowPosChanged(wParam, lParam);
-	}
-
 	inline LRESULT CMDIFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-#ifdef USE_OBSOLETE_CODE
-		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
-#else
-		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
-#endif
+			case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
 		
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
@@ -591,24 +565,6 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CDockMDIChild class
 	//
-
-#ifdef USE_OBSOLETE_CODE
-	inline HWND CMDIFrame::CDockMDIClient::Create(CWnd* pParent)
-	{
-		assert(pParent != 0);
-
-		CLIENTCREATESTRUCT clientcreate;
-		clientcreate.hWindowMenu  = 0;
-		clientcreate.idFirstChild = IDW_FIRSTCHILD;
-		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
-		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-
-		// Create the view window
-		CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
-
-		return m_hWnd;
-	}
-#endif
 
 	inline HWND CMDIFrame::CDockMDIClient::Create(HWND hWndParent)
 	{
@@ -683,73 +639,6 @@ namespace Win32xx
 		if (IsWindow())
 			GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline HWND CMDIChild::Create(CWnd* pParent /*= NULL*/)
-	// We create the MDI child window and then maximize if required.
-	// This technique avoids unnecessary flicker when creating maximized MDI children.
-	{
-		//Call PreCreate in case its overloaded
-		PreCreate(m_pData->cs);
-
-		//Determine if the window should be created maximized
-		BOOL bMax = FALSE;
-		assert(pParent);
-		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
-		bMax = bMax | (m_pData->cs.style & WS_MAXIMIZE);
-
-		// Set the Window Class Name
-		CString ClassName = _T("Win32++ MDI Child");
-		if (m_pData->cs.lpszClass)
-			ClassName = m_pData->cs.lpszClass;
-
-		// Set the window style
-		DWORD dwStyle;
-		dwStyle = m_pData->cs.style & ~WS_MAXIMIZE;
-		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
-
-		// Set window size and position
-		int x = CW_USEDEFAULT;
-		int	y = CW_USEDEFAULT;
-		int cx = CW_USEDEFAULT;
-		int cy = CW_USEDEFAULT;
-		if(m_pData->cs.cx && m_pData->cs.cy)
-		{
-			x = m_pData->cs.x;
-			y = m_pData->cs.y;
-			cx = m_pData->cs.cx;
-			cy = m_pData->cs.cy;
-		}
-
-		// Set the extended style
-		DWORD dwExStyle = m_pData->cs.dwExStyle | WS_EX_MDICHILD;
-
-		// Turn off redraw while creating the window
-		pParent->SetRedraw(FALSE);
-
-		// Create the window
-		if (!CreateEx(dwExStyle, ClassName, m_pData->cs.lpszName, dwStyle, x, y,
-			cx, cy, pParent->GetHwnd(), m_pData->cs.hMenu, m_pData->cs.lpCreateParams))
-			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
-
-		if (bMax)
-			ShowWindow(SW_MAXIMIZE);
-
-		// Turn redraw back on
-		pParent->SetRedraw(TRUE);
-		pParent->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
-
-		// Ensure bits revealed by round corners (XP themes) are redrawn
-		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
-
-		if (m_ChildMenu.GetHandle())
-			GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
-		if (m_hChildAccel)
-			GetApp()->SetAccelerators(m_hChildAccel, this);
-
-		return m_hWnd;
-	}
-#endif
 
 	inline HWND CMDIChild::Create(HWND hWndParent /*= NULL*/)
 	// We create the MDI child window and then maximize if required.
@@ -926,8 +815,9 @@ namespace Win32xx
 		}
 	}
 
-	inline LRESULT CMDIChild::OnMDIActivate(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIChild::OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
+		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
 
 		// This child is being activated
@@ -953,34 +843,18 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CMDIChild::OnWindowPosChanged(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CMDIChild::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		RecalcLayout();
-		return FinalWindowProc(WM_WINDOWPOSCHANGED, wParam, lParam);
-	}
-
-	// For this version only, the current definitions use the obsolete ones.
-	inline LRESULT CMDIChild::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnMDIActivate(wParam, lParam);
-	}
-
-	inline LRESULT CMDIChild::OnWindowPosChanged(UINT, WPARAM wParam, LPARAM lParam)
-	{
-		return OnWindowPosChanged(wParam, lParam);
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-#ifdef USE_OBSOLETE_CODE
-		case WM_MDIACTIVATE:		return OnMDIActivate(wParam, lParam);
-		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
-#else
-		case WM_MDIACTIVATE:		return OnMDIActivate(wParam, lParam);
-		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(wParam, lParam);
-#endif
+			case WM_MDIACTIVATE:		return OnMDIActivate(uMsg, wParam, lParam);
+			case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}

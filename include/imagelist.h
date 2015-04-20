@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -107,10 +107,6 @@ namespace Win32xx
 		int Replace(int nImage, HICON hIcon) const;
 		HIMAGELIST GetHandle() const;
 
-#ifdef USE_OBSOLETE_CODE
-		static CImageList* FromHandle(HIMAGELIST hImageList);
-#endif
-
 		//Attributes
 		HICON GetIcon(int iImage, UINT nFlags) const;
 		CSize GetIconSize() const;
@@ -186,39 +182,6 @@ namespace Win32xx
 		GetApp()->m_mapCImlData.insert(std::make_pair(m_pData->hImageList, m_pData));
 		GetApp()->m_csMapLock.Release();
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline CImageList* CImageList::FromHandle(HIMAGELIST hImageList)
-	// Returns the CImageList object associated with the ImageList handle (HIMAGELIST).
-	{
-		assert( GetApp() );
-
-		// Find an existing permanent CImageList from the map
-		CImageList* pImageList = GetApp()->GetCImageListFromMap(hImageList);
-		if ((0 != hImageList) && (0 == pImageList))
-		{
-			// Find any existing temporary CImageList for the HIMAGELIST
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST>::iterator m;
-			m = pTLSData->TmpImageLists.find(hImageList);
-	
-			if (m != pTLSData->TmpImageLists.end())
-				pImageList = m->second.get();
-
-			if (!pImageList)
-			{
-				pImageList = new CImageList;
-				pImageList->m_pData->hImageList = hImageList;
-				pImageList->m_pData->IsManagedHiml = FALSE;
-				pTLSData->TmpImageLists.insert(std::make_pair(hImageList, pImageList));
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-
-		return pImageList;
-	}
-#endif
 
 	inline BOOL CImageList::RemoveFromMap()
 	{

@@ -1,5 +1,5 @@
-// Win32++   Version 7.9
-// Release Date: 14th April 2015
+// Win32++   Version 8.0 Alpha
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -199,7 +199,6 @@ namespace Win32xx {}
 namespace Win32xx
 {
 	// Registered messages defined by Win32++
-	const UINT UWM_CLEANUPTEMPS = RegisterWindowMessage(_T("UWM_CLEANUPTEMPS")); // Message - posted to cleanup temporary CDCs, CWnds etc.
 	const UINT UWM_WINDOWCREATED = RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Message - posted when a window is created or attached.
 
 	////////////////////////////////////////////////
@@ -328,15 +327,7 @@ namespace Win32xx
 		HHOOK hMsgHook;		// WH_MSGFILTER hook for CMenuBar and Modal Dialogs
 		long nDlgHooks;		// Number of Dialog MSG hooks
 
-		std::map<HDC, DCPtr, CompareHDC> TmpDCs;		// Temporary CDC pointers
-		std::map<HGDIOBJ, GDIPtr, CompareGDI> TmpGDIs;	// Temporary CGDIObject pointers
-		std::map<HIMAGELIST, ImageListPtr, CompareHIMAGELIST> TmpImageLists;	// Temporary CImageList pointers
-		std::map<HWND, WndPtr, CompareHWND> TmpWnds;	// Temporary CWnd pointers
 		TLSData() : pWnd(0), pMainWnd(0), pMenuBar(0), hMsgHook(0), nDlgHooks(0) {}	// Constructor
-
-#ifndef _WIN32_WCE
-		std::map<HMENU, MenuPtr, CompareHMENU> TmpMenus;	// Temporary CMenu pointers
-#endif
 	};
 
 
@@ -415,7 +406,6 @@ namespace Win32xx
 		CWinThread(const CWinThread&);				// Disable copy construction
 		CWinThread& operator = (const CWinThread&);	// Disable assignment operator
 
-		void CleanupTemps();
 		static	UINT WINAPI StaticThreadProc(LPVOID pCThread);
 
 		PFNTHREADPROC m_pfnThreadProc;	// Callback function for worker threads
@@ -446,15 +436,6 @@ namespace Win32xx
 		friend class CTaskDialog;
 		friend class CWinThread;
 		friend class CWnd;
-
-#ifdef USE_OBSOLETE_CODE
-		friend class CBitmap;
-		friend class CBrush;
-		friend class CFont;
-		friend class CPalette;
-		friend class CPen;
-		friend class CRgn;
-#endif
 		friend CWinApp* GetApp();
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
@@ -491,16 +472,8 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
 #endif
-
-#ifdef USE_OBSOLETE_CODE
-		CDC* GetCDCFromMap(HDC hDC);
-		CGDIObject* GetCGDIObjectFromMap(HGDIOBJ hObject);
-		CImageList* GetCImageListFromMap(HIMAGELIST hImageList);
-		CMenu* GetCMenuFromMap(HMENU hMenu);
-#endif
 		
 		CWnd* GetCWndFromMap(HWND hWnd);
-		void	CleanupTemps();
 		TLSData* GetTlsData() const;
 		void	SetCallback();
 		TLSData* SetTlsData();
@@ -511,13 +484,6 @@ namespace Win32xx
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
 #ifndef _WIN32_WCE
 		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
-#endif
-
-#ifdef USE_OBSOLETE_CODE
-		std::map<HDC, CDC*, CompareHDC> m_mapHDC;			// maps device context handles to CDC objects
-		std::map<HGDIOBJ, CGDIObject*, CompareGDI> m_mapGDI;	// maps GDI handles to CGDIObjects.
-		std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST> m_mapHIMAGELIST;	// maps HIMAGELIST to CImageList.
-		std::map<HMENU, CMenu*, CompareHMENU> m_mapHMENU;	// maps menu handles to CMenu objects
 #endif
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
@@ -560,22 +526,11 @@ namespace Win32xx
 		virtual BOOL Attach(HWND hWnd);
 		virtual BOOL AttachDlgItem(UINT nID, HWND hwndParent);
 		virtual void CenterWindow() const;
-
-#ifdef USE_OBSOLETE_CODE
-		virtual HWND Create(CWnd* pParent);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam = NULL);
-#endif
-
 		virtual HWND Create(HWND hParent = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam = NULL);
 		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
-
-#ifdef USE_OBSOLETE_CODE
-		static	CWnd* FromHandle(HWND hWnd);
-#endif
-
 		static  CWnd* GetCWndPtr(HWND hWnd);
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
@@ -731,12 +686,6 @@ namespace Win32xx
 		virtual void OnDestroy();
 		virtual void OnDraw(CDC& dc);
 		virtual BOOL OnEraseBkgnd(CDC& dc);
-
-#ifdef USE_OBSOLETE_CODE
-		virtual void OnDraw(CDC* pDC);
-		virtual BOOL OnEraseBkgnd(CDC* pDC);
-#endif
-
 		virtual void OnInitialUpdate();
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -776,10 +725,6 @@ namespace Win32xx
 
 		Shared_Ptr<DataMembers> m_pData;
 		WNDPROC	m_PrevWindowProc;
-
-	#ifdef USE_OBSOLETE_CODE
-		BOOL m_IsTmpWnd;
-	#endif
 
 	}; // class CWnd
 
@@ -864,24 +809,6 @@ namespace Win32xx
 		}
 	}
 
-	inline void CWinThread::CleanupTemps()
-	// Removes all Temporary CWnds and CMenus belonging to this thread
-	{
-		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = GetApp()->GetTlsData();
-		assert(pTLSData);
-
-		pTLSData->TmpDCs.clear();
-		pTLSData->TmpGDIs.clear();
-		pTLSData->TmpImageLists.clear();
-		pTLSData->TmpWnds.clear();
-
-	#ifndef _WIN32_WCE
-		pTLSData->TmpMenus.clear();
-	#endif
-
-	}
-
 	inline void CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
 	{
 		// Valid argument values:
@@ -962,18 +889,12 @@ namespace Win32xx
 			if ((status = ::GetMessage(&Msg, NULL, 0, 0)) == -1)
 				return -1;
 
-			if (Msg.message == UWM_CLEANUPTEMPS)
+			if (!PreTranslateMessage(Msg))
 			{
-				CleanupTemps();
+				::TranslateMessage(&Msg);
+				::DispatchMessage(&Msg);
 			}
-			else
-			{
-				if (!PreTranslateMessage(Msg))
-				{
-					::TranslateMessage(&Msg);
-					::DispatchMessage(&Msg);
-				}
-			}
+
 		}
 
 		return LOWORD(Msg.wParam);
@@ -1117,21 +1038,6 @@ namespace Win32xx
 
 	inline CWinApp::~CWinApp()
 	{
-		// Ensure all temporary objects are destroyed before CWinApp is deconstructed
-		// These maps contain smart pointers, so clearing them calls the destructor
-		// on their contents.
-		std::vector<TLSDataPtr>::iterator iter;
-		for (iter = m_vTLSData.begin(); iter != m_vTLSData.end(); ++iter)
-		{
-			(*iter)->TmpDCs.clear();
-			(*iter)->TmpWnds.clear();
-			(*iter)->TmpGDIs.clear();
-			(*iter)->TmpImageLists.clear();
-#ifndef _WIN32_WCE
-			(*iter)->TmpMenus.clear();
-#endif
-		}
-
 		// Forcibly destroy any remaining windows now. Windows created from
 		//  static CWnds or dangling pointers are destroyed here.
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -1153,24 +1059,6 @@ namespace Win32xx
 		}
 
 		SetnGetThis(reinterpret_cast<CWinApp*>(-1));
-	}
-
-	inline void CWinApp::CleanupTemps()
-	// Removes all temporaries belonging to this thread
-	{
-		// Retrieve the pointer to the TLS Data
-		TLSData* pTLSData = GetApp()->GetTlsData();
-		assert(pTLSData);
-
-		pTLSData->TmpDCs.clear();
-		pTLSData->TmpGDIs.clear();
-		pTLSData->TmpImageLists.clear();
-		pTLSData->TmpWnds.clear();
-
-	#ifndef _WIN32_WCE
-		pTLSData->TmpMenus.clear();
-	#endif
-
 	}
 
 	inline CDC_Data* CWinApp::GetCDCDataFromMap(HDC hDC)
@@ -1236,74 +1124,6 @@ namespace Win32xx
 
 		m_csMapLock.Release();
 		return pCMenuData;
-	}
-#endif
-
-#ifdef USE_OBSOLETE_CODE
-	inline CDC* CWinApp::GetCDCFromMap(HDC hDC)
-	{
-		// Allocate an iterator for our HWND map
-		std::map<HDC, CDC*, CompareHDC>::iterator m;
-
-		// Find the CDC pointer mapped to this HDC
-		CDC* pDC = 0;
-		m_csMapLock.Lock();
-		m = m_mapHDC.find(hDC);
-
-		if (m != m_mapHDC.end())
-			pDC = m->second;
-
-		m_csMapLock.Release();
-		return pDC;
-	}
-
-	inline CGDIObject* CWinApp::GetCGDIObjectFromMap(HGDIOBJ hObject)
-	{
-		// Allocate an iterator for our HWND map
-		std::map<HGDIOBJ, CGDIObject*, CompareGDI>::iterator m;
-
-		// Find the CGDIObject pointer mapped to this HGDIOBJ
-		CGDIObject* pObject = 0;
-		m_csMapLock.Lock();
-		m = m_mapGDI.find(hObject);
-
-		if (m != m_mapGDI.end())
-			pObject = m->second;
-
-		m_csMapLock.Release();
-		return pObject;
-	}
-
-	inline CImageList* CWinApp::GetCImageListFromMap(HIMAGELIST hImageList)
-	{
-		std::map<HIMAGELIST, CImageList*, CompareHIMAGELIST>::iterator m;
-
-		// Find the CMenu pointer mapped to this HMENU
-		CImageList* pImageList = 0;
-		m_csMapLock.Lock();
-		m = m_mapHIMAGELIST.find(hImageList);
-
-		if (m != m_mapHIMAGELIST.end())
-			pImageList = m->second;
-
-		m_csMapLock.Release();
-		return pImageList;
-	}
-
-	inline CMenu* CWinApp::GetCMenuFromMap(HMENU hMenu)
-	{
-		std::map<HMENU, CMenu*, CompareHMENU>::iterator m;
-
-		// Find the CMenu pointer mapped to this HMENU
-		CMenu* pMenu = 0;
-		m_csMapLock.Lock();
-		m = m_mapHMENU.find(hMenu);
-
-		if (m != m_mapHMENU.end())
-			pMenu = m->second;
-
-		m_csMapLock.Release();
-		return pMenu;
 	}
 #endif
 
@@ -1505,20 +1325,12 @@ namespace Win32xx
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
 		//       m_pData is assigned in CWnd::Create(...)
-
-	#ifdef USE_OBSOLETE_CODE
-		m_IsTmpWnd = FALSE;
-	#endif
 	}
 
 	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
 	{
 		// A private constructor, used internally.
 	
-	#ifdef USE_OBSOLETE_CODE
-		m_IsTmpWnd = FALSE;
-	#endif
-
 		m_hWnd = hWnd;
 	}
 
@@ -1657,82 +1469,6 @@ namespace Win32xx
 		m_hWnd = NULL;
 		m_PrevWindowProc = NULL;
 	}
-
-#ifdef USE_OBSOLETE_CODE
-
-	inline HWND CWnd::Create(CWnd* pParent /* = NULL */)
-	// Creates the window. This is the default method of window creation.
-	{
-		// Test if Win32++ has been started
-		assert( GetApp() );
-		if (m_pData.get() == 0)
-			m_pData = new DataMembers;
-
-		// Set the WNDCLASS parameters
-		PreRegisterClass(m_pData->wc);
-		if (m_pData->wc.lpszClassName)
-		{
-			RegisterClass(m_pData->wc);
-			m_pData->cs.lpszClass = m_pData->wc.lpszClassName;
-		}
-		else
-			m_pData->cs.lpszClass = _T("Win32++ Window");
-
-		// Set Parent
-		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-
-		// Set a reasonable default window style
-		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		m_pData->cs.style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
-
-		// Set a reasonable default window position
-		if (NULL == pParent)
-		{
-			m_pData->cs.x  = CW_USEDEFAULT;
-			m_pData->cs.cx = CW_USEDEFAULT;
-			m_pData->cs.y  = CW_USEDEFAULT;
-			m_pData->cs.cy = CW_USEDEFAULT;
-		}
-
-		// Allow the CREATESTRUCT parameters to be modified
-		PreCreate(m_pData->cs);
-
-		DWORD dwStyle = m_pData->cs.style & ~WS_VISIBLE;
-
-		// Create the window
-#ifndef _WIN32_WCE
-		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, dwStyle, m_pData->cs.x, m_pData->cs.y,
-				m_pData->cs.cx, m_pData->cs.cy, hWndParent, m_pData->cs.hMenu, m_pData->cs.lpCreateParams);
-
-		if (m_pData->cs.style & WS_VISIBLE)
-		{
-			if		(m_pData->cs.style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
-			else if (m_pData->cs.style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
-			else	ShowWindow();
-		}
-
-#else
-		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, m_pData->cs.style, m_pData->cs.x, m_pData->cs.y,
-				m_pData->cs.cx, m_pData->cs.cy, hWndParent, 0, m_pData->cs.lpCreateParams);
-#endif
-
-		return m_hWnd;
-	}
-
-	inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, CWnd* pParent, UINT nID, LPVOID lpParam /*= NULL*/)
-	// Creates the window by specifying all the window creation parameters
-	{
-		int x = rc.left;
-		int y = rc.top;
-		int cx = rc.right - rc.left;
-		int cy = rc.bottom - rc.top;
-		HWND hWndParent = pParent? pParent->GetHwnd() : 0;
-		HMENU hMenu = pParent? (HMENU)(INT_PTR)nID : ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
-
-		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
-	}
-
-#endif // USE_OBSOLETE_CODE
 
 	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
 	// Creates the window. This is the default method of window creation.
@@ -1881,12 +1617,6 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-
-#ifdef USE_OBSOLETE_CODE
-	if (m_IsTmpWnd)
-		return;
-#endif
-
 		if (GetCWndPtr(m_hWnd) == this)
 		{
 			if (IsWindow())
@@ -1920,42 +1650,6 @@ namespace Win32xx
 		else
 			return ::DefWindowProc(m_hWnd, uMsg, wParam, lParam);
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline CWnd* CWnd::FromHandle(HWND hWnd)
-	// Returns the CWnd object associated with the window handle
-	{
-		TRACE("WARNING!! CWnd::FromHandle is obsolete. \n");
-
-		assert( GetApp() );
-
-		// Find any existing permanent CWnd from the map
-		CWnd* pWnd = GetCWndPtr(hWnd);
-		if ( NULL != hWnd && 0 == pWnd )
-		{
-			// Find any existing temporary CWnd for the HWND
-			TLSData* pTLSData = GetApp()->SetTlsData();
-			std::map<HWND, WndPtr, CompareHWND>::iterator m;
-			m = pTLSData->TmpWnds.find(hWnd);
-
-			if (m != pTLSData->TmpWnds.end())
-				pWnd = m->second.get();
-
-			if (!pWnd)
-			{
-				// No exiting CWnd for this HWND, so create one
-				pWnd = new CWnd;
-				pWnd->m_hWnd = hWnd;
-				pWnd->m_IsTmpWnd = TRUE;
-				pTLSData->TmpWnds.insert(std::make_pair(hWnd, pWnd));
-
-				::PostMessage(0, UWM_CLEANUPTEMPS, 0, 0);
-			}
-		}
-
-		return pWnd;
-	}
-#endif
 
 	inline CWnd* CWnd::GetCWndPtr(HWND hWnd)
 	// Retrieves the pointer to the CWnd associated with the specified HWND.
@@ -2113,29 +1807,6 @@ namespace Win32xx
 
 		return FALSE;
 	}
-
-#ifdef USE_OBSOLETE_CODE
-	inline void CWnd::OnDraw(CDC* pDC)
-	// Called when part of the client area of the window needs to be drawn
-	{
-		UNREFERENCED_PARAMETER(pDC);
-
-	    // Override this function in your derived class to perform drawing tasks.
-	}
-
-	inline BOOL CWnd::OnEraseBkgnd(CDC* pDC)
-	// Called when the background of the window's client area needs to be erased.
-	{
-		UNREFERENCED_PARAMETER(pDC);
-
-	    // Override this function in your derived class to perform drawing tasks.
-
-		// Return Value: Return FALSE to also permit default erasure of the background
-		//				 Return TRUE to prevent default erasure of the background
-
-		return FALSE;
-	}
-#endif
 
 	inline void CWnd::OnInitialUpdate()
 	{
@@ -2551,22 +2222,12 @@ namespace Win32xx
 				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
-
-#ifdef USE_OBSOLETE_CODE
-					OnDraw(&dc);
-#endif
-
 					OnDraw(dc);
 				}
 				else
 				// RedrawWindow can require repainting without an update rect
 				{
 					CClientDC dc(*this);
-
-#ifdef USE_OBSOLETE_CODE
-					OnDraw(&dc);
-#endif
-
 					OnDraw(dc);
 				}
 			}
@@ -2576,10 +2237,6 @@ namespace Win32xx
 			{
 				CDC dc((HDC)wParam);
 				BOOL bResult;
-
-#ifdef USE_OBSOLETE_CODE
-				bResult = OnEraseBkgnd(&dc);
-#endif
 				
 				bResult = OnEraseBkgnd(dc);
 				if (bResult) return TRUE;
