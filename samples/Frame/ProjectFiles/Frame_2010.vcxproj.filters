@@ -114,6 +114,9 @@
     <ClInclude Include="..\..\..\include\c_string.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\regkey.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

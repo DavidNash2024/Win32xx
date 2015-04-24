@@ -80,6 +80,7 @@
 #include "menubar.h"
 #include "rebar.h"
 #include "docking.h"
+#include "regkey.h"
 #include "default_resource.h"
 
 
@@ -1972,27 +1973,26 @@ namespace Win32xx
 	// Load the MRU list from the registry
 	{
 		assert(!m_strKeyName.IsEmpty()); // KeyName must be set before calling LoadRegistryMRUSettings
-		HKEY hKey = NULL;
-		BOOL bRet = FALSE;
 
+		CRegKey Key;
+		BOOL bRet = FALSE;
 		m_nMaxMRU = MIN(nMaxMRU, 16);
 		std::vector<CString> vMRUEntries;
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
 
-		if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
+		if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
 		{
 			CString PathName;
 			CString SubKeyName;
 			for (UINT i = 0; i < m_nMaxMRU; ++i)
 			{
-				DWORD dwType = REG_SZ;
 				DWORD dwBufferSize = 0;
 				SubKeyName.Format(_T("File %d"), i+1);
 
-				if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKeyName, NULL, &dwType, NULL, &dwBufferSize))
+				if (ERROR_SUCCESS == Key.QueryStringValue(SubKeyName, NULL, &dwBufferSize))
 				{
 					// load the entry from the registry
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKeyName, NULL, &dwType, (LPBYTE)PathName.GetBuffer(dwBufferSize), &dwBufferSize))
+					if (ERROR_SUCCESS == Key.QueryStringValue(SubKeyName, PathName.GetBuffer(dwBufferSize), &dwBufferSize))
 					{
 						PathName.ReleaseBuffer();
 
@@ -2003,15 +2003,12 @@ namespace Win32xx
 					{
 						PathName.ReleaseBuffer();
 						TRACE(_T("CFrame::LoadRegistryMRUSettings: RegQueryValueEx failed\n"));
-						if (hKey != 0)
-							RegCloseKey(hKey);
 					}
 				}
 			}
 
 			// successfully loaded all MRU values, so store them
 			m_vMRUEntries = vMRUEntries;
-			RegCloseKey(hKey);
 			bRet = TRUE;
 		}
 
@@ -2022,32 +2019,32 @@ namespace Win32xx
 	// Loads various frame settings from the registry
 	{
 		assert (NULL != szKeyName);
-		m_strKeyName = szKeyName;
 
+		m_strKeyName = szKeyName;
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
-		HKEY hKey = 0;
 		BOOL bRet = FALSE;
 
 		try
 		{
-			if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0, KEY_READ, &hKey))
+			CRegKey Key;
+			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
 			{
-				DWORD dwType = REG_BINARY;
-				DWORD BufferSize = sizeof(DWORD);
+				TRACE ("Open succesful\n");
 				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwShowCmd, dwStatusBar, dwToolBar;
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Top"), NULL, &dwType, (LPBYTE)&dwTop, &BufferSize))
+
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Top"), dwTop))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Left"), NULL, &dwType, (LPBYTE)&dwLeft, &BufferSize))
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Left"), dwLeft))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Width"), NULL, &dwType, (LPBYTE)&dwWidth, &BufferSize))
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Width"), dwWidth))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("Height"), NULL, &dwType, (LPBYTE)&dwHeight, &BufferSize))
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Height"), dwHeight))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("ShowCmd"), NULL, &dwType, (LPBYTE)&dwShowCmd, &BufferSize))
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("ShowCmd"), dwShowCmd))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("StatusBar"), NULL, &dwType, (LPBYTE)&dwStatusBar, &BufferSize))
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("StatusBar"), dwStatusBar))
 					throw CWinException(_T("RegQueryValueEx Failed"));
-				if (ERROR_SUCCESS != RegQueryValueEx(hKey, _T("ToolBar"), NULL, &dwType, (LPBYTE)&dwToolBar, &BufferSize))
+				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("ToolBar"), dwToolBar))
 					throw CWinException(_T("RegQueryValueEx Failed"));
 
 				m_rcPosition.top = dwTop;
@@ -2057,10 +2054,8 @@ namespace Win32xx
 				m_ShowCmd = dwShowCmd;
 				m_ShowStatusBar = dwStatusBar & 1;
 				m_ShowToolBar = dwToolBar & 1;
-
 				m_ShowCmd = (SW_MAXIMIZE == m_ShowCmd)?  SW_MAXIMIZE : SW_SHOW;
 
-				RegCloseKey(hKey);
 				bRet = TRUE;
 			}
 		}
@@ -2069,9 +2064,6 @@ namespace Win32xx
 		{
 			TRACE("Failed to load values from registry, using defaults!\n");
 			e.what();
-
-			if (hKey != 0)
-				RegCloseKey(hKey);
 		}
 
 		return bRet;
@@ -2704,10 +2696,13 @@ namespace Win32xx
 		{
 			CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
 			HKEY hKey = NULL;
+			CRegKey Key;
 
 			try
-			{
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+			{			
+				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
+					throw CWinException(_T("RegCreateKeyEx failed"));
+				if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
 					throw CWinException(_T("RegCreateKeyEx failed"));
 
 				// Store the window position in the registry
@@ -2725,15 +2720,15 @@ namespace Win32xx
 					DWORD dwHeight = MAX(rc.Height(), 50);
 					DWORD dwShowCmd = Wndpl.showCmd;
 
-					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Top"), 0, REG_DWORD, (LPBYTE)&dwTop, sizeof(DWORD)))
+					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Top"), dwTop))
 						throw CWinException(_T("RegSetValueEx failed"));
-					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Left"), 0, REG_DWORD, (LPBYTE)&dwLeft, sizeof(DWORD)))
+					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Left"), dwLeft))
 						throw CWinException(_T("RegSetValueEx failed"));
-					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Width"), 0, REG_DWORD, (LPBYTE)&dwWidth, sizeof(DWORD)))
+					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Width"), dwWidth))
 						throw CWinException(_T("RegSetValueEx failed"));
-					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("Height"), 0, REG_DWORD, (LPBYTE)&dwHeight, sizeof(DWORD)))
+					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Height"), dwHeight))
 						throw CWinException(_T("RegSetValueEx failed"));
-					if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("ShowCmd"), 0, REG_DWORD, (LPBYTE)&dwShowCmd, sizeof(DWORD)))
+					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("ShowCmd"), dwShowCmd))
 						throw CWinException(_T("RegSetValueEx failed"));
 				}
 
@@ -2741,23 +2736,22 @@ namespace Win32xx
 				DWORD dwShowToolBar = m_ShowToolBar;
 				DWORD dwShowStatusBar = m_ShowStatusBar;
 
-				if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("ToolBar"), 0, REG_DWORD, (LPBYTE)&dwShowToolBar, sizeof(DWORD)))
+				if (ERROR_SUCCESS != Key.SetDWORDValue(_T("ToolBar"), dwShowToolBar))
 					throw CWinException(_T("RegSetValueEx failed"));
-				if (ERROR_SUCCESS != RegSetValueEx(hKey, _T("StatusBar"), 0, REG_DWORD, (LPBYTE)&dwShowStatusBar, sizeof(DWORD)))
+				if (ERROR_SUCCESS != Key.SetDWORDValue(_T("StatusBar"), dwShowStatusBar))
 					throw CWinException(_T("RegSetValueEx failed"));
-
-				RegCloseKey(hKey);
 			}
 
 			catch (const CWinException& e)
 			{
 				TRACE("Failed to save registry settings\n");
 
-				if (hKey)
+				if (Key.GetKey())
 				{
 					// Roll back the registry changes by deleting this subkey
-					RegDeleteKey(HKEY_CURRENT_USER ,KeyName);
-					RegCloseKey(hKey);
+					Key.Close();
+					CRegKey KeyParent(HKEY_CURRENT_USER);
+					KeyParent.DeleteSubKey(KeyName);
 				}
 
 				e.what();
@@ -2772,11 +2766,16 @@ namespace Win32xx
 
 				try
 				{
+					CRegKey KeyParent(HKEY_CURRENT_USER);
+
 					// Delete Old MRUs
-					RegDeleteKey(HKEY_CURRENT_USER, KeyName);
+					KeyParent.DeleteSubKey(KeyName);
 
 					// Add Current MRUs
-					if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+					if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
+						throw CWinException(_T("RegCreateKeyEx failed"));
+
+					if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
 						throw CWinException(_T("RegCreateKeyEx failed"));
 
 					CString SubKeyName;
@@ -2789,12 +2788,10 @@ namespace Win32xx
 						{
 							strPathName = m_vMRUEntries[i];
 
-							if (ERROR_SUCCESS != RegSetValueEx(hKey, SubKeyName, 0, REG_SZ, (LPBYTE)strPathName.c_str(), (1 + strPathName.GetLength() )*sizeof(TCHAR)))
+							if (ERROR_SUCCESS != Key.SetStringValue(SubKeyName, strPathName.c_str()))
 								throw CWinException(_T("RegSetValueEx failed"));
 						}
 					}
-
-					RegCloseKey(hKey);
 				}
 
 				catch (const CWinException& e)
@@ -2804,8 +2801,9 @@ namespace Win32xx
 					if (hKey != 0)
 					{
 						// Roll back the registry changes by deleting this subkey
-						RegDeleteKey(HKEY_CURRENT_USER ,KeyName);
-						RegCloseKey(hKey);
+						Key.Close();
+						CRegKey KeyParent(HKEY_CURRENT_USER);
+						KeyParent.DeleteSubKey(KeyName);
 					}
 
 					e.what();

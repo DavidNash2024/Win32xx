@@ -44,7 +44,8 @@
 #include <mdi.h>
 #include <propertysheet.h>
 #include <rebar.h>
-//#include <ribbon.h>
+#include <regkey.h>
+#include <ribbon.h>
 #include <rich_edit.h>
 #include <socket.h>
 #include <statusbar.h>

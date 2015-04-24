@@ -45,6 +45,7 @@
 #include "wincore.h"
 #include "dialog.h"
 #include "gdi.h"
+#include "regkey.h"
 #include "default_resource.h"
 
 namespace Win32xx
@@ -1758,34 +1759,30 @@ namespace Win32xx
 		if (!strRegistryKeyName.IsEmpty())
 		{
 			CString KeyName = _T("Software\\") + strRegistryKeyName + _T("\\MDI Children");
-			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
-			if (hKey != 0)
+			CRegKey Key;
+			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
 			{
-				DWORD dwDWORD = REG_DWORD;
-				DWORD dwSZ = REG_SZ;
-				DWORD dwIntSize = sizeof(int);
-				int idTab;
+				DWORD dwIDTab;
 				int i = 0;
 				CString SubKeyName;
 				CString TabText;
 				SubKeyName.Format(_T("ID%d"), i);
 
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, SubKeyName, 0, &dwDWORD, (LPBYTE)&idTab, &dwIntSize))
+				while (ERROR_SUCCESS == Key.QueryDWORDValue(SubKeyName, dwIDTab))
 				{
 					SubKeyName.Format(_T("Text%d"), i);
 					DWORD dwBufferSize = 0;
-					if (ERROR_SUCCESS == RegQueryValueEx(hKey, SubKeyName, NULL, &dwSZ, 0, &dwBufferSize))
+					if (ERROR_SUCCESS == Key.QueryStringValue(SubKeyName, 0, &dwBufferSize))
 					{
-						RegQueryValueEx(hKey, SubKeyName, NULL, &dwSZ, (LPBYTE)TabText.GetBuffer(dwBufferSize), &dwBufferSize);
+						Key.QueryStringValue(SubKeyName, TabText.GetBuffer(dwBufferSize), &dwBufferSize);
 						TabText.ReleaseBuffer();
 					}
 
-					CWnd* pWnd = NewMDIChildFromID(idTab);
+					CWnd* pWnd = NewMDIChildFromID(dwIDTab);
 					if (pWnd)
 					{
-						AddMDIChild(pWnd, TabText, idTab);
+						AddMDIChild(pWnd, TabText, dwIDTab);
 						i++;
 						SubKeyName.Format(_T("ID%d"), i);
 						bResult = TRUE;
@@ -1802,14 +1799,12 @@ namespace Win32xx
 				{
 					// Load Active MDI Tab from the registry
 					SubKeyName = _T("Active MDI Tab");
-					int nTab;
-					if(ERROR_SUCCESS == RegQueryValueEx(hKey, SubKeyName, NULL, &dwDWORD, (LPBYTE)&nTab, &dwIntSize))
-						SetActiveMDITab(nTab);
+					DWORD dwTab;
+					if (ERROR_SUCCESS == Key.QueryDWORDValue(SubKeyName, dwTab))
+						SetActiveMDITab(dwTab);
 					else
 						SetActiveMDITab(0);
 				}
-
-				RegCloseKey(hKey);
 			}
 		}
 

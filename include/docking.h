@@ -60,6 +60,7 @@
 #include "gdi.h"
 #include "toolbar.h"
 #include "tab.h"
+#include "regkey.h"
 #include "default_resource.h"
 
 
@@ -185,7 +186,7 @@ namespace Win32xx
 		CWnd* GetView()	const			{ return GetViewPage()->GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
-		void SetHideSingleTab(BOOL HideSingle); 
+		void SetHideSingleTab(BOOL HideSingle);
 		void SetTabIcon(HICON hTabIcon) { m_hTabIcon = hTabIcon; }
 		void SetTabIcon(UINT nID_Icon);
 		void SetTabIcon(int i, HICON hIcon) { CTab::SetTabIcon(i, hIcon); }
@@ -507,7 +508,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		// Current declarations of message handlers
 		virtual LRESULT OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1845,7 +1846,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDocker class
 	//
-	inline CDocker::CDocker() : m_pDockParent(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), m_IsClosing(FALSE), 
+	inline CDocker::CDocker() : m_pDockParent(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), m_IsClosing(FALSE),
 		            m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
 					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0)
 	{
@@ -2148,7 +2149,7 @@ namespace Win32xx
 		if (GetAncestor().IsWindowVisible())
 		{
 			GetAncestor().SetForegroundWindow();
-		
+
 			pDocker->GetView()->SetFocus();
 			GetTopmostDocker()->SetRedraw(FALSE);
 			RecalcDockLayout();
@@ -2163,7 +2164,7 @@ namespace Win32xx
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (static_cast<CDockContainer*>(pDock->GetView())))
 		{
 			assert(dynamic_cast<CDockContainer*>(pDock->GetView()));
-			
+
 			// Transfer any dock children to this docker
 			pDock->MoveDockInContainerChildren(this);
 
@@ -2194,7 +2195,7 @@ namespace Win32xx
 			pDock->SetDockStyle(dwDockStyle);
 			pDock->SetParent(*this);
 			pDock->GetDockBar().SetParent(*GetDockAncestor());
-		
+
 			// Insert the containers in reverse order
 			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
 			{
@@ -2482,7 +2483,7 @@ namespace Win32xx
 			if (pContainer)
 			{
 				if (pContainer == pContainer->GetContainerParent())
-					UndockContainer(pContainer, GetCursorPos(), FALSE);			
+					UndockContainer(pContainer, GetCursorPos(), FALSE);
 				else
 					pContainer->GetContainerParent()->RemoveContainer(pContainer);
 			}
@@ -2547,13 +2548,10 @@ namespace Win32xx
 		if (szRegistryKeyName)
 		{
 			std::vector<DockInfo> vDockList;
-
 			CString KeyName = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
-			HKEY hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
-			if (hKey)
+			CRegKey Key;
+			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName, KEY_READ))
 			{
-				DWORD dwType = REG_BINARY;
 				DWORD BufferSize = sizeof(DockInfo);
 				DockInfo di;
 				int i = 0;
@@ -2561,14 +2559,14 @@ namespace Win32xx
 				SubKeyName.Format(_T("DockChild%d"), i);
 
 				// Fill the DockList vector from the registry
-				while (0 == RegQueryValueEx(hKey, SubKeyName, NULL, &dwType, (LPBYTE)&di, &BufferSize))
+				while (ERROR_SUCCESS == Key.QueryBinaryValue(SubKeyName, &di, &BufferSize))
 				{
 					vDockList.push_back(di);
 					i++;
 					SubKeyName.Format(_T("DockChild%d"), i);
 				}
 
-				RegCloseKey(hKey);
+				Key.Close();
 				if (vDockList.size() > 0) bResult = TRUE;
 			}
 
@@ -2641,36 +2639,31 @@ namespace Win32xx
 
 			// Restore Dock container tab order and active container
 			KeyName = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
-			hKey = 0;
-			RegOpenKeyEx(HKEY_CURRENT_USER, KeyName, 0, KEY_READ, &hKey);
-			if (hKey)
+			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName, KEY_READ))
 			{
 				UINT uContainer = 0;
 				CString SubKeyName;
 				SubKeyName.Format(_T("DockContainer%u"), uContainer);
-				HKEY hContainerKey = 0;
-				while ( 0 == RegOpenKeyEx(hKey, SubKeyName, 0, KEY_READ, &hContainerKey) )
+				CRegKey ContainerKey;
+				while (ERROR_SUCCESS == ContainerKey.Open(Key, SubKeyName, KEY_READ))
 				{
-					DWORD dwType = REG_DWORD;
-					DWORD BufferSize = sizeof(int);
-
 					// Load tab order
 					UINT nTab = 0;
-					UINT nTabID;
+					DWORD dwTabID;
 					std::vector<UINT> vTabOrder;
 					CString strTabKey;
 					strTabKey.Format(_T("Tab%u"), nTab);
-					while ( 0 == RegQueryValueEx(hContainerKey, strTabKey, NULL, &dwType, (LPBYTE)&nTabID, &BufferSize) )
+					while (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(strTabKey, dwTabID))
 					{
-						vTabOrder.push_back(nTabID);
+						vTabOrder.push_back(dwTabID);
 						strTabKey.Format(_T("Tab%u"), ++nTab);
 					}
 
 					// Set tab order
-					UINT nParentID;
-					if ( 0 == RegQueryValueEx(hContainerKey, _T("Parent Container"), NULL, &dwType, (LPBYTE)&nParentID, &BufferSize) )
+					DWORD dwParentID;
+					if (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(_T("Parent Container"), dwParentID))
 					{
-						CDocker* pDock = GetDockFromID(nParentID);
+						CDocker* pDock = GetDockFromID(dwParentID);
 						if (pDock)
 						{
 							CDockContainer* pParentContainer = pDock->GetContainer();
@@ -2695,8 +2688,8 @@ namespace Win32xx
 					}
 
 					// Set the active container
-					UINT nActiveContainer;
-					if (RegQueryValueEx(hContainerKey, _T("Active Container"), NULL, &dwType, (LPBYTE)&nActiveContainer, &BufferSize) == 0)
+					DWORD nActiveContainer;
+					if (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(_T("Active Container"), nActiveContainer))
 					{
 						CDocker* pDocker = GetDockFromID(nActiveContainer);
 						if (pDocker)
@@ -2711,11 +2704,8 @@ namespace Win32xx
 						}
 					}
 
-					RegCloseKey(hContainerKey);
 					SubKeyName.Format(_T("DockContainer%u"), ++uContainer);
 				}
-
-				RegCloseKey(hKey);
 			}
 		}
 
@@ -2747,7 +2737,7 @@ namespace Win32xx
 		while (GetDockChildren()->size() > 0)
 		{
 			iter = GetDockChildren()->begin();
-			CDocker* pDock = *iter;			
+			CDocker* pDock = *iter;
 			DWORD dwDockStyle = pDock->GetDockStyle() | DS_DOCKED_CONTAINER;
 			pDock->SeparateFromDock();
 			pDockTarget->DockInContainer( pDock, dwDockStyle );
@@ -2983,7 +2973,7 @@ namespace Win32xx
 			{
 				DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
 				CDockContainer* pContainer = static_cast<CDockContainer*>(GetView());
-				assert(dynamic_cast<CDockContainer*>(pContainer));				
+				assert(dynamic_cast<CDockContainer*>(pContainer));
 				pContainer->SelectPage(0);
 			}
 			break;
@@ -3254,7 +3244,7 @@ namespace Win32xx
 #ifdef WS_EX_LAYOUTRTL
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
-	
+
 		if (IsDocked())
 		{
 			rc.OffsetRect(-rc.left, -rc.top);
@@ -3303,7 +3293,7 @@ namespace Win32xx
 				}
 				else
 				{
-					rcChild.left = rcChild.right - (int)DockSize;				
+					rcChild.left = rcChild.right - (int)DockSize;
 					rcChild.left = MIN(rcChild.left, rc.right - minSize);
 					rcChild.left = MAX(rcChild.left, rc.left + minSize);
 				}
@@ -3312,19 +3302,19 @@ namespace Win32xx
 			case DS_DOCKED_TOP:
 				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
-				
-				rcChild.bottom = rcChild.top + (int)DockSize;				
+
+				rcChild.bottom = rcChild.top + (int)DockSize;
 				rcChild.bottom = MAX(rcChild.bottom, rc.top + minSize);
 				rcChild.bottom = MIN(rcChild.bottom, rc.bottom - minSize);
 				break;
 			case DS_DOCKED_BOTTOM:
 				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
-				
-				rcChild.top = rcChild.bottom - (int)DockSize;				
+
+				rcChild.top = rcChild.bottom - (int)DockSize;
 				rcChild.top = MIN(rcChild.top, rc.bottom - minSize);
 				rcChild.top = MAX(rcChild.top, rc.top + minSize);
-				
+
 				break;
 			}
 
@@ -3371,7 +3361,7 @@ namespace Win32xx
 		{
 			CRect rcBar;
 			rcBar.IntersectRect(m_rcBar, GetDockParent()->GetViewRect());
-			
+
 			// The SWP_NOCOPYBITS forces a redraw of the dock bar.
 			GetDockBar().SetWindowPos(NULL, rcBar, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOCOPYBITS);
 		}
@@ -3459,29 +3449,31 @@ namespace Win32xx
 
 		if (szRegistryKeyName)
 		{
-			HKEY hKey = NULL;
-			HKEY hKeyDock = NULL;
-			HKEY hKeyContainer = NULL;
+			CRegKey Key;
+			CRegKey KeyDock;
 			CString KeyName = _T("Software\\") + CString(szRegistryKeyName);
 
 			try
 			{
-				// Create/Open the App's registry key
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
+				// Create the App's registry key
+				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
+					throw (CWinException(_T("Create Key failed")));
+
+				if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
+					throw (CWinException(_T("Open Key failed")));
 
 				// Remove Old Docking info ...
 				// Remove existing DockContainer SubKeys
 				UINT uDockContainer = 0;
 				CString SubKeyName;
 				SubKeyName.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
-				while (0 == RegDeleteKey(hKey, SubKeyName) )
+				while (ERROR_SUCCESS == Key.DeleteSubKey(SubKeyName) )
 				{
 					SubKeyName.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
 				}
 
 				// Remove the Dock Windows key
-				RegDeleteKey(hKey, _T("Dock Windows"));
+				Key.DeleteSubKey(_T("Dock Windows"));
 
 				// Fill the DockInfo vector with the docking information
 				for (iter = vSorted.begin(); iter !=  vSorted.end(); ++iter)
@@ -3501,16 +3493,19 @@ namespace Win32xx
 					vDockInfo.push_back(di);
 				}
 
-				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("Dock Windows"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyDock, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
+				if (ERROR_SUCCESS != Key.Create(Key, _T("Dock Windows")))
+					throw (CWinException(_T("Create KeyDock failed")));
+
+				if (ERROR_SUCCESS != KeyDock.Open(Key, _T("Dock Windows")))
+					throw (CWinException(_T("Open KeyDock failed")));
 
 				// Add the Dock windows information to the registry
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
 				{
 					DockInfo di = vDockInfo[u];
 					SubKeyName.Format(_T("DockChild%u"), u);
-					if(ERROR_SUCCESS != RegSetValueEx(hKeyDock, SubKeyName, 0, REG_BINARY, (LPBYTE)&di, sizeof(DockInfo)))
-						throw (CWinException(_T("RegSetValueEx failed")));
+					if(ERROR_SUCCESS != KeyDock.SetBinaryValue(SubKeyName, &di, sizeof(DockInfo)))
+						throw (CWinException(_T("KeyDock SetBinaryValue failed")));
 				}
 
 				// Add dock container info to the registry
@@ -3521,19 +3516,23 @@ namespace Win32xx
 
 					if (pContainer && ( !((*iter)->GetDockStyle() & DS_DOCKED_CONTAINER) ))
 					{
+						CRegKey KeyContainer;
 						SubKeyName.Format(_T("DockContainer%u"), u1++);
-						if (ERROR_SUCCESS != RegCreateKeyEx(hKeyDock, SubKeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyContainer, NULL))
-							throw (CWinException(_T("RegCreateKeyEx Failed")));
+						if (ERROR_SUCCESS != KeyDock.Create(KeyDock, SubKeyName))
+							throw (CWinException(_T("Create KeyDockContainer failed")));
+
+						if (ERROR_SUCCESS != KeyContainer.Open(KeyDock, SubKeyName))
+							throw (CWinException(_T("Open KeyContainer failed")));
 
 						// Store the container group's parent
 						int nID = GetDockFromView(pContainer)->GetDockID();
-						if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, _T("Parent Container"), 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
-							throw (CWinException(_T("RegSetValueEx failed")));
+						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), nID))
+							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
 
 						// Store the active (selected) container
 						nID = GetDockFromView(pContainer->GetActiveContainer())->GetDockID();
-						if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, _T("Active Container"), 0, REG_DWORD, (LPBYTE)&nID, sizeof(int)))
-							throw (CWinException(_T("RegSetValueEx failed")));
+						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), nID))
+							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
 
 						// Store the tab order
 						for (UINT u2 = 0; u2 < pContainer->GetAllContainers()->size(); ++u2)
@@ -3542,38 +3541,31 @@ namespace Win32xx
 							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
 							int nTabID = GetDockFromView(pTab)->GetDockID();
 
-							if(ERROR_SUCCESS != RegSetValueEx(hKeyContainer, SubKeyName, 0, REG_DWORD, (LPBYTE)&nTabID, sizeof(int)))
+							if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(SubKeyName, nTabID))
 								throw (CWinException(_T("RegSetValueEx failed")));
 						}
-
-						RegCloseKey(hKeyContainer);
 					}
 				}
-
-				RegCloseKey(hKeyDock);
-				RegCloseKey(hKey);
 			}
 
 			catch (const CWinException& e)
 			{
 				// Roll back the registry changes by deleting the subkeys
-				if (hKey)
+				if (Key.GetKey())
 				{
-					if (hKeyDock)
+					if (KeyDock.GetKey())
 					{
 						// Remove existing DockContainer SubKeys
 						UINT uDockContainer = 0;
 						CString SubKeyName;
 						SubKeyName.Format(_T("DockContainer%u"), uDockContainer);
-						while (0 == RegDeleteKey(hKeyDock, SubKeyName) )
+						while (0 == KeyDock.DeleteSubKey(SubKeyName) )
 						{
 							SubKeyName.Format(_T("DockContainer%u"), ++uDockContainer);
 						}
-						RegDeleteKey(hKeyDock, _T("Dock Windows"));
-						RegCloseKey(hKeyDock);
-					}
 
-					RegCloseKey(hKey);
+						KeyDock.DeleteSubKey(_T("Dock Windows"));
+					}
 				}
 
 				e.what();
@@ -3812,7 +3804,7 @@ namespace Win32xx
 		// Allows nested calls to SetRedraw.
 		bRedraw? ++m_nRedrawCount : --m_nRedrawCount ;
 
-		return (BOOL)SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L); 
+		return (BOOL)SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L);
 	}
 
 	inline void CDocker::SetUndockPosition(CPoint pt)
@@ -3995,7 +3987,7 @@ namespace Win32xx
 		// The focus change for some controls can be delayed
 		SetTimer(TIMER_ID1, 200, NULL);
 		SetTimer(TIMER_ID2, 800, NULL);
-		
+
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
@@ -4023,7 +4015,7 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CDockContainer class
-	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0), 
+	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0),
 		                                m_nTabPressed(-1), m_IsHideSingleTab(FALSE)
 	{
 		m_pContainerParent = this;
@@ -4036,7 +4028,7 @@ namespace Win32xx
 	}
 
 	inline void CDockContainer::AddContainer(CDockContainer* pContainer, BOOL bInsert /* = FALSE */)
-	// Adds a container to the group. Set bInsert to TRUE to insert the container as the 
+	// Adds a container to the group. Set bInsert to TRUE to insert the container as the
 	//  first tab, or FALSE to add it as the last tab.
 	{
 		assert(pContainer);
@@ -4330,7 +4322,7 @@ namespace Win32xx
 		}
 		else
 			GetActiveView()->SetFocus();
-		
+
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
@@ -4459,9 +4451,9 @@ namespace Win32xx
 
 	inline void CDockContainer::SetHideSingleTab(BOOL HideSingle)
 	// Only display tabs if there are two or more.
-	{	
+	{
 		m_IsHideSingleTab = HideSingle;
-		RecalcLayout();	
+		RecalcLayout();
 	}
 
 	inline void CDockContainer::SetTabIcon(UINT nID_Icon)
@@ -4630,8 +4622,8 @@ namespace Win32xx
 		case WM_MOUSELEAVE:		return OnMouseLeave(uMsg, wParam, lParam);
 		case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
 		case WM_SETFOCUS:		return OnSetFocus(uMsg, wParam, lParam);
-		case WM_SIZE:			return OnSize(uMsg, wParam, lParam);		
-		} 
+		case WM_SIZE:			return OnSize(uMsg, wParam, lParam);
+		}
 
 		// pass unhandled messages on to CTab for processing
 		return CTab::WndProcDefault(uMsg, wParam, lParam);

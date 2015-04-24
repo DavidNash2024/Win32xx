@@ -25,6 +25,7 @@
     <ClInclude Include="..\..\..\include\menubar.h" />
     <ClInclude Include="..\..\..\include\propertysheet.h" />
     <ClInclude Include="..\..\..\include\rebar.h" />
+    <ClInclude Include="..\..\..\include\regkey.h" />
     <ClInclude Include="..\..\..\include\ribbon.h" />
     <ClInclude Include="..\..\..\include\shared_ptr.h" />
     <ClInclude Include="..\..\..\include\socket.h" />

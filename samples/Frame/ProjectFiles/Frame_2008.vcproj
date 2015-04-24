@@ -321,6 +321,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\regkey.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\ribbon.h"
 				>
 			</File>

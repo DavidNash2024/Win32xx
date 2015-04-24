@@ -3,7 +3,12 @@ Version 8.0
 
 New Features and Enhancements
 -----------------------------
+* Added CRegKey.
+  CRegKey is a wrapper for functions used to access and modify the registry.
+
 * Added  GetCommandLineArgs
+  This function provides access to the command line arguments. They are
+  returned in a vector of CString.
 
 * Removed obsolete code
 

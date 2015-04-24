@@ -142,14 +142,17 @@ namespace Win32xx
 		int  	DeleteItem(int nIndex ) const;
 		HWND 	GetComboBoxCtrl() const;
 		HWND 	GetEditCtrl() const;
-		DWORD 	GetExtendedStyle() const;
 		CImageList GetImageList() const;
 		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
 		BOOL 	HasEditChanged () const;
 		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
-		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
 		CImageList SetImageList(HIMAGELIST himlNew) const;
 		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
+
+#if (_WIN32_IE >= 0x0400)
+		DWORD 	GetExtendedStyle() const;
+		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
+#endif
 
 	protected:
 		// Overridables
@@ -224,6 +227,7 @@ namespace Win32xx
 		CHotKey& operator = (const CHotKey&);	// Disable assignment operator
 	};
 
+#if (_WIN32_IE >= 0x0400)
 	class CIPAddress : public CWnd
 	{
 	public:
@@ -247,6 +251,7 @@ namespace Win32xx
 		CIPAddress(const CIPAddress&);				// Disable copy construction
 		CIPAddress& operator = (const CIPAddress&);	// Disable assignment operator
 	};
+#endif // (_WIN32_IE >= 0x0400)
 
 	class CMonthCalendar : public CWnd
 	{
@@ -297,12 +302,15 @@ namespace Win32xx
 		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
 		BOOL SetFormat(LPCTSTR pstrFormat);
 		HWND GetMonthCalCtrl() const;
-		CFont GetMonthCalFont();
-		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
 		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
 		BOOL SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray);
 		DWORD GetTime(LPSYSTEMTIME pTimeDest) const;
 		BOOL SetTime(DWORD flag, LPSYSTEMTIME pTimeNew = NULL);
+
+#if (_WIN32_IE >= 0x0400)
+		CFont GetMonthCalFont();
+		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
+#endif
 
 	protected:
 		// Overridables
@@ -467,11 +475,13 @@ namespace Win32xx
 		BOOL HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
 		void Pop();
 		void RelayEvent(LPMSG lpMsg);
-
 		void SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect);
-		void Update();
 		void UpdateTipText(LPCTSTR lpszText, HWND hWnd, UINT_PTR nIDTool = 0);
 		void UpdateTipText(UINT nIDText, HWND hWnd, UINT_PTR nIDTool = 0);
+
+#if (_WIN32_IE >= 0x0400)
+		void Update();
+#endif
 
 #if (_WIN32_IE >=0x0500)
 		BOOL AdjustRect(LPRECT lprc, BOOL bLarger = TRUE);
@@ -854,12 +864,14 @@ namespace Win32xx
 		return reinterpret_cast<HWND>(SendMessage(CBEM_GETEDITCONTROL, 0L, 0L));
 	}
 
+#if (_WIN32_IE >= 0x0400)
 	inline DWORD CComboBoxEx::GetExtendedStyle() const
 	// Retrieves the extended styles that are in use for the ComboBoxEx control.
 	{
 		assert(IsWindow());
 		return (DWORD)SendMessage(CBEM_GETEXTENDEDSTYLE, 0L, 0L);
 	}
+#endif
 
 	inline CImageList CComboBoxEx::GetImageList() const
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
@@ -890,12 +902,14 @@ namespace Win32xx
 		return (int)SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)lpcCBItem);
 	}
 
+#if (_WIN32_IE >= 0x0400)
 	inline DWORD CComboBoxEx::SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const
 	// Sets extended styles within the ComboBoxEx control.
 	{
 		assert(IsWindow());
 		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
 	}
+#endif
 
 	inline CImageList CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
 	// Sets an image list for the ComboBoxEx control.
@@ -939,6 +953,7 @@ namespace Win32xx
 		return reinterpret_cast<HWND>(DateTime_GetMonthCal(*this));
 	}
 
+#if (_WIN32_IE >= 0x0400)
 	inline CFont CDateTime::GetMonthCalFont()
 	{
 		assert(IsWindow());
@@ -951,6 +966,7 @@ namespace Win32xx
 		assert(IsWindow());
 		DateTime_SetMonthCalFont(*this, hFont, MAKELONG(bRedraw, 0));
 	}
+#endif
 
 	inline DWORD CDateTime::GetRange(LPSYSTEMTIME lpSysTimeArray) const
 	{
@@ -1163,6 +1179,8 @@ namespace Win32xx
 	}
 #endif
 
+
+#if (_WIN32_IE >= 0x0400)
 	////////////////////////////////////////
 	// Definitions for the CIPAddress class
 	//
@@ -1218,6 +1236,7 @@ namespace Win32xx
 		assert(IsWindow());
 		SendMessage(IPM_SETRANGE, MAKEIPRANGE(nLower, nUpper), (LPARAM)nField);
 	}
+#endif // (_WIN32_IE >= 0x0400)
 
 
 	///////////////////////////////////////////
@@ -2011,12 +2030,14 @@ namespace Win32xx
 		SendMessage(TTM_NEWTOOLRECT, 0L, (LPARAM)&ti);
 	}
 
+#if (_WIN32_IE >= 0x0400)
 	inline void CToolTip::Update()
 	// Forces the current tool to be redrawn.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_UPDATE, 0L, 0L);
 	}
+#endif
 
 	inline void CToolTip::UpdateTipText(LPCTSTR lpszText, HWND hWnd, UINT_PTR nIDTool /*= 0*/)
 	// Sets the ToolTip text for a tool.
