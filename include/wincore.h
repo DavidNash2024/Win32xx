@@ -2585,7 +2585,7 @@ namespace Win32xx
 	}
 
 	inline void CWnd::Invalidate(BOOL bErase /*= TRUE*/) const
-	// The Invalidate function adds the entire client area the window's update region.
+	// The Invalidate function adds the entire client area to the window's update region.
 	// The update region represents the portion of the window's client area that must be redrawn.
 	{
 		assert(IsWindow());
