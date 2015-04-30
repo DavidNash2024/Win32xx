@@ -64,7 +64,7 @@
 namespace Win32xx
 {
 
-	struct ArchiveObject{size_t size; LPVOID p; LPCTSTR msg;};
+	struct ArchiveObject{UINT size; LPVOID p; LPCTSTR msg;};
 
 	// Unspecified object type containing the size of, a pointer p to, and  a
 	// message about a memory block that is either to be written into (<<)  or 
@@ -99,11 +99,11 @@ namespace Win32xx
 		bool 	IsOpen() const;
 		bool 	IsStoring() const;
 		bool	Open(CString filename, CArchive::mode);
-		void 	Read(void* lpBuf, size_t size, LPCTSTR msg = TEXT(""));
+		void 	Read(void* lpBuf, UINT size, LPCTSTR msg = TEXT(""));
 		void    SetError(UINT nError);
 		void 	SetObjectSchema(UINT nSchema);
 		void    SyncPoint();
-		void 	Write(const void* lpBuf, size_t size, LPCTSTR msg = TEXT(""));
+		void 	Write(const void* lpBuf, UINT size, LPCTSTR msg = TEXT(""));
 
 		// insertion operations
 		CArchive& operator<<(BYTE by);
@@ -263,7 +263,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CArchive::Read(void* lpBuf, size_t size, LPCTSTR msg /* = "" */)
+	inline void CArchive::Read(void* lpBuf, UINT size, LPCTSTR msg /* = "" */)
 	// Read size bytes from the open archive file into the given lpBuf.
 	// Return on success and  the number of bytes actually read is size.
 	// Throw an exception if not successful containing the message msg.
@@ -283,7 +283,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CArchive::Write(const void* lpBuf, size_t size, LPCTSTR msg /* = "" */)
+	inline void CArchive::Write(const void* lpBuf, UINT size, LPCTSTR msg /* = "" */)
 	// Write size characters of from the lpBuf into the open archive file  and
 	// return successfully if the number of characters actually written is
 	// size. Throw an exception if unsuccessful containing the message msg.
@@ -332,9 +332,9 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CArchive::SyncPoint()
-	// If storing, write the sync_mark string into the archive; if loading,
-	// read back and  vaidate that the sync_mark is present. If unable to
-	// write or validate the sync_mark, throw an exception.  Otherwise,
+	// If storing, write the sync mark string into the archive; if loading,
+	// read back and  validate that the sync mark is present. If unable to
+	// write or validate the sync mark, throw an exception.  Otherwise,
 	// leave the archive open for further serialization.
 		
 	// The use of SyncPoint() is recommended to assure that corruptions  or
@@ -509,7 +509,7 @@ namespace Win32xx
 	// Write the LPCTSTR string into the archive file. Throw an exception
 	// if an error occurs.
 	{
-		size_t size = (lstrlen(string) + 1) * sizeof(TCHAR);
+		UINT size = (lstrlen(string) + 1) * sizeof(TCHAR);
 		 
 		// Write() throws exception upon error
 		Write((char *)&size, sizeof(size_t), TEXT("C string"));
@@ -522,7 +522,7 @@ namespace Win32xx
 	// Write the CString string into the archive file. Throw an exception
 	// if an error occurs.
 	{
-		size_t size = (lstrlen(string.c_str()) + 1) * sizeof(TCHAR);
+		UINT size = (lstrlen(string.c_str()) + 1) * sizeof(TCHAR);
 		  
 		// Write() throws exception upon error
 		Write((char *)&size, sizeof(size_t), TEXT("CString"));
@@ -535,7 +535,7 @@ namespace Win32xx
 	// Write the CString string into the archive file. Throw an exception
 	// if an error occurs.
 	{
-		size_t size = sizeof(pt);
+		UINT size = sizeof(pt);
 		  
 		// Write() throws exception upon error
 		Write((char *)&size, sizeof(size_t), TEXT("CPoint"));
@@ -663,7 +663,7 @@ namespace Win32xx
 	// only on inability to read the recorded number of chars from the archive
 	// stream.
 	{
-		size_t size;
+		UINT size;
 		Read((char *)&size, sizeof(size_t), TEXT("C string"));
 		Read(string, size, TEXT("C string"));
 		return *this;
@@ -676,7 +676,7 @@ namespace Win32xx
 	// only on inability to read the recorded number of chars from the archive
 	// stream.
 	{
-		size_t size;
+		UINT size;
 		Read((char *)&size, sizeof(size_t));
 		  // A TCHAR buffer is needed to receive the stored chars in order to
 		  // be assigned to a CString in wide character mode. The sizing below
@@ -704,7 +704,7 @@ namespace Win32xx
 	// the location pointed to by ob.p.  Throw an exception if unable to
 	// do so correctly.
 	{
-		size_t size;
+		UINT size;
 		Read((char *)&size, sizeof(size_t), ob.msg);
 		if (size != ob.size)
 		{

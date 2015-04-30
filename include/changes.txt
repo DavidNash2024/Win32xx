@@ -5,6 +5,10 @@ New Features and Enhancements
 -----------------------------
 * Added CRegKey.
   CRegKey is a wrapper for functions used to access and modify the registry.
+  
+* Added CArchive.
+  CArchive provides a convenient means of saving and restoring an application's
+  data, by streaming the data to and from a file.   
 
 * Added  GetCommandLineArgs
   This function provides access to the command line arguments. They are

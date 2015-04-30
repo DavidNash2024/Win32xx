@@ -2029,7 +2029,6 @@ namespace Win32xx
 			CRegKey Key;
 			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
 			{
-				TRACE ("Open succesful\n");
 				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwShowCmd, dwStatusBar, dwToolBar;
 
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Top"), dwTop))

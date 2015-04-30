@@ -195,6 +195,13 @@ namespace Win32xx
 		tString m_str;
 		std::vector<TCHAR> m_buf;
 	};
+	
+} // namespace Win32xx
+	
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+namespace Win32xx
+{
 
 	inline CString::CString()
 	{

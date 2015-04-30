@@ -91,7 +91,7 @@ namespace Win32xx
 
 }
 
-
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 namespace Win32xx
 {
@@ -104,6 +104,7 @@ namespace Win32xx
 	}
 
 	inline CFile::CFile(LPCTSTR pszFileName, UINT nOpenFlags) : m_hFile(0)
+	//  Possible nOpenFlag values:  CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING	
 	{
 		assert(pszFileName);
 		Open(pszFileName, nOpenFlags);
@@ -203,6 +204,7 @@ namespace Win32xx
 
 	inline BOOL CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
 	// Prepares a file to be written to or read from.
+	// Possible nOpenFlag values:  CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING
 	{
 		if (m_hFile != 0) Close();
 
