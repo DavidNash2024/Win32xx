@@ -5,7 +5,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "frame.h"
+#include "wxx_frame.h"
 #include "View.h"
 
 

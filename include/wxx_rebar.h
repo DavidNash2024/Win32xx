@@ -38,9 +38,9 @@
 #ifndef _WIN32XX_REBAR_H_
 #define _WIN32XX_REBAR_H_
 
-#include "wincore.h"
-#include "gdi.h"
-#include "controls.h"
+#include "wxx_wincore.h"
+#include "wxx_gdi.h"
+#include "wxx_controls.h"
 
 
 namespace Win32xx

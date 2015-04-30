@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// mdi.h
+// wxx_mdi.h
 //  Declaration of the CMDIChild and CMDIFrame classes
 
 // The classes defined here add MDI frames support to Win32++. MDI
@@ -65,7 +65,7 @@
 #ifndef _WIN32XX_MDI_H_
 #define _WIN32XX_MDI_H_
 
-#include "frame.h"
+#include "wxx_frame.h"
 #include <vector>
 
 

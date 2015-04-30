@@ -36,16 +36,16 @@
 
 
 ///////////////////////////////////////////////////////
-// tab.h
+// wxx_tab.h
 //  Declaration of the CTab and CMDITab classes
 
 #ifndef _WIN32XX_TAB_H_
 #define _WIN32XX_TAB_H_
 
-#include "wincore.h"
-#include "dialog.h"
-#include "gdi.h"
-#include "regkey.h"
+#include "wxx_wincore.h"
+#include "wxx_dialog.h"
+#include "wxx_gdi.h"
+#include "wxx_regkey.h"
 #include "default_resource.h"
 
 namespace Win32xx

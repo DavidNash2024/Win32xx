@@ -36,15 +36,15 @@
 
 
 ///////////////////////////////////////////////////////
-// rich_edit.h
+// wxx_rich_edit.h
 //  Declaration of the CRichEdit class
 
 #ifndef _WIN32XX_RICH_EDIT_H_
 #define _WIN32XX_RICH_EDIT_H_
 
 
-#include "wincore.h"
-#include "gdi.h"
+#include "wxx_wincore.h"
+#include "wxx_gdi.h"
 #include <Richedit.h>
 #include <Richole.h>
 

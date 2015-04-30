@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// menu.h
+// wxx_menu.h
 //  Declaration of the CMenu class
 
 // Notes
@@ -96,8 +96,8 @@
 #define _WIN32XX_MENU_H_
 
 
-#include "wincore.h"
-#include "gdi.h"
+#include "wxx_wincore.h"
+#include "wxx_gdi.h"
 
 
 namespace Win32xx

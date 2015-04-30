@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// regkey.h
+// wxx_regkey.h
 //  Declaration of the CRegKey class
 
 #ifndef _WIN32XX_REGKEY_H_

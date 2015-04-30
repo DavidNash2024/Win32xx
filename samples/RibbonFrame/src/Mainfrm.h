@@ -6,7 +6,7 @@
 
 
 #include "View.h"
-#include "Ribbon.h"
+#include "wxx_ribbon.h"
 
 
 // Declaration of the CMainFrame class

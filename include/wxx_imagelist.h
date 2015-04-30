@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// imagelist.h
+// wxx_imagelist.h
 //  Declaration of the CImageList class
 
 // The CImageList class manages an image list.
@@ -51,7 +51,7 @@
 #define _WIN32XX_IMAGELIST_H_
 
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 
 namespace Win32xx

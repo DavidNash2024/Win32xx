@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// dialog.h
+// wxx_dialog.h
 //  Declaration of the CDialog class
 
 // CDialog adds support for dialogs to Win32++. Dialogs are specialised
@@ -68,7 +68,7 @@
 #ifndef _WIN32XX_DIALOG_H_
 #define _WIN32XX_DIALOG_H_
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 #ifndef SWP_NOCOPYBITS
 	#define SWP_NOCOPYBITS      0x0100

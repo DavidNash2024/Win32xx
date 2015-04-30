@@ -36,7 +36,7 @@
 
 
 //////////////////////////////////////////////////////
-// WceFrame.h
+// wxx_wceframe.h
 // Definitions for the CCmdBar and CWceFrame
 
 // These classes are provide a frame window for use on Window CE devices such
@@ -54,7 +54,7 @@
 #define _WIN32XX_WCEFRAME_H_
 
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 #include <commctrl.h>
 #include <vector>
 #include "default_resource.h"

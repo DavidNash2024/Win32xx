@@ -33,28 +33,33 @@
 #include <stdlib.h>
 #include <tchar.h>
 
-#include <controls.h>
-#include <dialog.h>
-#include <docking.h>
-#include <file.h>
-#include <frame.h>
-#include <gdi.h>
-#include <imagelist.h>
-#include <listview.h>
-#include <mdi.h>
-#include <propertysheet.h>
-#include <rebar.h>
-#include <regkey.h>
-//#include <ribbon.h>
-#include <rich_edit.h>
-#include <socket.h>
-#include <statusbar.h>
-#include <stdcontrols.h>
-//#include <taskdialog.h>
-#include <toolbar.h>
-#include <treeview.h>
-#include <webbrowser.h>
-#include <wincore.h>
+#include <wxx_archive.h>
+#include <wxx_controls.h>
+#include <wxx_cstring.h>
+#include <wxx_dialog.h>
+#include <wxx_docking.h>
+#include <wxx_file.h>
+#include <wxx_frame.h>
+#include <wxx_gdi.h>
+#include <wxx_imagelist.h>
+#include <wxx_listview.h>
+#include <wxx_mdi.h>
+#include <wxx_propertysheet.h>
+#include <wxx_rebar.h>
+#include <wxx_regkey.h>
+//#include <wxx_ribbon.h>
+#include <wxx_richedit.h>
+#include <wxx_shared_ptr.h>
+#include <wxx_socket.h>
+#include <wxx_statusbar.h>
+#include <wxx_stdcontrols.h>
+#include <wxx_tab.h>
+//#include <wxx_taskdialog.h>
+#include <wxx_time.h>
+#include <wxx_toolbar.h>
+#include <wxx_treeview.h>
+#include <wxx_webbrowser.h>
+#include <wxx_wincore.h>
 
 
 #endif

@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// stdcontrols.h
+// wxx_stdcontrols.h
 //  Declaration of the CButton, CEdit, CListBox and CStatic classes
 
 // The Button, Edit, ListBox and Static controls are often referred to 
@@ -49,7 +49,7 @@
 #ifndef _WIN32XX_STDCONTROLS_H_
 #define _WIN32XX_STDCONTROLS_H_
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 
 namespace Win32xx

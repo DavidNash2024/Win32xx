@@ -36,7 +36,7 @@
 
 
 ///////////////////////////////////////////////////////
-// winutils.h
+// wxx_winutils.h
 //  Declaration of the following classes:
 //  CPoint, CRect, and CSize
 

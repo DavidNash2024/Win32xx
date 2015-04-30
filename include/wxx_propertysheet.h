@@ -36,7 +36,7 @@
 
 
 ///////////////////////////////////////////////////////
-// propertysheet.h
+// wxx_propertysheet.h
 //  Declaration of the following classes:
 //  CPropertyPage and CPropertySheet
 
@@ -53,7 +53,7 @@
 #ifndef _WIN32XX_PROPERTYSHEET_H_
 #define _WIN32XX_PROPERTYSHEET_H_
 
-#include "dialog.h"
+#include "wxx_dialog.h"
 
 #define ID_APPLY_NOW   0x3021
 #define ID_WIZBACK     0x3023

@@ -49,18 +49,18 @@
 
 
 ///////////////////////////////////////////////////////
-// docking.h
+// wxx_docking.h
 //  Declaration of the CDocker class
 
 #ifndef _WIN32XX_DOCKING_H_
 #define _WIN32XX_DOCKING_H_
 
 
-#include "wincore.h"
-#include "gdi.h"
-#include "toolbar.h"
-#include "tab.h"
-#include "regkey.h"
+#include "wxx_wincore.h"
+#include "wxx_gdi.h"
+#include "wxx_toolbar.h"
+#include "wxx_tab.h"
+#include "wxx_regkey.h"
 #include "default_resource.h"
 
 

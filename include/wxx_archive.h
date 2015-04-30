@@ -58,8 +58,8 @@
 #ifndef _WIN32XX_ARCHIVE_H_
 #define _WIN32XX_ARCHIVE_H_
 
-#include "wincore.h"
-#include "file.h"
+#include "wxx_wincore.h"
+#include "wxx_file.h"
 
 namespace Win32xx
 {

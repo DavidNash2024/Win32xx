@@ -1,7 +1,7 @@
 ///////////////////////////////////////
 // main.cpp
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 // Note:  
 //  * Add the Win32++\include  directory to project's additional include directories

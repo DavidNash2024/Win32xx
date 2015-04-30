@@ -39,7 +39,7 @@
 // Thanks to Adam Szulc for his initial CString code.
 
 ////////////////////////////////////////////////////////
-// c_string.h
+// wxx_cstring.h
 //  Declaration of the CString class
 
 // This class is intended to provide a simple alternative to the MFC/ATL
@@ -86,7 +86,7 @@
 #define _WIN32XX_CSTRING_H_
 
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 
 namespace Win32xx

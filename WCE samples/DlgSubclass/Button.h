@@ -5,7 +5,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 
 class CButton : public CWnd

@@ -38,7 +38,7 @@
 #ifndef _WIN32XX_STATUSBAR_H_
 #define _WIN32XX_STATUSBAR_H_
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 namespace Win32xx
 {

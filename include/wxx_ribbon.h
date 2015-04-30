@@ -36,7 +36,7 @@
 
 
 ///////////////////////////////////////////////////////
-// ribbon.h
+// wxx_ribbon.h
 //  Declaration of the following classes:
 //  CRibbon and CRibbonFrame
 //

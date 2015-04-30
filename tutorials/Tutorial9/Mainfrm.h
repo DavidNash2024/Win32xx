@@ -6,8 +6,8 @@
 #define MAINFRM_H
 
 #include "targetver.h"
-#include "frame.h"
-#include "file.h"
+#include "wxx_frame.h"
+#include "wxx_file.h"
 #include "View.h"
 
 // required for Dev-C++

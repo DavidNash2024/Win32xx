@@ -4,8 +4,8 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include <wincore.h>
-#include <ribbon.h>
+#include <wxx_wincore.h>
+#include <wxx_ribbon.h>
 
 
 class CView : public CWnd, public CRibbon

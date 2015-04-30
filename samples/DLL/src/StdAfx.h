@@ -10,8 +10,8 @@
 //#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
 #include "targetver.h"			// Set the supported window features
 
-#include <wincore.h>
-#include <dialog.h>
+#include <wxx_wincore.h>
+#include <wxx_dialog.h>
 
 
 #endif // define STDAFX_H

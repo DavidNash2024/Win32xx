@@ -1,4 +1,4 @@
-// Win32++   Version 8.0 Alpha
+﻿// Win32++   Version 8.0 Alpha
 // Release Date: TBA
 //
 //      David Nash
@@ -36,7 +36,7 @@
 
 
 ///////////////////////////////////////////////////////
-// wincore.h
+// wxx_wincore.h
 //  Declaration of the following classes:
 //  CWinThread, CWinApp, CWnd, CWinException,
 //  CCriticalSection.
@@ -101,7 +101,7 @@
 #endif
 
 #ifdef _WIN32_WCE
-  #include "wcestddef.h"
+  #include "wxx_wcestddef.h"
 #endif
 
 
@@ -119,12 +119,12 @@
   #include <shlwapi.h>
   #include <process.h>
 #endif
-#include "shared_ptr.h"
-//#include "winutils.h"			// included later in this file
-//#include "c_string.h"			// included later in this file
-//#include "gdi.h"				// included later in this file
-//#include "menu.h"				// included later in this file
-//#include "imagelist.h"		// included later in this file
+#include "wxx_shared_ptr.h"
+//#include "wxx_winutils.h"			// included later in this file
+//#include "wxx_cstring.h"			// included later in this file
+//#include "wxx_gdi.h"				// included later in this file
+//#include "wxx_menu.h"				// included later in this file
+//#include "wxx_imagelist.h"		// included later in this file
 
 
 // For compilers lacking Win64 support
@@ -500,8 +500,8 @@ namespace Win32xx
 
 }
 
-#include "winutils.h"
-#include "c_string.h"
+#include "wxx_winutils.h"
+#include "wxx_cstring.h"
 
 
 namespace Win32xx
@@ -732,9 +732,9 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-#include "gdi.h"
-#include "menu.h"
-#include "imagelist.h"
+#include "wxx_gdi.h"
+#include "wxx_menu.h"
+#include "wxx_imagelist.h"
 
 namespace Win32xx
 {

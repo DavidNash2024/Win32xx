@@ -5,7 +5,7 @@
 // 1) Add Win32++'s include directory to the project's additional include directories for C/C++
 // 2) Add Win32++'s include directory to the project's additional include directories for Resources
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 
 // A class that inherits from CWnd. It is used to create the window.

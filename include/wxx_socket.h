@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// socket.h
+// wxx_socket.h
 //  Declaration of the CSocket class
 //
 // The CSocket class represents a network socket. It encapsulates many of
@@ -108,7 +108,7 @@
 #define _WIN32XX_SOCKET_H_
 
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 #include <winsock2.h>
 #include <ws2tcpip.h>
 

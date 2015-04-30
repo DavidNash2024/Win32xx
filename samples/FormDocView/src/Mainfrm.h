@@ -5,7 +5,7 @@
 #define MAINFRM_H
 
 
-#include "frame.h"
+#include "wxx_frame.h"
 #include "FormApp.h"
 #include "FormView.h"
 #include "FormDoc.h"

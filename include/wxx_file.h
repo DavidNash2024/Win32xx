@@ -39,7 +39,7 @@
 #define _WIN32XX_FILE_H_
 
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 namespace Win32xx
 {

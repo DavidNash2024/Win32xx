@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////
 //App.cpp -  Definitions for the CDialogApp class
 
-#include "dialog.h"
+#include "wxx_dialog.h"
 #include "resource.h"
 #include "DialogApp.h"
 

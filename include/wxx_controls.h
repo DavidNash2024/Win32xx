@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// controls.h
+// wxx_controls.h
 //  Declaration of the following classes:
 //  CAnimation, CComboBox, CComboBoxEx, CDateTime, CIPAddress,
 //  CHeader, CHotKey, CMonthCalendar, CProgressBar, CScrollBar,
@@ -46,8 +46,8 @@
 #ifndef _WIN32XX_CONTROLS_H_
 #define _WIN32XX_CONTROLS_H_
 
-#include "wincore.h"
-#include "stdcontrols.h"
+#include "wxx_wincore.h"
+#include "wxx_stdcontrols.h"
 
 namespace Win32xx
 {

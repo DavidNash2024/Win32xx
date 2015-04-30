@@ -2,7 +2,7 @@
 #define MYDIALOG_H
 
 
-#include "dialog.h"
+#include "wxx_dialog.h"
 #include "resource.h"
 
 

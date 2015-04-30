@@ -3,8 +3,8 @@
 //  Definitions for the CView class
 
 #include "view.h"
-#include "GDI.h"
-#include "file.h"
+#include "wxx_gdi.h"
+#include "wxx_file.h"
 #include "resource.h"
 
 using namespace std;

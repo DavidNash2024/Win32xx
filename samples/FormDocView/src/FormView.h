@@ -4,7 +4,7 @@
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-#include "dialog.h"
+#include "wxx_dialog.h"
 #include "resource.h"
 
 

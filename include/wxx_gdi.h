@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// gdi.h
+// wxx_gdi.h
 //  Declaration of the CDC class, and CBitmapInfoPtr class
 
 // The CDC class provides a device context, along with the various associated
@@ -127,7 +127,7 @@
 #ifndef _WIN32XX_GDI_H_
 #define _WIN32XX_GDI_H_
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 // Disable macros from Windowsx.h
 #undef CopyRgn

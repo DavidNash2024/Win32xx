@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// frame.h
+// wxx_frame.h
 //  Declaration of the CFrame and CMenuBar classes
 
 // The classes declared in this file support SDI (Single Document Interface)
@@ -72,15 +72,15 @@
 #ifndef _WIN32XX_FRAME_H_
 #define _WIN32XX_FRAME_H_
 
-#include "wincore.h"
-#include "dialog.h"
-#include "gdi.h"
-#include "statusbar.h"
-#include "toolbar.h"
-#include "menubar.h"
-#include "rebar.h"
-#include "docking.h"
-#include "regkey.h"
+#include "wxx_wincore.h"
+#include "wxx_dialog.h"
+#include "wxx_gdi.h"
+#include "wxx_statusbar.h"
+#include "wxx_toolbar.h"
+#include "wxx_menubar.h"
+#include "wxx_rebar.h"
+#include "wxx_docking.h"
+#include "wxx_regkey.h"
 #include "default_resource.h"
 
 

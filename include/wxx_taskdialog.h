@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// taskdialog.h
+// wxx_taskdialog.h
 //  Declaration of the CTaskDialog class
 
 // A task dialog is a dialog box that can be used to display information 
@@ -53,7 +53,7 @@
 #ifndef _WIN32XX_TASKDIALOG_H_
 #define _WIN32XX_TASKDIALOG_H_
 
-#include "wincore.h"
+#include "wxx_wincore.h"
 
 namespace Win32xx
 {
