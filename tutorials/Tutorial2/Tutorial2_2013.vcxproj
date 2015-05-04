@@ -14,7 +14,8 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\wincore.h" />
+    <ClInclude Include="..\..\include\wxx_wincore.h" />
+    <ClInclude Include="..\..\include\wxx_winutils.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

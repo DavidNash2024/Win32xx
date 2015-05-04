@@ -248,7 +248,11 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\include\wincore.h"
+				RelativePath="..\..\include\wxx_wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\wxx_winutils.h"
 				>
 			</File>
 		</Filter>

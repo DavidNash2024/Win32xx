@@ -242,49 +242,5 @@ SOURCE=..\src\res\SplitV.cur
 SOURCE=..\src\res\Text.ico
 # End Source File
 # End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\..\..\include\dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\docking.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\frame.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\gdi.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\listview.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\rebar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\statusbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\toolbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\treeview.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\wincore.h"
-# End Source File
-# End Group
 # End Target
 # End Project

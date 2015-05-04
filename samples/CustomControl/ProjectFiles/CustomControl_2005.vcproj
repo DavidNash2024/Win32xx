@@ -259,22 +259,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Win32++"
-			>
-			<File
-				RelativePath="..\..\..\include\dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\stdcontrols.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wincore.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

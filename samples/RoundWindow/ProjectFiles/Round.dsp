@@ -126,13 +126,5 @@ SOURCE=..\src\View.h
 SOURCE=..\src\Resource.rc
 # End Source File
 # End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\..\..\include\wincore.h"
-# End Source File
-# End Group
 # End Target
 # End Project

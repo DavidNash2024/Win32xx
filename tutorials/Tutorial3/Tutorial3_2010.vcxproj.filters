@@ -26,14 +26,17 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\Win32++\include\wincore.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="ScribbleApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="View.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wxx_wincore.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wxx_winutils.h">
+      <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

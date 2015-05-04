@@ -21,16 +21,22 @@
     <ClInclude Include="View.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\include\wxx_wincore.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\include\wxx_winutils.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
-      <Filter>Win32++</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="ScribbleApp.cpp">
-      <Filter>Win32++</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="View.cpp">
-      <Filter>Win32++</Filter>
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

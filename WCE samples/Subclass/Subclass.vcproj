@@ -733,18 +733,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Win32++"
-			>
-			<File
-				RelativePath="..\Win32++\WCEstddef.h"
-				>
-			</File>
-			<File
-				RelativePath="..\Win32++\WinCore.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

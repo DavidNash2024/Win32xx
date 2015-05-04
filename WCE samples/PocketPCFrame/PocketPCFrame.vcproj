@@ -735,30 +735,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Win32++"
-			>
-			<File
-				RelativePath="..\..\include\dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\webbrowser.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\wincore.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\winutils.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

@@ -11,6 +11,8 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\include\wxx_wincore.h" />
+    <ClInclude Include="..\..\include\wxx_winutils.h" />
     <ClInclude Include="ScribbleApp.h" />
     <ClInclude Include="View.h" />
   </ItemGroup>

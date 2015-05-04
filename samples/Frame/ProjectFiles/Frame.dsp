@@ -68,7 +68,7 @@ LINK32=link.exe
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX"StdAdx.h" /FD /GZ /c
+# ADD CPP /nologo /MTd /W3 /Gm /GR /GX /ZI /Od /I "..\..\..\include" /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /FR /YX"StdAdx.h" /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0xc09 /d "_DEBUG"
@@ -140,42 +140,6 @@ SOURCE=..\src\View.h
 # Begin Source File
 
 SOURCE=..\src\Resource.rc
-# End Source File
-# End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\..\..\include\dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\frame.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\gdi.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\rebar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\statusbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\toolbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\wincore.h"
-# End Source File
-# Begin Source File
-
-SOURCE=..\..\..\include\winutils.h
 # End Source File
 # End Group
 # End Target

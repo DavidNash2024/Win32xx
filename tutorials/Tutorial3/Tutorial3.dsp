@@ -119,13 +119,5 @@ SOURCE=.\View.h
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE=..\..\include\wincore.h
-# End Source File
-# End Group
 # End Target
 # End Project

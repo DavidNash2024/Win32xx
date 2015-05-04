@@ -70,7 +70,6 @@ namespace Win32xx
 		LONG QueryDWORDValue(LPCTSTR pszValueName, DWORD& dwValue);
 		LONG QueryGUIDValue(LPCTSTR pszValueName, GUID& guidValue);
 		LONG QueryMultiStringValue(LPCTSTR pszValueName, LPTSTR pszValue, ULONG* pnChars);
-		LONG QueryQWORDValue(LPCTSTR pszValueName, ULONGLONG& qwValue);
 		LONG QueryStringValue(LPCTSTR pszValueName, LPTSTR pszValue, ULONG* pnChars);
 		LONG QueryValue(LPCTSTR pszValueName, DWORD* pdwType, void* pData, ULONG* pnBytes);
 		LONG RecurseDeleteKey(LPCTSTR lpszKey);
@@ -79,9 +78,13 @@ namespace Win32xx
 		LONG SetGUIDValue(LPCTSTR pszValueName, REFGUID guidValue);
 		LONG SetKeySecurity(SECURITY_INFORMATION si, PSECURITY_DESCRIPTOR psd);
 		LONG SetMultiStringValue(LPCTSTR pszValueName, LPCTSTR pszValue);
-		LONG SetQWORDValue(LPCTSTR pszValueName, ULONGLONG qwValue);
 		LONG SetStringValue(LPCTSTR pszValueName, LPCTSTR pszValue, DWORD dwType = REG_SZ);
 		LONG SetValue(LPCTSTR pszValueName, DWORD dwType, const void* pValue, ULONG nBytes);
+
+#ifdef REG_QWORD
+		LONG QueryQWORDValue(LPCTSTR pszValueName, ULONGLONG& qwValue);
+		LONG SetQWORDValue(LPCTSTR pszValueName, ULONGLONG qwValue);
+#endif
 
 #if (WINVER >= 0x0600)
 		LONG SetKeyValue(LPCTSTR lpszKeyName, LPCTSTR lpszValue, LPCTSTR lpszValueName = NULL);
@@ -236,13 +239,7 @@ namespace Win32xx
 		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)pszValue, pnChars);
 	}
 
-	inline LONG CRegKey::QueryQWORDValue(LPCTSTR pszValueName, ULONGLONG& qwValue)
-	{
-		assert(m_hKey);
-		DWORD dwType = REG_QWORD;
-		DWORD nBytes = sizeof(ULONGLONG);
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)&qwValue, &nBytes);
-	}
+
 
 	inline LONG CRegKey::QueryStringValue(LPCTSTR pszValueName, LPTSTR pszValue, ULONG* pnChars)
 	{
@@ -338,12 +335,6 @@ namespace Win32xx
 		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_MULTI_SZ, (LPBYTE)pszValue, nBytes);
 	}
 
-	inline LONG CRegKey::SetQWORDValue(LPCTSTR pszValueName, ULONGLONG qwValue)
-	{
-		assert(m_hKey);
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_QWORD, (LPBYTE)&qwValue, sizeof(ULONGLONG) );
-	}
-
 	inline LONG CRegKey::SetStringValue(LPCTSTR pszValueName, LPCTSTR pszValue, DWORD dwType)
 	{
 		assert(m_hKey);
@@ -355,6 +346,24 @@ namespace Win32xx
 		assert(m_hKey);
 		return ::RegSetValueEx(m_hKey, pszValueName, 0, dwType, (BYTE*)pValue, nBytes);
 	}
+
+#ifdef REG_QWORD
+
+	inline LONG CRegKey::QueryQWORDValue(LPCTSTR pszValueName, ULONGLONG& qwValue)
+	{
+		assert(m_hKey);
+		DWORD dwType = REG_QWORD;
+		DWORD nBytes = sizeof(ULONGLONG);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)&qwValue, &nBytes);
+	}
+
+	inline LONG CRegKey::SetQWORDValue(LPCTSTR pszValueName, ULONGLONG qwValue)
+	{
+		assert(m_hKey);
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_QWORD, (LPBYTE)&qwValue, sizeof(ULONGLONG) );
+	}
+
+#endif
 
 }
 

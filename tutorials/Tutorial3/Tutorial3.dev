@@ -100,13 +100,4 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
-FileName=..\..\include\wincore.h
-CompileCpp=1
-Folder=Win32++
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
 

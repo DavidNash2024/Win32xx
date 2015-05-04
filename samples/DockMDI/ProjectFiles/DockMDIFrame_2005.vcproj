@@ -267,42 +267,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Win32++"
-			>
-			<File
-				RelativePath="..\..\..\include\dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\frame.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\gdi.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\mdi.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\rebar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\statusbar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\toolbar.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wincore.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

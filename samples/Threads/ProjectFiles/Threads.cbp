@@ -174,8 +174,6 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../../../include/thread.h" />
-		<Unit filename="../../../include/wincore.h" />
 		<Unit filename="../src/MainWnd.cpp" />
 		<Unit filename="../src/MainWnd.h" />
 		<Unit filename="../src/MyThread.cpp" />

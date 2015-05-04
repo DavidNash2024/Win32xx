@@ -1,4 +1,4 @@
-﻿// Win32++   Version 8.0 Alpha
+// Win32++   Version 8.0 Alpha
 // Release Date: TBA
 //
 //      David Nash
@@ -247,7 +247,7 @@ namespace Win32xx
 	{
 		// Constructor
 		CDC_Data() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
-		
+
 		std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
 		HDC		hDC;			// The HDC belonging to this CDC
 		long	Count;			// Reference count
@@ -260,7 +260,7 @@ namespace Win32xx
 	{
 		// Constructor
 		CGDI_Data() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
-		
+
 		HGDIOBJ hGDIObject;
 		long	Count;
 		bool	IsManagedObject;
@@ -286,7 +286,7 @@ namespace Win32xx
 		HMENU hMenu;
 		bool IsManagedMenu;
 		long Count;
-	};	
+	};
 #endif
 
 	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
@@ -465,14 +465,14 @@ namespace Win32xx
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
-		
+
 		CDC_Data* GetCDCDataFromMap(HDC hDC);
 		CGDI_Data* GetCGDIDataFromMap(HGDIOBJ hObject);
 		CIml_Data* GetCImlDataFromMap(HIMAGELIST himl);
 #ifndef _WIN32_WCE
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
 #endif
-		
+
 		CWnd* GetCWndFromMap(HWND hWnd);
 		TLSData* GetTlsData() const;
 		void	SetCallback();
@@ -1096,7 +1096,7 @@ namespace Win32xx
 	inline CIml_Data* CWinApp::GetCImlDataFromMap(HIMAGELIST himl)
 	{
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
-		
+
 		// Find the CImageList data mapped to this HIMAGELIST
 		CIml_Data* pCImlData = 0;
 		m_csMapLock.Lock();
@@ -1330,7 +1330,7 @@ namespace Win32xx
 	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
 	{
 		// A private constructor, used internally.
-	
+
 		m_hWnd = hWnd;
 	}
 
@@ -1475,7 +1475,7 @@ namespace Win32xx
 	{
 		// Test if Win32++ has been started
 		assert( GetApp() );
-		
+
 		if (m_pData.get() == 0)
 			m_pData = new DataMembers;
 
@@ -1509,8 +1509,8 @@ namespace Win32xx
 
 		// Create the window
 #ifndef _WIN32_WCE
-		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, dwStyle, 
-			    m_pData->cs.x, m_pData->cs.y, m_pData->cs.cx, m_pData->cs.cy, hWndParent, 
+		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, dwStyle,
+			    m_pData->cs.x, m_pData->cs.y, m_pData->cs.cx, m_pData->cs.cy, hWndParent,
 				m_pData->cs.hMenu, m_pData->cs.lpCreateParams);
 
 		if (m_pData->cs.style & WS_VISIBLE)
@@ -1521,7 +1521,7 @@ namespace Win32xx
 		}
 
 #else
-		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, m_pData->cs.style, 
+		CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, m_pData->cs.style,
 			    m_pData->cs.x, m_pData->cs.y, m_pData->cs.cx, m_pData->cs.cy, hWndParent,
 				0, m_pData->cs.lpCreateParams);
 #endif
@@ -2237,7 +2237,7 @@ namespace Win32xx
 			{
 				CDC dc((HDC)wParam);
 				BOOL bResult;
-				
+
 				bResult = OnEraseBkgnd(dc);
 				if (bResult) return TRUE;
 			}
@@ -2557,7 +2557,7 @@ namespace Win32xx
 	}
 
 	inline CDC CWnd::GetWindowDC() const
-	// The GetWindowDC function retrieves the device context (DC) for the entire window, 
+	// The GetWindowDC function retrieves the device context (DC) for the entire window,
 	// including title bar, menus, and scroll bars. Use like this:
 	// CDC dc = GetWindowDC();
 	{
@@ -2881,14 +2881,14 @@ namespace Win32xx
 	inline int CWnd::SetWindowRgn(CRgn& Rgn, BOOL bRedraw /*= TRUE*/) const
 	// The SetWindowRgn function sets the window region of the window.
 	// The window region determines the area within the window where the system permits drawing.
-	// The window now owns the region so it is detached from Rgn.  
+	// The window now owns the region so it is detached from Rgn.
 	{
 		assert(IsWindow());
 		HRGN hRgn = (HRGN)Rgn.GetHandle();
 		int iResult = ::SetWindowRgn(m_hWnd, hRgn, bRedraw);
 		if (iResult && hRgn)
 			Rgn.Detach();	// The system owns the region now
-		
+
 		return iResult;
 	}
 

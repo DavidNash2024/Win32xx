@@ -17,8 +17,14 @@
     <ClCompile Include="View.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\include\frame.h" />
-    <ClInclude Include="..\..\include\wincore.h" />
+    <ClInclude Include="..\..\include\wxx_dialog.h" />
+    <ClInclude Include="..\..\include\wxx_frame.h" />
+    <ClInclude Include="..\..\include\wxx_gdi.h" />
+    <ClInclude Include="..\..\include\wxx_rebar.h" />
+    <ClInclude Include="..\..\include\wxx_statusbar.h" />
+    <ClInclude Include="..\..\include\wxx_toolbar.h" />
+    <ClInclude Include="..\..\include\wxx_wincore.h" />
+    <ClInclude Include="..\..\include\wxx_winutils.h" />
     <ClInclude Include="Mainfrm.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ScribbleApp.h" />
@@ -27,6 +33,9 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\..\include\info.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

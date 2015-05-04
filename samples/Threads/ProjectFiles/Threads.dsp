@@ -142,17 +142,5 @@ SOURCE=..\src\ThreadApp.h
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\..\..\include\dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\wincore.h"
-# End Source File
-# End Group
 # End Target
 # End Project

@@ -195,40 +195,6 @@
 				RelativePath="..\src\Resource.rc">
 			</File>
 		</Filter>
-		<Filter
-			Name="Win32++"
-			Filter="">
-			<File
-				RelativePath="..\..\..\include\dialog.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\docking.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\frame.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\gdi.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\listview.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\rebar.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\statusbar.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\toolbar.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\treeview.h">
-			</File>
-			<File
-				RelativePath="..\..\..\include\wincore.h">
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

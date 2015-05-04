@@ -135,29 +135,5 @@ SOURCE=.\View.h
 SOURCE=.\Resource.rc
 # End Source File
 # End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\Win32++\Default_Resource.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\Dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\Frame.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\GDI.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\Win32++\WinCore.h"
-# End Source File
-# End Group
 # End Target
 # End Project

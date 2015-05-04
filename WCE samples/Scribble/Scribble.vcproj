@@ -728,26 +728,6 @@
 				>
 			</File>
 		</Filter>
-		<Filter
-			Name="Win32++"
-			>
-			<File
-				RelativePath="..\..\Win32++\include\dialog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\include\gdi.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\include\wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\Win32++\include\wincore.h"
-				>
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

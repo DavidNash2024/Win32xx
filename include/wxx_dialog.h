@@ -696,6 +696,8 @@ namespace Win32xx
 	// Set bFixedWidth to TRUE if the width should be fixed instead of variable.
 	// Set bFixedHeight to TRUE if the height should be fixed instead of variable.
 	{
+		assert(hWnd);
+
     	ResizeData rd;
     	rd.corner = corner;
     	rd.bFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
@@ -888,6 +890,9 @@ namespace Win32xx
 		// Declare an iterator to step through the vector
 		std::vector<ResizeData>::iterator iter;
 
+		// Allocates memory for a multiple-window- position structure. 
+		HDWP hdwp = ::BeginDeferWindowPos((int)m_vResizeData.size());
+
     	for (iter = m_vResizeData.begin(); iter != m_vResizeData.end(); ++iter)
     	{
     		int left   = 0;
@@ -924,17 +929,24 @@ namespace Win32xx
     			break;
     		}
 
-			// Position the child window.
+			// Determine the position of the child window.
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
 				HWND hWnd = (*iter).hWnd;
 				HWND hWndPrev = ::GetWindow(hWnd, GW_HWNDPREV); // Trick to maintain the original tab order.
+				
+				// Store the window's new position. Repositioning happens later.
+			//	hdwp = ::DeferWindowPos(hdwp, (*iter).hWnd, hWndPrev, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOCOPYBITS);
+				hdwp = ::DeferWindowPos(hdwp, (*iter).hWnd, hWndPrev, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
 
-				::SetWindowPos((*iter).hWnd, hWndPrev, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOCOPYBITS);
 				(*iter).rcOld = rc;
 			}
+
     	}
+
+		// Reposition all the child windows simultaneously.
+		::EndDeferWindowPos(hdwp);
     }
 
 #endif // #ifndef _WIN32_WCE

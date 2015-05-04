@@ -37,7 +37,7 @@
 
 ////////////////////////////////////////////////////////
 // Acknowledgement:
-// 
+//
 // The original author of CTime and CTimeSpan is:
 //
 //      Robert C. Tausworthe
@@ -58,7 +58,7 @@
 #include "wxx_wincore.h"
 #include "wxx_archive.h"
 #include <errno.h>
-#include <ctime>
+#include <time.h>
 
 
 namespace Win32xx
@@ -67,13 +67,13 @@ namespace Win32xx
 	////////////////////////////////////////////////////////
 	//
 	//	Local types, constants, etc.
-	
+
 	// define an alias for struct tm
 	typedef struct tm time_tm;
-	
+
 	// define the CTimeSpan data type
 	typedef long timespan_t;
-	
+
 	// standard/daylight type, to avoid ambiguity in constructor declarations
 	enum dst_t {decide = -1, STD, DST};
 
@@ -105,16 +105,16 @@ namespace Win32xx
 	//	On systems where time_t is defined as a 32-bit integer, there is an
 	//	upper date limit of January 18, 19:14:07, 2038. On 64-bit systems,
 	//	there is no such upper date limit.
-		
+
 	//	Windows also has other time types that also interface with the CTime
 	//	type. These are FILETIME, SYSTEMTIME, and MS-DOS date and time, each
 	//	of which are described in the MSDN API documentation. Basically:
-		
+
 	//	FILETIME is a structure containing a 64-bit value representing the
 	//	number of 100-nanosecond intervals since January 1, 1601 UTC.
-		
+
 	//	SYSTEMTIME is a structure representing a date and  time using individual
-	//	values for the month, day, year, weekday, hour, minute, second, and 
+	//	values for the month, day, year, weekday, hour, minute, second, and
 	//	millisecond. This is not useful in itself, but must be translated into
 	//	a FILETIME or time_t.
 
@@ -137,7 +137,7 @@ namespace Win32xx
 		CTime(const SYSTEMTIME&, dst_t eDST = decide);
 		CTime(const FILETIME&,  dst_t eDST = decide);
 		CTime(const CString&, dst_t eDST = decide);
-		
+
 		// Method members
 		bool 	   	GetAsFileTime(FILETIME&) const;
 		bool 	   	GetAsSystemTime(SYSTEMTIME&) const;
@@ -258,7 +258,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	//
 	//	Implementation of the CTime class
-	//	
+	//
 	////////////////////////////////////////////////////////////////
 
 	//	Local definitions, constants, and  defaults
@@ -281,7 +281,7 @@ namespace Win32xx
 	static const int hours_per_day = 24;
 
 	//============================================================================
-	inline time_t UTCtime(time_tm *atm) 
+	inline time_t UTCtime(time_tm *atm)
 	//	Return the time_t t corresponding to the date given in atm as a UTC
 	//	time. That is, gmtime(t) == atm.  This is equal to the local time_t
 	//	of the atm plus the current time zone bias.
@@ -323,13 +323,13 @@ namespace Win32xx
 	{
 		// compute the object time_t
 		m_time = ::mktime(&atm);
-		
+
 		// check for acceptable range
 		assert(m_time != -1);
 	}
 
 	//============================================================================
-	inline CTime::CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr, 
+	inline CTime::CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr,
 	    UINT min, UINT sec, dst_t nDST /* = -1 */)
 	//	Construct a CTime of the nthwk occurrence of the given wkday (0..6)
 	//	in the mo month of yr year, at hr:min:sec of that day, local time.
@@ -342,26 +342,26 @@ namespace Win32xx
 		assert(yr >= 1970);
 		assert(wkday <= 6);
 		assert(1 <= mo && mo <= 12);
-		
+
 		// This computation is tricky because adding whole days to a time_t
 		// may result in date within the DST zone, which, when rendered into
 		// calendar date form, appears off by the daylight bias. Rather, we
 		// need to work in UTC calendar days and  add integer calendar days to
 		// the first-of-month epoch in the given year to yield the desired
-		// date.  To start, compute the first of the month in the given year 
+		// date.  To start, compute the first of the month in the given year
 		// at the given hour, minute, and  second.
 		time_tm atm = {(int)sec, (int)min, (int)hr, (int)1, (int)(mo - 1),
 			(int)(yr - 1900), (int)0, (int)0, nDST};
-		
+
 		// get the local time of the UTC time corresponding to this
 		time_t t1st = UTCtime(&atm);
-		
+
 		// recover the day of the week
 		atm = *::gmtime(&t1st);
-		
+
 		// Compute number of days until the nthwk occurrence of wkday
 		int nthwkday = (7 + wkday - atm.tm_wday) % 7 + (nthwk - 1) * 7;
-		
+
 		// add this to the first of the month
 		time_t tnthwkdy = t1st + nthwkday * sec_per_day;
 		atm = *::gmtime(&tnthwkdy);
@@ -371,7 +371,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(UINT year, UINT month, UINT day, UINT hour, UINT min, 
+	inline CTime::CTime(UINT year, UINT month, UINT day, UINT hour, UINT min,
 		UINT sec, dst_t nDST)
 	//	Construct a CTime object from local time elements. Each element is
 	//	constrained to lie within the following ranges:
@@ -391,18 +391,18 @@ namespace Win32xx
 		assert(1 <= day && day   <= 31);
 		assert(1 <= month && month <= 12);
 		assert(year  >= 1970);
-		
+
 		// fill out a time_tm with the calendar date
 		time_tm atm = {(int)sec, (int)min, (int)hour, (int)day,
 			(int)(month - 1), (int)(year - 1900), (int)0, (int)0, nDST};
-		
+
 		// compute the object time_t
 		CTime t(atm);
 		m_time = t.m_time;
 	}
 
 	//============================================================================
-	inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, 
+	inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec,
 		dst_t nDST /* = -1 */)
 	//	Construct a CTime using the day-of-year doy, where doy = 1 is
 	//	January 1 in the specified year.  Restrictions on yr, hr, min, and  sec
@@ -412,7 +412,7 @@ namespace Win32xx
 		 // fill out a time_tm with the calendar date for Jan 1, yr, hr:min:sec
 		time_tm atm1st = {(int)sec, (int)min, (int)hr, (int)1,
 			(int)0, (int)(yr - 1900), (int)0, (int)0, STD};
-		
+
 		// get the local time of the UTC time corresponding to this
 		time_t Jan1 = UTCtime(&atm1st);
 		time_t tDoy = Jan1 + (doy - 1) * sec_per_day;
@@ -445,24 +445,24 @@ namespace Win32xx
 		assert(st.wYear >= 1970);
 		CTime t((UINT)st.wYear, (UINT)st.wMonth, (UINT)st.wDay, (UINT)st.wHour,
 			(UINT)st.wMinute, (UINT)st.wSecond, nDST);
-		
+
 		m_time = t.m_time;
 	}
 
 	//============================================================================
 	inline CTime::CTime(const FILETIME& ft, dst_t nDST)
-	//	Construct a CTime object from a (UTC) FILETIME structure ft. 
+	//	Construct a CTime object from a (UTC) FILETIME structure ft.
 	{
 		// start by converting ft (a UTC time) to local time
 		FILETIME localTime;
 		BOOL IsValid = ::FileTimeToLocalFileTime(&ft, &localTime);
 		assert(IsValid);
-		
+
 		//  convert localTime to a SYSTEMTIME structure
 		SYSTEMTIME st;
 		IsValid = ::FileTimeToSystemTime(&localTime, &st);
 		assert(IsValid);
-		
+
 		// then convert the system time to a CTime
 		CTime t(st, nDST);
 		m_time = t.m_time;
@@ -523,7 +523,7 @@ namespace Win32xx
 		}
 		else // no ":" present
 			H = M = S = 0;
-			
+
 		// now handle the year, month and  day formats
 		if ((p1 = timestr.Find(TEXT("/"))) >= 0) // "yyyy/mo/da H:M:S"
 		{
@@ -942,7 +942,7 @@ namespace Win32xx
 
 	//
 	//	Static and  Friend Functions
-	//	
+	//
 
 	//============================================================================
 	inline CTime CTime::GetCurrentTime()
@@ -958,23 +958,23 @@ namespace Win32xx
 	//	FILETIME ft increased by addend seconds.
 	{
 		// convert ft to unsigned long long
-		unsigned long long ftlong = (unsigned long long)
+		ULONGLONG ftlong = (ULONGLONG)
 			(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
-		unsigned long long ftaddend = (unsigned long long)(addend * 10000000);
+		ULONGLONG ftaddend = (ULONGLONG)(addend * 10000000);
 		if (addend > 0.)
 			ftlong += ftaddend;
 		else
 			ftlong -= ftaddend;
 		FILETIME fts;
-		fts.dwHighDateTime = ftlong >> 32;
-		fts.dwLowDateTime  = ftlong & ~0;
+		fts.dwHighDateTime = (DWORD)(ftlong >> 32);
+		fts.dwLowDateTime  = (DWORD)(ftlong & ~0);
 		return fts;
 	}
 
 	//
 	// Global functions within the Win32xx namespace
 	//
-		
+
 	//============================================================================
 	inline CArchive& operator>>(CArchive& ar, CTime t)
 	//	Read a CTime from the archive and  store it in t.  Throw an exception if
@@ -1009,7 +1009,7 @@ namespace Win32xx
 	//	CTimeSpan class implementation
 	//
 	///////////////////////////////////////////////////////////////
-	
+
 	//============================================================================
 	inline CTimeSpan::CTimeSpan()
 	//	Construct an CTimeSpan object initialized to 0.
@@ -1050,14 +1050,14 @@ namespace Win32xx
 	//	Return the number of complete days in this CTimeSpan.  This value may
 	//	be negative if the time span is negative.
 	{
-		return m_timespan / sec_per_day;  
+		return m_timespan / sec_per_day;
 	}
 
 	//============================================================================
 	inline long CTimeSpan::GetTotalHours() const
 	//	Return the total number of complete hours in this CTimeSpan.
 	{
-		return m_timespan / sec_per_hour;  
+		return m_timespan / sec_per_hour;
 	}
 
 	//============================================================================
@@ -1115,7 +1115,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTimeSpan CTimeSpan::operator-() const 
+	inline CTimeSpan CTimeSpan::operator-() const
 	//	Return the negated value of *this time span.
 	{
 		CTimeSpan t0(-m_timespan);
@@ -1211,7 +1211,7 @@ namespace Win32xx
 	{
 		CString fmt0 = pFormat,
 			insert;
-		
+
 		while (fmt0.Find(TEXT("%D")) != -1)  // number of days
 		{
 			insert.Format(TEXT("%ld"), GetDays());
@@ -1263,7 +1263,7 @@ namespace Win32xx
 	{
 		return Format(format.c_str());
 	}
-	
+
 	//
 	// Global functions within the Win32xx namespace
 	//

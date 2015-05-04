@@ -3463,17 +3463,7 @@ namespace Win32xx
 					throw (CWinException(_T("Open Key failed")));
 
 				// Remove Old Docking info ...
-				// Remove existing DockContainer SubKeys
-				UINT uDockContainer = 0;
-				CString SubKeyName;
-				SubKeyName.Format(_T("Dock Windows\\DockContainer%u"), uDockContainer);
-				while (ERROR_SUCCESS == Key.DeleteSubKey(SubKeyName) )
-				{
-					SubKeyName.Format(_T("Dock Windows\\DockContainer%u"), ++uDockContainer);
-				}
-
-				// Remove the Dock Windows key
-				Key.DeleteSubKey(_T("Dock Windows"));
+				Key.RecurseDeleteKey(_T("Dock Windows"));
 
 				// Fill the DockInfo vector with the docking information
 				for (iter = vSorted.begin(); iter !=  vSorted.end(); ++iter)
@@ -3498,6 +3488,8 @@ namespace Win32xx
 
 				if (ERROR_SUCCESS != KeyDock.Open(Key, _T("Dock Windows")))
 					throw (CWinException(_T("Open KeyDock failed")));
+
+				CString SubKeyName;
 
 				// Add the Dock windows information to the registry
 				for (UINT u = 0; u < vDockInfo.size(); ++u)
@@ -3553,19 +3545,7 @@ namespace Win32xx
 				// Roll back the registry changes by deleting the subkeys
 				if (Key.GetKey())
 				{
-					if (KeyDock.GetKey())
-					{
-						// Remove existing DockContainer SubKeys
-						UINT uDockContainer = 0;
-						CString SubKeyName;
-						SubKeyName.Format(_T("DockContainer%u"), uDockContainer);
-						while (0 == KeyDock.DeleteSubKey(SubKeyName) )
-						{
-							SubKeyName.Format(_T("DockContainer%u"), ++uDockContainer);
-						}
-
-						KeyDock.DeleteSubKey(_T("Dock Windows"));
-					}
+					Key.RecurseDeleteKey(_T("Dock Windows"));
 				}
 
 				e.what();

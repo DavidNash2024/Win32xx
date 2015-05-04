@@ -158,41 +158,5 @@ SOURCE=..\src\TabDemoApp.h
 SOURCE=..\src\Resource.rc
 # End Source File
 # End Group
-# Begin Group "Win32++"
-
-# PROP Default_Filter ""
-# Begin Source File
-
-SOURCE="..\..\..\include\dialog.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\frame.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\gdi.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\rebar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\statusbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\tab.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\toolbar.h"
-# End Source File
-# Begin Source File
-
-SOURCE="..\..\..\include\wincore.h"
-# End Source File
-# End Group
 # End Target
 # End Project

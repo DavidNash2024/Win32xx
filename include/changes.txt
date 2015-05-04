@@ -17,6 +17,9 @@ New Features and Enhancements
 * Removed obsolete code
 
 
+Added CFrame::SaveRegistryMRUSettings()
+
+
 
 Version 7.9
 ===========

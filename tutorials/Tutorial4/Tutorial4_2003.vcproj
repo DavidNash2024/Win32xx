@@ -215,13 +215,6 @@
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		</Filter>
-		<Filter
-			Name="Win32++"
-			Filter="">
-			<File
-				RelativePath="..\..\include\wincore.h">
-			</File>
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

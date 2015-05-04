@@ -346,23 +346,31 @@
 			Name="Win32++"
 			>
 			<File
-				RelativePath="..\..\include\dialog.h"
+				RelativePath="..\..\include\wxx_dialog.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\frame.h"
+				RelativePath="..\..\include\wxx_frame.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\gdi.h"
+				RelativePath="..\..\include\wxx_gdi.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\wincore.h"
+				RelativePath="..\..\include\wxx_statusbar.h"
 				>
 			</File>
 			<File
-				RelativePath="..\..\include\winutils.h"
+				RelativePath="..\..\include\wxx_toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\wxx_wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\include\wxx_winutils.h"
 				>
 			</File>
 		</Filter>

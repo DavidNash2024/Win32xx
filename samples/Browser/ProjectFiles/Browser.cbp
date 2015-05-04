@@ -176,14 +176,6 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../../../include/dialog.h" />
-		<Unit filename="../../../include/frame.h" />
-		<Unit filename="../../../include/gdi.h" />
-		<Unit filename="../../../include/rebar.h" />
-		<Unit filename="../../../include/statusbar.h" />
-		<Unit filename="../../../include/toolbar.h" />
-		<Unit filename="../../../include/webbrowser.h" />
-		<Unit filename="../../../include/wincore.h" />
 		<Unit filename="../src/BrowserApp.cpp" />
 		<Unit filename="../src/BrowserApp.h" />
 		<Unit filename="../src/EventSink.cpp" />

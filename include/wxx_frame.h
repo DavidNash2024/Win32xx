@@ -393,6 +393,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS &wc);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
+		virtual BOOL SaveRegistryMRUSettings();
 		virtual BOOL SaveRegistrySettings();
 		virtual void SetMenuBarBandSize();
 		virtual UINT SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
@@ -1938,7 +1939,7 @@ namespace Win32xx
 	{
 		CRect rcClient = GetClientRect();
 
-		if (GetStatusBar().IsWindow() && m_ShowStatusBar)
+		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
 		if (IsReBarSupported() && m_UseReBar && GetReBar().IsWindow())
@@ -2112,8 +2113,8 @@ namespace Win32xx
 	inline void CFrame::OnClose()
 	// Called in response to a WM_CLOSE message for the frame.
 	{
-		ShowWindow(SW_HIDE);
 		SaveRegistrySettings();
+		ShowWindow(SW_HIDE);
 		Destroy();
 	}
 
@@ -2376,11 +2377,17 @@ namespace Win32xx
 		switch(nID)
 		{
 		case IDW_VIEW_STATUSBAR:
-			GetFrameMenu().CheckMenuItem(nID, m_ShowStatusBar ? MF_CHECKED : MF_UNCHECKED);
+			{
+				BOOL IsVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+				GetFrameMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+			}
 			break;
 		case IDW_VIEW_TOOLBAR:
-			GetFrameMenu().EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
-			GetFrameMenu().CheckMenuItem(nID, m_ShowToolBar ? MF_CHECKED : MF_UNCHECKED);
+			{
+				BOOL IsVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+				GetFrameMenu().EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
+				GetFrameMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+			}
 			break;
 		}
 	}
@@ -2591,15 +2598,15 @@ namespace Win32xx
 
 	inline BOOL CFrame::OnViewStatusBar()
 	{
-		m_ShowStatusBar = !m_ShowStatusBar;
-		ShowStatusBar(m_ShowStatusBar);
+		BOOL Show = !(GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible());
+		ShowStatusBar(Show);
 		return TRUE;
 	}
 
 	inline BOOL CFrame::OnViewToolBar()
 	{
-		m_ShowToolBar = m_UseToolBar ? !m_ShowToolBar : FALSE;
-		ShowToolBar(m_ShowToolBar);
+		BOOL Show = m_UseToolBar && !GetToolBar().IsWindowVisible();
+		ShowToolBar(Show);
 		return TRUE;
 	}
 
@@ -2639,7 +2646,7 @@ namespace Win32xx
 			return;
 
 		// Resize the status bar
-		if (GetStatusBar().IsWindow() && m_ShowStatusBar)
+		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 		{
 			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar().Invalidate();
@@ -2655,7 +2662,7 @@ namespace Win32xx
 			GetReBar().SendMessage(WM_SIZE, 0L, 0L);
 			GetReBar().Invalidate();
 		}
-		else if (m_UseToolBar && m_ShowToolBar && GetToolBar().IsWindow())
+		else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
 			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
@@ -2688,17 +2695,75 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
+	inline BOOL CFrame::SaveRegistryMRUSettings()
+	{
+		// Store the MRU entries in the registry
+		if (m_nMaxMRU > 0)
+		{
+			try
+			{
+				// Delete Old MRUs
+				CString KeyParentName = _T("Software\\") + m_strKeyName;
+				CRegKey KeyParent;
+				KeyParent.Open(HKEY_CURRENT_USER, KeyParentName);
+				KeyParent.DeleteSubKey(_T("Recent Files"));
+
+				CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
+				CRegKey Key;
+
+				// Add Current MRUs
+				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
+					throw CWinException(_T("RegCreateKeyEx failed"));
+
+				if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
+					throw CWinException(_T("RegCreateKeyEx failed"));
+
+				CString SubKeyName;
+				CString strPathName;
+				for (UINT i = 0; i < m_nMaxMRU; ++i)
+				{
+					SubKeyName.Format(_T("File %d"), i+1);
+
+					if (i < m_vMRUEntries.size())
+					{
+						strPathName = m_vMRUEntries[i];
+
+						if (ERROR_SUCCESS != Key.SetStringValue(SubKeyName, strPathName.c_str()))
+							throw CWinException(_T("RegSetValueEx failed"));
+					}
+				}
+			}
+
+			catch (const CWinException& e)
+			{
+				TRACE("Failed to save registry MRU settings\n");
+				CString KeyName = _T("Software\\") + m_strKeyName;
+				CRegKey Key;
+
+				if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
+				{
+					// Roll back the registry changes by deleting this subkey
+					Key.DeleteSubKey(_T("Recent Files"));
+				}
+
+				e.what();
+				return FALSE;
+			}
+		}
+	
+		return TRUE;
+	}
+
 	inline BOOL CFrame::SaveRegistrySettings()
 	// Saves various frame window settings in the registry
 	{
 		if (!m_strKeyName.IsEmpty())
 		{
-			CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
-			HKEY hKey = NULL;
-			CRegKey Key;
-
 			try
-			{			
+			{
+				CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
+				CRegKey Key;
+
 				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
 					throw CWinException(_T("RegCreateKeyEx failed"));
 				if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
@@ -2732,8 +2797,8 @@ namespace Win32xx
 				}
 
 				// Store the ToolBar and statusbar states
-				DWORD dwShowToolBar = m_ShowToolBar;
-				DWORD dwShowStatusBar = m_ShowStatusBar;
+				DWORD dwShowToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+				DWORD dwShowStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 
 				if (ERROR_SUCCESS != Key.SetDWORDValue(_T("ToolBar"), dwShowToolBar))
 					throw CWinException(_T("RegSetValueEx failed"));
@@ -2744,71 +2809,20 @@ namespace Win32xx
 			catch (const CWinException& e)
 			{
 				TRACE("Failed to save registry settings\n");
+				CString KeyName = _T("Software\\") + m_strKeyName;
+				CRegKey Key;
 
-				if (Key.GetKey())
+				if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
 				{
 					// Roll back the registry changes by deleting this subkey
-					Key.Close();
-					CRegKey KeyParent(HKEY_CURRENT_USER);
-					KeyParent.DeleteSubKey(KeyName);
+					Key.DeleteSubKey(_T("Frame Settings"));
 				}
 
 				e.what();
 				return FALSE;
 			}
 
-			// Store the MRU entries in the registry
-			if (m_nMaxMRU > 0)
-			{
-				KeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
-				hKey = NULL;
-
-				try
-				{
-					CRegKey KeyParent(HKEY_CURRENT_USER);
-
-					// Delete Old MRUs
-					KeyParent.DeleteSubKey(KeyName);
-
-					// Add Current MRUs
-					if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
-						throw CWinException(_T("RegCreateKeyEx failed"));
-
-					if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
-						throw CWinException(_T("RegCreateKeyEx failed"));
-
-					CString SubKeyName;
-					CString strPathName;
-					for (UINT i = 0; i < m_nMaxMRU; ++i)
-					{
-						SubKeyName.Format(_T("File %d"), i+1);
-
-						if (i < m_vMRUEntries.size())
-						{
-							strPathName = m_vMRUEntries[i];
-
-							if (ERROR_SUCCESS != Key.SetStringValue(SubKeyName, strPathName.c_str()))
-								throw CWinException(_T("RegSetValueEx failed"));
-						}
-					}
-				}
-
-				catch (const CWinException& e)
-				{
-					TRACE("Failed to save registry MRU settings\n");
-
-					if (hKey != 0)
-					{
-						// Roll back the registry changes by deleting this subkey
-						Key.Close();
-						CRegKey KeyParent(HKEY_CURRENT_USER);
-						KeyParent.DeleteSubKey(KeyName);
-					}
-
-					e.what();
-					return FALSE;
-				}
-			}
+			return SaveRegistryMRUSettings();
 		}
 
 		return TRUE;
@@ -3249,12 +3263,10 @@ namespace Win32xx
 			if (bShow)
 			{
 				GetStatusBar().ShowWindow(SW_SHOW);
-				m_ShowStatusBar = TRUE;
 			}
 			else
 			{
 				GetStatusBar().ShowWindow(SW_HIDE);
-				m_ShowStatusBar = FALSE;
 			}
 		}
 
@@ -3274,7 +3286,6 @@ namespace Win32xx
 					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), TRUE);
 				else
 					GetToolBar().ShowWindow(SW_SHOW);
-				m_ShowToolBar = TRUE;
 			}
 			else
 			{
@@ -3282,7 +3293,6 @@ namespace Win32xx
 					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), FALSE);
 				else
 					GetToolBar().ShowWindow(SW_HIDE);
-				m_ShowToolBar = FALSE;
 			}
 		}
 
