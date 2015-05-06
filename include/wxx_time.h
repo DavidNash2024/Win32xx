@@ -431,11 +431,9 @@ namespace Win32xx
 	//	the hour, minute, and  second.
 	{
 		FILETIME ft;
-		BOOL IsValid = ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft);
-		assert(IsValid);
+		VERIFY( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) );
 		CTime t(ft, nDST);
 		m_time = t.m_time;
-		UNREFERENCED_PARAMETER(IsValid);	// silence warning in Release mode
 	}
 
 	//============================================================================
@@ -455,13 +453,11 @@ namespace Win32xx
 	{
 		// start by converting ft (a UTC time) to local time
 		FILETIME localTime;
-		BOOL IsValid = ::FileTimeToLocalFileTime(&ft, &localTime);
-		assert(IsValid);
+		VERIFY( ::FileTimeToLocalFileTime(&ft, &localTime) );
 
 		//  convert localTime to a SYSTEMTIME structure
 		SYSTEMTIME st;
-		IsValid = ::FileTimeToSystemTime(&localTime, &st);
-		assert(IsValid);
+		VERIFY( ::FileTimeToSystemTime(&localTime, &st) );
 
 		// then convert the system time to a CTime
 		CTime t(st, nDST);
@@ -861,7 +857,7 @@ namespace Win32xx
 
 		time_tm* ptm = ::localtime(&m_time);
 		if (ptm == NULL ||
-			!::_tcsftime(szBuffer, _countof(szBuffer), pFormat, ptm))
+			!::_tcsftime(szBuffer, maxTimeBufferSize, pFormat, ptm))
 			szBuffer[0] = '\0';
 		return (CString)szBuffer;
 	}
@@ -873,9 +869,7 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		bool IsValid = strFormat.LoadString(nFormatID);
-		assert(IsValid);
-		UNREFERENCED_PARAMETER(IsValid);	// silence warning in Release mode
+		VERIFY( strFormat.LoadString(nFormatID) );
 		return Format(strFormat);
 	}
 
@@ -903,10 +897,10 @@ namespace Win32xx
 			;
 
 		time_tm* ptmTemp = GetGmtTm();
-		if (ptmTemp ==NULL || !::_tcsftime(szBuffer, _countof(szBuffer),
+		if (ptmTemp ==NULL || !::_tcsftime(szBuffer, maxTimeBufferSize,
 			fmt0.c_str(), ptmTemp))
 			szBuffer[0] = '\0';
-		return szBuffer;
+		return CString(szBuffer);
 	}
 
 	//============================================================================
@@ -916,9 +910,7 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		bool IsValid = strFormat.LoadString(nFormatID);
-		assert(IsValid);
-		UNREFERENCED_PARAMETER(IsValid);	// silence warning in Release mode
+		VERIFY( strFormat.LoadString(nFormatID) );
 		return FormatGmt(strFormat);
 	}
 
@@ -1246,9 +1238,7 @@ namespace Win32xx
 	//	      %S - seconds (0-59)
 	{
 		CString strFormat;
-		bool IsValid = strFormat.LoadString(nFormatID);
-		assert(IsValid);
-		UNREFERENCED_PARAMETER(IsValid);	// silence warning in Release mode
+		VERIFY( strFormat.LoadString(nFormatID) );
 		return Format(strFormat);
 	}
 

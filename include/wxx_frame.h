@@ -484,8 +484,8 @@ namespace Win32xx
 		BOOL m_UseReBar;					// set to TRUE if ReBars are to be used
 		BOOL m_UseThemes;					// set to TRUE if themes are to be used
 		BOOL m_UseToolBar;					// set to TRUE if the toolbar is used
-		BOOL m_ShowStatusBar;				// A flag to indicate if the StatusBar should be displayed
-		BOOL m_ShowToolBar;					// A flag to indicate if the ToolBar should be displayed
+		BOOL m_ShowStatusBar;				// Initial StatusBar show state retrieved from registry
+		BOOL m_ShowToolBar;					// Initial ToolBar show state retrieved from registry
 
 	};  // class CFrame
 

@@ -109,6 +109,8 @@ namespace Win32xx
 		CArchive& operator<<(BYTE by);
 		CArchive& operator<<(WORD w);
 		CArchive& operator<<(LONG l);
+		CArchive& operator<<(LONGLONG ll);
+		CArchive& operator<<(ULONGLONG ull);
 		CArchive& operator<<(DWORD dw);
 		CArchive& operator<<(float f);
 		CArchive& operator<<(double d);
@@ -126,6 +128,8 @@ namespace Win32xx
 		CArchive& operator>>(WORD& w);
 		CArchive& operator>>(DWORD& dw);
 		CArchive& operator>>(LONG& l);
+		CArchive& operator>>(LONGLONG& ll);
+		CArchive& operator>>(ULONGLONG& ull);
 		CArchive& operator>>(float& f);
 		CArchive& operator>>(double& d);
 		CArchive& operator>>(int& i);
@@ -409,7 +413,7 @@ namespace Win32xx
 	// Write the BYTE b into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(b), &b, TEXT("byte")};
+		ArchiveObject ob = {sizeof(b), &b, TEXT("BYTE")};
 		*this << ob;
 		return *this;
 	}
@@ -419,7 +423,7 @@ namespace Win32xx
 	// Write the WORD w into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(w), &w, TEXT("word")};
+		ArchiveObject ob = {sizeof(w), &w, TEXT("WORD")};
 		*this << ob;
 		return *this;
 	}
@@ -429,7 +433,27 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(l), &l, TEXT("long")};
+		ArchiveObject ob = {sizeof(l), &l, TEXT("LONG")};
+		*this << ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(LONGLONG ll)
+	// Write the LONG l into the archive file. Throw an exception if an
+	// error occurs.
+	{
+		ArchiveObject ob = {sizeof(ll), &ll, TEXT("LONGLONG")};
+		*this << ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(ULONGLONG ull)
+	// Write the LONG l into the archive file. Throw an exception if an
+	// error occurs.
+	{
+		ArchiveObject ob = {sizeof(ull), &ull, TEXT("LONGLONG")};
 		*this << ob;
 		return *this;
 	}
@@ -512,8 +536,8 @@ namespace Win32xx
 		UINT size = (lstrlen(string) + 1) * sizeof(TCHAR);
 		 
 		// Write() throws exception upon error
-		Write((char *)&size, sizeof(size_t), TEXT("C string"));
-		Write(string, size, TEXT("C string"));
+		Write((char *)&size, sizeof(size), TEXT("LPTSTR"));
+		Write(string, size, TEXT("LPTSTR"));
 		return *this;
 	}
 
@@ -525,7 +549,7 @@ namespace Win32xx
 		UINT size = (lstrlen(string.c_str()) + 1) * sizeof(TCHAR);
 		  
 		// Write() throws exception upon error
-		Write((char *)&size, sizeof(size_t), TEXT("CString"));
+		Write((char *)&size, sizeof(size), TEXT("CString"));
 		Write(string.c_str(), size, TEXT("CString"));
 		return *this;
 	}
@@ -538,7 +562,7 @@ namespace Win32xx
 		UINT size = sizeof(pt);
 		  
 		// Write() throws exception upon error
-		Write((char *)&size, sizeof(size_t), TEXT("CPoint"));
+		Write((char *)&size, sizeof(size), TEXT("CPoint"));
 		Write((char *)&pt, size, TEXT("CPoint"));
 		return *this;
 	}
@@ -561,7 +585,7 @@ namespace Win32xx
 	// Read a BYTE from the archive and  store it in b.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(b), &b, TEXT("byte")};
+		ArchiveObject ob = {sizeof(b), &b, TEXT("BYTE")};
 		*this >> ob;
 		return *this;
 	}
@@ -578,10 +602,30 @@ namespace Win32xx
 
 	//============================================================================
 	inline CArchive& CArchive::operator>>(LONG& l)
-	// Read a LONG from the archive and  store it in l.  Throw an exception if
+	// Read a LONG from the archive and store it in l.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(l), &l, TEXT("long")};
+		ArchiveObject ob = {sizeof(l), &l, TEXT("LONG")};
+		*this >> ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(LONGLONG& ll)
+	// Read a LONGLONG from the archive and store it in ll.  Throw an exception if
+	// unable to do so correctly.
+	{
+		ArchiveObject ob = {sizeof(ll), &ll, TEXT("LONGLONG")};
+		*this >> ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(ULONGLONG& ull)
+	// Read a ULONGLONG from the archive and store it in ull.  Throw an exception if
+	// unable to do so correctly.
+	{
+		ArchiveObject ob = {sizeof(ull), &ull, TEXT("ULONGLONG")};
 		*this >> ob;
 		return *this;
 	}
@@ -664,8 +708,8 @@ namespace Win32xx
 	// stream.
 	{
 		UINT size;
-		Read((char *)&size, sizeof(size_t), TEXT("C string"));
-		Read(string, size, TEXT("C string"));
+		Read((char *)&size, sizeof(size), TEXT("LPTSTR"));
+		Read(string, size, TEXT("LPTSTR"));
 		return *this;
 	}
 
@@ -677,7 +721,7 @@ namespace Win32xx
 	// stream.
 	{
 		UINT size;
-		Read((char *)&size, sizeof(size_t));
+		Read((char *)&size, sizeof(size));
 		  // A TCHAR buffer is needed to receive the stored chars in order to
 		  // be assigned to a CString in wide character mode. The sizing below
 		  // may be more than needed, but its life is short.
@@ -705,7 +749,7 @@ namespace Win32xx
 	// do so correctly.
 	{
 		UINT size;
-		Read((char *)&size, sizeof(size_t), ob.msg);
+		Read((char *)&size, sizeof(size), ob.msg);
 		if (size != ob.size)
 		{
 			m_nError = ERROR_INVALID_DATA;

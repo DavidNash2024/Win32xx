@@ -302,10 +302,8 @@ namespace Win32xx
 		ofn.hwndOwner = hOwnerWnd;
 		ofn.hInstance = GetApp()->GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
-		ofn.lpstrFile = (LPTSTR)pszFilePathName;
 		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
 		ofn.lpstrDefExt = pszDefExt;
-		ofn.nMaxFile = lstrlen(pszFilePathName);
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Save File");
 		ofn.Flags = dwFlags;
 		ofn.nMaxFile = MaxPath;

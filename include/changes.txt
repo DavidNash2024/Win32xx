@@ -14,7 +14,9 @@ New Features and Enhancements
   This function provides access to the command line arguments. They are
   returned in a vector of CString.
 
-* Removed obsolete code
+* Added VERIFY macro
+  In debug mode, VERIFY asserts if the expression evaluates to zero
+  In release mode, VERIFY evaluates the expression, but doesn't assert
 
 
 Added CFrame::SaveRegistryMRUSettings()

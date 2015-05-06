@@ -58,6 +58,17 @@
 #define MAX(a,b)            (((a) > (b)) ? (a) : (b))
 #define MIN(a,b)            (((a) < (b)) ? (a) : (b))
 
+// Define our own VERIFY macro
+// In debug mode, VERIFY asserts if the expression evaluates to zero
+// In release mode, VERIFY evaluates the expression, but doesn't assert.
+#ifndef VERIFY
+  #ifdef _DEBUG
+    #define VERIFY(f) assert(f)
+  #else
+    #define VERIFY(f) ((void)(f))
+  #endif
+#endif
+
 
 namespace Win32xx
 {

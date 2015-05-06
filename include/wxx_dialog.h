@@ -933,12 +933,11 @@ namespace Win32xx
 			CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
 			if ( rc != (*iter).rcOld)
 			{
-				HWND hWnd = (*iter).hWnd;
-				HWND hWndPrev = ::GetWindow(hWnd, GW_HWNDPREV); // Trick to maintain the original tab order.
+				// Note: The tab order of the dialog's controls is determined by the order 
+				//       they are specified in the resource script (resource.rc).
 				
 				// Store the window's new position. Repositioning happens later.
-			//	hdwp = ::DeferWindowPos(hdwp, (*iter).hWnd, hWndPrev, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOCOPYBITS);
-				hdwp = ::DeferWindowPos(hdwp, (*iter).hWnd, hWndPrev, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW);
+				hdwp = ::DeferWindowPos(hdwp, (*iter).hWnd, NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOZORDER|SWP_NOCOPYBITS);
 
 				(*iter).rcOld = rc;
 			}
