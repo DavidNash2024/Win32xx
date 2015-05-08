@@ -17,6 +17,7 @@ public:
 
 	COLORREF GetPenColor() { return m_PenColor; }
 	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
+	void Serialize(CArchive &ar);
 
 protected:
 	virtual void OnDraw(CDC& dc);
@@ -42,6 +43,9 @@ private:
 	CBrush m_Brush;
 	std::vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
+
+	friend CArchive& operator<<(CArchive&, CView&);
+	friend CArchive& operator>>(CArchive&, CView&);
 };
 
 

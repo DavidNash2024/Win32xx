@@ -576,7 +576,7 @@ namespace Win32xx
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), TEXT(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
+		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), _T(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 	}
 
 	inline LRESULT CMDIFrame::CDockMDIClient::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)

@@ -2,13 +2,17 @@ Version 8.0
 ===========
 
 New Features and Enhancements
------------------------------
-* Added CRegKey.
-  CRegKey is a wrapper for functions used to access and modify the registry.
-  
+----------------------------- 
 * Added CArchive.
   CArchive provides a convenient means of saving and restoring an application's
-  data, by streaming the data to and from a file.   
+  data, by streaming the data to and from a file.
+  
+* Added CRegKey.
+  CRegKey is a wrapper for functions used to access and modify the registry.  
+
+* Added CTime and CTimeSpan
+  CTime manages the display of date and time.
+  CTimeSpan calculates the interval between times and dates.
 
 * Added  GetCommandLineArgs
   This function provides access to the command line arguments. They are
@@ -17,10 +21,29 @@ New Features and Enhancements
 * Added VERIFY macro
   In debug mode, VERIFY asserts if the expression evaluates to zero
   In release mode, VERIFY evaluates the expression, but doesn't assert
+  
+* Renamed Header files
+  The header files located in the include directory have been prefixed 
+  with wxx_ . This was done to avoid potential name conflicts with header
+  files from other libraries.  
 
 
-Added CFrame::SaveRegistryMRUSettings()
 
+Changes in detail
+-----------------
+Added CArchive
+Added CRegKey
+Added CTime
+Added CTimeSpan
+Added CFrame::SaveRegistryMRUSettings
+Added CWinException::GetText
+Added ::GetCommandLineArgs
+
+Added VERIFY macro
+
+Added INIFrame demo
+
+Renamed the header files. They are prefixed with wxx_
 
 
 Version 7.9

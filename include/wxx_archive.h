@@ -64,7 +64,7 @@
 namespace Win32xx
 {
 
-	struct ArchiveObject{UINT size; LPVOID p; LPCTSTR msg;};
+	struct ArchiveObject{UINT size; LPVOID p;};
 
 	// Unspecified object type containing the size of, a pointer p to, and  a
 	// message about a memory block that is either to be written into (<<)  or 
@@ -76,7 +76,7 @@ namespace Win32xx
 	// into the exception message that is thrown when a failure to serialize
 	// the object is encountered.  A typical usage would be of the form
 
-	//    ArchiveObject ao = {sizeof(A), &A, "typeof(A)"};
+	//    ArchiveObject ao = {sizeof(A), &A};
 	//	  ar << ao; or ar >> ao;
 	
 	
@@ -99,11 +99,9 @@ namespace Win32xx
 		bool 	IsOpen() const;
 		bool 	IsStoring() const;
 		bool	Open(CString filename, CArchive::mode);
-		void 	Read(void* lpBuf, UINT size, LPCTSTR msg = TEXT(""));
-		void    SetError(UINT nError);
+		void 	Read(void* lpBuf, UINT size);
 		void 	SetObjectSchema(UINT nSchema);
-		void    SyncPoint();
-		void 	Write(const void* lpBuf, UINT size, LPCTSTR msg = TEXT(""));
+		void 	Write(const void* lpBuf, UINT size);
 
 		// insertion operations
 		CArchive& operator<<(BYTE by);
@@ -118,9 +116,12 @@ namespace Win32xx
 		CArchive& operator<<(short w);
 		CArchive& operator<<(char ch);
 		CArchive& operator<<(unsigned u);
+		CArchive& operator<<(bool b);
 		CArchive& operator<<(LPCTSTR s);
 		CArchive& operator<<(const CString& s);
-		CArchive& operator<<(const CPoint& s);
+		CArchive& operator<<(const POINT& pt);
+		CArchive& operator<<(const RECT& rc);
+		CArchive& operator<<(const SIZE& sz);
 		CArchive& operator<<(const ArchiveObject& ob);
 
 		// extraction operations
@@ -136,29 +137,27 @@ namespace Win32xx
 		CArchive& operator>>(short& w);
 		CArchive& operator>>(char& ch);
 		CArchive& operator>>(unsigned& u);
+		CArchive& operator>>(bool& b);
 		CArchive& operator>>(LPTSTR s);
 		CArchive& operator>>(CString& s);
-		CArchive& operator>>(CPoint& s);
+		CArchive& operator>>(POINT& pt);
+		CArchive& operator>>(RECT& rc);
+		CArchive& operator>>(SIZE& sz);
 		CArchive& operator>>(ArchiveObject& ob);
 
 		// public data members
 		CString	m_sFileName;
 		mode	m_mMode;
-		int     m_nError;
-
-	protected:
 
 	private:
+		CArchive(const CArchive&);				// Disable copy construction
+		CArchive& operator = (const CArchive&); // Disable assignment operator
+
 		// private data members
 		CFile    m_file;        // archive file FILE, initially closed
 		bool     m_is_storing;  // archive direction switch
 		UINT     m_schema;      // archive version schema
-		CString	 m_sync_mark;	// archive sync test marker
 	};
-
-	// Global functions
-	CString		LastErrorMessage(void);
-	CString		SystemErrorMessage(int errnum);
 
 
 } // namespace Win32xx
@@ -175,24 +174,24 @@ namespace Win32xx
 		m_mMode       = nil;
 		m_schema      = 0;
 		m_is_storing  = false;
-		m_nError      = NO_ERROR;
-		m_sync_mark	  = TEXT("!@#$%^&*()_+");
+	//	m_sync_mark	  = TEXT("!@#$%^&*()_+");
 	}
 
 	//============================================================================
 	inline CArchive::~CArchive()
 	// Destroy CArchive object.
 	{
+		Close();
 	}
 
 	//============================================================================
 	inline bool CArchive::Open(CString filename, CArchive::mode mode)
-	// Open the archive filename in the given CArchive::mode and  create a
-	// buffer hving the given nBuffSize.  The mode can be read or write.
+	// Open the archive filename in the given CArchive::mode.
+	// The mode can be read or write.
 	// Return true if the archive opens without error, or false, otherwise.
 	// Does throw an exception if the schema cannot be written or read back.
-	{
-		::SetLastError(0);
+	{	
+		assert(mode == CArchive::read || mode == CArchive::write);
 		
 		// if the archive is open, close it
 		Close();
@@ -204,19 +203,16 @@ namespace Win32xx
 		{
 			if (!m_file.Open(filename.c_str(), OPEN_EXISTING))
 			{
-				CString msg = TEXT("Archived information file missing:\n") + filename +
-					TEXT("\nInformation not recovered.\n");
-
-				::MessageBox(NULL, msg, TEXT("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 				return false;
 			}
+
 			m_is_storing = false;
 			m_sFileName = filename;
 			
 			// recover schema of serialized configuration
 			*this >> m_schema;
 		}
-		else if (mode == write)
+		else
 		{
 			// if filename not given, use name used for reading
 			CString fn = filename.GetLength() == 0 ? m_sFileName : filename;
@@ -224,28 +220,17 @@ namespace Win32xx
 			// open the file, simply, in binary mode
 			if (!(m_file.Open(fn.c_str(), CREATE_ALWAYS)))
 			{
-				CString msg = TEXT("Could not write CArchive file:\n")
-					+ fn + TEXT("Current environment not saved.");
-				
-				MessageBox(NULL, msg, TEXT("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-				m_nError = ERROR_FILE_NOT_FOUND; // write open error
 				return false;
 			}
+
 			m_is_storing = true;
 			m_sFileName = filename;
 			
 			// record schema of current configuration if at beginning
 			*this << m_schema;
 		}
-		else // mode is nil
-		{
-			m_nError = ERROR_INVALID_DATA; // invalid archive error
-			::MessageBox(NULL, TEXT("Invalid archive mode."), TEXT("Error"), \
-				MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-		}
 		
-		m_nError = NO_ERROR;
-		return mode != nil;
+		return true;
 	}
 
 	//============================================================================
@@ -262,48 +247,42 @@ namespace Win32xx
 		}
 
 		m_mMode = nil;
-		m_nError = NO_ERROR;
 		m_sFileName.Empty();
 	}
 
 	//============================================================================
-	inline void CArchive::Read(void* lpBuf, UINT size, LPCTSTR msg /* = "" */)
+	inline void CArchive::Read(void* lpBuf, UINT size)
 	// Read size bytes from the open archive file into the given lpBuf.
 	// Return on success and  the number of bytes actually read is size.
-	// Throw an exception if not successful containing the message msg.
+	// Throw an exception if not successful.
 	{
-		::SetLastError(0);
+		if (!IsOpen())
+		{
+			throw CWinException(_T("CArchive not opened for reading"));
+		}
 
 		// read, simply and  in binary mode, the size into the lpBuf
-		if (size == 0  ||
-			(m_file.Read(lpBuf, size) != size)  ||
-			(m_nError = ::GetLastError()) != NO_ERROR)
+		if (size == 0  || (m_file.Read(lpBuf, size) != size) )
 		{
-			CString e;
-			e.Format(TEXT("CArchive read error: %s\n%s"), msg,
-				SystemErrorMessage(m_nError).c_str());
-			throw CWinException(e.c_str());
+			throw CWinException(_T("CArchive read error"));
 		}
 	}
 
 	//============================================================================
-	inline void CArchive::Write(const void* lpBuf, UINT size, LPCTSTR msg /* = "" */)
+	inline void CArchive::Write(const void* lpBuf, UINT size)
 	// Write size characters of from the lpBuf into the open archive file  and
 	// return successfully if the number of characters actually written is
-	// size. Throw an exception if unsuccessful containing the message msg.
-	{
-		::SetLastError(0);
-		
-		// write size characters in lpBuf to the  file	
-		if ((size == 0)  ||
-			(m_nError != NO_ERROR)  ||
-			(!m_file.Write(lpBuf, size))  ||
-			((m_nError = ::GetLastError()) != NO_ERROR))
+	// size. Throw an exception if unsuccessful.
+	{		
+		if (!IsOpen())
 		{
-			CString e;
-			e.Format(TEXT("CArchive write error: %s\n%s"), msg,
-				SystemErrorMessage(m_nError).c_str());
-			throw CWinException(e.c_str());
+			throw CWinException(_T("CArchive not opened for writing"));
+		}
+
+		// write size characters in lpBuf to the  file	
+		if ((size == 0) || (!m_file.Write(lpBuf, size)) )
+		{
+			throw CWinException(_T("CArchive write error"));
 		}
 	}
 
@@ -318,13 +297,6 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CArchive::SetError(UINT nError)
-	// Set the archive error indicator to nError.
-	{
-		m_nError = nError;
-	}
-
-	//============================================================================
 	inline void CArchive::SetObjectSchema(UINT nSchema)
 	// Record the archived data schema number.  This acts as a version number
 	// on the format of the archived data for special handling when there
@@ -332,57 +304,6 @@ namespace Win32xx
 	// by the application.
 	{
 		m_schema = nSchema;
-	}
-
-	//============================================================================
-	inline void CArchive::SyncPoint()
-	// If storing, write the sync mark string into the archive; if loading,
-	// read back and  validate that the sync mark is present. If unable to
-	// write or validate the sync mark, throw an exception.  Otherwise,
-	// leave the archive open for further serialization.
-		
-	// The use of SyncPoint() is recommended to assure that corruptions  or
-	// errors in serialization or deserialization of an archive are more
-	// likely to be handled more gracefully than if such synchronization
-	// were not present.
-	{
-		CString e;
-		if (m_nError != NO_ERROR)
-		{
-			e.Format(TEXT("CArchive sync point error:\n%s"),
-				SystemErrorMessage(m_nError).c_str());
-			throw CWinException(e.c_str());
-		}
-
-		// error if writing to an unopened archive
-		if (!IsOpen())
-		{
-			m_nError = ERROR_READ_FAULT;
-			e.Format(TEXT("CArchive not opened for sync point.\n%s"),
-				SystemErrorMessage(m_nError).c_str());
-			throw CWinException(e.c_str());
-		}
-		  
-		// perform loading or storing
-		if (IsStoring())
-		{
-			// Storing to archive
-			*this << m_sync_mark;
-		}
-		else
-		{
-			// Loading from archive
-			CString sync_check;
-			*this >> sync_check;
-
-			if (sync_check != m_sync_mark)
-			{
-				m_nError = ERROR_READ_FAULT;
-				e.Format(TEXT("CArchive sync point read error.\n%s"),
-					SystemErrorMessage(m_nError).c_str());
-				throw CWinException(e.c_str());
-			} 
-		}
 	}
 
 	//============================================================================
@@ -413,7 +334,7 @@ namespace Win32xx
 	// Write the BYTE b into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(b), &b, TEXT("BYTE")};
+		ArchiveObject ob = {sizeof(b), &b};
 		*this << ob;
 		return *this;
 	}
@@ -423,7 +344,7 @@ namespace Win32xx
 	// Write the WORD w into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(w), &w, TEXT("WORD")};
+		ArchiveObject ob = {sizeof(w), &w};
 		*this << ob;
 		return *this;
 	}
@@ -433,7 +354,7 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(l), &l, TEXT("LONG")};
+		ArchiveObject ob = {sizeof(l), &l};
 		*this << ob;
 		return *this;
 	}
@@ -443,7 +364,7 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(ll), &ll, TEXT("LONGLONG")};
+		ArchiveObject ob = {sizeof(ll), &ll};
 		*this << ob;
 		return *this;
 	}
@@ -453,7 +374,7 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(ull), &ull, TEXT("LONGLONG")};
+		ArchiveObject ob = {sizeof(ull), &ull};
 		*this << ob;
 		return *this;
 	}
@@ -463,7 +384,7 @@ namespace Win32xx
 	// Write the DWORD dw into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(dw), &dw, TEXT("DWORD")};
+		ArchiveObject ob = {sizeof(dw), &dw};
 		*this << ob;
 		return *this;
 	}
@@ -473,7 +394,7 @@ namespace Win32xx
 	// Write the float f into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(f), &f, TEXT("float")};
+		ArchiveObject ob = {sizeof(f), &f};
 		*this << ob;
 		return *this;
 	}
@@ -483,7 +404,7 @@ namespace Win32xx
 	// Write the double d into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(d), &d, TEXT("double")};
+		ArchiveObject ob = {sizeof(d), &d};
 		*this << ob;
 		return *this;
 	}
@@ -493,7 +414,7 @@ namespace Win32xx
 	// Write the int i into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(i), &i, TEXT("int")};
+		ArchiveObject ob = {sizeof(i), &i};
 		*this << ob;
 		return *this;
 	}
@@ -503,7 +424,7 @@ namespace Win32xx
 	// Write the short s into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(s), &s, TEXT("short")};
+		ArchiveObject ob = {sizeof(s), &s};
 		*this << ob;
 		return *this;
 	}
@@ -513,7 +434,7 @@ namespace Win32xx
 	// Write the char c into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(c), &c, TEXT("char")};
+		ArchiveObject ob = {sizeof(c), &c};
 		*this << ob;
 		return *this;
 	}
@@ -523,7 +444,17 @@ namespace Win32xx
 	// Write the unsigned u into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(u), &u, TEXT("unsigned")};
+		ArchiveObject ob = {sizeof(u), &u};
+		*this << ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(bool b)
+	// Write the bool b into the archive file. Throw an exception if an
+	// error occurs.
+	{
+		ArchiveObject ob = {sizeof(b), &b};
 		*this << ob;
 		return *this;
 	}
@@ -536,8 +467,8 @@ namespace Win32xx
 		UINT size = (lstrlen(string) + 1) * sizeof(TCHAR);
 		 
 		// Write() throws exception upon error
-		Write((char *)&size, sizeof(size), TEXT("LPTSTR"));
-		Write(string, size, TEXT("LPTSTR"));
+		Write(&size, sizeof(size));
+		Write(string, size);
 		return *this;
 	}
 
@@ -546,24 +477,50 @@ namespace Win32xx
 	// Write the CString string into the archive file. Throw an exception
 	// if an error occurs.
 	{
-		UINT size = (lstrlen(string.c_str()) + 1) * sizeof(TCHAR);
+		UINT size = string.GetLength() * sizeof(TCHAR);
 		  
 		// Write() throws exception upon error
-		Write((char *)&size, sizeof(size), TEXT("CString"));
-		Write(string.c_str(), size, TEXT("CString"));
+		Write(&size, sizeof(size));
+		Write(string.c_str(), size);
 		return *this;
 	}
 
 	//============================================================================
-	inline CArchive& CArchive::operator<<(const CPoint& pt)
-	// Write the CString string into the archive file. Throw an exception
+	inline CArchive& CArchive::operator<<(const POINT& pt)
+	// Write the POINT pt into the archive file. Throw an exception
 	// if an error occurs.
 	{
 		UINT size = sizeof(pt);
 		  
 		// Write() throws exception upon error
-		Write((char *)&size, sizeof(size), TEXT("CPoint"));
-		Write((char *)&pt, size, TEXT("CPoint"));
+		Write(&size, sizeof(size));
+		Write(&pt, size);
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(const RECT& rc)
+	// Write the RECT rc into the archive file. Throw an exception
+	// if an error occurs.
+	{
+		UINT size = sizeof(rc);
+		  
+		// Write() throws exception upon error
+		Write(&size, sizeof(size));
+		Write(&rc, size);
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(const SIZE& sz)
+	// Write the SIZE sz into the archive file. Throw an exception
+	// if an error occurs.
+	{
+		UINT size = sizeof(sz);
+		  
+		// Write() throws exception upon error
+		Write(&size, sizeof(size));
+		Write(&sz, size);
 		return *this;
 	}
 
@@ -573,10 +530,10 @@ namespace Win32xx
 	// pointer ob.p to location are given. Throw an excepton if unable
 	// to do so successfully.
 	{
-		Write((char *)&ob.size, sizeof(size_t), ob.msg);
+		Write(&ob.size, sizeof(ob.size));
 		  
 		// Write() throws exception upon error
-		Write(ob.p, ob.size, ob.msg);
+		Write(ob.p, ob.size);
 		return *this;
 	}
 
@@ -585,7 +542,7 @@ namespace Win32xx
 	// Read a BYTE from the archive and  store it in b.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(b), &b, TEXT("BYTE")};
+		ArchiveObject ob = {sizeof(b), &b};
 		*this >> ob;
 		return *this;
 	}
@@ -595,7 +552,7 @@ namespace Win32xx
 	// Read a WORD from the archive and  store it in w.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(w), &w, TEXT("WORD")};
+		ArchiveObject ob = {sizeof(w), &w};
 		*this >> ob;
 		return *this;
 	}
@@ -605,7 +562,7 @@ namespace Win32xx
 	// Read a LONG from the archive and store it in l.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(l), &l, TEXT("LONG")};
+		ArchiveObject ob = {sizeof(l), &l};
 		*this >> ob;
 		return *this;
 	}
@@ -615,7 +572,7 @@ namespace Win32xx
 	// Read a LONGLONG from the archive and store it in ll.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(ll), &ll, TEXT("LONGLONG")};
+		ArchiveObject ob = {sizeof(ll), &ll};
 		*this >> ob;
 		return *this;
 	}
@@ -625,7 +582,7 @@ namespace Win32xx
 	// Read a ULONGLONG from the archive and store it in ull.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(ull), &ull, TEXT("ULONGLONG")};
+		ArchiveObject ob = {sizeof(ull), &ull};
 		*this >> ob;
 		return *this;
 	}
@@ -635,7 +592,7 @@ namespace Win32xx
 	// Read a DWORD	 from the archive and  store it in dw.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(dw), &dw, TEXT("DWORD")};
+		ArchiveObject ob = {sizeof(dw), &dw};
 		*this >> ob;
 		return *this;
 	}
@@ -645,7 +602,7 @@ namespace Win32xx
 	// Read a float from the archive and  store it in f.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(f), &f, TEXT("float")};
+		ArchiveObject ob = {sizeof(f), &f};
 		*this >> ob;
 		return *this;
 	}
@@ -655,7 +612,7 @@ namespace Win32xx
 	// Read a double from the archive and  store it in d.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(d), &d, TEXT("double")};
+		ArchiveObject ob = {sizeof(d), &d};
 		*this >> ob;
 		return *this;
 	}
@@ -665,7 +622,7 @@ namespace Win32xx
 	// Read an int from the archive and  store it in i.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(i), &i, TEXT("int")};
+		ArchiveObject ob = {sizeof(i), &i};
 		*this >> ob;
 		return *this;
 	}
@@ -675,7 +632,7 @@ namespace Win32xx
 	// Read a short from the archive and  store it in i.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(i), &i, TEXT("short")};
+		ArchiveObject ob = {sizeof(i), &i};
 		*this >> ob;
 		return *this;
 	}
@@ -685,7 +642,7 @@ namespace Win32xx
 	// Read a char from the archive and  store it in c.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(c), &c, TEXT("char")};
+		ArchiveObject ob = {sizeof(c), &c};
 		*this >> ob;
 		return *this;
 	}
@@ -695,7 +652,17 @@ namespace Win32xx
 	// Read an unsigned int from the archive and  store it in u.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(u), &u, TEXT("unsigned")};
+		ArchiveObject ob = {sizeof(u), &u};
+		*this >> ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(bool& b)
+	// Read an bool from the archive and  store it in b.  Throw an
+	// exception if unable to do so correctly.
+	{
+		ArchiveObject ob = {sizeof(b), &b};
 		*this >> ob;
 		return *this;
 	}
@@ -708,8 +675,8 @@ namespace Win32xx
 	// stream.
 	{
 		UINT size;
-		Read((char *)&size, sizeof(size), TEXT("LPTSTR"));
-		Read(string, size, TEXT("LPTSTR"));
+		Read(&size, sizeof(size));
+		Read(string, size);
 		return *this;
 	}
 
@@ -720,24 +687,39 @@ namespace Win32xx
 	// only on inability to read the recorded number of chars from the archive
 	// stream.
 	{
-		UINT size;
-		Read((char *)&size, sizeof(size));
-		  // A TCHAR buffer is needed to receive the stored chars in order to
-		  // be assigned to a CString in wide character mode. The sizing below
-		  // may be more than needed, but its life is short.
-		TCHAR *buffer = new TCHAR[size];
-		Read(buffer, size);
-		string = buffer;
-		delete [] buffer;
+		UINT size;						// size is in bytes, not characters
+		Read(&size, sizeof(size));		
+		Read(string.GetBuffer( size / sizeof(TCHAR) ), size);
+		string.ReleaseBuffer( size / sizeof(TCHAR) );
 		return *this;
 	}
 
 	//============================================================================
-	inline CArchive& CArchive::operator>>(CPoint& pt)
-	// Read a CPoint from the archive and  store it in string.  Throw an
+	inline CArchive& CArchive::operator>>(POINT& pt)
+	// Read a POINT from the archive and  store it in pt.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(pt), &pt, TEXT("CPoint")};
+		ArchiveObject ob = {sizeof(pt), &pt};
+		*this >> ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(RECT& rc)
+	// Read a RECT from the archive and  store it in rc.  Throw an
+	// exception if unable to do so correctly.
+	{
+		ArchiveObject ob = {sizeof(rc), &rc};
+		*this >> ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(SIZE& sz)
+	// Read a SIZE from the archive and  store it in sz.  Throw an
+	// exception if unable to do so correctly.
+	{
+		ArchiveObject ob = {sizeof(sz), &sz};
 		*this >> ob;
 		return *this;
 	}
@@ -749,65 +731,14 @@ namespace Win32xx
 	// do so correctly.
 	{
 		UINT size;
-		Read((char *)&size, sizeof(size), ob.msg);
+		Read(&size, sizeof(size));
 		if (size != ob.size)
 		{
-			m_nError = ERROR_INVALID_DATA;
-			CString e;
-			e.Format(TEXT("CArchive corruption reading: %s"), ob.msg);
-			throw CWinException(e.c_str());
+			throw CWinException(_T("CArchive corruption reading"));
 		}
 		
-		Read(ob.p, ob.size, ob.msg);
+		Read(ob.p, ob.size);
 		return *this;
-	}
-
-
-	// Global functions
-	//============================================================================
-	inline CString	LastErrorMessage()
-	// Return the string currently in the last error message buffer.
-	{
-		DWORD err = ::GetLastError();
-		
-		// for some reason, this always returns err = 126 when
-		// no error has been committed.  This module hides that
-		// behavior, and  will then be in error if, in fact,
-		// an 126 error actually occurs.
-		if (err == 126)
-			::SetLastError(err = 0);
-		
-		return SystemErrorMessage(err);
-	}
-
-	//===========================================================================
-	inline CString	SystemErrorMessage(int errnum)
-	// Return the string error message corresponding to the numeric errnum
-	// returned by a DOS app.
-	{
-		LPTSTR s;
-		if(::FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER |
-			FORMAT_MESSAGE_FROM_SYSTEM, NULL, errnum, 0, (LPTSTR)&s, 0,
-			NULL) == 0)
-		{
-			// failed, unknown error code
-			s = (LPTSTR)"Unknown error.";
-		}
-		else
-		{
-			// success, use TCHAR version of strchr to find any '\r'
-			LPTSTR p = _tcschr(s, TEXT('\r'));
-			if(p != NULL)
-			{
-				// lose it and  end the string
-				*p = TEXT('\0');
-			}
-		}
-
-		CString error;
-		error.Format(TEXT("(%d) %s"), errnum, s);
-		::LocalFree(s);
-		return error;
 	}
 
 } // namespace Win32xx

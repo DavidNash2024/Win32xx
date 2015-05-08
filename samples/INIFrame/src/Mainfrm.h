@@ -36,7 +36,6 @@ protected:
 private:
 	CView m_View;
 	CRect m_rcPosition;		// Starting window position retrieved from ini file
-	DWORD m_ShowCmd;		// Initial frame show state retrieved from ini file
 	BOOL m_ShowStatusBar;	// Initial StatusBar show state retrieved from ini file
 	BOOL m_ShowToolBar;		// Initial ToolBar show state retrieved from ini file
 };

@@ -80,31 +80,14 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 {
 	// empty the PlotPoint vector
 	m_points.clear();
-	DWORD nBytesRead;
+
 	BOOL bResult = FALSE;
 
-	// Create a handle to the file
-	CFile File;
-	if (File.Open(szFilename, OPEN_EXISTING))
+	CArchive ar;
+	if (ar.Open(szFilename, CArchive::read))
 	{
-		do
-		{
-			PlotPoint pp;
-			nBytesRead = File.Read(&pp, sizeof(PlotPoint));
-			if (nBytesRead == sizeof(PlotPoint))
-				m_points.push_back(pp);
-
-		} while (nBytesRead == sizeof(PlotPoint));
-
-		if ((0 != nBytesRead) || (m_points.empty()))
-		{
-			// Failed to read all of the file
-			m_points.clear();
-			::MessageBox (0, _T("Invalid data in file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		}
-		else
-			bResult = TRUE;
-
+		ar >> *this;
+		bResult = TRUE;
 	}
 	else
 	{
@@ -120,46 +103,12 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 BOOL CView::FileSave(LPCTSTR szFilename)
 {
 	BOOL bResult = TRUE;
-	CFile hFile;
-	if (!hFile.Open(szFilename, CREATE_ALWAYS))
-	{
-		::MessageBox (0, _T("Failed to open file for writing"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		bResult = FALSE;
-	}
 
-	if (bResult)
-	{
-		// Write the file
-		for (size_t i = 0; i < m_points.size(); ++i)
-		{
-			if (!hFile.Write(&m_points[i], sizeof(PlotPoint)))
-			{
-				::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-				bResult = FALSE;
-				break;
-			}
-		}
-
-		// Verify file length
-		if (hFile.GetLength() != m_points.size() * sizeof(PlotPoint))
-		{
-			::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-			bResult = FALSE;
-		}
-	}
+	CArchive ar;
+	ar.Open(szFilename, CArchive::write);
+	ar << *this;
 
 	return bResult;
-}
-
-void CView::StorePoint(int x, int y, bool PenDown)
-{
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
-	P1.color = m_PenColor;
-
-	m_points.push_back(P1); //Add the point to the vector
 }
 
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -196,6 +145,64 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
+void CView::Serialize(CArchive &ar)
+// Uses CArchive to stream data to or from a file
+{
+	// The archive might throw an exception 
+	try
+	{
+		if (ar.IsStoring())
+		{
+			// Store the number of points
+			UINT nPoints = m_points.size();
+			ar << nPoints;
+			
+			// Store the PlotPoint data
+			std::vector<PlotPoint>::iterator iter;
+			for (iter = m_points.begin(); iter < m_points.end(); ++iter)
+			{
+				ar.Write( &(*iter), sizeof(PlotPoint) );
+			}
+		}
+		else
+		{
+			UINT nPoints;
+			PlotPoint pp = {0};
+			m_points.clear();
+
+			// Load the number of points
+			ar >> nPoints;
+
+			// Load the PlotPoint data
+			for (UINT u = 0; u < nPoints; ++u)
+			{
+				ar.Read(&pp, sizeof(PlotPoint));
+				m_points.push_back(pp);
+			}
+		}
+	}
+
+	catch (const CWinException &e)
+	{
+		// An exception occurred. Display the relevant information.
+		MessageBox(e.GetErrorString(), e.GetText(), MB_OK);
+		
+		m_points.clear();
+		Invalidate();
+	}
+}
+
+void CView::StorePoint(int x, int y, bool PenDown)
+{
+	PlotPoint P1;
+	P1.x = x;
+	P1.y = y;
+	P1.PenDown = PenDown;
+	P1.color = m_PenColor;
+
+	m_points.push_back(P1); //Add the point to the vector
+}
+
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
@@ -207,5 +214,17 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	//Use the default message handling for remaining messages
 	return WndProcDefault(uMsg, wParam, lParam);
+}
+
+CArchive& operator<<(CArchive& ar, CView& v)
+{
+	v.Serialize(ar);
+	return ar;
+}
+
+CArchive&  operator>>(CArchive& ar, CView& v)
+{
+	v.Serialize(ar);
+	return ar;
 }
 

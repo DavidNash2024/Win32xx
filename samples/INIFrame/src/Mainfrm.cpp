@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_ShowCmd(0), m_ShowStatusBar(0), m_ShowToolBar(0)
+CMainFrame::CMainFrame() : m_ShowStatusBar(1), m_ShowToolBar(1)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -140,11 +140,12 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 
 void CMainFrame::PreCreate(CREATESTRUCT &cs)
 {
+	// Load setting from Frame.ini
+	SerializeINI(false);	
+	
 	// Set the frame window styles
 	cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-
-	SerializeINI(false);
-	if (m_ShowCmd == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
+	if (GetShowCmd() == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
 
 	CWindowDC dcDesktop(0);
 
@@ -219,22 +220,26 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 		UINT failed = 999999;
 		CString Error("Error: GPPS failed");
 		
-		UINT Left = ::GetPrivateProfileInt(Key, _T("Left"), 999999, cs);
-		UINT Top = ::GetPrivateProfileInt (Key, _T("Top"), 999999, cs);
-		UINT Width = ::GetPrivateProfileInt (Key, _T("Width"), 999999, cs);
-		UINT Height = ::GetPrivateProfileInt (Key, _T("Height"), 999999, cs);	
-		BOOL ShowCmd = ::GetPrivateProfileInt (Key, _T("ShowCmd"), 999999, cs);
+		UINT Left = ::GetPrivateProfileInt(Key, _T("Left"), failed, cs);
+		UINT Top = ::GetPrivateProfileInt (Key, _T("Top"), failed, cs);
+		UINT Width = ::GetPrivateProfileInt (Key, _T("Width"), failed, cs);
+		UINT Height = ::GetPrivateProfileInt (Key, _T("Height"), failed, cs);	
+		UINT ShowCmd = ::GetPrivateProfileInt (Key, _T("ShowCmd"), failed, cs);
 
-		if (Left != failed && Top != failed && Width != failed && Height != failed && m_ShowCmd != failed) 
+		if (Left != failed && Top != failed && Width != failed && Height != failed && ShowCmd != failed) 
 		{
 			m_rcPosition = CRect(Left, Top, Left + Width, Top + Height);
-			m_ShowCmd = ShowCmd;
-		
+			SetShowCmd(ShowCmd);
+
 			// Set the show state of the status bar
-			m_ShowStatusBar = ::GetPrivateProfileInt (Key, _T("StatusBar"), 0, cs);
+			UINT ShowStatus = ::GetPrivateProfileInt (Key, _T("StatusBar"), 0, cs);
+			if (ShowStatus != failed)
+				m_ShowStatusBar = ShowStatus;
 
 			// Set the show state of the tool bar
-			m_ShowToolBar = ::GetPrivateProfileInt (Key, _T("ToolBar"), 0, cs);
+			UINT ShowTool = ::GetPrivateProfileInt (Key, _T("ToolBar"), 0, cs);
+			if (ShowTool != failed)
+				m_ShowToolBar = ShowTool;
 		}
 		else
 		{

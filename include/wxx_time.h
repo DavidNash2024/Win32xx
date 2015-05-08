@@ -122,6 +122,10 @@ namespace Win32xx
 	//  and second, minute, hour fields.  The format may be found in the MSDN
 	//	Library article on DosDateTimeToFileTime().
 	{
+		// global friends.  These functions can access private members
+		friend  CArchive& operator<<(CArchive&, CTime&);
+		friend  CArchive& operator>>(CArchive&, CTime&);
+
 	public:
 
 		// Constructors
@@ -184,12 +188,11 @@ namespace Win32xx
 		static	CTime 	GetCurrentTime();
 		static	FILETIME FileTimePlus(const FILETIME &, double );
 
-		// global friends
-		friend  CArchive& operator<<(CArchive&, CTime&);
-		friend  CArchive& operator>>(CArchive&, CTime&);
+	private:
 
-	protected:
+		// private data members
 		time_t 		m_time;
+
 	};
 
 	//============================================================================
@@ -200,6 +203,8 @@ namespace Win32xx
 	//	elements that differ by a specified span of time and  methods to
 	//	extract and  display CTimeSpan values.
 	{
+		friend class CTime;		// CTime can access private members
+	
 	public:
 		// Constructors
 		CTimeSpan();
@@ -243,8 +248,8 @@ namespace Win32xx
 		friend  CArchive& operator>>(CArchive&, CTimeSpan);
 
 	private:
-		friend class CTime;
 
+		// private data members
 		timespan_t m_timespan;
 	};
 
@@ -972,15 +977,14 @@ namespace Win32xx
 	//	Read a CTime from the archive and  store it in t.  Throw an exception if
 	//	unable to do so correctly.
 	{
-		int size;
-		ar.Read((char *)&size, sizeof(size_t));
+		UINT size;
+		ar.Read(&size, sizeof(size));
 		if (size != sizeof(CTime))
 		{
-			ar.SetError(ERROR_INVALID_DATA);
 			throw CWinException(TEXT("Archive corruption: reading CTime."));
 		}
 
-			ar.Read((char *)&t, size);
+		ar.Read(&t, size);
 		return ar;
 	}
 
@@ -989,9 +993,9 @@ namespace Win32xx
 	//	Write the time t into the archive file. Throw an exception if an
 	//	error occurs.
 	{
-		int size = sizeof(t);
-		ar.Write((char *)&size, sizeof(size_t));
-		ar.Write((char *)&t, size);
+		UINT size = sizeof(t);
+		ar.Write(&size, sizeof(size));
+		ar.Write(&t, size);
 		return ar;
 	}
 
@@ -1263,16 +1267,14 @@ namespace Win32xx
 	//	Read a CTimeSpan object from the archive and  store it in t.  Throw an
 	//	exception if unable to do so correctly.
 	{
-		int size;
-		ar.Read((char *)&size, sizeof(size_t));
+		UINT size;
+		ar.Read(&size, sizeof(size));
 		if (size != sizeof(CTimeSpan))
 		{
-			ar.SetError(ERROR_INVALID_DATA);
-			throw CWinException(
-				TEXT("Archive corruption: reading CTimeSpan."));
+			throw CWinException(_T("Archive corruption: reading CTimeSpan."));
 		}
 
-			ar.Read((char *)&t, size);
+		ar.Read(&t, size);
 		return ar;
 	}
 
@@ -1281,9 +1283,9 @@ namespace Win32xx
 	//	Write the time span object s into the archive file. Throw an exception
 	//	if an error occurs.
 	{
-		int size = sizeof(s);
-		ar.Write((char *)&size, sizeof(size_t));
-		ar.Write((char *)&s, size);
+		UINT size = sizeof(s);
+		ar.Write(&size, sizeof(size));
+		ar.Write(&s, size);
 		return ar;
 	}
 

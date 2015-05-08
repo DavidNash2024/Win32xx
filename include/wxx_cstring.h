@@ -987,7 +987,9 @@ namespace Win32xx
 		return string1.Compare(pszText) >= 0;
 	}
 
-	// Global LoadString
+	
+	// Global functions that use CString
+
 	inline CString LoadString(UINT nID)
 	{
 		CString str;
@@ -1045,6 +1047,18 @@ namespace Win32xx
 
 		// CommandLineArgs is a vector of CString
 		return CommandLineArgs;
+	}
+
+	inline CString	SystemErrorMessage(int errnum)
+	// Return the string error message corresponding to the numeric errnum
+	{
+		TCHAR szErrorString[MAX_STRING_SIZE] = {0};
+		DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+		::FormatMessage(dwFlags, NULL, errnum, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), szErrorString, MAX_STRING_SIZE-1, NULL);
+
+		CString error;
+		error.Format(_T("(%d) %s"), errnum, szErrorString);
+		return error;
 	}
 
 

@@ -363,6 +363,7 @@ namespace Win32xx
 		~CWinException() throw() {}
 		DWORD GetError() const throw ();
 		LPCTSTR GetErrorString() const throw ();
+		LPCTSTR GetText() const throw ();
 		const char * what () const throw ();
 
 	private:
@@ -746,13 +747,8 @@ namespace Win32xx
 	{
 		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
-		if (m_Error != 0)
-		{
-			DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-			::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
-		}
-		else
-			lstrcpyn(m_szErrorString, pszText, MAX_STRING_SIZE);
+		DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+		::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 	}
 
 	inline DWORD CWinException::GetError() const throw ()
@@ -765,10 +761,16 @@ namespace Win32xx
 		return m_szErrorString;
 	}
 
+	inline LPCTSTR CWinException::GetText() const throw ()
+	{
+		return m_pszText;
+	}
+
 	inline const char * CWinException::what() const throw ()
 	{
 		// Sends the last error string to the debugger (typically displayed in the IDE's output window).
 		::OutputDebugString(m_szErrorString);
+		::OutputDebugString(m_pszText);
 		return "CWinException thrown";
 	}
 
