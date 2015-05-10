@@ -35,11 +35,11 @@
 ////////////////////////////////////////////////////////
 
 
+#include "wxx_wincore.h"
+
 #ifndef _WIN32XX_FILE_H_
 #define _WIN32XX_FILE_H_
 
-
-#include "wxx_wincore.h"
 
 namespace Win32xx
 {
@@ -64,7 +64,7 @@ namespace Win32xx
 		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
 		virtual BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
 		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL, 
+						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
 						LPCTSTR pszFilter = NULL, HWND hOwnerWnd = NULL);
 		virtual UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
@@ -104,13 +104,13 @@ namespace Win32xx
 	}
 
 	inline CFile::CFile(LPCTSTR pszFileName, UINT nOpenFlags) : m_hFile(0)
-	//  Possible nOpenFlag values:  CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING	
+	//  Possible nOpenFlag values:  CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING
 	{
 		assert(pszFileName);
 		Open(pszFileName, nOpenFlags);
 		assert(m_hFile);
 	}
-	
+
 	inline CFile::~CFile()
 	{
 		Close();
@@ -138,7 +138,7 @@ namespace Win32xx
 		assert(m_hFile);
 		return FlushFileBuffers(m_hFile);
 	}
-	
+
 	inline HANDLE CFile::GetHandle() const
 	{
 		return m_hFile;
@@ -224,7 +224,7 @@ namespace Win32xx
 	}
 
 	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, HWND hOwnerWnd)
-	// Displays the file open dialog. 
+	// Displays the file open dialog.
 	// Returns a CString containing either the selected file name or an empty CString.
 	{
 		CString str;
@@ -248,7 +248,7 @@ namespace Win32xx
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
 		ofn.Flags = dwFlags;
 		ofn.nMaxFile = MaxPath;
-		
+
 		ofn.lpstrFile = (LPTSTR)str.GetBuffer(MaxPath);
 		::GetOpenFileName(&ofn);
 		str.ReleaseBuffer();

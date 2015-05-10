@@ -124,10 +124,12 @@
 //  CBitmapInfoPtr pbmi(hBitmap);
 //  MemDC.GetDIBits(hBitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 
+
+#include "wxx_wincore.h"
+
 #ifndef _WIN32XX_GDI_H_
 #define _WIN32XX_GDI_H_
 
-#include "wxx_wincore.h"
 
 // Disable macros from Windowsx.h
 #undef CopyRgn

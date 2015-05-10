@@ -83,17 +83,20 @@ BOOL CView::FileOpen(LPCTSTR szFilename)
 
 	BOOL bResult = FALSE;
 
-	CArchive ar;
-	if (ar.Open(szFilename, CArchive::read))
+	try
 	{
+		CArchive ar;
+		ar.Open(szFilename, CArchive::read);
 		ar >> *this;
 		bResult = TRUE;
 	}
-	else
+
+	catch (const CWinException &e)
 	{
-		CString strErrMsg = _T("Failed to open file ");
-		strErrMsg += szFilename;
-		::MessageBox (0, strErrMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
+		// An exception occurred. Display the relevant information.
+		MessageBox(e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+		
+		m_points.clear();
 	}
 
 	Invalidate();
@@ -104,9 +107,17 @@ BOOL CView::FileSave(LPCTSTR szFilename)
 {
 	BOOL bResult = TRUE;
 
-	CArchive ar;
-	ar.Open(szFilename, CArchive::write);
-	ar << *this;
+	try
+	{
+		CArchive ar;
+		ar.Open(szFilename, CArchive::write);
+		ar << *this;
+	}
+	catch (const CWinException &e)
+	{
+		// An exception occurred. Display the relevant information.
+		MessageBox(e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+	}
 
 	return bResult;
 }
@@ -148,48 +159,37 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CView::Serialize(CArchive &ar)
 // Uses CArchive to stream data to or from a file
 {
-	// The archive might throw an exception 
-	try
+
+	if (ar.IsStoring())
 	{
-		if (ar.IsStoring())
-		{
-			// Store the number of points
-			UINT nPoints = m_points.size();
-			ar << nPoints;
-			
-			// Store the PlotPoint data
-			std::vector<PlotPoint>::iterator iter;
-			for (iter = m_points.begin(); iter < m_points.end(); ++iter)
-			{
-				ar.Write( &(*iter), sizeof(PlotPoint) );
-			}
-		}
-		else
-		{
-			UINT nPoints;
-			PlotPoint pp = {0};
-			m_points.clear();
-
-			// Load the number of points
-			ar >> nPoints;
-
-			// Load the PlotPoint data
-			for (UINT u = 0; u < nPoints; ++u)
-			{
-				ar.Read(&pp, sizeof(PlotPoint));
-				m_points.push_back(pp);
-			}
-		}
-	}
-
-	catch (const CWinException &e)
-	{
-		// An exception occurred. Display the relevant information.
-		MessageBox(e.GetErrorString(), e.GetText(), MB_OK);
+		// Store the number of points
+		UINT nPoints = m_points.size();
+		ar << nPoints;
 		
-		m_points.clear();
-		Invalidate();
+		// Store the PlotPoint data
+		std::vector<PlotPoint>::iterator iter;
+		for (iter = m_points.begin(); iter < m_points.end(); ++iter)
+		{
+			ar.Write( &(*iter), sizeof(PlotPoint) );
+		}
 	}
+	else
+	{
+		UINT nPoints;
+		PlotPoint pp = {0};
+		m_points.clear();
+
+		// Load the number of points
+		ar >> nPoints;
+
+		// Load the PlotPoint data
+		for (UINT u = 0; u < nPoints; ++u)
+		{
+			ar.Read(&pp, sizeof(PlotPoint));
+			m_points.push_back(pp);
+		}
+	}
+
 }
 
 void CView::StorePoint(int x, int y, bool PenDown)
@@ -216,6 +216,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
+/*
 CArchive& operator<<(CArchive& ar, CView& v)
 {
 	v.Serialize(ar);
@@ -227,4 +228,4 @@ CArchive&  operator>>(CArchive& ar, CView& v)
 	v.Serialize(ar);
 	return ar;
 }
-
+*/

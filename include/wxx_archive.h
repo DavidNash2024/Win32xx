@@ -37,7 +37,7 @@
 
 ////////////////////////////////////////////////////////
 // Acknowledgement:
-// 
+//
 // The original author of CArchive is:
 //
 //      Robert C. Tausworthe
@@ -48,17 +48,16 @@
 
 ////////////////////////////////////////////////////////
 //	Contents Description:
-//  The CArchive class is used to serialize and 
-//  deserialize data. Data is streamed to and from the 
-//  file specified by the user, using the >> and << 
-//  operators. 
+//  The CArchive class is used to serialize and
+//  deserialize data. Data is streamed to and from the
+//  file specified by the user, using the >> and <<
+//  operators.
 
-
+#include "wxx_wincore.h"
 
 #ifndef _WIN32XX_ARCHIVE_H_
 #define _WIN32XX_ARCHIVE_H_
 
-#include "wxx_wincore.h"
 #include "wxx_file.h"
 
 namespace Win32xx
@@ -67,7 +66,7 @@ namespace Win32xx
 	struct ArchiveObject{UINT size; LPVOID p;};
 
 	// Unspecified object type containing the size of, a pointer p to, and  a
-	// message about a memory block that is either to be written into (<<)  or 
+	// message about a memory block that is either to be written into (<<)  or
 	// retrieved from (>>) an archive file. This struct is used in
 	// serialization and  deserialization of data, particularly those that
 	// are not of a type for which available << and >> operators are defined.
@@ -78,8 +77,8 @@ namespace Win32xx
 
 	//    ArchiveObject ao = {sizeof(A), &A};
 	//	  ar << ao; or ar >> ao;
-	
-	
+
+
 	//=============================================================================
 	class CArchive
 	// Serialization CArchive class
@@ -122,7 +121,8 @@ namespace Win32xx
 		CArchive& operator<<(const POINT& pt);
 		CArchive& operator<<(const RECT& rc);
 		CArchive& operator<<(const SIZE& sz);
-		CArchive& operator<<(const ArchiveObject& ob);
+		CArchive& operator<<(const ArchiveObject& ao);
+		CArchive& operator<<(const CObject& Ob);
 
 		// extraction operations
 		CArchive& operator>>(BYTE& by);
@@ -143,7 +143,8 @@ namespace Win32xx
 		CArchive& operator>>(POINT& pt);
 		CArchive& operator>>(RECT& rc);
 		CArchive& operator>>(SIZE& sz);
-		CArchive& operator>>(ArchiveObject& ob);
+		CArchive& operator>>(ArchiveObject& ao);
+		CArchive& operator>>(CObject& Ob);
 
 		// public data members
 		CString	m_sFileName;
@@ -157,6 +158,7 @@ namespace Win32xx
 		CFile    m_file;        // archive file FILE, initially closed
 		bool     m_is_storing;  // archive direction switch
 		UINT     m_schema;      // archive version schema
+
 	};
 
 
@@ -174,7 +176,6 @@ namespace Win32xx
 		m_mMode       = nil;
 		m_schema      = 0;
 		m_is_storing  = false;
-	//	m_sync_mark	  = TEXT("!@#$%^&*()_+");
 	}
 
 	//============================================================================
@@ -190,12 +191,12 @@ namespace Win32xx
 	// The mode can be read or write.
 	// Return true if the archive opens without error, or false, otherwise.
 	// Does throw an exception if the schema cannot be written or read back.
-	{	
+	{
 		assert(mode == CArchive::read || mode == CArchive::write);
-		
+
 		// if the archive is open, close it
 		Close();
-		
+
 		// Record the archive mode, even if the filename cannot be opened,
 		// for use in later determining error status of a subsequent
 		// de/serialization operation.
@@ -208,7 +209,7 @@ namespace Win32xx
 
 			m_is_storing = false;
 			m_sFileName = filename;
-			
+
 			// recover schema of serialized configuration
 			*this >> m_schema;
 		}
@@ -216,7 +217,7 @@ namespace Win32xx
 		{
 			// if filename not given, use name used for reading
 			CString fn = filename.GetLength() == 0 ? m_sFileName : filename;
-			
+
 			// open the file, simply, in binary mode
 			if (!(m_file.Open(fn.c_str(), CREATE_ALWAYS)))
 			{
@@ -225,11 +226,11 @@ namespace Win32xx
 
 			m_is_storing = true;
 			m_sFileName = filename;
-			
+
 			// record schema of current configuration if at beginning
 			*this << m_schema;
 		}
-		
+
 		return true;
 	}
 
@@ -258,13 +259,13 @@ namespace Win32xx
 	{
 		if (!IsOpen())
 		{
-			throw CWinException(_T("CArchive not opened for reading"));
+			throw CWinException(_T("Archive not opened for reading"));
 		}
 
 		// read, simply and  in binary mode, the size into the lpBuf
 		if (size == 0  || (m_file.Read(lpBuf, size) != size) )
 		{
-			throw CWinException(_T("CArchive read error"));
+			throw CWinException(_T("Archive read error"));
 		}
 	}
 
@@ -273,16 +274,16 @@ namespace Win32xx
 	// Write size characters of from the lpBuf into the open archive file  and
 	// return successfully if the number of characters actually written is
 	// size. Throw an exception if unsuccessful.
-	{		
+	{
 		if (!IsOpen())
 		{
-			throw CWinException(_T("CArchive not opened for writing"));
+			throw CWinException(_T("Archive not opened for writing"));
 		}
 
-		// write size characters in lpBuf to the  file	
+		// write size characters in lpBuf to the  file
 		if ((size == 0) || (!m_file.Write(lpBuf, size)) )
 		{
-			throw CWinException(_T("CArchive write error"));
+			throw CWinException(_T("Archive write error"));
 		}
 	}
 
@@ -465,7 +466,7 @@ namespace Win32xx
 	// if an error occurs.
 	{
 		UINT size = (lstrlen(string) + 1) * sizeof(TCHAR);
-		 
+
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));
 		Write(string, size);
@@ -478,7 +479,7 @@ namespace Win32xx
 	// if an error occurs.
 	{
 		UINT size = string.GetLength() * sizeof(TCHAR);
-		  
+
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));
 		Write(string.c_str(), size);
@@ -491,7 +492,7 @@ namespace Win32xx
 	// if an error occurs.
 	{
 		UINT size = sizeof(pt);
-		  
+
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));
 		Write(&pt, size);
@@ -504,7 +505,7 @@ namespace Win32xx
 	// if an error occurs.
 	{
 		UINT size = sizeof(rc);
-		  
+
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));
 		Write(&rc, size);
@@ -517,7 +518,7 @@ namespace Win32xx
 	// if an error occurs.
 	{
 		UINT size = sizeof(sz);
-		  
+
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));
 		Write(&sz, size);
@@ -525,15 +526,15 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CArchive& CArchive::operator<<(const ArchiveObject& ob)
+	inline CArchive& CArchive::operator<<(const ArchiveObject& ao)
 	// Write arbitrary CArchive object into this CArchive. Only ob.size  and
 	// pointer ob.p to location are given. Throw an excepton if unable
 	// to do so successfully.
 	{
-		Write(&ob.size, sizeof(ob.size));
-		  
+		Write(&ao.size, sizeof(ao.size));
+
 		// Write() throws exception upon error
-		Write(ob.p, ob.size);
+		Write(ao.p, ao.size);
 		return *this;
 	}
 
@@ -688,7 +689,7 @@ namespace Win32xx
 	// stream.
 	{
 		UINT size;						// size is in bytes, not characters
-		Read(&size, sizeof(size));		
+		Read(&size, sizeof(size));
 		Read(string.GetBuffer( size / sizeof(TCHAR) ), size);
 		string.ReleaseBuffer( size / sizeof(TCHAR) );
 		return *this;
@@ -725,21 +726,34 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CArchive& CArchive::operator>>(ArchiveObject& ob)
+	inline CArchive& CArchive::operator>>(ArchiveObject& ao)
 	// Read a char string of size ob.size from the archive and  store it in
 	// the location pointed to by ob.p.  Throw an exception if unable to
 	// do so correctly.
 	{
 		UINT size;
 		Read(&size, sizeof(size));
-		if (size != ob.size)
+		if (size != ao.size)
 		{
-			throw CWinException(_T("CArchive corruption reading"));
+			throw CWinException(_T("Unable to read object from archive"));
 		}
-		
-		Read(ob.p, ob.size);
+
+		Read(ao.p, ao.size);
 		return *this;
 	}
+
+	inline CArchive& CArchive::operator<<(const CObject& Ob)
+	{
+		((CObject)Ob).Serialize(*this);
+		return *this;
+	}
+
+	inline CArchive& CArchive::operator>>(CObject& Ob)
+	{
+		Ob.Serialize(*this);
+		return *this;
+	}
+
 
 } // namespace Win32xx
 

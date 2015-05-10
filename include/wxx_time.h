@@ -981,7 +981,7 @@ namespace Win32xx
 		ar.Read(&size, sizeof(size));
 		if (size != sizeof(CTime))
 		{
-			throw CWinException(TEXT("Archive corruption: reading CTime."));
+			throw CWinException(TEXT("Failed to read CTime from archive."));
 		}
 
 		ar.Read(&t, size);
@@ -1271,7 +1271,7 @@ namespace Win32xx
 		ar.Read(&size, sizeof(size));
 		if (size != sizeof(CTimeSpan))
 		{
-			throw CWinException(_T("Archive corruption: reading CTimeSpan."));
+			throw CWinException(_T("Failed to read CTimeSpan from archive"));
 		}
 
 		ar.Read(&t, size);

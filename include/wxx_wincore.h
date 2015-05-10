@@ -204,6 +204,7 @@ namespace Win32xx
 	////////////////////////////////////////////////
 	// Forward declarations.
 	//  These classes are defined later or elsewhere
+	class CArchive;
 	class CDC;
 	class CGDIObject;
 	class CMenu;
@@ -375,10 +376,26 @@ namespace Win32xx
 	// Typedef for _beginthreadex's callback function
 	typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
 
+
+	///////////////////////////////////
+	// Declaration of the CObject class
+	//
+	class CObject
+	{
+	public:
+		CObject() {}
+		virtual ~CObject() {}
+
+		virtual void Serialize(CArchive& ar);
+
+	private:
+	};
+
+
 	//////////////////////////////////////
 	// Declaration of the CWinThread class
 	//
-	class CWinThread
+	class CWinThread : public CObject
 	{
 	public:
 		CWinThread();
@@ -510,7 +527,7 @@ namespace Win32xx
 	////////////////////////////////
 	// Declaration of the CWnd class
 	//
-	class CWnd
+	class CWnd : public CObject
 	{
 	friend class CMDIChild;
 	friend class CDialog;
@@ -733,6 +750,7 @@ namespace Win32xx
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+#include "wxx_archive.h"
 #include "wxx_gdi.h"
 #include "wxx_menu.h"
 #include "wxx_imagelist.h"
@@ -769,9 +787,26 @@ namespace Win32xx
 	inline const char * CWinException::what() const throw ()
 	{
 		// Sends the last error string to the debugger (typically displayed in the IDE's output window).
+		::OutputDebugString(_T("CWinException thrown"));
 		::OutputDebugString(m_szErrorString);
 		::OutputDebugString(m_pszText);
 		return "CWinException thrown";
+	}
+
+	inline void CObject::Serialize(CArchive& /* ar */ )
+	{
+	
+	//	if (ar.IsStoring())
+	//	{
+	//		// Store a member variable in the archive
+	//		ar << m_SomeValue;
+	//	}
+	//	else
+	//	{
+	//		// Load a member variable from the archive
+	//		ar >> m_SomeValue;
+	//	}
+
 	}
 
 	///////////////////////////////////////

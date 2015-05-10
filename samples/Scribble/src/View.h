@@ -44,8 +44,6 @@ private:
 	std::vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
 
-	friend CArchive& operator<<(CArchive&, CView&);
-	friend CArchive& operator>>(CArchive&, CView&);
 };
 
 

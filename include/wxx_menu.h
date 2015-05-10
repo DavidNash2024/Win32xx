@@ -91,12 +91,12 @@
 //	}
 
 
+#include "wxx_wincore.h"
 
 #if !defined(_WIN32XX_MENU_H_) && !defined(_WIN32_WCE)
 #define _WIN32XX_MENU_H_
 
 
-#include "wxx_wincore.h"
 #include "wxx_gdi.h"
 
 

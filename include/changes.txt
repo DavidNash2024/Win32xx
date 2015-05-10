@@ -7,6 +7,12 @@ New Features and Enhancements
   CArchive provides a convenient means of saving and restoring an application's
   data, by streaming the data to and from a file.
   
+* Added CObject
+  CObject provides the Serialize virtual function which is used by CArchive. 
+  Any class inherited from CObject can override Serialize to customize the
+  way its data is saved in the archive. CWnd and CWinThread inherit from
+  CObject. Classes created by the user can inherit from CObject as well.  
+  
 * Added CRegKey.
   CRegKey is a wrapper for functions used to access and modify the registry.  
 

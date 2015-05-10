@@ -47,11 +47,11 @@
 // include a monochrome bitmap that contains masks that are used to draw
 // images transparently.
  
+
+#include "wxx_wincore.h" 
+ 
 #if !defined(_WIN32XX_IMAGELIST_H_)
 #define _WIN32XX_IMAGELIST_H_
-
-
-#include "wxx_wincore.h"
 
 
 namespace Win32xx
