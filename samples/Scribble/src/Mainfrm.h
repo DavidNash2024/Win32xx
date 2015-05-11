@@ -7,6 +7,7 @@
 
 
 #include "View.h"
+#include "Doc.h"
 
 
 class CMainFrame : public CFrame
@@ -14,6 +15,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
+	CDoc& GetDoc() { return m_Doc; }
 
 	BOOL OnFileExit();
 	BOOL OnFileMRU(WPARAM wParam);
@@ -33,6 +36,7 @@ protected:
 
 private:
 	CView m_View;
+	CDoc m_Doc;
 	CString m_PathName;
 
 };

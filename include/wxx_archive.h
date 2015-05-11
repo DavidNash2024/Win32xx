@@ -85,10 +85,11 @@ namespace Win32xx
 	{
 	public:
 		// file modes
-		enum mode{nil = -1, read, write};
+		enum mode {store = 0, load = 1};
 
 		// construction and  destruction
 		CArchive();
+		CArchive(CFile& pFile, CArchive::mode nMode);
 		~CArchive();
 
 		// method members
@@ -99,8 +100,10 @@ namespace Win32xx
 		bool 	IsStoring() const;
 		bool	Open(CString filename, CArchive::mode);
 		void 	Read(void* lpBuf, UINT size);
+		LPTSTR	ReadString(LPTSTR lpsz, UINT nMax);
 		void 	SetObjectSchema(UINT nSchema);
 		void 	Write(const void* lpBuf, UINT size);
+		void	WriteString(LPCTSTR string);
 
 		// insertion operations
 		CArchive& operator<<(BYTE by);
@@ -116,7 +119,6 @@ namespace Win32xx
 		CArchive& operator<<(char ch);
 		CArchive& operator<<(unsigned u);
 		CArchive& operator<<(bool b);
-		CArchive& operator<<(LPCTSTR s);
 		CArchive& operator<<(const CString& s);
 		CArchive& operator<<(const POINT& pt);
 		CArchive& operator<<(const RECT& rc);
@@ -138,7 +140,6 @@ namespace Win32xx
 		CArchive& operator>>(char& ch);
 		CArchive& operator>>(unsigned& u);
 		CArchive& operator>>(bool& b);
-		CArchive& operator>>(LPTSTR s);
 		CArchive& operator>>(CString& s);
 		CArchive& operator>>(POINT& pt);
 		CArchive& operator>>(RECT& rc);
@@ -148,7 +149,6 @@ namespace Win32xx
 
 		// public data members
 		CString	m_sFileName;
-		mode	m_mMode;
 
 	private:
 		CArchive(const CArchive&);				// Disable copy construction
@@ -156,6 +156,7 @@ namespace Win32xx
 
 		// private data members
 		CFile    m_file;        // archive file FILE, initially closed
+		mode	 m_mMode;
 		bool     m_is_storing;  // archive direction switch
 		UINT     m_schema;      // archive version schema
 
@@ -169,13 +170,9 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	inline CArchive::CArchive()
+	inline CArchive::CArchive() : m_mMode(load),  m_is_storing(false),  m_schema(0)
 	// Construct an empty CArchive object
 	{
-		m_sFileName.Empty();
-		m_mMode       = nil;
-		m_schema      = 0;
-		m_is_storing  = false;
 	}
 
 	//============================================================================
@@ -192,15 +189,13 @@ namespace Win32xx
 	// Return true if the archive opens without error, or false, otherwise.
 	// Does throw an exception if the schema cannot be written or read back.
 	{
-		assert(mode == CArchive::read || mode == CArchive::write);
-
 		// if the archive is open, close it
 		Close();
 
 		// Record the archive mode, even if the filename cannot be opened,
 		// for use in later determining error status of a subsequent
 		// de/serialization operation.
-		if ((m_mMode = mode) == read)
+		if ((m_mMode = mode) == load)
 		{
 			if (!m_file.Open(filename.c_str(), OPEN_EXISTING))
 			{
@@ -242,12 +237,11 @@ namespace Win32xx
 		if (m_file.GetHandle())
 		{
 			// flush if in write mode
-			if (m_mMode == write)
+			if (m_mMode == store)
 				m_file.Flush();
 			m_file.Close();
 		}
 
-		m_mMode = nil;
 		m_sFileName.Empty();
 	}
 
@@ -461,7 +455,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CArchive& CArchive::operator<<(LPCTSTR string)
+	inline void CArchive::WriteString(LPCTSTR string)
 	// Write the LPCTSTR string into the archive file. Throw an exception
 	// if an error occurs.
 	{
@@ -470,7 +464,6 @@ namespace Win32xx
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));
 		Write(string, size);
-		return *this;
 	}
 
 	//============================================================================
@@ -484,7 +477,7 @@ namespace Win32xx
 		Write(&size, sizeof(size));
 		Write(string.c_str(), size);
 		return *this;
-	}
+	} 
 
 	//============================================================================
 	inline CArchive& CArchive::operator<<(const POINT& pt)
@@ -669,16 +662,21 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CArchive& CArchive::operator>>(LPTSTR string)
-	// Read a TCHAR string from the archive and  store it in string.  Throw
-	// an exception if unable to do so correctly. Note: exceptions are thrown
+	inline LPTSTR CArchive::ReadString(LPTSTR string, UINT nMax)
+	// Reads at most nMax-1 TCHAR characters from the archive and store it in string.
+	// The string buffer provided must be be sized to hold at least nMax characters.
+	// Throw an exception if unable to do so correctly. Note: exceptions are thrown
 	// only on inability to read the recorded number of chars from the archive
 	// stream.
 	{
+		assert (nMax > 0);
 		UINT size;
 		Read(&size, sizeof(size));
+		size = MIN(size , (nMax -1) * sizeof(TCHAR));
+
 		Read(string, size);
-		return *this;
+		string[nMax-1] = _T('\0');
+		return string;
 	}
 
 	//============================================================================
@@ -744,7 +742,7 @@ namespace Win32xx
 
 	inline CArchive& CArchive::operator<<(const CObject& Ob)
 	{
-		((CObject)Ob).Serialize(*this);
+		((CObject&)Ob).Serialize(*this);
 		return *this;
 	}
 

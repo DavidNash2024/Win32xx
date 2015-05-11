@@ -81,17 +81,19 @@ BOOL CMainFrame::OnFileMRU(WPARAM wParam)
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	CString strMRUText = GetMRUEntry(nMRUIndex);
 
-	if (m_View.FileOpen(strMRUText))
+	if (GetDoc().FileOpen(strMRUText))
 		m_PathName = strMRUText;
 	else
 		RemoveMRUEntry(strMRUText);
+
+	GetView()->Invalidate();
 
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNew()
 {
-	m_View.ClearPoints();
+	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
 	return TRUE;
 }
@@ -104,7 +106,7 @@ BOOL CMainFrame::OnFileOpen()
 	if (!str.IsEmpty())
 	{
 		// Retrieve the PlotPoint data
-		if (m_View.FileOpen(str))
+		if (GetDoc().FileOpen(str))
 		{
 			// Save the filename
 			m_PathName = str;
@@ -114,6 +116,7 @@ BOOL CMainFrame::OnFileOpen()
 			m_PathName=_T("");
 	}
 
+	GetView()->Invalidate();
 	return TRUE;
 }
 
@@ -122,7 +125,7 @@ BOOL CMainFrame::OnFileSave()
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_PathName);
+		GetDoc().FileSave(m_PathName);
 
 	return TRUE;
 }
@@ -138,7 +141,7 @@ BOOL CMainFrame::OnFileSaveAs()
 		m_PathName = str;
 
 		// Save the file name
-		m_View.FileSave(str);
+		GetDoc().FileSave(str);
 		AddMRUEntry(str);
 	}
 
@@ -249,7 +252,7 @@ void CMainFrame::OnInitialUpdate()
 	// The second argument (if any) contains our file name.
 	if (args.size() > 1)
 	{
-		m_View.FileOpen(args[1]);
+		GetDoc().FileOpen(args[1]);
 	}
 }
 

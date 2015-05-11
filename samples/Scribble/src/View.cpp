@@ -3,7 +3,7 @@
 //  Definitions for the CView class
 
 #include "stdafx.h"
-#include "view.h"
+#include "ScribbleApp.h"
 #include "resource.h"
 
 
@@ -18,19 +18,24 @@ CView::~CView()
 {
 }
 
-void CView::ClearPoints()
-{
-	m_points.clear();
-	Invalidate();
-}
-
 void CView::DrawLine(int x, int y)
 {
 	CClientDC dcClient(*this);
-	dcClient.CreatePen(PS_SOLID, 1, m_points.back().color);
-	dcClient.MoveTo(m_points.back().x, m_points.back().y);
+	dcClient.CreatePen(PS_SOLID, 1, GetPoints().back().color);
+	dcClient.MoveTo(GetPoints().back().x, GetPoints().back().y);
 	dcClient.LineTo(x, y);
 }
+
+CDoc& CView::GetDoc()
+{
+	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
+	return Frame.GetDoc();
+}
+
+std::vector<PlotPoint>& CView::GetPoints()
+{ 
+	return GetDoc().GetPoints(); 
+}	
 
 void CView::OnDraw(CDC& dc)
 {
@@ -42,19 +47,22 @@ void CView::OnDraw(CDC& dc)
 	MemDC.CreateCompatibleBitmap(dc, Width, Height);
 	MemDC.FillRect(GetClientRect(), m_Brush);
 
-	if (m_points.size() > 0)
+	CPen pen;
+
+	if (GetPoints().size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
-		for (unsigned int i = 0 ; i < m_points.size(); i++)
+		for (int i = 0 ; i < GetPoints().size(); ++i)
 		{
+			pen.CreatePen(PS_SOLID, 1, GetPoints()[i].color);
+			MemDC.SelectObject(pen);
 
-			MemDC.CreatePen(PS_SOLID, 1, m_points[i].color);
 			if (bDraw)
-				MemDC.LineTo(m_points[i].x, m_points[i].y);
+				MemDC.LineTo(GetPoints()[i].x, GetPoints()[i].y);
 			else
-				MemDC.MoveTo(m_points[i].x, m_points[i].y);
+				MemDC.MoveTo(GetPoints()[i].x, GetPoints()[i].y);
 
-			bDraw = m_points[i].PenDown;
+			bDraw = GetPoints()[i].PenDown;
 		}
 	}
 
@@ -76,57 +84,11 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
-BOOL CView::FileOpen(LPCTSTR szFilename)
-{
-	// empty the PlotPoint vector
-	m_points.clear();
-
-	BOOL bResult = FALSE;
-
-	try
-	{
-		CArchive ar;
-		ar.Open(szFilename, CArchive::read);
-		ar >> *this;
-		bResult = TRUE;
-	}
-
-	catch (const CWinException &e)
-	{
-		// An exception occurred. Display the relevant information.
-		MessageBox(e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-		
-		m_points.clear();
-	}
-
-	Invalidate();
-	return bResult;
-}
-
-BOOL CView::FileSave(LPCTSTR szFilename)
-{
-	BOOL bResult = TRUE;
-
-	try
-	{
-		CArchive ar;
-		ar.Open(szFilename, CArchive::write);
-		ar << *this;
-	}
-	catch (const CWinException &e)
-	{
-		// An exception occurred. Display the relevant information.
-		MessageBox(e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
-	}
-
-	return bResult;
-}
-
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
  	// Capture mouse input.
  	SetCapture();
-	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
 
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
@@ -135,7 +97,7 @@ LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	//Release the capture on the mouse
 	ReleaseCapture();
-	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false, m_PenColor);
 
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
@@ -150,57 +112,10 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		TRACE(str);
 
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+		GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
 	}
 	
 	return FinalWindowProc(uMsg, wParam, lParam);
-}
-
-void CView::Serialize(CArchive &ar)
-// Uses CArchive to stream data to or from a file
-{
-
-	if (ar.IsStoring())
-	{
-		// Store the number of points
-		UINT nPoints = m_points.size();
-		ar << nPoints;
-		
-		// Store the PlotPoint data
-		std::vector<PlotPoint>::iterator iter;
-		for (iter = m_points.begin(); iter < m_points.end(); ++iter)
-		{
-			ar.Write( &(*iter), sizeof(PlotPoint) );
-		}
-	}
-	else
-	{
-		UINT nPoints;
-		PlotPoint pp = {0};
-		m_points.clear();
-
-		// Load the number of points
-		ar >> nPoints;
-
-		// Load the PlotPoint data
-		for (UINT u = 0; u < nPoints; ++u)
-		{
-			ar.Read(&pp, sizeof(PlotPoint));
-			m_points.push_back(pp);
-		}
-	}
-
-}
-
-void CView::StorePoint(int x, int y, bool PenDown)
-{
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
-	P1.color = m_PenColor;
-
-	m_points.push_back(P1); //Add the point to the vector
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -216,16 +131,4 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
-/*
-CArchive& operator<<(CArchive& ar, CView& v)
-{
-	v.Serialize(ar);
-	return ar;
-}
 
-CArchive&  operator>>(CArchive& ar, CView& v)
-{
-	v.Serialize(ar);
-	return ar;
-}
-*/
