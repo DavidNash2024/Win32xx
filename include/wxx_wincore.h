@@ -787,7 +787,7 @@ namespace Win32xx
 	inline const char * CWinException::what() const throw ()
 	{
 		// Sends the last error string to the debugger (typically displayed in the IDE's output window).
-		::OutputDebugString(_T("CWinException thrown"));
+		::OutputDebugString(_T("CWinException thrown\n"));
 		::OutputDebugString(m_szErrorString);
 		::OutputDebugString(m_pszText);
 		return "CWinException thrown";

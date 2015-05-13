@@ -89,7 +89,7 @@ namespace Win32xx
 
 		// construction and  destruction
 		CArchive();
-		CArchive(CFile& pFile, CArchive::mode nMode);
+		CArchive(LPCTSTR FileName, CArchive::mode nMode);
 		~CArchive();
 
 		// method members
@@ -117,6 +117,7 @@ namespace Win32xx
 		CArchive& operator<<(int i);
 		CArchive& operator<<(short w);
 		CArchive& operator<<(char ch);
+		CArchive& operator<<(wchar_t ch);  
 		CArchive& operator<<(unsigned u);
 		CArchive& operator<<(bool b);
 		CArchive& operator<<(const CString& s);
@@ -138,6 +139,7 @@ namespace Win32xx
 		CArchive& operator>>(int& i);
 		CArchive& operator>>(short& w);
 		CArchive& operator>>(char& ch);
+		CArchive& operator>>(wchar_t& ch);
 		CArchive& operator>>(unsigned& u);
 		CArchive& operator>>(bool& b);
 		CArchive& operator>>(CString& s);
@@ -173,6 +175,13 @@ namespace Win32xx
 	inline CArchive::CArchive() : m_mMode(load),  m_is_storing(false),  m_schema(0)
 	// Construct an empty CArchive object
 	{
+	}
+
+
+	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_is_storing(false),  m_schema(0)
+	// Construct an empty CArchive object
+	{
+		Open(FileName, Mode);
 	}
 
 	//============================================================================
@@ -257,7 +266,7 @@ namespace Win32xx
 		}
 
 		// read, simply and  in binary mode, the size into the lpBuf
-		if (size == 0  || (m_file.Read(lpBuf, size) != size) )
+		if ( m_file.Read(lpBuf, size) != size )
 		{
 			throw CWinException(_T("Archive read error"));
 		}
@@ -275,7 +284,7 @@ namespace Win32xx
 		}
 
 		// write size characters in lpBuf to the  file
-		if ((size == 0) || (!m_file.Write(lpBuf, size)) )
+		if ( !m_file.Write(lpBuf, size) )
 		{
 			throw CWinException(_T("Archive write error"));
 		}
@@ -430,6 +439,16 @@ namespace Win32xx
 	// error occurs.
 	{
 		ArchiveObject ob = {sizeof(c), &c};
+		*this << ob;
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(wchar_t ch) 
+	// Write the wchar_t ch into the archive file. Throw an exception if an
+	// error occurs.
+	{
+		ArchiveObject ob = {sizeof(ch), &ch};
 		*this << ob;
 		return *this;
 	}
@@ -642,6 +661,16 @@ namespace Win32xx
 	}
 
 	//============================================================================
+	inline CArchive& CArchive::operator>>(wchar_t& ch)
+	// Read a wchar_t from the archive and  store it in ch.  Throw an exception if
+	// unable to do so correctly.
+	{
+		ArchiveObject ob = {sizeof(ch), &ch};
+		*this >> ob;
+		return *this;
+	}
+
+	//============================================================================
 	inline CArchive& CArchive::operator>>(unsigned& u)
 	// Read an unsigned int from the archive and  store it in u.  Throw an
 	// exception if unable to do so correctly.
@@ -663,8 +692,9 @@ namespace Win32xx
 
 	//============================================================================
 	inline LPTSTR CArchive::ReadString(LPTSTR string, UINT nMax)
+	// The size (in characters) of string provided must be nMax or greater.
 	// Reads at most nMax-1 TCHAR characters from the archive and store it in string.
-	// The string buffer provided must be be sized to hold at least nMax characters.
+	// The stored string is NULL terminated.
 	// Throw an exception if unable to do so correctly. Note: exceptions are thrown
 	// only on inability to read the recorded number of chars from the archive
 	// stream.

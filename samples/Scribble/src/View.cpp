@@ -52,7 +52,7 @@ void CView::OnDraw(CDC& dc)
 	if (GetPoints().size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
-		for (int i = 0 ; i < GetPoints().size(); ++i)
+		for (UINT i = 0 ; i < GetPoints().size(); ++i)
 		{
 			pen.CreatePen(PS_SOLID, 1, GetPoints()[i].color);
 			MemDC.SelectObject(pen);
