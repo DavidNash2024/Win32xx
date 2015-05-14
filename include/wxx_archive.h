@@ -88,17 +88,13 @@ namespace Win32xx
 		enum mode {store = 0, load = 1};
 
 		// construction and  destruction
-		CArchive();
 		CArchive(LPCTSTR FileName, CArchive::mode nMode);
 		~CArchive();
 
 		// method members
-		void    Close();
 		UINT 	GetObjectSchema();
 		bool 	IsLoading() const;
-		bool 	IsOpen() const;
 		bool 	IsStoring() const;
-		bool	Open(CString filename, CArchive::mode);
 		void 	Read(void* lpBuf, UINT size);
 		LPTSTR	ReadString(LPTSTR lpsz, UINT nMax);
 		void 	SetObjectSchema(UINT nSchema);
@@ -158,7 +154,7 @@ namespace Win32xx
 
 		// private data members
 		CFile    m_file;        // archive file FILE, initially closed
-		mode	 m_mMode;
+	//	mode	 m_mMode;
 		bool     m_is_storing;  // archive direction switch
 		UINT     m_schema;      // archive version schema
 
@@ -172,86 +168,50 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	inline CArchive::CArchive() : m_mMode(load),  m_is_storing(false),  m_schema(0)
+	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_schema(0)
 	// Construct an empty CArchive object
 	{
-	}
-
-
-	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_is_storing(false),  m_schema(0)
-	// Construct an empty CArchive object
-	{
-		Open(FileName, Mode);
-	}
-
-	//============================================================================
-	inline CArchive::~CArchive()
-	// Destroy CArchive object.
-	{
-		Close();
-	}
-
-	//============================================================================
-	inline bool CArchive::Open(CString filename, CArchive::mode mode)
-	// Open the archive filename in the given CArchive::mode.
-	// The mode can be read or write.
-	// Return true if the archive opens without error, or false, otherwise.
-	// Does throw an exception if the schema cannot be written or read back.
-	{
-		// if the archive is open, close it
-		Close();
-
-		// Record the archive mode, even if the filename cannot be opened,
-		// for use in later determining error status of a subsequent
-		// de/serialization operation.
-		if ((m_mMode = mode) == load)
+		if (Mode == load)
 		{
-			if (!m_file.Open(filename.c_str(), OPEN_EXISTING))
+			// Open the archive for loading
+			if (!m_file.Open(FileName, OPEN_EXISTING))
 			{
-				return false;
+				throw (CWinException(_T("Failed to open file")));
 			}
 
 			m_is_storing = false;
-			m_sFileName = filename;
 
 			// recover schema of serialized configuration
 			*this >> m_schema;
 		}
 		else
 		{
-			// if filename not given, use name used for reading
-			CString fn = filename.GetLength() == 0 ? m_sFileName : filename;
-
-			// open the file, simply, in binary mode
-			if (!(m_file.Open(fn.c_str(), CREATE_ALWAYS)))
+			// Open the archive for storing
+			if (!(m_file.Open(FileName, CREATE_ALWAYS)))
 			{
-				return false;
+				throw (CWinException(_T("Failed to open file")));
 			}
 
 			m_is_storing = true;
-			m_sFileName = filename;
 
-			// record schema of current configuration if at beginning
+			// record schema of current configuration
 			*this << m_schema;
 		}
-
-		return true;
 	}
 
 	//============================================================================
-	inline void CArchive::Close()
-	// Close the CArchive object: close the file and  delete the buffer.
+	inline CArchive::~CArchive()
+	// Destroy CArchive object.
 	{
-		 // if the archive is open
+		// if the file is open
 		if (m_file.GetHandle())
 		{
 			// flush if in write mode
-			if (m_mMode == store)
+			if (IsStoring())
 				m_file.Flush();
+			
 			m_file.Close();
 		}
-
-		m_sFileName.Empty();
 	}
 
 	//============================================================================
@@ -260,11 +220,6 @@ namespace Win32xx
 	// Return on success and  the number of bytes actually read is size.
 	// Throw an exception if not successful.
 	{
-		if (!IsOpen())
-		{
-			throw CWinException(_T("Archive not opened for reading"));
-		}
-
 		// read, simply and  in binary mode, the size into the lpBuf
 		if ( m_file.Read(lpBuf, size) != size )
 		{
@@ -278,11 +233,6 @@ namespace Win32xx
 	// return successfully if the number of characters actually written is
 	// size. Throw an exception if unsuccessful.
 	{
-		if (!IsOpen())
-		{
-			throw CWinException(_T("Archive not opened for writing"));
-		}
-
 		// write size characters in lpBuf to the  file
 		if ( !m_file.Write(lpBuf, size) )
 		{
@@ -316,13 +266,6 @@ namespace Win32xx
 	// being loaded.
 	{
 		 return !m_is_storing;
-	}
-
-	//============================================================================
-	inline bool CArchive::IsOpen() const
-	// Return the status of the archive object file, true if it is open.
-	{
-		return (m_file.GetHandle() != NULL);
 	}
 
 	//============================================================================
@@ -475,8 +418,8 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CArchive::WriteString(LPCTSTR string)
-	// Write the LPCTSTR string into the archive file. Throw an exception
-	// if an error occurs.
+	// Write the LPCTSTR string into the archive file. The string must
+	// be null terminated. Throw an exception if an error occurs.
 	{
 		UINT size = (lstrlen(string) + 1) * sizeof(TCHAR);
 

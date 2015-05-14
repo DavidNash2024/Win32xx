@@ -5,6 +5,7 @@
 #define MAINFRM_H
 
 #include "View.h"
+#include "Doc.h"
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
@@ -12,6 +13,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
+	CDoc& GetDoc() {return m_Doc; }
 
 	BOOL	OnFileExit();
 	BOOL	OnFileOpen();
@@ -29,6 +32,7 @@ protected:
 
 private:
 	CView m_View;
+	CDoc m_Doc;
 };
 
 #endif //MAINFRM_H

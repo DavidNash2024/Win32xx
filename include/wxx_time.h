@@ -978,8 +978,8 @@ namespace Win32xx
 	//	unable to do so correctly.
 	{
 		UINT size;
-		ar.Read(&size, sizeof(size));
-		if (size != sizeof(CTime))
+		ar.Read(&size, sizeof(ULONGLONG));
+		if (size != sizeof(ULONGLONG))
 		{
 			throw CWinException(TEXT("Failed to read CTime from archive."));
 		}
@@ -1269,7 +1269,7 @@ namespace Win32xx
 	{
 		UINT size;
 		ar.Read(&size, sizeof(size));
-		if (size != sizeof(CTimeSpan))
+		if (size != sizeof(ULONGLONG))
 		{
 			throw CWinException(_T("Failed to read CTimeSpan from archive"));
 		}
@@ -1283,7 +1283,7 @@ namespace Win32xx
 	//	Write the time span object s into the archive file. Throw an exception
 	//	if an error occurs.
 	{
-		UINT size = sizeof(s);
+		UINT size = sizeof(ULONGLONG);
 		ar.Write(&size, sizeof(size));
 		ar.Write(&s, size);
 		return ar;

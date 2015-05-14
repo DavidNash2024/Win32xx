@@ -187,6 +187,9 @@ namespace Win32xx {}
   using namespace Win32xx;
 #endif
 
+// Version macro
+#define _WIN32XX_VERSION 0x0800 // Win32++ version 8.00
+
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
   #define TLS_OUT_OF_INDEXES ((DWORD_PTR) -1)
