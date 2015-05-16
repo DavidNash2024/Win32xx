@@ -88,7 +88,7 @@ namespace Win32xx
 		enum mode {store = 0, load = 1};
 
 		// construction and  destruction
-		CArchive(LPCTSTR FileName, CArchive::mode nMode);
+		CArchive(LPCTSTR FileName, mode nMode);
 		~CArchive();
 
 		// method members
@@ -113,7 +113,6 @@ namespace Win32xx
 		CArchive& operator<<(int i);
 		CArchive& operator<<(short w);
 		CArchive& operator<<(char ch);
-		CArchive& operator<<(wchar_t ch);  
 		CArchive& operator<<(unsigned u);
 		CArchive& operator<<(bool b);
 		CArchive& operator<<(const CString& s);
@@ -122,6 +121,10 @@ namespace Win32xx
 		CArchive& operator<<(const SIZE& sz);
 		CArchive& operator<<(const ArchiveObject& ao);
 		CArchive& operator<<(const CObject& Ob);
+#if !defined (_MSC_VER) ||  ( _MSC_VER > 1310 )
+		// wchar_t is not an a built-in type on older MS compilers
+		CArchive& operator<<(wchar_t ch);
+#endif
 
 		// extraction operations
 		CArchive& operator>>(BYTE& by);
@@ -135,7 +138,6 @@ namespace Win32xx
 		CArchive& operator>>(int& i);
 		CArchive& operator>>(short& w);
 		CArchive& operator>>(char& ch);
-		CArchive& operator>>(wchar_t& ch);
 		CArchive& operator>>(unsigned& u);
 		CArchive& operator>>(bool& b);
 		CArchive& operator>>(CString& s);
@@ -144,17 +146,18 @@ namespace Win32xx
 		CArchive& operator>>(SIZE& sz);
 		CArchive& operator>>(ArchiveObject& ao);
 		CArchive& operator>>(CObject& Ob);
+#if !defined (_MSC_VER) ||  ( _MSC_VER > 1310 )
+		// wchar_t is not an a built-in type on older MS compilers
+		CArchive& operator>>(wchar_t& ch);
+#endif
 
-		// public data members
-		CString	m_sFileName;
 
 	private:
 		CArchive(const CArchive&);				// Disable copy construction
 		CArchive& operator = (const CArchive&); // Disable assignment operator
 
 		// private data members
-		CFile    m_file;        // archive file FILE, initially closed
-	//	mode	 m_mMode;
+		CFile    m_file;        // archive file FILE
 		bool     m_is_storing;  // archive direction switch
 		UINT     m_schema;      // archive version schema
 
@@ -169,14 +172,14 @@ namespace Win32xx
 {
 
 	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_schema(0)
-	// Construct an empty CArchive object
+	// Construct a CArchive object
 	{
 		if (Mode == load)
 		{
 			// Open the archive for loading
 			if (!m_file.Open(FileName, OPEN_EXISTING))
 			{
-				throw (CWinException(_T("Failed to open file")));
+				throw (CWinException(_T("Failed to open archive")));
 			}
 
 			m_is_storing = false;
@@ -189,7 +192,7 @@ namespace Win32xx
 			// Open the archive for storing
 			if (!(m_file.Open(FileName, CREATE_ALWAYS)))
 			{
-				throw (CWinException(_T("Failed to open file")));
+				throw (CWinException(_T("Failed to save to archive")));
 			}
 
 			m_is_storing = true;
@@ -209,7 +212,7 @@ namespace Win32xx
 			// flush if in write mode
 			if (IsStoring())
 				m_file.Flush();
-			
+
 			m_file.Close();
 		}
 	}
@@ -386,8 +389,11 @@ namespace Win32xx
 		return *this;
 	}
 
+// wchar_t is not an a built-in type on older MS compilers
+#if !defined (_MSC_VER) ||  ( _MSC_VER > 1310 )
+	
 	//============================================================================
-	inline CArchive& CArchive::operator<<(wchar_t ch) 
+	inline CArchive& CArchive::operator<<(wchar_t ch)
 	// Write the wchar_t ch into the archive file. Throw an exception if an
 	// error occurs.
 	{
@@ -395,6 +401,7 @@ namespace Win32xx
 		*this << ob;
 		return *this;
 	}
+#endif
 
 	//============================================================================
 	inline CArchive& CArchive::operator<<(unsigned u)
@@ -439,7 +446,7 @@ namespace Win32xx
 		Write(&size, sizeof(size));
 		Write(string.c_str(), size);
 		return *this;
-	} 
+	}
 
 	//============================================================================
 	inline CArchive& CArchive::operator<<(const POINT& pt)
@@ -603,6 +610,9 @@ namespace Win32xx
 		return *this;
 	}
 
+// wchar_t is not an a built-in type on older MS compilers
+#if !defined (_MSC_VER) ||  ( _MSC_VER > 1310 )
+
 	//============================================================================
 	inline CArchive& CArchive::operator>>(wchar_t& ch)
 	// Read a wchar_t from the archive and  store it in ch.  Throw an exception if
@@ -612,6 +622,8 @@ namespace Win32xx
 		*this >> ob;
 		return *this;
 	}
+
+#endif
 
 	//============================================================================
 	inline CArchive& CArchive::operator>>(unsigned& u)

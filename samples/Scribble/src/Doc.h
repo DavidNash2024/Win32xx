@@ -5,6 +5,8 @@
 
 #include "View.h"
 
+// CDoc holds the application's data. It inherits from CObject
+// to perform data serialization to and from the archive.
 
 class CDoc : public CObject
 {

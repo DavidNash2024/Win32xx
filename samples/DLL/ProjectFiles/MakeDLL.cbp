@@ -157,6 +157,7 @@
 					<Add library="Uuid" />
 					<Add library="WS2_32" />
 					<Add library="gdi32" />
+					<Add library="comdlg32" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -182,6 +183,7 @@
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
 					<Add library="gdi32" />
+					<Add library="comdlg32" />
 				</Linker>
 			</Target>
 		</Build>
