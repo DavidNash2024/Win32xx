@@ -1,0 +1,161 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html><head>
+<meta http-equiv="content-type" content="text/html; charset=windows-1252">
+<title>Compiled HTML Help for MinGW Win32 Application</title>
+</head>
+
+<body>
+<h2>Adding Compiled HTML Help to a MinGW Win32 Application</h2>
+<ul>
+
+  <li><h3>Get MS HTML Help Workshop</h3>
+    <ul>
+      <li>Go to <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/htmlhelp/html/hwmicrosofthtmlhelpdownloads.asp">MSDN</a>, download (free) the help workshop and install.</li>
+      <li>In C:\Program Files\HTML Help Workshop\include there's a header file htmlhelp.h. Put a copy in C:\MinGW\include.</li>
+      <li>In C:\Program Files\HTML Help Workshop\lib there's a library 
+file htmlhelp.lib. Put a copy in C:\MinGW\lib under the name 
+libhtmlhelp.a. Renaming to the MinGW convention is not actually 
+necessary, but it makes the nature of the file clearer. As found by the 
+MinGW project staff, this file is a static library that calls 
+LoadLibrary/GetProcAddress to access the file 
+C:\WINDOWS\SYSTEM32\hhctrl.ocx, not an import library, and can be linked
+ by ld.</li>
+    </ul><br>
+  </li>
+  
+  <li><h3>Create the help file</h3>
+<p>No directions will be given here for producing a compiled help file 
+with the workshop. At the simplest, a single-page HTML file can be 
+"compressed" in the Workshop, omitting contents, index and word search. 
+(The CHM for a simple HTML file was bigger than the original, presumably
+ from overhead in the CHM format.)</p>
+  </li>
+  
+  <li><h3>Include a Help Menu in your sources</h3>
+    <ul>
+      <li><h4>WinMain and Window Procedure</h4>
+<pre>#include &lt;htmlhelp.h&gt;          // the HTML Help Workshop header
+#include "resource.h"          // resource header, see below
+TCHAR szAppName[]= "MYPROG";   // initialize pointer
+...
+     wndclass.lpszMenuName  =  szAppName ;
+...
+     hwnd = CreateWindow (...
+...
+LRESULT CALLBACK WndProc (HWND hwnd, UINT message, WPARAM wParam,
+                          LPARAM lParam)
+{
+     static HWND        hwndHelp ;
+     
+     switch (message)
+     {
+...		 
+     case WM_COMMAND:
+          switch (LOWORD (wParam))
+          {
+... messages from other menus, perhaps
+                    // Messages from Help menu
+               
+          case IDM_HELP:
+               hwndHelp = HtmlHelp (hwnd, "c:\\...\\myprog.chm", 
+                                (UINT)NULL, (DWORD)NULL) ;
+               // See the HTML Help API Reference help topic in HTML Help Workshop
+               return 0 ;
+... other items on the Help menu, perhaps (e.g., About)               
+          }
+          break ;
+               
+     }
+     return DefWindowProc (hwnd, message, wParam, lParam) ;
+}
+
+</pre>
+<p>The fragments above assume a C source file with WinMain and window 
+procedure WndProc, and presume familiarity with basic WinMain/WndProc 
+concepts, particularly the message loop and message handling. The 
+simplest way to make the menu resource defined in the resource file 
+below available is to use the same text string for the menu identifier 
+there as used for as the application name in the program. In the example
+ above szAppName is made a pointer to the string "MYPROG" and used to 
+intialize member lpszMenuName of the window class. Pointer szAppName is 
+available for other uses, including initializing member lpszClassName 
+for instance. Of course for only identifying the menu, you could instead
+ use</p>
+<pre>     wndclass.lpszMenuName  =  "MYPROG" ;</pre>
+<p>and dispense with szAppName. Petzold's <i>Programming Windows</i>, 
+5th edition, pp. 441-442 and sample program MENUDEMO.C, discusses in 
+detail this and other methods of making the menu available to your 
+program. HWND hwnd is the handle to the main window created in WinMain. A
+ call to function HtmlHelp (described in the HTML Help Workshop help: 
+HTML Help References/HTML Help API Reference) opens the compiled HTML 
+help. The four function arguments are the handle to the calling (main) 
+window, the path of the compiled help file, and two others that allow 
+opening the help at particular topics. Here, the help file is a single 
+page of HTML and these arguments are set to values that the compiler 
+doesn't fuss at. If you create a more ambitious help file, you would 
+presumably know how to use the features provided by the last two 
+arguments. The C string for the path conforms to C conventions, so the 
+Windows backslash directory separators have to be doubled. To make sure 
+the mechanics of including a help file are working before investing a 
+lot of time creating the help file, you could just name one of the 
+hundreds of CHM files on current versions of Windows.</p>
+      </li>
+      <li><h4>Resource File</h4>
+<pre>#include &lt;winresrc.h&gt;
+#include "resource.h"  // resource header, see below
+/////////////////////////////////////////////////////////////////////////////
+// Menu
+
+MYPROG MENU DISCARDABLE 
+{
+    POPUP "&amp;Help"
+    {
+        MENUITEM "&amp;Help",                       IDM_HELP
+    }
+}
+
+</pre>
+<p>What a pain! another syntax to learn if you're doing it all yourself.
+ Of course, IDEs do resource files (and their headers) automatically. 
+This is a resource file for a menu bar with only a Help pop-up on it and
+ with Help as the only menu item on the pop-up. Integrate this into a 
+more general menu with File, etc., if there is one. MSDN, of course, 
+documents <a href="http://msdn.microsoft.com/library/default.asp?url=/library/en-us/tools/tools/about_resource_files.asp">resource files</a>, and many examples are to be found in Petzold and no doubt on line.</p>
+      </li>
+       <li><h4>Resource Header "resource.h"</h4>
+<pre>#define IDM_HELP                        40005
+</pre>
+<p>Here of course the actual value that IDM_HELP is a mnemonic for is defined. In Petzold's <i>Programming Windows</i>
+ where the resource files and headers are generated by MSVC, values 
+start with 40001. Apparently, 40000 and up is a safe range for these 
+values.  The resource and header files above were chopped down from a 
+more general menu, so that's why the value is 40005.</p>
+      </li>
+    </ul>
+  </li>
+  
+  <li><h3>Build your application</h3>
+<p>Here's a makefile to build an application myprog where Cmyprog.c is 
+the all the C source code (including WinMain and the window procedure), 
+Rmyprog.rc is the resource file, and resource.h is the resource header.</p>
+<pre>LIBS = -lhtmlhelp -lcomctl32 -lcomdlg32 -lwinmm -ladvapi32 -lwinspool
+all: myprog.exe
+myprog.exe: Cmyprog.o Rmyprog.o
+	gcc -mwindows -o myprog.exe Cmyprog.o Rmyprog.o $(LIBS)
+Cmyprog.o: Cmyprog.c
+	gcc -c -o Cmyprog.o Cmyprog.c
+Rmyprog.o: Rmyprog.rc resource.h
+	windres Rmyprog.rc Rmyprog.o
+</pre>
+<p>It's possible that some of the WINAPI libraries in LIBS are 
+unnecessary when the required -mwindows flag is invoked. (This is John 
+Kopplin's belt-and-suspenders list for compiling examples in Petzold's <i>Programming Windows</i>.) Including -lhtmlhelp is vital, of course. Or, just from the DOS prompt:</p>
+<pre>gcc -c -o Cmyprog.o Cmyprog.c
+windres Rmyprog.rc Rmyprog.o
+gcc -mwindows -o myprog.exe Cmyprog.o Rmyprog.o -lhtmlhelp -lcomctl32 -lcomdlg32 -lwinmm -ladvapi32 -lwinspool
+</pre>
+  </li>
+</ul>
+
+
+</body></html>
