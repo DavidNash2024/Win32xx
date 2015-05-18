@@ -365,11 +365,7 @@ Serialize(CArchive &ar)                                               	/*
 
         Called to serialize or deserialize the view to and  from the archive ar,
         depending on the sense of IsStoring().  Scrollbar parameters are
-        considered part of the view, and  are archived here. If the archive
-        has encountered errors at entry, do not execute. Also, if invoked in
-        the read mode but the archive is not opened for reading, do not execute.
-        If invoked in the write mode, but the archive is not open, throw an
-        exception.
+        considered part of the view, and  are archived here. I
 *-----------------------------------------------------------------------------*/
 {
 	  // perform loading or storing

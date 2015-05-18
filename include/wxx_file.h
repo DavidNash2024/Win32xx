@@ -47,6 +47,20 @@ namespace Win32xx
 	class CFile
 	{
 	public:
+
+		enum OpenFlags
+		{
+			modeCreate =        CREATE_ALWAYS,	// Creates a new file. Truncates existing file to length 0.
+			modeNoTruncate =    OPEN_ALWAYS, // Creates a new file or opens an existing one.
+			shareExclusive =    0x0010,	// Denies read and write access to all others.
+			shareDenyWrite =    0x0020,	// Denies write access to all others.
+			shareDenyRead =     0x0030,	// Denies read access to all others.
+			shareDenyNone =     0x0040,	// No sharing restrictions.
+			modeRead =          0x0100,	// Requests read access only.
+			modeWrite =         0x0200,	// Requests write access only.
+			modeReadWrite =     0x0300,	// Requests read and write access.	
+		};
+	
 		CFile();
 		CFile(HANDLE hFile);
 		CFile(LPCTSTR pszFileName, UINT nOpenFlags);
@@ -78,7 +92,7 @@ namespace Win32xx
 		virtual void SetFilePath(LPCTSTR pszNewName);
 		virtual BOOL SetLength(ULONGLONG NewLen);
 		virtual BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
-		virtual BOOL Write(const void* pBuf, UINT nCount);
+		virtual void Write(const void* pBuf, UINT nCount);
 
 	private:
 		CFile(const CFile&);				// Disable copy construction
@@ -104,11 +118,23 @@ namespace Win32xx
 	}
 
 	inline CFile::CFile(LPCTSTR pszFileName, UINT nOpenFlags) : m_hFile(0)
-	//  Possible nOpenFlag values:  CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING
+	// Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
+	// Default value: OPEN_EXISTING | modeReadWrite
+	// 
+	// The following modes are also supported:
+	//	modeCreate		Creates a new file. Truncates an existing file to length 0.
+	//	modeNoTruncate	Creates a a new file, or opens an existing one.
+	//	modeRead		Requests read access only.
+	//	modeWrite		Requests write access only.
+	//	modeReadWrite	Requests read and write access.
+	//	shareExclusive	Denies read and write access to all others.
+	//	shareDenyWrite	Denies write access to all others.
+	//	shareDenyRead	Denies read access to all others.
+	//	shareDenyNone	No sharing restrictions.
 	{
 		assert(pszFileName);
-		Open(pszFileName, nOpenFlags);
-		assert(m_hFile);
+		if (!Open(pszFileName, nOpenFlags))
+			throw CWinException(_T("Failed to open file"));
 	}
 
 	inline CFile::~CFile()
@@ -204,11 +230,46 @@ namespace Win32xx
 
 	inline BOOL CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
 	// Prepares a file to be written to or read from.
-	// Possible nOpenFlag values:  CREATE_ALWAYS, CREATE_NEW, OPEN_ALWAYS, OPEN_EXISTING, TRUNCATE_EXISTING
+	// Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
+	// Default value: OPEN_EXISTING | modeReadWrite
+	// 
+	// The following modes are also supported:
+	//	modeCreate		Creates a new file. Truncates an existing file to length 0.
+	//	modeNoTruncate	Creates a a new file, or opens an existing one.
+	//	modeRead		Requests read access only.
+	//	modeWrite		Requests write access only.
+	//	modeReadWrite	Requests read and write access.
+	//	shareExclusive	Denies read and write access to all others.
+	//	shareDenyWrite	Denies write access to all others.
+	//	shareDenyRead	Denies read access to all others.
+	//	shareDenyNone	No sharing restrictions.
 	{
 		if (m_hFile != 0) Close();
 
-		m_hFile = ::CreateFile(pszFileName, GENERIC_READ | GENERIC_WRITE, 0, NULL, nOpenFlags, FILE_ATTRIBUTE_NORMAL, NULL);
+		DWORD dwAccess = 0;
+		switch (nOpenFlags & 0xF)
+		{
+		case modeRead:			dwAccess = GENERIC_READ;	break;
+		case modeWrite:			dwAccess = GENERIC_WRITE;	break;
+		case modeReadWrite:		dwAccess = GENERIC_READ | GENERIC_WRITE; break;
+		default:				dwAccess = GENERIC_READ | GENERIC_WRITE; break;
+		}
+
+		DWORD dwShare = 0;
+		switch (nOpenFlags & 0xF0)
+		{
+		case shareExclusive:	dwShare = 0; break;
+		case shareDenyWrite:	dwShare = FILE_SHARE_READ;	break;
+		case shareDenyRead:		dwShare = FILE_SHARE_WRITE; break;
+		case shareDenyNone:		dwShare = FILE_SHARE_READ | FILE_SHARE_WRITE; break;
+		default:                dwShare = 0; break;
+		}
+
+		DWORD dwCreate = nOpenFlags & 0xF;
+		if (dwCreate & OPEN_ALWAYS) nOpenFlags = OPEN_ALWAYS;
+		if (dwCreate == 0) dwCreate = OPEN_EXISTING;
+
+		m_hFile = ::CreateFile(pszFileName, dwAccess, dwShare, NULL, dwCreate, FILE_ATTRIBUTE_NORMAL, NULL);
 
 		if (INVALID_HANDLE_VALUE == m_hFile)
 		{
@@ -260,10 +321,14 @@ namespace Win32xx
 	// Reads from the file, storing the contents in the specified buffer.
 	{
 		assert(m_hFile);
+
+		if (nCount == 0) return 0;
+
+		assert(pBuf);
 		DWORD dwRead = 0;
 
 		if (!::ReadFile(m_hFile, pBuf, nCount, &dwRead, NULL))
-			dwRead = 0;
+			throw CWinException(_T("Failed to read from file"));
 
 		return dwRead;
 	}
@@ -382,16 +447,20 @@ namespace Win32xx
 		return ::UnlockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh);
 	}
 
-	inline BOOL CFile::Write(const void* pBuf, UINT nCount)
+	inline void CFile::Write(const void* pBuf, UINT nCount)
 	// Writes the specified buffer to the file.
 	{
 		assert(m_hFile);
-		DWORD dwWritten = 0;
-		BOOL bResult = ::WriteFile(m_hFile, pBuf, nCount, &dwWritten, NULL);
-		if (dwWritten != nCount)
-			bResult = FALSE;
 
-		return bResult;
+		if (nCount == 0) return;
+		
+		assert(pBuf);
+		DWORD dwWritten = 0;
+		if (!::WriteFile(m_hFile, pBuf, nCount, &dwWritten, NULL))
+			throw (_T("Failed to write to file"));
+		
+		if (dwWritten != nCount)
+			throw(_T("Failed to write to file"));
 	}
 
 

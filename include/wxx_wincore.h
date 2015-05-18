@@ -188,7 +188,7 @@ namespace Win32xx {}
 #endif
 
 // Version macro
-#define _WIN32XX_VERSION 0x0800 // Win32++ version 8.00
+#define _WIN32XX_VER 0x0800		// Win32++ version 8.0.0
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
@@ -796,6 +796,9 @@ namespace Win32xx
 		return "CWinException thrown";
 	}
 
+	///////////////////////////////////////
+	// Definitions for the CObject class
+	//
 	inline void CObject::Serialize(CArchive& /* ar */ )
 	{
 	

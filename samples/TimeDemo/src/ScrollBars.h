@@ -67,10 +67,9 @@ ScrollLimits : public CObject    					/*
 		ScrollLimits(UINT a, UINT b, UINT c, UINT d)
 		    {m_h_min = a; m_h_max = b; m_v_min = c; m_v_max = d;}
 
-		friend CArchive& operator<<(CArchive&, ScrollLimits&);
-		friend CArchive& operator>>(CArchive&, ScrollLimits&);
+		virtual	void Serialize(CArchive &ar);
 
-		  // member data
+		  // public member data
 		UINT m_h_min;
 		UINT m_h_max;
 		UINT m_v_min;
@@ -91,9 +90,9 @@ ScrollIncrements : public CObject                          		/*
 		ScrollIncrements(UINT a, UINT b, UINT c, UINT d)
 		    {m_h_line = a; m_h_page = b; m_v_line = c; m_v_page = d;}
 
-		friend CArchive& operator<<(CArchive&, ScrollIncrements&);
-		friend CArchive& operator>>(CArchive&, ScrollIncrements&);
+	virtual	void Serialize(CArchive &ar);
 
+		  // public member data
 		UINT m_h_line;
 		UINT m_h_page;
 		UINT m_v_line;

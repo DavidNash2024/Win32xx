@@ -88,6 +88,7 @@ namespace Win32xx
 		enum mode {store = 0, load = 1};
 
 		// construction and  destruction
+		CArchive(CFile& File, mode Mode);
 		CArchive(LPCTSTR FileName, mode nMode);
 		~CArchive();
 
@@ -157,9 +158,10 @@ namespace Win32xx
 		CArchive& operator = (const CArchive&); // Disable assignment operator
 
 		// private data members
-		CFile    m_file;        // archive file FILE
-		bool     m_is_storing;  // archive direction switch
-		UINT     m_schema;      // archive version schema
+		CFile*	m_pFile;				// archive file FILE
+		bool	m_IsStoring;		// archive direction switch
+		UINT	m_Schema;			// archive version schema
+		bool	m_IsFileManaged;	// delete the CFile pointer in destructor;
 
 	};
 
@@ -170,35 +172,59 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
-	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_schema(0)
-	// Construct a CArchive object
+	inline CArchive::CArchive(CFile& File, mode Mode) : m_Schema(0), m_IsFileManaged(false)
 	{
+		m_pFile = &File;
+
 		if (Mode == load)
 		{
-			// Open the archive for loading
-			if (!m_file.Open(FileName, OPEN_EXISTING))
-			{
-				throw (CWinException(_T("Failed to open archive")));
-			}
-
-			m_is_storing = false;
+			m_IsStoring = false;
 
 			// recover schema of serialized configuration
-			*this >> m_schema;
+			*this >> m_Schema;
 		}
 		else
 		{
-			// Open the archive for storing
-			if (!(m_file.Open(FileName, CREATE_ALWAYS)))
-			{
-				throw (CWinException(_T("Failed to save to archive")));
-			}
-
-			m_is_storing = true;
+			m_IsStoring = true;
 
 			// record schema of current configuration
-			*this << m_schema;
+			*this << m_Schema;
+		}
+	}
+
+	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_Schema(0), m_pFile(0)
+	// Construct a CArchive object
+	{
+		m_IsFileManaged = true;
+
+		try
+		{
+			if (Mode == load)
+			{	
+				// Open the archive for loading
+				m_pFile = new CFile(FileName, CFile::modeRead);	
+				m_IsStoring = false;
+
+				// recover schema of serialized configuration
+				*this >> m_Schema;
+			}
+			else
+			{
+
+				// Open the archive for storing
+				m_pFile = new CFile(FileName, CFile::modeCreate);
+				m_IsStoring = true;
+
+				// record schema of current configuration
+				*this << m_Schema;
+			}
+		}
+
+		catch(...)
+		{
+			delete m_pFile;
+			m_pFile = 0;
+			throw;	// Rethrow exception
 		}
 	}
 
@@ -207,13 +233,18 @@ namespace Win32xx
 	// Destroy CArchive object.
 	{
 		// if the file is open
-		if (m_file.GetHandle())
+		if (m_pFile->GetHandle())
 		{
 			// flush if in write mode
 			if (IsStoring())
-				m_file.Flush();
+				m_pFile->Flush();
 
-			m_file.Close();
+			m_pFile->Close();
+		}
+
+		if (m_IsFileManaged)
+		{
+			delete m_pFile;
 		}
 	}
 
@@ -224,10 +255,7 @@ namespace Win32xx
 	// Throw an exception if not successful.
 	{
 		// read, simply and  in binary mode, the size into the lpBuf
-		if ( m_file.Read(lpBuf, size) != size )
-		{
-			throw CWinException(_T("Archive read error"));
-		}
+		m_pFile->Read(lpBuf, size);
 	}
 
 	//============================================================================
@@ -237,10 +265,7 @@ namespace Win32xx
 	// size. Throw an exception if unsuccessful.
 	{
 		// write size characters in lpBuf to the  file
-		if ( !m_file.Write(lpBuf, size) )
-		{
-			throw CWinException(_T("Archive write error"));
-		}
+		m_pFile->Write(lpBuf, size);
 	}
 
 	//============================================================================
@@ -250,7 +275,7 @@ namespace Win32xx
 	// are several versions of the serialized data to be accommodated
 	// by the application.
 	{
-		return m_schema;
+		return m_Schema;
 	}
 
 	//============================================================================
@@ -260,7 +285,7 @@ namespace Win32xx
 	// are several versions of the serialized data to be accommodated
 	// by the application.
 	{
-		m_schema = nSchema;
+		m_Schema = nSchema;
 	}
 
 	//============================================================================
@@ -268,7 +293,7 @@ namespace Win32xx
 	// Return the current sense of serialization, true if the archive is
 	// being loaded.
 	{
-		 return !m_is_storing;
+		 return !m_IsStoring;
 	}
 
 	//============================================================================
@@ -276,7 +301,7 @@ namespace Win32xx
 	// Return the current sense of serialization, true if the archive is
 	// being stored.
 	{
-		return m_is_storing;
+		return m_IsStoring;
 	}
 
 	//============================================================================

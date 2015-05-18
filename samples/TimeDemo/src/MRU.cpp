@@ -194,9 +194,7 @@ Serialize(CArchive &ar)                                               	/*
 
 	Serialize or deserialize the MRU list to from the archive ar, depending
 	on the sense of IsStoring().   If the archive has encountered errors at
-	entry, do not execute. Also, if invoked in the read mode but the archive
-	is not opened for reading, do not execute. If invoked in the write mode,
-	but the archive is not open, throw an exception.
+	entry, do not execute. 
 *-----------------------------------------------------------------------------*/
 {
 	  // perform loading or storing

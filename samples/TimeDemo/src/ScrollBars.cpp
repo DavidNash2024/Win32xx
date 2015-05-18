@@ -75,7 +75,69 @@
 
 #include "ScrollBars.h"
 
-/*============================================================================*/
+/*******************************************************************************
+
+	Implementation of ScrollLimits class
+
+*=============================================================================*/
+	void ScrollLimits::
+Serialize(CArchive &ar)							/*
+
+        Serialize or deserialize the scroll limits to and  from the archive ar,
+	depending on the sense of IsStoring().
+*-----------------------------------------------------------------------------*/
+{
+	  // perform loading or storing
+        if (ar.IsStoring())
+        {
+		ar << m_h_min;
+		ar << m_h_max;
+		ar << m_v_min;
+		ar << m_v_max;
+	}
+        else    // recovering
+        {
+		ar >> m_h_min;
+		ar >> m_h_max;
+		ar >> m_v_min;
+		ar >> m_v_max;
+      	}
+}
+
+/*******************************************************************************
+
+	Implementation of ScrollIncrements class
+
+*=============================================================================*/
+	void ScrollIncrements::
+Serialize(CArchive &ar)							/*
+
+        Serialize or deserialize the scroll increments to and  from the 
+	archive ar, depending on the sense of IsStoring().
+*-----------------------------------------------------------------------------*/
+{
+	  // perform loading or storing
+        if (ar.IsStoring())
+        {
+		ar << m_h_line;
+		ar << m_h_page;
+		ar << m_v_line;
+		ar << m_v_page;
+	}
+        else    // recovering
+        {
+ 		ar >> m_h_line;
+		ar >> m_h_page;
+		ar >> m_v_line;
+		ar >> m_v_page;
+     	}
+}
+
+/*******************************************************************************
+
+
+
+*=============================================================================*/
 	WScrollBars::
 WScrollBars()                                                            /*
 
@@ -498,14 +560,10 @@ ScrollProc(UINT uMsg, WPARAM wParam, LPARAM lParam)         		/*
         void WScrollBars::
 Serialize(CArchive &ar)                                               /*
 
-        Aerialize or deserialize the toolbars to and  from the archive ar,
-	depending on the sense of IsStoring().   If the archive has encountered
-	errors at entry, do not execute. Also, if invoked in the read mode but
-	the archive is not opened for reading, do not execute. If invoked in
-	the write mode, but the archive is not open, throw an exception.
+        Serialize or deserialize the toolbars to and  from the archive ar,
+	depending on the sense of IsStoring(). 
 *-----------------------------------------------------------------------------*/
 {
-
 	  // perform loading or storing
         if (ar.IsStoring())
         {
@@ -527,7 +585,7 @@ Serialize(CArchive &ar)                                               /*
         else    // recovering
         {
                   // each item deserialized from the archive is
-                  // retrieved by first reading its length and  then
+                  // retrieved by first reading its length and then
                   // loading in that number of bytes into the data
                   // item saved in the archive, as above. Some items,
                   // such as fonts and  screen extents, require
@@ -632,48 +690,5 @@ ShowVScrollBar(BOOL show)                                         	/*
 
         m_vscroll_visible = show;
 	m_theView->ShowScrollBar(SB_VERT, m_vscroll_visible);
-}
-
-/*============================================================================*/
-	CArchive&  // WScrollBars::
-operator<<(CArchive& ar, ScrollLimits& sl)                       	/*
-
-*-----------------------------------------------------------------------------*/
-{
-	ArchiveObject ob = {sizeof(ScrollLimits), &sl};
-	ar << ob;
-	return ar;
-}
-
-/*============================================================================*/
-	CArchive&  // WScrollBars::
-operator>>(CArchive& ar, ScrollLimits& sl)                       	/*
-
-*-----------------------------------------------------------------------------*/
-{
-	ArchiveObject ob = {sizeof(ScrollLimits), &sl};
-	ar >> ob;
-	return ar;
-}
-
-/*============================================================================*/
-	CArchive&  // WScrollBars::
-operator<<(CArchive& ar, ScrollIncrements& si)                       	/*
-
-*-----------------------------------------------------------------------------*/
-{
-	ArchiveObject ob = {sizeof(ScrollIncrements), &si};
-	ar << ob;
-	return ar;
-}
-/*============================================================================*/
-	CArchive&  // WScrollBars::
-operator>>(CArchive& ar, ScrollIncrements& si)                       	/*
-
-*-----------------------------------------------------------------------------*/
-{
-	ArchiveObject ob = {sizeof(ScrollIncrements), &si};
-	ar >> ob;
-	return ar;
 }
 

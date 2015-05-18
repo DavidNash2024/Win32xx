@@ -629,13 +629,9 @@ SaveDocAs(void)							/*
 Serialize(CArchive &ar)                                               	/*
 
         Serialize or deserialize the CDoc document from the archive ar,
-	depending on the sense of ar.IsStoring().  If the archive has
-	encountered errors prior to entry, do not execute. Also, if invoked
-	in the  read mode but the archive is not opened for reading, do not
-	execute.  If invoked in  write mode, but the archive is not open,
-	throw an exception. Throw exceptions during reading or writing if
-	the process fails at any point.  Return true if all goes well, or
-	false if it didn't.
+	depending on the sense of ar.IsStoring().  Throw exceptions during 
+	reading or writing if the process fails at any point.  Return true 
+	if all goes well, or false if it didn't.
 *-----------------------------------------------------------------------------*/
 {
         if (ar.IsStoring())

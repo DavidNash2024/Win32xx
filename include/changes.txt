@@ -33,7 +33,36 @@ New Features and Enhancements
   with wxx_ . This was done to avoid potential name conflicts with header
   files from other libraries.  
 
-
+* Updated CFile
+  - The nOpenFlags used in open, and CFile's constructor continue to support
+    the same file creation modes as before, but now support additional modes
+	as well.
+  	Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, 
+	    OPEN_ALWAYS, TRUNCATE_EXISTING
+	 Default value: OPEN_EXISTING | modeReadWrite
+	 The following modes are also supported:
+	- CFile::modeCreate			Same as CREATE_ALWAYS.
+	- CFile::modeNoTruncate		Same as OPEN_ALWAYS.
+	- CFile::modeRead			Requests read access only.
+	- CFile::modeWrite			Requests write access only.
+	- CFile::modeReadWrite		Requests read and write access.
+	- CFile::shareExclusive		Denies read and write access to all others.
+	- CFile::shareDenyWrite		Denies write access to all others.
+	- CFile::shareDenyRead		Denies read access to all others.
+	- CFile::shareDenyNone		No sharing restrictions.
+  - CFile now throws an exception under the following circumstances
+    - Failure to read from a file
+    - Failure to write from a file
+    - Failure to open the file in CFile's constructor
+	
+Updated Samples
+ - Added INIFrame sample. 
+    This sample demonstrates the use of INI files.
+ - Added TimeDemo sample.
+    This sample demonstrates the use of CTime and CTimeSpan and CArchive.
+ - Updated Scribble. 
+     This sample now uses a Doc/View architecture, and CArchive to store data. 
+ 	
 
 Changes in detail
 -----------------
@@ -46,8 +75,13 @@ Added CWinException::GetText
 Added ::GetCommandLineArgs
 
 Added VERIFY macro
+Added _WIN32XX_VER macro
+Added INIFrame sample
+Added TimeDemo sample
 
-Added INIFrame demo
+Modified CFile::CFile   		throws an exception on fail to open file
+Modified CFile::Read    		throws an exception on fail to read file
+Modified CFile::Write           throws an exception on fail to write file
 
 Renamed the header files. They are prefixed with wxx_
 
@@ -815,8 +849,6 @@ New Features and Enhancements
 
 Incompatibilities with previous version
 ---------------------------------------
-* The various FromHandle functions are no longer global. For example, we now 
-   use CDC::FromHandle for CDC's FromHandle.
 * CThread has been replaced by CWinThread. CWinThread doesn't create the thread
    in its constructor. Use the CreateThread member function to create the 
    thread.
@@ -947,11 +979,6 @@ New Features and Enhancements
 	way of detaching a bitmap from a memory DC created by CreateCompatibleBitmap.
 	The various CDC::CreateXXX functions now return void instead of a pointer
 	to the old GDI object.
-* Added specialized CWnd objects
-   - Added		wndTop			for use with SetWindowPos and DeferWindowPos
-   - Added		wndTopMost		for use with SetWindowPos and DeferWindowPos
-   - Added		wndNoTopMost	for use with SetWindowPos and DeferWindowPos
-   - Added		wndBottom		for use with SetWindowPos and DeferWindowPos	
 
 
 Version 7.2

@@ -95,6 +95,7 @@ BOOL CMainFrame::OnFileNew()
 {
 	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
+	GetView()->Invalidate();
 	return TRUE;
 }
 

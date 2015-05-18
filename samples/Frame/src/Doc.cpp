@@ -27,21 +27,21 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
 	return bResult;
 }
 
-BOOL CDoc::FileStore(LPCTSTR szFilename)
+BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 {
 	BOOL bResult = FALSE;
 
-	try
-	{
-		CArchive ar(szFilename, CArchive::store);
-		ar << *this;
-		bResult = TRUE;
-	}
-	catch (const CWinException &e)
-	{
-		// An exception occurred. Display the relevant information.
-		::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
-	}
+//	try
+//	{
+//		CArchive ar(szFilename, CArchive::store);
+//		ar << *this;
+//		bResult = TRUE;
+//	}
+//	catch (const CWinException &e)
+//	{
+//		// An exception occurred. Display the relevant information.
+//		::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+//	}
 
 	return bResult;
 }
