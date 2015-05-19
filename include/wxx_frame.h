@@ -2058,12 +2058,14 @@ namespace Win32xx
 
 				bRet = TRUE;
 			}
+			else
+				throw CWinException(_T("Failed to open registry key: "));
 		}
 
 		catch (const CWinException& e)
 		{
-			TRACE("Failed to load values from registry, using defaults!\n");
-			e.what();
+			TRACE("*** Failed to load values from registry, using defaults. ***\n");
+			TRACE(e.GetText()); TRACE(strKey); TRACE("\n");
 		}
 
 		return bRet;
@@ -2736,7 +2738,9 @@ namespace Win32xx
 
 			catch (const CWinException& e)
 			{
-				TRACE("Failed to save registry MRU settings\n");
+				TRACE("*** Failed to save registry MRU settings. ***\n");
+				TRACE(e.GetText()); TRACE("\n");
+				
 				CString KeyName = _T("Software\\") + m_strKeyName;
 				CRegKey Key;
 
@@ -2746,7 +2750,6 @@ namespace Win32xx
 					Key.DeleteSubKey(_T("Recent Files"));
 				}
 
-				e.what();
 				return FALSE;
 			}
 		}
@@ -2808,7 +2811,9 @@ namespace Win32xx
 
 			catch (const CWinException& e)
 			{
-				TRACE("Failed to save registry settings\n");
+				TRACE("*** Failed to save registry settings. ***\n");
+				TRACE(e.GetText()); TRACE("\n");
+
 				CString KeyName = _T("Software\\") + m_strKeyName;
 				CRegKey Key;
 
@@ -2818,7 +2823,6 @@ namespace Win32xx
 					Key.DeleteSubKey(_T("Frame Settings"));
 				}
 
-				e.what();
 				return FALSE;
 			}
 

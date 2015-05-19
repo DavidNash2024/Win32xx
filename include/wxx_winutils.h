@@ -354,7 +354,10 @@ namespace Win32xx
 			WideCharToMultiByte(codePage, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
 		}
 
-		~CW2A() {}
+		~CW2A() 
+		{
+			m_pWStr = 0;
+		}
 		operator LPCSTR() { return m_pWStr? &m_vAnsiArray[0] : NULL; }
 
 	private:

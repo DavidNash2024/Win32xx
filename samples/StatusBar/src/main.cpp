@@ -16,11 +16,13 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		return theApp.Run();
 	}
 
-	// catch all exceptions inherited from std::exception
-	catch (std::exception &e)
+	// catch CWinException exceptions
+	catch (CWinException &e)
 	{
 		// Process the exception and quit
-		e.what();
+		CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());
+		MessageBox(NULL, Error, _T("CWinException thrown"), MB_ICONERROR) ;
+
 		return -1;
 	}
 }

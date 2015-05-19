@@ -790,9 +790,7 @@ namespace Win32xx
 	inline const char * CWinException::what() const throw ()
 	{
 		// Sends the last error string to the debugger (typically displayed in the IDE's output window).
-		::OutputDebugString(_T("CWinException thrown\n"));
 		::OutputDebugString(m_szErrorString);
-		::OutputDebugString(m_pszText);
 		return "CWinException thrown";
 	}
 
@@ -1039,44 +1037,35 @@ namespace Win32xx
 	// You must run only one instance of the class inherited from this.
 	inline CWinApp::CWinApp() : m_Callback(NULL)//, m_hAccel(0), m_pWndAccel(0)
 	{
-		try
+		m_csAppStart.Lock();
+		assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
+
+		m_dwTlsData = ::TlsAlloc();
+		if (m_dwTlsData == TLS_OUT_OF_INDEXES)
 		{
-			m_csAppStart.Lock();
-			assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
-
-			m_dwTlsData = ::TlsAlloc();
-			if (m_dwTlsData == TLS_OUT_OF_INDEXES)
-			{
-				// We only get here in the unlikely event that all TLS indexes are already allocated by this app
-				// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-				m_csAppStart.Release();
-				throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
-			}
-
-			SetnGetThis(this);
+			// We only get here in the unlikely event that all TLS indexes are already allocated by this app
+			// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
 			m_csAppStart.Release();
-
-			// Set the instance handle
-	#ifdef _WIN32_WCE
-			m_hInstance = (HINSTANCE)GetModuleHandle(0);
-	#else
-			MEMORY_BASIC_INFORMATION mbi;
-			ZeroMemory(&mbi, sizeof(MEMORY_BASIC_INFORMATION));
-			static int Address = 0;
-			VirtualQuery( &Address, &mbi, sizeof(mbi) );
-			assert(mbi.AllocationBase);
-			m_hInstance = (HINSTANCE)mbi.AllocationBase;
-	#endif
-
-			m_hResource = m_hInstance;
-			SetCallback();
+			throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
 		}
 
-		catch (const CWinException &e)
-		{
-			e.what();
-			throw;
-		}
+		SetnGetThis(this);
+		m_csAppStart.Release();
+
+		// Set the instance handle
+#ifdef _WIN32_WCE
+		m_hInstance = (HINSTANCE)GetModuleHandle(0);
+#else
+		MEMORY_BASIC_INFORMATION mbi;
+		ZeroMemory(&mbi, sizeof(MEMORY_BASIC_INFORMATION));
+		static int Address = 0;
+		VirtualQuery( &Address, &mbi, sizeof(mbi) );
+		assert(mbi.AllocationBase);
+		m_hInstance = (HINSTANCE)mbi.AllocationBase;
+#endif
+
+		m_hResource = m_hInstance;
+		SetCallback();
 	}
 
 	inline CWinApp::~CWinApp()
@@ -1590,66 +1579,58 @@ namespace Win32xx
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
-		try
+		// Prepare the CWnd if it has been reused
+		Destroy();
+
+		// Ensure a window class is registered
+		CString ClassName;
+		if (lpszClassName == 0 || lpszClassName[0] == _T('\0'))
+			ClassName = _T("Win32++ Window");
+		else
+			ClassName = lpszClassName;
+
+		WNDCLASS wc;
+		ZeroMemory(&wc, sizeof(WNDCLASS));
+		wc.lpszClassName = ClassName;
+		wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+		wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
+
+		// Register the window class (if not already registered)
+		VERIFY (RegisterClass(wc) != 0);
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsData();
+
+		// Store the CWnd pointer in thread local storage
+		pTLSData->pWnd = this;
+
+		// Create window
+		m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
+								hWndParent, nIDorHMenu, GetApp()->GetInstanceHandle(), lpParam);
+
+		// Now handle window creation failure
+		if (m_hWnd == 0)
 		{
-			// Prepare the CWnd if it has been reused
-			Destroy();
-
-			// Ensure a window class is registered
-			CString ClassName;
-			if (lpszClassName == 0 || lpszClassName[0] == _T('\0'))
-				ClassName = _T("Win32++ Window");
-			else
-				ClassName = lpszClassName;
-
-			WNDCLASS wc;
-			ZeroMemory(&wc, sizeof(WNDCLASS));
-			wc.lpszClassName = ClassName;
-			wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
-			wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
-
-			// Register the window class (if not already registered)
-			if (RegisterClass(wc) == 0)
-				throw CWinException(_T("Failed to register window class"));
-
-			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsData();
-
-			// Store the CWnd pointer in thread local storage
-			pTLSData->pWnd = this;
-
-			// Create window
-			m_hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
-									hWndParent, nIDorHMenu, GetApp()->GetInstanceHandle(), lpParam);
-
-			// Now handle window creation failure
-			if (m_hWnd == 0)
-				throw CWinException(_T("Failed to Create Window"));
-
-			// Automatically subclass predefined window class types
-			::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
-			if (wc.lpfnWndProc != GetApp()->m_Callback)
-			{
-				Subclass(m_hWnd);
-
-				// Send a message to force the HWND to be added to the map
-				SendMessage(WM_NULL, 0L, 0L);
-
-				// Override this to perform tasks after the window is attached.
-				OnAttach();
-			}
-
-			// Clear the CWnd pointer from TLS
-			pTLSData->pWnd = NULL;
+			TRACE(_T("*** Failed to create window ***\n"));
+			TRACE(SystemErrorMessage(::GetLastError()));
+			assert(m_hWnd);
 		}
 
-		catch (const CWinException &e)
+		// Automatically subclass predefined window class types
+		::GetClassInfo(GetApp()->GetInstanceHandle(), lpszClassName, &wc);
+		if (wc.lpfnWndProc != GetApp()->m_Callback)
 		{
-			TRACE("\n*** Failed to create window ***\n");
-			e.what();	// Display the last error message.
+			Subclass(m_hWnd);
 
-			// eat the exception (don't rethrow)
+			// Send a message to force the HWND to be added to the map
+			SendMessage(WM_NULL, 0L, 0L);
+
+			// Override this to perform tasks after the window is attached.
+			OnAttach();
 		}
+
+		// Clear the CWnd pointer from TLS
+		pTLSData->pWnd = NULL;
 
 		// Window creation is complete. Now call OnInitialUpdate
 		PostMessage(UWM_WINDOWCREATED);
@@ -2052,8 +2033,7 @@ namespace Win32xx
 			wc.lpfnWndProc	= CWnd::StaticWindowProc;
 
 			// Register the WNDCLASS structure
-			if ( !::RegisterClass(&wc) )
-				throw CWinException(_T("Failed to register window class"));
+			VERIFY ( ::RegisterClass(&wc) != 0 );
 
 			Done = TRUE;
 		}

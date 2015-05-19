@@ -3542,13 +3542,15 @@ namespace Win32xx
 
 			catch (const CWinException& e)
 			{
+				TRACE("*** Failed to save dock settings in registry. ***");
+				TRACE(e.GetText()); TRACE("\n");
+
 				// Roll back the registry changes by deleting the subkeys
 				if (Key.GetKey())
 				{
 					Key.RecurseDeleteKey(_T("Dock Windows"));
 				}
 
-				e.what();
 				return FALSE;
 			}
 		}

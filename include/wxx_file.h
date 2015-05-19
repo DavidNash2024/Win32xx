@@ -457,10 +457,10 @@ namespace Win32xx
 		assert(pBuf);
 		DWORD dwWritten = 0;
 		if (!::WriteFile(m_hFile, pBuf, nCount, &dwWritten, NULL))
-			throw (_T("Failed to write to file"));
+			throw CWinException(_T("Failed to write to file"));
 		
 		if (dwWritten != nCount)
-			throw(_T("Failed to write to file"));
+			throw CWinException(_T("Failed to write to file"));
 	}
 
 

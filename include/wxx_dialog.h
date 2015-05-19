@@ -391,59 +391,53 @@ namespace Win32xx
 
 		INT_PTR nResult = 0;
 
-		try
+
+		m_IsModal=TRUE;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsData();
+
+	#ifndef _WIN32_WCE
+		if (NULL == pTLSData->hMsgHook )
 		{
-			m_IsModal=TRUE;
+			pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
+		}
+		InterlockedIncrement(&pTLSData->nDlgHooks);
+	#endif
 
-			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsData();
+		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+		pTLSData->pWnd = this;
 
-		#ifndef _WIN32_WCE
-			if (NULL == pTLSData->hMsgHook )
-			{
-				pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
-			}
-			InterlockedIncrement(&pTLSData->nDlgHooks);
-		#endif
-
-			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
-			pTLSData->pWnd = this;
-
-			// Create a modal dialog
-			if (IsIndirect())
-				nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
-			else
-			{
-				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
-					hInstance = GetApp()->GetResourceHandle();
-				nResult = ::DialogBox(hInstance, m_lpszResName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
-			}
-
-			// Tidy up
-			m_hWnd = NULL;
-			pTLSData->pWnd = NULL;
-
-		#ifndef _WIN32_WCE
-			InterlockedDecrement(&pTLSData->nDlgHooks);
-			if (pTLSData->nDlgHooks == 0)
-			{
-				::UnhookWindowsHookEx(pTLSData->hMsgHook);
-				pTLSData->hMsgHook = NULL;
-			}
-
-		#endif
-
-			if (nResult == -1)
-				throw CWinException(_T("Failed to create modal dialog box"));
-
+		// Create a modal dialog
+		if (IsIndirect())
+			nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+		else
+		{
+			if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
+				hInstance = GetApp()->GetResourceHandle();
+			nResult = ::DialogBox(hInstance, m_lpszResName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 		}
 
-		catch (const CWinException &e)
-		{
-			TRACE("\n*** Failed to create dialog ***\n");
-			e.what();	// Display the last error message.
+		// Tidy up
+		m_hWnd = NULL;
+		pTLSData->pWnd = NULL;
 
-			// eat the exception (don't rethrow)
+	#ifndef _WIN32_WCE
+		InterlockedDecrement(&pTLSData->nDlgHooks);
+		if (pTLSData->nDlgHooks == 0)
+		{
+			::UnhookWindowsHookEx(pTLSData->hMsgHook);
+			pTLSData->hMsgHook = NULL;
+		}
+
+	#endif
+
+		// Display information on dialog creation failure
+		if (nResult == -1)
+		{
+			TRACE(_T("*** Failed to create modal dialog box ***\n"));
+			TRACE(SystemErrorMessage(::GetLastError()));
+			assert(0);
 		}
 
 		return nResult;
@@ -454,43 +448,36 @@ namespace Win32xx
 		assert( GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
-		try
+		m_IsModal=FALSE;
+
+		// Ensure this thread has the TLS index set
+		TLSData* pTLSData = GetApp()->SetTlsData();
+
+		// Store the CWnd pointer in Thread Local Storage
+		pTLSData->pWnd = this;
+
+		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+
+		// Create a modeless dialog
+		if (IsIndirect())
+			m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
+		else
 		{
-			m_IsModal=FALSE;
+			if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
+				hInstance = GetApp()->GetResourceHandle();
 
-			// Ensure this thread has the TLS index set
-			TLSData* pTLSData = GetApp()->SetTlsData();
-
-			// Store the CWnd pointer in Thread Local Storage
-			pTLSData->pWnd = this;
-
-			HINSTANCE hInstance = GetApp()->GetInstanceHandle();
-
-			// Create a modeless dialog
-			if (IsIndirect())
-				m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
-			else
-			{
-				if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
-					hInstance = GetApp()->GetResourceHandle();
-
-				m_hWnd = ::CreateDialog(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
-			}
-
-			// Tidy up
-			pTLSData->pWnd = NULL;
-
-			// Now handle dialog creation failure
-			if (!m_hWnd)
-				throw CWinException(_T("Failed to create dialog"));
+			m_hWnd = ::CreateDialog(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
 		}
 
-		catch (const CWinException &e)
-		{
-			TRACE("\n*** Failed to create dialog ***\n");
-			e.what();	// Display the last error message.
+		// Tidy up
+		pTLSData->pWnd = NULL;
 
-			// eat the exception (don't rethrow)
+		// Display information on dialog creation failure
+		if (!m_hWnd)
+		{
+			TRACE(_T("*** Failed to create dialog ***\n"));
+			TRACE(SystemErrorMessage(::GetLastError()));
+			assert(m_hWnd);
 		}
 
 		return m_hWnd;

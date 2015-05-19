@@ -1942,6 +1942,9 @@ namespace Win32xx
 			}
 			catch (const CWinException& e)
 			{
+				TRACE("*** Failed to save TabbedMDI settings in registry. ***\n");
+				TRACE(e.GetText()); TRACE("\n");
+
 				// Roll back the registry changes by deleting the subkeys
 				if (hKey != 0)
 				{
@@ -1955,7 +1958,6 @@ namespace Win32xx
 					RegCloseKey(hKey);
 				}
 
-				e.what();
 				return FALSE;
 			}
 		}
