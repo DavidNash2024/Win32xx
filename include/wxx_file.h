@@ -75,24 +75,27 @@ namespace Win32xx
 		virtual const CString& GetFilePath() const;
 		virtual const CString& GetFileTitle() const;
 		virtual ULONGLONG GetPosition() const;
-		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
 		virtual BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
-		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
-						LPCTSTR pszFilter = NULL, HWND hOwnerWnd = NULL);
 		virtual UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
-		virtual CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
-						LPCTSTR pszFilter = NULL, LPCTSTR pszDefExt = NULL, HWND hOwnerWnd = NULL);
 		virtual ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
 		virtual void SeekToBegin();
 		virtual ULONGLONG SeekToEnd();
-		virtual void SetFilePath(LPCTSTR pszNewName);
 		virtual BOOL SetLength(ULONGLONG NewLen);
-		virtual BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
 		virtual void Write(const void* pBuf, UINT nCount);
+
+#ifndef _WIN32_WCE
+		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
+		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
+						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
+						LPCTSTR pszFilter = NULL, HWND hOwnerWnd = NULL);
+		virtual CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
+						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
+						LPCTSTR pszFilter = NULL, LPCTSTR pszDefExt = NULL, HWND hOwnerWnd = NULL);
+		virtual void SetFilePath(LPCTSTR pszNewName);
+		virtual BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
+#endif
 
 	private:
 		CFile(const CFile&);				// Disable copy construction
@@ -215,6 +218,7 @@ namespace Win32xx
 		return Result;
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CFile::LockRange(ULONGLONG Pos, ULONGLONG Count)
 	// Locks a range of bytes in and open file.
 	{
@@ -227,6 +231,7 @@ namespace Win32xx
 
 		return ::LockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh);
 	}
+#endif
 
 	inline BOOL CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
 	// Prepares a file to be written to or read from.
@@ -276,14 +281,17 @@ namespace Win32xx
 			m_hFile = 0;
 		}
 
+#ifndef _WIN32_WCE
 		if (m_hFile != 0)
 		{
 			SetFilePath(pszFileName);
 		}
+#endif
 
 		return (m_hFile != 0);
 	}
 
+#ifndef _WIN32_WCE
 	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, HWND hOwnerWnd)
 	// Displays the file open dialog.
 	// Returns a CString containing either the selected file name or an empty CString.
@@ -316,6 +324,7 @@ namespace Win32xx
 
 		return str;
 	}
+#endif
 
 	inline UINT CFile::Read(void* pBuf, UINT nCount)
 	// Reads from the file, storing the contents in the specified buffer.
@@ -345,6 +354,7 @@ namespace Win32xx
 		return ::DeleteFile(pszFileName);
 	}
 
+#ifndef _WIN32_WCE
 	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, LPCTSTR pszDefExt, HWND hOwnerWnd)
 	// Displays the SaveFileDialog.
 	// Returns a CString containing either the selected file name or an empty CString
@@ -378,6 +388,7 @@ namespace Win32xx
 
 		return str;
 	}
+#endif
 
 	inline ULONGLONG CFile::Seek(LONGLONG lOff, UINT nFrom)
 	// Positions the current file pointer.
@@ -409,6 +420,7 @@ namespace Win32xx
 		return Seek(0, FILE_END);
 	}
 
+#ifndef _WIN32_WCE
 	inline void CFile::SetFilePath(LPCTSTR pszFileName)
 	// Specifies the full file name, including its path
 	{
@@ -424,6 +436,7 @@ namespace Win32xx
 				m_FileTitle = m_FileName.Left(nPos);
 		}
 	}
+#endif
 
 	inline BOOL CFile::SetLength(ULONGLONG NewLen)
 	// Changes the length of the file to the specified value.
@@ -434,6 +447,7 @@ namespace Win32xx
 		return ::SetEndOfFile(m_hFile);
 	}
 
+#ifndef _WIN32_WCE
 	inline BOOL CFile::UnlockRange(ULONGLONG Pos, ULONGLONG Count)
 	// Unlocks a range of bytes in an open file.
 	{
@@ -446,6 +460,7 @@ namespace Win32xx
 
 		return ::UnlockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh);
 	}
+#endif
 
 	inline void CFile::Write(const void* pBuf, UINT nCount)
 	// Writes the specified buffer to the file.

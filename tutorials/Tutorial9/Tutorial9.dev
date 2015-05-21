@@ -1,7 +1,7 @@
 [Project]
 FileName=Tutorial9.dev
 Name=Tutorial9
-UnitCount=14
+UnitCount=11
 Type=0
 Ver=2
 ObjFiles=
@@ -139,4 +139,23 @@ ProductVersion=
 AutoIncBuildNr=0
 SyncProduct=0
 
+[Unit10]
+FileName=Doc.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit11]
+FileName=Doc.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
 

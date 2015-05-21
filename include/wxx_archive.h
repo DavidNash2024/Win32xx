@@ -158,7 +158,7 @@ namespace Win32xx
 		CArchive& operator = (const CArchive&); // Disable assignment operator
 
 		// private data members
-		CFile*	m_pFile;				// archive file FILE
+		CFile*	m_pFile;			// archive file FILE
 		bool	m_IsStoring;		// archive direction switch
 		UINT	m_Schema;			// archive version schema
 		bool	m_IsFileManaged;	// delete the CFile pointer in destructor;
@@ -192,7 +192,7 @@ namespace Win32xx
 		}
 	}
 
-	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_Schema(0), m_pFile(0)
+	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_pFile(0), m_Schema(0)
 	// Construct a CArchive object
 	{
 		m_IsFileManaged = true;
@@ -453,7 +453,7 @@ namespace Win32xx
 	// Write the LPCTSTR string into the archive file. The string must
 	// be null terminated. Throw an exception if an error occurs.
 	{
-		UINT size = (lstrlen(string) + 1) * sizeof(TCHAR);
+		UINT size = lstrlen(string) * sizeof(TCHAR);
 
 		// Write() throws exception upon error
 		Write(&size, sizeof(size));

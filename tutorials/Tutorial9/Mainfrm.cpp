@@ -40,15 +40,16 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+	PostMessage(WM_CLOSE);
 
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNew()
 {
-	m_View.ClearPoints();
+	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
+	GetView()->Invalidate();
 	return TRUE;
 }
 
@@ -60,7 +61,7 @@ BOOL CMainFrame::OnFileOpen()
 	if (!str.IsEmpty())
 	{
 		// Retrieve the PlotPoint data
-		if (m_View.FileOpen(str))
+		if (GetDoc().FileOpen(str))
 		{
 			// Save the filename
 			m_PathName = str;
@@ -70,6 +71,7 @@ BOOL CMainFrame::OnFileOpen()
 			m_PathName=_T("");
 	}
 
+	GetView()->Invalidate();
 	return TRUE;
 }
 
@@ -78,7 +80,7 @@ BOOL CMainFrame::OnFileSave()
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_PathName);
+		GetDoc().FileSave(m_PathName);
 
 	return TRUE;
 }
@@ -94,7 +96,7 @@ BOOL CMainFrame::OnFileSaveAs()
 		m_PathName = str;
 
 		// Save the file name
-		m_View.FileSave(str);
+		GetDoc().FileSave(str);
 		AddMRUEntry(str);
 	}
 

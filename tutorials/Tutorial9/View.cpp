@@ -2,9 +2,7 @@
 // View.cpp
 //  Definitions for the CView class
 
-#include "view.h"
-#include "wxx_gdi.h"
-#include "wxx_file.h"
+#include "ScribbleApp.h"
 #include "resource.h"
 
 using namespace std;
@@ -18,18 +16,18 @@ CView::~CView()
 {
 }
 
-void CView::ClearPoints()
-{
-	m_points.clear();
-	Invalidate();
-}
-
 void CView::DrawLine(int x, int y)
 {
 	CClientDC dcClient(*this);
 	dcClient.CreatePen(PS_SOLID, 1, m_points.back().color);
 	dcClient.MoveTo(m_points.back().x, m_points.back().y);
 	dcClient.LineTo(x, y);
+}
+
+CDoc& CView::GetDoc()
+{
+	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
+	return Frame.GetDoc();
 }
 
 void CView::OnDraw(CDC& dc)
@@ -64,98 +62,12 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
 }
 
-BOOL CView::FileOpen(LPCTSTR szFilename)
-{
-	// empty the PlotPoint vector
-	m_points.clear();
-	DWORD nBytesRead;
-	BOOL bResult = FALSE;
-
-	// Create a handle to the file
-	CFile File;
-	if (File.Open(szFilename, OPEN_EXISTING))
-	{
-		do
-		{
-			PlotPoint pp;
-			nBytesRead = File.Read(&pp, sizeof(PlotPoint));
-			if (nBytesRead == sizeof(PlotPoint))
-				m_points.push_back(pp);	
-
-		} while (nBytesRead == sizeof(PlotPoint));
-
-		if ((0 != nBytesRead) || (m_points.empty()))
-		{
-			// Failed to read all of the file
-			m_points.clear();
-			::MessageBox (0, _T("Invalid data in file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		}
-		else
-			bResult = TRUE;
-
-	}
-	else
-	{
-		CString strErrMsg = _T("Failed to open file ");
-		strErrMsg += szFilename;
-		::MessageBox (0, strErrMsg, _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-	}
-
-	Invalidate();
-	return bResult;
-}
-
-BOOL CView::FileSave(LPCTSTR szFilename)
-{
-	BOOL bResult = TRUE;
-	CFile hFile;
-	if (!hFile.Open(szFilename, CREATE_ALWAYS))
-	{
-		::MessageBox (0, _T("Failed to open file for writing"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-		bResult = FALSE;
-	}
-	
-	if (bResult)
-	{
-		// Write the file
-		for (size_t i = 0; i < m_points.size(); ++i)
-		{
-			if (!hFile.Write(&m_points[i], sizeof(PlotPoint)))
-			{
-				::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-				bResult = FALSE;
-				break;
-			}
-		}
-
-		// Verify file length
-		if (hFile.GetLength() != m_points.size() * sizeof(PlotPoint))
-		{
-			::MessageBox (0, _T("Error while writing to file"), _T("Error"), MB_ICONEXCLAMATION | MB_OK);
-			bResult = FALSE;
-		}
-	}
-
-	return bResult;
-}
-
-void CView::StorePoint(int x, int y, bool PenDown)
-{
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
-	P1.color = m_PenColor;
-
-	m_points.push_back(P1); //Add the point to the vector
-}
-
 LRESULT CView::OnLButtonDown(UINT, WPARAM, LPARAM lParam)
 {
  	// Capture mouse input.
  	SetCapture();
 
-	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
 
 	return 0L;
 }
@@ -165,7 +77,7 @@ LRESULT CView::OnLButtonUp(UINT, WPARAM, LPARAM lParam)
 	//Release the capture on the mouse
 	ReleaseCapture();
 
-	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
+	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false, m_PenColor);
 
 	return 0L;	
 }
@@ -176,7 +88,7 @@ LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
 	if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
 	{
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
+		GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
 	}
 
 	return 0L;

@@ -687,9 +687,8 @@ namespace Win32xx
 		pParent->SetRedraw(FALSE);
 
 		// Create the window
-		if (!CreateEx(dwExStyle, ClassName, m_pData->cs.lpszName, dwStyle, x, y,
-			cx, cy, pParent->GetHwnd(), m_pData->cs.hMenu, m_pData->cs.lpCreateParams))
-			throw CWinException(_T("CMDIChild::Create ... CreateEx failed"));
+		CreateEx(dwExStyle, ClassName, m_pData->cs.lpszName, dwStyle, x, y,
+			cx, cy, pParent->GetHwnd(), m_pData->cs.hMenu, m_pData->cs.lpCreateParams);
 
 		if (bMax)
 			ShowWindow(SW_MAXIMIZE);

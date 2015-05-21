@@ -5,6 +5,7 @@
 #define MAINFRM_H
 
 #include "View.h"
+#include "Doc.h"
 
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
@@ -12,6 +13,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
+	CDoc& GetDoc() {return m_Doc; }
 
 	BOOL	OnFileExit();
 	BOOL	OnFileOpen();
@@ -35,6 +38,7 @@ protected:
 
 private:
 	CView m_View;
+	CDoc m_Doc;
 	CRect m_rcPosition;		// Starting window position retrieved from ini file
 	BOOL m_ShowStatusBar;	// Initial StatusBar show state retrieved from ini file
 	BOOL m_ShowToolBar;		// Initial ToolBar show state retrieved from ini file

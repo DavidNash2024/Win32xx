@@ -13,6 +13,9 @@
     <ClCompile Include="View.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Doc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Mainfrm.h">
@@ -44,6 +47,9 @@
     </ClInclude>
     <ClInclude Include="..\..\include\wxx_gdi.h">
       <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="Doc.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

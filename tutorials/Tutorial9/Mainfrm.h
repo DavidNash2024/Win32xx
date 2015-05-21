@@ -9,6 +9,7 @@
 #include "wxx_frame.h"
 #include "wxx_file.h"
 #include "View.h"
+#include "Doc.h"
 
 // required for Dev-C++
 #ifndef OPENFILENAME_SIZE_VERSION_400
@@ -20,6 +21,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
+	CDoc& GetDoc() { return m_Doc; }
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -35,6 +38,7 @@ protected:
 
 private:
 	CView m_View;
+	CDoc m_Doc;
 	CString m_PathName;
 
 };

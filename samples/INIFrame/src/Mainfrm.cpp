@@ -91,9 +91,7 @@ BOOL CMainFrame::OnFileOpen()
 	CFile File;
 	CString str = File.OpenFileDialog(0, 0, 0, 0);
 
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
-
+	GetDoc().FileLoad(str);
 	return TRUE;
 }
 
@@ -102,9 +100,7 @@ BOOL CMainFrame::OnFileSave()
 	CFile File;
 	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
 
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
-
+	GetDoc().FileStore(str);
 	return TRUE;
 }
 

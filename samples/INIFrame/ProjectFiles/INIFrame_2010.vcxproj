@@ -44,6 +44,7 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_winutils.h" />
+    <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\FrameApp.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\resource.h" />
@@ -52,6 +53,7 @@
     <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\FrameApp.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />

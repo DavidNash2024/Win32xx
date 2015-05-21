@@ -150,27 +150,21 @@ namespace Win32xx
 
 	inline BOOL CCmdBar::AddAdornments(DWORD dwFlags)
 	{
-		BOOL bReturn = CommandBar_AddAdornments(*this, dwFlags, 0);
-
-		if (!bReturn)
-			throw CWinException(_T("AddAdornments failed"));
-
-		return bReturn;
+		assert(IsWindow());
+		return CommandBar_AddAdornments(*this, dwFlags, 0);
 	}
 
 	inline int CCmdBar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight)
 	{
+		assert(IsWindow());
 		HINSTANCE hInst = GetApp()->GetInstanceHandle();
 		return 	CommandBar_AddBitmap(*this, hInst, idBitmap, iNumImages, iImageWidth, iImageHeight);
 	}
 
 	inline BOOL CCmdBar::AddButtons(int nButtons, TBBUTTON* pTBButton)
 	{
-		 BOOL bReturn = CommandBar_AddButtons(*this, nButtons, pTBButton);
-		 if (!bReturn)
-			 throw CWinException(_T("Failed to add buttons to commandbar"));
-
-		 return bReturn;
+		assert(IsWindow());
+		return CommandBar_AddButtons(*this, nButtons, pTBButton);
 	}
 
 	inline HWND CCmdBar::Create(HWND hParent)
@@ -190,43 +184,38 @@ namespace Win32xx
 		{
 			Attach(mbi.hwndMB);
 		}
-		else
-			throw CWinException(_T("Failed to create MenuBar"));
 		
 #else
 		*this = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
-
-		if (*this == NULL)
-			throw CWinException(_T("Failed to create CommandBar"));
+		assert (*this);
 
 		CommandBar_InsertMenubar(*this, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
 #endif
+		assert(IsWindow());
 		return *this;
 	}
 
 	inline int CCmdBar::GetHeight() const
 	{
+		assert(IsWindow());
 		return CommandBar_Height(*this);
 	}
 
 	inline HWND CCmdBar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton)
 	{
 		HINSTANCE hInst = GetApp()->GetInstanceHandle();
-		HWND hWnd = CommandBar_InsertComboBox(*this, hInst, iWidth, dwStyle, idComboBox, iButton);
-
-		if (!hWnd)
-			throw CWinException(_T("InsertComboBox failed"));
-
-		return hWnd;
+		return CommandBar_InsertComboBox(*this, hInst, iWidth, dwStyle, idComboBox, iButton);
 	}
 
 	inline BOOL CCmdBar::IsVisible()
 	{
+		assert(IsWindow());
 		return ::CommandBar_IsVisible(*this);
 	}
 
 	inline BOOL CCmdBar::Show(BOOL fShow)
 	{
+		assert(IsWindow());
 		return ::CommandBar_Show(*this, fShow);
 	}
 
