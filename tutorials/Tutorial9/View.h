@@ -28,6 +28,7 @@ public:
 	virtual ~CView();
 
 	CDoc& GetDoc();
+	std::vector<PlotPoint>& CView::GetPoints();
 	COLORREF GetPenColor() { return m_PenColor; }
 	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
@@ -44,7 +45,7 @@ private:
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	CBrush m_Brush;
-	std::vector<PlotPoint> m_points;	// Points of lines to draw
+//	std::vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
 };
 

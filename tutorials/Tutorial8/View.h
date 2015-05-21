@@ -8,8 +8,15 @@
 #include "wxx_wincore.h"
 #include <vector>
 
-using std::vector;
+class CDoc;
 
+struct PlotPoint
+{
+	int x;
+	int y;
+	bool PenDown;
+	COLORREF color;
+};
 
 // A class that inherits from CWnd. It is used to create the window.
 class CView : public CWnd
@@ -17,10 +24,9 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView();
-	void ClearPoints();
-	BOOL FileOpen(LPCTSTR szFilename);
-	BOOL FileSave(LPCTSTR szFilename);
 
+	CDoc& GetDoc();
+	std::vector<PlotPoint>& GetPoints();
 	COLORREF GetPenColor() { return m_PenColor; }
 	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
@@ -31,22 +37,12 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	struct PlotPoint
-	{
-		int x;
-		int y;
-		bool PenDown;
-		COLORREF color;
-	};
-
 	void DrawLine(int x, int y);
 	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	void StorePoint(int x, int y, bool PenDown);
 
 	CBrush m_Brush;
-	vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
 };
 

@@ -60,17 +60,17 @@ REM: Clean the Networking directory
 pushd Networking
 
 ::Remove directories
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Borland
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Debug
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Debug_Build
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Dev-C++
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\GNU
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Microsoft
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Release
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Release_Build
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\x64
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\_UpgradeReport_Files
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\__history
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Borland"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Debug"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Debug_Build"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Dev-C++"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\GNU"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Microsoft"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Release"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\Release_Build"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\x64"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\_UpgradeReport_Files"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\__history"
 FOR /D %%f IN ("*.") DO DEL /Q /AH "%%f\*.suo"
 FOR /D %%f IN ("*.") DO DEL /Q /AH "%%f\*.old"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\*.ncb"

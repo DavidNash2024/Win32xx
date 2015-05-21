@@ -19,8 +19,8 @@ CView::~CView()
 void CView::DrawLine(int x, int y)
 {
 	CClientDC dcClient(*this);
-	dcClient.CreatePen(PS_SOLID, 1, m_points.back().color);
-	dcClient.MoveTo(m_points.back().x, m_points.back().y);
+	dcClient.CreatePen(PS_SOLID, 1, GetPoints().back().color);
+	dcClient.MoveTo(GetPoints().back().x, GetPoints().back().y);
 	dcClient.LineTo(x, y);
 }
 
@@ -30,20 +30,25 @@ CDoc& CView::GetDoc()
 	return Frame.GetDoc();
 }
 
+std::vector<PlotPoint>& CView::GetPoints()
+{ 
+	return GetDoc().GetPoints(); 
+}
+
 void CView::OnDraw(CDC& dc)
 {
-	if (m_points.size() > 0)
+	if (GetPoints().size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
-		for (unsigned int i = 0 ; i < m_points.size(); i++)
+		for (unsigned int i = 0 ; i < GetPoints().size(); i++)
 		{
-			dc.CreatePen(PS_SOLID, 1, m_points[i].color);
+			dc.CreatePen(PS_SOLID, 1, GetPoints()[i].color);
 			if (bDraw)
-				dc.LineTo(m_points[i].x, m_points[i].y);
+				dc.LineTo(GetPoints()[i].x, GetPoints()[i].y);
 			else
-				dc.MoveTo(m_points[i].x, m_points[i].y);
+				dc.MoveTo(GetPoints()[i].x, GetPoints()[i].y);
 			
-			bDraw = m_points[i].PenDown;
+			bDraw = GetPoints()[i].PenDown;
 		}
 	}
 }

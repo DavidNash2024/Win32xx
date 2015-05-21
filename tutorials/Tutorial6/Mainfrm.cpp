@@ -40,7 +40,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
+	PostMessage(WM_CLOSE);
 
 	return TRUE;
 }

@@ -7,8 +7,8 @@
 
 #include "targetver.h"
 #include "wxx_frame.h"
-#include "wxx_file.h"
 #include "View.h"
+#include "Doc.h"
 
 // required for Dev-C++
 #ifndef OPENFILENAME_SIZE_VERSION_400
@@ -21,6 +21,8 @@ public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
 
+	CDoc& GetDoc() { return m_Doc; }
+
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnFileExit();
@@ -28,13 +30,13 @@ protected:
 	virtual BOOL OnFileOpen();
 	virtual BOOL OnFileSave();
 	virtual BOOL OnFileSaveAs();
-	virtual BOOL OnFilePrint();
 	virtual BOOL OnPenColor();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_View;
+	CDoc m_Doc;
 	CString m_PathName;
 
 };
