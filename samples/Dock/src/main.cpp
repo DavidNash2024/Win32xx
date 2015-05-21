@@ -20,7 +20,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// catch CWinException exceptions
 	catch (CWinException &e)
 	{
-		// Process the exception and quit
+		// Display the exception and quit
 		CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());
 		MessageBox(NULL, Error, _T("CWinException thrown"), MB_ICONERROR) ;
 

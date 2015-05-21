@@ -847,55 +847,7 @@ New Features and Enhancements
 * Updated the TabDemo and DockTabbedMDI samples. These now demonstrate using a
    dialog as the view window for the tab or docker.   
 
-Incompatibilities with previous version
----------------------------------------
-* CThread has been replaced by CWinThread. CWinThread doesn't create the thread
-   in its constructor. Use the CreateThread member function to create the 
-   thread.
-	
 
-Changes in detail
------------------
-Added CRichEdit
-Added CWinThread
-Added CBitmap::FromHandle
-Added CBrush::FromHandle
-Added CDC::FromHandle
-Added CFrame::GetTitle
-Added CFrame::SetTitle
-Added CFrame::GetStatusText
-Added CFont::FromHandle
-Added CImageList::DrawIndirect
-Added CImageList::FromHandle
-Added CMenu::FromHandle
-Added CPalette::FromHandle
-Added CPen::FromHandle
-Added CRgn::FromHandle
-Added CWinApp::LoadCursor
-Added CWinApp::LoadIcon
-Added CWinApp::LoadStandardCursor
-Added CWinApp::LoadStandardIcon
-Added CWinApp::SetCursor
-Added CWnd::FromHandle
-Added CWnd::FromHandlePermanent
-Modified CComboBoxEx::GetComboBoxCtrl
-Modified CComboBoxEx::GetEditCtrl
-Modified CDateTime::GetMonthCalCtrl
-Modified CFrame::SetStatusText
-Modified CListView::GetEditControl
-Modified CListView::GetHeader
-Modified CTreeView::EditLabel
-Moved CWinApp::GetAccelerators to CWinThread
-Moved CWinApp::InitInstance to CWinThread
-Moved CWinApp::MessageLoop to CWinThread
-Moved CWinApp::OnIdle to CWinThread
-Moved CWinApp::PreTranslateMessage to CWinThread
-Moved CWinApp::SetAccelerators to CWinThread
-Renamed CFrame::m_bShowIndicatorStatus  to CFrame::m_bUseIndicatorStatus
-Renamed CFrame::m_bShowMenuStatus       to CFrame::m_bUseMenuStatus
-Removed CThread
-Removed ::LoadBitmap   (use CBitmap instead).
-Removed ::FromHandle   (all versions)
 
 Version 7.4
 ===========
@@ -1109,7 +1061,6 @@ New Features and Enhancements
    problem, outside the programmer's control. Throwing fewer exceptions results 
    in slightly smaller executables, and gives users more flexibility and 
    control over their own exception methodology. They are thrown when:
-   - a window creation fails.
    - a critical dll cannot be loaded.
    - a window message cannot be routed to a CWnd object.
    - an attempt to read from or write to the registry fails unexpectedly.
