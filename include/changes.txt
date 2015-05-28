@@ -67,6 +67,7 @@ Updated Samples
 Changes in detail
 -----------------
 Added CArchive
+Added CObject
 Added CRegKey
 Added CTime
 Added CTimeSpan

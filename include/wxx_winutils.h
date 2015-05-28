@@ -69,6 +69,19 @@
   #endif
 #endif
 
+// Ensure UNICODE and _UNICODE definitions are the same
+#ifdef _UNICODE
+  #ifndef UNICODE
+    #define UNICODE
+  #endif
+#endif
+
+#ifdef UNICODE
+  #ifndef _UNICODE
+    #define UNICODE
+  #endif
+#endif
+
 
 namespace Win32xx
 {

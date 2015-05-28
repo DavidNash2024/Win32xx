@@ -689,7 +689,6 @@ namespace Win32xx
 	// buffer until a null terminator is reached. If the buffer doesn't contain a null
 	// terminator, you must specify the buffer's length.
 	{
-	//	assert (nNewLength > 0 || -1 == nNewLength);
 		assert (nNewLength <= (int)m_buf.size());
 
 		if (-1 == nNewLength)

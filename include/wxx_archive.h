@@ -173,27 +173,25 @@ namespace Win32xx
 namespace Win32xx
 {
 	inline CArchive::CArchive(CFile& File, mode Mode) : m_Schema(0), m_IsFileManaged(false)
+	// Construct a CArchive object
+	// The specified file must already be open for loading or storing.
 	{
 		m_pFile = &File;
 
 		if (Mode == load)
 		{
 			m_IsStoring = false;
-
-			// recover schema of serialized configuration
-			*this >> m_Schema;
 		}
 		else
 		{
 			m_IsStoring = true;
-
-			// record schema of current configuration
-			*this << m_Schema;
 		}
 	}
 
 	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_pFile(0), m_Schema(0)
 	// Construct a CArchive object
+	// A file with the specified name is created for storing (if required), and
+	// also opened. A failure to open the file will throw an exception.
 	{
 		m_IsFileManaged = true;
 
@@ -204,27 +202,19 @@ namespace Win32xx
 				// Open the archive for loading
 				m_pFile = new CFile(FileName, CFile::modeRead);	
 				m_IsStoring = false;
-
-				// recover schema of serialized configuration
-				*this >> m_Schema;
 			}
 			else
 			{
-
-				// Open the archive for storing
+				// Open the archive for storing. Creates file if required
 				m_pFile = new CFile(FileName, CFile::modeCreate);
 				m_IsStoring = true;
-
-				// record schema of current configuration
-				*this << m_Schema;
 			}
 		}
 
 		catch(...)
 		{
 			delete m_pFile;
-			m_pFile = 0;
-			throw;	// Rethrow exception
+			throw; // Rethrow the exception
 		}
 	}
 
@@ -251,7 +241,6 @@ namespace Win32xx
 	//============================================================================
 	inline void CArchive::Read(void* lpBuf, UINT size)
 	// Read size bytes from the open archive file into the given lpBuf.
-	// Return on success and  the number of bytes actually read is size.
 	// Throw an exception if not successful.
 	{
 		// read, simply and  in binary mode, the size into the lpBuf
@@ -260,9 +249,8 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CArchive::Write(const void* lpBuf, UINT size)
-	// Write size characters of from the lpBuf into the open archive file  and
-	// return successfully if the number of characters actually written is
-	// size. Throw an exception if unsuccessful.
+	// Write size characters of from the lpBuf into the open archive file.
+	// Throw an exception if unsuccessful.
 	{
 		// write size characters in lpBuf to the  file
 		m_pFile->Write(lpBuf, size);
@@ -453,9 +441,11 @@ namespace Win32xx
 	// Write the LPCTSTR string into the archive file. The string must
 	// be null terminated. Throw an exception if an error occurs.
 	{
+		bool IsUnicode = sizeof(TCHAR) -1;
 		UINT size = lstrlen(string) * sizeof(TCHAR);
 
 		// Write() throws exception upon error
+		Write(&IsUnicode, sizeof(IsUnicode));
 		Write(&size, sizeof(size));
 		Write(string, size);
 	}
@@ -465,9 +455,11 @@ namespace Win32xx
 	// Write the CString string into the archive file. Throw an exception
 	// if an error occurs.
 	{
+		bool IsUnicode = sizeof(TCHAR) -1;
 		UINT size = string.GetLength() * sizeof(TCHAR);
 
 		// Write() throws exception upon error
+		Write(&IsUnicode, sizeof(IsUnicode));
 		Write(&size, sizeof(size));
 		Write(string.c_str(), size);
 		return *this;
@@ -680,12 +672,10 @@ namespace Win32xx
 	// stream.
 	{
 		assert (nMax > 0);
-		UINT size;
-		Read(&size, sizeof(size));
-		size = MIN(size , (nMax -1) * sizeof(TCHAR));
 
-		Read(string, size);
-		string[nMax-1] = _T('\0');
+		CString str;
+		*this >> str;
+		lstrcpyn(string, str.c_str(), nMax);
 		return string;
 	}
 
@@ -696,10 +686,41 @@ namespace Win32xx
 	// only on inability to read the recorded number of chars from the archive
 	// stream.
 	{
+		bool IsUnicode;
+		Read(&IsUnicode, sizeof(bool));
 		UINT size;						// size is in bytes, not characters
 		Read(&size, sizeof(size));
-		Read(string.GetBuffer( size / sizeof(TCHAR) ), size);
-		string.ReleaseBuffer( size / sizeof(TCHAR) );
+		
+		if (IsUnicode)
+		{	
+			UINT nChars = size/sizeof(TCHAR);
+			WCHAR* buf = new WCHAR[nChars];
+			Read(buf, size);
+			
+#ifdef _UNICODE
+			memcpy(string.GetBuffer(nChars), buf, size);
+#else
+			WideCharToMultiByte(CP_ACP, 0, buf, nChars, string.GetBuffer(nChars), nChars, NULL,NULL);
+#endif
+
+			string.ReleaseBuffer(nChars);
+			delete[] buf;
+		}
+		else
+		{
+			char* buf = new char[size];
+			Read(buf, size);
+
+#ifdef _UNICODE
+			MultiByteToWideChar(CP_ACP, 0, buf, size, string.GetBuffer(size), size);
+#else
+			memcpy(string.GetBuffer(size), buf, size);
+#endif
+
+			string.ReleaseBuffer(size);
+			delete[] buf;
+		}
+
 		return *this;
 	}
 

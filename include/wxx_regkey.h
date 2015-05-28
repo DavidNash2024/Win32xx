@@ -56,8 +56,11 @@ namespace Win32xx
 
 		void Attach(HKEY hKey);
 		LONG Close();
-		LONG Create(HKEY hKeyParent, LPCTSTR lpszKeyName, LPTSTR lpszClass = REG_NONE, DWORD dwOptions = REG_OPTION_NON_VOLATILE,
-			           REGSAM samDesired = KEY_READ | KEY_WRITE, LPSECURITY_ATTRIBUTES lpSecAttr = NULL, LPDWORD lpdwDisposition = NULL);
+		LONG Create(HKEY hKeyParent, LPCTSTR lpszKeyName, LPTSTR lpszClass = REG_NONE, 
+		            DWORD dwOptions = REG_OPTION_NON_VOLATILE,
+			        REGSAM samDesired = KEY_READ | KEY_WRITE, 
+					LPSECURITY_ATTRIBUTES lpSecAttr = NULL, 
+					LPDWORD lpdwDisposition = NULL);
 		LONG DeleteSubKey(LPCTSTR lpszSubKey);
 		LONG DeleteValue(LPCTSTR lpszSubKey);
 		HKEY Detach();
