@@ -2292,7 +2292,7 @@ namespace Win32xx
 
 		case UWM_UPDATECOMMAND:
 			OnMenuUpdate((UINT)wParam); // Perform menu updates
-		break;
+			break;
 
 		} // switch (uMsg)
 
