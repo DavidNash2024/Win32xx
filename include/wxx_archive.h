@@ -53,6 +53,22 @@
 //  file specified by the user, using the >> and <<
 //  operators.
 
+// Note: This CArchive doesn't read archive written by MFC's CArchive.
+
+//  Differences between this CArchive and MFC's CArchive
+//   In this CArchive:
+//    - LPCTSTR strings retrieved from the archive exactly match the string
+//       saved to the archive. Strings can contain carriage return and line
+//       feed characters. These characters are not stripped.
+//    - CStrings retrieved from the archive exactly match the CString
+//       saved in the archive. CStrings can contain any character, including
+//       embedded null characters, line feeds and carriage returns.
+//
+//  In MFC's CArchive:
+//    - LPCTSTR strings have carriage return characters stripped
+//    - LPCTSTR strings are terminated by a \r\n characters.
+ 
+
 #include "wxx_wincore.h"
 
 #ifndef _WIN32XX_ARCHIVE_H_
@@ -156,9 +172,6 @@ namespace Win32xx
 	private:
 		CArchive(const CArchive&);				// Disable copy construction
 		CArchive& operator = (const CArchive&); // Disable assignment operator
-
-		UINT ReadStringLength();
-		void WriteStringLength(UINT length);
 
 		// private data members
 		CFile*	m_pFile;			// archive file FILE
@@ -441,23 +454,33 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CArchive::WriteString(LPCTSTR string)
-	// Write the LPCTSTR string into the archive file. The string must
-	// be null terminated. Throw an exception if an error occurs.
+	// Write the LPCTSTR string into the archive file. 
+	// The string must be null terminated. 
+	// Throw an exception if an error occurs.
 	{
 		UINT nChars = lstrlen(string);
+		bool IsUnicode = sizeof(TCHAR) -1;
 		
-		WriteStringLength(nChars);
+		// Store the Unicode state and number of characters in the archive 
+		*this << IsUnicode;
+		*this << nChars;
+		
 		Write(string, nChars*sizeof(TCHAR));
 	}
 
 	//============================================================================
 	inline CArchive& CArchive::operator<<(const CString& string)
-	// Write the CString string into the archive file. Throw an exception
-	// if an error occurs.
+	// Write the CString string into the archive file.
+	// The CString can contain any characters including embedded nulls.
+	// Throw an exception if an error occurs.
 	{
 		UINT nChars = string.GetLength();
+		bool IsUnicode = sizeof(TCHAR) -1;
+		
+		// Store the Unicode state and number of characters in the archive 
+		*this << IsUnicode;
+		*this << nChars;
 
-		WriteStringLength(nChars);
 		Write(string.c_str(), nChars*sizeof(TCHAR));
 		return *this;
 	}
@@ -661,12 +684,11 @@ namespace Win32xx
 
 	//============================================================================
 	inline LPTSTR CArchive::ReadString(LPTSTR szString, UINT nMax)
-	// The size (in characters) of szString provided must be nMax or greater.
-	// Reads at most nMax-1 TCHAR characters from the archive and store it in szString.
-	// The stored szString is NULL terminated.
-	// Throw an exception if unable to do so correctly. Note: exceptions are thrown
-	// only on inability to read the recorded number of chars from the archive
-	// stream.
+	// The size (in characters) of szString array must be nMax or greater.
+	// Reads at most nMax-1 TCHAR characters from the archive and store it
+	// in szString. Strings read from the archive are converted from ANSI
+	// or Unicode to TCHAR if required, and are NULL terminated.
+	// Throw an exception if unable to do so correctly. 
 	{
 		assert (nMax > 0);
 
@@ -683,15 +705,13 @@ namespace Win32xx
 	// only on inability to read the recorded number of chars from the archive
 	// stream.
 	{
-
-		bool IsUnicode = false;
-		UINT nChars = ReadStringLength();
-		if (nChars == (UINT)-1)
-		{ 
-			IsUnicode = true;
-			nChars = ReadStringLength();
-		}
+		bool IsUnicode;
+		UINT nChars;
 		
+		// Retrieve the Unicode state and number of characters from the archive
+		*this >> IsUnicode;
+		*this >> nChars;
+	
 		if (IsUnicode)
 		{	
 			WCHAR* buf = new WCHAR[nChars];
@@ -700,6 +720,7 @@ namespace Win32xx
 #ifdef _UNICODE
 			memcpy(string.GetBuffer(nChars), buf, nChars*2);
 #else
+			// Convert the archive string from Wide to Ansi
 			WideCharToMultiByte(CP_ACP, 0, buf, nChars, string.GetBuffer(nChars), nChars, NULL,NULL);
 #endif
 
@@ -712,6 +733,7 @@ namespace Win32xx
 			Read(buf, nChars);
 
 #ifdef _UNICODE
+			// Convert the archive string from Ansi to Wide
 			MultiByteToWideChar(CP_ACP, 0, buf, nChars, string.GetBuffer(nChars), nChars);
 #else
 			memcpy(string.GetBuffer(nChars), buf, nChars);
@@ -781,72 +803,6 @@ namespace Win32xx
 	{
 		Ob.Serialize(*this);
 		return *this;
-	}
-
-	//============================================================================
-	inline UINT CArchive::ReadStringLength()
-	//	Return the length of the string at the current archive position, or
-	//	returns (UINT)-1 if the string is determined to be Unicode. In the case
-	//  of Unicode, call ReadString again to retrieve the length of the string.
-	{
-		DWORD nNewLen;
-		
-		// get the first BYTE that was written
-		BYTE bLen;
-		*this >> bLen;
-		
-		// determine if this is the string length
-		if (bLen < 0xff)
-			return (UINT)bLen;
-
-		// get the next candidate, of WORD length
-		WORD wLen;
-		*this >> wLen;
-		if (wLen == 0xfffe)
-		{
-			// The string on the archive was written in Unicode
-			return (UINT)-1;
-		}
-		else if (wLen == 0xffff)
-		{
-			// read DWORD of length
-			*this >> nNewLen;
-			return (UINT)nNewLen;
-		}
-		else
-			return wLen;
-	}
-
-	//============================================================================
-	inline void CArchive::WriteStringLength(UINT length)
-	//	Write the length of a string (in characters, not bytes) into the 
-	//	archive in a manner that can be retrieved and determined to be a 
-	//	Unicode or ANSI form using the ReadStringLength() method, above.
-	{
-		bool IsUnicode = sizeof(TCHAR) - 1;
-		if (IsUnicode)
-		{
-			// write a special signature to recognize when the string is Unicode
-			*this << (BYTE)0xff;
-			*this << (WORD)0xfffe;
-		}
-		
-		// write the length of the string (w/o terminating /0)
-		if (length < 255)
-		{
-			*this << (BYTE)length;
-		}
-		else if (length < 0xfffe)
-		{
-			*this << (BYTE)0xff;
-			*this << (WORD)length;
-		}
-		else
-		{
-			*this << (BYTE)0xff;
-			*this << (WORD)0xffff;
-			*this << (DWORD)length;
-		}
 	}
 
 

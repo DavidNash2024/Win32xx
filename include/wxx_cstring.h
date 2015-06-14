@@ -114,11 +114,14 @@ namespace Win32xx
 		CString(const CString& str);
 		CString(LPCSTR pszText);
 		CString(LPCWSTR pszText);
-		CString(TCHAR ch, int nLength = 1);
-		CString(LPCTSTR pszText, int nLength);
+		CString(char ch, int nLength = 1);
+		CString(WCHAR ch, int nLength = 1);
+		CString(LPCSTR pszText, int nLength);
+		CString(LPCWSTR pszText, int nLength);
 
 		CString& operator = (const CString& str);
-		CString& operator = (const TCHAR ch);
+		CString& operator = (const char ch);
+		CString& operator = (const WCHAR ch);
 		CString& operator = (LPCSTR pszText);
 		CString& operator = (LPCWSTR pszText);
 		bool     operator == (LPCTSTR pszText) const;
@@ -128,7 +131,8 @@ namespace Win32xx
 		CString& operator += (const CString& str);
 		CString& operator += (LPCSTR szText);
 		CString& operator += (LPCWSTR szText);
-		CString& operator += (const TCHAR ch);
+		CString& operator += (const char ch);
+		CString& operator += (const WCHAR ch);
 
 		// Attributes
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
@@ -225,14 +229,48 @@ namespace Win32xx
 		m_str.assign(W2T(pszText));
 	}
 
-	inline CString::CString(TCHAR ch, int nLength)
+	inline CString::CString(char ch, int nLength)
 	{
-		m_str.assign(nLength, ch);
+		char str[2] = {0};
+		str[0] = ch;
+		A2T tch(str);
+		m_str.assign(nLength, ((LPCTSTR)tch)[0]);
 	}
 
-	inline CString::CString(LPCTSTR pszText, int nLength)
+	inline CString::CString(WCHAR ch, int nLength)
 	{
-		m_str.assign(pszText, nLength);
+		WCHAR str[2] = {0};
+		str[0] = ch;
+		W2T tch(str);
+		m_str.assign(nLength, ((LPCTSTR)tch)[0]);
+	}
+
+	inline CString::CString(LPCSTR pszText, int nLength)
+	{
+		char* buf = new char[nLength];
+
+#ifdef _UNICODE
+		MultiByteToWideChar(CP_ACP, 0, pszText, nLength, GetBuffer(nLength), nLength);
+#else
+		memcpy(GetBuffer(nLength), buf, nLength);
+#endif
+
+		ReleaseBuffer(nLength);
+		delete[] buf;
+	}
+
+	inline CString::CString(LPCWSTR pszText, int nLength)
+	{	
+		WCHAR* buf = new WCHAR[nLength];
+
+#ifdef _UNICODE
+		memcpy(GetBuffer(nLength), pszText, nLength*2);
+#else
+		WideCharToMultiByte(CP_ACP, 0, buf, nLength, string.GetBuffer(nChars), nLength, NULL,NULL);
+#endif
+
+		ReleaseBuffer(nLength);
+		delete[] buf;
 	}
 
 	inline CString& CString::operator = (const CString& str)
@@ -241,10 +279,20 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline CString& CString::operator = (const TCHAR ch)
+	inline CString& CString::operator = (const char ch)
 	{
-		m_str.assign(1, ch);
-		return *this;
+		char str[2] = {0};
+		str[0] = ch;
+		A2T tch(str);
+		m_str.assign(1, ((LPCTSTR)tch)[0]);
+	}
+
+	inline CString& CString::operator = (const WCHAR ch)
+	{
+		WCHAR str[2] = {0};
+		str[0] = ch;
+		W2T tch(str);
+		m_str.assign(1, ((LPCTSTR)tch)[0]);
 	}
 
 	inline CString& CString::operator = (LPCSTR pszText)
@@ -303,9 +351,21 @@ namespace Win32xx
 		return *this;
 	}
 
-	inline CString& CString::operator += (const TCHAR ch)
+	inline CString& CString::operator += (const char ch)
 	{
-		m_str.append(1,ch);
+		char str[2] = {0};
+		str[0] = ch;
+		A2T tch(str);
+		m_str.append(1, ((LPCTSTR)tch)[0]);
+		return *this;
+	}
+
+	inline CString& CString::operator += (const WCHAR ch)
+	{
+		WCHAR str[2] = {0};
+		str[0] = ch;
+		W2T tch(str);
+		m_str.append(1, ((LPCTSTR)tch)[0]);
 		return *this;
 	}
 
