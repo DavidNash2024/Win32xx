@@ -34,9 +34,9 @@ New Features and Enhancements
   files from other libraries.  
 
 * Updated CFile
-  - The nOpenFlags used in open, and CFile's constructor continue to support
-    the same file creation modes as before, but now support additional modes
-	as well.
+  - The nOpenFlags used in CFile::Open, and CFile's constructor continue to
+    support the same file creation modes as before, but now support additional
+	modes as well.
   	Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, 
 	    OPEN_ALWAYS, TRUNCATE_EXISTING
 	 Default value: OPEN_EXISTING | modeReadWrite

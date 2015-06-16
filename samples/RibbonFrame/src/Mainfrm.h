@@ -6,6 +6,7 @@
 
 
 #include "View.h"
+#include "Doc.h"
 #include "wxx_ribbon.h"
 
 
@@ -15,6 +16,8 @@ class CMainFrame : public CRibbonFrame
 public:
 	CMainFrame(void);
 	virtual ~CMainFrame();
+
+	CDoc& GetDoc() { return m_Doc; }
 
 	void MRUFileOpen(UINT nMRUIndex);
 	BOOL OnFileExit();
@@ -36,6 +39,7 @@ protected:
 
 private:
 	CView m_View;
+	CDoc m_Doc;
 	CString m_PathName;
 };
 

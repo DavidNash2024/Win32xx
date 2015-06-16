@@ -14,7 +14,7 @@ public:
     CRibbonFrameApp();
     virtual ~CRibbonFrameApp();
 	virtual BOOL InitInstance();
-	CMainFrame* GetFrame() { return &m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
     CMainFrame m_Frame;
@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CRibbonFrameApp object
-inline CRibbonFrameApp* GetSimpleApp() { return static_cast<CRibbonFrameApp*>(GetApp()); }
+inline CRibbonFrameApp& GetRibbonFrameApp() { return static_cast<CRibbonFrameApp&>(*GetApp()); }
 
 
 #endif

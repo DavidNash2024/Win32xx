@@ -72,10 +72,12 @@ void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 {
 	CString strMRUText = GetMRUEntry(nMRUIndex);
 
-	if (m_View.FileOpen(strMRUText))
+	if (GetDoc().FileOpen(strMRUText))
 		m_PathName = strMRUText;
 	else
 		RemoveMRUEntry(strMRUText);
+
+	GetView()->Invalidate();
 }
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
@@ -104,7 +106,7 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
 			if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
 			{	
 				UINT color = var.uintVal;
-				m_View.SetPen((COLORREF)color);
+				m_View.SetPenColor((COLORREF)color);
 			}
 		}
 	}		
@@ -157,7 +159,7 @@ BOOL CMainFrame::OnFileOpen()
 	if (!str.IsEmpty())
 	{
 		// Retrieve the PlotPoint data
-		if (m_View.FileOpen(str))
+		if (GetDoc().FileOpen(str))
 		{
 			// Save the filename
 			m_PathName = str;
@@ -167,13 +169,15 @@ BOOL CMainFrame::OnFileOpen()
 			m_PathName=_T("");
 	}
 
+	GetView()->Invalidate();
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNew()
 {
-	m_View.ClearPoints();
+	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
+	GetView()->Invalidate();
 	return TRUE;
 }
 
@@ -182,7 +186,7 @@ BOOL CMainFrame::OnFileSave()
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
-		m_View.FileSave(m_PathName);
+		GetDoc().FileSave(m_PathName);
 
 	return TRUE;
 }
@@ -190,7 +194,7 @@ BOOL CMainFrame::OnFileSave()
 BOOL CMainFrame::OnFileSaveAs()
 {
 	CFile File;
-		CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), *this);
+	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), *this);
 
 	// Store the PlotPoint data in the file
 	if (!str.IsEmpty())
@@ -198,7 +202,7 @@ BOOL CMainFrame::OnFileSaveAs()
 		m_PathName = str;
 
 		// Save the file name
-		m_View.FileSave(str);
+		GetDoc().FileSave(str);
 		AddMRUEntry(str);
 	}
 

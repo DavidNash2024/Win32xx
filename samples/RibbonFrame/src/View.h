@@ -6,40 +6,44 @@
 #define VIEW_H
 
 
+class CDoc;
+
+
+struct PlotPoint
+{
+	int x;
+	int y;
+	bool PenDown;
+	COLORREF color;
+};
+
+
 class CView : public CWnd
 {
 public:
 	CView();
 	virtual ~CView();
-	virtual void ClearPoints();
-	virtual BOOL FileOpen(LPCTSTR szFilename);
-	virtual BOOL FileSave(LPCTSTR szFilename);
-	virtual void SetPen(COLORREF Color);
+
+	CDoc& GetDoc();
+	std::vector<PlotPoint>& GetPoints();
+	COLORREF GetPenColor() { return m_PenColor; }
+	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
 protected:
 	virtual void OnDraw(CDC& dc);
+	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	struct PlotPoint
-	{
-		int x;
-		int y;
-		bool PenDown;
-		COLORREF color;
-	};
-
 	void DrawLine(int x, int y);
-	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	void StorePoint(int x, int y, bool PenDown);
 
-	CBrush m_hBrush;
-	std::vector<PlotPoint> m_points;	// Points of lines to draw
+	CBrush m_Brush;
 	COLORREF m_PenColor;
+
 };
 
 

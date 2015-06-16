@@ -11,6 +11,7 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\RibbonApp.cpp" />
@@ -54,6 +55,7 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_winutils.h" />
+    <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\Resource.h" />
     <ClInclude Include="..\src\RibbonApp.h" />

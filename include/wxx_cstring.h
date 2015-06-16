@@ -144,7 +144,7 @@ namespace Win32xx
 		void	 AppendFormat(LPCTSTR pszFormat,...);
 		void	 AppendFormat(UINT nFormatID, ...);
 		int      Collate(LPCTSTR pszText) const;
-		int		 CollateNoCase(LPCTSTR pszText) const;		
+		int		 CollateNoCase(LPCTSTR pszText) const;
 		int      Compare(LPCTSTR pszText) const;
 		int      CompareNoCase(LPCTSTR pszText) const;
 		int      Delete(int nIndex, int nCount = 1);
@@ -198,9 +198,9 @@ namespace Win32xx
 		tString m_str;
 		std::vector<TCHAR> m_buf;
 	};
-	
+
 } // namespace Win32xx
-	
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 namespace Win32xx
@@ -260,13 +260,13 @@ namespace Win32xx
 	}
 
 	inline CString::CString(LPCWSTR pszText, int nLength)
-	{	
+	{
 		WCHAR* buf = new WCHAR[nLength];
 
 #ifdef _UNICODE
 		memcpy(GetBuffer(nLength), pszText, nLength*2);
 #else
-		WideCharToMultiByte(CP_ACP, 0, buf, nLength, string.GetBuffer(nChars), nLength, NULL,NULL);
+		WideCharToMultiByte(CP_ACP, 0, buf, nLength, GetBuffer(nLength), nLength, NULL,NULL);
 #endif
 
 		ReleaseBuffer(nLength);
@@ -285,6 +285,7 @@ namespace Win32xx
 		str[0] = ch;
 		A2T tch(str);
 		m_str.assign(1, ((LPCTSTR)tch)[0]);
+		return *this;
 	}
 
 	inline CString& CString::operator = (const WCHAR ch)
@@ -293,6 +294,7 @@ namespace Win32xx
 		str[0] = ch;
 		W2T tch(str);
 		m_str.assign(1, ((LPCTSTR)tch)[0]);
+		return *this;
 	}
 
 	inline CString& CString::operator = (LPCSTR pszText)
@@ -410,11 +412,11 @@ namespace Win32xx
 	{
 		assert(pszText);
         int res = CompareString(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
-		
+
 		assert(res);
 		if 		(res == CSTR_LESS_THAN) return -1;
 		else if (res == CSTR_GREATER_THAN) return 1;
-		
+
 		return 0;
 	}
 
@@ -423,11 +425,11 @@ namespace Win32xx
 	{
 		assert(pszText);
         int res = CompareString(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, pszText, -1);
-		
+
 		assert(res);
 		if 		(res == CSTR_LESS_THAN) return -1;
 		else if (res == CSTR_GREATER_THAN) return 1;
-		
+
 		return 0;
 	}
 
@@ -466,7 +468,7 @@ namespace Win32xx
 	{
 		assert(nIndex >= 0);
 		size_t s = m_str.find(ch, nIndex);
-		
+
 		if (s == std::string::npos) return -1;
 		return (int)s;
 	}
@@ -1045,7 +1047,7 @@ namespace Win32xx
 		return string1.Compare(pszText) >= 0;
 	}
 
-	
+
 	// Global functions that use CString
 
 	inline CString LoadString(UINT nID)
@@ -1082,7 +1084,7 @@ namespace Win32xx
 					s = _T("\"\"");		// "" for a single quote or double quote argument
 				else
 					s = CommandLine.Mid(index +1, endPos - index -1);
-				
+
 				CommandLineArgs.push_back(s);
 				index = endPos + 2;
 			}
@@ -1097,7 +1099,7 @@ namespace Win32xx
 				CommandLineArgs.push_back(s);
 				index = endPos + 1;
 			}
-			
+
 			// skip excess space characters
 			while (index < CommandLine.GetLength() && CommandLine[index] == _T(' '))
 				index++;
