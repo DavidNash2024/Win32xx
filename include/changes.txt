@@ -51,9 +51,9 @@ New Features and Enhancements
 	- CFile::shareDenyRead		Denies read access to all others.
 	- CFile::shareDenyNone		No sharing restrictions.
   - CFile now throws an exception under the following circumstances
-    - Failure to read from a file
-    - Failure to write from a file
-    - Failure to open the file in CFile's constructor
+    - Failure to read from a file.
+    - Failure to write to a file.
+    - Failure to open the file in CFile's constructor.
 	
 Updated Samples
  - Added INIFrame sample. 

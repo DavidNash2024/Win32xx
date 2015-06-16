@@ -72,7 +72,7 @@ namespace Win32xx
 	typedef struct tm time_tm;
 
 	// define the CTimeSpan data type
-	typedef long timespan_t;
+	typedef LONGLONG timespan_t;
 
 	// standard/daylight type, to avoid ambiguity in constructor declarations
 	enum dst_t {decide = -1, STD, DST};
@@ -212,13 +212,13 @@ namespace Win32xx
 		CTimeSpan(const CTimeSpan& ts);
 
 		// Methods to extract items
-		long	GetDays() const;
-		long	GetTotalHours() const;
-		int 	GetHours() const;
-		long 	GetTotalMinutes() const;
-		int 	GetMinutes() const;
-		long 	GetTotalSeconds() const;
-		int 	GetSeconds() const;
+		LONGLONG	GetDays() const;
+		LONGLONG	GetTotalHours() const;
+		int 		GetHours() const;
+		LONGLONG 	GetTotalMinutes() const;
+		int 		GetMinutes() const;
+		LONGLONG 	GetTotalSeconds() const;
+		int 		GetSeconds() const;
 
 		// assignment operators
 		const CTimeSpan& operator=(const CTimeSpan& ts);
@@ -1047,7 +1047,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline long CTimeSpan::GetDays() const
+	inline LONGLONG CTimeSpan::GetDays() const
 	//	Return the number of complete days in this CTimeSpan.  This value may
 	//	be negative if the time span is negative.
 	{
@@ -1055,21 +1055,21 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline long CTimeSpan::GetTotalHours() const
+	inline LONGLONG CTimeSpan::GetTotalHours() const
 	//	Return the total number of complete hours in this CTimeSpan.
 	{
 		return m_timespan / sec_per_hour;
 	}
 
 	//============================================================================
-	inline long CTimeSpan::GetTotalMinutes() const
+	inline LONGLONG CTimeSpan::GetTotalMinutes() const
 	//	Return the total number of complete minutes in this CTimeSpan.
 	{
 		return m_timespan / sec_per_min;
 	}
 
 	//============================================================================
-	inline long CTimeSpan::GetTotalSeconds() const
+	inline LONGLONG CTimeSpan::GetTotalSeconds() const
 	//	Return the total number of complete seconds in this CTimeSpan.
 	{
 		return m_timespan;

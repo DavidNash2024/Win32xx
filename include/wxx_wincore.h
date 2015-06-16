@@ -773,23 +773,26 @@ namespace Win32xx
 	}
 
 	inline DWORD CWinException::GetError() const throw ()
+	// Retrieves the last error code value.
 	{
 		return m_Error;
 	}
 
 	inline LPCTSTR CWinException::GetErrorString() const throw ()
+	// Retrieves the error string from GetLastError.
 	{
 		return m_szErrorString;
 	}
 
 	inline LPCTSTR CWinException::GetText() const throw ()
+	// Retrieves the string specified in the constructor.
 	{
 		return m_pszText;
 	}
 
 	inline const char * CWinException::what() const throw ()
+	// Sends the last error string to the debugger (typically displayed in the IDE's output window).
 	{
-		// Sends the last error string to the debugger (typically displayed in the IDE's output window).
 		::OutputDebugString(m_szErrorString);
 		return "CWinException thrown";
 	}
