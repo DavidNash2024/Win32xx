@@ -57,6 +57,7 @@ BEGIN
     END
     POPUP "&Theme"
     BEGIN
+		MENUITEM "White",                       IDM_WHITE
         MENUITEM "Modern",                      IDM_MODERN
         MENUITEM "Blue",                        IDM_BLUE
         MENUITEM "Grey",                        IDM_GREY
@@ -247,6 +248,8 @@ END
 
 STRINGTABLE 
 BEGIN
+	IDM_WHITE               "Windows 8 and Windows 10 theme"
+	IDM_MODERN              "Vista & Windows 7 theme"
     IDM_BLUE                "Blue theme"
     IDM_GREY                "Grey theme"
     IDM_OLIVE               "Olive theme"
@@ -255,7 +258,6 @@ BEGIN
     IDM_PINK                "Pink theme"
     IDM_GOLD                "Gold theme"
     IDM_BLACK               "Black theme"
-	IDM_MODERN              "Vista & Windows 7 theme"
     IDM_USE_THEMES          "Use Themes"
     IDM_BAND_COLORS         "Show the bands in a seperate color"
     IDM_FLAT_STYLE          "Show Bands with Flat Style"

@@ -46,15 +46,16 @@
 #define IDM_VIEW_ARROWS                 176
 #define IDM_VIEW_CARDS                  177
 
-#define IDM_BLUE                        180
-#define IDM_GREY                        181
-#define IDM_OLIVE                       182
-#define IDM_OCHRE                       183
-#define IDM_MAUVE                       184
-#define IDM_PINK                        185
-#define IDM_GOLD                        186
-#define IDM_BLACK                       187
-#define IDM_MODERN                      188
+#define IDM_WHITE                       180
+#define IDM_MODERN                      181
+#define IDM_BLUE                        182
+#define IDM_GREY                        183
+#define IDM_OLIVE                       184
+#define IDM_OCHRE                       185
+#define IDM_MAUVE                       186
+#define IDM_PINK                        187
+#define IDM_GOLD                        188
+#define IDM_BLACK                       189
 
 #define IDM_USE_THEMES                  190
 #define IDM_BAND_COLORS                 191

@@ -61,7 +61,9 @@ Updated Samples
  - Added TimeDemo sample.
     This sample demonstrates the use of CTime and CTimeSpan and CArchive.
  - Updated Scribble. 
-     This sample now uses a Doc/View architecture, and CArchive to store data. 
+    This sample now uses a Doc/View architecture, and CArchive to store data.
+ - Updated Themes sample.
+    Added a white theme for use on Windows 8 and Windows 10.
  	
 
 Changes in detail

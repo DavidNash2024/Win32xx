@@ -169,7 +169,7 @@
 #define UWM_POPUPMENU		 (WM_APP + 0x3F0A)	// Message - creates the menubar popup menu
 #define UWM_TBRESIZE         (WM_APP + 0x3F0B)  // Message - sent by toolbar to parent. Used by the rebar
 #define UWM_TBWINPOSCHANGING (WM_APP + 0x3F0C)	// Message - sent to parent. Toolbar is resizing
-#define UWM_UPDATECOMMAND    (WM_APP + 0x3F0D)  // Message - sent before a menu is displayed. Used by OnUpdate
+#define UWM_UPDATECOMMAND    (WM_APP + 0x3F0D)  // Message - sent before a menu is displayed. Used by OnMenuUpdate
 #define UWN_BARSTART		 (WM_APP + 0x3F0E)	// Notification - docker bar selected for move
 #define UWN_BARMOVE			 (WM_APP + 0x3F0F)	// Notification - docker bar moved
 #define UWN_BAREND			 (WM_APP + 0x3F10)	// Notification - end of docker bar move

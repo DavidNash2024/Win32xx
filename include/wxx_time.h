@@ -72,7 +72,9 @@ namespace Win32xx
 	typedef struct tm time_tm;
 
 	// define the CTimeSpan data type
-	typedef LONGLONG timespan_t;
+	// This can be int or __int64 depending on the compiler
+	// VS2005 and above defaults to __int64
+	typedef time_t timespan_t;
 
 	// standard/daylight type, to avoid ambiguity in constructor declarations
 	enum dst_t {decide = -1, STD, DST};
@@ -983,6 +985,7 @@ namespace Win32xx
 			throw CWinException(TEXT("Failed to read CTime from archive."));
 		}
 
+		// load CTime as x64
 		ULONGLONG tx64 = 0;
 		ar.Read(&tx64, size);
 		memcpy(&t, &tx64, sizeof(t));
@@ -997,9 +1000,8 @@ namespace Win32xx
 		ULONGLONG tx64 = 0;
 		UINT size = sizeof(tx64);
 		
-		// convert CTime to x64
+		// store CTime as x64
 		memcpy(&tx64, &t, sizeof(t));
-		ar.Write(&size, sizeof(size));
 		ar.Write(&tx64, size);
 		return ar;
 	}
@@ -1080,7 +1082,7 @@ namespace Win32xx
 	//	Return the number of hours in the day component of this time
 	//	span (–23 through 23).
 	{
-		return (m_timespan / sec_per_hour) % hours_per_day;
+		return (int)((m_timespan / sec_per_hour) % hours_per_day);
 	}
 
 	//============================================================================
@@ -1088,7 +1090,7 @@ namespace Win32xx
 	//	Return the number of minutes in the hour component of this time
 	//	span (–59 through 59).
 	{
-		return (m_timespan / sec_per_min) % sec_per_min;
+		return (int)((m_timespan / sec_per_min) % sec_per_min);
 	}
 
 	//============================================================================
@@ -1096,7 +1098,7 @@ namespace Win32xx
 	//	Return the number of seconds in the minute component of this time
 	//	span (–59 through 59).
 	{
-		return m_timespan % sec_per_min;
+		return (int)(m_timespan % sec_per_min);
 	}
 
 	//============================================================================
@@ -1268,18 +1270,21 @@ namespace Win32xx
 	//
 
 	//============================================================================
-	inline CArchive& operator>>(CArchive& ar, CTimeSpan& t)
+	inline CArchive& operator>>(CArchive& ar, CTimeSpan& ts)
 	//	Read a CTimeSpan object from the archive and  store it in t.  Throw an
 	//	exception if unable to do so correctly.
 	{
 		UINT size;
 		ar.Read(&size, sizeof(size));
-		if (size != sizeof(t))
+		if (size != sizeof(ULONGLONG))
 		{
 			throw CWinException(_T("Failed to read CTimeSpan from archive"));
 		}
-
-		ar.Read(&t, size);
+		
+		// load CTimeSpan as x64
+		ULONGLONG tsx64 = 0;
+		ar.Read(&tsx64, size);
+		memcpy(&ts, &tsx64, sizeof(ts));
 		return ar;
 	}
 
@@ -1288,9 +1293,13 @@ namespace Win32xx
 	//	Write the time span object s into the archive file. Throw an exception
 	//	if an error occurs.
 	{
-		UINT size = sizeof(ts);
+		ULONGLONG tsx64 = 0;
+		UINT size = sizeof(tsx64);
 		ar.Write(&size, sizeof(size));
-		ar.Write(&ts, size);
+				
+		// store CTimeSpan as x64
+		memcpy(&tsx64, &ts, sizeof(ts));
+		ar.Write(&tsx64, size);
 		return ar;
 	}
 

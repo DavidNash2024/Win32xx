@@ -57,7 +57,21 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 
 	switch (nColor)
 	{
-	case IDM_MODERN:
+	case IDM_WHITE:		// Recommended for Windows 8 and Windows 10
+		{
+			SetReBarColors( RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255) );
+
+			StatusBarTheme sbt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255)};
+			SetStatusBarTheme (sbt);
+
+			ToolBarTheme tbt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255)};
+			SetToolBarTheme(tbt);
+
+			MenuTheme mt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255)};
+			SetMenuTheme(mt);
+		}
+		break;
+	case IDM_MODERN:	// Recommended for Vista and Windows 7
 		{
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
@@ -71,7 +85,7 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 			SetMenuTheme(mt);
 		}
 		break;
-	case IDM_BLUE:	// ICY_BLUE Theme
+	case IDM_BLUE:		// Recommended for Windows XP
 		{
 			SetReBarColors( RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220) );
 
@@ -319,6 +333,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_PINK:			 return ChooseColor(IDM_PINK);
 	case IDM_GOLD:			 return ChooseColor(IDM_GOLD);
 	case IDM_BLACK:			 return ChooseColor(IDM_BLACK);
+	case IDM_WHITE:			 return ChooseColor(IDM_WHITE); 
 	case IDM_USE_THEMES:	 return OnUseThemes();
 	case IDM_BAND_COLORS:	 return OnBandColors();
 	case IDM_FLAT_STYLE:	 return OnFlatStyle();
@@ -548,8 +563,8 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		break;
 	}
 
-	if ((nID >= IDM_BLUE) && (nID <= IDM_MODERN))
-		GetFrameMenu().CheckMenuItem(nID, (nID == m_nColor)? MF_CHECKED : MF_UNCHECKED);
+	// Check the color menu item and make it a radio item 
+	GetFrameMenu().CheckMenuRadioItem(IDM_WHITE, IDM_BLACK, m_nColor, 0);
 
 	// Call the base class member function
 	CFrame::OnMenuUpdate(nID);
