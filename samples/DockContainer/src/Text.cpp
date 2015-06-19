@@ -19,7 +19,7 @@ CViewText::CViewText()
     }
 }
 
-CViewText::~CViewText(void)
+CViewText::~CViewText()
 {
 	// Free the DLL
 	if (m_hRichEdit)

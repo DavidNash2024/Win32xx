@@ -8,8 +8,8 @@
 class CRichView : public CRichEdit
 {
 public:
-	CRichView(void);
-	virtual ~CRichView(void);
+	CRichView();
+	virtual ~CRichView();
 	virtual void SetFontDefaults();
 
 protected:

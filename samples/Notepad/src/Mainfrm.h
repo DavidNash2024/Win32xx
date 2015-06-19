@@ -16,7 +16,7 @@ DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG 
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
 	
 	BOOL ReadFile(LPCTSTR szFileName);

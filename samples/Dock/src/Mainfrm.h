@@ -23,7 +23,7 @@ enum DockIDs
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
 	
 	void LoadDefaultDockers();

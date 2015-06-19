@@ -173,7 +173,7 @@ namespace Win32xx
 		void SetWidth(long nNewValue);
 
 		// Operations
-		void AddWebBrowserControl(void);
+		void AddWebBrowserControl();
 		void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
 		BOOL GetProperty(LPCTSTR pszProperty, CString& strValue);
 		VARIANT GetProperty( LPCTSTR pszProperty);

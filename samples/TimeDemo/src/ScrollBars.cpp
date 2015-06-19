@@ -160,7 +160,7 @@ WScrollBars()                                                            /*
 
 /*============================================================================*/
 	ScrollIncrements WScrollBars::
-GetScrollIncrements(void)						/*
+GetScrollIncrements()						/*
 
 	Return the current scrolling increments, in scroll units.
 *-----------------------------------------------------------------------------*/
@@ -170,7 +170,7 @@ GetScrollIncrements(void)						/*
 
 /*============================================================================*/
 	ScrollLimits WScrollBars::
-GetScrollLimits(void)							/*
+GetScrollLimits()							/*
 
 	Return the current scrolling limits, in scroll units.
 *-----------------------------------------------------------------------------*/
@@ -180,7 +180,7 @@ GetScrollLimits(void)							/*
 
 /*============================================================================*/
 	CPoint WScrollBars::
-GetScrollPosition(void)							/*
+GetScrollPosition()							/*
 
 	Return the current scroll position coordinates, in scroll units and
 	set the m_scroll_position member to this value.

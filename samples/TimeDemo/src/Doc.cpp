@@ -606,7 +606,7 @@ SaveDoc()								/*
 
 /*============================================================================*/
 	bool CDoc::
-SaveDocAs(void)							/*
+SaveDocAs()							/*
 
 	Get a new name for the document file and replace the old one with
 	this.  Save the newly named document and retain it as the current

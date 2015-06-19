@@ -23,7 +23,7 @@ void CRichView::PreCreate(CREATESTRUCT &cs)
 	cs.lpszClass = RICHEDIT_CLASS; // RichEdit ver 2.0
 }
 
-void CRichView::OnInitialUpdate(void)
+void CRichView::OnInitialUpdate()
 {
 	//increase the text limit of the rich edit window
 	LimitText(-1);

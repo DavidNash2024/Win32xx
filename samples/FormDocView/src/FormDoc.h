@@ -18,16 +18,16 @@ public:
 	void  SaveDocRegistry(LPCTSTR szKeyName);
 	DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
 
-	BOOL  GetCheckA(void) { return m_CheckA; }
+	BOOL  GetCheckA() { return m_CheckA; }
 	void  SetCheckA(BOOL IsChecked) { m_CheckA = IsChecked; }
 
-	BOOL  GetCheckB(void) { return m_CheckB; }
+	BOOL  GetCheckB() { return m_CheckB; }
 	void  SetCheckB(BOOL IsChecked) { m_CheckB = IsChecked; }
 
-	BOOL  GetCheckC(void) { return m_CheckC; }
+	BOOL  GetCheckC() { return m_CheckC; }
 	void  SetCheckC(BOOL IsChecked) { m_CheckC = IsChecked; }
 
-	UINT  GetRadio(void) { return m_Radio; }
+	UINT  GetRadio() { return m_Radio; }
 	void  SetRadio(UINT radio) { m_Radio = radio; }
 
 private:

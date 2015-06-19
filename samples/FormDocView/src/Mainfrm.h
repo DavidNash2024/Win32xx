@@ -15,7 +15,7 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
 	CFormDoc* GetDoc() {return &m_Doc;} 
 

@@ -159,27 +159,27 @@ namespace Win32xx
 		time_t	  GetTime() const;
 
 		// Assignment operators
-		const CTime& 	operator=(const CTime& timeSrc);
-		const CTime& 	operator=(time_t t);
+		CTime& 	operator=(const CTime& timeSrc);
+		CTime& 	operator=(const time_t& t);
 
 		// Computational operators
-		CTimeSpan 	  operator-(CTime& t) const;
-		CTime 	  	  operator-(CTimeSpan& ts) const;
-		CTime 	  	  operator+(CTimeSpan& ts) const;
-		const CTime&  operator+=(CTimeSpan& ts);
-		const CTime&  operator-=(CTimeSpan& ts);
-		bool 		  operator==(CTime& t) const;
-		bool 		  operator!=(CTime& t) const;
-		bool 		  operator<(CTime& time) const;
-		bool 		  operator>(CTime& time) const;
-		bool 		  operator<=(CTime& time) const;
-		bool 		  operator>=(CTime& time) const;
+		const CTimeSpan operator-(const CTime& t) const;
+		const CTime	  operator-(const CTimeSpan& ts) const;
+		const CTime   operator+(const CTimeSpan& ts) const;
+		CTime&  operator+=(const CTimeSpan& ts);
+		CTime&  operator-=(const CTimeSpan& ts);
+		bool 		  operator==(const CTime& t) const;
+		bool 		  operator!=(const CTime& t) const;
+		bool 		  operator<(const CTime& time) const;
+		bool 		  operator>(const CTime& time) const;
+		bool 		  operator<=(const CTime& time) const;
+		bool 		  operator>=(const CTime& time) const;
 
 		// CString conversion
 		CString 	Format(const CString& format) const;
 		CString 	Format(LPCTSTR pFormat) const;
 		CString 	Format(UINT nFormatID) const;
-		CString 	StdFormat(void) const;
+		CString 	StdFormat() const;
 
 		CString 	FormatGmt(const CString& format) const;
 		CString 	FormatGmt(LPCTSTR pFormat) const;
@@ -223,21 +223,21 @@ namespace Win32xx
 		int 		GetSeconds() const;
 
 		// assignment operators
-		const CTimeSpan& operator=(const CTimeSpan& ts);
-		const CTimeSpan& operator=(timespan_t t);
+		CTimeSpan& operator=(const CTimeSpan& ts);
+		CTimeSpan& operator=(const timespan_t& t);
 
 		// computational operators
-		CTimeSpan		operator-() const;
-		CTimeSpan 		operator-(CTimeSpan& ts) const;
-		CTimeSpan 		operator+(CTimeSpan& ts) const;
-		const CTimeSpan& operator+=(CTimeSpan& ts);
-		const CTimeSpan& operator-=(CTimeSpan& ts);
-		bool 	  		operator==(CTimeSpan& ts) const;
-		bool 	  		operator!=(CTimeSpan& ts) const;
-		bool 	  		operator<(CTimeSpan& ts) const;
-		bool 	  		operator>(CTimeSpan& ts) const;
-		bool 	  		operator<=(CTimeSpan& ts) const;
-		bool 	  		operator>=(CTimeSpan& ts) const;
+		const CTimeSpan		operator-() const;
+		const CTimeSpan 	operator-(CTimeSpan& ts) const;
+		const CTimeSpan 	operator+(CTimeSpan& ts) const;
+		CTimeSpan& operator+=(CTimeSpan& ts);
+		CTimeSpan& operator-=(CTimeSpan& ts);
+		bool 	  		operator==(const CTimeSpan& ts) const;
+		bool 	  		operator!=(const CTimeSpan& ts) const;
+		bool 	  		operator<(const CTimeSpan& ts) const;
+		bool 	  		operator>(const CTimeSpan& ts) const;
+		bool 	  		operator<=(const CTimeSpan& ts) const;
+		bool 	  		operator>=(const CTimeSpan& ts) const;
 
 		// CString conversion
 		CString   	Format(LPCTSTR pFormat) const;
@@ -750,25 +750,25 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline const CTime& CTime::operator=(const CTime& t)
+	inline CTime& CTime::operator=(const CTime& t)
 	//	Assign the CTime t value to *this
 	{
-		// cannot use assignment *this = t; here, as it is recursive
-		// (i.e., "=" operator would call itself incessantly)
+		// Self assignment is safe
 		m_time = t.m_time;
 		return *this;
 	}
 
 	//============================================================================
-	inline const CTime& CTime::operator=(time_t t)
+	inline CTime& CTime::operator=(const time_t& t)
 	//	Assign the time_t value to *this time.
 	{
+		// Self assignment is safe
 		m_time = t;
 		return *this;;
 	}
 
 	//============================================================================
-	inline CTimeSpan CTime::operator-(CTime& t) const
+	inline const CTimeSpan CTime::operator-(const CTime& t) const
 	//	Return the time span between *this time and  time t
 	{
 		timespan_t d = (timespan_t)(m_time - t.m_time);
@@ -777,7 +777,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime CTime::operator-(CTimeSpan& ts) const
+	inline const CTime CTime::operator-(const CTimeSpan& ts) const
 	//	Return the CTime that is the time span ts before *this time.
 	{
 		time_t d = m_time - ts.m_timespan;
@@ -786,7 +786,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime CTime::operator+(CTimeSpan& ts) const
+	inline const CTime CTime::operator+(const CTimeSpan& ts) const
 	//	Return the CTime that is the time span ts after *this time.
 	{
 		time_t s = m_time + ts.m_timespan;
@@ -795,7 +795,7 @@ namespace Win32xx
 	}
 
 	/*============================================================================*/
-	inline const CTime& CTime::operator+=(CTimeSpan& ts)
+	inline CTime& CTime::operator+=(const CTimeSpan& ts)
 	//	Increment *this time by the time span ts and  return this CTime.
 	{
 		m_time += ts.m_timespan;
@@ -803,7 +803,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline const CTime& CTime::operator-=(CTimeSpan& ts)
+	inline CTime& CTime::operator-=(const CTimeSpan& ts)
 	//	Decrement *this time by the time span ts and  return this CTime.
 	{
 		m_time -= ts.m_timespan;
@@ -811,42 +811,42 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline bool CTime::operator==(CTime& t) const
+	inline bool CTime::operator==(const CTime& t) const
 	//	Return true if *this and  t are the same times.
 	{
 		return m_time == t.m_time;
 	}
 
 	//============================================================================
-	inline bool CTime::operator!=(CTime& t) const
+	inline bool CTime::operator!=(const CTime& t) const
 	//	Return true if *this and  t are not the same times.
 	{
 		return m_time != t.m_time;
 	}
 
 	//============================================================================
-	inline bool CTime::operator<(CTime& t) const
+	inline bool CTime::operator<(const CTime& t) const
 	//	Return true if *this time is less than time t.
 	{
 		return m_time < t.m_time;
 	}
 
 	//============================================================================
-	inline bool CTime::operator>(CTime& t) const
+	inline bool CTime::operator>(const CTime& t) const
 	//	Return true if *this time is greater than time t.
 	{
 		return m_time > t.m_time;
 	}
 
 	//============================================================================
-	inline bool CTime::operator<=(CTime& time) const
+	inline bool CTime::operator<=(const CTime& time) const
 	//	Return true if *this time is less than or equal to time t.
 	{
 		return m_time <= time.m_time;
 	}
 
 	//============================================================================
-	inline bool CTime::operator>=(CTime& time) const
+	inline bool CTime::operator>=(const CTime& time) const
 	//	Return true if *this time is greater than or equal to time t.
 	{
 		return m_time >= time.m_time;
@@ -1102,23 +1102,25 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline const CTimeSpan& CTimeSpan::operator=(const CTimeSpan& ts)
+	inline CTimeSpan& CTimeSpan::operator=(const CTimeSpan& ts)
 	//	Assign the CTimeSpan ts to *this time span
 	{
+		// Self assignment is safe
 		m_timespan = ts.m_timespan;
 		return *this;
 	}
 
 	//============================================================================
-	inline const CTimeSpan& CTimeSpan::operator=(timespan_t t)
+	inline CTimeSpan& CTimeSpan::operator=(const timespan_t& t)
 	//	Assign the timespan_t t value to *this time span.
 	{
+		// Self assignment is safe
 		m_timespan = t;
 		return *this;
 	}
 
 	//============================================================================
-	inline CTimeSpan CTimeSpan::operator-() const
+	inline const CTimeSpan CTimeSpan::operator-() const
 	//	Return the negated value of *this time span.
 	{
 		CTimeSpan t0(-m_timespan);
@@ -1126,7 +1128,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTimeSpan CTimeSpan::operator-(CTimeSpan& ts) const
+	inline const CTimeSpan CTimeSpan::operator-(CTimeSpan& ts) const
 	//	Return the result of subtracting the time span ts from *this time span.
 	{
 		timespan_t d = m_timespan - ts.m_timespan;
@@ -1135,7 +1137,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTimeSpan CTimeSpan::operator+(CTimeSpan& ts) const
+	inline const CTimeSpan CTimeSpan::operator+(CTimeSpan& ts) const
 	//	Return the result of adding the time span ts to *this time span.
 	{
 		timespan_t s = m_timespan + ts.m_timespan;
@@ -1144,7 +1146,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline const CTimeSpan& CTimeSpan::operator+=(CTimeSpan& ts)
+	inline CTimeSpan& CTimeSpan::operator+=(CTimeSpan& ts)
 	//	Increase *this time span by the ts time span and  return the result.
 	{
 		m_timespan += ts.m_timespan;
@@ -1152,7 +1154,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline const CTimeSpan& CTimeSpan::operator-=(CTimeSpan& ts)
+	inline CTimeSpan& CTimeSpan::operator-=(CTimeSpan& ts)
 	//	Decrease *this time span by the ts time span and  return the result.
 	{
 		m_timespan -= ts.m_timespan;
@@ -1160,35 +1162,35 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline bool CTimeSpan::operator==(CTimeSpan& ts) const
+	inline bool CTimeSpan::operator==(const CTimeSpan& ts) const
 	//	Return true if the time span ts equals *this one.
 	{
 		return m_timespan == ts.m_timespan;
 	}
 
 	//============================================================================
-	inline bool CTimeSpan::operator!=(CTimeSpan& ts) const
+	inline bool CTimeSpan::operator!=(const CTimeSpan& ts) const
 	//	Return true if the time span ts does not equal *this one.
 	{
 		return m_timespan != ts.m_timespan;
 	}
 
 	//============================================================================
-	inline bool CTimeSpan::operator<(CTimeSpan& ts) const
+	inline bool CTimeSpan::operator<(const CTimeSpan& ts) const
 	//	Return true if *this time span is less than the ts time span.
 	{
 		return m_timespan < ts.m_timespan;
 	}
 
 	//============================================================================
-	inline bool CTimeSpan::operator>(CTimeSpan& ts) const
+	inline bool CTimeSpan::operator>(const CTimeSpan& ts) const
 	//	Return true if *this time span is greater than the ts time span.
 	{
 		return m_timespan > ts.m_timespan;
 	}
 
 	//============================================================================
-	inline bool CTimeSpan::operator<=(CTimeSpan& ts) const
+	inline bool CTimeSpan::operator<=(const CTimeSpan& ts) const
 	//	Return true if *this time span is less than or equal to the ts
 	//	time span.
 	{
@@ -1196,7 +1198,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline bool CTimeSpan::operator>=(CTimeSpan& ts) const
+	inline bool CTimeSpan::operator>=(const CTimeSpan& ts) const
 	//	Return true if *this time span is greater than or equal to the ts
 	//	time span.
 	{

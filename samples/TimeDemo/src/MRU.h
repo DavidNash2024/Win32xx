@@ -78,7 +78,7 @@ CMRU : public CObject							/*
 		virtual void 	RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void    Serialize(CArchive &ar);
 		virtual void 	UpdateMRUMenu();
-		virtual void	ValidateMRU(void);
+		virtual void	ValidateMRU();
 
 	  // Protected Declarations
 	protected:

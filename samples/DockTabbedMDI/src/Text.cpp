@@ -19,7 +19,7 @@ CViewText::CViewText()
     }
 }
 
-CViewText::~CViewText(void)
+CViewText::~CViewText()
 {
 	if (m_hRichEdit)
 		::FreeLibrary(m_hRichEdit);

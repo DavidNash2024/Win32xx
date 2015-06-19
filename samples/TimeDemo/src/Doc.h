@@ -77,7 +77,7 @@ CDoc : public CObject							/*
 		virtual bool    OpenDoc(const CString &);
 		virtual void    PushContent(const CString&);
 		virtual bool    SaveDoc();
-		virtual bool    SaveDocAs(void);
+		virtual bool    SaveDocAs();
 		virtual void	Serialize(CArchive& ar);
 
 	  // public data members

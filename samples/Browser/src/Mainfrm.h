@@ -13,7 +13,7 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
 	
 	void ConnectEvents();

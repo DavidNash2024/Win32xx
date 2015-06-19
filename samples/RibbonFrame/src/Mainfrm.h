@@ -14,7 +14,7 @@
 class CMainFrame : public CRibbonFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }

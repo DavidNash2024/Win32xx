@@ -11,7 +11,7 @@
 class CMainMDIFrame : public CMDIFrame
 {
 public:
-	CMainMDIFrame(void);
+	CMainMDIFrame();
 	virtual ~CMainMDIFrame();
 
 	BOOL OnFileClose();
