@@ -54,8 +54,8 @@ void CView::NewPictureFile()
 		m_pPicture = NULL;
 	}
 
-	CMainFrame* pFrame = GetPicApp()->GetMainFrame();
-	pFrame->SetWindowText(LoadString(IDW_MAIN).c_str());
+	CMainFrame& Frame = GetPicApp().GetMainFrame();
+	Frame.SetWindowText(LoadString(IDW_MAIN).c_str());
 	Invalidate();
 }
 
@@ -78,8 +78,8 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	// Create IPicture from image file
 	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 	{
-		CMainFrame* pFrame = GetPicApp()->GetMainFrame();
-		pFrame->SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
+		CMainFrame& Frame = GetPicApp().GetMainFrame();
+		Frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
 		Invalidate();
 		return TRUE;
 	}
@@ -88,8 +88,8 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 		TRACE("Failed to load picture\n");
 
 		// Set Frame title back to default
-		CMainFrame* pFrame = GetPicApp()->GetMainFrame();
-		pFrame->SendMessage(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
+		CMainFrame& Frame = GetPicApp().GetMainFrame();
+		Frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)LoadString(IDW_MAIN).c_str());
 		return FALSE;
 	}
 }

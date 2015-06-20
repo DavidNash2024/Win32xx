@@ -14,15 +14,15 @@ public:
 	CReBarApp();
 	virtual ~CReBarApp();
 	virtual BOOL InitInstance();
-	CMainFrame* GetMainFrame() { return &m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-// a useful function that returns a pointer to the CReBarApp object
-inline CReBarApp* GetReBarApp() { return static_cast<CReBarApp*>(GetApp()); }
+// a useful function that returns a reference to the CReBarApp object
+inline CReBarApp& GetReBarApp() { return static_cast<CReBarApp&>(*GetApp()); }
 
 
 #endif // define REBARAPP_H

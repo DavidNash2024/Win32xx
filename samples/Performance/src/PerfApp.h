@@ -15,15 +15,15 @@ public:
 	CPerformanceApp();
 	virtual ~CPerformanceApp();
 	virtual BOOL InitInstance();
-	CMainWindow* GetMainWnd() {return &m_MainWnd;}
+	CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:
 	CMainWindow m_MainWnd;	
 };
 
 
-// returns a pointer to the CPerformanceApp object
-inline CPerformanceApp* GetPerfApp() { return static_cast<CPerformanceApp*>(GetApp()); }
+// returns a reference to the CPerformanceApp object
+inline CPerformanceApp& GetPerfApp() { return static_cast<CPerformanceApp&>(*GetApp()); }
 
 
 #endif  //PERFAPP_H

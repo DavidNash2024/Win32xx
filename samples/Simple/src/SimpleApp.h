@@ -14,7 +14,7 @@ public:
     CSimpleApp();
     virtual ~CSimpleApp() {}
 	virtual BOOL InitInstance();
-	CView* GetView() { return &m_View; }
+	CView& GetView() { return m_View; }
 
 private:
     CView m_View;
@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CSimpleApp object
-inline CSimpleApp* GetSimpleApp() { return static_cast<CSimpleApp*>(GetApp()); }
+inline CSimpleApp& GetSimpleApp() { return static_cast<CSimpleApp&>(*GetApp()); }
 
 
 #endif

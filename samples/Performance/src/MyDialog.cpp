@@ -50,10 +50,10 @@ void CMyDialog::OnOK()
 	int nTestMessages = GetDlgItemInt(IDC_MESSAGES, NULL, FALSE);
 
 	// Get a pointer to the CMainWindow object
-	CMainWindow* pMainWnd = GetPerfApp()->GetMainWnd();
+	CMainWindow& MainWnd = GetPerfApp().GetMainWnd();
 	
-	pMainWnd->SetTestMessages(nTestMessages);
-	pMainWnd->CreateTestWindows(nWindows);
+	MainWnd.SetTestMessages(nTestMessages);
+	MainWnd.CreateTestWindows(nWindows);
 
 	// End the dialog
 	EndDialog(IDOK);

@@ -21,7 +21,7 @@ private:
 };
 
 
-// returns a pointer to the CRibbonFrameApp object
+// returns a reference to the CRibbonFrameApp object
 inline CRibbonFrameApp& GetRibbonFrameApp() { return static_cast<CRibbonFrameApp&>(*GetApp()); }
 
 

@@ -14,7 +14,7 @@ public:
     CRoundApp();
     virtual ~CRoundApp() {}
 	virtual BOOL InitInstance();
-	CView* GetView() { return &m_View; }
+	CView& GetView() { return m_View; }
 
 private:
     CView m_View;
@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CRoundApp object
-inline CRoundApp* GetSimpleApp() { return static_cast<CRoundApp*>(GetApp()); }
+inline CRoundApp& GetSimpleApp() { return static_cast<CRoundApp&>(*GetApp()); }
 
 
 #endif

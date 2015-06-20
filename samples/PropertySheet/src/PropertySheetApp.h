@@ -15,15 +15,15 @@ public:
 	CPropertySheetApp();
 	virtual ~CPropertySheetApp();
 	virtual BOOL InitInstance();
-	CMainFrame* GetMainFrame() { return &m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-// returns a pointer to the CPropertySheetApp object
-inline CPropertySheetApp* GetPSApp() { return static_cast<CPropertySheetApp*>(GetApp()); }
+// returns a reference to the CPropertySheetApp object
+inline CPropertySheetApp& GetPSApp() { return static_cast<CPropertySheetApp&>(*GetApp()); }
 
 
 #endif // define PROPERTYSHEETAPP_H

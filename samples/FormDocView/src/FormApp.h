@@ -15,7 +15,7 @@ public:
   CFormApp();
   virtual ~CFormApp();
   virtual BOOL InitInstance();
-  CMainFrame* GetMainFrame() { return &m_Frame; }
+  CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
   CMainFrame m_Frame;
@@ -24,7 +24,7 @@ private:
 
 
 // Handy global functions
-inline CFormApp* GetSdiApp() { return static_cast<CFormApp*>(GetApp()); }
+inline CFormApp& GetSdiApp() { return static_cast<CFormApp&>(*GetApp()); }
 
 
 #endif // define SDI_APP_H

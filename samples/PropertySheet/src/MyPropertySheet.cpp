@@ -19,8 +19,8 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
 		{
-			CMainFrame* pFrame = GetPSApp()->GetMainFrame();
-			PropSheet_Changed(pFrame->GetHwnd(), GetHwnd());
+			CMainFrame& Frame = GetPSApp().GetMainFrame();
+			PropSheet_Changed(Frame.GetHwnd(), GetHwnd());
 			break;
 		}
 
@@ -119,8 +119,8 @@ INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
 		{
-			CMainFrame* pFrame = GetPSApp()->GetMainFrame();
-			PropSheet_Changed(pFrame->GetHwnd(), GetHwnd());
+			CMainFrame& Frame = GetPSApp().GetMainFrame();
+			PropSheet_Changed(Frame.GetHwnd(), GetHwnd());
 			break;
 		}
 

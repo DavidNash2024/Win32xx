@@ -111,10 +111,9 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		FileName.ReleaseBuffer();
 		DragFinish(hDrop);
 
-		CMainFrame* pFrame = GetFrameApp()->GetMainFrame();
-		assert(pFrame);
+		CMainFrame& Frame = GetFrameApp().GetMainFrame();
 
-		if ( !pFrame->LoadFile(FileName) )	
+		if ( !Frame.LoadFile(FileName) )	
 		{
 			TRACE ("Failed to load "); TRACE(FileName); TRACE("\n");
 			Invalidate();

@@ -142,10 +142,10 @@ LRESULT CColourDialog::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CColourDialog::OnOK()
 {
 	// Get a pointer to our CMainFrame object
-	CMainFrame* pMainFrame = GetFrameApp()->GetMainFrame();
+	CMainFrame& MainFrame = GetFrameApp().GetMainFrame();
 
 	BOOL bGray = SendDlgItemMessage(IDC_CHECK1, BM_GETCHECK, 0, 0);
-	pMainFrame->ModifyBitmap(m_cRed, m_cGreen, m_cBlue, bGray);
+	MainFrame.ModifyBitmap(m_cRed, m_cGreen, m_cBlue, bGray);
 
 	CDialog::OnOK();
 }

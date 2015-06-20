@@ -8,19 +8,19 @@
 
 void CClientSocket::OnConnect()
 {
-	CClientDialog* pDialog = GetDlgApp()->GetDialog();
-	pDialog->PostMessage(USER_CONNECT, 0, 0);
+	CClientDialog& Dialog = GetDlgApp().GetDialog();
+	Dialog.PostMessage(USER_CONNECT, 0, 0);
 }
 
 void CClientSocket::OnDisconnect()
 {
-	CClientDialog* pDialog = GetDlgApp()->GetDialog();
-	pDialog->PostMessage(USER_DISCONNECT, 0, 0);
+	CClientDialog& Dialog = GetDlgApp().GetDialog();
+	Dialog.PostMessage(USER_DISCONNECT, 0, 0);
 }
 
 void CClientSocket::OnReceive()
 {
-	CClientDialog* pDialog = GetDlgApp()->GetDialog();
-	pDialog->PostMessage(USER_RECEIVE, 0, 0);
+	CClientDialog& Dialog = GetDlgApp().GetDialog();
+	Dialog.PostMessage(USER_RECEIVE, 0, 0);
 }
 

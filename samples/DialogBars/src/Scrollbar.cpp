@@ -25,7 +25,7 @@ LRESULT CMyScrollBar::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	// Get a pointer to the MyDialog object
-	CMyDialog* pMyDialog = GetDialogApp()->GetDialog();
+	CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
 	GetScrollInfo(&m_si);
 
@@ -60,10 +60,10 @@ LRESULT CMyScrollBar::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		break;
 	}
 
-	pMyDialog->SetScroll(m_si.nPos);			// Set the scroll bar position
-	pMyDialog->SetSlider(m_si.nPos);			// Set the slider position
-	pMyDialog->SetProgress(m_si.nPos);		 // Set the progress bar position
-	pMyDialog->SetStatic(FALSE, m_si.nPos);	 // Set the static text
+	MyDialog.SetScroll(m_si.nPos);			// Set the scroll bar position
+	MyDialog.SetSlider(m_si.nPos);			// Set the slider position
+	MyDialog.SetProgress(m_si.nPos);		 // Set the progress bar position
+	MyDialog.SetStatic(FALSE, m_si.nPos);	 // Set the static text
 
 	return 0L;
 }

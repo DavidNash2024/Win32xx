@@ -13,7 +13,7 @@ class CDialogDemoApp : public CWinApp
 public:
 	CDialogDemoApp();
 	virtual ~CDialogDemoApp();
-	CMyDialog* GetDialog() {return &m_MyDialog;}
+	CMyDialog& GetDialog() {return m_MyDialog;}
 	virtual BOOL InitInstance();
 
 private:
@@ -21,8 +21,8 @@ private:
 };
 
 
-// returns a pointer to the CDialogDemoApp object
-inline CDialogDemoApp* GetDlgApp() { return static_cast<CDialogDemoApp*>(GetApp()); }
+// returns a reference to the CDialogDemoApp object
+inline CDialogDemoApp& GetDlgApp() { return static_cast<CDialogDemoApp&>(*GetApp()); }
 
 
 #endif // define DLGSUBCLASSAPP_H

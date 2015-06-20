@@ -26,11 +26,11 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			int nPos = GetPos();
 
 			// Get a pointer to the MyDialog object
-			CMyDialog* pMyDialog = GetDialogApp()->GetDialog();
+			CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
-			pMyDialog->SetProgress(nPos);		// Set the progress bar position
-			pMyDialog->SetScroll(nPos);			// Set the scroll bar position
-			pMyDialog->SetStatic(TRUE, nPos);	// Set the static text
+			MyDialog.SetProgress(nPos);		// Set the progress bar position
+			MyDialog.SetScroll(nPos);			// Set the scroll bar position
+			MyDialog.SetStatic(TRUE, nPos);	// Set the static text
 			break;
 		}
 	}

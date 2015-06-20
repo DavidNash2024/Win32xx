@@ -14,7 +14,7 @@ public:
 	CSplitterApp();
 	virtual ~CSplitterApp()  {}
 	virtual BOOL InitInstance();
-	CMainFrame* GetMainFrame() { return &m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
 	CMainFrame m_Frame;
@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CSplitterApp object
-inline CSplitterApp* GetSplitApp() { return static_cast<CSplitterApp*>(GetApp()); }
+inline CSplitterApp& GetSplitApp() { return static_cast<CSplitterApp&>(*GetApp()); }
 
 
 #endif // define EFRAMEAPP_H

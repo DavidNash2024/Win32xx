@@ -16,10 +16,10 @@ BOOL CViewThread::InitInstance()
 
 	// Create the view window
 	//  Note: pFrame->GetDockClient() is the parent of the view window
-	CMainFrame* pFrame = GetDXApp()->GetMainFrame();
-	if (m_View.CreateEx(0, 0, 0, WS_CHILD, CRect(0,0,1,1), pFrame->GetDockClient(), 0))
+	CMainFrame& Frame = GetDXApp().GetMainFrame();
+	if (m_View.CreateEx(0, 0, 0, WS_CHILD, CRect(0,0,1,1), Frame.GetDockClient(), 0))
 	{
-		pFrame->PostMessage(UWM_VIEWCREATED, 0, 0);
+		Frame.PostMessage(UWM_VIEWCREATED, 0, 0);
 	}
 	else
 	{

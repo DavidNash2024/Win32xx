@@ -14,15 +14,15 @@ public:
 	CDockContainerApp();
 	virtual ~CDockContainerApp();
 	virtual BOOL InitInstance();
-	CMainFrame* GetMainFrame() { return &m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-// returns a pointer to the CDockContainerApp object
-inline CDockContainerApp* GetContainerApp() { return static_cast<CDockContainerApp*>(GetApp()); }
+// returns a reference to the CDockContainerApp object
+inline CDockContainerApp& GetContainerApp() { return static_cast<CDockContainerApp&>(*GetApp()); }
 
 
 #endif // CONTAINERAPP_H

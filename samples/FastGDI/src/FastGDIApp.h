@@ -14,15 +14,15 @@ public:
 	CFastGDIApp();
 	virtual ~CFastGDIApp();
 	virtual BOOL InitInstance();
-	CMainFrame* GetMainFrame() { return &m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
 	CMainFrame m_Frame;
 };
 
 
-// returns a pointer to the CFastGDIApp object
-inline CFastGDIApp* GetFrameApp() { return static_cast<CFastGDIApp*>(GetApp()); }
+// returns a reference to the CFastGDIApp object
+inline CFastGDIApp& GetFrameApp() { return static_cast<CFastGDIApp&>(*GetApp()); }
 
 
 #endif // define FASTGDIAPP_H

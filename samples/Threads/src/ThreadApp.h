@@ -13,15 +13,15 @@ public:
 	CThreadApp();
 	virtual ~CThreadApp();
 	virtual BOOL InitInstance();
-	CMainWindow* GetMainWnd() {return &m_MainWnd;}
+	CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:
 	CMainWindow m_MainWnd;	
 };
 
 
-// returns a pointer to the CThreadApp object
-inline CThreadApp* GetThreadApp() { return static_cast<CThreadApp*>(GetApp()); }
+// returns a reference to the CThreadApp object
+inline CThreadApp& GetThreadApp() { return static_cast<CThreadApp&>(*GetApp()); }
 
 
 #endif  //THREADAPP_H
