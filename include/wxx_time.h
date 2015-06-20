@@ -76,14 +76,6 @@ namespace Win32xx
 	// VS2005 and above defaults to __int64
 	typedef time_t timespan_t;
 
-	// standard/daylight type, to avoid ambiguity in constructor declarations
-	enum dst_t {decide = -1, STD, DST};
-
-	// standard time display format (see strftime for %x meanings)
-	const CString stdTForm   = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z");
-	const CString stdTDate   = TEXT("%d-%b-%Y");
-	const CString stdTHMS    = TEXT("%I:%M:%S %p");
-
 	// forward declaration
 	class CTimeSpan;
 
@@ -135,13 +127,13 @@ namespace Win32xx
 		CTime(const CTime& t);
 		CTime(time_t t);
 		CTime(time_tm& t);
-		CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr, UINT min, UINT sec, dst_t nDST = decide);
-		CTime(UINT year, UINT month, UINT day, UINT hour, UINT min, UINT sec, dst_t nDST = decide);
-		CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, dst_t nDST = decide);
-		CTime(WORD wDosDate, WORD wDosTime, dst_t eDST = decide);
-		CTime(const SYSTEMTIME& st, dst_t eDST = decide);
-		CTime(const FILETIME& ft,  dst_t eDST = decide);
-		CTime(const CString& timestr, dst_t eDST = decide);
+		CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr, UINT min, UINT sec, int nDST = -1);
+		CTime(UINT year, UINT month, UINT day, UINT hour, UINT min, UINT sec, int nDST = -1);
+		CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int nDST = -1);
+		CTime(WORD wDosDate, WORD wDosTime, int nDST = -1);
+		CTime(const SYSTEMTIME& st, int nDST = -1);
+		CTime(const FILETIME& ft,  int nDST = -1);
+		CTime(const CString& timestr, int nDST = -1);
 
 		// Method members
 		bool 	  GetAsFileTime(FILETIME& ft) const;
@@ -179,8 +171,6 @@ namespace Win32xx
 		CString 	Format(const CString& format) const;
 		CString 	Format(LPCTSTR pFormat) const;
 		CString 	Format(UINT nFormatID) const;
-		CString 	StdFormat() const;
-
 		CString 	FormatGmt(const CString& format) const;
 		CString 	FormatGmt(LPCTSTR pFormat) const;
 		CString 	FormatGmt(UINT nFormatID) const;
@@ -267,25 +257,6 @@ namespace Win32xx
 	//
 	////////////////////////////////////////////////////////////////
 
-	//	Local definitions, constants, and  defaults
-	//  for string formatting
-	static const size_t  maxTimeBufferSize = 128;
-
-	static const CString Month[] =   {TEXT("January"), TEXT("February"),
-					  TEXT("March"), TEXT("April"), TEXT("May"),
-					  TEXT("June"), TEXT("July"), TEXT("August"),
-					  TEXT("September"), TEXT("October"),
-					  TEXT("November"), TEXT("December")};
-	static const CString AbMonth[] = {TEXT("Jan"), TEXT("Feb"), TEXT("Mar"),
-					  TEXT("Apr"), TEXT("May"), TEXT("Jun"),
-					  TEXT("Jul"), TEXT("Aug"), TEXT("Sep"),
-					  TEXT("Oct"), TEXT("Nov"), TEXT("Dec")};
-
-	static const int sec_per_day   = 86400;
-	static const int sec_per_hour  = 3600;
-	static const int sec_per_min   = 60;
-	static const int hours_per_day = 24;
-
 	//============================================================================
 	inline time_t UTCtime(time_tm *atm)
 	//	Return the time_t t corresponding to the date given in atm as a UTC
@@ -336,7 +307,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline CTime::CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr,
-	    UINT min, UINT sec, dst_t nDST /* = -1 */)
+	    UINT min, UINT sec, int nDST /* = -1 */)
 	//	Construct a CTime of the nthwk occurrence of the given wkday (0..6)
 	//	in the mo month of yr year, at hr:min:sec of that day, local time.
 	//	Restrictions on yr, mo, hr, min, and  sec are the same as cited in the
@@ -369,6 +340,7 @@ namespace Win32xx
 		int nthwkday = (7 + wkday - atm.tm_wday) % 7 + (nthwk - 1) * 7;
 
 		// add this to the first of the month
+		int sec_per_day = 86400;
 		time_t tnthwkdy = t1st + nthwkday * sec_per_day;
 		atm = *::gmtime(&tnthwkdy);
 		atm.tm_isdst = nDST;
@@ -378,7 +350,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline CTime::CTime(UINT year, UINT month, UINT day, UINT hour, UINT min,
-		UINT sec, dst_t nDST)
+		UINT sec, int nDST /* = -1 */)
 	//	Construct a CTime object from local time elements. Each element is
 	//	constrained to lie within the following ranges:
 	//		year 		1970–2038 (on 32-bit systems)
@@ -408,8 +380,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec,
-		dst_t nDST /* = -1 */)
+	inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int nDST /* = -1 */)
 	//	Construct a CTime using the day-of-year doy, where doy = 1 is
 	//	January 1 in the specified year.  Restrictions on yr, hr, min, and  sec
 	//	are the same as in CTime(yr, mo, da, hr, min, sec, nDST). There is no
@@ -417,10 +388,11 @@ namespace Win32xx
 	{
 		 // fill out a time_tm with the calendar date for Jan 1, yr, hr:min:sec
 		time_tm atm1st = {(int)sec, (int)min, (int)hr, (int)1,
-			(int)0, (int)(yr - 1900), (int)0, (int)0, STD};
+			(int)0, (int)(yr - 1900), (int)0, (int)0, nDST};
 
 		// get the local time of the UTC time corresponding to this
 		time_t Jan1 = UTCtime(&atm1st);
+		int sec_per_day = 86400;
 		time_t tDoy = Jan1 + (doy - 1) * sec_per_day;
 		time_tm atm = *::gmtime(&tDoy);
 		atm.tm_isdst = nDST;
@@ -429,7 +401,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(WORD wDosDate, WORD wDosTime, dst_t nDST)
+	inline CTime::CTime(WORD wDosDate, WORD wDosTime, int nDST /* = -1 */)
 	//	Construct a CTime object from the MS-DOS wDosDate and  wDosTime values.
 	//	These are formats used by MS-DOS. The date is a packed 16-bit value
 	//	in which bits in the value represent the day, month, and  year. The
@@ -443,7 +415,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(const SYSTEMTIME& st, dst_t nDST)
+	inline CTime::CTime(const SYSTEMTIME& st, int nDST /* = -1 */)
 	//	 Construct a CTime object from a SYSTEMTIME structure st.
 	{
 		assert(st.wYear >= 1970);
@@ -454,7 +426,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(const FILETIME& ft, dst_t nDST)
+	inline CTime::CTime(const FILETIME& ft, int nDST /* = -1 */)
 	//	Construct a CTime object from a (UTC) FILETIME structure ft.
 	{
 		// start by converting ft (a UTC time) to local time
@@ -471,7 +443,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(const CString& timestr,  dst_t nDST /* = -1 */)
+	inline CTime::CTime(const CString& timestr, int nDST /* = -1 */)
 	//	Construct a CTime as directed by the formatting CString timestr, whose
 	//	specifications appear below. Any nonconformity between timestr  and
 	//	these expected format standards will result in throwing an exception.
@@ -500,6 +472,16 @@ namespace Win32xx
 		int	H; 	// hour of day 0 - 23
 		int	M;	// minute of hour 0 - 59
 		int	S;	// seconds of minute 0 - 61 (leap years)
+
+		CString Month[] =   {TEXT("January"), TEXT("February"),
+					  TEXT("March"), TEXT("April"), TEXT("May"),
+					  TEXT("June"), TEXT("July"), TEXT("August"),
+					  TEXT("September"), TEXT("October"),
+					  TEXT("November"), TEXT("December")};
+		CString AbMonth[] = {TEXT("Jan"), TEXT("Feb"), TEXT("Mar"),
+					  TEXT("Apr"), TEXT("May"), TEXT("Jun"),
+					  TEXT("Jul"), TEXT("Aug"), TEXT("Sep"),
+					  TEXT("Oct"), TEXT("Nov"), TEXT("Dec")};
 
 		// find  H:M:S values
 		if ((p1 = MIN(timestr.Find(TEXT(":")), len)) >= 0)
@@ -859,6 +841,7 @@ namespace Win32xx
 	//	an empty CString. The pFormat string is converted using the conventions
 	//	of the C function strftime(). Consult the C++ reference for details.
 	{
+		const size_t  maxTimeBufferSize = 128;
 		TCHAR szBuffer[maxTimeBufferSize];
 
 		time_tm* ptm = ::localtime(&m_time);
@@ -895,6 +878,7 @@ namespace Win32xx
 	//	an empty CString. The pFormat string is converted using the conventions
 	//	of the C function strftime(). Consult the C++ reference for details.
 	{
+		const size_t  maxTimeBufferSize = 128;
 		TCHAR szBuffer[maxTimeBufferSize];
 		CString fmt0 = pFormat;
 		while (fmt0.Replace(TEXT("%Z"), TEXT("Coordinated Universal Time")))
@@ -928,15 +912,6 @@ namespace Win32xx
 	{
 		return FormatGmt(format.c_str());
 	}
-
-	//============================================================================
-	inline CString CTime::StdFormat() const
-	//	Return a CString containing the elements of *this time in the standard
-	//	form specified by the stdTForm string.
-	{
-		return Format(stdTForm);
-	}
-
 
 	//
 	//	Static and  Friend Functions
@@ -1037,6 +1012,9 @@ namespace Win32xx
 	//		nMins 	0–59
 	//		nSecs 	0–59
 	{
+		int sec_per_day  = 86400;
+		int sec_per_hour = 3600;
+		int sec_per_min  = 60;
 		m_timespan = lDays * sec_per_day + nHours * sec_per_hour +
 			nMins * sec_per_min + nSecs;
 	}
@@ -1053,6 +1031,7 @@ namespace Win32xx
 	//	Return the number of complete days in this CTimeSpan.  This value may
 	//	be negative if the time span is negative.
 	{
+		int sec_per_day = 86400;
 		return m_timespan / sec_per_day;
 	}
 
@@ -1060,6 +1039,7 @@ namespace Win32xx
 	inline LONGLONG CTimeSpan::GetTotalHours() const
 	//	Return the total number of complete hours in this CTimeSpan.
 	{
+		int sec_per_hour = 3600;
 		return m_timespan / sec_per_hour;
 	}
 
@@ -1067,6 +1047,7 @@ namespace Win32xx
 	inline LONGLONG CTimeSpan::GetTotalMinutes() const
 	//	Return the total number of complete minutes in this CTimeSpan.
 	{
+		int sec_per_min = 60;
 		return m_timespan / sec_per_min;
 	}
 
@@ -1082,6 +1063,8 @@ namespace Win32xx
 	//	Return the number of hours in the day component of this time
 	//	span (–23 through 23).
 	{
+		int sec_per_hour  = 3600;
+		int hours_per_day = 24;
 		return (int)((m_timespan / sec_per_hour) % hours_per_day);
 	}
 
@@ -1090,6 +1073,7 @@ namespace Win32xx
 	//	Return the number of minutes in the hour component of this time
 	//	span (–59 through 59).
 	{
+		int sec_per_min = 60;
 		return (int)((m_timespan / sec_per_min) % sec_per_min);
 	}
 
@@ -1098,6 +1082,7 @@ namespace Win32xx
 	//	Return the number of seconds in the minute component of this time
 	//	span (–59 through 59).
 	{
+		int sec_per_min = 60;
 		return (int)(m_timespan % sec_per_min);
 	}
 
