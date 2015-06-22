@@ -89,9 +89,9 @@ namespace Win32xx
 	public:
 		CTab();
 		virtual ~CTab();
-		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
-		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText, int nID_Icon, UINT idTab = 0);
-		virtual int  AddTabPage(WndPtr pView, LPCTSTR szTabText);
+		virtual int  AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
+		virtual int  AddTabPage(CWnd* pView, LPCTSTR szTabText, int nID_Icon, UINT idTab = 0);
+		virtual int  AddTabPage(CWnd* pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
 		virtual CMenu& GetListMenu();
@@ -212,7 +212,7 @@ namespace Win32xx
 	public:
 		CTabbedMDI();
 		virtual ~CTabbedMDI();
-		virtual CWnd& AddMDIChild(WndPtr pView, LPCTSTR szTabText, int idMDIChild = 0);
+		virtual CWnd& AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild = 0);
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
@@ -301,15 +301,17 @@ namespace Win32xx
 	{
 	}
 
-	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
+	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
+	// Adds a tab. The framework assumes ownership of the CWnd pointer provided, 
+	// and deletes the CWnd object when the window is destroyed.
 	{
-		assert(pView.get());
+		assert(pView);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
-		m_vTabViews.push_back(pView);
+		m_vTabViews.push_back(WndPtr(pView));
 
 		TabPageInfo tpi;
-		tpi.pView = pView.get();
+		tpi.pView = pView;
 		tpi.idTab = idTab;
 		tpi.TabText = szTabText;
 		if (hIcon != 0)
@@ -337,13 +339,17 @@ namespace Win32xx
 		return iNewPage;
 	}
 
-	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
+	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
+	// Adds a tab. The framework assumes ownership of the CWnd pointer provided, 
+	// and deletes the CWnd object when the window is destroyed.
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp().GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED);
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
-	inline int CTab::AddTabPage(WndPtr pView, LPCTSTR szTabText)
+	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText)
+	// Adds a tab. The framework assumes ownership of the CWnd pointer provided, 
+	// and deletes the CWnd object when the window is destroyed.
 	{
 		return AddTabPage(pView, szTabText, (HICON)0, 0);
 	}
@@ -1654,18 +1660,21 @@ namespace Win32xx
 	{
 	}
 
-	inline CWnd& CTabbedMDI::AddMDIChild(WndPtr pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
+	inline CWnd& CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
+	// Adds a MDI tab, given a pointer to the view window, and the tab's text. 
+	// The framework assumes ownership of the CWnd pointer provided, and deletes 
+	// the CWnd object when the window is destroyed.
 	{
-		assert(pView.get()); // Cannot add Null CWnd*
+		assert(pView); // Cannot add Null CWnd*
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
 
-		GetTab().AddTabPage(WndPtr(pView), szTabText, 0, idMDIChild);
+		GetTab().AddTabPage(pView, szTabText, 0, idMDIChild);
 
 		// Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
 		if (IsWindow())
 			GetParent().SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor().GetHwnd(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
-		return *pView.get();
+		return *pView;
 	}
 
 	inline void CTabbedMDI::CloseActiveMDI()

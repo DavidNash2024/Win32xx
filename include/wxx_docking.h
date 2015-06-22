@@ -1871,7 +1871,9 @@ namespace Win32xx
 	}
 
 	inline CDocker& CDocker::AddDockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, int nDockID /* = 0*/)
-	// This function creates the docker, and adds it to the docker hierarchy as docked
+	// This function creates the docker, and adds it to the docker hierarchy as docked.
+	// The framework assumes ownership of the CDocker pointer provided, and deletes the 
+	// CDocker object when the window is destroyed.
 	{
 		// Create the docker window as a child of the frame window.
 		// This permanently sets the frame window as the docker window's owner,
@@ -1933,7 +1935,9 @@ namespace Win32xx
 	}
 
 	inline CDocker& CDocker::AddUndockedChild(CDocker* pDocker, DWORD dwDockStyle, int DockSize, const RECT& rc, int nDockID /* = 0*/)
-	// This function creates the docker, and adds it to the docker hierarchy as undocked
+	// This function creates the docker, and adds it to the docker hierarchy as undocked.
+	// The framework assumes ownership of the CDocker pointer provided, and deletes the 
+	// CDocker object when the window is destroyed.
 	{
 		assert(pDocker);
 
@@ -2093,7 +2097,7 @@ namespace Win32xx
 		// Delete any child containers this container might have
 		if (GetContainer())
 		{
-			std::vector<ContainerInfo>& AllContainers = GetContainer()->GetAllContainers();
+			std::vector<ContainerInfo> AllContainers = GetContainer()->GetAllContainers();
 			std::vector<ContainerInfo>::iterator iter;
 			for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 			{
@@ -2173,7 +2177,7 @@ namespace Win32xx
 			CDockContainer* pContainerSource = static_cast<CDockContainer*>(&pDock->GetView());
 
 			std::vector<ContainerInfo>::reverse_iterator riter;
-			std::vector<ContainerInfo>& AllContainers = pContainerSource->GetAllContainers();
+			std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
 			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
 			{
 				CDockContainer* pContainerChild = (*riter).pContainer;
@@ -3864,7 +3868,7 @@ namespace Win32xx
 			// Choose a new docker from among the dockers for child containers
 			CDocker* pDockNew = 0;
 			CDocker* pDockOld = GetDockFromView(pContainer);
-			std::vector<ContainerInfo>& AllContainers = pContainer->GetAllContainers();
+			std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
 			std::vector<ContainerInfo>::iterator iter = AllContainers.begin();
 			while ((0 == pDockNew) && (iter < AllContainers.end()))
 			{

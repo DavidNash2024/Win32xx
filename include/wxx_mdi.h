@@ -149,7 +149,7 @@ namespace Win32xx
 		CMDIFrame();
 		virtual ~CMDIFrame() {}
 
-		virtual CMDIChild* AddMDIChild(MDIChildPtr pMDIChild);
+		virtual CMDIChild& AddMDIChild(CMDIChild* pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
 		virtual CMenu GetActiveMenu() const;
 		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockMDIClient&>(m_DockMDIClient); }
@@ -211,16 +211,16 @@ namespace Win32xx
 		SetView(GetDockClient());
 	}
 
-	inline CMDIChild* CMDIFrame::AddMDIChild(MDIChildPtr pMDIChild)
+	inline CMDIChild& CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
 	// Adds a MDI child to the MDI frame. The pointer to the MDI child will be 
 	//  automatically deleted when the MDI Frame destroys the MDI child.
 	{
-		assert(NULL != pMDIChild.get()); // Cannot add Null MDI Child
+		assert(NULL != pMDIChild); // Cannot add Null MDI Child
 
-		m_vMDIChild.push_back(pMDIChild);
+		m_vMDIChild.push_back(MDIChildPtr(pMDIChild));
 		pMDIChild->Create(GetMDIClient());
 
-		return pMDIChild.get();
+		return *pMDIChild;
 	}
 
 	inline void CMDIFrame::AppendMDIMenu(CMenu MenuWindow)
