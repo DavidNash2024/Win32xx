@@ -488,10 +488,10 @@ namespace Win32xx
 	// Global Functions
 	//
 
-	inline CWinApp* GetApp()
-	// Returns a pointer to the CWinApp derived class
+	inline CWinApp& GetApp()
+	// Returns a reference to the CWinApp derived class
 	{
-		return CWinApp::SetnGetThis();
+		return *CWinApp::SetnGetThis();
 	}
 
 	inline CPoint GetCursorPos()

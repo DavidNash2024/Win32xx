@@ -287,7 +287,7 @@ namespace Win32xx
 			default:
 				{
 					// Reflect this message if it's from a control
-					CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
+					CWnd* pWnd = GetApp().GetCWndFromMap((HWND)lParam);
 					if (pWnd != NULL)
 						lr = pWnd->OnCommand(wParam, lParam);
 
@@ -308,7 +308,7 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
+				CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
 
 				if (pWndFrom != NULL)
 					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
@@ -316,7 +316,7 @@ namespace Win32xx
 				{
 					// Some controls (eg ListView) have child windows.
 					// Reflect those notifications too.
-					CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
+					CWnd* pWndFromParent = GetApp().GetCWndFromMap(::GetParent(hwndFrom));
 					if (pWndFromParent != NULL)
 						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 				}
@@ -386,7 +386,7 @@ namespace Win32xx
 		// Create a modal dialog
 		// A modal dialog box must be closed by the user before the application continues
 
-		assert( GetApp() );		// Test if Win32++ has been started
+		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
 		INT_PTR nResult = 0;
@@ -395,7 +395,7 @@ namespace Win32xx
 		m_IsModal=TRUE;
 
 		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsData();
+		TLSData* pTLSData = GetApp().SetTlsData();
 
 	#ifndef _WIN32_WCE
 		if (NULL == pTLSData->hMsgHook )
@@ -405,7 +405,7 @@ namespace Win32xx
 		InterlockedIncrement(&pTLSData->nDlgHooks);
 	#endif
 
-		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+		HINSTANCE hInstance = GetApp().GetInstanceHandle();
 		pTLSData->pWnd = this;
 
 		// Create a modal dialog
@@ -413,8 +413,8 @@ namespace Win32xx
 			nResult = ::DialogBoxIndirect(hInstance, m_lpTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 		else
 		{
-			if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
-				hInstance = GetApp()->GetResourceHandle();
+			if (::FindResource(GetApp().GetResourceHandle(), m_lpszResName, RT_DIALOG))
+				hInstance = GetApp().GetResourceHandle();
 			nResult = ::DialogBox(hInstance, m_lpszResName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
 		}
 
@@ -445,26 +445,26 @@ namespace Win32xx
 
 	inline HWND CDialog::DoModeless(HWND hParent /* = 0 */)
 	{
-		assert( GetApp() );		// Test if Win32++ has been started
+		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
 
 		m_IsModal=FALSE;
 
 		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsData();
+		TLSData* pTLSData = GetApp().SetTlsData();
 
 		// Store the CWnd pointer in Thread Local Storage
 		pTLSData->pWnd = this;
 
-		HINSTANCE hInstance = GetApp()->GetInstanceHandle();
+		HINSTANCE hInstance = GetApp().GetInstanceHandle();
 
 		// Create a modeless dialog
 		if (IsIndirect())
 			m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
 		else
 		{
-			if (::FindResource(GetApp()->GetResourceHandle(), m_lpszResName, RT_DIALOG))
-				hInstance = GetApp()->GetResourceHandle();
+			if (::FindResource(GetApp().GetResourceHandle(), m_lpszResName, RT_DIALOG))
+				hInstance = GetApp().GetResourceHandle();
 
 			m_hWnd = ::CreateDialog(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
 		}
@@ -530,7 +530,7 @@ namespace Win32xx
 			// Process dialog keystrokes for modeless dialogs
 			if (!IsModal())
 			{
-				TLSData* pTLSData = GetApp()->GetTlsData();
+				TLSData* pTLSData = GetApp().GetTlsData();
 				if (NULL == pTLSData->hMsgHook)
 				{
 					if (IsDialogMessage(pMsg))
@@ -602,7 +602,7 @@ namespace Win32xx
 		if (w == 0)
 		{
 			// The HWND wasn't in the map, so add it now
-			TLSData* pTLSData = GetApp()->GetTlsData();
+			TLSData* pTLSData = GetApp().GetTlsData();
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
@@ -624,7 +624,7 @@ namespace Win32xx
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
 	// Used by Modal Dialogs for idle processing and PreTranslateMessage
 	{
-		TLSData* pTLSData = GetApp()->GetTlsData();
+		TLSData* pTLSData = GetApp().GetTlsData();
 		MSG Msg;
 		ZeroMemory(&Msg, sizeof(MSG));
 		LONG lCount = 0;
@@ -635,7 +635,7 @@ namespace Win32xx
 							(Msg.message != WM_TIMER) && 
 							(Msg.message != WM_MOUSEMOVE) && 
 							(Msg.message != WM_SETCURSOR) &&  
-								GetApp()->OnIdle(lCount) != FALSE )
+								GetApp().OnIdle(lCount) != FALSE )
 		{
 			++lCount;
 		}

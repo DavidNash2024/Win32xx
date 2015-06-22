@@ -18,8 +18,8 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 	void DoPopupMenu();
-	CMyListView* GetListView() const {return static_cast<CMyListView*>(m_RightPane.GetView());}
-	CMyTreeView* GetTreeView() const {return static_cast<CMyTreeView*>(m_pLeftPane->GetView());}
+	CMyListView& GetListView() const {return static_cast<CMyListView&>(m_RightPane.GetView());}
+	CMyTreeView& GetTreeView() const {return static_cast<CMyTreeView&>(m_pLeftPane->GetView());}
 	BOOL GetShowHidden() {return m_ShowHidden;}
 	BOOL OnFileExit();	
 	BOOL OnViewLargeIcon();

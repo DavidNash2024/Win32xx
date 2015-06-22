@@ -157,7 +157,7 @@ namespace Win32xx
 	inline int CCmdBar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight)
 	{
 		assert(IsWindow());
-		HINSTANCE hInst = GetApp()->GetInstanceHandle();
+		HINSTANCE hInst = GetApp().GetInstanceHandle();
 		return 	CommandBar_AddBitmap(*this, hInst, idBitmap, iNumImages, iImageWidth, iImageHeight);
 	}
 
@@ -176,7 +176,7 @@ namespace Win32xx
 		mbi.cbSize     = sizeof(SHMENUBARINFO);
 		mbi.hwndParent = hParent;
 		mbi.nToolBarId = IDW_MAIN;
-		mbi.hInstRes   = GetApp()->GetInstanceHandle();
+		mbi.hInstRes   = GetApp().GetInstanceHandle();
 		mbi.nBmpId     = 0;
 		mbi.cBmpImages = 0;
 
@@ -186,10 +186,10 @@ namespace Win32xx
 		}
 		
 #else
-		*this = CommandBar_Create(GetApp()->GetInstanceHandle(), hParent, IDW_MENUBAR);
+		*this = CommandBar_Create(GetApp().GetInstanceHandle(), hParent, IDW_MENUBAR);
 		assert (*this);
 
-		CommandBar_InsertMenubar(*this, GetApp()->GetInstanceHandle(), IDW_MAIN, 0);
+		CommandBar_InsertMenubar(*this, GetApp().GetInstanceHandle(), IDW_MAIN, 0);
 #endif
 		assert(IsWindow());
 		return *this;
@@ -203,7 +203,7 @@ namespace Win32xx
 
 	inline HWND CCmdBar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton)
 	{
-		HINSTANCE hInst = GetApp()->GetInstanceHandle();
+		HINSTANCE hInst = GetApp().GetInstanceHandle();
 		return CommandBar_InsertComboBox(*this, hInst, iWidth, dwStyle, idComboBox, iButton);
 	}
 
@@ -262,8 +262,8 @@ namespace Win32xx
 		GetMenuBar()->Create(*this);
 
 		// Set the keyboard accelerators
-		HACCEL hAccel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		GetApp()->SetAccelerators(hAccel, this);
+		HACCEL hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		GetApp().SetAccelerators(hAccel, this);
 
 		// Add the toolbar buttons
 		if (m_ToolBarData.size() > 0)

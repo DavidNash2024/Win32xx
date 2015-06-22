@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CRibbonFrameApp object
-inline CRibbonFrameApp& GetRibbonFrameApp() { return static_cast<CRibbonFrameApp&>(*GetApp()); }
+inline CRibbonFrameApp& GetRibbonFrameApp() { return static_cast<CRibbonFrameApp&>(GetApp()); }
 
 
 #endif

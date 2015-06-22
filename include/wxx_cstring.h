@@ -684,7 +684,7 @@ namespace Win32xx
 	inline bool CString::LoadString(UINT nID)
 	// Loads the string from a Windows resource.
 	{
-		assert (GetApp());
+		assert (&GetApp());
 
 		int nSize = 64;
 		TCHAR* pTCharArray = 0;
@@ -700,7 +700,7 @@ namespace Win32xx
 			nSize = nSize * 4;
 			vString.assign(nSize+1, _T('\0'));
 			pTCharArray = &vString[0];
-			nTChars = ::LoadString (GetApp()->GetResourceHandle(), nID, pTCharArray, nSize);
+			nTChars = ::LoadString (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
 		}
 
 		if (nTChars > 0)

@@ -22,7 +22,7 @@ private:
 
 
 // a useful function that returns a reference to the CFrameApp object
-inline CFrameApp& GetFrameApp() { return static_cast<CFrameApp&>(*GetApp()); }
+inline CFrameApp& GetFrameApp() { return static_cast<CFrameApp&>(GetApp()); }
 
 
 #endif // define FRAMEAPP_H

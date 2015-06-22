@@ -117,8 +117,7 @@ LRESULT CMyTreeView::OnNMRClick(LPNMHDR pNMHDR)
 {
 	UNREFERENCED_PARAMETER(pNMHDR);
 
-	CPoint ptScreen;
-	::GetCursorPos(&ptScreen);
+	CPoint ptScreen = GetCursorPos();
 	DoContextMenu(ptScreen);
 
 	return 0L;
@@ -185,8 +184,8 @@ LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
 {
 	TreeItemData* pItem = reinterpret_cast<TreeItemData*>(pNMTV->itemNew.lParam);
 
-	CMyListView* LeftView = GetExplorerApp().GetMainFrame().GetListView();
-	LeftView->DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
+	CMyListView& LeftView = GetExplorerApp().GetMainFrame().GetListView();
+	LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 
 	return 0L;
 }

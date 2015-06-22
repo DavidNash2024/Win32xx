@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CMDIDemoApp object
-inline CMDIDemoApp& GetMDIApp() { return static_cast<CMDIDemoApp&>(*GetApp()); }
+inline CMDIDemoApp& GetMDIApp() { return static_cast<CMDIDemoApp&>(GetApp()); }
 
 
 #endif // MDIDEMOAPP_H

@@ -77,7 +77,7 @@ void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 	else
 		RemoveMRUEntry(strMRUText);
 
-	GetView()->Invalidate();
+	GetView().Invalidate();
 }
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
@@ -169,7 +169,7 @@ BOOL CMainFrame::OnFileOpen()
 			m_PathName=_T("");
 	}
 
-	GetView()->Invalidate();
+	GetView().Invalidate();
 	return TRUE;
 }
 
@@ -177,7 +177,7 @@ BOOL CMainFrame::OnFileNew()
 {
 	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
-	GetView()->Invalidate();
+	GetView().Invalidate();
 	return TRUE;
 }
 

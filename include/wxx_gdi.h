@@ -954,12 +954,12 @@ namespace Win32xx
 	inline void CGDIObject::AddToMap()
 	// Store the HDC and CDC pointer in the HDC map
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 		assert(m_pData->hGDIObject);
 		
-		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapCGDIData.insert(std::make_pair(m_pData->hGDIObject, m_pData));
-		GetApp()->m_csMapLock.Release();
+		GetApp().m_csMapLock.Lock();
+		GetApp().m_mapCGDIData.insert(std::make_pair(m_pData->hGDIObject, m_pData));
+		GetApp().m_csMapLock.Release();
 	}
 
 	inline void CGDIObject::Attach(HGDIOBJ hObject)
@@ -979,7 +979,7 @@ namespace Win32xx
 			if (hObject)
 			{
 				// Add the GDI object to this CCGDIObject
-				CGDI_Data* pCGDIData = GetApp()->GetCGDIDataFromMap(hObject);
+				CGDI_Data* pCGDIData = GetApp().GetCGDIDataFromMap(hObject);
 				if (pCGDIData)
 				{
 					delete m_pData;
@@ -1067,12 +1067,12 @@ namespace Win32xx
 	{
 		BOOL Success = FALSE;
 
-		if( GetApp() )
+		if( &GetApp() )
 		{
 			// Allocate an iterator for our HDC map
 			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
-			CWinApp* pApp = GetApp();
+			CWinApp* pApp = &GetApp();
 			if (pApp)
 			{
 				// Erase the CGDIObject pointer entry from the map
@@ -1133,9 +1133,9 @@ namespace Win32xx
 	inline BOOL CBitmap::LoadBitmap(LPCTSTR lpszName)
 	// Loads a bitmap from a resource using the resource string.
 	{
-		assert(GetApp());
+		assert( &GetApp() );
 
-		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
@@ -1153,9 +1153,9 @@ namespace Win32xx
 	inline BOOL CBitmap::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
 	// Loads a bitmap from a resource using the resource string.
 	{
-		assert(GetApp());
+		assert( &GetApp() );
 
-		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp()->GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
+		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
@@ -1185,8 +1185,8 @@ namespace Win32xx
 		inline HBITMAP CBitmap::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
 		// Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
 		{
-			assert(GetApp());
-			HBITMAP hBitmap = ::CreateMappedBitmap(GetApp()->GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+			assert(&GetApp());
+			HBITMAP hBitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 			Attach(hBitmap);
 			SetManaged(true);
 			return hBitmap;
@@ -2070,12 +2070,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	inline void CDC::AddToMap()
 	// Store the HDC and CDC pointer in the HDC map
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 		assert(m_pData->hDC);
 		
-		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapCDCData.insert(std::make_pair(m_pData->hDC, m_pData));
-		GetApp()->m_csMapLock.Release();
+		GetApp().m_csMapLock.Lock();
+		GetApp().m_mapCDCData.insert(std::make_pair(m_pData->hDC, m_pData));
+		GetApp().m_csMapLock.Release();
 	}
 
 	inline void CDC::Attach(HDC hDC, HWND hWnd /* = 0*/)
@@ -2099,7 +2099,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 			
 			if (hDC)
 			{
-				CDC_Data* pCDCData = GetApp()->GetCDCDataFromMap(hDC);
+				CDC_Data* pCDCData = GetApp().GetCDCDataFromMap(hDC);
 				if (pCDCData)
 				{
 					delete m_pData;
@@ -2283,12 +2283,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		BOOL Success = FALSE;
 
-		if( GetApp() )
+		if( &GetApp() )
 		{
 			// Allocate an iterator for our Data map
 			std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
-			CWinApp* pApp = GetApp();
+			CWinApp* pApp = &GetApp();
 			if (pApp)
 			{
 				// Erase the CDC data entry from the map

@@ -70,10 +70,10 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 
 	// Create the ToolBar's image list from 4 icons
 	m_ToolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_TOP));
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_LEFT));
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_RIGHT));
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_BOTTOM));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_TOP));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_LEFT));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_RIGHT));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_BOTTOM));
 
 	// Create the ToolBar
 	m_ToolBar.Create(*this);

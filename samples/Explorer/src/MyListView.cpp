@@ -188,7 +188,7 @@ void CMyListView::DoDefault(int iItem)
 							if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
 							{
 								CMainFrame& MainFrame = GetExplorerApp().GetMainFrame();
-								MainFrame.GetTreeView()->SelectFromListView(pInfo->GetFullPidl());
+								MainFrame.GetTreeView().SelectFromListView(pInfo->GetFullPidl());
 							}
 							else
 							{
@@ -582,7 +582,7 @@ void CMyListView::OnInitialUpdate()
 		if (1 == iCol) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
 		else lvc.fmt = LVCFMT_LEFT;		//left-aligned column
 
-		::LoadString(GetApp()->GetInstanceHandle(), IDS_COLUMN1 + iCol,
+		::LoadString(GetApp().GetInstanceHandle(), IDS_COLUMN1 + iCol,
 			szText, sizeof(szText)/sizeof(szText[0]));
 
 		InsertColumn(iCol, lvc);

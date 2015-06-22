@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CThemesApp object
-inline CThemesApp& GetThemeApp() { return static_cast<CThemesApp&>(*GetApp()); }
+inline CThemesApp& GetThemeApp() { return static_cast<CThemesApp&>(GetApp()); }
 
 
 #endif // define THEMESAPP_H

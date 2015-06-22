@@ -23,7 +23,7 @@ void CMyStatusBar::OnAttach()
 	m_ProgressBar.SetWindowPos(NULL, rcPart, SWP_SHOWWINDOW);
 
 	// Add the icon
-	SetPartIcon(2, (HICON)GetApp()->LoadImage(MAKEINTRESOURCE(IDW_MAIN), IMAGE_ICON, 16, 16));
+	SetPartIcon(2, (HICON)GetApp().LoadImage(MAKEINTRESOURCE(IDW_MAIN), IMAGE_ICON, 16, 16));
 
 	// Set a Part as owner drawn. The part's drawing is performed in CMainFrame::OnDrawItem.
 	SetPartText(3, _T(""), SBT_OWNERDRAW);

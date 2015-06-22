@@ -22,7 +22,7 @@ private:
 
 
 // a useful function that returns a reference to the CStatusBarApp object
-inline CStatusBarApp& GetStatusBarApp() { return static_cast<CStatusBarApp&>(*GetApp()); }
+inline CStatusBarApp& GetStatusBarApp() { return static_cast<CStatusBarApp&>(GetApp()); }
 
 
 #endif // define STATUSBARAPP_H

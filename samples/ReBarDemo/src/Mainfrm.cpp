@@ -149,10 +149,10 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 	// Create the ToolBar's image list from 4 icons
 	m_ToolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_TOP));
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_LEFT));
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_RIGHT));
-	m_ToolBarImages.Add(GetApp()->LoadIcon(IDI_BOTTOM));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_TOP));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_LEFT));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_RIGHT));
+	m_ToolBarImages.Add(GetApp().LoadIcon(IDI_BOTTOM));
 
 	// Create the ToolBar
 	dwStyle |= TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
@@ -253,47 +253,41 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 void CMainFrame::RecalcLayout()
 // Override CFrame::RecalcLayout to add the positioning of our rebar
 {
+	// Resize the status bar
+	if (GetStatusBar().IsWindow() && GetShowStatusBar())
 	{
-		CWnd* pView = GetView();
-		if ((!pView) || (!pView->GetHwnd()))
-			return;
+		GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
+		GetStatusBar().Invalidate();
+		if (GetUseMenuStatus())
+			GetStatusBar().SetWindowText(GetStatusText());
 
-		// Resize the status bar
-		if (GetStatusBar().IsWindow() && GetShowStatusBar())
-		{
-			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
-			GetStatusBar().Invalidate();
-			if (GetUseMenuStatus())
-				GetStatusBar().SetWindowText(GetStatusText());
+		SetStatusIndicators();
+	}
 
-			SetStatusIndicators();
-		}
+	// Resize the rebar or toolbar
+	if (IsReBarUsed())
+	{
+		GetReBar().SendMessage(WM_SIZE, 0L, 0L);
+		GetReBar().Invalidate();
+	}
+	else if (GetUseToolBar() && GetShowToolBar() && GetToolBar().IsWindow())
+		GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
-		// Resize the rebar or toolbar
-		if (IsReBarUsed())
-		{
-			GetReBar().SendMessage(WM_SIZE, 0L, 0L);
-			GetReBar().Invalidate();
-		}
-		else if (GetUseToolBar() && GetShowToolBar() && GetToolBar().IsWindow())
-			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+	// Position the additional rebar at the top, left, right or bottom of the view.
+	if (m_ReBar.IsWindow())
+		SetReBarPos();
 
-		// Position the additional rebar at the top, left, right or bottom of the view.
-		if (m_ReBar.IsWindow())
-			SetReBarPos();
+	// Position the view window
+	RecalcDockLayout();
 
-		// Position the view window
-		RecalcDockLayout();
+	// Adjust rebar bands
+	if (IsReBarUsed())
+	{
+		if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
+			GetReBar().MoveBandsLeft();
 
-		// Adjust rebar bands
-		if (IsReBarUsed())
-		{
-			if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
-				GetReBar().MoveBandsLeft();
-
-			if (IsMenuBarUsed())
-				SetMenuBarBandSize();
-		}
+		if (IsMenuBarUsed())
+			SetMenuBarBandSize();
 	}
 }
 

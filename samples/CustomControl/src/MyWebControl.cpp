@@ -10,15 +10,15 @@ CWebControl::CWebControl()
 	WNDCLASS wc;
 	ZeroMemory(&wc, sizeof(WNDCLASS));
 
-	if (!::GetClassInfo(GetApp()->GetInstanceHandle(), ClassName, &wc))
+	if (!::GetClassInfo(GetApp().GetInstanceHandle(), ClassName, &wc))
 	{
 		wc.lpszClassName = ClassName;
 		wc.lpfnWndProc = ::DefWindowProc;
-		wc.hInstance = GetApp()->GetInstanceHandle();
+		wc.hInstance = GetApp().GetInstanceHandle();
 		::RegisterClass(&wc);
 	}
 
-	assert (::GetClassInfo(GetApp()->GetInstanceHandle(), ClassName, &wc));
+	assert (::GetClassInfo(GetApp().GetInstanceHandle(), ClassName, &wc));
 }
 
 void CWebControl::OnInitialUpdate()

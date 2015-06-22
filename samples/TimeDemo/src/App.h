@@ -110,7 +110,7 @@ CApp& TheApp()                                                  	/*
 	Global function for accesss to this application.
 *----------------------------------------------------------------------------*/
 {
-	return (CApp&)*GetApp();
+	return (CApp&)GetApp();
 }
 /*-----------------------------------------------------------------------------*/
 #endif // define SDI_APP_H

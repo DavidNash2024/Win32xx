@@ -22,7 +22,7 @@ private:
 };
 
 // returns a reference to the CExplorerApp object
-inline CExplorerApp& GetExplorerApp() { return static_cast<CExplorerApp&>(*GetApp()); }
+inline CExplorerApp& GetExplorerApp() { return static_cast<CExplorerApp&>(GetApp()); }
 
 
 #endif  //EXPLORERAPP_H

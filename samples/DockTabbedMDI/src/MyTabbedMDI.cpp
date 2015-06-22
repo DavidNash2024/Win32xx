@@ -56,7 +56,7 @@ LRESULT CMyTabbedMDI::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 				TCHITTESTINFO info;
 				ZeroMemory(&info, sizeof(TCHITTESTINFO));
 				info.pt = pt;
-				GetTab()->HitTest(info);
+				GetTab().HitTest(info);
 				if (info.flags != TCHT_NOWHERE) 
 					SetTimer(nIDTimer, 100, NULL);
 			}

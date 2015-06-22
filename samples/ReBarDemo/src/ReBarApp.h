@@ -22,7 +22,7 @@ private:
 
 
 // a useful function that returns a reference to the CReBarApp object
-inline CReBarApp& GetReBarApp() { return static_cast<CReBarApp&>(*GetApp()); }
+inline CReBarApp& GetReBarApp() { return static_cast<CReBarApp&>(GetApp()); }
 
 
 #endif // define REBARAPP_H

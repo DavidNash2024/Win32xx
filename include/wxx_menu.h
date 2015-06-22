@@ -195,7 +195,7 @@ namespace Win32xx
 	{
 		m_pData = new CMenu_Data;
 
-		HMENU menu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(nID));
+		HMENU menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
 		Attach(menu);
 		m_pData->IsManagedMenu = TRUE;
 	}
@@ -240,13 +240,13 @@ namespace Win32xx
 	inline void CMenu::AddToMap()
 	// Store the HMENU and CMenu pointer in the HMENU map
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 		assert(m_pData);
 		assert(m_pData->hMenu);
 		
-		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapCMenuData.insert(std::make_pair(m_pData->hMenu, m_pData));
-		GetApp()->m_csMapLock.Release();
+		GetApp().m_csMapLock.Lock();
+		GetApp().m_mapCMenuData.insert(std::make_pair(m_pData->hMenu, m_pData));
+		GetApp().m_csMapLock.Release();
 	}
 
 	inline void CMenu::Release()
@@ -274,12 +274,12 @@ namespace Win32xx
 	{
 		BOOL Success = FALSE;
 
-		if (GetApp())
+		if ( &GetApp() )
 		{
 			// Allocate an iterator for our HMENU map
 			std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
-			CWinApp* pApp = GetApp();
+			CWinApp* pApp = &GetApp();
 			if (pApp)
 			{
 				// Erase the Menu pointer entry from the map
@@ -334,7 +334,7 @@ namespace Win32xx
 			if (hMenu)
 			{
 				// Add the menu to this CMenu
-				CMenu_Data* pCMenuData = GetApp()->GetCMenuDataFromMap(hMenu);
+				CMenu_Data* pCMenuData = GetApp().GetCMenuDataFromMap(hMenu);
 				if (pCMenuData)
 				{
 					delete m_pData;
@@ -579,7 +579,7 @@ namespace Win32xx
 		assert(m_pData);
 		assert(NULL == m_pData->hMenu);
 		assert(lpszResourceName);
-		m_pData->hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), lpszResourceName);
+		m_pData->hMenu = ::LoadMenu(GetApp().GetResourceHandle(), lpszResourceName);
 		if (m_pData->hMenu != 0) AddToMap();
 		return NULL != m_pData->hMenu;
 	}
@@ -589,7 +589,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(NULL == m_pData->hMenu);
-		m_pData->hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(uIDResource));
+		m_pData->hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(uIDResource));
 		if (m_pData->hMenu != 0) AddToMap();
 		return NULL != m_pData->hMenu;
 	}

@@ -61,10 +61,10 @@ void CMainFrame::OnInitialUpdate()
 	// Add the right window pane
 	int Width = (int) (GetWindowRect().Width() * 0.3);
 	DWORD dwDockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
-	m_pLeftPane = static_cast<CLeftPane*>(m_RightPane.AddDockedChild(new CLeftPane, dwDockStyle, Width));
+	m_pLeftPane = static_cast<CLeftPane*>(&m_RightPane.AddDockedChild(new CLeftPane, dwDockStyle, Width));
 
 	// All windows are now created, so populate the treeview
-	GetTreeView()->GetRootItems();
+	GetTreeView().GetRootItems();
 
 	// Uncheck the hidden menu item
 	GetFrameMenu().CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
@@ -127,7 +127,7 @@ BOOL CMainFrame::OnViewLargeIcon()
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
-	GetListView()->ViewLargeIcons();
+	GetListView().ViewLargeIcons();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LARGEICON, 0);
 	return TRUE;
 } 
@@ -137,7 +137,7 @@ BOOL CMainFrame::OnViewList()
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
-	GetListView()->ViewList();
+	GetListView().ViewList();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
 	return TRUE;
 }
@@ -154,7 +154,7 @@ BOOL CMainFrame::OnViewReport()
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
-	GetListView()->ViewReport();
+	GetListView().ViewReport();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 	return TRUE;
 }
@@ -164,7 +164,7 @@ BOOL CMainFrame::OnViewSmallIcon()
 	// Handle the the View submenu
 	CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
 
-	GetListView()->ViewSmallIcons();
+	GetListView().ViewSmallIcons();
 	ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
 	return TRUE;
 }
@@ -178,7 +178,7 @@ BOOL CMainFrame::OnShowHidden()
 	ViewMenu.CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_ShowHidden)? MF_CHECKED : MF_UNCHECKED);
 
 	// Refresh the Listview display
-	GetListView()->DoDisplay();
+	GetListView().DoDisplay();
 	return TRUE;
 }
 

@@ -175,24 +175,24 @@ namespace Win32xx
 	inline void CImageList::AddToMap()
 	// Store the HIMAGELIST and CImageList pointer in the HIMAGELIST map
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 		assert(m_pData->hImageList);
 
-		GetApp()->m_csMapLock.Lock();
-		GetApp()->m_mapCImlData.insert(std::make_pair(m_pData->hImageList, m_pData));
-		GetApp()->m_csMapLock.Release();
+		GetApp().m_csMapLock.Lock();
+		GetApp().m_mapCImlData.insert(std::make_pair(m_pData->hImageList, m_pData));
+		GetApp().m_csMapLock.Release();
 	}
 
 	inline BOOL CImageList::RemoveFromMap()
 	{
 		BOOL Success = FALSE;
 
-		if (GetApp())
+		if ( &GetApp() )
 		{
 			// Allocate an iterator for our CImageList data
 			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
-			CWinApp* pApp = GetApp();
+			CWinApp* pApp = &GetApp();
 			if (pApp)
 			{
 				// Erase the CImageList data entry from the map
@@ -257,7 +257,7 @@ namespace Win32xx
 			if (hImageList)
 			{
 				// Add the image list to this CImageList
-				CIml_Data* pCImlData = GetApp()->GetCImlDataFromMap(hImageList);
+				CIml_Data* pCImlData = GetApp().GetCImlDataFromMap(hImageList);
 				if (pCImlData)
 				{
 					delete m_pData;
@@ -336,7 +336,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(NULL == m_pData->hImageList);
-		HIMAGELIST himlNew = ImageList_LoadBitmap(GetApp()->GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
+		HIMAGELIST himlNew = ImageList_LoadBitmap(GetApp().GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
 
 		if (himlNew)
 		{

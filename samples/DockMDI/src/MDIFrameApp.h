@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CMDIFrameApp object
-inline CMDIFrameApp& GetMDIApp() { return static_cast<CMDIFrameApp&>(*GetApp()); }
+inline CMDIFrameApp& GetMDIApp() { return static_cast<CMDIFrameApp&>(GetApp()); }
 
 
 #endif // MDIFRAMEAPP_H

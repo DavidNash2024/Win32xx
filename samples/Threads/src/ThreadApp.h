@@ -21,7 +21,7 @@ private:
 
 
 // returns a reference to the CThreadApp object
-inline CThreadApp& GetThreadApp() { return static_cast<CThreadApp&>(*GetApp()); }
+inline CThreadApp& GetThreadApp() { return static_cast<CThreadApp&>(GetApp()); }
 
 
 #endif  //THREADAPP_H

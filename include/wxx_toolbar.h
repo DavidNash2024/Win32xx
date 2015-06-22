@@ -179,7 +179,7 @@ namespace Win32xx
 
 		TBADDBITMAP tbab;
 		ZeroMemory(&tbab, sizeof(TBADDBITMAP));
-		tbab.hInst = GetApp()->GetResourceHandle();
+		tbab.hInst = GetApp().GetResourceHandle();
 		tbab.nID   = ToolBarID;
 		int iResult = (int)SendMessage(TB_ADDBITMAP, (WPARAM)iImages, (LPARAM)&tbab);
 
@@ -244,7 +244,7 @@ namespace Win32xx
 	// Adds a new string, passed as a resource ID, to the ToolBar's internal list of strings.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TB_ADDSTRING, (LPARAM)GetApp()->GetResourceHandle(), (WPARAM)nStringID);
+		return (int)SendMessage(TB_ADDSTRING, (LPARAM)GetApp().GetResourceHandle(), (WPARAM)nStringID);
 	}
 
 	inline int CToolBar::AddStrings(LPCTSTR lpszStrings) const
@@ -686,7 +686,7 @@ namespace Win32xx
 
 		TBREPLACEBITMAP tbrb;
 		ZeroMemory(&tbrb, sizeof(TBREPLACEBITMAP));
-		tbrb.hInstNew = GetApp()->GetResourceHandle();
+		tbrb.hInstNew = GetApp().GetResourceHandle();
 		tbrb.hInstOld = tbrb.hInstNew;
 		tbrb.nIDNew = NewToolBarID;
 		tbrb.nIDOld = m_OldToolBarID;

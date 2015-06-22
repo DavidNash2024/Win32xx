@@ -33,16 +33,16 @@ void CMainFrame::LoadDefaultDockers()
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 
 	// Add the parent dockers
-	CDocker* pDockRight  = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 250, ID_DOCK_CLASSES1);
-	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
+	CDocker& DockRight  = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 250, ID_DOCK_CLASSES1);
+	CDocker& DockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
 
 	// Add the remaining dockers
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 250, ID_DOCK_FILES1);
-	pDockRight->AddDockedChild(new CDockDialog, DS_DOCKED_CONTAINER | dwStyle, 250, ID_DOCK_DIALOG);
+	DockRight.AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 250, ID_DOCK_FILES1);
+	DockRight.AddDockedChild(new CDockDialog, DS_DOCKED_CONTAINER | dwStyle, 250, ID_DOCK_DIALOG);
 
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
-	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
+	DockBottom.AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
+	DockBottom.AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
+	DockBottom.AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
 }
 
 void CMainFrame::LoadDefaultMDIs()
@@ -88,41 +88,31 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileNewSimple()
 {
-	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
-	assert(pTabbedMDI);
-	pTabbedMDI->AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
+	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNewRect()
 {
-	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
-	assert(pTabbedMDI);
-	pTabbedMDI->AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
+	m_MyTabbedMDI.AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNewList()
 {
-	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
-	assert(pTabbedMDI);
-	pTabbedMDI->AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
+	m_MyTabbedMDI.AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNewText()
 {
-	CTabbedMDI* pTabbedMDI =  &m_MyTabbedMDI;
-	assert(pTabbedMDI);
-	pTabbedMDI->AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
+	m_MyTabbedMDI.AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileNewTree()
 {
-	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
-	assert(pTabbedMDI);
-	pTabbedMDI->AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
+	m_MyTabbedMDI.AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
 	return TRUE;
 }
 
@@ -139,7 +129,7 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
-	for (iter = GetAllDockChildren()->begin(); iter < GetAllDockChildren()->end(); ++iter)
+	for (iter = GetAllDockChildren().begin(); iter < GetAllDockChildren().end(); ++iter)
 	{
 		CDockContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer && pContainer->IsWindow())
@@ -163,8 +153,7 @@ BOOL CMainFrame::OnMDITabsAtTop()
 void CMainFrame::SetMDITabsAtTop(BOOL bTop)
 {
 	m_IsMDITabsAtTop = bTop;
-	CTabbedMDI* pTabbedMDI = &m_MyTabbedMDI;
-	pTabbedMDI->GetTab()->SetTabsAtTop(bTop);
+	m_MyTabbedMDI.GetTab().SetTabsAtTop(bTop);
 
 	// Set the menu checkmark
 	UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
@@ -306,7 +295,7 @@ void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 	std::vector<DockPtr>::iterator iter;
 
 	// Set the Tab position for each container
-	for (iter = GetAllDockChildren()->begin(); iter < GetAllDockChildren()->end(); ++iter)
+	for (iter = GetAllDockChildren().begin(); iter < GetAllDockChildren().end(); ++iter)
 	{
 		CDockContainer* pContainer = (*iter)->GetContainer();
 		if (pContainer && pContainer->IsWindow())
@@ -442,11 +431,11 @@ void CMainFrame::SetupToolBar()
 	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp()->LoadIcon(IDI_SIMPLE));
-	AddMenuIcon(IDM_FILE_NEWRECT, GetApp()->LoadIcon(IDI_RECT));
-	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp()->LoadIcon(IDI_TEXT));
-	AddMenuIcon(IDM_FILE_NEWLIST, GetApp()->LoadIcon(IDI_FILEVIEW));
-	AddMenuIcon(IDM_FILE_NEWTREE, GetApp()->LoadIcon(IDI_CLASSVIEW));
+	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp().LoadIcon(IDI_SIMPLE));
+	AddMenuIcon(IDM_FILE_NEWRECT, GetApp().LoadIcon(IDI_RECT));
+	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
+	AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILEVIEW));
+	AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSVIEW));
 }
 
 LRESULT CMainFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)

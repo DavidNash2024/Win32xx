@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CTrayApp object
-inline CTrayApp& GetTrayApp() { return static_cast<CTrayApp&>(*GetApp()); }
+inline CTrayApp& GetTrayApp() { return static_cast<CTrayApp&>(GetApp()); }
 
 
 #endif // TRAYAPP_H

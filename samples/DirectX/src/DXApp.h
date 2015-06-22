@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CDXApp object
-inline CDXApp& GetDXApp() { return static_cast<CDXApp&>(*GetApp()); }
+inline CDXApp& GetDXApp() { return static_cast<CDXApp&>(GetApp()); }
 
 
 #endif

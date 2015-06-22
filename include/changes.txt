@@ -86,6 +86,24 @@ Modified CFile::CFile   		throws an exception on fail to open file
 Modified CFile::Read    		throws an exception on fail to read file
 Modified CFile::Write           throws an exception on fail to write file
 
+Modified ::GetApp                          	now returns a reference                    
+Modified CDockContainer::GetView            now returns a reference                   
+Modified CDockContainer::GetViewPage        now returns a reference                                      
+Modified CDocker::GetView                   now returns a reference                   
+Modified CDocker::AddDockChild              now returns a reference                   
+Modified CDocker::AddUndockedChild          now returns a reference                   
+Modified CDocker::GetAllDockChildren        now returns a reference                   
+Modified CDocker::GetDockChildren           now returns a reference                   
+Modified CDocker::GetAllDockers             now returns a reference                   
+Modified CDocker::GetDockAncestor           now returns a reference                   
+Modified CDockContainer::GetAllContainers   now returns a reference                   
+Modified CMDIChild::GetMDIFrame             now returns a reference                   
+Modified CMDIChild::GetView                 now returns a reference                   
+Modified CTab::GetAllTabs                   now returns a reference                   
+Modified CTabbedMDI::AddMDIChild            now returns a reference                   
+Modified CTabbedMDI::GetTab                 now returns a reference                   
+
+
 Renamed the header files. They are prefixed with wxx_
 
 

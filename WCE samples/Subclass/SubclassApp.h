@@ -22,7 +22,7 @@ private:
 
 
 // returns a reference to the CSubclassApp object
-inline CSubclassApp& GetSubApp() { return *((CSubclassApp*)GetApp()); }
+inline CSubclassApp& GetSubApp() { return static_cast<CSubclassApp&>(GetApp()); }
 
 
 #endif // define SUBCLASSAPP_H

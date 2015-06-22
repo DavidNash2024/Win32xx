@@ -92,8 +92,8 @@ namespace Win32xx
 
 		// These functions aren't virtual, and shouldn't be overridden
 		void SetHandles(HMENU MenuName, HACCEL AccelName);
-		CMDIFrame* GetMDIFrame() const;
-		CWnd* GetView() const	{return m_pView;}
+		CMDIFrame& GetMDIFrame() const;
+		CWnd& GetView() const	{assert(m_pView); return *m_pView;}
 		void SetView(CWnd& pwndView);
 		void MDIActivate() const;
 		void MDIDestroy() const;
@@ -421,14 +421,14 @@ namespace Win32xx
 	inline BOOL CMDIFrame::OnViewStatusBar()
 	{
 		CFrame::OnViewStatusBar();
-		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		GetView().RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		return TRUE;
 	}
 
 	inline BOOL CMDIFrame::OnViewToolBar()
 	{
 		CFrame::OnViewToolBar();
-		GetView()->RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		GetView().RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		return TRUE;
 	}
 
@@ -449,7 +449,7 @@ namespace Win32xx
 	{
 		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
 		{
-			if (TranslateMDISysAccel(GetView()->GetHwnd(), pMsg))
+			if (TranslateMDISysAccel(GetView().GetHwnd(), pMsg))
 				return TRUE;
 		}
 
@@ -460,7 +460,7 @@ namespace Win32xx
 	{
 		CFrame::RecalcLayout();
 
-		if (GetView()->IsWindow())
+		if (GetView().IsWindow())
 			MDIIconArrange();
 	}
 
@@ -503,7 +503,7 @@ namespace Win32xx
 			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
 				UpdateFrameMenu(GetActiveMDIChild()->m_ChildMenu);
 			if (GetActiveMDIChild()->m_hChildAccel)
-				GetApp()->SetAccelerators(GetActiveMDIChild()->m_hChildAccel, this);
+				GetApp().SetAccelerators(GetActiveMDIChild()->m_hChildAccel, this);
 		}
 		else
 		{
@@ -512,7 +512,7 @@ namespace Win32xx
 			else
 				SetMenu( GetFrameMenu() );
 
-			GetApp()->SetAccelerators(GetFrameAccel(), this);
+			GetApp().SetAccelerators(GetFrameAccel(), this);
 		}
 	}
 
@@ -629,8 +629,8 @@ namespace Win32xx
 	inline CMDIChild::CMDIChild() : m_pView(NULL)
 	{
 		// Set the MDI Child's menu and accelerator in the constructor, like this ...
-		//   HMENU hChildMenu = LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView"));
-		//   HACCEL hChildAccel = LoadAccelerators(GetApp()->GetResourceHandle(), _T("MDIAccelView"));
+		//   HMENU hChildMenu = LoadMenu(GetApp().GetResourceHandle(), _T("MdiMenuView"));
+		//   HACCEL hChildAccel = LoadAccelerators(GetApp().GetResourceHandle(), _T("MDIAccelView"));
 		//   SetHandles(hChildMenu, hChildAccel);
 	}
 
@@ -701,18 +701,18 @@ namespace Win32xx
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
 		if (m_ChildMenu.GetHandle())
-			GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
+			GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
 		if (m_hChildAccel)
-			GetApp()->SetAccelerators(m_hChildAccel, this);
+			GetApp().SetAccelerators(m_hChildAccel, this);
 
 		return m_hWnd;
 	}
 
-	inline CMDIFrame* CMDIChild::GetMDIFrame() const
+	inline CMDIFrame& CMDIChild::GetMDIFrame() const
 	{
-		CMDIFrame* pMDIFrame = static_cast<CMDIFrame*>(GetCWndPtr(GetParent().GetParent()));
-		assert(dynamic_cast<CMDIFrame*>(pMDIFrame));
-		return pMDIFrame;
+		CMDIFrame& MDIFrame = static_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent()));
+		assert(dynamic_cast<CMDIFrame&>(MDIFrame));
+		return MDIFrame;
 	}
 
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -751,8 +751,8 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(pcs);
 
 		// Create the view window
-		assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
-		GetView()->Create(*this);
+		assert( &GetView() );			// Use SetView in CMDIChild's constructor to set the view window
+		GetView().Create(*this);
 		RecalcLayout();
 
 		return 0;
@@ -762,7 +762,7 @@ namespace Win32xx
 	{
 		// Resize the View window
 		CRect rc = GetClientRect();
-		GetView()->SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
+		GetView().SetWindowPos( NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_SHOWWINDOW );
 	}
 
 	inline void CMDIChild::SetHandles(HMENU hMenu, HACCEL hAccel)
@@ -773,14 +773,14 @@ namespace Win32xx
 		// Note: It is valid to call SetHandles before the window is created
 		if (IsWindow())
 		{
-			CWnd* pWnd = GetMDIFrame()->GetActiveMDIChild();
+			CWnd* pWnd = GetMDIFrame().GetActiveMDIChild();
 			if (pWnd == this)
 			{
 				if (m_ChildMenu.GetHandle())
-					GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
+					GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
 
 				if (m_hChildAccel)
-					GetApp()->SetAccelerators(m_hChildAccel, GetMDIFrame());
+					GetApp().SetAccelerators(m_hChildAccel, &GetMDIFrame());
 			}
 		}
 	}
@@ -796,17 +796,17 @@ namespace Win32xx
 			// Assign the view window
 			m_pView = &wndView;
 
-			if (*this != 0)
+			if (GetHwnd() != 0)
 			{
 				// The MDIChild is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMDIChild's constructor to set the view window
+				assert(&GetView());			// Use SetView in CMDIChild's constructor to set the view window
 
-				if (!GetView()->IsWindow())
-					GetView()->Create(*this);
+				if (!GetView().IsWindow())
+					GetView().Create(*this);
 				else
 				{
-					GetView()->SetParent(*this);
-					GetView()->ShowWindow();
+					GetView().SetParent(*this);
+					GetView().ShowWindow();
 				}
 				
 				RecalcLayout();
@@ -822,21 +822,21 @@ namespace Win32xx
 		// This child is being activated
 		if (lParam == (LPARAM) GetHwnd())
 		{
-			GetMDIFrame()->m_hActiveMDIChild = *this;
+			GetMDIFrame().m_hActiveMDIChild = *this;
 			// Set the menu to child default menu
 			if (m_ChildMenu.GetHandle())
-				GetMDIFrame()->UpdateFrameMenu(m_ChildMenu);
+				GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
 			if (m_hChildAccel)
-				GetApp()->SetAccelerators(m_hChildAccel, this);
+				GetApp().SetAccelerators(m_hChildAccel, this);
 		}
 
 		// No child is being activated
 		if (lParam == 0)
 		{
-			GetMDIFrame()->m_hActiveMDIChild = NULL;
+			GetMDIFrame().m_hActiveMDIChild = NULL;
 			// Set the menu to frame's original menu
-			GetMDIFrame()->UpdateFrameMenu( GetMDIFrame()->GetFrameMenu() );
-			GetApp()->SetAccelerators(GetMDIFrame()->GetFrameAccel(), this);
+			GetMDIFrame().UpdateFrameMenu( GetMDIFrame().GetFrameMenu() );
+			GetApp().SetAccelerators(GetMDIFrame().GetFrameAccel(), this);
 		}
 			
 		return 0L;

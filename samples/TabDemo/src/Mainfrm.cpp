@@ -246,9 +246,9 @@ void CMainFrame::SetupToolBar()
 	GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_NEW_FILES, GetApp()->LoadIcon(IDI_FILEVIEW));
-	AddMenuIcon(IDM_NEW_CLASSES, GetApp()->LoadIcon(IDI_CLASSVIEW));
-	AddMenuIcon(IDM_NEW_DIALOG, GetApp()->LoadIcon(IDI_DIALOGVIEW));
+	AddMenuIcon(IDM_NEW_FILES, GetApp().LoadIcon(IDI_FILEVIEW));
+	AddMenuIcon(IDM_NEW_CLASSES, GetApp().LoadIcon(IDI_CLASSVIEW));
+	AddMenuIcon(IDM_NEW_DIALOG, GetApp().LoadIcon(IDI_DIALOGVIEW));
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

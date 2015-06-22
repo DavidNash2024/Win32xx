@@ -19,7 +19,7 @@ private:
 
 
 // returns a reference to the CSimpleApp object
-inline CSimpleApp& GetSimpleApp() { return *((CSimpleApp*)GetApp()); }
+inline CSimpleApp& GetSimpleApp() { return static_cast<CSimpleApp&>(GetApp()); }
 
 
 #endif //SIMPLEAPP_H

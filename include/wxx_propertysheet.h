@@ -178,7 +178,7 @@ namespace Win32xx
 
 		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
 		m_PSP.dwFlags       |= PSP_USECALLBACK;
-		m_PSP.hInstance     = GetApp()->GetResourceHandle();
+		m_PSP.hInstance     = GetApp().GetResourceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
 		m_PSP.pszTitle      = m_Title;
 		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
@@ -236,7 +236,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Reflect this message if it's from a control
-				CWnd* pWnd = GetApp()->GetCWndFromMap((HWND)lParam);
+				CWnd* pWnd = GetApp().GetCWndFromMap((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);
 
@@ -258,7 +258,7 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = GetApp()->GetCWndFromMap(hwndFrom);
+				CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
 
 				if (pWndFrom != NULL)
 					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
@@ -266,7 +266,7 @@ namespace Win32xx
 				{
 					// Some controls (e.g. ListView) have child windows.
 					// Reflect those notifications too.
-					CWnd* pWndFromParent = GetApp()->GetCWndFromMap(::GetParent(hwndFrom));
+					CWnd* pWndFromParent = GetApp().GetCWndFromMap(::GetParent(hwndFrom));
 					if (pWndFromParent != NULL)
 						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 				}
@@ -570,7 +570,7 @@ namespace Win32xx
 
 	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 		UNREFERENCED_PARAMETER(hwnd);
 
 		// Note: the hwnd is always NULL
@@ -579,7 +579,7 @@ namespace Win32xx
 		{
 		case PSPCB_CREATE:
 			{
-				TLSData* pTLSData = GetApp()->GetTlsData();
+				TLSData* pTLSData = GetApp().GetTlsData();
 				assert(pTLSData);
 
 				// Store the CPropertyPage pointer in Thread Local Storage
@@ -593,14 +593,14 @@ namespace Win32xx
 
 	inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 
 		// Find matching CWnd pointer for this HWND
 		CPropertyPage* pPage = static_cast<CPropertyPage*>(GetCWndPtr(hwndDlg));
 		if (!pPage)
 		{
 			// matching CWnd pointer not found, so add it to HWNDMap now
-			TLSData* pTLSData = GetApp()->GetTlsData();
+			TLSData* pTLSData = GetApp().GetTlsData();
 			pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
 			// Set the hWnd members and call DialogProc for this message
@@ -631,7 +631,7 @@ namespace Win32xx
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hParent;
-		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
+		m_PSH.hInstance        = GetApp().GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
@@ -651,7 +651,7 @@ namespace Win32xx
 
 		m_PSH.dwFlags          = PSH_PROPSHEETPAGE | PSH_USECALLBACK;
 		m_PSH.hwndParent       = hParent;
-		m_PSH.hInstance        = GetApp()->GetInstanceHandle();
+		m_PSH.hInstance        = GetApp().GetInstanceHandle();
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
@@ -689,7 +689,7 @@ namespace Win32xx
 
 	inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 
 		switch(uMsg)
 		{
@@ -709,7 +709,7 @@ namespace Win32xx
 		case PSCB_INITIALIZED:
 			{
 				// Retrieve pointer to CWnd object from Thread Local Storage
-				TLSData* pTLSData = GetApp()->GetTlsData();
+				TLSData* pTLSData = GetApp().GetTlsData();
 				assert(pTLSData);
 
 				CPropertySheet* w = static_cast<CPropertySheet*>(pTLSData->pWnd);
@@ -724,7 +724,7 @@ namespace Win32xx
 	inline HWND CPropertySheet::Create(HWND hParent /*= 0*/)
 	// Creates a modeless Property Sheet
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 
 		if (hParent)
 		{
@@ -745,7 +745,7 @@ namespace Win32xx
 
 	inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER ppsph)
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 
 		INT_PTR ipResult = 0;
 
@@ -753,7 +753,7 @@ namespace Win32xx
 		assert(!::IsWindow(*this));
 
 		// Ensure this thread has the TLS index set
-		TLSData* pTLSData = GetApp()->SetTlsData();
+		TLSData* pTLSData = GetApp().SetTlsData();
 
 		// Store the 'this' pointer in Thread Local Storage
 		pTLSData->pWnd = this;
@@ -785,7 +785,7 @@ namespace Win32xx
 
 	inline int CPropertySheet::DoModal()
 	{
-		assert( GetApp() );
+		assert( &GetApp() );
 
 		BuildPageArray();
 		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();
@@ -804,7 +804,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		CPropertyPage* pPage = NULL;
-		if (*this != NULL)
+		if (GetHwnd() != NULL)
 		{
 			HWND hPage = (HWND)SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L);
 			pPage = static_cast<CPropertyPage*>(GetCWndPtr(hPage));
@@ -855,7 +855,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		int nPage = GetPageIndex(pPage);
-		if (*this != NULL)
+		if (GetHwnd() != NULL)
 			SendMessage(*this, PSM_REMOVEPAGE, nPage, 0L);
 
 		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);

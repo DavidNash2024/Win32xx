@@ -196,8 +196,8 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// Remove scrollbars and redraw the view if the frame is maximized
 			if (wParam == SIZE_MAXIMIZED)
 			{
-				GetView()->ShowScrollBar(SB_BOTH, FALSE);
-				GetView()->Invalidate();
+				GetView().ShowScrollBar(SB_BOTH, FALSE);
+				GetView().Invalidate();
 			}
 			
 			break;

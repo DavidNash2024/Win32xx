@@ -49,7 +49,7 @@ BOOL CMainFrame::OnFileNew()
 {
 	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
-	GetView()->Invalidate();
+	GetView().Invalidate();
 	return TRUE;
 }
 
@@ -71,7 +71,7 @@ BOOL CMainFrame::OnFileOpen()
 			m_PathName=_T("");
 	}
 
-	GetView()->Invalidate();
+	GetView().Invalidate();
 	return TRUE;
 }
 

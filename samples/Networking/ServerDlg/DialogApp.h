@@ -23,7 +23,7 @@ private:
 
 
 // returns a reference to the CDialogApp object
-inline CDialogApp& GetDlgApp() { return static_cast<CDialogApp&>(*GetApp()); }
+inline CDialogApp& GetDlgApp() { return static_cast<CDialogApp&>(GetApp()); }
 
 
 #endif // define DIALOGAPP_H

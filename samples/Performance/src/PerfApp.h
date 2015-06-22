@@ -23,7 +23,7 @@ private:
 
 
 // returns a reference to the CPerformanceApp object
-inline CPerformanceApp& GetPerfApp() { return static_cast<CPerformanceApp&>(*GetApp()); }
+inline CPerformanceApp& GetPerfApp() { return static_cast<CPerformanceApp&>(GetApp()); }
 
 
 #endif  //PERFAPP_H

@@ -1832,7 +1832,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
-		ti.hinst = GetApp()->GetResourceHandle();
+		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
 		if (lpRectTool)
 			ti.rect = *lpRectTool;
@@ -2055,7 +2055,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
-		ti.hinst = GetApp()->GetResourceHandle();
+		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}

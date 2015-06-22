@@ -855,7 +855,7 @@ namespace Win32xx
 		m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
 
 		// Start the keyboard hook
-		TLSData* pTLSData = GetApp()->SetTlsData();
+		TLSData* pTLSData = GetApp().SetTlsData();
 		pTLSData->pMainWnd = this;
 		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 	}
@@ -1049,8 +1049,8 @@ namespace Win32xx
 	{
 		// Adjust for the view styles
 		CRect rc = rcView;
-		DWORD dwStyle = (DWORD)GetView()->GetWindowLongPtr(GWL_STYLE);
-		DWORD dwExStyle = (DWORD)GetView()->GetWindowLongPtr(GWL_EXSTYLE);
+		DWORD dwStyle = (DWORD)GetView().GetWindowLongPtr(GWL_STYLE);
+		DWORD dwExStyle = (DWORD)GetView().GetWindowLongPtr(GWL_EXSTYLE);
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
 		// Calculate the new frame height
@@ -1131,7 +1131,7 @@ namespace Win32xx
 					CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
 					HICON hIcon = (HICON)pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0L);
 					if (NULL == hIcon)
-						hIcon = GetApp()->LoadStandardIcon(IDI_APPLICATION);
+						hIcon = GetApp().LoadStandardIcon(IDI_APPLICATION);
 
 					int cx = ::GetSystemMetrics (SM_CXSMICON);
 					int cy = ::GetSystemMetrics (SM_CYSMICON);
@@ -2106,8 +2106,8 @@ namespace Win32xx
 		PostMessage(UWM_DOCKACTIVATE);
 
 		// Also update DockClient captions if the view is a docker
-		if (dynamic_cast<CDocker*>(GetView()))
-			GetView()->PostMessage(UWM_DOCKACTIVATE);
+		if (dynamic_cast<CDocker*>(&GetView()))
+			GetView().PostMessage(UWM_DOCKACTIVATE);
 
 		return 0L;
 	}
@@ -2131,8 +2131,8 @@ namespace Win32xx
 		SetIconSmall(IDW_MAIN);
 
 		// Set the keyboard accelerators
-		m_hAccel = LoadAccelerators(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		GetApp()->SetAccelerators(m_hAccel, this);
+		m_hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		GetApp().SetAccelerators(m_hAccel, this);
 
 		// Set the Caption
 		SetWindowText(LoadString(IDW_MAIN));
@@ -2178,11 +2178,11 @@ namespace Win32xx
 			SetStatusIndicators();
 
 		// Create the view window
-		assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+		assert(&GetView());			// Use SetView in CMainFrame's constructor to set the view window
 		GetDockClient().SetDock(this);
 		GetDockClient().Create(*this);
-		if (GetView() != &GetDockClient())
-			GetView()->Create(GetDockClient());
+		if (&GetView() != &GetDockClient())
+			GetView().Create(GetDockClient());
 
 		// Disable XP themes for the menubar
 		GetMenuBar().SetWindowTheme(L" ", L" ");
@@ -2220,7 +2220,7 @@ namespace Win32xx
 		GetToolBar().Destroy();
 		GetReBar().Destroy();
 		GetStatusBar().Destroy();
-		GetView()->Destroy();
+		GetView().Destroy();
 
 		::PostQuitMessage(0);	// Terminates the application
 	}
@@ -2577,8 +2577,8 @@ namespace Win32xx
 		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
-		if (GetView()->IsWindow())
-			GetView()->PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
+		if (GetView().IsWindow())
+			GetView().PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
 
 		return 0L;
 	}
@@ -2643,10 +2643,6 @@ namespace Win32xx
 	inline void CFrame::RecalcLayout()
 	// Repositions the frame's child windows
 	{
-		CWnd* pView = GetView();
-		if ((!pView) || (!pView->GetHwnd()))
-			return;
-
 		// Resize the status bar
 		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 		{
@@ -2840,7 +2836,7 @@ namespace Win32xx
 		if (ID_MENU != 0)
 		{
 		// Sets the frame's menu from a resource ID.
-			hMenu = ::LoadMenu(GetApp()->GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+			hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
 			assert (hMenu);
 		}
 
@@ -3314,7 +3310,7 @@ namespace Win32xx
 	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	// Called by the keyboard hook to update status information
 	{
-		TLSData* pTLSData = GetApp()->GetTlsData();
+		TLSData* pTLSData = GetApp().GetTlsData();
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
 		assert(dynamic_cast<CFrame*>(pFrame));
 
@@ -3427,7 +3423,7 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView()->GetHwnd() : NULL);
+		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView().GetHwnd() : NULL);
 		case UWM_GETMBTHEME:		return (LRESULT)&GetMenuBarTheme();
 		case UWM_GETRBTHEME:		return (LRESULT)&GetReBarTheme();
 		case UWM_GETSBTHEME:		return (LRESULT)&GetStatusBarTheme();

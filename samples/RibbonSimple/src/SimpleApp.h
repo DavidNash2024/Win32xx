@@ -22,7 +22,7 @@ private:
 
 
 // returns a pointer to the CSimpleRibbonApp object
-inline CSimpleRibbonApp& GetSimpleApp() { return static_cast<CSimpleRibbonApp&>(*GetApp()); }
+inline CSimpleRibbonApp& GetSimpleApp() { return static_cast<CSimpleRibbonApp&>(GetApp()); }
 
 
 #endif

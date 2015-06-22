@@ -23,7 +23,7 @@ private:
 
 
 // returns a reference to the CCustomControlApp object
-inline CCustomControlApp& GetDlgApp() { return static_cast<CCustomControlApp&>(*GetApp()); }
+inline CCustomControlApp& GetDlgApp() { return static_cast<CCustomControlApp&>(GetApp()); }
 
 
 #endif // define CUSTOMCONTROLAPP_H

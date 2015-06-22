@@ -312,7 +312,7 @@ namespace Win32xx
 #endif
 
 		ofn.hwndOwner = hOwnerWnd;
-		ofn.hInstance = GetApp()->GetInstanceHandle();
+		ofn.hInstance = GetApp().GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
 		ofn.Flags = dwFlags;
@@ -375,7 +375,7 @@ namespace Win32xx
 #endif
 
 		ofn.hwndOwner = hOwnerWnd;
-		ofn.hInstance = GetApp()->GetInstanceHandle();
+		ofn.hInstance = GetApp().GetInstanceHandle();
 		ofn.lpstrFilter = pszFilter;
 		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
 		ofn.lpstrDefExt = pszDefExt;

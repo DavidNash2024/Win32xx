@@ -81,7 +81,7 @@ void CView::PreRegisterClass(WNDCLASS &wc)
 	// Set the background brush, class name and cursor
 	wc.hbrBackground = m_Brush;
 	wc.lpszClassName = _T("Scribble Window");
-	wc.hCursor = ::LoadCursor(GetApp()->GetInstanceHandle(), MAKEINTRESOURCE(IDC_CURSOR1));
+	wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
 }
 
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)

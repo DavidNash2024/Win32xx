@@ -49,7 +49,7 @@ CSimpleMDIChild::CSimpleMDIChild()
 	SetView(m_View);
 	
 	// Set the menu for this MDI child
-	SetHandles(LoadMenu(GetApp()->GetResourceHandle(), _T("MdiMenuView")), NULL);
+	SetHandles(LoadMenu(GetApp().GetResourceHandle(), _T("MdiMenuView")), NULL);
 }
 
 CSimpleMDIChild::~CSimpleMDIChild()
@@ -73,10 +73,10 @@ void CSimpleMDIChild::OnInitialUpdate()
 	// Add Child dockers
 	DWORD dwStyle = DS_CLIENTEDGE | DS_NO_UNDOCK;
 	m_View.SetDockStyle(dwStyle);
-	CDocker* pDockLeft  = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | dwStyle, 200, 0);
-	CDocker* pDockRight = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | dwStyle, 200, 0);
-	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);	
+	CDocker& DockLeft  = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | dwStyle, 200, 0);
+	CDocker& DockRight = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | dwStyle, 200, 0);
+	DockLeft.AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);
+	DockRight.AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);	
 }
 
 BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -99,16 +99,16 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CSimpleMDIChild::OnColor(COLORREF rgb)
 {
-	CDockSimple* pDockSimple = (CDockSimple*)GetView();
-	CSimpleView* pView = (CSimpleView*)pDockSimple->GetView();
-	pView->SetColor(rgb);
-	pView->Invalidate();
+	CDockSimple& DockSimple = static_cast<CDockSimple&>(GetView());
+	CSimpleView& View = static_cast<CSimpleView&>(DockSimple.GetView());
+	View.SetColor(rgb);
+	View.Invalidate();
 }
 
 LRESULT CSimpleMDIChild::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	CDocker* pDock = (CDocker*)GetView();
-	pDock->RecalcDockLayout();
+	CDocker& Dock = static_cast<CDocker&>(GetView());
+	Dock.RecalcDockLayout();
 
 	// Pass the message on for default processing
 	return FinalWindowProc(uMsg, wParam, lParam);

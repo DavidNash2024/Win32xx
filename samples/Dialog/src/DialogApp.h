@@ -21,7 +21,7 @@ private:
 };
 
 // returns a reference to the CDialogApp object
-inline CDialogApp& GetDialogApp() { return static_cast<CDialogApp&>(*GetApp()); }
+inline CDialogApp& GetDialogApp() { return static_cast<CDialogApp&>(GetApp()); }
 
 
 #endif // define DIALOGAPP_H

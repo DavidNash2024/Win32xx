@@ -63,10 +63,10 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch (LOWORD(wParam))
 	{
 	case IDM_EDIT_COPY:
-		GetView()->SendMessage(WM_COPY, 0, 0);
+		GetView().SendMessage(WM_COPY, 0, 0);
 		return TRUE;
 	case IDM_EDIT_PASTE:
-		GetView()->SendMessage(WM_PASTE, 0, 0);
+		GetView().SendMessage(WM_PASTE, 0, 0);
 		return TRUE;
 	}
 
