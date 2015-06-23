@@ -3423,7 +3423,7 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_GETFRAMEVIEW:		return (LRESULT)(GetView()? GetView().GetHwnd() : NULL);
+		case UWM_GETFRAMEVIEW:		return (LRESULT)GetView().GetHwnd();
 		case UWM_GETMBTHEME:		return (LRESULT)&GetMenuBarTheme();
 		case UWM_GETRBTHEME:		return (LRESULT)&GetReBarTheme();
 		case UWM_GETSBTHEME:		return (LRESULT)&GetStatusBarTheme();

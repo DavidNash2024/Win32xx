@@ -73,10 +73,10 @@ void CSimpleMDIChild::OnInitialUpdate()
 	// Add Child dockers
 	DWORD dwStyle = DS_CLIENTEDGE | DS_NO_UNDOCK;
 	m_View.SetDockStyle(dwStyle);
-	CDocker& DockLeft  = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | dwStyle, 200, 0);
-	CDocker& DockRight = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | dwStyle, 200, 0);
-	DockLeft.AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);
-	DockRight.AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);	
+	CDocker* pDockLeft  = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_LEFT  | dwStyle, 200, 0);
+	CDocker* pDockRight = m_View.AddDockedChild(new CDockOutput, DS_DOCKED_RIGHT | dwStyle, 200, 0);
+	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);	
 }
 
 BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
