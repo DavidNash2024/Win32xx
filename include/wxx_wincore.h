@@ -2670,8 +2670,9 @@ namespace Win32xx
 	inline BOOL CWnd::IsWindowVisible() const
 	// The IsWindowVisible function retrieves the visibility state of the window.
 	{
+		// Microsoft's IsWindowVisible is buggy, so we do it like this
 		assert(IsWindow());
-		return ::IsWindowVisible(m_hWnd);
+		return (GetWindowLongPtr(GWL_STYLE) & WS_VISIBLE) != 0;
 	}
 
 	inline BOOL CWnd::IsWindow() const

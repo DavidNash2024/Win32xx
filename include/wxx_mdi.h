@@ -252,7 +252,7 @@ namespace Win32xx
 
 		for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
 		{
-			if ((*v)->GetWindowLongPtr(GWL_STYLE) & WS_VISIBLE)	// IsWindowVisible is unreliable here
+			if ((*v)->IsWindowVisible())
 			{
 				// Add Separator
 				if (nWindow == 0)

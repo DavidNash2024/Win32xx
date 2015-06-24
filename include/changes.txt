@@ -92,8 +92,7 @@ Modified CDockContainer::GetViewPage        now returns a reference
 Modified CDocker::GetView                   now returns a reference               
 Modified CDocker::GetAllDockChildren        now returns a reference                   
 Modified CDocker::GetDockChildren           now returns a reference                   
-Modified CDocker::GetAllDockers             now returns a reference                   
-Modified CDocker::GetDockAncestor           now returns a reference                   
+Modified CDocker::GetAllDockers             now returns a reference                                     
 Modified CDockContainer::GetAllContainers   now returns a reference                   
 Modified CMDIChild::GetMDIFrame             now returns a reference                   
 Modified CMDIChild::GetView                 now returns a reference                   
