@@ -179,6 +179,19 @@ OnInitialUpdate()                                                       /*
 }
 
 /*============================================================================*/
+	void CView::
+SyncScrollBars()                                                        /*
+
+	On opening a new document, align the scroll bar positions in the new
+	window with those of the old window.  This is really only needed when
+	opening a document at start up time using saved scroll bar positions.
+*-----------------------------------------------------------------------------*/
+{
+	CPoint pt = m_sb.GetScrollPosition();
+	m_sb.SetScrollPosition(pt);
+}
+
+/*============================================================================*/
      	void    CView::
 Paint(CDC &dcMem, RECT rc)                                    		/*
 
@@ -197,20 +210,17 @@ Paint(CDC &dcMem, RECT rc)                                    		/*
 		return;
 	}
 	  // get the document size and  max width
-	int  doc_length = TheDoc().GetDocLength(),
-		 doc_width  = TheDoc().GetDocWidth();
+	int doc_length = TheDoc().GetDocLength(),
+	    doc_width  = TheDoc().GetDocWidth();
 	  // express screen width columns and  height lines in point form
 	CPoint 	wh = GetClientWdHt();
 	  // display the view content
 	CString s;
-	if (doc_length > 0)
+	if (doc_length > 0 && doc_width > 0)
 	{
-		  //figure how many lines & cols appear on the screen
+		  // compute how many lines & cols will appear on the screen
 		int lines = MIN(doc_length, wh.y),
-			cols  = MIN(doc_width, wh.x);
-
-		  // topleft is the upper-left-most character in the display
-		CPoint topleft(0, 0);
+		    cols  = MIN(doc_width,  wh.x);
 
 		  // show/hide the scrollbars
 		m_sb.ShowHScrollBar(doc_width  > wh.x);
@@ -220,11 +230,10 @@ Paint(CDC &dcMem, RECT rc)                                    		/*
 		m_sb.SetScrollLimits(sLim);
 		ScrollIncrements si(1, wh.x, 1, wh.y);
 		m_sb.SetScrollIncrements(si);
-		  // get scroll bar limits and  current position
-		topleft = m_sb.GetScrollPosition();
-
-		int	topline = MAX(topleft.y, 0),
-			leftcol = MAX(topleft.x, 0);
+		  // topleft is the upper-left-most character in the display
+		CPoint topleft = m_sb.GetScrollPosition();
+		int topline = MAX(topleft.y, 0),
+		    leftcol = MAX(topleft.x, 0);
 		for (int i = 0; i < lines; i++)
 		{
 			int j = i + topline;
@@ -232,26 +241,16 @@ Paint(CDC &dcMem, RECT rc)                                    		/*
 				continue;
 
 			s =  TheDoc().GetDocRecord(j, leftcol, cols);
-			LPCTSTR t = s.c_str();
-			TextOutHi(dcMem, rc, i, t, 0, cols);
+			TextOutHi(dcMem, rc, i, s, 0, cols);
 		}
 	}
 	else
 	{
-		CPoint topleft(0, 0);
-		  // show both scroll bars, just to show you can
-		m_sb.ShowHScrollBar(TRUE);
-		m_sb.ShowVScrollBar(TRUE);
-		  // set scroll limits to columns and  lines in the client area
-		ScrollLimits sLim(0, wh.x, 0, wh.y);
-		m_sb.SetScrollLimits(sLim);
-		ScrollIncrements si(1, wh.x, 1, wh.y);
-		m_sb.SetScrollIncrements(si);
-		  // get scroll bar limits and  current position
-		topleft = m_sb.GetScrollPosition();
+		m_sb.ShowHScrollBar(FALSE);
+		m_sb.ShowVScrollBar(FALSE);
 		  // There is no document, so display a message saying so
 		s = _T("No application is present.");
-		TextOutHi(dcMem, rc, topleft.y, s.c_str(), topleft.x, 50);
+		TextOutHi(dcMem, rc, 5, s, 5, wh.x);
 	}
 }
 
@@ -424,7 +423,6 @@ Serialize(CArchive &ar)                                               	/*
 		  // recover scroll bar parameters
 		ar >> m_sb;
       	}
-
 }
 
 /*============================================================================*/
@@ -490,19 +488,18 @@ SetDefaultFont()                                                        /*
 
 /*============================================================================*/
      	void    CView::
-TextOutHi(CDC &dc, RECT rc, int line, CString s, int leftcol,
+TextOutHi(CDC &dc, RECT rc, int line, const CString &s, int leftcol,
     int cols)               						/*
 
 	Output the string s beginning at leftcol for cols chars to the given
 	line of the client area with device context dc, bounded by rc.
 *-----------------------------------------------------------------------------*/
 {
-	UNREFERENCED_PARAMETER(cols);
-
+	CString slim = s.Left(cols);
 	UINT textalign = dc.GetTextAlign();
 	dc.SetTextAlign(TA_NOUPDATECP);
 	dc.TextOut((rc.left + m_cWd * leftcol),
-	    (rc.top + line * m_cHt), s.c_str(), s.GetLength());
+	    (rc.top + line * m_cHt), slim.c_str(), s.GetLength());
 	dc.SetTextAlign(textalign);
 }
 

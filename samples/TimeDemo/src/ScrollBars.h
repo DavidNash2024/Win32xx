@@ -117,9 +117,9 @@ WScrollBars : public CObject     					/*
 	~WScrollBars();
 
 	  // public method members
-	ScrollIncrements GetScrollIncrements();
-	ScrollLimits 	 GetScrollLimits();
-	CPoint		 GetScrollPosition();
+	ScrollIncrements GetScrollIncrements(void);
+	ScrollLimits 	 GetScrollLimits(void);
+	CPoint		 GetScrollPosition(void);
 	LRESULT 	 OnHScroll(WPARAM, LPARAM);
 	LRESULT 	 OnKeyScroll(WPARAM, LPARAM);
 	LRESULT 	 OnMouseWheel(WPARAM, LPARAM);

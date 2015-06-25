@@ -45,7 +45,7 @@
 	view has been created having both horizontal and  vertical scroll bars
 	by specifying the WM_HSCROLL and  WM_HSCROLL options, and  that this
 	view then handles the limits, increments, and  positioning of each. It
-	is necessary to declare a WScrollBars object private, if possible) in
+	is necessary to declare a WScrollBars object (private, if possible) in
 	the CWnd-derived class declaration, as, for example,
 
 		WScrollBars m_sb;         // scroll bars interface
@@ -60,7 +60,7 @@
 	m_sb.ShowVScrollBar(FALSE);
 
 	Each scroll bar position is assumed to range between certain minimum
-	 and  maximum values, expressed in scroll units. At the minimum value,
+	and  maximum values, expressed in scroll units. At the minimum value,
 	the position is at the top or left scroll limit, and  if at the maximum
 	value, the thumb is at the bottom or right scroll limit. Scrolling may
 	be initiated by mouse clicks on the bars, by dragging the "thumb" with
@@ -135,7 +135,7 @@ Serialize(CArchive &ar)							/*
 
 /*******************************************************************************
 
-
+	Implementation of WScrollBars class
 
 *=============================================================================*/
 	WScrollBars::
@@ -160,7 +160,7 @@ WScrollBars()                                                            /*
 
 /*============================================================================*/
 	ScrollIncrements WScrollBars::
-GetScrollIncrements()						/*
+GetScrollIncrements(void)						/*
 
 	Return the current scrolling increments, in scroll units.
 *-----------------------------------------------------------------------------*/
@@ -170,7 +170,7 @@ GetScrollIncrements()						/*
 
 /*============================================================================*/
 	ScrollLimits WScrollBars::
-GetScrollLimits()							/*
+GetScrollLimits(void)							/*
 
 	Return the current scrolling limits, in scroll units.
 *-----------------------------------------------------------------------------*/
@@ -180,27 +180,13 @@ GetScrollLimits()							/*
 
 /*============================================================================*/
 	CPoint WScrollBars::
-GetScrollPosition()							/*
+GetScrollPosition(void)							/*
 
-	Return the current scroll position coordinates, in scroll units and
-	set the m_scroll_position member to this value.
+	Return the current scroll bar position coordinates, which is the last
+	position set by SetScrollPosition().
 *-----------------------------------------------------------------------------*/
 {
-	if (!m_theView)
-		return CPoint(0, 0);
-
-	int x, y;
-	  // Get the current vertical scroll position from the CView window
-	SCROLLINFO si;
-	si.cbSize = sizeof (si);
-	si.fMask  = SIF_POS;
-	m_theView->GetScrollInfo(SB_VERT, si);
-	y = si.nPos;
-	  // Get the current horizontal scroll position
-	m_theView->GetScrollInfo(SB_HORZ, si);
-	x = si.nPos;
-	m_scroll_position = CPoint(x, y);
-	return m_scroll_position;
+	return (m_theView ? m_scroll_position : CPoint(0, 0));
 }
 
 /*============================================================================*/
@@ -224,14 +210,13 @@ OnHScroll(WPARAM wParam, LPARAM lParam)      	 			/*
 	if (!m_theView)
 		return 0;
 
-	  // Get the current horizontal scroll bar information from the CView
-	  // window
+	  // respond to the scroll event:
+	UINT nPos = m_scroll_position.x;
+	  // need horizontal scroll bar position and thumb track position
 	SCROLLINFO si;
 	si.cbSize = sizeof (si);
 	si.fMask  = SIF_ALL;
 	m_theView->GetScrollInfo(SB_HORZ, si);
-	  // respond to the scroll event:
-	UINT nPos = si.nPos;
 	switch (LOWORD(wParam)) // scroll command
 	{
 	    case SB_LEFT:		//   Scroll to far left.
@@ -263,15 +248,13 @@ OnHScroll(WPARAM wParam, LPARAM lParam)      	 			/*
 		nPos = si.nTrackPos; // was HIWORD(wParam);
 		break;
 
-	default:	// the rest are immaterial
+	    default:	// the rest are immaterial
 		break;
 	}
  	  // Reset new horizontal scroll position (automatically puts
 	  // m_state.nPos within the specified limits).
-	si.fMask = SIF_POS;
-	si.nPos  = nPos;
-	m_theView->SetScrollInfo(SB_HORZ, si, TRUE);
-	m_theView->Invalidate(FALSE);
+	m_scroll_position.x = nPos;
+	SetScrollPosition(m_scroll_position);
 	return 0;
 }
 
@@ -407,13 +390,13 @@ OnVScroll(WPARAM wParam, LPARAM lParam)        				/*
 	if (!m_vscroll_visible)
 		return 0;
 
-	  // Get the current vertical scroll bar information
+	  // respond to the scroll event:
+	UINT nPos = m_scroll_position.y;
+	  // need THE thumb track position
 	SCROLLINFO si;
 	si.cbSize = sizeof (si);
 	si.fMask  = SIF_ALL;
 	m_theView->GetScrollInfo(SB_VERT, si);
-	  // respond to the scroll event:
-	UINT nPos = si.nPos;
 	switch (LOWORD(wParam))  // the scroll code
 	{
 	    case SB_TOP:                // top of scroll
@@ -450,10 +433,8 @@ OnVScroll(WPARAM wParam, LPARAM lParam)        				/*
 	}
 	  // Reset new vertical scroll position (automatically puts
 	  // nPos within the specified limits).
-	si.fMask = SIF_POS;
-	si.nPos  = nPos;
-	m_theView->SetScrollInfo(SB_VERT, si, TRUE);
-	m_theView->Invalidate(FALSE);
+	m_scroll_position.y = nPos;
+	SetScrollPosition(m_scroll_position);
 	return 0;
 }
 
@@ -463,8 +444,8 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)        			/*
 
         Processes mouse wheel rotation when made in the focus window having
 	a vertical scrollbar.  LOWORD(wParam) contains the key flags,
-	HIWORD(wParam) gives the (signed) wheel rotation, GET_X_PARAM(lParam)
-	is the horizontal position of the pointer, and  GET_Y_PARAM(lParam)
+	HIWORD(wParam) gives the (signed) wheel rotation, GET_X_LPARAM(lParam)
+	is the horizontal position of the pointer, and  GET_Y_LPARAM(lParam)
 	is the vertical position of pointer.  The flags and  position parameters
 	are unused here.  The incoming rotation parameter will be a multiple
 	of the WHEEL_DELTA value, which is set at 120. Each such unit here
@@ -473,24 +454,15 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)        			/*
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	if (!m_hscroll_visible)
+	if (!m_vscroll_visible)
 		return 0;
 
-	  // get all current vertical scroll info
-	SCROLLINFO si;
-        si.cbSize = sizeof (si);
-        si.fMask  = SIF_ALL;
-        m_theView->GetScrollInfo(SB_VERT, si);
 	  // set the new position: first get (signed) rotation units
-	int rotation = HIWORD(wParam);
+	int wheelunits = (int)(short)HIWORD(wParam),
 	  // convert to line increments, maintaining sign
-	rotation = (rotation * m_increments.m_v_line) / WHEEL_DELTA;
-	si.nPos += rotation;
-
-	// reset new vertical scroll position
-	si.fMask = SIF_POS;
-	m_theView->SetScrollInfo(SB_VERT, si, TRUE);
-	m_theView->Invalidate(FALSE);
+	rotation = ::MulDiv(-wheelunits, m_increments.m_v_line, WHEEL_DELTA);
+	m_scroll_position.y += rotation;
+	SetScrollPosition(m_scroll_position);
 	return 0;
 }
 
@@ -567,36 +539,22 @@ Serialize(CArchive &ar)                                               /*
 	  // perform loading or storing
         if (ar.IsStoring())
         {
-                  // each item serialized is written to the archive
-                  // file as a char stream of the proper length,
-                  // preceded by that length. In some cases, such
-                  // as fonts and  window extents, secondary data
-                  // are saved, from with the primary items are then
-                  // reconstructed.
-
-                  // save toolbars state
+                  // save scrollbars state
   		ar << m_hscroll_visible;
 		ar << m_vscroll_visible;
 		ar << m_increments;
 		ar << m_limits;
-		GetScrollPosition();
 		ar << m_scroll_position;
 	}
-        else    // recovering
+        else
         {
-                  // each item deserialized from the archive is
-                  // retrieved by first reading its length and then
-                  // loading in that number of bytes into the data
-                  // item saved in the archive, as above. Some items,
-                  // such as fonts and  screen extents, require
-                  // additional converstion procedures, as shown below.
-
                   // recover toolbars parameters:
   		ar >> m_hscroll_visible;
 		ar >> m_vscroll_visible;
 		ar >> m_increments;
 		ar >> m_limits;
 		ar >> m_scroll_position;
+		SetScrollPosition(m_scroll_position);
       	}
 }
 
@@ -648,7 +606,8 @@ SetScrollLimits(ScrollLimits &lims)					/*
 SetScrollPosition(CPoint pt)						/*
 
 	Set the horizontal and  vertical scroll positions, respectively, to
-	x and  y, respectively and  redraw the scroll bars.
+	pt.x and pt.y, respectively and redraw the scroll bars. Limit values
+	that go out of bounds.
 *-----------------------------------------------------------------------------*/
 {
 	if (!m_theView)
@@ -659,9 +618,16 @@ SetScrollPosition(CPoint pt)						/*
 	si.fMask = SIF_POS;
 	si.nPos = pt.x;
 	m_theView->SetScrollInfo(SB_HORZ, si, TRUE);
+	m_theView->GetScrollInfo(SB_HORZ, si);
+	pt.x = si.nPos;
+	  // set the y coordinate
 	si.nPos = pt.y;
 	m_theView->SetScrollInfo(SB_VERT, si, TRUE);
+	m_theView->GetScrollInfo(SB_VERT, si);
+	pt.y = si.nPos;
+	  // record the current position
 	m_scroll_position = pt;
+	m_theView->Invalidate(FALSE);
 }
 
 /*============================================================================*/

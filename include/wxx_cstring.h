@@ -249,30 +249,26 @@ namespace Win32xx
 
 	inline CString::CString(LPCSTR pszText, int nLength)
 	{
-		char* buf = new char[nLength];
 
 #ifdef _UNICODE
 		MultiByteToWideChar(CP_ACP, 0, pszText, nLength, GetBuffer(nLength), nLength);
 #else
-		memcpy(GetBuffer(nLength), buf, nLength);
+		memcpy(GetBuffer(nLength), pszText, nLength);
 #endif
 
 		ReleaseBuffer(nLength);
-		delete[] buf;
 	}
 
 	inline CString::CString(LPCWSTR pszText, int nLength)
 	{
-		WCHAR* buf = new WCHAR[nLength];
 
 #ifdef _UNICODE
 		memcpy(GetBuffer(nLength), pszText, nLength*2);
 #else
-		WideCharToMultiByte(CP_ACP, 0, buf, nLength, GetBuffer(nLength), nLength, NULL,NULL);
+		WideCharToMultiByte(CP_ACP, 0, pszText, nLength, GetBuffer(nLength), nLength, NULL,NULL);
 #endif
 
 		ReleaseBuffer(nLength);
-		delete[] buf;
 	}
 
 	inline CString& CString::operator = (const CString& str)

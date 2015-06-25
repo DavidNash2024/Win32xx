@@ -1054,6 +1054,7 @@ namespace Win32xx
 					{
 						CDockContainer* pContainer = m_pDock->GetContainer()->GetActiveContainer();
 						CDocker* pDock = m_pDock->GetDockFromView(pContainer);
+						assert(pDock);
 						pDock->Close();
 					}
 					else
@@ -2183,6 +2184,7 @@ namespace Win32xx
 					pContainerChild->ShowWindow(SW_HIDE);
 					pContainerSource->RemoveContainer(pContainerChild);
 					CDocker* pDockChild = GetDockFromView(pContainerChild);
+					assert(pDockChild);
 					pDockChild->SetParent(*this);
 					pDockChild->m_pDockParent = this;
 				}
@@ -2885,6 +2887,7 @@ namespace Win32xx
 					{
 						// Reset container parent before destroying the dock window
 						CDocker* pDock = GetDockFromView((*iter1).pContainer);
+						assert(pDock);
 						if (pContainer->IsWindow())
 							pContainer->SetParent(pDock->GetDockClient());
 
@@ -3429,6 +3432,7 @@ namespace Win32xx
 				if (pChild != pContainer)
 				{
 					CDocker* pDock = GetDockFromView(pChild);
+					assert(pDock);
 					vSorted.push_back(pDock);
 				}
 			}
@@ -3517,12 +3521,16 @@ namespace Win32xx
 							throw (CWinException(_T("Open KeyContainer failed")));
 
 						// Store the container group's parent
-						int nID = GetDockFromView(pContainer)->GetDockID();
+						CDocker* pDock = GetDockFromView(pContainer);
+						assert(pDock);
+						int nID = pDock->GetDockID();
 						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), nID))
 							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
 
 						// Store the active (selected) container
-						nID = GetDockFromView(pContainer->GetActiveContainer())->GetDockID();
+						pDock = GetDockFromView(pContainer->GetActiveContainer());
+						assert(pDock);
+						nID = pDock->GetDockID();
 						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), nID))
 							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
 
@@ -3531,7 +3539,10 @@ namespace Win32xx
 						{
 							SubKeyName.Format(_T("Tab%u"), u2);
 							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
-							int nTabID = GetDockFromView(pTab)->GetDockID();
+							assert(pTab);
+							pDock = GetDockFromView(pTab);
+							assert(pDock);
+							int nTabID = pDock->GetDockID();
 
 							if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(SubKeyName, nTabID))
 								throw (CWinException(_T("RegSetValueEx failed")));
@@ -3853,7 +3864,7 @@ namespace Win32xx
 		// Undocking isn't supported on Win95
 		if (1400 == GetWinVersion()) return;
 
-		CDocker* pDockUndockedFrom = GetDockFromView(pContainer->GetContainerParent());
+		CDocker* pDockUndockedFrom = this;
 		pDockUndockedFrom->ShowWindow(SW_HIDE);
 		if (&GetView() == pContainer)
 		{
@@ -3863,6 +3874,7 @@ namespace Win32xx
 			// Choose a new docker from among the dockers for child containers
 			CDocker* pDockNew = 0;
 			CDocker* pDockOld = GetDockFromView(pContainer);
+			assert(pDockOld);
 			std::vector<ContainerInfo> AllContainers = pContainer->GetAllContainers();
 			std::vector<ContainerInfo>::iterator iter = AllContainers.begin();
 			while ((0 == pDockNew) && (iter < AllContainers.end()))
@@ -3891,6 +3903,7 @@ namespace Win32xx
 						{
 							pContainerNew->AddContainer(pChildContainer);
 							CDocker* pDock = GetDockFromView(pChildContainer);
+							assert(pDock);
 							pDock->SetParent(*pDockNew);
 							pDock->m_pDockParent = pDockNew;
 						}
@@ -3951,6 +3964,7 @@ namespace Win32xx
 
 		// Finally do the actual undocking
 		CDocker* pDock = GetDockFromView(pContainer);
+		assert(pDock);
 		CRect rc = GetDockClient().GetWindowRect();
 		ScreenToClient(rc);
 		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);

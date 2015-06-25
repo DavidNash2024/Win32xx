@@ -66,9 +66,10 @@ const CString CMainFrame::m_sCompiled_on = __DATE__;
 	CDoc&
 TheDoc()								/*
 
-	Return a reference to the current document objext.  This function has
+	Return a reference to the current document object.  This function has
 	global scope in order to access the CDoc class from anywhere outside
-	the CMainFrame class.
+	the CMainFrame class. It is defined here because TheApp() is known in
+	this context and not in Doc.h.
 *-----------------------------------------------------------------------------*/
 {
 	return TheApp().TheFrame()->ThisDoc();
@@ -460,7 +461,7 @@ OnCreate(LPCREATESTRUCT pcs)                                            /*
 	}
 	catch(...)
 	{
-		CString msg = _T("Error restoring previous  parameters.\n");
+		CString msg = _T("Error restoring previous parameters.\n");
 		::MessageBox(NULL, msg.c_str(), _T("Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	}
@@ -603,7 +604,7 @@ OnFileClose()								/*
 
 *-----------------------------------------------------------------------------*/
 {
-	TheDoc().CloseDoc();
+	m_Doc.CloseDoc();
 	UpdateFrame();
 
 }
@@ -628,11 +629,11 @@ OnFileNew()								/*
 *-----------------------------------------------------------------------------*/
 {
 	  // close the current document
-	TheDoc().CloseDoc();
+	m_Doc.CloseDoc();
 	  // TODO: Add code here to implement this member. For this demo,
 	  // refill the document with the initial document and empty the
 	  // document file name
-	TheDoc().InitialDoc();
+	m_Doc.NewDocument();
 	UpdateFrame();
 }
 
@@ -645,13 +646,13 @@ OnFileOpen()                                                            /*
 {
 	// Bring up the dialog, and  open the file
 	CString str =
-	    TheDoc().GetDocOpenFileName(_T("Name the file to open..."));
+	    m_Doc.GetDocOpenFileName(_T("Name the file to open..."));
 	if (str.IsEmpty())
 		return;
 
-	TheDoc().OpenDoc(str);
+	m_Doc.OpenDoc(str);
 
-	if (TheDoc().IsOpen())
+	if (m_Doc.IsOpen())
 		m_MRU.AddMRUEntry(str);
 }
 
@@ -664,7 +665,10 @@ OnFileOpenMRU(UINT nIndex)						/*
 {
 	  // get the MRU entry if there is one (str will be empty if not)
 	CString str = m_MRU.AccessMRUEntry(nIndex);
-	if (TheDoc().OpenDoc(str))
+	if (str.IsEmpty())
+		return false;
+		
+	if (m_Doc.OpenDoc(str))
 	{         // now it's ok to add it to the top of the MRU list
 		m_MRU.AddMRUEntry(str);
 		return true;
@@ -714,7 +718,7 @@ OnFileSave()                                                            /*
 	Save the current document.
 *-----------------------------------------------------------------------------*/
 {
-	ThisDoc().SaveDoc();
+	m_Doc.SaveDoc();
 	UpdateFrame();
 }
 
@@ -727,7 +731,7 @@ OnFileSaveAs()                                                       	/*
 	current one.
 *-----------------------------------------------------------------------------*/
 {
-	ThisDoc().SaveDocAs();
+	m_Doc.SaveDocAs();
 }
 
 /*============================================================================*/
@@ -854,9 +858,10 @@ OnInitialUpdate()                                                       /*
 {
 	// TODO: Place any additional startup code here.
 
-	  // Give keyboard focus to the view window:
+	  // give keyboard focus to the view window:
 	TheView().SetFocus();
-
+	  // open the most recently used document, if there was one
+	OnFileOpenMRU(0);
 	  // show initial button status
 	OnUpdateStatus();
 	TRACE("Frame created\n");
@@ -925,8 +930,8 @@ OnUpdateStatus()							/*
 	// TODO: Add code here to determine status of the controls
 
 	  // document status
-	bool 	doc_is_ready = ThisDoc().IsOpen(),
-		doc_is_dirty = ThisDoc().IsDirty();
+	bool 	doc_is_ready 	    = m_Doc.IsOpen(),
+		doc_is_dirty 	    = m_Doc.IsDirty();
 	  // determine enabled status of controls
 	bool 	ok_to_save          = doc_is_dirty;
 	bool	ok_to_saveas        = doc_is_ready;
@@ -1033,8 +1038,9 @@ Serialize(CArchive &ar)                                               /*
 		ar << showbar;
 		showbar = GetShowToolBar();
 		ar << showbar;
-		ar << m_MRU;  // for the MRU list
-		ar << m_View; // for the view ( and  scrollbars)
+		  // save MRU list and view (including scrollbars)
+		ar << m_MRU;
+		ar << m_View;
 	}
         else    // recovering
         {
@@ -1134,10 +1140,10 @@ SetupToolBar()                                                          /*
 	AddToolBarButton(IDM_FILE_SAVE,    TRUE,  0, 2);
 	AddToolBarButton(0);  // Separator
 	AddToolBarButton(IDM_EDIT_CUT,     TRUE,  0, 3);
-	AddToolBarButton(IDM_EDIT_COPY,    FALSE, _T("not yet"), 4);
-	AddToolBarButton(IDM_EDIT_PASTE,   FALSE, _T("not yet"), 5);
+	AddToolBarButton(IDM_EDIT_COPY,    FALSE, 0, 4);
+	AddToolBarButton(IDM_EDIT_PASTE,   FALSE, 0, 5);
 	AddToolBarButton(0);  // Separator
-	AddToolBarButton(IDM_FILE_PRINT,   FALSE, _T("not yet"), 6);
+	AddToolBarButton(IDM_FILE_PRINT,   FALSE, 0, 6);
 	AddToolBarButton(0);  // Separator
 	AddToolBarButton(IDM_HELP_CONTEXT, TRUE,  0, 7);
 	  // add menu icons for color and  font choice items

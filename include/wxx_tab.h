@@ -1059,7 +1059,6 @@ namespace Win32xx
 		// Create a clipping region. Its the overall tab window's region,
 		//  less the region belonging to the individual tab view's client area
 		CRgn rgnSrc1;
-	//	rgnSrc1.CreateRectRgn(rcClient.left, rcClient.top, rcClient.right, rcClient.bottom);
 		rgnSrc1.CreateRectRgnIndirect(rcClient);
 		CRect rcTab = GetClientRect();
 		AdjustRect(FALSE, &rcTab);

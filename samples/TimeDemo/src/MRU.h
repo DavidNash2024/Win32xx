@@ -78,7 +78,7 @@ CMRU : public CObject							/*
 		virtual void 	RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual void    Serialize(CArchive &ar);
 		virtual void 	UpdateMRUMenu();
-		virtual void	ValidateMRU();
+		virtual void	ValidateMRU(void);
 
 	  // Protected Declarations
 	protected:
@@ -92,7 +92,7 @@ CMRU : public CObject							/*
 
 //        enum {nMaximumMRUSlots = 16};
 	static const size_t m_nMaximumMRUSlots; // maximum possible slots
-		static const CString m_emptyMRUListLabel; // File MRU locator label
+	static const CString m_emptyMRUListLabel; // File MRU locator label
 };
 /*----------------------------------------------------------------------------*/
 #endif // GPP_MRU_H_FILE

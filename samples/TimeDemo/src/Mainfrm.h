@@ -71,15 +71,15 @@ CMainFrame : public CFrame						/*
 *-----------------------------------------------------------------------------*/
 {
 	public:
-				CMainFrame();
-		virtual 	~CMainFrame();
+				CMainFrame(void);
+		virtual 	~CMainFrame(void);
 		
-		virtual void    OnUpdateStatus();
+		virtual void    OnUpdateStatus(void);
 		virtual void    SetCursorShape(CursorShape);
 		virtual void	SetWindowTitle(const CString &title = _T(""));
-		CView&          TheView(){return m_View;}
-		CDoc& 		ThisDoc(){return m_Doc;}
-		CMRU&		TheMRU() {return m_MRU;};
+		CView&          TheView(void){return m_View;}
+		CDoc& 		ThisDoc(void){return m_Doc;}
+		CMRU&		TheMRU(void) {return m_MRU;};
 
 		  // public data members
 			bool    m_help_mode;
@@ -93,30 +93,30 @@ CMainFrame : public CFrame						/*
 		virtual BOOL 	OnCommandHelp(WPARAM wParam, LPARAM lParam);
 		virtual int  	OnCreate(LPCREATESTRUCT pcs);
 		virtual void	OnDestroy();
-		virtual void 	OnEditCopy();
-		virtual void 	OnEditCut();
-		virtual void 	OnEditDelete();
-		virtual void 	OnEditFind();
-		virtual void 	OnEditPaste();
-		virtual void 	OnEditRedo();
-		virtual void 	OnEditReplace();
-		virtual void 	OnEditUndo();
-		virtual void 	OnFileClose();
-		virtual void 	OnFileExit();
-		virtual void 	OnFileNew();
-		virtual void 	OnFileOpen();
+		virtual void 	OnEditCopy(void);
+		virtual void 	OnEditCut(void);
+		virtual void 	OnEditDelete(void);
+		virtual void 	OnEditFind(void);
+		virtual void 	OnEditPaste(void);
+		virtual void 	OnEditRedo(void);
+		virtual void 	OnEditReplace(void);
+		virtual void 	OnEditUndo(void);
+		virtual void 	OnFileClose(void);
+		virtual void 	OnFileExit(void);
+		virtual void 	OnFileNew(void);
+		virtual void 	OnFileOpen(void);
 		virtual bool 	OnFileOpenMRU(UINT);
-		virtual void 	OnFilePrint();
-		virtual void 	OnFilePrintPreview();
-		virtual void 	OnFileSave();
-		virtual void 	OnFileSaveAs();
-		virtual void    OnFontChoice();
-		virtual BOOL	OnHelp();
+		virtual void 	OnFilePrint(void);
+		virtual void 	OnFilePrintPreview(void);
+		virtual void 	OnFileSave(void);
+		virtual void 	OnFileSaveAs(void);
+		virtual void    OnFontChoice(void);
+		virtual BOOL	OnHelp(void);
 		virtual BOOL	OnHelp(const CString&);
-		virtual BOOL	OnHelpAbout();
-		virtual BOOL	OnHelpContext();
-		virtual void 	OnInitialUpdate();
-		virtual void 	OnMenuUpdate();
+		virtual BOOL	OnHelpAbout(void);
+		virtual BOOL	OnHelpContext(void);
+		virtual void 	OnInitialUpdate(void);
+		virtual void 	OnMenuUpdate(void);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
 		virtual void 	PreCreate(CREATESTRUCT& cs);
@@ -124,8 +124,8 @@ CMainFrame : public CFrame						/*
 		virtual void	Serialize(CArchive &ar);
 		virtual	BOOL    SetControlStatus(UINT, bool, ControlBars);
 		virtual void    SetStatusbarMsg(CString);
-		virtual void    SetupToolBar();
-		virtual void	UpdateFrame();
+		virtual void    SetupToolBar(void);
+		virtual void	UpdateFrame(void);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
 	  	  // protected data members
@@ -153,7 +153,7 @@ CMainFrame : public CFrame						/*
 
 	Declare the global function that provides access to the
 	CDoc class 							*/
-	
+
 CDoc& TheDoc();
 
 /*------------------------------------------------------------------------------*/

@@ -72,7 +72,8 @@ CView : public CWnd							/*
 		virtual LRESULT ScrollMessages(UINT, WPARAM, LPARAM);
 		virtual	void 	Serialize(CArchive &ar);
 		virtual CursorShape SetCursorShape(CursorShape);
-
+		virtual void 	SyncScrollBars();
+		
 		  // public data members
                 CFont     m_font;         // the font used to display view
                 COLORREF  m_rgbBkColor,	  // background color
@@ -85,7 +86,7 @@ CView : public CWnd							/*
 
 	protected:
 		virtual CPoint 	GetClientWdHt();
-		virtual int		OnCreate(LPCREATESTRUCT pcs);
+		virtual int	OnCreate(LPCREATESTRUCT pcs);
 		virtual void 	OnDraw(CDC& pDC);
 		virtual void 	OnInitialUpdate();
 		virtual void    Paint(CDC &, RECT);
@@ -93,7 +94,8 @@ CView : public CWnd							/*
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
 		virtual BOOL 	PreTranslateMessage(MSG *Msg);
 		virtual void    SetDefaultFont();
-     	virtual void    TextOutHi(CDC&, RECT, int, CString, int, int);
+     		virtual void    TextOutHi(CDC&, RECT, int, const CString &,
+		     		    int, int);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
 		  // protected static method
@@ -108,7 +110,6 @@ CView : public CWnd							/*
 
 	private:
 		  // private methods
-
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_VIEW_H

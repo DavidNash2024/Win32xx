@@ -68,21 +68,22 @@ CDoc : public CObject							/*
 		virtual int	GetDocLength() const;
 		virtual	CString GetDocOpenFileName(const CString&) const;
 		virtual CString GetDocRecord(int, int left = 0,
-						int length = -1) const;
+				    int length = -1) const;
 		virtual	CString GetDocSaveFileName(const CString&) const;
 		virtual int	GetDocWidth() const;
-		virtual void	InitialDoc();
+		virtual void	InitialDocument();
 		virtual	bool	IsDirty() const;
 		virtual bool    IsOpen() const;
 		virtual bool    OpenDoc(const CString &);
+		virtual void	NewDocument();
 		virtual void    PushContent(const CString&);
 		virtual bool    SaveDoc();
-		virtual bool    SaveDocAs();
+		virtual bool    SaveDocAs(void);
 		virtual void	Serialize(CArchive& ar);
 
 	  // public data members
 
-		static const CString m_sCompiled_on;  // date, mmm dd yyyy
+		static const 	CString m_sCompiled_on;  // date, mmm dd yyyy
 
 	protected:
 		CString	m_Doc_path;
@@ -90,11 +91,11 @@ CDoc : public CObject							/*
 	private:
 		bool    m_bDoc_is_dirty; // document has been altered
 		bool	m_bDoc_is_open;	 // the document status
-		int		m_stDoc_width;   // length, in characters
+		int	m_stDoc_width;   // length, in characters
 	     	std::vector<CString> m_doc_content; // array of document lines
 
 		  // static constants
 	     	static LPCTSTR m_file_dlg_filter; // file dialog filter
 };
-/*-----------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------*/
 #endif //SDI_DOC_H

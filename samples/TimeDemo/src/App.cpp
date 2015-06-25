@@ -58,14 +58,14 @@
 
   // About box dialog and  other information
 CString CApp::m_sAboutStatement = _T("Hello World!");
-const CString CApp::m_sCredits  = _T("Time, MRU, Archive, and Scrolling Demo");
+const CString CApp::m_sCredits  = _T("CTime, MRU, CArchive, and Scrolling Demo");
 const CString CApp::m_sVersion	= _T("Version 1.0 (2015)");
-const CString CApp::m_sCompiled_with = _T("TDM-GCC 4.8.1");
+const CString CApp::m_sCompiled_with = _T("(TODO: name your compiler here)");
 const CString CApp::m_sCompiled_on = __DATE__;
 const CString CApp::m_months    =
 		_T("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
-  // serialized data file type (here: time-demo file)
-const CString CApp::m_ini_file_extension  = _T(".tdf");
+  // serialized data file type (here: "time-demo info")
+const CString CApp::m_ini_file_extension  = _T(".tdi");
 
 /*============================================================================*/
 	int APIENTRY 

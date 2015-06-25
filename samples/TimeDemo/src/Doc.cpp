@@ -32,7 +32,7 @@
 	In no event shall the authors  or  copyright holders be liable for any
 	claim, damages,  or  other liability, whether in an action of contract,
 	tort  or  otherwise, arising from, out of,  or in connection with, these
-	materials, the use thereof,  or  any other other dealings therewith.
+	materials, the use thereof, or  any other other dealings therewith.
 
 	Programming Notes:
                 The programming standards roughly follow those established
@@ -56,12 +56,15 @@
 #include <io.h>
 
 #include "stdafx.h"
-#include "Doc.h"
 #include "App.h"
 #include "targetver.h"
 
   // local function for display of boolean value in demo
 static CString Truth(bool b){return b ? _T("true") : _T("false");}
+  // local formats for displaying CTime values as strings
+static const CString 	longDateFmt  = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z"),
+			shortDateFmt = TEXT("%d-%b-%Y"),
+			simpleHMSFmt = TEXT("%I:%M:%S %p");
 
 /*******************************************************************************
 
@@ -95,7 +98,7 @@ CDoc() 									/*
 	m_stDoc_width   = 0;
 	m_doc_content.clear();
 	  // show initial document content for display
-	InitialDoc();
+	InitialDocument();
 }
 
 /*============================================================================*/
@@ -158,8 +161,7 @@ GetDocOpenFileName(const CString &title) const				/*
 
 /*============================================================================*/
 	CString CDoc::
-GetDocRecord(int rcd, int left /* = 0 */, int length
-    /* = -1 */)	const						/*
+GetDocRecord(int rcd, int left /* = 0 */, int length /* = -1 */) const	/*
 
 	Return a CString containing the document rcd record, starting at
 	the left position and continuing for length characters.
@@ -214,13 +216,101 @@ GetDocWidth() const							/*
 }
 
 /*============================================================================*/
+	bool CDoc::
+IsDirty() const								/*
+
+	Return true if the document has not been saved in its present
+	condition, or false otherwise.
+*----------------------------------------------------------------------------*/
+{
+	return m_bDoc_is_dirty;
+}
+
+/*============================================================================*/
+	bool CDoc::
+IsOpen() const								/*
+
+	Return true if the document has been loaded successfully, or false
+	otherwise.
+*----------------------------------------------------------------------------*/
+{
+	return m_bDoc_is_open;
+}
+
+/*============================================================================*/
+	bool CDoc::
+OpenDoc(const CString &doc_file_name)					/*
+
+	Open the document having the given doc_file_name and load its contents
+	into the internal CString array.  Return true if the document was
+	opened, or false if not.
+*-----------------------------------------------------------------------------*/
+{
+	  // if there is a document already open with this file name,
+	  // say so, and return
+	if (m_bDoc_is_open && !m_Doc_path.IsEmpty() &&
+	    m_Doc_path.CompareNoCase(doc_file_name) == 0)
+	{
+		CString s;
+		s.Format(_T("This file is already open:\n    %s"),
+		    doc_file_name.c_str());
+		::MessageBox(NULL, s, _T("Error"), MB_OK |
+		    MB_ICONEXCLAMATION | MB_TASKMODAL);
+		return true;
+	}
+
+	  // if the name does not exist, return
+	if (doc_file_name.IsEmpty())
+		return false;
+
+	  // if there is another document open, close it before proceeding
+	if (m_bDoc_is_open)
+		CloseDoc();
+	try
+	{
+		m_doc_content.clear();
+		CArchive ar(doc_file_name, CArchive::load);
+		ar >> *this;
+	}
+	catch (const CWinException &e)  // catch std::exception events
+	{	  // Process the exception and  quit
+		CString msg,
+			what(e.what());
+		msg.Format(_T("Error restoring the document.\n%s\n%s"),
+		    e.GetErrorString(), what.c_str());
+		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		return false;
+	}
+	catch(...) // catch everything else
+	{
+		CString msg = _T("Error restoring the document.\n");
+		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		return false;
+	}
+
+	  // register the open document
+	m_Doc_path = doc_file_name;
+	m_bDoc_is_dirty = false;
+	m_bDoc_is_open = true;
+	  // show the file name in the window title
+	TheApp().TheFrame()->SetWindowTitle(m_Doc_path);
+	  // record the path in the MRU list
+	TheApp().TheFrame()->TheMRU().AddMRUEntry(m_Doc_path);
+	TheApp().TheFrame()->TheView().SyncScrollBars();
+	return true;
+}
+
+/*============================================================================*/
 	void CDoc::
-InitialDoc() 								/*
+NewDocument() 								/*
 
 	For this TimeDemo, develop the ad hoc array of strings that contain the
 	results of various tests of the CTime class and Win32++ functions.
 *-----------------------------------------------------------------------------*/
 {
+	m_doc_content.clear();
 	CString s;
 	s = _T("  -------------------------------------------------------");
 	PushContent(s);
@@ -231,77 +321,77 @@ InitialDoc() 								/*
 	PushContent(s);
 	PushContent(_T(""));
 	CTime t1;
-	PushContent(_T("   1. CTime t1;                                  ")
-	    + t1.StdFormat());
+	PushContent(_T("   1. CTime t1; (long date format)               ")
+	    + t1.Format(longDateFmt));
 
 	CTime t2(t1);
-	PushContent(_T("   2. CTime t2(t1);                          UTC ")
-	    + t2.FormatGmt(stdTForm));
+	PushContent(_T("   2. CTime t2(t1); (as UTC)                     ")
+	    + t2.FormatGmt(longDateFmt));
 
 	CTime t3(0);
-	PushContent(_T("   3. CTime t3(0); as stdDate                    ")
-	    + t3.FormatGmt(stdTDate));
-	PushContent(_T("   4. CTime t3(0); as stdTHMS                    ")
-	    + t3.FormatGmt(stdTHMS));
+	PushContent(_T("   3. CTime t3(0); (short date format)           ")
+	    + t3.FormatGmt(shortDateFmt));
+	PushContent(_T("   4. CTime t3(0); (simple HMS format)           ")
+	    + t3.FormatGmt(simpleHMSFmt));
 
 	t3 = CTime::GetCurrentTime();
 	PushContent(_T("   5. CTime t3 = GetCurrentTime()                ")
-	    + t3.StdFormat());
+	    + t3.Format(longDateFmt));
 
 	CTime t4(2014, 3, 8, 2, 37, 40);
 	PushContent(_T("   6. CTime t4(2014, 3, 8, 2, 37, 40);           ")
-	    + t4.StdFormat());
+	    + t4.Format(longDateFmt));
 
 	CTime t5(2014, 2, 9, 2, 37, 40);
 	PushContent(_T("   7. CTime t5(2014, 2, 9, 2, 37, 40);           ")
-	    + t5.StdFormat());
+	    + t5.Format(longDateFmt));
 
 	CTime t6(2014, 3, 9, 3, 37, 40);
 	PushContent(_T("   8. CTime t6(2014, 3, 9, 3, 37, 40);           ")
-	    + t6.StdFormat());
+	    + t6.Format(longDateFmt));
 
 	CTime t7(2014, 67, 3, 37, 40);
 	PushContent(_T("   9. CTime t7(2014, 67, 3, 37, 40);             ")
-	    + t7.StdFormat());
+	    + t7.Format(longDateFmt));
 
 	CTime t8(2014, 68, 3, 37, 40);
 	PushContent(_T("  10. CTime t8(2014, 68, 3, 37, 40);             ")
-	    + t8.StdFormat());
+	    + t8.Format(longDateFmt));
 
 	CString s9(_T("09-Mar-2014 3:37:40"));
 	CTime t9(s9);  // a CString conversion
 	PushContent(_T("  11. CTime t9(\"09-Mar-2014 3:37:40\")   CString  ")
-	    + t9.StdFormat());
+	    + t9.Format(longDateFmt));
 
 	CTime t10(_T("09-Mar-2014 3:37:40"));  // a LPCTTR conversion
 	PushContent(_T("  12. CTime t10(\"09-Mar-2014 2:37:40\")  LPCTSTR  ")
-	    + t10.StdFormat());
+	    + t10.Format(longDateFmt));
 
 	CTime t11(2014, 3, 6, 2, 3, 37, 40);
 	PushContent(_T("  13. CTime t11(2014, 3, 6, 2, 3, 37, 40);       ")
-	    + t11.StdFormat());
+	    + t11.Format(longDateFmt));
 
 	CTime t12(2014, 3, 6, 3, 3, 37, 40);
 	PushContent(_T("  14. CTime t12(2014, 3, 6, 3, 3, 37, 40);       ")
-	    + t12.StdFormat());
+	    + t12.Format(longDateFmt));
 
 	SYSTEMTIME st;
 	t12.GetAsSystemTime(st);
 	CTime t13(st);
 	PushContent(_T("  15. GetAsSystemTime(t12);                      ")
-	    + t13.StdFormat());
+	    + t13.Format(longDateFmt));
 
 	FILETIME ft;
 	t12.GetAsFileTime(ft);
 	CTime t14(ft);
 	PushContent(_T("  16. GetAsFileTime(t12);                        ")
-	    + t14.StdFormat());
+	    + t14.Format(longDateFmt));
 
 	WORD fatdate, fattime;
 	::FileTimeToDosDateTime(&ft, &fatdate, &fattime);
 	CTime t15(fatdate, fattime);
 	PushContent(_T("  17. t15(fatdate, fattime)                      ")
-	    + t15.StdFormat());
+	    + t15.Format(longDateFmt));
 
 	int 	yr = t15.GetYear(),
 		mo = t15.GetMonth(),
@@ -345,19 +435,19 @@ InitialDoc() 								/*
 
 	CTime t16 = t12 + ts;
 	PushContent(_T("  23. t16 = t12 + (t1 - t12) =  t1               ")
-	    + t16.StdFormat());
+	    + t16.Format(longDateFmt));
 
 	t16 -= ts;
 	PushContent(_T("  24. t16 -= (t1 - t12) =  t12                   ")
-	    + t16.StdFormat());
+	    + t16.Format(longDateFmt));
 
 	t16 += ts;
 	PushContent(_T("  25. t16 += (t1 - t12) =  t1                    ")
-	    + t16.StdFormat());
+	    + t16.Format(longDateFmt));
 
 	t16 = t1 - ts;
 	PushContent(_T("  26. t16 = t1 - (t1 - t12) =  t12               ")
-	    + t16.StdFormat());
+	    + t16.Format(longDateFmt));
 
 	ts = -ts;
 	s = ts.Format(_T("%D days, %H:%M:%S"));
@@ -455,88 +545,37 @@ InitialDoc() 								/*
 }
 
 /*============================================================================*/
-	bool CDoc::
-IsDirty() const								/*
+	void CDoc::
+InitialDocument() 							/*
 
-	Return true if the document has not been saved in its present
-	condition, or false otherwise.
-*----------------------------------------------------------------------------*/
-{
-	return m_bDoc_is_dirty;
-}
-
-/*============================================================================*/
-	bool CDoc::
-IsOpen() const								/*
-
-	Return true if the document has been loaded successfully, or false
-	otherwise.
-*----------------------------------------------------------------------------*/
-{
-	return m_bDoc_is_open;
-}
-
-/*============================================================================*/
-	bool CDoc::
-OpenDoc(const CString &doc_file_name)					/*
-
-	Open the document having the given doc_file_name and load its contents
-	into the internal CString array.  Return true if the document was
-	opened, or false if not.
+	Build an array of strings that will display on the screen when the
+	application is opened that introduce the program.
 *-----------------------------------------------------------------------------*/
 {
-	  // if there is a document already open with this file name,
-	  // say so, and return
-	if (m_bDoc_is_open && !m_Doc_path.IsEmpty() &&
-	    m_Doc_path.CompareNoCase(doc_file_name) == 0)
-	{
-		CString s;
-		s.Format(_T("This file is already open:\n    %s"),
-		    doc_file_name.c_str());
-		::MessageBox(NULL, s, _T("Error"), MB_OK |
-		    MB_ICONEXCLAMATION | MB_TASKMODAL);
-		return true;
-	}
-
-	  // if the name does not exist, return
-	if (doc_file_name.IsEmpty())
-		return false;
-
-	  // if there is another document open, close it before proceeding
-	if (m_bDoc_is_open)
-		CloseDoc();
-	try
-	{
-		CArchive ar(doc_file_name, CArchive::load);
-		ar << *this;
-	}
-	catch (const CWinException &e)  // catch std::exception events
-	{	  // Process the exception and  quit
-		CString msg,
-			what(e.what());
-		msg.Format(_T("Error restoring the document.\n%s\n%s"),
-		    e.GetErrorString(), what.c_str());
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-		return false;
-	}
-	catch(...) // catch everything else
-	{
-		CString msg = _T("Error restoring the document.\n");
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-		return false;
-	}
-
-	  // register the open document
-	m_Doc_path = doc_file_name;
-	m_bDoc_is_dirty = false;
-	m_bDoc_is_open = true;
-	  // show the file name in the window title
-	TheApp().TheFrame()->SetWindowTitle(m_Doc_path);
-	  // record the path in the MRU list
-	TheApp().TheFrame()->TheMRU().AddMRUEntry(m_Doc_path);
-	return true;
+	CString bar = _T("  -------------------------------------------------"),
+		blank = _T("");
+	PushContent(bar);
+	PushContent(blank);
+	PushContent(_T("    CTime, CArchive, MRU List, and Flicker-Free Scrolling"));
+	PushContent(_T("        Demonstration Program"));
+	PushContent(blank);
+	PushContent(bar);
+	PushContent(blank);
+	PushContent(_T("  No document is currently loaded. "));
+	PushContent(blank);
+	PushContent(_T("  Generate one by selecting New on the File Menu, or by"));
+	PushContent(_T("     clicking the New Document button on the toolbar."));
+	PushContent(blank);
+	PushContent(_T("  Open a previously saved file by selecting one on the "));
+	PushContent(_T("      Most Recently Used list on the File Menu, or"));
+	PushContent(_T("      by selecting one using Open on the FileMenu, or"));
+	PushContent(_T("      by using the Open Existing File button on the toolbar."));
+	PushContent(blank);
+	PushContent(_T("  Most recently used file is loaded at entry, by default, "));
+	PushContent(_T("      when one exists. "));
+ 	  // indicate that no document is currently open
+	m_bDoc_is_open = m_bDoc_is_dirty = false;
+	m_Doc_path.Empty();
 }
 
 /*============================================================================*/
@@ -564,6 +603,14 @@ SaveDoc()								/*
 	  // not yet been saved, give it a name and then save it.
 	if (m_bDoc_is_open && m_bDoc_is_dirty && m_Doc_path.IsEmpty())
 	{
+		if (::MessageBox(NULL, _T("Save this unnamed document?\n"),
+		    _T("Question"), MB_YESNO | MB_ICONQUESTION | MB_TASKMODAL |
+		    MB_DEFBUTTON1) == IDNO)
+		{
+			m_bDoc_is_dirty = false;
+			return true; // succeeded per user's choice
+		}
+
 		m_Doc_path =
 		    GetDocSaveFileName(_T("Save the current document as..."));
 		  // show the new file name in the window title
@@ -606,7 +653,7 @@ SaveDoc()								/*
 
 /*============================================================================*/
 	bool CDoc::
-SaveDocAs()							/*
+SaveDocAs(void)							/*
 
 	Get a new name for the document file and replace the old one with
 	this.  Save the newly named document and retain it as the current
