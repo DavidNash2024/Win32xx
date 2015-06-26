@@ -2132,7 +2132,8 @@ namespace Win32xx
 
 		// Set the keyboard accelerators
 		m_hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		GetApp().SetAccelerators(m_hAccel, this);
+		if (m_hAccel)
+			GetApp().SetAccelerators(m_hAccel, this);
 
 		// Set the Caption
 		SetWindowText(LoadString(IDW_MAIN));
@@ -2179,7 +2180,7 @@ namespace Win32xx
 
 		// Create the view window
 		assert(&GetView());			// Use SetView in CMainFrame's constructor to set the view window
-		GetDockClient().SetDock(this);
+		GetDockClient().SetDocker(*this);
 		GetDockClient().Create(*this);
 		if (&GetView() != &GetDockClient())
 			GetView().Create(GetDockClient());
@@ -2187,9 +2188,9 @@ namespace Win32xx
 		// Disable XP themes for the menubar
 		GetMenuBar().SetWindowTheme(L" ", L" ");
 
-		// Reposition the child windows
 		SendMessage(WM_SYSCOLORCHANGE);
-
+		
+		// Reposition the child windows
 		RecalcLayout();
 
 		return 0;

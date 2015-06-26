@@ -254,9 +254,9 @@ namespace Win32xx
 			virtual void SetColor(COLORREF color);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-			CDocker* GetDock() const		{return m_pDock;}
+			CDocker& GetDocker() const		{assert (m_pDocker); return *m_pDocker;}
 			int GetWidth() const			{return m_DockBarWidth;}
-			void SetDock(CDocker* pDock)	{m_pDock = pDock;}
+			void SetDocker(CDocker& Docker)	{m_pDocker = &Docker;}
 			void SetWidth(int nWidth)		{m_DockBarWidth = nWidth;}
 
 		protected:
@@ -269,7 +269,7 @@ namespace Win32xx
 			CDockBar(const CDockBar&);				// Disable copy construction
 			CDockBar& operator = (const CDockBar&); // Disable assignment operator
 
-			CDocker* m_pDock;
+			CDocker* m_pDocker;
 			DRAGPOS m_DragPos;
 			CBrush m_brBackground;
 			int m_DockBarWidth;
@@ -291,7 +291,7 @@ namespace Win32xx
 
 			CString& GetCaption() const		{ return (CString&)m_csCaption; }
 			CWnd& GetView() const			{ assert (m_pView); return *m_pView; }
-			void SetDock(CDocker* pDock)	{ m_pDock = pDock;}
+			void SetDocker(CDocker& Docker)	{ m_pDocker = &Docker;}
 			void SetCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
 			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
 			void SetView(CWnd& wndView);
@@ -320,7 +320,7 @@ namespace Win32xx
 
 			CString m_csCaption;
 			CPoint m_Oldpt;
-			CDocker* m_pDock;
+			CDocker* m_pDocker;
 			CWnd* m_pView;
 			BOOL m_IsClosePressed;
 			BOOL m_IsOldFocusStored;
@@ -593,7 +593,7 @@ namespace Win32xx
 	/////////////////////////////////////////////////////////////
 	// Definitions for the CDockBar class nested within CDocker
 	//
-	inline CDocker::CDockBar::CDockBar() : m_pDock(NULL), m_DockBarWidth(4)
+	inline CDocker::CDockBar::CDockBar() : m_pDocker(NULL), m_DockBarWidth(4)
 	{
 		m_brBackground.CreateSolidBrush(RGB(192,192,192));
 	}
@@ -611,7 +611,7 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockBar::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
+		if (!(m_pDocker->GetDockStyle() & DS_NO_RESIZE))
 		{
 			SendNotify(UWN_BARSTART);
 			SetCapture();
@@ -622,7 +622,7 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockBar::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == *this))
+		if (!(m_pDocker->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == *this))
 		{
 			SendNotify(UWN_BAREND);
 			ReleaseCapture();
@@ -633,7 +633,7 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockBar::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == *this))
+		if (!(m_pDocker->GetDockStyle() & DS_NO_RESIZE) && (GetCapture() == *this))
 		{
 			SendNotify(UWN_BARMOVE);
 		}
@@ -643,10 +643,10 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockBar::OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (!(m_pDock->GetDockStyle() & DS_NO_RESIZE))
+		if (!(m_pDocker->GetDockStyle() & DS_NO_RESIZE))
 		{
 			HCURSOR hCursor;
-			DWORD dwSide = GetDock()->GetDockStyle() & 0xF;
+			DWORD dwSide = GetDocker().GetDockStyle() & 0xF;
 			if ((dwSide == DS_DOCKED_LEFT) || (dwSide == DS_DOCKED_RIGHT))
 				hCursor = GetApp().LoadCursor(IDW_SPLITH);
 			else
@@ -714,7 +714,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 	// Definitions for the CDockClient class nested within CDocker
 	//
-	inline CDocker::CDockClient::CDockClient() : m_pView(0), m_IsClosePressed(FALSE),
+	inline CDocker::CDockClient::CDockClient() : m_pDocker(0), m_pView(0), m_IsClosePressed(FALSE),
 						m_IsOldFocusStored(FALSE), m_IsCaptionPressed(FALSE), m_IsTracking(FALSE)
 	{
 		m_Foregnd1 = RGB(32,32,32);
@@ -757,8 +757,8 @@ namespace Win32xx
 		int cx = GetSystemMetrics(SM_CXSMICON);
 		int cy = GetSystemMetrics(SM_CYSMICON);
 
-		rcClose.top = 2 + rc.top + m_pDock->m_NCHeight/2 - cy/2;
-		rcClose.bottom = 2 + rc.top + m_pDock->m_NCHeight/2 + cy/2;
+		rcClose.top = 2 + rc.top + m_pDocker->m_NCHeight/2 - cy/2;
+		rcClose.bottom = 2 + rc.top + m_pDocker->m_NCHeight/2 + cy/2;
 		rcClose.right = rc.right - gap;
 		rcClose.left = rcClose.right - cx;
 
@@ -776,9 +776,9 @@ namespace Win32xx
 
 	inline void CDocker::CDockClient::DrawCaption()
 	{
-		if (IsWindow() && m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if (IsWindow() && m_pDocker->IsDocked() && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			BOOL bFocus = m_pDock->IsChildOfDocker(GetFocus());
+			BOOL bFocus = m_pDocker->IsChildOfDocker(GetFocus());
 			m_IsOldFocusStored = FALSE;
 
 			// Acquire the DC for our NonClient painting
@@ -789,7 +789,7 @@ namespace Win32xx
 			CMemDC dcMem(dc);
 			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
-			int Height = m_pDock->m_NCHeight + rcAdjust;
+			int Height = m_pDocker->m_NCHeight + rcAdjust;
 			dcMem.CreateCompatibleBitmap(dc, Width, Height);
 			m_IsOldFocusStored = bFocus;
 
@@ -816,15 +816,15 @@ namespace Win32xx
 
 			// Draw the rectangle
 			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
-			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDock->m_NCHeight + rcAdjust);
+			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDocker->m_NCHeight + rcAdjust);
 
 			// Display the caption
-			int cx = (m_pDock->GetDockStyle() & DS_NO_CLOSE) ? 0 : GetSystemMetrics(SM_CXSMICON);
-			CRect rcText(4 + rcAdjust, rcAdjust, rc.Width() - 4 - cx - rcAdjust, m_pDock->m_NCHeight + rcAdjust);
+			int cx = (m_pDocker->GetDockStyle() & DS_NO_CLOSE) ? 0 : GetSystemMetrics(SM_CXSMICON);
+			CRect rcText(4 + rcAdjust, rcAdjust, rc.Width() - 4 - cx - rcAdjust, m_pDocker->m_NCHeight + rcAdjust);
 			dcMem.DrawText(m_csCaption, m_csCaption.GetLength(), rcText, DT_LEFT | DT_VCENTER | DT_SINGLELINE | DT_END_ELLIPSIS);
 
 			// Draw the close button
-			if (!(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+			if (!(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 				DrawCloseButton(dcMem, bFocus);
 
 			// Draw the 3D border
@@ -841,7 +841,7 @@ namespace Win32xx
 		// The close button isn't displayed on Win95
 		if (GetWinVersion() == 1400)  return;
 
-		if (m_pDock->IsDocked() && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if (m_pDocker->IsDocked() && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
 			// Determine the close button's drawing position relative to the window
 			CRect rcClose = GetCloseRect();
@@ -850,12 +850,12 @@ namespace Win32xx
 
 			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
 			{
-				rcClose.OffsetRect(2, m_pDock->m_NCHeight+2);
-				if (GetWindowRect().Height() < (m_pDock->m_NCHeight+4))
+				rcClose.OffsetRect(2, m_pDocker->m_NCHeight+2);
+				if (GetWindowRect().Height() < (m_pDocker->m_NCHeight+4))
 					rcClose.OffsetRect(-2, -2);
 			}
 			else
-				rcClose.OffsetRect(0, m_pDock->m_NCHeight-2);
+				rcClose.OffsetRect(0, m_pDocker->m_NCHeight-2);
 
 			// Draw the outer highlight for the close button
 			if (!IsRectEmpty(&rcClose))
@@ -935,12 +935,12 @@ namespace Win32xx
 		// Sets the non-client area (and hence sets the client area)
 		// This function modifies lParam
 
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (m_pDock->IsDocked())
+			if (m_pDocker->IsDocked())
 			{
 				LPRECT rc = (LPRECT)lParam;
-				rc->top += m_pDock->m_NCHeight;
+				rc->top += m_pDocker->m_NCHeight;
 			}
 		}
 
@@ -950,9 +950,9 @@ namespace Win32xx
 	inline LRESULT CDocker::CDockClient::OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Identify which part of the non-client area the cursor is over
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (m_pDock->IsDocked())
+			if (m_pDocker->IsDocked())
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 
@@ -972,9 +972,9 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockClient::OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if ((HTCLOSE == wParam) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+			if ((HTCLOSE == wParam) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 			{
 				m_IsClosePressed = TRUE;
 				SetCapture();
@@ -983,7 +983,7 @@ namespace Win32xx
 			m_IsCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
-			if (m_pDock->IsDocked())
+			if (m_pDocker->IsDocked())
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				ScreenToClient(pt);
@@ -991,7 +991,7 @@ namespace Win32xx
 					GetView().SetFocus();
 
 				// Update the close button
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CWindowDC dc(*this);
 					DrawCloseButton(dc, m_IsOldFocusStored);
@@ -1005,9 +1005,9 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockClient::OnNCLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if ((HTCLOSE == wParam) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+			if ((HTCLOSE == wParam) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 			{
 				m_IsClosePressed = TRUE;
 				SetCapture();
@@ -1016,7 +1016,7 @@ namespace Win32xx
 			m_IsCaptionPressed = TRUE;
 			m_Oldpt.x = GET_X_LPARAM(lParam);
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
-			if (m_pDock->IsDocked())
+			if (m_pDocker->IsDocked())
 			{
 				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 				ScreenToClient(pt);
@@ -1024,7 +1024,7 @@ namespace Win32xx
 					GetView().SetFocus();
 
 				// Update the close button
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CWindowDC dc(*this);
 					DrawCloseButton(dc, m_IsOldFocusStored);
@@ -1040,26 +1040,26 @@ namespace Win32xx
 	inline LRESULT CDocker::CDockClient::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		ReleaseCapture();
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 		{
 			CWindowDC dc(*this);
 			DrawCloseButton(dc, m_IsOldFocusStored);
-			if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
+			if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)))
 			{
 				m_IsCaptionPressed = FALSE;
 				if (m_IsClosePressed && GetCloseRect().PtInRect(GetCursorPos()))
 				{
 					// Destroy the docker
-					if (m_pDock->GetContainer())
+					if (m_pDocker->GetContainer())
 					{
-						CDockContainer* pContainer = m_pDock->GetContainer()->GetActiveContainer();
-						CDocker* pDock = m_pDock->GetDockFromView(pContainer);
+						CDockContainer* pContainer = m_pDocker->GetContainer()->GetActiveContainer();
+						CDocker* pDock = m_pDocker->GetDockFromView(pContainer);
 						assert(pDock);
 						pDock->Close();
 					}
 					else
 					{
-						m_pDock->Close();
+						m_pDocker->Close();
 					}
 				}
 			}
@@ -1081,9 +1081,9 @@ namespace Win32xx
 	inline LRESULT CDocker::CDockClient::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Focus changed, so redraw the captions
 	{
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			m_pDock->GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE, 0, 0);
+			m_pDocker->GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE, 0, 0);
 		}
 
 		return FinalWindowProc(uMsg, wParam, lParam);
@@ -1102,9 +1102,9 @@ namespace Win32xx
 			m_IsTracking = TRUE;
 		}
 
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (m_pDock->IsDocked())
+			if (m_pDocker->IsDocked())
 			{
 				// Discard phantom mouse move messages
 				if ( (m_Oldpt.x == GET_X_LPARAM(lParam) ) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
@@ -1119,7 +1119,7 @@ namespace Win32xx
 				}
 
 				// Update the close button
-				if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CLOSE))
+				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
 				{
 					CWindowDC dc(*this);
 					DrawCloseButton(dc, m_IsOldFocusStored);
@@ -1141,7 +1141,7 @@ namespace Win32xx
 	{
 		m_IsTracking = FALSE;
 		CWindowDC dc(*this);
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDock->IsDocked())
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & (DS_NO_CAPTION|DS_NO_CLOSE)) && m_pDocker->IsDocked())
 			DrawCloseButton(dc, m_IsOldFocusStored);
 
 		m_IsTracking = FALSE;
@@ -1156,9 +1156,9 @@ namespace Win32xx
 
 	inline LRESULT CDocker::CDockClient::OnNCPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if ((0 != m_pDock) && !(m_pDock->GetDockStyle() & DS_NO_CAPTION))
+		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
 		{
-			if (m_pDock->IsDocked())
+			if (m_pDocker->IsDocked())
 			{
 				DefWindowProc(WM_NCPAINT, wParam, lParam);
 				DrawCaption();
@@ -1185,12 +1185,12 @@ namespace Win32xx
 
 	inline void CDocker::CDockClient::PreCreate(CREATESTRUCT& cs)
 	{
-		DWORD dwStyle = m_pDock->GetDockStyle();
+		DWORD dwStyle = m_pDocker->GetDockStyle();
 		if (dwStyle & DS_CLIENTEDGE)
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
 
 #if (WINVER >= 0x0500)
-		if (m_pDock->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		if (m_pDocker->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
 			cs.dwExStyle |= WS_EX_LAYOUTRTL;
 #endif
 
@@ -1259,7 +1259,7 @@ namespace Win32xx
 		case WM_NCMOUSEMOVE:		return OnNCMouseMove(uMsg, wParam, lParam);
 		case WM_NCPAINT:			return OnNCPaint(uMsg, wParam, lParam);
 		case WM_NCMOUSELEAVE:		return OnNCMouseLeave(uMsg, wParam, lParam);
-		case WM_NOTIFY:				return m_pDock->SendMessage(uMsg, wParam, lParam);
+		case WM_NOTIFY:				return m_pDocker->SendMessage(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
 
@@ -2270,10 +2270,11 @@ namespace Win32xx
 	inline void CDocker::DrawHashBar(HWND hBar, POINT Pos)
 	// Draws a hashed bar while the splitter bar is being dragged
 	{
-		CDocker* pDock = (static_cast<CDockBar*>(GetCWndPtr(hBar)))->GetDock();
-		if (NULL == pDock) return;
+		CDockBar* pDockBar = static_cast<CDockBar*>(GetCWndPtr(hBar));
+		if (NULL == pDockBar) return;
+		CDocker& Docker = pDockBar->GetDocker();
 
-		BOOL bVertical = ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((pDock->GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
+		BOOL bVertical = ((Docker.GetDockStyle() & 0xF) == DS_DOCKED_LEFT) || ((Docker.GetDockStyle() & 0xF) == DS_DOCKED_RIGHT);
 		CClientDC dcBar(*this);
 
 		WORD HashPattern[] = {0x55,0xAA,0x55,0xAA,0x55,0xAA,0x55,0xAA};
@@ -2287,7 +2288,7 @@ namespace Win32xx
 		ScreenToClient(rc);
 		int cx = rc.Width();
 		int cy = rc.Height();
-		int BarWidth = pDock->GetDockBar().GetWidth();
+		int BarWidth = Docker.GetDockBar().GetWidth();
 
 		if (bVertical)
 			dcBar.PatBlt(Pos.x - BarWidth/2, rc.top, BarWidth, cy, PATINVERT);
@@ -2827,14 +2828,14 @@ namespace Win32xx
 #endif
 
 		// Create the various child windows
-		GetDockClient().SetDock(this);
+		GetDockClient().SetDocker(*this);
 		GetDockClient().Create(*this);
 
 		assert(&GetView());			// Use SetView in the docker's constructor to set the view window
 		GetView().Create(GetDockClient());
 
 		// Create the slider bar belonging to this docker
-		GetDockBar().SetDock(this);
+		GetDockBar().SetDocker(*this);
 		if (GetDockAncestor() != this)
 			GetDockBar().Create(*GetDockAncestor());
 
@@ -3059,13 +3060,14 @@ namespace Win32xx
 		POINT pt = pdp->ptPos;
 		ScreenToClient(pt);
 
-		CDocker* pDock = (static_cast<CDockBar*>(GetCWndPtr(pdp->hdr.hwndFrom)))->GetDock();
-		if (NULL == pDock) return;
+		CDockBar* pDockBar = static_cast<CDockBar*>(GetCWndPtr(pdp->hdr.hwndFrom));
+		if (NULL == pDockBar) return;
+		CDocker& Docker = pDockBar->GetDocker();
 
-		RECT rcDock = pDock->GetWindowRect();
+		RECT rcDock = Docker.GetWindowRect();
 		ScreenToClient(rcDock);
 
-		int iBarWidth    = pDock->GetDockBar().GetWidth();
+		int iBarWidth    = Docker.GetDockBar().GetWidth();
 		double dBarWidth = iBarWidth;
 		int DockSize;
 
@@ -3074,37 +3076,37 @@ namespace Win32xx
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
-		CRect rcDockParent = pDock->m_pDockParent->GetWindowRect();
+		CRect rcDockParent = Docker.m_pDockParent->GetWindowRect();
 
-		switch (pDock->GetDockStyle() & 0xF)
+		switch (Docker.GetDockStyle() & 0xF)
 		{
 		case DS_DOCKED_LEFT:
 			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
 			else     DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
-			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Width());
+			Docker.SetDockSize(DockSize);
+			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Width());
 			break;
 		case DS_DOCKED_RIGHT:
 			if (RTL)  DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
 			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
-			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Width());
+			Docker.SetDockSize(DockSize);
+			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Width());
 			break;
 		case DS_DOCKED_TOP:
 			DockSize = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
-			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Height());
+			Docker.SetDockSize(DockSize);
+			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Height());
 			break;
 		case DS_DOCKED_BOTTOM:
 			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
-			pDock->SetDockSize(DockSize);
-			pDock->m_DockSizeRatio = ((double)pDock->m_DockStartSize)/((double)rcDockParent.Height());
+			Docker.SetDockSize(DockSize);
+			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Height());
 			break;
 		}
 
