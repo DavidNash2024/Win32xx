@@ -4551,7 +4551,7 @@ namespace Win32xx
 
 	inline void CDockContainer::SwapTabs(UINT nTab1, UINT nTab2)
 	{
-		if ((nTab1 < GetAllContainers().size()) && (nTab2 < GetAllContainers().size()) && (nTab1 != nTab2))
+		if ((nTab1 < m_vContainerInfo.size()) && (nTab2 < m_vContainerInfo.size()) && (nTab1 != nTab2))
 		{
 			ContainerInfo CI1 = m_vContainerInfo[nTab1];
 			ContainerInfo CI2 = m_vContainerInfo[nTab2];

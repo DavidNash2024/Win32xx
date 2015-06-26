@@ -109,7 +109,6 @@ BEGIN
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
     "S",            IDM_FILE_SAVE,          VIRTKEY, CONTROL, NOINVERT
-    VK_DELETE,      IDM_EDIT_DELETE,        VIRTKEY, NOINVERT
 END
 
 /////////////////////////////////////////////////////////////////////////////
