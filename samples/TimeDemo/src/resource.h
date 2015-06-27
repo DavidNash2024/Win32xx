@@ -7,7 +7,7 @@
 ===============================================================================*
 
 	Contents Description:  Resource definitions used by minimal SDI 
-	applications in the resource.rc file.  Adapted to the Win32++ Windows
+	application's resource.rc file.  Adapted to the Win32++ Windows
 	interface classes, Copyright (c) 2005-2015 David Nash, under
 	permissions granted therein.
 	
