@@ -162,42 +162,42 @@ void CMainFrame::SetMDITabsAtTop(BOOL bTop)
 
 CDocker* CMainFrame::NewDockerFromID(int idDock)
 {
-	CDocker* pDock = NULL;
+	CDocker* pDocker = NULL;
 	switch(idDock)
 	{
 	case ID_DOCK_CLASSES1:
-		pDock = new CDockClasses;
+		pDocker = new CDockClasses;
 		break;
 	case ID_DOCK_CLASSES2:
-		pDock = new CDockClasses;					
+		pDocker = new CDockClasses;					
 		break;
 	case ID_DOCK_FILES1:
-		pDock = new CDockFiles;
+		pDocker = new CDockFiles;
 		break;
 	case ID_DOCK_FILES2:
-		pDock = new CDockFiles;
+		pDocker = new CDockFiles;
 		break;
 	case ID_DOCK_OUTPUT1:
-		pDock = new CDockOutput;
+		pDocker = new CDockOutput;
 		break;
 	case ID_DOCK_OUTPUT2:
-		pDock = new CDockOutput;
+		pDocker = new CDockOutput;
 		break;
 	case ID_DOCK_TEXT1:
-		pDock = new CDockText;
+		pDocker = new CDockText;
 		break;
 	case ID_DOCK_TEXT2:
-		pDock = new CDockText;
+		pDocker = new CDockText;
 		break;
 	case ID_DOCK_DIALOG:
-		pDock = new CDockDialog;
+		pDocker = new CDockDialog;
 		break;
 	default:
 		TRACE("Unknown Dock ID\n");
 		break;
 	}
 
-	return pDock;
+	return pDocker;
 }
 
 BOOL CMainFrame::OnDefaultLayout()

@@ -16,8 +16,8 @@
 	interface classes, Copyright (c) 2005-2015 David Nash, under
 	permissions granted therein.
 
-        Caveats: The copyright displayed above extends only to the author's
-        treatment of material that may have been extracted from online uncited
+	Caveats: The copyright displayed above extends only to the author's
+	treatment of material that may have been extracted from online uncited
 	sources. Unaltered portions of those materials retain their original
 	copyright status. The author's additions and  modifications may be used
 	 or  altered by others for non-commercial use only without permission.

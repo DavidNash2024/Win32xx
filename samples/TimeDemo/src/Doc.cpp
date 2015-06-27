@@ -15,7 +15,7 @@
 	additions, deletions, and  other treatments of materials that may have
 	been extracted from the cited sources.  Unaltered portions of those
 	materials retain their original copyright status. The author hereby
-	grants permission to any persion obtaining a copy of this treatment
+	grants permission to any person obtaining a copy of this treatment
 	of the subject class and  any associated documentation composed by
 	the author, to utilize this material, free of charge and  without
 	restriction  or  limitation, subject to the following conditions:

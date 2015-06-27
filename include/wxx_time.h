@@ -41,8 +41,7 @@
 // The original author of CTime and CTimeSpan is:
 //
 //      Robert C. Tausworthe
-//      2812 Rancho Costero
-//      Carlsbad, CA 92009
+//      email: robert.c.tausworthe@ieee.org
 //
 ////////////////////////////////////////////////////////
 

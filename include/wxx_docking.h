@@ -444,7 +444,7 @@ namespace Win32xx
 		virtual void Close();
 		virtual void CloseAllDockers();
 		virtual void Dock(CDocker* pDocker, UINT uDockSide);
-		virtual void DockInContainer(CDocker* pDock, DWORD dwDockStyle);
+		virtual void DockInContainer(CDocker* pDocker, DWORD dwDockStyle);
 		virtual CDockContainer* GetContainer() const;
 		virtual CDocker* GetActiveDocker() const;
 		virtual CDocker* GetDockAncestor() const;
@@ -457,6 +457,7 @@ namespace Win32xx
 		virtual int GetTextHeight();
 		virtual void Hide();
 		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);
+		virtual BOOL LoadContainerRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void RecalcDockLayout();
 		virtual BOOL SaveDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
@@ -1053,9 +1054,9 @@ namespace Win32xx
 					if (m_pDocker->GetContainer())
 					{
 						CDockContainer* pContainer = m_pDocker->GetContainer()->GetActiveContainer();
-						CDocker* pDock = m_pDocker->GetDockFromView(pContainer);
-						assert(pDock);
-						pDock->Close();
+						CDocker* pDocker = m_pDocker->GetDockFromView(pContainer);
+						assert(pDocker);
+						pDocker->Close();
 					}
 					else
 					{
@@ -1112,10 +1113,10 @@ namespace Win32xx
 
 				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_IsCaptionPressed))
 				{
-					CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(GetParent()));
-					assert(dynamic_cast<CDocker*>(pDock));
-					if (pDock)
-						pDock->Undock(GetCursorPos());
+					CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(GetParent()));
+					assert(dynamic_cast<CDocker*>(pDocker));
+					if (pDocker)
+						pDocker->Undock(GetCursorPos());
 				}
 
 				// Update the close button
@@ -2159,19 +2160,19 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::DockInContainer(CDocker* pDock, DWORD dwDockStyle)
+	inline void CDocker::DockInContainer(CDocker* pDocker, DWORD dwDockStyle)
 	// Add a container to an existing container
 	{
-		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (static_cast<CDockContainer*>(&pDock->GetView())))
+		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (static_cast<CDockContainer*>(&pDocker->GetView())))
 		{
-			assert(dynamic_cast<CDockContainer*>(&pDock->GetView()));
+			assert(dynamic_cast<CDockContainer*>(&pDocker->GetView()));
 
 			// Transfer any dock children to this docker
-			pDock->MoveDockInContainerChildren(this);
+			pDocker->MoveDockInContainerChildren(this);
 
 			// Transfer container children to the target container
 			CDockContainer* pContainer = static_cast<CDockContainer*>(&GetView());
-			CDockContainer* pContainerSource = static_cast<CDockContainer*>(&pDock->GetView());
+			CDockContainer* pContainerSource = static_cast<CDockContainer*>(&pDocker->GetView());
 
 			std::vector<ContainerInfo>::reverse_iterator riter;
 			std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
@@ -2190,13 +2191,13 @@ namespace Win32xx
 				}
 			}
 
-			pDock->m_pDockParent = this;
-			pDock->m_IsBlockMove = FALSE;
-			pDock->ShowWindow(SW_HIDE);
-			pDock->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-			pDock->SetDockStyle(dwDockStyle);
-			pDock->SetParent(*this);
-			pDock->GetDockBar().SetParent(*GetDockAncestor());
+			pDocker->m_pDockParent = this;
+			pDocker->m_IsBlockMove = FALSE;
+			pDocker->ShowWindow(SW_HIDE);
+			pDocker->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
+			pDocker->SetDockStyle(dwDockStyle);
+			pDocker->SetParent(*this);
+			pDocker->GetDockBar().SetParent(*GetDockAncestor());
 
 			// Insert the containers in reverse order
 			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
@@ -2306,16 +2307,16 @@ namespace Win32xx
 	// Returns the docker whose child window has focus
 	{
 		HWND hWnd = GetFocus();
-		CDocker* pDock = NULL;
-		while (hWnd && (pDock == NULL))
+		CDocker* pDocker = NULL;
+		while (hWnd && (pDocker == NULL))
 		{
 			if (IsRelated(hWnd))
-				pDock = static_cast<CDocker*>(GetCWndPtr(hWnd));
+				pDocker = static_cast<CDocker*>(GetCWndPtr(hWnd));
 
 			hWnd = ::GetParent(hWnd);
 		}
 
-		return pDock;
+		return pDocker;
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -2398,18 +2399,18 @@ namespace Win32xx
 
 	inline CDocker* CDocker::GetDockFromView(CWnd* pView) const
 	{
-		CDocker* pDock = 0;
+		CDocker* pDocker = 0;
 		std::vector<DockPtr>::iterator iter;
 		for (iter = GetAllDockChildren().begin(); iter != GetAllDockChildren().end(); ++iter)
 		{
 			if (&(*iter)->GetView() == pView)
-				pDock = (*iter).get();
+				pDocker = (*iter).get();
 		}
 
 		if (&GetDockAncestor()->GetView() == pView)
-			pDock = GetDockAncestor();
+			pDocker = GetDockAncestor();
 
-		return pDock;
+		return pDocker;
 	}
 
 	inline int CDocker::GetDockSize() const
@@ -2573,146 +2574,183 @@ namespace Win32xx
 				if (vDockList.size() > 0) bResult = TRUE;
 			}
 
-			// Add dockers without parents first
-			std::vector<DockInfo>::iterator iter;
-			for (iter = vDockList.begin(); iter != vDockList.end() ; ++iter)
+			try
 			{
-				DockInfo di = (*iter);
-				if (di.DockParentID == 0)
+				// Add dockers without parents first
+				std::vector<DockInfo>::iterator iter;
+				for (iter = vDockList.begin(); iter != vDockList.end() ; ++iter)
 				{
-					CDocker* pDocker = NewDockerFromID(di.DockID);
-					if (pDocker)
+					DockInfo di = (*iter);
+					if (di.DockParentID == 0)
 					{
+						CDocker* pDocker = NewDockerFromID(di.DockID);
+						if (!pDocker)
+							throw CWinException(_T("Failed to add dockers without parents from registry"));
+						
 						if (di.DockStyle & 0xF)
 							AddDockedChild(pDocker, di.DockStyle, di.DockSize, di.DockID);
 						else
-							AddUndockedChild(pDocker, di.DockStyle, di.DockSize, di.Rect, di.DockID);
-					}
-					else
-					{
-						TRACE("Failed to add dockers without parents from registry\n");
-						bResult = FALSE;
+							AddUndockedChild(pDocker, di.DockStyle, di.DockSize, di.Rect, di.DockID);			
 					}
 				}
-			}
 
-			// Remove dockers without parents from vDockList
-			for (UINT n = (UINT)vDockList.size(); n > 0; --n)
-			{
-				iter = vDockList.begin() + n-1;
-				if ((*iter).DockParentID == 0)
-					vDockList.erase(iter);
-			}
-
-			// Add remaining dockers
-			while (vDockList.size() > 0)
-			{
-				bool bFound = false;
-				for (iter = vDockList.begin(); iter != vDockList.end(); ++iter)
+				// Remove dockers without parents from vDockList
+				for (UINT n = (UINT)vDockList.size(); n > 0; --n)
 				{
-					DockInfo di = *iter;
-					CDocker* pDockParent = GetDockFromID(di.DockParentID);
-
-					if (pDockParent != 0)
-					{
-						CDocker* pDock = NewDockerFromID(di.DockID);
-						if(pDock)
-						{
-							pDockParent->AddDockedChild(pDock, di.DockStyle, di.DockSize, di.DockID);
-							bFound = true;
-						}
-						else
-						{
-							TRACE("Failed to add dockers with parents from registry\n");
-							bResult = FALSE;
-						}
-
+					iter = vDockList.begin() + n-1;
+					if ((*iter).DockParentID == 0)
 						vDockList.erase(iter);
-						break;
-					}
 				}
 
-				if (!bFound)
+				// Add remaining dockers
+				while (vDockList.size() > 0)
 				{
-					TRACE("Orphaned dockers stored in registry\n");
-					bResult = FALSE;
-					break;
+					bool bFound = false;
+					for (iter = vDockList.begin(); iter != vDockList.end(); ++iter)
+					{
+						DockInfo di = *iter;
+						CDocker* pDockParent = GetDockFromID(di.DockParentID);
+
+						if (pDockParent != 0)
+						{
+							CDocker* pDocker = NewDockerFromID(di.DockID);
+							if(!pDocker)
+								throw CWinException(_T("Failed to add dockers with parents from registry"));
+							
+							pDockParent->AddDockedChild(pDocker, di.DockStyle, di.DockSize, di.DockID);
+							bFound = true;
+							vDockList.erase(iter);
+							break;
+						}
+					}
+
+					if (!bFound)
+						throw CWinException(_T("Orphaned dockers stored in registry"));
+
+					if (!VerifyDockers())
+						throw CWinException(_T("Dockers are in an inconsistant state"));
 				}
 			}
 
-			// Restore Dock container tab order and active container
-			KeyName = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
+			catch (const CWinException& e)
+			{
+				TRACE(e.GetText()); TRACE("\n");
+				bResult = FALSE;
+				CloseAllDockers();
+
+				// Delete the bad key from the registry
+				CString strParentKey = _T("Software\\") + CString(szRegistryKeyName);
+				CRegKey ParentKey;
+				if (ERROR_SUCCESS == ParentKey.Open(HKEY_CURRENT_USER, strParentKey, KEY_READ))
+					ParentKey.RecurseDeleteKey(_T("Dock Windows"));
+			}
+			
+		}
+
+		if (bResult)
+			LoadContainerRegistrySettings(szRegistryKeyName);
+				
+		return bResult;
+	}
+
+
+	inline BOOL CDocker::LoadContainerRegistrySettings(LPCTSTR szRegistryKeyName)
+	{
+		BOOL bResult = FALSE;
+		if (szRegistryKeyName)
+		{
+			// Load Dock container tab order and active container
+			CString KeyName = _T("Software\\") + CString(szRegistryKeyName) + _T("\\Dock Windows");
+			CRegKey Key;
+
 			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName, KEY_READ))
 			{
-				UINT uContainer = 0;
-				CString SubKeyName;
-				SubKeyName.Format(_T("DockContainer%u"), uContainer);
-				CRegKey ContainerKey;
-				while (ERROR_SUCCESS == ContainerKey.Open(Key, SubKeyName, KEY_READ))
+				try
 				{
-					// Load tab order
-					UINT nTab = 0;
-					DWORD dwTabID;
-					std::vector<UINT> vTabOrder;
-					CString strTabKey;
-					strTabKey.Format(_T("Tab%u"), nTab);
-					while (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(strTabKey, dwTabID))
+					UINT uContainer = 0;
+					CString SubKeyName;
+					SubKeyName.Format(_T("DockContainer%u"), uContainer);
+					CRegKey ContainerKey;
+			
+					while (ERROR_SUCCESS == ContainerKey.Open(Key, SubKeyName, KEY_READ))
 					{
-						vTabOrder.push_back(dwTabID);
-						strTabKey.Format(_T("Tab%u"), ++nTab);
-					}
-
-					// Set tab order
-					DWORD dwParentID;
-					if (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(_T("Parent Container"), dwParentID))
-					{
-						CDocker* pDock = GetDockFromID(dwParentID);
-						if (pDock)
+						// Load tab order
+						bResult = TRUE;
+						UINT nTab = 0;
+						DWORD dwTabID;
+						std::vector<UINT> vTabOrder;
+						CString strTabKey;
+						strTabKey.Format(_T("Tab%u"), nTab);
+						while (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(strTabKey, dwTabID))
 						{
-							CDockContainer* pParentContainer = pDock->GetContainer();
-							if (pParentContainer)
+							vTabOrder.push_back(dwTabID);
+							strTabKey.Format(_T("Tab%u"), ++nTab);
+						}
+
+						// Set tab order
+						DWORD dwParentID;
+						if (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(_T("Parent Container"), dwParentID))
+						{
+							CDocker* pDocker = GetDockFromID(dwParentID);
+							if (!pDocker)
+								throw CWinException(_T("Failed to get docker from ID"));
+
+							CDockContainer* pParentContainer = pDocker->GetContainer();
+							if (!pParentContainer)
+								throw CWinException(_T("Failed to get parent container"));
+
+							for (UINT uTab = 0; uTab < vTabOrder.size(); ++uTab)
 							{
-								for (UINT uTab = 0; uTab < vTabOrder.size(); ++uTab)
-								{
-									CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(uTab));
-									if (pOldDocker)
-									{
-										UINT uOldID = pOldDocker->GetDockID();
+								CDocker* pOldDocker = GetDockFromView(pParentContainer->GetContainerFromIndex(uTab));
+								if (!pOldDocker)
+									throw CWinException(_T("Failed to get docker from view"));
 
-										std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
-										UINT uOldTab = (UINT)(it - vTabOrder.begin());
+								UINT uOldID = pOldDocker->GetDockID();
 
-										if (uTab != uOldTab)
-											pParentContainer->SwapTabs(uTab, uOldTab);
-									}
-								}
+								std::vector<UINT>::iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
+								UINT uOldTab = (UINT)(it - vTabOrder.begin());
+
+								if (uTab != uOldTab)
+									pParentContainer->SwapTabs(uTab, uOldTab);
 							}
 						}
-					}
 
-					// Set the active container
-					DWORD nActiveContainer;
-					if (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(_T("Active Container"), nActiveContainer))
-					{
-						CDocker* pDocker = GetDockFromID(nActiveContainer);
-						if (pDocker)
+						// Set the active container
+						DWORD nActiveContainer;
+						if (ERROR_SUCCESS == ContainerKey.QueryDWORDValue(_T("Active Container"), nActiveContainer))
 						{
+							CDocker* pDocker = GetDockFromID(nActiveContainer);
+							if (!pDocker)
+								throw CWinException(_T("Failed to get docker from ID"));
+
 							CDockContainer* pContainer = pDocker->GetContainer();
-							if (pContainer)
-							{
-								int nPage = pContainer->GetContainerIndex(pContainer);
-								if (nPage >= 0)
-									pContainer->SelectPage(nPage);
-							}
-						}
-					}
+							if (!pContainer)
+								throw CWinException(_T("Failed to get container view"));
 
-					SubKeyName.Format(_T("DockContainer%u"), ++uContainer);
+							int nPage = pContainer->GetContainerIndex(pContainer);
+							if (nPage >= 0)
+								pContainer->SelectPage(nPage);
+						}
+
+						SubKeyName.Format(_T("DockContainer%u"), ++uContainer);
+					}
+				}
+					
+				catch (const CWinException& e)
+				{
+					TRACE("*** Failed to load values from registry, using defaults. ***\n");
+					TRACE(e.GetText()); TRACE("\n");
+					CloseAllDockers();
+
+					// Delete the bad key from the registry
+					CString strParentKey = _T("Software\\") + CString(szRegistryKeyName);
+					CRegKey ParentKey;
+					if (ERROR_SUCCESS == ParentKey.Open(HKEY_CURRENT_USER, strParentKey, KEY_READ))
+						ParentKey.RecurseDeleteKey(_T("Dock Windows"));
 				}
 			}
 		}
 
-		if (!bResult) CloseAllDockers();
 		return bResult;
 	}
 
@@ -2740,10 +2778,10 @@ namespace Win32xx
 		while (GetDockChildren().size() > 0)
 		{
 			iter = GetDockChildren().begin();
-			CDocker* pDock = *iter;
-			DWORD dwDockStyle = pDock->GetDockStyle() | DS_DOCKED_CONTAINER;
-			pDock->SeparateFromDock();
-			pDockTarget->DockInContainer( pDock, dwDockStyle );
+			CDocker* pDocker = *iter;
+			DWORD dwDockStyle = pDocker->GetDockStyle() | DS_DOCKED_CONTAINER;
+			pDocker->SeparateFromDock();
+			pDockTarget->DockInContainer( pDocker, dwDockStyle );
 		}
 	}
 
@@ -2754,21 +2792,21 @@ namespace Win32xx
 
 		// Override this function to create the Docker objects as shown below
 
-		CDocker* pDock = NULL;
+		CDocker* pDocker = NULL;
 	/*	switch(nID)
 		{
 		case ID_CLASSES:
-			pDock = new CDockClasses;
+			pDocker = new CDockClasses;
 			break;
 		case ID_FILES:
-			pDock = new CDockFiles;
+			pDocker = new CDockFiles;
 			break;
 		default:
 			TRACE("Unknown Dock ID\n");
 			break;
 		} */
 
-		return pDock;
+		return pDocker;
 	}
 
 	inline LRESULT CDocker::OnBarStart(LPDRAGPOS pdp)
@@ -2887,12 +2925,12 @@ namespace Win32xx
 					if ((*iter1).pContainer != pContainer)
 					{
 						// Reset container parent before destroying the dock window
-						CDocker* pDock = GetDockFromView((*iter1).pContainer);
-						assert(pDock);
+						CDocker* pDocker = GetDockFromView((*iter1).pContainer);
+						assert(pDocker);
 						if (pContainer->IsWindow())
-							pContainer->SetParent(pDock->GetDockClient());
+							pContainer->SetParent(pDocker->GetDockClient());
 
-						pDock->Destroy();
+						pDocker->Destroy();
 					}
 				}
 			}
@@ -2909,13 +2947,13 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
-		CDocker* pDock = reinterpret_cast<CDocker*>(wParam);
+		CDocker* pDocker = reinterpret_cast<CDocker*>(wParam);
 
 		assert( this == GetDockAncestor() );
 		std::vector<DockPtr>::iterator iter;
 		for (iter = GetAllDockChildren().begin(); iter != GetAllDockChildren().end(); ++iter)
 		{
-			if ((*iter).get() == pDock)
+			if ((*iter).get() == pDocker)
 			{
 				GetAllDockChildren().erase(iter);
 				break;
@@ -2925,7 +2963,7 @@ namespace Win32xx
 		std::vector<CDocker*>& Dockers = GetDockAncestor()->GetAllDockers();
 		for (std::vector<CDocker*>::iterator it = Dockers.begin(); it < Dockers.end(); ++it)
 		{
-			if ((*it) == pDock)
+			if ((*it) == pDocker)
 			{
 				Dockers.erase(it);
 				break;
@@ -2954,28 +2992,28 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnDockEnd(LPDRAGPOS pdp)
 	{
-		CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(pdp->hdr.hwndFrom));
-		assert(dynamic_cast<CDocker*>(pDock));
-		if (NULL == pDock) return 0L;
+		CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(pdp->hdr.hwndFrom));
+		assert(dynamic_cast<CDocker*>(pDocker));
+		if (NULL == pDocker) return 0L;
 
 		UINT DockZone = pdp->DockZone;
-		CRect rc = pDock->GetWindowRect();
+		CRect rc = pDocker->GetWindowRect();
 
 		switch(DockZone)
 		{
 		case DS_DOCKED_LEFT:
 		case DS_DOCKED_RIGHT:
-			pDock->SetDockSize(rc.Width());
-			Dock(pDock, pDock->GetDockStyle() | DockZone);
+			pDocker->SetDockSize(rc.Width());
+			Dock(pDocker, pDocker->GetDockStyle() | DockZone);
 			break;
 		case DS_DOCKED_TOP:
 		case DS_DOCKED_BOTTOM:
-			pDock->SetDockSize(rc.Height());
-			Dock(pDock, pDock->GetDockStyle() | DockZone);
+			pDocker->SetDockSize(rc.Height());
+			Dock(pDocker, pDocker->GetDockStyle() | DockZone);
 			break;
 		case DS_DOCKED_CONTAINER:
 			{
-				DockInContainer(pDock, pDock->GetDockStyle() | DockZone);
+				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone);
 				CDockContainer* pContainer = static_cast<CDockContainer*>(&GetView());
 				assert(dynamic_cast<CDockContainer*>(pContainer));
 				pContainer->SelectPage(0);
@@ -2983,13 +3021,13 @@ namespace Win32xx
 			break;
 		case DS_DOCKED_LEFTMOST:
 		case DS_DOCKED_RIGHTMOST:
-			pDock->SetDockSize(rc.Width());
-			DockOuter(pDock, pDock->GetDockStyle() | DockZone);
+			pDocker->SetDockSize(rc.Width());
+			DockOuter(pDocker, pDocker->GetDockStyle() | DockZone);
 			break;
 		case DS_DOCKED_TOPMOST:
 		case DS_DOCKED_BOTTOMMOST:
-			pDock->SetDockSize(rc.Height());
-			DockOuter(pDock, pDock->GetDockStyle() | DockZone);
+			pDocker->SetDockSize(rc.Height());
+			DockOuter(pDocker, pDocker->GetDockStyle() | DockZone);
 			break;
 		}
 
@@ -3433,9 +3471,9 @@ namespace Win32xx
 
 				if (pChild != pContainer)
 				{
-					CDocker* pDock = GetDockFromView(pChild);
-					assert(pDock);
-					vSorted.push_back(pDock);
+					CDocker* pDocker = GetDockFromView(pChild);
+					assert(pDocker);
+					vSorted.push_back(pDocker);
 				}
 			}
 		}
@@ -3447,8 +3485,6 @@ namespace Win32xx
 	// Stores the docking configuration in the registry
 	// NOTE: This function assumes that each docker has a unique DockID
 	{
-		assert(VerifyDockers());
-
 		std::vector<CDocker*> vSorted = SortDockers();
 		std::vector<CDocker*>::iterator iter;
 		std::vector<DockInfo> vDockInfo;
@@ -3461,6 +3497,9 @@ namespace Win32xx
 
 			try
 			{
+				if (!VerifyDockers())
+					throw (CWinException(_T("Dockers are in an inconsistant state")));
+
 				// Create the App's registry key
 				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
 					throw (CWinException(_T("Create Key failed")));
@@ -3523,16 +3562,18 @@ namespace Win32xx
 							throw (CWinException(_T("Open KeyContainer failed")));
 
 						// Store the container group's parent
-						CDocker* pDock = GetDockFromView(pContainer);
-						assert(pDock);
-						int nID = pDock->GetDockID();
+						CDocker* pDocker = GetDockFromView(pContainer);
+						if (pDocker == 0)
+							throw CWinException(_T("Failed to get docker from container view")); 
+						int nID = pDocker->GetDockID();
 						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), nID))
 							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
 
 						// Store the active (selected) container
-						pDock = GetDockFromView(pContainer->GetActiveContainer());
-						assert(pDock);
-						nID = pDock->GetDockID();
+						pDocker = GetDockFromView(pContainer->GetActiveContainer());
+						if (pDocker == 0)
+							throw CWinException(_T("Failed to get active container's docker"));
+						nID = pDocker->GetDockID();
 						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), nID))
 							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
 
@@ -3541,10 +3582,12 @@ namespace Win32xx
 						{
 							SubKeyName.Format(_T("Tab%u"), u2);
 							CDockContainer* pTab = pContainer->GetContainerFromIndex(u2);
-							assert(pTab);
-							pDock = GetDockFromView(pTab);
-							assert(pDock);
-							int nTabID = pDock->GetDockID();
+							if (pTab == 0)
+								throw CWinException(_T("Failed to get container from index"));
+							pDocker = GetDockFromView(pTab);
+							if (pDocker== 0)
+								throw CWinException(_T("Failed to get docker from view"));
+							int nTabID = pDocker->GetDockID();
 
 							if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(SubKeyName, nTabID))
 								throw (CWinException(_T("RegSetValueEx failed")));
@@ -3581,10 +3624,10 @@ namespace Win32xx
 		DragPos.DockZone = m_dwDockZone;
 		m_dwDockZone = 0;
 
-		CDocker* pDock = GetDockFromPoint(DragPos.ptPos);
+		CDocker* pDocker = GetDockFromPoint(DragPos.ptPos);
 
-		if (pDock)
-			pDock->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
+		if (pDocker)
+			pDocker->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
 		else
 		{
 			if (GetDockHint().IsWindow())
@@ -3904,10 +3947,10 @@ namespace Win32xx
 						if (pContainerNew != pChildContainer)
 						{
 							pContainerNew->AddContainer(pChildContainer);
-							CDocker* pDock = GetDockFromView(pChildContainer);
-							assert(pDock);
-							pDock->SetParent(*pDockNew);
-							pDock->m_pDockParent = pDockNew;
+							CDocker* pDocker = GetDockFromView(pChildContainer);
+							assert(pDocker);
+							pDocker->SetParent(*pDockNew);
+							pDocker->m_pDockParent = pDockNew;
 						}
 					}
 				}
@@ -3965,16 +4008,16 @@ namespace Win32xx
 		}
 
 		// Finally do the actual undocking
-		CDocker* pDock = GetDockFromView(pContainer);
-		assert(pDock);
+		CDocker* pDocker = GetDockFromView(pContainer);
+		assert(pDocker);
 		CRect rc = GetDockClient().GetWindowRect();
 		ScreenToClient(rc);
-		pDock->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-		pDock->Undock(pt, bShowUndocked);
-		pDock->GetDockBar().SetParent(*GetDockAncestor());
+		pDocker->GetDockClient().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+		pDocker->Undock(pt, bShowUndocked);
+		pDocker->GetDockBar().SetParent(*GetDockAncestor());
 		pDockUndockedFrom->ShowWindow();
 		pDockUndockedFrom->RecalcDockLayout();
-		pDock->BringWindowToTop();
+		pDocker->BringWindowToTop();
 	}
 
 	inline LRESULT CDocker::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4273,11 +4316,11 @@ namespace Win32xx
 
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
-			CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(::GetParent(GetParent().GetHwnd())));
-			if (dynamic_cast<CDocker*>(pDock))
+			CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(::GetParent(GetParent().GetHwnd())));
+			if (dynamic_cast<CDocker*>(pDocker))
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
-				pDock->UndockContainer(pContainer, GetCursorPos(), TRUE);
+				pDocker->UndockContainer(pContainer, GetCursorPos(), TRUE);
 			}
 		}
 
@@ -4428,11 +4471,11 @@ namespace Win32xx
 				pNewContainer->GetViewPage().GetView().SetFocus();
 
 				// Adjust the docking caption
-				CDocker* pDock = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
-				if (dynamic_cast<CDocker*>(pDock))
+				CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
+				if (dynamic_cast<CDocker*>(pDocker))
 				{
-					pDock->SetCaption(pNewContainer->GetDockCaption());
-					pDock->RedrawWindow();
+					pDocker->SetCaption(pNewContainer->GetDockCaption());
+					pDocker->RedrawWindow();
 				}
 
 				m_iCurrentPage = nPage;
@@ -4551,10 +4594,11 @@ namespace Win32xx
 
 	inline void CDockContainer::SwapTabs(UINT nTab1, UINT nTab2)
 	{
-		if ((nTab1 < m_vContainerInfo.size()) && (nTab2 < m_vContainerInfo.size()) && (nTab1 != nTab2))
+		if ((nTab1 < GetContainerParent()->m_vContainerInfo.size()) && (nTab2 < GetContainerParent()->m_vContainerInfo.size()) && (nTab1 != nTab2))
+	//	if ((nTab1 < m_vContainerInfo.size()) && (nTab2 < m_vContainerInfo.size()) && (nTab1 != nTab2))
 		{
-			ContainerInfo CI1 = m_vContainerInfo[nTab1];
-			ContainerInfo CI2 = m_vContainerInfo[nTab2];
+			ContainerInfo CI1 = GetContainerParent()->m_vContainerInfo[nTab1];
+			ContainerInfo CI2 = GetContainerParent()->m_vContainerInfo[nTab2];
 
 			TCITEM Item1;
 			ZeroMemory(&Item1, sizeof(TCITEM));
@@ -4572,8 +4616,8 @@ namespace Win32xx
 
 			SetItem(nTab1, &Item2);
 			SetItem(nTab2, &Item1);
-			m_vContainerInfo[nTab1] = CI2;
-			m_vContainerInfo[nTab2] = CI1;
+			GetContainerParent()->m_vContainerInfo[nTab1] = CI2;
+			GetContainerParent()->m_vContainerInfo[nTab2] = CI1;
 		}
 	}
 

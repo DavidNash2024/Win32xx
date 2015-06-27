@@ -6,17 +6,17 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description:  Resource Definitions used bya ininmal SDI
-	applications resource.rc file.  Adapted to the Win32++ Windows
+	Contents Description:  Resource definitions used by minimal SDI 
+	applications in the resource.rc file.  Adapted to the Win32++ Windows
 	interface classes, Copyright (c) 2005-2015 David Nash, under
 	permissions granted therein.
 	
-        Caveats: The copyright displayed above extends only to the author's
+	Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and  to the alterations,
 	additions, deletions, and  other treatments of materials that may have
 	been extracted from the cited sources.  Unaltered portions of those
 	materials retain their original copyright status. The author hereby
-	grants permission to any persion obtaining a copy of this treatment
+	grants permission to any person obtaining a copy of this treatment
 	of the subject class and  any associated documentation composed by
 	the author, to utilize this material, free of charge and  without
 	restriction or limitation, subject to the following conditions:
@@ -40,7 +40,7 @@
 	that different kinds of resource objects have different prefixes to
 	distinguish the types of entities they belong to:
 	
-	        Entity ID 	Object
+		Entity ID 	Object
 		IDP_ 		Message-box prompt
 		IDD_ 		Dialog-box ID
 		ID_             Standard toolbar and  menu command
@@ -75,9 +75,9 @@
 	in the application.
 
 	Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-		Planning and Preparation Subsystem project for C++ programming.
+	The programming standards roughly follow those established
+	by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+	Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 

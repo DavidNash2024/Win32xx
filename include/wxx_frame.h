@@ -2025,10 +2025,10 @@ namespace Win32xx
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
 		BOOL bRet = FALSE;
 
-		try
+		CRegKey Key;
+		if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
 		{
-			CRegKey Key;
-			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
+			try
 			{
 				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwShowCmd, dwStatusBar, dwToolBar;
 
@@ -2058,14 +2058,18 @@ namespace Win32xx
 
 				bRet = TRUE;
 			}
-			else
-				throw CWinException(_T("Failed to open registry key: "));
-		}
 
-		catch (const CWinException& e)
-		{
-			TRACE("*** Failed to load values from registry, using defaults. ***\n");
-			TRACE(e.GetText()); TRACE(strKey); TRACE("\n");
+			catch (const CWinException& e)
+			{
+				TRACE("*** Failed to load values from registry, using defaults. ***\n");
+				TRACE(e.GetText()); TRACE(strKey); TRACE("\n");
+
+				// Delete the bad key from the registry
+				CString strParentKey = _T("Software\\") + m_strKeyName;
+				CRegKey ParentKey;
+				if (ERROR_SUCCESS == ParentKey.Open(HKEY_CURRENT_USER, strParentKey, KEY_READ))
+					ParentKey.DeleteSubKey(_T("Frame Settings"));
+			}
 		}
 
 		return bRet;
