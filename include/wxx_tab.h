@@ -212,7 +212,7 @@ namespace Win32xx
 	public:
 		CTabbedMDI();
 		virtual ~CTabbedMDI();
-		virtual CWnd& AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild = 0);
+		virtual CWnd* AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild = 0);
 		virtual void  CloseActiveMDI();
 		virtual void  CloseAllMDIChildren();
 		virtual void  CloseMDIChild(int nTab);
@@ -1659,7 +1659,7 @@ namespace Win32xx
 	{
 	}
 
-	inline CWnd& CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
+	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
 	// Adds a MDI tab, given a pointer to the view window, and the tab's text. 
 	// The framework assumes ownership of the CWnd pointer provided, and deletes 
 	// the CWnd object when the window is destroyed.
@@ -1673,7 +1673,7 @@ namespace Win32xx
 		if (IsWindow())
 			GetParent().SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor().GetHwnd(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
-		return *pView;
+		return pView;
 	}
 
 	inline void CTabbedMDI::CloseActiveMDI()

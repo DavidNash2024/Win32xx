@@ -73,6 +73,7 @@ Added CObject
 Added CRegKey
 Added CTime
 Added CTimeSpan
+Added CDocker::LoadContainerRegistrySettings
 Added CFrame::SaveRegistryMRUSettings
 Added CWinException::GetText
 Added ::GetCommandLineArgs
@@ -97,7 +98,6 @@ Modified CDockContainer::GetAllContainers   now returns a reference
 Modified CMDIChild::GetMDIFrame             now returns a reference
 Modified CMDIChild::GetView                 now returns a reference
 Modified CTab::GetAllTabs                   now returns a reference
-Modified CTabbedMDI::AddMDIChild            now returns a reference
 Modified CTabbedMDI::GetTab                 now returns a reference
 
 

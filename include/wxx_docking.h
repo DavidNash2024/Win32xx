@@ -456,8 +456,8 @@ namespace Win32xx
 		virtual CTabbedMDI* GetTabbedMDI() const;
 		virtual int GetTextHeight();
 		virtual void Hide();
-		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual BOOL LoadContainerRegistrySettings(LPCTSTR szRegistryKeyName);
+		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);		
 		virtual void RecalcDockLayout();
 		virtual BOOL SaveDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
