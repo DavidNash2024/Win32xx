@@ -2184,7 +2184,6 @@ namespace Win32xx
 
 		// Create the view window
 		assert(&GetView());			// Use SetView in CMainFrame's constructor to set the view window
-		GetDockClient().SetDocker(*this);
 		GetDockClient().Create(*this);
 		if (&GetView() != &GetDockClient())
 			GetView().Create(GetDockClient());

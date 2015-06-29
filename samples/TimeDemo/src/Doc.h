@@ -92,10 +92,10 @@ CDoc : public CObject							/*
 		bool    m_bDoc_is_dirty; // document has been altered
 		bool	m_bDoc_is_open;	 // the document status
 		int	m_stDoc_width;   // length, in characters
-	     	std::vector<CString> m_doc_content; // array of document lines
+		std::vector<CString> m_doc_content; // array of document lines
 
-		  // static constants
-	     	static LPCTSTR m_file_dlg_filter; // file dialog filter
+	  // static constants
+		static LPCTSTR m_file_dlg_filter; // file dialog filter
 };
 /*----------------------------------------------------------------------------*/
 #endif //SDI_DOC_H

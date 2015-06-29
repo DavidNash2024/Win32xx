@@ -53,8 +53,7 @@
 #define GPP_MRU_H_FILE
 
 #include <vector>
-#include "wxx_frame.h"
-#include "wxx_archive.h"
+
 
 /*============================================================================*/
         class

@@ -53,11 +53,10 @@
 
 *******************************************************************************/
 
-#include <io.h>
 
 #include "stdafx.h"
 #include "App.h"
-#include "targetver.h"
+
 
   // local function for display of boolean value in demo
 static CString Truth(bool b){return b ? _T("true") : _T("false");}

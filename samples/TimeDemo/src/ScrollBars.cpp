@@ -72,7 +72,7 @@
 	accordance with these limits, page sizes, increments, and  positions.
 
 *******************************************************************************/
-
+#include "stdafx.h"
 #include "ScrollBars.h"
 
 /*******************************************************************************

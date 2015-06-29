@@ -70,7 +70,7 @@
 
 // Predefinitions for windows.h go here
 //#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
-//#include "targetver.h"		// Set the supported window features
+#include "targetver.h"		// Set the supported window features
 
 // Specify Win32xx specific predefinitions here
 //#define NO_USING_NAMESPACE		// Don't use Win32xx namespace

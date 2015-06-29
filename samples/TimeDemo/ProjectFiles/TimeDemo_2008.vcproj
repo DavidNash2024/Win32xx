@@ -227,19 +227,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Archive.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CTime.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Doc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\LastErrMsg.h"
 				>
 			</File>
 			<File

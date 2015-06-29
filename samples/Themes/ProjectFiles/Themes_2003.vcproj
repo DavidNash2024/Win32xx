@@ -154,6 +154,9 @@
 				RelativePath="..\src\stdafx.h">
 			</File>
 			<File
+				RelativePath="..\src\targetver.h">
+			</File>
+			<File
 				RelativePath="..\src\ThemesApp.h">
 			</File>
 			<File

@@ -50,8 +50,6 @@
 #ifndef WScrollBars_H_DEFINED
 #define WScrollBars_H_DEFINED
 
-#include "wxx_wincore.h"
-#include "wxx_archive.h"
 
 /*============================================================================*/
 	class

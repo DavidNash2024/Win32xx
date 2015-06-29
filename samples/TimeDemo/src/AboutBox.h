@@ -46,7 +46,6 @@
 #ifndef ABOUT_BOX_H_DEFINED
 #define ABOUT_BOX_H_DEFINED
 
-#include "wxx_dialog.h"
 
 /*============================================================================*/
         class

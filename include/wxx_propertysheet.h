@@ -266,7 +266,7 @@ namespace Win32xx
 				{
 					// Some controls (e.g. ListView) have child windows.
 					// Reflect those notifications too.
-					CWnd* pWndFromParent = GetApp().GetCWndFromMap(::GetParent(hwndFrom));
+					CWnd* pWndFromParent = GetCWndPtr(::GetParent(hwndFrom));
 					if (pWndFromParent != NULL)
 						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 				}

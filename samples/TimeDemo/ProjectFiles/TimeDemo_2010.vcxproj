@@ -11,7 +11,6 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\include\default_resource.h" />
     <ClInclude Include="..\..\..\include\wxx_archive.h" />
     <ClInclude Include="..\..\..\include\wxx_controls.h" />
     <ClInclude Include="..\..\..\include\wxx_cstring.h" />
@@ -28,19 +27,15 @@
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
     <ClInclude Include="..\..\..\include\wxx_regkey.h" />
-    <ClInclude Include="..\..\..\include\wxx_ribbon.h" />
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
     <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
     <ClInclude Include="..\..\..\include\wxx_socket.h" />
     <ClInclude Include="..\..\..\include\wxx_statusbar.h" />
     <ClInclude Include="..\..\..\include\wxx_stdcontrols.h" />
     <ClInclude Include="..\..\..\include\wxx_tab.h" />
-    <ClInclude Include="..\..\..\include\wxx_taskdialog.h" />
     <ClInclude Include="..\..\..\include\wxx_time.h" />
     <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
     <ClInclude Include="..\..\..\include\wxx_treeview.h" />
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h" />
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h" />
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_winutils.h" />
@@ -65,11 +60,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\res\Star.ico" />
-    <None Include="..\src\res\toolbar.bmp" />
-    <None Include="..\src\res\Win32++.manifest" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

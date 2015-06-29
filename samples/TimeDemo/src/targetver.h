@@ -62,9 +62,9 @@
 //#define _WIN32_IE       0x0300
 
 // For Windows 98
-//#define WINVER          0x0410
-//#define _WIN32_WINDOWS  0x0410
-//#define _WIN32_IE       0x0401
+#define WINVER          0x0410
+#define _WIN32_WINDOWS  0x0410
+#define _WIN32_IE       0x0401
 
 // For Windows NT4
 //#define WINVER          0x0400
@@ -84,18 +84,10 @@
 //#define NTDDI_VERSION   0x05000000
 
 // For Windows XP
-#ifndef WINVER
-#define WINVER          0x0502
-#endif
-#ifndef _WIN32_WINNT
-#define _WIN32_WINNT    0x0502
-#endif
-#ifndef _WIN32_IE
-#define _WIN32_IE       0x0602
-#endif
-#ifndef NTDDI_VERSION
-#define NTDDI_VERSION   0x05020000
-#endif
+//#define WINVER          0x0501
+//#define _WIN32_WINNT    0x0501
+//#define _WIN32_IE       0x0501
+//#define NTDDI_VERSION   0x05010000
 
 // For Windows Vista
 //#define WINVER          0x0600

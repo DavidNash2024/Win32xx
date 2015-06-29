@@ -146,10 +146,13 @@ namespace Win32xx
 			virtual void SetView(CWnd& wndView);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-			CWnd* GetTabCtrl() const { return m_pTab;}
+			CWnd* GetTabCtrl() const						{ return m_pTab;}
+			CDockContainer* GetContainer() const;
+			void SetContainer(CDockContainer* pContainer)	{ m_pContainer = pContainer; }
 
 		private:
 			CToolBar m_ToolBar;
+			CDockContainer* m_pContainer;
 			CString m_strTooltip;
 			CWnd* m_pView;
 			CWnd* m_pTab;
@@ -180,6 +183,7 @@ namespace Win32xx
 		std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
 		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
 		CString& GetDockCaption() const	{ return (CString&)m_csCaption; }
+		CDocker* GetDocker() const		{ return m_pDocker; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_strTabText; }
 		virtual CToolBar& GetToolBar()	const { return GetViewPage().GetToolBar(); }
@@ -218,6 +222,7 @@ namespace Win32xx
 		CImageList m_imlToolBarDis;
 		CViewPage m_ViewPage;
 		int m_iCurrentPage;
+		CDocker* m_pDocker;
 		CDockContainer* m_pContainerParent;
 		HICON m_hTabIcon;
 		int m_nTabPressed;
@@ -291,8 +296,8 @@ namespace Win32xx
 
 			CString& GetCaption() const		{ return (CString&)m_csCaption; }
 			CWnd& GetView() const			{ assert (m_pView); return *m_pView; }
-			void SetDocker(CDocker& Docker)	{ m_pDocker = &Docker;}
-			void SetCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
+			void SetDocker(CDocker* pDocker)	{ m_pDocker = pDocker;}
+			void SetCaption(LPCTSTR szCaption)	{ m_csCaption = szCaption; }
 			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
 			void SetView(CWnd& wndView);
 
@@ -1113,10 +1118,8 @@ namespace Win32xx
 
 				if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_IsCaptionPressed))
 				{
-					CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(GetParent()));
-					assert(dynamic_cast<CDocker*>(pDocker));
-					if (pDocker)
-						pDocker->Undock(GetCursorPos());
+					assert(m_pDocker);
+					m_pDocker->Undock(GetCursorPos());
 				}
 
 				// Update the close button
@@ -1186,6 +1189,8 @@ namespace Win32xx
 
 	inline void CDocker::CDockClient::PreCreate(CREATESTRUCT& cs)
 	{
+		assert(m_pDocker);
+	//	DWORD dwStyle = m_pDocker->GetDockStyle();
 		DWORD dwStyle = m_pDocker->GetDockStyle();
 		if (dwStyle & DS_CLIENTEDGE)
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
@@ -1855,6 +1860,7 @@ namespace Win32xx
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
 		GetAllDockers().push_back(this);
+		m_DockClient.SetDocker(this);
 	}
 
 	inline CDocker::~CDocker()
@@ -2163,16 +2169,14 @@ namespace Win32xx
 	inline void CDocker::DockInContainer(CDocker* pDocker, DWORD dwDockStyle)
 	// Add a container to an existing container
 	{
-		if ((dwDockStyle & DS_DOCKED_CONTAINER) && (static_cast<CDockContainer*>(&pDocker->GetView())))
+		if ((dwDockStyle & DS_DOCKED_CONTAINER) && GetContainer())
 		{
-			assert(dynamic_cast<CDockContainer*>(&pDocker->GetView()));
-
 			// Transfer any dock children to this docker
 			pDocker->MoveDockInContainerChildren(this);
 
 			// Transfer container children to the target container
-			CDockContainer* pContainer = static_cast<CDockContainer*>(&GetView());
-			CDockContainer* pContainerSource = static_cast<CDockContainer*>(&pDocker->GetView());
+			CDockContainer* pContainer = GetContainer();
+			CDockContainer* pContainerSource = pDocker->GetContainer();
 
 			std::vector<ContainerInfo>::reverse_iterator riter;
 			std::vector<ContainerInfo> AllContainers = pContainerSource->GetAllContainers();
@@ -2452,13 +2456,8 @@ namespace Win32xx
 
 	inline CTabbedMDI* CDocker::GetTabbedMDI() const
 	{
-		CTabbedMDI* pTabbedMDI = NULL;
-		if (dynamic_cast<CTabbedMDI*>(&GetView()))
-		{
-			pTabbedMDI = static_cast<CTabbedMDI*>(&GetView());
-		}
-
-		return pTabbedMDI;
+		// returns NULL if not a CTabbedMDI*
+		return dynamic_cast<CTabbedMDI*>(&GetView());
 	}
 
 	inline int CDocker::GetTextHeight()
@@ -2866,7 +2865,6 @@ namespace Win32xx
 #endif
 
 		// Create the various child windows
-		GetDockClient().SetDocker(*this);
 		GetDockClient().Create(*this);
 
 		assert(&GetView());			// Use SetView in the docker's constructor to set the view window
@@ -2912,9 +2910,9 @@ namespace Win32xx
 			(*iter)->Destroy();
 		}
 
-		if (dynamic_cast<CDockContainer*>(&GetView()) && IsUndocked())
+		CDockContainer* pContainer = GetContainer();
+		if (pContainer && IsUndocked())
 		{
-			CDockContainer* pContainer = static_cast<CDockContainer*>(&GetView());
 			if (pContainer->GetAllContainers().size() > 1)
 			{
 				// This container has children, so destroy them now
@@ -3728,11 +3726,10 @@ namespace Win32xx
 	inline void CDocker::SetView(CWnd& wndView)
 	// Assigns the view window to the docker
 	{
-		CWnd* pWnd = &wndView;
 		GetDockClient().SetView(wndView);
-		if (dynamic_cast<CDockContainer*>(pWnd))
+		CDockContainer* pContainer = GetContainer();
+		if (pContainer)
 		{
-			CDockContainer* pContainer = static_cast<CDockContainer*>(&wndView);
 			SetCaption(pContainer->GetDockCaption().c_str());
 		}
 	}
@@ -3926,7 +3923,7 @@ namespace Win32xx
 			{
 				if ((*iter).pContainer != pContainer)
 				{
-					pDockNew = static_cast<CDocker*>(GetCWndPtr(::GetParent((*iter).pContainer->GetParent().GetHwnd())));
+					pDockNew = (*iter).pContainer->GetDocker();
 					assert(dynamic_cast<CDocker*>(pDockNew));
 				}
 
@@ -4056,10 +4053,11 @@ namespace Win32xx
 
 	//////////////////////////////////////
 	// Declaration of the CDockContainer class
-	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_hTabIcon(0),
+	inline CDockContainer::CDockContainer() : m_iCurrentPage(0), m_pDocker(0), m_hTabIcon(0),
 		                                m_nTabPressed(-1), m_IsHideSingleTab(FALSE)
 	{
 		m_pContainerParent = this;
+		m_ViewPage.SetContainer(this);
 	}
 
 	inline CDockContainer::~CDockContainer()
@@ -4284,6 +4282,8 @@ namespace Win32xx
 			tie.pszText = (LPTSTR)m_vContainerInfo[i].Title.c_str();
 			InsertItem(i, &tie);
 		}
+
+		m_pDocker = dynamic_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
 	}
 
 	inline LRESULT CDockContainer::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4316,11 +4316,10 @@ namespace Win32xx
 
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
-			CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(::GetParent(GetParent().GetHwnd())));
-			if (dynamic_cast<CDocker*>(pDocker))
+			if (dynamic_cast<CDocker*>(GetDocker()))
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
-				pDocker->UndockContainer(pContainer, GetCursorPos(), TRUE);
+				GetDocker()->UndockContainer(pContainer, GetCursorPos(), TRUE);
 			}
 		}
 
@@ -4471,11 +4470,10 @@ namespace Win32xx
 				pNewContainer->GetViewPage().GetView().SetFocus();
 
 				// Adjust the docking caption
-				CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
-				if (dynamic_cast<CDocker*>(pDocker))
+				if (dynamic_cast<CDocker*>(GetDocker()))
 				{
-					pDocker->SetCaption(pNewContainer->GetDockCaption());
-					pDocker->RedrawWindow();
+					GetDocker()->SetCaption(pNewContainer->GetDockCaption());
+					GetDocker()->RedrawWindow();
 				}
 
 				m_iCurrentPage = nPage;
@@ -4674,13 +4672,18 @@ namespace Win32xx
 
 	///////////////////////////////////////////
 	// Declaration of the nested CViewPage class
+
+	inline CDockContainer* CDockContainer::CViewPage::GetContainer() const
+	{ 
+		assert(dynamic_cast<CDockContainer*>(m_pContainer));
+		return m_pContainer; 
+	}
+
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)
 	{
-		CDockContainer* pContainer = static_cast<CDockContainer*>(GetCWndPtr(GetParent()));
-		assert(dynamic_cast<CDockContainer*>(pContainer));
 		BOOL bResult = FALSE;
-		if (pContainer && pContainer->GetActiveContainer() && pContainer->GetActiveContainer()->IsWindow())
-			bResult = (BOOL)pContainer->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
+		if (GetContainer()->GetActiveContainer() && GetContainer()->GetActiveContainer()->IsWindow())
+			bResult = (BOOL)GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
 
 		return bResult;
 	}
