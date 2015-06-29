@@ -312,31 +312,20 @@ namespace Win32xx
 	inline CRect CRibbonFrame::GetViewRect() const
 	{
 		// Get the frame's client area
-		CRect rcFrame = GetClientRect();
+		CRect rcClient = GetClientRect();
 
-		// Get the StatusBar's window area
-		CRect rcStatus;
-		if (GetStatusBar().IsWindowVisible() || !IsWindowVisible())
-			rcStatus = GetStatusBar().GetWindowRect();
+		rcClient.top += GetRibbonHeight();
 
-		// Get the top ReBar or ToolBar's window area
-		CRect rcTop;
-		if (IsReBarSupported() && GetUseReBar() )
-			rcTop = GetReBar().GetWindowRect();
+		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
+			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
+
+		if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
+			rcClient = ExcludeChildRect(rcClient, GetReBar());
 		else
-			if (GetUseToolBar() && GetToolBar().IsWindowVisible())
-				rcTop = GetToolBar().GetWindowRect();
+			if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
+				rcClient = ExcludeChildRect(rcClient, GetToolBar());
 
-		// Return client size less the ReBar and status windows
-		int top = rcFrame.top + rcTop.Height() + GetRibbonHeight();
-		int left = rcFrame.left;
-		int right = rcFrame.right;
-		int bottom = rcFrame.Height() - (rcStatus.Height());
-		if ((bottom <= top) ||( right <= left))
-			top = left = right = bottom = 0;
-
-		CRect rcView(left, top, right, bottom);
-		return rcView;
+		return rcClient;
 	}
 
 	inline int CRibbonFrame::OnCreate(LPCREATESTRUCT pcs)
@@ -354,10 +343,11 @@ namespace Win32xx
 			if (CreateRibbon(*this))
 			{
 				SetUseReBar(FALSE);			// Don't use a ReBar
-				SetUseToolBar(FALSE);			// Don't use a ToolBar
+				SetUseToolBar(FALSE);		// Don't use a ToolBar
 
 				CFrame::OnCreate(pcs);
 				SetMenu(NULL);
+				ShowStatusBar(TRUE);
 			}		
 		}
 		else 

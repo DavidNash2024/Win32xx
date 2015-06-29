@@ -6,7 +6,7 @@
 // For Windows 95
 //#define WINVER          0x0400
 //#define _WIN32_WINDOWS  0x0400
-//#define _WIN32_IE       0x0300
+//#define _WIN32_IE       0x0400
 
 // For Windows 98
 #define WINVER          0x0410
@@ -16,8 +16,7 @@
 // For Windows NT4
 //#define WINVER          0x0400
 //#define _WIN32_WINNT    0x0400
-//#define _WIN32_IE       0x0200
-//#define NTDDI_VERSION   0x05000000
+//#define _WIN32_IE       0x0400
 
 // For Windows ME
 //#define WINVER          0x0500
@@ -51,7 +50,7 @@
 // For Windows 8
 //#define WINVER          0x0602
 //#define _WIN32_WINNT    0x0602
-//#define _WIN32_IE       0x0900
+//#define _WIN32_IE       0x0A00
 //#define NTDDI_VERSION   0x06020000
 
 //For Windows 8.1
@@ -60,5 +59,4 @@
 //#define _WIN32_IE       0x0A00
 //#define NTDDI_VERSION   0x06030000
 
-// Users of Visual Studio 10 can do this instead
-// #include "SDKDDKver.h"
+

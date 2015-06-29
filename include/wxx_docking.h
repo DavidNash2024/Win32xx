@@ -1190,7 +1190,6 @@ namespace Win32xx
 	inline void CDocker::CDockClient::PreCreate(CREATESTRUCT& cs)
 	{
 		assert(m_pDocker);
-	//	DWORD dwStyle = m_pDocker->GetDockStyle();
 		DWORD dwStyle = m_pDocker->GetDockStyle();
 		if (dwStyle & DS_CLIENTEDGE)
 			cs.dwExStyle = WS_EX_CLIENTEDGE;

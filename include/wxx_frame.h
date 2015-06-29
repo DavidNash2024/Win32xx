@@ -1942,7 +1942,7 @@ namespace Win32xx
 		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-		if (IsReBarSupported() && m_UseReBar && GetReBar().IsWindow())
+		if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
 			rcClient = ExcludeChildRect(rcClient, GetReBar());
 		else
 			if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
