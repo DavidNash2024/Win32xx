@@ -51,6 +51,7 @@
 
 #include "stdafx.h"
 #include "MRU.h"
+#include "io.h"
 
 
 /*******************************************************************************
@@ -195,7 +196,7 @@ Serialize(CArchive &ar)                                               	/*
 
 	Serialize or deserialize the MRU list to from the archive ar, depending
 	on the sense of IsStoring().   If the archive has encountered errors at
-	entry, do not execute. 
+	entry, do not execute.
 *-----------------------------------------------------------------------------*/
 {
 	  // perform loading or storing

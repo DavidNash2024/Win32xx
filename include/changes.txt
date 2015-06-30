@@ -60,11 +60,15 @@ Updated Samples
     This sample demonstrates the use of INI files.
  - Added TimeDemo sample.
     This sample demonstrates the use of CTime and CTimeSpan and CArchive.
- - Updated Scribble. 
+ - Updated the Scribble sample. 
     This sample now uses a Doc/View architecture, and CArchive to store data.
  - Updated Themes sample.
-    Added a white theme for use on Windows 8 and Windows 10.
- 	
+    Added a white theme for use on Windows 8.1 and Windows 10.
+ - Updated the DirectX sample.
+ 	This sample now has a generic view window that could be used anywhere we
+	would use a view window, namely: CDocker, CDockContainer, CFrame, MDIChild, 
+	CTab, and CTabCTabbedMDI. The DirectX window runs in a separate thread.
+
 
 Changes in detail
 -----------------
@@ -263,7 +267,7 @@ Other tips:
    This allows them to be safely passed by value in function calls. More
    importantly, it also allows these to be safely returned from functions. 
    Reference counting permits this:
-    CDC dc = GetDCEx(hrgnClip, flags);            // GetDCEx returns CWnd
+    CDC dc = GetDCEx(hrgnClip, flags);            // GetDCEx returns CDC
 	CMenu PopupMenu = TopMenu.GetSubMenu(0);      // GetSubMenu returns CMenu
 	CImageList iml = GetToolBar().GetImageList(); // GetImageList return CImageList
     CFont myfont = GetFont();                     // GetFont returns CFont

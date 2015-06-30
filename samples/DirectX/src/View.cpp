@@ -9,18 +9,60 @@
 
 #include "stdafx.h"
 #include <d3dx9.h>	// see the note above
-#include <mmsystem.h>
-#include "View.h"
-#include "MainFrm.h"
-#include "resource.h"
+#include "DXApp.h"
 
 
-CView::CView() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
+/////////////////////////////////////////////////
+// Definitions for the CDXView class
+//
+BOOL CDXView::CDXThread::InitInstance()
 {
-	m_hCreateEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);
+	// This function runs when the thread starts
+
+	CMainFrame& Frame = GetDXApp().GetMainFrame();
+	CDXView& DXView = Frame.GetDXView();
+	CDX& DX = DXView.GetDX();
+	
+	// assign the m_pDX member variable
+	m_pDX = &DX;
+
+	// Create the DX window
+	DX.Create(DXView);
+
+	return TRUE;	// return TRUE to run the message loop
 }
 
-CView::~CView()
+int CDXView::CDXThread::MessageLoop()
+// Here we override CWinThread::MessageLoop to accommodate the special needs of DirectX
+{
+	MSG Msg;
+	ZeroMemory(&Msg, sizeof(MSG));
+	while( Msg.message != WM_QUIT )
+	{
+		if ( PeekMessage(&Msg, NULL, 0U, 0U, PM_REMOVE))
+		{
+			::TranslateMessage(&Msg);
+			::DispatchMessage(&Msg);
+		}
+		else
+		{
+			// Force thread to yield (otherwise it runs in a tight loop)
+			Sleep(1);
+			m_pDX->Render();
+		}
+	}
+
+	return LOWORD(Msg.wParam);
+} 
+
+/////////////////////////////////////////////////
+// Definitions for the CDXView class
+//
+CDXView::CDX::CDX() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
+{
+}
+
+CDXView::CDX::~CDX()
 {
 	if(m_pVB != NULL)
 		m_pVB->Release();
@@ -32,56 +74,8 @@ CView::~CView()
         m_pD3D->Release();
 }
 
-HWND CView::Create(HWND hParent)
-{
-	// Called by CFrame::OnCreate. 
-
-	UNREFERENCED_PARAMETER(hParent);
-	return 0;
-}
-
-int CView::OnCreate(LPCREATESTRUCT pcs)
-{
-	UNREFERENCED_PARAMETER(pcs);
-
-	// Initialize Direct3D
-	if( SUCCEEDED( InitD3D( *this ) ) )
-	{
-		// Create the scene geometry
-        if( SUCCEEDED( InitGeometry() ) )
-        {
-			// Show the window
-			ShowWindow(SW_SHOWDEFAULT);
-			UpdateWindow();
-		}
-	}
-	else
-		TRACE("Failed to initialize DirectX\n");
-
-	// Signal the event to indicate the window is created
-	SetEvent(m_hCreateEvent);
-	
-	return 0;
-}
-
-void CView::OnDestroy()
-{
-	// The view's thread is terminated in CMainFrame::OnDestroy
-}
-
-void CView::PreCreate(CREATESTRUCT &cs)
-{
-	cs.x = 50;
-	cs.y = 50;
-	cs.cx = 400;
-	cs.cy = 400;
-}
-
-//-----------------------------------------------------------------------------
-// Name: InitD3D()
-// Desc: Initializes Direct3D
-//-----------------------------------------------------------------------------
-HRESULT CView::InitD3D( HWND hWnd )
+HRESULT CDXView::CDX::InitD3D( HWND hWnd )
+// Initializes Direct3D
 {
     // Create the D3D object.
     if( NULL == ( m_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
@@ -112,12 +106,8 @@ HRESULT CView::InitD3D( HWND hWnd )
     return S_OK;
 }
 
-
-//-----------------------------------------------------------------------------
-// Name: InitGeometry()
-// Desc: Creates the scene geometry
-//-----------------------------------------------------------------------------
-HRESULT CView::InitGeometry()
+HRESULT CDXView::CDX::InitGeometry()
+// Creates the scene geometry.
 {
     // Initialize three vertices for rendering a triangle
     CUSTOMVERTEX g_Vertices[] =
@@ -145,11 +135,53 @@ HRESULT CView::InitGeometry()
     return S_OK;
 }
 
-//-----------------------------------------------------------------------------
-// Name: SetupMatrices()
-// Desc: Sets up the world, view, and projection transform Matrices.
-//-----------------------------------------------------------------------------
-void CView::SetupMatrices()
+int CDXView::CDX::OnCreate(LPCREATESTRUCT pcs)
+{
+	UNREFERENCED_PARAMETER(pcs);
+
+	// Initialize Direct3D
+	if( SUCCEEDED( InitD3D( *this ) ) )
+	{
+		// Create the scene geometry
+        if( SUCCEEDED( InitGeometry() ) )
+        {
+			// Show the window
+			ShowWindow(SW_SHOWDEFAULT);
+			UpdateWindow();
+		}
+	}
+	else
+		TRACE("Failed to initialize DirectX\n");
+	
+	return 0;
+}
+
+void CDXView::CDX::OnDestroy()
+{
+	// End this thread
+	::PostQuitMessage(0);
+}
+
+LRESULT CDXView::CDX::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	int cx = GET_X_LPARAM(lParam);
+	int cy = GET_Y_LPARAM(lParam);
+	
+	SetWindowPos(NULL, 0, 0, cx, cy, SWP_SHOWWINDOW);
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
+void CDXView::CDX::PreCreate(CREATESTRUCT &cs)
+{
+	// An initial window size to allow InitD3D to succeed
+	cs.x = 0;
+	cs.y = 0;
+	cs.cx = 100;
+	cs.cy = 100;
+}
+
+void CDXView::CDX::SetupMatrices()
+// Sets up the world, view, and projection transform Matrices.
 {
     // For our world matrix, we will just rotate the object about the y-axis.
     D3DXMATRIXA16 matWorld;
@@ -186,84 +218,68 @@ void CView::SetupMatrices()
     m_pd3dDevice->SetTransform( D3DTS_PROJECTION, &matProj );
 }
 
-//-----------------------------------------------------------------------------
-// Name: Render()
-// Desc: Draws the scene
-//-----------------------------------------------------------------------------
-void CView::Render()
+void CDXView::CDX::Render()
+// Draws the scene.
 {
-//	if ( WAIT_TIMEOUT == WaitForSingleObject(GetThread(), 1) )
+	if (IsWindow() && m_pd3dDevice)
 	{
-		if (IsWindow())
+		HRESULT hResult = m_pd3dDevice->TestCooperativeLevel();
+		switch (hResult)
 		{
-			HRESULT hResult = m_pd3dDevice->TestCooperativeLevel();
-			switch (hResult)
+		case D3D_OK:
 			{
-			case D3D_OK:
+				CRect rcClient = GetClientRect();
+				bool bNeedResize = (int)m_d3dpp.BackBufferWidth != rcClient.Width() || (int)m_d3dpp.BackBufferHeight != rcClient.Height();
+				if (bNeedResize)
 				{
-					CRect rcClient = GetClientRect();
-					bool bNeedResize = (int)m_d3dpp.BackBufferWidth != rcClient.Width() || (int)m_d3dpp.BackBufferHeight != rcClient.Height();
-					if (bNeedResize)
-					{
-						m_d3dpp.BackBufferWidth		= rcClient.Width();
-						m_d3dpp.BackBufferHeight	= rcClient.Height();
-						if ( !SUCCEEDED( m_pd3dDevice->Reset(&m_d3dpp) ) )
-							TRACE("Failed to reset the DirectX device\n");
-					}
-
-					// Clear the backbuffer to a black color
-					if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
-						TRACE("Failed to clear back buffer\n");
-
-					// Begin the scene
-					if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
-					{
-						// Setup the world, view, and projection Matrices
-						SetupMatrices();
-
-						SetupDefaultRenderStates();
-
-						// Render the vertex buffer contents
-						m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
-						m_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
-						m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 1 );
-
-						// End the scene
-						m_pd3dDevice->EndScene();
-					}
-					else
-						TRACE("Failed to render the scene\n");
-
-					// Present the backbuffer contents to the display
-					m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
+					m_d3dpp.BackBufferWidth		= rcClient.Width();
+					m_d3dpp.BackBufferHeight	= rcClient.Height();
+					if ( !SUCCEEDED( m_pd3dDevice->Reset(&m_d3dpp) ) )
+						TRACE("Failed to reset the DirectX device\n");
 				}
-				break;
-			case D3DERR_DEVICELOST:
-				TRACE("Got D3DERR_DEVICELOST\n");
-				break;
-			case D3DERR_DEVICENOTRESET:
-				TRACE("Got D3DERR_DEVICENOTRESET\n");
-				m_pd3dDevice->Reset(&m_d3dpp);	// Reset the DX device
-				break;
-			default:
-				TRACE("Direct3D device is in an invalid state\n");
-				break;
+
+				// Clear the backbuffer to a black color
+				if (D3D_OK !=m_pd3dDevice->Clear( 0, NULL, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0,0,0), 1.0f, 0 ))
+					TRACE("Failed to clear back buffer\n");
+
+				// Begin the scene
+				if( SUCCEEDED( m_pd3dDevice->BeginScene() ) )
+				{
+					// Setup the world, view, and projection Matrices
+					SetupMatrices();
+
+					SetupDefaultRenderStates();
+
+					// Render the vertex buffer contents
+					m_pd3dDevice->SetStreamSource( 0, m_pVB, 0, sizeof(CUSTOMVERTEX) );
+					m_pd3dDevice->SetFVF( D3DFVF_XYZ | D3DFVF_DIFFUSE );
+					m_pd3dDevice->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0, 1 );
+
+					// End the scene
+					m_pd3dDevice->EndScene();
+				}
+				else
+					TRACE("Failed to render the scene\n");
+
+				// Present the backbuffer contents to the display
+				m_pd3dDevice->Present( NULL, NULL, NULL, NULL );
 			}
+			break;
+		case D3DERR_DEVICELOST:
+			TRACE("Got D3DERR_DEVICELOST\n");
+			break;
+		case D3DERR_DEVICENOTRESET:
+			TRACE("Got D3DERR_DEVICENOTRESET\n");
+			m_pd3dDevice->Reset(&m_d3dpp);	// Reset the DX device
+			break;
+		default:
+			TRACE("Direct3D device is in an invalid state\n");
+			break;
 		}
 	}
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-//	switch(uMsg)
-//	{
-//
-//	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
-
-void CView::SetupDefaultRenderStates()
+void CDXView::CDX::SetupDefaultRenderStates()
 {
 	// Turn off culling, so we see the front and back of the triangle
 	m_pd3dDevice->SetRenderState( D3DRS_CULLMODE, D3DCULL_NONE );
@@ -272,4 +288,49 @@ void CView::SetupDefaultRenderStates()
 	m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 }
 
+LRESULT CDXView::CDX::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+		case WM_SIZE: return OnSize(uMsg, wParam, lParam);
+	}
+
+	return WndProcDefault(uMsg, wParam, lParam);
+}
+
+
+/////////////////////////////////////////////////
+// Definitions for the CDXView class
+//
+CDXView::~CDXView()
+{
+	// Ensure the DXThread ends before destroying this object.
+	::WaitForSingleObject(m_DXThread.GetThread(), INFINITE);
+}
+
+int CDXView::OnCreate(LPCREATESTRUCT pcs)
+{
+	// Create our thread. The thread creates the DX child window when starts
+	m_DXThread.CreateThread();
+	
+	return CWnd::OnCreate(pcs);
+}
+
+LRESULT CDXView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	if (m_DX.IsWindow())
+		m_DX.PostMessage(uMsg, wParam, lParam);
+
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
+LRESULT CDXView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch(uMsg)
+	{
+		case WM_SIZE: return OnSize(uMsg, wParam, lParam);
+	}
+
+	return WndProcDefault(uMsg, wParam, lParam);
+}
 

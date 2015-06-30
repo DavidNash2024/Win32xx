@@ -12,7 +12,7 @@ CMainFrame::CMainFrame()
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	//Set m_View as the view window of the frame
-	SetView(m_ViewThread.GetView());
+	SetView(m_DXView);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
@@ -58,25 +58,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	CFrame::OnCreate(pcs);
-
-	// Create and start the thread for the view window
-	m_ViewThread.CreateThread();
-	
-	// Wait for the View window to be created
-	WaitForSingleObject(m_ViewThread.GetView().GetCreateEvent(), INFINITE);
-
-	return 0;
-}
-
-void CMainFrame::OnDestroy()
-{
-	// End the view's thread
-	PostThreadMessage(m_ViewThread.GetThreadID(), WM_QUIT, 0, 0);
-	::WaitForSingleObject(m_ViewThread.GetThread(), INFINITE);
-	
-	// Call the base function
-	CFrame::OnDestroy();
+	return CFrame::OnCreate(pcs);
 }
 
 void CMainFrame::OnInitialUpdate()
@@ -168,13 +150,10 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case UWM_VIEWCREATED:
-	//	RecalcLayout();
-		TRACE("View Window created\n");
-		break;
-	}
+//	switch (uMsg)
+//	{
+//
+//	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

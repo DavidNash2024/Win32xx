@@ -3011,8 +3011,8 @@ namespace Win32xx
 		case DS_DOCKED_CONTAINER:
 			{
 				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone);
-				CDockContainer* pContainer = static_cast<CDockContainer*>(&GetView());
-				assert(dynamic_cast<CDockContainer*>(pContainer));
+				CDockContainer* pContainer = GetContainer();
+				assert(pContainer);
 				pContainer->SelectPage(0);
 			}
 			break;
@@ -3932,13 +3932,13 @@ namespace Win32xx
 			if (pDockNew)
 			{
 				// Move containers from the old docker to the new docker
-				CDockContainer* pContainerNew = static_cast<CDockContainer*>(&pDockNew->GetView());
-				assert(dynamic_cast<CDockContainer*>(pContainerNew));
+				CDockContainer* pContainerNew = pDockNew->GetContainer();
+				assert(pContainerNew);
 				for (iter = AllContainers.begin(); iter != AllContainers.end(); ++iter)
 				{
 					if ((*iter).pContainer != pContainer)
 					{
-						CDockContainer* pChildContainer = static_cast<CDockContainer*>((*iter).pContainer);
+						CDockContainer* pChildContainer = (*iter).pContainer;
 						pContainer->RemoveContainer(pChildContainer);
 						if (pContainerNew != pChildContainer)
 						{
@@ -3995,8 +3995,8 @@ namespace Win32xx
 		else
 		{
 			// This is a child container, so simply remove it from the parent
-			CDockContainer* pContainerParent = static_cast<CDockContainer*>(&GetView());
-			assert(dynamic_cast<CDockContainer*>(pContainerParent));
+			CDockContainer* pContainerParent = GetContainer();
+			assert(pContainerParent);
 			pContainerParent->RemoveContainer(pContainer);
 			pContainerParent->SetTabSize();
 			pContainerParent->SetFocus();
