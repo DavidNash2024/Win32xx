@@ -325,20 +325,19 @@ void CMainFrame::OnInitialUpdate()
 	// Hide the container's tab if it has just one tab
 	HideSingleContainerTab(m_IsHideSingleTab);
 
-	// Add a "Window" menu item, positioned 2nd from the right.
-	int nMenuPos = GetFrameMenu().GetMenuItemCount() -1;
-	CMenu WinMenu = m_MyTabbedMDI.GetListMenu();
-	GetFrameMenu().InsertMenu(nMenuPos, MF_POPUP|MF_BYPOSITION, (UINT_PTR)WinMenu.GetHandle(), _T("&Window"));
+	// Get a copy of the Frame's menu
+	CMenu FrameMenu = GetFrameMenu();
 
-	// Update the menu
-	if (IsReBarUsed())
-		GetMenuBar().SetMenu(GetFrameMenu());
-	else
-		DrawMenuBar();
+	// Modify the menu
+	int nMenuPos = FrameMenu.GetMenuItemCount() -1;
+	CMenu WinMenu = m_MyTabbedMDI.GetListMenu();
+	FrameMenu.InsertPopupMenu(nMenuPos, MF_BYPOSITION, WinMenu, _T("&Window"));
+
+	// Replace the frame's menu with our modified menu
+	SetFrameMenu(FrameMenu);
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow( GetShowCmd() );
-	
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 

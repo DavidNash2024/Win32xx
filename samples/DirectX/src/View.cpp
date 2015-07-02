@@ -292,7 +292,7 @@ LRESULT CDXView::CDX::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-		case WM_SIZE: return OnSize(uMsg, wParam, lParam);
+		case UWM_RESIZE: return OnSize(uMsg, wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
@@ -319,7 +319,7 @@ int CDXView::OnCreate(LPCREATESTRUCT pcs)
 LRESULT CDXView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (m_DX.IsWindow())
-		m_DX.PostMessage(uMsg, wParam, lParam);
+		m_DX.PostMessage(UWM_RESIZE, wParam, lParam);
 
 	return FinalWindowProc(uMsg, wParam, lParam);
 }

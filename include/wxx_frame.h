@@ -344,7 +344,8 @@ namespace Win32xx
 		BOOL IsMenuBarUsed() const					{ return (GetMenuBar().IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (GetReBar().IsWindow()); }
-		void SetFrameMenu(INT ID_MENU);
+		void SetAccelerators(UINT ID_ACCEL);
+		void SetFrameMenu(UINT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
 		void SetMenuTheme(MenuTheme& MBT);
 		void SetReBarTheme(ReBarTheme& RBT);
@@ -441,6 +442,7 @@ namespace Win32xx
 		CFrame(const CFrame&);				// Disable copy construction
 		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
+		void UpdateMenuBarBandSize();
 		static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
 
 		std::vector<ItemDataPtr> m_vMenuItemData;	// vector of MenuItemData pointers
@@ -467,7 +469,7 @@ namespace Win32xx
 		ReBarTheme m_RBTheme;				// struct of theme info for the ReBar
 		StatusBarTheme m_SBTheme;			// struct of theme info for the StatusBar
 		ToolBarTheme m_TBTheme;				// struct of theme info for the ToolBar
-		HACCEL m_hAccel;					// handle to the frame's accelerator table
+		HACCEL m_hAccel;					// handle to the frame's accelerator table (used by MDI without MDI child)
 		CWnd* m_pView;						// pointer to the View CWnd object
 		UINT m_nMaxMRU;						// maximum number of MRU entries
 		HWND m_hOldFocus;					// The window which had focus prior to the app's deactivation
@@ -992,6 +994,8 @@ namespace Win32xx
 
 		if (GetReBarTheme().LockMenuBand)
 			GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), FALSE);
+
+		UpdateMenuBarBandSize();
 	}
 
 	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
@@ -2135,9 +2139,7 @@ namespace Win32xx
 		SetIconSmall(IDW_MAIN);
 
 		// Set the keyboard accelerators
-		m_hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		if (m_hAccel)
-			GetApp().SetAccelerators(m_hAccel, this);
+		SetAccelerators(IDW_MAIN);
 
 		// Set the Caption
 		SetWindowText(LoadString(IDW_MAIN));
@@ -2151,15 +2153,16 @@ namespace Win32xx
 			// Create the rebar
 			GetReBar().Create(*this);
 
-			// Create the menu inside rebar
+			// Create the menubar inside rebar
 			GetMenuBar().Create(GetReBar());
 			AddMenuBarBand();
+
+			// Disable XP themes for the menubar
+			GetMenuBar().SetWindowTheme(L" ", L" ");
 		}
 
 		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
-		m_pMenuMetrics = new CMenuMetrics(*this);
-
 		UpdateMRUMenu();
 
 		// Create the ToolBar
@@ -2188,9 +2191,7 @@ namespace Win32xx
 		if (&GetView() != &GetDockClient())
 			GetView().Create(GetDockClient());
 
-		// Disable XP themes for the menubar
-		GetMenuBar().SetWindowTheme(L" ", L" ");
-
+		// Adjust fonts to match the desktop theme
 		SendMessage(WM_SYSCOLORCHANGE);
 		
 		// Reposition the child windows
@@ -2340,6 +2341,13 @@ namespace Win32xx
 		if (pmis->CtlType != ODT_MENU)
 			return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
 
+		// Initialize the menu metrics on first use
+		if (!m_pMenuMetrics.get())
+		{
+			m_pMenuMetrics = new CMenuMetrics(*this);
+			m_pMenuMetrics->Initialize();
+		}
+		
 		MeasureMenuItem(pmis);
 		return TRUE;
 	}
@@ -2559,22 +2567,11 @@ namespace Win32xx
 			GetMenuBar().SetMenu( GetFrameMenu() );
 
 			// Update the MenuBar band size
-			int nBand = GetReBar().GetBand(GetMenuBar());
-			REBARBANDINFO rbbi;
-			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
-			CClientDC dcMenuBar(GetMenuBar());
-			dcMenuBar.SelectObject(GetMenuBar().GetFont());
-			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
-			int MenuBar_Height = sizeMenuBar.cy + 6;
-			rbbi.fMask      = RBBIM_CHILDSIZE;
-			rbbi.cyMinChild = MenuBar_Height;
-			rbbi.cyMaxChild = MenuBar_Height;
-			GetReBar().SetBandInfo(nBand, rbbi);
+			UpdateMenuBarBandSize();
 		}
 
 		if (m_XPThemeName != GetThemeName())
 			SetTheme();
-		m_pMenuMetrics->Initialize();
 
 		// Reposition and redraw everything
 		RecalcLayout();
@@ -2832,7 +2829,15 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline void CFrame::SetFrameMenu(INT ID_MENU)
+	inline void CFrame::SetAccelerators(UINT ID_ACCEL)
+	// Sets the accelerator table for the application for this window
+	{
+		m_hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
+		if (m_hAccel)
+			GetApp().SetAccelerators(m_hAccel, this);
+	}
+
+	inline void CFrame::SetFrameMenu(UINT ID_MENU)
 	// Sets the frame's menu from a Resource ID.
 	// A resource ID of 0 removes the menu from the frame.
 	{
@@ -2859,7 +2864,10 @@ namespace Win32xx
 			ShowMenu(bShow);
 		}
 		else
+		{
 			SetMenu(m_Menu);
+			DrawMenuBar();
+		}
 	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
@@ -2884,23 +2892,26 @@ namespace Win32xx
 		CRect rcClient = GetClientRect();
 		CReBar& RB = GetReBar();
 		int nBand = RB.GetBand(GetMenuBar());
-		CRect rcBorder = RB.GetBandBorders(nBand);
+		if (nBand >= 0)
+		{
+			CRect rcBorder = RB.GetBandBorders(nBand);
 
-		REBARBANDINFO rbbi;
-		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
-		rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
-		RB.GetBandInfo(nBand, rbbi);
+			REBARBANDINFO rbbi;
+			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+			rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
+			RB.GetBandInfo(nBand, rbbi);
 
-		int Width;
-		if ((GetReBarTheme().UseThemes) && (GetReBarTheme().LockMenuBand))
-			Width = rcClient.Width() - rcBorder.Width() - 2;
-		else
-			Width = GetMenuBar().GetMaxSize().cx;
+			int Width;
+			if ((GetReBarTheme().UseThemes) && (GetReBarTheme().LockMenuBand))
+				Width = rcClient.Width() - rcBorder.Width() - 2;
+			else
+				Width = GetMenuBar().GetMaxSize().cx;
 
-		rbbi.cxMinChild = Width;
-		rbbi.cx         = Width;
+			rbbi.cxMinChild = Width;
+			rbbi.cx         = Width;
 
-		RB.SetBandInfo(nBand, rbbi);
+			RB.SetBandInfo(nBand, rbbi);
+		}
 	}
 
 	inline void CFrame::SetMenuTheme(MenuTheme& MBT)
@@ -3327,6 +3338,25 @@ namespace Win32xx
 		}
 
 		return ::CallNextHookEx(pFrame->m_KbdHook, nCode, wParam, lParam);
+	}
+
+	inline void CFrame::UpdateMenuBarBandSize()
+	// Update the MenuBar band size
+	{
+		int nBand = GetReBar().GetBand(GetMenuBar());
+		if (nBand >= 0)
+		{
+			REBARBANDINFO rbbi;
+			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+			CClientDC dcMenuBar(GetMenuBar());
+			dcMenuBar.SelectObject(GetMenuBar().GetFont());
+			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
+			int MenuBar_Height = sizeMenuBar.cy + 6;
+			rbbi.fMask      = RBBIM_CHILDSIZE;
+			rbbi.cyMinChild = MenuBar_Height;
+			rbbi.cyMaxChild = MenuBar_Height;
+			GetReBar().SetBandInfo(nBand, rbbi);
+		} 
 	}
 
 	inline void CFrame::UpdateMRUMenu()

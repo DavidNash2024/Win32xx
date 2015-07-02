@@ -66,8 +66,24 @@ Updated Samples
     Added a white theme for use on Windows 8.1 and Windows 10.
  - Updated the DirectX sample.
  	This sample now has a generic view window that could be used anywhere we
-	would use a view window, namely: CDocker, CDockContainer, CFrame, MDIChild, 
-	CTab, and CTabCTabbedMDI. The DirectX window runs in a separate thread.
+	would use a view window. The DirectX window runs in a separate thread.
+	
+Updated the help.
+The Using Win32++ section now contains:
+ - Getting Started
+ - Simple Windows
+ - Dialogs
+ - Frames
+ - MDI Frames
+ - Graphics Device Interface (GDI)
+ - Bitmaps
+ - ImageLists
+ - Menus
+ - Docking
+ - The Registry
+ - Text Conversion Functions
+ - CString
+ - Differences with MFC 
 
 
 Changes in detail
@@ -79,6 +95,9 @@ Added CTime
 Added CTimeSpan
 Added CDocker::LoadContainerRegistrySettings
 Added CFrame::SaveRegistryMRUSettings
+Added CFrame::SetAccelerators
+Added CMenu::FindMenuItem
+Added CMenu::InsertPopupMenu
 Added CWinException::GetText
 Added ::GetCommandLineArgs
 

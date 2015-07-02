@@ -10,6 +10,8 @@
 #include <d3d9.h>			// See the note above
 
 
+#define UWM_RESIZE     (WM_APP + 0x0001)  // Message - a copy of WM_SIZE info forwarded on to the DirectX window.
+
 // A structure for our custom vertex type
 struct CUSTOMVERTEX
 {

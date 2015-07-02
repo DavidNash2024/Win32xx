@@ -142,6 +142,7 @@ namespace Win32xx
 		BOOL CheckMenuRadioItem(UINT uIDFirst, UINT uIDLast, UINT uIDItem, UINT uFlags);
 		BOOL DeleteMenu(UINT uPosition, UINT uFlags);
 		UINT EnableMenuItem(UINT uIDEnableItem, UINT uEnable);
+		int FindMenuItem(LPCTSTR szMenuString);
 		UINT GetDefaultItem(UINT gmdiFlags, BOOL fByPos = FALSE);
 		DWORD GetMenuContextHelpId() const;
 
@@ -160,6 +161,7 @@ namespace Win32xx
 		BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
 		BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap);
 		BOOL InsertMenuItem(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos = FALSE);
+		BOOL InsertPopupMenu(UINT uPosition, UINT uFlags, HMENU hPopupMenu, LPCTSTR lpszNewItem);
 		BOOL ModifyMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
 		BOOL ModifyMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap);
 		BOOL RemoveMenu(UINT uPosition, UINT uFlags);
@@ -441,6 +443,27 @@ namespace Win32xx
 		assert(IsMenu(m_pData->hMenu));
 		return ::EnableMenuItem(m_pData->hMenu, uIDEnableItem, uEnable);
 	}
+
+	inline int CMenu::FindMenuItem(LPCTSTR szMenuString)
+	// Finds the position of a menu item with the specified string.
+	// Returns -1 if the string is not found.
+	{
+		assert(m_pData);
+		assert(IsMenu(m_pData->hMenu));
+
+		CString str;
+		int count = GetMenuItemCount();
+		for (int i = 0; i < count; i++)
+		{
+			if (GetMenuString(i, str, MF_BYPOSITION))
+			{
+				if (str == szMenuString)
+					return i;
+			}
+		}
+
+		return -1;
+	}
 	
 	inline UINT CMenu::GetDefaultItem(UINT gmdiFlags, BOOL fByPos /*= FALSE*/)
 	// Determines the default menu item.
@@ -564,13 +587,27 @@ namespace Win32xx
 	}
 
 	inline BOOL CMenu::InsertMenuItem(UINT uItem, LPMENUITEMINFO lpMenuItemInfo, BOOL fByPos /*= FALSE*/)
-	// Inserts a new menu item at the specified position in a menu.
+	// Inserts a new menu item at the specified position in the menu.
 	{
 		assert(m_pData);
 		assert(IsMenu(m_pData->hMenu));
 		assert(lpMenuItemInfo);
 		lpMenuItemInfo->cbSize = GetSizeofMenuItemInfo();
 		return ::InsertMenuItem(m_pData->hMenu, uItem, fByPos, lpMenuItemInfo);
+	}
+
+	inline BOOL CMenu::InsertPopupMenu(UINT uPosition, UINT uFlags, HMENU hPopupMenu, LPCTSTR lpszNewItem)
+	// Inserts a popup menu item at the specified position in the menu.
+	{
+		assert(hPopupMenu);
+		assert(IsMenu(m_pData->hMenu));
+
+		// Ensure the correct flags are set
+		uFlags &= ~MF_BITMAP;
+		uFlags &= ~MF_OWNERDRAW;
+		uFlags |= MF_POPUP;
+
+		return ::InsertMenu(m_pData->hMenu, uPosition, uFlags, (UINT_PTR)hPopupMenu, lpszNewItem);
 	}
 	
 	inline BOOL CMenu::LoadMenu(LPCTSTR lpszResourceName)

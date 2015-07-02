@@ -992,12 +992,9 @@ namespace Win32xx
 	}
 
 	inline void CWinThread::SetAccelerators(HACCEL hAccel, CWnd* pWndAccel)
-	// nID is the resource ID of the accelerator table
+	// hAccel is the handle of the accelerator table
 	// pWndAccel is the window pointer for translated messages
 	{
-		assert (hAccel);
-		assert (pWndAccel);
-
 		m_pWndAccel = pWndAccel;
 		m_hAccel = hAccel;
 	}
@@ -1007,7 +1004,6 @@ namespace Win32xx
 		assert(m_hThread);
 		return ::SetThreadPriority(m_hThread, nPriority);
 	}
-
 
 	inline DWORD CWinThread::SuspendThread() const
 	{
