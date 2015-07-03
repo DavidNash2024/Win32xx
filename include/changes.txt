@@ -81,6 +81,7 @@ The Using Win32++ section now contains:
  - Menus
  - Docking
  - The Registry
+ - Threads
  - Text Conversion Functions
  - CString
  - Differences with MFC 
@@ -99,6 +100,8 @@ Added CFrame::SetAccelerators
 Added CMenu::FindMenuItem
 Added CMenu::InsertPopupMenu
 Added CWinException::GetText
+Added CWinThread::PostThreadMessage
+Added CWinThread::operator HANDLE()
 Added ::GetCommandLineArgs
 
 Added VERIFY macro

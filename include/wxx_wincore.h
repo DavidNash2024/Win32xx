@@ -413,15 +413,17 @@ namespace Win32xx
 
 		// Operations
 		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
+		HACCEL	GetAccelerators() const { return m_hAccel; }
+		CWnd*	GetAcceleratorsWindow() const { return m_pWndAccel; }
 		HANDLE	GetThread()	const;
 		int		GetThreadID() const;
 		int		GetThreadPriority() const;
+		BOOL	PostThreadMessage(UINT message, WPARAM wParam, LPARAM lParam) const;
 		DWORD	ResumeThread() const;
-		HACCEL	GetAccelerators() const { return m_hAccel; }
-		CWnd*	GetAcceleratorsWindow() const { return m_pWndAccel; }
 		void	SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
 		BOOL	SetThreadPriority(int nPriority) const;
 		DWORD	SuspendThread() const;
+		operator HANDLE () const { return GetThread(); }
 
 	private:
 		CWinThread(const CWinThread&);				// Disable copy construction
@@ -985,7 +987,16 @@ namespace Win32xx
 		return Processed;
 	}
 
+	inline BOOL CWinThread::PostThreadMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) const
+	// Posts a message to the thread. The message will reach the MessageLoop, but 
+	//  will not call a CWnd's WndProc.
+	{
+		assert(m_hThread);
+		return ::PostThreadMessage(GetThreadID(), uMsg, wParam, lParam);
+	}
+
 	inline DWORD CWinThread::ResumeThread() const
+	// Resumes a thread that has been suspended, or created with the CREATE_SUSPENDED flag.
 	{
 		assert(m_hThread);
 		return ::ResumeThread(m_hThread);
