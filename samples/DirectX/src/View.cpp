@@ -46,9 +46,9 @@ int CDXView::CDXThread::MessageLoop()
 		}
 		else
 		{
-			// Force thread to yield (otherwise it runs in a tight loop)
-			Sleep(1);
-			m_pDX->Render();
+			// Force thread to yield
+			if (WAIT_TIMEOUT == ::WaitForSingleObject(*this, 1))
+				m_pDX->Render();
 		}
 	}
 
@@ -187,12 +187,12 @@ void CDXView::CDX::SetupMatrices()
     D3DXMATRIXA16 matWorld;
 
     // Set up the rotation matrix to generate 1 full rotation (2*PI radians)
-    // every 1000 ms. To avoid the loss of precision inherent in very high
+    // every 2000 ms. To avoid the loss of precision inherent in very high
     // floating point numbers, the system time is modulated by the rotation
     // period before conversion to a radian angle.
-    UINT  iTime  = timeGetTime() % 1000;
+    UINT  iTime  = timeGetTime() % 2000;
 
-    FLOAT fAngle = iTime * (2.0f * D3DX_PI) / 1000.0f;
+    FLOAT fAngle = iTime * (2.0f * D3DX_PI) / 2000.0f;
     D3DXMatrixRotationY( &matWorld, fAngle );
     m_pd3dDevice->SetTransform( D3DTS_WORLD, &matWorld );
 

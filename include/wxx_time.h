@@ -1,5 +1,5 @@
-// Win32++   Version 8.0 Alpha
-// Release Date: TBA
+// Win32++   Version 8.0
+// Release Date: 5th July 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -408,9 +408,15 @@ namespace Win32xx
 	//	the hour, minute, and  second.
 	{
 		FILETIME ft;
-		VERIFY( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) );
-		CTime t(ft, nDST);
-		m_time = t.m_time;
+		if ( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) )
+		{
+			CTime t(ft, nDST);
+			m_time = t.m_time;
+		}
+		else
+		{
+			assert( FALSE );
+		}
 	}
 
 	//============================================================================
@@ -430,12 +436,15 @@ namespace Win32xx
 	{
 		// start by converting ft (a UTC time) to local time
 		FILETIME localTime;
-		VERIFY( ::FileTimeToLocalFileTime(&ft, &localTime) );
-
+		if (!::FileTimeToLocalFileTime(&ft, &localTime) )
+			assert(FALSE);
+		
 		//  convert localTime to a SYSTEMTIME structure
 		SYSTEMTIME st;
-		VERIFY( ::FileTimeToSystemTime(&localTime, &st) );
-
+		
+		if (!::FileTimeToSystemTime(&localTime, &st))
+			assert(FALSE);
+		
 		// then convert the system time to a CTime
 		CTime t(st, nDST);
 		m_time = t.m_time;
@@ -745,7 +754,7 @@ namespace Win32xx
 	{
 		// Self assignment is safe
 		m_time = t;
-		return *this;;
+		return *this;
 	}
 
 	//============================================================================
@@ -857,8 +866,11 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		VERIFY( strFormat.LoadString(nFormatID) );
-		return Format(strFormat);
+		if ( !strFormat.LoadString(nFormatID) )
+			assert(FALSE);
+
+		assert( FALSE);
+		return CString();
 	}
 
 	//============================================================================
@@ -899,7 +911,9 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		VERIFY( strFormat.LoadString(nFormatID) );
+		if ( !strFormat.LoadString(nFormatID) )
+			assert(FALSE);
+
 		return FormatGmt(strFormat);
 	}
 
@@ -1235,9 +1249,11 @@ namespace Win32xx
 	//	      %S - seconds (0-59)
 	{
 		CString strFormat;
-		VERIFY( strFormat.LoadString(nFormatID) );
+		if ( !strFormat.LoadString(nFormatID) )
+			assert(FALSE);
+
 		return Format(strFormat);
-	}
+}
 
 	//============================================================================
 	inline CString CTimeSpan::Format(const CString& format) const

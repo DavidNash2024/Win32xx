@@ -1,5 +1,5 @@
-// Win32++   Version 8.0 Alpha
-// Release Date: TBA
+// Win32++   Version 8.0
+// Release Date: 5th July 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1606,7 +1606,11 @@ namespace Win32xx
 		wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
 		// Register the window class (if not already registered)
-		VERIFY (RegisterClass(wc) != 0);
+		if (RegisterClass(wc) == 0)
+		{
+			TRACE("*** RegisterClass failed ***\n");
+			assert( 0 );
+		}
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();
@@ -1621,7 +1625,7 @@ namespace Win32xx
 		// Now handle window creation failure
 		if (m_hWnd == 0)
 		{
-			TRACE(_T("*** Failed to create window ***\n"));
+			TRACE("*** Failed to create window ***\n");
 			TRACE(SystemErrorMessage(::GetLastError()));
 			assert(m_hWnd);
 		}

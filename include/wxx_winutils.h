@@ -1,5 +1,5 @@
-// Win32++   Version 8.0 Alpha
-// Release Date: TBA
+// Win32++   Version 8.0
+// Release Date: 5th July 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -58,11 +58,12 @@
 #define MAX(a,b)            (((a) > (b)) ? (a) : (b))
 #define MIN(a,b)            (((a) < (b)) ? (a) : (b))
 
+
 // Define our own VERIFY macro
 // In debug mode, VERIFY asserts if the expression evaluates to zero
 // In release mode, VERIFY evaluates the expression, but doesn't assert.
 #ifndef VERIFY
-  #ifdef _DEBUG
+  #ifndef NDEBUG
     #define VERIFY(f) assert(f)
   #else
     #define VERIFY(f) ((void)(f))

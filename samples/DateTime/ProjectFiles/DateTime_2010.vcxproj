@@ -48,6 +48,7 @@
     <ClInclude Include="..\src\MyDialog.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
+    <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
@@ -60,13 +61,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="..\src\res\Win32++.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\res\Dialog.ico" />
-    <None Include="..\src\res\Zapotec.bmp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

@@ -7,7 +7,6 @@ of having its own window procedure for routing messages.
 
 Win32++ supports the following compilers and development environments:
 * Borland C++ Compiler 5.5
-* Borland Developer Studio 2006
 * Dev-C++
 * Microsoft Visual C++ Toolkit 2003
 * Microsoft Visual C++ 2005 Express Edition
@@ -38,6 +37,7 @@ Win32++ supports the following operating systems
 * Windows 8 (32 bit and 64 bit)
 * Windows 8.1 (32 bit and 64 bit)
 * Windows 2012 Server
+* Windows 10
 * Windows CE from WCE400 (Windows mobile 2003) to WCE600 (Windows mobile 6)
 
 
