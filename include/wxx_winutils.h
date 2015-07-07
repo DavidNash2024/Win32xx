@@ -567,7 +567,7 @@ namespace Win32xx
 				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
 				DLLGETVERSION* pfnDLLGetVersion = NULL;
 
-				pfnDLLGetVersion = (DLLGETVERSION*)::GetProcAddress(hComCtl, "DllGetVersion");
+				pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(hComCtl, "DllGetVersion"));
 				if(pfnDLLGetVersion)
 				{
 					DLLVERSIONINFO dvi;
@@ -712,9 +712,9 @@ namespace Win32xx
 			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
   #ifdef _WIN32_WCE
-			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
+			INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, _T("InitCommonControlsEx")));
   #else
-			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+			INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, "InitCommonControlsEx"));
   #endif
 
 			if (pfnInitEx)
@@ -738,9 +738,9 @@ namespace Win32xx
 				typedef BOOL WINAPI INIT();
 
   #ifdef _WIN32_WCE
-				INIT* pfnInit = (INIT*)::GetProcAddress(hComCtl, _T("InitCommonControls"));
+				INIT* pfnInit = reinterpret_cast<INIT*>(::GetProcAddress(hComCtl, _T("InitCommonControls")));
   #else
-				INIT* pfnInit = (INIT*)::GetProcAddress(hComCtl, "InitCommonControls");
+				INIT* pfnInit = reinterpret_cast<INIT*>(::GetProcAddress(hComCtl, "InitCommonControls"));
   #endif
 
 				(*pfnInit)();

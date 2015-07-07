@@ -522,15 +522,15 @@ namespace Win32xx
 
 		if (m_hmodUXTheme != 0)
 		{
-			m_pfnCloseThemeData			  = (CLOSETHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "CloseThemeData");
-			m_pfnDrawThemeBackground	  = (DRAWTHEMEBACKGROUND*)::GetProcAddress(m_hmodUXTheme, "DrawThemeBackground");
-			m_pfnDrawThemeText			  = (DRAWTHEMETEXT*)::GetProcAddress(m_hmodUXTheme, "DrawThemeText");
-			m_pfnGetThemePartSize		  = (GETTHEMEPARTSIZE*)::GetProcAddress(m_hmodUXTheme, "GetThemePartSize");
-			m_pfnGetThemeInt			  = (GETTHEMEINT*)::GetProcAddress(m_hmodUXTheme, "GetThemeInt");
-			m_pfnGetThemeMargins		  = (GETTHEMEMARGINS*)::GetProcAddress(m_hmodUXTheme, "GetThemeMargins");
-			m_pfnGetThemeTextExtent		  = (GETTHEMETEXTEXTENT*)::GetProcAddress(m_hmodUXTheme, "GetThemeTextExtent");
-			m_pfnIsThemeBGPartTransparent = (ISTHEMEBGPARTTRANSPARENT*)::GetProcAddress(m_hmodUXTheme, "IsThemeBackgroundPartiallyTransparent");
-			m_pfnOpenThemeData			  = (OPENTHEMEDATA*)::GetProcAddress(m_hmodUXTheme, "OpenThemeData");
+			m_pfnCloseThemeData			  = reinterpret_cast<CLOSETHEMEDATA*>(::GetProcAddress(m_hmodUXTheme, "CloseThemeData"));
+			m_pfnDrawThemeBackground	  = reinterpret_cast<DRAWTHEMEBACKGROUND*>(::GetProcAddress(m_hmodUXTheme, "DrawThemeBackground"));
+			m_pfnDrawThemeText			  = reinterpret_cast<DRAWTHEMETEXT*>(::GetProcAddress(m_hmodUXTheme, "DrawThemeText"));
+			m_pfnGetThemePartSize		  = reinterpret_cast<GETTHEMEPARTSIZE*>(::GetProcAddress(m_hmodUXTheme, "GetThemePartSize"));
+			m_pfnGetThemeInt			  = reinterpret_cast<GETTHEMEINT*>(::GetProcAddress(m_hmodUXTheme, "GetThemeInt"));
+			m_pfnGetThemeMargins		  = reinterpret_cast<GETTHEMEMARGINS*>(::GetProcAddress(m_hmodUXTheme, "GetThemeMargins"));
+			m_pfnGetThemeTextExtent		  = reinterpret_cast<GETTHEMETEXTEXTENT*>(::GetProcAddress(m_hmodUXTheme, "GetThemeTextExtent"));
+			m_pfnIsThemeBGPartTransparent = reinterpret_cast<ISTHEMEBGPARTTRANSPARENT*>(::GetProcAddress(m_hmodUXTheme, "IsThemeBackgroundPartiallyTransparent"));
+			m_pfnOpenThemeData			  = reinterpret_cast<OPENTHEMEDATA*>(::GetProcAddress(m_hmodUXTheme, "OpenThemeData"));
 		}
 
 		if (m_hTheme != 0)
@@ -1179,7 +1179,7 @@ namespace Win32xx
 					}
 
 					CString str;
-					int nLength = (int)GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L);
+					int nLength = static_cast<int>(GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L));
 					if (nLength > 0)
 					{
 						GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
@@ -1239,7 +1239,7 @@ namespace Win32xx
 						DWORD dwTBStyle = (DWORD)pTB->SendMessage(TB_GETSTYLE, 0L, 0L);
 						int nStyle = pTB->GetButtonStyle(dwItem);
 
-						int nButton = (int)pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L);
+						int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L));
 						TBBUTTON tbb;
 						ZeroMemory(&tbb, sizeof(TBBUTTON));
 						pTB->SendMessage(TB_GETBUTTON, (WPARAM)nButton, (LPARAM)&tbb);

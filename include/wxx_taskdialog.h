@@ -250,7 +250,7 @@ namespace Win32xx
 		HMODULE hComCtl = LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hComCtl);
 		typedef HRESULT WINAPI TASKDIALOGINDIRECT(const TASKDIALOGCONFIG*, int*, int*, BOOL*);
-		TASKDIALOGINDIRECT* pTaskDialogIndirect = (TASKDIALOGINDIRECT*)::GetProcAddress(hComCtl, "TaskDialogIndirect");
+		TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(hComCtl, "TaskDialogIndirect"));
 
 		// Call TaskDialogIndirect through our function pointer
 		LRESULT lr = (*pTaskDialogIndirect)(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);

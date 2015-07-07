@@ -564,7 +564,7 @@ namespace Win32xx
 	// Otherwise, the string is inserted into the list, and the list is sorted.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_ADDSTRING, 0L, (LPARAM)lpszString);
+		return static_cast<int>(SendMessage(CB_ADDSTRING, 0L, (LPARAM)lpszString));
 	}
 
 	inline void CComboBox::Clear() const
@@ -593,7 +593,7 @@ namespace Win32xx
 	// Deletes a string in the list box of a combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_DELETESTRING, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(CB_DELETESTRING, (WPARAM)nIndex, 0L));
 	}
 
 	inline int  CComboBox::Dir(UINT attr, LPCTSTR lpszWildCard ) const
@@ -601,7 +601,7 @@ namespace Win32xx
 	// and set of file attributes.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_DIR, (WPARAM)attr, (LPARAM)lpszWildCard);
+		return static_cast<int>(SendMessage(CB_DIR, (WPARAM)attr, (LPARAM)lpszWildCard));
 	}
 
 	inline int  CComboBox::FindString(int nIndexStart, LPCTSTR lpszString) const
@@ -609,28 +609,28 @@ namespace Win32xx
 	// characters in a specified string.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_FINDSTRING, (WPARAM)nIndexStart, (LPARAM)lpszString);
+		return static_cast<int>(SendMessage(CB_FINDSTRING, (WPARAM)nIndexStart, (LPARAM)lpszString));
 	}
 
 	inline int  CComboBox::FindStringExact(int nIndexStart, LPCTSTR lpszString) const
 	// Find the first list box string in a combo box that matches the string specified in lpszString.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszString);
+		return static_cast<int>(SendMessage(CB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszString));
 	}
 
 	inline int  CComboBox::GetCount() const
 	// Retrieves the number of items in the list box of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETCOUNT, 0L, 0L);
+		return static_cast<int>(SendMessage(CB_GETCOUNT, 0L, 0L));
 	}
 
 	inline int  CComboBox::GetCurSel() const
 	// Retrieves the index of the currently selected item, if any, in the list box of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETCURSEL, 0L, 0L);
+		return static_cast<int>(SendMessage(CB_GETCURSEL, 0L, 0L));
 	}
 
 	inline CRect CComboBox::GetDroppedControlRect() const
@@ -646,7 +646,7 @@ namespace Win32xx
 	// Determines whether the list box of the combo box is dropped down.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(CB_GETDROPPEDSTATE, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(CB_GETDROPPEDSTATE, 0L, 0L));
 	}
 
 	inline int  CComboBox::GetDroppedWidth() const
@@ -654,7 +654,7 @@ namespace Win32xx
 	// with the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETDROPPEDWIDTH, 0L, 0L);
+		return static_cast<int>(SendMessage(CB_GETDROPPEDWIDTH, 0L, 0L));
 	}
 
 	inline DWORD CComboBox::GetEditSel() const
@@ -662,14 +662,14 @@ namespace Win32xx
 	// in the edit control of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETEDITSEL, 0L, 0L);
+		return static_cast<int>(SendMessage(CB_GETEDITSEL, 0L, 0L));
 	}
 
 	inline BOOL CComboBox::GetExtendedUI() const
 	// Determines whether the combo box has the default user interface or the extended user interface.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(CB_GETEXTENDEDUI, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(CB_GETEXTENDEDUI, 0L, 0L));
 	}
 
 	inline int  CComboBox::GetHorizontalExtent() const
@@ -677,49 +677,49 @@ namespace Win32xx
 	// be scrolled horizontally (the scrollable width).
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETHORIZONTALEXTENT, 0L, 0L);
+		return static_cast<int>(SendMessage(CB_GETHORIZONTALEXTENT, 0L, 0L));
 	}
 
 	inline DWORD CComboBox::GetItemData(int nIndex) const
 	// Retrieves the application-supplied value associated with the specified item in the combo box.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(CB_GETITEMDATA, (WPARAM)nIndex, 0L);
+		return static_cast<DWORD>(SendMessage(CB_GETITEMDATA, (WPARAM)nIndex, 0L));
 	}
 
 	inline int  CComboBox::GetItemHeight(int nIndex) const
 	// Determines the height of list items or the selection field in the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETITEMHEIGHT, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(CB_GETITEMHEIGHT, (WPARAM)nIndex, 0L));
 	}
 
 	inline int  CComboBox::GetLBText(int nIndex, LPTSTR lpszText) const
 	//  Retrieves a string from the list of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETLBTEXT, (WPARAM)nIndex, (LPARAM)lpszText);
+		return static_cast<int>(SendMessage(CB_GETLBTEXT, (WPARAM)nIndex, (LPARAM)lpszText));
 	}
 
 	inline int  CComboBox::GetLBTextLen(int nIndex) const
 	// Retrieves the length, in characters, of a string in the list of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETLBTEXTLEN, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(CB_GETLBTEXTLEN, (WPARAM)nIndex, 0L));
 	}
 
 	inline LCID CComboBox::GetLocale() const
 	// Retrieves the current locale of the combo box.
 	{
 		assert(IsWindow());
-		return (LCID)SendMessage(CB_GETLOCALE, 0L, 0L);
+		return static_cast<LCID>(SendMessage(CB_GETLOCALE, 0L, 0L));
 	}
 
 	inline int  CComboBox::GetTopIndex() const
 	// Retrieves the zero-based index of the first visible item in the list box portion of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_GETTOPINDEX, 0L, 0L);
+		return static_cast<int>(SendMessage(CB_GETTOPINDEX, 0L, 0L));
 	}
 
 	inline int  CComboBox::InitStorage(int nItems, int nBytes) const
@@ -727,7 +727,7 @@ namespace Win32xx
 	// large number of items to the list box portion of a combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_INITSTORAGE, (WPARAM)nItems, (LPARAM)nBytes);
+		return static_cast<int>(SendMessage(CB_INITSTORAGE, (WPARAM)nItems, (LPARAM)nBytes));
 	}
 
 	inline int  CComboBox::InsertString(int nIndex, LPCTSTR lpszString) const
@@ -735,7 +735,7 @@ namespace Win32xx
 	// a list with the CBS_SORT style is not sorted.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_INSERTSTRING, (WPARAM)nIndex, (LPARAM)lpszString);
+		return static_cast<int>(SendMessage(CB_INSERTSTRING, (WPARAM)nIndex, (LPARAM)lpszString));
 	}
 
 	inline void CComboBox::Paste() const
@@ -764,14 +764,14 @@ namespace Win32xx
 	// specified string. If a matching item is found, it is selected and copied to the edit control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszString);
+		return static_cast<int>(SendMessage(CB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszString));
 	}
 
 	inline int  CComboBox::SetCurSel(int nIndex) const
 	// Selects a string in the list of the combo box. If necessary, the list scrolls the string into view.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SETCURSEL, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(CB_SETCURSEL, (WPARAM)nIndex, 0L));
 	}
 
 	inline int  CComboBox::SetDroppedWidth(int nWidth) const
@@ -779,14 +779,14 @@ namespace Win32xx
 	// the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SETDROPPEDWIDTH, (WPARAM)nWidth, 0L);
+		return static_cast<int>(SendMessage(CB_SETDROPPEDWIDTH, (WPARAM)nWidth, 0L));
 	}
 
 	inline BOOL CComboBox::SetEditSel(int nStartChar, int nEndChar) const
 	// Selects characters in the edit control of the combo box.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(CB_SETEDITSEL, 0L, (LPARAM)MAKELONG(nStartChar,nEndChar));
+		return static_cast<BOOL>(SendMessage(CB_SETEDITSEL, 0L, (LPARAM)MAKELONG(nStartChar,nEndChar)));
 	}
 
 	inline int  CComboBox::SetExtendedUI(BOOL bExtended) const
@@ -794,7 +794,7 @@ namespace Win32xx
 	// has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SETEXTENDEDUI, (WPARAM)bExtended, 0L);
+		return static_cast<int>(SendMessage(CB_SETEXTENDEDUI, (WPARAM)bExtended, 0L));
 	}
 
 	inline void CComboBox::SetHorizontalExtent(UINT nExtent ) const
@@ -808,28 +808,28 @@ namespace Win32xx
 	// Sets the value associated with the specified item in the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)dwItemData);
+		return static_cast<int>(SendMessage(CB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)dwItemData));
 	}
 
 	inline int  CComboBox::SetItemHeight(int nIndex, UINT cyItemHeight) const
 	// Sets the height of list items or the selection field in the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SETITEMHEIGHT, (WPARAM)nIndex, (LPARAM)cyItemHeight);
+		return static_cast<int>(SendMessage(CB_SETITEMHEIGHT, (WPARAM)nIndex, (LPARAM)cyItemHeight));
 	}
 
 	inline LCID CComboBox::SetLocale( LCID NewLocale ) const
 	// Sets the current locale of the combo box.
 	{
 		assert(IsWindow());
-		return (LCID)SendMessage(CB_SETLOCALE, (WPARAM)NewLocale, 0L);
+		return static_cast<LCID>(SendMessage(CB_SETLOCALE, (WPARAM)NewLocale, 0L));
 	}
 
 	inline int  CComboBox::SetTopIndex(int nIndex) const
 	// Ensure that a particular item is visible in the list box of the combo box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CB_SETTOPINDEX, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(CB_SETTOPINDEX, (WPARAM)nIndex, 0L));
 	}
 
 	inline void CComboBox::ShowDropDown(BOOL bShow) const
@@ -847,7 +847,7 @@ namespace Win32xx
 	// Removes an item from the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CBEM_DELETEITEM, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(CBEM_DELETEITEM, (WPARAM)nIndex, 0L));
 	}
 
 	inline HWND CComboBoxEx::GetComboBoxCtrl() const
@@ -869,7 +869,7 @@ namespace Win32xx
 	// Retrieves the extended styles that are in use for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(CBEM_GETEXTENDEDSTYLE, 0L, 0L);
+		return static_cast<DWORD>(SendMessage(CBEM_GETEXTENDEDSTYLE, 0L, 0L));
 	}
 #endif
 
@@ -877,7 +877,7 @@ namespace Win32xx
 	// Retrieves the handle to an image list assigned to the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_GETIMAGELIST, 0L, 0L);
+		HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_GETIMAGELIST, 0L, 0L));
 		return CImageList(himl);
 	}
 
@@ -885,21 +885,21 @@ namespace Win32xx
 	// Retrieves item information for the given ComboBoxEx item.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(CBEM_GETITEM, 0L, (LPARAM)pCBItem);
+		return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0L, (LPARAM)pCBItem));
 	}
 
 	inline BOOL CComboBoxEx::HasEditChanged () const
 	// Determines whether or not the user has changed the text of the ComboBoxEx edit control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(CBEM_HASEDITCHANGED, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(CBEM_HASEDITCHANGED, 0L, 0L));
 	}
 
 	inline int CComboBoxEx::InsertItem(COMBOBOXEXITEM* lpcCBItem) const
 	// Inserts a new item in the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)lpcCBItem);
+		return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)lpcCBItem));
 	}
 
 #if (_WIN32_IE >= 0x0400)
@@ -907,7 +907,7 @@ namespace Win32xx
 	// Sets extended styles within the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles);
+		return static_cast<DWORD>(SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles));
 	}
 #endif
 
@@ -915,7 +915,7 @@ namespace Win32xx
 	// Sets an image list for the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = (HIMAGELIST)SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew);
+		HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew));
 		return CImageList(himl);
 	}
 
@@ -923,7 +923,7 @@ namespace Win32xx
 	// Sets the attributes for an item in the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(CBEM_SETITEM, 0L, (LPARAM)lpcCBItem);
+		return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0L, (LPARAM)lpcCBItem));
 	}
 
 	////////////////////////////////////////
@@ -932,13 +932,13 @@ namespace Win32xx
 	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
 	{
 		assert(IsWindow());
-		return (COLORREF)DateTime_GetMonthCalColor(*this, iColor);
+		return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, iColor));
 	}
 
 	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr)
 	{
 		assert(IsWindow());
-		return (COLORREF)DateTime_SetMonthCalColor(*this, iColor, clr);
+		return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, iColor, clr));
 	}
 
 	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat)
@@ -957,7 +957,7 @@ namespace Win32xx
 	inline CFont CDateTime::GetMonthCalFont()
 	{
 		assert(IsWindow());
-		HFONT hFont = (HFONT)DateTime_GetMonthCalFont(*this);
+		HFONT hFont = reinterpret_cast<HFONT>(DateTime_GetMonthCalFont(*this));
 		return CFont(hFont);
 	}
 
@@ -999,7 +999,7 @@ namespace Win32xx
 	inline DWORD CHotKey::GetHotKey() const
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(HKM_GETHOTKEY, 0L, 0L);
+		return static_cast<DWORD>(SendMessage(HKM_GETHOTKEY, 0L, 0L));
 	}
 
 	inline CString CHotKey::GetKeyName(UINT vk, BOOL fExtended) const
@@ -1204,13 +1204,13 @@ namespace Win32xx
 	inline int CIPAddress::GetAddress(DWORD* dwAddress)
 	{
 		assert(IsWindow());
-		return (int)SendMessage(IPM_GETADDRESS, 0L, (LPARAM)&dwAddress);
+		return static_cast<int>(SendMessage(IPM_GETADDRESS, 0L, (LPARAM)&dwAddress));
 	}
 
 	inline BOOL CIPAddress::IsBlank() const
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(IPM_ISBLANK, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(IPM_ISBLANK, 0L, 0L));
 	}
 
 	inline void CIPAddress::SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3)
@@ -1245,7 +1245,7 @@ namespace Win32xx
 	inline COLORREF CMonthCalendar::GetColor(int nRegion) const
 	{
 		assert(IsWindow());
-		return (COLORREF)MonthCal_GetColor(*this, nRegion);
+		return static_cast<COLORREF>(MonthCal_GetColor(*this, nRegion));
 	}
 
 	inline BOOL CMonthCalendar::GetCurSel(LPSYSTEMTIME pDateTime) const
@@ -1410,14 +1410,14 @@ namespace Win32xx
 	// Retrieves the current position of the progress bar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_GETPOS, 0L, 0L);
+		return static_cast<int>(SendMessage(PBM_GETPOS, 0L, 0L));
 	}
 
 	inline int CProgressBar::GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) (PPBRANGE) ppBRange);
+		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) (PPBRANGE) ppBRange));
 	}
 
 	inline int CProgressBar::OffsetPos(int nIncrement) const
@@ -1425,28 +1425,28 @@ namespace Win32xx
 	// the bar to reflect the new position.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_DELTAPOS, (WPARAM)nIncrement, 0L);
+		return static_cast<int>(SendMessage(PBM_DELTAPOS, (WPARAM)nIncrement, 0L));
 	}
 
 	inline int CProgressBar::SetPos(int nNewPos) const
 	// Sets the current position for the progress bar and redraws the bar to reflect the new position.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_SETPOS, (WPARAM)nNewPos, 0L);
+		return static_cast<int>(SendMessage(PBM_SETPOS, (WPARAM)nNewPos, 0L));
 	}
 
 	inline int CProgressBar::SetRange(short nMinRange, short nMaxRange) const
 	// Sets the minimum and maximum values for the progress bar and redraws the bar to reflect the new range.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_SETRANGE, 0L, (LPARAM) MAKELPARAM (nMinRange, nMaxRange));
+		return static_cast<int>(SendMessage(PBM_SETRANGE, 0L, (LPARAM) MAKELPARAM (nMinRange, nMaxRange)));
 	}
 
 	inline int CProgressBar::SetStep(int nStepInc) const
 	// Specifies the step increment for the progress bar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_SETSTEP, (WPARAM)nStepInc, 0L);
+		return static_cast<int>(SendMessage(PBM_SETSTEP, (WPARAM)nStepInc, 0L));
 	}
 
 	inline int CProgressBar::StepIt() const
@@ -1454,7 +1454,7 @@ namespace Win32xx
 	// redraws the bar to reflect the new position.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(PBM_STEPIT, 0L, 0L);
+		return static_cast<int>(SendMessage(PBM_STEPIT, 0L, 0L));
 	}
 
 
@@ -1541,7 +1541,7 @@ namespace Win32xx
 	// Retrieves the handle to the trackbar control buddy window at a given location.
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(TBM_GETBUDDY, (WPARAM)fLocation, 0L);
+		return reinterpret_cast<HWND>(SendMessage(TBM_GETBUDDY, (WPARAM)fLocation, 0L));
 	}
 
 	inline CRect CSlider::GetChannelRect() const
@@ -1558,14 +1558,14 @@ namespace Win32xx
 	// to keyboard input from the arrow keys.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETLINESIZE, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETLINESIZE, 0L, 0L));
 	}
 
 	inline int  CSlider::GetNumTics() const
 	// Retrieves the number of tick marks in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETNUMTICS, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETNUMTICS, 0L, 0L));
 	}
 
 	inline int  CSlider::GetPageSize() const
@@ -1573,49 +1573,49 @@ namespace Win32xx
 	// keyboard input, or mouse input, such as clicks in the trackbar's channel.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETPAGESIZE, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETPAGESIZE, 0L, 0L));
 	}
 
 	inline int  CSlider::GetPos() const
 	// Retrieves the current logical position of the slider in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETPOS, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETPOS, 0L, 0L));
 	}
 
 	inline int  CSlider::GetRangeMax() const
 	// Retrieves the maximum position for the slider in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETRANGEMAX, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETRANGEMAX, 0L, 0L));
 	}
 
 	inline int  CSlider::GetRangeMin() const
 	// Retrieves the minimum position for the slider in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETRANGEMIN, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETRANGEMIN, 0L, 0L));
 	}
 
 	inline int  CSlider::GetSelEnd() const
 	// Retrieves the ending position of the current selection range in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETSELEND, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETSELEND, 0L, 0L));
 	}
 
 	inline int  CSlider::GetSelStart() const
 	// Retrieves the starting position of the current selection range in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETSELSTART, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETSELSTART, 0L, 0L));
 	}
 
 	inline int  CSlider::GetThumbLength() const
 	// Retrieves the length of the slider in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETTHUMBLENGTH, 0L, 0L);
+		return static_cast<int>(SendMessage(TBM_GETTHUMBLENGTH, 0L, 0L));
 	}
 
 	inline CRect CSlider::GetThumbRect() const
@@ -1630,28 +1630,28 @@ namespace Win32xx
 	// Retrieves the logical position of a tick mark in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETTIC, (WPARAM)nTic, 0L);
+		return static_cast<int>(SendMessage(TBM_GETTIC, (WPARAM)nTic, 0L));
 	}
 
 	inline int  CSlider::GetTicPos(int nTic) const
 	// Retrieves the current physical position of a tick mark in the trackbar.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_GETTICPOS, (WPARAM)nTic, 0L);
+		return static_cast<int>(SendMessage(TBM_GETTICPOS, (WPARAM)nTic, 0L));
 	}
 
 	inline HWND CSlider::GetToolTips() const
 	// Retrieves the handle to the ToolTip control assigned to the trackbar, if any.
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(TBM_GETTOOLTIPS, 0L, 0L);
+		return reinterpret_cast<HWND>(SendMessage(TBM_GETTOOLTIPS, 0L, 0L));
 	}
 
 	inline HWND CSlider::SetBuddy(HWND hBuddy, BOOL fLocation /*= TRUE*/ ) const
 	// Assigns a window as the buddy window for the trackbar control.
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(TBM_SETBUDDY, (WPARAM)fLocation, (LPARAM)hBuddy);
+		return reinterpret_cast<HWND>(SendMessage(TBM_SETBUDDY, (WPARAM)fLocation, (LPARAM)hBuddy));
 	}
 
 	inline int  CSlider::SetLineSize(int nSize) const
@@ -1659,7 +1659,7 @@ namespace Win32xx
 	// keyboard input from the arrow keys.
 	{
 		assert(IsWindow());
-		return(int)SendMessage(TBM_SETLINESIZE, 0L, (LPARAM)nSize);
+		return static_cast<int>(SendMessage(TBM_SETLINESIZE, 0L, (LPARAM)nSize));
 	}
 
 	inline int  CSlider::SetPageSize(int nSize) const
@@ -1667,7 +1667,7 @@ namespace Win32xx
 	// keyboard input, or mouse input such as clicks in the trackbar's channel.
 	{
 		assert(IsWindow());
-		return(int)SendMessage(TBM_SETPAGESIZE, 0L, (LPARAM)nSize);
+		return static_cast<int>(SendMessage(TBM_SETPAGESIZE, 0L, (LPARAM)nSize));
 	}
 
 	inline void CSlider::SetPos(int nPos, BOOL bRedraw) const
@@ -1702,7 +1702,7 @@ namespace Win32xx
 	// Sets a tick mark in the trackbar at the specified logical position.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(TBM_SETTIC, 0L, (LPARAM)nTic);
+		return static_cast<BOOL>(SendMessage(TBM_SETTIC, 0L, (LPARAM)nTic));
 	}
 
 	inline void CSlider::SetTicFreq(int nFreq)  const
@@ -1716,7 +1716,7 @@ namespace Win32xx
 	// Positions a ToolTip control used by the trackbar control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TBM_SETTIPSIDE, (WPARAM)nLocation, 0L);
+		return static_cast<int>(SendMessage(TBM_SETTIPSIDE, (WPARAM)nLocation, 0L));
 	}
 
 	inline void CSlider::SetToolTips(HWND hToolTip) const
@@ -1733,35 +1733,35 @@ namespace Win32xx
 	// Retrieves acceleration information for the up-down control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(UDM_GETACCEL, (WPARAM)cAccels, (LPARAM)paAccels);
+		return static_cast<int>(SendMessage(UDM_GETACCEL, (WPARAM)cAccels, (LPARAM)paAccels));
 	}
 
 	inline int CSpinButton::GetBase() const
 	// Retrieves the current radix base (that is, either base 10 or 16) for the up-down control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(UDM_GETBASE, 0L, 0L);
+		return static_cast<int>(SendMessage(UDM_GETBASE, 0L, 0L));
 	}
 
 	inline HWND CSpinButton::GetBuddy() const
 	// Retrieves the handle to the current buddy window.
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(UDM_GETBUDDY, 0L, 0L);
+		return reinterpret_cast<HWND>(SendMessage(UDM_GETBUDDY, 0L, 0L));
 	}
 
 	inline int CSpinButton::GetPos() const
 	// Retrieves the current position of the up-down control with 16-bit precision.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(UDM_GETPOS, 0L, 0L);
+		return static_cast<int>(SendMessage(UDM_GETPOS, 0L, 0L));
 	}
 
 	inline DWORD CSpinButton::GetRange() const
 	// Retrieves the minimum and maximum positions (range) for the up-down control.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(UDM_GETRANGE, 0L, 0L);
+		return static_cast<DWORD>(SendMessage(UDM_GETRANGE, 0L, 0L));
 	}
 
 	inline void CSpinButton::PreCreate(CREATESTRUCT &cs)
@@ -1778,28 +1778,28 @@ namespace Win32xx
 	// Sets the acceleration for the up-down control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(UDM_SETACCEL, (WPARAM)cAccels, (LPARAM)paAccels);
+		return static_cast<BOOL>(SendMessage(UDM_SETACCEL, (WPARAM)cAccels, (LPARAM)paAccels));
 	}
 
 	inline int CSpinButton::SetBase(int nBase) const
 	// Sets the radix base for the up-down control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(UDM_SETBASE, (WPARAM)nBase, 0L);
+		return static_cast<int>(SendMessage(UDM_SETBASE, (WPARAM)nBase, 0L));
 	}
 
 	inline HWND CSpinButton::SetBuddy(HWND hBuddy) const
 	// Sets the buddy window for the up-down control.
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(UDM_SETBUDDY, (WPARAM)hBuddy, 0L);
+		return reinterpret_cast<HWND>(SendMessage(UDM_SETBUDDY, (WPARAM)hBuddy, 0L));
 	}
 
 	inline int CSpinButton::SetPos(int nPos) const
 	// Sets the current position for the up-down control with 16-bit precision.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(UDM_SETPOS, 0L, (LPARAM)MAKELONG ((short) nPos, 0));
+		return static_cast<int>(SendMessage(UDM_SETPOS, 0L, (LPARAM)MAKELONG ((short) nPos, 0)));
 	}
 
 	inline void CSpinButton::SetRange(int nLower, int nUpper) const
@@ -1836,7 +1836,7 @@ namespace Win32xx
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
 		if (lpRectTool)
 			ti.rect = *lpRectTool;
-		return (BOOL)SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti);
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
 	inline BOOL CToolTip::AddTool(HWND hWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
@@ -1848,7 +1848,7 @@ namespace Win32xx
 		ti.lpszText = (LPTSTR)lpszText;
 		if (lpRectTool)
 			ti.rect = *lpRectTool;
-		return (BOOL)SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti);
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
 	inline void CToolTip::DelTool(HWND hWnd, UINT_PTR nIDTool /*= 0*/)
@@ -1864,7 +1864,7 @@ namespace Win32xx
 	// Retrieves the initial, pop-up, and reshow durations currently set for a ToolTip control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TTM_GETDELAYTIME, dwDuration, 0L);
+		return static_cast<int>(SendMessage(TTM_GETDELAYTIME, dwDuration, 0L));
 	}
 
 	inline void CToolTip::GetMargin(LPRECT lprc) const
@@ -1878,7 +1878,7 @@ namespace Win32xx
 	// Retrieves the maximum width for a ToolTip window.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TTM_GETMAXTIPWIDTH, 0L, 0L);
+		return static_cast<int>(SendMessage(TTM_GETMAXTIPWIDTH, 0L, 0L));
 	}
 
 	inline void CToolTip::GetText(CString& str, HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
@@ -1897,21 +1897,21 @@ namespace Win32xx
 	// Retrieves the background color in a ToolTip window.
 	{
 		assert(IsWindow());
-		return (COLORREF)SendMessage(TTM_GETTIPBKCOLOR, 0L, 0L);
+		return static_cast<COLORREF>(SendMessage(TTM_GETTIPBKCOLOR, 0L, 0L));
 	}
 
 	inline COLORREF CToolTip::GetTipTextColor() const
 	// Retrieves the text color in a ToolTip window.
 	{
 		assert(IsWindow());
-		return (COLORREF)SendMessage(TTM_GETTIPTEXTCOLOR, 0L, 0L);
+		return static_cast<COLORREF>(SendMessage(TTM_GETTIPTEXTCOLOR, 0L, 0L));
 	}
 
 	inline int CToolTip::GetToolCount() const
 	// Retrieves a count of the tools maintained by a ToolTip control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TTM_GETTOOLCOUNT, 0L, 0L);
+		return static_cast<int>(SendMessage(TTM_GETTOOLCOUNT, 0L, 0L));
 	}
 
 	inline BOOL CToolTip::GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
@@ -1919,7 +1919,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		LoadToolInfo(ToolInfo, hWnd, nIDTool);
-		return (BOOL)SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo);
+		return static_cast<BOOL>(SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo));
 	}
 
 	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
@@ -1933,7 +1933,7 @@ namespace Win32xx
 		hti.hwnd = hWnd;
 		hti.pt = pt;
 		hti.ti = *lpToolInfo;
-		return (BOOL)SendMessage(TTM_HITTEST, 0L, (LPARAM)&hti);
+		return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0L, (LPARAM)&hti));
 	}
 
 	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, HWND hWnd, UINT_PTR nIDTool) const
@@ -1993,7 +1993,7 @@ namespace Win32xx
 	// Sets the maximum width for a ToolTip window.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(TTM_SETMAXTIPWIDTH, 0L, (LPARAM)iWidth);
+		return static_cast<int>(SendMessage(TTM_SETMAXTIPWIDTH, 0L, (LPARAM)iWidth));
 	}
 
 	inline void CToolTip::SetTipBkColor(COLORREF clr)
@@ -2066,7 +2066,7 @@ namespace Win32xx
 	//  ToolTip window rectangle needed to display a specified text display rectangle.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)lprc);
+		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)lprc));
 	}
 
 	inline CSize CToolTip::GetBubbleSize(LPTOOLINFO lpToolInfo) const
@@ -2082,7 +2082,7 @@ namespace Win32xx
 	// Adds a standard icon and title string to a ToolTip.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(TTM_SETTITLE, (WPARAM)uIcon, (LPARAM)lpstrTitle);
+		return static_cast<BOOL>(SendMessage(TTM_SETTITLE, (WPARAM)uIcon, (LPARAM)lpstrTitle));
 	}
 #endif
 

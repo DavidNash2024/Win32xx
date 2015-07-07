@@ -806,7 +806,7 @@ namespace Win32xx
 		CPropertyPage* pPage = NULL;
 		if (GetHwnd() != NULL)
 		{
-			HWND hPage = (HWND)SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L);
+			HWND hPage = reinterpret_cast<HWND>(SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L));
 			pPage = static_cast<CPropertyPage*>(GetCWndPtr(hPage));
 		}
 
@@ -836,7 +836,7 @@ namespace Win32xx
 	// Returns the handle to the Property Sheet's tab control
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(PSM_GETTABCONTROL, 0L, 0L);
+		return reinterpret_cast<HWND>(SendMessage(PSM_GETTABCONTROL, 0L, 0L));
 	}
 
 	inline BOOL CPropertySheet::IsModeless() const
@@ -884,7 +884,7 @@ namespace Win32xx
 	inline BOOL CPropertySheet::SetActivePage(int nPage)
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(*this, PSM_SETCURSEL, nPage, 0L);
+		return static_cast<BOOL>(SendMessage(*this, PSM_SETCURSEL, nPage, 0L));
 	}
 
 	inline BOOL CPropertySheet::SetActivePage(CPropertyPage* pPage)

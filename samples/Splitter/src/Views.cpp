@@ -50,7 +50,7 @@ void CViewList::OnInitialUpdate()
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();
@@ -95,7 +95,7 @@ BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
 	lvi1.pszText = (LPTSTR)szText;
-	return (BOOL)SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1);
+	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1));
 }
 
 void CViewList::InsertItems()
@@ -141,7 +141,7 @@ void CViewTree::OnInitialUpdate()
 	SetImageList(m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
 	dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
 	SetWindowLongPtr(GWL_STYLE, dwStyle);
 

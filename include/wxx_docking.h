@@ -3837,7 +3837,7 @@ namespace Win32xx
 		// Allows nested calls to SetRedraw.
 		bRedraw? ++m_nRedrawCount : --m_nRedrawCount ;
 
-		return (BOOL)SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L);
+		return static_cast<BOOL>(SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L));
 	}
 
 	inline void CDocker::SetUndockPosition(CPoint pt)
@@ -4681,7 +4681,7 @@ namespace Win32xx
 	{
 		BOOL bResult = FALSE;
 		if (GetContainer()->GetActiveContainer() && GetContainer()->GetActiveContainer()->IsWindow())
-			bResult = (BOOL)GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam);
+			bResult = static_cast<BOOL>(GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam));
 
 		return bResult;
 	}

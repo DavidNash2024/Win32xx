@@ -104,20 +104,20 @@ namespace Win32xx
 		assert(IsWindow());
 		assert(iParts <= 256);	
 		
-		return (BOOL)SendMessage(SB_SETPARTS, (WPARAM)iParts, (LPARAM)iPaneWidths);		
+		return static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)iParts, (LPARAM)iPaneWidths));		
 	}
 
 	inline int CStatusBar::GetParts()
 	{
 		assert(IsWindow());
-		return (int)SendMessage(SB_GETPARTS, 0L, 0L);
+		return static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
 	}
 
 #if (_WIN32_IE >= 0x0400)
 	inline HICON CStatusBar::GetPartIcon(int iPart)
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage(SB_GETICON, (WPARAM)iPart, 0L);
+		return reinterpret_cast<HICON>(SendMessage(SB_GETICON, (WPARAM)iPart, 0L));
 	}
 #endif
 
@@ -147,7 +147,7 @@ namespace Win32xx
 	inline BOOL CStatusBar::IsSimple()
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(SB_ISSIMPLE, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(SB_ISSIMPLE, 0L, 0L));
 	}
 
 	inline BOOL CStatusBar::OnEraseBkgnd(CDC& dc)
@@ -179,8 +179,8 @@ namespace Win32xx
 		assert(IsWindow());
 		
 		BOOL bResult = FALSE;
-		if ((int)SendMessage(SB_GETPARTS, 0L, 0L) >= iPart)
-			bResult = (BOOL)SendMessage(SB_SETTEXT, (WPARAM)(iPart | Style), (LPARAM)szText);
+		if (static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L) >= iPart))
+			bResult = static_cast<BOOL>(SendMessage(SB_SETTEXT, (WPARAM)(iPart | Style), (LPARAM)szText));
 
 		return bResult;
 	}
@@ -189,7 +189,7 @@ namespace Win32xx
 	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon)
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon);
+		return static_cast<BOOL>(SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon));
 	}
 #endif
 
@@ -203,7 +203,7 @@ namespace Win32xx
 		assert(iPart >= 0 && iPart <= 255);
 
 		// Fill the PartWidths vector with the current width of the StatusBar parts
-		int PartsCount = (int)SendMessage(SB_GETPARTS, 0L, 0L);
+		int PartsCount = static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
 		std::vector<int> PartWidths(PartsCount, 0);
 		int* pPartWidthArray = &PartWidths[0];
 		SendMessage(SB_GETPARTS, (WPARAM)PartsCount, (LPARAM)pPartWidthArray);
@@ -225,7 +225,7 @@ namespace Win32xx
 		}
 
 		// Set the StatusBar parts with our new parts count and part widths
-		BOOL bResult = (BOOL)SendMessage(SB_SETPARTS, (WPARAM)NewPartsCount, (LPARAM)pNewPartWidthArray);
+		BOOL bResult = static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)NewPartsCount, (LPARAM)pNewPartWidthArray));
 
 		return bResult;
 	}

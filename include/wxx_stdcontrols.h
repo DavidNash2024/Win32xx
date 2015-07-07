@@ -250,49 +250,49 @@ namespace Win32xx
 	// returns the handle to the bitmap associated with the button
 	{
 		assert(IsWindow());
-		return (HBITMAP)SendMessage(BM_GETIMAGE, IMAGE_BITMAP, 0L);
+		return reinterpret_cast<HBITMAP>(SendMessage(BM_GETIMAGE, IMAGE_BITMAP, 0L));
 	}
 
 	inline UINT CButton::GetButtonStyle() const
 	// returns the style of the button
 	{
 		assert(IsWindow());
-		return (UINT)GetWindowLongPtr(GWL_STYLE) & 0xFFFF;
+		return static_cast<UINT>(GetWindowLongPtr(GWL_STYLE) & 0xFFFF);
 	}
 
 	inline int CButton::GetCheck() const
 	// returns the check state of the button
 	{
 		assert(IsWindow());
-		return (int)SendMessage(BM_GETCHECK, 0L, 0L);
+		return static_cast<int>(SendMessage(BM_GETCHECK, 0L, 0L));
 	}
 
 	inline HCURSOR CButton::GetCursor() const
 	// returns the handle to the cursor associated with the button
 	{
 		assert(IsWindow());
-		return (HCURSOR)SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0L);
+		return reinterpret_cast<HCURSOR>(SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0L));
 	}
 
 	inline HICON CButton::GetIcon() const
 	// returns the handle to the icon associated with the button
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage(BM_GETIMAGE, IMAGE_ICON, 0L);
+		return reinterpret_cast<HICON>(SendMessage(BM_GETIMAGE, IMAGE_ICON, 0L));
 	}
 
 	inline UINT CButton::GetState() const
 	// returns the state of the button
 	{
 		assert(IsWindow());
-		return (UINT)SendMessage(BM_GETSTATE, 0L, 0L);
+		return static_cast<UINT>(SendMessage(BM_GETSTATE, 0L, 0L));
 	}
 
 	inline HBITMAP CButton::SetBitmap(HBITMAP hBitmap) const
 	// sets the bitmap associated with the button
 	{
 		assert(IsWindow());
-		return (HBITMAP)SendMessage(BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+		return reinterpret_cast<HBITMAP>(SendMessage(BM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap));
 	}
 
 	inline void CButton::SetButtonStyle(DWORD dwStyle, BOOL bRedraw) const
@@ -313,14 +313,14 @@ namespace Win32xx
 	// sets the cursor associated with the button
 	{
 		assert(IsWindow());
-		return (HCURSOR)SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor);
+		return reinterpret_cast<HCURSOR>(SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor));
 	}
 
 	inline HICON CButton::SetIcon(HICON hIcon) const
 	// sets the icon associated with the button
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage( BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+		return reinterpret_cast<HICON>(SendMessage( BM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon));
 	}
 
 	inline void CButton::SetState(BOOL bHighlight) const
@@ -344,14 +344,14 @@ namespace Win32xx
 	// Returns TRUE if the edit control operation can be undone.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_CANUNDO, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(EM_CANUNDO, 0L, 0L));
 	}
 
 	inline int CEdit::CharFromPos(CPoint pt) const
 	// Returns the character index and line index of the character nearest the specified point.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_CHARFROMPOS, 0L, MAKELPARAM(pt.x, pt.y));
+		return static_cast<int>(SendMessage(EM_CHARFROMPOS, 0L, MAKELPARAM(pt.x, pt.y)));
 	}
 
 	inline int CEdit::GetFirstVisibleLine() const
@@ -359,7 +359,7 @@ namespace Win32xx
 	//  or the zero-based index of the uppermost visible line in a multiline edit control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_GETFIRSTVISIBLELINE, 0L, 0L);
+		return static_cast<int>(SendMessage(EM_GETFIRSTVISIBLELINE, 0L, 0L));
 	}
 
 	inline HLOCAL CEdit::GetHandle() const
@@ -367,57 +367,57 @@ namespace Win32xx
 	//  It is not processed by single-line edit controls.
 	{
 		assert(IsWindow());
-		return (HLOCAL)SendMessage(EM_GETHANDLE, 0L, 0L);
+		return reinterpret_cast<HLOCAL>(SendMessage(EM_GETHANDLE, 0L, 0L));
 	}
 
 	inline UINT CEdit::GetLimitText() const
 	// Returns the current text limit, in characters.
 	{
 		assert(IsWindow());
-		return (UINT)SendMessage(EM_GETLIMITTEXT, 0L, 0L);
+		return static_cast<UINT>(SendMessage(EM_GETLIMITTEXT, 0L, 0L));
 	}
 
 	inline int CEdit::GetLine(int nIndex, LPTSTR lpszBuffer) const
 	// Copies characters to a buffer and returns the number of characters copied.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_GETLINE, (WPARAM)nIndex, (LPARAM)lpszBuffer);
+		return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)nIndex, (LPARAM)lpszBuffer));
 	}
 
 	inline int CEdit::GetLine(int nIndex, LPTSTR lpszBuffer, int nMaxLength) const
 	// Copies characters to a buffer and returns the number of characters copied.
 	{
 		assert(IsWindow());
-		*(LPWORD)lpszBuffer = (WORD)nMaxLength;
-		return (int)SendMessage(EM_GETLINE, (WPARAM)nIndex, (LPARAM)lpszBuffer);
+		*(LPWORD)lpszBuffer = static_cast<WORD>(nMaxLength);
+		return static_cast<int>(SendMessage(EM_GETLINE, (WPARAM)nIndex, (LPARAM)lpszBuffer));
 	}
 
 	inline int CEdit::GetLineCount() const
 	// Returns the number of lines in the edit control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_GETLINECOUNT, 0L, 0L);
+		return static_cast<int>(SendMessage(EM_GETLINECOUNT, 0L, 0L));
 	}
 
 	inline DWORD CEdit::GetMargins() const
 	// Returns the widths of the left and right margins.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(EM_GETMARGINS, 0L, 0L);
+		return static_cast<DWORD>(SendMessage(EM_GETMARGINS, 0L, 0L));
 	}
 
 	inline BOOL CEdit::GetModify() const
 	// Returns a flag indicating whether the content of an edit control has been modified.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_GETMODIFY, 0L, 0L);
+		return static_cast<BOOL>(SendMessage(EM_GETMODIFY, 0L, 0L));
 	}
 
 	inline TCHAR CEdit::GetPasswordChar() const
 	// Returns the character that edit controls use in conjunction with the ES_PASSWORD style.
 	{
 		assert(IsWindow());
-		return (TCHAR)SendMessage(EM_GETPASSWORDCHAR, 0L, 0L);
+		return static_cast<TCHAR>(SendMessage(EM_GETPASSWORDCHAR, 0L, 0L));
 	}
 
 	inline void CEdit::GetRect(LPRECT lpRect) const
@@ -438,14 +438,14 @@ namespace Win32xx
 	// Returns the starting and ending character positions of the current selection in the edit control.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(EM_GETSEL, 0L, 0L);
+		return static_cast<DWORD>(SendMessage(EM_GETSEL, 0L, 0L));
 	}
 
 	inline CPoint CEdit::PosFromChar(UINT nChar) const
 	// Returns the client coordinates of the specified character.
 	{
 		assert(IsWindow());
-		return CPoint( (DWORD)SendMessage(EM_POSFROMCHAR, (WPARAM)nChar, 0L));
+		return CPoint( static_cast<DWORD>(SendMessage(EM_POSFROMCHAR, (WPARAM)nChar, 0L)) );
 	}
 
 	inline void CEdit::SetHandle(HLOCAL hBuffer) const
@@ -489,7 +489,7 @@ namespace Win32xx
 	//  in a multiline edit control. It is not processed by single-line edit controls.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_FMTLINES, bAddEOL, 0L);
+		return static_cast<BOOL>(SendMessage(EM_FMTLINES, bAddEOL, 0L));
 	}
 
 	inline void CEdit::LimitText(int nChars) const
@@ -505,7 +505,7 @@ namespace Win32xx
 	//  This message is the reverse of the EM_LINEINDEX message.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_LINEFROMCHAR, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(EM_LINEFROMCHAR, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CEdit::LineIndex(int nLine) const
@@ -513,7 +513,7 @@ namespace Win32xx
 	// This message is the reverse of the EM_LINEFROMCHAR message
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_LINEINDEX, (WPARAM)nLine, 0L);
+		return static_cast<int>(SendMessage(EM_LINEINDEX, (WPARAM)nLine, 0L));
 	}
 
 	inline int CEdit::LineLength(int nLine) const
@@ -521,7 +521,7 @@ namespace Win32xx
 	//	returns the length, in characters, of a specified line.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(EM_LINELENGTH, (WPARAM)nLine, 0L);
+		return static_cast<int>(SendMessage(EM_LINELENGTH, (WPARAM)nLine, 0L));
 	}
 
 	inline void CEdit::LineScroll(int nLines, int nChars) const
@@ -550,7 +550,7 @@ namespace Win32xx
 	// Sets or removes the read-only style (ES_READONLY) in an edit control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_SETREADONLY, bReadOnly, 0L);
+		return static_cast<BOOL>(SendMessage(EM_SETREADONLY, bReadOnly, 0L));
 	}
 
 	inline void CEdit::SetRect(LPCRECT lpRect) const
@@ -589,21 +589,21 @@ namespace Win32xx
 	// Sets tab-stop positions in the multiline edit control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_SETTABSTOPS, (WPARAM)nTabStops, (LPARAM)rgTabStops);
+		return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, (WPARAM)nTabStops, (LPARAM)rgTabStops));
 	}
 
 	inline BOOL CEdit::SetTabStops() const
 	// Sets tab-stop positions in the multiline edit control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage( EM_SETTABSTOPS, 0L, 0L);
+		return static_cast<BOOL>(SendMessage( EM_SETTABSTOPS, 0L, 0L));
 	}
 
 	inline BOOL CEdit::SetTabStops(const int& cxEachStop) const
 	// Sets tab-stop positions in the multiline edit control.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(EM_SETTABSTOPS, (WPARAM)1, (LPARAM)(LPINT)&cxEachStop);
+		return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, (WPARAM)1, (LPARAM)(LPINT)&cxEachStop));
 	}
 
 	inline void CEdit::Clear() const
@@ -655,42 +655,42 @@ namespace Win32xx
 	// Returns the number of items in the list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETCOUNT, 0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETCOUNT, 0L, 0L));
 	}
 
 	inline int CListBox::GetHorizontalExtent() const
 	// Returns the scrollable width, in pixels, of a list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETHORIZONTALEXTENT,	0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETHORIZONTALEXTENT,	0L, 0L));
 	}
 
 	inline DWORD CListBox::GetItemData(int nIndex) const
 	// Returns the value associated with the specified item.
 	{
 		assert(IsWindow());
-		return (DWORD)SendMessage(LB_GETITEMDATA, (WPARAM)nIndex, 0L);
+		return static_cast<DWORD>(SendMessage(LB_GETITEMDATA, (WPARAM)nIndex, 0L));
 	}
 
 	inline void* CListBox::GetItemDataPtr(int nIndex) const
 	// Returns the value associated with the specified item.
 	{
 		assert(IsWindow());
-		return (LPVOID)SendMessage(LB_GETITEMDATA, (WPARAM)nIndex, 0L);
+		return reinterpret_cast<LPVOID>(SendMessage(LB_GETITEMDATA, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CListBox::GetItemHeight(int nIndex) const
 	// Returns the height, in pixels, of an item in a list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETITEMHEIGHT, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(LB_GETITEMHEIGHT, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CListBox::GetItemRect(int nIndex, LPRECT lpRect) const
 	// Retrieves the client coordinates of the specified list box item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETITEMRECT, (WPARAM)nIndex, (LPARAM)lpRect);
+		return static_cast<int>(SendMessage(LB_GETITEMRECT, (WPARAM)nIndex, (LPARAM)lpRect));
 	}
 
 	inline LCID CListBox::GetLocale() const
@@ -698,42 +698,42 @@ namespace Win32xx
 	//  and the low-order word contains the language identifier.
 	{
 		assert(IsWindow());
-		return (LCID)SendMessage(LB_GETLOCALE, 0L, 0L);
+		return static_cast<LCID>(SendMessage(LB_GETLOCALE, 0L, 0L));
 	}
 
 	inline int CListBox::GetSel(int nIndex) const
 	// Returns the selection state of a list box item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETSEL, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(LB_GETSEL, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CListBox::GetText(int nIndex, LPTSTR lpszBuffer) const
 	// Retrieves the string associated with a specified item and the length of the string.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETTEXT, (WPARAM)nIndex, (LPARAM)lpszBuffer);
+		return static_cast<int>(SendMessage(LB_GETTEXT, (WPARAM)nIndex, (LPARAM)lpszBuffer));
 	}
 
 	inline int CListBox::GetTextLen(int nIndex) const
 	// Returns the length, in characters, of the string associated with a specified item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage( LB_GETTEXTLEN, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage( LB_GETTEXTLEN, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CListBox::GetTopIndex() const
 	// Returns the index of the first visible item in a list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETTOPINDEX, 0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETTOPINDEX, 0L, 0L));
 	}
 
 	inline UINT CListBox::ItemFromPoint(CPoint pt, BOOL& bOutside) const
 	// Retrieves the zero-based index of the item nearest the specified point in a list box.
 	{
 		assert(IsWindow());
-		DWORD dw = (DWORD)SendMessage(LB_ITEMFROMPOINT, 0L, MAKELPARAM(pt.x, pt.y));
+		DWORD dw = static_cast<DWORD>(SendMessage(LB_ITEMFROMPOINT, 0L, MAKELPARAM(pt.x, pt.y)));
 		bOutside = !!HIWORD(dw);
 		return LOWORD(dw);
 	}
@@ -756,7 +756,7 @@ namespace Win32xx
 	// Associates a value with a list box item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)dwItemData);
+		return static_cast<int>(SendMessage(LB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)dwItemData));
 	}
 
 	inline int CListBox::SetItemDataPtr(int nIndex, void* pData) const
@@ -770,21 +770,21 @@ namespace Win32xx
 	// Sets the height, in pixels, of an item or items in a list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SETITEMHEIGHT, (WPARAM)nIndex, MAKELONG(cyItemHeight, 0));
+		return static_cast<int>(SendMessage(LB_SETITEMHEIGHT, (WPARAM)nIndex, MAKELONG(cyItemHeight, 0)));
 	}
 
 	inline LCID CListBox::SetLocale(LCID nNewLocale) const
 	// Sets the locale of a list box and returns the previous locale identifier.
 	{
 		assert(IsWindow());
-		return (LCID)SendMessage(LB_SETLOCALE, (WPARAM)nNewLocale, 0L);
+		return static_cast<LCID>(SendMessage(LB_SETLOCALE, (WPARAM)nNewLocale, 0L));
 	}
 
 	inline BOOL CListBox::SetTabStops(int nTabStops, LPINT rgTabStops) const
 	// Sets the tab stops to those specified in a specified array.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(LB_SETTABSTOPS, (WPARAM)nTabStops, (LPARAM)rgTabStops);
+		return static_cast<BOOL>(SendMessage(LB_SETTABSTOPS, (WPARAM)nTabStops, (LPARAM)rgTabStops));
 	}
 
 	inline void CListBox::SetTabStops() const
@@ -798,49 +798,49 @@ namespace Win32xx
 	// Sets the tab stops to those specified in a specified array.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(LB_SETTABSTOPS, 1, (LPARAM)(LPINT)&cxEachStop);
+		return static_cast<BOOL>(SendMessage(LB_SETTABSTOPS, 1, (LPARAM)(LPINT)&cxEachStop));
 	}
 
 	inline int CListBox::SetTopIndex(int nIndex) const
 	// Scrolls the list box so the specified item is at the top of the visible range.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SETTOPINDEX, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(LB_SETTOPINDEX, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CListBox::GetCurSel() const
 	// Returns the index of the currently selected item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETCURSEL, 0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETCURSEL, 0L, 0L));
 	}
 
 	inline int CListBox::SetCurSel(int nSelect) const
 	// Selects a specified list box item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SETCURSEL, (WPARAM)nSelect, 0L);
+		return static_cast<int>(SendMessage(LB_SETCURSEL, (WPARAM)nSelect, 0L));
 	}
 
 	inline int CListBox::GetAnchorIndex() const
 	// Returns the index of the item that the mouse last selected.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETANCHORINDEX, 0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETANCHORINDEX, 0L, 0L));
 	}
 
 	inline int CListBox::GetCaretIndex() const
 	// Returns the index of the item that has the focus rectangle.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETCARETINDEX, 0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETCARETINDEX, 0L, 0L));
 	}
 
 	inline int CListBox::GetSelCount() const
 	// Returns the number of selected items in a multiple-selection list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETSELCOUNT, 0L, 0L);
+		return static_cast<int>(SendMessage(LB_GETSELCOUNT, 0L, 0L));
 	}
 
 	inline int CListBox::GetSelItems(int nMaxItems, LPINT rgIndex) const
@@ -848,7 +848,7 @@ namespace Win32xx
 	//  and returns the total number of selected items.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_GETSELITEMS, (WPARAM)nMaxItems, (LPARAM)rgIndex);
+		return static_cast<int>(SendMessage(LB_GETSELITEMS, (WPARAM)nMaxItems, (LPARAM)rgIndex));
 	}
 
 	inline int CListBox::SelItemRange(BOOL bSelect, int nFirstItem, int nLastItem) const
@@ -856,9 +856,9 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		if (bSelect)
-			return (int)SendMessage(LB_SELITEMRANGEEX, (WPARAM)nFirstItem, (LPARAM)nLastItem);
+			return static_cast<int>(SendMessage(LB_SELITEMRANGEEX, (WPARAM)nFirstItem, (LPARAM)nLastItem));
 		else
-			return (int)SendMessage(LB_SELITEMRANGEEX, (WPARAM)nLastItem, (LPARAM)nFirstItem);
+			return static_cast<int>(SendMessage(LB_SELITEMRANGEEX, (WPARAM)nLastItem, (LPARAM)nFirstItem));
 	}
 
 	inline void CListBox::SetAnchorIndex(int nIndex) const
@@ -872,56 +872,56 @@ namespace Win32xx
 	// Sets the focus rectangle to a specified list box item.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SETCARETINDEX, (WPARAM)nIndex, MAKELONG(bScroll, 0));
+		return static_cast<int>(SendMessage(LB_SETCARETINDEX, (WPARAM)nIndex, MAKELONG(bScroll, 0)));
 	}
 
 	inline int CListBox::SetSel(int nIndex, BOOL bSelect) const
 	// Selects an item in a multiple-selection list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SETSEL, bSelect, (LPARAM)nIndex);
+		return static_cast<int>(SendMessage(LB_SETSEL, bSelect, (LPARAM)nIndex));
 	}
 
 	inline int CListBox::AddString(LPCTSTR lpszItem) const
 	// Adds a string to a list box and returns its index.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_ADDSTRING, 0L, (LPARAM)lpszItem);
+		return static_cast<int>(SendMessage(LB_ADDSTRING, 0L, (LPARAM)lpszItem));
 	}
 
 	inline int CListBox::DeleteString(UINT nIndex) const
 	// Removes a string from a list box and returns the number of strings remaining in the list.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_DELETESTRING, (WPARAM)nIndex, 0L);
+		return static_cast<int>(SendMessage(LB_DELETESTRING, (WPARAM)nIndex, 0L));
 	}
 
 	inline int CListBox::Dir(UINT attr, LPCTSTR lpszWildCard) const
 	// Adds a list of filenames to a list box and returns the index of the last filename added.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_DIR, (WPARAM)attr, (LPARAM)lpszWildCard);
+		return static_cast<int>(SendMessage(LB_DIR, (WPARAM)attr, (LPARAM)lpszWildCard));
 	}
 
 	inline int CListBox::FindString(int nStartAfter, LPCTSTR lpszItem) const
 	// Returns the index of the first string in the list box that begins with a specified string.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_FINDSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem);
+		return static_cast<int>(SendMessage(LB_FINDSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem));
 	}
 
 	inline int CListBox::FindStringExact(int nIndexStart, LPCTSTR lpszFind) const
 	// Returns the index of the string in the list box that is equal to a specified string.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszFind);
+		return static_cast<int>(SendMessage(LB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszFind));
 	}
 
 	inline int CListBox::InsertString(int nIndex, LPCTSTR lpszItem) const
 	// Inserts a string at a specified index in a list box.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_INSERTSTRING, (WPARAM)nIndex, (LPARAM)lpszItem);
+		return static_cast<int>(SendMessage(LB_INSERTSTRING, (WPARAM)nIndex, (LPARAM)lpszItem));
 	}
 
 	inline void CListBox::ResetContent() const
@@ -935,7 +935,7 @@ namespace Win32xx
 	// Selects the first string it finds that matches a specified prefix.
 	{
 		assert(IsWindow());
-		return (int)SendMessage(LB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem);
+		return static_cast<int>(SendMessage(LB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem));
 	}
 
 	inline void CListBox::PreRegisterClass(WNDCLASS &wc)
@@ -952,28 +952,28 @@ namespace Win32xx
 	// Returns the handle to the bitmap for the static control set by CStatic::SetBitmap
 	{
 		assert(IsWindow());
-		return (HBITMAP)SendMessage(STM_GETIMAGE, IMAGE_BITMAP, 0L);
+		return reinterpret_cast<HBITMAP>(SendMessage(STM_GETIMAGE, IMAGE_BITMAP, 0L));
 	}
 
 	inline HCURSOR CStatic::GetCursor() const
 	// Returns the handle to the cursor for the static control set by CStatic::SetCursor
 	{
 		assert(IsWindow());
-		return (HCURSOR)SendMessage(STM_GETIMAGE, IMAGE_CURSOR, 0L);
+		return reinterpret_cast<HCURSOR>(SendMessage(STM_GETIMAGE, IMAGE_CURSOR, 0L));
 	}
 
 	inline HENHMETAFILE CStatic::GetEnhMetaFile() const
 	// Returns the handle to the enhanced meta-file for the static control set by CStatic::SetEnhMetaFile
 	{
 		assert(IsWindow());
-		return (HENHMETAFILE)SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0L);
+		return reinterpret_cast<HENHMETAFILE>(SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0L));
 	}
 
 	inline HICON CStatic::GetIcon() const
 	// Returns the handle to the icon for the static control set by CStatic::SetIcon
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage(STM_GETIMAGE, IMAGE_ICON, 0L);
+		return reinterpret_cast<HICON>(SendMessage(STM_GETIMAGE, IMAGE_ICON, 0L));
 	}
 
 	inline HBITMAP CStatic::SetBitmap(HBITMAP hBitmap) const
@@ -983,7 +983,7 @@ namespace Win32xx
 	// This function requires the SS_BITMAP style
 	{
 		assert(IsWindow());
-		return (HBITMAP)SendMessage(STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap);
+		return reinterpret_cast<HBITMAP>(SendMessage(STM_SETIMAGE, IMAGE_BITMAP, (LPARAM)hBitmap));
 	}
 
 	inline HCURSOR CStatic::SetCursor(HCURSOR hCursor) const
@@ -993,7 +993,7 @@ namespace Win32xx
 	// This function requires the SS_ICON style
 	{
 		assert(IsWindow());
-		return (HCURSOR)SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor);
+		return reinterpret_cast<HCURSOR>(SendMessage(STM_SETIMAGE, IMAGE_CURSOR, (LPARAM)hCursor));
 	}
 
 	inline HENHMETAFILE CStatic::SetEnhMetaFile(HENHMETAFILE hMetaFile) const
@@ -1003,7 +1003,7 @@ namespace Win32xx
 	// This function requires the SS_ENHMETAFILE style
 	{
 		assert(IsWindow());
-		return (HENHMETAFILE)SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, (LPARAM)hMetaFile);
+		return reinterpret_cast<HENHMETAFILE>(SendMessage(STM_SETIMAGE, IMAGE_ENHMETAFILE, (LPARAM)hMetaFile));
 	}
 
 	inline HICON CStatic::SetIcon(HICON hIcon) const
@@ -1013,7 +1013,7 @@ namespace Win32xx
 	// This function requires the SS_ICON style
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage(STM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon);
+		return reinterpret_cast<HICON>(SendMessage(STM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon));
 	}
 
 	inline void CStatic::PreRegisterClass(WNDCLASS &wc)

@@ -868,7 +868,7 @@ namespace Win32xx
 #ifdef _WIN32_WCE
 		m_hThread = (HANDLE)::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_dwThreadID);
 #else
-		m_hThread = (HANDLE)::_beginthreadex(pSecurityAttributes, stack_size, (unsigned int (__stdcall *)(void *))m_pfnThreadProc, m_pThreadParams, initflag, &m_nThreadID);
+		m_hThread = (HANDLE)::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc, m_pThreadParams, initflag, &m_nThreadID);
 #endif
 
 		if (m_hThread == 0)
@@ -1712,9 +1712,9 @@ namespace Win32xx
 		{
 			// Declare a pointer to the GetAncestor function
 #ifndef _WIN32_WCE
-			pfnGetAncestor = (GETANCESTOR*)::GetProcAddress(hModule, "GetAncestor");
+			pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(hModule, "GetAncestor"));
 #else
-			pfnGetAncestor = (GETANCESTOR*)::GetProcAddress(hModule, L"GetAncestor");
+			pfnGetAncestor = reinterpret_cast<GETANCESTOR*>(::GetProcAddress(hModule, L"GetAncestor"));
 #endif
 
 			if (pfnGetAncestor)
@@ -2515,7 +2515,7 @@ namespace Win32xx
 	// Retrieves the font with which the window is currently drawing its text.
 	{
 		assert(IsWindow());
-		HFONT hFont = (HFONT)SendMessage(WM_GETFONT, 0, 0);
+		HFONT hFont = reinterpret_cast<HFONT>(SendMessage(WM_GETFONT, 0, 0));
 		return CFont(hFont);
 	}
 
@@ -2523,7 +2523,7 @@ namespace Win32xx
 	// Retrieves a handle to the large or small icon associated with a window.
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage(WM_GETICON, (WPARAM)bBigIcon, 0);
+		return reinterpret_cast<HICON>(SendMessage(WM_GETICON, (WPARAM)bBigIcon, 0));
 	}
 
 	inline CWnd CWnd::GetNextDlgGroupItem(HWND hCtl, BOOL bPrevious) const
@@ -2861,7 +2861,7 @@ namespace Win32xx
 	// Associates a new large or small icon with a window.
 	{
 		assert(IsWindow());
-		return (HICON)SendMessage(WM_SETICON, (WPARAM)bBigIcon, (LPARAM)hIcon);
+		return reinterpret_cast<HICON>(SendMessage(WM_SETICON, (WPARAM)bBigIcon, (LPARAM)hIcon));
 	}
 
 	inline BOOL CWnd::SetForegroundWindow() const
@@ -2884,7 +2884,7 @@ namespace Win32xx
 	// in that window from being redrawn.
 	{
 		assert(IsWindow());
-		return (BOOL)::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0L);
+		return static_cast<BOOL>(::SendMessage(m_hWnd, WM_SETREDRAW, (WPARAM)bRedraw, 0L));
 	}
 
 	inline LONG_PTR CWnd::SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const

@@ -27,7 +27,7 @@ void CViewFiles::OnInitialUpdate()
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();
@@ -69,7 +69,7 @@ BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
 	lvi1.pszText = (LPTSTR)szText;
-	return (BOOL)SendMessage(LVM_SETITEM, 0L, (LPARAM)&lvi1);
+	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0L, (LPARAM)&lvi1));
 }
 
 void CViewFiles::InsertItems()

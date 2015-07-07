@@ -384,21 +384,21 @@ namespace Win32xx
 	// Determines the number of selected items in a list-view control.
 	{
 		assert(IsWindow());
-		return (UINT)SendMessage( LVM_GETSELECTEDCOUNT, 0L, 0L );
+		return static_cast<UINT>(SendMessage( LVM_GETSELECTEDCOUNT, 0L, 0L ));
 	}
 
 	inline int CListView::GetSelectionMark( ) const
 	// Retrieves the selection mark from a list-view control.
 	{
 		assert(IsWindow());
-		return (int)SendMessage( LVM_GETSELECTIONMARK, 0L, 0L );
+		return static_cast<int>(SendMessage( LVM_GETSELECTIONMARK, 0L, 0L ));
 	}
 
 	inline int CListView::GetStringWidth( LPCTSTR pszString ) const
 	// Determines the width of a specified string using the specified list-view control's current font.
 	{
 		assert(IsWindow());
-		return (int)SendMessage( LVM_GETSTRINGWIDTH, 0L, (LPARAM)pszString );
+		return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0L, (LPARAM)pszString ));
 	}
 
 	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const
@@ -638,7 +638,7 @@ namespace Win32xx
 	// LVIS_STATEIMAGEMASK	Use this mask to retrieve the item's state image index.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)&Item);
+		return static_cast<BOOL>(SendMessage(LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)&Item));
 	}
 
     inline void CListView::SetItemState( int iItem, UINT nState, UINT nMask ) const
@@ -680,7 +680,7 @@ namespace Win32xx
 	// Sets the ToolTip control that the list-view control will use to display ToolTips.
 	{
 		assert(IsWindow());
-		return (HWND)SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
+		return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L));
 	}
 
 	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const
@@ -747,7 +747,7 @@ namespace Win32xx
 	// scrolling the list-view control if necessary.
 	{
 		assert(IsWindow());
-		return (BOOL)SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK );
+		return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK ));
 	}
 
 	inline int CListView::FindItem( LVFINDINFO& FindInfo, int iStart /*= -1*/ ) const

@@ -119,7 +119,7 @@ BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
 	lvi1.pszText = (LPTSTR)szText;
-	return (BOOL)SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1);
+	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1));
 }
 
 void CViewList::InsertItems()

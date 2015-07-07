@@ -399,7 +399,7 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
 	UNREFERENCED_PARAMETER(pNMHDR);
 
 	//get the item that has the focus
-	int nItem = (int)SendMessage(LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0));
+	int nItem = static_cast<int>(SendMessage(LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0)));
 
 	if(nItem != -1)
 		DoDefault(nItem);
@@ -604,22 +604,22 @@ void CMyListView::SetImageLists()
 	SHFILEINFO  sfi;
 
 	// Get the system image list
-	m_hLargeImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
-		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX);
+	m_hLargeImageList = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
+		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX));
 
-	m_hSmallImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
-		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
+	m_hSmallImageList = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
+		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
 }
 
 void CMyListView::ViewLargeIcons()
 {
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
 }
 
 void CMyListView::ViewSmallIcons()
 {
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
 }
 

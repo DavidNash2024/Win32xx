@@ -210,11 +210,11 @@ namespace Win32xx
 			throw CWinException(_T("Failed to load WS2_2.dll"));
 
 #ifdef _WIN32_WCE
-		m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, L"getaddrinfo");
-		m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, L"freeaddrinfo");
+		m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_hWS2_32, L"getaddrinfo") );
+		m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_hWS2_32, L"freeaddrinfo") );
 #else
-		m_pfnGetAddrInfo = (GETADDRINFO*) GetProcAddress(m_hWS2_32, "getaddrinfo");
-		m_pfnFreeAddrInfo = (FREEADDRINFO*) GetProcAddress(m_hWS2_32, "freeaddrinfo");
+		m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_hWS2_32, "getaddrinfo") );
+		m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_hWS2_32, "freeaddrinfo") );
 #endif
 
 		m_StopRequest = ::CreateEvent(0, TRUE, FALSE, 0);
@@ -289,7 +289,7 @@ namespace Win32xx
 			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
 			clientService.sin_port = htons( (u_short)port );
 
-			RetVal = ::bind( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::bind( m_Socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
 			if ( 0 != RetVal )
 				TRACE("Bind failed\n");
 		}
@@ -352,7 +352,7 @@ namespace Win32xx
 			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
 			clientService.sin_port = htons( (u_short)port );
 
-			RetVal = ::connect( m_Socket, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::connect( m_Socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
 			if ( 0 != RetVal )
 				TRACE("Connect failed\n");
 		}
@@ -412,7 +412,7 @@ namespace Win32xx
 		//	FD_ADDRESS_LIST_CHANGE		Notification of local address list changes for the address family of the socket.
 
 		WSANETWORKEVENTS NetworkEvents;
-		CSocket* pSocket = (CSocket*)thread_data;
+		CSocket* pSocket = reinterpret_cast<CSocket*>(thread_data);
 		SOCKET sClient = pSocket->m_Socket;
 
         WSAEVENT AllEvents[2];
@@ -694,7 +694,7 @@ namespace Win32xx
 			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
 			clientService.sin_port = htons( (u_short)port );
 
-			RetVal = ::sendto( m_Socket, send, len, flags, (SOCKADDR*) &clientService, sizeof(clientService) );
+			RetVal = ::sendto( m_Socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
 			if ( SOCKET_ERROR != RetVal )
 				TRACE("SendTo failed\n");
 		}
