@@ -1,5 +1,5 @@
-// Win32++   Version 8.0
-// Release Date: 5th July 2015
+// Win32++   Version 8.1 Alpha
+// Release Date: Not released yet
 //
 //      David Nash
 //      email: dnash@bigpond.net.au

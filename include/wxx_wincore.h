@@ -1,5 +1,5 @@
-// Win32++   Version 8.0
-// Release Date: 5th July 2015
+// Win32++   Version 8.1 Alpha
+// Release Date: Not released yet
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -188,7 +188,7 @@ namespace Win32xx {}
 #endif
 
 // Version macro
-#define _WIN32XX_VER 0x0800		// Win32++ version 8.0.0
+#define _WIN32XX_VER 0x0810		// Win32++ version 8.1.0
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES

@@ -1,5 +1,5 @@
-// Win32++   Version 8.0
-// Release Date: 5th July 2015
+// Win32++   Version 8.1 Alpha
+// Release Date: Not released yet
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -235,6 +235,7 @@ namespace Win32xx
 		NMHDR hdr;
 		POINT ptPos;
 		UINT DockZone;
+		CDocker* pDocker;
 	} *LPDRAGPOS;
 
 
@@ -688,6 +689,7 @@ namespace Win32xx
 		m_DragPos.hdr.hwndFrom = GetHwnd();
 		m_DragPos.ptPos = GetCursorPos();
 		m_DragPos.ptPos.x += 1;
+		m_DragPos.pDocker = m_pDocker;
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
 	}
 
@@ -1208,6 +1210,7 @@ namespace Win32xx
 		DragPos.hdr.code = nMessageID;
 		DragPos.hdr.hwndFrom = GetHwnd();
 		DragPos.ptPos = GetCursorPos();
+		DragPos.pDocker = m_pDocker;
 
 		// Send a DragPos notification to the docker
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
@@ -1440,10 +1443,9 @@ namespace Win32xx
 
 			m_bmBlueTint.DeleteObject();
 			m_bmBlueTint.CreateCompatibleBitmap(dcDesktop, rcBitmap.Width(), rcBitmap.Height());
-		/*	CBitmap* pOldBitmap = */ dcMem.SelectObject(m_bmBlueTint);
+			dcMem.SelectObject(m_bmBlueTint);
 			dcMem.BitBlt(0, 0, rcBitmap.Width(), rcBitmap.Height(), dcDesktop, rcTarget.left, rcTarget.top, SRCCOPY);
 			dcMem.DetachBitmap();
-		//	dcMem.SelectObject(pOldBitmap);
 			m_bmBlueTint.TintBitmap(-64, -24, +128);
 
 			// Create the Hint window
@@ -1557,8 +1559,8 @@ namespace Win32xx
 
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = static_cast<CDocker*>(GetCWndPtr(pDragPos->hdr.hwndFrom));
-		if (NULL == pDockDrag) return FALSE;
+		CDocker* pDockDrag = pDragPos->pDocker;
+		assert( dynamic_cast<CDocker*>(pDockDrag) );
 
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
 		if (NULL == pDockTarget) return FALSE;
@@ -1663,8 +1665,8 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetLeft::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = static_cast<CDocker*>(GetCWndPtr(pDragPos->hdr.hwndFrom));
-		if (NULL == pDockDrag) return FALSE;
+		CDocker* pDockDrag = pDragPos->pDocker;
+		assert( dynamic_cast<CDocker*>(pDockDrag) );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1711,8 +1713,8 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetTop::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = static_cast<CDocker*>(GetCWndPtr(pDragPos->hdr.hwndFrom));
-		if (NULL == pDockDrag) return FALSE;
+		CDocker* pDockDrag = pDragPos->pDocker;
+		assert( dynamic_cast<CDocker*>(pDockDrag) );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1759,8 +1761,8 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetRight::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = static_cast<CDocker*>(GetCWndPtr(pDragPos->hdr.hwndFrom));
-		if (NULL == pDockDrag) return FALSE;
+		CDocker* pDockDrag = pDragPos->pDocker;
+		assert( dynamic_cast<CDocker*>(pDockDrag) );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1807,8 +1809,8 @@ namespace Win32xx
 	//
 	inline BOOL CDocker::CTargetBottom::CheckTarget(LPDRAGPOS pDragPos)
 	{
-		CDocker* pDockDrag = static_cast<CDocker*>(GetCWndPtr(pDragPos->hdr.hwndFrom));
-		if (NULL == pDockDrag) return FALSE;
+		CDocker* pDockDrag = pDragPos->pDocker;
+		assert( dynamic_cast<CDocker*>(pDockDrag) );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1986,8 +1988,7 @@ namespace Win32xx
 						if(!GetDockAncestor()->m_TargetBottom.CheckTarget(pDragPos))
 						{
 							// Not in a docking zone, so clean up
-							NMHDR nmhdr = pDragPos->hdr;
-							CDocker* pDockDrag = static_cast<CDocker*>(GetCWndPtr(nmhdr.hwndFrom));
+							CDocker* pDockDrag = pDragPos->pDocker;
 							if (pDockDrag)
 							{
 								if (pDockDrag->m_IsBlockMove)
@@ -2288,7 +2289,7 @@ namespace Win32xx
 		brDithered.CreatePatternBrush(bmHash);
 		dcBar.SelectObject(brDithered);
 
-		CRect rc = GetCWndPtr(hBar)->GetWindowRect();
+		CRect rc = pDockBar->GetWindowRect();
 		ScreenToClient(rc);
 		int cx = rc.Width();
 		int cy = rc.Height();
@@ -2310,16 +2311,16 @@ namespace Win32xx
 	// Returns the docker whose child window has focus
 	{
 		HWND hWnd = GetFocus();
-		CDocker* pDocker = NULL;
-		while (hWnd && (pDocker == NULL))
+		HWND hWndDocker = NULL;
+		while (hWnd && (hWndDocker == NULL))
 		{
 			if (IsRelated(hWnd))
-				pDocker = static_cast<CDocker*>(GetCWndPtr(hWnd));
+				hWndDocker = hWnd;
 
 			hWnd = ::GetParent(hWnd);
 		}
 
-		return pDocker;
+		return static_cast<CDocker*>(GetCWndPtr(hWnd));
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -2881,10 +2882,9 @@ namespace Win32xx
 
 		// Set the default colour for the splitter bar
 		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-		CWnd* pFrame = GetCWndPtr(GetDockAncestor()->GetAncestor());
-		assert(pFrame);
+		HWND hWndFrame = GetDockAncestor()->GetAncestor();
 
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETRBTHEME, 0, 0));
+		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hWndFrame, UWM_GETRBTHEME, 0, 0));
 
 		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
 				rgbColour =pTheme->clrBkgnd2;
@@ -2989,7 +2989,7 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnDockEnd(LPDRAGPOS pdp)
 	{
-		CDocker* pDocker = static_cast<CDocker*>(GetCWndPtr(pdp->hdr.hwndFrom));
+		CDocker* pDocker = pdp->pDocker;
 		assert(dynamic_cast<CDocker*>(pDocker));
 		if (NULL == pDocker) return 0L;
 
@@ -3095,14 +3095,13 @@ namespace Win32xx
 		POINT pt = pdp->ptPos;
 		ScreenToClient(pt);
 
-		CDockBar* pDockBar = static_cast<CDockBar*>(GetCWndPtr(pdp->hdr.hwndFrom));
-		if (NULL == pDockBar) return;
-		CDocker& Docker = pDockBar->GetDocker();
+		CDocker* pDocker = pdp->pDocker;
+		assert( dynamic_cast<CDocker*>(pDocker) );
 
-		RECT rcDock = Docker.GetWindowRect();
+		RECT rcDock = pDocker->GetWindowRect();
 		ScreenToClient(rcDock);
 
-		int iBarWidth    = Docker.GetDockBar().GetWidth();
+		int iBarWidth    = pDocker->GetDockBar().GetWidth();
 		double dBarWidth = iBarWidth;
 		int DockSize;
 
@@ -3111,37 +3110,37 @@ namespace Win32xx
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
 #endif
 
-		CRect rcDockParent = Docker.m_pDockParent->GetWindowRect();
+		CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
 
-		switch (Docker.GetDockStyle() & 0xF)
+		switch (pDocker->GetDockStyle() & 0xF)
 		{
 		case DS_DOCKED_LEFT:
 			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
 			else     DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
-			Docker.SetDockSize(DockSize);
-			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Width());
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Width());
 			break;
 		case DS_DOCKED_RIGHT:
 			if (RTL)  DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
 			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
-			Docker.SetDockSize(DockSize);
-			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Width());
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Width());
 			break;
 		case DS_DOCKED_TOP:
 			DockSize = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
-			Docker.SetDockSize(DockSize);
-			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Height());
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Height());
 			break;
 		case DS_DOCKED_BOTTOM:
 			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
-			Docker.SetDockSize(DockSize);
-			Docker.m_DockSizeRatio = ((double)Docker.m_DockStartSize)/((double)rcDockParent.Height());
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Height());
 			break;
 		}
 
@@ -3156,10 +3155,9 @@ namespace Win32xx
 		if (this == GetDockAncestor())
 		{
 			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-			CWnd* pFrame = GetCWndPtr(GetDockAncestor()->GetAncestor());
-			assert(pFrame);
+			HWND hWndFrame = GetDockAncestor()->GetAncestor();
 
-			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(pFrame->SendMessage(UWM_GETRBTHEME, 0, 0));
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hWndFrame, UWM_GETRBTHEME, 0, 0));
 
 			if (pTheme && pTheme->UseThemes && pTheme->clrBand2 != 0)
 				rgbColour = pTheme->clrBkgnd2;
@@ -3619,6 +3617,7 @@ namespace Win32xx
 		DragPos.hdr.hwndFrom = GetHwnd();
 		DragPos.ptPos = GetCursorPos();
 		DragPos.DockZone = m_dwDockZone;
+		DragPos.pDocker = this;
 		m_dwDockZone = 0;
 
 		CDocker* pDocker = GetDockFromPoint(DragPos.ptPos);
