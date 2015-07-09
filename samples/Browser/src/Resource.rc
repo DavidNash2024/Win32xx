@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -75,22 +75,22 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/Globe.ico"
+IDW_MAIN                ICON                    "../src/res/Globe.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/toolbar.bmp"
-IDB_TOOLBAR24_NORM      BITMAP                  "res/Internet24_n.bmp"
-IDB_TOOLBAR24_HOT       BITMAP                  "res/Internet24_h.bmp"
-IDB_TOOLBAR24_DIS       BITMAP                  "res/Internet24_d.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDB_TOOLBAR24_NORM      BITMAP                  "../src/res/Internet24_n.bmp"
+IDB_TOOLBAR24_HOT       BITMAP                  "../src/res/Internet24_h.bmp"
+IDB_TOOLBAR24_DIS       BITMAP                  "../src/res/Internet24_d.bmp"
 
 #if !defined(__BORLANDC__) || (__BORLANDC__>0x550)
-IDB_TOOLBAR32_NORM      BITMAP                  "res/Browser_n.bmp"
-IDB_TOOLBAR32_HOT       BITMAP                  "res/Browser_h.bmp"
-IDB_TOOLBAR32_DIS       BITMAP                  "res/Browser_d.bmp"
+IDB_TOOLBAR32_NORM      BITMAP                  "../src/res/Browser_n.bmp"
+IDB_TOOLBAR32_HOT       BITMAP                  "../src/res/Browser_h.bmp"
+IDB_TOOLBAR32_DIS       BITMAP                  "../src/res/Browser_d.bmp"
 #endif
 
 /////////////////////////////////////////////////////////////////////////////

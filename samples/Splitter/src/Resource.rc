@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -77,24 +77,24 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/Splitter.ico"
+IDW_MAIN                ICON                    "../src/res/Splitter.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Cursor
 //
 
-IDW_SPLITH              CURSOR                  "res/SplitH.cur"
-IDW_SPLITV              CURSOR                  "res/SplitV.cur"
+IDW_SPLITH              CURSOR                  "../src/res/SplitH.cur"
+IDW_SPLITV              CURSOR                  "../src/res/SplitV.cur"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/toolbar.bmp"
-IDB_CLASSVIEW           BITMAP                  "res/classview.bmp"
-IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
+IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

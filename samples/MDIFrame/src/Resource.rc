@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -111,15 +111,15 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/mdi.ico"
-IDI_VIEW                ICON                    "res/view.ico"
+IDW_MAIN                ICON                    "../src/res/mdi.ico"
+IDI_VIEW                ICON                    "../src/res/view.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

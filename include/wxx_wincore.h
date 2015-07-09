@@ -550,8 +550,11 @@ namespace Win32xx
 		virtual BOOL AttachDlgItem(UINT nID, HWND hwndParent);
 		virtual void CenterWindow() const;
 		virtual HWND Create(HWND hParent = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, HMENU nIDorHMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, 
+		                      DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, 
+							  HMENU nIDorHMenu, LPVOID lpParam = NULL);
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, 
+		                      DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
 		static  CWnd* GetCWndPtr(HWND hWnd);

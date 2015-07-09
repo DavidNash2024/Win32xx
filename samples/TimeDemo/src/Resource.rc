@@ -68,7 +68,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 	RT_MANIFEST                                                     */
 
-1    RT_MANIFEST "res/Win32++.manifest"
+1           RT_MANIFEST                  "../src/res/Win32++.manifest"
 
 /*==============================================================================
 
@@ -78,16 +78,16 @@ IDW_MAIN MENU
 {
 	POPUP "&File"
 	{
-		MENUITEM "&New\tCtrl+N",	  IDM_FILE_NEW
+		MENUITEM "&New\tCtrl+N",          IDM_FILE_NEW
 		MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
 		MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
 		MENUITEM "Save &As\tCtrl+Shft+S", IDM_FILE_SAVEAS
-		MENUITEM "&Close", 		  IDM_FILE_CLOSE
+		MENUITEM "&Close",                IDM_FILE_CLOSE
 		MENUITEM SEPARATOR
 		MENUITEM "Print Pre&view\tShift+Ctrl+P", IDM_FILE_PRINT_PREVIEW
 		MENUITEM "&Print\tCtrl+P",        IDM_FILE_PRINT
 		MENUITEM SEPARATOR
-		MENUITEM "Recent Files",	  IDW_FILE_MRU_FILE1, GRAYED
+		MENUITEM "Recent Files",          IDW_FILE_MRU_FILE1, GRAYED
 		MENUITEM SEPARATOR
 		MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
 	}
@@ -106,17 +106,17 @@ IDW_MAIN MENU
 	}
 	POPUP "&View"
 	{
-		MENUITEM "&Font Choice",     	  IDM_FONT_CHOICE
-		MENUITEM "Screen &Color",     	  IDM_COLOR_CHOICE
-		MENUITEM "&Tool Bar",     	  IDW_VIEW_TOOLBAR,   CHECKED
+		MENUITEM "&Font Choice",          IDM_FONT_CHOICE
+		MENUITEM "Screen &Color",         IDM_COLOR_CHOICE
+		MENUITEM "&Tool Bar",             IDW_VIEW_TOOLBAR,   CHECKED
 		MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
 		MENUITEM SEPARATOR
 	}
 
 	POPUP "&Help"
 	{
-		MENUITEM "Contents",               IDM_HELP_CONTENT
-		MENUITEM "&About",     		   IDM_HELP_ABOUT
+		MENUITEM "Contents",              IDM_HELP_CONTENT
+		MENUITEM "&About",                IDM_HELP_ABOUT
 	}
 }
 
@@ -127,15 +127,15 @@ IDW_MAIN MENU
 	The icon with the lowest ID value is placed first to ensure that
 	the application icon remains consistent on all systems.		*/
 
-IDW_MAIN                ICON 			"res/TimeDemo.ico"
-IDM_COLOR_CHOICE	ICON                    "res/crayonS.ico"
-IDM_FONT_CHOICE         ICON                    "res/FontsS.ico"
+IDW_MAIN                ICON                    "../src/res/TimeDemo.ico"
+IDM_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
+IDM_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 /*==============================================================================
 
 	Bitmaps                                                         */
 
-IDW_MAIN		BITMAP			"res/Toolbar.bmp"
+IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
 
 /*==============================================================================
 

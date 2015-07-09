@@ -28,7 +28,7 @@ public:
 	virtual ~CView();
 
 	CDoc& GetDoc();
-	std::vector<PlotPoint>& CView::GetPoints();
+	std::vector<PlotPoint>& GetPoints();
 	COLORREF GetPenColor() { return m_PenColor; }
 	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 

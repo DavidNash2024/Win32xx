@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -80,21 +80,21 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/Star.ico"
-IDI_TOP                 ICON                    "res/Top.ico"
-IDI_LEFT                ICON                    "res/Left.ico"
-IDI_RIGHT               ICON                    "res/Right.ico"
-IDI_BOTTOM              ICON                    "res/Bottom.ico"
+IDW_MAIN                ICON                    "../src/res/Star.ico"
+IDI_TOP                 ICON                    "../src/res/Top.ico"
+IDI_LEFT                ICON                    "../src/res/Left.ico"
+IDI_RIGHT               ICON                    "../src/res/Right.ico"
+IDI_BOTTOM              ICON                    "../src/res/Bottom.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/Toolbar.bmp"
-IDB_NORMAL              BITMAP                  "res/Toolbar24.bmp"
-IDB_DISABLED            BITMAP                  "res/Toolbar24_d.bmp"
-IDB_HOT                 BITMAP                  "res/Toolbar24_h.bmp"
+IDW_MAIN                BITMAP                  "../src/res/Toolbar.bmp"
+IDB_NORMAL              BITMAP                  "../src/res/Toolbar24.bmp"
+IDB_DISABLED            BITMAP                  "../src/res/Toolbar24_d.bmp"
+IDB_HOT                 BITMAP                  "../src/res/Toolbar24_h.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //

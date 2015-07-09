@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -36,7 +36,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 
-IDW_MAIN                 ICON                    "res/star.ico"
+IDW_MAIN                 ICON                    "../src/res/star.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////
@@ -64,10 +64,10 @@ IDM_MINIMIZED MENU
 BEGIN
 	POPUP "MIN"
 	BEGIN
-		MENUITEM "&Restore",						IDM_MIN_RESTORE
+		MENUITEM "&Restore",                    IDM_MIN_RESTORE
 		MENUITEM SEPARATOR
-		MENUITEM "&About",							IDM_MIN_ABOUT
-		MENUITEM "&Exit",							IDM_MIN_EXIT
+		MENUITEM "&About",                      IDM_MIN_ABOUT
+		MENUITEM "&Exit",                       IDM_MIN_EXIT
 	END
 END
 

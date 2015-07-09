@@ -28,7 +28,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // NOTE The manifest must be added as a resource for the TestDLL projects for
 //  the program to use XP themes! 
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 
 #ifdef APSTUDIO_INVOKED

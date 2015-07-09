@@ -25,7 +25,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "res/Win32++.manifest"
+1                       RT_MANIFEST             "../src/res/Win32++.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -90,20 +90,20 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "res/Star.ico"
-IDI_CLASSVIEW           ICON                    "res/classview.ico"
-IDI_FILEVIEW            ICON                    "res/fileview.ico"
-IDI_DIALOGVIEW          ICON                    "res/Dialog.ico"
+IDW_MAIN                ICON                    "../src/res/Star.ico"
+IDI_CLASSVIEW           ICON                    "../src/res/classview.ico"
+IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
+IDI_DIALOGVIEW          ICON                    "../src/res/Dialog.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
 // Bitmap
 //
 
-IDW_MAIN                BITMAP                  "res/toolbar.bmp"
-IDB_CLASSVIEW           BITMAP                  "res/classview.bmp"
-IDB_FILEVIEW            BITMAP                  "res/fileview.bmp"
-IDB_STATUS              BITMAP                  "res/Status.bmp"
+IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
+IDB_CLASSVIEW           BITMAP                  "../src/res/classview.bmp"
+IDB_FILEVIEW            BITMAP                  "../src/res/fileview.bmp"
+IDB_STATUS              BITMAP                  "../src/res/Status.bmp"
 
 /////////////////////////////////////////////////////////////////////////////
 //
