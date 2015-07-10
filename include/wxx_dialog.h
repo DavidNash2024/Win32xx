@@ -222,10 +222,10 @@ namespace Win32xx
 
 	inline CDialog::~CDialog()
 	{
-		if (m_hWnd != NULL)
+		if (GetHwnd() != NULL)
 		{
 			if (IsModal())
-				::EndDialog(m_hWnd, 0);
+				::EndDialog(GetHwnd(), 0);
 			else
 				Destroy();
 		}
@@ -328,12 +328,12 @@ namespace Win32xx
 				if (IsWindow())
 					SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
 
-				return (BOOL)lr;
+				return static_cast<BOOL>(lr);
 			}
 
 		case WM_PAINT:
 			{
-				if (::GetUpdateRect(m_hWnd, NULL, FALSE))
+				if (::GetUpdateRect(*this, NULL, FALSE))
 				{
 					CPaintDC dc(*this);
 					OnDraw(dc);
@@ -387,7 +387,7 @@ namespace Win32xx
 		// A modal dialog box must be closed by the user before the application continues
 
 		assert( &GetApp() );		// Test if Win32++ has been started
-		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
+		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
 		INT_PTR nResult = 0;
 
@@ -446,7 +446,7 @@ namespace Win32xx
 	inline HWND CDialog::DoModeless(HWND hParent /* = 0 */)
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
-		assert(!::IsWindow(m_hWnd));	// Only one window per CWnd instance allowed
+		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
 		m_IsModal=FALSE;
 
@@ -488,7 +488,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		if (IsModal())
-			::EndDialog(m_hWnd, nResult);
+			::EndDialog(*this, nResult);
 		else
 			Destroy();
 

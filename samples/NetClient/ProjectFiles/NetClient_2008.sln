@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Client", "Client_2008.vcproj", "{56E21B91-A3A7-4B55-B5CF-3674769F233E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "NetClient", "NetClient_2008.vcproj", "{56E21B91-A3A7-4B55-B5CF-3674769F233E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

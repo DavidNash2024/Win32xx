@@ -2379,7 +2379,7 @@ namespace Win32xx
 	// The ClientToScreen function converts the client-area coordinates of a specified RECT to screen coordinates.
 	{
 		assert(IsWindow());
-		return (BOOL)::MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rc, 2);
+		return static_cast<BOOL>(::MapWindowPoints(m_hWnd, NULL, (LPPOINT)&rc, 2));
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
@@ -2784,7 +2784,7 @@ namespace Win32xx
 	// The ScreenToClient function converts the screen coordinates of a specified RECT on the screen to client-area coordinates.
 	{
 		assert(IsWindow());
-		return (BOOL)::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2);
+		return static_cast<BOOL>(::MapWindowPoints(NULL, m_hWnd, (LPPOINT)&rc, 2));
 	}
 
 	inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const

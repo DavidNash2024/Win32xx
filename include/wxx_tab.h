@@ -1743,7 +1743,7 @@ namespace Win32xx
 
 	inline int CTabbedMDI::GetMDIChildCount() const
 	{
-		return (int) GetTab().GetAllTabs().size();
+		return static_cast<int>( GetTab().GetAllTabs().size() );
 	}
 
 	inline int   CTabbedMDI::GetMDIChildID(int nTab) const

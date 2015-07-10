@@ -168,7 +168,7 @@ namespace Win32xx
 	inline void CTaskDialog::AddCommandControl(int nButtonID, LPCTSTR pszCaption)
 	// Adds a command control or push button to the Task Dialog.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 
 		std::vector<WCHAR> vButtonText;
 		StoreText(vButtonText, pszCaption);
@@ -184,7 +184,7 @@ namespace Win32xx
 	inline void CTaskDialog::AddRadioButton(int nRadioButtonID, LPCTSTR pszCaption)
 	// Adds a radio button to the Task Dialog.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 
 		std::vector<WCHAR> vRadioButtonText;
 		StoreText(vRadioButtonText, pszCaption);
@@ -201,7 +201,7 @@ namespace Win32xx
 	// Adds a range of radio buttons to the Task Dialog.
 	// Assumes the resource ID of the button and it's string match 
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		assert(nIDRadioButtonsFirst > 0);
 		assert(nIDRadioButtonsLast > nIDRadioButtonsFirst);
 
@@ -217,21 +217,21 @@ namespace Win32xx
 	inline void CTaskDialog::ClickButton(int nButtonID) const
 	// Simulates the action of a button click in the Task Dialog.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_CLICK_BUTTON, (WPARAM)nButtonID, 0); 
 	}
 
 	inline void CTaskDialog::ClickRadioButton(int nRadioButtonID) const
 	// Simulates the action of a radio button click in the TaskDialog.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_CLICK_RADIO_BUTTON, (WPARAM)nRadioButtonID, 0);
 	}
 
 	inline LRESULT CTaskDialog::DoModal(HWND hParent /* = NULL */)
 	// Creates and displays the Task Dialog.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 
 		m_tc.cbSize = sizeof(m_tc);
 		m_tc.pButtons = m_vButtons.empty()? NULL : &m_vButtons.front();
@@ -262,20 +262,20 @@ namespace Win32xx
 	inline void CTaskDialog::ElevateButton(int nButtonID, BOOL bElevated)
 	// Adds a shield icon to indicate that the button's action requires elevated privileges. 
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE, (WPARAM)nButtonID, (LPARAM)bElevated);
 	}
 	
 	inline void CTaskDialog::EnableButton(int nButtonID, BOOL bEnabled)
 	// Enables or disables a push button in the TaskDialog.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_ENABLE_BUTTON, (WPARAM)nButtonID, (LPARAM)bEnabled);
 	}
 	inline void CTaskDialog::EnableRadioButton(int nRadioButtonID, BOOL bEnabled)
 	// Enables or disables a radio button in the TaskDialog.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_ENABLE_RADIO_BUTTON, (WPARAM)nRadioButtonID, (LPARAM)bEnabled);
 	}
 
@@ -310,21 +310,21 @@ namespace Win32xx
 	inline int CTaskDialog::GetSelectedButtonID() const
 	// Returns the ID of the selected button. 
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		return m_SelectedButtonID;
 	}
 
 	inline int CTaskDialog::GetSelectedRadioButtonID() const 
 	// Returns the ID of the selected radio button.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		return m_SelectedRadioButtonID; 
 	}
 		
 	inline BOOL CTaskDialog::GetVerificationCheckboxState() const
 	// Returns the state of the verification check box.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		return m_VerificationCheckboxState;
 	}
 
@@ -343,7 +343,7 @@ namespace Win32xx
 	inline void CTaskDialog::NavigateTo(CTaskDialog& TaskDialog) const
 	// Replaces the information displayed by the task dialog.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		TASKDIALOGCONFIG tc = TaskDialog.GetConfig();
 		SendMessage(TDM_NAVIGATE_PAGE, 0, (LPARAM)&tc);
 	}
@@ -415,7 +415,7 @@ namespace Win32xx
 	inline void CTaskDialog::RemoveAllButtons()
 	// Removes all push buttons from the task dialog.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_vButtons.clear();
 		m_vButtonsText.clear();
 	}
@@ -423,7 +423,7 @@ namespace Win32xx
 	inline void CTaskDialog::RemoveAllRadioButtons()
 	// Removes all radio buttons from the task dialog.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_vRadioButtons.clear();
 		m_vRadioButtonsText.clear();
 	}
@@ -431,7 +431,7 @@ namespace Win32xx
 	inline void CTaskDialog::Reset()
 	// Returns the dialog to its default state.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 
 		RemoveAllButtons();
 		RemoveAllRadioButtons();
@@ -462,7 +462,7 @@ namespace Win32xx
 	//	TDCBF_RETRY_BUTTON		Retry button
 	//	TDCBF_CLOSE_BUTTON		Close button
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_tc.dwCommonButtons = dwCommonButtons; 
 	}
 
@@ -480,14 +480,14 @@ namespace Win32xx
 	// Sets the task dialog's default button.
 	// Can be either a button ID or one of the common buttons
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_tc.nDefaultButton = nButtonID;
 	}
 
 	inline void CTaskDialog::SetDefaultRadioButton(int nRadioButtonID) 
 	// Sets the default radio button.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_tc.nDefaultRadioButton = nRadioButtonID;
 	}
 
@@ -495,7 +495,7 @@ namespace Win32xx
 	// The width of the task dialog's client area. If 0, the 
 	// task dialog manager will calculate the ideal width.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_tc.cxWidth = nWidth;
 	}
 
@@ -604,28 +604,28 @@ namespace Win32xx
 	//  TDF_NO_DEFAULT_RADIO_BUTTON
 	//  TDF_CAN_BE_MINIMIZED
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		m_tc.dwFlags = dwFlags;
 	}
 
 	inline void CTaskDialog::SetProgressBarMarquee(BOOL bEnabled /* = TRUE*/, int nMarqueeSpeed /* = 0*/) 
 	// Starts and stops the marquee display of the progress bar, and sets the speed of the marquee.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_MARQUEE, (WPARAM)bEnabled, (LPARAM)nMarqueeSpeed);
 	}
 
 	inline void CTaskDialog::SetProgressBarPosition(int nProgressPos) 
 	// Sets the current position for a progress bar.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_POS, (WPARAM)nProgressPos, 0);
 	}
 
 	inline void CTaskDialog::SetProgressBarRange(int nMinRange, int nMaxRange) 
 	// Sets the minimum and maximum values for the hosted progress bar.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_RANGE, 0, MAKELPARAM(nMinRange, nMaxRange)); 
 	}
 
@@ -635,21 +635,21 @@ namespace Win32xx
 	//  PBST_PAUSE
 	//  PBST_ERROR
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_STATE, (WPARAM)nNewState, 0);
 	} 
 
 	inline void CTaskDialog::SetVerificationCheckbox(BOOL bChecked)
 	// Simulates a click on the verification checkbox of the Task Dialog, if it exists.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_CLICK_VERIFICATION, (WPARAM)bChecked, (LPARAM)bChecked);
 	}
 
 	inline void CTaskDialog::SetVerificationCheckboxText(LPCTSTR pszVerificationText)
 	// Sets the text for the verification check box.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		StoreText(m_vVerificationText, pszVerificationText);
 		m_tc.pszVerificationText = &m_vVerificationText.front();
 	}
@@ -657,7 +657,7 @@ namespace Win32xx
 	inline void CTaskDialog::SetWindowTitle(LPCTSTR pszWindowTitle)
 	// Sets the Task Dialog's window title.
 	{
-		assert (m_hWnd == NULL);
+		assert (GetHwnd() == NULL);
 		StoreText(m_vWindowTitle, pszWindowTitle);
 		m_tc.pszWindowTitle = &m_vWindowTitle.front(); 
 	}
@@ -785,7 +785,7 @@ namespace Win32xx
 	inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText)
 	// Updates a text element on the Task Dialog.
 	{
-		assert(m_hWnd);
+		assert(GetHwnd());
 		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)(LPCWSTR)T2W(pszNewText));
 	}
 

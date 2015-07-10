@@ -1,13 +1,13 @@
 [Project]
-FileName=Server_DEBUG.dev
-Name=Server
+FileName=NetServer_DEBUG.dev
+Name=NetServer
 UnitCount=12
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=Server_private.rc
+PrivateResource=NetServer_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=Server.exe
+OverrideOutputName=NetServer.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

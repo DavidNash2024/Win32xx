@@ -2,13 +2,13 @@
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
-		<Option title="Client" />
+		<Option title="NetServer" />
 		<Option pch_mode="0" />
 		<Option default_target="Release MinGW GNU compiler" />
 		<Option compiler="bcc" />
 		<Build>
 			<Target title="Debug Borland">
-				<Option output="Borland/Debug/Client.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland/Debug/NetServer.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland/Debug" />
 				<Option object_output="Borland/Debug" />
 				<Option type="0" />
@@ -32,7 +32,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
-				<Option output="Borland/Release/Client.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Borland/Release/NetServer.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Borland/Release" />
 				<Option object_output="Borland/Release" />
 				<Option type="0" />
@@ -55,7 +55,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
-				<Option output="Microsoft/Debug/Client.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft/Debug/NetServer.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft/Debug" />
 				<Option object_output="Microsoft/Debug" />
 				<Option type="0" />
@@ -92,7 +92,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release Microsoft Visual C++">
-				<Option output="Microsoft/Release/Client.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="Microsoft/Release/NetServer.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="Microsoft/Release" />
 				<Option object_output="Microsoft/Release" />
 				<Option type="0" />
@@ -126,7 +126,7 @@
 				</Linker>
 			</Target>
 			<Target title="Debug MinGW GNU compiler">
-				<Option output="GNU/Debug/Client.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU/Debug/NetServer.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU/Debug" />
 				<Option object_output="GNU/Debug" />
 				<Option type="0" />
@@ -152,7 +152,7 @@
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
-				<Option output="GNU/Release/Client.exe" prefix_auto="0" extension_auto="0" />
+				<Option output="GNU/Release/NetServer.exe" prefix_auto="0" extension_auto="0" />
 				<Option working_dir="GNU/Release" />
 				<Option object_output="GNU/Release" />
 				<Option type="0" />
@@ -178,16 +178,16 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../src/Client.cpp" />
-		<Unit filename="../src/Client.h" />
-		<Unit filename="../src/ClientDialog.cpp" />
-		<Unit filename="../src/ClientDialog.h" />
 		<Unit filename="../src/DialogApp.cpp" />
 		<Unit filename="../src/DialogApp.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/Server.cpp" />
+		<Unit filename="../src/Server.h" />
 		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/SvrDialog.cpp" />
+		<Unit filename="../src/SvrDialog.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h" />

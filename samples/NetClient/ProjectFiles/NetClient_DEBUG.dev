@@ -1,13 +1,13 @@
 [Project]
-FileName=Client_DEBUG.dev
-Name=Client
+FileName=NetClient_DEBUG.dev
+Name=NetClient
 UnitCount=12
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=Client_private.rc
+PrivateResource=NetClient_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=1
-OverrideOutputName=Client.exe
+OverrideOutputName=NetClient.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

@@ -692,7 +692,7 @@ OnFilePrint()                                                           /*
 	ZeroMemory(&pd, sizeof(pd));
 	pd.lStructSize = sizeof(pd);
 	pd.Flags = PD_RETURNDC;
-	pd.hwndOwner = m_hWnd; // handle to the CFrame window
+	pd.hwndOwner = GetHwnd(); // handle to the CFrame window
 
 	// Retrieve the printer DC
 	PrintDlg(&pd);

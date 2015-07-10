@@ -23,7 +23,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
     // Start Win32++
     CWinApp theApp;
-	
+
     // Create our view window
     CView MyWin;
     MyWin.Create();

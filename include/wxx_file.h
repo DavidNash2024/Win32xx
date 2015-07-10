@@ -192,19 +192,19 @@ namespace Win32xx
 	inline const CString& CFile::GetFileName() const
 	// Returns the filename of the file associated with this object.
 	{
-		return (const CString&)m_FileName;
+		return const_cast<const CString&>(m_FileName);
 	}
 
 	inline const CString& CFile::GetFilePath() const
 	// Returns the full filename including the directory of the file associated with this object.
 	{
-		return (const CString&)m_FilePath;
+		return const_cast<const CString&>(m_FilePath);
 	}
 
 	inline const CString& CFile::GetFileTitle() const
 	// Returns the filename of the file associated with this object, excluding the path and the file extension
 	{
-		return (const CString&)m_FileTitle;
+		return const_cast<const CString&>(m_FileTitle);
 	}
 
 	inline ULONGLONG CFile::GetPosition() const

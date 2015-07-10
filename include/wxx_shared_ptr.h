@@ -67,25 +67,25 @@
 // How to handle dynamically allocated arrays:
 // While we could create a smart pointer for arrays, we don't need to because
 // std::vector already handles this for us. Consider the following example:
-//    int nLength = ::GetWindowTextLength(m_hWnd);
+//    int nLength = ::GetWindowTextLength(hWnd);
 //	  pTChar = new TCHAR[nLength+1];
 //	  memset(pTChar, 0, (nLength+1)*sizeof(TCHAR));
-//	  ::GetWindowText(m_hWnd, m_pTChar, nLength);
+//	  ::GetWindowText(hWnd, m_pTChar, nLength);
 //    ....
 //    delete[] pTChar;
 //
 // This can be improved by using a vector instead of an array
 // This works because the memory in a vector is always contiguous.
 // Note that this is NOT always true of std::string.
-//    int nLength = ::GetWindowTextLength(m_hWnd);
+//    int nLength = ::GetWindowTextLength(hWnd);
 //    std::vector<TCHAR> vTChar( nLength+1, _T('\0') );
 //    TCHAR* pTCharArray = &vTChar.front();
-//    ::GetWindowText(m_hWnd, pTCharArray, nLength+1); 
+//    ::GetWindowText(hWnd, pTCharArray, nLength+1); 
 //
 // Alternatively we could use a CString.
-//    int nLength = ::GetWindowTextLength(m_hWnd);
+//    int nLength = ::GetWindowTextLength(hWnd);
 //    CString str;
-//    ::GetWindowText(m_hWnd, str.GetBuffer(nLength), nLength);
+//    ::GetWindowText(hWnd, str.GetBuffer(nLength), nLength);
 //    str.ReleaseBuffer();
 //
 

@@ -139,7 +139,7 @@ namespace Win32xx
 		// Attributes
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
 		tString& GetString() 		{ return m_str; }				// returns a reference to the underlying std::basic_string<TCHAR>
-		int      GetLength() const	{ return (int)m_str.length(); }	// returns the length in characters
+		int      GetLength() const	{ return static_cast<int>(m_str.length()); }	// returns the length in characters
 
 		// Operations
 		BSTR     AllocSysString() const;
@@ -466,7 +466,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		m_str.erase(nIndex, nCount);
-		return (int)m_str.size();
+		return static_cast<int>(m_str.size());
 	}
 
 	inline void CString::Empty()
@@ -482,7 +482,7 @@ namespace Win32xx
 		size_t s = m_str.find(ch, nIndex);
 
 		if (s == std::string::npos) return -1;
-		return (int)s;
+		return static_cast<int>(s);
 	}
 
 	inline int CString::Find(LPCTSTR pszText, int nIndex /* = 0 */) const
@@ -493,7 +493,7 @@ namespace Win32xx
 		size_t s = m_str.find(pszText, nIndex);
 
 		if (s == std::string::npos) return -1;
-		return (int)s;
+		return static_cast<int>(s);
 	}
 
 	inline int CString::FindOneOf(LPCTSTR pszText) const
@@ -503,7 +503,7 @@ namespace Win32xx
 		size_t s = m_str.find_first_of(pszText);
 
 		if (s == std::string::npos) return -1;
-		return (int)s;
+		return static_cast<int>(s);
 	}
 
 	inline void CString::Format(LPCTSTR pszFormat,...)
@@ -649,7 +649,7 @@ namespace Win32xx
 		assert(ch);
 
 		m_str.insert(nIndex, &ch, 1);
-		return (int)m_str.size();
+		return static_cast<int>(m_str.size());
 	}
 
 	inline int CString::Insert(int nIndex, const CString& str)
@@ -658,7 +658,7 @@ namespace Win32xx
 		assert(nIndex >= 0);
 
 		m_str.insert(nIndex, str);
-		return (int)m_str.size();
+		return static_cast<int>(m_str.size());
 	}
 
 	inline bool CString::IsEmpty() const
@@ -746,7 +746,7 @@ namespace Win32xx
 	// Search for a substring within the string, starting from the end.
 	{
 		assert(pszText);
-		return (int)m_str.rfind(pszText, nIndex);
+		return static_cast<int>(m_str.rfind(pszText, nIndex));
 	}
 
 	inline void CString::SetAt(int nIndex, TCHAR ch)

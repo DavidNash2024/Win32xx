@@ -225,7 +225,7 @@ namespace Win32xx
 		    return OnInitDialog();
 
 		case PSM_QUERYSIBLINGS:
-			return (BOOL)OnQuerySiblings(uMsg, wParam, lParam);
+			return static_cast<BOOL>(OnQuerySiblings(uMsg, wParam, lParam));
 			
 		case WM_CLOSE:	
 			{
@@ -278,7 +278,7 @@ namespace Win32xx
 				if (IsWindow())
 					SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
 
-				return (BOOL)lr;
+				return static_cast<BOOL>(lr);
 			}
 
 		case WM_PAINT:
@@ -817,7 +817,7 @@ namespace Win32xx
 	// Returns the number of Property Pages in this Property Sheet
 	{
 		assert(IsWindow());
-		return (int)m_vPages.size();
+		return static_cast<int>(m_vPages.size());
 	}
 
 	inline int CPropertySheet::GetPageIndex(CPropertyPage* pPage) const

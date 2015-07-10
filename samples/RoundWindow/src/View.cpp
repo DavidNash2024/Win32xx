@@ -190,7 +190,7 @@ LRESULT CView::OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	
 	// Initiate the popup menu
 	CPoint pt = GetCursorPos();
-	Popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, m_hWnd);
+	Popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, GetHwnd());
 
 	// Pass this message on for default processing
 	return FinalWindowProc(uMsg, wParam, lParam);

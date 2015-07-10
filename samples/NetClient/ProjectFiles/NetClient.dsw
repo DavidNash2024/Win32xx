@@ -3,7 +3,7 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
-Project: "Client"=".\Client.dsp" - Package Owner=<4>
+Project: "NetClient"=".\NetClient.dsp" - Package Owner=<4>
 
 Package=<5>
 {{{

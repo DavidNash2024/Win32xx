@@ -136,7 +136,7 @@ namespace Win32xx
 		public:
 			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
-			virtual CToolBar& GetToolBar() const	{return (CToolBar&)m_ToolBar;}
+			virtual CToolBar& GetToolBar() const	{return const_cast<CToolBar&>(m_ToolBar);}
 			virtual CWnd& GetView() const	{assert(m_pView); return *m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual int OnCreate(LPCREATESTRUCT pcs);
@@ -182,7 +182,7 @@ namespace Win32xx
 		CWnd* GetActiveView() const;
 		std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
 		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
-		CString& GetDockCaption() const	{ return (CString&)m_csCaption; }
+		CString& GetDockCaption() const	{ return const_cast<CString&>(m_csCaption); }
 		CDocker* GetDocker() const		{ return m_pDocker; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_strTabText; }
@@ -295,7 +295,7 @@ namespace Win32xx
 			virtual CRect GetCloseRect() const;
 			virtual void SendNotify(UINT nMessageID);
 
-			CString& GetCaption() const		{ return (CString&)m_csCaption; }
+			CString& GetCaption() const		{ return const_cast<CString&>(m_csCaption); }
 			CWnd& GetView() const			{ assert (m_pView); return *m_pView; }
 			void SetDocker(CDocker* pDocker)	{ m_pDocker = pDocker;}
 			void SetCaption(LPCTSTR szCaption)	{ m_csCaption = szCaption; }
@@ -2436,7 +2436,7 @@ namespace Win32xx
 		else if ((GetDockStyle() & DS_DOCKED_CONTAINER))
 			DockSize = 0;
 
-		return (int)DockSize;
+		return static_cast<int>(DockSize);
 	}
 
 	inline CDocker* CDocker::GetTopmostDocker() const

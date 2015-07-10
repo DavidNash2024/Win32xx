@@ -385,8 +385,8 @@ namespace Win32xx
 	{
 	public:
 		CW2W(LPCWSTR pWStr) : m_pWStr(pWStr) {}
-		operator LPCWSTR() { return (LPWSTR)m_pWStr; }
-		operator LPOLESTR() { return (LPOLESTR)m_pWStr; }
+		operator LPCWSTR() { return const_cast<LPWSTR>(m_pWStr); }
+		operator LPOLESTR() { return const_cast<LPOLESTR>(m_pWStr); }
 
 	private:
 		CW2W(const CW2W&);

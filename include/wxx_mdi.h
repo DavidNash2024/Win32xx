@@ -637,7 +637,7 @@ namespace Win32xx
 	inline CMDIChild::~CMDIChild()
 	{
 		if (IsWindow())
-			GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)m_hWnd, 0L);
+			GetParent().SendMessage(WM_MDIDESTROY, (WPARAM)GetHwnd(), 0L);
 	}
 
 	inline HWND CMDIChild::Create(HWND hWndParent /*= NULL*/)
@@ -705,7 +705,7 @@ namespace Win32xx
 		if (m_hChildAccel)
 			GetApp().SetAccelerators(m_hChildAccel, this);
 
-		return m_hWnd;
+		return GetHwnd();
 	}
 
 	inline CMDIFrame& CMDIChild::GetMDIFrame() const

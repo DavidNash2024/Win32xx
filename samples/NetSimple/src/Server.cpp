@@ -15,7 +15,8 @@ public:
 	virtual void OnReceive()
 	{
 		// This function is called automatically when there is data to receive
-		char str[1024] = {0};
+		// Has an extra character for null termination.
+		char str[1025] = {0};
 		int i = Receive(str, 1024, 0);
 		cout << i <<" chars received: " << str << endl;
 	}

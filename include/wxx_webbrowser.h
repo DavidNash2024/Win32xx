@@ -124,7 +124,7 @@ namespace Win32xx
 
 	private:
 		 ULONG       m_cRefs;       // ref count
-		 HWND        m_hWnd;        // window handle of the container
+		 HWND        m_hWndAX;      // window handle of the container
 		 HWND        m_hWndStatus;  // status window handle
 		 IUnknown*   m_pUnk;		// IUnknown of contained object
 		 CRect       m_rcControl;	// size of control
@@ -144,7 +144,7 @@ namespace Win32xx
 
 		//Attributes
 		LPDISPATCH GetApplication() const;
-		CAXWindow& GetAXWindow() const { return (CAXWindow&)m_AXContainer; }
+		CAXWindow& GetAXWindow() const { return const_cast<CAXWindow&>(m_AXContainer); }
 		BOOL GetBusy() const;
 		LPDISPATCH GetContainer() const;
 		BOOL GetFullScreen() const;
@@ -218,7 +218,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CAXWindow class
 	//
-	inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWnd(NULL), m_pUnk(NULL)
+	inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWndAX(NULL), m_pUnk(NULL)
 	{
 	}
 
@@ -249,7 +249,7 @@ namespace Win32xx
 	 		if (FAILED(hr))
 	 			return;
 
-	 		pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hWnd, &m_rcControl);
+	 		pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hWndAX, &m_rcControl);
 	 		pioo->Release();
 		}
 	}
@@ -388,10 +388,10 @@ namespace Win32xx
 
 	inline STDMETHODIMP CAXWindow::GetWindow(HWND* lphwnd)
 	{
-		if (!IsWindow(m_hWnd))
+		if (!IsWindow(m_hWndAX))
 			return S_FALSE;
 
-		*lphwnd = m_hWnd;
+		*lphwnd = m_hWndAX;
 		return S_OK;
 	}
 
@@ -402,7 +402,7 @@ namespace Win32xx
 		*ppIIPUIWin = NULL;
 
 		RECT rect;
-		GetClientRect(m_hWnd, &rect);
+		GetClientRect(m_hWndAX, &rect);
 		lprcPosRect->left       = 0;
 		lprcPosRect->top        = 0;
 		lprcPosRect->right      = rect.right;
@@ -412,7 +412,7 @@ namespace Win32xx
 
 		lpFrameInfo->cb             = sizeof(OLEINPLACEFRAMEINFO);
 		lpFrameInfo->fMDIApp        = FALSE;
-		lpFrameInfo->hwndFrame      = m_hWnd;
+		lpFrameInfo->hwndFrame      = m_hWndAX;
 		lpFrameInfo->haccel         = 0;
 		lpFrameInfo->cAccelEntries  = 0;
 
@@ -618,7 +618,7 @@ namespace Win32xx
 
 	inline void CAXWindow::SetParent(HWND hWndParent)
 	{
-		m_hWnd = hWndParent;
+		m_hWndAX = hWndParent;
 	}
 
 	inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pszStatusText)
@@ -638,7 +638,7 @@ namespace Win32xx
 			SendMessage(m_hWndStatus, SB_SETTEXT, (WPARAM)0, (LPARAM)pszStatusText);
 	#endif
 
-		return (S_OK);
+		return S_OK;
 	}
 
 	inline void CAXWindow::SetStatusWindow(HWND hWndStatus)
@@ -658,11 +658,11 @@ namespace Win32xx
 
 		if (fVisible)
 		{
-			pioo->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_hWnd, &m_rcControl);
-			pioo->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_hWnd, &m_rcControl);
+			pioo->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_hWndAX, &m_rcControl);
+			pioo->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_hWndAX, &m_rcControl);
 		}
 		else
-			pioo->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_hWnd, NULL);
+			pioo->DoVerb(OLEIVERB_HIDE, NULL, this, 0, m_hWndAX, NULL);
 
 		pioo->Release();
 	}
@@ -804,7 +804,7 @@ namespace Win32xx
 	{
 		VARIANT_BOOL bValue = VARIANT_FALSE;
 		GetIWebBrowser2()->get_Busy(&bValue);
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline LPDISPATCH CWebBrowser::GetContainer() const
@@ -820,7 +820,7 @@ namespace Win32xx
 	{
 		VARIANT_BOOL bValue = VARIANT_FALSE;
 		GetIWebBrowser2()->get_FullScreen(&bValue);
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline long CWebBrowser::GetHeight() const
@@ -881,7 +881,7 @@ namespace Win32xx
 	{
 		VARIANT_BOOL bValue = VARIANT_FALSE;
 		GetIWebBrowser2()->get_Offline(&bValue);
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline READYSTATE CWebBrowser::GetReadyState() const
@@ -899,7 +899,7 @@ namespace Win32xx
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
 		GetIWebBrowser2()->get_RegisterAsBrowser(&bValue);
 #endif
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline BOOL CWebBrowser::GetTheaterMode() const
@@ -907,7 +907,7 @@ namespace Win32xx
 	{
 		VARIANT_BOOL bValue = VARIANT_FALSE;
 		GetIWebBrowser2()->get_TheaterMode(&bValue);
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline long CWebBrowser::GetTop() const
@@ -923,7 +923,7 @@ namespace Win32xx
 	{
 		VARIANT_BOOL bValue = VARIANT_FALSE;
 		GetIWebBrowser2()->get_TopLevelContainer(&bValue);
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline CString CWebBrowser::GetType() const
@@ -941,7 +941,7 @@ namespace Win32xx
 	{
 		VARIANT_BOOL bValue = VARIANT_FALSE;
 		GetIWebBrowser2()->get_Visible(&bValue);
-		return (BOOL)bValue;
+		return static_cast<BOOL>(bValue);
 	}
 
 	inline long CWebBrowser::GetWidth() const

@@ -1311,7 +1311,7 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return (BOOL)MonthCal_GetSelRange(*this, &MinMax);
+		return static_cast<BOOL>(MonthCal_GetSelRange(*this, &MinMax));
 	}
 
 	inline BOOL CMonthCalendar::GetToday(LPSYSTEMTIME pDateTime) const
@@ -1323,13 +1323,13 @@ namespace Win32xx
 	inline DWORD CMonthCalendar::HitTest(PMCHITTESTINFO pMCHitTest)
 	{
 		assert(IsWindow());
-		return (DWORD)MonthCal_HitTest(*this, pMCHitTest);
+		return static_cast<DWORD>(MonthCal_HitTest(*this, pMCHitTest));
 	}
 
 	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
 	{
 		assert(IsWindow());
-		return (COLORREF)MonthCal_SetColor(*this, nRegion, clr);
+		return static_cast<COLORREF>(MonthCal_SetColor(*this, nRegion, clr));
 	}
 
 	inline BOOL CMonthCalendar::SetCurSel(const LPSYSTEMTIME pDateTime)
@@ -1341,7 +1341,7 @@ namespace Win32xx
 	inline BOOL CMonthCalendar::SetDayState(int nMonths, LPMONTHDAYSTATE pStates)
 	{
 		assert(IsWindow());
-		return (BOOL)MonthCal_SetDayState(*this, nMonths, pStates);
+		return static_cast<BOOL>(MonthCal_SetDayState(*this, nMonths, pStates));
 	}
 
 	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
@@ -1352,7 +1352,7 @@ namespace Win32xx
 		if(pnOld)
 			*pnOld = LOWORD(dwValue);
 
-		return (BOOL)HIWORD(dwValue);
+		return static_cast<BOOL>(HIWORD(dwValue));
 	}
 
 	inline BOOL CMonthCalendar::SetMaxSelCount(int nMax)
@@ -1385,7 +1385,7 @@ namespace Win32xx
 			dwLimit |= GDTR_MAX;
 		}
 
-		return (BOOL)MonthCal_SetRange(*this, dwLimit, &MinMax);
+		return static_cast<BOOL>(MonthCal_SetRange(*this, dwLimit, &MinMax));
 	}
 
 	inline BOOL CMonthCalendar::SetSelRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
@@ -1393,7 +1393,7 @@ namespace Win32xx
 		SYSTEMTIME MinMax[2];
 		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
 		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return (BOOL)MonthCal_SetSelRange(*this, &MinMax);
+		return static_cast<BOOL>(MonthCal_SetSelRange(*this, &MinMax));
 	}
 
 	inline void CMonthCalendar::SetToday(const LPSYSTEMTIME pDateTime)

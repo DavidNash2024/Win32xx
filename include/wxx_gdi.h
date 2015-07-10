@@ -57,7 +57,7 @@
 // Coding Example without CDC ...
 //  void DrawLine()
 //  {
-//	  HDC hdcClient = ::GetDC(m_hWnd);
+//	  HDC hdcClient = ::GetDC(GetHwnd());
 //    HDC hdcMem = ::CreateCompatibleDC(hdcClient);
 //    HBITMAP hBitmap = ::CreateCompatibleBitmap(hdcClient, cx, cy);
 //	  HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hdcMem, hBitmap);
@@ -71,7 +71,7 @@
 //    ::SelectObject(hdcMem, hOldBitmap);
 //    ::DeleteObject(hBitmap);
 //    ::DeleteDC(hdcMem);
-//	  ::ReleaseDC(m_hWnd, hdcClient);
+//	  ::ReleaseDC(GetHwnd(), hdcClient);
 //  }
 //
 // Coding Example with CDC classes ...
@@ -788,18 +788,18 @@ namespace Win32xx
 		CPaintDC(HWND hWnd)
 		{
 			assert(::IsWindow(hWnd));
-			m_hWnd = hWnd;
+			m_hWndPaint = hWnd;
 			Attach(::BeginPaint(hWnd, &m_ps), hWnd);
 			SetManaged(true);
 		}
 
 		virtual ~CPaintDC()
 		{
-			::EndPaint(m_hWnd, &m_ps);
+			::EndPaint(m_hWndPaint, &m_ps);
 		}
 
 	private:
-		HWND m_hWnd;
+		HWND m_hWndPaint;
 		PAINTSTRUCT m_ps;
 	};
 
@@ -1117,7 +1117,7 @@ namespace Win32xx
 
 	inline CBitmap::operator HBITMAP() const
 	{
-		return (HBITMAP)GetHandle();
+		return static_cast<HBITMAP>(GetHandle());
 	}
 
 	inline CBitmap::~CBitmap()
@@ -1442,7 +1442,7 @@ namespace Win32xx
 
 	inline CBrush::operator HBRUSH() const
 	{
-		return (HBRUSH)GetHandle();
+		return static_cast<HBRUSH>(GetHandle());
 	}
 
 	inline CBrush::~CBrush()
@@ -1538,7 +1538,7 @@ namespace Win32xx
 
 	inline CFont::operator HFONT() const
 	{
-		return (HFONT)GetHandle();
+		return static_cast<HFONT>(GetHandle());
 	}
 
 	inline CFont::~CFont()
@@ -1644,7 +1644,7 @@ namespace Win32xx
 
 	inline CPalette::operator HPALETTE() const
 	{
-		return (HPALETTE)GetHandle();
+		return static_cast<HPALETTE>(GetHandle());
 	}
 
 	inline CPalette::~CPalette ()
@@ -1678,7 +1678,7 @@ namespace Win32xx
 		assert(GetHandle() != NULL);
 		WORD nEntries = 0;
 		::GetObject(GetHandle(), sizeof(WORD), &nEntries);
-		return (int)nEntries;
+		return static_cast<int>(nEntries);
 	}
 
 	inline UINT CPalette::GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
@@ -1747,7 +1747,7 @@ namespace Win32xx
 
 	inline CPen::operator HPEN () const
 	{
-		return (HPEN)GetHandle();
+		return static_cast<HPEN>(GetHandle());
 	}
 
 	inline CPen::~CPen()
@@ -1820,7 +1820,7 @@ namespace Win32xx
 
 	inline CRgn::operator HRGN() const
 	{
-		return (HRGN)GetHandle();
+		return static_cast<HRGN>(GetHandle());
 	}
 
 	inline CRgn::~CRgn()
@@ -1982,7 +1982,7 @@ namespace Win32xx
 	// Fills the specified buffer with data describing a region.
 	{
 		assert(GetHandle() != NULL);
-		return (int)::GetRegionData((HRGN)GetHandle(), nDataSize, lpRgnData);
+		return static_cast<int>(::GetRegionData((HRGN)GetHandle(), nDataSize, lpRgnData));
 	}
 
 	inline BOOL CRgn::PtInRegion(int x, int y) const
@@ -2452,7 +2452,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Retrieves a pointer to the currently selected bitmap object
 	{
 		assert(m_pData->hDC);
-		return (HBITMAP)::GetCurrentObject(m_pData->hDC, OBJ_BITMAP);
+		return static_cast<HBITMAP>(::GetCurrentObject(m_pData->hDC, OBJ_BITMAP));
 	}
 
 	inline BOOL CDC::LoadBitmap(UINT nID)
@@ -2559,7 +2559,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Retrieves a pointer to the currently selected brush object
 	{
 		assert(m_pData->hDC);
-		return (HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH);
+		return static_cast<HBRUSH>(::GetCurrentObject(m_pData->hDC, OBJ_BRUSH));
 	}
 
 	inline LOGBRUSH CDC::GetLogBrush() const
@@ -2637,7 +2637,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Retrieves a pointer to the current font object
 	{
 		assert(m_pData->hDC);
-		return (HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT);
+		return static_cast<HFONT>(::GetCurrentObject(m_pData->hDC, OBJ_FONT));
 	}
 
 	inline LOGFONT CDC::GetLogFont() const
@@ -2701,7 +2701,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Retrieves a pointer to the currently selected palette
 	{
 		assert(m_pData->hDC);
-		return (HPALETTE)::GetCurrentObject(m_pData->hDC, OBJ_PAL);
+		return static_cast<HPALETTE>(::GetCurrentObject(m_pData->hDC, OBJ_PAL));
 	}
 
 	inline COLORREF CDC::GetNearestColor(COLORREF crColor) const
@@ -2716,7 +2716,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Use this to attach an existing palette.
 	{
 		assert(m_pData->hDC);
-		return (HPALETTE)::SelectPalette(m_pData->hDC, hPalette, bForceBkgnd);
+		return static_cast<HPALETTE>(::SelectPalette(m_pData->hDC, hPalette, bForceBkgnd));
 	}
 
 	inline void CDC::RealizePalette() const
@@ -2791,7 +2791,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Retrieves a pointer to the currently selected pen
 	{
 		assert(m_pData->hDC);
-		return (HPEN)::GetCurrentObject(m_pData->hDC, OBJ_PEN);
+		return static_cast<HPEN>(::GetCurrentObject(m_pData->hDC, OBJ_PEN));
 	}
 
 	inline LOGPEN CDC::GetLogPen() const
@@ -3432,7 +3432,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Fills a rectangle by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::FillRect(m_pData->hDC, &rc, hBrush);
+		return static_cast<BOOL>(::FillRect(m_pData->hDC, &rc, hBrush));
 	}
 
 	inline BOOL CDC::InvertRect(const RECT& rc) const
@@ -3498,14 +3498,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Draws a border around the specified rectangle by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::FrameRect(m_pData->hDC, &rc, hBrush);
+		return static_cast<BOOL>(::FrameRect(m_pData->hDC, &rc, hBrush));
 	}
 
 	inline BOOL CDC::FrameRgn(HRGN hRgn, HBRUSH hBrush, int nWidth, int nHeight) const
 	// Draws a border around the specified region by using the specified brush.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::FrameRgn(m_pData->hDC, hRgn, hBrush, nWidth, nHeight);
+		return static_cast<BOOL>(::FrameRgn(m_pData->hDC, hRgn, hBrush, nWidth, nHeight));
 	}
 
 	inline int CDC::GetPolyFillMode() const
@@ -3519,7 +3519,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Paints the specified region by using the brush currently selected into the device context.
 	{
 		assert(m_pData->hDC);
-		return (BOOL)::PaintRgn(m_pData->hDC, hRgn);
+		return static_cast<BOOL>(::PaintRgn(m_pData->hDC, hRgn));
 	}
 
 	inline int CDC::SetPolyFillMode(int iPolyFillMode) const

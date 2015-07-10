@@ -856,7 +856,7 @@ namespace Win32xx
 		if (ptm == NULL ||
 			!::_tcsftime(szBuffer, maxTimeBufferSize, pFormat, ptm))
 			szBuffer[0] = '\0';
-		return (CString)szBuffer;
+		return CString(szBuffer);
 	}
 
 	//============================================================================
@@ -1078,7 +1078,7 @@ namespace Win32xx
 	{
 		int sec_per_hour  = 3600;
 		int hours_per_day = 24;
-		return (int)((m_timespan / sec_per_hour) % hours_per_day);
+		return static_cast<int>((m_timespan / sec_per_hour) % hours_per_day);
 	}
 
 	//============================================================================
@@ -1087,7 +1087,7 @@ namespace Win32xx
 	//	span (–59 through 59).
 	{
 		int sec_per_min = 60;
-		return (int)((m_timespan / sec_per_min) % sec_per_min);
+		return static_cast<int>((m_timespan / sec_per_min) % sec_per_min);
 	}
 
 	//============================================================================
@@ -1096,7 +1096,7 @@ namespace Win32xx
 	//	span (–59 through 59).
 	{
 		int sec_per_min = 60;
-		return (int)(m_timespan % sec_per_min);
+		return static_cast<int>(m_timespan % sec_per_min);
 	}
 
 	//============================================================================

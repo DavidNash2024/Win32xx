@@ -910,7 +910,7 @@ namespace Win32xx
 		CBitmap Bitmap(ToolBarID);
 
 		if ((0 == iImages) || (!Bitmap))
-			return (UINT)m_vMenuIcons.size();	// No valid images, so nothing to do!
+			return static_cast<UINT>(m_vMenuIcons.size());	// No valid images, so nothing to do!
 
 		BITMAP bm = Bitmap.GetBitmapData();
 		int iImageHeight = bm.bmHeight;
@@ -928,7 +928,7 @@ namespace Win32xx
 			if (iImageHeight != szImage.cy)
 			{
 				TRACE("Unable to add icons. The new icons are a different size to the old ones\n");
-				return (UINT)m_vMenuIcons.size();
+				return static_cast<UINT>(m_vMenuIcons.size());
 			}
 		}
 
@@ -974,7 +974,7 @@ namespace Win32xx
 		}
 
 		// return the number of menu icons
-		return (UINT)m_vMenuIcons.size();
+		return static_cast<UINT>(m_vMenuIcons.size());
 	}
 
 	inline void CFrame::AddMenuBarBand()
@@ -3457,11 +3457,11 @@ namespace Win32xx
 		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_GETFRAMEVIEW:		return (LRESULT)GetView().GetHwnd();
-		case UWM_GETMBTHEME:		return (LRESULT)&GetMenuBarTheme();
-		case UWM_GETRBTHEME:		return (LRESULT)&GetReBarTheme();
-		case UWM_GETSBTHEME:		return (LRESULT)&GetStatusBarTheme();
-		case UWM_GETTBTHEME:		return (LRESULT)&GetToolBarTheme();
+		case UWM_GETFRAMEVIEW:		return reinterpret_cast<LRESULT>(GetView().GetHwnd());
+		case UWM_GETMBTHEME:		return reinterpret_cast<LRESULT>(&GetMenuBarTheme());
+		case UWM_GETRBTHEME:		return reinterpret_cast<LRESULT>(&GetReBarTheme());
+		case UWM_GETSBTHEME:		return reinterpret_cast<LRESULT>(&GetStatusBarTheme());
+		case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
 		case UWM_DRAWRBBKGND:       return DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
 		case UWM_DRAWSBBKGND:       return DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
 

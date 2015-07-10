@@ -57,5 +57,7 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\RibbonUI.h"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\src\RibbonUI.rc"
 
 
+REM: Pop the directory change off the stack
+popd
 
 

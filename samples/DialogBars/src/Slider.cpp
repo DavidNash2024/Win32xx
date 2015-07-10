@@ -41,7 +41,7 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CMySlider::SetSlider(int nPos)
 {
 	// Set the slider position
-	//::SendMessage(m_hWnd, TBM_SETPOS, TRUE, nPos);
+	// SendMessage(TBM_SETPOS, TRUE, nPos);
 	SetPos(nPos, TRUE);
 }
 
