@@ -374,7 +374,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			return MessageReflect(m_hWnd, uMsg, wParam, lParam);
+			return MessageReflect(uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
 	    return FALSE;
@@ -419,7 +419,7 @@ namespace Win32xx
 		}
 
 		// Tidy up
-		m_hWnd = NULL;
+		Cleanup();
 		pTLSData->pWnd = NULL;
 
 	#ifndef _WIN32_WCE
@@ -457,30 +457,31 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 
 		HINSTANCE hInstance = GetApp().GetInstanceHandle();
+		HWND hWnd;
 
 		// Create a modeless dialog
 		if (IsIndirect())
-			m_hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
+			hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
 		else
 		{
 			if (::FindResource(GetApp().GetResourceHandle(), m_lpszResName, RT_DIALOG))
 				hInstance = GetApp().GetResourceHandle();
 
-			m_hWnd = ::CreateDialog(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
+			hWnd = ::CreateDialog(hInstance, m_lpszResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
 		}
 
 		// Tidy up
 		pTLSData->pWnd = NULL;
 
 		// Display information on dialog creation failure
-		if (!m_hWnd)
+		if (!hWnd)
 		{
 			TRACE(_T("*** Failed to create dialog ***\n"));
 			TRACE(SystemErrorMessage(::GetLastError()));
-			assert(m_hWnd);
+			assert(hWnd);
 		}
 
-		return m_hWnd;
+		return hWnd;
 	}
 
 	inline void CDialog::EndDialog(INT_PTR nResult)
@@ -492,7 +493,7 @@ namespace Win32xx
 		else
 			Destroy();
 
-		m_hWnd = NULL;
+		Cleanup();
 	}
 
 	inline void CDialog::OnCancel()
@@ -571,7 +572,7 @@ namespace Win32xx
 	// Converts the dialog box units to screen units (pixels).
 	{
 		assert(IsWindow());
-		return ::MapDialogRect(m_hWnd, pRect);
+		return ::MapDialogRect(*this, pRect);
 	}
 
 	inline void CDialog::NextDlgCtrl() const
@@ -598,24 +599,24 @@ namespace Win32xx
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Find the CWnd pointer mapped to this HWND
-		CDialog* w = static_cast<CDialog*>(GetCWndPtr(hWnd));
-		if (w == 0)
+		CDialog* pDialog = static_cast<CDialog*>(GetCWndPtr(hWnd));
+		if (pDialog == 0)
 		{
 			// The HWND wasn't in the map, so add it now
 			TLSData* pTLSData = GetApp().GetTlsData();
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			w = static_cast<CDialog*>(pTLSData->pWnd);
-			assert(w);
+			pDialog = static_cast<CDialog*>(pTLSData->pWnd);
+			assert(pDialog);
 			pTLSData->pWnd = NULL;
 
 			// Store the Window pointer into the HWND map
-			w->m_hWnd = hWnd;
-			w->AddToMap();
+			pDialog->SetHwnd(hWnd);
+			pDialog->AddToMap();
 		}
 
-		return w->DialogProc(uMsg, wParam, lParam);
+		return pDialog->DialogProc(uMsg, wParam, lParam);
 
 	} // INT_PTR CALLBACK CDialog::StaticDialogProc(...)
 

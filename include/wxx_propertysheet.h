@@ -225,7 +225,7 @@ namespace Win32xx
 		    return OnInitDialog();
 
 		case PSM_QUERYSIBLINGS:
-			return static_cast<BOOL>(OnQuerySiblings(uMsg, wParam, lParam));
+			return OnQuerySiblings(uMsg, wParam, lParam);
 			
 		case WM_CLOSE:	
 			{
@@ -324,7 +324,7 @@ namespace Win32xx
 		case WM_HSCROLL:
 		case WM_VSCROLL:
 		case WM_PARENTNOTIFY:
-			return MessageReflect(*this, uMsg, wParam, lParam);
+			return MessageReflect(uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
 	    return FALSE;
@@ -564,7 +564,7 @@ namespace Win32xx
 		//	PSWIZB_FINISH			Display an enabled Finish button.
 		//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
 
-		assert (::IsWindow(*this));
+		assert ( IsWindow() );
 		PropSheet_SetWizButtons(::GetParent(*this), dwFlags);
 	}
 
@@ -604,7 +604,7 @@ namespace Win32xx
 			pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
 			// Set the hWnd members and call DialogProc for this message
-			pPage->m_hWnd = hwndDlg;
+			pPage->SetHwnd(hwndDlg);
 			pPage->AddToMap();
 		}
 
@@ -750,7 +750,7 @@ namespace Win32xx
 		INT_PTR ipResult = 0;
 
 		// Only one window per CWnd instance allowed
-		assert(!::IsWindow(*this));
+		assert( !IsWindow() );
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();
