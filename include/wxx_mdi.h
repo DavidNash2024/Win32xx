@@ -644,27 +644,30 @@ namespace Win32xx
 	// We create the MDI child window and then maximize if required.
 	// This technique avoids unnecessary flicker when creating maximized MDI children.
 	{
-		if (m_pData.get() == 0)
-			m_pData = new DataMembers;
+		CREATESTRUCT cs;
+		WNDCLASS wc;
+
+		ZeroMemory(&cs, sizeof(CREATESTRUCT));
+		ZeroMemory(&wc, sizeof(WNDCLASS));
 
 		//Call PreCreate in case its overloaded
-		PreCreate(m_pData->cs);
+		PreCreate(cs);
 
 		//Determine if the window should be created maximized
 		BOOL bMax = FALSE;
 		CWnd* pParent = GetCWndPtr(hWndParent);
 		assert(pParent);
 		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
-		bMax = bMax | (m_pData->cs.style & WS_MAXIMIZE);
+		bMax = bMax | (cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
 		CString ClassName = _T("Win32++ MDI Child");
-		if (m_pData->cs.lpszClass)
-			ClassName = m_pData->cs.lpszClass;
+		if (cs.lpszClass)
+			ClassName = cs.lpszClass;
 
 		// Set the window style
 		DWORD dwStyle;
-		dwStyle = m_pData->cs.style & ~WS_MAXIMIZE;
+		dwStyle = cs.style & ~WS_MAXIMIZE;
 		dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
 		// Set window size and position
@@ -672,23 +675,23 @@ namespace Win32xx
 		int	y = CW_USEDEFAULT;
 		int cx = CW_USEDEFAULT;
 		int cy = CW_USEDEFAULT;
-		if(m_pData->cs.cx && m_pData->cs.cy)
+		if(cs.cx && cs.cy)
 		{
-			x = m_pData->cs.x;
-			y = m_pData->cs.y;
-			cx = m_pData->cs.cx;
-			cy = m_pData->cs.cy;
+			x = cs.x;
+			y = cs.y;
+			cx = cs.cx;
+			cy = cs.cy;
 		}
 
 		// Set the extended style
-		DWORD dwExStyle = m_pData->cs.dwExStyle | WS_EX_MDICHILD;
+		DWORD dwExStyle = cs.dwExStyle | WS_EX_MDICHILD;
 
 		// Turn off redraw while creating the window
 		pParent->SetRedraw(FALSE);
 
 		// Create the window
-		CreateEx(dwExStyle, ClassName, m_pData->cs.lpszName, dwStyle, x, y,
-			cx, cy, pParent->GetHwnd(), m_pData->cs.hMenu, m_pData->cs.lpCreateParams);
+		CreateEx(dwExStyle, ClassName, cs.lpszName, dwStyle, x, y,
+			cx, cy, pParent->GetHwnd(), cs.hMenu, cs.lpCreateParams);
 
 		if (bMax)
 			ShowWindow(SW_MAXIMIZE);

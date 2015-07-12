@@ -726,20 +726,8 @@ namespace Win32xx
 		HWND m_hWnd;					// handle to this object's window
 
 	private:
-		struct DataMembers	// A structure that contains the data members
-		{
-			DataMembers()	// Constructor
-			{
-				::ZeroMemory(&cs, sizeof(CREATESTRUCT));
-				::ZeroMemory(&wc, sizeof(WNDCLASS));
-			}
-
-			CREATESTRUCT cs;
-			WNDCLASS	 wc;
-		};
-
-		CWnd(const CWnd&);				// Disable copy construction
-		CWnd& operator = (const CWnd&); // Disable assignment operator
+		CWnd(const CWnd&);	 			// Disable copy construction
+		CWnd& operator = (const CWnd&);	// Disable assignment operator
 		CWnd(HWND hWnd);				// Private constructor used internally
 
 		void AddToMap();
@@ -750,7 +738,6 @@ namespace Win32xx
 		void SetHwnd(HWND hWnd)			{ m_hWnd = hWnd; }
 		void Subclass(HWND hWnd);
 
-		Shared_Ptr<DataMembers> m_pData;
 		WNDPROC	m_PrevWindowProc;
 
 	}; // class CWnd
@@ -1049,7 +1036,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You must run only one instance of the class inherited from this.
-	inline CWinApp::CWinApp() : m_Callback(NULL)//, m_hAccel(0), m_pWndAccel(0)
+	inline CWinApp::CWinApp() : m_Callback(NULL)
 	{
 		m_csAppStart.Lock();
 		assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
@@ -1367,13 +1354,13 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd() : m_hWnd(NULL), m_PrevWindowProc(NULL)
+	inline CWnd::CWnd()
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
-		//       m_pData is assigned in CWnd::Create(...)
+
 	}
 
-	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
+	inline CWnd::CWnd(HWND hWnd)
 	{
 		// A private constructor, used internally.
 
@@ -1521,55 +1508,58 @@ namespace Win32xx
 		// Test if Win32++ has been started
 		assert( &GetApp() );
 
-		if (m_pData.get() == 0)
-			m_pData = new DataMembers;
+		CREATESTRUCT cs;
+		WNDCLASS wc;
+
+		ZeroMemory(&cs, sizeof(CREATESTRUCT));
+		ZeroMemory(&wc, sizeof(WNDCLASS));
 
 		// Set the WNDCLASS parameters
-		PreRegisterClass(m_pData->wc);
-		if (m_pData->wc.lpszClassName)
+		PreRegisterClass(wc);
+		if (wc.lpszClassName)
 		{
-			RegisterClass(m_pData->wc);
-			m_pData->cs.lpszClass = m_pData->wc.lpszClassName;
+			RegisterClass(wc);
+			cs.lpszClass =wc.lpszClassName;
 		}
 		else
-			m_pData->cs.lpszClass = _T("Win32++ Window");
+			cs.lpszClass = _T("Win32++ Window");
 
 		// Set a reasonable default window style
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		m_pData->cs.style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+		cs.style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
 
 		// Set a reasonable default window position
 		if (NULL == hWndParent)
 		{
-			m_pData->cs.x  = CW_USEDEFAULT;
-			m_pData->cs.cx = CW_USEDEFAULT;
-			m_pData->cs.y  = CW_USEDEFAULT;
-			m_pData->cs.cy = CW_USEDEFAULT;
+			cs.x  = CW_USEDEFAULT;
+			cs.cx = CW_USEDEFAULT;
+			cs.y  = CW_USEDEFAULT;
+			cs.cy = CW_USEDEFAULT;
 		}
 
 		// Allow the CREATESTRUCT parameters to be modified
-		PreCreate(m_pData->cs);
+		PreCreate(cs);
 
-		DWORD dwStyle = m_pData->cs.style & ~WS_VISIBLE;
+		DWORD dwStyle = cs.style & ~WS_VISIBLE;
 		HWND hWnd;
 
 		// Create the window
 #ifndef _WIN32_WCE
-		hWnd = CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, dwStyle,
-			    m_pData->cs.x, m_pData->cs.y, m_pData->cs.cx, m_pData->cs.cy, hWndParent,
-				m_pData->cs.hMenu, m_pData->cs.lpCreateParams);
+		hWnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, dwStyle,
+			    cs.x, cs.y, cs.cx, cs.cy, hWndParent,
+				cs.hMenu, cs.lpCreateParams);
 
-		if (m_pData->cs.style & WS_VISIBLE)
+		if (cs.style & WS_VISIBLE)
 		{
-			if		(m_pData->cs.style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
-			else if (m_pData->cs.style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
+			if		(cs.style & WS_MAXIMIZE) ShowWindow(SW_MAXIMIZE);
+			else if (cs.style & WS_MINIMIZE) ShowWindow(SW_MINIMIZE);
 			else	ShowWindow();
 		}
 
 #else
-		hWnd = CreateEx(m_pData->cs.dwExStyle, m_pData->cs.lpszClass, m_pData->cs.lpszName, m_pData->cs.style,
-			    m_pData->cs.x, m_pData->cs.y, m_pData->cs.cx, m_pData->cs.cy, hWndParent,
-				0, m_pData->cs.lpCreateParams);
+		hWnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, cs.style,
+			    cs.x, cs.y, cs.cx, cs.cy, hWndParent,
+				0, cs.lpCreateParams);
 #endif
 
 		return hWnd;
