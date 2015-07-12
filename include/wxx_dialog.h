@@ -492,8 +492,6 @@ namespace Win32xx
 			::EndDialog(*this, nResult);
 		else
 			Destroy();
-
-		Cleanup();
 	}
 
 	inline void CDialog::OnCancel()
