@@ -2188,7 +2188,7 @@ namespace Win32xx
 		// Create the view window
 		assert(&GetView());			// Use SetView in CMainFrame's constructor to set the view window
 		GetDockClient().Create(*this);
-		if (&GetView() != &GetDockClient())
+		if (GetView() != GetDockClient())
 			GetView().Create(GetDockClient());
 
 		// Adjust fonts to match the desktop theme

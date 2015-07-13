@@ -125,9 +125,9 @@ namespace Win32xx
 		CString& operator = (LPCSTR pszText);
 		CString& operator = (LPCWSTR pszText);
 		bool     operator == (LPCTSTR pszText) const;
-		bool	 operator == (CString& str) const;
+		bool	 operator == (const CString& str) const;
 		bool     operator != (LPCTSTR pszText) const;
-		bool	 operator != (CString& str) const;
+		bool	 operator != (const CString& str) const;
 				 operator LPCTSTR() const;
 		TCHAR&   operator [] (int nIndex);
 		CString& operator += (const CString& str);
@@ -314,7 +314,7 @@ namespace Win32xx
 		return (0 == Compare(pszText));
 	}
 
-	inline bool CString::operator == (CString& str) const
+	inline bool CString::operator == (const CString& str) const
 	// Returns TRUE if the strings have the same content
 	// Can compare CStrings containing null characters.
 	{
@@ -328,7 +328,7 @@ namespace Win32xx
         return Compare(pszText) != 0;
 	}
 
-	inline bool CString::operator != (CString& str) const
+	inline bool CString::operator != (const CString& str) const
 	// Returns TRUE if the strings have a different content.
 	// Can compares CStrings containing null characters.
 	{

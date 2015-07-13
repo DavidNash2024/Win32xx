@@ -415,12 +415,14 @@ namespace Win32xx
 		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
 		HACCEL	GetAccelerators() const { return m_hAccel; }
 		CWnd*	GetAcceleratorsWindow() const { return m_pWndAccel; }
+		CWnd*	GetMainWnd() const;
 		HANDLE	GetThread()	const;
 		int		GetThreadID() const;
 		int		GetThreadPriority() const;
 		BOOL	PostThreadMessage(UINT message, WPARAM wParam, LPARAM lParam) const;
 		DWORD	ResumeThread() const;
 		void	SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
+		void	SetMainWnd(CWnd* pWnd);
 		BOOL	SetThreadPriority(int nPriority) const;
 		DWORD	SuspendThread() const;
 		operator HANDLE () const { return GetThread(); }
@@ -726,7 +728,7 @@ namespace Win32xx
 		HWND m_hWnd;					// handle to this object's window
 
 	private:
-		CWnd(const CWnd&);	 			// Disable copy construction
+		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&);	// Disable assignment operator
 		CWnd(HWND hWnd);				// Private constructor used internally
 
@@ -866,6 +868,14 @@ namespace Win32xx
 			throw CWinException(_T("Failed to create thread"));
 	}
 
+	inline CWnd* CWinThread::GetMainWnd() const
+	// Retrieves the main window for this thread.
+	// Note: CFrame set's itself as the main window of its thread
+	{
+		TLSData* pTLSData = GetApp().GetTlsData();
+		return pTLSData->pMainWnd;
+	}
+
 	inline HANDLE CWinThread::GetThread() const
 	{
 		assert(m_hThread);
@@ -999,6 +1009,14 @@ namespace Win32xx
 	{
 		m_pWndAccel = pWndAccel;
 		m_hAccel = hAccel;
+	}
+
+	inline void CWinThread::SetMainWnd(CWnd* pWnd)
+	// Sets the main window for this thread.
+	// Note: CFrame set's itself as the main window of its thread
+	{
+		TLSData* pTLSData = GetApp().SetTlsData();
+		pTLSData->pMainWnd = pWnd;
 	}
 
 	inline BOOL CWinThread::SetThreadPriority(int nPriority) const
@@ -1354,13 +1372,12 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWnd class
 	//
-	inline CWnd::CWnd()
+	inline CWnd::CWnd() : m_hWnd(NULL), m_PrevWindowProc(NULL)
 	{
 		// Note: m_hWnd is set in CWnd::CreateEx(...)
-
 	}
 
-	inline CWnd::CWnd(HWND hWnd)
+	inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
 	{
 		// A private constructor, used internally.
 
@@ -1508,18 +1525,18 @@ namespace Win32xx
 		// Test if Win32++ has been started
 		assert( &GetApp() );
 
-		CREATESTRUCT cs;
 		WNDCLASS wc;
-
-		ZeroMemory(&cs, sizeof(CREATESTRUCT));
 		ZeroMemory(&wc, sizeof(WNDCLASS));
+
+		CREATESTRUCT cs;
+		ZeroMemory(&cs, sizeof(CREATESTRUCT));
 
 		// Set the WNDCLASS parameters
 		PreRegisterClass(wc);
 		if (wc.lpszClassName)
 		{
 			RegisterClass(wc);
-			cs.lpszClass =wc.lpszClassName;
+			cs.lpszClass = wc.lpszClassName;
 		}
 		else
 			cs.lpszClass = _T("Win32++ Window");
