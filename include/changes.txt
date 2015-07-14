@@ -1,3 +1,26 @@
+Version 8.1
+===========
+
+New Features and Enhancements
+----------------------------- 
+* Win32++ is now system DPI (Dots Per Inch) aware.
+  The manifest for each sample has been updated to support DPI aware.
+  The size of the CFrame status bar and menu elements are now adjusted to
+  accommodate the system's DPI settings. Users may wish to detect the current
+  DPI and the GUI layout accordingly to support different DPIs.
+
+  Refer to:
+  https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266%28v=vs.85%29.aspx
+  
+  
+  
+
+Changes in detail
+-----------------
+Added CWinThread::GetMainWnd
+Added CWinThread::SetMainWnd
+
+
 Version 8.0
 ===========
 
@@ -727,18 +750,6 @@ New Features and Enhancements
 * DynamicResize option add to the Dock sample    
 
 
-Changes in detail
------------------
-Modified CRect::CopyRect
-Modified CRect::DeflateRect
-Modified CRect::EqualRect
-Modified CRect::InflateRect
-Modified CRect::IntersectRect
-Modified CRect::SubtractRect
-Modified CRect::UnionRect
-renamed cstring.h to c_string.h
-
-
 Version 7.6
 ===========
 
@@ -797,44 +808,6 @@ New Features and Enhancements
 	 - Disable Dock closing
 	 - Disable docking on the left or right
 	 
-
-Changes in detail
------------------
-Added CDockContainer::OnMouseMove
-Added CDockContainer::SetHideSingleTab
-Added CDockContainer::SwapTabs
-Added CDocker::GetViewRect
-Added CFrame::DrawReBarBkgnd
-Added CFrame::DrawStatusBarBkgnd
-Added CFrame::GetStatusBarTheme
-Added CFrame::SetStatusBarTheme
-Added CTab::GetTabImageID
-Added CTab::GetTabText
-Added CWinApp::LoadImage
-Modified CTabbedMDI::GetTab			 returns CWnd*
-Modified CDocker::GetAllDockers      returns pointer to CDocker* vector
-Modified CDocker::GetDockChildren    returns pointer to CDocker* vector
-Moved ::TintBitmap 					 to CBitmap::TintBitmap
-Moved ::GrayScaleBitmap 			 to CBitmap::GrayScaleBitmap
-Moved ::CreateDisabledImageList 	 to CImageList::CreateDisabledImageList
-
-Added user defined messages:
-UWM_GETFRAMEVIEW:	Used by CFrame.  Returns the view window's HWND 
-UWN_DRAWRBBKGND:    Used by CFrame.  Called for ReBar background redrawing
-UWN_DRAWSBBKGND:    Used by CFrame.  Called for StatusBar background redrawing
-UWN_TABDRAGGED:     Used by CTabbedMDI. Called when a CTab's tab is dragged
-
-Added string resources for frames (defined in resource.rc)
-IDW_INDICATOR_CAPS
-IDW_INDICATOR_NUM
-IDW_INDICATOR_SCRL
-
-Incompatibilities with previous version
----------------------------------------
-IDW_INDICATOR_CAPS, IDW_INDICATOR_NUM and IDW_INDICATOR_SCRL string
-resources are now used to define the status indicators. They should be
-added to resource.rc
-
 
 Version 7.5.1
 =============

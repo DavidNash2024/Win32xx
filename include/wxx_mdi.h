@@ -714,7 +714,7 @@ namespace Win32xx
 	inline CMDIFrame& CMDIChild::GetMDIFrame() const
 	{
 		CMDIFrame& MDIFrame = static_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent()));
-		assert(dynamic_cast<CMDIFrame&>(MDIFrame));
+		assert(dynamic_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent())));
 		return MDIFrame;
 	}
 

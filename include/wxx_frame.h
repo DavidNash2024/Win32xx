@@ -247,6 +247,8 @@ namespace Win32xx
 		CRect GetTextRect(const CRect& rcItem);
 		CSize GetTextSize(MenuItemData* pmd);
 		void  Initialize();
+		CRect ScaleRect(const CRect& rcItem);
+		CSize ScaleSize(const CSize& szItem);
 		int   ToItemStateId(UINT uItemState);
 		int   ToCheckBackgroundStateId(int iStateId);
 		int   ToCheckStateId(UINT fType, int iStateId);
@@ -652,10 +654,12 @@ namespace Win32xx
 
 	inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& rcItem)
 	{
-		int x = rcItem.left + m_marCheckBackground.cxLeftWidth;
-		int y = rcItem.top  + m_marCheckBackground.cyTopHeight;
 		int cx = m_sizeCheck.cx + m_marCheck.Width();
 		int cy = m_sizeCheck.cy + m_marCheck.Height();
+
+		int x = rcItem.left + m_marCheckBackground.cxLeftWidth;
+	//	int y = rcItem.top  + m_marCheckBackground.cyTopHeight;
+		int y = rcItem.top + (rcItem.Height() - cy)/2;
 
 		return CRect(x, y, x + cx, y + cy);
 	}
@@ -673,7 +677,8 @@ namespace Win32xx
 	inline CRect CMenuMetrics::GetCheckRect(const CRect& rcItem)
 	{
 		int x = rcItem.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
-		int y = rcItem.top  + m_marCheckBackground.cyTopHeight + m_marCheck.cyTopHeight;
+	//	int y = rcItem.top  + m_marCheckBackground.cyTopHeight + m_marCheck.cyTopHeight;
+		int y = rcItem.top + (rcItem.Height() - m_sizeCheck.cy)/2;
 
 		return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
 	}
@@ -685,10 +690,13 @@ namespace Win32xx
 		// Add icon/check width
 		size.cx += m_sizeCheck.cx + m_marCheckBackground.Width() + m_marCheck.Width();
 
-		if (pmd->mii.fType & MFT_SEPARATOR) {
+		if (pmd->mii.fType & MFT_SEPARATOR) 
+		{
 			// separator height
 			size.cy = m_sizeSeparator.cy + m_marItem.Height();
-		} else {
+		} 
+		else 
+		{
 			// Add check background horizontal padding.
 			size.cx += m_marCheckBackground.Width();
 
@@ -696,7 +704,7 @@ namespace Win32xx
 			size.cx += m_marItem.Width();
 
 			// Account for text size
-			CSize sizeText = GetTextSize(pmd);
+			CSize sizeText = ScaleSize(GetTextSize(pmd));
 			size.cx += sizeText.cx;
 			size.cy = MAX(size.cy, sizeText.cy);
 
@@ -704,7 +712,7 @@ namespace Win32xx
 			size.cy = MAX(size.cy, m_sizeCheck.cy + m_marCheckBackground.Height() + m_marCheck.Height());
 		}
 
-		return size;
+		return (size);
 	}
 
 	inline CRect CMenuMetrics::GetSelectionRect(const CRect& rcItem)
@@ -773,6 +781,40 @@ namespace Win32xx
 		int bottom	= rcItem.bottom - m_marText.cyBottomHeight;
 
 		return CRect(left, top, right, bottom);
+	}
+
+	inline CRect CMenuMetrics::ScaleRect(const CRect& rcItem)
+	// Re-scale the CRect to support the system's DPI 
+	{
+		// DC for the desktop
+		CWindowDC dc(NULL);
+
+		int dpiX = dc.GetDeviceCaps(LOGPIXELSX); 
+		int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
+		
+		CRect rc  = rcItem;
+		rc.left   = MulDiv(rc.left, dpiX, 96);
+		rc.right  = MulDiv(rc.right, dpiX, 96);
+		rc.top    = MulDiv(rc.top, dpiY, 96);
+		rc.bottom = MulDiv(rc.bottom, dpiY, 96);
+
+		return rc;
+	}
+
+	inline CSize CMenuMetrics::ScaleSize(const CSize& szItem)
+	// Re-scale the CSize to support the system's DPI 	
+	{
+		// DC for the desktop
+		CWindowDC dc(NULL);
+
+		int dpiX = dc.GetDeviceCaps(LOGPIXELSX); 
+		int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
+
+		CSize sz = szItem;
+		sz.cx = MulDiv(sz.cx, dpiX, 96);
+		sz.cy = MulDiv(sz.cy, dpiY, 96);
+
+		return sz;
 	}
 
 	inline int CMenuMetrics::ToItemStateId(UINT uItemState)
@@ -1527,6 +1569,7 @@ namespace Win32xx
 			int iStateId = m_pMenuMetrics->ToItemStateId(pdis->itemState);
 			CRect rcCheckBackground = m_pMenuMetrics->GetCheckBackgroundRect(pdis->rcItem);
 			m_pMenuMetrics->DrawThemeBackground(pdis->hDC, MENU_POPUPCHECKBACKGROUND, m_pMenuMetrics->ToCheckBackgroundStateId(iStateId), &rcCheckBackground, NULL);
+
 			CRect rcCheck = m_pMenuMetrics->GetCheckRect(pdis->rcItem);
 			m_pMenuMetrics->DrawThemeBackground(pdis->hDC, MENU_POPUPCHECK, m_pMenuMetrics->ToCheckStateId(pmid->mii.fType, iStateId), &rcCheck, NULL);
 		}
@@ -2950,6 +2993,12 @@ namespace Win32xx
 			CSize csNUM  = dcStatus.GetTextExtentPoint32(NUM, lstrlen(NUM)+1);
 			CSize csSCRL = dcStatus.GetTextExtentPoint32(SCRL, lstrlen(SCRL)+1);
 
+			// Adjust for DPI aware
+			int dpiX = dcStatus.GetDeviceCaps(LOGPIXELSX); 
+			csCAP.cx  = MulDiv(csCAP.cx, dpiX, 96);
+			csNUM.cx  = MulDiv(csNUM.cx, dpiX, 96);
+			csSCRL.cx = MulDiv(csSCRL.cx, dpiX, 96);
+
 			// Get the coordinates of the window's client area.
 			CRect rcClient = GetClientRect();
 			int width = MAX(300, rcClient.right);
@@ -2965,9 +3014,9 @@ namespace Win32xx
 			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? SCRL: CString("");
 
 			// Only update indicators if the text has changed
-			if (Status1 != m_OldStatus[0])  GetStatusBar().SetPartText(1, (Status1));
-			if (Status2 != m_OldStatus[1])  GetStatusBar().SetPartText(2, (Status2));
-			if (Status3 != m_OldStatus[2])  GetStatusBar().SetPartText(3, (Status3));
+			if (Status1 != m_OldStatus[0])  GetStatusBar().SetPartText(1, " "+(Status1));
+			if (Status2 != m_OldStatus[1])  GetStatusBar().SetPartText(2, " "+(Status2));
+			if (Status3 != m_OldStatus[2])  GetStatusBar().SetPartText(3, " "+(Status3));
 
 			m_OldStatus[0] = Status1;
 			m_OldStatus[1] = Status2;
@@ -3327,7 +3376,7 @@ namespace Win32xx
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
-		assert(dynamic_cast<CFrame*>(pFrame));
+		assert(dynamic_cast<CFrame*>(pTLSData->pMainWnd));
 
 		if (HC_ACTION == nCode)
 		{

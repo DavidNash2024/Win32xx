@@ -1666,7 +1666,7 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetLeft::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-		assert( dynamic_cast<CDocker*>(pDockDrag) );
+		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1714,7 +1714,7 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetTop::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-		assert( dynamic_cast<CDocker*>(pDockDrag) );
+		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1762,7 +1762,7 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetRight::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-		assert( dynamic_cast<CDocker*>(pDockDrag) );
+		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -1810,7 +1810,7 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetBottom::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-		assert( dynamic_cast<CDocker*>(pDockDrag) );
+		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
@@ -2990,8 +2990,7 @@ namespace Win32xx
 	inline LRESULT CDocker::OnDockEnd(LPDRAGPOS pdp)
 	{
 		CDocker* pDocker = pdp->pDocker;
-		assert(dynamic_cast<CDocker*>(pDocker));
-		if (NULL == pDocker) return 0L;
+		assert(pDocker);
 
 		UINT DockZone = pdp->DockZone;
 		CRect rc = pDocker->GetWindowRect();
@@ -3096,7 +3095,7 @@ namespace Win32xx
 		ScreenToClient(pt);
 
 		CDocker* pDocker = pdp->pDocker;
-		assert( dynamic_cast<CDocker*>(pDocker) );
+		assert( pDocker );
 
 		RECT rcDock = pDocker->GetWindowRect();
 		ScreenToClient(rcDock);
@@ -3922,7 +3921,7 @@ namespace Win32xx
 				if ((*iter).pContainer != pContainer)
 				{
 					pDockNew = (*iter).pContainer->GetDocker();
-					assert(dynamic_cast<CDocker*>(pDockNew));
+					assert(pDockNew);
 				}
 
 				++iter;
@@ -4314,7 +4313,7 @@ namespace Win32xx
 
 		if (IsLeftButtonDown() && (m_nTabPressed >= 0))
 		{
-			if (dynamic_cast<CDocker*>(GetDocker()))
+			if (GetDocker())
 			{
 				CDockContainer* pContainer = GetContainerFromIndex(m_iCurrentPage);
 				GetDocker()->UndockContainer(pContainer, GetCursorPos(), TRUE);
@@ -4673,7 +4672,7 @@ namespace Win32xx
 
 	inline CDockContainer* CDockContainer::CViewPage::GetContainer() const
 	{ 
-		assert(dynamic_cast<CDockContainer*>(m_pContainer));
+		assert(m_pContainer);
 		return m_pContainer; 
 	}
 

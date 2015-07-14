@@ -1036,7 +1036,7 @@ namespace Win32xx
 	{
 		// Get the pointer for this CMyThread object
 		CWinThread* pThread = static_cast<CWinThread*>(pCThread);
-		assert(dynamic_cast<CWinThread*>(pThread));
+		assert(pThread);
 
 		if (pThread->InitInstance())
 		{
