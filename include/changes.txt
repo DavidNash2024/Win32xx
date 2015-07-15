@@ -6,14 +6,17 @@ New Features and Enhancements
 * Win32++ is now system DPI (Dots Per Inch) aware.
   The manifest for each sample has been updated to support DPI aware.
   The size of the CFrame status bar and menu elements are now adjusted to
-  accommodate the system's DPI settings. Users may wish to detect the current
-  DPI and the GUI layout accordingly to support different DPIs.
-
+  accommodate the system's DPI settings. 
+  
+  Users may wish to detect the current DPI and the GUI layout accordingly
+  to support different DPIs.
+  
   Refer to:
   https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266%28v=vs.85%29.aspx
-  
-  
-  
+
+* CFrame now defaults to a white theme for windows 8 and above, to better match
+  the color scheme of Windows 8, Windows 8.1 and Windows 10.  
+
 
 Changes in detail
 -----------------

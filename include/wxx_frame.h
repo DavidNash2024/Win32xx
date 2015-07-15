@@ -3054,24 +3054,48 @@ namespace Win32xx
 			// Retrieve the XP theme name
 			m_XPThemeName = GetThemeName();
 
-			enum Themetype{ Modern, Grey, Blue, Silver, Olive };
+			enum Themetype{ Win8, Win7, XP_Blue, XP_Silver, XP_Olive, Grey };
 
+			// For Win2000 and below
 			int Theme = Grey;
-			if (GetWinVersion() < 2600) // Not for Vista and above
+			
+			if (GetWinVersion() < 2600) // For Windows XP
 			{
 				if (m_XPThemeName == _T("NormalColor"))
-					Theme = Blue;
+					Theme = XP_Blue;
 				if (m_XPThemeName == _T("Metallic"))
-					Theme = Silver;
+					Theme = XP_Silver;
 				if (m_XPThemeName == _T("HomeStead"))
-					Theme = Olive;
+					Theme = XP_Olive;
+			}
+			else if (GetWinVersion() <= 2601)
+			{
+				// For Vista and Windows 7
+				Theme = Win7;
 			}
 			else
-				Theme = Modern;
+			{
+				// For Windows 8 and above
+				Theme = Win8;
+			}
 
 			switch (Theme)
 			{
-			case Modern:	// A pale blue color scheme suitable for Windows 7 and 8
+			case Win8:
+				{
+					MenuTheme mt = {T, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255)};
+					ReBarTheme rbt = {T, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(255, 255, 255), RGB(255, 255, 255)};
+					ToolBarTheme tbt = {T, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255)};
+
+					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(rbt);
+					SetStatusBarTheme(sbt);
+					SetToolBarTheme(tbt);
+				}
+				break;
+
+			case Win7:	// A pale blue color scheme suitable for Windows 7 and 8
 				{
 					MenuTheme mt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 					ReBarTheme rbt = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};
@@ -3085,20 +3109,8 @@ namespace Win32xx
 				}
 				break;
 
-			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
-				{
-					MenuTheme mt = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
-					ReBarTheme rbt = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, F, T, T, T, F};
-					StatusBarTheme sbt = {T, RGB(212, 208, 200), RGB(212, 208, 200)};
-					ToolBarTheme tbt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
 
-					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
-					SetReBarTheme(rbt);
-					SetStatusBarTheme(sbt);
-					SetToolBarTheme(tbt);
-				}
-				break;
-			case Blue:
+			case XP_Blue:
 				{
 					// Used for XP default (blue) color scheme
 					MenuTheme mt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
@@ -3113,7 +3125,7 @@ namespace Win32xx
 				}
 				break;
 
-			case Silver:
+			case XP_Silver:
 				{
 					// Used for XP Silver color scheme
 					MenuTheme mt = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
@@ -3128,7 +3140,7 @@ namespace Win32xx
 				}
 				break;
 
-			case Olive:
+			case XP_Olive:
 				{
 					// Used for XP Olive color scheme
 					MenuTheme mt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
@@ -3142,12 +3154,26 @@ namespace Win32xx
 					SetToolBarTheme(tbt);
 				}
 				break;
+			
+			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
+				{
+					MenuTheme mt = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+					ReBarTheme rbt = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(212, 208, 200), RGB(212, 208, 200)};
+					ToolBarTheme tbt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
+
+					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
+					SetReBarTheme(rbt);
+					SetStatusBarTheme(sbt);
+					SetToolBarTheme(tbt);
+				}
+				break;
 			}
 		}
 		else
 		{
 			// Set a default menu theme. This allows the menu to display icons.
-			// The colours specified here are used for Windows XP and below.
+			// The colours specified here are used for Windows 2000 and below.
 			MenuTheme mt = {FALSE, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
 			SetMenuTheme(mt);  // Sets the theme for popup menus and MenuBar
 		}
