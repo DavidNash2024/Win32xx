@@ -188,7 +188,7 @@ namespace Win32xx {}
 #endif
 
 // Version macro
-#define _WIN32XX_VER 0x0810		// Win32++ version 8.1.0
+#define _WIN32XX_VER 0x0801		// Win32++ version 8.0.1
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
@@ -1354,6 +1354,7 @@ namespace Win32xx
 	inline TLSData* CWinApp::SetTlsData()
 	{
 		TLSData* pTLSData = GetTlsData();
+		
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;

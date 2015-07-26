@@ -38,7 +38,7 @@
 
   #if _WIN32_WCE < 0x500 && ( defined(WIN32_PLATFORM_PSPC) || defined(WIN32_PLATFORM_WFSP) )
     #ifdef _X86_
-      #if defined(_DEBUG)
+      #ifndef NDEBUG
         #pragma comment(lib, "libcmtx86d.lib")
       #else
         #pragma comment(lib, "libcmtx86.lib")

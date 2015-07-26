@@ -884,7 +884,7 @@ namespace Win32xx
 
 		m_strStatusText = LoadString(IDW_READY);
 
-		// Do either InitCommonControls or InitCommonControlsEx
+		// Load the common controls. Uses InitCommonControlsEx
 		LoadCommonControls();
 
 		// By default, we use the rebar if we can

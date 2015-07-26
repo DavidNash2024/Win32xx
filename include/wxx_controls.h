@@ -231,7 +231,7 @@ namespace Win32xx
 	class CIPAddress : public CWnd
 	{
 	public:
-		CIPAddress() {}
+		CIPAddress();
 		virtual ~CIPAddress() {}
 
 		void ClearAddress();
@@ -256,7 +256,7 @@ namespace Win32xx
 	class CMonthCalendar : public CWnd
 	{
 	public:
-		CMonthCalendar() {}
+		CMonthCalendar();
 		virtual ~CMonthCalendar() {}
 
 		// Attributes
@@ -295,7 +295,7 @@ namespace Win32xx
 	class CDateTime : public CWnd
 	{
 	public:
-		CDateTime() {}
+		CDateTime();
 		virtual ~CDateTime() {}
 
 		COLORREF GetMonthCalColor(int iColor) const;
@@ -929,6 +929,10 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CDateTime class
 	//
+	inline CDateTime::CDateTime() 
+	{
+	}
+
 	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
 	{
 		assert(IsWindow());
@@ -1184,6 +1188,22 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CIPAddress class
 	//
+	inline CIPAddress::CIPAddress() 
+	{
+		if (GetComCtlVersion() > 470)
+		{
+			// Call InitCommonControlsEx
+			INITCOMMONCONTROLSEX InitStruct;
+			InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			InitStruct.dwICC = ICC_INTERNET_CLASSES;
+			InitCommonControlsEx(&InitStruct);
+		}
+		else
+		{
+			::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
+		}
+	}
+	
 	inline void CIPAddress::ClearAddress()
 	{
 		assert(IsWindow());
@@ -1242,6 +1262,10 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CMonthCalendar class
 	//
+	inline CMonthCalendar::CMonthCalendar() 
+	{
+	}
+
 	inline COLORREF CMonthCalendar::GetColor(int nRegion) const
 	{
 		assert(IsWindow());

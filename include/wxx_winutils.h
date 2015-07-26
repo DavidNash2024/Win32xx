@@ -505,7 +505,7 @@ namespace Win32xx
 	inline void TRACE(LPCSTR str)
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	{
-  #ifdef _DEBUG
+  #ifndef NDEBUG
 		OutputDebugString(A2T(str));
   #else
 		UNREFERENCED_PARAMETER(str); // no-op
@@ -515,7 +515,7 @@ namespace Win32xx
 	inline void TRACE(LPCWSTR str)
 	// TRACE sends a string to the debug/output pane, or an external debugger
 	{
-  #ifdef _DEBUG
+  #ifndef NDEBUG
 		OutputDebugString(W2T(str));
   #else
 		UNREFERENCED_PARAMETER(str); // no-op
@@ -700,6 +700,8 @@ namespace Win32xx
   #endif // #ifndef _WIN32_WCE
 
 	inline void LoadCommonControls()
+	// Loads the common controls using InitCommonControlsEx or InitCommonControls.
+	// Returns TRUE of InitCommonControlsEx is used.
 	{
 		// Load the Common Controls DLL
 		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
@@ -712,38 +714,34 @@ namespace Win32xx
 			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
   #ifdef _WIN32_WCE
-			INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, _T("InitCommonControlsEx")));
+			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
   #else
-			INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, "InitCommonControlsEx"));
+			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
   #endif
 
 			if (pfnInitEx)
 			{
 				// Load the full set of common controls
 				INITCOMMONCONTROLSEX InitStruct;
-				ZeroMemory(&InitStruct, sizeof(INITCOMMONCONTROLSEX));
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 				InitStruct.dwICC = ICC_WIN95_CLASSES|ICC_BAR_CLASSES|ICC_COOL_CLASSES|ICC_DATE_CLASSES;
 
-  #if !defined(_WIN32_WCE) && (_WIN32_IE >= 0x0400)
-				InitStruct.dwICC |= ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES;
+				// Call InitCommonControlsEx
+				(*pfnInitEx)(&InitStruct);
+
+  #ifndef _WIN32_WCE
+				if (GetComCtlVersion() > 470)
+				{
+					InitStruct.dwICC = ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES;
+					(*pfnInitEx)(&InitStruct);
+				}
   #endif
 
- 				// Call InitCommonControlsEx
-				(*pfnInitEx)(&InitStruct);
 			}
 			else
 			{
-				// Declare a typedef for the InItCommonControls function
-				typedef BOOL WINAPI INIT();
-
-  #ifdef _WIN32_WCE
-				INIT* pfnInit = reinterpret_cast<INIT*>(::GetProcAddress(hComCtl, _T("InitCommonControls")));
-  #else
-				INIT* pfnInit = reinterpret_cast<INIT*>(::GetProcAddress(hComCtl, "InitCommonControls"));
-  #endif
-
-				(*pfnInit)();
+				// InitCommonControlsEx not supported. Use older InitCommonControls
+				InitCommonControls();
 			}
 
 			::FreeLibrary(hComCtl);

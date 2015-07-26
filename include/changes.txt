@@ -1,5 +1,10 @@
-Version 8.1
-===========
+Version 8.0.1
+==============
+
+Bug Fix
+* Updated LoadCommonControls to resolve issues with modal dialogs
+  running on older operating systems. 
+
 
 New Features and Enhancements
 ----------------------------- 
@@ -8,10 +13,8 @@ New Features and Enhancements
   The size of the CFrame status bar and menu elements are now adjusted to
   accommodate the system's DPI settings. 
   
-  Users may wish to detect the current DPI and the GUI layout accordingly
-  to support different DPIs.
-  
-  Refer to:
+  Users may wish to detect the current DPI and their GUI layout accordingly
+  to support different DPIs. Refer to:
   https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266%28v=vs.85%29.aspx
 
 * CFrame now defaults to a white theme for windows 8 and above, to better match
@@ -22,6 +25,12 @@ Changes in detail
 -----------------
 Added CWinThread::GetMainWnd
 Added CWinThread::SetMainWnd
+
+Moved Dev-C++ project files to the "ProjectFiles" folder.
+Moved the network samples. They are now located in:
+ - NetClient
+ - NetServer
+ - NetSimple
 
 
 Version 8.0

@@ -177,9 +177,15 @@ namespace Win32xx
 
 	inline CRichEdit::CRichEdit()
 	{
-		// Load RichEdit 2.0 or 3.0
+		// Load RichEdit version 2.0 or 3.0
 		m_hmodRich = LoadLibrary(_T("riched20.dll"));
-		assert(m_hmodRich);
+		
+		// Load RichEdit version 1.0 as a last resort
+		if (m_hmodRich == 0)
+			m_hmodRich = LoadLibrary(_T("riched32.dll"));
+	
+		if (m_hmodRich == 0)
+			::MessageBox(NULL, _T("Failed to load RICHED32.DLL"), _T("Error"), MB_ICONWARNING);
 	}
 
 	inline CRichEdit::~CRichEdit()
