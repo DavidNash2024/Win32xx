@@ -9,6 +9,8 @@
 // Definitions for the CMyDialog class
 CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
+	if (GetComCtlVersion() < 471)
+		::MessageBox(NULL,  _T("Date Time control not supported"), _T(""), MB_OK );
 }
 
 CMyDialog::~CMyDialog()

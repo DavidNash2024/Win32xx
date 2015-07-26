@@ -66,7 +66,7 @@ INT_PTR CButtonDialog::OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Set the background color of the dialog
 	if (IsXPThemed()) 
 		return (INT_PTR)m_Brush.GetHandle();
-	else;
+	else
 		return FinalWindowProc(uMsg, wParam, lParam);
 }
 

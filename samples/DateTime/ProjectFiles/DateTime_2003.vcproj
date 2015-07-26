@@ -156,6 +156,19 @@
 				RelativePath="..\src\Resource.rc">
 			</File>
 		</Filter>
+		<Filter
+			Name="Win32++"
+			Filter="">
+			<File
+				RelativePath="..\..\..\include\wxx_dialog.h">
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wincore.h">
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_winutils.h">
+			</File>
+		</Filter>
 	</Files>
 	<Globals>
 	</Globals>
