@@ -1,5 +1,5 @@
-// Win32++   Version 8.1 Alpha
-// Release Date: Not released yet
+// Win32++   Version 8.0.1
+// Release Date: 28th July 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -869,7 +869,7 @@ namespace Win32xx
 	}
 
 	inline CWnd* CWinThread::GetMainWnd() const
-	// Retrieves the main window for this thread.
+	// Retrieves a pointer to the main window for this thread.
 	// Note: CFrame set's itself as the main window of its thread
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();

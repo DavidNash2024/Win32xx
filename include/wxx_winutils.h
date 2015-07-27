@@ -1,5 +1,5 @@
-// Win32++   Version 8.1 Alpha
-// Release Date: Not released yet
+// Win32++   Version 8.0.1
+// Release Date: 28th July 2015
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -726,16 +726,19 @@ namespace Win32xx
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
 				InitStruct.dwICC = ICC_WIN95_CLASSES|ICC_BAR_CLASSES|ICC_COOL_CLASSES|ICC_DATE_CLASSES;
 
-				// Call InitCommonControlsEx
-				(*pfnInitEx)(&InitStruct);
 
   #ifndef _WIN32_WCE
 				if (GetComCtlVersion() > 470)
 				{
-					InitStruct.dwICC = ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES;
-					(*pfnInitEx)(&InitStruct);
+					InitStruct.dwICC |= ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES;
 				}
   #endif
+  
+				// Call InitCommonControlsEx
+				if ( !((*pfnInitEx)(&InitStruct)) )
+				{
+					InitCommonControls();
+				}
 
 			}
 			else
