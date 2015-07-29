@@ -64,10 +64,10 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 			StatusBarTheme sbt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255)};
 			SetStatusBarTheme (sbt);
 
-			ToolBarTheme tbt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255)};
+			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(180, 250, 255), RGB(100, 250, 255), RGB(100, 250, 255), RGB(255, 255, 255)};
 			SetToolBarTheme(tbt);
 
-			MenuTheme mt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255)};
+			MenuTheme mt = {TRUE, RGB(0, 210, 255), RGB(0, 210, 255), RGB(0, 230, 255), RGB(0, 230, 255), RGB(255, 255, 255)};
 			SetMenuTheme(mt);
 		}
 		break;
