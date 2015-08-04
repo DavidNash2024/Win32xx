@@ -79,7 +79,7 @@
 
 #ifdef UNICODE
   #ifndef _UNICODE
-    #define UNICODE
+    #define _UNICODE
   #endif
 #endif
 
