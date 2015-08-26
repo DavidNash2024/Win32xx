@@ -457,7 +457,7 @@ namespace Win32xx
 
 		//  convert localTime to a SYSTEMTIME structure
 		SYSTEMTIME st;
-		ok = ::FileTimeToSystemTime(&localTime, &st), _T("Invalid FILETIME conversion");
+		ok = ::FileTimeToSystemTime(&localTime, &st);
 		assert(ok);
 
 		// then convert the system time to a CTime
