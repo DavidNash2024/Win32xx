@@ -91,9 +91,9 @@ namespace Win32xx
 	//	time.  Local instants may further appear as standard or daylight times.
 	//	Thus, the base epoch on a system in the PST zone will be displayed as
 	//	December 31, 1969 16:00:00. Any attempt to construct or evaluate a date
-	//	before this epoch will throw an exception or be in error. Even though
-	//	the time_t type is implemented (in MinGW, anyway) as a signed integer
-	//	type, negative values are not allowed.
+	//	before this epoch will assert or be in error. Even though the time_t
+	//	type is implemented (in MinGW, anyway) as a signed integer type, 
+	//	negative values are not allowed.
 
 	//	On systems where time_t is defined as a 32-bit integer, there is an
 	//	upper date limit of January 18, 19:14:07, 2038. On 64-bit systems,
@@ -257,17 +257,23 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 
 	//============================================================================
-	inline time_t UTCtime(time_tm *atm)
+	inline time_t UTCtime(time_tm* atm)
 	//	Return the time_t t corresponding to the date given in atm as a UTC
 	//	time. That is, gmtime(t) == atm.  This is equal to the local time_t
-	//	of the atm plus the current time zone bias.
+	//	of the atm plus the current time zone bias. This method asserts if
+	//  atm is NULL or corresponds to an invalid time.
 	{
 		// compute the local time from atm
+		assert(atm != NULL);           // atm must exist
 		time_t t0 = ::mktime(atm);     // atm = *localtime(t0)
-		time_tm atm0 = *::gmtime(&t0); // atm0 = UTC time of atm
-		time_t t1 = ::mktime(&atm0);   // atm0 = *localtime(t1)
+		assert(t0 != -1);
+		time_tm* ptm0 = ::gmtime(&t0); // atm0 = UTC time of atm
+		time_t t1 = ::mktime(ptm0);    // atm0 = localtime(t1)
+		assert(t1 != -1);
 		timespan_t zt = (timespan_t)(t0 - t1);  // time zone bias
-		return t0 + zt;
+		t0 += zt;
+		assert(::gmtime(&t0));
+		return t0;
 	}
 
 	//============================================================================
@@ -280,22 +286,23 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(const CTime &t)
-	//	Construct a CTime object from another CTime object t.
+	inline CTime::CTime(const CTime& t)
+	//	Construct a CTime object from another (valid) CTime object t.
 	{
 		m_time = t.m_time;
 	}
 
 	//============================================================================
 	inline CTime::CTime(time_t t)
-	//	Construct a CTime object from the time_t value t.
+	//	Construct a CTime object from the time_t value t, or assert if t is invalid.
 	{
+		assert(::gmtime(&t));
 		m_time = t;
 	}
 
 	//============================================================================
-	inline CTime::CTime(time_tm &atm)
-	//	Construct a CTime object from the time_tm atm.
+	inline CTime::CTime(time_tm& atm)
+	//	Construct a CTime object from the time_tm atm, or assert if atm is invalid
 	{
 		// compute the object time_t
 		m_time = ::mktime(&atm);
@@ -315,7 +322,7 @@ namespace Win32xx
 	//		nthwk   no constraint
 	{
 		// validate parameters w.r.t. ranges
-		assert(yr >= 1970);
+		assert(yr >= 1969);	// Last few hours of 1969 might be a valid local time
 		assert(wkday <= 6);
 		assert(1 <= mo && mo <= 12);
 
@@ -329,33 +336,42 @@ namespace Win32xx
 		time_tm atm = {(int)sec, (int)min, (int)hr, (int)1, (int)(mo - 1),
 			(int)(yr - 1900), (int)0, (int)0, nDST};
 
-		// get the local time of the UTC time corresponding to this
+		// get the (valid) local time of the UTC time corresponding to this
 		time_t t1st = UTCtime(&atm);
 
 		// recover the day of the week
-		atm = *::gmtime(&t1st);
+		time_tm* ptm1 = ::gmtime(&t1st);
+		assert(ptm1);
 
 		// Compute number of days until the nthwk occurrence of wkday
-		int nthwkday = (7 + wkday - atm.tm_wday) % 7 + (nthwk - 1) * 7;
+		int nthwkday = (7 + wkday - ptm1->tm_wday) % 7 + (nthwk - 1) * 7;
 
 		// add this to the first of the month
 		int sec_per_day = 86400;
 		time_t tnthwkdy = t1st + nthwkday * sec_per_day;
-		atm = *::gmtime(&tnthwkdy);
-		atm.tm_isdst = nDST;
-		CTime t0(atm);
-		m_time = t0.m_time;
+		ptm1 = ::gmtime(&tnthwkdy);
+		assert(ptm1);
+		
+		// compute the object time_t
+		ptm1->tm_isdst = nDST;
+		m_time = ::mktime(ptm1);
+		assert(m_time != -1);
 	}
 
 	//============================================================================
 	inline CTime::CTime(UINT year, UINT month, UINT day, UINT hour, UINT min,
 		UINT sec, int nDST /* = -1 */)
 	//	Construct a CTime object from local time elements. Each element is
-	//	constrained to lie within the following ranges:
+	//	constrained to lie within the following UTC ranges:
 	//		year 		1970–2038 (on 32-bit systems)
 	//		month 		1–12
 	//		day 		1–31
 	//		hour, min, sec	no constraint
+	// 
+	//   Note:
+	//      These valid ranges apply to UTC time. The local time zone might
+	//      be shifted up to + or - 11 hours from UTC time. Hence the last
+	//	    few hours of 1969 (local time) might be a valid time.
 
 	//	The nDST value indicates whether daylight savings time is in effect.
 	//	It can have one of three values, as follows:
@@ -364,18 +380,18 @@ namespace Win32xx
 	//              nDST <  0   The default. Automatically computes whether
 	//			    standard time or daylight time is in effect.
 	{
-		 // validate parameters w.r.t. ranges
+		// validate parameters w.r.t. ranges
 		assert(1 <= day && day   <= 31);
 		assert(1 <= month && month <= 12);
-		assert(year  >= 1970);
+		assert(year >= 1969);  // Last few hours of 1969 might be a valid local time
 
 		// fill out a time_tm with the calendar date
 		time_tm atm = {(int)sec, (int)min, (int)hour, (int)day,
 			(int)(month - 1), (int)(year - 1900), (int)0, (int)0, nDST};
 
 		// compute the object time_t
-		CTime t(atm);
-		m_time = t.m_time;
+		m_time = ::mktime(&atm);
+		assert(m_time != -1);
 	}
 
 	//============================================================================
@@ -385,47 +401,47 @@ namespace Win32xx
 	//	are the same as in CTime(yr, mo, da, hr, min, sec, nDST). There is no
 	//	constraint on doy.
 	{
-		 // fill out a time_tm with the calendar date for Jan 1, yr, hr:min:sec
+		// validate parameters w.r.t. ranges
+		assert(yr >= 1969);  // Last few hours of 1969 might be a valid local time
+
+		// fill out a time_tm with the calendar date for Jan 1, yr, hr:min:sec
 		time_tm atm1st = {(int)sec, (int)min, (int)hr, (int)1,
 			(int)0, (int)(yr - 1900), (int)0, (int)0, nDST};
 
 		// get the local time of the UTC time corresponding to this
 		time_t Jan1 = UTCtime(&atm1st);
 		int sec_per_day = 86400;
-		time_t tDoy = Jan1 + (doy - 1) * sec_per_day;
-		time_tm atm = *::gmtime(&tDoy);
-		atm.tm_isdst = nDST;
-		CTime t0(atm);
-		m_time = t0.m_time;
+		time_t tDoy = Jan1 + (doy - 1) * sec_per_day;	
+		time_tm* ptm = ::gmtime(&tDoy);
+		assert(ptm);
+		
+		// compute the object time_t
+		ptm->tm_isdst = nDST;
+		m_time = ::mktime(ptm);
+		assert(m_time != -1);
 	}
 
 	//============================================================================
 	inline CTime::CTime(WORD wDosDate, WORD wDosTime, int nDST /* = -1 */)
-	//	Construct a CTime object from the MS-DOS wDosDate and  wDosTime values.
+	//	Construct a CTime object from the MS-DOS wDosDate and wDosTime values.
 	//	These are formats used by MS-DOS. The date is a packed 16-bit value
-	//	in which bits in the value represent the day, month, and  year. The
+	//	in which bits in the value represent the day, month, and years past 1980. The
 	//	time is a packed 16-bit value in which bits in the value represent
 	//	the hour, minute, and  second.
 	{
 		FILETIME ft;
-		if ( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) )
-		{
-			CTime t(ft, nDST);
-			m_time = t.m_time;
-		}
-		else
-		{
-			assert( FALSE );
-		}
+		BOOL ok = ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft);
+		assert(ok);
+		CTime t(ft, nDST);
+		m_time = t.m_time;
 	}
 
 	//============================================================================
 	inline CTime::CTime(const SYSTEMTIME& st, int nDST /* = -1 */)
 	//	 Construct a CTime object from a SYSTEMTIME structure st.
 	{
-		assert(st.wYear >= 1970);
 		CTime t((UINT)st.wYear, (UINT)st.wMonth, (UINT)st.wDay, (UINT)st.wHour,
-			(UINT)st.wMinute, (UINT)st.wSecond, nDST);
+			(UINT)st.wMinute, (UINT)st.wSecond, nDST); // asserts if invalid
 
 		m_time = t.m_time;
 	}
@@ -436,17 +452,16 @@ namespace Win32xx
 	{
 		// start by converting ft (a UTC time) to local time
 		FILETIME localTime;
-		if (!::FileTimeToLocalFileTime(&ft, &localTime) )
-			assert(FALSE);
-		
+		BOOL ok = ::FileTimeToLocalFileTime(&ft, &localTime);
+		assert(ok);
+
 		//  convert localTime to a SYSTEMTIME structure
 		SYSTEMTIME st;
-		
-		if (!::FileTimeToSystemTime(&localTime, &st))
-			assert(FALSE);
-		
+		ok = ::FileTimeToSystemTime(&localTime, &st), _T("Invalid FILETIME conversion");
+		assert(ok);
+
 		// then convert the system time to a CTime
-		CTime t(st, nDST);
+		CTime t(st, nDST);  // asserts if invalid
 		m_time = t.m_time;
 	}
 
@@ -481,34 +496,35 @@ namespace Win32xx
 		int	M;	// minute of hour 0 - 59
 		int	S;	// seconds of minute 0 - 61 (leap years)
 
-		CString Month[] =   {TEXT("January"), TEXT("February"),
-					  TEXT("March"), TEXT("April"), TEXT("May"),
-					  TEXT("June"), TEXT("July"), TEXT("August"),
-					  TEXT("September"), TEXT("October"),
-					  TEXT("November"), TEXT("December")};
-		CString AbMonth[] = {TEXT("Jan"), TEXT("Feb"), TEXT("Mar"),
-					  TEXT("Apr"), TEXT("May"), TEXT("Jun"),
-					  TEXT("Jul"), TEXT("Aug"), TEXT("Sep"),
-					  TEXT("Oct"), TEXT("Nov"), TEXT("Dec")};
+		CString Month[] =   {_T("January"), _T("February"),
+					  _T("March"), _T("April"), _T("May"),
+					  _T("June"), _T("July"), _T("August"),
+					  _T("September"), _T("October"),
+					  _T("November"), _T("December")};
+		CString AbMonth[] = {_T("Jan"), _T("Feb"), _T("Mar"),
+					  _T("Apr"), _T("May"), _T("Jun"),
+					  _T("Jul"), _T("Aug"), _T("Sep"),
+					  _T("Oct"), _T("Nov"), _T("Dec")};
 
 		// find  H:M:S values
-		if ((p1 = MIN(timestr.Find(TEXT(":")), len)) >= 0)
+		p1 = MIN(timestr.Find(_T(":")), len);
+		if (p1 >= 0)
 		{	  // the time of day is present
-			p2 = timestr.ReverseFind(TEXT(":"));
+			p2 = timestr.ReverseFind(_T(":"));
 			if (p1 == p2) // H:M only
 			{
-				p2 = MAX(timestr.ReverseFind(TEXT(" "), p1), 0);
-				p3 = MAX(timestr.Find(TEXT(" "), p1), (int)len);
+				p2 = MAX(timestr.ReverseFind(_T(" "), p1), 0);
+				p3 = MAX(timestr.Find(_T(" "), p1), (int)len);
 				H = _ttoi(timestr.Mid(p2 + 1, p1 - p2).c_str());
 				M = _ttoi(timestr.Mid(p1 + 1, p3 - p1).c_str());
 				S = 0;
 			}
 			else // H:M:S
 			{
-				p3 = MAX(timestr.ReverseFind(TEXT(" "), p1), (int)0);
+				p3 = MAX(timestr.ReverseFind(_T(" "), p1), (int)0);
 				H = _ttoi(timestr.Mid(p3, p1 - p3).c_str());
 				M = _ttoi(timestr.Mid(p1 + 1, p2 - p1).c_str());
-				p3 = MAX(timestr.Find(TEXT(" "), p1), (int)len);
+				p3 = MAX(timestr.Find(_T(" "), p1), (int)len);
 				S = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
 			}
 
@@ -517,76 +533,73 @@ namespace Win32xx
 			H = M = S = 0;
 
 		// now handle the year, month and  day formats
-		if ((p1 = timestr.Find(TEXT("/"))) >= 0) // "yyyy/mo/da H:M:S"
+		p1 = timestr.Find(_T("/"));
+		if (p1 >= 0) // "yyyy/mo/da H:M:S"
 		{
-			if ((p2 = timestr.Find(TEXT("/"), p1 + 1)) > len)
-			{
-				errno = EINVAL;
-				return;
-			}
+			p2 = timestr.Find(_T("/"), p1 + 1);
+			assert(p2 <= len);  // Invalid time conversion format.
 
-			p3   = MIN(timestr.Find(TEXT(" "), p2), (int)len);
+			p3   = MIN(timestr.Find(_T(" "), p2), (int)len);
 			yyyy = _ttoi(timestr.Mid(0, p1).c_str());
 			mo   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
 			da   = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
 			CTime t(yyyy, mo, da, H, M, S, nDST);
 			m_time = t.m_time;
+			return;
 		}
-		else if ((p1 = timestr.Find(TEXT("-"))) >= 0)  // "da-Mon-yyyy H:M:D"
-		{
-			if ((p2 = timestr.Find(TEXT("-"), p1 + 1)) > len)
-			{
-				errno = EINVAL;
-				return;
-			}
 
-			p3   = MIN(timestr.Find(TEXT(" "), p2), (int)len);
+		p1 = timestr.Find(_T("-"));
+		if (p1 >= 0)  // "da-Mon-yyyy H:M:D"
+		{
+			p2 = timestr.Find(_T("-"), p1 + 1);
+			assert(p2 <= len);  // Invalid time conversion format.
+
+			p3   = MIN(timestr.Find(_T(" "), p2), (int)len);
 			da   = _ttoi(timestr.Mid(0, p1).c_str());
 			CString mon  = timestr.Mid(p1 + 1, p2 - p1 - 1);
 			yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
 			for (mo = 0; mo < 12; mo++)
 				if (mon == AbMonth[mo])
 					break;
-			if (mo == 12)
-			{
-				errno = EINVAL;
-				return;
-			}
+			assert(mo != 12);  // Invalid time conversion format.
+	
 			mo++;
 			CTime t(yyyy, mo, da, H, M, S, nDST);
 			m_time = t.m_time;
+			return;
 		}
-		else if ((p2 = timestr.Find(TEXT(", "))) >= 0)  // "Month da, yyyy H:M:S"
-		{
-			if ((p1 = timestr.Find(TEXT(" "))) > p2)
-			{
-				errno = EINVAL;
-				return;
-			}
 
-			p3   = MIN(timestr.Find(TEXT(" "), p2 + 2), (int)len);
+		p2 = timestr.Find(_T(", "));
+		if (p2 >= 0)  // "Month da, yyyy H:M:S"
+		{
+			p1 = timestr.Find(_T(" "));
+			assert(p1 <= p2);  // Invalid time conversion format.
+
+			p3   = MIN(timestr.Find(_T(" "), p2 + 2), (int)len);
 			CString month = timestr.Mid(0, p1);
 			da   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
 			yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
 			for (mo = 0; mo < 12; mo++)
 				if (month == Month[mo])
 					break;
-			if (mo == 12)
-			{
-				errno = EINVAL;
-				return;
-			}
+			assert(mo != 12);  // Invalid time conversion format.
+
 			mo++;
 			CTime t(yyyy, mo, da, H, M, S, nDST);
 			m_time = t.m_time;
+			return;
 		}
-		else if ((p1 = timestr.Find(TEXT("+"))) >= 0)  // "yyyy+doy H:M:S"
+
+		p1 = timestr.Find(_T("+"));
+		assert(p1 >= 0);  // Invalid time conversion format.
+		if (p1 >= 0)  // "yyyy+doy H:M:S"
 		{
-			p2 = MIN(timestr.Find(TEXT(" ")), (int)len);
+			p2 = MIN(timestr.Find(_T(" ")), (int)len);
 			yyyy = _ttoi(timestr.Mid(0, p1).c_str());
 			doy  = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
 			CTime t(yyyy, doy, H, M, S, nDST);
 			m_time = t.m_time;
+			return;
 		}
 	}
 
@@ -594,16 +607,22 @@ namespace Win32xx
 	inline bool CTime::GetAsFileTime(FILETIME& ft) const
 	//	Convert *this CTime object into a FILETIME structure and  store it
 	//	in st. The FILETIME data structure initialized by this function will
-	//	reflect the UTC time of this object. Return true if successful;
-	//	otherwise throw an exception.
+	//	reflect the UTC time of this object. Return true if successful.
 	{
+		bool rval = false;
 		time_tm* ptm = GetGmtTm();
 		assert(ptm != NULL);
-		SYSTEMTIME st = {(WORD)(1900 + ptm->tm_year), (WORD)(1 + ptm->tm_mon),
-			(WORD)ptm->tm_wday, (WORD)ptm->tm_mday, (WORD)ptm->tm_hour,
-			(WORD)ptm->tm_min, (WORD)ptm->tm_sec, (WORD)0};
-		SystemTimeToFileTime(&st, &ft);
-		return true;
+
+		if (ptm)
+		{
+			SYSTEMTIME st = {(WORD)(1900 + ptm->tm_year), (WORD)(1 + ptm->tm_mon),
+				(WORD)ptm->tm_wday, (WORD)ptm->tm_mday, (WORD)ptm->tm_hour,
+				(WORD)ptm->tm_min, (WORD)ptm->tm_sec, (WORD)0};
+			SystemTimeToFileTime(&st, &ft);
+			rval = true;
+		}
+		
+		return rval;
 	}
 
 	//============================================================================
@@ -611,31 +630,41 @@ namespace Win32xx
 	//	Convert *this CTime object into a SYSTEMTIME structure and  store it
 	//	in st. The SYSTEMTIME data structure initialized by this function will
 	//	reflect the local time of this object and  will have its wMilliseconds
-	//	member set to zero. Return true if successful; otherwise throw an
-	//	exception.
+	//	member set to zero. Return true if successful.
 	{
+		bool rval = false;
 		time_tm* ptm = GetLocalTm();
 		assert(ptm != NULL);
-		st.wYear 	= (WORD) (1900 + ptm->tm_year);
-		st.wMonth 	= (WORD) (1 + ptm->tm_mon);
-		st.wDayOfWeek 	= (WORD) ptm->tm_wday;
-		st.wDay 	= (WORD) ptm->tm_mday;
-		st.wHour 	= (WORD) ptm->tm_hour;
-		st.wMinute 	= (WORD) ptm->tm_min;
-		st.wSecond 	= (WORD) ptm->tm_sec;
-		st.wMilliseconds = 0;
-		return true;
+
+		if (ptm)
+		{
+			st.wYear 	= (WORD) (1900 + ptm->tm_year);
+			st.wMonth 	= (WORD) (1 + ptm->tm_mon);
+			st.wDayOfWeek 	= (WORD) ptm->tm_wday;
+			st.wDay 	= (WORD) ptm->tm_mday;
+			st.wHour 	= (WORD) ptm->tm_hour;
+			st.wMinute 	= (WORD) ptm->tm_min;
+			st.wSecond 	= (WORD) ptm->tm_sec;
+			st.wMilliseconds = 0;
+			rval = true;
+		}
+
+		return rval;
 	}
 
 	//============================================================================
 	inline time_tm* CTime::GetGmtTm(time_tm* ptm) const
 	//	Return a pointer to a time_tm that contains a decomposition of *this
 	//	CTime object expressed in UTC. If ptm is non NULL, this decomposition
-	//	is also copyed into ptm.
+	//	is also copied into ptm.
 	{
 		if (ptm != NULL)
 		{
-			*ptm = *::gmtime(&m_time);
+			time_tm* ptmTemp = ::gmtime(&m_time);
+			if (ptmTemp == NULL)
+				return NULL;    // the m_time was not initialized!
+
+			*ptm = *ptmTemp;
 			return ptm;
 		}
 		else
@@ -646,7 +675,7 @@ namespace Win32xx
 	inline time_tm* CTime::GetLocalTm(time_tm* ptm) const
 	//	Return a pointer to a time_tm that contains a decomposition of *this
 	//	CTime object expressed in the local time base. If ptm is non NULL, this
-	//	decomposition is also copyed into ptm.
+	//	decomposition is also copied into ptm.
 	{
 		if (ptm != NULL)
 		{
@@ -672,8 +701,8 @@ namespace Win32xx
 	inline int	CTime::GetYear(bool local /* = true */) const
 	//	Return the year of *this time object, local (true) or UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return 1900 + tmbuffer->tm_year;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return 1900 + ptmbuffer->tm_year;
 	}
 
 	//============================================================================
@@ -681,8 +710,8 @@ namespace Win32xx
 	//	Return the month of *this time object (1 through 12), local (true)  or
 	//	UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_mon + 1;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_mon + 1;
 	}
 
 	//============================================================================
@@ -690,8 +719,8 @@ namespace Win32xx
 	//	Return the day of *this object (1 through 31), local (true)  or
 	//	UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_mday ;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_mday ;
 	}
 
 	//============================================================================
@@ -699,8 +728,8 @@ namespace Win32xx
 	//	Return the hour of *this object (0 through 23), local (true)  or
 	//	UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_hour;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_hour;
 	}
 
 	//============================================================================
@@ -708,8 +737,8 @@ namespace Win32xx
 	//	Return the minute of *this object (0 through 59), local (true)  or
 	//	UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_min;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_min;
 	}
 
 	//============================================================================
@@ -717,8 +746,8 @@ namespace Win32xx
 	//	Return the second of *this object (0 through 61), local (true)  or
 	//	UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_sec;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_sec;
 	}
 
 	//============================================================================
@@ -726,8 +755,8 @@ namespace Win32xx
 	//	Return the day of the week of *this object (0–6, Sunday = 0), local
 	//	(true) or UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_wday;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_wday;
 	}
 
 	//============================================================================
@@ -735,8 +764,8 @@ namespace Win32xx
 	//	Return the day of the year of *this object (1-366), local (true)  or
 	//	UTC (false).
 	{
-		time_tm *tmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
-		return tmbuffer->tm_yday + 1;
+		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
+		return ptmbuffer->tm_yday + 1;
 	}
 
 	//============================================================================
@@ -752,6 +781,7 @@ namespace Win32xx
 	inline CTime& CTime::operator=(const time_t& t)
 	//	Assign the time_t value to *this time.
 	{
+		assert(t >= 0);
 		// Self assignment is safe
 		m_time = t;
 		return *this;
@@ -771,7 +801,7 @@ namespace Win32xx
 	//	Return the CTime that is the time span ts before *this time.
 	{
 		time_t d = m_time - ts.m_timespan;
-		CTime t(d);
+		CTime t(d);  // asserts if d is invalid
 		return t;
 	}
 
@@ -780,7 +810,7 @@ namespace Win32xx
 	//	Return the CTime that is the time span ts after *this time.
 	{
 		time_t s = m_time + ts.m_timespan;
-		CTime t(s);
+		CTime t(s); // asserts if s is invalid
 		return t;
 	}
 
@@ -789,6 +819,7 @@ namespace Win32xx
 	//	Increment *this time by the time span ts and  return this CTime.
 	{
 		m_time += ts.m_timespan;
+		assert(m_time >= 0); // Invalid addition to time object.
 		return *this;
 	}
 
@@ -797,19 +828,20 @@ namespace Win32xx
 	//	Decrement *this time by the time span ts and  return this CTime.
 	{
 		m_time -= ts.m_timespan;
+		assert(m_time >= 0); //Invalid subtraction from time object.
 		return *this;
 	}
 
 	//============================================================================
 	inline bool CTime::operator==(const CTime& t) const
-	//	Return true if *this and  t are the same times.
+	//	Return true if *this and t are the same times.
 	{
 		return m_time == t.m_time;
 	}
 
 	//============================================================================
 	inline bool CTime::operator!=(const CTime& t) const
-	//	Return true if *this and  t are not the same times.
+	//	Return true if *this and t are not the same times.
 	{
 		return m_time != t.m_time;
 	}
@@ -853,8 +885,7 @@ namespace Win32xx
 		TCHAR szBuffer[maxTimeBufferSize];
 
 		time_tm* ptm = ::localtime(&m_time);
-		if (ptm == NULL ||
-			!::_tcsftime(szBuffer, maxTimeBufferSize, pFormat, ptm))
+		if (ptm == NULL || !::_tcsftime(szBuffer, maxTimeBufferSize, pFormat, ptm))
 			szBuffer[0] = '\0';
 		return CString(szBuffer);
 	}
@@ -866,11 +897,9 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		if ( !strFormat.LoadString(nFormatID) )
-			assert(FALSE);
-
-		assert( FALSE);
-		return CString();
+		BOOL ok = strFormat.LoadString(nFormatID);
+		assert(ok);
+		return Format(strFormat);
 	}
 
 	//============================================================================
@@ -892,14 +921,13 @@ namespace Win32xx
 		const size_t  maxTimeBufferSize = 128;
 		TCHAR szBuffer[maxTimeBufferSize];
 		CString fmt0 = pFormat;
-		while (fmt0.Replace(TEXT("%Z"), TEXT("Coordinated Universal Time")))
+		while (fmt0.Replace(_T("%Z"), _T("Coordinated Universal Time")))
 			;
-		while (fmt0.Replace(TEXT("%z"), TEXT("UTC")))
+		while (fmt0.Replace(_T("%z"), _T("UTC")))
 			;
 
 		time_tm* ptmTemp = GetGmtTm();
-		if (ptmTemp ==NULL || !::_tcsftime(szBuffer, maxTimeBufferSize,
-			fmt0.c_str(), ptmTemp))
+		if (ptmTemp ==NULL || !::_tcsftime(szBuffer, maxTimeBufferSize, fmt0.c_str(), ptmTemp))
 			szBuffer[0] = '\0';
 		return CString(szBuffer);
 	}
@@ -911,9 +939,8 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		if ( !strFormat.LoadString(nFormatID) )
-			assert(FALSE);
-
+		BOOL ok = strFormat.LoadString(nFormatID);
+		assert(ok);
 		return FormatGmt(strFormat);
 	}
 
@@ -946,11 +973,20 @@ namespace Win32xx
 		// convert ft to unsigned long long
 		ULONGLONG ftlong = (ULONGLONG)
 			(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
+		BOOL sign = FALSE;
+		if (addend < 0.)
+		{
+			sign = TRUE;
+			addend = -addend;
+		}
 		ULONGLONG ftaddend = (ULONGLONG)(addend * 10000000);
-		if (addend > 0.)
-			ftlong += ftaddend;
-		else
+		if (sign)
+		{
+			assert(ftlong >= ftaddend); //FILETIME addition underflow.
 			ftlong -= ftaddend;
+		}
+		else
+			ftlong += ftaddend;
 		FILETIME fts;
 		fts.dwHighDateTime = (DWORD)(ftlong >> 32);
 		fts.dwLowDateTime  = (DWORD)(ftlong & ~0);
@@ -981,7 +1017,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CArchive& operator<<(CArchive &ar, CTime& t)
+	inline CArchive& operator<<(CArchive& ar, CTime& t)
 	//	Write the time t into the archive file. Throw an exception if an
 	//	error occurs.
 	{
@@ -1212,28 +1248,28 @@ namespace Win32xx
 	//	      %M - minute (0-59)
 	//	      %S - seconds (0-59)
 	{
-		CString fmt0 = pFormat,
-			insert;
+		CString fmt0 = pFormat;
+		CString insert;
 
-		while (fmt0.Find(TEXT("%D")) != -1)  // number of days
+		while (fmt0.Find(_T("%D")) != -1)  // number of days
 		{
-			insert.Format(TEXT("%ld"), GetDays());
-			fmt0.Replace(TEXT("%D"), insert);
+			insert.Format(_T("%ld"), GetDays());
+			fmt0.Replace(_T("%D"), insert);
 		}
-		while (fmt0.Find(TEXT("%H")) != -1)  // hours (00 – 23)
+		while (fmt0.Find(_T("%H")) != -1)  // hours (00 – 23)
 		{
-			insert.Format(TEXT("%02d"), GetHours());
-			fmt0.Replace(TEXT("%H"), insert);
+			insert.Format(_T("%02d"), GetHours());
+			fmt0.Replace(_T("%H"), insert);
 		}
-		while (fmt0.Find(TEXT("%M")) != -1)  // minutes (00 – 59)
+		while (fmt0.Find(_T("%M")) != -1)  // minutes (00 – 59)
 		{
-			insert.Format(TEXT("%02d"), GetMinutes());
-			fmt0.Replace(TEXT("%M"), insert);
+			insert.Format(_T("%02d"), GetMinutes());
+			fmt0.Replace(_T("%M"), insert);
 		}
-		while (fmt0.Find(TEXT("%S")) != -1)  // seconds (00 - 59)
+		while (fmt0.Find(_T("%S")) != -1)  // seconds (00 - 59)
 		{
-			insert.Format(TEXT("%02d"), GetSeconds());
-			fmt0.Replace(TEXT("%S"), insert);
+			insert.Format(_T("%02d"), GetSeconds());
+			fmt0.Replace(_T("%S"), insert);
 		}
 		return fmt0;
 	}
@@ -1241,7 +1277,7 @@ namespace Win32xx
 	//============================================================================
 	inline CString CTimeSpan::Format(UINT nFormatID) const
 	//	Return a rendering of *this CTimeSpan object in CString form using the
-	//	string resource having the nFormatID identifer as the template. The
+	//	string resource having the nFormatID identifier as the template. The
 	//	valid format directives are
 	//	      %D - number of days
 	//	      %H - hour (0-23)
@@ -1249,11 +1285,10 @@ namespace Win32xx
 	//	      %S - seconds (0-59)
 	{
 		CString strFormat;
-		if ( !strFormat.LoadString(nFormatID) )
-			assert(FALSE);
-
+		BOOL ok = strFormat.LoadString(nFormatID);
+		assert(ok);
 		return Format(strFormat);
-}
+	}
 
 	//============================================================================
 	inline CString CTimeSpan::Format(const CString& format) const

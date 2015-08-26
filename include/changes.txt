@@ -618,53 +618,6 @@ New Features and enhancements
    - Added MaskBlt and TransparentBlt functions
    - Now able to retrieve GDI objects currently selected in the device context.
 
-Changes in detail
------------------
-Added CDC::BeginPath
-Added CDC::CloseFigure
-Added CDC::CreateHalftonePalette
-Added CDC::CreatePalette
-Added CDC::EndPath
-Added CDC::EnumObjects
-Added CDC::FlattenPath 
-Added CDC::FrameRgn
-Added CDC::FlattenPath
-Added CDC::GetClipPath
-Added CDC::GetCharABCWidths 
-Added CDC::GetCHarABCWidthsI
-Added CDC::GetCharacterPlacement 
-Added CDC::GetCharWidth
-Added CDC::GetCharWidthI
-Added CDC::GetColorAdjustment
-Added CDC::GetCurrentBitmap
-Added CDC::GetCurrentBrush
-Added CDC::GetCurrentFont
-Added CDC::GetCurrentPalette
-Added CDC::GetCurrentPen
-Added CDC::GetFontData
-Added CDC::GetFontLanguageInfo
-Added CDC::GetGlyphOutline
-Added CDC::GetKerningPairs	 
-Added CDC::GetMiterLimit
-Added CDC::GetNearestColor
-Added CDC::GetPolyFillMode 
-Added CDC::GetROP2
-Added CDC::GetStockObject
-Added CDC::GradientFill
-Added CDC::MaskBlt
-Added CDC::RestoreDC
-Added CDC::SaveDC
-Added CDC::SelectClipPath
-Added CDC::SelectStockObject
-Added CDC::SetColorAdjustment 
-Added CDC::SetMapperFlags
-Added CDC::SetMiterLimit
-Added CDC::SetPolyFillMode  
-Added CDC::TransparentBlt
-Added CDC::UpdateColors
-Added CDC::WidenPath
-
-
 Version 7.7
 ===========
 
@@ -953,14 +906,6 @@ New Features and Enhancements
    - CIPAddress
    - CMonthCalendar
    - CTooltip
-* CString constructors now accept either ANSI or Unicode characters and converts
-   these to TCHAR as required.
-* Extended CDC
-	The CDC::DetachBitmap function has been added. This provides a convenient
-	way of detaching a bitmap from a memory DC created by CreateCompatibleBitmap.
-	The various CDC::CreateXXX functions now return void instead of a pointer
-	to the old GDI object.
-
 
 Version 7.2
 ===========
@@ -980,15 +925,6 @@ New Features and Enhancements
    The Idle processing is used by the Win32++ library for some internal 
    processing. It is also available for use by users, and is used in much the
    same way as OnIdle processing in MFC.
-* Enhanced the CDC class, and added CWindowDC, CClientDC, CMemDC, CPaintDC
-   and CMetaFileDC. The creation of the various different types of CDCs has
-   been simplified, and the CDC functions now use CDC pointers instead of
-   HDCs. These changes improve the compatibility between Win32++ and MFC.
-* Enhanced the various GDI object classes, namely CBitmap, CBrush, CFont, 
-   CPalette, CPen and CRgn, and added CGDIObject. The library now standardises
-   on using pointers to theses classes instead of raw GDI handles (like HPEN).
-   These changes improve the compatibility between Win32++ and MFC.
-
 
 Version 7.1
 ===========
@@ -1016,50 +952,19 @@ New Features and Enhancements
 	W2OLE		WCHAR to OLE
 	W2T			WCHAR to TCHAR
    Refer to the help documentation for instructions on using these functions.
-* OnEraseBkgnd is now called automatically when a CWnd's background needs
-   erasing. Return TRUE to prevent default erasure.
-* Scribble Tutorial now demonstrates the use of command line arguments
-* Enhanced CResizer.
-   - The anchor points are now fixed instead of proportional
-   - Scrollbars are now added when required.
-   - Added the DialogResizing sample to demonstrate CResizer's new features.
-* Create now use a CWnd pointer instead of a HWND when specifying the 
-   parent window.
-* Dialogs and Property Sheets now use a CWnd pointer instead of a HWND
-   when specifying the parent window.
-* CTab has been enhanced. The TCS_FIXEDWIDTH and TCS_OWNERDRAWFIXED styles
-   are now optional.   
-* Extended the CSize, CPoint and CRect classes
-* Extended CMDIFrame and CMDIChild. CMDIChild::SetHandles is now used to set
-   the MDI child's menu and accelerator table. 
-* A docker can now be resized while docked using CDocker::SetDockSize.
-* Extended the "Using Win32++ section of the Win32++ help documentation.
-
 
 Version 7.0
 ===========
 
 New Features and Enhancements
 -----------------------------
-* The following function now return CWnd* instead of HWND:
-   GetActiveWindow, GetAncestor, GetCapture, GetFocus, GetDlgItem, GetWindow,
-   GetLastAtivePopup, GetParent, GetTopWindow, SetActiveWindow, SetCapture, 
-   SetFocus, and SetParent.  This helps the framework to be more object
-   orientated, by allowing the programmer to work more directly with CWnds.
-   It also reduces the need to convert between CWnds and HWNDs in user code.
-   If a CWnd object for the HWND doesn't already exist, Win32++ creates a 
-   temporary CWnd. The pointers returned by these functions should not be
-   stored and used later, as they might not be valid then.
 * Added CThread class to simplify the task of using threads and creating
    windows in different threads. CThread can be used for both worker threads
    and GUI threads. Refer to the Thread and DirectX samples for examples of 
    how to use CThread to create windows in a different thread. The DirectX
    sample also uses a customized message loop for the thread.   
 * Added the following control wrappers: CAnimation, CComboBox, CComboBoxEx,
-   CProgressBar, CScrollBar, CSlider, and CSpinButton.
-* Renamed CToolbar to CToolBar, CStatusbar to CStatusBar, CRebar to CReBar
-   and CMenubar to CMenuBar. This matches the MFC names, and is also more 
-   consistent with Win32++'s naming conventions.   
+   CProgressBar, CScrollBar, CSlider, and CSpinButton.  
 * Added support for re-sizable dialogs. The CResizer class has been added
    to dialog.h to facilitate dialog resizing. Refer to the forms sample for
    an example of how to put CResizer to use.
@@ -1072,35 +977,10 @@ New Features and Enhancements
    as an alternative for those users who would like to use a "shared_ptr", but
    don't have access to one yet. Unlike auto-ptr's, shared_ptr's can be used
    to safely store pointers in vectors and other STL containers.
-* Extended the CToolbar class.
 * Added the GDIPlus sample to demonstrate how to use the GDIPlus library 
    provided with modern Windows operating systems (XP and above).
 * Win32++ can now be run from inside a DLL. The "DLL" sample demonstrates how to
    put a Win32++ dialog in a dll, and run it from a test program.  
-* Dialogs and Property Sheets now use DWLP_MSGRESULT to automatically handle the 
-   value returned by notifications in their message handling. This allows a 
-   dialog's controls to use custom draw.
-* Improved the appearance of frames without themes. The frame sample demonstrates
-   how override CMainFrame::OnCreate to customize the frame's appearance.
-* Asserts are used more liberally to test for programming errors. Any message
-   sent to a non-existent window, for example, will now assert. More asserts 
-   are intended to help users write code that is more robust. Note that asserts
-   are only evaluated in Debug mode, and have no effect in Release mode.
-* Exceptions are thrown less often. They are now thrown to indicate a critical
-   problem, outside the programmer's control. Throwing fewer exceptions results 
-   in slightly smaller executables, and gives users more flexibility and 
-   control over their own exception methodology. They are thrown when:
-   - a critical dll cannot be loaded.
-   - a window message cannot be routed to a CWnd object.
-   - an attempt to read from or write to the registry fails unexpectedly.
-* Vectors are now used as a replacement for all dynamically allocated arrays, 
-   ensuring the arrays are automatically deleted when they go out of scope.
-   Creating an array with "new" runs the risk of causing a memory leak,
-   particularly when an exception is thrown. Using a vector to create the
-   array guarantees that it will be deleted properly under all circumstances.
-* The OnPaint function now uses a CDC reference as its argument instead of a 
-   HDC. This simplifies the task of using a CDC when overriding OnPaint.
-* Extended the help documentation.   
 
 
 Version 6.9
@@ -1115,19 +995,11 @@ New Features and Enhancements
    approach to adding a browser window to any application.  It can be compiled
    by any of the supported compilers including Dev-C++, MinGW and the Borland 
    compilers as well as the compilers from Microsoft.  
-* Added an ActiveX host class called CAXWindow.
-* The CTab, CMDITab, CDocker and CDockContainer classes are now flicker free,
-   providing a more professional look during resizing and docker moving.
-* Improved the dock targeting and dock hinting.   
-* Introduced a new set of text conversion functions to convert between Ansi, 
-   Unicode and Wide characters.
-* CWnd objects can now report their type with GetWindowType.
+* Added an ActiveX host class called CAXWindow.  
 * Modified the Browser sample to use the new CWebBrowser class. It also 
    demonstrates how to use an event sink to get notification of browser events.
 * Added a Tray sample which demonstrates how to create an application 
-   which can be minimised to the system tray, and restored.
-* The visual editor that ships with VS2008 and VS2010 can now be used to
-   modify the resource files (Resource.rc and resource.h) without mangling them.   
+   which can be minimised to the system tray, and restored.  
 
 
 Version 6.8
@@ -1152,23 +1024,6 @@ Version 6.7
 
 New Features and Enhancements
 -----------------------------
-* The directory layout of Win32++ has changed. It now contains the following
-  folders:
-   help             The help for Win32++
-   include          The Win32++ library for typical use
-   lib              The static library files when they are build
-   Library Projects The project files used to build the static library
-   new projects     A set of projects to be used in your new projects 
-   src              The Win32++ library for building the static library
-   tests            A directory which contains the output of some tools
-   tools            A set of useful batch files for Win32++ 
-* The Win32++ include directory is specified within the project rather than
-   hard coded into the source files. To specify a different location for the
-   Win32++ files in a project, specify the "Additional Include Directories" for
-   both "C/C++" and "Resources". 
-* The projects now provide the option of compiling with a static library or
-   directly from the file in Win32++\include. To build the static libraries,
-   see below. 
 * The projects are now configured to take advantage of precompiled headers.
 * A set of tools is now provided in the tools folder. They include a set of 
    batch files for compiling the examples and batch files to "clean" them.
@@ -1179,12 +1034,7 @@ New Features and Enhancements
    extended style used by these languages. To take advantage of this feature,
    use PreCreate to set this extended when using CFrame, CMDIFrame, CTab, 
    CTabbedMDI, and CDocker.  
-* OnInitialUpdate is now called after Attach or AttachDlgItem.
-* IsChild now takes a HWND argument.
-* Win32++ is now available as a single download, rather than a collection of
-   files.
-* Each program example now has a Readme.txt file which describes what it does,
-   and the features it demonstrates.   
+* OnInitialUpdate is now called after Attach or AttachDlgItem.   
 
 
 Version 6.6
