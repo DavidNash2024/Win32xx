@@ -1,5 +1,5 @@
-// Win32++   Version 8.0.1
-// Release Date: 28th July 2015
+// Win32++   Version 8.1 beta
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -430,8 +430,7 @@ namespace Win32xx
 	//	the hour, minute, and  second.
 	{
 		FILETIME ft;
-		BOOL ok = ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft);
-		assert(ok);
+		VERIFY( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) );
 		CTime t(ft, nDST);
 		m_time = t.m_time;
 	}
@@ -452,13 +451,11 @@ namespace Win32xx
 	{
 		// start by converting ft (a UTC time) to local time
 		FILETIME localTime;
-		BOOL ok = ::FileTimeToLocalFileTime(&ft, &localTime);
-		assert(ok);
+		VERIFY( ::FileTimeToLocalFileTime(&ft, &localTime) );
 
 		//  convert localTime to a SYSTEMTIME structure
 		SYSTEMTIME st;
-		ok = ::FileTimeToSystemTime(&localTime, &st);
-		assert(ok);
+		VERIFY( ::FileTimeToSystemTime(&localTime, &st) );
 
 		// then convert the system time to a CTime
 		CTime t(st, nDST);  // asserts if invalid
@@ -814,7 +811,7 @@ namespace Win32xx
 		return t;
 	}
 
-	/*============================================================================*/
+	//============================================================================
 	inline CTime& CTime::operator+=(const CTimeSpan& ts)
 	//	Increment *this time by the time span ts and  return this CTime.
 	{
@@ -897,8 +894,7 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		BOOL ok = strFormat.LoadString(nFormatID);
-		assert(ok);
+		VERIFY( strFormat.LoadString(nFormatID) );
 		return Format(strFormat);
 	}
 
@@ -939,8 +935,7 @@ namespace Win32xx
 	//	identifies a resource string.
 	{
 		CString strFormat;
-		BOOL ok = strFormat.LoadString(nFormatID);
-		assert(ok);
+		VERIFY( strFormat.LoadString(nFormatID) );
 		return FormatGmt(strFormat);
 	}
 
@@ -1285,8 +1280,7 @@ namespace Win32xx
 	//	      %S - seconds (0-59)
 	{
 		CString strFormat;
-		BOOL ok = strFormat.LoadString(nFormatID);
-		assert(ok);
+		VERIFY( strFormat.LoadString(nFormatID) );
 		return Format(strFormat);
 	}
 

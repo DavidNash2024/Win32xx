@@ -1,9 +1,15 @@
+Version 8.1
+===========
+
+Moved CWnd::GetCWndPtr to ::GetCWndPtr
+
+
 Version 8.0.1
 ==============
 
 Bug Fix
 * Updated LoadCommonControls to resolve issues with modal dialogs
-  running on older operating systems. 
+  running on older operating systems.  
 
 
 New Features and Enhancements

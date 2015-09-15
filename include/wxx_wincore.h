@@ -1,5 +1,5 @@
-// Win32++   Version 8.0.1
-// Release Date: 28th July 2015
+// Win32++   Version 8.1 beta
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -474,6 +474,7 @@ namespace Win32xx
 		virtual int Run();
 
 		// Operations
+		CWnd*	GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		HCURSOR LoadCursor(LPCTSTR lpszResourceName) const;
@@ -498,7 +499,6 @@ namespace Win32xx
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
 #endif
 
-		CWnd* GetCWndFromMap(HWND hWnd);
 		TLSData* GetTlsData() const;
 		void	SetCallback();
 		TLSData* SetTlsData();
@@ -797,6 +797,7 @@ namespace Win32xx
 	//
 	inline void CObject::Serialize(CArchive& /* ar */ )
 	{
+	//	Override Serialize in the class inherited from CObject like this.
 	
 	//	if (ar.IsStoring())
 	//	{
