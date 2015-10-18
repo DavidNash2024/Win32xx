@@ -179,6 +179,7 @@
 #define UWN_TABCHANGED       (WM_APP + 0x3F14)	// Notification - tab size or position changed
 #define UWN_TABDRAGGED       (WM_APP + 0x3F15)	// Notification - tab is being dragged
 #define UWN_UNDOCKED		 (WM_APP + 0x3F16)	// Notification - sent by docker when undocked
+#define UWN_TABCLOSE		 (WM_APP + 0x3F17)	// Notification - sent by CTab when a tab is about to be closed
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -474,7 +475,6 @@ namespace Win32xx
 		virtual int Run();
 
 		// Operations
-		CWnd*	GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
 		HCURSOR LoadCursor(LPCTSTR lpszResourceName) const;
@@ -499,7 +499,7 @@ namespace Win32xx
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
 #endif
 
-		TLSData* GetTlsData() const;
+		CWnd* GetCWndFromMap(HWND hWnd);		TLSData* GetTlsData() const;
 		void	SetCallback();
 		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -640,6 +640,7 @@ namespace Win32xx
 		CWnd  SetActiveWindow() const;
 		CWnd  SetCapture() const;
 		ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
+		LONG_PTR SetDlgCtrlID(int idCtrl) const;
 		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const;
 		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
 		CWnd  SetFocus() const;
@@ -2938,6 +2939,13 @@ namespace Win32xx
 			Rgn.Detach();	// The system owns the region now
 
 		return iResult;
+	}
+
+	inline LONG_PTR CWnd::SetDlgCtrlID(int idCtrl) const
+	// Assigns an id to the window. Note that only child windows can have an ID assigned
+	{
+		assert(IsWindow());
+		return SetWindowLongPtr(GWLP_ID, idCtrl);
 	}
 
 	inline BOOL CWnd::SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const

@@ -1,7 +1,12 @@
 Version 8.1
 ===========
 
-Moved CWnd::GetCWndPtr to ::GetCWndPtr
+Added UWN_TABCLOSE notification
+Added CWnd::SetDlgCtrlID
+Added CTabbedMDI::OnTabClose
+
+
+
 
 
 Version 8.0.1

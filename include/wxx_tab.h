@@ -60,6 +60,12 @@ namespace Win32xx
 		TabPageInfo() : iImage(0), idTab(0), pView(0) {}	// constructor
 	};
 
+	typedef struct tagTABNMHDR
+	{
+		NMHDR hdr;
+		UINT nPage;
+	} TABNMHDR;
+
 	class CTab : public CWnd
 	{
 	protected:
@@ -188,6 +194,7 @@ namespace Win32xx
 		CTab& operator = (const CTab&); // Disable assignment operator
 
 		SIZE  GetMaxTabSize() const;
+		BOOL SendCloseNotify(int nPage);
 		void ShowActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
@@ -237,6 +244,7 @@ namespace Win32xx
 		virtual void 	OnAttach();
 		virtual void    OnDestroy();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual BOOL	OnTabClose(int nPage);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -1131,10 +1139,26 @@ namespace Win32xx
 		}
 	}
 
+	inline BOOL CTab::SendCloseNotify(int nPage)
+	{
+		int idCtrl = GetDlgCtrlID();
+		TABNMHDR TabNMHDR;
+		TabNMHDR.hdr.code = UWN_TABCLOSE;
+		TabNMHDR.hdr.hwndFrom = *this;
+		TabNMHDR.hdr.idFrom = idCtrl;
+		TabNMHDR.nPage = nPage;
+
+		// The default return value is zero
+		return GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
+	}
+
 	inline void CTab::RemoveTabPage(int nPage)
 	// Removes a tab and its view page
 	{
 		if ((nPage < 0) || (nPage > (int)m_vTabPageInfo.size() -1))
+			return;
+		
+		if (IsWindow() && SendCloseNotify(nPage))
 			return;
 
 		// Remove the tab
@@ -1175,6 +1199,7 @@ namespace Win32xx
 
 			NotifyChanged();
 		}
+  		
 	}
 
 	inline void CTab::SelectPage(int nPage)
@@ -1857,29 +1882,55 @@ namespace Win32xx
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
-		if (pnmhdr->code == UWN_TABCHANGED)
-			RecalcLayout();
+		assert(pnmhdr);
 
-		if (pnmhdr->code == UWN_TABDRAGGED)
+		switch(pnmhdr->code)
 		{
-			CPoint pt = GetCursorPos();
-			GetTab().ScreenToClient(pt);
 
-			TCHITTESTINFO info;
-			ZeroMemory(&info, sizeof(TCHITTESTINFO));
-			info.pt = pt;
-			int nTab = GetTab().HitTest(info);
-			if (nTab >= 0)
+		case UWN_TABCHANGED:
+			RecalcLayout();
+			break;
+
+		case UWN_TABDRAGGED:
 			{
-				if (nTab !=  GetActiveMDITab())
+				CPoint pt = GetCursorPos();
+				GetTab().ScreenToClient(pt);
+
+				TCHITTESTINFO info;
+				ZeroMemory(&info, sizeof(TCHITTESTINFO));
+				info.pt = pt;
+				int nTab = GetTab().HitTest(info);
+				if (nTab >= 0)
 				{
-					GetTab().SwapTabs(nTab, GetActiveMDITab());
-					SetActiveMDITab(nTab);
+					if (nTab !=  GetActiveMDITab())
+					{
+						GetTab().SwapTabs(nTab, GetActiveMDITab());
+						SetActiveMDITab(nTab);
+					}
 				}
+
+				break;
 			}
-		}
+
+		case UWN_TABCLOSE:
+			{	
+				TABNMHDR* pTabNMHDR = (TABNMHDR*)lParam;
+				return !OnTabClose(pTabNMHDR->nPage);
+			}
+
+		}	// switch(pnmhdr->code)
 
 		return 0L;
+	}
+
+	inline BOOL CTabbedMDI::OnTabClose(int nPage)
+	// Override this function to determine what happens when a tab is about to close.
+	// Return TRUE to allow the tab to close, or FALSE to prevent the tab closing.
+	{
+		UNREFERENCED_PARAMETER(nPage);
+		
+		// Allow the tab to be close
+		return TRUE;
 	}
 
 	inline LRESULT CTabbedMDI::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
