@@ -97,8 +97,14 @@ namespace Win32xx
 		friend CString operator + (const CString& string1, const CString& string2);
 		friend CString operator + (const CString& string, LPCTSTR pszText);
 		friend CString operator + (const CString& string, TCHAR ch);
+		friend CString operator + (const CString& string1, int val);
+		friend CString operator + (const CString& string1, double val);
+
 		friend CString operator + (LPCTSTR pszText, const CString& string);
 		friend CString operator + (TCHAR ch, const CString& string);
+		friend CString operator + (int val, const CString& string1);
+		friend CString operator + (double val, const CString& string1);
+
 		friend bool    operator < (const CString& string1, const CString& string2);
 		friend bool    operator > (const CString& string1, const CString& string2);
 		friend bool    operator < (const CString& string1, LPCTSTR pszText);
@@ -106,7 +112,9 @@ namespace Win32xx
 		friend bool    operator <= (const CString& string1, const CString& string2);
 		friend bool    operator >= (const CString& string1, const CString& string2);
 		friend bool    operator <= (const CString& string1, LPCTSTR pszText);
-		friend bool    operator >= (const CString& string1, LPCTSTR pszText);
+		friend bool    operator >= (CString& string1, LPCTSTR pszText);
+
+
 
 	public:
 		CString();
@@ -1004,6 +1012,22 @@ namespace Win32xx
 		str.m_str.append(1, ch);
 		return str;
 	}
+	
+	inline CString operator + (const CString& string1, int val)
+	{
+		tStringStream tss;
+		tss << val;
+		CString str = string1 + CString(tss.str().c_str());
+		return str;
+	}
+
+	inline CString operator + (const CString& string1, double val)
+	{
+		tStringStream tss;
+		tss << val;
+		CString str = string1 + CString(tss.str().c_str());
+		return str;
+	}
 
 	inline CString operator + (LPCTSTR pszText, const CString& string)
 	{
@@ -1016,6 +1040,22 @@ namespace Win32xx
 	{
 		CString str(ch);
 		str.m_str.append(string);
+		return str;
+	}
+
+	inline CString operator + (int val, const CString& string1)
+	{
+		tStringStream tss;
+		tss << val;
+		CString str = CString(tss.str().c_str()) + string1;
+		return str;
+	}
+
+	inline CString operator + (double val, const CString& string1)
+	{
+		tStringStream tss;
+		tss << val;
+		CString str = CString(tss.str().c_str()) + string1;
 		return str;
 	}
 
@@ -1058,7 +1098,6 @@ namespace Win32xx
 	{
 		return string1.Compare(pszText) >= 0;
 	}
-
 
 	// Global functions that use CString
 
@@ -1131,6 +1170,14 @@ namespace Win32xx
 		CString error;
 		error.Format(_T("(%d) %s"), errnum, szErrorString);
 		return error;
+	}
+
+	template<typename T>
+	inline CString ValueToCString(T val)
+	{
+		tStringStream tss;
+		tss << val;
+		return CString(tss.str().c_str());
 	}
 
 

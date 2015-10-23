@@ -5,6 +5,8 @@ Added UWN_TABCLOSE notification
 Added CWnd::SetDlgCtrlID
 Added CTabbedMDI::OnTabClose
 
+extended operator + for CString to support ints, floats, doubles etc.
+
 
 
 

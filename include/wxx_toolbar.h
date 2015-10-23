@@ -997,6 +997,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);
+		case UWM_ISTOOLBAR:			return TRUE;
 		}
 
 		// pass unhandled messages on for default processing

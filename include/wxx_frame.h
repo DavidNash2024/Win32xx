@@ -690,12 +690,12 @@ namespace Win32xx
 		// Add icon/check width
 		size.cx += m_sizeCheck.cx + m_marCheckBackground.Width() + m_marCheck.Width();
 
-		if (pmd->mii.fType & MFT_SEPARATOR) 
+		if (pmd->mii.fType & MFT_SEPARATOR)
 		{
 			// separator height
 			size.cy = m_sizeSeparator.cy + m_marItem.Height();
-		} 
-		else 
+		}
+		else
 		{
 			// Add check background horizontal padding.
 			size.cx += m_marCheckBackground.Width();
@@ -784,14 +784,14 @@ namespace Win32xx
 	}
 
 	inline CRect CMenuMetrics::ScaleRect(const CRect& rcItem)
-	// Re-scale the CRect to support the system's DPI 
+	// Re-scale the CRect to support the system's DPI
 	{
 		// DC for the desktop
 		CWindowDC dc(NULL);
 
-		int dpiX = dc.GetDeviceCaps(LOGPIXELSX); 
+		int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
 		int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
-		
+
 		CRect rc  = rcItem;
 		rc.left   = MulDiv(rc.left, dpiX, 96);
 		rc.right  = MulDiv(rc.right, dpiX, 96);
@@ -802,12 +802,12 @@ namespace Win32xx
 	}
 
 	inline CSize CMenuMetrics::ScaleSize(const CSize& szItem)
-	// Re-scale the CSize to support the system's DPI 	
+	// Re-scale the CSize to support the system's DPI
 	{
 		// DC for the desktop
 		CWindowDC dc(NULL);
 
-		int dpiX = dc.GetDeviceCaps(LOGPIXELSX); 
+		int dpiX = dc.GetDeviceCaps(LOGPIXELSX);
 		int dpiY = dc.GetDeviceCaps(LOGPIXELSY);
 
 		CSize sz = szItem;
@@ -2157,7 +2157,8 @@ namespace Win32xx
 		PostMessage(UWM_DOCKACTIVATE);
 
 		// Also update DockClient captions if the view is a docker
-		if (dynamic_cast<CDocker*>(&GetView()))
+	//	if (dynamic_cast<CDocker*>(&GetView()))
+		if ( GetView().SendMessage(UWM_ISDOCKER) )
 			GetView().PostMessage(UWM_DOCKACTIVATE);
 
 		return 0L;
@@ -2236,7 +2237,7 @@ namespace Win32xx
 
 		// Adjust fonts to match the desktop theme
 		SendMessage(WM_SYSCOLORCHANGE);
-		
+
 		// Reposition the child windows
 		RecalcLayout();
 
@@ -2247,7 +2248,8 @@ namespace Win32xx
 	// Handles CustomDraw notification from WM_NOTIFY.
 	{
 		CWnd* pWnd = GetCWndPtr(pNMHDR->hwndFrom);
-		if (dynamic_cast<CToolBar*>(pWnd))
+	//	if (dynamic_cast<CToolBar*>(pWnd))
+		if ( pWnd->SendMessage(UWM_ISTOOLBAR) )
 		{
 			if (pNMHDR->hwndFrom == GetMenuBar())
 				return CustomDrawMenuBar(pNMHDR);
@@ -2390,7 +2392,7 @@ namespace Win32xx
 			m_pMenuMetrics = new CMenuMetrics(*this);
 			m_pMenuMetrics->Initialize();
 		}
-		
+
 		MeasureMenuItem(pmis);
 		return TRUE;
 	}
@@ -2522,7 +2524,10 @@ namespace Win32xx
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
 		CWnd* pWnd = GetCWndPtr(WindowFromPoint(pt));
-		CToolBar* pToolBar = dynamic_cast<CToolBar*> (pWnd);
+	//	CToolBar* pToolBar = dynamic_cast<CToolBar*> (pWnd);
+		CToolBar* pToolBar = NULL;
+		if ( pWnd->SendMessage(UWM_ISTOOLBAR) )
+			pToolBar = static_cast<CToolBar*> (pWnd);
 
 		// Set the tooltip's text from the ToolBar button's CommandID
 		if (pToolBar)
@@ -2780,7 +2785,7 @@ namespace Win32xx
 			{
 				TRACE("*** Failed to save registry MRU settings. ***\n");
 				TRACE(e.GetText()); TRACE("\n");
-				
+
 				CString KeyName = _T("Software\\") + m_strKeyName;
 				CRegKey Key;
 
@@ -2793,7 +2798,7 @@ namespace Win32xx
 				return FALSE;
 			}
 		}
-	
+
 		return TRUE;
 	}
 
@@ -2994,7 +2999,7 @@ namespace Win32xx
 			CSize csSCRL = dcStatus.GetTextExtentPoint32(SCRL, lstrlen(SCRL)+1);
 
 			// Adjust for DPI aware
-			int dpiX = dcStatus.GetDeviceCaps(LOGPIXELSX); 
+			int dpiX = dcStatus.GetDeviceCaps(LOGPIXELSX);
 			csCAP.cx  = MulDiv(csCAP.cx, dpiX, 96);
 			csNUM.cx  = MulDiv(csNUM.cx, dpiX, 96);
 			csSCRL.cx = MulDiv(csSCRL.cx, dpiX, 96);
@@ -3058,7 +3063,7 @@ namespace Win32xx
 
 			// For Win2000 and below
 			int Theme = Grey;
-			
+
 			if (GetWinVersion() < 2600) // For Windows XP
 			{
 				if (m_XPThemeName == _T("NormalColor"))
@@ -3154,7 +3159,7 @@ namespace Win32xx
 					SetToolBarTheme(tbt);
 				}
 				break;
-			
+
 			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 				{
 					MenuTheme mt = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
@@ -3402,7 +3407,8 @@ namespace Win32xx
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
-		assert(dynamic_cast<CFrame*>(pTLSData->pMainWnd));
+	//	assert(dynamic_cast<CFrame*>(pTLSData->pMainWnd));
+		assert( pTLSData->pMainWnd->SendMessage(UWM_ISFRAME) );
 
 		if (HC_ACTION == nCode)
 		{
@@ -3431,7 +3437,7 @@ namespace Win32xx
 			rbbi.cyMinChild = MenuBar_Height;
 			rbbi.cyMaxChild = MenuBar_Height;
 			GetReBar().SetBandInfo(nBand, rbbi);
-		} 
+		}
 	}
 
 	inline void CFrame::UpdateMRUMenu()
@@ -3539,6 +3545,7 @@ namespace Win32xx
 		case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
 		case UWM_DRAWRBBKGND:       return DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
 		case UWM_DRAWSBBKGND:       return DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
+		case UWM_ISFRAME:			return TRUE;
 
 		} // switch uMsg
 

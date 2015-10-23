@@ -125,6 +125,7 @@
 //#include "wxx_gdi.h"				// included later in this file
 //#include "wxx_menu.h"				// included later in this file
 //#include "wxx_imagelist.h"		// included later in this file
+//#include "wxx_ddx.h"				// included later in this file
 
 
 // For compilers lacking Win64 support
@@ -157,6 +158,8 @@
 
 // Messages defined by Win32++
 // WM_APP range: 0x8000 through 0xBFFF
+// Note: The numbers defined for window messages doesn't need to be unique. View windows defined by users for example,
+//  could use user defined messages with the same number as those below without issue. 
 #define UWM_DOCKACTIVATE     (WM_APP + 0x3F01)  // Message - sent to dock ancestor when a docker is activated or deactivated.
 #define UWM_DOCKDESTROYED	 (WM_APP + 0x3F02)	// Message - posted when docker is destroyed
 #define UWM_DRAWRBBKGND      (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
@@ -170,16 +173,26 @@
 #define UWM_TBRESIZE         (WM_APP + 0x3F0B)  // Message - sent by toolbar to parent. Used by the rebar
 #define UWM_TBWINPOSCHANGING (WM_APP + 0x3F0C)	// Message - sent to parent. Toolbar is resizing
 #define UWM_UPDATECOMMAND    (WM_APP + 0x3F0D)  // Message - sent before a menu is displayed. Used by OnMenuUpdate
-#define UWN_BARSTART		 (WM_APP + 0x3F0E)	// Notification - docker bar selected for move
-#define UWN_BARMOVE			 (WM_APP + 0x3F0F)	// Notification - docker bar moved
-#define UWN_BAREND			 (WM_APP + 0x3F10)	// Notification - end of docker bar move
-#define UWN_DOCKSTART		 (WM_APP + 0x3F11)	// Notification - about to start undocking
-#define UWN_DOCKMOVE		 (WM_APP + 0x3F12)	// Notification - undocked docker is being moved
-#define UWN_DOCKEND			 (WM_APP + 0x3F13)	// Notification - docker has been docked
-#define UWN_TABCHANGED       (WM_APP + 0x3F14)	// Notification - tab size or position changed
-#define UWN_TABDRAGGED       (WM_APP + 0x3F15)	// Notification - tab is being dragged
-#define UWN_UNDOCKED		 (WM_APP + 0x3F16)	// Notification - sent by docker when undocked
-#define UWN_TABCLOSE		 (WM_APP + 0x3F17)	// Notification - sent by CTab when a tab is about to be closed
+#define UWM_ISDOCKER		 (WM_APP + 0x3F0E)  // Message - a Docker window returns TRUE
+#define UWM_ISDOCKCONTAINER	 (WM_APP + 0x3F0F)  // Message - a DockContainer window returns TRUE
+#define UWM_ISFRAME			 (WM_APP + 0x3F10)  // Message - a Frame window returns TRUE
+#define UWM_ISMDIFRAME		 (WM_APP + 0x3F11)  // Message - a MDIFrame window returns TRUE
+#define UWM_ISTABBEDMDI		 (WM_APP + 0x3F12)  // Message - a TabbedMDI window returns TRUE
+#define UWM_ISTOOLBAR		 (WM_APP + 0x3F13)  // Message - a ToolBar window returns TRUE
+#define UWN_BARSTART		 (WM_APP + 0x3F20)	// Notification - docker bar selected for move
+#define UWN_BARMOVE			 (WM_APP + 0x3F21)	// Notification - docker bar moved
+#define UWN_BAREND			 (WM_APP + 0x3F22)	// Notification - end of docker bar move
+#define UWN_DOCKSTART		 (WM_APP + 0x3F23)	// Notification - about to start undocking
+#define UWN_DOCKMOVE		 (WM_APP + 0x3F24)	// Notification - undocked docker is being moved
+#define UWN_DOCKEND			 (WM_APP + 0x3F25)	// Notification - docker has been docked
+#define UWN_TABCHANGED       (WM_APP + 0x3F26)	// Notification - tab size or position changed
+#define UWN_TABDRAGGED       (WM_APP + 0x3F27)	// Notification - tab is being dragged
+#define UWN_UNDOCKED		 (WM_APP + 0x3F28)	// Notification - sent by docker when undocked
+#define UWN_TABCLOSE		 (WM_APP + 0x3F29)	// Notification - sent by CTab when a tab is about to be closed
+
+
+
+
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -222,6 +235,7 @@ namespace Win32xx
 	class CPalette;
 	class CPen;
 	class CRgn;
+	class CDataExchange;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -563,6 +577,10 @@ namespace Win32xx
 		virtual HICON SetIconLarge(int nIcon);
 		virtual HICON SetIconSmall(int nIcon);
 
+		// For Data Exchange
+		virtual void DoDataExchange(CDataExchange& DX);
+		BOOL UpdateData(BOOL bReadFromControl, BOOL allowDDXDDV = TRUE);
+
 		// Attributes
 		HWND GetHwnd() const				{ return m_hWnd; }
 		WNDPROC GetPrevWindowProc() const	{ return m_PrevWindowProc; }
@@ -720,6 +738,7 @@ namespace Win32xx
 		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG* pMsg);
@@ -753,6 +772,7 @@ namespace Win32xx
 #include "wxx_gdi.h"
 #include "wxx_menu.h"
 #include "wxx_imagelist.h"
+#include "wxx_ddx.h"
 
 namespace Win32xx
 {
@@ -1691,6 +1711,21 @@ namespace Win32xx
 		return hWnd;
 	}
 
+	inline void CWnd::DoDataExchange(CDataExchange& DX)
+	//	This function performs data exchange and validation functions on
+	//	dialog data using DDX and DDV functions.  Never call this function
+	//	directly. It is called by the UpdateData() member function. Call
+	//	UpdateData() to write data into a set of dialog box controls or to
+	//	retrieve data from that set of dialog boxes.  Override this method
+	//	in the dialogs that utilize the DDX/DDV functions.
+	{
+		  // TODO: in each override of this method, enter DDX and DDV functions
+		  // here for each of the contols attached to the parent dialog window
+		  // that m_DX is assigned to.
+
+		UNREFERENCED_PARAMETER(DX);
+	}
+
 	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
 	// CMDIChild and CMDIFrame override this function
@@ -1976,6 +2011,33 @@ namespace Win32xx
 		return 0L;
 	}
 
+	inline LRESULT CWnd::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		// Window controls and other subclassed windows are expected to do their own
+		// drawing, so we don't call OnDraw for those.
+		// CustomDraw or OwnerDraw are normally used to modify the drawing of controls.
+		if (!m_PrevWindowProc)
+		{
+			if (::GetUpdateRect(*this, NULL, FALSE))
+			{
+				CPaintDC dc(*this);
+				OnDraw(dc);
+			}
+			else
+			// RedrawWindow can require repainting without an update rect
+			{
+				CClientDC dc(*this);
+				OnDraw(dc);
+			}
+
+			// No more drawing required
+			return 0L;
+		}
+
+		// Allow window controls to do their default drawing
+		return FinalWindowProc(uMsg, wParam, lParam);
+	}
+
 	inline void CWnd::OnMenuUpdate(UINT nID)
 	// Called when menu items are about to be displayed
 	{
@@ -2181,6 +2243,69 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 	}
 
+	inline BOOL CWnd::UpdateData(BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
+	//	Dialog Data Exchange support. Call this function to read values from
+	//	(bReadFromControl is TRUE) or deposit values into (bReadFromControl
+	//	is FALSE) a set of controls appearing in DDX/DDV statements in the
+	//	DoDataExchange() member method. Set allowDDXDDV to TRUE when DDX and
+	//	DDV assessments are to be observed, FALSE if they are not, as may be
+	//	needed in start-up portions of a program before the window appears.
+	//	Return TRUE if the operation is successful, or FALSE otherwise. When
+	//	called with bReadFromControl a TRUE value, success means the data has
+	//	been validated.
+	//
+	//	When a dialog box is uses data exchange, its OnInitDialog should call 
+	//  UpdateData(FALSE, FALSE) before the dialog box is visible. 
+	//  Also, the implementation of its OnOK should call UpdatData(TRUE) to
+	//  retrieve the data, and then close the dialog box.
+	//	If the Cancel button is clicked in the dialog box, the dialog box should
+	//	be closed without the data being retrieved.
+	{
+		  // must not update data before the window is created
+		assert(IsWindow());
+
+		CDataExchange DX(*this, bReadFromControl, allowDDXDDV);
+
+		BOOL ok = FALSE;  // if the try clause below throws an exception
+		try
+		{
+			DoDataExchange(DX);
+			if (DX.m_hWndLastControl != NULL && DX.m_hWndLastEditControl != NULL)
+			{	  // if there was an edit control
+				  // select all characters in the edit item
+				::SetFocus(DX.m_hWndLastEditControl);
+				::SendMessage(DX.m_hWndLastEditControl, EM_SETSEL, 0, -1);
+			}
+			ok = TRUE; // all is well!
+		}
+		catch(int e)    // int is USER_EXCEPTION
+		{
+			UNREFERENCED_PARAMETER(e);
+			  // Validation has failed - user has been alerted, so
+			  // merely proceed on. The exception is from the
+			  // incomplete DoDataExchange()
+		}
+		catch(LPTSTR s)  // for string exceptions (but as-yet unused here)
+		{
+			CString msg = s + (CString)_T("\nin DoDataExchange");
+			::MessageBox(NULL, msg.c_str(), _T("Exception"),
+				MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+		}
+		catch(...)  // everything else is NOT_SUPPORTED_EXCEPTION, caused by
+		{	    // unrecogized control IDs, resource failures, etc.
+
+	#ifdef _DEBUG
+			ErrorMessageBox(_T("Application Internal failure: ")
+				_T("feature not supported."));
+	#endif
+
+			// bad doings in DoDataExchange()
+			throw _T("Not supported exception.");
+		}
+
+		return ok;
+	}
+
 	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Override this function in your class derived from CWnd to handle
@@ -2265,7 +2390,7 @@ namespace Win32xx
 
 		case WM_PAINT:
 			{
-				// Subclassed controls expect to do their own painting.
+			/*	// Subclassed controls expect to do their own painting.
 				// CustomDraw or OwnerDraw are normally used to modify the drawing of controls.
 				if (m_PrevWindowProc) break;
 
@@ -2279,8 +2404,11 @@ namespace Win32xx
 				{
 					CClientDC dc(*this);
 					OnDraw(dc);
-				}
+				} */
+
+				OnPaint(uMsg, wParam, lParam);
 			}
+
 			return 0L;
 
 		case WM_ERASEBKGND:

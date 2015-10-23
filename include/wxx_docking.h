@@ -463,7 +463,7 @@ namespace Win32xx
 		virtual int GetTextHeight();
 		virtual void Hide();
 		virtual BOOL LoadContainerRegistrySettings(LPCTSTR szRegistryKeyName);
-		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);		
+		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void RecalcDockLayout();
 		virtual BOOL SaveDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
@@ -1560,13 +1560,15 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-		assert( dynamic_cast<CDocker*>(pDockDrag) );
+	//	assert( dynamic_cast<CDocker*>(pDockDrag) );
+		assert( pDockDrag->SendMessage(UWM_ISDOCKER) );
 
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_IsOverContainer = (dynamic_cast<CDockContainer*>(&pDockTarget->GetView()) != NULL);
+	//	m_IsOverContainer = (dynamic_cast<CDockContainer*>(&pDockTarget->GetView()) != NULL);
+		m_IsOverContainer = pDockTarget->GetView().SendMessage(UWM_ISDOCKCONTAINER);
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();
@@ -2304,7 +2306,12 @@ namespace Win32xx
 	inline CDockContainer* CDocker::GetContainer() const
 	{
 		// returns NULL if not a CDockContainer*
-		return dynamic_cast<CDockContainer*>(&GetView());
+		if (IsWindow() && GetView().SendMessage(UWM_ISDOCKCONTAINER))
+			return static_cast<CDockContainer*>(&GetView());
+		else
+			return NULL;
+
+		//	return dynamic_cast<CDockContainer*>(&GetView());
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
@@ -2457,7 +2464,12 @@ namespace Win32xx
 	inline CTabbedMDI* CDocker::GetTabbedMDI() const
 	{
 		// returns NULL if not a CTabbedMDI*
-		return dynamic_cast<CTabbedMDI*>(&GetView());
+		if (IsWindow() && GetView().SendMessage(UWM_ISTABBEDMDI))
+			return static_cast<CTabbedMDI*>(&GetView());
+		else
+			return NULL;
+
+	//	return dynamic_cast<CTabbedMDI*>(&GetView());
 	}
 
 	inline int CDocker::GetTextHeight()
@@ -2585,11 +2597,11 @@ namespace Win32xx
 						CDocker* pDocker = NewDockerFromID(di.DockID);
 						if (!pDocker)
 							throw CWinException(_T("Failed to add dockers without parents from registry"));
-						
+
 						if (di.DockStyle & 0xF)
 							AddDockedChild(pDocker, di.DockStyle, di.DockSize, di.DockID);
 						else
-							AddUndockedChild(pDocker, di.DockStyle, di.DockSize, di.Rect, di.DockID);			
+							AddUndockedChild(pDocker, di.DockStyle, di.DockSize, di.Rect, di.DockID);
 					}
 				}
 
@@ -2615,7 +2627,7 @@ namespace Win32xx
 							CDocker* pDocker = NewDockerFromID(di.DockID);
 							if(!pDocker)
 								throw CWinException(_T("Failed to add dockers with parents from registry"));
-							
+
 							pDockParent->AddDockedChild(pDocker, di.DockStyle, di.DockSize, di.DockID);
 							bFound = true;
 							vDockList.erase(iter);
@@ -2643,12 +2655,12 @@ namespace Win32xx
 				if (ERROR_SUCCESS == ParentKey.Open(HKEY_CURRENT_USER, strParentKey, KEY_READ))
 					ParentKey.RecurseDeleteKey(_T("Dock Windows"));
 			}
-			
+
 		}
 
 		if (bResult)
 			LoadContainerRegistrySettings(szRegistryKeyName);
-				
+
 		return bResult;
 	}
 
@@ -2670,7 +2682,7 @@ namespace Win32xx
 					CString SubKeyName;
 					SubKeyName.Format(_T("DockContainer%u"), uContainer);
 					CRegKey ContainerKey;
-			
+
 					while (ERROR_SUCCESS == ContainerKey.Open(Key, SubKeyName, KEY_READ))
 					{
 						// Load tab order
@@ -2734,7 +2746,7 @@ namespace Win32xx
 						SubKeyName.Format(_T("DockContainer%u"), ++uContainer);
 					}
 				}
-					
+
 				catch (const CWinException& e)
 				{
 					TRACE("*** Failed to load values from registry, using defaults. ***\n");
@@ -2893,6 +2905,12 @@ namespace Win32xx
 
 		// Set the caption height based on text height
 		m_NCHeight = MAX(20, GetTextHeight() + 5);
+
+		CDockContainer* pContainer = GetContainer();
+		if (pContainer)
+		{
+			SetCaption(pContainer->GetDockCaption().c_str());
+		}
 
 		return 0;
 	}
@@ -3558,7 +3576,7 @@ namespace Win32xx
 						// Store the container group's parent
 						CDocker* pDocker = GetDockFromView(pContainer);
 						if (pDocker == 0)
-							throw CWinException(_T("Failed to get docker from container view")); 
+							throw CWinException(_T("Failed to get docker from container view"));
 						int nID = pDocker->GetDockID();
 						if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), nID))
 							throw (CWinException(_T("KeyContainer SetDWORDValue failed")));
@@ -4041,7 +4059,7 @@ namespace Win32xx
 		// Messages defined by Win32++
 		case UWM_DOCKACTIVATE:		return OnDockActivated(uMsg, wParam, lParam);
 		case UWM_DOCKDESTROYED:		return OnDockDestroyed(uMsg, wParam, lParam);
-
+		case UWM_ISDOCKER:			return TRUE;
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -4124,10 +4142,10 @@ namespace Win32xx
 		return pContainer;
 	}
 
-	inline CDockContainer* CDockContainer::GetActiveContainer() const 
+	inline CDockContainer* CDockContainer::GetActiveContainer() const
 	{
 		assert(m_pContainerParent);
-		assert((int)m_pContainerParent->m_vContainerInfo.size() > m_pContainerParent->m_iCurrentPage); 
+		assert((int)m_pContainerParent->m_vContainerInfo.size() > m_pContainerParent->m_iCurrentPage);
 		return m_pContainerParent->m_vContainerInfo[m_pContainerParent->m_iCurrentPage].pContainer;
 	}
 
@@ -4280,7 +4298,10 @@ namespace Win32xx
 			InsertItem(i, &tie);
 		}
 
-		m_pDocker = dynamic_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
+	//	m_pDocker = dynamic_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
+		m_pDocker = NULL;
+		if ( GetParent().GetParent().SendMessage(UWM_ISDOCKER) )
+			m_pDocker = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
 	}
 
 	inline LRESULT CDockContainer::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4467,7 +4488,8 @@ namespace Win32xx
 				pNewContainer->GetViewPage().GetView().SetFocus();
 
 				// Adjust the docking caption
-				if (dynamic_cast<CDocker*>(GetDocker()))
+			//	if (dynamic_cast<CDocker*>(GetDocker()))
+				if (GetDocker())
 				{
 					GetDocker()->SetCaption(pNewContainer->GetDockCaption());
 					GetDocker()->RedrawWindow();
@@ -4660,6 +4682,7 @@ namespace Win32xx
 		case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
 		case WM_SETFOCUS:		return OnSetFocus(uMsg, wParam, lParam);
 		case WM_SIZE:			return OnSize(uMsg, wParam, lParam);
+		case UWM_ISDOCKCONTAINER:	return TRUE;
 		}
 
 		// pass unhandled messages on to CTab for processing
@@ -4671,9 +4694,9 @@ namespace Win32xx
 	// Declaration of the nested CViewPage class
 
 	inline CDockContainer* CDockContainer::CViewPage::GetContainer() const
-	{ 
+	{
 		assert(m_pContainer);
-		return m_pContainer; 
+		return m_pContainer;
 	}
 
 	inline BOOL CDockContainer::CViewPage::OnCommand(WPARAM wParam, LPARAM lParam)

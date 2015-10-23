@@ -556,6 +556,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 			case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
+			case UWM_ISMDIFRAME:		return TRUE;
 		}
 		
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
@@ -714,7 +715,8 @@ namespace Win32xx
 	inline CMDIFrame& CMDIChild::GetMDIFrame() const
 	{
 		CMDIFrame& MDIFrame = static_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent()));
-		assert(dynamic_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent())));
+	//	assert(dynamic_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent())));
+		assert( GetParent().GetParent().SendMessage(UWM_ISMDIFRAME) );
 		return MDIFrame;
 	}
 
