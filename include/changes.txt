@@ -1,12 +1,31 @@
 Version 8.1
 ===========
 
-Added UWN_TABCLOSE notification
-Added CWnd::SetDlgCtrlID
+New Features and Enhancements
+----------------------------- 
+* Added CDataExchange
+
+* Extended CString
+   - added operator + for CString to support ints, floats, doubles etc.
+
+
+Changes in detail
+-----------------
+Split wxx_winutils.h into several header files as follows:
+Added wxx_rect.h
+Added textconv.h
+
+Split wxx_wincore into several header files as follows:
+Added wxx_appcore1.h
+Added wxx_appcore2.h
+Added wxx_wincore1.h
+Added wxx_wincore2.h
+
+Added UWN_TABCLOSE windows message notification
+
 Added CTabbedMDI::OnTabClose
-
-extended operator + for CString to support ints, floats, doubles etc.
-
+Added CWnd::OnPaint
+Added CWnd::SetDlgCtrlID
 
 
 

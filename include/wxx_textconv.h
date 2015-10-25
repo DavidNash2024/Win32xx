@@ -223,6 +223,34 @@ namespace Win32xx
 		CA2BSTR& operator= (const CA2BSTR&);
 		BSTR m_bstrString;
 	};
+	
+
+
+	////////////////////////////////////////
+	// Global Functions
+	//
+	
+	inline void TRACE(LPCSTR str)
+	// TRACE sends a string to the debug/output pane, or an external debugger
+	{
+  #ifndef NDEBUG
+		OutputDebugString(A2T(str));
+  #else
+		UNREFERENCED_PARAMETER(str); // no-op
+  #endif
+	}
+
+	inline void TRACE(LPCWSTR str)
+	// TRACE sends a string to the debug/output pane, or an external debugger
+	{
+  #ifndef NDEBUG
+		OutputDebugString(W2T(str));
+  #else
+		UNREFERENCED_PARAMETER(str); // no-op
+  #endif
+	}
+	
+	
 } // namespace Win32xx
 
 #endif // _WIN32XX_TEXTCONV_H_

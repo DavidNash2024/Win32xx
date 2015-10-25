@@ -97,6 +97,147 @@ namespace Win32xx
 		COLORREF clrOutline;	// Colour for border outline
 	};
 	
+	
+  #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
+	
+	
+	inline int GetWinVersion()
+	{
+		DWORD dwVersion = GetVersion();
+		int Platform = (dwVersion < 0x80000000)? 2:1;
+		int MajorVer = LOBYTE(LOWORD(dwVersion));
+		int MinorVer = HIBYTE(LOWORD(dwVersion));
+
+		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
+
+		// Return values and window versions:
+		//  1400     Windows 95
+		//  1410     Windows 98
+		//  1490     Windows ME
+		//  2400     Windows NT
+		//  2500     Windows 2000
+		//  2501     Windows XP
+		//  2502     Windows Server 2003
+		//  2600     Windows Vista and Windows Server 2008
+		//  2601     Windows 7
+
+		return nVersion;
+	}
+
+	inline int GetComCtlVersion()
+	{
+		// Load the Common Controls DLL
+		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+		if (hComCtl == 0)
+			return 0;
+
+		int ComCtlVer = 400;
+
+		if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
+		{
+			// InitCommonControlsEx is unique to 4.7 and later
+			ComCtlVer = 470;
+
+			if (::GetProcAddress(hComCtl, "DllGetVersion"))
+			{
+				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
+				DLLGETVERSION* pfnDLLGetVersion = NULL;
+
+				pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(hComCtl, "DllGetVersion"));
+				if(pfnDLLGetVersion)
+				{
+					DLLVERSIONINFO dvi;
+					dvi.cbSize = sizeof dvi;
+					if(NOERROR == pfnDLLGetVersion(&dvi))
+					{
+						DWORD dwVerMajor = dvi.dwMajorVersion;
+						DWORD dwVerMinor = dvi.dwMinorVersion;
+						ComCtlVer = 100 * dwVerMajor + dwVerMinor;
+					}
+				}
+			}
+			else if (::GetProcAddress(hComCtl, "InitializeFlatSB"))
+				ComCtlVer = 471;	// InitializeFlatSB is unique to version 4.71
+		}
+
+		::FreeLibrary(hComCtl);
+
+		// return values and DLL versions
+		// 400  dll ver 4.00	Windows 95/Windows NT 4.0
+		// 470  dll ver 4.70	Internet Explorer 3.x
+		// 471  dll ver 4.71	Internet Explorer 4.0
+		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
+		// 580  dll ver 5.80	Internet Explorer 5
+		// 581  dll ver 5.81	Windows 2000 and Windows ME
+		// 582  dll ver 5.82	Windows XP or Vista without XP themes
+		// 600  dll ver 6.00	Windows XP with XP themes
+		// 610  dll ver 6.10	Windows Vista with XP themes
+		// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
+
+		return ComCtlVer;
+	}	
+	
+	
+	inline BOOL IsAeroThemed()
+	{
+		BOOL IsAeroThemed = FALSE;
+
+		// Test if Windows version is XP or greater
+		if (GetWinVersion() >= 2501)
+		{
+			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+
+			if(hMod != 0)
+			{
+				// Declare pointers to IsCompositionActive function
+				FARPROC pIsCompositionActive = ::GetProcAddress(hMod, "IsCompositionActive");
+
+				if(pIsCompositionActive)
+				{
+					if(pIsCompositionActive())
+					{
+						IsAeroThemed = TRUE;
+					}
+				}
+				::FreeLibrary(hMod);
+			}
+		}
+
+		return IsAeroThemed;
+	}
+	
+	inline BOOL IsXPThemed()
+	{
+		BOOL IsXPThemed = FALSE;
+
+		// Test if Windows version is XP or greater
+		if (GetWinVersion() >= 2501)
+		{
+			HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
+			if(hMod != 0)
+			{
+				// Declare pointers to functions
+				FARPROC pIsAppThemed   = ::GetProcAddress(hMod, "IsAppThemed");
+				FARPROC pIsThemeActive = ::GetProcAddress(hMod, "IsThemeActive");
+
+				if(pIsAppThemed && pIsThemeActive)
+				{
+					if(pIsAppThemed() && pIsThemeActive())
+					{
+						// Test if ComCtl32 dll used is version 6 or later
+						IsXPThemed = (GetComCtlVersion() >= 600);
+					}
+				}
+				::FreeLibrary(hMod);
+			}
+		}
+
+		return IsXPThemed;
+	}
+	
+  #endif // #ifndef _WIN32_WCE	
+	
+	
 } // namespace Win32xx
 
 #endif // _WIN32XX_THEMES_H_

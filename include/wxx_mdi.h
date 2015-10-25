@@ -69,7 +69,6 @@
 #include <vector>
 
 
-
 namespace Win32xx
 {
     class CMDIChild;

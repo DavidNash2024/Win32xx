@@ -187,7 +187,21 @@ namespace Win32xx
 
 namespace Win32xx
 {
+	////////////////////////////////////////
+	// Global function
+	//
+	inline UINT GetSizeofMenuItemInfo()
+	{
+		// For Win95 and NT, cbSize needs to be 44
+		if (1400 == (GetWinVersion()) || (2400 == GetWinVersion()))
+			return CCSIZEOF_STRUCT(MENUITEMINFO, cch);
 
+		return sizeof(MENUITEMINFO);
+	}
+
+	////////////////////////////////////////
+	// Definitions of CMenu
+	//
 	inline CMenu::CMenu()
 	{
 		m_pData = new CMenu_Data;
