@@ -56,6 +56,9 @@
 //            class used to create additional GUI and worker threads.
 
 
+#include "wxx_appcore1.h"
+
+
 namespace Win32xx
 {
 

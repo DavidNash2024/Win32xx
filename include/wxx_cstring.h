@@ -81,11 +81,13 @@
 //						reference can be used to modify the string directly.
 
 
-#include "wxx_wincore.h"
 
 #ifndef _WIN32XX_CSTRING_H_
 #define _WIN32XX_CSTRING_H_
 
+
+#include "wxx_appcore1.h"
+#include "wxx_textconv.h"
 
 
 namespace Win32xx

@@ -62,6 +62,74 @@
 //            application.
 
 
+
+//////////////////////////////////////
+//  Include the C++ and windows header files
+//
+#include <assert.h>
+#include <vector>
+#include <algorithm>
+#include <string>
+#include <map>
+#include <winsock2.h>
+#include <windows.h>
+#include <commctrl.h>
+#include <stdio.h>
+#include <tchar.h>
+#ifndef _WIN32_WCE
+  #include <shlwapi.h>
+  #include <process.h>
+  #include <sstream>
+#endif
+
+
+#include "wxx_shared_ptr.h"
+
+
+// Required for WinCE
+#ifndef TLS_OUT_OF_INDEXES
+  #define TLS_OUT_OF_INDEXES ((DWORD_PTR) -1)
+#endif
+#ifndef WM_PARENTNOTIFY
+  #define WM_PARENTNOTIFY 0x0210
+#endif
+
+// Remove pointless warning messages
+#ifdef _MSC_VER
+  #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
+  #ifndef _CRT_SECURE_NO_WARNINGS
+    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
+  #endif
+  #if _MSC_VER < 1500
+    #pragma warning (disable : 4511) // copy operator could not be generated
+    #pragma warning (disable : 4512) // assignment operator could not be generated
+    #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
+    #pragma warning (disable : 4786) // identifier was truncated
+  #endif
+#endif
+
+#ifdef __BORLANDC__
+  #pragma option -w-8026            // functions with exception specifications are not expanded inline
+  #pragma option -w-8027		    // function not expanded inline
+  #pragma option -w-8030			// Temporary used for 'rhs'
+  #define STRICT 1
+#endif
+
+#ifdef __GNUC__
+  #pragma GCC diagnostic ignored "-Wmissing-braces"
+#endif
+
+#ifdef _WIN32_WCE
+  #include "wxx_wcestddef.h"
+#endif
+
+// Define our own MIN and MAX macros
+// this avoids inconsistencies with Dev-C++ and other compilers, and
+// avoids conflicts between typical min/max macros and std::min/std::max
+#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
+#define MIN(a,b)            (((a) < (b)) ? (a) : (b))
+
+
 namespace Win32xx
 {
 	// Registered messages defined by Win32++
@@ -394,7 +462,83 @@ namespace Win32xx
 	// Returns a reference to the CWinApp derived class
 	{
 		return *CWinApp::SetnGetThis();
-	}	
+	}
+	
+		inline int GetWinVersion()
+	{
+		DWORD dwVersion = GetVersion();
+		int Platform = (dwVersion < 0x80000000)? 2:1;
+		int MajorVer = LOBYTE(LOWORD(dwVersion));
+		int MinorVer = HIBYTE(LOWORD(dwVersion));
+
+		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
+
+		// Return values and window versions:
+		//  1400     Windows 95
+		//  1410     Windows 98
+		//  1490     Windows ME
+		//  2400     Windows NT
+		//  2500     Windows 2000
+		//  2501     Windows XP
+		//  2502     Windows Server 2003
+		//  2600     Windows Vista and Windows Server 2008
+		//  2601     Windows 7
+
+		return nVersion;
+	}
+
+	inline int GetComCtlVersion()
+	{
+		// Load the Common Controls DLL
+		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
+		if (hComCtl == 0)
+			return 0;
+
+		int ComCtlVer = 400;
+
+		if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
+		{
+			// InitCommonControlsEx is unique to 4.7 and later
+			ComCtlVer = 470;
+
+			if (::GetProcAddress(hComCtl, "DllGetVersion"))
+			{
+				typedef HRESULT CALLBACK DLLGETVERSION(DLLVERSIONINFO*);
+				DLLGETVERSION* pfnDLLGetVersion = NULL;
+
+				pfnDLLGetVersion = reinterpret_cast<DLLGETVERSION*>(::GetProcAddress(hComCtl, "DllGetVersion"));
+				if(pfnDLLGetVersion)
+				{
+					DLLVERSIONINFO dvi;
+					dvi.cbSize = sizeof dvi;
+					if(NOERROR == pfnDLLGetVersion(&dvi))
+					{
+						DWORD dwVerMajor = dvi.dwMajorVersion;
+						DWORD dwVerMinor = dvi.dwMinorVersion;
+						ComCtlVer = 100 * dwVerMajor + dwVerMinor;
+					}
+				}
+			}
+			else if (::GetProcAddress(hComCtl, "InitializeFlatSB"))
+				ComCtlVer = 471;	// InitializeFlatSB is unique to version 4.71
+		}
+
+		::FreeLibrary(hComCtl);
+
+		// return values and DLL versions
+		// 400  dll ver 4.00	Windows 95/Windows NT 4.0
+		// 470  dll ver 4.70	Internet Explorer 3.x
+		// 471  dll ver 4.71	Internet Explorer 4.0
+		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
+		// 580  dll ver 5.80	Internet Explorer 5
+		// 581  dll ver 5.81	Windows 2000 and Windows ME
+		// 582  dll ver 5.82	Windows XP or Vista without XP themes
+		// 600  dll ver 6.00	Windows XP with XP themes
+		// 610  dll ver 6.10	Windows Vista with XP themes
+		// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
+
+		return ComCtlVer;
+	}
 
 }
 

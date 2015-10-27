@@ -104,16 +104,17 @@
 //    development environment fails to support IPv6.
 //
 
+
 #ifndef _WIN32XX_SOCKET_H_
 #define _WIN32XX_SOCKET_H_
 
 
-#include "wxx_wincore.h"
-#include <winsock2.h>
+#include <winsock2.h>       // must include before windows.h
+#include <windows.h>        
 #include <ws2tcpip.h>
 
 #ifndef _WIN32_WCE
-#include <process.h>
+  #include <process.h>
 #endif
 
 #define THREAD_TIMEOUT 100

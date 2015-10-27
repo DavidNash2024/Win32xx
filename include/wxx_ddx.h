@@ -50,9 +50,11 @@
 #ifndef _WIN32XX_DDX_H_
 #define _WIN32XX_DDX_H_
 
+
 #include <float.h>
 #include <iomanip>
-#include "wxx_controls.h"
+#include "wxx_cstring.h"
+#include "wxx_wincore1.h"
 
 
 namespace Win32xx
@@ -977,7 +979,7 @@ namespace Win32xx
 		else
 			::SendMessage(hWndCtrl, PBM_SETPOS, value, 0);
 	}
-
+/*
 	//============================================================================
 	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
 	//	This function manages the transfer of date and/or time data between a
@@ -1024,7 +1026,7 @@ namespace Win32xx
 		else
 			pWndMonth->SetCurSel(&value);
 	}
-
+*/
 	////////////////////////////////////////////////////////////////
 	//
 	//	DDV: Dialog Data Validation Functions
@@ -1183,7 +1185,7 @@ namespace Win32xx
 			::SendMessage(m_hWndLastControl, EM_LIMITTEXT, nChars, 0);
 		}
 	}
-
+/*
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal)
 	//	In READFROMCONTROL mode, this method sets the range of the slider
@@ -1220,7 +1222,8 @@ namespace Win32xx
 		pWndSlider->SetRangeMin(minVal, FALSE);
 		pWndSlider->SetRangeMax(maxVal, TRUE);
 	}
-
+*/
+/*
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
 		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange)
@@ -1305,7 +1308,7 @@ namespace Win32xx
 		pWndMonth->SetRange(const_cast<LPSYSTEMTIME>(&minRange),
 			const_cast<LPSYSTEMTIME>(&maxRange));
 	}
-
+*/
 
 	////////////////////////////////////////////////////////////////
 	//

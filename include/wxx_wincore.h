@@ -48,34 +48,6 @@
 // Version macro
 #define _WIN32XX_VER 0x0810		// Win32++ version 8.1.0
 
-// Remove pointless warning messages
-#ifdef _MSC_VER
-  #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
-  #ifndef _CRT_SECURE_NO_WARNINGS
-    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
-  #endif
-  #if _MSC_VER < 1500
-    #pragma warning (disable : 4511) // copy operator could not be generated
-    #pragma warning (disable : 4512) // assignment operator could not be generated
-    #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
-    #pragma warning (disable : 4786) // identifier was truncated
-  #endif
-#endif
-
-#ifdef __BORLANDC__
-  #pragma option -w-8026            // functions with exception specifications are not expanded inline
-  #pragma option -w-8027		    // function not expanded inline
-  #pragma option -w-8030			// Temporary used for 'rhs'
-  #define STRICT 1
-#endif
-
-#ifdef __GNUC__
-  #pragma GCC diagnostic ignored "-Wmissing-braces"
-#endif
-
-#ifdef _WIN32_WCE
-  #include "wxx_wcestddef.h"
-#endif
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step
@@ -84,38 +56,7 @@ namespace Win32xx {}
   using namespace Win32xx;
 #endif
 
-//////////////////////////////////////
-//  Include the C++ and windows header files
 
-#include <assert.h>
-#include <vector>
-#include <algorithm>
-#include <string>
-#include <map>
-#include <winsock2.h>
-#include <windows.h>
-#include <commctrl.h>
-#include <stdio.h>
-#include <tchar.h>
-#ifndef _WIN32_WCE
-  #include <shlwapi.h>
-  #include <process.h>
-  #include <sstream>
-#endif
-
-// Required for WinCE
-#ifndef TLS_OUT_OF_INDEXES
-  #define TLS_OUT_OF_INDEXES ((DWORD_PTR) -1)
-#endif
-#ifndef WM_PARENTNOTIFY
-  #define WM_PARENTNOTIFY 0x0210
-#endif
-
-// Define our own MIN and MAX macros
-// this avoids inconsistencies with Dev-C++ and other compilers, and
-// avoids conflicts between typical min/max macros and std::min/std::max
-#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
-#define MIN(a,b)            (((a) < (b)) ? (a) : (b))
 
 
 // Define our own VERIFY macro

@@ -46,8 +46,11 @@
 #ifndef _WIN32XX_CONTROLS_H_
 #define _WIN32XX_CONTROLS_H_
 
-#include "wxx_wincore.h"
+
+#include "wxx_wincore1.h"
 #include "wxx_stdcontrols.h"
+#include "wxx_ddx.h"
+
 
 namespace Win32xx
 {
@@ -2118,6 +2121,175 @@ namespace Win32xx
 		SendMessage(TTM_SETWINDOWTHEME, 0L, (LPARAM)lpstrTheme);
 	}
 #endif
+
+	//============================================================================
+	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
+	//	This function manages the transfer of date and/or time data between a
+	//	date and time picker control (CDateTime) with control numbered nID
+	//	in a dialog box or form view object and a SYSTEMTIME data member of
+	//	the object. When called in the read mode, the value is set to the
+	//	current state of the control. When called in the write mode, the
+	//	current state of the control is set to the given value.
+	{
+		HWND hWndCtrl = PrepareCtrl(nIDC);
+		CDateTime* pWndDate = (CDateTime*)CWnd::GetCWndPtr(hWndCtrl);
+		assert(pWndDate);
+
+		if (m_bReadFromControl)
+			pWndDate->GetTime(&value);
+		else
+			pWndDate->SetTime(GDT_VALID, &value);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDX_MonthCal(int nIDC, SYSTEMTIME& value)
+	//	This function manages the transfer of date data between a month
+	//	calendar control (CMonthCalendar) with control number nID in a dialog
+	//	box, form view, or control view object and a SYSTEMTIME data member
+	//	of that object. In particular, the control manages a date value only.
+	//	The time fields in the time object are set to reflect the creation
+	//	time of the control window, or whatever time was set into the control
+	//	with a call to the CMonthCalendar::SetCurSel() member method. In read
+	//	mode, value is set to the current state of the month calendar control.
+	//	In write mode, the current state is set to the given value.
+	{
+		HWND hWndCtrl = PrepareCtrl(nIDC);
+		CMonthCalendar* pWndMonth = (CMonthCalendar*)CWnd::GetCWndPtr(hWndCtrl);
+		assert(pWndMonth);
+
+		if (m_bReadFromControl)
+		{
+			pWndMonth->GetCurSel(&value);
+			value.wHour = 0;
+			value.wMinute = 0;
+			value.wSecond = 0;
+			value.wMilliseconds = 0;
+		}
+		else
+			pWndMonth->SetCurSel(&value);
+	}
+	
+	//============================================================================
+	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal)
+	//	In READFROMCONTROL mode, this method sets the range of the slider
+	//	control associated with the last visited window control to the pair
+	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
+	//	that the refValue first falls between minRange and maxRange values
+	//	before setting the range; if refValue is outside these limits,
+	//	no setting of the range takes place and a trace message is written
+	//	in debug mode.
+	{
+		if (!m_allowDDXDDV)
+			return;
+
+		assert(minVal <= maxVal);
+		if (!m_bReadFromControl)
+		{
+			if (minVal > value || maxVal < value)
+			{
+	#ifdef _DEBUG
+				  // just leave a trace if writing to the control
+				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+				CString str = CString(_T("Warning: slider position is outside given "))
+							+ _T("limits in the control with ID ") + nIDC + _T(" \n");
+				TRACE(str);
+	#endif
+				return;     // don't stop now
+			}
+		}
+
+		  // set the range tuple
+		CSlider* pWndSlider = (CSlider*)CWnd::GetCWndPtr(m_hWndLastControl);
+		assert(pWndSlider);
+
+		pWndSlider->SetRangeMin(minVal, FALSE);
+		pWndSlider->SetRangeMax(maxVal, TRUE);
+	}
+	
+	//============================================================================
+	inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
+		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange)
+	//	In READFROMCONTROL mode, this method sets the range of the DateTime
+	//	control associated with the last visited window control to the pair
+	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
+	//	that the refValue first falls between minRange and maxRange values
+	//	before setting the range; if refValue is outside these limits,
+	//	no setting of the range takes place and a trace message is written
+	//	in debug mode.
+	{
+		if (!m_allowDDXDDV)
+			return;
+
+		ULONGLONG zero = (ULONGLONG)0;
+		ULONGLONG val = SystemTimeToULL(refValue);
+		ULONGLONG min = SystemTimeToULL(minRange);
+		ULONGLONG max = SystemTimeToULL(maxRange);
+		assert(min == zero || max == zero || min <= max);
+
+		if (!m_bReadFromControl)
+		{
+			if ((min != zero && min > val) ||
+				(max != zero && max < val))
+			{
+				  // retrieve the control ID
+				int nIDC = ::GetWindowLong(m_hWndLastControl, 	GWL_ID);
+				CString str = CString(_T("Warning: Date-Time data is out of range "))
+								+ _T("in control ID ") + nIDC + _T(" \n");
+				TRACE(str);
+
+				return;     // continue on
+			}
+		}
+
+		  // set the given DateTime range
+		SYSTEMTIME sta[2];
+		sta[0] = minRange;
+		sta[1] = maxRange;
+		CDateTime* pWndDate = (CDateTime*)CWnd::GetCWndPtr(m_hWndLastControl);
+		assert(pWndDate);
+
+		pWndDate->SetRange(GDTR_MIN | GDTR_MAX, sta);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
+		const SYSTEMTIME& maxRange)
+	//	In READFROMCONTROL mode, this method sets the range of the month
+	//	calendar control associated with the last visited window control to
+	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
+	//	that the refValue first falls between minRange and maxRange values
+	//	before setting the range; if refValue is outside these limits,
+	//	no setting of the range takes place and a trace message is written
+	//	in debug mode.
+	{
+		if (!m_allowDDXDDV)
+			return;
+
+		ULONGLONG zero = (ULONGLONG)0;
+		ULONGLONG val = SystemTimeToULL(refValue);
+		ULONGLONG min = SystemTimeToULL(minRange);
+		ULONGLONG max = SystemTimeToULL(maxRange);
+		assert(min == zero || max == zero || min <= max);
+
+		if (!m_bReadFromControl)
+		{
+			if ((min != zero && min > val) ||
+				(max != zero && max < val))
+			{
+				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+				CString str = CString(_T("Warning: Calendar data is out of range "))
+							+ _T("in control ID ") + nIDC + _T(" \n");
+				TRACE(str);
+				return;     // continue on
+			}
+		}
+
+		CMonthCalendar* pWndMonth = (CMonthCalendar*)CWnd::GetCWndPtr(m_hWndLastControl);
+		assert(pWndMonth);
+
+		pWndMonth->SetRange(const_cast<LPSYSTEMTIME>(&minRange),
+			const_cast<LPSYSTEMTIME>(&maxRange));
+	}	
 
 
 } // namespace Win32xx

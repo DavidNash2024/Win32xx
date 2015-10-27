@@ -35,12 +35,16 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _WIN32XX_WINCORE2_H_
-#define _WIN32XX_WINCORE2_H_
-
 ///////////////////////////////////////////////////////
 // wxx_wincore2.h
 // This file contains the definition of the CWnd class.
+
+
+#ifndef _WIN32XX_WINCORE2_H_
+#define _WIN32XX_WINCORE2_H_
+
+
+#include "wxx_wincore1.h"
 
 
 namespace Win32xx

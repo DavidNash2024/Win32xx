@@ -80,7 +80,7 @@
 //    int nLength = ::GetWindowTextLength(hWnd);
 //    std::vector<TCHAR> vTChar( nLength+1, _T('\0') );
 //    TCHAR* pTCharArray = &vTChar.front();
-//    ::GetWindowText(hWnd, pTCharArray, nLength+1); 
+//    ::GetWindowText(hWnd, pTCharArray, nLength+1);
 //
 // Alternatively we could use a CString.
 //    int nLength = ::GetWindowTextLength(hWnd);
@@ -91,14 +91,26 @@
 
 
 // Summing up:
-// In my opinion, "naked" pointers for dynamically created objects should be 
-// avoided if possible in modern C++ code. That's to say that calls to "new" should 
-// be wrapped in some sort of smart pointer wherever possible. This eliminates 
-// the possibility of memory leaks, particularly in the event of exceptions. 
+// In my opinion, "naked" pointers for dynamically created objects should be
+// avoided if possible in modern C++ code. That's to say that calls to "new" should
+// be wrapped in some sort of smart pointer wherever possible. This eliminates
+// the possibility of memory leaks, particularly in the event of exceptions.
 // It also eliminates the need for delete in user's code.
+
 
 #ifndef _WIN32XX_SHARED_PTR_
 #define _WIN32XX_SHARED_PTR_
+
+
+#include <assert.h>
+#include <algorithm>        // For std::swap
+#include <winsock2.h>       // must include before windows.h
+#include <windows.h>        // For InterlockedIncrement and InterlockedDecrement
+
+#ifdef __BORLANDC__
+  #pragma option -w-8027	// function not expanded inline
+#endif
+
 
 namespace Win32xx
 {
@@ -107,8 +119,8 @@ namespace Win32xx
 	class Shared_Ptr
 	{
 	public:
-		Shared_Ptr() : m_ptr(NULL), m_count(NULL) { }
-		Shared_Ptr(T1 * p) : m_ptr(p), m_count(NULL)
+		Shared_Ptr() : m_ptr(0), m_count(0) { }
+		Shared_Ptr(T1 * p) : m_ptr(p), m_count(0)
 		{
 			try
 			{

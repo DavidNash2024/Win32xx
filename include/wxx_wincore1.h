@@ -35,13 +35,17 @@
 ////////////////////////////////////////////////////////
 
 
+///////////////////////////////////////////////////////
+// wxx_wincore1.h
+// This file contains the declaration of the CWnd class.
+
 #ifndef _WIN32XX_WINCORE1_H_
 #define _WIN32XX_WINCORE1_H_
 
 
-///////////////////////////////////////////////////////
-// wxx_wincore1.h
-// This file contains the declaration of the CWnd class.
+#include "wxx_rect.h"
+#include "wxx_cstring.h"
+#include "wxx_appcore1.h"
 
 
 // For compilers lacking Win64 support

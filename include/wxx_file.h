@@ -35,10 +35,11 @@
 ////////////////////////////////////////////////////////
 
 
-#include "wxx_wincore.h"
-
 #ifndef _WIN32XX_FILE_H_
 #define _WIN32XX_FILE_H_
+
+
+#include "wxx_cstring.h"
 
 
 namespace Win32xx

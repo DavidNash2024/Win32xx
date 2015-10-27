@@ -91,20 +91,16 @@
 //	}
 
 
-#include "wxx_wincore.h"
-
-#if !defined(_WIN32XX_MENU_H_) && !defined(_WIN32_WCE)
+#if !defined (_WIN32XX_MENU_H_) && !defined(_WIN32_WCE)
 #define _WIN32XX_MENU_H_
 
 
-#include "wxx_gdi.h"
+#include "wxx_appcore1.h"
+#include "wxx_cstring.h"
 
 
 namespace Win32xx
 {
-
-	// Forward declarations
-	class CBitmap;
 
 	class CMenu
 	{

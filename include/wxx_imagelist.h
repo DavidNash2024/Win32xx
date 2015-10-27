@@ -48,14 +48,18 @@
 // images transparently.
  
 
-#include "wxx_wincore.h" 
- 
-#if !defined(_WIN32XX_IMAGELIST_H_)
+#ifndef _WIN32XX_IMAGELIST_H_
 #define _WIN32XX_IMAGELIST_H_
+
+
+#include "wxx_appcore1.h"
+#include "wxx_rect.h"
 
 
 namespace Win32xx
 {
+	// Forward declaration
+	class CBitmap;
 
 	///////////////////////////////////////
 	// Declaration of the CImageList class, which manages ImageLists.
