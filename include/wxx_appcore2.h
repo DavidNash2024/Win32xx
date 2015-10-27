@@ -672,17 +672,7 @@ namespace Win32xx
 
 		return pTLSData;
 	}
-	
-	
-	////////////////////////////////////////
-	// Global Functions
-	//
-
-	inline CWinApp& GetApp()
-	// Returns a reference to the CWinApp derived class
-	{
-		return *CWinApp::SetnGetThis();
-	}	
+		
 
 } // namespace Win32xx
 

@@ -385,6 +385,16 @@ namespace Win32xx
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 
 	};
+	
+	////////////////////////////////////////
+	// Global Functions
+	//
+
+	inline CWinApp& GetApp()
+	// Returns a reference to the CWinApp derived class
+	{
+		return *CWinApp::SetnGetThis();
+	}	
 
 }
 

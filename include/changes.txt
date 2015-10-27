@@ -13,7 +13,9 @@ Changes in detail
 -----------------
 Split wxx_winutils.h into several header files as follows:
 Added wxx_rect.h
-Added textconv.h
+Added wxx_textconv.h
+Added wxx_themes.h
+Removed wxx_winutils.h
 
 Split wxx_wincore into several header files as follows:
 Added wxx_appcore1.h

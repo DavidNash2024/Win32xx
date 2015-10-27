@@ -37,9 +37,8 @@
 
 ///////////////////////////////////////////////////////
 // wxx_wincore.h
-//  This file includes all the files necessary to start
-//  Win32++ and create windows. Refer to the sample code
-//  at the end of this file.
+//  This file includes all the files necessary to start Win32++ and create
+//  simple windows. Refer to the sample code at the end of this file.
 //
 
 
@@ -144,7 +143,6 @@ namespace Win32xx {}
 
 
 
-
 //////////////////////////////////////
 //  Include the Win32++ header files
 
@@ -153,7 +151,6 @@ namespace Win32xx {}
 #include "wxx_rect.h"
 #include "wxx_textconv.h"
 #include "wxx_themes.h"
-//#include "wxx_winutils.h"
 #include "wxx_cstring.h"
 #include "wxx_wincore1.h"
 #include "wxx_archive.h"
