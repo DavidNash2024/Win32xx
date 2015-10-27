@@ -100,6 +100,7 @@ namespace Win32xx {}
 #ifndef _WIN32_WCE
   #include <shlwapi.h>
   #include <process.h>
+  #include <sstream>
 #endif
 
 // Required for WinCE
