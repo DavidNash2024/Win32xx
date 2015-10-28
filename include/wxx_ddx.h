@@ -56,6 +56,7 @@
 #include "wxx_cstring.h"
 #include "wxx_wincore1.h"
 
+#ifndef _WIN32_WCE
 
 namespace Win32xx
 {
@@ -88,9 +89,10 @@ namespace Win32xx
 
 	public:
 		  // Constructor/destructor
-		CDataExchange(CWnd& dlgWnd, BOOL bReadFromControl, BOOL allowDDXDDV = TRUE);
-		~CDataExchange();
+		CDataExchange();
+		virtual ~CDataExchange();
 
+		void Init(CWnd& dlgWnd, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */);
 		void Fail();
 
 		  // simple text operations
@@ -216,7 +218,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 
 	//============================================================================
-	inline CDataExchange::CDataExchange(CWnd& dlgWnd, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
+	inline CDataExchange::CDataExchange()
 	//	Construct a DDX-DDV object, where pDlgWnd is the parent window
 	//	containing controls for data exchange and validation. If allowDDXDDV is
 	//	TRUE, then observe exceptions generated when a DDX_ or DDV_ method
@@ -224,10 +226,18 @@ namespace Win32xx
 	//	start-up situations where uninitialized values are present before a
 	//	window opens.
 	{
-		  // the window has to be valid
-		assert(dlgWnd.IsWindow());	// Check this
+		m_bReadFromControl = FALSE;
+		m_hWndParent       = 0;
+		m_hWndLastControl  = NULL;
+		m_allowDDXDDV      = FALSE;
+	}
 
-		  // record the default action and parent window
+	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
+	{
+		// the window has to be valid
+		assert(dlgWnd.IsWindow());
+		
+		// record the default action and parent window
 		m_bReadFromControl = bReadFromControl;
 		m_hWndParent       = dlgWnd;
 		m_hWndLastControl  = NULL;
@@ -1329,6 +1339,7 @@ namespace Win32xx
 
 }	// namespace Win32xx
 
+#endif // _WIN32_WCE
 
 #endif // _WIN32XX_DDX_H_
 

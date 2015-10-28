@@ -59,7 +59,7 @@ namespace Win32xx
 			shareDenyNone =     0x0040,	// No sharing restrictions.
 			modeRead =          0x0100,	// Requests read access only.
 			modeWrite =         0x0200,	// Requests write access only.
-			modeReadWrite =     0x0300,	// Requests read and write access.	
+			modeReadWrite =     0x0300	// Requests read and write access.	
 		};
 	
 		CFile();

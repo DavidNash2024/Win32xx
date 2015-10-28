@@ -1015,19 +1015,19 @@ namespace Win32xx
 		return str;
 	}
 	
-	inline CString operator + (const CString& string1, int val)
+	inline CString operator + (const CString& string, int val)
 	{
-		tStringStream tss;
-		tss << val;
-		CString str = string1 + CString(tss.str().c_str());
+		CString str1;
+		str1.Format(_T("%d"), val);
+		CString str = string + str1;
 		return str;
 	}
 
-	inline CString operator + (const CString& string1, double val)
+	inline CString operator + (const CString& string, double val)
 	{
-		tStringStream tss;
-		tss << val;
-		CString str = string1 + CString(tss.str().c_str());
+		CString str1;
+		str1.Format(_T("%g"), val);
+		CString str = string + str1;
 		return str;
 	}
 
@@ -1045,19 +1045,21 @@ namespace Win32xx
 		return str;
 	}
 
-	inline CString operator + (int val, const CString& string1)
+	inline CString operator + (int val, const CString& string)
 	{
-		tStringStream tss;
-		tss << val;
-		CString str = CString(tss.str().c_str()) + string1;
+		CString str1;
+		str1.Format(_T("%d"), val);
+		CString str = str1 + string;
 		return str;
 	}
 
-	inline CString operator + (double val, const CString& string1)
+	inline CString operator + (double val, const CString& string)
 	{
-		tStringStream tss;
-		tss << val;
-		CString str = CString(tss.str().c_str()) + string1;
+		//tStringStream tss;
+		//tss << val;
+		CString str1;
+		str1.Format(_T("%g"), val);
+		CString str = str1 + string;
 		return str;
 	}
 

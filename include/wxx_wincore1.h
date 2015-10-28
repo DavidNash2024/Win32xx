@@ -146,8 +146,10 @@ namespace Win32xx
 		virtual HICON SetIconSmall(int nIcon);
 
 		// For Data Exchange
+	#ifndef _WIN32_WCE
 		virtual void DoDataExchange(CDataExchange& DX);
-		BOOL UpdateData(BOOL bReadFromControl, BOOL allowDDXDDV = TRUE);
+		BOOL UpdateData(CDataExchange& DX, BOOL bReadFromControl, BOOL allowDDXDDV = TRUE);
+	#endif
 
 		// Attributes
 		HWND GetHwnd() const				{ return m_hWnd; }

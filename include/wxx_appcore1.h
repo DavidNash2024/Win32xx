@@ -274,7 +274,11 @@ namespace Win32xx
 	{
 	public:
 		CCriticalSection()	{ ::InitializeCriticalSection(&m_cs); }
-		~CCriticalSection()	{ ::DeleteCriticalSection(&m_cs); }
+		~CCriticalSection()	
+		{ 
+			::LeaveCriticalSection(&m_cs);	
+			::DeleteCriticalSection(&m_cs); 
+		}
 
 		void Lock() 	{ ::EnterCriticalSection(&m_cs); }
 		void Release()	{ ::LeaveCriticalSection(&m_cs); }
@@ -464,7 +468,8 @@ namespace Win32xx
 		return *CWinApp::SetnGetThis();
 	}
 	
-		inline int GetWinVersion()
+#ifndef _WIN32_WCE
+	inline int GetWinVersion()
 	{
 		DWORD dwVersion = GetVersion();
 		int Platform = (dwVersion < 0x80000000)? 2:1;
@@ -539,6 +544,7 @@ namespace Win32xx
 
 		return ComCtlVer;
 	}
+#endif
 
 }
 

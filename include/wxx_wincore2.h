@@ -369,6 +369,7 @@ namespace Win32xx
 		return hWnd;
 	}
 
+#ifndef _WIN32_WCE
 	inline void CWnd::DoDataExchange(CDataExchange& DX)
 	//	This function performs data exchange and validation functions on
 	//	dialog data using DDX and DDV functions.  Never call this function
@@ -383,6 +384,7 @@ namespace Win32xx
 
 		UNREFERENCED_PARAMETER(DX);
 	}
+#endif
 
 	inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass messages on to the appropriate default window procedure
@@ -900,8 +902,8 @@ namespace Win32xx
 		
 		AddToMap();			// Store the CWnd pointer in the HWND map
 	}
-
-	inline BOOL CWnd::UpdateData(BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
+#ifndef _WIN32_WCE
+	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
 	//	Dialog Data Exchange support. Call this function to read values from
 	//	(bReadFromControl is TRUE) or deposit values into (bReadFromControl
 	//	is FALSE) a set of controls appearing in DDX/DDV statements in the
@@ -919,10 +921,15 @@ namespace Win32xx
 	//	If the Cancel button is clicked in the dialog box, the dialog box should
 	//	be closed without the data being retrieved.
 	{
-		  // must not update data before the window is created
+		// must not update data before the window is created
 		assert(IsWindow());
 
-		CDataExchange DX(*this, bReadFromControl, allowDDXDDV);
+		// A critical section which is released when ccs goes out of scope
+		CCriticalSection ccs;
+		ccs.Lock();
+
+	//	CDataExchange DX(*this, bReadFromControl, allowDDXDDV);
+		DX.Init(*this, bReadFromControl, allowDDXDDV);
 
 		BOOL ok = FALSE;  // if the try clause below throws an exception
 		try
@@ -963,6 +970,7 @@ namespace Win32xx
 
 		return ok;
 	}
+#endif // _WIN32_WCE
 
 	inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{

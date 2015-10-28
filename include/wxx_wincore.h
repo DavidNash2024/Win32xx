@@ -57,18 +57,18 @@ namespace Win32xx {}
 #endif
 
 
-
-
 // Define our own VERIFY macro
 // In debug mode, VERIFY asserts if the expression evaluates to zero
 // In release mode, VERIFY evaluates the expression, but doesn't assert.
-#ifndef VERIFY
-  #ifndef NDEBUG
-    #define VERIFY(f) assert(f)
-  #else
-    #define VERIFY(f) ((void)(f))
+#ifndef _WIN32_WCE
+  #ifndef VERIFY
+    #ifndef NDEBUG
+      #define VERIFY(f) assert(f)
+    #else
+      #define VERIFY(f) ((void)(f))
+    #endif
   #endif
-#endif
+#endif // _WIN32_WCE
 
 // Ensure UNICODE and _UNICODE definitions are consistent
 #ifdef _UNICODE
@@ -95,9 +95,13 @@ namespace Win32xx {}
 #include "wxx_themes.h"
 #include "wxx_cstring.h"
 #include "wxx_wincore1.h"
-#include "wxx_archive.h"
+#ifndef _WIN32_WCE
+  #include "wxx_archive.h"
+#endif
 #include "wxx_gdi.h"
-#include "wxx_menu.h"
+#ifndef _WIN32_WCE
+  #include "wxx_menu.h"
+#endif
 #include "wxx_imagelist.h"
 #include "wxx_ddx.h"
 #include "wxx_appcore2.h"

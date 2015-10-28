@@ -2122,6 +2122,7 @@ namespace Win32xx
 	}
 #endif
 
+#ifndef _WIN32_WCE
 	//============================================================================
 	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
 	//	This function manages the transfer of date and/or time data between a
@@ -2289,8 +2290,9 @@ namespace Win32xx
 
 		pWndMonth->SetRange(const_cast<LPSYSTEMTIME>(&minRange),
 			const_cast<LPSYSTEMTIME>(&maxRange));
-	}	
-
+	}
+	
+#endif // #ifndef _WIN32_WCE
 
 } // namespace Win32xx
 

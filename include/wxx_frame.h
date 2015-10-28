@@ -2247,9 +2247,9 @@ namespace Win32xx
 	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)
 	// Handles CustomDraw notification from WM_NOTIFY.
 	{
-		CWnd* pWnd = GetCWndPtr(pNMHDR->hwndFrom);
+	//	CWnd* pWnd = GetCWndPtr(pNMHDR->hwndFrom);
 	//	if (dynamic_cast<CToolBar*>(pWnd))
-		if ( pWnd->SendMessage(UWM_ISTOOLBAR) )
+		if ( ::SendMessage(pNMHDR->hwndFrom, UWM_ISTOOLBAR, 0, 0) )
 		{
 			if (pNMHDR->hwndFrom == GetMenuBar())
 				return CustomDrawMenuBar(pNMHDR);
