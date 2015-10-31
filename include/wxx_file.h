@@ -40,6 +40,7 @@
 
 
 #include "wxx_cstring.h"
+#include "wxx_exception.h"
 
 
 namespace Win32xx

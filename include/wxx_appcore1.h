@@ -48,16 +48,13 @@
 //            to shared resources. You can also use this class to lock and
 //            release your own critical sections.
 //
-// 2) CWinException: This class is used internally by Win32++ to handle
-//            exceptions. You can also use it to throw and catch exceptions.
-//
-// 3) CObject: A base class for CWnd and any other class that uses serialization.
+// 2) CObject: A base class for CWnd and any other class that uses serialization.
 //             It provides a virtual Serialize function for use by CArchive.
 //
-// 4) CWinThread: This class is the parent class for CWinApp. It is also the
+// 3) CWinThread: This class is the parent class for CWinApp. It is also the
 //            class used to create additional GUI and worker threads.
 //
-// 5) CWinApp: This class is used start Win32++ and run the message loop. You
+// 4) CWinApp: This class is used start Win32++ and run the message loop. You
 //            should inherit from this class to start Win32++ in your own
 //            application.
 
@@ -84,7 +81,6 @@
 
 
 #include "wxx_shared_ptr.h"
-
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
@@ -173,11 +169,7 @@ namespace Win32xx
 	typedef Shared_Ptr<CPen> PenPtr;
 	typedef Shared_Ptr<CRgn> RgnPtr;
 
-	enum Constants			// Defines the maximum size for TCHAR strings
-	{
-		MAX_MENU_STRING = 80,
-		MAX_STRING_SIZE = 255
-	};
+
 
 	struct CDC_Data	// A structure that contains the data members for CDC
 	{
@@ -273,47 +265,32 @@ namespace Win32xx
 	class CCriticalSection
 	{
 	public:
-		CCriticalSection()	{ ::InitializeCriticalSection(&m_cs); }
+		CCriticalSection() : IsLocked(false)	{ ::InitializeCriticalSection(&m_cs); }
 		~CCriticalSection()	
 		{ 
-			::LeaveCriticalSection(&m_cs);	
+			if (IsLocked) ::LeaveCriticalSection(&m_cs);	
+			
 			::DeleteCriticalSection(&m_cs); 
 		}
 
-		void Lock() 	{ ::EnterCriticalSection(&m_cs); }
-		void Release()	{ ::LeaveCriticalSection(&m_cs); }
+		void Lock() 	
+		{
+			::EnterCriticalSection(&m_cs); 
+			IsLocked = true;
+		}
+		void Release()
+		{ 
+			::LeaveCriticalSection(&m_cs);
+			IsLocked = false;
+		}
 
 	private:
 		CCriticalSection ( const CCriticalSection& );
 		CCriticalSection& operator = ( const CCriticalSection& );
-
+		
 		CRITICAL_SECTION m_cs;
+		bool IsLocked;
 	};
-
-
-	////////////////////////////////////////
-	// Declaration of the CWinException class
-	//
-	// Note: Each function guarantees not to throw an exception
-
-	class CWinException : public std::exception
-	{
-	public:
-		CWinException(LPCTSTR pszText) throw ();
-		~CWinException() throw() {}
-		DWORD GetError() const throw ();
-		LPCTSTR GetErrorString() const throw ();
-		LPCTSTR GetText() const throw ();
-		const char * what () const throw ();
-
-	private:
-		DWORD  m_Error;
-		LPCTSTR m_pszText;
-		TCHAR m_szErrorString[MAX_STRING_SIZE];
-	};
-
-	// Typedef for _beginthreadex's callback function
-	typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
 
 
 	///////////////////////////////////
@@ -329,6 +306,10 @@ namespace Win32xx
 
 	private:
 	};
+
+
+	// Typedef for _beginthreadex's callback function
+	typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
 
 
 	//////////////////////////////////////

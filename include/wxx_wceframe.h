@@ -147,7 +147,6 @@ namespace Win32xx
 			::CommandBar_Destroy(*this);
 	}
 
-
 	inline BOOL CCmdBar::AddAdornments(DWORD dwFlags)
 	{
 		assert(IsWindow());

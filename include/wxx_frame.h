@@ -2523,11 +2523,11 @@ namespace Win32xx
 	{
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
-		CWnd* pWnd = GetCWndPtr(WindowFromPoint(pt));
+		HWND hWnd = WindowFromPoint(pt);
 	//	CToolBar* pToolBar = dynamic_cast<CToolBar*> (pWnd);
 		CToolBar* pToolBar = NULL;
-		if ( pWnd->SendMessage(UWM_ISTOOLBAR) )
-			pToolBar = static_cast<CToolBar*> (pWnd);
+		if ( ::SendMessage(hWnd, UWM_ISTOOLBAR, 0, 0) )
+			pToolBar = static_cast<CToolBar*> (GetCWndPtr(hWnd));
 
 		// Set the tooltip's text from the ToolBar button's CommandID
 		if (pToolBar)
@@ -3408,6 +3408,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp().GetTlsData();
 		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
 	//	assert(dynamic_cast<CFrame*>(pTLSData->pMainWnd));
+		assert( pTLSData->pMainWnd );
 		assert( pTLSData->pMainWnd->SendMessage(UWM_ISFRAME) );
 
 		if (HC_ACTION == nCode)

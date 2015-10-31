@@ -1561,7 +1561,7 @@ namespace Win32xx
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
 	//	assert( dynamic_cast<CDocker*>(pDockDrag) );
-		assert( pDockDrag->SendMessage(UWM_ISDOCKER) );
+		assert( ::SendMessage(*pDockDrag, UWM_ISDOCKER, 0, 0) );
 
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
 		if (NULL == pDockTarget) return FALSE;

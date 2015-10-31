@@ -90,8 +90,17 @@
 #include "wxx_textconv.h"
 
 
+
+
 namespace Win32xx
 {
+
+	// Defines the maximum size for TCHAR strings
+	enum Constants			
+	{
+		MAX_MENU_STRING = 80,
+		MAX_STRING_SIZE = 255
+	};
 
 	class CString
 	{
@@ -101,7 +110,6 @@ namespace Win32xx
 		friend CString operator + (const CString& string, TCHAR ch);
 		friend CString operator + (const CString& string1, int val);
 		friend CString operator + (const CString& string1, double val);
-
 		friend CString operator + (LPCTSTR pszText, const CString& string);
 		friend CString operator + (TCHAR ch, const CString& string);
 		friend CString operator + (int val, const CString& string1);
@@ -115,8 +123,6 @@ namespace Win32xx
 		friend bool    operator >= (const CString& string1, const CString& string2);
 		friend bool    operator <= (const CString& string1, LPCTSTR pszText);
 		friend bool    operator >= (CString& string1, LPCTSTR pszText);
-
-
 
 	public:
 		CString();
@@ -134,6 +140,9 @@ namespace Win32xx
 		CString& operator = (const WCHAR ch);
 		CString& operator = (LPCSTR pszText);
 		CString& operator = (LPCWSTR pszText);
+		CString& operator = (int val);
+		CString& operator = (double val);
+
 		bool     operator == (LPCTSTR pszText) const;
 		bool	 operator == (const CString& str) const;
 		bool     operator != (LPCTSTR pszText) const;
@@ -145,6 +154,8 @@ namespace Win32xx
 		CString& operator += (LPCWSTR szText);
 		CString& operator += (const char ch);
 		CString& operator += (const WCHAR ch);
+		CString& operator += (int val);
+		CString& operator += (double val);
 
 		// Attributes
 		LPCTSTR	 c_str() const		{ return m_str.c_str(); }		// alternative for casting to LPCTSTR
@@ -213,7 +224,9 @@ namespace Win32xx
 
 } // namespace Win32xx
 
+
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 
 namespace Win32xx
 {
@@ -317,6 +330,22 @@ namespace Win32xx
 		return *this;
 	}
 
+	inline CString& CString::operator = (int val)
+	{
+		CString str;
+		str.Format(_T("%d"), val);
+		m_str.assign(str);
+		return *this;
+	}
+
+	inline CString& CString::operator = (double val)
+	{
+		CString str;
+		str.Format(_T("%g"), val);
+		m_str.assign(str);
+		return *this;
+	}
+
 	inline bool CString::operator == (LPCTSTR pszText) const
 	// Returns TRUE if the strings have the same content
 	{
@@ -390,6 +419,22 @@ namespace Win32xx
 		str[0] = ch;
 		W2T tch(str);
 		m_str.append(1, ((LPCTSTR)tch)[0]);
+		return *this;
+	}
+
+	inline CString& CString::operator += (int val)
+	{
+		CString str;
+		str.Format(_T("%d"), val);
+		m_str.append(str);
+		return *this;
+	}
+
+	inline CString& CString::operator += (double val)
+	{
+		CString str;
+		str.Format(_T("%g"), val);
+		m_str.append(str);
 		return *this;
 	}
 

@@ -43,16 +43,14 @@
 // wxx_appcore2.h
 // This file contains the definitions of the following set of classes.
 //
-// 1) CWinException: This class is used internally by Win32++ to handle
-//            exceptions. You can also use it to throw and catch exceptions.
+// 1) CObject: A base class for CWnd and any other class that uses serialization.
+//             It provides a virtual Serialize function for use by CArchive.
 //
-// 2) CObject:
-//
-// 3) CWinApp: This class is used start Win32++ and run the message loop. You
+// 2) CWinApp: This class is used start Win32++ and run the message loop. You
 //            should inherit from this class to start Win32++ in your own
 //            application.
 //
-// 4) CWinThread: This class is the parent class for CWinApp. It is also the
+// 3) CWinThread: This class is the parent class for CWinApp. It is also the
 //            class used to create additional GUI and worker threads.
 
 
@@ -61,42 +59,6 @@
 
 namespace Win32xx
 {
-
-	//////////////////////////////////////////
-	// Definitions for the CWinException class
-	//
-	inline CWinException::CWinException(LPCTSTR pszText) throw () : m_Error(::GetLastError()), m_pszText(pszText)
-	{
-		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
-
-		DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-		::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
-	}
-
-	inline DWORD CWinException::GetError() const throw ()
-	// Retrieves the last error code value.
-	{
-		return m_Error;
-	}
-
-	inline LPCTSTR CWinException::GetErrorString() const throw ()
-	// Retrieves the error string from GetLastError.
-	{
-		return m_szErrorString;
-	}
-
-	inline LPCTSTR CWinException::GetText() const throw ()
-	// Retrieves the string specified in the constructor.
-	{
-		return m_pszText;
-	}
-
-	inline const char * CWinException::what() const throw ()
-	// Sends the last error string to the debugger (typically displayed in the IDE's output window).
-	{
-		::OutputDebugString(m_szErrorString);
-		return "CWinException thrown";
-	}
 
 	///////////////////////////////////////
 	// Definitions for the CObject class
