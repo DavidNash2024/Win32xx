@@ -6,7 +6,17 @@ New Features and Enhancements
 * Added CDataExchange
 
 * Extended CString
-   - added operator + for CString to support ints, floats, doubles etc.
+   - Added operator + support for ints, floats and doubles.
+   - Added operator += support for ints, floats and doubles.
+   - Added operator = support for ints, floats and doubles.
+   
+* Updated the exception handling
+   - Added CException             ( inherits from std::exception )
+   - Added CNotSupportedException ( inherits from CException )
+   - Added CUserException         ( inherits from CException )
+   - Updated CWinException        ( inherits from CException )
+   
+   Note: Exceptions should be thrown by value, and caught by const reference.
 
 
 Changes in detail
@@ -20,6 +30,7 @@ Removed wxx_winutils.h
 Split wxx_wincore into several header files as follows:
 Added wxx_appcore1.h
 Added wxx_appcore2.h
+Added wxx_exception.h
 Added wxx_wincore1.h
 Added wxx_wincore2.h
 

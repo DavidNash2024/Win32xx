@@ -36,18 +36,20 @@ private:
 
 	// Nested classes for this dialog's child windows
 	// Nesting is optional. Its done to keep the IDE's class view tidy.
+	// Inheriting these classes from the base class is optional, but the derived
+	// classes can be customized if required.
 	class CRadioA : public CButton {};
 	class CRadioB : public CButton {};
 	class CRadioC : public CButton {};
 	class CCheckA : public CButton {};
 	class CCheckB : public CButton {};
 	class CCheckC : public CButton {};
-	class CButton1 : public CButton {};
-	class CListBox1 : public CListBox {};
-	class CEdit1 : public CEdit {};
-	class CRichEdit1 : public CEdit {};
-	class CBitmap1 : public CStatic {};
-	class CStatus : public CStatic {};
+	class CMyButton : public CButton {};
+	class CMyListBox : public CListBox {};
+	class CMyEdit : public CEdit {};
+	class CMyRichEdit : public CEdit {};
+	class CMyPicture : public CStatic {};
+	class CMyStatus : public CStatic {};
 	class COK : public CButton {};
 	class CGroup : public CWnd {};
 	
@@ -57,12 +59,12 @@ private:
 	CCheckA		m_CheckA;
 	CCheckB		m_CheckB;
 	CCheckC		m_CheckC;
-	CButton1	m_Button;
-	CListBox1	m_ListBox;
-	CEdit1		m_Edit;
-	CRichEdit1	m_RichEdit;
-	CBitmap1	m_Bitmap;
-	CStatus		m_Status;
+	CMyButton	m_Button;
+	CMyListBox	m_ListBox;
+	CMyEdit		m_Edit;
+	CMyRichEdit	m_RichEdit;
+	CMyPicture	m_Picture;
+	CMyStatus		m_Status;
 	COK			m_OK;
 	CGroup		m_Group;
 

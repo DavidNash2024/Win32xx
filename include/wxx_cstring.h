@@ -1157,6 +1157,17 @@ namespace Win32xx
 		return str;
 	}
 
+	inline CString GetWindowText(HWND hWndCtrl)
+	{
+		int nLength = ::GetWindowTextLength(hWndCtrl);
+		CString str;
+
+		::GetWindowText(hWndCtrl, str.GetBuffer(nLength), nLength+1);
+		str.ReleaseBuffer();
+
+		return str;
+	}
+
 	inline std::vector<CString> GetCommandLineArgs()
 	// Retrieves the command line arguments and stores them in a vector of CString.
 	// Similar to CommandLineToArgvW, but supports all versions of Windows,

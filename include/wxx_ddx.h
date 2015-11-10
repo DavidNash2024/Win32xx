@@ -67,15 +67,10 @@ namespace Win32xx
 	//
 	//////////////////////////////////////////////////////////////////////////
 
-	  // DDX read/write direction (easier to remember)
-	const BOOL SENDTOCONTROL = FALSE;	// set variable values into controls
+	// DDX read/write direction (easier to remember)
+	const BOOL SENDTOCONTROL   = FALSE;	// set variable values into controls
 	const BOOL READFROMCONTROL = TRUE;	// get values from controls into variables
 
-	// modal error message notification
-	inline void	ErrorMessageBox(LPCTSTR msg)
-	{
-		::MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-	}
 
 	///////////////////////////////////////////////////////////////////////////
 	//
@@ -88,14 +83,17 @@ namespace Win32xx
 	{
 
 	public:
-		  // Constructor/destructor
+		// Constructor/destructor
 		CDataExchange();
 		virtual ~CDataExchange();
 
-		void Init(CWnd& dlgWnd, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */);
-		void Fail();
+		void Init(CWnd& dlgWnd, BOOL bReadFromControl);
+		void virtual Fail(LPCTSTR message);
+		
+		HWND GetLastControl() { return m_hWndLastControl; }
+		HWND GetLastEditControl() { return m_hWndLastEditControl; }
 
-		  // simple text operations
+		// simple text operations
 		void DDX_Text(int nIDC, BYTE& value);
 		void DDX_Text(int nIDC, short& value);
 		void DDX_Text(int nIDC, int& value);
@@ -107,7 +105,7 @@ namespace Win32xx
 		void DDX_Text(int nIDC, float& value, int precision = FLT_DIG);
 		void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);
 
-		  // special control types
+		// special control types
 		void DDX_Check(int nIDC, int& value);
 		void DDX_Radio(int nIDC, int& value);
 		void DDX_LBString(int nIDC, CString& value);
@@ -123,9 +121,9 @@ namespace Win32xx
 		void DDX_DateTime(int nIDC, SYSTEMTIME& value);
 
 		  // special control subclassing
-		void DDX_Control(int nIDC, CWnd& rCtl);
+	//	void DDX_Control(int nIDC, CWnd& rCtl);
 
-		  // Standard Dialog Data Validation (DDV) routines
+		// Standard Dialog Data Validation (DDV) routines
 		void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
 		void DDV_MinMaxShort(short value, short minVal, short maxVal);
 		void DDV_MinMaxInt(int value, int minVal, int maxVal);
@@ -139,25 +137,20 @@ namespace Win32xx
 		void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
 		void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
 
-		  // helper operations
+		// helper operations
 		HWND PrepareCtrl(int nIDC);   // return HWND of control
 		HWND PrepareEditCtrl(int nIDC); // record this is an edit
-
-//	private:
-			 // data members
+	
+	private:
+		// data members
 		int   m_nID;               // ID of last-accessed control
 		HWND  m_hWndLastControl;   // handle of last-accessed control
 		HWND  m_hWndLastEditControl; // handle of last edit control
 		BOOL  m_bEditLastControl;  // most recent control is an edit box
 		BOOL  m_bReadFromControl;  // TRUE means read and validate data
-		BOOL  m_allowDDXDDV;       // observe DDX and DDV exceptions
 		HWND  m_hWndParent;        // parent dialog
 
 	};
-
-
-	inline CString GetWindowText(HWND hWndCtrl);
-	inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime);
 
 
 }	// namespace Win32xx
@@ -167,11 +160,7 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
-	  // exceptions
-	const int   USER_EXCEPTION          = 1;       // exception of type int
-
-	  // DDX anomaly prompting messages
+	// DDX anomaly prompting messages
 	static LPCTSTR DDX_MSG_BYTE   = _T("Please enter an integer between 0 and 255.");
 	static LPCTSTR DDX_MSG_INT    = _T("Please enter an integer.");
 	static LPCTSTR DDX_MSG_LONG   = _T("Please enter a long integer.");
@@ -180,16 +169,16 @@ namespace Win32xx
 	static LPCTSTR DDX_MSG_UINT   = _T("Please enter a positive integer.");
 	static LPCTSTR DDX_MSG_ULONG  = _T("Please enter a positive long integer.");
 
-	  // DDV formats and prompts
-//	static LPCTSTR DDV_MSG_DATETIME     = _T("Please enter a date and/or time.");
+	// DDV formats and prompts
+	static LPCTSTR DDV_MSG_DATETIME     = _T("Please enter a date and/or time.");
 	static LPCTSTR DDV_MSG_INT_RANGE    = _T("Please enter an integer in (%ld, %ld).");
 	static LPCTSTR DDV_MSG_UINT_RANGE   = _T("Please enter an integer in (%lu, %lu).");
-//	static LPCTSTR DDV_MSG_RADIO_BUTTON = _T("Please select a button.");
+	static LPCTSTR DDV_MSG_RADIO_BUTTON = _T("Please select a button.");
 	static LPCTSTR DDV_MSG_REAL_RANGE   = _T("Please enter a number in (%.*g, %.*g).");
 	static LPCTSTR DDV_MSG_STRING_SIZE  = _T("%s\n is too long.\nPlease enter no ")\
 						 _T("more than %ld characters.");
-//	static LPCTSTR DDV_MSG_NUMERIC  = _T("Please enter a valid number.");
-//	static LPCTSTR DDV_MSG_SLIDER  = _T("Slider position not in the range (%ld, %ld).");
+	static LPCTSTR DDV_MSG_NUMERIC  = _T("Please enter a valid number.");
+	static LPCTSTR DDV_MSG_SLIDER  = _T("Slider position not in the range (%ld, %ld).");
 
 
 #ifndef __BORLANDC__    // required for Borland 5.5 support
@@ -229,10 +218,9 @@ namespace Win32xx
 		m_bReadFromControl = FALSE;
 		m_hWndParent       = 0;
 		m_hWndLastControl  = NULL;
-		m_allowDDXDDV      = FALSE;
 	}
 
-	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
+	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bReadFromControl)
 	{
 		// the window has to be valid
 		assert(dlgWnd.IsWindow());
@@ -241,7 +229,6 @@ namespace Win32xx
 		m_bReadFromControl = bReadFromControl;
 		m_hWndParent       = dlgWnd;
 		m_hWndLastControl  = NULL;
-		m_allowDDXDDV      = allowDDXDDV;
 	}
 
 	//============================================================================
@@ -252,7 +239,7 @@ namespace Win32xx
 
 
 	//============================================================================
-	inline void CDataExchange::Fail()
+	inline void CDataExchange::Fail(LPCTSTR message)
 	//	This function is called whenever a failure condition has been detected
 	//	while validating the value in a control and a throw is required to
 	//	inhibit further DoDataExchange() activity.  Normally, the focus of
@@ -260,29 +247,27 @@ namespace Win32xx
 	//	condition and, in the case of an edit control, the characters in that
 	//	control will be selected.
 	{
+		::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+
 		if (!m_bReadFromControl)
 		{
-			TRACE(_T("Warning: CDataExchange::Fail() called while ")
-				_T("writing to a control.\n"));
-			// and throw a user exception, below
+			TRACE(_T("Warning: CDataExchange::Fail() called while "));
+			TRACE(_T("writing to a control.\n"));
 		}
 		else if (m_hWndLastControl != NULL)
 		{
-			  // if the offender is an edit control
-			if (m_bEditLastControl)
+			if (m_bEditLastControl) // if the offender is an edit control
 			{
-				  // select all characters in the edit item
+				// select all characters in the edit item
 				::SetFocus(m_hWndLastControl);
 				::SendMessage(m_hWndLastControl, EM_SETSEL, 0, -1);
 			}
 		}
 		else
-		{         // merely announce
-			TRACE(_T("Error: validation failed with no control to ")
-				_T("restore focus to.\n"));
+		{	// merely announce
+			TRACE(_T("Error: validation failed with no control to "));
+			TRACE(_T("restore focus to.\n"));
 		}
-
-		throw USER_EXCEPTION;
 	}
 
 	//============================================================================
@@ -314,21 +299,6 @@ namespace Win32xx
 		return hWndCtrl;
 	}
 
-
-	//============================================================================
-	// Retrieves the from a control and returns a CString.
-	inline CString GetWindowText(HWND hWndCtrl)
-	{
-		int nLength = ::GetWindowTextLength(hWndCtrl);
-		CString str;
-
-		::GetWindowText(hWndCtrl, str.GetBuffer(nLength), nLength+1);
-		str.ReleaseBuffer();
-
-		return str;
-	}
-
-
 	////////////////////////////////////////////////////////////////
 	//
 	//	DDX: Data Exchange Procedures
@@ -336,7 +306,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 
 	//============================================================================
-	inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
+/*	inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
 	//	This function enables the transfer of data between a control in a
 	//	dialog box, form view, or control view object and a CWnd data member
 	//	rCtl having the control nID, usingthe DDX/DDV object m_DX.
@@ -354,16 +324,13 @@ namespace Win32xx
 			if (m_hWndParent != ::GetParent(rCtl))
 				rCtl.Attach(m_hWndParent);
 		}
-	}
+	} */
 
 	//============================================================================
 	inline void CDataExchange::DDX_Text(int nIDC, BYTE& value)
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type BYTE.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -373,9 +340,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_BYTE);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_BYTE);
 			}
 		}
 		else
@@ -391,9 +357,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type short.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -403,9 +366,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_SHORT);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_SHORT);
 			}
 		}
 		else
@@ -421,9 +383,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type int.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -433,9 +392,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_INT);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_INT);
 			}
 		}
 		else
@@ -451,9 +409,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type UINT.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -463,9 +418,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_UINT);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_UINT);
 			}
 		}
 		else
@@ -481,9 +435,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type long.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -493,9 +444,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_LONG);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_LONG);
 			}
 		}
 		else
@@ -511,9 +461,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type ULONG.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -523,9 +470,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_ULONG);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_ULONG);
 			}
 		}
 		else
@@ -541,9 +487,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type float with the given precision.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -553,9 +496,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_REAL);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_REAL);
 			}
 		}
 		else
@@ -571,9 +513,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type double with the given precision.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -583,9 +522,8 @@ namespace Win32xx
 			ts >> value;
 			if (ts.fail())
 			{
-				ErrorMessageBox(DDX_MSG_REAL);
 				value = oldvalue;
-				Fail();
+				throw CUserException(DDX_MSG_REAL);
 			}
 		}
 		else
@@ -601,9 +539,6 @@ namespace Win32xx
 	//	Perform a text box data exchange on the current DDX/DDV object m_DX with
 	//	data value of type CString.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
@@ -621,9 +556,6 @@ namespace Win32xx
 	//	data value of type LPTSTR with the given maximum length.
 	{
 		assert(value);
-
-		if (!m_allowDDXDDV)
-			return;
 
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bReadFromControl)
@@ -666,6 +598,7 @@ namespace Win32xx
 				TRACE(str);
 				value = 0;  // set default to off
 			}
+
 			::SendMessage(hWndCtrl, BM_SETCHECK, (WPARAM)value, 0L);
 		}
 	}
@@ -678,50 +611,50 @@ namespace Win32xx
 	//	control in the group.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		  // assure that the control is a radio button and part of a group
+		
+		// assure that the control is a radio button and part of a group
 		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) &WS_GROUP);
 		assert(firstInGroup);
-		  // assure the button is a radio button
-		BOOL isRadioButton = (BOOL)(::SendMessage(hWndCtrl,
-			WM_GETDLGCODE, 0, 0L) & DLGC_RADIOBUTTON);
+		
+		// assure the button is a radio button
+		BOOL isRadioButton = (BOOL)(::SendMessage(hWndCtrl,	WM_GETDLGCODE, 0, 0L) & DLGC_RADIOBUTTON);
 		assert(isRadioButton);
 
-		  // preset the returned value to empty in case no button is set
+		// preset the returned value to empty in case no button is set
 		if (m_bReadFromControl)
 			value = -1;
 
-		  // traverse all buttons in the group: we've already established
-		  // there's a group, so set up for the radio buttons in the group
+		// traverse all buttons in the group: we've already established
+		// there's a group, so set up for the radio buttons in the group
 		firstInGroup = FALSE;
 		for (int iButton = 0; hWndCtrl != NULL && !firstInGroup; )
 		{
-			if (isRadioButton)
-			{	  // this control in the group is a radio button:
-				  // if asked to read the control,
-				if (m_bReadFromControl)
-				{         // is this button set?
-					if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L) != 0)
-					{         // Record the value the first time,
-						  // but if it happens again, there
-						  // is an error--only one button
-						  // checked is allowed.
+			if (isRadioButton) // this control in the group is a radio button
+			{	
+				if (m_bReadFromControl) // if asked to read the control
+				{   
+					if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L) != 0) // is this button set?
+					{
+						// Record the value the first time, but if it happens again, there
+						// is an error--only one button checked is allowed.
 						assert(value == -1);
 						value = iButton;
 					}
 				}
 				else // if asked to select the radio button,
 				{
-					  // then select it
+					// then select it
 					::SendMessage(hWndCtrl, BM_SETCHECK, (iButton == value), 0L);
 				}
 				iButton++;
 			}
 			else
 			{
-				TRACE(_T("Warning: there is a non-radio button in ")
-					_T("a radio button group.\n"));
+				TRACE(_T("Warning: there is a non-radio button in "));
+				TRACE(_T("a radio button group.\n"));
 			}
-			  // check the next window in the group, if any
+			  
+			// check the next window in the group, if any
 			hWndCtrl = ::GetWindow(hWndCtrl, GW_HWNDNEXT);
 			LRESULT lrButton = SendMessage(hWndCtrl, WM_GETDLGCODE, 0, 0L);
 			isRadioButton = (hWndCtrl != NULL && (lrButton & DLGC_RADIOBUTTON));
@@ -742,32 +675,32 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
-			  // find the index of the item selected in the list box
+			 // find the index of the item selected in the list box
 			int index = (int)::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L);
 			if (index != -1)
-			{	  // if text was selected, read it into the CString
+			{
+				// if text was selected, read it into the CString
 				int nLen = (int)::SendMessage(hWndCtrl, LB_GETTEXTLEN, index, 0L);
-				::SendMessage(hWndCtrl, LB_GETTEXT, index,
-					(LPARAM)value.GetBuffer(nLen));
+				::SendMessage(hWndCtrl, LB_GETTEXT, index, (LPARAM)value.GetBuffer(nLen));
 
 				value.ReleaseBuffer();
 			}
 			else
 			{
-				  // no selection, do nothing
+				// no selection, do nothing
 				value.Empty();
 			}
 		}
 		else
 		{
-			  // search the the entire list box for the given value
-			  // and select it if it is found
+			// search the the entire list box for the given value
+			// and select it if it is found
 			int index  = ::SendMessage(hWndCtrl, LB_SELECTSTRING,
 				(WPARAM)-1, (LPARAM)value.c_str());
 
 			if (index == LB_ERR)
 			{
-				  // value string was not found
+				// value string was not found
 				CString str = CString(_T("Warning: listbox item was not found:  ")) + value + _T(" \n");
 				TRACE(str);
 			}
@@ -789,27 +722,27 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
-			  // read and return the CString value
+			// read and return the CString value
 			DDX_LBString(nIDC, value);
 		}
 		else
 		{
-			  // find the first entry that matches the entire value,
-			  // in a case insensitive search, perhaps in sorted order,
-			  // if the box has that style
+			// find the first entry that matches the entire value,
+			// in a case insensitive search, perhaps in sorted order,
+			// if the box has that style
 			int index = (int)::SendMessage(hWndCtrl, LB_FINDSTRINGEXACT,
 				(WPARAM)-1, (LPARAM)value.c_str());
 
 			if (index < 0)
 			{
-				  // no match found
+				// no match found
 				CString str = (_T("Warning: listbox item was not found:  ")) + value + _T( "\n");
 				TRACE(str);
 			}
 			else
 			{
 				// select it
-				SendMessage(hWndCtrl, LB_SETCURSEL, index, 0L);
+				::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0L);
 			}
 		}
 	}
@@ -849,30 +782,30 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
-			  // just get the current edit item text (or drop list static)
-			  // (if it works)
+			// just get the current edit item text or drop list static (if it works)
 			int nLen = ::GetWindowTextLength(hWndCtrl);
 			if (nLen > 0)
 			{
-				  // get the known length
+				// get the known length
 				::GetWindowText(hWndCtrl, value.GetBuffer(nLen), nLen + 1);
 			}
 			else
-			{	  // for drop lists GetWindowTextLength does not work
-				  // so here assume max of 255 characters
+			{	
+				// for drop lists GetWindowTextLength does not work
+				// so here assume max of 255 characters
 				const int maxLen = 255;
 				::GetWindowText(hWndCtrl, value.GetBuffer(maxLen), maxLen + 1);
 			}
 			value.ReleaseBuffer();
 		}
 		else
-		{	  // set the current selection based on value string
+		{	  
+			// set the current selection based on value string
 			if (::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM)-1,
 				(LPARAM)value.c_str()) == CB_ERR)
 			{
-				  // value was not found, so just set the edit text
-				  // (this will be ignored if the control is a
-				  // DROPDOWNLIST)
+				// value was not found, so just set the edit text
+				// (this will be ignored if the control is a DROPDOWNLIST)
 				::SetWindowText(hWndCtrl, value);
 			}
 		}
@@ -905,14 +838,13 @@ namespace Win32xx
 				(WPARAM)-1, (LPARAM)value.c_str());
 			if (i < 0)
 			{
-				// just set the edit text
-				// (will be ignored if a DROPDOWNLIST)
+				// just set the edit text (will be ignored if a DROPDOWNLIST)
 				::SetWindowText(hWndCtrl, value);
 			}
 			else
 			{
 				// select it
-				SendMessage(hWndCtrl, CB_SETCURSEL, i, 0L);
+				::SendMessage(hWndCtrl, CB_SETCURSEL, i, 0L);
 			}
 		}
 	}
@@ -989,54 +921,8 @@ namespace Win32xx
 		else
 			::SendMessage(hWndCtrl, PBM_SETPOS, value, 0);
 	}
-/*
-	//============================================================================
-	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
-	//	This function manages the transfer of date and/or time data between a
-	//	date and time picker control (CDateTime) with control numbered nID
-	//	in a dialog box or form view object and a SYSTEMTIME data member of
-	//	the object. When called in the read mode, the value is set to the
-	//	current state of the control. When called in the write mode, the
-	//	current state of the control is set to the given value.
-	{
-		HWND hWndCtrl = PrepareCtrl(nIDC);
-		CDateTime* pWndDate = (CDateTime*)CWnd::GetCWndPtr(hWndCtrl);
-		assert(pWndDate);
 
-		if (m_bReadFromControl)
-			pWndDate->GetTime(&value);
-		else
-			pWndDate->SetTime(GDT_VALID, &value);
-	}
 
-	//============================================================================
-	inline void CDataExchange::DDX_MonthCal(int nIDC, SYSTEMTIME& value)
-	//	This function manages the transfer of date data between a month
-	//	calendar control (CMonthCalendar) with control number nID in a dialog
-	//	box, form view, or control view object and a SYSTEMTIME data member
-	//	of that object. In particular, the control manages a date value only.
-	//	The time fields in the time object are set to reflect the creation
-	//	time of the control window, or whatever time was set into the control
-	//	with a call to the CMonthCalendar::SetCurSel() member method. In read
-	//	mode, value is set to the current state of the month calendar control.
-	//	In write mode, the current state is set to the given value.
-	{
-		HWND hWndCtrl = PrepareCtrl(nIDC);
-		CMonthCalendar* pWndMonth = (CMonthCalendar*)CWnd::GetCWndPtr(hWndCtrl);
-		assert(pWndMonth);
-
-		if (m_bReadFromControl)
-		{
-			pWndMonth->GetCurSel(&value);
-			value.wHour = 0;
-			value.wMinute = 0;
-			value.wSecond = 0;
-			value.wMilliseconds = 0;
-		}
-		else
-			pWndMonth->SetCurSel(&value);
-	}
-*/
 	////////////////////////////////////////////////////////////////
 	//
 	//	DDV: Dialog Data Validation Functions
@@ -1045,79 +931,72 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal)
-	//	Check that minVal <= value <= maxVal for the BYTE value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.  BYTE is
-	//	unsigned char.
+	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.  BYTE is unsigned char.
 	{
 		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal)
-	//	Check that minVal <= value <= maxVal for the short value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.
 	{
 		DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxInt(int value, int minVal, int maxVal)
-	//	Check that minVal <= value <= maxVal for the int value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.
 	{
 		DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxLong(long value, long minVal, long maxVal)
-	//	Check that minVal <= value <= maxVal for the long value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		assert(minVal <= maxVal);
 		if (minVal <= value && value <= maxVal)
 			return;
 
-		  // just leave a debugging trace if writing to a control
+		// just leave a debugging trace if writing to a control
 		if (!m_bReadFromControl)
 		{
 			TRACE(_T("Warning: current control data is out of range.\n"));
 			return;     // don't stop
 		}
 
-		  // when reading a number outside the range, put out an error
-		  // message with the range tuple
-		CString prompt;
-		prompt.Format(DDV_MSG_INT_RANGE, minVal, maxVal);
-		ErrorMessageBox(prompt);
-		Fail();
+		// when reading a number outside the range, put out an error
+		// message with the range tuple
+		CString message;
+		message.Format(DDV_MSG_INT_RANGE, minVal, maxVal);
+
+		throw CUserException(message);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal)
-	//	Check that minVal <= value <= maxVal for the UINT value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.
 	{
 		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal)
-	//	Check that minVal <= value <= maxVal for the ULONG value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		assert(minVal <= maxVal);
 		if (minVal <= value && value <= maxVal)
 			return;
-
-		  // just leave a debugging trace if writing to a control
+		
 		if (!m_bReadFromControl)
 		{
+			// just leave a debugging trace if writing to a control
 			int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
 			CString str = CString(_T("Warning: value is outside limits in control with ID "))
 						   + nIDC + _T(" \n");
@@ -1125,19 +1004,19 @@ namespace Win32xx
 			return;     // don't stop
 		}
 
-		  // when reading a number outside the range, put out an error
-		  // message with the range tuple
-		CString prompt;
-		prompt.Format(DDV_MSG_UINT_RANGE, minVal, maxVal);
-		ErrorMessageBox(prompt);
-		Fail();
+		// when reading a number outside the range, put out an error
+		// message with the range tuple
+		CString message;
+		message.Format(DDV_MSG_UINT_RANGE, minVal, maxVal);
+
+		throw CUserException(message);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxFloat(float const& value, float minVal,
 		float maxVal, int precision /* = FLT_DIG */)
-	//	Check that minVal <= value <= maxVal for the float value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//  Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException..
 	{
 		DDV_MinMaxDouble((double)value, (double)minVal, (double)maxVal,
 			precision);
@@ -1146,195 +1025,55 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDouble(double const& value, double minVal,
 		double maxVal, int precision /* = DBL_DIG */)
-	//	Check that minVal <= value <= maxVal for the double value and, if not,
-	//	show the error box and invoke the m_DX failure procedure.
+	//  Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  otherwise throws a CUserException.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		assert(minVal <= maxVal);
 		if (minVal <= value && value <= maxVal)
 			return;
 
-		  // just leave a debugging trace if writing to a control
 		if (!m_bReadFromControl)
 		{
+			// just leave a debugging trace if writing to a control
 			TRACE(_T("Warning: current dialog data is out of range.\n"));
-			return; // don't Fail()
+			return; // don't throw
 		}
 
-		  // when reading a number outside the range, put out an error
-		  // message with the range tuple
-		CString prompt;
-		prompt.Format(DDV_MSG_REAL_RANGE, precision, minVal, precision, maxVal);
-		ErrorMessageBox(prompt);
-		Fail();
+		// when reading a number outside the range, put out an error
+		// message with the range tuple
+		CString message;
+		message.Format(DDV_MSG_REAL_RANGE, precision, minVal, precision, maxVal);
+
+		throw CUserException(message);
 	}
 
 	//============================================================================
 	inline void CDataExchange::DDV_MaxChars(CString const& value, int nChars)
-	//	On reading from the control, check that the length of value <= nChars;
-	//	if not, show the error message box and initiate the m_DX failure
-	//	procedure. If writing, send the box the message to set the limit
-	//	to nChars, which must be at least one.
+	//	Ensures that the length of value <= nChars when reading from the control,
+	//  otherwise throws a CUserException. If writing, send the box the message 
+	//  to set the limit to nChars, which must be at least one.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		assert(nChars >= 1);  // must allow at least one char
 		if (m_bReadFromControl && value.GetLength() > nChars)
 		{
-			CString prompt;
-			prompt.Format(DDV_MSG_STRING_SIZE, value.c_str(), (long)nChars);
-			ErrorMessageBox(prompt);
-  			Fail();
+			CString message;
+			message.Format(DDV_MSG_STRING_SIZE, value.c_str(), (long)nChars);
+
+			throw CUserException(message);
 		}
 		else if (m_hWndLastControl != NULL && m_bEditLastControl)
 		{
-			  // limit the control max-chars automatically
+			// limit the control max-chars automatically
 			::SendMessage(m_hWndLastControl, EM_LIMITTEXT, nChars, 0);
 		}
 	}
-/*
-	//============================================================================
-	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal)
-	//	In READFROMCONTROL mode, this method sets the range of the slider
-	//	control associated with the last visited window control to the pair
-	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
-	//	that the refValue first falls between minRange and maxRange values
-	//	before setting the range; if refValue is outside these limits,
-	//	no setting of the range takes place and a trace message is written
-	//	in debug mode.
-	{
-		if (!m_allowDDXDDV)
-			return;
 
-		assert(minVal <= maxVal);
-		if (!m_bReadFromControl)
-		{
-			if (minVal > value || maxVal < value)
-			{
-	#ifdef _DEBUG
-				  // just leave a trace if writing to the control
-				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
-				CString str = CString(_T("Warning: slider position is outside given "))
-							+ _T("limits in the control with ID ") + nIDC + _T(" \n");
-				TRACE(str);
-	#endif
-				return;     // don't stop now
-			}
-		}
-
-		  // set the range tuple
-		CSlider* pWndSlider = (CSlider*)CWnd::GetCWndPtr(m_hWndLastControl);
-		assert(pWndSlider);
-
-		pWndSlider->SetRangeMin(minVal, FALSE);
-		pWndSlider->SetRangeMax(maxVal, TRUE);
-	}
-*/
-/*
-	//============================================================================
-	inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
-		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange)
-	//	In READFROMCONTROL mode, this method sets the range of the DateTime
-	//	control associated with the last visited window control to the pair
-	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
-	//	that the refValue first falls between minRange and maxRange values
-	//	before setting the range; if refValue is outside these limits,
-	//	no setting of the range takes place and a trace message is written
-	//	in debug mode.
-	{
-		if (!m_allowDDXDDV)
-			return;
-
-		ULONGLONG zero = (ULONGLONG)0;
-		ULONGLONG val = SystemTimeToULL(refValue);
-		ULONGLONG min = SystemTimeToULL(minRange);
-		ULONGLONG max = SystemTimeToULL(maxRange);
-		assert(min == zero || max == zero || min <= max);
-
-		if (!m_bReadFromControl)
-		{
-			if ((min != zero && min > val) ||
-				(max != zero && max < val))
-			{
-				  // retrieve the control ID
-				int nIDC = ::GetWindowLong(m_hWndLastControl, 	GWL_ID);
-				CString str = CString(_T("Warning: Date-Time data is out of range "))
-								+ _T("in control ID ") + nIDC + _T(" \n");
-				TRACE(str);
-
-				return;     // continue on
-			}
-		}
-
-		  // set the given DateTime range
-		SYSTEMTIME sta[2];
-		sta[0] = minRange;
-		sta[1] = maxRange;
-		CDateTime* pWndDate = (CDateTime*)CWnd::GetCWndPtr(m_hWndLastControl);
-		assert(pWndDate);
-
-		pWndDate->SetRange(GDTR_MIN | GDTR_MAX, sta);
-	}
-
-	//============================================================================
-	inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
-		const SYSTEMTIME& maxRange)
-	//	In READFROMCONTROL mode, this method sets the range of the month
-	//	calendar control associated with the last visited window control to
-	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
-	//	that the refValue first falls between minRange and maxRange values
-	//	before setting the range; if refValue is outside these limits,
-	//	no setting of the range takes place and a trace message is written
-	//	in debug mode.
-	{
-		if (!m_allowDDXDDV)
-			return;
-
-		ULONGLONG zero = (ULONGLONG)0;
-		ULONGLONG val = SystemTimeToULL(refValue);
-		ULONGLONG min = SystemTimeToULL(minRange);
-		ULONGLONG max = SystemTimeToULL(maxRange);
-		assert(min == zero || max == zero || min <= max);
-
-		if (!m_bReadFromControl)
-		{
-			if ((min != zero && min > val) ||
-				(max != zero && max < val))
-			{
-				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
-				CString str = CString(_T("Warning: Calendar data is out of range "))
-							+ _T("in control ID ") + nIDC + _T(" \n");
-				TRACE(str);
-				return;     // continue on
-			}
-		}
-
-		CMonthCalendar* pWndMonth = (CMonthCalendar*)CWnd::GetCWndPtr(m_hWndLastControl);
-		assert(pWndMonth);
-
-		pWndMonth->SetRange(const_cast<LPSYSTEMTIME>(&minRange),
-			const_cast<LPSYSTEMTIME>(&maxRange));
-	}
-*/
-
-	////////////////////////////////////////////////////////////////
-	//
-	//	DDX/DDV Static Utility Members
-	//
-	////////////////////////////////////////////////////////////////
-
-	//============================================================================
-	inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime)
-	//	Convert the SYSTEMTIME struct to an ULONGLONG integer and
-	//	return this value.
-	{
-		FILETIME ft;
-		SystemTimeToFileTime(&systime, &ft);
-		return ((ULONGLONG)(ft.dwHighDateTime) << 32 | ft.dwLowDateTime);
-	}
+	// The following member functions are located in wxx_controls.h:
+	//  CDataExchange::DDX_DateTime
+	//  CDataExchange::DDX_MonthCal
+	//  CDataExchange::DDV_MinMaxSlider
+	//  CDataExchange::DDV_MinMaxDateTime
+	//  CDataExchange::DDV_MinMaxMonth
 
 
 }	// namespace Win32xx

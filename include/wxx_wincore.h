@@ -95,6 +95,7 @@ namespace Win32xx {}
 #include "wxx_themes.h"
 #include "wxx_cstring.h"
 #include "wxx_wincore1.h"
+#include "wxx_exception.h"
 #ifndef _WIN32_WCE
   #include "wxx_archive.h"
 #endif

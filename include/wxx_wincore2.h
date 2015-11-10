@@ -675,7 +675,10 @@ namespace Win32xx
 	{
 		// Window controls and other subclassed windows are expected to do their own
 		// drawing, so we don't call OnDraw for those.
-		// CustomDraw or OwnerDraw are normally used to modify the drawing of controls.
+
+		// Note: CustomDraw or OwnerDraw are normally used to modify the drawing of
+		//       controls, but overriding OnPaint is also an option.
+		
 		if (!m_PrevWindowProc)
 		{
 			if (::GetUpdateRect(*this, NULL, FALSE))
@@ -903,13 +906,12 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 	}
 #ifndef _WIN32_WCE
-	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bReadFromControl, BOOL allowDDXDDV /* = TRUE */)
+	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bReadFromControl)
 	//	Dialog Data Exchange support. Call this function to read values from
 	//	(bReadFromControl is TRUE) or deposit values into (bReadFromControl
 	//	is FALSE) a set of controls appearing in DDX/DDV statements in the
-	//	DoDataExchange() member method. Set allowDDXDDV to TRUE when DDX and
-	//	DDV assessments are to be observed, FALSE if they are not, as may be
-	//	needed in start-up portions of a program before the window appears.
+	//	DoDataExchange() member method.
+	//
 	//	Return TRUE if the operation is successful, or FALSE otherwise. When
 	//	called with bReadFromControl a TRUE value, success means the data has
 	//	been validated.
@@ -928,44 +930,24 @@ namespace Win32xx
 		CCriticalSection ccs;
 		ccs.Lock();
 
-	//	CDataExchange DX(*this, bReadFromControl, allowDDXDDV);
-		DX.Init(*this, bReadFromControl, allowDDXDDV);
+		DX.Init(*this, bReadFromControl);
 
-		BOOL ok = FALSE;  // if the try clause below throws an exception
+		BOOL ok = FALSE;  // Remains FALSE if DoDataExchange throws a CUserException
 		try
 		{
 			DoDataExchange(DX);
-			if (DX.m_hWndLastControl != NULL && DX.m_hWndLastEditControl != NULL)
-			{	  // if there was an edit control
-				  // select all characters in the edit item
-				::SetFocus(DX.m_hWndLastEditControl);
-				::SendMessage(DX.m_hWndLastEditControl, EM_SETSEL, 0, -1);
+			if (DX.GetLastControl() != NULL && DX.GetLastEditControl() != NULL)
+			{	
+				// select all characters in the edit control
+				::SetFocus(DX.GetLastEditControl());
+				::SendMessage(DX.GetLastEditControl(), EM_SETSEL, 0, -1);
 			}
-			ok = TRUE; // all is well!
+			ok = TRUE; // DoDataExchage completed succesfully
 		}
-		catch(int e)    // int is USER_EXCEPTION
+		catch(const CUserException& e)
 		{
-			UNREFERENCED_PARAMETER(e);
-			  // Validation has failed - user has been alerted, so
-			  // merely proceed on. The exception is from the
-			  // incomplete DoDataExchange()
-		}
-		catch(LPTSTR s)  // for string exceptions (but as-yet unused here)
-		{
-			CString msg = s + (CString)_T("\nin DoDataExchange");
-			::MessageBox(NULL, msg.c_str(), _T("Exception"),
-				MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-		}
-		catch(...)  // everything else is NOT_SUPPORTED_EXCEPTION, caused by
-		{	    // unrecogized control IDs, resource failures, etc.
-
-	#ifdef _DEBUG
-			ErrorMessageBox(_T("Application Internal failure: ")
-				_T("feature not supported."));
-	#endif
-
-			// bad doings in DoDataExchange()
-			throw _T("Not supported exception.");
+			// Validation has failed. Call the Fail to display the error.
+			DX.Fail( e.GetText() );
 		}
 
 		return ok;
@@ -1056,22 +1038,7 @@ namespace Win32xx
 
 		case WM_PAINT:
 			{
-			/*	// Subclassed controls expect to do their own painting.
-				// CustomDraw or OwnerDraw are normally used to modify the drawing of controls.
-				if (m_PrevWindowProc) break;
-
-				if (::GetUpdateRect(*this, NULL, FALSE))
-				{
-					CPaintDC dc(*this);
-					OnDraw(dc);
-				}
-				else
-				// RedrawWindow can require repainting without an update rect
-				{
-					CClientDC dc(*this);
-					OnDraw(dc);
-				} */
-
+				// OnPaint calls OnDraw when appropriate
 				OnPaint(uMsg, wParam, lParam);
 			}
 
@@ -2195,20 +2162,6 @@ namespace Win32xx
 			::FreeLibrary(hComCtl);
 		}
 	}
-
-  // Required for WinCE
-  #ifndef lstrcpyn
-	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
-	{
-		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
-			return NULL;
-		int nLen = MIN((int)lstrlen(lpstrSrc), nLength - 1);
-		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
-		lpstrDest[nLen] = _T('\0');
-		return lpstrRet;
-	}
-  #endif // !lstrcpyn
-
 }
 
 

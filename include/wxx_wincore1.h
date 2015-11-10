@@ -148,7 +148,7 @@ namespace Win32xx
 		// For Data Exchange
 	#ifndef _WIN32_WCE
 		virtual void DoDataExchange(CDataExchange& DX);
-		BOOL UpdateData(CDataExchange& DX, BOOL bReadFromControl, BOOL allowDDXDDV = TRUE);
+		virtual BOOL UpdateData(CDataExchange& DX, BOOL bReadFromControl);
 	#endif
 
 		// Attributes

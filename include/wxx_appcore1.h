@@ -152,9 +152,9 @@ namespace Win32xx
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
-#ifndef _WIN32_WCE
+  #ifndef _WIN32_WCE
 	typedef std::basic_stringstream<TCHAR> tStringStream;
-#endif
+  #endif
 
 	// Some useful smart pointers
 	typedef Shared_Ptr<CDC> DCPtr;
@@ -204,7 +204,7 @@ namespace Win32xx
 		long		Count;
 	};
 
-#ifndef _WIN32_WCE
+  #ifndef _WIN32_WCE
 	struct CMenu_Data	// A structure that contains the data members for CMenu
 	{
 		// Constructor
@@ -215,7 +215,7 @@ namespace Win32xx
 		bool IsManagedMenu;
 		long Count;
 	};
-#endif
+  #endif
 
 	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
 	{
@@ -262,26 +262,34 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Declarations for the CCriticalSection class
 	// This class is used for thread synchronisation
+	//
+	// Note: All locks are released when the CCriticalSection object is
+	//       destroyed, making this class exception safe.
 	class CCriticalSection
 	{
 	public:
-		CCriticalSection() : IsLocked(false)	{ ::InitializeCriticalSection(&m_cs); }
+		CCriticalSection() : m_count(0)	{ ::InitializeCriticalSection(&m_cs); }
 		~CCriticalSection()	
 		{ 
-			if (IsLocked) ::LeaveCriticalSection(&m_cs);	
-			
-			::DeleteCriticalSection(&m_cs); 
+			while (m_count > 0)
+			{
+				::InterlockedDecrement(&m_count);
+				::DeleteCriticalSection(&m_cs);
+			}
 		}
 
 		void Lock() 	
 		{
 			::EnterCriticalSection(&m_cs); 
-			IsLocked = true;
+			InterlockedIncrement(&m_count);
 		}
 		void Release()
 		{ 
-			::LeaveCriticalSection(&m_cs);
-			IsLocked = false;
+			if (m_count > 0)
+			{
+				::LeaveCriticalSection(&m_cs);
+				::InterlockedDecrement(&m_count);
+			}
 		}
 
 	private:
@@ -289,8 +297,9 @@ namespace Win32xx
 		CCriticalSection& operator = ( const CCriticalSection& );
 		
 		CRITICAL_SECTION m_cs;
-		bool IsLocked;
+		long m_count;
 	};
+
 
 
 	///////////////////////////////////
@@ -411,9 +420,9 @@ namespace Win32xx
 		CDC_Data* GetCDCDataFromMap(HDC hDC);
 		CGDI_Data* GetCGDIDataFromMap(HGDIOBJ hObject);
 		CIml_Data* GetCImlDataFromMap(HIMAGELIST himl);
-#ifndef _WIN32_WCE
+  #ifndef _WIN32_WCE
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
-#endif
+  #endif
 
 		CWnd* GetCWndFromMap(HWND hWnd);		TLSData* GetTlsData() const;
 		void	SetCallback();
@@ -423,15 +432,14 @@ namespace Win32xx
 		std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
 		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
-#ifndef _WIN32_WCE
+  #ifndef _WIN32_WCE
 		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
-#endif
+  #endif
 
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
-		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
+		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread		
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTLSLock;	// thread synchronisation for m_vTLSData
-		CCriticalSection m_csAppStart;	// thread synchronisation for application startup
 		HINSTANCE m_hInstance;			// handle to the applications instance
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsData;				// Thread Local Storage data
@@ -449,7 +457,7 @@ namespace Win32xx
 		return *CWinApp::SetnGetThis();
 	}
 	
-#ifndef _WIN32_WCE
+  #ifndef _WIN32_WCE
 	inline int GetWinVersion()
 	{
 		DWORD dwVersion = GetVersion();
@@ -468,8 +476,12 @@ namespace Win32xx
 		//  2501     Windows XP
 		//  2502     Windows Server 2003
 		//  2600     Windows Vista and Windows Server 2008
-		//  2601     Windows 7
+		//  2601     Windows 7 and Windows Server 2008 r2
+		//  2602     Windows 8 and Windows Server 2012
+		//  2603     Windows 8.1 and Windows Server 2012 r2
 
+		// Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
+		
 		return nVersion;
 	}
 
@@ -518,14 +530,27 @@ namespace Win32xx
 		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
 		// 580  dll ver 5.80	Internet Explorer 5
 		// 581  dll ver 5.81	Windows 2000 and Windows ME
-		// 582  dll ver 5.82	Windows XP or Vista without XP themes
+		// 582  dll ver 5.82	Windows XP, Vista, Windows 7 etc. without XP themes
 		// 600  dll ver 6.00	Windows XP with XP themes
 		// 610  dll ver 6.10	Windows Vista with XP themes
 		// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
 
 		return ComCtlVer;
 	}
-#endif
+  #endif
+
+  // Required for WinCE
+  #ifndef lstrcpyn
+	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
+	{
+		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
+			return NULL;
+		int nLen = MIN((int)lstrlen(lpstrSrc), nLength - 1);
+		LPTSTR lpstrRet = (LPTSTR)memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR));
+		lpstrDest[nLen] = _T('\0');
+		return lpstrRet;
+	}
+  #endif // !lstrcpyn	
 
 }
 

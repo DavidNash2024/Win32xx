@@ -2124,6 +2124,16 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	//============================================================================
+	inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime)
+	//	Convert the SYSTEMTIME struct to an ULONGLONG integer and
+	//	return this value.
+	{
+		FILETIME ft;
+		SystemTimeToFileTime(&systime, &ft);
+		return ((ULONGLONG)(ft.dwHighDateTime) << 32 | ft.dwLowDateTime);
+	}
+
+	//============================================================================
 	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
 	//	This function manages the transfer of date and/or time data between a
 	//	date and time picker control (CDateTime) with control numbered nID
@@ -2180,9 +2190,6 @@ namespace Win32xx
 	//	no setting of the range takes place and a trace message is written
 	//	in debug mode.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		assert(minVal <= maxVal);
 		if (!m_bReadFromControl)
 		{
@@ -2218,9 +2225,6 @@ namespace Win32xx
 	//	no setting of the range takes place and a trace message is written
 	//	in debug mode.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		ULONGLONG zero = (ULONGLONG)0;
 		ULONGLONG val = SystemTimeToULL(refValue);
 		ULONGLONG min = SystemTimeToULL(minRange);
@@ -2263,9 +2267,6 @@ namespace Win32xx
 	//	no setting of the range takes place and a trace message is written
 	//	in debug mode.
 	{
-		if (!m_allowDDXDDV)
-			return;
-
 		ULONGLONG zero = (ULONGLONG)0;
 		ULONGLONG val = SystemTimeToULL(refValue);
 		ULONGLONG min = SystemTimeToULL(minRange);

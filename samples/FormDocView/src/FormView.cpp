@@ -87,7 +87,7 @@ BOOL CFormView::OnInitDialog()
 	AttachItem(IDC_RICHEDIT1, m_RichEdit);
 	AttachItem(IDC_GROUP1,	m_Group);
 	AttachItem(IDC_STATUS,	m_Status);
-	AttachItem(IDC_BITMAP1, m_Bitmap);
+	AttachItem(IDC_BITMAP1, m_Picture);
 	
 	// Put some text in the edit boxes
 	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
@@ -124,7 +124,7 @@ BOOL CFormView::OnInitDialog()
 	m_Resizer.AddChild(m_Edit,     topleft, RD_STRETCH_WIDTH);
 	m_Resizer.AddChild(m_ListBox,  topleft, RD_STRETCH_WIDTH);
 	m_Resizer.AddChild(m_RichEdit, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
-	m_Resizer.AddChild(m_Bitmap,   topright, 0);
+	m_Resizer.AddChild(m_Picture,  topright, 0);
 	m_Resizer.AddChild(m_OK,       bottomright, 0);
 	m_Resizer.AddChild(m_Group,    bottomright, RD_STRETCH_HEIGHT);
 	m_Resizer.AddChild(m_Status,   bottomright, RD_STRETCH_HEIGHT);

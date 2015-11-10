@@ -322,23 +322,27 @@ namespace Win32xx
 	//
 
 	// To begin Win32++, inherit your application class from this one.
-	// You must run only one instance of the class inherited from this.
+	// You must run only one instance of the class inherited from CWinApp.
 	inline CWinApp::CWinApp() : m_Callback(NULL)
 	{
-		m_csAppStart.Lock();
-		assert( 0 == SetnGetThis() );	// Test if this is the first instance of CWinApp
+		CCriticalSection csAppStart;
+		csAppStart.Lock();
+		if ( 0 != SetnGetThis() )
+		{
+			// Test if this is the only instance of CWinApp
+			throw CNotSupportedException(_T("Only one instance of CWinApp is permitted"));
+		}
 
 		m_dwTlsData = ::TlsAlloc();
 		if (m_dwTlsData == TLS_OUT_OF_INDEXES)
 		{
 			// We only get here in the unlikely event that all TLS indexes are already allocated by this app
 			// At least 64 TLS indexes per process are allowed. Win32++ requires only one TLS index.
-			m_csAppStart.Release();
-			throw CWinException(_T("CWinApp::CWinApp  Failed to allocate TLS Index"));
+			throw CNotSupportedException(_T("CWinApp::CWinApp  Failed to allocate Thread Local Storage"));
 		}
 
 		SetnGetThis(this);
-		m_csAppStart.Release();
+		csAppStart.Release();
 
 		// Set the instance handle
 #ifdef _WIN32_WCE
@@ -623,7 +627,6 @@ namespace Win32xx
 	inline TLSData* CWinApp::SetTlsData()
 	{
 		TLSData* pTLSData = GetTlsData();
-		
 		if (NULL == pTLSData)
 		{
 			pTLSData = new TLSData;
