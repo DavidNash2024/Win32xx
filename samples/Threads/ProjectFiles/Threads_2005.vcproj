@@ -191,6 +191,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyEdit.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyThread.cpp"
 				>
 			</File>
@@ -230,6 +234,10 @@
 			>
 			<File
 				RelativePath="..\src\MainWnd.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\MyEdit.h"
 				>
 			</File>
 			<File

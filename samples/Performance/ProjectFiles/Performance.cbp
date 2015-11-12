@@ -178,6 +178,8 @@
 		<Unit filename="../src/MainWnd.h" />
 		<Unit filename="../src/MyDialog.cpp" />
 		<Unit filename="../src/MyDialog.h" />
+		<Unit filename="../src/MyEdit.cpp" />
+		<Unit filename="../src/MyEdit.h" />
 		<Unit filename="../src/PerfApp.cpp" />
 		<Unit filename="../src/PerfApp.h" />
 		<Unit filename="../src/Performance.rc">

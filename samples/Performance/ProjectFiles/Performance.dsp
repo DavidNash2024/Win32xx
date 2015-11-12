@@ -103,6 +103,10 @@ SOURCE=..\src\MyDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\MyEdit.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\PerfApp.cpp
 # End Source File
 # Begin Source File
@@ -124,6 +128,10 @@ SOURCE=..\src\MainWnd.h
 # Begin Source File
 
 SOURCE=..\src\MyDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyEdit.h
 # End Source File
 # Begin Source File
 

@@ -19,6 +19,9 @@
     <ClCompile Include="..\src\ThreadApp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MyEdit.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\MainWnd.h">
@@ -131,6 +134,9 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_winutils.h">
       <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyEdit.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

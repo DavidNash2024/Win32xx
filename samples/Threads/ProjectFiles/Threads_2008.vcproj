@@ -189,6 +189,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyEdit.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyThread.cpp"
 				>
 			</File>
@@ -231,6 +235,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\MyEdit.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\MyThread.h"
 				>
 			</File>
@@ -261,6 +269,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_appcore1.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_appcore2.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_archive.h"
 				>
 			</File>
@@ -278,6 +294,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_exception.h"
 				>
 			</File>
 			<File
@@ -382,6 +402,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wincore1.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wincore2.h"
 				>
 			</File>
 			<File

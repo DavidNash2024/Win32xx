@@ -6,13 +6,14 @@ New Features and Enhancements
 * Added CDataExchange
 
 * Extended CString
-   - Added operator + support for ints, floats and doubles.
-   - Added operator += support for ints, floats and doubles.
-   - Added operator = support for ints, floats and doubles.
+   - Added operator + support for ints and doubles.
+   - Added operator += support for ints and doubles.
+   - Added operator = support for ints and doubles.
    
 * Updated the exception handling
    - Added CException             ( inherits from std::exception )
    - Added CNotSupportedException ( inherits from CException )
+   - Added CResourceException     ( inherits from CException )
    - Added CUserException         ( inherits from CException )
    - Updated CWinException        ( inherits from CException )
    

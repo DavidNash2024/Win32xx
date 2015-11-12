@@ -176,6 +176,8 @@
 		</VirtualTargets>
 		<Unit filename="../src/MainWnd.cpp" />
 		<Unit filename="../src/MainWnd.h" />
+		<Unit filename="../src/MyEdit.cpp" />
+		<Unit filename="../src/MyEdit.h" />
 		<Unit filename="../src/MyThread.cpp" />
 		<Unit filename="../src/MyThread.h" />
 		<Unit filename="../src/TestWnd.cpp" />

@@ -90,6 +90,34 @@
   #define WM_PARENTNOTIFY 0x0210
 #endif
 
+
+// For compilers lacking Win64 support
+#ifndef  GetWindowLongPtr
+  #define GetWindowLongPtr   GetWindowLong
+  #define SetWindowLongPtr   SetWindowLong
+  #define GWLP_WNDPROC       GWL_WNDPROC
+  #define GWLP_HINSTANCE     GWL_HINSTANCE
+  #define GWLP_ID            GWL_ID
+  #define GWLP_USERDATA      GWL_USERDATA
+  #define DWLP_DLGPROC       DWL_DLGPROC
+  #define DWLP_MSGRESULT     DWL_MSGRESULT
+  #define DWLP_USER          DWL_USER
+  #define DWORD_PTR          DWORD 
+  #define LONG_PTR           LONG
+  #define ULONG_PTR          LONG
+#endif
+#ifndef GetClassLongPtr
+  #define GetClassLongPtr    GetClassLong
+  #define SetClassLongPtr    SetClassLong
+  #define GCLP_HBRBACKGROUND GCL_HBRBACKGROUND
+  #define GCLP_HCURSOR       GCL_HCURSOR
+  #define GCLP_HICON         GCL_HICON
+  #define GCLP_HICONSM       GCL_HICONSM
+  #define GCLP_HMODULE       GCL_HMODULE
+  #define GCLP_MENUNAME      GCL_MENUNAME
+  #define GCLP_WNDPROC       GCL_WNDPROC
+#endif
+
 // Remove pointless warning messages
 #ifdef _MSC_VER
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
@@ -168,7 +196,6 @@ namespace Win32xx
 	typedef Shared_Ptr<CPalette> PalettePtr;
 	typedef Shared_Ptr<CPen> PenPtr;
 	typedef Shared_Ptr<CRgn> RgnPtr;
-
 
 
 	struct CDC_Data	// A structure that contains the data members for CDC

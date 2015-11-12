@@ -7,8 +7,10 @@
 
 #include "TestWnd.h"
 #include "MyThread.h"
+#include "MyEdit.h"
 
 typedef Shared_Ptr<CMyThread> MyThreadPtr;
+
 
 class CMainWindow : public CWnd
 {
@@ -36,8 +38,7 @@ private:
 	std::vector<MyThreadPtr> m_vMyThread;// A vectore of CMyThread smart pointers
 	int m_nTestWnd;						// Number of additional test windows to be created
 	int m_nWindowsCreated;				// Count of windows actually created
-	CEdit m_EditWnd;
-	CFont m_Font;
+	CMyEdit m_EditWnd;
 };
 
 

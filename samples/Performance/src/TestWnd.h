@@ -2,9 +2,9 @@
 // TestWnd.h
 //  Declaration of the CTestWindow class
 
+
 #ifndef TESTWND_H
 #define TESTWND_H
-
 
 
 class CTestWindow : public CWnd

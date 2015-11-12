@@ -42,7 +42,6 @@
 #include "wxx_cstring.h"
 #include "wxx_exception.h"
 
-
 namespace Win32xx
 {
 
@@ -294,9 +293,15 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, HWND hOwnerWnd)
+	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName,
+						DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, 
+						HWND hOwnerWnd)
 	// Displays the file open dialog.
 	// Returns a CString containing either the selected file name or an empty CString.
+	// Note: pszFilter is a pointer to a buffer containing pairs of null-terminated filter strings. 
+	//       The last string in the buffer must be terminated by two NULL characters. A CString can
+	//       contain embedded NULL characters. Alternatively the '|' character can be used in place
+	//       of embedded NULL characters here. 
 	{
 		CString str;
 		if (pszFilePathName)
@@ -315,7 +320,12 @@ namespace Win32xx
 
 		ofn.hwndOwner = hOwnerWnd;
 		ofn.hInstance = GetApp().GetInstanceHandle();
-		ofn.lpstrFilter = pszFilter;
+	
+		// convert any '|' characters in pszFilter to NULL characters
+		CString strFilter =  pszFilter;
+		strFilter.Replace(_T('|'), _T('\0'));
+		ofn.lpstrFilter = strFilter.c_str();
+
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
 		ofn.Flags = dwFlags;
 		ofn.nMaxFile = MaxPath;
@@ -357,9 +367,15 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName, DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, LPCTSTR pszDefExt, HWND hOwnerWnd)
+	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName,
+						DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter,
+						LPCTSTR pszDefExt, HWND hOwnerWnd)
 	// Displays the SaveFileDialog.
-	// Returns a CString containing either the selected file name or an empty CString
+	// Returns a CString containing either the selected file name or an empty CString.
+	// Note: pszFilter is a pointer to a buffer containing pairs of null-terminated filter strings. 
+	//       The last string in the buffer must be terminated by two NULL characters. A CString can
+	//       contain embedded NULL characters. Alternatively the '|' character can be used in place
+	//       of embedded NULL characters here. 
 	{
 		CString str;
 		if (pszFilePathName)
@@ -378,7 +394,16 @@ namespace Win32xx
 
 		ofn.hwndOwner = hOwnerWnd;
 		ofn.hInstance = GetApp().GetInstanceHandle();
-		ofn.lpstrFilter = pszFilter;
+
+		// convert any '|' characters in pszFilter to NULL characters
+		CString strFilter =  pszFilter;
+		strFilter.Replace(_T('|'), _T('\0'));
+		ofn.lpstrFilter = strFilter.c_str();
+
+		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
+		ofn.Flags = dwFlags;
+		ofn.nMaxFile = MaxPath;
+
 		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
 		ofn.lpstrDefExt = pszDefExt;
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Save File");

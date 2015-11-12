@@ -15,7 +15,8 @@ public:
 	virtual ~CMyThread() {}
 	
 	virtual BOOL InitInstance();
-	CTestWindow* GetTestWnd()  { return &m_TestWnd; }
+	CTestWindow* GetTestWnd()	{ return &m_TestWnd; }
+	int GetThreadCount()		{ return m_nThread; }
 
 private:
 	CTestWindow m_TestWnd;

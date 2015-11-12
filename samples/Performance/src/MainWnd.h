@@ -8,6 +8,7 @@
 
 #include "TestWnd.h"
 #include "MyDialog.h"
+#include "MyEdit.h"
 
 typedef Shared_Ptr<CTestWindow> TestWindowPtr;
 
@@ -39,8 +40,7 @@ private:
 	};
 
 	std::vector<TestWindowPtr> m_pCTestWindows;	// A vector CTestWindow smart pointers
-	CEdit m_Edit;			// Handle to the edit window
-	CFont m_Font;			// A font for the edit window
+	CMyEdit m_Edit;			// Handle to the edit window
 	int m_nTestMessages;	// Number of test messages to be sent
 	int m_nTestWindows;		// Number of test windows to create
 	int m_nWindowsCreated;	// Number of windows created

@@ -125,6 +125,9 @@
 				RelativePath="..\src\MainWnd.cpp">
 			</File>
 			<File
+				RelativePath="..\src\MyEdit.cpp">
+			</File>
+			<File
 				RelativePath="..\src\MyThread.cpp">
 			</File>
 			<File
@@ -143,6 +146,9 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
 			<File
 				RelativePath="..\src\MainWnd.h">
+			</File>
+			<File
+				RelativePath="..\src\MyEdit.h">
 			</File>
 			<File
 				RelativePath="..\src\MyThread.h">

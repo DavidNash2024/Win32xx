@@ -1,7 +1,7 @@
 [Project]
 FileName=Threads.dev
 Name=Threads
-UnitCount=12
+UnitCount=14
 Type=0
 Ver=2
 ObjFiles=
@@ -151,13 +151,14 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit13]
-FileName=Threads.rc
-Folder=Resource
+FileName=..\src\MyEdit.cpp
+Folder=Source
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit16]
 FileName=MyDialog.cpp
@@ -191,6 +192,16 @@ BuildCmd=
 
 [Unit12]
 FileName=..\src\ThreadApp.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\MyEdit.h
 CompileCpp=1
 Folder=Header
 Compile=1

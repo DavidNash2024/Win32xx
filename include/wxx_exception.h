@@ -138,6 +138,26 @@ namespace Win32xx
 		virtual ~CNotSupportedException() throw();
 		virtual const char* what() const throw();
 	};
+	
+	
+	//////////////////////////////////////////////////
+	// Declaration of the CResourceException class
+	//
+	//	This exception is used by the Win32++ framework to indicate
+	//  a failure to create a resource, such as a GDI resource. Users
+	//  can also use this exception when a resource fails to load from
+	//  the resource script (resource.rc). 
+	//
+	// Note: Each function guarantees not to throw an exception
+	//
+	class CResourceException : public CException
+	{
+	public:
+		CResourceException(int nMessageID);
+		CResourceException(LPCTSTR pszText = NULL, int nMessageID = 0);
+		virtual ~CResourceException() throw();
+		virtual const char* what() const throw();
+	};
 
 
 	////////////////////////////////////////
@@ -186,24 +206,27 @@ namespace Win32xx
 	}
 
 	inline LPCTSTR CException::GetText() const throw()
-	// Retrieves the string specified in the constructor.
+	// Retrieves the string specified when the exception is thrown.
 	{
 		return m_szText;
 	}
 
 	inline int CException::GetMessageID() const throw()
+	// Retrieves the message ID specified when the exception is thrown.
+	// This could be a resource ID for a string in the resource script (resource.rc).
 	{
 		return m_nMessageID;
 	}
 
 	inline void CException::ReportError() const throw()
+	// Displays the exception information in a message box.
 	{
 		if (m_szText[0] != 0)
-			MessageBox(NULL, m_szText, _T("Exception Occurred"), MB_OK);
+			::MessageBox(NULL, m_szText, _T("Exception Occurred"), MB_OK);
 		else if (m_nMessageID > 0 )
-			MessageBox(NULL, LoadString(m_nMessageID), _T("Exception Occurred"), MB_OK);
+			::MessageBox(NULL, LoadString(m_nMessageID), _T("Exception Occurred"), MB_OK);
 
-		else MessageBox(NULL, _T("Unspecified Error"), _T("Exception Occurred"), MB_OK);
+		else ::MessageBox(NULL, _T("Unspecified Error"), _T("Exception Occurred"), MB_OK);
 	}
 
 
@@ -213,13 +236,21 @@ namespace Win32xx
 	inline CUserException::CUserException(int nMessageID)
 			: CException(nMessageID)
 	{
+		// Display some text in the debugger
 		::OutputDebugString(_T("*** CUserException thrown ***\n"));
 	}
 	
 	inline CUserException::CUserException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 			: CException(pszText, nMessageID)
 	{
+		// Display some text in the debugger
 		::OutputDebugString(_T("*** CUserException thrown ***\n"));
+		
+		if (pszText)
+		{
+			::OutputDebugString(pszText);
+			::OutputDebugString(_T("\n"));
+		}	
 	}
 
 	inline CUserException::~CUserException() throw()
@@ -227,6 +258,7 @@ namespace Win32xx
 	}
 
 	inline const char* CUserException::what() const throw()
+	// Returns the exception type as a char string. Use A2T to convert this to TCHAR	
 	{
 		return "Win32xx::CUserException";
 	}
@@ -238,13 +270,21 @@ namespace Win32xx
 	inline CNotSupportedException::CNotSupportedException(int nMessageID)
 		: CException(nMessageID)
 	{
+		// Display some text in the debugger
 		::OutputDebugString(_T("*** CNotSupportedException thrown ***\n"));
 	}
 	
 	inline CNotSupportedException::CNotSupportedException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 		: CException(pszText, nMessageID)
 	{
+		// Display some text in the debugger
 		::OutputDebugString(_T("*** CNotSupportedException thrown ***\n"));
+
+		if (pszText)
+		{
+			::OutputDebugString(pszText);
+			::OutputDebugString(_T("\n"));
+		}
 	}
 	
 	inline CNotSupportedException::~CNotSupportedException() throw()
@@ -252,8 +292,43 @@ namespace Win32xx
 	}
 	
 	inline const char* CNotSupportedException::what() const throw()
+	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
 	{
 		return "Win32xx::CNotSupportedException";		
+	}
+	
+	
+	//////////////////////////////////////////////////
+	// Definitions of the CResourceException class
+	//	
+	inline CResourceException::CResourceException(int nMessageID)
+		: CException(nMessageID)
+	{
+		// Display some text in the debugger
+		::OutputDebugString(_T("*** CResourceException thrown ***\n"));
+	}
+	
+	inline CResourceException::CResourceException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
+		: CException(pszText, nMessageID)
+	{
+		// Display some text in the debugger
+		::OutputDebugString(_T("*** CResourceException thrown ***\n"));
+		
+		if (pszText)
+		{
+			::OutputDebugString(pszText);
+			::OutputDebugString(_T("\n"));
+		}
+	}
+	
+	inline CResourceException::~CResourceException() throw()
+	{
+	}
+	
+	inline const char* CResourceException::what() const throw()
+	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
+	{
+		return "Win32xx::CResourceException";		
 	}
 
 
@@ -265,9 +340,11 @@ namespace Win32xx
 	{
 		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
+		// Store error information in m_szErrorString
 		DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 		::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 		
+		// Display some text in the debugger
 		::OutputDebugString(_T("*** CWinException thrown ***\n"));
 		::OutputDebugString(m_szErrorString);
 	}
@@ -277,10 +354,18 @@ namespace Win32xx
 	{
 		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
+		// Store error information in m_szErrorString
 		DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 		::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 		
+		// Display some text in the debugger
 		::OutputDebugString(_T("*** CWinException thrown ***\n"));
+		if (pszText)
+		{
+			::OutputDebugString(pszText);
+			::OutputDebugString(_T("\n"));
+		}
+
 		::OutputDebugString(m_szErrorString);
 	}
 
@@ -297,7 +382,7 @@ namespace Win32xx
 	}
 
 	inline const char * CWinException::what() const throw()
-	// Sends the last error string to the debugger (typically displayed in the IDE's output window).
+	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
 	{
 		return "Win32xx::CWinException";
 	} 

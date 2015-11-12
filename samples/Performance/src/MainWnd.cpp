@@ -44,17 +44,7 @@ int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
 {
 	UNREFERENCED_PARAMETER(pcs);
 
-	CRect r = GetClientRect();
-	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | WS_HSCROLL | ES_MULTILINE | ES_AUTOVSCROLL | ES_AUTOHSCROLL;
-
-	// Create an Edit window over the client area of the main window
-	m_Edit.CreateEx(0L, _T("Edit"), _T(""), dwStyle, r.left, r.top, r.right - r.left, r.bottom - r.top,
-						*this, NULL, NULL);
-
-	// Set a default font
-	m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-	m_Edit.SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
+	m_Edit.Create(*this);
 
 	return 0;
 }

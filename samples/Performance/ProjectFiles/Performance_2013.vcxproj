@@ -46,6 +46,7 @@
     <ClInclude Include="..\..\..\include\wxx_winutils.h" />
     <ClInclude Include="..\src\MainWnd.h" />
     <ClInclude Include="..\src\MyDialog.h" />
+    <ClInclude Include="..\src\MyEdit.h" />
     <ClInclude Include="..\src\PerfApp.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TestWnd.h" />
@@ -54,6 +55,7 @@
     <ClCompile Include="..\src\main.cpp" />
     <ClCompile Include="..\src\MainWnd.cpp" />
     <ClCompile Include="..\src\MyDialog.cpp" />
+    <ClCompile Include="..\src\MyEdit.cpp" />
     <ClCompile Include="..\src\PerfApp.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
