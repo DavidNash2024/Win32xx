@@ -12,12 +12,32 @@ New Features and Enhancements
    
 * Updated the exception handling
    - Added CException             ( inherits from std::exception )
+   - Added CFileException         ( inherits from CException ) 
    - Added CNotSupportedException ( inherits from CException )
    - Added CResourceException     ( inherits from CException )
    - Added CUserException         ( inherits from CException )
    - Updated CWinException        ( inherits from CException )
    
-   Note: Exceptions should be thrown by value, and caught by const reference.
+   CWinExceptions are now thrown under the following circumstances:
+   - A failure to create a thread
+   - A failure to create a window, including:
+     - generic windows
+	 - dialogs
+	 - property sheets
+	 - task dialogs
+   - A failure to create a GDI resource, namely:
+     - device contexts
+     - bitmaps
+     - brushes
+     - fonts
+     - palettes
+     - pens
+     - regions
+   
+   Notes:
+    - Exceptions should be thrown by value, and caught by const reference.   
+    - A failure to create a GDI resources occurs when too many GDI resources are allocated to the process. A GDI resource leak can cause this.
+   
 
 
 Changes in detail
@@ -41,6 +61,9 @@ Added CTabbedMDI::OnTabClose
 Added CWnd::OnPaint
 Added CWnd::SetDlgCtrlID
 
+Modified    CDC::CreateCompatibleDC returns HDC
+Modified    CDC::CreateDC 			returns HDC
+Modified    CDC::CreateIC 			returns HDC
 
 
 

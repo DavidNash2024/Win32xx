@@ -314,6 +314,12 @@ namespace Win32xx
 		HWND hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 								hWndParent, nIDorHMenu, GetApp().GetInstanceHandle(), lpParam);
 
+		if (hWnd == 0)
+		{
+			// Throw an exception when window creation fails
+			pTLSData->pWnd = NULL;
+			throw CWinException(_T("CreateWindowEx failed"));
+		}
 
 		// Automatically subclass predefined window class types
 		::GetClassInfo(GetApp().GetInstanceHandle(), lpszClassName, &wc);
@@ -323,14 +329,6 @@ namespace Win32xx
 
 			// Override this to perform tasks after the window is attached.
 			OnAttach();
-		}
-
-		// Now handle window creation failure
-		if (hWnd == 0)
-		{
-			TRACE("*** Failed to create window ***\n");
-			TRACE(SystemErrorMessage(::GetLastError()));
-			assert(hWnd);
 		}
 
 		// Clear the CWnd pointer from TLS

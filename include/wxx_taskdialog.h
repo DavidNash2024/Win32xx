@@ -256,6 +256,19 @@ namespace Win32xx
 		LRESULT lr = (*pTaskDialogIndirect)(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);
 
 		FreeLibrary(hComCtl);
+
+		if (lr != S_OK)
+		{
+			// Throw an exception to indicate task dialog creation failure
+			// TaskDialogs don't supply GetLastError information, so a CResourceException is used
+			if (lr == E_OUTOFMEMORY)
+				throw CResourceException(_T("TaskDialogIndirect failed, out of memory"));
+			if (lr == E_INVALIDARG)
+				throw CResourceException(_T("TaskDialogIndirect failed, invalid argument"));
+			else
+				throw CResourceException(_T("TaskDialogIndirect failed"));
+		}
+
 		return lr;
 	}
 	

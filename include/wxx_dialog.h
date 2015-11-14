@@ -432,12 +432,10 @@ namespace Win32xx
 
 	#endif
 
-		// Display information on dialog creation failure
+		// Throw an exception if the dialog creation fails
 		if (nResult == -1)
 		{
-			TRACE(_T("*** Failed to create modal dialog box ***\n"));
-			TRACE(SystemErrorMessage(::GetLastError()));
-			assert(0);
+			throw CWinException(_T("Dialog creation failed"));
 		}
 
 		return nResult;
@@ -474,11 +472,9 @@ namespace Win32xx
 		pTLSData->pWnd = NULL;
 
 		// Display information on dialog creation failure
-		if (!hWnd)
+		if (hWnd == 0)
 		{
-			TRACE(_T("*** Failed to create dialog ***\n"));
-			TRACE(SystemErrorMessage(::GetLastError()));
-			assert(hWnd);
+			throw CWinException(_T("Dialog creation failed"));
 		}
 
 		return hWnd;

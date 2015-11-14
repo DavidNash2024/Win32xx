@@ -739,6 +739,8 @@ namespace Win32xx
 		m_PSH.dwFlags &= ~PSH_WIZARD;
 		m_PSH.dwFlags |= PSH_MODELESS;
 		HWND hWnd = (HWND)CreatePropertySheet(&m_PSH);
+		if (hWnd == 0)
+			throw CWinException(_T("CreatePropertySheet failed"));
 
 		return hWnd;
 	}
@@ -760,6 +762,9 @@ namespace Win32xx
 
 		// Create the property sheet
 		ipResult = PropertySheet(ppsph);
+
+		if (ipResult == -1)
+			throw CWinException(_T("PropertySheet failed"));
 
 		return ipResult;
 	}
