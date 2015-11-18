@@ -83,6 +83,31 @@ namespace Win32xx {}
   #endif
 #endif
 
+// Remove pointless warning messages
+#ifdef _MSC_VER
+  #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
+  #ifndef _CRT_SECURE_NO_WARNINGS
+    #define _CRT_SECURE_NO_WARNINGS // eliminate deprecation warnings for VS2005/VS2010
+  #endif
+  #if _MSC_VER < 1500
+    #pragma warning (disable : 4511) // copy operator could not be generated
+    #pragma warning (disable : 4512) // assignment operator could not be generated
+    #pragma warning (disable : 4702) // unreachable code (bugs in Microsoft's STL)
+    #pragma warning (disable : 4786) // identifier was truncated
+  #endif
+#endif
+
+#ifdef __BORLANDC__
+  #pragma option -w-8026            // functions with exception specifications are not expanded inline
+  #pragma option -w-8027		    // function not expanded inline
+  #pragma option -w-8030			// Temporary used for 'rhs'
+  #define STRICT 1
+#endif
+
+#ifdef __GNUC__
+  #pragma GCC diagnostic ignored "-Wmissing-braces"
+#endif
+
 
 
 //////////////////////////////////////

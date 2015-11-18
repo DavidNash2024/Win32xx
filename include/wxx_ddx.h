@@ -89,7 +89,7 @@ namespace Win32xx
 
 		void Init(CWnd& dlgWnd, BOOL bReadFromControl);
 		void virtual Fail(LPCTSTR message);
-		
+
 		HWND GetLastControl() { return m_hWndLastControl; }
 		HWND GetLastEditControl() { return m_hWndLastEditControl; }
 
@@ -140,7 +140,7 @@ namespace Win32xx
 		// helper operations
 		HWND PrepareCtrl(int nIDC);   // return HWND of control
 		HWND PrepareEditCtrl(int nIDC); // record this is an edit
-	
+
 	private:
 		// data members
 		int   m_nID;               // ID of last-accessed control
@@ -170,15 +170,15 @@ namespace Win32xx
 	static LPCTSTR DDX_MSG_ULONG  = _T("Please enter a positive long integer.");
 
 	// DDV formats and prompts
-	static LPCTSTR DDV_MSG_DATETIME     = _T("Please enter a date and/or time.");
+//	static LPCTSTR DDV_MSG_DATETIME     = _T("Please enter a date and/or time.");
 	static LPCTSTR DDV_MSG_INT_RANGE    = _T("Please enter an integer in (%ld, %ld).");
 	static LPCTSTR DDV_MSG_UINT_RANGE   = _T("Please enter an integer in (%lu, %lu).");
-	static LPCTSTR DDV_MSG_RADIO_BUTTON = _T("Please select a button.");
+//	static LPCTSTR DDV_MSG_RADIO_BUTTON = _T("Please select a button.");
 	static LPCTSTR DDV_MSG_REAL_RANGE   = _T("Please enter a number in (%.*g, %.*g).");
 	static LPCTSTR DDV_MSG_STRING_SIZE  = _T("%s\n is too long.\nPlease enter no ")\
 						 _T("more than %ld characters.");
-	static LPCTSTR DDV_MSG_NUMERIC  = _T("Please enter a valid number.");
-	static LPCTSTR DDV_MSG_SLIDER  = _T("Slider position not in the range (%ld, %ld).");
+//	static LPCTSTR DDV_MSG_NUMERIC  = _T("Please enter a valid number.");
+//	static LPCTSTR DDV_MSG_SLIDER  = _T("Slider position not in the range (%ld, %ld).");
 
 
 #ifndef __BORLANDC__    // required for Borland 5.5 support
@@ -224,7 +224,7 @@ namespace Win32xx
 	{
 		// the window has to be valid
 		assert(dlgWnd.IsWindow());
-		
+
 		// record the default action and parent window
 		m_bReadFromControl = bReadFromControl;
 		m_hWndParent       = dlgWnd;
@@ -611,11 +611,11 @@ namespace Win32xx
 	//	control in the group.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		
+
 		// assure that the control is a radio button and part of a group
 		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) &WS_GROUP);
 		assert(firstInGroup);
-		
+
 		// assure the button is a radio button
 		BOOL isRadioButton = (BOOL)(::SendMessage(hWndCtrl,	WM_GETDLGCODE, 0, 0L) & DLGC_RADIOBUTTON);
 		assert(isRadioButton);
@@ -630,9 +630,9 @@ namespace Win32xx
 		for (int iButton = 0; hWndCtrl != NULL && !firstInGroup; )
 		{
 			if (isRadioButton) // this control in the group is a radio button
-			{	
+			{
 				if (m_bReadFromControl) // if asked to read the control
-				{   
+				{
 					if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L) != 0) // is this button set?
 					{
 						// Record the value the first time, but if it happens again, there
@@ -653,7 +653,7 @@ namespace Win32xx
 				TRACE(_T("Warning: there is a non-radio button in "));
 				TRACE(_T("a radio button group.\n"));
 			}
-			  
+
 			// check the next window in the group, if any
 			hWndCtrl = ::GetWindow(hWndCtrl, GW_HWNDNEXT);
 			LRESULT lrButton = SendMessage(hWndCtrl, WM_GETDLGCODE, 0, 0L);
@@ -790,7 +790,7 @@ namespace Win32xx
 				::GetWindowText(hWndCtrl, value.GetBuffer(nLen), nLen + 1);
 			}
 			else
-			{	
+			{
 				// for drop lists GetWindowTextLength does not work
 				// so here assume max of 255 characters
 				const int maxLen = 255;
@@ -799,7 +799,7 @@ namespace Win32xx
 			value.ReleaseBuffer();
 		}
 		else
-		{	  
+		{
 			// set the current selection based on value string
 			if (::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM)-1,
 				(LPARAM)value.c_str()) == CB_ERR)
@@ -931,7 +931,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal)
-	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//	Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.  BYTE is unsigned char.
 	{
 		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
@@ -939,7 +939,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal)
-	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//	Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.
 	{
 		DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
@@ -947,7 +947,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxInt(int value, int minVal, int maxVal)
-	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//	Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.
 	{
 		DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
@@ -955,7 +955,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxLong(long value, long minVal, long maxVal)
-	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//	Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.
 	{
 		assert(minVal <= maxVal);
@@ -979,7 +979,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal)
-	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//	Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.
 	{
 		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
@@ -987,13 +987,13 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal)
-	//	Ensures that minVal <= value <= maxVal when reading from the control, 
+	//	Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.
 	{
 		assert(minVal <= maxVal);
 		if (minVal <= value && value <= maxVal)
 			return;
-		
+
 		if (!m_bReadFromControl)
 		{
 			// just leave a debugging trace if writing to a control
@@ -1015,7 +1015,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxFloat(float const& value, float minVal,
 		float maxVal, int precision /* = FLT_DIG */)
-	//  Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException..
 	{
 		DDV_MinMaxDouble((double)value, (double)minVal, (double)maxVal,
@@ -1025,7 +1025,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDouble(double const& value, double minVal,
 		double maxVal, int precision /* = DBL_DIG */)
-	//  Ensures that minVal <= value <= maxVal when reading from the control, 
+	//  Ensures that minVal <= value <= maxVal when reading from the control,
 	//  otherwise throws a CUserException.
 	{
 		assert(minVal <= maxVal);
@@ -1050,7 +1050,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDV_MaxChars(CString const& value, int nChars)
 	//	Ensures that the length of value <= nChars when reading from the control,
-	//  otherwise throws a CUserException. If writing, send the box the message 
+	//  otherwise throws a CUserException. If writing, send the box the message
 	//  to set the limit to nChars, which must be at least one.
 	{
 		assert(nChars >= 1);  // must allow at least one char

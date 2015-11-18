@@ -39,7 +39,7 @@
 #ifndef _WIN32XX_APPCORE1_H_
 #define _WIN32XX_APPCORE1_H_
 
-
+	
 ///////////////////////////////////////////////////////
 // wxx_appcore1.h
 // This file contains the declarations of the following set of classes.
@@ -344,7 +344,7 @@ namespace Win32xx
 	};
 
 
-	// Typedef for _beginthreadex's callback function
+	// typedef for _beginthreadex's callback function
 	typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
 
 
