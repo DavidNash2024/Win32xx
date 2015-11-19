@@ -93,6 +93,8 @@ namespace Win32xx
 		HWND GetLastControl() { return m_hWndLastControl; }
 		HWND GetLastEditControl() { return m_hWndLastEditControl; }
 
+		void AllowErrMsg(BOOL);
+		
 		// simple text operations
 		void DDX_Text(int nIDC, BYTE& value);
 		void DDX_Text(int nIDC, short& value);
@@ -121,7 +123,7 @@ namespace Win32xx
 		void DDX_DateTime(int nIDC, SYSTEMTIME& value);
 
 		  // special control subclassing
-	//	void DDX_Control(int nIDC, CWnd& rCtl);
+		void DDX_Control(int nIDC, CWnd& rCtl);
 
 		// Standard Dialog Data Validation (DDV) routines
 		void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
@@ -149,7 +151,7 @@ namespace Win32xx
 		BOOL  m_bEditLastControl;  // most recent control is an edit box
 		BOOL  m_bReadFromControl;  // TRUE means read and validate data
 		HWND  m_hWndParent;        // parent dialog
-
+		BOOL  m_allowErrMsg;       // allow DDX and DDV error messages
 	};
 
 
@@ -181,6 +183,7 @@ namespace Win32xx
 //	static LPCTSTR DDV_MSG_SLIDER  = _T("Slider position not in the range (%ld, %ld).");
 
 
+
 #ifndef __BORLANDC__    // required for Borland 5.5 support
 	//============================================================================
 	inline tStringStream& operator>>(tStringStream& ts, BYTE& value)
@@ -208,18 +211,21 @@ namespace Win32xx
 
 	//============================================================================
 	inline CDataExchange::CDataExchange()
-	//	Construct a DDX-DDV object, where pDlgWnd is the parent window
-	//	containing controls for data exchange and validation. If allowDDXDDV is
-	//	TRUE, then observe exceptions generated when a DDX_ or DDV_ method
-	//	would otherwise detect a proscribed condition. This may be useful in
-	//	start-up situations where uninitialized values are present before a
-	//	window opens.
+	//	Construct a DDX-DDV object.
 	{
 		m_bReadFromControl = FALSE;
 		m_hWndParent       = 0;
 		m_hWndLastControl  = NULL;
+		m_allowErrMsg      = TRUE;
 	}
 
+	//============================================================================
+	inline CDataExchange::~CDataExchange()
+	//	Destructor.
+	{
+	}
+
+	//============================================================================
 	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bReadFromControl)
 	{
 		// the window has to be valid
@@ -232,12 +238,14 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CDataExchange::~CDataExchange()
-	//	Destructor.
+	inline void CDataExchange::AllowErrMsg(BOOL allow)
+	//      This function is called to prevent an error message from appearing in
+	//      instances where the operator cannot respond, such as when the window has not
+	//      yet appeared, or when the window is about to close.
 	{
+		m_allowErrMsg = allow;
 	}
-
-
+	
 	//============================================================================
 	inline void CDataExchange::Fail(LPCTSTR message)
 	//	This function is called whenever a failure condition has been detected
@@ -247,7 +255,10 @@ namespace Win32xx
 	//	condition and, in the case of an edit control, the characters in that
 	//	control will be selected.
 	{
-		::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+		if (m_allowErrMsg)
+			::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+		else
+			m_allowErrMsg = TRUE;
 
 		if (!m_bReadFromControl)
 		{
@@ -306,7 +317,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 
 	//============================================================================
-/*	inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
+	inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
 	//	This function enables the transfer of data between a control in a
 	//	dialog box, form view, or control view object and a CWnd data member
 	//	rCtl having the control nID, usingthe DDX/DDV object m_DX.
@@ -324,7 +335,7 @@ namespace Win32xx
 			if (m_hWndParent != ::GetParent(rCtl))
 				rCtl.Attach(m_hWndParent);
 		}
-	} */
+	}
 
 	//============================================================================
 	inline void CDataExchange::DDX_Text(int nIDC, BYTE& value)
@@ -1074,7 +1085,6 @@ namespace Win32xx
 	//  CDataExchange::DDV_MinMaxSlider
 	//  CDataExchange::DDV_MinMaxDateTime
 	//  CDataExchange::DDV_MinMaxMonth
-
 
 }	// namespace Win32xx
 
