@@ -4,8 +4,26 @@ Version 8.1
 New Features and Enhancements
 ----------------------------- 
 * Added CDataExchange
+  This class provides support for dialog data exchange(DDX) and dialog data 
+  validation(DDV). This class has a set of DDX and DDV member functions which
+  perform the data exchange and validation for different types of controls.  
+  Typically this is used for controls in a dialogs, but controls in any
+  window support DDX and DDV.
+  
+  To use CDataExchange, perform the following steps:
+  - Override DoDataExchange and specify the appropriate DDX and DDV functions.
+  - Call UpdateData(FALSE) to initialize the controls and assign their values.
+    This is typically done in the dialog's OnInitDialog function.
+  - Call UpdateData(TRUE) to validate and retrieve the control data.	
+
+  Refer to the DDXDemo sample for a demonstration of how to use CDataExchange
 
 * Extended CString
+   CString is now based on the CStringT template.
+   CStringA is defined as CStringT<CHAR>
+   CStringW is defined as CStringT<WCHAR>
+   CString inherits from CStringT<TCHAR>. It is backwards compatible with
+    the previous implementation of CString. 
    - Added operator + support for ints and doubles.
    - Added operator += support for ints and doubles.
    - Added operator = support for ints and doubles.

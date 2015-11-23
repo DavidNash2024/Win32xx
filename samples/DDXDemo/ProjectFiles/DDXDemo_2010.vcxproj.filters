@@ -1,0 +1,170 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClInclude Include="..\..\..\include\dialog.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\frame.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\gdi.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\rebar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\statusbar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\toolbar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wincore.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\controls.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\default_resource.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\docking.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\file.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\listview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\mdi.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\menu.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\propertysheet.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\ribbon.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\shared_ptr.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\socket.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\stdcontrols.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\tab.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\taskdialog.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\treeview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\webbrowser.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\winutils.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\menubar.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\c_string.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\App.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\View.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Doc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\Mainfrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\stdafx.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\targetver.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyButton.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyDateTime.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MySlider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyMonthCalendar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MyScrollbar.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{29d62d0b-04f8-4fa3-9b71-897b669ad183}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{7650ecf8-c29f-4653-8b29-37ff797272ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{f6f3bd02-18d4-4ea3-94e2-94e7b02419a4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Win32++">
+      <UniqueIdentifier>{dfda0793-d80f-4750-a6e7-b533a02f1312}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\App.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Doc.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Mainfrm.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StdAfx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\View.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyButton.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyDateTime.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyMonthCalendar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MyScrollbar.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MySlider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

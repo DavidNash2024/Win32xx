@@ -46,6 +46,22 @@
 ////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////
+// wxx_ddx.h
+//  Definition of the CDataExchange class
+
+// This class provides support for Dialog Data eXchange(DDX) and Dialog Data 
+// Validation(DDV). This class has a set of DDX and DDV member functions which
+// perform the data exchange and validation for different types of controls.  
+// Typically this is used for controls in a dialogs, but controls in any
+// window support DDX and DDV.
+  
+// To use CDataExchange, perform the following steps:
+// * Override DoDataExchange and specify the appropriate DDX and DDV functions.
+// * Call UpdateData(FALSE) to initialize the controls and assign their values.
+//    This is typically done in the dialog's OnInitDialog function.
+// * Call UpdateData(TRUE) to validate and retrieve the control data.
+
 
 #ifndef _WIN32XX_DDX_H_
 #define _WIN32XX_DDX_H_
@@ -57,6 +73,7 @@
 #include "wxx_wincore1.h"
 
 #ifndef _WIN32_WCE
+
 
 namespace Win32xx
 {
@@ -93,8 +110,6 @@ namespace Win32xx
 		HWND GetLastControl() { return m_hWndLastControl; }
 		HWND GetLastEditControl() { return m_hWndLastEditControl; }
 
-		void AllowErrMsg(BOOL);
-		
 		// simple text operations
 		void DDX_Text(int nIDC, BYTE& value);
 		void DDX_Text(int nIDC, short& value);
@@ -125,7 +140,7 @@ namespace Win32xx
 		  // special control subclassing
 		void DDX_Control(int nIDC, CWnd& rCtl);
 
-		// Standard Dialog Data Validation (DDV) routines
+		// Standard Dynamic Data Validation (DDV) routines
 		void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
 		void DDV_MinMaxShort(short value, short minVal, short maxVal);
 		void DDV_MinMaxInt(int value, int minVal, int maxVal);
@@ -150,8 +165,7 @@ namespace Win32xx
 		HWND  m_hWndLastEditControl; // handle of last edit control
 		BOOL  m_bEditLastControl;  // most recent control is an edit box
 		BOOL  m_bReadFromControl;  // TRUE means read and validate data
-		HWND  m_hWndParent;        // parent dialog
-		BOOL  m_allowErrMsg;       // allow DDX and DDV error messages
+		HWND  m_hWndParent;        // parent window
 	};
 
 
@@ -184,7 +198,8 @@ namespace Win32xx
 
 
 
-#ifndef __BORLANDC__    // required for Borland 5.5 support
+// required for Borland 5.5 support
+#if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
 	//============================================================================
 	inline tStringStream& operator>>(tStringStream& ts, BYTE& value)
 	{
@@ -216,7 +231,6 @@ namespace Win32xx
 		m_bReadFromControl = FALSE;
 		m_hWndParent       = 0;
 		m_hWndLastControl  = NULL;
-		m_allowErrMsg      = TRUE;
 	}
 
 	//============================================================================
@@ -227,6 +241,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bReadFromControl)
+	// Initialization for the CWnd::UpdateData() method.
 	{
 		// the window has to be valid
 		assert(dlgWnd.IsWindow());
@@ -238,27 +253,11 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::AllowErrMsg(BOOL allow)
-	//      This function is called to prevent an error message from appearing in
-	//      instances where the operator cannot respond, such as when the window has not
-	//      yet appeared, or when the window is about to close.
-	{
-		m_allowErrMsg = allow;
-	}
-	
-	//============================================================================
 	inline void CDataExchange::Fail(LPCTSTR message)
 	//	This function is called whenever a failure condition has been detected
-	//	while validating the value in a control and a throw is required to
-	//	inhibit further DoDataExchange() activity.  Normally, the focus of
-	//	the parent dialog is given to the control window causing the failure
-	//	condition and, in the case of an edit control, the characters in that
-	//	control will be selected.
+	//	while validating the value in a control.
 	{
-		if (m_allowErrMsg)
-			::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-		else
-			m_allowErrMsg = TRUE;
+		::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 
 		if (!m_bReadFromControl)
 		{
@@ -284,8 +283,8 @@ namespace Win32xx
 	//============================================================================
 	inline HWND CDataExchange::PrepareCtrl(int nIDC)
 	//	Find the handle to the control whose numeric identifier is nID and
-	//	record this as the last control handle encountered, set the last-edit
-	//	member to a false default value.
+	//	record this as the last control handle encountered. Set the last-edit
+	//	member to a FALSE default value.
 	{
 		assert(nIDC != 0);
 		assert(nIDC != -1);	// not allowed
@@ -300,13 +299,13 @@ namespace Win32xx
 
 	//============================================================================
 	inline HWND CDataExchange::PrepareEditCtrl(int nIDC)
-	//	Get and record the handle corresponding to nIDC and set the edit-last
-	//	boolean to true. This is to be used only for edit controls.
+	//	Get and record the handle corresponding to nIDC and set the m_bEditLastControl
+	//	variable to TRUE. This method is only used for edit controls.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		assert(hWndCtrl);
 
-		m_bEditLastControl = true;
+		m_bEditLastControl = TRUE;
 		return hWndCtrl;
 	}
 
@@ -318,22 +317,17 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
-	//	This function enables the transfer of data between a control in a
-	//	dialog box, form view, or control view object and a CWnd data member
-	//	rCtl having the control nID, usingthe DDX/DDV object m_DX.
-	//	Specifically, this method attaches the control to the nID. If it
-	//	has already been subclassed, the member does nothing.
+	//	This function attaches the window with a control ID of nID 
+	//	to the specified CWnd. Controls are only attached once. If CWnd 
+	//	specified by rCtl is already attached to a window, no further 
+	//	action is taken. 
 	{
 		if (!rCtl.IsWindow())    // not subclassed yet
 		{
+			assert (!m_bReadFromControl);
 			HWND hWndCtrl = PrepareCtrl(nIDC);
 			assert(hWndCtrl);
 			rCtl.Attach(hWndCtrl);
-			  // If the control has reparented itself (e.g.,
-			  // invisible control), make sure that the CWnd gets
-			  // properly wired to its control site.
-			if (m_hWndParent != ::GetParent(rCtl))
-				rCtl.Attach(m_hWndParent);
 		}
 	}
 
@@ -702,7 +696,7 @@ namespace Win32xx
 				value.Empty();
 			}
 		}
-		else
+		else if (!value.IsEmpty())
 		{
 			// search the the entire list box for the given value
 			// and select it if it is found
@@ -721,8 +715,8 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_LBStringExact(int nIDC, CString& value)
 	//	This function manages the transfer of CString data between the edit
-	//	control of a list box control in a dialog box, form view, or control
-	//	view object and a CString data member of that object. It performs a
+	//	control of a list box control in a dialog box or other window,
+	//	and a CString data member of that object. It performs a
 	//	data exchange for the state of the list box control appearing within
 	//	the DDX/DDV object m_DX with the control numbered nIDC. On reading the
 	//	list box, the current list box selection is returned as the value.
@@ -736,7 +730,7 @@ namespace Win32xx
 			// read and return the CString value
 			DDX_LBString(nIDC, value);
 		}
-		else
+		else if (!value.IsEmpty())
 		{
 			// find the first entry that matches the entire value,
 			// in a case insensitive search, perhaps in sorted order,
@@ -761,7 +755,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_LBIndex(int nIDC, int& index)
 	//	This function manages the transfer of data between a list box
-	//	control in a dialog box, form view, or control view object and an
+	//	control in a dialog box or other window, and an
 	//	integer index of that object. It performs a data exchange for the
 	//	state of the list box control appearing within the DDX/DDV object m_DX
 	//	with the control numbered nIDC. When this function is called, index
@@ -779,8 +773,8 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_CBString(int nIDC, CString& value)
 	//	This function manages the transfer of CString data between the edit
-	//	control of a ComboBox control in a dialog box, form view, or control
-	//	view object and a CString data member of that object. It performs a
+	//	control of a ComboBox control in a dialog box or other window,
+	//	and a CString data member of that object. It performs a
 	//	data exchange for the state of the combo box control appearing within
 	//	the DDX/DDV object m_DX with the control numbered nIDC. On reading the
 	//	list box, the combo box edit window value is returned as the value.
@@ -793,7 +787,7 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		if (m_bReadFromControl)
 		{
-			// just get the current edit item text or drop list static (if it works)
+			// get the current edit item text or drop list static where possible
 			int nLen = ::GetWindowTextLength(hWndCtrl);
 			if (nLen > 0)
 			{
@@ -825,8 +819,8 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_CBStringExact(int nIDC, CString& value)
 	//	This function manages the transfer of CString data between the edit
-	//	control of a combo box control in a dialog box, form view, or control
-	//	view object and a CString data member of that object. It performs a
+	//	control of a combo box control in a dialog box or other window,
+	//	and a CString data member of that object. It performs a
 	//	data exchange for the state of the combo box control appearing within
 	//	the DDX/DDV object m_DX with the control numbered nIDC. On reading the
 	//	list box, the combo box edit window value is returned as the value.
@@ -842,14 +836,14 @@ namespace Win32xx
 		{
 			DDX_CBString(nIDC, value);
 		}
-		else // write to control
+		else if (value != _T(""))	// write to control
 		{
 			// set current selection based on data string
 			int i = (int)::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT,
 				(WPARAM)-1, (LPARAM)value.c_str());
 			if (i < 0)
 			{
-				// just set the edit text (will be ignored if a DROPDOWNLIST)
+				// set the edit text (will be ignored if a DROPDOWNLIST)
 				::SetWindowText(hWndCtrl, value);
 			}
 			else
@@ -863,7 +857,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_CBIndex(int nIDC, int& index)
 	//	This function manages the transfer of data between a combo box control
-	//	in a dialog box, form view, or control view object and an integer
+	//	in a dialog box or other window, and an integer
 	//	index of that object. It performs a data exchange for the state of
 	//	the combo box control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, index is set
@@ -882,7 +876,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_Scroll(int nIDC, int& value)
 	//	This function manages the transfer of data between a scroll bar control
-	//	in a dialog box, form view, or control view object and an integer
+	//	in a dialog box or other window, and an integer
 	//	value for that object. It performs a data exchange for the state of
 	//	the scroll bar control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, value is set
@@ -900,7 +894,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_Slider(int nIDC, int& value)
 	//	This function manages the transfer of data between a slider control
-	//	in a dialog box, form view, or control view object and an integer
+	//	in a dialog box or other window, and an integer
 	//	position value for that object. It performs a data exchange for the
 	//	slider control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, value is set
@@ -918,7 +912,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CDataExchange::DDX_Progress(int nIDC, int& value)
 	//	This function manages the transfer of data between a progress control
-	//	in a dialog box, form view, or control view object and an integer
+	//	in a dialog box or other window, and an integer
 	//	progress value for that object. It performs a data exchange for the
 	//	slider control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, value is set
@@ -1046,7 +1040,7 @@ namespace Win32xx
 		if (!m_bReadFromControl)
 		{
 			// just leave a debugging trace if writing to a control
-			TRACE(_T("Warning: current dialog data is out of range.\n"));
+			TRACE(_T("Warning: control data is out of range.\n"));
 			return; // don't throw
 		}
 
@@ -1079,12 +1073,169 @@ namespace Win32xx
 		}
 	}
 
-	// The following member functions are located in wxx_controls.h:
-	//  CDataExchange::DDX_DateTime
-	//  CDataExchange::DDX_MonthCal
-	//  CDataExchange::DDV_MinMaxSlider
-	//  CDataExchange::DDV_MinMaxDateTime
-	//  CDataExchange::DDV_MinMaxMonth
+	//============================================================================
+	inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime)
+	//	Convert the SYSTEMTIME struct to an ULONGLONG integer and
+	//	return this value.
+	{
+		FILETIME ft;
+		SystemTimeToFileTime(&systime, &ft);
+		return ((ULONGLONG)(ft.dwHighDateTime) << 32 | ft.dwLowDateTime);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
+	//	This function manages the transfer of date and/or time data between a
+	//	date and time picker control (CDateTime) with control numbered nID
+	//	in a dialog box or other window, and a SYSTEMTIME data member of
+	//	the object. When called in the read mode, the value is set to the
+	//	current state of the control. When called in the write mode, the
+	//	current state of the control is set to the given value.
+	{
+		HWND hWndCtrl = PrepareCtrl(nIDC);
+
+		if (m_bReadFromControl)
+			DateTime_GetSystemtime(hWndCtrl, &value);
+		else
+			DateTime_SetSystemtime(hWndCtrl, GDT_VALID, &value);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDX_MonthCal(int nIDC, SYSTEMTIME& value)
+	//	This function manages the transfer of date data between a month
+	//	calendar control (CMonthCalendar) with control number nID in a dialog
+	//	box or other window, and a SYSTEMTIME data member
+	//	of that object. In particular, the control manages a date value only.
+	//	The time fields in the time object are set to reflect the creation
+	//	time of the control window, or whatever time was set into the control
+	//	with a call to the CMonthCalendar::SetCurSel() member method. In read
+	//	mode, value is set to the current state of the month calendar control.
+	//	In write mode, the current state is set to the given value.
+	{
+		HWND hWndCtrl = PrepareCtrl(nIDC);
+
+		if (m_bReadFromControl)
+		{
+			MonthCal_GetCurSel(hWndCtrl, &value);
+			value.wHour = 0;
+			value.wMinute = 0;
+			value.wSecond = 0;
+			value.wMilliseconds = 0;
+		}
+		else
+			MonthCal_SetCurSel(hWndCtrl, &value);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal)
+	//	In READFROMCONTROL mode, this method sets the range of the slider
+	//	control associated with the last visited window control to the pair
+	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
+	//	that the refValue first falls between minRange and maxRange values
+	//	before setting the range; if refValue is outside these limits,
+	//	no setting of the range takes place and a trace message is written
+	//	in debug mode.
+	{
+		assert(minVal <= maxVal);
+		if (m_bReadFromControl)
+		{
+			if (minVal > value || maxVal < value)
+			{
+	#ifdef _DEBUG
+				  // just leave a trace if writing to the control
+				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+				CString str = CString(_T("Warning: slider position is outside given "))
+							+ _T("limits in the control with ID ") + nIDC + _T(" \n");
+				TRACE(str);
+	#endif
+				return;     // don't stop now
+			}
+		}
+
+		// set the range tuple
+		::SendMessage(m_hWndLastControl,TBM_SETRANGEMIN, (WPARAM)FALSE, (LPARAM)minVal);
+		::SendMessage(m_hWndLastControl, TBM_SETRANGEMAX, (WPARAM)TRUE, (LPARAM)maxVal);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
+		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange)
+	//	In READFROMCONTROL mode, this method sets the range of the DateTime
+	//	control associated with the last visited window control to the pair
+	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
+	//	that the refValue first falls between minRange and maxRange values
+	//	before setting the range; if refValue is outside these limits,
+	//	no setting of the range takes place and a trace message is written
+	//	in debug mode.
+	{
+		ULONGLONG zero = (ULONGLONG)0;
+		ULONGLONG val = SystemTimeToULL(refValue);
+		ULONGLONG min = SystemTimeToULL(minRange);
+		ULONGLONG max = SystemTimeToULL(maxRange);
+		assert(min == zero || max == zero || min <= max);
+
+		if (m_bReadFromControl)
+		{
+			if ((min != zero && min > val) ||
+				(max != zero && max < val))
+			{
+				  // retrieve the control ID
+				int nIDC = ::GetWindowLong(m_hWndLastControl, 	GWL_ID);
+				CString str = CString(_T("Warning: Date-Time data is out of range "))
+								+ _T("in control ID ") + nIDC + _T(" \n");
+				TRACE(str);
+
+				return;     // continue on
+			}
+		}
+
+		  // set the given DateTime range
+		SYSTEMTIME sta[2];
+		sta[0] = minRange;
+		sta[1] = maxRange;
+
+		DateTime_SetRange(m_hWndLastControl, GDTR_MIN | GDTR_MAX, sta);
+	}
+
+	//============================================================================
+	inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
+		const SYSTEMTIME& maxRange)
+	//	In READFROMCONTROL mode, this method sets the range of the month
+	//	calendar control associated with the last visited window control to
+	//	(minRange, maxRange). In SENDTOCONTROL mode, this method verifies
+	//	that the refValue first falls between minRange and maxRange values
+	//	before setting the range; if refValue is outside these limits,
+	//	no setting of the range takes place and a trace message is written
+	//	in debug mode.
+	{
+		ULONGLONG zero = (ULONGLONG)0;
+		ULONGLONG val = SystemTimeToULL(refValue);
+		ULONGLONG min = SystemTimeToULL(minRange);
+		ULONGLONG max = SystemTimeToULL(maxRange);
+		assert(min == zero || max == zero || min <= max);
+
+		if (!m_bReadFromControl)
+		{
+			if ((min != zero && min > val) ||
+				(max != zero && max < val))
+			{
+				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+				CString str = CString(_T("Warning: Calendar data is out of range "))
+							+ _T("in control ID ") + nIDC + _T(" \n");
+				TRACE(str);
+				return;     // continue on
+			}
+		}
+
+
+		SYSTEMTIME MinMax[2];
+		DWORD dwLimit = GDTR_MIN | GDTR_MAX;
+		memcpy(&MinMax[0], &minRange, sizeof(SYSTEMTIME));
+		memcpy(&MinMax[1], &maxRange, sizeof(SYSTEMTIME));
+
+		MonthCal_SetRange(m_hWndLastControl, dwLimit, &MinMax);
+	}
+
 
 }	// namespace Win32xx
 

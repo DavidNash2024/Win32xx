@@ -369,16 +369,17 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline void CWnd::DoDataExchange(CDataExchange& DX)
-	//	This function performs data exchange and validation functions on
-	//	dialog data using DDX and DDV functions.  Never call this function
-	//	directly. It is called by the UpdateData() member function. Call
-	//	UpdateData() to write data into a set of dialog box controls or to
-	//	retrieve data from that set of dialog boxes.  Override this method
-	//	in the dialogs that utilize the DDX/DDV functions.
+	//	This function performs dialog data exchange and dialog data 
+	//	validation using DDX and DDV functions. Typically this is done for
+	//	controls in a dialogs, but controls in any window support DDX and DDV.
+	//	Never call this function directly. It is called by the UpdateData() 
+	//	member function. Call UpdateData() to write data into, or retrieve
+	//	validated data from the controls.  Override this method in the dialog
+	//	or other window that utilize the DDX/DDV functions.
 	{
-		  // TODO: in each override of this method, enter DDX and DDV functions
-		  // here for each of the contols attached to the parent dialog window
-		  // that m_DX is assigned to.
+		  // TODO: Any dialog or window using DDX/DDV for its controls should
+		  // override of this member, and put calls to the DDX and DDV functions
+		  // there.
 
 		UNREFERENCED_PARAMETER(DX);
 	}
@@ -907,19 +908,17 @@ namespace Win32xx
 	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bReadFromControl)
 	//	Dialog Data Exchange support. Call this function to read values from
 	//	(bReadFromControl is TRUE) or deposit values into (bReadFromControl
-	//	is FALSE) a set of controls appearing in DDX/DDV statements in the
-	//	DoDataExchange() member method.
+	//	is FALSE) a set of controls appearing in DDX/DDV statements in an
+	//	override of the DoDataExchange() member method.
 	//
-	//	Return TRUE if the operation is successful, or FALSE otherwise. When
-	//	called with bReadFromControl a TRUE value, success means the data has
+	//	Return TRUE if the operation is successful, or FALSE otherwise. If
+	//	called when bReadFromControl is TRUE, success means the data has
 	//	been validated.
 	//
-	//	When a dialog box is uses data exchange, its OnInitDialog should call 
-	//  UpdateData(FALSE, FALSE) before the dialog box is visible. 
-	//  Also, the implementation of its OnOK should call UpdatData(TRUE) to
-	//  retrieve the data, and then close the dialog box.
-	//	If the Cancel button is clicked in the dialog box, the dialog box should
-	//	be closed without the data being retrieved.
+	//	When a dialog box uses dialog data exchange, OnInitDialog() calls
+	//	UpdateData(FALSE) to attach the controls. Typically, OnOK is 
+	//	overridden and calls UpdatData(TRUE) to validate and retrieve the data
+	//	before closing the dialog.
 	{
 		// must not update data before the window is created
 		assert(IsWindow());
