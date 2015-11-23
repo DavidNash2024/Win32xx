@@ -322,7 +322,10 @@ namespace Win32xx
 		ofn.hInstance = GetApp().GetInstanceHandle();
 	
 		// convert any '|' characters in pszFilter to NULL characters
-		CString strFilter =  pszFilter;
+		CString strFilter;
+		if (pszFilter)
+			strFilter = pszFilter;
+
 		strFilter.Replace(_T('|'), _T('\0'));
 		ofn.lpstrFilter = strFilter.c_str();
 
@@ -396,7 +399,10 @@ namespace Win32xx
 		ofn.hInstance = GetApp().GetInstanceHandle();
 
 		// convert any '|' characters in pszFilter to NULL characters
-		CString strFilter =  pszFilter;
+		CString strFilter;
+		if (pszFilter)
+			strFilter = pszFilter;
+
 		strFilter.Replace(_T('|'), _T('\0'));
 		ofn.lpstrFilter = strFilter.c_str();
 
