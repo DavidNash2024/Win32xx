@@ -616,5 +616,5 @@ namespace Win32xx
 #endif
 }	// namespace Win32xx
 
-#endif	// _WIN32XX_MENU_H_
+#endif	// _WIN32XX_IMAGELIST_H_
 

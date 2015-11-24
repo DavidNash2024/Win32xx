@@ -245,8 +245,8 @@ namespace Win32xx
 		
 	public:
 		CString() {}
-		CString(const CString& str)           : CStringT<TCHAR>(str) {}
-		CString(LPCSTR pszText)				: CStringT<TCHAR>(A2T(pszText)) {}
+		CString(const CString& str)           	: CStringT<TCHAR>(str) {}
+		CString(LPCSTR pszText)					: CStringT<TCHAR>(A2T(pszText)) {}
 		CString(LPCWSTR pszText)				: CStringT<TCHAR>(W2T(pszText))	{}
 		CString(LPCSTR pszText, int nLength)	: CStringT<TCHAR>(A2T(pszText), nLength) {}
 		CString(LPCWSTR pszText, int nLength)	: CStringT<TCHAR>(W2T(pszText), nLength) {}
@@ -923,7 +923,8 @@ namespace Win32xx
 	{
 		assert (nMinBufLength >= 0);
 
-		m_buf.assign(nMinBufLength + 1, 0);
+		T ch = 0;
+		m_buf.assign(nMinBufLength + 1, ch);
 		typename std::basic_string<T>::iterator it_end;
 
 		if (m_str.length() >= (size_t)nMinBufLength)
@@ -1176,7 +1177,7 @@ namespace Win32xx
 
 		if (-1 == nNewLength)
 		{
-			nNewLength = m_buf.size();	// check this
+			nNewLength = lstrlenT(&m_buf[0]);
 		}
 
 		T ch = 0;
@@ -1618,6 +1619,13 @@ namespace Win32xx
 	{
 		CString str(string1);
 		str.m_str.append(pszText);
+		return str;
+	}
+
+	inline CString operator + (const CString& string1, TCHAR ch)
+	{
+		CString str(string1);
+		str.m_str += ch;
 		return str;
 	}
 

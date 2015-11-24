@@ -194,7 +194,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)  				/*
 		return TRUE;
 		
 	    case IDM_HELP_ABOUT:
-	    	OnHelp();
+		OnHelp();
 		return TRUE;
 
 	    case IDC_RADIO_A:
@@ -403,33 +403,15 @@ UpdateDialog(BOOL bReadFromControl /* = SENDTOCONTROL */)		/*
 	LRESULT CMainFrame::
 WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)			/*
 
-	All CWnd windows direct their messages here. This function then
-	can process some of these and redirect the remaining messages to
-	the base class default handler.
+	All CWnd windows direct their messages here. This function can process
+	some of these and redirect the remaining messages to the base class
+	default handler.
 *-----------------------------------------------------------------------------*/
 {
-	switch (uMsg)
-	{
-	    case WM_SETFOCUS:
-	    {
-	    	HWND hwndLoseFocus = (HWND) wParam; 
-	    	int  nID = ::GetDlgCtrlID(hwndLoseFocus);
-	    	if (nID == IDC_EDIT_SHORT)
-			nID = IDC_EDIT_SHORT;
-	    	break;
-	    }
-	    
-	    case WM_KILLFOCUS:
-	    {
-		HWND hwndGainFocus = (HWND) wParam; 
-	    	int  nID = ::GetDlgCtrlID(hwndGainFocus);
-	    	if (nID == IDC_EDIT_SHORT)
-			nID = IDC_EDIT_SHORT;
-
-		break;
-	    }
-		// Add case statements for each messages to be handled here
-	}
+//	switch (uMsg)
+//	{
+//		// Add case statements for each messages to be handled here
+//	}
 
 	  // pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

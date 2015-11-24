@@ -905,14 +905,14 @@ namespace Win32xx
 		AddToMap();			// Store the CWnd pointer in the HWND map
 	}
 #ifndef _WIN32_WCE
-	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bReadFromControl)
-	//	Dialog Data Exchange support. Call this function to read values from
-	//	(bReadFromControl is TRUE) or deposit values into (bReadFromControl
+	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bRetrieveAndValidate)
+	//	Dialog Data Exchange support. Call this function to retrieve values from
+	//	(bRetrieveAndValidate is TRUE) or assign values to (bRetrieveAndValidate
 	//	is FALSE) a set of controls appearing in DDX/DDV statements in an
 	//	override of the DoDataExchange() member method.
 	//
 	//	Return TRUE if the operation is successful, or FALSE otherwise. If
-	//	called when bReadFromControl is TRUE, success means the data has
+	//	called when bRetrieveValidate is TRUE, success means the data has
 	//	been validated.
 	//
 	//	When a dialog box uses dialog data exchange, OnInitDialog() calls
@@ -927,7 +927,7 @@ namespace Win32xx
 		CCriticalSection ccs;
 		ccs.Lock();
 
-		DX.Init(*this, bReadFromControl);
+		DX.Init(*this, bRetrieveAndValidate);
 
 		BOOL ok = FALSE;  // Remains FALSE if DoDataExchange throws a CUserException
 		try

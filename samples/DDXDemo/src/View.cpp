@@ -112,29 +112,8 @@ CView(UINT nResID)                                                  	/*
 *-----------------------------------------------------------------------------*/
 	: CDialog(nResID)
 {
-	// Initial values for the dialog controls			
-	// These inital values need to pass DDX/DDV validation
-	m_fFloat     = 0.0;	
-	m_dDouble    = 0.0;	
-	m_LPTSTR[0]  = _T('\0'); 
-	m_iByte	     = 0;
-	m_iCheckA    = 0;	
-	m_iCheckB    = 0;	
-	m_iCheckC    = 0;	
-	m_iComboBox  = 0;	
-	m_iInt       = 0;	
-	m_iListBox   = 0;	
-	m_iLong      = 0L;	
-	m_iProgress  = 0;	
-	m_iRadioA    = 0;	
-	m_iScrollBar = 0;	
-	m_iShort     = 0;	
-	m_iSlider    = 0;	
-	m_iUINT      = 10;	
-	m_nIDFocus   = 0; 	
-	m_ULong      = 10L;	
-	CTime::GetCurrentTime().GetAsSystemTime(m_stDateTime);		
-	m_stMoCalendar = m_stDateTime;					
+	// Initial values for the dialog controls that use DDX/DDV validation
+	// are initialized in OnInitDialog() by the GetDocumentValues() method.
 
 	  // buttons
 	m_clrCtlBtnFg    = COLOR_BLACK;
@@ -585,6 +564,10 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDC_ROSE_BITMAP:
 		OnBitmap();
+		m_nIDFocus = nID;
+		return TRUE;
+
+	    case IDC_EDIT_STATUS:
 		m_nIDFocus = nID;
 		return TRUE;
 	}

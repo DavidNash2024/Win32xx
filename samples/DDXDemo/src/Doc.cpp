@@ -63,7 +63,9 @@ CDoc()                                                                  /*
 	Construct the basic document object.
 *-----------------------------------------------------------------------------*/
 {
-	  // initial values of boxes not initialized on construction
+	  //Initialize the values of ALL controls using DDX/DDV.  These are
+	  // overwritten by saved values in the registry after initial startup,
+	  // but it is important to have valid values during initial startup.
 	m_iByte     = 0;
 	m_iShort    = 0;
 	m_iInt      = 0;
@@ -77,6 +79,15 @@ CDoc()                                                                  /*
 	m_CheckB    = FALSE;
 	m_CheckC    = FALSE; 
 	m_Radio     = 0;
+	m_sString.Empty();
+	m_sRichEdit.Empty();
+	m_sListBox.Empty();
+	m_iListBox  = 0;
+	m_sComboBox.Empty();
+	m_iComboBox = 0;
+	m_iSlider   = 0;
+	CTime::GetCurrentTime().GetAsSystemTime(m_stDateTime);
+	m_stMoCalendar = m_stDateTime;
 }
 
 /*============================================================================*/

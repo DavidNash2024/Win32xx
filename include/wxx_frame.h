@@ -1086,8 +1086,6 @@ namespace Win32xx
 
 		if(0 != szText)
 			GetToolBar().SetButtonText(nID, szText);
-
-		if (!IsWindow()) TRACE("Warning ... Resource IDs for toolbars should be added in SetupToolBar\n");
 	}
 
 	inline void CFrame::AdjustFrameRect(const RECT& rcView)
