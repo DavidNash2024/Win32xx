@@ -45,7 +45,7 @@
 
 #include "wxx_rect.h"
 #include "wxx_cstring.h"
-#include "wxx_appcore1.h"
+#include "wxx_appcore0.h"
 
 
 
