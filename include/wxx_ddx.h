@@ -70,7 +70,7 @@
 #include <float.h>
 #include <iomanip>
 #include "wxx_cstring.h"
-#include "wxx_wincore1.h"
+#include "wxx_wincore0.h"
 
 #ifndef _WIN32_WCE
 

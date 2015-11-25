@@ -52,7 +52,7 @@
 #define _WIN32XX_IMAGELIST_H_
 
 
-#include "wxx_appcore1.h"
+#include "wxx_appcore0.h"
 #include "wxx_rect.h"
 
 

@@ -67,11 +67,10 @@ Added wxx_themes.h
 Removed wxx_winutils.h
 
 Split wxx_wincore into several header files as follows:
-Added wxx_appcore1.h
-Added wxx_appcore2.h
+Added wxx_appcore0.h
+Added wxx_appcore.h
 Added wxx_exception.h
-Added wxx_wincore1.h
-Added wxx_wincore2.h
+Added wxx_wincore0.h
 
 Added UWN_TABCLOSE windows message notification
 

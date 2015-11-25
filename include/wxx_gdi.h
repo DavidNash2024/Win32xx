@@ -129,8 +129,8 @@
 #define _WIN32XX_GDI_H_
 
 
-#include "wxx_appcore1.h"
-#include "wxx_wincore1.h"
+#include "wxx_appcore0.h"
+#include "wxx_wincore0.h"
 
 
 // Disable macros from Windowsx.h

@@ -47,7 +47,7 @@
 #define _WIN32XX_CONTROLS_H_
 
 
-#include "wxx_wincore1.h"
+#include "wxx_wincore0.h"
 #include "wxx_stdcontrols.h"
 #include "wxx_ddx.h"
 
