@@ -35,12 +35,12 @@
 ////////////////////////////////////////////////////////
 
 
-#ifndef _WIN32XX_APPCORE2_H_
-#define _WIN32XX_APPCORE2_H_
+#ifndef _WIN32XX_APPCORE_H_
+#define _WIN32XX_APPCORE_H_
 
 
 ///////////////////////////////////////////////////////
-// wxx_appcore2.h
+// wxx_appcore.h
 // This file contains the definitions of the following set of classes.
 //
 // 1) CObject: A base class for CWnd and any other class that uses serialization.
@@ -644,5 +644,5 @@ namespace Win32xx
 
 } // namespace Win32xx
 
-#endif // _WIN32XX_APPCORE2_H_
+#endif // _WIN32XX_APPCORE_H_
 

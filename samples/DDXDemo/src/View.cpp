@@ -112,8 +112,33 @@ CView(UINT nResID)                                                  	/*
 *-----------------------------------------------------------------------------*/
 	: CDialog(nResID)
 {
-	// Initial values for the dialog controls that use DDX/DDV validation
-	// are initialized in OnInitDialog() by the GetDocumentValues() method.
+	  // These initial values for the dialog controls that use DDX/DDV
+	  // validation will be overwritten in OnInitDialog() by the
+	  // GetDocumentValues() method before they are ever used.  However, it is
+	  // good practice for constructors to initialize all its essential
+	  // parameters.
+	m_iByte     = 0;
+	m_iShort    = 0;
+	m_iInt      = 0;
+	m_iUINT     = 0;
+	m_iLong     = 0L;
+	m_ULong     = 0;
+	m_fFloat    = 0.0;
+	m_dDouble   = 0.0;
+	m_LPTSTR[0] = _T('\0');
+	m_iCheckA    = FALSE;
+	m_iCheckB    = FALSE;
+	m_iCheckC    = FALSE;
+	m_iRadioA    = 0;
+	m_sString.Empty();
+	m_sRichEdit.Empty();
+	m_sListBox.Empty();
+	m_iListBox  = 0;
+	m_sComboBox.Empty();
+	m_iComboBox = 0;
+	m_iSlider   = 0;
+	CTime::GetCurrentTime().GetAsSystemTime(m_stDateTime);
+	m_stMoCalendar = m_stDateTime;
 
 	  // buttons
 	m_clrCtlBtnFg    = COLOR_BLACK;

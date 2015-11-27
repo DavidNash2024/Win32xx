@@ -64,8 +64,9 @@ CDoc()                                                                  /*
 *-----------------------------------------------------------------------------*/
 {
 	  //Initialize the values of ALL controls using DDX/DDV.  These are
-	  // overwritten by saved values in the registry after initial startup,
-	  // but it is important to have valid values during initial startup.
+	  // overwritten by saved values from the registry after initial
+	  // startup, but it is important to have valid values for the
+	  // initil startup.
 	m_iByte     = 0;
 	m_iShort    = 0;
 	m_iInt      = 0;
@@ -75,10 +76,10 @@ CDoc()                                                                  /*
 	m_fFloat    = 0.0;
 	m_dDouble   = 0.0;
 	m_LPTSTR[0] = _T('\0');
-	m_CheckA    = FALSE;
-	m_CheckB    = FALSE;
-	m_CheckC    = FALSE; 
-	m_Radio     = 0;
+	m_iCheckA   = FALSE;
+	m_iCheckB   = FALSE;
+	m_iCheckC   = FALSE;
+	m_iRadioA   = 0;
 	m_sString.Empty();
 	m_sRichEdit.Empty();
 	m_sListBox.Empty();
@@ -124,10 +125,10 @@ LoadDocRegistry(LPCTSTR szKeyName)                                      /*
 		m_dDouble   = _tcstod(s, &p);
 		s           = RegQueryStringValue(key, _T("LPTSTR1"));
 		_tcscpy(m_LPTSTR, s.c_str());
-		m_CheckA    = RegQueryBOOLValue(key,   _T("CheckA"));
-		m_CheckB    = RegQueryBOOLValue(key,   _T("CheckB"));
-		m_CheckC    = RegQueryBOOLValue(key,   _T("CheckC"));
-		m_Radio     = RegQueryDWORDValue(key,  _T("Radio"));
+		m_iCheckA   = RegQueryBOOLValue(key,   _T("CheckA"));
+		m_iCheckB   = RegQueryBOOLValue(key,   _T("CheckB"));
+		m_iCheckC   = RegQueryBOOLValue(key,   _T("CheckC"));
+		m_iRadioA   = RegQueryDWORDValue(key,  _T("Radio"));
 		m_sString   = RegQueryStringValue(key, _T("Edit1"));
 		m_sRichEdit = RegQueryStringValue(key, _T("RichEdit1"));
 		m_sListBox  = RegQueryStringValue(key, _T("ListBox1"));
@@ -221,10 +222,10 @@ SaveDocRegistry(LPCTSTR szKeyName)                                      /*
 	  // Create() closes the key handle, so we have to reopen it
 	if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_WRITE))
 	{
-		key.SetDWORDValue(_T("CheckA"),     m_CheckA);
-		key.SetDWORDValue(_T("CheckB"),     m_CheckB);
-		key.SetDWORDValue(_T("CheckC"),     m_CheckC);
-		key.SetDWORDValue(_T("Radio"),      m_Radio);
+		key.SetDWORDValue(_T("CheckA"),     m_iCheckA);
+		key.SetDWORDValue(_T("CheckB"),     m_iCheckB);
+		key.SetDWORDValue(_T("CheckC"),     m_iCheckC);
+		key.SetDWORDValue(_T("Radio"),      m_iRadioA);
 		key.SetDWORDValue(_T("Byte1"),      m_iByte);
 		key.SetDWORDValue(_T("Short1"),     m_iShort);
 		key.SetDWORDValue(_T("Int1"),       m_iInt);

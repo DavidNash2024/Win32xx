@@ -110,7 +110,6 @@
 #endif
 
 
-
 namespace Win32xx
 {
 
@@ -298,6 +297,48 @@ namespace Win32xx
 		ISTHEMEBGPARTTRANSPARENT* m_pfnIsThemeBGPartTransparent;
 		OPENTHEMEDATA*			  m_pfnOpenThemeData;
 	};
+	
+	///////////////////////////////////////
+	// Declaration of the CViewHolder class
+	//  A View Holder is a window that contains a view window
+	//	
+	class CViewHolder : public CWnd
+	{
+	public:
+		CViewHolder() {}
+		virtual ~CViewHolder() {}
+		
+		virtual CWnd& GetView() const		{assert(m_pView); return *m_pView;}
+		virtual CRect GetViewRect() const 	{ return GetClientRect(); }
+		virtual void RecalcLayout() 		
+		{
+			// Resize the View window
+			GetView().SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW|SWP_ASYNCWINDOWPOS );
+		}
+
+		virtual void SetView(CWnd& wndView) { m_pView = &wndView;}
+		
+	protected:
+		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+		{
+			RecalcLayout();
+			return FinalWindowProc(uMsg, wParam, lParam);
+		}
+		
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+		{ 	
+			switch (uMsg)
+			{
+			case WM_WINDOWPOSCHANGED: return OnWindowPosChanged(uMsg, wParam, lParam);
+			} // switch uMsg
+
+			return CWnd::WndProcDefault(uMsg, wParam, lParam);
+		}
+	
+	private:
+		CWnd* m_pView;
+	};
+		
 
 
 	//////////////////////////////////
@@ -3041,7 +3082,7 @@ namespace Win32xx
 
 	inline void CFrame::SetTheme()
 	// Sets the theme colors for the frame's rebar, toolbar and menubar
-	// Note: To modify theme colors, override this function in CMainframe,
+	// Note: To modify theme colors, override this function in CMainFrame,
 	//        and make any modifications there.
 	{
 		// Avoid themes if using less than 16 bit colors

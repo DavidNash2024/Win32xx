@@ -37,9 +37,52 @@
 
 ///////////////////////////////////////////////////////
 // wxx_wincore.h
-//  This file includes all the files necessary to start Win32++ and create
-//  simple windows. Refer to the sample code at the end of this file.
+//  This file contains the definition of the CWnd class.
+//  Including this file adds all the code necessary to start Win32++ 
+//  and create simple windows. 
+//  
+//  Refer to the following example code.
 //
+
+
+// Example code
+/*
+
+///////////////////////////////////
+// main.cpp
+
+// To configure your project:
+// 1) Add Win32++'s include directory to the project's additional include directories for C/C++
+// 2) Add Win32++'s include directory to the project's additional include directories for Resources
+
+#include "wxx_wincore.h"
+
+
+// A class that inherits from CWnd. It is used to create the window.
+class CView : public CWnd
+{
+public:
+    CView() {}
+    virtual ~CView() {}
+    virtual void OnDestroy() { PostQuitMessage(0); }	// Ends the program
+};
+
+
+
+int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
+{
+    // Start Win32++
+    CWinApp theApp;
+
+    // Create our view window
+    CView MyWin;
+    MyWin.Create();
+
+    // Run the application's message loop
+    return theApp.Run();
+}
+
+*/
 
 
 #ifndef _WIN32XX_WINCORE_H_
@@ -109,7 +152,6 @@ namespace Win32xx {}
 #endif
 
 
-
 //////////////////////////////////////
 //  Include the Win32++ header files
 
@@ -131,47 +173,6 @@ namespace Win32xx {}
 #include "wxx_imagelist.h"
 #include "wxx_ddx.h"
 #include "wxx_appcore.h"
-
-
-
-// Example code
-/*
-
-///////////////////////////////////
-// main.cpp
-
-// To configure your project:
-// 1) Add Win32++'s include directory to the project's additional include directories for C/C++
-// 2) Add Win32++'s include directory to the project's additional include directories for Resources
-
-#include "wxx_wincore.h"
-
-
-// A class that inherits from CWnd. It is used to create the window.
-class CView : public CWnd
-{
-public:
-    CView() {}
-    virtual ~CView() {}
-    virtual void OnDestroy() { PostQuitMessage(0); }	// Ends the program
-};
-
-
-
-int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
-{
-    // Start Win32++
-    CWinApp theApp;
-
-    // Create our view window
-    CView MyWin;
-    MyWin.Create();
-
-    // Run the application's message loop
-    return theApp.Run();
-}
-
-*/
 
 
 namespace Win32xx

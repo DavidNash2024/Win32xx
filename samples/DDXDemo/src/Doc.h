@@ -71,17 +71,17 @@ CDoc    : public CObject 						/*
 		DWORD   RegQueryDWORDValue(CRegKey& key, LPCTSTR pName);
 		CString RegQueryStringValue(CRegKey& key, LPCTSTR pName);
 		SYSTEMTIME RegQuerySYSTEMTIMEValue(CRegKey &key, LPCTSTR pName);
-		BOOL  	GetCheckA(void) {return m_CheckA;}
-		void  	SetCheckA(BOOL IsChecked) { m_CheckA = IsChecked;}
+		BOOL  	GetCheckA(void) {return m_iCheckA;}
+		void  	SetCheckA(BOOL IsChecked) { m_iCheckA = IsChecked;}
 
-		BOOL  	GetCheckB(void) {return m_CheckB;}
-		void  	SetCheckB(BOOL IsChecked) { m_CheckB = IsChecked;}
+		BOOL  	GetCheckB(void) {return m_iCheckB;}
+		void  	SetCheckB(BOOL IsChecked) { m_iCheckB = IsChecked;}
 
-		BOOL  	GetCheckC(void) {return m_CheckC;}
-		void  	SetCheckC(BOOL IsChecked) { m_CheckC = IsChecked;}
+		BOOL  	GetCheckC(void) {return m_iCheckC;}
+		void  	SetCheckC(BOOL IsChecked) { m_iCheckC = IsChecked;}
 
-		UINT  	GetRadio(void) {return m_Radio;}
-		void  	SetRadio(UINT radio) { m_Radio = radio;}
+		UINT  	GetRadio(void) {return m_iRadioA;}
+		void  	SetRadio(UINT radio) { m_iRadioA = radio;}
 
 		CString &GetListBoxS(void) {return m_sListBox;}
 		void	SetListBoxS(const CString &s){ m_sListBox = s;}
@@ -152,10 +152,10 @@ CDoc    : public CObject 						/*
 		DWORD   m_ULong;
 		float   m_fFloat;
 		double  m_dDouble;
-		BOOL	m_CheckA;
-		BOOL	m_CheckB;
-		BOOL	m_CheckC;
-		UINT	m_Radio;
+		BOOL	m_iCheckA;
+		BOOL	m_iCheckB;
+		BOOL	m_iCheckC;
+		UINT	m_iRadioA;
 		CString	m_sListBox,
 			m_sComboBox,
 			m_sString,

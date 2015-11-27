@@ -36,11 +36,12 @@
 
 
 ///////////////////////////////////////////////////////
-// wxx_wincore1.h
+// wxx_wincore0.h
 // This file contains the declaration of the CWnd class.
+//
 
-#ifndef _WIN32XX_WINCORE1_H_
-#define _WIN32XX_WINCORE1_H_
+#ifndef _WIN32XX_WINCORE0_H_
+#define _WIN32XX_WINCORE0_H_
 
 
 #include "wxx_rect.h"
@@ -309,5 +310,5 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_WINCORE1_H_
+#endif // _WIN32XX_WINCORE0_H_
 

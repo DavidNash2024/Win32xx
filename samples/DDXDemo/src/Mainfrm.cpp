@@ -128,9 +128,9 @@ LoadRegistrySettings(LPCTSTR szKeyName)					/*
 OnClose()								/*
 
 	The framework calls this member function as a signal that the CWnd or
-	application is to terminate. Retrieve and save the data in the dialog
-	controls if all is well. If an error arises, give the user the
-	opportunity to correct or ignore it.
+	application is to terminate. Retrieve the data in the dialog controls
+	and save it if all is well. If an error arises, return with the cursor
+	in the offending control so the user can correct it.
 *-----------------------------------------------------------------------------*/
 {									
 	if (UpdateDialog(TRUE))						
@@ -141,8 +141,6 @@ OnClose()								/*
 	else
 	{	  // oops! there is a problem with some of the control data								
 		TRACE("*** Verification failed ***\n");			
-		if (MessageBox(_T("Fix this (yes) or ignore it (no)?"),
-		    _T("Verification Check"), MB_YESNO) == IDYES)
 			return;	 // return control to user to fix this problem
 	}
 

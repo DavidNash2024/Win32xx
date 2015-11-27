@@ -36,12 +36,12 @@
 
 
 
-#ifndef _WIN32XX_APPCORE1_H_
-#define _WIN32XX_APPCORE1_H_
+#ifndef _WIN32XX_APPCORE0_H_
+#define _WIN32XX_APPCORE0_H_
 
 	
 ///////////////////////////////////////////////////////
-// wxx_appcore1.h
+// wxx_appcore0.h
 // This file contains the declarations of the following set of classes.
 //
 // 1) CCriticalSection: This class is used internally to manage thread access
@@ -581,4 +581,4 @@ namespace Win32xx
 
 }
 
-#endif // _WIN32XX_APPCORE1_H_
+#endif // _WIN32XX_APPCORE0_H_
