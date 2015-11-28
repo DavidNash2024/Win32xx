@@ -123,9 +123,9 @@ namespace Win32xx
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
 	//
-	class CMDIFrame : public CFrame
+	class CMDIFrame : public CFrameT<CDocker>
 	{
-		friend class CMDIChild;     // CMDIChild uses m_hOrigMenu
+		friend class CMDIChild;     // CMDIChild uses m_hActiveMDIChild
 
 	public:
 		// A nested class inside CMDIFrame
@@ -151,8 +151,10 @@ namespace Win32xx
 		virtual CMDIChild& AddMDIChild(CMDIChild* pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
 		virtual CMenu GetActiveMenu() const;
-		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockMDIClient&>(m_DockMDIClient); }
-		virtual CWnd& GetMDIClient() const { return GetDockClient(); }
+	//	virtual CDockClient& GetDockClient() const	{ return const_cast<CDockMDIClient&>(m_DockMDIClient); }
+		virtual CDockMDIClient& GetDockClient() const	{ return const_cast<CDockMDIClient&>(m_DockMDIClient); }
+	//	virtual CWnd& GetMDIClient() const { return GetDockClient(); }
+		virtual CWnd& GetMDIClient() const { return (CWnd&)m_DockMDIClient; }
 		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -207,7 +209,8 @@ namespace Win32xx
 	//
 	inline CMDIFrame::CMDIFrame() : m_hActiveMDIChild(NULL)
 	{
-		SetView(GetDockClient());
+	//	SetView(GetDockClient());
+		SetView(m_DockMDIClient);
 	}
 
 	inline CMDIChild& CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
@@ -381,7 +384,8 @@ namespace Win32xx
 	{
 		if (RemoveAllMDIChildren())
 		{
-			CFrame::OnClose();
+		//	CFrame::OnClose();
+			CDockFrame::OnClose();
 		}
 	}
 
@@ -398,7 +402,8 @@ namespace Win32xx
 				return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 		}
 
-		return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
+	//	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
+		return CDockFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 	}
 
 	inline void CMDIFrame::OnMenuUpdate(UINT nID)
@@ -419,14 +424,16 @@ namespace Win32xx
 
 	inline BOOL CMDIFrame::OnViewStatusBar()
 	{
-		CFrame::OnViewStatusBar();
+	//	CFrame::OnViewStatusBar();
+		CFrameT<CDocker>::OnViewStatusBar();
 		GetView().RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		return TRUE;
 	}
 
 	inline BOOL CMDIFrame::OnViewToolBar()
 	{
-		CFrame::OnViewToolBar();
+	//	CFrame::OnViewToolBar();
+		CDockFrame::OnViewToolBar();
 		GetView().RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		return TRUE;
 	}
@@ -452,12 +459,14 @@ namespace Win32xx
 				return TRUE;
 		}
 
-		return CFrame::PreTranslateMessage(pMsg);
+	//	return CFrame::PreTranslateMessage(pMsg);
+		return CDockFrame::PreTranslateMessage(pMsg);
 	}
 
 	inline void CMDIFrame::RecalcLayout()
 	{
-		CFrame::RecalcLayout();
+	//	CFrame::RecalcLayout();
+		CDockFrame::RecalcLayout();
 
 		if (GetView().IsWindow())
 			MDIIconArrange();
@@ -558,7 +567,8 @@ namespace Win32xx
 			case UWM_ISMDIFRAME:		return TRUE;
 		}
 		
-		return CFrame::WndProcDefault(uMsg, wParam, lParam);
+	//	return CFrame::WndProcDefault(uMsg, wParam, lParam);
+		return CDockFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
@@ -716,6 +726,7 @@ namespace Win32xx
 		CMDIFrame& MDIFrame = static_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent()));
 	//	assert(dynamic_cast<CMDIFrame&>(*GetCWndPtr(GetParent().GetParent())));
 		assert( GetParent().GetParent().SendMessage(UWM_ISMDIFRAME) );
+
 		return MDIFrame;
 	}
 

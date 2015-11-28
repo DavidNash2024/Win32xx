@@ -273,7 +273,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wxx_appcore1.h"
+				RelativePath="..\..\..\include\wxx_appcore0.h"
 				>
 			</File>
 			<File
@@ -405,7 +405,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wxx_wincore1.h"
+				RelativePath="..\..\..\include\wxx_wincore0.h"
 				>
 			</File>
 			<File

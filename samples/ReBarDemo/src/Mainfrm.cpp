@@ -278,7 +278,7 @@ void CMainFrame::RecalcLayout()
 		SetReBarPos();
 
 	// Position the view window
-	RecalcDockLayout();
+	CFrame::RecalcLayout();
 
 	// Adjust rebar bands
 	if (IsReBarUsed())

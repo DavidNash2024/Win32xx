@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////
 // Mainfrm.h
-//  Declaration of the CMainFrame class
+//  Declaration of the CMainDockFrame class
 
 #ifndef MAINFRM_H
 #define MAINFRM_H
@@ -9,11 +9,11 @@
 #include "SplitterPanes.h"
 
 
-class CMainFrame : public CFrame
+class CMainDockFrame : public CDockFrame
 {
 public:
-	CMainFrame();
-	virtual ~CMainFrame();
+	CMainDockFrame();
+	virtual ~CMainDockFrame();
 	
 	BOOL OnFileExit();
 	BOOL OnViewList();

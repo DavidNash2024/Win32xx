@@ -464,6 +464,7 @@ namespace Win32xx
 		virtual void Hide();
 		virtual BOOL LoadContainerRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual BOOL LoadDockRegistrySettings(LPCTSTR szRegistryKeyName);
+		virtual void RecalcLayout() { RecalcDockLayout(); }
 		virtual void RecalcDockLayout();
 		virtual BOOL SaveDockRegistrySettings(LPCTSTR szRegistryKeyName);
 		virtual void Undock(CPoint pt, BOOL bShowUndocked = TRUE);
@@ -2868,48 +2869,58 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(pcs);
 
-#if (WINVER >= 0x0500)
-		if (GetParent().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
-		{
-			DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
-			SetWindowLongPtr(GWL_EXSTYLE, dwExStyle | WS_EX_LAYOUTRTL);
-		}
-#endif
-
 		// Create the various child windows
 		GetDockClient().Create(*this);
 
 		assert(&GetView());			// Use SetView in the docker's constructor to set the view window
-		GetView().Create(GetDockClient());
 
-		// Create the slider bar belonging to this docker
-		GetDockBar().SetDocker(*this);
-		if (GetDockAncestor() != this)
-			GetDockBar().Create(*GetDockAncestor());
-
-		// Now remove the WS_POPUP style. It was required to allow this window
-		// to be owned by the frame window.
-		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
-		SetParent(GetParent());		// Reinstate the window's parent
-
-		// Set the default colour for the splitter bar
-		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-		HWND hWndFrame = GetDockAncestor()->GetAncestor();
-
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hWndFrame, UWM_GETRBTHEME, 0, 0));
-
-		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
-				rgbColour =pTheme->clrBkgnd2;
-
-		SetBarColor(rgbColour);
-
-		// Set the caption height based on text height
-		m_NCHeight = MAX(20, GetTextHeight() + 5);
-
-		CDockContainer* pContainer = GetContainer();
-		if (pContainer)
+		if (GetView() != GetDockClient())
 		{
-			SetCaption(pContainer->GetDockCaption().c_str());
+			// skip this for a MDIDockFrame. Its view window is the DockClient
+			GetView().Create(GetDockClient());
+		}
+
+		if (!SendMessage(UWM_ISFRAME))	// If docker is also a CDockFrame
+		{
+
+	#if (WINVER >= 0x0500)
+			if (GetParent().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+			{
+				DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
+				SetWindowLongPtr(GWL_EXSTYLE, dwExStyle | WS_EX_LAYOUTRTL);
+			}
+	#endif
+
+			// Create the slider bar belonging to this docker
+			GetDockBar().SetDocker(*this);
+			if (GetDockAncestor() != this)
+				GetDockBar().Create(*GetDockAncestor());
+
+			// Now remove the WS_POPUP style. It was required to allow this window
+			// to be owned by the frame window.
+			SetWindowLongPtr(GWL_STYLE, WS_CHILD);
+			SetParent(GetParent());		// Reinstate the window's parent
+
+			// Set the default colour for the splitter bar
+			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
+			HWND hWndFrame = GetDockAncestor()->GetAncestor();
+
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hWndFrame, UWM_GETRBTHEME, 0, 0));
+
+			if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
+					rgbColour =pTheme->clrBkgnd2;
+
+			SetBarColor(rgbColour);
+
+			// Set the caption height based on text height
+			m_NCHeight = MAX(20, GetTextHeight() + 5);
+
+			CDockContainer* pContainer = GetContainer();
+			if (pContainer)
+			{
+				SetCaption(pContainer->GetDockCaption().c_str());
+			}
+
 		}
 
 		return 0;
@@ -4789,7 +4800,7 @@ namespace Win32xx
 			if (IsWindow())
 			{
 				// The frame is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
+				assert(GetView());			// Use SetView in CMainDockFrame's constructor to set the view window
 
 				if (!GetView().IsWindow())
 					GetView().Create(*this);
