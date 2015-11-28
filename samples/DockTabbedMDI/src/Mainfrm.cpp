@@ -7,11 +7,11 @@
 #include "resource.h"
 
 
-// Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE), 
+// Definitions for the CMainDockFrame class
+CMainDockFrame::CMainDockFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE), 
                            m_IsHideSingleTab(TRUE), m_IsMDITabsAtTop(TRUE)
 {
-	// Constructor for CMainFrame. Its called after CFrame's constructor
+	// Constructor for CMainDockFrame. Its called after CFrame's constructor
 
 	//Set m_MyTabbedMDI as the view window of the frame
 	SetView(m_MyTabbedMDI);
@@ -21,12 +21,12 @@ CMainFrame::CMainFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE)
 	LoadRegistrySettings(_T("Win32++\\TabbedMDI Docking"));
 }
 
-CMainFrame::~CMainFrame()
+CMainDockFrame::~CMainDockFrame()
 {
-	// Destructor for CMainFrame.
+	// Destructor for CMainDockFrame.
 }
 
-void CMainFrame::LoadDefaultDockers()
+void CMainDockFrame::LoadDefaultDockers()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
@@ -45,7 +45,7 @@ void CMainFrame::LoadDefaultDockers()
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
 }
 
-void CMainFrame::LoadDefaultMDIs()
+void CMainDockFrame::LoadDefaultMDIs()
 {
 	// Add some MDI tabs
 	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
@@ -58,7 +58,7 @@ void CMainFrame::LoadDefaultMDIs()
 		m_MyTabbedMDI.SetActiveMDITab(0);
 }
 
-BOOL CMainFrame::OnFileNew()
+BOOL CMainDockFrame::OnFileNew()
 // Creates the popup menu when the "New" toolbar button is pressed
 {
 	// Position the popup menu
@@ -79,51 +79,51 @@ BOOL CMainFrame::OnFileNew()
 	return TRUE;
 }
 
-BOOL CMainFrame::OnFileExit()
+BOOL CMainDockFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
 	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNewSimple()
+BOOL CMainDockFrame::OnFileNewSimple()
 {
 	m_MyTabbedMDI.AddMDIChild(new CViewWeb, _T("Browser"), ID_MDI_WEB);
 	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNewRect()
+BOOL CMainDockFrame::OnFileNewRect()
 {
 	m_MyTabbedMDI.AddMDIChild(new CViewRect, _T("Rectangles"), ID_MDI_RECT);
 	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNewList()
+BOOL CMainDockFrame::OnFileNewList()
 {
 	m_MyTabbedMDI.AddMDIChild(new CViewFiles, _T("ListView"), ID_MDI_FILES);
 	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNewText()
+BOOL CMainDockFrame::OnFileNewText()
 {
 	m_MyTabbedMDI.AddMDIChild(new CViewText, _T("TextView"), ID_MDI_TEXT);
 	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNewTree()
+BOOL CMainDockFrame::OnFileNewTree()
 {
 	m_MyTabbedMDI.AddMDIChild(new CViewClasses, _T("TreeView"), ID_MDI_CLASSES);
 	return TRUE;
 }
 
-BOOL CMainFrame::OnContainerTabsAtTop()
+BOOL CMainDockFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
 	SetContainerTabsAtTop(!m_IsContainerTabsAtTop);
 	return TRUE;
 }
 
-void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
+void CMainDockFrame::SetContainerTabsAtTop(BOOL bTop)
 {
 	m_IsContainerTabsAtTop = bTop;
 	std::vector<DockPtr>::iterator iter;
@@ -143,14 +143,14 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
 }
 
-BOOL CMainFrame::OnMDITabsAtTop()
+BOOL CMainDockFrame::OnMDITabsAtTop()
 // Reposition TabbedMDI's tabs
 {
 	SetMDITabsAtTop(!m_IsMDITabsAtTop);
 	return TRUE;
 }
 
-void CMainFrame::SetMDITabsAtTop(BOOL bTop)
+void CMainDockFrame::SetMDITabsAtTop(BOOL bTop)
 {
 	m_IsMDITabsAtTop = bTop;
 	m_MyTabbedMDI.GetTab().SetTabsAtTop(bTop);
@@ -160,7 +160,7 @@ void CMainFrame::SetMDITabsAtTop(BOOL bTop)
 	GetFrameMenu().CheckMenuItem(IDM_TABBEDMDI_TOP, uCheck);
 }
 
-CDocker* CMainFrame::NewDockerFromID(int idDock)
+CDocker* CMainDockFrame::NewDockerFromID(int idDock)
 {
 	CDocker* pDocker = NULL;
 	switch(idDock)
@@ -200,7 +200,7 @@ CDocker* CMainFrame::NewDockerFromID(int idDock)
 	return pDocker;
 }
 
-BOOL CMainFrame::OnDefaultLayout()
+BOOL CMainDockFrame::OnDefaultLayout()
 {
 	SetRedraw(FALSE);
 
@@ -216,7 +216,7 @@ BOOL CMainFrame::OnDefaultLayout()
 	return TRUE;
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// OnCommand responds to menu and and toolbar input
 	switch(LOWORD(wParam))
@@ -267,7 +267,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
+int CMainDockFrame::OnCreate(LPCREATESTRUCT pcs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -280,16 +280,16 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	return CFrame::OnCreate(pcs);
+	return CDockFrame::OnCreate(pcs);
 }
 
-BOOL CMainFrame::OnHideSingleTab()
+BOOL CMainDockFrame::OnHideSingleTab()
 {
 	HideSingleContainerTab(!m_IsHideSingleTab);
 	return TRUE;
 }
 
-void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
+void CMainDockFrame::HideSingleContainerTab(BOOL HideSingle)
 {
 	m_IsHideSingleTab = HideSingle;
 	std::vector<DockPtr>::iterator iter;
@@ -310,7 +310,7 @@ void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 }
 
 
-void CMainFrame::OnInitialUpdate()
+void CMainDockFrame::OnInitialUpdate()
 {
 	SetDockStyle(DS_CLIENTEDGE);
 
@@ -341,27 +341,27 @@ void CMainFrame::OnInitialUpdate()
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 
-LRESULT CMainFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainDockFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Update the "Window" menu 
 	m_MyTabbedMDI.GetListMenu();
 
-	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
+	return CDockFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 }
 
-BOOL CMainFrame::OnCloseDockers()
+BOOL CMainDockFrame::OnCloseDockers()
 {
 	CloseAllDockers();
 	return TRUE;
 }
 
-BOOL CMainFrame::OnCloseMDIs()
+BOOL CMainDockFrame::OnCloseMDIs()
 {
 	m_MyTabbedMDI.CloseAllMDIChildren();
 	return TRUE;
 }
 
-void CMainFrame::OnMenuUpdate(UINT nID)
+void CMainDockFrame::OnMenuUpdate(UINT nID)
 // Called when menu items are about to be displayed
 {
 	// Only for the Menu IDs we wish to modify
@@ -383,21 +383,21 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 
-	CFrame::OnMenuUpdate(nID);
+	CDockFrame::OnMenuUpdate(nID);
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
+void CMainDockFrame::PreCreate(CREATESTRUCT &cs)
 {
 	// Call the base class function first
-	CFrame::PreCreate(cs);
+	CDockFrame::PreCreate(cs);
 
 	// Hide the window initially by removing the WS_VISIBLE style
 	cs.style &= ~WS_VISIBLE;
 }
 
-BOOL CMainFrame::SaveRegistrySettings()
+BOOL CMainDockFrame::SaveRegistrySettings()
 {
-	CFrame::SaveRegistrySettings();
+	CDockFrame::SaveRegistrySettings();
 
 	// Save the docker settings
 	SaveDockRegistrySettings(GetRegistryKeyName());
@@ -408,7 +408,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 	return TRUE;
 }
 
-void CMainFrame::SetupToolBar()
+void CMainDockFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW   );
@@ -437,7 +437,7 @@ void CMainFrame::SetupToolBar()
 	AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSVIEW));
 }
 
-LRESULT CMainFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainDockFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
@@ -449,7 +449,7 @@ LRESULT CMainFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return MA_ACTIVATE;
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainDockFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

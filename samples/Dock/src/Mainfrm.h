@@ -19,12 +19,12 @@ enum DockIDs
 	ID_DOCK_TEXT2 = 8
 };
 
-// Declaration of the CMainFrame class
-class CMainFrame : public CFrame
+// Declaration of the CMainDockFrame class
+class CMainDockFrame : public CDockFrame
 {
 public:
-	CMainFrame();
-	virtual ~CMainFrame();
+	CMainDockFrame();
+	virtual ~CMainDockFrame();
 	
 	void LoadDefaultDockers();
 	BOOL On3DBorder();

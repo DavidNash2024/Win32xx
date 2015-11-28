@@ -14,10 +14,10 @@ public:
 	CSplitterApp();
 	virtual ~CSplitterApp()  {}
 	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+	CMainDockFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+	CMainDockFrame m_Frame;
 };
 
 

@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainFrame class
+// Mainfrm.cpp  - definitions for the CMainDockFrame class
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
 
-CMainFrame::CMainFrame()
+CMainDockFrame::CMainDockFrame()
 {
 	SetView(m_MainView);
 
@@ -15,11 +15,11 @@ CMainFrame::CMainFrame()
 	LoadRegistrySettings(_T("Win32++\\Splitter Sample"));
 }
 
-CMainFrame::~CMainFrame()
+CMainDockFrame::~CMainDockFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -35,7 +35,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-BOOL CMainFrame::OnFileExit()
+BOOL CMainDockFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
@@ -43,7 +43,7 @@ BOOL CMainFrame::OnFileExit()
 	return TRUE;;
 }
 
-void CMainFrame::OnInitialUpdate()
+void CMainDockFrame::OnInitialUpdate()
 {
 	// Set the styles for splitter panes
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
@@ -62,7 +62,7 @@ void CMainFrame::OnInitialUpdate()
 
 }
 
-BOOL CMainFrame::OnViewList()
+BOOL CMainDockFrame::OnViewList()
 {
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 	if (m_pDockList->IsDocked())
@@ -79,7 +79,7 @@ BOOL CMainFrame::OnViewList()
 	return TRUE;
 }
 
-BOOL CMainFrame::OnViewText()
+BOOL CMainDockFrame::OnViewText()
 {
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 
@@ -97,7 +97,7 @@ BOOL CMainFrame::OnViewText()
 	return TRUE;
 }
 
-void CMainFrame::SetupToolBar()
+void CMainDockFrame::SetupToolBar()
 {	
 	// Define the resource IDs for the toolbar
 	AddToolBarButton( IDM_FILE_NEW   );
@@ -113,7 +113,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainDockFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{

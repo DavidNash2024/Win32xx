@@ -22,11 +22,20 @@ New Features and Enhancements
    CString is now based on the CStringT template.
    CStringA is defined as CStringT<CHAR>
    CStringW is defined as CStringT<WCHAR>
-   CString inherits from CStringT<TCHAR>. It is backwards compatible with
-    the previous implementation of CString. 
+   CString inherits from CStringT<TCHAR>. It is backwards compatible with the
+    previous implementation of CString. 
    - Added operator + support for ints and doubles.
    - Added operator += support for ints and doubles.
    - Added operator = support for ints and doubles.
+   
+* Frames now comes in two versions
+   CFrame provides a frame without docking capabilities. Inherit your CMainFrame
+   from this class if your application doesn't require docking. Using this class
+   strips out the docking code, making the executables slightly smaller.   
+   
+   CDockFrame provides a frame docking capabilities. Inherit your CMainDockFrame
+   from this class if your application uses docking. It has all the
+   functionality of CFrame, and supports docking as well. 
    
 * Updated the exception handling
    - Added CException             ( inherits from std::exception )
