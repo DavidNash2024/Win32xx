@@ -9,7 +9,7 @@
 #include "SplitterPanes.h"
 
 
-class CMainDockFrame : public CDockFrame
+class CMainDockFrame : public CFrame
 {
 public:
 	CMainDockFrame();

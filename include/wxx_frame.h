@@ -37,7 +37,7 @@
 
 ////////////////////////////////////////////////////////
 // wxx_frame.h
-//  Declaration of the CFrameT and CMenuBar classes
+//  Declaration of the CFrame and CMenuBar classes
 
 // The classes declared in this file support SDI (Single Document Interface)
 // frames on Win32/Win64 operating systems (not Windows CE). For Windows CE,
@@ -45,7 +45,7 @@
 // single view window. Refer to mdi.h for frames that support several
 // child windows.
 
-// CFrameT also uses each of the following classes:
+// CFrame also uses each of the following classes:
 // * CReBar for managing the frame's rebar control.
 // * CMenuBar for managing the menu inside the rebar.
 // * CToolBar for managing the frame's toolbar.
@@ -53,7 +53,7 @@
 // In each case the members for these classes are exposed by a GetXXX
 // function, allowing them to be accessed or sent messages.
 
-// CFrameT is responsible for creating a "frame" window. This window has a
+// CFrame is responsible for creating a "frame" window. This window has a
 // menu and and several child windows, including a toolbar (usually hosted
 // within a rebar), a status bar, and a view positioned over the frame
 // window's non-client area. The "view" window is a separate CWnd object
@@ -210,7 +210,7 @@ namespace Win32xx
 
 
 	// Forward declaration of CFrame. Its defined later.
-//	class CFrame;
+	class CFrame;
 
 	struct MenuItemData
 	// Each Dropdown menu item has this data
@@ -227,7 +227,7 @@ namespace Win32xx
 
 	/////////////////////////////////////
 	// Declaration of the CMenuMetrics class
-	//  This class is used by CFrameT to retrieve the size of the components
+	//  This class is used by CFrame to retrieve the size of the components
 	//  used to perform owner-drawing of menu items.  Windows Visual Styles
 	//  are used to render menu items for systems running Aero (Vista and above).
 	//  Win32++ custom themes are used to render menu items for systems without Aero.
@@ -297,71 +297,18 @@ namespace Win32xx
 		ISTHEMEBGPARTTRANSPARENT* m_pfnIsThemeBGPartTransparent;
 		OPENTHEMEDATA*			  m_pfnOpenThemeData;
 	};
-
-	///////////////////////////////////////
-	// Declaration of the CViewHolder class
-	//  A View Holder is a window that contains a view window
-	//
-	class CViewHolder : public CWnd
-	{
-	public:
-		CViewHolder() {}
-		virtual ~CViewHolder() {}
-
-		virtual CWnd& GetView() const		{assert(m_pView); return *m_pView;}
-		virtual CRect GetViewRect() const 	{ return GetClientRect(); }
-		virtual void RecalcLayout()
-		{
-			// Resize the View window
-			if (GetView().IsWindow())
-				GetView().SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW|SWP_ASYNCWINDOWPOS );
-		}
-
-		virtual void SetView(CWnd& wndView) { m_pView = &wndView;}
-
-	protected:
-		virtual int OnCreate(LPCREATESTRUCT pcs)
-		{
-			UNREFERENCED_PARAMETER(pcs);
-
-			// Create the view window
-			GetView().Create(*this);
-			return 0;
-		}
-
-		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
-		{
-			RecalcLayout();
-			return FinalWindowProc(uMsg, wParam, lParam);
-		}
-
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-		{
-			switch (uMsg)
-			{
-			case WM_WINDOWPOSCHANGED: return OnWindowPosChanged(uMsg, wParam, lParam);
-			} // switch uMsg
-
-			return CWnd::WndProcDefault(uMsg, wParam, lParam);
-		}
-
-	private:
-		CWnd* m_pView;
-	};
-
-
+	
 
 	//////////////////////////////////
-	// Declaration of the CFrameT class
+	// Declaration of the CFrame class
 	//
-	template <class T>
-	class CFrameT : public T
+	class CFrame : public CDocker
 	{
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
 
 	public:
-		CFrameT();
-		virtual ~CFrameT();
+		CFrame();
+		virtual ~CFrame();
 
 		// Override these functions as required
 		virtual void AdjustFrameRect(const RECT& rcView);
@@ -394,7 +341,7 @@ namespace Win32xx
 		StatusBarTheme& GetStatusBarTheme()	const	{ return const_cast<StatusBarTheme&>(m_SBTheme); }
 		ToolBarTheme& GetToolBarTheme()	const		{ return const_cast<ToolBarTheme&>(m_TBTheme); }
 		CString GetStatusText() const				{ return m_strStatusText; }
-		CString GetTitle() const					{ return T::GetWindowText(); }
+		CString GetTitle() const					{ return GetWindowText(); }
 		BOOL IsMenuBarUsed() const					{ return (GetMenuBar().IsWindow()); }
 		BOOL IsReBarSupported() const				{ return (GetComCtlVersion() > 470); }
 		BOOL IsReBarUsed() const					{ return (GetReBar().IsWindow()); }
@@ -405,7 +352,7 @@ namespace Win32xx
 		void SetReBarTheme(ReBarTheme& RBT);
 		void SetStatusBarTheme(StatusBarTheme& SBT);
 		void SetStatusText(LPCTSTR szText);
-		void SetTitle(LPCTSTR szText)				{ T::SetWindowText(szText); }
+		void SetTitle(LPCTSTR szText)				{ SetWindowText(szText); }
 		void SetToolBarTheme(ToolBarTheme& TBT);
 
 	protected:
@@ -493,8 +440,8 @@ namespace Win32xx
 		void SetUseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
 
 	private:
-		CFrameT(const CFrameT&);				// Disable copy construction
-		CFrameT& operator = (const CFrameT&); // Disable assignment operator
+		CFrame(const CFrame&);				// Disable copy construction
+		CFrame& operator = (const CFrame&); // Disable assignment operator
 		CSize GetTBImageSize(CBitmap* pbm);
 		void UpdateMenuBarBandSize();
 		static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
@@ -543,12 +490,7 @@ namespace Win32xx
 		BOOL m_ShowStatusBar;				// Initial StatusBar show state retrieved from registry
 		BOOL m_ShowToolBar;					// Initial ToolBar show state retrieved from registry
 
-	};  // class CFrameT
-
-
-	typedef CFrameT<CDocker> CDockFrame;
-	typedef CFrameT<CViewHolder> CFrame;
-
+	};  // class CFrame
 
 }
 
@@ -927,10 +869,9 @@ namespace Win32xx
 
 
 	///////////////////////////////////
-	// Definitions for the CFrameT class
+	// Definitions for the CFrame class
 	//
-	template <class T>
-	inline CFrameT<T>::CFrameT() : m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
+	inline CFrame::CFrame() : m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
 							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_pMenuMetrics(0), m_ShowCmd(SW_SHOW),
 							  m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE), m_UseThemes(TRUE),
 							  m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE)
@@ -962,14 +903,12 @@ namespace Win32xx
 		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 	}
 
-	template <class T>
-	inline CFrameT<T>::~CFrameT()
+	inline CFrame::~CFrame()
 	{
 		if (m_KbdHook != 0) UnhookWindowsHookEx(m_KbdHook);
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::AddMenuIcon(int nID_MenuItem, HICON hIcon)
+	inline BOOL CFrame::AddMenuIcon(int nID_MenuItem, HICON hIcon)
 	// Adds an icon to an internal ImageList for use with popup menu items.
 	{
 		// Create a new ImageList if required
@@ -993,8 +932,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	template <class T>
-	inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
+	inline UINT CFrame::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
 	// Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
 	// Note:  If existing images are a different size to the new ones, the old ones will be removed!
 	//        The ToolBarDisabledID is ignored unless ToolBarID and ToolBarDisabledID bitmaps are the same size.
@@ -1080,8 +1018,7 @@ namespace Win32xx
 		return static_cast<UINT>(m_vMenuIcons.size());
 	}
 
-	template <class T>
-	inline void CFrameT<T>::AddMenuBarBand()
+	inline void CFrame::AddMenuBarBand()
 	// Adds a MenuBar to the rebar control
 	{
 		REBARBANDINFO rbbi;
@@ -1102,8 +1039,7 @@ namespace Win32xx
 		UpdateMenuBarBandSize();
 	}
 
-	template <class T>
-	inline void CFrameT<T>::AddMRUEntry(LPCTSTR szMRUEntry)
+	inline void CFrame::AddMRUEntry(LPCTSTR szMRUEntry)
 	// Adds an entry to the Most Recently Used (MRU) list.
 	{
 		// Erase possible duplicate entries from vector
@@ -1119,8 +1055,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	template <class T>
-	inline void CFrameT<T>::AddToolBarBand(CToolBar& TB, DWORD dwBandStyle, UINT nID)
+	inline void CFrame::AddToolBarBand(CToolBar& TB, DWORD dwBandStyle, UINT nID)
 	// Adds a ToolBar to the rebar control
 	{
 		// Create the ToolBar Window
@@ -1140,8 +1075,7 @@ namespace Win32xx
 		GetReBar().InsertBand(-1, rbbi);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */, int iImage /* = -1 */)
+	inline void CFrame::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */, int iImage /* = -1 */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
@@ -1153,32 +1087,30 @@ namespace Win32xx
 			GetToolBar().SetButtonText(nID, szText);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::AdjustFrameRect(const RECT& rcView)
+	inline void CFrame::AdjustFrameRect(const RECT& rcView)
 	// Adjust the size of the frame to accommodate the View window's dimensions
 	{
 		// Adjust for the view styles
 		CRect rc = rcView;
-		DWORD dwStyle = (DWORD)T::GetView().GetWindowLongPtr(GWL_STYLE);
-		DWORD dwExStyle = (DWORD)T::GetView().GetWindowLongPtr(GWL_EXSTYLE);
+		DWORD dwStyle = (DWORD)GetView().GetWindowLongPtr(GWL_STYLE);
+		DWORD dwExStyle = (DWORD)GetView().GetWindowLongPtr(GWL_EXSTYLE);
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
 		// Calculate the new frame height
-		CRect rCFrameTBefore = T::GetWindowRect();
-		CRect rcViewBefore = T::GetViewRect();
-		int Height = rc.Height() + rCFrameTBefore.Height() - rcViewBefore.Height();
+		CRect rcFrameBefore = GetWindowRect();
+		CRect rcViewBefore = GetViewRect();
+		int Height = rc.Height() + rcFrameBefore.Height() - rcViewBefore.Height();
 
 		// Adjust for the frame styles
-		dwStyle = (DWORD)T::GetWindowLongPtr(GWL_STYLE);
-		dwExStyle = (DWORD)T::GetWindowLongPtr(GWL_EXSTYLE);
+		dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+		dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
 		// Calculate final rect size, and reposition frame
-		T::SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
+		SetWindowPos(NULL, 0, 0, rc.Width(), Height, SWP_NOMOVE);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::CreateToolBar()
+	inline void CFrame::CreateToolBar()
 	// Creates the frame's toolbar. Additional toolbars can be added with AddToolBarBand
 	//  if the frame uses a rebar.
 	{
@@ -1216,8 +1148,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::CustomDrawMenuBar(NMHDR* pNMHDR)
+	inline LRESULT CFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
 	// CustomDraw is used to render the MenuBar's toolbar buttons
 	{
 		LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
@@ -1320,14 +1251,13 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::CustomDrawToolBar(NMHDR* pNMHDR)
+	inline LRESULT CFrame::CustomDrawToolBar(NMHDR* pNMHDR)
 	// With CustomDraw we manually control the drawing of each toolbar button
 	{
 		if ((GetToolBarTheme().UseThemes) && (GetComCtlVersion() > 470))
 		{
 			LPNMTBCUSTOMDRAW lpNMCustomDraw = (LPNMTBCUSTOMDRAW)pNMHDR;
-			CToolBar* pTB = static_cast<CToolBar*>(T::GetCWndPtr(pNMHDR->hwndFrom));
+			CToolBar* pTB = static_cast<CToolBar*>(GetCWndPtr(pNMHDR->hwndFrom));
 
 			if (pTB)
 			{
@@ -1515,8 +1445,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
+	inline void CFrame::DrawMenuItem(LPDRAWITEMSTRUCT pdis)
 	// Called by OnDrawItem to render the popup menu items.
 	{
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
@@ -1586,8 +1515,7 @@ namespace Win32xx
 
 	}
 
-	template <class T>
-	inline void CFrameT<T>::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis)
+	inline void CFrame::DrawMenuItemBkgnd(LPDRAWITEMSTRUCT pdis)
 	// Called by DrawMenuItem to render the popup menu background
 	{
 		// Draw the item background
@@ -1623,8 +1551,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis)
+	inline void CFrame::DrawMenuItemCheckmark(LPDRAWITEMSTRUCT pdis)
 	// Draws the checkmark or radiocheck transparently
 	{
 		CRect rc = pdis->rcItem;
@@ -1700,8 +1627,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
+	inline void CFrame::DrawMenuItemIcon(LPDRAWITEMSTRUCT pdis)
 	// Called by DrawMenuItem to draw icons in popup menus
 	{
 		if ( 0 == m_imlMenu.GetHandle() )
@@ -1736,8 +1662,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::DrawMenuItemText(LPDRAWITEMSTRUCT pdis)
+	inline void CFrame::DrawMenuItemText(LPDRAWITEMSTRUCT pdis)
 	// Called by DrawMenuItem to render the text for popup menus.
 	{
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
@@ -1787,8 +1712,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::DrawReBarBkgnd(CDC& dc, CReBar& ReBar)
+	inline BOOL CFrame::DrawReBarBkgnd(CDC& dc, CReBar& ReBar)
 	// Draws the ReBar's background when ReBar themes are enabled.
 	// Returns TRUE when the default background drawing is suppressed.
 	{
@@ -1844,7 +1768,7 @@ namespace Win32xx
 							ReBar.GetBandInfo(nBand, rbbi);
 							CRect rcChild;
 							::GetWindowRect(rbbi.hwndChild, &rcChild);
-							T::ScreenToClient(rcChild);
+							ScreenToClient(rcChild);
 
 							// Determine our drawing rectangle
 							int StartPad = IsXPThemed()? 2: 0;							CRect rcDraw = rcBand;
@@ -1931,8 +1855,7 @@ namespace Win32xx
 		return IsDrawn;
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::DrawStatusBarBkgnd(CDC& dc, CStatusBar& StatusBar)
+	inline BOOL CFrame::DrawStatusBarBkgnd(CDC& dc, CStatusBar& StatusBar)
 	// Draws the StatusBar's background when StatusBar themes are enabled.
 	// Returns TRUE when the default background drawing is suppressed.
 	{
@@ -1953,13 +1876,12 @@ namespace Win32xx
 		return IsDrawn;
 	}
 
-	template <class T>
-	inline CRect CFrameT<T>::ExcludeChildRect(CRect& rcClient, HWND hChild) const
+	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, HWND hChild) const
 	// Calculates the remaining client rect when a child window is excluded.
 	// Note: Assumes the child window touches 3 of the client rect's borders
 	//  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar())
 	{
-		T::ClientToScreen(rcClient);
+		ClientToScreen(rcClient);
 
 		CRect rcChildWindow;
 		::GetWindowRect(hChild, &rcChildWindow);
@@ -1979,13 +1901,12 @@ namespace Win32xx
 				rcClient.right -= rcChildWindow.Width();
 		}
 
-		T::ScreenToClient(rcClient);
+		ScreenToClient(rcClient);
 
 		return rcClient;
 	}
 
-	template <class T>
-	inline int CFrameT<T>::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
+	inline int CFrame::GetMenuItemPos(HMENU hMenu, LPCTSTR szItem)
 	// Returns the position of the menu item, given it's name
 	{
 		int nMenuItemCount = ::GetMenuItemCount(hMenu);
@@ -2031,8 +1952,7 @@ namespace Win32xx
 		return -1;
 	}
 
-	template <class T>
-	inline CString CFrameT<T>::GetMRUEntry(UINT nIndex)
+	inline CString CFrame::GetMRUEntry(UINT nIndex)
 	// Returns a MRU entry given its index.
 	{
 		CString strPathName;
@@ -2046,8 +1966,7 @@ namespace Win32xx
 		return strPathName;
 	}
 
-	template <class T>
-	inline CSize CFrameT<T>::GetTBImageSize(CBitmap* pbm)
+	inline CSize CFrame::GetTBImageSize(CBitmap* pbm)
 	// Returns the size of a bitmap image
 	{
 		assert(pbm);
@@ -2059,11 +1978,10 @@ namespace Win32xx
 		return CSize(cx, cy);
 	}
 
-	template <class T>
-	inline CRect CFrameT<T>::GetViewRect() const
+	inline CRect CFrame::GetViewRect() const
 	// Returns the dimensions of the view window.
 	{
-		CRect rcClient = T::GetClientRect();
+		CRect rcClient = GetClientRect();
 
 		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 			rcClient = ExcludeChildRect(rcClient, GetStatusBar());
@@ -2077,8 +1995,7 @@ namespace Win32xx
 		return rcClient;
 	}
 
-	template <class T>
-	inline CString CFrameT<T>::GetThemeName() const
+	inline CString CFrame::GetThemeName() const
 	// Returns the XP theme name
 	{
 		HMODULE hMod = ::LoadLibrary(_T("uxtheme.dll"));
@@ -2097,8 +2014,7 @@ namespace Win32xx
 		return CString(ThemeName);
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
+	inline BOOL CFrame::LoadRegistryMRUSettings(UINT nMaxMRU /*= 0*/)
 	// Load the MRU list from the registry
 	{
 		assert(!m_strKeyName.IsEmpty()); // KeyName must be set before calling LoadRegistryMRUSettings
@@ -2131,7 +2047,7 @@ namespace Win32xx
 					else
 					{
 						PathName.ReleaseBuffer();
-						TRACE(_T("CFrameT::LoadRegistryMRUSettings: RegQueryValueEx failed\n"));
+						TRACE(_T("CFrame::LoadRegistryMRUSettings: RegQueryValueEx failed\n"));
 					}
 				}
 			}
@@ -2144,8 +2060,7 @@ namespace Win32xx
 		return bRet;
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::LoadRegistrySettings(LPCTSTR szKeyName)
+	inline BOOL CFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	// Loads various frame settings from the registry
 	{
 		assert (NULL != szKeyName);
@@ -2204,8 +2119,7 @@ namespace Win32xx
 		return bRet;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::MeasureMenuItem(MEASUREITEMSTRUCT *pmis)
+	inline void CFrame::MeasureMenuItem(MEASUREITEMSTRUCT *pmis)
 	// Determines the size of the popup menus
 	{
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pmis->itemData);
@@ -2218,8 +2132,7 @@ namespace Win32xx
 		pmis->itemHeight = size.cy;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the frame is activated (WM_ACTIVATE received)
 	{
 		// Perform default processing first
@@ -2228,8 +2141,8 @@ namespace Win32xx
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
 			// Save the hwnd of the window which currently has focus
-			// (this must be CFrameT window itself or a child window
-			if (!T::IsIconic()) m_hOldFocus = ::GetFocus();
+			// (this must be CFrame window itself or a child window
+			if (!IsIconic()) m_hOldFocus = ::GetFocus();
 		}
 		else
 		{
@@ -2238,41 +2151,39 @@ namespace Win32xx
 		}
 
 		// Update DockClient captions
-		T::PostMessage(UWM_DOCKACTIVATE);
+		PostMessage(UWM_DOCKACTIVATE);
 
 		// Also update DockClient captions if the view is a docker
 	//	if (dynamic_cast<CDocker*>(&GetView()))
-		if ( T::GetView().SendMessage(UWM_ISDOCKER) )
-			T::GetView().PostMessage(UWM_DOCKACTIVATE);
+		if ( GetView().SendMessage(UWM_ISDOCKER) )
+			GetView().PostMessage(UWM_DOCKACTIVATE);
 
 		return 0L;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::OnClose()
+	inline void CFrame::OnClose()
 	// Called in response to a WM_CLOSE message for the frame.
 	{
 		SaveRegistrySettings();
-		T::ShowWindow(SW_HIDE);
-		T::Destroy();
+		ShowWindow(SW_HIDE);
+		Destroy();
 	}
 
-	template <class T>
-	inline int CFrameT<T>::OnCreate(LPCREATESTRUCT pcs)
+	inline int CFrame::OnCreate(LPCREATESTRUCT pcs)
 	// This is called when the frame window is being created.
 	// Override this in CMainFrame if you wish to modify what happens here
 	{
 		UNREFERENCED_PARAMETER(pcs);
 
 		// Set the icon
-		T::SetIconLarge(IDW_MAIN);
-		T::SetIconSmall(IDW_MAIN);
+		SetIconLarge(IDW_MAIN);
+		SetIconSmall(IDW_MAIN);
 
 		// Set the keyboard accelerators
 		SetAccelerators(IDW_MAIN);
 
 		// Set the Caption
-		T::SetWindowText(LoadString(IDW_MAIN));
+		SetWindowText(LoadString(IDW_MAIN));
 
 		// Set the theme for the frame elements
 		SetTheme();
@@ -2316,16 +2227,13 @@ namespace Win32xx
 			SetStatusIndicators();
 
 		// Create the view window
-		assert(&T::GetView());			// Use SetView in CMainFrame's constructor to set the view window
-	//	GetDockClient().Create(*this);
-	//	if (GetView() != GetDockClient())
-	//		GetView().Create(GetDockClient());
-
-		// Create the view window
-		T::OnCreate(pcs);
+		assert(&GetView());			// Use SetView in CMainFrame's constructor to set the view window
+		GetDockClient().Create(*this);
+		if (GetView() != GetDockClient())
+			GetView().Create(GetDockClient());
 
 		// Adjust fonts to match the desktop theme
-		T::SendMessage(WM_SYSCOLORCHANGE);
+		SendMessage(WM_SYSCOLORCHANGE);
 
 		// Reposition the child windows
 		RecalcLayout();
@@ -2333,8 +2241,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnCustomDraw(LPNMHDR pNMHDR)
+	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)
 	// Handles CustomDraw notification from WM_NOTIFY.
 	{
 	//	CWnd* pWnd = GetCWndPtr(pNMHDR->hwndFrom);
@@ -2350,24 +2257,22 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::OnDestroy()
+	inline void CFrame::OnDestroy()
 	// Called when the frame is about to be destroyed (WM_DESTROY received)
 	{
-		T::SetMenu(NULL);
+		SetMenu(NULL);
 
-		T::OnDestroy();
+		CDocker::OnDestroy();
 		GetMenuBar().Destroy();
 		GetToolBar().Destroy();
 		GetReBar().Destroy();
 		GetStatusBar().Destroy();
-		T::GetView().Destroy();
+		GetView().Destroy();
 
 		::PostQuitMessage(0);	// Terminates the application
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
@@ -2380,8 +2285,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnExitMenuLoop(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnExitMenuLoop(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the menu's modal loop has ended (WM_EXITMENULOOP received)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -2407,8 +2311,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::OnHelp()
+	inline BOOL CFrame::OnHelp()
 	// Called to display help (WM_HELP received or selected via menu)
 	{
 		// Ensure only one dialog displayed even for multiple hits of the F1 button
@@ -2417,7 +2320,7 @@ namespace Win32xx
 			// Store the window handle that currently has keyboard focus
 			HWND hPrevFocus = ::GetFocus();
 			if (hPrevFocus == GetMenuBar().GetHwnd())
-				hPrevFocus = T::GetHwnd();
+				hPrevFocus = GetHwnd();
 
 			m_AboutDialog.DoModal(*this);
 
@@ -2427,8 +2330,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the menu's modal loop begins (WM_INITMENUPOPUP received)
 	{
 		// The system menu shouldn't be owner drawn
@@ -2453,7 +2355,7 @@ namespace Win32xx
 
 			// Send message for menu updates
 			UINT menuItem = Menu.GetMenuItemID(i);
-			T::SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0L);
+			SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0L);
 
 			// Specify owner-draw for the menu item type
 			if (Menu.GetMenuItemInfo(i, &mii, TRUE))
@@ -2473,8 +2375,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnMeasureItem(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMeasureItem(UINT, WPARAM wParam, LPARAM lParam)
 	// Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
 	//  values can be assigned with the menu item's dimensions.
 	{
@@ -2493,8 +2394,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when a menu is active, and a key is pressed other than an accelerator.
 	{
 		if ((IsMenuBarUsed()) && (LOWORD(wParam)!= VK_SPACE))
@@ -2504,11 +2404,10 @@ namespace Win32xx
 			return -1L;
 		}
 
-		return T::FinalWindowProc(WM_MENUCHAR, wParam, lParam);
+		return FinalWindowProc(WM_MENUCHAR, wParam, lParam);
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnMenuSelect(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnMenuSelect(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when a menu item is selected.
 	{
 		// Set the StatusBar text when we hover over a menu
@@ -2518,7 +2417,7 @@ namespace Win32xx
 			int nID = LOWORD (wParam);
 			CMenu Menu((HMENU) lParam);
 
-			if ((Menu != T::GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
+			if ((Menu != GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				GetStatusBar().SetWindowText(LoadString(nID));
 			else
 				GetStatusBar().SetWindowText(m_strStatusText);
@@ -2528,8 +2427,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::OnMenuUpdate(UINT nID)
+	inline void CFrame::OnMenuUpdate(UINT nID)
 	{
 		// Update the check buttons before displaying the menu
 		switch(nID)
@@ -2550,8 +2448,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnNotify(WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	// Called when a notification from a child window (WM_NOTIFY) is received.
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -2568,11 +2465,10 @@ namespace Win32xx
 		case UWN_UNDOCKED:		return OnUndocked();
 		}
 
-		return T::OnNotify(wParam, lParam);
+		return CDocker::OnNotify(wParam, lParam);
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnRBNHeightChange(LPNMHDR pNMHDR)
+	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
 	// Called when the rebar's height changes
 	{
 		UNREFERENCED_PARAMETER(pNMHDR);
@@ -2582,8 +2478,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnRBNLayoutChanged(LPNMHDR pNMHDR)
+	inline LRESULT CFrame::OnRBNLayoutChanged(LPNMHDR pNMHDR)
 	// Notification of rebar layout change.
 	{
 		UNREFERENCED_PARAMETER(pNMHDR);
@@ -2594,8 +2489,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnRBNMinMax(LPNMHDR pNMHDR)
+	inline LRESULT CFrame::OnRBNMinMax(LPNMHDR pNMHDR)
 	// Notification of a rebar band minimized or maximized
 	{
 		UNREFERENCED_PARAMETER(pNMHDR);
@@ -2606,12 +2500,11 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnTBNDropDown(LPNMTOOLBAR pNMTB)
+	inline LRESULT CFrame::OnTBNDropDown(LPNMTOOLBAR pNMTB)
 	// Press of Dropdown botton on ToolBar
 	{
 		int iItem = pNMTB->iItem;
-		CToolBar* pTB = static_cast<CToolBar*>(T::GetCWndPtr(pNMTB->hdr.hwndFrom));
+		CToolBar* pTB = static_cast<CToolBar*>(GetCWndPtr(pNMTB->hdr.hwndFrom));
 
 		if (pTB)
 		{
@@ -2622,8 +2515,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI)
+	inline LRESULT CFrame::OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI)
 	// Tool tip notification from the toolbar
 	{
 		// Find the ToolBar that generated the tooltip
@@ -2632,7 +2524,7 @@ namespace Win32xx
 	//	CToolBar* pToolBar = dynamic_cast<CToolBar*> (pWnd);
 		CToolBar* pToolBar = NULL;
 		if ( ::SendMessage(hWnd, UWM_ISTOOLBAR, 0, 0) )
-			pToolBar = static_cast<CToolBar*> (T::GetCWndPtr(hWnd));
+			pToolBar = static_cast<CToolBar*> (GetCWndPtr(hWnd));
 
 		// Set the tooltip's text from the ToolBar button's CommandID
 		if (pToolBar)
@@ -2655,16 +2547,14 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnUndocked()
+	inline LRESULT CFrame::OnUndocked()
 	// Notification of undocked from CDocker received via OnNotify
 	{
 		m_hOldFocus = 0;
 		return 0;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2673,8 +2563,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnSize(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSize(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2683,8 +2572,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2732,17 +2620,16 @@ namespace Win32xx
 
 		// Reposition and redraw everything
 		RecalcLayout();
-		T::RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
-		if (T::GetView().IsWindow())
-			T::GetView().PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
+		if (GetView().IsWindow())
+			GetView().PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
 
 		return 0L;
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenuBarUsed())
 		{
@@ -2754,27 +2641,24 @@ namespace Win32xx
 			m_hOldFocus = ::GetFocus();
 
 		// Pass remaining system commands on for default processing
-		return T::FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
+		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::OnViewStatusBar()
+	inline BOOL CFrame::OnViewStatusBar()
 	{
 		BOOL Show = !(GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible());
 		ShowStatusBar(Show);
 		return TRUE;
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::OnViewToolBar()
+	inline BOOL CFrame::OnViewToolBar()
 	{
 		BOOL Show = m_UseToolBar && !GetToolBar().IsWindowVisible();
 		ShowToolBar(Show);
 		return TRUE;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::PreCreate(CREATESTRUCT& cs)
+	inline void CFrame::PreCreate(CREATESTRUCT& cs)
 	// Sets frame window creation parameters prior to the frame window's creation
 	{
 		// Set the frame window styles
@@ -2795,16 +2679,14 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::PreRegisterClass(WNDCLASS &wc)
+	inline void CFrame::PreRegisterClass(WNDCLASS &wc)
 	// Set the frame's class parameters prior to the frame window's creation
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Win32++ Frame");
 	}
 
-	template <class T>
-	inline void CFrameT<T>::RecalcLayout()
+	inline void CFrame::RecalcLayout()
 	// Repositions the frame's child windows
 	{
 		// Resize the status bar
@@ -2828,8 +2710,7 @@ namespace Win32xx
 			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
-	//	RecalcDockLayout();
-		T::RecalcLayout();
+		RecalcDockLayout();
 
 		// Adjust rebar bands
 		if (IsReBarUsed())
@@ -2842,8 +2723,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::RemoveMRUEntry(LPCTSTR szMRUEntry)
+	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	// Removes an entry from the MRU list
 	{
 		std::vector<CString>::iterator it;
@@ -2859,8 +2739,7 @@ namespace Win32xx
 		UpdateMRUMenu();
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::SaveRegistryMRUSettings()
+	inline BOOL CFrame::SaveRegistryMRUSettings()
 	{
 		// Store the MRU entries in the registry
 		if (m_nMaxMRU > 0)
@@ -2920,8 +2799,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	template <class T>
-	inline BOOL CFrameT<T>::SaveRegistrySettings()
+	inline BOOL CFrame::SaveRegistrySettings()
 	// Saves various frame window settings in the registry
 	{
 		if (!m_strKeyName.IsEmpty())
@@ -2941,7 +2819,7 @@ namespace Win32xx
 				ZeroMemory(&Wndpl, sizeof(WINDOWPLACEMENT));
 				Wndpl.length = sizeof(WINDOWPLACEMENT);
 
-				if (T::GetWindowPlacement(Wndpl))
+				if (GetWindowPlacement(Wndpl))
 				{
 					// Get the Frame's window position
 					CRect rc = Wndpl.rcNormalPosition;
@@ -2996,8 +2874,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetAccelerators(UINT ID_ACCEL)
+	inline void CFrame::SetAccelerators(UINT ID_ACCEL)
 	// Sets the accelerator table for the application for this window
 	{
 		m_hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
@@ -3005,8 +2882,7 @@ namespace Win32xx
 			GetApp().SetAccelerators(m_hAccel, this);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetFrameMenu(UINT ID_MENU)
+	inline void CFrame::SetFrameMenu(UINT ID_MENU)
 	// Sets the frame's menu from a Resource ID.
 	// A resource ID of 0 removes the menu from the frame.
 	{
@@ -3021,8 +2897,7 @@ namespace Win32xx
 		SetFrameMenu(hMenu);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetFrameMenu(HMENU hMenu)
+	inline void CFrame::SetFrameMenu(HMENU hMenu)
 	// Sets the frame's menu.
 	{
 		m_Menu.Attach(hMenu);
@@ -3035,13 +2910,12 @@ namespace Win32xx
 		}
 		else
 		{
-			T::SetMenu(m_Menu);
-			T::DrawMenuBar();
+			SetMenu(m_Menu);
+			DrawMenuBar();
 		}
 	}
 
-	template <class T>
-	inline UINT CFrameT<T>::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
+	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
 	// Sets the menu icons. Any previous menu icons are removed.
 	{
 		// Remove any existing menu icons
@@ -3056,12 +2930,11 @@ namespace Win32xx
 		return AddMenuIcons(MenuData, crMask, ToolBarID, ToolBarDisabledID);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetMenuBarBandSize()
+	inline void CFrame::SetMenuBarBandSize()
 	// Sets the minimum width of the MenuBar band to the width of the rebar
 	// This prevents other bands from moving to this MenuBar's row.
 	{
-		CRect rcClient = T::GetClientRect();
+		CRect rcClient = GetClientRect();
 		CReBar& RB = GetReBar();
 		int nBand = RB.GetBand(GetMenuBar());
 		if (nBand >= 0)
@@ -3086,8 +2959,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetMenuTheme(MenuTheme& MBT)
+	inline void CFrame::SetMenuTheme(MenuTheme& MBT)
 	// Sets the theme colors for the MenuBar and the popup Menu items
 	// Note: If Aero Themes are supported, they are used for popup menu items instead
 	{
@@ -3097,22 +2969,19 @@ namespace Win32xx
 			GetMenuBar().Invalidate();
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetReBarTheme(ReBarTheme& RBT)
+	inline void CFrame::SetReBarTheme(ReBarTheme& RBT)
 	// Stores the rebar's theme colors
 	{
 		m_RBTheme = RBT;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetStatusBarTheme(StatusBarTheme& SBT)
+	inline void CFrame::SetStatusBarTheme(StatusBarTheme& SBT)
 	// Stores the statusbar's theme colors
 	{
 		m_SBTheme = SBT;
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetStatusIndicators()
+	inline void CFrame::SetStatusIndicators()
 	// Creates 4 panes in the status bar and displays status and key states.
 	{
 		if (GetStatusBar().IsWindow() && (m_UseIndicatorStatus))
@@ -3133,7 +3002,7 @@ namespace Win32xx
 			csSCRL.cx = MulDiv(csSCRL.cx, dpiX, 96);
 
 			// Get the coordinates of the window's client area.
-			CRect rcClient = T::GetClientRect();
+			CRect rcClient = GetClientRect();
 			int width = MAX(300, rcClient.right);
 
 			// Create 4 panes
@@ -3157,8 +3026,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetStatusText(LPCTSTR szText)
+	inline void CFrame::SetStatusText(LPCTSTR szText)
 	// Stores the status text and displays it in the StatusBar
 	{
 		m_strStatusText = szText;
@@ -3170,8 +3038,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetTheme()
+	inline void CFrame::SetTheme()
 	// Sets the theme colors for the frame's rebar, toolbar and menubar
 	// Note: To modify theme colors, override this function in CMainFrame,
 	//        and make any modifications there.
@@ -3181,8 +3048,8 @@ namespace Win32xx
 		if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
 			m_UseThemes = FALSE;
 
-		BOOL t = TRUE;
-		BOOL f = FALSE;
+		BOOL T = TRUE;
+		BOOL F = FALSE;
 
 		if (m_UseThemes)
 		{
@@ -3218,10 +3085,10 @@ namespace Win32xx
 			{
 			case Win8:
 				{
-					MenuTheme mt = {t, RGB(0, 210, 255), RGB(0, 210, 255), RGB(0, 230, 255), RGB(0, 230, 255), RGB(255, 255, 255)};
-					ReBarTheme rbt = {t, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), f, f, t, t, t, f};
-					StatusBarTheme sbt = {t, RGB(255, 255, 255), RGB(255, 255, 255)};
-					ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(180, 250, 255), RGB(100, 250, 255), RGB(100, 250, 255), RGB(255, 255, 255)};
+					MenuTheme mt = {T, RGB(0, 210, 255), RGB(0, 210, 255), RGB(0, 230, 255), RGB(0, 230, 255), RGB(255, 255, 255)};
+					ReBarTheme rbt = {T, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(255, 255, 255), RGB(255, 255, 255)};
+					ToolBarTheme tbt = {T, RGB(180, 250, 255), RGB(180, 250, 255), RGB(100, 250, 255), RGB(100, 250, 255), RGB(255, 255, 255)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);
@@ -3232,10 +3099,10 @@ namespace Win32xx
 
 			case Win7:	// A pale blue color scheme suitable for Windows 7 and 8
 				{
-					MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
-					ReBarTheme rbt = {t, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), f, f, t, t, t, f};
-					StatusBarTheme sbt = {t, RGB(225, 230, 255), RGB(240, 242, 250)};
-					ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
+					MenuTheme mt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+					ReBarTheme rbt = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(225, 230, 255), RGB(240, 242, 250)};
+					ToolBarTheme tbt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);
@@ -3248,10 +3115,10 @@ namespace Win32xx
 			case XP_Blue:
 				{
 					// Used for XP default (blue) color scheme
-					MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
-					ReBarTheme rbt = {t, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), f, f, t, t, t, f};
-					StatusBarTheme sbt = {t, RGB(150,190,245), RGB(196,215,250)};
-					ToolBarTheme tbt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
+					MenuTheme mt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(220,230,250), RGB(150,190,245), RGB(128, 128, 200)};
+					ReBarTheme rbt = {T, RGB(150,190,245), RGB(196,215,250), RGB(220,230,250), RGB( 70,130,220), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(150,190,245), RGB(196,215,250)};
+					ToolBarTheme tbt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(192, 128, 255)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);
@@ -3263,10 +3130,10 @@ namespace Win32xx
 			case XP_Silver:
 				{
 					// Used for XP Silver color scheme
-					MenuTheme mt = {t, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
-					ReBarTheme rbt = {t, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), f, f, t, t, t, f};
-					StatusBarTheme sbt = {t, RGB(225, 220, 240), RGB(240, 240, 245)};
-					ToolBarTheme tbt = {t, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
+					MenuTheme mt = {T, RGB(196, 215, 250), RGB( 120, 180, 220), RGB(240, 240, 245), RGB(170, 165, 185), RGB(128, 128, 150)};
+					ReBarTheme rbt = {T, RGB(225, 220, 240), RGB(240, 240, 245), RGB(245, 240, 255), RGB(160, 155, 180), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(225, 220, 240), RGB(240, 240, 245)};
+					ToolBarTheme tbt = {T, RGB(192, 210, 238), RGB(192, 210, 238), RGB(152, 181, 226), RGB(152, 181, 226), RGB(49, 106, 197)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);
@@ -3278,10 +3145,10 @@ namespace Win32xx
 			case XP_Olive:
 				{
 					// Used for XP Olive color scheme
-					MenuTheme mt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
-					ReBarTheme rbt = {t, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), f, f, t, t, t, f};
-					StatusBarTheme sbt = {t, RGB(215, 216, 182), RGB(242, 242, 230)};
-					ToolBarTheme tbt = {t, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
+					MenuTheme mt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(249, 255, 227), RGB(178, 191, 145), RGB(128, 128, 128)};
+					ReBarTheme rbt = {T, RGB(215, 216, 182), RGB(242, 242, 230), RGB(249, 255, 227), RGB(178, 191, 145), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(215, 216, 182), RGB(242, 242, 230)};
+					ToolBarTheme tbt = {T, RGB(255, 230, 190), RGB(255, 190, 100), RGB(255, 140, 40), RGB(255, 180, 80), RGB(200, 128, 128)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);
@@ -3292,10 +3159,10 @@ namespace Win32xx
 
 			case Grey:	// A color scheme suitable for 16 bit colors. Suitable for Windows older than XP.
 				{
-					MenuTheme mt = {t, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
-					ReBarTheme rbt = {t, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), f, f, t, t, t, f};
-					StatusBarTheme sbt = {t, RGB(212, 208, 200), RGB(212, 208, 200)};
-					ToolBarTheme tbt = {t, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
+					MenuTheme mt = {T, RGB(182, 189, 210), RGB( 182, 189, 210), RGB(200, 196, 190), RGB(200, 196, 190), RGB(100, 100, 100)};
+					ReBarTheme rbt = {T, RGB(212, 208, 200), RGB(212, 208, 200), RGB(230, 226, 222), RGB(220, 218, 208), F, F, T, T, T, F};
+					StatusBarTheme sbt = {T, RGB(212, 208, 200), RGB(212, 208, 200)};
+					ToolBarTheme tbt = {T, RGB(182, 189, 210), RGB(182, 189, 210), RGB(133, 146, 181), RGB(133, 146, 181), RGB(10, 36, 106)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);
@@ -3316,8 +3183,7 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
+	inline void CFrame::SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	// A Disabled image list is created from ToolBarID if one doesn't already exist.
@@ -3340,8 +3206,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
+	inline void CFrame::SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Disabled Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
@@ -3372,8 +3237,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
+	inline void CFrame::SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Hot Image List for additional Toolbars.
 	// The CImageList provided should be a member of CMainFrame.
 	{
@@ -3403,8 +3267,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
+	inline void CFrame::SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
 	// Assumes the width of the button image = height, minimum width = 16
 	// The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
@@ -3426,8 +3289,7 @@ namespace Win32xx
 		SetTBImageListDis(GetToolBar(), m_ToolBarDisabledImages, ToolBarDisabledID, crMask);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetupToolBar()
+	inline void CFrame::SetupToolBar()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s).
 
@@ -3449,8 +3311,7 @@ namespace Win32xx
 */
 	}
 
-	template <class T>
-	inline void CFrameT<T>::SetToolBarTheme(ToolBarTheme& TBT)
+	inline void CFrame::SetToolBarTheme(ToolBarTheme& TBT)
 	// Stores the tool bar's theme colors
 	{
 		m_TBTheme = TBT;
@@ -3458,8 +3319,7 @@ namespace Win32xx
 			GetToolBar().GetParent().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::ShowMenu(BOOL bShow)
+	inline void CFrame::ShowMenu(BOOL bShow)
 	// Hides or shows the menu
 	{
 		if (bShow)
@@ -3467,14 +3327,14 @@ namespace Win32xx
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), TRUE);
 			else
-				T::SetMenu(m_Menu);
+				SetMenu(m_Menu);
 		}
 		else
 		{
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), FALSE);
 			else
-				T::SetMenu(NULL);
+				SetMenu(NULL);
 		}
 
 		if (GetReBar().IsWindow())
@@ -3487,8 +3347,7 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	template <class T>
-	inline void CFrameT<T>::ShowStatusBar(BOOL bShow)
+	inline void CFrame::ShowStatusBar(BOOL bShow)
 	// Hides or shows the status bar
 	{
 		if (GetStatusBar().IsWindow())
@@ -3505,11 +3364,10 @@ namespace Win32xx
 
 		// Reposition the Windows
 		RecalcLayout();
-		T::RedrawWindow();
+		RedrawWindow();
 	}
 
-	template <class T>
-	inline void CFrameT<T>::ShowToolBar(BOOL bShow)
+	inline void CFrame::ShowToolBar(BOOL bShow)
 	// Hides or shows the tool bar
 	{
 		if (GetToolBar().IsWindow())
@@ -3538,16 +3396,15 @@ namespace Win32xx
 
 		// Reposition the Windows
 		RecalcLayout();
-		T::RedrawWindow();
+		RedrawWindow();
 	}
 
-	template <class T>
-	inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CALLBACK CFrame::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
 	// Called by the keyboard hook to update status information
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
-		CFrameT* pFrame = static_cast<CFrameT*>(pTLSData->pMainWnd);
-	//	assert(dynamic_cast<CFrameT*>(pTLSData->pMainWnd));
+		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
+	//	assert(dynamic_cast<CFrame*>(pTLSData->pMainWnd));
 		assert( pTLSData->pMainWnd );
 		assert( pTLSData->pMainWnd->SendMessage(UWM_ISFRAME) );
 
@@ -3562,8 +3419,7 @@ namespace Win32xx
 		return ::CallNextHookEx(pFrame->m_KbdHook, nCode, wParam, lParam);
 	}
 
-	template <class T>
-	inline void CFrameT<T>::UpdateMenuBarBandSize()
+	inline void CFrame::UpdateMenuBarBandSize()
 	// Update the MenuBar band size
 	{
 		int nBand = GetReBar().GetBand(GetMenuBar());
@@ -3582,8 +3438,7 @@ namespace Win32xx
 		}
 	}
 
-	template <class T>
-	inline void CFrameT<T>::UpdateMRUMenu()
+	inline void CFrame::UpdateMRUMenu()
 	// Updates the menu item information for the Most Recently Used (MRU) list.
 	{
 		if (0 >= m_nMaxMRU) return;
@@ -3657,11 +3512,10 @@ namespace Win32xx
 			}
 		}
 
-		T::DrawMenuBar();
+		DrawMenuBar();
 	}
 
-	template <class T>
-	inline LRESULT CFrameT<T>::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Handle the frame's window messages.
 	{
 		switch (uMsg)
@@ -3679,10 +3533,10 @@ namespace Win32xx
 		case WM_SIZE:			return OnSize(uMsg, wParam, lParam);
 		case WM_SYSCOLORCHANGE:	return OnSysColorChange(uMsg, wParam, lParam);
 		case WM_SYSCOMMAND:		return OnSysCommand(uMsg, wParam, lParam);
-		case WM_WINDOWPOSCHANGED: return T::FinalWindowProc(uMsg, wParam, lParam);
+		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
-		case UWM_GETFRAMEVIEW:		return reinterpret_cast<LRESULT>(T::GetView().GetHwnd());
+		case UWM_GETFRAMEVIEW:		return reinterpret_cast<LRESULT>(GetView().GetHwnd());
 		case UWM_GETMBTHEME:		return reinterpret_cast<LRESULT>(&GetMenuBarTheme());
 		case UWM_GETRBTHEME:		return reinterpret_cast<LRESULT>(&GetReBarTheme());
 		case UWM_GETSBTHEME:		return reinterpret_cast<LRESULT>(&GetStatusBarTheme());
@@ -3693,7 +3547,7 @@ namespace Win32xx
 
 		} // switch uMsg
 
-		return T::WndProcDefault(uMsg, wParam, lParam);
+		return CDocker::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
