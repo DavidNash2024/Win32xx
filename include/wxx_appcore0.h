@@ -404,11 +404,7 @@ namespace Win32xx
 		// Provide these access to CWinApp's private members:
 		friend class CDC;
 		friend class CDialog;
-
-		// Visual Studio 6 doesn't support template friends
-  #if !defined(_MSC_VER) ||  _MSC_VER >= 1500 
-		template <class T> friend class CFrameT;
-  #endif
+		friend class CFrame;
 		friend class CGDIObject;
 		friend class CImageList;
 		friend class CMenu;
@@ -444,12 +440,6 @@ namespace Win32xx
 		HCURSOR SetCursor(HCURSOR hCursor) const;
 		void	SetResourceHandle(HINSTANCE hResource);
 
-		// Visual Studio 6 needs these public
-  #if defined(_MSC_VER) && _MSC_VER < 1500
-		TLSData* GetTlsData() const;
-		TLSData* SetTlsData();
-  #endif
-
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
@@ -457,24 +447,18 @@ namespace Win32xx
 		CDC_Data* GetCDCDataFromMap(HDC hDC);
 		CGDI_Data* GetCGDIDataFromMap(HGDIOBJ hObject);
 		CIml_Data* GetCImlDataFromMap(HIMAGELIST himl);
-		CWnd* GetCWndFromMap(HWND hWnd);	
-		void	SetCallback();
-
-		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
-
   #ifndef _WIN32_WCE
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
   #endif
 
-  #if !defined(_MSC_VER) ||  _MSC_VER >= 1500
-		TLSData* GetTlsData() const;
+		CWnd* GetCWndFromMap(HWND hWnd);		TLSData* GetTlsData() const;
+		void	SetCallback();
 		TLSData* SetTlsData();
-  #endif
+		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
 		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
-
   #ifndef _WIN32_WCE
 		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
   #endif

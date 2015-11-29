@@ -280,7 +280,7 @@ int CMainDockFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	return CDockFrame::OnCreate(pcs);
+	return CFrame::OnCreate(pcs);
 }
 
 BOOL CMainDockFrame::OnHideSingleTab()
@@ -346,7 +346,7 @@ LRESULT CMainDockFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Update the "Window" menu 
 	m_MyTabbedMDI.GetListMenu();
 
-	return CDockFrame::OnInitMenuPopup(uMsg, wParam, lParam);
+	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 }
 
 BOOL CMainDockFrame::OnCloseDockers()
@@ -383,13 +383,13 @@ void CMainDockFrame::OnMenuUpdate(UINT nID)
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 
-	CDockFrame::OnMenuUpdate(nID);
+	CFrame::OnMenuUpdate(nID);
 }
 
 void CMainDockFrame::PreCreate(CREATESTRUCT &cs)
 {
 	// Call the base class function first
-	CDockFrame::PreCreate(cs);
+	CFrame::PreCreate(cs);
 
 	// Hide the window initially by removing the WS_VISIBLE style
 	cs.style &= ~WS_VISIBLE;
@@ -397,7 +397,7 @@ void CMainDockFrame::PreCreate(CREATESTRUCT &cs)
 
 BOOL CMainDockFrame::SaveRegistrySettings()
 {
-	CDockFrame::SaveRegistrySettings();
+	CFrame::SaveRegistrySettings();
 
 	// Save the docker settings
 	SaveDockRegistrySettings(GetRegistryKeyName());
