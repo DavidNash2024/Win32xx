@@ -111,9 +111,13 @@ namespace Win32xx
 		bool 	IsLoading() const;
 		bool 	IsStoring() const;
 		void 	Read(void* lpBuf, UINT size);
+		LPSTR	ReadStringA(LPSTR szString, UINT nMax);
+		LPWSTR	ReadStringW(LPWSTR szString, UINT nMax);
 		LPTSTR	ReadString(LPTSTR szString, UINT nMax);
 		void 	SetObjectSchema(UINT nSchema);
 		void 	Write(const void* lpBuf, UINT size);
+		void	WriteStringA(LPCSTR string);
+		void	WriteStringW(LPCWSTR string);
 		void	WriteString(LPCTSTR string);
 
 		// insertion operations
@@ -130,6 +134,8 @@ namespace Win32xx
 		CArchive& operator<<(char ch);
 		CArchive& operator<<(unsigned u);
 		CArchive& operator<<(bool b);
+		CArchive& operator<<(const CStringA& string);
+		CArchive& operator<<(const CStringW& string);
 		CArchive& operator<<(const CString& s);
 		CArchive& operator<<(const POINT& pt);
 		CArchive& operator<<(const RECT& rc);
@@ -155,6 +161,8 @@ namespace Win32xx
 		CArchive& operator>>(char& ch);
 		CArchive& operator>>(unsigned& u);
 		CArchive& operator>>(bool& b);
+		CArchive& operator>>(CStringA& s);
+		CArchive& operator>>(CStringW& s);
 		CArchive& operator>>(CString& s);
 		CArchive& operator>>(POINT& pt);
 		CArchive& operator>>(RECT& rc);
@@ -456,6 +464,37 @@ namespace Win32xx
 	}
 
 	//============================================================================
+	inline void CArchive::WriteStringA(LPCSTR string)
+	// Write the LPCSTR string into the archive file. 
+	// The string must be null terminated. 
+	// Throw an exception if an error occurs.
+	{
+		UINT nChars = lstrlenA(string);
+		bool IsUnicode = sizeof(CHAR) -1;
+		
+		// Store the Unicode state and number of characters in the archive 
+		*this << IsUnicode;
+		*this << nChars;
+		
+		Write(string, nChars*sizeof(CHAR));
+	}
+
+	inline void CArchive::WriteStringW(LPCWSTR string)
+	// Write the LPCWSTR string into the archive file. 
+	// The string must be null terminated. 
+	// Throw an exception if an error occurs.
+	{
+		UINT nChars = lstrlenW(string);
+		bool IsUnicode = sizeof(WCHAR) -1;
+		
+		// Store the Unicode state and number of characters in the archive 
+		*this << IsUnicode;
+		*this << nChars;
+		
+		Write(string, nChars*sizeof(WCHAR));
+	}
+
+	//============================================================================
 	inline void CArchive::WriteString(LPCTSTR string)
 	// Write the LPCTSTR string into the archive file. 
 	// The string must be null terminated. 
@@ -470,6 +509,41 @@ namespace Win32xx
 		
 		Write(string, nChars*sizeof(TCHAR));
 	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(const CStringA& string)
+	// Write the CStringA string into the archive file.
+	// The CStringA can contain any characters including embedded nulls.
+	// Throw an exception if an error occurs.
+	{
+		UINT nChars = string.GetLength();
+		bool IsUnicode = false;
+		
+		// Store the Unicode state and number of characters in the archive 
+		*this << IsUnicode;
+		*this << nChars;
+
+		Write(string.c_str(), nChars*sizeof(CHAR));
+		return *this;
+	}
+
+	//============================================================================
+	inline CArchive& CArchive::operator<<(const CStringW& string)
+	// Write the CStringW string into the archive file.
+	// The CStringW can contain any characters including embedded nulls.
+	// Throw an exception if an error occurs.
+	{
+		UINT nChars = string.GetLength();
+		bool IsUnicode = true;
+		
+		// Store the Unicode state and number of characters in the archive 
+		*this << IsUnicode;
+		*this << nChars;
+
+		Write(string.c_str(), nChars*sizeof(WCHAR));
+		return *this;
+	}
+
 
 	//============================================================================
 	inline CArchive& CArchive::operator<<(const CString& string)
@@ -686,6 +760,38 @@ namespace Win32xx
 	}
 
 	//============================================================================
+	inline LPSTR CArchive::ReadStringA(LPSTR szString, UINT nMax)
+	// The size (in characters) of szString array must be nMax or greater.
+	// Reads at most nMax-1 TCHAR characters from the archive and store it
+	// in szString. Strings read from the archive are converted from ANSI
+	// or Unicode to TCHAR if required, and are NULL terminated.
+	// Throw an exception if unable to do so correctly. 
+	{
+		assert (nMax > 0);
+
+		CStringA str;
+		*this >> str;
+		lstrcpynA(szString, str.c_str(), nMax);
+		return szString;
+	}
+
+	//============================================================================
+	inline LPWSTR CArchive::ReadStringW(LPWSTR szString, UINT nMax)
+	// The size (in characters) of szString array must be nMax or greater.
+	// Reads at most nMax-1 TCHAR characters from the archive and store it
+	// in szString. Strings read from the archive are converted from ANSI
+	// or Unicode to TCHAR if required, and are NULL terminated.
+	// Throw an exception if unable to do so correctly. 
+	{
+		assert (nMax > 0);
+
+		CStringW str;
+		*this >> str;
+		lstrcpynW(szString, str.c_str(), nMax);
+		return szString;
+	}
+
+	//============================================================================
 	inline LPTSTR CArchive::ReadString(LPTSTR szString, UINT nMax)
 	// The size (in characters) of szString array must be nMax or greater.
 	// Reads at most nMax-1 TCHAR characters from the archive and store it
@@ -700,6 +806,58 @@ namespace Win32xx
 		lstrcpyn(szString, str.c_str(), nMax);
 		return szString;
 	}
+
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(CStringA& string)
+	// Read a CString from the archive and  store it in string.  Throw an
+	// exception if unable to do so correctly.
+	{
+		bool IsUnicode;
+		UINT nChars;
+		
+		// Retrieve the Unicode state and number of characters from the archive
+		*this >> IsUnicode;
+		*this >> nChars;
+	
+		if (IsUnicode)	
+			throw CFileException(_T("Unicode characters stored. Not a CStringA"));
+
+		char* buf = new char[nChars];
+		Read(buf, nChars);
+		memcpy(string.GetBuffer(nChars), buf, nChars);
+		string.ReleaseBuffer(nChars);
+		delete[] buf;
+
+		return *this;
+	}
+
+
+	//============================================================================
+	inline CArchive& CArchive::operator>>(CStringW& string)
+	// Read a CStringW from the archive and  store it in string.  Throw an
+	// exception if unable to do so correctly.
+	{
+		bool IsUnicode;
+		UINT nChars;
+		
+		// Retrieve the Unicode state and number of characters from the archive
+		*this >> IsUnicode;
+		*this >> nChars;
+
+		if (!IsUnicode)	
+			throw CFileException(_T("ANSI characters stored. Not a CStringW"));
+	
+		WCHAR* buf = new WCHAR[nChars];
+		Read(buf, nChars*2);	
+		memcpy(string.GetBuffer(nChars), buf, nChars*2);
+		string.ReleaseBuffer(nChars);
+		delete[] buf;
+
+		return *this;
+	}
+
+
 
 	//============================================================================
 	inline CArchive& CArchive::operator>>(CString& string)

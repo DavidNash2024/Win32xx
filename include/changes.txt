@@ -19,10 +19,10 @@ New Features and Enhancements
   window support DDX and DDV.
   
   To use CDataExchange, perform the following steps:
-  - Override DoDataExchange and specify the appropriate DDX and DDV functions.
-  - Call UpdateData(FALSE) to initialize the controls and assign their values.
-    This is typically done in the dialog's OnInitDialog function.
-  - Call UpdateData(TRUE) to validate and retrieve the control data.	
+   - Override DoDataExchange and specify the appropriate DDX and DDV functions.
+   - Call UpdateData(FALSE) to initialize the controls and assign their values.
+     This is typically done in the dialog's OnInitDialog function.
+   - Call UpdateData(TRUE) to validate and retrieve the control data.	
 
   Refer to the DDXDemo sample for a demonstration of how to use CDataExchange
 
@@ -47,30 +47,30 @@ New Features and Enhancements
    - Updated CWinException        ( inherits from CException )
 
    CFileExceptions are thrown under the following circumstance
-     - CArchive fails to create the archive file
-	 - CArchive fails to read from or write to the archive file
-	 - CFile fails to create the file
-	 - CFile fails to read from or write to the file.
+    - CArchive fails to create the archive file
+	- CArchive fails to read from or write to the archive file
+	- CFile fails to create the file
+	- CFile fails to read from or write to the file.
    
    CNotSupportedExceptions are thrown under the following circumstances:
-     - An attempt is made to run more than one instance of CWinApp.
-	 - CWinApp is prevented from starting the framework.
+    - An attempt is made to run more than one instance of CWinApp.
+	- CWinApp is prevented from starting the framework.
    
    CWinExceptions are now thrown under the following circumstances:
-   - A failure to create a thread
-   - A failure to create a window, including:
-     - generic windows
-	 - dialogs
-	 - property sheets
-	 - task dialogs
-   - A failure to create a GDI resource, namely:
-     - device contexts
-     - bitmaps
-     - brushes
-     - fonts
-     - palettes
-     - pens
-     - regions
+    * A failure to create a thread
+    * A failure to create a window, including:
+      - generic windows
+	  - dialogs
+	  - property sheets
+	  - task dialogs
+    * A failure to create a GDI resource, namely:
+      - device contexts
+      - bitmaps
+      - brushes
+      - fonts
+      - palettes
+      - pens
+      - regions
 	 
    CUserExceptions are thrown under the following circumstances:
      - A CDataExchange DDX or DDV function fails validation
@@ -82,7 +82,19 @@ New Features and Enhancements
 	- CException is an abstract class. CExceptions can't be thrown.
     - A failure to create a GDI resources occurs when too many GDI resources
       are allocated to the process. A GDI resource leak can cause this.
-
+	  
+* Updated CArchive
+   - Added the ability to archive char and wchar character arrays. The abilty
+     to archive TCHAR character is retained
+   - Added the capacity to archive CStringA and CStringW . The ability to
+     archive CString is retained.	  
+	  
+* Updated CWnd
+   - Added OnPaint virtual function. OnPaint calls OnDraw for generic windows,
+     but not for window controls. Users can override OnPaint to draw to window
+     controls as an alternative to custom draw or owner draw.	 
+   - Added DoDataExchange and UpdatedData to support CDataExchange. 	
+  
 * Updated CCriticalSection
   All critical sections are now guaranteed to be released when the
   CCriticalSection's destructor is called.
@@ -117,15 +129,23 @@ Added CWnd::DoDataExchange
 Added CWnd::UpdateData
 Added DDXDemo Sample
 
+Added CArchive::ReadStringA
+Added CArchive::ReadStringW
+Added CArchive::WriteStringA
+Added CArchive::WriteStringW
+Added CArchive::operator<<(const CStringA& string);
+Added CArchive::operator<<(const CStringW& string);
+Added CArchive::operator>>(CStringA& s);
+Added CArchive::operator>>(CStringW& s);
+
 Modified    CDC::CreateCompatibleDC returns HDC
 Modified    CDC::CreateDC 			returns HDC
 Modified    CDC::CreateIC 			returns HDC
-Modified	CWnd::OnCreate
-Modified	CWnd::PreTranslateMessage
 Modified	CThread::PreTranslateMessage
-Modified	CWnd::IsDialogMessage
 Modified	CToolTip::RelayEvent
-
+Modified	CWnd::OnCreate
+Modified	CWnd::IsDialogMessage
+Modified	CWnd::PreTranslateMessage
 
 
 Version 8.0.1

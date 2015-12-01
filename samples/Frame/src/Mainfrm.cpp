@@ -74,6 +74,35 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 
+	CStringA strA;
+	CStringW strW;
+	CString str;
+
+	CHAR  szA[50];
+	WCHAR szW[50];
+	TCHAR szT[50];
+
+	{
+		CArchive ar(_T("TestFile"), CArchive::store);
+		ar << CStringA("Some text in a CStringA");
+		ar << CStringW(_T("Some text in a CStringW"));
+		ar << CString("Some text in a CString"); 
+		ar.WriteStringA("A char character array");
+		ar.WriteStringW(L"A WCHAR character array");
+		ar.WriteString(_T("A TCHAR character array"));
+	}
+
+	{
+		CArchive ar(_T("TestFile"), CArchive::load);
+		ar >> strA;
+		ar >> strW;
+		ar >> str;
+		ar.ReadStringA(szA, 50);
+		ar.ReadStringW(szW, 50);
+		ar.ReadString(szT, 50);
+	}
+
+
 	TRACE("Frame created\n");
 }
 
@@ -83,7 +112,8 @@ BOOL CMainFrame::OnFileOpen()
 	CFile File;
 	CString str = File.OpenFileDialog(0, 0, 0, 0);
 
-	GetDoc().FileLoad(str);
+	if (!str.IsEmpty())
+		GetDoc().FileLoad(str);
 
 	return TRUE;
 }
@@ -93,7 +123,8 @@ BOOL CMainFrame::OnFileSave()
 	CFile File;
 	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
 
-	GetDoc().FileStore(str);
+	if (!str.IsEmpty())
+		GetDoc().FileStore(str);
 
 	return TRUE;
 }
