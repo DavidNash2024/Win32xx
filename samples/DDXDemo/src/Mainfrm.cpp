@@ -226,7 +226,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)  				/*
 
 /*============================================================================*/
 	int CMainFrame::
-OnCreate(LPCREATESTRUCT pcs)						/*
+OnCreate(CREATESTRUCT& cs)  // dn						/*
 
 	Define the way the frame is created. Overriding CFrame::Oncreate is
 	optional.
@@ -241,7 +241,7 @@ OnCreate(LPCREATESTRUCT pcs)						/*
 	// SetUseToolBar(FALSE);	 // Don't use a ToolBar
 
 	// call the base class function
-	int rtn = CFrame::OnCreate(pcs);
+	int rtn = CFrame::OnCreate(cs);  // dn
 	
 	if (IsReBarSupported())
 	{

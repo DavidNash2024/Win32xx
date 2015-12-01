@@ -103,6 +103,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)				/*
 			  // Run the application
 			rtn = thisApp.Run();
 		}
+		
 		catch(const CWinException e)
 		{
 			CString msg,
@@ -112,12 +113,19 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)				/*
 			::MessageBox(NULL, msg.c_str(), _T("Exception"),
 			    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 		}
-		catch(LPCTSTR s)
+	//	catch(LPCTSTR s)  // dn
+	//	{
+	//		CString msg;
+	//		msg.Format(_T("%s\nWinMain Good Bye..."),  s);
+	//		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+	//		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+	//	}	
+		catch (const CException &e)	// catch all other CException events  // dn
 		{
-			CString msg;
-			msg.Format(_T("%s\nWinMain Good Bye..."),  s);
-			::MessageBox(NULL, msg.c_str(), _T("Exception"),
-			    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+			// Display the exception and quit
+			MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONERROR);
+
+			return -1;
 		}
 		catch(...)      // catch all other exception events
 		{

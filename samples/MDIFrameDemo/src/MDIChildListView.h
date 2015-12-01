@@ -31,7 +31,7 @@ public:
 	virtual ~CMDIChildListView();
 
 protected:
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
 	CViewList m_ListView;

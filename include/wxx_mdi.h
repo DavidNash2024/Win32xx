@@ -102,7 +102,7 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual void OnClose();
-		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
@@ -178,7 +178,7 @@ namespace Win32xx
 		virtual BOOL    OnViewToolBar();
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
-		virtual BOOL    PreTranslateMessage(MSG* pMsg);
+		virtual BOOL    PreTranslateMessage(MSG& Msg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -444,15 +444,15 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline BOOL CMDIFrame::PreTranslateMessage(MSG* pMsg)
+	inline BOOL CMDIFrame::PreTranslateMessage(MSG& Msg)
 	{
-		if (WM_KEYFIRST <= pMsg->message && pMsg->message <= WM_KEYLAST)
+		if (WM_KEYFIRST <= Msg.message && Msg.message <= WM_KEYLAST)
 		{
-			if (TranslateMDISysAccel(GetView().GetHwnd(), pMsg))
+			if (TranslateMDISysAccel(GetView().GetHwnd(), &Msg))
 				return TRUE;
 		}
 
-		return CFrame::PreTranslateMessage(pMsg);
+		return CFrame::PreTranslateMessage(Msg);
 	}
 
 	inline void CMDIFrame::RecalcLayout()
@@ -750,9 +750,9 @@ namespace Win32xx
 		MDIDestroy();
 	}
 
-	inline int CMDIChild::OnCreate(LPCREATESTRUCT pcs)
+	inline int CMDIChild::OnCreate(CREATESTRUCT& cs)
 	{
-		UNREFERENCED_PARAMETER(pcs);
+		UNREFERENCED_PARAMETER(cs);
 
 		// Create the view window
 		assert( &GetView() );			// Use SetView in CMDIChild's constructor to set the view window

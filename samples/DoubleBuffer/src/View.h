@@ -16,7 +16,7 @@ public:
 	CBitmap CreateMaskBitmap(CBitmap& m_Blue, COLORREF clrTransparent);
 
 protected:
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnDraw(CDC& dc);
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);

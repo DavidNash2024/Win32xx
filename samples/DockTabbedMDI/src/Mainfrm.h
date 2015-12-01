@@ -58,7 +58,7 @@ public:
 protected:
 	virtual CDocker* NewDockerFromID(int idDock);
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int     OnCreate(LPCREATESTRUCT pcs);
+	virtual int     OnCreate(CREATESTRUCT& cs);
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    OnMenuUpdate(UINT nID);

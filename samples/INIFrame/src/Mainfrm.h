@@ -28,7 +28,7 @@ public:
 
 protected:
 	virtual BOOL	OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int		OnCreate(LPCREATESTRUCT pcs);
+	virtual int		OnCreate(CREATESTRUCT& cs);
 	virtual void	OnClose();
 	virtual void	OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

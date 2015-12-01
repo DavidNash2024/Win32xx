@@ -81,15 +81,13 @@ namespace Win32xx
 
 	struct ArchiveObject{UINT size; LPVOID p;};
 
-	// Unspecified object type containing the size of, a pointer p to, and  a
-	// message about a memory block that is either to be written into (<<)  or
+	// Unspecified object type containing the pointer p to a 
+	// memory block and its size that is either to be written into (<<)  or
 	// retrieved from (>>) an archive file. This struct is used in
-	// serialization and  deserialization of data, particularly those that
+	// serialization and deserialization of data, particularly those that
 	// are not of a type for which available << and >> operators are defined.
-	// The size and  pointer describe the extent and  location of the object
-	// to be serialized, and  the message msg, which may be NULL, is inserted
-	// into the exception message that is thrown when a failure to serialize
-	// the object is encountered.  A typical usage would be of the form
+	// The size and pointer describe the extent and  location of the object
+	// to be serialized. A typical usage would be of the form:
 
 	//    ArchiveObject ao = {sizeof(A), &A};
 	//	  ar << ao; or ar >> ao;
@@ -238,19 +236,22 @@ namespace Win32xx
 	inline CArchive::~CArchive()
 	// Destroy CArchive object.
 	{
-		// if the file is open
-		if (m_pFile->GetHandle())
+		if (m_pFile)
 		{
-			// flush if in write mode
-			if (IsStoring())
-				m_pFile->Flush();
+			// if the file is open
+			if (m_pFile->GetHandle())
+			{
+				// flush if in write mode
+				if (IsStoring())
+					m_pFile->Flush();
 
-			m_pFile->Close();
-		}
+				m_pFile->Close();
+			}
 
-		if (m_IsFileManaged)
-		{
-			delete m_pFile;
+			if (m_IsFileManaged)
+			{
+				delete m_pFile;
+			}
 		}
 	}
 
@@ -260,6 +261,7 @@ namespace Win32xx
 	// Throw an exception if not successful.
 	{
 		// read, simply and  in binary mode, the size into the lpBuf
+		assert(m_pFile);
 		m_pFile->Read(lpBuf, size);
 	}
 
@@ -269,6 +271,7 @@ namespace Win32xx
 	// Throw an exception if unsuccessful.
 	{
 		// write size characters in lpBuf to the  file
+		assert(m_pFile);
 		m_pFile->Write(lpBuf, size);
 	}
 
@@ -782,11 +785,13 @@ namespace Win32xx
 	// the location pointed to by ob.p.  Throw an exception if unable to
 	// do so correctly.
 	{
+		assert(m_pFile);
 		UINT size;
 		Read(&size, sizeof(size));
 		if (size != ao.size)
 		{
-			throw CWinException(_T("Unable to read object from archive"));
+		//	throw CWinException(_T("Unable to read object from archive"));
+			throw CFileException(m_pFile->GetFilePath(), _T("Unable to read object from archive"));
 		}
 
 		Read(ao.p, ao.size);

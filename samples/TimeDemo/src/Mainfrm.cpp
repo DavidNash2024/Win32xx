@@ -421,7 +421,7 @@ OnCommandHelp(WPARAM wParam, LPARAM lParam)				/*
 
 /*============================================================================*/
 	int CMainFrame::
-OnCreate(LPCREATESTRUCT pcs)                                            /*
+OnCreate(CREATESTRUCT& cs)  // dn                                          /*
 
 	This method controls the way the frame is created.
 *-----------------------------------------------------------------------------*/
@@ -434,7 +434,7 @@ OnCreate(LPCREATESTRUCT pcs)                                            /*
 //	    m_bUseToolBar = FALSE;	    // Don't use a toolbar
 
 	  // call the base class function
-	int rtn = CFrame::OnCreate(pcs);
+	int rtn = CFrame::OnCreate(cs);  // dn
 	  // make sure it created the frame
 	if (rtn != 0)
 		return rtn;
@@ -447,7 +447,8 @@ OnCreate(LPCREATESTRUCT pcs)                                            /*
 		  // recover the frame saved parameters
 		ar >> *this;
 	}
-	catch (const CWinException &e)  // catch all std::exception events
+//	catch (const CWinException &e)  // catch all std::exception events
+	catch (const CFileException& e)  // dn
 	{
 		  // Process the exception and  quit
 		CString msg,
@@ -494,7 +495,8 @@ OnDestroy()								/*
 		  // no serialization on Open() error
 		ar << *this;  // for the frame
 	}
-	catch (const CWinException &e)  // catch all std::exception events
+//	catch (const CWinException &e)  // catch all std::exception events
+	catch (const CFileException& e)  // dn
 	{
 		  // Process the exception and  quit
 		CString msg,
@@ -986,7 +988,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
 	BOOL CMainFrame::
-PreTranslateMessage(MSG *Msg)                                           /*
+PreTranslateMessage(MSG& Msg)  // dn                                           /*
 
 	Pretranslates the system message uMsg from the mainframe message loop
 	before they are dispatched to theTranslateMessage and  DispatchMessage
@@ -998,12 +1000,12 @@ PreTranslateMessage(MSG *Msg)                                           /*
 *-----------------------------------------------------------------------------*/
 {
 	UNREFERENCED_PARAMETER(Msg);
-//	HWND   hwnd	= Msg->hwnd;
-//	UINT   message	= Msg->message;
-//	WPARAM wParam	= Msg->wParam;
-//	LPARAM lParam	= Msg->lParam;
-//	DWORD  time	= Msg->time;
-//	CPoint  pt	= Msg->pt;
+//	HWND   hwnd	= Msg.hwnd;  // dn
+//	UINT   message	= Msg.message;  // dn
+//	WPARAM wParam	= Msg.wParam;  // dn
+//	LPARAM lParam	= Msg.lParam;  // dn
+//	DWORD  time	= Msg.time;  // dn
+//	CPoint  pt	= Msg.pt;  // dn
 
 	  // return 0 if the message was not handled here
 	return 0;

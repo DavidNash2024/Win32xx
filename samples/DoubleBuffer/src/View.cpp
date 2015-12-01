@@ -40,9 +40,9 @@ void CView::OnDraw(CDC& dc)
 }
 
 
-int CView::OnCreate(LPCREATESTRUCT pcs)
+int CView::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER (pcs);
+	UNREFERENCED_PARAMETER (cs);
 
 	m_Blue.LoadBitmap(IDB_BLUE);
 	m_Orange.LoadBitmap(IDB_ORANGE);

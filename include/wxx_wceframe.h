@@ -114,7 +114,7 @@ namespace Win32xx
 		CRect GetViewRect() const;
 		CCmdBar* GetMenuBar() const {return const_cast<CCmdBar*>(&m_MenuBar);}
 		virtual void OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual int  OnCreate(LPCREATESTRUCT pcs);		
+		virtual int  OnCreate(CREATESTRUCT& cs);		
 		virtual void PreCreate(CREATESTRUCT &cs);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolBarData);
@@ -255,7 +255,7 @@ namespace Win32xx
 		return r;
 	}
 
-	inline int CWceFrame::OnCreate(LPCREATESTRUCT pcs)
+	inline int CWceFrame::OnCreate(CREATESTRUCT& cs)
 	{
 		// Create the Commandbar
 		GetMenuBar()->Create(*this);

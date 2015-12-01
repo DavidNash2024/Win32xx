@@ -92,9 +92,9 @@ CMDIChildTreeView::~CMDIChildTreeView()
 {
 }
 
-int CMDIChildTreeView::OnCreate(LPCREATESTRUCT pcs)
+int CMDIChildTreeView::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 	m_TreeView.Create(*this);
 
 	SetWindowText(_T("Tree-View Window"));

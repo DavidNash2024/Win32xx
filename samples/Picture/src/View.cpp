@@ -94,7 +94,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	}
 }
 
-int CView::OnCreate(LPCREATESTRUCT pcs)
+int CView::OnCreate(CREATESTRUCT& cs)
 {
 	// Set the window background to black
 	m_Brush.CreateSolidBrush(RGB(0,0,0));
@@ -103,7 +103,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	// Support Drag and Drop on this window
 	DragAcceptFiles(TRUE);
 
-	return CWnd::OnCreate(pcs);
+	return CWnd::OnCreate(cs);
 }
 
 void CView::OnDraw(CDC& dc)

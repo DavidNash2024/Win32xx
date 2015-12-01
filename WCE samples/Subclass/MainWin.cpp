@@ -9,8 +9,10 @@ CMainWin::CMainWin()
 	::InitCommonControls();
 }
 
-int CMainWin::OnCreate(LPCREATESTRUCT pcs)
+int CMainWin::OnCreate(CREATESTRUCT& cs)
 {
+	UNREFERENCED_PARAMETER(cs);
+
 	m_Button.Create(*this);
 	return 0;
 }

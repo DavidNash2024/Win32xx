@@ -271,7 +271,8 @@ OpenDoc(const CString &doc_file_name)					/*
 		CArchive ar(doc_file_name, CArchive::load);
 		ar >> *this;
 	}
-	catch (const CWinException &e)  // catch std::exception events
+//	catch (const CWinException &e)  // catch std::exception events
+	catch (const CFileException &e)  // catch CFileException events  // dn
 	{	  // Process the exception and  quit
 		CString msg,
 			what(e.what());
@@ -624,7 +625,8 @@ SaveDoc()								/*
 		ar << *this;
 	}
 
-	catch (const CWinException &e)  // catch all std::exception events
+//	catch (const CWinException &e)  // catch all std::exception events
+	catch (const CFileException& e)  // dn
 	{	  // Process the exception and  quit
 		CString msg,
 			what(e.what());

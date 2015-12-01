@@ -10,9 +10,9 @@
 ////////////////////////
 // CViewRect definitions
 
-int CViewRect::OnCreate(LPCREATESTRUCT pcs)
+int CViewRect::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 	SetTimer (1, 250, NULL) ;
 	return 0;
 }
@@ -96,12 +96,12 @@ CMDIChildRect::~CMDIChildRect()
 {
 }
 
-int CMDIChildRect::OnCreate(LPCREATESTRUCT pcs)
+int CMDIChildRect::OnCreate(CREATESTRUCT& cs)
 {
 	SetWindowText(_T("Rectangle Window"));
 	SetIconLarge(IDI_RECT);
 	SetIconSmall(IDI_RECT);
 
-	return CMDIChild::OnCreate(pcs);
+	return CMDIChild::OnCreate(cs);
 }
 

@@ -40,13 +40,13 @@ CMDIChildMax::~CMDIChildMax()
 {
 }
 
-int CMDIChildMax::OnCreate(LPCREATESTRUCT pcs)
+int CMDIChildMax::OnCreate(CREATESTRUCT& cs)
 {
 	SetWindowText(_T("Maximised Window"));
 	SetIconLarge(IDI_MAX);
 	SetIconSmall(IDI_MAX);
 
-	return CMDIChild::OnCreate(pcs);
+	return CMDIChild::OnCreate(cs);
 }
 
 void CMDIChildMax::PreCreate(CREATESTRUCT &cs)

@@ -64,9 +64,9 @@ void CView::OnTop()
 	RecalcLayout();
 }
 
-int CView::OnCreate(LPCREATESTRUCT pcs)
+int CView::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	// Create the ToolBar's image list from 4 icons
 	m_ToolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);

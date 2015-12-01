@@ -8,7 +8,7 @@
 
 // Definitions for the CView class
 
-int CView::OnCreate(LPCREATESTRUCT pcs)
+int CView::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate is called automatically during window creation when a
 	// WM_CREATE message received.
@@ -16,7 +16,7 @@ int CView::OnCreate(LPCREATESTRUCT pcs)
 	// Tasks such as setting the icon, creating child windows, or anything
 	// associated with creating windows are normally performed here.
 
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	TRACE("OnCreate\n");
 	

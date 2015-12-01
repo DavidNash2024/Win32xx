@@ -25,7 +25,7 @@ public:
 	virtual void SetTestMessages(int nTestMessages) {m_nTestMessages = nTestMessages;}
 
 protected:
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnSize();

@@ -53,23 +53,13 @@ HWND CMainWindow::Create(HWND hParent)
 		rc, hParent, 0);
 }
 
-int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
+int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	// Create the Edit child window to display text
-//	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_VSCROLL | ES_LEFT | ES_MULTILINE | ES_AUTOVSCROLL;
-//	m_EditWnd.CreateEx(0, _T("Edit"), NULL, dwStyle, CRect(0,0,0,0), *this, 0);
 	m_EditWnd.Create(*this);
-//	m_EditWnd.SetWindowLongPtr(GWL_STYLE, dwStyle);
 
-	// Permit the Edit window to display up to 128000 characters
-//	m_EditWnd.SendMessage(EM_SETLIMITTEXT, 128000, 0);
-
-	// Set the font for the Edit window
-//	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-//		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-//  	m_EditWnd.SetFont(m_Font, FALSE);
 
 	// Create each CMyThread object
 	for (int i = 1 ; i <= m_nTestWnd ; i++)

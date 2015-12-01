@@ -117,12 +117,15 @@ CView(UINT nResID)                                                  	/*
 	  // GetDocumentValues() method before they are ever used.  However, it is
 	  // good practice for constructors to initialize all its essential
 	  // parameters.
-	m_iByte     = 0;
+//	m_iByte     = 0;
+	m_iByte     = 10;  // dn
 	m_iShort    = 0;
 	m_iInt      = 0;
-	m_iUINT     = 0;
+//	m_iUINT     = 0;
+	m_iUINT		= 10;  // dn
 	m_iLong     = 0L;
-	m_ULong     = 0;
+//	m_ULong     = 0;
+	m_ULong		= 10;  // dn
 	m_fFloat    = 0.0;
 	m_dDouble   = 0.0;
 	m_LPTSTR[0] = _T('\0');
@@ -849,16 +852,16 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 
 /*============================================================================*/
 	BOOL CView::
-PreTranslateMessage(MSG* pMsg)                              		/*
+PreTranslateMessage(MSG& Msg)  // dn                              		/*
 
 	Filter mouse and keyboard messages prior to being passed to the
 	message loop.
 *-----------------------------------------------------------------------------*/
 {
 	if ((HWND)m_ToolTip != NULL)
-		m_ToolTip.RelayEvent(pMsg);
+		m_ToolTip.RelayEvent(Msg);  // dn
 
-	return CWnd::PreTranslateMessage(pMsg);
+	return CWnd::PreTranslateMessage(Msg);  // dn
 }
 
 /*============================================================================*/

@@ -116,9 +116,9 @@ CMDIChildListView::~CMDIChildListView()
 {
 }
 
-int CMDIChildListView::OnCreate(LPCREATESTRUCT pcs)
+int CMDIChildListView::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 	m_ListView.Create(*this);
 	
 	SetWindowText( _T("List-View Window") );

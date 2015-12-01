@@ -96,7 +96,7 @@ CMainFrame : public CFrame
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual void OnClose();					
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual int  OnCreate(CREATESTRUCT& cs);  // dn
 		virtual void OnFileExit();
 		virtual void OnInitialUpdate();
 		virtual void PreCreate(CREATESTRUCT& cs);

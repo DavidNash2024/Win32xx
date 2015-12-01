@@ -177,7 +177,7 @@ namespace Win32xx
 		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
 		BOOL  InvalidateRgn(HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(HWND hwndChild) const;
-		BOOL  IsDialogMessage(LPMSG lpMsg) const;
+		BOOL  IsDialogMessage(MSG& Msg) const;
 		UINT  IsDlgButtonChecked(int nIDButton) const;
 		BOOL  IsWindow() const;
 		BOOL  IsWindowEnabled() const;
@@ -273,7 +273,7 @@ namespace Win32xx
 		virtual void OnAttach();
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
-		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
 		virtual void OnDraw(CDC& dc);
 		virtual BOOL OnEraseBkgnd(CDC& dc);
@@ -285,7 +285,7 @@ namespace Win32xx
 		virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual BOOL PreTranslateMessage(MSG& Msg);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

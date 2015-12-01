@@ -44,7 +44,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -58,7 +58,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 
 	// call the base class function
 	
-	int Res = CFrame::OnCreate(pcs);
+	int Res = CFrame::OnCreate(cs);
 	ShowStatusBar(m_ShowStatusBar);
 	ShowToolBar(m_ShowToolBar);
 	return Res;

@@ -223,7 +223,7 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline BOOL CWinThread::PreTranslateMessage(MSG Msg)
+	inline BOOL CWinThread::PreTranslateMessage(MSG& Msg)
 	{
 		// This functions is called by the MessageLoop. It processes the
 		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
@@ -246,7 +246,7 @@ namespace Win32xx
 					CWnd* pWnd = GetApp().GetCWndFromMap(hWnd);
 					if (pWnd)
 					{
-						Processed = pWnd->PreTranslateMessage(&Msg);
+						Processed = pWnd->PreTranslateMessage(Msg);
 						if(Processed)
 							break;
 					}

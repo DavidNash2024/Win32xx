@@ -352,7 +352,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -365,7 +365,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	CFrame::OnCreate(pcs);
+	CFrame::OnCreate(cs);
 
 	if (IsReBarSupported())
 	{

@@ -197,7 +197,7 @@ namespace Win32xx
 
 	protected:
 		virtual void OnAttach();
-		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
 		virtual void OnSize(int width, int height);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -761,9 +761,9 @@ namespace Win32xx
 			AddWebBrowserControl();
 	}
 
-	inline int CWebBrowser::OnCreate(LPCREATESTRUCT pcs)
+	inline int CWebBrowser::OnCreate(CREATESTRUCT& cs)
 	{
-		UNREFERENCED_PARAMETER(pcs);
+		UNREFERENCED_PARAMETER(cs);
 		AddWebBrowserControl();
 		return 0;
 	}

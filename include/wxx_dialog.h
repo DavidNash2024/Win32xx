@@ -103,7 +103,7 @@ namespace Win32xx
 		virtual void OnClose();
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual BOOL PreTranslateMessage(MSG& Msg);
 
 		// Can't override these functions
 		DWORD GetDefID() const;
@@ -517,10 +517,10 @@ namespace Win32xx
 			EndDialog(IDOK);
 	}
 
-	inline BOOL CDialog::PreTranslateMessage(MSG* pMsg)
+	inline BOOL CDialog::PreTranslateMessage(MSG& Msg)
 	{
 		// allow the dialog to translate keyboard input
-		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
 		{
 			// Process dialog keystrokes for modeless dialogs
 			if (!IsModal())
@@ -528,7 +528,7 @@ namespace Win32xx
 				TLSData* pTLSData = GetApp().GetTlsData();
 				if (NULL == pTLSData->hMsgHook)
 				{
-					if (IsDialogMessage(pMsg))
+					if (IsDialogMessage(Msg))
 						return TRUE;
 				}
 				else
@@ -639,6 +639,7 @@ namespace Win32xx
 		if (nCode == MSGF_DIALOGBOX)
 		{
 			MSG* lpMsg = reinterpret_cast<MSG*>(lParam);
+			assert(lpMsg);
 
 			// only pre-translate keyboard events
 			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST))
@@ -648,7 +649,7 @@ namespace Win32xx
 					CDialog* pDialog = static_cast<CDialog*>(GetCWndPtr(hWnd));
 					if (pDialog && (lstrcmp(pDialog->GetClassName(), _T("#32770")) == 0))	// only for dialogs
 					{
-						if (pDialog->PreTranslateMessage(lpMsg))
+						if (pDialog->PreTranslateMessage(*lpMsg))
 							return 1; // Eat the message
 
 						break;	// Pass the message on
