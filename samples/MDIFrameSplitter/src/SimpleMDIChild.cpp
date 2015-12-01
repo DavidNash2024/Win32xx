@@ -56,7 +56,7 @@ CSimpleMDIChild::~CSimpleMDIChild()
 {
 }
 
-int CSimpleMDIChild::OnCreate(LPCREATESTRUCT pcs)
+int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption
 	SetWindowText( _T("Simple Window") );
@@ -65,7 +65,7 @@ int CSimpleMDIChild::OnCreate(LPCREATESTRUCT pcs)
     SetIconLarge(IDI_VIEW);
 	SetIconSmall(IDI_VIEW);
 
-	return CMDIChild::OnCreate(pcs);
+	return CMDIChild::OnCreate(cs);
 }
 
 void CSimpleMDIChild::OnInitialUpdate()

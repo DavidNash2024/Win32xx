@@ -74,11 +74,21 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                               /*
 		return theApp.Run();
 	}
 
-	  // catch all exceptions inherited from std::exception
-	catch (std::exception &e)
+	// catch all unhandled CException types
+	catch (const CException& e)  // dn
+	{
+		// Display the exception and quit
+		MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONERROR);
+
+		return -1;
+	}
+	
+	// catch all unhandled exceptions inherited from std::exception
+	catch (const std::exception &e)
 	{
 		  // Process the exception and quit
-		e.what();
+		MessageBox(NULL, _T("An unhandled std::exception was thrown"), A2T(e.what()), MB_ICONERROR);  
+	//	e.what();
 		return -1;
 	}
 

@@ -639,7 +639,7 @@ namespace Win32xx
 		// Note:  Window controls are attached.
 	}
 
-	inline int CWnd::OnCreate(LPCREATESTRUCT pcs)
+	inline int CWnd::OnCreate(CREATESTRUCT& cs)
 	{
 		// This function is called when a WM_CREATE message is received
 		// Override it to automatically perform tasks during window creation.
@@ -648,7 +648,7 @@ namespace Win32xx
 		// Note: Window controls don't call OnCreate. They are sublcassed (attached)
 		//  after their window is created.
 
-		UNREFERENCED_PARAMETER (pcs);
+		UNREFERENCED_PARAMETER (cs);
 		return 0;
 	}
 
@@ -874,9 +874,9 @@ namespace Win32xx
 		//     To set a small icon for the window, use SetIconSmall.
 	}
 
-	inline BOOL CWnd::PreTranslateMessage(MSG* pMsg)
+	inline BOOL CWnd::PreTranslateMessage(MSG& Msg)
 	{
-		UNREFERENCED_PARAMETER(pMsg);
+		UNREFERENCED_PARAMETER(Msg);
 
 		// Override this function if your class requires input messages to be
 		// translated before normal processing. Function which translate messages
@@ -1129,7 +1129,13 @@ namespace Win32xx
 			}
 			break;  // Note: Some MDI commands require default processing
 		case WM_CREATE:
-			return OnCreate((LPCREATESTRUCT) lParam);
+			{
+				LPCREATESTRUCT pcs = (LPCREATESTRUCT) lParam;
+				if (pcs == NULL)
+					throw CWinException(_T("WM_CREATE failed"));
+
+				return OnCreate(*pcs);
+			}
 		case WM_DESTROY:
 			OnDestroy();
 			break;	// Note: Some controls require default processing.
@@ -1552,12 +1558,12 @@ namespace Win32xx
 		return ::IsChild(*this, hwndChild);
 	}
 
-	inline BOOL CWnd::IsDialogMessage(LPMSG lpMsg) const
+	inline BOOL CWnd::IsDialogMessage(MSG& Msg) const
 	// The IsDialogMessage function determines whether a message is intended for the specified dialog box and,
 	// if it is, processes the message.
 	{
 		assert(IsWindow());
-		return ::IsDialogMessage(*this, lpMsg);
+		return ::IsDialogMessage(*this, &Msg);
 	}
 
 	inline UINT CWnd::IsDlgButtonChecked(int nIDButton) const

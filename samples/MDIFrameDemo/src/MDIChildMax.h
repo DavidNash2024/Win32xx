@@ -26,7 +26,7 @@ public:
 	virtual ~CMDIChildMax();
 
 protected:
-	virtual int OnCreate(LPCREATESTRUCT pcs);
+	virtual int OnCreate(CREATESTRUCT& cs);
 	virtual void PreCreate(CREATESTRUCT &cs);
 
 private:

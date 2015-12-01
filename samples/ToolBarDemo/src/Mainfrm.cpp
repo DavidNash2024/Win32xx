@@ -69,7 +69,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -81,7 +81,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseThemes(FALSE);				// Don't use themes
 
 	// call the base class function
-	CFrame::OnCreate(pcs);
+	CFrame::OnCreate(cs);
 
 	// Add the CCS_ADJUSTABLE style to the ToolBar
 	DWORD dwStyle = GetToolBar().GetWindowLongPtr(GWL_STYLE);

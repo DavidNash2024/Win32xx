@@ -378,7 +378,7 @@ namespace Win32xx
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
 		virtual void OnClose();
-		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
 		virtual void OnDestroy();
 		virtual BOOL OnHelp();
@@ -2169,11 +2169,11 @@ namespace Win32xx
 		Destroy();
 	}
 
-	inline int CFrame::OnCreate(LPCREATESTRUCT pcs)
+	inline int CFrame::OnCreate(CREATESTRUCT& cs)
 	// This is called when the frame window is being created.
 	// Override this in CMainFrame if you wish to modify what happens here
 	{
-		UNREFERENCED_PARAMETER(pcs);
+		UNREFERENCED_PARAMETER(cs);
 
 		// Set the icon
 		SetIconLarge(IDW_MAIN);

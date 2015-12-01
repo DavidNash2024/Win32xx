@@ -40,9 +40,9 @@ void CMainWindow::CreateTestWindows(int nWindows)
 	}
 }
 
-int CMainWindow::OnCreate(LPCREATESTRUCT pcs)
+int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	m_Edit.Create(*this);
 

@@ -102,6 +102,9 @@ namespace Win32xx
 		MAX_STRING_SIZE = 255
 	};
 
+	/////////////////////////////////////////////
+	// Declaration of the CStringT class template
+	//
 	template <class T>
 	class CStringT
 	{
@@ -227,10 +230,9 @@ namespace Win32xx
 	typedef CStringT<CHAR> CStringA;
 	typedef CStringT<WCHAR> CStringW;
 
-	////////////////////////////////////
-	// Declaration of the CString class
+	///////////////////////////////////
+	// Definition of the CString class
 	//
-
 	class CString : public CStringT<TCHAR>
 	{
 		friend CString operator + (const CString& string1, const CString& string2);
@@ -393,6 +395,9 @@ namespace Win32xx
 namespace Win32xx
 {
 
+	/////////////////////////////////////////////
+	// Definition of the CStringT class template
+	//
 	template <class T>
 	inline CStringT<T>::CStringT()
 	{

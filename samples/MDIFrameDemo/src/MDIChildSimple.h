@@ -32,7 +32,7 @@ public:
 protected:
 	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

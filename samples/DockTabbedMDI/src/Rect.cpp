@@ -8,9 +8,9 @@
 
 // CViewRect definitions
 
-int CViewRect::OnCreate(LPCREATESTRUCT pcs)
+int CViewRect::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	SetTimer (1, 250, NULL) ;
 	return 0;

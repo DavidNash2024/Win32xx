@@ -1,6 +1,14 @@
 Version 8.1
 ===========
 
+Important
+---------
+The definition of the following virtual functions have changed. You will 
+need to update your code as accordingly. The current definitions are:
+- CWnd::OnCreate(CREATESTRUCT& cs)
+- CWnd::PreTranslateMessage(MSG& Msg)
+- CThread::PreTranslateMessage(MSG& Msg)
+
 New Features and Enhancements
 ----------------------------- 
 * Added CDataExchange
@@ -20,10 +28,12 @@ New Features and Enhancements
 
 * Extended CString
    CString is now based on the CStringT template.
-   CStringA is defined as CStringT<CHAR>
-   CStringW is defined as CStringT<WCHAR>
-   CString inherits from CStringT<TCHAR>. It is backwards compatible with
-    the previous implementation of CString. 
+   CStringA is defined as CStringT<CHAR>. It is an ANSI only version of CString
+   CStringW is defined as CStringT<WCHAR>. It is a UNICODE only version of CString.
+   CString inherits from CStringT<TCHAR>. In addition to accepting TCHAR when 
+   constructed, it also accepts CHAR and WCHAR. It is backwards compatible with
+   the previous implementation of CString.
+   Additional features added to CStringA, CStringW and CString:   
    - Added operator + support for ints and doubles.
    - Added operator += support for ints and doubles.
    - Added operator = support for ints and doubles.
@@ -36,9 +46,15 @@ New Features and Enhancements
    - Added CUserException         ( inherits from CException )
    - Updated CWinException        ( inherits from CException )
 
+   CFileExceptions are thrown under the following circumstance
+     - CArchive fails to create the archive file
+	 - CArchive fails to read from or write to the archive file
+	 - CFile fails to create the file
+	 - CFile fails to read from or write to the file.
+   
    CNotSupportedExceptions are thrown under the following circumstances:
-     - An attempt is made to run more than one instance of CWinApp
-	 - CWinApp fails to allocate a Thread Local Storage
+     - An attempt is made to run more than one instance of CWinApp.
+	 - CWinApp is prevented from starting the framework.
    
    CWinExceptions are now thrown under the following circumstances:
    - A failure to create a thread
@@ -58,13 +74,18 @@ New Features and Enhancements
 	 
    CUserExceptions are thrown under the following circumstances:
      - A CDataExchange DDX or DDV function fails validation
+	 - A CUserException is typically the exception thrown in user code. 
    
    Notes:
     - Exceptions should be thrown by value, and caught by const reference.   
 	- Catch CExceptions to catch all exceptions inherited from CException.
 	- CException is an abstract class. CExceptions can't be thrown.
     - A failure to create a GDI resources occurs when too many GDI resources
-      are allocated to the process. A GDI resource leak can cause this.  
+      are allocated to the process. A GDI resource leak can cause this.
+
+* Updated CCriticalSection
+  All critical sections are now guaranteed to be released when the
+  CCriticalSection's destructor is called.
 
 
 Changes in detail
@@ -82,14 +103,28 @@ Added wxx_exception.h
 Added wxx_wincore0.h
 
 Added UWN_TABCLOSE windows message notification
-
 Added CTabbedMDI::OnTabClose
 Added CWnd::OnPaint
 Added CWnd::SetDlgCtrlID
 
+Added CStringT class template
+Added CStringA typedef
+Added CStringW typedef
+Modified CString. 	Now inherits from CStringT<TCHAR>
+
+Added CDataExchange class
+Added CWnd::DoDataExchange
+Added CWnd::UpdateData
+Added DDXDemo Sample
+
 Modified    CDC::CreateCompatibleDC returns HDC
 Modified    CDC::CreateDC 			returns HDC
 Modified    CDC::CreateIC 			returns HDC
+Modified	CWnd::OnCreate
+Modified	CWnd::PreTranslateMessage
+Modified	CThread::PreTranslateMessage
+Modified	CWnd::IsDialogMessage
+Modified	CToolTip::RelayEvent
 
 
 

@@ -17,7 +17,7 @@ public:
 protected:
 	virtual BOOL OnColor();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnDestroy();
 	virtual void OnDraw(CDC& dc);
 	virtual BOOL OnExit();

@@ -109,7 +109,7 @@ CView
 		virtual BOOL 	OnInitDialog();
 		virtual void 	OnOK();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual BOOL 	PreTranslateMessage(MSG* pMsg);
+		virtual BOOL 	PreTranslateMessage(MSG& Msg);  // dn
 		virtual void 	UpdateParameters();
 
 		  // DDX/DDV variables that need to be visible to friends

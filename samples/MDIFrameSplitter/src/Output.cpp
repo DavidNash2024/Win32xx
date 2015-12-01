@@ -47,12 +47,12 @@ CDockOutput::CDockOutput()
 	SetView(m_View);
 }
 
-int CDockOutput::OnCreate(LPCREATESTRUCT pcs)
+int CDockOutput::OnCreate(CREATESTRUCT& cs)
 {
 	// Set the width of the splitter bar
 	SetBarWidth(8);
 
-	return CDocker::OnCreate(pcs);
+	return CDocker::OnCreate(cs);
 }
 
 

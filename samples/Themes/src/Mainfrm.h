@@ -37,7 +37,7 @@ protected:
 	virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
 	virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);

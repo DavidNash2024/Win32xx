@@ -138,7 +138,7 @@ namespace Win32xx
 	{
 		assert(pszFileName);
 		if (!Open(pszFileName, nOpenFlags))
-			throw CWinException(_T("Failed to open file"));
+			throw CFileException(pszFileName, _T("Failed to open file"));
 	}
 
 	inline CFile::~CFile()
@@ -203,7 +203,8 @@ namespace Win32xx
 	}
 
 	inline const CString& CFile::GetFileTitle() const
-	// Returns the filename of the file associated with this object, excluding the path and the file extension
+	// Returns the filename of the file associated with this object, as returned 
+	// by the GetFileTitle Windows API function. Usually the same as GetFileName.
 	{
 		return const_cast<const CString&>(m_FileTitle);
 	}
@@ -352,7 +353,7 @@ namespace Win32xx
 		DWORD dwRead = 0;
 
 		if (!::ReadFile(m_hFile, pBuf, nCount, &dwRead, NULL))
-			throw CWinException(_T("Failed to read from file"));
+			throw CFileException(GetFilePath(), _T("Failed to read from file"));
 
 		return dwRead;
 	}
@@ -464,9 +465,9 @@ namespace Win32xx
 			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), &pFileName);
 			m_FilePath.ReleaseBuffer();
 			m_FileName = pFileName;
-			int nPos = m_FileName.ReverseFind(_T("."));
-			if (nPos >= 0)
-				m_FileTitle = m_FileName.Left(nPos);
+
+			::GetFileTitle(pszFileName, m_FileTitle.GetBuffer(nBuffSize), (WORD)nBuffSize);
+			m_FileTitle.ReleaseBuffer();
 		}
 	}
 #endif
@@ -505,10 +506,10 @@ namespace Win32xx
 		assert(pBuf);
 		DWORD dwWritten = 0;
 		if (!::WriteFile(m_hFile, pBuf, nCount, &dwWritten, NULL))
-			throw CWinException(_T("Failed to write to file"));
+			throw CFileException(GetFilePath(), _T("Failed to write to file"));
 		
 		if (dwWritten != nCount)
-			throw CWinException(_T("Failed to write to file"));
+			throw CFileException(GetFilePath(), _T("Failed to write to file"));
 	}
 
 

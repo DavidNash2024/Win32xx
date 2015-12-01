@@ -17,7 +17,7 @@ public:
 	virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
 
 protected:
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnDestroy();
 	virtual void OnDraw(CDC& dc);	
 	virtual void OnInitialUpdate();

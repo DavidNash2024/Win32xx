@@ -27,7 +27,7 @@ public:
 	virtual ~CMDIChildTreeView();
 
 protected:
-	virtual int  OnCreate(LPCREATESTRUCT pcs);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
 	CViewTree m_TreeView;

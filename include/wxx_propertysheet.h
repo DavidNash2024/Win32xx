@@ -91,7 +91,7 @@ namespace Win32xx
 		virtual int  OnWizardBack();
 		virtual INT_PTR OnWizardFinish();
 		virtual int  OnWizardNext();
-		virtual	BOOL PreTranslateMessage(MSG* pMsg);
+		virtual	BOOL PreTranslateMessage(MSG& Msg);
 
 		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
 		static INT_PTR CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -146,7 +146,7 @@ namespace Win32xx
 		virtual void SetWizardMode(BOOL bWizard);
 
 	protected:
-		virtual BOOL PreTranslateMessage(MSG* pMsg);
+		virtual BOOL PreTranslateMessage(MSG& Msg);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -498,24 +498,24 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline BOOL CPropertyPage::PreTranslateMessage(MSG* pMsg)
+	inline BOOL CPropertyPage::PreTranslateMessage(MSG& Msg)
 	{
 		// allow the tab control to translate keyboard input
-		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
-			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
+		if (Msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
+			(Msg.wParam == VK_TAB || Msg.wParam == VK_PRIOR || Msg.wParam == VK_NEXT))
 		{
-			if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
+			if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)&Msg))
 				return TRUE;
 		}
 
 		// allow the dialog to translate keyboard input
-		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
 		{
-			if (IsDialogMessage(pMsg))
+			if (IsDialogMessage(Msg))
 				return TRUE;
 		}
 
-		return CWnd::PreTranslateMessage(pMsg);
+		return CWnd::PreTranslateMessage(Msg);
 	}
 
 	inline LRESULT CPropertyPage::QuerySiblings(WPARAM wParam, LPARAM lParam) const
@@ -867,23 +867,23 @@ namespace Win32xx
 		m_PSH.nPages = (int)m_vPages.size();
 	}
 
-	inline BOOL CPropertySheet::PreTranslateMessage(MSG* pMsg)
+	inline BOOL CPropertySheet::PreTranslateMessage(MSG& Msg)
 	{
 		// allow sheet to translate Ctrl+Tab, Shift+Ctrl+Tab, Ctrl+PageUp, and Ctrl+PageDown
-		if (pMsg->message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
-			(pMsg->wParam == VK_TAB || pMsg->wParam == VK_PRIOR || pMsg->wParam == VK_NEXT))
+		if (Msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
+			(Msg.wParam == VK_TAB || Msg.wParam == VK_PRIOR || Msg.wParam == VK_NEXT))
 		{
-			if (SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)pMsg))
+			if (SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)&Msg))
 				return TRUE;
 		}
 
 		// allow the dialog to translate keyboard input
-		if ((pMsg->message >= WM_KEYFIRST) && (pMsg->message <= WM_KEYLAST))
+		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
 		{
-			return GetActivePage()->PreTranslateMessage(pMsg);
+			return GetActivePage()->PreTranslateMessage(Msg);
 		}
 
-		return CWnd::PreTranslateMessage(pMsg);
+		return CWnd::PreTranslateMessage(Msg);
 	}
 
 	inline BOOL CPropertySheet::SetActivePage(int nPage)

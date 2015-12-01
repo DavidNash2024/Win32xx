@@ -139,7 +139,7 @@ namespace Win32xx
 			virtual CToolBar& GetToolBar() const	{return const_cast<CToolBar&>(m_ToolBar);}
 			virtual CWnd& GetView() const	{assert(m_pView); return *m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-			virtual int OnCreate(LPCREATESTRUCT pcs);
+			virtual int OnCreate(CREATESTRUCT& cs);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS &wc);
 			virtual void RecalcLayout();
@@ -382,7 +382,7 @@ namespace Win32xx
 			CTargetCentre();
 			virtual ~CTargetCentre();
 			virtual void OnDraw(CDC& dc);
-			virtual int  OnCreate(LPCREATESTRUCT pcs);
+			virtual int  OnCreate(CREATESTRUCT& cs);
 			virtual BOOL CheckTarget(LPDRAGPOS pDragPos);
 			BOOL IsOverContainer() { return m_IsOverContainer; }
 
@@ -503,7 +503,7 @@ namespace Win32xx
 
 	protected:
 		virtual CDocker* NewDockerFromID(int idDock);
-		virtual int  OnCreate(LPCREATESTRUCT pcs);
+		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
 		virtual LRESULT OnBarEnd(LPDRAGPOS pdp);
 		virtual LRESULT OnBarMove(LPDRAGPOS pdp);
@@ -1541,9 +1541,9 @@ namespace Win32xx
 		}
 	}
 
-	inline int CDocker::CTargetCentre::OnCreate(LPCREATESTRUCT pcs)
+	inline int CDocker::CTargetCentre::OnCreate(CREATESTRUCT& cs)
 	{
-		UNREFERENCED_PARAMETER(pcs);
+		UNREFERENCED_PARAMETER(cs);
 
 		// Use a region to create an irregularly shapped window
 		POINT ptArray[16] = { {0,29}, {22, 29}, {29, 22}, {29, 0},
@@ -2864,9 +2864,9 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline int CDocker::OnCreate(LPCREATESTRUCT pcs)
+	inline int CDocker::OnCreate(CREATESTRUCT& cs)
 	{
-		UNREFERENCED_PARAMETER(pcs);
+		UNREFERENCED_PARAMETER(cs);
 
 #if (WINVER >= 0x0500)
 		if (GetParent().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
@@ -4708,9 +4708,9 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline int CDockContainer::CViewPage::OnCreate(LPCREATESTRUCT pcs)
+	inline int CDockContainer::CViewPage::OnCreate(CREATESTRUCT& cs)
 	{
-		UNREFERENCED_PARAMETER(pcs);
+		UNREFERENCED_PARAMETER(cs);
 		if (m_pView)
 			m_pView->Create(*this);
 

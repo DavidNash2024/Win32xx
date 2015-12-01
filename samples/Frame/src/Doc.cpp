@@ -16,7 +16,7 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
 		bResult = TRUE;
 	}
 
-	catch (const CWinException &e)
+	catch (const CFileException &e)
 	{
 		// An exception occurred. Display the relevant information.
 		::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
@@ -37,7 +37,7 @@ BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 //		ar << *this;
 //		bResult = TRUE;
 //	}
-//	catch (const CWinException &e)
+//	catch (const CFileException &e)
 //	{
 //		// An exception occurred. Display the relevant information.
 //		::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);

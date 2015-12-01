@@ -477,7 +477,7 @@ namespace Win32xx
 		void DelTool(HWND hWnd, UINT_PTR nIDTool = 0);
 		BOOL HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
 		void Pop();
-		void RelayEvent(LPMSG lpMsg);
+		void RelayEvent(MSG& Msg);
 		void SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect);
 		void UpdateTipText(LPCTSTR lpszText, HWND hWnd, UINT_PTR nIDTool = 0);
 		void UpdateTipText(UINT nIDText, HWND hWnd, UINT_PTR nIDTool = 0);
@@ -1987,11 +1987,11 @@ namespace Win32xx
 		SendMessage(TTM_POP, 0L, 0L);
 	}
 
-	inline void CToolTip::RelayEvent(LPMSG lpMsg)
+	inline void CToolTip::RelayEvent(MSG& Msg)
 	// Passes a mouse message to a ToolTip control for processing.
 	{
 		assert(IsWindow());
-		SendMessage(TTM_RELAYEVENT, 0L, (LPARAM)lpMsg);
+		SendMessage(TTM_RELAYEVENT, 0L, (LPARAM)&Msg);
 	}
 
 	inline void CToolTip::SetDelayTime(UINT nDelay)

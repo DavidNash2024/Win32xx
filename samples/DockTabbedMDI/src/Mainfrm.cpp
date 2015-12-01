@@ -267,7 +267,7 @@ BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-int CMainDockFrame::OnCreate(LPCREATESTRUCT pcs)
+int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -280,7 +280,7 @@ int CMainDockFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	return CFrame::OnCreate(pcs);
+	return CFrame::OnCreate(cs);
 }
 
 BOOL CMainDockFrame::OnHideSingleTab()

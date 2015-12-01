@@ -255,7 +255,7 @@ void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 	TRACE("OnDocumentBegin\n");
 }
 
-int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -268,7 +268,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT pcs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 	
 	// Call the base function first
-	CFrame::OnCreate(pcs);
+	CFrame::OnCreate(cs);
 
 	ConnectEvents();
 	return 0;

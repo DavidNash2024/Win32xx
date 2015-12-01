@@ -135,9 +135,9 @@ HRESULT CDXView::CDX::InitGeometry()
     return S_OK;
 }
 
-int CDXView::CDX::OnCreate(LPCREATESTRUCT pcs)
+int CDXView::CDX::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	// Initialize Direct3D
 	if( SUCCEEDED( InitD3D( *this ) ) )
@@ -308,12 +308,12 @@ CDXView::~CDXView()
 	::WaitForSingleObject(m_DXThread.GetThread(), INFINITE);
 }
 
-int CDXView::OnCreate(LPCREATESTRUCT pcs)
+int CDXView::OnCreate(CREATESTRUCT& cs)
 {
 	// Create our thread. The thread creates the DX child window when starts
 	m_DXThread.CreateThread();
 	
-	return CWnd::OnCreate(pcs);
+	return CWnd::OnCreate(cs);
 }
 
 LRESULT CDXView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)

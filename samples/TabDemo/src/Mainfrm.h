@@ -30,7 +30,7 @@ public:
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(LPCREATESTRUCT pCreateStruct);
+	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void PreCreate(CREATESTRUCT &cs);

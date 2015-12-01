@@ -45,7 +45,7 @@ class CDXView : public CWnd
 		void SetupMatrices();
 
 	protected:
-		virtual	int  OnCreate(LPCREATESTRUCT pcs);
+		virtual	int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT &cs);
@@ -79,7 +79,7 @@ public:
 	CDX& GetDX() const { return const_cast<CDX&>(m_DX); }
 
 protected:
-	virtual int OnCreate(LPCREATESTRUCT pcs);
+	virtual int OnCreate(CREATESTRUCT& cs);
 	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

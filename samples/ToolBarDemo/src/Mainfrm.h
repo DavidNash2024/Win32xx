@@ -25,7 +25,7 @@ public:
 protected:
 	virtual LRESULT OnBeginAdjust(LPNMTOOLBAR pNMTB);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int OnCreate(LPCREATESTRUCT pcs);
+	virtual int OnCreate(CREATESTRUCT& cs);
 	virtual LRESULT OnCustHelp(LPNMHDR pNMHDR);
 	virtual LRESULT OnEndAdjust(LPNMHDR pNMHDR);
 	virtual LRESULT OnGetButtonInfo(LPNMTOOLBAR pNMTB);

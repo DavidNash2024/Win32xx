@@ -22,9 +22,9 @@ CViewText::~CViewText()
 	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 }
 
-int CViewText::OnCreate(LPCREATESTRUCT pcs)
+int CViewText::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 
 	//Set font
 	if (!m_Font)
@@ -74,9 +74,9 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 }
 
 
-int CMDIChildText::OnCreate(LPCREATESTRUCT pcs)
+int CMDIChildText::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(pcs);
+	UNREFERENCED_PARAMETER(cs);
 	m_TextView.Create(*this);
 
 	SetWindowText(_T("Text Window"));
