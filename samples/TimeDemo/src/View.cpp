@@ -256,7 +256,7 @@ Paint(CDC &dcMem, RECT rc)                                    		/*
 
 /*============================================================================*/
 	void CView::
-PreCreate(CREATESTRUCT &cs)                                             /*
+PreCreate(CREATESTRUCT& cs)                                             /*
 
 	Set defaults used by the create function for the view window for
 	precise control over the window created.
@@ -272,7 +272,7 @@ PreCreate(CREATESTRUCT &cs)                                             /*
 
 /*============================================================================*/
 	void CView::
-PreRegisterClass(WNDCLASS &wc)                                          /*
+PreRegisterClass(WNDCLASS& wc)                                          /*
 
 	Set Window class parameters for precise control over the characteristics
 	of the window class created.

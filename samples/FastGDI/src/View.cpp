@@ -319,7 +319,7 @@ LRESULT CView::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-void CView::PreCreate(CREATESTRUCT &cs)
+void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// Set the Window Class name
 	cs.lpszClass = _T("View");

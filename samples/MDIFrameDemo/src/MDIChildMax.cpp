@@ -49,7 +49,7 @@ int CMDIChildMax::OnCreate(CREATESTRUCT& cs)
 	return CMDIChild::OnCreate(cs);
 }
 
-void CMDIChildMax::PreCreate(CREATESTRUCT &cs)
+void CMDIChildMax::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = WS_MAXIMIZE;
 }

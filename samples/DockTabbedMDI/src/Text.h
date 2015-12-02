@@ -25,7 +25,7 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnInitialUpdate();
-	virtual void PreCreate(CREATESTRUCT &cs); 
+	virtual void PreCreate(CREATESTRUCT& cs); 
 
 private:
 	HMODULE m_hRichEdit;

@@ -19,7 +19,7 @@ protected:
 	{
 		m_Edit.Attach(GetEditCtrl());
 	}
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
 	CEdit m_Edit;

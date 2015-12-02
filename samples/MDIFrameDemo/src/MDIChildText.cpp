@@ -37,7 +37,7 @@ int CViewText::OnCreate(CREATESTRUCT& cs)
 	return 0;
 }
 
-void CViewText::PreCreate(CREATESTRUCT &cs)
+void CViewText::PreCreate(CREATESTRUCT& cs)
 {
 	cs.lpszClass = _T("RichEdit");
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 

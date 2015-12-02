@@ -300,17 +300,21 @@ namespace Win32xx
 		{ 
 			while (m_count > 0)
 			{
-				::InterlockedDecrement(&m_count);
-				::DeleteCriticalSection(&m_cs);
+				Release();
 			}
+			
+			::DeleteCriticalSection(&m_cs);
 		}
 
 		void Lock() 	
+		// Enter the critical section and increment the lock count
 		{
 			::EnterCriticalSection(&m_cs); 
 			InterlockedIncrement(&m_count);
 		}
+		
 		void Release()
+		// Leave the critical section and decrement the lock count
 		{ 
 			if (m_count > 0)
 			{

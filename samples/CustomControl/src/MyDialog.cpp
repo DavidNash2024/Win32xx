@@ -82,7 +82,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_MyControl.AttachDlgItem(IDC_CUSTOMWEB, *this);
 
 	// Support automatic resizing
-	m_Resizer.Initialize( this, CRect(0, 0, 300, 200) );
+	m_Resizer.Initialize( *this, CRect(0, 0, 300, 200) );
 	m_Resizer.AddChild(m_MyControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
 	
 	return TRUE;

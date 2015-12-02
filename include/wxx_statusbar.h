@@ -55,7 +55,7 @@ namespace Win32xx
 	// Overridables
 		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	// Attributes
 		int GetParts();
@@ -157,12 +157,12 @@ namespace Win32xx
 		return (TRUE == GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc, (LPARAM)this));
 	}
 
-	inline void CStatusBar::PreCreate(CREATESTRUCT &cs)
+	inline void CStatusBar::PreCreate(CREATESTRUCT& cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
 	}
 
-	inline void CStatusBar::PreRegisterClass(WNDCLASS &wc)
+	inline void CStatusBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  STATUSCLASSNAME;

@@ -31,7 +31,7 @@ void CViewText::OnInitialUpdate()
 	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-void CViewText::PreCreate(CREATESTRUCT &cs)
+void CViewText::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
 				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;

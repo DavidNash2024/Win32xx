@@ -70,13 +70,13 @@ void CView::OnDraw(CDC& dc)
 	dc.BitBlt(0, 0, Width, Height, MemDC, 0, 0, SRCCOPY);
 }
 
-void CView::PreCreate(CREATESTRUCT &cs)
+void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// Set the extra style to provide a sunken effect
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CView::PreRegisterClass(WNDCLASS &wc)
+void CView::PreRegisterClass(WNDCLASS& wc)
 {
 	// Set the background brush, class name and cursor
 	wc.hbrBackground = m_Brush;

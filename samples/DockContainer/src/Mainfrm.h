@@ -28,7 +28,7 @@ protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnInitialUpdate();
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolBar();
 

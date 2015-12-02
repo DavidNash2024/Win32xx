@@ -28,7 +28,7 @@ public:
 	virtual LRESULT OnTVNGetDispInfo(LPNMTVDISPINFO pNMTVDI);
 	virtual LRESULT OnTVNExpanding(LPNMTREEVIEW pNMTV);
 	virtual LRESULT OnTVNSelChanged(LPNMTREEVIEW pNMTV);
-	virtual void    PreCreate(CREATESTRUCT &cs);
+	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

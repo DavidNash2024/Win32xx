@@ -130,7 +130,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// This function is called before the frame is created.
 	// It provides an opportunity to modify the various CREATESTRUCT

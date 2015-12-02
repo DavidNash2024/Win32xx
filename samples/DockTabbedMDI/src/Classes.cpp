@@ -78,7 +78,7 @@ void CViewClasses::OnInitialUpdate()
 	Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-void CViewClasses::PreCreate(CREATESTRUCT &cs)
+void CViewClasses::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = TVS_NOTOOLTIPS|WS_CHILD;
 	cs.lpszClass = WC_TREEVIEW;

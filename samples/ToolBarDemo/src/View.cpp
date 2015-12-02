@@ -142,7 +142,7 @@ inline LRESULT CView::OnNotify(WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
-void CView::PreCreate(CREATESTRUCT &cs)
+void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// Here we set the defaults used by the create function for the view window
 	// Preforming this is optional, but doing so allows us to
@@ -152,7 +152,7 @@ void CView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CView::PreRegisterClass(WNDCLASS &wc)
+void CView::PreRegisterClass(WNDCLASS& wc)
 {
 	// Here we set the Window class parameters.
 	// Preforming this is optional, but doing so allows us to

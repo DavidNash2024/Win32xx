@@ -127,7 +127,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 	cs.style = WS_VISIBLE;			// Window is initially visible
 }
 
-void CView::PreRegisterClass(WNDCLASS &wc)
+void CView::PreRegisterClass(WNDCLASS& wc)
 {
 	// This function will be called automatically by Create.
 	// Here we set the window's class paramaters.

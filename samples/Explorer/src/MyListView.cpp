@@ -592,7 +592,7 @@ void CMyListView::OnInitialUpdate()
 	ViewReport();
 }
 
-void CMyListView::PreCreate(CREATESTRUCT &cs)
+void CMyListView::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | LVS_AUTOARRANGE |
             LVS_ICON | LVS_SHAREIMAGELISTS | LVS_SHOWSELALWAYS;

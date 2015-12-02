@@ -393,7 +393,7 @@ namespace Win32xx
 		virtual BOOL OnViewStatusBar();
 		virtual BOOL OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual void RemoveMRUEntry(LPCTSTR szMRUEntry);
 		virtual BOOL SaveRegistryMRUSettings();
 		virtual BOOL SaveRegistrySettings();
@@ -2358,7 +2358,7 @@ namespace Win32xx
 			SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0L);
 
 			// Specify owner-draw for the menu item type
-			if (Menu.GetMenuItemInfo(i, &mii, TRUE))
+			if (Menu.GetMenuItemInfo(i, mii, TRUE))
 			{
 				if (mii.dwItemData == 0)
 				{
@@ -2367,7 +2367,7 @@ namespace Win32xx
 					pItem->mii = mii;
 					mii.dwItemData = (DWORD_PTR)pItem;
 					mii.fType |= MFT_OWNERDRAW;
-					Menu.SetMenuItemInfo(i, &mii, TRUE); // Store pItem in mii
+					Menu.SetMenuItemInfo(i, mii, TRUE); // Store pItem in mii
 				}
 			}
 		}
@@ -2679,7 +2679,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::PreRegisterClass(WNDCLASS &wc)
+	inline void CFrame::PreRegisterClass(WNDCLASS& wc)
 	// Set the frame's class parameters prior to the frame window's creation
 	{
 		// Set the Window Class
@@ -3499,10 +3499,10 @@ namespace Win32xx
 				BOOL bResult;
 				if (index == MaxMRUIndex)
 					// Replace the last MRU entry first
-					bResult = FileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, &mii, FALSE);
+					bResult = FileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
 				else
 					// Insert the other MRU entries next
-					bResult = FileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, &mii, FALSE);
+					bResult = FileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
 
 				if (!bResult)
 				{

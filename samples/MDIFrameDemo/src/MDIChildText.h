@@ -12,7 +12,7 @@ public:
 	CViewText();
 	virtual ~CViewText();
 	virtual int OnCreate(CREATESTRUCT& cs);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
 	CFont	m_Font;

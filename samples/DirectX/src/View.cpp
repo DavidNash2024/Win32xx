@@ -171,7 +171,7 @@ LRESULT CDXView::CDX::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-void CDXView::CDX::PreCreate(CREATESTRUCT &cs)
+void CDXView::CDX::PreCreate(CREATESTRUCT& cs)
 {
 	// An initial window size to allow InitD3D to succeed
 	cs.x = 0;

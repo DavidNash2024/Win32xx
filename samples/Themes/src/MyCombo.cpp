@@ -16,7 +16,7 @@ CMyCombo::~CMyCombo()
 {
 }
 
-void CMyCombo::PreCreate(CREATESTRUCT &cs)
+void CMyCombo::PreCreate(CREATESTRUCT& cs)
 {
 	cs.lpszClass = WC_COMBOBOXEX;
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;

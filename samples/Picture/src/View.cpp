@@ -333,7 +333,7 @@ void CView::Paint(HDC hDC)
 	}
 }
 
-void CView::PreCreate(CREATESTRUCT &cs)
+void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// Set the Window Class name
 	cs.lpszClass = _T("PictureView");

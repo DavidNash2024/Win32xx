@@ -134,7 +134,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Load setting from Frame.ini
 	SerializeINI(false);	

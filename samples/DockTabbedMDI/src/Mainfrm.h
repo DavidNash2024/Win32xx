@@ -63,7 +63,7 @@ protected:
 	virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    OnMenuUpdate(UINT nID);
 	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void    PreCreate(CREATESTRUCT &cs);
+	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual BOOL    SaveRegistrySettings();
 	virtual void    SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

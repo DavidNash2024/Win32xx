@@ -14,7 +14,7 @@ CRichView::~CRichView()
 {
 }
 
-void CRichView::PreCreate(CREATESTRUCT &cs)
+void CRichView::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
 				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;

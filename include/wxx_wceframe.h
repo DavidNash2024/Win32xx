@@ -115,7 +115,7 @@ namespace Win32xx
 		CCmdBar* GetMenuBar() const {return const_cast<CCmdBar*>(&m_MenuBar);}
 		virtual void OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual int  OnCreate(CREATESTRUCT& cs);		
-		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolBarData);
 		virtual	LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -291,7 +291,7 @@ namespace Win32xx
 #endif
 	}
 
-	inline void CWceFrame::PreCreate(CREATESTRUCT &cs)
+	inline void CWceFrame::PreCreate(CREATESTRUCT& cs)
 	{
 		cs.style = WS_VISIBLE;
 		m_strAppName = _T("Win32++ Application");

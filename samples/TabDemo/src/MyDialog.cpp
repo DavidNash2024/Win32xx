@@ -73,7 +73,7 @@ BOOL CViewDialog::OnInitDialog()
 	m_RichEdit2.SetWindowText(_T("Rich Edit Window"));
 
 	// Initialize dialog resizing
-	m_Resizer.Initialize( this, CRect(0, 0, 300, 200) ); 
+	m_Resizer.Initialize( *this, CRect(0, 0, 300, 200) ); 
 	m_Resizer.AddChild(m_RadioA,   topleft, 0);
 	m_Resizer.AddChild(m_RadioB,   topleft, 0);
 	m_Resizer.AddChild(m_RadioC,   topleft, 0);

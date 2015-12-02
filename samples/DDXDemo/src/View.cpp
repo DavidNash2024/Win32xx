@@ -852,8 +852,8 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 
 /*============================================================================*/
 	BOOL CView::
-PreTranslateMessage(MSG& Msg)  // dn                              		/*
-
+PreTranslateMessage(MSG& Msg)  // dn                              		
+/*
 	Filter mouse and keyboard messages prior to being passed to the
 	message loop.
 *-----------------------------------------------------------------------------*/

@@ -52,7 +52,7 @@ namespace Win32xx
 	public:
 		CListView() {}
 		virtual ~CListView() {}
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 		// Attributes
 		CSize	ApproximateViewRect(CSize sz = CSize(-1, -1), int iCount = -1) const;
@@ -157,7 +157,7 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	inline void CListView::PreRegisterClass(WNDCLASS &wc)
+	inline void CListView::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  WC_LISTVIEW;

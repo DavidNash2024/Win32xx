@@ -68,7 +68,7 @@ NoResizeStatusBar : public CStatusBar
 
 /*----------------------------------------------------------------------------*/
 {
-	void PreCreate(CREATESTRUCT &cs)
+	void PreCreate(CREATESTRUCT& cs)
 	{ cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM; }
 };
 

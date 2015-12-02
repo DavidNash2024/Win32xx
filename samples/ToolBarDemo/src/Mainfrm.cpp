@@ -38,7 +38,7 @@ LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
 	for (int i = 0; i < nResetCount; i++)
 	{
 		TBBUTTON tbb;
-		pToolBar->GetButton(i, &tbb);
+		pToolBar->GetButton(i, tbb);
 		m_vTBBReset.push_back(tbb);
 	}
 
@@ -274,7 +274,7 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
 	for (int j = 0; j < nResetCount; j++)
 	{
 		TBBUTTON tbb = m_vTBBReset[j];
-		pToolBar->InsertButton(j, &tbb);
+		pToolBar->InsertButton(j, tbb);
 	}
 
 	RecalcLayout();
@@ -338,7 +338,7 @@ BOOL CMainFrame::OnTBDefault()
 	for (int j = 0; j < nDefaultCount; j++)
 	{
 		TBBUTTON tbb = m_vTBBDefault[j];
-		GetToolBar().InsertButton(j, &tbb);
+		GetToolBar().InsertButton(j, tbb);
 	}
 
 	RecalcLayout();
@@ -353,7 +353,7 @@ void CMainFrame::SaveTBDefault()
 	for (int i = 0; i < nCount; i++)
 	{
 		TBBUTTON tbb;
-		GetToolBar().GetButton(i, &tbb);
+		GetToolBar().GetButton(i, tbb);
 		m_vTBBDefault.push_back(tbb);
 	}
 }

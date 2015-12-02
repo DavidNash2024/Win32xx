@@ -45,7 +45,7 @@ protected:
 	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual BOOL SaveRegistrySettings();
 	virtual void SetupToolBar();
 
