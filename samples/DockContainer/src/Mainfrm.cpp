@@ -151,7 +151,7 @@ void CMainDockFrame::LoadDefaultDockers()
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
 }
 
-void CMainDockFrame::PreCreate(CREATESTRUCT &cs)
+void CMainDockFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
 	CFrame::PreCreate(cs);

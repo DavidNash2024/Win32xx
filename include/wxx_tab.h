@@ -185,7 +185,7 @@ namespace Win32xx
 		virtual void	NotifyDragged();
 		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
-		virtual void	PreRegisterClass(WNDCLASS &wc);
+		virtual void	PreRegisterClass(WNDCLASS& wc);
 		virtual void    SetTabSize();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -1114,7 +1114,7 @@ namespace Win32xx
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE;
 	}
 
-	inline void CTab::PreRegisterClass(WNDCLASS &wc)
+	inline void CTab::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = WC_TABCONTROL;
 	}

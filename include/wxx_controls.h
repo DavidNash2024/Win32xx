@@ -73,7 +73,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = ANIMATE_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = ANIMATE_CLASS; }
 
 	private:
 		CAnimation(const CAnimation&);				// Disable copy construction
@@ -128,7 +128,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("ComboBox"); }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = _T("ComboBox"); }
 
 	private:
 		CComboBox(const CComboBox&);				// Disable copy construction
@@ -159,7 +159,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_COMBOBOXEX; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = WC_COMBOBOXEX; }
 
 	private:
 		CComboBoxEx(const CComboBoxEx&);				// Disable copy construction
@@ -203,7 +203,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_HEADER ; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = WC_HEADER ; }
 
 	private:
 		CHeader(const CHeader&);				// Disable copy construction
@@ -223,7 +223,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = HOTKEY_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = HOTKEY_CLASS; }
 
 	private:
 		CHotKey(const CHotKey&);				// Disable copy construction
@@ -248,7 +248,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = WC_IPADDRESS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = WC_IPADDRESS; }
 
 	private:
 		CIPAddress(const CIPAddress&);				// Disable copy construction
@@ -288,7 +288,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = MONTHCAL_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = MONTHCAL_CLASS; }
 
 	private:
 		CMonthCalendar(const CMonthCalendar&);				// Disable copy construction
@@ -317,7 +317,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = DATETIMEPICK_CLASS; }
 
 	private:
 		CDateTime(const CDateTime&);				// Disable copy construction
@@ -340,7 +340,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = PROGRESS_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = PROGRESS_CLASS; }
 
 	private:
 		CProgressBar(const CProgressBar&);				// Disable copy construction
@@ -364,7 +364,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = _T("SCROLLBAR"); ; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = _T("SCROLLBAR"); ; }
 
 	private:
 		CScrollBar(const CScrollBar&);				// Disable copy construction
@@ -408,7 +408,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TRACKBAR_CLASS; }
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = TRACKBAR_CLASS; }
 
 	private:
 		CSlider(const CSlider&);				// Disable copy construction
@@ -436,8 +436,8 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	private:
 		CSpinButton(const CSpinButton&);				// Disable copy construction
@@ -496,8 +496,8 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
-		virtual void PreCreate(CREATESTRUCT &cs)
+		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
+		virtual void PreCreate(CREATESTRUCT& cs)
 		{
 			cs.dwExStyle = WS_EX_TOOLWINDOW;
 			cs.style = WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP;
@@ -1791,12 +1791,12 @@ namespace Win32xx
 		return static_cast<DWORD>(SendMessage(UDM_GETRANGE, 0L, 0L));
 	}
 
-	inline void CSpinButton::PreCreate(CREATESTRUCT &cs)
+	inline void CSpinButton::PreCreate(CREATESTRUCT& cs)
     {
 		cs.style = WS_CHILD | WS_VISIBLE | WS_BORDER | WS_VISIBLE |UDS_SETBUDDYINT;
 	}
 
-	inline void CSpinButton::PreRegisterClass(WNDCLASS &wc)
+	inline void CSpinButton::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = UPDOWN_CLASS;
 	}

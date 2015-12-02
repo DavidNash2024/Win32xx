@@ -156,7 +156,7 @@ namespace Win32xx
 		BOOL 	Undo() const;
 
 	protected:
-		void	PreRegisterClass(WNDCLASS &wc);
+		void	PreRegisterClass(WNDCLASS& wc);
 
 	private:
 		HMODULE m_hmodRich;
@@ -196,7 +196,7 @@ namespace Win32xx
 		FreeLibrary(m_hmodRich);
 	}
 
-	inline void CRichEdit::PreRegisterClass(WNDCLASS &wc)
+	inline void CRichEdit::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  RICHEDIT_CLASS;

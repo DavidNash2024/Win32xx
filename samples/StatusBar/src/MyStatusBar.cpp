@@ -42,7 +42,7 @@ BOOL CMyStatusBar::OnEraseBkgnd(CDC& dc)
 	return FALSE;
 }
 
-void CMyStatusBar::PreCreate(CREATESTRUCT &cs)
+void CMyStatusBar::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
 	

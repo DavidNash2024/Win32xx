@@ -76,7 +76,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	private:
 		CButton(const CButton&);				// Disable copy construction
@@ -139,7 +139,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	private:
 		CEdit(const CEdit&);				// Disable copy construction
@@ -202,7 +202,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	private:
 		CListBox(const CListBox&);				// Disable copy construction
@@ -227,7 +227,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	private:
 		CStatic(const CStatic&);				// Disable copy construction
@@ -330,7 +330,7 @@ namespace Win32xx
 		SendMessage(BM_SETSTATE, bHighlight, 0L);
 	}
 
-	inline void CButton::PreRegisterClass(WNDCLASS &wc)
+	inline void CButton::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Button");
@@ -641,7 +641,7 @@ namespace Win32xx
 		SendMessage(EM_UNDO, 0L, 0L);
 	}
 
-	inline void CEdit::PreRegisterClass(WNDCLASS &wc)
+	inline void CEdit::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Edit");
@@ -938,7 +938,7 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(LB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszItem));
 	}
 
-	inline void CListBox::PreRegisterClass(WNDCLASS &wc)
+	inline void CListBox::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("ListBox");
@@ -1016,7 +1016,7 @@ namespace Win32xx
 		return reinterpret_cast<HICON>(SendMessage(STM_SETIMAGE, IMAGE_ICON, (LPARAM)hIcon));
 	}
 
-	inline void CStatic::PreRegisterClass(WNDCLASS &wc)
+	inline void CStatic::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  _T("Static");

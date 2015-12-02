@@ -152,12 +152,12 @@ namespace Win32xx
     class CResizer
     {
 	public:
-		CResizer() : m_pParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
+		CResizer() : m_hParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
 		virtual ~CResizer() {}
 
 		virtual void AddChild(HWND hWnd, Alignment corner, DWORD dwStyle);
 		virtual void HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    	virtual void Initialize(CWnd* pParent, const RECT& rcMin, const RECT& rcMax = CRect(0,0,0,0));
+    	virtual void Initialize(HWND hParent, const RECT& rcMin, const RECT& rcMax = CRect(0,0,0,0));
 		virtual void OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void RecalcLayout();
@@ -175,7 +175,7 @@ namespace Win32xx
 		};
 
     private:
-        CWnd* m_pParent;
+        HWND m_hParent;
     	std::vector<ResizeData> m_vResizeData;
 
     	CRect m_rcInit;
@@ -687,7 +687,7 @@ namespace Win32xx
     	rd.bFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
 		CRect rcInit;
 		::GetWindowRect(hWnd, &rcInit);
-		m_pParent->ScreenToClient(rcInit);
+		::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2);
 		rd.rcInit = rcInit;
 		rd.hWnd = hWnd;
 
@@ -714,23 +714,26 @@ namespace Win32xx
 		}
 	}
 
-    void inline CResizer::Initialize(CWnd* pParent, const RECT& rcMin, const RECT& rcMax)
+    void inline CResizer::Initialize(HWND hParent, const RECT& rcMin, const RECT& rcMax)
 	// Sets up the Resizer by specifying the parent window (usually a dialog),
 	//  and the minimum and maximum allowed rectangle sizes.
+	//
+	// Note:hParent can either be a CWnd or a window handle (HWND)
     {
-    	assert (NULL != pParent);
+		assert (::IsWindow(hParent));
 
-    	m_pParent = pParent;
-    	m_rcInit = pParent->GetClientRect();
+    	m_hParent = hParent;
+		::GetClientRect(hParent, &m_rcInit);
+
     	m_rcMin = rcMin;
     	m_rcMax = rcMax;
 
 		m_vResizeData.clear();
 
 		// Add scroll bar support to the parent window
-		DWORD dwStyle = (DWORD)m_pParent->GetClassLongPtr(GCL_STYLE);
+		DWORD dwStyle = (DWORD)::GetClassLongPtr(hParent, GCL_STYLE);
 		dwStyle |= WS_HSCROLL | WS_VSCROLL;
-		m_pParent->SetClassLongPtr(GCL_STYLE, dwStyle);
+		::SetClassLongPtr(hParent, GCL_STYLE, dwStyle);
     }
 
 	void inline CResizer::OnHScroll(UINT, WPARAM wParam, LPARAM)
@@ -769,10 +772,12 @@ namespace Win32xx
 
 		// Scroll the window.
 		xNewPos = MAX(0, xNewPos);
-		xNewPos = MIN( xNewPos, GetMinRect().Width() - m_pParent->GetClientRect().Width() );
+		CRect rc;
+		::GetClientRect(m_hParent, &rc);
+		xNewPos = MIN( xNewPos, GetMinRect().Width() - rc.Width() );
 		int xDelta = xNewPos - m_xScrollPos;
 		m_xScrollPos = xNewPos;
-		m_pParent->ScrollWindow(-xDelta, 0, NULL, NULL);
+		::ScrollWindow(m_hParent, -xDelta, 0, NULL, NULL);
 
 		// Reset the scroll bar.
 		SCROLLINFO si;
@@ -780,7 +785,7 @@ namespace Win32xx
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_POS;
 		si.nPos   = m_xScrollPos;
-		m_pParent->SetScrollInfo(SB_HORZ, si, TRUE);
+		::SetScrollInfo(m_hParent, SB_HORZ, &si, TRUE);
 	}
 
 	void inline CResizer::OnVScroll(UINT, WPARAM wParam, LPARAM)
@@ -819,10 +824,12 @@ namespace Win32xx
 
 		// Scroll the window.
 		yNewPos = MAX(0, yNewPos);
-		yNewPos = MIN( yNewPos, GetMinRect().Height() - m_pParent->GetClientRect().Height() );
+		CRect rc;
+		GetClientRect(m_hParent, &rc);
+		yNewPos = MIN( yNewPos, GetMinRect().Height() - rc.Height() );
 		int yDelta = yNewPos - m_yScrollPos;
 		m_yScrollPos = yNewPos;
-		m_pParent->ScrollWindow(0, -yDelta, NULL, NULL);
+		::ScrollWindow(m_hParent, 0, -yDelta, NULL, NULL);
 
 		// Reset the scroll bar.
 		SCROLLINFO si;
@@ -830,7 +837,7 @@ namespace Win32xx
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_POS;
 		si.nPos   = m_yScrollPos;
-		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
+		::SetScrollInfo(m_hParent, SB_VERT, &si, TRUE);
 	}
 
     void inline CResizer::RecalcLayout()
@@ -838,9 +845,10 @@ namespace Win32xx
 	// the WM_SIZE message in the parent window.
 	{
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
-    	assert (NULL != m_pParent);
+		assert (::IsWindow(m_hParent));
 
-		CRect rcCurrent = m_pParent->GetClientRect();
+		CRect rcCurrent;
+		::GetClientRect(m_hParent, &rcCurrent);
 
 		// Adjust the scrolling if required
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
@@ -852,15 +860,15 @@ namespace Win32xx
 		si.nMax   =	m_rcMin.Width();
 		si.nPage  = rcCurrent.Width();
 		si.nPos   = m_xScrollPos;
-		m_pParent->SetScrollInfo(SB_HORZ, si, TRUE);
+		::SetScrollInfo(m_hParent, SB_HORZ, &si, TRUE);
 		si.nMax   =	m_rcMin.Height();
 		si.nPage  = rcCurrent.Height();
 		si.nPos   = m_yScrollPos;
-		m_pParent->SetScrollInfo(SB_VERT, si, TRUE);
+		::SetScrollInfo(m_hParent, SB_VERT, &si, TRUE);
 
 		// Note: calls to SetScrollInfo may have changed the client rect, so
 		// we get it again.
-		rcCurrent = m_pParent->GetClientRect();
+		::GetClientRect(m_hParent, &rcCurrent);
 
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
     	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );

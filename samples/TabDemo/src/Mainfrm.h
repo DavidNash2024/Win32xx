@@ -33,7 +33,7 @@ protected:
 	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

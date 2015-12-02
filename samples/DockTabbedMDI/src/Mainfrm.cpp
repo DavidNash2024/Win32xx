@@ -386,7 +386,7 @@ void CMainDockFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
-void CMainDockFrame::PreCreate(CREATESTRUCT &cs)
+void CMainDockFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
 	CFrame::PreCreate(cs);

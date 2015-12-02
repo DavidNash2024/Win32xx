@@ -21,7 +21,7 @@ public:
 protected:
 	virtual void OnDestroy();
 	virtual void OnInitialUpdate();
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
 	CImageList m_imlNormal;

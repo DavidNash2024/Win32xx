@@ -74,7 +74,7 @@ namespace Win32xx
 		BOOL  DeleteButton(int iButton) const;
 		BOOL  DisableButton(int idButton) const;
 		BOOL  EnableButton(int idButton) const;
-		BOOL  GetButton(int iButton, LPTBBUTTON lpButton) const;
+		BOOL  GetButton(int iButton, TBBUTTON& Button) const;
 		int   GetButtonCount() const;
 		DWORD GetButtonSize() const;
 		UINT  GetButtonState(int idButton) const;
@@ -96,7 +96,7 @@ namespace Win32xx
 		BOOL  HideButton(int idButton, BOOL fShow) const;
 		int   HitTest() const;
 		BOOL  Indeterminate(int idButton, BOOL fIndeterminate) const;
-		BOOL  InsertButton(int iButton, LPTBBUTTON lpButton) const;
+		BOOL  InsertButton(int iButton, TBBUTTON& Button) const;
 		BOOL  IsButtonHidden(int idButton) const;
 		BOOL  IsButtonHighlighted(int idButton) const;
 		BOOL  IsButtonIndeterminate(int idButton) const;
@@ -129,8 +129,8 @@ namespace Win32xx
 		virtual void OnAttach();
 		virtual void OnDestroy();
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -234,7 +234,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CToolBar::AddButtons(UINT uNumButtons, LPTBBUTTON lpButtons) const
-	// Adds one or more buttons to a ToolBar.
+	// Adds one or more buttons to a ToolBar. lpButtons is a pointer to an array of TBBUTTON
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(TB_ADDBUTTONS, (LPARAM)uNumButtons, (WPARAM)lpButtons));
@@ -318,11 +318,11 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TB_ENABLEBUTTON, (WPARAM)idButton, (LPARAM) MAKELONG(TRUE,0 )));
 	}
 
-	inline BOOL CToolBar::GetButton(int iButton, LPTBBUTTON lpButton) const
+	inline BOOL CToolBar::GetButton(int iButton, TBBUTTON& Button) const
 	// Receives the TBBUTTON structure information from the specified button
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TB_GETBUTTON, (LPARAM)iButton, (WPARAM)lpButton));
+		return static_cast<BOOL>(SendMessage(TB_GETBUTTON, (LPARAM)iButton, (WPARAM)&Button));
 	}
 
 	inline int CToolBar::GetButtonCount() const
@@ -559,11 +559,11 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TB_INDETERMINATE, (WPARAM)idButton, (LPARAM)MAKELONG (fIndeterminate, 0)));
 	}
 
-	inline BOOL CToolBar::InsertButton(int iButton, LPTBBUTTON lpButton) const
+	inline BOOL CToolBar::InsertButton(int iButton, TBBUTTON& Button) const
 	// Inserts a button to the left of iButton.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TB_INSERTBUTTON, (WPARAM)iButton, (LPARAM)lpButton));
+		return static_cast<BOOL>(SendMessage(TB_INSERTBUTTON, (WPARAM)iButton, (LPARAM)&Button));
 	}
 
 	inline BOOL CToolBar::IsButtonHidden(int idButton) const
@@ -651,13 +651,13 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline void CToolBar::PreCreate(CREATESTRUCT &cs)
+	inline void CToolBar::PreCreate(CREATESTRUCT& cs)
 	{
 		// Sets the CREATESTRUCT parameters prior to window creation
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
 	}
 
-	inline void CToolBar::PreRegisterClass(WNDCLASS &wc)
+	inline void CToolBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  TOOLBARCLASSNAME;
@@ -754,7 +754,7 @@ namespace Win32xx
 		// Retrieve existing state and style
 		TBBUTTON tb;
 		ZeroMemory(&tb, sizeof(TBBUTTON));
-		BOOL bSucceeded = GetButton(CommandToIndex(idButton), &tb);
+		BOOL bSucceeded = GetButton(CommandToIndex(idButton), tb);
 		assert(bSucceeded);
 
         if (bSucceeded)

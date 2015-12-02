@@ -12,7 +12,7 @@ public:
 protected:
 	virtual void OnAttach();
 	virtual BOOL OnEraseBkgnd(CDC& dc);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	void SetStatusParts();

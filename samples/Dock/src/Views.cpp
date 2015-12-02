@@ -239,7 +239,7 @@ void CViewText::OnInitialUpdate()
 	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-void CViewText::PreCreate(CREATESTRUCT &cs)
+void CViewText::PreCreate(CREATESTRUCT& cs)
 {
 	cs.lpszClass = _T("EDIT");
 	cs.style = ES_MULTILINE|WS_CHILD;

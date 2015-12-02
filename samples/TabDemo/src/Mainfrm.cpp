@@ -215,7 +215,7 @@ BOOL CMainFrame::OnTabsAtTop()
 	return TRUE;
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
 	CFrame::PreCreate(cs);

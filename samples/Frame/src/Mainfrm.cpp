@@ -74,35 +74,6 @@ void CMainFrame::OnInitialUpdate()
 	// Place any additional startup code here.
 
 
-	CStringA strA;
-	CStringW strW;
-	CString str;
-
-	CHAR  szA[50];
-	WCHAR szW[50];
-	TCHAR szT[50];
-
-	{
-		CArchive ar(_T("TestFile"), CArchive::store);
-		ar << CStringA("Some text in a CStringA");
-		ar << CStringW(_T("Some text in a CStringW"));
-		ar << CString("Some text in a CString"); 
-		ar.WriteStringA("A char character array");
-		ar.WriteStringW(L"A WCHAR character array");
-		ar.WriteString(_T("A TCHAR character array"));
-	}
-
-	{
-		CArchive ar(_T("TestFile"), CArchive::load);
-		ar >> strA;
-		ar >> strW;
-		ar >> str;
-		ar.ReadStringA(szA, 50);
-		ar.ReadStringW(szW, 50);
-		ar.ReadString(szT, 50);
-	}
-
-
 	TRACE("Frame created\n");
 }
 
@@ -159,7 +130,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT &cs)
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// This function is called before the frame is created.
 	// It provides an opportunity to modify the various CREATESTRUCT

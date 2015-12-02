@@ -47,7 +47,7 @@ void CMainFrame::DoPopupMenu()
 
 		mii.fMask  = MIIM_STATE | MIIM_ID;
 		CMenu SubMenu = GetFrameMenu().GetSubMenu(1);
-		SubMenu.GetMenuItemInfo(i, &mii, TRUE);
+		SubMenu.GetMenuItemInfo(i, mii, TRUE);
 		if (mii.fState & MFS_CHECKED)
 			TopMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
 	}

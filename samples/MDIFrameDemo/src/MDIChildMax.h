@@ -27,7 +27,7 @@ public:
 
 protected:
 	virtual int OnCreate(CREATESTRUCT& cs);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
 	CViewMax m_MaxView;

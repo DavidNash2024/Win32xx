@@ -137,7 +137,7 @@ void CGDIPlusView::OnInitialUpdate()
 	TRACE("View window created\n");
 }
 
-void CGDIPlusView::PreCreate(CREATESTRUCT &cs)
+void CGDIPlusView::PreCreate(CREATESTRUCT& cs)
 {
 	// Here we set the defaults used by the create function for the view window
 	// Preforming this is optional, but doing so allows us to
@@ -147,7 +147,7 @@ void CGDIPlusView::PreCreate(CREATESTRUCT &cs)
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CGDIPlusView::RegisterClass(WNDCLASS &wc)
+void CGDIPlusView::RegisterClass(WNDCLASS& wc)
 {
 	// Here we set the Window class parameters.
 	// Preforming this is optional, but doing so allows us to

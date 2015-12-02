@@ -141,7 +141,7 @@ namespace Win32xx
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual int OnCreate(CREATESTRUCT& cs);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-			virtual void PreRegisterClass(WNDCLASS &wc);
+			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void RecalcLayout();
 			virtual void SetView(CWnd& wndView);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -208,7 +208,7 @@ namespace Win32xx
 		virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -254,7 +254,7 @@ namespace Win32xx
 			CDockBar();
 			virtual ~CDockBar();
 			virtual void OnDraw(CDC& dc);
-			virtual void PreCreate(CREATESTRUCT &cs);
+			virtual void PreCreate(CREATESTRUCT& cs);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
 			virtual void SetColor(COLORREF color);
@@ -350,7 +350,7 @@ namespace Win32xx
 			virtual RECT CalcHintRectOuter(CDocker* pDockDrag, UINT uDockSide);
 			virtual void DisplayHint(CDocker* pDockTarget, CDocker* pDockDrag, UINT uDockSide);
 			virtual void OnDraw(CDC& dc);
-			virtual void PreCreate(CREATESTRUCT &cs);
+			virtual void PreCreate(CREATESTRUCT& cs);
 
 		private:
 			CDockHint(const CDockHint&);				// Disable copy construction
@@ -366,7 +366,7 @@ namespace Win32xx
 			CTarget() {}
 			virtual ~CTarget();
 			virtual void OnDraw(CDC& dc);
-			virtual void PreCreate(CREATESTRUCT &cs);
+			virtual void PreCreate(CREATESTRUCT& cs);
 
 		protected:
 			CBitmap m_bmImage;
@@ -512,8 +512,8 @@ namespace Win32xx
 		virtual LRESULT OnDockMove(LPDRAGPOS pdp);
 		virtual LRESULT OnDockStart(LPDRAGPOS pdp);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT &cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Current declarations of message handlers
@@ -670,7 +670,7 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline void CDocker::CDockBar::PreCreate(CREATESTRUCT &cs)
+	inline void CDocker::CDockBar::PreCreate(CREATESTRUCT& cs)
 	{
 		// Create a child window, initially hidden
 		cs.style = WS_CHILD;
@@ -1480,7 +1480,7 @@ namespace Win32xx
 		dc.BitBlt(0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
 	}
 
-	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT &cs)
+	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT& cs)
 	{
 		cs.style = WS_POPUP;
 
@@ -1654,7 +1654,7 @@ namespace Win32xx
 			TRACE("Missing docking resource\n");
 	}
 
-	inline void CDocker::CTarget::PreCreate(CREATESTRUCT &cs)
+	inline void CDocker::CTarget::PreCreate(CREATESTRUCT& cs)
 	{
 		cs.style = WS_POPUP;
 		cs.dwExStyle = WS_EX_TOPMOST|WS_EX_TOOLWINDOW;
@@ -3267,7 +3267,7 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline void CDocker::PreCreate(CREATESTRUCT &cs)
+	inline void CDocker::PreCreate(CREATESTRUCT& cs)
 	{
 		// Specify the WS_POPUP style to have this window owned
 		if (this != GetDockAncestor())
@@ -3276,7 +3276,7 @@ namespace Win32xx
 		cs.dwExStyle = WS_EX_TOOLWINDOW;
 	}
 
-	inline void CDocker::PreRegisterClass(WNDCLASS &wc)
+	inline void CDocker::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ Docker");
 		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
@@ -4394,7 +4394,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	inline void CDockContainer::PreCreate(CREATESTRUCT &cs)
+	inline void CDockContainer::PreCreate(CREATESTRUCT& cs)
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		CTab::PreCreate(cs);
@@ -4756,7 +4756,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline void CDockContainer::CViewPage::PreRegisterClass(WNDCLASS &wc)
+	inline void CDockContainer::CViewPage::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = _T("Win32++ TabPage");
 		wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);

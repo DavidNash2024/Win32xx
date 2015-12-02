@@ -29,7 +29,7 @@ protected:
 	virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);
 	virtual LRESULT OnNMReturn(LPNMHDR pNMHDR);
 	virtual LRESULT OnLVNDispInfo(NMLVDISPINFO* pdi);
-	virtual void PreCreate(CREATESTRUCT &cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:

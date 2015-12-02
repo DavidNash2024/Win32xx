@@ -385,7 +385,7 @@ void CMyTreeView::OnInitialUpdate()
 	SendMessage(TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM) GetImageList(FALSE));
 }
 
-void CMyTreeView::PreCreate(CREATESTRUCT &cs)
+void CMyTreeView::PreCreate(CREATESTRUCT& cs)
 {
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 	cs.style = WS_TABSTOP | WS_CHILD | WS_VISIBLE | TVS_HASLINES |

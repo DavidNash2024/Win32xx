@@ -6,7 +6,7 @@
 #include "MyCombo.h"
 
 
-void CMyCombo::PreCreate(CREATESTRUCT &cs)
+void CMyCombo::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = WS_VISIBLE | WS_CHILD | CBS_DROPDOWN | WS_CLIPCHILDREN;
 	cs.cy = 100;	// required to display list

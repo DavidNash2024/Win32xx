@@ -113,7 +113,7 @@ BOOL CFormView::OnInitDialog()
 	OnRangeOfIds_Radio(curRadio);
 	
 	// Initialize dialog resizing
-	m_Resizer.Initialize( this, CRect(0, 0, 300, 270) );
+	m_Resizer.Initialize( *this, CRect(0, 0, 300, 270) );
 	m_Resizer.AddChild(m_RadioA,   topleft, 0);
 	m_Resizer.AddChild(m_RadioB,   topleft, 0);
 	m_Resizer.AddChild(m_RadioC,   topleft, 0);

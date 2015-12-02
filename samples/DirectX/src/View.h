@@ -48,7 +48,7 @@ class CDXView : public CWnd
 		virtual	int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void PreCreate(CREATESTRUCT &cs);
+		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

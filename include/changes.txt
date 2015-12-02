@@ -138,14 +138,24 @@ Added CArchive::operator<<(const CStringW& string);
 Added CArchive::operator>>(CStringA& s);
 Added CArchive::operator>>(CStringW& s);
 
-Modified    CDC::CreateCompatibleDC returns HDC
-Modified    CDC::CreateDC 			returns HDC
-Modified    CDC::CreateIC 			returns HDC
-Modified	CThread::PreTranslateMessage
-Modified	CToolTip::RelayEvent
-Modified	CWnd::OnCreate
-Modified	CWnd::IsDialogMessage
-Modified	CWnd::PreTranslateMessage
+Modified CDC::CreateCompatibleDC 		returns HDC
+Modified CDC::CreateDC 					returns HDC
+Modified CDC::CreateIC 					returns HDC
+
+These function no longer use a pointer:
+Modified CMenu::GetMenuInfo
+Modified CMenu::SetMenuInfo
+Modified CMenu::GetMenuItemInfo
+Modified CMenu::SetMenuItemInfo
+Modified CMenu::InsertMenuItem
+Modified CResizer::Initialize
+Modified CToolBar::GetButton
+Modified CToolBar::InsertButton
+Modified CToolTip::RelayEvent
+Modified CThread::PreTranslateMessage
+Modified CWnd::OnCreate
+Modified CWnd::IsDialogMessage
+Modified CWnd::PreTranslateMessage
 
 
 Version 8.0.1

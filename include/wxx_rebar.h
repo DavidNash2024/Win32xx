@@ -100,7 +100,7 @@ namespace Win32xx
 		virtual LRESULT OnTBWinPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnToolBarResize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void PreRegisterClass(WNDCLASS &wc);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -330,7 +330,7 @@ namespace Win32xx
 	}
 
 
-	inline void CReBar::PreCreate(CREATESTRUCT &cs)
+	inline void CReBar::PreCreate(CREATESTRUCT& cs)
 	// Sets the CREATESTRUCT parameters prior to window creation
 	{
 		cs.style = WS_VISIBLE | WS_CHILD | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
@@ -338,7 +338,7 @@ namespace Win32xx
 
 	}
 
-	inline void CReBar::PreRegisterClass(WNDCLASS &wc)
+	inline void CReBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  REBARCLASSNAME;

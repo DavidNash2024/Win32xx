@@ -89,8 +89,8 @@ namespace Win32xx
 		virtual LRESULT OnTBNHotItemChange(LPNMTBHOTITEM pNMHI);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual void	PreCreate(CREATESTRUCT &cs);
-		virtual void	PreRegisterClass(WNDCLASS &wc);
+		virtual void	PreCreate(CREATESTRUCT& cs);
+		virtual void	PreRegisterClass(WNDCLASS& wc);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -983,12 +983,12 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
-	inline void CMenuBar::PreCreate(CREATESTRUCT &cs)
+	inline void CMenuBar::PreCreate(CREATESTRUCT& cs)
 	{
 		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS | TBSTYLE_LIST | TBSTYLE_FLAT | CCS_NODIVIDER | CCS_NORESIZE;
 	}
 
-	inline void CMenuBar::PreRegisterClass(WNDCLASS &wc)
+	inline void CMenuBar::PreRegisterClass(WNDCLASS& wc)
 	{
 		// Set the Window Class
 		wc.lpszClassName =  TOOLBARCLASSNAME;

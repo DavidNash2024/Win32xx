@@ -90,8 +90,8 @@ CView : public CWnd							/*
 		virtual void 	OnDraw(CDC& pDC);
 		virtual void 	OnInitialUpdate();
 		virtual void    Paint(CDC &, RECT);
-		virtual void 	PreCreate(CREATESTRUCT &cs);
-		virtual void 	PreRegisterClass(WNDCLASS &wc);
+		virtual void 	PreCreate(CREATESTRUCT& cs);
+		virtual void 	PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL 	PreTranslateMessage(MSG& Msg);  // dn
 		virtual void    SetDefaultFont();
      		virtual void    TextOutHi(CDC&, RECT, int, const CString &,
