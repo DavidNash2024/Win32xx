@@ -90,7 +90,7 @@ CMainFrame : public CFrame						/*
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual BOOL 	OnCommandAction(WPARAM wParam, LPARAM lParam);
 		virtual BOOL 	OnCommandHelp(WPARAM wParam, LPARAM lParam);
-		virtual int  	OnCreate(CREATESTRUCT& cs);  // dn
+		virtual int  	OnCreate(CREATESTRUCT& cs);  
 		virtual void	OnDestroy();
 		virtual void 	OnEditCopy(void);
 		virtual void 	OnEditCut(void);
@@ -119,7 +119,7 @@ CMainFrame : public CFrame						/*
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
 		virtual void 	PreCreate(CREATESTRUCT& cs);
-		virtual BOOL 	PreTranslateMessage(MSG& Msg);  // dn
+		virtual BOOL 	PreTranslateMessage(MSG& Msg);  
 		virtual void	Serialize(CArchive &ar);
 		virtual	BOOL    SetControlStatus(UINT, bool, ControlBars);
 		virtual void    SetStatusbarMsg(CString);
