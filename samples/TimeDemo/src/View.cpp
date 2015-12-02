@@ -106,11 +106,11 @@ GetClientWdHt()                                            		/*
 
 /*============================================================================*/
 	int	CView::
-OnCreate(CREATESTRUCT& cs)  // dn                                   /*
+OnCreate(CREATESTRUCT& cs) 						/*
 
 *-----------------------------------------------------------------------------*/
 {
-	UNREFERENCED_PARAMETER(cs);  // dn
+	UNREFERENCED_PARAMETER(cs);  
 
 	// TODO: add code here  to prepare the initial view
 	SetDefaultFont();
@@ -291,7 +291,7 @@ PreRegisterClass(WNDCLASS& wc)                                          /*
 
 /*============================================================================*/
 	BOOL CView::
-PreTranslateMessage(MSG& Msg)  // dn                                           /*
+PreTranslateMessage(MSG& Msg)						/*
 
 	Used by CWinApp to translate window messages before they are dispatched
 	to theTranslateMessage and  DispatchMessage Windows functions in the
@@ -302,12 +302,12 @@ PreTranslateMessage(MSG& Msg)  // dn                                           /
 {
 	UNREFERENCED_PARAMETER(Msg);
 
-//	HWND   hwnd	= Msg.hwnd;  // dn
-//	UINT   message	= Msg.message;  // dn
-//	WPARAM wParam	= Msg.wParam;  // dn
-//	LPARAM lParam	= Msg.lParam;  // dn
-//	DWORD  time	= Msg.time;  // dn
-//	CPoint  pt	= Msg.pt;  // dn
+//	HWND   hwnd	= Msg.hwnd;  
+//	UINT   message	= Msg.message;  
+//	WPARAM wParam	= Msg.wParam;  
+//	LPARAM lParam	= Msg.lParam;  
+//	DWORD  time	= Msg.time;  
+//	CPoint  pt	= Msg.pt;  
 
 	  // return 0 if the message was not handled here
 	return 0;
