@@ -455,7 +455,7 @@ namespace Win32xx
 		virtual CDocker* GetActiveDocker() const;
 		virtual CDocker* GetDockAncestor() const;
 		virtual CDocker* GetDockFromID(int n_DockID) const;
-		virtual CDocker* GetDockFromPoint(POINT pt) const;
+		virtual CDocker* GetDockFromPoint(POINT pt);
 		virtual CDocker* GetDockFromView(CWnd* pView) const;
 		virtual CDocker* GetTopmostDocker() const;
 		virtual int GetDockSize() const;
@@ -546,6 +546,7 @@ namespace Win32xx
 		void SendNotify(UINT nMessageID);
 		void SetUndockPosition(CPoint pt);
 		std::vector<CDocker*> SortDockers();
+		static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
 
 		CDockBar		m_DockBar;
 		CDockHint		m_DockHint;
@@ -578,6 +579,8 @@ namespace Win32xx
 		DWORD m_dwDockZone;
 		double m_DockSizeRatio;
 		DWORD m_DockStyle;
+		HWND m_hDockUnderPoint;
+		CPoint m_DockPoint;
 
 	}; // class CDocker
 
@@ -2337,56 +2340,40 @@ namespace Win32xx
 		return m_pDockAncestor;
 	}
 
-	inline CDocker* CDocker::GetDockFromPoint(POINT pt) const
+	inline CDocker* CDocker::GetDockFromPoint(POINT pt)
 	// Retrieves the Docker whose view window contains the specified point.
 	// Used when dragging undocked dockers over other dockers to provide
 	// the docker which needs to display the dock targets and dock hints.
 	{
-		// Step 1: Find the top level Docker the point is over
-		// Start at the DockAncestor's Ancestor and work up the Z order
-		CDocker* pDockTop = NULL;
-		HWND hAncestor = GetDockAncestor()->GetAncestor();
-		HWND hWnd = hAncestor;
+		// Step 1: Find the top level Docker under the point
+		// EnumWindows assigns the Docker under the point to m_hDockUnderPoint
 
-		do
-		{
-			if (IsRelated(hWnd) || hWnd == hAncestor)
-			{
-				CDocker* pDockTest;
-				if (hWnd == hAncestor)
-					pDockTest = GetDockAncestor();
-				else
-					pDockTest = static_cast<CDocker*>(GetCWndPtr(hWnd));
-
-				CRect rc = pDockTest->GetClientRect();
-				pDockTest->ClientToScreen(rc);
-				if ((this != pDockTest) && rc.PtInRect(pt))
-				{
-					pDockTop = pDockTest;
-				}
-			}
-			hWnd = ::GetWindow(hWnd, GW_HWNDPREV);
-
-		} while (hWnd != ::GetWindow(hWnd, GW_HWNDFIRST));
+		m_hDockUnderPoint = 0;
+		m_DockPoint = pt;
+		EnumWindows(EnumWindowsProc, (LPARAM)this);
 
 		// Step 2: Find the docker child whose view window has the point
 		CDocker* pDockTarget = NULL;
-		if (pDockTop)
+		if (m_hDockUnderPoint != 0)
 		{
-			CDocker* pDockParent = pDockTop;
-			CDocker* pDockTest = pDockParent;
+			HWND hDockTest = m_hDockUnderPoint;
+			HWND hDockParent = m_hDockUnderPoint;
 
-			while (IsRelated(*pDockTest))
+			while (IsRelated(hDockTest))
 			{
-				pDockParent = pDockTest;
+				hDockParent = hDockTest;
 				CPoint ptLocal = pt;
-				pDockParent->ScreenToClient(ptLocal);
-				pDockTest = static_cast<CDocker*>(GetCWndPtr(pDockParent->ChildWindowFromPoint(ptLocal)));
-				assert (pDockTest != pDockParent);
+				::ScreenToClient(hDockParent, &ptLocal);
+				hDockTest = ::ChildWindowFromPoint(hDockParent, ptLocal);
+				assert(hDockTest != hDockParent);
 			}
 
+			assert (::SendMessage(hDockParent, UWM_ISDOCKER, 0, 0));
+			CDocker* pDockParent = static_cast<CDocker*>(GetCWndPtr(hDockParent));
+
 			CRect rc = pDockParent->GetDockClient().GetWindowRect();
-			if (rc.PtInRect(pt)) pDockTarget = pDockParent;
+			if (rc.PtInRect(pt))
+				pDockTarget = pDockParent;
 		}
 
 		return pDockTarget;
@@ -4063,6 +4050,26 @@ namespace Win32xx
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
+	}
+
+	inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hWnd, LPARAM lParam)
+	// Static callback function to enumerate windows
+	{
+		CRect rc;
+		assert(lParam);
+		CDocker* This = (CDocker*)lParam;
+		CPoint pt = This->m_DockPoint;
+
+		if (This->IsRelated(hWnd) && hWnd != This->GetHwnd())
+		{
+			::GetWindowRect(hWnd, &rc);
+			if (rc.PtInRect(pt) && This->m_hDockUnderPoint == 0)
+			{
+				This->m_hDockUnderPoint = hWnd;
+			}
+		}
+
+		return TRUE;
 	}
 
 
