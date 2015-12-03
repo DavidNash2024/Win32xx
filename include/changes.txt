@@ -12,8 +12,8 @@ need to update your code as accordingly. The current definitions are:
 New Features and Enhancements
 ----------------------------- 
 * Added CDataExchange
-  This class provides support for dialog data exchange(DDX) and dialog data 
-  validation(DDV). This class has a set of DDX and DDV member functions which
+  CDataExchange provides support for dialog data exchange(DDX) and dialog data 
+  validation(DDV). CDataExchange class has a set of DDX and DDV member functions which
   perform the data exchange and validation for different types of controls.  
   Typically this is used for controls in a dialogs, but controls in any
   window support DDX and DDV.
@@ -42,7 +42,6 @@ New Features and Enhancements
    - Added CException             ( inherits from std::exception )
    - Added CFileException         ( inherits from CException ) 
    - Added CNotSupportedException ( inherits from CException )
-   - Added CResourceException     ( inherits from CException )
    - Added CUserException         ( inherits from CException )
    - Updated CWinException        ( inherits from CException )
 
@@ -59,22 +58,22 @@ New Features and Enhancements
    CWinExceptions are now thrown under the following circumstances:
     * A failure to create a thread
     * A failure to create a window, including:
-      - generic windows
-	  - dialogs
-	  - property sheets
-	  - task dialogs
+	   - generic windows
+	   - dialogs
+	   - property sheets
+	   - task dialogs
     * A failure to create a GDI resource, namely:
-      - device contexts
-      - bitmaps
-      - brushes
-      - fonts
-      - palettes
-      - pens
-      - regions
+	   - device contexts
+	   - bitmaps
+	   - brushes
+	   - fonts
+	   - palettes
+	   - pens
+	   - regions
 	 
    CUserExceptions are thrown under the following circumstances:
-     - A CDataExchange DDX or DDV function fails validation
-	 - A CUserException is typically the exception thrown in user code. 
+    - A CDataExchange DDX or DDV function fails validation
+	- A CUserException is typically the exception thrown in user code. 
    
    Notes:
     - Exceptions should be thrown by value, and caught by const reference.   
@@ -91,8 +90,8 @@ New Features and Enhancements
 	  
 * Updated CWnd
    - Added OnPaint virtual function. OnPaint calls OnDraw for generic windows,
-     but not for window controls. Users can override OnPaint to draw to window
-     controls as an alternative to custom draw or owner draw.	 
+     but not for window controls. Users can now override OnPaint to draw to
+	 window controls as an alternative to custom draw or owner draw.	 
    - Added DoDataExchange and UpdatedData to support CDataExchange. 	
   
 * Updated CCriticalSection
