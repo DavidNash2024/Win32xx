@@ -31,6 +31,8 @@ public:
 	CDockSimple() {SetView(m_View);}
 	virtual ~CDockSimple() {}
 
+	CSimpleView& GetSimpleView() { return m_View; }
+
 private:
 	CSimpleView m_View;
 

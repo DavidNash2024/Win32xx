@@ -244,7 +244,7 @@ namespace Win32xx
 	//  A CDocker window allows other CDocker windows to be "docked" inside it.
 	//  A CDocker can dock on the top, left, right or bottom side of a parent CDocker.
 	//  There is no theoretical limit to the number of CDockers within CDockers.
-	class CDocker : public CWnd
+	class CDocker : virtual public CWnd
 	{
 	public:
 		//  A nested class for the splitter bar that separates the docked panes.
@@ -1563,14 +1563,12 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-	//	assert( dynamic_cast<CDocker*>(pDockDrag) );
 		assert( ::SendMessage(*pDockDrag, UWM_ISDOCKER, 0, 0) );
 
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-	//	m_IsOverContainer = (dynamic_cast<CDockContainer*>(&pDockTarget->GetView()) != NULL);
 		m_IsOverContainer = pDockTarget->GetView().SendMessage(UWM_ISDOCKCONTAINER);
 
 		// Redraw the target if the dock target changes
@@ -2313,8 +2311,6 @@ namespace Win32xx
 			return static_cast<CDockContainer*>(&GetView());
 		else
 			return NULL;
-
-		//	return dynamic_cast<CDockContainer*>(&GetView());
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
@@ -2330,7 +2326,7 @@ namespace Win32xx
 			hWnd = ::GetParent(hWnd);
 		}
 
-		return static_cast<CDocker*>(GetCWndPtr(hWnd));
+		return dynamic_cast<CDocker*>(GetCWndPtr(hWnd));
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -2369,7 +2365,7 @@ namespace Win32xx
 			}
 
 			assert (::SendMessage(hDockParent, UWM_ISDOCKER, 0, 0));
-			CDocker* pDockParent = static_cast<CDocker*>(GetCWndPtr(hDockParent));
+			CDocker* pDockParent = dynamic_cast<CDocker*>(GetCWndPtr(hDockParent));
 
 			CRect rc = pDockParent->GetDockClient().GetWindowRect();
 			if (rc.PtInRect(pt))
@@ -2455,8 +2451,6 @@ namespace Win32xx
 			return static_cast<CTabbedMDI*>(&GetView());
 		else
 			return NULL;
-
-	//	return dynamic_cast<CTabbedMDI*>(&GetView());
 	}
 
 	inline int CDocker::GetTextHeight()
@@ -4305,10 +4299,9 @@ namespace Win32xx
 			InsertItem(i, &tie);
 		}
 
-	//	m_pDocker = dynamic_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
 		m_pDocker = NULL;
 		if ( GetParent().GetParent().SendMessage(UWM_ISDOCKER) )
-			m_pDocker = static_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
+			m_pDocker = dynamic_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
 	}
 
 	inline LRESULT CDockContainer::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4495,7 +4488,6 @@ namespace Win32xx
 				pNewContainer->GetViewPage().GetView().SetFocus();
 
 				// Adjust the docking caption
-			//	if (dynamic_cast<CDocker*>(GetDocker()))
 				if (GetDocker())
 				{
 					GetDocker()->SetCaption(pNewContainer->GetDockCaption());

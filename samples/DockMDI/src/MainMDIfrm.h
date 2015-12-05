@@ -6,7 +6,7 @@
 #define MAINMDIFRM_H
 
 
-class CMainMDIFrame : public CMDIFrame
+class CMainMDIFrame : public CMDIDockFrame
 {
 public:
 	CMainMDIFrame();

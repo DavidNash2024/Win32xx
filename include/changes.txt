@@ -8,15 +8,18 @@ need to update your code as accordingly. The current definitions are:
 - CWnd::OnCreate(CREATESTRUCT& cs)
 - CWnd::PreTranslateMessage(MSG& Msg)
 - CThread::PreTranslateMessage(MSG& Msg)
+Also:
+- SDI Frame applications which require docking support should use CDockFrame.
+- MDI Frame applications which require docking support should use CMDIDockFrame.
 
 New Features and Enhancements
 ----------------------------- 
 * Added CDataExchange
   CDataExchange provides support for dialog data exchange(DDX) and dialog data 
-  validation(DDV). CDataExchange class has a set of DDX and DDV member functions which
-  perform the data exchange and validation for different types of controls.  
-  Typically this is used for controls in a dialogs, but controls in any
-  window support DDX and DDV.
+  validation(DDV). CDataExchange class has a set of DDX and DDV member
+  functions which perform the data exchange and validation for different types
+  of controls. Typically this is used for controls in a dialogs, but controls
+  in any window support DDX and DDV.
   
   To use CDataExchange, perform the following steps:
    - Override DoDataExchange and specify the appropriate DDX and DDV functions.
@@ -37,6 +40,21 @@ New Features and Enhancements
    - Added operator + support for ints and doubles.
    - Added operator += support for ints and doubles.
    - Added operator = support for ints and doubles.
+   
+* Added CDockFrame.
+   Inherit your CMainFrame from CDockFrame to add docking capabilities to normal
+   Single Document Interface (SDI) frames. Frames which don't require docking 
+   capabilities should inherit from CFrame. The use of CFrame instead of
+   CDockFrame results in as smaller executable file size.
+   Refer to the Doc, DockContainer, DockTabbeedMDI and Splitter samples for
+   a demonstration of CDockFrame.
+
+* Added CMDIDockFrame
+   Inherit your CMainMDIFrame from CMDIDockFrame to add docking capabilities to
+   Multiple Document Interface (MDI) frames. MDI Frames which don't require docking
+   capabilities should inherit from CMDIFrame. The use of CMDIFrame instead of
+   CMDIDockFrame results in a smaller executable file size.
+   Refer to the DockMDI sample for a demonstration of CMDIDockFrame.
    
 * Updated the exception handling
    - Added CException             ( inherits from std::exception )
@@ -112,6 +130,9 @@ Added wxx_appcore0.h
 Added wxx_appcore.h
 Added wxx_exception.h
 Added wxx_wincore0.h
+
+Added CDockFrame.  	 Inherits from CFrame and CDocker
+Added CMDIDockFrame. Inherits from CMDIFrame and CDocker
 
 Added UWN_TABCLOSE windows message notification
 Added CTabbedMDI::OnTabClose

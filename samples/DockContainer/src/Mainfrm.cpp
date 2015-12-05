@@ -116,7 +116,7 @@ int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	return CFrame::OnCreate(cs);
+	return CDockFrame::OnCreate(cs);
 }
 
 void CMainDockFrame::OnInitialUpdate()
