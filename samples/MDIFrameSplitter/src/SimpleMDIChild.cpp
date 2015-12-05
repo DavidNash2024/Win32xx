@@ -99,16 +99,13 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CSimpleMDIChild::OnColor(COLORREF rgb)
 {
-	CDockSimple& DockSimple = static_cast<CDockSimple&>(GetView());
-	CSimpleView& View = static_cast<CSimpleView&>(DockSimple.GetView());
-	View.SetColor(rgb);
-	View.Invalidate();
+	m_View.GetSimpleView().SetColor(rgb);
+	m_View.GetSimpleView().Invalidate();
 }
 
 LRESULT CSimpleMDIChild::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	CDocker& Dock = static_cast<CDocker&>(GetView());
-	Dock.RecalcDockLayout();
+	m_View.RecalcDockLayout();
 
 	// Pass the message on for default processing
 	return FinalWindowProc(uMsg, wParam, lParam);

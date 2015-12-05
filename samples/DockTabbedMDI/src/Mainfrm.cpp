@@ -8,7 +8,7 @@
 
 
 // Definitions for the CMainDockFrame class
-CMainDockFrame::CMainDockFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE), 
+CMainDockFrame::CMainDockFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE),
                            m_IsHideSingleTab(TRUE), m_IsMDITabsAtTop(TRUE)
 {
 	// Constructor for CMainDockFrame. Its called after CFrame's constructor
@@ -75,7 +75,7 @@ BOOL CMainDockFrame::OnFileNew()
 	CMenu PopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, GetHwnd(), &tpm);
 	return TRUE;
 }
 
@@ -169,7 +169,7 @@ CDocker* CMainDockFrame::NewDockerFromID(int idDock)
 		pDocker = new CDockClasses;
 		break;
 	case ID_DOCK_CLASSES2:
-		pDocker = new CDockClasses;					
+		pDocker = new CDockClasses;
 		break;
 	case ID_DOCK_FILES1:
 		pDocker = new CDockFiles;
@@ -280,7 +280,7 @@ int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	return CFrame::OnCreate(cs);
+	return CDockFrame::OnCreate(cs);
 }
 
 BOOL CMainDockFrame::OnHideSingleTab()
@@ -343,7 +343,7 @@ void CMainDockFrame::OnInitialUpdate()
 
 LRESULT CMainDockFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// Update the "Window" menu 
+	// Update the "Window" menu
 	m_MyTabbedMDI.GetListMenu();
 
 	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
@@ -379,7 +379,7 @@ void CMainDockFrame::OnMenuUpdate(UINT nID)
 		}
 
 		// Enable the Edit menu items for CViewText windows, disable them otherwise
-		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;
+		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;	
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 

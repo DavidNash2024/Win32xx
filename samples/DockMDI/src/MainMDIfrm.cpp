@@ -49,7 +49,7 @@ BOOL CMainMDIFrame::OnFilePrint()
 	PRINTDLG pd = {0};
 	pd.lStructSize = sizeof( pd );
 	pd.Flags = PD_RETURNDC;
-	pd.hwndOwner = *this;
+	pd.hwndOwner = GetHwnd();
 
 	// Retrieve the printer DC
 	PrintDlg( &pd );
@@ -120,7 +120,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 
 
 	// call the base class function
-	return CMDIFrame::OnCreate(cs);
+	return CMDIDockFrame::OnCreate(cs);
 }
 
 BOOL CMainMDIFrame::OnFileClose()
@@ -191,6 +191,6 @@ LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	}
 
 //	pass unhandled messages on for default processing
-	return CMDIFrame::WndProcDefault(uMsg, wParam, lParam);
+	return WndProcDefault(uMsg, wParam, lParam);
 }
 

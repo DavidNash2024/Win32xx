@@ -30,7 +30,7 @@ enum DockIDs
 };
 
 // Declaration of the CMainDockFrame class
-class CMainDockFrame : public CFrame
+class CMainDockFrame : public CDockFrame
 {
 public:
 	CMainDockFrame();

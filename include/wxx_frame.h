@@ -297,12 +297,12 @@ namespace Win32xx
 		ISTHEMEBGPARTTRANSPARENT* m_pfnIsThemeBGPartTransparent;
 		OPENTHEMEDATA*			  m_pfnOpenThemeData;
 	};
-	
+
 
 	//////////////////////////////////
 	// Declaration of the CFrame class
 	//
-	class CFrame : public CDocker
+	class CFrame : virtual public CWnd
 	{
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
 
@@ -318,6 +318,14 @@ namespace Win32xx
 		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
 		virtual void RecalcLayout();
+		virtual void RecalcViewLayout()
+		{
+			GetView().SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+		}
+
+		virtual CWnd& GetView() { return *m_pView; }
+		virtual void SetView(CWnd& wndView) { m_pView = &wndView; }
+
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
@@ -491,6 +499,80 @@ namespace Win32xx
 		BOOL m_ShowToolBar;					// Initial ToolBar show state retrieved from registry
 
 	};  // class CFrame
+
+
+	class CDockFrame : public CFrame, public CDocker
+	{
+	public:
+		CWnd& GetView()						{ return CDocker::GetView(); }
+		CRect GetViewRect() const			{ return CFrame::GetViewRect(); }
+		void SetView(CWnd& wndView)			{ CDocker::SetView(wndView); }
+
+	protected:
+		void OnClose()						{ CFrame::OnClose(); }
+		void OnMenuUpdate(UINT nID)			{ CFrame::OnMenuUpdate(nID); }
+		void PreCreate(CREATESTRUCT& cs)	{ CFrame::PreCreate(cs); }
+		void PreRegisterClass(WNDCLASS& wc) { CFrame::PreRegisterClass(wc); }
+		void RecalcViewLayout()				{ RecalcDockLayout();}
+
+		int OnCreate(CREATESTRUCT& cs)
+		{
+			GetDockClient().Create(GetHwnd());
+			GetView().Create(GetDockClient());
+			return CFrame::OnCreate(cs);
+		}
+		void OnDestroy()
+		{
+			CDocker::OnDestroy();
+			CFrame::OnDestroy();
+		}
+
+		LRESULT OnNotify(WPARAM wParam, LPARAM lParam)
+		// Called when a notification from a child window (WM_NOTIFY) is received.
+		{
+			LRESULT lr = CFrame::OnNotify(wParam, lParam);
+			if (lr == 0)
+				lr = CDocker::OnNotify(wParam, lParam);
+
+			return lr;
+		}
+
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+		// Handle the frame's window messages.
+		{
+			switch (uMsg)
+			{
+			case WM_ACTIVATE:		return CFrame::OnActivate(uMsg, wParam, lParam);
+			case WM_DRAWITEM:		return CFrame::OnDrawItem(uMsg, wParam, lParam);
+			case WM_ERASEBKGND:		return 0L;
+			case WM_EXITMENULOOP:	return CFrame::OnExitMenuLoop(uMsg, wParam, lParam);
+			case WM_HELP:			return CFrame::OnHelp();
+			case WM_INITMENUPOPUP:	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
+			case WM_MENUCHAR:		return CFrame::OnMenuChar(uMsg, wParam, lParam);
+			case WM_MEASUREITEM:	return CFrame::OnMeasureItem(uMsg, wParam, lParam);
+			case WM_MENUSELECT:		return CFrame::OnMenuSelect(uMsg, wParam, lParam);
+			case WM_SETFOCUS:		return CFrame::OnSetFocus(uMsg, wParam, lParam);
+			case WM_SIZE:			return CFrame::OnSize(uMsg, wParam, lParam);
+			case WM_SYSCOLORCHANGE:	return CFrame::OnSysColorChange(uMsg, wParam, lParam);
+			case WM_SYSCOMMAND:		return CFrame::OnSysCommand(uMsg, wParam, lParam);
+			case WM_WINDOWPOSCHANGED: return CFrame::FinalWindowProc(uMsg, wParam, lParam);
+
+			// Messages defined by Win32++
+			case UWM_GETFRAMEVIEW:		return reinterpret_cast<LRESULT>(GetView().GetHwnd());
+			case UWM_GETMBTHEME:		return reinterpret_cast<LRESULT>(&GetMenuBarTheme());
+			case UWM_GETRBTHEME:		return reinterpret_cast<LRESULT>(&GetReBarTheme());
+			case UWM_GETSBTHEME:		return reinterpret_cast<LRESULT>(&GetStatusBarTheme());
+			case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
+			case UWM_DRAWRBBKGND:       return CFrame::DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
+			case UWM_DRAWSBBKGND:       return CFrame::DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
+			case UWM_ISFRAME:			return TRUE;
+
+			} // switch uMsg
+
+			return CDocker::WndProcDefault(uMsg, wParam, lParam);
+		}
+
+	};
 
 }
 
@@ -2154,7 +2236,6 @@ namespace Win32xx
 		PostMessage(UWM_DOCKACTIVATE);
 
 		// Also update DockClient captions if the view is a docker
-	//	if (dynamic_cast<CDocker*>(&GetView()))
 		if ( GetView().SendMessage(UWM_ISDOCKER) )
 			GetView().PostMessage(UWM_DOCKACTIVATE);
 
@@ -2228,9 +2309,9 @@ namespace Win32xx
 
 		// Create the view window
 		assert(&GetView());			// Use SetView in CMainFrame's constructor to set the view window
-		GetDockClient().Create(*this);
-		if (GetView() != GetDockClient())
-			GetView().Create(GetDockClient());
+
+		if (!GetView().IsWindow())
+			GetView().Create(*this);
 
 		// Adjust fonts to match the desktop theme
 		SendMessage(WM_SYSCOLORCHANGE);
@@ -2244,8 +2325,6 @@ namespace Win32xx
 	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)
 	// Handles CustomDraw notification from WM_NOTIFY.
 	{
-	//	CWnd* pWnd = GetCWndPtr(pNMHDR->hwndFrom);
-	//	if (dynamic_cast<CToolBar*>(pWnd))
 		if ( ::SendMessage(pNMHDR->hwndFrom, UWM_ISTOOLBAR, 0, 0) )
 		{
 			if (pNMHDR->hwndFrom == GetMenuBar())
@@ -2262,7 +2341,7 @@ namespace Win32xx
 	{
 		SetMenu(NULL);
 
-		CDocker::OnDestroy();
+	//	CDocker::OnDestroy();
 		GetMenuBar().Destroy();
 		GetToolBar().Destroy();
 		GetReBar().Destroy();
@@ -2465,7 +2544,7 @@ namespace Win32xx
 		case UWN_UNDOCKED:		return OnUndocked();
 		}
 
-		return CDocker::OnNotify(wParam, lParam);
+		return CWnd::OnNotify(wParam, lParam);
 	}
 
 	inline LRESULT CFrame::OnRBNHeightChange(LPNMHDR pNMHDR)
@@ -2521,7 +2600,6 @@ namespace Win32xx
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
 		HWND hWnd = WindowFromPoint(pt);
-	//	CToolBar* pToolBar = dynamic_cast<CToolBar*> (pWnd);
 		CToolBar* pToolBar = NULL;
 		if ( ::SendMessage(hWnd, UWM_ISTOOLBAR, 0, 0) )
 			pToolBar = static_cast<CToolBar*> (GetCWndPtr(hWnd));
@@ -2710,7 +2788,8 @@ namespace Win32xx
 			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 		// Position the view window
-		RecalcDockLayout();
+		if (GetView().IsWindow())
+			RecalcViewLayout();
 
 		// Adjust rebar bands
 		if (IsReBarUsed())
@@ -3403,8 +3482,7 @@ namespace Win32xx
 	// Called by the keyboard hook to update status information
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
-		CFrame* pFrame = static_cast<CFrame*>(pTLSData->pMainWnd);
-	//	assert(dynamic_cast<CFrame*>(pTLSData->pMainWnd));
+		CFrame* pFrame = dynamic_cast<CFrame*>(pTLSData->pMainWnd);
 		assert( pTLSData->pMainWnd );
 		assert( pTLSData->pMainWnd->SendMessage(UWM_ISFRAME) );
 
@@ -3547,7 +3625,8 @@ namespace Win32xx
 
 		} // switch uMsg
 
-		return CDocker::WndProcDefault(uMsg, wParam, lParam);
+	//	return CDocker::WndProcDefault(uMsg, wParam, lParam);
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 
