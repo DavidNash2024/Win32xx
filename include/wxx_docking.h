@@ -2090,7 +2090,6 @@ namespace Win32xx
 
 		std::vector <DockPtr>::iterator v;
 
-		if (IsWindow()) SetRedraw(FALSE);
 		for (v = GetAllDockChildren().begin(); v != GetAllDockChildren().end(); ++v)
 		{
 			// The CDocker is destroyed when the window is destroyed
@@ -2099,7 +2098,6 @@ namespace Win32xx
 		}
 
 		GetDockChildren().clear();
-		if (IsWindow()) SetRedraw(TRUE);
 
 		// Delete any child containers this container might have
 		if (GetContainer())
@@ -2112,6 +2110,7 @@ namespace Win32xx
 					GetContainer()->RemoveContainer((*iter).pContainer);
 			}
 		}
+
 
 		RecalcDockLayout();
 	}
@@ -4345,6 +4344,39 @@ namespace Win32xx
 		return CTab::OnMouseLeave(uMsg, wParam, lParam);
 	}
 
+	inline LRESULT CDockContainer::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		CPoint pt;
+		pt.x = GET_X_LPARAM(lParam);
+		pt.y = GET_Y_LPARAM(lParam);
+
+		// Skip if mouse hasn't moved
+		if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
+			return FALSE;
+
+		m_OldMousePos.x = pt.x;
+		m_OldMousePos.y = pt.y;
+
+		if (IsLeftButtonDown())
+		{
+			TCHITTESTINFO info;
+			ZeroMemory(&info, sizeof(TCHITTESTINFO));
+			info.pt = CPoint((DWORD)lParam);
+			int nTab = HitTest(info);
+			if (nTab >= 0 && m_nTabPressed >= 0)
+			{
+				if (nTab !=  m_nTabPressed)
+				{
+					SwapTabs(nTab, m_nTabPressed);
+					m_nTabPressed = nTab;
+					SelectPage(nTab);
+				}
+			}
+		}
+
+		return CTab::OnMouseMove(uMsg, wParam, lParam);
+	}
+
 	inline LRESULT CDockContainer::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -4610,8 +4642,10 @@ namespace Win32xx
 
 	inline void CDockContainer::SwapTabs(UINT nTab1, UINT nTab2)
 	{
-		if ((nTab1 < GetContainerParent()->m_vContainerInfo.size()) && (nTab2 < GetContainerParent()->m_vContainerInfo.size()) && (nTab1 != nTab2))
-	//	if ((nTab1 < m_vContainerInfo.size()) && (nTab2 < m_vContainerInfo.size()) && (nTab1 != nTab2))
+		assert (nTab1 < GetContainerParent()->m_vContainerInfo.size());
+		assert (nTab2 < GetContainerParent()->m_vContainerInfo.size());
+		
+		if (nTab1 != nTab2)
 		{
 			ContainerInfo CI1 = GetContainerParent()->m_vContainerInfo[nTab1];
 			ContainerInfo CI2 = GetContainerParent()->m_vContainerInfo[nTab2];
@@ -4635,40 +4669,6 @@ namespace Win32xx
 			GetContainerParent()->m_vContainerInfo[nTab1] = CI2;
 			GetContainerParent()->m_vContainerInfo[nTab2] = CI1;
 		}
-	}
-
-
-	inline LRESULT CDockContainer::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		CPoint pt;
-		pt.x = GET_X_LPARAM(lParam);
-		pt.y = GET_Y_LPARAM(lParam);
-
-		// Skip if mouse hasn't moved
-		if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
-			return FALSE;
-
-		m_OldMousePos.x = pt.x;
-		m_OldMousePos.y = pt.y;
-
-		if (IsLeftButtonDown())
-		{
-			TCHITTESTINFO info;
-			ZeroMemory(&info, sizeof(TCHITTESTINFO));
-			info.pt = CPoint((DWORD)lParam);
-			int nTab = HitTest(info);
-			if (nTab >= 0)
-			{
-				if (nTab !=  m_nTabPressed)
-				{
-					SwapTabs(nTab, m_nTabPressed);
-					m_nTabPressed = nTab;
-					SelectPage(nTab);
-				}
-			}
-		}
-
-		return CTab::OnMouseMove(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CDockContainer::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -739,7 +739,6 @@ namespace Win32xx
 		int cy = m_sizeCheck.cy + m_marCheck.Height();
 
 		int x = rcItem.left + m_marCheckBackground.cxLeftWidth;
-	//	int y = rcItem.top  + m_marCheckBackground.cyTopHeight;
 		int y = rcItem.top + (rcItem.Height() - cy)/2;
 
 		return CRect(x, y, x + cx, y + cy);
@@ -758,7 +757,6 @@ namespace Win32xx
 	inline CRect CMenuMetrics::GetCheckRect(const CRect& rcItem)
 	{
 		int x = rcItem.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
-	//	int y = rcItem.top  + m_marCheckBackground.cyTopHeight + m_marCheck.cyTopHeight;
 		int y = rcItem.top + (rcItem.Height() - m_sizeCheck.cy)/2;
 
 		return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
@@ -2341,7 +2339,6 @@ namespace Win32xx
 	{
 		SetMenu(NULL);
 
-	//	CDocker::OnDestroy();
 		GetMenuBar().Destroy();
 		GetToolBar().Destroy();
 		GetReBar().Destroy();
@@ -2772,8 +2769,8 @@ namespace Win32xx
 		{
 			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 			GetStatusBar().Invalidate();
-			if (m_UseMenuStatus)
-				GetStatusBar().SetWindowText(m_strStatusText);
+			if (GetUseMenuStatus())
+				GetStatusBar().SetWindowText(GetStatusText());
 
 			SetStatusIndicators();
 		}
@@ -3625,7 +3622,6 @@ namespace Win32xx
 
 		} // switch uMsg
 
-	//	return CDocker::WndProcDefault(uMsg, wParam, lParam);
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 

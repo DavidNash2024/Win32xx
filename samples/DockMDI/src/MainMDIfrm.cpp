@@ -81,7 +81,8 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:			return OnFileNew();
+	case IDM_FILE_NEWDOCK:		return OnFileNewDocker();
+	case IDM_FILE_NEWMDI:		return OnFileNewMDI();
 	case IDM_FILE_CLOSE:		return OnFileClose();
 	case IDM_FILE_OPEN:			return OnFileOpen();
 	case IDM_FILE_SAVE:			return OnFileSave();
@@ -136,10 +137,16 @@ BOOL CMainMDIFrame::OnFileExit()
 	return TRUE;
 }
 
-BOOL CMainMDIFrame::OnFileNew()
+BOOL CMainMDIFrame::OnFileNewMDI()
 {
 	// Create a new MDI child
 	AddMDIChild(new CSimpleMDIChild);
+	return TRUE;
+}
+
+BOOL CMainMDIFrame::OnFileNewDocker()
+{
+	AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | DS_CLIENTEDGE, 150);
 	return TRUE;
 }
 
@@ -170,7 +177,7 @@ BOOL CMainMDIFrame::OnMDITile()
 void CMainMDIFrame::SetupToolBar()
 {
 	// Define the resource IDs for the toolbar
-	AddToolBarButton( IDM_FILE_NEW   );
+	AddToolBarButton( IDM_FILE_NEWMDI);
 	AddToolBarButton( IDM_FILE_OPEN  );
 	AddToolBarButton( IDM_FILE_SAVE  );
 	AddToolBarButton( 0 );				// Separator
@@ -181,6 +188,9 @@ void CMainMDIFrame::SetupToolBar()
 	AddToolBarButton( IDM_FILE_PRINT );
 	AddToolBarButton( 0 );				// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
+
+	// Add an extra icon for the New Docker menu item
+	AddMenuIcon( IDM_FILE_NEWDOCK, GetApp().LoadIcon(IDW_MAIN) );
 }
 
 LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -14,7 +14,8 @@ public:
 
 	BOOL OnFileClose();
 	BOOL OnFileExit();
-	BOOL OnFileNew();
+	BOOL OnFileNewDocker();
+	BOOL OnFileNewMDI();
 	BOOL OnFileOpen();
 	BOOL OnFileSave();
 	BOOL OnFilePrint();
