@@ -1125,14 +1125,16 @@ namespace Win32xx
 		{
 			if (GetActiveView())
 			{
-				// Set the tab sizes
-				SetTabSize();
+
 
 				// Position the View over the tab control's display area
 				CRect rc = GetClientRect();
 				MapWindowPoints(GetParent(), rc);
 				AdjustRect(FALSE, &rc);
 				GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+
+				// Set the tab sizes
+				SetTabSize();
 			}
 
 			RedrawWindow(NULL, NULL, RDW_INVALIDATE|RDW_NOCHILDREN);

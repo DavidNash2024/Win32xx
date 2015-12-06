@@ -16,7 +16,7 @@ New Features and Enhancements
 ----------------------------- 
 * Added CDataExchange
   CDataExchange provides support for dialog data exchange(DDX) and dialog data 
-  validation(DDV). CDataExchange class has a set of DDX and DDV member
+  validation(DDV). The CDataExchange class has a set of DDX and DDV member
   functions which perform the data exchange and validation for different types
   of controls. Typically this is used for controls in a dialogs, but controls
   in any window support DDX and DDV.
@@ -46,7 +46,7 @@ New Features and Enhancements
    Single Document Interface (SDI) frames. Frames which don't require docking 
    capabilities should inherit from CFrame. The use of CFrame instead of
    CDockFrame results in as smaller executable file size.
-   Refer to the Doc, DockContainer, DockTabbeedMDI and Splitter samples for
+   Refer to the Dock, DockContainer, DockTabbeedMDI and Splitter samples for
    a demonstration of CDockFrame.
 
 * Added CMDIDockFrame
