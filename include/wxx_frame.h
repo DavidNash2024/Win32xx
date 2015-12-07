@@ -3161,10 +3161,10 @@ namespace Win32xx
 			{
 			case Win8:
 				{
-					MenuTheme mt = {T, RGB(0, 210, 255), RGB(0, 210, 255), RGB(0, 230, 255), RGB(0, 230, 255), RGB(255, 255, 255)};
-					ReBarTheme rbt = {T, RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), F, F, T, T, T, F};
-					StatusBarTheme sbt = {T, RGB(255, 255, 255), RGB(255, 255, 255)};
-					ToolBarTheme tbt = {T, RGB(180, 250, 255), RGB(180, 250, 255), RGB(100, 250, 255), RGB(100, 250, 255), RGB(255, 255, 255)};
+					MenuTheme mt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
+					ReBarTheme rbt = {T, RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240), F, F, T, F, T, F};
+					StatusBarTheme sbt = {T, RGB(235, 237, 250), RGB(235, 237, 250)};
+					ToolBarTheme tbt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 
 					SetMenuTheme(mt);	// Sets the theme for popup menus and MenuBar
 					SetReBarTheme(rbt);

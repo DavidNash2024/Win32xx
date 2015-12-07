@@ -1125,16 +1125,11 @@ namespace Win32xx
 		{
 			if (GetActiveView())
 			{
-
-
 				// Position the View over the tab control's display area
 				CRect rc = GetClientRect();
 				MapWindowPoints(GetParent(), rc);
 				AdjustRect(FALSE, &rc);
 				GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
-
-				// Set the tab sizes
-				SetTabSize();
 			}
 
 			RedrawWindow(NULL, NULL, RDW_INVALIDATE|RDW_NOCHILDREN);
@@ -1151,7 +1146,7 @@ namespace Win32xx
 		TabNMHDR.nPage = nPage;
 
 		// The default return value is zero
-		return GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
+		return (BOOL)GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
 	}
 
 	inline void CTab::RemoveTabPage(int nPage)

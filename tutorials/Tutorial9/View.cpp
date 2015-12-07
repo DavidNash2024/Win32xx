@@ -35,6 +35,13 @@ std::vector<PlotPoint>& CView::GetPoints()
 	return GetDoc().GetPoints(); 
 }
 
+int CView::OnCreate(CREATESTRUCT&)
+{
+	// Support Drag and Drop on this window
+	DragAcceptFiles(TRUE);
+	return 0;
+}
+
 void CView::OnDraw(CDC& dc)
 {
 	if (GetPoints().size() > 0)
@@ -53,18 +60,26 @@ void CView::OnDraw(CDC& dc)
 	}
 }
 
-void CView::PreCreate(CREATESTRUCT &cs)
+LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// Set the extra style to provide a sunken effect
-	cs.dwExStyle = WS_EX_CLIENTEDGE;
-}
+	UNREFERENCED_PARAMETER(uMsg);
+	UNREFERENCED_PARAMETER(lParam);
 
-void CView::PreRegisterClass(WNDCLASS &wc)
-{
-	// Set the background brush, class name and cursor
-	wc.hbrBackground = m_Brush;
-	wc.lpszClassName = _T("Scribble Window");
-	wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
+	HDROP hDrop = (HDROP)wParam;
+	UINT nLength = DragQueryFile(hDrop, 0, 0, 0);
+
+	if (nLength > 0)
+	{
+		CString FileName;
+		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
+		FileName.ReleaseBuffer();
+
+		CMainFrame& MainFrame = GetScribbleApp().GetMainFrame();
+		MainFrame.LoadFile(FileName);
+
+		DragFinish(hDrop);
+	}
+	return 0L;
 }
 
 LRESULT CView::OnLButtonDown(UINT, WPARAM, LPARAM lParam)
@@ -99,10 +114,25 @@ LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
 	return 0L;
 }
 
+void CView::PreCreate(CREATESTRUCT &cs)
+{
+	// Set the extra style to provide a sunken effect
+	cs.dwExStyle = WS_EX_CLIENTEDGE;
+}
+
+void CView::PreRegisterClass(WNDCLASS &wc)
+{
+	// Set the background brush, class name and cursor
+	wc.hbrBackground = m_Brush;
+	wc.lpszClassName = _T("Scribble Window");
+	wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
+}
+
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
+	case WM_DROPFILES:		return OnDropFiles(uMsg, wParam, lParam);
 	case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);
 	case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
     case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);

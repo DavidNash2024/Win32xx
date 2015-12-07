@@ -33,7 +33,9 @@ public:
 	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
 protected:
+	virtual int OnCreate(CREATESTRUCT&);
 	virtual void OnDraw(CDC& dc);
+	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT &cs);
 	virtual void PreRegisterClass(WNDCLASS &wc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

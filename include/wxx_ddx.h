@@ -700,7 +700,7 @@ namespace Win32xx
 		{
 			// search the the entire list box for the given value
 			// and select it if it is found
-			int index  = ::SendMessage(hWndCtrl, LB_SELECTSTRING,
+			int index  = (int)::SendMessage(hWndCtrl, LB_SELECTSTRING,
 				(WPARAM)-1, (LPARAM)value.c_str());
 
 			if (index == LB_ERR)
