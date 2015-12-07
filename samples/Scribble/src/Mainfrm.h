@@ -17,6 +17,7 @@ public:
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }
+	void LoadFile(LPCTSTR str);
 
 	BOOL OnFileExit();
 	BOOL OnFileMRU(WPARAM wParam);

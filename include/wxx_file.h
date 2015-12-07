@@ -323,12 +323,16 @@ namespace Win32xx
 		ofn.hInstance = GetApp().GetInstanceHandle();
 	
 		// convert any '|' characters in pszFilter to NULL characters
-		CString strFilter;
-		if (pszFilter)
-			strFilter = pszFilter;
-
-		strFilter.Replace(_T('|'), _T('\0'));
-		ofn.lpstrFilter = strFilter.c_str();
+		CString strFilter(pszFilter);
+		if (strFilter.Find(_T('|')) >= 0)
+		{
+			strFilter.Replace(_T('|'), _T('\0'));
+			ofn.lpstrFilter = strFilter.c_str();
+		}
+		else
+		{
+			ofn.lpstrFilter = pszFilter;	// might contain embedded NULL characters
+		}
 
 		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
 		ofn.Flags = dwFlags;

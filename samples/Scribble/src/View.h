@@ -30,7 +30,9 @@ public:
 	void SetPenColor(COLORREF Color) { m_PenColor = Color; }
 
 protected:
+	virtual int OnCreate(CREATESTRUCT&);
 	virtual void OnDraw(CDC& dc);
+	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);

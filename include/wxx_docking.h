@@ -1569,7 +1569,7 @@ namespace Win32xx
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_IsOverContainer = pDockTarget->GetView().SendMessage(UWM_ISDOCKCONTAINER);
+		m_IsOverContainer = (BOOL)pDockTarget->GetView().SendMessage(UWM_ISDOCKCONTAINER);
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();

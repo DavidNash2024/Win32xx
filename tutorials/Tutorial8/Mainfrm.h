@@ -22,6 +22,7 @@ public:
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }
+	void  LoadFile(LPCTSTR str);
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

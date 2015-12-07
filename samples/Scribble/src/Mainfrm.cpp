@@ -99,6 +99,21 @@ BOOL CMainFrame::OnFileNew()
 	return TRUE;
 }
 
+void CMainFrame::LoadFile(LPCTSTR str)
+{
+	// Retrieve the PlotPoint data
+	if (GetDoc().FileOpen(str))
+	{
+		// Save the filename
+		m_PathName = str;
+		AddMRUEntry(str);
+	}
+	else
+		m_PathName=_T("");
+
+	GetView().Invalidate();
+}
+
 BOOL CMainFrame::OnFileOpen()
 {
 	CFile File;
@@ -106,18 +121,9 @@ BOOL CMainFrame::OnFileOpen()
 
 	if (!str.IsEmpty())
 	{
-		// Retrieve the PlotPoint data
-		if (GetDoc().FileOpen(str))
-		{
-			// Save the filename
-			m_PathName = str;
-			AddMRUEntry(str);
-		}
-		else
-			m_PathName=_T("");
+		LoadFile(str);
 	}
 
-	GetView().Invalidate();
 	return TRUE;
 }
 

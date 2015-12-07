@@ -11,6 +11,7 @@ need to update your code as accordingly. The current definitions are:
 Also:
 - SDI Frame applications which require docking support should use CDockFrame.
 - MDI Frame applications which require docking support should use CMDIDockFrame.
+- CArchive and CFile now throw CFileExceptions
 
 New Features and Enhancements
 ----------------------------- 
@@ -130,24 +131,25 @@ Added wxx_appcore0.h
 Added wxx_appcore.h
 Added wxx_exception.h
 Added wxx_wincore0.h
+Retained wxx_wincore.h
 
-Added CDockFrame.  	 Inherits from CFrame and CDocker
-Added CMDIDockFrame. Inherits from CMDIFrame and CDocker
+Added CDataExchange class.
+Added CDockFrame class.    Inherits from CFrame and CDocker
+Added CMDIDockFrame class. Inherits from CMDIFrame and CDocker
+
+Added DDXDemo Sample
 
 Added UWN_TABCLOSE windows message notification
 Added CTabbedMDI::OnTabClose
+Added CWnd::DoDataExchange
 Added CWnd::OnPaint
 Added CWnd::SetDlgCtrlID
+Added CWnd::UpdateData
 
 Added CStringT class template
 Added CStringA typedef
 Added CStringW typedef
 Modified CString. 	Now inherits from CStringT<TCHAR>
-
-Added CDataExchange class
-Added CWnd::DoDataExchange
-Added CWnd::UpdateData
-Added DDXDemo Sample
 
 Added CArchive::ReadStringA
 Added CArchive::ReadStringW
@@ -176,6 +178,8 @@ Modified CThread::PreTranslateMessage
 Modified CWnd::OnCreate
 Modified CWnd::IsDialogMessage
 Modified CWnd::PreTranslateMessage
+
+Updated theme colors for Windows 8, Windows 8.1 and Windows 10
 
 
 Version 8.0.1
