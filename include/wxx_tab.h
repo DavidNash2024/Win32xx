@@ -183,6 +183,7 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void	NotifyChanged();
 		virtual void	NotifyDragged();
+		virtual BOOL	NotifyTabClosing(int nPage);
 		virtual void	Paint();
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void	PreRegisterClass(WNDCLASS& wc);
@@ -194,7 +195,6 @@ namespace Win32xx
 		CTab& operator = (const CTab&); // Disable assignment operator
 
 		SIZE  GetMaxTabSize() const;
-		BOOL SendCloseNotify(int nPage);
 		void ShowActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
@@ -791,6 +791,19 @@ namespace Win32xx
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
+	inline BOOL CTab::NotifyTabClosing(int nPage)
+	{
+		int idCtrl = GetDlgCtrlID();
+		TABNMHDR TabNMHDR;
+		TabNMHDR.hdr.code = UWN_TABCLOSE;
+		TabNMHDR.hdr.hwndFrom = *this;
+		TabNMHDR.hdr.idFrom = idCtrl;
+		TabNMHDR.nPage = nPage;
+
+		// The default return value is zero
+		return (BOOL)GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
+	}
+
 	inline void CTab::OnAttach()
 	{
 		// Create and assign the image list
@@ -872,12 +885,17 @@ namespace Win32xx
 		if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
 		{
 			int nPage = GetCurSel();
-			RemoveTabPage(nPage);
-			if (nPage > 0)
-				SelectPage(nPage -1);
+			
+			// Send a notification to parent asking if its OK to close the tab.
+			if (!NotifyTabClosing(nPage))
+			{
+				RemoveTabPage(nPage);
+				if (nPage > 0)
+					SelectPage(nPage -1);
 
-			if (GetActiveView())
-				GetActiveView()->RedrawWindow();
+				if (GetActiveView())
+					GetActiveView()->RedrawWindow();
+			}
 		}
 
 		m_IsClosePressed = FALSE;
@@ -1136,26 +1154,10 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CTab::SendCloseNotify(int nPage)
-	{
-		int idCtrl = GetDlgCtrlID();
-		TABNMHDR TabNMHDR;
-		TabNMHDR.hdr.code = UWN_TABCLOSE;
-		TabNMHDR.hdr.hwndFrom = *this;
-		TabNMHDR.hdr.idFrom = idCtrl;
-		TabNMHDR.nPage = nPage;
-
-		// The default return value is zero
-		return (BOOL)GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
-	}
-
 	inline void CTab::RemoveTabPage(int nPage)
 	// Removes a tab and its view page
 	{
 		if ((nPage < 0) || (nPage > (int)m_vTabPageInfo.size() -1))
-			return;
-		
-		if (IsWindow() && SendCloseNotify(nPage))
 			return;
 
 		// Remove the tab

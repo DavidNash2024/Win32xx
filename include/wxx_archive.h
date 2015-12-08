@@ -948,7 +948,6 @@ namespace Win32xx
 		Read(&size, sizeof(size));
 		if (size != ao.size)
 		{
-		//	throw CWinException(_T("Unable to read object from archive"));
 			throw CFileException(m_pFile->GetFilePath(), _T("Unable to read object from archive"));
 		}
 
