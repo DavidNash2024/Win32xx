@@ -76,7 +76,7 @@ namespace Win32xx
 		virtual const CString& GetFilePath() const;
 		virtual const CString& GetFileTitle() const;
 		virtual ULONGLONG GetPosition() const;
-		virtual BOOL Open(LPCTSTR pszFileName, UINT nOpenFlags);
+		virtual void Open(LPCTSTR pszFileName, UINT nOpenFlags);
 		virtual UINT Read(void* pBuf, UINT nCount);
 		static BOOL Remove(LPCTSTR pszFileName);
 		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
@@ -137,8 +137,7 @@ namespace Win32xx
 	//	shareDenyNone	No sharing restrictions.
 	{
 		assert(pszFileName);
-		if (!Open(pszFileName, nOpenFlags))
-			throw CFileException(pszFileName, _T("Failed to open file"));
+		Open(pszFileName, nOpenFlags);	// thows CFileException on failure
 	}
 
 	inline CFile::~CFile()
@@ -235,7 +234,7 @@ namespace Win32xx
 	}
 #endif
 
-	inline BOOL CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
+	inline void CFile::Open(LPCTSTR pszFileName, UINT nOpenFlags)
 	// Prepares a file to be written to or read from.
 	// Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
 	// Default value: OPEN_EXISTING | modeReadWrite
@@ -281,6 +280,7 @@ namespace Win32xx
 		if (INVALID_HANDLE_VALUE == m_hFile)
 		{
 			m_hFile = 0;
+			throw CFileException(pszFileName, _T("Failed to open file"));
 		}
 
 #ifndef _WIN32_WCE
@@ -290,7 +290,6 @@ namespace Win32xx
 		}
 #endif
 
-		return (m_hFile != 0);
 	}
 
 #ifndef _WIN32_WCE

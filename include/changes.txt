@@ -12,6 +12,7 @@ Also:
 - SDI Frame applications which require docking support should use CDockFrame.
 - MDI Frame applications which require docking support should use CMDIDockFrame.
 - CArchive and CFile now throw CFileExceptions
+- CFile::Open throws a CFileException on failure.
 
 New Features and Enhancements
 ----------------------------- 
@@ -73,14 +74,8 @@ New Features and Enhancements
    CNotSupportedExceptions are thrown under the following circumstances:
     - An attempt is made to run more than one instance of CWinApp.
 	- CWinApp is prevented from starting the framework.
-   
-   CWinExceptions are now thrown under the following circumstances:
-    * A failure to create a thread
-    * A failure to create a window, including:
-	   - generic windows
-	   - dialogs
-	   - property sheets
-	   - task dialogs
+	
+   CResourceExceptions are thrown under the following circumstances:
     * A failure to create a GDI resource, namely:
 	   - device contexts
 	   - bitmaps
@@ -89,6 +84,14 @@ New Features and Enhancements
 	   - palettes
 	   - pens
 	   - regions
+   
+   CWinExceptions are now thrown under the following circumstances:
+    * A failure to create a thread
+    * A failure to create a window, including:
+	   - generic windows
+	   - dialogs
+	   - property sheets
+	   - task dialogs
 	 
    CUserExceptions are thrown under the following circumstances:
     - A CDataExchange DDX or DDV function fails validation
@@ -151,6 +154,12 @@ Added CStringA typedef
 Added CStringW typedef
 Modified CString. 	Now inherits from CStringT<TCHAR>
 
+Added CException
+Added CFileException
+Added CNotSupportedException
+Added CResourceException
+Added CUserException
+
 Added CArchive::ReadStringA
 Added CArchive::ReadStringW
 Added CArchive::WriteStringA
@@ -163,6 +172,7 @@ Added CArchive::operator>>(CStringW& s);
 Modified CDC::CreateCompatibleDC 		returns HDC
 Modified CDC::CreateDC 					returns HDC
 Modified CDC::CreateIC 					returns HDC
+Modified CFile::Open 	throws a CFileException on failure
 
 These function no longer use a pointer:
 Modified CMenu::GetMenuInfo

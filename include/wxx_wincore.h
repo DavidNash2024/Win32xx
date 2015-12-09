@@ -352,7 +352,7 @@ namespace Win32xx
 
 		// Set a reasonable default window style
 		DWORD dwOverlappedStyle = WS_OVERLAPPED | WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX;
-		cs.style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle);
+		cs.style = WS_VISIBLE | ((hWndParent)? WS_CHILD : dwOverlappedStyle );
 
 		// Set a reasonable default window position
 		if (NULL == hWndParent)

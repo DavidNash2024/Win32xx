@@ -79,18 +79,26 @@
 namespace Win32xx
 {
 
-	struct ArchiveObject{UINT size; LPVOID p;};
+	struct ArchiveObject
+	{
+		// member variables
+		UINT	m_size;		// not size_t as that is different in x86 and x64
+		LPVOID	m_pData;
 
-	// Unspecified object type containing the pointer p to a 
-	// memory block and its size that is either to be written into (<<)  or
-	// retrieved from (>>) an archive file. This struct is used in
-	// serialization and deserialization of data, particularly those that
-	// are not of a type for which available << and >> operators are defined.
-	// The size and pointer describe the extent and  location of the object
-	// to be serialized. A typical usage would be of the form:
+		// Constructor
+		ArchiveObject(LPVOID pData, UINT size) : m_size(size), m_pData(pData) {}
+	};
 
-	//    ArchiveObject ao = {sizeof(A), &A};
-	//	  ar << ao; or ar >> ao;
+	// An object used for serialization that can hold any type of data.
+	// Specify a pointer to the data, and the size of the data in bytes.
+	// The size of the data can usually be retrieved by sizeof.
+	// CArchive uses the >> and << operator overloads to serialize
+	// the ArchiveObject to the archive.
+	//
+	// A typical usage would be of the form:
+	//
+	//  ArchiveObject ao(&Data, sizeof(Data));
+	//  ar << ao; or ar >> ao;
 
 
 	//=============================================================================
@@ -324,7 +332,7 @@ namespace Win32xx
 	// Write the BYTE b into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(b), &b};
+		ArchiveObject ob(&b, sizeof(b));
 		*this << ob;
 		return *this;
 	}
@@ -334,7 +342,7 @@ namespace Win32xx
 	// Write the WORD w into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(w), &w};
+		ArchiveObject ob(&w, sizeof(w));
 		*this << ob;
 		return *this;
 	}
@@ -344,7 +352,7 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(l), &l};
+		ArchiveObject ob(&l, sizeof(l));
 		*this << ob;
 		return *this;
 	}
@@ -354,7 +362,7 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(ll), &ll};
+		ArchiveObject ob(&ll, sizeof(ll));
 		*this << ob;
 		return *this;
 	}
@@ -364,7 +372,7 @@ namespace Win32xx
 	// Write the LONG l into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(ull), &ull};
+		ArchiveObject ob(&ull, sizeof(ull));
 		*this << ob;
 		return *this;
 	}
@@ -374,7 +382,7 @@ namespace Win32xx
 	// Write the DWORD dw into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(dw), &dw};
+		ArchiveObject ob(&dw, sizeof(dw));
 		*this << ob;
 		return *this;
 	}
@@ -384,7 +392,7 @@ namespace Win32xx
 	// Write the float f into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(f), &f};
+		ArchiveObject ob(&f, sizeof(f));
 		*this << ob;
 		return *this;
 	}
@@ -394,7 +402,7 @@ namespace Win32xx
 	// Write the double d into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(d), &d};
+		ArchiveObject ob(&d, sizeof(d));
 		*this << ob;
 		return *this;
 	}
@@ -404,7 +412,7 @@ namespace Win32xx
 	// Write the int i into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(i), &i};
+		ArchiveObject ob(&i, sizeof(i));
 		*this << ob;
 		return *this;
 	}
@@ -414,7 +422,7 @@ namespace Win32xx
 	// Write the short s into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(s), &s};
+		ArchiveObject ob(&s, sizeof(s));
 		*this << ob;
 		return *this;
 	}
@@ -424,7 +432,7 @@ namespace Win32xx
 	// Write the char c into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(c), &c};
+		ArchiveObject ob(&c, sizeof(c));
 		*this << ob;
 		return *this;
 	}
@@ -437,7 +445,7 @@ namespace Win32xx
 	// Write the wchar_t ch into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(ch), &ch};
+		ArchiveObject ob(&ch, sizeof(ch));
 		*this << ob;
 		return *this;
 	}
@@ -448,7 +456,7 @@ namespace Win32xx
 	// Write the unsigned u into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(u), &u};
+		ArchiveObject ob(&u, sizeof(u));
 		*this << ob;
 		return *this;
 	}
@@ -458,7 +466,7 @@ namespace Win32xx
 	// Write the bool b into the archive file. Throw an exception if an
 	// error occurs.
 	{
-		ArchiveObject ob = {sizeof(b), &b};
+		ArchiveObject ob(&b, sizeof(b));
 		*this << ob;
 		return *this;
 	}
@@ -607,10 +615,10 @@ namespace Win32xx
 	// pointer ob.p to location are given. Throw an excepton if unable
 	// to do so successfully.
 	{
-		Write(&ao.size, sizeof(ao.size));
+		Write(&ao.m_size, sizeof(ao.m_size));
 
 		// Write() throws exception upon error
-		Write(ao.p, ao.size);
+		Write(ao.m_pData, ao.m_size);
 		return *this;
 	}
 
@@ -619,7 +627,7 @@ namespace Win32xx
 	// Read a BYTE from the archive and  store it in b.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(b), &b};
+		ArchiveObject ob(&b, sizeof(b));
 		*this >> ob;
 		return *this;
 	}
@@ -629,7 +637,7 @@ namespace Win32xx
 	// Read a WORD from the archive and  store it in w.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(w), &w};
+		ArchiveObject ob(&w, sizeof(w));
 		*this >> ob;
 		return *this;
 	}
@@ -639,7 +647,7 @@ namespace Win32xx
 	// Read a LONG from the archive and store it in l.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(l), &l};
+		ArchiveObject ob(&l, sizeof(l));
 		*this >> ob;
 		return *this;
 	}
@@ -649,7 +657,7 @@ namespace Win32xx
 	// Read a LONGLONG from the archive and store it in ll.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(ll), &ll};
+		ArchiveObject ob(&ll, sizeof(ll));
 		*this >> ob;
 		return *this;
 	}
@@ -659,7 +667,7 @@ namespace Win32xx
 	// Read a ULONGLONG from the archive and store it in ull.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(ull), &ull};
+		ArchiveObject ob(&ull, sizeof(ull));
 		*this >> ob;
 		return *this;
 	}
@@ -669,7 +677,7 @@ namespace Win32xx
 	// Read a DWORD	 from the archive and  store it in dw.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(dw), &dw};
+		ArchiveObject ob(&dw, sizeof(dw));
 		*this >> ob;
 		return *this;
 	}
@@ -679,7 +687,7 @@ namespace Win32xx
 	// Read a float from the archive and  store it in f.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(f), &f};
+		ArchiveObject ob(&f, sizeof(f));
 		*this >> ob;
 		return *this;
 	}
@@ -689,7 +697,7 @@ namespace Win32xx
 	// Read a double from the archive and  store it in d.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(d), &d};
+		ArchiveObject ob(&d, sizeof(d));
 		*this >> ob;
 		return *this;
 	}
@@ -699,7 +707,7 @@ namespace Win32xx
 	// Read an int from the archive and  store it in i.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(i), &i};
+		ArchiveObject ob(&i, sizeof(i));
 		*this >> ob;
 		return *this;
 	}
@@ -709,7 +717,7 @@ namespace Win32xx
 	// Read a short from the archive and  store it in i.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(i), &i};
+		ArchiveObject ob(&i, sizeof(i));
 		*this >> ob;
 		return *this;
 	}
@@ -719,7 +727,7 @@ namespace Win32xx
 	// Read a char from the archive and  store it in c.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(c), &c};
+		ArchiveObject ob(&c, sizeof(c));
 		*this >> ob;
 		return *this;
 	}
@@ -732,7 +740,7 @@ namespace Win32xx
 	// Read a wchar_t from the archive and  store it in ch.  Throw an exception if
 	// unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(ch), &ch};
+		ArchiveObject ob(&ch, sizeof(ch));
 		*this >> ob;
 		return *this;
 	}
@@ -744,7 +752,7 @@ namespace Win32xx
 	// Read an unsigned int from the archive and  store it in u.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(u), &u};
+		ArchiveObject ob(&u, sizeof(u));
 		*this >> ob;
 		return *this;
 	}
@@ -754,7 +762,7 @@ namespace Win32xx
 	// Read an bool from the archive and  store it in b.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(b), &b};
+		ArchiveObject ob(&b, sizeof(b));
 		*this >> ob;
 		return *this;
 	}
@@ -912,7 +920,7 @@ namespace Win32xx
 	// Read a POINT from the archive and  store it in pt.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(pt), &pt};
+		ArchiveObject ob(&pt, sizeof(pt));
 		*this >> ob;
 		return *this;
 	}
@@ -922,7 +930,7 @@ namespace Win32xx
 	// Read a RECT from the archive and  store it in rc.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(rc), &rc};
+		ArchiveObject ob(&rc, sizeof(rc));
 		*this >> ob;
 		return *this;
 	}
@@ -932,7 +940,7 @@ namespace Win32xx
 	// Read a SIZE from the archive and  store it in sz.  Throw an
 	// exception if unable to do so correctly.
 	{
-		ArchiveObject ob = {sizeof(sz), &sz};
+		ArchiveObject ob(&sz, sizeof(sz));
 		*this >> ob;
 		return *this;
 	}
@@ -946,12 +954,12 @@ namespace Win32xx
 		assert(m_pFile);
 		UINT size;
 		Read(&size, sizeof(size));
-		if (size != ao.size)
+		if (size != ao.m_size)
 		{
 			throw CFileException(m_pFile->GetFilePath(), _T("Unable to read object from archive"));
 		}
 
-		Read(ao.p, ao.size);
+		Read(ao.m_pData, ao.m_size);
 		return *this;
 	}
 
