@@ -755,7 +755,7 @@ namespace Win32xx
 			{
 				HDC hDC = ::GetDC(hWnd);
 				if (hDC == 0)
-					throw CWinException(_T("GetDC failed"));
+					throw CResourceException(_T("GetDC failed"));
 
 				Attach(hDC, hWnd);
 				SetManaged(true);
@@ -783,7 +783,7 @@ namespace Win32xx
 			{
 				HDC hDC = ::GetDCEx(hWnd, hrgnClip, flags);
 				if (hDC == 0)
-					throw CWinException(_T("GetDCEx failed"));
+					throw CResourceException(_T("GetDCEx failed"));
 
 				Attach(hDC, hWnd);
 				SetManaged(true);
@@ -829,7 +829,7 @@ namespace Win32xx
 			{
 				HDC hDC = ::BeginPaint(hWnd, &m_ps);
 				if (hDC == 0)
-					throw CWinException(_T("BeginPaint failed"));
+					throw CResourceException(_T("BeginPaint failed"));
 
 				Attach(hDC, hWnd);
 				SetManaged(true);
@@ -864,7 +864,7 @@ namespace Win32xx
 			{
 				HDC hDC = ::GetWindowDC(hWnd);
 				if (hDC == 0)
-					throw CWinException(_T("GetWindowDC failed"));
+					throw CResourceException(_T("GetWindowDC failed"));
 
 				Attach(hDC, hWnd);
 				SetManaged(true);
@@ -906,7 +906,7 @@ namespace Win32xx
 		{
 			HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, lpBounds, lpszDescription);
 			if (hDC == 0)
-				throw CWinException(_T("CreateEnhMetaFile failed"));
+				throw CResourceException(_T("CreateEnhMetaFile failed"));
 
 			Attach(hDC);
 		}
@@ -1254,7 +1254,7 @@ namespace Win32xx
 			assert(&GetApp());
 			HBITMAP hBitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
 			if (hBitmap == 0)
-				throw CWinException(_T("CreateMappedBitmap failed"));
+				throw CResourceException(_T("CreateMappedBitmap failed"));
 
 			Attach(hBitmap);
 			SetManaged(true);
@@ -1267,7 +1267,7 @@ namespace Win32xx
 		{
 			HBITMAP hBitmap = ::CreateBitmap(nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
 			if (hBitmap == 0)
-				throw CWinException(_T("CreateBitmap failed"));
+				throw CResourceException(_T("CreateBitmap failed"));
 
 			Attach(hBitmap);
 			SetManaged(true);
@@ -1280,7 +1280,7 @@ namespace Win32xx
 		{
 			HBITMAP hBitmap = ::CreateBitmapIndirect(lpBitmap);
 			if (hBitmap == 0)
-				throw CWinException(_T("CreateBitmapIndirect failed"));
+				throw CResourceException(_T("CreateBitmapIndirect failed"));
 
 			Attach(hBitmap);
 			SetManaged(true);
@@ -1293,7 +1293,7 @@ namespace Win32xx
 		{
 			HBITMAP hBitmap = ::CreateCompatibleBitmap(hdc, nWidth, nHeight);
 			if (hBitmap == 0)
-				throw CWinException(_T("CreateCompatibleBitmap"));
+				throw CResourceException(_T("CreateCompatibleBitmap"));
 
 			Attach(hBitmap);
 			SetManaged(true);
@@ -1539,7 +1539,7 @@ namespace Win32xx
 	{
 		HBRUSH hBrush = ::CreateSolidBrush(crColor);
 		if (hBrush == 0)
-			throw CWinException(_T("CreateSolidBrush failed"));
+			throw CResourceException(_T("CreateSolidBrush failed"));
 
 		Attach(hBrush);
 		SetManaged(true);
@@ -1552,7 +1552,7 @@ namespace Win32xx
 	{
 		HBRUSH hBrush = ::CreateHatchBrush(nIndex, crColor);
 		if (hBrush == 0)
-			throw CWinException(_T("CreateHatchBrush failed"));
+			throw CResourceException(_T("CreateHatchBrush failed"));
 
 		Attach(hBrush);
 		SetManaged(true);
@@ -1564,7 +1564,7 @@ namespace Win32xx
 	{
 		HBRUSH hBrush = ::CreateBrushIndirect(lpLogBrush);
 		if (hBrush == 0)
-			throw CWinException(_T("CreateBrushIndirect failed"));
+			throw CResourceException(_T("CreateBrushIndirect failed"));
 
 		Attach(hBrush);
 		SetManaged(true);
@@ -1576,7 +1576,7 @@ namespace Win32xx
 	{
 		HBRUSH hBrush = ::CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
 		if (hBrush == 0)
-			throw CWinException(_T("CreateDIBPatternBrush failed"));
+			throw CResourceException(_T("CreateDIBPatternBrush failed"));
 
 		Attach(hBrush);
 		SetManaged(true);
@@ -1588,7 +1588,7 @@ namespace Win32xx
 	{
 		HBRUSH hBrush = ::CreateDIBPatternBrushPt(lpPackedDIB, nUsage);
 		if (hBrush == 0)
-			throw CWinException(_T("CreateDIBPatternBrushPt failed"));
+			throw CResourceException(_T("CreateDIBPatternBrushPt failed"));
 
 		Attach(hBrush);
 		SetManaged(true);
@@ -1603,7 +1603,7 @@ namespace Win32xx
 	{
 		HBRUSH hBrush = ::CreatePatternBrush(hBitmap);
 		if (hBrush == 0)
-			throw CWinException(_T("CreatePatternBrush failed"));
+			throw CResourceException(_T("CreatePatternBrush failed"));
 
 		Attach(hBrush);
 		SetManaged(true);
@@ -1661,7 +1661,7 @@ namespace Win32xx
 	{
 		HFONT hFont = ::CreateFontIndirect(lpLogFont);
 		if (hFont == 0)
-			throw CWinException(_T("CreateFontIndirect"));
+			throw CResourceException(_T("CreateFontIndirect"));
 		
 		Attach(hFont);
 		SetManaged(true);
@@ -1728,7 +1728,7 @@ namespace Win32xx
 			dwPitchAndFamily, lpszFacename);
 
 		if (hFont == 0)
-			throw CWinException(_T("CreateFont failed"));
+			throw CResourceException(_T("CreateFont failed"));
 
 		Attach(hFont);
 		SetManaged(true);
@@ -1773,7 +1773,7 @@ namespace Win32xx
 	{
 		HPALETTE hPalette = ::CreatePalette (lpLogPalette);
 		if (hPalette == 0)
-			throw CWinException(_T("CreatePalette failed"));
+			throw CResourceException(_T("CreatePalette failed"));
 
 		Attach(hPalette);
 		SetManaged(true);
@@ -1786,7 +1786,7 @@ namespace Win32xx
 	{
 		HPALETTE hPalette = ::CreateHalftonePalette(hdc);
 		if (hPalette == 0)
-			throw CWinException(_T("CreateHalftonePalette failed"));
+			throw CResourceException(_T("CreateHalftonePalette failed"));
 
 		Attach(hPalette);
 		::RealizePalette(hdc);
@@ -1971,7 +1971,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreateRectRgn(x1, y1, x2, y2);
 		if (hRgn == 0)
-			throw CWinException(_T("CreateRectRgn failed"));
+			throw CResourceException(_T("CreateRectRgn failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -1983,7 +1983,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreateRectRgnIndirect(&rc);
 		if (hRgn == 0)
-			throw CWinException(_T("CreateRectRgnIndirect failed"));
+			throw CResourceException(_T("CreateRectRgnIndirect failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -1996,7 +1996,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreateEllipticRgn(x1, y1, x2, y2);
 		if (hRgn == 0)
-			throw CWinException(_T("CreateEllipticRgn failed"));
+			throw CResourceException(_T("CreateEllipticRgn failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2008,7 +2008,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreateEllipticRgnIndirect(&rc);
 		if (hRgn == 0)
-			throw CWinException(_T("CreateEllipticRgnIndirect failed"));
+			throw CResourceException(_T("CreateEllipticRgnIndirect failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2020,7 +2020,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreatePolygonRgn(lpPoints, nCount, nMode);
 		if (hRgn == 0)
-			throw CWinException(_T("CreatePolygonRgn failed"));
+			throw CResourceException(_T("CreatePolygonRgn failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2032,7 +2032,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreatePolyPolygonRgn(lpPoints, lpPolyCounts, nCount, nPolyFillMode);
 		if (hRgn == 0)
-			throw CWinException(_T("CreatePolyPolygonRgn failed"));
+			throw CResourceException(_T("CreatePolyPolygonRgn failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2044,7 +2044,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::CreateRoundRectRgn(x1, y1, x2, y2, x3, y3);
 		if (hRgn == 0)
-			throw CWinException(_T("CreateRoundRectRgn failed"));
+			throw CResourceException(_T("CreateRoundRectRgn failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2058,7 +2058,7 @@ namespace Win32xx
 		assert(hDC != NULL);
 		HRGN hRgn = ::PathToRegion(hDC);
 		if (hRgn == 0)
-			throw CWinException(_T("PathToRegion failed"));
+			throw CResourceException(_T("PathToRegion failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2072,7 +2072,7 @@ namespace Win32xx
 	{
 		HRGN hRgn = ::ExtCreateRegion(lpXForm, nCount, pRgnData);
 		if (hRgn == 0)
-			throw CWinException(_T("ExtCreateRegion failed"));
+			throw CResourceException(_T("ExtCreateRegion failed"));
 
 		Attach(hRgn);
 		SetManaged(true);
@@ -2332,7 +2332,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		HDC hDC = ::CreateCompatibleDC(hdcSource);
 		
 		if (hDC == NULL)
-			throw CWinException(_T("CreateCompatibleDC failed"));
+			throw CResourceException(_T("CreateCompatibleDC failed"));
 
 		m_pData->hDC = hDC;
 		m_pData->IsManagedHDC = TRUE;
@@ -2349,7 +2349,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		HDC hDC = ::CreateDC(lpszDriver, lpszDevice, lpszOutput, pInitData);
 
 		if (hDC == NULL)
-			throw CWinException(_T("CreateDC failed"));
+			throw CResourceException(_T("CreateDC failed"));
 
 		m_pData->hDC = hDC;
 		m_pData->IsManagedHDC = TRUE;
@@ -2364,7 +2364,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		HDC hDC = ::CreateIC(lpszDriver, lpszDevice, lpszOutput, pInitData);
 		
 		if (hDC == 0)
-			throw CWinException(_T("CreateIC failed"));
+			throw CResourceException(_T("CreateIC failed"));
 		
 		m_pData->hDC = hDC;
 		m_pData->IsManagedHDC = TRUE;
