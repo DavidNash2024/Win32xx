@@ -117,15 +117,16 @@ namespace Win32xx
 	class CFileException : public CException
 	{
 	public:
-		CFileException(LPCTSTR szFileName, int nMessageID);
-		CFileException(LPCTSTR szFileName, LPCTSTR pszText= NULL, int nMessageID = 0);
+		CFileException(LPCTSTR szFilePath, int nMessageID);
+		CFileException(LPCTSTR szFilePath, LPCTSTR pszText= NULL, int nMessageID = 0);
 		virtual ~CFileException() throw();
 
+		LPCTSTR GetFilePath() const throw();
 		LPCTSTR GetFileName() const throw();
 		virtual const char* what () const throw();
 	
 	private:
-		TCHAR m_szFileName[MAX_STRING_SIZE];
+		TCHAR m_szFilePath[MAX_STRING_SIZE];
 	};
 
 	
@@ -133,7 +134,7 @@ namespace Win32xx
 	// Declaration of the CNotSupportedException class
 	//
 	//	This exception is used by the Win32++ framework to indicate
-	//  critical errors. 
+	//  errors that prevent Win32++ from running. 
 	//
 	// Note: Each function guarantees not to throw an exception
 	//
@@ -151,9 +152,7 @@ namespace Win32xx
 	// Declaration of the CResourceException class
 	//
 	//	This exception is used by the Win32++ framework to indicate
-	//  a failure to create a resource, such as a GDI resource. Users
-	//  can also use this exception when a resource fails to load from
-	//  the resource script (resource.rc). 
+	//  a failure to create a GDI resource. 
 	//
 	// Note: Each function guarantees not to throw an exception
 	//
@@ -191,8 +190,8 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//
-	//  This exception can be used to display the information retrieved from
-	//  GetLastError in text form when a Windows API function fails.
+	//  This is thrown when an attempt to create a thread or window fails.
+	//  GetErrorString can be used to retrieve the reason for the failure.
 	//
 	// Note: Each function guarantees not to throw an exception
 	//
@@ -282,20 +281,20 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CFileException class
 	//
-	inline CFileException::CFileException(LPCTSTR szFileName, int nMessageID)
+	inline CFileException::CFileException(LPCTSTR szFilePath, int nMessageID)
 		: CException(nMessageID)
 	// CFileException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
-		memset(m_szFileName, 0, MAX_STRING_SIZE * sizeof(TCHAR));
+		memset(m_szFilePath, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
-		if (szFileName)
+		if (szFilePath)
 		{
-			lstrcpyn(m_szFileName, szFileName, MAX_STRING_SIZE-1);
+			lstrcpyn(m_szFilePath, szFilePath, MAX_STRING_SIZE-1);
 			::OutputDebugString(_T("File name: "));
-			::OutputDebugString(szFileName);
+			::OutputDebugString(szFilePath);
 			::OutputDebugString(_T("\n"));
 		}
 
@@ -303,20 +302,20 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
-	inline CFileException::CFileException(LPCTSTR szFileName, LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
+	inline CFileException::CFileException(LPCTSTR szFilePath, LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 		: CException(pszText, nMessageID)
 	// CFileException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CFileException thrown ***\n"));
 
-		memset(m_szFileName, 0, MAX_STRING_SIZE * sizeof(TCHAR));
+		memset(m_szFilePath, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 
-		if (szFileName)
+		if (szFilePath)
 		{
-			lstrcpyn(m_szFileName, szFileName, MAX_STRING_SIZE-1);
+			lstrcpyn(m_szFilePath, szFilePath, MAX_STRING_SIZE-1);
 			::OutputDebugString(_T("File name: "));
-			::OutputDebugString(szFileName);
+			::OutputDebugString(szFilePath);
 			::OutputDebugString(_T("\n"));
 		}
 
@@ -335,10 +334,23 @@ namespace Win32xx
 	{
 	}
 	
-	inline LPCTSTR CFileException::GetFileName() const throw()
-	// Returns the filename specified when the exception was thrown
+	inline LPCTSTR CFileException::GetFilePath() const throw()
+	// Returns the filename and path specified when the exception was thrown
 	{
-		return m_szFileName;
+		return m_szFilePath;
+	}
+
+	inline LPCTSTR CFileException::GetFileName() const throw()
+	// Returns the filename excluding the path.
+	{
+		// Get the index of the first character after the last '\'
+		int index = lstrlen(m_szFilePath);
+		while ( index > 0  &&  m_szFilePath[index-1] != _T('\\') )
+		{
+			--index;
+		}
+
+		return m_szFilePath + index;	// pointer arithmetic
 	}
 	
 	inline const char* CFileException::what() const throw()

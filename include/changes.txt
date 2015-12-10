@@ -20,8 +20,8 @@ New Features and Enhancements
   CDataExchange provides support for dialog data exchange(DDX) and dialog data 
   validation(DDV). The CDataExchange class has a set of DDX and DDV member
   functions which perform the data exchange and validation for different types
-  of controls. Typically this is used for controls in a dialogs, but controls
-  in any window support DDX and DDV.
+  of controls. Typically this is used for controls in dialogs, but controls in
+  any window support DDX and DDV.
   
   To use CDataExchange, perform the following steps:
    - Override DoDataExchange and specify the appropriate DDX and DDV functions.
