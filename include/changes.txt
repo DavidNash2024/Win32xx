@@ -153,6 +153,7 @@ Added CStringT class template
 Added CStringA typedef
 Added CStringW typedef
 Modified CString. 	Now inherits from CStringT<TCHAR>
+Added CStringT::GetWindowText
 
 Added CException
 Added CFileException

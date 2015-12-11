@@ -192,6 +192,7 @@ namespace Win32xx
 		T		 GetAt(int nIndex) const;
 		T*		 GetBuffer(int nMinBufLength);
 		void	 GetErrorString(DWORD dwError);
+		void	 GetWindowText(HWND hWnd);
 		void     Empty();
 		int      Insert(int nIndex, T ch);
 		int      Insert(int nIndex, const CStringT& str);
@@ -342,6 +343,22 @@ namespace Win32xx
 			str[0] = ch;
 			W2T tch(str);
 			m_str.append(1, ((LPCTSTR)tch)[0]);
+			return *this;
+		}
+
+		CString& operator += (int val)
+		{
+			CString str;
+			str.Format(_T("%d"), val);
+			m_str.append(str);
+			return *this;
+		}
+
+		CString& operator += (double val)
+		{
+			CString str;
+			str.Format(_T("%g"), val);
+			m_str.append(str);
 			return *this;
 		}
 
@@ -1016,19 +1033,41 @@ namespace Win32xx
 #endif // _WIN32_WCE
 
 	template <>
+	inline void CStringT<CHAR>::GetWindowText(HWND hWndCtrl)
+	{
+		int nLength = ::GetWindowTextLengthA(hWndCtrl);
+		if (nLength > 0)
+		{
+			std::vector<CHAR> vBuffer( nLength+1, 0 );
+			::GetWindowTextA(hWndCtrl, &vBuffer[0], nLength+1);
+			m_str = &vBuffer[0];
+		}
+	}
+
+	template <>
+	inline void CStringT<WCHAR>::GetWindowText(HWND hWndCtrl)
+	{
+		int nLength = ::GetWindowTextLengthW(hWndCtrl);
+		CStringT str;
+		if (nLength > 0)
+		{
+			std::vector<WCHAR> vBuffer( nLength+1, 0 );
+			::GetWindowTextW(hWndCtrl, &vBuffer[0], nLength+1);
+			m_str = &vBuffer[0];
+		}
+	}
+
+	template <>
 	inline void CStringT<CHAR>::GetErrorString(DWORD dwError)
 	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
 		m_str.erase();
 
-		if (dwError != 0)
-		{
-			CHAR* pTemp = 0;
-			DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-			::FormatMessageA(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pTemp, 1, NULL);
-			m_str.assign(pTemp);
-			::LocalFree(pTemp);
-		}
+		CHAR* pTemp = 0;
+		DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+		::FormatMessageA(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pTemp, 1, NULL);
+		m_str.assign(pTemp);
+		::LocalFree(pTemp);
 	}
 
 	template <>
@@ -1037,14 +1076,11 @@ namespace Win32xx
 	{
 		m_str.erase();
 
-		if (dwError != 0)
-		{
-			WCHAR* pTemp = 0;
-			DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-			::FormatMessageW(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&pTemp, 1, NULL);
-			m_str.assign(pTemp);
-			::LocalFree(pTemp);
-		}
+		WCHAR* pTemp = 0;
+		DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+		::FormatMessageW(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&pTemp, 1, NULL);
+		m_str.assign(pTemp);
+		::LocalFree(pTemp);
 	}
 
 	template <class T>
@@ -1359,9 +1395,10 @@ namespace Win32xx
 	// Extracts specified tokens in a target string.
 	{
 		assert(pszTokens);
-		assert(iStart >= 0);
 
 		CStringT str;
+		if(iStart >= 0)
+		{
 		size_t pos1 = m_str.find_first_not_of(pszTokens, iStart);
 		size_t pos2 = m_str.find_first_of(pszTokens, pos1);
 
@@ -1371,7 +1408,7 @@ namespace Win32xx
 
 		if (pos1 != m_str.npos)
 			str.m_str = m_str.substr(pos1, pos2-pos1);
-
+		}
 		return str;
 	}
 
@@ -1695,7 +1732,7 @@ namespace Win32xx
 	inline CString operator + (const CString& string1, int val)
 	{
         CString str;
-        str.Format(_T("%s%a"), string1.c_str(), val);
+        str.Format(_T("%s%d"), string1.c_str(), val);
         return str;
 	}
 
@@ -1744,14 +1781,10 @@ namespace Win32xx
 		return str;
 	}
 
-	inline CString GetWindowText(HWND hWndCtrl)
+	inline CString GetWindowText(HWND hWnd)
 	{
-		int nLength = ::GetWindowTextLength(hWndCtrl);
 		CString str;
-
-		::GetWindowText(hWndCtrl, str.GetBuffer(nLength), nLength+1);
-		str.ReleaseBuffer();
-
+		str.GetWindowText(hWnd);
 		return str;
 	}
 

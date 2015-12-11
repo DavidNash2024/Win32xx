@@ -238,6 +238,8 @@ MSBuild Tutorial8\Tutorial8_2013.sln /p:Configuration=Debug       >>"..\output\V
 MSBuild Tutorial8\Tutorial8_2013.sln /p:Configuration=Release     >>"..\output\VS2013.log"
 MSBuild Tutorial9\Tutorial9_2013.sln /p:Configuration=Debug       >>"..\output\VS2013.log"
 MSBuild Tutorial9\Tutorial9_2013.sln /p:Configuration=Release     >>"..\output\VS2013.log"
+MSBuild Tutorial10\Tutorial10_2013.sln /p:Configuration=Debug     >>"..\output\VS2013.log"
+MSBuild Tutorial10\Tutorial10_2013.sln /p:Configuration=Release   >>"..\output\VS2013.log"
 
 mkdir "..\output\VS2013\Tutorials"
 mkdir "..\output\VS2013\Tutorials\Debug"
@@ -252,6 +254,7 @@ copy Tutorial6\Debug\Tutorial6.exe         "..\output\VS2013\Tutorials\Debug"   
 copy Tutorial7\Debug\Tutorial7.exe         "..\output\VS2013\Tutorials\Debug"    >>"..\output\VS2013.log"
 copy Tutorial8\Debug\Tutorial8.exe         "..\output\VS2013\Tutorials\Debug"    >>"..\output\VS2013.log"
 copy Tutorial9\Debug\Tutorial9.exe         "..\output\VS2013\Tutorials\Debug"    >>"..\output\VS2013.log"
+copy Tutorial10\Debug\Tutorial10.exe       "..\output\VS2013\Tutorials\Debug"    >>"..\output\VS2013.log"
 
 mkdir "..\output\VS2013\Tutorials\Release"
 
@@ -264,7 +267,7 @@ copy Tutorial5\Release\Tutorial5.exe       "..\output\VS2013\Tutorials\Release" 
 copy Tutorial6\Release\Tutorial6.exe       "..\output\VS2013\Tutorials\Release"    >>"..\output\VS2013.log"
 copy Tutorial7\Release\Tutorial7.exe       "..\output\VS2013\Tutorials\Release"    >>"..\output\VS2013.log"
 copy Tutorial8\Release\Tutorial8.exe       "..\output\VS2013\Tutorials\Release"    >>"..\output\VS2013.log"
-copy Tutorial9\Release\Tutorial9.exe       "..\output\VS2013\Tutorials\Release"    >>"..\output\VS2013.log"
+copy Tutorial10\Release\Tutorial10.exe     "..\output\VS2013\Tutorials\Release"    >>"..\output\VS2013.log"
 
 REM: Pop the directory change off the stack
 popd

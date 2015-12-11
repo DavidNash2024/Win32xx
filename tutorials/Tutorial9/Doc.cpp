@@ -26,18 +26,18 @@ BOOL CDoc::FileOpen(LPCTSTR szFilename)
 
 BOOL CDoc::FileSave(LPCTSTR szFilename)
 {
-	BOOL bResult = TRUE;
+	BOOL bResult = FALSE;
 
 	try
 	{
 		CArchive ar(szFilename, CArchive::store);
 		ar << *this;
+		bResult = TRUE;
 	}
 	catch (const CFileException &e)
 	{
 		// An exception occurred. Display the relevant information.
 		::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
-		bResult = FALSE;
 	}
 
 	return bResult;

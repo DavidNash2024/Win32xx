@@ -1,4 +1,5 @@
 
+#include "stdafx.h"
 #include "Doc.h"
 
 BOOL CDoc::FileOpen(LPCTSTR szFilename)
@@ -32,7 +33,7 @@ BOOL CDoc::FileSave(LPCTSTR szFilename)
 	{
 		CArchive ar(szFilename, CArchive::store);
 		ar << *this;
-		bResult = TRUE;
+		bResult = FALSE;
 	}
 	catch (const CFileException &e)
 	{

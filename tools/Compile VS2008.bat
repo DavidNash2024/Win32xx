@@ -236,6 +236,8 @@ devenv /build Debug Tutorial8\Tutorial8_2008.sln       >>"..\output\VS2008.log"
 devenv /build Release Tutorial8\Tutorial8_2008.sln     >>"..\output\VS2008.log"
 devenv /build Debug Tutorial9\Tutorial9_2008.sln       >>"..\output\VS2008.log"
 devenv /build Release Tutorial9\Tutorial9_2008.sln     >>"..\output\VS2008.log"
+devenv /build Debug Tutorial10\Tutorial10_2008.sln     >>"..\output\VS2008.log"
+devenv /build Release Tutorial10\Tutorial10_2008.sln   >>"..\output\VS2008.log"
 
 mkdir "..\output\VS2008\Tutorials"
 mkdir "..\output\VS2008\Tutorials\Debug"
@@ -250,6 +252,7 @@ copy Tutorial6\Debug\Tutorial6.exe         "..\output\VS2008\Tutorials\Debug"   
 copy Tutorial7\Debug\Tutorial7.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
 copy Tutorial8\Debug\Tutorial8.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
 copy Tutorial9\Debug\Tutorial9.exe         "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
+copy Tutorial10\Debug\Tutorial10.exe       "..\output\VS2008\Tutorials\Debug"    >>"..\output\VS2008.log"
 
 mkdir "..\output\VS2008\Tutorials\Release"
 
@@ -263,6 +266,7 @@ copy Tutorial6\Release\Tutorial6.exe       "..\output\VS2008\Tutorials\Release" 
 copy Tutorial7\Release\Tutorial7.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
 copy Tutorial8\Release\Tutorial8.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
 copy Tutorial9\Release\Tutorial9.exe       "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
+copy Tutorial10\Release\Tutorial10.exe     "..\output\VS2008\Tutorials\Release"    >>"..\output\VS2008.log"
 
 REM: Pop the directory change off the stack
 popd

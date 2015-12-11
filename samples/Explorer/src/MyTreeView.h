@@ -16,7 +16,6 @@ class CMyTreeView : public CTreeView
 public:
 	CMyTreeView();
 	virtual ~CMyTreeView();
-	HIMAGELIST GetImageList(BOOL bLarge);
 	BOOL GetRootItems();
 	BOOL SelectFromListView(Cpidl& CpidlFull);
 
@@ -59,10 +58,6 @@ private:
 	void EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent);
 	BOOL GetChildItems(HTREEITEM hParentItem);
 
-	void SetImageLists();
-
-	HIMAGELIST m_hLargeImageList;
-	HIMAGELIST m_hSmallImageList;
 	CContextMenu2 m_ccm2;
 	std::vector <TreeItemDataPtr> m_pItems;
 
