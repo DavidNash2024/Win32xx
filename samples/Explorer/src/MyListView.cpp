@@ -25,7 +25,6 @@ int CALLBACK CMyListView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lPa
 
 CMyListView::CMyListView()
 {
-	SetImageLists();
 }
 
 CMyListView::~CMyListView()
@@ -545,14 +544,6 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 	return TRUE;
 }
 
-HIMAGELIST CMyListView::GetImageList(BOOL bLarge)
-{
-	if (bLarge)
-		return m_hLargeImageList;
-	else
-		return m_hSmallImageList;
-}
-
 void CMyListView::OnDestroy()
 {
 	m_pItems.clear();
@@ -562,8 +553,7 @@ void CMyListView::OnDestroy()
 void CMyListView::OnInitialUpdate()
 {
 	//Set the image lists
-	SendMessage(LVM_SETIMAGELIST, LVSIL_NORMAL, (LPARAM) GetImageList(TRUE));
-	SendMessage(LVM_SETIMAGELIST, LVSIL_SMALL, (LPARAM) GetImageList(FALSE));
+	SetImageLists();
 
 	//Set up the colmns for report mode
 	TCHAR szText[256];
@@ -604,11 +594,14 @@ void CMyListView::SetImageLists()
 	SHFILEINFO  sfi;
 
 	// Get the system image list
-	m_hLargeImageList = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
-		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX));
+	HIMAGELIST hLargeImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
+								sizeof(SHFILEINFO), SHGFI_SYSICONINDEX));
 
-	m_hSmallImageList = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
-		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
+	HIMAGELIST hSmallImages = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0, &sfi,
+								sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
+
+	SetImageList(hLargeImages, LVSIL_NORMAL);
+	SetImageList(hSmallImages, LVSIL_SMALL);
 }
 
 void CMyListView::ViewLargeIcons()

@@ -13,7 +13,6 @@
 //CMyTreeView function definitions
 CMyTreeView::CMyTreeView()
 {
-	SetImageLists();
 }
 
 CMyTreeView::~CMyTreeView()
@@ -306,14 +305,6 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 	return TRUE;
 }
 
-HIMAGELIST CMyTreeView::GetImageList(BOOL bLarge)
-{
-	if (bLarge)
-		return m_hLargeImageList;
-	else
-		return m_hSmallImageList;
-}
-
 BOOL CMyTreeView::GetRootItems()
 {
 	DeleteAllItems();
@@ -381,8 +372,13 @@ void CMyTreeView::OnDestroy()
 
 void CMyTreeView::OnInitialUpdate()
 {
-	//Set the image list
-	SendMessage(TVM_SETIMAGELIST, TVSIL_NORMAL, (LPARAM) GetImageList(FALSE));
+	// Get a copy of the system image lists
+	SHFILEINFO  sfi;
+
+	HIMAGELIST hSmall =  reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0,
+							&sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
+
+	SetImageList(hSmall, LVSIL_NORMAL);
 }
 
 void CMyTreeView::PreCreate(CREATESTRUCT& cs)
@@ -436,18 +432,6 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 	TRACE("Item NOT found\n");
 
 	return FALSE;
-}
-
-void CMyTreeView::SetImageLists()
-{
-	SHFILEINFO  sfi;
-
-	// Get the system image list
-	m_hLargeImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
-		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX);
-
-	m_hSmallImageList = (HIMAGELIST)::SHGetFileInfo(_T("C:\\"), 0, &sfi,
-		sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON);
 }
 
 LRESULT CMyTreeView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
