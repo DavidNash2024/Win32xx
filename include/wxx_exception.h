@@ -241,19 +241,6 @@ namespace Win32xx
 	{
 	}
 
-	inline LPCTSTR CException::GetText() const throw()
-	// Retrieves the string specified when the exception is thrown.
-	{
-		return m_szText;
-	}
-
-	inline int CException::GetMessageID() const throw()
-	// Retrieves the message ID specified when the exception is thrown.
-	// This could be a resource ID for a string in the resource script (resource.rc).
-	{
-		return m_nMessageID;
-	}
-
 	inline DWORD CException::GetError() const throw()
 	// Returns the error reported by GetLastError
 	{
@@ -264,6 +251,13 @@ namespace Win32xx
 	// Retrieves the error string from GetLastError.
 	{
 		return m_szErrorString;
+	}	
+
+	inline int CException::GetMessageID() const throw()
+	// Retrieves the message ID specified when the exception is thrown.
+	// This could be a resource ID for a string in the resource script (resource.rc).
+	{
+		return m_nMessageID;
 	}
 
 	inline void CException::ReportError() const throw()
@@ -276,6 +270,12 @@ namespace Win32xx
 
 		else ::MessageBox(NULL, _T("Unspecified Error"), _T("Exception Occurred"), MB_OK);
 	}
+	
+	inline LPCTSTR CException::GetText() const throw()
+	// Retrieves the string specified when the exception is thrown.
+	{
+		return m_szText;
+	}	
 
 
 	///////////////////////////////////////////
