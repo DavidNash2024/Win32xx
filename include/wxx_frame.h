@@ -513,7 +513,7 @@ namespace Win32xx
 		void OnMenuUpdate(UINT nID)			{ CFrame::OnMenuUpdate(nID); }
 		void PreCreate(CREATESTRUCT& cs)	{ CFrame::PreCreate(cs); }
 		void PreRegisterClass(WNDCLASS& wc) { CFrame::PreRegisterClass(wc); }
-		void RecalcViewLayout()				{ RecalcDockLayout();}
+		void RecalcViewLayout()				{ RecalcDockLayout(); }
 
 		int OnCreate(CREATESTRUCT& cs)
 		{
@@ -521,6 +521,7 @@ namespace Win32xx
 			GetView().Create(GetDockClient());
 			return CFrame::OnCreate(cs);
 		}
+		
 		void OnDestroy()
 		{
 			CDocker::OnDestroy();
