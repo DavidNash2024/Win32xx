@@ -19,6 +19,7 @@ public:
 
 	CDoc& GetDoc() { return m_Doc; }
 
+	void LoadFile(LPCTSTR str);
 	void MRUFileOpen(UINT nMRUIndex);
 	BOOL OnFileExit();
 	BOOL OnFileNew();

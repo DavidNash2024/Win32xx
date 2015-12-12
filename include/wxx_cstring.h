@@ -1048,7 +1048,6 @@ namespace Win32xx
 	inline void CStringT<WCHAR>::GetWindowText(HWND hWndCtrl)
 	{
 		int nLength = ::GetWindowTextLengthW(hWndCtrl);
-		CStringT str;
 		if (nLength > 0)
 		{
 			std::vector<WCHAR> vBuffer( nLength+1, 0 );
@@ -1778,13 +1777,6 @@ namespace Win32xx
 	{
 		CString str;
 		str.LoadString(nID);
-		return str;
-	}
-
-	inline CString GetWindowText(HWND hWnd)
-	{
-		CString str;
-		str.GetWindowText(hWnd);
 		return str;
 	}
 

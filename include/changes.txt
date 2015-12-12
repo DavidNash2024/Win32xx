@@ -12,7 +12,7 @@ Also:
 - SDI Frame applications which require docking support should use CDockFrame.
 - MDI Frame applications which require docking support should use CMDIDockFrame.
 - CArchive and CFile now throw CFileExceptions
-- CFile::Open throws a CFileException on failure.
+- CFile::Open throws a CFileException on failure and returns void.
 
 New Features and Enhancements
 ----------------------------- 

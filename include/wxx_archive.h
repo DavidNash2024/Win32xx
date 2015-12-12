@@ -956,7 +956,7 @@ namespace Win32xx
 	// Throw an exception if an error occurs.
 	{
 		UINT nChars = lstrlenA(string);
-		bool IsUnicode = sizeof(CHAR) -1;
+		bool IsUnicode = false;
 		
 		// Store the Unicode state and number of characters in the archive 
 		*this << IsUnicode;
@@ -971,7 +971,7 @@ namespace Win32xx
 	// Throw an exception if an error occurs.
 	{
 		UINT nChars = lstrlenW(string);
-		bool IsUnicode = sizeof(WCHAR) -1;
+		bool IsUnicode = true;
 		
 		// Store the Unicode state and number of characters in the archive 
 		*this << IsUnicode;

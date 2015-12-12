@@ -256,13 +256,20 @@ inline void CMainFrame::OnMenuUpdate(UINT nID)
 
 void CMainFrame::SaveFile(CString& str)
 {
-	CFile File;
 	bool DoSave = TRUE;
 
-	if (File.Open(str, OPEN_EXISTING))
+	try
 	{
+		CFile File;
+		File.Open(str, OPEN_EXISTING);
+	
 		if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + str, MB_YESNO | MB_ICONWARNING))
 			DoSave = FALSE;
+	}
+
+	catch (const CFileException&)
+	{
+		// Discard exception
 	}
 
 	if (DoSave)

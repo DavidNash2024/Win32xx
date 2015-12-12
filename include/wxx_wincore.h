@@ -599,10 +599,8 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 
-		int nLength = ::GetWindowTextLength(*this);
 		CString str;
-		::GetWindowText(*this, str.GetBuffer(nLength), nLength+1);
-		str.ReleaseBuffer();
+		str.GetWindowText(*this);
 		return str;
 	}
 
@@ -1388,7 +1386,7 @@ namespace Win32xx
 	}
 
 	inline int CWnd::GetDlgCtrlID() const
-	// Retrieves the control ID value for any child window
+	// Retrieves the control ID value for any child window.
 	{
 		assert(IsWindow());
 		return ::GetDlgCtrlID(*this);
