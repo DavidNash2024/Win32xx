@@ -921,7 +921,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			BYTE oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -947,7 +948,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			short oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -973,7 +975,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			int oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -999,7 +1002,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			UINT oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -1025,7 +1029,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			long oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -1051,7 +1056,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			ULONG oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -1077,7 +1083,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			float oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -1103,7 +1110,8 @@ namespace Win32xx
 		if (m_bRetrieveAndValidate)
 		{
 			double oldvalue = value;
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			tStringStream ts(str.c_str());
 			ts >> value;
 			if (ts.fail())
@@ -1128,7 +1136,7 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bRetrieveAndValidate)
 		{
-			value = GetWindowText(hWndCtrl);
+			value.GetWindowText(hWndCtrl);
 		}
 		else
 		{
@@ -1146,7 +1154,8 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
 		if (m_bRetrieveAndValidate)
 		{
-			CString str = GetWindowText(hWndCtrl);
+			CString str;
+			str.GetWindowText(hWndCtrl);
 			lstrcpyn(value, str, nMaxLen-1);
 			value[nMaxLen-1] = _T('\0');
 		}

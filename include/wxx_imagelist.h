@@ -142,7 +142,6 @@ namespace Win32xx
 	{
 		m_pData = new CIml_Data;
 		Attach(himl);
-	//	m_pData->IsManagedHiml = TRUE;
 	}
 
 	inline CImageList::CImageList(const CImageList& rhs)

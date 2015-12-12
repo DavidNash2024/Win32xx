@@ -33,8 +33,10 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
  {
 	 CFile File;
 	 BOOL bResult = FALSE;
-	 if (File.Open(pszFile, OPEN_ALWAYS))
+	 try
 	 {
+		 File.Open(pszFile, OPEN_ALWAYS);
+	 
 		// Create our LPBITMAPINFO object
 		CBitmapInfoPtr pbmi(m_bmImage);
 
@@ -61,6 +63,12 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
 
 		if (File.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + (int) pbmih->biSizeImage)
 			bResult = TRUE;
+	 }
+
+	 catch (const CFileException& e)
+	 {
+		 CString str = CString("Failed to save file: ") + e.GetFilePath();
+		 MessageBox(str, A2T(e.what()), MB_OK);
 	 }
 
 	return bResult;

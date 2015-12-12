@@ -349,32 +349,58 @@ BOOL CMainFrame::OnOptionsWrap()
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
-	// Open the file for reading
-	CFile File;
-	if (!File.Open(szFileName, OPEN_EXISTING))
+	BOOL Succeeded = FALSE;
+
+	try
+	{
+		// Open the file for reading
+		CFile File;
+		File.Open(szFileName, OPEN_EXISTING);
+
+		EDITSTREAM es;
+		es.dwCookie =  (DWORD_PTR) File.GetHandle();
+		es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
+		m_RichView.StreamIn(SF_TEXT, es);
+
+		//Clear the modified text flag
+		m_RichView.SetModify(FALSE);
+
+		Succeeded = TRUE;
+	}
+
+	catch (const CFileException& e)
 	{
 		CString str = _T("Failed to load:  ");
-		str += szFileName;
-		::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
+		str += e.GetFilePath();
+		::MessageBox(NULL, str, A2T(e.what()), MB_ICONWARNING);
 		return FALSE;
 	}
 
-	EDITSTREAM es;
-	es.dwCookie =  (DWORD_PTR) File.GetHandle();
-	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
-	m_RichView.StreamIn(SF_TEXT, es);
-
-	//Clear the modified text flag
-	m_RichView.SetModify(FALSE);
-
-	return TRUE;
+	return Succeeded;
 }
 
 BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 {
-	// Open the file for writing
-	CFile File;
-	if (!File.Open(szFileName, CREATE_ALWAYS))
+	BOOL Succeeded = FALSE;
+	try
+	{
+		// Open the file for writing
+		CFile File;
+		File.Open(szFileName, CREATE_ALWAYS);
+
+		EDITSTREAM es;
+		es.dwCookie =  (DWORD_PTR) File.GetHandle();
+		es.dwError = 0;
+		es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamOutCallback;
+		m_RichView.StreamOut(SF_TEXT, es);
+
+		//Clear the modified text flag
+		m_RichView.SetModify(FALSE);
+
+		Succeeded = TRUE;
+	}
+
+	catch (const CFileException&)
 	{
 		CString str = _T("Failed to write:  ");
 		str += szFileName;
@@ -382,17 +408,7 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 		return FALSE;
 	}
 
-	EDITSTREAM es;
-
-	es.dwCookie =  (DWORD_PTR) File.GetHandle();
-	es.dwError = 0;
-	es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamOutCallback;
-	m_RichView.StreamOut(SF_TEXT, es);
-
-	//Clear the modified text flag
-	m_RichView.SetModify(FALSE);
-
-	return TRUE;
+	return Succeeded;
 }
 
 BOOL CMainFrame::OnFileOpen()
