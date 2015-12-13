@@ -13,14 +13,16 @@ Classes titled CDockXXXX are inherited from CDocker. Classes titled
 CContainerXXXX are inherited from CDockContainer. Classes titled CViewXXXX
 are the various view windows inherited from CWnd.
 
+CMainFrame inherits from CDockFrame.
+
 Refer to the documentation for further information on the use of the CDocker
 and CDockContainer classes.
 
 
 Features demonstrated in this example
 =====================================
-* Use of CFrame to provide a frame window.
-* Use of CFrame as a docker.
+* Use of CDockFrame to provide a frame window.
+* Use of CDockFrame as a docker.
 * Use of CContainer as a view window for CDocker.
 * Use of RichEdit, ListView and TreeViews as view windows for CDockContainer.
 * Use of the container's optional toolbar.

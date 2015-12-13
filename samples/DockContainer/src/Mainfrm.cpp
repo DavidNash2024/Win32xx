@@ -7,10 +7,10 @@
 #include "mainfrm.h"
 
 
-// Definitions for the CMainDockFrame class
-CMainDockFrame::CMainDockFrame()
+// Definitions for the CMainFrame class
+CMainFrame::CMainFrame()
 {
-	// Constructor for CMainDockFrame. Its called after CFrame's constructor
+	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	//Set m_View as the view window of the frame
 	SetView(m_View);
@@ -20,12 +20,12 @@ CMainDockFrame::CMainDockFrame()
 	LoadRegistrySettings(_T("Win32++\\DockContainer"));
 }
 
-CMainDockFrame::~CMainDockFrame()
+CMainFrame::~CMainFrame()
 {
-	// Destructor for CMainDockFrame.
+	// Destructor for CMainFrame.
 }
 
-CDocker* CMainDockFrame::NewDockerFromID(int nID)
+CDocker* CMainFrame::NewDockerFromID(int nID)
 {
 	CDocker* pDock = NULL;
 	switch(nID)
@@ -62,7 +62,7 @@ CDocker* CMainDockFrame::NewDockerFromID(int nID)
 	return pDock;
 }
 
-BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -80,7 +80,7 @@ BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-BOOL CMainDockFrame::OnDockDefault()
+BOOL CMainFrame::OnDockDefault()
 {
 	SetRedraw(FALSE);
 	CloseAllDockers();
@@ -90,20 +90,20 @@ BOOL CMainDockFrame::OnDockDefault()
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnDockCloseAll()
+BOOL CMainFrame::OnDockCloseAll()
 {
 	CloseAllDockers();
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
 	return TRUE;
 }
 
-int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -119,7 +119,7 @@ int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
 	return CDockFrame::OnCreate(cs);
 }
 
-void CMainDockFrame::OnInitialUpdate()
+void CMainFrame::OnInitialUpdate()
 {
 	SetDockStyle(DS_CLIENTEDGE);
 
@@ -131,7 +131,7 @@ void CMainDockFrame::OnInitialUpdate()
 	ShowWindow( GetShowCmd() );
 }
 
-void CMainDockFrame::LoadDefaultDockers()
+void CMainFrame::LoadDefaultDockers()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
@@ -151,7 +151,7 @@ void CMainDockFrame::LoadDefaultDockers()
 	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
 }
 
-void CMainDockFrame::PreCreate(CREATESTRUCT& cs)
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
 	CFrame::PreCreate(cs);
@@ -160,7 +160,7 @@ void CMainDockFrame::PreCreate(CREATESTRUCT& cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-BOOL CMainDockFrame::SaveRegistrySettings()
+BOOL CMainFrame::SaveRegistrySettings()
 {
 	if (CFrame::SaveRegistrySettings())
 		return SaveDockRegistrySettings(GetRegistryKeyName());
@@ -168,7 +168,7 @@ BOOL CMainDockFrame::SaveRegistrySettings()
 		return FALSE;
 }
 
-void CMainDockFrame::SetupToolBar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW,   FALSE );

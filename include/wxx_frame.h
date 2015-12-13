@@ -3160,7 +3160,7 @@ namespace Win32xx
 
 			switch (Theme)
 			{
-			case Win8:
+			case Win8:	// A pale blue scheme without gradients, suitable for Windows 8, 8.1, and 10
 				{
 					MenuTheme mt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 					ReBarTheme rbt = {T, RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240), F, F, T, F, T, F};
@@ -3174,7 +3174,7 @@ namespace Win32xx
 				}
 				break;
 
-			case Win7:	// A pale blue color scheme suitable for Windows 7 and 8
+			case Win7:	// A pale blue color scheme suitable for Vista and Windows 7
 				{
 					MenuTheme mt = {T, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 					ReBarTheme rbt = {T, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), F, F, T, T, T, F};

@@ -208,8 +208,8 @@ void CViewTree::OnInitialUpdate()
 	AddItem(htiCTreeViewApp, _T("CTreeViewApp()"), 3);
 	AddItem(htiCTreeViewApp, _T("GetMainFrame()"), 3);
 	AddItem(htiCTreeViewApp, _T("InitInstance()"), 3);
-	HTREEITEM htiMainFrame = AddItem(htiRoot, _T("CMainDockFrame"), 1);
-	AddItem(htiMainFrame, _T("CMainDockFrame()"), 3);
+	HTREEITEM htiMainFrame = AddItem(htiRoot, _T("CMainFrame"), 1);
+	AddItem(htiMainFrame, _T("CMainFrame()"), 3);
 	AddItem(htiMainFrame, _T("OnCommand()"), 4);
 	AddItem(htiMainFrame, _T("OnInitialUpdate()"), 4);
 	AddItem(htiMainFrame, _T("WndProc()"), 4);

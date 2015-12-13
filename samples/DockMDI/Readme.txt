@@ -5,13 +5,12 @@ MDI frame window. MDI (Multiple Document Interface) frames allow different
 types of view windows to be displayed simultaneously. The more common SDI
 (Single Document Interface) frames only display a single view.
 
-This is a very simple project which could be used as a starting point for your
-own MDI frame based applications.
-
+CMainMDIFrame inherits from CMDIDockFrame to enable docking support.
 
 Features demonstrated in this example
 =====================================
 * Use of CMDIFrame and CMDIChild classes to implement a MDI frame
+* Adding a docker to a MDI frame.
 * Enabling/Disabling various frame features in OnCreate, namely:
    - show/hide toolbar and menu status in the status bar.
    - show/hide indicators in the status bar.

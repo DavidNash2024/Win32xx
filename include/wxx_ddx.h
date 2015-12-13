@@ -105,48 +105,48 @@ namespace Win32xx
 		virtual ~CDataExchange();
 		
 		// Dialog Data Validation (DDV) functions
-		void DDV_MaxChars(CString const& value, int nChars);			
-		void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
-		void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);		
-		void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG);
-		void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG);		
-		void DDV_MinMaxInt(int value, int minVal, int maxVal);
-		void DDV_MinMaxLong(long value,  long minVal, long maxVal);
-		void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
-		void DDV_MinMaxShort(short value, short minVal, short maxVal);
-		void DDV_MinMaxSlider(DWORD value, DWORD minVal, DWORD maxVal);		
-		void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal);
-		void DDV_MinMaxULong(DWORD value, DWORD minVal, DWORD maxVal);		
+		virtual void DDV_MaxChars(CString const& value, int nChars);			
+		virtual void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
+		virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);		
+		virtual void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG);
+		virtual void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG);		
+		virtual void DDV_MinMaxInt(int value, int minVal, int maxVal);
+		virtual void DDV_MinMaxLong(long value,  long minVal, long maxVal);
+		virtual void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
+		virtual void DDV_MinMaxShort(short value, short minVal, short maxVal);
+		virtual void DDV_MinMaxSlider(DWORD value, DWORD minVal, DWORD maxVal);		
+		virtual void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal);
+		virtual void DDV_MinMaxULong(DWORD value, DWORD minVal, DWORD maxVal);		
 				
 		// DDX Initialisation
-		void DDX_Control(int nIDC, CWnd& rCtl);			
+		virtual void DDX_Control(int nIDC, CWnd& rCtl);			
 		
 		// Dialog Data eXchange (DDX) functions
-		void DDX_CBIndex(int nIDC, int& index);		
-		void DDX_CBString(int nIDC, CString& value);		
-		void DDX_CBStringExact(int nIDC, CString& value);
-		void DDX_Check(int nIDC, int& value);
-		void DDX_DateTime(int nIDC, SYSTEMTIME& value);		
-		void DDX_LBIndex(int nIDC, int& index);
-		void DDX_LBString(int nIDC, CString& value);
-		void DDX_LBStringExact(int nIDC, CString& value);
-		void DDX_MonthCal(int nIDC, SYSTEMTIME& value);
-		void DDX_Progress(int nIDC, int& value);
-		void DDX_Radio(int nIDC, int& value);
-		void DDX_Scroll(int nIDC, int& value);		
-		void DDX_Slider(int nIDC, int& value);
+		virtual void DDX_CBIndex(int nIDC, int& index);		
+		virtual void DDX_CBString(int nIDC, CString& value);		
+		virtual void DDX_CBStringExact(int nIDC, CString& value);
+		virtual void DDX_Check(int nIDC, int& value);
+		virtual void DDX_DateTime(int nIDC, SYSTEMTIME& value);		
+		virtual void DDX_LBIndex(int nIDC, int& index);
+		virtual void DDX_LBString(int nIDC, CString& value);
+		virtual void DDX_LBStringExact(int nIDC, CString& value);
+		virtual void DDX_MonthCal(int nIDC, SYSTEMTIME& value);
+		virtual void DDX_Progress(int nIDC, int& value);
+		virtual void DDX_Radio(int nIDC, int& value);
+		virtual void DDX_Scroll(int nIDC, int& value);		
+		virtual void DDX_Slider(int nIDC, int& value);
 		
 		// DDX text operations
-		void DDX_Text(int nIDC, BYTE& value);
-		void DDX_Text(int nIDC, short& value);
-		void DDX_Text(int nIDC, int& value);
-		void DDX_Text(int nIDC, UINT& value);
-		void DDX_Text(int nIDC, long& value);
-		void DDX_Text(int nIDC, DWORD& value);
-		void DDX_Text(int nIDC, CString& value);
-		void DDX_Text(int nIDC, LPTSTR value, int nMaxLen);
-		void DDX_Text(int nIDC, float& value, int precision = FLT_DIG);
-		void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);		
+		virtual void DDX_Text(int nIDC, BYTE& value);
+		virtual void DDX_Text(int nIDC, short& value);
+		virtual void DDX_Text(int nIDC, int& value);
+		virtual void DDX_Text(int nIDC, UINT& value);
+		virtual void DDX_Text(int nIDC, long& value);
+		virtual void DDX_Text(int nIDC, DWORD& value);
+		virtual void DDX_Text(int nIDC, CString& value);
+		virtual void DDX_Text(int nIDC, LPTSTR value, int nMaxLen);
+		virtual void DDX_Text(int nIDC, float& value, int precision = FLT_DIG);
+		virtual void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);		
 
 		// Helper operations
 		void virtual Fail(LPCTSTR message);
