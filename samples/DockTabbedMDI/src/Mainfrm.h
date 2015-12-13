@@ -29,12 +29,12 @@ enum DockIDs
 	ID_DOCK_DIALOG = 11
 };
 
-// Declaration of the CMainDockFrame class
-class CMainDockFrame : public CDockFrame
+// Declaration of the CMainFrame class
+class CMainFrame : public CDockFrame
 {
 public:
-	CMainDockFrame();
-	virtual ~CMainDockFrame();
+	CMainFrame();
+	virtual ~CMainFrame();
 
 	void HideSingleContainerTab(BOOL HideSingle);
 	BOOL OnCloseMDIs();

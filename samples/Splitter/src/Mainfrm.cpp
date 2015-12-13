@@ -1,12 +1,12 @@
 ////////////////////////////////////////////////////
-// Mainfrm.cpp  - definitions for the CMainDockFrame class
+// Mainfrm.cpp  - definitions for the CMainFrame class
 
 #include "stdafx.h"
 #include "mainfrm.h"
 #include "resource.h"
 
 
-CMainDockFrame::CMainDockFrame()
+CMainFrame::CMainFrame()
 {
 	SetView(m_MainView);
 
@@ -15,11 +15,11 @@ CMainDockFrame::CMainDockFrame()
 	LoadRegistrySettings(_T("Win32++\\Splitter Sample"));
 }
 
-CMainDockFrame::~CMainDockFrame()
+CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -35,7 +35,7 @@ BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-BOOL CMainDockFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
@@ -43,7 +43,7 @@ BOOL CMainDockFrame::OnFileExit()
 	return TRUE;;
 }
 
-void CMainDockFrame::OnInitialUpdate()
+void CMainFrame::OnInitialUpdate()
 {
 	// Set the styles for splitter panes
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
@@ -62,7 +62,7 @@ void CMainDockFrame::OnInitialUpdate()
 
 }
 
-BOOL CMainDockFrame::OnViewList()
+BOOL CMainFrame::OnViewList()
 {
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 	if (m_pDockList->IsDocked())
@@ -79,7 +79,7 @@ BOOL CMainDockFrame::OnViewList()
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnViewText()
+BOOL CMainFrame::OnViewText()
 {
 	DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 
@@ -97,7 +97,7 @@ BOOL CMainDockFrame::OnViewText()
 	return TRUE;
 }
 
-void CMainDockFrame::SetupToolBar()
+void CMainFrame::SetupToolBar()
 {	
 	// Define the resource IDs for the toolbar
 	AddToolBarButton( IDM_FILE_NEW   );
@@ -113,7 +113,7 @@ void CMainDockFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainDockFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
 //	{

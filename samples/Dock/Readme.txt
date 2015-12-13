@@ -18,14 +18,17 @@ additional docking features when used as the view window for a Docker.
 Classes titled CDockXXXX are inherited from CDocker. Classes titled CViewXXXX
 are the various view windows inherited from CWnd.
 
+CMainFrame inherits from CDockFrame. CDockFrame adds support for docking
+to CMainFrame. 
+
 Refer to the documentation for further information on the use of the CDocker
 class.
 
 
 Features demonstrated in this example
 =====================================
-* Use of CFrame to provide a frame window
-* Use of CFrame as a docker
+* Use of CDockFrame to provide a frame window.
+* Use of CDockFrame to provide docking support.
 * Use of RichEdit, ListView and TreeView windows as view windows for CDocker.
 * The use of several docking styles.
 * Saving the dock layout in the registry.

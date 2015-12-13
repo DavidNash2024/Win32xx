@@ -14,10 +14,10 @@ public:
 	CTabbedMDIApp();
 	virtual ~CTabbedMDIApp();
 	virtual BOOL InitInstance();
-	CMainDockFrame& GetMainFrame() { return m_Frame; }
+	CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainDockFrame m_Frame;
+	CMainFrame m_Frame;
 };
 
 

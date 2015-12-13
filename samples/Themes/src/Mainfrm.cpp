@@ -57,21 +57,21 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 
 	switch (nColor)
 	{
-	case IDM_WHITE:		// Recommended for Windows 8 and Windows 10
+	case IDM_WIN8:		// Recommended for Windows 8 and Windows 10
 		{
-			SetReBarColors( RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255), RGB(255, 255, 255) );
+			SetReBarColors( RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240) );
 
-			StatusBarTheme sbt = {TRUE, RGB(255, 255, 255), RGB(255, 255, 255)};
+			StatusBarTheme sbt = {TRUE, RGB(235, 237, 250), RGB(235, 237, 250)};
 			SetStatusBarTheme (sbt);
 
-			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(180, 250, 255), RGB(100, 250, 255), RGB(100, 250, 255), RGB(255, 255, 255)};
+			ToolBarTheme tbt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 			SetToolBarTheme(tbt);
 
-			MenuTheme mt = {TRUE, RGB(0, 210, 255), RGB(0, 210, 255), RGB(0, 230, 255), RGB(0, 230, 255), RGB(255, 255, 255)};
+			MenuTheme mt = {TRUE, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
 			SetMenuTheme(mt);
 		}
 		break;
-	case IDM_MODERN:	// Recommended for Vista and Windows 7
+	case IDM_WIN7:	// Recommended for Vista and Windows 7
 		{
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
@@ -199,7 +199,7 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 		break;
 	default:
 		{
-			m_nColor = IDM_MODERN;
+			m_nColor = IDM_WIN7;
 			SetReBarColors( RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230) );
 
 			StatusBarTheme sbt = {TRUE, RGB(225, 230, 255), RGB(240, 242, 250)};
@@ -219,7 +219,7 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 	if (nFileItem >= 0)
 	{
 		CMenu ThemeMenu = GetFrameMenu().GetSubMenu(nFileItem);
-		ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_MODERN, nColor, 0);
+		ThemeMenu.CheckMenuRadioItem(IDM_BLUE, IDM_WIN7, nColor, 0);
 	}
 
 	RecalcLayout();
@@ -324,7 +324,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	switch(LOWORD(wParam))
 	{
 	case IDM_FILE_EXIT:		 return OnFileExit();
-	case IDM_MODERN:		 return ChooseColor(IDM_MODERN);
+	case IDM_WIN7:		 return ChooseColor(IDM_WIN7);
 	case IDM_BLUE:			 return ChooseColor(IDM_BLUE);
 	case IDM_GREY:			 return ChooseColor(IDM_GREY);
 	case IDM_OLIVE:			 return ChooseColor(IDM_OLIVE);
@@ -333,7 +333,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_PINK:			 return ChooseColor(IDM_PINK);
 	case IDM_GOLD:			 return ChooseColor(IDM_GOLD);
 	case IDM_BLACK:			 return ChooseColor(IDM_BLACK);
-	case IDM_WHITE:			 return ChooseColor(IDM_WHITE); 
+	case IDM_WIN8:			 return ChooseColor(IDM_WIN8); 
 	case IDM_USE_THEMES:	 return OnUseThemes();
 	case IDM_BAND_COLORS:	 return OnBandColors();
 	case IDM_FLAT_STYLE:	 return OnFlatStyle();
@@ -564,7 +564,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	}
 
 	// Check the color menu item and make it a radio item 
-	GetFrameMenu().CheckMenuRadioItem(IDM_WHITE, IDM_BLACK, m_nColor, 0);
+	GetFrameMenu().CheckMenuRadioItem(IDM_WIN8, IDM_BLACK, m_nColor, 0);
 
 	// Call the base class member function
 	CFrame::OnMenuUpdate(nID);

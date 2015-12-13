@@ -7,10 +7,10 @@
 #include "resource.h"
 
 
-// Definitions for the CMainDockFrame class
-CMainDockFrame::CMainDockFrame()
+// Definitions for the CMainFrame class
+CMainFrame::CMainFrame()
 {
-	// Constructor for CMainDockFrame. Its called after CFrame's constructor
+	// Constructor for CMainFrame. Its called after CFrame's constructor
 
 	m_UseProportionalResize = FALSE;
 	m_Use3DBorder = TRUE;
@@ -28,12 +28,12 @@ CMainDockFrame::CMainDockFrame()
 	LoadRegistrySettings(_T("Win32++\\Dock"));
 }
 
-CMainDockFrame::~CMainDockFrame()
+CMainFrame::~CMainFrame()
 {
-	// Destructor for CMainDockFrame.
+	// Destructor for CMainFrame.
 }
 
-BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
@@ -59,14 +59,14 @@ BOOL CMainDockFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-BOOL CMainDockFrame::OnFileExit()
+BOOL CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnDockDefault()
+BOOL CMainFrame::OnDockDefault()
 {
 	SetRedraw(FALSE);	// Suppress drawing to the frame window
 	CloseAllDockers();
@@ -76,28 +76,28 @@ BOOL CMainDockFrame::OnDockDefault()
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnPropResize()
+BOOL CMainFrame::OnPropResize()
 {
 	m_UseProportionalResize = !m_UseProportionalResize;
 	SetDockStyles();
 	return TRUE;
 }
 
-BOOL CMainDockFrame::On3DBorder()
+BOOL CMainFrame::On3DBorder()
 {
 	m_Use3DBorder = !m_Use3DBorder;
 	SetDockStyles();
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnNoUndocking()
+BOOL CMainFrame::OnNoUndocking()
 {
 	m_DisableUndocking = !m_DisableUndocking;
 	SetDockStyles();
 	return TRUE;
 }
 
-void CMainDockFrame::OnMenuUpdate(UINT nID)
+void CMainFrame::OnMenuUpdate(UINT nID)
 {
 	switch(nID)
 	{
@@ -127,21 +127,21 @@ void CMainDockFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
-BOOL CMainDockFrame::OnNoResize()
+BOOL CMainFrame::OnNoResize()
 {
 	m_DisableResize = !m_DisableResize;
 	SetDockStyles();
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnNoDockLR()
+BOOL CMainFrame::OnNoDockLR()
 {
 	m_DisableDockLR = !m_DisableDockLR;
 	SetDockStyles();
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnNoDockClose()
+BOOL CMainFrame::OnNoDockClose()
 {
 	m_DisableDockClose = !m_DisableDockClose;
 	SetDockStyles();
@@ -149,13 +149,13 @@ BOOL CMainDockFrame::OnNoDockClose()
 	return TRUE;
 } 
 
-BOOL CMainDockFrame::OnDockCloseAll()
+BOOL CMainFrame::OnDockCloseAll()
 {
 	CloseAllDockers();
 	return TRUE;
 }
 
-BOOL CMainDockFrame::OnDynamicResize()
+BOOL CMainFrame::OnDynamicResize()
 {
 	// Dragging the docker's splitter bar will either dynamicly resize the dockers
 	// during the dragging, or simply display a hashed splitter bar.
@@ -169,7 +169,7 @@ BOOL CMainDockFrame::OnDynamicResize()
 	return TRUE;
 }
 
-int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
 	// Overriding CFrame::Oncreate is optional.
@@ -185,7 +185,7 @@ int CMainDockFrame::OnCreate(CREATESTRUCT& cs)
 	return CDockFrame::OnCreate(cs);
 }
 
-void CMainDockFrame::OnInitialUpdate()
+void CMainFrame::OnInitialUpdate()
 {
 	SetDockStyle(DS_CLIENTEDGE);
 
@@ -200,7 +200,7 @@ void CMainDockFrame::OnInitialUpdate()
 	ShowWindow( GetShowCmd() );
 }
 
-void CMainDockFrame::LoadDefaultDockers()
+void CMainFrame::LoadDefaultDockers()
 {
 	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
@@ -218,7 +218,7 @@ void CMainDockFrame::LoadDefaultDockers()
 	SetDockStyles();
 }
 
-CDocker* CMainDockFrame::NewDockerFromID(int nID)
+CDocker* CMainFrame::NewDockerFromID(int nID)
 {
 	CDocker* pDock = NULL;
 	switch(nID)
@@ -255,7 +255,7 @@ CDocker* CMainDockFrame::NewDockerFromID(int nID)
 	return pDock;
 }
 
-void CMainDockFrame::PreCreate(CREATESTRUCT& cs)
+void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
 	CFrame::PreCreate(cs);
@@ -264,7 +264,7 @@ void CMainDockFrame::PreCreate(CREATESTRUCT& cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
-BOOL CMainDockFrame::SaveRegistrySettings()
+BOOL CMainFrame::SaveRegistrySettings()
 {
 	if (CFrame::SaveRegistrySettings())
 		return SaveDockRegistrySettings(GetRegistryKeyName());
@@ -272,7 +272,7 @@ BOOL CMainDockFrame::SaveRegistrySettings()
 		return FALSE;
 }
 
-void CMainDockFrame::SetDockStyles()
+void CMainFrame::SetDockStyles()
 {
 	std::vector<CDocker*>::iterator iter;
 
@@ -295,7 +295,7 @@ void CMainDockFrame::SetDockStyles()
 	}
 }
 
-void CMainDockFrame::SetupToolBar()
+void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW,   FALSE );

@@ -117,7 +117,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 			BOOL bShow = m_View.GetShowButtons();
 			UINT uCheck = (bShow)? MF_CHECKED : MF_UNCHECKED;
 			GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, uCheck);
-			UINT uEnable = (bDraw && bFixed)? MF_ENABLED : MF_DISABLED ;
+			UINT uEnable = (bDraw && bFixed)? MF_ENABLED : MF_GRAYED;
 			GetFrameMenu().EnableMenuItem(IDM_TAB_BUTTONS, uEnable);
 		}
 		break;

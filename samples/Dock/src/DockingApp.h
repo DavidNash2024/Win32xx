@@ -15,10 +15,10 @@ public:
     CDockingApp();
     virtual ~CDockingApp() {}
 	virtual BOOL InitInstance();
-	CMainDockFrame& GetMainFrame() { return m_MainFrame; }
+	CMainFrame& GetMainFrame() { return m_MainFrame; }
 
 private:
-    CMainDockFrame m_MainFrame;
+    CMainFrame m_MainFrame;
 
 };
 
