@@ -115,6 +115,7 @@ namespace Win32xx
 		~CArchive();
 
 		// method members
+		const CFile&	GetFile();
 		UINT 	GetObjectSchema();
 		bool 	IsLoading() const;
 		bool 	IsStoring() const;
@@ -272,23 +273,11 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CArchive::Read(void* lpBuf, UINT size)
-	// Read size bytes from the open archive file into the given lpBuf.
-	// Throw an exception if not successful.
+	inline const CFile& CArchive::GetFile()
+	// Returns the file associated with the archive.
 	{
-		// read, simply and  in binary mode, the size into the lpBuf
 		assert(m_pFile);
-		m_pFile->Read(lpBuf, size);
-	}
-
-	//============================================================================
-	inline void CArchive::Write(const void* lpBuf, UINT size)
-	// Write size characters of from the lpBuf into the open archive file.
-	// Throw an exception if unsuccessful.
-	{
-		// write size characters in lpBuf to the  file
-		assert(m_pFile);
-		m_pFile->Write(lpBuf, size);
+		return *m_pFile;
 	}
 
 	//============================================================================
@@ -299,16 +288,6 @@ namespace Win32xx
 	// by the application.
 	{
 		return m_Schema;
-	}
-
-	//============================================================================
-	inline void CArchive::SetObjectSchema(UINT nSchema)
-	// Record the archived data schema number.  This acts as a version number
-	// on the format of the archived data for special handling when there
-	// are several versions of the serialized data to be accommodated
-	// by the application.
-	{
-		m_Schema = nSchema;
 	}
 
 	//============================================================================
@@ -325,6 +304,36 @@ namespace Win32xx
 	// being stored.
 	{
 		return m_IsStoring;
+	}
+
+	//============================================================================
+	inline void CArchive::Read(void* lpBuf, UINT size)
+	// Read size bytes from the open archive file into the given lpBuf.
+	// Throw an exception if not successful.
+	{
+		// read, simply and  in binary mode, the size into the lpBuf
+		assert(m_pFile);
+		m_pFile->Read(lpBuf, size);
+	}
+
+	//============================================================================
+	inline void CArchive::SetObjectSchema(UINT nSchema)
+	// Record the archived data schema number.  This acts as a version number
+	// on the format of the archived data for special handling when there
+	// are several versions of the serialized data to be accommodated
+	// by the application.
+	{
+		m_Schema = nSchema;
+	}
+
+	//============================================================================
+	inline void CArchive::Write(const void* lpBuf, UINT size)
+	// Write size characters of from the lpBuf into the open archive file.
+	// Throw an exception if unsuccessful.
+	{
+		// write size characters in lpBuf to the  file
+		assert(m_pFile);
+		m_pFile->Write(lpBuf, size);
 	}
 
 	//============================================================================
@@ -565,7 +574,7 @@ namespace Win32xx
 	//============================================================================
 	inline CArchive& CArchive::operator<<(const ArchiveObject& ao)
 	// Write arbitrary CArchive object into this CArchive. Only ob.size  and
-	// pointer ob.p to location are given. Throw an excepton if unable
+	// pointer ob.p to location are given. Throw an exception if unable
 	// to do so successfully.
 	{
 		Write(&ao.m_size, sizeof(ao.m_size));
@@ -733,7 +742,7 @@ namespace Win32xx
 		*this >> nChars;
 	
 		if (IsUnicode)	
-			throw CFileException(_T("Unicode characters stored. Not a CStringA"));
+			throw CFileException(m_pFile->GetFilePath(), _T("Unicode characters stored. Not a CStringA"));
 
 		char* buf = new char[nChars];
 		Read(buf, nChars);
@@ -758,7 +767,7 @@ namespace Win32xx
 		*this >> nChars;
 
 		if (!IsUnicode)	
-			throw CFileException(_T("ANSI characters stored. Not a CStringW"));
+			throw CFileException(m_pFile->GetFilePath(), _T("ANSI characters stored. Not a CStringW"));
 	
 		WCHAR* buf = new WCHAR[nChars];
 		Read(buf, nChars*2);	

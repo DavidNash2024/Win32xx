@@ -74,9 +74,11 @@ New Features and Enhancements
    CNotSupportedExceptions are thrown under the following circumstances:
     - An attempt is made to run more than one instance of CWinApp.
 	- CWinApp is prevented from starting the framework.
+	- CSocket fails to load the WS2_32.DLL.
+	- CSocket fails to initialize the use of WS2_32.DLL.	
 	
    CResourceExceptions are thrown under the following circumstances:
-    * A failure to create a GDI resource, namely:
+    An attempt to create a GDI resource fails. Applies to:
 	   - device contexts
 	   - bitmaps
 	   - brushes
@@ -106,8 +108,8 @@ New Features and Enhancements
 	  
 * Updated CArchive
    - Added the ability to archive char and wchar character arrays. The abilty
-     to archive TCHAR character is retained
-   - Added the capacity to archive CStringA and CStringW . The ability to
+     to archive TCHAR character arrays is retained.
+   - Added the ability to archive CStringA and CStringW. The ability to
      archive CString is retained.	  
 	  
 * Updated CWnd
@@ -161,6 +163,7 @@ Added CNotSupportedException
 Added CResourceException
 Added CUserException
 
+Added CArchive::GetFile
 Added CArchive::ReadStringA
 Added CArchive::ReadStringW
 Added CArchive::WriteStringA
@@ -189,6 +192,13 @@ Modified CThread::PreTranslateMessage
 Modified CWnd::OnCreate
 Modified CWnd::IsDialogMessage
 Modified CWnd::PreTranslateMessage
+
+Modified CDocker::GetAllDockChildren		returns const ref
+Modified CDocker::GetDockChildren			returns const ref
+Modified CDocker::GetAllDockers				returns const ref
+Modified CDockContainer::GetAllContainers	returns const ref
+Modified CMDIFrame::GetAllMDIChildren		returns const ref
+Modified CTab:: GetAllTabs					returns const ref
 
 Updated theme colors for Windows 8, Windows 8.1 and Windows 10
 

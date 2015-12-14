@@ -126,7 +126,7 @@ BOOL CMainFrame::OnContainerTabsAtTop()
 void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 {
 	m_IsContainerTabsAtTop = bTop;
-	std::vector<DockPtr>::iterator iter;
+	std::vector<DockPtr>::const_iterator iter;
 
 	// Set the Tab position for each container
 	for (iter = GetAllDockChildren().begin(); iter < GetAllDockChildren().end(); ++iter)
@@ -292,7 +292,7 @@ BOOL CMainFrame::OnHideSingleTab()
 void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 {
 	m_IsHideSingleTab = HideSingle;
-	std::vector<DockPtr>::iterator iter;
+	std::vector<DockPtr>::const_iterator iter;
 
 	// Set the Tab position for each container
 	for (iter = GetAllDockChildren().begin(); iter < GetAllDockChildren().end(); ++iter)

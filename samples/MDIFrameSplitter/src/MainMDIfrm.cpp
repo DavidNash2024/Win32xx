@@ -177,7 +177,7 @@ LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Called when a MDI child is activated with a mouse click
  		{
 			// Redraw all MDI children to update docker caption
-			std::vector<MDIChildPtr>::iterator iter;
+			std::vector<MDIChildPtr>::const_iterator iter;
 			for (iter = GetAllMDIChildren().begin(); iter < GetAllMDIChildren().end(); ++iter)
 			{
 				(*iter)->RedrawWindow();

@@ -1001,7 +1001,8 @@ namespace Win32xx
 		ar.Read(&size, sizeof(UINT));
 		if (size != sizeof(ULONGLONG))
 		{
-			throw CWinException(TEXT("Failed to read CTime from archive."));
+			CString str = ar.GetFile().GetFilePath();
+			throw CFileException(str, _T("Failed to read CTime from archive."));
 		}
 
 		// load CTime as x64
@@ -1309,7 +1310,8 @@ namespace Win32xx
 		ar.Read(&size, sizeof(size));
 		if (size != sizeof(ULONGLONG))
 		{
-			throw CWinException(_T("Failed to read CTimeSpan from archive"));
+			CString str = ar.GetFile().GetFilePath();
+			throw CFileException(str, _T("Failed to read CTimeSpan from archive"));
 		}
 		
 		// load CTimeSpan as x64

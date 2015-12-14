@@ -318,11 +318,7 @@ namespace Win32xx
 		virtual BOOL IsMDIFrame() const { return FALSE; }
 		virtual void SetStatusIndicators();
 		virtual void RecalcLayout();
-		virtual void RecalcViewLayout()
-		{
-			GetView().SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
-		}
-
+		virtual void RecalcViewLayout();
 		virtual CWnd& GetView() { return *m_pView; }
 		virtual void SetView(CWnd& wndView) { m_pView = &wndView; }
 
@@ -2158,19 +2154,19 @@ namespace Win32xx
 				DWORD dwTop, dwLeft, dwWidth, dwHeight, dwShowCmd, dwStatusBar, dwToolBar;
 
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Top"), dwTop))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Left"), dwLeft))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Width"), dwWidth))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("Height"), dwHeight))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("ShowCmd"), dwShowCmd))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("StatusBar"), dwStatusBar))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("ToolBar"), dwToolBar))
-					throw CWinException(_T("RegQueryValueEx Failed"));
+					throw CUserException(_T("RegQueryValueEx Failed"));
 
 				m_rcPosition.top = dwTop;
 				m_rcPosition.left = dwLeft;
@@ -2184,7 +2180,7 @@ namespace Win32xx
 				bRet = TRUE;
 			}
 
-			catch (const CWinException& e)
+			catch (const CUserException& e)
 			{
 				TRACE("*** Failed to load values from registry, using defaults. ***\n");
 				TRACE(e.GetText()); TRACE(strKey); TRACE("\n");
@@ -2800,6 +2796,13 @@ namespace Win32xx
 		}
 	}
 
+	inline void CFrame::RecalcViewLayout()
+	// Resize the view window
+	{
+		GetView().SetWindowPos( NULL, GetViewRect(), SWP_SHOWWINDOW);
+	}
+
+
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	// Removes an entry from the MRU list
 	{
@@ -2834,10 +2837,10 @@ namespace Win32xx
 
 				// Add Current MRUs
 				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
-					throw CWinException(_T("RegCreateKeyEx failed"));
+					throw CUserException(_T("RegCreateKeyEx failed"));
 
 				if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
-					throw CWinException(_T("RegCreateKeyEx failed"));
+					throw CUserException(_T("RegCreateKeyEx failed"));
 
 				CString SubKeyName;
 				CString strPathName;
@@ -2850,12 +2853,12 @@ namespace Win32xx
 						strPathName = m_vMRUEntries[i];
 
 						if (ERROR_SUCCESS != Key.SetStringValue(SubKeyName, strPathName.c_str()))
-							throw CWinException(_T("RegSetValueEx failed"));
+							throw CUserException(_T("RegSetValueEx failed"));
 					}
 				}
 			}
 
-			catch (const CWinException& e)
+			catch (const CUserException& e)
 			{
 				TRACE("*** Failed to save registry MRU settings. ***\n");
 				TRACE(e.GetText()); TRACE("\n");
@@ -2887,9 +2890,9 @@ namespace Win32xx
 				CRegKey Key;
 
 				if (ERROR_SUCCESS != Key.Create(HKEY_CURRENT_USER, KeyName))
-					throw CWinException(_T("RegCreateKeyEx failed"));
+					throw CUserException(_T("RegCreateKeyEx failed"));
 				if (ERROR_SUCCESS != Key.Open(HKEY_CURRENT_USER, KeyName))
-					throw CWinException(_T("RegCreateKeyEx failed"));
+					throw CUserException(_T("RegCreateKeyEx failed"));
 
 				// Store the window position in the registry
 				WINDOWPLACEMENT Wndpl;
@@ -2907,15 +2910,15 @@ namespace Win32xx
 					DWORD dwShowCmd = Wndpl.showCmd;
 
 					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Top"), dwTop))
-						throw CWinException(_T("RegSetValueEx failed"));
+						throw CUserException(_T("RegSetValueEx failed"));
 					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Left"), dwLeft))
-						throw CWinException(_T("RegSetValueEx failed"));
+						throw CUserException(_T("RegSetValueEx failed"));
 					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Width"), dwWidth))
-						throw CWinException(_T("RegSetValueEx failed"));
+						throw CUserException(_T("RegSetValueEx failed"));
 					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("Height"), dwHeight))
-						throw CWinException(_T("RegSetValueEx failed"));
+						throw CUserException(_T("RegSetValueEx failed"));
 					if (ERROR_SUCCESS != Key.SetDWORDValue(_T("ShowCmd"), dwShowCmd))
-						throw CWinException(_T("RegSetValueEx failed"));
+						throw CUserException(_T("RegSetValueEx failed"));
 				}
 
 				// Store the ToolBar and statusbar states
@@ -2923,12 +2926,12 @@ namespace Win32xx
 				DWORD dwShowStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 
 				if (ERROR_SUCCESS != Key.SetDWORDValue(_T("ToolBar"), dwShowToolBar))
-					throw CWinException(_T("RegSetValueEx failed"));
+					throw CUserException(_T("RegSetValueEx failed"));
 				if (ERROR_SUCCESS != Key.SetDWORDValue(_T("StatusBar"), dwShowStatusBar))
-					throw CWinException(_T("RegSetValueEx failed"));
+					throw CUserException(_T("RegSetValueEx failed"));
 			}
 
-			catch (const CWinException& e)
+			catch (const CUserException& e)
 			{
 				TRACE("*** Failed to save registry settings. ***\n");
 				TRACE(e.GetText()); TRACE("\n");

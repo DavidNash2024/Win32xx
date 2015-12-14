@@ -166,7 +166,7 @@ namespace Win32xx
 		virtual BOOL RemoveAllMDIChildren();
 
 		// These functions aren't virtual. Don't override these
-		std::vector<MDIChildPtr>& GetAllMDIChildren() {return m_vMDIChild;}
+		const std::vector<MDIChildPtr>& GetAllMDIChildren() const {return m_vMDIChild;}
 		void MDICascade(int nType = 0) const;
 		void MDIIconArrange() const;
 		void MDIMaximize() const;
@@ -343,7 +343,7 @@ namespace Win32xx
 		int nWindow = 0;
 
 		// Allocate an iterator for our MDIChild vector
-		std::vector<MDIChildPtr>::iterator v;
+		std::vector<MDIChildPtr>::const_iterator v;
 
 		for (v = GetAllMDIChildren().begin(); v < GetAllMDIChildren().end(); ++v)
 		{
