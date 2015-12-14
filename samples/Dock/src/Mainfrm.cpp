@@ -159,7 +159,7 @@ BOOL CMainFrame::OnDynamicResize()
 {
 	// Dragging the docker's splitter bar will either dynamicly resize the dockers
 	// during the dragging, or simply display a hashed splitter bar.
-	std::vector<CDocker*>::iterator iter;
+	std::vector<CDocker*>::const_iterator iter;
 	m_UseDynamicResize = !m_UseDynamicResize;
 
 	for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
@@ -274,7 +274,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 
 void CMainFrame::SetDockStyles()
 {
-	std::vector<CDocker*>::iterator iter;
+	std::vector<CDocker*>::const_iterator iter;
 
 	for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
 	{

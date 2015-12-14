@@ -122,7 +122,7 @@ namespace Win32xx
 		virtual void SwapTabs(UINT nTab1, UINT nTab2);
 
 		// Attributes
-		std::vector<TabPageInfo>& GetAllTabs() const { return const_cast<std::vector <TabPageInfo>&>(m_vTabPageInfo); }
+		const std::vector<TabPageInfo>& GetAllTabs() const { return m_vTabPageInfo; }
 		CImageList GetODImageList() const	{ return const_cast<CImageList&>(m_imlODTab); }
 		CFont& GetTabFont() const		{ return const_cast<CFont&>(m_TabFont); }
 		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
@@ -1968,11 +1968,11 @@ namespace Win32xx
 			try
 			{
 				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
+					throw (CUserException(_T("RegCreateKeyEx Failed")));
 
 				RegDeleteKey(hKey, _T("MDI Children"));
 				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
-					throw (CWinException(_T("RegCreateKeyEx Failed")));
+					throw (CUserException(_T("RegCreateKeyEx Failed")));
 
 				for (int i = 0; i < GetMDIChildCount(); ++i)
 				{
@@ -1981,24 +1981,24 @@ namespace Win32xx
 
 					SubKeyName.Format(_T("ID%d"), i);
 					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, (LPBYTE)&pdi.idTab, sizeof(int)))
-						throw (CWinException(_T("RegSetValueEx Failed")));
+						throw (CUserException(_T("RegSetValueEx Failed")));
 
 					SubKeyName.Format(_T("Text%d"), i);
 					CString TabText = GetTab().GetTabPageInfo(i).TabText;
 					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_SZ, (LPBYTE)TabText.c_str(), (1 + TabText.GetLength() )*sizeof(TCHAR)))
-						throw (CWinException(_T("RegSetValueEx Failed")));
+						throw (CUserException(_T("RegSetValueEx Failed")));
 				}
 
 				// Add Active Tab to the registry
 				CString SubKeyName = _T("Active MDI Tab");
 				int nTab = GetActiveMDITab();
 				if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, (LPBYTE)&nTab, sizeof(int)))
-					throw (CWinException(_T("RegSetValueEx failed")));
+					throw (CUserException(_T("RegSetValueEx failed")));
 
 				RegCloseKey(hKeyMDIChild);
 				RegCloseKey(hKey);
 			}
-			catch (const CWinException& e)
+			catch (const CUserException& e)
 			{
 				TRACE("*** Failed to save TabbedMDI settings in registry. ***\n");
 				TRACE(e.GetText()); TRACE("\n");

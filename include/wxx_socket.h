@@ -108,14 +108,10 @@
 #ifndef _WIN32XX_SOCKET_H_
 #define _WIN32XX_SOCKET_H_
 
+// include exception handling, TRACE etc.
+#include "wxx_wincore.h"
 
-#include <winsock2.h>       // must include before windows.h
-#include <windows.h>        
 #include <ws2tcpip.h>
-
-#ifndef _WIN32_WCE
-  #include <process.h>
-#endif
 
 #define THREAD_TIMEOUT 100
 
@@ -204,11 +200,11 @@ namespace Win32xx
 		WSADATA wsaData;
 
 		if (::WSAStartup(MAKEWORD(2,2), &wsaData) != 0)
-			throw CWinException(_T("WSAStartup failed"));
+			throw CNotSupportedException(_T("WSAStartup failed"));
 
 		m_hWS2_32 = LoadLibrary(_T("WS2_32.dll"));
 		if (m_hWS2_32 == 0)
-			throw CWinException(_T("Failed to load WS2_2.dll"));
+			throw CNotSupportedException(_T("Failed to load WS2_2.dll"));
 
 #ifdef _WIN32_WCE
 		m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_hWS2_32, L"getaddrinfo") );
