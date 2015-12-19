@@ -11,76 +11,80 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\include\controls.h" />
+    <ClInclude Include="..\..\..\include\c_string.h" />
     <ClInclude Include="..\..\..\include\default_resource.h" />
-    <ClInclude Include="..\..\..\include\wxx_archive.h" />
-    <ClInclude Include="..\..\..\include\wxx_controls.h" />
-    <ClInclude Include="..\..\..\include\wxx_cstring.h" />
-    <ClInclude Include="..\..\..\include\wxx_dialog.h" />
-    <ClInclude Include="..\..\..\include\wxx_docking.h" />
-    <ClInclude Include="..\..\..\include\wxx_file.h" />
-    <ClInclude Include="..\..\..\include\wxx_frame.h" />
-    <ClInclude Include="..\..\..\include\wxx_gdi.h" />
-    <ClInclude Include="..\..\..\include\wxx_imagelist.h" />
-    <ClInclude Include="..\..\..\include\wxx_listview.h" />
-    <ClInclude Include="..\..\..\include\wxx_mdi.h" />
-    <ClInclude Include="..\..\..\include\wxx_menu.h" />
-    <ClInclude Include="..\..\..\include\wxx_menubar.h" />
-    <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
-    <ClInclude Include="..\..\..\include\wxx_rebar.h" />
-    <ClInclude Include="..\..\..\include\wxx_regkey.h" />
-    <ClInclude Include="..\..\..\include\wxx_ribbon.h" />
-    <ClInclude Include="..\..\..\include\wxx_richedit.h" />
-    <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
-    <ClInclude Include="..\..\..\include\wxx_socket.h" />
-    <ClInclude Include="..\..\..\include\wxx_statusbar.h" />
-    <ClInclude Include="..\..\..\include\wxx_stdcontrols.h" />
-    <ClInclude Include="..\..\..\include\wxx_tab.h" />
-    <ClInclude Include="..\..\..\include\wxx_taskdialog.h" />
-    <ClInclude Include="..\..\..\include\wxx_time.h" />
-    <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
-    <ClInclude Include="..\..\..\include\wxx_treeview.h" />
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h" />
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h" />
-    <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
-    <ClInclude Include="..\..\..\include\wxx_wincore.h" />
-    <ClInclude Include="..\..\..\include\wxx_winutils.h" />
-    <ClInclude Include="..\src\CustomControlApp.h" />
-    <ClInclude Include="..\src\MyDialog.h" />
-    <ClInclude Include="..\src\MyWebControl.h" />
+    <ClInclude Include="..\..\..\include\dialog.h" />
+    <ClInclude Include="..\..\..\include\docking.h" />
+    <ClInclude Include="..\..\..\include\file.h" />
+    <ClInclude Include="..\..\..\include\frame.h" />
+    <ClInclude Include="..\..\..\include\gdi.h" />
+    <ClInclude Include="..\..\..\include\listview.h" />
+    <ClInclude Include="..\..\..\include\mdi.h" />
+    <ClInclude Include="..\..\..\include\menu.h" />
+    <ClInclude Include="..\..\..\include\menubar.h" />
+    <ClInclude Include="..\..\..\include\propertysheet.h" />
+    <ClInclude Include="..\..\..\include\rebar.h" />
+    <ClInclude Include="..\..\..\include\ribbon.h" />
+    <ClInclude Include="..\..\..\include\shared_ptr.h" />
+    <ClInclude Include="..\..\..\include\socket.h" />
+    <ClInclude Include="..\..\..\include\statusbar.h" />
+    <ClInclude Include="..\..\..\include\stdcontrols.h" />
+    <ClInclude Include="..\..\..\include\tab.h" />
+    <ClInclude Include="..\..\..\include\taskdialog.h" />
+    <ClInclude Include="..\..\..\include\toolbar.h" />
+    <ClInclude Include="..\..\..\include\treeview.h" />
+    <ClInclude Include="..\..\..\include\webbrowser.h" />
+    <ClInclude Include="..\..\..\include\wincore.h" />
+    <ClInclude Include="..\..\..\include\winutils.h" />
+    <ClInclude Include="..\src\App.h" />
+    <ClInclude Include="..\src\Doc.h" />
+    <ClInclude Include="..\src\Mainfrm.h" />
+    <ClInclude Include="..\src\MyButton.h" />
+    <ClInclude Include="..\src\MyDateTime.h" />
+    <ClInclude Include="..\src\MyMonthCalendar.h" />
+    <ClInclude Include="..\src\MyScrollbar.h" />
+    <ClInclude Include="..\src\MySlider.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\targetver.h" />
+    <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\CustomControlApp.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\MyDialog.cpp" />
-    <ClCompile Include="..\src\MyWebControl.cpp" />
+    <ClCompile Include="..\src\App.cpp" />
+    <ClCompile Include="..\src\Doc.cpp" />
+    <ClCompile Include="..\src\Mainfrm.cpp" />
+    <ClCompile Include="..\src\MyButton.cpp" />
+    <ClCompile Include="..\src\MyDateTime.cpp" />
+    <ClCompile Include="..\src\MyMonthCalendar.cpp" />
+    <ClCompile Include="..\src\MyScrollbar.cpp" />
+    <ClCompile Include="..\src\MySlider.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CustomControl</RootNamespace>
-    <ProjectName>CustomControl</ProjectName>
+    <RootNamespace>DDXDemo</RootNamespace>
+    <ProjectName>DDXDemo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">

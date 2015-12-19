@@ -44,21 +44,21 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_winutils.h" />
-    <ClInclude Include="..\src\CustomControlApp.h" />
-    <ClInclude Include="..\src\MyDialog.h" />
-    <ClInclude Include="..\src\MyWebControl.h" />
+    <ClInclude Include="..\src\FormApp.h" />
+    <ClInclude Include="..\src\FormDoc.h" />
+    <ClInclude Include="..\src\FormView.h" />
+    <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\stdafx.h" />
-    <ClInclude Include="..\src\targetver.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\CustomControlApp.cpp" />
-    <ClCompile Include="..\src\main.cpp" />
-    <ClCompile Include="..\src\MyDialog.cpp" />
-    <ClCompile Include="..\src\MyWebControl.cpp" />
+    <ClCompile Include="..\src\FormApp.cpp" />
+    <ClCompile Include="..\src\FormDoc.cpp" />
+    <ClCompile Include="..\src\FormView.cpp" />
+    <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
@@ -67,20 +67,20 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>CustomControl</RootNamespace>
-    <ProjectName>CustomControl</ProjectName>
+    <RootNamespace>FormDemo</RootNamespace>
+    <ProjectName>FormDemo</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
-    <PlatformToolset>v120_xp</PlatformToolset>
+    <PlatformToolset>v140_xp</PlatformToolset>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
