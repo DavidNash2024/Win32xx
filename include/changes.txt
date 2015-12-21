@@ -202,6 +202,8 @@ Modified CTab:: GetAllTabs					returns const ref
 
 Updated theme colors for Windows 8, Windows 8.1 and Windows 10
 
+Renamed the DirectX sample to DirectX9
+
 
 Version 8.0.1
 ==============

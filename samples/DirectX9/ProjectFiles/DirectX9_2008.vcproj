@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="TaskDialog"
-	ProjectGUID="{C60BEBF3-77D9-4A0D-B377-F9FE2FC01FAF}"
-	RootNamespace="TaskDialog"
+	Version="9.00"
+	Name="DirectX9"
+	ProjectGUID="{26EE2813-09DB-4601-86D0-55B84F2E6B9E}"
+	RootNamespace="DirectX9"
 	Keyword="Win32Proj"
+	TargetFrameworkVersion="196613"
 	>
 	<Platforms>
 		<Platform
@@ -46,8 +47,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="1"
 				UsePrecompiledHeader="2"
-				WarningLevel="4"
-				Detect64BitPortabilityProblems="false"
+				WarningLevel="3"
 				DebugInformationFormat="4"
 			/>
 			<Tool
@@ -62,8 +62,9 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
 				LinkIncremental="2"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
 				TargetMachine="1"
@@ -86,9 +87,6 @@
 			/>
 			<Tool
 				Name="VCAppVerifierTool"
-			/>
-			<Tool
-				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -119,12 +117,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
+				Optimization="2"
+				EnableIntrinsicFunctions="true"
 				AdditionalIncludeDirectories="..\..\..\include"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				RuntimeLibrary="0"
+				EnableFunctionLevelLinking="true"
 				UsePrecompiledHeader="2"
-				WarningLevel="4"
-				Detect64BitPortabilityProblems="false"
+				WarningLevel="3"
 				DebugInformationFormat="3"
 			/>
 			<Tool
@@ -139,10 +139,13 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="user32.lib gdi32.lib comctl32.lib comdlg32.lib Advapi32.lib shell32.lib ole32.lib"
+				AdditionalDependencies="comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
 				LinkIncremental="1"
+				GenerateManifest="false"
 				GenerateDebugInformation="true"
 				SubSystem="2"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -165,9 +168,6 @@
 				Name="VCAppVerifierTool"
 			/>
 			<Tool
-				Name="VCWebDeploymentTool"
-			/>
-			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
@@ -181,11 +181,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\src\DXApp.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\main.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\MyTaskDialog.cpp"
+				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>
 			<File
@@ -209,7 +213,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\src\TaskDialogApp.cpp"
+				RelativePath="..\src\View.cpp"
 				>
 			</File>
 		</Filter>
@@ -219,7 +223,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\src\MyTaskDialog.h"
+				RelativePath="..\src\DXApp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
@@ -231,11 +239,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\targetver.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\TaskDialogApp.h"
+				RelativePath="..\src\View.h"
 				>
 			</File>
 		</Filter>
@@ -245,7 +249,143 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\src\TaskDialog.rc"
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
+		</Filter>
+		<Filter
+			Name="Win32++"
+			>
+			<File
+				RelativePath="..\..\..\include\default_resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_archive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_controls.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_cstring.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_dialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_file.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_frame.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_gdi.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_imagelist.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_listview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_mdi.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_menu.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_menubar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_propertysheet.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_regkey.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_ribbon.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_richedit.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_shared_ptr.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_socket.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_statusbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_stdcontrols.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_tab.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_taskdialog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_time.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_toolbar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wceframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wcestddef.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_webbrowser.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wincore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_winutils.h"
 				>
 			</File>
 		</Filter>

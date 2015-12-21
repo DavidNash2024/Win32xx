@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="DirectX"
+	Name="DirectX9"
 	ProjectGUID="{42A74E33-A355-4D57-AB80-B920B5BE84A2}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -33,10 +33,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
-				OutputFile="$(OutDir)/DirectX.exe"
+				OutputFile="$(OutDir)/DirectX9.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/DirectX.pdb"
+				ProgramDatabaseFile="$(OutDir)/DirectX9.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib d3d9.lib d3dx9.lib Winmm.lib"
-				OutputFile="$(OutDir)/DirectX.exe"
+				OutputFile="$(OutDir)/DirectX9.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"

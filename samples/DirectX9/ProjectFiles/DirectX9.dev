@@ -1,13 +1,13 @@
 [Project]
-FileName=DX.dev
-Name=DX
+FileName=DirectX9.dev
+Name=DirectX9
 UnitCount=12
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=DX_private.rc
+PrivateResource=DirectX9_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++
 ObjectOutput=.\Dev-C++
 OverrideOutput=1
-OverrideOutputName=DX.exe
+OverrideOutputName=DirectX9.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
