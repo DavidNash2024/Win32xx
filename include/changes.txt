@@ -43,6 +43,12 @@ New Features and Enhancements
    - Added operator += support for ints and doubles.
    - Added operator = support for ints and doubles.
    
+* Updated CArchive
+   - Added the ability to archive char and wchar character arrays. The abilty
+     to archive TCHAR character arrays is retained.
+   - Added the ability to archive CStringA and CStringW. The ability to
+     archive CString is retained.	   
+   
 * Added CDockFrame.
    Inherit your CMainFrame from CDockFrame to add docking capabilities to normal
    Single Document Interface (SDI) frames. Frames which don't require docking 
@@ -104,13 +110,7 @@ New Features and Enhancements
 	- Catch CExceptions to catch all exceptions inherited from CException.
 	- CException is an abstract class. CExceptions can't be thrown.
     - A failure to create a GDI resources occurs when too many GDI resources
-      are allocated to the process. A GDI resource leak can cause this.
-	  
-* Updated CArchive
-   - Added the ability to archive char and wchar character arrays. The abilty
-     to archive TCHAR character arrays is retained.
-   - Added the ability to archive CStringA and CStringW. The ability to
-     archive CString is retained.	  
+      are allocated to the process. A GDI resource leak can cause this.  
 	  
 * Updated CWnd
    - Added OnPaint virtual function. OnPaint calls OnDraw for generic windows,
