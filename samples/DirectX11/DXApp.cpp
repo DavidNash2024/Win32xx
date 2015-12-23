@@ -1,15 +1,19 @@
 
 #include "DXApp.h"
 
-
+//--------------------------------------------------------------------------------------
+// Create's the DirectX view window
+//--------------------------------------------------------------------------------------
 BOOL CDXApp::InitInstance()
 {
-	m_View.Create();
+	m_DXView.Create();
 
 	return TRUE;
 }
 
-
+//--------------------------------------------------------------------------------------
+// The App's messages loop. Calls Render during idle processing
+//--------------------------------------------------------------------------------------
 int CDXApp::MessageLoop()
 {
 	// Main message loop
@@ -23,7 +27,7 @@ int CDXApp::MessageLoop()
 		}
 		else
 		{
-			m_View.Render();
+			m_DXView.Render();
 		}
 	}
 

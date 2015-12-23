@@ -2,12 +2,8 @@
 #include "DXView.h"
 
 
-
-
 //--------------------------------------------------------------------------------------
-// Helper for compiling shaders with D3DCompile
-//
-// With VS 11, we could load up prebuilt .cso files instead...
+// Global helper function for compiling shaders with D3DCompile
 //--------------------------------------------------------------------------------------
 HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szShaderModel, ID3DBlob** ppBlobOut )
 {
@@ -43,11 +39,33 @@ HRESULT CompileShaderFromFile( WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR sz
 }
 
 //--------------------------------------------------------------------------------------
-// Destructor
+// CDXView Destructor
 //--------------------------------------------------------------------------------------
 CDXView::~CDXView()
 {
 	CleanupDevice();
+}
+
+//--------------------------------------------------------------------------------------
+// Clean up the objects we've created
+//--------------------------------------------------------------------------------------
+void CDXView::CleanupDevice()
+{
+	if (m_pImmediateContext) m_pImmediateContext->ClearState();
+
+	if (m_pConstantBuffer) m_pConstantBuffer->Release();
+	if (m_pVertexBuffer) m_pVertexBuffer->Release();
+	if (m_pIndexBuffer) m_pIndexBuffer->Release();
+	if (m_pVertexLayout) m_pVertexLayout->Release();
+	if (m_pVertexShader) m_pVertexShader->Release();
+	if (m_pPixelShader) m_pPixelShader->Release();
+	if (m_pRenderTargetView) m_pRenderTargetView->Release();
+	if (m_pSwapChain1) m_pSwapChain1->Release();
+	if (m_pSwapChain) m_pSwapChain->Release();
+	if (m_pImmediateContext1) m_pImmediateContext1->Release();
+	if (m_pImmediateContext) m_pImmediateContext->Release();
+	if (m_pd3dDevice1) m_pd3dDevice1->Release();
+	if (m_pd3dDevice) m_pd3dDevice->Release();
 }
 
 //--------------------------------------------------------------------------------------
@@ -346,29 +364,37 @@ HRESULT CDXView::InitDevice()
     return S_OK;
 }
 
-
-//--------------------------------------------------------------------------------------
-// Clean up the objects we've created
-//--------------------------------------------------------------------------------------
-void CDXView::CleanupDevice()
+int CDXView::OnCreate(CREATESTRUCT& cs)
 {
-    if( m_pImmediateContext ) m_pImmediateContext->ClearState();
+	// OnCreate is called automatically during window creation when a
+	// WM_CREATE message received.
 
-    if( m_pConstantBuffer ) m_pConstantBuffer->Release();
-    if( m_pVertexBuffer ) m_pVertexBuffer->Release();
-    if( m_pIndexBuffer ) m_pIndexBuffer->Release();
-    if( m_pVertexLayout ) m_pVertexLayout->Release();
-    if( m_pVertexShader ) m_pVertexShader->Release();
-    if( m_pPixelShader ) m_pPixelShader->Release();
-    if( m_pRenderTargetView ) m_pRenderTargetView->Release();
-    if( m_pSwapChain1 ) m_pSwapChain1->Release();
-    if( m_pSwapChain ) m_pSwapChain->Release();
-    if( m_pImmediateContext1 ) m_pImmediateContext1->Release();
-    if( m_pImmediateContext ) m_pImmediateContext->Release();
-    if( m_pd3dDevice1 ) m_pd3dDevice1->Release();
-    if( m_pd3dDevice ) m_pd3dDevice->Release();
+	// Tasks such as setting the icon, creating child windows, or anything
+	// associated with creating windows are normally performed here.
+
+	UNREFERENCED_PARAMETER(cs);
+
+	// Set the window's icon
+	SetIconSmall(IDI_DIRECTX11);
+	SetIconLarge(IDI_DIRECTX11);
+
+	// Set the window title
+	SetWindowText(LoadString(IDS_APP_TITLE));
+
+	InitDevice();
+
+	TRACE("OnCreate\n");
+	return 0;
 }
 
+//--------------------------------------------------------------------------------------
+// Set the window creation parameters
+//--------------------------------------------------------------------------------------
+void CDXView::PreCreate(CREATESTRUCT& cs)
+{
+	cs.cx = 800;
+	cs.cy = 600;
+}
 
 //--------------------------------------------------------------------------------------
 // Render a frame
@@ -423,3 +449,25 @@ void CDXView::Render()
     m_pSwapChain->Present( 0, 0 );
 }
 
+//--------------------------------------------------------------------------------------
+// Window Procedure. Handles window messages.
+//--------------------------------------------------------------------------------------
+LRESULT CDXView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	PAINTSTRUCT ps;
+	HDC hdc;
+
+	switch (uMsg)
+	{
+	case WM_PAINT:
+		hdc = BeginPaint(ps);
+		EndPaint(ps);
+		break;
+
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+	}
+
+	return WndProcDefault(uMsg, wParam, lParam);
+}
