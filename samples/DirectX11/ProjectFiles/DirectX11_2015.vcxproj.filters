@@ -17,15 +17,9 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <CLInclude Include="resource.h">
-      <Filter>Resource Files</Filter>
-    </CLInclude>
-    <ClInclude Include="DXApp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\src\DXApp.h" />
+    <ClInclude Include="..\src\DXView.h" />
+    <CLInclude Include="..\src\resource.h" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="DirectX11.fx">
@@ -39,18 +33,12 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="DXView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="DXApp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="..\src\DXApp.cpp" />
+    <ClCompile Include="..\src\DXView.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="Resource.rc">
+    <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

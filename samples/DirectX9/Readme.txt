@@ -1,4 +1,4 @@
-DirectX Example
+DirectX9 Example
 ==================
 This project displays a moving DirectX picture in a simple window. The code
 in this example is based on DirectX version 9. 
@@ -8,7 +8,9 @@ For MS compilers you will need the DirectX SDK v9
 For Dev-C++ you will need the DirecX v9.0c DevPak
 
 Microsoft makes the the DirectX Software Development Kit available for download
-without charge.
+without charge. The latest version is of the DirectX SDK was published in
+June 2010. This version supports Window OS versions XP through to Windows 10.
+Users will need install the DirectX End-User Runtimes (June 2010). 
 
 This example displays a rotating triangle using DirectX within the DXView window.
 - CDXView is an ordinary child window, and is the view window of CMainFrame.
