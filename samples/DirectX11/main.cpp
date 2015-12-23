@@ -14,16 +14,10 @@
 
 
 //--------------------------------------------------------------------------------------
-// Entry point to the program. Initializes everything and goes into a message processing 
-// loop. Idle time is used to render the scene.
+// Entry point to the program. Starts the Win32++ framework and runs the message loop.
 //--------------------------------------------------------------------------------------
-int WINAPI wWinMain( _In_ HINSTANCE hInstance, _In_opt_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow )
+int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	UNREFERENCED_PARAMETER(hInstance);
-	UNREFERENCED_PARAMETER( hPrevInstance );
-    UNREFERENCED_PARAMETER( lpCmdLine );
-	UNREFERENCED_PARAMETER(nCmdShow);
-
 
 	CDXApp theApp;
 	theApp.Run();

@@ -43,57 +43,9 @@ public:
 	void Render();
 
 protected:
-	int OnCreate(CREATESTRUCT& cs)
-	{
-		// OnCreate is called automatically during window creation when a
-		// WM_CREATE message received.
-
-		// Tasks such as setting the icon, creating child windows, or anything
-		// associated with creating windows are normally performed here.
-
-		UNREFERENCED_PARAMETER(cs);
-
-		// Set the window's icon
-		SetIconSmall(IDI_DIRECTX11);
-		SetIconLarge(IDI_DIRECTX11);
-
-		// Set the window title
-		SetWindowText(LoadString(IDS_APP_TITLE));
-
-		InitDevice();
-
-		TRACE("OnCreate\n");
-		return 0;
-	}
-
-	virtual void PreCreate(CREATESTRUCT& cs)
-	{
-		cs.cx = 800;
-		cs.cy = 600;
-	}
-
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		PAINTSTRUCT ps;
-		HDC hdc;
-
-		switch (uMsg)
-		{
-		case WM_PAINT:
-			hdc = BeginPaint(ps);
-			EndPaint(ps);
-			break;
-
-		case WM_DESTROY:
-			PostQuitMessage(0);
-			break;
-
-			// Note that this tutorial does not handle resizing (WM_SIZE) requests,
-			// so we created the window without the resize border.
-		}
-
-		return WndProcDefault(uMsg, wParam, lParam);
-	}
+	virtual int OnCreate(CREATESTRUCT& cs);
+	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	D3D_DRIVER_TYPE         m_driverType = D3D_DRIVER_TYPE_NULL;
