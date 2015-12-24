@@ -23,7 +23,9 @@ bmp       | A bitmap resource file
 cur       | A cursor resource file
 manifest  | A manifest resource file
 txt       | A text file
-xml       | An Extensible Markup Language file (defines the ribbon UI) 
+xml       | An Extensible Markup Language file (defines the ribbon UI)
+hlsl      | Holds High Level Shading Language (HLSL), for DirectX
+fx        | An effect file, for DirectX
 
 Supported Compilers and Integrated Development Environments (IDEs)
 ==================================================================
@@ -45,6 +47,9 @@ Win32++ supports the following:
 * Visual Studio.net 2012 Express
 * Visual Studio.net 2013
 * Visual Studio.net 2013 Express
+* Visual Studio.net 2013 Community
+* Visual Studio.net 2015
+* Visual Studio.net 2015 Community
 
 CodeBlocks is an IDE. The project files are configured for the following 
 compilers:
@@ -72,11 +77,14 @@ The programs compiled with Win32++ can run on the following operating systems:
 * Windows 8 x 64
 * Windows 8.1
 * Windows 8.1 x 64
+* Windows 10
+* Windows 10 x 64
 * Windows Server 2003
 * Windows Server 2003 x64
 * Windows Server 2008
 * Windows Server 2008 x64
 * Windows Server 2012
+* Windows Server 2016
 * Windows CE
 
 Note: Programs compiled with Visual Studio.net 2008 and Visual Studio.net 2008 
@@ -93,6 +101,7 @@ Directory Structure
 When extracting the files from the zip archive, be sure to preserve the 
 directory structure. The directory structure will typically look like this:
 
+.\help
 .\include
 .\new projects
 .\output
@@ -104,130 +113,7 @@ directory structure. The directory structure will typically look like this:
 The files which form the Win32++ library are contained in the include
 subdirectory. 
 
-Components of Win32++
-=====================
-
- Files              |  Classes       | Operating Systems | Description
-====================+================+===================+=====================
-wxx_archive.h       | CArchive       | Win32, Win64      | Adds support for
-                    |                | and WinCE         | saving and restoring.
---------------------+----------------+-------------------+---------------------
-wxx_controls.h      | CAnimation     | Win32, Win64      | Adds support for the
-                    | CComboBox      | and WinCE         | following controls:
-		  	        | CComboBoxEx    |                   | Animation, ComboBox,
-			        | CDateTime      |                   | ComboBoxEx, 
-                    | CIPAddress     |                   | DateTime, IPAddress, 
-	                | CProgressBar   |                   | ProgressBar,
-                    | CScrollBar     |                   | Scroll bar, Slider
-	                | CSlider        |                   | Spin button,
-                    | CSpinButton    |                   | and ToolTip.
-                    | CToolTip       |                   | 		  
---------------------+----------------+-------------------+---------------------				  
-wxx_cstring.h       | CString        | Win32, Win64      | Adds support for
-                    |                | and WinCE         | text strings.
---------------------+----------------+-------------------+---------------------				  
-wxx_dialog.h        | CDialog        | Win32, Win64      | Adds dialog support.
-                    | CResizer       | WinCE for CDialog |				  
---------------------+----------------+-------------------+---------------------
-wxx_docking.h       | CDocker        | Win32, Win64      | Adds support for
-                    | CDockContainer |                   | docking windows and
-                    |                |                   | splitter windows. 
---------------------+----------------+-------------------+---------------------
-wxx_file.h          | CFile          | Win32, Win64      | Adds support disk
-                    |                | and WinCE         | input and output				  
---------------------+----------------+-------------------+---------------------                   
-wxx_frame.h         | CMenuMetrics   | Win32, Win64      | Adds support for
-                    | CFrame         |                   | frames. Frames use a
-                    |                |                   | toolbar and menubar
-                    |                |                   | inside a rebar, and 
-                    |                |                   | a statusbar.  
---------------------+----------------+-------------------+---------------------
-wxx_gdi.h           | CDC            | Win32, Win64      | A helper class for 
-                    | CBitmap   	 | and WinCE         | GDI graphics.
-                    | CBrush         |                   |
-                    | CFont          |                   |
-                    | CPalette       |                   |
-                    | CPen           |                   |
-                    | CRgn		     |                   |
---------------------+----------------+-------------------+---------------------
-wxx_imagelist.h     | CImageList     | Win32, Win64      | A helper class for
-                    |                | and WinCE         | image lists.
---------------------+----------------+-------------------+---------------------
-wxx_listView.h      | CListView      | Win32, Win64      | Adds support for a
-                    |                | and WinCE         | ListView control.                  
---------------------+----------------+-------------------+---------------------  
-wxx_mdi.h           | CMDIFrame      | Win32, Win64      | Adds support for MDI
-                    | CMDIChild      |                   | frames.                  
---------------------+----------------+-------------------+---------------------
-wxx_menu.h          | CMenu          | Win32, Win64      | A helper class for
-                    |                |                   | menus.           
---------------------+----------------+-------------------+---------------------
-wxx_menubar.h       | CMenuBar       | Win32, Win64      | Provides a menu for
-                    |                |                   | use in a rebar.           
---------------------+----------------+-------------------+---------------------
-wxx_propertysheet.h | CPropertySheet | Win32, Win64      | Adds property sheet
-                    | CPropertyPage  | and WinCE         | support.
---------------------+----------------+-------------------+---------------------
-wxx_rebar.h         | CRebar         | Win32, Win64      | Adds support for a 
-                    |                | and WinCE         | Rebar control.      
---------------------+----------------+-------------------+---------------------
-wxx_regkey.h        | CRegKey        | Win32, Win64      | Adds support using 
-                    |                | and WinCE         | the register.      
---------------------+----------------+-------------------+---------------------
-wxx_ribbon.h        | CRibbon        | Win32, Win64      | Adds support for the 
-                    | CRibbonFrame   |                   | Windows 7 ribbon.     
---------------------+----------------+-------------------+---------------------
-wxx_richedit.h      | CRichEdit      | Win32, Win64      | Adds support Rich  
-                    |                |                   | Edit control.     				  
---------------------+----------------+-------------------+---------------------
-wxx_shared_ptr.h    | Shared_Ptr     | Win32, Win64,     | Add a smart pointer
-                    |                | and WinCE         | for use in vectors.
---------------------+----------------+-------------------+---------------------
-wxx_socket.h        | CSocket        | Win32, Win64      | Adds network  
-                    |                | and WinCE         | support.
---------------------+----------------+-------------------+---------------------
-wxx_statusbar.h     | CStatusbar     | Win32, Win64      | Adds support for a
-                    |                | and WinCE         | Status bar control.
---------------------+----------------+-------------------+---------------------
-wxx_stdcontrols.h   | CButton        | Win32, Win64      | Adds support for
-                    | CEdit          | and WinCE         | Button, Edit, 
-                    | CListBox       |                   | ListBox and Static    
-                    | CStatic        |                   | controls.                                       
---------------------+----------------+-------------------+---------------------
-wxx_tab.h           | CTab           | Win32, Win64      | Adds support for tab
-                    | CMDITab        |                   | controls, and MDI
-                    |                |                   | tab windows.                   
---------------------+----------------+-------------------+---------------------
-wxx_taskdialog.h    | CTaskDialog    | Win32, Win64      | Adds support for tab
-                    |                |                   | task dialogs.  
---------------------+----------------+-------------------+---------------------
-wxx_time.h          | CTime          | Win32, Win64      | Adds support for
-                    | CTimeSpan      | and WinCE         | Time operations.					
---------------------+----------------+-------------------+---------------------
-wxx_toolbar.h       | CToolbar       | Win32, Win64      | Adds support for a
-                    |                | and WinCE         | Toolbar control.
---------------------+----------------+-------------------+---------------------
-wxx_treeview.h      | CTreeView      | Win32, Win64      | Adds support for a
-                    |                | and WinCE         | TreeView control.
---------------------+----------------+-------------------+---------------------
-wxx_wceframe.h      | CWceFrame      | WinCE only        | Adds support for
-                    | CCmdbar        |                   | frames in WinCE.
---------------------+----------------+-------------------+---------------------
-wxx_webbrowser.h    | CAXWindow      | Win32, Win64      | Adds support for an
-                    | CWebBrowser    | and WinCE         | ActiveX container 
-                    |                |                   | and a WebBrowser.
---------------------+----------------+-------------------+---------------------
-wxx_wincore.h       | CCriticalSection | Win32, Win64,   | The core set of 
-                    | CWinApp          | and WinCE       | classes required for
-                    | CWinException    |                 | all Win32++
-				    | CWinThread       |                 | applications. 
-                    | CWnd             |                 |  
---------------------+------------------+-----------------+---------------------
-wxx_winutils.h      | CPoint           | Win32, Win64,   | Additional utility
-                    | CRect            | and WinCE       | classes.
-                    | CSize            |                 |
-				    | CA2W, CW2A etc.  |                 |
---------------------+------------------+-----------------+---------------------  
-
-Refer to the help documentation that ships with Win32++ for more information on
-using Win32++.
+Help
+====
+Refer to the documentation that ships with Win32++ in the help folder
+for more information on using Win32++.
