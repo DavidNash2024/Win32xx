@@ -381,7 +381,13 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
 	// Set the window title
 	SetWindowText(LoadString(IDS_APP_TITLE));
 
-	InitDevice();
+	if (FAILED(InitDevice()))
+	{
+		MessageBox(_T("DirectX Failed to Initialize"), _T("Error"), MB_OK);
+		
+		// Window creation failed
+		return -1;
+	}
 
 	TRACE("OnCreate\n");
 	return 0;

@@ -17,8 +17,8 @@ FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\Release_Build"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\x64"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\_UpgradeReport_Files"
 FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\__history"
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\ipch
-FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU64
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\ipch"
+FOR /D %%f IN ("*.") DO RMDIR /S /Q "%%f\ProjectFiles\GNU64"
 
 
 ::Remove files
