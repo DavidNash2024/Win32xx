@@ -10,7 +10,7 @@
 
 
 // Declaration of the CViewText class
-class CViewOutput : public CWnd
+class CViewOutput : public CRichEdit
 {
 public:
 	CViewOutput();
@@ -21,7 +21,6 @@ protected:
 	virtual void OnInitialUpdate(); 
 
 private:
-	HMODULE m_hRichEdit;
 	CFont m_Font;
 };
 

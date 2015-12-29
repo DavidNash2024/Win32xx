@@ -11,17 +11,10 @@
 // Definitions for the CFormView class
 CFormView::CFormView(UINT nResID) : CDialog(nResID)
 {
-	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-	if (m_hInstRichEdit == 0) 
-	{
-		::MessageBox(NULL, _T("CFormView::CRichView  Failed to load RICHED32.DLL"), 
-                 _T(""), MB_ICONWARNING);
-	}
 }
 
 CFormView::~CFormView()
 {
-	::FreeLibrary(m_hInstRichEdit);
 }
 
 HWND CFormView::Create(HWND hParent = 0)

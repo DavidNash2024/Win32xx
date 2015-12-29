@@ -1020,55 +1020,55 @@ Serialize(CArchive &ar)                                               /*
 	  // perform loading or storing
         if (ar.IsStoring())
         {
-                  // each item serialized is written to the archive
-                  // file as a char stream of the proper length,
-                  // preceded by that length. In some cases, other forms of
-		  // data are saved, from with the primary items are then
-                  // reconstructed.
+			  // each item serialized is written to the archive
+			  // file as a char stream of the proper length,
+			  // preceded by that length. In some cases, other forms of
+			  // data are saved, from with the primary items are then
+			  // reconstructed.
 
-                  // save current window placement information
-		ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
-		m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-		GetWindowPlacement(m_Wndpl);
-		ArchiveObject w = {m_Wndpl.length, &m_Wndpl};
-		ar << w;
-		  // save the base class frame status and  tool bar switches:
-		  // these control the display of the StatusBar and  ToolBar
-		BOOL showbar = GetShowStatusBar();
-		ar << showbar;
-		showbar = GetShowToolBar();
-		ar << showbar;
-		  // save MRU list and view (including scrollbars)
-		ar << m_MRU;
-		ar << m_View;
-	}
+			  // save current window placement information
+			ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
+			m_Wndpl.length = sizeof(WINDOWPLACEMENT);
+			GetWindowPlacement(m_Wndpl);
+			ArchiveObject w(&m_Wndpl, m_Wndpl.length);
+			ar << w;
+			  // save the base class frame status and  tool bar switches:
+			  // these control the display of the StatusBar and  ToolBar
+			BOOL showbar = GetShowStatusBar();
+			ar << showbar;
+			showbar = GetShowToolBar();
+			ar << showbar;
+			  // save MRU list and view (including scrollbars)
+			ar << m_MRU;
+			ar << m_View;
+		}
         else    // recovering
         {
-                  // each item deserialized from the archive is
-                  // retrieved by first reading its length and  then
-                  // loading in that number of bytes into the data
-                  // item saved in the archive, as above. Some items require
-                  // additional converstion procedures, as shown below.
+			  // each item deserialized from the archive is
+			  // retrieved by first reading its length and  then
+			  // loading in that number of bytes into the data
+			  // item saved in the archive, as above. Some items require
+			  // additional converstion procedures, as shown below.
 
-                  // recover window frame placement, but do not invoke
-		  // SetWindowPlacement(), as the window is not yet created.
-		ArchiveObject w = {sizeof(WINDOWPLACEMENT), &m_Wndpl};
-		ar >> w;
-		  // recover frame status and  tool bar base class switches
-		BOOL showbar;
-		ar >> showbar;
-		ShowStatusBar(showbar);
-		ar >> showbar;
-		ShowToolBar(showbar);
-		  // no exception having been raised, set frame parameters
-	        RECT rc = m_Wndpl.rcNormalPosition;
-	        m_win_x = rc.left;
-	        m_win_y = rc.top;
-	        m_win_width  = rc.right  - rc.left;
-	        m_win_height = rc.bottom - rc.top;
-		  // load MRU and View parameters
-		ar >> m_MRU;
-		ar >> m_View;
+			  // recover window frame placement, but do not invoke
+			  // SetWindowPlacement(), as the window is not yet created.
+			ArchiveObject w(&m_Wndpl, sizeof(WINDOWPLACEMENT));
+			ar >> w;
+			  // recover frame status and  tool bar base class switches
+			BOOL showbar;
+			ar >> showbar;
+			ShowStatusBar(showbar);
+			ar >> showbar;
+			ShowToolBar(showbar);
+			  // no exception having been raised, set frame parameters
+			RECT rc = m_Wndpl.rcNormalPosition;
+			m_win_x = rc.left;
+			m_win_y = rc.top;
+			m_win_width  = rc.right  - rc.left;
+			m_win_height = rc.bottom - rc.top;
+			  // load MRU and View parameters
+			ar >> m_MRU;
+			ar >> m_View;
         }
 }
 

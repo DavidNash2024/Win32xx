@@ -31,7 +31,6 @@ protected:
 private:
 	void OnButton();
 
-	HMODULE m_hInstRichEdit;
 	CResizer m_Resizer;
 
 	// Nested classes for this dialog's child windows
@@ -47,7 +46,7 @@ private:
 	class CMyButton : public CButton {};
 	class CMyListBox : public CListBox {};
 	class CMyEdit : public CEdit {};
-	class CMyRichEdit : public CEdit {};
+	class CMyRichEdit : public CRichEdit {};
 	class CMyPicture : public CStatic {};
 	class CMyStatus : public CStatic {};
 	class COK : public CButton {};

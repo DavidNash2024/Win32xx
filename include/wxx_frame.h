@@ -118,13 +118,13 @@ namespace Win32xx
 	//
 
 	// define some structs and enums from uxtheme.h and vssym32.h
-	typedef struct _MARGINS
+	struct MARGINS
 	{
 		int cxLeftWidth;      // width of left border that retains its size
 		int cxRightWidth;     // width of right border that retains its size
 		int cyTopHeight;      // height of top border that retains its size
 		int cyBottomHeight;   // height of bottom border that retains its size
-	} MARGINS, *PMARGINS;
+	};
 
 	class CMargins : public MARGINS
 	{

@@ -108,6 +108,8 @@ MSBuild Themes\ProjectFiles\Themes_2015.sln /p:Configuration=Debug              
 MSBuild Themes\ProjectFiles\Themes_2015.sln /p:Configuration=Release                     >>"..\output\VS2015.log"
 MSBuild Threads\ProjectFiles\Threads_2015.sln /p:Configuration=Debug                     >>"..\output\VS2015.log"
 MSBuild Threads\ProjectFiles\Threads_2015.sln /p:Configuration=Release                   >>"..\output\VS2015.log"
+MSBuild TimeDemo\ProjectFiles\TimeDemo_2015.sln /p:Configuration=Debug                   >>"..\output\VS2015.log"
+MSBuild TimeDemo\ProjectFiles\TimeDemo_2015.sln /p:Configuration=Release                 >>"..\output\VS2015.log"
 MSBuild ToolBarDemo\ProjectFiles\ToolBarDemo_2015.sln /p:Configuration=Debug             >>"..\output\VS2015.log"
 MSBuild ToolBarDemo\ProjectFiles\ToolBarDemo_2015.sln /p:Configuration=Release           >>"..\output\VS2015.log"
 MSBuild Tray\ProjectFiles\Tray_2015.sln /p:Configuration=Debug                           >>"..\output\VS2015.log"
@@ -163,6 +165,7 @@ copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2015\
 copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
+copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 
@@ -215,6 +218,7 @@ copy TabDemo\ProjectFiles\Release\TabDemo.exe                 "..\output\VS2015\
 copy TaskDialog\ProjectFiles\Release\TaskDialog.exe           "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Themes\ProjectFiles\Release\Themes.exe                   "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+copy TimeDemo\ProjectFiles\Release\TimeDemo.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe         "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Tray\ProjectFiles\Release\Tray.exe                       "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 

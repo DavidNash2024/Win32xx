@@ -16,9 +16,9 @@ Also:
 
 New Features and Enhancements
 ----------------------------- 
-* Added CDataExchange
-  CDataExchange provides support for dialog data exchange(DDX) and dialog data 
-  validation(DDV). The CDataExchange class has a set of DDX and DDV member
+* Added DDX/DDV
+  CDataExchange provides support for Dialog Data eXchange(DDX) and Dialog Data 
+  Validation(DDV). The CDataExchange class has a set of DDX and DDV member
   functions which perform the data exchange and validation for different types
   of controls. Typically this is used for controls in dialogs, but controls in
   any window support DDX and DDV.
@@ -121,6 +121,11 @@ New Features and Enhancements
 * Updated CCriticalSection
   All critical sections are now guaranteed to be released when the
   CCriticalSection's destructor is called.
+  
+* Updated the documentation
+   - Added 'Doc View Model'               to Using Win32++
+   - Added 'Serialization with CArchive'  to Using Win32++
+   - Extended 'CString'                   in Using Win32++   
 
 
 Changes in detail

@@ -370,58 +370,64 @@ Serialize(CArchive &ar)                                               	/*
 	  // perform loading or storing
         if (ar.IsStoring())
         {
-                  // each item serialized is written to the archive
-                  // file as a TCHAR stream of the proper length,
-                  // preceded by that length. In some cases, such
-                  // as for fonts and  window extents, secondary data
-                  // are saved from which the primary items are then
-                  // reconstructed.
+            // each item serialized is written to the archive
+            // file as a TCHAR stream of the proper length,
+            // preceded by that length. In some cases, such
+            // as for fonts and  window extents, secondary data
+            // are saved from which the primary items are then
+            // reconstructed.
 
-                  // save m_hfFont
-                LOGFONT lf;
+              // save m_hfFont
+            LOGFONT lf;
         	m_font.GetObject(sizeof(LOGFONT), &lf);
-	 	ArchiveObject f = {sizeof(LOGFONT), &lf};
+	 		ArchiveObject f(&lf, sizeof(LOGFONT));
         	ar << f;
-		  // save font height and  width
-		ar << m_cHt;
-		ar << m_cWd;
-                  // save m_rgbTxColor
-		ar << m_rgbTxColor;
-                  // save m_rgbBkColor
-		ar << m_rgbBkColor;
-		  // save the scrollbar parameters
-		ar << m_sb;
-	}
+
+			  // save font height and  width
+			ar << m_cHt;
+			ar << m_cWd;
+
+			  // save m_rgbTxColor
+			ar << m_rgbTxColor;
+
+			  // save m_rgbBkColor
+			ar << m_rgbBkColor;
+			
+			  // save the scrollbar parameters
+			ar << m_sb;
+		}
         else    // recovering
         {
-                  // each item deserialized from the archive is
-                  // retrieved by first reading its length and  then
-                  // loading in that number of bytes into the data
-                  // item saved in the archive, as above. Some items,
-                  // such as fonts and  screen extents, require
-                  // additional converstion procedures, as shown below.
+            // each item deserialized from the archive is
+            // retrieved by first reading its length and  then
+            // loading in that number of bytes into the data
+            // item saved in the archive, as above. Some items,
+            // such as fonts and  screen extents, require
+            // additional converstion procedures, as shown below.
 
-                  // recover m_hfFont
-                LOGFONT lf;
-	 	ArchiveObject f = {sizeof(LOGFONT), &lf};
+              // recover m_hfFont
+            LOGFONT lf;
+	 		ArchiveObject f(&lf, sizeof(LOGFONT));
         	ar >> f;
-		  // recover font height and  width
-		UINT cHt, cWd;
-		ar >> cHt;
-  		ar >> cWd;
-                  // recover view colors
-		COLORREF rgbTxColor, rgbBkColor;
-		ar >> rgbTxColor;
-		ar >> rgbBkColor;
+			
+			  // recover font height and  width
+			UINT cHt, cWd;
+			ar >> cHt;
+  			ar >> cWd;
+			
+			  // recover view colors
+			COLORREF rgbTxColor, rgbBkColor;
+			ar >> rgbTxColor;
+			ar >> rgbBkColor;
 
-		  // no exception having been raised, set the view parameters
+			  // no exception having been raised, set the view parameters
         	m_font.CreateFontIndirect(&lf);
-		m_rgbTxColor = rgbTxColor;
-		m_rgbBkColor = rgbBkColor;
-		m_cHt = cHt;
-		m_cWd = cWd;
-		  // recover scroll bar parameters
-		ar >> m_sb;
+			m_rgbTxColor = rgbTxColor;
+			m_rgbBkColor = rgbBkColor;
+			m_cHt = cHt;
+			m_cWd = cWd;
+			  // recover scroll bar parameters
+			ar >> m_sb;
       	}
 }
 

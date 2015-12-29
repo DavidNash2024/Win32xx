@@ -47,9 +47,9 @@
 // http://www.resedit.net
 
 #include <windows.h>
-#include <commctrl.h>
 #include <richedit.h>
 #include "resource.h"
+
 
 /*==============================================================================
 
@@ -174,9 +174,9 @@ FONT 8, "Courier", 0, 0
     LISTBOX         IDC_LISTBOX, 15, 280, 135, 70, WS_GROUP | WS_TABSTOP |
     			WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
 			LBS_SORT | LBS_NOTIFY
-    CONTROL         "Slider", IDC_SLIDER, TRACKBAR_CLASS, WS_TABSTOP |
+    CONTROL         "", IDC_SLIDER, "msctls_trackbar32", WS_TABSTOP |
     			TBS_NOTICKS | TBS_BOTH, 185, 15, 135, 15
-    CONTROL         "progress", IDC_PROGRESSBAR, PROGRESS_CLASS,
+    CONTROL         "", IDC_PROGRESSBAR, "msctls_progress32",
     			WS_TABSTOP | PBS_SMOOTH, 185, 45, 135, 14
     SCROLLBAR       IDC_SCROLLBAR, 185, 70, 135, 14, SBS_HORZ | WS_TABSTOP
     COMBOBOX        IDC_COMBOBOX, 185, 95, 135, 150, CBS_DROPDOWN |
@@ -190,9 +190,9 @@ FONT 8, "Courier", 0, 0
     			 WS_TABSTOP | BS_NOTIFY
     AUTOCHECKBOX    "Check Box C", IDC_CHECK_C, 190, 210, 55, 10, WS_GROUP |
     			 WS_TABSTOP | BS_NOTIFY
-    CONTROL         "Date-Time", IDC_DATE_TIME, DATETIMEPICK_CLASS, WS_GROUP |
+    CONTROL         "", IDC_DATE_TIME, "SysDateTimePick32", WS_GROUP |
     			WS_TABSTOP | DTS_TIMEFORMAT , 190, 230, 100, 15
-    CONTROL         "Month Cal", IDC_CALENDAR, MONTHCAL_CLASS, WS_TABSTOP |
+    CONTROL         "", IDC_CALENDAR, "SysMonthCal32", WS_TABSTOP |
     			MCS_NOTODAY, 185, 250, 110, 100
     PUSHBUTTON  "PUSH ME", IDC_PUSH_ME_BUTTON, 330, 15, 50, 16,
                     WS_GROUP | WS_TABSTOP | BS_OWNERDRAW
