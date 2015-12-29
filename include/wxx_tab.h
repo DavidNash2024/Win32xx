@@ -60,11 +60,11 @@ namespace Win32xx
 		TabPageInfo() : iImage(0), idTab(0), pView(0) {}	// constructor
 	};
 
-	typedef struct tagTABNMHDR
+	struct TABNMHDR
 	{
 		NMHDR hdr;
 		UINT nPage;
-	} TABNMHDR;
+	};
 
 	class CTab : public CWnd
 	{

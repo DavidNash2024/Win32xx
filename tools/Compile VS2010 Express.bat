@@ -106,6 +106,8 @@ MSBuild Themes\ProjectFiles\Themes_2010.sln /p:Configuration=Debug              
 MSBuild Themes\ProjectFiles\Themes_2010.sln /p:Configuration=Release                     >>"..\output\VS2010.log"
 MSBuild Threads\ProjectFiles\Threads_2010.sln /p:Configuration=Debug                     >>"..\output\VS2010.log"
 MSBuild Threads\ProjectFiles\Threads_2010.sln /p:Configuration=Release                   >>"..\output\VS2010.log"
+MSBuild TimeDemo\ProjectFiles\TimeDemo_2010.sln /p:Configuration=Debug                   >>"..\output\VS2010.log"
+MSBuild TimeDemo\ProjectFiles\TimeDemo_2010.sln /p:Configuration=Release                 >>"..\output\VS2010.log"
 MSBuild ToolBarDemo\ProjectFiles\ToolBarDemo_2010.sln /p:Configuration=Debug             >>"..\output\VS2010.log"
 MSBuild ToolBarDemo\ProjectFiles\ToolBarDemo_2010.sln /p:Configuration=Release           >>"..\output\VS2010.log"
 MSBuild Tray\ProjectFiles\Tray_2010.sln /p:Configuration=Debug                           >>"..\output\VS2010.log"
@@ -159,6 +161,7 @@ copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2010\
 copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
+copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 
@@ -209,6 +212,7 @@ copy TabDemo\ProjectFiles\Release\TabDemo.exe                 "..\output\VS2010\
 copy TaskDialog\ProjectFiles\Release\TaskDialog.exe           "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Themes\ProjectFiles\Release\Themes.exe                   "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Threads\ProjectFiles\Release\Threads.exe                 "..\output\VS2010\Release"    >>"..\output\VS2010.log"
+copy TimeDemo\ProjectFiles\Release\TimeDemo.exe               "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe         "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Release\Tray.exe                       "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 

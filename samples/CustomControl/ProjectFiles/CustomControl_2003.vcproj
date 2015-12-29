@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="DialogDemo"
+	Name="CustomControl"
 	ProjectGUID="{42A74E33-A355-4D57-AB80-B920B5BE84A2}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -33,10 +33,10 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile="$(OutDir)/DialogDemo.exe"
+				OutputFile="$(OutDir)/CustomControl.exe"
 				LinkIncremental="2"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/DialogDemo.pdb"
+				ProgramDatabaseFile="$(OutDir)/CustomControl.pdb"
 				SubSystem="2"
 				TargetMachine="1"/>
 			<Tool
@@ -81,7 +81,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="comctl32.lib"
-				OutputFile="$(OutDir)/DialogDemo.exe"
+				OutputFile="$(OutDir)/CustomControl.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"

@@ -9,41 +9,23 @@
 
 CViewText::CViewText()
 {
-	m_hRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-    if (m_hRichEdit == 0)
-    {
-		::MessageBox(NULL,_T("CRichView::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
-    }
 }
 
 CViewText::~CViewText()
 {
-	// Cleanup
-	if (m_hRichEdit) ::FreeLibrary(m_hRichEdit);
 }
 
-int CViewText::OnCreate(CREATESTRUCT& cs)
+void CViewText::OnAttach()
 {
-	UNREFERENCED_PARAMETER(cs);
-
 	//Set font
 	if (!m_Font)
 	{
 		m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
+			CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 	}
-	
+
 	SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0L);
-	return 0;
 }
-
-void CViewText::PreCreate(CREATESTRUCT& cs)
-{
-	cs.lpszClass = _T("RichEdit");
-	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
-				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
-}
-
 
 CMDIChildText::CMDIChildText()
 {

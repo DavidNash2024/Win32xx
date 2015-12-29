@@ -108,6 +108,8 @@ devenv /build Debug Themes\ProjectFiles\Themes_2013.sln                 >>"..\ou
 devenv /build Release Themes\ProjectFiles\Themes_2013.sln               >>"..\output\VS2013.log"
 devenv /build Debug Threads\ProjectFiles\Threads_2013.sln               >>"..\output\VS2013.log"
 devenv /build Release Threads\ProjectFiles\Threads_2013.sln             >>"..\output\VS2013.log"
+devenv /build Debug TimeDemo\ProjectFiles\TimeDemo_2013.sln             >>"..\output\VS2013.log"
+devenv /build Release TimeDemo\ProjectFiles\TimeDemo_2013.sln           >>"..\output\VS2013.log"
 devenv /build Debug ToolBarDemo\ProjectFiles\ToolBarDemo_2013.sln       >>"..\output\VS2013.log"
 devenv /build Release ToolBarDemo\ProjectFiles\ToolBarDemo_2013.sln     >>"..\output\VS2013.log"
 devenv /build Debug Tray\ProjectFiles\Tray_2013.sln                     >>"..\output\VS2013.log"
@@ -163,6 +165,7 @@ copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2013\
 copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
+copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 
@@ -215,6 +218,7 @@ copy TabDemo\ProjectFiles\Release\TabDemo.exe                   "..\output\VS201
 copy TaskDialog\ProjectFiles\Release\TaskDialog.exe             "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2013\Release"    >>"..\output\VS2013.log"
+copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 

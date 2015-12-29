@@ -107,6 +107,8 @@ vcbuild /rebuild Themes\ProjectFiles\Themes_2008.vcproj debug                   
 vcbuild /rebuild Themes\ProjectFiles\Themes_2008.vcproj release                     >>"..\output\VS2008.log"
 vcbuild /rebuild Threads\ProjectFiles\Threads_2008.vcproj debug                     >>"..\output\VS2008.log"
 vcbuild /rebuild Threads\ProjectFiles\Threads_2008.vcproj release                   >>"..\output\VS2008.log"
+vcbuild /rebuild TimeDemo\ProjectFiles\TimeDemo_2008.vcproj debug                   >>"..\output\VS2008.log"
+vcbuild /rebuild TimeDemo\ProjectFiles\TimeDemo_2008.vcproj release                 >>"..\output\VS2008.log"
 vcbuild /rebuild ToolBarDemo\ProjectFiles\ToolBarDemo_2008.vcproj debug             >>"..\output\VS2008.log"
 vcbuild /rebuild ToolBarDemo\ProjectFiles\ToolBarDemo_2008.vcproj release           >>"..\output\VS2008.log"
 vcbuild /rebuild Tray\ProjectFiles\Tray_2008.vcproj debug                           >>"..\output\VS2008.log"
@@ -160,6 +162,7 @@ copy TabDemo\ProjectFiles\Debug\TabDemo.exe                   "..\output\VS2008\
 copy TaskDialog\ProjectFiles\Debug\TaskDialog.exe             "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
+copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 
@@ -210,6 +213,7 @@ copy TabDemo\ProjectFiles\Release\TabDemo.exe                   "..\output\VS200
 copy TaskDialog\ProjectFiles\Release\TaskDialog.exe             "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2008\Release"    >>"..\output\VS2008.log"
+copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 

@@ -6,17 +6,15 @@
 #define MDICHILDTEXT_H
 
 
-class CViewText : public CWnd
+class CViewText : public CRichEdit
 {
 public:
 	CViewText();
 	virtual ~CViewText();
-	virtual int OnCreate(CREATESTRUCT& cs);
-	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual void OnAttach();
 
 private:
 	CFont	m_Font;
-	HMODULE m_hRichEdit;
 };
 
 

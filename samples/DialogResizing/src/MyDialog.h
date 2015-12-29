@@ -31,7 +31,6 @@ private:
 	BOOL OnCheck3();
 
 	CResizer m_Resizer;
-	HMODULE m_hInstRichEdit;
 
 	// Nested classes for this dialog's child windows
 	// Nesting is optional. Its done here to keep the IDE's class view tidy.
@@ -42,8 +41,8 @@ private:
 	class CCheckB : public CButton {};
 	class CCheckC : public CButton {};
 	class CButton1 : public CButton {};
-	class CRichEdit1 : public CEdit {};
-	class CRichEdit2 : public CEdit {};
+	class CRichEdit1 : public CRichEdit {};
+	class CRichEdit2 : public CRichEdit {};
 	
 	CRadioA		m_RadioA; 
 	CRadioB		m_RadioB;
