@@ -123,9 +123,10 @@ New Features and Enhancements
   CCriticalSection's destructor is called.
   
 * Updated the documentation
-   - Added 'Doc View Model'               to Using Win32++
-   - Added 'Serialization with CArchive'  to Using Win32++
-   - Extended 'CString'                   in Using Win32++   
+   - Added 'Dialog Data Exchange (DDX and DDV)	to Using Win32++
+   - Added 'Doc View Model'               		to Using Win32++
+   - Added 'Serialization with CArchive'  		to Using Win32++
+   - Extended 'CString'                  	 	in Using Win32++   
 
 
 Changes in detail
