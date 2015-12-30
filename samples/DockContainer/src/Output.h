@@ -10,7 +10,7 @@
 #include "resource.h"
 
 // Declaration of the CViewText class
-class CViewOutput : public CWnd
+class CViewOutput : public CRichEdit
 {
 public:
 	CViewOutput();
@@ -19,9 +19,6 @@ public:
 protected:
 	virtual void PreCreate(CREATESTRUCT& cs); 
 	virtual void OnInitialUpdate(); 
-
-private:
-	HMODULE m_hRichEdit;
 
 };
 

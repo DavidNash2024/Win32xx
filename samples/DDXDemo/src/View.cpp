@@ -384,15 +384,11 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)			/*
 	void  CView::
 DoDataExchange(CDataExchange& DX)					/*
 
-	Override the base class method to display and read control data for
-	the CView dialog.
+	Specify the controls used for Dialog Data Exchange (DDX) and Dialog Data
+	Verification (DDV). This function is invoked each time UpdateData is called.
 *-----------------------------------------------------------------------------*/
 {
-	CWnd::DoDataExchange(DX);  // base class does nothing
-	  // attach all controls to numeric IDs first, just in case some
-	  // DDV_xxxx checking on a DDX_yyyy throws an exception and leaves a
-	  // later-declared DDX_Control() statement un-subclassed when
-	  // initializing in READFROMCONTROL mode.
+	// DDX_Control is used to attach controls to the numeric IDs
 	DX.DDX_Control(IDC_COMBOBOX,       m_ComboBox);
 	DX.DDX_Control(IDC_LISTBOX,        m_ListBox);
 	DX.DDX_Control(IDC_EDIT_RICHEDIT,  m_RichEdit);
@@ -404,73 +400,92 @@ DoDataExchange(CDataExchange& DX)					/*
 	DX.DDX_Control(IDC_DATE_TIME,      m_DateTime);
 	DX.DDX_Control(IDC_CALENDAR,       m_MoCalendar);
 
-	  // Now connect controls to data variables that may receive or deposit
-	  // values or states
 
-	  // Note: data in a combo box may be accessed two ways: by string or by
-	  // index. Only one of these two methods should be used.  Comment the
-	  // other out below.
+	// The other DDX functions transfer the control's to data to or from
+	//  the specified variable.
+	// The DDV functions specify the range of valid data for the control.
+
+
+	// connect byte box to m_iByte and specify limits
+	DX.DDX_Text(IDC_EDIT_BYTE,       m_iByte);
+	DX.DDV_MinMaxByte(               m_iByte, 10, 200);
+  
+	// connect short box to m_iShort and specify limits
+	DX.DDX_Text(IDC_EDIT_SHORT,      m_iShort);
+	DX.DDV_MinMaxShort(              m_iShort, -1000, 1000);
+	
+	// connect int box to m_iInt and specify limits
+	DX.DDX_Text(IDC_EDIT_INT,        m_iInt);
+	DX.DDV_MinMaxInt(                m_iInt, -10000, 10000);
+	
+	// connect UINT box to m_iUINT and specify limits
+	DX.DDX_Text(IDC_EDIT_UINT,       m_iUINT);
+	DX.DDV_MinMaxUInt(               m_iUINT, 10, 10000);
+	
+	// connect long box to m_iLong and specify limits
+	DX.DDX_Text(IDC_EDIT_LONG,       m_iLong);
+	DX.DDV_MinMaxLong(               m_iLong, -100000, 100000);
+	
+	// connect ULONG box to m_ULong and specify limits
+	DX.DDX_Text(IDC_EDIT_DWORD,      m_ULong);
+	DX.DDV_MinMaxULong(              m_ULong, 10, 100000);
+	
+	// connect float box to m_fFloat and specify limits
+	DX.DDX_Text(IDC_EDIT_FLOAT,      m_fFloat);
+	DX.DDV_MinMaxFloat(              m_fFloat, -10.0, 100000.0);
+	
+	// connect double box to m_dDouble and specify limits
+	DX.DDX_Text(IDC_EDIT_DOUBLE,     m_dDouble);
+	DX.DDV_MinMaxDouble(             m_dDouble, -10.0, 100000.);
+	
+	// connect the LPTSTR box and specify length
+	DX.DDX_Text(IDC_EDIT_LPTSTR,     m_LPTSTR, 255);
+	DX.DDV_MaxChars(                 m_LPTSTR, 25);
+	
+	// connect the regular edit box to m_sString and specify length
+	DX.DDX_Text(IDC_EDIT_CSTRING,    m_sString);
+	DX.DDV_MaxChars(                 m_sString, 25);
+	
+	// connect the rich edit box to m_sRichEdit for string operations
+	DX.DDX_Text(IDC_EDIT_RICHEDIT,   m_sRichEdit);
+	DX.DDV_MaxChars( 	             m_sRichEdit, 25); // limit length
+	
+	// connect the slider control to m_iSlider and specify limits
+	DX.DDX_Slider(IDC_SLIDER,        m_iSlider);
+	DX.DDV_MinMaxSlider(             m_iSlider, 0, 1000);
+	
+	// connect the progress bar to m_iProgress
+	DX.DDX_Progress(IDC_PROGRESSBAR, m_iProgress);
+	
+	// connect scroll bar to m_iScrollBar
+	DX.DDX_Scroll(  IDC_SCROLLBAR,   m_iScrollBar);
+	
+	// connect the radio boxes
+	DX.DDX_Radio( IDC_RADIO_A,       m_iRadioA);
+	
+	// connect check boxes
+	DX.DDX_Check(IDC_CHECK_A,        m_iCheckA);
+	DX.DDX_Check(IDC_CHECK_B,        m_iCheckB);
+	DX.DDX_Check(IDC_CHECK_C,        m_iCheckC);
+
+	// Note: Data in a combo box may be accessed two ways: by string or by
+	// index. Only one of these two methods should be used.  Comment the
+	// other out below.
 	DX.DDX_CBString(IDC_COMBOBOX,     m_sComboBox); // use string method
 //	DDX_CBIndex(IDC_COMBOBOX,	  m_iComboBox); // use index method
 //	m_ComboBox.GetLBText(m_iComboBox, m_sComboBox.GetBuffer(256));
 //	m_sComboBox.ReleaseBuffer();
 
-	  // Note: data in a list box may be accessed two ways: by string or by
-	  // index. Only one of these two methods should be used.  Comment the
-	  // other out below.
+	// Note: Data in a list box may be accessed two ways: by string or by
+	// index. Only one of these two methods should be used.  Comment the
+	// other out below.
 	DX.DDX_LBString(IDC_LISTBOX,      m_sListBox);  // use string method
 //	DDX_LBIndex(IDC_LISTBOX,	  m_iListBox);  // use index method
 //	m_ListBox.GetText(m_iListBox, 	  m_sListBox.GetBuffer(256));
 //	m_sListBox.ReleaseBuffer();
 
-	  // connect numeric and string boxes
-	  // connect byte box and check limits
-	DX.DDX_Text(IDC_EDIT_BYTE,       m_iByte);
-	DX.DDV_MinMaxByte(               m_iByte, 10, 200);
-	  // connect short int box and check limits
-	DX.DDX_Text(IDC_EDIT_SHORT,      m_iShort);
-	DX.DDV_MinMaxShort(              m_iShort, -1000, 1000);
-	  // connect int box and check limits
-	DX.DDX_Text(IDC_EDIT_INT,        m_iInt);
-	DX.DDV_MinMaxInt(                m_iInt, -10000, 10000);
-	  // connect UINT box and check limits
-	DX.DDX_Text(IDC_EDIT_UINT,       m_iUINT);
-	DX.DDV_MinMaxUInt(               m_iUINT, 10, 10000);
-	  // connect long box and check limits
-	DX.DDX_Text(IDC_EDIT_LONG,       m_iLong);
-	DX.DDV_MinMaxLong(               m_iLong, -100000, 100000);
-	  // connect ULONG box and check limits
-	DX.DDX_Text(IDC_EDIT_DWORD,      m_ULong);
-	DX.DDV_MinMaxULong(              m_ULong, 10, 100000);
-	  // connect float box and check limits
-	DX.DDX_Text(IDC_EDIT_FLOAT,      m_fFloat);
-	DX.DDV_MinMaxFloat(              m_fFloat, -10.0, 100000.0);
-	  // connect double box and check limits
-	DX.DDX_Text(IDC_EDIT_DOUBLE,     m_dDouble);
-	DX.DDV_MinMaxDouble(             m_dDouble, -10.0, 100000.);
-	  // connect the LPTSTR box and check length
-	DX.DDX_Text(IDC_EDIT_LPTSTR,     m_LPTSTR, 255);
-	DX.DDV_MaxChars(                 m_LPTSTR, 25);
-	  // connect the regular edit box and check length
-	DX.DDX_Text(IDC_EDIT_CSTRING,    m_sString);
-	DX.DDV_MaxChars(                 m_sString, 25);
-	  // connect the rich edit box for string operations
-	DX.DDX_Text(IDC_EDIT_RICHEDIT,   m_sRichEdit);
-	DX.DDV_MaxChars( 	             m_sRichEdit, 25); // limit length
-	  // connect the slider control
-	DX.DDX_Slider(IDC_SLIDER,        m_iSlider);
-	DX.DDV_MinMaxSlider(             m_iSlider, 0, 1000);
-	  // connect the progress bar
-	DX.DDX_Progress(IDC_PROGRESSBAR, m_iProgress);
-	  // connect scroll bar
-	DX.DDX_Scroll(  IDC_SCROLLBAR,   m_iScrollBar);
-	  // connect the radio boxes
-	DX.DDX_Radio( IDC_RADIO_A,       m_iRadioA);
-	  // connect check boxes
-	DX.DDX_Check(IDC_CHECK_A,        m_iCheckA);
-	DX.DDX_Check(IDC_CHECK_B,        m_iCheckB);
-	DX.DDX_Check(IDC_CHECK_C,        m_iCheckC);
-	  // engage the DateTime control and check +/-30 days
+	
+	// engage the DateTime control and specify +/-30 days
 	CTime tnow = CTime::GetCurrentTime();
 	CTimeSpan tmo = 30 * 86400;
 	CTime   tMin = tnow - tmo;
@@ -480,10 +495,12 @@ DoDataExchange(CDataExchange& DX)					/*
 	tMax.GetAsSystemTime(stMax);
 	DX.DDX_DateTime(IDC_DATE_TIME,   m_stDateTime);
 	DX.DDV_MinMaxDateTime(           m_stDateTime,  stMin, stMax);
-	  // engage the Month Calendar control and check +/-30 days
+	
+	// engage the Month Calendar control and specify +/-30 days
 	DX.DDX_MonthCal(IDC_CALENDAR,    m_stMoCalendar);
 	DX.DDV_MinMaxMonth(              m_stMoCalendar,  stMin, stMax);
-	  // connect the status box
+	
+	// connect the status box
 	DX.DDX_Text(IDC_EDIT_STATUS,     m_sStatus);
 }
 

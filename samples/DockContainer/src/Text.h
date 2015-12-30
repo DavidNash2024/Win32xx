@@ -10,7 +10,7 @@
 
 
 // Declaration of the CViewText class
-class CViewText : public CWnd
+class CViewText : public CRichEdit
 {
 public:
 	CViewText();
@@ -19,9 +19,6 @@ public:
 protected:
 	virtual void PreCreate(CREATESTRUCT& cs); 
 	virtual void OnInitialUpdate(); 
-
-private:
-	HMODULE m_hRichEdit;
 
 };
 
