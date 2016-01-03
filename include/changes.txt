@@ -179,6 +179,10 @@ Added CArchive::operator<<(const CStringW& string);
 Added CArchive::operator>>(CStringA& s);
 Added CArchive::operator>>(CStringW& s);
 
+Added DirectX11 sample
+Renamed the DirectX sample to DirectX9
+Added project files for Visual Studio Community 2015
+
 Modified CDC::CreateCompatibleDC 		returns HDC
 Modified CDC::CreateDC 					returns HDC
 Modified CDC::CreateIC 					returns HDC
@@ -208,8 +212,6 @@ Modified CTab:: GetAllTabs					returns const ref
 
 Updated theme colors for Windows 8, Windows 8.1 and Windows 10
 
-Renamed the DirectX sample to DirectX9
-Added DirectX11 sample
 
 Version 8.0.1
 ==============
