@@ -63,6 +63,19 @@
 //////////////////////////////////////
 //  Include the C++ and windows header files
 //
+
+// Specify minimum acceptable version macros
+// These are suitable for Windows 95
+#ifndef WINVER
+  #define WINVER          0x0400
+#endif
+#ifndef _WIN32_WINDOWS
+  #define _WIN32_WINDOWS  0x0400
+#endif
+#ifndef _WIN32_IE
+ #define _WIN32_IE        0x0400
+#endif
+
 #include <assert.h>
 #include <vector>
 #include <algorithm>
@@ -455,7 +468,8 @@ namespace Win32xx
 		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
   #endif
 
-		CWnd* GetCWndFromMap(HWND hWnd);		TLSData* GetTlsData() const;
+		CWnd* GetCWndFromMap(HWND hWnd);
+		TLSData* GetTlsData() const;
 		void	SetCallback();
 		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);

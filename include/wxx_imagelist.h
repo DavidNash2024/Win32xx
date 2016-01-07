@@ -83,9 +83,7 @@ namespace Win32xx
 		BOOL Create(int cx, int cy, UINT nFlags, int nInitial, int nGrow);
 		BOOL Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask);
 		BOOL Create(LPCTSTR lpszBitmapID, int cx, int nGrow, COLORREF crMask);
-#if (_WIN32_IE >= 0x0400)
 		BOOL Create(HIMAGELIST hImageList);
-#endif
 
 #ifndef _WIN32_WCE
 		BOOL CreateDisabledImageList(HIMAGELIST himlNormal);
@@ -350,7 +348,6 @@ namespace Win32xx
 		return ( himlNew!= 0 );
 	}
 
-#if (_WIN32_IE >= 0x0400)
 	inline BOOL CImageList::Create(HIMAGELIST hImageList)
 	// Creates a duplicate ImageList
 	{
@@ -365,7 +362,6 @@ namespace Win32xx
 
 		return ( himlCopy!= 0 );
 	}
-#endif
 
 	inline void CImageList::DeleteImageList()
 	// Destroys an image list.
