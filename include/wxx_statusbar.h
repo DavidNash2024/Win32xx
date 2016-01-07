@@ -65,12 +65,8 @@ namespace Win32xx
 		BOOL IsSimple();
 		BOOL SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
 		BOOL SetPartWidth(int iPart, int iWidth) const;
-
-#if (_WIN32_IE >= 0x0400)
 		HICON GetPartIcon(int iPart);
 		BOOL SetPartIcon(int iPart, HICON hIcon);
-#endif
-
 
 	// Operations
 		CStatusBar(const CStatusBar&);				// Disable copy construction
@@ -113,13 +109,11 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
 	}
 
-#if (_WIN32_IE >= 0x0400)
 	inline HICON CStatusBar::GetPartIcon(int iPart)
 	{
 		assert(IsWindow());
 		return reinterpret_cast<HICON>(SendMessage(SB_GETICON, (WPARAM)iPart, 0L));
 	}
-#endif
 
 	inline CRect CStatusBar::GetPartRect(int iPart)
 	{
@@ -185,13 +179,11 @@ namespace Win32xx
 		return bResult;
 	}
 
-#if (_WIN32_IE >= 0x0400)
 	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon)
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon));
 	}
-#endif
 
 	inline BOOL CStatusBar::SetPartWidth(int iPart, int iWidth) const
 	{
