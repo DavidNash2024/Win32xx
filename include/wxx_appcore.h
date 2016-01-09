@@ -138,10 +138,14 @@ namespace Win32xx
 	}
 
 	inline HWND CWinThread::GetMainWnd() const
-	// Retrieves a pointer to the main window for this thread.
+	// Retrieves a handle to the main window for this thread.
 	// Note: CFrame set's itself as the main window of its thread
+	//       Will assert if the thread doesn't have TLSData assigned. 
+	//       TLSData is assigned when the first window in the thread is created. 
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
+		assert (pTLSData);
+
 		return pTLSData->hMainWnd;
 	}
 
