@@ -103,7 +103,6 @@ directory structure. The directory structure will typically look like this:
 
 .\help
 .\include
-.\new projects
 .\output
 .\samples
 .\tools

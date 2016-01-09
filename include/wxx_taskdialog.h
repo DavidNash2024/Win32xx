@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -682,7 +682,7 @@ namespace Win32xx
 
 		assert( &GetApp() );
 
-		CTaskDialog* t = static_cast<CTaskDialog*>(GetApp().GetCWndFromMap(hWnd));
+		CTaskDialog* t = static_cast<CTaskDialog*>(GetCWndPtr(hWnd));
 		if (t == 0)
 		{
 			// The CTaskDialog pointer wasn't found in the map, so add it now

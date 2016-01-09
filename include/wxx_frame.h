@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -973,11 +973,6 @@ namespace Win32xx
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
 		m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
 		m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
-
-		// Start the keyboard hook
-		TLSData* pTLSData = GetApp().SetTlsData();
-		pTLSData->pMainWnd = this;
-		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 	}
 
 	inline CFrame::~CFrame()
@@ -2251,6 +2246,11 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(cs);
 
+		// Start the keyboard hook
+		TLSData* pTLSData = GetApp().SetTlsData();
+		pTLSData->hMainWnd = GetHwnd();
+		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
+
 		// Set the icon
 		SetIconLarge(IDW_MAIN);
 		SetIconSmall(IDW_MAIN);
@@ -3483,9 +3483,10 @@ namespace Win32xx
 	// Called by the keyboard hook to update status information
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
-		CFrame* pFrame = dynamic_cast<CFrame*>(pTLSData->pMainWnd);
-		assert( pTLSData->pMainWnd );
-		assert( pTLSData->pMainWnd->SendMessage(UWM_ISFRAME) );
+		HWND hFrame = pTLSData->hMainWnd;
+		CFrame* pFrame = dynamic_cast<CFrame*>(GetApp().GetCWndFromMap(hFrame));
+		assert( pFrame );
+		assert( pFrame->SendMessage(UWM_ISFRAME) );
 
 		if (HC_ACTION == nCode)
 		{

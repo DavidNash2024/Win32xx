@@ -175,7 +175,7 @@
 				<Option working_dir="GNU64/Debug" />
 				<Option object_output="GNU64/Debug" />
 				<Option type="0" />
-				<Option compiler="gnu_gcc_x64_compiler" />
+				<Option compiler="mingw-w64" />
 				<Compiler>
 					<Add option="-fexpensive-optimizations" />
 					<Add option="-g" />

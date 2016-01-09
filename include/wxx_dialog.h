@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -287,7 +287,7 @@ namespace Win32xx
 			default:
 				{
 					// Reflect this message if it's from a control
-					CWnd* pWnd = GetApp().GetCWndFromMap((HWND)lParam);
+					CWnd* pWnd = GetCWndPtr((HWND)lParam);
 					if (pWnd != NULL)
 						lr = pWnd->OnCommand(wParam, lParam);
 
@@ -308,7 +308,7 @@ namespace Win32xx
 			{
 				// Do Notification reflection if it came from a CWnd object
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
+				CWnd* pWndFrom = GetCWndPtr(hwndFrom);
 
 				if (pWndFrom != NULL)
 					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
@@ -316,7 +316,7 @@ namespace Win32xx
 				{
 					// Some controls (eg ListView) have child windows.
 					// Reflect those notifications too.
-					CWnd* pWndFromParent = GetApp().GetCWndFromMap(::GetParent(hwndFrom));
+					CWnd* pWndFromParent = GetCWndPtr(::GetParent(hwndFrom));
 					if (pWndFromParent != NULL)
 						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
 				}

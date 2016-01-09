@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -290,12 +290,12 @@ namespace Win32xx
 	struct TLSData			// Used for Thread Local Storage (TLS)
 	{
 		CWnd* pWnd;			// pointer to CWnd object for Window creation
-		CWnd* pMainWnd;		// pointer to the main window for the thread (usually CFrame)
+		HWND  hMainWnd;		//	handle to the main window for the thread (usually CFrame)
 		CMenuBar* pMenuBar;	// pointer to CMenuBar object used for the WH_MSGFILTER hook
 		HHOOK hMsgHook;		// WH_MSGFILTER hook for CMenuBar and Modal Dialogs
 		long nDlgHooks;		// Number of Dialog MSG hooks
 
-		TLSData() : pWnd(0), pMainWnd(0), pMenuBar(0), hMsgHook(0), nDlgHooks(0) {}	// Constructor
+		TLSData() : pWnd(0), hMainWnd(0), pMenuBar(0), hMsgHook(0), nDlgHooks(0) {}	// Constructor
 	};
 
 
@@ -385,14 +385,14 @@ namespace Win32xx
 		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
 		HACCEL	GetAccelerators() const { return m_hAccel; }
 		CWnd*	GetAcceleratorsWindow() const { return m_pWndAccel; }
-		CWnd*	GetMainWnd() const;
+		HWND	GetMainWnd() const;
 		HANDLE	GetThread()	const;
 		int		GetThreadID() const;
 		int		GetThreadPriority() const;
 		BOOL	PostThreadMessage(UINT message, WPARAM wParam, LPARAM lParam) const;
 		DWORD	ResumeThread() const;
 		void	SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
-		void	SetMainWnd(CWnd* pWnd);
+		void	SetMainWnd(HWND hWnd);
 		BOOL	SetThreadPriority(int nPriority) const;
 		DWORD	SuspendThread() const;
 		operator HANDLE () const { return GetThread(); }
@@ -420,16 +420,9 @@ namespace Win32xx
 	{
 		// Provide these access to CWinApp's private members:
 		friend class CDC;
-		friend class CDialog;
-		friend class CFrame;
 		friend class CGDIObject;
 		friend class CImageList;
 		friend class CMenu;
-		friend class CMenuBar;
-		friend class CPropertyPage;
-		friend class CPropertySheet;
-		friend class CTaskDialog;
-		friend class CWinThread;
 		friend class CWnd;
 		friend CWinApp& GetApp();
 
@@ -444,8 +437,10 @@ namespace Win32xx
 		virtual int Run();
 
 		// Operations
+		CWnd* GetCWndFromMap(HWND hWnd);
 		HINSTANCE GetInstanceHandle() const { return m_hInstance; }
 		HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
+		TLSData* GetTlsData() const;
 		HCURSOR LoadCursor(LPCTSTR lpszResourceName) const;
 		HCURSOR LoadCursor(int nIDCursor) const;
 		HCURSOR LoadStandardCursor(LPCTSTR lpszCursorName) const;
@@ -456,31 +451,24 @@ namespace Win32xx
 		HANDLE  LoadImage(int nIDImage, UINT uType, int cx, int cy, UINT fuLoad = LR_DEFAULTCOLOR) const;
 		HCURSOR SetCursor(HCURSOR hCursor) const;
 		void	SetResourceHandle(HINSTANCE hResource);
+		TLSData* SetTlsData();
 
 	private:
 		CWinApp(const CWinApp&);				// Disable copy construction
 		CWinApp& operator = (const CWinApp&);	// Disable assignment operator
 
-		CDC_Data* GetCDCDataFromMap(HDC hDC);
-		CGDI_Data* GetCGDIDataFromMap(HGDIOBJ hObject);
-		CIml_Data* GetCImlDataFromMap(HIMAGELIST himl);
-  #ifndef _WIN32_WCE
-		CMenu_Data* GetCMenuDataFromMap(HMENU hMenu);
-  #endif
-
-		CWnd* GetCWndFromMap(HWND hWnd);
-		TLSData* GetTlsData() const;
+		void AddCDCData(HDC hDC, CDC_Data* pData);
+		void AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData);
+		void AddCImlData(HIMAGELIST hIml, CIml_Data* pData);	
+		CDC_Data* GetCDCData(HDC hDC);
+		CGDI_Data* GetCGDIData(HGDIOBJ hObject);
+		CIml_Data* GetCImlData(HIMAGELIST himl);	
 		void	SetCallback();
-		TLSData* SetTlsData();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
 		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
-  #ifndef _WIN32_WCE
-		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
-  #endif
-
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread		
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
@@ -489,6 +477,12 @@ namespace Win32xx
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsData;				// Thread Local Storage data
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
+
+#ifndef _WIN32_WCE
+		void AddCMenuData(HMENU hMenu, CMenu_Data* pData);
+		CMenu_Data* GetCMenuData(HMENU hMenu);
+		std::map<HMENU, CMenu_Data*, CompareHMENU> m_mapCMenuData;
+#endif
 
 	};
 	

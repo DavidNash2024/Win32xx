@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -256,9 +256,7 @@ namespace Win32xx
 		assert(m_pData);
 		assert(m_pData->hMenu);
 		
-		GetApp().m_csMapLock.Lock();
-		GetApp().m_mapCMenuData.insert(std::make_pair(m_pData->hMenu, m_pData));
-		GetApp().m_csMapLock.Release();
+		GetApp().AddCMenuData(m_pData->hMenu, m_pData);
 	}
 
 	inline void CMenu::Release()
@@ -346,7 +344,7 @@ namespace Win32xx
 			if (hMenu)
 			{
 				// Add the menu to this CMenu
-				CMenu_Data* pCMenuData = GetApp().GetCMenuDataFromMap(hMenu);
+				CMenu_Data* pCMenuData = GetApp().GetCMenuData(hMenu);
 				if (pCMenuData)
 				{
 					delete m_pData;

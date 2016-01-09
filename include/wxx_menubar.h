@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -391,7 +391,7 @@ namespace Win32xx
 		SendMessage(TB_BUTTONSTRUCTSIZE, (WPARAM)sizeof(TBBUTTON), 0L);
 
 		TLSData* pTLSData = GetApp().GetTlsData();
-		m_hFrame = pTLSData->pMainWnd->GetHwnd();
+		m_hFrame = pTLSData->hMainWnd;
 	}
 
 	inline LRESULT CMenuBar::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
