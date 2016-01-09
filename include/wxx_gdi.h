@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -1022,10 +1022,8 @@ namespace Win32xx
 	{
 		assert( &GetApp() );
 		assert(m_pData->hGDIObject);
-		
-		GetApp().m_csMapLock.Lock();
-		GetApp().m_mapCGDIData.insert(std::make_pair(m_pData->hGDIObject, m_pData));
-		GetApp().m_csMapLock.Release();
+
+		GetApp().AddCGDIData(m_pData->hGDIObject, m_pData);
 	}
 
 	inline void CGDIObject::Attach(HGDIOBJ hObject)
@@ -1045,7 +1043,7 @@ namespace Win32xx
 			if (hObject)
 			{
 				// Add the GDI object to this CCGDIObject
-				CGDI_Data* pCGDIData = GetApp().GetCGDIDataFromMap(hObject);
+				CGDI_Data* pCGDIData = GetApp().GetCGDIData(hObject);
 				if (pCGDIData)
 				{
 					delete m_pData;
@@ -2239,9 +2237,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		assert( &GetApp() );
 		assert(m_pData->hDC);
 		
-		GetApp().m_csMapLock.Lock();
-		GetApp().m_mapCDCData.insert(std::make_pair(m_pData->hDC, m_pData));
-		GetApp().m_csMapLock.Release();
+		GetApp().AddCDCData(m_pData->hDC, m_pData);
 	}
 
 	inline void CDC::Attach(HDC hDC, HWND hWnd /* = 0*/)
@@ -2265,7 +2261,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 			
 			if (hDC)
 			{
-				CDC_Data* pCDCData = GetApp().GetCDCDataFromMap(hDC);
+				CDC_Data* pCDCData = GetApp().GetCDCData(hDC);
 				if (pCDCData)
 				{
 					delete m_pData;

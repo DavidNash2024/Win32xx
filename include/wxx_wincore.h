@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -89,7 +89,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #define _WIN32XX_WINCORE_H_
 
 // Version macro
-#define _WIN32XX_VER 0x0810		// Win32++ version 8.1.0
+#define _WIN32XX_VER 0x0820		// Win32++ version 8.2.0
 
 
 // Automatically include the Win32xx namespace
@@ -1115,7 +1115,8 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Reflect this message if it's from a control
-				CWnd* pWnd = GetApp().GetCWndFromMap((HWND)lParam);
+			//	CWnd* pWnd = GetApp().GetCWndFromMap((HWND)lParam);
+				CWnd* pWnd = GetCWndPtr((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);
 

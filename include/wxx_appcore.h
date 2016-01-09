@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -137,12 +137,12 @@ namespace Win32xx
 			throw CWinException(_T("Failed to create thread"));
 	}
 
-	inline CWnd* CWinThread::GetMainWnd() const
+	inline HWND CWinThread::GetMainWnd() const
 	// Retrieves a pointer to the main window for this thread.
 	// Note: CFrame set's itself as the main window of its thread
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
-		return pTLSData->pMainWnd;
+		return pTLSData->hMainWnd;
 	}
 
 	inline HANDLE CWinThread::GetThread() const
@@ -280,12 +280,12 @@ namespace Win32xx
 		m_hAccel = hAccel;
 	}
 
-	inline void CWinThread::SetMainWnd(CWnd* pWnd)
+	inline void CWinThread::SetMainWnd(HWND hWnd)
 	// Sets the main window for this thread.
 	// Note: CFrame set's itself as the main window of its thread
 	{
 		TLSData* pTLSData = GetApp().SetTlsData();
-		pTLSData->pMainWnd = pWnd;
+		pTLSData->hMainWnd = hWnd;
 	}
 
 	inline BOOL CWinThread::SetThreadPriority(int nPriority) const
@@ -385,7 +385,37 @@ namespace Win32xx
 		SetnGetThis(reinterpret_cast<CWinApp*>(-1));
 	}
 
-	inline CDC_Data* CWinApp::GetCDCDataFromMap(HDC hDC)
+	inline void CWinApp::AddCDCData(HDC hDC, CDC_Data* pData)
+	{
+		m_csMapLock.Lock();
+		m_mapCDCData.insert(std::make_pair(hDC, pData));
+		m_csMapLock.Release();
+	}
+
+	inline void CWinApp::AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData)
+	{
+		m_csMapLock.Lock();
+		m_mapCGDIData.insert(std::make_pair(hGDI, pData));
+		m_csMapLock.Release();
+	}
+
+	inline void CWinApp::AddCImlData(HIMAGELIST hIml, CIml_Data* pData)
+	{
+		m_csMapLock.Lock();
+		m_mapCImlData.insert(std::make_pair(hIml, pData));
+		m_csMapLock.Release();
+	}
+
+#ifndef _WIN32_WCE
+	inline void CWinApp::AddCMenuData(HMENU hMenu, CMenu_Data* pData)
+	{
+		m_csMapLock.Lock();
+		m_mapCMenuData.insert(std::make_pair(hMenu, pData));
+		m_csMapLock.Release();
+	}
+#endif
+
+	inline CDC_Data* CWinApp::GetCDCData(HDC hDC)
 	{
 		std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
@@ -401,7 +431,7 @@ namespace Win32xx
 		return pCDCData;
 	}
 
-	inline CGDI_Data* CWinApp::GetCGDIDataFromMap(HGDIOBJ hObject)
+	inline CGDI_Data* CWinApp::GetCGDIData(HGDIOBJ hObject)
 	{
 		std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
@@ -417,7 +447,7 @@ namespace Win32xx
 		return pCGDIData;
 	}
 
-	inline CIml_Data* CWinApp::GetCImlDataFromMap(HIMAGELIST himl)
+	inline CIml_Data* CWinApp::GetCImlData(HIMAGELIST himl)
 	{
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
@@ -434,7 +464,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline CMenu_Data* CWinApp::GetCMenuDataFromMap(HMENU hMenu)
+	inline CMenu_Data* CWinApp::GetCMenuData(HMENU hMenu)
 	{
 		std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 

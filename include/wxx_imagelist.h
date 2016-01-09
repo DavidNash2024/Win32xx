@@ -1,5 +1,5 @@
-// Win32++   Version 8.1
-// Release Date: 4th January 2016
+// Win32++   Version 8.2
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -179,9 +179,7 @@ namespace Win32xx
 		assert( &GetApp() );
 		assert(m_pData->hImageList);
 
-		GetApp().m_csMapLock.Lock();
-		GetApp().m_mapCImlData.insert(std::make_pair(m_pData->hImageList, m_pData));
-		GetApp().m_csMapLock.Release();
+		GetApp().AddCImlData(m_pData->hImageList, m_pData);
 	}
 
 	inline BOOL CImageList::RemoveFromMap()
@@ -258,7 +256,7 @@ namespace Win32xx
 			if (hImageList)
 			{
 				// Add the image list to this CImageList
-				CIml_Data* pCImlData = GetApp().GetCImlDataFromMap(hImageList);
+				CIml_Data* pCImlData = GetApp().GetCImlData(hImageList);
 				if (pCImlData)
 				{
 					delete m_pData;
