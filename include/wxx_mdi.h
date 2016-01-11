@@ -506,17 +506,25 @@ namespace Win32xx
 	inline void CMDIFrame::OnMenuUpdate(UINT nID)
 	{
 		// Updates the check buttons before displaying the menu
-		
-		switch(nID)
+
+		switch (nID)
 		{
 		case IDW_VIEW_STATUSBAR:
-			GetActiveMenu().CheckMenuItem(nID, GetShowStatusBar() ? MF_CHECKED : MF_UNCHECKED);
+			{
+				BOOL IsVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+				GetActiveMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+			}
 			break;
+
 		case IDW_VIEW_TOOLBAR:
-			GetActiveMenu().EnableMenuItem(nID, GetUseToolBar() ? MF_ENABLED : MF_DISABLED);
-			GetActiveMenu().CheckMenuItem(nID, GetShowToolBar() ? MF_CHECKED : MF_UNCHECKED);
+			{
+				BOOL IsVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+				GetActiveMenu().EnableMenuItem(nID, GetUseToolBar() ? MF_ENABLED : MF_DISABLED);
+				GetActiveMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+			}
 			break;
-		}	
+		}
+
 	}
 
 	inline BOOL CMDIFrame::OnViewStatusBar()

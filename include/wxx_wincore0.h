@@ -264,7 +264,6 @@ namespace Win32xx
     #endif
   #endif
 
-		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 		operator HWND() const { return GetHwnd(); }
 
 	protected:
@@ -295,6 +294,8 @@ namespace Win32xx
 		CWnd(const CWnd&);				// Disable copy construction
 		CWnd& operator = (const CWnd&);	// Disable assignment operator
 		CWnd(HWND hWnd);				// Private constructor used internally
+
+		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		void AddToMap();
 		void Cleanup();

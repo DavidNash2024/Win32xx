@@ -92,10 +92,6 @@ namespace Win32xx
 		virtual INT_PTR OnWizardFinish();
 		virtual int  OnWizardNext();
 		virtual	BOOL PreTranslateMessage(MSG& Msg);
-
-		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
-		static INT_PTR CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
 		void CancelToClose() const;
 		PROPSHEETPAGE GetPSP() const {return m_PSP;}
 		BOOL IsButtonEnabled(int iButton) const;
@@ -104,13 +100,15 @@ namespace Win32xx
 		void SetTitle(LPCTSTR szTitle);
 		void SetWizardButtons(DWORD dwFlags) const;
 
-	protected:
-		PROPSHEETPAGE m_PSP;
 
 	private:
 		CPropertyPage(const CPropertyPage&);				// Disable copy construction
 		CPropertyPage& operator = (const CPropertyPage&);	// Disable assignment operator
 
+		static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
+		static INT_PTR CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+		PROPSHEETPAGE m_PSP;
 		CString m_Title;
 	};
 

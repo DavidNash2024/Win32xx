@@ -254,7 +254,7 @@ void CMainFrame::RecalcLayout()
 // Override CFrame::RecalcLayout to add the positioning of our rebar
 {
 	// Resize the status bar
-	if (GetStatusBar().IsWindow() && GetShowStatusBar())
+	if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 	{
 		GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
 		GetStatusBar().Invalidate();
@@ -270,7 +270,7 @@ void CMainFrame::RecalcLayout()
 		GetReBar().SendMessage(WM_SIZE, 0L, 0L);
 		GetReBar().Invalidate();
 	}
-	else if (GetUseToolBar() && GetShowToolBar() && GetToolBar().IsWindow())
+	else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
 		GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 
 	// Position the additional rebar at the top, left, right or bottom of the view.

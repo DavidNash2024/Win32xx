@@ -1034,9 +1034,10 @@ Serialize(CArchive &ar)                                               /*
 			ar << w;
 			  // save the base class frame status and  tool bar switches:
 			  // these control the display of the StatusBar and  ToolBar
-			BOOL showbar = GetShowStatusBar();
+
+			BOOL showbar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 			ar << showbar;
-			showbar = GetShowToolBar();
+			showbar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
 			ar << showbar;
 			  // save MRU list and view (including scrollbars)
 			ar << m_MRU;

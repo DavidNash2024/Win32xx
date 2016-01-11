@@ -128,7 +128,7 @@ void CMainFrame::OnInitialUpdate()
 		LoadDefaultDockers();
 
 	// PreCreate initially set the window as invisible, so show it now.
-	ShowWindow( GetShowCmd() );
+	ShowWindow( GetInitValues().ShowCmd );
 }
 
 void CMainFrame::LoadDefaultDockers()

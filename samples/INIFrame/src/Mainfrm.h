@@ -32,16 +32,13 @@ protected:
 	virtual void	OnClose();
 	virtual void	OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void	PreCreate(CREATESTRUCT& cs);
 	virtual void	SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CView m_View;
 	CDoc m_Doc;
-	CRect m_rcPosition;		// Starting window position retrieved from ini file
-	BOOL m_ShowStatusBar;	// Initial StatusBar show state retrieved from ini file
-	BOOL m_ShowToolBar;		// Initial ToolBar show state retrieved from ini file
+
 };
 
 #endif //MAINFRM_H

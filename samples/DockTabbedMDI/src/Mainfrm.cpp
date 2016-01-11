@@ -309,7 +309,6 @@ void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 	GetFrameMenu().CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
 }
 
-
 void CMainFrame::OnInitialUpdate()
 {
 	SetDockStyle(DS_CLIENTEDGE);
@@ -337,7 +336,7 @@ void CMainFrame::OnInitialUpdate()
 	SetFrameMenu(FrameMenu);
 
 	// PreCreate initially set the window as invisible, so show it now.
-	ShowWindow( GetShowCmd() );
+	ShowWindow( GetInitValues().ShowCmd );
 	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 
