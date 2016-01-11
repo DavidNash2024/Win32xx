@@ -307,6 +307,16 @@ namespace Win32xx
 		typedef Shared_Ptr<MenuItemData> ItemDataPtr;
 
 	public:
+
+		struct InitValues
+		{
+			CRect rcPos;
+			int	  ShowCmd;
+			BOOL  ShowStatusBar;
+			BOOL  ShowToolBar;
+			InitValues() : ShowCmd(0), ShowStatusBar(0), ShowToolBar(0) {}	// constructor
+		};
+
 		CFrame();
 		virtual ~CFrame();
 
@@ -336,6 +346,7 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
+		InitValues& GetInitValues()					{ return m_InitValues; }
 		CMenu& GetFrameMenu() const					{ return const_cast<CMenu&>(m_Menu); }
 		MenuTheme& GetMenuBarTheme() const			{ return const_cast<MenuTheme&>(m_MBTheme); }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
@@ -352,6 +363,7 @@ namespace Win32xx
 		void SetAccelerators(UINT ID_ACCEL);
 		void SetFrameMenu(UINT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
+		void SetInitValues(InitValues& Values);
 		void SetMenuTheme(MenuTheme& MBT);
 		void SetReBarTheme(ReBarTheme& RBT);
 		void SetStatusBarTheme(StatusBarTheme& SBT);
@@ -428,15 +440,11 @@ namespace Win32xx
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		DWORD GetShowCmd() const { return m_ShowCmd; }
-		BOOL GetShowStatusBar() const { return m_ShowStatusBar; }
-		BOOL GetShowToolBar() const { return m_ShowToolBar; }
 		BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
 		BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
 		BOOL GetUseReBar() const { return m_UseReBar; }
 		BOOL GetUseThemes() const { return m_UseThemes; }
 		BOOL GetUseToolBar() const { return m_UseToolBar; }
-		void SetShowCmd(DWORD ShowCmd) { m_ShowCmd = ShowCmd; }
 		void SetUseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
 		void SetUseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
 		void SetUseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
@@ -454,6 +462,7 @@ namespace Win32xx
 		std::vector<CString> m_vMRUEntries;	// Vector of CStrings for MRU entries
 		std::vector<UINT> m_vMenuIcons;		// vector of menu icon resource IDs
 		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for ToolBar buttons
+		InitValues m_InitValues;			// struct of initial values
 		CDialog m_AboutDialog;				// Help about dialog
 		CMenuBar m_MenuBar;					// CMenuBar object
 		CReBar m_ReBar;						// CReBar object
@@ -484,15 +493,11 @@ namespace Win32xx
 		Shared_Ptr<CMenuMetrics> m_pMenuMetrics;  // Smart pointer for CMenuMetrics
 		CImageList m_imlMenu;				// Imagelist of menu icons
 		CImageList m_imlMenuDis;			// Imagelist of disabled menu icons
-		CRect m_rcPosition;					// Starting window position retrieved from registry
-		DWORD m_ShowCmd;					// Initial show state retrieved from registry
 		BOOL m_UseIndicatorStatus;			// set to TRUE to see indicators in status bar
 		BOOL m_UseMenuStatus;				// set to TRUE to see menu and toolbar updates in status bar
 		BOOL m_UseReBar;					// set to TRUE if ReBars are to be used
 		BOOL m_UseThemes;					// set to TRUE if themes are to be used
 		BOOL m_UseToolBar;					// set to TRUE if the toolbar is used
-		BOOL m_ShowStatusBar;				// Initial StatusBar show state retrieved from registry
-		BOOL m_ShowToolBar;					// Initial ToolBar show state retrieved from registry
 
 	};  // class CFrame
 
@@ -949,9 +954,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
-							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_pMenuMetrics(0), m_ShowCmd(SW_SHOW),
-							  m_UseIndicatorStatus(TRUE), m_UseMenuStatus(TRUE), m_UseThemes(TRUE),
-							  m_UseToolBar(TRUE), m_ShowStatusBar(TRUE), m_ShowToolBar(TRUE)
+							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_pMenuMetrics(0), m_UseIndicatorStatus(TRUE), 
+							  m_UseMenuStatus(TRUE), m_UseThemes(TRUE), m_UseToolBar(TRUE) 
 	{
 		ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
 		ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
@@ -2163,14 +2167,12 @@ namespace Win32xx
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("ToolBar"), dwToolBar))
 					throw CUserException(_T("RegQueryValueEx Failed"));
 
-				m_rcPosition.top = dwTop;
-				m_rcPosition.left = dwLeft;
-				m_rcPosition.bottom = m_rcPosition.top + dwHeight;
-				m_rcPosition.right = m_rcPosition.left + dwWidth;
-				m_ShowCmd = dwShowCmd;
-				m_ShowStatusBar = dwStatusBar & 1;
-				m_ShowToolBar = dwToolBar & 1;
-				m_ShowCmd = (SW_MAXIMIZE == m_ShowCmd)?  SW_MAXIMIZE : SW_SHOW;
+				InitValues Values;
+				Values.rcPos = CRect(dwLeft, dwTop, dwLeft + dwWidth, dwTop + dwHeight);
+				Values.ShowCmd = (SW_MAXIMIZE == dwShowCmd) ? SW_MAXIMIZE : SW_SHOW;
+				Values.ShowStatusBar = dwStatusBar & 1;
+				Values.ShowToolBar = dwToolBar & 1;
+				SetInitValues(Values);
 
 				bRet = TRUE;
 			}
@@ -2286,18 +2288,17 @@ namespace Win32xx
 		if (m_UseToolBar)
 		{
 			CreateToolBar();
-			ShowToolBar(m_ShowToolBar);
+			ShowToolBar(GetInitValues().ShowToolBar);
 		}
 		else
 		{
-			m_ShowToolBar = FALSE;
 			GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
 
 		// Create the status bar
 		GetStatusBar().Create(*this);
 		GetStatusBar().SetFont(m_fntStatusBar, FALSE);
-		ShowStatusBar(m_ShowStatusBar);
+		ShowStatusBar(GetInitValues().ShowStatusBar);
 
 		if (m_UseIndicatorStatus)
 			SetStatusIndicators();
@@ -2736,18 +2737,18 @@ namespace Win32xx
 		// Set the frame window styles
 		cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
 
-		if (m_ShowCmd == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
+		if (GetInitValues().ShowCmd == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
 
 		CWindowDC dcDesktop(0);
 
 		// Does the window fit on the desktop?
-		if (RectVisible(dcDesktop, &m_rcPosition) && (m_rcPosition.Width() > 0))
+		if (RectVisible(dcDesktop, &GetInitValues().rcPos) && (GetInitValues().rcPos.Width() > 0))
 		{
 			// Set the original window position
-			cs.x  = m_rcPosition.left;
-			cs.y  = m_rcPosition.top;
-			cs.cx = m_rcPosition.Width();
-			cs.cy = m_rcPosition.Height();
+			cs.x  = GetInitValues().rcPos.left;
+			cs.y  = GetInitValues().rcPos.top;
+			cs.cx = GetInitValues().rcPos.Width();
+			cs.cy = GetInitValues().rcPos.Height();
 		}
 	}
 
@@ -2993,6 +2994,15 @@ namespace Win32xx
 			SetMenu(m_Menu);
 			DrawMenuBar();
 		}
+	}
+
+	inline void CFrame::SetInitValues(InitValues& Values)
+	// Sets the initial values from the InitValues struct
+	{
+		m_InitValues.rcPos = Values.rcPos;
+		m_InitValues.ShowCmd = Values.ShowCmd;
+		m_InitValues.ShowStatusBar = Values.ShowStatusBar;
+		m_InitValues.ShowToolBar = Values.ShowToolBar;
 	}
 
 	inline UINT CFrame::SetMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)

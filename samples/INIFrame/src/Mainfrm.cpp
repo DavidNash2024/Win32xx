@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_ShowStatusBar(1), m_ShowToolBar(1)
+CMainFrame::CMainFrame()
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -16,6 +16,9 @@ CMainFrame::CMainFrame() : m_ShowStatusBar(1), m_ShowToolBar(1)
 
 	// Normally we would use LoadRegistrySettings here, but this
 	// is omitted in this sample. We use an ini file instead.
+
+	// Load initial values from the ini file.
+	SerializeINI(FALSE);
 }
 
 CMainFrame::~CMainFrame()
@@ -57,10 +60,10 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	
 	int Res = CFrame::OnCreate(cs);
-	ShowStatusBar(m_ShowStatusBar);
-	ShowToolBar(m_ShowToolBar);
+
+	ShowStatusBar(GetInitValues().ShowStatusBar);
+	ShowToolBar(GetInitValues().ShowToolBar);
 	return Res;
 }
 
@@ -134,28 +137,6 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	return CFrame::OnNotify(wParam, lParam);
 }
 
-void CMainFrame::PreCreate(CREATESTRUCT& cs)
-{
-	// Load setting from Frame.ini
-	SerializeINI(false);	
-	
-	// Set the frame window styles
-	cs.style = WS_OVERLAPPEDWINDOW | WS_VISIBLE;
-	if (GetShowCmd() == SW_MAXIMIZE) cs.style |= WS_MAXIMIZE;
-
-	CWindowDC dcDesktop(0);
-
-	// Does the window fit on the desktop?
-	if (RectVisible(dcDesktop, &m_rcPosition) && (m_rcPosition.Width() > 0))
-	{
-		// Set the original window position
-		cs.x  = m_rcPosition.left;
-		cs.y  = m_rcPosition.top;
-		cs.cx = m_rcPosition.Width();
-		cs.cy = m_rcPosition.Height();
-	}
-}
-
 CString CMainFrame::ItoT(int i)
 // Integer to TCHAR. Returns a CString
 {
@@ -213,6 +194,7 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 	}
 	else 
 	{
+		InitValues Values;
 		UINT failed = 999999;
 		CString Error("Error: GPPS failed");
 		
@@ -224,24 +206,26 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 
 		if (Left != failed && Top != failed && Width != failed && Height != failed && ShowCmd != failed) 
 		{
-			m_rcPosition = CRect(Left, Top, Left + Width, Top + Height);
-			SetShowCmd(ShowCmd);
+			Values.rcPos = CRect(Left, Top, Left + Width, Top + Height);
+			Values.ShowCmd = ShowCmd;
 
 			// Set the show state of the status bar
 			UINT ShowStatus = ::GetPrivateProfileInt (Key, _T("StatusBar"), 0, cs);
 			if (ShowStatus != failed)
-				m_ShowStatusBar = ShowStatus;
+				Values.ShowStatusBar = ShowStatus;
 
 			// Set the show state of the tool bar
 			UINT ShowTool = ::GetPrivateProfileInt (Key, _T("ToolBar"), 0, cs);
 			if (ShowTool != failed)
-				m_ShowToolBar = ShowTool;
+				Values.ShowToolBar = ShowTool;
 		}
 		else
 		{
 			TRACE("Failed to load ini file settings");
 			;;
 		}
+
+		SetInitValues(Values);
 	}
 }
 

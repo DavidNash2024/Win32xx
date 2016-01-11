@@ -103,7 +103,6 @@ namespace Win32xx
 		void SetVerificationCheckbox(BOOL bChecked);
 		void SetVerificationCheckboxText(LPCTSTR pszVerificationText);
 		void SetWindowTitle(LPCTSTR pszWindowTitle);
-		static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData);
 		void StoreText(std::vector<WCHAR>& vWChar, LPCTSTR pFromTChar);
 		void UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText);
 		
@@ -127,6 +126,8 @@ namespace Win32xx
 	private:
 		CTaskDialog(const CTaskDialog&);				// Disable copy construction
 		CTaskDialog& operator = (const CTaskDialog&);	// Disable assignment operator
+
+		static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData);
 
 		std::vector<TASKDIALOG_BUTTON> m_vButtons;
 		std::vector<TASKDIALOG_BUTTON> m_vRadioButtons;

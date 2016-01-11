@@ -97,13 +97,15 @@ namespace Win32xx
 	protected:
 		// These are the functions you might wish to override
 		virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void EndDialog(INT_PTR nResult);
 		virtual void OnCancel();
 		virtual void OnClose();
 		virtual BOOL OnInitDialog();
 		virtual void OnOK();
 		virtual BOOL PreTranslateMessage(MSG& Msg);
+		
+		// You won't need to override this functions
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Can't override these functions
 		DWORD GetDefID() const;
@@ -112,15 +114,16 @@ namespace Win32xx
 		void NextDlgCtrl() const;
 		void PrevDlgCtrl() const;
 		void SetDefID(UINT nID);
-		static INT_PTR CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-	#ifndef _WIN32_WCE
-		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
-	#endif
 
 	private:
 		CDialog(const CDialog&);			  // Disable copy construction
 		CDialog& operator = (const CDialog&); // Disable assignment operator
+
+		static INT_PTR CALLBACK StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+#ifndef _WIN32_WCE
+		static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
+#endif
 
 		BOOL m_IsModal;					// a flag for modal dialogs
 		LPCTSTR m_lpszResName;			// the resource name for the dialog
