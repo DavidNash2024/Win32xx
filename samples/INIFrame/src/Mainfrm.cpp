@@ -60,11 +60,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
 	// call the base class function
-	int Res = CFrame::OnCreate(cs);
-
-	ShowStatusBar(GetInitValues().ShowStatusBar);
-	ShowToolBar(GetInitValues().ShowToolBar);
-	return Res;
+	return CFrame::OnCreate(cs);
 }
 
 void CMainFrame::OnClose()
@@ -195,6 +191,7 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 	else 
 	{
 		InitValues Values;
+
 		UINT failed = 999999;
 		CString Error("Error: GPPS failed");
 		

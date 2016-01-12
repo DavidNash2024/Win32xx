@@ -1,3 +1,30 @@
+Version 8.2
+===========
+
+
+
+Changes in detail
+-----------------
+Modified:
+CWinThread::GetMainWnd			now returns HWND
+CWinThread::SetMainWnd			now accepts HWND
+
+These functions are now public:
+CWinApp::GetCWndFromMap
+CWinApp::GetTlsData
+CWinApp::SetTlsData
+
+Added
+CFrame::GetInitValues
+CFrame::SetInitValues
+
+Removed:
+CFrame::GetShowCmd
+CFrame::GetShowStatusBar
+CFrame::GetShowToolBar
+CFrame::SetShowCmd
+
+
 Version 8.1
 ===========
 
