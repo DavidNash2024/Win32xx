@@ -314,7 +314,9 @@ namespace Win32xx
 			int	  ShowCmd;
 			BOOL  ShowStatusBar;
 			BOOL  ShowToolBar;
-			InitValues() : ShowCmd(0), ShowStatusBar(0), ShowToolBar(0) {}	// constructor
+			
+			// Display StatusBar and ToolBar by default
+			InitValues() : ShowCmd(0), ShowStatusBar(1), ShowToolBar(1) {}	// constructor
 		};
 
 		CFrame();
@@ -2144,7 +2146,7 @@ namespace Win32xx
 		m_strKeyName = szKeyName;
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
 		BOOL bRet = FALSE;
-
+		InitValues Values;
 		CRegKey Key;
 		if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
 		{
@@ -2167,12 +2169,10 @@ namespace Win32xx
 				if (ERROR_SUCCESS != Key.QueryDWORDValue(_T("ToolBar"), dwToolBar))
 					throw CUserException(_T("RegQueryValueEx Failed"));
 
-				InitValues Values;
 				Values.rcPos = CRect(dwLeft, dwTop, dwLeft + dwWidth, dwTop + dwHeight);
 				Values.ShowCmd = (SW_MAXIMIZE == dwShowCmd) ? SW_MAXIMIZE : SW_SHOW;
 				Values.ShowStatusBar = dwStatusBar & 1;
 				Values.ShowToolBar = dwToolBar & 1;
-				SetInitValues(Values);
 
 				bRet = TRUE;
 			}
@@ -2187,9 +2187,13 @@ namespace Win32xx
 				CRegKey ParentKey;
 				if (ERROR_SUCCESS == ParentKey.Open(HKEY_CURRENT_USER, strParentKey, KEY_READ))
 					ParentKey.DeleteSubKey(_T("Frame Settings"));
+
+				InitValues DefaultValues;
+				Values = DefaultValues;
 			}
 		}
 
+		SetInitValues(Values);
 		return bRet;
 	}
 
