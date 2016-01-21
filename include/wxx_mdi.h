@@ -88,12 +88,12 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void RecalcLayout();
+		virtual CWnd& GetView() const { assert(m_pView); return *m_pView; }
+		virtual void SetView(CWnd& pwndView);
 
 		// These functions aren't virtual, and shouldn't be overridden
 		void SetHandles(HMENU MenuName, HACCEL AccelName);
 		CMDIFrame& GetMDIFrame() const;
-		CWnd& GetView() const	{assert(m_pView); return *m_pView;}
-		void SetView(CWnd& pwndView);
 		void MDIActivate() const;
 		void MDIDestroy() const;
 		void MDIMaximize() const;

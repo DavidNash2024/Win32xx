@@ -14,7 +14,8 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 
-	CDoc& GetDoc() {return m_Doc; }
+	CDoc& GetDoc()		{ return m_Doc; }
+	CView& GetView()	{ return m_View; }
 
 	BOOL	OnFileExit();
 	BOOL	OnFileOpen();

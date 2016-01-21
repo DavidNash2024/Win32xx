@@ -80,6 +80,8 @@ namespace Win32xx
 
 	class CDialog : public CWnd
 	{
+	friend class CCommonDialog;
+
 	public:
 		CDialog(UINT nResID);
 		CDialog(LPCTSTR lpszResName);
@@ -423,7 +425,6 @@ namespace Win32xx
 
 		// Tidy up
 		Cleanup();
-		pTLSData->pWnd = NULL;
 
 	#ifndef _WIN32_WCE
 		InterlockedDecrement(&pTLSData->nDlgHooks);
@@ -609,7 +610,7 @@ namespace Win32xx
 			pTLSData->pWnd = NULL;
 
 			// Store the Window pointer into the HWND map
-			pDialog->SetHwnd(hWnd);
+			pDialog->m_hWnd = hWnd;
 			pDialog->AddToMap();
 		}
 
