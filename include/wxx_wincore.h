@@ -190,7 +190,7 @@ namespace Win32xx
 	{
 		// A private constructor, used internally.
 
-		SetHwnd(hWnd);
+		m_hWnd = hWnd;
 	}
 
 	inline CWnd::~CWnd()
@@ -320,11 +320,11 @@ namespace Win32xx
 
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
-	{
+	{	
 		if ( &GetApp() )
 			RemoveFromMap();
 
-		SetHwnd(NULL);
+		m_hWnd = NULL;
 		m_PrevWindowProc = NULL;
 	}
 
@@ -1012,7 +1012,7 @@ namespace Win32xx
 			pTLSData->pWnd = NULL;
 
 			// Store the CWnd pointer in the HWND map
-			w->SetHwnd(hWnd);
+			w->m_hWnd = hWnd;
 			w->AddToMap();
 		}
 
@@ -1026,7 +1026,7 @@ namespace Win32xx
 		assert(::IsWindow(hWnd));
 
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
-		SetHwnd(hWnd);
+		m_hWnd = hWnd;
 		
 		AddToMap();			// Store the CWnd pointer in the HWND map
 	}

@@ -8,7 +8,7 @@
 
 
 // A global function to provide access to the CFormDoc class
-CFormDoc* GetDoc()
+CFormDoc& GetDoc()
 {
 	return GetSdiApp().GetMainFrame().GetDoc();
 }
@@ -34,7 +34,7 @@ CMainFrame::~CMainFrame()
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 {
 	CFrame::LoadRegistrySettings(szKeyName);
-	GetDoc()->LoadDocRegistry(GetRegistryKeyName().c_str());
+	GetDoc().LoadDocRegistry(GetRegistryKeyName().c_str());
 
 	return TRUE;
 }
@@ -112,26 +112,26 @@ void CMainFrame::OnInitialUpdate()
 
 void CMainFrame::OnUpdateCheckA(UINT nID)
 {
-	BOOL bCheck = GetDoc()->GetCheckA();
+	BOOL bCheck = GetDoc().GetCheckA();
 	GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 }
 
 void CMainFrame::OnUpdateCheckB(UINT nID)
 {
-	BOOL bCheck = GetDoc()->GetCheckB();
+	BOOL bCheck = GetDoc().GetCheckB();
 	GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 }
 
 void CMainFrame::OnUpdateCheckC(UINT nID)
 {
-	BOOL bCheck = GetDoc()->GetCheckC();
+	BOOL bCheck = GetDoc().GetCheckC();
 	GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 }
 
 void CMainFrame::OnUpdateRangeOfIds_Radio(UINT nID)
 {
 	UINT adjId = nID - ID_RADIO_A;
-	UINT curRadio = GetDoc()->GetRadio();
+	UINT curRadio = GetDoc().GetRadio();
 	BOOL bCheck = (curRadio == adjId);
 	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
 	CMenu RadioMenu = GetFrameMenu().GetSubMenu(nFileItem);
@@ -149,7 +149,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 BOOL CMainFrame::SaveRegistrySettings()
 {
 	CFrame::SaveRegistrySettings();
-	GetDoc()->SaveDocRegistry(GetRegistryKeyName().c_str());
+	GetDoc().SaveDocRegistry(GetRegistryKeyName().c_str());
 
 	return TRUE;
 }

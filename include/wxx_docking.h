@@ -476,6 +476,8 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockClient&>(m_DockClient); }
 		virtual CDockHint& GetDockHint() const		{ return m_pDockAncestor->m_DockHint; }
 		virtual CRect GetViewRect() const			{ return GetClientRect(); }
+		virtual CWnd& GetView() const				{ return GetDockClient().GetView(); }
+		virtual void SetView(CWnd& wndView);
 
 		const std::vector <DockPtr> & GetAllDockChildren() const	{return GetDockAncestor()->m_vAllDockChildren;}
 		const std::vector <CDocker*> & GetDockChildren() const		{return m_vDockChildren;}
@@ -485,7 +487,6 @@ namespace Win32xx
 		int GetDockID() const				{return m_nDockID;}
 		CDocker* GetDockParent() const		{return m_pDockParent;}
 		DWORD GetDockStyle() const			{return m_DockStyle;}
-		CWnd& GetView() const			{return GetDockClient().GetView();}
 		BOOL IsChildOfDocker(HWND hWnd) const;
 		BOOL IsDocked() const;
 		BOOL IsDragAutoResize() const;
@@ -500,7 +501,6 @@ namespace Win32xx
 		void SetDockSize(int DockSize);
 		void SetDragAutoResize(BOOL bAutoResize);
 		BOOL SetRedraw(BOOL bRedraw = TRUE);
-		void SetView(CWnd& wndView);
 
 	protected:
 		virtual CDocker* NewDockerFromID(int idDock);

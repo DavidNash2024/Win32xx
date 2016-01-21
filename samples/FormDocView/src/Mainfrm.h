@@ -17,7 +17,8 @@ class CMainFrame : public CFrame
 public:
 	CMainFrame();
 	virtual ~CMainFrame();
-	CFormDoc* GetDoc() {return &m_Doc;} 
+	CFormDoc& GetDoc()		{ return m_Doc; }
+	CFormView& GetView()	{ return m_SdiView; }
 
 protected:
 	virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
@@ -42,7 +43,7 @@ private:
 };
 
 // A global function to provide access to the CFormDoc class
-CFormDoc* GetDoc(); 
+CFormDoc& GetDoc(); 
 
 #endif //MAINFRM_H
 

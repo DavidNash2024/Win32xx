@@ -602,7 +602,7 @@ namespace Win32xx
 			pPage = static_cast<CPropertyPage*>(pTLSData->pWnd);
 
 			// Set the hWnd members and call DialogProc for this message
-			pPage->SetHwnd(hwndDlg);
+			pPage->m_hWnd = hwndDlg;
 			pPage->AddToMap();
 		}
 

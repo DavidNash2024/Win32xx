@@ -24,6 +24,9 @@ CFrame::GetShowStatusBar
 CFrame::GetShowToolBar
 CFrame::SetShowCmd
 
+Moved:
+The "New Project" folder to samples
+
 
 Version 8.1
 ===========

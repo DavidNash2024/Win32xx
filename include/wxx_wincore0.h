@@ -92,6 +92,7 @@ namespace Win32xx
 	//
 	class CWnd : public CObject
 	{
+	friend class CCommonDialog;
 	friend class CMDIChild;
 	friend class CDialog;
 	friend class CPropertyPage;
@@ -288,6 +289,9 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+		// These functions aren't virtual, and shouldn't be overridden
+		void Cleanup();
+
 		HWND m_hWnd;					// handle to this object's window
 
 	private:
@@ -298,11 +302,9 @@ namespace Win32xx
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		void AddToMap();
-		void Cleanup();
 		LRESULT MessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();
-		void SetHwnd(HWND hWnd)			{ m_hWnd = hWnd; }
 		void Subclass(HWND hWnd);
 
 		WNDPROC	m_PrevWindowProc;

@@ -93,16 +93,16 @@ BOOL CFormView::OnInitDialog()
 	}
 
 	// Set initial button states
-	BOOL bCheck = GetDoc()->GetCheckA();
+	BOOL bCheck = GetDoc().GetCheckA();
 	m_CheckA.SetCheck(bCheck);
 
-	bCheck = GetDoc()->GetCheckB();
+	bCheck = GetDoc().GetCheckB();
 	m_CheckB.SetCheck(bCheck);
 
-	bCheck = GetDoc()->GetCheckC();
+	bCheck = GetDoc().GetCheckC();
 	m_CheckC.SetCheck(bCheck);
 
-	UINT curRadio = GetDoc()->GetRadio();
+	UINT curRadio = GetDoc().GetRadio();
 	OnRangeOfIds_Radio(curRadio);
 	
 	// Initialize dialog resizing
@@ -140,10 +140,10 @@ void CFormView::OnButton()
 void CFormView::OnCheckA()
 {
 	TRACE("Check Box A\n");
-	BOOL bCheck = GetDoc()->GetCheckA();
+	BOOL bCheck = GetDoc().GetCheckA();
 	bCheck = !bCheck;  // Toggle
 	SendDlgItemMessage(ID_CHECK_A, BM_SETCHECK, bCheck, 0);
-	GetDoc()->SetCheckA(bCheck);
+	GetDoc().SetCheckA(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
 }
@@ -151,10 +151,10 @@ void CFormView::OnCheckA()
 void CFormView::OnCheckB()
 {
 	TRACE("Check Box B\n");
-	BOOL bCheck = GetDoc()->GetCheckB();
+	BOOL bCheck = GetDoc().GetCheckB();
 	bCheck = !bCheck;  // Toggle
 	SendDlgItemMessage(ID_CHECK_B, BM_SETCHECK, bCheck, 0);
-	GetDoc()->SetCheckB(bCheck);
+	GetDoc().SetCheckB(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
 }
@@ -162,10 +162,10 @@ void CFormView::OnCheckB()
 void CFormView::OnCheckC()
 {
 	TRACE("Check Box C\n");
-	BOOL bCheck = GetDoc()->GetCheckC();
+	BOOL bCheck = GetDoc().GetCheckC();
 	bCheck = !bCheck;  // Toggle
 	SendDlgItemMessage(ID_CHECK_C, BM_SETCHECK, bCheck, 0);
-	GetDoc()->SetCheckC(bCheck);
+	GetDoc().SetCheckC(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
 }
@@ -176,7 +176,7 @@ void CFormView::OnRangeOfIds_Radio(UINT nIdAdjust)
 	SendDlgItemMessage(ID_RADIO_B, BM_SETCHECK, FALSE, 0);
 	SendDlgItemMessage(ID_RADIO_C, BM_SETCHECK, FALSE, 0);
 	SendDlgItemMessage(ID_RADIO_A + nIdAdjust, BM_SETCHECK, TRUE, 0);
-	GetDoc()->SetRadio(nIdAdjust);
+	GetDoc().SetRadio(nIdAdjust);
 
 	SetDlgItemText(IDC_STATUS, _T("Radio changed"));
 	TRACE("Radio changed\n");
