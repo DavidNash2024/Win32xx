@@ -723,6 +723,10 @@ namespace Win32xx
 	// Creates a modeless Property Sheet
 	{
 		assert( &GetApp() );
+		assert(!IsWindow());		// Only one window per CWnd instance allowed
+
+		// Return the CPropertySheet to default
+		Cleanup();
 
 		if (hParent)
 		{
@@ -761,6 +765,8 @@ namespace Win32xx
 		// Create the property sheet
 		ipResult = PropertySheet(ppsph);
 
+		pTLSData->pWnd = NULL;
+
 		if (ipResult == -1)
 			throw CWinException(_T("PropertySheet failed"));
 
@@ -789,6 +795,10 @@ namespace Win32xx
 	inline int CPropertySheet::DoModal()
 	{
 		assert( &GetApp() );
+		assert(!IsWindow());		// Only one window per CWnd instance allowed
+
+		// Return the CPropertySheet to default
+		Cleanup();
 
 		BuildPageArray();
 		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();

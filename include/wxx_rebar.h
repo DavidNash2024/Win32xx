@@ -326,7 +326,7 @@ namespace Win32xx
 	{
 		// Permit the parent window to handle the drawing of the ReBar's background.
 		// Return TRUE to suppress default background drawing.
-		return (TRUE == GetParent().SendMessage(UWM_DRAWRBBKGND, (WPARAM)&dc, (LPARAM)this));
+		return (TRUE == SendMessage(::GetParent(m_hWnd), UWM_DRAWRBBKGND, (WPARAM)&dc, (LPARAM)this));
 	}
 
 
