@@ -320,7 +320,11 @@ namespace Win32xx
 
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
-	{	
+	{
+		// Window should already be destroyed if managed 
+		assert( (GetCWndPtr(*this) != this) || (!IsWindow()) );
+
+
 		if ( &GetApp() )
 			RemoveFromMap();
 
@@ -409,8 +413,8 @@ namespace Win32xx
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert( !IsWindow() );	// Only one window per CWnd instance allowed
 
-		// Prepare the CWnd if it has been reused
-		Destroy();
+		// Return the CWnd to default
+		Cleanup();
 
 		// Ensure a window class is registered
 		CString ClassName;
@@ -609,7 +613,7 @@ namespace Win32xx
 	// WM_CLOSE is sent by SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0) or by clicking X
 	//  in the top right corner. Usually, only top level windows receive WM_CLOSE.
 	{
-		::DestroyWindow(*this);
+		Destroy();
 	}
 
 	inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -1115,7 +1119,6 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Reflect this message if it's from a control
-			//	CWnd* pWnd = GetApp().GetCWndFromMap((HWND)lParam);
 				CWnd* pWnd = GetCWndPtr((HWND)lParam);
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);

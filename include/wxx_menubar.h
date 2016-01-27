@@ -355,9 +355,9 @@ namespace Win32xx
 
 	inline void CMenuBar::GrabFocus()
 	{
-		if (GetFocus() != *this)
-			m_hPrevFocus = SetFocus();
-		SetCapture();
+		if (::GetFocus() != *this)
+			m_hPrevFocus = ::SetFocus(m_hWnd);
+		::SetCapture(m_hWnd);
 		::SetCursor(::LoadCursor(NULL, IDC_ARROW));
 	}
 
@@ -931,7 +931,7 @@ namespace Win32xx
 		// This is used to bring up a new popup menu when required
 
 		CPoint pt = GetCursorPos();
-		if (*this == WindowFromPoint(pt))	// MenuBar window must be on top
+		if (*this == ::WindowFromPoint(pt))	// MenuBar window must be on top
 		{
 			DWORD flag = pNMHI->dwFlags;
 			if ((flag & HICF_MOUSE) && !(flag & HICF_LEAVING))

@@ -257,6 +257,7 @@ namespace Win32xx
 		LRESULT lr = (*pTaskDialogIndirect)(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);
 
 		FreeLibrary(hComCtl);
+		pTLSData->pWnd = NULL;
 
 		if (lr != S_OK)
 		{

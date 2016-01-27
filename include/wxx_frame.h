@@ -2598,7 +2598,7 @@ namespace Win32xx
 	{
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
-		HWND hWnd = WindowFromPoint(pt);
+		HWND hWnd = ::WindowFromPoint(pt);
 		CToolBar* pToolBar = NULL;
 		if ( ::SendMessage(hWnd, UWM_ISTOOLBAR, 0, 0) )
 			pToolBar = static_cast<CToolBar*> (GetCWndPtr(hWnd));
@@ -3110,9 +3110,9 @@ namespace Win32xx
 			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? SCRL: CString("");
 
 			// Only update indicators if the text has changed
-			if (Status1 != m_OldStatus[0])  GetStatusBar().SetPartText(1, " "+(Status1));
-			if (Status2 != m_OldStatus[1])  GetStatusBar().SetPartText(2, " "+(Status2));
-			if (Status3 != m_OldStatus[2])  GetStatusBar().SetPartText(3, " "+(Status3));
+			if (Status1 != m_OldStatus[0])  GetStatusBar().SetPartText(1, Status1);
+			if (Status2 != m_OldStatus[1])  GetStatusBar().SetPartText(2, Status2);
+			if (Status3 != m_OldStatus[2])  GetStatusBar().SetPartText(3, Status3);
 
 			m_OldStatus[0] = Status1;
 			m_OldStatus[1] = Status2;
