@@ -80,7 +80,6 @@ namespace Win32xx
 
 	class CDialog : public CWnd
 	{
-	friend class CCommonDialog;
 
 	public:
 		CDialog(UINT nResID);
@@ -394,9 +393,6 @@ namespace Win32xx
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
-		// Return the CDialog to default
-		Cleanup();
-
 		INT_PTR nResult = 0;
 		m_IsModal=TRUE;
 
@@ -426,7 +422,6 @@ namespace Win32xx
 
 		// Tidy up
 		pTLSData->pWnd = NULL;
-		Cleanup();
 
 	#ifndef _WIN32_WCE
 		InterlockedDecrement(&pTLSData->nDlgHooks);
@@ -452,9 +447,6 @@ namespace Win32xx
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
-		// Return the CDialog to default
-		Cleanup();
-		
 		m_IsModal=FALSE;
 
 		// Ensure this thread has the TLS index set

@@ -745,7 +745,6 @@ namespace Win32xx
 			OnTDCreated();
 			break;
 		case TDN_DESTROYED:		
-			Cleanup();			// Prepare this CWnd to be reused. 
 			OnTDDestroyed();
 			break;
 		case TDN_DIALOG_CONSTRUCTED:

@@ -289,9 +289,6 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-		// These functions aren't virtual, and shouldn't be overridden
-		void Cleanup();
-
 		HWND m_hWnd;					// handle to this object's window
 
 	private:
@@ -302,6 +299,7 @@ namespace Win32xx
 		static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		void AddToMap();
+		void Cleanup();
 		LRESULT MessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		BOOL RegisterClass(WNDCLASS& wc);
 		BOOL RemoveFromMap();

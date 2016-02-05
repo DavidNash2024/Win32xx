@@ -725,9 +725,6 @@ namespace Win32xx
 		assert( &GetApp() );
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
-		// Return the CPropertySheet to default
-		Cleanup();
-
 		if (hParent)
 		{
 			m_PSH.hwndParent = hParent;
@@ -796,9 +793,6 @@ namespace Win32xx
 	{
 		assert( &GetApp() );
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
-
-		// Return the CPropertySheet to default
-		Cleanup();
 
 		BuildPageArray();
 		PROPSHEETPAGE* pPSPArray = &m_vPSP.front();
