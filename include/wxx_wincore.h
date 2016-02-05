@@ -202,11 +202,17 @@ namespace Win32xx
 	inline void CWnd::AddToMap()
 	// Store the window handle and CWnd pointer in the HWND map
 	{
-		assert( &GetApp() );
+		// The framework must be started
+		assert(&GetApp());
+
+		// This HWND is should not be in the map yet
+		assert (NULL == GetApp().GetCWndFromMap(*this));
+
+		// Remove any old map entry for this CWnd (required when the CWnd is reused)
+		RemoveFromMap();
+
+		// Add the (HWND, CWnd*) pair to the map
 		GetApp().m_csMapLock.Lock();
-
-		assert(!GetApp().GetCWndFromMap(*this));
-
 		GetApp().m_mapHWND.insert(std::make_pair(GetHwnd(), this));
 		GetApp().m_csMapLock.Release();
 	}
@@ -222,7 +228,6 @@ namespace Win32xx
 		// Note: Perform the attach from the same thread as the window's message loop
 		GetApp().SetTlsData();
 
-		Cleanup();			// Cleanup any previous attachment
 		Subclass(hWnd);		// Set the window's callback to CWnd::StaticWindowProc
 
 		OnAttach();
@@ -412,9 +417,6 @@ namespace Win32xx
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert( !IsWindow() );	// Only one window per CWnd instance allowed
-
-		// Return the CWnd to default
-		Cleanup();
 
 		// Ensure a window class is registered
 		CString ClassName;
