@@ -331,7 +331,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void RecalcLayout();
 		virtual void RecalcViewLayout();
-		virtual CWnd& GetView() { return *m_pView; }
+		virtual CWnd& GetView() const { return *m_pView; }
 		virtual void SetView(CWnd& wndView) { m_pView = &wndView; }
 
 
@@ -507,7 +507,7 @@ namespace Win32xx
 	class CDockFrame : public CFrame, public CDocker
 	{
 	public:
-		CWnd& GetView()						{ return CDocker::GetView(); }
+		CWnd& GetView()	const			{ return CDocker::GetView(); }
 		CRect GetViewRect() const			{ return CFrame::GetViewRect(); }
 		void SetView(CWnd& wndView)			{ CDocker::SetView(wndView); }
 

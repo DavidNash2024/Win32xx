@@ -258,6 +258,7 @@ namespace Win32xx
 
 		FreeLibrary(hComCtl);
 		pTLSData->pWnd = NULL;
+		m_hWnd = 0;
 
 		if (lr != S_OK)
 		{
@@ -699,7 +700,7 @@ namespace Win32xx
 			pTLSData->pWnd = NULL;
 
 			// Store the CTaskDialog pointer in the HWND map
-			t->SetHwnd(hWnd);
+			t->m_hWnd = hWnd;
 			t->AddToMap();
 		}
 

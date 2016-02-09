@@ -409,6 +409,8 @@ namespace Win32xx
 		
 		// invoke the control and save the result on success
 		BOOL ok = ::ChooseColor(&m_cc);
+		
+		m_hWnd = 0;
 
 		if (ok)
 		{
@@ -612,6 +614,8 @@ namespace Win32xx
 		int ok = (m_bOpenFileDialog ?
 			::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
 
+		m_hWnd = 0;
+		
 		// the result of the file choice box is processed here: 
 		if (ok)
 			OnOK();
@@ -1348,7 +1352,8 @@ namespace Win32xx
 		// open the font choice dialog
 		BOOL ok = ::ChooseFont(&m_cf);
 
-		  
+		m_hWnd = 0;
+		
 		// the result of the font choice box is processed here:
 		if (ok)
 		{

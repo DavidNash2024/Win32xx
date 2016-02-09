@@ -209,7 +209,7 @@ namespace Win32xx
 	public:
 		CMDIDockFrame()						{ SetView(GetMDIClient()); }
 		CRect GetViewRect() const			{ return CMDIFrame::GetViewRect(); }
-		virtual CWnd& GetView()				{ return CMDIFrame::GetView(); }
+		virtual CWnd& GetView() const		{ return CMDIFrame::GetView(); }
 		void RecalcViewLayout()				{ RecalcDockLayout(); }
 		
 		virtual CDocker::CDockClient& GetDockClient() const	
