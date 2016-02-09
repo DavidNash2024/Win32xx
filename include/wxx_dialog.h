@@ -422,6 +422,7 @@ namespace Win32xx
 
 		// Tidy up
 		pTLSData->pWnd = NULL;
+		m_hWnd = 0;
 
 	#ifndef _WIN32_WCE
 		InterlockedDecrement(&pTLSData->nDlgHooks);

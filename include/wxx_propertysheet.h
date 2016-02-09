@@ -763,6 +763,7 @@ namespace Win32xx
 		ipResult = PropertySheet(ppsph);
 
 		pTLSData->pWnd = NULL;
+		m_hWnd = 0;
 
 		if (ipResult == -1)
 			throw CWinException(_T("PropertySheet failed"));

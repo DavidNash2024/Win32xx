@@ -71,6 +71,7 @@
 #include <iomanip>
 #include "wxx_cstring.h"
 #include "wxx_wincore0.h"
+#include "wxx_exception.h"
 
 #ifndef _WIN32_WCE
 
