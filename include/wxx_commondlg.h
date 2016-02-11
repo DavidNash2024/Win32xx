@@ -235,22 +235,24 @@ namespace Win32xx
 		LOGFONT	GetChoiceLogFont(void) const	{ return m_LogFont;}
 		const CHOOSEFONT& GetChooseFont() const { return m_cf; }
 		int 	GetSize(void) const;   
-		CString GetStyleName(void) const		{ return m_cf.lpszStyle? m_cf.lpszStyle : _T(""); }
+		CString GetStyleName(void) const		{ return m_szStyleName;}
 		long 	GetWeight(void) const  			{ return m_LogFont.lfWeight;}
 		DWORD 	FillInLogFont(const CHARFORMAT& cf);
 		BOOL 	IsBold(void) const				{ return (m_LogFont.lfWeight >= FW_SEMIBOLD);}
 		BOOL 	IsItalic(void) const			{ return m_LogFont.lfItalic;}
-		BOOL 	IsStrikeOut(void) const			{ return m_LogFont.lfStrikeOut; }
-		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline; }
+		BOOL 	IsStrikeOut(void) const			{ return m_LogFont.lfStrikeOut;}
+		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline;}
 		void    SetAvgSize(const SIZE& sz)		{ m_avgWdHt = sz; } 
 			
-		void    SetColor(const COLORREF rgb)	{ m_cf.rgbColors = rgb; }
-		void	SetChooseFont(CHOOSEFONT cf)	{ m_cf = cf; }
+		void    SetColor(const COLORREF rgb)	{ m_cf.rgbColors = rgb;}
 		void    SetChoiceFont(const CFont& f)	{ LOGFONT lf = f.GetLogFont(); SetChoiceLogFont(lf); }
 		void    SetChoiceLogFont(LOGFONT& lf)	{ SetFontIndirect(lf); RecordFontMetrics(); }
 		void	SetFlags(DWORD dwFlags);
 		void    SetPrinter(const CDC* pdcPrinter); 
-		void	SetStyleName(LPCTSTR pszStyle)		{ m_cf.lpszStyle = (LPTSTR)pszStyle; }	
+	//	void    SetStyleName(const CString& style)	{ lstrcpyn(m_szStyleName, style.c_str(), sizeof(m_szStyleName));
+	//													m_cf.lpszStyle = (LPTSTR)&m_szStyleName;}
+		void    SetStyleName(LPCTSTR pszStyle)	{ lstrcpyn(m_szStyleName, pszStyle, sizeof(m_szStyleName));
+														m_cf.lpszStyle = (LPTSTR)&m_szStyleName;}
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
@@ -270,6 +272,7 @@ namespace Win32xx
 		TEXTMETRIC 	m_tm;		// font text metrics
        	SIZE		m_avgWdHt;  // font average width & height
 		CHOOSEFONT	m_cf;		// font choice parameter block
+		TCHAR 		m_szStyleName[64]; // style name on the dialog
 	};
 
 }
@@ -598,11 +601,11 @@ namespace Win32xx
 
 		if (hWndOwner)
 			m_OFN.hwndOwner = hWndOwner;
-		// zero out the file buffer for consistent parsing later
-		DWORD nOffset = lstrlen(m_OFN.lpstrFile) + 1;
-		assert(nOffset <= m_OFN.nMaxFile);
-		ZeroMemory(m_OFN.lpstrFile + nOffset, (m_OFN.nMaxFile - nOffset)
-			* sizeof(TCHAR));
+	//	// zero out the file buffer for consistent parsing later
+	//	DWORD nOffset = lstrlen(m_OFN.lpstrFile) + 1;
+	//	assert(nOffset <= m_OFN.nMaxFile);
+	//	ZeroMemory(m_OFN.lpstrFile + nOffset, (m_OFN.nMaxFile - nOffset)
+	//		* sizeof(TCHAR));
 
 		int ok = (m_bOpenFileDialog ?
 			::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
@@ -1198,10 +1201,11 @@ namespace Win32xx
 	//	printer on which the fonts are to be selected. The pParentWnd paameter
 	//	is a handle to the font dialog box's parent or owner window.
 	{
-		// clear out logfont, style name, and choose font structure
+		  // clear out logfont, style name, and choose font structure
 		ZeroMemory(&m_LogFont,     sizeof(m_LogFont));
+		ZeroMemory(&m_szStyleName, sizeof(m_szStyleName));
 		ZeroMemory(&m_cf, 	   sizeof(m_cf));
-		
+
 		// set dialog parameters
 		m_cf.rgbColors   = 0; // black
 		m_cf.lStructSize = sizeof(m_cf);
@@ -1213,7 +1217,6 @@ namespace Win32xx
 			m_cf.hDC = pdcPrinter->GetHDC();
 			m_cf.Flags |= CF_PRINTERFONTS;
 		}
-		
 		if (lplfInitial)
 		{
 			m_cf.lpLogFont = lplfInitial;
@@ -1225,9 +1228,8 @@ namespace Win32xx
 			SetChoiceFont(m_Font);
 			m_cf.lpLogFont = &m_LogFont;
 		}
-		
 		SetChoiceLogFont(m_LogFont);
-		m_cf.lpszStyle = (LPTSTR)_T("");
+		m_cf.lpszStyle = (LPTSTR)&m_szStyleName;
 	}
 
 	//============================================================================
@@ -1248,17 +1250,18 @@ namespace Win32xx
 	{
 		// clear out logfont, style name, and choose font structure
 		ZeroMemory(&m_LogFont,     sizeof(m_LogFont));
+		ZeroMemory(&m_szStyleName, sizeof(m_szStyleName));
 		ZeroMemory(&m_cf, 	   sizeof(m_cf));
-		
+
 		// set dialog parameters
 		m_cf.lStructSize = sizeof(m_cf);
 		m_cf.hwndOwner = hParentWnd;
-		m_cf.lpszStyle   = (LPTSTR)_T("");
+		m_cf.lpszStyle   = (LPTSTR)&m_szStyleName;
 		m_cf.lpLogFont   = &m_LogFont;
 		SetChoiceLogFont(m_LogFont);
 		m_cf.Flags       = dwFlags | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
 		m_cf.Flags      |= FillInLogFont(charformat);
-		
+
 		// show the help box on the form if enabled in dwFlags
 		if (m_cf.Flags & CF_SHOWHELP)
 			m_cf.Flags |= CF_ENABLEHOOK;
@@ -1266,7 +1269,7 @@ namespace Win32xx
 			m_cf.Flags |= CF_SHOWHELP;
 		if (charformat.dwMask & CFM_COLOR)
 			m_cf.rgbColors = charformat.crTextColor;
-		
+
 		SetPrinter(pdcPrinter);
 	}
 
@@ -1313,7 +1316,8 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 		m_cf.Flags    |= CF_ENABLEHOOK;
 		m_cf.lpfnHook  = (LPCCHOOKPROC)CDHookProc;
-		  
+		
+
 		if (hWndOwner)
 			m_cf.hwndOwner = hWndOwner;
 		  
