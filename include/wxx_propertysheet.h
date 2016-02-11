@@ -748,10 +748,11 @@ namespace Win32xx
 	{
 		assert( &GetApp() );
 
-		INT_PTR ipResult = 0;
-
 		// Only one window per CWnd instance allowed
-		assert( !IsWindow() );
+		assert(!IsWindow());
+
+		INT_PTR ipResult = 0;
+		m_hWnd = 0;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();

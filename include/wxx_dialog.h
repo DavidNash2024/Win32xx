@@ -395,6 +395,7 @@ namespace Win32xx
 
 		INT_PTR nResult = 0;
 		m_IsModal=TRUE;
+		m_hWnd = 0;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();
@@ -449,6 +450,7 @@ namespace Win32xx
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
 		m_IsModal=FALSE;
+		m_hWnd = 0;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();

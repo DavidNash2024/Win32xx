@@ -416,7 +416,7 @@ namespace Win32xx
 	// Creates the window by specifying all the window creation parameters
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
-		assert( !IsWindow() );	// Only one window per CWnd instance allowed
+		assert( !IsWindow() );		// Only one window per CWnd instance allowed
 
 		// Ensure a window class is registered
 		CString ClassName;
@@ -443,6 +443,7 @@ namespace Win32xx
 
 		// Store the CWnd pointer in thread local storage
 		pTLSData->pWnd = this;
+		m_hWnd = 0;
 
 		// Create window
 		HWND hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,

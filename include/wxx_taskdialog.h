@@ -234,6 +234,7 @@ namespace Win32xx
 	{
 		assert (GetHwnd() == NULL);
 
+		m_hWnd = 0;
 		m_tc.cbSize = sizeof(m_tc);
 		m_tc.pButtons = m_vButtons.empty()? NULL : &m_vButtons.front();
 		m_tc.cButtons = m_vButtons.size();
