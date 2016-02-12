@@ -89,20 +89,24 @@ namespace Win32xx
 		virtual ~CColorDialog(){}
 
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
-		const CHOOSECOLOR& GetChooseColor() const { return m_cc; }
-		COLORREF	GetColor() const			{ return m_cc.rgbResult;}
+		const CHOOSECOLOR& GetParameters() const { return m_cc; }
+		COLORREF  GetColor() const				{ return m_cc.rgbResult;}
 		COLORREF* GetCustomColors()				{ return m_rgbCustomColors;}
-		void	SetChooseColor(CHOOSECOLOR cc)	{ m_cc = cc; }		
+		void	SetParameters(CHOOSECOLOR cc)	{ m_cc = cc; }		
 		void 	SetColor(COLORREF clr)			{ m_cc.rgbResult = clr;}
 		void    SetCustomColors(const COLORREF*	rgbCstmColors = NULL);
 		void	SetFlags(DWORD dwFlags);
 
+	//	COLORREF GetCustomColor(int i)			{ return m_rgbCustomColors[i]; }
+	//	void	SetCustomColor(int i, COLORREF c)	
+	//	{ 
+	//		m_rgbCustomColors[i] = c;
+	//		m_cc.lpCustColors = m_rgbCustomColors;
+	//	}
+
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-		virtual CHOOSECOLOR& GetCCParams(){return m_cc;}
-
-		COLORREF 	GetCustColor(int i)			{ return m_rgbCustomColors[i]; }
-		void	SetCustColor(int i, COLORREF c)	{ m_rgbCustomColors[i] = c; }
+	//	virtual CHOOSECOLOR& GetCCParams(){return m_cc;}
 
 	private:
 		// private data
@@ -119,8 +123,10 @@ namespace Win32xx
 	
 		// Constructor/destructor
 		CFileDialog(BOOL bOpenFileDialog = TRUE, LPCTSTR pszDefExt = NULL,
-				LPCTSTR pszFileName = NULL, DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-				LPCTSTR pszFilter   = NULL, HWND  hParentWnd = 0);
+				LPCTSTR pszFileName = NULL, 
+				DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
+				LPCTSTR pszFilter   = NULL, 
+				HWND  hParentWnd = 0);
 		
 		virtual ~CFileDialog(){}
 		
@@ -128,7 +134,7 @@ namespace Win32xx
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
 		
 		// methods valid after successful DoModal()
-		const OPENFILENAME& GetOpenFileName() const { return m_OFN; }
+		const OPENFILENAME& GetParameters() const { return m_OFN; }
 		CString GetFileName() const; 
 		CString GetFileExt() const;  
 		CString GetFileTitle() const;
@@ -142,7 +148,7 @@ namespace Win32xx
 		void    SetFileName(LPCTSTR szFileName);
 		void	SetFilter(LPCTSTR pszFilter);
 		void    SetMode(BOOL open)					{ m_bOpenFileDialog = open; }
-		void	SetOpenFileName(OPENFILENAME ofn)	{ m_OFN = ofn; }
+		void	SetParameters(OPENFILENAME ofn)		{ m_OFN = ofn; }
 		void    SetTitle(LPCTSTR szTitle)			{ m_OFN.lpstrTitle = szTitle; }
 
 		// Enumerating multiple file selections
@@ -162,6 +168,7 @@ namespace Win32xx
 	private:
 		BOOL 		m_bOpenFileDialog;  // TRUE = open, FALSE = save
 		CString   	m_sFilter;          // file filter buffer
+		CString		m_sFileName;
 		OPENFILENAME	m_OFN;
 	};
 
@@ -187,17 +194,17 @@ namespace Win32xx
 		// Operations:
 		// Helpers for parsing information after successful return
 		BOOL 	FindNext() const;           // TRUE = find next
-		const FINDREPLACE& GetFindReplace() const	{ return m_fr; }
+		const	FINDREPLACE& GetParameters() const		{ return m_fr; }
 		CString GetFindString() const;      // get find string
 		CString	GetReplaceString() const;   // get replacement string
-		BOOL	IsFindDialogOnly() const { return m_bFindDialogOnly; }
+		BOOL	IsFindDialogOnly() const				{ return m_bFindDialogOnly; }
 		BOOL 	IsTerminating();      	    // TRUE = terminate dialog
 		BOOL 	MatchCase() const;          // TRUE = matching case
 		BOOL 	MatchWholeWord() const;     // TRUE = whole words only
 		BOOL 	ReplaceAll() const;         // TRUE = all occurrences
 		BOOL 	ReplaceCurrent() const;     // TRUE = current string
 		BOOL 	SearchDown() const;         // TRUE = down, FALSE = up
-		void	SetFindReplace(FINDREPLACE fr)		{ m_fr = fr; }	
+		void	SetParameters(FINDREPLACE fr)			{ m_fr = fr; }	
 		
 		// static public methods
 		static CFindReplaceDialog* GetNotifier(LPARAM lParam);
@@ -208,6 +215,8 @@ namespace Win32xx
 	private:
 		FINDREPLACE 	m_fr; // the parameter structure
 		BOOL		m_bFindDialogOnly;
+		CString 	m_strFindWhat;
+		CString 	m_strReplaceWith;
 		
 	};
 
@@ -217,10 +226,14 @@ namespace Win32xx
 	//	The font choice box common dialog class.
 	{
 	public:
-		CFontDialog(LPLOGFONT lplfInitial = NULL, DWORD dwFlags = 0,
-				CDC* pdcPrinter = NULL, HWND hParentWnd = 0);
-		CFontDialog(const CHARFORMAT& charformat, DWORD dwFlags = 0,
-				CDC* pdcPrinter = NULL, HWND parentWnd = 0);
+		CFontDialog(LPLOGFONT lplfInitial = NULL, 
+				DWORD dwFlags = 0,
+				CDC* pdcPrinter = NULL, 
+				HWND hParentWnd = 0);
+		CFontDialog(const CHARFORMAT& charformat, 
+				DWORD dwFlags = 0,
+				CDC* pdcPrinter = NULL, 
+				HWND parentWnd = 0);
 	
 		virtual ~CFontDialog(void)	{}
 
@@ -233,7 +246,7 @@ namespace Win32xx
 		DWORD   GetFlags() const 				{ return m_cf.Flags;}
 		CFont	GetChoiceFont(void) const		{ return m_Font;}
 		LOGFONT	GetChoiceLogFont(void) const	{ return m_LogFont;}
-		const CHOOSEFONT& GetChooseFont() const { return m_cf; }
+		const CHOOSEFONT& GetParameters() const { return m_cf; }
 		int 	GetSize(void) const;   
 		CString GetStyleName(void) const		{ return m_szStyleName;}
 		long 	GetWeight(void) const  			{ return m_LogFont.lfWeight;}
@@ -242,22 +255,20 @@ namespace Win32xx
 		BOOL 	IsItalic(void) const			{ return m_LogFont.lfItalic;}
 		BOOL 	IsStrikeOut(void) const			{ return m_LogFont.lfStrikeOut;}
 		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline;}
-		void    SetAvgSize(const SIZE& sz)		{ m_avgWdHt = sz; } 
-			
+		void    SetAvgSize(const SIZE& sz)		{ m_avgWdHt = sz; } 			
 		void    SetColor(const COLORREF rgb)	{ m_cf.rgbColors = rgb;}
 		void    SetChoiceFont(const CFont& f)	{ LOGFONT lf = f.GetLogFont(); SetChoiceLogFont(lf); }
 		void    SetChoiceLogFont(LOGFONT& lf)	{ SetFontIndirect(lf); RecordFontMetrics(); }
 		void	SetFlags(DWORD dwFlags);
+		void	SetParameters(CHOOSEFONT cf)	{ m_cf = cf; }
 		void    SetPrinter(const CDC* pdcPrinter); 
-	//	void    SetStyleName(const CString& style)	{ lstrcpyn(m_szStyleName, style.c_str(), sizeof(m_szStyleName));
-	//													m_cf.lpszStyle = (LPTSTR)&m_szStyleName;}
 		void    SetStyleName(LPCTSTR pszStyle)	{ lstrcpyn(m_szStyleName, pszStyle, sizeof(m_szStyleName));
 														m_cf.lpszStyle = (LPTSTR)&m_szStyleName;}
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 		LOGFONT* GetLogFontPtr()			{ return &m_LogFont;}
-		CHOOSEFONT* GetParamStructPtr()		{ return &m_cf;}
+	//	CHOOSEFONT* GetParamStructPtr()		{ return &m_cf;}
 		TEXTMETRIC GetTexMetric(void) const	{ return m_tm;}
 		TEXTMETRIC* GetTextMetricPtr()		{ return &m_tm;}
 		virtual void 	OnOK();
@@ -597,15 +608,12 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 		m_OFN.Flags   |= OFN_ENABLEHOOK;
 		m_OFN.lpfnHook = (LPCCHOOKPROC)CDHookProc;
-		
+
+		m_OFN.lpstrFile = (LPTSTR)m_sFileName.GetBuffer(m_OFN.nMaxFile);
+		m_sFileName.ReleaseBuffer();
 
 		if (hWndOwner)
 			m_OFN.hwndOwner = hWndOwner;
-	//	// zero out the file buffer for consistent parsing later
-	//	DWORD nOffset = lstrlen(m_OFN.lpstrFile) + 1;
-	//	assert(nOffset <= m_OFN.nMaxFile);
-	//	ZeroMemory(m_OFN.lpstrFile + nOffset, (m_OFN.nMaxFile - nOffset)
-	//		* sizeof(TCHAR));
 
 		int ok = (m_bOpenFileDialog ?
 			::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
@@ -1043,24 +1051,36 @@ namespace Win32xx
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();
 		pTLSData->pWnd = this;
+
+		const int MaxChars = 128;
 		
 		// Create the modal dialog
 		ZeroMemory(&m_fr, sizeof(m_fr));
 		m_fr.lStructSize   = sizeof(m_fr);
 		m_fr.hwndOwner = hParentWnd;
 		m_fr.Flags     = dwFlags | FR_ENABLEHOOK;
-		m_fr.lpstrFindWhat = (LPTSTR)pszFindWhat;
-		m_fr.lpstrReplaceWith = (LPTSTR)pszReplaceWith;
-		m_fr.wFindWhatLen     = 128;
-		m_fr.wReplaceWithLen  = 128;
+		m_fr.wFindWhatLen     = MaxChars;
+		m_fr.wReplaceWithLen  = MaxChars;
 		m_fr.lCustData = (LPARAM)this;
 		m_fr.lpfnHook 	      = (LPCCHOOKPROC)CCommonDialog::CDHookProc;
+
+		m_fr.lpstrFindWhat = (LPTSTR)m_strFindWhat.GetBuffer(MaxChars);
+		if (pszFindWhat)
+			lstrcpyn(m_fr.lpstrFindWhat, pszFindWhat, MaxChars);
+
+		m_fr.lpstrReplaceWith = (LPTSTR)m_strReplaceWith.GetBuffer(MaxChars);
+		if (pszReplaceWith)
+			lstrcpyn(m_fr.lpstrReplaceWith, pszReplaceWith, MaxChars);
+
 
 		HWND hWnd;  // the returned find/replace dialog box handle
 		if (bFindDialogOnly)
 			hWnd = ::FindText(&m_fr);
 		else
 			hWnd = ::ReplaceText(&m_fr);
+
+		m_strFindWhat.ReleaseBuffer();
+		m_strReplaceWith.ReleaseBuffer();
 
 		return hWnd != NULL;
 	}
