@@ -92,26 +92,20 @@ namespace Win32xx
 		const CHOOSECOLOR& GetParameters() const { return m_cc; }
 		COLORREF  GetColor() const				{ return m_cc.rgbResult;}
 		COLORREF* GetCustomColors()				{ return m_rgbCustomColors;}
-		void	SetParameters(CHOOSECOLOR cc)	{ m_cc = cc; }		
 		void 	SetColor(COLORREF clr)			{ m_cc.rgbResult = clr;}
 		void    SetCustomColors(const COLORREF*	rgbCstmColors = NULL);
-		void	SetFlags(DWORD dwFlags);
-
-	//	COLORREF GetCustomColor(int i)			{ return m_rgbCustomColors[i]; }
-	//	void	SetCustomColor(int i, COLORREF c)	
-	//	{ 
-	//		m_rgbCustomColors[i] = c;
-	//		m_cc.lpCustColors = m_rgbCustomColors;
-	//	}
+		void	SetParameters(CHOOSECOLOR cc);	
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-	//	virtual CHOOSECOLOR& GetCCParams(){return m_cc;}
+
+		// You won't need to override this function
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		// private data
-		CHOOSECOLOR 	m_cc;	    // color choice parameters
-		COLORREF  		m_rgbCustomColors[16]; // custom colors
+		CHOOSECOLOR 	m_cc;					// color choice parameters
+		COLORREF  		m_rgbCustomColors[16];	// custom colors
 	};
 
 
@@ -148,7 +142,7 @@ namespace Win32xx
 		void    SetFileName(LPCTSTR szFileName);
 		void	SetFilter(LPCTSTR pszFilter);
 		void    SetMode(BOOL open)					{ m_bOpenFileDialog = open; }
-		void	SetParameters(OPENFILENAME ofn)		{ m_OFN = ofn; }
+		void	SetParameters(OPENFILENAME ofn);
 		void    SetTitle(LPCTSTR szTitle)			{ m_OFN.lpstrTitle = szTitle; }
 
 		// Enumerating multiple file selections
@@ -165,10 +159,13 @@ namespace Win32xx
 		virtual BOOL 	OnShareViolation(LPCTSTR lpszPathName);
 		virtual void 	OnTypeChange();
 
+		// You won't need to override this function
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 	private:
-		BOOL 		m_bOpenFileDialog;  // TRUE = open, FALSE = save
-		CString   	m_sFilter;          // file filter buffer
-		CString		m_sFileName;
+		BOOL 			m_bOpenFileDialog;  // TRUE = open, FALSE = save
+		CString   		m_sFilter;          // file filter buffer
+		CString			m_sFileName;
 		OPENFILENAME	m_OFN;
 	};
 
@@ -178,14 +175,15 @@ namespace Win32xx
 	{
 	public:
 		// constructor and destructor
-		CFindReplaceDialog() : CCommonDialog()
+		CFindReplaceDialog()
 		{
 			ZeroMemory(&m_fr, sizeof(m_fr));
 			m_bFindDialogOnly = TRUE;
+			SetParameters(m_fr);
 		};
 		~CFindReplaceDialog(){}
 
-		BOOL 	Create(BOOL bFindDialogOnly, 
+		BOOL Create(BOOL bFindDialogOnly, 
 						LPCTSTR sFindWhat, 
 						LPCTSTR sReplaceWith = NULL,
 						DWORD dwFlags = FR_DOWN, 
@@ -204,13 +202,17 @@ namespace Win32xx
 		BOOL 	ReplaceAll() const;         // TRUE = all occurrences
 		BOOL 	ReplaceCurrent() const;     // TRUE = current string
 		BOOL 	SearchDown() const;         // TRUE = down, FALSE = up
-		void	SetParameters(FINDREPLACE fr)			{ m_fr = fr; }	
+		void	SetParameters(FINDREPLACE fr);
 		
 		// static public methods
 		static CFindReplaceDialog* GetNotifier(LPARAM lParam);
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
+		virtual BOOL PreTranslateMessage(MSG& Msg);
+
+		// You won't need to override this function
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		FINDREPLACE 	m_fr; // the parameter structure
@@ -228,60 +230,49 @@ namespace Win32xx
 	public:
 		CFontDialog(LPLOGFONT lplfInitial = NULL, 
 				DWORD dwFlags = 0,
-				CDC* pdcPrinter = NULL, 
+				HDC hdcPrinter = 0, 
 				HWND hParentWnd = 0);
 		CFontDialog(const CHARFORMAT& charformat, 
 				DWORD dwFlags = 0,
-				CDC* pdcPrinter = NULL, 
-				HWND parentWnd = 0);
+				HDC hdcPrinter = 0, 
+				HWND hParentWnd = 0);
 	
 		virtual ~CFontDialog(void)	{}
 
-		virtual INT_PTR	DoModal(HWND hWndOwner = NULL);	
-     	SIZE	GetAvgSize(void) const			{ return m_avgWdHt;} 
+		virtual INT_PTR	DoModal(HWND hWndOwner = 0);	
 		CHARFORMAT	GetCharFormat(void) const;
 		COLORREF	GetColor(void) const 		{ return m_cf.rgbColors;}
-		LOGFONT GetCurrentLogFont(void) const; 
 		CString GetFaceName(void) const			{ return m_LogFont.lfFaceName;}
 		DWORD   GetFlags() const 				{ return m_cf.Flags;}
-		CFont	GetChoiceFont(void) const		{ return m_Font;}
 		LOGFONT	GetChoiceLogFont(void) const	{ return m_LogFont;}
 		const CHOOSEFONT& GetParameters() const { return m_cf; }
 		int 	GetSize(void) const;   
 		CString GetStyleName(void) const		{ return m_szStyleName;}
 		long 	GetWeight(void) const  			{ return m_LogFont.lfWeight;}
-		DWORD 	FillInLogFont(const CHARFORMAT& cf);
 		BOOL 	IsBold(void) const				{ return (m_LogFont.lfWeight >= FW_SEMIBOLD);}
 		BOOL 	IsItalic(void) const			{ return m_LogFont.lfItalic;}
 		BOOL 	IsStrikeOut(void) const			{ return m_LogFont.lfStrikeOut;}
 		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline;}
-		void    SetAvgSize(const SIZE& sz)		{ m_avgWdHt = sz; } 			
+		
 		void    SetColor(const COLORREF rgb)	{ m_cf.rgbColors = rgb;}
-		void    SetChoiceFont(const CFont& f)	{ LOGFONT lf = f.GetLogFont(); SetChoiceLogFont(lf); }
-		void    SetChoiceLogFont(LOGFONT& lf)	{ SetFontIndirect(lf); RecordFontMetrics(); }
 		void	SetFlags(DWORD dwFlags);
-		void	SetParameters(CHOOSEFONT cf)	{ m_cf = cf; }
-		void    SetPrinter(const CDC* pdcPrinter); 
+		void	SetParameters(CHOOSEFONT cf);
 		void    SetStyleName(LPCTSTR pszStyle)	{ lstrcpyn(m_szStyleName, pszStyle, sizeof(m_szStyleName));
 														m_cf.lpszStyle = (LPTSTR)&m_szStyleName;}
+		DWORD FillInLogFont(const CHARFORMAT& cf);
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 		LOGFONT* GetLogFontPtr()			{ return &m_LogFont;}
-	//	CHOOSEFONT* GetParamStructPtr()		{ return &m_cf;}
-		TEXTMETRIC GetTexMetric(void) const	{ return m_tm;}
-		TEXTMETRIC* GetTextMetricPtr()		{ return &m_tm;}
 		virtual void 	OnOK();
-		virtual void 	RecordFontMetrics(void);
-		virtual void	SetFontIndirect(const LOGFONT& lf); 
-		void    SetTextMetric(const TEXTMETRIC& tm)		{ m_tm = tm;}
+
+
+		// You won't need to override this function
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		// private data
-		CFont		m_Font;		// the current font
 		LOGFONT 	m_LogFont;	// font charactreristics
-		TEXTMETRIC 	m_tm;		// font text metrics
-       	SIZE		m_avgWdHt;  // font average width & height
 		CHOOSEFONT	m_cf;		// font choice parameter block
 		TCHAR 		m_szStyleName[64]; // style name on the dialog
 	};
@@ -298,25 +289,17 @@ namespace Win32xx
 
 	//============================================================================
 	inline	void CCommonDialog::OnHelpButton()
-	//	Override this function to respond to the help button
+	//	Override this function to respond to the help button. The commondialog 
+	//  requires the appropriate flag to be specified before a help button
+	//  is displayed. 
 	{
 	}
 
 	//============================================================================
 	inline INT_PTR CALLBACK CCommonDialog::CDHookProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
-	//	The common static callback hook procedure for non-templated
-	//	derived classes of the CCommonDialog class that rely on such
-	//	a hook procedure to serve as their message loops. All messages
-	//	generated by the dialog boxes pass through this function, which
-	//	redirects further responses to the calling object's DialogProc()
-	//	member. The parameters passed to are
-	//
-	//  hWmd,	 the handle of dialog box window;
-	//	message, the message being received;
-	//	wParam,  information about the message, whose value depends on
-	//		     the message received;
-	//	lParam,   more information about the message, whose valuee again
-	//		      depends on the message received.
+	//	The callback function for the common dialog's hook procedure. Messages 
+	//  intercepted by the hook procedure are processed here, and forwarded
+	//  on to the virtual DialogProc function.
 	{
 		// Find the CWnd pointer mapped to this HWND
 		CCommonDialog* pDialog = static_cast<CCommonDialog*>(GetCWndPtr(hWnd));
@@ -335,6 +318,7 @@ namespace Win32xx
 			pDialog->m_hWnd = hWnd;
 			pDialog->AddToMap();
 		}
+
 		return pDialog->DialogProc(uMsg, wParam, lParam);
 	}
 
@@ -342,67 +326,73 @@ namespace Win32xx
 
 	//============================================================================
 	inline CColorDialog::CColorDialog(COLORREF clrInit /* = 0 */, DWORD dwFlags /* = 0 */,
-		HWND hParentWnd /* = 0 */) :  CCommonDialog()
-	//	Construct CColorDialog object and initialize the CHOOSECOLOR struct
-	//	with option dwFlags, default and initial colors. Default flags are
-	//	CC_RGBINIT | CC_ANYCOLOR (see the CHOOSECOLOR struct description in
-	//	MSDN documentation). These defaults cause the dialog box, when
-	//	activated, to display all available colors in the set of basic colors
-	//	and to use clrInit as the initial color selection. If dwFlags includes
-	//	CC_FULLOPEN, then the dialog displays the additional controls that
-	//	allow the user to create custom colors. If this flag is not set, the
-	//	user must click the "Define Custom Color" button to display the custom
-	//	color controls. If dwFlags includes CC_SHOWHELP, then the dialog box
-	//	displays the "Help" button. In this case, the dialog box sends the
-	//	IDM_HELP_COLORDLG message to the hParentWnd when the user clicks the
-	//	"Help" button.
+		HWND hParentWnd /* = 0 */)
+	//	Construct a CColorDialog object and initialize the CHOOSECOLOR struct
+	//	with the current color, the option dwFlags, and the owner window.
+	//  Refer to the description of the CHOOSECOLOR struct in the MSDN documentation.
 	{
-		  // set the parameters for the ChooseColor common control
+		// set the parameters in the CHOOSECOLOR struct
 		ZeroMemory(&m_cc,  sizeof(CHOOSECOLOR));
-		m_cc.lStructSize  = sizeof(CHOOSECOLOR);
 		m_cc.hwndOwner = hParentWnd;
-		SetColor(clrInit);
+		m_cc.rgbResult = clrInit;
+		m_cc.Flags = dwFlags;
 
 		// Set all custom colors to white
 		for (int i = 0; i <= 15; ++i)
 			m_rgbCustomColors[i] = RGB(255,255,255);
 
-		m_cc.lpCustColors = m_rgbCustomColors;
-		SetFlags(dwFlags);
-
+		// Set the CHOOSECOLOR struct parameters to safe values
+		SetParameters(m_cc);
 	}
 
 	//============================================================================
-	inline INT_PTR CColorDialog::DialogProc(UINT message, WPARAM wParam, LPARAM lParam)	
-	//	This is the color dialog message loop. It handles those messages
-	//	specific to this derived class.  Here it completes the actions of the
-	//	CCHookProc() procedure and returns the results of this processing
-	//	back to the hook procedure for completing the default message handling.
-	//	Specifically, however, the IDOK and IDCANCEL command messages are NOT
-	//	processed here, so as to allow the natural termination mode of the
-	//	ChooseFont() box to take place. See DoModal() for handling of OK and
-	//	canceled responses.
+	inline INT_PTR CColorDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		//	Message intercepted by the hook procedure are passed here.
+		//	Note: OnCancel and OnOK are not called here. They are called by DoModal
+		//  in response to value returned by called by ChooseColor.
+		
+		//  A typical function might look like this:
+
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Windows API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Windows API documentation
+		//	}
+
+		// Always pass unhandled messages on to DialogProcDefault
+		return DialogProcDefault(uMsg, wParam, lParam);
+	}
+
+	//============================================================================
+	inline INT_PTR CColorDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)	
+	//	The Default message handling for CColorDialog. Don't override this function, override
+	//  DialogProc instead.
+	//	Note: OnCancel and OnOK are not called by DialogProc. They are called by DoModal
+	//  in response to value returned by called by ChooseColor.
 	{
 		UNREFERENCED_PARAMETER(lParam);
 	
-		if (message == WM_INITDIALOG)
+		switch (uMsg)
 		{
-			return OnInitDialog();
+		case WM_INITDIALOG:		return OnInitDialog();
+		case WM_COMMAND:		if (LOWORD(wParam) == pshHelp)	OnHelpButton();
 		}
 
-		if (message == m_msgHELP ||
-		   (message == WM_COMMAND && LOWORD(wParam) == pshHelp))
-			OnHelpButton();
 
-		// not processed here, so say so
+		// Return 0 to allow default processing of the message. 
 		return 0;
-
 	}
 
 	//============================================================================
 	inline INT_PTR CColorDialog::DoModal(HWND hWndOwner /* = 0 */)
-	//	Show the ChooseColor common dialog box and select the current color. If
-	//	hWndOwner is non-NULL, override the ownership set by the constructor.
+	//	Show the ChooseColor common dialog box and select the current color.
+	//	If hWndOwner is non-NULL, override the ownership set by the constructor.
 	{
 		assert( &GetApp() );	// Test if Win32++ has been started
 		assert(!IsWindow());	// Only one window per CWnd instance allowed
@@ -412,14 +402,7 @@ namespace Win32xx
 
 		// Create the modal dialog
 		pTLSData->pWnd = this;
-		m_cc.Flags |= CC_ENABLEHOOK;
-		m_cc.lpfnHook = (LPCCHOOKPROC)CDHookProc;
-		
-		// make sure there is a parent window
-		if (hWndOwner == 0)
-			hWndOwner = m_cc.hwndOwner;
-		if (hWndOwner == 0)
-			hWndOwner = GetApp().GetMainWnd();
+
 		if (hWndOwner != 0)
 			m_cc.hwndOwner = hWndOwner;
 		
@@ -428,42 +411,44 @@ namespace Win32xx
 		
 		m_hWnd = 0;
 
-		if (ok)
+		if (!ok)
 		{
-			OnOK();
-			return IDOK;
+			OnCancel();
+			return IDCANCEL;
 		}
-		OnCancel();
-		return IDCANCEL;
+		
+		OnOK();
+		return IDOK;		
 	}
 
 	//============================================================================
 	inline void CColorDialog::SetCustomColors(const COLORREF* rgbCustomColors /* = NULL */)
-	//	If the rgbCustomColors value is non-NULL, replace the custom color
-	//	array with the entries of the  array it points to. The size of the
-	//	replacement array must be 16. If the value is NULL, no action takes
-	//	place. This method must be invoked prior to DoModal() execution in
-	//	order to be effective.
+	//	The rgbCustomColors parameter is a pointer to an array of 16 COLORREF.
+	//  If the rgbCustomColors is NULL, all custom colors are set to white, 
+	//  otherwise they are set to the colors specified in the rgbCustomColors array.
 	{
-		if (!rgbCustomColors)
-			return;
-
 		for (UINT i = 0; i < 16; i++)
-			m_rgbCustomColors[i] = rgbCustomColors[i];
+		{
+			COLORREF clr = rgbCustomColors? rgbCustomColors[i] : RGB(255,255,255);
+			m_rgbCustomColors[i] = clr;
+		}
 	}
 
 	//============================================================================
-	inline void CColorDialog::SetFlags(DWORD dwFlags)
-	//	Reset the color choice flags to dwFlags and change any options that
-	//	depend on some of the flag values, before use by DoModal() operations;
- 	//	e.g., show the help box on the form if enabled in current m_cc.Flags
-	{
-		m_cc.Flags = dwFlags | CC_ANYCOLOR | CC_RGBINIT;
-		if (m_cc.Flags & CC_SHOWHELP)
-			m_cc.Flags |= CC_ENABLEHOOK;
-		else if (m_cc.Flags & CC_ENABLEHOOK)
-			m_cc.Flags |= CC_SHOWHELP;
-	}
+	inline void	CColorDialog::SetParameters(CHOOSECOLOR cc)
+	//	Sets the various parameters of the CHOOSECOLOR struct.
+	//  The parameters are set to safe values.
+	{ 
+		m_cc.lStructSize	= sizeof(m_cc);
+		m_cc.hwndOwner		= cc.hwndOwner;
+		m_cc.hInstance		= cc.hInstance;
+		m_cc.rgbResult		= cc.rgbResult;		
+		m_cc.lpCustColors	= m_rgbCustomColors;
+		m_cc.Flags			= cc.Flags | CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
+		m_cc.lCustData		= cc.lCustData;
+		m_cc.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
+		m_cc.lpTemplateName = cc.lpTemplateName;
+	}	
 
 
 
@@ -471,7 +456,7 @@ namespace Win32xx
 	//============================================================================
 	inline CFileDialog::CFileDialog(BOOL bOpenFileDialog, LPCTSTR pszDefExt /* = NULL */,
 		LPCTSTR pszFileName /* = NULL */, DWORD dwFlags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
-		LPCTSTR pszFilter /* = NULL */, HWND hParentWnd /* = 0 */) : CCommonDialog()
+		LPCTSTR pszFilter /* = NULL */, HWND hParentWnd /* = 0 */)
 	//	Construct a standard Windows File-Open or File-Save-As dialog box,
 	//	depending on the value of bOpenFileDialog, TRUE for a File-Open dialog
 	//	or FALSE to for a File-Save-As dialog.  The default file name extension
@@ -498,25 +483,43 @@ namespace Win32xx
 		ZeroMemory(&m_OFN, sizeof(m_OFN));
 		  
 		// fill in the OPENFILENAME struct
-		m_OFN.lStructSize = sizeof(m_OFN);
-		m_OFN.hwndOwner = hParentWnd;
-		  
-		// make handle to Explorer or old-style file choice box
-		m_OFN.hInstance = GetApp().GetInstanceHandle();
-		SetFilter(pszFilter);
-		  
-		// setup initial file name
-		m_OFN.lpstrFile		 = (LPTSTR)pszFileName;
-		m_OFN.nMaxFile       = _MAX_PATH;
-		m_OFN.nMaxFileTitle  = _MAX_PATH;
+		m_OFN.hwndOwner		= hParentWnd;
+		m_OFN.lpstrFilter	= pszFilter;
+		m_OFN.lpstrFile		= (LPTSTR)pszFileName;
+		m_OFN.lpstrDefExt	= pszDefExt;
+
 		SetFlags(dwFlags);
-		SetDefExt(pszDefExt);
-		m_OFN.lpfnHook       = (LPCCHOOKPROC)CCommonDialog::CDHookProc;
+
+		// Safely set the remaining OPENFILENAME values
+		SetParameters(m_OFN);
 	}
 
 	//============================================================================
-	inline	INT_PTR CFileDialog::
-	DialogProc(UINT message, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CFileDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		//	Message intercepted by the hook procedure are passed here.
+		//	Note: OnCancel and OnOK are not called here. They are called by DoModal
+		//  in response to value returned by called by GetOpenFileName or GetSaveFileName.
+		
+		//  A typical function might look like this:
+
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Windows API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Windows API documentation
+		//	}
+
+		// Always pass unhandled messages on to DialogProcDefault
+		return DialogProcDefault(uMsg, wParam, lParam);
+	}
+
+	//============================================================================
+	inline	INT_PTR CFileDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
 	//	This is the file open/saveas dialog message loop. It handles those
 	//	messages specific to this derived class.  Here it completes the actions
 	//	of the OFNHookProc() procedure and returns the results of this
@@ -584,6 +587,7 @@ namespace Win32xx
 		return 0;
 	}
 
+
 	//============================================================================
 	inline INT_PTR CFileDialog::DoModal(HWND hWndOwner /* = 0 */)
 	//	Display the common file dialog box for browsing files and directories
@@ -606,28 +610,24 @@ namespace Win32xx
 
 		// Create the modal dialog
 		pTLSData->pWnd = this;
-		m_OFN.Flags   |= OFN_ENABLEHOOK;
-		m_OFN.lpfnHook = (LPCCHOOKPROC)CDHookProc;
-
-		m_OFN.lpstrFile = (LPTSTR)m_sFileName.GetBuffer(m_OFN.nMaxFile);
-		m_sFileName.ReleaseBuffer();
 
 		if (hWndOwner)
 			m_OFN.hwndOwner = hWndOwner;
 
-		int ok = (m_bOpenFileDialog ?
-			::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
-
+		m_OFN.lpstrFile = (LPTSTR)m_sFileName.GetBuffer(m_OFN.nMaxFile);
+		int ok = (m_bOpenFileDialog ? ::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
+		m_sFileName.ReleaseBuffer();
 		m_hWnd = 0;
 
 		// the result of the file choice box is processed here: 
-		if (ok)
-			OnOK();
-		else
+		if (!ok)
+		{
 			OnCancel();
+			return  IDCANCEL;
+		}
 
-		// return the file choice outcome
-		return ok ? IDOK : IDCANCEL;
+		OnOK();
+		return IDOK;
 	}
 
 	//============================================================================
@@ -1019,6 +1019,45 @@ namespace Win32xx
 			m_OFN.Flags |= OFN_SHOWHELP;
 	}
 
+	//============================================================================
+	inline void CFileDialog::SetParameters(OPENFILENAME ofn)
+	{
+
+		// Set the correct struct size for all Windows versions and compilers
+		DWORD StructSize = sizeof(m_OFN);
+
+  #if defined OPENFILENAME_SIZE_VERSION_400
+		if (GetWinVersion() < 2500)
+			StructSize = OPENFILENAME_SIZE_VERSION_400;
+  #endif
+
+		m_OFN.lStructSize		= StructSize;
+		m_OFN.hwndOwner			= ofn.hwndOwner;
+		m_OFN.hInstance			= GetApp().GetInstanceHandle();
+		SetFilter(ofn.lpstrFilter);
+		m_OFN.lpstrCustomFilter	= ofn.lpstrCustomFilter;
+		m_OFN.nMaxCustFilter	= _MAX_PATH;
+		m_OFN.nFilterIndex		= ofn.nFilterIndex; 
+		m_OFN.lpstrFile			= ofn.lpstrFile; 
+		m_OFN.nMaxFile			= _MAX_PATH; 
+		m_OFN.lpstrFileTitle	= ofn.lpstrFileTitle; 
+		m_OFN.nMaxFileTitle		= _MAX_PATH; 
+		m_OFN.lpstrInitialDir	= ofn.lpstrInitialDir; 
+		m_OFN.lpstrTitle		= ofn.lpstrTitle; 
+		m_OFN.Flags				= ofn.Flags | OFN_ENABLEHOOK; 
+		m_OFN.nFileOffset		= ofn.nFileOffset; 
+		m_OFN.nFileExtension	= ofn.nFileExtension; 
+		m_OFN.lpstrDefExt		= ofn.lpstrDefExt; 
+		m_OFN.lCustData			= ofn.lCustData; 
+		m_OFN.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
+
+  #if defined OPENFILENAME_SIZE_VERSION_400
+		if (GetWinVersion() >= 2500)
+			m_OFN.FlagsEx =		ofn.FlagsEx;
+  #endif
+
+	}
+
 
 	//============================================================================
 	inline BOOL CFindReplaceDialog::Create(BOOL bFindDialogOnly, LPCTSTR pszFindWhat,
@@ -1052,25 +1091,16 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp().SetTlsData();
 		pTLSData->pWnd = this;
 
-		const int MaxChars = 128;
-		
-		// Create the modal dialog
-		ZeroMemory(&m_fr, sizeof(m_fr));
-		m_fr.lStructSize   = sizeof(m_fr);
-		m_fr.hwndOwner = hParentWnd;
-		m_fr.Flags     = dwFlags | FR_ENABLEHOOK;
-		m_fr.wFindWhatLen     = MaxChars;
-		m_fr.wReplaceWithLen  = MaxChars;
-		m_fr.lCustData = (LPARAM)this;
-		m_fr.lpfnHook 	      = (LPCCHOOKPROC)CCommonDialog::CDHookProc;
+		if (hParentWnd)
+			m_fr.hwndOwner = hParentWnd;
 
-		m_fr.lpstrFindWhat = (LPTSTR)m_strFindWhat.GetBuffer(MaxChars);
+		m_fr.lpstrFindWhat = (LPTSTR)m_strFindWhat.GetBuffer(m_fr.wFindWhatLen);
 		if (pszFindWhat)
-			lstrcpyn(m_fr.lpstrFindWhat, pszFindWhat, MaxChars);
+			lstrcpyn(m_fr.lpstrFindWhat, pszFindWhat, m_fr.wFindWhatLen);
 
-		m_fr.lpstrReplaceWith = (LPTSTR)m_strReplaceWith.GetBuffer(MaxChars);
+		m_fr.lpstrReplaceWith = (LPTSTR)m_strReplaceWith.GetBuffer(m_fr.wReplaceWithLen);
 		if (pszReplaceWith)
-			lstrcpyn(m_fr.lpstrReplaceWith, pszReplaceWith, MaxChars);
+			lstrcpyn(m_fr.lpstrReplaceWith, pszReplaceWith, m_fr.wReplaceWithLen);
 
 
 		HWND hWnd;  // the returned find/replace dialog box handle
@@ -1085,10 +1115,31 @@ namespace Win32xx
 		return hWnd != NULL;
 	}
 
+	inline INT_PTR CFindReplaceDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		//	Message intercepted by the hook procedure are passed here.	
+		//  A typical function might look like this:
+
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Windows API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Windows API documentation
+		//	}
+
+		// Always pass unhandled messages on to DialogProcDefault
+		return DialogProcDefault(uMsg, wParam, lParam);
+	}
+
 	//============================================================================
-	inline INT_PTR CFindReplaceDialog::DialogProc(UINT message, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
+
 		switch (message)
 		{
 		case WM_INITDIALOG:
@@ -1176,6 +1227,33 @@ namespace Win32xx
 		return ((m_fr.Flags & FR_WHOLEWORD) != 0);
 	}
 
+	//============================================================================	
+	inline BOOL CFindReplaceDialog::PreTranslateMessage(MSG& Msg)
+	//  Modeless dialogs need to pass messages through IsDialogMessage 
+	//  prior to being handled for default keyboard processing
+	{
+		// allow the dialog to translate keyboard input
+		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
+		{
+			// Process dialog keystrokes for modeless dialogs
+			{
+				TLSData* pTLSData = GetApp().GetTlsData();
+				if (NULL == pTLSData->hMsgHook)
+				{
+					if (IsDialogMessage(Msg))
+						return TRUE;
+				}
+				else
+				{
+					// A modal message loop is running which performs IsDialogMessage
+					// for us.
+				}
+			}
+		}
+
+		return FALSE;
+	}
+
 	//============================================================================
 	inline BOOL CFindReplaceDialog::ReplaceAll() const
 	//	Return TRUE if the user has requested that all strings matching the
@@ -1201,10 +1279,28 @@ namespace Win32xx
 		return ((m_fr.Flags & FR_DOWN) != 0);
 	}
 
+	//============================================================================
+	inline void	CFindReplaceDialog::SetParameters(FINDREPLACE fr)
+	{
+		const int MaxChars = 128;
+
+		m_fr.lStructSize		= sizeof(FINDREPLACE);
+		m_fr.hwndOwner			= fr.hwndOwner;
+		m_fr.hInstance			= GetApp().GetInstanceHandle();
+		m_fr.Flags				= fr.Flags | FR_ENABLEHOOK;
+		m_fr.lpstrFindWhat		= NULL;		// is set within Create
+		m_fr.lpstrReplaceWith	= NULL;		// is set within Create
+		m_fr.wFindWhatLen		= MAX(fr.wFindWhatLen, MaxChars);
+		m_fr.wReplaceWithLen	= MAX(fr.wReplaceWithLen, MaxChars);
+		m_fr.lCustData			= (LPARAM)this;
+		m_fr.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
+		m_fr.lpTemplateName		= fr.lpTemplateName;
+	}
+
 
 	//============================================================================
 	inline CFontDialog::CFontDialog(LPLOGFONT lplfInitial /* = NULL */, DWORD dwFlags /* = 0 */,
-		CDC* pdcPrinter /* = NULL */, HWND hParentWnd /* = 0 */) : CCommonDialog()
+		HDC hdcPrinter /* = 0 */, HWND hParentWnd /* = 0 */)
 	//	Construct a CFontDialog object from values given. Note that these are
 	//	stored into the members of the CHOOSEFONT structure. These may be
 	//	changed later if the choose font dialog is desired to be differently
@@ -1231,30 +1327,38 @@ namespace Win32xx
 		m_cf.lStructSize = sizeof(m_cf);
 		m_cf.hwndOwner   =  hParentWnd;
 		SetFlags(dwFlags);
-		if (pdcPrinter)
+		if (hdcPrinter)
 		{
-			assert(pdcPrinter->GetHDC() != NULL);
-			m_cf.hDC = pdcPrinter->GetHDC();
+			m_cf.hDC = hdcPrinter;
 			m_cf.Flags |= CF_PRINTERFONTS;
 		}
 		if (lplfInitial)
 		{
 			m_cf.lpLogFont = lplfInitial;
+			m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
 			memcpy(&m_LogFont, m_cf.lpLogFont, sizeof(m_LogFont));
 		}
 		else
 		{         // default font, 10pt Courier New
-			m_Font.CreatePointFont(10, _T("Courier New"));
-			SetChoiceFont(m_Font);
+		//	m_Font.CreatePointFont(10, _T("Courier New"));
+		//	SetChoiceFont(m_Font);
 			m_cf.lpLogFont = &m_LogFont;
 		}
-		SetChoiceLogFont(m_LogFont);
+	//	SetChoiceLogFont(m_LogFont);
 		m_cf.lpszStyle = (LPTSTR)&m_szStyleName;
+
+		if (hdcPrinter)
+		{
+			m_cf.hDC = hdcPrinter;
+			m_cf.Flags |= CF_PRINTERFONTS;
+		}
+
+		SetParameters(m_cf);
 	}
 
 	//============================================================================
 	inline CFontDialog::CFontDialog(const CHARFORMAT& charformat, DWORD dwFlags /* = 0 */,
-		CDC* pdcPrinter /* =  NULL */, HWND hParentWnd /* = 0*/) : CCommonDialog()
+		HDC hdcPrinter /* =  0 */, HWND hParentWnd /* = 0*/)
 	//	Construct a font choice dialog object that can be used to create a font
 	//	for use in a rich edit control. The charformat points to a CHARFORMAT
 	//	data structure that allows setting some of the font's characteristics
@@ -1278,7 +1382,7 @@ namespace Win32xx
 		m_cf.hwndOwner = hParentWnd;
 		m_cf.lpszStyle   = (LPTSTR)&m_szStyleName;
 		m_cf.lpLogFont   = &m_LogFont;
-		SetChoiceLogFont(m_LogFont);
+	//	SetChoiceLogFont(m_LogFont);
 		m_cf.Flags       = dwFlags | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
 		m_cf.Flags      |= FillInLogFont(charformat);
 
@@ -1287,14 +1391,45 @@ namespace Win32xx
 			m_cf.Flags |= CF_ENABLEHOOK;
 		else if (m_cf.Flags & CF_ENABLEHOOK)
 			m_cf.Flags |= CF_SHOWHELP;
+		
 		if (charformat.dwMask & CFM_COLOR)
 			m_cf.rgbColors = charformat.crTextColor;
 
-		SetPrinter(pdcPrinter);
+		if (hdcPrinter)
+		{
+			m_cf.hDC = hdcPrinter;
+			m_cf.Flags |= CF_PRINTERFONTS;
+		}
+
+		SetParameters(m_cf);
 	}
 
 	//============================================================================
-	inline INT_PTR CFontDialog::DialogProc(UINT message, WPARAM wParam, LPARAM lParam)
+	inline INT_PTR CFontDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		//	Message intercepted by the hook procedure are passed here.
+		//	Note: OnCancel and OnOK are not called here. They are called by DoModal
+		//  in response to value returned by called by ChooseFont.
+		
+		//  A typical function might look like this:
+
+		//	switch (uMsg)
+		//	{
+		//	case MESSAGE1:		// Some Windows API message
+		//		OnMessage1();	// A user defined function
+		//		break;			// Also do default processing
+		//	case MESSAGE2:
+		//		OnMessage2();
+		//		return x;		// Don't do default processing, but instead return
+		//						//  a value recommended by the Windows API documentation
+		//	}
+
+		// Always pass unhandled messages on to DialogProcDefault
+		return DialogProcDefault(uMsg, wParam, lParam);
+	}
+
+	//============================================================================
+	inline INT_PTR CFontDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
 	//	This is the font dialog message loop. It handles those messages
 	//	specific to this derived class.  Here it completes the actions of the
 	//	CFHookProc() procedure and returns the results of this processing
@@ -1333,10 +1468,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp().SetTlsData();
 
 		// Create the modal dialog
-		pTLSData->pWnd = this;
-		m_cf.Flags    |= CF_ENABLEHOOK;
-		m_cf.lpfnHook  = (LPCCHOOKPROC)CDHookProc;
-		
+		pTLSData->pWnd = this;		
 
 		if (hWndOwner)
 			m_cf.hwndOwner = hWndOwner;
@@ -1346,20 +1478,106 @@ namespace Win32xx
 
 		m_hWnd = 0;
 		
-		// the result of the font choice box is processed here:
-		if (ok)
+		// process the result of the font choice box:
+		if (!ok)
 		{
-			OnOK();
-			return IDOK;
+			OnCancel();
+ 			return IDCANCEL;
 		}
 		  
-		// no font chosen
-		OnCancel();
- 		return IDCANCEL;
+		OnOK();
+		return IDOK;
 	}
 
 	//============================================================================
-	inline DWORD CFontDialog::FillInLogFont(const CHARFORMAT& cf)
+	inline CHARFORMAT CFontDialog::GetCharFormat() const 
+	//	Returns the CHARFORMAT of this font object, as translated from the
+	//	information in the m_cf CHOOSEFONT struct.
+	{
+		CHARFORMAT chfmt;
+		chfmt.dwEffects = 0;
+		chfmt.dwMask = 0;
+		
+		if ((m_cf.Flags & CF_NOSTYLESEL) == 0)
+		{
+			chfmt.dwMask    |= CFM_BOLD | CFM_ITALIC;
+			chfmt.dwEffects |= (IsBold()) ? CFE_BOLD : 0;
+			chfmt.dwEffects |= (IsItalic()) ? CFE_ITALIC : 0;
+		}
+		
+		if ((m_cf.Flags & CF_NOSIZESEL) == 0)
+		{
+			chfmt.dwMask |= CFM_SIZE;
+			  // GetSize() returns 1/10th points, convert to  twips
+			chfmt.yHeight = GetSize() * 2;
+		}
+
+		if ((m_cf.Flags & CF_NOFACESEL) == 0)
+		{
+			chfmt.dwMask |= CFM_FACE;
+			chfmt.bPitchAndFamily = m_cf.lpLogFont->lfPitchAndFamily;
+			lstrcpy(chfmt.szFaceName, GetFaceName().c_str());
+		}
+
+		if (m_cf.Flags & CF_EFFECTS)
+		{
+			chfmt.dwMask |= CFM_UNDERLINE | CFM_STRIKEOUT | CFM_COLOR;
+			chfmt.dwEffects |= (IsUnderline()) ? CFE_UNDERLINE : 0;
+			chfmt.dwEffects |= (IsStrikeOut()) ? CFE_STRIKEOUT : 0;
+			chfmt.crTextColor = GetColor();
+		}
+		
+		if ((m_cf.Flags & CF_NOSCRIPTSEL) == 0)
+		{
+			chfmt.bCharSet = m_cf.lpLogFont->lfCharSet;
+			chfmt.dwMask |= CFM_CHARSET;
+		}
+		
+		chfmt.yOffset = 0;
+		return chfmt;
+	}
+
+	//============================================================================
+	inline int CFontDialog::GetSize() const
+	//	Return the current font size, in 1/10th points (1 pt = 1/72 inch).
+	{
+		HDC hdc = ::GetDC(NULL); // the device context for the entire screen
+		
+		// number of pixels per inch along the screen height.
+		int pxpi = GetDeviceCaps(hdc, LOGPIXELSY);
+		
+		// point size is (pixel height) * 72 / pxpi, so in 1/10ths size is
+		int charsize = -MulDiv(m_LogFont.lfHeight, 720, pxpi);
+		::ReleaseDC(NULL, hdc);
+		return charsize;
+	}
+
+	//============================================================================
+	inline void CFontDialog::OnOK()
+	//	This member is caused to execute after the DoModal() member has
+	//	terminated with the OK button activated. 
+	{
+	}
+
+	//============================================================================
+	inline void CFontDialog::SetFlags(DWORD dwFlags)
+	//	Reset the file choice flags to dwFlags and change any options that
+	//	depend on some of the flag values, before use by DoModal() operations.
+	{
+		m_cf.Flags  = dwFlags  | CF_EFFECTS  // strikeout, underline, text color
+					   | CF_INITTOLOGFONTSTRUCT // use m_LogFont
+					   | CF_SCREENFONTS  // show screenfonts
+					   ;
+		
+		// show the help box on the form if enabled in dwFlags
+		if (m_cf.Flags & CF_SHOWHELP)
+			m_cf.Flags |= CF_ENABLEHOOK;
+		else if (m_cf.Flags & CF_ENABLEHOOK)
+			m_cf.Flags |= CF_SHOWHELP;
+	}
+
+	//============================================================================
+	inline DWORD CFontDialog::FillInLogFont(const CHARFORMAT& cf)							
 	//	Translate the font character format cf properties of a CRichEdit control
 	//	into elements of the m_LogFont member and settings of the option flags,
 	//	which will then be applied by the caller to specifiy the constructed
@@ -1413,11 +1631,11 @@ namespace Win32xx
 			m_LogFont.lfCharSet = cf.bCharSet;
 		else
 			dwFlags |= CF_NOSCRIPTSEL;
-		
+	
 		m_LogFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
 		m_LogFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
 		m_LogFont.lfQuality = DEFAULT_QUALITY;
-		
+	
 		if (cf.dwMask & CFM_FACE)
 		{
 			m_LogFont.lfPitchAndFamily = cf.bPitchAndFamily;
@@ -1428,180 +1646,29 @@ namespace Win32xx
 			m_LogFont.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
 			m_LogFont.lfFaceName[0] = (TCHAR)0;
 		}
-		
-		SetChoiceLogFont(m_LogFont);
+	
+	//	SetChoiceLogFont(m_LogFont);
 		return dwFlags;
 	}
 
 	//============================================================================
-	inline CHARFORMAT CFontDialog::GetCharFormat() const 
-	//	Returns the CHARFORMAT of this font object, as translated from the
-	//	information in the m_cf CHOOSEFONT struct.
+	inline void CFontDialog::SetParameters(CHOOSEFONT cf)
 	{
-		CHARFORMAT chfmt;
-		chfmt.dwEffects = 0;
-		chfmt.dwMask = 0;
-		
-		if ((m_cf.Flags & CF_NOSTYLESEL) == 0)
-		{
-			chfmt.dwMask    |= CFM_BOLD | CFM_ITALIC;
-			chfmt.dwEffects |= (IsBold()) ? CFE_BOLD : 0;
-			chfmt.dwEffects |= (IsItalic()) ? CFE_ITALIC : 0;
-		}
-		
-		if ((m_cf.Flags & CF_NOSIZESEL) == 0)
-		{
-			chfmt.dwMask |= CFM_SIZE;
-			  // GetSize() returns 1/10th points, convert to  twips
-			chfmt.yHeight = GetSize() * 2;
-		}
-
-		if ((m_cf.Flags & CF_NOFACESEL) == 0)
-		{
-			chfmt.dwMask |= CFM_FACE;
-			chfmt.bPitchAndFamily = m_cf.lpLogFont->lfPitchAndFamily;
-			lstrcpy(chfmt.szFaceName, GetFaceName().c_str());
-		}
-
-		if (m_cf.Flags & CF_EFFECTS)
-		{
-			chfmt.dwMask |= CFM_UNDERLINE | CFM_STRIKEOUT | CFM_COLOR;
-			chfmt.dwEffects |= (IsUnderline()) ? CFE_UNDERLINE : 0;
-			chfmt.dwEffects |= (IsStrikeOut()) ? CFE_STRIKEOUT : 0;
-			chfmt.crTextColor = GetColor();
-		}
-		
-		if ((m_cf.Flags & CF_NOSCRIPTSEL) == 0)
-		{
-			chfmt.bCharSet = m_cf.lpLogFont->lfCharSet;
-			chfmt.dwMask |= CFM_CHARSET;
-		}
-		
-		chfmt.yOffset = 0;
-		return chfmt;
-	}
-
-	//============================================================================
-	inline LOGFONT CFontDialog::GetCurrentLogFont() const
-	//	Assign the characteristics of the currently selected font in the
-	//	m_cf.hwndOwner window to the members of the LOGFONT structure lf. This
-	//	may not be the same as the contents of m_LogFont, depending on whether
-	//	the selection of the m_Font has been selected into the window device
-	//	context.
-	{
-		// get the handle to the hWnd's device context
-		HDC hdc = ::GetDC(m_cf.hwndOwner);
-
-		// select the m_Font into the device context in order to get the
-		// current font
-		CFont curfont = (CFont)(HFONT)::SelectObject(hdc, m_Font);
-		
-		// restore entry environment
-		::SelectObject(hdc, curfont);
-		::ReleaseDC(m_cf.hwndOwner, hdc);
-		LOGFONT lf = curfont.GetLogFont();
-		return lf;
-	}
-
-	//============================================================================
-	inline int CFontDialog::GetSize() const
-	//	Return the current font size, in 1/10th points (1 pt = 1/72 inch).
-	{
-		HDC hdc = ::GetDC(NULL); // the device context for the entire screen
-		
-		// number of pixels per inch along the screen height.
-		int pxpi = GetDeviceCaps(hdc, LOGPIXELSY);
-		
-		// point size is (pixel height) * 72 / pxpi, so in 1/10ths size is
-		int charsize = -MulDiv(m_LogFont.lfHeight, 720, pxpi);
-		::ReleaseDC(NULL, hdc);
-		return charsize;
-	}
-
-	//============================================================================
-	inline void CFontDialog::OnOK()
-	//	This member is caused to execute after the DoModal() member has
-	//	terminated with the OK button activated. The action here is just to
-	//	create the logfont form of the selected font.
-	{
-		SetChoiceLogFont(m_LogFont);
-	}
-
-	//============================================================================
-	inline void CFontDialog::RecordFontMetrics()
-	//	Record the current font TEXTMETRIC values and the average character
-	//	width and height for the given parent window whose handle is
-	//	m_cf.hwndOwner, if non-NUL, or for the entire screen if NULL.
-	{
-		// get the handle to the hWnd's device context
-		HDC hdc = ::GetDC(m_cf.hwndOwner);
-		
-		// select the current font into the device context: save the old
-		CFont ob = (CFont)(HFONT)::SelectObject(hdc, m_Font);
-		
-		// measure the font width and height
-		::GetTextMetrics(hdc, &m_tm);
-		m_avgWdHt.cx = m_tm.tmAveCharWidth;
-		m_avgWdHt.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
-		
-		// restore entry environment
-		::SelectObject(hdc, ob);
-		::ReleaseDC(m_cf.hwndOwner, hdc);
-	}
-
-	//============================================================================
-	inline void CFontDialog::SetFlags(DWORD dwFlags)
-	//	Reset the file choice flags to dwFlags and change any options that
-	//	depend on some of the flag values, before use by DoModal() operations.
-	{
-		m_cf.Flags  = dwFlags  | CF_EFFECTS  // strikeout, underline, text color
-					   | CF_INITTOLOGFONTSTRUCT // use m_LogFont
-					   | CF_SCREENFONTS  // show screenfonts
-					   ;
-		
-		// show the help box on the form if enabled in dwFlags
-		if (m_cf.Flags & CF_SHOWHELP)
-			m_cf.Flags |= CF_ENABLEHOOK;
-		else if (m_cf.Flags & CF_ENABLEHOOK)
-			m_cf.Flags |= CF_SHOWHELP;
-	}
-
-	//============================================================================
-	inline void CFontDialog::SetFontIndirect(const LOGFONT& lf)
-	//	Set the current font to have the characteristics contained in the
-	//	supplied LOGFONT structure lf. Copy the face name into the font choice
-	//	style name.
-	{
-		// convert lf to a CFont
-		CFont hf;
-		hf.CreateFontIndirect(&lf);
-		
-		// if it worked, put it in this object
-		if(hf)
-		{
-			DeleteObject(m_Font);
-			m_Font = hf;
-			m_LogFont = lf;
-			SetStyleName(lf.lfFaceName);
-		}
-		else
-		{
-			::MessageBox(NULL, _T("Font creation error."), _T("Error"),
-				MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-		}
-	}
-
-	//============================================================================
-	inline void CFontDialog::SetPrinter(const CDC* pdcPrinter)
-	//	Set the printer device context to pdcPrinter. Use this after the flags
-	//	have already been initialized.
-	{
-		if (pdcPrinter)
-		{
-			assert(pdcPrinter->GetHDC() != NULL);
-			m_cf.hDC = pdcPrinter->GetHDC();
-			m_cf.Flags |= CF_PRINTERFONTS;
-		}
+		m_cf.lStructSize	= sizeof(CHOOSEFONT);
+		m_cf. hwndOwner		= cf.hwndOwner;
+		m_cf.hDC			= cf.hDC;
+		m_cf.lpLogFont		= cf.lpLogFont;
+		m_cf.iPointSize		= cf.iPointSize;
+		m_cf.Flags			= cf.Flags | CF_ENABLEHOOK;
+		m_cf.rgbColors		= cf.rgbColors;
+		m_cf.lCustData		= cf.lCustData;
+		m_cf.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
+		m_cf.lpTemplateName	= cf.lpTemplateName;
+		m_cf.hInstance		= GetApp().GetInstanceHandle();
+		m_cf.lpszStyle		= cf.lpszStyle;
+		m_cf.nFontType		= cf.nFontType;
+		m_cf.nSizeMin		= cf.nSizeMin;
+		m_cf.nSizeMax		= cf.nSizeMax;
 	}
 
 }
