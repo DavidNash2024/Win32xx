@@ -105,7 +105,7 @@ namespace Win32xx
 		virtual void OnOK();
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 		
-		// You won't need to override this functions
+		// You won't need to override this function
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Can't override these functions
