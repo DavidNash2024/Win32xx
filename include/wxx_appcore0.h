@@ -170,7 +170,14 @@
 namespace Win32xx
 {
 	// Registered messages defined by Win32++
-	const UINT UWM_WINDOWCREATED = RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Message - posted when a window is created or attached.
+	const UINT UWM_WINDOWCREATED = RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Posted when a window is created or attached.
+
+	// registered message used by common dialogs
+	const UINT UWM_HELPMSGSTRING = ::RegisterWindowMessage(HELPMSGSTRING);		// Sent when the user clicks the Help button.
+	const UINT UWM_FILEOKSTRING  = ::RegisterWindowMessage(FILEOKSTRING);		// Sent when the user specifies a file name and clicks the OK button.
+	const UINT UWM_LBSELCHSTRING = ::RegisterWindowMessage(LBSELCHSTRING);		// Sent when the selection changes in any of the list boxes or combo boxes of the dialog box.
+	const UINT UWM_SHAREVISTRING = ::RegisterWindowMessage(SHAREVISTRING);		// Sent if a sharing violation occurs for the selected file when the user clicks the OK button.
+	const UINT UWM_FINDMSGSTRING = ::RegisterWindowMessage(FINDMSGSTRING);		// Sent when the user clicks the Find Next, Replace, or Replace All button, or closes the dialog box. 
 
 	////////////////////////////////////////////////
 	// Forward declarations.
