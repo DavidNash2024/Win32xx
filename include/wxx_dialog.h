@@ -92,7 +92,7 @@ namespace Win32xx
 		virtual HWND Create(HWND hWndParent = NULL) { return DoModeless(hWndParent); }
 		virtual INT_PTR DoModal(HWND hWndParent = NULL);
 		virtual HWND DoModeless(HWND hWndParent = NULL);	
-		BOOL IsModal() const { return m_IsModal; }
+		virtual BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return (NULL != m_lpTemplate); }
 
 	protected:

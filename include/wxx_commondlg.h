@@ -176,6 +176,8 @@ namespace Win32xx
 						DWORD dwFlags = FR_DOWN, 
 						HWND hParentWnd = 0);
 
+		virtual BOOL IsModal() const					{ return FALSE; }
+
 		// Operations:
 		// Helpers for parsing information after successful return
 		BOOL 	FindNext() const;           // TRUE = find next
@@ -196,7 +198,6 @@ namespace Win32xx
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-		virtual BOOL PreTranslateMessage(MSG& Msg);
 
 		// You won't need to override this function
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -282,24 +283,23 @@ namespace Win32xx
 	//  on to the virtual DialogProc function.
 	{
 		// Find the CWnd pointer mapped to this HWND
-		CCommonDialog* pDialog = static_cast<CCommonDialog*>(GetCWndPtr(hWnd));
-		if (pDialog == 0)
+		CCommonDialog* pCommonDlg = static_cast<CCommonDialog*>(GetCWndPtr(hWnd));
+		if (pCommonDlg == 0)
 		{
 			// The HWND wasn't in the map, so add it now
 			TLSData* pTLSData = GetApp().GetTlsData();
 			assert(pTLSData);
 
 			// Retrieve pointer to CWnd object from Thread Local Storage TLS
-			pDialog = static_cast<CCommonDialog*>(pTLSData->pWnd);
-			assert(pDialog);
+			pCommonDlg = static_cast<CCommonDialog*>(pTLSData->pWnd);
+			assert(pCommonDlg);
 			pTLSData->pWnd = NULL;
 
-			// Store the Window pointer into the HWND map
-			pDialog->m_hWnd = hWnd;
-			pDialog->AddToMap();
+			// Attach the HWND to the CommonDialog object
+			pCommonDlg->Attach(hWnd);
 		}
 
-		return pDialog->DialogProc(uMsg, wParam, lParam);
+		return pCommonDlg->DialogProc(uMsg, wParam, lParam);
 	}
 
 
@@ -1026,7 +1026,7 @@ namespace Win32xx
 		ZeroMemory(&m_fr, sizeof(m_fr));
 		m_bFindDialogOnly = TRUE;
 		SetParameters(m_fr);
-	};
+	}
 
 	//============================================================================
 	inline BOOL CFindReplaceDialog::Create(BOOL bFindDialogOnly, LPCTSTR pszFindWhat,
@@ -1197,33 +1197,6 @@ namespace Win32xx
 	//	search string; otherwise FALSE.
 	{
 		return ((m_fr.Flags & FR_WHOLEWORD) != 0);
-	}
-
-	//============================================================================	
-	inline BOOL CFindReplaceDialog::PreTranslateMessage(MSG& Msg)
-	//  Modeless dialogs need to pass messages through IsDialogMessage 
-	//  prior to being handled for default keyboard processing
-	{
-		// allow the dialog to translate keyboard input
-		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
-		{
-			// Process dialog keystrokes for modeless dialogs
-			{
-				TLSData* pTLSData = GetApp().GetTlsData();
-				if (NULL == pTLSData->hMsgHook)
-				{
-					if (IsDialogMessage(Msg))
-						return TRUE;
-				}
-				else
-				{
-					// A modal message loop is running which performs IsDialogMessage
-					// for us.
-				}
-			}
-		}
-
-		return FALSE;
 	}
 
 	//============================================================================
