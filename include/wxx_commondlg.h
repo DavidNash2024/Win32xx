@@ -82,10 +82,10 @@ namespace Win32xx
 		virtual ~CColorDialog(){}
 
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
-		const CHOOSECOLOR& GetParameters() const { return m_cc; }
-		COLORREF  GetColor() const				{ return m_cc.rgbResult;}
+		const CHOOSECOLOR& GetParameters() const { return m_CC; }
+		COLORREF  GetColor() const				{ return m_CC.rgbResult;}
 		COLORREF* GetCustomColors()				{ return m_rgbCustomColors;}
-		void 	SetColor(COLORREF clr)			{ m_cc.rgbResult = clr;}
+		void 	SetColor(COLORREF clr)			{ m_CC.rgbResult = clr;}
 		void    SetCustomColors(const COLORREF*	rgbCstmColors = NULL);
 		void	SetParameters(CHOOSECOLOR cc);	
 
@@ -97,7 +97,7 @@ namespace Win32xx
 
 	private:
 		// private data
-		CHOOSECOLOR 	m_cc;					// ChooseColor parameters
+		CHOOSECOLOR 	m_CC;					// ChooseColor parameters
 		COLORREF  		m_rgbCustomColors[16];	// Custom colors array
 	};
 
@@ -109,7 +109,8 @@ namespace Win32xx
 	public:
 	
 		// Constructor/destructor
-		CFileDialog(BOOL bOpenFileDialog = TRUE, LPCTSTR pszDefExt = NULL,
+		CFileDialog(BOOL bOpenFileDialog = TRUE, 
+				LPCTSTR pszDefExt = NULL,
 				LPCTSTR pszFileName = NULL, 
 				DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
 				LPCTSTR pszFilter   = NULL, 
@@ -181,7 +182,7 @@ namespace Win32xx
 		// Operations:
 		// Helpers for parsing information after successful return
 		BOOL 	FindNext() const;           // TRUE = find next
-		const	FINDREPLACE& GetParameters() const		{ return m_fr; }
+		const	FINDREPLACE& GetParameters() const		{ return m_FR; }
 		CString GetFindString() const;      // get find string
 		CString	GetReplaceString() const;   // get replacement string
 		BOOL	IsFindDialogOnly() const				{ return m_bFindDialogOnly; }
@@ -203,7 +204,7 @@ namespace Win32xx
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		FINDREPLACE 	m_fr;				// FindReplace paramaters
+		FINDREPLACE 	m_FR;				// FindReplace paramaters
 		BOOL			m_bFindDialogOnly;	// TRUE for a find only dialog
 		CString 		m_strFindWhat;
 		CString 		m_strReplaceWith;	
@@ -229,10 +230,10 @@ namespace Win32xx
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
 		DWORD FillInLogFont(const CHARFORMAT& cf);
 		CHARFORMAT	GetCharFormat(void) const;
-		COLORREF	GetColor(void) const 		{ return m_cf.rgbColors;}
+		COLORREF	GetColor(void) const 		{ return m_FR.rgbColors;}
 		CString GetFaceName(void) const			{ return m_LogFont.lfFaceName;}
 		LOGFONT	GetLogFont(void) const			{ return m_LogFont;}
-		const CHOOSEFONT& GetParameters() const { return m_cf; }
+		const CHOOSEFONT& GetParameters() const { return m_FR; }
 		int 	GetSize(void) const;   
 		CString GetStyleName(void) const		{ return m_strStyleName;}
 		long 	GetWeight(void) const  			{ return m_LogFont.lfWeight;}
@@ -240,7 +241,7 @@ namespace Win32xx
 		BOOL 	IsItalic(void) const			{ return m_LogFont.lfItalic;}
 		BOOL 	IsStrikeOut(void) const			{ return m_LogFont.lfStrikeOut;}
 		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline;}		
-		void    SetColor(const COLORREF rgb)	{ m_cf.rgbColors = rgb;}
+		void    SetColor(const COLORREF rgb)	{ m_FR.rgbColors = rgb;}
 		void	SetParameters(CHOOSEFONT cf);
 		void    SetStyleName(LPCTSTR pszStyle);
 
@@ -254,7 +255,7 @@ namespace Win32xx
 	private:
 		// private data
 		LOGFONT 	m_LogFont;			// font charactreristics
-		CHOOSEFONT	m_cf;				// ChooseFont parameters
+		CHOOSEFONT	m_FR;				// ChooseFont parameters
 		CString		m_strStyleName;		// style name on the dialog
 	};
 
@@ -312,17 +313,17 @@ namespace Win32xx
 	//  Refer to the description of the CHOOSECOLOR struct in the MSDN documentation.
 	{
 		// set the parameters in the CHOOSECOLOR struct
-		ZeroMemory(&m_cc,  sizeof(CHOOSECOLOR));
-		m_cc.hwndOwner = hParentWnd;
-		m_cc.rgbResult = clrInit;
-		m_cc.Flags = dwFlags;
+		ZeroMemory(&m_CC,  sizeof(CHOOSECOLOR));
+		m_CC.hwndOwner = hParentWnd;
+		m_CC.rgbResult = clrInit;
+		m_CC.Flags = dwFlags;
 
 		// Set all custom colors to white
 		for (int i = 0; i <= 15; ++i)
 			m_rgbCustomColors[i] = RGB(255,255,255);
 
 		// Set the CHOOSECOLOR struct parameters to safe values
-		SetParameters(m_cc);
+		SetParameters(m_CC);
 	}
 
 	//============================================================================
@@ -384,10 +385,10 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 
 		if (hWndOwner != 0)
-			m_cc.hwndOwner = hWndOwner;
+			m_CC.hwndOwner = hWndOwner;
 		
 		// invoke the control and save the result on success
-		BOOL ok = ::ChooseColor(&m_cc);
+		BOOL ok = ::ChooseColor(&m_CC);
 		
 		m_hWnd = 0;
 
@@ -419,24 +420,27 @@ namespace Win32xx
 	//	Sets the various parameters of the CHOOSECOLOR struct.
 	//  The parameters are set to safe values.
 	{ 
-		m_cc.lStructSize	= sizeof(m_cc);
-		m_cc.hwndOwner		= cc.hwndOwner;
-		m_cc.hInstance		= cc.hInstance;
-		m_cc.rgbResult		= cc.rgbResult;		
-		m_cc.lpCustColors	= m_rgbCustomColors;
-		m_cc.Flags			= cc.Flags | CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
-		m_cc.lCustData		= cc.lCustData;
-		m_cc.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
-		m_cc.lpTemplateName = cc.lpTemplateName;
+		m_CC.lStructSize	= sizeof(m_CC);
+		m_CC.hwndOwner		= cc.hwndOwner;
+		m_CC.hInstance		= cc.hInstance;
+		m_CC.rgbResult		= cc.rgbResult;		
+		m_CC.lpCustColors	= m_rgbCustomColors;
+		m_CC.Flags			= cc.Flags | CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
+		m_CC.lCustData		= cc.lCustData;
+		m_CC.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
+		m_CC.lpTemplateName = cc.lpTemplateName;
 	}	
 
 
 
 
 	//============================================================================
-	inline CFileDialog::CFileDialog(BOOL bOpenFileDialog, LPCTSTR pszDefExt /* = NULL */,
-		LPCTSTR pszFileName /* = NULL */, DWORD dwFlags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
-		LPCTSTR pszFilter /* = NULL */, HWND hParentWnd /* = 0 */)
+	inline CFileDialog::CFileDialog(BOOL bOpenFileDialog  /* = TRUE */, 
+		LPCTSTR pszDefExt /* = NULL */,
+		LPCTSTR pszFileName /* = NULL */,
+		DWORD dwFlags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
+		LPCTSTR pszFilter /* = NULL */,
+		HWND hParentWnd /* = 0 */)
 	//	Construct a standard Windows File-Open or File-Save-As dialog box,
 	//	depending on the value of bOpenFileDialog, TRUE for a File-Open dialog
 	//	or FALSE to for a File-Save-As dialog.  The default file name extension
@@ -463,11 +467,11 @@ namespace Win32xx
 		ZeroMemory(&m_OFN, sizeof(m_OFN));
 		  
 		// fill in the OPENFILENAME struct
+		m_OFN.lpstrFile		= (LPTSTR)pszFileName;
 		m_OFN.hwndOwner		= hParentWnd;
 		m_OFN.lpstrFilter	= pszFilter;
-		m_OFN.lpstrFile		= (LPTSTR)pszFileName;
 		m_OFN.lpstrDefExt	= pszDefExt;
-		m_OFN.Flags          = dwFlags;
+		m_OFN.Flags			= dwFlags;
 
 		// Safely set the remaining OPENFILENAME values
 		SetParameters(m_OFN);
@@ -962,7 +966,14 @@ namespace Win32xx
 	//	before DoModal() operations.
 	{
 		  // setup initial file name
-		m_OFN.lpstrFile = (LPTSTR)pszFileName;
+		if (pszFileName)
+		{
+			m_sFileName = pszFileName;
+			m_OFN.lpstrFile = (LPTSTR)m_sFileName.c_str();
+		}
+		else
+			m_OFN.lpstrFile = NULL;
+
 	}
 
 	inline void CFileDialog::SetFilter(LPCTSTR pszFilter)
@@ -985,6 +996,8 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CFileDialog::SetParameters(OPENFILENAME ofn)
+	//	Sets the various parameters of the OPENFILENAME struct.
+	//  The parameters are set to safe values.	
 	{
 		// Set the correct struct size for all Windows versions and compilers
 		DWORD StructSize = sizeof(m_OFN);
@@ -996,14 +1009,22 @@ namespace Win32xx
 			m_OFN.FlagsEx =		ofn.FlagsEx;
   #endif
 
+		if (ofn.lpstrFile)
+		{
+			m_sFileName = ofn.lpstrFile;
+			m_OFN.lpstrFile = (LPTSTR)m_sFileName.c_str();
+		}
+		else
+			m_OFN.lpstrFile = NULL;
+
+		SetFilter(ofn.lpstrFilter);
+
 		m_OFN.lStructSize		= StructSize;
 		m_OFN.hwndOwner			= ofn.hwndOwner;
 		m_OFN.hInstance			= GetApp().GetInstanceHandle();
-		SetFilter(ofn.lpstrFilter);
 		m_OFN.lpstrCustomFilter	= ofn.lpstrCustomFilter;
 		m_OFN.nMaxCustFilter	= _MAX_PATH;
 		m_OFN.nFilterIndex		= ofn.nFilterIndex; 
-		m_OFN.lpstrFile			= ofn.lpstrFile; 
 		m_OFN.nMaxFile			= _MAX_PATH; 
 		m_OFN.lpstrFileTitle	= ofn.lpstrFileTitle; 
 		m_OFN.nMaxFileTitle		= _MAX_PATH; 
@@ -1023,9 +1044,9 @@ namespace Win32xx
 	//============================================================================
 	inline CFindReplaceDialog::CFindReplaceDialog()
 	{
-		ZeroMemory(&m_fr, sizeof(m_fr));
+		ZeroMemory(&m_FR, sizeof(m_FR));
 		m_bFindDialogOnly = TRUE;
-		SetParameters(m_fr);
+		SetParameters(m_FR);
 	}
 
 	//============================================================================
@@ -1061,25 +1082,25 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 
 		if (hParentWnd)
-			m_fr.hwndOwner = hParentWnd;
+			m_FR.hwndOwner = hParentWnd;
 			
-		m_fr.Flags = dwFlags;
-		SetParameters(m_fr);	
+		m_FR.Flags = dwFlags;
+		SetParameters(m_FR);	
 
-		m_fr.lpstrFindWhat = (LPTSTR)m_strFindWhat.GetBuffer(m_fr.wFindWhatLen);
+		m_FR.lpstrFindWhat = (LPTSTR)m_strFindWhat.GetBuffer(m_FR.wFindWhatLen);
 		if (pszFindWhat)
-			lstrcpyn(m_fr.lpstrFindWhat, pszFindWhat, m_fr.wFindWhatLen);
+			lstrcpyn(m_FR.lpstrFindWhat, pszFindWhat, m_FR.wFindWhatLen);
 
-		m_fr.lpstrReplaceWith = (LPTSTR)m_strReplaceWith.GetBuffer(m_fr.wReplaceWithLen);
+		m_FR.lpstrReplaceWith = (LPTSTR)m_strReplaceWith.GetBuffer(m_FR.wReplaceWithLen);
 		if (pszReplaceWith)
-			lstrcpyn(m_fr.lpstrReplaceWith, pszReplaceWith, m_fr.wReplaceWithLen);
+			lstrcpyn(m_FR.lpstrReplaceWith, pszReplaceWith, m_FR.wReplaceWithLen);
 
 
 		HWND hWnd;  // the returned find/replace dialog box handle
 		if (bFindDialogOnly)
-			hWnd = ::FindText(&m_fr);
+			hWnd = ::FindText(&m_FR);
 		else
-			hWnd = ::ReplaceText(&m_fr);
+			hWnd = ::ReplaceText(&m_FR);
 
 		m_strFindWhat.ReleaseBuffer();
 		m_strReplaceWith.ReleaseBuffer();
@@ -1138,7 +1159,7 @@ namespace Win32xx
 	//	TRUE if the user wants to find the next occurrence of the search string;
 	//	otherwise FALSE.
 	{
-		return ((m_fr.Flags & FR_FINDNEXT )!= 0);
+		return ((m_FR.Flags & FR_FINDNEXT )!= 0);
 	}
 
 	//============================================================================
@@ -1146,14 +1167,14 @@ namespace Win32xx
 	//	Call this function from your callback function to return the default
 	//	string to find.
 	{
-		return m_fr.lpstrFindWhat;
+		return m_FR.lpstrFindWhat;
 	}
 
 	//============================================================================
 	inline CFindReplaceDialog* CFindReplaceDialog::GetNotifier(LPARAM lParam)
 	//	Return a pointer to the current Find/Replace dialog box. This may be
 	//	used within the OnFindReplace() method to access the current dialog box,
-	//	to call its member functions, and to access the m_fr structure.
+	//	to call its member functions, and to access the m_FR structure.
 	//	The lParam value is that passed to the frame window's OnFindReplace()
 	//	function.
 	{
@@ -1167,7 +1188,7 @@ namespace Win32xx
 	inline CString CFindReplaceDialog::GetReplaceString() const
 	//	Call this function to return the current replace string.
 	{
-		return m_fr.lpstrReplaceWith == NULL ? _T("") : m_fr.lpstrReplaceWith;
+		return m_FR.lpstrReplaceWith == NULL ? _T("") : m_FR.lpstrReplaceWith;
 	}
 
 	//============================================================================
@@ -1180,7 +1201,7 @@ namespace Win32xx
 	//	variable to NULL. Optionally, you can also store the find/replace text
 	//	last entered and use it to initialize the next find/replace dialog box.
 	{
-		return ((m_fr.Flags & FR_DIALOGTERM) != 0);
+		return ((m_FR.Flags & FR_DIALOGTERM) != 0);
 	}
 
 	//============================================================================
@@ -1188,7 +1209,7 @@ namespace Win32xx
 	//	Return TRUE if the user wants to find occurrences of the search string
 	//	that exactly match the case of the search string; otherwise FALSE.
 	{
-		return ((m_fr.Flags & FR_MATCHCASE) != 0);
+		return ((m_FR.Flags & FR_MATCHCASE) != 0);
 	}
 
 	//============================================================================
@@ -1196,7 +1217,7 @@ namespace Win32xx
 	//	Return TRUE if the user wants to match only the entire words of the
 	//	search string; otherwise FALSE.
 	{
-		return ((m_fr.Flags & FR_WHOLEWORD) != 0);
+		return ((m_FR.Flags & FR_WHOLEWORD) != 0);
 	}
 
 	//============================================================================
@@ -1204,7 +1225,7 @@ namespace Win32xx
 	//	Return TRUE if the user has requested that all strings matching the
 	//	replace string be replaced; otherwise FALSE.
 	{
-		return ((m_fr.Flags & FR_REPLACEALL) != 0);
+		return ((m_FR.Flags & FR_REPLACEALL) != 0);
 	}
 
 	//============================================================================
@@ -1212,7 +1233,7 @@ namespace Win32xx
 	//	Return TRUE if the user has requested that the currently selected string
 	//	be replaced with the replace string; otherwise FALSE.
 	{
-		return ((m_fr.Flags & FR_REPLACE) != 0);
+		return ((m_FR.Flags & FR_REPLACE) != 0);
 	}
 
 	//============================================================================
@@ -1221,25 +1242,27 @@ namespace Win32xx
 	//	direction; FALSE if the user wants the search to proceed in an upward
 	//	direction.
 	{
-		return ((m_fr.Flags & FR_DOWN) != 0);
+		return ((m_FR.Flags & FR_DOWN) != 0);
 	}
 
 	//============================================================================
 	inline void	CFindReplaceDialog::SetParameters(FINDREPLACE fr)
+	//	Sets the various parameters of the FINDREPLACE struct.
+	//  The parameters are set to safe values.		
 	{
 		const int MaxChars = 128;
 
-		m_fr.lStructSize		= sizeof(FINDREPLACE);
-		m_fr.hwndOwner			= fr.hwndOwner;
-		m_fr.hInstance			= GetApp().GetInstanceHandle();
-		m_fr.Flags				= fr.Flags | FR_ENABLEHOOK;
-		m_fr.lpstrFindWhat		= NULL;		// is set within Create
-		m_fr.lpstrReplaceWith	= NULL;		// is set within Create
-		m_fr.wFindWhatLen		= MAX(fr.wFindWhatLen, MaxChars);
-		m_fr.wReplaceWithLen	= MAX(fr.wReplaceWithLen, MaxChars);
-		m_fr.lCustData			= (LPARAM)this;
-		m_fr.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
-		m_fr.lpTemplateName		= fr.lpTemplateName;
+		m_FR.lStructSize		= sizeof(FINDREPLACE);
+		m_FR.hwndOwner			= fr.hwndOwner;
+		m_FR.hInstance			= GetApp().GetInstanceHandle();
+		m_FR.Flags				= fr.Flags | FR_ENABLEHOOK;
+		m_FR.lpstrFindWhat		= NULL;		// is set within Create
+		m_FR.lpstrReplaceWith	= NULL;		// is set within Create
+		m_FR.wFindWhatLen		= MAX(fr.wFindWhatLen, MaxChars);
+		m_FR.wReplaceWithLen	= MAX(fr.wReplaceWithLen, MaxChars);
+		m_FR.lCustData			= (LPARAM)this;
+		m_FR.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
+		m_FR.lpTemplateName		= fr.lpTemplateName;
 	}
 
 
@@ -1254,7 +1277,7 @@ namespace Win32xx
 	//	a LOGFONT data structure that allows setting some of the font's
 	//	characteristics. The dwFlags entry specifies one or more choose-font
 	//	flags. One or more preset values can be combined using the bitwise OR
-	//	operator. To modify the m_cf.Flags structure member, be sure to use a
+	//	operator. To modify the m_FR.Flags structure member, be sure to use a
 	//	bitwise OR operator to retain the default behavior. For details on each
 	//	of these flags, see the description of the CHOOSEFONT structure in the
 	//	Windows SDK. The pdcPrinter parameter pointsto a printer-device context.
@@ -1263,42 +1286,40 @@ namespace Win32xx
 	//	is a handle to the font dialog box's parent or owner window.
 	{
 		  // clear out logfont, style name, and choose font structure
-		ZeroMemory(&m_LogFont,     sizeof(m_LogFont));
-		ZeroMemory(&m_cf, 	   sizeof(m_cf));
+		ZeroMemory(&m_LogFont, sizeof(m_LogFont));
+		ZeroMemory(&m_FR, sizeof(m_FR));
 
 		// set dialog parameters
-		m_cf.rgbColors   = 0; // black
-		m_cf.lStructSize = sizeof(m_cf);
-		m_cf.hwndOwner   =  hParentWnd;
-		m_cf.Flags  = dwFlags  | CF_EFFECTS  // strikeout, underline, text color
-					   | CF_INITTOLOGFONTSTRUCT // use the LogFont to initialize dialog box controls
-					   | CF_SCREENFONTS  // show screenfonts
-					   ;
+		m_FR.rgbColors   = 0; // black
+		m_FR.lStructSize = sizeof(m_FR);
+		m_FR.hwndOwner   =  hParentWnd;
+		m_FR.Flags  = dwFlags | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
+		m_FR.lpszStyle = (LPTSTR)m_strStyleName.c_str();
+
 		if (hdcPrinter)
 		{
-			m_cf.hDC = hdcPrinter;
-			m_cf.Flags |= CF_PRINTERFONTS;
+			m_FR.hDC = hdcPrinter;
+			m_FR.Flags |= CF_PRINTERFONTS;
 		}
+		
 		if (lplfInitial)
 		{
-			m_cf.lpLogFont = lplfInitial;
-			m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
-			memcpy(&m_LogFont, m_cf.lpLogFont, sizeof(m_LogFont));
+			m_FR.lpLogFont = lplfInitial;
+			m_FR.Flags |= CF_INITTOLOGFONTSTRUCT;
+			memcpy(&m_LogFont, m_FR.lpLogFont, sizeof(m_LogFont));
 		}
 		else
 		{
-			m_cf.lpLogFont = &m_LogFont;
+			m_FR.lpLogFont = &m_LogFont;
 		}
-
-		m_cf.lpszStyle = (LPTSTR)m_strStyleName.c_str();
 
 		if (hdcPrinter)
 		{
-			m_cf.hDC = hdcPrinter;
-			m_cf.Flags |= CF_PRINTERFONTS;
+			m_FR.hDC = hdcPrinter;
+			m_FR.Flags |= CF_PRINTERFONTS;
 		}
 
-		SetParameters(m_cf);
+		SetParameters(m_FR);
 	}
 
 	//============================================================================
@@ -1309,7 +1330,7 @@ namespace Win32xx
 	//	data structure that allows setting some of the font's characteristics
 	//	for a rich edit control.  The dwFlags entry specifies one or more
 	//	choose-font flags. One or more preset values can be combined using the
-	//	bitwise OR operator. To modify the m_cf.Flags structure member, be sure
+	//	bitwise OR operator. To modify the m_FR.Flags structure member, be sure
 	//	to use a bitwise OR operator to retain the default behavior. For details
 	//	on each of these flags, see the description of the CHOOSEFONT structure
 	//	in the Windows SDK. The pdcPrinter parameter pointsto a printer-device
@@ -1318,33 +1339,27 @@ namespace Win32xx
 	//	paameter is a handle to the font dialog box's parent or owner window.
 	{
 		// clear out logfont, style name, and choose font structure
-		ZeroMemory(&m_LogFont,     sizeof(m_LogFont));
-		ZeroMemory(&m_cf, 	   sizeof(m_cf));
+		ZeroMemory(&m_LogFont, sizeof(m_LogFont));
+		ZeroMemory(&m_FR, sizeof(m_FR));
 
 		// set dialog parameters
-		m_cf.lStructSize = sizeof(m_cf);
-		m_cf.hwndOwner = hParentWnd;
-		m_cf.lpszStyle   = (LPTSTR)m_strStyleName.c_str();
-		m_cf.lpLogFont   = &m_LogFont;
-		m_cf.Flags       = dwFlags | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
-		m_cf.Flags      |= FillInLogFont(charformat);
-
-		// show the help box on the form if enabled in dwFlags
-		if (m_cf.Flags & CF_SHOWHELP)
-			m_cf.Flags |= CF_ENABLEHOOK;
-		else if (m_cf.Flags & CF_ENABLEHOOK)
-			m_cf.Flags |= CF_SHOWHELP;
-		
+		m_FR.lStructSize = sizeof(m_FR);
+		m_FR.hwndOwner   = hParentWnd;
+		m_FR.lpszStyle   = (LPTSTR)m_strStyleName.c_str();
+		m_FR.lpLogFont   = &m_LogFont;
+		m_FR.Flags       = dwFlags | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS | CF_ENABLEHOOK;
+		m_FR.Flags      |= FillInLogFont(charformat);
+	
 		if (charformat.dwMask & CFM_COLOR)
-			m_cf.rgbColors = charformat.crTextColor;
+			m_FR.rgbColors = charformat.crTextColor;
 
 		if (hdcPrinter)
 		{
-			m_cf.hDC = hdcPrinter;
-			m_cf.Flags |= CF_PRINTERFONTS;
+			m_FR.hDC = hdcPrinter;
+			m_FR.Flags |= CF_PRINTERFONTS;
 		}
 
-		SetParameters(m_cf);
+		SetParameters(m_FR);
 	}
 
 	//============================================================================
@@ -1414,10 +1429,10 @@ namespace Win32xx
 		pTLSData->pWnd = this;		
 
 		if (hWndOwner)
-			m_cf.hwndOwner = hWndOwner;
+			m_FR.hwndOwner = hWndOwner;
 		  
 		// open the font choice dialog
-		BOOL ok = ::ChooseFont(&m_cf);
+		BOOL ok = ::ChooseFont(&m_FR);
 
 		m_hWnd = 0;
 		
@@ -1435,34 +1450,34 @@ namespace Win32xx
 	//============================================================================
 	inline CHARFORMAT CFontDialog::GetCharFormat() const 
 	//	Returns the CHARFORMAT of this font object, as translated from the
-	//	information in the m_cf CHOOSEFONT struct.
+	//	information in the m_FR CHOOSEFONT struct.
 	{
 		CHARFORMAT chfmt;
 		chfmt.dwEffects = 0;
 		chfmt.dwMask = 0;
 		
-		if ((m_cf.Flags & CF_NOSTYLESEL) == 0)
+		if ((m_FR.Flags & CF_NOSTYLESEL) == 0)
 		{
 			chfmt.dwMask    |= CFM_BOLD | CFM_ITALIC;
 			chfmt.dwEffects |= (IsBold()) ? CFE_BOLD : 0;
 			chfmt.dwEffects |= (IsItalic()) ? CFE_ITALIC : 0;
 		}
 		
-		if ((m_cf.Flags & CF_NOSIZESEL) == 0)
+		if ((m_FR.Flags & CF_NOSIZESEL) == 0)
 		{
 			chfmt.dwMask |= CFM_SIZE;
 			  // GetSize() returns 1/10th points, convert to  twips
 			chfmt.yHeight = GetSize() * 2;
 		}
 
-		if ((m_cf.Flags & CF_NOFACESEL) == 0)
+		if ((m_FR.Flags & CF_NOFACESEL) == 0)
 		{
 			chfmt.dwMask |= CFM_FACE;
-			chfmt.bPitchAndFamily = m_cf.lpLogFont->lfPitchAndFamily;
+			chfmt.bPitchAndFamily = m_FR.lpLogFont->lfPitchAndFamily;
 			lstrcpy(chfmt.szFaceName, GetFaceName().c_str());
 		}
 
-		if (m_cf.Flags & CF_EFFECTS)
+		if (m_FR.Flags & CF_EFFECTS)
 		{
 			chfmt.dwMask |= CFM_UNDERLINE | CFM_STRIKEOUT | CFM_COLOR;
 			chfmt.dwEffects |= (IsUnderline()) ? CFE_UNDERLINE : 0;
@@ -1470,9 +1485,9 @@ namespace Win32xx
 			chfmt.crTextColor = GetColor();
 		}
 		
-		if ((m_cf.Flags & CF_NOSCRIPTSEL) == 0)
+		if ((m_FR.Flags & CF_NOSCRIPTSEL) == 0)
 		{
-			chfmt.bCharSet = m_cf.lpLogFont->lfCharSet;
+			chfmt.bCharSet = m_FR.lpLogFont->lfCharSet;
 			chfmt.dwMask |= CFM_CHARSET;
 		}
 		
@@ -1578,6 +1593,8 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CFontDialog::SetParameters(CHOOSEFONT cf)
+	//	Sets the various parameters of the CHOOSEFONT struct.
+	//  The parameters are set to safe values.	
 	{
 		if (cf.lpLogFont)
 			m_LogFont = *cf.lpLogFont;
@@ -1593,21 +1610,21 @@ namespace Win32xx
 			m_strStyleName.Empty();
 		}
 
-		m_cf.lStructSize	= sizeof(CHOOSEFONT);
-		m_cf. hwndOwner		= cf.hwndOwner;
-		m_cf.hDC			= cf.hDC;		
-		m_cf.lpLogFont		= &m_LogFont;
-		m_cf.iPointSize		= cf.iPointSize;
-		m_cf.Flags			= cf.Flags | CF_ENABLEHOOK;
-		m_cf.rgbColors		= cf.rgbColors;
-		m_cf.lCustData		= cf.lCustData;
-		m_cf.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
-		m_cf.lpTemplateName	= cf.lpTemplateName;
-		m_cf.hInstance		= GetApp().GetInstanceHandle();
-		m_cf.lpszStyle		= (LPTSTR)m_strStyleName.c_str();
-		m_cf.nFontType		= cf.nFontType;
-		m_cf.nSizeMin		= cf.nSizeMin;
-		m_cf.nSizeMax		= cf.nSizeMax;
+		m_FR.lStructSize	= sizeof(CHOOSEFONT);
+		m_FR. hwndOwner		= cf.hwndOwner;
+		m_FR.hDC			= cf.hDC;		
+		m_FR.lpLogFont		= &m_LogFont;
+		m_FR.iPointSize		= cf.iPointSize;
+		m_FR.Flags			= cf.Flags | CF_ENABLEHOOK;
+		m_FR.rgbColors		= cf.rgbColors;
+		m_FR.lCustData		= cf.lCustData;
+		m_FR.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
+		m_FR.lpTemplateName	= cf.lpTemplateName;
+		m_FR.hInstance		= GetApp().GetInstanceHandle();
+		m_FR.lpszStyle		= (LPTSTR)m_strStyleName.c_str();
+		m_FR.nFontType		= cf.nFontType;
+		m_FR.nSizeMin		= cf.nSizeMin;
+		m_FR.nSizeMax		= cf.nSizeMax;
 	}
 
 	inline void CFontDialog::SetStyleName(LPCTSTR pszStyle)	
@@ -1617,7 +1634,7 @@ namespace Win32xx
 		else
 			m_strStyleName.Empty();
 		
-		m_cf.lpszStyle = (LPTSTR)m_strStyleName.c_str();
+		m_FR.lpszStyle = (LPTSTR)m_strStyleName.c_str();
 	}
 
 }
