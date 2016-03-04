@@ -431,7 +431,11 @@ namespace Win32xx
 		friend class CImageList;
 		friend class CMenu;
 		friend class CWnd;
+		friend class CPrintDialog;
+		friend class CPageSetupDialog;
 		friend CWinApp& GetApp();
+		friend void GlobalFreeAll(HGLOBAL hGlobal);
+		friend BOOL UpdateDefaultPrinter();
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -484,6 +488,8 @@ namespace Win32xx
 		HINSTANCE m_hResource;			// handle to the applications resources
 		DWORD m_dwTlsData;				// Thread Local Storage data
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
+		HGLOBAL m_hDevMode;				// Used by CPrintDialog and CPageSetupDialog
+		HGLOBAL m_hDevNames;			// Used by CPrintDialog and CPageSetupDialog
 
 #ifndef _WIN32_WCE
 		void AddCMenuData(HMENU hMenu, CMenu_Data* pData);
@@ -502,7 +508,8 @@ namespace Win32xx
 	{
 		return *CWinApp::SetnGetThis();
 	}
-	
+
+
   #ifndef _WIN32_WCE
 	inline int GetWinVersion()
 	{
