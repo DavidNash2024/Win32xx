@@ -60,6 +60,25 @@
 namespace Win32xx
 {
 
+	inline void GlobalFreeAll(HGLOBAL hGlobal)
+	{
+		if (hGlobal == NULL)
+			return;
+
+		// check validity of the handle
+		assert(::GlobalFlags(hGlobal) != GMEM_INVALID_HANDLE);
+		// decrement the lock count associated with the handle
+		UINT nCount = ::GlobalFlags(hGlobal) & GMEM_LOCKCOUNT;
+		while (nCount--)
+		{
+			TRACE("***WARNING Global memory still locked ***\n");
+			::GlobalUnlock(hGlobal);
+		}
+
+		// finally, really free the handle
+		::GlobalFree(hGlobal);
+	}
+
 	///////////////////////////////////////
 	// Definitions for the CObject class
 	//
@@ -327,7 +346,7 @@ namespace Win32xx
 
 	// To begin Win32++, inherit your application class from this one.
 	// You must run only one instance of the class inherited from CWinApp.
-	inline CWinApp::CWinApp() : m_Callback(NULL)
+	inline CWinApp::CWinApp() : m_Callback(NULL), m_hDevMode(0), m_hDevNames(0)
 	{
 		CCriticalSection csAppStart;
 		csAppStart.Lock();
@@ -366,6 +385,10 @@ namespace Win32xx
 
 	inline CWinApp::~CWinApp()
 	{
+		// Deallocate the global memory 
+		GlobalFreeAll(m_hDevMode);
+		GlobalFreeAll(m_hDevNames);
+
 		// Forcibly destroy any remaining windows now. Windows created from
 		//  static CWnds or dangling pointers are destroyed here.
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
