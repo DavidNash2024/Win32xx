@@ -169,7 +169,7 @@ namespace Win32xx
 
 		// Attributes
 		const T* c_str() const			{ return m_str.c_str(); }					// alternative for casting to const T*
-		virtual  std::basic_string<T>& GetString() { return m_str; }				// returns a reference to the std::basic_string<T>
+		virtual  std::basic_string<T> GetString() const { return m_str; }			// returns copy of the std::basic_string<T>
 		int      GetLength() const	{ return static_cast<int>(m_str.length()); }	// returns the length in characters
 
 		// Operations
@@ -280,11 +280,17 @@ namespace Win32xx
 			m_str.assign(nLength, ((LPCTSTR)tch)[0]);
 		}
 
-        CString& operator = (const CString& str)
-        {
-            m_str.assign(str);
-            return *this;
-        }
+		CString& operator = (const CString& str)
+		{
+			m_str.assign(str.GetString());
+			return *this;
+		}
+
+		CString& operator = (const CStringT<TCHAR>& str)
+		{
+			m_str.assign(str.GetString());
+			return *this;
+		}
 
 		CString& operator = (const char ch)
 		{
@@ -364,30 +370,30 @@ namespace Win32xx
 
 		CString Left(int nCount) const
 		{
-		    CString str;
-		    str = CStringT<TCHAR>::Left(nCount);
-		    return str;
+			CString str;
+			str = CStringT<TCHAR>::Left(nCount);
+			return str;
 		}
 
 		CString Mid(int nFirst) const
 		{
 			CString str;
-		    str = CStringT<TCHAR>::Mid(nFirst);
-		    return str;
+			str = CStringT<TCHAR>::Mid(nFirst);
+			return str;
 		}
 
 		CString Mid(int nFirst, int nCount) const
 		{
 			CString str;
-		    str = CStringT<TCHAR>::Mid(nFirst, nCount);
-		    return str;
+			str = CStringT<TCHAR>::Mid(nFirst, nCount);
+			return str;
 		}
 
 		CString Right(int nCount) const
 		{
 			CString str;
-		    str = CStringT<TCHAR>::Right(nCount);
-		    return str;
+			str = CStringT<TCHAR>::Right(nCount);
+			return str;
 		}
 
 		CString SpanExcluding(const TCHAR* pszText) const
@@ -400,15 +406,15 @@ namespace Win32xx
 		CString SpanIncluding(const TCHAR* pszText) const
 		{
 			CString str;
-		    str = CStringT<TCHAR>::SpanIncluding(pszText);
-		    return str;
+			str = CStringT<TCHAR>::SpanIncluding(pszText);
+			return str;
 		}
 
 		CString Tokenize(const TCHAR* pszTokens, int& iStart) const
 		{
 			CString str;
-		    str = CStringT<TCHAR>::Tokenize(pszTokens, iStart);
-		    return str;
+			str = CStringT<TCHAR>::Tokenize(pszTokens, iStart);
+			return str;
 		}
 
 	};
@@ -441,7 +447,7 @@ namespace Win32xx
 	inline CStringT<T>::CStringT(const CStringT& str)
 	// Constructor. Assigns from a CStringT<T>.
 	{
-		m_str.assign(str);
+		m_str.assign(str.m_str);
 	}
 
 	template <class T>
@@ -463,6 +469,7 @@ namespace Win32xx
 	template <class T>
 	inline CStringT<T>::CStringT(const T* pszText, int nLength)
 	// Constructor. Assigns from a const T* possibly containing null characters.
+	// Ensure the size of the text buffer holds nLength or more characters
 	{
 		memcpy(GetBuffer(nLength), pszText, nLength*sizeof(T));
 		ReleaseBuffer(nLength);
@@ -555,7 +562,7 @@ namespace Win32xx
 	// Returns TRUE if the strings have a different content.
 	{
 		assert(pszText);
-        return Compare(pszText) != 0;
+		return Compare(pszText) != 0;
 	}
 
 	template <class T>
@@ -563,7 +570,7 @@ namespace Win32xx
 	// Returns TRUE if the strings have a different content.
 	// Can compares CStringTs containing null characters.
 	{
-        return m_str != str.m_str;
+		return m_str != str.m_str;
 	}
 
 	template <class T>
@@ -619,7 +626,7 @@ namespace Win32xx
 	}
 
 	template <>
-    inline CStringT<WCHAR>& CStringT<WCHAR>::operator += (int val)
+	inline CStringT<WCHAR>& CStringT<WCHAR>::operator += (int val)
 	// Addition assignment. Appends an int converted to a WCHAR character array.
 	{
 		CStringT str;
@@ -709,7 +716,7 @@ namespace Win32xx
 	// Performs a case sensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
-        int res = CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
+		int res = CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
 
 		assert(res);
 		if 		(res == CSTR_LESS_THAN) return -1;
@@ -723,7 +730,7 @@ namespace Win32xx
 	// Performs a case sensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
-        int res = CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
+		int res = CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
 
 		assert(res);
 		if 		(res == CSTR_LESS_THAN) return -1;
@@ -765,7 +772,7 @@ namespace Win32xx
 	// Performs a case sensitive comparison of the two strings.
 	{
 		assert(pszText);
-        return lstrcmpA(m_str.c_str(), pszText);
+		return lstrcmpA(m_str.c_str(), pszText);
 	}
 
 	template <>
@@ -1117,7 +1124,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CStringT str;
-		str.m_str.assign(c_str(), 0, nCount);
+		str.m_str.assign(m_str, 0, nCount);
 		return str;
 	}
 
@@ -1217,7 +1224,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CStringT str;
-		str.m_str.assign(c_str(), nFirst, nCount);
+		str.m_str.assign(m_str, nFirst, nCount);
 		return str;
 	}
 
@@ -1325,7 +1332,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CStringT str;
-		str.m_str.assign(c_str(), m_str.size() - nCount, nCount);
+		str.m_str.assign(m_str, m_str.size() - nCount, nCount);
 		return str;
 	}
 
@@ -1551,25 +1558,25 @@ namespace Win32xx
 	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, int val)
 	// Addition operator.
 	{
-        CStringT<CHAR> str;
-        str.Format("%s%a", string1.c_str(), val);
-        return str;
+		CStringT<CHAR> str;
+		str.Format("%s%a", string1.c_str(), val);
+		return str;
 	}
 
 	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, int val)
 	// Addition operator.
 	{
-        CStringT<WCHAR> str;
-        str.Format(L"%s%d", string1.c_str(), val);
-        return str;
+		CStringT<WCHAR> str;
+		str.Format(L"%s%d", string1.c_str(), val);
+		return str;
 	}
 
 	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, double val)
 	// Addition operator.
 	{
-        CStringT<CHAR> str;
-        str.Format("%s%g", string1.c_str(), val);
-        return str;
+		CStringT<CHAR> str;
+		str.Format("%s%g", string1.c_str(), val);
+		return str;
 	}
 
 	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, double val)
@@ -1615,33 +1622,33 @@ namespace Win32xx
 	inline CStringT<CHAR> operator + (int val, const CStringT<CHAR>& string1)
 	// Addition operator.
 	{
-        CStringT<CHAR> str;
-        str.Format("%d%s", val, string1.c_str());
-        return str;
+		CStringT<CHAR> str;
+		str.Format("%d%s", val, string1.c_str());
+		return str;
 	}
 
 	inline CStringT<WCHAR> operator + (int val, const CStringT<WCHAR>& string1)
 	// Addition operator.
 	{
-        CStringT<WCHAR> str;
-        str.Format(L"%d%s", val, string1.c_str());
-        return str;
+		CStringT<WCHAR> str;
+		str.Format(L"%d%s", val, string1.c_str());
+		return str;
 	}
 
 	inline CStringT<CHAR> operator + (double val, const CStringT<CHAR>& string1)
 	// Addition operator.
 	{
-        CStringT<CHAR> str;
-        str.Format("%g%s", val, string1.c_str());
-        return str;
+		CStringT<CHAR> str;
+		str.Format("%g%s", val, string1.c_str());
+		return str;
 	}
 
 	inline CStringT<WCHAR> operator + (double val, const CStringT<WCHAR>& string1)
 	// Addition operator.
 	{
-        CStringT<WCHAR> str;
-        str.Format(L"%g%s", val, string1.c_str());
-        return str;
+		CStringT<WCHAR> str;
+		str.Format(L"%g%s", val, string1.c_str());
+		return str;
 	}
 
 
@@ -1730,16 +1737,16 @@ namespace Win32xx
 
 	inline CString operator + (const CString& string1, int val)
 	{
-        CString str;
-        str.Format(_T("%s%d"), string1.c_str(), val);
-        return str;
+		CString str;
+		str.Format(_T("%s%d"), string1.c_str(), val);
+		return str;
 	}
 
 	inline CString operator + (const CString& string1, double val)
 	{
-        CString str;
-        str.Format(_T("%s%g"), string1.c_str(), val);
-        return str;
+		CString str;
+		str.Format(_T("%s%g"), string1.c_str(), val);
+		return str;
 	}
 
 	inline CString operator + (const TCHAR* pszText, const CString& string1)
@@ -1758,16 +1765,16 @@ namespace Win32xx
 
 	inline CString operator + (int val, const CString& string1)
 	{
-        CString str;
-        str.Format(_T("%d%s"), val, string1.c_str());
-        return str;
+		CString str;
+		str.Format(_T("%d%s"), val, string1.c_str());
+		return str;
 	}
 
 	inline CString operator + (double val, const CString& string1)
 	{
-        CString str;
-        str.Format(_T("%g%s"), val, string1.c_str());
-        return str;
+		CString str;
+		str.Format(_T("%g%s"), val, string1.c_str());
+		return str;
 	}
 	
 	//////////////////////////////////////////////

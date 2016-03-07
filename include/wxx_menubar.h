@@ -69,7 +69,7 @@ namespace Win32xx
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
-	//Overridables
+		//Overridables
 		virtual void OnAttach();
 		virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnExitMenuLoop(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -91,6 +91,8 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void	PreCreate(CREATESTRUCT& cs);
 		virtual void	PreRegisterClass(WNDCLASS& wc);
+		
+		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

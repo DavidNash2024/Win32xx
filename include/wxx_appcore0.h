@@ -435,7 +435,6 @@ namespace Win32xx
 		friend class CPageSetupDialog;
 		friend CWinApp& GetApp();
 		friend void GlobalFreeAll(HGLOBAL hGlobal);
-		friend BOOL UpdateDefaultPrinter();
 
 		typedef Shared_Ptr<TLSData> TLSDataPtr;
 
@@ -470,11 +469,13 @@ namespace Win32xx
 
 		void AddCDCData(HDC hDC, CDC_Data* pData);
 		void AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData);
-		void AddCImlData(HIMAGELIST hIml, CIml_Data* pData);	
+		void AddCImlData(HIMAGELIST hIml, CIml_Data* pData);
+		void GlobalFreeAll(HGLOBAL hGlobal);
 		CDC_Data* GetCDCData(HDC hDC);
 		CGDI_Data* GetCGDIData(HGDIOBJ hObject);
 		CIml_Data* GetCImlData(HIMAGELIST himl);	
 		void	SetCallback();
+		void UpdateDefaultPrinter();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
 		std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;

@@ -115,8 +115,8 @@ namespace Win32xx
 	class CPropertySheet : public CWnd
 	{
 	public:
-		CPropertySheet(UINT nIDCaption, HWND hParent = NULL);
-		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hParent = NULL);
+		CPropertySheet(UINT nIDCaption, HWND hParent = 0);
+		CPropertySheet(LPCTSTR pszCaption = NULL, HWND hParent = 0);
 		virtual ~CPropertySheet() {}
 
 		// Operations
@@ -145,6 +145,8 @@ namespace Win32xx
 
 	protected:
 		virtual BOOL PreTranslateMessage(MSG& Msg);
+		
+		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -169,7 +171,7 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CPropertyPage class
 	//
-	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/)
+	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/)
 	{
 		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
 		SetTitle(szTitle);
@@ -613,7 +615,7 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CPropertySheet class
 	//
-	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hParent /* = NULL*/)
+	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hParent /* = 0*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(LoadString(nIDCaption));
@@ -633,7 +635,7 @@ namespace Win32xx
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
-	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hParent /* = NULL*/)
+	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hParent /* = 0*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
 		SetTitle(pszCaption);
@@ -813,7 +815,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		CPropertyPage* pPage = NULL;
-		if (GetHwnd() != NULL)
+		if (GetHwnd() != 0)
 		{
 			HWND hPage = reinterpret_cast<HWND>(SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L));
 			pPage = static_cast<CPropertyPage*>(GetCWndPtr(hPage));
@@ -864,7 +866,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		int nPage = GetPageIndex(pPage);
-		if (GetHwnd() != NULL)
+		if (GetHwnd() != 0)
 			SendMessage(*this, PSM_REMOVEPAGE, nPage, 0L);
 
 		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
