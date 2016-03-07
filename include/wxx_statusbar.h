@@ -52,12 +52,12 @@ namespace Win32xx
 		CStatusBar();
 		virtual ~CStatusBar() {}
 
-	// Overridables
+		// Overridables
 		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 
-	// Attributes
+		// Attributes
 		int GetParts();
 
 		CRect GetPartRect(int iPart);
@@ -68,7 +68,7 @@ namespace Win32xx
 		HICON GetPartIcon(int iPart);
 		BOOL SetPartIcon(int iPart, HICON hIcon);
 
-	// Operations
+		// Operations
 		CStatusBar(const CStatusBar&);				// Disable copy construction
 		CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
 

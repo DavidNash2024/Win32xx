@@ -277,7 +277,7 @@ namespace Win32xx
 		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
 
 		// Get the parent window dimensions (parent could be the desktop)
-		if (GetParent().GetHwnd() != NULL) rcParent = GetParent().GetWindowRect();
+		if (GetParent().GetHwnd() != 0) rcParent = GetParent().GetWindowRect();
 		else rcParent = rcDesktop;
 
 	#ifndef _WIN32_WCE
@@ -333,11 +333,11 @@ namespace Win32xx
 		if ( &GetApp() )
 			RemoveFromMap();
 
-		m_hWnd = NULL;
-		m_PrevWindowProc = NULL;
+		m_hWnd = 0;
+		m_PrevWindowProc = 0;
 	}
 
-	inline HWND CWnd::Create(HWND hWndParent /* = NULL */)
+	inline HWND CWnd::Create(HWND hWndParent /* = 0 */)
 	// Creates the window. This is the default method of window creation.
 	{
 		// Test if Win32++ has been started
@@ -512,7 +512,7 @@ namespace Win32xx
 	//	validated data from the controls.  Override this method in the dialog
 	//	or other window that utilize the DDX/DDV functions.
 	{
-		  // TODO: Any dialog or window using DDX/DDV for its controls should
+		  // Any dialog or window using DDX/DDV for its controls should
 		  // override of this member, and put calls to the DDX and DDV functions
 		  // there.
 
@@ -697,7 +697,7 @@ namespace Win32xx
 		// A function used to call OnMessageReflect. You shouldn't need to call or
 		//  override this function.
 
-		HWND hWnd = NULL;
+		HWND hWnd = 0;
 		switch (uMsg)
 		{
 		case WM_COMMAND:

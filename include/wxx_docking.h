@@ -137,18 +137,18 @@ namespace Win32xx
 			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
 			virtual CToolBar& GetToolBar() const	{return const_cast<CToolBar&>(m_ToolBar);}
-			virtual CWnd& GetView() const	{assert(m_pView); return *m_pView;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual int OnCreate(CREATESTRUCT& cs);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void RecalcLayout();
-			virtual void SetView(CWnd& wndView);
 			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CWnd* GetTabCtrl() const						{ return m_pTab;}
+			CWnd& GetView() const { assert(m_pView); return *m_pView; }
 			CDockContainer* GetContainer() const;
 			void SetContainer(CDockContainer* pContainer)	{ m_pContainer = pContainer; }
+			void SetView(CWnd& wndView);
 
 		private:
 			CToolBar m_ToolBar;
@@ -476,8 +476,9 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockClient&>(m_DockClient); }
 		virtual CDockHint& GetDockHint() const		{ return m_pDockAncestor->m_DockHint; }
 		virtual CRect GetViewRect() const			{ return GetClientRect(); }
-		virtual CWnd& GetView() const				{ return GetDockClient().GetView(); }
-		virtual void SetView(CWnd& wndView);
+		
+		CWnd& GetView() const						{ return GetDockClient().GetView(); }
+		void SetView(CWnd& wndView);
 
 		const std::vector <DockPtr> & GetAllDockChildren() const	{return GetDockAncestor()->m_vAllDockChildren;}
 		const std::vector <CDocker*> & GetDockChildren() const		{return m_vDockChildren;}

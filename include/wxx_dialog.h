@@ -89,9 +89,9 @@ namespace Win32xx
 
 		// You probably won't need to override these functions
 		virtual void AttachItem(int nID, CWnd& Wnd);
-		virtual HWND Create(HWND hWndParent = NULL) { return DoModeless(hWndParent); }
-		virtual INT_PTR DoModal(HWND hWndParent = NULL);
-		virtual HWND DoModeless(HWND hWndParent = NULL);	
+		virtual HWND Create(HWND hWndParent = 0) { return DoModeless(hWndParent); }
+		virtual INT_PTR DoModal(HWND hWndParent = 0);
+		virtual HWND DoModeless(HWND hWndParent = 0);	
 		virtual BOOL IsModal() const { return m_IsModal; }
 		BOOL IsIndirect() const { return (NULL != m_lpTemplate); }
 
@@ -105,7 +105,7 @@ namespace Win32xx
 		virtual void OnOK();
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 		
-		// You won't need to override this function
+		// Not intended to be overridden
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Can't override these functions
@@ -226,7 +226,7 @@ namespace Win32xx
 
 	inline CDialog::~CDialog()
 	{
-		if (GetHwnd() != NULL)
+		if (GetHwnd() != 0)
 		{
 			if (IsModal())
 				::EndDialog(GetHwnd(), 0);
@@ -385,7 +385,7 @@ namespace Win32xx
 
 	} // INT_PTR CALLBACK CDialog::DialogProc(...)
 
-	inline INT_PTR CDialog::DoModal(HWND hWndParent /* = NULL */)
+	inline INT_PTR CDialog::DoModal(HWND hWndParent /* = 0 */)
 	{
 		// Create a modal dialog
 		// A modal dialog box must be closed by the user before the application continues

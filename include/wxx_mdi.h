@@ -88,10 +88,10 @@ namespace Win32xx
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void RecalcLayout();
-		virtual CWnd& GetView() const { assert(m_pView); return *m_pView; }
-		virtual void SetView(CWnd& pwndView);
-
+	
 		// These functions aren't virtual, and shouldn't be overridden
+		CWnd& GetView() const			{ assert(m_pView); return *m_pView; }
+		void SetView(CWnd& pwndView);
 		void SetHandles(HMENU MenuName, HACCEL AccelName);
 		CMDIFrame& GetMDIFrame() const;
 		void MDIActivate() const;
@@ -106,7 +106,7 @@ namespace Win32xx
 		virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
-		// Its unlikely you would need to override these functions
+		// Not intended to be overridden
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -188,6 +188,8 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
 		virtual BOOL    PreTranslateMessage(MSG& Msg);
+		
+		// Not intended to be overridden	
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -209,7 +211,7 @@ namespace Win32xx
 	public:
 		CMDIDockFrame()						{ SetView(GetMDIClient()); }
 		CRect GetViewRect() const			{ return CMDIFrame::GetViewRect(); }
-		virtual CWnd& GetView() const		{ return CMDIFrame::GetView(); }
+		CWnd& GetView() const				{ return CMDIFrame::GetView(); }
 		void RecalcViewLayout()				{ RecalcDockLayout(); }
 		
 		virtual CDocker::CDockClient& GetDockClient() const	

@@ -125,12 +125,14 @@ namespace Win32xx
 		void  SetToolTips(HWND hToolTip) const;
 
 	protected:
-	// Overridables
+		// Overridables
 		virtual void OnAttach();
 		virtual void OnDestroy();
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
+		
+		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

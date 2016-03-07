@@ -196,10 +196,13 @@ namespace Win32xx
 		void Stop();
 
 	protected:
+		// Override these as required
 		virtual void OnAttach();
 		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
 		virtual void OnSize(int width, int height);
+		
+		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

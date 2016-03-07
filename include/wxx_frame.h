@@ -331,8 +331,9 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void RecalcLayout();
 		virtual void RecalcViewLayout();
-		virtual CWnd& GetView() const { return *m_pView; }
-		virtual void SetView(CWnd& wndView) { m_pView = &wndView; }
+		
+		CWnd& GetView() const		{ return *m_pView; }
+		void SetView(CWnd& wndView) { m_pView = &wndView; }
 
 
 		// Virtual Attributes
@@ -427,6 +428,8 @@ namespace Win32xx
 		virtual void ShowStatusBar(BOOL bShow);
 		virtual void ShowToolBar(BOOL bShow);
 		virtual void UpdateMRUMenu();
+		
+		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Current declarations of message handlers

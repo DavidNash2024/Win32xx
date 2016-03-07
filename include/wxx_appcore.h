@@ -60,25 +60,6 @@
 namespace Win32xx
 {
 
-	inline void GlobalFreeAll(HGLOBAL hGlobal)
-	{
-		if (hGlobal == NULL)
-			return;
-
-		// check validity of the handle
-		assert(::GlobalFlags(hGlobal) != GMEM_INVALID_HANDLE);
-		// decrement the lock count associated with the handle
-		UINT nCount = ::GlobalFlags(hGlobal) & GMEM_LOCKCOUNT;
-		while (nCount--)
-		{
-			TRACE("***WARNING Global memory still locked ***\n");
-			::GlobalUnlock(hGlobal);
-		}
-
-		// finally, really free the handle
-		::GlobalFree(hGlobal);
-	}
-
 	///////////////////////////////////////
 	// Definitions for the CObject class
 	//
@@ -441,6 +422,28 @@ namespace Win32xx
 		m_csMapLock.Release();
 	}
 #endif
+
+
+	inline void CWinApp::GlobalFreeAll(HGLOBAL hGlobal)
+	// Free the specified global memory. It also provides a TRACE warning
+	// if the global memory is currently locked.
+	{
+		if (hGlobal == 0)
+			return;
+
+		// check validity of the handle
+		assert(::GlobalFlags(hGlobal) != GMEM_INVALID_HANDLE);
+		// decrement the lock count associated with the handle
+		UINT nCount = ::GlobalFlags(hGlobal) & GMEM_LOCKCOUNT;
+		while (nCount--)
+		{
+			TRACE("***WARNING Global memory still locked ***\n");
+			::GlobalUnlock(hGlobal);
+		}
+
+		// finally, really free the handle
+		::GlobalFree(hGlobal);
+	}
 
 	inline CDC_Data* CWinApp::GetCDCData(HDC hDC)
 	{
