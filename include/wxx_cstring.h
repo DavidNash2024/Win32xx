@@ -479,7 +479,7 @@ namespace Win32xx
 	// Assign from a const CStringT<T>.
 	inline CStringT<T>& CStringT<T>::operator = (const CStringT<T>& str)
 	{
-		m_str.assign(str);
+		m_str.assign(str.m_str);
 		return *this;
 	}
 
@@ -507,7 +507,7 @@ namespace Win32xx
 	{
 		CStringT str;
 		str.Format("%d", val);
-		m_str.assign(str);
+		m_str.assign(str.m_str);
 		return *this;
 	}
 
@@ -517,7 +517,7 @@ namespace Win32xx
 	{
 		CStringT str;
 		str.Format(L"%d", val);
-		m_str.assign(str);
+		m_str.assign(str.m_str);
 		return *this;
 	}
 
@@ -527,7 +527,7 @@ namespace Win32xx
 	{
 		CStringT str;
 		str.Format("%g", val);
-		m_str.assign(str);
+		m_str.assign(str.m_str);
 		return *this;
 	}
 
@@ -537,7 +537,7 @@ namespace Win32xx
 	{
 		CStringT str;
 		str.Format(L"%g", val);
-		m_str.assign(str);
+		m_str.assign(str.m_str);
 		return *this;
 	}
 
@@ -593,7 +593,7 @@ namespace Win32xx
 	inline CStringT<T>& CStringT<T>::operator += (const CStringT& str)
 	// Addition assignment. Appends CStringT<T>.
 	{
-		m_str.append(str);
+		m_str.append(str.m_str);
 		return *this;
 	}
 
