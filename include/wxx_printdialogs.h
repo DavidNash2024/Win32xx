@@ -401,8 +401,6 @@ namespace Win32xx
 			m_pd.Flags |= PD_RETURNDC;
 		}
 
-		// Set these flags initially. They can be modified by calling SetParameters.
-		m_pd.Flags |= PD_ENABLEPRINTHOOK | PD_ENABLESETUPHOOK;
 		m_pd.Flags &= ~PD_RETURNIC;
 		SetParameters(m_pd);
 	}
@@ -536,7 +534,8 @@ namespace Win32xx
 			GlobalUnlock(GetApp().m_hDevNames);
 
 			DWORD dwError = CommDlgExtendedError();
-			if (dwError != 0)
+			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+			// ignore the exception caused by closing the dialog
 			{
 				// Reset global memory
 				GlobalFreeAll();
@@ -706,7 +705,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CPrintDialog::SetParameters(PRINTDLG& pd)
-	// Set the parameters of the PRINTDLG structure to safe values
+	// Set the parameters of the PRINTDLG structure to sensible values
 	{
 		m_pd.lStructSize	= sizeof(m_pd);
 		m_pd.hwndOwner		= 0;			// Set this in DoModal
@@ -724,6 +723,10 @@ namespace Win32xx
 		m_pd.hSetupTemplate = pd.hSetupTemplate;
 		m_pd.lpPrintTemplateName = pd.lpPrintTemplateName;
 		m_pd.lpSetupTemplateName = pd.lpSetupTemplateName;
+
+		// Enable the hook proc for the help button
+		if (m_pd.Flags & PD_SHOWHELP)
+			m_pd.Flags |= PD_ENABLEPRINTHOOK;
 	}
 
 
@@ -739,9 +742,6 @@ namespace Win32xx
 	{
 		ZeroMemory(&m_psd, sizeof(m_psd));
 		m_psd.Flags = dwFlags;
-
-		// Add the flags to support message hooking
-		m_psd.Flags |= PSD_ENABLEPAGESETUPHOOK | PSD_ENABLEPAGEPAINTHOOK;
 
 		SetParameters(m_psd);
 	}
@@ -838,7 +838,8 @@ namespace Win32xx
 			GlobalUnlock(GetApp().m_hDevNames);
 
 			DWORD dwError = CommDlgExtendedError();
-			if (dwError != 0)
+			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+			// ignore the exception caused by closing the dialog
 			{
 				// Reset global memory
 				GlobalFreeAll();
@@ -946,7 +947,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CPageSetupDialog::SetParameters(PAGESETUPDLG& psd)
-	// Set the parameters of the PAGESETUPDLG structure to safe values
+	// Set the parameters of the PAGESETUPDLG structure to sensible values
 	{
 		m_psd.lStructSize		= sizeof(m_psd);
 		m_psd.hwndOwner			= 0;			// Set this in DoModal
@@ -960,6 +961,10 @@ namespace Win32xx
 		m_psd.lpfnPagePaintHook = (LPCCHOOKPROC)CPageSetupDialog::PaintHookProc;
 		m_psd.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
 		m_psd.hPageSetupTemplate = psd.hPageSetupTemplate;
+
+		// Enable the hook proc for the help button
+		if (m_psd.Flags & PSD_SHOWHELP)
+			m_psd.Flags |= PSD_ENABLEPAGESETUPHOOK;
 	}
 
 }

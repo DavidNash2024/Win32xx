@@ -226,7 +226,6 @@ namespace Win32xx
 		virtual ~CFontDialog(void)	{}
 
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
-		DWORD FillInLogFont(const CHARFORMAT& cf);
 		CHARFORMAT	GetCharFormat(void) const;
 		COLORREF	GetColor(void) const 		{ return m_CF.rgbColors;}
 		CString GetFaceName(void) const			{ return m_LogFont.lfFaceName;}
@@ -251,6 +250,8 @@ namespace Win32xx
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		DWORD FillInLogFont(const CHARFORMAT& cf);
+
 		// private data
 		LOGFONT 	m_LogFont;			// Font charactreristics
 		CHOOSEFONT	m_CF;				// ChooseFont parameters
@@ -398,7 +399,8 @@ namespace Win32xx
 		if (!ok)
 		{
 			DWORD dwError = CommDlgExtendedError();
-			if (dwError != 0)
+			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+				// ignore the exception caused by closing the dialog
 				throw CResourceException(_T("CColorDialog::DoModal Failed"), dwError);
 
 			OnCancel();
@@ -425,10 +427,10 @@ namespace Win32xx
 	//============================================================================
 	inline void	CColorDialog::SetParameters(CHOOSECOLOR cc)
 	// Sets the various parameters of the CHOOSECOLOR struct.
-	// The parameters are set to safe values.
+	// The parameters are set to sensible values.
 	{
 		m_CC.lStructSize	= sizeof(m_CC);
-		m_CC.hwndOwner		= cc.hwndOwner;
+		m_CC.hwndOwner		= 0;			// Set this in DoModal
 		m_CC.hInstance		= cc.hInstance;
 		m_CC.rgbResult		= cc.rgbResult;
 		m_CC.lpCustColors	= m_rgbCustomColors;
@@ -436,6 +438,10 @@ namespace Win32xx
 		m_CC.lCustData		= cc.lCustData;
 		m_CC.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
 		m_CC.lpTemplateName = cc.lpTemplateName;
+
+		// Enable the hook proc for the help button
+		if (m_CC.Flags & CC_SHOWHELP)
+			m_CC.Flags |= CC_ENABLEHOOK;
 	}
 
 
@@ -957,7 +963,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CFileDialog::SetParameters(OPENFILENAME ofn)
 	//	Sets the various parameters of the OPENFILENAME struct.
-	//  The parameters are set to safe values.
+	//  The parameters are set to sensible values.
 	{
 		// Set the correct struct size for all Windows versions and compilers
 		DWORD StructSize = sizeof(m_OFN);
@@ -996,6 +1002,10 @@ namespace Win32xx
 		m_OFN.lpstrDefExt		= ofn.lpstrDefExt;
 		m_OFN.lCustData			= ofn.lCustData;
 		m_OFN.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
+
+		// Enable the hook proc for the help button
+		if (m_OFN.Flags & OFN_SHOWHELP)
+			m_OFN.Flags |= OFN_ENABLEHOOK;
 	}
 
 
@@ -1213,21 +1223,35 @@ namespace Win32xx
 	//============================================================================
 	inline void	CFindReplaceDialog::SetParameters(FINDREPLACE fr)
 	//	Sets the various parameters of the FINDREPLACE struct.
-	//  The parameters are set to safe values.
+	//  The parameters are set to sensible values.
 	{
 		const int MaxChars = 128;
+
+		if (fr.lpstrFindWhat)
+			m_strFindWhat = fr.lpstrFindWhat;
+		else
+			m_strFindWhat.Empty();
+
+		if (fr.lpstrReplaceWith)
+			m_strReplaceWith = fr.lpstrReplaceWith;
+		else
+			m_strReplaceWith.Empty();
 
 		m_FR.lStructSize		= sizeof(FINDREPLACE);
 		m_FR.hwndOwner			= 0;		// Set this in Create
 		m_FR.hInstance			= GetApp().GetInstanceHandle();
 		m_FR.Flags				= fr.Flags;
-		m_FR.lpstrFindWhat		= NULL;		// is set within Create
-		m_FR.lpstrReplaceWith	= NULL;		// is set within Create
+		m_FR.lpstrFindWhat		= (LPTSTR)m_strFindWhat.c_str();
+		m_FR.lpstrReplaceWith	= (LPTSTR)m_strReplaceWith.c_str();
 		m_FR.wFindWhatLen		= MAX(fr.wFindWhatLen, MaxChars);
 		m_FR.wReplaceWithLen	= MAX(fr.wReplaceWithLen, MaxChars);
 		m_FR.lCustData			= (LPARAM)this;
 		m_FR.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
 		m_FR.lpTemplateName		= fr.lpTemplateName;
+
+		// Enable the hook proc for the help button
+		if (m_FR.Flags & FR_SHOWHELP)
+			m_FR.Flags |= FR_ENABLEHOOK;
 	}
 
 
@@ -1251,23 +1275,11 @@ namespace Win32xx
 		m_CF.rgbColors   = 0; // black
 		m_CF.lStructSize = sizeof(m_CF);
 		m_CF.Flags  = dwFlags;
-		m_CF.lpszStyle = (LPTSTR)m_strStyleName.c_str();
-
-		if (hdcPrinter)
-		{
-			m_CF.hDC = hdcPrinter;
-			m_CF.Flags |= CF_PRINTERFONTS;
-		}
+		m_CF.lpLogFont = lplfInitial;
 
 		if (lplfInitial)
 		{
-			m_CF.lpLogFont = lplfInitial;
 			m_CF.Flags |= CF_INITTOLOGFONTSTRUCT;
-			memcpy(&m_LogFont, m_CF.lpLogFont, sizeof(m_LogFont));
-		}
-		else
-		{
-			m_CF.lpLogFont = &m_LogFont;
 		}
 
 		if (hdcPrinter)
@@ -1295,9 +1307,6 @@ namespace Win32xx
 
 		// set dialog parameters
 		m_CF.lStructSize = sizeof(m_CF);
-		m_CF.lpszStyle   = (LPTSTR)m_strStyleName.c_str();
-		m_CF.lpLogFont   = &m_LogFont;
-		m_CF.Flags       = dwFlags | CF_INITTOLOGFONTSTRUCT;
 		m_CF.Flags      |= FillInLogFont(charformat);
 
 		if (charformat.dwMask & CFM_COLOR)
@@ -1372,17 +1381,20 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 
 		m_CF.hwndOwner = hWndOwner;
+		m_CF.lpszStyle = (LPTSTR)m_strStyleName.GetBuffer(80);
 
 		// open the font choice dialog
 		BOOL ok = ::ChooseFont(&m_CF);
 
+		m_strStyleName.ReleaseBuffer();
 		m_hWnd = 0;
 
 		// process the result of the font choice box:
 		if (!ok)
 		{
 			DWORD dwError = CommDlgExtendedError();
-			if (dwError != 0)
+			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+				// ignore the exception caused by closing the dialog
 				throw CResourceException(_T("CFontDialog::DoModal Failed"), dwError);
 
 			OnCancel();
@@ -1544,14 +1556,7 @@ namespace Win32xx
 		else
 			ZeroMemory(&m_LogFont, sizeof(LOGFONT));
 
-		if (cf.lpszStyle)
-		{
-			m_strStyleName = cf.lpszStyle;
-		}
-		else
-		{
-			m_strStyleName.Empty();
-		}
+		SetStyleName(cf.lpszStyle);
 
 		m_CF.lStructSize	= sizeof(CHOOSEFONT);
 		m_CF.hwndOwner		= 0;		// Set this in DoModal
@@ -1568,6 +1573,10 @@ namespace Win32xx
 		m_CF.nFontType		= cf.nFontType;
 		m_CF.nSizeMin		= cf.nSizeMin;
 		m_CF.nSizeMax		= cf.nSizeMax;
+
+		// Enable the hook proc for the help button
+		if (m_CF.Flags & CF_SHOWHELP)
+			m_CF.Flags |= CF_ENABLEHOOK;
 	}
 
 	//============================================================================

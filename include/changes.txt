@@ -1,6 +1,9 @@
 Version 8.2
 ===========
 
+New Features and Enhancements
+----------------------------- 
+* Added support for the Common Dialogs
 
 
 Changes in detail
@@ -15,6 +18,12 @@ CWinApp::GetTlsData
 CWinApp::SetTlsData
 
 Added
+CCommonDialog
+CColorDialog
+CFindReplaceDialog
+CFontDialog
+CPageSetupDialog
+CPrinDialog
 CFrame::GetInitValues
 CFrame::SetInitValues
 
