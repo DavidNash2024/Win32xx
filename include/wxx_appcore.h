@@ -55,7 +55,9 @@
 
 
 #include "wxx_appcore0.h"
-
+#include "wxx_textconv.h"
+#include "wxx_wincore0.h"
+#include "wxx_exception.h"
 
 namespace Win32xx
 {

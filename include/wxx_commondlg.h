@@ -240,7 +240,6 @@ namespace Win32xx
 		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline;}
 		void    SetColor(const COLORREF rgb)	{ m_CF.rgbColors = rgb;}
 		void	SetParameters(CHOOSEFONT cf);
-		void    SetStyleName(LPCTSTR pszStyle);
 
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
@@ -325,6 +324,10 @@ namespace Win32xx
 		// Set all custom colors to white
 		for (int i = 0; i <= 15; ++i)
 			m_rgbCustomColors[i] = RGB(255,255,255);
+
+		// Enable the hook proc for the help button
+		if (m_CC.Flags & CC_SHOWHELP)
+			m_CC.Flags |= CC_ENABLEHOOK;
 
 		// Set the CHOOSECOLOR struct parameters to safe values
 		SetParameters(m_CC);
@@ -438,10 +441,6 @@ namespace Win32xx
 		m_CC.lCustData		= cc.lCustData;
 		m_CC.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
 		m_CC.lpTemplateName = cc.lpTemplateName;
-
-		// Enable the hook proc for the help button
-		if (m_CC.Flags & CC_SHOWHELP)
-			m_CC.Flags |= CC_ENABLEHOOK;
 	}
 
 
@@ -472,6 +471,10 @@ namespace Win32xx
 		m_OFN.lpstrFilter	= pszFilter;
 		m_OFN.lpstrDefExt	= pszDefExt;
 		m_OFN.Flags			= dwFlags;
+
+		// Enable the hook proc for the help button
+		if (m_OFN.Flags & OFN_SHOWHELP)
+			m_OFN.Flags |= OFN_ENABLEHOOK;
 
 		// Safely set the remaining OPENFILENAME values
 		SetParameters(m_OFN);
@@ -975,14 +978,7 @@ namespace Win32xx
 			m_OFN.FlagsEx =		ofn.FlagsEx;
   #endif
 
-		if (ofn.lpstrFile)
-		{
-			m_sFileName = ofn.lpstrFile;
-			m_OFN.lpstrFile = (LPTSTR)m_sFileName.c_str();
-		}
-		else
-			m_OFN.lpstrFile = NULL;
-
+		SetFileName(ofn.lpstrFile);
 		SetFilter(ofn.lpstrFilter);
 
 		m_OFN.lStructSize		= StructSize;
@@ -1002,10 +998,6 @@ namespace Win32xx
 		m_OFN.lpstrDefExt		= ofn.lpstrDefExt;
 		m_OFN.lCustData			= ofn.lCustData;
 		m_OFN.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
-
-		// Enable the hook proc for the help button
-		if (m_OFN.Flags & OFN_SHOWHELP)
-			m_OFN.Flags |= OFN_ENABLEHOOK;
 	}
 
 
@@ -1225,7 +1217,9 @@ namespace Win32xx
 	//	Sets the various parameters of the FINDREPLACE struct.
 	//  The parameters are set to sensible values.
 	{
-		const int MaxChars = 128;
+		int MaxChars = 128;
+		MaxChars = MAX(MaxChars, lstrlen(fr.lpstrFindWhat));
+		MaxChars = MAX(MaxChars, lstrlen(fr.lpstrReplaceWith));
 
 		if (fr.lpstrFindWhat)
 			m_strFindWhat = fr.lpstrFindWhat;
@@ -1243,8 +1237,8 @@ namespace Win32xx
 		m_FR.Flags				= fr.Flags;
 		m_FR.lpstrFindWhat		= (LPTSTR)m_strFindWhat.c_str();
 		m_FR.lpstrReplaceWith	= (LPTSTR)m_strReplaceWith.c_str();
-		m_FR.wFindWhatLen		= MAX(fr.wFindWhatLen, MaxChars);
-		m_FR.wReplaceWithLen	= MAX(fr.wReplaceWithLen, MaxChars);
+		m_FR.wFindWhatLen		= (WORD)MAX(fr.wFindWhatLen, MaxChars);
+		m_FR.wReplaceWithLen	= (WORD)MAX(fr.wReplaceWithLen, MaxChars);
 		m_FR.lCustData			= (LPARAM)this;
 		m_FR.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
 		m_FR.lpTemplateName		= fr.lpTemplateName;
@@ -1275,18 +1269,18 @@ namespace Win32xx
 		m_CF.rgbColors   = 0; // black
 		m_CF.lStructSize = sizeof(m_CF);
 		m_CF.Flags  = dwFlags;
+		m_CF.Flags |= CF_INITTOLOGFONTSTRUCT;
 		m_CF.lpLogFont = lplfInitial;
-
-		if (lplfInitial)
-		{
-			m_CF.Flags |= CF_INITTOLOGFONTSTRUCT;
-		}
 
 		if (hdcPrinter)
 		{
 			m_CF.hDC = hdcPrinter;
 			m_CF.Flags |= CF_PRINTERFONTS;
 		}
+
+		// Enable the hook proc for the help button
+		if (m_CF.Flags & CF_SHOWHELP)
+			m_CF.Flags |= CF_ENABLEHOOK;
 
 		SetParameters(m_CF);
 	}
@@ -1307,7 +1301,8 @@ namespace Win32xx
 
 		// set dialog parameters
 		m_CF.lStructSize = sizeof(m_CF);
-		m_CF.Flags      |= FillInLogFont(charformat);
+		m_CF.Flags	= dwFlags;
+		m_CF.Flags  |= FillInLogFont(charformat);
 
 		if (charformat.dwMask & CFM_COLOR)
 			m_CF.rgbColors = charformat.crTextColor;
@@ -1317,6 +1312,10 @@ namespace Win32xx
 			m_CF.hDC = hdcPrinter;
 			m_CF.Flags |= CF_PRINTERFONTS;
 		}
+
+		// Enable the hook proc for the help button
+		if (m_CF.Flags & CF_SHOWHELP)
+			m_CF.Flags |= CF_ENABLEHOOK;
 
 		SetParameters(m_CF);
 	}
@@ -1556,7 +1555,11 @@ namespace Win32xx
 		else
 			ZeroMemory(&m_LogFont, sizeof(LOGFONT));
 
-		SetStyleName(cf.lpszStyle);
+		if (cf.lpszStyle)
+			m_strStyleName = cf.lpszStyle;
+		else
+			m_strStyleName.Empty();
+
 
 		m_CF.lStructSize	= sizeof(CHOOSEFONT);
 		m_CF.hwndOwner		= 0;		// Set this in DoModal
@@ -1573,22 +1576,6 @@ namespace Win32xx
 		m_CF.nFontType		= cf.nFontType;
 		m_CF.nSizeMin		= cf.nSizeMin;
 		m_CF.nSizeMax		= cf.nSizeMax;
-
-		// Enable the hook proc for the help button
-		if (m_CF.Flags & CF_SHOWHELP)
-			m_CF.Flags |= CF_ENABLEHOOK;
-	}
-
-	//============================================================================
-	inline void CFontDialog::SetStyleName(LPCTSTR pszStyle)
-	// Assigns the specified font style to the CHOOSEFONT structure.
-	{
-		if (pszStyle)
-			m_strStyleName = pszStyle;
-		else
-			m_strStyleName.Empty();
-
-		m_CF.lpszStyle = (LPTSTR)m_strStyleName.c_str();
 	}
 
 }
