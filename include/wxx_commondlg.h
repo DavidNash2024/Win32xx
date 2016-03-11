@@ -645,8 +645,6 @@ namespace Win32xx
 	//	Return the title of the file entered in the DoModal() operation. The
 	//	title consists of the full path name with directory path and extension
 	//	removed.
-	//	If the OFN_ALLOWMULTISELECT option set, only the extension on the first
-	//	file path selected will be returned.
 	{
 		CString strResult = GetFileName();
 		int pos = strResult.ReverseFind(_T("."));
@@ -658,92 +656,73 @@ namespace Win32xx
 
 	//============================================================================
 	inline CString CFileDialog::GetNextPathName(int& pos) const
-	//	Return the next file path name from the selection made in the DoModal()
-	//	operation. If the m_OFN.Flags member includes the OFN_ALLOWMULTISELECT
-	//	option, more than one file name may appear in the selection. Set pos = 0
-	//	prior to entry to establish the initial operation, and then use the
-	//	returned pos in subsequent calls as a forward iteration to retrieve
-	//	the remaining path names in succession. The pos value is set to a
-	//	negative number when no more path names are present.
+	//	Return the next file path name from a group of files selected. The 
+	//	OFN_ALLOWMULTISELECT flag allows multiple files to be selected. Use pos = 0
+	//	to retrieve the first file. The pos parameter is updated to point to the 
+	// 	next file name. The pos parameter is set to -1 when the last file is retrived.
 	{
 		assert(pos >= 0);
 
 		BOOL bExplorer = m_OFN.Flags & OFN_EXPLORER;
 		TCHAR chDelimiter = (bExplorer ? _T('\0') : _T(' '));
-
-		// let lpsz be a pointer to the position in the returned file name
-		// string to start the search
-		LPTSTR lpsz = m_OFN.lpstrFile + pos;
-		if (pos == 0) // first time
+		
+		CString strFile(m_OFN.lpstrFile + pos, m_OFN.nMaxFile);	// strFile can contain NULLs
+		int Index = 0;
+		if (pos == 0)
 		{
-			if ((m_OFN.Flags & OFN_ALLOWMULTISELECT) == 0)
-			{         // no multi-selection, lpstrFile is the path name
-				pos = -1;
-				return m_OFN.lpstrFile;
-			}
-
-			// multi-selection case: find the pos after first chDelimiter
-			while(*lpsz != chDelimiter && *lpsz != _T('\0'))
-				lpsz = _tcsinc(lpsz);
-			lpsz = _tcsinc(lpsz);
-
-			// if we've reached the end of the input already, only one file
-			// file name was selected in multi-selection mode
-			if (*lpsz == _T('\0'))
+			Index = strFile.Find(chDelimiter);
+			
+			if ( (Index < 0) || (strFile.GetAt(++Index) == _T('\0')))
 			{
+				// Only one file selected. m_OFN.lpstrFile contains a single string
+				// consisting of the path and file name.
 				pos = -1;
 				return m_OFN.lpstrFile;
 			}
 		}
 
-		// This is not the first time, or it is the first time but the input
-		// scan did not terminate; in either case, no file name has yet been
-		// returned.
+		// Multiple files selected. m_OFN.lpstrFile contains a set of substrings separated
+		// by delimiters. The first substring is the path, the following ones are file names.
+		
+		// Fill strPath with the path
 		CString strPath = m_OFN.lpstrFile; // convert to string
 		if (!bExplorer)
 		{
-			LPTSTR lpszPath = m_OFN.lpstrFile;
-			while(*lpszPath != chDelimiter)
-				lpszPath = _tcsinc(lpszPath);
-			strPath = strPath.Left(int(lpszPath - m_OFN.lpstrFile));
+			int nDeliminator = strPath.Find(chDelimiter);
+			strPath = strPath.Left(nDeliminator);
 		}
 
-		LPTSTR lpszFileName = lpsz;
-		CString strFileName = lpsz;
+		// Fill strFileName with the file name 
+		CString strFileName = m_OFN.lpstrFile + pos + Index;
+		if (!bExplorer)
+		{
+			int nDeliminator = strFileName.Find(chDelimiter);
+			if (nDeliminator > 0)
+				strFileName = strFileName.Left(nDeliminator);
+		} 
 
-		// find char pos at the next chDelimiter
-		while(*lpsz != chDelimiter && *lpsz != _T('\0'))
-			lpsz = _tcsinc(lpsz);
-
-		if (!bExplorer && *lpsz == _T('\0'))
+		// Calculate the pos of the next file
+		int nFileLen = lstrlen(strFileName);
+		if (strFile.GetAt(nFileLen + 1) == _T('\0'))
 			pos = -1;
 		else
-		{
-			if (!bExplorer)
-				strFileName = strFileName.Left(int(lpsz - lpszFileName));
+			pos = pos + Index + nFileLen +1;
 
-			lpsz = _tcsinc(lpsz);
-			if (*lpsz == _T('\0')) // if double terminated then done
-				pos = -1;
-			else
-				pos = lpsz - m_OFN.lpstrFile;
-		}
-
-		// only add _T("\\") if it is needed
+		
 		if (!strPath.IsEmpty())
 		{
-			// check for last back-slash or forward slash (handles DBCS)
-			LPCTSTR lpsz1 = _tcsrchr(strPath, _T('\\'));
-			if (lpsz1 == NULL)
-				lpsz1 = _tcsrchr(strPath, _T('/'));
-			// if it is at the last character, then an extra one is unneeded
-			if (lpsz1 != NULL &&
-				(lpsz1 - (LPCTSTR)strPath) == strPath.GetLength() - 1)
+			// Get the last character from the path
+			int nPathLen = strPath.GetLength();
+			TCHAR ch = strPath.GetAt(nPathLen -1);
+
+			if ((ch == _T('\\')) || (ch == _T('/')))
 			{
-				assert(*lpsz1 == _T('\\') || *lpsz1 == _T('/'));
+				// Path already ends with _T('\\') or _T('/')
 				return strPath + strFileName;
 			}
 		}
+
+		// Add _T('\\') to the end of the path 
 		return strPath + _T("\\") + strFileName;
 	}
 
