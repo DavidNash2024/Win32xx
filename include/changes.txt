@@ -4,6 +4,22 @@ Version 8.2
 New Features and Enhancements
 ----------------------------- 
 * Added support for the Common Dialogs
+The following common dialogs have been added to the framework:
+ - CColorDialog
+ - CFindReplacDialog
+ - CFileDialog
+ - CFontDialog
+ - CPrintDialog
+ - CPageSetupDialog
+ 
+The CPrintDialog and CPageSetupDialog classes share global memory for 
+their hDevMode and hDevNames handles. This global memory persists after
+the CPrintDialog and CPageSetupDialog objects are destructed, and is 
+managed by CWinApp. There is no need for the user to manually free the
+hDevMode and hDevNames memory.
+
+* Updated samples
+ - The INIFrame sample now stores the settings file in the AppData folder.
 
 
 Changes in detail
@@ -11,6 +27,10 @@ Changes in detail
 Modified:
 CWinThread::GetMainWnd			now returns HWND
 CWinThread::SetMainWnd			now accepts HWND
+CWinThread::GetAcceleratorWindow now returns HWND
+CWinThread::SetAccelerators		now accepts HWND
+
+renamed CWinThread::GetAccelerators to CWinThread::GetAcceleratorTable
 
 These functions are now public:
 CWinApp::GetCWndFromMap

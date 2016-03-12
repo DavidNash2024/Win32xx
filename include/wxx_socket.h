@@ -111,6 +111,14 @@
 // include exception handling, TRACE etc.
 #include "wxx_wincore.h"
 
+// Work around a bug in Visual Studio 6
+#ifdef _MSC_VER
+  #if _MSC_VER < 1500
+    // Skip loading wspiapi.h
+	#define _WSPIAPI_H_
+  #endif
+#endif  
+
 #include <ws2tcpip.h>
 
 #define THREAD_TIMEOUT 100

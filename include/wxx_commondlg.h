@@ -659,7 +659,7 @@ namespace Win32xx
 	//	Return the next file path name from a group of files selected. The 
 	//	OFN_ALLOWMULTISELECT flag allows multiple files to be selected. Use pos = 0
 	//	to retrieve the first file. The pos parameter is updated to point to the 
-	// 	next file name. The pos parameter is set to -1 when the last file is retrived.
+	// 	next file name. The pos parameter is set to -1 when the last file is retrieved.
 	{
 		assert(pos >= 0);
 
@@ -685,7 +685,7 @@ namespace Win32xx
 		// by delimiters. The first substring is the path, the following ones are file names.
 		
 		// Fill strPath with the path
-		CString strPath = m_OFN.lpstrFile; // convert to string
+		CString strPath = m_OFN.lpstrFile; // strPath is terminated by first NULL
 		if (!bExplorer)
 		{
 			int nDeliminator = strPath.Find(chDelimiter);
@@ -701,7 +701,7 @@ namespace Win32xx
 				strFileName = strFileName.Left(nDeliminator);
 		} 
 
-		// Calculate the pos of the next file
+		// Update pos to point to the next file
 		int nFileLen = lstrlen(strFileName);
 		if (strFile.GetAt(nFileLen + 1) == _T('\0'))
 			pos = -1;

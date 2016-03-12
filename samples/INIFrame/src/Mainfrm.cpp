@@ -152,10 +152,59 @@ int CMainFrame::TtoI(LPCTSTR szString)
 	return res;
 }
 
+CString CMainFrame::GetINIPath()
+// Returns the path to the AppData folder. Returns the current folder if
+// the Operating System doesn't support the SHGetFolderPath function.
+{
+	CString FilePath = _T(".");
+
+	if (GetWinVersion() >= 2500)	// For Window versions >= Windows 2000
+	{
+		HMODULE hMod = ::LoadLibrary(_T("Shell32.dll"));
+
+		if (hMod)
+		{
+			typedef HRESULT(WINAPI *MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
+
+			// Get the function pointer of the SHGetFolderPath function
+#ifdef UNICODE
+			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathW");
+#else
+			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathA");
+#endif
+
+			if (ProcAdd)
+			{
+				// Call the SHGetFolderPath function to retrieve the AppData folder
+				if (SUCCEEDED((ProcAdd)(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE,
+					NULL, 0, FilePath.GetBuffer(MAX_PATH))))
+				{
+					FilePath.ReleaseBuffer();
+
+					// Create the directory if required
+					FilePath += _T("\\Win32xx");
+					CreateDirectory(FilePath, NULL);
+					FilePath += _T("\\INIFrame");
+					CreateDirectory(FilePath, NULL);
+				}
+				else
+				{
+					FilePath.ReleaseBuffer();
+					FilePath = _T(".");
+				}
+			}
+
+			FreeLibrary(hMod);
+		}
+	}
+
+	return FilePath;
+}
+
 void CMainFrame::SerializeINI(BOOL IsStoring) 
 // Load values to, or restore values from the ini file
 {
-	CString cs("./Frame.ini");
+	CString FileName = GetINIPath() + _T("\\Frame.ini");
 	CString	Key("Frame Settings");
 
 	WINDOWPLACEMENT Wndpl;
@@ -173,20 +222,20 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 		UINT height = MAX(rc.Height(), 50);
 		UINT showCmd = Wndpl.showCmd;
 
-		::WritePrivateProfileString( NULL, NULL, NULL, cs );
+		::WritePrivateProfileString(NULL, NULL, NULL, FileName);
 
 		// Write the Frame window's position and show state 
-		::WritePrivateProfileString (Key, _T("Left"),       ItoT(left), cs); 
-		::WritePrivateProfileString (Key, _T("Top"),        ItoT(top), cs); 
-		::WritePrivateProfileString (Key, _T("Width"),      ItoT(width), cs);
-		::WritePrivateProfileString (Key, _T("Height"),     ItoT(height), cs);
-		::WritePrivateProfileString (Key, _T("ShowCmd"),    ItoT(showCmd), cs);
+		::WritePrivateProfileString (Key, _T("Left"),       ItoT(left), FileName);
+		::WritePrivateProfileString (Key, _T("Top"),        ItoT(top), FileName);
+		::WritePrivateProfileString (Key, _T("Width"),      ItoT(width), FileName);
+		::WritePrivateProfileString (Key, _T("Height"),     ItoT(height), FileName);
+		::WritePrivateProfileString (Key, _T("ShowCmd"),    ItoT(showCmd), FileName);
 
 		// Write the StatusBar and ToolBar show state.
 		DWORD dwShowStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
 		DWORD dwShowToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-		::WritePrivateProfileString (Key, _T("StatusBar"),  ItoT(dwShowStatusBar), cs);
-		::WritePrivateProfileString (Key, _T("ToolBar"),    ItoT(dwShowToolBar), cs);
+		::WritePrivateProfileString (Key, _T("StatusBar"),  ItoT(dwShowStatusBar), FileName);
+		::WritePrivateProfileString (Key, _T("ToolBar"),    ItoT(dwShowToolBar), FileName);
 	}
 	else 
 	{
@@ -195,11 +244,11 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 		UINT failed = 999999;
 		CString Error("Error: GPPS failed");
 		
-		UINT Left = ::GetPrivateProfileInt(Key, _T("Left"), failed, cs);
-		UINT Top = ::GetPrivateProfileInt (Key, _T("Top"), failed, cs);
-		UINT Width = ::GetPrivateProfileInt (Key, _T("Width"), failed, cs);
-		UINT Height = ::GetPrivateProfileInt (Key, _T("Height"), failed, cs);	
-		UINT ShowCmd = ::GetPrivateProfileInt (Key, _T("ShowCmd"), failed, cs);
+		UINT Left = ::GetPrivateProfileInt(Key, _T("Left"), failed, FileName);
+		UINT Top = ::GetPrivateProfileInt (Key, _T("Top"), failed, FileName);
+		UINT Width = ::GetPrivateProfileInt (Key, _T("Width"), failed, FileName);
+		UINT Height = ::GetPrivateProfileInt (Key, _T("Height"), failed, FileName);
+		UINT ShowCmd = ::GetPrivateProfileInt (Key, _T("ShowCmd"), failed, FileName);
 
 		if (Left != failed && Top != failed && Width != failed && Height != failed && ShowCmd != failed) 
 		{
@@ -207,12 +256,12 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
 			Values.ShowCmd = ShowCmd;
 
 			// Set the show state of the status bar
-			UINT ShowStatus = ::GetPrivateProfileInt (Key, _T("StatusBar"), 0, cs);
+			UINT ShowStatus = ::GetPrivateProfileInt (Key, _T("StatusBar"), 0, FileName);
 			if (ShowStatus != failed)
 				Values.ShowStatusBar = ShowStatus;
 
 			// Set the show state of the tool bar
-			UINT ShowTool = ::GetPrivateProfileInt (Key, _T("ToolBar"), 0, cs);
+			UINT ShowTool = ::GetPrivateProfileInt (Key, _T("ToolBar"), 0, FileName);
 			if (ShowTool != failed)
 				Values.ShowToolBar = ShowTool;
 		}
