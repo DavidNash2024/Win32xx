@@ -614,7 +614,7 @@ namespace Win32xx
 			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
 				UpdateFrameMenu(GetActiveMDIChild()->m_ChildMenu);
 			if (GetActiveMDIChild()->m_hChildAccel)
-				GetApp().SetAccelerators(GetActiveMDIChild()->m_hChildAccel, this);
+				GetApp().SetAccelerators(GetActiveMDIChild()->m_hChildAccel, *this);
 		}
 		else
 		{
@@ -623,7 +623,7 @@ namespace Win32xx
 			else
 				SetMenu( GetFrameMenu() );
 
-			GetApp().SetAccelerators(GetFrameAccel(), this);
+			GetApp().SetAccelerators(GetFrameAccel(), *this);
 		}
 	}
 
@@ -824,7 +824,7 @@ namespace Win32xx
 		if (m_ChildMenu.GetHandle())
 			GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
 		if (m_hChildAccel)
-			GetApp().SetAccelerators(m_hChildAccel, this);
+			GetApp().SetAccelerators(m_hChildAccel, *this);
 
 		return GetHwnd();
 	}
@@ -900,7 +900,7 @@ namespace Win32xx
 					GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
 
 				if (m_hChildAccel)
-					GetApp().SetAccelerators(m_hChildAccel, &GetMDIFrame());
+					GetApp().SetAccelerators(m_hChildAccel, GetMDIFrame());
 			}
 		}
 	}
@@ -947,7 +947,7 @@ namespace Win32xx
 			if (m_ChildMenu.GetHandle())
 				GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
 			if (m_hChildAccel)
-				GetApp().SetAccelerators(m_hChildAccel, this);
+				GetApp().SetAccelerators(m_hChildAccel, *this);
 		}
 
 		// No child is being activated
@@ -956,7 +956,7 @@ namespace Win32xx
 			GetMDIFrame().m_hActiveMDIChild = NULL;
 			// Set the menu to frame's original menu
 			GetMDIFrame().UpdateFrameMenu( GetMDIFrame().GetFrameMenu() );
-			GetApp().SetAccelerators(GetMDIFrame().GetFrameAccel(), this);
+			GetApp().SetAccelerators(GetMDIFrame().GetFrameAccel(), *this);
 		}
 			
 		return 0L;

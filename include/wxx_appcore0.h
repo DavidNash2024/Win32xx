@@ -390,15 +390,15 @@ namespace Win32xx
 
 		// Operations
 		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
-		HACCEL	GetAccelerators() const { return m_hAccel; }
-		CWnd*	GetAcceleratorsWindow() const { return m_pWndAccel; }
+		HACCEL	GetAcceleratorTable() const { return m_hAccel; }
+		HWND	GetAcceleratorsWindow() const { return m_hWndAccel; }
 		HWND	GetMainWnd() const;
 		HANDLE	GetThread()	const;
 		int		GetThreadID() const;
 		int		GetThreadPriority() const;
 		BOOL	PostThreadMessage(UINT message, WPARAM wParam, LPARAM lParam) const;
 		DWORD	ResumeThread() const;
-		void	SetAccelerators(HACCEL hAccel, CWnd* pWndAccel);
+		void	SetAccelerators(HACCEL hAccel, HWND hWndAccel);
 		void	SetMainWnd(HWND hWnd);
 		BOOL	SetThreadPriority(int nPriority) const;
 		DWORD	SuspendThread() const;
@@ -416,7 +416,7 @@ namespace Win32xx
 		UINT m_nThreadID;				// ID of this thread
 		DWORD m_dwThreadID;				// ID of this thread
 		HACCEL m_hAccel;				// handle to the accelerator table
-		CWnd* m_pWndAccel;				// pointer to the window for accelerator keys
+		HWND m_hWndAccel;				// handle to the window for accelerator keys
 
 	};
 

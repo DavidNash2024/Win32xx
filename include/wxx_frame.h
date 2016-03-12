@@ -2967,7 +2967,7 @@ namespace Win32xx
 	{
 		m_hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(ID_ACCEL));
 		if (m_hAccel)
-			GetApp().SetAccelerators(m_hAccel, this);
+			GetApp().SetAccelerators(m_hAccel, *this);
 	}
 
 	inline void CFrame::SetFrameMenu(UINT ID_MENU)

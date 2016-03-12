@@ -24,6 +24,7 @@ public:
 	CString ItoT(int i);
 	int		TtoI(LPCTSTR szString);
 	
+	CString GetINIPath();
 	void SerializeINI(BOOL IsStoring);
 
 protected:
