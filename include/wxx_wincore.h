@@ -155,22 +155,11 @@ namespace Win32xx {}
 //////////////////////////////////////
 //  Include the Win32++ header files
 
-#include "wxx_shared_ptr.h"
-#include "wxx_appcore0.h"
-#include "wxx_rect.h"
-#include "wxx_textconv.h"
-#include "wxx_themes.h"
-#include "wxx_cstring.h"
 #include "wxx_wincore0.h"
-#include "wxx_exception.h"
-#ifndef _WIN32_WCE
-  #include "wxx_archive.h"
-#endif
 #include "wxx_gdi.h"
 #ifndef _WIN32_WCE
   #include "wxx_menu.h"
 #endif
-#include "wxx_imagelist.h"
 #include "wxx_ddx.h"
 #include "wxx_appcore.h"
 

@@ -216,19 +216,27 @@ BOOL CMainFrame::OnFileSave()
 BOOL CMainFrame::OnFilePrint()
 {
 	// Bring up a dialog to choose the printer
-	PRINTDLG pd;
-	ZeroMemory(&pd, sizeof(PRINTDLG));
-	pd.lStructSize = sizeof( pd );
-	pd.Flags = PD_RETURNDC;
-	pd.hwndOwner = *this;
+	CPrintDialog Printdlg;
 
-	// Retrieve the printer DC
-	PrintDlg( &pd );
-	
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
+	try
+	{
+		INT_PTR Res = Printdlg.DoModal(*this);
 
-	return TRUE;
+		// Retrieve the printer DC
+		// CDC dcPrinter = Printdlg.GetPrinterDC();
+
+		// TODO:
+		// Add your own code here. Refer to the tutorial for additional information
+
+		return (Res == IDOK);	// boolean expression
+	}
+
+	catch (const CResourceException& e)
+	{
+		// No default printer
+		MessageBox(_T("Unable to display print dialog"), _T("Error"), MB_OK);
+		return FALSE;
+	}
 }
 
 void CMainFrame::OnInitialUpdate()

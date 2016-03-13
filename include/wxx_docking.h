@@ -57,10 +57,10 @@
 
 
 #include "wxx_wincore.h"
-#include "wxx_gdi.h"
 #include "wxx_toolbar.h"
 #include "wxx_tab.h"
 #include "wxx_regkey.h"
+#include "wxx_themes.h"
 #include "default_resource.h"
 
 

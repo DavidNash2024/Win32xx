@@ -131,6 +131,7 @@
 
 #include "wxx_appcore0.h"
 #include "wxx_wincore0.h"
+#include "wxx_exception.h"
 
 
 // Disable macros from Windowsx.h
@@ -726,10 +727,10 @@ namespace Win32xx
 		CSize TabbedTextOut(int x, int y, LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions, int nTabOrigin) const;
 		BOOL  TextOut(int x, int y, LPCTSTR lpszString, int nCount = -1) const;
 
-  #if (_WIN32_WINNT >= 0x0500)
+  #if (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 		BOOL  GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC pABC) const;
 		BOOL  GetCharWidthI(UINT giFirst, UINT cgi, LPWORD pgi, int* pBuffer) const;
-  #endif // (_WIN32_WINNT >= 0x0500)
+  #endif // (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 #endif  // _WIN32_WCE
 
 	protected:
@@ -898,8 +899,8 @@ namespace Win32xx
 				::DeleteEnhMetaFile(m_hEMF);
 			}
 		}
-		void Create(LPCTSTR lpszFilename = NULL) 
-		{ 
+		void Create(LPCTSTR lpszFilename = NULL)
+		{
 			Attach(::CreateMetaFile(lpszFilename));
 		}
 		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
@@ -1085,7 +1086,7 @@ namespace Win32xx
 		if (m_pData->Count > 0)
 		{
 			if (InterlockedDecrement(&m_pData->Count) == 0)
-			{			
+			{
 				delete m_pData;
 			}
 		}
@@ -1118,7 +1119,7 @@ namespace Win32xx
 				{
 					::DeleteObject(m_pData->hGDIObject);
 				}
-				
+
 				RemoveFromMap();
 			}
 
@@ -1637,7 +1638,7 @@ namespace Win32xx
 		{
 			CreateFontIndirect(lpLogFont);
 		}
-		
+
 		catch(...)
 		{
 			Release();	// Cleanup
@@ -1660,7 +1661,7 @@ namespace Win32xx
 		HFONT hFont = ::CreateFontIndirect(lpLogFont);
 		if (hFont == 0)
 			throw CResourceException(_T("CreateFontIndirect"));
-		
+
 		Attach(hFont);
 		SetManaged(true);
 		return hFont;
@@ -2236,7 +2237,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert( &GetApp() );
 		assert(m_pData->hDC);
-		
+
 		GetApp().AddCDCData(m_pData->hDC, m_pData);
 	}
 
@@ -2257,8 +2258,8 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 				// Assign values to our data members
 				m_pData = new CDC_Data;
-			}		
-			
+			}
+
 			if (hDC)
 			{
 				CDC_Data* pCDCData = GetApp().GetCDCData(hDC);
@@ -2326,7 +2327,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateCompatibleDC(hdcSource);
-		
+
 		if (hDC == NULL)
 			throw CResourceException(_T("CreateCompatibleDC failed"));
 
@@ -2336,8 +2337,8 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 		return hDC;
 	}
-	
-	
+
+
 	inline HDC CDC::CreateDC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData)
 	// Returns a device context (DC) for a device using the specified name.
 	{
@@ -2352,16 +2353,16 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		AddToMap();
 		return hDC;
 	}
-	
+
 #ifndef _WIN32_WCE
 	inline HDC CDC::CreateIC(LPCTSTR lpszDriver, LPCTSTR lpszDevice, LPCTSTR lpszOutput, const DEVMODE* pInitData)
 	{
 		assert(m_pData->hDC == NULL);
 		HDC hDC = ::CreateIC(lpszDriver, lpszDevice, lpszOutput, pInitData);
-		
+
 		if (hDC == 0)
 			throw CResourceException(_T("CreateIC failed"));
-		
+
 		m_pData->hDC = hDC;
 		m_pData->IsManagedHDC = TRUE;
 		AddToMap();
@@ -4247,7 +4248,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return ::TextOut(m_pData->hDC, x, y, lpszString, nCount);
 	}
 
-  #if (_WIN32_WINNT >= 0x0500)
+  #if (_WIN32_WINNT >= 0x0500) && !defined(__GNUC__)
 	inline BOOL CDC::GetCharABCWidthsI(UINT giFirst, UINT cgi, LPWORD pgi, LPABC pABC) const
 	// Retrieves the widths, in logical units, of consecutive glyph indices in a specified range from the
 	// current TrueType font. This function succeeds only with TrueType fonts.
