@@ -5,10 +5,10 @@
 //
 //--------------------------------------------------------------------------------------
 
-#include "wxx_wincore.h"
+//#include "wxx_wincore.h"
 
 #include "DXApp.h"
-#include "DXView.h"
+//#include "DXView.h"
 #include "resource.h"
 
 

@@ -15,46 +15,55 @@ The following common dialogs have been added to the framework:
 The CPrintDialog and CPageSetupDialog classes share global memory for 
 their hDevMode and hDevNames handles. This global memory persists after
 the CPrintDialog and CPageSetupDialog objects are destructed, and is 
-managed by CWinApp. There is no need for the user to manually free the
-hDevMode and hDevNames memory.
+managed by CWinApp. There is no need for the user to manually lock,
+unlock or free the hDevMode and hDevNames memory.
+
+* Updated CFrame
+ - GetInitValues and SetInitValues have been added conveniently to store
+   and retrieve a set of values from the registry or an INI file. These 
+   functions replace a set of functions that stored and retrieved these
+   values individually.
 
 * Updated samples
  - The INIFrame sample now stores the settings file in the AppData folder.
+   It is important for applications to store values in the AppData folder
+   on the more modern operating systems (Vista and above) as the user
+   doesn't have write permission in the "Program Files" on these.
+   
+* "New Projects" folder
+ - This folder has been relocated to the samples folder. This can be used
+   as the starting point for your new projects. 
 
 
 Changes in detail
 -----------------
-Modified:
-CWinThread::GetMainWnd			now returns HWND
-CWinThread::SetMainWnd			now accepts HWND
-CWinThread::GetAcceleratorWindow now returns HWND
-CWinThread::SetAccelerators		now accepts HWND
+Added CCommonDialog 		class
+Added CColorDialog  		class
+Added CFindReplaceDialog 	class
+Added CFontDialog 			class
+Added CPageSetupDialog 		class
+Added CPrinDialog 			class
+Added CFrame::GetInitValues
+Added CFrame::SetInitValues
 
-renamed CWinThread::GetAccelerators to CWinThread::GetAcceleratorTable
+Modified CWinThread::GetMainWnd				now returns HWND
+Modified CWinThread::SetMainWnd				now accepts HWND
+Modified CWinThread::GetAcceleratorWindow 	now returns HWND
+Modified CWinThread::SetAccelerators		now accepts HWND
+
+Renamed CWinThread::GetAccelerators to CWinThread::GetAcceleratorTable
+
+Removed CFrame::GetShowCmd
+Removed CFrame::GetShowStatusBar
+Removed CFrame::GetShowToolBar
+Removed CFrame::SetShowCmd
 
 These functions are now public:
 CWinApp::GetCWndFromMap
 CWinApp::GetTlsData
 CWinApp::SetTlsData
 
-Added
-CCommonDialog
-CColorDialog
-CFindReplaceDialog
-CFontDialog
-CPageSetupDialog
-CPrinDialog
-CFrame::GetInitValues
-CFrame::SetInitValues
-
-Removed:
-CFrame::GetShowCmd
-CFrame::GetShowStatusBar
-CFrame::GetShowToolBar
-CFrame::SetShowCmd
-
-Moved:
-The "New Project" folder to samples
+Moved The "New Project" folder to samples
 
 
 Version 8.1

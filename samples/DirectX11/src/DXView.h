@@ -9,8 +9,6 @@
 #include <directxmath.h>
 #include <directxcolors.h>
 
-
-
 #include "resource.h"
 
 using namespace DirectX;

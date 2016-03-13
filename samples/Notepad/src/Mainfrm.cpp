@@ -145,107 +145,112 @@ BOOL CMainFrame::OnFileNew()
 
 BOOL CMainFrame::OnFilePrint()
 {
-	PRINTDLG pd;
+	// Bring up a dialog to choose the printer
+	CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
 
-	// Initialize PRINTDLG
-	ZeroMemory(&pd, sizeof(pd));
-	pd.lStructSize = sizeof(pd);
-	pd.hwndOwner   = *this;
-	pd.hDevMode    = NULL;     // Don't forget to free or store hDevMode
-	pd.hDevNames   = NULL;     // Don't forget to free or store hDevNames
-	pd.Flags       = PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC;
-	pd.nCopies     = 1;
-	pd.nFromPage   = 0xFFFF;
-	pd.nToPage     = 0xFFFF;
-	pd.nMinPage    = 1;
-	pd.nMaxPage    = 0xFFFF;
-	pd.hwndOwner = *this;
+	PRINTDLG pd = PrintDlg.GetParameters();
+	pd.nCopies = 1;
+	pd.nFromPage = 0xFFFF;
+	pd.nToPage = 0xFFFF;
+	pd.nMinPage = 1;
+	pd.nMaxPage = 0xFFFF;
+	PrintDlg.SetParameters(pd);
 
-	if (PrintDlg(&pd)==TRUE)
+	try
 	{
-		HDC hPrinterDC = pd.hDC;
-
-		// This code basically taken from MS KB article Q129860
-
-		FORMATRANGE fr;
-		int	nHorizRes   = ::GetDeviceCaps(hPrinterDC, HORZRES);
-		int	nVertRes    = ::GetDeviceCaps(hPrinterDC, VERTRES);
-		int nLogPixelsX = ::GetDeviceCaps(hPrinterDC, LOGPIXELSX);
-		int nLogPixelsY = ::GetDeviceCaps(hPrinterDC, LOGPIXELSY);
-		LONG lTextLength;   // Length of document.
-		LONG lTextPrinted;  // Amount of document printed.
-
-		// Ensure the printer DC is in MM_TEXT mode.
-		::SetMapMode ( hPrinterDC, MM_TEXT );
-
-		// Rendering to the same DC we are measuring.
-		ZeroMemory(&fr, sizeof(fr));
-		fr.hdc = hPrinterDC;
-		fr.hdcTarget = hPrinterDC;
-
-		// Set up the page.
-		int margin = 200; // 1440 TWIPS = 1 inch.
-		fr.rcPage.left     = fr.rcPage.top = margin;
-		fr.rcPage.right    = (nHorizRes/nLogPixelsX) * 1440 - margin;
-		fr.rcPage.bottom   = (nVertRes/nLogPixelsY) * 1440 - margin;
-
-		// Set up margins all around.
-		fr.rc.left   = fr.rcPage.left ;//+ 1440;
-		fr.rc.top    = fr.rcPage.top ;//+ 1440;
-		fr.rc.right  = fr.rcPage.right ;//- 1440;
-		fr.rc.bottom = fr.rcPage.bottom ;//- 1440;
-
-		// Default the range of text to print as the entire document.
-		fr.chrg.cpMin = 0;
-		fr.chrg.cpMax = -1;
-		m_RichView.FormatRange(&fr, TRUE);
-
-		// Set up the print job (standard printing stuff here).
-		DOCINFO di;
-		ZeroMemory(&di, sizeof(di));
-		di.cbSize = sizeof(DOCINFO);
-		di.lpszDocName = m_strPathName;
-
-		// Do not print to file.
-		di.lpszOutput = NULL;
-
-		// Start the document.
-		::StartDoc(hPrinterDC, &di);
-
-		// Find out real size of document in characters.
-		lTextLength = m_RichView.GetTextLengthEx(GTL_NUMCHARS);
-
-		do
+		if (PrintDlg.DoModal(*this) == IDOK)
 		{
-			// Start the page.
-			::StartPage(hPrinterDC);
+			CDC dcPrinter = PrintDlg.GetPrinterDC();
+			HDC hPrinterDC = dcPrinter.GetHDC();
 
-			// Print as much text as can fit on a page. The return value is
-			// the index of the first character on the next page. Using TRUE
-			// for the wParam parameter causes the text to be printed.
-			lTextPrinted = m_RichView.FormatRange(&fr, TRUE);
-			m_RichView.DisplayBand(&fr.rc);
+			// This code is based on Microsoft's KB article Q129860
 
-			// Print last page.
-			::EndPage(hPrinterDC);
+			int	nHorizRes	= dcPrinter.GetDeviceCaps(HORZRES);
+			int	nVertRes	= dcPrinter.GetDeviceCaps(VERTRES);
+			int nLogPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);
+			int nLogPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);
+			LONG lTextLength;   // Length of document.
+			LONG lTextPrinted;  // Amount of document printed.
 
-			// If there is more text to print, adjust the range of characters
-			// to start printing at the first character of the next page.
-			if (lTextPrinted < lTextLength)
+			// Ensure the printer DC is in MM_TEXT mode.
+			dcPrinter.SetMapMode(MM_TEXT);
+
+			// Rendering to the same DC we are measuring.
+			FORMATRANGE fr;
+			ZeroMemory(&fr, sizeof(fr));
+			fr.hdc = hPrinterDC;
+			fr.hdcTarget = hPrinterDC;
+
+			// Set up the page.
+			int margin = 200; // 1440 TWIPS = 1 inch.
+			fr.rcPage.left = fr.rcPage.top = margin;
+			fr.rcPage.right = (nHorizRes / nLogPixelsX) * 1440 - margin;
+			fr.rcPage.bottom = (nVertRes / nLogPixelsY) * 1440 - margin;
+
+			// Set up margins all around.
+			fr.rc.left = fr.rcPage.left;//+ 1440;
+			fr.rc.top = fr.rcPage.top;//+ 1440;
+			fr.rc.right = fr.rcPage.right;//- 1440;
+			fr.rc.bottom = fr.rcPage.bottom;//- 1440;
+
+			// Default the range of text to print as the entire document.
+			fr.chrg.cpMin = 0;
+			fr.chrg.cpMax = -1;
+			m_RichView.FormatRange(&fr, TRUE);
+
+			// Set up the print job (standard printing stuff here).
+			DOCINFO di;
+			ZeroMemory(&di, sizeof(di));
+			di.cbSize = sizeof(DOCINFO);
+			di.lpszDocName = m_strPathName;
+
+			// Do not print to file.
+			di.lpszOutput = NULL;
+
+			// Start the document.
+			dcPrinter.StartDoc(&di);
+
+			// Find out real size of document in characters.
+			lTextLength = m_RichView.GetTextLengthEx(GTL_NUMCHARS);
+
+			do
 			{
-				fr.chrg.cpMin = lTextPrinted;
-				fr.chrg.cpMax = -1;
-			}
+				// Start the page.
+				dcPrinter.StartPage();
+
+				// Print as much text as can fit on a page. The return value is
+				// the index of the first character on the next page. Using TRUE
+				// for the wParam parameter causes the text to be printed.
+				lTextPrinted = m_RichView.FormatRange(&fr, TRUE);
+				m_RichView.DisplayBand(&fr.rc);
+
+				// Print last page.
+				dcPrinter.EndPage();
+
+				// If there is more text to print, adjust the range of characters
+				// to start printing at the first character of the next page.
+				if (lTextPrinted < lTextLength)
+				{
+					fr.chrg.cpMin = lTextPrinted;
+					fr.chrg.cpMax = -1;
+				}
+			} while (lTextPrinted < lTextLength);
+
+			// Tell the control to release cached information.
+			m_RichView.FormatRange(&fr, FALSE);
+
+			// End the print job
+			dcPrinter.EndDoc();
 		}
-		while (lTextPrinted < lTextLength);
+		else
+			return FALSE;
+	}
 
-		// Tell the control to release cached information.
-		m_RichView.FormatRange(&fr, FALSE);
-
-		::EndDoc (hPrinterDC);
-
-		// Delete DC when done.
-		::DeleteDC(hPrinterDC);
+	catch (const CResourceException& e)
+	{
+		// No default printer perhaps
+		MessageBox(e.GetText(), _T("Error"), MB_OK);
+		return FALSE;
 	}
 
 	return TRUE;
@@ -349,8 +354,6 @@ BOOL CMainFrame::OnOptionsWrap()
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
-	BOOL Succeeded = FALSE;
-
 	try
 	{
 		// Open the file for reading
@@ -364,8 +367,6 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 
 		//Clear the modified text flag
 		m_RichView.SetModify(FALSE);
-
-		Succeeded = TRUE;
 	}
 
 	catch (const CFileException& e)
@@ -376,12 +377,11 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 		return FALSE;
 	}
 
-	return Succeeded;
+	return TRUE;
 }
 
 BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 {
-	BOOL Succeeded = FALSE;
 	try
 	{
 		// Open the file for writing
@@ -396,8 +396,6 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 
 		//Clear the modified text flag
 		m_RichView.SetModify(FALSE);
-
-		Succeeded = TRUE;
 	}
 
 	catch (const CFileException&)
@@ -408,7 +406,7 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 		return FALSE;
 	}
 
-	return Succeeded;
+	return TRUE;
 }
 
 BOOL CMainFrame::OnFileOpen()

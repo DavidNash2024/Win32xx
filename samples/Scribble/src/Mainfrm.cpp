@@ -248,10 +248,12 @@ BOOL CMainFrame::OnFilePrint()
 			if(0 > EndDoc(pd.hDC))
 				throw CUserException(_T("EndDoc failed"));
 		}
-		catch (const CUserException& e)
+		catch (const CException& e)
 		{
 			// Display a message box indicating why printing failed.
-			MessageBox(e.GetErrorString(), _T("Printing Failed"), MB_ICONWARNING);
+			CString strMsg = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+			CString strType = CString(e.what());
+			MessageBox(strMsg, strType, MB_ICONWARNING);
 		}
 	}
 

@@ -41,6 +41,7 @@
 
 #include "wxx_cstring.h"
 #include "wxx_exception.h"
+#include "wxx_commondlg.h"
 
 namespace Win32xx
 {
@@ -297,55 +298,15 @@ namespace Win32xx
 						DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, 
 						HWND hOwnerWnd)
 	// Displays the file open dialog.
+	// pszFilter can contain a set of strings terminated by NULL or '|'.	
 	// Returns a CString containing either the selected file name or an empty CString.
-	// Note: pszFilter is a pointer to a buffer containing pairs of null-terminated filter strings. 
-	//       The last string in the buffer must be terminated by two NULL characters. A CString can
-	//       contain embedded NULL characters. Alternatively the '|' character can be used in place
-	//       of embedded NULL characters here. 
+	// Throws a CResourceException if the file dialog creation fails.
 	{
-		CString str;
-		if (pszFilePathName)
-			str = pszFilePathName;
+		CFileDialog FileDlg(TRUE, 0, pszFilePathName, dwFlags, pszFilter);
+		FileDlg.SetTitle(pszTitle);
+		FileDlg.DoModal(hOwnerWnd);		// can throw a CResourceException
 
-		int MaxPath = 260; // Should be a const int but VS6 can't handle it.
-
-		OPENFILENAME ofn;
-		ZeroMemory(&ofn, sizeof(OPENFILENAME));
-		ofn.lStructSize = sizeof(OPENFILENAME);
-
-#if defined OPENFILENAME_SIZE_VERSION_400
-		if (GetWinVersion() < 2500)
-			ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-#endif
-
-		ofn.hwndOwner = hOwnerWnd;
-		ofn.hInstance = GetApp().GetInstanceHandle();
-	
-		// convert any '|' characters in pszFilter to NULL characters
-		CString strFilter;
-		if (pszFilter)
-		{
-			strFilter = pszFilter;
-			if (strFilter.Find(_T('|')) >= 0)
-			{
-				strFilter.Replace(_T('|'), _T('\0'));
-				ofn.lpstrFilter = strFilter.c_str();
-			}
-			else
-			{
-				ofn.lpstrFilter = pszFilter;	// might contain embedded NULL characters
-			}
-		}
-
-		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
-		ofn.Flags = dwFlags;
-		ofn.nMaxFile = MaxPath;
-
-		ofn.lpstrFile = (LPTSTR)str.GetBuffer(MaxPath);
-		::GetOpenFileName(&ofn);
-		str.ReleaseBuffer();
-
-		return str;
+		return FileDlg.GetPathName();
 	}
 #endif
 
@@ -382,60 +343,15 @@ namespace Win32xx
 						DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter,
 						LPCTSTR pszDefExt, HWND hOwnerWnd)
 	// Displays the SaveFileDialog.
+	// pszFilter can contain a set of strings terminated by NULL or '|'.	
 	// Returns a CString containing either the selected file name or an empty CString.
-	// Note: pszFilter is a pointer to a buffer containing pairs of null-terminated filter strings. 
-	//       The last string in the buffer must be terminated by two NULL characters. A CString can
-	//       contain embedded NULL characters. Alternatively the '|' character can be used in place
-	//       of embedded NULL characters here. 
+	// Throws a CResourceException if the file dialog creation fails.
 	{
-		CString str;
-		if (pszFilePathName)
-			str = pszFilePathName;
+		CFileDialog FileDlg(FALSE, pszDefExt, pszFilePathName, dwFlags, pszFilter);
+		FileDlg.SetTitle(pszTitle);
+		FileDlg.DoModal(hOwnerWnd);		// can throw a CResourceException
 
-		int MaxPath = 260; // Should be a const int but VS6 can't handle it.
-
-		OPENFILENAME ofn;
-		ZeroMemory(&ofn, sizeof(OPENFILENAME));
-		ofn.lStructSize = sizeof(OPENFILENAME);
-
-#if defined OPENFILENAME_SIZE_VERSION_400
-		if (GetWinVersion() < 2500)
-			ofn.lStructSize = OPENFILENAME_SIZE_VERSION_400;
-#endif
-
-		ofn.hwndOwner = hOwnerWnd;
-		ofn.hInstance = GetApp().GetInstanceHandle();
-
-		// convert any '|' characters in pszFilter to NULL characters
-		CString strFilter;
-		if (pszFilter)
-		{
-			strFilter = pszFilter;
-			if (strFilter.Find(_T('|')) >= 0)
-			{
-				strFilter.Replace(_T('|'), _T('\0'));
-				ofn.lpstrFilter = strFilter.c_str();
-			}
-			else
-			{
-				ofn.lpstrFilter = pszFilter;	// might contain embedded NULL characters
-			}
-		}
-
-		ofn.lpstrTitle = pszTitle? pszTitle : _T("Open File");
-		ofn.Flags = dwFlags;
-		ofn.nMaxFile = MaxPath;
-
-		ofn.lpstrFileTitle = (LPTSTR)pszFilePathName;
-		ofn.lpstrDefExt = pszDefExt;
-		ofn.lpstrTitle = pszTitle? pszTitle : _T("Save File");
-		ofn.Flags = dwFlags;
-		ofn.nMaxFile = MaxPath;
-		ofn.lpstrFile = (LPTSTR)str.GetBuffer(MaxPath);
-		::GetSaveFileName(&ofn);
-		str.ReleaseBuffer();
-
-		return str;
+		return FileDlg.GetPathName();
 	}
 #endif
 

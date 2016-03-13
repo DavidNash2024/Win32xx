@@ -49,6 +49,7 @@
 
 #include "wxx_wincore0.h"
 #include "wxx_stdcontrols.h"
+#include "wxx_imagelist.h"
 #include "wxx_ddx.h"
 
 
@@ -477,9 +478,11 @@ namespace Win32xx
 
 #if (_WIN32_IE >=0x0500)
 		BOOL AdjustRect(LPRECT lprc, BOOL bLarger = TRUE);
+  #ifdef TTM_SETTITLE
 		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle);
+  #endif
 #endif
-#if (WINVER >= 0x0501)
+#if (WINVER >= 0x0501) && defined(TTM_SETWINDOWTHEME)
 		void SetWindowTheme(LPCWSTR lpstrTheme);
 #endif
 
@@ -917,7 +920,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CDateTime class
 	//
-	inline CDateTime::CDateTime() 
+	inline CDateTime::CDateTime()
 	{
 	}
 
@@ -1173,7 +1176,7 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CIPAddress class
 	//
-	inline CIPAddress::CIPAddress() 
+	inline CIPAddress::CIPAddress()
 	{
 		if (GetComCtlVersion() > 470)
 		{
@@ -1188,7 +1191,7 @@ namespace Win32xx
 			::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
 		}
 	}
-	
+
 	inline void CIPAddress::ClearAddress()
 	{
 		assert(IsWindow());
@@ -1246,7 +1249,7 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CMonthCalendar class
 	//
-	inline CMonthCalendar::CMonthCalendar() 
+	inline CMonthCalendar::CMonthCalendar()
 	{
 	}
 
@@ -2084,6 +2087,7 @@ namespace Win32xx
 		return sz;
 	}
 
+#ifdef TTM_SETTITLE
 	inline BOOL CToolTip::SetTitle(UINT uIcon, LPCTSTR lpstrTitle)
 	// Adds a standard icon and title string to a ToolTip.
 	{
@@ -2091,8 +2095,9 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_SETTITLE, (WPARAM)uIcon, (LPARAM)lpstrTitle));
 	}
 #endif
+#endif
 
-#if (WINVER >= 0x0501)
+#if (WINVER >= 0x0501) && defined(TTM_SETWINDOWTHEME)
 	inline void CToolTip::SetWindowTheme(LPCWSTR lpstrTheme)
 	// Sets the visual style of a ToolTip control.
 	{
