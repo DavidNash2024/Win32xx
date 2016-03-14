@@ -147,14 +147,29 @@ GetDocOpenFileName(const CString &title) const				/*
 *-----------------------------------------------------------------------------*/
 {
 	// Bring up the dialog, and  open the file
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_HIDEREADONLY |
-	    OFN_OVERWRITEPROMPT, title, m_file_dlg_filter);
-	if (str.IsEmpty())
+//	CFile File;
+//	CString str = File.OpenFileDialog(0, OFN_HIDEREADONLY |
+//	    OFN_OVERWRITEPROMPT, title, m_file_dlg_filter);
+	
+//	if (str.IsEmpty())
+//		::MessageBox(NULL, _T("No document name was selected.\n")
+//			_T("The document cannot be opened."),
+//			_T("Information"), MB_OK | MB_ICONINFORMATION |
+//			MB_TASKMODAL);
+//	return str;
+
+	CString str;
+	DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+	CFileDialog FileDlg(TRUE, 0, 0, dwFlags, m_file_dlg_filter);
+	FileDlg.SetTitle(title);
+	if (FileDlg.DoModal() == IDOK)
+		str = FileDlg.GetPathName();
+	else
 		::MessageBox(NULL, _T("No document name was selected.\n")
-		    _T("The document cannot be opened."),
-		    _T("Information"), MB_OK | MB_ICONINFORMATION |
-		    MB_TASKMODAL);
+			_T("The document cannot be opened."),
+			_T("Information"), MB_OK | MB_ICONINFORMATION |
+			MB_TASKMODAL);
+
 	return str;
 }
 
@@ -191,16 +206,32 @@ GetDocSaveFileName(const CString &title) const				/*
 	as the window title.
 *-----------------------------------------------------------------------------*/
 {
-	CFile file;
+//	CFile file;
+//	TCHAR extbuff[10];
+//	CString str = file.SaveFileDialog(0, OFN_HIDEREADONLY |
+//	    OFN_OVERWRITEPROMPT, title.c_str(), m_file_dlg_filter,
+//	    extbuff);
+//	if (str.IsEmpty())
+//		::MessageBox(NULL, _T("No document name was selected.\n")
+//		    _T("The current document will not be saved."),
+//		    _T("Information"), MB_OK | MB_ICONINFORMATION |
+//		    MB_TASKMODAL);
+//	return str;
+
+	CString str;
 	TCHAR extbuff[10];
-	CString str = file.SaveFileDialog(0, OFN_HIDEREADONLY |
-	    OFN_OVERWRITEPROMPT, title.c_str(), m_file_dlg_filter,
-	    extbuff);
-	if (str.IsEmpty())
+	DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT;
+	CFileDialog FileDlg(FALSE, extbuff, NULL, dwFlags, m_file_dlg_filter);
+	FileDlg.SetTitle(title);
+
+	if (FileDlg.DoModal() == IDOK)
+		str = FileDlg.GetPathName();
+	else
 		::MessageBox(NULL, _T("No document name was selected.\n")
 		    _T("The current document will not be saved."),
 		    _T("Information"), MB_OK | MB_ICONINFORMATION |
-		    MB_TASKMODAL);
+			MB_TASKMODAL);
+
 	return str;
 }
 

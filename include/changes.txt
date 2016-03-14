@@ -17,6 +17,8 @@ their hDevMode and hDevNames handles. This global memory persists after
 the CPrintDialog and CPageSetupDialog objects are destructed, and is 
 managed by CWinApp. There is no need for the user to manually lock,
 unlock or free the hDevMode and hDevNames memory.
+Note: CFile::OpenFileDialog and CFile::SaveFileDialog have been removed.
+Use CFiledDialog for these instead.
 
 * Updated CFrame
  - GetInitValues and SetInitValues have been added conveniently to store
@@ -31,8 +33,8 @@ unlock or free the hDevMode and hDevNames memory.
    doesn't have write permission in the "Program Files" on these.
    
 * "New Projects" folder
- - This folder has been relocated to the samples folder. This can be used
-   as the starting point for your new projects. 
+ - This folder has been relocated to the samples folder. This sampe can
+   be used as the starting point for your new projects. 
 
 
 Changes in detail
@@ -57,8 +59,10 @@ Removed CFrame::GetShowCmd
 Removed CFrame::GetShowStatusBar
 Removed CFrame::GetShowToolBar
 Removed CFrame::SetShowCmd
+CFile::OpenFileDialog
+CFile::SaveFileDialog
 
-These functions are now public:
+The following functions are now public:
 CWinApp::GetCWndFromMap
 CWinApp::GetTlsData
 CWinApp::SetTlsData

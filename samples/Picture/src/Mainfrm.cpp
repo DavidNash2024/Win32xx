@@ -100,12 +100,14 @@ BOOL CMainFrame::OnFileNew()
 
 BOOL CMainFrame::OnFileOpen()
 {
-	TCHAR szFilter[] = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
+	LPCTSTR szFilters = _T("Supported Files Types(*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf)\0*.bmp;*.gif;*.jpg;*.ico;*.emf;*.wmf\0Bitmaps (*.bmp)\0*.bmp\0GIF Files (*.gif)\0*.gif\0JPEG Files (*.jpg)\0*.jpg\0Icons (*.ico)\0*.ico\0Enhanced Metafiles (*.emf)\0*.emf\0Windows Metafiles (*.wmf)\0*.wmf\0\0");
 
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY, _T("Open File"), szFilter, *this);
-	if (!str.IsEmpty())
+	DWORD dwFlags = OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST | OFN_HIDEREADONLY;
+	CFileDialog FileDlg(TRUE, NULL, NULL, dwFlags, szFilters);
+	
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
+		CString str = FileDlg.GetPathName();
 		m_View.LoadPictureFile(str);
 	}
 
@@ -126,35 +128,32 @@ BOOL CMainFrame::OnFileSaveAs()
 	{
 		SHORT Type;
 		m_View.GetPicture()->get_Type(&Type);
-        CString Filter;
-        CString Ext;
+		CString Ext;
 
+		// Assign the default file extension.
 		// Note: iPicture doesn't convert between file types
 		switch(Type)
 		{
 		case PICTYPE_BITMAP:
-			Filter = _T("Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0");
 			Ext = _T("bmp");
 			break;
 		case PICTYPE_METAFILE:
-			Filter = _T("Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0");
 			Ext = _T("wmf");
 			break;
 		case PICTYPE_ICON:
-			Filter = _T("Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0");
 			Ext = _T("ico");
 			break;
 		case PICTYPE_ENHMETAFILE:
-			Filter = _T("Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0");
 			Ext = _T("emf");
 			break;
 		}
 
-		CFile File;
-		CString str = File.SaveFileDialog(0, OFN_SHOWHELP | OFN_OVERWRITEPROMPT, _T("Save File"), Filter, Ext, *this);
+		DWORD dwFlags = OFN_OVERWRITEPROMPT;
+		CFileDialog FileDlg(FALSE, Ext, NULL, dwFlags, NULL);
 
-		if (!str.IsEmpty())
+		if (FileDlg.DoModal(*this) == IDOK)
 		{
+			CString str = FileDlg.GetPathName();
 			m_View.SavePicture(str);
 			AddMRUEntry(str);
 		}

@@ -12,7 +12,7 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
 	try
 	{
 		CArchive ar(szFilename, CArchive::load);
-		ar >> *this;
+		ar >> *this;		// Uses the Serialize function
 		bResult = TRUE;
 	}
 
@@ -34,7 +34,7 @@ BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 //	try
 //	{
 //		CArchive ar(szFilename, CArchive::store);
-//		ar << *this;
+//		ar << *this;		// Uses the Serialize function
 //		bResult = TRUE;
 //	}
 //	catch (const CFileException &e)

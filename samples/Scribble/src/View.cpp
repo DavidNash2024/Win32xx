@@ -7,8 +7,6 @@
 #include "resource.h"
 
 
-using namespace std;
-
 CView::CView() : m_PenColor(RGB(0,0,0))
 {
 	m_Brush.CreateSolidBrush(RGB(255,255,230));
@@ -91,8 +89,8 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
 		FileName.ReleaseBuffer();
 
-		CMainFrame& MainFrame = GetScribbleApp().GetMainFrame();
-		MainFrame.LoadFile(FileName);
+		// Send a user defined message to the frame window
+		GetParent().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
 
 		DragFinish(hDrop);
 	}
@@ -154,7 +152,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DROPFILES:		return OnDropFiles(uMsg, wParam, lParam);
 	case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);
 	case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
-    case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);	
+	case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);	
 	}
 
 	//Use the default message handling for remaining messages

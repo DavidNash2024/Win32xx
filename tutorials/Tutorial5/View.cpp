@@ -11,6 +11,10 @@ CView::CView()
 {
 }
 
+CView::~CView()
+{
+}
+
 void CView::DrawLine(int x, int y)
 {
 	CClientDC dcClient(*this);
@@ -46,27 +50,25 @@ void CView::StorePoint(int x, int y, bool PenDown)
 	m_points.push_back(P1); //Add the point to the vector
 }
 
-LRESULT CView::OnLButtonDown(UINT, WPARAM, LPARAM lParam)
+LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
  	// Capture mouse input.
  	SetCapture();
-
 	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 
-	return 0L;
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-LRESULT CView::OnLButtonUp(UINT, WPARAM, LPARAM lParam)
+LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	//Release the capture on the mouse
 	ReleaseCapture();
-
 	StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
-	
-	return 0L;
+
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// hold down the left mouse button and move mouse to draw lines.
 	if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
@@ -74,23 +76,20 @@ LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 	}
-
-	return 0L;
+	
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_LBUTTONDOWN: return OnLButtonDown(uMsg, wParam, lParam);
-	case WM_MOUSEMOVE:	 return OnMouseMove(uMsg, wParam, lParam);     
-    case WM_LBUTTONUP:	 return OnLButtonUp(uMsg, wParam, lParam);
+	case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);
+	case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
+	case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);	
 	}
 
 	//Use the default message handling for remaining messages
 	return WndProcDefault(uMsg, wParam, lParam);
 }
-
-
-
 

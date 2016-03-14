@@ -78,24 +78,28 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileOpen()
 {
-	// Bring up the file open dialog
-	CFile File;
-	CString str = File.OpenFileDialog(0, 0, 0, 0);
+	CFileDialog FileDlg(TRUE);
 
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		// TODO:
+		// Add your own code here. Refer to the tutorial for additional information
+	}
 
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-	// Bring up the file save dialog.
-	CFile File;
-	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
+	CFileDialog FileDlg(FALSE);
 
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
+	// Bring up the file save dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		// TODO:
+		// Add your own code here. Refer to the tutorial for additional information
+	}
 
 	return TRUE;
 }
@@ -118,10 +122,10 @@ BOOL CMainFrame::OnFilePrint()
 		return (Res == IDOK);	// boolean expression
 	}
 
-	catch (const CResourceException& e)
+	catch (const CResourceException& /* e */)
 	{
 		// No default printer
-		MessageBox(_T("Unable to display print dialog"), _T("Error"), MB_OK);
+		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
 		return FALSE;
 	}
 }

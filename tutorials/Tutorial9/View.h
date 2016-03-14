@@ -5,11 +5,14 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "targetver.h"
-#include "wxx_wincore.h"
-#include <vector>
+
+// Message - sent to the parent (Frame) window when a file is dropped on the View window
+//   WPARAM: A pointer to the filename (LPCTSTR)
+//   LPARAM: unused
+#define UWM_DROPFILE (WM_APP + 0x0001)	
 
 class CDoc;
+
 
 struct PlotPoint
 {
@@ -20,7 +23,6 @@ struct PlotPoint
 };
 
 
-// A class that inherits from CWnd. It is used to create the window.
 class CView : public CWnd
 {
 public:
@@ -36,19 +38,19 @@ protected:
 	virtual int OnCreate(CREATESTRUCT&);
 	virtual void OnDraw(CDC& dc);
 	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void PreCreate(CREATESTRUCT &cs);
-	virtual void PreRegisterClass(WNDCLASS &wc);
+	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual void PreRegisterClass(WNDCLASS& wc);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	void DrawLine(int x, int y);
-	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	CBrush m_Brush;
-//	std::vector<PlotPoint> m_points;	// Points of lines to draw
 	COLORREF m_PenColor;
+
 };
 
 

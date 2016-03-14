@@ -184,7 +184,6 @@ namespace Win32xx
 		virtual BOOL IsModal() const					{ return FALSE; }
 
 		// Operations:
-		// Helpers for parsing information after successful return
 		BOOL 	FindNext() const;           // TRUE = find next
 		const	FINDREPLACE& GetParameters() const	{ return m_FR; }
 		CString GetFindString() const;      // get find string
@@ -198,7 +197,6 @@ namespace Win32xx
 		BOOL 	SearchDown() const;         // TRUE = down, FALSE = up
 		void	SetParameters(FINDREPLACE fr);
 
-		// static public methods
 		static CFindReplaceDialog* GetNotifier(LPARAM lParam);
 
 	protected:
@@ -252,7 +250,7 @@ namespace Win32xx
 		DWORD FillInLogFont(const CHARFORMAT& cf);
 
 		// private data
-		LOGFONT 	m_LogFont;			// Font charactreristics
+		LOGFONT 	m_LogFont;			// Font characteristics
 		CHOOSEFONT	m_CF;				// ChooseFont parameters
 		CString		m_strStyleName;		// Style name on the dialog
 	};
@@ -455,7 +453,7 @@ namespace Win32xx
 		DWORD dwFlags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
 		LPCTSTR pszFilter /* = NULL */)
 	// Construct a CFileDialog object and initialize the OPENFILENAME struct
-	// with the default extent, inital file mame, optional dwFlags, file filters,
+	// with the default extent, initial file mame, optional dwFlags, file filters,
 	// and the owner window.  The pszFilter contains a series of string pairs
 	// that specify file filters, separated by '\0' or '|' chars. Refer to the
 	// description of the OPENFILENAME struct in the Windows API documentation.
@@ -1026,6 +1024,7 @@ namespace Win32xx
 		TLSData* pTLSData = GetApp().SetTlsData();
 		pTLSData->pWnd = this;
 
+		// Initialize the FINDREPLACE struct values
 		m_FR.Flags = dwFlags;
 		SetParameters(m_FR);
 		m_FR.hwndOwner = hParentWnd;
@@ -1039,7 +1038,8 @@ namespace Win32xx
 			lstrcpyn(m_FR.lpstrReplaceWith, pszReplaceWith, m_FR.wReplaceWithLen);
 
 
-		HWND hWnd;  // the returned find/replace dialog box handle
+		// Display the dialog box
+		HWND hWnd;
 		if (bFindDialogOnly)
 			hWnd = ::FindText(&m_FR);
 		else
@@ -1337,11 +1337,11 @@ namespace Win32xx
 			OnInitDialog();
 		}
 
-		  // dispatch special commdlg messages
+		// dispatch special commdlg messages
 		if (message == WM_COMMAND && LOWORD(wParam) == pshHelp)
 			OnHelpButton();
 
-		  // unhandled messages
+		// default processing
 		return 0;
 	}
 

@@ -152,10 +152,11 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 
 BOOL CMainFrame::OnFileOpen()
 {
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), *this);
-	if (!str.IsEmpty())
+	CFileDialog FileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
+	
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
+		CString str = FileDlg.GetPathName();
 		LoadFile(str);
 	}
 
@@ -211,19 +212,14 @@ BOOL CMainFrame::OnFileSave()
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-	CFile File;
-	CString str = File.SaveFileDialog(0, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"), _T("bmp"), 0);
+	CFileDialog FileDlg(FALSE, _T("bmp"), NULL, 0, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
 
-	if (!str.IsEmpty())
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
-		CString str1 = str.Right(4);
-		str1.MakeLower();
-		if (str1 != _T(".bmp")) 
-			str += _T(".bmp");
-
-		SaveFile(str);
+		CString strName = FileDlg.GetPathName();		
+		SaveFile(strName);
 	}
-
+	
 	return TRUE;
 }
 
