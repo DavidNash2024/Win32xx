@@ -5,39 +5,38 @@
 #ifndef VIEW_H
 #define VIEW_H
 
+
 #include "wxx_wincore.h"
 #include <vector>
 
-using std::vector;
 
 
-// A class that inherits from CWnd. It is used to create the window.
+struct PlotPoint
+{
+	int x;
+	int y;
+	bool PenDown;
+};
+
+
 class CView : public CWnd
 {
 public:
 	CView();
-	virtual ~CView(){}
+	virtual ~CView();
 
 protected:
 	virtual void OnDestroy();
 	virtual void OnDraw(CDC& dc);
+	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	struct PlotPoint
-	{
-		int x;
-		int y;
-		bool PenDown;
-	};
-
 	void DrawLine(int x, int y);
-	LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	void StorePoint(int x, int y, bool PenDown);
-
-	vector<PlotPoint> m_points;	// Points of lines to draw
+	std::vector<PlotPoint> m_points;	// Points of lines to draw	COLORREF m_PenColor;
 };
 
 

@@ -8,7 +8,7 @@
 
 CMainFrame::CMainFrame()
 {
-	//Set m_View as the view window of the frame
+	// Set m_View as the view window of the frame
 	SetView(m_View);
 }
 
@@ -18,9 +18,10 @@ CMainFrame::~CMainFrame()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	// Process the messages from the Menu and Tool Bar
+
 	UNREFERENCED_PARAMETER(lParam);
 
-	// Process the messages from the Menu and Tool Bar
 	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:			return OnFileNew();
@@ -122,5 +123,4 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	return WndProcDefault(uMsg, wParam, lParam);
 } // LRESULT CMainFrame::WndProc(...)
-
 

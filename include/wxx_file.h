@@ -89,12 +89,6 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
-		virtual CString OpenFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
-						LPCTSTR pszFilter = NULL, HWND hOwnerWnd = NULL);
-		virtual CString SaveFileDialog(LPCTSTR pszFilePathName = NULL,
-						DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR pszTitle = NULL,
-						LPCTSTR pszFilter = NULL, LPCTSTR pszDefExt = NULL, HWND hOwnerWnd = NULL);
 		virtual void SetFilePath(LPCTSTR pszNewName);
 		virtual BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
 #endif
@@ -138,7 +132,7 @@ namespace Win32xx
 	//	shareDenyNone	No sharing restrictions.
 	{
 		assert(pszFileName);
-		Open(pszFileName, nOpenFlags);	// thows CFileException on failure
+		Open(pszFileName, nOpenFlags);	// throws CFileException on failure
 	}
 
 	inline CFile::~CFile()
@@ -293,23 +287,6 @@ namespace Win32xx
 
 	}
 
-#ifndef _WIN32_WCE
-	inline CString CFile::OpenFileDialog(LPCTSTR pszFilePathName,
-						DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter, 
-						HWND hOwnerWnd)
-	// Displays the file open dialog.
-	// pszFilter can contain a set of strings terminated by NULL or '|'.	
-	// Returns a CString containing either the selected file name or an empty CString.
-	// Throws a CResourceException if the file dialog creation fails.
-	{
-		CFileDialog FileDlg(TRUE, 0, pszFilePathName, dwFlags, pszFilter);
-		FileDlg.SetTitle(pszTitle);
-		FileDlg.DoModal(hOwnerWnd);		// can throw a CResourceException
-
-		return FileDlg.GetPathName();
-	}
-#endif
-
 	inline UINT CFile::Read(void* pBuf, UINT nCount)
 	// Reads from the file, storing the contents in the specified buffer.
 	{
@@ -337,23 +314,6 @@ namespace Win32xx
 	{
 		return ::DeleteFile(pszFileName);
 	}
-
-#ifndef _WIN32_WCE
-	inline CString CFile::SaveFileDialog(LPCTSTR pszFilePathName,
-						DWORD dwFlags, LPCTSTR pszTitle, LPCTSTR pszFilter,
-						LPCTSTR pszDefExt, HWND hOwnerWnd)
-	// Displays the SaveFileDialog.
-	// pszFilter can contain a set of strings terminated by NULL or '|'.	
-	// Returns a CString containing either the selected file name or an empty CString.
-	// Throws a CResourceException if the file dialog creation fails.
-	{
-		CFileDialog FileDlg(FALSE, pszDefExt, pszFilePathName, dwFlags, pszFilter);
-		FileDlg.SetTitle(pszTitle);
-		FileDlg.DoModal(hOwnerWnd);		// can throw a CResourceException
-
-		return FileDlg.GetPathName();
-	}
-#endif
 
 	inline ULONGLONG CFile::Seek(LONGLONG lOff, UINT nFrom)
 	// Positions the current file pointer.

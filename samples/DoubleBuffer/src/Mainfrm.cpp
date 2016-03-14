@@ -79,23 +79,28 @@ void CMainFrame::OnInitialUpdate()
 
 BOOL CMainFrame::OnFileOpen()
 {
-	// Bring up the dialog, and open the file
-	CFile File;
-	CString str = File.OpenFileDialog(0, 0, 0, 0);
+	CFileDialog FileDlg(TRUE);
 
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		// TODO:
+		// Add your own code here. Refer to the tutorial for additional information
+	}
 
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-	CFile File;
-	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
+	CFileDialog FileDlg(FALSE);
 
-	// TODO:
-	// Add your own code here. Refer to the tutorial for additional information
+	// Bring up the file save dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		// TODO:
+		// Add your own code here. Refer to the tutorial for additional information
+	}
 
 	return TRUE;
 }

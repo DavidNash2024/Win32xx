@@ -5,7 +5,6 @@
 #include "ScribbleApp.h"
 #include "resource.h"
 
-using namespace std;
 
 CView::CView() : m_PenColor(RGB(0,0,0))
 {
@@ -74,35 +73,33 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
 		FileName.ReleaseBuffer();
 
-		CMainFrame& MainFrame = GetScribbleApp().GetMainFrame();
-		MainFrame.LoadFile(FileName);
+		// Send a user defined message to the frame window
+		GetParent().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
 
 		DragFinish(hDrop);
 	}
 	return 0L;
 }
 
-LRESULT CView::OnLButtonDown(UINT, WPARAM, LPARAM lParam)
+LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
  	// Capture mouse input.
  	SetCapture();
-
 	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
 
-	return 0L;
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-LRESULT CView::OnLButtonUp(UINT, WPARAM, LPARAM lParam)
+LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	//Release the capture on the mouse
 	ReleaseCapture();
-
 	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false, m_PenColor);
 
-	return 0L;	
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// hold down the left mouse button and move mouse to draw lines.
 	if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
@@ -110,17 +107,17 @@ LRESULT CView::OnMouseMove(UINT, WPARAM wParam, LPARAM lParam)
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
 		GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
 	}
-
-	return 0L;
+	
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-void CView::PreCreate(CREATESTRUCT &cs)
+void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// Set the extra style to provide a sunken effect
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CView::PreRegisterClass(WNDCLASS &wc)
+void CView::PreRegisterClass(WNDCLASS& wc)
 {
 	// Set the background brush, class name and cursor
 	wc.hbrBackground = m_Brush;
@@ -135,7 +132,7 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	case WM_DROPFILES:		return OnDropFiles(uMsg, wParam, lParam);
 	case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);
 	case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
-    case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);
+	case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);	
 	}
 
 	//Use the default message handling for remaining messages

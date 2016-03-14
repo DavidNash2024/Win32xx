@@ -168,16 +168,19 @@ void CMainFrame::LoadFile(LPCTSTR str)
 
 BOOL CMainFrame::OnFileOpen()
 {
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), *this);
+	CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+	FileDlg.SetTitle(_T("Open File"));
 
-	if (!str.IsEmpty())
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
-		LoadFile(str);
+		// Load the file
+		LoadFile(FileDlg.GetPathName());
 	}
 
 	return TRUE;
 }
+
 BOOL CMainFrame::OnFileNew()
 {
 	GetDoc().GetPoints().clear();
@@ -198,17 +201,21 @@ BOOL CMainFrame::OnFileSave()
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), *this);
+	CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+	FileDlg.SetTitle(_T("Save File"));
 
-	// Store the PlotPoint data in the file
-	if (!str.IsEmpty())
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
-		m_PathName = str;
+		CString str = FileDlg.GetPathName();
 
-		// Save the file name
-		GetDoc().FileSave(str);
-		AddMRUEntry(str);
+		// Save the file
+		if (GetDoc().FileSave(str))
+		{
+			// Save the file name
+			m_PathName = str;
+			AddMRUEntry(m_PathName);
+		}
 	}
 
 	return TRUE;

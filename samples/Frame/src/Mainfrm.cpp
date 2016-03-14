@@ -79,23 +79,26 @@ void CMainFrame::OnInitialUpdate()
 
 BOOL CMainFrame::OnFileOpen()
 {
-	// Bring up the dialog, and open the file
-	CFile File;
-	CString str = File.OpenFileDialog(0, 0, 0, 0);
+	CFileDialog FileDlg(TRUE);
 
-	if (!str.IsEmpty())
-		GetDoc().FileLoad(str);
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		GetDoc().FileLoad(FileDlg.GetPathName());
+	}
 
 	return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-	CFile File;
-	CString str = File.SaveFileDialog(0, 0, 0, 0, 0);
-
-	if (!str.IsEmpty())
-		GetDoc().FileStore(str);
+	CFileDialog FileDlg(FALSE);
+	
+	// Bring up the file save dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		GetDoc().FileStore(FileDlg.GetPathName());
+	}
 
 	return TRUE;
 }
@@ -118,10 +121,10 @@ BOOL CMainFrame::OnFilePrint()
 		return (Res == IDOK);	// boolean expression
 	}
 
-	catch (const CResourceException& e)
+	catch (const CResourceException& /* e */)
 	{
 		// No default printer
-		MessageBox(_T("Unable to display print dialog"), _T("Error"), MB_OK);
+		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
 		return FALSE;
 	}
 }

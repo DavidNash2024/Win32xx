@@ -5,9 +5,10 @@
 #include "mainfrm.h"
 #include "resource.h"
 
+
 CMainFrame::CMainFrame()
 {
-	//Set m_View as the view window of the frame
+	// Set m_View as the view window of the frame
 	SetView(m_View);
 }
 
@@ -17,9 +18,10 @@ CMainFrame::~CMainFrame()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
+	// Process the messages from the Menu and Tool Bar
+
 	UNREFERENCED_PARAMETER(lParam);
 
-	// Process the messages from the Menu and Tool Bar
 	switch (LOWORD(wParam))
 	{
 	case IDM_FILE_NEW:			return OnFileNew();
@@ -76,19 +78,18 @@ BOOL CMainFrame::OnFileSaveAs()
 
 void CMainFrame::SetupToolBar()
 {
-	// Set the Resource IDs for the toolbar buttons
+	// Define our toolbar
 	AddToolBarButton( IDM_FILE_NEW   );
 	AddToolBarButton( IDM_FILE_OPEN  );
 	AddToolBarButton( IDM_FILE_SAVE  );
-	
 	AddToolBarButton( 0 );				// Separator
-	AddToolBarButton( IDM_EDIT_CUT );
-	AddToolBarButton( IDM_EDIT_COPY );
-	AddToolBarButton( IDM_EDIT_PASTE );
-	
+	AddToolBarButton( IDM_EDIT_CUT,   FALSE );
+	AddToolBarButton( IDM_EDIT_COPY,  FALSE );
+	AddToolBarButton( IDM_EDIT_PASTE, FALSE );
+
 	AddToolBarButton( 0 );				// Separator
 	AddToolBarButton( IDM_FILE_PRINT );
-	
+
 	AddToolBarButton( 0 );				// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
 }

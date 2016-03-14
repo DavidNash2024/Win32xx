@@ -246,10 +246,10 @@ BOOL CMainFrame::OnFilePrint()
 			return FALSE;
 	}
 
-	catch (const CResourceException& e)
+	catch (const CResourceException& /* e */)
 	{
-		// No default printer perhaps
-		MessageBox(e.GetText(), _T("Error"), MB_OK);
+		// No default printer
+		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
 		return FALSE;
 	}
 
@@ -413,12 +413,12 @@ BOOL CMainFrame::OnFileOpen()
 {
 	// szFilters is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	CString Filters( _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), Filters, *this);
-
-	if (!str.IsEmpty())
+	LPCTSTR szFilters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
+	CFileDialog FileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, szFilters);
+	
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
+		CString str = FileDlg.GetPathName();
 		ReadFile(str);
 		SetFileName(str);
 		AddMRUEntry(str);
@@ -440,14 +440,14 @@ BOOL CMainFrame::OnFileSave()
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-	// szFilters is a text string that includes two file name filters:
+	// szFilter is a text string that includes two file name filters:
 	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	CString Filters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0\0"), 46);
-	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), Filters, _T("txt"), *this);
+	LPCTSTR szFilters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
+	CFileDialog FileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, szFilters);
 
-	if (!str.IsEmpty())
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
+		CString str = FileDlg.GetPathName();
 		WriteFile(str);
 		SetFileName(str);
 		AddMRUEntry(str);

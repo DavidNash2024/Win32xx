@@ -77,6 +77,7 @@ BOOL CMainFrame::OnFileExit()
 }
 
 BOOL CMainFrame::OnFileMRU(WPARAM wParam)
+// Called when a MRU file is selected from the menu
 {
 	UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
 	CString strMRUText = GetMRUEntry(nMRUIndex);
@@ -100,6 +101,7 @@ BOOL CMainFrame::OnFileNew()
 }
 
 void CMainFrame::LoadFile(LPCTSTR str)
+// Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
 	// Retrieve the PlotPoint data
 	if (GetDoc().FileOpen(str))
@@ -116,12 +118,14 @@ void CMainFrame::LoadFile(LPCTSTR str)
 
 BOOL CMainFrame::OnFileOpen()
 {
-	CFile File;
-	CString str = File.OpenFileDialog(0, OFN_FILEMUSTEXIST, _T("Open File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), *this);
+	CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+	FileDlg.SetTitle(_T("Open File"));
 
-	if (!str.IsEmpty())
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
-		LoadFile(str);
+		// Load the file
+		LoadFile(FileDlg.GetPathName());
 	}
 
 	return TRUE;
@@ -139,17 +143,21 @@ BOOL CMainFrame::OnFileSave()
 
 BOOL CMainFrame::OnFileSaveAs()
 {
-	CFile File;
-	CString str = File.SaveFileDialog(0, OFN_OVERWRITEPROMPT, _T("Save File"), _T("Scribble Files (*.dat)\0*.dat\0\0"), _T("dat"), *this);
+	CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+	FileDlg.SetTitle(_T("Save File"));
 
-	// Store the PlotPoint data in the file
-	if (!str.IsEmpty())
+	// Bring up the file open dialog retrieve the selected filename
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
-		m_PathName = str;
+		CString str = FileDlg.GetPathName();
 
-		// Save the file name
-		GetDoc().FileSave(str);
-		AddMRUEntry(str);
+		// Save the file
+		if (GetDoc().FileSave(str))
+		{
+			// Save the file name
+			m_PathName = str;
+			AddMRUEntry(m_PathName);
+		}
 	}
 
 	return TRUE;
@@ -248,6 +256,7 @@ BOOL CMainFrame::OnFilePrint()
 			if(0 > EndDoc(pd.hDC))
 				throw CUserException(_T("EndDoc failed"));
 		}
+		
 		catch (const CException& e)
 		{
 			// Display a message box indicating why printing failed.
@@ -312,10 +321,17 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-//	switch (uMsg)
-//	{
+	switch (uMsg)
+	{
+	case UWM_DROPFILE:
+	{
+		LPCTSTR szFileName = (LPCTSTR)wParam;
+		assert(szFileName);
+		LoadFile(szFileName);
+		break;
+	}
 
-//	} // switch (uMsg)
+	} // switch (uMsg)
 
 	return WndProcDefault(uMsg, wParam, lParam);
 } // LRESULT CMainFrame::WndProc(...)

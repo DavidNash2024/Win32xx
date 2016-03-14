@@ -887,7 +887,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline CDevMode CPageSetupDialog::GetDevMode() const
-	// Returns a pointer to the locked hDevMode memory encapulated in a CDevMode object.
+	// Returns a pointer to the locked hDevMode memory encapsulated in a CDevMode object.
 	// There is no need to unlock this memory. The CDevMode object automatically
 	// unlocks the memory when it goes out of scope.
 	// Usage:
@@ -899,7 +899,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline CDevNames CPageSetupDialog::GetDevNames() const
-	// Returns a pointer to the locked hDevNames memory encapulated in a CDevNames object.
+	// Returns a pointer to the locked hDevNames memory encapsulated in a CDevNames object.
 	// There is no need to unlock this memory. The CDevNames object automatically
 	// unlocks the memory when it goes out of scope.
 	// Usage:
@@ -958,7 +958,7 @@ namespace Win32xx
 	//============================================================================
 	inline UINT CPageSetupDialog::OnDrawPage(HDC hDC, UINT nMessage, LPRECT lpRect)
 	// Override this function to customize drawing of the sample page in the Page Setup dialog box.
-	// It is called in reponse to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
+	// It is called in response to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
 	// WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.
 	{
 		UNREFERENCED_PARAMETER(hDC);

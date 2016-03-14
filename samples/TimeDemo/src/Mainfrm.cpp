@@ -692,22 +692,19 @@ OnFilePrint()                                                           /*
 
 	try
 	{
-		INT_PTR Res = Printdlg.DoModal(*this);
+		Printdlg.DoModal(*this);
 
 		// Retrieve the printer DC
 		// CDC dcPrinter = Printdlg.GetPrinterDC();
 
 		// TODO:
 		// Add your own code here. Refer to the tutorial for additional information
-
-		return (Res == IDOK);	// boolean expression
 	}
 
-	catch (const CResourceException& e)
+	catch (const CResourceException& /* e */)
 	{
 		// No default printer
-		MessageBox(_T("Unable to display print dialog"), _T("Error"), MB_OK);
-		return FALSE;
+		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
 	}
 }
 /*============================================================================*/

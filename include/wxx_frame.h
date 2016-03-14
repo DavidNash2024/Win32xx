@@ -349,7 +349,7 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		InitValues& GetInitValues()					{ return m_InitValues; }
+		InitValues GetInitValues() const			{ return m_InitValues; }
 		CMenu& GetFrameMenu() const					{ return const_cast<CMenu&>(m_Menu); }
 		MenuTheme& GetMenuBarTheme() const			{ return const_cast<MenuTheme&>(m_MBTheme); }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
@@ -366,7 +366,7 @@ namespace Win32xx
 		void SetAccelerators(UINT ID_ACCEL);
 		void SetFrameMenu(UINT ID_MENU);
 		void SetFrameMenu(HMENU hMenu);
-		void SetInitValues(InitValues& Values);
+		void SetInitValues(const InitValues& Values);
 		void SetMenuTheme(MenuTheme& MBT);
 		void SetReBarTheme(ReBarTheme& RBT);
 		void SetStatusBarTheme(StatusBarTheme& SBT);
@@ -1960,7 +1960,7 @@ namespace Win32xx
 	inline CRect CFrame::ExcludeChildRect(CRect& rcClient, HWND hChild) const
 	// Calculates the remaining client rect when a child window is excluded.
 	// Note: Assumes the child window touches 3 of the client rect's borders
-	//  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar())
+	//  e.g.   CRect rc = ExcludeChildRect(GetClientRect(), GetStatusBar());
 	{
 		ClientToScreen(rcClient);
 
@@ -2635,6 +2635,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
+	// Called when the frame window (not a child window) receives focus
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2644,6 +2645,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnSize(UINT, WPARAM wParam, LPARAM lParam)
+	// Called when the frame window is resized
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2653,6 +2655,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
+	// Called in response to a WM_SYSCOLORCHANGE message. This message is sent
+	// to all top-level windows when a change is made to a system color setting. 
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2710,6 +2714,8 @@ namespace Win32xx
 	}
 
 	inline LRESULT CFrame::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
+	// Called in response to a WM_SYSCOMMAND notification. This notification
+	// is passed on to the MenuBar to process alt keys and maximise or restore.
 	{
 		if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenuBarUsed())
 		{
@@ -2725,6 +2731,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::OnViewStatusBar()
+	// Called in response to menu input to display or hide the status bar.
 	{
 		BOOL Show = !(GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible());
 		ShowStatusBar(Show);
@@ -2732,6 +2739,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::OnViewToolBar()
+	// Called in response to menu input to display or hide the tool bar.
 	{
 		BOOL Show = m_UseToolBar && !GetToolBar().IsWindowVisible();
 		ShowToolBar(Show);
@@ -2749,13 +2757,14 @@ namespace Win32xx
 		CWindowDC dcDesktop(0);
 
 		// Does the window fit on the desktop?
-		if (RectVisible(dcDesktop, &GetInitValues().rcPos) && (GetInitValues().rcPos.Width() > 0))
+		CRect rcInitPos = GetInitValues().rcPos;
+		if (RectVisible(dcDesktop, &rcInitPos) && (rcInitPos.Width() > 0))
 		{
 			// Set the original window position
-			cs.x  = GetInitValues().rcPos.left;
-			cs.y  = GetInitValues().rcPos.top;
-			cs.cx = GetInitValues().rcPos.Width();
-			cs.cy = GetInitValues().rcPos.Height();
+			cs.x  = rcInitPos.left;
+			cs.y  = rcInitPos.top;
+			cs.cx = rcInitPos.Width();
+			cs.cy = rcInitPos.Height();
 		}
 	}
 
@@ -2828,6 +2837,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CFrame::SaveRegistryMRUSettings()
+	// Saves the current MRU settings in the registry
 	{
 		// Store the MRU entries in the registry
 		if (m_nMaxMRU > 0)
@@ -3003,9 +3013,12 @@ namespace Win32xx
 		}
 	}
 
-	inline void CFrame::SetInitValues(InitValues& Values)
-	// Sets the initial values from the InitValues struct
+	inline void CFrame::SetInitValues(const InitValues& Values)
+	// Sets the initial values from the InitValues struct. The InitValues struct
+	// is used to load and store the initial values, usually saved in the
+	// registry or an INI file.
 	{
+		// Values is a const ref, so copy the members individually
 		m_InitValues.rcPos = Values.rcPos;
 		m_InitValues.ShowCmd = Values.ShowCmd;
 		m_InitValues.ShowStatusBar = Values.ShowStatusBar;
@@ -3282,7 +3295,8 @@ namespace Win32xx
 
 	inline void CFrame::SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Image List for additional Toolbars.
-	// The CImageList provided should be a member of CMainFrame.
+	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.	
+	// The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
 	// A Disabled image list is created from ToolBarID if one doesn't already exist.
 	{
 		// Get the image size
@@ -3305,7 +3319,8 @@ namespace Win32xx
 
 	inline void CFrame::SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Disabled Image List for additional Toolbars.
-	// The CImageList provided should be a member of CMainFrame.
+	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.	
+	// The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
 	{
 		if (nID != 0)
 		{
@@ -3336,7 +3351,8 @@ namespace Win32xx
 
 	inline void CFrame::SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Hot Image List for additional Toolbars.
-	// The CImageList provided should be a member of CMainFrame.
+	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.	
+	// The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
 	{
 		if (nID != 0)
 		{
@@ -3366,13 +3382,14 @@ namespace Win32xx
 
 	inline void CFrame::SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID)
 	// Either sets the imagelist or adds/replaces bitmap depending on ComCtl32.dll version
-	// Assumes the width of the button image = height, minimum width = 16
+	// The ToolBarIDs are bitmap resources containing a set of toolbar button images.
+	// Each toolbar button image must have a minimum height of 16. Its height must equal its width.
 	// The colour mask is ignored for 32bit bitmaps, but is required for 24bit bitmaps
 	// The colour mask is often grey RGB(192,192,192) or magenta (255,0,255)
-	// The Hot and disabled bitmap resources can be 0
+	// The Hot and disabled bitmap resources can be 0.
 	// A Disabled image list is created from ToolBarID if one isn't provided.
 	{
-		if (GetComCtlVersion() < 470)
+		if (GetComCtlVersion() < 470)	// only on Win95
 		{
 			// We are using COMCTL32.DLL version 4.0, so we can't use an ImageList.
 			// Instead we simply set the bitmap.
