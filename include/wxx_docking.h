@@ -477,8 +477,8 @@ namespace Win32xx
 		virtual CDockHint& GetDockHint() const		{ return m_pDockAncestor->m_DockHint; }
 		virtual CRect GetViewRect() const			{ return GetClientRect(); }
 		
-		CWnd& GetView() const						{ return GetDockClient().GetView(); }
-		void SetView(CWnd& wndView);
+		virtual CWnd& GetView() const						{ return GetDockClient().GetView(); }
+		virtual void SetView(CWnd& wndView);
 
 		const std::vector <DockPtr> & GetAllDockChildren() const	{return GetDockAncestor()->m_vAllDockChildren;}
 		const std::vector <CDocker*> & GetDockChildren() const		{return m_vDockChildren;}

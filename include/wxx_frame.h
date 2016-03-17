@@ -332,8 +332,8 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void RecalcViewLayout();
 		
-		CWnd& GetView() const		{ return *m_pView; }
-		void SetView(CWnd& wndView) { m_pView = &wndView; }
+		virtual CWnd& GetView() const		{ return *m_pView; }
+		virtual void SetView(CWnd& wndView) { m_pView = &wndView; }
 
 
 		// Virtual Attributes
@@ -510,9 +510,9 @@ namespace Win32xx
 	class CDockFrame : public CFrame, public CDocker
 	{
 	public:
-		CWnd& GetView()	const			{ return CDocker::GetView(); }
-		CRect GetViewRect() const			{ return CFrame::GetViewRect(); }
-		void SetView(CWnd& wndView)			{ CDocker::SetView(wndView); }
+		virtual CWnd& GetView()	const		{ return CDocker::GetView(); }
+		virtual CRect GetViewRect() const	{ return CFrame::GetViewRect(); }
+		virtual void SetView(CWnd& wndView)	{ CDocker::SetView(wndView); }
 
 	protected:
 		void OnClose()						{ CFrame::OnClose(); }

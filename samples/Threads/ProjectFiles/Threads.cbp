@@ -185,6 +185,11 @@
 		<Unit filename="../src/ThreadApp.cpp" />
 		<Unit filename="../src/ThreadApp.h" />
 		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/stdafx.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Unit filename="../src/targetver.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

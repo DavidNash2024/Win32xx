@@ -53,7 +53,6 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "wxx_frame.h"
 #include "App.h"
 #include "View.h"
 #include "Doc.h"

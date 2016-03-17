@@ -10,7 +10,6 @@
 #include <vector>
 
 
-
 struct PlotPoint
 {
 	int x;

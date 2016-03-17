@@ -128,28 +128,33 @@ BOOL CMainFrame::OnFileSaveAs()
 	{
 		SHORT Type;
 		m_View.GetPicture()->get_Type(&Type);
-		CString Ext;
+		LPCTSTR Filter = NULL;
+		LPCTSTR Ext    = NULL;
 
-		// Assign the default file extension.
+		// Assign the default file extension and filter.
 		// Note: iPicture doesn't convert between file types
 		switch(Type)
 		{
 		case PICTYPE_BITMAP:
+			Filter = _T("Supported Files Type(*.bmp)\0*.bmp;\0Bitmap (*.bmp)\0*.bmp\0\0");
 			Ext = _T("bmp");
 			break;
 		case PICTYPE_METAFILE:
+			Filter = _T("Supported Files Type(*.wmf)\0*.bmp;\0Metafile (*.wmf)\0*.wmf\0\0");
 			Ext = _T("wmf");
 			break;
 		case PICTYPE_ICON:
+			Filter = _T("Supported Files Type(*.ico)\0*.ico;\0Icon File (*.ico)\0*.ico\0\0");
 			Ext = _T("ico");
 			break;
 		case PICTYPE_ENHMETAFILE:
+			Filter = _T("Supported Files Type(*.emf)\0*.emf;\0Enhanced Metafile (*.emf)\0*.emf\0\0");
 			Ext = _T("emf");
 			break;
 		}
 
 		DWORD dwFlags = OFN_OVERWRITEPROMPT;
-		CFileDialog FileDlg(FALSE, Ext, NULL, dwFlags, NULL);
+		CFileDialog FileDlg(FALSE, Ext, NULL, dwFlags, Filter);
 
 		if (FileDlg.DoModal(*this) == IDOK)
 		{

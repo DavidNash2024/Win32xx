@@ -52,7 +52,6 @@
 #ifndef CMyButton_H
 #define CMyButton_H
 
-#include <wxx_stdcontrols.h>
 
 /******************************************************************************/
 	class

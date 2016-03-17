@@ -1,7 +1,6 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp  - definitions for the CMainFrame class
 
-#include "targetver.h"
 #include "mainfrm.h"
 #include "resource.h"
 
