@@ -41,7 +41,7 @@
 
 #include "wxx_cstring.h"
 #include "wxx_exception.h"
-#include "wxx_commondlg.h"
+
 
 namespace Win32xx
 {

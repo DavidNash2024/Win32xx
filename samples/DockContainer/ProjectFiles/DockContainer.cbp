@@ -172,7 +172,6 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
-		<Unit filename="../../../include/menubar.h" />
 		<Unit filename="../src/Classes.cpp" />
 		<Unit filename="../src/Classes.h" />
 		<Unit filename="../src/ContainerApp.cpp" />
@@ -190,10 +189,16 @@
 		</Unit>
 		<Unit filename="../src/Simple.cpp" />
 		<Unit filename="../src/Simple.h" />
+		<Unit filename="../src/StdAfx.cpp" />
 		<Unit filename="../src/Text.cpp" />
 		<Unit filename="../src/Text.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/stdafx.h">
+			<Option compile="1" />
+			<Option weight="0" />
+		</Unit>
+		<Unit filename="../src/targetver.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

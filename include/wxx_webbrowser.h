@@ -41,6 +41,7 @@
 #include <ocidl.h>
 #include <shlobj.h>
 
+
 namespace Win32xx
 {
 	///////////////////////////////////////////////////

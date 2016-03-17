@@ -55,8 +55,6 @@
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-#include "wxx_dialog.h"
-#include "wxx_richedit.h"
 
 #include "resource.h"
 #include "MyButton.h"

@@ -52,7 +52,6 @@
 #ifndef MyMonthCalendar_H
 #define MyMonthCalendar_H
 
-#include "wxx_controls.h"
 
 /*============================================================================*/
 	class

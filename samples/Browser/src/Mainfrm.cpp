@@ -4,8 +4,6 @@
 #include "stdafx.h"
 #include "resource.h"
 #include "mainfrm.h"
-#include <shlobj.h>
-#include <sstream>
 
 
 // Definitions for the CMainFrame class

@@ -262,7 +262,7 @@ namespace Win32xx
 
 		// Set the keyboard accelerators
 		HACCEL hAccel = LoadAccelerators(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
-		GetApp().SetAccelerators(hAccel, this);
+		GetApp().SetAccelerators(hAccel, *this);
 
 		// Add the toolbar buttons
 		if (m_ToolBarData.size() > 0)

@@ -118,19 +118,23 @@ BOOL CMainFrame::OnFileSaveAs()
 
 BOOL CMainFrame::OnPenColor()
 {
-	static COLORREF CustColors[16] = {0};	// array of custom colors
-	CHOOSECOLOR cc = {0};					// Structure used by ChooseColor
-
-	cc.lStructSize = sizeof(CHOOSECOLOR);
-	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
-	cc.rgbResult = m_View.GetPenColor();
-	cc.lpCustColors = CustColors;
-	cc.hwndOwner = *this;
+	// array of custom colors, initialized to white
+	static COLORREF CustColors[16] = {	RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
 	
-	// Initiate the Choose Color dialog
-	if (ChooseColor(&cc)==TRUE) 
+	CColorDialog ColorDlg;
+	ColorDlg.SetCustomColors(CustColors);
+	
+	// Initialize the Choose Color dialog
+	if (ColorDlg.DoModal(*this) == IDOK)
 	{
-		m_View.SetPenColor(cc.rgbResult);
+		// Store the custom colors in the static array
+		memcpy(CustColors, ColorDlg.GetCustomColors(), 16*sizeof(COLORREF));
+		
+		// Retrieve the chosen color
+		m_View.SetPenColor(ColorDlg.GetColor());
 	}
 
 	return TRUE;

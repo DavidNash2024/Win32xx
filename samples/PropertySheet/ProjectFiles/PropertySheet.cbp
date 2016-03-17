@@ -182,10 +182,12 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/StdAfx.cpp" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
+		<Unit filename="../src/stdafx.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

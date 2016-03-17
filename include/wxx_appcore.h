@@ -433,6 +433,7 @@ namespace Win32xx
 		if (hGlobal == 0)
 			return;
 
+#ifndef _WIN32_WCE
 		// check validity of the handle
 		assert(::GlobalFlags(hGlobal) != GMEM_INVALID_HANDLE);
 		// decrement the lock count associated with the handle
@@ -442,6 +443,7 @@ namespace Win32xx
 			TRACE("***WARNING Global memory still locked ***\n");
 			::GlobalUnlock(hGlobal);
 		}
+#endif
 
 		// finally, really free the handle
 		::GlobalFree(hGlobal);

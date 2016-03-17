@@ -24,7 +24,7 @@ BOOL CMainMDIFrame::OnFileOpen()
 	CFileDialog FileDlg(TRUE);
 
 	// Bring up the file open dialog retrieve the selected filename
-	if (FileDlg.DoModal(*this) == IDOK)
+	if (FileDlg.DoModal(GetHwnd()) == IDOK)
 	{
 		// TODO:
 		// Add your own code here. Refer to the tutorial for additional information
@@ -38,7 +38,7 @@ BOOL CMainMDIFrame::OnFileSave()
 	CFileDialog FileDlg(FALSE);
 
 	// Bring up the file save dialog retrieve the selected filename
-	if (FileDlg.DoModal(*this) == IDOK)
+	if (FileDlg.DoModal(GetHwnd()) == IDOK)
 	{
 		// TODO:
 		// Add your own code here. Refer to the tutorial for additional information
@@ -57,7 +57,7 @@ BOOL CMainMDIFrame::OnFilePrint()
 
 	// Retrieve the printer DC
 	PrintDlg( &pd );
-	
+
 	// TODO:
 	// Add your own code here. Refer to the tutorial for additional information
 
@@ -78,7 +78,7 @@ void CMainMDIFrame::OnInitialUpdate()
 
 	// Add some  MDI children
 	AddMDIChild(new CSimpleMDIChild);
-	AddMDIChild(new CSimpleMDIChild); 
+	AddMDIChild(new CSimpleMDIChild);
 }
 
 BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -160,7 +160,7 @@ BOOL CMainMDIFrame::OnMDICascade()
 	return TRUE;
 }
 
-BOOL CMainMDIFrame::OnMDICloseAll() 
+BOOL CMainMDIFrame::OnMDICloseAll()
 {
 	RemoveAllMDIChildren();
 	return TRUE;
@@ -173,7 +173,7 @@ BOOL CMainMDIFrame::OnMDIIconArrange()
 }
 
 BOOL CMainMDIFrame::OnMDITile()
-{ 
+{
 	MDITile();
 	return TRUE;
 }

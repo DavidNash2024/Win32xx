@@ -18,7 +18,6 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 	CFormDoc& GetDoc()		{ return m_Doc; }
-	CFormView& GetView()	{ return m_SdiView; }
 
 protected:
 	virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);

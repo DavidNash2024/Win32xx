@@ -52,7 +52,6 @@
 #ifndef MyDateTime_H
 #define MyDateTime_H
 
-#include "wxx_controls.h"
 
 /*============================================================================*/
 	class

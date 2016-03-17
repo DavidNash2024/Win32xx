@@ -133,33 +133,29 @@ BOOL CMainFrame::OnFilePrint()
 	MemDC.SelectObject(bmView);
 	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
 
-	// Bring up a dialog to choose the printer
-	PRINTDLG pd;
-	ZeroMemory(&pd, sizeof(PRINTDLG));
-	pd.lStructSize = sizeof( pd );
-	pd.Flags = PD_RETURNDC;
-	pd.hwndOwner = GetHwnd();
+	CPrintDialog PrintDlg;
 
-	// Retrieve the printer DC
-	if( PrintDlg( &pd ) )
+	try
 	{
-		try
+		// Bring up a dialog to choose the printer
+		if (PrintDlg.DoModal(*this))	// throws exception if there is no default printer
 		{
 			// Zero and then initialize the members of a DOCINFO structure.
 			DOCINFO di;
-			memset( &di, 0, sizeof(DOCINFO) );
+			memset(&di, 0, sizeof(DOCINFO));
 			di.cbSize = sizeof(DOCINFO);
 			di.lpszDocName = _T("Scribble Printout");
-			di.lpszOutput = (LPTSTR) NULL;
-			di.lpszDatatype = (LPTSTR) NULL;
+			di.lpszOutput = (LPTSTR)NULL;
+			di.lpszDatatype = (LPTSTR)NULL;
 			di.fwType = 0;
 
 			// Begin a print job by calling the StartDoc function.
-			if (SP_ERROR == StartDoc(pd.hDC, &di))
+			CDC dcPrint = PrintDlg.GetPrinterDC();
+			if (SP_ERROR == StartDoc(dcPrint, &di))
 				throw CUserException(_T("Failed to start print job"));
 
 			// Inform the driver that the application is about to begin sending data.
-			if (0 > StartPage(pd.hDC))
+			if (0 > StartPage(dcPrint))
 				throw CUserException(_T("StartPage failed"));
 
 			BITMAPINFOHEADER bi;
@@ -168,7 +164,7 @@ BOOL CMainFrame::OnFilePrint()
 			bi.biHeight = Height;
 			bi.biWidth = Width;
 			bi.biPlanes = 1;
-			bi.biBitCount =  24;
+			bi.biBitCount = 24;
 			bi.biCompression = BI_RGB;
 
 			// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
@@ -181,62 +177,66 @@ BOOL CMainFrame::OnFilePrint()
 			MemDC.GetDIBits(bmView, 0, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
 			// Determine the scaling factors required to print the bitmap and retain its original proportions.
-			float fLogPelsX1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSX);
-			float fLogPelsY1 = (float) ViewDC.GetDeviceCaps(LOGPIXELSY);
-			float fLogPelsX2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSX);
-			float fLogPelsY2 = (float) GetDeviceCaps(pd.hDC, LOGPIXELSY);
+			float fLogPelsX1 = (float)ViewDC.GetDeviceCaps(LOGPIXELSX);
+			float fLogPelsY1 = (float)ViewDC.GetDeviceCaps(LOGPIXELSY);
+			float fLogPelsX2 = (float)GetDeviceCaps(dcPrint, LOGPIXELSX);
+			float fLogPelsY2 = (float)GetDeviceCaps(dcPrint, LOGPIXELSY);
 			float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
 			float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
 
 			// Compute the coordinates of the upper left corner of the centered bitmap.
-			int cWidthPels = GetDeviceCaps(pd.hDC, HORZRES);
-			int xLeft = ((cWidthPels / 2) - ((int) (((float) Width) * fScaleX)) / 2);
-			int cHeightPels = GetDeviceCaps(pd.hDC, VERTRES);
-			int yTop = ((cHeightPels / 2) - ((int) (((float) Height) * fScaleY)) / 2);
+			int cWidthPels = GetDeviceCaps(dcPrint, HORZRES);
+			int xLeft = ((cWidthPels / 2) - ((int)(((float)Width) * fScaleX)) / 2);
+			int cHeightPels = GetDeviceCaps(dcPrint, VERTRES);
+			int yTop = ((cHeightPels / 2) - ((int)(((float)Height) * fScaleY)) / 2);
 
 			// Use StretchDIBits to scale the bitmap and maintain its original proportions
-			if (GDI_ERROR == (UINT)StretchDIBits(pd.hDC, xLeft, yTop, (int) ((float) Width * fScaleX),
-				(int) ((float) Height * fScaleY), 0, 0, Width, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY))
+			if (GDI_ERROR == (UINT)StretchDIBits(dcPrint, xLeft, yTop, (int)((float)Width * fScaleX),
+				(int)((float)Height * fScaleY), 0, 0, Width, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY))
 			{
 				throw CUserException(_T("Failed to resize image for printing"));
 			}
 
 			// Inform the driver that the page is finished.
-			if (0 > EndPage(pd.hDC))
+			if (0 > EndPage(dcPrint))
 				throw CUserException(_T("EndPage failed"));
 
 			// Inform the driver that document has ended.
-			if(0 > EndDoc(pd.hDC))
+			if (0 > EndDoc(dcPrint))
 				throw CUserException(_T("EndDoc failed"));
 		}
-		
-		catch (const CException& e)
-		{
-			// Display a message box indicating why printing failed.
-			CString strMsg = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-			CString strType = CString(e.what());
-			MessageBox(strMsg, strType, MB_ICONWARNING);
-		}
 	}
-
+		
+	catch (const CException& e)
+	{
+		// Display a message box indicating why printing failed.
+		CString strMsg = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+		CString strType = CString(e.what());
+		MessageBox(strMsg, strType, MB_ICONWARNING);
+	}
+	
 	return TRUE;
 }
 
 BOOL CMainFrame::OnPenColor()
 {
-	static COLORREF CustColors[16] = {0};	// array of custom colors
-	CHOOSECOLOR cc = {0};					// Structure used by ChooseColor
-
-	cc.lStructSize = sizeof(CHOOSECOLOR);
-	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
-	cc.rgbResult = m_View.GetPenColor();
-	cc.lpCustColors = CustColors;
-	cc.hwndOwner = *this;
+	// array of custom colors, initialized to white
+	static COLORREF CustColors[16] = {	RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
 	
-	// Initiate the Choose Color dialog
-	if (ChooseColor(&cc)==TRUE) 
+	CColorDialog ColorDlg;
+	ColorDlg.SetCustomColors(CustColors);
+	
+	// Initialize the Choose Color dialog
+	if (ColorDlg.DoModal(*this) == IDOK)
 	{
-		m_View.SetPenColor(cc.rgbResult);
+		// Store the custom colors in the static array
+		memcpy(CustColors, ColorDlg.GetCustomColors(), 16*sizeof(COLORREF));
+		
+		// Retrieve the chosen color
+		m_View.SetPenColor(ColorDlg.GetColor());
 	}
 
 	return TRUE;
