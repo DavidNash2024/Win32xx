@@ -75,7 +75,7 @@ BOOL CMainFrame::OnFileNew()
 	CMenu PopupMenu = TopMenu.GetSubMenu(0);
 
 	// Start the popup menu
-	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, GetHwnd(), &tpm);
+	PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 	return TRUE;
 }
 

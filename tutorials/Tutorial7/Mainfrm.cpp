@@ -24,60 +24,53 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:			return OnFileNew();
-	case IDM_FILE_OPEN:			return OnFileOpen();
-	case IDM_FILE_SAVE:			return OnFileSave();
-	case IDM_FILE_SAVEAS:		return OnFileSaveAs();
-	case IDM_FILE_PRINT:		return OnFilePrint();
-	case IDM_PEN_COLOR:			return OnPenColor();
+	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
+	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
+	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
+	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
+	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;	
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	case IDM_PEN_COLOR:			OnPenColor();		return TRUE;	
 	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
 	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
 	case IDM_HELP_ABOUT:		return OnHelp();
-	case IDM_FILE_EXIT:			return OnFileExit();
 	}
 
 	return FALSE;
 }
 
-BOOL CMainFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
-
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNew()
+void CMainFrame::OnFileNew()
 {
 	::MessageBox(NULL, _T("File New  ... Implemented later"), _T("Menu"), MB_OK);
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileOpen()
+void CMainFrame::OnFileOpen()
 {
 	::MessageBox(NULL, _T("File Open  ... Implemented later"), _T("Menu"), MB_OK);
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFilePrint()
+void CMainFrame::OnFilePrint()
 {
 	::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileSave()
+void CMainFrame::OnFileSave()
 {
 	::MessageBox(NULL, _T("File Save  ... Implemented later"), _T("Menu"), MB_OK);
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileSaveAs()
+void CMainFrame::OnFileSaveAs()
 {
 	::MessageBox(NULL, _T("File SaveAs  ... Implemented later"), _T("Menu"), MB_OK);
-	return TRUE;
 }
 
-BOOL CMainFrame::OnPenColor()
+void CMainFrame::OnPenColor()
 {
 	// array of custom colors, initialized to white
 	static COLORREF CustColors[16] = {	RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -97,8 +90,6 @@ BOOL CMainFrame::OnPenColor()
 		// Retrieve the chosen color
 		m_View.SetPenColor(ColorDlg.GetColor());
 	}
-
-	return TRUE;
 }
 
 void CMainFrame::SetupToolBar()

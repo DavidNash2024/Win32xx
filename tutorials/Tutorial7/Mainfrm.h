@@ -14,18 +14,22 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
+
+	void LoadFile(LPCTSTR str);
+
+	void OnFileExit();
+	void OnFileMRU(WPARAM wParam);
+	void OnFileNew();
+	void OnFileOpen();
+	void OnFileSave();
+	void OnFileSaveAs();
+	void OnFilePrint();
+	void OnPenColor();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnFileExit();
-	virtual BOOL OnFileNew();
-	virtual BOOL OnFileOpen();
-	virtual BOOL OnFileSave();
-	virtual BOOL OnFileSaveAs();
-	virtual BOOL OnFilePrint();
-	virtual BOOL OnPenColor();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

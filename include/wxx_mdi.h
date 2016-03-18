@@ -214,6 +214,8 @@ namespace Win32xx
 		CWnd& GetView() const				{ return CMDIFrame::GetView(); }
 		void RecalcViewLayout()				{ RecalcDockLayout(); }
 		
+		operator HWND() const				{ return GetHwnd(); }
+		
 		virtual CDocker::CDockClient& GetDockClient() const	
 		{ 
 			return const_cast<CMDIClient&>(GetMDIClient());

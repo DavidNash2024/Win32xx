@@ -19,14 +19,14 @@ public:
 	CDoc& GetDoc() { return m_Doc; }
 	void LoadFile(LPCTSTR str);
 
-	BOOL OnFileExit();
-	BOOL OnFileMRU(WPARAM wParam);
-	BOOL OnFileNew();
-	BOOL OnFileOpen();
-	BOOL OnFileSave();
-	BOOL OnFileSaveAs();
-	BOOL OnFilePrint();
-	BOOL OnPenColor();
+	void OnFileExit();
+	void OnFileMRU(WPARAM wParam);
+	void OnFileNew();
+	void OnFileOpen();
+	void OnFileSave();
+	void OnFileSaveAs();
+	void OnFilePrint();
+	void OnPenColor();
 
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);

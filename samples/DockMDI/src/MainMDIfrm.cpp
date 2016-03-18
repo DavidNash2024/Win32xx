@@ -24,7 +24,7 @@ BOOL CMainMDIFrame::OnFileOpen()
 	CFileDialog FileDlg(TRUE);
 
 	// Bring up the file open dialog retrieve the selected filename
-	if (FileDlg.DoModal(GetHwnd()) == IDOK)
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
 		// TODO:
 		// Add your own code here. Refer to the tutorial for additional information
@@ -38,7 +38,7 @@ BOOL CMainMDIFrame::OnFileSave()
 	CFileDialog FileDlg(FALSE);
 
 	// Bring up the file save dialog retrieve the selected filename
-	if (FileDlg.DoModal(GetHwnd()) == IDOK)
+	if (FileDlg.DoModal(*this) == IDOK)
 	{
 		// TODO:
 		// Add your own code here. Refer to the tutorial for additional information

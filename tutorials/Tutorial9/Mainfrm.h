@@ -9,33 +9,29 @@
 #include "wxx_commondlg.h"
 #include "wxx_frame.h"
 #include "wxx_file.h"
-#include "wxx_printdialogs.h"
 #include "View.h"
 #include "Doc.h"
 
-// required for Dev-C++
-#ifndef OPENFILENAME_SIZE_VERSION_400
-#define OPENFILENAME_SIZE_VERSION_400 sizeof(OPENFILENAME)
-#endif
 
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame(void);
+	CMainFrame();
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }
 	void LoadFile(LPCTSTR str);
 
+	void OnFileExit();
+	void OnFileNew();
+	void OnFileOpen();
+	void OnFileSave();
+	void OnFileSaveAs();
+	void OnFilePrint();
+	void OnPenColor();
+
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnFileExit();
-	virtual BOOL OnFileNew();
-	virtual BOOL OnFileOpen();
-	virtual BOOL OnFileSave();
-	virtual BOOL OnFileSaveAs();
-	virtual BOOL OnFilePrint();
-	virtual BOOL OnPenColor();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
