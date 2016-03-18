@@ -5,6 +5,7 @@
 
 #include "targetver.h"
 #include "wxx_archive.h"
+#include "wxx_printdialogs.h"
 #include "View.h"
 
 // CDoc holds the application's data. It inherits from CObject
@@ -20,6 +21,7 @@ public:
 	
 	BOOL FileOpen(LPCTSTR szFilename);
 	BOOL FileSave(LPCTSTR szFilename);
+	void Print(CView& View);
 	void Serialize(CArchive &ar);
 	void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
 

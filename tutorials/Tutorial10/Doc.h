@@ -18,6 +18,7 @@ public:
 	
 	BOOL FileOpen(LPCTSTR szFilename);
 	BOOL FileSave(LPCTSTR szFilename);
+	void Print(CView& View);
 	void Serialize(CArchive &ar);
 	void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
 

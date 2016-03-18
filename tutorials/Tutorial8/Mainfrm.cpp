@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////
 // Mainfrm.cpp  - definitions for the CMainFrame class
 
-#include "targetver.h"
+
 #include "mainfrm.h"
 #include "resource.h"
 
@@ -24,34 +24,32 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (LOWORD(wParam))
 	{
-	case IDM_FILE_NEW:			return OnFileNew();
-	case IDM_FILE_OPEN:			return OnFileOpen();
-	case IDM_FILE_SAVE:			return OnFileSave();
-	case IDM_FILE_SAVEAS:		return OnFileSaveAs();
-	case IDM_PEN_COLOR:			return OnPenColor();
+	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
+	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
+	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
+	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
+	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;	
+	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
+	case IDM_PEN_COLOR:			OnPenColor();		return TRUE;	
 	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
 	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
 	case IDM_HELP_ABOUT:		return OnHelp();
-	case IDM_FILE_EXIT:			return OnFileExit();
 	}
 
 	return FALSE;
 }
 
-BOOL CMainFrame::OnFileExit()
+void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
 	PostMessage(WM_CLOSE);
-
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileNew()
+void CMainFrame::OnFileNew()
 {
 	GetDoc().GetPoints().clear();
 	m_PathName = _T("");
 	GetView().Invalidate();
-	return TRUE;
 }
 
 void CMainFrame::LoadFile(LPCTSTR str)
@@ -69,7 +67,7 @@ void CMainFrame::LoadFile(LPCTSTR str)
 	GetView().Invalidate();
 }
 
-BOOL CMainFrame::OnFileOpen()
+void CMainFrame::OnFileOpen()
 {
 	CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
 	FileDlg.SetTitle(_T("Open File"));
@@ -80,21 +78,22 @@ BOOL CMainFrame::OnFileOpen()
 		// Load the file
 		LoadFile(FileDlg.GetPathName());
 	}
-
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileSave()
+void CMainFrame::OnFilePrint()
+{
+	::MessageBox(NULL, _T("File Print  ... Implemented later"), _T("Menu"), MB_OK);
+}
+
+void CMainFrame::OnFileSave()
 {
 	if (m_PathName == _T(""))
 		OnFileSaveAs();
 	else
 		GetDoc().FileSave(m_PathName);
-
-	return TRUE;
 }
 
-BOOL CMainFrame::OnFileSaveAs()
+void CMainFrame::OnFileSaveAs()
 {
 	CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
 	FileDlg.SetTitle(_T("Save File"));
@@ -113,10 +112,9 @@ BOOL CMainFrame::OnFileSaveAs()
 		}
 	}
 
-	return TRUE;
 }
 
-BOOL CMainFrame::OnPenColor()
+void CMainFrame::OnPenColor()
 {
 	// array of custom colors, initialized to white
 	static COLORREF CustColors[16] = {	RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
@@ -136,8 +134,6 @@ BOOL CMainFrame::OnPenColor()
 		// Retrieve the chosen color
 		m_View.SetPenColor(ColorDlg.GetColor());
 	}
-
-	return TRUE;
 }
 
 void CMainFrame::SetupToolBar()

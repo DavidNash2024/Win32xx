@@ -513,6 +513,8 @@ namespace Win32xx
 		virtual CWnd& GetView()	const		{ return CDocker::GetView(); }
 		virtual CRect GetViewRect() const	{ return CFrame::GetViewRect(); }
 		virtual void SetView(CWnd& wndView)	{ CDocker::SetView(wndView); }
+		
+		operator HWND() const 				{ return GetHwnd(); }
 
 	protected:
 		void OnClose()						{ CFrame::OnClose(); }
