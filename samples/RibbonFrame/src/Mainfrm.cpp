@@ -234,7 +234,7 @@ void CMainFrame::OnFileSaveAs()
 void CMainFrame::OnFilePrint()
 {
 	// Pass the print job to CDoc
-	GetDoc().Print(m_View);
+	GetDoc().Print();
 }
 
 

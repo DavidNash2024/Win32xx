@@ -18,10 +18,10 @@ public:
 	~CDoc() {}
 
 	std::vector<PlotPoint>& GetPoints() {return m_points;}	// returns a vector of PlotPoint data
-	
+	const CView& GetView() const;	
 	BOOL FileOpen(LPCTSTR szFilename);
 	BOOL FileSave(LPCTSTR szFilename);
-	void Print(CView& View);
+	void Print();
 	void Serialize(CArchive &ar);
 	void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
 

@@ -43,6 +43,9 @@ Prerequisites:
 2. Microsoft Windows SDK v7.0 
 3. Visual Studio 2005, 2008 or 2010 (full or Express Edition)
 
+Note:
+Microsoft Visual Community 2013 and 2015 include the Windows 7 SDK.
+
 Compiling Instructions
 ======================
 To compile Ribbon.xml, specify it's custom build properties as follows:

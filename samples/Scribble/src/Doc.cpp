@@ -1,6 +1,14 @@
 
 #include "stdafx.h"
+#include "ScribbleApp.h"
 #include "Doc.h"
+
+
+const CView& CDoc::GetView() const
+{
+	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
+	return static_cast<CView&>(Frame.GetView());
+}
 
 BOOL CDoc::FileOpen(LPCTSTR szFilename)
 {
@@ -46,15 +54,15 @@ BOOL CDoc::FileSave(LPCTSTR szFilename)
 
 // Sends the bitmap extracted from the View window to a printer of your choice
 // This function provides a useful reference for printing bitmaps in general
-void CDoc::Print(CView& View)
+void CDoc::Print()
 {
 	// Get the dimensions of the View window
-	CRect rcView = View.GetClientRect();
+	CRect rcView = GetView().GetClientRect();
 	int Width = rcView.Width();
 	int Height = rcView.Height();
 
 	// Copy the bitmap from the View window
-	CClientDC ViewDC(View);
+	CClientDC ViewDC(GetView());
 	CMemDC MemDC(ViewDC);
 	CBitmap bmView;
 	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
@@ -66,7 +74,7 @@ void CDoc::Print(CView& View)
 	try
 	{
 		// Bring up a dialog to choose the printer
-		if (PrintDlg.DoModal(View))	// throws exception if there is no default printer
+		if (PrintDlg.DoModal(GetView()))	// throws exception if there is no default printer
 		{
 			// Zero and then initialize the members of a DOCINFO structure.
 			DOCINFO di;

@@ -228,7 +228,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)  				/*
 	int CMainFrame::
 OnCreate(CREATESTRUCT& cs)  						/*
 
-	Define the way the frame is created. Overriding CFrame::Oncreate is
+	Define the way the frame is created. Overriding CFrame::OnCreate is
 	optional.
 *-----------------------------------------------------------------------------*/
 {
