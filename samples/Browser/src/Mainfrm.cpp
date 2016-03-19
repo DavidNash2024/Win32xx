@@ -256,7 +256,7 @@ void CMainFrame::OnDocumentBegin(DISPPARAMS* pDispParams)
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::Oncreate is optional.
+	// Overriding CFrame::OnCreate is optional.
 	// Uncomment the lines below to change frame options.
 
 	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar

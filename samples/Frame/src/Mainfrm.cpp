@@ -48,7 +48,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
 	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::Oncreate is optional.
+	// Overriding CFrame::OnCreate is optional.
 	// The default for the following variables is TRUE
 
 	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
