@@ -999,7 +999,7 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);
-		case UWM_ISTOOLBAR:			return TRUE;
+		case UWM_GETCTOOLBAR:		return reinterpret_cast<LRESULT>(this);
 		}
 
 		// pass unhandled messages on for default processing

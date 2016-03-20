@@ -1566,13 +1566,13 @@ namespace Win32xx
 	inline BOOL CDocker::CTargetCentre::CheckTarget(LPDRAGPOS pDragPos)
 	{
 		CDocker* pDockDrag = pDragPos->pDocker;
-		assert( ::SendMessage(*pDockDrag, UWM_ISDOCKER, 0, 0) );
+		assert( ::SendMessage(*pDockDrag, UWM_GETCDOCKER, 0, 0) );
 
 		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_IsOverContainer = (BOOL)pDockTarget->GetView().SendMessage(UWM_ISDOCKCONTAINER);
+		m_IsOverContainer = (BOOL)pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER);
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();
@@ -2309,10 +2309,10 @@ namespace Win32xx
 	inline CDockContainer* CDocker::GetContainer() const
 	{
 		// returns NULL if not a CDockContainer*
-		if (IsWindow() && GetView().SendMessage(UWM_ISDOCKCONTAINER))
-			return static_cast<CDockContainer*>(&GetView());
-		else
-			return NULL;
+		if (IsWindow())
+			return reinterpret_cast<CDockContainer*>(GetView().SendMessage(UWM_GETCDOCKCONTAINER));
+
+		return NULL;
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
@@ -2328,7 +2328,7 @@ namespace Win32xx
 			hWnd = ::GetParent(hWnd);
 		}
 
-		return dynamic_cast<CDocker*>(GetCWndPtr(hWnd));
+		return reinterpret_cast<CDocker*>(::SendMessage(hWnd, UWM_GETCDOCKER, 0, 0));
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -2366,8 +2366,8 @@ namespace Win32xx
 				assert(hDockTest != hDockParent);
 			}
 
-			assert (::SendMessage(hDockParent, UWM_ISDOCKER, 0, 0));
-			CDocker* pDockParent = dynamic_cast<CDocker*>(GetCWndPtr(hDockParent));
+			CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(hDockParent, UWM_GETCDOCKER, 0, 0));
+			assert(pDockParent);
 
 			CRect rc = pDockParent->GetDockClient().GetWindowRect();
 			if (rc.PtInRect(pt))
@@ -2449,10 +2449,10 @@ namespace Win32xx
 	inline CTabbedMDI* CDocker::GetTabbedMDI() const
 	{
 		// returns NULL if not a CTabbedMDI*
-		if (IsWindow() && GetView().SendMessage(UWM_ISTABBEDMDI))
-			return static_cast<CTabbedMDI*>(&GetView());
-		else
-			return NULL;
+		if (IsWindow())
+			return reinterpret_cast<CTabbedMDI*>(GetView().SendMessage(UWM_GETCTABBEDMDI));
+
+		return NULL;
 	}
 
 	inline int CDocker::GetTextHeight()
@@ -4042,7 +4042,7 @@ namespace Win32xx
 		// Messages defined by Win32++
 		case UWM_DOCKACTIVATE:		return OnDockActivated(uMsg, wParam, lParam);
 		case UWM_DOCKDESTROYED:		return OnDockDestroyed(uMsg, wParam, lParam);
-		case UWM_ISDOCKER:			return TRUE;
+		case UWM_GETCDOCKER:		return reinterpret_cast<LRESULT>(this);
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -4301,9 +4301,7 @@ namespace Win32xx
 			InsertItem(i, &tie);
 		}
 
-		m_pDocker = NULL;
-		if ( GetParent().GetParent().SendMessage(UWM_ISDOCKER) )
-			m_pDocker = dynamic_cast<CDocker*>(GetCWndPtr(GetParent().GetParent()));
+		m_pDocker = reinterpret_cast<CDocker*>((GetParent().GetParent().SendMessage(UWM_GETCDOCKER)));
 	}
 
 	inline LRESULT CDockContainer::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -4684,7 +4682,7 @@ namespace Win32xx
 		case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
 		case WM_SETFOCUS:		return OnSetFocus(uMsg, wParam, lParam);
 		case WM_SIZE:			return OnSize(uMsg, wParam, lParam);
-		case UWM_ISDOCKCONTAINER:	return TRUE;
+		case UWM_GETCDOCKCONTAINER:	return reinterpret_cast<LRESULT>(this);
 		}
 
 		// pass unhandled messages on to CTab for processing

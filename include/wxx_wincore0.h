@@ -49,40 +49,39 @@
 #include "wxx_appcore0.h"
 
 
-
 // Messages defined by Win32++
 // WM_APP range: 0x8000 through 0xBFFF
-// Note: The numbers defined for window messages don't need to be unique. View windows defined by users for example,
+// Note: The numbers defined for window messages don't always need to be unique. View windows defined by users for example,
 //  could use other user defined messages with the same number as those below without issue. 
-#define UWM_DOCKACTIVATE     (WM_APP + 0x3F01)  // Message - sent to dock ancestor when a docker is activated or deactivated.
-#define UWM_DOCKDESTROYED	 (WM_APP + 0x3F02)	// Message - posted when docker is destroyed
-#define UWM_DRAWRBBKGND      (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
-#define UWM_DRAWSBBKGND      (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.
-#define UWM_GETFRAMEVIEW     (WM_APP + 0x3F05)  // Message - returns the HWND of the frame's view window
-#define UWM_GETMBTHEME       (WM_APP + 0x3F06)	// Message - returns a pointer to MenuBarTheme
-#define UWM_GETRBTHEME       (WM_APP + 0x3F07)	// Message - returns a pointer to ReBarTheme
-#define UWM_GETSBTHEME       (WM_APP + 0x3F08)	// Message - returns a pointer to StatusBarTheme
-#define UWM_GETTBTHEME       (WM_APP + 0x3F09)  // Message - returns a pointer to ToolBarTheme
-#define UWM_POPUPMENU		 (WM_APP + 0x3F0A)	// Message - creates the menubar popup menu
-#define UWM_TBRESIZE         (WM_APP + 0x3F0B)  // Message - sent by toolbar to parent. Used by the rebar
-#define UWM_TBWINPOSCHANGING (WM_APP + 0x3F0C)	// Message - sent to parent. Toolbar is resizing
-#define UWM_UPDATECOMMAND    (WM_APP + 0x3F0D)  // Message - sent before a menu is displayed. Used by OnMenuUpdate
-#define UWM_ISDOCKER		 (WM_APP + 0x3F0E)  // Message - a Docker window returns TRUE
-#define UWM_ISDOCKCONTAINER	 (WM_APP + 0x3F0F)  // Message - a DockContainer window returns TRUE
-#define UWM_ISFRAME			 (WM_APP + 0x3F10)  // Message - a Frame window returns TRUE
-#define UWM_ISMDIFRAME		 (WM_APP + 0x3F11)  // Message - a MDIFrame window returns TRUE
-#define UWM_ISTABBEDMDI		 (WM_APP + 0x3F12)  // Message - a TabbedMDI window returns TRUE
-#define UWM_ISTOOLBAR		 (WM_APP + 0x3F13)  // Message - a ToolBar window returns TRUE
-#define UWN_BARSTART		 (WM_APP + 0x3F20)	// Notification - docker bar selected for move
-#define UWN_BARMOVE			 (WM_APP + 0x3F21)	// Notification - docker bar moved
-#define UWN_BAREND			 (WM_APP + 0x3F22)	// Notification - end of docker bar move
-#define UWN_DOCKSTART		 (WM_APP + 0x3F23)	// Notification - about to start undocking
-#define UWN_DOCKMOVE		 (WM_APP + 0x3F24)	// Notification - undocked docker is being moved
-#define UWN_DOCKEND			 (WM_APP + 0x3F25)	// Notification - docker has been docked
-#define UWN_TABCHANGED       (WM_APP + 0x3F26)	// Notification - tab size or position changed
-#define UWN_TABDRAGGED       (WM_APP + 0x3F27)	// Notification - tab is being dragged
-#define UWN_UNDOCKED		 (WM_APP + 0x3F28)	// Notification - sent by docker when undocked
-#define UWN_TABCLOSE		 (WM_APP + 0x3F29)	// Notification - sent by CTab when a tab is about to be closed
+#define UWM_DOCKACTIVATE      (WM_APP + 0x3F01) // Message - sent to dock ancestor when a docker is activated or deactivated.
+#define UWM_DOCKDESTROYED	  (WM_APP + 0x3F02)	// Message - posted when docker is destroyed
+#define UWM_DRAWRBBKGND       (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
+#define UWM_DRAWSBBKGND       (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.
+#define UWM_GETCDOCKCONTAINER (WM_APP + 0x3F05)	// Message - returns a pointer to this CWnd if it is a CDockContainer
+#define UWM_GETCDOCKER        (WM_APP + 0x3F06)	// Message - returns a pointer to this CWnd if it is a CDocker
+#define UWM_GETCFRAME         (WM_APP + 0x3F07)	// Message - returns a pointer to this CWnd if it is a CFrame
+#define UWM_GETCTABBEDMDI     (WM_APP + 0x3F08)	// Message - returns a pointer to this CWnd if it is a CTabbedMDI
+#define UWM_GETCTOOLBAR       (WM_APP + 0x3F09)	// Message - returns a pointer to this CWnd if it is a CToolBar
+#define UWM_GETCWND           (WM_APP + 0x3F0A)	// Message - returns a pointer to this CWnd
+#define UWM_GETFRAMEVIEW      (WM_APP + 0x3F0B) // Message - returns the HWND of the frame's view window. Used by CMenuBar
+#define UWM_GETMBTHEME        (WM_APP + 0x3F0C)	// Message - returns a pointer to MenuBarTheme
+#define UWM_GETRBTHEME        (WM_APP + 0x3F0D)	// Message - returns a pointer to ReBarTheme
+#define UWM_GETSBTHEME        (WM_APP + 0x3F0E)	// Message - returns a pointer to StatusBarTheme
+#define UWM_GETTBTHEME        (WM_APP + 0x3F0F) // Message - returns a pointer to ToolBarTheme
+#define UWM_POPUPMENU		  (WM_APP + 0x3F10)	// Message - creates the menubar popup menu
+#define UWM_TBRESIZE          (WM_APP + 0x3F11) // Message - sent by toolbar to parent. Used by the rebar
+#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F12)	// Message - sent to parent. Toolbar is resizing
+#define UWM_UPDATECOMMAND     (WM_APP + 0x3F13) // Message - sent before a menu is displayed. Used by OnMenuUpdate
+#define UWN_BARSTART		  (WM_APP + 0x3F20)	// Notification - docker bar selected for move
+#define UWN_BARMOVE			  (WM_APP + 0x3F21)	// Notification - docker bar moved
+#define UWN_BAREND			  (WM_APP + 0x3F22)	// Notification - end of docker bar move
+#define UWN_DOCKSTART		  (WM_APP + 0x3F23)	// Notification - about to start undocking
+#define UWN_DOCKMOVE		  (WM_APP + 0x3F24)	// Notification - undocked docker is being moved
+#define UWN_DOCKEND			  (WM_APP + 0x3F25)	// Notification - docker has been docked
+#define UWN_TABCHANGED        (WM_APP + 0x3F26)	// Notification - tab size or position changed
+#define UWN_TABDRAGGED        (WM_APP + 0x3F27)	// Notification - tab is being dragged
+#define UWN_UNDOCKED		  (WM_APP + 0x3F28)	// Notification - sent by docker when undocked
+#define UWN_TABCLOSE		  (WM_APP + 0x3F29)	// Notification - sent by CTab when a tab is about to be closed
 
 
 namespace Win32xx
