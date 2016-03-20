@@ -65,6 +65,7 @@ namespace Win32xx
 	protected:
 		virtual void 	OnCancel()	{}	// a required to override
 		virtual	void 	OnHelpButton();
+		virtual BOOL	OnInitDialog();
 		virtual void 	OnOK()	{}		// a required to override
 
 		// static callback
@@ -83,9 +84,9 @@ namespace Win32xx
 		virtual ~CColorDialog(){}
 
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
-		const CHOOSECOLOR& GetParameters() const { return m_CC; }
 		COLORREF  GetColor() const				{ return m_CC.rgbResult;}
 		COLORREF* GetCustomColors()				{ return m_rgbCustomColors;}
+		const CHOOSECOLOR& GetParameters() const { return m_CC; }		
 		void 	SetColor(COLORREF clr)			{ m_CC.rgbResult = clr;}
 		void    SetCustomColors(const COLORREF*	rgbCstmColors = NULL);
 		void	SetParameters(CHOOSECOLOR cc);
@@ -123,19 +124,18 @@ namespace Win32xx
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
 
 		// methods valid after successful DoModal()
-		const OPENFILENAME& GetParameters() const { return m_OFN; }
 		CString GetFileName() const;
 		CString GetFileExt() const;
 		CString GetFileTitle() const;
 		CString GetFolderPath() const;
 		CString GetPathName() const;
+		const OPENFILENAME& GetParameters() const { return m_OFN; }		
 
 		// methods for setting parameters before DoModal()
 		BOOL	IsOpenFileDialog()					{ return m_bOpenFileDialog; }
 		void    SetDefExt(LPCTSTR szExt);
 		void    SetFileName(LPCTSTR szFileName);
 		void	SetFilter(LPCTSTR pszFilter);
-		void    SetMode(BOOL open)					{ m_bOpenFileDialog = open; }
 		void	SetParameters(OPENFILENAME ofn);
 		void    SetTitle(LPCTSTR szTitle)			{ m_OFN.lpstrTitle = szTitle; }
 
@@ -185,9 +185,9 @@ namespace Win32xx
 
 		// Operations:
 		BOOL 	FindNext() const;           // TRUE = find next
-		const	FINDREPLACE& GetParameters() const	{ return m_FR; }
 		CString GetFindString() const;      // get find string
 		CString	GetReplaceString() const;   // get replacement string
+		const	FINDREPLACE& GetParameters() const	{ return m_FR; }		
 		BOOL	IsFindDialogOnly() const			{ return m_bFindDialogOnly; }
 		BOOL 	IsTerminating();      	    // TRUE = terminate dialog
 		BOOL 	MatchCase() const;          // TRUE = matching case
@@ -276,6 +276,13 @@ namespace Win32xx
 	{
 	}
 
+	inline BOOL CCommonDialog::OnInitDialog()
+	// Called when the dialog is initialized. Override it in your derived class
+	// to automatically perform tasks. The return value is used by WM_INITDIALOG
+	{
+		return TRUE;
+	}
+
 	//============================================================================
 	inline INT_PTR CALLBACK CCommonDialog::CDHookProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// The callback function for the common dialog's hook procedure. Messages
@@ -309,10 +316,9 @@ namespace Win32xx
 
 	//============================================================================
 	inline CColorDialog::CColorDialog(COLORREF clrInit /* = 0 */, DWORD dwFlags /* = 0 */)
-	// Construct a CColorDialog object and initialize the CHOOSECOLOR struct
-	// with the current color, the option dwFlags, and the owner window.
-	// Refer to the description of the CHOOSECOLOR struct in the Windows API
-	// documentation.
+	// Construct a CColorDialog object. The initial color, and flags for the 
+	// CHOOSECOLOR struct can be specified.  Refer to the description of the 
+	// CHOOSECOLOR struct in the Windows API documentation.
 	{
 		// set the parameters in the CHOOSECOLOR struct
 		ZeroMemory(&m_CC,  sizeof(CHOOSECOLOR));
@@ -379,7 +385,7 @@ namespace Win32xx
 	//============================================================================
 	inline INT_PTR CColorDialog::DoModal(HWND hWndOwner /* = 0 */)
 	// Display the ChooseColor common dialog box and select the current color.
-	// An exception is thrown if the dialog isn't created.
+	// An exception is thrown if the dialog box isn't created.
 	{
 		assert( &GetApp() );	// Test if Win32++ has been started
 		assert(!IsWindow());	// Only one window per CWnd instance allowed
@@ -452,14 +458,15 @@ namespace Win32xx
 		LPCTSTR pszFileName /* = NULL */,
 		DWORD dwFlags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
 		LPCTSTR pszFilter /* = NULL */)
-	// Construct a CFileDialog object and initialize the OPENFILENAME struct
-	// with the default extent, initial file mame, optional dwFlags, file filters,
-	// and the owner window.  The pszFilter contains a series of string pairs
-	// that specify file filters, separated by '\0' or '|' chars. Refer to the
-	// description of the OPENFILENAME struct in the Windows API documentation.
+	// Construct a CFileDialog object. bOpenFileDialog specifies the type of 
+	// dialog box, OpenFile or SaveFile. The file's default extent and name can
+	// be specified, along with the flags for the OPENFILENAME struct. 
+	// The pszFilter contains a series of string pairs that specify file filters, 
+	// separated by '\0' or '|' chars. Refer to the description of the OPENFILENAME
+	// struct in the Windows API documentation.
 	{
 		// set open/saveas toggle
-		SetMode(bOpenFileDialog);
+		m_bOpenFileDialog = bOpenFileDialog;
 
 		// clear out the OPENFILENAME structure
 		ZeroMemory(&m_OFN, sizeof(m_OFN));
@@ -608,10 +615,10 @@ namespace Win32xx
 	//============================================================================
 	inline CString CFileDialog::GetFileName() const
 	//	Return the name of the file that was entered in the DoModal() operation.
-	//	This name consists of only the file title and extension.
-	//  If the OFN_ALLOWMULTISELECT is specified, only the file name on the first
-	//	file path selected will be returned. If so, GetNextPathName can be used
-	//  to retrieve subsequent file names.
+	//	This name consists of only the file title and extension. If the 
+	//  OFN_ALLOWMULTISELECT flag is specified, only the first file path selected
+	//  will be returned. If so, GetNextPathName can be used to retrieve subsequent
+	// 	file names.
 	{
 		CString strResult = GetPathName();
 		int pos = MAX(strResult.ReverseFind(_T("\\")),
@@ -909,7 +916,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CFileDialog::SetFileName(LPCTSTR pszFileName)
-	//	Set the initial file choice dialog file name to pszFileName.
+	//	Set the initial file name in the dialog box to pszFileName.
 	{
 		  // setup initial file name
 		if (pszFileName)
@@ -1108,18 +1115,15 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFindReplaceDialog::FindNext() const
-	//	Call this function from your callback function to determine whether the
-	//	user wants to find the next occurrence of the search string. Returns
-	//	TRUE if the user wants to find the next occurrence of the search string;
-	//	otherwise FALSE.
+	//	Call this function to determine whether the user wants to find the next
+	//  occurrence of the search string. 
 	{
 		return ((m_FR.Flags & FR_FINDNEXT )!= 0);
 	}
 
 	//============================================================================
 	inline	CString CFindReplaceDialog::GetFindString() const
-	//	Call this function from your callback function to return the default
-	//	string to find.
+	//	Call this function to return the default string to find.
 	{
 		return m_FR.lpstrFindWhat;
 	}

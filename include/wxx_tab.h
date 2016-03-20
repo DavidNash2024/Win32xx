@@ -2045,7 +2045,7 @@ namespace Win32xx
 		switch(uMsg)
 		{
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
-		case UWM_ISTABBEDMDI:		return TRUE;
+		case UWM_GETCTABBEDMDI:		return reinterpret_cast<LRESULT>(this);
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);

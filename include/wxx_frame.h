@@ -574,7 +574,7 @@ namespace Win32xx
 			case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
 			case UWM_DRAWRBBKGND:       return CFrame::DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
 			case UWM_DRAWSBBKGND:       return CFrame::DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
-			case UWM_ISFRAME:			return TRUE;
+			case UWM_GETCFRAME:			return reinterpret_cast<LRESULT>(this);
 
 			} // switch uMsg
 
@@ -2237,7 +2237,7 @@ namespace Win32xx
 		PostMessage(UWM_DOCKACTIVATE);
 
 		// Also update DockClient captions if the view is a docker
-		if ( GetView().SendMessage(UWM_ISDOCKER) )
+		if ( GetView().SendMessage(UWM_GETCDOCKER) )
 			GetView().PostMessage(UWM_DOCKACTIVATE);
 
 		return 0L;
@@ -2330,7 +2330,7 @@ namespace Win32xx
 	inline LRESULT CFrame::OnCustomDraw(LPNMHDR pNMHDR)
 	// Handles CustomDraw notification from WM_NOTIFY.
 	{
-		if ( ::SendMessage(pNMHDR->hwndFrom, UWM_ISTOOLBAR, 0, 0) )
+		if ( ::SendMessage(pNMHDR->hwndFrom, UWM_GETCTOOLBAR, 0, 0) )
 		{
 			if (pNMHDR->hwndFrom == GetMenuBar())
 				return CustomDrawMenuBar(pNMHDR);
@@ -2604,9 +2604,7 @@ namespace Win32xx
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
 		HWND hWnd = ::WindowFromPoint(pt);
-		CToolBar* pToolBar = NULL;
-		if ( ::SendMessage(hWnd, UWM_ISTOOLBAR, 0, 0) )
-			pToolBar = static_cast<CToolBar*> (GetCWndPtr(hWnd));
+		CToolBar* pToolBar = (CToolBar*)::SendMessage(hWnd, UWM_GETCTOOLBAR, 0, 0);
 
 		// Set the tooltip's text from the ToolBar button's CommandID
 		if (pToolBar)
@@ -3520,9 +3518,8 @@ namespace Win32xx
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		HWND hFrame = pTLSData->hMainWnd;
-		CFrame* pFrame = dynamic_cast<CFrame*>(GetApp().GetCWndFromMap(hFrame));
-		assert( pFrame );
-		assert( pFrame->SendMessage(UWM_ISFRAME) );
+		CFrame* pFrame = reinterpret_cast<CFrame*>(::SendMessage(hFrame, UWM_GETCFRAME, 0, 0));
+		assert(pFrame);
 
 		if (HC_ACTION == nCode)
 		{
@@ -3659,7 +3656,7 @@ namespace Win32xx
 		case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
 		case UWM_DRAWRBBKGND:       return DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
 		case UWM_DRAWSBBKGND:       return DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
-		case UWM_ISFRAME:			return TRUE;
+		case UWM_GETCFRAME:			return reinterpret_cast<LRESULT>(this);
 
 		} // switch uMsg
 

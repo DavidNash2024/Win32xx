@@ -1205,6 +1205,12 @@ namespace Win32xx
 			OnMenuUpdate((UINT)wParam); // Perform menu updates
 			break;
 
+		case UWM_GETCWND:
+			{
+				assert(this == GetCWndPtr(m_hWnd));
+				return reinterpret_cast<LRESULT>(this);
+			}
+
 		} // switch (uMsg)
 
 		// Now hand all messages to the default procedure

@@ -195,7 +195,8 @@ namespace Win32xx
 	class CPrintDialog : public CCommonDialog
 	{
 	public:
-		CPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION );
+		CPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | 
+										PD_HIDEPRINTTOFILE | PD_NOSELECTION );
 		virtual ~CPrintDialog();
 
 		virtual INT_PTR DoModal(HWND hWndOwner = 0);
@@ -219,9 +220,6 @@ namespace Win32xx
 	protected:
 		// Override these functions as required
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-		virtual void	OnCancel();
-		virtual BOOL 	OnInitDialog();
-		virtual void	OnOK();
 
 		// Not intended to be overriden
 		virtual INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
@@ -271,9 +269,6 @@ namespace Win32xx
 		// Override these functions as required
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 		virtual UINT 	OnDrawPage(HDC, UINT, LPRECT);
-		virtual void	OnCancel();
-		virtual BOOL 	OnInitDialog();
-		virtual void	OnOK();
 		virtual UINT 	OnPreDrawPage(WORD wPaper, WORD wFlags, LPPAGESETUPDLG pPSD);
 
 		// Not intended to be overridden
@@ -678,24 +673,6 @@ namespace Win32xx
 		return (PrintRange() ? m_PD.nToPage : -1);
 	}
 
-	//============================================================================
-	inline void CPrintDialog::OnCancel()
-	// Called when the dialog's Cancel button is pressed.
-	{
-	}
-
-	//============================================================================
-	inline BOOL  CPrintDialog::OnInitDialog()
-	// Called when the Print dialog is about to be displayed.
-	{
-		return TRUE;
-	}
-
-	//============================================================================
-	inline void CPrintDialog::OnOK()
-	// Called when the dialog's OnOK button is pressed.
-	{
-	}
 
 	//============================================================================
 	inline BOOL CPrintDialog::PrintAll() const
@@ -968,24 +945,6 @@ namespace Win32xx
 		return 0; // do the default
 	}
 
-	//============================================================================
-	inline void CPageSetupDialog::OnCancel()
-	// Called when the dialog's Cancel button is pressed.
-	{
-	}
-
-	//============================================================================
-	inline BOOL  CPageSetupDialog::OnInitDialog()
-	// Called before the dialog is displayed.
-	{
-		return TRUE;
-	}
-
-	//============================================================================
-	inline void CPageSetupDialog::OnOK()
-	// Called when the dialog's OK button is pressed.
-	{
-	}
 
 	//============================================================================
 	inline UINT CPageSetupDialog::OnPreDrawPage(WORD wPaper, WORD wFlags, LPPAGESETUPDLG pPSD)

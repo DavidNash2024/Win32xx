@@ -21,7 +21,7 @@ Note: CFile::OpenFileDialog and CFile::SaveFileDialog have been removed.
 Use CFiledDialog for these instead.
 
 * Updated CFrame
- - GetInitValues and SetInitValues have been added conveniently to store
+ - GetInitValues and SetInitValues have been added to conveniently store
    and retrieve a set of values from the registry or an INI file. These 
    functions replace a set of functions that stored and retrieved these
    values individually.
@@ -29,24 +29,41 @@ Use CFiledDialog for these instead.
 * Updated samples
  - The INIFrame sample now stores the settings file in the AppData folder.
    It is important for applications to store values in the AppData folder
-   on the more modern operating systems (Vista and above) as the user
-   doesn't have write permission in the "Program Files" on these.
+   on the more modern operating systems (Vista and above) as these don't
+   allow the user to write to the "Program Files" folder.
    
 * "New Projects" folder
- - This folder has been relocated to the samples folder. This sampe can
-   be used as the starting point for your new projects. 
+ - This folder has been relocated to the samples folder. It is now more 
+   convenient to use this as the starting point for your new projects.
+   
+* Added messages to retrieve the CWnd pointer. SendMessage can now be used
+  to retrieve the window's CWnd pointer as an alternative to GetCWndPtr.
+ - UWM_GETCWND returns the CWnd*
+ - UWM_GETCFRAME returns the CWnd* for any object inherited from CFrame
+ - UWM_GETCMDIFRAME returns the CWnd* for any object inherited from CMDIFrame
+ - UWM_GETCDOCKER returns the CWnd* for any object inherited from CDocker
+ - UWM_GETCDOCKCONTAINER returns the CWnd* for any object inherited from CDockContainer
+ - UWM_GETCTABBEDMDI returns the CWnd* for any object inherited from CTabbedMDI
+ - UWM_GETCTOOLBAR returns the CWnd* for any object inherited from CToolBar
 
 
 Changes in detail
 -----------------
-Added CCommonDialog 		class
-Added CColorDialog  		class
-Added CFindReplaceDialog 	class
-Added CFontDialog 			class
-Added CPageSetupDialog 		class
-Added CPrinDialog 			class
-Added CFrame::GetInitValues
-Added CFrame::SetInitValues
+Added CCommonDialog 			class
+Added CColorDialog  			class
+Added CFindReplaceDialog 		class
+Added CFontDialog 				class
+Added CPageSetupDialog 			class
+Added CPrinDialog 				class
+Added CFrame::GetInitValues		member function
+Added CFrame::SetInitValues		member function
+Added UWM_GETCWND 				window message.
+Added UWM_GETCFRAME 			window message.
+Added UWM_GETCMDIFRAME 			window message.
+Added UWM_GETCDOCKER 			window message.
+Added UWM_GETCDOCKCONTAINER 	window message.
+Added UWM_GETCTABBEDMDI 		window message.
+Added UWM_GETCTOOLBAR 			window message.
 
 Modified CWinThread::GetMainWnd				now returns HWND
 Modified CWinThread::SetMainWnd				now accepts HWND
@@ -59,8 +76,14 @@ Removed CFrame::GetShowCmd
 Removed CFrame::GetShowStatusBar
 Removed CFrame::GetShowToolBar
 Removed CFrame::SetShowCmd
-CFile::OpenFileDialog
-CFile::SaveFileDialog
+Removed CFile::OpenFileDialog
+Removed CFile::SaveFileDialog
+Removed UWM_ISDOCKER		 	window message.
+Removed UWM_ISDOCKCONTAINER	 	window message.
+Removed UWM_ISFRAME			 	window message.
+Removed UWM_ISMDIFRAME		 	window message.
+Removed UWM_ISTABBEDMDI		 	window message.
+Removed UWM_ISTOOLBAR		 	window message.
 
 The following functions are now public:
 CWinApp::GetCWndFromMap

@@ -258,7 +258,6 @@ namespace Win32xx
 			{
 
 			case WM_WINDOWPOSCHANGED:	return CMDIFrame::OnWindowPosChanged(uMsg, wParam, lParam);
-			case UWM_ISMDIFRAME:		return TRUE;		
 
 			case WM_ACTIVATE:		return CFrame::OnActivate(uMsg, wParam, lParam);
 			case WM_DRAWITEM:		return CFrame::OnDrawItem(uMsg, wParam, lParam);
@@ -283,7 +282,7 @@ namespace Win32xx
 			case UWM_GETTBTHEME:	return reinterpret_cast<LRESULT>(&GetToolBarTheme());
 			case UWM_DRAWRBBKGND:   return CFrame::DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
 			case UWM_DRAWSBBKGND:   return CFrame::DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
-			case UWM_ISFRAME:		return TRUE;
+			case UWM_GETCFRAME:		return reinterpret_cast<LRESULT>(this);
 
 			} // switch uMsg
 
@@ -669,7 +668,6 @@ namespace Win32xx
 		switch (uMsg)
 		{
 			case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
-			case UWM_ISMDIFRAME:		return TRUE;
 		}
 		
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
