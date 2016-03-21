@@ -111,7 +111,6 @@ void CMainFrame::OnFileSaveAs()
 			AddMRUEntry(m_PathName);
 		}
 	}
-
 }
 
 void CMainFrame::OnPenColor()

@@ -74,7 +74,7 @@ void CDoc::Print()
 	try
 	{
 		// Bring up a dialog to choose the printer
-		if (PrintDlg.DoModal(GetView()))	// throws exception if there is no default printer
+		if (PrintDlg.DoModal(GetView()) == IDOK)	// throws exception if there is no default printer
 		{
 			// Zero and then initialize the members of a DOCINFO structure.
 			DOCINFO di;

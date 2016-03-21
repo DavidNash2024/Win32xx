@@ -78,6 +78,7 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 		DragFinish(hDrop);
 	}
+	
 	return 0L;
 }
 
