@@ -66,14 +66,14 @@ void CDoc::Print()
 	CBitmap bmView;
 	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
 	MemDC.SelectObject(bmView);
-	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
+	MemDC.BitBlt(0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
 
 	CPrintDialog PrintDlg;
 
 	try
 	{
 		// Bring up a dialog to choose the printer
-		if (PrintDlg.DoModal(GetView()))	// throws exception if there is no default printer
+		if (PrintDlg.DoModal(GetView()) == IDOK)	// throws exception if there is no default printer
 		{
 			// Zero and then initialize the members of a DOCINFO structure.
 			DOCINFO di;

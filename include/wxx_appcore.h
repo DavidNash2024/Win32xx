@@ -280,7 +280,7 @@ namespace Win32xx
 
 	inline void CWinThread::SetAccelerators(HACCEL hAccel, HWND hWndAccel)
 	// hAccel is the handle of the accelerator table
-	// pWndAccel is the window pointer for translated messages
+	// hWndAccel is the window handle for translated messages.
 	{
 		m_hWndAccel = hWndAccel;
 		m_hAccel = hAccel;
@@ -516,6 +516,7 @@ namespace Win32xx
 #endif
 
 	inline CWnd* CWinApp::GetCWndFromMap(HWND hWnd)
+	// Retrieves the CWnd pointer associated with the specified hWnd.
 	{
 		// Allocate an iterator for our HWND map
 		std::map<HWND, CWnd*, CompareHWND>::iterator m;
@@ -533,6 +534,7 @@ namespace Win32xx
 	}
 
 	inline TLSData* CWinApp::GetTlsData() const
+	// Retrieves the pointer to the Thread Local Storage data for the current thread.
 	{
 		return static_cast<TLSData*>(TlsGetValue(m_dwTlsData));
 	}
@@ -689,6 +691,7 @@ namespace Win32xx
 	}
 
 	inline TLSData* CWinApp::SetTlsData()
+	// Creates the Thread Local Storage data for the current thread if none already exists.
 	{
 		TLSData* pTLSData = GetTlsData();
 		if (NULL == pTLSData)
