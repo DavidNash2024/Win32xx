@@ -88,9 +88,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 #ifndef _WIN32XX_WINCORE_H_
 #define _WIN32XX_WINCORE_H_
 
-// Version macro
-#define _WIN32XX_VER 0x0820		// Win32++ version 8.2.0
-
 
 // Automatically include the Win32xx namespace
 // define NO_USING_NAMESPACE to skip this step

@@ -80,12 +80,26 @@
 #define UWN_DOCKEND			  (WM_APP + 0x3F25)	// Notification - docker has been docked
 #define UWN_TABCHANGED        (WM_APP + 0x3F26)	// Notification - tab size or position changed
 #define UWN_TABDRAGGED        (WM_APP + 0x3F27)	// Notification - tab is being dragged
-#define UWN_UNDOCKED		  (WM_APP + 0x3F28)	// Notification - sent by docker when undocked
-#define UWN_TABCLOSE		  (WM_APP + 0x3F29)	// Notification - sent by CTab when a tab is about to be closed
+#define UWN_TABCLOSE		  (WM_APP + 0x3F28)	// Notification - sent by CTab when a tab is about to be closed
+#define UWN_UNDOCKED		  (WM_APP + 0x3F29)	// Notification - sent by docker when undocked
+
 
 
 namespace Win32xx
 {
+
+	// Registered messages defined by Win32++
+	const UINT UWM_WINDOWCREATED = RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Posted when a window is created or attached.
+
+#ifndef _WIN32_WCE
+	// registered message used by common dialogs
+	const UINT UWM_HELPMSGSTRING = ::RegisterWindowMessage(HELPMSGSTRING);		// Used by common dialogs. Sent when the user clicks the Help button.
+	const UINT UWM_FILEOKSTRING  = ::RegisterWindowMessage(FILEOKSTRING);		// Used by common dialogs. Sent when the user specifies a file name and clicks the OK button.
+	const UINT UWM_LBSELCHSTRING = ::RegisterWindowMessage(LBSELCHSTRING);		// Used by the File common dialog. Sent when the selection changes in any of the list boxes or combo boxes.
+	const UINT UWM_SHAREVISTRING = ::RegisterWindowMessage(SHAREVISTRING);		// Used by the File common dialog. Sent if a sharing violation occurs for the selected file when the user clicks the OK button.
+	const UINT UWM_FINDMSGSTRING = ::RegisterWindowMessage(FINDMSGSTRING);		// Used by the Find/Replace common dialog. Sent when the user clicks the Find Next, Replace, or Replace All button, or closes the dialog box.
+#endif
+
 	////////////////////////////////
 	// Declaration of the CWnd class
 	//
