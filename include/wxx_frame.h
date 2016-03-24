@@ -316,7 +316,7 @@ namespace Win32xx
 			BOOL  ShowToolBar;
 			
 			// Display StatusBar and ToolBar by default
-			InitValues() : ShowCmd(0), ShowStatusBar(1), ShowToolBar(1) {}	// constructor
+			InitValues() : ShowCmd(SW_SHOW), ShowStatusBar(1), ShowToolBar(1) {}	// constructor
 		};
 
 		CFrame();
@@ -349,7 +349,10 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		InitValues GetInitValues() const			{ return m_InitValues; }
+		InitValues GetInitValues() const			
+		{ 
+			return m_InitValues;
+		}
 		CMenu& GetFrameMenu() const					{ return const_cast<CMenu&>(m_Menu); }
 		MenuTheme& GetMenuBarTheme() const			{ return const_cast<MenuTheme&>(m_MBTheme); }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
