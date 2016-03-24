@@ -552,8 +552,7 @@ namespace Win32xx
 		if (message == UWM_LBSELCHSTRING)
 		{	// handle the registered list box selection change
 			// notifications:
-			OnLBSelChangedNotify(wParam, LOWORD(lParam),
-				HIWORD(lParam));
+			OnLBSelChangedNotify((UINT)wParam, LOWORD(lParam), HIWORD(lParam));
 			return 0;
 		}
 

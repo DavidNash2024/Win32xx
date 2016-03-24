@@ -19,8 +19,7 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
 		{
-			CMainFrame& Frame = GetPSApp().GetMainFrame();
-			PropSheet_Changed(Frame.GetHwnd(), GetHwnd());
+			PropSheet_Changed(GetParent(), GetHwnd());
 			break;
 		}
 
@@ -119,8 +118,7 @@ INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// on any command notification, tell the property sheet to enable the Apply button
 	case WM_COMMAND:
 		{
-			CMainFrame& Frame = GetPSApp().GetMainFrame();
-			PropSheet_Changed(Frame.GetHwnd(), GetHwnd());
+			PropSheet_Changed(GetParent(), GetHwnd());
 			break;
 		}
 
@@ -164,7 +162,7 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /*
 void CMyPropertySheet::OnInitialUpdate()
 {
 	// Adjust layout for modeless property sheet
-	if ((IsModeless()) && !(IsWizard()))
+/*	if ((IsModeless()) && !(IsWizard()))
 	{
 		// Reposition windows
 		RECT rc = GetWindowRect();
@@ -176,7 +174,7 @@ void CMyPropertySheet::OnInitialUpdate()
 		DestroyButton(IDCANCEL);
 		DestroyButton(ID_APPLY_NOW);
 		DestroyButton(IDHELP);
-	}
+	} */
 
 	// Remove system menu for wizards
 	if (IsWizard())
