@@ -331,8 +331,9 @@ namespace Win32xx
 
 	} // INT_PTR CALLBACK CPropertyPage::DialogProc(...)
 
-	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const
+	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const	
 	{
+		// returns TRUE if the button is enabled
 		assert(IsWindow());
 		return GetParent().GetDlgItem(iButton).IsWindowEnabled();
 	}
@@ -419,6 +420,7 @@ namespace Win32xx
 
 	inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
+		// Handle the WM_NOTIFY message and call the appropriate functions
 		UNREFERENCED_PARAMETER(wParam);
 
 		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
@@ -481,7 +483,8 @@ namespace Win32xx
 
 		// Return Value:
 		// Return non-zero to prevent the wizard from finishing.
-		// Version 5.80. and later. Return a window handle to prevent the wizard from finishing. The wizard will set the focus to that window. The window must be owned by the wizard page.
+		// Version 5.80. and later. Return a window handle to prevent the wizard from finishing. 
+		// The wizard will set the focus to that window. The window must be owned by the wizard page.
 		// Return 0 to allow the wizard to finish.
 
 		return 0; // Allow wizard to finish
@@ -522,7 +525,8 @@ namespace Win32xx
 	{
 		// Sent to a property sheet, which then forwards the message to each of its pages.
 		// Set wParam and lParam to values you want passed to the property pages.
-		// Returns the nonzero value from a page in the property sheet, or zero if no page returns a nonzero value.
+		// Returns the non-zero value from a page in the property sheet, or zero if no page
+		// returns a non-zero value.
 
 		assert(IsWindow());
 		return GetParent().SendMessage(PSM_QUERYSIBLINGS, wParam, lParam);
@@ -747,6 +751,8 @@ namespace Win32xx
 	}
 
 	inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER ppsph)
+	// Display either a modal or modeless property sheet, depending on the PROPSHEETHEADER flags.
+	
 	{
 		assert( &GetApp() );
 
@@ -787,12 +793,14 @@ namespace Win32xx
 	}
 
 	inline void CPropertySheet::Destroy()
+	// Note: To destroy a property sheet from within an application, post a WM_CLOSE
 	{
 		CWnd::Destroy();
 		m_vPages.clear();
 	}
 
 	inline int CPropertySheet::DoModal()
+	// Create a modal property sheet
 	{
 		assert( &GetApp() );
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
@@ -802,6 +810,7 @@ namespace Win32xx
 		m_PSH.ppsp = pPSPArray;
 
 		// Create the Property Sheet
+		m_PSH.dwFlags &= ~PSH_MODELESS;
 		int nResult = (int)CreatePropertySheet(&m_PSH);
 
 		m_vPages.clear();
@@ -908,12 +917,14 @@ namespace Win32xx
 	}
 
 	inline void CPropertySheet::SetIcon(UINT idIcon)
+	// Sets the property sheet's icon
 	{
 		m_PSH.pszIcon = MAKEINTRESOURCE(idIcon);
 		m_PSH.dwFlags |= PSH_USEICONID;
 	}
 
 	inline void CPropertySheet::SetTitle(LPCTSTR szTitle)
+	// Sets the property sheet's title
 	{
 		if (szTitle)
 			m_Title = szTitle;
@@ -924,6 +935,8 @@ namespace Win32xx
 	}
 
 	inline void CPropertySheet::SetWizardMode(BOOL bWizard)
+	// A Wizard is a form of property sheet that displays the pages in sequence.
+	// This function enables or disables Wizard mode for the property sheet.
 	{
 		if (bWizard)
 			m_PSH.dwFlags |= PSH_WIZARD;
