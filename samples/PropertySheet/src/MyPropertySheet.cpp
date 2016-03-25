@@ -44,7 +44,10 @@ int CButtonPage::OnApply()
 
 void CButtonPage::OnCancel()
 { 
-	TRACE ("Cancel button pressed\n"); 
+	TRACE ("Cancel button pressed\n");
+
+	// Close the modeless propertysheet
+	GetParent().PostMessage(WM_CLOSE);	
 }
 
 BOOL CButtonPage::OnInitDialog()
@@ -62,6 +65,9 @@ int CButtonPage::OnOK()
 	// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
 	// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
 
+	// Close the modeless propertysheet
+	GetParent().PostMessage(WM_CLOSE);
+	
 	return Validate(); 
 }
 
@@ -161,21 +167,6 @@ CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /*
 
 void CMyPropertySheet::OnInitialUpdate()
 {
-	// Adjust layout for modeless property sheet
-/*	if ((IsModeless()) && !(IsWizard()))
-	{
-		// Reposition windows
-		RECT rc = GetWindowRect();
-		RECT rcButton = GetDlgItem(IDOK).GetWindowRect();
-		SetWindowPos(NULL, 0, 0, rc.right - rc.left, rcButton.top - rc.top, SWP_NOMOVE | SWP_NOZORDER | SWP_NOACTIVATE);
-
-		// Remove buttons
-		DestroyButton(IDOK);
-		DestroyButton(IDCANCEL);
-		DestroyButton(ID_APPLY_NOW);
-		DestroyButton(IDHELP);
-	} */
-
 	// Remove system menu for wizards
 	if (IsWizard())
 	{
