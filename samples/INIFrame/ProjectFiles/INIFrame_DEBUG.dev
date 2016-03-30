@@ -1,5 +1,5 @@
 [Project]
-FileName=Frame_DEBUG.dev
+FileName=INIFrame_DEBUG.dev
 Name=Frame
 UnitCount=14
 Type=0
@@ -26,8 +26,8 @@ UseCustomMakefile=0
 CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
-CompilerSet=0
-CompilerSettings=0000001000000001000000
+CompilerSet=4
+CompilerSettings=0000000100000000001000000
 LogOutput=
 LogOutputEnabled=0
 

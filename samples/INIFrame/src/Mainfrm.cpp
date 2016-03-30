@@ -170,50 +170,20 @@ int CMainFrame::TtoI(LPCTSTR szString)
 }
 
 CString CMainFrame::GetINIPath()
-// Returns the path to the AppData folder. Returns the current folder if
-// the Operating System doesn't support the SHGetFolderPath function.
+// Returns the path used for the INI file.
 {
-	CString FilePath = _T(".");
+	CString FilePath = GetAppDataPath();
 
-	if (GetWinVersion() >= 2500)	// For Window versions >= Windows 2000
+	if (!FilePath.IsEmpty())
 	{
-		HMODULE hMod = ::LoadLibrary(_T("Shell32.dll"));
-
-		if (hMod)
-		{
-			typedef HRESULT(WINAPI *MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
-
-			// Get the function pointer of the SHGetFolderPath function
-#ifdef UNICODE
-			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathW");
-#else
-			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathA");
-#endif
-
-			if (ProcAdd)
-			{
-				// Call the SHGetFolderPath function to retrieve the AppData folder
-				if (SUCCEEDED((ProcAdd)(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE,
-					NULL, 0, FilePath.GetBuffer(MAX_PATH))))
-				{
-					FilePath.ReleaseBuffer();
-
-					// Create the directory if required
-					FilePath += _T("\\Win32xx");
-					CreateDirectory(FilePath, NULL);
-					FilePath += _T("\\INIFrame");
-					CreateDirectory(FilePath, NULL);
-				}
-				else
-				{
-					FilePath.ReleaseBuffer();
-					FilePath = _T(".");
-				}
-			}
-
-			FreeLibrary(hMod);
-		}
+		// Create the directory if required
+		FilePath += _T("\\Win32++");
+		CreateDirectory(FilePath, NULL);
+		FilePath += _T("\\INIFrame");
+		CreateDirectory(FilePath, NULL);
 	}
+	else
+		FilePath = _T(".");
 
 	return FilePath;
 }

@@ -255,7 +255,7 @@ namespace Win32xx
 		TASKDIALOGINDIRECT* pTaskDialogIndirect = reinterpret_cast<TASKDIALOGINDIRECT*>(::GetProcAddress(hComCtl, "TaskDialogIndirect"));
 
 		// Call TaskDialogIndirect through our function pointer
-		LRESULT lr = (*pTaskDialogIndirect)(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);
+		LRESULT lr = pTaskDialogIndirect(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);
 
 		FreeLibrary(hComCtl);
 		pTLSData->pWnd = NULL;

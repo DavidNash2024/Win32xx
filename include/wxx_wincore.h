@@ -1881,7 +1881,7 @@ namespace Win32xx
 			typedef HRESULT (__stdcall *PFNSETWINDOWTHEME)(HWND hWnd, LPCWSTR pszSubAppName, LPCWSTR pszSubIdList);
 			PFNSETWINDOWTHEME pfn = (PFNSETWINDOWTHEME)GetProcAddress(hMod, "SetWindowTheme");
 
-			hr = (*pfn)(*this, pszSubAppName, pszSubIdList);
+			hr = pfn(*this, pszSubAppName, pszSubIdList);
 
 			::FreeLibrary(hMod);
 		}
@@ -2275,7 +2275,7 @@ namespace Win32xx
   #endif
   
 				// Call InitCommonControlsEx
-				if ( !((*pfnInitEx)(&InitStruct)) )
+				if ( !(pfnInitEx(&InitStruct)) )
 				{
 					InitCommonControls();
 				}

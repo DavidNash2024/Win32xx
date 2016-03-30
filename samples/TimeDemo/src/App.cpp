@@ -202,8 +202,18 @@ InitInstance()								/*
 	  // the app name, sans type
 	m_sExeName = m_sAppName.Mid(0, findloc);
 	  // the archive path name
- 	m_sIniFile = m_sAppDir + sPathSep + m_sExeName +
-	     m_ini_file_extension;
+	if (!GetAppDataPath().IsEmpty())	// dn ...
+	{
+		m_sIniFile = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName + sPathSep + m_sExeName + m_ini_file_extension;
+
+		// create the folder if required
+		::CreateDirectory(GetAppDataPath() + _T("\\Win32++"), NULL);
+		::CreateDirectory(GetAppDataPath() + _T("\\Win32++\\") + m_sExeName, NULL);
+	}
+	else
+ 		m_sIniFile = m_sAppDir + sPathSep + m_sExeName + m_ini_file_extension;
+
+
 	  // generate the About box static information: first the latest
 	  // date one of the main stream files was compiled
 	ULONG compiled_on = DatInt(CApp::m_sCompiled_on);

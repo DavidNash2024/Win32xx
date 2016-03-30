@@ -676,7 +676,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::CloseThemeData()
 	{
 		if (m_pfnCloseThemeData)
-			return (*m_pfnCloseThemeData)(m_hTheme);
+			return m_pfnCloseThemeData(m_hTheme);
 
 		return E_NOTIMPL;
 	}
@@ -684,7 +684,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect)
 	{
 		if (m_pfnDrawThemeBackground)
-			return (*m_pfnDrawThemeBackground)(m_hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
+			return m_pfnDrawThemeBackground(m_hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
 
 		return E_NOTIMPL;
 	}
@@ -692,7 +692,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect)
 	{
 		if (m_pfnDrawThemeText)
-			return (*m_pfnDrawThemeText)(m_hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
+			return m_pfnDrawThemeText(m_hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
 
 		return E_NOTIMPL;
 	}
@@ -700,7 +700,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz)
 	{
 		if (m_pfnGetThemePartSize)
-			return (*m_pfnGetThemePartSize)(m_hTheme, hdc, iPartId, iStateId, prc, eSize, psz);
+			return m_pfnGetThemePartSize(m_hTheme, hdc, iPartId, iStateId, prc, eSize, psz);
 
 		return E_NOTIMPL;
 	}
@@ -708,7 +708,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal)
 	{
 		if (m_pfnGetThemeInt)
-			return (*m_pfnGetThemeInt)(m_hTheme, iPartId, iStateId, iPropId, piVal);
+			return m_pfnGetThemeInt(m_hTheme, iPartId, iStateId, iPropId, piVal);
 
 		return E_NOTIMPL;
 	}
@@ -716,7 +716,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::GetThemeMargins(HDC hdc, int iPartId, int iStateId, int iPropId, LPRECT prc, MARGINS* pMargins)
 	{
 		if (m_pfnGetThemeMargins)
-			return (*m_pfnGetThemeMargins)(m_hTheme, hdc, iPartId, iStateId, iPropId, prc, pMargins);
+			return m_pfnGetThemeMargins(m_hTheme, hdc, iPartId, iStateId, iPropId, prc, pMargins);
 
 		return E_NOTIMPL;
 	}
@@ -724,7 +724,7 @@ namespace Win32xx
 	inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect)
 	{
 		if (m_pfnGetThemeTextExtent)
-			return (*m_pfnGetThemeTextExtent)(m_hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, pBoundingRect, pExtentRect);
+			return m_pfnGetThemeTextExtent(m_hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, pBoundingRect, pExtentRect);
 
 		return E_NOTIMPL;
 	}
@@ -732,7 +732,7 @@ namespace Win32xx
 	inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId)
 	{
 		if (m_pfnIsThemeBGPartTransparent)
-			return (*m_pfnIsThemeBGPartTransparent)(m_hTheme, iPartId, iStateId);
+			return m_pfnIsThemeBGPartTransparent(m_hTheme, iPartId, iStateId);
 
 		return E_NOTIMPL;
 	}
@@ -740,7 +740,7 @@ namespace Win32xx
 	inline HANDLE CMenuMetrics::OpenThemeData(HWND hwnd, LPCWSTR pszClassList)
 	{
 		if (m_pfnOpenThemeData)
-			return (*m_pfnOpenThemeData)(hwnd, pszClassList);
+			return m_pfnOpenThemeData(hwnd, pszClassList);
 
 		return NULL;
 	}
@@ -2092,7 +2092,7 @@ namespace Win32xx
 				LPWSTR pszColorBuff, int cchMaxColorChars, LPWSTR pszSizeBuff, int cchMaxSizeChars);
 
 			PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
-			(*pfn)(0, 0, ThemeName, 30, 0, 0);
+			pfn(0, 0, ThemeName, 30, 0, 0);
 
 			::FreeLibrary(hMod);
 		}
