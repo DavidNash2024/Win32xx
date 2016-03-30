@@ -1,0 +1,291 @@
+/* (04-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+********************************************************************************
+|                                                                              |
+|                   Copyright (c) 2016, Robert C. Tausworthe                   |
+|                             All Rights Reserved.                             |
+|                          robert.c.tausworthe@ieee.org                        |
+|                                                                              |
+===============================================================================*
+
+	Contents Description: Application resources file for a mininmal
+	application. Adapted to use Win32++ Windows interface classes,
+	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
+
+        Caveats: The copyright displayed above extends only to the author's
+	original contributions to the subject class, and to the alterations,
+	additions, deletions, and other treatments of materials that may have
+	been extracted from the cited sources.  Unaltered portions of those
+	materials retain their original copyright status. The author hereby
+	grants permission to any person obtaining a copy of this treatment
+	of the subject class and any associated documentation composed by
+	the author, to utilize this material, free of charge and without
+	restriction or limitation, subject to the following conditions:
+
+		The above copyright notice, as well as that of David Nash
+		and Win32++, together with the respective permission
+		conditions shall be included in all copies or substantial
+		portions of this material so copied, modified, merged,
+		published, distributed, or otherwise held by others.
+
+	These materials are provided "as is", without warranty of any kind,
+	express or implied, including but not limited to: warranties of
+	merchantability, fitness for a particular purpose, and non-infringement.
+	In no event shall the authors or copyright holders be liable for any
+	claim, damages, or other liability, whether in an action of contract,
+	tort or otherwise, arising from, out of, or in connection with, these
+	materials, the use thereof, or any other other dealings therewith.
+
+	Special Conventions:
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
+
+/******************************************************************************/
+// Microsoft Visual C++ generated resource script.
+//
+#include "Resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+
+/*==============================================================================
+
+	Generated from the TEXTINCLUDE 2 resource.                      */
+
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/*==============================================================================
+
+	English (United States) resources                               */
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/*==============================================================================
+
+	RT_MANIFEST                                                     */
+
+1    RT_MANIFEST "../src/res/Win32++.manifest"
+
+/*==============================================================================
+
+	Menu                                                            */
+
+IDW_MAIN MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&New\tCtrl+N",	  IDM_FILE_NEW
+		MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
+		MENUITEM "&Save\tCtrl+S",         IDM_FILE_SAVE
+		MENUITEM "Save &As\tCtrl+Shft+S", IDM_FILE_SAVEAS
+		MENUITEM "&Close", 		  IDM_FILE_CLOSE
+		MENUITEM SEPARATOR
+		MENUITEM "Print Pre&view\tShift+Ctrl+P", IDM_FILE_PREVIEW
+		MENUITEM "&Print...\tCtrl+P",     IDM_FILE_PRINT
+		MENUITEM "PageSetup...\tAlt+P",   IDM_FILE_PAGESETUP
+		MENUITEM SEPARATOR
+		MENUITEM "Recent Files",	  IDW_FILE_MRU_FILE1, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
+	}
+	POPUP "&Edit"
+	{
+		MENUITEM "Undo\tCtrl+Z",          IDM_EDIT_UNDO //, GRAYED
+		MENUITEM "Redo\tShift+Ctrl+Z",    IDM_EDIT_REDO //, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "Cut\tCtrl+X",           IDM_EDIT_CUT //, GRAYED
+		MENUITEM "Copy\tCtrl+C",          IDM_EDIT_COPY //, GRAYED
+		MENUITEM "Paste\tCtrl+V",         IDM_EDIT_PASTE //, GRAYED
+		MENUITEM "Delete\tDel",           IDM_EDIT_DELETE //, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND //, GRAYED
+		MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE //, GRAYED
+	}
+	POPUP "&View"
+	{
+		MENUITEM "&Tool Bar",     	  IDW_VIEW_TOOLBAR,   CHECKED
+		MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
+		MENUITEM SEPARATOR
+		MENUITEM "&Control Colors",	  IDM_COLOR_CHOICE
+		MENUITEM "&Font Face+Color",	  IDM_FONT_CHOICE
+	}
+
+	POPUP "&Help"
+	{
+		MENUITEM "Contents",               IDM_HELP_CONTENT
+		MENUITEM "&About",     		   IDW_ABOUT
+	}
+}
+
+/*==============================================================================
+
+	Icon
+
+	The icon with the lowest ID value is placed first to ensure that
+	the application icon remains consistent on all systems.		*/
+
+IDW_MAIN		ICON			"../src/res/smile.ico"
+IDI_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
+IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
+
+/*==============================================================================
+
+	Bitmaps                                                         */
+
+IDW_MAIN                BITMAP DISCARDABLE  	"../src/res/Toolbar.bmp"
+
+/*============================================================================**
+
+	Main Window Form Dialog                                         */
+
+IDD_FORM_DIALOG DIALOGEX 0, 0, 490, 410
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
+EXSTYLE WS_EX_CLIENTEDGE
+FONT 10, "Courier New", 0, 0
+{
+	  // controls within the client area:
+	DEFPUSHBUTTON   "OK", IDOK, 10, 20, 50, 16, BS_DEFPUSHBUTTON |
+			    WS_GROUP | WS_TABSTOP | BS_OWNERDRAW
+	EDITTEXT        IDM_EDITBOX, 120, 82, 84, 35, ES_MULTILINE | WS_TABSTOP
+			    | ES_AUTOHSCROLL | NOT WS_BORDER, WS_EX_STATICEDGE
+}
+
+/*==============================================================================
+
+	About Dialog: for display upon being triggered by CFrame::OnHelp()  */
+
+IDW_ABOUT DIALOGEX 200, 200, 200, 150
+STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
+	DS_MODALFRAME | DS_FIXEDSYS
+CAPTION "About"
+FONT 8, "Courier New", 400, 0
+{
+	CTEXT	"Common Dialogs Application\nRobert C. Tausworthe",
+		    IDC_ABOUT_BOX_CREDITS, 5, 10, 190, 120
+	ICON    IDW_MAIN, 0, 4, 4, 20, 20
+}
+
+/*==============================================================================
+
+	CListBoxDlg Dialog						*/
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+IDD_CLISTVIEWBOX_DIALOG DIALOG 0, 0, 150, 160
+STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
+	DS_MODALFRAME | DS_FIXEDSYS
+CAPTION "CListBoxDlg Dialog"
+FONT 10, "Microsoft Sans Serif"
+{
+    DEFPUSHBUTTON   "OK", IDOK, 5, 140, 30, 15
+    PUSHBUTTON      "Help", IDM_HELP_LIST_BOX, 60, 140, 30, 15
+    PUSHBUTTON      "Cancel", IDCANCEL, 115, 140, 30, 15
+    LISTBOX         IDC_LIST_BOX, 5, 5, 140, 130, WS_GROUP | WS_TABSTOP |
+    			WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
+			LBS_NOTIFY
+}
+/*==============================================================================
+
+	Accelerators                                                    */
+
+IDW_MAIN ACCELERATORS
+{
+	"N",            IDM_FILE_NEW,	 VIRTKEY, CONTROL, NOINVERT
+	"O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
+	"S",            IDM_FILE_SAVE,   VIRTKEY, CONTROL, NOINVERT
+	"S",            IDM_FILE_SAVEAS, VIRTKEY, SHIFT, CONTROL, NOINVERT
+	"C",            IDM_EDIT_COPY,   VIRTKEY, CONTROL, NOINVERT
+	"X",            IDM_EDIT_CUT,    VIRTKEY, CONTROL, NOINVERT
+	"V",            IDM_EDIT_PASTE,  VIRTKEY, CONTROL, NOINVERT
+	"P",            IDM_FILE_PRINT,  VIRTKEY, CONTROL, NOINVERT
+	"P",            IDM_FILE_PREVIEW, VIRTKEY, SHIFT, CONTROL, NOINVERT
+	"P",		IDM_FILE_PAGESETUP,VIRTKEY, ALT, NOINVERT
+	"H",		IDW_ABOUT,  	 VIRTKEY, CONTROL, NOINVERT
+	VK_F1,          IDM_HELP_CONTEXT, VIRTKEY, SHIFT, NOINVERT
+	"Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
+	"R",            IDM_EDIT_REPLACE, VIRTKEY, CONTROL, NOINVERT
+	"Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
+	"Y",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
+	VK_DELETE,      IDM_EDIT_DELETE, VIRTKEY, SHIFT, NOINVERT
+}
+
+/*==============================================================================
+
+	String Tables--tool tips and status labels			*/
+STRINGTABLE  // for the mainframe
+{
+	IDW_MAIN                "Common Dialogs Sample"
+	IDW_INDICATOR_CAPS      "CAP"
+	IDW_INDICATOR_NUM       "NUM"
+	IDW_INDICATOR_SCRL      "SCRL"
+	IDW_VIEW_TOOLBAR        "Show or hide the tool bar."
+	IDW_VIEW_STATUSBAR      "Show or hide the status bar."
+
+	  // for menu items
+	IDM_COLOR_CHOICE        "Change the background color."
+	IDM_FONT_CHOICE         "Change the display font."
+}
+
+STRINGTABLE	  // standard file menu or toolbar items
+{
+	IDM_FILE_NEW            "Create a New Document."
+	IDM_FILE_OPEN           "Open Existing Document."
+	IDM_FILE_SAVE           "Save the Document."
+	IDM_FILE_SAVEAS         "Save the Document with a new name."
+	IDM_FILE_PRINT          "Print the Document."
+	IDM_FILE_PREVIEW        "Preview Print the Document."
+	IDM_FILE_CLOSE          "Close the current document. (for this demo remove MRU item)"
+	IDW_FILE_MRU_FILE1      "Open this document"
+	IDW_FILE_MRU_FILE2      "Open this document"
+	IDW_FILE_MRU_FILE3      "Open this document"
+	IDW_FILE_MRU_FILE4      "Open this document"
+	IDW_FILE_MRU_FILE5      "Open this document"
+	  // add more mru IDs if needed
+	IDM_FILE_EXIT           "End the Program."
+}
+
+STRINGTABLE	  // standard edit menu or toolbar items
+{
+	IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard. (for this demo populate MRU list.)"
+	IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard."
+	IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document."
+	IDM_EDIT_UNDO           "Undo the last action."
+	IDM_EDIT_REDO           "Redo the previously undone action."
+	IDM_EDIT_FIND           "Find something..."
+	IDM_EDIT_REPLACE        "Replace something..."
+	IDM_EDIT_DELETE         "Erase the selected Contents."
+}
+
+STRINGTABLE     // help menu or toolbar items
+{
+	IDW_ABOUT          	"Display information about this program."
+	IDM_HELP_CONTENT        "Show help document for this program."
+	IDM_HELP_CONTEXT        "Show help on topic selected."
+}
+
+STRINGTABLE     // window-related items
+{
+	SC_CLOSE                "Close the Window."
+	SC_MAXIMIZE             "Maximize the Window."
+	SC_MINIMIZE             "Minimize the WIndow."
+	SC_MOVE                 "Move the Window."
+	SC_NEXTWINDOW           "Select Next Window."
+	SC_PREVWINDOW           "Select Previous Window."
+	SC_RESTORE              "Restore the Window."
+	SC_SIZE                 "Resize the Window."
+}
+
+STRINGTABLE     // client area items
+{
+	IDOK                    "Here, the OK button just prints a message."
+	IDM_EDITBOX             "This is a plain edit control."
+}
+
+/*-----------------------------------------------------------------------------*/
+#endif    // English (U.S.) resources
+
+

@@ -510,7 +510,8 @@ OnDestroy()								/*
 		::MessageBox(NULL, msg.c_str(), _T("Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	}
-	return CFrame::OnDestroy();
+
+	CFrame::OnDestroy();	// dn ...
 }
 
 /*============================================================================*/

@@ -26,6 +26,10 @@ Use CFiledDialog for these instead.
    functions replace a set of functions that stored and retrieved these
    values individually.
 
+* Added GetAppDataPath
+ - This function returns the path to the AppData folder. Applications 
+   can create folders within AppData to store their data. 
+   
 * Updated samples
  - The INIFrame sample now stores the settings file in the AppData folder.
    It is important for applications to store values in the AppData folder
@@ -55,6 +59,7 @@ Added CFindReplaceDialog 		class
 Added CFontDialog 				class
 Added CPageSetupDialog 			class
 Added CPrinDialog 				class
+Added GetAppDataPath            function
 Added CFrame::GetInitValues		member function
 Added CFrame::SetInitValues		member function
 Added UWM_GETCWND 				window message.

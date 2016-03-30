@@ -130,7 +130,7 @@ namespace Win32xx
 		friend CStringT<WCHAR> operator + (WCHAR ch, const CStringT<WCHAR>& string1);
 		friend CStringT<WCHAR> operator + (int val, const CStringT<WCHAR>& string1);
 		friend CStringT<WCHAR> operator + (double val, const CStringT<WCHAR>& string1);
-		
+
 		// These global functions don't need to be friends
 	//	bool operator < (const CStringT<T>& string1, const CStringT<T>& string2);
 	//	bool operator > (const CStringT<T>& string1, const CStringT<T>& string2);
@@ -139,7 +139,7 @@ namespace Win32xx
 	//	bool operator < (const CStringT<T>& string1, const T* pszText);
 	//	bool operator > (const CStringT<T>& string1, const T* pszText);
 	//	bool operator <= (const CStringT<T>& string1, const T* pszText);
-	//	bool operator >= (const CStringT<T>& string1, const T* pszText);	
+	//	bool operator >= (const CStringT<T>& string1, const T* pszText);
 
 		public:
 		CStringT();
@@ -247,7 +247,7 @@ namespace Win32xx
 	class CString : public CStringT<TCHAR>
 	{
 		friend CString operator + (const CString& string1, const CString& string2);
-		friend CString operator + (const CString& string1, const TCHAR* pszText);	
+		friend CString operator + (const CString& string1, const TCHAR* pszText);
 		friend CString operator + (const CString& string1, TCHAR ch);
 		friend CString operator + (const CString& string1, int val);
 		friend CString operator + (const CString& string1, double val);
@@ -255,7 +255,7 @@ namespace Win32xx
 		friend CString operator + (TCHAR ch, const CString& string1);
 		friend CString operator + (int val, const CString& string1);
 		friend CString operator + (double val, const CString& string1);
-		
+
 	public:
 		CString() {}
 		CString(const CString& str)           	: CStringT<TCHAR>(str) {}
@@ -1776,15 +1776,48 @@ namespace Win32xx
 		str.Format(_T("%g%s"), val, string1.c_str());
 		return str;
 	}
-	
+
 	//////////////////////////////////////////////
 	// CString global functions
 	//
-	inline CString LoadString(UINT nID)
+	inline CString GetAppDataPath()
+	// Returns the path to the AppData folder. Returns an empty CString if
+	// the Operating System doesn't support the use of an AppData folder.
+	// The AppData folder is available in Windows 2000 and above.
 	{
-		CString str;
-		str.LoadString(nID);
-		return str;
+		CString AppData;
+
+		HMODULE hMod = ::LoadLibrary(_T("Shell32.dll"));
+		if (hMod)
+		{
+			typedef HRESULT(WINAPI *MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
+
+			// Get the function pointer of the SHGetFolderPath function
+  #ifdef UNICODE
+			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathW");
+  #else
+			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathA");
+  #endif
+
+  #ifndef CSIDL_APPDATA
+  #define CSIDL_APPDATA     0x001a
+  #endif // CSIDL_APPDATA
+
+  #ifndef CSIDL_FLAG_CREATE
+  #define CSIDL_FLAG_CREATE 0x8000
+  #endif
+
+			if (ProcAdd)
+			{
+				// Call the SHGetFolderPath function to retrieve the AppData folder
+				ProcAdd(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, AppData.GetBuffer(MAX_PATH));
+				AppData.ReleaseBuffer();
+			}
+
+			FreeLibrary(hMod);
+		}
+
+		return AppData;
 	}
 
 	inline std::vector<CString> GetCommandLineArgs()
@@ -1837,6 +1870,13 @@ namespace Win32xx
 
 		// CommandLineArgs is a vector of CStringT
 		return CommandLineArgs;
+	}
+
+	inline CString LoadString(UINT nID)
+	{
+		CString str;
+		str.LoadString(nID);
+		return str;
 	}
 
 

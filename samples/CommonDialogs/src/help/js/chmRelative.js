@@ -1,0 +1,1 @@
+function relativelnk(a){var b,c;b=location.href.search(/:/)==2?14:7;c=location.href.lastIndexOf("\\")+1;a="file:///"+location.href.substring(b,c)+a;location.href=a};

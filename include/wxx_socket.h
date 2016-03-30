@@ -512,7 +512,7 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-		return (*m_pfnGetAddrInfo)(T2A(nodename), T2A(servname), hints, res);
+		return m_pfnGetAddrInfo(T2A(nodename), T2A(servname), hints, res);
 
 #else
 
@@ -581,7 +581,7 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-		(*m_pfnFreeAddrInfo)(ai);
+		m_pfnFreeAddrInfo(ai);
 
 #else
 
