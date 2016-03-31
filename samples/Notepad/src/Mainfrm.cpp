@@ -246,7 +246,7 @@ BOOL CMainFrame::OnFilePrint()
 			return FALSE;
 	}
 
-	catch (const CResourceException& /* e */)
+	catch (const CWinException& /* e */)
 	{
 		// No default printer
 		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);

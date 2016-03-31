@@ -702,7 +702,7 @@ OnFilePrint()                                                           /*
 		// Add your own code here. Refer to the tutorial for additional information
 	}
 
-	catch (const CResourceException& /* e */)
+	catch (const CWinException& /* e */)
 	{
 		// No default printer
 		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
@@ -875,20 +875,20 @@ OnInitialUpdate()                                                       /*
 	TRACE("Frame created\n");
 }
 
-/*============================================================================*/
-	void CMainFrame::
-OnMenuUpdate()								/*
+// /*============================================================================*/
+//	void CMainFrame::
+//OnMenuUpdate()		// dn ...	 (never called)					/*
 
-	Invoke the CFrame OnMenuUpdate() method to update the status  and
-	tool bar menu items. This is not an override of the CFrame protected
-	method bearing the same name/
-*-----------------------------------------------------------------------------*/
-{
-	  // Update the check state of the various menu items
-	OnUpdateStatus();
-	CFrame::OnMenuUpdate(IDW_VIEW_STATUSBAR);
-	CFrame::OnMenuUpdate(IDW_VIEW_TOOLBAR);
-}
+//	Invoke the CFrame OnMenuUpdate() method to update the status  and
+//	tool bar menu items. This is not an override of the CFrame protected
+//	method bearing the same name/
+//*-----------------------------------------------------------------------------*/
+//{													// dn ...
+//	  // Update the check state of the various menu items
+//	OnUpdateStatus();								// dn ...
+//	CFrame::OnMenuUpdate(IDW_VIEW_STATUSBAR);		// dn ...
+//	CFrame::OnMenuUpdate(IDW_VIEW_TOOLBAR);			// dn ...
+//}													// dn ...
 
 /*============================================================================*/
 	LRESULT CMainFrame::

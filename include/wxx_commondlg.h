@@ -52,6 +52,22 @@
 #include "wxx_richedit.h"
 
 
+
+///////////////////////////////////////////////////////////////////
+// Definitions of the CCommonDialog, CColorDialog, CFileDialog, 
+// CFindReplaceDialog, and CFontDialog classes.
+//
+// CCommonDialog is the base class for all common dialogs.
+// CColorDialog supports the color common dialog.
+// CFileDialog supports the FileOpen and FileSave common dialogs.
+// CFindReplaceDialog supports the Find and Replace common dialogs.
+// CFontDialog supports the Font common dialog.
+//
+// Note: A CWinException is thrown if the dialog can't be displayed.
+// Use CWinException's GetMessageID to retrieve CommDlgExtendedError.
+
+
+
 namespace Win32xx
 {
 
@@ -107,7 +123,7 @@ namespace Win32xx
 
 	//============================================================================
 	class CFileDialog : public CCommonDialog
-	// The open/save-as file choice common dialog box class.
+	// The file open/save-as common dialog box class.
 	{
 	public:
 
@@ -206,7 +222,7 @@ namespace Win32xx
 		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		FINDREPLACE 	m_FR;				// FindReplace paramaters
+		FINDREPLACE 	m_FR;				// FindReplace parameters
 		BOOL			m_bFindDialogOnly;	// TRUE for a find only dialog
 		CString 		m_strFindWhat;		// The Find string
 		CString 		m_strReplaceWith;	// The Replace string
@@ -215,7 +231,7 @@ namespace Win32xx
 
 	//============================================================================
 	class CFontDialog : public CCommonDialog
-	// The font choice box common dialog class.
+	// The font choice common dialog box class.
 	{
 	public:
 		CFontDialog(LPLOGFONT lplfInitial = NULL, DWORD dwFlags = 0, HDC hdcPrinter = 0);
@@ -408,7 +424,7 @@ namespace Win32xx
 			DWORD dwError = CommDlgExtendedError();
 			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
 				// ignore the exception caused by closing the dialog
-				throw CResourceException(_T("CColorDialog::DoModal Failed"), dwError);
+				throw CWinException(_T("CColorDialog::DoModal Failed"), dwError);
 
 			OnCancel();
 			return IDCANCEL;
@@ -600,7 +616,7 @@ namespace Win32xx
 			{
 				// ignore the exception caused by closing the dialog
 				if (dwError != CDERR_DIALOGFAILURE || (m_OFN.Flags & OFN_EXPLORER))
-					throw CResourceException(_T("CFileDialog::DoModal Failed"), dwError);
+					throw CWinException(_T("CFileDialog::DoModal Failed"), dwError);
 			}
 
 			OnCancel();
@@ -929,7 +945,7 @@ namespace Win32xx
 
 	inline void CFileDialog::SetFilter(LPCTSTR pszFilter)
 	//	Set the file choice dialog file name filter string to pszFilter.
-	//  The string is a pair of strings delimitated by NULL or '|'
+	//  The string is a pair of strings delimited by NULL or '|'
 	//  For Example: _T("Text Files (*.txt) |*.txt|")
 	{
 		m_OFN.lpstrFilter = pszFilter;	// might contain embedded NULL characters
@@ -1376,7 +1392,7 @@ namespace Win32xx
 			DWORD dwError = CommDlgExtendedError();
 			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
 				// ignore the exception caused by closing the dialog
-				throw CResourceException(_T("CFontDialog::DoModal Failed"), dwError);
+				throw CWinException(_T("CFontDialog::DoModal Failed"), dwError);
 
 			OnCancel();
  			return IDCANCEL;

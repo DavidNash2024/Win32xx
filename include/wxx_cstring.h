@@ -1787,34 +1787,34 @@ namespace Win32xx
 	{
 		CString AppData;
 
-		HMODULE hMod = ::LoadLibrary(_T("Shell32.dll"));
-		if (hMod)
+		HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
+		if (hShell)
 		{
 			typedef HRESULT(WINAPI *MYPROC)(HWND, int, HANDLE, DWORD, LPTSTR);
 
 			// Get the function pointer of the SHGetFolderPath function
   #ifdef UNICODE
-			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathW");
+			MYPROC pSHGetFolderPath = (MYPROC)GetProcAddress(hShell, "SHGetFolderPathW");
   #else
-			MYPROC ProcAdd = (MYPROC)GetProcAddress(hMod, "SHGetFolderPathA");
+			MYPROC pSHGetFolderPath = (MYPROC)GetProcAddress(hShell, "SHGetFolderPathA");
   #endif
 
   #ifndef CSIDL_APPDATA
-  #define CSIDL_APPDATA     0x001a
-  #endif // CSIDL_APPDATA
-
-  #ifndef CSIDL_FLAG_CREATE
-  #define CSIDL_FLAG_CREATE 0x8000
+    #define CSIDL_APPDATA     0x001a
   #endif
 
-			if (ProcAdd)
+  #ifndef CSIDL_FLAG_CREATE
+    #define CSIDL_FLAG_CREATE 0x8000
+  #endif
+
+			if (pSHGetFolderPath)
 			{
 				// Call the SHGetFolderPath function to retrieve the AppData folder
-				ProcAdd(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, AppData.GetBuffer(MAX_PATH));
+				pSHGetFolderPath(NULL, CSIDL_APPDATA | CSIDL_FLAG_CREATE, NULL, 0, AppData.GetBuffer(MAX_PATH));
 				AppData.ReleaseBuffer();
 			}
 
-			FreeLibrary(hMod);
+			FreeLibrary(hShell);
 		}
 
 		return AppData;

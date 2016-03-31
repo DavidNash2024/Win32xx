@@ -522,7 +522,14 @@ OnPageSetup()								/*
 {
 	MyPageSetup PSD(PSD_SHOWHELP);
 	PSD.SetPSDTitle(_T("Page Parameter Setup"));		
-	PSD.DoModal(theApp.GetMainWnd());
+	try													// dn ...
+	{
+		PSD.DoModal(theApp.GetMainWnd());
+	}
+	catch (const CWinException& e)						// dn ...
+	{
+		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONWARNING);
+	}
 
 	// TODO: Add code here to set up the printer.  Note: control does not
 	// return here until after OnOK() or OnCancel() have concluded.
@@ -555,8 +562,16 @@ OnPrintDialog()								/*
 	pd.nMinPage = 1;
 	pd.nMaxPage = 1000;
 	PD.SetPDTitle(_T("Choose Print Parameters"));
-	PD.SetParameters(pd);			
-	PD.DoModal(theApp.GetMainWnd());	
+	PD.SetParameters(pd);
+
+	try											// dn ...
+	{
+		PD.DoModal(theApp.GetMainWnd());
+	}
+	catch (const CWinException& e)				// dn ...
+	{
+		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_OK);
+	}
 
 	// TODO: Add code here to print the document.  Note: control does not
 	// return here until after OnOK() or OnCancel() have concluded.
