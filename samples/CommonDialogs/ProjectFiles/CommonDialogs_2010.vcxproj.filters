@@ -18,13 +18,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\ComDlgRC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ContextHelp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\ContextHelpRC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\CtlColorChoice.h">
@@ -140,12 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-    <ResourceCompile Include="..\src\CListBoxDlg.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-    <ResourceCompile Include="..\src\ContextHelp.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

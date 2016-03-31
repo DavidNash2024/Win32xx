@@ -98,9 +98,7 @@
     <ClInclude Include="..\src\CColorChoice.h" />
     <ClInclude Include="..\src\CListBoxDlg.h" />
     <ClInclude Include="..\src\ColorDefs.h" />
-    <ClInclude Include="..\src\ComDlgRC.h" />
     <ClInclude Include="..\src\ContextHelp.h" />
-    <ClInclude Include="..\src\ContextHelpRC.h" />
     <ClInclude Include="..\src\CtlColorChoice.h" />
     <ClInclude Include="..\src\CustomButton.h" />
     <ClInclude Include="..\src\Doc.h" />
@@ -130,8 +128,6 @@
     <ClCompile Include="..\src\View.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="..\src\CListBoxDlg.rc" />
-    <ResourceCompile Include="..\src\ContextHelp.rc" />
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
