@@ -264,13 +264,13 @@ namespace Win32xx
 		if (lr != S_OK)
 		{
 			// Throw an exception to indicate task dialog creation failure
-			// TaskDialogs don't supply GetLastError information, so a CResourceException is used
+			// Note: GetLastError message is not used
 			if (lr == E_OUTOFMEMORY)
-				throw CResourceException(_T("TaskDialogIndirect failed, out of memory"));
+				throw CWinException(_T("TaskDialogIndirect failed, out of memory"));
 			if (lr == E_INVALIDARG)
-				throw CResourceException(_T("TaskDialogIndirect failed, invalid argument"));
+				throw CWinException(_T("TaskDialogIndirect failed, invalid argument"));
 			else
-				throw CResourceException(_T("TaskDialogIndirect failed"));
+				throw CWinException(_T("TaskDialogIndirect failed"));
 		}
 
 		return lr;

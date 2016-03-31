@@ -147,14 +147,13 @@ LoadPersistentData()                                                    /*
 		UpdateToolbarMenuStatus();
 	  // the ar object closes on destruction
 	}
-	catch (const CWinException &e)  // catch all std::exception events
+	// catch (const CWinException &e)  // catch all std::exception events		// dn ...
+	catch (const CException& e)  // catch all CException events					// dn ...
 	{
-		  // Process the exception and quit
-		CString msg;
-		msg.Format(_T("%s\n%s\n%s"),
-		    _T("Previous settings could not be restored."),
-		    e.GetErrorString(), e.what());
-		::MessageBox(NULL, msg, _T("Exception"), MB_OK | MB_ICONSTOP |
+		  // Process the exception
+		CString msg = "Previous settings could not be restored.\n";
+		msg += e.GetText();
+		::MessageBox(NULL, msg, A2T(e.what()), MB_OK | MB_ICONSTOP |
 		    MB_TASKMODAL);
 	}
 	catch(...) // catch all other exception events
@@ -634,7 +633,8 @@ SaveRegistrySettings()                                                  /*
 		ar << m_MRU;    // for the MRU list
 		ar << m_View;   // for the view, including control colors
 	}
-	catch (const CWinException &e)  // catch all std::exception events
+	// catch (const CWinException &e)  // catch all std::exception events
+	catch (const CException& e)  // catch all std::exception events		// dn ...
 	{
 		  // Process the exception and quit
 		CString msg;

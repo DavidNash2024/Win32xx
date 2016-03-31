@@ -70,7 +70,7 @@
 //   CDevNames pDevNames = PrintDialog.GetDevNames();
 //   CDevMode  pDevMode  = PrintDialog.GetDevMode();
 //
-// NOTE: CPrintDialog and CPageSetupDialog throw a CResourceException
+// NOTE: CPrintDialog and CPageSetupDialog throw a CWinException
 // if they are unable to display the dialog.
 
 // NOTE: CPrintDialog and CPageSetupDialog will throw an exception if
@@ -137,7 +137,7 @@ namespace Win32xx
 				if (m_p == 0)
 				{
 					// The handle is probably invalid
-					throw CResourceException(_T("CGlobalLock::Lock failed to lock handle"));
+					throw CWinException(_T("CGlobalLock::Lock failed to lock handle"));
 				}
 			}
 			else
@@ -539,7 +539,7 @@ namespace Win32xx
 			{
 				// Reset global memory
 				GlobalFreeAll();
-				throw CResourceException(_T("CPrintDialog::DoModal Failed"), dwError);
+				throw CWinException(_T("CPrintDialog::DoModal Failed"), dwError);
 			}
 
 			OnCancel();
@@ -564,7 +564,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CPrintDialog::GetDefaults()
-	// Sets the printer and the page setings to default, without displaying a dialog.
+	// Sets the printer and the page settings to default, without displaying a dialog.
 	// The hDevMode and hDevNames memory is freed and reallocated.
 	// Returns TRUE if a default printer exists.
 	{
@@ -607,7 +607,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	// Returns a pointer to the locked hDevMode memory encapulated in a CDevMode object.
+	// Returns a pointer to the locked hDevMode memory encapsulated in a CDevMode object.
 	// There is no need to unlock this memory. The CDevMode object automatically
 	// unlocks the memory when it goes out of scope.
 	// Usage:
@@ -619,7 +619,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	// Returns a pointer to the locked hDevNames memory encapulated in a CDevNames object.
+	// Returns a pointer to the locked hDevNames memory encapsulated in a CDevNames object.
 	// There is no need to unlock this memory. The CDevNames object automatically
 	// unlocks the memory when it goes out of scope.
 	// Usage:
@@ -849,7 +849,7 @@ namespace Win32xx
 			{
 				// Reset global memory
 				GlobalFreeAll();
-				throw CResourceException(_T("CPageSetupDialog::DoModal Failed"), dwError);
+				throw CWinException(_T("CPageSetupDialog::DoModal Failed"), dwError);
 			}
 
 			OnCancel();
