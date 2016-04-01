@@ -185,7 +185,7 @@ namespace Win32xx
 			m_hmodRich = LoadLibrary(_T("riched32.dll"));
 	
 		if (m_hmodRich == 0)
-			::MessageBox(NULL, _T("Failed to load RICHED32.DLL"), _T("Error"), MB_ICONWARNING);
+			throw CNotSupportedException(_T("Failed to load RICHED32.DLL"));
 	}
 
 	inline CRichEdit::~CRichEdit()

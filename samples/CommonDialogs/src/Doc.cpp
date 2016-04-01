@@ -522,11 +522,11 @@ OnPageSetup()								/*
 {
 	MyPageSetup PSD(PSD_SHOWHELP);
 	PSD.SetPSDTitle(_T("Page Parameter Setup"));		
-	try													// dn ...
+	try
 	{
 		PSD.DoModal(theApp.GetMainWnd());
 	}
-	catch (const CWinException& e)						// dn ...
+	catch (const CWinException& e)
 	{
 		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONWARNING);
 	}
@@ -564,11 +564,11 @@ OnPrintDialog()								/*
 	PD.SetPDTitle(_T("Choose Print Parameters"));
 	PD.SetParameters(pd);
 
-	try											// dn ...
+	try
 	{
 		PD.DoModal(theApp.GetMainWnd());
 	}
-	catch (const CWinException& e)				// dn ...
+	catch (const CWinException& e)
 	{
 		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_OK);
 	}

@@ -113,18 +113,13 @@ OnColorChoice()     		                                       	/*
         Select the view's backbround color.
 *-----------------------------------------------------------------------------*/
 {
-	CHOOSECOLOR cc;
-	ZeroMemory(&cc, sizeof(CHOOSECOLOR));
-	cc.lStructSize = sizeof(CHOOSECOLOR);
-	cc.Flags = CC_RGBINIT | CC_ANYCOLOR ;
-	cc.hwndOwner    = m_View.GetHwnd();
-	cc.rgbResult    = m_View.m_rgbBkColor;
-	cc.lpCustColors = m_View.m_rgbCustomColors;
-
-	if(::ChooseColor(&cc))
+	CColorDialog ColorDlg(m_View.m_rgbBkColor, CC_RGBINIT | CC_ANYCOLOR);
+	ColorDlg.SetCustomColors(m_View.m_rgbCustomColors);
+	if (ColorDlg.DoModal(m_View) == IDOK)
 	{
-		m_View.m_rgbBkColor = cc.rgbResult;
+		m_View.m_rgbBkColor = ColorDlg.GetColor();
 	}
+	
 	UpdateFrame();
 }
 
@@ -511,7 +506,7 @@ OnDestroy()								/*
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	}
 
-	CFrame::OnDestroy();	// dn ...
+	CFrame::OnDestroy();
 }
 
 /*============================================================================*/
@@ -750,30 +745,26 @@ OnFontChoice()     		                                 	/*
         background color is always the same as the client area background.
 *-----------------------------------------------------------------------------*/
 {
-	CHOOSEFONT cf;
-	ZeroMemory(&cf, sizeof(CHOOSEFONT));
-          // load the current font
 	LOGFONT lf;
 	m_View.m_font.GetObject(sizeof(LOGFONT), &lf);
-          // set dialog parameters
-	cf.lStructSize = sizeof(CHOOSEFONT);
-	cf.Flags = CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
-	cf.hwndOwner = m_View.GetHwnd();
-	cf.lpLogFont = &lf; // the returned font parameters
-	cf.rgbColors = m_View.m_rgbTxColor;
-          // open the dialog
-	if(::ChooseFont(&cf))
+	DWORD dwFlags = CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
+	
+	CFontDialog FontDlg(&lf, dwFlags);
+	FontDlg.SetColor(m_View.m_rgbTxColor);
+	
+	if (FontDlg.DoModal(m_View) == IDOK)
 	{
 		CFont f;
 		if (f.CreateFontIndirect(&lf))
-                        m_View.m_font = f;
-                else
+			m_View.m_font = f;
+		else
 			::MessageBox(NULL, _T("Font creation error."),
-			    _T("Error"), MB_OK | MB_ICONEXCLAMATION |
-			    MB_TASKMODAL);
+				_T("Error"), MB_OK | MB_ICONEXCLAMATION |
+				MB_TASKMODAL);
 
-		m_View.m_rgbTxColor = cf.rgbColors;
+		m_View.m_rgbTxColor = FontDlg.GetColor();
 	}
+
 	m_View.SaveFontSize();
 	UpdateFrame();
 }

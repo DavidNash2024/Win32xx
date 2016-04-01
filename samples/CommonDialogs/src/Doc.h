@@ -52,10 +52,8 @@
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
-// #include "wxx_commondlg.h"			// dn ...
-// #include "wxx_printdialogs.h"		// dn ...
 #include "MyFindReplaceDlg.h"
-#include <sys/stat.h>                   // dn ...
+#include <sys/stat.h>
 
 /*============================================================================*/
 	class

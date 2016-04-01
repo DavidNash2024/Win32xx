@@ -95,7 +95,6 @@ namespace Win32xx
 		LPCTSTR GetErrorString() const throw();
 		int GetMessageID() const throw();
 		LPCTSTR GetText() const throw();
-		void ReportError() const throw();
 		virtual const char* what() const throw() = 0; // pure virtual function
 
 	private:
@@ -260,17 +259,6 @@ namespace Win32xx
 		return m_nMessageID;
 	}
 
-	inline void CException::ReportError() const throw()
-	// Displays the exception information in a message box.
-	{
-		if (m_szText[0] != 0)
-			::MessageBox(NULL, m_szText, _T("Exception Occurred"), MB_OK);
-		else if (m_nMessageID > 0 )
-			::MessageBox(NULL, LoadString(m_nMessageID), _T("Exception Occurred"), MB_OK);
-
-		else ::MessageBox(NULL, _T("Unspecified Error"), _T("Exception Occurred"), MB_OK);
-	}
-	
 	inline LPCTSTR CException::GetText() const throw()
 	// Retrieves the string specified when the exception is thrown.
 	{

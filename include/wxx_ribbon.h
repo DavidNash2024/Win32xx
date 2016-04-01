@@ -51,6 +51,8 @@
 #include <UIRibbon.h>					// Contained within the Windows 7 SDK	
 #include <UIRibbonPropertyHelpers.h>
 
+#include "wxx_frame.h"
+
 namespace Win32xx
 {
 	// Defines the callback entry-point methods for the Ribbon framework.

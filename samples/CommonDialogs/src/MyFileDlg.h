@@ -41,9 +41,6 @@
 #ifndef MY_FILE_DLG_H
 #define MY_FILE_DLG_H
 
-// #include "wxx_commondlg.h"			// dn ...
-// #include "ComDlgRC.h"				// dn ...
-
 /*============================================================================*/
 	class
 MyFileDialog : public CFileDialog

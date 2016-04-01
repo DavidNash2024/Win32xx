@@ -67,8 +67,7 @@
 
 #include "stdafx.h"
 #include "CColorChoice.h"
-// #include "ComDlgRC.h"    // dn ...
-#include "resource.h"       // dn ...
+#include "resource.h"
 
 /*============================================================================*/
 	CColorChoice::
@@ -91,8 +90,8 @@ AddColorChoice(const CString& usage, COLORREF color) 			/*
 {
 	UINT size = m_ColorTable.size();
 	ctl_color pair;
-	pair.usage = usage;				// dn ...
-	pair.color = color;				// dn ...
+	pair.usage = usage;
+	pair.color = color;
 	m_ColorTable.push_back(pair);
 	return (UINT)m_ColorTable.size() == size + 1;
 }

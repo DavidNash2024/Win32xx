@@ -677,7 +677,6 @@ namespace Win32xx
 		BOOL SetViewportExtEx(int x, int y, LPSIZE lpSize) const;
 		BOOL SetViewportExtEx(SIZE size, LPSIZE lpSizeRet) const;
 		BOOL ScaleViewportExtEx(int xNum, int xDenom, int yNum, int yDenom, LPSIZE lpSize) const;
-		BOOL OffsetWindowOrg(int nWidth, int nHeight, LPPOINT lpPoint) const;
 		BOOL GetWindowExtEx(LPSIZE lpSize)  const;
 		BOOL SetWindowExtEx(int x, int y, LPSIZE lpSize) const;
 		BOOL SetWindowExtEx(SIZE size, LPSIZE lpSizeRet) const;
@@ -1332,7 +1331,7 @@ namespace Win32xx
 		}
 
 		// DIB support
-		inline HBITMAP CBitmap::CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, CONST VOID* lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
+		inline HBITMAP CBitmap::CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
 		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
 		{
 			HBITMAP hBitmap = ::CreateDIBitmap(hdc, lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
@@ -1471,7 +1470,7 @@ namespace Win32xx
 
 #endif // !_WIN32_WCE
 
-		inline HBITMAP CBitmap::CreateDIBSection(HDC hdc, CONST BITMAPINFO* lpbmi, UINT uColorUse, VOID** ppvBits, HANDLE hSection, DWORD dwOffset)
+		inline HBITMAP CBitmap::CreateDIBSection(HDC hdc, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset)
 		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values.
 		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.
 		{

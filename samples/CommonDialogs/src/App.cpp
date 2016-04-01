@@ -303,21 +303,18 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 		CString msg = e.what() + (CString)"\nWinMain Goodbye...";;
 		::MessageBox(NULL, msg.c_str(), _T("Standard Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-	//	return -1;      // dn ...
 	}
 	catch(CString s)        // catch CString events
 	{
 		CString msg = s + (CString)"\nWinMain Goodbye...";
 		::MessageBox(NULL, msg.c_str(), _T("Registered Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-	//	return -1;      // dn ...
 	}
 	catch(LPCTSTR s)        // catch C string events
 	{
 		CString msg = s + (CString)"\nWinMain Goodbye...";
 		::MessageBox(NULL, msg.c_str(), _T("Registered Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-	//	return -1;      // dn ...
 	}
 	catch(...)      // catch all other exception events
 	{
@@ -325,7 +322,6 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 		    _T("WinMain Goodbye...");
 		::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-	//	return -1;      // dn ...
 	}
 
 	  // release the semaphore

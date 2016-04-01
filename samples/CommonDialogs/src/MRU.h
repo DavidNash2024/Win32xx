@@ -53,9 +53,6 @@
 #ifndef GPP_MRU_H_FILE
 #define GPP_MRU_H_FILE
 
-//#include <vector>
-// #include "wxx_wincore.h"			// dn ...
-// #include "wxx_frame.h"			// dn ...
 
 /*============================================================================*/
         class

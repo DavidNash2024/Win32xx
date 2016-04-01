@@ -50,7 +50,7 @@
 
 *******************************************************************************/
 
-#include "stdafx.h"			// dn ...
+#include "stdafx.h"
 #include "MRU.h"
 #include "io.h"
 
@@ -261,10 +261,9 @@ UpdateMRUMenu()                          				/*
 	{
 		  // create the MRU "show" list, which contains only strings
 		  // of limited length, chars removed at the midpoint, as needed
-		int 	maxlen = MAX_MENU_STRING - 10,
-			mid    = maxlen / 2;
-	//	CString strMRUShow[m_nMaximumMRUSlots];
-        std::vector<CString> strMRUShow(m_nMaximumMRUSlots);    // dn ...
+		int maxlen = MAX_MENU_STRING - 10;
+		int	mid    = maxlen / 2;
+        std::vector<CString> strMRUShow(m_nMaximumMRUSlots);
 		for (int i = 0; i <= iLast; i++)
 		{
 			CString s = m_vMRUEntries[i];

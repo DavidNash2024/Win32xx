@@ -52,9 +52,6 @@
 #ifndef MYFONTDIALOG_H
 #define MYFONTDIALOG_H
 
-// #include "wxx_commondlg.h"				// dn ...
-// #include "ComDlgRC.h"					// dn ...
-
 /*============================================================================*/
 	class
 MyFontDialog : public CFontDialog                                       /*

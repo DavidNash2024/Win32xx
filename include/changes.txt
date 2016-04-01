@@ -83,6 +83,7 @@ Removed CFrame::GetShowToolBar
 Removed CFrame::SetShowCmd
 Removed CFile::OpenFileDialog
 Removed CFile::SaveFileDialog
+Removed CException::ReportError
 Removed UWM_ISDOCKER		 	window message.
 Removed UWM_ISDOCKCONTAINER	 	window message.
 Removed UWM_ISFRAME			 	window message.
