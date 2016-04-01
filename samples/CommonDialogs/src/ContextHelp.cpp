@@ -137,14 +137,13 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-// #include "wxx_frame.h"			// dn ...
+
 #ifndef __BORLANDC__    // not supported by Borland v5.5 compiler
 #include <htmlhelp.h>   // load after wxx_ to get system #defines
 #endif // __BORLANDC__
 
 #include "ContextHelp.h"
-// #include "ContextHelpRC.h"       // dn ...
-#include "resource.h"               // dn ...
+#include "resource.h"
 
 /*============================================================================*/
 	ContextHelp::
@@ -176,8 +175,8 @@ AddHelpTopic(UINT nID, const CString& topic) 				/*
 {
 	UINT size = m_help_table.size();
 	help_message pair;
-	pair.nID = nID;				// dn ...
-	pair.topic = topic;			// dn ...
+	pair.nID = nID;
+	pair.topic = topic;
 	m_help_table.push_back(pair);
 	return (UINT)m_help_table.size() == size + 1;
 }

@@ -1032,13 +1032,7 @@ namespace Win32xx
 	//	An exception is thrown if the window isn't created.
 	{
 		assert( &GetApp() );	// Test if Win32++ has been started
-		if (IsWindow())		// Only one window per CWnd instance allowed
-		{
-			LPCTSTR msg =  _T("Only one Find/Replace box at a time allowed.");
-			::MessageBox(NULL, msg, _T("Error"), MB_OK | MB_ICONEXCLAMATION
-				| MB_TASKMODAL);
-			return FALSE;
-		}
+		assert(!IsWindow());	// Only one window per CWnd instance allowed
 
 		m_bFindDialogOnly = bFindDialogOnly;
 

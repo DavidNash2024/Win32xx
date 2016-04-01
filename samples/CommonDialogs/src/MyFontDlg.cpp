@@ -52,7 +52,7 @@
 
 *******************************************************************************/
 
-#include "stdafx.h"				// dn ...
+#include "stdafx.h"
 #include "MyFontDlg.h"
 #include "resource.h"
 

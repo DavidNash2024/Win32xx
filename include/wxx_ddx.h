@@ -115,9 +115,9 @@ namespace Win32xx
 		virtual void DDV_MinMaxLong(long value,  long minVal, long maxVal);
 		virtual void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
 		virtual void DDV_MinMaxShort(short value, short minVal, short maxVal);
-		virtual void DDV_MinMaxSlider(DWORD value, DWORD minVal, DWORD maxVal);		
+		virtual void DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal);
 		virtual void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal);
-		virtual void DDV_MinMaxULong(DWORD value, DWORD minVal, DWORD maxVal);		
+		virtual void DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal);
 				
 		// DDX Initialisation
 		virtual void DDX_Control(int nIDC, CWnd& rCtl);			
@@ -143,14 +143,14 @@ namespace Win32xx
 		virtual void DDX_Text(int nIDC, int& value);
 		virtual void DDX_Text(int nIDC, UINT& value);
 		virtual void DDX_Text(int nIDC, long& value);
-		virtual void DDX_Text(int nIDC, DWORD& value);
+		virtual void DDX_Text(int nIDC, ULONG& value);
 		virtual void DDX_Text(int nIDC, CString& value);
 		virtual void DDX_Text(int nIDC, LPTSTR value, int nMaxLen);
 		virtual void DDX_Text(int nIDC, float& value, int precision = FLT_DIG);
 		virtual void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);		
 
 		// Helper operations
-		void virtual Fail(LPCTSTR message);
+		void virtual Fail(LPCTSTR message, LPCTSTR error = _T("Error"));
 		HWND GetLastControl() 		{ return m_hWndLastControl; }
 		HWND GetLastEditControl() 	{ return m_hWndLastEditControl; }
 		void Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate);		
@@ -1167,11 +1167,12 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::Fail(LPCTSTR message)
+	inline void CDataExchange::Fail(LPCTSTR message, LPCTSTR error /*= _T(Error)*/)
 	//	This function is called when a CUserException is caught while
-	//  validating the value in a control.
+	//  validating the value in a control. This is a virtual function which can
+	//  be overridden as required. 
 	{
-		::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+		::MessageBox(NULL, message, error, MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 
 		if (!m_bRetrieveAndValidate)
 		{

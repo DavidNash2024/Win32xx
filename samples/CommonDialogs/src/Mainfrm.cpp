@@ -60,8 +60,6 @@
 #include "resource.h"
 #include "App.h"
 #include "MRU.h"
-//#include "ComDlgRC.h"         // dn ...
-//#include "CFileDialog.h"      // dn ...
 
 
 /*******************************************************************************
@@ -147,8 +145,7 @@ LoadPersistentData()                                                    /*
 		UpdateToolbarMenuStatus();
 	  // the ar object closes on destruction
 	}
-	// catch (const CWinException &e)  // catch all std::exception events		// dn ...
-	catch (const CException& e)  // catch all CException events					// dn ...
+	catch (const CException& e)  // catch all CException events
 	{
 		  // Process the exception
 		CString msg = "Previous settings could not be restored.\n";
@@ -633,8 +630,7 @@ SaveRegistrySettings()                                                  /*
 		ar << m_MRU;    // for the MRU list
 		ar << m_View;   // for the view, including control colors
 	}
-	// catch (const CWinException &e)  // catch all std::exception events
-	catch (const CException& e)  // catch all std::exception events		// dn ...
+	catch (const CException& e)  // catch all std::exception events
 	{
 		  // Process the exception and quit
 		CString msg;

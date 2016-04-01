@@ -59,8 +59,7 @@
 #include "ColorDefs.h"
 #include "Resource.h"
 #include "ContextHelp.h"
-// #include "ComDlgRC.h"        // dn ...
-#include "resource.h"           // dn ...
+#include "resource.h"
 
 /*******************************************************************************
 

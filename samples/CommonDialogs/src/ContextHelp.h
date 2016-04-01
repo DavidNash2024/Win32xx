@@ -43,7 +43,6 @@
 #define CONTEXTHELP_H
 
 #include <vector>
-// #include "wxx_wincore.h"			// dn ...
 
   // the help message structure definition
 struct help_message {UINT nID; CString topic;};

@@ -41,9 +41,7 @@
 #ifndef MY_FIND_REPLACE_DLG_H
 #define MY_FIND_REPLACE_DLG_H
 
-// #include "wxx_commondlg.h"			// dn ...
-// #include "ComDlgRC.h"                // dn ...
-#include "resource.h"                   // dn ...
+#include "resource.h"
 
 /*============================================================================*/
 	class

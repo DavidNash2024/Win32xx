@@ -1186,10 +1186,8 @@ namespace Win32xx
 			InitStruct.dwICC = ICC_INTERNET_CLASSES;
 			InitCommonControlsEx(&InitStruct);
 		}
-		else
-		{
-			::MessageBox(NULL, _T("IP Address Control not supported!"), _T("Error"), MB_OK);
-		}
+		else 
+			throw CNotSupportedException(_T("IP Address Control not supported!"));
 	}
 
 	inline void CIPAddress::ClearAddress()

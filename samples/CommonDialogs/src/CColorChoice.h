@@ -53,12 +53,8 @@
 #ifndef CCOLORCHOICE_H
 #define CCOLORCHOICE_H
 
-//#include "wxx_wincore.h"			// dn ...
-//#include "wxx_commondlg.h"		// dn ...		
-
 #include "ColorDefs.h"
 #include "CListBoxDlg.h"
-//#include "ComDlgRC.h"				// dn ...
 
 /*******************************************************************************
 

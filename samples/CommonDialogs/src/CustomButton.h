@@ -53,7 +53,6 @@
 #ifndef CUSTOM_BUTTON_H
 #define CUSTOM_BUTTON_H
 
-// #include <wxx_stdcontrols.h>			// dn ...
 
 /******************************************************************************/
 	class

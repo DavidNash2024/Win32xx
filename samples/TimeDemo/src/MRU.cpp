@@ -280,11 +280,10 @@ UpdateMRUMenu()                          				/*
 	{
 		  // create the MRU "show" list, which contains only strings
 		  // of limited length, chars removed at the midpoint, as needed
-		int 	maxlen = MAX_MENU_STRING - 10,
-			mid    = maxlen / 2;
+		int maxlen = MAX_MENU_STRING - 10;
+		int mid = maxlen / 2;
 
-	//	CString strMRUShow[m_nMaximumMRUSlots];					// dn ...
-        std::vector<CString> strMRUShow(m_nMaximumMRUSlots);	// dn ... (for Borland v5.5)
+        std::vector<CString> strMRUShow(m_nMaximumMRUSlots);
 		for (int i = 0; i <= iLast; i++)
 		{
 			CString s = m_vMRUEntries[i];

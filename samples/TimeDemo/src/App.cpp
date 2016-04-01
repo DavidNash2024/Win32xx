@@ -202,7 +202,7 @@ InitInstance()								/*
 	  // the app name, sans type
 	m_sExeName = m_sAppName.Mid(0, findloc);
 	  // the archive path name
-	if (!GetAppDataPath().IsEmpty())	// dn ...
+	if (!GetAppDataPath().IsEmpty())
 	{
 		m_sIniFile = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName + sPathSep + m_sExeName + m_ini_file_extension;
 
