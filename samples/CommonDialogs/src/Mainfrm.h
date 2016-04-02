@@ -8,7 +8,7 @@
 ===============================================================================*
 
 	Contents Description: Declaration of the CMainFrame class for the
-	BasicForm SDI sample application using the Win32++ Windows interface
+	CommonDialogs SDI sample application using the Win32++ Windows interface
 	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
 	therein.
 

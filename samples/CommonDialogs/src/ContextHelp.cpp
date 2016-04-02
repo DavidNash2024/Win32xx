@@ -138,8 +138,8 @@
 
 #include "stdafx.h"
 
-#ifndef __BORLANDC__    // not supported by Borland v5.5 compiler
-#include <htmlhelp.h>   // load after wxx_ to get system #defines
+#ifndef __BORLANDC__ 
+#include <htmlhelp.h>   // not supported by Borland v5.5 compiler
 #endif // __BORLANDC__
 
 #include "ContextHelp.h"
@@ -272,8 +272,8 @@ OnHelp(const CString &topic)                                   		/*
 
 	  // if no help window was opened, show that there was an error
 	OnHelpAbout();
-	::MessageBox(NULL, _T("Help topic could not be opened.\nMake sure that")
-	    _T("the BasicForm.chm file is in the BasicForm.exe directory."),
+	::MessageBox(NULL, _T("Help topic could not be opened.\n Use the install script")
+	    _T(" in the src\\install folder to copy the help to the AppData folder."),
 	    _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 	return TRUE;
 }

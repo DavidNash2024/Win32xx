@@ -7,7 +7,7 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the  CView class for the BasicForm
+	Contents Description: Declaration of the  CView class for the CommonDialogs
 	sample SDI application using the Win32++ Windows interface classes,
 	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
 

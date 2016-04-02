@@ -7,9 +7,9 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description:  Resource Definitions used by the BasicForm SDI
-	sample application resource.rc file.  Adapted to the Win32++ Windows
-	interface classes, Copyright (c) 2005-2016 David Nash, under
+	Contents Description:  Resource Definitions used by the CommonDialogs
+	SDI sample application resource.rc file.  Adapted to the Win32++
+	Windows interface classes, Copyright (c) 2005-2016 David Nash, under
 	permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's

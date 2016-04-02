@@ -8,7 +8,7 @@
 ===============================================================================*
 
 	Contents Description: Declaration of a basic Single Document Interface
-	(SDI) class for the BasicForm sample program using with the Win32++
+	(SDI) class for the CommonDialogs sample program using with the Win32++
 	Windows interface classes, Copyright (c) 2005-2015  David Nash, under
 	permissions granted therein.
 
