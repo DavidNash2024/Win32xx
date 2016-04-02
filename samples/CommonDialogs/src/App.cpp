@@ -8,9 +8,9 @@
 ===============================================================================*
 
 	Contents Description:  This file contains the WinMain() function and
-	CApp Class implementation for the BasicForm SDI sample application using
-	the Win32++ Windows interface classes, Copyright (c) 2005-2016 David
-	Nash, under permissions granted therein.
+	CApp Class implementation for the CommonDialogs SDI sample application
+	using the Win32++ Windows interface classes, Copyright (c) 2005-2016
+	David Nash, under permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -75,7 +75,7 @@ static	const	LPCTSTR	help_file_type    = _T(".chm");
 
   // semaphore name, instances, and handle: make sure the name
   // is unique to among applications being executed simultaneously
-static	const	LPCTSTR	appSemaphoreName = _T("Win32++BasicFormApp");
+static	const	LPCTSTR	appSemaphoreName = _T("Win32++CommonDialogsApp");
 static  const	int     nInstances = 1; // number of allowed instances
 static	HANDLE 	m_hSem;
 
@@ -151,6 +151,10 @@ InitInstance()								/*
 		// Create the folders if required
 		CreateDirectory(GetAppDataPath() + _T("\\Win32++"), NULL);
 		CreateDirectory(GetAppDataPath() + _T("\\Win32++\\") + m_sExeName, NULL);
+
+		// Note: on Win2000 and above we could create the folders in a single step:
+		// CString FullPath = (GetAppDataPath() + _T("\\Win32++\\INIFrame");
+		// SHCreateDirectory(NULL, FullPath);	// supported on Win2000 and above
 	}
 	else
 	{

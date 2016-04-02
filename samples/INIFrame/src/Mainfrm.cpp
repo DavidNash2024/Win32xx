@@ -181,6 +181,10 @@ CString CMainFrame::GetINIPath()
 		CreateDirectory(FilePath, NULL);
 		FilePath += _T("\\INIFrame");
 		CreateDirectory(FilePath, NULL);
+
+		// Note: on Win2000 and above we could create the folders in a single step:
+		// FilePath += _T("\\Win32++\\INIFrame");
+		// SHCreateDirectory(NULL, FilePath);	// supported on Win2000 and above
 	}
 	else
 		FilePath = _T(".");

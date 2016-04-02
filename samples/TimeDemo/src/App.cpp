@@ -209,6 +209,10 @@ InitInstance()								/*
 		// create the folder if required
 		::CreateDirectory(GetAppDataPath() + _T("\\Win32++"), NULL);
 		::CreateDirectory(GetAppDataPath() + _T("\\Win32++\\") + m_sExeName, NULL);
+
+		// Note: on Win2000 and above we could create the folders in a single step:
+		// FullPath = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName;
+		// SHCreateDirectory(NULL, FullPath);	// supported on Win2000 and above
 	}
 	else
  		m_sIniFile = m_sAppDir + sPathSep + m_sExeName + m_ini_file_extension;

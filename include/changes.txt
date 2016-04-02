@@ -3,7 +3,7 @@ Version 8.2
 
 New Features and Enhancements
 ----------------------------- 
-* Added support for the Common Dialogs
+* Added support for Common Dialogs
 The following common dialogs have been added to the framework:
  - CColorDialog
  - CFindReplacDialog

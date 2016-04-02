@@ -8,8 +8,9 @@
 ===============================================================================*
 
 	Contents Description: Implementation of the CMainFrame class for the
-	BasicForm sample application using the Win32++ Windows interface classes,
-	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
+	CommonDialogs sample application using the Win32++ Windows interface
+	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
+	therein.
 
 	This particular frame class contains features a fixed-size form for the
 	display, with no resizing gripper tool at the end of the status bar,
