@@ -15,7 +15,6 @@
     <ClInclude Include="..\..\..\include\wxx_appcore.h" />
     <ClInclude Include="..\..\..\include\wxx_appcore0.h" />
     <ClInclude Include="..\..\..\include\wxx_archive.h" />
-    <ClInclude Include="..\..\..\include\wxx_commondlg.h" />
     <ClInclude Include="..\..\..\include\wxx_controls.h" />
     <ClInclude Include="..\..\..\include\wxx_cstring.h" />
     <ClInclude Include="..\..\..\include\wxx_ddx.h" />
@@ -30,6 +29,7 @@
     <ClInclude Include="..\..\..\include\wxx_mdi.h" />
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
+    <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
     <ClInclude Include="..\..\..\include\wxx_rect.h" />
@@ -52,7 +52,6 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
-    <ClInclude Include="..\..\..\include\wxx_winutils.h" />
     <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\FrameApp.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
@@ -79,7 +78,6 @@
     <None Include="..\src\res\Star.ico" />
     <None Include="..\src\res\toolbar.bmp" />
     <None Include="..\src\res\Win32++.manifest" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>

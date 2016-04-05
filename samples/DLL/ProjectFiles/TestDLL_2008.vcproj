@@ -211,7 +211,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_appcore.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_appcore0.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_archive.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_commondlg.h"
 				>
 			</File>
 			<File
@@ -223,11 +235,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_ddx.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_dialog.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_docking.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_exception.h"
 				>
 			</File>
 			<File
@@ -263,11 +283,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_printdialogs.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_propertysheet.h"
 				>
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_rebar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_rect.h"
 				>
 			</File>
 			<File
@@ -307,6 +335,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_textconv.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_themes.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_time.h"
 				>
 			</File>
@@ -335,7 +371,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\include\wxx_winutils.h"
+				RelativePath="..\..\..\include\wxx_wincore0.h"
 				>
 			</File>
 		</Filter>

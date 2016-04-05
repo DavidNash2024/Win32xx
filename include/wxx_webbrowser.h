@@ -37,6 +37,7 @@
 #ifndef _WIN32XX_WEBBROWSER_H_
 #define _WIN32XX_WEBBROWSER_H_
 
+#include "wxx_appcore0.h"
 #include <exdisp.h>
 #include <ocidl.h>
 #include <shlobj.h>

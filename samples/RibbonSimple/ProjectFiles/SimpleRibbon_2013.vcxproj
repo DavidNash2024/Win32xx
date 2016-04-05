@@ -21,11 +21,16 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\include\default_resource.h" />
+    <ClInclude Include="..\..\..\include\wxx_appcore.h" />
+    <ClInclude Include="..\..\..\include\wxx_appcore0.h" />
     <ClInclude Include="..\..\..\include\wxx_archive.h" />
+    <ClInclude Include="..\..\..\include\wxx_commondlg.h" />
     <ClInclude Include="..\..\..\include\wxx_controls.h" />
     <ClInclude Include="..\..\..\include\wxx_cstring.h" />
+    <ClInclude Include="..\..\..\include\wxx_ddx.h" />
     <ClInclude Include="..\..\..\include\wxx_dialog.h" />
     <ClInclude Include="..\..\..\include\wxx_docking.h" />
+    <ClInclude Include="..\..\..\include\wxx_exception.h" />
     <ClInclude Include="..\..\..\include\wxx_file.h" />
     <ClInclude Include="..\..\..\include\wxx_frame.h" />
     <ClInclude Include="..\..\..\include\wxx_gdi.h" />
@@ -34,8 +39,10 @@
     <ClInclude Include="..\..\..\include\wxx_mdi.h" />
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
+    <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
+    <ClInclude Include="..\..\..\include\wxx_rect.h" />
     <ClInclude Include="..\..\..\include\wxx_regkey.h" />
     <ClInclude Include="..\..\..\include\wxx_ribbon.h" />
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
@@ -45,6 +52,8 @@
     <ClInclude Include="..\..\..\include\wxx_stdcontrols.h" />
     <ClInclude Include="..\..\..\include\wxx_tab.h" />
     <ClInclude Include="..\..\..\include\wxx_taskdialog.h" />
+    <ClInclude Include="..\..\..\include\wxx_textconv.h" />
+    <ClInclude Include="..\..\..\include\wxx_themes.h" />
     <ClInclude Include="..\..\..\include\wxx_time.h" />
     <ClInclude Include="..\..\..\include\wxx_toolbar.h" />
     <ClInclude Include="..\..\..\include\wxx_treeview.h" />
@@ -52,7 +61,7 @@
     <ClInclude Include="..\..\..\include\wxx_wcestddef.h" />
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
-    <ClInclude Include="..\..\..\include\wxx_winutils.h" />
+    <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\Resource.h" />
     <ClInclude Include="..\src\SimpleApp.h" />
     <ClInclude Include="..\src\stdafx.h" />
