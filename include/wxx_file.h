@@ -71,11 +71,14 @@ namespace Win32xx
 
 		virtual BOOL Close();
 		virtual BOOL Flush();
+		virtual CString GetFileDirectory() const;
+		virtual const CString& GetFileName() const;
+		virtual CString GetFileNameExt() const;
+		virtual CString GetFileNameWOExt() const;
+		virtual const CString& GetFilePath() const;
+		virtual CString GetFileTitle() const;
 		HANDLE GetHandle() const;
 		virtual ULONGLONG GetLength() const;
-		virtual const CString& GetFileName() const;
-		virtual const CString& GetFilePath() const;
-		virtual const CString& GetFileTitle() const;
 		virtual ULONGLONG GetPosition() const;
 		virtual void Open(LPCTSTR pszFileName, UINT nOpenFlags);
 		virtual UINT Read(void* pBuf, UINT nCount);
@@ -98,7 +101,6 @@ namespace Win32xx
 		CFile& operator = (const CFile&);	// Disable assignment operator
 		CString m_FileName;
 		CString m_FilePath;
-		CString m_FileTitle;
 		HANDLE m_hFile;
 	};
 
@@ -163,6 +165,17 @@ namespace Win32xx
 		return FlushFileBuffers(m_hFile);
 	}
 
+	inline CString CFile::GetFileDirectory() const
+	{
+		CString Directory;
+		
+		int sep = m_FilePath.ReverseFind(_T("\\"));
+		if (sep > 0)
+			Directory = m_FilePath.Left(sep);
+
+		return Directory;
+	}
+
 	inline HANDLE CFile::GetHandle() const
 	{
 		return m_hFile;
@@ -190,17 +203,48 @@ namespace Win32xx
 		return const_cast<const CString&>(m_FileName);
 	}
 
+	inline CString CFile::GetFileNameExt() const
+	{
+		CString FileNameExt;
+
+		int dot = m_FileName.ReverseFind(_T("."));
+		if (dot > 1)
+			FileNameExt = m_FileName.Mid(dot+1, lstrlen(m_FileName));
+
+		return FileNameExt;
+	}
+
+	inline CString CFile::GetFileNameWOExt() const
+	{
+		CString FileNameWOExt = m_FileName;
+
+		int dot = m_FileName.ReverseFind(_T("."));
+		if (dot > 0)
+			FileNameWOExt = m_FileName.Left(dot);
+		
+		return FileNameWOExt;
+	}
+
 	inline const CString& CFile::GetFilePath() const
 	// Returns the full filename including the directory of the file associated with this object.
 	{
 		return const_cast<const CString&>(m_FilePath);
 	}
 
-	inline const CString& CFile::GetFileTitle() const
-	// Returns the filename of the file associated with this object, as returned 
-	// by the GetFileTitle Windows API function. Usually the same as GetFileName.
+	inline CString CFile::GetFileTitle() const
+		// Returns the string that the system would use to display the file name to
+		// the user. The string might or might not contain the filename's extension
+		// depending on user settings.
 	{
-		return const_cast<const CString&>(m_FileTitle);
+		CString FileTitle;
+		int nBuffSize = m_FilePath.GetLength();
+		if (nBuffSize > 0)
+		{
+			::GetFileTitle(m_FilePath, FileTitle.GetBuffer(nBuffSize), (WORD)nBuffSize);
+			FileTitle.ReleaseBuffer();
+		}
+
+		return FileTitle;
 	}
 
 	inline ULONGLONG CFile::GetPosition() const
@@ -248,12 +292,16 @@ namespace Win32xx
 		if (m_hFile != 0) Close();
 
 		DWORD dwAccess = 0;
-		switch (nOpenFlags & 0xF)
+		switch (nOpenFlags & 0xF00)
 		{
-		case modeRead:			dwAccess = GENERIC_READ;	break;
-		case modeWrite:			dwAccess = GENERIC_WRITE;	break;
-		case modeReadWrite:		dwAccess = GENERIC_READ | GENERIC_WRITE; break;
-		default:				dwAccess = GENERIC_READ | GENERIC_WRITE; break;
+		case modeRead:
+			dwAccess = GENERIC_READ;	break;
+		case modeWrite:
+			dwAccess = GENERIC_WRITE;	break;
+		case modeReadWrite:
+			dwAccess = GENERIC_READ | GENERIC_WRITE; break;
+		default:
+			dwAccess = GENERIC_READ | GENERIC_WRITE; break;
 		}
 
 		DWORD dwShare = 0;
@@ -356,9 +404,6 @@ namespace Win32xx
 			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), &pFileName);
 			m_FilePath.ReleaseBuffer();
 			m_FileName = pFileName;
-
-			::GetFileTitle(pszFileName, m_FileTitle.GetBuffer(nBuffSize), (WORD)nBuffSize);
-			m_FileTitle.ReleaseBuffer();
 		}
 	}
 #endif

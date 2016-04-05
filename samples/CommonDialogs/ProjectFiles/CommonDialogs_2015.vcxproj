@@ -30,6 +30,7 @@
     <ClInclude Include="..\..\..\include\wxx_mdi.h" />
     <ClInclude Include="..\..\..\include\wxx_menu.h" />
     <ClInclude Include="..\..\..\include\wxx_menubar.h" />
+    <ClInclude Include="..\..\..\include\wxx_printdialogs.h" />
     <ClInclude Include="..\..\..\include\wxx_propertysheet.h" />
     <ClInclude Include="..\..\..\include\wxx_rebar.h" />
     <ClInclude Include="..\..\..\include\wxx_rect.h" />
@@ -52,7 +53,6 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
-    <ClInclude Include="..\..\..\include\wxx_winutils.h" />
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\CColorChoice.h" />
     <ClInclude Include="..\src\CListBoxDlg.h" />

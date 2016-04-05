@@ -135,9 +135,6 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_winutils.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\Doc.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -165,6 +162,9 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">
@@ -176,7 +176,6 @@
     <None Include="..\src\res\toolbar.bmp">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">
