@@ -866,21 +866,6 @@ OnInitialUpdate()                                                       /*
 	TRACE("Frame created\n");
 }
 
-// /*============================================================================*/
-//	void CMainFrame::
-//OnMenuUpdate()		// dn ...	 (never called)					/*
-
-//	Invoke the CFrame OnMenuUpdate() method to update the status  and
-//	tool bar menu items. This is not an override of the CFrame protected
-//	method bearing the same name/
-//*-----------------------------------------------------------------------------*/
-//{													// dn ...
-//	  // Update the check state of the various menu items
-//	OnUpdateStatus();								// dn ...
-//	CFrame::OnMenuUpdate(IDW_VIEW_STATUSBAR);		// dn ...
-//	CFrame::OnMenuUpdate(IDW_VIEW_TOOLBAR);			// dn ...
-//}													// dn ...
-
 /*============================================================================*/
 	LRESULT CMainFrame::
 OnNotify(WPARAM wParam, LPARAM lParam)                                  /*

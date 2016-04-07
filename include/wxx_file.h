@@ -165,7 +165,13 @@ namespace Win32xx
 		return FlushFileBuffers(m_hFile);
 	}
 
+	inline HANDLE CFile::GetHandle() const
+	{
+		return m_hFile;
+	}
+
 	inline CString CFile::GetFileDirectory() const
+	// Returns the directory of the file associated with this object.
 	{
 		CString Directory;
 		
@@ -176,45 +182,26 @@ namespace Win32xx
 		return Directory;
 	}
 
-	inline HANDLE CFile::GetHandle() const
-	{
-		return m_hFile;
-	}
-
-	inline ULONGLONG CFile::GetLength( ) const
-	// Returns the length of the file in bytes.
-	{
-		assert(m_hFile);
-
-		LONG HighPosCur = 0;
-		LONG HighPosEnd = 0;
-
-		DWORD LowPosCur = SetFilePointer(m_hFile, 0, &HighPosCur, FILE_CURRENT);
-		DWORD LowPosEnd = SetFilePointer(m_hFile, 0, &HighPosEnd, FILE_END);
-		SetFilePointer(m_hFile, LowPosCur, &HighPosCur, FILE_BEGIN);
-
-		ULONGLONG Result = ((ULONGLONG)HighPosEnd << 32) + LowPosEnd;
-		return Result;
-	}
-
 	inline const CString& CFile::GetFileName() const
-	// Returns the filename of the file associated with this object.
+	// Returns the filename of the file associated with this object, not including the directory.
 	{
 		return const_cast<const CString&>(m_FileName);
 	}
 
 	inline CString CFile::GetFileNameExt() const
+	// Returns the extension part of the filename of the file associated with this object.
 	{
-		CString FileNameExt;
+		CString Extension;
 
 		int dot = m_FileName.ReverseFind(_T("."));
 		if (dot > 1)
-			FileNameExt = m_FileName.Mid(dot+1, lstrlen(m_FileName));
+			Extension = m_FileName.Mid(dot+1, lstrlen(m_FileName));
 
-		return FileNameExt;
+		return Extension;
 	}
 
 	inline CString CFile::GetFileNameWOExt() const
+	// Returns the filename of the file associated with this object, not including the directory, without its extension.
 	{
 		CString FileNameWOExt = m_FileName;
 
@@ -232,9 +219,9 @@ namespace Win32xx
 	}
 
 	inline CString CFile::GetFileTitle() const
-		// Returns the string that the system would use to display the file name to
-		// the user. The string might or might not contain the filename's extension
-		// depending on user settings.
+	// Returns the string that the system would use to display the file name to
+	// the user. The string might or might not contain the filename's extension
+	// depending on user settings.
 	{
 		CString FileTitle;
 		int nBuffSize = m_FilePath.GetLength();
@@ -245,6 +232,22 @@ namespace Win32xx
 		}
 
 		return FileTitle;
+	}
+
+	inline ULONGLONG CFile::GetLength() const
+	// Returns the length of the file in bytes.
+	{
+		assert(m_hFile);
+
+		LONG HighPosCur = 0;
+		LONG HighPosEnd = 0;
+
+		DWORD LowPosCur = SetFilePointer(m_hFile, 0, &HighPosCur, FILE_CURRENT);
+		DWORD LowPosEnd = SetFilePointer(m_hFile, 0, &HighPosEnd, FILE_END);
+		SetFilePointer(m_hFile, LowPosCur, &HighPosCur, FILE_BEGIN);
+
+		ULONGLONG Result = ((ULONGLONG)HighPosEnd << 32) + LowPosEnd;
+		return Result;
 	}
 
 	inline ULONGLONG CFile::GetPosition() const

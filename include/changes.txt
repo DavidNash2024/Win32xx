@@ -60,6 +60,9 @@ Added CFontDialog 				class
 Added CPageSetupDialog 			class
 Added CPrinDialog 				class
 Added GetAppDataPath            function
+Added CFile::GetFileDirectory	member function
+Added CFile::GetFileNameExt		member function
+Added CFile::GetFileNameWOExt	member function
 Added CFrame::GetInitValues		member function
 Added CFrame::SetInitValues		member function
 Added UWM_GETCWND 				window message.
