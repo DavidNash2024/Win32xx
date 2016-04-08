@@ -867,6 +867,59 @@ OnInitialUpdate()                                                       /*
 }
 
 /*============================================================================*/
+	void CMainFrame::
+OnMenuUpdate(UINT nID)                                                  /*
+
+	Update the state of menu entries and toolbar button, enabling or disabling
+	them as appropriate.
+ *-----------------------------------------------------------------------------*/
+{
+	switch (nID)
+	{
+	case IDM_FILE_SAVE:
+		SetControlStatus(nID, ThisDoc().IsDirty(), both);
+		break;
+	case IDM_FILE_SAVEAS:
+		SetControlStatus(nID, ThisDoc().IsOpen(), both);
+		break;
+	case IDM_FILE_PRINT:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_FILE_PRINT_PREVIEW:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_UNDO:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_REDO:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_CUT:
+		SetControlStatus(nID, ThisDoc().IsOpen(), both);
+		break;
+	case IDM_EDIT_COPY:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_PASTE:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_FIND:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_REPLACE:
+		SetControlStatus(nID, false, both);
+		break;
+	case IDM_EDIT_DELETE:
+		SetControlStatus(nID, false, both);
+			break;
+
+	}	// switch (nID)
+
+	// Call the base function to update Tool Bar and Status Bar checkmarks.
+	CFrame::OnMenuUpdate(nID);
+}
+
+/*============================================================================*/
 	LRESULT CMainFrame::
 OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 

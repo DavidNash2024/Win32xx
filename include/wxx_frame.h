@@ -2514,6 +2514,9 @@ namespace Win32xx
 	}
 
 	inline void CFrame::OnMenuUpdate(UINT nID)
+	// Called when a menu item is about to be displayed. Override this function to enable 
+	// or disible the menu item, or add a check mark. Also call this base function to
+    // update the 'Tool Bar' and 'Status Bar' menu status.
 	{
 		// Update the check buttons before displaying the menu
 		switch(nID)
