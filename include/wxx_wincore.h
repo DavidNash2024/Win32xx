@@ -820,7 +820,9 @@ namespace Win32xx
 	}
 
 	inline void CWnd::OnMenuUpdate(UINT nID)
-	// Called when menu items are about to be displayed
+	// Called when menu items are about to be displayed. Override this function to 
+	// enable/disable the menu item, or add/remove the check box or radio button
+	// to menu items. 
 	{
 		UNREFERENCED_PARAMETER(nID);
 
