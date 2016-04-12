@@ -1,5 +1,5 @@
 // Win32++   Version 8.2
-// Release Date: TBA
+// Release Date: 11th April 2016
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -59,9 +59,8 @@
 // create a TCP client & server, and a UDP client and server.
 
 // To compile programs with CSocket, link with ws3_32.lib for Win32,
-// and ws2.lib for Windows CE. Windows 95 systems will need to install the
-// "Windows Sockets 2.0 for Windows 95". It's available from:
-// http://support.microsoft.com/kb/182108/EN-US/
+// and ws2.lib for Windows CE. This class uses Winsock version 2, and
+// supports Windows 98 and above.
 
 // For a TCP server, inherit a class from CSocket and override OnAccept, OnDisconnect
 // and OnRecieve. Create one instance of this class and use it as a listening socket.

@@ -870,47 +870,47 @@ OnInitialUpdate()                                                       /*
 	void CMainFrame::
 OnMenuUpdate(UINT nID)                                                  /*
 
-	Update the state of menu entries and toolbar button, enabling or disabling
-	them as appropriate.
+	Update the state of menu entries, enabling or disabling them as
+	appropriate.
  *-----------------------------------------------------------------------------*/
 {
 	switch (nID)
 	{
 	case IDM_FILE_SAVE:
-		SetControlStatus(nID, ThisDoc().IsDirty(), both);
+		SetControlStatus(nID, ThisDoc().IsDirty(), mainmenu);
 		break;
 	case IDM_FILE_SAVEAS:
-		SetControlStatus(nID, ThisDoc().IsOpen(), both);
+		SetControlStatus(nID, ThisDoc().IsOpen(), mainmenu);
 		break;
 	case IDM_FILE_PRINT:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_FILE_PRINT_PREVIEW:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_UNDO:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_REDO:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_CUT:
-		SetControlStatus(nID, ThisDoc().IsOpen(), both);
+		SetControlStatus(nID, ThisDoc().IsOpen(), mainmenu);
 		break;
 	case IDM_EDIT_COPY:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_PASTE:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_FIND:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_REPLACE:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 		break;
 	case IDM_EDIT_DELETE:
-		SetControlStatus(nID, false, both);
+		SetControlStatus(nID, false, mainmenu);
 			break;
 
 	}	// switch (nID)
