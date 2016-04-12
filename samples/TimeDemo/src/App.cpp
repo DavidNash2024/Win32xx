@@ -50,6 +50,7 @@
 
 #include "stdafx.h"
 #include "App.h"
+#include "global.h"
 
 /*******************************************************************************
 
@@ -64,7 +65,7 @@ const CString CApp::m_sCompiled_on = __DATE__;
 const CString CApp::m_months    =
 		_T("Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec");
   // serialized data file type (here: "time-demo info")
-const CString CApp::m_ini_file_extension  = _T(".tdi");
+static	const	LPCTSTR	archive_file_type     = _T(".arc");
 
 /*============================================================================*/
 	int APIENTRY 
@@ -169,54 +170,18 @@ InitInstance()								/*
 	file name are generated and saved as public data members of this object.
 *-----------------------------------------------------------------------------*/
 {
-	  // load the nominal app title
-	m_sApp_title.LoadString(IDW_MAIN);
-          // extract the app name, directory, and  path names
-	TCHAR namebuffer[FILENAME_MAX];
-	::GetModuleFileName(NULL, namebuffer, FILENAME_MAX);
-	m_sAppPath = namebuffer;
-          // the directory ends at the final "\" or "/" (NOTE: the path
-	  // separator may be presented as either '/' or '\' by gnu. In
-	  // fact, regular execution has '\', while the debugger has '/'.)
-	LPCTSTR sPathSep = _T("\\");
-        int findloc = m_sAppPath.ReverseFind(sPathSep);
-        if (findloc == -1)
-        {
-        	sPathSep = (LPCTSTR)_T("/");
-       		findloc = m_sAppPath.ReverseFind(sPathSep);
-		if (findloc == -1)
-		{
-			::MessageBox(NULL,
-			    _T("Path separation character error."),
-			    _T("Error"), MB_OK | MB_ICONEXCLAMATION |
-			    MB_TASKMODAL);
-			return FALSE;
-		}
-        }
-	  // the directory is the string up to this last "\"
-	m_sAppDir  = m_sAppPath.Mid(0, findloc);
-	  // the app name follows the "\"
-	m_sAppName = m_sAppPath.Mid(findloc + 1);
-	  // form the archive file name
-	findloc = m_sAppName.ReverseFind(_T("."));
-	  // the app name, sans type
-	m_sExeName = m_sAppName.Mid(0, findloc);
-	  // the archive path name
-	if (!GetAppDataPath().IsEmpty())
-	{
-		m_sIniFile = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName + sPathSep + m_sExeName + m_ini_file_extension;
-
-		// create the folder if required
-		::CreateDirectory(GetAppDataPath() + _T("\\Win32++"), NULL);
-		::CreateDirectory(GetAppDataPath() + _T("\\Win32++\\") + m_sExeName, NULL);
-
-		// Note: on Win2000 and above we could create the folders in a single step:
-		// FullPath = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName;
-		// SHCreateDirectory(NULL, FullPath);	// supported on Win2000 and above
-	}
-	else
- 		m_sIniFile = m_sAppDir + sPathSep + m_sExeName + m_ini_file_extension;
-
+         // extract the app name, directory, and  path names
+	::GetModuleFileName(NULL, m_sAppPath.GetBuffer(FILENAME_MAX),
+	    FILENAME_MAX);
+	m_sAppPath.ReleaseBuffer();
+	CFile f;
+	f.SetFilePath(m_sAppPath.c_str());
+	m_sAppDir = f.GetFileDirectory();
+	m_sAppName = f.GetFileNameWOExt();
+	  // locate the archive file
+	m_sArcvDir = MakeAppDataPath(_T("win32++\\") + m_sAppName);
+	  // form the archive file path name
+ 	m_sArcvFile  = m_sArcvDir + _T("\\") + m_sAppName + archive_file_type;
 
 	  // generate the About box static information: first the latest
 	  // date one of the main stream files was compiled
@@ -225,9 +190,10 @@ InitInstance()								/*
 	compiled_on = MAX(compiled_on, DatInt(CMainFrame::m_sCompiled_on));
 	compiled_on = MAX(compiled_on, DatInt(CView::m_sCompiled_on));
 	m_sAboutStatement.Format(_T("%s\n\n(%s.exe)\n%s\ncompiled with ")
-	    _T("%s\non %s"), m_sCredits.c_str(), m_sExeName.c_str(),
+	    _T("%s\non %s"), m_sCredits.c_str(), m_sAppName.c_str(),
 	    m_sVersion.c_str(), m_sCompiled_with.c_str(),
 	    IntDat(compiled_on).c_str());
+
 	  //Create the Frame Window
 	if (!m_Frame.Create())
 	{	  //End the program if the frame window creation fails

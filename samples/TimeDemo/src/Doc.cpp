@@ -72,8 +72,8 @@ static const CString 	longDateFmt  = TEXT("%d-%b-%Y [%j] (%a) %H:%M:%S %z"),
   // this file dialog extensions filter is used by the main frame when getting
   // the name of a document to open
 LPCTSTR CDoc::m_file_dlg_filter =
-    _T("Time Demo Files (*.tdf)\0")
-    _T("*.tdf\0")
+    _T("Time Demo Files (*.arc)\0")
+    _T("*.arc\0")
     _T("All Files (*.*)\0")
     _T("*.*\0")
     _T("\0");

@@ -1,7 +1,7 @@
 [Project]
-FileName=TimeDemo_Release.dev
+FileName=TimeDemo_RELEASE.dev
 Name=timedemo
-UnitCount=19
+UnitCount=21
 Type=0
 Ver=2
 ObjFiles=
@@ -191,9 +191,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit20]
-FileName=MRU.cpp
+FileName=..\src\Global.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -201,7 +201,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit21]
-FileName=MRU.cpp
+FileName=..\src\Global.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

@@ -115,7 +115,7 @@ CMainFrame : public CFrame						/*
 		virtual BOOL	OnHelpAbout(void);
 		virtual BOOL	OnHelpContext(void);
 		virtual void 	OnInitialUpdate(void);
-		virtual void	OnMenuUpdate(UINT nID);
+		virtual void 	OnMenuUpdate(UINT);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
 		virtual void 	PreCreate(CREATESTRUCT& cs);

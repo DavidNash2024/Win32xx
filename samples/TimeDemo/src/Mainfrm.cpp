@@ -438,7 +438,7 @@ OnCreate(CREATESTRUCT& cs)						/*
 	try
 	{
 		  // open the application's saved parameter archive
-		CArchive ar(TheApp().m_sIniFile, CArchive::load);
+		CArchive ar(TheApp().m_sArcvFile, CArchive::load);
 		  // recover the frame saved parameters
 		ar >> *this;
 	}
@@ -452,7 +452,7 @@ OnCreate(CREATESTRUCT& cs)						/*
 		::MessageBox(NULL, msg.c_str(), _T("Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 		  // remove the corrupted application archive file
-		::DeleteFile(TheApp().m_sIniFile);
+		::DeleteFile(TheApp().m_sArcvFile);
 	}
 	catch(...)
 	{
@@ -485,7 +485,7 @@ OnDestroy()								/*
   	OnFileClose();
   	try
 	{
-		CArchive ar(TheApp().m_sIniFile, CArchive::store);
+		CArchive ar(TheApp().m_sArcvFile, CArchive::store);
 		  // no serialization on Open() error
 		ar << *this;  // for the frame
 	}
@@ -754,6 +754,7 @@ OnFontChoice()     		                                 	/*
 	
 	if (FontDlg.DoModal(m_View) == IDOK)
 	{
+		lf = FontDlg.GetLogFont();
 		CFont f;
 		if (f.CreateFontIndirect(&lf))
 			m_View.m_font = f;
@@ -1197,7 +1198,7 @@ SetWindowTitle(const CString &docpath /* = _T("") */)			/*
 	file name.
 *-----------------------------------------------------------------------------*/
 {
-	CString s = TheApp().m_sApp_title + _T(":   ") + docpath;
+	CString s = TheApp().m_sAppName + _T(":   ") + docpath;
 	SetTitle(s);
 	OnUpdateStatus();
 	UpdateFrame();
