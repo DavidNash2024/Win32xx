@@ -71,17 +71,12 @@ CApp : public CWinApp							/*
 			CMainFrame*	TheFrame() {return &m_Frame;}
 
 		  // public data members
-                TCHAR   **m_argv;       // list of command line arguments
-                int       m_argc;       // number of command line arguments
-		CString   m_sAppName, 	// name of app: path minus directory
+		CString   m_sAppName, 	// name of app: minus directory and .exe
 		          m_sAppDir,    // directory of this app
 		          m_sAppPath,   // path to this app
-		          m_sExeName,   // name of exe file, without extension
-			  m_sIniFile,   // serialization file name
-			  m_sCmdLine;   // commmand line, sans app name
+		          m_sArcvDir,   // name of archive directory
+			  m_sArcvFile;  // serialization file name
 
-		CString   m_sApp_title; // base title of app
-		
 	     	static const CString m_sCompiled_on;   // compile date
 		static const CString m_sCompiled_with; // compiler + system info
 		static const CString m_sVersion;       // app version info
@@ -100,7 +95,6 @@ CApp : public CWinApp							/*
 
 		  // static constants
 		static const CString m_months;
-		static const CString m_ini_file_extension;
 };
 
 /*============================================================================*/
