@@ -193,10 +193,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\Global.cpp"
-				>
-			</File>
-			<File
 				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>
@@ -232,10 +228,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Doc.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\Global.h"
 				>
 			</File>
 			<File

@@ -302,13 +302,13 @@ OpenDoc(const CString &doc_file_name)					/*
 		CArchive ar(doc_file_name, CArchive::load);
 		ar >> *this;
 	}
-	catch (const CFileException &e)  // catch CFileException events  
+	catch (const CException &e)  // catch CException events
 	{	  // Process the exception and  quit
 		CString msg,
 			what(e.what());
 		msg.Format(_T("Error restoring the document.\n%s\n%s"),
-		    e.GetErrorString(), what.c_str());
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+		    e.GetText(), e.GetErrorString());
+		::MessageBox(NULL, msg.c_str(), what.c_str(),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 		return false;
 	}
@@ -655,13 +655,13 @@ SaveDoc()								/*
 		ar << *this;
 	}
 
-	catch (const CFileException& e)  
+	catch (const CException& e)
 	{	  // Process the exception and  quit
 		CString msg,
 			what(e.what());
 		msg.Format(_T("Error while saving document:\n%s\n%s"),
-		    e.GetErrorString(), what.c_str());
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+		    e.GetText(), e.GetErrorString());
+		::MessageBox(NULL, msg.c_str(), what.c_str(),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 		return false;
 	}

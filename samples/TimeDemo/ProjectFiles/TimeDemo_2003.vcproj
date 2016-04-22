@@ -128,9 +128,6 @@
 				RelativePath="..\src\Doc.cpp">
 			</File>
 			<File
-				RelativePath="..\src\Global.cpp">
-			</File>
-			<File
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
@@ -161,9 +158,6 @@
 			</File>
 			<File
 				RelativePath="..\src\FrameApp.h">
-			</File>
-			<File
-				RelativePath="..\src\Global.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">

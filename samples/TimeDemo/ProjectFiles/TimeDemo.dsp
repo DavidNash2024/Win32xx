@@ -103,10 +103,6 @@ SOURCE=..\src\Doc.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Global.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
@@ -132,10 +128,6 @@ SOURCE=..\src\View.cpp
 # Begin Source File
 
 SOURCE=..\src\Doc.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Global.h
 # End Source File
 # Begin Source File
 

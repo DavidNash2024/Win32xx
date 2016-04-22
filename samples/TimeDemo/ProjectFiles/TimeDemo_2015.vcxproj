@@ -63,7 +63,6 @@
     <ClInclude Include="..\src\AboutBox.h" />
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\Doc.h" />
-    <ClInclude Include="..\src\Global.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\MRU.h" />
     <ClInclude Include="..\src\resource.h" />
@@ -84,7 +83,6 @@
     <ClCompile Include="..\src\AboutBox.cpp" />
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
-    <ClCompile Include="..\src\Global.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
     <ClCompile Include="..\src\MRU.cpp" />
     <ClCompile Include="..\src\ScrollBars.cpp" />
