@@ -25,9 +25,6 @@
     <ClCompile Include="..\src\ScrollBars.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Global.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Doc.h">
@@ -182,9 +179,6 @@
     </ClInclude>
     <ClInclude Include="..\..\..\include\default_resource.h">
       <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Global.h">
-      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

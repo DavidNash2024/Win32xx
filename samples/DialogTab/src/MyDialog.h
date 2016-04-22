@@ -18,6 +18,10 @@ public:
 	virtual INT_PTR OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+protected:
+	virtual void OnOK() {}		// supress closing dialog with the enter key
+	virtual void OnCancel() {}	// supress closing dialog with the esc key
+
 private:
 	CBrush m_Brush;
 };
@@ -29,6 +33,10 @@ public:
 	~CComboBoxDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual BOOL OnInitDialog();
+
+protected:
+	virtual void OnOK() {}		// supress closing dialog with the enter key
+	virtual void OnCancel() {}	// supress closing dialog with the esc key
 
 private:
 	CBrush m_Brush;

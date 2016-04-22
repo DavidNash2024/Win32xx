@@ -50,7 +50,6 @@
 
 #include "stdafx.h"
 #include "App.h"
-#include "global.h"
 
 /*******************************************************************************
 
@@ -67,7 +66,47 @@ const CString CApp::m_months    =
   // serialized data file type (here: "time-demo info")
 static	const	LPCTSTR	archive_file_type     = _T(".arc");
 
-/*============================================================================*/
+/*******************************************************************************
+
+	Local non-class function
+
+*=============================================================================*/
+	static CString
+MakeAppDataPath(const CString& subpath)					/*
+
+	Return a string giving the path APPDATA environmental path, with the
+	given subpath appended.  Create this path if it does not exist. If
+	an error is encountered, throw a user exception.
+*-----------------------------------------------------------------------------*/
+{
+	::SetLastError(0);
+	CString appdata = GetAppDataPath();
+
+	int from, to, next;
+	for (from = 0, to = subpath.GetLength(); from < to; from = ++next)
+	{
+		int 	nextbk  = subpath.Find(_T("\\"), from),
+			nextfwd = subpath.Find(_T("/"), from);
+		next    = MAX(nextbk, nextfwd);
+		if (next < 0)
+			next = to;
+
+		CString add = subpath.Mid(from, next - from);
+		appdata += _T("\\") + add;
+		if (!SUCCEEDED(::CreateDirectory(appdata, 0)))
+		{
+			CString msg = appdata + _T("\nDirectory creation error.");
+			throw CUserException(msg);
+		}
+	}
+	return appdata;
+}
+
+/*******************************************************************************
+
+	Windows API entry point
+
+*=============================================================================*/
 	int APIENTRY 
 WinMain(HINSTANCE, HINSTANCE, LPSTR, int)				/*
 
@@ -85,7 +124,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)				/*
 	  // Create and  check the semaphore that limits the number of
 	  // simultaneously executing instances of this application
 	  // to m_nInstances.
-	static	HANDLE 	m_hSemaphore;
+	static	HANDLE m_hSemaphore;
         if ((m_hSemaphore = CreateSemaphore(NULL, nInstances, nInstances,
 	    szSemaphoreName)) != NULL)
 	{
@@ -105,21 +144,14 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)				/*
 			rtn = thisApp.Run();
 		}
 		
-		catch(const CWinException e)
+		catch(const CException& e)
 		{
 			CString msg,
-				what(e.what());
-			msg.Format(_T("%s\n%s,%s"), e.GetErrorString(),
-			    what.c_str(), _T("\nWinMain Goodbye..."));
-			::MessageBox(NULL, msg.c_str(), _T("Exception"),
+				 what(e.what());
+			msg.Format(_T("%s\n%s\n%s"), e.GetText(), e.GetText(),
+			    e.GetErrorString(), _T("\nWinMain Goodbye..."));
+			::MessageBox(NULL, msg.c_str(), what.c_str(),
 			    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
-		}
-		catch (const CException &e) // catch all other CException events  
-		{
-			// Display the exception and quit
-			MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONERROR);
-
-			return -1;
 		}
 		catch(...)      // catch all other exception events
 		{

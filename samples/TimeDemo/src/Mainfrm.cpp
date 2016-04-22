@@ -442,14 +442,14 @@ OnCreate(CREATESTRUCT& cs)						/*
 		  // recover the frame saved parameters
 		ar >> *this;
 	}
-	catch (const CFileException& e)  
+	catch (const CException& e)
 	{
 		  // Process the exception and  quit
 		CString msg,
 			what(e.what());
 		msg.Format(_T("Error restoring previous parameters.\n%s\n%s"),
-		    e.GetErrorString(), what.c_str());
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+		    e.GetText(), e.GetErrorString());
+		::MessageBox(NULL, msg.c_str(), what.c_str(),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 		  // remove the corrupted application archive file
 		::DeleteFile(TheApp().m_sArcvFile);
@@ -489,14 +489,14 @@ OnDestroy()								/*
 		  // no serialization on Open() error
 		ar << *this;  // for the frame
 	}
-	catch (const CFileException& e)  
+	catch (const CException& e)
 	{
 		  // Process the exception and  quit
 		CString msg,
 			what(e.what());
 		msg.Format(_T("Error while saving program settings:\n%s\n%s"),
-		    e.GetErrorString(), what.c_str());
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
+		    e.GetText(), e.GetErrorString());
+		::MessageBox(NULL, msg.c_str(), what.c_str(),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	}
 	catch(...)
@@ -697,7 +697,7 @@ OnFilePrint()                                                           /*
 		// Add your own code here. Refer to the tutorial for additional information
 	}
 
-	catch (const CWinException& /* e */)
+	catch (const CException& /* e */)
 	{
 		// No default printer
 		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);

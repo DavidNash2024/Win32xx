@@ -203,8 +203,6 @@
 		<Unit filename="../src/App.h" />
 		<Unit filename="../src/Doc.cpp" />
 		<Unit filename="../src/Doc.h" />
-		<Unit filename="../src/Global.cpp" />
-		<Unit filename="../src/Global.h" />
 		<Unit filename="../src/MRU.cpp" />
 		<Unit filename="../src/MRU.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
