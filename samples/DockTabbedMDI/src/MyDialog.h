@@ -16,10 +16,12 @@ protected:
 	virtual BOOL OnInitDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void OnCancel();
+	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnOK();
 
 private:
+	void AppendText(int nID, LPCTSTR szText);
 	void OnButton();
 	void OnRadio1();
 	void OnRadio2();
@@ -40,8 +42,8 @@ private:
 	class CCheckB : public CButton {};
 	class CCheckC : public CButton {};
 	class CButton1 : public CButton {};
-	class CRichEdit1 : public CEdit {};
-	class CRichEdit2 : public CEdit {};
+	class CRichEdit1 : public CRichEdit {};
+	class CRichEdit2 : public CRichEdit {};
 	
 	CRadioA		m_RadioA; 
 	CRadioB		m_RadioB;

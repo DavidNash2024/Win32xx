@@ -19,7 +19,7 @@ CClientDialog::~CClientDialog()
 {
 }
 
-void CClientDialog::Append(int nID, LPCTSTR buf)
+void CClientDialog::AppendText(int nID, LPCTSTR buf)
 {
 	// This function appends text to an edit control
 
@@ -127,11 +127,11 @@ BOOL CClientDialog::OnSocketReceive()
 	int size = m_Client.Receive( buf, 1024, 0 ); // receive at most 1024 chars
 	if (SOCKET_ERROR == size)
 	{
-		Append( IDC_EDIT_STATUS, _T("Receive failed.") );
+		AppendText( IDC_EDIT_STATUS, _T("Receive failed.") );
 		return size;
 	}
 
-	Append( IDC_EDIT_RECEIVE, A2T(buf) );
+	AppendText( IDC_EDIT_RECEIVE, A2T(buf) );
 	
 	return TRUE;
 }
@@ -259,7 +259,7 @@ void CClientDialog::OnStartClient()
 
 				if (!m_Client.Create(IPfamily, SOCK_STREAM))
 				{
-					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
+					AppendText(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING );
 					return;
 				}
@@ -289,7 +289,7 @@ void CClientDialog::OnStartClient()
 				// Connect to the server
 				if (0 != m_Client.Connect(strAddr, port) )
 				{
-					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
+					AppendText(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to connect to server. Is it started?"), _T("Connect Failed"), MB_ICONWARNING );
 					m_Client.Disconnect();
 					m_ButtonConnect.EnableWindow( TRUE );
@@ -305,7 +305,7 @@ void CClientDialog::OnStartClient()
 				// Create the socket
 				if (!m_Client.Create(IPfamily, SOCK_DGRAM))
 				{
-					Append(IDC_EDIT_STATUS, m_Client.GetLastError());
+					AppendText(IDC_EDIT_STATUS, m_Client.GetLastError());
 					MessageBox( _T("Failed to create Client socket"), _T("Connect Failed"), MB_ICONWARNING );
 					return;
 				}
