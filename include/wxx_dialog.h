@@ -274,11 +274,6 @@ namespace Win32xx
 				CenterWindow();
 			}
 		    return OnInitDialog();
-		case WM_CLOSE:	
-			{
-				OnClose();
-				return 0L;
-			}	
 	    case WM_COMMAND:
 	        switch (LOWORD (wParam))
 	        {

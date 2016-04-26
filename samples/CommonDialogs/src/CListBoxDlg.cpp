@@ -118,7 +118,7 @@ DoModal(HWND hWndOwner /* = 0 */)      					/*
 	until the dialog box is closed, which happens on selection of the OK,
 	Cancel, or [X] button on the dialog. If OK is selected, return the index
 	of the item highlighted in the list box. Otherwise, return the value
-	-1. Attach the box to the given hWndOwner if non-zero, or to the
+	INT_MAX. Attach the box to the given hWndOwner if non-zero, or to the
 	m_hWndOwner otherwise.  If the latter is also 0, attach the box to
 	the main window.
 *-----------------------------------------------------------------------------*/
@@ -128,19 +128,21 @@ DoModal(HWND hWndOwner /* = 0 */)      					/*
 		m_hWndOwner = hWndOwner;
 	if (m_hWndOwner == 0)
 		m_hWndOwner = GetApp().GetMainWnd();
-	int ok = (int) CDialog::DoModal(m_hWndOwner);
-	  // NOTE: the CDialog class message loop handles the passage of
-	  // execution to OnOK() or OnCancel(), the ending of the dialog, and
-	  // the determination of the return value. Since the CDialog::DoModal()
-	  // method returns the parameter sent in the CDialog::EndDialog()
-	  // statement, the OnOK() member sets the return value to the index of
-	  // the selected item in the list box, if one was selected. However, if
-	  // no item is highlighted in the list box, the native value returned
-	  // is -1, which, if sent to EndDialog(), produces an unwanted
-	  // assert(0). In this case, INT_MAX is returned instead. See OnOK()
-	  // and OnCancel() for the mechanism that implements this behavior.
+	int index = (int) CDialog::DoModal(m_hWndOwner);
+	  // NOTE: the CDialog class automatically passes execution control to
+	  // either the OnOK() or OnCancel() method upon termination of the
+	  // modal dialog before returning control back here. The nResult value
+	  // returned by CDialog::DoModal() is the parameter passed to a
+	  // CDialog::EndDialog(nResult) statement; hence, on success, when the
+	  // OnOK() method is invoked, it sets this return value to the index
+	  // of the selected item in the list box, if one was selected. If no
+	  // item was highlighted or the selection was cancelled, the OnCancel()
+	  // method is invoked, which returns the INT_MAX value to indicate this
+	  // condition. Had a -1 been attempted, as CDialog::EndDialog(-1), that
+	  // procedure would have produced an unwanted assert(0). See OnOK() and
+	  // OnCancel() for details.
 	::UpdateWindow(hWndOwner);
-	return (ok < INT_MAX ? ok : -1);
+	return (index < INT_MAX ? index : -1);
 }
 
 /*============================================================================*/

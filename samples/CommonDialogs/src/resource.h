@@ -103,8 +103,7 @@
 #define IDC_ABOUT_BOX_CREDITS          101
 
   // resource IDs of menu or toolbar icons, bitmaps, or other images
-#define IDI_COLOR_CHOICE               200
-#define IDI_FONT_CHOICE                201
+#define IDB_TOOLBAR                    203		
 
   // resource IDs for Menu and ToolBar commands
 #define IDM_FILE_NEW                   1001
@@ -114,7 +113,7 @@
 #define IDM_FILE_CLOSE                 1005
 #define IDM_FILE_PAGESETUP             1006
 #define IDM_FILE_PRINT                 1007
-#define IDM_FILE_PREVIEW	           1008
+#define IDM_FILE_PREVIEW	       1008
 #define IDM_FILE_EXIT                  1009
 #define IDM_EDIT_UNDO                  1010
 #define IDM_EDIT_REDO                  1011
@@ -130,10 +129,10 @@
 #define IDM_COLOR_CHOICE               1021
 
   // resource IDs for client area controls (IDOK has its own, so not given here)
-#define IDM_EDITBOX			           1050
+#define IDM_EDITBOX		       1050
 
 #define IDD_CLISTVIEWBOX_DIALOG        2000   // the CListBoxDialog box
-#define IDC_LIST_BOX  		           2001   // the list box within the above
+#define IDC_LIST_BOX  		       2001   // the list box within the above
 
   // message identifiers for common dialog communications
 #define IDM_HELP_COLORDLG              2010

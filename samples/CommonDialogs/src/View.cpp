@@ -41,13 +41,17 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Special Conventions:
-
-	Programming Notes:
-                The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-		Planning and Preparation Subsystem project for C++ programming.
-
+	Programming Notes: The representation of a font in this class takes the
+	form of a MyFontDialog class object. This format allows access to not
+	only the font itself, but to its background and foreground colors and
+	to its average heigh and width, as well. It allows user selection of 
+	font characteristics and access to assistance via the HELP button  in
+	the selection process. Serialization of the object provides an easy
+	means to archive all of the font's attributes.
+	
+        The programming standards roughly follow those established by the
+	1997-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+	Preparation Subsystem project for C++ programming.
 ********************************************************************************
 
 	Implementation of the CView class
@@ -340,11 +344,7 @@ OnFontChoice()     		                                 	/*
 	HWND hOwnerWnd = GetApp().GetMainWnd();
           // open the dialog
 	m_FontChoice.SetBoxTitle(_T("Select font for edit box"));
-	CHOOSEFONT cf = m_FontChoice.GetParameters();
-	cf.Flags |= CF_SCREENFONTS;
-	m_FontChoice.SetParameters(cf);
-
-	if(m_FontChoice.DoModal(hOwnerWnd))
+	if(m_FontChoice.DoModal(hOwnerWnd) == IDOK)
 	{
 		  // bring choice elements into this view
                 m_Edit.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
@@ -376,17 +376,15 @@ OnInitDialog()                                                          /*
 	AttachControl(IDM_EDITBOX, m_Edit);
 	  // set default or recovered font
 	m_Edit.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
-	  // put some arbitrary text in the edit control just for this demo
+	  // Put some arbitrary initial text in the edit control just for
+	  // this demo. It gets overwritten, so it is never seen on screen.
 	m_Edit.SetWindowText(_T("hello world"));
-
-	  // set font choice help messages to go to the main frame,
-	  // set the initial flags to show the help box and use the font style,
-	  // and set the initial choice color
-	CHOOSEFONT cf = m_FontChoice.GetParameters();
-	cf.Flags |= CF_SHOWHELP | CF_USESTYLE;
-	m_FontChoice.SetParameters(cf);
+	  // By design MyFontDlg help messages to go to the main frame, show the
+	  // help box, use the previous font and font style. Here set a default
+	  // choice color
 	m_FontChoice.SetColor(COLOR_BLACK);
-	  // and set the initial flags to show the help box and all colors
+	  // Set color choice dialog initial flags to show the help box and all
+	  // colors
 	CHOOSECOLOR cc = m_CtlColorChoice.GetParameters();
 	cc.Flags = CC_SHOWHELP | CC_FULLOPEN;
 	cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;

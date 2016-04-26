@@ -51,6 +51,11 @@ BOOL CViewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+void CViewDialog::OnCancel()
+{
+	TRACE("OnCancel called \n");
+}
+
 BOOL CViewDialog::OnInitDialog()
 {
 	// Set the Icon
@@ -90,7 +95,6 @@ BOOL CViewDialog::OnInitDialog()
 void CViewDialog::OnOK()
 {
 	MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
-	CDialog::OnOK();
 }
 
 void CViewDialog::OnButton()

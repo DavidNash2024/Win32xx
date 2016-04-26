@@ -36,9 +36,14 @@ Features demonstrated in this example
   and control colors for all colored elements of the client area.
 * A derived CustomButton class that illustrates how to give buttons custom
   colors.
-* Use of derived classes MyFileDlg, MyFindReplaceDlg, MyFontDlg, MyPrinter,
-  and MyPrintSetup to customize the appearance of their respective dialogs
+* Use of derived classes MyFileDialog, MyFindReplaceDialog, MyFontDialog, 
+  and Printer, to customize the appearance of their respective dialogs
   and to extend context help functions to those dialogs.
+* Use of a MyFontDialog object as the representation of a font in the
+  CView class. This usage allows access to not only the font itself, but to 
+  its background and foreground colors and to its average heigh and width, 
+  as well. It allows user selection of font characteristics and access to 
+  assistance via the HELP button in the selection process. 
 * Use of the CArchive class to store and retrieve the frame settings 
   (including MRU list, status and toolbar display switches, and window
   placement) and document data. The frame's persistent data is stored in

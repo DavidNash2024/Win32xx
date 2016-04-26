@@ -103,7 +103,7 @@ CView : public CDialog							/*
 //		CResizer m_Resizer;
 		CtlColorChoice  m_CtlColorChoice; // the control color choice
 		CToolTip        m_ToolTip;	  // form tool tips
-		MyFontDialog  	m_FontChoice;	  // edit control font
+		MyFontDialog  	m_FontChoice;	  // edit control font attributes
        		UINT	     	m_cWd,   	  // font average width
 			    	m_cHt;   	  // font average height
 		  // controls on the view

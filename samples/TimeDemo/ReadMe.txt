@@ -5,7 +5,7 @@ The TimeDemo Program Features
   text font and background color are selectable from the View menu.
 
 * Organization of code into an architecture based on Application, Main
-  Frame, and View classes.
+  Frame, Document, and View classes.
 
 * Demonstration of the CArchive class to save the program persistent
   parameters, such as window size and placement, screen font,

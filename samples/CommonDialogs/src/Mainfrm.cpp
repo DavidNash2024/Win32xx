@@ -149,7 +149,7 @@ LoadPersistentData()                                                    /*
 	catch (const CException& e)  // catch all CException events
 	{
 		  // Process the exception
-		CString msg = "Previous settings could not be restored.\n";
+		CString msg = "Previous parameters could not be restored.\n";
 		msg += e.GetText();
 		::MessageBox(NULL, msg, A2T(e.what()), MB_OK | MB_ICONSTOP |
 		    MB_TASKMODAL);
@@ -867,10 +867,7 @@ SetupToolBar()                                                          /*
 	AddToolBarButton(0);  // Separator
 	AddToolBarButton(IDM_HELP_CONTEXT,  TRUE, 0, 11);
 	  // Set the toolbar image list: use defaults for hot and disabled
-	SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
-	  // Set icons for color and font choice menu items
-	AddMenuIcon(IDM_COLOR_CHOICE, theApp.LoadIcon(IDI_COLOR_CHOICE));
-	AddMenuIcon(IDM_FONT_CHOICE,  theApp.LoadIcon(IDI_FONT_CHOICE));
+	SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR, 0, 0);
 }
 
 /*============================================================================*/

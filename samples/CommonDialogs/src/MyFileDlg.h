@@ -65,7 +65,7 @@ MyFileDialog : public CFileDialog
 			  // is invoked.
 			  
 	protected:
-		virtual void OnHelpButton()
+		virtual void 	OnHelpButton()
 		  // Send the proper file dialog context help identifier to
 		  // the window whose handle is the OPENFILENAME struct's
 		  // hwndOwner.

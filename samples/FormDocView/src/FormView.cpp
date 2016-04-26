@@ -38,6 +38,8 @@ INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CFormView::OnCancel()
 {
 	// Discard these messages
+	SetDlgItemText(IDC_STATUS, _T("Cancel Pressed."));
+	TRACE("Cancel Pressed.\n");
 }
 
 BOOL CFormView::OnCommand(WPARAM wParam, LPARAM lParam)
