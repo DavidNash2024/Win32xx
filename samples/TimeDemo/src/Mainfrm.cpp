@@ -694,13 +694,15 @@ OnFilePrint()                                                           /*
 		// CDC dcPrinter = Printdlg.GetPrinterDC();
 
 		// TODO:
-		// Add your own code here. Refer to the tutorial for additional information
+		// Add your own code here. Refer to the tutorial for
+		// additional information
 	}
 
 	catch (const CException& /* e */)
 	{
 		// No default printer
-		MessageBox(_T("Unable to display print dialog"), _T("Print Failed"), MB_OK);
+		MessageBox(_T("Unable to display print dialog"),
+		    _T("Print Failed"), MB_OK);
 	}
 }
 /*============================================================================*/
@@ -747,7 +749,7 @@ OnFontChoice()     		                                 	/*
 {
 	LOGFONT lf;
 	m_View.m_font.GetObject(sizeof(LOGFONT), &lf);
-	DWORD dwFlags = CF_EFFECTS | CF_INITTOLOGFONTSTRUCT | CF_SCREENFONTS;
+	DWORD dwFlags = CF_EFFECTS | CF_SCREENFONTS;
 	
 	CFontDialog FontDlg(&lf, dwFlags);
 	FontDlg.SetColor(m_View.m_rgbTxColor);
@@ -760,8 +762,8 @@ OnFontChoice()     		                                 	/*
 			m_View.m_font = f;
 		else
 			::MessageBox(NULL, _T("Font creation error."),
-				_T("Error"), MB_OK | MB_ICONEXCLAMATION |
-				MB_TASKMODAL);
+			    _T("Error"), MB_OK | MB_ICONEXCLAMATION |
+			    MB_TASKMODAL);
 
 		m_View.m_rgbTxColor = FontDlg.GetColor();
 	}

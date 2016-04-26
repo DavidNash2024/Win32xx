@@ -38,10 +38,21 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Programming Notes:
-               The programming standards roughly follow those established
-                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-		Planning and Preparation Subsystem project for C++ programming.
+	Programming Notes: A font is characterized by many parameters. Some of
+	its attributes are described by its corresponding LOGFONT structure.
+	Other attributes not found in the LOGFONT are its foreground and
+	background colors and the style string that appears in the Style box of
+	the DoModal() dialog, when engaged. All of these attributes are
+	found in the CHOOSEFONT structure underlying the base CFontDialog class
+	accessible via the CFontDialog::GetParameters()/SetParameters() methods.
+	Some are also accessble directly via other CFontDialog methods. This
+	class augments the base class by providing a response to the help
+	button, evaluation of the average height and width of the font, and
+	serialization of object information.
+
+	The programming standards roughly follow those established by the
+	1997-1999 Jet Propulsion Laboratory Deep Space Network Planning and
+	Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
@@ -69,6 +80,7 @@ MyFontDialog : public CFontDialog                                       /*
 
 		~MyFontDialog(){}
 
+		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
 			SIZE	GetAvgSize(void) const
 				    { return m_avgWdHt;}
 			CFont	GetChoiceFont(void) const
@@ -101,7 +113,7 @@ MyFontDialog : public CFontDialog                                       /*
 				    {SetWindowText(m_sBoxTitle);}
 
 	private:
-		CString 	m_sBoxTitle;
+		CString 	m_sBoxTitle;    // DoModal box caption
 		TEXTMETRIC 	m_tm;		// font text metrics
 	       	SIZE		m_avgWdHt;	// font average width & height
 		CFont		m_Font;		// the current font

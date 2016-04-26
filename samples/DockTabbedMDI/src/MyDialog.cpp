@@ -33,6 +33,12 @@ INT_PTR CViewDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
+void CViewDialog::OnCancel()
+{
+	SetDlgItemText(IDC_STATIC3, _T("Cancel Pressed"));
+	TRACE("Cancel Pressed\n");
+}
+
 BOOL CViewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);

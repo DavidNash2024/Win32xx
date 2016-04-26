@@ -15,6 +15,7 @@ public:
 protected:
 	virtual BOOL OnInitDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual void OnCancel();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnOK();
 

@@ -10,7 +10,8 @@ pushd ..\Tutorials
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Borland
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Debug
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Debug_Build
-FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Dev-C++
+FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Dev-C++\Debug
+FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Dev-C++\Release
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\GNU
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Microsoft
 FOR /D %%f IN ("*.") DO RMDIR /S /Q %%f\Release
@@ -47,6 +48,7 @@ FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.vco"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.log"
 FOR /D %%f IN ("*.") DO DEL /Q %%f\"*.sdf"
+FOR /D %%f IN ("*.") DO DEL /Q %%f\"Dev-C++\*.*"
 
 
 popd

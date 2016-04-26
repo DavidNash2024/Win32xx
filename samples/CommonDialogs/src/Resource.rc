@@ -130,14 +130,13 @@ IDW_MAIN MENU
 	the application icon remains consistent on all systems.		*/
 
 IDW_MAIN		ICON			"../src/res/smile.ico"
-IDI_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
-IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 /*==============================================================================
 
 	Bitmaps                                                         */
 
-IDW_MAIN                BITMAP DISCARDABLE  	"../src/res/Toolbar.bmp"
+IDW_MAIN                BITMAP              	"../src/res/MenuIcons.bmp"	
+IDB_TOOLBAR             BITMAP               	"../src/res/Toolbar.bmp"	
 
 /*============================================================================**
 
