@@ -14,13 +14,15 @@ public:
 	virtual ~CViewDialog();
 
 protected:
-	virtual BOOL OnInitDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnCancel();
+	virtual void OnClose();
+	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 
 private:
+	void AppendText(int nID, LPCTSTR szText);
 	void OnButton();
 	void OnRadio1();
 	void OnRadio2();

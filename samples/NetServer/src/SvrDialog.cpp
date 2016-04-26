@@ -13,7 +13,7 @@ CTCPClientDlg::CTCPClientDlg(UINT nResID) : CDialog(nResID), m_pSocket(0)
 {
 }
 
-void CTCPClientDlg::Append(int nID, LPCTSTR buf)
+void CTCPClientDlg::AppendText(int nID, LPCTSTR buf)
 {
 	// This function appends some text to an edit control
 
@@ -70,7 +70,7 @@ void CTCPClientDlg::Receive()
 	std::vector<char> vChar( 1025, '\0' );
 	char* buf = &vChar.front();	// char array with 1025 elements initialised to '\0'
 	m_pSocket->Receive(buf, 1024, 0);
-	Append(IDC_EDIT_RECEIVE2, A2T(buf));
+	AppendText(IDC_EDIT_RECEIVE2, A2T(buf));
 }
 
 void CTCPClientDlg::Send()

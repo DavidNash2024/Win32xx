@@ -19,6 +19,24 @@ CViewDialog::~CViewDialog()
 	::FreeLibrary(m_hInstRichEdit);
 }
 
+void CViewDialog::AppendText(int nID, LPCTSTR szText)
+{
+	// This function appends text to an edit control
+
+	// Append Line Feed
+	int ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	if (ndx)
+	{
+		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+		SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM)(_T("\r\n")));
+	}
+
+	// Append text
+	ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM)szText);
+}
+
 INT_PTR CViewDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Pass resizing messages on to the resizer
@@ -35,8 +53,13 @@ INT_PTR CViewDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 void CViewDialog::OnCancel()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Cancel Pressed"));
+	AppendText(IDC_RICHEDIT2, _T("Cancel Pressed"));
 	TRACE("Cancel Pressed\n");
+}
+
+void CViewDialog::OnClose()
+{
+	// Suppress the WM_CLOSE message that is sent by pressing an Esc key in the RichEdit controls.
 }
 
 BOOL CViewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -91,49 +114,49 @@ BOOL CViewDialog::OnInitDialog()
 
 void CViewDialog::OnOK()
 {
-	MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
-	CDialog::OnOK();
+	AppendText(IDC_RICHEDIT2, _T("OK Button Pressed"));
+	TRACE("OK Button Pressed\n");
 }
 
 void CViewDialog::OnButton()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Button Pressed"));
+	AppendText(IDC_RICHEDIT2, _T("Button Pressed"));
 	TRACE("Button Pressed\n");
 }
 
 void CViewDialog::OnCheck1()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Check Box 1"));
+	AppendText(IDC_RICHEDIT2, _T("Check Box 1"));
 	TRACE("Check Box 1\n");
 }
 
 void CViewDialog::OnCheck2()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Check Box 2"));
+	AppendText(IDC_RICHEDIT2, _T("Check Box 2"));
 	TRACE("Check Box 2\n");
 }
 
 void CViewDialog::OnCheck3()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Check Box 3"));
+	AppendText(IDC_RICHEDIT2, _T("Check Box 3"));
 	TRACE("Check Box 3\n");
 }
 
 void CViewDialog::OnRadio1()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Radio 1"));
+	AppendText(IDC_RICHEDIT2, _T("Radio 1"));
 	TRACE("Radio 1\n");
 }
 
 void CViewDialog::OnRadio2()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Radio 2"));
+	AppendText(IDC_RICHEDIT2, _T("Radio 2"));
 	TRACE("Radio 2\n");
 }
 
 void CViewDialog::OnRadio3()
 {
-	SetDlgItemText(IDC_STATIC3, _T("Radio 3"));
+	AppendText(IDC_RICHEDIT2, _T("Radio 3"));
 	TRACE("Radio 3\n");
 }
 

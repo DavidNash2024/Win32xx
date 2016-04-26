@@ -34,6 +34,12 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam); 
 }
 
+void CMyDialog::OnCancel()
+{
+	// Suppress default handling of OnCancel.
+	// Called when the esc button is pressed.
+}
+
 void CMyDialog::OnOK()
 {
 	TRACE("Enter key pressed\n");

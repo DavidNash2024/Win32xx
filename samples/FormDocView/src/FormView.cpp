@@ -35,11 +35,23 @@ INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
+void CFormView::OnButton()
+{
+	SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
+	TRACE("Button Pressed\n");
+}
+
 void CFormView::OnCancel()
 {
 	// Discard these messages
 	SetDlgItemText(IDC_STATUS, _T("Cancel Pressed."));
 	TRACE("Cancel Pressed.\n");
+}
+
+void CFormView::OnClose()
+{
+	// Suppress handling of WM_CLOSE for the dialog.
+	// An edit control will send WM_CLOSE to the dialog if the Esc button is pressed.
 }
 
 BOOL CFormView::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -133,11 +145,7 @@ void CFormView::OnOK()
 	TRACE("OK Button Pressed.\n");
 }
 
-void CFormView::OnButton()
-{
-	SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
-	TRACE("Button Pressed\n");
-}
+
 
 void CFormView::OnCheckA()
 {

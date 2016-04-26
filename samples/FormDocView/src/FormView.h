@@ -22,10 +22,11 @@ public:
 	void OnCheckC();
 
 protected:
-	virtual void OnCancel();
-	virtual BOOL OnInitDialog();
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual void OnCancel();
+	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual BOOL OnInitDialog();
 	virtual void OnOK();
 
 private:

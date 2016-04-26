@@ -23,7 +23,7 @@ public:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual void OnClose();
 	virtual BOOL OnInitDialog();
-	void Append(int nID, LPCTSTR buf);
+	void AppendText(int nID, LPCTSTR buf);
 	void Receive();
 	void Send();
 
