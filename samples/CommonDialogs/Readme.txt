@@ -1,5 +1,5 @@
-BasicForm Example
-===============
+CustomDialogs Example
+=====================
 
 This sample program has a frame window which includes a menu bar, tool bar
 and status bar, with a modeless dialog as the client window of the frame. 
@@ -18,12 +18,12 @@ Features demonstrated in this example
 * Context-sensitive help via a compiled HTML (.chm) file whose topics
   appear when the user selects the (?) help button on the toolbar and then
   selects a feature of interest. The primary copy of the .chm file is found
-  in the relative path ..\..\BasicForm\src\help\BasicForm.chm. 
+  in the relative path ..\..\CustomDialogs\src\help\CustomDialogs.chm. 
 
   NOTE: In order for this sample program to locate the help file, a copy of
   this file must be placed in the same directory as the compiled executable
-  BasicForm.exe. Instructions on how to create this .chm file using freeware
-  tools appears as a topic in that file. The file BasicForm.hnd appearing
+  CustomDialogs.exe. Instructions on how to create this .chm file using freeware
+  tools appears as a topic in that file. The file CustomDialogs.hnd appearing
   in the help subdirectory is the source from which the chm form was created
   using the HelpNDoc tool. The decompiled .htm, .hhp, .hhc, and .hhk are
   also located here.
@@ -47,8 +47,8 @@ Features demonstrated in this example
 * Use of the CArchive class to store and retrieve the frame settings 
   (including MRU list, status and toolbar display switches, and window
   placement) and document data. The frame's persistent data is stored in
-  the file named BasicForm.arc, which, for this sample program, lies in the
-  same directory containing the execuable, BasicForm.exe.
+  the file named CustomDialogs.arc, which, for this sample program, lies in the
+  same directory containing the execuable, CustomDialogs.exe.
 * A fixed-size form for the display, with no resizing gripper tool at the
   end of the status bar.
 * Programmer-selectable menu, tool bar, and status bar themes, as well as
