@@ -51,14 +51,19 @@
 	serialization of object information.
 	
 	This class may be used in place of the CFontDialog class in instances
-	the help button is requiredd and where serialization of the font
-	characteristics are meant to be persisitent across executions of the
+	the help button is required and where serialization of the font
+	characteristics are meant to be persistent across executions of the
 	application. It may also be used in lieu of separate declarations of a
 	font, its color, and its average height and width.
 
 	Programming Notes: The programming standards roughly follow those
 	established by the 1997-1999 Jet Propulsion Laboratory Deep Space
 	Network Planning and Preparation Subsystem project for C++ programming.
+	
+	Acknowledgement:
+	The author would like to thank and acknowledge the advice, critical
+	review, insight, and assistance provided by David Nash in the development
+	of this work.	
 
 ********************************************************************************
 

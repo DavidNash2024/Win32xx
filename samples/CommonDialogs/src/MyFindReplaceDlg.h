@@ -31,6 +31,11 @@
 	claim, damages, or other liability, whether in an action of contract,
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
+	
+	Acknowledgement:
+	The author would like to thank and acknowledge the advice, critical
+	review, insight, and assistance provided by David Nash in the development
+	of this work.	
 
 ********************************************************************************
 
