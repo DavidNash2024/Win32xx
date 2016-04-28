@@ -45,7 +45,7 @@
 	the DoModal() dialog, when engaged. All of these attributes are
 	found in the CHOOSEFONT structure underlying the base CFontDialog class
 	accessible via the CFontDialog::GetParameters()/SetParameters() methods.
-	Some are also accessble directly via other CFontDialog methods. This
+	Some are also accessible directly via other CFontDialog methods. This
 	class augments the base class by providing a response to the help
 	button, evaluation of the average height and width of the font, and
 	serialization of object information.
@@ -53,6 +53,11 @@
 	The programming standards roughly follow those established by the
 	1997-1999 Jet Propulsion Laboratory Deep Space Network Planning and
 	Preparation Subsystem project for C++ programming.
+	
+	Acknowledgement:
+	The author would like to thank and acknowledge the advice, critical
+	review, insight, and assistance provided by David Nash in the development
+	of this work.	
 
 ********************************************************************************
 
