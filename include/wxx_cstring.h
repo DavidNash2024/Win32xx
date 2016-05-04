@@ -1,5 +1,5 @@
-// Win32++   Version 8.2
-// Release Date: 11th April 2016
+// Win32++   Version 8.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -86,10 +86,13 @@
 #define _WIN32XX_CSTRING_H_
 
 
-#include "wxx_appcore0.h"
+#include <assert.h>
+#include <tchar.h>
+#include <stdio.h>
+#include <string>
+#include <algorithm>
+#include <windows.h>
 #include "wxx_textconv.h"
-
-
 
 
 namespace Win32xx
@@ -693,23 +696,6 @@ namespace Win32xx
 		m_str.append(str);
 	}
 
-	template <class T>
-	inline void CStringT<T>::AppendFormat(UINT nFormatID, ...)
-	// Appends formatted data to an the CStringT content.
-	{
-		CStringT str1;
-		CStringT str2;
-
-		if (str1.LoadString(nFormatID))
-		{
-			va_list args;
-			va_start(args, nFormatID);
-			str2.FormatV(str1.c_str(), args);
-			va_end(args);
-
-			m_str.append(str2);
-		}
-	}
 
 	template <>
 	inline int CStringT<CHAR>::Collate(const CHAR* pszText) const
@@ -859,20 +845,6 @@ namespace Win32xx
 		va_start(args, pszFormat);
 		FormatV(pszFormat, args);
 		va_end(args);
-	}
-
-	template <class T>
-	inline void CStringT<T>::Format(UINT nID, ...)
-	// Formats the string as sprintf does.
-	{
-		CStringT str;
-		if (str.LoadString(nID))
-		{
-			va_list args;
-			va_start(args, nID);
-			FormatV(str.c_str(), args);
-			va_end(args);
-		}
 	}
 
 	template <>
@@ -1126,64 +1098,6 @@ namespace Win32xx
 		CStringT str;
 		str.m_str.assign(m_str, 0, nCount);
 		return str;
-	}
-
-	template <>
-	inline bool CStringT<CHAR>::LoadString(UINT nID)
-	// Loads the string from a Windows resource.
-	{
-		assert (&GetApp());
-
-		int nSize = 64;
-		CHAR* pTCharArray = 0;
-		std::vector<CHAR> vString;
-		int nTChars = nSize;
-
-		Empty();
-
-		// Increase the size of our array in a loop until we load the entire string
-		// The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
-		while ( nSize-1 <= nTChars )
-		{
-			nSize = nSize * 4;
-			vString.assign(nSize+1, 0);
-			pTCharArray = &vString[0];
-			nTChars = ::LoadStringA (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
-		}
-
-		if (nTChars > 0)
-			m_str.assign(pTCharArray);
-
-		return (nTChars != 0);
-	}
-
-	template <>
-	inline bool CStringT<WCHAR>::LoadString(UINT nID)
-	// Loads the string from a Windows resource.
-	{
-		assert (&GetApp());
-
-		int nSize = 64;
-		WCHAR* pTCharArray = 0;
-		std::vector<WCHAR> vString;
-		int nTChars = nSize;
-
-		Empty();
-
-		// Increase the size of our array in a loop until we load the entire string
-		// The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
-		while ( nSize-1 <= nTChars )
-		{
-			nSize = nSize * 4;
-			vString.assign(nSize+1, 0);
-			pTCharArray = &vString[0];
-			nTChars = ::LoadStringW (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
-		}
-
-		if (nTChars > 0)
-			m_str.assign(pTCharArray);
-
-		return (nTChars != 0);
 	}
 
 	template <class T>
@@ -1872,12 +1786,12 @@ namespace Win32xx
 		return CommandLineArgs;
 	}
 
-	inline CString LoadString(UINT nID)
+/*	inline CString LoadString(UINT nID)
 	{
 		CString str;
 		str.LoadString(nID);
 		return str;
-	}
+	} */
 
 
 }	// namespace Win32xx

@@ -1,5 +1,5 @@
-// Win32++   Version 8.2
-// Release Date: 11th April 2016
+// Win32++   Version 8.3
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -2199,32 +2199,125 @@ namespace Win32xx
 		return CWnd( ::WindowFromDC(hDC) );
 	}
 
+  #endif	// _WIN32_WCE
 
-  #endif
 
+	
+	/////////////////////////////////////////////////////////
+	// Definitions of CString functions that required CWinApp
+	//
+			
+	template <class T>
+	inline void CStringT<T>::AppendFormat(UINT nFormatID, ...)
+	// Appends formatted data to an the CStringT content.
+	{
+		CStringT str1;
+		CStringT str2;
 
+		if (str1.LoadString(nFormatID))
+		{
+			va_list args;
+			va_start(args, nFormatID);
+			str2.FormatV(str1.c_str(), args);
+			va_end(args);
+
+			m_str.append(str2);
+		}
+	}
+
+	template <class T>
+	inline void CStringT<T>::Format(UINT nID, ...)
+	// Formats the string as sprintf does.
+	{
+		CStringT str;
+		if (str.LoadString(nID))
+		{
+			va_list args;
+			va_start(args, nID);
+			FormatV(str.c_str(), args);
+			va_end(args);
+		}
+	}	
+	
+	template <>
+	inline bool CStringT<CHAR>::LoadString(UINT nID)
+	// Loads the string from a Windows resource.
+	{
+		assert (&GetApp());
+
+		int nSize = 64;
+		CHAR* pTCharArray = 0;
+		std::vector<CHAR> vString;
+		int nTChars = nSize;
+
+		Empty();
+
+		// Increase the size of our array in a loop until we load the entire string
+		// The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
+		while ( nSize-1 <= nTChars )
+		{
+			nSize = nSize * 4;
+			vString.assign(nSize+1, 0);
+			pTCharArray = &vString[0];
+			nTChars = ::LoadStringA (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
+		}
+
+		if (nTChars > 0)
+			m_str.assign(pTCharArray);
+
+		return (nTChars != 0);
+	} 
+
+	template <>
+	inline bool CStringT<WCHAR>::LoadString(UINT nID)
+	// Loads the string from a Windows resource.
+	{
+		assert (&GetApp());
+
+		int nSize = 64;
+		WCHAR* pTCharArray = 0;
+		std::vector<WCHAR> vString;
+		int nTChars = nSize;
+
+		Empty();
+
+		// Increase the size of our array in a loop until we load the entire string
+		// The ANSI and _UNICODE versions of LoadString behave differently. This technique works for both.
+		while ( nSize-1 <= nTChars )
+		{
+			nSize = nSize * 4;
+			vString.assign(nSize+1, 0);
+			pTCharArray = &vString[0];
+			nTChars = ::LoadStringW (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
+		}
+
+		if (nTChars > 0)
+			m_str.assign(pTCharArray);
+
+		return (nTChars != 0);
+	}
 
 	////////////////////////////////////////
 	// Global Functions
 	//
 
-  #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
+#ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
 
 	inline UINT GetSizeofNonClientMetrics()
-	// This function correctly determines the sizeof NONCLIENTMETRICS
+		// This function correctly determines the sizeof NONCLIENTMETRICS
 	{
 
-  #if (WINVER >= 0x0600)
+#if (WINVER >= 0x0600)
 		// Is OS version less than Vista, adjust size to correct value
 		if (GetWinVersion() < 2600)
 			return CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
-  #endif
+#endif
 
 		return sizeof(NONCLIENTMETRICS);
 	}
 
 	inline BOOL IsLeftButtonDown()
-	// Reports the state of the left mouse button
+		// Reports the state of the left mouse button
 	{
 		SHORT state;
 		if (GetSystemMetrics(SM_SWAPBUTTON))
@@ -2239,11 +2332,11 @@ namespace Win32xx
 	}
 
 
-  #endif // #ifndef _WIN32_WCE
+#endif // #ifndef _WIN32_WCE
 
 	inline void LoadCommonControls()
-	// Loads the common controls using InitCommonControlsEx or InitCommonControls.
-	// Returns TRUE of InitCommonControlsEx is used.
+		// Loads the common controls using InitCommonControlsEx or InitCommonControls.
+		// Returns TRUE of InitCommonControlsEx is used.
 	{
 		// Load the Common Controls DLL
 		HMODULE hComCtl = ::LoadLibrary(_T("COMCTL32.DLL"));
@@ -2255,29 +2348,29 @@ namespace Win32xx
 			// Declare a typedef for the InItCommonControlsEx function
 			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
-  #ifdef _WIN32_WCE
+#ifdef _WIN32_WCE
 			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
-  #else
+#else
 			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
-  #endif
+#endif
 
 			if (pfnInitEx)
 			{
 				// Load the full set of common controls
 				INITCOMMONCONTROLSEX InitStruct;
 				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-				InitStruct.dwICC = ICC_WIN95_CLASSES|ICC_BAR_CLASSES|ICC_COOL_CLASSES|ICC_DATE_CLASSES;
+				InitStruct.dwICC = ICC_WIN95_CLASSES | ICC_BAR_CLASSES | ICC_COOL_CLASSES | ICC_DATE_CLASSES;
 
 
-  #if (!defined _WIN32_WCE && _WIN32_IE >= 0x0401)
+#if (!defined _WIN32_WCE && _WIN32_IE >= 0x0401)
 				if (GetComCtlVersion() > 470)
 				{
-					InitStruct.dwICC |= ICC_INTERNET_CLASSES|ICC_NATIVEFNTCTL_CLASS|ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES;
+					InitStruct.dwICC |= ICC_INTERNET_CLASSES | ICC_NATIVEFNTCTL_CLASS | ICC_PAGESCROLLER_CLASS | ICC_USEREX_CLASSES;
 				}
-  #endif
-  
+#endif
+
 				// Call InitCommonControlsEx
-				if ( !(pfnInitEx(&InitStruct)) )
+				if (!(pfnInitEx(&InitStruct)))
 				{
 					InitCommonControls();
 				}
@@ -2292,6 +2385,15 @@ namespace Win32xx
 			::FreeLibrary(hComCtl);
 		}
 	}
+
+	inline CString LoadString(UINT nID)
+	{
+		CString str;
+		str.LoadString(nID);
+		return str;
+	}
+	
+	
 }
 
 

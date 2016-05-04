@@ -1,3 +1,15 @@
+Version 8.3
+===========
+
+New Features and Enhancements
+-----------------------------
+* Updated CString
+ - CString and the text conversion classes can now be used independently of
+   the rest of the framework.
+
+
+
+
 Version 8.2
 ===========
 
