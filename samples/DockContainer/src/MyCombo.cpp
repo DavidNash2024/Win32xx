@@ -26,13 +26,13 @@ void CMyCombo::PreCreate(CREATESTRUCT& cs)
 
 BOOL CMyCombo::AddItems()
 {
-    typedef struct
+    struct ITEMINFO
 	{
         int iImage;
         int iSelectedImage;
         int iIndent;
         LPTSTR pszText;
-    } ITEMINFO, *PITEMINFO;
+    };
 
     ITEMINFO IInf[ ] =
 	{
