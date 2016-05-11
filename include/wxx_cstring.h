@@ -954,7 +954,7 @@ namespace Win32xx
 	// Note: The buffer uses a vector. Vectors are required to be contiguous in memory under
 	//       the current standard, whereas std::strings do not have this requirement.
 	{
-		assert (nMinBufLength >= 0);
+		assert (nMinBufLength > 0);
 
 		T ch = 0;
 		m_buf.assign(nMinBufLength + 1, ch);

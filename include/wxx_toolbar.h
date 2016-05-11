@@ -385,9 +385,13 @@ namespace Win32xx
 
 		int Length = static_cast<int>(SendMessage(TB_GETBUTTONTEXT, (WPARAM)idButton, 0L));
 		CString str;
-		LPTSTR szStr = str.GetBuffer(Length +1);
-		SendMessage(TB_GETBUTTONTEXT, (WPARAM)idButton, (LPARAM)szStr);
-		str.ReleaseBuffer();
+		if (Length > 0)
+		{
+			LPTSTR szStr = str.GetBuffer(Length);
+			SendMessage(TB_GETBUTTONTEXT, (WPARAM)idButton, (LPARAM)szStr);
+			str.ReleaseBuffer();
+		}
+
 		return str;
 	}
 
