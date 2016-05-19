@@ -1253,8 +1253,10 @@ namespace Win32xx
 				else
 				{
 					GetView().SetParent(*this);
-					GetView().ShowWindow();
 				}
+
+				CRect rc = GetClientRect();
+				GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 			}
 		}
 	}

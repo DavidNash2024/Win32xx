@@ -333,8 +333,7 @@ namespace Win32xx
 		virtual void RecalcViewLayout();
 		
 		virtual CWnd& GetView() const		{ return *m_pView; }
-		virtual void SetView(CWnd& wndView) { m_pView = &wndView; }
-
+		virtual void SetView(CWnd& wndView);
 
 		// Virtual Attributes
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
@@ -3437,6 +3436,17 @@ namespace Win32xx
 		m_TBTheme = TBT;
 		if (GetToolBar().IsWindow())
 			GetToolBar().GetParent().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
+	}
+
+	inline void CFrame::SetView(CWnd& wndView)
+	{
+		m_pView = &wndView;
+
+		if (IsWindow())
+		{
+			CRect rc = GetViewRect();
+			GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+		}
 	}
 
 	inline void CFrame::ShowMenu(BOOL bShow)
