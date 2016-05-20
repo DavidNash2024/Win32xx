@@ -102,7 +102,7 @@ namespace Win32xx
 		BOOL  IsButtonIndeterminate(int idButton) const;
 		BOOL  IsButtonPressed(int idButton) const;
 		int   MapAccelerator(TCHAR chAccel) const;
-		BOOL  MarkButton(int idButton) const;
+		BOOL  MarkButton(int idButton, BOOL fHighlight = TRUE ) const;
 		BOOL  MoveButton(UINT uOldPos, UINT uNewPos) const;
 		BOOL  PressButton(int idButton, BOOL fPress) const;
 		void  SaveRestore(BOOL fSave, TBSAVEPARAMS* ptbsp) const;
@@ -614,11 +614,11 @@ namespace Win32xx
 		return idButton;
 	}
 
-	inline BOOL CToolBar::MarkButton(int idButton) const
+	inline BOOL CToolBar::MarkButton(int idButton, BOOL fHighlight /*= TRUE*/ ) const
 	// Sets the highlight state of a given button in a ToolBar control.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TB_MARKBUTTON, (WPARAM)idButton, 0L));
+		return static_cast<BOOL>(SendMessage(TB_MARKBUTTON, (WPARAM)idButton, (LPARAM)fHighlight));
 	}
 
 	inline BOOL CToolBar::MoveButton(UINT uOldPos, UINT uNewPos) const
