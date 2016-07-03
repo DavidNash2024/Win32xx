@@ -549,7 +549,7 @@ namespace Win32xx
 		void SendNotify(UINT nMessageID);
 		void SetUndockPosition(CPoint pt);
 		std::vector<CDocker*> SortDockers();
-		static BOOL CALLBACK EnumWindowsProc(HWND hWnd, LPARAM lParam);
+		static BOOL CALLBACK EnumWindowsProc(HWND hWndTop, LPARAM lParam);
 
 		CDockBar		m_DockBar;
 		CDockHint		m_DockHint;
@@ -4050,20 +4050,25 @@ namespace Win32xx
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
-	inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hWnd, LPARAM lParam)
-	// Static callback function to enumerate windows
+	inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hWndTop, LPARAM lParam)
+	// Static callback function to enumerate top level windows
 	{
-		CRect rc;
-		assert(lParam);
 		CDocker* This = (CDocker*)lParam;
+		assert(dynamic_cast<CDocker*>(This));
 		CPoint pt = This->m_DockPoint;
 
-		if (This->IsRelated(hWnd) && hWnd != This->GetHwnd())
+		// Update hWndTop if the DockAncestor is child of the top level window
+		if (::IsChild(hWndTop, This->GetDockAncestor()->GetHwnd()))
+			hWndTop = This->GetDockAncestor()->GetHwnd();
+
+		// Assign this docker's m_hDockUnderPoint
+		if (This->IsRelated(hWndTop) && hWndTop != This->GetHwnd())
 		{
-			::GetWindowRect(hWnd, &rc);
+			CRect rc;
+			::GetWindowRect(hWndTop, &rc);
 			if (rc.PtInRect(pt) && This->m_hDockUnderPoint == 0)
 			{
-				This->m_hDockUnderPoint = hWnd;
+				This->m_hDockUnderPoint = hWndTop;
 			}
 		}
 
