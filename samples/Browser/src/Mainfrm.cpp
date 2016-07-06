@@ -268,6 +268,13 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 	// Call the base function first
 	CFrame::OnCreate(cs);
 
+	// Add the combo box band to the rebar
+	if (IsReBarUsed())
+	{
+		int Height = 22;
+		AddComboBoxBand(Height);
+	}
+
 	ConnectEvents();
 	return 0;
 }
@@ -422,6 +429,28 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	SetWindowText(str);
 }
 
+void CMainFrame::SetupMenuIcons()
+{
+	// Add menu icons from the IDW_MAIN bitmap resource
+	
+	std::vector<UINT> IconData;		// a vector of Resource IDs
+	if (IsReBarUsed())
+	{
+		// Load the Resource IDs for popup menu items
+		IconData.push_back(IDM_FILE_NEW);
+		IconData.push_back(IDM_FILE_OPEN);
+		IconData.push_back(IDM_FILE_SAVE);
+		IconData.push_back(IDM_EDIT_CUT);
+		IconData.push_back(IDM_EDIT_COPY);
+		IconData.push_back(IDM_EDIT_PASTE);
+		IconData.push_back(IDM_FILE_PRINT);
+		IconData.push_back(IDM_HELP_ABOUT);
+	}
+
+	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);
+
+}
+
 void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
@@ -450,24 +479,6 @@ void CMainFrame::SetupToolBar()
 		SetToolBarImages(RGB(255,0,255), IDB_TOOLBAR24_NORM, IDB_TOOLBAR24_HOT, IDB_TOOLBAR24_DIS);
 	}
 
-	std::vector<UINT> IconData;
-	if (IsReBarUsed())
-	{
-		int Height = 22;
-		AddComboBoxBand(Height);
-
-		// Set the icons for popup menu items
-		IconData.push_back ( IDM_FILE_NEW  );
-		IconData.push_back ( IDM_FILE_OPEN );
-		IconData.push_back ( IDM_FILE_SAVE );
-		IconData.push_back ( IDM_EDIT_CUT  );
-		IconData.push_back ( IDM_EDIT_COPY );
-		IconData.push_back ( IDM_EDIT_PASTE);
-		IconData.push_back ( IDM_FILE_PRINT);
-		IconData.push_back ( IDM_HELP_ABOUT);
-	}
-
-	AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

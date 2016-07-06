@@ -224,6 +224,17 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 	cs.style &= ~WS_VISIBLE;
 }
 
+void CMainFrame::SetupMenuIcons()
+{
+	// Load default set of menu icons from the toolbar
+	CFrame::SetupMenuIcons();
+
+	// Add some extra icons for menu items
+	AddMenuIcon(IDM_NEW_FILES, GetApp().LoadIcon(IDI_FILEVIEW));
+	AddMenuIcon(IDM_NEW_CLASSES, GetApp().LoadIcon(IDI_CLASSVIEW));
+	AddMenuIcon(IDM_NEW_DIALOG, GetApp().LoadIcon(IDI_DIALOGVIEW));
+}
+
 void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
@@ -244,11 +255,6 @@ void CMainFrame::SetupToolBar()
 
 	// Set the Checkmarks in the menu
 	GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
-
-	// Add some extra icons for menu items
-	AddMenuIcon(IDM_NEW_FILES, GetApp().LoadIcon(IDI_FILEVIEW));
-	AddMenuIcon(IDM_NEW_CLASSES, GetApp().LoadIcon(IDI_CLASSVIEW));
-	AddMenuIcon(IDM_NEW_DIALOG, GetApp().LoadIcon(IDI_DIALOGVIEW));
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

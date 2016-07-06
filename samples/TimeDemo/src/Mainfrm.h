@@ -128,6 +128,7 @@ CMainFrame : public CFrame						/*
 		virtual void	Serialize(CArchive &ar);
 		virtual	BOOL    SetControlStatus(UINT, bool, ControlBars);
 		virtual void    SetStatusbarMsg(CString);
+		virtual void	SetupMenuIcons();
 		virtual void    SetupToolBar(void);
 		virtual void	UpdateFrame(void);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);

@@ -51,6 +51,7 @@ protected:
 	virtual int  OnCreate(CREATESTRUCT& cs);
 	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+	virtual void SetupMenuIcons();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

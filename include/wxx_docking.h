@@ -1238,7 +1238,14 @@ namespace Win32xx
 		if (m_pView != &wndView)
 		{
 			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
+			if (m_pView && m_pView->IsWindow())
+			{
+				// We can't change docker view if it is a DockContainer
+				// Use CDockContainer::SetView to change the DockContainer's view instead
+				assert(m_pView->SendMessageW(UWM_GETCDOCKCONTAINER) == 0);
+				
+				m_pView->ShowWindow(SW_HIDE);
+			}
 
 			// Assign the view window
 			m_pView = &wndView;
@@ -1246,7 +1253,6 @@ namespace Win32xx
 			if (IsWindow())
 			{
 				// The docker is already created, so create and position the new view too
-				assert(&GetView());			// Use SetView in the constructor to set the view window
 
 				if (!GetView().IsWindow())
 					GetView().Create(*this);
@@ -4057,7 +4063,7 @@ namespace Win32xx
 		assert(dynamic_cast<CDocker*>(This));
 		CPoint pt = This->m_DockPoint;
 
-		// Update hWndTop if the DockAncestor is child of the top level window
+		// Update hWndTop if the DockAncestor is a child of the top level window
 		if (::IsChild(hWndTop, This->GetDockAncestor()->GetHwnd()))
 			hWndTop = This->GetDockAncestor()->GetHwnd();
 
@@ -4788,16 +4794,14 @@ namespace Win32xx
 		if (m_pView != &wndView)
 		{
 			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
+			if (m_pView && m_pView->IsWindow()) 
+				m_pView->ShowWindow(SW_HIDE);
 
 			// Assign the view window
 			m_pView = &wndView;
 
 			if (IsWindow())
 			{
-				// The frame is already created, so create and position the new view too
-				assert(GetView());			// Use SetView in CMainFrame's constructor to set the view window
-
 				if (!GetView().IsWindow())
 					GetView().Create(*this);
 				else
@@ -4805,6 +4809,9 @@ namespace Win32xx
 					GetView().SetParent(*this);
 					GetView().ShowWindow();
 				}
+
+				// The new view must not be a dockcontainer
+				assert(GetView().SendMessage(UWM_GETCDOCKCONTAINER) == 0);
 
 				RecalcLayout();
 			}

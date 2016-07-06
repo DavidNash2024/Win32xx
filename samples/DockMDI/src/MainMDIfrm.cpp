@@ -178,6 +178,15 @@ BOOL CMainMDIFrame::OnMDITile()
 	return TRUE;
 }
 
+void CMainMDIFrame::SetupMenuIcons()
+{
+	// Add the default set of menu icons from the toolbar.
+	CFrame::SetupMenuIcons();
+
+	// Add an extra icon for the New Docker menu item
+	AddMenuIcon(IDM_FILE_NEWDOCK, GetApp().LoadIcon(IDW_MAIN));
+}
+
 void CMainMDIFrame::SetupToolBar()
 {
 	// Define the resource IDs for the toolbar
@@ -192,9 +201,6 @@ void CMainMDIFrame::SetupToolBar()
 	AddToolBarButton( IDM_FILE_PRINT );
 	AddToolBarButton( 0 );				// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
-
-	// Add an extra icon for the New Docker menu item
-	AddMenuIcon( IDM_FILE_NEWDOCK, GetApp().LoadIcon(IDW_MAIN) );
 }
 
 LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1168,6 +1168,21 @@ SetStatusbarMsg(CString status)             				/*
 	GetStatusBar().SetPartText(0, status.c_str());
 }
 
+ /*============================================================================*/
+ void CMainFrame::
+	 SetupMenuIcons()                                                          /*
+
+Called from the CFrame::OnCreate() function to load the menu icons.
+*-----------------------------------------------------------------------------*/
+ {
+	   // add the default set of menu icons from the toolbar
+	 CFrame::SetupMenuIcons();
+
+	   // add menu icons for color and  font choice items
+	 AddMenuIcon(IDM_COLOR_CHOICE, TheApp().LoadIcon(IDM_COLOR_CHOICE));
+	 AddMenuIcon(IDM_FONT_CHOICE, TheApp().LoadIcon(IDM_FONT_CHOICE));
+ }
+
 /*============================================================================*/
 	void CMainFrame::
 SetupToolBar()                                                          /*
@@ -1192,9 +1207,7 @@ SetupToolBar()                                                          /*
 	AddToolBarButton(IDM_FILE_PRINT,   FALSE, 0, 6);
 	AddToolBarButton(0);  // Separator
 	AddToolBarButton(IDM_HELP_CONTEXT, TRUE,  0, 7);
-	  // add menu icons for color and  font choice items
-	AddMenuIcon(IDM_COLOR_CHOICE, TheApp().LoadIcon(IDM_COLOR_CHOICE));
-	AddMenuIcon(IDM_FONT_CHOICE,  TheApp().LoadIcon(IDM_FONT_CHOICE));
+
 }
 
 /*============================================================================*/
