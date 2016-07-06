@@ -34,6 +34,7 @@ protected:
 	virtual void OnInitialUpdate();
 	virtual void OnMenuUpdate(UINT nID);
 	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual void SetupMenuIcons();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

@@ -545,7 +545,8 @@ namespace Win32xx
 				}
 
 				dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-				dcMem.RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+			//	dcMem.RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
+				dcMem.RoundRect(rcItem.left, rcItem.top, rcItem.right +1, rcItem.bottom, 6, 6);
 
 				if (rcItem.Width() >= 24)
 				{

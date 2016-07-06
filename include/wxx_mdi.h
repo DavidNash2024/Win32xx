@@ -693,8 +693,8 @@ namespace Win32xx
 
 	inline CMDIFrame& CMDIFrame::CMDIClient::GetMDIFrame() const 
 	{
-		assert( m_pMDIFrame );
-		return const_cast<CMDIFrame&>( *m_pMDIFrame );
+		assert ( dynamic_cast<CMDIFrame*>(m_pMDIFrame) );
+		return const_cast<CMDIFrame&>(*m_pMDIFrame);
 	}
 
 	inline LRESULT CMDIFrame::CMDIClient::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
@@ -750,6 +750,7 @@ namespace Win32xx
 		//   HMENU hChildMenu = LoadMenu(GetApp().GetResourceHandle(), _T("MdiMenuView"));
 		//   HACCEL hChildAccel = LoadAccelerators(GetApp().GetResourceHandle(), _T("MDIAccelView"));
 		//   SetHandles(hChildMenu, hChildAccel);
+		//   SetView(m_View);
 	}
 
 	inline CMDIChild::~CMDIChild()
@@ -911,16 +912,14 @@ namespace Win32xx
 		if (m_pView != &wndView)
 		{
 			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) m_pView->ShowWindow(SW_HIDE);
+			if (m_pView && m_pView->IsWindow()) 
+				m_pView->ShowWindow(SW_HIDE);
 
 			// Assign the view window
 			m_pView = &wndView;
 
 			if (GetHwnd() != 0)
 			{
-				// The MDIChild is already created, so create and position the new view too
-				assert(&GetView());			// Use SetView in CMDIChild's constructor to set the view window
-
 				if (!GetView().IsWindow())
 					GetView().Create(*this);
 				else

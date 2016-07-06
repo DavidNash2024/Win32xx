@@ -407,6 +407,19 @@ BOOL CMainFrame::SaveRegistrySettings()
 	return TRUE;
 }
 
+void CMainFrame::SetupMenuIcons()
+{
+	// Load the defualt set of icons from the toolbar
+	CFrame::SetupMenuIcons();
+
+	// Add some extra icons for menu items
+	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp().LoadIcon(IDI_SIMPLE));
+	AddMenuIcon(IDM_FILE_NEWRECT, GetApp().LoadIcon(IDI_RECT));
+	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
+	AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILEVIEW));
+	AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSVIEW));
+}
+
 void CMainFrame::SetupToolBar()
 {
 	// Set the Resource IDs for the toolbar buttons
@@ -428,12 +441,7 @@ void CMainFrame::SetupToolBar()
 	// Remove the checkmark for container tabs at top
 	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 
-	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp().LoadIcon(IDI_SIMPLE));
-	AddMenuIcon(IDM_FILE_NEWRECT, GetApp().LoadIcon(IDI_RECT));
-	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
-	AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILEVIEW));
-	AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSVIEW));
+
 }
 
 LRESULT CMainFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)

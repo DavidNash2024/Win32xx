@@ -7,7 +7,16 @@ New Features and Enhancements
  - CString and the text conversion classes can now be used independently of
    the rest of the framework.
 
+* Updated CFrame
+ - SetView can now be used to switch between multiple views.
+ - Added a virtual SetupMenuIcons function. This functions adds the set of
+   ToolBar images to the icons used in menus. Override this to add additional
+   icons to the menus.
+   
 
+Changes in detail
+-----------------
+Added CFrame::SetupMenuIcons
 
 
 Version 8.2

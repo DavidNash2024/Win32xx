@@ -423,6 +423,7 @@ namespace Win32xx
 		virtual void SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask);
 		virtual void SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask);
 		virtual void SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask);
+		virtual void SetupMenuIcons();
 		virtual void SetupToolBar();
 		virtual void SetTheme();
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
@@ -1209,6 +1210,11 @@ namespace Win32xx
 
 		SetupToolBar();
 
+		if (m_vToolBarData.size() == 0)
+		{
+			TRACE("Warning ... No resource IDs assigned to the toolbar\n");
+		}
+
 		if (IsReBarSupported() && m_UseReBar)
 		{
 			SIZE MaxSize = GetToolBar().GetMaxSize();
@@ -1222,15 +1228,6 @@ namespace Win32xx
 			}
 		}
 
-		if (m_vToolBarData.size() > 0)
-		{
-			// Add the icons for popup menu
-			AddMenuIcons(m_vToolBarData, RGB(192, 192, 192), IDW_MAIN, 0);
-		}
-		else
-		{
-			TRACE("Warning ... No resource IDs assigned to the toolbar\n");
-		}
 	}
 
 	inline LRESULT CFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
@@ -2305,6 +2302,8 @@ namespace Win32xx
 		{
 			GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
 		}
+
+		SetupMenuIcons();
 
 		// Create the status bar
 		GetStatusBar().Create(*this);
@@ -3408,6 +3407,16 @@ namespace Win32xx
 		SetTBImageListDis(GetToolBar(), m_ToolBarDisabledImages, ToolBarDisabledID, crMask);
 	}
 
+	inline void CFrame::SetupMenuIcons()
+	{
+		// Add the set of toolbar images to the menu
+		if (m_vToolBarData.size() > 0)
+		{
+			// Add the icons for popup menu
+			AddMenuIcons(m_vToolBarData, RGB(192, 192, 192), IDW_MAIN, 0);
+		}
+	}
+
 	inline void CFrame::SetupToolBar()
 	{
 		// Use this function to set the Resource IDs for the toolbar(s).
@@ -3440,12 +3449,25 @@ namespace Win32xx
 
 	inline void CFrame::SetView(CWnd& wndView)
 	{
-		m_pView = &wndView;
-
-		if (IsWindow())
+		if (m_pView != &wndView)
 		{
-			CRect rc = GetViewRect();
-			GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			// Hide the old view if any
+			if (m_pView && m_pView->IsWindow())
+				m_pView->ShowWindow(SW_HIDE);
+
+			// Assign the new view
+			m_pView = &wndView;
+
+			if (IsWindow())
+			{
+				if (!m_pView->IsWindow())
+					m_pView->Create(*this);
+				else
+					GetView().SetParent(*this);
+
+				CRect rc = GetViewRect();
+				GetView().SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
+			}
 		}
 	}
 
