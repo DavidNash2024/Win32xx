@@ -476,7 +476,7 @@ namespace Win32xx
 		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockClient&>(m_DockClient); }
 		virtual CDockHint& GetDockHint() const		{ return m_pDockAncestor->m_DockHint; }
 		virtual CRect GetViewRect() const			{ return GetClientRect(); }
-		
+
 		virtual CWnd& GetView() const						{ return GetDockClient().GetView(); }
 		virtual void SetView(CWnd& wndView);
 
@@ -1242,8 +1242,8 @@ namespace Win32xx
 			{
 				// We can't change docker view if it is a DockContainer
 				// Use CDockContainer::SetView to change the DockContainer's view instead
-				assert(m_pView->SendMessageW(UWM_GETCDOCKCONTAINER) == 0);
-				
+				assert(m_pView->SendMessage(UWM_GETCDOCKCONTAINER) == 0);
+
 				m_pView->ShowWindow(SW_HIDE);
 			}
 
@@ -4658,7 +4658,7 @@ namespace Win32xx
 	{
 		assert (nTab1 < GetContainerParent()->m_vContainerInfo.size());
 		assert (nTab2 < GetContainerParent()->m_vContainerInfo.size());
-		
+
 		if (nTab1 != nTab2)
 		{
 			ContainerInfo CI1 = GetContainerParent()->m_vContainerInfo[nTab1];
@@ -4794,7 +4794,7 @@ namespace Win32xx
 		if (m_pView != &wndView)
 		{
 			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) 
+			if (m_pView && m_pView->IsWindow())
 				m_pView->ShowWindow(SW_HIDE);
 
 			// Assign the view window
