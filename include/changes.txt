@@ -3,6 +3,10 @@ Version 8.3
 
 New Features and Enhancements
 -----------------------------
+* Added CRibbonDockFrame.
+   This class adds docking to a frame window which supports the Ribbon UI.
+   A RibbonDockFrame sample has been added to demonstrate CRibbonDockFrame.
+
 * Updated CString
  - CString and the text conversion classes can now be used independently of
    the rest of the framework.
@@ -16,7 +20,9 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added CFrame::SetupMenuIcons
+Added CRibbonDockFrame           class
+Added CFrame::SetupMenuIcons     member function
+Added RibbonDockFrame            sample application
 
 
 Version 8.2
