@@ -38,7 +38,7 @@
 ///////////////////////////////////////////////////////
 // wxx_ribbon.h
 //  Declaration of the following classes:
-//  CRibbon and CRibbonFrame
+//  CRibbon, CRibbonFrame, and CRibbonDockFrame
 //
 
 #ifndef _WIN32XX_RIBBON_H_
@@ -135,6 +135,45 @@ namespace Win32xx
 		std::vector<RecentFilesPtr> m_vRecentFiles;
 	};
 
+
+    class CRibbonDockFrame : public CDockFrame, public CRibbon
+    {
+    public:
+        // A nested class for the MRU item properties
+        class CRecentFiles : public IUISimplePropertySet
+        {
+        public:
+            CRecentFiles(PWSTR wszFullPath);
+            ~CRecentFiles() {}
+
+            // IUnknown methods.
+            STDMETHODIMP_(ULONG) AddRef();
+            STDMETHODIMP_(ULONG) Release();
+            STDMETHODIMP QueryInterface(REFIID iid, void** ppv);
+
+            // IUISimplePropertySet methods 
+            STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *value);
+
+        private:
+            LONG m_cRef;                        // Reference count.
+            WCHAR m_wszDisplayName[MAX_PATH];
+            WCHAR m_wszFullPath[MAX_PATH];
+        };
+
+        typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
+
+        CRibbonDockFrame() {}
+        virtual ~CRibbonDockFrame() {}
+        virtual CRect GetViewRect() const;
+        virtual int  OnCreate(CREATESTRUCT& cs);
+        virtual void OnDestroy();
+        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
+        virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
+        virtual void UpdateMRUMenu();
+
+    private:
+        std::vector<RecentFilesPtr> m_vRecentFiles;
+    };
 }
 
 
@@ -513,6 +552,214 @@ namespace Win32xx
 
 		return hr;
 	}
+
+
+    //////////////////////////////////////////////////
+    // Definitions for the CRibbonDockFrame class
+    //
+    inline CRect CRibbonDockFrame::GetViewRect() const
+    {
+        // Get the frame's client area
+        CRect rcClient = GetClientRect();
+
+        rcClient.top += GetRibbonHeight();
+
+        if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
+            rcClient = ExcludeChildRect(rcClient, GetStatusBar());
+
+        if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
+            rcClient = ExcludeChildRect(rcClient, GetReBar());
+        else
+            if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
+                rcClient = ExcludeChildRect(rcClient, GetToolBar());
+
+        return rcClient;
+    }
+
+    inline int CRibbonDockFrame::OnCreate(CREATESTRUCT& cs)
+    {
+        // OnCreate is called automatically during window creation when a
+        // WM_CREATE message received.
+
+        // Tasks such as setting the icon, creating child windows, or anything
+        // associated with creating windows are normally performed here.
+
+        UNREFERENCED_PARAMETER(cs);
+
+        if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
+        {
+            if (CreateRibbon(*this))
+            {
+                SetUseReBar(FALSE);			// Don't use a ReBar
+                SetUseToolBar(FALSE);		// Don't use a ToolBar
+
+                CDockFrame::OnCreate(cs);
+                SetMenu(NULL);
+                ShowStatusBar(TRUE);
+            }
+        }
+        else
+        {
+            CDockFrame::OnCreate(cs);
+        }
+
+        return 0;
+    }
+
+    inline void CRibbonDockFrame::OnDestroy()
+    {
+        DestroyRibbon();
+        CDocker::OnDestroy();
+        CFrame::OnDestroy();
+    }
+
+    inline STDMETHODIMP CRibbonDockFrame::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
+    {
+        UNREFERENCED_PARAMETER(viewId);
+        UNREFERENCED_PARAMETER(pView);
+        UNREFERENCED_PARAMETER(uReasonCode);
+
+        HRESULT hr = E_NOTIMPL;
+
+        // Checks to see if the view that was changed was a Ribbon view.
+        if (UI_VIEWTYPE_RIBBON == typeId)
+        {
+            switch (verb)
+            {
+            case UI_VIEWVERB_CREATE:	// The view was newly created.
+                hr = S_OK;
+                break;
+            case UI_VIEWVERB_SIZE:		// Ribbon size has changed
+                RecalcLayout();
+                break;
+            case UI_VIEWVERB_DESTROY:	// The view was destroyed.
+                hr = S_OK;
+                break;
+            }
+        }
+
+        return hr;
+    }
+
+    inline HRESULT CRibbonDockFrame::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
+    {
+        LONG iCurrentFile = 0;
+        std::vector<CString> FileNames = GetMRUEntries();
+        std::vector<CString>::iterator iter;
+        int iFileCount = FileNames.size();
+        HRESULT hr = E_FAIL;
+        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
+        m_vRecentFiles.clear();
+
+        if (psa != NULL)
+        {
+            for (iter = FileNames.begin(); iter != FileNames.end(); ++iter)
+            {
+                CString strCurrentFile = (*iter);
+                WCHAR wszCurrentFile[MAX_PATH] = { 0L };
+                lstrcpynW(wszCurrentFile, T2W(strCurrentFile), MAX_PATH);
+
+                CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
+                m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));
+                hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pRecentFiles));
+                ++iCurrentFile;
+            }
+
+            SAFEARRAYBOUND sab = { (ULONG)iCurrentFile, 0 };
+            SafeArrayRedim(psa, &sab);
+            hr = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
+
+            SafeArrayDestroy(psa);	// Calls release for each element in the array
+        }
+
+        return hr;
+    }
+
+    inline void CRibbonDockFrame::UpdateMRUMenu()
+    {
+        // Suppress UpdateMRUMenu when ribbon is used
+        if (GetRibbonFramework() != 0) return;
+
+        CFrame::UpdateMRUMenu();
+    }
+
+
+    /////////////////////////////////////////////////////////////////////
+    // Declaration of the nested CRibbonDockFrame CRecentFiles class
+    //
+    inline CRibbonDockFrame::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(1)
+    {
+        SHFILEINFOW sfi;
+        DWORD_PTR dwPtr = NULL;
+        m_wszFullPath[0] = L'\0';
+        m_wszDisplayName[0] = L'\0';
+
+        if (NULL != lstrcpynW(m_wszFullPath, wszFullPath, MAX_PATH))
+        {
+            dwPtr = ::SHGetFileInfoW(wszFullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
+
+            if (dwPtr != NULL)
+            {
+                lstrcpynW(m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
+            }
+            else // Provide a reasonable fall back.
+            {
+                lstrcpynW(m_wszDisplayName, m_wszFullPath, MAX_PATH);
+            }
+        }
+    }
+
+    inline STDMETHODIMP_(ULONG) CRibbonDockFrame::CRecentFiles::AddRef()
+    {
+        return InterlockedIncrement(&m_cRef);
+    }
+
+    inline STDMETHODIMP_(ULONG) CRibbonDockFrame::CRecentFiles::Release()
+    {
+        return InterlockedDecrement(&m_cRef);
+    }
+
+    inline STDMETHODIMP CRibbonDockFrame::CRecentFiles::QueryInterface(REFIID iid, void** ppv)
+    {
+        if (!ppv)
+        {
+            return E_POINTER;
+        }
+
+        if (iid == __uuidof(IUnknown))
+        {
+            *ppv = static_cast<IUnknown*>(this);
+        }
+        else if (iid == __uuidof(IUISimplePropertySet))
+        {
+            *ppv = static_cast<IUISimplePropertySet*>(this);
+        }
+        else
+        {
+            *ppv = NULL;
+            return E_NOINTERFACE;
+        }
+
+        AddRef();
+        return S_OK;
+    }
+
+    // IUISimplePropertySet methods.
+    inline STDMETHODIMP CRibbonDockFrame::CRecentFiles::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
+    {
+        HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
+
+        if (key == UI_PKEY_Label)
+        {
+            hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
+        }
+        else if (key == UI_PKEY_LabelDescription)
+        {
+            hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
+        }
+
+        return hr;
+    }
 
 } // namespace Win32xx
 

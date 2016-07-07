@@ -2371,7 +2371,7 @@ namespace Win32xx
 				CPoint ptLocal = pt;
 				::ScreenToClient(hDockParent, &ptLocal);
 				hDockTest = ::ChildWindowFromPoint(hDockParent, ptLocal);
-				assert(hDockTest != hDockParent);
+				if (hDockTest == hDockParent) break;
 			}
 
 			CDocker* pDockParent = reinterpret_cast<CDocker*>(::SendMessage(hDockParent, UWM_GETCDOCKER, 0, 0));
