@@ -828,7 +828,7 @@ namespace Win32xx
 
 		BOOL Succeeded = TRUE;
 		CString sString = szText;
-		std::map<CString, int>::iterator m;
+		std::map<CString, int>::const_iterator m;
 		int iString;
 
 		// Check to see if the string is already added

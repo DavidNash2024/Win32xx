@@ -374,7 +374,7 @@ namespace Win32xx
 
 		// Forcibly destroy any remaining windows now. Windows created from
 		//  static CWnds or dangling pointers are destroyed here.
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+		std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
 		for (m = m_mapHWND.begin(); m != m_mapHWND.end(); ++m)
 		{
 			HWND hWnd = (*m).first;
@@ -451,7 +451,7 @@ namespace Win32xx
 
 	inline CDC_Data* CWinApp::GetCDCData(HDC hDC)
 	{
-		std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
+		std::map<HDC, CDC_Data*, CompareHDC>::const_iterator m;
 
 		// Find the CDC data mapped to this HDC
 		CDC_Data* pCDCData = 0;
@@ -467,7 +467,7 @@ namespace Win32xx
 
 	inline CGDI_Data* CWinApp::GetCGDIData(HGDIOBJ hObject)
 	{
-		std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
+		std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::const_iterator m;
 
 		// Find the CGDIObject data mapped to this HGDIOBJ
 		CGDI_Data* pCGDIData = 0;
@@ -483,7 +483,7 @@ namespace Win32xx
 
 	inline CIml_Data* CWinApp::GetCImlData(HIMAGELIST himl)
 	{
-		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
+		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::const_iterator m;
 
 		// Find the CImageList data mapped to this HIMAGELIST
 		CIml_Data* pCImlData = 0;
@@ -500,7 +500,7 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 	inline CMenu_Data* CWinApp::GetCMenuData(HMENU hMenu)
 	{
-		std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
+		std::map<HMENU, CMenu_Data*, CompareHMENU>::const_iterator m;
 
 		// Find the CMenu data mapped to this HMENU
 		CMenu_Data* pCMenuData = 0;
@@ -519,7 +519,7 @@ namespace Win32xx
 	// Retrieves the CWnd pointer associated with the specified hWnd.
 	{
 		// Allocate an iterator for our HWND map
-		std::map<HWND, CWnd*, CompareHWND>::iterator m;
+		std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
 
 		// Find the CWnd pointer mapped to this HWND
 		CWnd* pWnd = 0;

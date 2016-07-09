@@ -1167,7 +1167,7 @@ namespace Win32xx
 		DeleteItem(nPage);
 
 		// Remove the TapPageInfo entry
-		std::vector<TabPageInfo>::iterator itTPI = m_vTabPageInfo.begin() + nPage;
+		std::vector<TabPageInfo>::const_iterator itTPI = m_vTabPageInfo.begin() + nPage;
 		CWnd* pView = (*itTPI).pView;
 		int iImage = (*itTPI).iImage;
 		if (iImage >= 0)
@@ -1179,8 +1179,8 @@ namespace Win32xx
 		(*itTPI).pView->Destroy();
 		m_vTabPageInfo.erase(itTPI);
 
-		std::vector<WndPtr>::iterator itView;
-		for (itView = m_vTabViews.begin(); itView < m_vTabViews.end(); ++itView)
+		std::vector<WndPtr>::const_iterator itView;
+		for (itView = m_vTabViews.begin(); itView != m_vTabViews.end(); ++itView)
 		{
 			if ((*itView).get() == pView)
 			{

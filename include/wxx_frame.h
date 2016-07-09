@@ -2827,7 +2827,7 @@ namespace Win32xx
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	// Removes an entry from the MRU list
 	{
-		std::vector<CString>::iterator it;
+		std::vector<CString>::const_iterator it;
 		for (it = m_vMRUEntries.begin(); it != m_vMRUEntries.end(); ++it)
 		{
 			if ((*it) == szMRUEntry)

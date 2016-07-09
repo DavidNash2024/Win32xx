@@ -919,7 +919,7 @@ namespace Win32xx
 		if ( &GetApp() )
 		{
 			// Allocate an iterator for our HWND map
-			std::map<HWND, CWnd*, CompareHWND>::iterator m;
+			std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
 
 			CWinApp& App = GetApp();
 
