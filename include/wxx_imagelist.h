@@ -189,7 +189,7 @@ namespace Win32xx
 		if ( &GetApp() )
 		{
 			// Allocate an iterator for our CImageList data
-			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
+			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::const_iterator m;
 
 			CWinApp* pApp = &GetApp();
 			if (pApp)

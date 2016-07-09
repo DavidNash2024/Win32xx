@@ -460,7 +460,8 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_MOUSEACTIVATE:	return OnMouseActivate(uMsg, wParam, lParam);
+	case WM_MOUSEACTIVATE:	OnMouseActivate(uMsg, wParam, lParam);
+		break;
 	}
 
 	// Always pass unhandled messages on to WndProcDefault

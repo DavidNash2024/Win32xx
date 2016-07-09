@@ -287,7 +287,7 @@ namespace Win32xx
 		if ( &GetApp() )
 		{
 			// Allocate an iterator for our HMENU map
-			std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
+			std::map<HMENU, CMenu_Data*, CompareHMENU>::const_iterator m;
 
 			CWinApp* pApp = &GetApp();
 			if (pApp)

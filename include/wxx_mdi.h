@@ -599,7 +599,7 @@ namespace Win32xx
 	inline void CMDIFrame::RemoveMDIChild(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
-		std::vector<MDIChildPtr>::iterator v;
+		std::vector<MDIChildPtr>::const_iterator v;
 
 		for (v = m_vMDIChild.begin(); v!= m_vMDIChild.end(); ++v)
 		{

@@ -12,7 +12,8 @@ New Features and Enhancements
    the rest of the framework.
 
 * Updated CFrame
- - SetView can now be used to switch between multiple views.
+ - SetView can now be used to switch between multiple views. This also applies
+   to CDocker, CDockContainer and CMDIChild.
  - Added a virtual SetupMenuIcons function. This functions adds the set of
    ToolBar images to the icons used in menus. Override this to add additional
    icons to the menus.

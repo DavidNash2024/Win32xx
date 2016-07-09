@@ -437,7 +437,7 @@ namespace Win32xx
 	{
 		LONG iCurrentFile = 0;
 		std::vector<CString> FileNames = GetMRUEntries();
-		std::vector<CString>::iterator iter;
+		std::vector<CString>::const_iterator iter;
 		int iFileCount = FileNames.size();
 		HRESULT hr = E_FAIL;
 		SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
@@ -645,7 +645,7 @@ namespace Win32xx
     {
         LONG iCurrentFile = 0;
         std::vector<CString> FileNames = GetMRUEntries();
-        std::vector<CString>::iterator iter;
+        std::vector<CString>::const_iterator iter;
         int iFileCount = FileNames.size();
         HRESULT hr = E_FAIL;
         SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);

@@ -683,7 +683,7 @@ namespace Win32xx
 	// Builds the PROPSHEETPAGE array
 	{
 		m_vPSP.clear();
-		std::vector<PropertyPagePtr>::iterator iter;
+		std::vector<PropertyPagePtr>::const_iterator iter;
 		for (iter = m_vPages.begin(); iter != m_vPages.end(); ++iter)
 			m_vPSP.push_back((*iter)->GetPSP());
 

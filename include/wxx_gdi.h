@@ -1134,7 +1134,7 @@ namespace Win32xx
 		if( &GetApp() )
 		{
 			// Allocate an iterator for our HDC map
-			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
+			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::const_iterator m;
 
 			CWinApp* pApp = &GetApp();
 			if (pApp)
@@ -2453,7 +2453,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		if( &GetApp() )
 		{
 			// Allocate an iterator for our Data map
-			std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
+			std::map<HDC, CDC_Data*, CompareHDC>::const_iterator m;
 
 			CWinApp* pApp = &GetApp();
 			if (pApp)
