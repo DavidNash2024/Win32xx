@@ -131,7 +131,7 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
-		
+
 		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -828,7 +828,7 @@ namespace Win32xx
 
 		BOOL Succeeded = TRUE;
 		CString sString = szText;
-		std::map<CString, int>::const_iterator m;
+		std::map<CString, int>::iterator m;
 		int iString;
 
 		// Check to see if the string is already added

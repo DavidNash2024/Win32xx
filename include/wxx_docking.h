@@ -456,7 +456,6 @@ namespace Win32xx
 		virtual CDocker* GetActiveDocker() const;
 		virtual CDocker* GetDockAncestor() const;
 		virtual CDocker* GetDockFromID(int n_DockID) const;
-		virtual CDocker* GetDockFromPoint(POINT pt);
 		virtual CDocker* GetDockFromView(CWnd* pView) const;
 		virtual CDocker* GetTopmostDocker() const;
 		virtual int GetDockSize() const;
@@ -533,6 +532,7 @@ namespace Win32xx
 		CDocker(const CDocker&);				// Disable copy construction
 		CDocker& operator = (const CDocker&);	// Disable assignment operator
 		std::vector <DockPtr> & GetAllChildren() const {return const_cast< std::vector<DockPtr>& >(GetDockAncestor()->m_vAllDockChildren);}
+		virtual CDocker* GetDockUnderDragPoint(POINT pt);
 		void CheckAllTargets(LPDRAGPOS pDragPos);
 		void CloseAllTargets();
 		void DockOuter(CDocker* pDocker, DWORD dwDockStyle);
@@ -1576,7 +1576,7 @@ namespace Win32xx
 		CDocker* pDockDrag = pDragPos->pDocker;
 		assert( ::SendMessage(*pDockDrag, UWM_GETCDOCKER, 0, 0) );
 
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pDragPos->ptPos);
+		CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pDragPos->ptPos);
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
@@ -1683,7 +1683,7 @@ namespace Win32xx
 		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
+		CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1731,7 +1731,7 @@ namespace Win32xx
 		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
+		CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1779,7 +1779,7 @@ namespace Win32xx
 		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
+		CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -1827,7 +1827,7 @@ namespace Win32xx
 		assert( pDockDrag );
 
 		CPoint pt = pDragPos->ptPos;
-		CDocker* pDockTarget = pDockDrag->GetDockFromPoint(pt)->GetTopmostDocker();
+		CDocker* pDockTarget = pDockDrag->GetDockUnderDragPoint(pt)->GetTopmostDocker();
 		if (pDockTarget != pDockDrag->GetDockAncestor())
 		{
 			Destroy();
@@ -2244,7 +2244,7 @@ namespace Win32xx
 		pDocker->SetDockStyle(dwDockStyle);
 
 		// Set the docking relationships
-		std::vector<CDocker*>::const_iterator iter = GetDockAncestor()->m_vDockChildren.begin();
+		std::vector<CDocker*>::iterator iter = GetDockAncestor()->m_vDockChildren.begin();
 		GetDockAncestor()->m_vDockChildren.insert(iter, pDocker);
 		pDocker->SetParent(*GetDockAncestor());
 		pDocker->GetDockBar().SetParent(*GetDockAncestor());
@@ -2346,7 +2346,7 @@ namespace Win32xx
 		return m_pDockAncestor;
 	}
 
-	inline CDocker* CDocker::GetDockFromPoint(POINT pt)
+	inline CDocker* CDocker::GetDockUnderDragPoint(POINT pt)
 	// Retrieves the Docker whose view window contains the specified point.
 	// Used when dragging undocked dockers over other dockers to provide
 	// the docker which needs to display the dock targets and dock hints.
@@ -2579,7 +2579,7 @@ namespace Win32xx
 			try
 			{
 				// Add dockers without parents first
-				std::vector<DockInfo>::const_iterator iter;
+				std::vector<DockInfo>::iterator iter;
 				for (iter = vDockList.begin(); iter != vDockList.end() ; ++iter)
 				{
 					DockInfo di = (*iter);
@@ -2956,7 +2956,7 @@ namespace Win32xx
 		CDocker* pDocker = reinterpret_cast<CDocker*>(wParam);
 
 		assert( this == GetDockAncestor() );
-		std::vector<DockPtr>::const_iterator iter;
+		std::vector<DockPtr>::iterator iter;
 		for (iter = GetAllChildren().begin(); iter != GetAllChildren().end(); ++iter)
 		{
 			if ((*iter).get() == pDocker)
@@ -2967,7 +2967,7 @@ namespace Win32xx
 		}
 
 		std::vector<CDocker*>& Dockers = GetDockAncestor()->m_vAllDockers;
-		for (std::vector<CDocker*>::const_iterator it = Dockers.begin(); it < Dockers.end(); ++it)
+		for (std::vector<CDocker*>::iterator it = Dockers.begin(); it < Dockers.end(); ++it)
 		{
 			if ((*it) == pDocker)
 			{
@@ -3628,7 +3628,7 @@ namespace Win32xx
 		DragPos.pDocker = this;
 		m_dwDockZone = 0;
 
-		CDocker* pDocker = GetDockFromPoint(DragPos.ptPos);
+		CDocker* pDocker = GetDockUnderDragPoint(DragPos.ptPos);
 
 		if (pDocker)
 			pDocker->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
@@ -3987,7 +3987,7 @@ namespace Win32xx
 				// insert pDockNew into its DockParent's DockChildren vector
 				if (pDockNew->m_pDockParent)
 				{
-					std::vector<CDocker*>::const_iterator p;
+					std::vector<CDocker*>::iterator p;
 					for (p = pDockNew->m_pDockParent->m_vDockChildren.begin(); p != pDockNew->m_pDockParent->m_vDockChildren.end(); ++p)
 					{
 						if (*p == this)
@@ -4057,7 +4057,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hWndTop, LPARAM lParam)
-	// Static callback function to enumerate top level dockers excluding 
+	// Static callback function to enumerate top level dockers excluding
 	// the one being dragged. Top level windows are enumurated in Z order.
 	{
 		CDocker* This = (CDocker*)lParam;
@@ -4474,7 +4474,7 @@ namespace Win32xx
 		DeleteItem(iTab);
 
 		// Remove the ContainerInfo entry
-		std::vector<ContainerInfo>::const_iterator iter;
+		std::vector<ContainerInfo>::iterator iter;
 		int iImage = -1;
 		for (iter = m_vContainerInfo.begin(); iter != m_vContainerInfo.end(); ++iter)
 		{

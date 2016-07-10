@@ -38,9 +38,9 @@
 ///////////////////////////////////////////////////////
 // wxx_wincore.h
 //  This file contains the definition of the CWnd class.
-//  Including this file adds all the code necessary to start Win32++ 
-//  and create simple windows. 
-//  
+//  Including this file adds all the code necessary to start Win32++
+//  and create simple windows.
+//
 //  Refer to the following example code.
 //
 
@@ -312,7 +312,7 @@ namespace Win32xx
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
 	{
-		// Window should already be destroyed if managed 
+		// Window should already be destroyed if managed
 		assert( (GetCWndPtr(*this) != this) || (!IsWindow()) );
 
 
@@ -490,10 +490,10 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline void CWnd::DoDataExchange(CDataExchange& DX)
-	//	This function performs dialog data exchange and dialog data 
+	//	This function performs dialog data exchange and dialog data
 	//	validation using DDX and DDV functions. Typically this is done for
 	//	controls in a dialogs, but controls in any window support DDX and DDV.
-	//	Never call this function directly. It is called by the UpdateData() 
+	//	Never call this function directly. It is called by the UpdateData()
 	//	member function. Call UpdateData() to write data into, or retrieve
 	//	validated data from the controls.  Override this method in the dialog
 	//	or other window that utilize the DDX/DDV functions.
@@ -796,7 +796,7 @@ namespace Win32xx
 
 		// Note: CustomDraw or OwnerDraw are normally used to modify the drawing of
 		//       controls, but overriding OnPaint is also an option.
-		
+
 		if (!m_PrevWindowProc)
 		{
 			if (::GetUpdateRect(*this, NULL, FALSE))
@@ -820,9 +820,9 @@ namespace Win32xx
 	}
 
 	inline void CWnd::OnMenuUpdate(UINT nID)
-	// Called when menu items are about to be displayed. Override this function to 
+	// Called when menu items are about to be displayed. Override this function to
 	// enable/disable the menu item, or add/remove the check box or radio button
-	// to menu items. 
+	// to menu items.
 	{
 		UNREFERENCED_PARAMETER(nID);
 
@@ -919,7 +919,7 @@ namespace Win32xx
 		if ( &GetApp() )
 		{
 			// Allocate an iterator for our HWND map
-			std::map<HWND, CWnd*, CompareHWND>::const_iterator m;
+			std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
 			CWinApp& App = GetApp();
 
@@ -1022,7 +1022,7 @@ namespace Win32xx
 
 		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 		m_hWnd = hWnd;
-		
+
 		AddToMap();			// Store the CWnd pointer in the HWND map
 	}
 #ifndef _WIN32_WCE
@@ -1037,7 +1037,7 @@ namespace Win32xx
 	//	been validated.
 	//
 	//	When a dialog box uses dialog data exchange, OnInitDialog() calls
-	//	UpdateData(FALSE) to attach the controls. Typically, OnOK is 
+	//	UpdateData(FALSE) to attach the controls. Typically, OnOK is
 	//	overridden and calls UpdatData(TRUE) to validate and retrieve the data
 	//	before closing the dialog.
 	{
@@ -1055,7 +1055,7 @@ namespace Win32xx
 		{
 			DoDataExchange(DX);
 			if (DX.GetLastControl() != NULL && DX.GetLastEditControl() != NULL)
-			{	
+			{
 				// select all characters in the edit control
 				::SetFocus(DX.GetLastEditControl());
 				::SendMessage(DX.GetLastEditControl(), EM_SETSEL, 0, -1);
@@ -2202,11 +2202,11 @@ namespace Win32xx
   #endif	// _WIN32_WCE
 
 
-	
+
 	/////////////////////////////////////////////////////////
 	// Definitions of CString functions that required CWinApp
 	//
-			
+
 	template <class T>
 	inline void CStringT<T>::AppendFormat(UINT nFormatID, ...)
 	// Appends formatted data to an the CStringT content.
@@ -2237,8 +2237,8 @@ namespace Win32xx
 			FormatV(str.c_str(), args);
 			va_end(args);
 		}
-	}	
-	
+	}
+
 	template <>
 	inline bool CStringT<CHAR>::LoadString(UINT nID)
 	// Loads the string from a Windows resource.
@@ -2266,7 +2266,7 @@ namespace Win32xx
 			m_str.assign(pTCharArray);
 
 		return (nTChars != 0);
-	} 
+	}
 
 	template <>
 	inline bool CStringT<WCHAR>::LoadString(UINT nID)
@@ -2392,8 +2392,8 @@ namespace Win32xx
 		str.LoadString(nID);
 		return str;
 	}
-	
-	
+
+
 }
 
 
