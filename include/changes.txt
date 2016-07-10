@@ -25,6 +25,8 @@ Added CRibbonDockFrame           class
 Added CFrame::SetupMenuIcons     member function
 Added RibbonDockFrame            sample application
 
+Removed CDocker::GetDockFromPoint
+
 
 Version 8.2
 ===========

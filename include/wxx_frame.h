@@ -314,7 +314,7 @@ namespace Win32xx
 			int	  ShowCmd;
 			BOOL  ShowStatusBar;
 			BOOL  ShowToolBar;
-			
+
 			// Display StatusBar and ToolBar by default
 			InitValues() : ShowCmd(SW_SHOW), ShowStatusBar(1), ShowToolBar(1) {}	// constructor
 		};
@@ -331,7 +331,7 @@ namespace Win32xx
 		virtual void SetStatusIndicators();
 		virtual void RecalcLayout();
 		virtual void RecalcViewLayout();
-		
+
 		virtual CWnd& GetView() const		{ return *m_pView; }
 		virtual void SetView(CWnd& wndView);
 
@@ -348,8 +348,8 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		InitValues GetInitValues() const			
-		{ 
+		InitValues GetInitValues() const
+		{
 			return m_InitValues;
 		}
 		CMenu& GetFrameMenu() const					{ return const_cast<CMenu&>(m_Menu); }
@@ -431,7 +431,7 @@ namespace Win32xx
 		virtual void ShowStatusBar(BOOL bShow);
 		virtual void ShowToolBar(BOOL bShow);
 		virtual void UpdateMRUMenu();
-		
+
 		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -516,7 +516,7 @@ namespace Win32xx
 		virtual CWnd& GetView()	const		{ return CDocker::GetView(); }
 		virtual CRect GetViewRect() const	{ return CFrame::GetViewRect(); }
 		virtual void SetView(CWnd& wndView)	{ CDocker::SetView(wndView); }
-		
+
 		operator HWND() const 				{ return GetHwnd(); }
 
 	protected:
@@ -532,7 +532,7 @@ namespace Win32xx
 			GetView().Create(GetDockClient());
 			return CFrame::OnCreate(cs);
 		}
-		
+
 		void OnDestroy()
 		{
 			CDocker::OnDestroy();
@@ -964,8 +964,8 @@ namespace Win32xx
 	// Definitions for the CFrame class
 	//
 	inline CFrame::CFrame() : m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
-							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_pMenuMetrics(0), m_UseIndicatorStatus(TRUE), 
-							  m_UseMenuStatus(TRUE), m_UseThemes(TRUE), m_UseToolBar(TRUE) 
+							  m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_pMenuMetrics(0), m_UseIndicatorStatus(TRUE),
+							  m_UseMenuStatus(TRUE), m_UseThemes(TRUE), m_UseToolBar(TRUE)
 	{
 		ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
 		ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
@@ -2512,7 +2512,7 @@ namespace Win32xx
 	}
 
 	inline void CFrame::OnMenuUpdate(UINT nID)
-	// Called when a menu item is about to be displayed. Override this function to enable 
+	// Called when a menu item is about to be displayed. Override this function to enable
 	// or disible the menu item, or add a check mark. Also call this base function to
     // update the 'Tool Bar' and 'Status Bar' menu status.
 	{
@@ -2660,7 +2660,7 @@ namespace Win32xx
 
 	inline LRESULT CFrame::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
 	// Called in response to a WM_SYSCOLORCHANGE message. This message is sent
-	// to all top-level windows when a change is made to a system color setting. 
+	// to all top-level windows when a change is made to a system color setting.
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2827,7 +2827,7 @@ namespace Win32xx
 	inline void CFrame::RemoveMRUEntry(LPCTSTR szMRUEntry)
 	// Removes an entry from the MRU list
 	{
-		std::vector<CString>::const_iterator it;
+		std::vector<CString>::iterator it;
 		for (it = m_vMRUEntries.begin(); it != m_vMRUEntries.end(); ++it)
 		{
 			if ((*it) == szMRUEntry)
@@ -3299,7 +3299,7 @@ namespace Win32xx
 
 	inline void CFrame::SetTBImageList(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Image List for additional Toolbars.
-	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.	
+	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
 	// The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
 	// A Disabled image list is created from ToolBarID if one doesn't already exist.
 	{
@@ -3323,7 +3323,7 @@ namespace Win32xx
 
 	inline void CFrame::SetTBImageListDis(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Disabled Image List for additional Toolbars.
-	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.	
+	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
 	// The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
 	{
 		if (nID != 0)
@@ -3355,7 +3355,7 @@ namespace Win32xx
 
 	inline void CFrame::SetTBImageListHot(CToolBar& ToolBar, CImageList& ImageList, UINT nID, COLORREF crMask)
 	// Sets the Hot Image List for additional Toolbars.
-	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.	
+	// The specified CToolBar should be a member of CMainFrame to ensure it remains in scope.
 	// The specified CImageList should be a member of CMainFrame to ensure it remains in scope.
 	{
 		if (nID != 0)

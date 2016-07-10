@@ -188,7 +188,7 @@ namespace Win32xx
 		virtual void    PreCreate(CREATESTRUCT& cs);
 		virtual void	PreRegisterClass(WNDCLASS& wc);
 		virtual void    SetTabSize();
-		
+
 		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -312,7 +312,7 @@ namespace Win32xx
 	}
 
 	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
-	// Adds a tab. The framework assumes ownership of the CWnd pointer provided, 
+	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
 	// and deletes the CWnd object when the window is destroyed.
 	{
 		assert(pView);
@@ -350,7 +350,7 @@ namespace Win32xx
 	}
 
 	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
-	// Adds a tab. The framework assumes ownership of the CWnd pointer provided, 
+	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
 	// and deletes the CWnd object when the window is destroyed.
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp().GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED);
@@ -358,7 +358,7 @@ namespace Win32xx
 	}
 
 	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText)
-	// Adds a tab. The framework assumes ownership of the CWnd pointer provided, 
+	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
 	// and deletes the CWnd object when the window is destroyed.
 	{
 		return AddTabPage(pView, szTabText, (HICON)0, 0);
@@ -552,7 +552,7 @@ namespace Win32xx
 				{
 					CString str = GetTabText(i);
 					int iImage = GetTabImageID(i);
-					CSize szImage = m_imlODTab.GetIconSize();	
+					CSize szImage = m_imlODTab.GetIconSize();
 					int yOffset = (rcItem.Height() - szImage.cy)/2;
 
 					// Draw the icon
@@ -780,7 +780,7 @@ namespace Win32xx
 		ZeroMemory(&nmhdr, sizeof(NMHDR));
 		nmhdr.hwndFrom = *this;
 		nmhdr.code = UWN_TABCHANGED;
-		
+
 		if (GetParent().IsWindow())
 			GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
@@ -888,7 +888,7 @@ namespace Win32xx
 		if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
 		{
 			int nPage = GetCurSel();
-			
+
 			// Send a notification to parent asking if its OK to close the tab.
 			if (!NotifyTabClosing(nPage))
 			{
@@ -1033,7 +1033,7 @@ namespace Win32xx
 			// return focus back to the child window that had it before
 			HWND hwndPrevFocus = (HWND)wParam;
 			if (IsChild(hwndPrevFocus))
-				::SetFocus(hwndPrevFocus);				
+				::SetFocus(hwndPrevFocus);
 		}
 
 		return FinalWindowProc(uMsg, wParam, lParam);
@@ -1167,7 +1167,7 @@ namespace Win32xx
 		DeleteItem(nPage);
 
 		// Remove the TapPageInfo entry
-		std::vector<TabPageInfo>::const_iterator itTPI = m_vTabPageInfo.begin() + nPage;
+		std::vector<TabPageInfo>::iterator itTPI = m_vTabPageInfo.begin() + nPage;
 		CWnd* pView = (*itTPI).pView;
 		int iImage = (*itTPI).iImage;
 		if (iImage >= 0)
@@ -1179,7 +1179,7 @@ namespace Win32xx
 		(*itTPI).pView->Destroy();
 		m_vTabPageInfo.erase(itTPI);
 
-		std::vector<WndPtr>::const_iterator itView;
+		std::vector<WndPtr>::iterator itView;
 		for (itView = m_vTabViews.begin(); itView != m_vTabViews.end(); ++itView)
 		{
 			if ((*itView).get() == pView)
@@ -1201,7 +1201,7 @@ namespace Win32xx
 
 			NotifyChanged();
 		}
-  		
+
 	}
 
 	inline void CTab::SelectPage(int nPage)
@@ -1687,8 +1687,8 @@ namespace Win32xx
 	}
 
 	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
-	// Adds a MDI tab, given a pointer to the view window, and the tab's text. 
-	// The framework assumes ownership of the CWnd pointer provided, and deletes 
+	// Adds a MDI tab, given a pointer to the view window, and the tab's text.
+	// The framework assumes ownership of the CWnd pointer provided, and deletes
 	// the CWnd object when the window is destroyed.
 	{
 		assert(pView); // Cannot add Null CWnd*
@@ -1915,7 +1915,7 @@ namespace Win32xx
 			}
 
 		case UWN_TABCLOSE:
-			{	
+			{
 				TABNMHDR* pTabNMHDR = (TABNMHDR*)lParam;
 				return !OnTabClose(pTabNMHDR->nPage);
 			}
@@ -1930,7 +1930,7 @@ namespace Win32xx
 	// Return TRUE to allow the tab to close, or FALSE to prevent the tab closing.
 	{
 		UNREFERENCED_PARAMETER(nPage);
-		
+
 		// Allow the tab to be close
 		return TRUE;
 	}

@@ -43,10 +43,10 @@
 // An image list is a collection of images of the same size, each of which
 // can be referred to by its index. Image lists are used to efficiently manage
 // large sets of icons or bitmaps. All images in an image list are contained
-// in a single, wide bitmap in screen device format. An image list can also 
+// in a single, wide bitmap in screen device format. An image list can also
 // include a monochrome bitmap that contains masks that are used to draw
 // images transparently.
- 
+
 
 #ifndef _WIN32XX_IMAGELIST_H_
 #define _WIN32XX_IMAGELIST_H_
@@ -123,7 +123,7 @@ namespace Win32xx
 		void Release();
 		BOOL RemoveFromMap();
 
-		CIml_Data* m_pData; 
+		CIml_Data* m_pData;
 	};
 
 
@@ -189,7 +189,7 @@ namespace Win32xx
 		if ( &GetApp() )
 		{
 			// Allocate an iterator for our CImageList data
-			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::const_iterator m;
+			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
 			CWinApp* pApp = &GetApp();
 			if (pApp)
@@ -212,7 +212,7 @@ namespace Win32xx
 	}
 
 	inline int CImageList::Add(HBITMAP hbmImage, HBITMAP hbmMask)
-	// Adds an image or images to an image list, generating a mask from the specified bitmap. 
+	// Adds an image or images to an image list, generating a mask from the specified bitmap.
 	// The hbmMask parameter can be NULL.
 	{
 		assert(m_pData);
@@ -302,7 +302,7 @@ namespace Win32xx
 		{
 		//	m_pData->hImageList = himlNew;
 		//	AddToMap();
-		
+
 			Attach(himlNew);
 			m_pData->IsManagedHiml = TRUE;
 		}
@@ -529,7 +529,7 @@ namespace Win32xx
 			{
 				if (m_pData->IsManagedHiml)
 				{
-					ImageList_Destroy(m_pData->hImageList);					
+					ImageList_Destroy(m_pData->hImageList);
 				}
 
 				RemoveFromMap();
@@ -548,7 +548,7 @@ namespace Win32xx
 	{
 		assert(NULL == m_pData->hImageList);
 		assert(himlNormal);
-	
+
 		int nCount = ImageList_GetImageCount(himlNormal);
 		if (nCount > 0)
 		{

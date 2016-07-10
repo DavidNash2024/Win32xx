@@ -82,13 +82,13 @@ namespace Win32xx
 	{
 		friend class CMDIFrame;
 	public:
-		CMDIChild(); 
+		CMDIChild();
 		virtual ~CMDIChild();
 
 		// These are the functions you might wish to override
 		virtual HWND Create(HWND hWndParent = NULL);
 		virtual void RecalcLayout();
-	
+
 		// These functions aren't virtual, and shouldn't be overridden
 		CWnd& GetView() const			{ assert(m_pView); return *m_pView; }
 		void SetView(CWnd& pwndView);
@@ -105,7 +105,7 @@ namespace Win32xx
 		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		// Not intended to be overridden
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -137,7 +137,7 @@ namespace Win32xx
 		public:
 			CMDIClient() : m_pMDIFrame(0) {}
 			virtual ~CMDIClient() {}
-			CMDIFrame& GetMDIFrame() const; 
+			CMDIFrame& GetMDIFrame() const;
 
 		protected:
 			// Overridable virtual functions
@@ -176,7 +176,7 @@ namespace Win32xx
 		void MDITile(int nType = 0) const;
 		void SetActiveMDIChild(CMDIChild* pChild);
 
-	protected:		
+	protected:
 		// Overridable virtual functions
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    OnClose();
@@ -188,8 +188,8 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
 		virtual BOOL    PreTranslateMessage(MSG& Msg);
-		
-		// Not intended to be overridden	
+
+		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -213,19 +213,19 @@ namespace Win32xx
 		CRect GetViewRect() const			{ return CMDIFrame::GetViewRect(); }
 		CWnd& GetView() const				{ return CMDIFrame::GetView(); }
 		void RecalcViewLayout()				{ RecalcDockLayout(); }
-		
+
 		operator HWND() const				{ return GetHwnd(); }
-		
-		virtual CDocker::CDockClient& GetDockClient() const	
-		{ 
+
+		virtual CDocker::CDockClient& GetDockClient() const
+		{
 			return const_cast<CMDIClient&>(GetMDIClient());
 		}
-		
+
 		virtual void SetView(CWnd&)
-		{ 
+		{
 			// A MDI Frame's view is always the MDIClient window
-			CMDIFrame::SetView(GetMDIClient()); 
-			CDocker::SetView(GetMDIClient()); 
+			CMDIFrame::SetView(GetMDIClient());
+			CDocker::SetView(GetMDIClient());
 		}
 
 	protected:
@@ -237,8 +237,8 @@ namespace Win32xx
 		void PreRegisterClass(WNDCLASS& wc) { CMDIFrame::PreRegisterClass(wc); }
 		BOOL PreTranslateMessage(MSG& Msg)	{ return CMDIFrame::PreTranslateMessage(Msg); }
 		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-		{ 
-			return CMDIFrame::FinalWindowProc(uMsg, wParam, lParam); 
+		{
+			return CMDIFrame::FinalWindowProc(uMsg, wParam, lParam);
 		}
 
 		LRESULT OnNotify(WPARAM wParam, LPARAM lParam)
@@ -309,7 +309,7 @@ namespace Win32xx
 	}
 
 	inline CMDIChild& CMDIFrame::AddMDIChild(CMDIChild* pMDIChild)
-	// Adds a MDI child to the MDI frame. The pointer to the MDI child will be 
+	// Adds a MDI child to the MDI frame. The pointer to the MDI child will be
 	//  automatically deleted when the MDI Frame destroys the MDI child.
 	{
 		assert(NULL != pMDIChild); // Cannot add Null MDI Child
@@ -323,7 +323,7 @@ namespace Win32xx
 
 	inline void CMDIFrame::AppendMDIMenu(CMenu MenuWindow)
 	// Adds the additional menu items the the "Window" submenu when
-	//  MDI child windows are created	
+	//  MDI child windows are created
 	{
 		if (!MenuWindow.GetHandle())
 			return;
@@ -338,7 +338,7 @@ namespace Win32xx
 				MenuWindow.DeleteMenu(nItems, MF_BYPOSITION);
 				uLastID = MenuWindow.GetMenuItemID(--nItems);
 			}
-			
+
 			//delete the separator too
 			MenuWindow.DeleteMenu(nItems, MF_BYPOSITION);
 		}
@@ -393,7 +393,7 @@ namespace Win32xx
 	// otherwise returns a pointer to the MDI Frame's menu
 	{
 		CMenu Menu = GetFrameMenu();
-		
+
 		if(GetActiveMDIChild())
 			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
 				Menu = GetActiveMDIChild()->m_ChildMenu;
@@ -422,7 +422,7 @@ namespace Win32xx
 
 	inline void CMDIFrame::MDICascade(int nType /* = 0*/) const
 	// Possible values for nType are:
-	// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.	
+	// MDITILE_SKIPDISABLED	Prevents disabled MDI child windows from being cascaded.
 	{
 		assert(IsWindow());
 		GetMDIClient().SendMessage(WM_MDICASCADE, (WPARAM)nType, 0L);
@@ -485,7 +485,7 @@ namespace Win32xx
 	}
 
 	inline int CMDIFrame::OnCreate(CREATESTRUCT& cs)
-	{	
+	{
 		GetMDIClient().m_pMDIFrame = this;
 		return CFrame::OnCreate(cs);
 	}
@@ -587,7 +587,7 @@ namespace Win32xx
 			MDIChildPtr pMDIChild = m_vMDIChild[i];
 
 			// Ask the window to close. If it is destroyed, RemoveMDIChild gets called.
-			pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0L);	
+			pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0L);
 
 			if (pMDIChild->IsWindow())
 				bResult = FALSE;
@@ -599,7 +599,7 @@ namespace Win32xx
 	inline void CMDIFrame::RemoveMDIChild(HWND hWnd)
 	{
 		// Allocate an iterator for our HWND map
-		std::vector<MDIChildPtr>::const_iterator v;
+		std::vector<MDIChildPtr>::iterator v;
 
 		for (v = m_vMDIChild.begin(); v!= m_vMDIChild.end(); ++v)
 		{
@@ -669,7 +669,7 @@ namespace Win32xx
 		{
 			case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
-		
+
 		return CFrame::WndProcDefault(uMsg, wParam, lParam);
 	}
 
@@ -691,7 +691,7 @@ namespace Win32xx
 		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), _T(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 	}
 
-	inline CMDIFrame& CMDIFrame::CMDIClient::GetMDIFrame() const 
+	inline CMDIFrame& CMDIFrame::CMDIClient::GetMDIFrame() const
 	{
 		assert ( dynamic_cast<CMDIFrame*>(m_pMDIFrame) );
 		return const_cast<CMDIFrame&>(*m_pMDIFrame);
@@ -912,7 +912,7 @@ namespace Win32xx
 		if (m_pView != &wndView)
 		{
 			// Hide the existing view window (if any)
-			if (m_pView && m_pView->IsWindow()) 
+			if (m_pView && m_pView->IsWindow())
 				m_pView->ShowWindow(SW_HIDE);
 
 			// Assign the view window
@@ -927,7 +927,7 @@ namespace Win32xx
 					GetView().SetParent(*this);
 					GetView().ShowWindow();
 				}
-				
+
 				RecalcLayout();
 			}
 		}
@@ -957,7 +957,7 @@ namespace Win32xx
 			GetMDIFrame().UpdateFrameMenu( GetMDIFrame().GetFrameMenu() );
 			GetApp().SetAccelerators(GetMDIFrame().GetFrameAccel(), *this);
 		}
-			
+
 		return 0L;
 	}
 

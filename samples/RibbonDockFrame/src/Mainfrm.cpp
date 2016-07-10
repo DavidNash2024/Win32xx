@@ -243,8 +243,13 @@ void CMainFrame::OnInitialUpdate()
 	// Add some Dockers to the MDI Frame
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 	int DockWidth = 150;
-	AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);
-	AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, DockWidth);
+	CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);
+	CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, DockWidth);
+
+	assert (pDock1->GetContainer());
+	assert (pDock2->GetContainer());
+	pDock1->GetContainer()->SetHideSingleTab(TRUE);
+	pDock2->GetContainer()->SetHideSingleTab(TRUE);
 }
 
 void CMainFrame::SetupToolBar()
