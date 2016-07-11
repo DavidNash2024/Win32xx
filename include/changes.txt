@@ -18,9 +18,17 @@ New Features and Enhancements
    ToolBar images to the icons used in menus. Override this to add additional
    icons to the menus.
    
+* Updated CDocker
+  - SetView can now be used to switch between multiple views for CDocker and
+    CDockContainer.  
+  - Improved the way the active docker is determined.
+  
 
 Changes in detail
 -----------------
+Added CDocker::OnActivate
+Added CDocker::OnMouseActivate
+Added CDocker::OnSize
 Added CRibbonDockFrame           class
 Added CFrame::SetupMenuIcons     member function
 Added RibbonDockFrame            sample application

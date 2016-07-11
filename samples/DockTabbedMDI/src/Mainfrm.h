@@ -62,7 +62,6 @@ protected:
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    OnMenuUpdate(UINT nID);
-	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual BOOL    SaveRegistrySettings();
 	virtual void	SetupMenuIcons();
@@ -71,7 +70,6 @@ protected:
 
 private:
 	CMyTabbedMDI m_MyTabbedMDI;
-	CDocker* m_pLastActiveDocker;
 	BOOL m_IsContainerTabsAtTop;
 	BOOL m_IsHideSingleTab;
 	BOOL m_IsMDITabsAtTop;

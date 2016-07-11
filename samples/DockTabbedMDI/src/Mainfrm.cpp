@@ -8,8 +8,8 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_pLastActiveDocker(0), m_IsContainerTabsAtTop(FALSE),
-                           m_IsHideSingleTab(TRUE), m_IsMDITabsAtTop(TRUE)
+CMainFrame::CMainFrame() : m_IsContainerTabsAtTop(FALSE), m_IsHideSingleTab(TRUE), 
+							m_IsMDITabsAtTop(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -366,19 +366,17 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	// Only for the Menu IDs we wish to modify
 	if (nID >= IDM_EDIT_UNDO && nID <= IDM_EDIT_DELETE)
 	{
-		CWnd* pWnd = 0;
+		CWnd* pView = 0;
 		CMenu EditMenu = GetFrameMenu().GetSubMenu(1);
 
-		if (m_pLastActiveDocker)
-		{
-			if (m_pLastActiveDocker == this)
-				pWnd = m_MyTabbedMDI.GetActiveMDIChild();
-			else if (m_pLastActiveDocker->IsDocked())
-				pWnd = m_pLastActiveDocker->GetContainer()->GetActiveView();
-		}
+		// Get the pointer to the active view
+		if (GetActiveDocker() == this)
+			pView = m_MyTabbedMDI.GetActiveMDIChild();
+		else if (GetActiveDocker() && GetActiveDocker()->IsDocked())
+			pView = GetActiveDocker()->GetContainer()->GetActiveView();
 
 		// Enable the Edit menu items for CViewText windows, disable them otherwise
-		UINT Flags = (dynamic_cast<CViewText*>(pWnd))? MF_ENABLED : MF_GRAYED;	
+		UINT Flags = (dynamic_cast<CViewText*>(pView))? MF_ENABLED : MF_GRAYED;
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 
@@ -444,25 +442,12 @@ void CMainFrame::SetupToolBar()
 
 }
 
-LRESULT CMainFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	UNREFERENCED_PARAMETER(uMsg);
-	UNREFERENCED_PARAMETER(wParam);
-	UNREFERENCED_PARAMETER(lParam);
-
-	// Store the active docker before processing the menu events
-	m_pLastActiveDocker = GetActiveDocker();
-
-	return MA_ACTIVATE;
-}
-
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-	case WM_MOUSEACTIVATE:	OnMouseActivate(uMsg, wParam, lParam);
-		break;
-	}
+//	switch (uMsg)
+//	{
+//	
+//	}
 
 	// Always pass unhandled messages on to WndProcDefault
 	return WndProcDefault(uMsg, wParam, lParam);

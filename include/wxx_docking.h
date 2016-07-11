@@ -96,8 +96,6 @@
   #define WM_NCMOUSELEAVE 0x000002A2
 #endif
 
-#define TIMER_ID1 2101
-#define TIMER_ID2 2102
 
 namespace Win32xx
 {
@@ -518,13 +516,15 @@ namespace Win32xx
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Current declarations of message handlers
+		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnExitSizeMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -562,6 +562,7 @@ namespace Win32xx
 		CTargetBottom	m_TargetBottom;
 		CDocker*		m_pDockParent;
 		CDocker*		m_pDockAncestor;
+		CDocker*		m_pDockActive;				// Only used by the DockAncestor
 
 		std::vector <CDocker*> m_vDockChildren;		// Docker's immediate children
 		std::vector <DockPtr> m_vAllDockChildren;	// All descendants of the DockAncestor (only for the DockAncestor)
@@ -815,7 +816,7 @@ namespace Win32xx
 			dcMem.CreateFontIndirect(&info.lfStatusFont);
 
 			// Set the Colours
-			if (bFocus)
+			if (m_pDocker->GetActiveDocker() == m_pDocker)
 			{
 				dcMem.SetTextColor(m_Foregnd1);
 				dcMem.CreateSolidBrush(m_Backgnd1);
@@ -999,8 +1000,6 @@ namespace Win32xx
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDocker->IsDocked())
 			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				ScreenToClient(pt);
 				if (!GetView().IsChild(GetFocus()))
 					GetView().SetFocus();
 
@@ -1032,8 +1031,6 @@ namespace Win32xx
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDocker->IsDocked())
 			{
-				CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-				ScreenToClient(pt);
 				if (!GetView().IsChild(GetFocus()))
 					GetView().SetFocus();
 
@@ -1272,7 +1269,6 @@ namespace Win32xx
 		switch (uMsg)
 		{
 		case WM_LBUTTONUP:			return OnLButtonUp(uMsg, wParam, lParam);
-		case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 		case WM_MOUSEMOVE:			return OnMouseMove(uMsg, wParam, lParam);
 		case WM_NCCALCSIZE:			return OnNCCalcSize(uMsg, wParam, lParam);
 		case WM_NCHITTEST:			return OnNCHitTest(uMsg, wParam, lParam);
@@ -1868,8 +1864,8 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDocker class
 	//
-	inline CDocker::CDocker() : m_pDockParent(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), m_IsClosing(FALSE),
-		            m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
+	inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockActive(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), 
+					m_IsClosing(FALSE), m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
 					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0)
 	{
 		// Assume this docker is the DockAncestor for now.
@@ -2176,6 +2172,10 @@ namespace Win32xx
 			RecalcDockLayout();
 			GetTopmostDocker()->SetRedraw(TRUE);
 			GetTopmostDocker()->RedrawWindow();
+
+			// Update the Dock captions
+			GetDockAncestor()->m_pDockActive = pDocker;
+			DrawAllCaptions();
 		}
 	}
 
@@ -2326,17 +2326,13 @@ namespace Win32xx
 	inline CDocker* CDocker::GetActiveDocker() const
 	// Returns the docker whose child window has focus
 	{
-		HWND hWnd = GetFocus();
-		HWND hWndDocker = NULL;
-		while (hWnd && (hWndDocker == NULL))
-		{
-			if (IsRelated(hWnd))
-				hWndDocker = hWnd;
+		if (GetDockAncestor()->m_pDockActive)
+			if (GetActiveWindow().GetHwnd() == GetDockAncestor()->m_pDockActive->GetTopmostDocker()->GetHwnd())
+			{
+				return GetDockAncestor()->m_pDockActive;
+			}
 
-			hWnd = ::GetParent(hWnd);
-		}
-
-		return reinterpret_cast<CDocker*>(::SendMessage(hWnd, UWM_GETCDOCKER, 0, 0));
+		return NULL;
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -2811,6 +2807,13 @@ namespace Win32xx
 		return pDocker;
 	}
 
+	inline LRESULT CDocker::OnActivate(UINT, WPARAM, LPARAM)
+	{
+		GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
+
+		return 0L;
+	}
+
 	inline LRESULT CDocker::OnBarStart(LPDRAGPOS pdp)
 	{
 		CPoint pt = pdp->ptPos;
@@ -2908,9 +2911,6 @@ namespace Win32xx
 
 	inline void CDocker::OnDestroy()
 	{
-		KillTimer(TIMER_ID1);
-		KillTimer(TIMER_ID2);
-
 		// Destroy any dock children first
 		std::vector<CDocker*>::const_iterator iter;
 		for (iter = m_vDockChildren.begin(); iter != m_vDockChildren.end(); ++iter)
@@ -2977,6 +2977,16 @@ namespace Win32xx
 		}
 
 		return 0L;
+	}
+
+	inline LRESULT CDocker::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called in response to a UWM_DOCKACTIVATE message
+	{
+		// Redraw captions to take account of focus change
+		if (this == GetDockAncestor())
+			DrawAllCaptions();
+
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnDockStart(LPDRAGPOS pdp)
@@ -3055,6 +3065,23 @@ namespace Win32xx
 		return 0L;
 	}
 
+	inline LRESULT CDocker::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		CPoint pt = GetCursorPos();
+
+		if (IsWindow() && PtInRect(GetDockClient().GetWindowRect(), pt))
+		{
+			GetDockAncestor()->m_pDockActive = this;
+			DrawAllCaptions();
+
+			// If the view window won't accept focus, give it to the DockClient
+			if (!GetView().IsChild(GetFocus()))
+				GetDockClient().GetView().SetFocus();
+		}
+
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
+	}
+
 	inline LRESULT CDocker::OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		m_IsDragging = FALSE;
@@ -3078,81 +3105,16 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDocker::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		UNREFERENCED_PARAMETER(uMsg);
-		UNREFERENCED_PARAMETER(lParam);
-
-		if (this == GetDockAncestor())
+		if (this == GetTopmostDocker())
 		{
-			if (wParam == TIMER_ID1 || wParam == TIMER_ID2)
-			{
-				DrawAllCaptions();
-				KillTimer(wParam);
-			}
+			// Reposition the dock children
+			if (IsUndocked() && IsWindowVisible() && !m_IsClosing)
+				RecalcDockLayout();
 		}
 
-		return 0L;
-	}
-
-	inline void CDocker::ResizeDockers(LPDRAGPOS pdp)
-	// Called when the docker's splitter bar is dragged
-	{
-		assert(pdp);
-
-		POINT pt = pdp->ptPos;
-		ScreenToClient(pt);
-
-		CDocker* pDocker = pdp->pDocker;
-		assert( pDocker );
-
-		RECT rcDock = pDocker->GetWindowRect();
-		ScreenToClient(rcDock);
-
-		int iBarWidth    = pDocker->GetDockBar().GetWidth();
-		double dBarWidth = iBarWidth;
-		int DockSize;
-
-		BOOL RTL = FALSE;
-#ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
-#endif
-
-		CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
-
-		switch (pDocker->GetDockStyle() & 0xF)
-		{
-		case DS_DOCKED_LEFT:
-			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
-			else     DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
-
-			DockSize = MAX(-iBarWidth, DockSize);
-			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Width());
-			break;
-		case DS_DOCKED_RIGHT:
-			if (RTL)  DockSize = MAX(pt.x, iBarWidth/2) - rcDock.left - (int)(.5* dBarWidth);
-			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth/2) - (int)(.5* dBarWidth);
-
-			DockSize = MAX(-iBarWidth, DockSize);
-			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Width());
-			break;
-		case DS_DOCKED_TOP:
-			DockSize = MAX(pt.y, iBarWidth/2) - rcDock.top - (int)(.5* dBarWidth);
-			DockSize = MAX(-iBarWidth, DockSize);
-			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Height());
-			break;
-		case DS_DOCKED_BOTTOM:
-			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth/2) - (int)(.5* dBarWidth);
-			DockSize = MAX(-iBarWidth, DockSize);
-			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize)/((double)rcDockParent.Height());
-			break;
-		}
-
-		RecalcDockLayout();
+		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CDocker::OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -3248,11 +3210,6 @@ namespace Win32xx
 				CloseAllTargets();
 				m_IsBlockMove = FALSE;
 			}
-		}
-		else if (this == GetTopmostDocker())
-		{
-			// Reposition the dock children
-			if (IsUndocked() && IsWindowVisible() && !m_IsClosing) RecalcDockLayout();
 		}
 
 		return FinalWindowProc(uMsg, wParam, lParam);
@@ -3482,6 +3439,66 @@ namespace Win32xx
 		}
 
 		return vSorted;
+	}
+
+	inline void CDocker::ResizeDockers(LPDRAGPOS pdp)
+	// Called when the docker's splitter bar is dragged
+	{
+		assert(pdp);
+
+		POINT pt = pdp->ptPos;
+		ScreenToClient(pt);
+
+		CDocker* pDocker = pdp->pDocker;
+		assert(pDocker);
+
+		RECT rcDock = pDocker->GetWindowRect();
+		ScreenToClient(rcDock);
+
+		int iBarWidth = pDocker->GetDockBar().GetWidth();
+		double dBarWidth = iBarWidth;
+		int DockSize;
+
+		BOOL RTL = FALSE;
+#ifdef WS_EX_LAYOUTRTL
+		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+#endif
+
+		CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
+
+		switch (pDocker->GetDockStyle() & 0xF)
+		{
+		case DS_DOCKED_LEFT:
+			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - (int)(.5* dBarWidth);
+			else     DockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - (int)(.5* dBarWidth);
+
+			DockSize = MAX(-iBarWidth, DockSize);
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Width());
+			break;
+		case DS_DOCKED_RIGHT:
+			if (RTL)  DockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - (int)(.5* dBarWidth);
+			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - (int)(.5* dBarWidth);
+
+			DockSize = MAX(-iBarWidth, DockSize);
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Width());
+			break;
+		case DS_DOCKED_TOP:
+			DockSize = MAX(pt.y, iBarWidth / 2) - rcDock.top - (int)(.5* dBarWidth);
+			DockSize = MAX(-iBarWidth, DockSize);
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Height());
+			break;
+		case DS_DOCKED_BOTTOM:
+			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth / 2) - (int)(.5* dBarWidth);
+			DockSize = MAX(-iBarWidth, DockSize);
+			pDocker->SetDockSize(DockSize);
+			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Height());
+			break;
+		}
+
+		RecalcDockLayout();
 	}
 
 	inline BOOL CDocker::SaveDockRegistrySettings(LPCTSTR szRegistryKeyName)
@@ -4023,27 +4040,17 @@ namespace Win32xx
 		pDocker->BringWindowToTop();
 	}
 
-	inline LRESULT CDocker::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		// Redraw captions to take account of focus change
-		DrawAllCaptions();
-
-		// The focus change for some controls can be delayed
-		SetTimer(TIMER_ID1, 200, NULL);
-		SetTimer(TIMER_ID2, 800, NULL);
-
-		return CWnd::WndProcDefault(uMsg, wParam, lParam);
-	}
-
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
+		case WM_ACTIVATE:			return OnActivate(uMsg, wParam, lParam);
 		case WM_SYSCOMMAND:			return OnSysCommand(uMsg, wParam, lParam);
 		case WM_EXITSIZEMOVE:		return OnExitSizeMove(uMsg, wParam, lParam);
+		case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(uMsg, wParam, lParam);
+		case WM_SIZE:				return OnSize(uMsg, wParam, lParam);
 		case WM_SYSCOLORCHANGE:		return OnSysColorChange(uMsg, wParam, lParam);
-		case WM_TIMER:				return OnTimer(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 

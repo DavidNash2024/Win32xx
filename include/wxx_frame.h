@@ -554,7 +554,12 @@ namespace Win32xx
 		{
 			switch (uMsg)
 			{
-			case WM_ACTIVATE:		return CFrame::OnActivate(uMsg, wParam, lParam);
+			case WM_ACTIVATE:
+			{
+				CFrame::OnActivate(uMsg, wParam, lParam);
+				CDocker::OnActivate(uMsg, wParam, lParam);
+				return 0L;
+			}
 			case WM_DRAWITEM:		return CFrame::OnDrawItem(uMsg, wParam, lParam);
 			case WM_ERASEBKGND:		return 0L;
 			case WM_EXITMENULOOP:	return CFrame::OnExitMenuLoop(uMsg, wParam, lParam);
