@@ -1876,6 +1876,9 @@ namespace Win32xx
 
 	inline CDocker::~CDocker()
 	{
+		if (GetDockAncestor()->m_pDockActive == this)
+			GetDockAncestor()->m_pDockActive = 0;
+
 		GetDockBar().Destroy();
 
 		std::vector<DockPtr>::const_iterator iter;
