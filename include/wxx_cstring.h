@@ -201,7 +201,7 @@ namespace Win32xx
 		int      Insert(int nIndex, const CStringT& str);
 		bool     IsEmpty() const;
         CStringT Left(int nCount) const;
-		bool	 LoadString(UINT nID);
+		bool	 LoadString(UINT nID);		// defined in wincore.h
 		void     MakeLower();
 		void	 MakeReverse();
 		void     MakeUpper();
@@ -1785,13 +1785,6 @@ namespace Win32xx
 		// CommandLineArgs is a vector of CStringT
 		return CommandLineArgs;
 	}
-
-/*	inline CString LoadString(UINT nID)
-	{
-		CString str;
-		str.LoadString(nID);
-		return str;
-	} */
 
 
 }	// namespace Win32xx
