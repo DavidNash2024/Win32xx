@@ -50,12 +50,12 @@
 // wxx_ddx.h
 //  Definition of the CDataExchange class
 
-// This class provides support for Dialog Data eXchange(DDX) and Dialog Data 
+// This class provides support for Dialog Data eXchange(DDX) and Dialog Data
 // Validation(DDV). This class has a set of DDX and DDV member functions which
-// perform the data exchange and validation for different types of controls.  
+// perform the data exchange and validation for different types of controls.
 // Typically this is used for controls in a dialogs, but controls in any
 // window support DDX and DDV.
-  
+
 // To use CDataExchange, perform the following steps:
 // * Override DoDataExchange and specify the appropriate DDX and DDV functions.
 // * Call UpdateData(FALSE) to initialize the controls and assign their values.
@@ -104,13 +104,13 @@ namespace Win32xx
 		// Constructor/destructor
 		CDataExchange();
 		virtual ~CDataExchange();
-		
+
 		// Dialog Data Validation (DDV) functions
-		virtual void DDV_MaxChars(CString const& value, int nChars);			
+		virtual void DDV_MaxChars(CString const& value, int nChars);
 		virtual void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
-		virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);		
+		virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
 		virtual void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG);
-		virtual void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG);		
+		virtual void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG);
 		virtual void DDV_MinMaxInt(int value, int minVal, int maxVal);
 		virtual void DDV_MinMaxLong(long value,  long minVal, long maxVal);
 		virtual void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
@@ -118,25 +118,25 @@ namespace Win32xx
 		virtual void DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal);
 		virtual void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal);
 		virtual void DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal);
-				
+
 		// DDX Initialisation
-		virtual void DDX_Control(int nIDC, CWnd& rCtl);			
-		
+		virtual void DDX_Control(int nIDC, CWnd& rCtl);
+
 		// Dialog Data eXchange (DDX) functions
-		virtual void DDX_CBIndex(int nIDC, int& index);		
-		virtual void DDX_CBString(int nIDC, CString& value);		
+		virtual void DDX_CBIndex(int nIDC, int& index);
+		virtual void DDX_CBString(int nIDC, CString& value);
 		virtual void DDX_CBStringExact(int nIDC, CString& value);
 		virtual void DDX_Check(int nIDC, int& value);
-		virtual void DDX_DateTime(int nIDC, SYSTEMTIME& value);		
+		virtual void DDX_DateTime(int nIDC, SYSTEMTIME& value);
 		virtual void DDX_LBIndex(int nIDC, int& index);
 		virtual void DDX_LBString(int nIDC, CString& value);
 		virtual void DDX_LBStringExact(int nIDC, CString& value);
 		virtual void DDX_MonthCal(int nIDC, SYSTEMTIME& value);
 		virtual void DDX_Progress(int nIDC, int& value);
 		virtual void DDX_Radio(int nIDC, int& value);
-		virtual void DDX_Scroll(int nIDC, int& value);		
+		virtual void DDX_Scroll(int nIDC, int& value);
 		virtual void DDX_Slider(int nIDC, int& value);
-		
+
 		// DDX text operations
 		virtual void DDX_Text(int nIDC, BYTE& value);
 		virtual void DDX_Text(int nIDC, short& value);
@@ -147,15 +147,15 @@ namespace Win32xx
 		virtual void DDX_Text(int nIDC, CString& value);
 		virtual void DDX_Text(int nIDC, LPTSTR value, int nMaxLen);
 		virtual void DDX_Text(int nIDC, float& value, int precision = FLT_DIG);
-		virtual void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);		
+		virtual void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);
 
 		// Helper operations
 		void virtual Fail(LPCTSTR message);
 		HWND GetLastControl() 		{ return m_hWndLastControl; }
 		HWND GetLastEditControl() 	{ return m_hWndLastEditControl; }
-		void Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate);		
+		void Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate);
 		HWND PrepareCtrl(int nIDC);   	// return HWND of control
-		HWND PrepareEditCtrl(int nIDC); // record this is an edit	
+		HWND PrepareEditCtrl(int nIDC); // record this is an edit
 
 	private:
 		// data members
@@ -165,6 +165,19 @@ namespace Win32xx
 		BOOL  m_bEditLastControl;  		// most recent control is an edit box
 		BOOL  m_bRetrieveAndValidate;	// TRUE means retrieve and validate data
 		HWND  m_hWndParent;        		// parent window
+
+		// Message strings. They are assigned in the constructor.
+		LPCTSTR DDX_MSG_BYTE;
+		LPCTSTR DDX_MSG_INT;
+		LPCTSTR DDX_MSG_LONG;
+		LPCTSTR DDX_MSG_SHORT;
+		LPCTSTR DDX_MSG_REAL;
+		LPCTSTR DDX_MSG_UINT;
+		LPCTSTR DDX_MSG_ULONG;
+		LPCTSTR DDV_MSG_INT_RANGE;
+		LPCTSTR DDV_MSG_UINT_RANGE;
+		LPCTSTR DDV_MSG_REAL_RANGE;
+		LPCTSTR DDV_MSG_STRING_SIZE;
 	};
 
 
@@ -179,22 +192,6 @@ namespace Win32xx
 
 namespace Win32xx
 {
-	// DDX anomaly prompting messages
-	static LPCTSTR DDX_MSG_BYTE   = _T("Please enter an integer between 0 and 255.");
-	static LPCTSTR DDX_MSG_INT    = _T("Please enter an integer.");
-	static LPCTSTR DDX_MSG_LONG   = _T("Please enter a long integer.");
-	static LPCTSTR DDX_MSG_SHORT  = _T("Please enter a short integer.");
-	static LPCTSTR DDX_MSG_REAL   = _T("Please enter a number.");
-	static LPCTSTR DDX_MSG_UINT   = _T("Please enter a positive integer.");
-	static LPCTSTR DDX_MSG_ULONG  = _T("Please enter a positive long integer.");
-
-	// DDV formats and prompts
-	static LPCTSTR DDV_MSG_INT_RANGE    = _T("Please enter an integer in (%ld, %ld).");
-	static LPCTSTR DDV_MSG_UINT_RANGE   = _T("Please enter an integer in (%lu, %lu).");
-	static LPCTSTR DDV_MSG_REAL_RANGE   = _T("Please enter a number in (%.*g, %.*g).");
-	static LPCTSTR DDV_MSG_STRING_SIZE  = _T("%s\n is too long.\nPlease enter no ")\
-						 _T("more than %ld characters.");
-
 
 // required for Borland 5.5 support
 #if !(defined(__BORLANDC__) || (__BORLANDC__ >= 0x600))
@@ -226,9 +223,28 @@ namespace Win32xx
 	inline CDataExchange::CDataExchange()
 	//	Construct a DDX-DDV object.
 	{
+		m_nID = 0;
+		m_hWndLastControl = 0;
+		m_hWndLastEditControl = 0;
+		m_bEditLastControl = FALSE;
 		m_bRetrieveAndValidate = FALSE;
-		m_hWndParent       = 0;
-		m_hWndLastControl  = NULL;
+		m_hWndParent = 0;
+
+		// DDX anomaly prompting messages
+		DDX_MSG_BYTE = _T("Please enter an integer between 0 and 255.");
+		DDX_MSG_INT = _T("Please enter an integer.");
+		DDX_MSG_LONG = _T("Please enter a long integer.");
+		DDX_MSG_SHORT = _T("Please enter a short integer.");
+		DDX_MSG_REAL = _T("Please enter a number.");
+		DDX_MSG_UINT = _T("Please enter a positive integer.");
+		DDX_MSG_ULONG = _T("Please enter a positive long integer.");
+
+		// DDV formats and prompts
+		DDV_MSG_INT_RANGE = _T("Please enter an integer in (%ld, %ld).");
+		DDV_MSG_UINT_RANGE = _T("Please enter an integer in (%lu, %lu).");
+		DDV_MSG_REAL_RANGE = _T("Please enter a number in (%.*g, %.*g).");
+		DDV_MSG_STRING_SIZE = _T("%s\n is too long.\nPlease enter no ")\
+								_T("more than %ld characters.");
 	}
 
 	//============================================================================
@@ -236,7 +252,7 @@ namespace Win32xx
 	//	Destructor.
 	{
 	}
-	
+
 	////////////////////////////////////////////////////////////////
 	//
 	//	DDV: Dialog Data Validation Functions
@@ -263,7 +279,7 @@ namespace Win32xx
 			::SendMessage(m_hWndLastControl, EM_LIMITTEXT, nChars, 0);
 		}
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal)
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise throws
@@ -271,7 +287,7 @@ namespace Win32xx
 	{
 		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
 		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange)
@@ -310,8 +326,8 @@ namespace Win32xx
 		sta[1] = maxRange;
 
 		DateTime_SetRange(m_hWndLastControl, GDTR_MIN | GDTR_MAX, sta);
-	}		
-	
+	}
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDouble(double const& value, double minVal,
 		double maxVal, int precision /* = DBL_DIG */)
@@ -336,7 +352,7 @@ namespace Win32xx
 
 		throw CUserException(message);
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxFloat(float const& value, float minVal,
 		float maxVal, int precision /* = FLT_DIG */)
@@ -378,7 +394,7 @@ namespace Win32xx
 
 		throw CUserException(message);
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
 		const SYSTEMTIME& maxRange)
@@ -415,8 +431,8 @@ namespace Win32xx
 		memcpy(&MinMax[1], &maxRange, sizeof(SYSTEMTIME));
 
 		MonthCal_SetRange(m_hWndLastControl, dwLimit, &MinMax);
-	}	
-	
+	}
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal)
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
@@ -424,7 +440,7 @@ namespace Win32xx
 	{
 		DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
 	}
-		
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal)
 	//	When validating, this method sets the range of the slider
@@ -462,8 +478,8 @@ namespace Win32xx
 	//  throws a CUserException.
 	{
 		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
-	}	
-	
+	}
+
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal)
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
@@ -489,18 +505,18 @@ namespace Win32xx
 		message.Format(DDV_MSG_UINT_RANGE, minVal, maxVal);
 
 		throw CUserException(message);
-	}	
+	}
 
 
 	////////////////////////////////////////////////////////////////
 	//
 	//	DDX: Control Initialization
 	//
-	////////////////////////////////////////////////////////////////	
+	////////////////////////////////////////////////////////////////
 
 	//============================================================================
 	inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
-	//	This function attaches the window with a control ID of nID 
+	//	This function attaches the window with a control ID of nID
 	//	to the specified CWnd. Controls are only attached once.
 	{
 		if (!rCtl.IsWindow())    // not subclassed yet
@@ -537,7 +553,7 @@ namespace Win32xx
 		else
 			::SendMessage(hWndCtrl, CB_SETCURSEL, (WPARAM)index, 0L);
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDX_CBString(int nIDC, CString& value)
 	//	This function manages the transfer of CString data between the edit
@@ -621,7 +637,7 @@ namespace Win32xx
 			}
 		}
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDX_Check(int nIDC, int& value)
 	//	Perform a check box control data exchange on the DDX/DDV object m_DX
@@ -647,7 +663,7 @@ namespace Win32xx
 			::SendMessage(hWndCtrl, BM_SETCHECK, (WPARAM)value, 0L);
 		}
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
 	//	This function manages the transfer of date and/or time data between a
@@ -664,7 +680,7 @@ namespace Win32xx
 		else
 			DateTime_SetSystemtime(hWndCtrl, GDT_VALID, &value);
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::DDX_LBIndex(int nIDC, int& index)
 	//	This function manages the transfer of data between a list box
@@ -681,7 +697,7 @@ namespace Win32xx
 			index = (int)::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L);
 		else
 			::SendMessage(hWndCtrl, LB_SETCURSEL, (WPARAM)index, 0L);
-	}	
+	}
 
 	//============================================================================
 	inline void CDataExchange::DDX_LBString(int nIDC, CString& value)
@@ -791,8 +807,8 @@ namespace Win32xx
 		}
 		else
 			MonthCal_SetCurSel(hWndCtrl, &value);
-	}		
-	
+	}
+
 	//============================================================================
 	inline void CDataExchange::DDX_Progress(int nIDC, int& value)
 	//	This function manages the transfer of data between a progress control
@@ -809,7 +825,7 @@ namespace Win32xx
 			value = (int) ::SendMessage(hWndCtrl, PBM_GETPOS, 0, 0);
 		else
 			::SendMessage(hWndCtrl, PBM_SETPOS, value, 0);
-	}	
+	}
 
 	//============================================================================
 	inline void CDataExchange::DDX_Radio(int nIDC, int& value)
@@ -911,7 +927,7 @@ namespace Win32xx
 	//
 	//	DDX: Data Exchange Procedures
 	//
-	////////////////////////////////////////////////////////////////	
+	////////////////////////////////////////////////////////////////
 
 	//============================================================================
 	inline void CDataExchange::DDX_Text(int nIDC, BYTE& value)
@@ -1170,7 +1186,7 @@ namespace Win32xx
 	inline void CDataExchange::Fail(LPCTSTR message)
 	//	This function is called when a CUserException is caught while
 	//  validating the value in a control. This is a virtual function which can
-	//  be overridden as required. 
+	//  be overridden as required.
 	{
 		::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 
@@ -1194,7 +1210,7 @@ namespace Win32xx
 			TRACE(_T("restore focus to.\n"));
 		}
 	}
-	
+
 	//============================================================================
 	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate)
 	// Used by CWnd::UpdateData() to initialize the CDataExchange members.
@@ -1206,7 +1222,7 @@ namespace Win32xx
 		m_bRetrieveAndValidate = bRetrieveAndValidate;
 		m_hWndParent       = dlgWnd;
 		m_hWndLastControl  = NULL;
-	}	
+	}
 
 	//============================================================================
 	inline HWND CDataExchange::PrepareCtrl(int nIDC)
@@ -1235,13 +1251,13 @@ namespace Win32xx
 
 		m_bEditLastControl = TRUE;
 		return hWndCtrl;
-	}	
+	}
 
 	////////////////////////////////////////////////////////////////
 	//
 	//	Global function
 	//
-	////////////////////////////////////////////////////////////////	
+	////////////////////////////////////////////////////////////////
 
 	//============================================================================
 	inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime)
