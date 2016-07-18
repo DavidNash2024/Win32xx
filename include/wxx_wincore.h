@@ -1044,7 +1044,7 @@ namespace Win32xx
 		// must not update data before the window is created
 		assert(IsWindow());
 
-		// A critical section which is released when ccs goes out of scope
+		// A critical section ensures threads update the data seperately
 		CCriticalSection ccs;
 		ccs.Lock();
 
@@ -1067,6 +1067,8 @@ namespace Win32xx
 			// Validation has failed. Call the Fail to display the error.
 			DX.Fail( e.GetText() );
 		}
+
+		ccs.Release();
 
 		return ok;
 	}

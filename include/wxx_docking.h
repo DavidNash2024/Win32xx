@@ -490,6 +490,7 @@ namespace Win32xx
 		BOOL IsDragAutoResize() const;
 		BOOL IsRelated(HWND hWnd) const;
 		BOOL IsUndocked() const;
+		void SetActiveDocker(CDocker* pDock);
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
 		void SetCaption(LPCTSTR szCaption);
@@ -3659,6 +3660,27 @@ namespace Win32xx
 
 			CloseAllTargets();
 			m_IsBlockMove = FALSE;
+		}
+	}
+
+	inline void CDocker::SetActiveDocker(CDocker* pDock)
+	{
+		assert(pDock->IsWindow());
+
+		if (pDock->SendMessage(UWM_GETCDOCKER))
+		{
+			GetDockAncestor()->m_pDockActive = pDock;
+			
+			// Give focus to the view window unless its child already has it
+			if (!pDock->GetView().IsChild(GetFocus()))
+				pDock->GetView().SetFocus();
+
+			// If the view window won't accept focus, give it to the DockClient
+			if (!pDock->GetView().IsChild(GetFocus()))
+				pDock->GetDockClient().GetView().SetFocus();
+
+			// Update the captions
+			DrawAllCaptions();
 		}
 	}
 
