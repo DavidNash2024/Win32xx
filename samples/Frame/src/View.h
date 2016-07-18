@@ -14,7 +14,6 @@ public:
 	CView();
 	virtual ~CView(){}
 
-	CDoc& GetDoc();
 
 protected:
 	virtual void OnDraw(CDC& dc);

@@ -330,6 +330,7 @@ namespace Win32xx
 		void Release()
 		// Leave the critical section and decrement the lock count
 		{ 
+			assert (m_count > 0);
 			if (m_count > 0)
 			{
 				::LeaveCriticalSection(&m_cs);
@@ -408,7 +409,7 @@ namespace Win32xx
 		LPVOID m_pThreadParams;			// Thread parameter for worker threads
 		HANDLE m_hThread;				// Handle of this thread
 		UINT m_nThreadID;				// ID of this thread
-		DWORD m_dwThreadID;				// ID of this thread
+		DWORD m_dwThreadID;				// ID of this thread (used for WinCE)
 		HACCEL m_hAccel;				// handle to the accelerator table
 		HWND m_hWndAccel;				// handle to the window for accelerator keys
 

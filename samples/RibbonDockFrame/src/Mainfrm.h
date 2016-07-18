@@ -8,7 +8,6 @@
 
 #include "View.h"
 #include "Doc.h"
-#include "wxx_ribbon.h"
 
 
 // Declaration of the CMainFrame class
@@ -19,15 +18,20 @@ public:
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }
-
 	void LoadFile(LPCTSTR str);
 	void MRUFileOpen(UINT nMRUIndex);
+
+	LRESULT OnDropFile(WPARAM wParam);
+	LRESULT OnGetAllPoints();
+	LRESULT OnSendPoint(WPARAM wParam);
+
 	void OnFileExit();
 	void OnFileNew();
 	void OnFileOpen();
 	void OnFileSave();
 	void OnFileSaveAs();
 	void OnFilePrint();
+	void OnInitialUpdate();
 	void OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue);
 	void OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
 	void SetPenColor(COLORREF clr);
@@ -36,7 +40,6 @@ protected:
 	virtual STDMETHODIMP Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
 	virtual STDMETHODIMP UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue);
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnInitialUpdate();
 	virtual void SetupToolBar();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

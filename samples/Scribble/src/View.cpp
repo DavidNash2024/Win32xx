@@ -19,20 +19,11 @@ CView::~CView()
 void CView::DrawLine(int x, int y)
 {
 	CClientDC dcClient(*this);
-	dcClient.CreatePen(PS_SOLID, 1, GetPoints().back().color);
-	dcClient.MoveTo(GetPoints().back().x, GetPoints().back().y);
+	std::vector<PlotPoint>& pp = *GetAllPoints();
+
+	dcClient.CreatePen(PS_SOLID, 1, pp.back().m_color);
+	dcClient.MoveTo(pp.back().m_x, pp.back().m_y);
 	dcClient.LineTo(x, y);
-}
-
-CDoc& CView::GetDoc()
-{
-	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
-	return Frame.GetDoc();
-}
-
-std::vector<PlotPoint>& CView::GetPoints()
-{ 
-	return GetDoc().GetPoints(); 
 }
 
 int CView::OnCreate(CREATESTRUCT&)
@@ -53,21 +44,22 @@ void CView::OnDraw(CDC& dc)
 	MemDC.FillRect(GetClientRect(), m_Brush);
 
 	CPen pen;
+	std::vector<PlotPoint>& pp = *GetAllPoints();
 
-	if (GetPoints().size() > 0)
+	if (pp.size() > 0)
 	{
 		bool bDraw = false;  //Start with the pen up
-		for (UINT i = 0 ; i < GetPoints().size(); ++i)
+		for (UINT i = 0 ; i < pp.size(); ++i)
 		{
-			pen.CreatePen(PS_SOLID, 1, GetPoints()[i].color);
+			pen.CreatePen(PS_SOLID, 1, pp[i].m_color);
 			MemDC.SelectObject(pen);
 
 			if (bDraw)
-				MemDC.LineTo(GetPoints()[i].x, GetPoints()[i].y);
+				MemDC.LineTo(pp[i].m_x, pp[i].m_y);
 			else
-				MemDC.MoveTo(GetPoints()[i].x, GetPoints()[i].y);
+				MemDC.MoveTo(pp[i].m_x, pp[i].m_y);
 
-			bDraw = GetPoints()[i].PenDown;
+			bDraw = pp[i].m_PenDown;
 		}
 	}
 
@@ -101,8 +93,7 @@ LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
  	// Capture mouse input.
  	SetCapture();
-	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
-
+	SendPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
@@ -110,8 +101,7 @@ LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	//Release the capture on the mouse
 	ReleaseCapture();
-	GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false, m_PenColor);
-
+	SendPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false);
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
@@ -125,10 +115,22 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		TRACE(str);
 
 		DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-		GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
+		SendPoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true);
 	}
 	
 	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
+std::vector<PlotPoint>* CView::GetAllPoints()
+{
+	LRESULT lr = GetParent().SendMessage(UWN_GETALLPOINTS, 0, 0);
+	return reinterpret_cast<std::vector<PlotPoint>*>(lr);
+}
+
+void CView::SendPoint(int x, int y, bool PenDown)
+{
+	PlotPoint pp(x, y, PenDown, m_PenColor);
+	GetParent().SendMessage(UWM_SENDPOINT, (WPARAM)&pp, 0);
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)

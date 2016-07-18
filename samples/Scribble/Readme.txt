@@ -26,7 +26,7 @@ Features demonstrated in this example
 * Responding to toolbar and menu commands in OnCommand
 * Responding to notifications in OnNotify.
 * Capturing mouse input.
-* Using a vector to store data.
+* Use of a vector to store data.
 * Loading and saving data to a file.
 * Printing the content of a window.
 * Responding to frame window messages in CFrame::WndProc
@@ -34,6 +34,7 @@ Features demonstrated in this example
 * Using the TRACE command to output debug text.
 * Saving the frame settings in the registry.
 * Implementing a Most Recently Used (MRU) list in the file menu.
-* Using the CDC class to work with device contexts.
-* Using double buffering to speed up drawing to a device context.
+* Use of the CDC class to work with device contexts.
+* Use of double buffering to speed up drawing to a device context.
+* Use of user defined messages to pass information between CView and CMainFrame.
 
