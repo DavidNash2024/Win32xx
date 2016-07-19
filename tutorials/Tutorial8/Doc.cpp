@@ -3,7 +3,7 @@
 
 BOOL CDoc::FileOpen(LPCTSTR szFilename)
 {
-	GetPoints().clear();
+	GetAllPoints().clear();
 	BOOL bResult = FALSE;
 
 	try
@@ -17,8 +17,8 @@ BOOL CDoc::FileOpen(LPCTSTR szFilename)
 	{
 		// An exception occurred. Display the relevant information.
 		::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-		
-		GetPoints().clear();
+
+		GetAllPoints().clear();
 	}
 
 	return bResult;
@@ -50,22 +50,23 @@ void CDoc::Serialize(CArchive &ar)
 	if (ar.IsStoring())
 	{
 		// Store the number of points
-		UINT nPoints = GetPoints().size();
+		UINT nPoints = GetAllPoints().size();
 		ar << nPoints;
-		
+
 		// Store the PlotPoint data
 		std::vector<PlotPoint>::iterator iter;
-		for (iter = GetPoints().begin(); iter < GetPoints().end(); ++iter)
+		for (iter = GetAllPoints().begin(); iter < GetAllPoints().end(); ++iter)
 		{
-			ArchiveObject ao( &(*iter), sizeof(PlotPoint) );
+			PlotPoint pp = (*iter);
+			ArchiveObject ao(&pp, sizeof(PlotPoint));
 			ar << ao;
 		}
 	}
 	else
 	{
 		UINT nPoints;
-		PlotPoint pp = {0};
-		GetPoints().clear();
+		PlotPoint pp;
+		GetAllPoints().clear();
 
 		// Load the number of points
 		ar >> nPoints;
@@ -73,21 +74,15 @@ void CDoc::Serialize(CArchive &ar)
 		// Load the PlotPoint data
 		for (UINT u = 0; u < nPoints; ++u)
 		{
-			ArchiveObject ao( &pp, sizeof(pp) );
+			ArchiveObject ao(&pp, sizeof(pp));
 			ar >> ao;
-			GetPoints().push_back(pp);
+			GetAllPoints().push_back(pp);
 		}
 	}
 
 }
 
-void CDoc::StorePoint(int x, int y, bool PenDown, COLORREF PenColor)
+void CDoc::StorePoint(PlotPoint& pp)
 {
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
-	P1.color = PenColor;
-
-	m_points.push_back(P1); //Add the point to the vector
+	m_points.push_back(pp); //Add the point to the vector
 }

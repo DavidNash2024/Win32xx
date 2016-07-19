@@ -15,6 +15,7 @@ CView::~CView()
 }
 
 void CView::DrawLine(int x, int y)
+// Draws a line in the window's client area
 {
 	CClientDC dcClient(*this);
 	dcClient.MoveTo(m_points.back().x, m_points.back().y);
@@ -22,6 +23,7 @@ void CView::DrawLine(int x, int y)
 }
 
 void CView::OnDraw(CDC& dc)
+// Called when drawing to the window
 {
 	if (m_points.size() > 0)
 	{
@@ -50,6 +52,7 @@ void CView::StorePoint(int x, int y, bool PenDown)
 }
 
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Called when the left mouse button is pressed while the cursor is over the window.
 {
  	// Capture mouse input.
  	SetCapture();
@@ -59,6 +62,7 @@ LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Called when the left mouse button is released
 {
 	//Release the capture on the mouse
 	ReleaseCapture();
@@ -68,6 +72,7 @@ LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Called when the mouse is moved while captured
 {
 	// hold down the left mouse button and move mouse to draw lines.
 	if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
@@ -80,6 +85,7 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 }
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Called to handle the window's messages
 {
 	switch (uMsg)
 	{

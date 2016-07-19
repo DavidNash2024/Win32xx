@@ -308,22 +308,36 @@ void CMainFrame::SetupToolBar()
 }
 
 LRESULT CMainFrame::OnDropFile(WPARAM wParam)
+// Called in reponse to a UWM_DROPFILE message
 {
+	// wParam is a pointer (LPCTSTR) to the filename
 	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
 	assert(szFileName);
+
+	// Load the file
 	LoadFile(szFileName);
 	return 0L;
 }
 
 LRESULT CMainFrame::OnGetAllPoints()
+// Called in response to a UWN_GETALLPOINTS message
 {
-	return reinterpret_cast<LRESULT>(&GetDoc().GetAllPoints());
+	// Get a pointer to the vector of PlotPoints
+	std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
+
+	// Cast the pointer to a LRESULT and return it
+	return reinterpret_cast<LRESULT>(pAllPoints);
 }
 
 LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
+// Called in response to a UWM_SENDPOINT message
 {
+	// wParam is a pointer to the vector of PlotPoints
 	PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wParam);
-	GetDoc().StorePoint(pPP->m_x, pPP->m_y, pPP->m_PenDown, pPP->m_color);
+
+	// Dereference the pointer and store the vector of PlotPoints in CDoc
+	assert(pPP);
+	GetDoc().StorePoint(*pPP);
 	return 0L;
 }
 

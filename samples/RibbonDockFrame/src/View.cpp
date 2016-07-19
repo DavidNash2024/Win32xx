@@ -21,8 +21,8 @@ void CView::DrawLine(int x, int y)
 	CClientDC dcClient(*this);
 	std::vector<PlotPoint>& pp = *GetAllPoints();
 
-	dcClient.CreatePen(PS_SOLID, 1, pp.back().m_color);
-	dcClient.MoveTo(pp.back().m_x, pp.back().m_y);
+	dcClient.CreatePen(PS_SOLID, 1, pp.back().color);
+	dcClient.MoveTo(pp.back().x, pp.back().y);
 	dcClient.LineTo(x, y);
 }
 
@@ -51,15 +51,15 @@ void CView::OnDraw(CDC& dc)
 		bool bDraw = false;  //Start with the pen up
 		for (UINT i = 0 ; i < pp.size(); ++i)
 		{
-			pen.CreatePen(PS_SOLID, 1, pp[i].m_color);
+			pen.CreatePen(PS_SOLID, 1, pp[i].color);
 			MemDC.SelectObject(pen);
 
 			if (bDraw)
-				MemDC.LineTo(pp[i].m_x, pp[i].m_y);
+				MemDC.LineTo(pp[i].x, pp[i].y);
 			else
-				MemDC.MoveTo(pp[i].m_x, pp[i].m_y);
+				MemDC.MoveTo(pp[i].x, pp[i].y);
 
-			bDraw = pp[i].m_PenDown;
+			bDraw = pp[i].PenDown;
 		}
 	}
 
@@ -124,12 +124,17 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 std::vector<PlotPoint>* CView::GetAllPoints()
 {
 	LRESULT lr = GetAncestor().SendMessage(UWN_GETALLPOINTS, 0, 0);
+	assert(lr);
 	return reinterpret_cast<std::vector<PlotPoint>*>(lr);
 }
 
 void CView::SendPoint(int x, int y, bool PenDown)
 {
-	PlotPoint pp(x, y, PenDown, m_PenColor);
+	PlotPoint pp;
+	pp.x = x;
+	pp.y = y;
+	pp.PenDown = PenDown;
+	pp.color = m_PenColor;
 	GetAncestor().SendMessage(UWM_SENDPOINT, (WPARAM)&pp, 0);
 }
 

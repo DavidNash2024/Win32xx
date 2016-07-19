@@ -4,12 +4,6 @@
 #include "Doc.h"
 
 
-const CView& CDoc::GetView() const
-{
-	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
-	return static_cast<CView&>(Frame.GetView());
-}
-
 BOOL CDoc::FileOpen(LPCTSTR szFilename)
 {
 	GetAllPoints().clear();
@@ -66,7 +60,8 @@ void CDoc::Serialize(CArchive &ar)
 		std::vector<PlotPoint>::iterator iter;
 		for (iter = GetAllPoints().begin(); iter < GetAllPoints().end(); ++iter)
 		{
-			ArchiveObject ao( &(*iter), sizeof(PlotPoint) );
+			PlotPoint pp = (*iter);
+			ArchiveObject ao( &pp, sizeof(PlotPoint) );
 			ar << ao;
 		}
 	}
@@ -90,8 +85,7 @@ void CDoc::Serialize(CArchive &ar)
 
 }
 
-void CDoc::StorePoint(int x, int y, bool PenDown, COLORREF PenColor)
+void CDoc::StorePoint(PlotPoint& pp)
 {
-	PlotPoint pp(x, y, PenDown, PenColor);
 	m_points.push_back(pp); //Add the point to the vector
 }
