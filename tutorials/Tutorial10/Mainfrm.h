@@ -19,6 +19,10 @@ public:
 	CDoc& GetDoc() { return m_Doc; }
 	void LoadFile(LPCTSTR str);
 
+	LRESULT OnDropFile(WPARAM wParam);
+	LRESULT OnGetAllPoints();
+	LRESULT OnSendPoint(WPARAM wParam);
+
 	void OnFileExit();
 	void OnFileMRU(WPARAM wParam);
 	void OnFileNew();

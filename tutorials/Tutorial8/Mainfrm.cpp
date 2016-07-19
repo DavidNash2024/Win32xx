@@ -47,7 +47,7 @@ void CMainFrame::OnFileExit()
 
 void CMainFrame::OnFileNew()
 {
-	GetDoc().GetPoints().clear();
+	GetDoc().GetAllPoints().clear();
 	m_PathName = _T("");
 	GetView().Invalidate();
 }
@@ -152,20 +152,49 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
+LRESULT CMainFrame::OnDropFile(WPARAM wParam)
+// Called in reponse to a UWM_DROPFILE message
+{
+	// wParam is a pointer (LPCTSTR) to the filename
+	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
+	assert(szFileName);
+
+	// Load the file
+	LoadFile(szFileName);
+	return 0L;
+}
+
+LRESULT CMainFrame::OnGetAllPoints()
+// Called in response to a UWN_GETALLPOINTS message
+{
+	// Get a pointer to the vector of PlotPoints
+	std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
+
+	// Cast the pointer to a LRESULT and return it
+	return reinterpret_cast<LRESULT>(pAllPoints);
+}
+
+LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
+// Called in response to a UWM_SENDPOINT message
+{
+	// wParam is a pointer to the vector of PlotPoints
+	PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wParam);
+
+	// Dereference the pointer and store the vector of PlotPoints in CDoc
+	GetDoc().StorePoint(*pPP);
+	return 0L;
+}
+
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case UWM_DROPFILE:
-	{
-		LPCTSTR szFileName = (LPCTSTR)wParam;
-		assert(szFileName);
-		LoadFile(szFileName);
-		break;
+	case UWM_DROPFILE:			return OnDropFile(wParam);
+	case UWN_GETALLPOINTS:		return OnGetAllPoints();
+	case UWM_SENDPOINT:			return OnSendPoint(wParam);
 	}
 
-	} // switch (uMsg)
-
+	//Use the default message handling for remaining messages
 	return WndProcDefault(uMsg, wParam, lParam);
-} // LRESULT CMainFrame::WndProc(...)
+}
 

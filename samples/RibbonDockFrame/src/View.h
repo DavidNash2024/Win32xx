@@ -24,17 +24,10 @@
 // The PlotPoint struct holds the drawing information for each point
 struct PlotPoint
 {
-	int m_x;
-	int m_y;
-	bool m_PenDown;
-	COLORREF m_color;
-
-	// The constructors
-	PlotPoint() : m_x(0), m_y(0), m_PenDown(false), m_color(RGB(0, 0, 0)) {}
-	
-	PlotPoint(int x, int y, bool PenDown, COLORREF color) :
-		m_x(x), m_y(y), m_PenDown(PenDown), m_color(color) {}
-
+	int x;
+	int y;
+	bool PenDown;
+	COLORREF color;
 };
 
 
