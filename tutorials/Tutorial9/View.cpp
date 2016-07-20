@@ -121,7 +121,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 }
 
 std::vector<PlotPoint>* CView::GetAllPoints()
-// Retrieves a pointer to the PlotPoint vector by sending a message
+// Retrieves a pointer to the PlotPoint vector by sending a user defined message
 {
 	LRESULT lr = GetParent().SendMessage(UWN_GETALLPOINTS, 0, 0);
 	assert(lr);
@@ -129,7 +129,7 @@ std::vector<PlotPoint>* CView::GetAllPoints()
 }
 
 void CView::SendPoint(int x, int y, bool PenDown)
-// Sends a pointer to a PlotPoint to the parent window in a message
+// Sends a pointer to a PlotPoint to the parent window in a user defined message
 {
 	PlotPoint pp;
 	pp.x = x;

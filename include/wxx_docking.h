@@ -2277,6 +2277,10 @@ namespace Win32xx
 		GetAncestor().SetFocus();
 		pDocker->GetView().SetFocus();
 		RecalcDockLayout();
+
+		// Update the Dock captions
+		GetDockAncestor()->m_pDockActive = pDocker;
+		DrawAllCaptions();
 	}
 
 	inline void CDocker::DrawAllCaptions()
