@@ -233,8 +233,9 @@ void CMainFrame::OnPenColor()
 }
 
 void CMainFrame::SetupToolBar()
+// Configures the ToolBar
 {
-	// Define our toolbar
+	// Define our toolbar buttons
 	AddToolBarButton( IDM_FILE_NEW   );
 	AddToolBarButton( IDM_FILE_OPEN  );
 	AddToolBarButton( IDM_FILE_SAVE  );
@@ -250,7 +251,7 @@ void CMainFrame::SetupToolBar()
 }
 
 LRESULT CMainFrame::OnDropFile(WPARAM wParam)
-// Called in reponse to a UWM_DROPFILE message
+// Called in response to the UWM_DROPFILE user defined message
 {
 	// wParam is a pointer (LPCTSTR) to the filename
 	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
@@ -262,7 +263,7 @@ LRESULT CMainFrame::OnDropFile(WPARAM wParam)
 }
 
 LRESULT CMainFrame::OnGetAllPoints()
-// Called in response to a UWN_GETALLPOINTS message
+// Called in response to the UWM_GETALLPOINTS user defined message
 {
 	// Get a pointer to the vector of PlotPoints
 	std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
@@ -272,7 +273,7 @@ LRESULT CMainFrame::OnGetAllPoints()
 }
 
 LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
-// Called in response to a UWM_SENDPOINT message
+// Called in response to the UWM_SENDPOINT user defined message
 {
 	// wParam is a pointer to the vector of PlotPoints
 	PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wParam);
@@ -283,6 +284,7 @@ LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Called to handle the window's messages
 {
 	switch (uMsg)
 	{
