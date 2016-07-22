@@ -44,24 +44,12 @@
 //     to the window that owns the menu. To manage owner drawing for menus,
 //     handle these two messages in the CWnd's WndProc function.
 //
-//  2) The CMenu pointer returned by FromHandle might be a temporary pointer. It
-//     should be used immediately, not saved for later use.
-//
-//  3) The CMenu pointers returned by FromHandle or GetSubMenu do not need
-//     to be deleted. They are automatically deleted by the Win32++.
-//
-//  4) CMenu pointers returned by GetSubMenu are deleted when the parent CMenu is
-//     detached, destroyed or deconstructed.
-//
-//  5) The HMENU that is attached to a CMenu object (using the attach function) is
-//     automatically deleted when the CMenu object goes out of scope. Detach the
-//     HMENU to stop it being deleted when CMenu's destructor is called.
-//
-//  6) Pass CMenu objects by reference or by pointer when passing them as function
+//  2) CMenu objects are reference counted and can be safely copied. They can
+//     be returned by value from functions and passed by value in function 
 //     arguments.
 //
-//  7) In those functions that use a MENUITEMINFO structure, its cbSize member is
-//     automatically set to the correct value.
+//  3) In those functions that use a MENUITEMINFO structure, its cbSize member
+//     is automatically set to the correct value.
 
 //  Program sample
 //  --------------
