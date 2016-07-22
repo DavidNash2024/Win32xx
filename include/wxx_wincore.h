@@ -232,7 +232,7 @@ namespace Win32xx
 	}
 
 	inline void CWnd::CenterWindow() const
-	// Centers this window over it's parent
+	// Centers this window over its parent
 	{
 
 	// required for multi-monitor support with Dev-C++ and VC6
@@ -1285,7 +1285,7 @@ namespace Win32xx
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const
-	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
+	// The DeferWindowPos function updates the specified multiple window position structure for the window.
 	// The hWndInsertAfter can one of:  HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, or HWND_TOPMOST
 	{
         assert(IsWindow());
@@ -1293,7 +1293,7 @@ namespace Win32xx
 	}
 
 	inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
-	// The DeferWindowPos function updates the specified multiple-window – position structure for the window.
+	// The DeferWindowPos function updates the specified multiple window position structure for the window.
 	// The hWndInsertAfter can one of:  HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, or HWND_TOPMOST
 	{
 		assert(IsWindow());

@@ -93,14 +93,14 @@
 //    CMemDC CMemDC(dcClient);
 //	  dcMem.CreateCompatibleBitmap(dcClient, cx, cy);
 //    CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
-//    CPen* pOldPen = CMemDC.SelectObject(MyPen);
+//    CMemDC.SelectObject(MyPen);
 //	  CMemDC.MoveTo(0, 0);
 //    CMemDC.LineTo(50, 50);
 //	  dcClient.BitBlt(0, 0, cx, cy, CMemDC, 0, 0);
 //  }
 
 // Notes:
-//  * When the CDC object drops out of scope, it's destructor is called, releasing
+//  * When the CDC object drops out of scope, its destructor is called, releasing
 //     or deleting the device context as appropriate.
 //  * When the destructor for CBitmap, CBrush, CPalette, CPen and CRgn are called,
 //     the destructor is called deleting their GDI object.
