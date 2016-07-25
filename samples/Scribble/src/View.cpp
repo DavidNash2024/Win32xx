@@ -37,13 +37,12 @@ void CView::OnDraw(CDC& dc)
 {
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering
 	// Set up our Memory DC and bitmap
-	CMemDC MemDC(dc);
+	CMemDC dcMem(dc);
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
-	MemDC.CreateCompatibleBitmap(dc, Width, Height);
-	MemDC.FillRect(GetClientRect(), m_Brush);
+	dcMem.CreateCompatibleBitmap(dc, Width, Height);
+	dcMem.FillRect(GetClientRect(), m_Brush);
 
-	CPen pen;
 	std::vector<PlotPoint>& pp = *GetAllPoints();
 
 	if (pp.size() > 0)
@@ -51,20 +50,23 @@ void CView::OnDraw(CDC& dc)
 		bool bDraw = false;  //Start with the pen up
 		for (UINT i = 0 ; i < pp.size(); ++i)
 		{
-			pen.CreatePen(PS_SOLID, 1, pp[i].color);
-			MemDC.SelectObject(pen);
+			CPen pen(PS_SOLID, 1, pp[i].color);
+			HPEN OldPen = (HPEN)dcMem.SelectObject(pen);
 
 			if (bDraw)
-				MemDC.LineTo(pp[i].x, pp[i].y);
+				dcMem.LineTo(pp[i].x, pp[i].y);
 			else
-				MemDC.MoveTo(pp[i].x, pp[i].y);
+				dcMem.MoveTo(pp[i].x, pp[i].y);
 
 			bDraw = pp[i].PenDown;
+			
+			// Ensure the CPen is selected out of dcMem before the CPen is destroyed.
+			dcMem.SelectObject(OldPen);
 		}
 	}
 
 	// Copy from the memory DC to our painting dc
-	dc.BitBlt(0, 0, Width, Height, MemDC, 0, 0, SRCCOPY);
+	dc.BitBlt(0, 0, Width, Height, dcMem, 0, 0, SRCCOPY);
 }
 
 LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)

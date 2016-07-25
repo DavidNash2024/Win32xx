@@ -65,6 +65,11 @@
 //    HPEN hOldPen = (HPEN)::SelectObject(hdcMem, hPen);
 //	  ::MoveToEx(hdcMem, 0, 0, NULL);
 //    ::LineTo(hdcMem, 50, 50);
+//    ::SelectObject(hdcMem, hOldPen);
+//    ::DeleteObject(hPen);
+//    hPen = ::CreatePen(PS_SOLID, 1, RGB(0,255,0);
+//    hOldPen = (HPEN)::SelectObject(hdcMem, hPen);
+//    ::LineTo(hdcMem, 80, 80);
 //	  ::BitBlt(hdcClient, 0, 0, cx, cy, hdcMem, 0, 0);
 //    ::SelectObject(hdcMem, hOldPen);
 //    ::DeleteObject(hPen);
@@ -80,23 +85,34 @@
 //	  CClientDC dcClient(*this)
 //    CMemDC dcMem(dcClient);
 //	  dcMem.CreateCompatibleBitmap(dcClient, cx, cy);
-//    CMemDC.CreatePen(PS_SOLID, 1, RGB(255,0,0);
-//	  CMemDC.MoveTo(0, 0);
-//    CMemDC.LineTo(50, 50);
-//	  dcClient.BitBlt(0, 0, cx, cy, CMemDC, 0, 0);
+//    dcMem.CreatePen(PS_SOLID, 1, RGB(255,0,0);
+//	  dcMem.MoveTo(0, 0);
+//    dcMem.LineTo(50, 50);
+//    dcMem.CreatePen(PS_SOLID, 1, RGB(0,255,0));
+//    dcMem.LineTo(80,80);
+//	  dcClient.BitBlt(0, 0, cx, cy, dcMem, 0, 0);
 //  }
 //
 // Coding Example with CDC classes and CPen ...
 //  void DrawLine()
 //  {
 //	  CClientDC dcClient(*this)
-//    CMemDC CMemDC(dcClient);
+//    CMemDC dcMem(dcClient);
 //	  dcMem.CreateCompatibleBitmap(dcClient, cx, cy);
 //    CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
-//    CMemDC.SelectObject(MyPen);
-//	  CMemDC.MoveTo(0, 0);
-//    CMemDC.LineTo(50, 50);
-//	  dcClient.BitBlt(0, 0, cx, cy, CMemDC, 0, 0);
+//    HPEN OldPen = (HPEN)dcMem.SelectObject(MyPen);
+//	  dcMem.MoveTo(0, 0);
+//    dcMem.LineTo(50, 50);
+//
+//    // Only required if we want to change MyPen while its selected into dcMem
+//    dcMem.SelectObject(OldPen);
+//
+//    // Change MyPen and then re-select it into dcMem
+//    MyPen.CreatePen(PS_SOLID, 1, RGB(0,255,0));
+//    dcMem.SelectObject(MyPen);
+//
+//    dcMem.LineTo(80,80);
+//	  dcClient.BitBlt(0, 0, cx, cy, dcMem, 0, 0);	 
 //  }
 
 // Notes:
@@ -107,10 +123,14 @@
 //  * When the CDC object's destructor is called, any GDI objects created by one of
 //     the CDC member functions (CDC::CreatePen for example) will be deleted.
 //  * Bitmaps can only be selected into one device context at a time.
+//  * Other GDI resources can be selected into more than one device context at a time.
 //  * Palettes use SelectPalatte to select them into device the context.
 //  * Regions use SelectClipRgn to select them into the device context.
 //  * All the GDI classes are reference counted. This allows functions to safely
 //     pass these objects by value, as well as by pointer or by reference.
+//  * If SelectObject is used to select say a CPen into a device context, the 
+//     CPen shouldn't be changed while device context is valid. Use SelectObject to
+//     select the old pen back into the device context before changing the pen.
 
 // The CBitmapInfoPtr class is a convenient wrapper for the BITMAPINFO structure.
 // The size of the BITMAPINFO structure is dependant on the type of HBITMAP, and its
@@ -120,9 +140,9 @@
 // GetDIBits and SetDIBits.
 //
 // Coding example ...
-//  CDC MemDC = CreateCompatibleDC(NULL);
+//  CDC dcMem = CreateCompatibleDC(NULL);
 //  CBitmapInfoPtr pbmi(hBitmap);
-//  MemDC.GetDIBits(hBitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+//  dcMem.GetDIBits(hBitmap, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 
 
 #ifndef _WIN32XX_GDI_H_
@@ -1347,14 +1367,14 @@ namespace Win32xx
 			BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
 
 			// Create the reference DC for GetDIBits to use
-			CMemDC MemDC(NULL);
+			CMemDC dcMem(NULL);
 
 			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-			MemDC.GetDIBits(*this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 			std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
 			byte* pByteArray = &vBits[0];
 
-			MemDC.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 			UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
 			int yOffset = 0;
@@ -1384,7 +1404,7 @@ namespace Win32xx
 			}
 
 			// Save the modified colour back into our source DDB
-			MemDC.SetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			dcMem.SetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		}
 
 		inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
@@ -1400,14 +1420,14 @@ namespace Win32xx
 			bmiHeader.biBitCount = 24;
 
 			// Create the reference DC for GetDIBits to use
-			CMemDC MemDC(NULL);
+			CMemDC dcMem(NULL);
 
 			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-			MemDC.GetDIBits(*this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 			std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
 			byte* pByteArray = &vBits[0];
 
-			MemDC.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 			UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
 
 			// Ensure sane colour correction values
@@ -1465,7 +1485,7 @@ namespace Win32xx
 			}
 
 			// Save the modified colour back into our source DDB
-			MemDC.SetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			dcMem.SetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		}
 
 #endif // !_WIN32_WCE

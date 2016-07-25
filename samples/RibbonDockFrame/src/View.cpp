@@ -43,7 +43,6 @@ void CView::OnDraw(CDC& dc)
 	MemDC.CreateCompatibleBitmap(dc, Width, Height);
 	MemDC.FillRect(GetClientRect(), m_Brush);
 
-	CPen pen;
 	std::vector<PlotPoint>& pp = *GetAllPoints();
 
 	if (pp.size() > 0)
@@ -51,8 +50,8 @@ void CView::OnDraw(CDC& dc)
 		bool bDraw = false;  //Start with the pen up
 		for (UINT i = 0 ; i < pp.size(); ++i)
 		{
-			pen.CreatePen(PS_SOLID, 1, pp[i].color);
-			MemDC.SelectObject(pen);
+			CPen pen(PS_SOLID, 1, pp[i].color);
+			HPEN OldPen = (HPEN)MemDC.SelectObject(pen);
 
 			if (bDraw)
 				MemDC.LineTo(pp[i].x, pp[i].y);
@@ -60,6 +59,9 @@ void CView::OnDraw(CDC& dc)
 				MemDC.MoveTo(pp[i].x, pp[i].y);
 
 			bDraw = pp[i].PenDown;
+			
+			// Select the old pen to allow the CPen to be changed.
+			MemDC.SelectObject(OldPen);
 		}
 	}
 

@@ -384,7 +384,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 
 		// Operations
-		void	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
+		HANDLE	CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
 		HACCEL	GetAcceleratorTable() const { return m_hAccel; }
 		HWND	GetAcceleratorsWindow() const { return m_hWndAccel; }
 		HWND	GetMainWnd() const;

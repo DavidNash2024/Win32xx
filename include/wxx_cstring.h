@@ -179,6 +179,7 @@ namespace Win32xx
 		BSTR     AllocSysString() const;
 		void	 AppendFormat(const T* pszFormat,...);
 		void	 AppendFormat(UINT nFormatID, ...);
+		void	 Assign(const T* pszText, int nCount);
         int      Collate(const T* pszText) const;
         int      CollateNoCase(const T* pszText) const;
         int      Compare(const T* pszText) const;
@@ -696,6 +697,12 @@ namespace Win32xx
 		m_str.append(str);
 	}
 
+	template <class T>
+	inline void	CStringT<T>::Assign(const T* pszText, int nCount)
+	// Assigns the specified number of charaters from pszText to the CStringT.
+	{
+		m_str.assign(pszText, nCount);
+	}
 
 	template <>
 	inline int CStringT<CHAR>::Collate(const CHAR* pszText) const

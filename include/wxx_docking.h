@@ -1486,9 +1486,9 @@ namespace Win32xx
 	{
 		// Display the blue tinted bitmap
 		CRect rc = GetClientRect();
-		CMemDC MemDC(dc);
-		MemDC.SelectObject(m_bmBlueTint);
-		dc.BitBlt(0, 0, rc.Width(), rc.Height(), MemDC, 0, 0, SRCCOPY);
+		CMemDC dcMem(dc);
+		dcMem.SelectObject(m_bmBlueTint);
+		dc.BitBlt(0, 0, rc.Width(), rc.Height(), dcMem, 0, 0, SRCCOPY);
 	}
 
 	inline void CDocker::CDockHint::PreCreate(CREATESTRUCT& cs)

@@ -744,11 +744,8 @@ namespace Win32xx
 		if (IsUnicode)	
 			throw CFileException(m_pFile->GetFilePath(), _T("Unicode characters stored. Not a CStringA"));
 
-		char* buf = new char[nChars];
-		Read(buf, nChars);
-		memcpy(string.GetBuffer(nChars), buf, nChars);
+		Read(string.GetBuffer(nChars), nChars);
 		string.ReleaseBuffer(nChars);
-		delete[] buf;
 
 		return *this;
 	}
@@ -769,11 +766,8 @@ namespace Win32xx
 		if (!IsUnicode)	
 			throw CFileException(m_pFile->GetFilePath(), _T("ANSI characters stored. Not a CStringW"));
 	
-		WCHAR* buf = new WCHAR[nChars];
-		Read(buf, nChars*2);	
-		memcpy(string.GetBuffer(nChars), buf, nChars*2);
+		Read(string.GetBuffer(nChars), nChars * 2);
 		string.ReleaseBuffer(nChars);
-		delete[] buf;
 
 		return *this;
 	}
@@ -795,8 +789,11 @@ namespace Win32xx
 		*this >> nChars;
 	
 		if (IsUnicode)
-		{	
-			WCHAR* buf = new WCHAR[nChars];
+		{
+			std::vector<WCHAR> vWChar(nChars + 1, L'\0');
+			WCHAR* buf = &vWChar.front();
+
+		//	WCHAR* buf = new WCHAR[nChars];
 			Read(buf, nChars*2);
 			
 #ifdef _UNICODE
@@ -807,11 +804,14 @@ namespace Win32xx
 #endif
 
 			string.ReleaseBuffer(nChars);
-			delete[] buf;
+		//	delete[] buf;
 		}
 		else
 		{
-			char* buf = new char[nChars];
+			std::vector<char> vChar(nChars + 1, '\0');
+			char* buf = &vChar.front();
+
+		//	char* buf = new char[nChars];
 			Read(buf, nChars);
 
 #ifdef _UNICODE
@@ -822,7 +822,7 @@ namespace Win32xx
 #endif
 
 			string.ReleaseBuffer(nChars);
-			delete[] buf;
+		//	delete[] buf;
 		}
 
 		return *this;
