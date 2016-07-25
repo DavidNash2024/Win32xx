@@ -562,8 +562,8 @@ namespace Win32xx
 			for (int i = 0 ; i < nCount; ++i)
 			{
 				CClientDC DesktopDC(NULL);
-				CMemDC MemDC(NULL);
-				MemDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
+				CMemDC dcMem(NULL);
+				dcMem.CreateCompatibleBitmap(DesktopDC, cx, cx);
 				CRect rc;
 				rc.SetRect(0, 0, cx, cx);
 
@@ -576,28 +576,28 @@ namespace Win32xx
 					if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
 				}
 
-				MemDC.SolidFill(crMask, rc);
+				dcMem.SolidFill(crMask, rc);
 
 				// Draw the image on the memory DC
-				ImageList_Draw(himlNormal, i, MemDC , 0, 0, ILD_NORMAL);
+				ImageList_Draw(himlNormal, i, dcMem , 0, 0, ILD_NORMAL);
 
 				// Convert colored pixels to gray
 				for (int x = 0 ; x < cx; ++x)
 				{
 					for (int y = 0; y < cy; ++y)
 					{
-						COLORREF clr = ::GetPixel(MemDC, x, y);
+						COLORREF clr = ::GetPixel(dcMem, x, y);
 
 						if (clr != crMask)
 						{
 							BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
-							MemDC.SetPixel(x, y, RGB(byGray, byGray, byGray));
+							dcMem.SetPixel(x, y, RGB(byGray, byGray, byGray));
 						}
 					}
 				}
 
 				// Detach the bitmap so we can use it.
-				CBitmap Bitmap = MemDC.DetachBitmap();
+				CBitmap Bitmap = dcMem.DetachBitmap();
 				Add(Bitmap, crMask);
 			}
 		}

@@ -119,7 +119,7 @@ namespace Win32xx
 		}
 	}
 
-	inline void CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
+	inline HANDLE CWinThread::CreateThread(unsigned initflag /* = 0 */, unsigned stack_size/* = 0 */, LPSECURITY_ATTRIBUTES pSecurityAttributes /*= NULL*/)
 	{
 		// Valid argument values:
 		// initflag					Either CREATE_SUSPENDED or 0
@@ -137,6 +137,8 @@ namespace Win32xx
 
 		if (m_hThread == 0)
 			throw CWinException(_T("Failed to create thread"));
+
+		return m_hThread;
 	}
 
 	inline HWND CWinThread::GetMainWnd() const

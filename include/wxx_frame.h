@@ -1674,17 +1674,17 @@ namespace Win32xx
 			// Draw the checkmark's background rectangle
 			dcDraw.Rectangle(rcBk.left, rcBk.top, rcBk.right, rcBk.bottom);
 
-			CMemDC MemDC(dcDraw);
+			CMemDC dcMem(dcDraw);
 			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
-			MemDC.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
+			dcMem.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
 			CRect rcCheck( 0, 0, cxCheck, cyCheck);
 
 			// Copy the check mark bitmap to hdcMem
 			if (MFT_RADIOCHECK == fType)
-				MemDC.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUBULLET);
+				dcMem.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUBULLET);
 			else
-				MemDC.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUCHECK);
+				dcMem.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUCHECK);
 
 			int xoffset = (rcBk.Width() - rcCheck.Width()-1)/2;
 			int yoffset = (rcBk.Height() - rcCheck.Height()-1)/2;
@@ -1700,15 +1700,15 @@ namespace Win32xx
 			if ((pdis->itemState & ODS_SELECTED))  // && (!tm.UseThemes))
 			{
 				// Draw a white checkmark
-				MemDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, DSTINVERT);
-				MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+				dcMem.BitBlt(0, 0, cxCheck, cyCheck, dcMem, 0, 0, DSTINVERT);
+				MaskDC.BitBlt(0, 0, cxCheck, cyCheck, dcMem, 0, 0, SRCAND);
 				dcDraw.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCPAINT);
 			}
 			else
 			{
 				// Draw a black checkmark
 				int BullitOffset = (MFT_RADIOCHECK == fType)? 1 : 0;
-				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, MemDC, 0, 0, SRCAND);
+				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, dcMem, 0, 0, SRCAND);
 				dcDraw.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 			}
 		}
@@ -1820,14 +1820,14 @@ namespace Win32xx
 
 			// Create our memory DC
 			CRect rcReBar = ReBar.GetClientRect();
-			CMemDC MemDC(dc);
-			MemDC.CreateCompatibleBitmap(dc, rcReBar.Width(), rcReBar.Height());
+			CMemDC dcMem(dc);
+			dcMem.CreateCompatibleBitmap(dc, rcReBar.Width(), rcReBar.Height());
 
 			// Draw to ReBar background to the memory DC
-			MemDC.SolidFill(RBTheme.clrBkgnd2, rcReBar);
+			dcMem.SolidFill(RBTheme.clrBkgnd2, rcReBar);
 			CRect rcBkGnd = rcReBar;
 			rcBkGnd.right = 600;
-			MemDC.GradientFill(RBTheme.clrBkgnd1, RBTheme.clrBkgnd2, rcReBar, TRUE);
+			dcMem.GradientFill(RBTheme.clrBkgnd1, RBTheme.clrBkgnd2, rcReBar, TRUE);
 
 			if (RBTheme.clrBand1 || RBTheme.clrBand2)
 			{
@@ -1907,9 +1907,9 @@ namespace Win32xx
 							}
 
 							// Copy Source DC to Memory DC using the RoundRect mask
-							MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
-							MemDC.BitBlt(left, top, cx, cy, MaskDC,   left, top, SRCAND);
-							MemDC.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+							dcMem.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
+							dcMem.BitBlt(left, top, cx, cy, MaskDC,   left, top, SRCAND);
+							dcMem.BitBlt(left, top, cx, cy, SourceDC, left, top, SRCINVERT);
 						}
 					}
 				}
@@ -1931,12 +1931,12 @@ namespace Win32xx
 						rcRand.left = MAX(0, rcReBar.left - 4);
 						rcRand.bottom +=2;
 					}
-					MemDC.DrawEdge(rcRand, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
+					dcMem.DrawEdge(rcRand, EDGE_ETCHED, BF_BOTTOM | BF_ADJUST);
 				}
 			}
 
 			// Copy the Memory DC to the window's DC
-			dc.BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), MemDC, 0, 0, SRCCOPY);
+			dc.BitBlt(0, 0, rcReBar.Width(), rcReBar.Height(), dcMem, 0, 0, SRCCOPY);
 		}
 
 		return IsDrawn;
