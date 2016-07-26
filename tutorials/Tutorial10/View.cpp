@@ -52,18 +52,14 @@ void CView::OnDraw(CDC& dc)
 		bool bDraw = false;  //Start with the pen up
 		for (UINT i = 0 ; i < pp.size(); ++i)
 		{
-			CPen pen(PS_SOLID, 1, pp[i].color);
-			HPEN OldPen = (HPEN)MemDC.SelectObject(pen);
+			dcMem.CreatePen(PS_SOLID, 1, pp[i].color);
 
 			if (bDraw)
-				MemDC.LineTo(pp[i].x, pp[i].y);
+				dcMem.LineTo(pp[i].x, pp[i].y);
 			else
-				MemDC.MoveTo(pp[i].x, pp[i].y);
+				dcMem.MoveTo(pp[i].x, pp[i].y);
 
 			bDraw = pp[i].PenDown;
-			
-			// Remove the old pen so it can be changed.
-			MemDC.SelectObject(OldPen);
 		}
 	}
 
