@@ -790,10 +790,10 @@ namespace Win32xx
 	
 		if (IsUnicode)
 		{
+			// use a vector to create our WCHAR array
 			std::vector<WCHAR> vWChar(nChars + 1, L'\0');
 			WCHAR* buf = &vWChar.front();
 
-		//	WCHAR* buf = new WCHAR[nChars];
 			Read(buf, nChars*2);
 			
 #ifdef _UNICODE
@@ -804,14 +804,13 @@ namespace Win32xx
 #endif
 
 			string.ReleaseBuffer(nChars);
-		//	delete[] buf;
 		}
 		else
 		{
+			// use a vector to create our char array
 			std::vector<char> vChar(nChars + 1, '\0');
 			char* buf = &vChar.front();
 
-		//	char* buf = new char[nChars];
 			Read(buf, nChars);
 
 #ifdef _UNICODE
@@ -822,7 +821,6 @@ namespace Win32xx
 #endif
 
 			string.ReleaseBuffer(nChars);
-		//	delete[] buf;
 		}
 
 		return *this;

@@ -191,6 +191,7 @@ namespace Win32xx
 	class CPen;
 	class CRgn;
 	class CDataExchange;
+	struct CDC_Data;
 
 	// tString is a TCHAR std::string
 	typedef std::basic_string<TCHAR> tString;
@@ -211,19 +212,6 @@ namespace Win32xx
 	typedef Shared_Ptr<CPen> PenPtr;
 	typedef Shared_Ptr<CRgn> RgnPtr;
 
-
-	struct CDC_Data	// A structure that contains the data members for CDC
-	{
-		// Constructor
-		CDC_Data() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
-
-		std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
-		HDC		hDC;			// The HDC belonging to this CDC
-		long	Count;			// Reference count
-		bool	IsManagedHDC;	// Delete/Release the HDC on destruction
-		HWND	hWnd;			// The HWND of a Window or Client window DC
-		int		nSavedDCState;	// The save state of the HDC.
-	};
 
 	struct CGDI_Data	// A structure that contains the data members for CGDIObject
 	{

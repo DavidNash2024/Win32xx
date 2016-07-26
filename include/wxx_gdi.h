@@ -100,11 +100,11 @@
 //    CMemDC dcMem(dcClient);
 //	  dcMem.CreateCompatibleBitmap(dcClient, cx, cy);
 //    CPen MyPen(PS_SOLID, 1, RGB(255,0,0));
-//    HPEN OldPen = (HPEN)dcMem.SelectObject(MyPen);
+//    CPen OldPen = dcMem.SelectObject(MyPen);
 //	  dcMem.MoveTo(0, 0);
 //    dcMem.LineTo(50, 50);
 //
-//    // Only required if we want to change MyPen while its selected into dcMem
+//    // Only need to select the OldPen if MyPen is changed while its selected into dcMem.
 //    dcMem.SelectObject(OldPen);
 //
 //    // Change MyPen and then re-select it into dcMem
@@ -389,6 +389,25 @@ namespace Win32xx
 		int GetRegionData(LPRGNDATA lpRgnData, int nDataSize) const;
 	};
 
+	struct CDC_Data	// A structure that contains the data members for CDC
+	{
+		// Constructor
+		CDC_Data() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
+
+		std::vector<GDIPtr> m_vGDIObjects;	// Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
+		CBitmap Bitmap;
+		CBrush	Brush;
+		CFont	Font;
+		CPalette Palette;
+		CPen	Pen;
+		CRgn	Rgn;
+		HDC		hDC;			// The HDC belonging to this CDC
+		long	Count;			// Reference count
+		bool	IsManagedHDC;	// Delete/Release the HDC on destruction
+		HWND	hWnd;			// The HWND of a Window or Client window DC
+		int		nSavedDCState;	// The save state of the HDC.
+	};
+
 
 	///////////////////////////////////////////////
 	// Declarations for the CDC class
@@ -413,6 +432,11 @@ namespace Win32xx
 		BOOL RestoreDC(int nSavedDC) const;
 		int SaveDC() const;
 		HGDIOBJ SelectObject(HGDIOBJ hObject) const;
+		HBITMAP SelectObject(HBITMAP hBitmap) const;
+		HBRUSH SelectObject(HBRUSH hBrush) const;
+		HFONT SelectObject(HFONT hFont) const;
+		HPEN SelectObject(HPEN hPen) const;
+		int SelectObject(HRGN hRgn) const;
 
 #ifndef _WIN32_WCE
 		void operator = (const HDC hDC);
@@ -473,11 +497,11 @@ namespace Win32xx
 #endif
 
 		// Create and select Palettes
-		void CreatePalette(LPLOGPALETTE pLogPalette);
+		void CreatePalette(LPLOGPALETTE pLogPalette, BOOL bForceBkgnd);
 		HPALETTE SelectPalette(HPALETTE hPalette, BOOL bForceBkgnd);
 
 #ifndef _WIN32_WCE
-		void CreateHalftonePalette();
+		void CreateHalftonePalette(BOOL bForceBkgnd);
 #endif
 
 		// Create Pens
@@ -2510,6 +2534,36 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return ::SelectObject(m_pData->hDC, hObject);
 	}
 
+	inline HBITMAP CDC::SelectObject(HBITMAP hBitmap) const
+	{
+		assert(m_pData);
+		return (HBITMAP)::SelectObject(m_pData->hDC, hBitmap);
+	}
+
+	inline HBRUSH CDC::SelectObject(HBRUSH hBrush) const
+	{
+		assert(m_pData);
+		return (HBRUSH)::SelectObject(m_pData->hDC, hBrush);
+	}
+
+	inline HFONT CDC::SelectObject(HFONT hFont) const
+	{
+		assert(m_pData);
+		return (HFONT)::SelectObject(m_pData->hDC, hFont);
+	}
+
+	inline HPEN CDC::SelectObject(HPEN hPen) const
+	{
+		assert(m_pData);
+		return (HPEN)::SelectObject(m_pData->hDC, hPen);
+	}
+
+	inline int CDC::SelectObject(HRGN hRgn) const
+	{
+		assert(m_pData);
+		return (int)(INT_PTR)::SelectObject(m_pData->hDC, hRgn);
+	}
+
 	inline void CDC::SolidFill(COLORREF Color, const RECT& rc) const
 	// Fills a rectangle with a solid color
 	{
@@ -2524,10 +2578,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateCompatibleBitmap(hdc, cx, cy);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateCompatibleBitmap(hdc, cx, cy);
+		SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 	}
 
 	inline void CDC::CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors)
@@ -2535,10 +2589,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateBitmap(cx, cy, Planes, BitsPerPixel, pvColors);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateBitmap(cx, cy, Planes, BitsPerPixel, pvColors);
+		SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 	}
 
 #ifndef _WIN32_WCE
@@ -2547,10 +2601,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateBitmapIndirect(lpBitmap);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateBitmapIndirect(lpBitmap);
+		SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 	}
 
 	inline void CDC::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
@@ -2559,10 +2613,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
+		SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 	}
 #endif
 
@@ -2572,10 +2626,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateDIBSection(hdc, &bmi, iUsage, ppvBits, hSection, dwOffset);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateDIBSection(hdc, &bmi, iUsage, ppvBits, hSection, dwOffset);
+		SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 	}
 
 	inline CBitmap CDC::DetachBitmap()
@@ -2584,16 +2638,13 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Usage:  CBitmap MyBitmap = MyMemDC.DetachBitmap();
 	{
 		// Create a stock bitmap to replace the current one.
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateBitmap(1, 1, 1, 1, 0);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateBitmap(1, 1, 1, 1, 0);
+		
+		CBitmap OldBitmap = SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 
-		// Select our new stock bitmap into the device context
-		HBITMAP hBitmap = (HBITMAP)::SelectObject(*this, *pBitmap);
-
-		// Create a local CBitmap. We can return this by value because it is reference counted
-		CBitmap Bitmap(hBitmap);
-		return Bitmap;
+		return OldBitmap;
 	}
 
 	inline void CDC::Destroy()
@@ -2655,12 +2706,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		BOOL bResult = pBitmap->LoadBitmap(lpszName);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
+		CBitmap bitmap;
+		BOOL bResult = bitmap.LoadBitmap(lpszName);
 
 		if (bResult)
-			::SelectObject(*this, *pBitmap);
+		{
+			SelectObject(bitmap);
+			m_pData->Bitmap = bitmap;
+		}
 
 		return bResult;
 	}
@@ -2678,12 +2731,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		BOOL bResult = pBitmap->LoadImage(lpszName, cxDesired, cyDesired, fuLoad);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
+		CBitmap bitmap;
+		BOOL bResult = bitmap.LoadImage(lpszName, cxDesired, cyDesired, fuLoad);
 
 		if (bResult)
-			::SelectObject(*this, *pBitmap);
+		{
+			SelectObject(bitmap);
+			m_pData->Bitmap = bitmap;
+		}
 
 		return bResult;
 	}
@@ -2694,12 +2749,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		BOOL bResult = pBitmap->LoadOEMBitmap(nIDBitmap);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
+		CBitmap bitmap;
+		BOOL bResult = bitmap.LoadOEMBitmap(nIDBitmap);
 
 		if (bResult)
-			::SelectObject(*this, *pBitmap);
+		{
+			SelectObject(bitmap);
+			m_pData->Bitmap = bitmap;
+		}
 
 		return bResult;
 	}
@@ -2710,10 +2767,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBitmap* pBitmap = new CBitmap;
-		pBitmap->CreateMappedBitmap(nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
-		m_pData->m_vGDIObjects.push_back(pBitmap);
-		::SelectObject(m_pData->hDC, *pBitmap);
+		CBitmap bitmap;
+		bitmap.CreateMappedBitmap(nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+		SelectObject(bitmap);
+		m_pData->Bitmap = bitmap;
 	}
 #endif // !_WIN32_WCE
 
@@ -2725,10 +2782,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBrush* pBrush = new CBrush;
-		pBrush->CreatePatternBrush(hBitmap);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
+		CBrush brush;
+		brush.CreatePatternBrush(hBitmap);
+		SelectObject(brush);
+		m_pData->Brush = brush;
 	}
 
 	inline void CDC::CreateSolidBrush(COLORREF rgb)
@@ -2736,10 +2793,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBrush* pBrush = new CBrush;
-		pBrush->CreateSolidBrush(rgb);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
+		CBrush brush;
+		brush.CreateSolidBrush(rgb);
+		SelectObject(brush);
+		m_pData->Brush = brush;
 	}
 
 	inline HBRUSH CDC::GetCurrentBrush() const
@@ -2767,10 +2824,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBrush* pBrush = new CBrush;
-		pBrush->CreateBrushIndirect(pLogBrush);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
+		CBrush brush;
+		brush.CreateBrushIndirect(pLogBrush);
+		SelectObject(brush);
+		m_pData->Brush = brush;
 	}
 
 	inline void CDC::CreateHatchBrush(int fnStyle, COLORREF rgb)
@@ -2778,10 +2835,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBrush* pBrush = new CBrush;
-		pBrush->CreateHatchBrush(fnStyle, rgb);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
+		CBrush brush;
+		brush.CreateHatchBrush(fnStyle, rgb);
+		SelectObject(brush);
+		m_pData->Brush = brush;
 	}
 
 	inline void CDC::CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec)
@@ -2789,10 +2846,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBrush* pBrush = new CBrush;
-		pBrush->CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
+		CBrush brush;
+		brush.CreateDIBPatternBrush(hglbDIBPacked, fuColorSpec);
+		SelectObject(brush);
+		m_pData->Brush = brush;
 	}
 
 	inline void CDC::CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage)
@@ -2800,10 +2857,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CBrush* pBrush = new CBrush;
-		pBrush->CreateDIBPatternBrushPt(lpPackedDIB, iUsage);
-		m_pData->m_vGDIObjects.push_back(pBrush);
-		::SelectObject(m_pData->hDC, *pBrush);
+		CBrush brush;
+		brush.CreateDIBPatternBrushPt(lpPackedDIB, iUsage);
+		SelectObject(brush);
+		m_pData->Brush = brush;
 	}
 #endif
 
@@ -2814,10 +2871,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CFont* pFont = new CFont;
-		pFont->CreateFontIndirect(plf);
-		m_pData->m_vGDIObjects.push_back(pFont);
-		::SelectObject(m_pData->hDC, *pFont);
+		CFont font;
+		font.CreateFontIndirect(plf);
+		SelectObject(font);
+		m_pData->Font = font;
 	}
 
 	inline HFONT CDC::GetCurrentFont() const
@@ -2861,27 +2918,27 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CFont* pFont = new CFont;
-		pFont->CreateFont (nHeight, nWidth, nEscapement, nOrientation, fnWeight,
-								fdwItalic, fdwUnderline, fdwStrikeOut, fdwCharSet,
-								fdwOutputPrecision, fdwClipPrecision, fdwQuality,
-								fdwPitchAndFamily, lpszFace);
-		m_pData->m_vGDIObjects.push_back(pFont);
-		::SelectObject(m_pData->hDC, *pFont);
+		CFont font;
+		font.CreateFont(nHeight, nWidth, nEscapement, nOrientation, fnWeight,
+			fdwItalic, fdwUnderline, fdwStrikeOut, fdwCharSet,
+			fdwOutputPrecision, fdwClipPrecision, fdwQuality,
+			fdwPitchAndFamily, lpszFace);
+		SelectObject(font);
+		m_pData->Font = font;
 	}
 #endif
 
 	// Palette functions
-	inline void CDC::CreatePalette(LPLOGPALETTE pLogPalette)
+	inline void CDC::CreatePalette(LPLOGPALETTE pLogPalette, BOOL bForceBkgnd)
 	// Creates and selects a palette
 	{
 		assert(m_pData->hDC);
 
-		CPalette* pPalette = new CPalette;
-		pPalette->CreatePalette(pLogPalette);
-		m_pData->m_vGDIObjects.push_back(pPalette);
-		::SelectObject(m_pData->hDC, *pPalette);
-		::RealizePalette(m_pData->hDC);
+		CPalette palette;
+		palette.CreatePalette(pLogPalette);
+		SelectPalette(palette, bForceBkgnd);
+		m_pData->Palette = palette;
+		RealizePalette();
 	}
 
 	inline HPALETTE CDC::GetCurrentPalette() const
@@ -2915,15 +2972,15 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 #ifndef _WIN32_WCE
 
-	inline void CDC::CreateHalftonePalette()
+	inline void CDC::CreateHalftonePalette(BOOL bForceBkgnd)
 	// Creates and selects halftone palette
 	{
 		assert(m_pData->hDC);
 
-		CPalette* pPalette = new CPalette;
-		pPalette->CreateHalftonePalette(*this);
-		m_pData->m_vGDIObjects.push_back(pPalette);
-		::SelectObject(m_pData->hDC, *pPalette);
+		CPalette palette;
+		palette.CreateHalftonePalette(*this);
+		::SelectPalette(m_pData->hDC, palette, bForceBkgnd);
+		m_pData->Palette = palette;
 		::RealizePalette(m_pData->hDC);
 	}
 
@@ -2957,10 +3014,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CPen* pPen = new CPen;
-		pPen->CreatePen(nStyle, nWidth, rgb);
-		m_pData->m_vGDIObjects.push_back(pPen);
-		::SelectObject(m_pData->hDC, *pPen);
+		CPen pen;
+		pen.CreatePen(nStyle, nWidth, rgb);
+		SelectObject(pen);
+		m_pData->Pen = pen;
 	}
 
 	inline void CDC::CreatePenIndirect (LPLOGPEN pLogPen)
@@ -2968,10 +3025,10 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CPen* pPen = new CPen;
-		pPen->CreatePenIndirect(pLogPen);
-		m_pData->m_vGDIObjects.push_back(pPen);
-		::SelectObject(m_pData->hDC, *pPen);
+		CPen pen;
+		pen.CreatePenIndirect(pLogPen);
+		SelectObject(pen);
+		m_pData->Pen = pen;
 	}
 
 	inline HPEN CDC::GetCurrentPen() const
@@ -2995,7 +3052,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 	// Retrieve and Select Stock Objects
 	inline HGDIOBJ CDC::GetStockObject(int nIndex) const
-	// Retrieves a stock brush, pen, or font into the device context.
+	// Retrieves a stock brush, pen, or font.
 	// nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
 	//                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,
 	//                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT.
@@ -3011,7 +3068,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 		HGDIOBJ hStockObject = ::GetStockObject(nIndex);
-		return ::SelectObject(m_pData->hDC, hStockObject);
+		return SelectObject(hStockObject);
 	}
 
 	// Region functions
@@ -3021,10 +3078,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreateRectRgn(left, top, right, bottom);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreateRectRgn(left, top, right, bottom);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 
 	inline int CDC::CreateRectRgnIndirect(const RECT& rc)
@@ -3033,10 +3091,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreateRectRgnIndirect(rc);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreateRectRgnIndirect(rc);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 
 	inline int CDC::CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData)
@@ -3047,10 +3106,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreateFromData(Xform, nCount, pRgnData);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreateFromData(Xform, nCount, pRgnData);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 
 
@@ -3062,10 +3122,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreateEllipticRgn(left, top, right, bottom);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreateEllipticRgn(left, top, right, bottom);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 
 	inline int CDC::CreateEllipticRgnIndirect(const RECT& rc)
@@ -3075,10 +3136,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreateEllipticRgnIndirect(rc);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreateEllipticRgnIndirect(rc);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 
 	inline int CDC::CreatePolygonRgn(LPPOINT ppt, int cPoints, int fnPolyFillMode)
@@ -3088,10 +3150,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreatePolygonRgn(ppt, cPoints, fnPolyFillMode);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreatePolygonRgn(ppt, cPoints, fnPolyFillMode);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 
 	inline int CDC::CreatePolyPolygonRgn(LPPOINT ppt, LPINT pPolyCounts, int nCount, int fnPolyFillMode)
@@ -3100,10 +3163,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 
-		CRgn* pRgn = new CRgn;
-		pRgn->CreatePolyPolygonRgn(ppt, pPolyCounts, nCount, fnPolyFillMode);
-		m_pData->m_vGDIObjects.push_back(pRgn);
-		return SelectClipRgn(*pRgn);
+		CRgn rgn;
+		rgn.CreatePolyPolygonRgn(ppt, pPolyCounts, nCount, fnPolyFillMode);
+		int Complexity = SelectClipRgn(rgn);
+		m_pData->Rgn = rgn;
+		return Complexity;
 	}
 #endif
 

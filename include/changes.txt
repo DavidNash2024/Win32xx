@@ -10,6 +10,8 @@ New Features and Enhancements
 * Updated CString
  - CString and the text conversion classes can now be used independently of
    the rest of the framework.
+ - Added CString::Assign. This function is used to assign a specified number 
+   of characters to a CString. The assigned string can contain NULL characters.    
 
 * Updated CFrame
  - SetView can now be used to switch between multiple views. This also applies
@@ -23,6 +25,12 @@ New Features and Enhancements
     CDockContainer.  
   - Improved the way the active docker is determined.
   
+* Updated CDC
+  - Additional overrides for CDC::SelectObject to allow this function to be used 
+    with casting. For example:
+	  CPen Pen(PS_SOLID, 1, RGB(255, 0, 0));
+	  CPen OldPen = dcMem.SelectObject(pen);
+  
 
 Changes in detail
 -----------------
@@ -33,8 +41,10 @@ Added CDocker::OnSize			member function
 Added CDocker::SetActiveDocker	member function
 Added CFrame::SetupMenuIcons    member function
 Added RibbonDockFrame           sample application
+Added additional overrides for CDC::SelectObject		
 
 Modified CWinThread::CreateThread	now returns thread handle.
+Modified CDC::CreatePalette
 
 Removed CDocker::GetDockFromPoint
 
