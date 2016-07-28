@@ -603,9 +603,10 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 
 		m_OFN.hwndOwner = hWndOwner;
-		m_OFN.lpstrFile = (LPTSTR)m_sFileName.GetBuffer(m_OFN.nMaxFile);
+		m_OFN.lpstrFile = m_sFileName.GetBuffer(m_OFN.nMaxFile);
 		int ok = (m_bOpenFileDialog ? ::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
 		m_sFileName.ReleaseBuffer();
+		m_OFN.lpstrFile = (LPTSTR)m_sFileName.c_str();
 		m_hWnd = 0;
 
 		// the result of the file choice box is processed here:

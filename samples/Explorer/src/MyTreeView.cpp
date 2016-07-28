@@ -409,7 +409,6 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
 	while (hChild != NULL)
 	{
 		//Get the TVITEM structure for this item
-		TVITEM tvItem;
 		ZeroMemory(&tvItem, sizeof(TVITEM));
 		tvItem.mask = TVIF_PARAM;
 		tvItem.hItem = hChild;

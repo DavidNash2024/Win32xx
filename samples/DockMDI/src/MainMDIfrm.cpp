@@ -79,7 +79,7 @@ void CMainMDIFrame::OnInitialUpdate()
 	assert (pDock1->GetContainer());
 	assert (pDock2->GetContainer());
 	pDock1->GetContainer()->SetHideSingleTab(TRUE);
-	pDock1->GetContainer()->SetHideSingleTab(TRUE);
+	pDock2->GetContainer()->SetHideSingleTab(TRUE);
 
 	// Add some  MDI children
 	AddMDIChild(new CSimpleMDIChild);

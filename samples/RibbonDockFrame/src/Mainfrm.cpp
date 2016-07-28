@@ -189,7 +189,7 @@ void CMainFrame::OnFileOpen()
 	if (FileDlg.DoModal(*this) == IDOK)
 	{
 		// Load the file
-		return LoadFile(FileDlg.GetPathName());
+		LoadFile(FileDlg.GetPathName());
 	}
 }
 
