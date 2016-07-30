@@ -845,10 +845,10 @@ namespace Win32xx
 
 	inline void CTab::OnDestroy()
 	{
-		for (int i = GetItemCount()-1; i >= 0; --i)
+	/*	for (int i = GetItemCount()-1; i >= 0; --i)
 		{
 			RemoveTabPage(i);
-		}
+		} */
 	}
 
 	inline LRESULT CTab::OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam)
