@@ -1663,7 +1663,7 @@ namespace Win32xx
 			int Iconx = m_pMenuMetrics->m_sizeCheck.cx;
 			int Icony = m_pMenuMetrics->m_sizeCheck.cy;
 			int left = m_pMenuMetrics->m_marCheck.cxLeftWidth;
-			int top = rc.top + (rc.Height() - Icony)/2;
+			int top = rc.top + (rc.Height() - Icony) / 2;
 			rcBk.SetRect(left, top, left + Iconx, top + Icony);
 
 			CBrush Brush(MBT.clrHot2);
@@ -1678,7 +1678,7 @@ namespace Win32xx
 			int cxCheck = ::GetSystemMetrics(SM_CXMENUCHECK);
 			int cyCheck = ::GetSystemMetrics(SM_CYMENUCHECK);
 			dcMem.CreateBitmap(cxCheck, cyCheck, 1, 1, NULL);
-			CRect rcCheck( 0, 0, cxCheck, cyCheck);
+			CRect rcCheck(0, 0, cxCheck, cyCheck);
 
 			// Copy the check mark bitmap to hdcMem
 			if (MFT_RADIOCHECK == fType)
@@ -1686,10 +1686,8 @@ namespace Win32xx
 			else
 				dcMem.DrawFrameControl(rcCheck, DFC_MENU, DFCS_MENUCHECK);
 
-			int xoffset = (rcBk.Width() - rcCheck.Width()-1)/2;
-			int yoffset = (rcBk.Height() - rcCheck.Height()-1)/2;
-
-			xoffset += 2;
+			int xoffset = (rcBk.Width() - rcCheck.Width()  +1) / 2;
+			int yoffset = (rcBk.Height() - rcCheck.Height() +1) / 2;
 
 			// Draw a white or black check mark as required
 			// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
@@ -1697,7 +1695,7 @@ namespace Win32xx
 			MaskDC.CreateCompatibleBitmap(dcDraw, cxCheck, cyCheck);
 			MaskDC.BitBlt(0, 0, cxCheck, cyCheck, MaskDC, 0, 0, WHITENESS);
 
-			if ((pdis->itemState & ODS_SELECTED))  // && (!tm.UseThemes))
+			if ((pdis->itemState & ODS_SELECTED))
 			{
 				// Draw a white checkmark
 				dcMem.BitBlt(0, 0, cxCheck, cyCheck, dcMem, 0, 0, DSTINVERT);
@@ -1707,8 +1705,7 @@ namespace Win32xx
 			else
 			{
 				// Draw a black checkmark
-				int BullitOffset = (MFT_RADIOCHECK == fType)? 1 : 0;
-				MaskDC.BitBlt( -BullitOffset, BullitOffset, cxCheck, cyCheck, dcMem, 0, 0, SRCAND);
+				MaskDC.BitBlt(0, 0, cxCheck, cyCheck, dcMem, 0, 0, SRCAND);
 				dcDraw.BitBlt(rcBk.left + xoffset, rcBk.top + yoffset, cxCheck, cyCheck, MaskDC, 0, 0, SRCAND);
 			}
 		}

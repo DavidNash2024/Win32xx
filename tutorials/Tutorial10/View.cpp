@@ -39,11 +39,11 @@ void CView::OnDraw(CDC& dc)
 {
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering
 	// Set up our Memory DC and bitmap
-	CMemDC MemDC(dc);
+	CMemDC dcMem(dc);
 	int Width = GetClientRect().Width();
 	int Height = GetClientRect().Height();
-	MemDC.CreateCompatibleBitmap(dc, Width, Height);
-	MemDC.FillRect(GetClientRect(), m_Brush);
+	dcMem.CreateCompatibleBitmap(dc, Width, Height);
+	dcMem.FillRect(GetClientRect(), m_Brush);
 
 	std::vector<PlotPoint>& pp = *GetAllPoints();
 
@@ -64,7 +64,7 @@ void CView::OnDraw(CDC& dc)
 	}
 
 	// Copy from the memory DC to our painting dc
-	dc.BitBlt(0, 0, Width, Height, MemDC, 0, 0, SRCCOPY);
+	dc.BitBlt(0, 0, Width, Height, dcMem, 0, 0, SRCCOPY);
 }
 
 LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
