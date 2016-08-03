@@ -27,7 +27,7 @@ LRESULT CMyScrollBar::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Get a pointer to the MyDialog object
 	CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
-	GetScrollInfo(&m_si);
+	GetScrollInfo(m_si);
 
 	switch (LOWORD (wParam))
 	{
@@ -89,6 +89,6 @@ void CMyScrollBar::SetScroll(int nPos)
 	m_si.fMask = SIF_ALL;
 
 	// Set the scroll bar position
-	SetScrollInfo(&m_si, TRUE);
+	SetScrollInfo(m_si, TRUE);
 }
 

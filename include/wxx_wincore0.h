@@ -245,8 +245,8 @@ namespace Win32xx
 		int   DlgDirListComboBox(LPTSTR lpPathSpec, int nIDComboBox, int nIDStaticPath, UINT uFiletype) const;
 		BOOL  DlgDirSelectEx(LPTSTR lpString, int nCount, int nIDListBox) const;
 		BOOL  DlgDirSelectComboBoxEx(LPTSTR lpString, int nCount, int nIDComboBox) const;
-		BOOL  DrawAnimatedRects(int idAni, RECT& rcFrom, RECT& rcTo) const;
-		BOOL  DrawCaption(HDC hDC, RECT& rc, UINT uFlags) const;
+		BOOL  DrawAnimatedRects(int idAni, const RECT& rcFrom, const RECT& rcTo) const;
+		BOOL  DrawCaption(HDC hDC, const RECT& rc, UINT uFlags) const;
 		BOOL  EnableScrollBar(UINT uSBflags, UINT uArrows) const;
 		CWnd  GetLastActivePopup() const;
 		CMenu GetMenu() const;

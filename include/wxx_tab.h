@@ -141,7 +141,7 @@ namespace Win32xx
 		CImageList  GetImageList() const;
 		BOOL		GetItem(int iItem, LPTCITEM pitem) const;
 		int			GetItemCount() const;
-		BOOL		GetItemRect(int iItem, LPRECT prc) const;
+		BOOL		GetItemRect(int iItem, RECT& rc) const;
 		int			GetRowCount() const;
 		HWND		GetToolTips() const;
 		BOOL		HighlightItem(INT idItem, WORD fHighlight) const;
@@ -165,7 +165,6 @@ namespace Win32xx
 		virtual void	DrawTabs(CDC& dcMem);
 		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
 		virtual void    OnAttach();
-		virtual void	OnDestroy();
 		virtual BOOL    OnEraseBkgnd(CDC&) { return TRUE;}
 		virtual LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -530,7 +529,7 @@ namespace Win32xx
 		for (int i = 0; i < GetItemCount(); ++i)
 		{
 			CRect rcItem;
-			GetItemRect(i, &rcItem);
+			GetItemRect(i, rcItem);
 			if (!rcItem.IsRectEmpty())
 			{
 				if (i == GetCurSel())
@@ -545,7 +544,6 @@ namespace Win32xx
 				}
 
 				dcMem.CreatePen(PS_SOLID, 1, RGB(160, 160, 160));
-			//	dcMem.RoundRect(rcItem.left+1, rcItem.top, rcItem.right+2, rcItem.bottom, 6, 6);
 				dcMem.RoundRect(rcItem.left, rcItem.top, rcItem.right +1, rcItem.bottom, 6, 6);
 
 				if (rcItem.Width() >= 24)
@@ -582,7 +580,7 @@ namespace Win32xx
 
 		// Draw a lighter rectangle touching the tab buttons
 		CRect rcItem;
-		GetItemRect(0, &rcItem);
+		GetItemRect(0, rcItem);
 		int left = rcItem.left +1;
 		int right = rcTab.right;
 		int top = rcTab.bottom;
@@ -615,7 +613,7 @@ namespace Win32xx
 
 			// Draw a lighter line over the darker line for the selected tab
 			dcMem.CreatePen(PS_SOLID, 1, RGB(248,248,248));
-			GetItemRect(GetCurSel(), &rcItem);
+			GetItemRect(GetCurSel(), rcItem);
 			OffsetRect(&rcItem, 1, 1);
 
 			if (IsBottomTab)
@@ -819,7 +817,7 @@ namespace Win32xx
 		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		m_TabFont.CreateFontIndirect(&info.lfStatusFont);
+		m_TabFont.CreateFontIndirect(info.lfStatusFont);
 
 		SetFont(m_TabFont, TRUE);
 
@@ -841,14 +839,6 @@ namespace Win32xx
 		int HeightGap = 5;
 		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
 		SelectPage(0);
-	}
-
-	inline void CTab::OnDestroy()
-	{
-	/*	for (int i = GetItemCount()-1; i >= 0; --i)
-		{
-			RemoveTabPage(i);
-		} */
 	}
 
 	inline LRESULT CTab::OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1553,11 +1543,11 @@ namespace Win32xx
 		return TabCtrl_GetItemCount(*this);
 	}
 
-	inline BOOL CTab::GetItemRect(int iItem, LPRECT prc) const
+	inline BOOL CTab::GetItemRect(int iItem, RECT& rc) const
 	// Retrieves the bounding rectangle for a tab in a tab control.
 	{
 		assert(IsWindow());
-		return TabCtrl_GetItemRect(*this, iItem, prc);
+		return TabCtrl_GetItemRect(*this, iItem, &rc);
 	}
 
 	inline int CTab::GetRowCount() const

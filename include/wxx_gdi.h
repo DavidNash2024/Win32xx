@@ -265,14 +265,14 @@ namespace Win32xx
 	public:
 		CFont();
 		CFont(HFONT hFont);
-		CFont(const LOGFONT* lpLogFont);
+		CFont(const LOGFONT& LogFont);
 		operator HFONT() const;
 		virtual ~CFont();
 
 		// Create methods
-		HFONT CreateFontIndirect(const LOGFONT* lpLogFont);
+		HFONT CreateFontIndirect(const LOGFONT& LogFont);
 		HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc = NULL, BOOL bBold = FALSE, BOOL bItalic = FALSE);
-		HFONT CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hdc = NULL);
+		HFONT CreatePointFontIndirect(const LOGFONT& LogFont, HDC hdc = NULL);
 
 #ifndef _WIN32_WCE
 		HFONT CreateFont(int nHeight, int nWidth, int nEscapement,
@@ -485,7 +485,7 @@ namespace Win32xx
 #endif
 
 		// Create Fonts
-		void CreateFontIndirect(LPLOGFONT plf);
+		void CreateFontIndirect(const LOGFONT& lf);
 		HFONT GetCurrentFont() const;
 		LOGFONT GetLogFont() const;
 
@@ -740,8 +740,8 @@ namespace Win32xx
 		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
 
 		// Text Functions
-		int   DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const;
-		BOOL  ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
+		int   DrawText(LPCTSTR lpszString, int nCount, RECT& rc, UINT nFormat) const;
+		BOOL  ExtTextOut(int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
 		COLORREF GetBkColor() const;
 		int   GetBkMode() const;
 		UINT  GetTextAlign() const;
@@ -754,7 +754,7 @@ namespace Win32xx
 		COLORREF SetTextColor(COLORREF crColor) const;
 
 #ifndef _WIN32_WCE
-		int   DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const;
+		int   DrawTextEx(LPTSTR lpszString, int nCount, RECT& rc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const;
 		DWORD GetCharacterPlacement(LPCTSTR pString, int nCount, int nMaxExtent,
 		                            LPGCP_RESULTS pResults, DWORD dwFlags) const;
 
@@ -942,13 +942,15 @@ namespace Win32xx
 				::DeleteEnhMetaFile(m_hEMF);
 			}
 		}
+
 		void Create(LPCTSTR lpszFilename = NULL)
 		{
 			Attach(::CreateMetaFile(lpszFilename));
 		}
-		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, LPCRECT lpBounds, LPCTSTR lpszDescription)
+
+		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT& rcBounds, LPCTSTR lpszDescription)
 		{
-			HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, lpBounds, lpszDescription);
+			HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, &rcBounds, lpszDescription);
 			if (hDC == 0)
 				throw CResourceException(_T("CreateEnhMetaFile failed"));
 
@@ -1675,11 +1677,11 @@ namespace Win32xx
 		Attach(hFont);
 	}
 
-	inline CFont::CFont(const LOGFONT* lpLogFont)
+	inline CFont::CFont(const LOGFONT& LogFont)
 	{
 		try
 		{
-			CreateFontIndirect(lpLogFont);
+			CreateFontIndirect(LogFont);
 		}
 
 		catch(...)
@@ -1698,10 +1700,10 @@ namespace Win32xx
 	{
 	}
 
-	inline HFONT CFont::CreateFontIndirect(const LOGFONT* lpLogFont)
+	inline HFONT CFont::CreateFontIndirect(const LOGFONT& LogFont)
 	// Creates a logical font that has the specified characteristics.
 	{
-		HFONT hFont = ::CreateFontIndirect(lpLogFont);
+		HFONT hFont = ::CreateFontIndirect(&LogFont);
 		if (hFont == 0)
 			throw CResourceException(_T("CreateFontIndirect"));
 
@@ -1725,10 +1727,10 @@ namespace Win32xx
 		if (bItalic)
 			logFont.lfItalic = (BYTE)TRUE;
 
-		return CreatePointFontIndirect(&logFont, hdc);
+		return CreatePointFontIndirect(logFont, hdc);
 	}
 
-	inline HFONT CFont::CreatePointFontIndirect(const LOGFONT* lpLogFont, HDC hdc /* = NULL*/)
+	inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& LogFont, HDC hdc /* = NULL*/)
 	// Creates a font of a specified typeface and point size.
 	// This function automatically converts the height in lfHeight to logical units using the specified device context.
 	{
@@ -1736,7 +1738,7 @@ namespace Win32xx
 		CDC dc(hDC1);
 
 		// convert nPointSize to logical units based on hDC
-		LOGFONT logFont = *lpLogFont;
+		LOGFONT logFont = LogFont;
 
 #ifndef _WIN32_WCE
 		POINT pt = { 0, 0 };
@@ -1752,7 +1754,7 @@ namespace Win32xx
 		logFont.lfHeight = -abs(((::GetDeviceCaps(hDC1, LOGPIXELSY)* logFont.lfHeight)/ 720));
 #endif // _WIN32_WCE
 
-		return CreateFontIndirect (&logFont);
+		return CreateFontIndirect (logFont);
 	}
 
 #ifndef _WIN32_WCE
@@ -2568,7 +2570,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	// Fills a rectangle with a solid color
 	{
 		COLORREF OldColor = SetBkColor(Color);
-		ExtTextOut(0, 0, ETO_OPAQUE, &rc, NULL, 0, 0);
+		ExtTextOut(0, 0, ETO_OPAQUE, rc, NULL, 0, 0);
 		SetBkColor(OldColor);
 	}
 
@@ -2866,13 +2868,13 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 
 	// Font functions
-	inline void CDC::CreateFontIndirect(LPLOGFONT plf)
+	inline void CDC::CreateFontIndirect(const LOGFONT& lf)
 	// Creates a logical font and selects it into the device context.
 	{
 		assert(m_pData->hDC);
 
 		CFont font;
-		font.CreateFontIndirect(plf);
+		font.CreateFontIndirect(lf);
 		SelectObject(font);
 		m_pData->Font = font;
 	}
@@ -4139,7 +4141,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	// Text Functions
-	inline BOOL CDC::ExtTextOut(int x, int y, UINT nOptions, LPCRECT lprc, LPCTSTR lpszString, int nCount /*= -1*/, LPINT lpDxWidths /*=NULL*/) const
+	inline BOOL CDC::ExtTextOut(int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, int nCount /*= -1*/, LPINT lpDxWidths /*=NULL*/) const
 	// Draws text using the currently selected font, background color, and text color
 	{
 		assert(m_pData->hDC);
@@ -4147,14 +4149,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		if (nCount == -1)
 			nCount = lstrlen (lpszString);
 
-		return ::ExtTextOut(m_pData->hDC, x, y, nOptions, lprc, lpszString, nCount, lpDxWidths );
+		return ::ExtTextOut(m_pData->hDC, x, y, nOptions, &rc, lpszString, nCount, lpDxWidths );
 	}
 
-	inline int CDC::DrawText(LPCTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat) const
+	inline int CDC::DrawText(LPCTSTR lpszString, int nCount, RECT& rc, UINT nFormat) const
 	// Draws formatted text in the specified rectangle
 	{
 		assert(m_pData->hDC);
-		return ::DrawText(m_pData->hDC, lpszString, nCount, lprc, nFormat );
+		return ::DrawText(m_pData->hDC, lpszString, nCount, &rc, nFormat );
 	}
 
 	inline UINT CDC::GetTextAlign() const
@@ -4230,11 +4232,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 #ifndef _WIN32_WCE
-	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, LPRECT lprc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const
+	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, RECT& rc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const
 	// Draws formatted text in the specified rectangle with more formatting options
 	{
 		assert(m_pData->hDC);
-		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, lprc, nFormat, lpDTParams);
+		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, &rc, nFormat, lpDTParams);
 	}
 
 	inline BOOL CDC::GetCharABCWidths(UINT uFirstChar, UINT uLastChar, LPABC pABC) const

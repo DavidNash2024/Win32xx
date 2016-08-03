@@ -27,7 +27,7 @@ void CHyperlink::OnAttach()
 	SystemParametersInfo(SPI_GETNONCLIENTMETRICS, ncm.cbSize, &ncm, 0);
 	LOGFONT lf = ncm.lfMessageFont;
 	lf.lfUnderline = TRUE;
-	m_UrlFont.CreateFontIndirect(&lf);
+	m_UrlFont.CreateFontIndirect(lf);
 }
 
 LRESULT CHyperlink::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)

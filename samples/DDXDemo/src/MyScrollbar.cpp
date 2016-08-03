@@ -76,7 +76,7 @@ OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam) 			/*
 	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(lParam);
 
-	GetScrollInfo(&m_siScroll);
+	GetScrollInfo(m_siScroll);
 
 	switch (LOWORD (wParam))
 	{
@@ -147,6 +147,6 @@ SetScrollInfo(int lo, int hi, int pos, int page)			/*
 	m_siScroll.fMask  = SIF_ALL;
 
 	  // Set the scroll bar position
-	CScrollBar::SetScrollInfo(&m_siScroll, TRUE);
+	CScrollBar::SetScrollInfo(m_siScroll, TRUE);
 }
 

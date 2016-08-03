@@ -43,10 +43,55 @@ Added CFrame::SetupMenuIcons    member function
 Added RibbonDockFrame           sample application
 Added additional overrides for CDC::SelectObject		
 
-Modified CWinThread::CreateThread	now returns thread handle.
+
+Modified CComboBoxEx::GetItem
+Modified CComboBoxEx::InsertItem
+Modified CComboBoxEx::SetItem
+Modified CDC::CreateFontIndirect
 Modified CDC::CreatePalette
+Modified CDC::DrawText
+Modified CDC::DrawTextEx
+Modified CDC::ExtTextOut
+Modified CDialog::MapDialogRect
+Modified CEdit::GetRect
+Modified CEdit::SetRect
+Modified CEdit::SetRectNP
+Modified CEdit::GetRect
+Modified CFont::CFont(const LOGFONT& LogFont);
+Modified CFont::CreateFontIndirect
+Modified CFont::CreatePointFontIndirect
+Modified CHeader::GetItem
+Modified CHeader::InsertItem
+Modified CHeader::SetItem	 
+Modified CListBox::GetItemRect
+Modified CMetaFileDC::CreateEnhanced	   
+Modified CMonthCalendar::GetRange
+Modified CMonthCalendar::GetSelRange
+Modified CMonthCalendar::GetToday
+Modified CMonthCalendar::HitTest
+Modified CMonthCalendar::SetCurSel 
+Modified CMonthCalendar::SetDayState
+Modified CMonthCalendar::SetSelRange
+Modified CMonthCalendar::SetToday
+Modified CRichEdit::SetRect
+Modified CRichEdit::DisplayBand
+Modified CRichEdit::FindText
+Modified CRichEdit::FormatRange
+Modified CRichEdit::GetPunctuation
+Modified CRichEdit::SetPunctuation
+Modified CScrollBar::GetScrollRange
+Modified CScrollBar::GetScrollInfo
+Modified CScrollBar::SetScrollInfo
+Modified CTab::GetItemRect
+Modified CToolTip::GetMargin
+Modified CToolTip::SetMargin
+Modified CToolTip::AdjustRect
+Modified CToolTip::SetToolRect
+Modified CWinThread::CreateThread	now returns thread handle.
+
 
 Removed CDocker::GetDockFromPoint
+Removed CTab::OnDestroy
 
 
 Version 8.2

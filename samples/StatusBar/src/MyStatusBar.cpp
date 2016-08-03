@@ -71,7 +71,7 @@ LRESULT CMyStatusBar::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		{	
 			// Change the Progress Bar indication
 			m_ProgressBar.OffsetPos(1);
-			if (m_ProgressBar.GetRange(FALSE, 0) == m_ProgressBar.GetPos())
+			if (m_ProgressBar.GetRange(FALSE, NULL) == m_ProgressBar.GetPos())
 				m_ProgressBar.SetPos(0);
 
 			break;

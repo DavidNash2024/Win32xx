@@ -24,7 +24,7 @@ void CHyperlink::OnAttach()
 	CFont Font = GetFont();
 	LOGFONT lf = Font.GetLogFont();
 	lf.lfUnderline = TRUE;
-	m_UrlFont.CreateFontIndirect(&lf);
+	m_UrlFont.CreateFontIndirect(lf);
 }
 
 void CHyperlink::OnLButtonDown()

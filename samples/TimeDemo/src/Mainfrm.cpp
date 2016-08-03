@@ -763,7 +763,7 @@ OnFontChoice()     		                                 	/*
 	{
 		lf = FontDlg.GetLogFont();
 		CFont f;
-		if (f.CreateFontIndirect(&lf))
+		if (f.CreateFontIndirect(lf))
 			m_View.m_font = f;
 		else
 			::MessageBox(NULL, _T("Font creation error."),
