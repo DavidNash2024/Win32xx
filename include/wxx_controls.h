@@ -147,11 +147,11 @@ namespace Win32xx
 		HWND 	GetComboBoxCtrl() const;
 		HWND 	GetEditCtrl() const;
 		CImageList GetImageList() const;
-		BOOL 	GetItem(COMBOBOXEXITEM* pCBItem) const;
+		BOOL 	GetItem(COMBOBOXEXITEM& CBItem) const;
 		BOOL 	HasEditChanged () const;
-		int     InsertItem(COMBOBOXEXITEM* lpcCBItem) const;
+		int     InsertItem(const COMBOBOXEXITEM& CBItem) const;
 		CImageList SetImageList(HIMAGELIST himlNew) const;
-		BOOL 	SetItem(PCOMBOBOXEXITEM lpcCBItem) const;
+		BOOL 	SetItem(const COMBOBOXEXITEM& CBItem) const;
 		DWORD 	GetExtendedStyle() const;
 		DWORD 	SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const;
 
@@ -172,13 +172,13 @@ namespace Win32xx
 
 		// Attributes
 		CImageList GetImageList() const;
-		BOOL	GetItem(int nPos, HDITEM* pHeaderItem) const;
+		BOOL	GetItem(int nPos, HDITEM& HeaderItem) const;
 		int		GetItemCount() const;
 		CRect	GetItemRect(int nIndex) const;
 		BOOL	GetOrderArray(LPINT piArray, int iCount);
 		int		OrderToIndex(int nOrder) const;
 		CImageList SetImageList(HIMAGELIST himlNew) const;
-		BOOL	SetItem(int nPos, HDITEM* pHeaderItem);
+		BOOL	SetItem(int nPos, const HDITEM& HeaderItem);
 		BOOL	SetOrderArray(int iCount, LPINT piArray);
 		int		GetBitmapMargin() const;
 		int		SetBitmapMargin(int nWidth);
@@ -186,7 +186,7 @@ namespace Win32xx
 		// Operations
 		CImageList CreateDragImage(int nIndex) const;
 		BOOL	DeleteItem(int nPos);
-		int		InsertItem(int nPos, HDITEM* phdi);
+		int		InsertItem(int nPos, const HDITEM& phdi);
 		BOOL	Layout(HDLAYOUT* pHeaderLayout);
 #ifdef Header_SetHotDivider
 		int		SetHotDivider(CPoint pt);
@@ -236,7 +236,7 @@ namespace Win32xx
 
 		void ClearAddress();
 		int GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3);
-		int GetAddress(DWORD* dwAddress);
+		int GetAddress(DWORD& dwAddress);
 		BOOL IsBlank() const;
 		void SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3);
 		void SetAddress(DWORD dwAddress);
@@ -271,16 +271,16 @@ namespace Win32xx
 		BOOL GetCurSel(LPSYSTEMTIME pDateTime) const;
 		int GetMaxSelCount() const;
 		int GetMonthRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange, DWORD dwFlags) const;
-		DWORD GetRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const;
-		BOOL GetSelRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const;
-		BOOL GetToday(LPSYSTEMTIME pDateTime) const;
-		DWORD HitTest(PMCHITTESTINFO pMCHitTest);
-		BOOL SetCurSel(const LPSYSTEMTIME pDateTime);
-		BOOL SetDayState(int nMonths, LPMONTHDAYSTATE pStates);
+		DWORD GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
+		BOOL GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
+		BOOL GetToday(SYSTEMTIME& DateTime) const;
+		DWORD HitTest(MCHITTESTINFO& MCHitTest);
+		BOOL SetCurSel(const SYSTEMTIME& DateTime);
+		BOOL SetDayState(int nMonths, const MONTHDAYSTATE& States);
 		BOOL SetMaxSelCount(int nMax);
 		BOOL SetRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange);
-		BOOL SetSelRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange);
-		void SetToday(const LPSYSTEMTIME pDateTime);
+		BOOL SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
+		void SetToday(const SYSTEMTIME&  DateTime);
 
 	protected:
 		// Overridables
@@ -347,10 +347,10 @@ namespace Win32xx
 		virtual ~CScrollBar() {}
 
 		BOOL EnableScrollBar( UINT nArrowFlags = ESB_ENABLE_BOTH )  const;
-		BOOL GetScrollInfo(LPSCROLLINFO lpsi)  const;
+		BOOL GetScrollInfo(SCROLLINFO& si)  const;
 		int  GetScrollPos()  const;
-		BOOL GetScrollRange(LPINT lpMinPos, LPINT lpMaxPos )  const;
-		BOOL SetScrollInfo(LPSCROLLINFO lpsi, BOOL bRedraw = TRUE )  const;
+		BOOL GetScrollRange(int& MinPos, int& MaxPos )  const;
+		BOOL SetScrollInfo(const SCROLLINFO& si, BOOL bRedraw = TRUE )  const;
 		int  SetScrollPos(int nPos, BOOL bRedraw)  const;
 		BOOL SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw = TRUE )  const;
 		BOOL ShowScrollBar(BOOL bShow)  const;
@@ -445,7 +445,7 @@ namespace Win32xx
 
 		//Attributes
 		int		GetDelayTime(DWORD dwDuration) const;
-		void	GetMargin(LPRECT lprc) const;
+		void	GetMargin(RECT& rc) const;
 		int		GetMaxTipWidth() const;
 		void	 GetText(CString& str, HWND hWnd, UINT_PTR nIDTool = 0) const;
 		COLORREF GetTipBkColor() const;
@@ -454,7 +454,7 @@ namespace Win32xx
 		BOOL	GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool = 0) const;
 		void	SetDelayTime(UINT nDelay);
 		void	SetDelayTime(DWORD dwDuration, int iTime);
-		void	SetMargin(LPRECT lprc);
+		void	SetMargin(const RECT& rc);
 		int		SetMaxTipWidth(int iWidth);
 		void	SetTipBkColor(COLORREF clr);
 		void	SetTipTextColor(COLORREF clr);
@@ -471,13 +471,13 @@ namespace Win32xx
 		BOOL HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
 		void Pop();
 		void RelayEvent(MSG& Msg);
-		void SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect);
+		void SetToolRect(HWND hWnd, UINT_PTR nIDTool, const RECT& rc);
 		void UpdateTipText(LPCTSTR lpszText, HWND hWnd, UINT_PTR nIDTool = 0);
 		void UpdateTipText(UINT nIDText, HWND hWnd, UINT_PTR nIDTool = 0);
 		void Update();
 
 #if (_WIN32_IE >=0x0500)
-		BOOL AdjustRect(LPRECT lprc, BOOL bLarger = TRUE);
+		BOOL AdjustRect(RECT& rc, BOOL bLarger = TRUE);
   #ifdef TTM_SETTITLE
 		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle);
   #endif
@@ -874,11 +874,11 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
-	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM* pCBItem) const
+	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM& CBItem) const
 	// Retrieves item information for the given ComboBoxEx item.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0L, (LPARAM)pCBItem));
+		return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0L, (LPARAM)&CBItem));
 	}
 
 	inline BOOL CComboBoxEx::HasEditChanged () const
@@ -888,11 +888,11 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(CBEM_HASEDITCHANGED, 0L, 0L));
 	}
 
-	inline int CComboBoxEx::InsertItem(COMBOBOXEXITEM* lpcCBItem) const
+	inline int CComboBoxEx::InsertItem(const COMBOBOXEXITEM& CBItem) const
 	// Inserts a new item in the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)lpcCBItem));
+		return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)&CBItem));
 	}
 
 	inline DWORD CComboBoxEx::SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const
@@ -910,11 +910,11 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
-	inline BOOL CComboBoxEx::SetItem(PCOMBOBOXEXITEM lpcCBItem) const
+	inline BOOL CComboBoxEx::SetItem(const COMBOBOXEXITEM& CBItem) const
 	// Sets the attributes for an item in the ComboBoxEx control.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0L, (LPARAM)lpcCBItem));
+		return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0L, (LPARAM)&CBItem));
 	}
 
 	////////////////////////////////////////
@@ -1057,10 +1057,10 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
-	inline BOOL CHeader::GetItem(int nPos, HDITEM* pHeaderItem) const
+	inline BOOL CHeader::GetItem(int nPos, HDITEM& HeaderItem) const
 	{
 		assert(IsWindow());
-		return Header_GetItem(*this, nPos, pHeaderItem);
+		return Header_GetItem(*this, nPos, &HeaderItem);
 	}
 
 	inline int CHeader::GetItemCount() const
@@ -1083,10 +1083,10 @@ namespace Win32xx
 		return Header_GetOrderArray(*this, piArray, iCount);
 	}
 
-	inline int CHeader::InsertItem(int nPos, HDITEM* phdi)
+	inline int CHeader::InsertItem(int nPos, const HDITEM& hdi)
 	{
 		assert(IsWindow());
-		return Header_InsertItem(*this, nPos, phdi);
+		return Header_InsertItem(*this, nPos, &hdi);
 	}
 
 	inline BOOL CHeader::Layout(HDLAYOUT* pHeaderLayout)
@@ -1122,10 +1122,10 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
-	inline BOOL CHeader::SetItem(int nPos, HDITEM* pHeaderItem)
+	inline BOOL CHeader::SetItem(int nPos, const HDITEM& HeaderItem)
 	{
 		assert(IsWindow());
-		return Header_SetItem(*this, nPos, pHeaderItem);
+		return Header_SetItem(*this, nPos, &HeaderItem);
 	}
 
 	inline BOOL CHeader::SetOrderArray(int iCount, LPINT piArray)
@@ -1199,7 +1199,7 @@ namespace Win32xx
 	inline int CIPAddress::GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3)
 	{
 		DWORD dwAddr;
-		int iValue = GetAddress(&dwAddr);
+		int iValue = GetAddress(dwAddr);
 		nField0 = (BYTE)FIRST_IPADDRESS(dwAddr);
 		nField1 = (BYTE)SECOND_IPADDRESS(dwAddr);
 		nField2 = (BYTE)THIRD_IPADDRESS(dwAddr);
@@ -1207,7 +1207,7 @@ namespace Win32xx
 		return iValue;
 	}
 
-	inline int CIPAddress::GetAddress(DWORD* dwAddress)
+	inline int CIPAddress::GetAddress(DWORD& dwAddress)
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(IPM_GETADDRESS, 0L, (LPARAM)&dwAddress));
@@ -1304,35 +1304,36 @@ namespace Win32xx
 		return nCount;
 	}
 
-	inline DWORD CMonthCalendar::GetRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const
+	inline DWORD CMonthCalendar::GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
 		DWORD dwValue = MonthCal_GetRange(*this, &MinMax);
-		memcpy(pMinRange, &MinMax[0], sizeof(SYSTEMTIME));
-		memcpy(pMaxRange, &MinMax[1], sizeof(SYSTEMTIME));
+		MinRange = MinMax[0];
+		MaxRange = MinMax[1];
 		return dwValue;
 	}
 
-	inline BOOL CMonthCalendar::GetSelRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange) const
+	inline BOOL CMonthCalendar::GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
-		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
-		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-		return static_cast<BOOL>(MonthCal_GetSelRange(*this, &MinMax));
+		BOOL Value = MonthCal_GetSelRange(*this, &MinMax);
+		MinRange = MinMax[0];
+		MaxRange = MinMax[1];
+		return Value;
 	}
 
-	inline BOOL CMonthCalendar::GetToday(LPSYSTEMTIME pDateTime) const
+	inline BOOL CMonthCalendar::GetToday(SYSTEMTIME& DateTime) const
 	{
 		assert(IsWindow());
-		return MonthCal_GetToday(*this, pDateTime);
+		return MonthCal_GetToday(*this, &DateTime);
 	}
 
-	inline DWORD CMonthCalendar::HitTest(PMCHITTESTINFO pMCHitTest)
+	inline DWORD CMonthCalendar::HitTest(MCHITTESTINFO& MCHitTest)
 	{
 		assert(IsWindow());
-		return static_cast<DWORD>(MonthCal_HitTest(*this, pMCHitTest));
+		return static_cast<DWORD>(MonthCal_HitTest(*this, &MCHitTest));
 	}
 
 	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
@@ -1341,16 +1342,16 @@ namespace Win32xx
 		return static_cast<COLORREF>(MonthCal_SetColor(*this, nRegion, clr));
 	}
 
-	inline BOOL CMonthCalendar::SetCurSel(const LPSYSTEMTIME pDateTime)
+	inline BOOL CMonthCalendar::SetCurSel(const SYSTEMTIME& DateTime)
 	{
 		assert(IsWindow());
-		return MonthCal_SetCurSel(*this, pDateTime);
+		return MonthCal_SetCurSel(*this, &DateTime);
 	}
 
-	inline BOOL CMonthCalendar::SetDayState(int nMonths, LPMONTHDAYSTATE pStates)
+	inline BOOL CMonthCalendar::SetDayState(int nMonths, const MONTHDAYSTATE& State)
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(MonthCal_SetDayState(*this, nMonths, pStates));
+		return static_cast<BOOL>(MonthCal_SetDayState(*this, nMonths, &State));
 	}
 
 	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
@@ -1397,18 +1398,18 @@ namespace Win32xx
 		return static_cast<BOOL>(MonthCal_SetRange(*this, dwLimit, &MinMax));
 	}
 
-	inline BOOL CMonthCalendar::SetSelRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
+	inline BOOL CMonthCalendar::SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
 	{
 		SYSTEMTIME MinMax[2];
-		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
-		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
+		MinMax[0] = MinRange;
+		MinMax[1] = MaxRange;
 		return static_cast<BOOL>(MonthCal_SetSelRange(*this, &MinMax));
 	}
 
-	inline void CMonthCalendar::SetToday(const LPSYSTEMTIME pDateTime)
+	inline void CMonthCalendar::SetToday(const SYSTEMTIME& DateTime)
 	{
 		assert(IsWindow());
-		MonthCal_SetToday(*this, pDateTime);
+		MonthCal_SetToday(*this, &DateTime);
 	}
 
 
@@ -1477,12 +1478,12 @@ namespace Win32xx
 		return ::EnableScrollBar(*this, SB_CTL, nArrowFlags);
 	}
 
-	inline BOOL CScrollBar::GetScrollInfo(LPSCROLLINFO lpsi)  const
+	inline BOOL CScrollBar::GetScrollInfo(SCROLLINFO& si)  const
 	// Retrieves the parameters of a scroll bar, including the minimum and maximum
 	// scrolling positions, the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
-		return ::GetScrollInfo(*this, SB_CTL, lpsi);
+		return ::GetScrollInfo(*this, SB_CTL, &si);
 	}
 
 	inline int CScrollBar::GetScrollPos()  const
@@ -1492,19 +1493,19 @@ namespace Win32xx
 		return ::GetScrollPos(*this, SB_CTL);
 	}
 
-	inline BOOL CScrollBar::GetScrollRange(LPINT lpMinPos, LPINT lpMaxPos )  const
+	inline BOOL CScrollBar::GetScrollRange(int& MinPos, int& MaxPos )  const
 	// Retrieves the current minimum and maximum scroll box (thumb) positions for the scroll bar.
 	{
 		assert(IsWindow());
-		return ::GetScrollRange(*this, SB_CTL, lpMinPos, lpMaxPos);
+		return ::GetScrollRange(*this, SB_CTL, &MinPos, &MaxPos);
 	}
 
-	inline BOOL CScrollBar::SetScrollInfo(LPSCROLLINFO lpsi, BOOL bRedraw )  const
+	inline BOOL CScrollBar::SetScrollInfo(const SCROLLINFO& si, BOOL bRedraw )  const
 	// Sets the parameters of the scroll bar, including the minimum and maximum scrolling positions,
 	// the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
-		return ::SetScrollInfo(*this, SB_CTL, lpsi, bRedraw);
+		return ::SetScrollInfo(*this, SB_CTL, &si, bRedraw);
 	}
 
 	inline int CScrollBar::SetScrollPos(int nPos, BOOL bRedraw)  const
@@ -1876,11 +1877,11 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TTM_GETDELAYTIME, dwDuration, 0L));
 	}
 
-	inline void CToolTip::GetMargin(LPRECT lprc) const
+	inline void CToolTip::GetMargin(RECT& rc) const
 	// Retrieves the top, left, bottom, and right margins set for a ToolTip window.
 	{
 		assert(IsWindow());
-		SendMessage(TTM_GETMARGIN, 0L, (LPARAM)lprc);
+		SendMessage(TTM_GETMARGIN, 0L, (LPARAM)&rc);
 	}
 
 	inline int CToolTip::GetMaxTipWidth() const
@@ -1990,12 +1991,11 @@ namespace Win32xx
 		SendMessage(TTM_SETDELAYTIME, dwDuration, (LPARAM)iTime);
 	}
 
-	inline void CToolTip::SetMargin(LPRECT lprc)
+	inline void CToolTip::SetMargin(const RECT& rc)
 	// Sets the top, left, bottom, and right margins for a ToolTip window.
 	{
 		assert(IsWindow());
-		assert(lprc);
-		SendMessage(TTM_SETMARGIN, 0L, (LPARAM)lprc);
+		SendMessage(TTM_SETMARGIN, 0L, (LPARAM)&rc);
 	}
 
 	inline int CToolTip::SetMaxTipWidth(int iWidth)
@@ -2028,14 +2028,13 @@ namespace Win32xx
 		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)lpToolInfo);
 	}
 
-	inline void CToolTip::SetToolRect(HWND hWnd, UINT_PTR nIDTool, LPCRECT lpRect)
+	inline void CToolTip::SetToolRect(HWND hWnd, UINT_PTR nIDTool, const RECT& rc)
 	// Sets a new bounding rectangle for a tool.
 	{
 		assert(IsWindow());
-		assert(lpRect);
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
-		ti.rect = *lpRect;
+		ti.rect = rc;
 		SendMessage(TTM_NEWTOOLRECT, 0L, (LPARAM)&ti);
 	}
 
@@ -2068,12 +2067,12 @@ namespace Win32xx
 	}
 
 #if (_WIN32_IE >=0x0500)
-	inline BOOL CToolTip::AdjustRect(LPRECT lprc, BOOL bLarger /*= TRUE*/)
+	inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL bLarger /*= TRUE*/)
 	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the
 	//  ToolTip window rectangle needed to display a specified text display rectangle.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)lprc));
+		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)&rc));
 	}
 
 	inline CSize CToolTip::GetBubbleSize(LPTOOLINFO lpToolInfo) const

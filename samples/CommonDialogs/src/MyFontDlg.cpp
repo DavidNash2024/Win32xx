@@ -263,7 +263,7 @@ SetFontIndirect(const LOGFONT& lf)                                      /*
 	be created.
 *-----------------------------------------------------------------------------*/
 {
-	m_Font.CreateFontIndirect(&lf);				// throws CResourceException on failure  
+	m_Font.CreateFontIndirect(lf);				// throws CResourceException on failure  
 	CHOOSEFONT cf = GetParameters();
 	memcpy(cf.lpLogFont, &lf, sizeof(LOGFONT));
 }

@@ -196,7 +196,7 @@ BOOL CMainFrame::OnFilePrint()
 			// Default the range of text to print as the entire document.
 			fr.chrg.cpMin = 0;
 			fr.chrg.cpMax = -1;
-			m_RichView.FormatRange(&fr, TRUE);
+			m_RichView.FormatRange(fr, TRUE);
 
 			// Set up the print job (standard printing stuff here).
 			DOCINFO di;
@@ -221,8 +221,8 @@ BOOL CMainFrame::OnFilePrint()
 				// Print as much text as can fit on a page. The return value is
 				// the index of the first character on the next page. Using TRUE
 				// for the wParam parameter causes the text to be printed.
-				lTextPrinted = m_RichView.FormatRange(&fr, TRUE);
-				m_RichView.DisplayBand(&fr.rc);
+				lTextPrinted = m_RichView.FormatRange(fr, TRUE);
+				m_RichView.DisplayBand(fr.rc);
 
 				// Print last page.
 				dcPrinter.EndPage();
@@ -237,7 +237,7 @@ BOOL CMainFrame::OnFilePrint()
 			} while (lTextPrinted < lTextLength);
 
 			// Tell the control to release cached information.
-			m_RichView.FormatRange(&fr, FALSE);
+			m_RichView.FormatRange(fr, FALSE);
 
 			// End the print job
 			dcPrinter.EndDoc();
@@ -332,7 +332,7 @@ BOOL CMainFrame::OnOptionsFont()
 	if (ChooseFont(&cf))
 	{
 		// Set the Font
-		CFont RichFont(cf.lpLogFont);
+		CFont RichFont(*cf.lpLogFont);
 		m_RichView.SetFont(RichFont, TRUE);
 
 		// Set the font color

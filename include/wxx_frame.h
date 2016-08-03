@@ -857,7 +857,7 @@ namespace Win32xx
 				info.lfMenuFont.lfWeight = FW_BOLD;
 
 			// Calculate the size of the text
-			DesktopDC.CreateFontIndirect(&info.lfMenuFont);
+			DesktopDC.CreateFontIndirect(info.lfMenuFont);
 			sizeText = DesktopDC.GetTextExtentPoint32(szItemText, lstrlen(szItemText));
 			sizeText.cx += m_marText.cxRightWidth;
 			sizeText.cy += m_marText.Height();
@@ -990,8 +990,8 @@ namespace Win32xx
 		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
-		m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
+		m_fntMenuBar.CreateFontIndirect(info.lfMenuFont);
+		m_fntStatusBar.CreateFontIndirect(info.lfStatusFont);
 	}
 
 	inline CFrame::~CFrame()
@@ -2685,7 +2685,7 @@ namespace Win32xx
 		{
 			// Update the status bar font and text
 			m_fntStatusBar.DeleteObject();
-			m_fntStatusBar.CreateFontIndirect(&info.lfStatusFont);
+			m_fntStatusBar.CreateFontIndirect(info.lfStatusFont);
 			GetStatusBar().SetFont(m_fntStatusBar, TRUE);
 			if (m_UseMenuStatus)
 				GetStatusBar().SetWindowText(m_strStatusText);
@@ -2697,7 +2697,7 @@ namespace Win32xx
 		{
 			// Update the MenuBar font and button size
 			m_fntMenuBar.DeleteObject();
-			m_fntMenuBar.CreateFontIndirect(&info.lfMenuFont);
+			m_fntMenuBar.CreateFontIndirect(info.lfMenuFont);
 			GetMenuBar().SetFont(m_fntMenuBar, TRUE);
 			GetMenuBar().SetMenu( GetFrameMenu() );
 

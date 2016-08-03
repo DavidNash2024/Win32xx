@@ -426,7 +426,7 @@ Serialize(CArchive &ar)                                               	/*
 			ar >> rgbBkColor;
 
 		  // no exception having been raised, set the view parameters
-        	m_font.CreateFontIndirect(&lf);
+        	m_font.CreateFontIndirect(lf);
 			m_rgbTxColor = rgbTxColor;
 			m_rgbBkColor = rgbBkColor;
 			m_cHt = cHt;

@@ -83,7 +83,7 @@ LRESULT CMainFrame::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		CFont Font = GetStatusBar().GetFont();
 		LOGFONT lf = Font.GetLogFont();
 		lf.lfItalic = TRUE;
-		dc.CreateFontIndirect(&lf);
+		dc.CreateFontIndirect(lf);
 		
 		// Display the gradient background and text
 		dc.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), rcPart, TRUE);

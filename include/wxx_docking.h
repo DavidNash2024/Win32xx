@@ -814,7 +814,7 @@ namespace Win32xx
 			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dcMem.CreateFontIndirect(&info.lfStatusFont);
+			dcMem.CreateFontIndirect(info.lfStatusFont);
 
 			// Set the Colours
 			if (m_pDocker->GetActiveDocker() == m_pDocker)
@@ -2476,7 +2476,7 @@ namespace Win32xx
 		LOGFONT lf = info.lfStatusFont;
 
 		CClientDC dc(*this);
-		dc.CreateFontIndirect(&lf);
+		dc.CreateFontIndirect(lf);
 		CSize szText = dc.GetTextExtentPoint32(_T("Text"), lstrlen(_T("Text")));
 		return szText.cy;
 	}
@@ -4255,7 +4255,7 @@ namespace Win32xx
 			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 			info.cbSize = GetSizeofNonClientMetrics();
 			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-			dc.CreateFontIndirect(&info.lfStatusFont);
+			dc.CreateFontIndirect(info.lfStatusFont);
 			TempSize = dc.GetTextExtentPoint32(iter->Title, lstrlen(iter->Title));
 			if (TempSize.cx > Size.cx)
 				Size = TempSize;
@@ -4307,7 +4307,7 @@ namespace Win32xx
 		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
 		info.cbSize = GetSizeofNonClientMetrics();
 		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
-		GetTabFont().CreateFontIndirect(&info.lfStatusFont);
+		GetTabFont().CreateFontIndirect(info.lfStatusFont);
 		SetFont(GetTabFont());
 
 		ContainerInfo ci;

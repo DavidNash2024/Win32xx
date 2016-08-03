@@ -102,7 +102,7 @@ namespace Win32xx
 		DWORD GetMargins() const;
 		BOOL GetModify() const;
 		TCHAR GetPasswordChar() const;
-		void GetRect(LPRECT lpRect) const;
+		void GetRect(RECT& rc) const;
 		void GetSel(int& nStartChar, int& nEndChar) const;
 		DWORD GetSel() const;
 		CPoint PosFromChar(UINT nChar) const;
@@ -122,8 +122,8 @@ namespace Win32xx
 		void ReplaceSel(LPCTSTR lpszNewText, BOOL bCanUndo) const;
 		void SetPasswordChar(TCHAR ch) const;
 		BOOL SetReadOnly(BOOL bReadOnly = TRUE) const;
-		void SetRect(LPCRECT lpRect) const;
-		void SetRectNP(LPCRECT lpRect) const;
+		void SetRect(const RECT& rc) const;
+		void SetRectNP(const RECT& rc) const;
 		void SetSel(DWORD dwSelection, BOOL bNoScroll) const;
 		void SetSel(int nStartChar, int nEndChar, BOOL bNoScroll) const;
 		BOOL SetTabStops(int nTabStops, LPINT rgTabStops) const;
@@ -158,7 +158,7 @@ namespace Win32xx
 		DWORD GetItemData(int nIndex) const;
 		void* GetItemDataPtr(int nIndex) const;
 		int  GetItemHeight(int nIndex) const;
-		int  GetItemRect(int nIndex, LPRECT lpRect) const;
+		int  GetItemRect(int nIndex, RECT& rc) const;
 		LCID GetLocale() const;
 		int  GetSel(int nIndex) const;
 		int  GetText(int nIndex, LPTSTR lpszBuffer) const;
@@ -420,11 +420,11 @@ namespace Win32xx
 		return static_cast<TCHAR>(SendMessage(EM_GETPASSWORDCHAR, 0L, 0L));
 	}
 
-	inline void CEdit::GetRect(LPRECT lpRect) const
+	inline void CEdit::GetRect(RECT& rc) const
 	// Returns the coordinates of the formatting rectangle in an edit control.
 	{
 		assert(IsWindow());
-		SendMessage(EM_GETRECT, 0L, (LPARAM)lpRect);
+		SendMessage(EM_GETRECT, 0L, (LPARAM)&rc);
 	}
 
 	inline void CEdit::GetSel(int& nStartChar, int& nEndChar) const
@@ -553,18 +553,18 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(EM_SETREADONLY, bReadOnly, 0L));
 	}
 
-	inline void CEdit::SetRect(LPCRECT lpRect) const
+	inline void CEdit::SetRect(const RECT& rc) const
 	// Sets the formatting rectangle for the multiline edit control and redraws the window.
 	{
 		assert(IsWindow());
-		SendMessage(EM_SETRECT, 0L, (LPARAM)lpRect);
+		SendMessage(EM_SETRECT, 0L, (LPARAM)&rc);
 	}
 
-	inline void CEdit::SetRectNP(LPCRECT lpRect) const
+	inline void CEdit::SetRectNP(const RECT& rc) const
 	// Sets the formatting rectangle for the multiline edit control but does not redraw the window.
 	{
 		assert(IsWindow());
-		SendMessage(EM_SETRECTNP, 0L, (LPARAM)lpRect);
+		SendMessage(EM_SETRECTNP, 0L, (LPARAM)&rc);
 	}
 
 	inline void CEdit::SetSel(DWORD dwSelection, BOOL bNoScroll) const
@@ -686,11 +686,11 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(LB_GETITEMHEIGHT, (WPARAM)nIndex, 0L));
 	}
 
-	inline int CListBox::GetItemRect(int nIndex, LPRECT lpRect) const
+	inline int CListBox::GetItemRect(int nIndex, RECT& rc) const
 	// Retrieves the client coordinates of the specified list box item.
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(LB_GETITEMRECT, (WPARAM)nIndex, (LPARAM)lpRect));
+		return static_cast<int>(SendMessage(LB_GETITEMRECT, (WPARAM)nIndex, (LPARAM)&rc));
 	}
 
 	inline LCID CListBox::GetLocale() const

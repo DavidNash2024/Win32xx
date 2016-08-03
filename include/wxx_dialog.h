@@ -111,7 +111,7 @@ namespace Win32xx
 		// Can't override these functions
 		DWORD GetDefID() const;
 		void GotoDlgCtrl(HWND hWndCtrl);
-		BOOL MapDialogRect(LPRECT pRect) const;
+		BOOL MapDialogRect(RECT& rc) const;
 		void NextDlgCtrl() const;
 		void PrevDlgCtrl() const;
 		void SetDefID(UINT nID);
@@ -566,11 +566,11 @@ namespace Win32xx
 		SendMessage(WM_NEXTDLGCTL, (WPARAM)hWndCtrl, TRUE);
 	}
 
-	inline BOOL CDialog::MapDialogRect(LPRECT pRect) const
+	inline BOOL CDialog::MapDialogRect(RECT& rc) const
 	// Converts the dialog box units to screen units (pixels).
 	{
 		assert(IsWindow());
-		return ::MapDialogRect(*this, pRect);
+		return ::MapDialogRect(*this, &rc);
 	}
 
 	inline void CDialog::NextDlgCtrl() const

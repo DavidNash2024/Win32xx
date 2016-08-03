@@ -82,11 +82,11 @@ namespace Win32xx
 		void 	Clear() const;
 		void 	Copy() const;
 		void 	Cut() const;
-		BOOL 	DisplayBand(LPRECT pDisplayRect) const;
+		BOOL 	DisplayBand(const RECT& rcDisplay) const;
 		void 	EmptyUndoBuffer() const;
-		long 	FindText(DWORD dwFlags, FINDTEXTEX* pFindTextEx) const;
+		long 	FindText(DWORD dwFlags, const FINDTEXTEX& FindTextEx) const;
 		DWORD 	FindWordBreak(UINT nCode, DWORD nStart) const;
-		long  	FormatRange(FORMATRANGE* pfr, BOOL bDisplay = TRUE) const;
+		long  	FormatRange(const FORMATRANGE& fr, BOOL bDisplay = TRUE) const;
 		CPoint 	GetCharPos(long lChar) const;
 		DWORD 	GetDefaultCharFormat(CHARFORMAT& cf) const;
 		DWORD 	GetDefaultCharFormat(CHARFORMAT2& cf) const;
@@ -101,7 +101,8 @@ namespace Win32xx
 		UINT 	GetOptions() const;
 		DWORD 	GetParaFormat(PARAFORMAT& pf) const;
 		DWORD 	GetParaFormat(PARAFORMAT2& pf) const;
-		void 	GetRect(LPRECT lpRect) const;
+		BOOL 	GetPunctuation(UINT fType, const PUNCTUATION& Punc) const;
+		void 	GetRect(RECT& rc) const;
 		UNDONAMEID GetRedoName() const;
 		void 	GetSel(CHARRANGE& cr) const;
 		void 	GetSel(long& nStartChar, long& nEndChar) const;
@@ -137,9 +138,9 @@ namespace Win32xx
 		void 	SetOptions(WORD wOp, DWORD dwFlags) const;
 		BOOL 	SetParaFormat(PARAFORMAT& pf) const;
 		BOOL 	SetParaFormat(PARAFORMAT2& pf) const;
-		BOOL 	SetPunctuation(UINT fType, PUNCTUATION* lpPunc) const;
+		BOOL 	SetPunctuation(UINT fType, const PUNCTUATION& Punc) const;
 		BOOL 	SetReadOnly(BOOL bReadOnly = TRUE) const;
-		void 	SetRect(LPCRECT lpRect) const;
+		void 	SetRect(const RECT& rc) const;
 		void 	SetSel(long nStartChar, long nEndChar) const;
 		void 	SetSel(CHARRANGE& cr) const;
 		BOOL 	SetSelectionCharFormat(CHARFORMAT& cf) const;
@@ -252,11 +253,11 @@ namespace Win32xx
 		SendMessage(WM_CUT, 0L, 0L);
 	}
 
-	inline BOOL CRichEdit::DisplayBand(LPRECT pDisplayRect) const
+	inline BOOL CRichEdit::DisplayBand(const RECT& rcDisplay) const
 	// Displays a portion of the contents of a rich edit control, as previously formatted for a device using the EM_FORMATRANGE message.
 	{
 		assert(IsWindow());
-		return (TRUE == SendMessage(EM_DISPLAYBAND, 0L, (LPARAM)pDisplayRect));
+		return (TRUE == SendMessage(EM_DISPLAYBAND, 0L, (LPARAM)&rcDisplay));
 	}
 
 	inline void CRichEdit::EmptyUndoBuffer() const
@@ -266,11 +267,11 @@ namespace Win32xx
 		SendMessage(EM_EMPTYUNDOBUFFER, 0L, 0L);
 	}
 
-	inline long CRichEdit::FindText(DWORD dwFlags, FINDTEXTEX* pFindTextEx) const
+	inline long CRichEdit::FindText(DWORD dwFlags, const FINDTEXTEX& FindTextEx) const
 	// Finds text within the rich edit control.
 	{
 		assert(IsWindow());
-		return static_cast<long>(SendMessage(EM_FINDTEXTEX, (WPARAM)dwFlags,  (LPARAM)pFindTextEx));
+		return static_cast<long>(SendMessage(EM_FINDTEXTEX, (WPARAM)dwFlags,  (LPARAM)&FindTextEx));
 	}
 
 	inline DWORD CRichEdit::FindWordBreak(UINT nCode, DWORD nStart) const
@@ -281,12 +282,12 @@ namespace Win32xx
 		return static_cast<DWORD>(SendMessage(EM_FINDWORDBREAK, (WPARAM)nCode, (LPARAM)nStart));
 	}
 
-	inline long CRichEdit::FormatRange(FORMATRANGE* pfr, BOOL bDisplay /* = TRUE */) const
+	inline long CRichEdit::FormatRange(const FORMATRANGE& fr, BOOL bDisplay /* = TRUE */) const
 	// Formats a range of text in a rich edit control for a specific device (e.g. printer).
 
 	{
 		assert(IsWindow());
-		return static_cast<long>(SendMessage(EM_FORMATRANGE, (WPARAM)bDisplay, (LPARAM)pfr));
+		return static_cast<long>(SendMessage(EM_FORMATRANGE, (WPARAM)bDisplay, (LPARAM)&fr));
 	}
 
 	inline CPoint CRichEdit::GetCharPos(long lChar) const
@@ -395,12 +396,18 @@ namespace Win32xx
 		return static_cast<DWORD>(SendMessage(EM_GETPARAFORMAT, 0L, (LPARAM)&pf));
 	}
 
-	inline void CRichEdit::GetRect(LPRECT lpRect) const
+	inline BOOL CRichEdit::GetPunctuation(UINT fType, const PUNCTUATION& Punc) const
+	{
+		assert(IsWindow());
+		return (TRUE == SendMessage(EM_GETPUNCTUATION, (WPARAM)fType, (LPARAM)&Punc));
+	}
+
+	inline void CRichEdit::GetRect(RECT& rc) const
 	// Retrieves the formatting rectangle. The formatting rectangle is the limiting
 	// rectangle into which text can be drawn.
 	{
 		assert(IsWindow());
-		SendMessage(EM_GETRECT, 0L, (LPARAM)lpRect);
+		SendMessage(EM_GETRECT, 0L, (LPARAM)&rc);
 	}
 
 	inline UNDONAMEID CRichEdit::GetRedoName() const
@@ -685,6 +692,12 @@ namespace Win32xx
 		return (TRUE == SendMessage(EM_SETPARAFORMAT, 0L, (LPARAM)&pf));
 	}
 
+	inline BOOL CRichEdit::SetPunctuation(UINT fType, const PUNCTUATION& Punc) const
+	{
+		assert(IsWindow());
+		return (TRUE == SendMessage(EM_SETPUNCTUATION, (WPARAM)fType, (LPARAM)&Punc));
+	}
+
 	inline BOOL CRichEdit::SetReadOnly(BOOL bReadOnly /* = TRUE*/) const
 	// Sets or removes the read-only style.
 	{
@@ -692,11 +705,11 @@ namespace Win32xx
 		return (TRUE == SendMessage(EM_SETREADONLY, (WPARAM)bReadOnly, 0L));
 	}
 
-	inline void CRichEdit::SetRect(LPCRECT lpRect) const
+	inline void CRichEdit::SetRect(const RECT& rc) const
 	// Sets the formatting rectangle. The formatting rectangle is the limiting rectangle into which the control draws the text.
 	{
 		assert(IsWindow());
-		SendMessage(EM_SETRECT, 0L, (LPARAM)lpRect);
+		SendMessage(EM_SETRECT, 0L, (LPARAM)&rc);
 	}
 
 	inline void CRichEdit::SetSel(long nStartChar, long nEndChar) const

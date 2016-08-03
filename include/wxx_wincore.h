@@ -1986,7 +1986,7 @@ namespace Win32xx
 	}
     #endif
 
-	inline BOOL CWnd::DrawAnimatedRects(int idAni, RECT& rcFrom, RECT& rcTo) const
+	inline BOOL CWnd::DrawAnimatedRects(int idAni, const RECT& rcFrom, const RECT& rcTo) const
 	// The DrawAnimatedRects function draws a wire-frame rectangle and animates it to indicate the opening of
 	// an icon or the minimizing or maximizing of a window.
 	{
@@ -1994,7 +1994,7 @@ namespace Win32xx
 		return ::DrawAnimatedRects(*this, idAni, &rcFrom, &rcTo);
 	}
 
-	inline BOOL CWnd::DrawCaption(HDC hDC, RECT& rc, UINT uFlags) const
+	inline BOOL CWnd::DrawCaption(HDC hDC, const RECT& rc, UINT uFlags) const
 	// The DrawCaption function draws a window caption.
 	{
 		assert(IsWindow());

@@ -566,7 +566,7 @@ namespace Win32xx
 	// The rebar bands will be arranged and wrapped as necessary to fit the rectangle.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(RB_SIZETORECT, 0L, (LPARAM) (LPRECT)rect));
+		return static_cast<BOOL>(SendMessage(RB_SIZETORECT, 0L, (LPARAM) &rect));
 	}
 
 	inline void CReBar::SetToolTips(HWND hToolTip) const

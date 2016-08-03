@@ -354,7 +354,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 					ZeroMemory(&CBXitem, sizeof(COMBOBOXEXITEM));
 					CBXitem.mask = CBEIF_TEXT;
 					CBXitem.pszText = (LPTSTR)str.c_str();
-					m_ComboboxEx.InsertItem(&CBXitem);
+					m_ComboboxEx.InsertItem(CBXitem);
 
 					// Navigate to the web page
 					m_View.Navigate(str);
