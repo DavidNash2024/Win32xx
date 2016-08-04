@@ -889,7 +889,7 @@ namespace Win32xx
 		}
 		// Redraw button
 		CRect r = GetItemRect(iIndex);
-		InvalidateRect(&r, TRUE);
+		InvalidateRect(r, TRUE);
 
 		return Succeeded;
 	}

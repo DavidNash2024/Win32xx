@@ -454,7 +454,7 @@ BOOL CMainFrame::OnUseThemes()
 		int nBand = GetReBar().GetBand(GetMenuBar());
 		GetReBar().ShowGripper(nBand, !m_UseThemes);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -468,7 +468,7 @@ BOOL CMainFrame::OnBandColors()
 		m_UseBandColors = !m_UseBandColors;
 		ChooseColor(m_nColor);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -484,7 +484,7 @@ BOOL CMainFrame::OnFlatStyle()
 		RBT.FlatStyle = m_UseFlatStyle;
 		SetReBarTheme(RBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -500,7 +500,7 @@ BOOL CMainFrame::OnLeftBands()
 		RBT.BandsLeft = m_KeepBandsLeft;
 		SetReBarTheme(RBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -518,7 +518,7 @@ BOOL CMainFrame::OnLockMenuBar()
 		GetReBar().MoveBand(GetReBar().GetBand(GetMenuBar()), 0);	// Move the MenuBar to band 0
 		GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), !m_LockMenuBand);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -579,7 +579,7 @@ BOOL CMainFrame::OnRoundBorders()
 		RBT.RoundBorders = m_UseRoundBorders;
 		SetReBarTheme(RBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -595,7 +595,7 @@ BOOL CMainFrame::OnShortBands()
 		RBT.ShortBands = m_UseShortBands;
 		SetReBarTheme(RBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 
@@ -611,7 +611,7 @@ BOOL CMainFrame::OnUseLines()
 		RBT.UseLines = m_UseLines;
 		SetReBarTheme(RBT);
 
-		GetReBar().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		RecalcLayout();
 	}
 

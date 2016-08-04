@@ -533,14 +533,14 @@ namespace Win32xx
 	inline BOOL CMDIFrame::OnViewStatusBar()
 	{
 		CFrame::OnViewStatusBar();
-		GetView().RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		return TRUE;
 	}
 
 	inline BOOL CMDIFrame::OnViewToolBar()
 	{
 		CFrame::OnViewToolBar();
-		GetView().RedrawWindow(NULL, NULL, RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
+		GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
 		return TRUE;
 	}
 
@@ -703,7 +703,7 @@ namespace Win32xx
 		SetRedraw(FALSE);
 		LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
 		SetRedraw(TRUE);
-		RedrawWindow(0, 0, RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		return lr;
 	}
@@ -817,7 +817,7 @@ namespace Win32xx
 
 		// Turn redraw back on
 		pParent->SetRedraw(TRUE);
-		pParent->RedrawWindow(NULL, NULL, RDW_INVALIDATE | RDW_ALLCHILDREN);
+		pParent->RedrawWindow(RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);

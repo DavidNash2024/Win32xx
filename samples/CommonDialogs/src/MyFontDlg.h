@@ -75,13 +75,16 @@ MyFontDialog : public CFontDialog                                       /*
 *-----------------------------------------------------------------------------*/
 {
 	public:
-		MyFontDialog(LPLOGFONT lplfInitial = NULL,
+		MyFontDialog(const LOGFONT& lfInitial,
 				DWORD dwFlags = 0,
 				HDC hdcPrinter = 0);
 
 		MyFontDialog(const CHARFORMAT& charformat,
 				DWORD dwFlags = 0,
 				HDC hdcPrinter = 0);
+
+		MyFontDialog(DWORD dwFlags = 0,
+			HDC hdcPrinter = 0);
 
 		~MyFontDialog(){}
 
@@ -97,7 +100,7 @@ MyFontDialog : public CFontDialog                                       /*
 				    { m_avgWdHt = sz; }
 			void	SetBoxTitle(LPCTSTR title)
 				    { m_sBoxTitle = title;}
-			void    SetChoiceLogFont(LOGFONT& lf)
+			void    SetChoiceLogFont(const LOGFONT& lf)
 				    { SetFontIndirect(lf); RecordFontMetrics();}
 			void    SetChoiceFont(const CFont& f)
 				    { LOGFONT lf = f.GetLogFont();

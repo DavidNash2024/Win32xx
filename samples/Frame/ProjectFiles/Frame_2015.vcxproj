@@ -15,6 +15,7 @@
     <ClInclude Include="..\..\..\include\wxx_appcore.h" />
     <ClInclude Include="..\..\..\include\wxx_appcore0.h" />
     <ClInclude Include="..\..\..\include\wxx_archive.h" />
+    <ClInclude Include="..\..\..\include\wxx_commondlg.h" />
     <ClInclude Include="..\..\..\include\wxx_controls.h" />
     <ClInclude Include="..\..\..\include\wxx_cstring.h" />
     <ClInclude Include="..\..\..\include\wxx_ddx.h" />

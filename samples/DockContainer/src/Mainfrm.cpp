@@ -86,7 +86,7 @@ BOOL CMainFrame::OnDockDefault()
 	CloseAllDockers();
 	LoadDefaultDockers();
 	SetRedraw(TRUE);
-	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 	return TRUE;
 }
 

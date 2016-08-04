@@ -170,7 +170,8 @@ namespace Win32xx
 		CWnd  GetDesktopWindow() const;
 		int	  GetDlgCtrlID() const;
 		CWnd  GetDlgItem(int nIDDlgItem) const;
-		UINT  GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const;
+		UINT  GetDlgItemInt(int nIDDlgItem, BOOL& IsTranslated, BOOL bSigned) const;
+		UINT  GetDlgItemInt(int nIDDlgItem, BOOL bSigned) const;
 		CString GetDlgItemText(int nIDDlgItem) const;
 		CWnd  GetFocus() const;
 		CFont GetFont() const;
@@ -188,7 +189,8 @@ namespace Win32xx
 		CString GetWindowText() const;
 		int   GetWindowTextLength() const;
 		void  Invalidate(BOOL bErase = TRUE) const;
-		BOOL  InvalidateRect(LPCRECT lpRect, BOOL bErase = TRUE) const;
+		BOOL  InvalidateRect(const RECT& rc, BOOL bErase = TRUE) const;
+		BOOL  InvalidateRect(BOOL bErase = TRUE) const;
 		BOOL  InvalidateRgn(HRGN hRgn, BOOL bErase = TRUE) const;
 		BOOL  IsChild(HWND hwndChild) const;
 		BOOL  IsDialogMessage(MSG& Msg) const;
@@ -205,7 +207,9 @@ namespace Win32xx
 		BOOL  MoveWindow(const RECT& rc, BOOL bRepaint = TRUE) const;
 		BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
 		BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-		BOOL  RedrawWindow(LPCRECT lpRectUpdate = NULL, HRGN hRgn = NULL, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+		BOOL  RedrawWindow(const RECT& rcUpdate, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+		BOOL  RedrawWindow(HRGN hRgn, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
+		BOOL  RedrawWindow(UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
 		int   ReleaseDC(HDC hDC) const;
 		BOOL  ScreenToClient(POINT& Point) const;
 		BOOL  ScreenToClient(RECT& rc) const;
@@ -235,7 +239,8 @@ namespace Win32xx
 		HRESULT SetWindowTheme(LPCWSTR pszSubAppName, LPCWSTR pszSubIdList) const;
 		BOOL  ShowWindow(int nCmdShow = SW_SHOWNORMAL) const;
 		BOOL  UpdateWindow() const;
-		BOOL  ValidateRect(LPCRECT prc) const;
+		BOOL  ValidateRect(const RECT& rc) const;
+		BOOL  ValidateRect() const;
 		BOOL  ValidateRgn(HRGN hRgn) const;
 		static CWnd WindowFromPoint(POINT pt);
 
@@ -262,7 +267,8 @@ namespace Win32xx
 		BOOL  OpenIcon() const;
 		void  Print(HDC hDC, DWORD dwFlags) const;
 		BOOL  SetMenu(HMENU hMenu) const;
-		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const;
+		BOOL  ScrollWindow(int XAmount, int YAmount, const RECT& rcScroll, LPCRECT prcClip = 0) const;
+		BOOL  ScrollWindow(int XAmount, int YAmount, LPCRECT prcClip = 0) const;
 		int   ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const;
 		int   SetScrollPos(int nBar, int nPos, BOOL bRedraw) const;
 		BOOL  SetScrollRange(int nBar, int nMinPos, int nMaxPos, BOOL bRedraw) const;

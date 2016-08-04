@@ -128,7 +128,7 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 
 		ShowScrollBar(SB_BOTH, FALSE);
-		RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);		
+		RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);		
 	}
 	
 	return 0L;

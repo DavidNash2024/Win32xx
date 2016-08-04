@@ -234,8 +234,9 @@ namespace Win32xx
 	// The font choice common dialog box class.
 	{
 	public:
-		CFontDialog(LPLOGFONT lplfInitial = NULL, DWORD dwFlags = 0, HDC hdcPrinter = 0);
+		CFontDialog(const LOGFONT& lfInitial, DWORD dwFlags = 0, HDC hdcPrinter = 0);
 		CFontDialog(const CHARFORMAT& charformat, DWORD dwFlags = 0, HDC hdcPrinter = 0);
+		CFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = 0);
 
 		virtual ~CFontDialog(void)	{}
 
@@ -1247,7 +1248,7 @@ namespace Win32xx
 	//
 
 	//============================================================================
-	inline CFontDialog::CFontDialog(LPLOGFONT lplfInitial /* = NULL */, DWORD dwFlags /* = 0 */,
+	inline CFontDialog::CFontDialog(const LOGFONT& lfInitial, DWORD dwFlags /* = 0 */,
 		HDC hdcPrinter /* = 0 */)
 	//	Construct a CFontDialog object from values given. Note that these are
 	//	stored into the members of the CHOOSEFONT structure.
@@ -1263,7 +1264,7 @@ namespace Win32xx
 		m_CF.lStructSize = sizeof(m_CF);
 		m_CF.Flags  = dwFlags;
 		m_CF.Flags |= CF_INITTOLOGFONTSTRUCT;
-		m_CF.lpLogFont = lplfInitial;
+		m_CF.lpLogFont = (LOGFONT*)&lfInitial;
 
 		if (hdcPrinter)
 		{
@@ -1309,6 +1310,31 @@ namespace Win32xx
 		// Enable the hook proc for the help button
 		if (m_CF.Flags & CF_SHOWHELP)
 			m_CF.Flags |= CF_ENABLEHOOK;
+
+		SetParameters(m_CF);
+	}
+
+	inline CFontDialog::CFontDialog(DWORD dwFlags /* = 0 */, HDC hdcPrinter /* =  0 */)
+	//	Construct a default CFontDialog object. 
+	{
+		// clear out logfont, style name, and choose font structure
+		ZeroMemory(&m_LogFont, sizeof(m_LogFont));
+		ZeroMemory(&m_CF, sizeof(m_CF));
+
+		// set dialog parameters
+		m_CF.rgbColors = 0; // black
+		m_CF.lStructSize = sizeof(m_CF);
+		m_CF.Flags	= dwFlags;
+		
+		if (hdcPrinter)
+		{
+			m_CF.hDC = hdcPrinter;
+			m_CF.Flags |= CF_PRINTERFONTS;
+		}
+
+		// Enable the hook proc for the help button
+		if (m_CF.Flags & CF_SHOWHELP)
+			m_CF.Flags |= CF_ENABLEHOOK;		
 
 		SetParameters(m_CF);
 	}

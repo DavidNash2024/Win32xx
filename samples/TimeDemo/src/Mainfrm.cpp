@@ -756,7 +756,7 @@ OnFontChoice()     		                                 	/*
 	m_View.m_font.GetObject(sizeof(LOGFONT), &lf);
 	DWORD dwFlags = CF_EFFECTS | CF_SCREENFONTS;
 	
-	CFontDialog FontDlg(&lf, dwFlags);
+	CFontDialog FontDlg(lf, dwFlags);
 	FontDlg.SetColor(m_View.m_rgbTxColor);
 	
 	if (FontDlg.DoModal(m_View) == IDOK)

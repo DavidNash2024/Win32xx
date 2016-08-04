@@ -165,6 +165,9 @@
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_commondlg.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">

@@ -324,12 +324,13 @@ namespace Win32xx
 		virtual ~CProgressBar() {}
 
 		int  GetPos() const;
-		int  GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const;
+		int  GetRange(BOOL fWhichLimit, const PPBRANGE& PBRange) const;
+		int  GetRange(BOOL fWhichLimit) const;
 		int  OffsetPos(int nIncrement) const;
 		int  SetPos(int nNewPos) const;
 		int  SetRange(short nMinRange, short nMaxRange) const;
 		int  SetStep(int nStepInc) const;
-		int  StepIt() const;
+		int  StepIt() const;	
 
 	protected:
 		// Overridables
@@ -465,8 +466,10 @@ namespace Win32xx
 
 		//Operations
 		void Activate(BOOL bActivate);
-		BOOL AddTool(HWND hWnd, UINT nIDText, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0);
-		BOOL AddTool(HWND hWnd, LPCTSTR lpszText = LPSTR_TEXTCALLBACK, LPCRECT lpRectTool = NULL, UINT_PTR nIDTool = 0);
+		BOOL AddTool(HWND hWnd, UINT nIDText, const RECT& rcTool, UINT_PTR nIDTool = 0);
+		BOOL AddTool(HWND hWnd, UINT nIDText, UINT_PTR nIDTool = 0);
+		BOOL AddTool(HWND hWnd, LPCTSTR lpszText, const RECT& rcTool, UINT_PTR nIDTool = 0);
+		BOOL AddTool(HWND hWnd, LPCTSTR lpszText, UINT_PTR nIDTool = 0);
 		void DelTool(HWND hWnd, UINT_PTR nIDTool = 0);
 		BOOL HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
 		void Pop();
@@ -1423,11 +1426,18 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(PBM_GETPOS, 0L, 0L));
 	}
 
-	inline int CProgressBar::GetRange(BOOL fWhichLimit, PPBRANGE ppBRange) const
+	inline int CProgressBar::GetRange(BOOL fWhichLimit, const PPBRANGE& PBRange) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) (PPBRANGE) ppBRange));
+		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) &PBRange));
+	}
+	
+	inline int CProgressBar::GetRange(BOOL fWhichLimit) const
+	// Retrieves information about the current high and low limits of the progress bar control.
+	{
+		assert(IsWindow());
+		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) 0L));
 	}
 
 	inline int CProgressBar::OffsetPos(int nIncrement) const
@@ -1836,7 +1846,7 @@ namespace Win32xx
 		SendMessage(TTM_ACTIVATE, (WPARAM)bActivate, 0L);
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWnd, UINT nIDText, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	inline BOOL CToolTip::AddTool(HWND hWnd, UINT nIDText, const RECT& rcTool, UINT_PTR nIDTool /*= 0*/)
 	// Registers a tool with a ToolTip control.
 	{
 		assert(IsWindow());
@@ -1844,20 +1854,41 @@ namespace Win32xx
 		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
-		if (lpRectTool)
-			ti.rect = *lpRectTool;
+		ti.rect = rcTool;
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWnd, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/, LPCRECT lpRectTool /*= NULL*/, UINT_PTR nIDTool /*= 0*/)
+	inline BOOL CToolTip::AddTool(HWND hWnd, UINT nIDText, UINT_PTR nIDTool /*= 0*/)
 	// Registers a tool with a ToolTip control.
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
+		ti.hinst = GetApp().GetResourceHandle();
+		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
+	}
+
+	inline BOOL CToolTip::AddTool(HWND hWnd, LPCTSTR lpszText, const RECT& rcTool, UINT_PTR nIDTool /*= 0*/)
+	// Registers a tool with a ToolTip control.  If lpszText contains the value LPSTR_TEXTCALLBACK, 
+	// TTN_NEEDTEXT notification messages go to the parent of the window that pWnd points to.
+	{
+		assert(IsWindow());
+		TOOLINFO ti;
+		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.lpszText = (LPTSTR)lpszText;
-		if (lpRectTool)
-			ti.rect = *lpRectTool;
+		ti.rect = rcTool;
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
+	}
+
+	inline BOOL CToolTip::AddTool(HWND hWnd, LPCTSTR lpszText, UINT_PTR nIDTool /*= 0*/)
+	// Registers a tool with a ToolTip control.  If lpszText contains the value LPSTR_TEXTCALLBACK, 
+	// TTN_NEEDTEXT notification messages go to the parent of the window that pWnd points to.
+	{
+		assert(IsWindow());
+		TOOLINFO ti;
+		LoadToolInfo(ti, hWnd, nIDTool);
+		ti.lpszText = (LPTSTR)lpszText;
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 

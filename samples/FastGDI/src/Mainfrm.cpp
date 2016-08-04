@@ -50,7 +50,7 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
 		GetMyView().GetImage().GrayScaleBitmap();
 	}
 
-	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+	GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
@@ -140,7 +140,7 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 			AdjustFrameRect(rcImage);
 		}
 
-		GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+		GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 		// Set the caption
 		CString str = _T("FastGDI - ") + m_PathName;
@@ -196,7 +196,7 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 		AdjustFrameRect(rcImage);
 	}
 
-	GetMyView().RedrawWindow(0, 0, RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
+	GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
 	// Set the caption
 	CString str = _T("FastGDI - ") + m_PathName;

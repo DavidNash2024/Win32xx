@@ -113,7 +113,7 @@ namespace Win32xx
 		HMENU GetHandle() const;
 		BOOL LoadMenu(LPCTSTR lpszResourceName);
 		BOOL LoadMenu(UINT uIDResource);
-		BOOL LoadMenuIndirect(const void* lpMenuTemplate);
+		BOOL LoadMenuIndirect(const LPMENUTEMPLATE lpMenuTemplate);
 
 		//Menu Operations
 		BOOL TrackPopupMenu(UINT uFlags, int x, int y, HWND hWnd, LPCRECT lpRect = 0);
@@ -626,7 +626,7 @@ namespace Win32xx
 		return NULL != m_pData->hMenu;
 	}
 
-	inline BOOL CMenu::LoadMenuIndirect(const void* lpMenuTemplate)
+	inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE lpMenuTemplate)
 	// Loads the specified menu template and assigns it to this CMenu.
 	{
 		assert(m_pData);

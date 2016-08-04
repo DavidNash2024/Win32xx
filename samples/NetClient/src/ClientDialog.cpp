@@ -281,7 +281,7 @@ void CClientDialog::OnStartClient()
 				}
 
 				// Retrieve the local port number
-				UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), NULL, FALSE);
+				UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), FALSE);
 
 				// Temporarily disable the Connect/Disconnect button
 				m_ButtonConnect.EnableWindow(FALSE);
@@ -371,7 +371,7 @@ void CClientDialog::OnSend()
 			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
 			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
-			UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), NULL, FALSE);
+			UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), FALSE);
 			CString strSend = m_EditSend.GetWindowText();
 
 			// Retrieve the IP Address
