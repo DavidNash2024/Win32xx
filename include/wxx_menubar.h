@@ -967,9 +967,9 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		InvalidateRect(&m_MDIRect[0], TRUE);
-		InvalidateRect(&m_MDIRect[1], TRUE);
-		InvalidateRect(&m_MDIRect[2], TRUE);
+		InvalidateRect(m_MDIRect[0], TRUE);
+		InvalidateRect(m_MDIRect[1], TRUE);
+		InvalidateRect(m_MDIRect[2], TRUE);
 		{
 			CClientDC MenuBarDC(*this);
 			DrawAllMDIButtons(MenuBarDC);

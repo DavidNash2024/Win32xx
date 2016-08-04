@@ -1402,11 +1402,18 @@ namespace Win32xx
 		return CWnd( ::GetDlgItem(*this, nIDDlgItem) );
 	}
 
-	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL* lpTranslated, BOOL bSigned) const
+	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL& IsTranslated, BOOL bSigned) const
 	// The GetDlgItemInt function translates the text of a specified control in a dialog box into an integer value.
 	{
 		assert(IsWindow());
-		return ::GetDlgItemInt(*this, nIDDlgItem, lpTranslated, bSigned);
+		return ::GetDlgItemInt(*this, nIDDlgItem, &IsTranslated, bSigned);
+	}
+
+	inline UINT CWnd::GetDlgItemInt(int nIDDlgItem, BOOL bSigned) const
+	// The GetDlgItemInt function translates the text of a specified control in a dialog box into an integer value.
+	{
+		assert(IsWindow());
+		return ::GetDlgItemInt(*this, nIDDlgItem, NULL, bSigned);
 	}
 
 	inline CWnd CWnd::GetFocus() const
@@ -1533,12 +1540,20 @@ namespace Win32xx
 		::InvalidateRect(*this, NULL, bErase);
 	}
 
-	inline BOOL CWnd::InvalidateRect(LPCRECT lpRect, BOOL bErase /*= TRUE*/) const
+	inline BOOL CWnd::InvalidateRect(const RECT& rc, BOOL bErase /*= TRUE*/) const
 	// The InvalidateRect function adds a rectangle to the window's update region.
 	// The update region represents the portion of the window's client area that must be redrawn.
 	{
 		assert(IsWindow());
-		return ::InvalidateRect(*this, lpRect, bErase);
+		return ::InvalidateRect(*this, &rc, bErase);
+	}
+
+	inline BOOL CWnd::InvalidateRect(BOOL bErase /*= TRUE*/) const
+	// The InvalidateRect function adds a rectangle to the window's update region.
+	// The entire window's client area is redrawn when no rectangle is specified.
+	{
+		assert(IsWindow());
+		return ::InvalidateRect(*this, NULL, bErase);
 	}
 
 	inline BOOL CWnd::InvalidateRgn(HRGN hRgn, BOOL bErase /*= TRUE*/) const
@@ -1660,11 +1675,25 @@ namespace Win32xx
 		return ::PostMessage(hWnd, uMsg, wParam, lParam);
 	}
 
-	inline BOOL CWnd::RedrawWindow(LPCRECT lpRectUpdate, HRGN hRgn, UINT flags) const
-	// The RedrawWindow function updates the specified rectangle or region in a window's client area.
+	inline BOOL CWnd::RedrawWindow(const RECT& rcUpdate, UINT flags) const
+	// The RedrawWindow function updates the specified rectangle in a window's client area.
 	{
 		assert(IsWindow());
-		return ::RedrawWindow(*this, lpRectUpdate, hRgn, flags);
+		return ::RedrawWindow(*this, &rcUpdate, 0, flags);
+	}
+
+	inline BOOL CWnd::RedrawWindow(HRGN hRgn, UINT flags) const
+	// The RedrawWindow function updates the specified region in a window's client area.
+	{
+		assert(IsWindow());
+		return ::RedrawWindow(*this, 0, hRgn, flags);
+	}
+
+	inline BOOL CWnd::RedrawWindow(UINT flags) const
+	// The RedrawWindow function updates the entire window's client area.
+	{
+		assert(IsWindow());
+		return ::RedrawWindow(*this, 0, 0, flags);
 	}
 
 	inline int CWnd::ReleaseDC(HDC hDC) const
@@ -1911,12 +1940,19 @@ namespace Win32xx
 		return ::UpdateWindow(*this);
 	}
 
-	inline BOOL CWnd::ValidateRect(LPCRECT prc) const
+	inline BOOL CWnd::ValidateRect(const RECT& rc) const
 	// The ValidateRect function validates the client area within a rectangle by
 	// removing the rectangle from the update region of the window.
 	{
 		assert(IsWindow());
-		return ::ValidateRect(*this, prc);
+		return ::ValidateRect(*this, &rc);
+	}
+
+	inline BOOL CWnd::ValidateRect() const
+	// The ValidateRect function validates the entire client area of the window.
+	{
+		assert(IsWindow());
+		return ::ValidateRect(*this, NULL);
 	}
 
 	inline BOOL CWnd::ValidateRgn(HRGN hRgn) const
@@ -2112,18 +2148,44 @@ namespace Win32xx
 		SendMessage(*this, WM_PRINT, (WPARAM)hDC, (LPARAM)dwFlags);
 	}
 
-	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT lprcScroll, LPCRECT lprcClip) const
-	// The ScrollWindow function scrolls the contents of the specified window's client area.
+	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, const RECT& rcScroll, LPCRECT prcClip) const
+	// The ScrollWindow function scrolls the contents of the window's client area.
+	// rcScroll specifies the portion of the client area to be scrolled.
+	// prcClip points to the clipping rectangle to scroll. Only bits inside this rectangle are scrolled.
+	// If prcClip is NULL, no clipping is performed on the scroll rectangle.
 	{
 		assert(IsWindow());
-		return ::ScrollWindow(*this, XAmount, YAmount, lprcScroll, lprcClip);
+		return ::ScrollWindow(*this, XAmount, YAmount, &rcScroll, prcClip);
 	}
 
-	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT lprcScroll, LPCRECT lprcClip, HRGN hrgnUpdate, LPRECT lprcUpdate, UINT flags) const
+	inline BOOL CWnd::ScrollWindow(int XAmount, int YAmount, LPCRECT prcClip) const
 	// The ScrollWindow function scrolls the contents of the window's client area.
+	// The entire client area is scrolled.
+	// prcClip points to the clipping rectangle to scroll. Only bits inside this rectangle are scrolled.
+	// If prcClip is NULL, no clipping is performed on the scroll rectangle.
 	{
 		assert(IsWindow());
-		return ::ScrollWindowEx(*this, dx, dy, lprcScroll, lprcClip, hrgnUpdate, lprcUpdate, flags);
+		return ::ScrollWindow(*this, XAmount, YAmount, NULL, prcClip);
+	}
+
+	inline int CWnd::ScrollWindowEx(int dx, int dy, LPCRECT prcScroll, LPCRECT prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags) const
+	// The ScrollWindow function scrolls the contents of the window's client area.
+	// prcScroll: Pointer to a RECT structure that specifies the portion of the client area to be scrolled.
+	//            If this parameter is NULL, the entire client area is scrolled.
+	// prcClip:   Pointer to a RECT structure that contains the coordinates of the clipping rectangle.
+	//            Only device bits within the clipping rectangle are affected. This parameter may be NULL.
+	// hrgnUpdate: Handle to the region that is modified to hold the region invalidated by scrolling.
+	//             This parameter may be NULL.
+	// prcUpdate: Pointer to a RECT structure that receives the boundaries of the rectangle invalidated by scrolling.
+	//            This parameter may be NULL.
+	// flags:     Specifies flags that control scrolling.This parameter can be one of the following values.
+	//   SW_ERASE: 	        Erases the newly invalidated region when specified with the SW_INVALIDATE flag.
+	//   SW_INVALIDATE:     Invalidates the region identified by the hrgnUpdate parameter after scrolling.
+	//   SW_SCROLLCHILDREN: Scrolls all child windows that intersect the rectangle pointed to by the prcScroll parameter.
+	//   SW_SMOOTHSCROLL:   Scrolls using smooth scrolling.
+	{
+		assert(IsWindow());
+		return ::ScrollWindowEx(*this, dx, dy, prcScroll, prcClip, hrgnUpdate, prcUpdate, flags);
 	}
 
 	inline BOOL CWnd::SetMenu(HMENU hMenu) const

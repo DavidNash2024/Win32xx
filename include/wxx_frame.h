@@ -2710,7 +2710,7 @@ namespace Win32xx
 
 		// Reposition and redraw everything
 		RecalcLayout();
-		RedrawWindow(NULL, NULL, RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		RedrawWindow(RDW_ERASE | RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		// Forward the message to the view window
 		if (GetView().IsWindow())
@@ -3446,7 +3446,7 @@ namespace Win32xx
 	{
 		m_TBTheme = TBT;
 		if (GetToolBar().IsWindow())
-			GetToolBar().GetParent().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_ALLCHILDREN);
+			GetToolBar().GetParent().RedrawWindow(RDW_INVALIDATE|RDW_ALLCHILDREN);
 	}
 
 	inline void CFrame::SetView(CWnd& wndView)

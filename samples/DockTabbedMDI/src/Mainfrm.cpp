@@ -337,7 +337,7 @@ void CMainFrame::OnInitialUpdate()
 
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow( GetInitValues().ShowCmd );
-	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+	RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 }
 
 LRESULT CMainFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)

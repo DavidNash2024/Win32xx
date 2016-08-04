@@ -72,7 +72,7 @@ BOOL CMainFrame::OnDockDefault()
 	CloseAllDockers();
 	LoadDefaultDockers();
 	SetRedraw(TRUE);	// Re-enable drawing to the frame window
-	RedrawWindow(0, 0, RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
+	RedrawWindow(RDW_INVALIDATE|RDW_FRAME|RDW_UPDATENOW|RDW_ALLCHILDREN);
 	return TRUE;
 }
 

@@ -1,6 +1,14 @@
 Version 8.3
 ===========
 
+Bug Fixes:
+ - Sometimes the view window of an undocked docker wasn't resized.
+ - CFileDialog::GetPathName failed on Win98.
+ - A dock ancestor didn't support docking unless it was also a top level window.
+ - An exception could be thrown when CTab was destroyed.
+ - The highlighted menu radio box was out of position on Windows XP and older.
+ - The Scribble sample destroyed a pen while it was selected in the device context.
+
 New Features and Enhancements
 -----------------------------
 * Added CRibbonDockFrame.
@@ -13,9 +21,9 @@ New Features and Enhancements
  - Added CString::Assign. This function is used to assign a specified number 
    of characters to a CString. The assigned string can contain NULL characters.    
 
-* Updated CFrame
- - SetView can now be used to switch between multiple views. This also applies
-   to CDocker, CDockContainer and CMDIChild.
+* Updated CFrame and CMDIFrame
+ - SetView can now be used to switch between multiple views for frames
+   and MDI children.
  - Added a virtual SetupMenuIcons function. This functions adds the set of
    ToolBar images to the icons used in menus. Override this to add additional
    icons to the menus.
@@ -23,13 +31,16 @@ New Features and Enhancements
 * Updated CDocker
   - SetView can now be used to switch between multiple views for CDocker and
     CDockContainer.  
-  - Improved the way the active docker is determined.
+  - Improved the way the active docker is determined. This is now implemented
+    without a timer.
   
 * Updated CDC
   - Additional overrides for CDC::SelectObject to allow this function to be used 
     with casting. For example:
 	  CPen Pen(PS_SOLID, 1, RGB(255, 0, 0));
 	  CPen OldPen = dcMem.SelectObject(pen);
+  - GDI resources created by CDC are managed better. Old GDI resources are now
+    destroyed immediately, rather than when the CDC is de-constructed.  
   
 
 Changes in detail
@@ -43,7 +54,7 @@ Added CFrame::SetupMenuIcons    member function
 Added RibbonDockFrame           sample application
 Added additional overrides for CDC::SelectObject		
 
-
+These functions use references instead of pointers
 Modified CComboBoxEx::GetItem
 Modified CComboBoxEx::InsertItem
 Modified CComboBoxEx::SetItem
@@ -57,12 +68,15 @@ Modified CEdit::GetRect
 Modified CEdit::SetRect
 Modified CEdit::SetRectNP
 Modified CEdit::GetRect
-Modified CFont::CFont(const LOGFONT& LogFont);
+Modified CFont::CFont
 Modified CFont::CreateFontIndirect
 Modified CFont::CreatePointFontIndirect
+Modified CFontDialog::CFontDialog  
 Modified CHeader::GetItem
 Modified CHeader::InsertItem
-Modified CHeader::SetItem	 
+Modified CHeader::SetItem
+Modified CImageList::DrawIndirect
+Modified CImageList::GetImageInfo 
 Modified CListBox::GetItemRect
 Modified CMetaFileDC::CreateEnhanced	   
 Modified CMonthCalendar::GetRange
@@ -73,6 +87,9 @@ Modified CMonthCalendar::SetCurSel
 Modified CMonthCalendar::SetDayState
 Modified CMonthCalendar::SetSelRange
 Modified CMonthCalendar::SetToday
+Modified CPageSetupDialog::OnDrawPage
+Modified CPageSetupDialog::OnPreDrawPage
+Modified CProgressBar::GetRange
 Modified CRichEdit::SetRect
 Modified CRichEdit::DisplayBand
 Modified CRichEdit::FindText
@@ -83,12 +100,19 @@ Modified CScrollBar::GetScrollRange
 Modified CScrollBar::GetScrollInfo
 Modified CScrollBar::SetScrollInfo
 Modified CTab::GetItemRect
+Modified CToolTip::AddTool 
 Modified CToolTip::GetMargin
 Modified CToolTip::SetMargin
 Modified CToolTip::AdjustRect
 Modified CToolTip::SetToolRect
-Modified CWinThread::CreateThread	now returns thread handle.
+Modified CWnd::DrawAnimatedRects
+Modified CWnd::GetDlgItemInt 
+Modified CWnd::InvalidateRect
+Modified CWnd::RedrawWindow  
+Modified CWnd::ScrollWindow  	
+Modified CWnd::ValidateRect  
 
+Modified CWinThread::CreateThread	now returns thread handle.
 
 Removed CDocker::GetDockFromPoint
 Removed CTab::OnDestroy

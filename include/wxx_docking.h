@@ -1427,7 +1427,7 @@ namespace Win32xx
 		if (uDockSide != m_uDockSideOld)
 		{
 			Destroy();
-			pDockTarget->RedrawWindow( NULL, NULL, RDW_NOERASE | RDW_UPDATENOW );
+			pDockTarget->RedrawWindow(RDW_NOERASE | RDW_UPDATENOW );
 			pDockDrag->RedrawWindow();
 		}
 		m_uDockSideOld = uDockSide;
@@ -1982,7 +1982,7 @@ namespace Win32xx
 		pDocker->SetParent(0);
 		pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
 		pDocker->SetRedraw(TRUE);
-		pDocker->RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
+		pDocker->RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 		pDocker->SetWindowText(pDocker->GetCaption().c_str());
 
 		return pDocker;
@@ -2006,7 +2006,7 @@ namespace Win32xx
 							if (pDockDrag)
 							{
 								if (pDockDrag->m_IsBlockMove)
-									pDockDrag->RedrawWindow(0, 0, RDW_FRAME|RDW_INVALIDATE);
+									pDockDrag->RedrawWindow(RDW_FRAME|RDW_INVALIDATE);
 
 								GetDockHint().Destroy();
 								pDockDrag->m_dwDockZone = 0;
@@ -3698,14 +3698,14 @@ namespace Win32xx
 				{
 					DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
 					GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, (LONG_PTR)dwExStyle);
-					GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+					GetDockClient().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
 				}
 				else
 				{
 					DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
 					dwExStyle &= ~WS_EX_CLIENTEDGE;
 					GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, (LONG_PTR)dwExStyle);
-					GetDockClient().RedrawWindow(0, 0, RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+					GetDockClient().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
 				}
 			}
 
@@ -4497,7 +4497,7 @@ namespace Win32xx
 			AdjustRect(FALSE, &rc);
 			CDockContainer* pContainer = m_vContainerInfo[m_iCurrentPage].pContainer;
 			pContainer->GetViewPage().SetWindowPos(0, rc, SWP_SHOWWINDOW);
-			RedrawWindow(NULL, NULL, RDW_INVALIDATE|RDW_NOCHILDREN);
+			RedrawWindow(RDW_INVALIDATE|RDW_NOCHILDREN);
 		}
 	}
 

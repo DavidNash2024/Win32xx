@@ -195,7 +195,7 @@ namespace Win32xx
 	class CPrintDialog : public CCommonDialog
 	{
 	public:
-		CPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | 
+		CPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS |
 										PD_HIDEPRINTTOFILE | PD_NOSELECTION );
 		virtual ~CPrintDialog();
 
@@ -268,8 +268,8 @@ namespace Win32xx
 	protected:
 		// Override these functions as required
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-		virtual UINT 	OnDrawPage(HDC, UINT, LPRECT);
-		virtual UINT 	OnPreDrawPage(WORD wPaper, WORD wFlags, LPPAGESETUPDLG pPSD);
+		virtual UINT 	OnDrawPage(HDC, UINT, const RECT&);
+		virtual UINT 	OnPreDrawPage(WORD wPaper, WORD wFlags, const PAGESETUPDLG& PSD);
 
 		// Not intended to be overridden
 		virtual INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
@@ -917,8 +917,11 @@ namespace Win32xx
 		switch (message)
 		{
 		case WM_PSD_PAGESETUPDLG:
-			return pDlg->OnPreDrawPage(LOWORD(wParam), HIWORD(wParam),
-				(LPPAGESETUPDLG)lParam);
+			{
+				assert(lParam);
+				PAGESETUPDLG psd = *((LPPAGESETUPDLG)lParam);
+				return pDlg->OnPreDrawPage(LOWORD(wParam), HIWORD(wParam), psd);
+			}
 
 		case WM_PSD_FULLPAGERECT:
 		case WM_PSD_MINMARGINRECT:
@@ -926,33 +929,34 @@ namespace Win32xx
 		case WM_PSD_GREEKTEXTRECT:
 		case WM_PSD_ENVSTAMPRECT:
 		case WM_PSD_YAFULLPAGERECT:
-			return pDlg->OnDrawPage((HDC)wParam, message,
-				(LPRECT)lParam);
+			{
+				assert(lParam);
+				RECT rc = *((LPRECT)lParam);
+				return pDlg->OnDrawPage((HDC)wParam, message, rc);
+			}
 		}
 		return 0;
 	}
 
 	//============================================================================
-	inline UINT CPageSetupDialog::OnDrawPage(HDC hDC, UINT nMessage, LPRECT lpRect)
+	inline UINT CPageSetupDialog::OnDrawPage(HDC hDC, UINT nMessage, const RECT& /* rc*/)
 	// Override this function to customize drawing of the sample page in the Page Setup dialog box.
 	// It is called in response to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
 	// WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.
 	{
 		UNREFERENCED_PARAMETER(hDC);
 		UNREFERENCED_PARAMETER(nMessage);
-		UNREFERENCED_PARAMETER(lpRect);
 
 		return 0; // do the default
 	}
 
 
 	//============================================================================
-	inline UINT CPageSetupDialog::OnPreDrawPage(WORD wPaper, WORD wFlags, LPPAGESETUPDLG pPSD)
+	inline UINT CPageSetupDialog::OnPreDrawPage(WORD wPaper, WORD wFlags, const PAGESETUPDLG& /*PSD*/)
 	// Called before drawing is preformed on the sample page.
 	{
 		UNREFERENCED_PARAMETER(wPaper);
 		UNREFERENCED_PARAMETER(wFlags);
-		UNREFERENCED_PARAMETER(pPSD);
 
 		return 0;
 	}

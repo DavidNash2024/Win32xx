@@ -1143,7 +1143,7 @@ namespace Win32xx
 				GetActiveView()->SetWindowPos(NULL, rc, SWP_SHOWWINDOW);
 			}
 
-			RedrawWindow(NULL, NULL, RDW_INVALIDATE|RDW_NOCHILDREN);
+			RedrawWindow(RDW_INVALIDATE|RDW_NOCHILDREN);
 		}
 	}
 

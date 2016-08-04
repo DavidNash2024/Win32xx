@@ -438,7 +438,7 @@ BOOL CSvrDialog::StartServer()
 	}
 
 	// Retrieve the local port number
-	UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), NULL, FALSE);
+	UINT port = (m_EditPort.GetDlgCtrlID(), NULL, FALSE);
 
 	// Bind to the socket
 	Append(IDC_EDIT_STATUS, _T("Binding to socket"));

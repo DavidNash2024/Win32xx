@@ -77,7 +77,7 @@
 
 /*============================================================================*/
 	MyFontDialog::
-MyFontDialog(LPLOGFONT lplfInitial /* = NULL */, DWORD dwFlags /* = 0 */,
+MyFontDialog(const LOGFONT& lfInitial, DWORD dwFlags /* = 0 */,
     HDC hdcPrinter /* = 0 */)    					/*
 
 	Create an object having the specified log font given in lplfInitial and
@@ -85,17 +85,10 @@ MyFontDialog(LPLOGFONT lplfInitial /* = NULL */, DWORD dwFlags /* = 0 */,
 	a default font. Throw an exception if the font cannot be created. Always
 	enable the hook procedure dialog loop and help button.
 *-----------------------------------------------------------------------------*/
-    : CFontDialog(lplfInitial, dwFlags | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
+    : CFontDialog(lfInitial, dwFlags | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
 {
 	SetBoxTitle(_T("Font"));
-	if (!lplfInitial)
-	{	  // set default font, 10pt Courier New
-		CFont f;
-		f.CreatePointFont(10, _T("Courier New"));
-		SetChoiceFont(f);
-	}
-	else
-		SetChoiceLogFont(*lplfInitial);
+	SetChoiceLogFont(lfInitial);
 }
 
 /*============================================================================*/
@@ -115,6 +108,25 @@ MyFontDialog(const CHARFORMAT& charformat, DWORD dwFlags /* = 0 */,
 }
 
 /*============================================================================*/
+	MyFontDialog::
+	MyFontDialog(DWORD dwFlags /*= 0*/,	
+		HDC hdcPrinter /*= 0*/)							/*
+
+		Create an object having the specified charformat and having the
+		attributes specified by dwFlags. Throw an exception if the font cannot
+		be created. Always enable the dialog loop hook procedure and help button.
+*-----------------------------------------------------------------------------*/
+		: CFontDialog(dwFlags | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
+	{
+		SetBoxTitle(_T("Font"));
+		
+		// set default font, 10pt Courier New
+		CFont f;							
+		f.CreatePointFont(10, _T("Courier New"));
+		SetChoiceFont(f);	
+	}
+
+/*============================================================================*/
 	INT_PTR MyFontDialog::
 DoModal(HWND hWndOwner /* = 0 */)                                       /*
 
@@ -123,6 +135,7 @@ DoModal(HWND hWndOwner /* = 0 */)                                       /*
 	the OnOK() member before returning control to the point of invocation
 	when the OK button is activated.
 *-----------------------------------------------------------------------------*/
+
 {
           // open the dialog
 	CHOOSEFONT cf = GetParameters();

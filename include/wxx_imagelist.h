@@ -103,7 +103,7 @@ namespace Win32xx
 		BOOL DragShowNolock(BOOL bShow) const;
 		BOOL Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const;
 		BOOL DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
-		BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pimldp);
+		BOOL DrawIndirect(const IMAGELISTDRAWPARAMS& imldp);
 		BOOL Remove(int nImage) const;
 		BOOL Replace(int nImage, HBITMAP hbmImage, HBITMAP hbmMask) const;
 		int Replace(int nImage, HICON hIcon) const;
@@ -113,7 +113,7 @@ namespace Win32xx
 		HICON GetIcon(int iImage, UINT nFlags) const;
 		CSize GetIconSize() const;
 		int GetImageCount() const;
-		BOOL GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const;
+		BOOL GetImageInfo(int nImage, IMAGEINFO& ImageInfo) const;
 
 		//Operators
 		operator HIMAGELIST () const;
@@ -448,11 +448,11 @@ namespace Win32xx
 		return ImageList_DrawEx(m_pData->hImageList, nImage, hdc, pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
 	}
 
-	inline BOOL CImageList::DrawIndirect(IMAGELISTDRAWPARAMS* pimldp)
+	inline BOOL CImageList::DrawIndirect(const IMAGELISTDRAWPARAMS& imldp)
 	// Draws an image list image based on an IMAGELISTDRAWPARAMS structure.
 	{
 		assert(m_pData->hImageList);
-		return ImageList_DrawIndirect(pimldp);
+		return ImageList_DrawIndirect((LPIMAGELISTDRAWPARAMS)&imldp);
 	}
 
 	inline HICON CImageList::GetIcon(int iImage, UINT nFlags) const
@@ -479,11 +479,11 @@ namespace Win32xx
 		return ImageList_GetImageCount(m_pData->hImageList);
 	}
 
-	inline BOOL CImageList::GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const
+	inline BOOL CImageList::GetImageInfo(int nImage, IMAGEINFO& ImageInfo) const
 	// Retrieves information about an image.
 	{
 		assert(m_pData->hImageList);
-		return ImageList_GetImageInfo(m_pData->hImageList, nImage, pImageInfo);
+		return ImageList_GetImageInfo(m_pData->hImageList, nImage, &ImageInfo);
 	}
 
 	inline BOOL CImageList::Remove(int nImage) const

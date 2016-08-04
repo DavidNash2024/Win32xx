@@ -72,7 +72,7 @@ void CView::OnSize()
 {
 	CRect r = GetClientRect();
 	r.top += GetRibbonHeight();
-	InvalidateRect(&r);
+	InvalidateRect(r);
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
