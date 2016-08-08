@@ -337,7 +337,7 @@ namespace Win32xx
 		CWnd* pMDIChild = NULL;
 		if (GetMDIClient())
 		{
-			HWND hMDIChild = (HWND)GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+			HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 			pMDIChild = GetCWndPtr(hMDIChild);
 		}
 

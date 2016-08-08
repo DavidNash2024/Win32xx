@@ -433,7 +433,7 @@ namespace Win32xx
 		ZeroMemory(&tvi, sizeof(TVITEM));
 		tvi.hItem = hItem;
 		tvi.mask  = nMask;
-		tvi.pszText = (LPTSTR)szText;
+		tvi.pszText = const_cast<LPTSTR>(szText);
 		tvi.iImage  = nImage;
 		tvi.iSelectedImage = nSelectedImage;
 		tvi.state = nState;
@@ -484,7 +484,7 @@ namespace Win32xx
 		TVITEM tvi;
 		ZeroMemory(&tvi, sizeof(TVITEM));
 		tvi.hItem = hItem;
-		tvi.pszText = (LPTSTR)szText;
+		tvi.pszText = const_cast<LPTSTR>(szText);
 		tvi.mask = TVIF_TEXT;
 		return TreeView_SetItem(*this, &tvi );
 	}

@@ -339,10 +339,10 @@ namespace Win32xx
 		// If you need to modify the default behaviour of the MenuBar, ReBar,
 		// StatusBar or ToolBar, inherit from those classes, and override
 		// the following attribute functions.
-		virtual CMenuBar& GetMenuBar()	const		{ return const_cast<CMenuBar&>(m_MenuBar); }
-		virtual CReBar& GetReBar() const			{ return const_cast<CReBar&>(m_ReBar); }
-		virtual CStatusBar& GetStatusBar() const	{ return const_cast<CStatusBar&>(m_StatusBar); }
-		virtual CToolBar& GetToolBar() const		{ return const_cast<CToolBar&>(m_ToolBar); }
+		virtual CMenuBar& GetMenuBar()	const		{ return m_MenuBar; }
+		virtual CReBar& GetReBar() const			{ return m_ReBar; }
+		virtual CStatusBar& GetStatusBar() const	{ return m_StatusBar; }
+		virtual CToolBar& GetToolBar() const		{ return m_ToolBar; }
 
 		// Non-virtual Attributes
 		// These functions aren't virtual, and shouldn't be overridden
@@ -352,14 +352,14 @@ namespace Win32xx
 		{
 			return m_InitValues;
 		}
-		CMenu& GetFrameMenu() const					{ return const_cast<CMenu&>(m_Menu); }
-		MenuTheme& GetMenuBarTheme() const			{ return const_cast<MenuTheme&>(m_MBTheme); }
+		CMenu& GetFrameMenu() const					{ return m_Menu; }
+		MenuTheme& GetMenuBarTheme() const			{ return m_MBTheme; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetMRUEntry(UINT nIndex);
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
-		ReBarTheme& GetReBarTheme()	const			{ return const_cast<ReBarTheme&>(m_RBTheme); }
-		StatusBarTheme& GetStatusBarTheme()	const	{ return const_cast<StatusBarTheme&>(m_SBTheme); }
-		ToolBarTheme& GetToolBarTheme()	const		{ return const_cast<ToolBarTheme&>(m_TBTheme); }
+		ReBarTheme& GetReBarTheme()	const			{ return m_RBTheme; }
+		StatusBarTheme& GetStatusBarTheme()	const	{ return m_SBTheme; }
+		ToolBarTheme& GetToolBarTheme()	const		{ return m_TBTheme; }
 		CString GetStatusText() const				{ return m_strStatusText; }
 		CString GetTitle() const					{ return GetWindowText(); }
 		BOOL IsMenuBarUsed() const					{ return (GetMenuBar().IsWindow()); }
@@ -472,11 +472,11 @@ namespace Win32xx
 		std::vector<UINT> m_vToolBarData;	// vector of resource IDs for ToolBar buttons
 		InitValues m_InitValues;			// struct of initial values
 		CDialog m_AboutDialog;				// Help about dialog
-		CMenuBar m_MenuBar;					// CMenuBar object
-		CReBar m_ReBar;						// CReBar object
-		CStatusBar m_StatusBar;				// CStatusBar object
-		CToolBar m_ToolBar;					// CToolBar object
-		CMenu m_Menu;						// handle to the frame menu
+		mutable CMenuBar m_MenuBar;			// CMenuBar object
+		mutable CReBar m_ReBar;				// CReBar object
+		mutable CStatusBar m_StatusBar;		// CStatusBar object
+		mutable CToolBar m_ToolBar;			// CToolBar object
+		mutable CMenu m_Menu;				// handle to the frame menu
 		CFont m_fntMenuBar;					// MenuBar font
 		CFont m_fntStatusBar;				// StatusBar font
 		CImageList m_ToolBarImages;			// Image list for the ToolBar buttons
@@ -487,10 +487,10 @@ namespace Win32xx
 		CString m_strStatusText;			// CString for status text
 		CString m_strTooltip;				// CString for tool tips
 		CString m_XPThemeName;				// CString for Windows Theme Name
-		MenuTheme m_MBTheme;				// struct of theme info for the popup Menu and MenuBar
-		ReBarTheme m_RBTheme;				// struct of theme info for the ReBar
-		StatusBarTheme m_SBTheme;			// struct of theme info for the StatusBar
-		ToolBarTheme m_TBTheme;				// struct of theme info for the ToolBar
+		mutable MenuTheme m_MBTheme;		// struct of theme info for the popup Menu and MenuBar
+		mutable ReBarTheme m_RBTheme;		// struct of theme info for the ReBar
+		mutable StatusBarTheme m_SBTheme;	// struct of theme info for the StatusBar
+		mutable ToolBarTheme m_TBTheme;		// struct of theme info for the ToolBar
 		HACCEL m_hAccel;					// handle to the frame's accelerator table (used by MDI without MDI child)
 		CWnd* m_pView;						// pointer to the View CWnd object
 		UINT m_nMaxMRU;						// maximum number of MRU entries
@@ -2623,7 +2623,7 @@ namespace Win32xx
 				if (nID > 0)
 				{
 					m_strTooltip = LoadString(nID);
-					lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
+					lpDispInfo->lpszText = const_cast<LPTSTR>(m_strTooltip.c_str());
 				}
 				else
 					m_strTooltip = _T("");
@@ -3647,7 +3647,7 @@ namespace Win32xx
 				mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
 				mii.fType = MFT_STRING;
 				mii.wID = IDW_FILE_MRU_FILE1 + index;
-				mii.dwTypeData = (LPTSTR)strMRUArray[index].c_str();
+				mii.dwTypeData = const_cast<LPTSTR>(strMRUArray[index].c_str());
 
 				BOOL bResult;
 				if (index == MaxMRUIndex)

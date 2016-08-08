@@ -112,7 +112,7 @@ namespace Win32xx
 		virtual ~CWceFrame();
 		virtual void AddToolBarButton(UINT nID);
 		CRect GetViewRect() const;
-		CCmdBar* GetMenuBar() const {return const_cast<CCmdBar*>(&m_MenuBar);}
+		CCmdBar* GetMenuBar() const {return &m_MenuBar;}
 		virtual void OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual int  OnCreate(CREATESTRUCT& cs);		
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -124,7 +124,7 @@ namespace Win32xx
 		std::vector<UINT> m_ToolBarData;
 
 	private:
-		CCmdBar m_MenuBar;
+		mutable CCmdBar m_MenuBar;
 		CString m_strAppName;
 
 #ifdef SHELL_AYGSHELL

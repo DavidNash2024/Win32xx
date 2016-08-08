@@ -291,7 +291,7 @@ namespace Win32xx
 			default:
 				{
 					// Reflect this message if it's from a control
-					CWnd* pWnd = GetCWndPtr((HWND)lParam);
+					CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
 					if (pWnd != NULL)
 						lr = pWnd->OnCommand(wParam, lParam);
 

@@ -146,7 +146,7 @@ namespace Win32xx
 
 		//Attributes
 		LPDISPATCH GetApplication() const;
-		CAXWindow& GetAXWindow() const { return const_cast<CAXWindow&>(m_AXContainer); }
+		CAXWindow& GetAXWindow() const { return m_AXContainer; }
 		BOOL GetBusy() const;
 		LPDISPATCH GetContainer() const;
 		BOOL GetFullScreen() const;
@@ -209,7 +209,7 @@ namespace Win32xx
 
 	private:
 		UINT	GetPidlLength(LPITEMIDLIST pidl);
-		CAXWindow	  m_AXContainer;	// The ActiveX Container
+		mutable CAXWindow	  m_AXContainer;	// The ActiveX Container
 		IWebBrowser2* m_pIWebBrowser2;	// Interface to the ActiveX web browser control
 	};
 

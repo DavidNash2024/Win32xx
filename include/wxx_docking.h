@@ -134,7 +134,7 @@ namespace Win32xx
 		public:
 			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
-			virtual CToolBar& GetToolBar() const	{return const_cast<CToolBar&>(m_ToolBar);}
+			virtual CToolBar& GetToolBar() const	{return m_ToolBar;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 			virtual int OnCreate(CREATESTRUCT& cs);
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -149,7 +149,7 @@ namespace Win32xx
 			void SetView(CWnd& wndView);
 
 		private:
-			CToolBar m_ToolBar;
+			mutable CToolBar m_ToolBar;
 			CDockContainer* m_pContainer;
 			CString m_strTooltip;
 			CWnd* m_pView;
@@ -165,7 +165,7 @@ namespace Win32xx
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
 		virtual int GetContainerIndex(CDockContainer* pContainer);
 		virtual SIZE GetMaxTabTextSize();
-		virtual CViewPage& GetViewPage() const	{ return const_cast<CViewPage&>(m_ViewPage); }
+		virtual CViewPage& GetViewPage() const	{ return m_ViewPage; }
 		virtual int GetTabImageID(UINT nTab) const;
 		virtual CString GetTabText(UINT nTab) const;
 		virtual void RecalcLayout();
@@ -180,7 +180,7 @@ namespace Win32xx
 		CWnd* GetActiveView() const;
 		const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
 		CDockContainer* GetContainerParent() const { return m_pContainerParent; }
-		CString& GetDockCaption() const	{ return const_cast<CString&>(m_csCaption); }
+		CString& GetDockCaption() const	{ return m_csCaption; }
 		CDocker* GetDocker() const		{ return m_pDocker; }
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_strTabText; }
@@ -215,11 +215,11 @@ namespace Win32xx
 		std::vector<ContainerInfo> m_vContainerInfo;	// vector of ContainerInfo structs
 		std::vector<UINT> m_vToolBarData;				// vector of resource IDs for ToolBar buttons
 		CString m_strTabText;
-		CString m_csCaption;
+		mutable CString m_csCaption;
 		CImageList m_imlToolBar;
 		CImageList m_imlToolBarHot;
 		CImageList m_imlToolBarDis;
-		CViewPage m_ViewPage;
+		mutable CViewPage m_ViewPage;
 		int m_iCurrentPage;
 		CDocker* m_pDocker;
 		CDockContainer* m_pContainerParent;
@@ -294,7 +294,7 @@ namespace Win32xx
 			virtual CRect GetCloseRect() const;
 			virtual void SendNotify(UINT nMessageID);
 
-			CString& GetCaption() const		{ return const_cast<CString&>(m_csCaption); }
+			CString& GetCaption() const		{ return m_csCaption; }
 			CWnd& GetView() const			{ assert (m_pView); return *m_pView; }
 			void SetDocker(CDocker* pDocker)	{ m_pDocker = pDocker;}
 			void SetCaption(LPCTSTR szCaption)	{ m_csCaption = szCaption; }
@@ -323,7 +323,7 @@ namespace Win32xx
 			CDockClient(const CDockClient&);				// Disable copy construction
 			CDockClient& operator = (const CDockClient&);	// Disable assignment operator
 
-			CString m_csCaption;
+			mutable CString m_csCaption;
 			CPoint m_Oldpt;
 			CDocker* m_pDocker;
 			CWnd* m_pView;
@@ -469,8 +469,8 @@ namespace Win32xx
 		virtual BOOL VerifyDockers();
 
 		// Attributes
-		virtual CDockBar& GetDockBar() const		{ return const_cast<CDockBar&>(m_DockBar); }
-		virtual CDockClient& GetDockClient() const	{ return const_cast<CDockClient&>(m_DockClient); }
+		virtual CDockBar& GetDockBar() const		{ return m_DockBar; }
+		virtual CDockClient& GetDockClient() const	{ return m_DockClient; }
 		virtual CDockHint& GetDockHint() const		{ return m_pDockAncestor->m_DockHint; }
 		virtual CRect GetViewRect() const			{ return GetClientRect(); }
 
@@ -532,7 +532,7 @@ namespace Win32xx
 	private:
 		CDocker(const CDocker&);				// Disable copy construction
 		CDocker& operator = (const CDocker&);	// Disable assignment operator
-		std::vector <DockPtr> & GetAllChildren() const {return const_cast< std::vector<DockPtr>& >(GetDockAncestor()->m_vAllDockChildren);}
+		std::vector <DockPtr> & GetAllChildren() const {return GetDockAncestor()->m_vAllDockChildren;}
 		virtual CDocker* GetDockUnderDragPoint(POINT pt);
 		void CheckAllTargets(LPDRAGPOS pDragPos);
 		void CloseAllTargets();
@@ -552,9 +552,9 @@ namespace Win32xx
 		std::vector<CDocker*> SortDockers();
 		static BOOL CALLBACK EnumWindowsProc(HWND hWndTop, LPARAM lParam);
 
-		CDockBar		m_DockBar;
-		CDockHint		m_DockHint;
-		CDockClient		m_DockClient;
+		mutable CDockBar		m_DockBar;
+		mutable CDockHint		m_DockHint;
+		mutable CDockClient		m_DockClient;
 		CTargetCentre	m_TargetCentre;
 		CTargetLeft		m_TargetLeft;
 		CTargetTop		m_TargetTop;
@@ -4163,7 +4163,7 @@ namespace Win32xx
 			ZeroMemory(&tie, sizeof(TCITEM));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = ci.iImage;
-			tie.pszText = (LPTSTR)m_vContainerInfo[iNewPage].Title.c_str();
+			tie.pszText = const_cast<LPTSTR>(m_vContainerInfo[iNewPage].Title.c_str());
 			InsertItem(iNewPage, &tie);
 			SelectPage(iNewPage);
 			SetTabSize();
@@ -4348,7 +4348,7 @@ namespace Win32xx
 			ZeroMemory(&tie, sizeof(TCITEM));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vContainerInfo[i].iImage;
-			tie.pszText = (LPTSTR)m_vContainerInfo[i].Title.c_str();
+			tie.pszText = const_cast<LPTSTR>(m_vContainerInfo[i].Title.c_str());
 			InsertItem(i, &tie);
 		}
 
@@ -4456,7 +4456,7 @@ namespace Win32xx
 	inline LRESULT CDockContainer::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Sets the focus to the active view (or its child)
-		HWND hwndPrevFocus = (HWND)wParam;
+		HWND hwndPrevFocus = reinterpret_cast<HWND>(wParam);
 		if (GetActiveView()->IsChild(hwndPrevFocus))
 		{
 			// return focus back to the child of the active view that had it before
@@ -4787,7 +4787,7 @@ namespace Win32xx
 					if (nID > 0)
 					{
 						m_strTooltip = LoadString(nID);
-						lpDispInfo->lpszText = (LPTSTR)m_strTooltip.c_str();
+						lpDispInfo->lpszText = const_cast<LPTSTR>(m_strTooltip.c_str());
 					}
 					else
 						m_strTooltip = _T("");

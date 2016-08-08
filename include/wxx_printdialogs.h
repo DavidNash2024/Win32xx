@@ -162,7 +162,7 @@ namespace Win32xx
 	inline CGlobalLock<DEVNAMES>::operator LPCTSTR() const
 	{
 		assert(m_p != NULL);
-		return (LPCTSTR)m_p;
+		return reinterpret_cast<LPCTSTR>(m_p);
 	}
 
 
@@ -338,13 +338,13 @@ namespace Win32xx
 				}
 
 				// Compare current default printer to the one in global memory
-				LPDEVNAMES pDefDevNames = (LPDEVNAMES)::GlobalLock(pd.hDevNames);
-				if (lstrcmp((LPCTSTR)pDevNames + pDevNames->wDriverOffset,
-						(LPCTSTR)pDefDevNames + pDefDevNames->wDriverOffset) != 0 ||
-					lstrcmp((LPCTSTR)pDevNames + pDevNames->wDeviceOffset,
-						(LPCTSTR)pDefDevNames + pDefDevNames->wDeviceOffset) != 0 ||
-					lstrcmp((LPCTSTR)pDevNames + pDevNames->wOutputOffset,
-						(LPCTSTR)pDefDevNames + pDefDevNames->wOutputOffset) != 0)
+				LPDEVNAMES pDefDevNames = reinterpret_cast<LPDEVNAMES>(::GlobalLock(pd.hDevNames));
+				if (lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDriverOffset,
+					reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDriverOffset) != 0 ||
+					lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDeviceOffset,
+						reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDeviceOffset) != 0 ||
+					lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wOutputOffset,
+						reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wOutputOffset) != 0)
 				{
 					// Default printer has changed. Reset the global memory.
 					::GlobalUnlock(m_hDevNames);
@@ -425,9 +425,9 @@ namespace Win32xx
 				LPDEVMODE pDevMode = CDevMode(GetApp().m_hDevMode);
 				if (pDevMode)
 				{
-					dc.CreateDC((LPCTSTR)pDevNames + pDevNames->wDriverOffset,
-						(LPCTSTR)pDevNames + pDevNames->wDeviceOffset,
-						(LPCTSTR)pDevNames + pDevNames->wOutputOffset,
+					dc.CreateDC(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDriverOffset,
+						reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDeviceOffset,
+						reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wOutputOffset,
 						pDevMode);
 				}
 			}
@@ -599,7 +599,7 @@ namespace Win32xx
 		if (GetApp().m_hDevNames != 0)
 		{
 			CDevNames pDev = GetDevNames();
-			LPCTSTR name = (LPCTSTR)pDev + pDev->wDeviceOffset;
+			LPCTSTR name = static_cast<LPCTSTR>(pDev) + pDev->wDeviceOffset;
 			str = name;
 		}
 
@@ -638,7 +638,7 @@ namespace Win32xx
 		if (GetApp().m_hDevNames != 0)
 		{
 			CDevNames pDev = GetDevNames();
-			LPCTSTR name = (LPCTSTR)pDev + pDev->wDriverOffset;
+			LPCTSTR name = static_cast<LPCTSTR>(pDev) + pDev->wDriverOffset;
 			str =  name;
 		}
 
@@ -660,7 +660,7 @@ namespace Win32xx
 		if (GetApp().m_hDevNames != 0)
 		{
 			CDevNames pDev = GetDevNames();
-			LPCTSTR name = (LPCTSTR)pDev + pDev->wOutputOffset;
+			LPCTSTR name = static_cast<LPCTSTR>(pDev) + pDev->wOutputOffset;
 			str = name;
 		}
 		return str;
@@ -722,8 +722,8 @@ namespace Win32xx
 		m_PD.nMaxPage		= pd.nMaxPage;
 		m_PD.nCopies		= pd.nCopies;
 		m_PD.hInstance		= GetApp().GetResourceHandle();
-		m_PD.lpfnPrintHook  = (LPCCHOOKPROC)CDHookProc;
-		m_PD.lpfnSetupHook  = (LPCCHOOKPROC)CDHookProc;
+		m_PD.lpfnPrintHook  = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+		m_PD.lpfnSetupHook  = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
 		m_PD.lCustData		= pd.lCustData;
 		m_PD.hPrintTemplate	= pd.hPrintTemplate;
 		m_PD.hSetupTemplate = pd.hSetupTemplate;
@@ -973,8 +973,8 @@ namespace Win32xx
 		m_PSD.rtMargin			= psd.rtMargin;
 		m_PSD.hInstance			= GetApp().GetResourceHandle();
 		m_PSD.lCustData			= psd.lCustData;
-		m_PSD.lpfnPageSetupHook = (LPCCHOOKPROC)CDHookProc;
-		m_PSD.lpfnPagePaintHook = (LPCCHOOKPROC)CPageSetupDialog::PaintHookProc;
+		m_PSD.lpfnPageSetupHook = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+		m_PSD.lpfnPagePaintHook = reinterpret_cast<LPCCHOOKPROC>(CPageSetupDialog::PaintHookProc);
 		m_PSD.lpPageSetupTemplateName = psd.lpPageSetupTemplateName;
 		m_PSD.hPageSetupTemplate = psd.hPageSetupTemplate;
 	}

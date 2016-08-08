@@ -12,7 +12,7 @@ class CMyCombo : public CComboBoxEx
 public:
 	CMyCombo() {}
 	virtual ~CMyCombo() {}
-	CEdit* GetEdit() const { return const_cast<CEdit*>(&m_Edit); } 
+	CEdit* GetEdit() const { return &m_Edit; } 
 
 protected:
 	virtual void OnAttach()
@@ -22,7 +22,7 @@ protected:
 	virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CEdit m_Edit;
+	mutable CEdit m_Edit;
 };
 
 
