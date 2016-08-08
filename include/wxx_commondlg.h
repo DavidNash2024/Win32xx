@@ -460,7 +460,7 @@ namespace Win32xx
 		m_CC.lpCustColors	= m_rgbCustomColors;
 		m_CC.Flags			= cc.Flags;
 		m_CC.lCustData		= cc.lCustData;
-		m_CC.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
+		m_CC.lpfnHook		= reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
 		m_CC.lpTemplateName = cc.lpTemplateName;
 	}
 
@@ -489,7 +489,7 @@ namespace Win32xx
 		ZeroMemory(&m_OFN, sizeof(m_OFN));
 
 		// fill in the OPENFILENAME struct
-		m_OFN.lpstrFile		= (LPTSTR)pszFileName;
+		m_OFN.lpstrFile		= const_cast<LPTSTR>(pszFileName);
 		m_OFN.lpstrFilter	= pszFilter;
 		m_OFN.lpstrDefExt	= pszDefExt;
 		m_OFN.Flags			= dwFlags;
@@ -576,7 +576,7 @@ namespace Win32xx
 		if (message == UWM_SHAREVISTRING)
 		{   // handle a sharing violation for the selected file that
 			// occurred when the user clicked the OK button.
-			return OnShareViolation((LPCTSTR)lParam);
+			return OnShareViolation(reinterpret_cast<LPCTSTR>(lParam));
 		}
 
 		if (message == UWM_FILEOKSTRING)
@@ -607,7 +607,7 @@ namespace Win32xx
 		m_OFN.lpstrFile = m_sFileName.GetBuffer(m_OFN.nMaxFile);
 		int ok = (m_bOpenFileDialog ? ::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
 		m_sFileName.ReleaseBuffer();
-		m_OFN.lpstrFile = (LPTSTR)m_sFileName.c_str();
+		m_OFN.lpstrFile = const_cast<LPTSTR>(m_sFileName.c_str());
 		m_hWnd = 0;
 
 		// the result of the file choice box is processed here:
@@ -842,7 +842,7 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
-		OFNOTIFY* pNotify = (OFNOTIFY*)lParam;
+		OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lParam);
 		switch(pNotify->hdr.code)
 		{
 			case CDN_INITDONE:
@@ -939,7 +939,7 @@ namespace Win32xx
 		if (pszFileName)
 		{
 			m_sFileName = pszFileName;
-			m_OFN.lpstrFile = (LPTSTR)m_sFileName.c_str();
+			m_OFN.lpstrFile = const_cast<LPTSTR>(m_sFileName.c_str());
 		}
 		else
 			m_OFN.lpstrFile = NULL;
@@ -998,7 +998,7 @@ namespace Win32xx
 		m_OFN.nFileExtension	= ofn.nFileExtension;
 		m_OFN.lpstrDefExt		= ofn.lpstrDefExt;
 		m_OFN.lCustData			= ofn.lCustData;
-		m_OFN.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
+		m_OFN.lpfnHook			= reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
 	}
 
 
@@ -1047,14 +1047,13 @@ namespace Win32xx
 		SetParameters(m_FR);
 		m_FR.hwndOwner = hParentWnd;
 
-		m_FR.lpstrFindWhat = (LPTSTR)m_strFindWhat.GetBuffer(m_FR.wFindWhatLen);
+		m_FR.lpstrFindWhat = m_strFindWhat.GetBuffer(m_FR.wFindWhatLen);
 		if (pszFindWhat)
 			lstrcpyn(m_FR.lpstrFindWhat, pszFindWhat, m_FR.wFindWhatLen);
 
-		m_FR.lpstrReplaceWith = (LPTSTR)m_strReplaceWith.GetBuffer(m_FR.wReplaceWithLen);
+		m_FR.lpstrReplaceWith = m_strReplaceWith.GetBuffer(m_FR.wReplaceWithLen);
 		if (pszReplaceWith)
 			lstrcpyn(m_FR.lpstrReplaceWith, pszReplaceWith, m_FR.wReplaceWithLen);
-
 
 		// Display the dialog box
 		HWND hWnd;
@@ -1070,7 +1069,9 @@ namespace Win32xx
 		}
 
 		m_strFindWhat.ReleaseBuffer();
+		m_FR.lpstrFindWhat = const_cast<LPTSTR>(m_strFindWhat.c_str());
 		m_strReplaceWith.ReleaseBuffer();
+		m_FR.lpstrReplaceWith = const_cast<LPTSTR>(m_strReplaceWith.c_str());
 
 		return TRUE;
 	}
@@ -1146,8 +1147,8 @@ namespace Win32xx
 	//	The lParam value is that passed in the UWM_FINDMSGSTRING message.
 	{
 		assert(lParam != 0);
-		LPFINDREPLACE pFR = (LPFINDREPLACE)lParam;
-		CFindReplaceDialog* pDlg = (CFindReplaceDialog*)pFR->lCustData;
+		LPFINDREPLACE pFR = reinterpret_cast<LPFINDREPLACE>(lParam);
+		CFindReplaceDialog* pDlg = reinterpret_cast<CFindReplaceDialog*>(pFR->lCustData);
 		return pDlg;
 	}
 
@@ -1229,12 +1230,12 @@ namespace Win32xx
 		m_FR.hwndOwner			= 0;		// Set this in Create
 		m_FR.hInstance			= GetApp().GetInstanceHandle();
 		m_FR.Flags				= fr.Flags;
-		m_FR.lpstrFindWhat		= (LPTSTR)m_strFindWhat.c_str();
-		m_FR.lpstrReplaceWith	= (LPTSTR)m_strReplaceWith.c_str();
-		m_FR.wFindWhatLen		= (WORD)MAX(fr.wFindWhatLen, MaxChars);
-		m_FR.wReplaceWithLen	= (WORD)MAX(fr.wReplaceWithLen, MaxChars);
-		m_FR.lCustData			= (LPARAM)this;
-		m_FR.lpfnHook			= (LPCCHOOKPROC)CDHookProc;
+		m_FR.lpstrFindWhat		= const_cast<LPTSTR>(m_strFindWhat.c_str());
+		m_FR.lpstrReplaceWith	= const_cast<LPTSTR>(m_strReplaceWith.c_str());
+		m_FR.wFindWhatLen		= static_cast<WORD>(MAX(fr.wFindWhatLen, MaxChars));
+		m_FR.wReplaceWithLen	= static_cast<WORD>(MAX(fr.wReplaceWithLen, MaxChars));
+		m_FR.lCustData			= reinterpret_cast<LPARAM>(this);
+		m_FR.lpfnHook			= reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
 		m_FR.lpTemplateName		= fr.lpTemplateName;
 
 		// Enable the hook proc for the help button
@@ -1264,7 +1265,7 @@ namespace Win32xx
 		m_CF.lStructSize = sizeof(m_CF);
 		m_CF.Flags  = dwFlags;
 		m_CF.Flags |= CF_INITTOLOGFONTSTRUCT;
-		m_CF.lpLogFont = (LOGFONT*)&lfInitial;
+		m_CF.lpLogFont = const_cast<LOGFONT*>(&lfInitial);
 
 		if (hdcPrinter)
 		{
@@ -1399,12 +1400,13 @@ namespace Win32xx
 		pTLSData->pWnd = this;
 
 		m_CF.hwndOwner = hWndOwner;
-		m_CF.lpszStyle = (LPTSTR)m_strStyleName.GetBuffer(80);
+		m_CF.lpszStyle = m_strStyleName.GetBuffer(80);
 
 		// open the font choice dialog
 		BOOL ok = ::ChooseFont(&m_CF);
 
 		m_strStyleName.ReleaseBuffer();
+		m_CF.lpszStyle = const_cast<LPTSTR>(m_strStyleName.c_str());
 		m_hWnd = 0;
 
 		// process the result of the font choice box:
@@ -1514,10 +1516,8 @@ namespace Win32xx
 
 		if ((cf.dwMask & (CFM_ITALIC|CFM_BOLD)) == (CFM_ITALIC|CFM_BOLD))
 		{
-			m_LogFont.lfWeight = (cf.dwEffects & CFE_BOLD) ?
-				FW_BOLD : FW_NORMAL;
-			m_LogFont.lfItalic = (BYTE)((cf.dwEffects & CFE_ITALIC) ?
-				TRUE : FALSE);
+			m_LogFont.lfWeight = (cf.dwEffects & CFE_BOLD) ? FW_BOLD : FW_NORMAL;
+			m_LogFont.lfItalic = (cf.dwEffects & CFE_ITALIC) ? TRUE : FALSE;
 		}
 		else
 		{
@@ -1530,10 +1530,8 @@ namespace Win32xx
 			(CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR))
 		{
 			dwFlags |= CF_EFFECTS;
-			m_LogFont.lfUnderline = (BYTE)((cf.dwEffects & CFE_UNDERLINE) ?
-				TRUE : FALSE);
-			m_LogFont.lfStrikeOut = (BYTE)((cf.dwEffects & CFE_STRIKEOUT) ?
-				TRUE : FALSE);
+			m_LogFont.lfUnderline = (cf.dwEffects & CFE_UNDERLINE) ? TRUE : FALSE;
+			m_LogFont.lfStrikeOut = (cf.dwEffects & CFE_STRIKEOUT) ? TRUE : FALSE;
 		}
 		else
 		{
@@ -1553,7 +1551,7 @@ namespace Win32xx
 		if (cf.dwMask & CFM_FACE)
 		{
 			m_LogFont.lfPitchAndFamily = cf.bPitchAndFamily;
-			lstrcpy(m_LogFont.lfFaceName, (LPTSTR)cf.szFaceName);
+			lstrcpy(m_LogFont.lfFaceName, cf.szFaceName);
 		}
 		else
 		{
@@ -1588,10 +1586,10 @@ namespace Win32xx
 		m_CF.Flags			= cf.Flags;
 		m_CF.rgbColors		= cf.rgbColors;
 		m_CF.lCustData		= cf.lCustData;
-		m_CF.lpfnHook		= (LPCCHOOKPROC)CDHookProc;
+		m_CF.lpfnHook		= reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
 		m_CF.lpTemplateName	= cf.lpTemplateName;
 		m_CF.hInstance		= GetApp().GetInstanceHandle();
-		m_CF.lpszStyle		= (LPTSTR)m_strStyleName.c_str();
+		m_CF.lpszStyle		= const_cast<LPTSTR>(m_strStyleName.c_str());
 		m_CF.nFontType		= cf.nFontType;
 		m_CF.nSizeMin		= cf.nSizeMin;
 		m_CF.nSizeMax		= cf.nSizeMax;

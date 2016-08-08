@@ -236,7 +236,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Reflect this message if it's from a control
-				CWnd* pWnd = GetCWndPtr((HWND)lParam);
+				CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);
 
@@ -743,7 +743,7 @@ namespace Win32xx
 		// Create a modeless Property Sheet
 		m_PSH.dwFlags &= ~PSH_WIZARD;
 		m_PSH.dwFlags |= PSH_MODELESS;
-		HWND hWnd = (HWND)CreatePropertySheet(&m_PSH);
+		HWND hWnd = reinterpret_cast<HWND>(CreatePropertySheet(&m_PSH));
 		if (hWnd == 0)
 			throw CWinException(_T("CreatePropertySheet failed"));
 

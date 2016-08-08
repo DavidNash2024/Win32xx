@@ -582,7 +582,7 @@ namespace Win32xx
 		lvi.iItem = iItem;
 		lvi.iSubItem = iSubItem;
 		lvi.mask = nMask;
-		lvi.pszText = (LPTSTR)pszText;
+		lvi.pszText = const_cast<LPTSTR>(pszText);
 		lvi.iImage = iImage;
 		lvi.state = nState;
 		lvi.stateMask = nStateMask;
@@ -652,7 +652,7 @@ namespace Win32xx
 	// Sets the text color of a list-view control.
 	{
 		assert(IsWindow());
-		ListView_SetItemText(*this, iItem, iSubItem, (LPTSTR)pszText );
+		ListView_SetItemText(*this, iItem, iSubItem, const_cast<LPTSTR>(pszText) );
 	}
 
 	inline int CListView::SetSelectionMark( int iIndex ) const
@@ -804,7 +804,7 @@ namespace Win32xx
 		}
 
 		lvc.iOrder = iCol;
-		lvc.pszText = (LPTSTR)pszColumnHeading;
+		lvc.pszText = const_cast<LPTSTR>(pszColumnHeading);
 		lvc.fmt = iFormat;
 		lvc.iSubItem = iSubItem;
 		return ListView_InsertColumn( *this, iCol, &lvc );
@@ -825,7 +825,7 @@ namespace Win32xx
 		LVITEM lvi;
 		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
-		lvi.pszText = (LPTSTR)pszText;
+		lvi.pszText = const_cast<LPTSTR>(pszText);
 		lvi.mask = LVIF_TEXT;
 		return ListView_InsertItem( *this, &lvi );
 	}
@@ -838,7 +838,7 @@ namespace Win32xx
 		LVITEM lvi;
 		ZeroMemory(&lvi, sizeof(LVITEM));
 		lvi.iItem = iItem;
-		lvi.pszText = (LPTSTR)pszText;
+		lvi.pszText = const_cast<LPTSTR>(pszText);
 		lvi.iImage = iImage;
 		lvi.mask = LVIF_TEXT | LVIF_IMAGE;
 		return ListView_InsertItem( *this, &lvi );

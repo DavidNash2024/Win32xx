@@ -437,8 +437,8 @@ namespace Win32xx
 
 	inline LRESULT CReBar::OnToolBarResize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		HWND hToolBar = (HWND)wParam;
-		LPSIZE pToolBarSize = (LPSIZE)lParam;
+		HWND hToolBar = reinterpret_cast<HWND>(wParam);
+		LPSIZE pToolBarSize = reinterpret_cast<LPSIZE>(lParam);
 		ResizeBand(GetBand(hToolBar), *pToolBarSize);
 
 		return FinalWindowProc(uMsg, wParam, lParam);

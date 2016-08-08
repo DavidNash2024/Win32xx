@@ -697,14 +697,14 @@ namespace Win32xx
 		case WM_VKEYTOITEM:
 		case WM_HSCROLL:
 		case WM_VSCROLL:
-			hWnd = (HWND)lParam;
+			hWnd = reinterpret_cast<HWND>(lParam);
 			break;
 
 		case WM_DRAWITEM:
 		case WM_MEASUREITEM:
 		case WM_DELETEITEM:
 		case WM_COMPAREITEM:
-			hWnd = GetDlgItem((int)wParam);
+			hWnd = GetDlgItem(static_cast<int>(lParam));
 			break;
 
 		case WM_PARENTNOTIFY:
@@ -712,7 +712,7 @@ namespace Win32xx
 			{
 			case WM_CREATE:
 			case WM_DESTROY:
-				hWnd = (HWND)lParam;
+				hWnd = reinterpret_cast<HWND>(lParam);
 				break;
 			}
 		}
@@ -1112,7 +1112,7 @@ namespace Win32xx
 		case WM_COMMAND:
 			{
 				// Reflect this message if it's from a control
-				CWnd* pWnd = GetCWndPtr((HWND)lParam);
+				CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
 				if (pWnd != NULL)
 					lr = pWnd->OnCommand(wParam, lParam);
 
@@ -1834,7 +1834,6 @@ namespace Win32xx
 	// The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost
 	{
 		assert(IsWindow());
-	//	HWND hWndInsertAfter = pInsertAfter? pInsertAfter->GetHwnd() : (HWND)0;
 		return ::SetWindowPos(*this, hWndInsertAfter, x, y, cx, cy, uFlags);
 	}
 

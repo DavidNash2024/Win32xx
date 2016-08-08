@@ -1853,7 +1853,7 @@ namespace Win32xx
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.hinst = GetApp().GetResourceHandle();
-		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
+		ti.lpszText = MAKEINTRESOURCE(nIDText);
 		ti.rect = rcTool;
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
@@ -1865,7 +1865,7 @@ namespace Win32xx
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.hinst = GetApp().GetResourceHandle();
-		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
+		ti.lpszText = MAKEINTRESOURCE(nIDText);
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
@@ -1876,7 +1876,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
-		ti.lpszText = (LPTSTR)lpszText;
+		ti.lpszText = const_cast<LPTSTR>(lpszText);
 		ti.rect = rcTool;
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
@@ -1888,7 +1888,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
-		ti.lpszText = (LPTSTR)lpszText;
+		ti.lpszText = const_cast<LPTSTR>(lpszText);
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
@@ -2082,7 +2082,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
-		ti.lpszText = (LPTSTR)lpszText;
+		ti.lpszText = const_cast<LPTSTR>(lpszText);
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
 
@@ -2093,7 +2093,7 @@ namespace Win32xx
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.hinst = GetApp().GetResourceHandle();
-		ti.lpszText = (LPTSTR)MAKEINTRESOURCE(nIDText);
+		ti.lpszText = MAKEINTRESOURCE(nIDText);
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
 

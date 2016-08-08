@@ -116,7 +116,7 @@ MyFontDialog(const CHARFORMAT& charformat, DWORD dwFlags /* = 0 */,
 		attributes specified by dwFlags. Throw an exception if the font cannot
 		be created. Always enable the dialog loop hook procedure and help button.
 *-----------------------------------------------------------------------------*/
-		: CFontDialog(dwFlags | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
+		: CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
 	{
 		SetBoxTitle(_T("Font"));
 		

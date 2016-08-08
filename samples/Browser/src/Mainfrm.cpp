@@ -42,7 +42,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
 	rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
 	rbbi.clrBack    = GetReBarTheme().clrBand1;
 	rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
-	rbbi.lpText     = (LPTSTR)_T("Address");
+	rbbi.lpText     = const_cast<LPTSTR>(_T("Address"));
 
 	GetReBar().InsertBand(-1, rbbi);
 }
@@ -227,7 +227,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 	// Handle notification WM_COMMAND from ComboboxEx
-	if((HWND)lParam == m_ComboboxEx.GetHwnd())
+	if(reinterpret_cast<HWND>(lParam) == m_ComboboxEx.GetHwnd())
 	{
 		switch(HIWORD(wParam))
 		{
@@ -353,7 +353,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 					COMBOBOXEXITEM CBXitem;
 					ZeroMemory(&CBXitem, sizeof(COMBOBOXEXITEM));
 					CBXitem.mask = CBEIF_TEXT;
-					CBXitem.pszText = (LPTSTR)str.c_str();
+					CBXitem.pszText = const_cast<LPTSTR>(str.c_str());
 					m_ComboboxEx.InsertItem(CBXitem);
 
 					// Navigate to the web page

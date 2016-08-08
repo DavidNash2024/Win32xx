@@ -159,7 +159,7 @@ namespace Win32xx
 		virtual CMDIChild& AddMDIChild(CMDIChild* pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
 		virtual CMenu GetActiveMenu() const;
-		virtual CMDIClient& GetMDIClient() const { return const_cast<CMDIClient&>(m_MDIClient); }
+		virtual CMDIClient& GetMDIClient() const { return m_MDIClient; }
 		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
@@ -199,7 +199,7 @@ namespace Win32xx
 		void UpdateFrameMenu(CMenu Menu);
 
 		std::vector<MDIChildPtr> m_vMDIChild;
-		CMDIClient m_MDIClient;
+		mutable CMDIClient m_MDIClient;
 		HWND m_hActiveMDIChild;
 	};
 
@@ -218,7 +218,7 @@ namespace Win32xx
 
 		virtual CDocker::CDockClient& GetDockClient() const
 		{
-			return const_cast<CMDIClient&>(GetMDIClient());
+			return GetMDIClient();
 		}
 
 		virtual void SetView(CWnd&)
@@ -694,7 +694,7 @@ namespace Win32xx
 	inline CMDIFrame& CMDIFrame::CMDIClient::GetMDIFrame() const
 	{
 		assert ( dynamic_cast<CMDIFrame*>(m_pMDIFrame) );
-		return const_cast<CMDIFrame&>(*m_pMDIFrame);
+		return *m_pMDIFrame;
 	}
 
 	inline LRESULT CMDIFrame::CMDIClient::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
@@ -714,7 +714,7 @@ namespace Win32xx
 		CallWindowProc(GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
 
 		// Now remove MDI child
-		GetMDIFrame().RemoveMDIChild((HWND) wParam);
+		GetMDIFrame().RemoveMDIChild(reinterpret_cast<HWND>(wParam));
 
 		return 0L;
 	}
@@ -833,7 +833,7 @@ namespace Win32xx
 	inline CMDIFrame& CMDIChild::GetMDIFrame() const
 	{
 		assert( m_pMDIFrame );
-		return const_cast<CMDIFrame&>(*m_pMDIFrame);
+		return *m_pMDIFrame;
 	}
 
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

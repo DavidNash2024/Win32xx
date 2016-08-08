@@ -1178,7 +1178,7 @@ namespace Win32xx
 		}
 		else
 		{
-			::SetWindowText(hWndCtrl, (LPTSTR)value);
+			::SetWindowText(hWndCtrl, value);
 		}
 	}
 

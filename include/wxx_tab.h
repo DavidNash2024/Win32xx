@@ -123,8 +123,8 @@ namespace Win32xx
 
 		// Attributes
 		const std::vector<TabPageInfo>& GetAllTabs() const { return m_vTabPageInfo; }
-		CImageList GetODImageList() const	{ return const_cast<CImageList&>(m_imlODTab); }
-		CFont& GetTabFont() const		{ return const_cast<CFont&>(m_TabFont); }
+		CImageList GetODImageList() const	{ return m_imlODTab; }
+		CFont& GetTabFont() const		{ return m_TabFont; }
 		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
@@ -200,8 +200,8 @@ namespace Win32xx
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
 		std::vector<WndPtr> m_vTabViews;
-		CFont m_TabFont;
-		CImageList m_imlODTab;	// Image List for Owner Draw Tabs
+		mutable CFont m_TabFont;
+		mutable CImageList m_imlODTab;	// Image List for Owner Draw Tabs
 		CMenu m_ListMenu;
 		CWnd* m_pActiveView;
 		CPoint m_OldMousePos;
@@ -232,7 +232,7 @@ namespace Win32xx
 		virtual LPCTSTR GetMDIChildTitle(int nTab) const;
 		virtual CMenu& GetListMenu() const { return GetTab().GetListMenu(); }
 		virtual void   ShowListDialog() { GetTab().ShowListDialog(); }
-		virtual CTab& GetTab() const	{ return const_cast<CTab&>(m_Tab); }
+		virtual CTab& GetTab() const	{ return m_Tab; }
 		virtual BOOL LoadRegistrySettings(const CString& strRegistryKeyName);
 		virtual void RecalcLayout();
 		virtual BOOL SaveRegistrySettings(const CString& strRegistryKeyName);
@@ -253,7 +253,7 @@ namespace Win32xx
 		CTabbedMDI(const CTabbedMDI&);				// Disable copy construction
 		CTabbedMDI& operator = (const CTabbedMDI&); // Disable assignment operator
 
-		CTab m_Tab;
+		mutable CTab m_Tab;
 	};
 
 }
@@ -337,7 +337,7 @@ namespace Win32xx
 			ZeroMemory(&tie, sizeof(TCITEM));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = tpi.iImage;
-			tie.pszText = (LPTSTR)tpi.TabText.c_str();
+			tie.pszText = const_cast<LPTSTR>(tpi.TabText.c_str());
 			InsertItem(iNewPage, &tie);
 
 			SetTabSize();
@@ -832,7 +832,7 @@ namespace Win32xx
 			ZeroMemory(&tie, sizeof(TCITEM));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vTabPageInfo[i].iImage;
-			tie.pszText = (LPTSTR)m_vTabPageInfo[i].TabText.c_str();
+			tie.pszText = const_cast<LPTSTR>(m_vTabPageInfo[i].TabText.c_str());
 			InsertItem(i, &tie);
 		}
 
@@ -1021,7 +1021,7 @@ namespace Win32xx
 		if (GetActiveView() && !m_IsClosePressed)
 		{
 			// return focus back to the child window that had it before
-			HWND hwndPrevFocus = (HWND)wParam;
+			HWND hwndPrevFocus = reinterpret_cast<HWND>(wParam);
 			if (IsChild(hwndPrevFocus))
 				::SetFocus(hwndPrevFocus);
 		}
@@ -1327,7 +1327,7 @@ namespace Win32xx
 			TCITEM Item;
 			ZeroMemory(&Item, sizeof(TCITEM));
 			Item.mask = TCIF_TEXT;
-			Item.pszText = (LPTSTR)szText;
+			Item.pszText = const_cast<LPTSTR>(szText);
 
 			if (SetItem(nTab, &Item))
 				m_vTabPageInfo[nTab].TabText = szText;
@@ -1431,14 +1431,14 @@ namespace Win32xx
 			ZeroMemory(&Item1, sizeof(TCITEM));
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = nLength;
-			Item1.pszText = (LPTSTR)T1.TabText.c_str();
+			Item1.pszText = const_cast<LPTSTR>(T1.TabText.c_str());
 			GetItem(nTab1, &Item1);
 
 			TCITEM Item2;
 			ZeroMemory(&Item2, sizeof(TCITEM));
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = nLength;
-			Item2.pszText = (LPTSTR)T2.TabText.c_str();
+			Item2.pszText = const_cast<LPTSTR>(T2.TabText.c_str());
 			GetItem(nTab2, &Item2);
 
 			SetItem(nTab1, &Item2);
