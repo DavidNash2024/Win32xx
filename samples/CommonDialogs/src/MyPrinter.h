@@ -39,15 +39,15 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -60,6 +60,9 @@
 #define MYPRINTER_H
 
 /******************************************************************************/
+
+#include "wxx_printdialogs.h"		
+#include "ListBoxDlgRC.h"
 
 #define TF(b) (b ? _T("true") : _T("false"))
 

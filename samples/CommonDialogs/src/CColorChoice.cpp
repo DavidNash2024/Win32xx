@@ -51,18 +51,18 @@
 	The user calls upon the DoModal() method to display the color selection
 	ListBox and thence the color choice dialog to supply the color for that
 	selection.  Access to a particular element in the color table is made
-	using its index in the DeleteEntry(), GetColor(), GetBrush(),
-	GetUsage(), SetColorTable(), and SetUsage() methods.
+	using its index in the DeleteTableEntry(), GetTableColor(), GetBrush(),
+	GetTableUsage(), SetTableColor(), and SetTableUsage() methods.
+
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
 
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -72,11 +72,12 @@
 
 #include "stdafx.h"
 #include "CColorChoice.h"
-#include "resource.h"
+#include "ListBoxDlgRC.h"
+#include "AppHelpRC.h"
 
 /*============================================================================*/
 	CColorChoice::
-CColorChoice()						   /*
+CColorChoice()						   		/*
 
 	Construct a color choice object with or without initial values.
 *-----------------------------------------------------------------------------*/
@@ -87,23 +88,21 @@ CColorChoice()						   /*
 
 /*============================================================================*/
 	BOOL CColorChoice::
-AddColorChoice(const CString& usage, COLORREF color) 			/*
+AddColorChoice(UINT nID, const CString& usage, COLORREF color) 		/*
 
-	Add the (name, color) pair to the color table, return TRUE on success,
-	FALSE otherwise.
+	Add the (nID, name, color) tuple to the color table, return TRUE on
+	success, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-	UINT size = m_ColorTable.size();
-	ctl_color pair;
-	pair.usage = usage;
-	pair.color = color;
-	m_ColorTable.push_back(pair);
-	return (UINT)m_ColorTable.size() == size + 1;
+	UINT size = GetTableSize();
+	ctl_color triple = {nID, usage, color};
+	m_ColorTable.push_back(triple);
+	return (UINT)GetTableSize() == size + 1;
 }
 
 /*============================================================================*/
 	UINT CColorChoice::
-DeleteEntry(UINT index)							/*
+DeleteTableEntry(UINT index)						/*
 
 	Description and explanation of parameters
 *-----------------------------------------------------------------------------*/
@@ -113,11 +112,11 @@ DeleteEntry(UINT index)							/*
 }
 
 /*============================================================================*/
-	INT_PTR CColorChoice::
+	INT_PTR CColorChoice:: 
 DoModal(HWND hWndOwner /* = 0 */) 					/*
 
         Show the base class color dialog box and select an app control
-	color.
+	color. 
 *-----------------------------------------------------------------------------*/
 {
 	  // determine a common window for the two dialog boxes
@@ -127,7 +126,7 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 		hWndOwner = GetApp().GetMainWnd();
 	  // prepare the list box dialog: load the color table choice items
 	m_LBDlg.ClearList();
-	for (UINT i = 0; i < m_ColorTable.size(); i++)
+	for (UINT i = 0; i < GetTableSize(); i++)
 		m_LBDlg.AddListItem(m_ColorTable[i].usage.c_str());
 	  // Make the control be modal so the choice is returned at
 	  // termination. Further, name the parent that cannot be accessed
@@ -138,9 +137,10 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 		return IDCANCEL;
 
 	  // register the current control color in the color choice struct
-	SetColor(m_ColorTable[selection].color);
+	  // with the base class
+	SetColor(m_ColorTable[selection].color);	
 	  // invoke the control and save the result on success
-	if(CColorDialog::DoModal(hWndOwner) ==  IDOK)
+	if(CColorDialog::DoModal(hWndOwner) ==  IDOK)	
 	{
 		m_ColorTable[selection].color = CColorDialog::GetColor();
 		return IDOK;
@@ -149,15 +149,66 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 }
 
 /*============================================================================*/
-	CBrush& CColorChoice::
-GetBrush(UINT index) 							/*
+	COLORREF CColorChoice::
+GetTableColor(UINT nID) 						/*
 
-	Return a brush with the color found in the color table at the given
-	index. The returned reference to a permanent object is required.
+	Return the color found in the color table having the given nID
+	identifier.
 *-----------------------------------------------------------------------------*/
 {
-   	m_br.CreateSolidBrush(GetColor(index));
-    	return m_br;
+	UINT idx = GetTableIndex(nID);
+	return m_ColorTable[idx].color;
+}
+
+/*============================================================================*/
+	CBrush CColorChoice::
+GetBrush(UINT nID) 							/*
+
+	Return a solid brush with the color found in the color table at the
+	given nID identifier. If the table has not yet been populated, return
+	a black brush. If nID is not found, throw an exception.
+*-----------------------------------------------------------------------------*/
+{
+	UINT idx = GetTableIndex(nID);
+	CBrush br;
+  	br.CreateSolidBrush(m_ColorTable[idx].color);
+    	return br;
+}
+
+/*============================================================================*/
+	UINT CColorChoice::
+GetTableIndex(UINT nID)                                                 /*
+
+	Return the color table index of the entry having the given nID. Return
+	zero if nID is zero or the table is empty.  Throw an exception if nID
+	is nonzero and is not in the table.
+*-----------------------------------------------------------------------------*/
+{
+	  // ignore the invocation if the table is empty
+	if (GetTableSize() == 0 || nID == 0)
+		return 0; // default value
+		
+	UINT idx = 0;
+ 	std::vector<ctl_color>::iterator it;
+	for (it = m_ColorTable.begin(); it != m_ColorTable.end() &&
+	    (*it).nID != nID; ++it, ++idx)
+		;
+	if (idx >= GetTableSize())
+		throw CUserException(_T("Requested color not found."));
+		
+	return idx;
+}
+
+/*============================================================================*/
+	CString& CColorChoice::
+GetTableUsage(UINT nID)                                                 /*
+
+	Return the usage field of the ctl_color triplet corresponding having
+	the given nID.
+*-----------------------------------------------------------------------------*/
+{
+	UINT idx = GetTableIndex(nID);
+	return  m_ColorTable[idx].usage;
 }
 
 /*============================================================================*/
@@ -187,7 +238,7 @@ InitCustomColors()                                                      /*
 	rgbCustomColors[14] = RGB(200, 200, 155);
 	rgbCustomColors[15] = RGB(200, 250, 255);
 
-	SetCustomColors(rgbCustomColors);
+	SetCustomColors(rgbCustomColors);						
 }
 
 /*============================================================================*/
@@ -216,10 +267,9 @@ OnInitDialog()                                                          /*
 	  // do the base class initialization first (it currently does nothing)
 	CDialog::OnInitDialog();
 	SetWindowTitle();
-	InitCustomColors();
+	InitCustomColors();  
 	return TRUE;
 }
-
 
 /*============================================================================*/
         void CColorChoice::
@@ -236,42 +286,67 @@ Serialize(CArchive &ar)                                               	/*
 		  // save the current color
 		ar << GetParameters().rgbResult;
         	  // save the custom colors
-		ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );
-		ar << ao;
+		ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );	
+		ar << ao;	
 		  // save the color table entries
-		UINT n = m_ColorTable.size();
-		ar << n;
+		ar << GetTableSize();
 		std::vector<ctl_color>::iterator it;
 		for (it = m_ColorTable.begin(); it < m_ColorTable.end(); ++it)
 		{
+			ar << (*it).nID;
 			ar << (*it).usage;
 			ar << (*it).color;
 		}
-
 	}
     else    // recovering
     {
 		  // recover current color
 		COLORREF rgbResult;
 		ar >> rgbResult;
-		SetColor(rgbResult);
+		SetColor(rgbResult); // set base class current color
         	  // read in the custom colors
 		COLORREF cr[16];
-		ArchiveObject ao(cr, 16 * sizeof(COLORREF) );
+		ArchiveObject ao(cr, 16 * sizeof(COLORREF));
 		ar >> ao;
-		SetCustomColors(cr);
+		SetCustomColors(cr);	
 		  // recover the color table entries
 		UINT n;
 		ar >> n;
+		m_ColorTable.resize(n);
 		std::vector<ctl_color>::iterator it;
-		for (it = m_ColorTable.begin(); it < m_ColorTable.begin() + n; ++it)
+		for (it = m_ColorTable.begin(); it < m_ColorTable.begin() + n;
+		    ++it)
 		{
+			ar >> (*it).nID;
 			ar >> (*it).usage;
 			ar >> (*it).color;
-		}
-
+		}	
 	}
 
 	CColorDialog::Serialize(ar);
+}
+
+/*============================================================================*/
+	void CColorChoice::
+SetTableColor(UINT nID, COLORREF rgb)                                   /*
+
+	Set the color entry of the color table entry with the given nID to
+	the specified rgb color.
+*-----------------------------------------------------------------------------*/
+{
+	UINT idx = GetTableIndex(nID);
+	m_ColorTable[idx].color = rgb;
+}
+
+/*============================================================================*/
+	void CColorChoice::
+SetTableUsage(UINT nID, const CString& s)                               /*
+
+	Set the usage entry of the color table entry with the given nID to
+	the specified s string.
+*-----------------------------------------------------------------------------*/
+{
+	UINT idx = GetTableIndex(nID);
+	m_ColorTable[idx].usage = s;
 }
 

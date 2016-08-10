@@ -91,19 +91,43 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=..\src\App.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\AppHelp.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\AppProlog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\CColorChoice.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\CustomButton.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Doc.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\FrameApp.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\main.cpp
+SOURCE=..\src\ListBoxDlg.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MRUFrame.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFontDlg.cpp
 # End Source File
 # Begin Source File
 

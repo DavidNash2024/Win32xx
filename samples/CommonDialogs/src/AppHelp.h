@@ -1,4 +1,4 @@
-/* (15-Sep-2015) [Tab/Indent: 8/8][Line/Box: 80/74]            (ContextHelp.h) *
+/* (15-Sep-2015) [Tab/Indent: 8/8][Line/Box: 80/74]                (AppHelp.h) *
 ********************************************************************************
 |                                                                              |
 |                     Copyright (c) 2016, Robert C. Tausworthe                 |
@@ -7,11 +7,12 @@
 |                                                                              |
 *==============================================================================*
 
-	Contents: Generic ContextHelp class declaration file. This class
-	provides the means for accessing help topics contained in compiled HTML
-	(.chm) documents to applications that use the Win32++ WINAPI interface,
-	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
-	Consult the ContextHelp.cpp file for further usage information.
+	Contents: AppHelp class declaration file. This class provides a set of
+	help functions whereby topics appearing in a compiled HTML (.chm)
+	document pertaining to an  application may be displayed. The class is
+	based on the Win32++ WINAPI interface, Copyright (c) 2005-2016 David
+	Nash, under permissions granted therein. Further information on the
+	usage of this class appears in AppHelp.cpp.
 
         Caveats: The copyright displayed above extends only to the author's
         treatment of material that may have been extracted from cited sources.
@@ -28,59 +29,60 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
-	ContextHelp Class Declaration
+	AppHelp Class Declaration
 
 *******************************************************************************/
 
 #ifndef CONTEXTHELP_H
 #define CONTEXTHELP_H
 
-#include <vector>
+/*=============================================================================*
 
-  // the help message structure definition
+	The help message structure definition                           */
+	
 struct help_message {UINT nID; CString topic;};
 
 /*============================================================================*/
 	class
-ContextHelp    : public CDialog						/*
+AppHelp    : public CDialog						/*
 
 	A class to provide access to documentation of features contained in a
-	.chm file based on selection of contextual items found within an app.
+	help file based on selection of contextual items found within an app.
 *-----------------------------------------------------------------------------*/
 {
 	public:
-		ContextHelp();
-		virtual ~ContextHelp(){}
+		AppHelp();
+		virtual ~AppHelp(){}
 		
 		virtual BOOL    AddHelpTopic(UINT nID, const CString& topic);
-		virtual void	DefaultTopics(void);
-		virtual BOOL	InitiateContextHelp(void);
+		virtual void    ConnectAppHelp(const CString& chmName,
+				    const CString& aboutCredits);
+		virtual BOOL	EngageContextHelp();
 		virtual BOOL    IsActive() { return m_bHelpActive;}
-		virtual BOOL    LookupAndDisplay(const CString& topic);
 		virtual BOOL	OnHelp(const CString &topic);
-		virtual BOOL    OnHelp(WPARAM wParam, UINT maxMRU = 0);
-		virtual BOOL    OnHelpID(UINT nID, UINT maxMRU = 0);
-		virtual  void	SetCredits(const CString &s){ m_sCredits = s;}
-		virtual void    SetHelpFile(const CString& s)
-				    { m_sContextHelpFile = s;}
+		virtual BOOL    OnHelp(WPARAM wParam);
+		virtual BOOL	OnHelpAbout();
+		virtual BOOL    OnHelpID(UINT nID);
 
 	protected:
-		virtual BOOL	OnHelpAbout(void);
+		virtual void	DefaultTopics();
+		virtual BOOL    DisplayHelpTopic(const CString& topic);
 		virtual BOOL 	OnInitDialog();
 
 	private:
+		
 		  // private data
 		CString 	m_sCredits;
 		BOOL    	m_bHelpActive;

@@ -1,0 +1,72 @@
+/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (AppProlog.rc) *
+********************************************************************************
+|                                                                              |
+|                     Copyright (c) 2016, Robert C. Tausworthe                 |
+|                             All Rights Reserved.                             |
+|                          robert.c.tausworthe@ieee.org                        |
+|                                                                              |
+*==============================================================================*
+
+	Contents: This file defines the CAppProlog resources for a base
+	application. CAppProlog class requires a set of resources pertaining to
+	the particular application being built. Usage of this capability thus
+	requires that this file be copied into the src space of the application
+	files and edited with application-secific values.  This is consistent
+	with the Win32++ WINAPI interface, Copyright (c) 2005-2016 David Nash,
+	under permissions granted therein.
+
+        Caveats: The copyright displayed above extends only to the author's
+        treatment of material that may have been extracted from cited sources.
+	Unaltered portions of those materials retain their original copyright
+	status. The author's additions and modifications may be used or altered
+	by others for non-commercial use only without permission.  However,
+	citation of the author's work should be included in such usages.
+
+	These materials are provided "as is", without warranty of any kind,
+	express or implied, including but not limited to: warranties of
+	merchantability, fitness for a particular purpose, and non-infringement.
+	In no event shall the authors or copyright holders be liable for any
+	claim, damages, or other liability, whether in an action of contract,
+	tort or otherwise, arising from, out of, or in connection with, these
+	materials, the use thereof, or any other other dealings therewith.
+	
+	Implementation Notes:   The file dialog document type filter is a string
+	used to determine the types of names that files must have in order to be
+	displayed in the file list box. This string consists of substring pairs,
+	each of which specifies a descriptor and a type (or types). The first
+	substring in each pair describes the filter; the second specifies the
+	file extension (i.e., type) that applies. Multiple extensions may be
+	specified using ‘;’ as the delimiter. Each substring ends with the ‘|’
+	character and the entire string terminates in "||\0".
+
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
+	Programming Notes:
+               The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
+
+********************************************************************************
+
+	AppProlog resource declarations
+
+*******************************************************************************/
+
+#include "windows.h"
+#include "AppPrologRC.h"
+
+STRINGTABLE
+{	  // app-specific program values
+	IDS_APP_VERSION         "Version 1.0 (2016)"
+	IDS_ARCHIVE_FILE_EXT    ".arc"
+	IDS_DATAPATH_SUBDIR	"win32++\\"
+	IDS_DOC_DEFAULT_EXT     ".txt"
+	IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
+	IDS_HELP_FILE_EXT       ".chm"
+	IDS_MAX_MRU_ENTRIES     "5"
+}
+
+

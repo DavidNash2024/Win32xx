@@ -8,9 +8,9 @@
 ===============================================================================*
 
 	Contents Description:  This file contains the WinMain() function and
-	CApp Class implementation for the CommonDialogs SDI sample application
-	using the Win32++ Windows interface classes, Copyright (c) 2005-2016
-	David Nash, under permissions granted therein.
+	CApp Class implementation for the CommonDialogs demonstration sample
+	application using the Win32++ Windows interface classes, Copyright
+	(c) 2005-2016 David Nash, under permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -47,15 +47,16 @@
 	controls, standard file open and save-as dialogs, and most-recently used
 	list (MRU), with persistent data stored in and retrieved from archive
 	files.
-
-        The programming standards roughly follow those established by the
-	1997-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-	Preparation Subsystem project for C++ programming.
 	
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
 
 *******************************************************************************/
 
@@ -63,8 +64,7 @@
 
 #include <sys\stat.h>
 #include <io.h>
-
-#include "App.h"
+#include "StdApp.h"
 
 /*******************************************************************************
 
@@ -74,27 +74,6 @@
 
 	Local extern and (static) default constants			*/
 
-  // serialized data file type and help file type
-static	const	LPCTSTR	archive_file_type = _T(".arc");
-static	const	LPCTSTR	help_file_type    = _T(".chm");
-
-  // semaphore name, instances, and handle: make sure the name
-  // is unique to among applications being executed simultaneously
-static	const	LPCTSTR	appSemaphoreName = _T("Win32++CommonDialogsApp");
-static  const	int     nInstances = 1; // number of allowed instances
-static	HANDLE 	m_hSem;
-
-  // application version and compilation information
-CString CApp::m_sAppVersion	= _T("Version 1.0\n");  // app version info
-CString CApp::m_sCompiled_with 	= _T("TDM-GCC 4.8.1");  // your compiler here
-CString CApp::m_sCompiled_on   	= __DATE__;
-  // About box program description
-CString CApp::m_sCredits = _T("%s\n\nCopyright (c) %s, Robert C. Tausworthe\n")
-				 _T("All Rights Reserved.\n\n")
-				 _T("Robert.C.Tausworthe@ieee.org\n\n")
-				 _T("%s compiled with %s\n")
-				 _T("Win32++ %d.%d.%d on %s.\n");
-CString CApp::m_sLatest_compilation = _T("Hello World!");
 
 /*******************************************************************************
 
@@ -107,84 +86,13 @@ InitInstance()								/*
 	This method is immediately called from the base class (CWinApp) Run()
 	method to create the frame, perform initialization of the app, and
 	return TRUE on success. Returning FALSE terminates the program.
-
-	Here, the About box information, command line arguments, app path,
-	app directory, app name, app exe name, archive file name, and help
-	file name are generated and saved as public data members of this object.
+	
+	Here, the About box information, app path, app directory, app name,
+	app exe name, archive file name, help file name and other constants
+	are generated and saved as public data members of this object via the
+	mere declaration of the CAppProlog m_Prolog object in App.h.
 *-----------------------------------------------------------------------------*/
 {
-
-	  // Here we save the command line and its arguments
-
-	m_sCmdLine = ::GetCommandLine();
-	m_argv = GetCommandLineArgs();
-	m_argc  = m_argv.size();
-          // extract the app name, directory, and path names as TCHAR strings
-	m_sAppPath = m_argv[0];
-          // the directory ends at the final "\" or "/" (NOTE: the path
-	  // separator may be presented as either '/' or '\' by gnu. In
-	  // fact, regular execution has '\', while the debugger has '/'.)
-	CString sPathSep = _T("\\");
-        size_t finalPathSep = m_sAppPath.GetString().find_last_of(sPathSep);
-        if (finalPathSep == (size_t)-1)
-        {
-        	sPathSep = _T("/");
-       		finalPathSep = m_sAppPath.GetString().find_last_of(sPathSep);
-		if (finalPathSep == (size_t)-1)
-		{
-			CString msg = _T("Path separation character error.");
-			::MessageBox(NULL, msg, _T("Error"), MB_OK |
-			    MB_ICONEXCLAMATION | MB_TASKMODAL);
-			return FALSE;
-		}
-        }
-	  // the directory is the string up to this last path separator
-	m_sAppDir  = m_sAppPath.Mid(0, finalPathSep);
-	  // the location of the archive file
-
-	m_sAppName = m_sAppPath.Mid(finalPathSep + 1);
-	  // find the app name, sans type
-	size_t finalExtSep = m_sAppName.GetString().find_last_of(_T("."));
-	m_sExeName = m_sAppName.Mid(0, finalExtSep);
-
-	if (!GetAppDataPath().IsEmpty())
-	{
-		// Use the AppData folder for the archive and help file
-		m_sArcvDir = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName;
-		m_sHelpDir = GetAppDataPath() + _T("\\Win32++\\") + m_sExeName;
-
-		// Create the folders if required
-		CreateDirectory(GetAppDataPath() + _T("\\Win32++"), NULL);
-		CreateDirectory(GetAppDataPath() + _T("\\Win32++\\") + m_sExeName, NULL);
-
-		// Note: on Win2000 and above we could create the folders in a single step:
-		// CString FullPath = (GetAppDataPath() + _T("\\Win32++\\INIFrame");
-		// SHCreateDirectory(NULL, FullPath);	// supported on Win2000 and above
-	}
-	else
-	{
-		m_sArcvDir = m_sAppDir;
-		m_sHelpDir = m_sAppDir;
-	}
-
-
-
- 	m_sArcvFile  = m_sArcvDir + _T("\\") + m_sExeName +
-	    archive_file_type;
-	  // the help file path name
-	m_sHelpFile = m_sHelpDir + _T("\\") + m_sExeName + help_file_type;
-	  // generate the About box static information
-	ULONG compiled_on = DatInt(CApp::m_sCompiled_on); // CApp
-	compiled_on = MAX(compiled_on, DatInt(CMainFrame::m_sCompiled_on));
-	compiled_on = MAX(compiled_on, DatInt(CDoc::m_sCompiled_on));
-	compiled_on = MAX(compiled_on, DatInt(CView::m_sCompiled_on));
-	CString date = IntDat(compiled_on);
-	m_sLatest_compilation.Format(m_sCredits, m_sExeName.c_str(),
-	    date.Right(4).c_str(), m_sAppVersion.c_str(),
-	    m_sCompiled_with.c_str(),
-	    _WIN32XX_VER / 0x100, (_WIN32XX_VER % 0x100) / 0x10,
-	    _WIN32XX_VER % 0x10, date.c_str());
-
 	  //Create the Frame Window
 	if (!m_Frame.Create())
 	{	  //End the program if the frame window creation fails
@@ -193,7 +101,7 @@ InitInstance()								/*
 				    MB_ICONEXCLAMATION | MB_TASKMODAL);
 		return FALSE;
 	}
-	  // initialize app-wide printer context to default.
+
 	return TRUE;
 }
 
@@ -249,7 +157,7 @@ Serialize(CArchive &ar)                                               	/*
         if (ar.IsStoring())
         {
                   // each item is written to the archive as a char stream of
-		  // the proper length, preceded by that length.
+		  // the proper length, preceded by that length. 
 
 	}
         else    // recovering
@@ -287,15 +195,18 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 	  // Create and check the semaphore that limits the number of
 	  // simultaneously executing instances of this application
 	  // to m_nInstances.
-        m_hSem = CreateSemaphore(NULL, nInstances, nInstances,
-	    appSemaphoreName);
+	static	const	LPCTSTR	semaphoreName = _T("Win32++_CommonDialogsDemo");
+	static  const	int     nInstances = 1; // number of allowed instances
+	static	HANDLE 	m_hSem;
+
+        m_hSem = CreateSemaphore(NULL, nInstances, nInstances, semaphoreName);
         if (WaitForSingleObject(m_hSem, 0) == WAIT_TIMEOUT)
         {
         	::MessageBox(NULL, _T("The allowed number of instances of this\n")
 		    _T("application are already running."), _T("Stop"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	        CloseHandle(m_hSem);
-	        return 0;
+	        return 0;  // before entering the message loop
 	}
 	  // declare the CApp object and run the application
 	try
@@ -306,14 +217,15 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 		  // Run the application
 		rtn = thisApp.Run();
 	}
-	catch (std::exception &e)  // catch all std::exception events
+	catch (CException &e)	// catch all CException events
 	{
 		  // Process the exception and quit
-		CString msg = e.what() + (CString)"\nWinMain Goodbye...";;
+		CString msg = e.what() + (CString)_T("\n") +
+		    e.GetText() + (CString)_T("\nWinMain Goodbye...");
 		::MessageBox(NULL, msg.c_str(), _T("Standard Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	}
-	catch(CString s)        // catch CString events
+	catch(CString &s)	// catch CString events
 	{
 		CString msg = s + (CString)"\nWinMain Goodbye...";
 		::MessageBox(NULL, msg.c_str(), _T("Registered Exception"),

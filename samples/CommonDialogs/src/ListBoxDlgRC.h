@@ -1,4 +1,4 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
+/* (10-OCT-2015) [Tab/Indent: 8/8][Line/Box: 80/74]           (ListBoxDlgRC.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,11 +7,10 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description:  Resource Definitions used by the CommonDialogs
-	SDI sample application resource.rc file.  Adapted to the Win32++ Windows
-	interface classes, Copyright (c) 2005-2016 David Nash, under
-	permissions granted therein.
-	
+	Contents Description:  Resource Definitions used by the CListBoxDlg
+	dialog class template. Adapted to the Win32++ Windows interface classes,
+	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
+
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
 	additions, deletions, and other treatments of materials that may have
@@ -40,7 +39,7 @@
 	generally adhere to prefixes as shown in the following table. Note
 	that different kinds of resource objects have different prefixes to
 	distinguish the types of entities they belong to:
-	
+
 	        Entity ID 	Object
 		IDP_ 		Message-box prompt
 		IDD_ 		Dialog-box ID
@@ -50,7 +49,7 @@
 		IDR_ 		Frame-related resource
 		IDC_ 		Control resource
 		IDW_            Win32++ default resources
-	
+
 	Notes about Resource IDs: In general, resource IDs can have values
 	from 1 to 65535. Programs with resource IDs higher than 65535 may
 	not be supported by some Windows versions.
@@ -87,52 +86,17 @@
 
 ********************************************************************************
 
-	Definition of resource ID values
+	Definition of CComDialogResource class resource ID values
 
 *******************************************************************************/
 
-#ifndef RESOURCE_H_DEFINED
-#define RESOURCE_H_DEFINED
+#ifndef CCOMDLG_RESOURCE_H_DEFINED
+#define CCOMDLG_RESOURCE_H_DEFINED
 
-
-  // Include the resource IDs defined by Win32++, numbered 51 - 99.
-  // These are prefixed by IDW_.
 #include "default_resource.h"
 
-  // resource ID of the main frame dialog (see resource.rc)
-#define IDD_FORM_DIALOG                 100			
-
-  // resource IDs for Menu and ToolBar commands
-#define IDM_FILE_NEW                    101			
-#define IDM_FILE_OPEN                   102			
-#define IDM_FILE_SAVE                   103			
-#define IDM_FILE_SAVEAS                 104			
-#define IDM_FILE_CLOSE                  105			
-#define IDM_FILE_PAGESETUP              106			
-#define IDM_FILE_PRINT                  107			
-#define IDM_FILE_PREVIEW	        108			
-#define IDM_FILE_EXIT                   109			
-#define IDM_EDIT_UNDO                   110			
-#define IDM_EDIT_REDO                   111			
-#define IDM_EDIT_CUT                    112			
-#define IDM_EDIT_COPY                   113			
-#define IDM_EDIT_PASTE                  114			
-#define IDM_EDIT_FIND                   115			
-#define IDM_EDIT_REPLACE                116			
-#define IDM_EDIT_DELETE                 117			
-#define IDM_FONT_CHOICE                 120			
-#define IDM_COLOR_CHOICE                121
-
-  // help context and content toolbar and menu messages
-#define IDM_HELP_CONTENT                130			
-#define IDM_HELP_CONTEXT                131			
-
-  // resource IDs of menu or toolbar icons, bitmaps, or other images
-#define IDI_COLOR_CHOICE                140			
-#define IDI_FONT_CHOICE                 141			
-
-  // resource IDs for client area controls (IDOK has its own, so not given here)
-#define IDM_EDITBOX			150			
+#define IDD_CLISTVIEWBOX_DIALOG       400   // CListBoxDialog box
+#define IDC_LIST_BOX  		      401   // list box within above
 
 /*-----------------------------------------------------------------------------*/
-#endif // RESOURCE_H_DEFINED
+#endif // CCOMDLG_RESOURCE_H_DEFINED

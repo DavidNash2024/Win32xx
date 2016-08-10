@@ -31,11 +31,16 @@
 	claim, damages, or other liability, whether in an action of contract,
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
-	
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.	
+
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
@@ -46,6 +51,8 @@
 #ifndef MY_FILE_DLG_H
 #define MY_FILE_DLG_H
 
+#include "ListBoxDlgRC.h"
+
 /*============================================================================*/
 	class
 MyFileDialog : public CFileDialog
@@ -53,12 +60,14 @@ MyFileDialog : public CFileDialog
 /*----------------------------------------------------------------------------*/
 {
 	public:
-		MyFileDialog(BOOL bOpenFileDialog = TRUE,
+		MyFileDialog
+		(
+		    BOOL bOpenFileDialog = TRUE,
 		    LPCTSTR sDefExt   = NULL,	
 		    LPCTSTR sFileName = NULL,									
 		    DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
-		    LPCTSTR  sFilter  = NULL)	
-		        : CFileDialog(bOpenFileDialog, sDefExt, sFileName,
+		    LPCTSTR  sFilter  = NULL
+		)	: CFileDialog(bOpenFileDialog, sDefExt, sFileName,
 			    dwFlags, sFilter)
 		{
 		}
@@ -70,7 +79,7 @@ MyFileDialog : public CFileDialog
 			  // is invoked.
 			  
 	protected:
-		virtual void 	OnHelpButton()
+		virtual void OnHelpButton()
 		  // Send the proper file dialog context help identifier to
 		  // the window whose handle is the OPENFILENAME struct's
 		  // hwndOwner.

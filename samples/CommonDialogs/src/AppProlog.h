@@ -1,4 +1,4 @@
-/* (10-08-2014) [Tab/Indent: 8/8][Line/Box: 80/74]            (CtlColorChoice.h) *
+/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (AppProlog.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,14 +7,11 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of a generic CtlColorChoice popup
-	dialog class for applications using the Win32++ Windows interface
-	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
-	therein. Information on the use of this class appears in the
-	CtlColorChoice.cpp file. This class extends the CColorChoice class to
-	permit the alteration of colors for all control types and individual
-	controls appearing on a frame dialog application. Instructions and
-	restrictions on the usage of this class appear in CtlColorChoice.cpp.
+	Contents Description: Declaration of the CAppProlog class, which is
+	used by the CApp class in an App/Frame/Doc/View architecture for
+	providing a set of commonly needed items in applications using the
+	Win32++ Windows interface classes, Copyright (c) 2005-2015 David Nash,
+	under permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -42,70 +39,72 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
 
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.
-	
 ********************************************************************************
 
-	Declaration of the CtlColorChoice class
+	Declaration of the CAppProlog class
 
 *******************************************************************************/
 
-#ifndef CTLCOLORCHOICE_H
-#define CTLCOLORCHOICE_H
+#ifndef APP_CPROLOG_H
+#define APP_CPROLOG_H
 
-#include "ColorDefs.h"
-#include "CListBoxDlg.h"
-#include "CColorChoice.h"
-
-/*******************************************************************************
-
-	Local struct and enum definitions                               */
-
-   // Mnemonic identifiers for indexing the m_ColorTable array.  The ctl_color
-   // pairs should be entered into this table in the order given
-enum CtlColors
-{
-	DlgTxFg = 0, 	DlgTxBg, DlgBg,	// dialog
-	BtnTxFg, 	BtnTxBg, BtnBg, // button
-	EdtTxFg, 	EdtTxBg, EdtBg, // edit
-	LBxTxFg, 	LBxTxBg, LBxBg, // list box
-	SclTxFg, 	SclTxBg, SclBg, // scroll
-	StcTxFg, 	StcTxBg, StcBg, // static
-	REdTxFg, 	REdTxBg, REdBg, // rich edit
-	EndDefaultColors                // end control class colors
-};
-
-/******************************************************************************/
-	class
-CtlColorChoice   : public CColorChoice					/*
-
-	A class to support the selection of the colors appearing in the controls 
-	of an application dialog.
-*-----------------------------------------------------------------------------*/
+class CAppProlog
 {
 	public:
-		CtlColorChoice();
-		virtual ~CtlColorChoice(){}
-		
-		virtual void	GetContolColors(UINT nCtlColor, COLORREF& fg,
-				    COLORREF& bg, CBrush& br);
+		CAppProlog();
+		~CAppProlog();
 
+		CString& GetAboutBoxInfo() {return m_sAboutBoxInfo;}
+		CString& GetAppDir()       { return m_sAppDir;}
+		CString& GetAppName()      { return m_sAppName;}
+		CString& GetAppPath()      { return m_sAppPath;}
+		CString& GetAppTitle()     { return m_sAppTitle;}
+		CString& GetArcvDir()      { return m_sArcvDir;}
+		CString& GetArcvPath()     { return m_sArcvPath;}
+		CString& GetCompiler()     { return m_sCompiler;}
+		CString& GetCompileDate()  { return m_sCompiled_on;}
+		CString& GetDocExt()       { return m_sDocExt;}
+		CString& GetFileFilter()   {return m_sFileFilter;}
+		CString& GetHelpDir()      { return m_sHelpDir;}
+		CString& GetHelpPath()     { return m_sHelpPath;}
+		UINT     GetMaxMRU()       { return m_nMaxMRUSlots;}
+		CString& GetWin32Vers()    { return m_sWin32Version;}
+		BOOL     HasHelpFile()     { return m_bHasHelpFile;}
+
+		  // static methods
+		static	CString	MakeAppDataPath(const CString& subpath);
+
+		
 	protected:
-		virtual void    InitCtlDefaultColors();
-		virtual BOOL 	OnInitDialog();
-			void 	InitCustomColors() {}
-		virtual	void	Serialize(CArchive &ar);
 
 	private:
-
+		  // private data
+		BOOL    m_bHasHelpFile; // TRUE if the help file exists
+		UINT    m_nMaxMRUSlots; // maximum allowed MRU entries
+ 		CString m_sAboutBoxInfo, // About box information
+		 	m_sAppTitle,	// name of app, no directory, with ext
+		 	m_sAppName,	// name of app: no directory, no ext
+		        m_sAppDir,	// directory of this app
+		        m_sAppPath,	// path to this app
+		        m_sArcvDir,	// directory holding the archive file
+			m_sArcvPath,	// archive file name
+			m_sCompiler,	// compiler designation
+			m_sCompiled_on, // compilation date
+			m_sDocExt,	// document default extension
+			m_sFileFilter,  // do file dialog filter
+		        m_sHelpDir,	// directory holding the help file
+		        m_sHelpPath,	// path to the application's help file
+		        m_sWin32Version; // version of Win32 framework used
 };
 /*----------------------------------------------------------------------------*/
-#endif  // CTLCOLORCHOICE_H
+#endif  // CAPP_PROLOG_H

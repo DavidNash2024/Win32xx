@@ -1,4 +1,4 @@
-/* (27-Jan-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (MyFontDlg.cpp) *
+/* (27-Jan-2016) [Tab/Indent: 8/8][Line/Box: 80/74]         (MyFontDialog.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -38,32 +38,19 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Usage Information: A font is characterized by many parameters. Some of
-	its attributes are described by its corresponding LOGFONT structure.
-	Other attributes not found in the LOGFONT are its foreground and
-	background colors and its style string that appears in the Style box of
-	the ::ChooseFont() dialog, when engaged. All of these attributes are
-	found in the CHOOSEFONT structure underlying the base CFontDialog class
-	accessible via the CFontDialog::GetParameters()/SetParameters() methods.
-	Some are also accessble directly via other CFontDialog methods. This
-	class augments the base class by providing a response to the help
-	button, evaluation of the average height and width of the font, and
-	serialization of object information.
+	Usage Information: This class may be used in place of the CFontDialog
+	class in instances where serialization of the font characteristics
+	are meant to be persisitent across executions of the application.
 	
-	This class may be used in place of the CFontDialog class in instances
-	the help button is required and where serialization of the font
-	characteristics are meant to be persistent across executions of the
-	application. It may also be used in lieu of separate declarations of a
-	font, its color, and its average height and width.
-
-	Programming Notes: The programming standards roughly follow those
-	established by the 1997-1999 Jet Propulsion Laboratory Deep Space
-	Network Planning and Preparation Subsystem project for C++ programming.
-	
-	Acknowledgement:
+ 	Acknowledgement:
 	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.	
+	review, insight, and assistance provided by David Nash in the
+	development of this work.
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
@@ -73,90 +60,25 @@
 
 #include "stdafx.h"
 #include "MyFontDlg.h"
-#include "resource.h"
+#include "AppHelpRC.h"
 
 /*============================================================================*/
 	MyFontDialog::
-MyFontDialog(const LOGFONT& lfInitial, DWORD dwFlags /* = 0 */,
-    HDC hdcPrinter /* = 0 */)    					/*
+MyFontDialog(DWORD dwFlags /* = CF_SHOWHELP */, HDC hdcPrinter /* = 0 */) /*
 
-	Create an object having the specified log font given in lplfInitial and
-	having the attributes specified by dwFlags. If lplfInitial is NULL, use
-	a default font. Throw an exception if the font cannot be created. Always
-	enable the hook procedure dialog loop and help button.
+	Create a simple default font dialog object with the title "Font", a
+	10pt Courier New typeface, and font, style, strikeout, underline, text
+	color, and help options enabled, as well as other options specified by
+	dwFlags. The hdcPrinter parameter, if non-zero, is a handle to a printer
+	device context for the printer on which the fonts are to be selected.
 *-----------------------------------------------------------------------------*/
-    : CFontDialog(lfInitial, dwFlags | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
+    : CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS |
+	CF_ENABLEHOOK | CF_SHOWHELP , hdcPrinter)
 {
 	SetBoxTitle(_T("Font"));
-	SetChoiceLogFont(lfInitial);
-}
-
-/*============================================================================*/
-	MyFontDialog::
-MyFontDialog(const CHARFORMAT& charformat, DWORD dwFlags /* = 0 */,
-    HDC hdcPrinter /* = 0 */)       					/*
-
-	Create an object having the specified charformat and having the
-	attributes specified by dwFlags. Throw an exception if the font cannot
-	be created. Always enable the dialog loop hook procedure and help button.
-*-----------------------------------------------------------------------------*/
-    : CFontDialog(charformat, dwFlags | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
-{
-	SetBoxTitle(_T("Font"));
-	LOGFONT lf = GetLogFont();
-	SetChoiceLogFont(lf);
-}
-
-/*============================================================================*/
-	MyFontDialog::
-	MyFontDialog(DWORD dwFlags /*= 0*/,	
-		HDC hdcPrinter /*= 0*/)							/*
-
-		Create an object having the specified charformat and having the
-		attributes specified by dwFlags. Throw an exception if the font cannot
-		be created. Always enable the dialog loop hook procedure and help button.
-*-----------------------------------------------------------------------------*/
-		: CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS | CF_ENABLEHOOK, hdcPrinter)
-	{
-		SetBoxTitle(_T("Font"));
-		
-		// set default font, 10pt Courier New
-		CFont f;							
-		f.CreatePointFont(10, _T("Courier New"));
-		SetChoiceFont(f);	
-	}
-
-/*============================================================================*/
-	INT_PTR MyFontDialog::
-DoModal(HWND hWndOwner /* = 0 */)                                       /*
-
-	Display the font choice dialog; hWndOwner specifies dialog's owner
-	window. Enable the dialog to show the help button. The method processes
-	the OnOK() member before returning control to the point of invocation
-	when the OK button is activated.
-*-----------------------------------------------------------------------------*/
-
-{
-          // open the dialog
-	CHOOSEFONT cf = GetParameters();
-	cf.Flags |= CF_SHOWHELP | CF_SCREENFONTS;
-	SetParameters(cf);								
-
-	return CFontDialog::DoModal(hWndOwner);
-}
-
-/*============================================================================*/
-	LOGFONT MyFontDialog::
-GetCurrentLogFont() const                                               /*
-
-	Return the log font characteristics of the currently active font in the
-	CHOOSEFONT struct's hwndOwner window.  This may not be the same as the
-	current object log font, depending on whether the selection of the
-	object font has been selected into the window device context.
-*-----------------------------------------------------------------------------*/
-{
-	CClientDC dc(GetParameters().hwndOwner);
-	return dc.GetLogFont();	
+          // default font, 10pt Courier New
+	m_Font.CreatePointFont(10, _T("Courier New"));
+	SetChoiceFont(m_Font);
 }
 
 /*============================================================================*/
@@ -193,11 +115,9 @@ OnInitDialog()                                                          /*
 	void MyFontDialog::
 OnOK()                                                                  /*
 
-	This member executes immediately after the DoModal() member terminates
-	upon activation of the OK button and before control returns to the
-	point of invocation. At this point the object's log font and foreground
-	color have been selected. The action here completes the selected dialog
-	object, which consists of m_Font and the font text metrics.
+	This member is caused to execute after the DoModal() member has
+	terminated with the OK button activated. The action here is just to
+	create the logfont form of the selected font.
 *-----------------------------------------------------------------------------*/
 {
 	LOGFONT lf = GetLogFont();
@@ -208,18 +128,25 @@ OnOK()                                                                  /*
 	void MyFontDialog::
 RecordFontMetrics()                                                     /*
 
-	Select the current font into the device context of the object's parent
-	window, whose handle is m_cf.hwndOwner if non-NUL, or of the entire
-	screen if it is NULL.  Record the current font TEXTMETRIC values and
-	compute the average character width and height in this window.
-*-----------------------------------------------------------------------------*/
-{
-	  // measure the font width and height	
-	CClientDC dc(GetParameters().hwndOwner);					
-	dc.SelectObject(m_Font);									
-	dc.GetTextMetrics(m_tm);									
-	m_avgWdHt.cx = m_tm.tmAveCharWidth;							
-	m_avgWdHt.cy = m_tm.tmHeight + m_tm.tmExternalLeading;		
+	Record the current font TEXTMETRIC values and the average character
+	width and height for the given parent window whose handle is
+	m_cf.hwndOwner, if non-NUL, or for the entire screen if NULL.
+*-----------------------------------------------------------------------------*/{
+	  // get the handle to the hWnd's device context
+	HDC hdc = ::GetDC(GetParameters().hwndOwner);
+
+	  // select the current font into the device context:
+	  // save the old
+	CFont oldfont = (CFont)(HFONT)::SelectObject(hdc, m_Font);
+
+	  // measure the font width and height
+	::GetTextMetrics(hdc, &m_tm);
+	m_avgWdHt.cx = m_tm.tmAveCharWidth;
+	m_avgWdHt.cy = m_tm.tmHeight + m_tm.tmExternalLeading;
+
+	  // restore entry environment
+	::SelectObject(hdc, oldfont);
+	::ReleaseDC(GetParameters().hwndOwner, hdc);
 }
 
 /*============================================================================*/
@@ -236,7 +163,7 @@ Serialize(CArchive &ar)                                               	/*
         {
 		  // save the font as a LOGFONT
 		LOGFONT lf = GetLogFont();
-		ArchiveObject f(&lf, sizeof(LOGFONT));
+		ArchiveObject f(&lf, sizeof(LOGFONT));				
         	ar << f;
 		  // save m_tm
 	 	ArchiveObject g(GetTextMetricPtr(), sizeof(TEXTMETRIC));
@@ -250,20 +177,23 @@ Serialize(CArchive &ar)                                               	/*
         {
                   // recover the font as LOGFONT
 		LOGFONT lf;
-		ArchiveObject f(&lf, sizeof(LOGFONT));
-		ar >> f;
-		SetChoiceLogFont(lf);
+		ArchiveObject f(&lf, sizeof(LOGFONT));				
+		ar >> f;											
+		CHOOSEFONT cf = GetParameters();					
+		cf.lpLogFont = &lf;									
+		SetParameters(cf);									
+		SetChoiceLogFont(lf);								
 		  // recover the text metrics
 	 	ArchiveObject g(GetTextMetricPtr(), sizeof(TEXTMETRIC));
 	 	ar >> g;
    		  // recover character height and width
 		SIZE z;
 		ar >> z;
-		SetAvgSize(z);
+		m_avgWdHt = z;
 		  // retrieve the font color
 		COLORREF rgb;
 		ar >> rgb;
-		SetColor(rgb);
+		SetColor(rgb);			
 	}
 }
 
@@ -271,13 +201,30 @@ Serialize(CArchive &ar)                                               	/*
 	void MyFontDialog::
 SetFontIndirect(const LOGFONT& lf)                                      /*
 
-	Set the current object to have the characteristics contained in the
-	supplied LOGFONT structure lf. Throw an exception if the font cannot
-	be created.
+	Set the current font to have the characteristics contained in the
+	supplied LOGFONT structure lf. Copy the face name into the font choice
+	style name.
 *-----------------------------------------------------------------------------*/
 {
-	m_Font.CreateFontIndirect(lf);				// throws CResourceException on failure  
-	CHOOSEFONT cf = GetParameters();
-	memcpy(cf.lpLogFont, &lf, sizeof(LOGFONT));
+	  // convert lf to a CFont
+	CFont hf;
+	hf.CreateFontIndirect(lf);
+
+	  // if it worked, put it in this object
+	if(hf)
+	{
+		DeleteObject(m_Font);
+		m_Font        = hf;
+		m_LogFont     = lf;
+		CHOOSEFONT cf = GetParameters();
+		cf.lpLogFont  = &m_LogFont;
+		SetParameters(cf);
+	}
+	else
+	{
+		::MessageBox(NULL, _T("Font creation error."),
+		    _T("Error"), MB_OK | MB_ICONEXCLAMATION |
+		    MB_TASKMODAL);
+	}
 }
 

@@ -8,9 +8,9 @@
 ===============================================================================*
 
 	Contents Description: Implementation of the CMainFrame class for the
-	CommonDialogs sample application using the Win32++ Windows interface
-	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
-	therein.
+	CommonDialogs demonstration sample application using the Win32++ Windows
+	interface classes, Copyright (c) 2005-2016 David Nash, under permissions
+	granted therein.
 
 	This particular frame class contains features a fixed-size form for the
 	display, with no resizing gripper tool at the end of the status bar,
@@ -43,17 +43,17 @@
 	materials, the use thereof, or any other other dealings therewith.
 	Citation of the author's work should be included in such usages.
 
-	Special Conventions:
+	Special Conventions: 
+
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
 
 	Programming Notes:
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -62,27 +62,19 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-
-#include "resource.h"
-#include "App.h"
-#include "MRU.h"
-
+#include "StdApp.h"
 
 /*******************************************************************************
 
 	Macros and Local (static) default constants          		*/
 
-  // latest file compilation date
-CString CMainFrame::m_sCompiled_on = __DATE__;
-
-static const	UINT    nMaxMRUSlots = 5;
   // the (fixed) window dimensions : {left, top, width, height}
 static const	RECT    rcWindowPlacement = {100, 100, 490, 400};
 
 /*******************************************************************************
 
 	Implementation of the Main Frame class
-
+	
 *=============================================================================*/
 	CMainFrame::
 CMainFrame() 								/*
@@ -102,27 +94,51 @@ CMainFrame() 								/*
 	ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
 	  // Set m_View as the view window of the frame
 	SetView(m_View);
-	  // inform the MRU object of the frame that owns it
-	m_MRU.ConnectMRU(this, nMaxMRUSlots);
 	  // define the context help topics and controls they service
 	SetContextHelpMessages();
 }
 
 /*============================================================================*/
-	void CMainFrame::
+	BOOL CMainFrame::
+DoContextHelp(WPARAM wParam)						/*
+
+	This method is invoked when the user selects an item from a menu, when
+	a child control sends a notification message, or when an accelerator
+	keystroke is translated. If the frame is not in context help mode,
+	returns FALSE. When context help mode is active, the method returns
+	TRUE.  The low-order word of wParam identifies the command nID of the
+	menu or accelerator message. If this method is invoked from an
+	OnCommand() method, the high-order word is 1 if the message is from
+	an accelerator, or 0 if the message is from the menu. If it is invoked
+	as the result of WM_COMMAND or WM_SYSCOMMAND, the high-order word
+	carries a notification code.
+*-----------------------------------------------------------------------------*/
+{
+	if (!m_AppHelp.OnHelp(wParam))
+		return FALSE;
+
+	m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
+	Invalidate();
+	return TRUE;
+}
+
+/*============================================================================*/
+	BOOL CMainFrame::
 EngageContextHelp() 							/*
 
 	Set the context help mode on and set cursors to the help cursor.
 *-----------------------------------------------------------------------------*/
 {
 	  // if context help is already active, no need to engage further
-	if (m_ContextHelp.IsActive())
-		return;
+	if (m_AppHelp.IsActive())
+		return FALSE;
 
+	GetView().SetFocus();
 	  // set the cursor(s) in all controls to help
 	m_hCursor = ::LoadCursor(NULL, IDC_HELP);
     	  // set help mode on
-    	m_ContextHelp.InitiateContextHelp();
+    	m_AppHelp.EngageContextHelp();
+	return TRUE;
 }
 
 /*============================================================================*/
@@ -138,31 +154,29 @@ LoadPersistentData()                                                    /*
 		CArchive ar(theApp.GetArcvFile(), CArchive::load);
 	          // deserialize in the same order as serialized
 		ar >> theApp;	// for the app
-		ar >> *this;	// for the frame
-		ar >> m_MRU;    // for the MRU list
+		ar >> *this;	// for the mainframe and base classes
 		ar >> m_View;   // for the view, including control colors
 		Invalidate();  // repaint the client with recovered colors
 
+		  // weed out any MRU entries that have disappeared
+		ValidateMRU(); // remove invalid file path names
 		  // if there is a MRU item at the top of the list, use it
 		  // as the name of the document to open
-		CString docfile = m_MRU.AccessMRUEntry(0);
+		CString docfile = AccessMRUEntry(0);
 		if (!docfile.IsEmpty())
 			m_Doc.OnOpenDoc(docfile);
 		UpdateToolbarMenuStatus();
+		  // reset the status bar color
+		COLORREF sb = m_View.GetSBBkColor();
+		SetSBBkColor(sb);
+
 	  // the ar object closes on destruction
 	}
-	catch (const CException& e)  // catch all CException events
+	catch(...) // catch all exceptions in trying to load the archive
 	{
-		  // Process the exception
-		CString msg = "Previous parameters could not be restored.\n";
-		msg += e.GetText();
-		::MessageBox(NULL, msg, A2T(e.what()), MB_OK | MB_ICONSTOP |
-		    MB_TASKMODAL);
-	}
-	catch(...) // catch all other exception events
-	{
-		CString msg = _T("Previous settings could not be restored.\n");
-		::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
+		CString msg = _T("Previous settings could not be restored.\n")
+		    _T("Unable to read archived values.\n");
+		::MessageBox(NULL, msg.c_str(), _T("Exception"),
 		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
 	}
 }
@@ -205,7 +219,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	The method returns nonzero if it processes the message; otherwise it
 	returns zero.
-
+	
 	In this particular case, the command message may be directed toward
 	context help, in which case a separate method is invoked to display
 	the help topic indicated.  Otherwise, the command messages are assumed
@@ -214,13 +228,13 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 *-----------------------------------------------------------------------------*/
 {
 	  // if context help mode is active, display the help topic for wParam
-	if (OnContextHelp(wParam))
+	if (DoContextHelp(wParam))
 		return TRUE;
 
 	UINT nID = LOWORD(wParam);
 	  // map all MRU file messages to one representative
 	if(IDW_FILE_MRU_FILE1 <= nID &&
-	    nID < IDW_FILE_MRU_FILE1 + nMaxMRUSlots)
+	    nID < IDW_FILE_MRU_FILE1 + theAppProlog.GetMaxMRU())
 		nID = IDW_FILE_MRU_FILE1;
 
 	switch(nID)
@@ -294,21 +308,17 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	    	m_Doc.OnReplaceDialog();
 		return TRUE;
 
-	    case IDM_HELP_CONTENT:
-	    	EngageContextHelp();
-	    	return OnContextHelp(wParam);
+	    case IDW_ABOUT:         // invoked by F1 and Help->About menu item
+	    	return m_AppHelp.OnHelpAbout();
 
-	      // Handle all of the help request messages from common dialogs.
-	    case IDC_HELP_COMDLG:
-	    	EngageContextHelp();
-	    	return OnContextHelp((WPARAM)lParam);
+	    case IDC_HELP_COMDLG:  // Handle help requests from common dialogs
+	    	return m_AppHelp.OnHelpID(LOWORD(lParam)); 
 
-	    case IDW_ABOUT:
-	    	return m_ContextHelp.OnHelpID(IDW_ABOUT, nMaxMRUSlots);
+	    case IDM_HELP_CONTENT:	// invoked by Help->Content menu item
+	    	return m_AppHelp.OnHelpID(nID);
 
-	    case IDM_HELP_CONTEXT:
-		EngageContextHelp();
-		return TRUE;
+	    case IDM_HELP_CONTEXT: // invoked by Shift+F1 and Help button
+		return EngageContextHelp(); // initiates context help mode
 
 	    case IDW_VIEW_TOOLBAR:
 	    	OnViewToolBar(); // toggle tool bar
@@ -333,37 +343,8 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	    default:
 		break;
 	}
-
+	
 	return FALSE;
-}
-
-/*============================================================================*/
-	BOOL CMainFrame::
-OnContextHelp(WPARAM wParam)						/*
-
-	This method is invoked when the user selects an item from a menu, when
-	a child control sends a notification message, or when an accelerator
-	keystroke is translated. If the frame is not in context help mode,
-	returns FALSE. When context help mode is active, the method returns
-	TRUE.  The low-order word of wParam identifies the command nID of the
-	menu or accelerator message. If this method is invoked from an
-	OnCommand() method, the high-order word is 1 if the message is from
-	an accelerator, or 0 if the message is from the menu. If it is invoked
-	as the result of WM_COMMAND or WM_SYSCOMMAND, the high-order word
-	carries a notification code.
-*-----------------------------------------------------------------------------*/
-{
-	  // make sure context help is active
-	if (!m_ContextHelp.IsActive())
-		return FALSE;
-
-	  // show the topic and cancel help mode
-	m_ContextHelp.OnHelp(wParam, nMaxMRUSlots);
-	  // context help is no longer active, so restore normal cursors
-	m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
-	Invalidate();
-
-	return TRUE;
 }
 
 /*============================================================================*/
@@ -385,7 +366,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 	// m_UseToolBar = FALSE;	 // Don't use a ToolBar
 
 	  // TODO: set CREATESTRUCT desired options here
-
+	  
 	  // call the base class OnCreate() method with these options
 	int rtn = CFrame::OnCreate(rcs);
 	  // set theme colors, if supported
@@ -395,12 +376,11 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 		SetThemeColors();
 	}
 
-	  // communicate help file name and about box contents to
-	  // context help object
-	RegisterHelpParameters();
+	  // set the MRU max size
+	ConnectMRU(theAppProlog.GetMaxMRU());
+	  // communicate help file name and about box contents to help object
+	ConnectAppHelp();
 	LoadPersistentData();
-	  // weed out any MRU entries that have disappeared
-//	m_MRU.ValidateMRU(); // TODO: uncomment this when we have actual files
 	return rtn;
 }
 
@@ -425,13 +405,13 @@ OnFileOpenMRU(UINT nIndex)						/*
 	if (m_Doc.IsOpen())
 		m_Doc.OnCloseDoc();
 
-	// get the MRU entry but don't move it to the top of the MRU list, yet
-	CString str = m_MRU.AccessMRUEntry(nIndex);
+	  // get the MRU entry but don't move it to the top of the MRU list, yet
+	CString str = AccessMRUEntry(nIndex);
 	m_Doc.OnOpenDoc(str);
 	UpdateToolbarMenuStatus();
 	if (m_Doc.IsOpen())
 	{         // now it's ok to move it
-		m_MRU.AddMRUEntry(str);
+		AddMRUEntry(str);
 		return TRUE;
 	}
 
@@ -529,10 +509,10 @@ UpdateToolbarMenuStatus()						/*
 *-----------------------------------------------------------------------------*/
 {
 	// TODO: Add and modify code here to implement this member
-
+	
 	  // document status
 	BOOL 	doc_is_ready = m_Doc.IsOpen();
-
+	
 	  // determine enabled status of controls (TODO: redo for actual app)
 	BOOL	ok_to_cut         = TRUE;   // doc_is_ready;
 	BOOL	ok_to_copy        = FALSE;  // doc_is_ready;
@@ -594,31 +574,6 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
 	BOOL CMainFrame::
-PreTranslateMessage(MSG& Msg)                                           /*
-
-	Pretranslates the system message uMsg from the mainframe message loop
-	before they are dispatched to theTranslateMessage and DispatchMessage
-	Windows functions in the message loop and before they are dispached
-	to the PreTranslateMessage method of CWnd. MSG contains the message
-	to process. Return a nonzero if the message was translated and should
-	not be dispatched; return 0 if the message was not translated and
-	should be dispatched.
-*-----------------------------------------------------------------------------*/
-{
-	UNREFERENCED_PARAMETER(Msg);
-//	HWND   hwnd	= Msg->hwnd;
-//	UINT   message	= Msg->message;
-//	WPARAM wParam	= Msg->wParam;
-//	LPARAM lParam	= Msg->lParam;
-//	DWORD  time	= Msg->time;
-//	CPoint  pt	= Msg->pt;
-
-	  // return 0 if the message was NOT handled here
-	return 0;
-}
-
-/*============================================================================*/
-	BOOL CMainFrame::
 SaveRegistrySettings()                                                  /*
 
 	This member is called in response to a WM_CLOSE message for the
@@ -632,11 +587,10 @@ SaveRegistrySettings()                                                  /*
 		CArchive ar(theApp.GetArcvFile(), CArchive::store);
 	         // serialize in the following order
 		ar << theApp;   // for the App
-		ar << *this;    // for the main frame
-		ar << m_MRU;    // for the MRU list
+		ar << *this;    // for the mainframe and base classes
 		ar << m_View;   // for the view, including control colors
 	}
-	catch (const CException& e)  // catch all std::exception events
+	catch (const CWinException &e)  // catch all std::exception events
 	{
 		  // Process the exception and quit
 		CString msg;
@@ -697,6 +651,7 @@ Serialize(CArchive &ar)                                               /*
 			SetWindowPlacement(m_Wndpl);
 		}
         }
+        CMRUFrame::Serialize(ar);
 }
 
 /*============================================================================*/
@@ -706,49 +661,45 @@ SetContextHelpMessages() 						/*
 	Define the set of all context help topics to be displayed for each of
 	the control identifiers that are serviced in this app, except for those
 	for CCommonDialog help boxes and the frame SC_MAXIMIZE, SC_MINIMIZE,
-	and SC_CLOSE boxes (these are defaults in the ContextHelp class).
+	and SC_CLOSE boxes (these are defaults in the AppHelp class).
 *-----------------------------------------------------------------------------*/
 {
 	  // define the tool bar button and menu item topics
-	m_ContextHelp.AddHelpTopic(IDM_FILE_NEW, 	_T("NewDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_OPEN, 	_T("OpenExistingDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_SAVE, 	_T("SaveCurrentDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_SAVEAS, 	_T("SaveAsAnotherDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_CLOSE, 	_T("CloseCurrentDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_PAGESETUP,  _T("PageSetupForPrintout"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_PRINT, 	_T("PrintDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_PREVIEW,    _T("PreviewPrintout"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_EXIT,  	_T("ExitTerminateProgram"));
-	m_ContextHelp.AddHelpTopic(IDW_FILE_MRU_FILE1, 	_T("MostRecentlyUsedList"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_UNDO, 	_T("UndoFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_REDO, 	_T("RedoFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_CUT, 	_T("CutFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_COPY, 	_T("CopyFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_PASTE, 	_T("PasteFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_DELETE, 	_T("DeleteFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_FIND, 	_T("FindInDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_REPLACE,	_T("ReplaceInDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_CONTENT, 	_T("Introduction"));
-	m_ContextHelp.AddHelpTopic(IDW_ABOUT, 		_T("AboutThisProgram"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_CONTEXT,	_T("Welcome"));
-	m_ContextHelp.AddHelpTopic(IDW_VIEW_TOOLBAR, 	_T("ToolbarTopics"));
-	m_ContextHelp.AddHelpTopic(IDW_VIEW_STATUSBAR, 	_T("StatusbarTopics"));
-	m_ContextHelp.AddHelpTopic(IDM_COLOR_CHOICE, 	_T("ColorChoiceFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_FONT_CHOICE, 	_T("FontChoiceFunction"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_NEW, 	   _T("NewDocument"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_OPEN, 	   _T("OpenExistingDocument"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_SAVE, 	   _T("SaveCurrentDocument"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_SAVEAS,    _T("SaveAsAnotherDocument"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_CLOSE, 	    _T("CloseCurrentDocument"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_PAGESETUP,  _T("PageSetupForPrintout"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_PRINT, 	    _T("PrintDocument"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_PREVIEW,    _T("PreviewPrintout"));
+	m_AppHelp.AddHelpTopic(IDM_FILE_EXIT,  	    _T("ExitTerminateProgram"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_UNDO, 	    _T("UndoFunction"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_REDO, 	    _T("RedoFunction"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_CUT, 	    _T("CutFunction"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_COPY, 	    _T("CopyFunction"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_PASTE, 	    _T("PasteFunction"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_DELETE,     _T("DeleteFunction"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_FIND, 	    _T("FindInDocument"));
+	m_AppHelp.AddHelpTopic(IDM_EDIT_REPLACE,    _T("ReplaceInDocument"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_CONTENT,    _T("Introduction"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_CONTEXT,    _T("Welcome"));
+	m_AppHelp.AddHelpTopic(IDM_COLOR_CHOICE,    _T("ColorChoiceFunction"));
+	m_AppHelp.AddHelpTopic(IDM_FONT_CHOICE,     _T("FontChoiceFunction"));
 	  // define client area controls topics
-	m_ContextHelp.AddHelpTopic(IDM_EDITBOX, 	_T("EditBoxUsage"));
-	m_ContextHelp.AddHelpTopic(IDOK, 		_T("OKButtonUsage"));
+	m_AppHelp.AddHelpTopic(IDM_EDITBOX,  	    _T("EditBoxUsage"));
+	m_AppHelp.AddHelpTopic(IDOK, 		    _T("OKButtonUsage"));
 	  // define common dialog help button topics
-	m_ContextHelp.AddHelpTopic(IDM_HELP_COLORDLG, 	_T("ColorDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FILEDLG_OPEN, _T("FileDialogOpenHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FILEDLG_NEW, _T("FileDialogNewHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FILEDLG_SAVEAS, _T("FileDialogSaveAsHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FONTDLG,    _T("FontChoiceDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_PAGESETDLG, _T("PageSetupDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_PRINTDLG, 	_T("PrinterDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FINDDLG,	_T("FindTextDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_REPLACEDLG, _T("ReplaceTextDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_LIST_BOX, 	_T("ListBoxDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_COLORDLG,    _T("ColorDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_FILEDLG_OPEN, _T("FileDialogOpenHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_FILEDLG_NEW, _T("FileDialogNewHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_FILEDLG_SAVEAS, _T("FileDialogSaveAsHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_FONTDLG,    _T("FontChoiceDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_PAGESETDLG, _T("PageSetupDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_PRINTDLG,   _T("PrinterDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_FINDDLG,    _T("FindTextDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_REPLACEDLG, _T("ReplaceTextDialogHelp"));
+	m_AppHelp.AddHelpTopic(IDM_HELP_LIST_BOX,   _T("ListBoxDialogHelp"));
 }
 
 /*============================================================================*/
@@ -872,23 +823,23 @@ SetupToolBar()                                                          /*
 	AddToolBarButton(0);  // Separator
 	AddToolBarButton(IDM_HELP_CONTEXT,  TRUE, 0, 11);
 	  // Set the toolbar image list: use defaults for hot and disabled
-	SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR, 0, 0);
+	SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
+	  // Set icons for color and font choice menu items
+	AddMenuIcon(IDM_COLOR_CHOICE, theApp.LoadIcon(IDI_COLOR_CHOICE));
+	AddMenuIcon(IDM_FONT_CHOICE,  theApp.LoadIcon(IDI_FONT_CHOICE));
 }
 
 /*============================================================================*/
 	void CMainFrame::
-RegisterHelpParameters() 						/*
+ConnectAppHelp() 						/*
 
-	Inform the ContextHelp object of the help .chm file name and ContextHelp
-	of its credits information string.
+	Register the AppHelp object help .chm file name and the AppHelp About
+	Box credits information string.
 *-----------------------------------------------------------------------------*/
 {
-	  // inform context help of its .chm document name (perhaps again,
-	  // but maybe not
-	m_ContextHelp.SetHelpFile(theApp.GetHelpFile());
-	  // set the about box application information (perhaps again, in
-	  // case the file fails
-	m_ContextHelp.SetCredits(CApp::m_sLatest_compilation);
+	  // inform context help of its .chm document name
+	m_AppHelp.ConnectAppHelp(theApp.GetHelpFile(),
+	    theAppProlog.GetAboutBoxInfo());
 }
 
 /*============================================================================*/
@@ -919,14 +870,14 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 	    case WM_HELP:
 	    {     // Handle the F1 requests for help. The HELPINFO in lParam
 		  // is of no use to the current context help class.
-		m_ContextHelp.OnHelpID(IDM_HELP_CONTENT, nMaxMRUSlots);
+		m_AppHelp.OnHelpID(IDM_HELP_CONTENT);
 	    	return TRUE;
 	    }
 
 	    case WM_SYSCOMMAND:
 	    {
 		  // if in help mode, let it handle the wParam message
-	    	if (OnContextHelp(wParam))
+	    	if (DoContextHelp(wParam))
 			return TRUE;
 
 		  // else process requests for action

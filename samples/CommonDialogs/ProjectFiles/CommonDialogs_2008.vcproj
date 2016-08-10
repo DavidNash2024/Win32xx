@@ -185,19 +185,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\AppHelp.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppProlog.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\CColorChoice.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CListBoxDlg.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ContextHelp.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CtlColorChoice.cpp"
 				>
 			</File>
 			<File
@@ -209,11 +205,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ListBoxDlg.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\MRU.cpp"
+				RelativePath="..\src\MRUFrame.cpp"
 				>
 			</File>
 			<File
@@ -225,14 +225,6 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -255,23 +247,27 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\AppHelp.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppHelpRC.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppProlog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppPrologRC.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\CColorChoice.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\CListBoxDlg.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\ColorDefs.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\ContextHelp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CtlColorChoice.h"
 				>
 			</File>
 			<File
@@ -283,11 +279,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\ListBoxDlg.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlgRC.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\MRU.h"
+				RelativePath="..\src\MRUFrame.h"
 				>
 			</File>
 			<File
@@ -315,6 +319,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\StdApp.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\targetver.h"
 				>
 			</File>
@@ -328,6 +336,18 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath="..\src\AppHelp.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppProlog.rc"
+				>
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlg.rc"
+				>
+			</File>
 			<File
 				RelativePath="..\src\Resource.rc"
 				>

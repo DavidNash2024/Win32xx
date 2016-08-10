@@ -31,11 +31,16 @@
 	claim, damages, or other liability, whether in an action of contract,
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
-	
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.	
+
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
@@ -46,7 +51,8 @@
 #ifndef MY_FIND_REPLACE_DLG_H
 #define MY_FIND_REPLACE_DLG_H
 
-#include "resource.h"
+#include "ListBoxDlgRC.h"
+#include "AppHelpRC.h"
 
 /*============================================================================*/
 	class
@@ -55,21 +61,19 @@ MyFindReplaceDialog : public CFindReplaceDialog
 /*----------------------------------------------------------------------------*/
 {
 	public:
-		MyFindReplaceDialog()
-		{
-		}
+		MyFindReplaceDialog() {}
 
 		void SetBoxTitle(LPCTSTR title) {m_sBoxTitle = title;}
-
+	
 	protected:
 		virtual void OnHelpButton()
 		  // Send the find or replace context help identifier to the
 		  //  window whose handle is the FINDREPLACE struct's hwndOwner,
 		  //  depending on the dialog box mode
 		{
-			HWND hwndOwner = GetParameters().hwndOwner;
+			HWND hwndOwner = GetParameters().hwndOwner;		
 			if (::IsWindow(hwndOwner))
-			{
+			{		
 				LPARAM lParam = IsFindDialogOnly()
 				    ? IDM_HELP_FINDDLG : IDM_HELP_REPLACEDLG;
 				SendMessage(hwndOwner, WM_COMMAND,
@@ -86,10 +90,10 @@ MyFindReplaceDialog : public CFindReplaceDialog
 			SetWindowTitle();
 			return TRUE;
 		}
-
+	
 		virtual void SetWindowTitle() const
 				    { SetWindowText(m_sBoxTitle);}
-
+	
 	private:
 		CString m_sBoxTitle;
 };

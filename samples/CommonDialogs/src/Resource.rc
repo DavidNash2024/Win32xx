@@ -7,7 +7,7 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Application resources file for a mininmal
+	Contents Description: Application resources file for a mininmal 
 	application. Adapted to use Win32++ Windows interface classes,
 	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
 
@@ -37,31 +37,20 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 /******************************************************************************/
-// Microsoft Visual C++ generated resource script.
-//
-#include "Resource.h"
 
-#define APSTUDIO_READONLY_SYMBOLS
-
-/*==============================================================================
-
-	Generated from the TEXTINCLUDE 2 resource.                      */
-
-#define APSTUDIO_HIDDEN_SYMBOLS
 #include "windows.h"
-#undef APSTUDIO_HIDDEN_SYMBOLS
-#undef APSTUDIO_READONLY_SYMBOLS
+#include "Resource.h"
 
 /*==============================================================================
 
@@ -135,13 +124,14 @@ IDW_MAIN MENU
 	the application icon remains consistent on all systems.		*/
 
 IDW_MAIN		ICON			"../src/res/smile.ico"
+IDI_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
+IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 /*==============================================================================
 
 	Bitmaps                                                         */
 
-IDW_MAIN                BITMAP              	"../src/res/MenuIcons.bmp"	
-IDB_TOOLBAR             BITMAP               	"../src/res/Toolbar.bmp"	
+IDW_MAIN                BITMAP DISCARDABLE  	"../src/res/Toolbar.bmp"
 
 /*============================================================================**
 
@@ -159,39 +149,6 @@ FONT 10, "Courier New", 0, 0
 			    | ES_AUTOHSCROLL | NOT WS_BORDER, WS_EX_STATICEDGE
 }
 
-/*==============================================================================
-
-	About Dialog: for display upon being triggered by CFrame::OnHelp()  */
-
-IDW_ABOUT DIALOGEX 200, 200, 200, 150
-STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
-	DS_MODALFRAME | DS_FIXEDSYS
-CAPTION "About"
-FONT 8, "Courier New", 400, 0
-{
-	CTEXT	"Common Dialogs Application\nRobert C. Tausworthe",
-		    IDC_ABOUT_BOX_CREDITS, 5, 10, 190, 120
-	ICON    IDW_MAIN, 0, 4, 4, 20, 20
-}
-
-/*==============================================================================
-
-	CListBoxDlg Dialog						*/
-
-LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
-IDD_CLISTVIEWBOX_DIALOG DIALOG 0, 0, 150, 160
-STYLE WS_POPUP | WS_CAPTION | WS_BORDER | WS_SYSMENU | WS_VISIBLE | DS_SETFONT |
-	DS_MODALFRAME | DS_FIXEDSYS
-CAPTION "CListBoxDlg Dialog"
-FONT 10, "Microsoft Sans Serif"
-{
-    DEFPUSHBUTTON   "OK", IDOK, 5, 140, 30, 15
-    PUSHBUTTON      "Help", IDM_HELP_LIST_BOX, 60, 140, 30, 15
-    PUSHBUTTON      "Cancel", IDCANCEL, 115, 140, 30, 15
-    LISTBOX         IDC_LIST_BOX, 5, 5, 140, 130, WS_GROUP | WS_TABSTOP |
-    			WS_VSCROLL | NOT WS_BORDER | LBS_NOINTEGRALHEIGHT |
-			LBS_NOTIFY
-}
 /*==============================================================================
 
 	Accelerators                                                    */
@@ -222,13 +179,13 @@ IDW_MAIN ACCELERATORS
 	String Tables--tool tips and status labels			*/
 STRINGTABLE  // for the mainframe
 {
-	IDW_MAIN                "Common Dialogs Sample"
+	IDW_MAIN                "Common Dialogs Demo, with Help"
 	IDW_INDICATOR_CAPS      "CAP"
 	IDW_INDICATOR_NUM       "NUM"
 	IDW_INDICATOR_SCRL      "SCRL"
 	IDW_VIEW_TOOLBAR        "Show or hide the tool bar."
 	IDW_VIEW_STATUSBAR      "Show or hide the status bar."
-
+	
 	  // for menu items
 	IDM_COLOR_CHOICE        "Change the background color."
 	IDM_FONT_CHOICE         "Change the display font."
@@ -290,6 +247,5 @@ STRINGTABLE     // client area items
 }
 
 /*-----------------------------------------------------------------------------*/
-#endif    // English (U.S.) resources
-
+#endif    // !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 

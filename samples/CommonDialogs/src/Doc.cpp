@@ -36,15 +36,15 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -52,34 +52,11 @@
 
 *******************************************************************************/
 
-
-#include "stdafx.h"
+#include "stdafx.h"	
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#include "app.h"
-#include "Doc.h"
-#include "MyFileDlg.h"
-#include "MyFindReplaceDlg.h"
-#include "MyPrinter.h"
-
-/*******************************************************************************
-
-	Local (static) default constants                               	*/
-
-  // File dialog document type filter: this string is used to determine the
-  // types of names that files must have in order to be displayed in the file
-  // list box. This string consists of substring pairs, each of which specifies
-  // a descriptor and a type (or types). The first substring in each pair
-  // describes the filter; the second specifies the file extension (i.e., type)
-  // that applies. Multiple extensions may be specified using ‘;’ as the
-  // delimiter. Each substring ends with the ‘|’ character and the entire string
-  // terminates in "||\0".
-static  CString app_ext_dflt   = _T(".txt");
-static	CString app_filter_dflt=
-	   _T("Text files        (*.txt)|*.txt|All Files          (*.*)|*.*||");
-  // latest file compilation date
-CString CDoc::m_sCompiled_on = __DATE__;
+#include "StdApp.h"
 
 /*============================================================================*/
 	CDoc::
@@ -93,8 +70,8 @@ CDoc() 									/*
 	m_Doc_is_dirty = FALSE;
 	m_Doc_length = 0;
 	m_Doc_width = 0;
-	SetFilter(app_filter_dflt);
-	SetExt(app_ext_dflt);
+	m_Doc_file_ext.Empty();
+	m_Doc_file_filter.Empty();
 }
 
 /*============================================================================*/
@@ -121,6 +98,21 @@ GetLength()								/*
 }
 
 /*============================================================================*/
+	const CString& CDoc::
+GetExt()                                                          	/*
+
+	Get the document file extension; if no extension has been set, use the
+	one from the AppProlog object.
+*----------------------------------------------------------------------------*/
+{
+	if (m_Doc_file_ext.IsEmpty())
+		SetExt(theAppProlog.GetDocExt());
+
+	return m_Doc_file_ext;
+}
+
+
+/*============================================================================*/
 	BOOL CDoc::
 GetFileStatus(const CString& filename)                                  /*
 
@@ -130,6 +122,20 @@ GetFileStatus(const CString& filename)                                  /*
 *----------------------------------------------------------------------------*/
 {
 	return (::_tstat(filename.c_str(), &m_Status) == 0);
+}
+
+/*============================================================================*/
+	const CString& CDoc::
+GetFilter()                                                       	/*
+
+	Get the document file dialog filter; if no filter has been set, use the
+	one from the AppProlog object.
+*----------------------------------------------------------------------------*/
+{
+	if (m_Doc_file_filter.IsEmpty())
+		SetFilter(theAppProlog.GetFileFilter());
+
+	return m_Doc_file_filter;
 }
 
 /*============================================================================*/
@@ -182,12 +188,11 @@ OnCloseDoc()								/*
 {
 	  // for this demo, just remove an MRU entry, and open the top one,
 	  // if any
-	CMRU& theMRU = theFrame.GetMRU();
-	CString s = theMRU.AccessMRUEntry(0);
-	theMRU.RemoveMRUEntry(s.c_str());
-	if (theMRU.GetSize() > 0)
+	CString s = theFrame.AccessMRUEntry(0);
+	theFrame.RemoveMRUEntry(s.c_str());
+	if (theFrame.GetMRUSize() > 0)
 	{
-		s = theMRU.AccessMRUEntry(0);
+		s = theFrame.AccessMRUEntry(0);
 		OnOpenDoc(s);
 	}
 	theFrame.UpdateToolbarMenuStatus();
@@ -223,22 +228,21 @@ OnCut()									/*
 	// TODO: Add code here to implement this member
 	
 	// for this demo, add 5 strings to the MRU list and open the topmost one
-	CMRU& theMRU = theFrame.GetMRU();
-	theMRU.EmptyMRUList();
-	theMRU.AddMRUEntry(_T("This is MRU 5"));
-	theMRU.AddMRUEntry(_T("This is MRU 4"));
-	theMRU.AddMRUEntry(_T("This is MRU 3"));
-	theMRU.AddMRUEntry(_T("This is MRU 2"));
-	theMRU.AddMRUEntry(_T("This is MRU 1 and it is very, very, very, very, ")
+	theFrame.EmptyMRUList();
+	theFrame.AddMRUEntry(_T("This is MRU 5"));
+	theFrame.AddMRUEntry(_T("This is MRU 4"));
+	theFrame.AddMRUEntry(_T("This is MRU 3"));
+	theFrame.AddMRUEntry(_T("This is MRU 2"));
+	theFrame.AddMRUEntry(_T("This is MRU 1 and it is very, very, very, ")
 	    _T("very, very, very, very, very, very, very, very, very, very, ")
-	    _T("very, very long"));
-	OnOpenDoc(theMRU.AccessMRUEntry(0));
+	    _T("very, very, very long"));
+	OnOpenDoc(theFrame.AccessMRUEntry(0));
  	theFrame.UpdateToolbarMenuStatus();
 }
 
 /*============================================================================*/
 	void CDoc::
-OnDelete()									/*
+OnDelete()								/*
 
 	Delete the currently selected text from the document.
 *-----------------------------------------------------------------------------*/
@@ -255,7 +259,7 @@ OnDocOpenDialog()             						/*
 *-----------------------------------------------------------------------------*/
 {
 	MyFileDialog fd(TRUE, _T(""), _T(""),
-	    // OFN_HIDEREADONLY |
+	    OFN_HIDEREADONLY |
 	    OFN_SHOWHELP |
 	    OFN_EXPLORER |
 	    OFN_NONETWORKBUTTON |
@@ -263,7 +267,7 @@ OnDocOpenDialog()             						/*
 	    OFN_PATHMUSTEXIST |
 	    OFN_ENABLEHOOK    |
 	    OFN_ENABLESIZING,
-	    theDoc.GetFilter());
+	    GetFilter());
 	fd.SetBoxTitle(_T("Open document file..."));
 	fd.SetDefExt(theDoc.GetExt());
 	if (fd.DoModal(theApp.GetMainWnd()) == IDOK)
@@ -282,7 +286,7 @@ OnDocOpenDialog()             						/*
 		  // open the document based on this name
 		OnOpenDoc(fname);
 		if (IsOpen())
-			theFrame.GetMRU().AddMRUEntry(fname);
+			theFrame.AddMRUEntry(fname);
 	}
 	theFrame.UpdateToolbarMenuStatus();
 }
@@ -295,13 +299,14 @@ OnFileNewDialog()     							/*
 *-----------------------------------------------------------------------------*/
 {
 	MyFileDialog fd(TRUE, _T(""), _T(""),
+	    OFN_HIDEREADONLY |
 	    OFN_SHOWHELP |
 	    OFN_EXPLORER |
 	    OFN_NONETWORKBUTTON |
 	    OFN_ENABLESIZING,
-	    theDoc.GetFilter());
+	    GetFilter());
 	fd.SetBoxTitle(_T("New document file..."));
-	fd.SetDefExt(theDoc.GetExt());
+	fd.SetDefExt(GetExt());
 	if (fd.DoModal(theApp.GetMainWnd()) == IDOK)	
  	{
  		CString fname = fd.GetPathName();
@@ -314,7 +319,7 @@ OnFileNewDialog()     							/*
 
 		OnNewDoc(fname);
 		if (IsOpen())
-			theFrame.GetMRU().AddMRUEntry(fname);
+			theFrame.AddMRUEntry(fname);
 	}
 }
 
@@ -527,14 +532,7 @@ OnPageSetup()								/*
 {
 	MyPageSetup PSD(PSD_SHOWHELP);
 	PSD.SetPSDTitle(_T("Page Parameter Setup"));		
-	try
-	{
-		PSD.DoModal(theApp.GetMainWnd());
-	}
-	catch (const CWinException& e)
-	{
-		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONWARNING);
-	}
+	PSD.DoModal(theApp.GetMainWnd());
 
 	// TODO: Add code here to set up the printer.  Note: control does not
 	// return here until after OnOK() or OnCancel() have concluded.
@@ -567,16 +565,8 @@ OnPrintDialog()								/*
 	pd.nMinPage = 1;
 	pd.nMaxPage = 1000;
 	PD.SetPDTitle(_T("Choose Print Parameters"));
-	PD.SetParameters(pd);
-
-	try
-	{
-		PD.DoModal(theApp.GetMainWnd());
-	}
-	catch (const CWinException& e)
-	{
-		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_OK);
-	}
+	PD.SetParameters(pd);			
+	PD.DoModal(theApp.GetMainWnd());	
 
 	// TODO: Add code here to print the document.  Note: control does not
 	// return here until after OnOK() or OnCancel() have concluded.
@@ -677,7 +667,7 @@ OnSaveDocAs()								/*
 
 		m_Doc_is_dirty = FALSE;
 		if (IsOpen())
-			theFrame.GetMRU().AddMRUEntry(fname);
+			theFrame.AddMRUEntry(fname);
 		return TRUE;
 	}
 	return FALSE;
