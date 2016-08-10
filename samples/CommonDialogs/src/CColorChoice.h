@@ -39,15 +39,15 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -58,15 +58,18 @@
 #ifndef CCOLORCHOICE_H
 #define CCOLORCHOICE_H
 
+#include "stdafx.h"
+
 #include "ColorDefs.h"
-#include "CListBoxDlg.h"
+#include "ListBoxDlg.h"
+#include "ListBoxDlgRC.h"
 
 /*******************************************************************************
 
 	Local struct and enum definitions                               */
 
-  // usage-color pairs forming the m_ColorTable array
-struct ctl_color {CString  usage;  COLORREF color;};
+  // id-usage-color triples forming the m_ColorTable array
+struct ctl_color {UINT nID; CString  usage;  COLORREF color;};
 
 /******************************************************************************/
 	class
@@ -78,22 +81,19 @@ CColorChoice   : public CColorDialog					/*
 		CColorChoice();
 		virtual ~CColorChoice(){}
 		
-		virtual BOOL	AddColorChoice(const CString&, COLORREF);
+		virtual BOOL	AddColorChoice(UINT,  const CString&, COLORREF);
 			void    ClearColorTable(){m_ColorTable.clear();}
-			UINT    DeleteEntry(UINT index);
+			UINT    DeleteTableEntry(UINT index);
 		virtual INT_PTR DoModal(HWND hWndOwner = 0);
-			CBrush&	GetBrush(UINT index);
-			COLORREF GetColor(UINT idx)
-				     { return m_ColorTable[idx].color;}
-			UINT	GetTableSize(){ return m_ColorTable.size();}
-			CString& GetUsage(UINT idx)
-				     { return  m_ColorTable[idx].usage;}
-		virtual void    SetColorTable(UINT idx, COLORREF rgb)
-				     { m_ColorTable[idx].color = rgb;}
-		virtual void    SetUsage(UINT idx, const CString& s)
-				     { m_ColorTable[idx].usage = s;}
-		virtual CListBoxDlg& GetListBoxDlg(){return m_LBDlg;}
+			CBrush	GetBrush(UINT nID);
+		virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
+			COLORREF GetTableColor(UINT nID);
+			UINT    GetTableIndex(UINT nID);
+			UINT	GetTableSize() { return m_ColorTable.size();}
+			CString& GetTableUsage(UINT nID);
 			void	SetBoxTitle(LPCTSTR title) {m_sBoxTitle = title;}
+		virtual void    SetTableColor(UINT nID, COLORREF rgb);
+		virtual void    SetTableUsage(UINT nID, const CString& s);
 
 	protected:
 
@@ -107,7 +107,6 @@ CColorChoice   : public CColorDialog					/*
 		void InitCustomColors();		
 
 		  // private data
-		CBrush          m_br;		// must have object persistence
 		CListBoxDlg     m_LBDlg;	// the list box dialog
 		CString 	m_sBoxTitle;	// the color dialog box title
 		std::vector<ctl_color> m_ColorTable;   // usage-color pairs

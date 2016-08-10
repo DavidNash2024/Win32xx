@@ -7,14 +7,15 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the  CView class for the CommonDialogs
-	sample SDI application using the Win32++ Windows interface classes,
-	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
+	Contents Description: Declaration of the  CView class for the
+	CommonDialogs sample SDI application using the Win32++ Windows interface
+	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
+	therein.
 
- 	This particular view class contains features for selection of client
+ 	This particular view class demonstrates methods for selection of client
 	background color, selection of edit box font, use of external
 	serialization files, and context help for all controls in the client
-	area.
+	area. 
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -42,15 +43,15 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -62,15 +63,32 @@
 #define SDI_VIEW_H
 
 #include "CustomButton.h"
-#include "CtlColorChoice.h"
+#include "CColorChoice.h"
 #include "MyFontDlg.h"
 
 /*******************************************************************************
 
 	Local constants and types                               	*/
 
+   // Mnemonic identifiers for entries in the m_ColorTable array.  The nID
+   // field should be one of these identifiers for clarity. Default color is 0
+enum CtlColors
+{
+	DfltClr = 0,
+	DlgTxFg, 	DlgTxBg, DlgBg,	// dialog
+	BtnTxFg, 	BtnTxBg, BtnBg, // button
+	EdtTxFg, 	EdtTxBg, EdtBg, // edit
+	LBxTxFg, 	LBxTxBg, LBxBg, // list box
+	SclTxFg, 	SclTxBg, SclBg, // scroll
+	StcTxFg, 	StcTxBg, StcBg, // static
+	REdTxFg, 	REdTxBg, REdBg, // rich edit
+	OKTxFg, 	OKTxBg,  OKBg,  // OK custom button
+	SBTxFg,         SBTxBg,  SBBg,  // status bar
+	EndColors                	// end color IDs
+};
+
 /*============================================================================*/
-	class
+	class 
 CView : public CDialog							/*
 
 	This application's View class, a pattern for developing new apps.
@@ -79,42 +97,44 @@ CView : public CDialog							/*
 	public:
 		CView(UINT nResID);
 		virtual ~CView(){}
-
-		virtual void AttachControl(UINT nIDC, CWnd& rCtl);
-		virtual HWND Create(HWND hParent);
-		virtual void OnColorChoice();
-		virtual void OnFontChoice();
+		
+		virtual void 	AttachControl(UINT nIDC, CWnd& rCtl);
+		virtual HWND 	Create(HWND hParent);
+		    COLORREF 	GetSBBkColor()
+		    		{ return m_ColorChoice.GetTableColor(SBBg);}
+		virtual void 	OnColorChoice();
+		virtual void 	OnFontChoice();
 
 		  // public data members
-
-	     	static CString m_sCompiled_on; // compilation date, mmm dd yyyy
 
 	protected:
 		virtual BOOL    AddToolTip(HWND, UINT nID);
 		virtual BOOL    AddToolTip(HWND, UINT nID, const CString & s);
 		virtual void    AssignToolTips();
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
+		virtual void	GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg,
+				    UINT& bk, UINT& bg);
+		virtual void    InitCtlColors();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
 		virtual BOOL 	OnInitDialog();
 		virtual void 	OnOK();
 		virtual void 	PreCreate(CREATESTRUCT &cs);
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
-		virtual BOOL 	PreTranslateMessage(MSG& Msg);
 		virtual	void 	Serialize(CArchive &ar);
 
 	private:
 		  // private data members
 //		CResizer m_Resizer;
-		CtlColorChoice  m_CtlColorChoice; // the control color choice
+		CColorChoice    m_ColorChoice; // the control color choice
 		CToolTip        m_ToolTip;	  // form tool tips
-		MyFontDialog  	m_FontChoice;	  // edit control font attributes
+		MyFontDialog  	m_FontChoice;	  // edit control font
        		UINT	     	m_cWd,   	  // font average width
 			    	m_cHt;   	  // font average height
 		  // controls on the view
 		CEdit        	m_Edit;
 		CustomButton 	m_OK;
-
+		CBrush          m_br;
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_VIEW_H

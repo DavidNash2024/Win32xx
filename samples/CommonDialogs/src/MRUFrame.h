@@ -1,4 +1,4 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]                    (App.h) *
+/* (06-Aug-16) [Tab/Indent: 8/8][Line/Box: 80/74]               (MRUFrame.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,10 +7,12 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of a basic Single Document Interface
-	(SDI) class for the CommonDialogs sample program using the Win32++
-	Windows interface classes, Copyright (c) 2005-2015 David Nash, under
-	permissions granted therein.
+	Contents Description: Declaration of the CMRUFrame class for
+	applications using the Win32++ Windows interface classes, Copyright
+	(c) 2005-2016 David Nash, under permissions granted therein.
+
+	This class derives from the CFrame class and extends the scope and
+	functionality of the Most Recently Used (MRU) list.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -35,6 +37,7 @@
 	claim, damages, or other liability, whether in an action of contract,
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
+	Citation of the author's work should be included in such usages.
 
 	Special Conventions:
 
@@ -44,79 +47,51 @@
 		in the development of this work.
 
 	Programming Notes:
-               The programming standards roughly follow those established
+                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
-	Declaration of the CApp class
-	
+	Declaration of the CMRUFrame class
+
 *******************************************************************************/
-
-#ifndef SDI_APP_H
-#define SDI_APP_H
-
-/*******************************************************************************
-
-	Intra-Class Communication definitions                           */
-	
-#define theApp          TheApp()
-#define theAppProlog	theApp.GetAppProlog()
-#define theDoc          theFrame.TheDoc()
-#define theFrame        theApp.TheFrame()
+#ifndef CMRUFRAME_H
+#define CMRUFRAME_H
 
 /*============================================================================*/
-	class 
-CApp : public CWinApp							/*
+	class
+CMRUFrame : public CFrame                                               /*
 
-	This application's app class, a pattern for developing new apps.
+	Extend the CFrame class to add serialization of the MRU list and to
+	allow public access to, and manipulation of, MRU strings. MRU strings
+	that are not valid file paths are discarded by Validate().
 *-----------------------------------------------------------------------------*/
 {
 	public:
-		CApp(){}
-		~CApp(){}
+		CMRUFrame();
+		virtual ~CMRUFrame();
 
-		BOOL 	    InitInstance(); // called from (CWinApp) Run()
-		CMainFrame& TheFrame()    { return m_Frame;}
-		int	    GetCmdShow()  {return m_nCmdShow;}
-		CAppProlog  GetAppProlog() { return m_Prolog;};
-		CString&    GetArcvFile() {return m_Prolog.GetArcvPath();}
-		CString&    GetHelpFile() {return m_Prolog.GetHelpPath();}
-		void	    SetCmdShow(int c) {m_nCmdShow = c;}
+		  // method members
+		virtual CString AccessMRUEntry(UINT nIndex);
+		virtual void	AddMRUEntry(LPCTSTR szMRUEntry)
+				    { CFrame::AddMRUEntry(szMRUEntry);}
+		virtual void    EmptyMRUList();
+		virtual UINT    GetMRUSize() { return GetMRUEntries().size();}
+		virtual void	RemoveMRUEntry(LPCTSTR szMRUEntry)
+				    {CFrame::RemoveMRUEntry(szMRUEntry);}
+		virtual void	ValidateMRU();
 
+	  // Protected Declarations
 	protected:
-		void Serialize(CArchive &ar);
+		virtual void 	ConnectMRU(UINT nMaxMRU = 0);
+		virtual void    Serialize(CArchive &ar);
 
+	  // Private Declarations
 	private:
-		  // private data
- 		CString    m_sAppName, 	 // name of app: path minus directory
-		           m_sAppDir,    // directory of this app
-		           m_sAppPath,   // path to this app
-		           m_sExeName,   // name of exe file, without extension
-		           m_sHelpDir,   // directory holding the help file
-		           m_sHelpFile,  // path to the application's help file
-		           m_sArcvDir,   // directory holding the archive file
-			   m_sArcvFile;  // initialization archive file name
-		int        m_nCmdShow;   // WinMain() entry nCmdShow argument
-		CMainFrame m_Frame;      // the main frame object
-		CAppProlog m_Prolog;
-		
-		  // static data
-		static ULONG   DatInt(const CString &);
-		static CString IntDat(ULONG);
+		size_t		m_nMaxMRU;	// maximum MRU entries, this app
+		UINT    	m_nSchema;      // serialized data schema
+
 };
-
-/*============================================================================*/
-	inline
-CApp& TheApp()                                                  	/*
-
-	Global access to this application object.
-*----------------------------------------------------------------------------*/
-{
-	return (CApp&)GetApp();
-}
-
-/*-----------------------------------------------------------------------------*/
-#endif // define SDI_APP_H
-
+/*----------------------------------------------------------------------------*/
+#endif  // CMRUFRAME_H

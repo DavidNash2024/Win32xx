@@ -41,23 +41,18 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Programming Notes: The representation of a font in this class takes the
-	form of a MyFontDialog class object. This format allows access to not
-	only the font itself, but to its background and foreground colors and
-	to its average heigh and width, as well. It allows user selection of 
-	font characteristics and access to assistance via the HELP button  in
-	the selection process. Serialization of the object provides an easy
-	means to archive all of the font's attributes.
-	
-        The programming standards roughly follow those established by the
-	1997-1999 Jet Propulsion Laboratory Deep Space Network Planning and
-	Preparation Subsystem project for C++ programming.
-	
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.
-	
+	Special Conventions:
+
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
+
 ********************************************************************************
 
 	Implementation of the CView class
@@ -65,26 +60,7 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-#include "App.h"
-#include "ColorDefs.h"
-#include "Resource.h"
-#include "ContextHelp.h"
-#include "resource.h"
-
-/*******************************************************************************
-
-	Macros, constants, and local (static) default constants 	*/
-
-  // latest file compilation date
-CString CView::m_sCompiled_on = __DATE__;
-
-/*============================================================================*/
-	enum
-CustomColors
-{
-	OKTxFg = EndDefaultColors, OKTxBg,  OKBg,  // OK custom button
-	EndCustomColors
-};
+#include "StdApp.h"
 
 /*============================================================================*/
 	CView::
@@ -94,10 +70,10 @@ CView(UINT nResID)                             				/*
 *-----------------------------------------------------------------------------*/
 	: CDialog(nResID)
 {
-	m_cWd = m_cHt  = 0;
 	CFont f;
-	  // 10 pt, Courier default font
-	m_FontChoice.SetChoiceFont(f.CreatePointFont(100, _T("Courier New")));
+	f.CreatePointFont(100, _T("Courier New"));
+	m_FontChoice.SetChoiceFont(f);
+	m_cWd = m_cHt  = 0;
 }
 
 /*============================================================================*/
@@ -233,15 +209,165 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 
 /*============================================================================*/
 	void CView::
+GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg, UINT& bk,  UINT& bg) /*
+
+	Return the text foreground fg, text background bk, and control
+	background bg indexes for the control class nCtlColor whose color values
+	are to be found in the color table at their respective color indexes.
+*-----------------------------------------------------------------------------*/
+{
+	switch (nCtlColor)
+	{
+	    case WM_CTLCOLORDLG:
+		fg = DlgTxFg;
+		bk = DlgTxBg;
+    		bg = DlgBg;
+		break;
+
+	    case WM_CTLCOLORBTN:
+	    {
+		  // As illustrated here, we can handle each button separately
+		  // according to its nID. For the OK button case
+	    	if (nID == IDOK)
+	    	{
+			fg = OKTxFg;
+	    		bk = OKTxBg;
+	    		bg = OKBg;
+		}
+		else
+		{
+			fg = BtnTxFg;
+			bk = BtnTxBg;
+	    		bg = BtnBg;
+		}
+		// ... ditto for other buttons
+		break;
+	    }
+
+	    case WM_CTLCOLOREDIT:
+		fg = EdtTxFg;
+		bk = EdtTxBg;
+    		bg = EdtBg;
+		break;
+
+	    case WM_CTLCOLORLISTBOX:
+		fg = LBxTxFg;
+		bk = LBxTxBg;
+    		bg = LBxBg;
+		break;
+
+	    case WM_CTLCOLORSCROLLBAR:
+		fg = SclTxFg;
+		bk = SclTxBg;
+    		bg = SclBg;
+		break;
+
+	    case WM_CTLCOLORSTATIC:
+		fg = StcTxFg;
+		bk = StcTxBg;
+    		bg = StcBg;
+		break;
+
+	  // if there are custom colors for some controls, change them here
+
+	    default:
+		fg = bk = bg = DfltClr;
+		break;
+	}
+}
+
+/*============================================================================*/
+	void CView::
+InitCtlColors()								/*
+
+	Populate the color table with the initial ctl_color triplets used in the
+	list box of the CColorDialog object. These values are displayed in the
+	controls on first execution of this program, and are overwritten by
+	deserialization in subsequent executions.
+	
+	Note: Not all listed colors are actually displayed in this demo program.
+	Unused color entries may be commented out or eliminated; However on
+	doing so, it is necessary to eliminate references elsewhere in this
+	program to the nIDs of removed entries.
+*-----------------------------------------------------------------------------*/
+{
+	m_ColorChoice.AddColorChoice(DlgTxFg, _T("o  Dialog text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(DlgTxBg, _T("o  Dialog text BG"),
+	    COLOR_BLUE);
+	m_ColorChoice.AddColorChoice(DlgBg, _T("o  Dialog BG"),
+	    COLOR_LT_BLUE);
+
+	m_ColorChoice.AddColorChoice(BtnTxFg, _T("o  Button text FG"),
+	    COLOR_BLACK);
+	m_ColorChoice.AddColorChoice(BtnTxBg, _T("o  Button text BG"),
+	    COLOR_CYAN);
+	m_ColorChoice.AddColorChoice(BtnBg, _T("o  Button BG"),
+	    COLOR_LT_CYAN);
+
+	m_ColorChoice.AddColorChoice(OKTxFg, _T("o  OK text FG"),
+	    COLOR_BLACK);
+	m_ColorChoice.AddColorChoice(OKTxBg, _T("o  OK text BG"),
+	    COLOR_YELLOW);
+	m_ColorChoice.AddColorChoice(OKBg, _T("o  OK BG"),
+	    COLOR_LT_YELLOW);
+
+	m_ColorChoice.AddColorChoice(EdtTxFg, _T( "o  Edit text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(EdtTxBg, _T("o  Edit text BG"),
+	    COLOR_RED);
+	m_ColorChoice.AddColorChoice(EdtBg, _T("o  Edit control BG"),
+	    COLOR_LT_RED);
+
+	m_ColorChoice.AddColorChoice(LBxTxFg, _T("o  List box text FG"),
+	    COLOR_BLACK);
+	m_ColorChoice.AddColorChoice(LBxTxBg, _T("o  List box text BG"),
+	    COLOR_GREEN);
+	m_ColorChoice.AddColorChoice(LBxBg, _T("o  List box BG"),
+	    COLOR_LT_GREEN);
+
+	m_ColorChoice.AddColorChoice(SBTxFg, _T("o  Status bar text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(SBTxBg, _T("o  Status bar text BG"),
+	    COLOR_MAGENTA);
+	m_ColorChoice.AddColorChoice(SBBg, _T("o  Status bar BG"),
+	    theFrame.GetStatusBarTheme().clrBkgnd1); // use current theme
+
+	m_ColorChoice.AddColorChoice(SclTxFg, _T("o  Scroll bar text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(SclTxBg, _T("o  Scroll bar text BG"),
+	    COLOR_MAGENTA);
+	m_ColorChoice.AddColorChoice(SclBg, _T("o  Scroll bar BG"),
+	    COLOR_LT_MAGENTA);
+
+	m_ColorChoice.AddColorChoice(StcTxFg, _T("o  Static box text FG"),
+	    COLOR_BLACK);
+	m_ColorChoice.AddColorChoice(StcTxBg, _T("o  Static box text BG"),
+	    COLOR_YELLOW);
+	m_ColorChoice.AddColorChoice(StcBg, _T("o  Static box BG"),
+	    COLOR_LT_YELLOW);
+	  // richedit controls (these are set differently than the others)
+	m_ColorChoice.AddColorChoice(REdTxFg, _T("o  RichEdit text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(REdTxBg, _T("o  RichEdit text BG"),
+	    COLOR_RED);
+	m_ColorChoice.AddColorChoice(REdBg, _T("o  RichEdit BG"),
+	    COLOR_LT_RED);
+}
+
+/*============================================================================*/
+	void CView::
 OnColorChoice() 							/*
 
 	Show the control color choice dialog box and select a control color.
-	The CtlColorChoice class
 *-----------------------------------------------------------------------------*/
 {
 	  // set color choice help messages to go to the the main frame,
 	HWND hWndOwner = theApp.GetMainWnd();
-	m_CtlColorChoice.DoModal(hWndOwner);  // calls the base class DoModal()
+	m_ColorChoice.DoModal(hWndOwner);  // calls the base class DoModal()
+	  // reset the status bar color
+	COLORREF sb = GetSBBkColor();
+	theFrame.SetSBBkColor(sb);
 }
 
 /*============================================================================*/
@@ -260,8 +386,8 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
 	  // check all OnCommand() messages: if help mode is active, let it
 	  // handle the wParam message
-	if (theFrame.OnContextHelp(wParam))
-		return TRUE; // context help active
+    	if (theFrame.DoContextHelp(wParam))
+		return TRUE;
 
 	UINT nID = LOWORD(wParam);
 	switch (nID)
@@ -269,8 +395,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 	      // handle help request messages sent to the view from
 	      // common dialogs (if any)
 	    case IDC_HELP_COMDLG:
-	    	theFrame.EngageContextHelp();
-	    	return theFrame.OnContextHelp((WPARAM)lParam);
+	    	return theFrame.GetAppHelp().OnHelpID((WPARAM)lParam);
 
 	    default:
 	    	break;
@@ -304,39 +429,19 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)            		/*
 	for the text.
 *-----------------------------------------------------------------------------*/
 {
-	  // get the control numeric ID, when needed
-	UINT nID = ::GetDlgCtrlID(hWnd);
+	  // declare default control colors IDs
+	UINT fg = DfltClr,
+	     bk = DfltClr,
+	     bg = DfltClr;
+	  // get the CtlColors of each control class first
+	GetCtlColors(nCtlColor, ::GetDlgCtrlID(hWnd), fg, bk, bg);
 	  // get the display context
 	CDC dcCtl(hDC);
-	  // declare default control colors and brush
-	COLORREF fg = COLOR_BLACK,
-		 bk = COLOR_BLACK;
-	CBrush   br = CBrush(COLOR_BLACK);
-
-	  // handle colors of each control class first
-	m_CtlColorChoice.GetContolColors(nCtlColor, fg, bk, br);
-	  // if there are custom colors for some controls, change them here
-	switch (nCtlColor)
-	{
-	    case WM_CTLCOLORBTN:
-		  // As illustrated here, we can handle each control separately
-		  // according to its nID. For the OK button case
-	    	if (nID == IDOK)
-	    	{
-			fg = m_CtlColorChoice.GetColor(OKTxFg);
-	    		bk = m_CtlColorChoice.GetColor(OKTxBg);
-	    		br = m_CtlColorChoice.GetBrush(OKBg);
-		}
-		// ... ditto for other buttons
-		break;
-
-	    // ditto for other controls in other classes
-	}
-
-	dcCtl.SetTextColor(fg);
-	dcCtl.SetBkColor(bk);
-	  // returned brush handle must be to permanent brush
-        return (UINT_PTR)(HBRUSH)br;
+	dcCtl.SetTextColor(m_ColorChoice.GetTableColor(fg));
+	dcCtl.SetBkColor(m_ColorChoice.GetTableColor(bk));
+	m_br = m_ColorChoice.GetBrush(bg);
+	  // returned brush handle must persist
+        return (UINT_PTR)(HBRUSH)m_br;
 }
 
 /*============================================================================*/
@@ -350,13 +455,16 @@ OnFontChoice()     		                                 	/*
 	HWND hOwnerWnd = GetApp().GetMainWnd();
           // open the dialog
 	m_FontChoice.SetBoxTitle(_T("Select font for edit box"));
-	if(m_FontChoice.DoModal(hOwnerWnd) == IDOK)
+	CHOOSEFONT cf = m_FontChoice.GetParameters();
+	cf.Flags |= CF_SCREENFONTS;
+	m_FontChoice.SetParameters(cf);
+	if(m_FontChoice.DoModal(hOwnerWnd))
 	{
 		  // bring choice elements into this view
                 m_Edit.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
 		m_cWd = m_FontChoice.GetAvgSize().cx;
 		m_cHt = m_FontChoice.GetAvgSize().cy;
-		m_CtlColorChoice.SetColorTable(EdtTxFg, m_FontChoice.GetColor());
+		m_ColorChoice.SetTableColor(EdtTxFg, m_FontChoice.GetColor());
 	}
 }
 
@@ -380,32 +488,28 @@ OnInitDialog()                                                          /*
 	  // subclass the controls on the dialog
 	AttachControl(IDOK, m_OK);
 	AttachControl(IDM_EDITBOX, m_Edit);
-	  // set default or recovered font
-	m_Edit.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
-	  // Put some arbitrary initial text in the edit control just for
-	  // this demo. It gets overwritten, so it is never seen on screen.
-	m_Edit.SetWindowText(_T("hello world"));
-	  // By design MyFontDlg help messages to go to the main frame, show the
-	  // help box, use the previous font and font style. Here set a default
-	  // choice color
+	  // set font choice help messages to go to the main frame,
+	  // set the initial flags to show the help box and use the font style,
+	  // and set the initial choice color
+	CHOOSEFONT cf = m_FontChoice.GetParameters();
+	cf.Flags |= CF_SHOWHELP | CF_USESTYLE;
+	cf.lpszStyle = (LPTSTR)_T("Regular"); // initial font presumed regular
+	m_FontChoice.SetParameters(cf);
 	m_FontChoice.SetColor(COLOR_BLACK);
-	  // Set color choice dialog initial flags to show the help box and all
-	  // colors
-	CHOOSECOLOR cc = m_CtlColorChoice.GetParameters();
+	  // and set the initial flags to show the help box and all colors
+	CHOOSECOLOR cc = m_ColorChoice.GetParameters();
 	cc.Flags = CC_SHOWHELP | CC_FULLOPEN;
 	cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
-	m_CtlColorChoice.SetParameters(cc);
+	  // setup the CColorChoice object
+	m_ColorChoice.SetParameters(cc);
+	  // populate the initial control colors (will be overwritten by
+	  // deserialized values)
+	InitCtlColors();
+	  // set edit box to default font
+	m_Edit.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
+	  // put some arbitrary text in the edit control just for this demo
+	m_Edit.SetWindowText(_T("hello world"));
 
-	// add custom control colors, if not already there
-	if (m_CtlColorChoice.GetTableSize() == EndDefaultColors)
-	{
-		m_CtlColorChoice.AddColorChoice(_T("x  OK text foreground"),
-		    COLOR_BLACK);
-		m_CtlColorChoice.AddColorChoice(_T("x  OK text background"),
-		    COLOR_YELLOW);
-		m_CtlColorChoice.AddColorChoice(_T("x  OK background"),
-		    COLOR_LT_YELLOW);
-	}
 	return TRUE;
 }
 
@@ -420,7 +524,7 @@ OnOK()                                                                  /*
 **----------------------------------------------------------------------------*/
 {
 	  // if help mode is active, let it handle the IDOK message
-	if (theFrame.OnContextHelp((WPARAM)IDOK))
+	if (theFrame.DoContextHelp((WPARAM)IDOK))
 		return;
 
 	::MessageBox(NULL, _T("OK Button Pressed."), _T("Information"),
@@ -461,30 +565,6 @@ PreRegisterClass(WNDCLASS &wc)                                          /*
 }
 
 /*============================================================================*/
-	BOOL CView::
-PreTranslateMessage(MSG& Msg)                                           /*
-
-	Used by CWinApp to translate window messages before they are dispatched
-	to theTranslateMessage and DispatchMessage Windows functions in the
-	message loop. MSG contains the message to process. Return a nonzero
-	if the message was translated and should not be dispatched; return
-	0 if the message was not translated and should be dispatched.
-*-----------------------------------------------------------------------------*/
-{
-	UNREFERENCED_PARAMETER(Msg);
-
-//	HWND   hwnd	= Msg->hwnd;
-//	UINT   message	= Msg->message;
-//	WPARAM wParam	= Msg->wParam;
-//	LPARAM lParam	= Msg->lParam;
-//	DWORD  time	= Msg->time;
-//	CPoint  pt	= Msg->pt;
-
-	  // return 0 if the message was NOT handled here
-	return 0;
-}
-
-/*============================================================================*/
         void CView::
 Serialize(CArchive &ar)                                               	/*
 
@@ -499,7 +579,7 @@ Serialize(CArchive &ar)                                               	/*
                   // save font parameters
 		ar << m_FontChoice;
 		  // save regular control class colors
-		ar << m_CtlColorChoice;
+		ar << m_ColorChoice;
 	}
         else    // recovering
         {
@@ -509,7 +589,7 @@ Serialize(CArchive &ar)                                               	/*
 		m_cWd = m_FontChoice.GetAvgSize().cx;
 		m_cHt = m_FontChoice.GetAvgSize().cy;
 		  // recover colors
-		ar >> m_CtlColorChoice;
+		ar >> m_ColorChoice;
       	}
 }
 

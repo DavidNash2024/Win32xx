@@ -7,9 +7,10 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the CDoc class for the CommonDialogs
-	sample  application using the Win32++ Windows interface classes,
-	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
+	Contents Description: Declaration of the CDoc class for the
+	CommonDialogs sample  application using the Win32++ Windows interface
+	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
+	therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -38,15 +39,15 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -57,11 +58,12 @@
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
+#include "wxx_commondlg.h"
+#include "wxx_printdialogs.h"		
 #include "MyFindReplaceDlg.h"
-#include <sys/stat.h>
 
 /*============================================================================*/
-	class
+	class 
 CDoc									/*
 
 	This application's document class, a pattern for developing new apps.
@@ -71,10 +73,8 @@ CDoc									/*
 
 		CDoc();
 		virtual ~CDoc();
-		virtual const CString&	GetExt() const
-					    { return m_Doc_file_ext;}
-		virtual const CString&	GetFilter() const
-					    { return m_Doc_file_filter;}
+		virtual const CString&	GetExt();
+		virtual const CString&	GetFilter();
 		virtual size_t  GetLength();
 		virtual CString GetRecord(size_t, size_t left = 0,
 				    size_t length = (size_t)-1);
@@ -110,7 +110,6 @@ CDoc									/*
 				    { m_Doc_file_filter = s;}
 
 		  // public data members
-		static CString	m_sCompiled_on; // compilation date, mmm dd yyyy
 
 	protected:
 			BOOL    GetFileStatus(const CString&);

@@ -11,7 +11,7 @@
 	CommonDialogs SDI sample application using the Win32++ Windows interface
 	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
 	therein.
-
+	
 	This particular frame class contains features a fixed-size form for the
 	display, with no resizing gripper tool at the end of the status bar,
 	and provisions for selection of client background color, selection of
@@ -44,15 +44,15 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 *******************************************************************************/
 
@@ -70,11 +70,11 @@ NoResizeGripperStatusBar : public CStatusBar                            /*
 	This class defines a status bar at the bottom of the frame having
 	no resizing gripper box. To use this class, declare a member variable
 	of the frame of this class, as, for example,
-
+	
 		NoResizeGripperStatusBar m_NoResizeGripperStatusBar;
 
 	and then override the frame's GetStatusBar() method with the following:
-
+	
 		virtual CStatusBar& GetStatusBar() const
 				{ return const_cast<NoResizeGripperStatusBar&>
 				  (m_NoResizeGripperStatusBar); }
@@ -91,17 +91,15 @@ NoResizeGripperStatusBar : public CStatusBar                            /*
 /*******************************************************************************
 
 	Declaration of the CMainFrame class
-
+	
 *******************************************************************************/
 
 #include "wxx_commondlg.h"
 
 #include "View.h"
 #include "Doc.h"
-#include "MRU.h"
-#include "ContextHelp.h"
-
-
+#include "MRUFrame.h"
+#include "AppHelp.h"
 
 /*******************************************************************************
 
@@ -111,8 +109,8 @@ NoResizeGripperStatusBar : public CStatusBar                            /*
 enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
-	class
-CMainFrame : public CFrame						/*
+	class 
+CMainFrame : public CMRUFrame						/*
 
 	This application's mainframe class, a pattern for developing new apps.
 *-----------------------------------------------------------------------------*/
@@ -120,20 +118,22 @@ CMainFrame : public CFrame						/*
 	public:
 		CMainFrame(void);
 		virtual 	~CMainFrame(void){}
-
-		virtual void    EngageContextHelp();
-		CMRU&           GetMRU() {return m_MRU;}
-		virtual BOOL 	OnContextHelp(WPARAM wParam);
+		
+			BOOL	DoContextHelp(WPARAM wParam);
+		virtual BOOL    EngageContextHelp();
+			AppHelp& GetAppHelp() {return m_AppHelp;}
+		virtual CStatusBar& GetStatusBar() const
+				{ return const_cast<NoResizeGripperStatusBar&>
+				  (m_NoResizeGripperStatusBar); }
+			void    SetSBBkColor(COLORREF clr)
+				    { GetStatusBar().SendMessage(SB_SETBKCOLOR,
+				      0, (LPARAM)clr);}
 		virtual CDoc&   TheDoc() { return m_Doc;}
 		virtual void 	UpdateToolbarMenuStatus(void);
 
 		  // public static data members
-	     	static  CString	m_sCompiled_on; // compilation date, mmm dd yyyy
 
 	protected:
-		virtual CStatusBar& GetStatusBar() const
-				{ return const_cast<NoResizeGripperStatusBar&>
-				  (m_NoResizeGripperStatusBar); }
 		virtual void    LoadPersistentData();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual int  	OnCreate(CREATESTRUCT& rcs);
@@ -146,7 +146,6 @@ CMainFrame : public CFrame						/*
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
 		virtual void 	PreCreate(CREATESTRUCT& cs);
-		virtual BOOL 	PreTranslateMessage(MSG& Msg);
 		virtual BOOL 	SaveRegistrySettings(void);
 		virtual void	Serialize(CArchive &ar);
 		virtual void    SetContextHelpMessages(void);
@@ -157,22 +156,21 @@ CMainFrame : public CFrame						/*
 		virtual void    SetStatusbarMsg(CString);
 		virtual BOOL 	SetThemeColors();
 		virtual void    SetupToolBar(void);
-		virtual void    RegisterHelpParameters();
+		virtual void    ConnectAppHelp();
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 
 	private:
 		  // private data members
-		CDoc 	   m_Doc;	   // the document
-		CView	   m_View;	   // the view
-		CMRU       m_MRU;          // the MRU list object
-                UINT 	   m_win_x,        // serialized window x position
-                           m_win_y,        // serialized window y position
-                           m_width,   // serialized window width
-                           m_height;  // serialized window height
-		HCURSOR    m_hCursor;      // current cursor shape
-		CBitmap    m_colorbmp;     // for the color choice menuitem
-		ContextHelp  	   m_ContextHelp; // the context help object
-		WINDOWPLACEMENT    m_Wndpl;      // window placement information
+		CDoc 	   m_Doc;	      // the document
+		CView	   m_View;	      // the view
+                UINT 	   m_win_x,           // serialized window x position
+                           m_win_y,           // serialized window y position
+                           m_width,           // serialized window width
+                           m_height;          // serialized window height
+		HCURSOR    m_hCursor;         // current cursor shape
+		CBitmap    m_colorbmp;        // for the color choice menuitem
+		AppHelp  	   m_AppHelp; // the context help object
+		WINDOWPLACEMENT    m_Wndpl;   // window placement information
 		NoResizeGripperStatusBar m_NoResizeGripperStatusBar;
 };
 /*------------------------------------------------------------------------------*/

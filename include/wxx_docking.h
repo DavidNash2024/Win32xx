@@ -566,8 +566,8 @@ namespace Win32xx
 		CDocker*		m_pDockActive;				// Only used by the DockAncestor
 
 		std::vector <CDocker*> m_vDockChildren;		// Docker's immediate children
-		std::vector <DockPtr> m_vAllDockChildren;	// All descendants of the DockAncestor (only for the DockAncestor)
-		std::vector <CDocker*> m_vAllDockers;		// DockAncestor + all descendants (only for the DockAncestor)
+		std::vector <DockPtr> m_vAllDockChildren;	// All descendants of the DockAncestor (only used by the DockAncestor)
+		std::vector <CDocker*> m_vAllDockers;		// DockAncestor + all descendants (only used by the DockAncestor)
 
 		CRect m_rcBar;
 		CRect m_rcChild;

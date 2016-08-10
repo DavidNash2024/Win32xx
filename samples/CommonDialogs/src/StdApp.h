@@ -1,4 +1,4 @@
-/* (24-Jul-2015) [Tab/Indent: 8/8][Line/Box: 80/74]           (CustomButton.h) *
+/* (21-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                 (StdApp.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,11 +7,12 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: The CustomButton class declaration. This class is
-	derived from the CButton class found in the Win32++ Windows interface
-	classes, Copyright (c)2005-2015 David Nash, under permissions granted
-	therein. It permits individual settings of the parameters of owner-drawn
-	button controls on dialog forms.
+	Contents Description: Standard application declarations header file.
+	This file is used to #include all the application's header files. Fo
+	use in programs compiled using the Win32++ interface classes, Copyright
+	(c) 2005-2016 David Nash, under permissions granted therein.
+
+	Adapted for use in this application.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and  to the alterations,
@@ -37,44 +38,55 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+	To use precompiled headers, do the following:
+	1) Add the set of application headers to stdapp.h
+	2) Include StdApp.h in each cpp file. It must be included first.
+	3) Compile StdApp.h into the precompiled hearder StdApp.h.gch by
+	   including StdApp.mak into the makefile in the project options:
+
+		all-before: StdApp.h.gch
+                StdApp.h.gch: StdApp.h
+			$(CPP) -c StdApp.h -o StdApp.h.gch $(CXXFLAGS)
+
+	4) Add StdApp.cpp to your project source files.
+
 	Special Conventions:
 
- 	Acknowledgement:
-		The author would like to thank and acknowledge the advice,
-		critical review, insight, and assistance provided by David Nash
-		in the development of this work.
-
 	Programming Notes:
-               The programming standards roughly follow those established
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
+		Planning and Preparation Subsystem project for C++ programming.
+	Programming Notes:
+                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
-	Implementation of the CustomButton class
+	Declaration of the StdApp headers for this application
 
 *******************************************************************************/
 
-#ifndef CUSTOM_BUTTON_H
-#define CUSTOM_BUTTON_H
 
-/******************************************************************************/
-	class
-CustomButton : public CButton                                          /*
+#ifndef STD_APP_H
+#define STD_APP_H
 
-	This class extends the CButton class to permit owner-drawn buttons.
-*-----------------------------------------------------------------------------*/
-{
-	public:
-		CustomButton();
-		virtual ~CustomButton(){}
-		virtual void DrawItem(LPDRAWITEMSTRUCT);
+/*============================================================================*/
 
-	protected:
-		virtual LRESULT WndProc(UINT, WPARAM, LPARAM);
-
-	private:
-};
+#include "Resource.h"
+#include "ListBoxDlgRC.h"
+#include "AppPrologRC.h"
+#include "AppProlog.h"
+#include "ColorDefs.h"
+#include "AppHelpRC.h"
+#include "AppHelp.h"
+#include "MyFileDlg.h"
+#include "MyFindReplaceDlg.h"
+#include "MyPrinter.h"
+#include "Doc.h"
+#include "View.h"
+#include "MainFrm.h"
+#include "App.h"
 
 /*----------------------------------------------------------------------------*/
-#endif  // CUSTOM_BUTTON_H
+#endif // STD_APP_H

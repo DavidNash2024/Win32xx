@@ -1,4 +1,4 @@
-/* (27-Jan-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MyFontDlg.h) *
+/* (21-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppPrologRC.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,12 +7,10 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the MyFontDialog class for
-	applications using the Win32++ Windows interface classes, Copyright
-	(c) 2005-2016 David Nash, under permissions granted therein. This class
-	derives from the CFontDalog class found in the Win32++ Windows interface
-	framework. It permits customized handling of the HELP button to provide
-	context help, setting of the dialog title, and serialization.
+	Contents Description:  Resource Definitions used by the CAppProlog
+	class for resources defined in CAppProlog.rc. Adapted to use the Win32++
+	Windows interface classes, Copyright (c) 2005-2016 David Nash, under
+	permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -38,73 +36,61 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+	Special Conventions:  The specification of IDs for resource objects
+	generally adhere to prefixes as shown in the following table. Note
+	that different kinds of resource objects have different prefixes to
+	distinguish the types of entities they belong to:
+
+	        Entity ID 	Object
+		IDP_ 		Message-box prompt
+		IDD_ 		Dialog-box ID
+		ID_             Standard MFC toolbar and menu command
+		IDT_		Toolbar command
+		IDM_		Menu command
+		IDR_ 		Frame-related resource
+		IDC_ 		Control resource
+		IDW_            Win32++ default resources
+
+	Notes about Resource IDs: In general, resource IDs can have values
+	from 1 to 65535. Programs with resource IDs higher than 65535 may
+	not be supported by some Windows versions.
+
+	* The Windows Platform SDK defines the WM_APP constant as a value
+	to be used by applications to define private messages that do not
+	conflict with system messages. The Win32++ suite is viewed as an
+	application by the WINAPI and preempts the first 24 (in version 7.6.1)
+	of these, so this file defines its resource IDs beginning at a
+	reasonable distance above this, to allow for their future expansion.
+	This value is defined as THIS_APP, below.
+
  	Acknowledgement:
 		The author would like to thank and acknowledge the advice,
 		critical review, insight, and assistance provided by David Nash
 		in the development of this work.
 
 	Programming Notes:
-               The programming standards roughly follow those established
+                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
-	Declaration of the MyFontDialog class
+	Definition of CAppProlog Resource ID values
 
 *******************************************************************************/
 
-#ifndef MYFONTDIALOG_H
-#define MYFONTDIALOG_H
-
-#include "ListBoxDlgRC.h"
+#ifndef APP_PROLOG_RC_H_DEFINED
+#define APP_PROLOG_RC_H_DEFINED
 
 /*============================================================================*/
-	class
-MyFontDialog : public CFontDialog                                       /*
 
-*-----------------------------------------------------------------------------*/
-{
-	public:
-		MyFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = 0);
+#define IDS_APP_VERSION                 300
+#define IDS_ARCHIVE_FILE_EXT            301
+#define IDS_DATAPATH_SUBDIR             302
+#define IDS_DOC_DEFAULT_EXT             303
+#define IDS_FILE_FILTER                 304
+#define IDS_HELP_FILE_EXT               305
+#define IDS_MAX_MRU_ENTRIES             306
 
-		~MyFontDialog(){}
-
-			SIZE	GetAvgSize(void) const
-				    { return m_avgWdHt;}
-			CFont	GetChoiceFont(void) const
-				    { return m_Font;}
-			LOGFONT GetCurrentLogFont() const { return m_LogFont;}
-		virtual void 	OnOK();
-			void	SetBoxTitle(LPCTSTR title)
-				    { m_sBoxTitle = title;}
-			void    SetChoiceFont(const CFont& f)
-				    { LOGFONT lf = f.GetLogFont();
-				      SetChoiceLogFont(lf);}
-
-	protected:
-		TEXTMETRIC 	GetTexMetric(void) const
-				    { return m_tm;}
-		TEXTMETRIC* 	GetTextMetricPtr()
-				    { return &m_tm;}
-		virtual void 	OnHelpButton();
-		virtual BOOL 	OnInitDialog();
-			void 	RecordFontMetrics();
-		virtual	void 	Serialize(CArchive &ar);
-			void    SetChoiceLogFont(LOGFONT& lf)
-				    { SetFontIndirect(lf); RecordFontMetrics();}
-			void 	SetFontIndirect(const LOGFONT& lf);
-			void	SetTextMetric(const TEXTMETRIC& tm)
-				    { m_tm = tm;}
-		virtual void    SetWindowTitle() const
-				    {SetWindowText(m_sBoxTitle);}
-
-	private:
-		CString 	m_sBoxTitle;
-		TEXTMETRIC 	m_tm;		// font text metrics
-	       	SIZE		m_avgWdHt;	// font average width & height
-		CFont		m_Font;		// the current font
-		LOGFONT         m_LogFont;      // the current logfont
-};
-
-#endif
+/*----------------------------------------------------------------------------*/
+#endif // APP_PROLOG_RC_H_DEFINED

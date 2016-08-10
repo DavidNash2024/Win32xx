@@ -57,11 +57,6 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -83,7 +78,7 @@ typedef  unsigned char  byte;
 
 // Predefinitions for windows.h go here
 //#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
-//#include "targetver.h"	// Set the supported window features
+#include "targetver.h"	// Set the supported window features
 
 // Specify Win32xx specific predefinitions here
 //#define NO_USING_NAMESPACE		// Don't use Win32xx namespace
@@ -108,7 +103,7 @@ typedef  unsigned char  byte;
 #include <wxx_controls.h>
 #include <wxx_cstring.h>
 #include <wxx_dialog.h>
-//#include <wxx_ddx.h>
+#include <wxx_ddx.h>
 #include <wxx_docking.h>
 #include <wxx_file.h>
 #include <wxx_frame.h>
@@ -116,7 +111,6 @@ typedef  unsigned char  byte;
 #include <wxx_imagelist.h>
 #include <wxx_listview.h>
 #include <wxx_mdi.h>
-#include <wxx_printdialogs.h>
 #include <wxx_propertysheet.h>
 #include <wxx_rebar.h>
 #include <wxx_regkey.h>

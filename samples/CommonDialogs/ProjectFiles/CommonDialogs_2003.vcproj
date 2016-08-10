@@ -122,16 +122,13 @@
 				RelativePath="..\src\App.cpp">
 			</File>
 			<File
+				RelativePath="..\src\AppHelp.cpp">
+			</File>
+			<File
+				RelativePath="..\src\AppHelp.h">
+			</File>
+			<File
 				RelativePath="..\src\CColorChoice.cpp">
-			</File>
-			<File
-				RelativePath="..\src\CListBoxDlg.cpp">
-			</File>
-			<File
-				RelativePath="..\src\ContextHelp.cpp">
-			</File>
-			<File
-				RelativePath="..\src\CtlColorChoice.cpp">
 			</File>
 			<File
 				RelativePath="..\src\CustomButton.cpp">
@@ -140,10 +137,25 @@
 				RelativePath="..\src\Doc.cpp">
 			</File>
 			<File
+				RelativePath="..\src\ListBoxDlg.cpp">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlg.h">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlg.rc">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlgRC.h">
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
-				RelativePath="..\src\MRU.cpp">
+				RelativePath="..\src\MRUFrame.cpp">
+			</File>
+			<File
+				RelativePath="..\src\MRUFrame.h">
 			</File>
 			<File
 				RelativePath="..\src\MyFontDlg.cpp">
@@ -163,19 +175,16 @@
 				RelativePath="..\src\App.h">
 			</File>
 			<File
+				RelativePath="..\src\AppProlog.h">
+			</File>
+			<File
+				RelativePath="..\src\AppPrologRC.h">
+			</File>
+			<File
 				RelativePath="..\src\CColorChoice.h">
 			</File>
 			<File
-				RelativePath="..\src\CListBoxDlg.h">
-			</File>
-			<File
 				RelativePath="..\src\ColorDefs.h">
-			</File>
-			<File
-				RelativePath="..\src\ContextHelp.h">
-			</File>
-			<File
-				RelativePath="..\src\CtlColorChoice.h">
 			</File>
 			<File
 				RelativePath="..\src\CustomButton.h">
@@ -185,9 +194,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
-			</File>
-			<File
-				RelativePath="..\src\MRU.h">
 			</File>
 			<File
 				RelativePath="..\src\MyFileDlg.h">
@@ -218,6 +224,12 @@
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
+			<File
+				RelativePath="..\src\AppHelp.rc">
+			</File>
+			<File
+				RelativePath="..\src\AppProlog.rc">
+			</File>
 			<File
 				RelativePath="..\src\Resource.rc">
 			</File>

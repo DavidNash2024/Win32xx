@@ -1,4 +1,4 @@
-/* (10-08-2014) [Tab/Indent: 8/8][Line/Box: 80/74]             (CListBoxDlg.h) *
+/* (10-08-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (ListBoxDlg.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -38,15 +38,15 @@
 
 	Special Conventions:
 
+ 	Acknowledgement:
+		The author would like to thank and acknowledge the advice,
+		critical review, insight, and assistance provided by David Nash
+		in the development of this work.
+
 	Programming Notes:
                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
-	Acknowledgement:
-	The author would like to thank and acknowledge the advice, critical
-	review, insight, and assistance provided by David Nash in the development
-	of this work.		
 
 ********************************************************************************
 
@@ -57,7 +57,7 @@
 #ifndef CLISTVIEW_BOX_H_DEFINED
 #define CLISTVIEW_BOX_H_DEFINED
 
-#include <vector>
+#include "ListBoxDlgRC.h"
 
 /*============================================================================*/
         class

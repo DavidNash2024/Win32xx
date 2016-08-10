@@ -184,21 +184,33 @@
 		</VirtualTargets>
 		<Unit filename="../src/App.cpp" />
 		<Unit filename="../src/App.h" />
+		<Unit filename="../src/AppHelp.cpp" />
+		<Unit filename="../src/AppHelp.h" />
+		<Unit filename="../src/AppHelp.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/AppHelpRC.h" />
+		<Unit filename="../src/AppProlog.cpp" />
+		<Unit filename="../src/AppProlog.h" />
+		<Unit filename="../src/AppProlog.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/AppPrologRC.h" />
 		<Unit filename="../src/CColorChoice.cpp" />
 		<Unit filename="../src/CColorChoice.h" />
-		<Unit filename="../src/CListBoxDlg.cpp" />
-		<Unit filename="../src/CListBoxDlg.h" />
 		<Unit filename="../src/ColorDefs.h" />
-		<Unit filename="../src/ContextHelp.cpp" />
-		<Unit filename="../src/ContextHelp.h" />
-		<Unit filename="../src/CtlColorChoice.cpp" />
-		<Unit filename="../src/CtlColorChoice.h" />
 		<Unit filename="../src/CustomButton.cpp" />
 		<Unit filename="../src/CustomButton.h" />
 		<Unit filename="../src/Doc.cpp" />
 		<Unit filename="../src/Doc.h" />
-		<Unit filename="../src/MRU.cpp" />
-		<Unit filename="../src/MRU.h" />
+		<Unit filename="../src/ListBoxDlg.cpp" />
+		<Unit filename="../src/ListBoxDlg.h" />
+		<Unit filename="../src/ListBoxDlg.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/ListBoxDlgRC.h" />
+		<Unit filename="../src/MRUFrame.cpp" />
+		<Unit filename="../src/MRUFrame.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyFileDlg.h" />
@@ -210,6 +222,7 @@
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/StdAfx.cpp" />
+		<Unit filename="../src/StdApp.h" />
 		<Unit filename="../src/View.cpp" />
 		<Unit filename="../src/View.h" />
 		<Unit filename="../src/resource.h" />
