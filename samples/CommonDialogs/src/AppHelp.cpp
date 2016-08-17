@@ -158,14 +158,21 @@
 
 	At the top of the view's OnCommand()
 
-	    	if (theFrame.DoContextHelp(wParam))
+	    	if (ParentFrame().DoContextHelp(wParam))
 		return TRUE;
 
 	and, if the view handles IDOK and/or IDCANCEL, or other such dialog
 	messages, place at the top of each handler code such as
 
-	if (theFrame.DoContextHelp((WPARAM)IDOK))
+	if (ParentFrame().DoContextHelp((WPARAM)IDOK)) 
 		return;
+
+	In the above, the m_pFrame pointer may be found within the view class by
+	
+		CMainFrame *m_pFrame;
+		...
+		m_pFrame = dynamic_cast<CMainFrame*>(m_pFrame->
+		    GetCWndPtr(GetApp().GetMainWnd()));
 
 	In instances where messages avoid message loops, such in as the IDOK
 	case above, but be careful to use a meaningful return value, if one is
@@ -346,7 +353,7 @@ OnInitDialog()                                                          /*
 {
 	  // do the base class initialization first
 	CDialog::OnInitDialog();
-	SetDlgItemText(IDC_ABOUT_CREDITS, m_sCredits.c_str());
+	SetDlgItemText(IDC_ABOUT_CREDITS, m_sCredits);
 	return TRUE;
 }
 

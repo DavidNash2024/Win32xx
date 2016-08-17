@@ -187,11 +187,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppHelp.cpp"
+				RelativePath="..\src\AppGlobal.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.cpp"
+				RelativePath="..\src\AppHelp.cpp"
 				>
 			</File>
 			<File
@@ -212,10 +212,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MRUFrame.cpp"
 				>
 			</File>
 			<File
@@ -249,19 +245,19 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\AppGlobal.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppGlobalRC.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\AppHelp.h"
 				>
 			</File>
 			<File
 				RelativePath="..\src\AppHelpRC.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppProlog.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppPrologRC.h"
 				>
 			</File>
 			<File
@@ -290,10 +286,6 @@
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\MRUFrame.h"
 				>
 			</File>
 			<File
@@ -339,11 +331,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\src\AppHelp.rc"
+				RelativePath="..\src\AppGlobal.rc"
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.rc"
+				RelativePath="..\src\AppHelp.rc"
 				>
 			</File>
 			<File

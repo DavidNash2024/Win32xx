@@ -356,6 +356,7 @@ namespace Win32xx
 		MenuTheme& GetMenuBarTheme() const			{ return m_MBTheme; }
 		std::vector<CString> GetMRUEntries() const	{ return m_vMRUEntries; }
 		CString GetMRUEntry(UINT nIndex);
+		UINT GetMRULimit()							{ return m_nMaxMRU; }
 		CString GetRegistryKeyName() const			{ return m_strKeyName; }
 		ReBarTheme& GetReBarTheme()	const			{ return m_RBTheme; }
 		StatusBarTheme& GetStatusBarTheme()	const	{ return m_SBTheme; }
@@ -370,6 +371,18 @@ namespace Win32xx
 		void SetFrameMenu(HMENU hMenu);
 		void SetInitValues(const InitValues& Values);
 		void SetMenuTheme(MenuTheme& MBT);
+		void SetMRULimit(UINT MRULimit)
+		// Sets the maximum number of MRU entries
+		{	
+			// Remove any excess MRU entries
+			if (MRULimit < m_vMRUEntries.size())
+			{
+				m_vMRUEntries.erase(m_vMRUEntries.begin() + MRULimit, m_vMRUEntries.end());
+			}
+
+			m_nMaxMRU = MRULimit;
+			UpdateMRUMenu();
+		}
 		void SetReBarTheme(ReBarTheme& RBT);
 		void SetStatusBarTheme(StatusBarTheme& SBT);
 		void SetStatusText(LPCTSTR szText);
@@ -2105,7 +2118,7 @@ namespace Win32xx
 
 		CRegKey Key;
 		BOOL bRet = FALSE;
-		m_nMaxMRU = MIN(nMaxMRU, 16);
+		SetMRULimit(nMaxMRU);
 		std::vector<CString> vMRUEntries;
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
 
@@ -2437,7 +2450,7 @@ namespace Win32xx
 			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
 			mii.fMask = MIIM_STATE | MIIM_ID | MIIM_SUBMENU |MIIM_CHECKMARKS | MIIM_TYPE | MIIM_DATA;
 			mii.dwTypeData = pItem->GetItemText();	// assign TCHAR pointer, text is assigned by GetMenuItemInfo
-			mii.cch = MAX_MENU_STRING -1;
+			mii.cch = MAX_MENU_STRING;
 
 			// Send message for menu updates
 			UINT menuItem = Menu.GetMenuItemID(i);
@@ -2846,16 +2859,16 @@ namespace Win32xx
 	// Saves the current MRU settings in the registry
 	{
 		// Store the MRU entries in the registry
-		if (m_nMaxMRU > 0)
+		try
 		{
-			try
-			{
-				// Delete Old MRUs
-				CString KeyParentName = _T("Software\\") + m_strKeyName;
-				CRegKey KeyParent;
-				KeyParent.Open(HKEY_CURRENT_USER, KeyParentName);
-				KeyParent.DeleteSubKey(_T("Recent Files"));
+			// Delete Old MRUs
+			CString KeyParentName = _T("Software\\") + m_strKeyName;
+			CRegKey KeyParent;
+			KeyParent.Open(HKEY_CURRENT_USER, KeyParentName);
+			KeyParent.DeleteSubKey(_T("Recent Files"));
 
+			if (m_nMaxMRU > 0)
+			{
 				CString KeyName = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
 				CRegKey Key;
 
@@ -2870,7 +2883,7 @@ namespace Win32xx
 				CString strPathName;
 				for (UINT i = 0; i < m_nMaxMRU; ++i)
 				{
-					SubKeyName.Format(_T("File %d"), i+1);
+					SubKeyName.Format(_T("File %d"), i + 1);
 
 					if (i < m_vMRUEntries.size())
 					{
@@ -2881,23 +2894,23 @@ namespace Win32xx
 					}
 				}
 			}
+		}
 
-			catch (const CUserException& e)
+		catch (const CUserException& e)
+		{
+			TRACE("*** Failed to save registry MRU settings. ***\n");
+			TRACE(e.GetText()); TRACE("\n");
+
+			CString KeyName = _T("Software\\") + m_strKeyName;
+			CRegKey Key;
+
+			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
 			{
-				TRACE("*** Failed to save registry MRU settings. ***\n");
-				TRACE(e.GetText()); TRACE("\n");
-
-				CString KeyName = _T("Software\\") + m_strKeyName;
-				CRegKey Key;
-
-				if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
-				{
-					// Roll back the registry changes by deleting this subkey
-					Key.DeleteSubKey(_T("Recent Files"));
-				}
-
-				return FALSE;
+				// Roll back the registry changes by deleting this subkey
+				Key.DeleteSubKey(_T("Recent Files"));
 			}
+
+			return FALSE;
 		}
 
 		return TRUE;
@@ -3594,33 +3607,49 @@ namespace Win32xx
 	inline void CFrame::UpdateMRUMenu()
 	// Updates the menu item information for the Most Recently Used (MRU) list.
 	{
-		if (0 >= m_nMaxMRU) return;
+		if (!IsWindow() ) return;
 
-		// Set the text for the MRU Menu
-		CString strMRUArray[16];
-		UINT MaxMRUArrayIndex = 0;
+		// Create a vector of CStrings containing the MRU menu entries
+		std::vector<CString> MRUStrings;
+
 		if (m_vMRUEntries.size() > 0)
 		{
-			for (UINT n = 0; ((n < m_vMRUEntries.size()) && (n <= m_nMaxMRU)); ++n)
+			for (UINT n = 0; n < m_vMRUEntries.size(); ++n)
 			{
-				strMRUArray[n] = m_vMRUEntries[n];
-				if (strMRUArray[n].GetLength() > MAX_MENU_STRING - 10)
-				{
-					// Truncate the string if its too long
-					strMRUArray[n].Delete(0, strMRUArray[n].GetLength() - MAX_MENU_STRING +10);
-					strMRUArray[n] = _T("... ") + strMRUArray[n];
-				}
+				CString str = m_vMRUEntries[n];
 
 				// Prefix the string with its number
-				CString strVal;
-				strVal.Format(_T("%d "), n+1);
-				strMRUArray[n] = strVal + strMRUArray[n];
-				MaxMRUArrayIndex = n;
+				CString Count;
+				Count.Format(_T("%d "), n + 1);
+				str = Count + str;
+
+				// Trim the string if its too long
+				if (str.GetLength() > MAX_MENU_STRING)
+				{
+					// Extract the first part of the string up until the first "\\"
+					CString Prefix;	
+					int Index = str.Find(_T("\\"));
+					if (Index >= 0)
+						Prefix = str.Left(Index + 1);
+
+					// Reduce the string to fit within MAX_MENU_STRING
+					CString Gap = _T("...");
+					str.Delete(0, str.GetLength() - MAX_MENU_STRING + Prefix.GetLength() + Gap.GetLength()+1);
+
+					// Remove the front of the string up to the next "\\" if any.
+					Index = str.Find(_T("\\"));
+					if (Index >= 0)
+						str.Delete(0, Index);
+
+					str = Prefix + Gap + str;
+				}
+
+				MRUStrings.push_back(str);
 			}
 		}
 		else
 		{
-			strMRUArray[0] = _T("Recent Files");
+			MRUStrings.push_back(_T("Recent Files"));
 		}
 
 		// Set MRU menu items
@@ -3628,18 +3657,18 @@ namespace Win32xx
 		ZeroMemory(&mii, sizeof(MENUITEMINFO));
 		mii.cbSize = GetSizeofMenuItemInfo();
 
-		int nFileItem = 0;  // We place the MRU items under the left most menu item
-		CMenu FileMenu = GetFrameMenu().GetSubMenu(nFileItem);
+		// We place the MRU items under the left most menu item
+		CMenu FileMenu = GetFrameMenu().GetSubMenu(0);
 
 		if (FileMenu.GetHandle())
 		{
 			// Remove all but the first MRU Menu entry
-			for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 +16; ++u)
+			for (UINT u = IDW_FILE_MRU_FILE2; u <= IDW_FILE_MRU_FILE1 + MRUStrings.size(); ++u)
 			{
 				FileMenu.DeleteMenu(u, MF_BYCOMMAND);
 			}
 
-			int MaxMRUIndex = (int)MIN(MaxMRUArrayIndex, m_nMaxMRU);
+			int MaxMRUIndex = MRUStrings.size() -1;
 
 			for (int index = MaxMRUIndex; index >= 0; --index)
 			{
@@ -3647,7 +3676,7 @@ namespace Win32xx
 				mii.fState = (0 == m_vMRUEntries.size())? MFS_GRAYED : 0;
 				mii.fType = MFT_STRING;
 				mii.wID = IDW_FILE_MRU_FILE1 + index;
-				mii.dwTypeData = const_cast<LPTSTR>(strMRUArray[index].c_str());
+				mii.dwTypeData = const_cast<LPTSTR>(MRUStrings[index].c_str());
 
 				BOOL bResult;
 				if (index == MaxMRUIndex)

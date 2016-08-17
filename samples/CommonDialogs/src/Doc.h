@@ -75,19 +75,18 @@ CDoc									/*
 		virtual ~CDoc();
 		virtual const CString&	GetExt();
 		virtual const CString&	GetFilter();
+		const   CString& GetFilePath()
+				    { return m_Doc_file.GetFilePath();}
 		virtual size_t  GetLength();
 		virtual CString GetRecord(size_t, size_t left = 0,
 				    size_t length = (size_t)-1);
 		virtual size_t  GetWidth();
-		virtual BOOL    IsDirty(){return m_Doc_is_dirty;}
-		virtual BOOL    IsOpen(){return m_Doc_is_open;}
+		virtual BOOL    IsDirty() {return m_Doc_is_dirty;}
+		virtual BOOL    IsOpen() {return m_Doc_is_open;}
 		virtual BOOL    OnCloseDoc();
 		virtual void    OnCopy();
 		virtual void    OnCut();
 		virtual void    OnDelete();
-		virtual void    OnFileNewDialog();
-		virtual void    OnDocOpenDialog();
-		virtual void    OnFindDialog();
 		virtual void 	OnFindReplace(UINT, WPARAM, LPARAM);
 		virtual void 	OnFRFindNext(MyFindReplaceDialog*);
 		virtual void 	OnFRReplaceAll(MyFindReplaceDialog*);
@@ -100,10 +99,9 @@ CDoc									/*
 		virtual void    OnPrintPreview();
 		virtual void    OnPageSetup();
 		virtual void    OnRedo();
-		virtual void    OnReplaceDialog();
 		virtual BOOL    OnSaveDoc();
-		virtual BOOL    OnSaveDocAs();
 		virtual void    OnUndo();
+			void	SetDirty(BOOL b) { m_Doc_is_dirty = b;}
 		virtual void    SetExt(const CString& ext)
 				    { m_Doc_file_ext = ext;}
 		virtual void    SetFilter(const CString &s)
@@ -112,7 +110,6 @@ CDoc									/*
 		  // public data members
 
 	protected:
-			BOOL    GetFileStatus(const CString&);
 		virtual	void 	Serialize(CArchive &ar);
 
 	private:
@@ -123,7 +120,6 @@ CDoc									/*
 		size_t  m_Doc_width;    // length, in records
 	     	CString m_Doc_file_ext; // default file extension
 	     	CString m_Doc_file_filter; // file dialog filter
-		MyFindReplaceDialog m_FindRepDialog;  // find-replace dialog
 		struct _stat	    m_Status;         // status information
 };
 /*-----------------------------------------------------------------------------*/

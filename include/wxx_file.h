@@ -400,13 +400,16 @@ namespace Win32xx
 	inline void CFile::SetFilePath(LPCTSTR pszFileName)
 	// Specifies the full file name, including its path
 	{
-		TCHAR* pFileName = NULL;
+		LPTSTR pFileName[1] = {0};
+
 		int nBuffSize = ::GetFullPathName(pszFileName, 0, 0, 0);
 		if (nBuffSize > 0)
 		{
-			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), &pFileName);
+			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), pFileName);
+			if (pFileName)			
+				m_FileName = pFileName[0];
+			
 			m_FilePath.ReleaseBuffer();
-			m_FileName = pFileName;
 		}
 	}
 #endif

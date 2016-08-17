@@ -122,6 +122,9 @@
 				RelativePath="..\src\App.cpp">
 			</File>
 			<File
+				RelativePath="..\src\AppGlobal.cpp">
+			</File>
+			<File
 				RelativePath="..\src\AppHelp.cpp">
 			</File>
 			<File
@@ -143,19 +146,7 @@
 				RelativePath="..\src\ListBoxDlg.h">
 			</File>
 			<File
-				RelativePath="..\src\ListBoxDlg.rc">
-			</File>
-			<File
-				RelativePath="..\src\ListBoxDlgRC.h">
-			</File>
-			<File
 				RelativePath="..\src\Mainfrm.cpp">
-			</File>
-			<File
-				RelativePath="..\src\MRUFrame.cpp">
-			</File>
-			<File
-				RelativePath="..\src\MRUFrame.h">
 			</File>
 			<File
 				RelativePath="..\src\MyFontDlg.cpp">
@@ -175,10 +166,10 @@
 				RelativePath="..\src\App.h">
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.h">
+				RelativePath="..\src\AppGlobal.h">
 			</File>
 			<File
-				RelativePath="..\src\AppPrologRC.h">
+				RelativePath="..\src\AppGlobalRC.h">
 			</File>
 			<File
 				RelativePath="..\src\CColorChoice.h">
@@ -191,6 +182,9 @@
 			</File>
 			<File
 				RelativePath="..\src\Doc.h">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlgRC.h">
 			</File>
 			<File
 				RelativePath="..\src\Mainfrm.h">
@@ -225,10 +219,13 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}">
 			<File
+				RelativePath="..\src\AppGlobal.rc">
+			</File>
+			<File
 				RelativePath="..\src\AppHelp.rc">
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.rc">
+				RelativePath="..\src\ListBoxDlg.rc">
 			</File>
 			<File
 				RelativePath="..\src\Resource.rc">

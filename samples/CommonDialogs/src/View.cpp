@@ -101,7 +101,7 @@ AddToolTip(HWND hParent, UINT nID, const CString & sToolTip)		/*
 		TRACE(_T("cannot connect tooltip: ") + sToolTip);
 		return FALSE;
 	}
-	if (!m_ToolTip.AddTool(hCtl, sToolTip.c_str()))
+	if (!m_ToolTip.AddTool(hCtl, sToolTip))
 	{
 		TRACE(_T("unable to add tooltip: ") + sToolTip);
 		return FALSE;
@@ -179,7 +179,7 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 	    {
 		  // let the main frame OnCommand() handle this as a
 		  // notification from the main window
-	    	return theFrame.SendMessage(WM_COMMAND, (WPARAM)IDW_MAIN,
+	    	return ParentFrame().SendMessage(WM_COMMAND, (WPARAM)IDW_MAIN,
 		    (LPARAM)0);
 	    }
 
@@ -331,7 +331,7 @@ InitCtlColors()								/*
 	m_ColorChoice.AddColorChoice(SBTxBg, _T("o  Status bar text BG"),
 	    COLOR_MAGENTA);
 	m_ColorChoice.AddColorChoice(SBBg, _T("o  Status bar BG"),
-	    theFrame.GetStatusBarTheme().clrBkgnd1); // use current theme
+	    ParentFrame().GetStatusBarTheme().clrBkgnd1); // use current theme
 
 	m_ColorChoice.AddColorChoice(SclTxFg, _T("o  Scroll bar text FG"),
 	    COLOR_WHITE);
@@ -367,7 +367,7 @@ OnColorChoice() 							/*
 	m_ColorChoice.DoModal(hWndOwner);  // calls the base class DoModal()
 	  // reset the status bar color
 	COLORREF sb = GetSBBkColor();
-	theFrame.SetSBBkColor(sb);
+	ParentFrame().SetSBBkColor(sb); 
 }
 
 /*============================================================================*/
@@ -386,7 +386,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
 	  // check all OnCommand() messages: if help mode is active, let it
 	  // handle the wParam message
-    	if (theFrame.DoContextHelp(wParam))
+    	if (ParentFrame().DoContextHelp(wParam))
 		return TRUE;
 
 	UINT nID = LOWORD(wParam);
@@ -395,7 +395,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 	      // handle help request messages sent to the view from
 	      // common dialogs (if any)
 	    case IDC_HELP_COMDLG:
-	    	return theFrame.GetAppHelp().OnHelpID((WPARAM)lParam);
+	    	return ParentFrame().GetAppHelp().OnHelpID((WPARAM)lParam);
 
 	    default:
 	    	break;
@@ -483,6 +483,9 @@ OnInitDialog()                                                          /*
 	  // load the program icons
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
+	  // get the parent frame
+	m_pFrame = dynamic_cast<CMainFrame*>(m_pFrame->
+	    GetCWndPtr(GetApp().GetMainWnd()));
 	  // add tool tips to controls in client area
 	AssignToolTips();
 	  // subclass the controls on the dialog
@@ -524,7 +527,7 @@ OnOK()                                                                  /*
 **----------------------------------------------------------------------------*/
 {
 	  // if help mode is active, let it handle the IDOK message
-	if (theFrame.DoContextHelp((WPARAM)IDOK))
+	if (ParentFrame().DoContextHelp((WPARAM)IDOK)) 
 		return;
 
 	::MessageBox(NULL, _T("OK Button Pressed."), _T("Information"),

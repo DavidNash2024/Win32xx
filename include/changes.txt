@@ -46,6 +46,8 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added CRibbonDockFrame          class
+Added CFrame::GetMRULimit		member function
+Added CFrame::SetMRULimit		member function
 Added CDocker::OnActivate		member function
 Added CDocker::OnMouseActivate	member function
 Added CDocker::OnSize			member function

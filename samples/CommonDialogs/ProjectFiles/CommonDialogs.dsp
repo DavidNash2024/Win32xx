@@ -95,11 +95,11 @@ SOURCE=..\src\App.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\AppHelp.cpp
+SOURCE=..\src\AppGlobal.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\AppProlog.cpp
+SOURCE=..\src\AppHelp.cpp
 # End Source File
 # Begin Source File
 
@@ -123,10 +123,6 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MRUFrame.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\MyFontDlg.cpp
 # End Source File
 # Begin Source File
@@ -143,15 +139,59 @@ SOURCE=..\src\View.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\src\App.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\AppGlobal.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\AppGlobalRC.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ColorChoice.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ColorDefs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\CustomButton.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Doc.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\FrameApp.h
+SOURCE=..\src\ListBoxDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ListBoxDlgRC.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFileDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFindReplaceDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFontDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyPrinter.h
 # End Source File
 # Begin Source File
 
@@ -171,8 +211,23 @@ SOURCE=..\src\View.h
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 # Begin Source File
 
+SOURCE=..\src\AppGlobal.rc
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\AppHelp.rc
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ListBoxDlg.rc
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Resource.rc
 # End Source File
+
+
+
 # End Group
 # End Target
 # End Project

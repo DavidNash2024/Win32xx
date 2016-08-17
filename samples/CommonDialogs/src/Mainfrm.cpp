@@ -63,18 +63,19 @@
 
 #include "stdafx.h"
 #include "StdApp.h"
+#include <io.h>
 
 /*******************************************************************************
 
 	Macros and Local (static) default constants          		*/
 
   // the (fixed) window dimensions : {left, top, width, height}
-static const	RECT    rcWindowPlacement = {100, 100, 490, 400};
+static const RECT rcWindowPlacement = {100, 100, 490, 400};
 
 /*******************************************************************************
 
 	Implementation of the Main Frame class
-	
+
 *=============================================================================*/
 	CMainFrame::
 CMainFrame() 								/*
@@ -82,20 +83,53 @@ CMainFrame() 								/*
 	Construct and initiallize the CMainFrame object from the IDD_FORM_DIALOG
 	resource defined in resource.rc.
 *-----------------------------------------------------------------------------*/
-	: m_View(IDD_FORM_DIALOG)
+    : m_View(IDD_FORM_DIALOG)
 {
 	  // set normal cursor to the arrow
 	m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
 	  // set the form initial default location and (fixed) size
-	m_win_x  = rcWindowPlacement.left;
-	m_win_y  = rcWindowPlacement.top;
-	m_width  = rcWindowPlacement.right;
-	m_height = rcWindowPlacement.bottom;
+	m_win_x   = rcWindowPlacement.left;
+	m_win_y   = rcWindowPlacement.top;
+	m_width   = rcWindowPlacement.right;
+	m_height  = rcWindowPlacement.bottom;
 	ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
 	  // Set m_View as the view window of the frame
 	SetView(m_View);
 	  // define the context help topics and controls they service
 	SetContextHelpMessages();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+ConnectAppHelp() 						/*
+
+	Register the AppHelp object help .chm file name and the AppHelp About
+	Box credits information string.
+*-----------------------------------------------------------------------------*/
+{
+	  // inform context help of its .chm document name
+	m_AppHelp.ConnectAppHelp(theApp.GetHelpFile(),
+	    theAppGlobal.GetAboutBoxInfo());
+}
+
+/*============================================================================*/
+	void CMainFrame::
+SetMRULimit(UINT nMaxMRU /* = 0 */)					/*
+
+	Register the maximum number of elements nMaxMRU of the MRU list to be
+	shown.  If there is no current registry key name, enter an obligatory
+	dummy in order to set the nMaxMRU value into CFrame.
+*-----------------------------------------------------------------------------*/
+{
+	static const CString keyname = _T("CMainFrameMRU");
+	CString currentkey = GetRegistryKeyName();
+	if (currentkey != keyname)
+		LoadRegistrySettings(keyname);
+
+	m_nMaxMRU  = nMaxMRU;
+	LoadRegistryMRUSettings(m_nMaxMRU);
+	  // throw away any MRU entries from the registry
+	EmptyMRUList();
 }
 
 /*============================================================================*/
@@ -123,6 +157,22 @@ DoContextHelp(WPARAM wParam)						/*
 }
 
 /*============================================================================*/
+	void CMainFrame::
+EmptyMRUList()                                                          /*
+
+	Remove all entries from the MRU list and  display the empty list
+	on the MRU menu.
+*-----------------------------------------------------------------------------*/
+{
+	  // use a separate list to get the entries
+	const std::vector<CString>& MRUEntries = GetMRUEntries();
+	  // then remove items from the MRU list one by one
+	std::vector<CString>::const_iterator it;
+	for (it = MRUEntries.begin(); it != MRUEntries.end(); ++it)
+		RemoveMRUEntry(*it);
+}
+
+/*============================================================================*/
 	BOOL CMainFrame::
 EngageContextHelp() 							/*
 
@@ -146,7 +196,7 @@ EngageContextHelp() 							/*
 LoadPersistentData()                                                    /*
 
 	Recover app, mainframe, MRU, and view serialized data from previous
-	execution.
+	execution. MRU strings that are not valid file paths are discarded.
 *-----------------------------------------------------------------------------*/
 {
 	try
@@ -162,9 +212,16 @@ LoadPersistentData()                                                    /*
 		ValidateMRU(); // remove invalid file path names
 		  // if there is a MRU item at the top of the list, use it
 		  // as the name of the document to open
-		CString docfile = AccessMRUEntry(0);
+		CString docfile = GetMRUEntry(0);
 		if (!docfile.IsEmpty())
-			m_Doc.OnOpenDoc(docfile);
+			if (!m_Doc.OnOpenDoc(docfile))
+			{
+				RemoveMRUEntry(docfile);
+				  // for this demo, show this removal
+				::MessageBox(NULL, docfile,
+				    _T("Removing invalid MRU entry..."), MB_OK |
+				    MB_ICONINFORMATION | MB_TASKMODAL);
+			}
 		UpdateToolbarMenuStatus();
 		  // reset the status bar color
 		COLORREF sb = m_View.GetSBBkColor();
@@ -176,8 +233,8 @@ LoadPersistentData()                                                    /*
 	{
 		CString msg = _T("Previous settings could not be restored.\n")
 		    _T("Unable to read archived values.\n");
-		::MessageBox(NULL, msg.c_str(), _T("Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		::MessageBox(NULL, msg, _T("Exception"), MB_OK | MB_ICONSTOP |
+		    MB_TASKMODAL);
 	}
 }
 
@@ -234,17 +291,17 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	UINT nID = LOWORD(wParam);
 	  // map all MRU file messages to one representative
 	if(IDW_FILE_MRU_FILE1 <= nID &&
-	    nID < IDW_FILE_MRU_FILE1 + theAppProlog.GetMaxMRU())
+	    nID < IDW_FILE_MRU_FILE1 + m_nMaxMRU)
 		nID = IDW_FILE_MRU_FILE1;
 
 	switch(nID)
 	{
 	    case IDM_FILE_NEW:
-		m_Doc.OnFileNewDialog();
+	    	OnFileNew();
 		return TRUE;
 
 	    case IDM_FILE_OPEN:
-		m_Doc.OnDocOpenDialog();
+	    	OnFileOpen();
 		return TRUE;
 
 	    case IDM_FILE_SAVE:
@@ -252,23 +309,23 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 		return TRUE;
 
 	    case IDM_FILE_SAVEAS:
-	    	m_Doc.OnSaveDocAs();
+	    	OnFileSaveAs();
 		return TRUE;
 
 	    case IDM_FILE_CLOSE:
-		m_Doc.OnCloseDoc();
+		OnFileClose();
 		return TRUE;
 
 	    case IDM_FILE_PAGESETUP:
-	    	m_Doc.OnPageSetup();
+		OnFilePageSetup();
 		return TRUE;
 
 	    case IDM_FILE_PREVIEW:
-	    	m_Doc.OnPrintPreview();
+	    	OnFilePreview();
 		return TRUE;
 
 	    case IDM_FILE_PRINT:
-	    	m_Doc.OnPrintDialog();
+	    	OnFilePrint();
 		return TRUE;
 
 	    case IDM_FILE_EXIT:
@@ -285,7 +342,8 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 		return TRUE;
 
 	    case IDM_EDIT_CUT:
-	    	m_Doc.OnCut();
+// 	    	m_Doc.OnCut();	// TODO: uncomment this and remove OnCut() below
+	    	OnCut();        // see CMainFrame::OnCut()
 		return TRUE;
 
 	    case IDM_EDIT_COPY:
@@ -301,11 +359,11 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 		return TRUE;
 
 	    case IDM_EDIT_FIND:
-	    	m_Doc.OnFindDialog();
+	    	OnEditFind();
 		return TRUE;
 
 	    case IDM_EDIT_REPLACE:
-	    	m_Doc.OnReplaceDialog();
+	    	OnEditReplace();
 		return TRUE;
 
 	    case IDW_ABOUT:         // invoked by F1 and Help->About menu item
@@ -376,8 +434,8 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 		SetThemeColors();
 	}
 
-	  // set the MRU max size
-	ConnectMRU(theAppProlog.GetMaxMRU());
+	  // tell CFrame the max MRU size
+	SetMRULimit(theAppGlobal.GetMaxMRU());
 	  // communicate help file name and about box contents to help object
 	ConnectAppHelp();
 	LoadPersistentData();
@@ -386,13 +444,221 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 
 /*============================================================================*/
 	void CMainFrame::
-OnFileExit()								/*
+OnCut()                                                            	/*
 
-	Perform whatever functions are necessary, other than Serialize(), as
-	it is invoked in response to the WM_CLOSE message that is sent when
-	the frame is close.
+	Demonstrate operation of the MRU list: for this demo, add 5 strings to
+	the MRU list and open the topmost one. In an actual application, this
+	function would be directed to CDoc::OnCut() in OnCommand().
 *-----------------------------------------------------------------------------*/
 {
+	EmptyMRUList();
+	AddMRUEntry(_T("This is MRU 5 and it is very, very, very, ")
+	    _T("very, very, very, very, very, very, very, very, very, very, ")
+	    _T("very, very, very long"));
+	AddMRUEntry(_T("This is MRU 4"));
+	AddMRUEntry(_T("This is MRU 3"));
+	AddMRUEntry(_T("This is MRU 2"));
+	AddMRUEntry(_T("This is MRU 1"));
+	CString mru_top = GetMRUEntry(0);
+	if (!m_Doc.OnOpenDoc(mru_top))
+	{
+		  // announce that the entry is being removed
+		::MessageBox(NULL, mru_top, _T("Removing invalid MRU entry..."),
+		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+		RemoveMRUEntry(mru_top);
+ 	}
+	 UpdateToolbarMenuStatus();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnEditFind()                                                            /*
+
+   	Initiate the find non-modal dialog box and the messages sent to the
+	CDoc::OnFindReplace() method by the CMainFrame::WndProc() message loop.
+*-----------------------------------------------------------------------------*/
+{
+	m_FindRepDialog.SetBoxTitle(_T("Find a string..."));
+	m_FindRepDialog.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
+	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)m_View);
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnEditReplace()                                                            /*
+
+	Invoke the find-replace dialog and initiate the find non-modal dialog
+	box and the messages sent to the CDoc::OnFindReplace() method by the
+	the CMainFrame::WndProc() message loop.  Note: the replace dialog box
+	does not have the direction up-down box that the find dialog box has.
+	This is "by design."
+*-----------------------------------------------------------------------------*/
+{
+	m_FindRepDialog.SetBoxTitle(_T("Find, then Replace"));
+	m_FindRepDialog.Create(FALSE, _T("Initial Text"), _T("Replace Text"),
+	    FR_DOWN | FR_SHOWHELP | FR_ENABLEHOOK, (HWND)m_View);
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFileNew()                                                            /*
+
+	Prompt the user for a new document file name and, if valid, open a new
+	document. Notify user of
+*-----------------------------------------------------------------------------*/
+{
+	MyFileDialog fd(TRUE,
+	    m_Doc.GetExt(),  	 // extension defined by app
+	    m_Doc.GetFilePath(), // current open file path
+	    OFN_HIDEREADONLY |
+	    OFN_SHOWHELP |
+	    OFN_EXPLORER |
+	    OFN_NONETWORKBUTTON |
+	    OFN_ENABLESIZING,
+	    m_Doc.GetFilter());
+	fd.SetBoxTitle(_T("New document file..."));
+	fd.SetDefExt(m_Doc.GetExt());
+	CString msg;
+	  // do not leave without a valid unused file name, unless cancelled
+	while (fd.DoModal(m_View) == IDOK)
+ 	{
+ 		CString new_path = fd.GetPathName();
+		  // new_path should not exist
+		if (::_taccess(new_path, 0x04) != 0)
+		{  	  // for the demo, announce the file chosen
+			msg.Format(_T("Open new document file\n    '%s'"),
+			    new_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+
+			  // let the document class handle the new_path
+			m_Doc.OnNewDoc(new_path);
+			if (m_Doc.IsOpen())
+				AddMRUEntry(new_path);
+			else
+			{
+				msg.Format(
+				    _T("Document file\n    '%s'\ndid not open."),
+				    new_path.c_str());
+				::MessageBox(NULL, msg, _T("Information"),
+				    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			}
+			UpdateToolbarMenuStatus();
+			return;
+		}
+		  //
+		msg.Format(_T("That document file\n    '%s'\n")
+		    _T("already exists."), new_path.c_str());
+		::MessageBox(NULL, msg, _T("Error"), MB_OK |
+		    MB_ICONERROR | MB_TASKMODAL);
+	}
+	msg = _T("No name was entered, no action was taken.");
+	::MessageBox(NULL, msg, _T("Information"),
+	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFileClose()                                                            /*
+
+	Close the currently open document file.
+	
+	In the demo, after the file is closed, the topmost valid MRU list
+	entry is opened; invalid members are removed.
+*-----------------------------------------------------------------------------*/
+{
+	if (!m_Doc.IsOpen())
+		return;
+		
+	CString current_file = m_Doc.GetFilePath(),
+		mru_top_file = GetMRUEntry(0);
+	  // these should be the same
+	assert(current_file.CompareNoCase(mru_top_file) == 0);
+	  // let the document class handle the closure
+	m_Doc.OnCloseDoc();
+	RemoveMRUEntry(current_file);
+	  // for the demo, announce the closure and removal from the MRU list
+	CString msg;
+	msg.Format(_T("Closing file and removing MRU entry:\n    '%s'"), 
+	    current_file.c_str());
+	::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
+	    MB_TASKMODAL);
+
+	  // for this demo, open the top valid MRU entry, if any
+	while (GetMRUSize() > 0)
+	{
+		mru_top_file = GetMRUEntry(0);
+		if (m_Doc.OnOpenDoc(mru_top_file))
+			break;
+			
+		RemoveMRUEntry(mru_top_file);
+		  // for this demo, announce removal
+		::MessageBox(NULL, mru_top_file.c_str(),
+		    _T("Removing invalid MRU entry..."), MB_OK | MB_ICONINFORMATION |
+		    MB_TASKMODAL);
+	}
+	UpdateToolbarMenuStatus();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFileOpen()                                                            /*
+
+	Display the open file dialog to input the document file name and to
+	open the corresponding document if that file exists.
+*-----------------------------------------------------------------------------*/
+{
+	MyFileDialog fd(TRUE,
+	    m_Doc.GetExt(),	 // extension defined by app
+	    m_Doc.GetFilePath(), // current open file path
+	    OFN_HIDEREADONLY |
+	    OFN_SHOWHELP |
+	    OFN_EXPLORER |
+	    OFN_NONETWORKBUTTON |
+	    OFN_FILEMUSTEXIST |	 // only exising files allowed
+	    OFN_PATHMUSTEXIST |
+	    OFN_ENABLEHOOK    |
+	    OFN_ENABLESIZING,
+	    m_Doc.GetFilter());
+	fd.SetBoxTitle(_T("Open document file..."));
+	fd.SetDefExt(m_Doc.GetExt());
+	CString msg;
+	if (fd.DoModal(*this) == IDOK)
+ 	{
+ 		CString the_path = fd.GetPathName();
+		if (the_path.IsEmpty())
+		    return;
+
+		  // for the demo, announce the file chosen
+		msg.Format(_T("File chosen: '%s'"),
+		    the_path.c_str());
+		::MessageBox(NULL, msg, _T("Information"),
+		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+
+		  // open the document based on this name
+		m_Doc.OnOpenDoc(the_path);
+		if (m_Doc.IsOpen())
+			AddMRUEntry(the_path);
+		else
+		{
+			msg.Format(
+			    _T("Document file\n    '%s'\ndid not open."),
+			    the_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			  // if the_path was in the MRU list, remove it
+			RemoveMRUEntry(the_path);
+			  // for the demo, announce the file removed from the MRU list
+			::MessageBox(NULL, the_path,
+			    _T("Removing invalid MRU entry..."), MB_OK |
+			    MB_ICONINFORMATION | MB_TASKMODAL);
+		}
+		UpdateToolbarMenuStatus();
+		return;
+  	}
+	msg = _T("No name was entered, no action was taken.");
+	::MessageBox(NULL, msg, _T("Information"),
+	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
@@ -402,20 +668,127 @@ OnFileOpenMRU(UINT nIndex)						/*
 	Open the MRU file at nIndex as the next document.
 *-----------------------------------------------------------------------------*/
 {
+	  // if there is a current document open, close it
 	if (m_Doc.IsOpen())
+	{
+		CString current_file = m_Doc.GetFilePath();
 		m_Doc.OnCloseDoc();
-
-	  // get the MRU entry but don't move it to the top of the MRU list, yet
-	CString str = AccessMRUEntry(nIndex);
-	m_Doc.OnOpenDoc(str);
+		RemoveMRUEntry(current_file);
+	}
+	  // get the MRU entry
+	CString mru_entry = GetMRUEntry(nIndex);
+	m_Doc.OnOpenDoc(mru_entry);
 	UpdateToolbarMenuStatus();
 	if (m_Doc.IsOpen())
-	{         // now it's ok to move it
-		AddMRUEntry(str);
 		return TRUE;
-	}
 
+	  // file did not open, so remove the name from the MRU list
+	RemoveMRUEntry(mru_entry);
+	  // for the demo, announce the file removed from the MRU list
+	::MessageBox(NULL, mru_entry,
+	    _T("Removing invalid MRU entry..."), MB_OK | MB_ICONINFORMATION |
+	    MB_TASKMODAL);
 	return FALSE;
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFilePageSetup()                                                            /*
+
+*-----------------------------------------------------------------------------*/
+{
+    	m_Doc.OnPageSetup();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFilePreview()                                                            /*
+
+*-----------------------------------------------------------------------------*/
+{
+    	m_Doc.OnPrintPreview();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFilePrint()                                                            /*
+
+*-----------------------------------------------------------------------------*/
+{
+    	m_Doc.OnPrintDialog();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFileSaveAs()                                                            /*
+
+	Save the current document into a file named in a file dialog and make
+	that file the current document. 
+*-----------------------------------------------------------------------------*/
+{
+	if (!m_Doc.IsOpen())
+		return;
+
+	  // declare the file dialog box
+	MyFileDialog fd(FALSE,
+	    m_Doc.GetExt(),	 // extension defined by app
+	    m_Doc.GetFilePath(), // current open file path
+	    OFN_HIDEREADONLY |
+	    OFN_OVERWRITEPROMPT |
+	    OFN_SHOWHELP |
+	    OFN_EXPLORER |
+	    OFN_ENABLEHOOK |
+	    OFN_NONETWORKBUTTON,
+	    m_Doc.GetFilter());  // filter defined by app
+	fd.SetBoxTitle(_T("Save document file as"));
+	CString current_path = m_Doc.GetFilePath(),
+		msg;
+	  // query user for the save-as file path name
+	if (fd.DoModal(*this) == IDOK)
+ 	{	  // At this point, a file path has been chosen that is
+	 	  // not empty and if it already exists has been approved by the
+		   // user to be overwritten. Fetch the path from the dialog.
+		CString new_path = fd.GetPathName();
+		  // check if the input path is the one already open
+		if (new_path.CompareNoCase(current_path) == 0)
+		{         // the named paths are the same
+			msg.Format(_T("Document file\n    '%s'\n is already ")
+			    _T("open. No action taken"), new_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			return;
+		}
+		else
+			  // save and close the current document
+			m_Doc.OnCloseDoc();
+
+		  // for the demo, announce the file chosen
+		msg.Format(_T("Document file saved as:\n    '%s'."),
+		    new_path.c_str());
+		::MessageBox(NULL, msg, _T("Information"),
+		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+		CopyFile(current_path, new_path, FALSE);
+		if (!m_Doc.OnOpenDoc(new_path))
+		{
+			msg.Format(_T("Saved document file\n    '%s'")
+			    _T(" could not be reopened."), new_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			  // reopen the current file at entry
+			m_Doc.OnOpenDoc(current_path);
+			UpdateToolbarMenuStatus();
+			return;
+		}
+		if (m_Doc.IsOpen())
+		{
+			AddMRUEntry(new_path);
+			UpdateToolbarMenuStatus();
+		}
+		return;
+	}
+	msg = _T("No name was entered, no action was taken.");
+	::MessageBox(NULL, msg, _T("Information"),
+	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
@@ -501,47 +874,14 @@ OnProcessMRU(WPARAM wParam, LPARAM lParam)                              /*
 
 /*============================================================================*/
 	void CMainFrame::
-UpdateToolbarMenuStatus()						/*
+OnTerminate()								/*
 
-	Check the status of controls whose enabled/disabled or check/uncheck
-	status needs to be changed and make changes as necessary. Caution:
-	only use one SetXXXXStatus per control ID.
+	Perform whatever functions are necessary, other than Serialize(), as
+	it is invoked in response to the WM_CLOSE message that is sent when
+	the frame is close.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: Add and modify code here to implement this member
-	
-	  // document status
-	BOOL 	doc_is_ready = m_Doc.IsOpen();
-	
-	  // determine enabled status of controls (TODO: redo for actual app)
-	BOOL	ok_to_cut         = TRUE;   // doc_is_ready;
-	BOOL	ok_to_copy        = FALSE;  // doc_is_ready;
-	BOOL	ok_to_delete      = FALSE;  // doc_is_ready;
-	BOOL	ok_to_find        = TRUE;   // doc_is_ready;
-	BOOL	ok_to_paste       = FALSE;  // doc_is_ready;
-	BOOL	ok_to_print       = TRUE;   // doc_is_ready;
-	BOOL	ok_to_preview     = TRUE;   // doc_is_ready;
-	BOOL	ok_to_page_setup  = TRUE;   // doc_is_ready;
-	BOOL	ok_to_redo        = FALSE;  // doc_is_ready;
-	BOOL	ok_to_replace     = TRUE;   // doc_is_ready;
-	BOOL 	ok_to_save        = doc_is_ready;
-	BOOL	ok_to_saveas      = doc_is_ready;
-	BOOL	ok_to_undo        = FALSE;  // doc_is_ready;
-
- 	  // set the control button status
-	SetControlStatus(IDM_EDIT_CUT, 		ok_to_cut, 	   both);
-	SetControlStatus(IDM_EDIT_COPY, 	ok_to_copy, 	   both);
-	SetControlStatus(IDM_EDIT_DELETE, 	ok_to_delete, 	   both);
-	SetControlStatus(IDM_EDIT_FIND, 	ok_to_find, 	   both);
-	SetControlStatus(IDM_FILE_PAGESETUP,	ok_to_page_setup,  mainmenu);
-	SetControlStatus(IDM_EDIT_PASTE, 	ok_to_paste,	   both);
-	SetControlStatus(IDM_FILE_PRINT, 	ok_to_print,  	   both);
-	SetControlStatus(IDM_FILE_PREVIEW,      ok_to_preview,     mainmenu);
-	SetControlStatus(IDM_EDIT_REDO, 	ok_to_redo,	   both);
-	SetControlStatus(IDM_EDIT_REPLACE, 	ok_to_replace, 	   both);
-	SetControlStatus(IDM_FILE_SAVE, 	ok_to_save,        both);
-	SetControlStatus(IDM_FILE_SAVEAS, 	ok_to_saveas, 	   both);
-	SetControlStatus(IDM_EDIT_UNDO, 	ok_to_undo, 	   both);
+	m_Doc.OnSaveDoc();
 }
 
 /*============================================================================*/
@@ -603,8 +943,8 @@ SaveRegistrySettings()                                                  /*
 	catch(...)
 	{
 		CString msg = _T("\nProgram settings could not be saved.\n    ");
-		::MessageBox(NULL, msg.c_str(), _T("Unregistered Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		::MessageBox(NULL, msg, _T("Unregistered Exception"), MB_OK |
+		    MB_ICONSTOP | MB_TASKMODAL);
 	}
 	return TRUE;
 }
@@ -633,6 +973,14 @@ Serialize(CArchive &ar)                                               /*
 		GetWindowPlacement(m_Wndpl);
 		ArchiveObject w(&m_Wndpl, m_Wndpl.length);
 		ar << w;
+		  // record the number of MRU entries to write
+		size_t i, nMRU = GetMRUSize();
+		ar << nMRU;
+		  // save this many entries (don't use a copied list)
+		for (i = 0; i < nMRU; ++i)
+		{
+			ar << GetMRUEntries()[i];
+		}
 	}
         else    // recovering
         {
@@ -650,8 +998,29 @@ Serialize(CArchive &ar)                                               /*
 			m_Wndpl.length = sizeof(WINDOWPLACEMENT);
 			SetWindowPlacement(m_Wndpl);
 		}
+		  // read MRU values from archive
+		EmptyMRUList();
+		  // use dummy vector in case an exception occurs
+		std::vector<CString> vMRUEntries;
+		  // extract all the MRU entries that were archived to preserve
+		  // the archive for subsequent use
+		size_t i, nMRU;
+		ar >> nMRU; // the number of entries to read in
+		CString s;
+		for (i = 0; i < nMRU; ++i)
+		{
+			ar >> s;
+			if (i < m_nMaxMRU)  // keep only those within the limit
+				vMRUEntries.push_back(s);
+		}
+		  // all successfully read in, so store them LIFO order into
+		  // the MRU list for proper display
+		for (i = 0; i < nMRU; ++i)
+		{
+			s = vMRUEntries[nMRU - 1 - i];
+			AddMRUEntry(s);
+		}
         }
-        CMRUFrame::Serialize(ar);
 }
 
 /*============================================================================*/
@@ -726,16 +1095,6 @@ SetControlStatus(UINT nID, BOOL status, ControlBars which)           	/*
 }
 
 /*============================================================================*/
-	 void CMainFrame::
-SetStatusbarMsg(CString status)             /*
-
-	Write the status message on the status bar.
-*-----------------------------------------------------------------------------*/
-{
-	GetStatusBar().SetPartText(0, status.c_str());
-}
-
-/*============================================================================*/
 	void CMainFrame::
 SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
     COLORREF clrBand2)  						/*
@@ -761,6 +1120,16 @@ SetReBarColors(COLORREF clrBkGnd1, COLORREF clrBkGnd2, COLORREF clrBand1,
 
 		SetReBarTheme(rt);
 	}
+}
+
+/*============================================================================*/
+	 void CMainFrame::
+SetStatusbarMsg(CString status)             				/*
+
+	Write the status message on the status bar.
+*-----------------------------------------------------------------------------*/
+{
+	GetStatusBar().SetPartText(0, status);
 }
 
 /*============================================================================*/
@@ -831,15 +1200,144 @@ SetupToolBar()                                                          /*
 
 /*============================================================================*/
 	void CMainFrame::
-ConnectAppHelp() 						/*
+UpdateToolbarMenuStatus()						/*
 
-	Register the AppHelp object help .chm file name and the AppHelp About
-	Box credits information string.
+	Check the status of controls whose enabled/disabled or check/uncheck
+	status needs to be changed and make changes as necessary. Caution:
+	only use one SetXXXXStatus per control ID.
 *-----------------------------------------------------------------------------*/
 {
-	  // inform context help of its .chm document name
-	m_AppHelp.ConnectAppHelp(theApp.GetHelpFile(),
-	    theAppProlog.GetAboutBoxInfo());
+	// TODO: Add and modify code here to implement this member
+
+	  // document status
+	BOOL 	doc_is_ready = m_Doc.IsOpen();
+
+	  // determine enabled status of controls (TODO: redo for actual app)
+	BOOL	ok_to_cut         = TRUE;   // doc_is_ready;
+	BOOL	ok_to_copy        = FALSE;  // doc_is_ready;
+	BOOL	ok_to_delete      = FALSE;  // doc_is_ready;
+	BOOL	ok_to_find        = TRUE;   // doc_is_ready;
+	BOOL	ok_to_paste       = FALSE;  // doc_is_ready;
+	BOOL	ok_to_print       = TRUE;   // doc_is_ready;
+	BOOL	ok_to_preview     = TRUE;   // doc_is_ready;
+	BOOL	ok_to_page_setup  = TRUE;   // doc_is_ready;
+	BOOL	ok_to_redo        = FALSE;  // doc_is_ready;
+	BOOL	ok_to_replace     = TRUE;   // doc_is_ready;
+	BOOL 	ok_to_save        = doc_is_ready;
+	BOOL	ok_to_saveas      = doc_is_ready;
+	BOOL	ok_to_undo        = FALSE;  // doc_is_ready;
+	BOOL    ok_to_close       = doc_is_ready;
+	
+ 	  // set the control button status
+	SetControlStatus(IDM_EDIT_CUT, 		ok_to_cut, 	   both);
+	SetControlStatus(IDM_EDIT_COPY, 	ok_to_copy, 	   both);
+	SetControlStatus(IDM_EDIT_DELETE, 	ok_to_delete, 	   both);
+	SetControlStatus(IDM_EDIT_FIND, 	ok_to_find, 	   both);
+	SetControlStatus(IDM_FILE_PAGESETUP,	ok_to_page_setup,  mainmenu);
+	SetControlStatus(IDM_EDIT_PASTE, 	ok_to_paste,	   both);
+	SetControlStatus(IDM_FILE_PRINT, 	ok_to_print,  	   both);
+	SetControlStatus(IDM_FILE_PREVIEW,      ok_to_preview,     mainmenu);
+	SetControlStatus(IDM_EDIT_REDO, 	ok_to_redo,	   both);
+	SetControlStatus(IDM_EDIT_REPLACE, 	ok_to_replace, 	   both);
+	SetControlStatus(IDM_FILE_CLOSE, 	ok_to_close,       mainmenu);
+	SetControlStatus(IDM_FILE_SAVE, 	ok_to_save,        both);
+	SetControlStatus(IDM_FILE_SAVEAS, 	ok_to_saveas, 	   both);
+	SetControlStatus(IDM_EDIT_UNDO, 	ok_to_undo, 	   both);
+}
+
+/*============================================================================*/
+	void CMainFrame::
+UpdateMRUMenu()                          				/*
+
+	Override the base class method to truncate long MRU list entries using
+	a '...' splice at the midpoint, rather than at the beginning, as does
+	the base class. This will be called by the framework whenever a menu
+	element is changed.
+*-----------------------------------------------------------------------------*/
+{
+	  // find in the leftmost submenu (i.e., the one with index 0)
+	CMenu fileMenu = GetFrameMenu().GetSubMenu(0);
+	  // compute the index of the last entry in the MRU list
+	int iLast = (int)MIN(GetMRUSize(), m_nMaxMRU) -  1;
+	  // if there is no leftmost submenu, or if there are no entries to
+	  // post, or if we cannot modify the first entry to indicate an empty
+	  // MRU list, we cannot proceed
+	if (!fileMenu.GetHandle())
+	{	  // just refresh the frame menu bar and  leave
+		DrawMenuBar();
+		return;
+	}
+	   // insert the empty MRU list label in the top slot
+	fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
+	    IDW_FILE_MRU_FILE1, _T("Recent Files"));
+	fileMenu.EnableMenuItem(IDW_FILE_MRU_FILE1, MF_BYCOMMAND | MF_GRAYED);
+
+	  // remove all the other MRU Menu entries
+	for (int i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 +
+	    (int)m_nMaxMRU; ++i)
+		fileMenu.DeleteMenu(i, MF_BYCOMMAND);
+	  // if the list is not empty, there's more to do
+	if (iLast >= 0)
+	{
+		  // create the MRU "show" list, which contains only strings
+		  // of limited length, chars removed at the midpoint, as needed
+		int 	maxlen = MAX_MENU_STRING - 10,
+			mid    = maxlen / 2;
+		CString strMRUShow[16];
+		for (int i = 0; i <= iLast; i++)
+		{
+			CString s = GetMRUEntries()[i];
+			if (s.GetLength() > maxlen)
+			{
+				  // eliminate middle if too long
+				s.Delete(mid, s.GetLength() - maxlen);
+				s.Insert(mid, _T("..."));
+			}
+			// Prefix with its number
+			CString v;
+			v.Format(_T("%d "), i + 1);
+			strMRUShow[i] = v + s;
+		}
+
+		  // display the MRU items: start by replacing the first item
+		  // in the the list with the last MRU item
+		fileMenu.ModifyMenu(IDW_FILE_MRU_FILE1, MF_BYCOMMAND,
+		    IDW_FILE_MRU_FILE1 + iLast, strMRUShow[iLast]);
+		  // now insert the remaining items in reverse order, starting
+		  // at the next-to-iLast entry and  pushing all the others
+		  // down in the menu (entries thus end up in the correct order)
+		for (int j = iLast - 1 ; j >= 0; iLast--, j--)
+			fileMenu.InsertMenu(IDW_FILE_MRU_FILE1 + iLast,
+			    MF_BYCOMMAND, IDW_FILE_MRU_FILE1 + j,
+			    strMRUShow[j]);
+	}
+	  // refresh the frame menu bar and  leave
+	DrawMenuBar();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+ValidateMRU()                                                 		/*
+	Validate the that the MRU list entries, if there are any, correspond
+	to actual file paths. Remove any that do not.
+*-----------------------------------------------------------------------------*/
+{
+	  // get a copy of the MRU list entries
+	const std::vector<CString>& MRUEntries = GetMRUEntries();
+	  // check them one by one as a valid file path
+	std::vector<CString>::const_iterator it;
+	for (it = MRUEntries.begin(); it != MRUEntries.end(); ++it)
+	{
+		  // check whether the current entry exists
+		CString s = *it;
+		if (_taccess(s, 4) != 0)
+		{
+			  // for the demo, announce removal
+			::MessageBox(NULL, s, _T("Removing invalid MRU entry..."),
+			    MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+			RemoveMRUEntry(s);
+		}
+	}
 }
 
 /*============================================================================*/
@@ -884,7 +1382,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 		switch (LOWORD(wParam))
 		{
 		    case SC_CLOSE:
-			OnFileExit();
+			OnTerminate();
 			break;  // let default process this further
 		}
 	    }

@@ -90,7 +90,7 @@ InitInstance()								/*
 	Here, the About box information, app path, app directory, app name,
 	app exe name, archive file name, help file name and other constants
 	are generated and saved as public data members of this object via the
-	mere declaration of the CAppProlog m_Prolog object in App.h.
+	mere declaration of the CAppGlobal m_AppGlobal object in App.h.
 *-----------------------------------------------------------------------------*/
 {
 	  //Create the Frame Window
@@ -120,8 +120,8 @@ DatInt(const CString &date)                                             /*
 	11 (Dec).
 *-----------------------------------------------------------------------------*/
 {
-	int 	yyyy = _ttoi(date.Mid(7, 4).c_str()),
-		dd   = _ttoi(date.Mid(4, 2).c_str()),
+	int 	yyyy = _ttoi(date.Mid(7, 4)),
+		dd   = _ttoi(date.Mid(4, 2)),
 		mo   = months.Find(date.Mid(0, 3)) / 4;
 	ULONG	ans  = ((yyyy * 100 + mo) * 100) + dd;
 	return  ans;
@@ -222,27 +222,27 @@ WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine,
 		  // Process the exception and quit
 		CString msg = e.what() + (CString)_T("\n") +
 		    e.GetText() + (CString)_T("\nWinMain Goodbye...");
-		::MessageBox(NULL, msg.c_str(), _T("Standard Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		::MessageBox(NULL, msg, _T("Standard Exception"), MB_OK |
+		    MB_ICONSTOP | MB_TASKMODAL);
 	}
 	catch(CString &s)	// catch CString events
 	{
 		CString msg = s + (CString)"\nWinMain Goodbye...";
-		::MessageBox(NULL, msg.c_str(), _T("Registered Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		::MessageBox(NULL, msg, _T("Registered Exception"), MB_OK |
+		    MB_ICONSTOP | MB_TASKMODAL);
 	}
 	catch(LPCTSTR s)        // catch C string events
 	{
 		CString msg = s + (CString)"\nWinMain Goodbye...";
-		::MessageBox(NULL, msg.c_str(), _T("Registered Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		::MessageBox(NULL, msg, _T("Registered Exception"), MB_OK |
+		    MB_ICONSTOP | MB_TASKMODAL);
 	}
 	catch(...)      // catch all other exception events
 	{
 		CString msg = _T("Unregistered exception event.\n")
 		    _T("WinMain Goodbye...");
-		::MessageBox(NULL, msg.c_str(), _T("Unknown Exception"),
-		    MB_OK | MB_ICONSTOP | MB_TASKMODAL);
+		::MessageBox(NULL, msg, _T("Unknown Exception"), MB_OK |
+		    MB_ICONSTOP | MB_TASKMODAL);
 	}
 
 	  // release the semaphore

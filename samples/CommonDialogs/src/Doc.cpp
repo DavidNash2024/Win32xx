@@ -102,26 +102,13 @@ GetLength()								/*
 GetExt()                                                          	/*
 
 	Get the document file extension; if no extension has been set, use the
-	one from the AppProlog object.
+	one from the AppGlobal object.
 *----------------------------------------------------------------------------*/
 {
 	if (m_Doc_file_ext.IsEmpty())
-		SetExt(theAppProlog.GetDocExt());
+		SetExt(theAppGlobal.GetDocExt());
 
 	return m_Doc_file_ext;
-}
-
-
-/*============================================================================*/
-	BOOL CDoc::
-GetFileStatus(const CString& filename)                                  /*
-
-	Return TRUE if the status information for the specified file is
-	successfully obtained; otherwise, FALSE. On success, deposit the status
-	of the file in the m_Status structure.
-*----------------------------------------------------------------------------*/
-{
-	return (::_tstat(filename.c_str(), &m_Status) == 0);
 }
 
 /*============================================================================*/
@@ -129,11 +116,11 @@ GetFileStatus(const CString& filename)                                  /*
 GetFilter()                                                       	/*
 
 	Get the document file dialog filter; if no filter has been set, use the
-	one from the AppProlog object.
+	one from the AppGlobal object.
 *----------------------------------------------------------------------------*/
 {
 	if (m_Doc_file_filter.IsEmpty())
-		SetFilter(theAppProlog.GetFileFilter());
+		SetFilter(theAppGlobal.GetFileFilter());
 
 	return m_Doc_file_filter;
 }
@@ -182,28 +169,19 @@ GetWidth()								/*
 OnCloseDoc()								/*
 
 	Perform any cleanup necessary to close the document, except for
-	serialization chores, which are performed separately, in the Serialize()
+	serialization chores, which are performed separately in the Serialize()
 	member.
 *-----------------------------------------------------------------------------*/
 {
-	  // for this demo, just remove an MRU entry, and open the top one,
-	  // if any
-	CString s = theFrame.AccessMRUEntry(0);
-	theFrame.RemoveMRUEntry(s.c_str());
-	if (theFrame.GetMRUSize() > 0)
-	{
-		s = theFrame.AccessMRUEntry(0);
-		OnOpenDoc(s);
-	}
-	theFrame.UpdateToolbarMenuStatus();
-
-	m_Doc_is_open = FALSE;
-	m_Doc_length = 0;
-	if (m_Doc_file.GetHandle() == INVALID_HANDLE_VALUE)
+	  // save the document, or if the document cannot be saved, just exit
+	if (!OnSaveDoc())
 		return FALSE;
 
 	// TODO: clean up as needed to close the document
 	
+	  // mark the document is not open, with zero length
+	m_Doc_is_open = FALSE;
+	m_Doc_length = 0;
 	return m_Doc_file.Close();
 }
 
@@ -211,129 +189,30 @@ OnCloseDoc()								/*
 	void CDoc::
 OnCopy()								/*
 
-	Copy the currently selected text in document into the clipboard.
+	Copy the currently selected items in document into the clipboard.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app dependent function
+	// TODO: app-dependent function
 }
 
 /*============================================================================*/
 	void CDoc::
 OnCut()									/*
 
-	Cut the selected text from the document into the clipboard.
+	Cut the selected items from the document into the clipboard.
 *-----------------------------------------------------------------------------*/
 {
-
-	// TODO: Add code here to implement this member
-	
-	// for this demo, add 5 strings to the MRU list and open the topmost one
-	theFrame.EmptyMRUList();
-	theFrame.AddMRUEntry(_T("This is MRU 5"));
-	theFrame.AddMRUEntry(_T("This is MRU 4"));
-	theFrame.AddMRUEntry(_T("This is MRU 3"));
-	theFrame.AddMRUEntry(_T("This is MRU 2"));
-	theFrame.AddMRUEntry(_T("This is MRU 1 and it is very, very, very, ")
-	    _T("very, very, very, very, very, very, very, very, very, very, ")
-	    _T("very, very, very long"));
-	OnOpenDoc(theFrame.AccessMRUEntry(0));
- 	theFrame.UpdateToolbarMenuStatus();
+	// TODO: Add app-dependent
 }
 
 /*============================================================================*/
 	void CDoc::
 OnDelete()								/*
 
-	Delete the currently selected text from the document.
+	Delete the currently selected items from the document.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app dependent function
-}
-
-/*============================================================================*/
-	void CDoc::
-OnDocOpenDialog()             						/*
-
-	Display the open file dialog to input the document file name and to
-	open the corresponding document if that file exists.
-*-----------------------------------------------------------------------------*/
-{
-	MyFileDialog fd(TRUE, _T(""), _T(""),
-	    OFN_HIDEREADONLY |
-	    OFN_SHOWHELP |
-	    OFN_EXPLORER |
-	    OFN_NONETWORKBUTTON |
-	    OFN_FILEMUSTEXIST |
-	    OFN_PATHMUSTEXIST |
-	    OFN_ENABLEHOOK    |
-	    OFN_ENABLESIZING,
-	    GetFilter());
-	fd.SetBoxTitle(_T("Open document file..."));
-	fd.SetDefExt(theDoc.GetExt());
-	if (fd.DoModal(theApp.GetMainWnd()) == IDOK)
- 	{
- 		CString fname = fd.GetPathName();
-		if (fname.IsEmpty())
-		    return;
-		    
-		  // for the demo, show the file chosen
-		CString msg;
-		msg.Format(_T("File chosen: '%s'"),
-		    fd.GetFileName().c_str());
-		::MessageBox(NULL, msg, _T("Information"),
-		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-		    
-		  // open the document based on this name
-		OnOpenDoc(fname);
-		if (IsOpen())
-			theFrame.AddMRUEntry(fname);
-	}
-	theFrame.UpdateToolbarMenuStatus();
-}
-
-/*============================================================================*/
-	void CDoc::
-OnFileNewDialog()     							/*
-
-	Open a new document based on an input file name
-*-----------------------------------------------------------------------------*/
-{
-	MyFileDialog fd(TRUE, _T(""), _T(""),
-	    OFN_HIDEREADONLY |
-	    OFN_SHOWHELP |
-	    OFN_EXPLORER |
-	    OFN_NONETWORKBUTTON |
-	    OFN_ENABLESIZING,
-	    GetFilter());
-	fd.SetBoxTitle(_T("New document file..."));
-	fd.SetDefExt(GetExt());
-	if (fd.DoModal(theApp.GetMainWnd()) == IDOK)	
- 	{
- 		CString fname = fd.GetPathName();
-
-		  // for the demo, show the file chosen
-		CString msg;
-		msg.Format(_T("File chosen: '%s'"), fname.c_str());
-		::MessageBox(NULL, msg, _T("Information"),
-		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-
-		OnNewDoc(fname);
-		if (IsOpen())
-			theFrame.AddMRUEntry(fname);
-	}
-}
-
-/*============================================================================*/
-	void CDoc::
-OnFindDialog()								/*
-
-	Initiate the find non-modal dialog box and the messages sent to the
-	OnFindReplace() method by the main window message loop.
-*-----------------------------------------------------------------------------*/
-{
-	m_FindRepDialog.SetBoxTitle(_T("Find a string..."));
-	m_FindRepDialog.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
-	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)theApp.GetMainWnd());
+	// TODO: app-dependent function
 }
 
 /*============================================================================*/
@@ -409,7 +288,6 @@ OnFRReplaceAll(MyFindReplaceDialog* pFR)           			/*
 		updown = pFR->SearchDown() ? _T("down") : _T("up");
 
 	// TODO: enter code to make replacements
-	
 	msg.Format(_T("Find all occurrences of '%s'.\n")
 		   _T("replace all occurrences with: '%s'.\n")
 		   _T("Match case? \t\t%s\n")
@@ -436,7 +314,6 @@ OnFRReplaceCurrent(MyFindReplaceDialog* pFR)     			/*
 		updown = pFR->SearchDown() ? _T("down") : _T("up");
 		
 	// TODO: enter code to make the replacement
-	
 	msg.Format(_T("Find next occurrence of '%s'.\n")
 		   _T("replace this occurrences with '%s'.\n")
 		   _T("Match case? \t\t%s\n")
@@ -468,20 +345,18 @@ OnNewDoc(const CString& filename)                                       /*
 	to do so, or FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-	if (GetFileStatus(filename))
-	{
-		::MessageBox(NULL, _T("That document file already exists."),
-		    _T("Error"), MB_OK | MB_ICONERROR |
-		    MB_TASKMODAL);
-		return FALSE;
-	}
+//	UNREFERENCED_PARAMETER(filename); // this fails on const parameters
+	  // dummy for above: TODO: remove when filename is used elsewhere
+	{size_t i_07_04_1776 = sizeof(filename); i_07_04_1776 = i_07_04_1776;}
+
+	  // if there is a document currently open, save and close it
 	if (IsOpen())
 		OnCloseDoc();
 
 	// TODO: create the document using this filename
 	
 	m_Doc_is_open = TRUE; // for the demo
-
+	m_Doc_is_dirty = FALSE;
 	return IsOpen();
 }
 
@@ -491,35 +366,50 @@ OnOpenDoc(const CString &file)						/*
 
 	Open the document from the given file. Previous state parameters that
 	were serialized in the prior execution will have already been loaded.
+	Return TRUE if file is open on return, FALSE if not.
 *-----------------------------------------------------------------------------*/
 {
-	if (file.CompareNoCase(m_Doc_file.GetFilePath()) == 0)
+	CString current_path = m_Doc_file.GetFilePath(),
+		msg;
+	if (file.CompareNoCase(current_path) == 0)
 	{
-		::MessageBox(NULL, _T("That document file is already open."),
-		    _T("Information"), MB_OK | MB_ICONINFORMATION |
-		    MB_TASKMODAL);
-		return FALSE;
+		msg.Format(_T("Document file\n    '%s'\nis already open."),
+		    current_path.c_str());
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		  // not deemed a failure, as the file is open, as specified
+		return TRUE;
 	}
+	  // if there is currently a document open, close it
 	if (IsOpen())
 		OnCloseDoc();
-	  // TODO: try to open the file and check that it opened
 
-	  // here we just have some dummy code that announces the file name
-	  // we are trying to open
-	CString msg = (CString)"Trying to open file:\n" + file;
-	::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
-	    MB_TASKMODAL);
-	if (file.IsEmpty() || !GetFileStatus(file)) // test for unopen file
+	  // regardless of whether it opens, it is not dirty
+	m_Doc_is_dirty = FALSE;
+	  // try to open (it should, as we know it exists, but still ...)
+	try
 	{
-		CString s;
-		s.Format(_T("Unable to open file\n    %s"), file.c_str());
-		::MessageBox(NULL, s, _T("Error"), MB_OK | MB_ICONEXCLAMATION |
+		  // for the demo, announce the path being opened
+		msg = (CString)"Now opening document file:\n    " + file;
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		m_Doc_file.Open(file, OPEN_EXISTING);
+		  // if there was no throw, the document opened
+		m_Doc_is_open = TRUE;
+		  // for the demo, annouce success
+		msg = (CString)"File opened successfully:\n    " + file;
+		::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
 		    MB_TASKMODAL);
+	}
+	catch (...)
+	{
+		msg.Format(_T("Document file\n    '%s'\ndid not open."),
+		    file.c_str());
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
 		m_Doc_is_open = FALSE;
 		return FALSE;
 	}
-	
-	m_Doc_is_open = TRUE;
 	return TRUE;
 }
 
@@ -592,85 +482,36 @@ OnRedo()								/*
 }
 
 /*============================================================================*/
-	void CDoc::
-OnReplaceDialog()							/*
-
-	Invoke the find-replace dialog.  Note: the replace dialog box does not
-	have the direction up-down box that the find dialog box has.  This is
-	by design.
-*-----------------------------------------------------------------------------*/
-{
-	m_FindRepDialog.SetBoxTitle(_T("Find, then Replace"));
-	m_FindRepDialog.Create(FALSE, _T("Initial Text"), _T("Replace Text"),
-	    FR_DOWN | FR_SHOWHELP | FR_ENABLEHOOK, (HWND)theApp.GetMainWnd());	
-}
-
-/*============================================================================*/
 	BOOL CDoc::
 OnSaveDoc()								/*
 
 	Save current values of the document back into the currently named
-	source file. Return TRUE if able to do so, FALSE otherwise.
+	source file. Return TRUE if the document was not open or not dirty, or
+	is saved properly, or FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-	// get the file name
-	if (!IsOpen() || m_Doc_file.GetFileName().IsEmpty() ||
-	    m_Doc_file.GetHandle() == INVALID_HANDLE_VALUE)
-		return FALSE;
+	  // if no document is open or, if open, not dirty
+	if (!IsOpen() || !m_Doc_is_dirty)
+		return TRUE;
 
-	// TODO: restore proper file saving function
-
+	  // document will not be dirty on exit, whatever its current state
 	m_Doc_is_dirty = FALSE;
-	return TRUE;
-}
 
-/*============================================================================*/
-	BOOL CDoc::
-OnSaveDocAs()								/*
-
-	Save the current document into a document based on the file named in
-	a file dialog box and make that file the current document. Return TRUE
-	if able to do so, FALSE otherwise.
-*-----------------------------------------------------------------------------*/
-{
-	if (!IsOpen())
-		return FALSE;
-
-	MyFileDialog fd(FALSE, _T(""), _T(""),
-	    OFN_HIDEREADONLY |
-	    OFN_OVERWRITEPROMPT |
-	    OFN_SHOWHELP |
-	    OFN_EXPLORER |
-	    OFN_ENABLEHOOK |	
-	    OFN_NONETWORKBUTTON,
-	    GetFilter());
-
-	fd.SetBoxTitle(_T("Save document file as"));
-	if (fd.DoModal(theApp.GetMainWnd()) == IDOK)
- 	{	  // save the file
-		CString fname = fd.GetPathName();
-		  // test whether file name exists
-		if (fname.IsEmpty() || !GetFileStatus(fname))
-			return FALSE;
-
-		  // if the file name is the same as that opened
-		if (fname.CompareNoCase(m_Doc_file.GetFilePath()))
-			return OnSaveDoc();
-
-		// TODO: save the document as being based on fname
-
-		  // for the demo, show the file chosen
-		CString msg;
-		msg.Format(_T("File to save: '%s'."), fname.c_str());
+	  // make sure the file is ok to save
+	if (m_Doc_file.GetFileName().IsEmpty() ||
+	    m_Doc_file.GetHandle() == INVALID_HANDLE_VALUE)
+	{
+		CString msg = _T("Attempt to save an invalid file.");
 		::MessageBox(NULL, msg, _T("Information"),
 		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-
-		m_Doc_is_dirty = FALSE;
-		if (IsOpen())
-			theFrame.AddMRUEntry(fname);
-		return TRUE;
+		m_Doc_is_open = FALSE;
+		m_Doc_length = 0;
+		return FALSE;
 	}
-	return FALSE;
+
+	// TODO: save the document into its file
+
+	return TRUE;
 }
 
 /*============================================================================*/

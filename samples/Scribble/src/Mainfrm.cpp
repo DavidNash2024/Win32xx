@@ -266,10 +266,6 @@ void CMainFrame::OnInitialUpdate()
 	{
 		GetDoc().FileOpen(args[1]);
 	}
-
-#ifdef UNICODE
-	MessageBox(_T("Unicode App"), _T("Message"), MB_OK);
-#endif
 }
 
 void CMainFrame::OnPenColor()
