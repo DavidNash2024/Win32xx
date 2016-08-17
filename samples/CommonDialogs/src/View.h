@@ -66,6 +66,8 @@
 #include "CColorChoice.h"
 #include "MyFontDlg.h"
 
+class CMainFrame;
+
 /*******************************************************************************
 
 	Local constants and types                               	*/
@@ -119,6 +121,7 @@ CView : public CDialog							/*
 		virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
 		virtual BOOL 	OnInitDialog();
 		virtual void 	OnOK();
+		     CMainFrame& ParentFrame() {return *m_pFrame;}
 		virtual void 	PreCreate(CREATESTRUCT &cs);
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
 		virtual	void 	Serialize(CArchive &ar);
@@ -126,11 +129,12 @@ CView : public CDialog							/*
 	private:
 		  // private data members
 //		CResizer m_Resizer;
-		CColorChoice    m_ColorChoice; // the control color choice
-		CToolTip        m_ToolTip;	  // form tool tips
-		MyFontDialog  	m_FontChoice;	  // edit control font
-       		UINT	     	m_cWd,   	  // font average width
-			    	m_cHt;   	  // font average height
+		CMainFrame     *m_pFrame;	// parent frame
+		CColorChoice    m_ColorChoice;	// the control color choice
+		CToolTip        m_ToolTip;	// form tool tips
+		MyFontDialog  	m_FontChoice;	// edit control font
+       		UINT	     	m_cWd,   	// font average width
+			    	m_cHt;   	// font average height
 		  // controls on the view
 		CEdit        	m_Edit;
 		CustomButton 	m_OK;

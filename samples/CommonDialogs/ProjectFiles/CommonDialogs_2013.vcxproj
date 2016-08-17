@@ -54,10 +54,10 @@
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\App.h" />
+    <ClInclude Include="..\src\AppGlobal.h" />
+    <ClInclude Include="..\src\AppGlobalRC.h" />
     <ClInclude Include="..\src\AppHelp.h" />
     <ClInclude Include="..\src\AppHelpRC.h" />
-    <ClInclude Include="..\src\AppProlog.h" />
-    <ClInclude Include="..\src\AppPrologRC.h" />
     <ClInclude Include="..\src\CColorChoice.h" />
     <ClInclude Include="..\src\ColorDefs.h" />
     <ClInclude Include="..\src\CustomButton.h" />
@@ -65,7 +65,6 @@
     <ClInclude Include="..\src\ListBoxDlg.h" />
     <ClInclude Include="..\src\ListBoxDlgRC.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
-    <ClInclude Include="..\src\MRUFrame.h" />
     <ClInclude Include="..\src\MyFileDlg.h" />
     <ClInclude Include="..\src\MyFindReplaceDlg.h" />
     <ClInclude Include="..\src\MyFontDlg.h" />
@@ -77,8 +76,8 @@
     <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="..\src\AppGlobal.rc" />
     <ResourceCompile Include="..\src\AppHelp.rc" />
-    <ResourceCompile Include="..\src\AppProlog.rc" />
     <ResourceCompile Include="..\src\ListBoxDlg.rc" />
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
@@ -89,14 +88,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\App.cpp" />
+    <ClCompile Include="..\src\AppGlobal.cpp" />
     <ClCompile Include="..\src\AppHelp.cpp" />
-    <ClCompile Include="..\src\AppProlog.cpp" />
     <ClCompile Include="..\src\CColorChoice.cpp" />
     <ClCompile Include="..\src\CustomButton.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
     <ClCompile Include="..\src\ListBoxDlg.cpp" />
     <ClCompile Include="..\src\Mainfrm.cpp" />
-    <ClCompile Include="..\src\MRUFrame.cpp" />
     <ClCompile Include="..\src\MyFontDlg.cpp" />
     <ClCompile Include="..\src\StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

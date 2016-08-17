@@ -1,4 +1,4 @@
-/* (21-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppPrologRC.h) *
+/* (21-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppGlobalRC.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,8 +7,8 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description:  Resource Definitions used by the CAppProlog
-	class for resources defined in CAppProlog.rc. Adapted to use the Win32++
+	Contents Description:  Resource Definitions used by the CAppGlobal
+	class for resources defined in CAppGlobal.rc. Adapted to use the Win32++
 	Windows interface classes, Copyright (c) 2005-2016 David Nash, under
 	permissions granted therein.
 
@@ -75,7 +75,7 @@
 
 ********************************************************************************
 
-	Definition of CAppProlog Resource ID values
+	Definition of CAppGlobal Resource ID values
 
 *******************************************************************************/
 

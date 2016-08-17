@@ -1,4 +1,4 @@
-/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppProlog.cpp) *
+/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppGlobal.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,7 +7,7 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Implementation of the CAppProlog class, which is
+	Contents Description: Implementation of the CAppGlobal class, which is
 	used by the CApp class in an App/Frame/Doc/View architecture for
 	supplying a set of commonly needed items within applications. It is
 	based on the Win32++ Windows interface classes, Copyright (c) 2005-2015
@@ -37,7 +37,7 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Usage: The declaration of an object of the AppProlog class within the
+	Usage: The declaration of an object of the AppGlobal class within the
 	CApp class automatically creates a number of program resources of
 	possible use in an application. These are retrieved at any time using
 	the functions
@@ -55,8 +55,8 @@
 		CString& GetFileFilter()
 		CString& GetHelpDir()	
 		CString& GetHelpPath()	
-		BOOL     HasHelpFile() 
 		UINT     GetMaxMRU() 
+		BOOL     HasHelpFile()
 
 	Special Conventions:
 
@@ -72,23 +72,24 @@
 
 ********************************************************************************
 
-	Implementation of the CAppProlog class
+	Implementation of the CAppGlobal class
 
 *******************************************************************************/
 
 #include "stdafx.h"
 #include "default_resource.h"
+#include <io.h>
 
-#include "AppProlog.h"
-#include "AppPrologRC.h"
+#include "AppGlobal.h"
+#include "AppGlobalRC.h"
 
 /*******************************************************************************
 
-	CAppProlog class
+	CAppGlobal class
 
 *=============================================================================*/
-	CAppProlog::
-CAppProlog()                                                            /*
+	CAppGlobal::
+CAppGlobal()                                                            /*
 
 	Here are initialized public data strings containing the AboutBox
 	information, the app path, the app directory, the app name, the
@@ -100,21 +101,10 @@ CAppProlog()                                                            /*
 	    FILENAME_MAX);
 	m_sAppPath.ReleaseBuffer();
 	CFile f; // no file opened here, just using the name parsing parts
-	f.SetFilePath(m_sAppPath.c_str());
+	f.SetFilePath(m_sAppPath);
 	m_sAppDir   = f.GetFileDirectory();
 	m_sAppTitle = f.GetFileTitle();
 	m_sAppName  = f.GetFileNameWOExt();
-
-	  // the help file path name
-	m_sHelpDir  = m_sAppDir;
-	m_sHelpPath = m_sHelpDir + _T("\\") + m_sAppName +
-	    LoadString(IDS_HELP_FILE_EXT);
-
-	  // determine the availability of the help file
-	m_bHasHelpFile = (_taccess(m_sHelpPath.c_str(), 0x04) == 0);
-	  // convey the a help file name to the AppHelp object (empty if none)
-	if (!m_bHasHelpFile)
-		m_sHelpPath.Empty();
 
 	  // locate the archive file
 	m_sArcvDir = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) +
@@ -124,12 +114,24 @@ CAppProlog()                                                            /*
  	m_sArcvPath  = m_sArcvDir + _T("\\") + m_sAppName +
 	     LoadString(IDS_ARCHIVE_FILE_EXT);
 
+	  // the help file path name
+	m_sHelpDir  = m_sArcvDir; 
+	m_sHelpPath = m_sHelpDir + _T("\\") + m_sAppName +
+	    LoadString(IDS_HELP_FILE_EXT);
+
+	  // determine the availability of the help file
+	m_bHasHelpFile = (_taccess(m_sHelpPath, 0x04) == 0);
+	  // convey the a help file name to the AppHelp object (empty if none)
+	if (!m_bHasHelpFile)
+		m_sHelpPath.Empty();
+
 	  // the document default extension
 	m_sDocExt     = LoadString(IDS_DOC_DEFAULT_EXT);
 	m_sFileFilter = LoadString(IDS_FILE_FILTER);
 	
-	  // the maximum allowed number of MRU entries
-	m_nMaxMRUSlots = _ttoi(LoadString(IDS_MAX_MRU_ENTRIES).c_str());
+	  // the maximum allowed number of MRU entries (limited to be under 16
+	  // by Win32++)
+	m_nMaxMRUSlots = MIN(_ttoi(LoadString(IDS_MAX_MRU_ENTRIES)), 16);
 
 	  // make Win32++ version string
 	UINT ver = _WIN32XX_VER;
@@ -155,8 +157,8 @@ CAppProlog()                                                            /*
 }
 
 /*============================================================================*/
-	CAppProlog::
-~CAppProlog()                                                            /*
+	CAppGlobal::
+~CAppGlobal()                                                            /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -167,7 +169,7 @@ CAppProlog()                                                            /*
 	Static functions
 
 *=============================================================================*/
-	CString CAppProlog::
+	CString CAppGlobal::
 MakeAppDataPath(const CString& subpath)					/*
 
 	Return a string consisting of the APPDATA environmental path with the

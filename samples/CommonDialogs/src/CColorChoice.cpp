@@ -127,7 +127,7 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 	  // prepare the list box dialog: load the color table choice items
 	m_LBDlg.ClearList();
 	for (UINT i = 0; i < GetTableSize(); i++)
-		m_LBDlg.AddListItem(m_ColorTable[i].usage.c_str());
+		m_LBDlg.AddListItem(m_ColorTable[i].usage);
 	  // Make the control be modal so the choice is returned at
 	  // termination. Further, name the parent that cannot be accessed
 	  // during the modal operation.

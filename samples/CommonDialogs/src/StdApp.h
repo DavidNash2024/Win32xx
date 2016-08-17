@@ -75,8 +75,8 @@
 
 #include "Resource.h"
 #include "ListBoxDlgRC.h"
-#include "AppPrologRC.h"
-#include "AppProlog.h"
+#include "AppGlobalRC.h"
+#include "AppGlobal.h"
 #include "ColorDefs.h"
 #include "AppHelpRC.h"
 #include "AppHelp.h"

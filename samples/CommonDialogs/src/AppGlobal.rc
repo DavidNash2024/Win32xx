@@ -1,4 +1,4 @@
-/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (AppProlog.rc) *
+/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (AppGlobal.rc) *
 ********************************************************************************
 |                                                                              |
 |                     Copyright (c) 2016, Robert C. Tausworthe                 |
@@ -7,8 +7,8 @@
 |                                                                              |
 *==============================================================================*
 
-	Contents: This file defines the CAppProlog resources for a base
-	application. CAppProlog class requires a set of resources pertaining to
+	Contents: This file defines the CAppGlobal resources for a base
+	application. CAppGlobal class requires a set of resources pertaining to
 	the particular application being built. Usage of this capability thus
 	requires that this file be copied into the src space of the application
 	files and edited with application-secific values.  This is consistent
@@ -51,12 +51,12 @@
 
 ********************************************************************************
 
-	AppProlog resource declarations
+	AppGlobal resource declarations
 
 *******************************************************************************/
 
 #include "windows.h"
-#include "AppPrologRC.h"
+#include "AppGlobalRC.h"
 
 STRINGTABLE
 {	  // app-specific program values

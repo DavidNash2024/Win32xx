@@ -1,4 +1,4 @@
-/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (AppProlog.h) *
+/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (AppGlobal.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,7 +7,7 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the CAppProlog class, which is
+	Contents Description: Declaration of the CAppGlobal class, which is
 	used by the CApp class in an App/Frame/Doc/View architecture for
 	providing a set of commonly needed items in applications using the
 	Win32++ Windows interface classes, Copyright (c) 2005-2015 David Nash,
@@ -51,18 +51,18 @@
 
 ********************************************************************************
 
-	Declaration of the CAppProlog class
+	Declaration of the CAppGlobal class
 
 *******************************************************************************/
 
 #ifndef APP_CPROLOG_H
 #define APP_CPROLOG_H
 
-class CAppProlog
+class CAppGlobal
 {
 	public:
-		CAppProlog();
-		~CAppProlog();
+		CAppGlobal();
+		~CAppGlobal();
 
 		CString& GetAboutBoxInfo() {return m_sAboutBoxInfo;}
 		CString& GetAppDir()       { return m_sAppDir;}
@@ -70,7 +70,10 @@ class CAppProlog
 		CString& GetAppPath()      { return m_sAppPath;}
 		CString& GetAppTitle()     { return m_sAppTitle;}
 		CString& GetArcvDir()      { return m_sArcvDir;}
-		CString& GetArcvPath()     { return m_sArcvPath;}
+		CString& GetArcvPath()     
+		{ 
+			return m_sArcvPath;
+		}
 		CString& GetCompiler()     { return m_sCompiler;}
 		CString& GetCompileDate()  { return m_sCompiled_on;}
 		CString& GetDocExt()       { return m_sDocExt;}

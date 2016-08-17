@@ -83,6 +83,8 @@ MyPrinter : public CPrintDialog                        			/*
 		void SetPDTitle (LPCTSTR title) {m_sPDTitle  = title;}
 
 	protected:
+		friend class MyPageSetup;
+		
 		virtual void OnHelpButton()
 		// Send the printer context help identifier to the window whose
 		// handle is the object's hwndOwner.
@@ -107,7 +109,7 @@ MyPrinter : public CPrintDialog                        			/*
 
 		virtual void OnCancel()
 		{
-			// for now just show the dialog as cancelled
+			  // for now just announce the dialog as cancelled
 			::MessageBox(NULL, _T("OnCancel"), _T("Information"),
 			MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 		}
@@ -136,6 +138,8 @@ MyPrinter : public CPrintDialog                        			/*
 				    coll.c_str(), range.c_str(), select.c_str());
 				::MessageBox(NULL, rpt, _T("Information"),
 				    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+
+			// TODO: print the document
 		}
 
 
@@ -164,6 +168,8 @@ MyPageSetup : public CPageSetupDialog                            	/*
 		void SetPSDTitle(LPCTSTR title) {m_sPSDTitle = title;}
 
 	protected:
+		friend class MyPrinter;
+		
 		virtual void OnHelpButton()
 		//  Send the printer or page setup context help identifier to
 		// the window whose handle is the object's hwndOwner,
@@ -189,13 +195,14 @@ MyPageSetup : public CPageSetupDialog                            	/*
 
 		virtual void OnCancel()
 		{
-			// for now just show the dialog as cancelled
+			// for now just announce the dialog as cancelled
 			::MessageBox(NULL, _T("OnCancel"), _T("Information"),
 			MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 		}
 
 		virtual void OnOK()
 		{
+			  // for now, just show the selected page parameters
 			CSize papersize = GetPaperSize();
 			CRect margins, minMargins;
 			GetMargins(margins, minMargins);
@@ -218,6 +225,8 @@ MyPageSetup : public CPageSetupDialog                            	/*
 			    minMargins.right, minMargins.bottom, units, orient);
 			::MessageBox(NULL, rpt, _T("Information"),
 			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+
+			// TODO: store the page parameters for actual use
 		}
 
 		virtual void SetWindowTitle() const

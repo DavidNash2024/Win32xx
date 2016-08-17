@@ -25,18 +25,13 @@
     <ClCompile Include="..\src\App.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AppProlog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\AppHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ListBoxDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MRUFrame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
+    <ClCompile Include="..\src\AppGlobal.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Mainfrm.h">
@@ -207,9 +202,6 @@
     <ClInclude Include="..\..\..\include\wxx_printdialogs.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AppProlog.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\AppHelp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -222,9 +214,8 @@
     <ClInclude Include="..\src\ListBoxDlgRC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\MRUFrame.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
+    <ClInclude Include="..\src\AppGlobal.h" />
+    <ClInclude Include="..\src\AppGlobalRC.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">
@@ -261,5 +252,6 @@
     <ResourceCompile Include="..\src\ListBoxDlg.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+    <ResourceCompile Include="..\src\AppGlobal.rc" />
   </ItemGroup>
 </Project>

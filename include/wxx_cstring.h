@@ -1708,6 +1708,8 @@ namespace Win32xx
 	{
 		CString AppData;
 
+#ifndef _WIN32_WCE
+
 		HMODULE hShell = ::LoadLibrary(_T("Shell32.dll"));
 		if (hShell)
 		{
@@ -1737,6 +1739,8 @@ namespace Win32xx
 
 			FreeLibrary(hShell);
 		}
+
+#endif // _WIN32_WCE
 
 		return AppData;
 	}

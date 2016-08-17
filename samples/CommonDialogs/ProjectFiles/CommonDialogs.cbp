@@ -184,18 +184,18 @@
 		</VirtualTargets>
 		<Unit filename="../src/App.cpp" />
 		<Unit filename="../src/App.h" />
+		<Unit filename="../src/AppGlobal.cpp" />
+		<Unit filename="../src/AppGlobal.h" />
+		<Unit filename="../src/AppGlobal.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/AppGlobalRC.h" />
 		<Unit filename="../src/AppHelp.cpp" />
 		<Unit filename="../src/AppHelp.h" />
 		<Unit filename="../src/AppHelp.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/AppHelpRC.h" />
-		<Unit filename="../src/AppProlog.cpp" />
-		<Unit filename="../src/AppProlog.h" />
-		<Unit filename="../src/AppProlog.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
-		<Unit filename="../src/AppPrologRC.h" />
 		<Unit filename="../src/CColorChoice.cpp" />
 		<Unit filename="../src/CColorChoice.h" />
 		<Unit filename="../src/ColorDefs.h" />
@@ -209,8 +209,6 @@
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/ListBoxDlgRC.h" />
-		<Unit filename="../src/MRUFrame.cpp" />
-		<Unit filename="../src/MRUFrame.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyFileDlg.h" />

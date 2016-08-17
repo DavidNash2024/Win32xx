@@ -59,12 +59,10 @@
 
 /*******************************************************************************
 
-	Intra-Class Communication definitions                           */
+	Shortened class reference definitions                           */
 	
 #define theApp          TheApp()
-#define theAppProlog	theApp.GetAppProlog()
-#define theDoc          theFrame.TheDoc()
-#define theFrame        theApp.TheFrame()
+#define theAppGlobal	theApp.GetAppGlobal()
 
 /*============================================================================*/
 	class 
@@ -78,11 +76,10 @@ CApp : public CWinApp							/*
 		~CApp(){}
 
 		BOOL 	    InitInstance(); // called from (CWinApp) Run()
-		CMainFrame& TheFrame()    { return m_Frame;}
 		int	    GetCmdShow()  {return m_nCmdShow;}
-		CAppProlog  GetAppProlog() { return m_Prolog;};
-		CString&    GetArcvFile() {return m_Prolog.GetArcvPath();}
-		CString&    GetHelpFile() {return m_Prolog.GetHelpPath();}
+		CAppGlobal  GetAppGlobal() { return m_AppGlobal;};
+		CString&    GetArcvFile() {return m_AppGlobal.GetArcvPath();}
+		CString&    GetHelpFile() {return m_AppGlobal.GetHelpPath();}
 		void	    SetCmdShow(int c) {m_nCmdShow = c;}
 
 	protected:
@@ -100,7 +97,7 @@ CApp : public CWinApp							/*
 			   m_sArcvFile;  // initialization archive file name
 		int        m_nCmdShow;   // WinMain() entry nCmdShow argument
 		CMainFrame m_Frame;      // the main frame object
-		CAppProlog m_Prolog;
+		CAppGlobal m_AppGlobal;
 		
 		  // static data
 		static ULONG   DatInt(const CString &);

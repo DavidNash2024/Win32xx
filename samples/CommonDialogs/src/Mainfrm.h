@@ -98,7 +98,6 @@ NoResizeGripperStatusBar : public CStatusBar                            /*
 
 #include "View.h"
 #include "Doc.h"
-#include "MRUFrame.h"
 #include "AppHelp.h"
 
 /*******************************************************************************
@@ -110,7 +109,7 @@ enum ControlBars {toolbar, mainmenu, both};
 
 /*============================================================================*/
 	class 
-CMainFrame : public CMRUFrame						/*
+CMainFrame : public CFrame						/*
 
 	This application's mainframe class, a pattern for developing new apps.
 *-----------------------------------------------------------------------------*/
@@ -120,31 +119,44 @@ CMainFrame : public CMRUFrame						/*
 		virtual 	~CMainFrame(void){}
 		
 			BOOL	DoContextHelp(WPARAM wParam);
+		virtual void    EmptyMRUList();
 		virtual BOOL    EngageContextHelp();
 			AppHelp& GetAppHelp() {return m_AppHelp;}
+		virtual UINT    GetMRUSize() { return GetMRUEntries().size();}
 		virtual CStatusBar& GetStatusBar() const
 				{ return const_cast<NoResizeGripperStatusBar&>
 				  (m_NoResizeGripperStatusBar); }
+		virtual void	RemoveMRUEntry(LPCTSTR szMRUEntry)
+				    {CFrame::RemoveMRUEntry(szMRUEntry);}
 			void    SetSBBkColor(COLORREF clr)
 				    { GetStatusBar().SendMessage(SB_SETBKCOLOR,
 				      0, (LPARAM)clr);}
-		virtual CDoc&   TheDoc() { return m_Doc;}
 		virtual void 	UpdateToolbarMenuStatus(void);
 
-		  // public static data members
-
 	protected:
+		virtual void    ConnectAppHelp();
+		virtual void 	SetMRULimit(UINT nMaxMRU = 0);
 		virtual void    LoadPersistentData();
+		virtual void    OnColorChoice();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual int  	OnCreate(CREATESTRUCT& rcs);
-		virtual void    OnColorChoice();
-		virtual void 	OnFileExit(void);
+		virtual void    OnCut();
+		virtual void    OnEditFind();
+		virtual void    OnEditReplace();
+		virtual void    OnFileClose();
+		virtual void    OnFileNew();
+		virtual void    OnFileOpen();
 		virtual BOOL 	OnFileOpenMRU(UINT);
+		virtual void    OnFilePageSetup();
+		virtual void    OnFilePreview();
+		virtual void    OnFilePrint();
+		virtual void    OnFileSaveAs();
 		virtual void    OnFontChoice();
 		virtual void    OnInitialUpdate(void);
 		virtual void 	OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
+		virtual void 	OnTerminate(void);
 		virtual void 	PreCreate(CREATESTRUCT& cs);
 		virtual BOOL 	SaveRegistrySettings(void);
 		virtual void	Serialize(CArchive &ar);
@@ -156,8 +168,9 @@ CMainFrame : public CMRUFrame						/*
 		virtual void    SetStatusbarMsg(CString);
 		virtual BOOL 	SetThemeColors();
 		virtual void    SetupToolBar(void);
-		virtual void    ConnectAppHelp();
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
+		virtual void 	UpdateMRUMenu();
+		virtual void	ValidateMRU();
 
 	private:
 		  // private data members
@@ -167,10 +180,12 @@ CMainFrame : public CMRUFrame						/*
                            m_win_y,           // serialized window y position
                            m_width,           // serialized window width
                            m_height;          // serialized window height
+		UINT	   m_nMaxMRU;	      // maximum MRU entries, this app
 		HCURSOR    m_hCursor;         // current cursor shape
 		CBitmap    m_colorbmp;        // for the color choice menuitem
-		AppHelp  	   m_AppHelp; // the context help object
+		AppHelp    m_AppHelp; // the context help object
 		WINDOWPLACEMENT    m_Wndpl;   // window placement information
+		MyFindReplaceDialog m_FindRepDialog;  // find-replace dialog
 		NoResizeGripperStatusBar m_NoResizeGripperStatusBar;
 };
 /*------------------------------------------------------------------------------*/
