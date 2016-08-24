@@ -54,7 +54,7 @@ int main()
 	{
 		Server.Accept(Client, NULL, NULL);
 	}
-	while (SOCKET_ERROR == Client.GetSocket());
+	while (SOCKET_ERROR == (int)Client.GetSocket());
 
 	cout << "Client connected\n";
 
