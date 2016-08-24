@@ -60,9 +60,9 @@ namespace Win32xx
 			shareDenyNone =     0x0040,	// No sharing restrictions.
 			modeRead =          0x0100,	// Requests read access only.
 			modeWrite =         0x0200,	// Requests write access only.
-			modeReadWrite =     0x0300	// Requests read and write access.	
+			modeReadWrite =     0x0300	// Requests read and write access.
 		};
-	
+
 		CFile();
 		CFile(HANDLE hFile);
 		CFile(LPCTSTR pszFileName, UINT nOpenFlags);
@@ -121,7 +121,7 @@ namespace Win32xx
 	inline CFile::CFile(LPCTSTR pszFileName, UINT nOpenFlags) : m_hFile(0)
 	// Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
 	// Default value: OPEN_EXISTING | modeReadWrite
-	// 
+	//
 	// The following modes are also supported:
 	//	modeCreate		Creates a new file. Truncates an existing file to length 0.
 	//	modeNoTruncate	Creates a a new file, or opens an existing one.
@@ -174,7 +174,7 @@ namespace Win32xx
 	// Returns the directory of the file associated with this object.
 	{
 		CString Directory;
-		
+
 		int sep = m_FilePath.ReverseFind(_T("\\"));
 		if (sep > 0)
 			Directory = m_FilePath.Left(sep);
@@ -208,7 +208,7 @@ namespace Win32xx
 		int dot = m_FileName.ReverseFind(_T("."));
 		if (dot > 0)
 			FileNameWOExt = m_FileName.Left(dot);
-		
+
 		return FileNameWOExt;
 	}
 
@@ -280,7 +280,7 @@ namespace Win32xx
 	// Prepares a file to be written to or read from.
 	// Possible nOpenFlag values: CREATE_NEW, CREATE_ALWAYS, OPEN_EXISTING, OPEN_ALWAYS, TRUNCATE_EXISTING
 	// Default value: OPEN_EXISTING | modeReadWrite
-	// 
+	//
 	// The following modes are also supported:
 	//	modeCreate		Creates a new file. Truncates an existing file to length 0.
 	//	modeNoTruncate	Creates a a new file, or opens an existing one.
@@ -398,17 +398,21 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline void CFile::SetFilePath(LPCTSTR pszFileName)
-	// Specifies the full file name, including its path
+	// Assigns the specified full file path to this object.
+	// Call this function if the file path is not supplied when the CFile is constructed.
 	{
-		LPTSTR pFileName[1] = {0};
+		LPTSTR pFileName = NULL;
 
 		int nBuffSize = ::GetFullPathName(pszFileName, 0, 0, 0);
 		if (nBuffSize > 0)
 		{
-			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), pFileName);
-			if (pFileName)			
-				m_FileName = pFileName[0];
-			
+			::GetFullPathName(pszFileName, nBuffSize, m_FilePath.GetBuffer(nBuffSize), &pFileName);
+
+			if (pFileName != NULL)
+				m_FileName = pFileName;
+			else
+				m_FileName = _T("");
+
 			m_FilePath.ReleaseBuffer();
 		}
 	}
@@ -444,12 +448,12 @@ namespace Win32xx
 		assert(m_hFile);
 
 		if (nCount == 0) return;
-		
+
 		assert(pBuf);
 		DWORD dwWritten = 0;
 		if (!::WriteFile(m_hFile, pBuf, nCount, &dwWritten, NULL))
 			throw CFileException(GetFilePath(), _T("Failed to write to file"));
-		
+
 		if (dwWritten != nCount)
 			throw CFileException(GetFilePath(), _T("Failed to write to file"));
 	}

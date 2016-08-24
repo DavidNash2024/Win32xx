@@ -27,6 +27,10 @@ New Features and Enhancements
  - Added a virtual SetupMenuIcons function. This functions adds the set of
    ToolBar images to the icons used in menus. Override this to add additional
    icons to the menus.
+ - Updated MRU support.
+   The display of long file names in the MRU uses the same approach as Visual 
+   Studio.
+ - Modified default theme colors for Windows 8 and Windows 10.
    
 * Updated CDocker
   - SetView can now be used to switch between multiple views for CDocker and
@@ -39,7 +43,7 @@ New Features and Enhancements
     with casting. For example:
 	  CPen Pen(PS_SOLID, 1, RGB(255, 0, 0));
 	  CPen OldPen = dcMem.SelectObject(pen);
-  - GDI resources created by CDC are managed better. Old GDI resources are now
+  - GDI resources created by CDC are better managed. Old GDI resources are now
     destroyed immediately, rather than when the CDC is de-constructed.  
   
 
