@@ -350,7 +350,7 @@ namespace Win32xx
 		BOOL EnableScrollBar( UINT nArrowFlags = ESB_ENABLE_BOTH )  const;
 		BOOL GetScrollInfo(SCROLLINFO& si)  const;
 		int  GetScrollPos()  const;
-		BOOL GetScrollRange(int& MinPos, int& MaxPos )  const;
+		BOOL GetScrollRange(int& MinPos, int& MaxPos)  const;
 		BOOL SetScrollInfo(const SCROLLINFO& si, BOOL bRedraw = TRUE )  const;
 		int  SetScrollPos(int nPos, BOOL bRedraw)  const;
 		BOOL SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw = TRUE )  const;

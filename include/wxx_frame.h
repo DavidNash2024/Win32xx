@@ -371,18 +371,7 @@ namespace Win32xx
 		void SetFrameMenu(HMENU hMenu);
 		void SetInitValues(const InitValues& Values);
 		void SetMenuTheme(MenuTheme& MBT);
-		void SetMRULimit(UINT MRULimit)
-		// Sets the maximum number of MRU entries
-		{	
-			// Remove any excess MRU entries
-			if (MRULimit < m_vMRUEntries.size())
-			{
-				m_vMRUEntries.erase(m_vMRUEntries.begin() + MRULimit, m_vMRUEntries.end());
-			}
-
-			m_nMaxMRU = MRULimit;
-			UpdateMRUMenu();
-		}
+		void SetMRULimit(UINT MRULimit);
 		void SetReBarTheme(ReBarTheme& RBT);
 		void SetStatusBarTheme(StatusBarTheme& SBT);
 		void SetStatusText(LPCTSTR szText);
@@ -3096,6 +3085,19 @@ namespace Win32xx
 
 		if (GetMenuBar().IsWindow())
 			GetMenuBar().Invalidate();
+	}
+
+	inline void CFrame::SetMRULimit(UINT MRULimit)
+	// Sets the maximum number of MRU entries
+	{
+		// Remove any excess MRU entries
+		if (MRULimit < m_vMRUEntries.size())
+		{
+			m_vMRUEntries.erase(m_vMRUEntries.begin() + MRULimit, m_vMRUEntries.end());
+		}
+
+		m_nMaxMRU = MRULimit;
+		UpdateMRUMenu();
 	}
 
 	inline void CFrame::SetReBarTheme(ReBarTheme& RBT)

@@ -52,7 +52,6 @@ Changes in detail
 Added CRibbonDockFrame          class
 Added CFrame::GetMRULimit		member function
 Added CFrame::SetMRULimit		member function
-Added CDocker::OnActivate		member function
 Added CDocker::OnMouseActivate	member function
 Added CDocker::OnSize			member function
 Added CDocker::SetActiveDocker	member function
@@ -73,7 +72,6 @@ Modified CDialog::MapDialogRect
 Modified CEdit::GetRect
 Modified CEdit::SetRect
 Modified CEdit::SetRectNP
-Modified CEdit::GetRect
 Modified CFont::CFont
 Modified CFont::CreateFontIndirect
 Modified CFont::CreatePointFontIndirect
