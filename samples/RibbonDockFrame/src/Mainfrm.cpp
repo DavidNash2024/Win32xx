@@ -332,7 +332,7 @@ void CMainFrame::OnFilePrint()
 
 void CMainFrame::OnInitialUpdate()
 {
-	// Add some Dockers to the MDI Frame
+	// Add some Dockers to the Ribbon Frame
 	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
 	int DockWidth = 150;
 	CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);

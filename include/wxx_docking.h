@@ -3668,6 +3668,7 @@ namespace Win32xx
 	}
 
 	inline void CDocker::SetActiveDocker(CDocker* pDock)
+	// Sets the active docker.
 	{
 		assert(pDock->IsWindow());
 

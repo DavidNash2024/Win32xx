@@ -397,6 +397,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CRichEdit::GetPunctuation(UINT fType, const PUNCTUATION& Punc) const
+	// Retrieves the current punctuation characters for the rich edit control. 
+	// This is available only in Asian-language versions of the operating system.
 	{
 		assert(IsWindow());
 		return (TRUE == SendMessage(EM_GETPUNCTUATION, (WPARAM)fType, (LPARAM)&Punc));
@@ -693,6 +695,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CRichEdit::SetPunctuation(UINT fType, const PUNCTUATION& Punc) const
+	// Sets the current punctuation characters for the rich edit control. 
+	// This is available only in Asian-language versions of the operating system.	
 	{
 		assert(IsWindow());
 		return (TRUE == SendMessage(EM_SETPUNCTUATION, (WPARAM)fType, (LPARAM)&Punc));
