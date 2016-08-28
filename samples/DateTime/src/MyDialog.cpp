@@ -33,7 +33,7 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			// Update the time displayed every second
 			SYSTEMTIME lt;
 			GetLocalTime(&lt);
-			m_DateTime.SetTime(GDT_VALID, &lt);
+			m_DateTime.SetTime(lt);
 
 			return 0;
 		}
@@ -51,16 +51,13 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
     {
 	case IDC_BUTTONSET:
 		{
-			SYSTEMTIME month, all;
-			
-			m_MonthCal.GetCurSel(&month);
-			m_DateTime.GetTime(&all);
+			SYSTEMTIME month = m_MonthCal.GetCurSel();		
+			SYSTEMTIME all   = m_DateTime.GetTime();
 			
 			all.wDay = month.wDay;
 			all.wMonth = month.wMonth;
 			all.wYear = month.wYear;
 		
-
 			if (!SetLocalTime(&all))
 			{
 				MessageBox(_T("Failed to set the time\nRun app as Administrator"), _T("Set Time Failed"), MB_OK);

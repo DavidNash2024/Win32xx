@@ -210,18 +210,18 @@ namespace Win32xx
 		BOOL LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
 		BOOL LoadOEMBitmap(UINT nIDBitmap);
-		HBITMAP CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits);
+		HBITMAP CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID pBits);
 		HBITMAP CreateCompatibleBitmap(HDC hdc, int nWidth, int nHeight);
-		HBITMAP CreateDIBSection(HDC hdc, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset);
+		HBITMAP CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT uColorUse, LPVOID* pBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
-		HBITMAP CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		HBITMAP CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse);
 		HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
-		HBITMAP CreateBitmapIndirect(LPBITMAP lpBitmap);
+		HBITMAP CreateBitmapIndirect(const BITMAP& Bitmap);
 		void GrayScaleBitmap();
 		void TintBitmap (int cRed, int cGreen, int cBlue);
-		int GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const;
-		int SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse);
+		int GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const;
+		int SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse);
 		CSize GetBitmapDimensionEx() const;
 		CSize SetBitmapDimensionEx(int nWidth, int nHeight);
 #endif // !_WIN32_WCE
@@ -249,9 +249,9 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		HBRUSH CreateHatchBrush(int nIndex, COLORREF crColor);
-		HBRUSH CreateBrushIndirect(LPLOGBRUSH lpLogBrush);
+		HBRUSH CreateBrushIndirect(const LOGBRUSH& LogBrush);
 		HBRUSH CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
-		HBRUSH CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT nUsage);
+		HBRUSH CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT nUsage);
 #endif // !defined(_WIN32_WCE)
 
 	};
@@ -331,17 +331,17 @@ namespace Win32xx
 		CPen(HPEN hPen);
 		CPen(int nPenStyle, int nWidth, COLORREF crColor);
 #ifndef _WIN32_WCE
-		CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
+		CPen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
 #endif // !_WIN32_WCE
 		operator HPEN() const;
 		virtual ~CPen();
 
 		HPEN CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
-		HPEN CreatePenIndirect(LPLOGPEN lpLogPen);
+		HPEN CreatePenIndirect(const LOGPEN& LogPen);
 		LOGPEN GetLogPen() const;
 
 #ifndef _WIN32_WCE
-		HPEN ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
+		HPEN ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
 		EXTLOGPEN GetExtLogPen() const;
 #endif // !_WIN32_WCE
 
@@ -451,9 +451,9 @@ namespace Win32xx
 #endif
 
 		// Create Bitmaps
-		void CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pvColors);
+		void CreateBitmap(int cx, int cy, UINT Planes, UINT BitsPerPixel, LPCVOID pColors);
 		void CreateCompatibleBitmap(HDC hdc, int cx, int cy);
-		void CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+		void CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT iUsage, LPVOID* ppBits,
 										HANDLE hSection, DWORD dwOffset);
 		CBitmap DetachBitmap();
 		BITMAP  GetBitmapData() const;
@@ -465,9 +465,9 @@ namespace Win32xx
 		BOOL LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
 
 #ifndef _WIN32_WCE
-		void CreateBitmapIndirect(LPBITMAP pBitmap);
-		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
-										BITMAPINFO& bmi, UINT fuUsage);
+		void CreateBitmapIndirect(const BITMAP& Bitmap);
+		void CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID pbInit,
+										const LPBITMAPINFO pbmi, UINT fuUsage);
 		void CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/);
 #endif
 
@@ -478,7 +478,7 @@ namespace Win32xx
 		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
-		void CreateBrushIndirect(LPLOGBRUSH pLogBrush);
+		void CreateBrushIndirect(const LOGBRUSH& LogBrush);
 		void CreateHatchBrush(int fnStyle, COLORREF rgb);
 		void CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
 		void CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
@@ -506,7 +506,7 @@ namespace Win32xx
 
 		// Create Pens
 		void CreatePen(int nStyle, int nWidth, COLORREF rgb);
-		void CreatePenIndirect(LPLOGPEN pLogPen);
+		void CreatePenIndirect(const LOGPEN& LogPen);
 		HPEN GetCurrentPen() const;
 		LOGPEN GetLogPen() const;
 
@@ -517,7 +517,7 @@ namespace Win32xx
 		// Create Regions
 		int CreateRectRgn(int left, int top, int right, int bottom);
 		int CreateRectRgnIndirect(const RECT& rc);
-		int CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA *pRgnData);
+		int CreateFromData(const XFORM* Xform, DWORD nCount, const RGNDATA* pRgnData);
 
 #ifndef _WIN32_WCE
 		int CreateEllipticRgn(int left, int top, int right, int bottom);
@@ -617,7 +617,7 @@ namespace Win32xx
 		BOOL PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const;
 		int  StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight,
 			               int XSrc, int YSrc, int nSrcWidth, int nSrcHeight,
-						   CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const;
+						   LPCVOID pBits, const LPBITMAPINFO pbmi, UINT iUsage, DWORD dwRop) const;
 
 		BOOL StretchBlt(int x, int y, int nWidth, int nHeight, HDC hdcSrc,
 			               int xSrc, int ySrc, int nSrcWidth, int nSrcHeight,
@@ -626,12 +626,12 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 		BOOL ExtFloodFill(int x, int y, COLORREF crColor, UINT nFillType) const;
 		BOOL FloodFill(int x, int y, COLORREF crColor) const;
-		int  GetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, LPVOID lpvBits,
-			            LPBITMAPINFO lpbi, UINT uUsage) const;
+		int  GetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, LPVOID pBits,
+			            LPBITMAPINFO pbi, UINT uUsage) const;
 
 		int  GetStretchBltMode() const;
-		int  SetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits,
-			            LPBITMAPINFO lpbi, UINT fuColorUse) const;
+		int  SetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, LPCVOID pBits,
+			            LPBITMAPINFO pbmi, UINT fuColorUse) const;
 
 		int  SetStretchBltMode(int iStretchMode) const;
   #if (WINVER >= 0x0410)
@@ -652,7 +652,7 @@ namespace Win32xx
 		DWORD GetFontData(DWORD dwTable, DWORD dwOffset, LPVOID pvBuffer,  DWORD cbData) const;
 		DWORD GetFontLanguageInfo() const;
 		DWORD GetGlyphOutline(UINT uChar, UINT uFormat, LPGLYPHMETRICS pgm, DWORD cbBuffer,
-			                  LPVOID pvBuffer, CONST MAT2 *lpmat2) const;
+			                  LPVOID pvBuffer, const MAT2* lpmat2) const;
 
 		DWORD GetKerningPairs(DWORD nNumPairs, LPKERNINGPAIR pkrnpair) const;
 		DWORD SetMapperFlags(DWORD dwFlag) const;
@@ -665,7 +665,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		BOOL GetColorAdjustment(LPCOLORADJUSTMENT pCA) const;
-		BOOL SetColorAdjustment(CONST COLORADJUSTMENT* pCA) const;
+		BOOL SetColorAdjustment(const COLORADJUSTMENT* pCA) const;
 		BOOL UpdateColors() const;
 #endif
 
@@ -1319,10 +1319,10 @@ namespace Win32xx
 		}
 
 #ifndef _WIN32_WCE
-		inline HBITMAP CBitmap::CreateBitmapIndirect(LPBITMAP lpBitmap)
+		inline HBITMAP CBitmap::CreateBitmapIndirect(const BITMAP& Bitmap)
 		// Creates a bitmap with the width, height, and color format specified in the BITMAP structure.
 		{
-			HBITMAP hBitmap = ::CreateBitmapIndirect(lpBitmap);
+			HBITMAP hBitmap = ::CreateBitmapIndirect(&Bitmap);
 			if (hBitmap == 0)
 				throw CResourceException(_T("CreateBitmapIndirect failed"));
 
@@ -1377,10 +1377,11 @@ namespace Win32xx
 		}
 
 		// DIB support
-		inline HBITMAP CBitmap::CreateDIBitmap(HDC hdc, CONST BITMAPINFOHEADER* lpbmih, DWORD dwInit, LPCVOID lpbInit, CONST BITMAPINFO* lpbmi, UINT uColorUse)
+		inline HBITMAP CBitmap::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse)
 		// Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
+		// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 		{
-			HBITMAP hBitmap = ::CreateDIBitmap(hdc, lpbmih, dwInit, lpbInit, lpbmi, uColorUse);
+			HBITMAP hBitmap = ::CreateDIBitmap(hdc, pbmih, dwInit, pbInit, pbmi, uColorUse);
 			Attach(hBitmap);
 			SetManaged(true);
 			return hBitmap;
@@ -1396,7 +1397,7 @@ namespace Win32xx
 			CMemDC dcMem(NULL);
 
 			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-			dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 			std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
 			byte* pByteArray = &vBits[0];
 
@@ -1430,7 +1431,7 @@ namespace Win32xx
 			}
 
 			// Save the modified colour back into our source DDB
-			dcMem.SetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		}
 
 		inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
@@ -1449,7 +1450,7 @@ namespace Win32xx
 			CMemDC dcMem(NULL);
 
 			// Use GetDIBits to create a DIB from our DDB, and extract the colour data
-			dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+			GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
 			std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
 			byte* pByteArray = &vBits[0];
 
@@ -1511,34 +1512,37 @@ namespace Win32xx
 			}
 
 			// Save the modified colour back into our source DDB
-			dcMem.SetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+			SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
 		}
 
 #endif // !_WIN32_WCE
 
-		inline HBITMAP CBitmap::CreateDIBSection(HDC hdc, CONST BITMAPINFO* lpbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset)
+		inline HBITMAP CBitmap::CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset)
 		// Creates a DIB that applications can write to directly. The function gives you a pointer to the location of the bitmap bit values.
 		// You can supply a handle to a file-mapping object that the function will use to create the bitmap, or you can let the system allocate the memory for the bitmap.
+		// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 		{
-			HBITMAP hBitmap = ::CreateDIBSection(hdc, lpbmi, uColorUse, ppvBits, hSection, dwOffset);
+			HBITMAP hBitmap = ::CreateDIBSection(hdc, pbmi, uColorUse, ppvBits, hSection, dwOffset);
 			Attach(hBitmap);
 			SetManaged(true);
 			return hBitmap;
 		}
 
 #ifndef _WIN32_WCE
-		inline int CBitmap::GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID lpvBits, LPBITMAPINFO lpbmi, UINT uColorUse) const
+		inline int CBitmap::GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const
 		// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
+		// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 		{
 			assert(GetHandle() != NULL);
-			return ::GetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines,  lpvBits, lpbmi, uColorUse);
+			return ::GetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines,  pBits, pbmi, uColorUse);
 		}
 
-		inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, CONST VOID* lpvBits, CONST BITMAPINFO* lpbmi, UINT uColorUse)
+		inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse)
 		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
+		// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 		{
 			assert(GetHandle() != NULL);
-			return ::SetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines, lpvBits, lpbmi, uColorUse);
+			return ::SetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines, pBits, pbmi, uColorUse);
 		}
 #endif // !_WIN32_WCE
 
@@ -1603,10 +1607,10 @@ namespace Win32xx
 		return hBrush;
 	}
 
-	inline HBRUSH CBrush::CreateBrushIndirect(LPLOGBRUSH lpLogBrush)
+	inline HBRUSH CBrush::CreateBrushIndirect(const LOGBRUSH& LogBrush)
 	// Creates a logical brush from style, color, and pattern specified in the LOGPRUSH struct.
 	{
-		HBRUSH hBrush = ::CreateBrushIndirect(lpLogBrush);
+		HBRUSH hBrush = ::CreateBrushIndirect(&LogBrush);
 		if (hBrush == 0)
 			throw CResourceException(_T("CreateBrushIndirect failed"));
 
@@ -1913,11 +1917,11 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
+	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
 		try
 		{
-			ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
+			::ExtCreatePen(nPenStyle, nWidth, &LogBrush, nStyleCount, lpStyle);
 		}
 
 		catch(...)
@@ -1946,10 +1950,10 @@ namespace Win32xx
 		return hPen;
 	}
 
-	inline HPEN CPen::CreatePenIndirect(LPLOGPEN lpLogPen)
+	inline HPEN CPen::CreatePenIndirect(const LOGPEN& LogPen)
 	// Creates a logical pen that has the style, width, and color specified in a structure.
 	{
-		HPEN hPen = ::CreatePenIndirect(lpLogPen);
+		HPEN hPen = ::CreatePenIndirect(&LogPen);
 		Attach(hPen);
 		SetManaged(true);
 		return hPen;
@@ -1967,10 +1971,10 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline HPEN CPen::ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH* pLogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
+	inline HPEN CPen::ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
 	// Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
 	{
-		HPEN hPen = ::ExtCreatePen(nPenStyle, nWidth, pLogBrush, nStyleCount, lpStyle);
+		HPEN hPen = ::ExtCreatePen(nPenStyle, nWidth, &LogBrush, nStyleCount, lpStyle);
 		Attach(hPen);
 		SetManaged(true);
 		return hPen;
@@ -2113,6 +2117,7 @@ namespace Win32xx
 
 	inline HRGN CRgn::CreateFromData(const XFORM* lpXForm, int nCount, const RGNDATA* pRgnData)
 	// Creates a region from the specified region and transformation data.
+	// If the XFORM pointer is NULL, the identity transformation is used. 
 	{
 		HRGN hRgn = ::ExtCreateRegion(lpXForm, nCount, pRgnData);
 		if (hRgn == 0)
@@ -2598,38 +2603,40 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateBitmapIndirect (LPBITMAP lpBitmap)
+	inline void CDC::CreateBitmapIndirect (const BITMAP& Bitmap)
 	// Creates a bitmap and selects it into the device context.
 	{
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		bitmap.CreateBitmapIndirect(lpBitmap);
+		bitmap.CreateBitmapIndirect(Bitmap);
 		SelectObject(bitmap);
 		m_pData->Bitmap = bitmap;
 	}
 
 	inline void CDC::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER& bmih, DWORD fdwInit, LPCVOID lpbInit,
-										BITMAPINFO& bmi,  UINT fuUsage)
+										const LPBITMAPINFO pbmi,  UINT fuUsage)
 	// Creates a bitmap and selects it into the device context.
+	// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 	{
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		bitmap.CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, &bmi, fuUsage);
+		bitmap.CreateDIBitmap(hdc, &bmih, fdwInit, lpbInit, pbmi, fuUsage);
 		SelectObject(bitmap);
 		m_pData->Bitmap = bitmap;
 	}
 #endif
 
-	inline void CDC::CreateDIBSection(HDC hdc, const BITMAPINFO& bmi, UINT iUsage, LPVOID *ppvBits,
+	inline void CDC::CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT iUsage, LPVOID* ppvBits,
 										HANDLE hSection, DWORD dwOffset)
 	// Creates a bitmap and selects it into the device context.
+	// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 	{
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		bitmap.CreateDIBSection(hdc, &bmi, iUsage, ppvBits, hSection, dwOffset);
+		bitmap.CreateDIBSection(hdc, pbmi, iUsage, ppvBits, hSection, dwOffset);
 		SelectObject(bitmap);
 		m_pData->Bitmap = bitmap;
 	}
@@ -2821,13 +2828,13 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 #ifndef _WIN32_WCE
-	inline void CDC::CreateBrushIndirect(LPLOGBRUSH pLogBrush)
+	inline void CDC::CreateBrushIndirect(const LOGBRUSH& LogBrush)
 	// Creates the brush and selects it into the device context.
 	{
 		assert(m_pData->hDC);
 
 		CBrush brush;
-		brush.CreateBrushIndirect(pLogBrush);
+		brush.CreateBrushIndirect(LogBrush);
 		SelectObject(brush);
 		m_pData->Brush = brush;
 	}
@@ -2993,7 +3000,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return ::GetColorAdjustment(m_pData->hDC, pCA);
 	}
 
-	inline BOOL CDC::SetColorAdjustment(CONST COLORADJUSTMENT* pCA) const
+	inline BOOL CDC::SetColorAdjustment(const COLORADJUSTMENT* pCA) const
 	// Sets the color adjustment values for the device context.
 	{
 		assert(m_pData->hDC);
@@ -3022,13 +3029,13 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		m_pData->Pen = pen;
 	}
 
-	inline void CDC::CreatePenIndirect (LPLOGPEN pLogPen)
+	inline void CDC::CreatePenIndirect (const LOGPEN& LogPen)
 	// Creates the pen and selects it into the device context.
 	{
 		assert(m_pData->hDC);
 
 		CPen pen;
-		pen.CreatePenIndirect(pLogPen);
+		pen.CreatePenIndirect(LogPen);
 		SelectObject(pen);
 		m_pData->Pen = pen;
 	}
@@ -3215,7 +3222,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline DWORD CDC::GetGlyphOutline(UINT uChar, UINT uFormat, LPGLYPHMETRICS pgm, DWORD cbBuffer,
-			                  LPVOID pvBuffer, CONST MAT2 *lpmat2) const
+			                  LPVOID pvBuffer, const MAT2* lpmat2) const
 	// Retrieves the outline or bitmap for a character in the TrueType font that is selected into the device context.
 	{
 		assert(m_pData->hDC);
@@ -3785,11 +3792,12 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 	// Bitmap Functions
 	inline int CDC::StretchDIBits(int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth,
-		           int nSrcHeight, CONST VOID *lpBits, BITMAPINFO& bi, UINT iUsage, DWORD dwRop) const
+		           int nSrcHeight, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT iUsage, DWORD dwRop) const
 	// Copies the color data for a rectangle of pixels in a DIB to the specified destination rectangle.
+	// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 	{
 		assert(m_pData->hDC);
-		return ::StretchDIBits(m_pData->hDC, XDest, YDest, nDestWidth, nDestHeight, XSrc, YSrc, nSrcWidth, nSrcHeight, lpBits, &bi, iUsage, dwRop);
+		return ::StretchDIBits(m_pData->hDC, XDest, YDest, nDestWidth, nDestHeight, XSrc, YSrc, nSrcWidth, nSrcHeight, pBits, pbmi, iUsage, dwRop);
 	}
 
 	inline BOOL CDC::PatBlt(int x, int y, int nWidth, int nHeight, DWORD dwRop) const
@@ -3842,18 +3850,20 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 #ifndef _WIN32_WCE
-	inline int CDC::GetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, LPVOID lpvBits, LPBITMAPINFO lpbi, UINT uUsage) const
+	inline int CDC::GetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, LPVOID pBits, LPBITMAPINFO pbi, UINT uUsage) const
 	// Retrieves the bits of the specified compatible bitmap and copies them into a buffer as a DIB using the specified format.
+	// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 	{
 		assert(m_pData->hDC);
-		return ::GetDIBits(m_pData->hDC, hBitmap, uStartScan, cScanLines, lpvBits, lpbi, uUsage);
+		return ::GetDIBits(m_pData->hDC, hBitmap, uStartScan, cScanLines, pBits, pbi, uUsage);
 	}
 
-	inline int CDC::SetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, CONST VOID *lpvBits, LPBITMAPINFO lpbi, UINT fuColorUse) const
+	inline int CDC::SetDIBits(HBITMAP hBitmap, UINT uStartScan, UINT cScanLines, LPCVOID pBits, LPBITMAPINFO pbi, UINT fuColorUse) const
 	// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
+	// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 	{
 		assert(m_pData->hDC);
-		return ::SetDIBits(m_pData->hDC, hBitmap, uStartScan, cScanLines, lpvBits, lpbi, fuColorUse);
+		return ::SetDIBits(m_pData->hDC, hBitmap, uStartScan, cScanLines, pBits, pbi, fuColorUse);
 	}
 
 	inline int CDC::GetStretchBltMode() const

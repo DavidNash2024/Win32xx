@@ -50,24 +50,38 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added CRibbonDockFrame          class
-Added CFrame::GetMRULimit		member function
-Added CFrame::SetMRULimit		member function
+Added CDateTime::SetTimeNone    member function
 Added CDocker::OnMouseActivate	member function
 Added CDocker::OnSize			member function
 Added CDocker::SetActiveDocker	member function
+Added CFrame::GetMRULimit		member function
+Added CFrame::SetMRULimit		member function
 Added CFrame::SetupMenuIcons    member function
 Added RibbonDockFrame           sample application
 Added additional overrides for CDC::SelectObject		
 
-These functions use references instead of pointers
+These functions use references instead of pointers:
+Modified CBitmap::CreateBitmapIndirect
+Modified CBitmap::CreateDIBitmap 
+Modified CBitmap::CreateDIBSection
+Modified CBrush::CreateBrushIndirect 
 Modified CComboBoxEx::GetItem
 Modified CComboBoxEx::InsertItem
 Modified CComboBoxEx::SetItem
+Modified CDC::CreateBitmapIndirect
+Modified CDC::CreateBrushIndirect
+Modified CDC::CreateDIBitmap 
+Modified CDC::CreateDIBSection
 Modified CDC::CreateFontIndirect
 Modified CDC::CreatePalette
+Modified CDC::CreatePenIndirect
 Modified CDC::DrawText
 Modified CDC::DrawTextEx
 Modified CDC::ExtTextOut
+Modified CDateTime::GetRange
+Modified CDateTime::GetTime
+Modified CDateTime::SetRange
+Modified CDateTime::SetTime
 Modified CDialog::MapDialogRect
 Modified CEdit::GetRect
 Modified CEdit::SetRect
@@ -82,7 +96,9 @@ Modified CHeader::SetItem
 Modified CImageList::DrawIndirect
 Modified CImageList::GetImageInfo 
 Modified CListBox::GetItemRect
-Modified CMetaFileDC::CreateEnhanced	   
+Modified CMetaFileDC::CreateEnhanced
+Modified CMonthCalendar::GetCurSel
+Modified CMonthCalendar::GetMonthRange  
 Modified CMonthCalendar::GetRange
 Modified CMonthCalendar::GetSelRange
 Modified CMonthCalendar::GetToday
@@ -93,6 +109,8 @@ Modified CMonthCalendar::SetSelRange
 Modified CMonthCalendar::SetToday
 Modified CPageSetupDialog::OnDrawPage
 Modified CPageSetupDialog::OnPreDrawPage
+Modified CPen::CreatePenIndirect
+Modified CPen::ExtCreatePen
 Modified CProgressBar::GetRange
 Modified CRichEdit::SetRect
 Modified CRichEdit::DisplayBand
@@ -105,16 +123,21 @@ Modified CScrollBar::GetScrollInfo
 Modified CScrollBar::SetScrollInfo
 Modified CTab::GetItemRect
 Modified CToolTip::AddTool 
-Modified CToolTip::GetMargin
-Modified CToolTip::SetMargin
 Modified CToolTip::AdjustRect
+Modified CToolTip::GetBubbleSize
+Modified CToolTip::GetMargin
+Modified CToolTip::GetToolInfo
+Modified CToolTip::HitTest
+Modified CToolTip::SetMargin
 Modified CToolTip::SetToolRect
+Modified CToolTip::SetToolInfo 
+Modified CWceFrame::GetMenuBar
 Modified CWnd::DrawAnimatedRects
 Modified CWnd::GetDlgItemInt 
 Modified CWnd::InvalidateRect
 Modified CWnd::RedrawWindow  
 Modified CWnd::ScrollWindow  	
-Modified CWnd::ValidateRect  
+Modified CWnd::ValidateRect
 
 Modified CWinThread::CreateThread	now returns thread handle.
 

@@ -64,13 +64,8 @@ GetTimeStr(const CString& fmt) const                                    /*
 	Return the currently selected date as a CString.
 *-----------------------------------------------------------------------------*/
 {
-	SYSTEMTIME st;
-	CString dt;
-	if(GetTime(&st) ==  GDT_VALID)
-	{
-		CTime t(st);
-		dt = t.Format(fmt);
-	}
-	return dt;
+	CTime t(GetTime());
+
+	return CString(t.Format(fmt));
 }
 
