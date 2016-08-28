@@ -119,7 +119,7 @@ namespace Win32xx
 		BOOL	SetTextBkColor( COLORREF clrBkText ) const;
 		BOOL	SetTextColor( COLORREF clrText ) const;
 		HWND	SetToolTips ( HWND hToolTip ) const;
-		void	SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const;
+		void	SetWorkAreas( int nWorkAreas, LPCRECT pRectArray ) const;
 		int		SubItemHitTest( LVHITTESTINFO& htInfo ) const;
 
 		// Operations
@@ -683,7 +683,7 @@ namespace Win32xx
 		return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L));
 	}
 
-	inline void CListView::SetWorkAreas( int nWorkAreas, CRect& pRectArray ) const
+	inline void CListView::SetWorkAreas( int nWorkAreas, LPCRECT pRectArray ) const
 	// Sets the working area within a list-view control.
 	{
 		assert(IsWindow());

@@ -91,7 +91,7 @@ namespace Win32xx
 
 		// These functions aren't virtual, and shouldn't be overridden
 		CWnd& GetView() const			{ assert(m_pView); return *m_pView; }
-		void SetView(CWnd& pwndView);
+		void SetView(CWnd& wndView);
 		void SetHandles(HMENU MenuName, HACCEL AccelName);
 		CMDIFrame& GetMDIFrame() const;
 		void MDIActivate() const;

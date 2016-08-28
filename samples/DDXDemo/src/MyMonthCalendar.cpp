@@ -58,8 +58,8 @@
 #include "MyMonthCalendar.h"
 
 /*============================================================================*/
-	BOOL CMyMonthCalendar::
-GetCurSel(LPSYSTEMTIME pst) const     					/*
+SYSTEMTIME CMyMonthCalendar::
+GetCurSel() const     					/*
 
 	Retrieve the currently selected date, with hour, minute, seconds, and
 	milliseconds fields set to zero.  The base class values of these
@@ -67,9 +67,9 @@ GetCurSel(LPSYSTEMTIME pst) const     					/*
 	the control.
 *-----------------------------------------------------------------------------*/
 {
-	BOOL rtn = CMonthCalendar::GetCurSel(pst);
-	pst->wHour = pst->wMinute = pst->wSecond = pst->wMilliseconds = 0;
-	return rtn;
+	SYSTEMTIME st = CMonthCalendar::GetCurSel();
+	st.wHour = st.wMinute = st.wSecond = st.wMilliseconds = 0;
+	return st;
 }
 
 /*============================================================================*/
@@ -79,13 +79,9 @@ GetCurSelStr(const CString &fmt) const     					/*
 	Return the currently selected date as a CString.
 *-----------------------------------------------------------------------------*/
 {
-	SYSTEMTIME st;
-	CString mc;
-	if(GetCurSel(&st))
-	{
-		CTime t(st);
-		mc = t.Format(fmt);
-	}
+	CTime t(GetCurSel());
+	CString mc = t.Format(fmt);
+
 	return mc;
 }
 

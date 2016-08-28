@@ -268,17 +268,17 @@ namespace Win32xx
 		int SetMonthDelta(int iDelta);
 
 		// Operations
-		BOOL GetCurSel(LPSYSTEMTIME pDateTime) const;
+		SYSTEMTIME GetCurSel() const;
 		int GetMaxSelCount() const;
-		int GetMonthRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange, DWORD dwFlags) const;
+		int GetMonthRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange, DWORD dwFlags) const;
 		DWORD GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
 		BOOL GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
-		BOOL GetToday(SYSTEMTIME& DateTime) const;
+		SYSTEMTIME GetToday() const;
 		DWORD HitTest(MCHITTESTINFO& MCHitTest);
 		BOOL SetCurSel(const SYSTEMTIME& DateTime);
 		BOOL SetDayState(int nMonths, const MONTHDAYSTATE& States);
 		BOOL SetMaxSelCount(int nMax);
-		BOOL SetRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange);
+		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
 		BOOL SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
 		void SetToday(const SYSTEMTIME&  DateTime);
 
@@ -298,15 +298,16 @@ namespace Win32xx
 		virtual ~CDateTime() {}
 
 		COLORREF GetMonthCalColor(int iColor) const;
+		HWND GetMonthCalCtrl() const;
+		CFont GetMonthCalFont();
+		DWORD GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
+		SYSTEMTIME GetTime(DWORD* pReturnCode = NULL) const;
 		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
 		BOOL SetFormat(LPCTSTR pstrFormat);
-		HWND GetMonthCalCtrl() const;
-		DWORD GetRange(LPSYSTEMTIME lpSysTimeArray) const;
-		BOOL SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray);
-		DWORD GetTime(LPSYSTEMTIME pTimeDest) const;
-		BOOL SetTime(DWORD flag, LPSYSTEMTIME pTimeNew = NULL);
-		CFont GetMonthCalFont();
 		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
+		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
+		BOOL SetTime(const SYSTEMTIME& TimeNew);
+		BOOL SetTimeNone();
 
 	protected:
 		// Overridables
@@ -445,23 +446,23 @@ namespace Win32xx
 		virtual ~CToolTip();
 
 		//Attributes
-		int		GetDelayTime(DWORD dwDuration) const;
-		void	GetMargin(RECT& rc) const;
-		int		GetMaxTipWidth() const;
-		void	 GetText(CString& str, HWND hWnd, UINT_PTR nIDTool = 0) const;
+		int		 GetDelayTime(DWORD dwDuration) const;
+		CRect	 GetMargin() const;
+		int		 GetMaxTipWidth() const;
+		CString	 GetText(HWND hWnd, UINT_PTR nIDTool = 0) const;
 		COLORREF GetTipBkColor() const;
 		COLORREF GetTipTextColor() const;
-		int		GetToolCount() const;
-		BOOL	GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool = 0) const;
-		void	SetDelayTime(UINT nDelay);
-		void	SetDelayTime(DWORD dwDuration, int iTime);
-		void	SetMargin(const RECT& rc);
-		int		SetMaxTipWidth(int iWidth);
-		void	SetTipBkColor(COLORREF clr);
-		void	SetTipTextColor(COLORREF clr);
-		void	SetToolInfo(LPTOOLINFO lpToolInfo);
+		int		 GetToolCount() const;
+		TOOLINFO GetToolInfo(HWND hWnd, UINT_PTR nIDTool = 0) const;
+		void	 SetDelayTime(UINT nDelay);
+		void	 SetDelayTime(DWORD dwDuration, int iTime);
+		void	 SetMargin(const RECT& rc);
+		int		 SetMaxTipWidth(int iWidth);
+		void	 SetTipBkColor(COLORREF clr);
+		void	 SetTipTextColor(COLORREF clr);
+		void	 SetToolInfo(const TOOLINFO& ToolInfo);
 #if (_WIN32_IE >=0x0500)
-		CSize	GetBubbleSize(LPTOOLINFO lpToolInfo) const;
+		CSize	 GetBubbleSize(const TOOLINFO& ToolInfo) const;
 #endif
 
 		//Operations
@@ -471,7 +472,7 @@ namespace Win32xx
 		BOOL AddTool(HWND hWnd, LPCTSTR lpszText, const RECT& rcTool, UINT_PTR nIDTool = 0);
 		BOOL AddTool(HWND hWnd, LPCTSTR lpszText, UINT_PTR nIDTool = 0);
 		void DelTool(HWND hWnd, UINT_PTR nIDTool = 0);
-		BOOL HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const;
+		BOOL HitTest(HWND hWnd, CPoint pt, TOOLINFO& ToolInfo) const;
 		void Pop();
 		void RelayEvent(MSG& Msg);
 		void SetToolRect(HWND hWnd, UINT_PTR nIDTool, const RECT& rc);
@@ -928,30 +929,35 @@ namespace Win32xx
 	}
 
 	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
+	// Retrieves the color for a given portion of the month calendar within the date and time picker (DTP) control. 
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, iColor));
 	}
 
 	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr)
+	// Sets the color for a given portion of the month calendar within the date and time picker (DTP) control.
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, iColor, clr));
 	}
 
 	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat)
+	// Sets the display of the date and time picker (DTP) control based on a given format string.
 	{
 		assert(IsWindow());
 		return DateTime_SetFormat(*this, pszFormat);
 	}
 
 	inline HWND CDateTime::GetMonthCalCtrl() const
+	// Retrieves the handle to the date and time picker's (DTP) child month calendar control.
 	{
 		assert(IsWindow());
 		return reinterpret_cast<HWND>(DateTime_GetMonthCal(*this));
 	}
 
 	inline CFont CDateTime::GetMonthCalFont()
+	// Retrieves the font that the date and time picker (DTP) control's child month calendar control is currently using.
 	{
 		assert(IsWindow());
 		HFONT hFont = reinterpret_cast<HFONT>(DateTime_GetMonthCalFont(*this));
@@ -959,33 +965,65 @@ namespace Win32xx
 	}
 
 	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
+	// Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
 	{
 		assert(IsWindow());
 		DateTime_SetMonthCalFont(*this, hFont, MAKELONG(bRedraw, 0));
 	}
 
-	inline DWORD CDateTime::GetRange(LPSYSTEMTIME lpSysTimeArray) const
+	inline DWORD CDateTime::GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
+	// Retrieves the current minimum and maximum allowable system times for the date and time picker (DTP) control.
 	{
 		assert(IsWindow());
-		return DateTime_GetRange(*this, lpSysTimeArray);
+
+		SYSTEMTIME Ranges[2];
+		DWORD Result = DateTime_GetRange(*this, Ranges);
+		MinRange = Ranges[0];
+		MaxRange = Ranges[1];
+		return Result;
 	}
 
-	inline BOOL CDateTime::SetRange(DWORD flags, LPSYSTEMTIME lpSysTimeArray)
+	inline BOOL CDateTime::SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
+	// Sets the minimum and maximum allowable system times for the date and time picker (DTP) control.
 	{
 		assert(IsWindow());
-		return DateTime_SetRange(*this, flags, lpSysTimeArray);
+		SYSTEMTIME Ranges[2];
+		Ranges[0] = MinRange;
+		Ranges[1] = MaxRange;
+		DWORD flags = GDTR_MIN | GDTR_MAX;
+
+		return DateTime_SetRange(*this, flags, Ranges);
 	}
 
-	inline DWORD CDateTime::GetTime(LPSYSTEMTIME pTimeDest) const
+	inline SYSTEMTIME CDateTime::GetTime(DWORD* pReturnCode) const
+	// Returns the currently selected time from a date and time picker (DTP) control
+	// Possible return codes are: GDT_VALID, GDT_ERROR, and GDT_NONE.
+    // A return code of GDT_NONE occurs if the control was set to the DTS_SHOWNONE
+	//	style and the control check box was not selected.
 	{
 		assert(IsWindow());
-		return DateTime_GetSystemtime(*this, pTimeDest);
+		SYSTEMTIME SysTime;
+
+		DWORD Res = DateTime_GetSystemtime(*this, &SysTime);
+		if (pReturnCode)
+			*pReturnCode = Res;
+		
+		return SysTime;
 	}
 
-	inline BOOL CDateTime::SetTime(DWORD flag, LPSYSTEMTIME pTimeNew /*= NULL*/)
+	inline BOOL CDateTime::SetTime(const SYSTEMTIME& TimeNew)
+	// Sets the date and time picker (DTP) control to a given date and time.
 	{
 		assert(IsWindow());
-		return DateTime_SetSystemtime(*this, flag, pTimeNew);
+		return DateTime_SetSystemtime(*this, GDT_VALID, &TimeNew);
+	}
+
+	inline BOOL CDateTime::SetTimeNone()
+	// Set the DTP control to "no date" and clear its check box.
+	// Only applies to DTP controls that are set to the DTS_SHOWNONE style.
+	{
+		assert(IsWindow());
+		return DateTime_SetSystemtime(*this, GDT_NONE, NULL);
 	}
 
 
@@ -1255,18 +1293,23 @@ namespace Win32xx
 	}
 
 	inline COLORREF CMonthCalendar::GetColor(int nRegion) const
+	// Retrieves the color for a given portion of the month calendar control.
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(MonthCal_GetColor(*this, nRegion));
 	}
 
-	inline BOOL CMonthCalendar::GetCurSel(LPSYSTEMTIME pDateTime) const
+	inline SYSTEMTIME CMonthCalendar::GetCurSel() const
+	// Retrieves the currently selected date.
 	{
 		assert(IsWindow());
-		return MonthCal_GetCurSel(*this, pDateTime);
+		SYSTEMTIME st = { 0 };
+		MonthCal_GetCurSel(*this, &st);
+		return st;
 	}
 
 	inline int CMonthCalendar::GetFirstDayOfWeek(BOOL* pbLocal /*= NULL*/) const
+	// Retrieves the first day of the week.
 	{
 		assert(IsWindow());
 		DWORD dwValue = MonthCal_GetFirstDayOfWeek(*this);
@@ -1278,12 +1321,14 @@ namespace Win32xx
 	}
 
 	inline int CMonthCalendar::GetMaxSelCount() const
+	// Retrieves the maximum date range that can be selected.
 	{
 		assert(IsWindow());
 		return MonthCal_GetMaxSelCount(*this);
 	}
 
 	inline CRect CMonthCalendar::GetMinReqRect() const
+	// Retrieves the minimum size required to display a full month
 	{
 		assert(IsWindow());
 		RECT rc;
@@ -1292,22 +1337,26 @@ namespace Win32xx
 	}
 
 	inline int CMonthCalendar::GetMonthDelta() const
+	// Retrieves the scroll rate for the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_GetMonthDelta(*this);
 	}
 
-	inline int CMonthCalendar::GetMonthRange(LPSYSTEMTIME pMinRange, LPSYSTEMTIME pMaxRange, DWORD dwFlags) const
+	inline int CMonthCalendar::GetMonthRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange, DWORD dwFlags) const
+	// Retrieves date information that represents the high and low limits of the month calendar control's display.
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
-		memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
-		memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
 		int nCount = MonthCal_GetMonthRange(*this, dwFlags, MinMax);
+		MinRange = MinMax[0];
+		MaxRange = MinMax[1];
+
 		return nCount;
 	}
 
 	inline DWORD CMonthCalendar::GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
+	//	Retrieves the minimum and maximum allowable dates set for the month calendar control.
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
@@ -1318,6 +1367,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CMonthCalendar::GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
+	// Retrieves date information that represents the upper and lower limits of the date range currently selected by the user.
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
@@ -1327,37 +1377,46 @@ namespace Win32xx
 		return Value;
 	}
 
-	inline BOOL CMonthCalendar::GetToday(SYSTEMTIME& DateTime) const
+	inline SYSTEMTIME CMonthCalendar::GetToday() const
+	// Retrieves the date information for the date specified as "today" for the month calendar control.
 	{
 		assert(IsWindow());
-		return MonthCal_GetToday(*this, &DateTime);
+		SYSTEMTIME DateTime = { 0 };
+		VERIFY(MonthCal_GetToday(*this, &DateTime));
+
+		return DateTime;
 	}
 
 	inline DWORD CMonthCalendar::HitTest(MCHITTESTINFO& MCHitTest)
+	//	Determines which portion of the month calendar control is at a given point on the screen.
 	{
 		assert(IsWindow());
 		return static_cast<DWORD>(MonthCal_HitTest(*this, &MCHitTest));
 	}
 
 	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
+	// Sets the color for a given portion of the month calendar control.
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(MonthCal_SetColor(*this, nRegion, clr));
 	}
 
 	inline BOOL CMonthCalendar::SetCurSel(const SYSTEMTIME& DateTime)
+	// Sets the currently selected date for the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_SetCurSel(*this, &DateTime);
 	}
 
 	inline BOOL CMonthCalendar::SetDayState(int nMonths, const MONTHDAYSTATE& State)
+	// Sets the day states for all months that are currently visible within the month calendar control.
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(MonthCal_SetDayState(*this, nMonths, &State));
 	}
 
 	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
+	// Sets the first day of the week for the month calendar control.
 	{
 		assert(IsWindow());
 		DWORD dwValue = (DWORD)MonthCal_SetFirstDayOfWeek(*this, iDay);
@@ -1369,39 +1428,33 @@ namespace Win32xx
 	}
 
 	inline BOOL CMonthCalendar::SetMaxSelCount(int nMax)
+	// Sets the maximum number of days that can be selected in the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_SetMaxSelCount(*this, nMax);
 	}
 
 	inline int CMonthCalendar::SetMonthDelta(int iDelta)
+	// Sets the scroll rate for the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_SetMonthDelta(*this, iDelta);
 	}
 
-	inline BOOL CMonthCalendar::SetRange(const LPSYSTEMTIME pMinRange, const LPSYSTEMTIME pMaxRange)
+	inline BOOL CMonthCalendar::SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
+	// Sets the minimum and maximum allowable dates for the month calendar control.
 	{
-
 		SYSTEMTIME MinMax[2];
-		DWORD dwLimit;
+		DWORD dwLimit = GDTR_MIN | GDTR_MAX;
 
-		if (pMinRange)
-		{
-			memcpy(&MinMax[0], pMinRange, sizeof(SYSTEMTIME));
-			dwLimit = GDTR_MIN;
-		}
-
-		if (pMaxRange)
-		{
-			memcpy(&MinMax[1], pMaxRange, sizeof(SYSTEMTIME));
-			dwLimit |= GDTR_MAX;
-		}
+		MinMax[0] = MinRange;
+		MinMax[1] = MaxRange;
 
 		return static_cast<BOOL>(MonthCal_SetRange(*this, dwLimit, &MinMax));
 	}
 
 	inline BOOL CMonthCalendar::SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
+	// Sets the selection for the month calendar control to a given date range.
 	{
 		SYSTEMTIME MinMax[2];
 		MinMax[0] = MinRange;
@@ -1410,6 +1463,7 @@ namespace Win32xx
 	}
 
 	inline void CMonthCalendar::SetToday(const SYSTEMTIME& DateTime)
+	// Sets the "today" selection for the month calendar control.
 	{
 		assert(IsWindow());
 		MonthCal_SetToday(*this, &DateTime);
@@ -1908,11 +1962,13 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TTM_GETDELAYTIME, dwDuration, 0L));
 	}
 
-	inline void CToolTip::GetMargin(RECT& rc) const
+	inline CRect CToolTip::GetMargin() const
 	// Retrieves the top, left, bottom, and right margins set for a ToolTip window.
 	{
 		assert(IsWindow());
+		CRect rc;
 		SendMessage(TTM_GETMARGIN, 0L, (LPARAM)&rc);
+		return rc;
 	}
 
 	inline int CToolTip::GetMaxTipWidth() const
@@ -1922,16 +1978,19 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TTM_GETMAXTIPWIDTH, 0L, 0L));
 	}
 
-	inline void CToolTip::GetText(CString& str, HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
+	inline CString CToolTip::GetText(HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
 	// Retrieves the information a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
+		CString str;
 		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed ToolTip is 80 characters for Windows XP and below
 		TOOLINFO ti;
 		LoadToolInfo(ti, hWnd, nIDTool);
 		ti.lpszText = pszText;
 		SendMessage(TTM_GETTEXT, 0L, (LPARAM)&ti);
 		str.ReleaseBuffer();
+
+		return str;
 	}
 
 	inline COLORREF CToolTip::GetTipBkColor() const
@@ -1955,25 +2014,26 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TTM_GETTOOLCOUNT, 0L, 0L));
 	}
 
-	inline BOOL CToolTip::GetToolInfo(TOOLINFO& ToolInfo, HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
+	inline TOOLINFO CToolTip::GetToolInfo(HWND hWnd, UINT_PTR nIDTool /*= 0*/) const
 	// Retrieves the information that a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
+		TOOLINFO ToolInfo;
 		LoadToolInfo(ToolInfo, hWnd, nIDTool);
-		return static_cast<BOOL>(SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo));
+		SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo);
+		return ToolInfo;
 	}
 
-	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, LPTOOLINFO lpToolInfo) const
+	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, TOOLINFO& ToolInfo) const
 	// Tests a point to determine whether it is within the bounding rectangle of the
 	//  specified tool and, if it is, retrieves information about the tool.
 	{
 		assert(IsWindow());
-		assert(lpToolInfo);
 		TTHITTESTINFO hti;
 		ZeroMemory(&hti, sizeof(TTHITTESTINFO));
 		hti.hwnd = hWnd;
 		hti.pt = pt;
-		hti.ti = *lpToolInfo;
+		hti.ti = ToolInfo;
 		return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0L, (LPARAM)&hti));
 	}
 
@@ -2052,11 +2112,11 @@ namespace Win32xx
 		SendMessage(TTM_SETTIPTEXTCOLOR, (WPARAM)clr, 0L);
 	}
 
-	inline void CToolTip::SetToolInfo(LPTOOLINFO lpToolInfo)
+	inline void CToolTip::SetToolInfo(const TOOLINFO& ToolInfo)
 	// Sets the information that a ToolTip control maintains for a tool.
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)lpToolInfo);
+		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)&ToolInfo);
 	}
 
 	inline void CToolTip::SetToolRect(HWND hWnd, UINT_PTR nIDTool, const RECT& rc)
@@ -2106,11 +2166,11 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)&rc));
 	}
 
-	inline CSize CToolTip::GetBubbleSize(LPTOOLINFO lpToolInfo) const
+	inline CSize CToolTip::GetBubbleSize(const TOOLINFO& ToolInfo) const
 	// Returns the width and height of a ToolTip control.
 	{
 		assert(IsWindow());
-		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, 0L, (LPARAM)lpToolInfo);
+		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, 0L, (LPARAM)&ToolInfo);
 		CSize sz(LOWORD(lr), HIWORD(lr));
 		return sz;
 	}

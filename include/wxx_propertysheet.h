@@ -661,6 +661,8 @@ namespace Win32xx
 
 	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
 	// Adds a Property Page to the Property Sheet
+    // The framework assumes ownership of the CPropertyPage pointer provided,
+	// and deletes the CPropertyPage object when the PropertySheet is destroyed.
 	{
 		assert(NULL != pPage);
 

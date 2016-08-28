@@ -71,7 +71,7 @@ CMyMonthCalendar : public CMonthCalendar                                 /*
 		CMyMonthCalendar() {}
 		virtual ~CMyMonthCalendar() {}
 		
-		virtual BOOL    GetCurSel(LPSYSTEMTIME) const;
+		virtual SYSTEMTIME GetCurSel() const;
 		virtual CString GetCurSelStr(const CString&) const;
 		
 	protected:
