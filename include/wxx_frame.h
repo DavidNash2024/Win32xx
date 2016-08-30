@@ -1690,6 +1690,7 @@ namespace Win32xx
 
 			int xoffset = (rcBk.Width() - rcCheck.Width()  +1) / 2;
 			int yoffset = (rcBk.Height() - rcCheck.Height() +1) / 2;
+			if (MFT_RADIOCHECK != fType) yoffset--;
 
 			// Draw a white or black check mark as required
 			// Unfortunately MaskBlt isn't supported on Win95, 98 or ME, so we do it the hard way
