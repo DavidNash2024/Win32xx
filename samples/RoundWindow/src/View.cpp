@@ -143,7 +143,10 @@ LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	SetCapture();
 	
 	// Save the relative mouse position
-	m_Point = CPoint(lParam);
+	m_Point = GetCursorPos();
+	ScreenToClient(m_Point);
+
+	// Adjust client co-ords to window co-ords.
 	m_Point.x += GetSystemMetrics(SM_CXFIXEDFRAME);
 	m_Point.y += GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFIXEDFRAME);
 
@@ -165,8 +168,7 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	if (wParam & MK_LBUTTON)
 	{
-		CPoint pt(lParam);
-		ClientToScreen(pt);
+		CPoint pt = GetCursorPos();
 
 		int x = pt.x - m_Point.x;
 		int y = pt.y - m_Point.y;

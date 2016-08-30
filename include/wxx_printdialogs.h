@@ -412,6 +412,7 @@ namespace Win32xx
 	}
 
 	inline CDC CPrintDialog::GetPrinterDC() const
+	// Returns the printer's device context.
 	{
 		CDC dc;
 

@@ -102,7 +102,6 @@ namespace Win32xx
 	
   #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
 	
-	
 	inline BOOL IsAeroThemed()
 	{
 		BOOL IsAeroThemed = FALSE;
