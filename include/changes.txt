@@ -5,6 +5,7 @@ Bug Fixes:
  - Sometimes the view window of an undocked docker wasn't resized.
  - CFileDialog::GetPathName failed on Win98.
  - A dock ancestor didn't support docking unless it was also a top level window.
+ - Dockers can now be used as a view window for a tab in CTab and CTabbedMDI.
  - An exception could be thrown when CTab was destroyed.
  - The highlighted menu radio box was out of position on Windows XP and older.
  - The Scribble sample destroyed a pen while it was selected in the device context.

@@ -3101,14 +3101,17 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		LPDRAGPOS pdp = (LPDRAGPOS)lParam;
 
-		switch (((LPNMHDR)lParam)->code)
+		if (IsWindowVisible())
 		{
-		case UWN_BARSTART:		return OnBarStart(pdp);
-		case UWN_BARMOVE:		return OnBarMove(pdp);
-		case UWN_BAREND:		return OnBarEnd(pdp);
-		case UWN_DOCKSTART:		return OnDockStart(pdp);
-		case UWN_DOCKMOVE:		return OnDockMove(pdp);
-		case UWN_DOCKEND:		return OnDockEnd(pdp);
+			switch (((LPNMHDR)lParam)->code)
+			{
+			case UWN_BARSTART:		return OnBarStart(pdp);
+			case UWN_BARMOVE:		return OnBarMove(pdp);
+			case UWN_BAREND:		return OnBarEnd(pdp);
+			case UWN_DOCKSTART:		return OnDockStart(pdp);
+			case UWN_DOCKMOVE:		return OnDockMove(pdp);
+			case UWN_DOCKEND:		return OnDockEnd(pdp);
+			}
 		}
 		return 0L;
 	}
