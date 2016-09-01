@@ -319,24 +319,16 @@ BOOL CMainFrame::OnOptionsFont()
 	lf.lfWeight = (cf2.dwEffects & CFE_BOLD)? 700 : 400;
 	lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);
 
-	// Fill the CHOOSEFONT stucture
-	CHOOSEFONT cf;
-	ZeroMemory(&cf, sizeof(cf));
-	cf.lStructSize = sizeof(cf);
-	cf.hwndOwner = *this;
-	cf.lpLogFont = &lf;						// current logfont
-	cf.rgbColors = cf2.crTextColor;			// current text color
-	cf.lpLogFont = &lf;
-	cf.Flags = CF_SCREENFONTS | CF_EFFECTS | CF_INITTOLOGFONTSTRUCT;
-
-	if (ChooseFont(&cf))
+	// Display the Choose Font dialog
+	CFontDialog LogFont(lf, CF_SCREENFONTS | CF_EFFECTS);
+	if (LogFont.DoModal(*this) == IDOK)
 	{
 		// Set the Font
-		CFont RichFont(*cf.lpLogFont);
+		CFont RichFont(LogFont.GetLogFont());
 		m_RichView.SetFont(RichFont, TRUE);
 
 		// Set the font color
-		cf2.crTextColor = cf.rgbColors;
+		cf2.crTextColor = LogFont.GetColor();
 		cf2.dwEffects = 0;
 		cf2.dwMask = CFM_COLOR;
 		m_RichView.SetDefaultCharFormat(cf2);

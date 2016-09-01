@@ -205,7 +205,7 @@ namespace Win32xx
 		virtual void OnSize(int width, int height);
 		
 		// Not intended to be overridden
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		UINT	GetPidlLength(LPITEMIDLIST pidl);

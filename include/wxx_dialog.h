@@ -106,7 +106,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 		
 		// Not intended to be overridden
-		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Can't override these functions
 		DWORD GetDefID() const;

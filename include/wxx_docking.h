@@ -140,7 +140,8 @@ namespace Win32xx
 			virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void RecalcLayout();
-			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+			
+			LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CWnd* GetTabCtrl() const						{ return m_pTab;}
 			CWnd& GetView() const { assert(m_pView); return *m_pView; }
@@ -208,7 +209,9 @@ namespace Win32xx
 		virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		
+		// Not intended to be overwritten
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		std::vector<ContainerInfo>& GetAll() const {return m_pContainerParent->m_vContainerInfo;}
@@ -257,7 +260,7 @@ namespace Win32xx
 			virtual void PreRegisterClass(WNDCLASS& wc);
 			virtual void SendNotify(UINT nMessageID);
 			virtual void SetColor(COLORREF color);
-			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+			LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 			CDocker& GetDocker() const		{assert (m_pDocker); return *m_pDocker;}
 			int GetWidth() const			{return m_DockBarWidth;}
@@ -316,7 +319,7 @@ namespace Win32xx
 			virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual void    PreRegisterClass(WNDCLASS& wc);
 			virtual void    PreCreate(CREATESTRUCT& cs);
-			virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+			LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		private:
 			LRESULT MouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -514,7 +517,9 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		
+		// Not intended to be overwritten
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Current declarations of message handlers
 		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
