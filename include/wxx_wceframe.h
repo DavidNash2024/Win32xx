@@ -118,9 +118,7 @@ namespace Win32xx
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void RecalcLayout();
 		virtual void SetButtons(const std::vector<UINT> ToolBarData);
-		
-		// Not intended to be overwritten
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual	LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	protected:
 		std::vector<UINT> m_ToolBarData;

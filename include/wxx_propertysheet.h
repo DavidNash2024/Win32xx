@@ -77,6 +77,7 @@ namespace Win32xx
 		virtual ~CPropertyPage() {}
 
 		virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual int  OnApply();
 		virtual void OnCancel();
 		virtual void OnHelp();
@@ -98,9 +99,6 @@ namespace Win32xx
 		void SetModified(BOOL bChanged) const;
 		void SetTitle(LPCTSTR szTitle);
 		void SetWizardButtons(DWORD dwFlags) const;
-
-		// Not intended to be overwritten
-		INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 
 	private:
@@ -149,7 +147,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 		
 		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CPropertySheet(const CPropertySheet&);				// Disable copy construction

@@ -170,7 +170,7 @@ namespace Win32xx
 		virtual void 	OnTypeChange();
 
 		// Not intended to be overridden
-		INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		BOOL 			m_bOpenFileDialog;  // TRUE = open, FALSE = save
