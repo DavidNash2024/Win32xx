@@ -308,7 +308,7 @@ namespace Win32xx
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		
 		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		HWND m_hWnd;					// handle to this object's window
 

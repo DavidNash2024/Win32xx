@@ -435,7 +435,7 @@ namespace Win32xx
 		virtual void UpdateMRUMenu();
 
 		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Current declarations of message handlers
 		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);

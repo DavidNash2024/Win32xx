@@ -189,7 +189,7 @@ namespace Win32xx
 		virtual void    SetTabSize();
 
 		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTab(const CTab&);				// Disable copy construction
@@ -247,9 +247,7 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnTabClose(int nPage);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
-		// Not intended to be overwritten
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTabbedMDI(const CTabbedMDI&);				// Disable copy construction

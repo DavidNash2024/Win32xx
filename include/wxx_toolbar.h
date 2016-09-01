@@ -133,7 +133,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS& wc);
 
 		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CToolBar(const CToolBar&);				// Disable copy construction
