@@ -222,7 +222,7 @@ namespace Win32xx
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 
 		// Not intended to be overriden
-		virtual INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
+		INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
 
 	private:
 		void GlobalFreeAll()
@@ -272,7 +272,7 @@ namespace Win32xx
 		virtual UINT 	OnPreDrawPage(WORD wPaper, WORD wFlags, const PAGESETUPDLG& PSD);
 
 		// Not intended to be overridden
-		virtual INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
+		INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
 		static INT_PTR CALLBACK PaintHookProc(HWND, UINT, WPARAM, LPARAM);
 
 	private:

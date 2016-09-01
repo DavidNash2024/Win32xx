@@ -107,8 +107,8 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 		// Not intended to be overridden
-		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CMDIChild(const CMDIChild&);				// Disable copy construction
@@ -190,7 +190,7 @@ namespace Win32xx
 		virtual BOOL    PreTranslateMessage(MSG& Msg);
 
 		// Not intended to be overridden
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CMDIFrame(const CMDIFrame&);				// Disable copy construction
