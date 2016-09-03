@@ -10,33 +10,14 @@
 // Definitions for the CMyDialog class
 CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
-	// Load RichEdit version 2.0 or 3.0
-	m_hInstRichEdit = LoadLibrary(_T("riched20.dll"));
-    
-	// Load RichEdit version 1.0 as a last resort
-	if (m_hInstRichEdit == 0)
- 		m_hInstRichEdit = LoadLibrary(_T("riched32.dll"));
-
-	if (m_hInstRichEdit == 0)
-		::MessageBox(NULL, _T("CMyDialog::CMyDialog  Failed to load RICHED32.DLL"), _T("Error"), MB_ICONWARNING);
 }
 
 CMyDialog::CMyDialog(LPCTSTR lpszResName) : CDialog(lpszResName)
 {
-	// Load RichEdit version 2.0 or 3.0
-	m_hInstRichEdit = LoadLibrary(_T("riched20.dll"));
-    
-	// Load RichEdit version 1.0 as a last resort
-	if (m_hInstRichEdit == 0)
- 		m_hInstRichEdit = LoadLibrary(_T("riched32.dll"));
-
-	if (m_hInstRichEdit == 0)
-		::MessageBox(NULL, _T("CMyDialog::CMyDialog  Failed to load RICHED32.DLL"), _T("Error"), MB_ICONWARNING);
 }
 
 CMyDialog::~CMyDialog()
 {
-	::FreeLibrary(m_hInstRichEdit);
 }
 
 INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -81,8 +62,7 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
-	// Put some text in the edit boxes
-	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
+	// Put some text in the rich edit box
 	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
@@ -95,6 +75,9 @@ BOOL CMyDialog::OnInitDialog()
 
 	// Turn our static control into a hyperlink
 	AttachItem(IDC_STATIC4, m_Hyperlink);
+	
+	// Attach the rich edit control to m_RichEdit
+	AttachItem(IDC_RICHEDIT1, m_RichEdit);
 
 	return TRUE;
 }

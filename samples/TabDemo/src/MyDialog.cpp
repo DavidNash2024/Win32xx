@@ -9,14 +9,10 @@
 // Definitions for the CViewDialog class
 CViewDialog::CViewDialog(UINT nResID) : CDialog(nResID)
 {
-	m_hInstRichEdit = LoadLibrary(_T("RICHED32.DLL"));
-    if (m_hInstRichEdit == 0)
- 		::MessageBox(NULL, _T("CViewDialog::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
 }
 
 CViewDialog::~CViewDialog()
 {
-	::FreeLibrary(m_hInstRichEdit);
 }
 
 void CViewDialog::AppendText(int nID, LPCTSTR szText)

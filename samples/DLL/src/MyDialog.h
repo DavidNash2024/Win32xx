@@ -29,7 +29,8 @@ private:
 	BOOL OnCheck2();
 	BOOL OnCheck3();
 
-	HMODULE m_hInstRichEdit;
+	CEdit	  m_Edit;
+	CRichEdit m_RichEdit;
 };
 
 #endif //MYDIALOG_H

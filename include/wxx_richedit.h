@@ -160,7 +160,8 @@ namespace Win32xx
 		void	PreRegisterClass(WNDCLASS& wc);
 
 	private:
-		HMODULE m_hmodRich;
+		HMODULE m_hmodRich1;
+		HMODULE m_hmodRich2;
 	};
 
 }
@@ -177,16 +178,16 @@ namespace Win32xx
 	//
 
 	inline CRichEdit::CRichEdit()
-	{
-		// Load RichEdit version 2.0 or 3.0
-		m_hmodRich = LoadLibrary(_T("riched20.dll"));
-		
-		// Load RichEdit version 1.0 as a last resort
-		if (m_hmodRich == 0)
-			m_hmodRich = LoadLibrary(_T("riched32.dll"));
+	{	
+		// Load RichEdit version 1.0
+		// Note: Many dialogs use RichEdit version 1.0
+		m_hmodRich1 = LoadLibrary(_T("riched32.dll"));
 	
-		if (m_hmodRich == 0)
+		if (m_hmodRich1 == 0)
 			throw CNotSupportedException(_T("Failed to load RICHED32.DLL"));
+
+		// Load RichEdit version 2.0 or 3.0 (if we can)
+		m_hmodRich2 = LoadLibrary(_T("riched20.dll"));
 	}
 
 	inline CRichEdit::~CRichEdit()
@@ -194,7 +195,9 @@ namespace Win32xx
 		// Destroy the window before freeing the DLL
 		Destroy();
 
-		FreeLibrary(m_hmodRich);
+		FreeLibrary(m_hmodRich1);
+		if (m_hmodRich2)
+			FreeLibrary(m_hmodRich2);
 	}
 
 	inline void CRichEdit::PreRegisterClass(WNDCLASS& wc)

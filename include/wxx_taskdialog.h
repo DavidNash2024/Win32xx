@@ -121,7 +121,9 @@ namespace Win32xx
 		virtual BOOL OnTDTimer(DWORD dwTickCount);
 		virtual void OnTDVerificationCheckboxClicked(BOOL bChecked);
 		virtual LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		
+		// Not intended to be overwritten
+		LRESULT TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CTaskDialog(const CTaskDialog&);				// Disable copy construction
