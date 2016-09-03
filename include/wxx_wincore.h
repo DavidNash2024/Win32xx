@@ -704,7 +704,7 @@ namespace Win32xx
 		case WM_MEASUREITEM:
 		case WM_DELETEITEM:
 		case WM_COMPAREITEM:
-			hWnd = GetDlgItem(static_cast<int>(lParam));
+			hWnd = GetDlgItem(static_cast<int>(wParam));
 			break;
 
 		case WM_PARENTNOTIFY:

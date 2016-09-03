@@ -9,14 +9,10 @@
 // Definitions for the CMyDialog class
 CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
-	m_hInstRichEdit = ::LoadLibrary(_T("RICHED32.DLL"));
-    if (m_hInstRichEdit == 0)
- 		::MessageBox(NULL, _T("CMyDialog::CRichView  Failed to load RICHED32.DLL"), _T(""), MB_ICONWARNING);
 }
 
 CMyDialog::~CMyDialog()
 {
-	::FreeLibrary(m_hInstRichEdit);
 }
 
 void CMyDialog::OnDestroy()
@@ -60,9 +56,12 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconLarge(IDI_DIALOG);
 	SetIconSmall(IDI_DIALOG);
 
+	AttachItem(IDC_EDIT1, m_Edit);
+	AttachItem(IDC_RICHEDIT1, m_RichEdit);
+
 	// Put some text in the edit boxes
-	SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
-	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
+	m_Edit.SetWindowText(_T("Edit Control"));
+	m_RichEdit.SetWindowText(_T("Rich Edit Window"));
 
 	// Put some text in the list box
 	for (int i = 0 ; i < 8 ; i++)

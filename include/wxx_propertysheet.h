@@ -147,7 +147,7 @@ namespace Win32xx
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 		
 		// Not intended to be overridden
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CPropertySheet(const CPropertySheet&);				// Disable copy construction

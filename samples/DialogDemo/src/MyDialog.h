@@ -34,10 +34,10 @@ private:
 	BOOL OnCheck2();
 	BOOL OnCheck3();
 
-	HMODULE m_hInstRichEdit;
-	CMyButton m_Button;
-	CHyperlink m_Hyperlink;
-	CListBox m_ListBox;
+	CRichEdit	m_RichEdit;
+	CMyButton	m_Button;
+	CHyperlink	m_Hyperlink;
+	CListBox	m_ListBox;
 };
 
 #endif //MYDIALOG_H

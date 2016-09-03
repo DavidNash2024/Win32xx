@@ -31,7 +31,6 @@ private:
 	void OnCheck3();
 
 	CResizer m_Resizer;
-	HMODULE m_hInstRichEdit;
 
 	// Nested classes for this dialog's child windows
 	// Nesting is optional. Its done here to keep the IDE's class view tidy.

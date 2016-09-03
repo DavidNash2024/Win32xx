@@ -93,7 +93,7 @@ namespace Win32xx
 		virtual void	PreRegisterClass(WNDCLASS& wc);
 		
 		// Not intended to be overridden
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CMenuBar(const CMenuBar&);				// Disable copy construction
