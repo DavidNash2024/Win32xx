@@ -1,8 +1,8 @@
-RibbonFrame Example
-===================
+RibbonDockFrame Example
+=======================
 This project demonstrates how to add a ribbon to a Docking Frame. The ribbon
 buttons are defined in an Ribbon.xml. This application adds a ribbon to the
-Scribble sample. The ribbon is only supported on Windows 7 OS (and above). If
+Scribble sample. The ribbon is only supported on Windows 7 (and above). If
 the ribbon isn't supported by the operating system, the traditional menu and 
 toolbar are displayed instead. 
 

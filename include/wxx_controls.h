@@ -977,6 +977,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		SYSTEMTIME Ranges[2];
+		ZeroMemory(Ranges, 2 * sizeof(SYSTEMTIME));
 		DWORD Result = DateTime_GetRange(*this, Ranges);
 		MinRange = Ranges[0];
 		MaxRange = Ranges[1];
@@ -1003,7 +1004,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME SysTime;
-
+		ZeroMemory(&SysTime,  sizeof(SYSTEMTIME));
 		DWORD Res = DateTime_GetSystemtime(*this, &SysTime);
 		if (pReturnCode)
 			*pReturnCode = Res;
@@ -1303,7 +1304,8 @@ namespace Win32xx
 	// Retrieves the currently selected date.
 	{
 		assert(IsWindow());
-		SYSTEMTIME st = { 0 };
+		SYSTEMTIME st;
+		ZeroMemory(&st, sizeof(st));
 		MonthCal_GetCurSel(*this, &st);
 		return st;
 	}
@@ -1331,7 +1333,7 @@ namespace Win32xx
 	// Retrieves the minimum size required to display a full month
 	{
 		assert(IsWindow());
-		RECT rc;
+		CRect rc;
 		MonthCal_GetMinReqRect(*this, &rc);
 		return rc;
 	}
@@ -1348,10 +1350,10 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
+		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));	
 		int nCount = MonthCal_GetMonthRange(*this, dwFlags, MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
-
 		return nCount;
 	}
 
@@ -1360,6 +1362,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
+		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
 		DWORD dwValue = MonthCal_GetRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
@@ -1371,6 +1374,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
+		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
 		BOOL Value = MonthCal_GetSelRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
@@ -1381,9 +1385,9 @@ namespace Win32xx
 	// Retrieves the date information for the date specified as "today" for the month calendar control.
 	{
 		assert(IsWindow());
-		SYSTEMTIME DateTime = { 0 };
+		SYSTEMTIME DateTime;
+		ZeroMemory(&DateTime, sizeof(DateTime));
 		VERIFY(MonthCal_GetToday(*this, &DateTime));
-
 		return DateTime;
 	}
 
