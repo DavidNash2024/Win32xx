@@ -537,24 +537,31 @@ namespace Win32xx
 		switch (message)
 		{
 			case WM_INITDIALOG:
-			{     // handle the initialization message
- 			return OnInitDialog();
+			{
+				// handle the initialization message
+ 				return OnInitDialog();
 			}
 
 			case WM_COMMAND:
-			{     // handle the HELP button for old-style file dialogs:
-	 		if (LOWORD(wParam) == pshHelp)
-				OnHelpButton();
+			{
+				// handle the HELP button for old-style file dialogs:
+	 			if (LOWORD(wParam) == pshHelp)
+					OnHelpButton();
 
-			return 0;
+				return 0;
 			}
 
 			case WM_NOTIFY:
-			{     // handle messages for Explorer-style hook procedures:
-			if (m_OFN.Flags & OFN_EXPLORER)
-				return OnNotify(wParam, lParam);
+			{
+				// handle messages for Explorer-style hook procedures:
+				if (m_OFN.Flags & OFN_EXPLORER)
+				{
+					LRESULT lr = OnNotify(wParam, lParam);
+					SetWindowLongPtr(DWLP_MSGRESULT, lr);
+					return lr;
+				}
 
-			return 0;
+				return 0;
 			}
 		}
 
@@ -843,49 +850,37 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 
 		OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lParam);
+		assert(pNotify);
 		switch(pNotify->hdr.code)
 		{
 			case CDN_INITDONE:
-			OnInitDone();
-			return TRUE;
+				OnInitDone();
+				return TRUE;
 
 			case CDN_SELCHANGE:
-			OnFileNameChange();
-			return TRUE;
+				OnFileNameChange();
+				return TRUE;
 
 			case CDN_FOLDERCHANGE:
-  			OnFolderChange();
-			return TRUE;
+				OnFolderChange();
+				return TRUE;
 
 			case CDN_SHAREVIOLATION:
-				{
-					 LRESULT Result =  OnShareViolation(pNotify->pszFile);
-
-					 if ( Result != OFN_SHAREWARN)
-						 SetWindowLongPtr(DWLP_MSGRESULT, Result);
-
-					 return Result;
-				}
-
+				return OnShareViolation(pNotify->pszFile);
+	
 			case CDN_HELP:
-			OnHelpButton();
-			return TRUE;
+				OnHelpButton();
+				return TRUE;
 
 			case CDN_FILEOK:
-				{
-					LRESULT Result = OnFileNameOK();
-
-					if (Result != 0)
-						SetWindowLongPtr(DWLP_MSGRESULT, Result);
-
-					return Result;
-				}
+				return OnFileNameOK();
 
 			case CDN_TYPECHANGE:
-			OnTypeChange();
-			return TRUE;
+				OnTypeChange();
+				return TRUE;
 		}
 
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 		return FALSE;   // not handled
 	}
 

@@ -2296,7 +2296,8 @@ namespace Win32xx
 
 		// Setup the menu
 		SetFrameMenu(IDW_MAIN);
-		UpdateMRUMenu();
+		if (m_nMaxMRU > 0)
+			UpdateMRUMenu();
 
 		// Create the ToolBar
 		if (m_UseToolBar)
@@ -3673,7 +3674,7 @@ namespace Win32xx
 				FileMenu.DeleteMenu(u, MF_BYCOMMAND);
 			}
 
-			int MaxMRUIndex = MRUStrings.size() -1;
+			int MaxMRUIndex = static_cast<int>(MRUStrings.size() -1);
 
 			for (int index = MaxMRUIndex; index >= 0; --index)
 			{

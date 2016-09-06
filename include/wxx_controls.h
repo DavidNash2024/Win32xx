@@ -271,10 +271,10 @@ namespace Win32xx
 		SYSTEMTIME GetCurSel() const;
 		int GetMaxSelCount() const;
 		int GetMonthRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange, DWORD dwFlags) const;
-		DWORD GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
-		BOOL GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
+		LRESULT GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
+		LRESULT GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
 		SYSTEMTIME GetToday() const;
-		DWORD HitTest(MCHITTESTINFO& MCHitTest);
+		LRESULT HitTest(MCHITTESTINFO& MCHitTest);
 		BOOL SetCurSel(const SYSTEMTIME& DateTime);
 		BOOL SetDayState(int nMonths, const MONTHDAYSTATE& States);
 		BOOL SetMaxSelCount(int nMax);
@@ -1357,25 +1357,25 @@ namespace Win32xx
 		return nCount;
 	}
 
-	inline DWORD CMonthCalendar::GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
+	inline LRESULT CMonthCalendar::GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
 	//	Retrieves the minimum and maximum allowable dates set for the month calendar control.
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
 		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
-		DWORD dwValue = MonthCal_GetRange(*this, &MinMax);
+		LRESULT dwValue = MonthCal_GetRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
 		return dwValue;
 	}
 
-	inline BOOL CMonthCalendar::GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
+	inline LRESULT CMonthCalendar::GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
 	// Retrieves date information that represents the upper and lower limits of the date range currently selected by the user.
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
 		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
-		BOOL Value = MonthCal_GetSelRange(*this, &MinMax);
+		LRESULT Value = MonthCal_GetSelRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
 		return Value;
@@ -1391,11 +1391,11 @@ namespace Win32xx
 		return DateTime;
 	}
 
-	inline DWORD CMonthCalendar::HitTest(MCHITTESTINFO& MCHitTest)
+	inline LRESULT CMonthCalendar::HitTest(MCHITTESTINFO& MCHitTest)
 	//	Determines which portion of the month calendar control is at a given point on the screen.
 	{
 		assert(IsWindow());
-		return static_cast<DWORD>(MonthCal_HitTest(*this, &MCHitTest));
+		return MonthCal_HitTest(*this, &MCHitTest);
 	}
 
 	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)

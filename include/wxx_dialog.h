@@ -332,7 +332,7 @@ namespace Win32xx
 				if (IsWindow())
 					SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
 
-				return static_cast<BOOL>(lr);
+				return lr;
 			}
 
 		case WM_PAINT:
@@ -381,7 +381,8 @@ namespace Win32xx
 			return MessageReflect(uMsg, wParam, lParam);
 
 	    } // switch(uMsg)
-	    return FALSE;
+	    
+		return 0;
 
 	} // INT_PTR CALLBACK CDialog::DialogProc(...)
 
