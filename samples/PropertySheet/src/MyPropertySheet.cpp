@@ -30,15 +30,11 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return DialogProcDefault(uMsg, wParam, lParam);
 }
 
-int CButtonPage::OnApply()
+BOOL CButtonPage::OnApply()
 { 
 	TRACE ("Appy button pressed\n"); 
-	
-	// The possible return values are:
-	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
-	// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-	// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
 
+	GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0L);
 	return Validate();
 }
 
@@ -56,19 +52,12 @@ BOOL CButtonPage::OnInitDialog()
 	return TRUE; 
 }
 
-int CButtonPage::OnOK()
+void CButtonPage::OnOK()
 { 
 	TRACE ("OK button pressed\n");
 
-	// The possible return values are:
-	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
-	// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-	// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
-
 	// Close the modeless propertysheet
-	GetParent().PostMessage(WM_CLOSE);
-	
-	return Validate(); 
+	CPropertyPage::OnOK();
 }
 
 BOOL CButtonPage::OnQueryCancel()
@@ -78,38 +67,30 @@ BOOL CButtonPage::OnQueryCancel()
 	return FALSE;    // Allow cancel to proceed
 }
 
-int CButtonPage::OnSetActive()
+BOOL CButtonPage::OnSetActive()
 {
 	TRACE("Button page is now active\n");
 
 	// Set the wizard buttons
 	SetWizardButtons(PSWIZB_NEXT);
 
-	return 0;
+	return TRUE;
 }
 
-int CButtonPage::Validate()
+BOOL CButtonPage::Validate()
 {
 	// This is where we validate (and save) the contents of this page before it is closed
-	
-	// return one of these values:
-	// PSNRET_NOERROR. The changes made to this page are valid and have been applied
-	// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-	// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned 
-	//                               to the page that had focus when the button was pressed.
+	// Here we would extract and test the values from th ButtonPage dialog:
 
-
-	int nStatus = PSNRET_NOERROR;
-//	int nStatus = PSNRET_INVALID;
-//	int nStatus = PSNRET_INVALID_NOCHANGEPAGE;
+	BOOL IsValid = TRUE;
 
 // Tell the user what went wrong
-	if (nStatus != PSNRET_NOERROR)
-		MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
-	else
-		TRACE("Button Page Validation passed\n");
+//	if (IsValid)
+//		MessageBox(_T("Button Page Validation Failed"), _T("PageSheet Check"), MB_OK);
+//	else
+//		TRACE("Button Page Validation passed\n");
 	
-	return nStatus;
+	return IsValid;
 }
 
 CComboPage::CComboPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPropertyPage(nIDTemplate, szTitle)
@@ -150,14 +131,14 @@ BOOL CComboPage::OnInitDialog()
 	return TRUE;
 }
 
-int CComboPage::OnSetActive()
+BOOL CComboPage::OnSetActive()
 {
 	TRACE("Combo page is now active\n");
 
 	// Set the wizard buttons
 	SetWizardButtons(PSWIZB_BACK | PSWIZB_FINISH);
 
-	return 0;
+	return TRUE;
 }
 
 CMyPropertySheet::CMyPropertySheet(LPCTSTR pszCaption /*=NULL*/, HWND hParent /* = NULL*/) : CPropertySheet(pszCaption, hParent)

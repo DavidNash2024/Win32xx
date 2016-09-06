@@ -975,6 +975,7 @@ namespace Win32xx
 		case TCN_SELCHANGE:	return OnTCNSelChange(pNMHDR);
 		}
 
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 		return 0L;
 	}
 
@@ -1914,6 +1915,7 @@ namespace Win32xx
 
 		}	// switch(pnmhdr->code)
 
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 		return 0L;
 	}
 

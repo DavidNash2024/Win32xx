@@ -70,29 +70,31 @@ namespace Win32xx
     class CPropertyPage;
 	typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
 
-	class CPropertyPage : public CWnd
+	class CPropertyPage : public CDialog
 	{
 	public:
 		CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
 		virtual ~CPropertyPage() {}
 
 		virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual int  OnApply();
+		virtual BOOL OnApply();
 		virtual void OnCancel();
 		virtual void OnHelp();
 		virtual BOOL OnInitDialog();
 		virtual BOOL OnKillActive();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual int  OnOK();
+		virtual void OnOK();
 		virtual BOOL OnQueryCancel();
 		virtual BOOL OnQuerySiblings(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual int  OnSetActive();
-		virtual int  OnWizardBack();
-		virtual INT_PTR OnWizardFinish();
-		virtual int  OnWizardNext();
+		virtual void OnReset();
+		virtual BOOL OnSetActive();
+		virtual BOOL OnWizardBack();
+		virtual BOOL OnWizardFinish();
+		virtual BOOL OnWizardNext();
 		virtual	BOOL PreTranslateMessage(MSG& Msg);
+
 		void CancelToClose() const;
+		INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		PROPSHEETPAGE GetPSP() const {return m_PSP;}
 		BOOL IsButtonEnabled(int iButton) const;
 		LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam) const;
@@ -145,9 +147,7 @@ namespace Win32xx
 
 	protected:
 		virtual BOOL PreTranslateMessage(MSG& Msg);
-		
-		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
 
 	private:
 		CPropertySheet(const CPropertySheet&);				// Disable copy construction
@@ -171,7 +171,7 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CPropertyPage class
 	//
-	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/)
+	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/) : CDialog((UINT)0)
 	{
 		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
 		SetTitle(szTitle);
@@ -217,117 +217,13 @@ namespace Win32xx
 	inline INT_PTR CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// All DialogProc functions should pass unhandled messages to this function
 	{
-		LRESULT lr = 0L;
-
 		switch (uMsg)
 	    {
-	    case WM_INITDIALOG:
-		    return OnInitDialog();
-
 		case PSM_QUERYSIBLINGS:
 			return OnQuerySiblings(uMsg, wParam, lParam);
-			
-		case WM_CLOSE:	
-			{
-				OnClose();
-				return 0L;
-			}	
-
-		case WM_COMMAND:
-			{
-				// Reflect this message if it's from a control
-				CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
-				if (pWnd != NULL)
-					lr = pWnd->OnCommand(wParam, lParam);
-
-				// Handle user commands
-				if (!lr)
-					lr =  OnCommand(wParam, lParam);
-
-				if (lr) return 0L;
-			}
-			break;
-
-		case WM_DESTROY:
-			{
-				OnDestroy();
-				break;
-			}
-
-		case WM_NOTIFY:
-			{
-				// Do Notification reflection if it came from a CWnd object
-				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = GetCWndPtr(hwndFrom);
-
-				if (pWndFrom != NULL)
-					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
-				else
-				{
-					// Some controls (e.g. ListView) have child windows.
-					// Reflect those notifications too.
-					CWnd* pWndFromParent = GetCWndPtr(::GetParent(hwndFrom));
-					if (pWndFromParent != NULL)
-						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
-				}
-
-				// Handle user notifications
-				if (!lr) lr = OnNotify(wParam, lParam);
-
-				// Set the return code for notifications
-				if (IsWindow())
-					SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
-
-				return static_cast<BOOL>(lr);
-			}
-
-		case WM_PAINT:
-			{
-				if (::GetUpdateRect(*this, NULL, FALSE))
-				{
-					CPaintDC dc(*this);
-					OnDraw(dc);
-				}
-				else
-				// RedrawWindow can require repainting without an update rect
-				{
-					CClientDC dc(*this);
-					OnDraw(dc);
-				}
-
-				break;
-			}
-			
-		case WM_ERASEBKGND:
-			{
-				CDC dc((HDC)wParam);
-				BOOL bResult;
-				bResult = OnEraseBkgnd(dc);
-
-				if (bResult) return TRUE;
-			}
-			break;
-
-		// A set of messages to be reflected back to the control that generated them
-		case WM_CTLCOLORBTN:
-		case WM_CTLCOLOREDIT:
-		case WM_CTLCOLORDLG:
-		case WM_CTLCOLORLISTBOX:
-		case WM_CTLCOLORSCROLLBAR:
-		case WM_CTLCOLORSTATIC:
-		case WM_DRAWITEM:
-		case WM_MEASUREITEM:
-		case WM_DELETEITEM:
-		case WM_COMPAREITEM:
-		case WM_CHARTOITEM:
-		case WM_VKEYTOITEM:
-		case WM_HSCROLL:
-		case WM_VSCROLL:
-		case WM_PARENTNOTIFY:
-			return MessageReflect(uMsg, wParam, lParam);
-
-	    } // switch(uMsg)
-	    return FALSE;
+	    }
+		
+		return CDialog::DialogProcDefault(uMsg, wParam, lParam);
 
 	} // INT_PTR CALLBACK CPropertyPage::DialogProc(...)
 
@@ -338,17 +234,14 @@ namespace Win32xx
 		return GetParent().GetDlgItem(iButton).IsWindowEnabled();
 	}
 
-	inline int CPropertyPage::OnApply()
+	inline BOOL CPropertyPage::OnApply()
 	{
-		// This function is called for each page when the Apply button is pressed
+		// This function is called for each page when the Apply, OK or Close button is pressed
 		// Override this function in your derived class if required.
 
-		// The possible return values are:
-		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
-		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
+		// Return TRUE to accept the changes; otherwise FALSE.
 
-		return PSNRET_NOERROR;
+		return TRUE;
 	}
 
 	inline void CPropertyPage::OnCancel()
@@ -368,6 +261,8 @@ namespace Win32xx
 		// Called when the cancel button is pressed, and before the cancel has taken place
 		// Returns TRUE to prevent the cancel operation, or FALSE to allow it.
 
+		// Return FALSE to allow the cance to proceed; otherwise TRUE.
+		
 		return FALSE;    // Allow cancel to proceed
 	}
 
@@ -385,6 +280,12 @@ namespace Win32xx
 		// return TRUE to stop query at this page.
 
 		return FALSE;
+	}
+
+	inline void CPropertyPage::OnReset()
+	{
+
+		OnCancel();
 	}
 
 	inline BOOL CPropertyPage::OnInitDialog()
@@ -405,17 +306,13 @@ namespace Win32xx
 		return FALSE;
 	}
 
-	inline int CPropertyPage::OnOK()
+	inline void CPropertyPage::OnOK()
 	{
-		// Called for each page when the OK button is pressed
+		// Called when the OK button is pressed if OnApply for each page returns TRUE.
 		// Override this function in your derived class if required.
 
-		// The possible return values are:
-		// PSNRET_NOERROR. The changes made to this page are valid and have been applied
-		// PSNRET_INVALID. The property sheet will not be destroyed, and focus will be returned to this page.
-		// PSNRET_INVALID_NOCHANGEPAGE. The property sheet will not be destroyed, and focus will be returned;
-
-		return PSNRET_NOERROR;
+		// Close the modeless propertysheet
+		GetParent().PostMessage(WM_CLOSE);
 	}
 
 	inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -424,81 +321,82 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 
 		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
+		assert(pNotify);
+		
 		switch(pNotify->hdr.code)
 		{
-		case PSN_SETACTIVE:
-			return OnSetActive();
+		case PSN_SETACTIVE:	
+			return OnSetActive() ? 0L : -1L;
 		case PSN_KILLACTIVE:
 			return OnKillActive();
 		case PSN_APPLY:
-			if (pNotify->lParam)
-				return OnOK();
-			else
-				return OnApply();
+			if (OnApply())
+			{
+				if (pNotify->lParam)
+					OnOK();
+				return PSNRET_NOERROR;
+			}
+			return PSNRET_INVALID_NOCHANGEPAGE;
 		case PSN_RESET:
-			OnCancel();
-			return FALSE;
+			OnReset();
 		case PSN_QUERYCANCEL:
 			return OnQueryCancel();
 		case PSN_WIZNEXT:
-			return OnWizardNext();
+			return OnWizardNext()? 0L : -1L;
 		case PSN_WIZBACK:
-			return OnWizardBack();
+			return OnWizardBack()? 0L : -1L;
 		case PSN_WIZFINISH:
-			return OnWizardFinish();
+			return !OnWizardFinish();
 		case PSN_HELP:
 			OnHelp();
-			return TRUE;
+			break;
+		default:
+			return FALSE;   // notification not handled
 		}
-		return FALSE;
+
+		// notification handled
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
+		return TRUE;
 	}
 
-	inline int CPropertyPage::OnSetActive()
+	inline BOOL CPropertyPage::OnSetActive()
 	{
 		// Called when a page becomes active
 		// Override this function in your derived class if required.
 
-		// Returns zero to accept the activation, or -1 to activate the next or the previous page (depending
-		// on whether the user clicked the Next or Back button). To set the activation to a particular page,
-		// return the resource identifier of the page.
+		// Return TRUE if the page was successfully set active; otherwise FALSE.
 
-		return 0;
+		return TRUE;
 	}
 
-	inline int CPropertyPage::OnWizardBack()
+	inline BOOL CPropertyPage::OnWizardBack()
 	{
 		// This function is called when the Back button is pressed on a wizard page
 		// Override this function in your derived class if required.
 
-		// Returns 0 to allow the wizard to go to the previous page. Returns -1 to prevent the wizard
-		// from changing pages. To display a particular page, return its dialog resource identifier.
+		// Return TRUE to allow the wizard to go to the previous page; otherwise return FALSE.
 
-		return 0;
+		return TRUE;
 	}
 
-	inline INT_PTR CPropertyPage::OnWizardFinish()
+	inline BOOL CPropertyPage::OnWizardFinish()
 	{
 		// This function is called when the Finish button is pressed on a wizard page
 		// Override this function in your derived class if required.
 
 		// Return Value:
-		// Return non-zero to prevent the wizard from finishing.
-		// Version 5.80. and later. Return a window handle to prevent the wizard from finishing. 
-		// The wizard will set the focus to that window. The window must be owned by the wizard page.
-		// Return 0 to allow the wizard to finish.
+		// TRUE if the property sheet is destroyed when the wizard finishes; otherwise return FALSE.
 
-		return 0; // Allow wizard to finish
+		return TRUE; // Allow wizard to finish
 	}
 
-	inline int CPropertyPage::OnWizardNext()
+	inline BOOL CPropertyPage::OnWizardNext()
 	{
 		// This function is called when the Next button is pressed on a wizard page
 		// Override this function in your derived class if required.
 
-		// Return 0 to allow the wizard to go to the next page. Return -1 to prevent the wizard from
-		// changing pages. To display a particular page, return its dialog resource identifier.
-
-		return 0;
+		// Return TRUE to allow the wizard to go to the next page; otherwise return FALSE.
+		return TRUE;
 	}
 
 	inline BOOL CPropertyPage::PreTranslateMessage(MSG& Msg)
@@ -944,27 +842,6 @@ namespace Win32xx
 			m_PSH.dwFlags |= PSH_WIZARD;
 		else
 			m_PSH.dwFlags &= ~PSH_WIZARD;
-	}
-
-	inline LRESULT CPropertySheet::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-		case WM_DESTROY:
-			OnDestroy();
-			break;
-
-		case WM_SYSCOMMAND:
-			if ((SC_CLOSE == wParam) && (m_PSH.dwFlags &  PSH_MODELESS))
-			{
-				Destroy();
-				return 0L;
-			}
-			break;
-		}
-
-		// pass unhandled messages on for default processing
-		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
 }
