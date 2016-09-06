@@ -45,7 +45,11 @@ New Features and Enhancements
 	  CPen Pen(PS_SOLID, 1, RGB(255, 0, 0));
 	  CPen OldPen = dcMem.SelectObject(pen);
   - GDI resources created by CDC are better managed. Old GDI resources are now
-    destroyed immediately, rather than when the CDC is de-constructed.  
+    destroyed immediately, rather than when the CDC is de-constructed.
+
+* Updated CPropertyPage
+  - OnApply, OnSetActive OnWizardBack, OnWizardFinish and OnWizardNext now return
+    a BOOL, making them simpler to use.
   
 
 Changes in detail
@@ -141,6 +145,12 @@ Modified CWnd::ScrollWindow
 Modified CWnd::ValidateRect
 
 Modified CWinThread::CreateThread	now returns thread handle.
+Modified CPropertyPage::OnApply
+Modified CPropertyPage::OnOK
+Modified CPropertyPage::OnSetActive
+Modified CPropertyPage::OnWizardBack
+Modified CPropertyPage::OnWizardFinish
+Modified CPropertyPage::OnWizardNext
 
 Removed CDocker::GetDockFromPoint
 Removed CTab::OnDestroy

@@ -3115,6 +3115,8 @@ namespace Win32xx
 			case UWN_DOCKEND:		return OnDockEnd(pdp);
 			}
 		}
+		
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns		
 		return 0L;
 	}
 
@@ -4445,6 +4447,7 @@ namespace Win32xx
 		case TCN_SELCHANGE:	return OnTCNSelChange(pNMHDR);
 		}
 
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 		return 0L;
 	}
 
@@ -4811,6 +4814,7 @@ namespace Win32xx
 			break;
 		} // switch LPNMHDR
 
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns		
 		return 0L;
 	}
 
