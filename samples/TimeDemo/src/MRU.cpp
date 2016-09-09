@@ -329,24 +329,18 @@ ValidateMRU()								/*
 *-----------------------------------------------------------------------------*/
 {
 	  // search the MRU list in reverse so as not to cause reshuffling
-	std::vector<CString>::reverse_iterator it;
-	for (it = m_vMRUEntries.rbegin(); it != m_vMRUEntries.rend(); ++it)
+	std::vector<CString>::iterator it;
+	for (int i = m_vMRUEntries.size() - 1; i >= 0; --i)
 	{
 		  // check whether the current entry exists, or is gone
-		CString s = (*it);
-#if defined(UNICODE) || defined(_UNICODE)
-		bool gone = (_waccess(s.c_str(), 4) != 0);
-#else
-		bool gone = (_access(s.c_str(), 4) != 0);
-#endif
-		  // if it is not there, remove the item from the list
-		if (gone)
+		CString s = m_vMRUEntries[i];
+		if (_taccess(s.c_str(), 4) != 0)
 		{
-	::MessageBox(NULL, s.c_str(), _T("removing"),
-	    MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-			  // reverse iterators must be altered to the
-			  // proper forward iterator
-			m_vMRUEntries.erase((it - 1).base());
+			::MessageBox(NULL, s, _T("Removing invalid MRU entry."),
+			    MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+			  // convert index to the proper forward iterator for erase
+			it = m_vMRUEntries.begin() + i;
+			m_vMRUEntries.erase(it);
 		}
 	}
 	UpdateMRUMenu();
