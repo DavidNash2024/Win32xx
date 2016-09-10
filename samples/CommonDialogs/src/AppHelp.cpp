@@ -1,4 +1,4 @@
-/* (15-Sep-2015) [Tab/Indent: 8/8][Line/Box: 80/74]             (AppHelp.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (AppHelp.cpp) *
 ********************************************************************************
 |                                                                              |
 |                     Copyright (c) 2016, Robert C. Tausworthe                 |
@@ -29,24 +29,25 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Usage Notes: This class provides access to help information in two
+	USAGE NOTES: This class provides access to help information in two
 	forms: First, as a modeless dialog bearing whatever information, or
 	"credits," the user desires to post there; this dialog is commonly
 	called the "About Box", and it is made to appear whenever the system
 	posts the IDW_ABOUT message defined in the Win32++ default_resource.h
-	file. Typically, an application will invoke this form of help using the
-	F1 key or via a Help->About topic on the main menu.
+	file. Typically, an application will invoke this form of help activating
+	the Help->About topic on the main menu.
 
 	The second form is the display of topical information held in a compiled
 	HTML (.chm) file. Typically an application will invoke this kind of help
-	by selecting a Help->Contents topic on the main menu, or by clicking the
-	mouse on a Help button on the display of one of the CCommonDialog
-	objects, or by pressing the Shift+F1 key, or by clicking the mouse on
-	a context help button on the toolbar. The latter two cases cause the
-	cursor to change to the (?) state and remain in this state until the
-	user has clicked the mouse on another control, whereupon the help file
-	is searched for a topic corresponding to the selected control; the
-	topic is then displayed, if found.
+	by pressint the F1 key, by selecting a Help->Contents topic on the main
+	menu, by clicking the mouse on a Help button on the display of one of
+	the CCommonDialog objects, by pressing the Shift+F1 key, or by clicking
+	the mouse on a context help button on the toolbar. The latter two cases
+	initiate the context help state, signified by the presence of the help
+	cursor (?), which extends until the user has clicked the mouse on
+	another control. At this point the .chm help file is searched for a
+	topic corresponding to the selected control; that topic is then
+	displayed, if found.
 
 	The suite of files comprising the suite of help functions is composed of
 
@@ -85,16 +86,18 @@
 		m_AppHelp.AddHelpTopic(UINT nID, const CString& topic);
 
 	in which the selection of a control having the identifier nID will
-	invoke the display of a string topic within the help guide file.
-	Assistance in peparing the help guide to contain such topics may be
-	found in the file
+	invoke the display of a string topic within the help guide file. A
+	number of these, considered to be standard, are declared in the
+	AppHelp::DefaultTopics() method, below.
+	
+	Assistance in peparing the help guide to contain the application's
+	topics may be found in the file
 
 		Adding HTML Help to MinGW.html
 
-	which may be found at a number of sites using an internet search. A
-	number of typical topics found in an application are included in the
-	DefaultTopics() method, below. Make sure that all controls that have
-	help topics attached are declared in the resource.h header file.
+	which may be accessed at a number of sites using an internet search. The
+	programmer should make sure that all controls that should have help
+	topics are declared in the resource.h header file.
 
 	A number of help numeric resources are typically defined, such as those
 	implicit in the mainframe OnCommand() cases to be added:
@@ -132,15 +135,19 @@
 	code to recognize such requests and process them accordingly. Messages
 	that do not pass through these more usual message loops, such as those
 	handling dialog messages (e.g., IDOK and IDCANCEL), also need to make
-	such insertions. It is useful for the mainframe thus to implement a
-	BOOL DoContextHelp(WPARAM wParam) function that consists of
+	such insertions.
 
-		if (!m_AppHelp.OnHelp(wParam))
-			return FALSE;
+	It is useful for the mainframe thus to implement the following function
 
-		m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
-		Invalidate();
-		return TRUE;
+		BOOL CMainFrame::DoContextHelp(WPARAM wParam)
+		{
+			if (!m_AppHelp.OnHelp(wParam))
+				return FALSE;
+
+			m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
+			Invalidate();
+			return TRUE;
+		}
 
 	If the OnHelp() method returns TRUE, that means there was a response
 	to a help request. Having dispatched this request, the help mode is
@@ -148,32 +155,37 @@
 	Otherwise, the wParam message is not help-related and normal processing
 	is allowed to take place.
 
-	At the top of the mainframe's OnCommand() and WndProc WM_SYSCOMMAND
-	processing, for example,
+	At the top of the mainframe's OnCommand() for example,
 
 		if (DoContextHelp(wParam))
 		return TRUE;
 
-		...
+	and within the mainframe's WndProc WM_SYSCOMMAND
+	processing, 		
+	
+	    case IDM_HELP_ACTIVE:
+		return DoContextHelp(wParam);
 
 	At the top of the view's OnCommand()
 
-	    	if (ParentFrame().DoContextHelp(wParam))
-		return TRUE;
+		if(::SendMessage(m_hParent, IDM_HELP_ACTIVE, wParam, 0))
+			return TRUE;
 
 	and, if the view handles IDOK and/or IDCANCEL, or other such dialog
 	messages, place at the top of each handler code such as
 
-	if (ParentFrame().DoContextHelp((WPARAM)IDOK)) 
-		return;
+		if(::SendMessage(m_hParent, IDM_HELP_ACTIVE, wParam, 0))
+			return;
 
-	In the above, the m_pFrame pointer may be found within the view class by
+	In the above, the m_hParent handle may be set within the view class
+	member
 	
-		CMainFrame *m_pFrame;
-		...
-		m_pFrame = dynamic_cast<CMainFrame*>(m_pFrame->
-		    GetCWndPtr(GetApp().GetMainWnd()));
-
+		CView:: Create(HWND hParent = 0) 
+		{
+			m_hParent = hParent;
+			...
+		}
+	
 	In instances where messages avoid message loops, such in as the IDOK
 	case above, but be careful to use a meaningful return value, if one is
 	required, so as not to create an unintentioned response. The low-order
@@ -189,8 +201,12 @@
 		    }
 
 		    case WM_HELP:
-		    {     // Handle the F1 requests for help.
-			m_AppHelp.OnHelpID(IDM_HELP_CONTENT);
+		    {     // Handle the F1 requests for help. The HELPINFO in lParam
+			  // is of no use to the current context help class. The
+			  // system also sends this message on Shift+F1, so it is
+			  // necessary to distinguish which usage is in effect.
+			if (!m_AppHelp.IsActive())
+				m_AppHelp.OnHelpID(IDM_HELP_CONTENT);
 		    	return TRUE;
 		    }
 
@@ -291,12 +307,12 @@ DefaultTopics()                                               	/*
 	within the override so as to include these topics.
 *-----------------------------------------------------------------------------*/
 {
-	  // load frame topics
+	  // standard frame topics
 	AddHelpTopic(IDW_MAIN, /* client area*/	_T("Introduction"));
 	AddHelpTopic(SC_MINIMIZE, 		_T("MinimizeWindow"));
 	AddHelpTopic(SC_MAXIMIZE, 		_T("MaximizeWindow"));
 	AddHelpTopic(SC_RESTORE, 		_T("RestoreWindow"));
-	AddHelpTopic(SC_CLOSE, 			_T("TerminateFunction"));
+	AddHelpTopic(SC_CLOSE, 			_T("ExitTerminateProgram"));
 	  // standard menu topics
 	AddHelpTopic(IDW_VIEW_TOOLBAR, 		_T("ToolbarTopics"));
 	AddHelpTopic(IDW_VIEW_STATUSBAR, 	_T("StatusbarTopics"));
@@ -377,9 +393,9 @@ OnHelp(const CString &topic)                                   		/*
 	CString s,
 		fmt = _T("Help topic could not be located:\n\n%s%s");
 	CString add = (m_sContextHelpFile.IsEmpty() ?
-		    _T("\n\nNo help guide exists.")
+		   _T("\n\nNo help guide exists.")
 		    :
-		    _T("\n\nMake sure the .chm file is in the .exe directory."));
+		   _T("\n\nMake sure the .chm file is in the .exe directory."));
 
 	s.Format(fmt, topic.c_str(), add.c_str());
 	::MessageBox(NULL, s, _T("Information"), MB_OK | MB_ICONINFORMATION |

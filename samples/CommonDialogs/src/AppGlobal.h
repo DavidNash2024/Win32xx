@@ -1,4 +1,4 @@
-/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (AppGlobal.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (AppGlobal.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -64,20 +64,17 @@ class CAppGlobal
 		CAppGlobal();
 		~CAppGlobal();
 
-		CString& GetAboutBoxInfo() {return m_sAboutBoxInfo;}
+		CString& GetAboutBoxInfo() { return m_sAboutBoxInfo;}
 		CString& GetAppDir()       { return m_sAppDir;}
 		CString& GetAppName()      { return m_sAppName;}
 		CString& GetAppPath()      { return m_sAppPath;}
 		CString& GetAppTitle()     { return m_sAppTitle;}
 		CString& GetArcvDir()      { return m_sArcvDir;}
-		CString& GetArcvPath()     
-		{ 
-			return m_sArcvPath;
-		}
+		CString& GetArcvPath()     { return m_sArcvPath;}
 		CString& GetCompiler()     { return m_sCompiler;}
 		CString& GetCompileDate()  { return m_sCompiled_on;}
 		CString& GetDocExt()       { return m_sDocExt;}
-		CString& GetFileFilter()   {return m_sFileFilter;}
+		CString& GetFileFilter()   { return m_sFileFilter;}
 		CString& GetHelpDir()      { return m_sHelpDir;}
 		CString& GetHelpPath()     { return m_sHelpPath;}
 		UINT     GetMaxMRU()       { return m_nMaxMRUSlots;}

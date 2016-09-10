@@ -1,4 +1,4 @@
-/* (20-Jul-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppGlobal.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (AppGlobal.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |

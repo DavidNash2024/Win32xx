@@ -1,4 +1,4 @@
-/* (10-OCT-2015) [Tab/Indent: 8/8][Line/Box: 80/74]           (ListBoxDlgRC.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]           (ListBoxDlgRC.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |

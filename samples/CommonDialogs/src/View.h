@@ -1,4 +1,4 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]                   (View.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                   (View.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -102,10 +102,10 @@ CView : public CDialog							/*
 		
 		virtual void 	AttachControl(UINT nIDC, CWnd& rCtl);
 		virtual HWND 	Create(HWND hParent);
-		    COLORREF 	GetSBBkColor()
-		    		{ return m_ColorChoice.GetTableColor(SBBg);}
-		virtual void 	OnColorChoice();
-		virtual void 	OnFontChoice();
+			CFont&  GetEditFont() { return m_EditFont;}
+
+			void	SetEditFont(const CFont& f);
+
 
 		  // public data members
 
@@ -114,14 +114,9 @@ CView : public CDialog							/*
 		virtual BOOL    AddToolTip(HWND, UINT nID, const CString & s);
 		virtual void    AssignToolTips();
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-		virtual void	GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg,
-				    UINT& bk, UINT& bg);
-		virtual void    InitCtlColors();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
-		virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
 		virtual BOOL 	OnInitDialog();
 		virtual void 	OnOK();
-		     CMainFrame& ParentFrame() {return *m_pFrame;}
 		virtual void 	PreCreate(CREATESTRUCT &cs);
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
 		virtual	void 	Serialize(CArchive &ar);
@@ -129,16 +124,12 @@ CView : public CDialog							/*
 	private:
 		  // private data members
 //		CResizer m_Resizer;
-		CMainFrame     *m_pFrame;	// parent frame
-		CColorChoice    m_ColorChoice;	// the control color choice
+		HWND            m_hParent;      // handle of parent frame
 		CToolTip        m_ToolTip;	// form tool tips
-		MyFontDialog  	m_FontChoice;	// edit control font
-       		UINT	     	m_cWd,   	// font average width
-			    	m_cHt;   	// font average height
+		CFont           m_EditFont;     // edit box font
 		  // controls on the view
 		CEdit        	m_Edit;
 		CustomButton 	m_OK;
-		CBrush          m_br;
 };
 /*----------------------------------------------------------------------------*/
 #endif // SDI_VIEW_H
