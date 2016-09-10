@@ -1,4 +1,4 @@
-/* (26-Feb-2000) [Tab/Indent: 8/8][Line/Box: 80/74]              (ColorDefs.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (ColorDefs.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2000, Robert C. Tausworthe                   |

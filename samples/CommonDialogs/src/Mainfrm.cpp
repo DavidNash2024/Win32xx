@@ -1,4 +1,4 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MainFrm.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -92,6 +92,7 @@ CMainFrame() 								/*
 	m_win_y   = rcWindowPlacement.top;
 	m_width   = rcWindowPlacement.right;
 	m_height  = rcWindowPlacement.bottom;
+	m_nMaxMRU = 0;
 	ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
 	  // Set m_View as the view window of the frame
 	SetView(m_View);
@@ -110,26 +111,6 @@ ConnectAppHelp() 						/*
 	  // inform context help of its .chm document name
 	m_AppHelp.ConnectAppHelp(theApp.GetHelpFile(),
 	    theAppGlobal.GetAboutBoxInfo());
-}
-
-/*============================================================================*/
-	void CMainFrame::
-SetMRULimit(UINT nMaxMRU /* = 0 */)					/*
-
-	Register the maximum number of elements nMaxMRU of the MRU list to be
-	shown.  If there is no current registry key name, enter an obligatory
-	dummy in order to set the nMaxMRU value into CFrame.
-*-----------------------------------------------------------------------------*/
-{
-	static const CString keyname = _T("CMainFrameMRU");
-	CString currentkey = GetRegistryKeyName();
-	if (currentkey != keyname)
-		LoadRegistrySettings(keyname);
-
-	m_nMaxMRU  = nMaxMRU;
-	LoadRegistryMRUSettings(m_nMaxMRU);
-	  // throw away any MRU entries from the registry
-	EmptyMRUList();
 }
 
 /*============================================================================*/
@@ -184,11 +165,161 @@ EngageContextHelp() 							/*
 		return FALSE;
 
 	GetView().SetFocus();
-	  // set the cursor(s) in all controls to help
+	  // set the cursor(s) in all controls to help, and show immediately
 	m_hCursor = ::LoadCursor(NULL, IDC_HELP);
+	SendMessage(WM_SETCURSOR, 0, 0);
     	  // set help mode on
     	m_AppHelp.EngageContextHelp();
 	return TRUE;
+}
+
+/*============================================================================*/
+	void CMainFrame::
+GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg, UINT& bk,  UINT& bg) /*
+
+	Return the text foreground fg, text background bk, and control
+	background bg indexes for the control class nCtlColor whose color values
+	are to be found in the color table at their respective color indexes.
+*-----------------------------------------------------------------------------*/
+{
+	switch (nCtlColor)
+	{
+	    case WM_CTLCOLORDLG:
+		fg = DlgTxFg;
+		bk = DlgTxBg;
+    		bg = DlgBg;
+		break;
+
+	    case WM_CTLCOLORBTN:
+	    {
+		  // As illustrated here, we can handle each button separately
+		  // according to its nID. For the OK button case
+	    	if (nID == IDOK)
+	    	{
+			fg = OKTxFg;
+	    		bk = OKTxBg;
+	    		bg = OKBg;
+		}
+		else
+		{
+			fg = BtnTxFg;
+			bk = BtnTxBg;
+	    		bg = BtnBg;
+		}
+		// ... ditto for other buttons
+		break;
+	    }
+
+	    case WM_CTLCOLOREDIT:
+		fg = EdtTxFg;
+		bk = EdtTxBg;
+    		bg = EdtBg;
+		break;
+
+	    case WM_CTLCOLORLISTBOX:
+		fg = LBxTxFg;
+		bk = LBxTxBg;
+    		bg = LBxBg;
+		break;
+
+	    case WM_CTLCOLORSCROLLBAR:
+		fg = SclTxFg;
+		bk = SclTxBg;
+    		bg = SclBg;
+		break;
+
+	    case WM_CTLCOLORSTATIC:
+		fg = StcTxFg;
+		bk = StcTxBg;
+    		bg = StcBg;
+		break;
+
+	  // if there are custom colors for some controls, change them here
+
+	    default:
+		fg = bk = bg = DfltClr;
+		break;
+	}
+}
+
+/*============================================================================*/
+	void CMainFrame::
+InitCtlColors()								/*
+
+	Populate the color table with the initial ctl_color triplets used in the
+	list box of the CColorDialog object. These values are displayed in the
+	controls on first execution of this program, and are overwritten by
+	deserialization in subsequent executions.
+
+	Note: Not all listed colors are actually displayed in this demo program.
+	Unused color entries have been commented out or eliminated; However, on
+	doing so, it is necessary to eliminate references elsewhere in this
+	program to the nIDs of removed entries.
+*-----------------------------------------------------------------------------*/
+{
+//	m_ColorChoice.AddColorChoice(DlgTxFg, _T("o  Dialog text FG"),
+//	    COLOR_WHITE);
+//	m_ColorChoice.AddColorChoice(DlgTxBg, _T("o  Dialog text BG"),
+//	    COLOR_BLUE);
+	m_ColorChoice.AddColorChoice(DlgBg, _T("o  Dialog BG"),
+	    COLOR_LT_BLUE);
+
+//	m_ColorChoice.AddColorChoice(BtnTxFg, _T("o  Button text FG"),
+//	    COLOR_BLACK);
+//	m_ColorChoice.AddColorChoice(BtnTxBg, _T("o  Button text BG"),
+//	    COLOR_CYAN);
+//	m_ColorChoice.AddColorChoice(BtnBg, _T("o  Button BG"),
+//	    COLOR_LT_CYAN);
+
+	m_ColorChoice.AddColorChoice(OKTxFg, _T("o  OK text FG"),
+	    COLOR_BLACK);
+	m_ColorChoice.AddColorChoice(OKTxBg, _T("o  OK text BG"),
+	    COLOR_YELLOW);
+	m_ColorChoice.AddColorChoice(OKBg, _T("o  OK BG"),
+	    COLOR_LT_YELLOW);
+
+	m_ColorChoice.AddColorChoice(EdtTxFg, _T( "o  Edit text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(EdtTxBg, _T("o  Edit text BG"),
+	    COLOR_RED);
+	m_ColorChoice.AddColorChoice(EdtBg, _T("o  Edit control BG"),
+	    COLOR_LT_RED);
+
+//	m_ColorChoice.AddColorChoice(LBxTxFg, _T("o  List box text FG"),
+//	    COLOR_BLACK);
+//	m_ColorChoice.AddColorChoice(LBxTxBg, _T("o  List box text BG"),
+//	    COLOR_GREEN);
+//	m_ColorChoice.AddColorChoice(LBxBg, _T("o  List box BG"),
+//	    COLOR_LT_GREEN);
+
+//	m_ColorChoice.AddColorChoice(SBTxFg, _T("o  Status bar text FG"),
+//	    COLOR_WHITE);
+//	m_ColorChoice.AddColorChoice(SBTxBg, _T("o  Status bar text BG"),
+//	    COLOR_MAGENTA);
+	m_ColorChoice.AddColorChoice(SBBg, _T("o  Status bar BG"),
+	    GetStatusBarTheme().clrBkgnd1); // use current theme
+
+//	m_ColorChoice.AddColorChoice(SclTxFg, _T("o  Scroll bar text FG"),
+//	    COLOR_WHITE);
+//	m_ColorChoice.AddColorChoice(SclTxBg, _T("o  Scroll bar text BG"),
+//	    COLOR_MAGENTA);
+//	m_ColorChoice.AddColorChoice(SclBg, _T("o  Scroll bar BG"),
+//	    COLOR_LT_MAGENTA);
+
+//	m_ColorChoice.AddColorChoice(StcTxFg, _T("o  Static box text FG"),
+//	    COLOR_BLACK);
+//	m_ColorChoice.AddColorChoice(StcTxBg, _T("o  Static box text BG"),
+//	    COLOR_YELLOW);
+//	m_ColorChoice.AddColorChoice(StcBg, _T("o  Static box BG"),
+//	    COLOR_LT_YELLOW);
+
+	  // richedit controls (these are set differently than the others)
+//	m_ColorChoice.AddColorChoice(REdTxFg, _T("o  RichEdit text FG"),
+//	    COLOR_WHITE);
+//	m_ColorChoice.AddColorChoice(REdTxBg, _T("o  RichEdit text BG"),
+//	    COLOR_RED);
+//	m_ColorChoice.AddColorChoice(REdBg, _T("o  RichEdit BG"),
+//	    COLOR_LT_RED);
 }
 
 /*============================================================================*/
@@ -206,7 +337,7 @@ LoadPersistentData()                                                    /*
 		ar >> theApp;	// for the app
 		ar >> *this;	// for the mainframe and base classes
 		ar >> m_View;   // for the view, including control colors
-		Invalidate();  // repaint the client with recovered colors
+		Invalidate();   // repaint the client with recovered colors
 
 		  // weed out any MRU entries that have disappeared
 		ValidateMRU(); // remove invalid file path names
@@ -222,10 +353,7 @@ LoadPersistentData()                                                    /*
 				    _T("Removing invalid MRU entry..."), MB_OK |
 				    MB_ICONINFORMATION | MB_TASKMODAL);
 			}
-		UpdateToolbarMenuStatus();
-		  // reset the status bar color
-		COLORREF sb = m_View.GetSBBkColor();
-		SetSBBkColor(sb);
+		UpdateControlUIState();
 
 	  // the ar object closes on destruction
 	}
@@ -242,11 +370,23 @@ LoadPersistentData()                                                    /*
 	void CMainFrame::
 OnColorChoice()     		                                       	/*
 
-        Show the color common dialog box and select the app backbround color.
+        Show the CListBoxDlg color dialog box to select the color of a control's
+	text foreground, text background, or control background. NOTE: colors
+	selected for controls in the view are painted by the OnCtlColor()
+	method invoked in the WndProc() loop each time the control is redrawn.
+	The staus bar color has no message to redraw it, so it is set here.
 *-----------------------------------------------------------------------------*/
 {
-	m_View.OnColorChoice();
-	UpdateToolbarMenuStatus();
+	  // set color choice help messages to go to the the main frame,
+	HWND hWndOwner = theApp.GetMainWnd();
+	m_ColorChoice.DoModal(hWndOwner);  // calls the base class DoModal()
+	  // reset the status bar color
+	if (m_ColorChoice.GetSelectedColorID() == SBBg)
+	{
+		COLORREF sb = GetSBBkColor();
+		SetSBBkColor(sb);
+	}
+	UpdateControlUIState();
 	Invalidate();
 	UpdateWindow();
 }
@@ -284,11 +424,12 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	handling methods.
 *-----------------------------------------------------------------------------*/
 {
+	UINT nID = LOWORD(wParam);
 	  // if context help mode is active, display the help topic for wParam
+	  // and return TRUE; otherwise, just pass through
 	if (DoContextHelp(wParam))
 		return TRUE;
 
-	UINT nID = LOWORD(wParam);
 	  // map all MRU file messages to one representative
 	if(IDW_FILE_MRU_FILE1 <= nID &&
 	    nID < IDW_FILE_MRU_FILE1 + m_nMaxMRU)
@@ -398,6 +539,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	    	OnProcessMRU(wParam, lParam);
 	    	return TRUE;
 
+
 	    default:
 		break;
 	}
@@ -405,6 +547,45 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	return FALSE;
 }
 
+/*============================================================================*/
+	INT_PTR  CMainFrame::
+OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)            		/*
+
+	This member function is invoked when a child control is about to be
+	drawn. It can be used to prepare the display context hDC for drawing
+	the control using user-selected colors. Here, the SetTextColor() and
+	SetBkColor() methods may be used with desired RGB values to set the
+	text and background colors of almost all controls.  Here, hDC contains
+	the handle to the display context for the child window, which may be
+	temporary.  hWnd contains he handle to the control asking for the
+	color, which also may be temporary. Finally, nCtlColor contains one
+	of the messages specifying the type of control (see DialogProc() for
+	values). On termination the method returns a handle to the brush that
+	is to be used for painting the control background.
+
+	Note: This method is not to be used for the list box of a drop-down
+	combo box because the drop-down list box is actually a child of the
+	combo box and not a child of the window. To change the color of the
+	drop-down list box, create a CComboBox with a similar OnCtlColor() that
+	checks for CTLCOLOR_LISTBOX in the nCtlColor parameter. In that handler,
+	the SetBkColor() member function must be used to set the background
+	color for the text.
+*-----------------------------------------------------------------------------*/
+{
+	  // declare default control colors IDs
+	UINT fg = DfltClr,
+	     bk = DfltClr,
+	     bg = DfltClr;
+	  // get the CtlColors of each control class first
+	GetCtlColors(nCtlColor, ::GetDlgCtrlID(hWnd), fg, bk, bg);
+	  // get the display context
+	CDC dcCtl(hDC);
+	dcCtl.SetTextColor(m_ColorChoice.GetTableColor(fg));
+	dcCtl.SetBkColor(m_ColorChoice.GetTableColor(bk));
+	m_br = m_ColorChoice.GetBrush(bg);
+	  // returned brush handle must persist
+        return (UINT_PTR)(HBRUSH)m_br;
+}
 /*============================================================================*/
 	int CMainFrame::
 OnCreate(CREATESTRUCT& rcs)                                            /*
@@ -434,8 +615,33 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 		SetThemeColors();
 	}
 
+	  // populate the initial control colors (will be overwritten by
+	  // deserialized values)
+	InitCtlColors();
+	  // and set the initial flags to show the help box and all colors
+	CHOOSECOLOR cc = m_ColorChoice.GetParameters();
+	cc.Flags = CC_SHOWHELP | CC_FULLOPEN;
+	cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
+	  // setup the CColorChoice object
+	m_ColorChoice.SetParameters(cc);
 	  // tell CFrame the max MRU size
-	SetMRULimit(theAppGlobal.GetMaxMRU());
+	m_nMaxMRU = theAppGlobal.GetMaxMRU();
+	SetMRULimit(m_nMaxMRU);
+	  // set font choice help messages to go to the main frame,
+	  // set the initial flags to show the help box and use the font style,
+	CHOOSEFONT cf = m_FontChoice.GetParameters();
+	cf.Flags |= CF_SHOWHELP | CF_USESTYLE;
+	cf.lpszStyle = (LPTSTR)_T("Regular"); // initial font presumed regular
+	m_FontChoice.SetParameters(cf);
+	  // set the default font
+	CFont f;
+	f.CreatePointFont(100, _T("Courier New"));
+	m_FontChoice.SetChoiceFont(f);
+	m_FontChoice.SetColor(m_ColorChoice.GetTableColor(EdtTxBg));
+	m_View.SetEditFont(f);
+	  // set the default status bar color
+	COLORREF sb = GetSBBkColor();
+	SetSBBkColor(sb);
 	  // communicate help file name and about box contents to help object
 	ConnectAppHelp();
 	LoadPersistentData();
@@ -467,7 +673,7 @@ OnCut()                                                            	/*
 		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 		RemoveMRUEntry(mru_top);
  	}
-	 UpdateToolbarMenuStatus();
+	 UpdateControlUIState();
 }
 
 /*============================================================================*/
@@ -480,7 +686,7 @@ OnEditFind()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find a string..."));
 	m_FindRepDialog.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
-	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)m_View);
+	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)*this); 
 }
 
 /*============================================================================*/
@@ -496,7 +702,7 @@ OnEditReplace()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find, then Replace"));
 	m_FindRepDialog.Create(FALSE, _T("Initial Text"), _T("Replace Text"),
-	    FR_DOWN | FR_SHOWHELP | FR_ENABLEHOOK, (HWND)m_View);
+	    FR_DOWN | FR_SHOWHELP | FR_ENABLEHOOK, (HWND)*this);
 }
 
 /*============================================================================*/
@@ -520,7 +726,7 @@ OnFileNew()                                                            /*
 	fd.SetDefExt(m_Doc.GetExt());
 	CString msg;
 	  // do not leave without a valid unused file name, unless cancelled
-	while (fd.DoModal(m_View) == IDOK)
+	while (fd.DoModal(*this) == IDOK)
  	{
  		CString new_path = fd.GetPathName();
 		  // new_path should not exist
@@ -543,7 +749,7 @@ OnFileNew()                                                            /*
 				::MessageBox(NULL, msg, _T("Information"),
 				    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 			}
-			UpdateToolbarMenuStatus();
+			UpdateControlUIState();
 			return;
 		}
 		  //
@@ -597,7 +803,7 @@ OnFileClose()                                                            /*
 		    _T("Removing invalid MRU entry..."), MB_OK | MB_ICONINFORMATION |
 		    MB_TASKMODAL);
 	}
-	UpdateToolbarMenuStatus();
+	UpdateControlUIState();
 }
 
 /*============================================================================*/
@@ -653,7 +859,7 @@ OnFileOpen()                                                            /*
 			    _T("Removing invalid MRU entry..."), MB_OK |
 			    MB_ICONINFORMATION | MB_TASKMODAL);
 		}
-		UpdateToolbarMenuStatus();
+		UpdateControlUIState();
 		return;
   	}
 	msg = _T("No name was entered, no action was taken.");
@@ -678,7 +884,7 @@ OnFileOpenMRU(UINT nIndex)						/*
 	  // get the MRU entry
 	CString mru_entry = GetMRUEntry(nIndex);
 	m_Doc.OnOpenDoc(mru_entry);
-	UpdateToolbarMenuStatus();
+	UpdateControlUIState();
 	if (m_Doc.IsOpen())
 		return TRUE;
 
@@ -776,13 +982,13 @@ OnFileSaveAs()                                                            /*
 			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 			  // reopen the current file at entry
 			m_Doc.OnOpenDoc(current_path);
-			UpdateToolbarMenuStatus();
+			UpdateControlUIState();
 			return;
 		}
 		if (m_Doc.IsOpen())
 		{
 			AddMRUEntry(new_path);
-			UpdateToolbarMenuStatus();
+			UpdateControlUIState();
 		}
 		return;
 	}
@@ -798,9 +1004,21 @@ OnFontChoice()     		                                 	/*
         Select the view font typeface, characteristics, and color.
 *-----------------------------------------------------------------------------*/
 {
-	m_View.OnFontChoice();
+	  // set font choice help messages to go to the the main frame,
+	HWND hOwnerWnd = GetApp().GetMainWnd();
+          // open the dialog
+	m_FontChoice.SetBoxTitle(_T("Select font for edit box"));
+	CHOOSEFONT cf = m_FontChoice.GetParameters();
+	cf.Flags |= CF_SCREENFONTS;
+	m_FontChoice.SetParameters(cf);
+	if(m_FontChoice.DoModal(hOwnerWnd))
+	{
+		  // bring choice elements into this view
+		m_View.SetEditFont(m_FontChoice.GetChoiceFont());
+    		m_ColorChoice.SetTableColor(EdtTxFg, m_FontChoice.GetColor());
+	}
 	Invalidate();
-	UpdateToolbarMenuStatus();
+	UpdateControlUIState();
 	UpdateWindow();
 }
 
@@ -817,8 +1035,9 @@ OnInitialUpdate()                                                       /*
 	  // Give keyboard focus to the view window:
 	m_View.SetFocus();
 
-	  // show initial button status
-	UpdateToolbarMenuStatus();
+	m_nMaxMRU = theAppGlobal.GetMaxMRU();
+
+	UpdateControlUIState();
 	TRACE("Frame created\n");
 }
 
@@ -832,7 +1051,7 @@ OnMenuUpdate(UINT nID)							/*
 *-----------------------------------------------------------------------------*/
 {
 	  // Update the check state of the various menu items
-	UpdateToolbarMenuStatus();
+	UpdateControlUIState();
 	CFrame::OnMenuUpdate(nID);
 }
 
@@ -973,6 +1192,10 @@ Serialize(CArchive &ar)                                               /*
 		GetWindowPlacement(m_Wndpl);
 		ArchiveObject w(&m_Wndpl, m_Wndpl.length);
 		ar << w;
+                  // save font parameters
+		ar << m_FontChoice;
+		  // save regular control class colors
+		ar << m_ColorChoice;
 		  // record the number of MRU entries to write
 		size_t i, nMRU = GetMRUSize();
 		ar << nMRU;
@@ -998,6 +1221,17 @@ Serialize(CArchive &ar)                                               /*
 			m_Wndpl.length = sizeof(WINDOWPLACEMENT);
 			SetWindowPlacement(m_Wndpl);
 		}
+                  // recover font parameters
+		ar >> m_FontChoice;
+		m_View.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
+		  // set font elements into view
+		m_View.SetEditFont(m_FontChoice.GetChoiceFont());
+    		m_ColorChoice.SetTableColor(EdtTxFg, m_FontChoice.GetColor());
+		  // recover colors
+		ar >> m_ColorChoice;
+		  // reset the status bar color
+		COLORREF sb = GetSBBkColor();
+		SetSBBkColor(sb);
 		  // read MRU values from archive
 		EmptyMRUList();
 		  // use dummy vector in case an exception occurs
@@ -1200,7 +1434,7 @@ SetupToolBar()                                                          /*
 
 /*============================================================================*/
 	void CMainFrame::
-UpdateToolbarMenuStatus()						/*
+UpdateControlUIState()							/*
 
 	Check the status of controls whose enabled/disabled or check/uncheck
 	status needs to be changed and make changes as necessary. Caution:
@@ -1357,7 +1591,13 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 
 	switch (uMsg)
 	{
-		// Add case statements for each message to be handled here
+	    case WM_CTLCOLORBTN:
+	    case WM_CTLCOLOREDIT:
+	    case WM_CTLCOLORDLG:
+	    case WM_CTLCOLORLISTBOX:
+	    case WM_CTLCOLORSCROLLBAR:
+	    case WM_CTLCOLORSTATIC:
+		return OnCtlColor((HDC)wParam, (HWND)lParam, uMsg);
 
 	    case WM_SETCURSOR:
 	    {
@@ -1367,10 +1607,16 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 
 	    case WM_HELP:
 	    {     // Handle the F1 requests for help. The HELPINFO in lParam
-		  // is of no use to the current context help class.
-		m_AppHelp.OnHelpID(IDM_HELP_CONTENT);
+		  // is of no use to the current context help class. The
+		  // system also sends this message on Shift+F1, so it is
+		  // necessary to distinguish which usage is in effect.
+		if (!m_AppHelp.IsActive())
+			m_AppHelp.OnHelpID(IDM_HELP_CONTENT);
 	    	return TRUE;
 	    }
+
+	    case IDM_HELP_ACTIVE:
+		return DoContextHelp(wParam);
 
 	    case WM_SYSCOMMAND:
 	    {

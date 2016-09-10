@@ -76,7 +76,7 @@ MyFindReplaceDialog : public CFindReplaceDialog
 			{		
 				LPARAM lParam = IsFindDialogOnly()
 				    ? IDM_HELP_FINDDLG : IDM_HELP_REPLACEDLG;
-				SendMessage(hwndOwner, WM_COMMAND,
+				::SendMessage(hwndOwner, WM_COMMAND,
 				    IDC_HELP_COMDLG, lParam);
 			}
 		}

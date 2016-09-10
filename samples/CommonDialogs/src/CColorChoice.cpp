@@ -1,4 +1,4 @@
-/* (10-08-2014) [Tab/Indent: 8/8][Line/Box: 80/74]          (CColorChoice.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (CColorChoice.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -115,8 +115,11 @@ DeleteTableEntry(UINT index)						/*
 	INT_PTR CColorChoice:: 
 DoModal(HWND hWndOwner /* = 0 */) 					/*
 
-        Show the base class color dialog box and select an app control
-	color. 
+        Show the CListBoxDlg dialog box with the list of candidate control
+	categories and, if a one is selected, show the CColorDialog box to
+	select a color for that control category. If no category or color is
+	selected, return IDCANCEL. Otherwise, return IDOK. On exit, the indes of
+	the selected color can be accessed via GetSelectedColorID().
 *-----------------------------------------------------------------------------*/
 {
 	  // determine a common window for the two dialog boxes
@@ -129,8 +132,8 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 	for (UINT i = 0; i < GetTableSize(); i++)
 		m_LBDlg.AddListItem(m_ColorTable[i].usage);
 	  // Make the control be modal so the choice is returned at
-	  // termination. Further, name the parent that cannot be accessed
-	  // during the modal operation.
+	  // termination. 
+	m_nSelection = (UINT)-1;
 	int selection = m_LBDlg.DoModal(hWndOwner);
 	  // if invalid, go no further
 	if (selection < 0)
@@ -143,6 +146,7 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 	if(CColorDialog::DoModal(hWndOwner) ==  IDOK)	
 	{
 		m_ColorTable[selection].color = CColorDialog::GetColor();
+		m_nSelection =m_ColorTable[selection].nID;
 		return IDOK;
 	}
 	return IDCANCEL;
@@ -157,6 +161,9 @@ GetTableColor(UINT nID) 						/*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
+	if (idx == (UINT)-1)
+		return RGB(0, 0, 0);
+		
 	return m_ColorTable[idx].color;
 }
 
@@ -170,8 +177,10 @@ GetBrush(UINT nID) 							/*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
+	COLORREF color = (idx == (UINT)-1 ?
+	    RGB(0, 0, 0) : m_ColorTable[idx].color);
 	CBrush br;
-  	br.CreateSolidBrush(m_ColorTable[idx].color);
+  	br.CreateSolidBrush(color);
     	return br;
 }
 
@@ -180,13 +189,13 @@ GetBrush(UINT nID) 							/*
 GetTableIndex(UINT nID)                                                 /*
 
 	Return the color table index of the entry having the given nID. Return
-	zero if nID is zero or the table is empty.  Throw an exception if nID
-	is nonzero and is not in the table.
+	(UINT)-1 if nID is zero or the table is empty.  Throw an exception if
+	nID is nonzero and is not in the table.
 *-----------------------------------------------------------------------------*/
 {
 	  // ignore the invocation if the table is empty
 	if (GetTableSize() == 0 || nID == 0)
-		return 0; // default value
+		return -1; // default value
 		
 	UINT idx = 0;
  	std::vector<ctl_color>::iterator it;
@@ -194,13 +203,13 @@ GetTableIndex(UINT nID)                                                 /*
 	    (*it).nID != nID; ++it, ++idx)
 		;
 	if (idx >= GetTableSize())
-		throw CUserException(_T("Requested color not found."));
+		idx = -1;
 		
 	return idx;
 }
 
 /*============================================================================*/
-	CString& CColorChoice::
+	CString CColorChoice::
 GetTableUsage(UINT nID)                                                 /*
 
 	Return the usage field of the ctl_color triplet corresponding having
@@ -208,7 +217,8 @@ GetTableUsage(UINT nID)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	return  m_ColorTable[idx].usage;
+	CString usage = (idx == (UINT)-1 ? _T("") : m_ColorTable[idx].usage);
+	return  usage;
 }
 
 /*============================================================================*/
@@ -252,7 +262,7 @@ OnHelpButton()	                                                        /*
 	  // route the help message to the owner window
 	HWND hwndOwner = GetParameters().hwndOwner;
 	if (::IsWindow(hwndOwner))
-		SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
+		::SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
 			IDM_HELP_COLORDLG);
 }
 
@@ -335,6 +345,9 @@ SetTableColor(UINT nID, COLORREF rgb)                                   /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
+	if (idx == (UINT)-1)
+		return;
+
 	m_ColorTable[idx].color = rgb;
 }
 
@@ -347,6 +360,9 @@ SetTableUsage(UINT nID, const CString& s)                               /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
+	if (idx == (UINT)-1)
+		return;
+
 	m_ColorTable[idx].usage = s;
 }
 

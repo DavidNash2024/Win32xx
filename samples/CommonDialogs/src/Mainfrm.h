@@ -1,4 +1,4 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]                (MainFrm.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -121,7 +121,7 @@ CMainFrame : public CFrame						/*
 			BOOL	DoContextHelp(WPARAM wParam);
 		virtual void    EmptyMRUList();
 		virtual BOOL    EngageContextHelp();
-			AppHelp& GetAppHelp() {return m_AppHelp;}
+		       AppHelp& GetAppHelp() {return m_AppHelp;}
 		virtual UINT    GetMRUSize() { return GetMRUEntries().size();}
 		virtual CStatusBar& GetStatusBar() const
 				{ return const_cast<NoResizeGripperStatusBar&>
@@ -131,14 +131,19 @@ CMainFrame : public CFrame						/*
 			void    SetSBBkColor(COLORREF clr)
 				    { GetStatusBar().SendMessage(SB_SETBKCOLOR,
 				      0, (LPARAM)clr);}
-		virtual void 	UpdateToolbarMenuStatus(void);
+		virtual void 	UpdateControlUIState(void);
+
+		    COLORREF 	GetSBBkColor()
+		    		{ return m_ColorChoice.GetTableColor(SBBg);}
 
 	protected:
 		virtual void    ConnectAppHelp();
-		virtual void 	SetMRULimit(UINT nMaxMRU = 0);
+		virtual void	GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg,
+				    UINT& bk, UINT& bg);
 		virtual void    LoadPersistentData();
 		virtual void    OnColorChoice();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
+		virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
 		virtual int  	OnCreate(CREATESTRUCT& rcs);
 		virtual void    OnCut();
 		virtual void    OnEditFind();
@@ -152,6 +157,7 @@ CMainFrame : public CFrame						/*
 		virtual void    OnFilePrint();
 		virtual void    OnFileSaveAs();
 		virtual void    OnFontChoice();
+		virtual void    InitCtlColors();
 		virtual void    OnInitialUpdate(void);
 		virtual void 	OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -183,8 +189,11 @@ CMainFrame : public CFrame						/*
 		UINT	   m_nMaxMRU;	      // maximum MRU entries, this app
 		HCURSOR    m_hCursor;         // current cursor shape
 		CBitmap    m_colorbmp;        // for the color choice menuitem
-		AppHelp    m_AppHelp; // the context help object
-		WINDOWPLACEMENT    m_Wndpl;   // window placement information
+		AppHelp    m_AppHelp;         // the context help object
+		CBrush     m_br;              // backbround brush object
+		CColorChoice m_ColorChoice;   // the control color choice
+		MyFontDialog m_FontChoice;    // edit control font
+		WINDOWPLACEMENT m_Wndpl;      // window placement information
 		MyFindReplaceDialog m_FindRepDialog;  // find-replace dialog
 		NoResizeGripperStatusBar m_NoResizeGripperStatusBar;
 };

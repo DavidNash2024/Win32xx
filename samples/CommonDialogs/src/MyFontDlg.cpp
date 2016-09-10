@@ -1,4 +1,4 @@
-/* (27-Jan-2016) [Tab/Indent: 8/8][Line/Box: 80/74]         (MyFontDialog.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]         (MyFontDialog.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -92,8 +92,8 @@ OnHelpButton()                                                          /*
 	HWND hwndOwner = GetParameters().hwndOwner;
 	if (::IsWindow(hwndOwner))
 	{
-		SendMessage(hwndOwner, WM_COMMAND,
-		    IDC_HELP_COMDLG, IDM_HELP_FONTDLG);
+		::SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
+		    IDM_HELP_FONTDLG);
 	}
 }
 

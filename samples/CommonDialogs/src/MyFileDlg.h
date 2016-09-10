@@ -93,7 +93,7 @@ MyFileDialog : public CFileDialog
 				    (isOpenDoc ? IDM_HELP_FILEDLG_OPEN :
 				        IDM_HELP_FILEDLG_NEW) :
 				    IDM_HELP_FILEDLG_SAVEAS;
-				SendMessage(hwndOwner, WM_COMMAND,
+				::SendMessage(hwndOwner, WM_COMMAND,
 				    IDC_HELP_COMDLG, lParam);
 			}
 		}

@@ -1,4 +1,4 @@
-/* (10-08-2014) [Tab/Indent: 8/8][Line/Box: 80/74]            (CColorChoice.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (CColorChoice.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -87,10 +87,11 @@ CColorChoice   : public CColorDialog					/*
 		virtual INT_PTR DoModal(HWND hWndOwner = 0);
 			CBrush	GetBrush(UINT nID);
 		virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
+			UINT    GetSelectedColorID() {return m_nSelection;}
 			COLORREF GetTableColor(UINT nID);
 			UINT    GetTableIndex(UINT nID);
 			UINT	GetTableSize() { return m_ColorTable.size();}
-			CString& GetTableUsage(UINT nID);
+			CString GetTableUsage(UINT nID); 
 			void	SetBoxTitle(LPCTSTR title) {m_sBoxTitle = title;}
 		virtual void    SetTableColor(UINT nID, COLORREF rgb);
 		virtual void    SetTableUsage(UINT nID, const CString& s);
@@ -109,6 +110,7 @@ CColorChoice   : public CColorDialog					/*
 		  // private data
 		CListBoxDlg     m_LBDlg;	// the list box dialog
 		CString 	m_sBoxTitle;	// the color dialog box title
+		UINT            m_nSelection;   // the selected color index
 		std::vector<ctl_color> m_ColorTable;   // usage-color pairs
 };
 /*----------------------------------------------------------------------------*/

@@ -1,4 +1,4 @@
-/* (09-Feb-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MyPrinter.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MyPrinter.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -92,7 +92,7 @@ MyPrinter : public CPrintDialog                        			/*
 			HWND hwndOwner =  GetParameters().hwndOwner;	
 			if (::IsWindow(hwndOwner))
 			{
-				SendMessage(hwndOwner, WM_COMMAND,
+				::SendMessage(hwndOwner, WM_COMMAND,
 				    IDC_HELP_COMDLG, IDM_HELP_PRINTDLG);
 			}
 		}
@@ -178,7 +178,7 @@ MyPageSetup : public CPageSetupDialog                            	/*
 			HWND hwndOwner = GetParameters().hwndOwner;
 			if (::IsWindow(hwndOwner))
 			{
-				SendMessage(hwndOwner, WM_COMMAND,
+				::SendMessage(hwndOwner, WM_COMMAND,
 				    IDC_HELP_COMDLG, (LPARAM)IDM_HELP_PAGESETDLG);
 			}
 		}

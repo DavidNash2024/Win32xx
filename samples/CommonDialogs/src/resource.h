@@ -1,4 +1,4 @@
-/* (02-Aug-2014) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]               (resource.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -125,7 +125,8 @@
 
   // help context and content toolbar and menu messages
 #define IDM_HELP_CONTENT                130			
-#define IDM_HELP_CONTEXT                131			
+#define IDM_HELP_CONTEXT                131
+#define IDM_HELP_ACTIVE			WM_APP + 100
 
   // resource IDs of menu or toolbar icons, bitmaps, or other images
 #define IDI_COLOR_CHOICE                140			

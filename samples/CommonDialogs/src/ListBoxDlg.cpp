@@ -1,4 +1,4 @@
-/* (01-Oct-2015) [Tab/Indent: 8/8][Line/Box: 80/74]           (ListBoxDlg.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]           (ListBoxDlg.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -162,8 +162,8 @@ OnHelpButton()                                                          /*
 	HWND hwndOwner = GetWindow(GW_OWNER);
 	if (::IsWindow(hwndOwner))
 	{
-		SendMessage(hwndOwner, WM_COMMAND,
-		    IDC_HELP_COMDLG, IDM_HELP_LIST_BOX);
+		::SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
+		    IDM_HELP_LIST_BOX);
 	}
 
 }
