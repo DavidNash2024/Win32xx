@@ -273,6 +273,8 @@ namespace Win32xx
 			case WM_SIZE:			return CFrame::OnSize(uMsg, wParam, lParam);
 			case WM_SYSCOLORCHANGE:	return CFrame::OnSysColorChange(uMsg, wParam, lParam);
 			case WM_SYSCOMMAND:		return CFrame::OnSysCommand(uMsg, wParam, lParam);
+			case WM_UNINITMENUPOPUP: return CFrame::OnUnInitMenuPopup(uMsg, wParam, lParam);
+
 		//	case WM_WINDOWPOSCHANGED: return CFrame::FinalWindowProc(uMsg, wParam, lParam);
 
 			// Messages defined by Win32++
