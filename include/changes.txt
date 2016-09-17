@@ -62,6 +62,7 @@ Added CDocker::SetActiveDocker	member function
 Added CFrame::GetMRULimit		member function
 Added CFrame::SetMRULimit		member function
 Added CFrame::SetupMenuIcons    member function
+Added CFrame::OnUnInitMenuPopup member function
 Added RibbonDockFrame           sample application
 Added additional overrides for CDC::SelectObject		
 

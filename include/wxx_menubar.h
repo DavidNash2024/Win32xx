@@ -1101,6 +1101,8 @@ namespace Win32xx
 		case WM_SYSKEYUP:			return OnSysKeyUp(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);
+		case WM_UNINITMENUPOPUP:	return ::SendMessage(m_hFrame, uMsg, wParam, lParam);
+		case WM_MENURBUTTONUP:		return ::SendMessage(m_hFrame, uMsg, wParam, lParam);
 
 		// Messages defined by Win32++
 		case UWM_POPUPMENU:			return OnPopupMenu();

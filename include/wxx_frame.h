@@ -413,6 +413,7 @@ namespace Win32xx
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual LRESULT OnUndocked();
+		virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnViewStatusBar();
 		virtual BOOL OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -2382,23 +2383,12 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		for (UINT nItem = 0; nItem < m_vMenuItemData.size(); ++nItem)
-		{
-			// Undo OwnerDraw and put the text back
-			MENUITEMINFO mii;
-			ZeroMemory(&mii, sizeof(MENUITEMINFO));
-			mii.cbSize = GetSizeofMenuItemInfo();
+		// Win95 and WinNT don't support WM_UNINITPOPUPMENU
+		int WinVer = GetWinVersion();
+		if (WinVer == 1400 || WinVer == 2400)
+			m_vMenuItemData.clear();
 
-			mii.fMask = MIIM_TYPE | MIIM_DATA;
-			mii.fType = m_vMenuItemData[nItem]->mii.fType;
-			mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
-			mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
-			mii.dwItemData = 0;
-			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
-		}
-
-		m_vMenuItemData.clear();
-
+		TRACE("OnExitMenuPopup\n");
 		return 0L;
 	}
 
@@ -2638,13 +2628,6 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CFrame::OnUndocked()
-	// Notification of undocked from CDocker received via OnNotify
-	{
-		m_hOldFocus = 0;
-		return 0;
-	}
-
 	inline LRESULT CFrame::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the frame window (not a child window) receives focus
 	{
@@ -2739,6 +2722,44 @@ namespace Win32xx
 
 		// Pass remaining system commands on for default processing
 		return FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
+	}
+
+	inline LRESULT CFrame::OnUndocked()
+	// Notification of undocked from CDocker received via OnNotify
+	{
+		m_hOldFocus = 0;
+		return 0;
+	}
+
+	inline LRESULT CFrame::OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
+	// Called when the drop-down menu or submenu has been destroyed.
+	{
+		UNREFERENCED_PARAMETER(wParam);
+		UNREFERENCED_PARAMETER(lParam);
+
+		for (int nItem = (int)m_vMenuItemData.size() - 1; nItem >= 0; --nItem)
+		{
+			// Undo OwnerDraw and put the text back
+			MENUITEMINFO mii;
+			ZeroMemory(&mii, sizeof(MENUITEMINFO));
+			mii.cbSize = GetSizeofMenuItemInfo();
+
+			mii.fMask = MIIM_TYPE | MIIM_DATA;
+			mii.fType = m_vMenuItemData[nItem]->mii.fType;
+			mii.dwTypeData = m_vMenuItemData[nItem]->GetItemText();
+			mii.cch = lstrlen(m_vMenuItemData[nItem]->GetItemText());
+			mii.dwItemData = 0;
+			::SetMenuItemInfo(m_vMenuItemData[nItem]->hMenu, m_vMenuItemData[nItem]->nPos, TRUE, &mii);
+			int nPos = m_vMenuItemData[nItem]->nPos;
+			m_vMenuItemData.pop_back();
+
+			// Break when we reach the top of this popup menu
+			if (nPos == 0)
+				break;
+		}
+
+		TRACE("OnUnInitMenuPopup\n");
+		return 0L;
 	}
 
 	inline BOOL CFrame::OnViewStatusBar()
@@ -3721,6 +3742,7 @@ namespace Win32xx
 		case WM_SIZE:			return OnSize(uMsg, wParam, lParam);
 		case WM_SYSCOLORCHANGE:	return OnSysColorChange(uMsg, wParam, lParam);
 		case WM_SYSCOMMAND:		return OnSysCommand(uMsg, wParam, lParam);
+		case WM_UNINITMENUPOPUP:  return OnUnInitMenuPopup(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED: return FinalWindowProc(uMsg, wParam, lParam);
 
 		// Messages defined by Win32++

@@ -92,6 +92,16 @@
   #include <sstream>
 #endif
 
+// These messages are actually supported on Win98
+#if WINVER >= 0x0410
+  #ifndef WM_UNINITMENUPOPUP
+    #define WM_UNINITMENUPOPUP              0x0125
+  #endif
+
+  #ifndef WM_MENURBUTTONUP
+    #define WM_MENURBUTTONUP                0x0122
+  #endif
+#endif // WINVER == 0x0410
 
 #include "wxx_shared_ptr.h"
 
@@ -167,7 +177,7 @@
 #define MIN(a,b)            (((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0820		// Win32++ version 8.2.0
+#define _WIN32XX_VER 0x0830		// Win32++ version 8.3.0
 
 
 namespace Win32xx
