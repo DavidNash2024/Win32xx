@@ -217,18 +217,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\RichEditView.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\StdAfx.cpp"
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -312,6 +308,10 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RichEditView.h"
 				>
 			</File>
 			<File

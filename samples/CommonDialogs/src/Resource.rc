@@ -50,6 +50,7 @@
 /******************************************************************************/
 
 #include "windows.h"
+#include "richedit.h"
 #include "Resource.h"
 
 /*==============================================================================
@@ -99,6 +100,8 @@ IDW_MAIN MENU
 		MENUITEM SEPARATOR
 		MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND //, GRAYED
 		MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE //, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "Load bogus MRU",        IDM_BOGUS_MRU
 	}
 	POPUP "&View"
 	{
@@ -107,6 +110,8 @@ IDW_MAIN MENU
 		MENUITEM SEPARATOR
 		MENUITEM "&Control Colors",	  IDM_COLOR_CHOICE
 		MENUITEM "&Font Face+Color",	  IDM_FONT_CHOICE
+		MENUITEM SEPARATOR
+		MENUITEM "&Wrap Text Lines",       IDM_RICHEDWRAP, CHECKED
 	}
 
 	POPUP "&Help"
@@ -143,10 +148,13 @@ EXSTYLE WS_EX_CLIENTEDGE
 FONT 10, "Courier New", 0, 0
 {
 	  // controls within the client area:
-	DEFPUSHBUTTON   "OK", IDOK, 10, 20, 50, 16, BS_DEFPUSHBUTTON |
+	DEFPUSHBUTTON   "OK", IDOK, 315, 10, 50, 16, BS_DEFPUSHBUTTON |
 			    WS_GROUP | WS_TABSTOP | BS_OWNERDRAW
-	EDITTEXT        IDM_EDITBOX, 120, 82, 84, 35, ES_MULTILINE | WS_TABSTOP
-			    | ES_AUTOHSCROLL | NOT WS_BORDER, WS_EX_STATICEDGE
+	CONTROL         "", IDC_RICHEDITBOX, RICHEDIT_CLASS, ES_MULTILINE |
+			    ES_AUTOHSCROLL | WS_BORDER  | WS_TABSTOP |
+			    ES_WANTRETURN  | WS_VSCROLL | WS_HSCROLL,
+			    10, 10, 290, 235, WS_EX_CLIENTEDGE |
+			    WS_EX_ACCEPTFILES
 }
 
 /*==============================================================================
@@ -159,6 +167,7 @@ IDW_MAIN ACCELERATORS
 	"O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
 	"S",            IDM_FILE_SAVE,   VIRTKEY, CONTROL, NOINVERT
 	"S",            IDM_FILE_SAVEAS, VIRTKEY, SHIFT, CONTROL, NOINVERT
+	"F",            IDM_EDIT_FIND,   VIRTKEY, CONTROL, NOINVERT
 	"C",            IDM_EDIT_COPY,   VIRTKEY, CONTROL, NOINVERT
 	"X",            IDM_EDIT_CUT,    VIRTKEY, CONTROL, NOINVERT
 	"V",            IDM_EDIT_PASTE,  VIRTKEY, CONTROL, NOINVERT
@@ -185,7 +194,7 @@ STRINGTABLE  // for the mainframe
 	IDW_INDICATOR_SCRL      "SCRL"
 	IDW_VIEW_TOOLBAR        "Show or hide the tool bar."
 	IDW_VIEW_STATUSBAR      "Show or hide the status bar."
-	
+	IDM_RICHEDWRAP          "Enable/disable text wrapping."
 	  // for menu items
 	IDM_COLOR_CHOICE        "Change the background color."
 	IDM_FONT_CHOICE         "Change the display font."
@@ -211,7 +220,7 @@ STRINGTABLE	  // standard file menu or toolbar items
 
 STRINGTABLE	  // standard edit menu or toolbar items
 {
-	IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard. (for this demo populate MRU list.)"
+	IDM_EDIT_CUT            "Cut the Selected Contents to the Clipboard."
 	IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard."
 	IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document."
 	IDM_EDIT_UNDO           "Undo the last action."
@@ -219,6 +228,7 @@ STRINGTABLE	  // standard edit menu or toolbar items
 	IDM_EDIT_FIND           "Find something..."
 	IDM_EDIT_REPLACE        "Replace something..."
 	IDM_EDIT_DELETE         "Erase the selected Contents."
+	IDM_BOGUS_MRU           "Populate MRU list with bogus values."
 }
 
 STRINGTABLE     // help menu or toolbar items
@@ -243,7 +253,7 @@ STRINGTABLE     // window-related items
 STRINGTABLE     // client area items
 {
 	IDOK                    "Here, the OK button just prints a message."
-	IDM_EDITBOX             "This is a plain edit control."
+	IDC_RICHEDITBOX         "This is a rich edit control."
 }
 
 /*-----------------------------------------------------------------------------*/

@@ -59,12 +59,12 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/GR" />
 					<Add option="/W3" />
 					<Add option="/Zi" />
-					<Add option="/MTd" />
 					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
@@ -86,6 +86,7 @@
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
 					<Add library="htmlhelp" />
+					<Add library="Shell32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -120,6 +121,7 @@
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
 					<Add library="htmlhelp" />
+					<Add library="Shell32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -219,6 +221,8 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/RichEditView.cpp" />
+		<Unit filename="../src/RichEditView.h" />
 		<Unit filename="../src/StdAfx.cpp" />
 		<Unit filename="../src/StdApp.h" />
 		<Unit filename="../src/View.cpp" />

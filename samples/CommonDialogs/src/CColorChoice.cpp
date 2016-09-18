@@ -195,7 +195,7 @@ GetTableIndex(UINT nID)                                                 /*
 {
 	  // ignore the invocation if the table is empty
 	if (GetTableSize() == 0 || nID == 0)
-		return -1; // default value
+		return (UINT)-1; // default value
 		
 	UINT idx = 0;
  	std::vector<ctl_color>::iterator it;
@@ -203,7 +203,7 @@ GetTableIndex(UINT nID)                                                 /*
 	    (*it).nID != nID; ++it, ++idx)
 		;
 	if (idx >= GetTableSize())
-		idx = -1;
+		idx = (UINT)-1;
 		
 	return idx;
 }

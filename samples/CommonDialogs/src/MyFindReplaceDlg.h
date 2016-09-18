@@ -63,7 +63,7 @@ MyFindReplaceDialog : public CFindReplaceDialog
 	public:
 		MyFindReplaceDialog() {}
 
-		void SetBoxTitle(LPCTSTR title) {m_sBoxTitle = title;}
+		void SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
 	
 	protected:
 		virtual void OnHelpButton()

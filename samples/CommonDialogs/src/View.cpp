@@ -121,7 +121,7 @@ AssignToolTips() 							/*
 	m_ToolTip.AddTool(hParent, _T("Client area"));
 	  // for each control in the client area
 	AddToolTip(hParent, IDOK);
-	AddToolTip(hParent, IDM_EDITBOX);
+	AddToolTip(hParent, IDC_RICHEDITBOX);
 	  // ok, now activate these
 	m_ToolTip.Activate(TRUE);
 }
@@ -203,6 +203,16 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 }
 
 /*============================================================================*/
+	void CView::
+NoDocOpen()								/*
+
+	Announce that no document is currently open
+*-----------------------------------------------------------------------------*/
+{
+	m_RichEdit.SetWindowText(_T("\n\n\t\tNo document is open."));
+}
+
+/*============================================================================*/
 	BOOL CView::
 OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
@@ -238,6 +248,19 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
 /*============================================================================*/
 	BOOL CView::
+OnDropFiles(HDROP hDropInfo)                                            /*
+
+	Open the text document dragged and dropped in the rich edit window.
+*-----------------------------------------------------------------------------*/
+{
+	TCHAR szFileName[_MAX_PATH];
+	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+	GetDoc().OnOpenDoc(szFileName);
+	return TRUE;
+}
+
+/*============================================================================*/
+	BOOL CView::
 OnInitDialog()                                                          /*
 
 	This method is invoked immediately before the dialog box is displayed.
@@ -251,19 +274,41 @@ OnInitDialog()                                                          /*
 	  // load the program icons
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
-	  // get the parent frame
-//	m_pParent = dynamic_cast<CMainFrame*>(m_pParent-> GetCWndPtr(m_hParent));
 	  // add tool tips to controls in client area
 	AssignToolTips();
 	  // subclass the controls on the dialog
 	AttachControl(IDOK, m_OK);
-	AttachControl(IDM_EDITBOX, m_Edit);
+	AttachControl(IDC_RICHEDITBOX, m_RichEdit);
 	  // set edit box to default font
-	m_Edit.SetFont(m_EditFont, TRUE);
+	m_RichEdit.SetFont(m_EditFont, TRUE);
 	  // put some arbitrary text in the edit control just for this demo
-	m_Edit.SetWindowText(_T("hello world"));
-
+	NoDocOpen();
 	return TRUE;
+}
+
+/*============================================================================*/
+	LRESULT CView::
+OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
+
+	Process messages that controls send to the view.
+**-----------------------------------------------------------------------------*/
+{
+	NMHDR* pNMH;
+	pNMH = (LPNMHDR) lParam;
+	switch (pNMH->code)
+	{
+	    case EN_MSGFILTER: // keyboard or mouse event: update control states
+		::SendMessage(m_hParent, IDM_UPDATECONTROLUISTATE, 0, 0);
+		break;
+
+	    case EN_DROPFILES: // a file has been dropped in the rich edit box
+		ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
+		HDROP hDropInfo = (HDROP) ENDrop->hDrop;
+		OnDropFiles(hDropInfo);
+		return TRUE;
+	}
+
+	return CDialog::OnNotify(wParam, lParam);
 }
 
 /*============================================================================*/
@@ -284,6 +329,128 @@ OnOK()                                                                  /*
 	::MessageBox(NULL, _T("OK Button Pressed."), _T("Information"),
 	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 	TRACE("OK Button Pressed.\n");
+}
+
+/*============================================================================*/
+	void CView::
+OnPrintDocument()							/*
+
+	Invoke the MyPrinter dialog to get printing parameters and then print
+	the document.
+*-----------------------------------------------------------------------------*/
+{
+	// Implementation note: this code is based on Microsoft's KB article
+	// Q129860, "Using Built-In Printing Features from a Rich Edit Control"
+
+//-----OnPreparePrinting
+	  // bring up a dialog to choose the printer and printing parameters
+	MyPrinter PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+	PRINTDLG pd = PrintDlg.GetParameters();
+	pd.nCopies = 1;
+	pd.nFromPage = 0xFFFF;
+	pd.nToPage = 0xFFFF;
+	pd.nMinPage = 1;
+	pd.nMaxPage = 0xFFFF;
+	PrintDlg.SetParameters(pd);
+
+	try
+	{
+		if (PrintDlg.DoModal(theApp.GetMainWnd()) == IDOK)
+		{
+			CDC dcPrinter = PrintDlg.GetPrinterDC();
+			HDC hPrinterDC = dcPrinter.GetHDC();
+//-----OnBeginPrinting
+
+			int	nHorizRes = dcPrinter.GetDeviceCaps(HORZRES);
+			int	nVertRes  = dcPrinter.GetDeviceCaps(VERTRES);
+			int nLogPixelsX   = dcPrinter.GetDeviceCaps(LOGPIXELSX);
+			int nLogPixelsY   = dcPrinter.GetDeviceCaps(LOGPIXELSY);
+			LONG lTextLength;   // Length of document.
+			LONG lTextPrinted;  // Amount of document printed.
+
+			// Ensure the printer DC is in MM_TEXT mode.
+			dcPrinter.SetMapMode(MM_TEXT);
+
+			// Rendering to the same DC we are measuring.
+			FORMATRANGE fr;
+			ZeroMemory(&fr, sizeof(fr));
+			fr.hdc = hPrinterDC;
+			fr.hdcTarget = hPrinterDC;
+
+			// Set up the page.
+			int margin = 200; // 1440 TWIPS = 1 inch.
+			fr.rcPage.left = fr.rcPage.top = margin;
+			fr.rcPage.right = (nHorizRes / nLogPixelsX) * 1440 - margin;
+			fr.rcPage.bottom = (nVertRes / nLogPixelsY) * 1440 - margin;
+
+			// Set up margins all around.
+			fr.rc.left = fr.rcPage.left;//+ 1440;
+			fr.rc.top = fr.rcPage.top;//+ 1440;
+			fr.rc.right = fr.rcPage.right;//- 1440;
+			fr.rc.bottom = fr.rcPage.bottom;//- 1440;
+
+			// Default the range of text to print as the entire document.
+			fr.chrg.cpMin = 0;
+			fr.chrg.cpMax = -1;
+			m_RichEdit.FormatRange(fr, TRUE);
+
+			// Set up the print job (standard printing stuff here).
+			DOCINFO di;
+			ZeroMemory(&di, sizeof(di));
+			di.cbSize = sizeof(DOCINFO);
+			di.lpszDocName = GetDoc().GetFilePath();
+
+			// Do not print to file.
+			di.lpszOutput = NULL;
+//------
+			// Start the document.
+			dcPrinter.StartDoc(&di);
+//------OnPrepareDC
+			// Find out real size of document in characters.
+			lTextLength = m_RichEdit.GetTextLengthEx(GTL_NUMCHARS);
+
+			do
+			{
+//------
+				// Start the page.
+				dcPrinter.StartPage();
+//------OnPrint
+				// Print as much text as can fit on a page. The return value is
+				// the index of the first character on the next page. Using TRUE
+				// for the wParam parameter causes the text to be printed.
+				lTextPrinted = m_RichEdit.FormatRange(fr, TRUE);
+				m_RichEdit.DisplayBand(fr.rc);
+//------
+				// Print last page.
+				dcPrinter.EndPage();
+//------loop back preparation
+				// If there is more text to print, adjust the range of characters
+				// to start printing at the first character of the next page.
+				if (lTextPrinted < lTextLength)
+				{
+					fr.chrg.cpMin = lTextPrinted;
+					fr.chrg.cpMax = -1;
+				}
+			} while (lTextPrinted < lTextLength);
+
+			// Tell the control to release cached information.
+			m_RichEdit.FormatRange(fr, FALSE);
+//------
+			// End the print job
+			dcPrinter.EndDoc();
+//-----OnEndPrinting
+		}
+		else
+			return;
+	}
+
+	catch (const CWinException& /* e */)
+	{
+		// No default printer
+		::MessageBox(0, _T("Unable to display print dialog"),
+		    _T("Print Failed"), MB_OK);
+		return;
+	}
 }
 
 /*============================================================================*/
@@ -319,6 +486,29 @@ PreRegisterClass(WNDCLASS &wc)                                          /*
 }
 
 /*============================================================================*/
+	void CView::
+Register(CDoc* pDoc)							/*
+
+	Register the view's document.
+*-----------------------------------------------------------------------------*/
+{
+	m_pDoc = pDoc;
+}
+
+/*============================================================================*/
+	void CView::
+SetRichEditColors(COLORREF txfg, COLORREF txbg, COLORREF bg)            /*
+
+
+	Set the rich edit control text foreground and background colors and the
+	control background color.  This is needed only once (not like other
+	controls set in OnCtlColor()).
+*-----------------------------------------------------------------------------*/
+{
+	m_RichEdit.SetColors(txfg, txbg, bg);
+}
+
+/*============================================================================*/
         void CView::
 Serialize(CArchive &ar)                                               	/*
 
@@ -343,7 +533,7 @@ SetEditFont(const CFont& f)						/*
 *-----------------------------------------------------------------------------*/
 {
 	m_EditFont = f;
-	m_Edit.SetFont(f, TRUE);
+	m_RichEdit.SetFont(f, TRUE);
 }
 
 

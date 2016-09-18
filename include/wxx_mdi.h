@@ -263,7 +263,6 @@ namespace Win32xx
 			case WM_ACTIVATE:		return CFrame::OnActivate(uMsg, wParam, lParam);
 			case WM_DRAWITEM:		return CFrame::OnDrawItem(uMsg, wParam, lParam);
 			case WM_ERASEBKGND:		return 0L;
-			case WM_EXITMENULOOP:	return CFrame::OnExitMenuLoop(uMsg, wParam, lParam);
 			case WM_HELP:			return CFrame::OnHelp();
 			case WM_INITMENUPOPUP:	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 			case WM_MENUCHAR:		return CFrame::OnMenuChar(uMsg, wParam, lParam);

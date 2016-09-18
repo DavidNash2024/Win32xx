@@ -123,6 +123,8 @@
 #define IDM_FONT_CHOICE                 120			
 #define IDM_COLOR_CHOICE                121
 
+#define IDM_BOGUS_MRU                   125
+
   // help context and content toolbar and menu messages
 #define IDM_HELP_CONTENT                130			
 #define IDM_HELP_CONTEXT                131
@@ -133,7 +135,11 @@
 #define IDI_FONT_CHOICE                 141			
 
   // resource IDs for client area controls (IDOK has its own, so not given here)
-#define IDM_EDITBOX			150			
+#define IDC_RICHEDITBOX			150
+#define IDM_RICHEDWRAP                  151
+
+  // rich edit notification to CMainFrame
+#define IDM_UPDATECONTROLUISTATE        WM_APP + 101
 
 /*-----------------------------------------------------------------------------*/
 #endif // RESOURCE_H_DEFINED

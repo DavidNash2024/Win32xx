@@ -92,15 +92,7 @@ NoResizeGripperStatusBar : public CStatusBar                            /*
 
 	Declaration of the CMainFrame class
 	
-*******************************************************************************/
-
-#include "wxx_commondlg.h"
-
-#include "View.h"
-#include "Doc.h"
-#include "AppHelp.h"
-
-/*******************************************************************************
+********************************************************************************
 
 	Local constants and types                               	*/
 
@@ -118,20 +110,25 @@ CMainFrame : public CFrame						/*
 		CMainFrame(void);
 		virtual 	~CMainFrame(void){}
 		
+			void 	AddMRUEntry(LPCTSTR szMRUEntry)
+				    { CFrame::AddMRUEntry (szMRUEntry);}
 			BOOL	DoContextHelp(WPARAM wParam);
 		virtual void    EmptyMRUList();
 		virtual BOOL    EngageContextHelp();
 		       AppHelp& GetAppHelp() {return m_AppHelp;}
-		virtual UINT    GetMRUSize() { return GetMRUEntries().size();}
+			CDoc& 	GetDoc() { return m_Doc; }
+			UINT    GetMRUSize() { return GetMRUEntries().size();}
 		virtual CStatusBar& GetStatusBar() const
 				{ return const_cast<NoResizeGripperStatusBar&>
 				  (m_NoResizeGripperStatusBar); }
-		virtual void	RemoveMRUEntry(LPCTSTR szMRUEntry)
+			CView&  GetView() {return m_View;}
+		virtual void	RemoveMRUEntry(const CString& szMRUEntry)
 				    {CFrame::RemoveMRUEntry(szMRUEntry);}
 			void    SetSBBkColor(COLORREF clr)
 				    { GetStatusBar().SendMessage(SB_SETBKCOLOR,
 				      0, (LPARAM)clr);}
-		virtual void 	UpdateControlUIState(void);
+		virtual void 	SetWindowTitle(const CString& title);
+		virtual void 	UpdateControlUIState();
 
 		    COLORREF 	GetSBBkColor()
 		    		{ return m_ColorChoice.GetTableColor(SBBg);}
@@ -140,21 +137,24 @@ CMainFrame : public CFrame						/*
 		virtual void    ConnectAppHelp();
 		virtual void	GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg,
 				    UINT& bk, UINT& bg);
+		 CRichEditView& GetREView() { return m_View.GetREView();}
+
 		virtual void    LoadPersistentData();
+			void    OnBogusMRU();
 		virtual void    OnColorChoice();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
 		virtual int  	OnCreate(CREATESTRUCT& rcs);
-		virtual void    OnCut();
 		virtual void    OnEditFind();
 		virtual void    OnEditReplace();
 		virtual void    OnFileClose();
 		virtual void    OnFileNew();
 		virtual void    OnFileOpen();
-		virtual BOOL 	OnFileOpenMRU(UINT);
+		virtual void 	OnFileOpenMRU(UINT);
 		virtual void    OnFilePageSetup();
 		virtual void    OnFilePreview();
 		virtual void    OnFilePrint();
+		virtual void    OnFileSave();
 		virtual void    OnFileSaveAs();
 		virtual void    OnFontChoice();
 		virtual void    InitCtlColors();
@@ -162,12 +162,15 @@ CMainFrame : public CFrame						/*
 		virtual void 	OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
+		virtual BOOL    OnRichEditColor();
 		virtual void 	OnTerminate(void);
+		virtual void    OnWrapText();
 		virtual void 	PreCreate(CREATESTRUCT& cs);
 		virtual BOOL 	SaveRegistrySettings(void);
 		virtual void	Serialize(CArchive &ar);
 		virtual void    SetContextHelpMessages(void);
-			BOOL    SetControlStatus(UINT, BOOL, ControlBars);
+			BOOL	SetCheckStatus(UINT, BOOL, ControlBars);
+			BOOL    SetEnableStatus(UINT, BOOL, ControlBars);
 		virtual void 	SetReBarColors(COLORREF clrBkGnd1,
 				    COLORREF clrBkGnd2, COLORREF clrBand1,
 				    COLORREF clrBand2);
@@ -191,6 +194,7 @@ CMainFrame : public CFrame						/*
 		CBitmap    m_colorbmp;        // for the color choice menuitem
 		AppHelp    m_AppHelp;         // the context help object
 		CBrush     m_br;              // backbround brush object
+		BOOL       m_bWrapText;       // wrap text in rich edit if true.
 		CColorChoice m_ColorChoice;   // the control color choice
 		MyFontDialog m_FontChoice;    // edit control font
 		WINDOWPLACEMENT m_Wndpl;      // window placement information

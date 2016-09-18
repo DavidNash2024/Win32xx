@@ -31,7 +31,12 @@
     <ClCompile Include="..\src\ListBoxDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AppGlobal.cpp" />
+    <ClCompile Include="..\src\AppGlobal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RichEditView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Mainfrm.h">
@@ -214,8 +219,18 @@
     <ClInclude Include="..\src\ListBoxDlgRC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AppGlobal.h" />
-    <ClInclude Include="..\src\AppGlobalRC.h" />
+    <ClInclude Include="..\src\AppGlobalRC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AppGlobal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\RichEditView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\StdApp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">
@@ -252,6 +267,8 @@
     <ResourceCompile Include="..\src\ListBoxDlg.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\src\AppGlobal.rc" />
+    <ResourceCompile Include="..\src\AppGlobal.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

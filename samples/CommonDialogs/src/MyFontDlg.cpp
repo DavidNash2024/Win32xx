@@ -115,7 +115,7 @@ OnInitDialog()                                                          /*
 	void MyFontDialog::
 OnOK()                                                                  /*
 
-	This member is caused to execute after the DoModal() member has
+	This member is caused to execute after the () member has
 	terminated with the OK button activated. The action here is just to
 	create the logfont form of the selected font.
 *-----------------------------------------------------------------------------*/

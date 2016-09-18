@@ -36,6 +36,16 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+	Programming notes: Documents in this sample program are simple text
+	files of either ASCII or UNICODE character formats that conform with the
+	character mode option set during compilation.  An open document has a
+	file path name associated with it, which is maintained in the CString
+	m_open_doc_path. The CFile object m_Doc_file is used to create or open
+	this file and to read or write the contents of the rich edit view window
+	and then to immediately close the CFile object. The document itself
+	remains open until OnCloseDoc() is executed. At that point the path name
+	is emptied.
+	
  	Acknowledgement:
 		The author would like to thank and acknowledge the advice,
 		critical review, insight, and assistance provided by David Nash
@@ -67,11 +77,9 @@ CDoc() 									/*
     :	m_Doc_file(INVALID_HANDLE_VALUE)
 {
 	m_Doc_is_open = FALSE;
-	m_Doc_is_dirty = FALSE;
-	m_Doc_length = 0;
-	m_Doc_width = 0;
 	m_Doc_file_ext.Empty();
 	m_Doc_file_filter.Empty();
+	m_open_doc_path.Empty();
 }
 
 /*============================================================================*/
@@ -84,17 +92,34 @@ CDoc() 									/*
 }
 
 /*============================================================================*/
-	size_t CDoc::
-GetLength()								/*
+	CHARRANGE CDoc::
+FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)			/*
 
-	Return the document length, in records.
-*----------------------------------------------------------------------------*/
+	Find the next occurrence of the string returned by the find-replace
+	dialog box FR in the document starting with the given character range
+	and return the found character range, or an end-of-text range otherwise.
+*-----------------------------------------------------------------------------*/
 {
-	if (!IsOpen())
-		m_Doc_length = 0;
-
-	  // TODO: compute the document length
-	return m_Doc_length;
+	  // get find string that does not go out of scope
+	m_find_next   = FR.GetFindString();
+	  // set the search parmeters
+	BOOL	match = FR.MatchCase(),
+		whole = FR.MatchWholeWord(),
+		down  = FR.SearchDown();
+	DWORD dwFlags = (match ? FR_MATCHCASE : 0) |
+			(whole ? FR_WHOLEWORD : 0) |
+			(down  ? FR_DOWN : 0);
+	  // Perform the search per the dwFlags and the FINDTEXEX contents:
+	  // search down: end of current selection to end of text, or
+	  // search up:   beginning of current selection to beginning of text
+	r.cpMin = (down ? r.cpMax : r.cpMin);
+	r.cpMax = (down ? -1 : 0);
+	  // get current location or selection
+	FINDTEXTEX ftx;
+	ftx.chrg = r;
+	ftx.lpstrText = m_find_next.c_str();
+	GetREView().FindText(dwFlags, ftx);
+	return ftx.chrgText;
 }
 
 /*============================================================================*/
@@ -126,46 +151,46 @@ GetFilter()                                                       	/*
 }
 
 /*============================================================================*/
-	CString CDoc::
-GetRecord(size_t rcd, size_t left /* = 0 */, size_t length /* = (size_t)-1 */)
-									/*
-	Return a CString containing the document rcd record, starting at
-	the left position and continuing for length characters, for use when the
-	document is record-based and records are to be viewed.
+	CRichEditView& CDoc::
+GetREView()                                                       	/*
+
+	Return a reference to the rich edit view object.
 *----------------------------------------------------------------------------*/
 {
-	UNREFERENCED_PARAMETER(rcd);
-	
-	CString rtn = _T("");
-	if (!IsOpen() || m_Doc_length == 0)
-		return rtn;
-
-	// TODO: read the rcd-th record of the document into rtn 
-
-	int count = MAX(MIN(rtn.GetLength() - (int)left, (int)length), 0);
-	if (count > 0)
-		rtn.Mid(left, count);
-	return rtn;
-}
-
-/*============================================================================*/
-	size_t CDoc::
-GetWidth()								/*
-
-	Return the document view width, in characters, for use when the
-	document is record-based and records are to be viewed.
-*----------------------------------------------------------------------------*/
-{
-	if (!IsOpen())
-		m_Doc_width = 0;
-		
-	  // TODO: compute document width for view
-	  
-	return m_Doc_width;
+	return GetView().GetREView();
 }
 
 /*============================================================================*/
 	BOOL CDoc::
+IsDirty()                                                               /*
+
+	Indicate the modification state of the text in the rich edit view.
+*-----------------------------------------------------------------------------*/
+{
+	return GetREView().GetModify();
+}
+
+/*============================================================================*/
+	void CDoc::
+NotFound(const MyFindReplaceDialog& FR)					/*
+
+	Post a message box relating that the current search did not find the
+	string sought for.
+*-----------------------------------------------------------------------------*/
+{
+	BOOL	match = FR.MatchCase(),
+		whole = FR.MatchWholeWord();
+	CString msg;
+	LPCTSTR wholeword = (whole ? _T("\nas a whole word") : _T("")),
+		matchcase = (match ? _T("\nmatching case") : _T(""));
+	msg.Format(_T("'%s'was not found%s%s."), m_find_next.c_str(),
+	    wholeword, matchcase);
+	::MessageBox(NULL, msg, _T("Information"), MB_OK |
+	    MB_ICONINFORMATION | MB_TASKMODAL);
+}
+
+/*============================================================================*/
+	void CDoc::
 OnCloseDoc()								/*
 
 	Perform any cleanup necessary to close the document, except for
@@ -173,16 +198,22 @@ OnCloseDoc()								/*
 	member.
 *-----------------------------------------------------------------------------*/
 {
-	  // save the document, or if the document cannot be saved, just exit
-	if (!OnSaveDoc())
-		return FALSE;
-
-	// TODO: clean up as needed to close the document
-	
+	  //Check for unsaved text
+	CString msg;
+	msg.Format(_T("Save changes to this document?\n    %s"),
+	    GetFilePath().c_str());
+	if (m_Doc_is_open && IsDirty() && (::MessageBox(NULL, msg,
+	    _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES))
+	{
+		OnSaveDoc();
+		return;
+	}
 	  // mark the document is not open, with zero length
 	m_Doc_is_open = FALSE;
-	m_Doc_length = 0;
-	return m_Doc_file.Close();
+	m_open_doc_path.Empty();
+	GetREView().Clean();
+	GetView().NoDocOpen();
+	GetFrame().SetWindowTitle(m_open_doc_path);
 }
 
 /*============================================================================*/
@@ -192,7 +223,7 @@ OnCopy()								/*
 	Copy the currently selected items in document into the clipboard.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app-dependent function
+	GetREView().Copy();
 }
 
 /*============================================================================*/
@@ -202,7 +233,7 @@ OnCut()									/*
 	Cut the selected items from the document into the clipboard.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: Add app-dependent
+	GetREView().Cut();
 }
 
 /*============================================================================*/
@@ -212,7 +243,7 @@ OnDelete()								/*
 	Delete the currently selected items from the document.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app-dependent function
+	GetREView().Clear();
 }
 
 /*============================================================================*/
@@ -256,20 +287,19 @@ OnFRFindNext(MyFindReplaceDialog* pFR)      				/*
 	in the document.
 *-----------------------------------------------------------------------------*/
 {
-	CString msg,
-		next = pFR->GetFindString(),
-		match = pFR->MatchCase() ? _T("yes") : _T("no"),
-		whole = pFR->MatchWholeWord() ? _T("yes") : _T("no"),
-		updown = pFR->SearchDown() ? _T("down") : _T("up");
-
-	// TODO: enter code to find next occurrence of 'next'
-	msg.Format(_T("Find next occurrence of '%s'.\n")
-		   _T("Match case? \t\t%s\n")
-		   _T("Match whole word? \t%s\n")
-		   _T("Search direction: \t%s"),
-		   next.c_str(), match.c_str(), whole.c_str(), updown.c_str());
-	::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
-	    MB_TASKMODAL);
+	  // get current location or selection
+	CHARRANGE r;
+	GetREView().GetSel(r);
+	  // find the next occurrence
+	r = FindNext(*pFR, r);
+	if (r.cpMin >= 0)
+	{
+		  // select the text and set the focus to show it
+		GetREView().SetSel(r);
+		GetREView().SetFocus();
+	}
+	else
+		NotFound(*pFR);
 }
 
 /*============================================================================*/
@@ -280,22 +310,33 @@ OnFRReplaceAll(MyFindReplaceDialog* pFR)           			/*
 	in the document by the string returned by that box.
 *-----------------------------------------------------------------------------*/
 {
-	CString msg,
-		next = pFR->GetFindString(),
-		with = pFR->GetReplaceString(),
-		match = pFR->MatchCase() ? _T("yes") : _T("no"),
-		whole = pFR->MatchWholeWord() ? _T("yes") : _T("no"),
-		updown = pFR->SearchDown() ? _T("down") : _T("up");
-
-	// TODO: enter code to make replacements
-	msg.Format(_T("Find all occurrences of '%s'.\n")
-		   _T("replace all occurrences with: '%s'.\n")
-		   _T("Match case? \t\t%s\n")
-		   _T("Match whole word? \t%s\n")
-		   _T("Search direction: \t%s"), next.c_str(), with.c_str(),
-		   match.c_str(), whole.c_str(), updown.c_str());
-	::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
-	    MB_TASKMODAL);
+	  // get replacement string that does not go out of scope
+	m_replace_with = pFR->GetReplaceString();
+	  // search the entire range, start at character 0
+	CHARRANGE r  = {0, 0},
+		  r0 = r;
+	r = FindNext(*pFR, r);
+	  // if not found, say so
+	if (r.cpMin < 0)
+	{
+		NotFound(*pFR);
+		return;
+	}
+	  // replace this occurrence, seek the next, and repeat until no more
+	do
+	{
+		GetREView().SetSel(r);
+		GetREView().ReplaceSel(m_replace_with.c_str(), TRUE);
+		  // save the last replacement site and reset the search
+		  // beginning point for the next
+		r0 = r;
+		r.cpMin = r.cpMax;
+		r = FindNext(*pFR, r);
+	} while (r.cpMin >= 0);
+	  // show the last replacement
+	r0.cpMax = r0.cpMin + m_replace_with.GetLength();
+	GetREView().SetSel(r0);
+	GetREView().SetFocus();
 }
 
 /*============================================================================*/
@@ -306,22 +347,25 @@ OnFRReplaceCurrent(MyFindReplaceDialog* pFR)     			/*
 	box in the document by the string returned by that box.
 *-----------------------------------------------------------------------------*/
 {
-	CString msg,
-		next = pFR->GetFindString(),
-		with = pFR->GetReplaceString(),
-		match = pFR->MatchCase() ? _T("yes") : _T("no"),
-		whole = pFR->MatchWholeWord() ? _T("yes") : _T("no"),
-		updown = pFR->SearchDown() ? _T("down") : _T("up");
-		
-	// TODO: enter code to make the replacement
-	msg.Format(_T("Find next occurrence of '%s'.\n")
-		   _T("replace this occurrences with '%s'.\n")
-		   _T("Match case? \t\t%s\n")
-		   _T("Match whole word? \t%s\n")
-		   _T("Search direction: \t%s"), next.c_str(), with.c_str(),
-		   match.c_str(), whole.c_str(), updown.c_str());
-	::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
-	    MB_TASKMODAL);
+	  // get replacement string that does not go out of scope
+	m_replace_with = pFR->GetReplaceString();
+	  // get current location or selection
+	CHARRANGE r;
+	GetREView().GetSel(r);
+	  // find the next occurrence
+	r = FindNext(*pFR, r);
+	if (r.cpMin >= 0)
+	{
+		  // select the text, make the replacement, and set the
+		  // focus to show it
+		GetREView().SetSel(r);
+		GetREView().ReplaceSel(m_replace_with, TRUE);
+		r.cpMax = r.cpMin + m_replace_with.GetLength();
+		GetREView().SetSel(r);
+		GetREView().SetFocus();
+	}
+	else
+		NotFound(*pFR);
 }
 
 /*============================================================================*/
@@ -332,32 +376,44 @@ OnFRTerminating(MyFindReplaceDialog* pFR)   				/*
 *-----------------------------------------------------------------------------*/
 {
 	UNREFERENCED_PARAMETER(pFR);
-
-	::MessageBox(NULL, _T("Terminating find/replace."),
-	    _T("Information"), MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
 	BOOL CDoc::
 OnNewDoc(const CString& filename)                                       /*
 
-	Open a new document based on the given filename; return TRUE if able
-	to do so, or FALSE otherwise.
+	Open a new document with the given filename; return TRUE if able to do
+	so, or FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-//	UNREFERENCED_PARAMETER(filename); // this fails on const parameters
-	  // dummy for above: TODO: remove when filename is used elsewhere
-	{size_t i_07_04_1776 = sizeof(filename); i_07_04_1776 = i_07_04_1776;}
-
 	  // if there is a document currently open, save and close it
 	if (IsOpen())
 		OnCloseDoc();
 
-	// TODO: create the document using this filename
-	
-	m_Doc_is_open = TRUE; // for the demo
-	m_Doc_is_dirty = FALSE;
-	return IsOpen();
+	  // try to open 
+	try
+	{
+		m_Doc_file.Open(filename, CREATE_NEW);
+		GetREView().Clean();
+		m_open_doc_path = GetFilePath();
+		m_Doc_file.Close();
+		m_Doc_is_open = TRUE; //if no throw, the document opened
+		GetFrame().AddMRUEntry(m_open_doc_path);
+	}
+	catch (...) // if there was an error in opening the file
+	{
+		CString msg = (CString)"Document file did not open." + filename;
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		m_open_doc_path.Empty();
+		m_Doc_is_open = FALSE;
+		  // if the_path was in the MRU list, remove it
+		GetFrame().RemoveMRUEntry(filename);
+		return FALSE;
+	}
+	SetDirty(FALSE);
+	GetFrame().SetWindowTitle(m_open_doc_path);
+	return m_Doc_is_open;
 }
 
 /*============================================================================*/
@@ -369,12 +425,11 @@ OnOpenDoc(const CString &file)						/*
 	Return TRUE if file is open on return, FALSE if not.
 *-----------------------------------------------------------------------------*/
 {
-	CString current_path = m_Doc_file.GetFilePath(),
-		msg;
-	if (file.CompareNoCase(current_path) == 0)
+	CString msg;
+	if (file.CompareNoCase(m_open_doc_path) == 0)
 	{
 		msg.Format(_T("Document file\n    '%s'\nis already open."),
-		    current_path.c_str());
+		    m_open_doc_path.c_str());
 		::MessageBox(NULL, msg, _T("Information"), MB_OK |
 		    MB_ICONINFORMATION | MB_TASKMODAL);
 		  // not deemed a failure, as the file is open, as specified
@@ -384,32 +439,32 @@ OnOpenDoc(const CString &file)						/*
 	if (IsOpen())
 		OnCloseDoc();
 
-	  // regardless of whether it opens, it is not dirty
-	m_Doc_is_dirty = FALSE;
 	  // try to open (it should, as we know it exists, but still ...)
 	try
 	{
-		  // for the demo, announce the path being opened
-		msg = (CString)"Now opening document file:\n    " + file;
-		::MessageBox(NULL, msg, _T("Information"), MB_OK |
-		    MB_ICONINFORMATION | MB_TASKMODAL);
 		m_Doc_file.Open(file, OPEN_EXISTING);
 		  // if there was no throw, the document opened
+		GetREView().ReadFile(m_Doc_file);
+		m_open_doc_path = GetFilePath();
+		m_Doc_file.Close();
 		m_Doc_is_open = TRUE;
-		  // for the demo, annouce success
-		msg = (CString)"File opened successfully:\n    " + file;
-		::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
-		    MB_TASKMODAL);
+		GetFrame().AddMRUEntry(file);
 	}
-	catch (...)
+	catch (...) // if there was an error in opening the file
 	{
 		msg.Format(_T("Document file\n    '%s'\ndid not open."),
 		    file.c_str());
 		::MessageBox(NULL, msg, _T("Information"), MB_OK |
 		    MB_ICONINFORMATION | MB_TASKMODAL);
 		m_Doc_is_open = FALSE;
+		  // if the_path was in the MRU list, remove it
+		GetFrame().RemoveMRUEntry(file);
+		m_open_doc_path.Empty();
 		return FALSE;
 	}
+	  // regardless of whether it opens, it is not dirty
+	SetDirty(FALSE);
+	GetFrame().SetWindowTitle(m_open_doc_path);
 	return TRUE;
 }
 
@@ -436,30 +491,7 @@ OnPaste()								/*
 	location.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app dependent function
-}
-
-/*============================================================================*/
-	void CDoc::
-OnPrintDialog()								/*
-
-	Invoke the CPrintDialog to get printing parameters and print the
-	document.
-*-----------------------------------------------------------------------------*/
-{
-	  // Choose the printer and printing parameters.
-	MyPrinter PD(PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_SHOWHELP);
-	PRINTDLG pd = PD.GetParameters();
- 	pd.nFromPage = 1;
-	pd.nToPage = 100;
-	pd.nMinPage = 1;
-	pd.nMaxPage = 1000;
-	PD.SetPDTitle(_T("Choose Print Parameters"));
-	PD.SetParameters(pd);			
-	PD.DoModal(theApp.GetMainWnd());	
-
-	// TODO: Add code here to print the document.  Note: control does not
-	// return here until after OnOK() or OnCancel() have concluded.
+	GetREView().Paste();
 }
 
 /*============================================================================*/
@@ -469,6 +501,7 @@ OnPrintPreview()							/*
 	Invoke the print preview dialog
 *-----------------------------------------------------------------------------*/
 {
+	// TODO: fill in print preview
 }
 
 /*============================================================================*/
@@ -478,7 +511,7 @@ OnRedo()								/*
 	Reapply the last editing action that was undone.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app dependent function
+	GetREView().Redo();
 }
 
 /*============================================================================*/
@@ -491,28 +524,71 @@ OnSaveDoc()								/*
 *-----------------------------------------------------------------------------*/
 {
 	  // if no document is open or, if open, not dirty
-	if (!IsOpen() || !m_Doc_is_dirty)
+	if (!IsOpen() || !IsDirty())
 		return TRUE;
 
-	  // document will not be dirty on exit, whatever its current state
-	m_Doc_is_dirty = FALSE;
-
 	  // make sure the file is ok to save
-	if (m_Doc_file.GetFileName().IsEmpty() ||
-	    m_Doc_file.GetHandle() == INVALID_HANDLE_VALUE)
+	if (m_open_doc_path.IsEmpty())
 	{
 		CString msg = _T("Attempt to save an invalid file.");
 		::MessageBox(NULL, msg, _T("Information"),
 		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 		m_Doc_is_open = FALSE;
-		m_Doc_length = 0;
 		return FALSE;
 	}
 
-	// TODO: save the document into its file
-
+	try
+	{
+		  // for the demo, announce the path being opened
+		CString msg = (CString)"Saving document file:\n    " +
+		    m_open_doc_path;
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		m_Doc_file.Open(m_open_doc_path, CREATE_ALWAYS);
+		  // if there was no throw, the document opened
+		GetREView().WriteFile(m_Doc_file);
+		m_Doc_file.Close();
+		m_Doc_is_open = TRUE;
+		GetFrame().AddMRUEntry(m_open_doc_path);
+	}
+	catch (...) // if there was an error 
+	{
+		CString msg = (CString)"Document file did not save." +
+		     m_open_doc_path;
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		m_Doc_is_open = FALSE;
+		  // if the_path was in the MRU list, remove it
+		GetFrame().RemoveMRUEntry(m_open_doc_path);
+		m_open_doc_path.Empty();
+		return FALSE;
+	}
+	  // document will not be dirty on exit, whatever its current state
+	SetDirty(FALSE);
 	return TRUE;
 }
+
+/*============================================================================*/
+	void CDoc::
+OnUndo()								/*
+
+	Undo the last editing action on the document.
+*-----------------------------------------------------------------------------*/
+{
+	GetREView().Undo();
+}
+
+/*============================================================================*/
+	void CDoc::
+Register(CMainFrame* pFm, CView* pVu)					/*
+
+	Register the parent frame and view with this document.
+*-----------------------------------------------------------------------------*/
+{
+	m_pParent = pFm;
+	m_pView   = pVu;
+}
+
 
 /*============================================================================*/
         void CDoc::
@@ -548,12 +624,12 @@ Serialize(CArchive &ar)                                               	/*
 
 /*============================================================================*/
 	void CDoc::
-OnUndo()								/*
+SetDirty(BOOL b)                                                        /*
 
-	Undo the last editing action on the document.
+	Set the real edit window text modification state to b.
 *-----------------------------------------------------------------------------*/
 {
-	// TODO: app dependent function
+	GetREView().SetModify(b);
 }
 
 
