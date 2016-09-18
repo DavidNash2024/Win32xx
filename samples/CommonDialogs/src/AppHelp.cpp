@@ -120,7 +120,7 @@
 		if (m_AppHelp.IsActive())
 			return FALSE;
 
-		GetView().SetFocus();
+tbd		GetView().SetFocus();
 		  // set the cursor(s) in all controls to help
 		m_hCursor = ::LoadCursor(NULL, IDC_HELP);
 	    	  // set help mode on

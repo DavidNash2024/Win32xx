@@ -92,7 +92,7 @@ CColorChoice   : public CColorDialog					/*
 			UINT    GetTableIndex(UINT nID);
 			UINT	GetTableSize() { return m_ColorTable.size();}
 			CString GetTableUsage(UINT nID); 
-			void	SetBoxTitle(LPCTSTR title) {m_sBoxTitle = title;}
+			void	SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
 		virtual void    SetTableColor(UINT nID, COLORREF rgb);
 		virtual void    SetTableUsage(UINT nID, const CString& s);
 

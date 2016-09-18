@@ -138,7 +138,7 @@ DoModal(HWND hWndOwner /* = 0 */)      					/*
 	int ok = (int) CDialog::DoModal(m_hWndOwner);
 	  // NOTE: the CDialog class message loop handles the passage of
 	  // execution to OnOK() or OnCancel(), the ending of the dialog, and
-	  // the determination of the return value. Since the CDialog::DoModal()
+	  // the determination of the return value. Since the CDialog::()
 	  // method returns the parameter sent in the CDialog::EndDialog()
 	  // statement, the OnOK() member sets the return value to the index of
 	  // the selected item in the list box, if one was selected. However, if
@@ -172,7 +172,7 @@ OnHelpButton()                                                          /*
 	void CListBoxDlg::
 OnOK()									/*
 
-	This member executes after the DoModal() member terminates if the OK
+	This member executes after the () member terminates if the OK
 	button was activated.
 *-----------------------------------------------------------------------------*/
 {
@@ -185,9 +185,9 @@ OnOK()									/*
 	void CListBoxDlg::
 OnCancel()								/*
 
-	This member executes after the DoModal() member terminates and either
+	This member executes after the () member terminates and either
 	the Cancel or [X] button on the dialog was activated. Since the
-	CDialog::DoModal() method returns the parameter sent in the EndDialog()
+	CDialog::() method returns the parameter sent in the EndDialog()
 	statement, this member sets that value to INT_MAX so that no unwanted
 	assert(0) occurs.
 *-----------------------------------------------------------------------------*/

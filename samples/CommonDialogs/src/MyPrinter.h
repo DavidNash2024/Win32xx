@@ -80,7 +80,7 @@ MyPrinter : public CPrintDialog                        			/*
 		{
 		}
 
-		void SetPDTitle (LPCTSTR title) {m_sPDTitle  = title;}
+		void SetPDTitle (const CString& title) {m_sPDTitle  = title;}
 
 	protected:
 		friend class MyPageSetup;
@@ -116,29 +116,6 @@ MyPrinter : public CPrintDialog                        			/*
 
 		virtual void OnOK()
 		{
-			//  just show the printer information
-			int 	copies = GetCopies(),
-				from   = GetFromPage(),
-				to     = GetToPage();
-			CString device = GetDeviceName(),
-				driver = GetDriverName(),
-				port   = GetPortName(),
-				all    = TF(PrintAll()),
-				coll   = TF(PrintCollate()),
-				range  = TF(PrintRange()),
-				select = TF(PrintSelection()),
-				rpt;
-				rpt.Format(_T("Device : %s\nDriver : %s\n")
-				    _T("Port : %s\nRange : %d - %d\n")
-				    _T("Copies : %d\n Print all : %s\n")
-				    _T("Print collate : %s\nPrint range : %s\n")
-				    _T("Print selection : %s\n"),
-				    device.c_str(), driver.c_str(),
-				    port.c_str(), from, to, copies, all.c_str(),
-				    coll.c_str(), range.c_str(), select.c_str());
-				::MessageBox(NULL, rpt, _T("Information"),
-				    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-
 			// TODO: print the document
 		}
 
@@ -165,7 +142,7 @@ MyPageSetup : public CPageSetupDialog                            	/*
 		{
 		}
 
-		void SetPSDTitle(LPCTSTR title) {m_sPSDTitle = title;}
+		void SetPSDTitle(const CString& title) {m_sPSDTitle = title;}
 
 	protected:
 		friend class MyPrinter;
@@ -202,29 +179,6 @@ MyPageSetup : public CPageSetupDialog                            	/*
 
 		virtual void OnOK()
 		{
-			  // for now, just show the selected page parameters
-			CSize papersize = GetPaperSize();
-			CRect margins, minMargins;
-			GetMargins(margins, minMargins);
-			DWORD flags = GetParameters().Flags;
-			CDevMode lpDev = GetDevMode();	
-			LPCTSTR orient = (lpDev.Get() ?
-			    (lpDev->dmOrientation == DMORIENT_PORTRAIT  ?
-			    _T("portrait") : _T("landscape")) : _T("ERROR!!!"));
-			LPCTSTR units = (flags & PSD_INHUNDREDTHSOFMILLIMETERS ?
-			    _T("1/100 mm") : (flags & PSD_INTHOUSANDTHSOFINCHES ?
-			    _T("1/1000 in") : _T("unknown")));
-			CString rpt;
-			rpt.Format(_T("paper size (%d, %d)\n")
-			    _T("margins (%d, %d, %d, %d)\n")
-			    _T("min margins (%d, %d, %d, %d)\n")
-			    _T("units: %s\norientation: %s"),
-			    papersize.cx, papersize.cy,
-			    margins.left, margins.top, margins.right,
-			    margins.bottom, minMargins.left, minMargins.top,
-			    minMargins.right, minMargins.bottom, units, orient);
-			::MessageBox(NULL, rpt, _T("Information"),
-			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 
 			// TODO: store the page parameters for actual use
 		}

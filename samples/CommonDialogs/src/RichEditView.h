@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (ListBoxDlg.h) *
+/* (06-Sep-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (CRichEditView.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,10 +7,10 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of a generic CListBoxDlg popup dialog
-	class for applications using the Win32++ Windows interface classes,
-	Copyright (c) 2005-2016 David Nash, under permissions granted therein.
-	This class is derived from the CCommonDialog class.
+	Contents Description: Declaration of the CRichEditView class for the
+	CommonDialogs sample  application using the Win32++ Windows interface
+	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
+	therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -36,6 +36,7 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+
 	Special Conventions:
 
  	Acknowledgement:
@@ -50,49 +51,40 @@
 
 ********************************************************************************
 
-	Declaration of the CListBoxDlg class
+	Declaration of the CRichEditView class
 
 *******************************************************************************/
 
-#ifndef CLISTVIEW_BOX_H_DEFINED
-#define CLISTVIEW_BOX_H_DEFINED
-
-#include "ListBoxDlgRC.h"
+#ifndef CRICHEDITVIEW_H
+#define CRICHEDITVIEW_H
 
 /*============================================================================*/
-        class
-CListBoxDlg : public CCommonDialog        				/*
+	class
+CRichEditView : public CRichEdit                                        /*
 
-	A list box element choice common dialog box.
 *-----------------------------------------------------------------------------*/
 {
 	public:
-		CListBoxDlg(HWND hParentWnd = 0);
-		virtual ~CListBoxDlg(){}
+		CRichEditView();
+		~CRichEditView();
 
-		virtual  void	AddListItem(const CString &s)
-				    { m_sList.push_back(s);}
-		virtual INT_PTR DoModal(HWND hWndOwner = 0);
-		virtual void	ClearList(){ m_sList.clear();}
-		virtual void	OnCancel();
-		virtual void 	OnOK();
-			void	SetBoxTitle(const CString& title)
-				    { m_sBoxTitle = title;}
+		void    Clean();
+		BOOL    IsSelected();
+		BOOL	ReadFile(const CFile& file);
+		void	SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg);
+		void	SetFont(HFONT hFont, BOOL bRedraw) const;
+		void	SetWrapping(int wrap);
+		BOOL	WriteFile(const CFile& file);
+
+		static  DWORD CALLBACK StreamInCallback(DWORD dwCookie,
+			    LPBYTE pbBuff, LONG cb, LONG *pcb);
+		static  DWORD CALLBACK StreamOutCallback(DWORD dwCookie,
+			    LPBYTE pbBuff, LONG cb, LONG *pcb);
 
 	protected:
-		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
-		virtual BOOL 	OnInitDialog();
-		virtual void 	OnHelpButton();
-		virtual void    SetWindowTitle() const
-				    { SetWindowText(m_sBoxTitle);}
-
+		virtual	void OnInitialUpdate();
+		
 	private:
-		  // private data
-		CListBox	m_ListBox;	// the IDC_LIST_BOX control
-		HWND 		m_hWndOwner;	// dialog's owner window
-		CString 	m_sBoxTitle;    // the list box title
-		std::vector<CString> m_sList;	// the list box contents
 };
-/*----------------------------------------------------------------------------*/
-#endif // CLISTVIEW_BOX_H_DEFINED
 
+#endif

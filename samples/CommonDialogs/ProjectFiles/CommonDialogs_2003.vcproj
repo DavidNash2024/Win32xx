@@ -146,10 +146,22 @@
 				RelativePath="..\src\ListBoxDlg.h">
 			</File>
 			<File
+				RelativePath="..\src\ListBoxDlg.rc">
+			</File>
+			<File
+				RelativePath="..\src\ListBoxDlgRC.h">
+			</File>
+			<File
 				RelativePath="..\src\Mainfrm.cpp">
 			</File>
 			<File
+				RelativePath="..\src\MRUFrame.h">
+			</File>
+			<File
 				RelativePath="..\src\MyFontDlg.cpp">
+			</File>
+			<File
+				RelativePath="..\src\RichEditView.cpp">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
@@ -184,9 +196,6 @@
 				RelativePath="..\src\Doc.h">
 			</File>
 			<File
-				RelativePath="..\src\ListBoxDlgRC.h">
-			</File>
-			<File
 				RelativePath="..\src\Mainfrm.h">
 			</File>
 			<File
@@ -203,6 +212,9 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
+			</File>
+			<File
+				RelativePath="..\src\RichEditView.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">
@@ -223,9 +235,6 @@
 			</File>
 			<File
 				RelativePath="..\src\AppHelp.rc">
-			</File>
-			<File
-				RelativePath="..\src\ListBoxDlg.rc">
 			</File>
 			<File
 				RelativePath="..\src\Resource.rc">

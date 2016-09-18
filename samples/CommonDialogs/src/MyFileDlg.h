@@ -72,10 +72,10 @@ MyFileDialog : public CFileDialog
 		{
 		}
 
-		void	SetBoxTitle(LPCTSTR title) {SetTitle(title);}
+		void	SetBoxTitle(const CString& title) {SetTitle(title);}
 			  // Set the title of the read/saveas dialog box to
 			  // the title string. This must be used after an object
-			  // of this class is constructed, but before DoModal()
+			  // of this class is constructed, but before ()
 			  // is invoked.
 			  
 	protected:
@@ -99,7 +99,7 @@ MyFileDialog : public CFileDialog
 		}
 
 		virtual BOOL OnInitDialog()
-		// This method is activated within DoModal immediately before
+		// This method is activated within  immediately before
 		// the dialog box is displayed, and too late for any changes to
 		// m_OFN fields to take effect.  However, if there are other
 		// actions required for initialization of this object before the

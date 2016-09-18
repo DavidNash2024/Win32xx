@@ -76,7 +76,7 @@ MyFontDialog : public CFontDialog                                       /*
 				    { return m_Font;}
 			LOGFONT GetCurrentLogFont() const { return m_LogFont;}
 		virtual void 	OnOK();
-			void	SetBoxTitle(LPCTSTR title)
+			void	SetBoxTitle(const CString& title)
 				    { m_sBoxTitle = title;}
 			void    SetChoiceFont(const CFont& f)
 				    { LOGFONT lf = f.GetLogFont();

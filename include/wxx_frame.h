@@ -441,7 +441,6 @@ namespace Win32xx
 		// Current declarations of message handlers
 		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnExitMenuLoop(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMenuChar(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -566,7 +565,6 @@ namespace Win32xx
 			}
 			case WM_DRAWITEM:		return CFrame::OnDrawItem(uMsg, wParam, lParam);
 			case WM_ERASEBKGND:		return 0L;
-			case WM_EXITMENULOOP:	return CFrame::OnExitMenuLoop(uMsg, wParam, lParam);
 			case WM_HELP:			return CFrame::OnHelp();
 			case WM_INITMENUPOPUP:	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 			case WM_MENUCHAR:		return CFrame::OnMenuChar(uMsg, wParam, lParam);
@@ -2377,21 +2375,6 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline LRESULT CFrame::OnExitMenuLoop(UINT, WPARAM wParam, LPARAM lParam)
-	// Called when the menu's modal loop has ended (WM_EXITMENULOOP received)
-	{
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
-
-		// Win95 and WinNT don't support WM_UNINITPOPUPMENU
-		int WinVer = GetWinVersion();
-		if (WinVer == 1400 || WinVer == 2400)
-			m_vMenuItemData.clear();
-
-		TRACE("OnExitMenuPopup\n");
-		return 0L;
-	}
-
 	inline BOOL CFrame::OnHelp()
 	// Called to display help (WM_HELP received or selected via menu)
 	{
@@ -2416,6 +2399,10 @@ namespace Win32xx
 	{
 		// The system menu shouldn't be owner drawn
 		if (HIWORD(lParam))
+			return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+
+		// Not supported on Win95 or WinNT
+		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
 			return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
 		CMenu Menu((HMENU)wParam);
@@ -2733,6 +2720,7 @@ namespace Win32xx
 
 	inline LRESULT CFrame::OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
 	// Called when the drop-down menu or submenu has been destroyed.
+	// Win95 & WinNT don't support the WM_UNINITMENUPOPUP message.
 	{
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
@@ -2758,7 +2746,6 @@ namespace Win32xx
 				break;
 		}
 
-		TRACE("OnUnInitMenuPopup\n");
 		return 0L;
 	}
 
@@ -3732,7 +3719,6 @@ namespace Win32xx
 		case WM_ACTIVATE:		return OnActivate(uMsg, wParam, lParam);
 		case WM_DRAWITEM:		return OnDrawItem(uMsg, wParam, lParam);
 		case WM_ERASEBKGND:		return 0L;
-		case WM_EXITMENULOOP:	return OnExitMenuLoop(uMsg, wParam, lParam);
 		case WM_HELP:			return OnHelp();
 		case WM_INITMENUPOPUP:	return OnInitMenuPopup(uMsg, wParam, lParam);
 		case WM_MENUCHAR:		return OnMenuChar(uMsg, wParam, lParam);

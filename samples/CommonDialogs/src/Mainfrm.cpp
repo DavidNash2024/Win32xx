@@ -70,7 +70,7 @@
 	Macros and Local (static) default constants          		*/
 
   // the (fixed) window dimensions : {left, top, width, height}
-static const RECT rcWindowPlacement = {100, 100, 490, 400};
+static const RECT rcWindowPlacement = {100, 100, 780, 620};
 
 /*******************************************************************************
 
@@ -93,6 +93,7 @@ CMainFrame() 								/*
 	m_width   = rcWindowPlacement.right;
 	m_height  = rcWindowPlacement.bottom;
 	m_nMaxMRU = 0;
+	m_bWrapText = TRUE;
 	ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
 	  // Set m_View as the view window of the frame
 	SetView(m_View);
@@ -102,7 +103,7 @@ CMainFrame() 								/*
 
 /*============================================================================*/
 	void CMainFrame::
-ConnectAppHelp() 						/*
+ConnectAppHelp() 							/*
 
 	Register the AppHelp object help .chm file name and the AppHelp About
 	Box credits information string.
@@ -164,7 +165,7 @@ EngageContextHelp() 							/*
 	if (m_AppHelp.IsActive())
 		return FALSE;
 
-	GetView().SetFocus();
+	m_View.SetFocus();
 	  // set the cursor(s) in all controls to help, and show immediately
 	m_hCursor = ::LoadCursor(NULL, IDC_HELP);
 	SendMessage(WM_SETCURSOR, 0, 0);
@@ -278,12 +279,12 @@ InitCtlColors()								/*
 	m_ColorChoice.AddColorChoice(OKBg, _T("o  OK BG"),
 	    COLOR_LT_YELLOW);
 
-	m_ColorChoice.AddColorChoice(EdtTxFg, _T( "o  Edit text FG"),
-	    COLOR_WHITE);
-	m_ColorChoice.AddColorChoice(EdtTxBg, _T("o  Edit text BG"),
-	    COLOR_RED);
-	m_ColorChoice.AddColorChoice(EdtBg, _T("o  Edit control BG"),
-	    COLOR_LT_RED);
+//	m_ColorChoice.AddColorChoice(EdtTxFg, _T( "o  Edit text FG"),
+//	    COLOR_WHITE);
+//	m_ColorChoice.AddColorChoice(EdtTxBg, _T("o  Edit text BG"),
+//	    COLOR_RED);
+//	m_ColorChoice.AddColorChoice(EdtBg, _T("o  Edit control BG"),
+//	    COLOR_LT_RED);
 
 //	m_ColorChoice.AddColorChoice(LBxTxFg, _T("o  List box text FG"),
 //	    COLOR_BLACK);
@@ -314,12 +315,12 @@ InitCtlColors()								/*
 //	    COLOR_LT_YELLOW);
 
 	  // richedit controls (these are set differently than the others)
-//	m_ColorChoice.AddColorChoice(REdTxFg, _T("o  RichEdit text FG"),
-//	    COLOR_WHITE);
-//	m_ColorChoice.AddColorChoice(REdTxBg, _T("o  RichEdit text BG"),
-//	    COLOR_RED);
-//	m_ColorChoice.AddColorChoice(REdBg, _T("o  RichEdit BG"),
-//	    COLOR_LT_RED);
+	m_ColorChoice.AddColorChoice(REdTxFg, _T("o  RichEdit text FG"),
+	    COLOR_WHITE);
+	m_ColorChoice.AddColorChoice(REdTxBg, _T("o  RichEdit text BG"),
+	    COLOR_RED);
+	m_ColorChoice.AddColorChoice(REdBg, _T("o  RichEdit BG"),
+	    COLOR_LT_RED);
 }
 
 /*============================================================================*/
@@ -341,21 +342,7 @@ LoadPersistentData()                                                    /*
 
 		  // weed out any MRU entries that have disappeared
 		ValidateMRU(); // remove invalid file path names
-		  // if there is a MRU item at the top of the list, use it
-		  // as the name of the document to open
-		CString docfile = GetMRUEntry(0);
-		if (!docfile.IsEmpty())
-			if (!m_Doc.OnOpenDoc(docfile))
-			{
-				RemoveMRUEntry(docfile);
-				  // for this demo, show this removal
-				::MessageBox(NULL, docfile,
-				    _T("Removing invalid MRU entry..."), MB_OK |
-				    MB_ICONINFORMATION | MB_TASKMODAL);
-			}
-		UpdateControlUIState();
-
-	  // the ar object closes on destruction
+		  // the ar object closes on destruction
 	}
 	catch(...) // catch all exceptions in trying to load the archive
 	{
@@ -381,11 +368,16 @@ OnColorChoice()     		                                       	/*
 	HWND hWndOwner = theApp.GetMainWnd();
 	m_ColorChoice.DoModal(hWndOwner);  // calls the base class DoModal()
 	  // reset the status bar color
-	if (m_ColorChoice.GetSelectedColorID() == SBBg)
+	UINT selection = m_ColorChoice.GetSelectedColorID();
+	if (selection == SBBg)
 	{
 		COLORREF sb = GetSBBkColor();
 		SetSBBkColor(sb);
 	}
+	  // reset the rich edit control color
+	if (selection == REdTxFg || selection == REdTxBg || selection == REdBg)
+		OnRichEditColor();
+		
 	UpdateControlUIState();
 	Invalidate();
 	UpdateWindow();
@@ -446,7 +438,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 		return TRUE;
 
 	    case IDM_FILE_SAVE:
-	    	m_Doc.OnSaveDoc();
+	    	OnFileSave();
 		return TRUE;
 
 	    case IDM_FILE_SAVEAS:
@@ -470,43 +462,55 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 		return TRUE;
 
 	    case IDM_FILE_EXIT:
+	    	m_Doc.OnCloseDoc();
 		  // Issue a close request to the frame
 		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 		return TRUE;
 
 	    case IDM_EDIT_UNDO:
 	    	m_Doc.OnUndo();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_REDO:
 	    	m_Doc.OnRedo();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_CUT:
-// 	    	m_Doc.OnCut();	// TODO: uncomment this and remove OnCut() below
-	    	OnCut();        // see CMainFrame::OnCut()
+ 	    	m_Doc.OnCut();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_COPY:
 	    	m_Doc.OnCopy();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_PASTE:
 	    	m_Doc.OnPaste();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_DELETE:
 	    	m_Doc.OnDelete();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_FIND:
 	    	OnEditFind();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_EDIT_REPLACE:
 	    	OnEditReplace();
+ 	    	UpdateControlUIState();
 		return TRUE;
 
+	    case IDM_BOGUS_MRU:
+	    	OnBogusMRU();
+	    	return TRUE;
+	    	
 	    case IDW_ABOUT:         // invoked by F1 and Help->About menu item
 	    	return m_AppHelp.OnHelpAbout();
 
@@ -527,6 +531,10 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	    	OnViewStatusBar(); // toggle status bar
 		return TRUE;
 
+	    case IDM_RICHEDWRAP:
+	    	OnWrapText();
+		return TRUE;
+		
 	    case IDM_COLOR_CHOICE:
 		OnColorChoice();
 		return TRUE;
@@ -559,7 +567,7 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)            		/*
 	the handle to the display context for the child window, which may be
 	temporary.  hWnd contains he handle to the control asking for the
 	color, which also may be temporary. Finally, nCtlColor contains one
-	of the messages specifying the type of control (see DialogProc() for
+	of the messages specifying the type of control (see WndProc() for
 	values). On termination the method returns a handle to the brush that
 	is to be used for painting the control background.
 
@@ -570,6 +578,9 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)            		/*
 	checks for CTLCOLOR_LISTBOX in the nCtlColor parameter. In that handler,
 	the SetBkColor() member function must be used to set the background
 	color for the text.
+	
+	It is also not used to change the colors of a rich edit control. See
+	View::SetRichEditColors() for that process.
 *-----------------------------------------------------------------------------*/
 {
 	  // declare default control colors IDs
@@ -614,7 +625,9 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 		//Set our theme colors
 		SetThemeColors();
 	}
-
+	  // establish communications
+	m_View.Register(&m_Doc);
+	m_Doc.Register(this, &m_View);
 	  // populate the initial control colors (will be overwritten by
 	  // deserialized values)
 	InitCtlColors();
@@ -637,24 +650,26 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 	CFont f;
 	f.CreatePointFont(100, _T("Courier New"));
 	m_FontChoice.SetChoiceFont(f);
-	m_FontChoice.SetColor(m_ColorChoice.GetTableColor(EdtTxBg));
+	m_FontChoice.SetColor(m_ColorChoice.GetTableColor(REdTxFg));
 	m_View.SetEditFont(f);
-	  // set the default status bar color
-	COLORREF sb = GetSBBkColor();
-	SetSBBkColor(sb);
 	  // communicate help file name and about box contents to help object
 	ConnectAppHelp();
 	LoadPersistentData();
+	  // set the default status bar color
+	COLORREF sb = GetSBBkColor();
+	SetSBBkColor(sb);
+	  // set the edit box colors
+	OnRichEditColor();
 	return rtn;
 }
 
 /*============================================================================*/
 	void CMainFrame::
-OnCut()                                                            	/*
+OnBogusMRU()                                                            /*
 
 	Demonstrate operation of the MRU list: for this demo, add 5 strings to
 	the MRU list and open the topmost one. In an actual application, this
-	function would be directed to CDoc::OnCut() in OnCommand().
+	function would not be present
 *-----------------------------------------------------------------------------*/
 {
 	EmptyMRUList();
@@ -666,14 +681,8 @@ OnCut()                                                            	/*
 	AddMRUEntry(_T("This is MRU 2"));
 	AddMRUEntry(_T("This is MRU 1"));
 	CString mru_top = GetMRUEntry(0);
-	if (!m_Doc.OnOpenDoc(mru_top))
-	{
-		  // announce that the entry is being removed
-		::MessageBox(NULL, mru_top, _T("Removing invalid MRU entry..."),
-		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-		RemoveMRUEntry(mru_top);
- 	}
-	 UpdateControlUIState();
+	m_Doc.OnOpenDoc(mru_top);
+	UpdateControlUIState();
 }
 
 /*============================================================================*/
@@ -686,7 +695,7 @@ OnEditFind()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find a string..."));
 	m_FindRepDialog.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
-	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)*this); 
+	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)*this);
 }
 
 /*============================================================================*/
@@ -710,7 +719,7 @@ OnEditReplace()                                                            /*
 OnFileNew()                                                            /*
 
 	Prompt the user for a new document file name and, if valid, open a new
-	document. Notify user of
+	document.
 *-----------------------------------------------------------------------------*/
 {
 	MyFileDialog fd(TRUE,
@@ -739,16 +748,6 @@ OnFileNew()                                                            /*
 
 			  // let the document class handle the new_path
 			m_Doc.OnNewDoc(new_path);
-			if (m_Doc.IsOpen())
-				AddMRUEntry(new_path);
-			else
-			{
-				msg.Format(
-				    _T("Document file\n    '%s'\ndid not open."),
-				    new_path.c_str());
-				::MessageBox(NULL, msg, _T("Information"),
-				    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-			}
 			UpdateControlUIState();
 			return;
 		}
@@ -768,9 +767,6 @@ OnFileNew()                                                            /*
 OnFileClose()                                                            /*
 
 	Close the currently open document file.
-	
-	In the demo, after the file is closed, the topmost valid MRU list
-	entry is opened; invalid members are removed.
 *-----------------------------------------------------------------------------*/
 {
 	if (!m_Doc.IsOpen())
@@ -782,27 +778,6 @@ OnFileClose()                                                            /*
 	assert(current_file.CompareNoCase(mru_top_file) == 0);
 	  // let the document class handle the closure
 	m_Doc.OnCloseDoc();
-	RemoveMRUEntry(current_file);
-	  // for the demo, announce the closure and removal from the MRU list
-	CString msg;
-	msg.Format(_T("Closing file and removing MRU entry:\n    '%s'"), 
-	    current_file.c_str());
-	::MessageBox(NULL, msg, _T("Information"), MB_OK | MB_ICONINFORMATION |
-	    MB_TASKMODAL);
-
-	  // for this demo, open the top valid MRU entry, if any
-	while (GetMRUSize() > 0)
-	{
-		mru_top_file = GetMRUEntry(0);
-		if (m_Doc.OnOpenDoc(mru_top_file))
-			break;
-			
-		RemoveMRUEntry(mru_top_file);
-		  // for this demo, announce removal
-		::MessageBox(NULL, mru_top_file.c_str(),
-		    _T("Removing invalid MRU entry..."), MB_OK | MB_ICONINFORMATION |
-		    MB_TASKMODAL);
-	}
 	UpdateControlUIState();
 }
 
@@ -835,30 +810,10 @@ OnFileOpen()                                                            /*
 		if (the_path.IsEmpty())
 		    return;
 
-		  // for the demo, announce the file chosen
-		msg.Format(_T("File chosen: '%s'"),
-		    the_path.c_str());
-		::MessageBox(NULL, msg, _T("Information"),
-		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-
 		  // open the document based on this name
 		m_Doc.OnOpenDoc(the_path);
 		if (m_Doc.IsOpen())
-			AddMRUEntry(the_path);
-		else
-		{
-			msg.Format(
-			    _T("Document file\n    '%s'\ndid not open."),
-			    the_path.c_str());
-			::MessageBox(NULL, msg, _T("Information"),
-			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-			  // if the_path was in the MRU list, remove it
-			RemoveMRUEntry(the_path);
-			  // for the demo, announce the file removed from the MRU list
-			::MessageBox(NULL, the_path,
-			    _T("Removing invalid MRU entry..."), MB_OK |
-			    MB_ICONINFORMATION | MB_TASKMODAL);
-		}
+			SetWindowTitle(the_path);
 		UpdateControlUIState();
 		return;
   	}
@@ -868,33 +823,16 @@ OnFileOpen()                                                            /*
 }
 
 /*============================================================================*/
-	BOOL CMainFrame::
+	void CMainFrame::
 OnFileOpenMRU(UINT nIndex)						/*
 
 	Open the MRU file at nIndex as the next document.
 *-----------------------------------------------------------------------------*/
 {
-	  // if there is a current document open, close it
-	if (m_Doc.IsOpen())
-	{
-		CString current_file = m_Doc.GetFilePath();
-		m_Doc.OnCloseDoc();
-		RemoveMRUEntry(current_file);
-	}
 	  // get the MRU entry
 	CString mru_entry = GetMRUEntry(nIndex);
 	m_Doc.OnOpenDoc(mru_entry);
 	UpdateControlUIState();
-	if (m_Doc.IsOpen())
-		return TRUE;
-
-	  // file did not open, so remove the name from the MRU list
-	RemoveMRUEntry(mru_entry);
-	  // for the demo, announce the file removed from the MRU list
-	::MessageBox(NULL, mru_entry,
-	    _T("Removing invalid MRU entry..."), MB_OK | MB_ICONINFORMATION |
-	    MB_TASKMODAL);
-	return FALSE;
 }
 
 /*============================================================================*/
@@ -921,7 +859,20 @@ OnFilePrint()                                                            /*
 
 *-----------------------------------------------------------------------------*/
 {
-    	m_Doc.OnPrintDialog();
+    	m_View.OnPrintDocument();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnFileSave()                                                            /*
+
+	Save the current document.
+*-----------------------------------------------------------------------------*/
+{
+	if (m_Doc.GetFilePath().IsEmpty())
+		OnFileSaveAs();
+	else
+	    	m_Doc.OnSaveDoc();
 }
 
 /*============================================================================*/
@@ -929,7 +880,7 @@ OnFilePrint()                                                            /*
 OnFileSaveAs()                                                            /*
 
 	Save the current document into a file named in a file dialog and make
-	that file the current document. 
+	that file the current document.
 *-----------------------------------------------------------------------------*/
 {
 	if (!m_Doc.IsOpen())
@@ -1015,7 +966,9 @@ OnFontChoice()     		                                 	/*
 	{
 		  // bring choice elements into this view
 		m_View.SetEditFont(m_FontChoice.GetChoiceFont());
-    		m_ColorChoice.SetTableColor(EdtTxFg, m_FontChoice.GetColor());
+    		m_ColorChoice.SetTableColor(REdTxFg, m_FontChoice.GetColor());
+		  // reset the rich edit control color
+		OnRichEditColor();
 	}
 	Invalidate();
 	UpdateControlUIState();
@@ -1034,9 +987,18 @@ OnInitialUpdate()                                                       /*
 
 	  // Give keyboard focus to the view window:
 	m_View.SetFocus();
-
 	m_nMaxMRU = theAppGlobal.GetMaxMRU();
-
+	DragAcceptFiles(TRUE);
+	  // if there is a MRU item at the top of the list, use it
+	  // as the name of the document to open
+	CString docfile = GetMRUEntry(0),
+		msg;
+	msg.Format(_T("Open previous document?\n    %s"), docfile.c_str());
+	if (!docfile.IsEmpty() &&  (::MessageBox(NULL, msg, _T("Question..."),
+	    MB_YESNO | MB_ICONQUESTION) == IDYES))
+	{
+		m_Doc.OnOpenDoc(docfile);
+	}
 	UpdateControlUIState();
 	TRACE("Frame created\n");
 }
@@ -1064,15 +1026,14 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 	background painting by sending a message to the parent.
 **-----------------------------------------------------------------------------*/
 {
-	// TODO: Add code here to implement this member
-
-	  // Process notification messages sent by child windows
-//	switch(((LPNMHDR)lParam)->code)
+//	NMHDR* pNMH;
+//	pNMH = (LPNMHDR) lParam;
+//	switch (pNMH->code)
 //	{
-//		// Add case statements for each notification message here
+//	    default:
+//	    	break;
 //	}
 
-	// Some notifications should return a value when handled
 	return CFrame::OnNotify(wParam, lParam);
 }
 
@@ -1092,6 +1053,20 @@ OnProcessMRU(WPARAM wParam, LPARAM lParam)                              /*
 }
 
 /*============================================================================*/
+	BOOL CMainFrame::
+OnRichEditColor()                            /*
+
+	Set the rich edit control colors to those found in the color table.
+*-----------------------------------------------------------------------------*/
+{
+	COLORREF txfg = m_ColorChoice.GetTableColor(REdTxFg),
+		 txbg = m_ColorChoice.GetTableColor(REdTxBg),
+		 bg   = m_ColorChoice.GetTableColor(REdBg);
+	m_View.SetRichEditColors(txfg, txbg, bg);
+	return TRUE;
+}
+
+/*============================================================================*/
 	void CMainFrame::
 OnTerminate()								/*
 
@@ -1100,7 +1075,18 @@ OnTerminate()								/*
 	the frame is close.
 *-----------------------------------------------------------------------------*/
 {
-	m_Doc.OnSaveDoc();
+	m_Doc.OnCloseDoc();
+}
+
+/*============================================================================*/
+	void CMainFrame::
+OnWrapText()								/*
+
+	Description
+*-----------------------------------------------------------------------------*/
+{
+	m_bWrapText = !m_bWrapText;
+	GetREView().SetWrapping(m_bWrapText);
 }
 
 /*============================================================================*/
@@ -1186,16 +1172,11 @@ Serialize(CArchive &ar)                                               /*
 		ar << showbar;
 		showbar = GetToolBar().IsWindowVisible();
 		ar << showbar;
-                  // save current window placement information
-		ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
-		m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-		GetWindowPlacement(m_Wndpl);
-		ArchiveObject w(&m_Wndpl, m_Wndpl.length);
-		ar << w;
                   // save font parameters
 		ar << m_FontChoice;
 		  // save regular control class colors
 		ar << m_ColorChoice;
+		ar << m_bWrapText;
 		  // record the number of MRU entries to write
 		size_t i, nMRU = GetMRUSize();
 		ar << nMRU;
@@ -1213,14 +1194,6 @@ Serialize(CArchive &ar)                                               /*
 		ShowStatusBar(showbar);
 		ar >> showbar;
 		ShowToolBar(showbar);
-                   // recover window placement information
-		ArchiveObject w(&m_Wndpl, sizeof(WINDOWPLACEMENT));
-		ar >> w;
-		if (m_Wndpl.length != 0)
-		{
-			m_Wndpl.length = sizeof(WINDOWPLACEMENT);
-			SetWindowPlacement(m_Wndpl);
-		}
                   // recover font parameters
 		ar >> m_FontChoice;
 		m_View.SetFont(m_FontChoice.GetChoiceFont(), TRUE);
@@ -1232,6 +1205,8 @@ Serialize(CArchive &ar)                                               /*
 		  // reset the status bar color
 		COLORREF sb = GetSBBkColor();
 		SetSBBkColor(sb);
+		ar >> m_bWrapText;
+		GetREView().SetWrapping(m_bWrapText);
 		  // read MRU values from archive
 		EmptyMRUList();
 		  // use dummy vector in case an exception occurs
@@ -1255,6 +1230,39 @@ Serialize(CArchive &ar)                                               /*
 			AddMRUEntry(s);
 		}
         }
+}
+
+/*============================================================================*/
+	BOOL CMainFrame::
+SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)		/*
+
+*-----------------------------------------------------------------------------*/
+{
+
+	BOOL ok = FALSE;
+	if (where == mainmenu || where == both)
+	{
+		if (bCheck > 1)
+			ok = (GetFrameMenu().EnableMenuItem(nID, MF_BYCOMMAND |
+			    MF_GRAYED) != 0xFFFFFFFF);
+		else
+			ok = (GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND |
+			    (bCheck ? MF_CHECKED : MF_UNCHECKED)) != 0xFFFFFFFF);
+	}
+	
+	if (!ok)
+		ok = TRUE;
+	if (where == mainmenu || where == both)
+	{
+		if (bCheck > 1)
+			ok = GetToolBar().SetButtonState(nID, TBSTATE_INDETERMINATE);
+		else
+		{
+			GetToolBar().CheckButton(nID, bCheck);
+			ok = TRUE;
+		}
+	}
+	return ok;
 }
 
 /*============================================================================*/
@@ -1290,7 +1298,7 @@ SetContextHelpMessages() 						/*
 	m_AppHelp.AddHelpTopic(IDM_COLOR_CHOICE,    _T("ColorChoiceFunction"));
 	m_AppHelp.AddHelpTopic(IDM_FONT_CHOICE,     _T("FontChoiceFunction"));
 	  // define client area controls topics
-	m_AppHelp.AddHelpTopic(IDM_EDITBOX,  	    _T("EditBoxUsage"));
+	m_AppHelp.AddHelpTopic(IDC_RICHEDITBOX,	    _T("EditBoxUsage"));
 	m_AppHelp.AddHelpTopic(IDOK, 		    _T("OKButtonUsage"));
 	  // define common dialog help button topics
 	m_AppHelp.AddHelpTopic(IDM_HELP_COLORDLG,    _T("ColorDialogHelp"));
@@ -1307,7 +1315,7 @@ SetContextHelpMessages() 						/*
 
 /*============================================================================*/
 	BOOL CMainFrame::
-SetControlStatus(UINT nID, BOOL status, ControlBars which)           	/*
+SetEnableStatus(UINT nID, BOOL status, ControlBars which)           	/*
 
 	Set the control having the given nID to the enable/disable
 	status, on the toolbar, main menu, or both, as indicated by which.
@@ -1434,6 +1442,46 @@ SetupToolBar()                                                          /*
 
 /*============================================================================*/
 	void CMainFrame::
+SetWindowTitle(const CString& docfile)					/*
+
+	Put the app title and docfile name in the main window text. Limit the
+	displayed text length to that of the frame.
+*-----------------------------------------------------------------------------*/
+{
+	  // the app title is in resources.rc
+	CString appTitle = LoadString(IDW_MAIN);
+	  // compute text lengths
+	int applen = appTitle.GetLength(),
+	    doclen = docfile.GetLength();
+	  // only count "\\" as one character
+	for (int i = 0; i < doclen; )
+	{
+		i = docfile.Find(_T("\\"), i);
+		if (i < 0)
+			break;
+
+		--doclen;
+		i++;
+	}
+	  // form the caption title
+	if (!docfile.IsEmpty())
+		appTitle  += _T(":    ") + docfile;;
+	  // compute maximum characters in the caption and mid point of docfile
+	int width = m_View.GetClientRect().Width(),
+	    maxlen = (10 * width) / 68 - 3,  // empirical value minus "..."
+	    mid    = applen + (maxlen - applen - 1) / 2;
+	  // limit the caption line to that which will fit
+	if (appTitle.GetLength() > maxlen)
+	{
+		  // eliminate middle if too long
+		appTitle.Delete(mid, appTitle.GetLength() - maxlen);
+		appTitle.Insert(mid, _T("..."));
+	}
+	SetWindowText(appTitle);
+}
+
+/*============================================================================*/
+	void CMainFrame::
 UpdateControlUIState()							/*
 
 	Check the status of controls whose enabled/disabled or check/uncheck
@@ -1447,36 +1495,37 @@ UpdateControlUIState()							/*
 	BOOL 	doc_is_ready = m_Doc.IsOpen();
 
 	  // determine enabled status of controls (TODO: redo for actual app)
-	BOOL	ok_to_cut         = TRUE;   // doc_is_ready;
-	BOOL	ok_to_copy        = FALSE;  // doc_is_ready;
-	BOOL	ok_to_delete      = FALSE;  // doc_is_ready;
-	BOOL	ok_to_find        = TRUE;   // doc_is_ready;
-	BOOL	ok_to_paste       = FALSE;  // doc_is_ready;
-	BOOL	ok_to_print       = TRUE;   // doc_is_ready;
-	BOOL	ok_to_preview     = TRUE;   // doc_is_ready;
-	BOOL	ok_to_page_setup  = TRUE;   // doc_is_ready;
-	BOOL	ok_to_redo        = FALSE;  // doc_is_ready;
-	BOOL	ok_to_replace     = TRUE;   // doc_is_ready;
-	BOOL 	ok_to_save        = doc_is_ready;
+	BOOL	ok_to_cut         = doc_is_ready && GetREView().IsSelected();
+	BOOL	ok_to_copy        = doc_is_ready && GetREView().IsSelected();
+	BOOL	ok_to_delete      = doc_is_ready && GetREView().IsSelected();
+	BOOL	ok_to_find        = doc_is_ready;
+	BOOL	ok_to_paste       = doc_is_ready && GetREView().CanPaste();
+	BOOL	ok_to_print       = doc_is_ready;
+	BOOL	ok_to_preview     = FALSE;   // doc_is_ready; TBD
+	BOOL	ok_to_page_setup  = TRUE;
+	BOOL	ok_to_redo        = GetREView().CanRedo();
+	BOOL	ok_to_replace     = doc_is_ready;
+	BOOL 	ok_to_save        = doc_is_ready && GetREView().GetModify();
 	BOOL	ok_to_saveas      = doc_is_ready;
-	BOOL	ok_to_undo        = FALSE;  // doc_is_ready;
+	BOOL	ok_to_undo        = GetREView().CanUndo();
 	BOOL    ok_to_close       = doc_is_ready;
 	
  	  // set the control button status
-	SetControlStatus(IDM_EDIT_CUT, 		ok_to_cut, 	   both);
-	SetControlStatus(IDM_EDIT_COPY, 	ok_to_copy, 	   both);
-	SetControlStatus(IDM_EDIT_DELETE, 	ok_to_delete, 	   both);
-	SetControlStatus(IDM_EDIT_FIND, 	ok_to_find, 	   both);
-	SetControlStatus(IDM_FILE_PAGESETUP,	ok_to_page_setup,  mainmenu);
-	SetControlStatus(IDM_EDIT_PASTE, 	ok_to_paste,	   both);
-	SetControlStatus(IDM_FILE_PRINT, 	ok_to_print,  	   both);
-	SetControlStatus(IDM_FILE_PREVIEW,      ok_to_preview,     mainmenu);
-	SetControlStatus(IDM_EDIT_REDO, 	ok_to_redo,	   both);
-	SetControlStatus(IDM_EDIT_REPLACE, 	ok_to_replace, 	   both);
-	SetControlStatus(IDM_FILE_CLOSE, 	ok_to_close,       mainmenu);
-	SetControlStatus(IDM_FILE_SAVE, 	ok_to_save,        both);
-	SetControlStatus(IDM_FILE_SAVEAS, 	ok_to_saveas, 	   both);
-	SetControlStatus(IDM_EDIT_UNDO, 	ok_to_undo, 	   both);
+	SetEnableStatus(IDM_EDIT_CUT, 		ok_to_cut, 	   both);
+	SetEnableStatus(IDM_EDIT_COPY, 		ok_to_copy, 	   both);
+	SetEnableStatus(IDM_EDIT_DELETE, 	ok_to_delete, 	   both);
+	SetEnableStatus(IDM_EDIT_FIND, 		ok_to_find, 	   both);
+	SetEnableStatus(IDM_FILE_PAGESETUP,	ok_to_page_setup,  mainmenu);
+	SetEnableStatus(IDM_EDIT_PASTE, 	ok_to_paste,	   both);
+	SetEnableStatus(IDM_FILE_PRINT, 	ok_to_print,  	   both);
+	SetEnableStatus(IDM_FILE_PREVIEW,       ok_to_preview,     mainmenu);
+	SetEnableStatus(IDM_EDIT_REDO, 		ok_to_redo,	   both);
+	SetEnableStatus(IDM_EDIT_REPLACE, 	ok_to_replace, 	   both);
+	SetEnableStatus(IDM_FILE_CLOSE, 	ok_to_close,       mainmenu);
+	SetEnableStatus(IDM_FILE_SAVE, 		ok_to_save,        both);
+	SetEnableStatus(IDM_FILE_SAVEAS, 	ok_to_saveas, 	   both);
+	SetEnableStatus(IDM_EDIT_UNDO, 		ok_to_undo, 	   both);
+	SetCheckStatus(IDM_RICHEDWRAP, 		m_bWrapText, 	   mainmenu);
 }
 
 /*============================================================================*/
@@ -1582,7 +1631,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 	normal housekeeping functions (see Win32++\include\frame.h).
 *-----------------------------------------------------------------------------*/
 {
-	  // can't use a case statement on this:
+	  // can't use a case statement on this ::RegisterWindowMessage() value
 	if (uMsg == UWM_FINDMSGSTRING)
 	{
 		m_Doc.OnFindReplace(uMsg, wParam, lParam);
@@ -1605,6 +1654,10 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 		return TRUE;
 	    }
 
+	    case IDM_UPDATECONTROLUISTATE:
+	    	UpdateControlUIState();
+		return TRUE;
+		
 	    case WM_HELP:
 	    {     // Handle the F1 requests for help. The HELPINFO in lParam
 		  // is of no use to the current context help class. The

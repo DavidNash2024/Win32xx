@@ -59,8 +59,9 @@
 
 /*******************************************************************************
 
-	Shortened class reference definitions                           */
-	
+	Class reference definitions                           		*/
+
+  // shorthand app and global references
 #define theApp          TheApp()
 #define theAppGlobal	theApp.GetAppGlobal()
 
@@ -76,9 +77,10 @@ CApp : public CWinApp							/*
 		~CApp(){}
 
 		BOOL 	    InitInstance(); // called from (CWinApp) Run()
-		int	    GetCmdShow()  {return m_nCmdShow;}
 		CAppGlobal  GetAppGlobal() { return m_AppGlobal;};
 		CString&    GetArcvFile() {return m_AppGlobal.GetArcvPath();}
+		int	    GetCmdShow()  {return m_nCmdShow;}
+		CMainFrame& GetFrame()    {return m_Frame;}
 		CString&    GetHelpFile() {return m_AppGlobal.GetHelpPath();}
 		void	    SetCmdShow(int c) {m_nCmdShow = c;}
 

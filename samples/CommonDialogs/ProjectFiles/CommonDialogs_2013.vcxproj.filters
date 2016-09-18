@@ -190,6 +190,9 @@
     <ClInclude Include="..\src\AppGlobalRC.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\RichEditView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">
@@ -259,6 +262,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\View.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RichEditView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AppGlobal.cpp">

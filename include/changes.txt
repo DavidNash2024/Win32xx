@@ -154,6 +154,7 @@ Modified CPropertyPage::OnWizardFinish
 Modified CPropertyPage::OnWizardNext
 
 Removed CDocker::GetDockFromPoint
+Removed CFrame::OnExitMenuLoop
 Removed CTab::OnDestroy
 
 

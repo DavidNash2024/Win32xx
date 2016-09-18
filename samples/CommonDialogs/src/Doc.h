@@ -58,13 +58,12 @@
 #ifndef SDI_DOC_H
 #define SDI_DOC_H
 
-#include "wxx_commondlg.h"
-#include "wxx_printdialogs.h"		
-#include "MyFindReplaceDlg.h"
+class CMainFrame;
+class CView;
 
 /*============================================================================*/
 	class 
-CDoc									/*
+CDoc	: public CObject						/*
 
 	This application's document class, a pattern for developing new apps.
 *-----------------------------------------------------------------------------*/
@@ -76,17 +75,18 @@ CDoc									/*
 		virtual const CString&	GetExt();
 		virtual const CString&	GetFilter();
 		const   CString& GetFilePath()
-				    { return m_Doc_file.GetFilePath();}
-		virtual size_t  GetLength();
-		virtual CString GetRecord(size_t, size_t left = 0,
-				    size_t length = (size_t)-1);
-		virtual size_t  GetWidth();
-		virtual BOOL    IsDirty() {return m_Doc_is_dirty;}
+				    { return (m_open_doc_path.IsEmpty() ?
+				         m_Doc_file.GetFilePath() :
+					 m_open_doc_path);}
+		virtual BOOL    IsDirty();
 		virtual BOOL    IsOpen() {return m_Doc_is_open;}
-		virtual BOOL    OnCloseDoc();
+		virtual void    OnCloseDoc();
 		virtual void    OnCopy();
 		virtual void    OnCut();
+		virtual void    OnPaste();
 		virtual void    OnDelete();
+		virtual void    OnRedo();
+		virtual void    OnUndo();
 		virtual void 	OnFindReplace(UINT, WPARAM, LPARAM);
 		virtual void 	OnFRFindNext(MyFindReplaceDialog*);
 		virtual void 	OnFRReplaceAll(MyFindReplaceDialog*);
@@ -94,14 +94,11 @@ CDoc									/*
 		virtual void 	OnFRTerminating(MyFindReplaceDialog*);
 		virtual BOOL    OnNewDoc(const CString&);
 		virtual BOOL    OnOpenDoc(const CString &);
-		virtual void    OnPaste();
-		virtual void    OnPrintDialog();
 		virtual void    OnPrintPreview();
 		virtual void    OnPageSetup();
-		virtual void    OnRedo();
 		virtual BOOL    OnSaveDoc();
-		virtual void    OnUndo();
-			void	SetDirty(BOOL b) { m_Doc_is_dirty = b;}
+			void    Register(CMainFrame*, CView*);
+			void	SetDirty(BOOL b);
 		virtual void    SetExt(const CString& ext)
 				    { m_Doc_file_ext = ext;}
 		virtual void    SetFilter(const CString &s)
@@ -110,17 +107,25 @@ CDoc									/*
 		  // public data members
 
 	protected:
+		    CMainFrame& GetFrame() { return *m_pParent;}
+		        CView&  GetView() { return *m_pView;}
+		 CRichEditView& GetREView();
 		virtual	void 	Serialize(CArchive &ar);
 
 	private:
-		CFile   m_Doc_file;     // holds the document name, path, etc.
-		BOOL    m_Doc_is_dirty; // document has been altered since open
-		BOOL	m_Doc_is_open;	// the document status
-		size_t  m_Doc_length;   // length, in records
-		size_t  m_Doc_width;    // length, in records
-	     	CString m_Doc_file_ext; // default file extension
-	     	CString m_Doc_file_filter; // file dialog filter
-		struct _stat	    m_Status;         // status information
+		      CHARRANGE FindNext(const MyFindReplaceDialog&, CHARRANGE);
+			void    NotFound(const MyFindReplaceDialog&);
+			
+		  // private data
+		CFile   m_Doc_file;        // holds the document name, path, etc.
+		BOOL	m_Doc_is_open;	   // the document status
+	     	CString m_Doc_file_ext,    // default file extension
+	     		m_Doc_file_filter, // file dialog filter
+	     		m_find_next,       // current string to find
+	     		m_replace_with,    // replacement string
+	     		m_open_doc_path;   // the path of the open document
+		CMainFrame* m_pParent;     // the parent frame
+		CView*      m_pView;       // the view for this document
 };
 /*-----------------------------------------------------------------------------*/
 #endif //SDI_DOC_H
