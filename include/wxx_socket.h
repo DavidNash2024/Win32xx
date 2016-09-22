@@ -422,8 +422,9 @@ namespace Win32xx
         WSAEVENT AllEvents[2];
 		AllEvents[0] = ::WSACreateEvent();
 		AllEvents[1] = (WSAEVENT)pSocket->m_StopRequest;
-		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE |
-			          FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
+		long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
+		if (GetWinVersion() != 1400) // Win Version != Win95
+			Events |= FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
 		// Associate the network event object (hNetworkEvents) with the
 		// specified network events (Events) on socket sClient.

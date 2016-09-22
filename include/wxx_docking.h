@@ -64,6 +64,20 @@
 #include "default_resource.h"
 
 
+// Ensure these are defined
+#ifndef GA_ROOT
+#define GA_ROOT					2
+#endif
+
+#ifndef WM_UNINITMENUPOPUP
+#define WM_UNINITMENUPOPUP		0x0125
+#endif
+
+#ifndef WM_MENURBUTTONUP
+#define WM_MENURBUTTONUP		0x0122
+#endif
+
+
 // Docking Styles
 #define DS_DOCKED_LEFT			0x0001  // Dock the child left
 #define DS_DOCKED_RIGHT			0x0002  // Dock the child right
@@ -2334,13 +2348,33 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
-	// Returns the docker whose child window has focus
+	// Returns the docker whose child window is active.
+	// Returns NULL if the docker is an inactive window, or a child of an inactive window.
 	{
 		if (GetDockAncestor()->m_pDockActive)
-			if (GetActiveWindow().GetHwnd() == GetDockAncestor()->m_pDockActive->GetTopmostDocker()->GetHwnd())
+		{
+			CWnd* pTopmostActive = GetDockAncestor()->m_pDockActive->GetTopmostDocker();
+			if (GetActiveWindow() == pTopmostActive->GetHwnd())
 			{
 				return GetDockAncestor()->m_pDockActive;
 			}
+			
+			if (pTopmostActive->IsWindow() && (GetActiveWindow() == pTopmostActive->GetAncestor(GA_ROOT)))
+			{
+				// if the topmost docker has a parent, the parent could be a MDI child.
+				HWND hMDIChild = pTopmostActive->GetParent();
+				if (hMDIChild)
+				{
+					HWND hMDIClient = ::GetParent(hMDIChild);
+					HWND hMDIActive = (HWND)SendMessage(hMDIClient, WM_MDIGETACTIVE, 0, 0);
+
+					if (hMDIActive && hMDIActive != hMDIChild)
+						return NULL;	// Parent is a MDI child, but not the active one
+				}
+
+				return GetDockAncestor()->m_pDockActive;
+			}
+		}
 
 		return NULL;
 	}

@@ -413,7 +413,6 @@ namespace Win32xx
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual LRESULT OnUndocked();
-		virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnViewStatusBar();
 		virtual BOOL OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -449,6 +448,7 @@ namespace Win32xx
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);		
 
 		BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
 		BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
