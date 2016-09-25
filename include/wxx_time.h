@@ -132,7 +132,7 @@ namespace Win32xx
 		CTime(WORD wDosDate, WORD wDosTime, int nDST = -1);
 		CTime(const SYSTEMTIME& st, int nDST = -1);
 		CTime(const FILETIME& ft,  int nDST = -1);
-		CTime(const CString& timestr, int nDST = -1);
+		CTime(LPCTSTR szTime, int nDST = -1);
 
 		// Method members
 		bool 	  GetAsFileTime(FILETIME& ft) const;
@@ -167,10 +167,8 @@ namespace Win32xx
 		bool 		  operator>=(const CTime& time) const;
 
 		// CString conversion
-		CString 	Format(const CString& format) const;
 		CString 	Format(LPCTSTR pFormat) const;
 		CString 	Format(UINT nFormatID) const;
-		CString 	FormatGmt(const CString& format) const;
 		CString 	FormatGmt(LPCTSTR pFormat) const;
 		CString 	FormatGmt(UINT nFormatID) const;
 
@@ -230,7 +228,6 @@ namespace Win32xx
 
 		// CString conversion
 		CString   	Format(LPCTSTR pFormat) const;
-		CString   	Format(const CString& format) const;
 		CString   	Format(UINT nFormatID) const;
 
 		// Global friends
@@ -463,7 +460,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CTime::CTime(const CString& timestr, int nDST /* = -1 */)
+	inline CTime::CTime(LPCTSTR szTime, int nDST /* = -1 */)
 	//	Construct a CTime as directed by the formatting CString timestr, whose
 	//	specifications appear below. Any nonconformity between timestr  and
 	//	these expected format standards will result in throwing an exception.
@@ -483,6 +480,7 @@ namespace Win32xx
 	//	string contains "/"; the second, when "-" appears; the third, when ","
 	//	is present; and  the fourth, when "+" is found.
 	{
+		CString timestr(szTime);
 		int  p1, p2, p3; // position indexes into timestr
 		int	len = timestr.GetLength();
 		int yyyy;   // year, 4 digits
@@ -899,15 +897,6 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline CString CTime::Format(const CString& format) const
-	//	Create a formatted representation of this date/time value as a local
-	//	time, in the same manner as an LPCTSTR argument, but using a CString
-	//	format instead.
-	{
-		return Format(format.c_str());
-	}
-
-	//============================================================================
 	inline CString CTime::FormatGmt(LPCTSTR pFormat) const
 	//	Create a formatted representation of this date/time value as a UTC
 	//	time. If  this CTime object is null or invalid, the return value is
@@ -937,15 +926,6 @@ namespace Win32xx
 		CString strFormat;
 		VERIFY( strFormat.LoadString(nFormatID) );
 		return FormatGmt(strFormat);
-	}
-
-	//============================================================================
-	inline CString CTime::FormatGmt(const CString& format) const
-	//	Create a formatted representation of this date/time value as a UTC
-	//	time, in the same manner as an LPCTSTR argument, but using a CString
-	//	format instead.
-	{
-		return FormatGmt(format.c_str());
 	}
 
 	//
@@ -1285,17 +1265,6 @@ namespace Win32xx
 		return Format(strFormat);
 	}
 
-	//============================================================================
-	inline CString CTimeSpan::Format(const CString& format) const
-	//	Return a rendering of *this CTimeSpan object in CString form using the
-	//	CString format as the template. The valid format directives are
-	//	      %D - number of days
-	//	      %H - hour (0-23)
-	//	      %M - minute (0-59)
-	//	      %S - seconds (0-59)
-	{
-		return Format(format.c_str());
-	}
 
 	//
 	// Global functions within the Win32xx namespace

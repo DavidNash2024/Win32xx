@@ -122,6 +122,7 @@ Modified CRichEdit::SetRect
 Modified CRichEdit::DisplayBand
 Modified CRichEdit::FindText
 Modified CRichEdit::FormatRange
+Modified CRichEdit::GetTextRange
 Modified CRichEdit::GetPunctuation
 Modified CRichEdit::SetPunctuation
 Modified CScrollBar::GetScrollRange
