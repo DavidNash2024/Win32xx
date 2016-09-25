@@ -233,9 +233,9 @@ namespace Win32xx
 		virtual CMenu& GetListMenu() const { return GetTab().GetListMenu(); }
 		virtual void   ShowListDialog() { GetTab().ShowListDialog(); }
 		virtual CTab& GetTab() const	{ return m_Tab; }
-		virtual BOOL LoadRegistrySettings(const CString& strRegistryKeyName);
+		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual void RecalcLayout();
-		virtual BOOL SaveRegistrySettings(const CString& strRegistryKeyName);
+		virtual BOOL SaveRegistrySettings(LPCTSTR szKeyName);
 		virtual void SetActiveMDIChild(CWnd* pWnd);
 		virtual void SetActiveMDITab(int nTab);
 
@@ -1780,13 +1780,13 @@ namespace Win32xx
 		return GetTab().GetTabPageInfo(nTab).TabText;
 	}
 
-	inline BOOL CTabbedMDI::LoadRegistrySettings(const CString& strRegistryKeyName)
+	inline BOOL CTabbedMDI::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		BOOL bResult = FALSE;
 
-		if (!strRegistryKeyName.IsEmpty())
+		if (szKeyName)
 		{
-			CString KeyName = _T("Software\\") + strRegistryKeyName + _T("\\MDI Children");
+			CString KeyName = _T("Software\\") + CString(szKeyName) + _T("\\MDI Children");
 			CRegKey Key;
 			if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, KeyName))
 			{
@@ -1954,11 +1954,11 @@ namespace Win32xx
 		}
 	}
 
-	inline BOOL CTabbedMDI::SaveRegistrySettings(const CString& strRegistryKeyName)
+	inline BOOL CTabbedMDI::SaveRegistrySettings(LPCTSTR szKeyName)
 	{
-		if (!strRegistryKeyName.IsEmpty())
+		if (szKeyName)
 		{
-			CString KeyName = _T("Software\\") + strRegistryKeyName;
+			CString KeyName = _T("Software\\") + CString(szKeyName);
 			HKEY hKey = NULL;
 			HKEY hKeyMDIChild = NULL;
 

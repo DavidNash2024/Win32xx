@@ -114,7 +114,7 @@ namespace Win32xx
 		long 	GetTextLength() const;
 		long 	GetTextLengthEx(DWORD dwFlags, UINT uCodePage = -1) const;
 		UINT 	GetTextMode() const;
-		int 	GetTextRange(int nFirst, int nLast, CString& refString) const;
+		CString GetTextRange(int nFirst, int nLast) const;
 		UNDONAMEID GetUndoName() const;
 		void	 HideSelection(BOOL bHide, BOOL bPerm) const;
 		void 	LimitText(long nChars = 0) const;
@@ -506,7 +506,7 @@ namespace Win32xx
 		return static_cast<UINT>(SendMessage(EM_GETTEXTMODE, 0L, 0L));
 	}
 
-	inline int CRichEdit::GetTextRange(int nFirst, int nLast, CString& refString) const
+	inline CString CRichEdit::GetTextRange(int nFirst, int nLast) const
 	// Retrieves the specified range of text.
 	{
 		assert(IsWindow());
@@ -514,13 +514,14 @@ namespace Win32xx
 		chrg.cpMin = nFirst;
 		chrg.cpMax = nLast;
 
+		CString refString;
 		TEXTRANGE tr;
 		tr.chrg = chrg;
 		tr.lpstrText = refString.GetBuffer(nLast - nFirst + 1);
 		SendMessage(EM_GETTEXTRANGE, 0, (LPARAM)&tr);
 		refString.ReleaseBuffer();
 
-		return refString.GetLength();
+		return refString;
 	}
 
 	inline UNDONAMEID CRichEdit::GetUndoName() const

@@ -177,7 +177,6 @@ namespace Win32xx
 		// Operations
 		void AddWebBrowserControl();
 		void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
-		BOOL GetProperty(LPCTSTR pszProperty, CString& strValue);
 		VARIANT GetProperty( LPCTSTR pszProperty);
 		void GoBack();
 		void GoForward();
@@ -1020,19 +1019,6 @@ namespace Win32xx
 	// Executes a command using the IOleCommandTarget interface.
 	{
 		GetIWebBrowser2()->ExecWB(cmdID, cmdexecopt, pvaIn, pvaOut);
-	}
-
-	inline BOOL CWebBrowser::GetProperty(LPCTSTR pszProperty, CString& strValue)
-	// Gets the value associated with the specified property name.
-	{
-		VARIANT v;
-		HRESULT hResult = GetIWebBrowser2()->GetProperty(T2BSTR(pszProperty), &v);
-		if (v.vt == VT_EMPTY)
-			strValue.Empty();
-		else
-			strValue = BSTR2T(v.bstrVal);
-
-        return (hResult == S_OK);
 	}
 
 	inline VARIANT CWebBrowser::GetProperty( LPCTSTR pszProperty )

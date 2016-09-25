@@ -2264,7 +2264,7 @@ namespace Win32xx
 		// Start the keyboard hook
 		TLSData* pTLSData = GetApp().SetTlsData();
 		pTLSData->hMainWnd = GetHwnd();
-		::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
+		m_KbdHook = ::SetWindowsHookEx(WH_KEYBOARD, StaticKeyboardProc, NULL, ::GetCurrentThreadId());
 
 		// Set the icon
 		SetIconLarge(IDW_MAIN);
