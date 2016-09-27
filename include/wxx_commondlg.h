@@ -151,9 +151,9 @@ namespace Win32xx
 		BOOL	IsOpenFileDialog()					{ return m_bOpenFileDialog; }
 		void    SetDefExt(LPCTSTR szExt);
 		void    SetFileName(LPCTSTR szFileName);
-		void	SetFilter(LPCTSTR pszFilter);
+		void	SetFilter(LPCTSTR szFilter);
 		void	SetParameters(OPENFILENAME ofn);
-		void    SetTitle(LPCTSTR szTitle)			{ m_OFN.lpstrTitle = szTitle; }
+		void    SetTitle(LPCTSTR szTitle);
 
 		// Enumerating multiple file selections
 		CString	GetNextPathName(int& pos) const;
@@ -174,8 +174,10 @@ namespace Win32xx
 
 	private:
 		BOOL 			m_bOpenFileDialog;  // TRUE = open, FALSE = save
-		CString   		m_sFilter;          // file filter string
-		CString			m_sFileName;		// file name string
+		CString   		m_sFilter;          // File filter string
+		CString			m_sFileName;		// File name string
+		CString			m_sTitle;			// Dialog title
+		CString         m_sDefExt;			// Default extension string
 		OPENFILENAME	m_OFN;				// OpenFileName parameters
 	};
 
@@ -923,38 +925,71 @@ namespace Win32xx
 	//	Set the default extension of the dialog box to pszExt.
 	//  Only the first three characters are sent to the dialog.
 	{
-		m_OFN.lpstrDefExt = pszExt;
+		if (pszExt)
+		{
+			m_sDefExt = pszExt;
+			m_OFN.lpstrDefExt = m_sDefExt.c_str();
+		}
+		else
+		{
+			m_sDefExt.Empty();
+			m_OFN.lpstrDefExt = NULL;
+		}
 	}
 
 	//============================================================================
 	inline void CFileDialog::SetFileName(LPCTSTR pszFileName)
 	//	Set the initial file name in the dialog box to pszFileName.
 	{
-		  // setup initial file name
+		// setup initial file name
 		if (pszFileName)
 		{
 			m_sFileName = pszFileName;
 			m_OFN.lpstrFile = const_cast<LPTSTR>(m_sFileName.c_str());
 		}
 		else
+		{
+			m_sFileName.Empty();
 			m_OFN.lpstrFile = NULL;
+		}
 	}
 
-	inline void CFileDialog::SetFilter(LPCTSTR pszFilter)
+	inline void CFileDialog::SetFilter(LPCTSTR szFilter)
 	//	Set the file choice dialog file name filter string to pszFilter.
 	//  The string is a pair of strings delimited by NULL or '|'
-	//  For Example: _T("Text Files (*.txt) |*.txt|")
+	//  The string must be either double terminated, or use '|' instead of '\0' 
+	//  For Example: _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0")
+	//           or: _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*|")
 	{
-		m_OFN.lpstrFilter = pszFilter;	// might contain embedded NULL characters
+		// Clear any existing filter
+		m_OFN.lpstrFilter = NULL;
+		m_sFilter.Empty();
 
 		// convert any '|' characters in pszFilter to NULL characters
-		if (pszFilter)
+		if (szFilter)
 		{
-			m_sFilter = pszFilter;
-			if (m_sFilter.Find(_T('|')) >= 0)
+			CString str = szFilter;
+			if (str.Find(_T('|')) >= 0)
 			{
-				m_sFilter.Replace(_T('|'), _T('\0'));
+				str.Replace(_T('|'), _T('\0'));
+				m_sFilter = str;
 				m_OFN.lpstrFilter = m_sFilter.c_str();
+			}
+			else
+			{
+				// szFilter doesn't contain '|', so it should be double terminated
+				int i = 0;
+				while (i < _MAX_PATH)
+				{
+					// Search for double termination
+					if (szFilter[i] == _T('\0') && szFilter[i + 1] == _T('\0'))
+					{
+						m_sFilter.Assign(szFilter, i+1);
+						m_OFN.lpstrFilter = m_sFilter.c_str();
+						break;
+					}
+					++i;
+				}
 			}
 		}
 	}
@@ -976,6 +1011,7 @@ namespace Win32xx
 
 		SetFileName(ofn.lpstrFile);
 		SetFilter(ofn.lpstrFilter);
+		SetTitle(ofn.lpstrFile);
 
 		m_OFN.lStructSize		= StructSize;
 		m_OFN.hwndOwner			= 0;			// Set this in DoModal
@@ -987,13 +1023,27 @@ namespace Win32xx
 		m_OFN.lpstrFileTitle	= ofn.lpstrFileTitle;
 		m_OFN.nMaxFileTitle		= MAX(_MAX_PATH, ofn.nMaxFileTitle);
 		m_OFN.lpstrInitialDir	= ofn.lpstrInitialDir;
-		m_OFN.lpstrTitle		= ofn.lpstrTitle;
 		m_OFN.Flags				= ofn.Flags;
 		m_OFN.nFileOffset		= ofn.nFileOffset;
 		m_OFN.nFileExtension	= ofn.nFileExtension;
 		m_OFN.lpstrDefExt		= ofn.lpstrDefExt;
 		m_OFN.lCustData			= ofn.lCustData;
 		m_OFN.lpfnHook			= reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+	}
+
+	//============================================================================
+	inline void CFileDialog::SetTitle(LPCTSTR szTitle)
+	// Sets the title of the fileopen or filesave dialog.
+	{
+		if (szTitle)
+		{
+			m_sTitle = szTitle;
+			m_OFN.lpstrTitle = m_sTitle.c_str();
+		else
+		{
+			m_sTitle.Empty();
+			m_OFN.lpstrTitle = NULL;
+		}
 	}
 
 
