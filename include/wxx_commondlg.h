@@ -1039,6 +1039,7 @@ namespace Win32xx
 		{
 			m_sTitle = szTitle;
 			m_OFN.lpstrTitle = m_sTitle.c_str();
+		}
 		else
 		{
 			m_sTitle.Empty();
