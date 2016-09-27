@@ -480,6 +480,7 @@ namespace Win32xx
 	//	string contains "/"; the second, when "-" appears; the third, when ","
 	//	is present; and  the fourth, when "+" is found.
 	{
+		assert(szTime);
 		CString timestr(szTime);
 		int  p1, p2, p3; // position indexes into timestr
 		int	len = timestr.GetLength();

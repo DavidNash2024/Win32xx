@@ -363,10 +363,10 @@ NewDocument() 								/*
 	PushContent(_T("   2. CTime t2(t1); (as UTC)                     ")
 	    + t2.FormatGmt(longDateFmt));
 
-	CTime t3(0);
-	PushContent(_T("   3. CTime t3(0); (short date format)           ")
+	CTime t3(time_t(0));
+	PushContent(_T("   3. CTime t3(time_t(0)); (short date format)   ")
 	    + t3.FormatGmt(shortDateFmt));
-	PushContent(_T("   4. CTime t3(0); (simple HMS format)           ")
+	PushContent(_T("   4. CTime t3(time_t(0)); (simple HMS format)   ")
 	    + t3.FormatGmt(simpleHMSFmt));
 
 	t3 = CTime::GetCurrentTime();
@@ -398,7 +398,7 @@ NewDocument() 								/*
 	PushContent(_T("  11. CTime t9(\"09-Mar-2014 3:37:40\")   CString  ")
 	    + t9.Format(longDateFmt));
 
-	CTime t10(_T("09-Mar-2014 3:37:40"));  // a LPCTTR conversion
+	CTime t10(_T("09-Mar-2014 3:37:40"));  // a LPCTSTR conversion
 	PushContent(_T("  12. CTime t10(\"09-Mar-2014 2:37:40\")  LPCTSTR  ")
 	    + t10.Format(longDateFmt));
 
