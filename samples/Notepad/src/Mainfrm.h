@@ -4,12 +4,7 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-
 #include "RichView.h"
-
-
-DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
-DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 
 
 // Declaration of the CMainFrame class

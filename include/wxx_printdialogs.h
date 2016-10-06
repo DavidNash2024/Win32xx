@@ -301,7 +301,7 @@ namespace Win32xx
 	//============================================================================
 	inline void CWinApp::UpdateDefaultPrinter()
 	// Allocates the global memory for the default printer if required.
-	// Resets the global memory we were using the default printer, and the
+	// Resets the global memory if we were using the default printer, and the
 	// default printer has changed.
 	{
 		if (m_hDevNames == 0)
