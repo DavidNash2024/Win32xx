@@ -87,6 +87,7 @@ namespace Win32xx
 		long 	FindText(DWORD dwFlags, const FINDTEXTEX& FindTextEx) const;
 		DWORD 	FindWordBreak(UINT nCode, DWORD nStart) const;
 		long  	FormatRange(const FORMATRANGE& fr, BOOL bDisplay = TRUE) const;
+		long	FormatRange(BOOL bDisplay = FALSE) const;
 		CPoint 	GetCharPos(long lChar) const;
 		DWORD 	GetDefaultCharFormat(CHARFORMAT& cf) const;
 		DWORD 	GetDefaultCharFormat(CHARFORMAT2& cf) const;
@@ -274,7 +275,14 @@ namespace Win32xx
 	// Finds text within the rich edit control.
 	{
 		assert(IsWindow());
-		return static_cast<long>(SendMessage(EM_FINDTEXTEX, (WPARAM)dwFlags,  (LPARAM)&FindTextEx));
+		
+	#ifdef _UNICODE
+		UINT em_findText = EM_FINDTEXTEXW;
+	 #else
+         UINT em_findText = EM_FINDTEXTEX;
+	 #endif
+
+		return static_cast<long>(SendMessage(em_findText, (WPARAM)dwFlags,  (LPARAM)&FindTextEx));
 	}
 
 	inline DWORD CRichEdit::FindWordBreak(UINT nCode, DWORD nStart) const
@@ -287,10 +295,16 @@ namespace Win32xx
 
 	inline long CRichEdit::FormatRange(const FORMATRANGE& fr, BOOL bDisplay /* = TRUE */) const
 	// Formats a range of text in a rich edit control for a specific device (e.g. printer).
-
 	{
 		assert(IsWindow());
 		return static_cast<long>(SendMessage(EM_FORMATRANGE, (WPARAM)bDisplay, (LPARAM)&fr));
+	}
+
+	inline long CRichEdit::FormatRange(BOOL bDisplay /* = FALSE */) const
+	// Free format information cached by the control.
+	{
+		assert(IsWindow());
+		return static_cast<long>(SendMessage(EM_FORMATRANGE, (WPARAM)bDisplay, 0));
 	}
 
 	inline CPoint CRichEdit::GetCharPos(long lChar) const

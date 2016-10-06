@@ -49,7 +49,7 @@ FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcb"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vcl"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.vco"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\Dev-C++\*.*"
-
+FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.db"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*private.*"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\Makefile.win"
 FOR /D %%f IN ("*.") DO DEL /Q "%%f\ProjectFiles\*.aps"

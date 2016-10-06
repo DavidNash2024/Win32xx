@@ -237,7 +237,7 @@ BOOL CMainFrame::OnFilePrint()
 			} while (lTextPrinted < lTextLength);
 
 			// Tell the control to release cached information.
-			m_RichView.FormatRange(fr, FALSE);
+			m_RichView.FormatRange();
 
 			// End the print job
 			dcPrinter.EndDoc();
