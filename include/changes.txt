@@ -12,6 +12,11 @@ Bug Fixes:
 
 New Features and Enhancements
 -----------------------------
+* Added PrintPreview sample
+   This sample extends the NotePad sample by adding support for Print Preview.
+   The techniques demonstrated here can be used in your own applications to 
+   provide a print preview.
+   
 * Added CRibbonDockFrame.
    This class adds docking to a frame window which supports the Ribbon UI.
    A RibbonDockFrame sample has been added to demonstrate CRibbonDockFrame.
@@ -44,7 +49,7 @@ New Features and Enhancements
     with casting. For example:
 	  CPen Pen(PS_SOLID, 1, RGB(255, 0, 0));
 	  CPen OldPen = dcMem.SelectObject(pen);
-  - GDI resources created by CDC are better managed. Old GDI resources are now
+  - GDI resources created by CDC are managed better. Old GDI resources are now
     destroyed immediately, rather than when the CDC is de-constructed.
 
 * Updated CPropertyPage
@@ -63,8 +68,9 @@ Added CFrame::GetMRULimit		member function
 Added CFrame::SetMRULimit		member function
 Added CFrame::SetupMenuIcons    member function
 Added CFrame::OnUnInitMenuPopup member function
-Added RibbonDockFrame           sample application
-Added additional overrides for CDC::SelectObject		
+Added additional overrides for CDC::SelectObject
+Added PrintPreview              sample application
+Added RibbonDockFrame           sample application		
 
 These functions use references instead of pointers:
 Modified CBitmap::CreateBitmapIndirect
@@ -146,14 +152,15 @@ Modified CWnd::RedrawWindow
 Modified CWnd::ScrollWindow  	
 Modified CWnd::ValidateRect
 
-Modified CWinThread::CreateThread	now returns thread handle.
-Modified CPropertyPage::OnApply
-Modified CPropertyPage::OnOK
-Modified CPropertyPage::OnSetActive
-Modified CPropertyPage::OnWizardBack
-Modified CPropertyPage::OnWizardFinish
-Modified CPropertyPage::OnWizardNext
+Modified CWinThread::CreateThread			now returns thread handle.
+Modified CPropertyPage::OnApply				now returns BOOL
+Modified CPropertyPage::OnOK				now returns void
+Modified CPropertyPage::OnSetActive			now returns BOOL
+Modified CPropertyPage::OnWizardBack		now returns BOOL
+Modified CPropertyPage::OnWizardFinish		now returns BOOL
+Modified CPropertyPage::OnWizardNext		now returns BOOL
 
+Removed CDC::GetClipRgn
 Removed CDocker::GetDockFromPoint
 Removed CFrame::OnExitMenuLoop
 Removed CTab::OnDestroy

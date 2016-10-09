@@ -679,7 +679,6 @@ namespace Win32xx
 		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect) const;
 		int  ExcludeClipRect(const RECT& rc) const;
 		int  GetClipBox(RECT& rc) const;
-		int  GetClipRgn(HRGN hrgn) const;
 		int  IntersectClipRect(int Left, int Top, int Right, int Bottom) const;
 		int  IntersectClipRect(const RECT& rc) const;
 		BOOL RectVisible(const RECT& rc) const;
@@ -2159,7 +2158,7 @@ namespace Win32xx
 	inline int CRgn::CopyRgn(HRGN hrgnSrc)
 	// Assigns the specified region to the current region.
 	{
-		assert(GetHandle() == NULL);
+		assert(GetHandle() != NULL);
 		assert(hrgnSrc);
 		return ::CombineRgn((HRGN)GetHandle(), hrgnSrc, NULL, RGN_COPY);
 	}
@@ -3280,15 +3279,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	{
 		assert(m_pData->hDC);
 		return ::GetClipBox(m_pData->hDC, &rc);
-	}
-
-	inline int CDC::GetClipRgn(HRGN hrgn) const
-	// Retrieves a handle identifying the current application-defined clipping region for the specified device context.
-	// hrgn: A handle to an existing region before the function is called.
-	//       After the function returns, this parameter is a handle to a copy of the current clipping region.
-	{
-		assert(m_pData->hDC);
-		return ::GetClipRgn(m_pData->hDC, hrgn);
 	}
 
 	inline int CDC::IntersectClipRect(int Left, int Top, int Right, int Bottom) const
