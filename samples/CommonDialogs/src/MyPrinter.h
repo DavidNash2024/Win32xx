@@ -8,7 +8,7 @@
 ===============================================================================*
 
 	Contents Description: The declaration and implementation of the
-	MyPrinter and MyPageSetup classes. which are derived from the
+	MyPrinter and MyPageSetup classes, which are derived from the
 	CPrintDialog and CPageSetupDialog classs. These are customized
 	extensions that augment the handling of the PrintDlg and PageSetupDlg
 	HELP buttons to provide context help and setting of the dialog titles.
@@ -51,7 +51,7 @@
 
 ********************************************************************************
 
-	Declaration of the MyPrinter/MyPageSetup class
+	Declaration of the MyPrinter/MyPageSetup classes
 
 *******************************************************************************/
 
@@ -74,13 +74,13 @@ MyPrinter : public CPrintDialog                        			/*
 {
 	public:
 		MyPrinter(
-		DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES |
-		PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION)
-			:	CPrintDialog(dwFlags)
+		    DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES |
+		    PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION)
+		    :	CPrintDialog(dwFlags)
 		{
 		}
 
-		void SetPDTitle (const CString& title) {m_sPDTitle  = title;}
+		void SetBoxTitle (const CString& title) {m_sPDTitle  = title;}
 
 	protected:
 		friend class MyPageSetup;
@@ -110,13 +110,14 @@ MyPrinter : public CPrintDialog                        			/*
 		virtual void OnCancel()
 		{
 			  // for now just announce the dialog as cancelled
-			::MessageBox(NULL, _T("OnCancel"), _T("Information"),
-			MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			::MessageBox(NULL, _T("Print job cancelled."),
+			    _T("Information"), MB_OK | MB_ICONINFORMATION |
+			    MB_TASKMODAL);
 		}
 
 		virtual void OnOK()
 		{
-			// TODO: print the document
+			// TODO: do needed preparation to print the document
 		}
 
 
@@ -126,7 +127,7 @@ MyPrinter : public CPrintDialog                        			/*
 		}
 
 	private:
-		CString m_sPDTitle;
+		CString m_sPDTitle;     // persistent over span of object
 
 };
 
@@ -142,7 +143,7 @@ MyPageSetup : public CPageSetupDialog                            	/*
 		{
 		}
 
-		void SetPSDTitle(const CString& title) {m_sPSDTitle = title;}
+		void SetBoxTitle(const CString& title) {m_sPSDTitle = title;}
 
 	protected:
 		friend class MyPrinter;

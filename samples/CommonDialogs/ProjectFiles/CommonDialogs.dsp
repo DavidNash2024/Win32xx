@@ -99,7 +99,7 @@ SOURCE=..\src\AppHelp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\AppGlobal.cpp
+SOURCE=..\src\AppProlog.cpp
 # End Source File
 # Begin Source File
 
@@ -123,11 +123,11 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyFontDlg.cpp
+SOURCE=..\src\MRUFrame.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\RichEditView.cpp
+SOURCE=..\src\MyFontDlg.cpp
 # End Source File
 # Begin Source File
 

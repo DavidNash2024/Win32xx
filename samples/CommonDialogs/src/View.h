@@ -62,6 +62,8 @@
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
+class CPrintRichView;
+
 /*******************************************************************************
 
 	Local constants and types                               	*/
@@ -99,8 +101,9 @@ CView : public CDialog							/*
 			CFont&  GetEditFont() { return m_EditFont;}
 			CRichEditView& GetREView() { return m_RichEdit;}
 			void    NoDocOpen();
-			BOOL 	OnDropFiles(HDROP hDropInfo);
+			BOOL 	OnDropFiles(HDROP hDroinfo);
 		virtual void    OnPrintDocument();
+		virtual void    OnPrintPreview();
 			void    Register(CDoc*);
 			void	SetEditFont(const CFont& f);
 			void	SetRichEditColors(COLORREF, COLORREF, COLORREF);
@@ -120,6 +123,7 @@ CView : public CDialog							/*
 		virtual void 	PreCreate(CREATESTRUCT &cs);
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
 		virtual	void 	Serialize(CArchive &ar);
+
 	private:
 		  // private data members
 //		CResizer m_Resizer;

@@ -72,11 +72,16 @@ MyFileDialog : public CFileDialog
 		{
 		}
 
-		void	SetBoxTitle(const CString& title) {SetTitle(title);}
-			  // Set the title of the read/saveas dialog box to
-			  // the title string. This must be used after an object
-			  // of this class is constructed, but before ()
-			  // is invoked.
+		void	SetBoxTitle(const CString& title)  
+		  // Set the title of the read/saveas dialog box to the title
+		  // string. This must be used after an object of this class is
+		  // constructed, but before DoModal() is invoked. It also must
+		  // deposit a pointer to an object persistent over the span
+		  // of the object.
+		{
+			m_sTitle = title;
+			SetTitle(m_sTitle.c_str());
+		}
 			  
 	protected:
 		virtual void OnHelpButton()
@@ -113,6 +118,7 @@ MyFileDialog : public CFileDialog
 		}
 
 	private:
+		CString m_sTitle;       // persistent over object span
 };
 /*----------------------------------------------------------------------------*/
 #endif // MY_FILE_DLG_H

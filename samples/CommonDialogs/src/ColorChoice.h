@@ -1,4 +1,4 @@
-/* (06-Sep-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (CRichEditView.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (ColorChoice.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,10 +7,11 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the CRichEditView class for the
-	CommonDialogs sample  application using the Win32++ Windows interface
+	Contents Description: Declaration of a generic CColorChoice popup
+	dialog class for applications using the Win32++ Windows interface
 	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
-	therein.
+	therein. Information on the use of this class appears in the
+	CColorChoice.cpp file.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -36,7 +37,6 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-
 	Special Conventions:
 
  	Acknowledgement:
@@ -51,64 +51,67 @@
 
 ********************************************************************************
 
-	Declaration of the CRichEditView class
+	Declaration of the CColorChoice class
 
 *******************************************************************************/
 
-#ifndef CRICHEDITVIEW_H
-#define CRICHEDITVIEW_H
+#ifndef CCOLORCHOICE_H
+#define CCOLORCHOICE_H
 
-#include "PrintInfo.h"
+#include "stdafx.h"
 
-/*============================================================================*/
+#include "ColorDefs.h"
+#include "ListBoxDlg.h"
+#include "ListBoxDlgRC.h"
+
+/*******************************************************************************
+
+	Local struct and enum definitions                               */
+
+  // id-usage-color triples forming the m_ColorTable array
+struct ctl_color {UINT nID; CString  usage;  COLORREF color;};
+
+/******************************************************************************/
 	class
-CRichEditView : public CRichEdit                                        /*
+CColorChoice   : public CColorDialog					/*
 
 *-----------------------------------------------------------------------------*/
 {
 	public:
-		CRichEditView();
-		~CRichEditView();
-
-		void    Clean();
-		void    DoPrintRichView(const CString& sDocPath);
-		void 	DoPrintView();
-		BOOL    IsSelected();
-		void	SetColors(COLORREF txfg, COLORREF txbg, COLORREF bg);
-		void	SetDocPath(const CString& s)
-			    { m_sDocPath = s;}
-		void	SetFont(HFONT hFont, BOOL bRedraw) const;
-		void	SetPrintPath(const CString& s)
-			    { m_sPrintPath = s;}
-		void	SetWrapping(int wrap);
-		BOOL	StreamInFile(const CFile& file, BOOL mode);
-		BOOL	StreamOutFile(const CFile& file, BOOL mode);
+		CColorChoice();
+		virtual ~CColorChoice(){}
+		
+		virtual BOOL	AddColorChoice(UINT, const CString&, COLORREF);
+			void    ClearColorTable(){m_ColorTable.clear();}
+			UINT    DeleteTableEntry(UINT index);
+		virtual INT_PTR DoModal(HWND hWndOwner = 0);
+			CBrush	GetBrush(UINT nID);
+		virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
+			UINT    GetSelectedColorID() {return m_nSelection;}
+			COLORREF GetTableColor(UINT nID);
+			UINT    GetTableIndex(UINT nID);
+			UINT	GetTableSize() { return m_ColorTable.size();}
+			CString GetTableUsage(UINT nID); 
+			void	SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
+		virtual void    SetTableColor(UINT nID, COLORREF rgb);
+		virtual void    SetTableUsage(UINT nID, const CString& s);
 
 	protected:
-		BOOL 	DoPreparePrinting(CPrintInfo& info);
-		void 	OnInitialUpdate();
-		void    GetPageBreaks(CPrintInfo&);
-		void 	OnBeginPrinting(CDC& DC, CPrintInfo& info);
-		void 	OnEndPrinting(CDC& DC, CPrintInfo& info);
-		void 	OnPrepareDC(CDC& DC, CPrintInfo& info);
-		BOOL 	OnPreparePrinting(CPrintInfo& info);
-		void 	OnPrint(CDC& DC, CPrintInfo& info);
-		void    SetAppBanding(BOOL b) { m_bAppBanding = b;}
 
-		static  DWORD CALLBACK StreamInCallback(DWORD dwCookie,
-			    LPBYTE pbBuff, LONG cb, LONG *pcb);
-		static  DWORD CALLBACK StreamOutCallback(DWORD dwCookie,
-			    LPBYTE pbBuff, LONG cb, LONG *pcb);
-
+		virtual void 	OnHelpButton();	
+		virtual BOOL 	OnInitDialog();	
+		virtual void    SetWindowTitle() const
+				    {SetWindowText(m_sBoxTitle);}	
+		virtual	void	Serialize(CArchive &ar);
 
 	private:
-		long    m_nTextLength;
-		CString m_sDocPath;    // document path name
-		CString	m_sPrintPath;  // print-to-file path (not supported)
-		CString m_sDataType;   // data ised t0o record print job
-		BOOL    m_bAppBanding; // TRUE if app banding supported
-		FORMATRANGE m_fr;
-		std::vector<int> m_page_first_char;
+		void InitCustomColors();		
+
+		  // private data
+		CListBoxDlg     m_LBDlg;	// the list box dialog
+		CString 	m_sBoxTitle;	// the color dialog box title
+		UINT            m_nSelection;   // the selected color index
+		std::vector<ctl_color> m_ColorTable;   // usage-color pairs
 };
 /*----------------------------------------------------------------------------*/
-#endif  // CRICHEDITVIEW_H
+#endif  // CCOLORCHOICE_H

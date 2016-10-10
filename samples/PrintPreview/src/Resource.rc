@@ -46,7 +46,7 @@ BEGIN
 		MENUITEM "Print Setup",                 IDM_FILE_PRINTSETUP 
         MENUITEM "Print Preview",               IDM_FILE_PREVIEW
         MENUITEM "&Print",                      IDM_FILE_PRINT
-        MENUITEM "QuickPrint",                  IDM_FILE_QUICKPRINT
+        MENUITEM "Quick Print",                 IDM_FILE_QUICKPRINT
         MENUITEM SEPARATOR
         MENUITEM "Recent Files",                IDW_FILE_MRU_FILE1, GRAYED
         MENUITEM SEPARATOR

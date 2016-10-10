@@ -64,6 +64,11 @@ CRichEditView()                                                         /*
 
 *-----------------------------------------------------------------------------*/
 {
+	m_sDocPath.Empty();
+	m_sPrintPath.Empty();
+	m_sDataType.Empty();
+	m_bAppBanding = FALSE;
+
 }
 
 /*============================================================================*/
@@ -81,9 +86,7 @@ Clean()									/*
 	Clear the control of all text.
 *-----------------------------------------------------------------------------*/
 {
-	long len = GetTextLength();
-	SetSel(0, len);
-	Clear();
+	SetWindowText(_T(""));
 }
 
 /*============================================================================*/
@@ -112,8 +115,6 @@ OnInitialUpdate()                                         		/*
 	  //Determine which messages will be passed to the parent
 	DWORD dwMask = ENM_KEYEVENTS | ENM_DROPFILES | ENM_MOUSEEVENTS;
 	SetEventMask(dwMask);
-	SetFocus();
-
 }
 
 /*============================================================================*/
@@ -148,8 +149,11 @@ SetFont(HFONT hFont, BOOL bRedraw) const                                /*
 #define IMF_AUTOFONT			0x0002
 #endif
 
-	  // Prevent Unicode characters from changing the font
+	  // Prevent Unicode characters from changing the font: first, get the
+	  // rich edit option settings
 	LRESULT lres = SendMessage(EM_GETLANGOPTIONS, 0, 0);
+	  // do not automatically change fonts when the user explicitly changes
+	  // to a different keyboard layout.
 	lres &= ~IMF_AUTOFONT;
 	SendMessage(EM_SETLANGOPTIONS, 0, lres);
 }
@@ -173,7 +177,7 @@ SetWrapping(int wrap)                                                  /*
 
 /*============================================================================*/
 	BOOL CRichEditView::
-ReadFile(const CFile& file)      					/*
+StreamInFile(const CFile& file, BOOL mode)      			/*
 
 	Read the text-only contents of the opened file into this rich edit
 	control. Set the modified state FALSE and return TRUE on success. Return
@@ -183,12 +187,13 @@ ReadFile(const CFile& file)      					/*
 {
 	try
 	{
+		UINT format = SF_TEXT;
+		if (mode == TRUE)
+			format |= SF_UNICODE;
 		EDITSTREAM es;
 		es.dwCookie =  (DWORD_PTR) file.GetHandle();
 		es.pfnCallback = (EDITSTREAMCALLBACK) StreamInCallback;
-		StreamIn(SF_TEXT, es);
-
-		//Clear the modified text flag
+		StreamIn(format, es);
 	}
 
 	catch (const CFileException& e)
@@ -205,7 +210,7 @@ ReadFile(const CFile& file)      					/*
 
 /*============================================================================*/
 	BOOL CRichEditView::
-WriteFile(const CFile& file)                                            /*
+StreamOutFile(const CFile& file, BOOL mode)                             /*
 
 	Write the text-only contents of this rich edit control into the opened
 	file. Set the modified state FALSE and return TRUE on success. Return
@@ -215,11 +220,14 @@ WriteFile(const CFile& file)                                            /*
 {
 	try
 	{
+		UINT format = SF_TEXT;
+		if (mode == TRUE)
+			format |= SF_UNICODE;
 		EDITSTREAM es;
 		es.dwCookie =  (DWORD_PTR) file.GetHandle();
 		es.dwError = 0;
 		es.pfnCallback = (EDITSTREAMCALLBACK) StreamOutCallback;
-		StreamOut(SF_TEXT, es);
+		StreamOut(format, es);
 
 		//Clear the modified text flag
 	}
@@ -244,12 +252,13 @@ WriteFile(const CFile& file)                                            /*
 	DWORD CALLBACK CRichEditView::
 StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*
 
-	Tansfer data into the rich edit view window. The dwCookie is an
-	app-defined value that directs the deposition of cb bytes of data into
-	the pbBuff. The pcb points to the location receiving the number of bytes
-	actually transferred in. Returns zero on success, or nonzero if cb is
-	zero, indicating completion. Throws an exception on gilr error. In this
-	usage, dwCookie contains the handle of an open file.
+	Replace the contents of the rich edit view window with data from an
+	input stream. The dwCookie is an app-defined value that directs the
+	deposition of cb bytes of data into the pbBuff. The pcb points to the
+	location receiving the number of bytes actually transferred in. Returns
+	zero on success, or nonzero if cb is zero, indicating completion.
+	Throws an exception on gilr error. In this usage, dwCookie contains the
+	handle of an open file.
 *-----------------------------------------------------------------------------*/
 {
 	// Required for StreamIn termination
@@ -259,7 +268,7 @@ StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*
 	*pcb = 0;
 	if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb,
 	    NULL))
-		::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
+		::MessageBox(NULL, _T("StreamInFile Failed"), _T(""), MB_OK);
 
 	return 0;
 }
@@ -281,10 +290,338 @@ StreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)  /*
 		return (1);
 
 	*pcb = 0;
-	if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
-	    NULL))
-		::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
+	if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb,
+	    (LPDWORD)pcb, NULL))
+		::MessageBox(NULL, _T("StreamOutFile Failed"), _T(""), MB_OK);
 	return 0;
 }
 
+/*============================================================================*/
+	BOOL 	CRichEditView::
+DoPreparePrinting(CPrintInfo& info)					/*
+
+	Call this function from your override of OnPreparePrinting to invoke
+	the print dialog box to create a printer device context. This method
+	invokes a print dialog box using the values in the info structure. The
+	m_pPD member of this structure must contain a valid CPrintDialog object
+	reference upon entry.
+
+	After the dialog box closes with an IDOK, the a printer device context
+	contains the settings specified in the dialog box and deposits this
+	information so as to be available through the info parameter. This
+	device context is used to print the document. Return TRUE if printing
+	can begin; FALSE if the operation is canceled.
+*-----------------------------------------------------------------------------*/
+{
+	  // set up a dialog to choose the printer and printing parameters
+	::IsWindow(*info.m_pPD);
+	  // get the printing parameters
+	if (info.m_pPD->DoModal(GetApp().GetMainWnd()) != IDOK)
+		return FALSE;
+
+	  // save the printer dialog parameters so they are available
+	  // after the printer dialog object goes out of scope.
+	PRINTDLG pd = info.m_pPD->GetParameters();
+	info.SetNCopies(pd.nCopies);
+	info.SetFromPage(pd.nFromPage);
+	info.SetMinPage(pd.nMinPage);
+	info.SetMaxPage(pd.nMaxPage);
+	info.SetToPage(pd.nToPage);
+	info.m_strPageDesc = _T("Page %u");
+	return TRUE;
+}
+
+/*============================================================================*/
+	void CRichEditView::
+DoPrintView()								/*
+
+	Perform standard printing of a customized view of the current document,
+	whose name appears in m_sDocPath, which should be set prior to entry to
+	label the spooling object. If banding is supported, this should also be
+	set. If the printer uses a data type to record the print job, this may
+	also be set. The printing device is placed in MM_TEXT mode, so units
+	are measured in twips.
+*-----------------------------------------------------------------------------*/
+{
+ 	try
+	{
+		  // maintain the printer context information throughout the
+		  // job via this object:
+		CPrintInfo info;
+		  // display printer dialog and create printer device context
+		if (!OnPreparePrinting(info))
+			return;
+
+		  // set the printer device context via saved info
+		CDC DC = info.m_pPD->GetPrinterDC();
+		  // put the printer DC in MM_TEXT mode and compute the page
+		  // m_rectDraw in twips
+		DC.SetMapMode(MM_TEXT);
+		int nHorizRes   = DC.GetDeviceCaps(HORZRES);
+		int nVertRes    = DC.GetDeviceCaps(VERTRES);
+		int nLogPixelsX = DC.GetDeviceCaps(LOGPIXELSX);
+		int nLogPixelsY = DC.GetDeviceCaps(LOGPIXELSY);
+		info.m_rectDraw.SetRect(0, 0, (nHorizRes * 1440) / nLogPixelsX,
+		    (nVertRes  * 1440) / nLogPixelsY);
+		  // allocate resources and perform initializations
+		OnBeginPrinting(DC, info);
+
+		  // Set up the print job
+		DOCINFO di;
+		ZeroMemory(&di, sizeof(di));
+		di.cbSize       = sizeof(DOCINFO);
+		di.lpszDocName  = m_sDocPath; // the spooler label
+		di.lpszOutput   = (m_sPrintPath.IsEmpty() ?
+		    NULL : m_sPrintPath.c_str());
+		di.lpszDatatype = (m_sDataType.IsEmpty() ?
+		    NULL : m_sDataType.c_str());
+		di.fwType       = (m_bAppBanding ?  DI_APPBANDING : 0);
+		  // Start the document.
+		DC.StartDoc(&di);
+
+		  // Determine the printing page range
+		UINT nEndPage   = info.GetToPage(),
+		     nStartPage = info.GetFromPage();
+
+		  // assure that the starting page is within limits
+		if (nStartPage < info.GetMinPage())
+			nStartPage = info.GetMinPage();
+		if (nStartPage > info.GetMaxPage())
+			nStartPage = info.GetMaxPage();
+		  // assure that the ending page is within limits
+		if (nEndPage < info.GetMinPage())
+			nEndPage = info.GetMinPage();
+		if (nEndPage > info.GetMaxPage())
+			nEndPage = info.GetMaxPage();
+		  // determine the page increment
+		int nStep = (nEndPage >= nStartPage) ? 1 : -1;
+		  // adjust the end page for the for loop
+		nEndPage = (nEndPage == 0xffff) ? 0xffff : nEndPage + nStep;
+		 // begin the page printing loop
+		BOOL bError = FALSE;
+		for (info.m_nCurPage = nStartPage; info.m_nCurPage != nEndPage;
+		    info.m_nCurPage += nStep)
+		{
+			OnPrepareDC(DC, info);
+
+			// check for end of print
+			if (!info.m_bContinuePrinting)
+				break;
+
+			  // TODO: print the current page number in a progress
+			  // status area
+
+			  // attempt to start the current page
+			if (DC.StartPage() < 0)
+			{
+				bError = TRUE;
+				break;
+			}
+
+			  // we must now call OnPrepareDC again because
+			  // StartPage has reset the device attributes.
+#if WINVER > 0x0400
+			OnPrepareDC(DC, info);
+#endif
+			assert(info.m_bContinuePrinting);
+
+			 // the page has been successfully started, so now
+			 // render the page
+			OnPrint(DC, info);
+			if (DC.EndPage() < 0 )
+			{
+				bError = TRUE;
+				break;
+			}
+		}
+		  // cleanup the document printing process
+		if (!bError)
+			DC.EndDoc();
+		else
+			DC.AbortDoc();
+		  // and end the job
+		OnEndPrinting(DC, info);
+	}
+
+	catch (const CWinException& /* e */)
+	{
+		// No default printer
+		::MessageBox(0, _T("Unable to display print dialog"),
+		    _T("Print Failed"), MB_OK);
+		return;
+	}
+}
+
+/*============================================================================*/
+	void CRichEditView::
+DoPrintRichView(const CString& sDocPath)				/*
+
+	Print the contents of the CRichEditView control in the CView client
+	area accessed by pView. Label the spooler output using the sDocPath.
+*-----------------------------------------------------------------------------*/
+{
+	  // record the document interfaces
+	m_sDocPath = sDocPath;
+	  // let the base class administer the printing
+	DoPrintView();
+}
+
+/*============================================================================*/
+	void CRichEditView::
+GetPageBreaks(CPrintInfo& info)						/*
+
+	Calculate the vector of first characters on each page in this text rich
+	edit view. Set the page count and page number limits into the info
+	object.
+*-----------------------------------------------------------------------------*/
+{
+	  // Use a separate format range object for pagination. This is
+	  // necessary because the FormatRange function alters its content
+	FORMATRANGE fr = m_fr;
+	  // set up to scan the entire rich edit view
+	fr.chrg.cpMin = 0;
+	fr.chrg.cpMax = -1;
+	long nTextScanned = 0;  // amount of document scanned so far
+	  // find the beginning characters of each page
+	m_page_first_char.clear();
+	  // first page begins at 0
+	m_page_first_char.push_back(0);
+	do
+	{	  // Format as much text as can fit on a page. The return value
+		  // is the index of the first character on the next page. Using
+		  // FALSE for the wParam parameter causes the text to be
+		  // measured.
+		nTextScanned = FormatRange(fr, FALSE);
+		  // record the beginning character of the next page
+		m_page_first_char.push_back(nTextScanned);
+		  // If there is more text to format, adjust the range of
+		  // characters to start formatting at the first character of
+		  // the next page.
+		if (nTextScanned < m_nTextLength)
+		{
+			fr.chrg.cpMin = nTextScanned;
+			fr.chrg.cpMax = -1;
+		}
+	} while (nTextScanned < m_nTextLength);
+	  // tell the control to release cached information.
+	FormatRange(fr, FALSE);
+	  // on exit, the m_page_first_char vector should contain one more
+	  // entry than the actual number of pages
+	info.SetMinPage(1);
+	info.SetFromPage(1);
+	UINT maxpg = m_page_first_char.size() - 1;
+	info.SetMaxPage(maxpg);
+	info.SetToPage(maxpg);
+}
+
+/*============================================================================*/
+	void CRichEditView::
+OnBeginPrinting(CDC& DC, CPrintInfo& info)                             /*
+
+	Initiate parameters used by the printing task. This includes setting
+	the FORMATRANGE m_fr structure with the printer context, the printer
+	page size and margins, the range of text to print, the beginning
+	locations of each page to be printed.
+*-----------------------------------------------------------------------------*/
+{
+	HDC hPrinterDC = DC.GetHDC();
+
+	  // Rendering to the same DC we are measuring.
+	ZeroMemory(&m_fr, sizeof(m_fr));
+	m_fr.hdc       = hPrinterDC;  // device to render to
+	m_fr.hdcTarget = hPrinterDC;  // device to format to
+
+	  // Set up the page.
+	info.m_nMargin = 200; // twips
+	m_fr.rcPage.left   = m_fr.rcPage.top = info.m_nMargin;
+	m_fr.rcPage.right  = info.m_rectDraw.right - info.m_nMargin;
+	m_fr.rcPage.bottom = info.m_rectDraw.bottom - info.m_nMargin;
+
+	  // Set up margins all around.
+	m_fr.rc.left   = m_fr.rcPage.left;
+	m_fr.rc.top    = m_fr.rcPage.top;
+	m_fr.rc.right  = m_fr.rcPage.right;
+	m_fr.rc.bottom = m_fr.rcPage.bottom;
+
+	  // Default the range of text to print as the entire document.
+	m_fr.chrg.cpMin = 0;
+	m_fr.chrg.cpMax = -1;
+
+	  // Find out real size of document in characters.
+	m_nTextLength = GetTextLengthEx(GTL_NUMCHARS);
+	GetPageBreaks(info);
+	info.m_bContinuePrinting = TRUE;
+	  // Default the range of text to print as the entire document.
+	m_fr.chrg.cpMin = 0;
+	m_fr.chrg.cpMax = -1;
+}
+
+/*============================================================================*/
+	void CRichEditView::
+OnEndPrinting(CDC& DC, CPrintInfo& info)                               /*
+
+	Clean up any loose ends before ending the job.
+*-----------------------------------------------------------------------------*/
+{
+	UNREFERENCED_PARAMETER(DC);
+	UNREFERENCED_PARAMETER(info);
+
+	  // tell the control to release cached information.
+	FormatRange(m_fr, FALSE);
+}
+
+/*============================================================================*/
+	void CRichEditView::
+OnPrepareDC(CDC& DC, CPrintInfo& info /* = NULL */)                    /*
+
+	Make preparations for printing the next page. Here, check for an
+	end-of-printing condition.
+*-----------------------------------------------------------------------------*/
+{
+	UNREFERENCED_PARAMETER(DC);
+	UNREFERENCED_PARAMETER(info);
+	if (m_fr.chrg.cpMin  >=  m_nTextLength)
+		info.m_bContinuePrinting = FALSE;
+}
+
+/*============================================================================*/
+	BOOL CRichEditView::
+OnPreparePrinting(CPrintInfo& info)                                    /*
+
+	Declare a printer dialog box, set initial info settings, and get the
+	printer parameters via the printer dialog. Return TRUE if a printer was
+	chosen, FALSE if the dialog was cancelled.
+*-----------------------------------------------------------------------------*/
+{
+	  // set up the dialog to choose the printer and printing parameters
+	MyPrinter PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
+	    PD_SHOWHELP);
+	PrintDlg.SetBoxTitle(_T("Print contents of rich edit box."));
+	info.InitInfo(&PrintDlg, 1, 0xffff, 1, 0xffff, 1);
+	if (!DoPreparePrinting(info))
+		return FALSE;
+
+	return TRUE;
+}
+
+/*============================================================================*/
+	void CRichEditView::
+OnPrint(CDC& DC, CPrintInfo& info)                                     /*
+
+	Print the current page indicated in info.
+*-----------------------------------------------------------------------------*/
+{
+	UNREFERENCED_PARAMETER(DC);
+
+	UINT page_no = info.m_nCurPage;
+	long first = m_page_first_char[page_no - 1];
+	m_fr.chrg.cpMin = first;
+	m_fr.chrg.cpMax = -1;
+
+	  // Print the a page. The return value should be the index of the first
+	  // character on the next page. Using TRUE for the wParam parameter
+	  // causes the text to be printed.
+	FormatRange(m_fr, TRUE);
+	DisplayBand(m_fr.rc);
+}
 

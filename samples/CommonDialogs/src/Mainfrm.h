@@ -121,7 +121,6 @@ CMainFrame : public CFrame						/*
 		virtual CStatusBar& GetStatusBar() const
 				{ return const_cast<NoResizeGripperStatusBar&>
 				  (m_NoResizeGripperStatusBar); }
-			CView&  GetView() {return m_View;}
 		virtual void	RemoveMRUEntry(const CString& szMRUEntry)
 				    {CFrame::RemoveMRUEntry(szMRUEntry);}
 			void    SetSBBkColor(COLORREF clr)
@@ -139,31 +138,21 @@ CMainFrame : public CFrame						/*
 				    UINT& bk, UINT& bg);
 		 CRichEditView& GetREView() { return m_View.GetREView();}
 
+		virtual void    InitCtlColors();
 		virtual void    LoadPersistentData();
-			void    OnBogusMRU();
 		virtual void    OnColorChoice();
 		virtual BOOL 	OnCommand(WPARAM wParam, LPARAM lParam);
 		virtual INT_PTR OnCtlColor(HDC, HWND, UINT);
 		virtual int  	OnCreate(CREATESTRUCT& rcs);
 		virtual void    OnEditFind();
 		virtual void    OnEditReplace();
-		virtual void    OnFileClose();
-		virtual void    OnFileNew();
-		virtual void    OnFileOpen();
 		virtual void 	OnFileOpenMRU(UINT);
-		virtual void    OnFilePageSetup();
-		virtual void    OnFilePreview();
-		virtual void    OnFilePrint();
-		virtual void    OnFileSave();
-		virtual void    OnFileSaveAs();
 		virtual void    OnFontChoice();
-		virtual void    InitCtlColors();
 		virtual void    OnInitialUpdate(void);
 		virtual void 	OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
 		virtual BOOL    OnRichEditColor();
-		virtual void 	OnTerminate(void);
 		virtual void    OnWrapText();
 		virtual void 	PreCreate(CREATESTRUCT& cs);
 		virtual BOOL 	SaveRegistrySettings(void);
@@ -171,14 +160,13 @@ CMainFrame : public CFrame						/*
 		virtual void    SetContextHelpMessages(void);
 			BOOL	SetCheckStatus(UINT, BOOL, ControlBars);
 			BOOL    SetEnableStatus(UINT, BOOL, ControlBars);
-		virtual void 	SetReBarColors(COLORREF clrBkGnd1,
-				    COLORREF clrBkGnd2, COLORREF clrBand1,
-				    COLORREF clrBand2);
+		virtual void 	SetReBarColors(COLORREF, COLORREF, COLORREF,
+				    COLORREF);
 		virtual void    SetStatusbarMsg(CString);
 		virtual BOOL 	SetThemeColors();
 		virtual void    SetupToolBar(void);
-		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 		virtual void 	UpdateMRUMenu();
+		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 		virtual void	ValidateMRU();
 
 	private:

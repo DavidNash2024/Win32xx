@@ -72,13 +72,23 @@ void CPreviewPane::Render(CDC& dc)
 		CMemDC dcMem(dc);
 		dcMem.SelectObject(m_Bitmap);
 		BITMAP bm = m_Bitmap.GetBitmapData();
-
-		double ratio = double(bm.bmHeight) / double(bm.bmWidth);
-		CRect rcPreview = GetClientRect();
 		int Border = 20;
 		CRect rcClient = GetClientRect();
-		int PreviewWidth = rcClient.Width() - (2 * Border);
-		int PreviewHeight = (int)( PreviewWidth * ratio);
+
+		double ratio = double(bm.bmHeight) / double(bm.bmWidth);
+		int PreviewWidth;
+		int PreviewHeight;
+
+		if ((rcClient.Width() - 2*Border)*ratio < (rcClient.Height() - 2*Border))
+		{
+			PreviewWidth = rcClient.Width() - (2*Border);
+			PreviewHeight = (int)(PreviewWidth * ratio);
+		}
+		else
+		{
+			PreviewHeight = rcClient.Height() - (2*Border);
+			PreviewWidth = (int)(PreviewHeight / ratio);
+		}
 
 		// Copy from the memory dc to the PreviewPane's DC with stretching.
 		dc.StretchBlt(Border, Border, PreviewWidth, PreviewHeight, dcMem, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
@@ -161,7 +171,7 @@ BOOL CPreviewDialog::OnInitDialog()
 	AttachItem(IDC_CUSTOM1, m_PreviewPane);
 
 	// Support dialog resizing
-	m_Resizer.Initialize(*this, CRect(0, 0, 300, 200));
+	m_Resizer.Initialize(*this, CRect(0, 0, 100, 120));
 	m_Resizer.AddChild(m_ButtonPrint, topleft, 0);
 	m_Resizer.AddChild(m_ButtonPrev, topleft, 0);
 	m_Resizer.AddChild(m_ButtonNext, topleft, 0);
@@ -266,8 +276,9 @@ void CPreviewDialog::PreviewPage(UINT nPage)
 	fr.chrg.cpMax = m_PageBreaks[nPage];
 
 	// Create a compatible bitmap for the memory DC
-	int Width = GetDeviceCaps(dcPreview, LOGPIXELSX) * (dcPrinter.GetDeviceCaps(HORZRES) / dcPrinter.GetDeviceCaps(LOGPIXELSX));
+	int Width = 160 + GetDeviceCaps(dcPreview, LOGPIXELSX) * (dcPrinter.GetDeviceCaps(HORZRES) / dcPrinter.GetDeviceCaps(LOGPIXELSX));
 	int Height = 160 + GetDeviceCaps(dcPreview, LOGPIXELSY) * (dcPrinter.GetDeviceCaps(VERTRES) / dcPrinter.GetDeviceCaps(LOGPIXELSY));
+
 	dcMem.CreateCompatibleBitmap(dcPreview, Width, Height);
 	CRect rc(0, 0, Width, Height);
 	dcMem.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
