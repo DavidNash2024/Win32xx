@@ -101,7 +101,6 @@ IDW_MAIN MENU
 		MENUITEM "Find\tCtrl+F",          IDM_EDIT_FIND //, GRAYED
 		MENUITEM "Replace\tCtrl+R",       IDM_EDIT_REPLACE //, GRAYED
 		MENUITEM SEPARATOR
-		MENUITEM "Load bogus MRU",        IDM_BOGUS_MRU
 	}
 	POPUP "&View"
 	{
@@ -179,7 +178,7 @@ IDW_MAIN ACCELERATORS
 	"Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
 	"R",            IDM_EDIT_REPLACE, VIRTKEY, CONTROL, NOINVERT
 	"Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
-	"Y",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
+	"Z",            IDM_EDIT_REDO,   VIRTKEY, SHIFT, CONTROL, NOINVERT
 	VK_DELETE,      IDM_EDIT_DELETE, VIRTKEY, SHIFT, NOINVERT
 }
 
@@ -188,7 +187,7 @@ IDW_MAIN ACCELERATORS
 	String Tables--tool tips and status labels			*/
 STRINGTABLE  // for the mainframe
 {
-	IDW_MAIN                "Common Dialogs Demo, with Help"
+	IDW_MAIN                "Common Dialogs Demo, with Context-Sensitive Help"
 	IDW_INDICATOR_CAPS      "CAP"
 	IDW_INDICATOR_NUM       "NUM"
 	IDW_INDICATOR_SCRL      "SCRL"
@@ -208,7 +207,7 @@ STRINGTABLE	  // standard file menu or toolbar items
 	IDM_FILE_SAVEAS         "Save the Document with a new name."
 	IDM_FILE_PRINT          "Print the Document."
 	IDM_FILE_PREVIEW        "Preview Print the Document."
-	IDM_FILE_CLOSE          "Close the current document. (for this demo remove MRU item)"
+	IDM_FILE_CLOSE          "Close the current document."
 	IDW_FILE_MRU_FILE1      "Open this document"
 	IDW_FILE_MRU_FILE2      "Open this document"
 	IDW_FILE_MRU_FILE3      "Open this document"
@@ -228,7 +227,6 @@ STRINGTABLE	  // standard edit menu or toolbar items
 	IDM_EDIT_FIND           "Find something..."
 	IDM_EDIT_REPLACE        "Replace something..."
 	IDM_EDIT_DELETE         "Erase the selected Contents."
-	IDM_BOGUS_MRU           "Populate MRU list with bogus values."
 }
 
 STRINGTABLE     // help menu or toolbar items

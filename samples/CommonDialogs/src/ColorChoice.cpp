@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (CColorChoice.cpp) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]          (ColorChoice.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -71,7 +71,7 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-#include "CColorChoice.h"
+#include "ColorChoice.h"
 #include "ListBoxDlgRC.h"
 #include "AppHelpRC.h"
 
@@ -84,6 +84,7 @@ CColorChoice()						   		/*
 {
 	ClearColorTable();
 	SetBoxTitle(_T("Color"));
+	m_LBDlg.SetBoxTitle(_T("Choose color to change."));
 }
 
 /*============================================================================*/

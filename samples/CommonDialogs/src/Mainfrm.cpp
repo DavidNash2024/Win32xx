@@ -165,7 +165,6 @@ EngageContextHelp() 							/*
 	if (m_AppHelp.IsActive())
 		return FALSE;
 
-	m_View.SetFocus();
 	  // set the cursor(s) in all controls to help, and show immediately
 	m_hCursor = ::LoadCursor(NULL, IDC_HELP);
 	SendMessage(WM_SETCURSOR, 0, 0);
@@ -331,6 +330,16 @@ LoadPersistentData()                                                    /*
 	execution. MRU strings that are not valid file paths are discarded.
 *-----------------------------------------------------------------------------*/
 {
+	  // determine the availability of the archive file
+	if (_taccess(theApp.GetArcvFile(), 0x04) != 0)
+	{
+		CString msg = _T("Default values are being used on this first\n")
+		    _T("startup. Your customized settings, colors, and font\n")
+		    _T("will be restored in future usages.\n");
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		return;
+	}
 	try
 	{
 		CArchive ar(theApp.GetArcvFile(), CArchive::load);
@@ -365,8 +374,7 @@ OnColorChoice()     		                                       	/*
 *-----------------------------------------------------------------------------*/
 {
 	  // set color choice help messages to go to the the main frame,
-	HWND hWndOwner = theApp.GetMainWnd();
-	m_ColorChoice.DoModal(hWndOwner);  // calls the base class DoModal()
+	m_ColorChoice.DoModal(GetApp().GetMainWnd()); 
 	  // reset the status bar color
 	UINT selection = m_ColorChoice.GetSelectedColorID();
 	if (selection == SBBg)
@@ -430,72 +438,106 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	switch(nID)
 	{
 	    case IDM_FILE_NEW:
-	    	OnFileNew();
+    		m_Doc.OnNewDoc();
+		UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_FILE_OPEN:
-	    	OnFileOpen();
+	    	m_Doc.OnOpenDoc();
+		UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_FILE_SAVE:
-	    	OnFileSave();
+	    	m_Doc.OnSaveDoc();
+		UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_FILE_SAVEAS:
-	    	OnFileSaveAs();
+	    	m_Doc.OnSaveDocAs();
+		UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_FILE_CLOSE:
-		OnFileClose();
+		m_Doc.OnCloseDoc();
+		UpdateControlUIState();
 		return TRUE;
 
 	    case IDM_FILE_PAGESETUP:
-		OnFilePageSetup();
+	    	m_Doc.OnPageSetup();
 		return TRUE;
 
 	    case IDM_FILE_PREVIEW:
-	    	OnFilePreview();
+	    	m_View.OnPrintPreview();
 		return TRUE;
 
 	    case IDM_FILE_PRINT:
-	    	OnFilePrint();
+	    	m_View.OnPrintDocument();
 		return TRUE;
 
 	    case IDM_FILE_EXIT:
-	    	m_Doc.OnCloseDoc();
 		  // Issue a close request to the frame
 		SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0);
 		return TRUE;
 
 	    case IDM_EDIT_UNDO:
+	    {
+	    	if (::GetFocus() !=(HWND)GetREView())
+			return ::SendMessage(::GetFocus(), EM_UNDO, 0, 0);
+
 	    	m_Doc.OnUndo();
  	    	UpdateControlUIState();
 		return TRUE;
+	    }
 
 	    case IDM_EDIT_REDO:
+	    {
+	    	if (::GetFocus() !=(HWND)GetREView())
+			return ::SendMessage(::GetFocus(), EM_REDO, 0, 0);
+
 	    	m_Doc.OnRedo();
  	    	UpdateControlUIState();
 		return TRUE;
+	    }
 
 	    case IDM_EDIT_CUT:
- 	    	m_Doc.OnCut();
+	    {
+	    	if (::GetFocus() !=(HWND)GetREView())
+			return ::SendMessage(::GetFocus(), WM_CUT, 0, 0);
+
+	    	m_Doc.OnCut();
  	    	UpdateControlUIState();
 		return TRUE;
+	    }
 
 	    case IDM_EDIT_COPY:
+	    {
+	    	if (::GetFocus() !=(HWND)GetREView())
+			return ::SendMessage(::GetFocus(), WM_COPY, 0, 0);
+
 	    	m_Doc.OnCopy();
  	    	UpdateControlUIState();
 		return TRUE;
+	    }
 
 	    case IDM_EDIT_PASTE:
+	    {
+	    	if (::GetFocus() !=(HWND)GetREView())
+			return ::SendMessage(::GetFocus(), WM_PASTE, 0, 0);
+
 	    	m_Doc.OnPaste();
  	    	UpdateControlUIState();
 		return TRUE;
+	    }
 
 	    case IDM_EDIT_DELETE:
+	    {
+	    	if (::GetFocus() !=(HWND)GetREView())
+			return ::SendMessage(::GetFocus(), WM_CLEAR, 0, 0);
+
 	    	m_Doc.OnDelete();
  	    	UpdateControlUIState();
 		return TRUE;
+	    }
 
 	    case IDM_EDIT_FIND:
 	    	OnEditFind();
@@ -507,10 +549,6 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
  	    	UpdateControlUIState();
 		return TRUE;
 
-	    case IDM_BOGUS_MRU:
-	    	OnBogusMRU();
-	    	return TRUE;
-	    	
 	    case IDW_ABOUT:         // invoked by F1 and Help->About menu item
 	    	return m_AppHelp.OnHelpAbout();
 
@@ -597,6 +635,7 @@ OnCtlColor(HDC hDC, HWND hWnd, UINT nCtlColor)            		/*
 	  // returned brush handle must persist
         return (UINT_PTR)(HBRUSH)m_br;
 }
+
 /*============================================================================*/
 	int CMainFrame::
 OnCreate(CREATESTRUCT& rcs)                                            /*
@@ -665,28 +704,6 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 
 /*============================================================================*/
 	void CMainFrame::
-OnBogusMRU()                                                            /*
-
-	Demonstrate operation of the MRU list: for this demo, add 5 strings to
-	the MRU list and open the topmost one. In an actual application, this
-	function would not be present
-*-----------------------------------------------------------------------------*/
-{
-	EmptyMRUList();
-	AddMRUEntry(_T("This is MRU 5 and it is very, very, very, ")
-	    _T("very, very, very, very, very, very, very, very, very, very, ")
-	    _T("very, very, very long"));
-	AddMRUEntry(_T("This is MRU 4"));
-	AddMRUEntry(_T("This is MRU 3"));
-	AddMRUEntry(_T("This is MRU 2"));
-	AddMRUEntry(_T("This is MRU 1"));
-	CString mru_top = GetMRUEntry(0);
-	m_Doc.OnOpenDoc(mru_top);
-	UpdateControlUIState();
-}
-
-/*============================================================================*/
-	void CMainFrame::
 OnEditFind()                                                            /*
 
    	Initiate the find non-modal dialog box and the messages sent to the
@@ -716,114 +733,6 @@ OnEditReplace()                                                            /*
 
 /*============================================================================*/
 	void CMainFrame::
-OnFileNew()                                                            /*
-
-	Prompt the user for a new document file name and, if valid, open a new
-	document.
-*-----------------------------------------------------------------------------*/
-{
-	MyFileDialog fd(TRUE,
-	    m_Doc.GetExt(),  	 // extension defined by app
-	    m_Doc.GetFilePath(), // current open file path
-	    OFN_HIDEREADONLY |
-	    OFN_SHOWHELP |
-	    OFN_EXPLORER |
-	    OFN_NONETWORKBUTTON |
-	    OFN_ENABLESIZING,
-	    m_Doc.GetFilter());
-	fd.SetBoxTitle(_T("New document file..."));
-	fd.SetDefExt(m_Doc.GetExt());
-	CString msg;
-	  // do not leave without a valid unused file name, unless cancelled
-	while (fd.DoModal(*this) == IDOK)
- 	{
- 		CString new_path = fd.GetPathName();
-		  // new_path should not exist
-		if (::_taccess(new_path, 0x04) != 0)
-		{  	  // for the demo, announce the file chosen
-			msg.Format(_T("Open new document file\n    '%s'"),
-			    new_path.c_str());
-			::MessageBox(NULL, msg, _T("Information"),
-			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-
-			  // let the document class handle the new_path
-			m_Doc.OnNewDoc(new_path);
-			UpdateControlUIState();
-			return;
-		}
-		  //
-		msg.Format(_T("That document file\n    '%s'\n")
-		    _T("already exists."), new_path.c_str());
-		::MessageBox(NULL, msg, _T("Error"), MB_OK |
-		    MB_ICONERROR | MB_TASKMODAL);
-	}
-	msg = _T("No name was entered, no action was taken.");
-	::MessageBox(NULL, msg, _T("Information"),
-	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFileClose()                                                            /*
-
-	Close the currently open document file.
-*-----------------------------------------------------------------------------*/
-{
-	if (!m_Doc.IsOpen())
-		return;
-		
-	CString current_file = m_Doc.GetFilePath(),
-		mru_top_file = GetMRUEntry(0);
-	  // these should be the same
-	assert(current_file.CompareNoCase(mru_top_file) == 0);
-	  // let the document class handle the closure
-	m_Doc.OnCloseDoc();
-	UpdateControlUIState();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFileOpen()                                                            /*
-
-	Display the open file dialog to input the document file name and to
-	open the corresponding document if that file exists.
-*-----------------------------------------------------------------------------*/
-{
-	MyFileDialog fd(TRUE,
-	    m_Doc.GetExt(),	 // extension defined by app
-	    m_Doc.GetFilePath(), // current open file path
-	    OFN_HIDEREADONLY |
-	    OFN_SHOWHELP |
-	    OFN_EXPLORER |
-	    OFN_NONETWORKBUTTON |
-	    OFN_FILEMUSTEXIST |	 // only exising files allowed
-	    OFN_PATHMUSTEXIST |
-	    OFN_ENABLEHOOK    |
-	    OFN_ENABLESIZING,
-	    m_Doc.GetFilter());
-	fd.SetBoxTitle(_T("Open document file..."));
-	fd.SetDefExt(m_Doc.GetExt());
-	CString msg;
-	if (fd.DoModal(*this) == IDOK)
- 	{
- 		CString the_path = fd.GetPathName();
-		if (the_path.IsEmpty())
-		    return;
-
-		  // open the document based on this name
-		m_Doc.OnOpenDoc(the_path);
-		if (m_Doc.IsOpen())
-			SetWindowTitle(the_path);
-		UpdateControlUIState();
-		return;
-  	}
-	msg = _T("No name was entered, no action was taken.");
-	::MessageBox(NULL, msg, _T("Information"),
-	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-}
-
-/*============================================================================*/
-	void CMainFrame::
 OnFileOpenMRU(UINT nIndex)						/*
 
 	Open the MRU file at nIndex as the next document.
@@ -831,121 +740,8 @@ OnFileOpenMRU(UINT nIndex)						/*
 {
 	  // get the MRU entry
 	CString mru_entry = GetMRUEntry(nIndex);
-	m_Doc.OnOpenDoc(mru_entry);
+	m_Doc.OpenDoc(mru_entry);
 	UpdateControlUIState();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFilePageSetup()                                                            /*
-
-*-----------------------------------------------------------------------------*/
-{
-    	m_Doc.OnPageSetup();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFilePreview()                                                            /*
-
-*-----------------------------------------------------------------------------*/
-{
-    	m_Doc.OnPrintPreview();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFilePrint()                                                            /*
-
-*-----------------------------------------------------------------------------*/
-{
-    	m_View.OnPrintDocument();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFileSave()                                                            /*
-
-	Save the current document.
-*-----------------------------------------------------------------------------*/
-{
-	if (m_Doc.GetFilePath().IsEmpty())
-		OnFileSaveAs();
-	else
-	    	m_Doc.OnSaveDoc();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnFileSaveAs()                                                            /*
-
-	Save the current document into a file named in a file dialog and make
-	that file the current document.
-*-----------------------------------------------------------------------------*/
-{
-	if (!m_Doc.IsOpen())
-		return;
-
-	  // declare the file dialog box
-	MyFileDialog fd(FALSE,
-	    m_Doc.GetExt(),	 // extension defined by app
-	    m_Doc.GetFilePath(), // current open file path
-	    OFN_HIDEREADONLY |
-	    OFN_OVERWRITEPROMPT |
-	    OFN_SHOWHELP |
-	    OFN_EXPLORER |
-	    OFN_ENABLEHOOK |
-	    OFN_NONETWORKBUTTON,
-	    m_Doc.GetFilter());  // filter defined by app
-	fd.SetBoxTitle(_T("Save document file as"));
-	CString current_path = m_Doc.GetFilePath(),
-		msg;
-	  // query user for the save-as file path name
-	if (fd.DoModal(*this) == IDOK)
- 	{	  // At this point, a file path has been chosen that is
-	 	  // not empty and if it already exists has been approved by the
-		   // user to be overwritten. Fetch the path from the dialog.
-		CString new_path = fd.GetPathName();
-		  // check if the input path is the one already open
-		if (new_path.CompareNoCase(current_path) == 0)
-		{         // the named paths are the same
-			msg.Format(_T("Document file\n    '%s'\n is already ")
-			    _T("open. No action taken"), new_path.c_str());
-			::MessageBox(NULL, msg, _T("Information"),
-			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-			return;
-		}
-		else
-			  // save and close the current document
-			m_Doc.OnCloseDoc();
-
-		  // for the demo, announce the file chosen
-		msg.Format(_T("Document file saved as:\n    '%s'."),
-		    new_path.c_str());
-		::MessageBox(NULL, msg, _T("Information"),
-		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-		CopyFile(current_path, new_path, FALSE);
-		if (!m_Doc.OnOpenDoc(new_path))
-		{
-			msg.Format(_T("Saved document file\n    '%s'")
-			    _T(" could not be reopened."), new_path.c_str());
-			::MessageBox(NULL, msg, _T("Information"),
-			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
-			  // reopen the current file at entry
-			m_Doc.OnOpenDoc(current_path);
-			UpdateControlUIState();
-			return;
-		}
-		if (m_Doc.IsOpen())
-		{
-			AddMRUEntry(new_path);
-			UpdateControlUIState();
-		}
-		return;
-	}
-	msg = _T("No name was entered, no action was taken.");
-	::MessageBox(NULL, msg, _T("Information"),
-	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
@@ -958,7 +754,7 @@ OnFontChoice()     		                                 	/*
 	  // set font choice help messages to go to the the main frame,
 	HWND hOwnerWnd = GetApp().GetMainWnd();
           // open the dialog
-	m_FontChoice.SetBoxTitle(_T("Select font for edit box"));
+	m_FontChoice.SetBoxTitle(_T("Select font for rich edit box"));
 	CHOOSEFONT cf = m_FontChoice.GetParameters();
 	cf.Flags |= CF_SCREENFONTS;
 	m_FontChoice.SetParameters(cf);
@@ -985,9 +781,9 @@ OnInitialUpdate()                                                       /*
 {
 	// TODO: Place any additional startup code here.
 
-	  // Give keyboard focus to the view window:
-	m_View.SetFocus();
+	  // set the maximum MRU entries value
 	m_nMaxMRU = theAppGlobal.GetMaxMRU();
+	  // enable drag-and-drop file entry mode
 	DragAcceptFiles(TRUE);
 	  // if there is a MRU item at the top of the list, use it
 	  // as the name of the document to open
@@ -997,7 +793,7 @@ OnInitialUpdate()                                                       /*
 	if (!docfile.IsEmpty() &&  (::MessageBox(NULL, msg, _T("Question..."),
 	    MB_YESNO | MB_ICONQUESTION) == IDYES))
 	{
-		m_Doc.OnOpenDoc(docfile);
+		m_Doc.OpenDoc(docfile);
 	}
 	UpdateControlUIState();
 	TRACE("Frame created\n");
@@ -1064,18 +860,6 @@ OnRichEditColor()                            /*
 		 bg   = m_ColorChoice.GetTableColor(REdBg);
 	m_View.SetRichEditColors(txfg, txbg, bg);
 	return TRUE;
-}
-
-/*============================================================================*/
-	void CMainFrame::
-OnTerminate()								/*
-
-	Perform whatever functions are necessary, other than Serialize(), as
-	it is invoked in response to the WM_CLOSE message that is sent when
-	the frame is close.
-*-----------------------------------------------------------------------------*/
-{
-	m_Doc.OnCloseDoc();
 }
 
 /*============================================================================*/
@@ -1255,7 +1039,8 @@ SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)		/*
 	if (where == mainmenu || where == both)
 	{
 		if (bCheck > 1)
-			ok = GetToolBar().SetButtonState(nID, TBSTATE_INDETERMINATE);
+			ok = GetToolBar().SetButtonState(nID,
+			    TBSTATE_INDETERMINATE);
 		else
 		{
 			GetToolBar().CheckButton(nID, bCheck);
@@ -1501,7 +1286,7 @@ UpdateControlUIState()							/*
 	BOOL	ok_to_find        = doc_is_ready;
 	BOOL	ok_to_paste       = doc_is_ready && GetREView().CanPaste();
 	BOOL	ok_to_print       = doc_is_ready;
-	BOOL	ok_to_preview     = FALSE;   // doc_is_ready; TBD
+	BOOL	ok_to_preview     = FALSE;   // doc_is_ready; // not supported
 	BOOL	ok_to_page_setup  = TRUE;
 	BOOL	ok_to_redo        = GetREView().CanRedo();
 	BOOL	ok_to_replace     = doc_is_ready;
@@ -1681,7 +1466,8 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 		switch (LOWORD(wParam))
 		{
 		    case SC_CLOSE:
-			OnTerminate();
+			  // TODO: other cleanup here, as needed
+			m_Doc.OnCloseDoc();
 			break;  // let default process this further
 		}
 	    }

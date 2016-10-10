@@ -1,7 +1,7 @@
 [Project]
 FileName=CommonDialogs32.dev
 Name=CommonDialogs
-UnitCount=38
+UnitCount=40
 Type=0
 Ver=2
 ObjFiles=
@@ -11,7 +11,7 @@ PrivateResource=CommonDialogs_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=_@@_
-CppCompiler=-D _DEBUG_@@_-g_@@_-O0_@@_
+CppCompiler=-D _DEBUG_@@_-g_@@_-O0_@@_-D _UNICODE_@@_-D UNICODE_@@__@@_
 Linker=-lComctl32_@@_-lOle32_@@_-lUuid_@@_-lOleaut32_@@_-lWs2_32_@@_-lhtmlhelp_@@_
 IsCpp=1
 Icon=
@@ -161,17 +161,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit41]
-FileName=..\src\PrnUtils.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit42]
-FileName=..\src\PrnUtils.h
+FileName=..\src\PrintView.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -180,10 +170,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit43]
-FileName=..\src\PrinterSetupMgr.cpp
+[Unit42]
+FileName=..\src\PrintView.cpp
 CompileCpp=1
 Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit43]
+FileName=..\src\PrintRichView.h
+CompileCpp=1
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -311,7 +311,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit22]
-FileName=..\src\CColorChoice.h
+FileName=..\src\ColorChoice.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -361,7 +361,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit40]
-FileName=..\src\StdApp.h
+FileName=..\src\PrintInfo.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -391,9 +391,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit44]
-FileName=..\src\MyPageSetupDlg.h
+FileName=..\src\PrintRichView.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -451,13 +451,14 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit39]
-FileName=..\src\AppProlog.rc
-Folder=Resource
+FileName=..\src\PrintInfo.cpp
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit32]
 FileName=..\src\AppGlobalRC.h
@@ -470,7 +471,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit21]
-FileName=..\src\CColorChoice.cpp
+FileName=..\src\ColorChoice.cpp
 CompileCpp=1
 Folder=Source
 Compile=1

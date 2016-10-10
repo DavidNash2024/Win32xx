@@ -187,11 +187,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppGlobal.cpp"
+				RelativePath="..\src\AppHelp.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppHelp.cpp"
+				RelativePath="..\src\AppProlog.cpp"
 				>
 			</File>
 			<File
@@ -215,11 +215,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MyFontDlg.cpp"
+				RelativePath="..\src\MRUFrame.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\RichEditView.cpp"
+				RelativePath="..\src\MyFontDlg.cpp"
 				>
 			</File>
 			<File
@@ -227,14 +227,6 @@
 				>
 				<FileConfiguration
 					Name="Debug|Win32"
-					>
-					<Tool
-						Name="VCCLCompilerTool"
-						UsePrecompiledHeader="1"
-					/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32"
 					>
 					<Tool
 						Name="VCCLCompilerTool"
@@ -257,19 +249,19 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppGlobal.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppGlobalRC.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\AppHelp.h"
 				>
 			</File>
 			<File
 				RelativePath="..\src\AppHelpRC.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppProlog.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppPrologRC.h"
 				>
 			</File>
 			<File
@@ -325,10 +317,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\RichEditView.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\stdafx.h"
 				>
 			</File>
@@ -351,11 +339,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\src\AppGlobal.rc"
+				RelativePath="..\src\AppHelp.rc"
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppHelp.rc"
+				RelativePath="..\src\AppProlog.rc"
 				>
 			</File>
 			<File

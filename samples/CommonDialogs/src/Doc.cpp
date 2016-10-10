@@ -36,15 +36,25 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
-	Programming notes: Documents in this sample program are simple text
-	files of either ASCII or UNICODE character formats that conform with the
-	character mode option set during compilation.  An open document has a
-	file path name associated with it, which is maintained in the CString
-	m_open_doc_path. The CFile object m_Doc_file is used to create or open
-	this file and to read or write the contents of the rich edit view window
-	and then to immediately close the CFile object. The document itself
-	remains open until OnCloseDoc() is executed. At that point the path name
-	is emptied.
+	Programming notes: Documents in this sample program are assumed to be
+	simple text files of either single or double-byte characters from the
+	Windows standard code pages. The single-byte format is herein referred
+	to as ANSI encoding and the double-byte encoding as UNICODE encoding.
+
+	Character strings in this program may take either Unicode or ANSI forms,
+	depending, resepectively, on whether or not the -D _UNICODE option to
+	the compiler is specified. However, the files that are read into and
+	written from the rich edit view control may take either encoding, and
+	this distinction is detected automatically if the double-byte encoding
+	only uses one of the first two bytes in the file as its initial
+	character.
+	
+	An open document has a file path name associated with it, which is
+	maintained in the CString m_open_doc_path. The CFile object m_Doc_file
+	is used to create or open this file and to read or write the contents of
+	the rich edit view window and then to immediately close the CFile
+	object. The internal form of the document itself remains open until
+	OnCloseDoc() is executed. At that point the path name is emptied.
 	
  	Acknowledgement:
 		The author would like to thank and acknowledge the advice,
@@ -65,7 +75,7 @@
 #include "stdafx.h"	
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <io.h>
 #include "StdApp.h"
 
 /*============================================================================*/
@@ -80,6 +90,13 @@ CDoc() 									/*
 	m_Doc_file_ext.Empty();
 	m_Doc_file_filter.Empty();
 	m_open_doc_path.Empty();
+	m_Doc_file.SetFilePath(m_open_doc_path);
+	
+	m_UnicodeMode = FALSE;
+	m_UnicodeFile = -1; // no file open
+#ifdef _UNICODE
+	m_UnicodeMode = TRUE;
+#endif
 }
 
 /*============================================================================*/
@@ -171,6 +188,45 @@ IsDirty()                                                               /*
 }
 
 /*============================================================================*/
+	BOOL CDoc::
+MakeNewDoc(const CString& filename)                                       /*
+
+	Open a new document with the given filename; return TRUE if able to do
+	so, or FALSE otherwise.
+*-----------------------------------------------------------------------------*/
+{
+	  // if there is a document currently open, save and close it
+	if (IsOpen())
+		OnCloseDoc();
+
+	  // try to open
+	try
+	{
+		m_UnicodeFile = m_UnicodeMode;
+		m_Doc_file.Open(filename, CREATE_NEW);
+		GetREView().Clean();
+		m_open_doc_path = GetFilePath();
+		m_Doc_file.Close();
+		m_Doc_is_open = TRUE; //if no throw, the document opened
+		GetFrame().AddMRUEntry(m_open_doc_path);
+	}
+	catch (...) // if there was an error in opening the file
+	{
+		CString msg = (CString)"Document file did not open." + filename;
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		m_open_doc_path.Empty();
+		m_Doc_is_open = FALSE;
+		  // if the_path was in the MRU list, remove it
+		GetFrame().RemoveMRUEntry(filename);
+		return FALSE;
+	}
+	SetDirty(FALSE);
+	GetFrame().SetWindowTitle(m_open_doc_path);
+	return m_Doc_is_open;
+}
+
+/*============================================================================*/
 	void CDoc::
 NotFound(const MyFindReplaceDialog& FR)					/*
 
@@ -198,6 +254,10 @@ OnCloseDoc()								/*
 	member.
 *-----------------------------------------------------------------------------*/
 {
+	if (!IsOpen())
+		return;
+
+	CString current_file = GetFilePath();
 	  //Check for unsaved text
 	CString msg;
 	msg.Format(_T("Save changes to this document?\n    %s"),
@@ -213,6 +273,7 @@ OnCloseDoc()								/*
 	m_open_doc_path.Empty();
 	GetREView().Clean();
 	GetView().NoDocOpen();
+	m_UnicodeFile = -1;  // no file is open
 	GetFrame().SetWindowTitle(m_open_doc_path);
 }
 
@@ -379,93 +440,92 @@ OnFRTerminating(MyFindReplaceDialog* pFR)   				/*
 }
 
 /*============================================================================*/
-	BOOL CDoc::
-OnNewDoc(const CString& filename)                                       /*
+	void CDoc::
+OnNewDoc()                                                            /*
 
-	Open a new document with the given filename; return TRUE if able to do
-	so, or FALSE otherwise.
+	Prompt the user for a new document file name and, if valid, open a new
+	document.
 *-----------------------------------------------------------------------------*/
 {
-	  // if there is a document currently open, save and close it
-	if (IsOpen())
-		OnCloseDoc();
+	MyFileDialog fd(TRUE,
+	    GetExt(),  	 // extension defined by app
+	    GetFilePath(), // current open file path
+	    OFN_HIDEREADONLY |
+	    OFN_SHOWHELP |
+	    OFN_EXPLORER |
+	    OFN_NONETWORKBUTTON |
+	    OFN_ENABLESIZING,
+	    GetFilter());
+	fd.SetBoxTitle(_T("New document file..."));
+	fd.SetDefExt(GetExt());
+	CString msg;
+	  // do not leave without a valid unused file name, unless cancelled
+   	while (fd.DoModal(GetApp().GetMainWnd()) == IDOK)
+ 	{
+ 		CString new_path = fd.GetPathName();
+		  // new_path should not exist
+		if (::_taccess(new_path, 0x04) != 0)
+		{  	  // for the demo, announce the file chosen
+			msg.Format(_T("Open new document file\n    '%s'"),
+			    new_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 
-	  // try to open 
-	try
-	{
-		m_Doc_file.Open(filename, CREATE_NEW);
-		GetREView().Clean();
-		m_open_doc_path = GetFilePath();
-		m_Doc_file.Close();
-		m_Doc_is_open = TRUE; //if no throw, the document opened
-		GetFrame().AddMRUEntry(m_open_doc_path);
+			  // let the document class handle the new_path
+			MakeNewDoc(new_path);
+			return;
+		}
+		  //
+		msg.Format(_T("That document file\n    '%s'\n")
+		    _T("already exists."), new_path.c_str());
+		::MessageBox(NULL, msg, _T("Error"), MB_OK |
+		    MB_ICONERROR | MB_TASKMODAL);
 	}
-	catch (...) // if there was an error in opening the file
-	{
-		CString msg = (CString)"Document file did not open." + filename;
-		::MessageBox(NULL, msg, _T("Information"), MB_OK |
-		    MB_ICONINFORMATION | MB_TASKMODAL);
-		m_open_doc_path.Empty();
-		m_Doc_is_open = FALSE;
-		  // if the_path was in the MRU list, remove it
-		GetFrame().RemoveMRUEntry(filename);
-		return FALSE;
-	}
-	SetDirty(FALSE);
-	GetFrame().SetWindowTitle(m_open_doc_path);
-	return m_Doc_is_open;
+	msg = _T("No name was entered, no action was taken.");
+	::MessageBox(NULL, msg, _T("Information"),
+	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
-	BOOL CDoc::
-OnOpenDoc(const CString &file)						/*
+	void CDoc::
+OnOpenDoc()                                                            /*
 
-	Open the document from the given file. Previous state parameters that
-	were serialized in the prior execution will have already been loaded.
-	Return TRUE if file is open on return, FALSE if not.
+	Display the open file dialog to input the document file name and to
+	open the corresponding document if that file exists.
 *-----------------------------------------------------------------------------*/
 {
+	MyFileDialog fd
+	(   TRUE,               // open file dialog
+	    GetExt(), 		// extension defined by app
+	    GetFilePath(),	// current open file path
+	    OFN_HIDEREADONLY |  // flags
+	    OFN_SHOWHELP |
+	    OFN_EXPLORER |
+	    OFN_NONETWORKBUTTON |
+	    OFN_FILEMUSTEXIST |	 // only exising files allowed
+	    OFN_PATHMUSTEXIST |
+	    OFN_ENABLEHOOK    |
+	    OFN_ENABLESIZING,
+	    GetFilter()
+	);
+	fd.SetBoxTitle(_T("Open document file..."));
+	fd.SetDefExt(GetExt());
 	CString msg;
-	if (file.CompareNoCase(m_open_doc_path) == 0)
-	{
-		msg.Format(_T("Document file\n    '%s'\nis already open."),
-		    m_open_doc_path.c_str());
-		::MessageBox(NULL, msg, _T("Information"), MB_OK |
-		    MB_ICONINFORMATION | MB_TASKMODAL);
-		  // not deemed a failure, as the file is open, as specified
-		return TRUE;
-	}
-	  // if there is currently a document open, close it
-	if (IsOpen())
-		OnCloseDoc();
+	if (fd.DoModal(GetApp().GetMainWnd()) == IDOK)
+ 	{
+ 		CString the_path = fd.GetPathName();
+		if (the_path.IsEmpty())
+		    return;
 
-	  // try to open (it should, as we know it exists, but still ...)
-	try
-	{
-		m_Doc_file.Open(file, OPEN_EXISTING);
-		  // if there was no throw, the document opened
-		GetREView().ReadFile(m_Doc_file);
-		m_open_doc_path = GetFilePath();
-		m_Doc_file.Close();
-		m_Doc_is_open = TRUE;
-		GetFrame().AddMRUEntry(file);
-	}
-	catch (...) // if there was an error in opening the file
-	{
-		msg.Format(_T("Document file\n    '%s'\ndid not open."),
-		    file.c_str());
-		::MessageBox(NULL, msg, _T("Information"), MB_OK |
-		    MB_ICONINFORMATION | MB_TASKMODAL);
-		m_Doc_is_open = FALSE;
-		  // if the_path was in the MRU list, remove it
-		GetFrame().RemoveMRUEntry(file);
-		m_open_doc_path.Empty();
-		return FALSE;
-	}
-	  // regardless of whether it opens, it is not dirty
-	SetDirty(FALSE);
-	GetFrame().SetWindowTitle(m_open_doc_path);
-	return TRUE;
+		  // open the document based on this name
+		OpenDoc(the_path);
+		if (IsOpen())
+			GetFrame().SetWindowTitle(the_path);
+		return;
+  	}
+	msg = _T("No name was entered, no action was taken.");
+	::MessageBox(NULL, msg, _T("Information"),
+	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 }
 
 /*============================================================================*/
@@ -476,7 +536,7 @@ OnPageSetup()								/*
 *-----------------------------------------------------------------------------*/
 {
 	MyPageSetup PSD(PSD_SHOWHELP);
-	PSD.SetPSDTitle(_T("Page Parameter Setup"));		
+	PSD.SetBoxTitle(_T("Page Parameter Setup"));
 	PSD.DoModal(theApp.GetMainWnd());
 
 	// TODO: Add code here to set up the printer.  Note: control does not
@@ -492,16 +552,6 @@ OnPaste()								/*
 *-----------------------------------------------------------------------------*/
 {
 	GetREView().Paste();
-}
-
-/*============================================================================*/
-	void CDoc::
-OnPrintPreview()							/*
-
-	Invoke the print preview dialog
-*-----------------------------------------------------------------------------*/
-{
-	// TODO: fill in print preview
 }
 
 /*============================================================================*/
@@ -523,6 +573,12 @@ OnSaveDoc()								/*
 	is saved properly, or FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
+	if (GetFilePath().IsEmpty())
+	{
+		OnSaveDocAs();
+		return TRUE;
+	}
+	
 	  // if no document is open or, if open, not dirty
 	if (!IsOpen() || !IsDirty())
 		return TRUE;
@@ -539,14 +595,9 @@ OnSaveDoc()								/*
 
 	try
 	{
-		  // for the demo, announce the path being opened
-		CString msg = (CString)"Saving document file:\n    " +
-		    m_open_doc_path;
-		::MessageBox(NULL, msg, _T("Information"), MB_OK |
-		    MB_ICONINFORMATION | MB_TASKMODAL);
 		m_Doc_file.Open(m_open_doc_path, CREATE_ALWAYS);
 		  // if there was no throw, the document opened
-		GetREView().WriteFile(m_Doc_file);
+		GetREView().StreamOutFile(m_Doc_file, m_UnicodeFile);
 		m_Doc_file.Close();
 		m_Doc_is_open = TRUE;
 		GetFrame().AddMRUEntry(m_open_doc_path);
@@ -570,12 +621,147 @@ OnSaveDoc()								/*
 
 /*============================================================================*/
 	void CDoc::
+OnSaveDocAs()                                                            /*
+
+	Save the current document into a file named in a file dialog and make
+	that file the current document.
+*-----------------------------------------------------------------------------*/
+{
+	if (!IsOpen())
+		return;
+
+	  // declare the file dialog box
+	MyFileDialog fd(FALSE,
+	    GetExt(),	 // extension defined by app
+	    GetFilePath(), // current open file path
+	    OFN_HIDEREADONLY |
+	    OFN_OVERWRITEPROMPT |
+	    OFN_SHOWHELP |
+	    OFN_EXPLORER |
+	    OFN_ENABLEHOOK |
+	    OFN_NONETWORKBUTTON,
+	    GetFilter());  // filter defined by app
+	fd.SetBoxTitle(_T("Save document file as"));
+	CString current_path = GetFilePath(),
+		msg;
+	  // query user for the save-as file path name
+	if (fd.DoModal(GetApp().GetMainWnd()) == IDOK)
+ 	{	  // At this point, a file path has been chosen that is
+	 	  // not empty and if it already exists has been approved by the
+		   // user to be overwritten. Fetch the path from the dialog.
+		CString new_path = fd.GetPathName();
+		  // check if the input path is the one already open
+		if (new_path.CompareNoCase(current_path) == 0)
+		{         // the named paths are the same
+			msg.Format(_T("Document file\n    '%s'\n is already ")
+			    _T("open. No action taken"), new_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			return;
+		}
+		else
+			  // save and close the current document
+			OnCloseDoc();
+
+		  // for the demo, announce the file chosen
+		msg.Format(_T("Document file saved as:\n    '%s'."),
+		    new_path.c_str());
+		::MessageBox(NULL, msg, _T("Information"),
+		    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+		CopyFile(current_path, new_path, FALSE);
+		if (!OpenDoc(new_path))
+		{
+			msg.Format(_T("Saved document file\n    '%s'")
+			    _T(" could not be reopened."), new_path.c_str());
+			::MessageBox(NULL, msg, _T("Information"),
+			    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+			  // reopen the current file at entry
+			OpenDoc(current_path);
+			return;
+		}
+		if (IsOpen())
+		{
+			GetFrame().AddMRUEntry(new_path);
+		}
+		return;
+	}
+	msg = _T("No name was entered, no action was taken.");
+	::MessageBox(NULL, msg, _T("Information"),
+	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
+}
+
+/*============================================================================*/
+	void CDoc::
 OnUndo()								/*
 
 	Undo the last editing action on the document.
 *-----------------------------------------------------------------------------*/
 {
 	GetREView().Undo();
+}
+
+/*============================================================================*/
+	BOOL CDoc::
+OpenDoc(const CString &file)						/*
+
+	Open the document from the given file. Previous state parameters that
+	were serialized in the prior execution will have already been loaded.
+	Return TRUE if file is open on return, FALSE if not. A file of length
+	greater than 2 bytes whose second byte is zero is deemed to be Unicode.
+*-----------------------------------------------------------------------------*/
+{
+	CString msg;
+	if (file.CompareNoCase(m_open_doc_path) == 0)
+	{
+		msg.Format(_T("Document file\n    '%s'\nis already open."),
+		    m_open_doc_path.c_str());
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		  // not deemed a failure, as the file is open, as specified
+		return TRUE;
+	}
+	  // if there is currently a document open, close it
+	if (IsOpen())
+		OnCloseDoc();
+
+	  // try to open (it should, as we know it exists, but still ...)
+	try
+	{
+		m_Doc_file.Open(file, OPEN_EXISTING);
+		  // if there was no throw, the document opened: check for
+		  // ANSI or UNICODE mode
+		DWORD  length =(DWORD)m_Doc_file.GetLength(),
+			nbytes = 0;
+		char *buffer = new char[3];
+		if (!::ReadFile(m_Doc_file.GetHandle(), buffer, 2, &nbytes, NULL))
+			throw _T("StreamInFile Failed");
+
+		m_UnicodeFile = (length > 2 && (buffer[0] == 0 ||
+		    buffer[1] == 0) ? TRUE : FALSE);
+		delete buffer;
+		m_Doc_file.SeekToBegin();
+		GetREView().StreamInFile(m_Doc_file, m_UnicodeFile);
+		m_open_doc_path = GetFilePath();
+		m_Doc_file.Close();
+		m_Doc_is_open = TRUE;
+		GetFrame().AddMRUEntry(file);
+	}
+	catch (...) // if there was an error in opening the file
+	{
+		msg.Format(_T("Document file\n    '%s'\ndid not open."),
+		    file.c_str());
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		m_Doc_is_open = FALSE;
+		  // if the_path was in the MRU list, remove it
+		GetFrame().RemoveMRUEntry(file);
+		m_open_doc_path.Empty();
+		return FALSE;
+	}
+	  // regardless of whether it opens, it is not dirty
+	SetDirty(FALSE);
+	GetFrame().SetWindowTitle(m_open_doc_path);
+	return TRUE;
 }
 
 /*============================================================================*/

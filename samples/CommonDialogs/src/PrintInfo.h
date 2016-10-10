@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]            (CColorChoice.h) *
+/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (PrintInfo.h) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,11 +7,9 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of a generic CColorChoice popup
-	dialog class for applications using the Win32++ Windows interface
-	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
-	therein. Information on the use of this class appears in the
-	CColorChoice.cpp file.
+	Contents Description: Declaration of the CPrintInfo class for
+	applications using the Win32++ Windows interface classes, Copyright
+	(c) 2005-2016 David Nash, under permissions granted therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -55,63 +53,54 @@
 
 *******************************************************************************/
 
-#ifndef CCOLORCHOICE_H
-#define CCOLORCHOICE_H
+#ifndef CPRINTINFO_H
+#define CPRINTINFO_H
 
-#include "stdafx.h"
-
-#include "ColorDefs.h"
-#include "ListBoxDlg.h"
-#include "ListBoxDlgRC.h"
-
-/*******************************************************************************
-
-	Local struct and enum definitions                               */
-
-  // id-usage-color triples forming the m_ColorTable array
-struct ctl_color {UINT nID; CString  usage;  COLORREF color;};
-
-/******************************************************************************/
+/*============================================================================*/
 	class
-CColorChoice   : public CColorDialog					/*
+CPrintInfo                                                              /*
 
 *-----------------------------------------------------------------------------*/
 {
 	public:
-		CColorChoice();
-		virtual ~CColorChoice(){}
-		
-		virtual BOOL	AddColorChoice(UINT,  const CString&, COLORREF);
-			void    ClearColorTable(){m_ColorTable.clear();}
-			UINT    DeleteTableEntry(UINT index);
-		virtual INT_PTR DoModal(HWND hWndOwner = 0);
-			CBrush	GetBrush(UINT nID);
-		virtual CListBoxDlg& GetListBoxDlg() {return m_LBDlg;}
-			UINT    GetSelectedColorID() {return m_nSelection;}
-			COLORREF GetTableColor(UINT nID);
-			UINT    GetTableIndex(UINT nID);
-			UINT	GetTableSize() { return m_ColorTable.size();}
-			CString GetTableUsage(UINT nID); 
-			void	SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
-		virtual void    SetTableColor(UINT nID, COLORREF rgb);
-		virtual void    SetTableUsage(UINT nID, const CString& s);
+			CPrintInfo();
+			~CPrintInfo();
+			
+		UINT 	GetFromPage() const { return m_nFromPage;}
+		UINT 	GetMaxPage() const  { return m_nMaxPage; }
+		UINT 	GetMinPage() const  { return m_nMinPage; }
+		UINT 	GetNCopies() const  { return m_nCopies; }
+		UINT 	GetToPage() const   { return m_nToPage; }
+		void    InitInfo(CPrintDialog*, UINT, UINT, UINT, UINT, UINT);
+		void 	SetFromPage(UINT nFromPage) { m_nFromPage = nFromPage; }
+		void 	SetMaxPage(UINT nMaxPage)   { m_nMaxPage = nMaxPage; }
+		void 	SetMinPage(UINT nMinPage)   { m_nMinPage = nMinPage; }
+		void 	SetNCopies(UINT nCopies)    { m_nCopies = nCopies; }
+		void 	SetToPage(UINT nToPage)     { m_nToPage = nToPage; }
 
-	protected:
+	//	UINT 	GetOffsetPage() const; // (not supported)
 
-		virtual void 	OnHelpButton();	
-		virtual BOOL 	OnInitDialog();	
-		virtual void    SetWindowTitle() const
-				    {SetWindowText(m_sBoxTitle);}	
-		virtual	void	Serialize(CArchive &ar);
+		  // public data
+		CPrintDialog* m_pPD;	// pointer to print dialog
+		BOOL 	m_bDocObject,	// TRUE if a DocObject (not supported)
+			m_bDirect,	// TRUE if bypassing Print Dialog
+		 	m_bPreview,	// TRUE if in preview mode
+			m_bContinuePrinting;// set FALSE to end printing
+		UINT    m_nCopies,      // number of copies (not supported)
+			m_nFromPage,    // first printed page, 1 based
+			m_nMaxPage,     // maximum page limit
+			m_nMinPage,     // minimum page limit
+			m_nToPage,      // last printed page
+			m_nCurPage,	// current page
+		 	m_nNumPreviewPages; // (not supported)
+		LPVOID	m_lpUserData;	// pointer to user created struct       
+		CRect	m_rectDraw;	// rect of current usable page area     
+		CString m_strPageDesc;	// format string for page number display
+		UINT    m_nMargin;	// page margin, in twips
 
-	private:
-		void InitCustomColors();		
-
-		  // private data
-		CListBoxDlg     m_LBDlg;	// the list box dialog
-		CString 	m_sBoxTitle;	// the color dialog box title
-		UINT            m_nSelection;   // the selected color index
-		std::vector<ctl_color> m_ColorTable;   // usage-color pairs
+		  // these only valid if m_bDocObject: currently not supported
+		DWORD	m_dwFlags;	// flags for DocObject print operations
+		UINT	m_nOffsetPage;	// first page offset in combined Doc job
 };
 /*----------------------------------------------------------------------------*/
-#endif  // CCOLORCHOICE_H
+#endif //CPRINTINFO_H

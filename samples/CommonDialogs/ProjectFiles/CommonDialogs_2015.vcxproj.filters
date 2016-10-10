@@ -13,9 +13,6 @@
     <ClCompile Include="..\src\Doc.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CColorChoice.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\CustomButton.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -37,6 +34,8 @@
     <ClCompile Include="..\src\RichEditView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ColorChoice.cpp" />
+    <ClCompile Include="..\src\PrintInfo.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Mainfrm.h">
@@ -180,9 +179,6 @@
     <ClInclude Include="..\..\..\include\wxx_commondlg.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CColorChoice.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ColorDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -231,6 +227,8 @@
     <ClInclude Include="..\src\StdApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\ColorChoice.h" />
+    <ClInclude Include="..\src\PrintInfo.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">

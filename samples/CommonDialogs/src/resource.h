@@ -123,8 +123,6 @@
 #define IDM_FONT_CHOICE                 120			
 #define IDM_COLOR_CHOICE                121
 
-#define IDM_BOGUS_MRU                   125
-
   // help context and content toolbar and menu messages
 #define IDM_HELP_CONTENT                130			
 #define IDM_HELP_CONTEXT                131

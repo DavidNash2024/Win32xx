@@ -209,7 +209,9 @@ NoDocOpen()								/*
 	Announce that no document is currently open
 *-----------------------------------------------------------------------------*/
 {
-	m_RichEdit.SetWindowText(_T("\n\n\t\tNo document is open."));
+	m_RichEdit.SetWindowText(_T("\n\n\t\tNo document is now open.\n\n\t")
+	    _T("Load or create one using a File menu command,\n\t")
+	    _T("or drag and drop a text file name in this area."));
 }
 
 /*============================================================================*/
@@ -248,14 +250,14 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
 /*============================================================================*/
 	BOOL CView::
-OnDropFiles(HDROP hDropInfo)                                            /*
+OnDropFiles(HDROP hDroinfo)                                            /*
 
 	Open the text document dragged and dropped in the rich edit window.
 *-----------------------------------------------------------------------------*/
 {
 	TCHAR szFileName[_MAX_PATH];
-	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
-	GetDoc().OnOpenDoc(szFileName);
+	::DragQueryFile((HDROP)hDroinfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+	GetDoc().OpenDoc(szFileName);
 	return TRUE;
 }
 
@@ -303,8 +305,8 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 
 	    case EN_DROPFILES: // a file has been dropped in the rich edit box
 		ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-		HDROP hDropInfo = (HDROP) ENDrop->hDrop;
-		OnDropFiles(hDropInfo);
+		HDROP hDroinfo = (HDROP) ENDrop->hDrop;
+		OnDropFiles(hDroinfo);
 		return TRUE;
 	}
 
@@ -335,122 +337,21 @@ OnOK()                                                                  /*
 	void CView::
 OnPrintDocument()							/*
 
-	Invoke the MyPrinter dialog to get printing parameters and then print
-	the document.
+	Invoke a MyPrinter dialog to get printing parameters and then print
+	the contents of the rich view control.
 *-----------------------------------------------------------------------------*/
 {
-	// Implementation note: this code is based on Microsoft's KB article
-	// Q129860, "Using Built-In Printing Features from a Rich Edit Control"
+	m_RichEdit.DoPrintRichView(GetDoc().GetFilePath());
+}
 
-//-----OnPreparePrinting
-	  // bring up a dialog to choose the printer and printing parameters
-	MyPrinter PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-	PRINTDLG pd = PrintDlg.GetParameters();
-	pd.nCopies = 1;
-	pd.nFromPage = 0xFFFF;
-	pd.nToPage = 0xFFFF;
-	pd.nMinPage = 1;
-	pd.nMaxPage = 0xFFFF;
-	PrintDlg.SetParameters(pd);
+/*============================================================================*/
+	void CView::
+OnPrintPreview()							/*
 
-	try
-	{
-		if (PrintDlg.DoModal(theApp.GetMainWnd()) == IDOK)
-		{
-			CDC dcPrinter = PrintDlg.GetPrinterDC();
-			HDC hPrinterDC = dcPrinter.GetHDC();
-//-----OnBeginPrinting
-
-			int	nHorizRes = dcPrinter.GetDeviceCaps(HORZRES);
-			int	nVertRes  = dcPrinter.GetDeviceCaps(VERTRES);
-			int nLogPixelsX   = dcPrinter.GetDeviceCaps(LOGPIXELSX);
-			int nLogPixelsY   = dcPrinter.GetDeviceCaps(LOGPIXELSY);
-			LONG lTextLength;   // Length of document.
-			LONG lTextPrinted;  // Amount of document printed.
-
-			// Ensure the printer DC is in MM_TEXT mode.
-			dcPrinter.SetMapMode(MM_TEXT);
-
-			// Rendering to the same DC we are measuring.
-			FORMATRANGE fr;
-			ZeroMemory(&fr, sizeof(fr));
-			fr.hdc = hPrinterDC;
-			fr.hdcTarget = hPrinterDC;
-
-			// Set up the page.
-			int margin = 200; // 1440 TWIPS = 1 inch.
-			fr.rcPage.left = fr.rcPage.top = margin;
-			fr.rcPage.right = (nHorizRes / nLogPixelsX) * 1440 - margin;
-			fr.rcPage.bottom = (nVertRes / nLogPixelsY) * 1440 - margin;
-
-			// Set up margins all around.
-			fr.rc.left = fr.rcPage.left;//+ 1440;
-			fr.rc.top = fr.rcPage.top;//+ 1440;
-			fr.rc.right = fr.rcPage.right;//- 1440;
-			fr.rc.bottom = fr.rcPage.bottom;//- 1440;
-
-			// Default the range of text to print as the entire document.
-			fr.chrg.cpMin = 0;
-			fr.chrg.cpMax = -1;
-			m_RichEdit.FormatRange(fr, TRUE);
-
-			// Set up the print job (standard printing stuff here).
-			DOCINFO di;
-			ZeroMemory(&di, sizeof(di));
-			di.cbSize = sizeof(DOCINFO);
-			di.lpszDocName = GetDoc().GetFilePath();
-
-			// Do not print to file.
-			di.lpszOutput = NULL;
-//------
-			// Start the document.
-			dcPrinter.StartDoc(&di);
-//------OnPrepareDC
-			// Find out real size of document in characters.
-			lTextLength = m_RichEdit.GetTextLengthEx(GTL_NUMCHARS);
-
-			do
-			{
-//------
-				// Start the page.
-				dcPrinter.StartPage();
-//------OnPrint
-				// Print as much text as can fit on a page. The return value is
-				// the index of the first character on the next page. Using TRUE
-				// for the wParam parameter causes the text to be printed.
-				lTextPrinted = m_RichEdit.FormatRange(fr, TRUE);
-				m_RichEdit.DisplayBand(fr.rc);
-//------
-				// Print last page.
-				dcPrinter.EndPage();
-//------loop back preparation
-				// If there is more text to print, adjust the range of characters
-				// to start printing at the first character of the next page.
-				if (lTextPrinted < lTextLength)
-				{
-					fr.chrg.cpMin = lTextPrinted;
-					fr.chrg.cpMax = -1;
-				}
-			} while (lTextPrinted < lTextLength);
-
-			// Tell the control to release cached information.
-			m_RichEdit.FormatRange(fr, FALSE);
-//------
-			// End the print job
-			dcPrinter.EndDoc();
-//-----OnEndPrinting
-		}
-		else
-			return;
-	}
-
-	catch (const CWinException& /* e */)
-	{
-		// No default printer
-		::MessageBox(0, _T("Unable to display print dialog"),
-		    _T("Print Failed"), MB_OK);
-		return;
-	}
+	Invoke the print preview dialog
+*-----------------------------------------------------------------------------*/
+{
+	// TODO: not supported
 }
 
 /*============================================================================*/

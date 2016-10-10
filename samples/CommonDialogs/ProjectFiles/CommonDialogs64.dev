@@ -1,14 +1,14 @@
 [Project]
 FileName=CommonDialogs64.dev
 Name=CommonDialogs
-UnitCount=36
+UnitCount=40
 Type=0
 Ver=2
 ObjFiles=
-Includes=..\..\..\include
+Includes=C:\Tausware\win32++\include
 Libs=..\src\help
 PrivateResource=CommonDialogs_private.rc
-ResourceIncludes=..\..\..\include
+ResourceIncludes=C:\Tausware\win32++\include
 MakeIncludes=
 Compiler=_@@_
 CppCompiler=-D _DEBUG_@@_-g_@@_-O0_@@_-DUNICODE_@@_-D_UNICODE_@@_
@@ -151,7 +151,7 @@ BuildCmd=
 CompileCpp=1
 
 [Unit24]
-FileName=..\src\CColorChoice.h
+FileName=..\src\ListBoxDlg.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -161,19 +161,19 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit28]
-FileName=..\src\ColorDefs.h
+FileName=..\src\AppHelp.rc
 CompileCpp=1
-Folder=Header
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
 [Unit41]
-FileName=..\src\PrnUtils.cpp
+FileName=..\src\PrintRichView.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -181,17 +181,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit42]
-FileName=..\src\PrnUtils.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit43]
-FileName=..\src\PrinterSetupMgr.cpp
+FileName=..\src\PrintView.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -200,8 +190,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit33]
-FileName=..\src\StdApp.h
+[Unit43]
+FileName=..\src\PrintView.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -210,8 +200,18 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit33]
+FileName=..\src\AppGlobal.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit34]
-FileName=..\src\AppGlobalRC.h
+FileName=..\src\AppGlobal.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -221,7 +221,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit23]
-FileName=..\src\CColorChoice.cpp
+FileName=..\src\ListBoxDlg.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -331,16 +331,6 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit25]
-FileName=..\src\ListBoxDlg.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit27]
 FileName=..\src\ListBoxDlg.rc
 CompileCpp=1
 Folder=Resource
@@ -350,12 +340,22 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit27]
+FileName=..\src\ListBoxDlgRC.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit30]
-FileName=..\src\AppHelp.rc
+FileName=..\src\AppGlobal.rc
 CompileCpp=1
 Folder=Resource
 Compile=1
-Link=0
+Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
@@ -371,9 +371,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit40]
-FileName=..\src\StdApp.h
+FileName=..\src\RichEditView.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -381,9 +381,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit38]
-FileName=..\src\AppGlobal.h
+FileName=..\src\PrintInfo.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -391,7 +391,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit26]
-FileName=..\src\ListBoxDlg.h
+FileName=..\src\ColorDefs.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -401,9 +401,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit44]
-FileName=..\src\MyPageSetupDlg.h
+FileName=..\src\RichEditView.cpp
 CompileCpp=1
-Folder=Header
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -431,9 +431,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit35]
-FileName=..\src\AppGlobal.cpp
+FileName=..\src\RichEditView.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -441,8 +441,8 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit36]
-FileName=..\src\AppGlobal.h
-Folder=Header
+FileName=..\src\ColorChoice.cpp
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -451,9 +451,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit37]
-FileName=..\src\AppGlobal.cpp
+FileName=..\src\ColorChoice.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -461,7 +461,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit29]
-FileName=..\src\ListBoxDlgRC.h
+FileName=..\src\AppHelpRC.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -471,17 +471,18 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit39]
-FileName=..\src\AppProlog.rc
-Folder=Resource
+FileName=..\src\PrintInfo.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
 [Unit32]
-FileName=..\src\AppGlobal.rc
-Folder=Resource
+FileName=..\src\AppGlobalRC.h
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -500,7 +501,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit31]
-FileName=..\src\AppHelpRC.h
+FileName=..\src\StdApp.h
 CompileCpp=1
 Folder=Header
 Compile=1

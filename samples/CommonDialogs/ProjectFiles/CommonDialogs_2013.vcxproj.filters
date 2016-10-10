@@ -136,6 +136,12 @@
     <ClInclude Include="..\src\AppHelpRC.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\AppPrologRC.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AppProlog.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
     <ClInclude Include="..\src\CColorChoice.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -155,6 +161,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Doc.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\MRUFrame.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\MyFontDlg.h">
@@ -182,15 +191,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\MyFileDlg.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AppGlobal.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AppGlobalRC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\RichEditView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -226,10 +226,10 @@
     <ResourceCompile Include="..\src\AppHelp.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\src\ListBoxDlg.rc">
+    <ResourceCompile Include="..\src\AppProlog.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\src\AppGlobal.rc">
+    <ResourceCompile Include="..\src\ListBoxDlg.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
@@ -238,6 +238,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\AppHelp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AppProlog.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\CColorChoice.cpp">
@@ -255,6 +258,9 @@
     <ClCompile Include="..\src\Mainfrm.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\MRUFrame.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\MyFontDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -262,12 +268,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\View.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\RichEditView.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\AppGlobal.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
