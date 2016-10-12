@@ -185,15 +185,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\AppGlobal.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\AppHelp.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\CColorChoice.cpp"
+				RelativePath="..\src\ColorChoice.cpp"
 				>
 			</File>
 			<File
@@ -213,11 +213,15 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MRUFrame.cpp"
+				RelativePath="..\src\MyFontDlg.cpp"
 				>
 			</File>
 			<File
-				RelativePath="..\src\MyFontDlg.cpp"
+				RelativePath="..\src\PrintInfo.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RichEditView.cpp"
 				>
 			</File>
 			<File
@@ -247,6 +251,14 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\AppGlobal.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\AppGlobalRC.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\AppHelp.h"
 				>
 			</File>
@@ -255,15 +267,11 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\AppPrologRC.h"
 				>
 			</File>
 			<File
-				RelativePath="..\src\CColorChoice.h"
+				RelativePath="..\src\ColorChoice.h"
 				>
 			</File>
 			<File
@@ -291,10 +299,6 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\MRUFrame.h"
-				>
-			</File>
-			<File
 				RelativePath="..\src\MyFileDlg.h"
 				>
 			</File>
@@ -311,7 +315,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\src\PrintInfo.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\resource.h"
+				>
+			</File>
+			<File
+				RelativePath="..\src\RichEditView.h"
 				>
 			</File>
 			<File
@@ -337,11 +349,11 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 			<File
-				RelativePath="..\src\AppHelp.rc"
+				RelativePath="..\src\AppGlobal.rc"
 				>
 			</File>
 			<File
-				RelativePath="..\src\AppProlog.rc"
+				RelativePath="..\src\AppHelp.rc"
 				>
 			</File>
 			<File

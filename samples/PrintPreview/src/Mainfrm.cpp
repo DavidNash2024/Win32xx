@@ -113,8 +113,12 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 	// SetUseThemes(FALSE);				// Don't use themes
 	// SetUseToolBar(FALSE);			// Don't use a ToolBar
 
+
+	// Create the PrintPreview dialog. It is initially hidden.	
+	m_PrintPreview.Create(*this);
+
 	// call the base class function
-	return CFrame::OnCreate(cs);
+	return  CFrame::OnCreate(cs);
 }
 
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
@@ -175,20 +179,19 @@ BOOL CMainFrame::OnFilePreview()
 		return FALSE;
 	}
 
-	SetRedraw(FALSE);
-
-	// Hide the menu and toolbar
-	ShowMenu(FALSE);
-	ShowToolBar(FALSE);
-
-	// Create the dialog
-	if (!m_PrintPreview.IsWindow())
-		m_PrintPreview.Create(*this);
-
 	m_PrintPreview.DoPrintPreview(GetPageRect(), GetPrintRect());
 	SetView(m_PrintPreview);
 
+	// Supress Frame drawing
+	SetRedraw(FALSE);
+	
+	// Hide the menu and toolbar
+	ShowMenu(FALSE);
+	ShowToolBar(FALSE);
+	
+	// Re-enable Frame drawing
 	SetRedraw(TRUE);
+
 	RedrawWindow();
 	return TRUE;
 }
@@ -607,15 +610,19 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case UWM_CHANGEVIEW:
-		SetRedraw(FALSE);
-		m_PrintPreview.Destroy();
+		SetView(m_RichView);
+		m_RichView.SetFocus();
 
+		// Supress Frame drawing
+		SetRedraw(FALSE);
+
+		// Show the menu and toolbar
 		ShowMenu(TRUE);
 		ShowToolBar(TRUE);
 
-		SetView(m_RichView);
+		// Re-enable frame drawing
 		SetRedraw(TRUE);
-		m_RichView.SetFocus();
+
 		RedrawWindow();
 		break;
 

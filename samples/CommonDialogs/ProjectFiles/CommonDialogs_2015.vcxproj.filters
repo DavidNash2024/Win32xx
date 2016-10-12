@@ -34,8 +34,12 @@
     <ClCompile Include="..\src\RichEditView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ColorChoice.cpp" />
-    <ClCompile Include="..\src\PrintInfo.cpp" />
+    <ClCompile Include="..\src\ColorChoice.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PrintInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\Mainfrm.h">
@@ -227,8 +231,12 @@
     <ClInclude Include="..\src\StdApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ColorChoice.h" />
-    <ClInclude Include="..\src\PrintInfo.h" />
+    <ClInclude Include="..\src\ColorChoice.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\PrintInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">

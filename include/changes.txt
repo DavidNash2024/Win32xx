@@ -488,11 +488,6 @@ Updated theme colors for Windows 8, Windows 8.1 and Windows 10
 Version 8.0.1
 ==============
 
-Bug Fix
-* Updated LoadCommonControls to resolve issues with modal dialogs
-  running on older operating systems.  
-
-
 New Features and Enhancements
 ----------------------------- 
 * Win32++ is now system DPI (Dots Per Inch) aware.
@@ -503,21 +498,6 @@ New Features and Enhancements
   Users may wish to detect the current DPI and their GUI layout accordingly
   to support different DPIs. Refer to:
   https://msdn.microsoft.com/en-us/library/windows/desktop/dn469266%28v=vs.85%29.aspx
-
-* CFrame now defaults to a white theme for windows 8 and above, to better match
-  the color scheme of Windows 8, Windows 8.1 and Windows 10.  
-
-
-Changes in detail
------------------
-Added CWinThread::GetMainWnd
-Added CWinThread::SetMainWnd
-
-Moved Dev-C++ project files to the "ProjectFiles" folder.
-Moved the network samples. They are now located in:
- - NetClient
- - NetServer
- - NetSimple
 
 
 Version 8.0
@@ -577,37 +557,6 @@ New Features and Enhancements
     - Failure to write to a file.
     - Failure to open the file in CFile's constructor.
 	
-Updated Samples
- - Added INIFrame sample. 
-    This sample demonstrates the use of INI files.
- - Added TimeDemo sample.
-    This sample demonstrates the use of CTime and CTimeSpan and CArchive.
- - Updated the Scribble sample. 
-    This sample now uses a Doc/View architecture, and CArchive to store data.
- - Updated Themes sample.
-    Added a white theme for use on Windows 8.1 and Windows 10.
- - Updated the DirectX sample.
- 	This sample now has a generic view window that could be used anywhere we
-	would use a view window. The DirectX window runs in a separate thread.
-	
-Updated the help.
-The Using Win32++ section now contains:
- - Getting Started
- - Simple Windows
- - Dialogs
- - Frames
- - MDI Frames
- - Graphics Device Interface (GDI)
- - Bitmaps
- - ImageLists
- - Menus
- - Docking
- - The Registry
- - Threads
- - Text Conversion Functions
- - CString
- - Differences with MFC 
-
 
 Changes in detail
 -----------------
@@ -631,9 +580,9 @@ Added _WIN32XX_VER macro
 Added INIFrame sample
 Added TimeDemo sample
 
-Modified CFile::CFile   		throws an exception on fail to open file
-Modified CFile::Read    		throws an exception on fail to read file
-Modified CFile::Write           throws an exception on fail to write file
+Modified CFile::CFile   	now throws an exception on fail to open file
+Modified CFile::Read    	now	throws an exception on fail to read file
+Modified CFile::Write       now throws an exception on fail to write file
 
 Modified ::GetApp                          	now returns a reference
 Modified CDockContainer::GetView            now returns a reference
@@ -666,14 +615,6 @@ non-pointer arguments in Win32++ function calls.
 New Features and Enhancements
 -----------------------------
 * The FromHandle method of creating temporary CWnds has been obsoleted. 
-The FromHandle approach had the following disadvantages:
- - It required the newly created CWnds to be removed some indeterminate time
-   after being created. This was done in OnIdle.
- - The running of OnIdle can be delayed indefinitely while windows runs
-   any internal message loop, causing temporaries to accumulate. Internal
-   message loops are run while menus are active, for example.   
- - It encouraged an inappropriate reliance on raw pointers to CWnd objects.
- - There was confusion about when the temporary CWnd was destroyed.
 The FromHandle approach has been replaced. CWnd member functions which 
 previously returned a CWnd pointer(CWnd*) now return CWnd. 
 Coding examples: (The GetParent function now returns a CWnd)
@@ -688,17 +629,6 @@ Coding examples: (The GetParent function now returns a CWnd)
   - CPalette:: FromHandle
   - CPen::FromHandle
   - CRgn::FromHandle
-  
-  Note: All versions of FromHandle are available if the USE_OBSOLETE_CODE
-  is defined.
-  
- * Message handler functions have been standardised to the form:
-  LRESULT OnSomeMessage(UINT uMSg, WPARAM wParam, LPARAM lParam).
- 
-  Note:
-  - OnCommand,  OnNotify and OnNotifyReflect remain unchanged.
-  - The older CFrame::OnMessageXX handlers are available if the 
-    USE_OBSOLETE_CODE is defined.
  
 * Many functions which previously used a CWnd* argument now use a HWND
 argument. This has the following advantages:
@@ -732,370 +662,9 @@ used instead of the handle.
  - These classes use reference counting, so they can be safely copied. This
    allows them to be returned by value from functions.
    
-* The various CFrame protected member variables are now private. Setters
-   and getters are used to access them. Frame creation options that can be
-   set in CMainFrame::OnCreate are now CFrame member functions rather than
-   protected CFrame member variables. e.g. we now use SetUseThemes(FALSE)
-   in place of m_UseThemes = FALSE .
-   
-* Updated Samples
- - Added round window sample.
- - Add DoubleBuffer sample.
- - Added choose font and word wrap options to notepad sample.
- - Updated black theme in themes sample.
- 
-* Updated the documentation
-  - Within Using Win32++
-    - Updated Graphics Device Interface (GDI)
-	- Added Bitmaps
-	- Added ImageLists
-	- Added Menus
-   
-
-Step by step guide to code migration
-------------------------------------
-1) Define the USE_OBSOLETE_CODE For this version, a USE_OBSOLETE_CODE macro is 
-   provided to assist with code migration. It adds the older definitions of the
-   following:
-  - CWnd::Create
-  - CWnd::OnDraw  
-  - CWnd::OnEraseBkgnd
- 
-  - CBitmap::FromHandle
-  - CBrush::FromHandle
-  - CDC::FromHandle  
-  - CFont::FromHandle
-  - CImageList::FromHandle
-  - CMenu::FromHandle  
-  - CPalette::FromHandle
-  - CPen::FromHandle
-  - CRgn::FromHandle
-  - CWnd::FromHandle  
-  
-  - The messages handlers in CDocker and CFrame of the form:
-    - CDocker::OnMessageXX(WPARAM wParam, LPARAM lParam)
-    - CFrame::OnMessageXX(WPARAM wParam, LPARAM lParam)
-	- CMDIFrame::OnMessageXX(WPARAM wParam, LPARAM lParam)
-	- CMDIChild::OnMessageXX(WPARAM wParam, LPARAM lParam)
-  
-  If used, this macro must be defined before including the Win32++ header files.
-  It can be placed in stdafx.h if precompiled headers are used. Even with this
-  macro you will need to use non-pointer versions of function arguments.
-
-2) Replace pointers to Win32++ objects to their non-pointer equivalents.
-   This could be done by dereferencing the pointer (add a * before the pointer),
-   or by removing the address-of operator & .   
-
-3) Use "." instead of "->" when using the return of Win32++ functions.
-
-4) At this stage your program should compile and run. The next step is to
-   remove dependence on the USE_OBSOLETE_CODE macro.
-   
-   a) Modify the definitions of any Create, OnDraw and OnEraseBkgnd functions.
-      If the definitions of these functions are incorrect, they won't get called
-	  automatically.
-   
-   b) Remove the use of FromHandle in your code. There might be better ways
-      but we can always use Attach and Detach in place of FromHandle.
-	  
-   c) Add the UINT parameter to the message handlers. For example:
-       OnSize(WPARAM wParam, LPARAM lParam)
-	   should now be:
-	   OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
-            
-   d) Remove the definition of USE_OBSOLETE_CODE.
-
-Other tips:
-*) The following Win32++ classes are reference counted and can be safely copied.
-   CDC, CMenu, CImageList, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, CGDIObject.
-   This allows them to be safely passed by value in function calls. More
-   importantly, it also allows these to be safely returned from functions. 
-   Reference counting permits this:
-    CDC dc = GetDCEx(hrgnClip, flags);            // GetDCEx returns CDC
-	CMenu PopupMenu = TopMenu.GetSubMenu(0);      // GetSubMenu returns CMenu
-	CImageList iml = GetToolBar().GetImageList(); // GetImageList return CImageList
-    CFont myfont = GetFont();                     // GetFont returns CFont
-   
-*) GetCWndPtr can be used to retrieve a CWnd pointer from the global map.
-
-*) There is no need to add use GetHwnd(), GetHandle() or GetHDC() when using
-   objects in functioning calls expecting a handle. The Win32++ classes use
-   operator overloading to do these conversions automatically.
-   
-  
-Changes in detail
------------------
-The following virtual functions have been modified
-CWnd::Create
-CWnd::CreateEx
-CWnd::OnDraw
-CWnd::OnEraseBkgnd
-
-Other changes:
-Function which returned pointers to Win32++ objects now return Win32++ objects
-Functions arguments which were pointers to Win32++ objects are now handles.  
-
-Added CClientDCEx
-
-Added CFrame::GetShowStatusBar
-Added CFrame::GetShowCmd
-Added CFrame::GetShowToolBar
-Added CFrame::GetUseIndicatorStatus
-Added CFrame::GetUseMenuStatus
-Added CFrame::GetUseReBar
-Added CFrame::GetUseThemes
-Added CFrame::GetUseToolBar
-Added CFrame::SetShowCmd
-Added CFrame::SetUseIndicatorStatus
-Added CFrame::SetUseMenuStatus
-Added CFrame::SetUseReBar
-Added CFrame::SetUseThemes
-Added CFrame::SetUseToolBar
-
-Modified CBitmap::CreateCompatibleBitmap
-Modified CBitmap::CreateDIBitmap
-Modified CBitmap::CreateDIBSection
-Modified CBitmap::GetDIBits
-Modified CBitmap::SetDIBits
-Modified CBitmapInfoPtr::CBitmapInfoPtr
-Modified CBrush::CreatePatternBrush
-Modified CClientDC::CClientDC
-Modified CComboBoxEx::GetImageList
-Modified CComboBoxEx::SetImageList
-Modified CDC::BitBlt
-Modified CDC::CreateCompatibleDC
-Modified CDC::CreateCompatibleBitmap
-Modified CDC::CreateDIBitmap
-Modified CDC::CreateDIBSection
-Modified CDC::CreatePatternBrush
-Modified CDC::DrawIconEx
-Modified CDC::ExtSelectClipRgn
-Modified CDC::FillRect
-Modified CDC::FillRgn
-Modified CDC::FrameRect
-Modified CDC::FrameRgn
-Modified CDC::GetCurrentBitmap
-Modified CDC::GetCurrentBrush
-Modified CDC::GetCurrentFont
-Modified CDC::GetCurrentPalette
-Modified CDC::GetCurrentPen
-Modified CDC::GrayString
-Modified CDC::MaskBlt
-Modified CDC::GetDIBits
-Modified CDC::PaintRgn
-Modified CDC::SelectClipRgn
-Modified CDC::SelectObject (all versions)
-Modified CDC::SetDIBits
-Modified CDC::StretchBlt
-Modified CDC::TransparentBlt
-Modified CDateTime::GetMonthCalFont
-Modified CDialog::Create
-Modified CDialog::DoModal
-Modified CDialog::DoModeless
-Modified CDialog::GotoDlgCtrl
-Modified CDocker::GetDockBar		
-Modified CDocker::GetDockClient	
-Modified CDocker::GetDockHint
-Modified CDocker::IsChildOfDocker
-Modified CDocker::IsRelated
-Modified CDocker::OnDockActivated
-Modified CDocker::OnDockDestroyed
-Modified CDocker::OnExitSizeMove
-Modified CDocker::OnNCLButtonDblClk
-Modified CDocker::OnSysColorChange
-Modified CDocker::OnSysCommand
-Modified CDocker::OnTimer
-Modified CDocker::OnWindowPosChanging
-Modified CDocker::OnWindowPosChanged
-Modified CFile::OpenFileDialog
-Modified CFile::SaveFileDialog
-Modified CFont::CreatePointFont
-Modified CFont::CreatePointFontIndirect
-Modified CFrame::AddToolBarBand
-Modified CFrame::DrawReBarBkgnd
-Modified CFrame::DrawStatusBarBkgnd
-Modified CFrame::ExcludeChildRect
-Modified CFrame::GetFrameMenu
-Modified CFrame::GetMenuItemPos
-Modified CFrame::GetMenuBar
-Modified CFrame::GetMenuBarTheme
-Modified CFrame::GetReBar
-Modified CFrame::GetReBarTheme
-Modified CFrame::GetStatusBar
-Modified CFrame::GetStatusBarTheme
-Modified CFrame::GetToolBar
-Modified CFrame::GetToolBarTheme
-Modified CFrame::OnActivate
-Modified CFrame::OnDrawItem
-Modified CFrame::OnExitMenuLoop
-Modified CFrame::OnHelp
-Modified CFrame::OnInitMenuPopup
-Modified CFrame::OnMeasureItem
-Modified CFrame::OnMenuChar
-Modified CFrame::OnMenuSelect
-Modified CFrame::OnSetFocus
-Modified CFrame::OnSize
-Modified CFrame::OnSysColorChange
-Modified CFrame::OnSysCommand
-Modified CFrame::OnViewStatusBar
-Modified CFrame::OnViewToolBar
-Modified CFrame::SetMenuTheme
-Modified CFrame::SetReBarTheme
-Modified CFrame::SetStatusBarTheme
-Modified CFrame::SetTBImageList
-Modified CFrame::SetTBImageListDis
-Modified CFrame::SetTBImageListHot
-Modified CFrame::SetToolBarTheme
-Modified CHeader::CreateDragImage
-Modified CHeader::GetImageList
-Modified CHeader::GetImageList
-Modified CImageList::Add
-Modified CImageList::DragEnter
-Modified CImageList::DragLeave
-Modified CImageList::Draw
-Modified CImageList::DrawEx
-Modified CImageList::GetIconSize
-Modified CListView::GetImageList
-Modified CListView::SetImageList
-Modified CMDIChild::OnMDIActivate
-Modified CMDIChild::OnWindowPosChanged
-Modified CMDIFrame::AppendMDIMenu
-Modified CMDIFrame::CDockMDIClient::Create
-Modified CMDIFrame::GetActiveMenu
-Modified CMDIFrame::GetDockClient
-Modified CMDIFrame::GetMDIClient
-Modified CMDIFrame::OnInitMenuPopup
-Modified CMDIFrame::OnWindowPosChanged
-Modified CMemDC::CMemDC
-Modified CMenu::AppendMenu
-Modified CMenu::GetSubMenu
-Modified CMenu::InsertMenu
-Modified CMenu::ModifyMenu
-Modified CMenu::SetMenuItemBitmaps
-Modified CMenu::TrackPopupMenu
-Modified CMenu::TrackPopupMenuEx
-Modified CMenuBar::DrawAllMDIButtons
-Modified CMetaFileDC::CreateEnhanced
-Modified CPaintDC::CPaintDC
-Modified CPalette::CreateHalftonePalette
-Modified CPropertySheet::CPropertySheet
-Modified CReBar::GetToolTips
-Modified CReBar::OnLButtonDown
-Modified CReBar::OnLButtonUp
-Modified CReBar::OnMouseMove
-Modified CReBar::OnTBWinPosChanging
-Modified CReBar::OnToolBarResize
-Modified CReBar::SetBandBitmap
-Modified CReBar::SetToolTips
-Modified CRibbon::CreateRibbon
-Modified CResizer::AddChild
-Modified CRgn::CombineRgn
-Modified CRgn::CopyRgn
-Modified CRgn::EqualRgn
-Modified CSlider::GetBuddy
-Modified CSlider::SetBuddy
-Modified CSlider::GetToolTips
-Modified CSlider::SetToolTips
-Modified CSpinButton::GetBuddy
-Modified CSpinButton::SetBuddy
-Modified CTab::DrawCloseButton
-Modified CTab::DrawListButton
-Modified CTab::DrawTabs
-Modified CTab::DrawTabBorders
-Modified CTab::GetListMenu
-Modified CTab::GetODImageList
-Modified CTab::GetTabFont
-Modified CTab::GetToolTips
-Modified CTab::OnEraseBkgnd
-Modified CTab::OnLButtonDblClk
-Modified CTab::OnLButtonDown
-Modified CTab::OnLButtonUp
-Modified CTab::OnMouseLeave
-Modified CTab::OnMouseMove
-Modified CTab::OnKillFocus
-Modified CTab::OnPaint
-Modified CTab::OnNCHitTest
-Modified CTab::OnSetFocus
-Modified CTab::OnWindowPosChanged
-Modified CTab::OnWindowPosChanging
-Modified CTab::SetFont
-Modified CTab::SetImageList
-Modified CTab::SetToolTips
-Modified CTabbedMDI::GetListMenu
-Modified CTabbedMDI::OnWindowPosChanged
-Modified CToolBar::GetDisabledImageList
-Modified CToolBar::GetHotImageList
-Modified CToolBar::GetImageList
-Modified CToolBar::SetImageList
-Modified CToolBar::SetDisableImageList
-Modified CToolBar::SetHotImageList
-Modified CToolTip::AddTool
-Modified CToolTip::DelTool
-Modified CToolTip::GetText
-Modified CToolTip::GetToolInfo
-Modified CToolTip::SetToolRect
-Modified CToolTip::HitTest
-Modified CToolTip::UpdateTipText
-Modified CTreeView::GetImageList
-Modified CTreeView::GetToolTips
-Modified CTreeView::SetImageList
-Modified CTreeView::SetToolTips
-Modified CWindowDC::CWindowDC
-Modified CWnd::AttachDlgItem
-Modified CWnd::BeginPaint
-Modified CWnd::ChildFromPoint
-Modified CWnd::DrawCaption
-Modified CWnd::GetActiveWindow
-Modified CWnd::GetAncestor
-Modified CWnd::GetDC
-Modified CWnd::GetDCEx
-Modified CWnd::GetFocus
-Modified CWnd::DeferWindowPos
-Modified CWnd::GetDecktopWindow
-Modified CWnd::GetDlgItem
-Modified CWnd::GetUpdateRgn
-Modified CWnd::GetWindowDC
-Modified CWnd::HiliteMenuItem
-Modified CWnd::InvalidateRgn
-Modified CWnd::GetLastActivePopup
-Modified CWnd::GetNextDlgGroupItem
-Modified CWnd::GetNextDlgTabItem
-Modified CWnd::GetParent
-Modified CWnd::GetTopWindow
-Modified CWnd::GetWindow
-Modified CWnd::IsChild
-Modified CWnd::MapWindowPoints
-Modified CWnd::Print
-Modified CWnd::RedrawWindow
-Modified CWnd::ReleaseDC
-Modified CWnd::ScrollWindowEx
-Modified CWnd::SetActiveWindow
-Modified CWnd::SetCapture
-Modified CWnd::SetFont
-Modified CWnd::SetFocus
-Modified CWnd::SetMenu
-Modified CWnd::SetParent
-Modified CWnd::SetWindowPos
-Modified CWnd::SetWindowRgn
-Modified CWnd::ValidateRgn
-Modified CWnd::WindowFromDC
-Modified CWnd::WindowFromPoint
-
-Removed static const CWnd wndTop(HWND_TOP);
-Removed static const CWnd wndTopMost(HWND_TOPMOST);
-Removed static const CWnd wndBottom(HWND_BOTTOM);
-Removed static const CWnd wndNoTopMost(HWND_NOTOPMOST);
-Removed CResizer::AddChild   (one of two)
-
-Renamed CWnd::FromHandlePermanent to CWnd::GetCWndPtr
-
 
 Version 7.8
 ===========
-
-Bug Fixes
-* Rebar bands holding Toolbar buttons with text are now sized correctly.
-* Tab controls now support tabbing to child dialogs.
 
 New Features and enhancements
 -----------------------------
@@ -1107,12 +676,6 @@ New Features and enhancements
 
 Version 7.7
 ===========
-
-Bug Fixes:
-* Deletion of the HIMAGELIST managed by CImageList.
-* Container in container docking.
-* Double notifications from tab controls.
-* CDocker::Close can now be used to close any child docker.
 
 New Features and Enhancements
 -----------------------------
@@ -1143,7 +706,7 @@ New Features and Enhancements
    minimized by specifying the WS_MAXIMIZE or WS_MINIMIZE styles in PreCreate,
    even though this is not supported by the CreateWindowEx Windows API function.
    
-* Frames now load the show state (maximized or normal) from the registry.   
+* Frames now load the save state (maximized or normal) from the registry.   
 	
 * Added DockMDI sample.	
   This sample demonstrates adding Dockers to MDI Frames.
@@ -1152,55 +715,6 @@ New Features and Enhancements
    resizing for dock children. The DS_FIXED_RESIZE style has been replaced with
    DS_NO_FIXED_RESIZE.	
 	
-Changes in detail
------------------
-Added CFrame::m_ShowCmd      (loaded from the registry: SW_MAXIMIZE or SW_SHOW)
-Added CMDIFrame::GetActiveMenu
-Added CTab::OnSetFocus
-Modified CTabbedMDI::AddMIDChild
-Removed CDocker::OnDockSetFocus
-Removed CDocker::OnFrameGotFocus
-Removed CDocker::OnFrameLostFocus
-Removed CDocker::OnSetFocus
-Removed CFrame::GetView (now inherits from CDocker::GetView)
-Removed CFrame::SetView (now inherits from CDocker::SetView)
-Removed CMDIFrame::UpdateCheckMarks
-Renamed CDocker::LoadRegistrySettings to CDocker::LoadDockRegistrySettings
-Renamed CDocker::SaveRegistrySettings to CDocker::SaveDockRegistrySettings
-Renamed CFrame::m_bUseIndicatorStatus to CFrame::m_UseIndicatorStatus
-Renamed CFrame::m_bUseMenuStatus      to CFrame::m_UseMenuStatus
-Renamed CFrame::m_bUseReBar           to CFrame::m_UseReBar
-Renamed CFrame::m_bUseThemes          to CFrame::m_UseThemes
-Renamed CFrame::m_bUseToolBar         to CFrame::m_UseToolBar
-Renamed CFrame::m_bShowStatusBar      to CFrame::m_ShowStatusBar
-Renamed CFrame::m_bShowToolBar        to CFrame::m_ShowToolBar
-
-Removed user defined messages:
-UWN_DOCKSETFOCUS
-UWN_FRAMELOSTFOCUS
-UWN_FRAMEGOTFOCUS
-
-Changed dock styles
-Added   DS_NO_FIXED_RESIZE
-Removed DS_FIXED_RESIZE
-
-
-Version 7.6.1
-=============
-
-Bug Fixes:
-- In some circumstances, CTab would assert when used in a CDialog.
-- ReBarDemo now resizes properly.
-- CenterWindow now works to center the PropertySheets in the PropertySheet sample.
-
-New Features and Enhancements
-* OnInitialUpdate delayed until after window is created.
-   OnInitialUpdate is now called after the window creation has fully completed. 
-   Code which needs to run before this should be put in OnCreate.
-* CFrame now displays menu icons when themes are disabled.   
-* CRect has been updated to emulate the CRect provided with ATL and MFC
-* DynamicResize option add to the Dock sample    
-
 
 Version 7.6
 ===========
@@ -1260,14 +774,6 @@ New Features and Enhancements
 	 - Disable Dock closing
 	 - Disable docking on the left or right
 	 
-
-Version 7.5.1
-=============
-Bug Fixes:
-* Fixed memory leak in CDIObject
-* Hand cursor is now displayed over hyperlink in DialogDemo sample
-* Removed flicker for CMenuBar when run on Windows 98
-
 
 Version 7.5
 ===========
@@ -1338,10 +844,6 @@ New Features and Enhancements
    - CreateWindowEx now uses HMENU or UINT instead of CMenu*. This allows 
       the menu parameter to specify a menu for a parent window, or a window ID
       for a child window.   
-* Updated CSocket:
-   - now supports WinCE
-   - send and receive functions now use char and support binary data.
-   - port arguments are now UINT, not LPCTSTR
 * Updated CFrame:
    - Frames now use the IDW_READY resource for the "Ready" string.
    - CFrame no longer requires the number of images in the ToolBar bitmap to 
@@ -1382,10 +884,6 @@ New Features and Enhancements
 	- Frames now honour the current window theme's menu and status fonts.
 	- the frame's appearance changes dynamically to reflect changes to the window theme.
 	- minor adjustment to the ReBar theme colours for the "Modern" theme.
-* Extended CWebBrowser
-	The CWebBrower class has been extended to wrap the member functions of
-	iWebBrowser2. The Browser sample has been updated and now supports
-	Copy/Paste.
 * Added the following controls
    - CDateTime
    - CHeader
@@ -1409,9 +907,8 @@ New Features and Enhancements
 * Added CFile
    This class provides a convenient wrapper for functions dealing with files.
 * Added Idle processing.
-   The Idle processing is used by the Win32++ library for some internal 
-   processing. It is also available for use by users, and is used in much the
-   same way as OnIdle processing in MFC.
+   The Idle processing is also available for use by users, and is used in much
+   the same way as OnIdle processing in MFC.
 
 Version 7.1
 ===========
@@ -1514,8 +1011,6 @@ New Features and Enhancements
 * The projects are now configured to take advantage of precompiled headers.
 * A set of tools is now provided in the tools folder. They include a set of 
    batch files for compiling the examples and batch files to "clean" them.
-* The CDC class has been extended. Several functions have been added, and
-  CDC::GetDC has been renamed to CDC::GetHDC.
 * Support has been added for Right to Left languages which include Hebrew and 
    Arabic. The CFrame and CDocker classes now honour the WS_EX_LAYOUTRTL 
    extended style used by these languages. To take advantage of this feature,
@@ -1529,16 +1024,6 @@ Version 6.6
 
 New Features and Enhancements
 -----------------------------
-* The number of arguments have changed for WndProc and WndProcDefault.
-  - The HWND parameter has been dropped in both of these functions. It's
-    presence was redundant and possibly confusing. Users will need to modify
-    their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
-    member variable can be used in place of hwnd within the WndProc function.
-* The number of arguments have changed for DialogProc and DialogProcDefault.
-  - The HWND parameter has been dropped in both of these functions. It's
-    presence was redundant and possibly confusing. Users will need to modify
-    their WndProc and WndProc functions accordingly. If needed, the m_hWnd 
-    member variable can be used in place of hwnd in the WndProc function.  
 * Enhancements to docking, containers and tabs.
   - By default the dockers are immediately resized while the splitter bar is 
      being dragged. To defer resizing until the splitter bar is released, use
@@ -1553,34 +1038,14 @@ New Features and Enhancements
      structure in functions like GetDIBits and SetDIBits.
   - Added GrayScaleBitmap function to gdi.h. It converts a colored bitmap to
      to gray-scale.     
-* Automated menu updating.
+* Enhancements to frames
   - When a menu is about to be displayed, OnUpdateMenu is called to provide
      an opportunity to modify the check state of the menu items.
-* Enhancements to frames
   - The style of the rebarband is now specified in AddToolbarBand. This 
      facilities saving and restoring ToolBar settings from the registry (as 
      demonstrated in the Themes example.)  
   - The Frame's ShowToolbar and ShowStatusbar states are now saved in the
-     registry.
-* Modification to CRect class
-  - The various function now use references instead of naked pointers.    
-* Updated the Themes sample.
-  - Added check boxes for the various rebar theme option
-  - Added Hide/Show option for the additional toolbars
-  - Save/Load the theme options in the registry
-  - Save/Load the rebar band positions and styles in the registry
-* Replaced the Form sample with the DocViewForm sample.
-  - This sample now demonstrates a form using a Doc/View architecture, much
-     like the traditional Doc/View of MFC. 
-  - Added OnUpdateMenu handling. 
-* Updated the FastGDI sample.
-  - Added gray-scale transformation
-  - Added file save.
-  - Added Scroll bars.
-* Updated the picture sample.
-  - Added Scroll bars.  
-* Updated the DockContainer and DockTabbedMDI examples    
-  - These examples now demonstrate how to theme a container's ToolBar.   
+     registry.  
    
 
 Version 6.5
@@ -1602,39 +1067,8 @@ New Features and Enhancements
    name suggests, it provides tabs for a MDI window. 
 * Added TabbedMDI example within docking.
    Refer to the docking TabbedMDI example for a demonstration of how CTabbedMDI
-   class is used.   
-* Enhancements to docking.
-   - Dockers can now be docked into, and undocked from all other dockers, 
-     including those that are undocked. 
-   - Containers can also be docked into and undocked all from containers,
-      including those that are undocked.
-   - Containers can display their tabs at the top or bottom of the window.
-   - Containers can also display a tab list button.
-   - Docker and container objects are destroyed when their window is closed.
-   - CContainer::SetupToolbar can be used to specify the ToolBar's resource IDs.
-   - Dockers and containers can save their layout in and load their layout from
-      the registry.     
-* Improvements to toolbars
-   - Resource IDs should be specified in SetupToolbar, rather than CMainFrame's
-      constructor.
-   - Other configurations for the ToolBar such as disabled buttons and alternate
-      bitmaps should be specified in SetupToolbar, rather than in OnCreate.
-   - Configuration of additional toolbars if any should also be done in
-      SetupToolbar.  Refer to the Themes example for a demonstration of this.
-   - CToolbar now holds the vector of Resource IDs, which can be retrieved
-      with the GetToolbarData function. There is no need to specify a vector
-      when adding additional toolbars.
-   - There is now no need to specify the number of ToolBar buttons in the
-      AddBitmap, ReplaceBitmap, SetBitmap and SetImages functions.
-   - The AddToolbarButton can now add a ToolBar button which is initially
-      disabled.
-   - There is no need to call SetButtons when adding additional ToolBars.
-   - Tooltips for all ToolBars in the ReBar are now displayed.      
-* MIN and MAX macros have been defined and can be used in place of min and max.
-   This avoids incompatibilities between the way different compliers support
-   these macros. It also avoids clashes between the macro definitions of 
-   min and max, and the STL definitions of min and max.
-     
+   class is used.
+   
    
 Version 6.4
 ===========
@@ -1713,8 +1147,7 @@ New Features and Enhancements
    attaching a Tree-View control from a dialog.
 * Added CPoint CRect and CSize classes
    The CPoint, CRect and CSize classes can be used anywhere a POINT, RECT
-   or CSize struct can be used respectively.
-* Extended the CRebar, CToolbar and CStatusbar classes.
+   or SIZE struct is used.
 * Added support for x64 applications.
    Win32++ can now be used to build 64 bit applications. The manifest file has 
    been modified to support both 32bit and 64bit applications. The new manifest
@@ -1750,24 +1183,11 @@ New Features and Enhancements
 * PreRegisterClass can now be used to set the WNDCLASS parameters before the
    window class is registered. This provides a convenient way to set a window's
    background brush or cursor. 
-* Improvements to tracing. It now uses OutputDebugString to send the trace
-   output the debug/output pane of the various IDE's. This is now also 
-   compatible with debuggers, should you choose to use them.
-* Automatically detects the XP theme used (Default, Silver or Olive), and
-   adjusts the theme colors accordingly.   
-* Enhanced the tutorial. It now also demonstrates file operations and printing.
-
   
 Version 5.6
 ===========
-* Property Sheets are now supported. The files PropertySheet.cpp and 
-   PropertySheet.h have been added to Win32++. These files define the 
-   CPropertySheet and CPropertyPage classes. The Property sheet generic 
-   demonstrates the following:
-  - Modal property sheets.
-  - Modeless property sheets.
-  - Wizards.    
-
+* Property sheets are now supported. Property sheets can be modal, modeless
+  or Wizards.
 
 Version 5.5
 ===========
@@ -1792,18 +1212,14 @@ Version 5.4
   - Gradient background for hot buttons (any two colors)
   - Gradient background for pressed buttons (any two colors)
   - Colored outline for hot and pressed buttons (any color)
-* Built in support for multiple toolbars (in rebars) with AddToolbarBand
-* Added Forms example
-* Added Themes example
-
+* CRebar provides built in support for multiple toolbars with AddToolbarBand
 
 Version 5.3
 ===========
-* Owner drawn drop down menu items with icons.  CMenubar::SetIcons is
-   used to determine which menu items display an icon. By default, the
+* Owner drawn drop down menu items with icons.  By default, the
    framework uses the ToolBar's bitmap and resource IDs for displaying 
    icons. Override CFrame::SetButtons to change this behavior.
-* Automatic subclassing for all windows controls such as List-View, 
+* CreateEx automatically subclasses windows controls such as List-View, 
    ToolBar, Richedit etc.
 
    
@@ -1811,21 +1227,16 @@ Version 5.2
 ===========
 * Added a separate HINSTANCE for resources. This provides for multilingual
    support, when resources are loaded via a DLL.
-* Added the Internet Browser example. It demonstrates how to host an ActiveX
-   control in a Win32++ window.
-* Added the Performance example. This program now also conducts a simple 
-   performance test to measure the efficiency of the message handling. 
 
    
 Version 5.1
 ===========
-* Existing windows can be subclassed and converted to CWnd objects using Attach
-* Dialog items can be sublcassed and converted to CWnd objects, using 
+* Attach can be used to subclass existing windows and associate them with a CWnd.
+* Dialog controls can be sublcassed and converted to CWnd objects, using 
    AttachDlgItem.
 * Improvements to CToolbar. The ToolBar uses image lists which support using 
   separate bitmaps for normal, hot and disabled buttons. Text can be added
-  to ToolBar buttons, and the style can be set.
-* Improvements to CStatusbar.  
+  to ToolBar buttons, and the style can be set.  
 * Notifications from common controls are reflected back to the CWnd object that
   generated them. 
 * Messages from old style common controls are reflected back to the CWnd object
