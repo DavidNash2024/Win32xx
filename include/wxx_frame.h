@@ -2225,6 +2225,7 @@ namespace Win32xx
 		// Perform default processing first
 		CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
 
+
 		if (LOWORD(wParam) == WA_INACTIVE)
 		{
 			// Save the hwnd of the window which currently has focus
@@ -2240,8 +2241,9 @@ namespace Win32xx
 		// Update DockClient captions
 		PostMessage(UWM_DOCKACTIVATE);
 
+		
 		// Also update DockClient captions if the view is a docker
-		if ( GetView().SendMessage(UWM_GETCDOCKER) )
+		if (GetView().IsWindow() && GetView().SendMessage(UWM_GETCDOCKER))
 			GetView().PostMessage(UWM_DOCKACTIVATE);
 
 		return 0L;

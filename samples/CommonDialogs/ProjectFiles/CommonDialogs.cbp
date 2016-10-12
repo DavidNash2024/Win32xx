@@ -59,12 +59,12 @@
 				<Option type="0" />
 				<Option compiler="msvctk" />
 				<Compiler>
+					<Add option="/MTd" />
 					<Add option="/GA" />
 					<Add option="/GX" />
 					<Add option="/GR" />
 					<Add option="/W3" />
 					<Add option="/Zi" />
-					<Add option="/MTd" />
 					<Add option="/Zi /D_DEBUG" />
 					<Add option="/DWIN32" />
 					<Add option="/D_DEBUG" />
@@ -86,6 +86,7 @@
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
 					<Add library="htmlhelp" />
+					<Add library="shell32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -120,6 +121,7 @@
 					<Add library="Comdlg32" />
 					<Add library="Oleaut32" />
 					<Add library="htmlhelp" />
+					<Add library="shell32" />
 					<Add directory="C:/Program Files/Microsoft Platform SDK/Lib" />
 				</Linker>
 			</Target>
@@ -184,20 +186,20 @@
 		</VirtualTargets>
 		<Unit filename="../src/App.cpp" />
 		<Unit filename="../src/App.h" />
+		<Unit filename="../src/AppGlobal.cpp" />
+		<Unit filename="../src/AppGlobal.h" />
+		<Unit filename="../src/AppGlobal.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
+		<Unit filename="../src/AppGlobalRC.h" />
 		<Unit filename="../src/AppHelp.cpp" />
 		<Unit filename="../src/AppHelp.h" />
 		<Unit filename="../src/AppHelp.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/AppHelpRC.h" />
-		<Unit filename="../src/AppProlog.cpp" />
-		<Unit filename="../src/AppProlog.h" />
-		<Unit filename="../src/AppProlog.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
-		<Unit filename="../src/AppPrologRC.h" />
-		<Unit filename="../src/CColorChoice.cpp" />
-		<Unit filename="../src/CColorChoice.h" />
+		<Unit filename="../src/ColorChoice.cpp" />
+		<Unit filename="../src/ColorChoice.h" />
 		<Unit filename="../src/ColorDefs.h" />
 		<Unit filename="../src/CustomButton.cpp" />
 		<Unit filename="../src/CustomButton.h" />
@@ -209,8 +211,6 @@
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/ListBoxDlgRC.h" />
-		<Unit filename="../src/MRUFrame.cpp" />
-		<Unit filename="../src/MRUFrame.h" />
 		<Unit filename="../src/Mainfrm.cpp" />
 		<Unit filename="../src/Mainfrm.h" />
 		<Unit filename="../src/MyFileDlg.h" />
@@ -218,9 +218,13 @@
 		<Unit filename="../src/MyFontDlg.cpp" />
 		<Unit filename="../src/MyFontDlg.h" />
 		<Unit filename="../src/MyPrinter.h" />
+		<Unit filename="../src/PrintInfo.cpp" />
+		<Unit filename="../src/PrintInfo.h" />
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
+		<Unit filename="../src/RichEditView.cpp" />
+		<Unit filename="../src/RichEditView.h" />
 		<Unit filename="../src/StdAfx.cpp" />
 		<Unit filename="../src/StdApp.h" />
 		<Unit filename="../src/View.cpp" />

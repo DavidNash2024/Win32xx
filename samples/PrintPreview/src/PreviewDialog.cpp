@@ -78,33 +78,41 @@ void CPreviewPane::Render(CDC& dc)
 		double ratio = double(bm.bmHeight) / double(bm.bmWidth);
 		int PreviewWidth;
 		int PreviewHeight;
+		
+		// These borders center the preview with the PreviewPane.
+		int xBorder = Border;
+		int yBorder = Border;
 
 		if ((rcClient.Width() - 2*Border)*ratio < (rcClient.Height() - 2*Border))
 		{
 			PreviewWidth = rcClient.Width() - (2*Border);
 			PreviewHeight = (int)(PreviewWidth * ratio);
+
+			yBorder = (rcClient.Height() - PreviewHeight) / 2;
 		}
 		else
 		{
 			PreviewHeight = rcClient.Height() - (2*Border);
 			PreviewWidth = (int)(PreviewHeight / ratio);
+
+			xBorder = (rcClient.Width() - PreviewWidth) / 2;
 		}
 
 		// Copy from the memory dc to the PreviewPane's DC with stretching.
-		dc.StretchBlt(Border, Border, PreviewWidth, PreviewHeight, dcMem, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+		dc.StretchBlt(xBorder, yBorder, PreviewWidth, PreviewHeight, dcMem, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 	
 		// Draw a grey border around the preview
 		// OnEraseBkgnd suppresses background drawing to avoid flicker on Windows XP and earlier 
-		CRect rcFill(0, 0, Border, PreviewHeight + Border);
+		CRect rcFill(0, 0, xBorder, PreviewHeight + yBorder);
 		dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 
-		rcFill.SetRect(0, 0, PreviewWidth + Border, Border);
+		rcFill.SetRect(0, 0, PreviewWidth + xBorder, yBorder);
 		dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 
-		rcFill.SetRect(PreviewWidth + Border, 0, rcClient.Width(), rcClient.Height());
+		rcFill.SetRect(PreviewWidth + xBorder, 0, rcClient.Width(), rcClient.Height());
 		dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 
-		rcFill.SetRect(0, PreviewHeight+Border, rcClient.Width(), rcClient.Height());
+		rcFill.SetRect(0, PreviewHeight + yBorder, rcClient.Width(), rcClient.Height());
 		dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 	}
 }
@@ -247,6 +255,7 @@ BOOL CPreviewDialog::DoPrintPreview(RECT rcPage, RECT rcPrintArea)
 	GetRichView().FormatRange();
 
 	// Preview the first page;
+	m_CurrentPage = 0;
 	PreviewPage(0);
 
 	return TRUE;

@@ -95,15 +95,15 @@ SOURCE=..\src\App.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\AppGlobal.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\AppHelp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\AppProlog.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\CColorChoice.cpp
+SOURCE=..\src\ColorChoice.cpp
 # End Source File
 # Begin Source File
 
@@ -123,11 +123,15 @@ SOURCE=..\src\Mainfrm.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MRUFrame.cpp
+SOURCE=..\src\MyFontDlg.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\MyFontDlg.cpp
+SOURCE=..\src\PrintInfo.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\RichEditView.cpp
 # End Source File
 # Begin Source File
 

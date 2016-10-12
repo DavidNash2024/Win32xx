@@ -60,6 +60,7 @@ codeblocks.exe --rebuild StatusBar\ProjectFiles\StatusBar.cbp               >>".
 codeblocks.exe --rebuild TabDemo\ProjectFiles\TabDemo.cbp                   >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Themes\ProjectFiles\Themes.cbp                     >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Threads\ProjectFiles\Threads.cbp                   >>"..\output\CodeBlocks.log"
+codeblocks.exe --rebuild TimeDemo\ProjectFiles\TimeDemo.cbp                 >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild ToolBarDemo\ProjectFiles\ToolBarDemo.cbp           >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Tray\ProjectFiles\Tray.cbp                         >>"..\output\CodeBlocks.log"
 
@@ -109,6 +110,7 @@ copy StatusBar\ProjectFiles\Microsoft\Debug\StatusBar.exe               "..\outp
 copy TabDemo\ProjectFiles\Microsoft\Debug\TabDemo.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Microsoft\Debug\Themes.exe                     "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Microsoft\Debug\Threads.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
+copy TimeDemo\ProjectFiles\Microsoft\Debug\TimeDemo.exe                 "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Microsoft\Debug\ToolBarDemo.exe           "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Microsoft\Debug\Tray.exe                         "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 
@@ -156,6 +158,7 @@ copy StatusBar\ProjectFiles\Microsoft\Release\StatusBar.exe               "..\ou
 copy TabDemo\ProjectFiles\Microsoft\Release\TabDemo.exe                   "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Microsoft\Release\Themes.exe                     "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Microsoft\Release\Threads.exe                   "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
+copy TimeDemo\ProjectFiles\Microsoft\Release\TimeDemo.exe                 "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Microsoft\Release\ToolBarDemo.exe           "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Microsoft\Release\Tray.exe                         "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 
@@ -206,6 +209,7 @@ copy StatusBar\ProjectFiles\Borland\Debug\StatusBar.exe               "..\output
 copy TabDemo\ProjectFiles\Borland\Debug\TabDemo.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Borland\Debug\Themes.exe                     "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Borland\Debug\Threads.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
+copy TimeDemo\ProjectFiles\Borland\Debug\TimeDemo.exe                 "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Borland\Debug\ToolBarDemo.exe           "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Debug\Tray.exe                         "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 
@@ -253,6 +257,7 @@ copy StatusBar\ProjectFiles\Borland\Release\StatusBar.exe               "..\outp
 copy TabDemo\ProjectFiles\Borland\Release\TabDemo.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\Borland\Release\Themes.exe                     "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\Borland\Release\Threads.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
+copy TimeDemo\ProjectFiles\Borland\Release\TimeDemo.exe                 "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Borland\Release\ToolBarDemo.exe           "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Release\Tray.exe                         "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 
@@ -303,6 +308,7 @@ copy StatusBar\ProjectFiles\GNU\Debug\StatusBar.exe               "..\output\Min
 copy TabDemo\ProjectFiles\GNU\Debug\TabDemo.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\GNU\Debug\Themes.exe                     "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Debug\Threads.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
+copy TimeDemo\ProjectFiles\GNU\Debug\TimeDemo.exe                 "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\GNU\Debug\ToolBarDemo.exe           "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\GNU\Debug\Tray.exe                         "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 
@@ -350,6 +356,7 @@ copy StatusBar\ProjectFiles\GNU\Release\StatusBar.exe               "..\output\M
 copy TabDemo\ProjectFiles\GNU\Release\TabDemo.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Themes\ProjectFiles\GNU\Release\Themes.exe                     "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Threads\ProjectFiles\GNU\Release\Threads.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
+copy TimeDemo\ProjectFiles\GNU\Release\TimeDemo.exe                 "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\GNU\Release\ToolBarDemo.exe           "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\GNU\\Release\Tray.exe                        "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 
