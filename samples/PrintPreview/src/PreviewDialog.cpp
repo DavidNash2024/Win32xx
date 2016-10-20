@@ -150,7 +150,7 @@ INT_PTR CPreviewDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 BOOL CPreviewDialog::OnCloseButton()
 {
-	GetParent().SendMessage(UWM_CHANGEVIEW);
+	GetAncestor().SendMessage(UWM_CHANGEVIEW);
 	return TRUE;
 }
 
@@ -208,7 +208,7 @@ BOOL CPreviewDialog::OnPrevButton()
 
 BOOL CPreviewDialog::OnPrintButton()
 {
-	GetParent().SendMessage(UWM_PRINTNOW);
+	GetAncestor().SendMessage(UWM_PRINTNOW);
 	return TRUE; 
 }
 
@@ -285,8 +285,9 @@ void CPreviewDialog::PreviewPage(UINT nPage)
 	fr.chrg.cpMax = m_PageBreaks[nPage];
 
 	// Create a compatible bitmap for the memory DC
-	int Width = 160 + GetDeviceCaps(dcPreview, LOGPIXELSX) * (dcPrinter.GetDeviceCaps(HORZRES) / dcPrinter.GetDeviceCaps(LOGPIXELSX));
-	int Height = 160 + GetDeviceCaps(dcPreview, LOGPIXELSY) * (dcPrinter.GetDeviceCaps(VERTRES) / dcPrinter.GetDeviceCaps(LOGPIXELSY));
+	double rescale = 1.15;
+	int Width = (int)(rescale * GetDeviceCaps(dcPreview, LOGPIXELSX) * (dcPrinter.GetDeviceCaps(HORZRES) / dcPrinter.GetDeviceCaps(LOGPIXELSX)));
+	int Height = (int)(rescale * GetDeviceCaps(dcPreview, LOGPIXELSY) * (dcPrinter.GetDeviceCaps(VERTRES) / dcPrinter.GetDeviceCaps(LOGPIXELSY)));
 
 	dcMem.CreateCompatibleBitmap(dcPreview, Width, Height);
 	CRect rc(0, 0, Width, Height);

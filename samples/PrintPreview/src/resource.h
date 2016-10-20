@@ -34,6 +34,10 @@
 #define IDC_BUTTONCLOSE                 164
 #define IDC_CUSTOM1                     165
 
+#define IDI_PRINTPREVIEW                170
+#define IDI_PRINTSETUP                  171
+#define IDI_QUICKPRINT                  172
+#define IDI_PRINT                       173
 
 // user defined window messages
 #define UWM_CHANGEVIEW     (WM_APP + 0x0001)	// wParam and lParam are ignored

@@ -16,7 +16,7 @@ CMainFrame::CMainFrame() : m_PrintPreview(IDD_PRINTPREVIEW), m_IsWrapped(FALSE)
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\Notepad Sample"));
+	LoadRegistrySettings(_T("Win32++\\PrintPreview Sample"));
 
 	// Load the settings from the registry with 5 MRU entries
 	LoadRegistryMRUSettings(5);
@@ -212,17 +212,18 @@ CRect CMainFrame::GetPageRect()
 	int nLogPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);
 
 	int margin = 200;	// 1440 TWIPS = 1 inch.
+	int tpi = 1440;		// twips per inch 
 
 	rcPage.left = margin;
 	rcPage.top = margin;
-	rcPage.right = (nHorizRes / nLogPixelsX) * 1440 - margin;
-	rcPage.bottom = (nVertRes / nLogPixelsY) * 1440 - margin;
+	rcPage.right = (nHorizRes / nLogPixelsX) * tpi - margin;
+	rcPage.bottom = (nVertRes / nLogPixelsY) * tpi - margin;
 
 	return rcPage;
 }
 
 CRect CMainFrame::GetPrintRect()
-// The print area within the page. Units are measured in twips.
+// Returns the print area within the page. Units are measured in twips.
 {
 	int margin = 200;
 	
@@ -241,6 +242,7 @@ CRect CMainFrame::GetPrintRect()
 }
 
 void CMainFrame::QuickPrint(CPrintDialog& PrintDlg)
+// Print the document without bringing up a print dialog
 {
 	CDC dcPrinter = PrintDlg.GetPrinterDC();
 
@@ -587,6 +589,15 @@ void CMainFrame::SetWindowTitle()
 		Title = m_strPathName + _T(" - PrintPreview Demo");
 
 	SetWindowText(Title);
+}
+
+void CMainFrame::SetupMenuIcons()
+{
+	CFrame::SetupMenuIcons();
+	AddMenuIcon(IDM_FILE_PRINTSETUP,	GetApp().LoadIcon(IDI_PRINTSETUP));
+	AddMenuIcon(IDM_FILE_PREVIEW,		GetApp().LoadIcon(IDI_PRINTPREVIEW));
+	AddMenuIcon(IDM_FILE_QUICKPRINT,	GetApp().LoadIcon(IDI_QUICKPRINT));
+	AddMenuIcon(IDM_FILE_PRINT,			GetApp().LoadIcon(IDI_PRINT));
 }
 
 void CMainFrame::SetupToolBar()

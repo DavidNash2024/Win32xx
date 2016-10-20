@@ -1352,7 +1352,7 @@ namespace Win32xx
 	// Trims leading whitespace characters from the string.
 	{
 		// This method is supported by the Borland 5.5 compiler
-		typename std::basic_string<T>::const_iterator iter;
+		typename std::basic_string<T>::iterator iter;
 		for (iter = m_str.begin(); iter != m_str.end(); ++iter)
 		{
 			if (!_istspace(*iter))

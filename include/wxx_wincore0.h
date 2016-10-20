@@ -89,7 +89,7 @@ namespace Win32xx
 {
 
 	// Registered messages defined by Win32++
-	const UINT UWM_WINDOWCREATED = RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Posted when a window is created or attached.
+	const UINT UWM_WINDOWCREATED = ::RegisterWindowMessage(_T("UWM_WINDOWCREATED"));	// Posted when a window is created or attached.
 
 #ifndef _WIN32_WCE
 	// registered message used by common dialogs
