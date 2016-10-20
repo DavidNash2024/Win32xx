@@ -87,6 +87,10 @@ END
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
 IDW_MAIN                ICON                    "../src/res/PrintPreview.ico"
+IDI_PRINTPREVIEW        ICON                    "../src/res/Print Preview.ico"
+IDI_PRINTSETUP          ICON                    "../src/res/Print Settings.ico"
+IDI_QUICKPRINT          ICON                    "../src/res/Quick Print.ico"
+IDI_PRINT               ICON                    "../src/res/Print.ico"
 
 
 /////////////////////////////////////////////////////////////////////////////

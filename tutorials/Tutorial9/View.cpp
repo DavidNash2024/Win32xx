@@ -71,7 +71,7 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		FileName.ReleaseBuffer();
 
 		// Send a user defined message to the frame window
-		GetParent().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
+		GetAncestor().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
 
 		DragFinish(hDrop);
 	}
@@ -123,7 +123,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
 std::vector<PlotPoint>* CView::GetAllPoints()
 // Retrieves a pointer to the PlotPoint vector by sending a user defined message
 {
-	LRESULT lr = GetParent().SendMessage(UWN_GETALLPOINTS, 0, 0);
+	LRESULT lr = GetAncestor().SendMessage(UWN_GETALLPOINTS, 0, 0);
 	assert(lr);
 	return reinterpret_cast<std::vector<PlotPoint>*>(lr);
 }
@@ -136,7 +136,7 @@ void CView::SendPoint(int x, int y, bool PenDown)
 	pp.y = y;
 	pp.PenDown = PenDown;
 	pp.color = m_PenColor;
-	GetParent().SendMessage(UWM_SENDPOINT, (WPARAM)&pp, 0);
+	GetAncestor().SendMessage(UWM_SENDPOINT, (WPARAM)&pp, 0);
 }
 
 void CView::PreRegisterClass(WNDCLASS& wc)

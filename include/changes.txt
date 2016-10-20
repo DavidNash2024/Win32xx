@@ -1008,7 +1008,6 @@ Version 6.7
 
 New Features and Enhancements
 -----------------------------
-* The projects are now configured to take advantage of precompiled headers.
 * A set of tools is now provided in the tools folder. They include a set of 
    batch files for compiling the examples and batch files to "clean" them.
 * Support has been added for Right to Left languages which include Hebrew and 
