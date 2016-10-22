@@ -1,5 +1,5 @@
 // Win32++   Version 8.3
-// Release Date: TBA
+// Release Date: 25th October 2016
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
