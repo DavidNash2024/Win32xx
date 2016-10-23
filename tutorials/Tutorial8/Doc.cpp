@@ -57,8 +57,7 @@ void CDoc::Serialize(CArchive &ar)
 		std::vector<PlotPoint>::iterator iter;
 		for (iter = GetAllPoints().begin(); iter < GetAllPoints().end(); ++iter)
 		{
-			PlotPoint pp = (*iter);
-			ArchiveObject ao(&pp, sizeof(PlotPoint));
+			ArchiveObject ao( &(*iter), sizeof(PlotPoint) );
 			ar << ao;
 		}
 	}
@@ -74,7 +73,7 @@ void CDoc::Serialize(CArchive &ar)
 		// Load the PlotPoint data
 		for (UINT u = 0; u < nPoints; ++u)
 		{
-			ArchiveObject ao(&pp, sizeof(pp));
+			ArchiveObject ao( &pp, sizeof(pp) );
 			ar >> ao;
 			GetAllPoints().push_back(pp);
 		}
@@ -82,7 +81,13 @@ void CDoc::Serialize(CArchive &ar)
 
 }
 
-void CDoc::StorePoint(PlotPoint& pp)
+void CDoc::StorePoint(int x, int y, bool PenDown, COLORREF PenColor)
 {
-	m_points.push_back(pp); //Add the point to the vector
+	PlotPoint P1;
+	P1.x = x;
+	P1.y = y;
+	P1.PenDown = PenDown;
+	P1.color = PenColor;
+
+	m_points.push_back(P1); //Add the point to the vector
 }

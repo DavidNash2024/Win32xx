@@ -39,6 +39,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
+LRESULT CMainFrame::OnDropFile(WPARAM wParam)
+// Called in response to the UWM_DROPFILE user defined message
+{
+	// wParam is a pointer (LPCTSTR) to the filename
+	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
+	assert(szFileName);
+
+	// Load the file
+	LoadFile(szFileName);
+	return 0L;
+}
+
 void CMainFrame::OnFileExit()
 {
 	// Issue a close request to the frame
@@ -153,47 +165,12 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::OnDropFile(WPARAM wParam)
-// Called in response to the UWM_DROPFILE user defined message
-{
-	// wParam is a pointer (LPCTSTR) to the filename
-	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
-	assert(szFileName);
-
-	// Load the file
-	LoadFile(szFileName);
-	return 0L;
-}
-
-LRESULT CMainFrame::OnGetAllPoints()
-// Called in response to the UWM_GETALLPOINTS user defined message
-{
-	// Get a pointer to the vector of PlotPoints
-	std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
-
-	// Cast the pointer to a LRESULT and return it
-	return reinterpret_cast<LRESULT>(pAllPoints);
-}
-
-LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
-// Called in response to the UWM_SENDPOINT user defined message
-{
-	// wParam is a pointer to the vector of PlotPoints
-	PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wParam);
-
-	// Dereference the pointer and store the vector of PlotPoints in CDoc
-	GetDoc().StorePoint(*pPP);
-	return 0L;
-}
-
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Called to handle the window's messages
 {
 	switch (uMsg)
 	{
 	case UWM_DROPFILE:			return OnDropFile(wParam);
-	case UWN_GETALLPOINTS:		return OnGetAllPoints();
-	case UWM_SENDPOINT:			return OnSendPoint(wParam);
 	}
 
 	//Use the default message handling for remaining messages
