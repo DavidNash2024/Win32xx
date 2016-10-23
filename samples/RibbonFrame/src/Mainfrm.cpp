@@ -9,8 +9,11 @@
 #include "resource.h"
 
 
+// Definitions for the CMainFrame class
 CMainFrame::CMainFrame()
 {
+	// Constructor for CMainFrame. Its called after CFrame's constructor
+
 	// Set m_View as the view window of the frame
 	SetView(m_View);
 
@@ -75,6 +78,18 @@ void CMainFrame::MRUFileOpen(UINT nMRUIndex)
 		RemoveMRUEntry(strMRUText);
 
 	GetView().Invalidate();
+}
+
+LRESULT CMainFrame::OnDropFile(WPARAM wParam)
+// Called in response to the UWM_DROPFILE user defined message
+{
+	// wParam is a pointer (LPCTSTR) to the filename
+	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
+	assert(szFileName);
+
+	// Load the file
+	LoadFile(szFileName);
+	return 0L;
 }
 
 void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue)
@@ -149,6 +164,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
 	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
 	case IDM_HELP_ABOUT:		return OnHelp();
+
 	}
 
 	return FALSE;
@@ -229,107 +245,15 @@ void CMainFrame::OnFileSaveAs()
 // This function provides a useful reference for printing bitmaps in general
 void CMainFrame::OnFilePrint()
 {
-	// Get the dimensions of the View window
-	CRect rcView = GetView().GetClientRect();
-	int Width = rcView.Width();
-	int Height = rcView.Height();
-
-	// Copy the bitmap from the View window
-	CClientDC ViewDC(GetView());
-	CMemDC MemDC(ViewDC);
-	CBitmap bmView;
-	bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
-	MemDC.SelectObject(bmView);
-	BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
-
-	CPrintDialog PrintDlg;
-
-	try
-	{
-		// Bring up a dialog to choose the printer
-		if (PrintDlg.DoModal(GetView()) == IDOK)	// throws exception if there is no default printer
-		{
-			// Zero and then initialize the members of a DOCINFO structure.
-			DOCINFO di;
-			memset(&di, 0, sizeof(DOCINFO));
-			di.cbSize = sizeof(DOCINFO);
-			di.lpszDocName = _T("Scribble Printout");
-			di.lpszOutput = (LPTSTR)NULL;
-			di.lpszDatatype = (LPTSTR)NULL;
-			di.fwType = 0;
-
-			// Begin a print job by calling the StartDoc function.
-			CDC dcPrint = PrintDlg.GetPrinterDC();
-			if (SP_ERROR == StartDoc(dcPrint, &di))
-				throw CUserException(_T("Failed to start print job"));
-
-			// Inform the driver that the application is about to begin sending data.
-			if (0 > StartPage(dcPrint))
-				throw CUserException(_T("StartPage failed"));
-
-			BITMAPINFOHEADER bi;
-			ZeroMemory(&bi, sizeof(BITMAPINFOHEADER));
-			bi.biSize = sizeof(BITMAPINFOHEADER);
-			bi.biHeight = Height;
-			bi.biWidth = Width;
-			bi.biPlanes = 1;
-			bi.biBitCount = 24;
-			bi.biCompression = BI_RGB;
-
-			// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
-			// Get the size of the image data
-			MemDC.GetDIBits(bmView, 0, Height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
-
-			// Retrieve the image data
-			std::vector<byte> vBits(bi.biSizeImage, 0);	// a vector to hold the byte array
-			byte* pByteArray = &vBits.front();
-			MemDC.GetDIBits(bmView, 0, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
-
-			// Determine the scaling factors required to print the bitmap and retain its original proportions.
-			float fLogPelsX1 = (float)ViewDC.GetDeviceCaps(LOGPIXELSX);
-			float fLogPelsY1 = (float)ViewDC.GetDeviceCaps(LOGPIXELSY);
-			float fLogPelsX2 = (float)GetDeviceCaps(dcPrint, LOGPIXELSX);
-			float fLogPelsY2 = (float)GetDeviceCaps(dcPrint, LOGPIXELSY);
-			float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
-			float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
-
-			// Compute the coordinates of the upper left corner of the centered bitmap.
-			int cWidthPels = GetDeviceCaps(dcPrint, HORZRES);
-			int xLeft = ((cWidthPels / 2) - ((int)(((float)Width) * fScaleX)) / 2);
-			int cHeightPels = GetDeviceCaps(dcPrint, VERTRES);
-			int yTop = ((cHeightPels / 2) - ((int)(((float)Height) * fScaleY)) / 2);
-
-			// Use StretchDIBits to scale the bitmap and maintain its original proportions
-			if (GDI_ERROR == (UINT)StretchDIBits(dcPrint, xLeft, yTop, (int)((float)Width * fScaleX),
-				(int)((float)Height * fScaleY), 0, 0, Width, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY))
-			{
-				throw CUserException(_T("Failed to resize image for printing"));
-			}
-
-			// Inform the driver that the page is finished.
-			if (0 > EndPage(dcPrint))
-				throw CUserException(_T("EndPage failed"));
-
-			// Inform the driver that document has ended.
-			if (0 > EndDoc(dcPrint))
-				throw CUserException(_T("EndDoc failed"));
-		}
-	}
-
-	catch (const CException& e)
-	{
-		// Display a message box indicating why printing failed.
-		CString strMsg = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-		CString strType = CString(e.what());
-		::MessageBox(NULL, strMsg, strType, MB_ICONWARNING);
-	}
-
+	// Pass the print job to CDoc
+	GetDoc().Print();
 }
+
 
 void CMainFrame::SetupToolBar()
 // Configures the ToolBar. Used when there isn't a ribbon.
 {
-	// Define our toolbar buttons
+	// Define our toolbar buttons. Used when there isn't a ribbon.
 	AddToolBarButton( IDM_FILE_NEW   );
 	AddToolBarButton( IDM_FILE_OPEN  );
 	AddToolBarButton( IDM_FILE_SAVE  );
@@ -383,47 +307,12 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, 
 	return hr;
 }
 
-LRESULT CMainFrame::OnDropFile(WPARAM wParam)
-// Called in response to the UWM_DROPFILE user defined message
-{
-	// wParam is a pointer (LPCTSTR) to the filename
-	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
-	assert(szFileName);
-
-	// Load the file
-	LoadFile(szFileName);
-	return 0L;
-}
-
-LRESULT CMainFrame::OnGetAllPoints()
-// Called in response to the UWM_GETALLPOINTS user defined message
-{
-	// Get a pointer to the vector of PlotPoints
-	std::vector<PlotPoint>* pAllPoints = &GetDoc().GetAllPoints();
-
-	// Cast the pointer to a LRESULT and return it
-	return reinterpret_cast<LRESULT>(pAllPoints);
-}
-
-LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
-// Called in response to the UWM_SENDPOINT user defined message
-{
-	// wParam is a pointer to the vector of PlotPoints
-	PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wParam);
-
-	// Dereference the pointer and store the vector of PlotPoints in CDoc
-	GetDoc().StorePoint(*pPP);
-	return 0L;
-}
-
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Called to handle the window's messages
 {
 	switch (uMsg)
 	{
 	case UWM_DROPFILE:			return OnDropFile(wParam);
-	case UWN_GETALLPOINTS:		return OnGetAllPoints();
-	case UWM_SENDPOINT:			return OnSendPoint(wParam);
 	}
 
 	//Use the default message handling for remaining messages

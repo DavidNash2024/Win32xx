@@ -8,21 +8,22 @@
 
 #include "View.h"
 #include "Doc.h"
+#include "wxx_ribbon.h"
 
 
 // Declaration of the CMainFrame class
-class CMainFrame : public CRibbonFrame{
+class CMainFrame : public CRibbonFrame
+{
 public:
 	CMainFrame();
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }
+
 	void LoadFile(LPCTSTR str);
 	void MRUFileOpen(UINT nMRUIndex);
 
 	LRESULT OnDropFile(WPARAM wParam);
-	LRESULT OnGetAllPoints();
-	LRESULT OnSendPoint(WPARAM wParam);
 
 	void OnFileExit();
 	void OnFileNew();
