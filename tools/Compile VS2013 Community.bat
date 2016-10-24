@@ -159,7 +159,7 @@ copy NetServer\ProjectFiles\Debug\NetServer.exe               "..\output\VS2013\
 copy NotePad\ProjectFiles\Debug\Notepad.exe                   "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy Performance\ProjectFiles\Debug\Performance.exe           "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy Picture\ProjectFiles\Debug\Picture.exe                   "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
-copy PrintPreview\ProjectFiles\Debug\Picture.exe              "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
+copy PrintPreview\ProjectFiles\Debug\PrintPreview.exe         "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy PropertySheet\ProjectFiles\Debug\PropertySheet.exe       "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy ReBarDemo\ProjectFiles\Debug\ReBarDemo.exe               "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy RibbonDockFrame\ProjectFiles\Debug\RibbonDockFrame.exe   "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
