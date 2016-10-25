@@ -1,5 +1,5 @@
-// Win32++   Version 8.3
-// Release Date: 25th October 2016
+// Win32++   Version 8.4
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -68,6 +68,9 @@
 //
 //      // This is ok
 //      string2.Format(_T("String1 is: %s"), (LPCTSTR)string1); // Yes, this is correct
+//
+//      // This is better. It doesn't use casting
+//      string2.Format(_T("String1 is: %s"), string1.c_str());  // This is correct too
 //
 //    Note: The MFC/ATL CString class uses a non portable hack to make its CString class
 //          behave like a POD. Other compilers (such as the MinGW compiler) specifically
