@@ -1926,7 +1926,6 @@ namespace Win32xx
 		pDocker->m_nDockID = nDockID;
 		pDocker->m_pDockAncestor = GetDockAncestor();
 		pDocker->m_pDockParent = this;
-		pDocker->SetDockSize(DockSize);
 		HWND hwndFrame = GetDockAncestor()->GetAncestor();
 		pDocker->Create(hwndFrame);
 		pDocker->SetParent(*this);
@@ -1936,6 +1935,8 @@ namespace Win32xx
 			DockInContainer(pDocker, dwDockStyle);
 		else
 			Dock(pDocker, dwDockStyle);
+
+		pDocker->SetDockSize(DockSize);
 
 		// Issue TRACE warnings for any missing resources
 		HMODULE hMod= GetApp().GetResourceHandle();
