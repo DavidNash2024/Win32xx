@@ -2353,8 +2353,6 @@ namespace Win32xx
 	inline void CFrame::OnDestroy()
 	// Called when the frame is about to be destroyed (WM_DESTROY received)
 	{
-		SetMenu(NULL);
-
 		GetMenuBar().Destroy();
 		GetToolBar().Destroy();
 		GetReBar().Destroy();

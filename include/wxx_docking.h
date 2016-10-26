@@ -273,6 +273,7 @@ namespace Win32xx
 			virtual void SetColor(COLORREF color);
 			LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
+			CBrush GetBrushBkgnd() const	{return m_brBackground;}
 			CDocker& GetDocker() const		{assert (m_pDocker); return *m_pDocker;}
 			int GetWidth() const			{return m_DockBarWidth;}
 			void SetDocker(CDocker& Docker)	{m_pDocker = &Docker;}
@@ -312,7 +313,7 @@ namespace Win32xx
 			CWnd& GetView() const			{ assert (m_pView); return *m_pView; }
 			void SetDocker(CDocker* pDocker)	{ m_pDocker = pDocker;}
 			void SetCaption(LPCTSTR szCaption)	{ m_csCaption = szCaption; }
-			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
+			void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2, COLORREF PenColor);
 			void SetView(CWnd& wndView);
 
 		protected:
@@ -349,6 +350,7 @@ namespace Win32xx
 			COLORREF m_Backgnd1;
 			COLORREF m_Foregnd2;
 			COLORREF m_Backgnd2;
+			COLORREF m_PenColor;
 		};
 
 		//  This nested class is used to indicate where a window could dock by
@@ -508,7 +510,7 @@ namespace Win32xx
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
 		void SetCaption(LPCTSTR szCaption);
-		void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2);
+		void SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2, COLORREF PenColor = RGB(160, 150, 140));
 		void SetCaptionHeight(int nHeight);
 		void SetDockStyle(DWORD dwDockStyle);
 		void SetDockSize(int DockSize);
@@ -626,7 +628,6 @@ namespace Win32xx
 	//
 	inline CDocker::CDockBar::CDockBar() : m_pDocker(NULL), m_DockBarWidth(4)
 	{
-		m_brBackground.CreateSolidBrush(RGB(192,192,192));
 	}
 
 	inline CDocker::CDockBar::~CDockBar()
@@ -751,8 +752,9 @@ namespace Win32xx
 	{
 		m_Foregnd1 = RGB(32,32,32);
 		m_Backgnd1 = RGB(190,207,227);
-		m_Foregnd2 =  GetSysColor(COLOR_BTNTEXT);
+		m_Foregnd2 = GetSysColor(COLOR_BTNTEXT);
 		m_Backgnd2 = GetSysColor(COLOR_BTNFACE);
+		m_PenColor = RGB(160, 150, 140);
 	}
 
 	inline void CDocker::CDockClient::Draw3DBorder(RECT& Rect)
@@ -847,7 +849,7 @@ namespace Win32xx
 			}
 
 			// Draw the rectangle
-			dcMem.CreatePen(PS_SOLID, 1, RGB(160, 150, 140));
+			dcMem.CreatePen(PS_SOLID, 1, m_PenColor);
 			dcMem.Rectangle(rcAdjust, rcAdjust, rc.Width() - rcAdjust, m_pDocker->m_NCHeight + rcAdjust);
 
 			// Display the caption
@@ -1236,15 +1238,17 @@ namespace Win32xx
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
 	}
 
-	inline void CDocker::CDockClient::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF Foregnd2, COLORREF Backgnd2)
+	inline void CDocker::CDockClient::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF Foregnd2, COLORREF Backgnd2, COLORREF PenColor)
 	{
 		// Set the colors used when drawing the caption
 		// m_Foregnd1 Foreground colour (focused).  m_Backgnd1 Background colour (focused)
 		// m_Foregnd2 Foreground colour (not focused). m_Backgnd2 Foreground colour (not focused)
+		// m_PenColor Pen color used for drawing the outline.
 		m_Foregnd1 = Foregnd1;
 		m_Backgnd1 = Backgnd1;
 		m_Foregnd2 = Foregnd2;
 		m_Backgnd2 = Backgnd2;
+		m_PenColor = PenColor;
 	}
 
 	inline void CDocker::CDockClient::SetView(CWnd& wndView)
@@ -2931,16 +2935,19 @@ namespace Win32xx
 		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
 		SetParent(GetParent());		// Reinstate the window's parent
 
-		// Set the default colour for the splitter bar
-		COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
-		HWND hWndFrame = GetDockAncestor()->GetAncestor();
+		// Set the default colour for the splitter bar if it hasn't already been set
+		if (!GetDockBar().GetBrushBkgnd().GetHandle())
+		{
+			COLORREF rgbColour = GetSysColor(COLOR_BTNFACE);
+			HWND hWndFrame = GetDockAncestor()->GetAncestor();
 
-		ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hWndFrame, UWM_GETRBTHEME, 0, 0));
+			ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(::SendMessage(hWndFrame, UWM_GETRBTHEME, 0, 0));
 
-		if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
-				rgbColour =pTheme->clrBkgnd2;
+			if (pTheme && pTheme->UseThemes && pTheme->clrBkgnd2 != 0)
+				rgbColour = pTheme->clrBkgnd2;
 
-		SetBarColor(rgbColour);
+			SetBarColor(rgbColour);
+		}
 
 		// Set the caption height based on text height
 		m_NCHeight = MAX(20, GetTextHeight() + 5);
@@ -3767,9 +3774,9 @@ namespace Win32xx
 			SetWindowText(szCaption);
 	}
 
-	inline void CDocker::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2)
+	inline void CDocker::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF ForeGnd2, COLORREF BackGnd2, COLORREF PenColor /*= RGB(160, 150, 140)*/)
 	{
-		GetDockClient().SetCaptionColors(Foregnd1, Backgnd1, ForeGnd2, BackGnd2);
+		GetDockClient().SetCaptionColors(Foregnd1, Backgnd1, ForeGnd2, BackGnd2, PenColor);
 	}
 
 	inline void CDocker::SetCaptionHeight(int nHeight)
