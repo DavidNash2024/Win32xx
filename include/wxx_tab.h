@@ -127,6 +127,7 @@ namespace Win32xx
 		CFont& GetTabFont() const		{ return m_TabFont; }
 		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
 		int GetTabHeight() const		{ return m_nTabHeight; }
+		SIZE GetMaxTabSize() const;
 		CWnd* GetActiveView() const		{ return m_pActiveView; }
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
@@ -195,7 +196,6 @@ namespace Win32xx
 		CTab(const CTab&);				// Disable copy construction
 		CTab& operator = (const CTab&); // Disable assignment operator
 
-		SIZE  GetMaxTabSize() const;
 		void ShowActiveView(CWnd* pView);
 
 		std::vector<TabPageInfo> m_vTabPageInfo;
@@ -1075,7 +1075,7 @@ namespace Win32xx
 			// No tabs, so simply display a grey background and exit
 			COLORREF rgbDialog = GetSysColor(COLOR_BTNFACE);
 			dcView.SolidFill(rgbDialog, rcClient);
-			return;
+		//	return;
 		}
 
 		// Create a clipping region. Its the overall tab window's region,
@@ -1137,6 +1137,7 @@ namespace Win32xx
 	{
 		if (IsWindow())
 		{
+			SetTabSize();
 			if (GetActiveView())
 			{
 				// Position the View over the tab control's display area
