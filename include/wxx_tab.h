@@ -1075,7 +1075,7 @@ namespace Win32xx
 			// No tabs, so simply display a grey background and exit
 			COLORREF rgbDialog = GetSysColor(COLOR_BTNFACE);
 			dcView.SolidFill(rgbDialog, rcClient);
-		//	return;
+			return;
 		}
 
 		// Create a clipping region. Its the overall tab window's region,
