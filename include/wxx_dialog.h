@@ -387,10 +387,8 @@ namespace Win32xx
 	} // INT_PTR CALLBACK CDialog::DialogProc(...)
 
 	inline INT_PTR CDialog::DoModal(HWND hWndParent /* = 0 */)
+	// Create a modal dialog. A modal dialog box must be closed by the user before the application continues.	
 	{
-		// Create a modal dialog
-		// A modal dialog box must be closed by the user before the application continues
-
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
 
@@ -446,6 +444,7 @@ namespace Win32xx
 	}
 
 	inline HWND CDialog::DoModeless(HWND hParent /* = 0 */)
+	// Create a modeless dialog.
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
@@ -486,6 +485,7 @@ namespace Win32xx
 	}
 
 	inline void CDialog::EndDialog(INT_PTR nResult)
+	// Ends a modal or modeless dialog.
 	{
 		assert(IsWindow());
 
@@ -496,8 +496,8 @@ namespace Win32xx
 	}
 
 	inline void CDialog::OnCancel()
+	// Called when the Cancel button is pressed. Override to customize OnCancel behaviour
 	{
-		// Override to customize OnCancel behaviour
 		EndDialog(IDCANCEL);
 	}
 	
@@ -523,6 +523,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CDialog::PreTranslateMessage(MSG& Msg)
+	// Override this function to filter mouse and keyboard messages prior to being passed to the message loop.
 	{
 		// allow the dialog to translate keyboard input
 		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
@@ -700,6 +701,7 @@ namespace Win32xx
     }
 
 	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Performs the resizing and scrolling. Call this function from within the window's DialogProc.
 	{
 		switch (uMsg)
 		{
@@ -742,6 +744,7 @@ namespace Win32xx
     }
 
 	void inline CResizer::OnHScroll(UINT, WPARAM wParam, LPARAM)
+	// Called to perform horizontal scrolling.
 	{
 		int xNewPos;
 
@@ -794,6 +797,7 @@ namespace Win32xx
 	}
 
 	void inline CResizer::OnVScroll(UINT, WPARAM wParam, LPARAM)
+	// // Called to perform vertical scrolling.
 	{
 		int yNewPos;
 

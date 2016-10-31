@@ -104,18 +104,21 @@ namespace Win32xx
 	}
 
 	inline int CStatusBar::GetParts()
+	// Retrieves a count of the parts in the status bar.
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
 	}
 
 	inline HICON CStatusBar::GetPartIcon(int iPart)
+	// Retrieves the icon for a part in the status bar.
 	{
 		assert(IsWindow());
 		return reinterpret_cast<HICON>(SendMessage(SB_GETICON, (WPARAM)iPart, 0L));
 	}
 
 	inline CRect CStatusBar::GetPartRect(int iPart)
+	// Retrieves the bounding rectangle of a part in the status bar.
 	{
 		assert(IsWindow());
 		
@@ -125,6 +128,7 @@ namespace Win32xx
 	}
 
 	inline CString CStatusBar::GetPartText(int iPart) const
+	// Retrieves the text from a part in the status bar.
 	{
 		assert(IsWindow());
 		CString PaneText;
@@ -139,6 +143,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CStatusBar::IsSimple()
+	// Checks the status bar control to determine if it is in simple mode.
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(SB_ISSIMPLE, 0L, 0L));
@@ -180,6 +185,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon)
+	// Sets the icon for a part in the status bar.
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon));
@@ -223,6 +229,8 @@ namespace Win32xx
 	}
 
 	inline void CStatusBar::SetSimple(BOOL fSimple /* = TRUE*/)
+	// Specifies whether a status window displays simple text or displays all window parts
+	//  set by a previous SB_SETPARTS message.
 	{
 		assert(IsWindow());
 		SendMessage(SB_SIMPLE, (WPARAM)fSimple, 0L);

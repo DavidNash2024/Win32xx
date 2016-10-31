@@ -1,3 +1,14 @@
+Version 8.4
+===========
+
+Changes in detail
+-----------------
+Added Trace						function 
+Added CTab::GetMaxTabSize		member function
+Modified TRACE 					now implemented as a macro.
+
+
+
 Version 8.3
 ===========
 
@@ -46,7 +57,7 @@ New Features and Enhancements
   
 * Updated CDC
   - Additional overrides for CDC::SelectObject to allow this function to be used 
-    with casting. For example:
+    without casting. For example:
 	  CPen Pen(PS_SOLID, 1, RGB(255, 0, 0));
 	  CPen OldPen = dcMem.SelectObject(pen);
   - GDI resources created by CDC are managed better. Old GDI resources are now

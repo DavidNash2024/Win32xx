@@ -148,12 +148,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CCmdBar::AddAdornments(DWORD dwFlags)
+	// Adds a button, and optionally, Help and OK buttons, to the command bar.
 	{
 		assert(IsWindow());
 		return CommandBar_AddAdornments(*this, dwFlags, 0);
 	}
 
 	inline int CCmdBar::AddBitmap(int idBitmap, int iNumImages, int iImageWidth, int iImageHeight)
+	// Adds one or more images to the list of button images available in the command bar.
 	{
 		assert(IsWindow());
 		HINSTANCE hInst = GetApp().GetInstanceHandle();
@@ -161,12 +163,14 @@ namespace Win32xx
 	}
 
 	inline BOOL CCmdBar::AddButtons(int nButtons, TBBUTTON* pTBButton)
+	// Adds one or more toolbar buttons to a command bar control.
 	{
 		assert(IsWindow());
 		return CommandBar_AddButtons(*this, nButtons, pTBButton);
 	}
 
 	inline HWND CCmdBar::Create(HWND hParent)
+	// Creates the command bar control.
 	{
 #ifdef SHELL_AYGSHELL
 		SHMENUBARINFO mbi;
@@ -195,24 +199,28 @@ namespace Win32xx
 	}
 
 	inline int CCmdBar::GetHeight() const
+	// Retrieves the height of the command bar in pixels.
 	{
 		assert(IsWindow());
 		return CommandBar_Height(*this);
 	}
 
 	inline HWND CCmdBar::InsertComboBox(int iWidth, UINT dwStyle, WORD idComboBox, WORD iButton)
+	// Inserts a combo box into the command bar.
 	{
 		HINSTANCE hInst = GetApp().GetInstanceHandle();
 		return CommandBar_InsertComboBox(*this, hInst, iWidth, dwStyle, idComboBox, iButton);
 	}
 
 	inline BOOL CCmdBar::IsVisible()
+	// Retrieves the visibility state of the command bar.
 	{
 		assert(IsWindow());
 		return ::CommandBar_IsVisible(*this);
 	}
 
 	inline BOOL CCmdBar::Show(BOOL fShow)
+	// Shows or hides the command bar.
 	{
 		assert(IsWindow());
 		return ::CommandBar_Show(*this, fShow);
@@ -243,6 +251,7 @@ namespace Win32xx
 	}
 
 	inline CRect CWceFrame::GetViewRect() const
+	// Returns a RECT structure which contains the dimensions of the client area of the frame.
 	{
 		CRect r;
 		::GetClientRect(*this, &r);
@@ -256,6 +265,8 @@ namespace Win32xx
 	}
 
 	inline int CWceFrame::OnCreate(CREATESTRUCT& cs)
+	// Called during window creation. Override this function to perform tasks such as
+	//  creating child windows.
 	{
 		// Create the Commandbar
 		GetMenuBar().Create(*this);
@@ -277,6 +288,7 @@ namespace Win32xx
 	}
 
 	inline void CWceFrame::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
+	// Called when the frame is activated.
 	{
 #ifdef SHELL_AYGSHELL
 		// Notify shell of our activate message
@@ -292,6 +304,7 @@ namespace Win32xx
 	}
 
 	inline void CWceFrame::PreCreate(CREATESTRUCT& cs)
+	// Called before the window is created. Override this function to set the window creation parameters.
 	{
 		cs.style = WS_VISIBLE;
 		m_strAppName = _T("Win32++ Application");
@@ -306,6 +319,7 @@ namespace Win32xx
 	}
 
 	inline void CWceFrame::RecalcLayout()
+	// Repositions the client area of the frame.
 	{
 		HWND hwndCB = GetMenuBar().GetHwnd();
 		if (hwndCB)

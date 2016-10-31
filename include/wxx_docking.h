@@ -2681,7 +2681,7 @@ namespace Win32xx
 
 			catch (const CUserException& e)
 			{
-				TRACE(e.GetText()); TRACE("\n");
+				Trace(e.GetText()); Trace("\n");
 				bResult = FALSE;
 				CloseAllDockers();
 
@@ -2785,8 +2785,8 @@ namespace Win32xx
 
 				catch (const CUserException& e)
 				{
-					TRACE("*** Failed to load values from registry, using defaults. ***\n");
-					TRACE(e.GetText()); TRACE("\n");
+					Trace("*** Failed to load values from registry, using defaults. ***\n");
+					Trace(e.GetText()); Trace("\n");
 					CloseAllDockers();
 
 					// Delete the bad key from the registry
@@ -3675,8 +3675,8 @@ namespace Win32xx
 
 			catch (const CUserException& e)
 			{
-				TRACE("*** Failed to save dock settings in registry. ***");
-				TRACE(e.GetText()); TRACE("\n");
+				Trace("*** Failed to save dock settings in registry. ***");
+				Trace(e.GetText()); Trace("\n");
 
 				// Roll back the registry changes by deleting the subkeys
 				if (Key.GetKey())

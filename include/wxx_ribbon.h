@@ -206,6 +206,7 @@ namespace Win32xx
 
 	inline STDMETHODIMP CRibbon::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue, 
 										  __in_opt IUISimplePropertySet* pCommandExecutionProperties)
+	// Responds to execute events on Commands bound to the Command handler.									  
 	{
 		UNREFERENCED_PARAMETER (nCmdID);
 		UNREFERENCED_PARAMETER (verb);

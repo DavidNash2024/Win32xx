@@ -232,24 +232,16 @@ namespace Win32xx
 	// Global Functions
 	//
 	
-	inline void TRACE(LPCSTR str)
-	// TRACE sends a string to the debug/output pane, or an external debugger
+	inline void Trace(LPCSTR str)
+	// Trace sends a string to the debug/output pane, or an external debugger
 	{
-  #ifndef NDEBUG
 		OutputDebugString(A2T(str));
-  #else
-		UNREFERENCED_PARAMETER(str); // no-op
-  #endif
 	}
 
-	inline void TRACE(LPCWSTR str)
-	// TRACE sends a string to the debug/output pane, or an external debugger
+	inline void Trace(LPCWSTR str)
+	// Trace sends a string to the debug/output pane, or an external debugger
 	{
-  #ifndef NDEBUG
 		OutputDebugString(W2T(str));
-  #else
-		UNREFERENCED_PARAMETER(str); // no-op
-  #endif
 	}
 	
 	

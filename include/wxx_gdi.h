@@ -1140,12 +1140,14 @@ namespace Win32xx
 	}
 
 	inline HGDIOBJ CGDIObject::GetHandle() const
+	// Returns the GDI handle (HGDIOBJ) associated with this object.
 	{
 		assert(m_pData);
 		return m_pData->hGDIObject;
 	}
 
 	inline int CGDIObject::GetObject(int nCount, LPVOID pObject) const
+	// Retrieves information for the specified graphics object.
 	{
 		assert(m_pData);
 		return ::GetObject(m_pData->hGDIObject, nCount, pObject);

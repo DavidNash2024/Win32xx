@@ -418,6 +418,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMenuBar::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when a key is pressed.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
@@ -472,6 +473,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMenuBar::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when the menu bar loses focus.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
@@ -482,6 +484,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMenuBar::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when the left mouse button is pressed.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 
@@ -526,6 +529,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMenuBar::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when a key is released.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
@@ -706,6 +710,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMenuBar::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when the cursor leave the client area of the window.
 	{
 		if (IsMDIFrame())
 		{
@@ -723,6 +728,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CMenuBar::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when the cursor moves.
 	{
 		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);

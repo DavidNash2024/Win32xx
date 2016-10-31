@@ -92,6 +92,10 @@
   #include <sstream>
 #endif
 
+#ifdef _WIN32_WCE
+  #include "wxx_wcestddef.h"
+#endif
+
 // These messages are actually supported on Win98
 #if WINVER >= 0x0410
   #ifndef WM_UNINITMENUPOPUP
@@ -141,6 +145,7 @@
   #define GCLP_WNDPROC       GCL_WNDPROC
 #endif
 
+
 // Remove pointless warning messages
 #ifdef _MSC_VER
   #pragma warning (disable : 4996) // function or variable may be unsafe (deprecated)
@@ -166,18 +171,58 @@
   #pragma GCC diagnostic ignored "-Wmissing-braces"
 #endif
 
-#ifdef _WIN32_WCE
-  #include "wxx_wcestddef.h"
+
+// Automatically include the Win32xx namespace
+// define NO_USING_NAMESPACE to skip this step
+namespace Win32xx {}
+#ifndef NO_USING_NAMESPACE
+using namespace Win32xx;
+#endif
+
+
+// Ensure UNICODE and _UNICODE definitions are consistent
+#ifdef _UNICODE
+  #ifndef UNICODE
+    #define UNICODE
+  #endif
+#endif
+
+#ifdef UNICODE
+  #ifndef _UNICODE
+    #define _UNICODE
+  #endif
 #endif
 
 // Define our own MIN and MAX macros
-// this avoids inconsistencies with Dev-C++ and other compilers, and
+// This avoids inconsistencies with MinGW and other compilers, and
 // avoids conflicts between typical min/max macros and std::min/std::max
-#define MAX(a,b)            (((a) > (b)) ? (a) : (b))
-#define MIN(a,b)            (((a) < (b)) ? (a) : (b))
+#define MAX(a,b) 		(((a) > (b)) ? (a) : (b))
+#define MIN(a,b) 		(((a) < (b)) ? (a) : (b))
 
 // Version macro
-#define _WIN32XX_VER 0x0830		// Win32++ version 8.3.0
+#define _WIN32XX_VER 0x0840		// Win32++ version 8.4.0
+
+// Define the TRACE Macro
+// In debug mode, TRACE send text to the debug/output pane, or an external debugger
+// In release mode, TRACE is ignored.
+#ifndef TRACE
+  #ifdef NDEBUG
+    #define TRACE(str) (void(0))
+  #else
+    #define TRACE(str) Trace(str)
+  #endif
+#endif
+
+// Define the VERIFY macro
+// In debug mode, VERIFY asserts if the expression evaluates to zero
+// In release mode, VERIFY evaluates the expression, but doesn't assert.
+#ifndef VERIFY
+  #ifndef NDEBUG
+    #define VERIFY(f) assert(f)
+  #else
+    #define VERIFY(f) ((void)(f))
+  #endif
+#endif
 
 
 namespace Win32xx

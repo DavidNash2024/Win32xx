@@ -247,7 +247,7 @@ namespace Win32xx
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnTabClose(int nPage);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		// Not intended to be overwritten
 		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -632,6 +632,7 @@ namespace Win32xx
 	}
 
 	inline CRect CTab::GetCloseRect() const
+	// Returns the dimensions of the bounding rectangle of the close button.
 	{
 		CRect rcClose;
 		if (GetShowButtons())
@@ -654,6 +655,7 @@ namespace Win32xx
 	}
 
 	inline CMenu& CTab::GetListMenu()
+	// Returns a reference to the list menu.
 	{
 		if (!IsMenu(m_ListMenu))
 			m_ListMenu.CreatePopupMenu();
@@ -684,6 +686,7 @@ namespace Win32xx
 	}
 
 	inline CRect CTab::GetListRect() const
+	// Returns the dimensions of the bounding rectangle of the list button.
 	{
 		CRect rcList;
 		if (GetShowButtons())
@@ -697,6 +700,7 @@ namespace Win32xx
 	}
 
 	inline SIZE CTab::GetMaxTabSize() const
+	// Returns the size of the largest tab
 	{
 		CSize Size;
 
@@ -743,6 +747,7 @@ namespace Win32xx
 	}
 
 	inline int CTab::GetTabIndex(CWnd* pWnd) const
+	// Returns the index of the tab given its view window.
 	{
 		assert(pWnd);
 
@@ -756,6 +761,7 @@ namespace Win32xx
 	}
 
 	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab) const
+	// Returns the tab page info struct for the specified tab.
 	{
 		assert (nTab < m_vTabPageInfo.size());
 
@@ -763,12 +769,14 @@ namespace Win32xx
 	}
 
 	inline int CTab::GetTabImageID(UINT nTab) const
+	// Returns the image ID for the specified tab.
 	{
 		assert (nTab < m_vTabPageInfo.size());
 		return m_vTabPageInfo[nTab].iImage;
 	}
 
 	inline CString CTab::GetTabText(UINT nTab) const
+	// Returns the text for the specified tab.
 	{
 		assert (nTab < m_vTabPageInfo.size());
 		return m_vTabPageInfo[nTab].TabText;
@@ -808,6 +816,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::OnAttach()
+	// Called when this object is attached to a tab control
 	{
 		// Create and assign the image list
 		m_imlODTab.DeleteImageList();
@@ -1134,6 +1143,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::RecalcLayout()
+	// Repositions the child windows of the tab control.
 	{
 		if (IsWindow())
 		{
@@ -1211,6 +1221,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SetFixedWidth(BOOL bEnabled)
+	// Enable or disable fixed tab width.
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (bEnabled)
@@ -1264,6 +1275,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SetShowButtons(BOOL bShow)
+	// Allows the list and close buttons to be shown or hidden.
 	{
 		m_IsShowingButtons = bShow;
 		RecalcLayout();
@@ -1305,6 +1317,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SetTabSize()
+	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
 	{
 		if (GetItemCount() > 0)
 		{
@@ -1424,6 +1437,7 @@ namespace Win32xx
 	}
 
 	inline void CTab::SwapTabs(UINT nTab1, UINT nTab2)
+	// Swaps the two specified tabs.
 	{
 		if ((nTab1 < GetAllTabs().size()) && (nTab2 < GetAllTabs().size()) && (nTab1 != nTab2))
 		{
@@ -1998,8 +2012,8 @@ namespace Win32xx
 			}
 			catch (const CUserException& e)
 			{
-				TRACE("*** Failed to save TabbedMDI settings in registry. ***\n");
-				TRACE(e.GetText()); TRACE("\n");
+				Trace("*** Failed to save TabbedMDI settings in registry. ***\n");
+				Trace(e.GetText()); Trace("\n");
 
 				// Roll back the registry changes by deleting the subkeys
 				if (hKey != 0)
