@@ -468,6 +468,7 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::MDITile(int nType /* = 0*/) const
+	// Arrange all of the MDI child windows in a tile format. 
 	{
 		// Possible values for nType are:
 		// MDITILE_HORIZONTAL	Tiles MDI child windows so that one window appears above another.
@@ -479,6 +480,7 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::OnClose()
+	// Called when the MDI frame is about to close
 	{
 		if (RemoveAllMDIChildren())
 		{
@@ -487,6 +489,7 @@ namespace Win32xx
 	}
 
 	inline int CMDIFrame::OnCreate(CREATESTRUCT& cs)
+	// Called when the MDI frame is created.
 	{
 		GetMDIClient().m_pMDIFrame = this;
 		return CFrame::OnCreate(cs);
@@ -509,9 +512,8 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::OnMenuUpdate(UINT nID)
+	// Updates the check buttons before displaying the menu	
 	{
-		// Updates the check buttons before displaying the menu
-
 		switch (nID)
 		{
 		case IDW_VIEW_STATUSBAR:
@@ -533,6 +535,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::OnViewStatusBar()
+	// Called when the StatusBar is shown.
 	{
 		CFrame::OnViewStatusBar();
 		GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
@@ -540,6 +543,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::OnViewToolBar()
+	// Called when the ToolBar window is shown.
 	{
 		CFrame::OnViewToolBar();
 		GetView().RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ERASE | RDW_ALLCHILDREN);
@@ -560,6 +564,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::PreTranslateMessage(MSG& Msg)
+	// Used to translate window messages before they are dispatched to the TranslateMessage and 
+	//  DispatchMessage Windows functions. 
 	{
 		if (WM_KEYFIRST <= Msg.message && Msg.message <= WM_KEYLAST)
 		{
@@ -571,6 +577,7 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::RecalcLayout()
+	// Repositions the child windows of the MDI frame, such as the toolbar, status bar and view window.
 	{
 		CFrame::RecalcLayout();
 
@@ -579,6 +586,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::RemoveAllMDIChildren()
+	// Removes all MDI children.
 	{
 		BOOL bResult = TRUE;
 		int Children = (int)m_vMDIChild.size();
@@ -599,6 +607,7 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::RemoveMDIChild(HWND hWnd)
+	// Removes an individual MDI child.
 	{
 		// Allocate an iterator for our HWND map
 		std::vector<MDIChildPtr>::iterator v;

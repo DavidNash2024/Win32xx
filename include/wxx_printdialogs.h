@@ -845,8 +845,7 @@ namespace Win32xx
 			GlobalUnlock(GetApp().m_hDevNames);
 
 			DWORD dwError = CommDlgExtendedError();
-			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
-			// ignore the exception caused by closing the dialog
+			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE)) // ignore the exception caused by closing the dialog
 			{
 				// Reset global memory
 				GlobalFreeAll();

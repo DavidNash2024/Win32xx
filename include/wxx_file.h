@@ -166,6 +166,7 @@ namespace Win32xx
 	}
 
 	inline HANDLE CFile::GetHandle() const
+	// Returns the file handle associated with this object.
 	{
 		return m_hFile;
 	}

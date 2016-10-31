@@ -681,6 +681,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::CloseThemeData()
+	// Closes the theme data handle.
 	{
 		if (m_pfnCloseThemeData)
 			return m_pfnCloseThemeData(m_hTheme);
@@ -689,6 +690,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect)
+	// Draws the border and fill defined by the visual style for the specified control part.
 	{
 		if (m_pfnDrawThemeBackground)
 			return m_pfnDrawThemeBackground(m_hTheme, hdc, iPartId, iStateId, pRect, pClipRect);
@@ -697,6 +699,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect)
+	// Draws text using the color and font defined by the visual style.
 	{
 		if (m_pfnDrawThemeText)
 			return m_pfnDrawThemeText(m_hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, dwTextFlags2, pRect);
@@ -705,6 +708,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz)
+	// Calculates the original size of the part defined by a visual style.
 	{
 		if (m_pfnGetThemePartSize)
 			return m_pfnGetThemePartSize(m_hTheme, hdc, iPartId, iStateId, prc, eSize, psz);
@@ -713,6 +717,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal)
+	// Retrieves the value of an int property.
 	{
 		if (m_pfnGetThemeInt)
 			return m_pfnGetThemeInt(m_hTheme, iPartId, iStateId, iPropId, piVal);
@@ -721,6 +726,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::GetThemeMargins(HDC hdc, int iPartId, int iStateId, int iPropId, LPRECT prc, MARGINS* pMargins)
+	// Retrieves the value of a MARGINS property.
 	{
 		if (m_pfnGetThemeMargins)
 			return m_pfnGetThemeMargins(m_hTheme, hdc, iPartId, iStateId, iPropId, prc, pMargins);
@@ -729,6 +735,7 @@ namespace Win32xx
 	}
 
 	inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect)
+	// Calculates the size and location of the specified text when rendered in the visual style font.
 	{
 		if (m_pfnGetThemeTextExtent)
 			return m_pfnGetThemeTextExtent(m_hTheme, hdc, iPartId, iStateId, pszText, iCharCount, dwTextFlags, pBoundingRect, pExtentRect);
@@ -737,6 +744,7 @@ namespace Win32xx
 	}
 
 	inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId)
+	// Retrieves whether the background specified by the visual style has transparent pieces or alpha-blended pieces.
 	{
 		if (m_pfnIsThemeBGPartTransparent)
 			return m_pfnIsThemeBGPartTransparent(m_hTheme, iPartId, iStateId);
@@ -745,6 +753,7 @@ namespace Win32xx
 	}
 
 	inline HANDLE CMenuMetrics::OpenThemeData(HWND hwnd, LPCWSTR pszClassList)
+	// Opens the theme data for a window and its associated class.
 	{
 		if (m_pfnOpenThemeData)
 			return m_pfnOpenThemeData(hwnd, pszClassList);
@@ -782,6 +791,7 @@ namespace Win32xx
 	}
 
 	inline CSize CMenuMetrics::GetItemSize(MenuItemData* pmd)
+	// Retrieve the size of the menu item
 	{
 		CSize size;
 
@@ -916,6 +926,7 @@ namespace Win32xx
 	}
 
 	inline int CMenuMetrics::ToItemStateId(UINT uItemState)
+	// Convert from item state to MENU_POPUPITEM state
 	{
 		const bool      IsDisabled   = ((uItemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
 		const bool      IsHot        = ((uItemState & (ODS_HOTLIGHT | ODS_SELECTED)) != 0);
@@ -932,6 +943,7 @@ namespace Win32xx
 	}
 
 	inline int CMenuMetrics::ToCheckBackgroundStateId(int iStateId)
+	// Convert to MENU_POPUPCHECKBACKGROUND
 	{
 		POPUPCHECKBACKGROUNDSTATES iStateIdCheckBackground;
 
@@ -945,6 +957,7 @@ namespace Win32xx
 	}
 
 	inline int CMenuMetrics::ToCheckStateId(UINT fType, int iStateId)
+	// Convert to MENU_POPUPCHECK state
 	{
 		POPUPCHECKSTATES iStateIdCheck;
 
@@ -2188,8 +2201,8 @@ namespace Win32xx
 
 			catch (const CUserException& e)
 			{
-				TRACE("*** Failed to load values from registry, using defaults. ***\n");
-				TRACE(e.GetText()); TRACE(strKey); TRACE("\n");
+				Trace("*** Failed to load values from registry, using defaults. ***\n");
+				Trace(e.GetText()); TRACE(strKey); Trace("\n");
 
 				// Delete the bad key from the registry
 				CString strParentKey = _T("Software\\") + m_strKeyName;
@@ -2898,8 +2911,8 @@ namespace Win32xx
 
 		catch (const CUserException& e)
 		{
-			TRACE("*** Failed to save registry MRU settings. ***\n");
-			TRACE(e.GetText()); TRACE("\n");
+			Trace("*** Failed to save registry MRU settings. ***\n");
+			Trace(e.GetText()); Trace("\n");
 
 			CString KeyName = _T("Software\\") + m_strKeyName;
 			CRegKey Key;
@@ -2970,8 +2983,8 @@ namespace Win32xx
 
 			catch (const CUserException& e)
 			{
-				TRACE("*** Failed to save registry settings. ***\n");
-				TRACE(e.GetText()); TRACE("\n");
+				Trace("*** Failed to save registry settings. ***\n");
+				Trace(e.GetText()); Trace("\n");
 
 				CString KeyName = _T("Software\\") + m_strKeyName;
 				CRegKey Key;
