@@ -81,7 +81,6 @@ CApp : public CWinApp							/*
 		CString&    GetArcvFile() {return m_AppGlobal.GetArcvPath();}
 		int	    GetCmdShow()  {return m_nCmdShow;}
 		CMainFrame& GetFrame()    {return m_Frame;}
-		CString&    GetHelpFile() {return m_AppGlobal.GetHelpPath();}
 		void	    SetCmdShow(int c) {m_nCmdShow = c;}
 
 	protected:
@@ -93,8 +92,6 @@ CApp : public CWinApp							/*
 		           m_sAppDir,    // directory of this app
 		           m_sAppPath,   // path to this app
 		           m_sExeName,   // name of exe file, without extension
-		           m_sHelpDir,   // directory holding the help file
-		           m_sHelpFile,  // path to the application's help file
 		           m_sArcvDir,   // directory holding the archive file
 			   m_sArcvFile;  // initialization archive file name
 		int        m_nCmdShow;   // WinMain() entry nCmdShow argument
@@ -115,7 +112,6 @@ CApp& TheApp()                                                  	/*
 {
 	return (CApp&)GetApp();
 }
-
 /*-----------------------------------------------------------------------------*/
 #endif // define SDI_APP_H
 

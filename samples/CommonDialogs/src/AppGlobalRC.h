@@ -89,7 +89,6 @@
 #define IDS_DATAPATH_SUBDIR             302
 #define IDS_DOC_DEFAULT_EXT             303
 #define IDS_FILE_FILTER                 304
-#define IDS_HELP_FILE_EXT               305
 #define IDS_MAX_MRU_ENTRIES             306
 
 /*----------------------------------------------------------------------------*/

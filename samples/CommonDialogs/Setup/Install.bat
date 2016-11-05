@@ -13,7 +13,6 @@ mkdir "%AppData%\Win32++\CommonDialogs"
 
 ECHO.
 ECHO Copy the files to the AppData folder
-copy CommonDialogs.chm "%AppData%\Win32++\CommonDialogs" 
 copy CommonDialogs.arc "%AppData%\Win32++\CommonDialogs"
 
 ECHO.

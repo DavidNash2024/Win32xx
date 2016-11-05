@@ -1,4 +1,4 @@
-/* (28-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (MyFontDlg.h) *
+/* (01-Nov-2016) [Tab/Indent: 8/8][Line/Box: 80/74]             (AboutBox.cpp) *
 ********************************************************************************
 |                                                                              |
 |                   Copyright (c) 2016, Robert C. Tausworthe                   |
@@ -7,11 +7,10 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Declaration of the MyFontDialog class for
-	applications using the Win32++ Windows interface classes, Copyright
-	(c) 2005-2016 David Nash, under permissions granted therein. This class
-	derives from the CFontDalog class found in the Win32++ Windows interface
-	framework. 
+	Contents Description: Declaration of the AboutBox class for the
+	CommonDialogs SDI sample application using the Win32++ Windows interface
+	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
+	therein.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -37,72 +36,48 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 
+	Special Conventions:
+
  	Acknowledgement:
 		The author would like to thank and acknowledge the advice,
 		critical review, insight, and assistance provided by David Nash
 		in the development of this work.
 
 	Programming Notes:
-               The programming standards roughly follow those established
+                The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
-	Declaration of the MyFontDialog class
+	Implementation of the AboutBox class
 
 *******************************************************************************/
 
-#ifndef MYFONTDIALOG_H
-#define MYFONTDIALOG_H
+#include "StdAfx.h"
+#include "StdApp.h"
 
-#include "ListBoxDlgRC.h"
+/*******************************************************************************
 
-/*============================================================================*/
-	class
-MyFontDialog : public CFontDialog                                       /*
+	AboutBox dialog implementation
 
+/=============================================================================*/
+	void AboutBox::
+OnHelpAbout()                                                       	/*
+
+	Display the application's About dialog box, which shows a credits string
+	supplied by the application. This typically contains an application
+	name, copyright information, and date of most recent compilation.
 *-----------------------------------------------------------------------------*/
 {
-	public:
-		MyFontDialog(DWORD dwFlags = 0, HDC hdcPrinter = 0);
+	  // Ensure that only one About dialog displays even for multiple
+	  // activation commands
+	CString s = TheApp().GetAppGlobal().GetAboutBoxInfo();
+	if (!IsWindow())
+		Create();  // make the AboutBox modeless
 
-		~MyFontDialog(){}
+	SetDlgItemText(IDC_ABOUT_MSG, s); // tbd m_sCredits);
+	SetFocus(); 	// set the focus on the box
+	return;
+}
 
-			SIZE	GetAvgSize(void) const
-				    { return m_avgWdHt;}
-			CFont	GetChoiceFont(void) const
-				    { return m_Font;}
-			LOGFONT GetCurrentLogFont() const { return m_LogFont;}
-		virtual void 	OnOK();
-			void	SetBoxTitle(const CString& title)
-				    { m_sBoxTitle = title;}
-			void    SetChoiceFont(const CFont& f)
-				    { LOGFONT lf = f.GetLogFont();
-				      SetChoiceLogFont(lf);}
-
-	protected:
-		TEXTMETRIC 	GetTexMetric(void) const
-				    { return m_tm;}
-		TEXTMETRIC* 	GetTextMetricPtr()
-				    { return &m_tm;}
-		virtual BOOL 	OnInitDialog();
-			void 	RecordFontMetrics();
-		virtual	void 	Serialize(CArchive &ar);
-			void    SetChoiceLogFont(LOGFONT& lf)
-				    { SetFontIndirect(lf); RecordFontMetrics();}
-			void 	SetFontIndirect(const LOGFONT& lf);
-			void	SetTextMetric(const TEXTMETRIC& tm)
-				    { m_tm = tm;}
-		virtual void    SetWindowTitle() const
-				    {SetWindowText(m_sBoxTitle);}
-
-	private:
-		CString 	m_sBoxTitle;
-		TEXTMETRIC 	m_tm;		// font text metrics
-	       	SIZE		m_avgWdHt;	// font average width & height
-		CFont		m_Font;		// the current font
-		LOGFONT         m_LogFont;      // the current logfont
-};
-
-#endif

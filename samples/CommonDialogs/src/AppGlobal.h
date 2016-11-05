@@ -75,11 +75,8 @@ class CAppGlobal
 		CString& GetCompileDate()  { return m_sCompiled_on;}
 		CString& GetDocExt()       { return m_sDocExt;}
 		CString& GetFileFilter()   { return m_sFileFilter;}
-		CString& GetHelpDir()      { return m_sHelpDir;}
-		CString& GetHelpPath()     { return m_sHelpPath;}
 		UINT     GetMaxMRU()       { return m_nMaxMRUSlots;}
 		CString& GetWin32Vers()    { return m_sWin32Version;}
-		BOOL     HasHelpFile()     { return m_bHasHelpFile;}
 
 		  // static methods
 		static	CString	MakeAppDataPath(const CString& subpath);
@@ -89,7 +86,6 @@ class CAppGlobal
 
 	private:
 		  // private data
-		BOOL    m_bHasHelpFile; // TRUE if the help file exists
 		UINT    m_nMaxMRUSlots; // maximum allowed MRU entries
  		CString m_sAboutBoxInfo, // About box information
 		 	m_sAppTitle,	// name of app, no directory, with ext
@@ -102,8 +98,6 @@ class CAppGlobal
 			m_sCompiled_on, // compilation date
 			m_sDocExt,	// document default extension
 			m_sFileFilter,  // do file dialog filter
-		        m_sHelpDir,	// directory holding the help file
-		        m_sHelpPath,	// path to the application's help file
 		        m_sWin32Version; // version of Win32 framework used
 };
 /*----------------------------------------------------------------------------*/

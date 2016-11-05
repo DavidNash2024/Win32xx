@@ -9,10 +9,8 @@
 
 	Contents Description: The declaration and implementation of the
 	MyPrinter and MyPageSetup classes, which are derived from the
-	CPrintDialog and CPageSetupDialog classs. These are customized
-	extensions that augment the handling of the PrintDlg and PageSetupDlg
-	HELP buttons to provide context help and setting of the dialog titles.
-
+	CPrintDialog and CPageSetupDialog classs.
+	
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
 	additions, deletions, and other treatments of materials that may have
@@ -85,18 +83,6 @@ MyPrinter : public CPrintDialog                        			/*
 	protected:
 		friend class MyPageSetup;
 		
-		virtual void OnHelpButton()
-		// Send the printer context help identifier to the window whose
-		// handle is the object's hwndOwner.
-		{
-			HWND hwndOwner =  GetParameters().hwndOwner;	
-			if (::IsWindow(hwndOwner))
-			{
-				::SendMessage(hwndOwner, WM_COMMAND,
-				    IDC_HELP_COMDLG, IDM_HELP_PRINTDLG);
-			}
-		}
-
 		virtual BOOL OnInitDialog()
 		//  Override this member method to perform special processing
 		//  when the printer box is initialized. Return TRUE.
@@ -148,19 +134,6 @@ MyPageSetup : public CPageSetupDialog                            	/*
 	protected:
 		friend class MyPrinter;
 		
-		virtual void OnHelpButton()
-		//  Send the printer or page setup context help identifier to
-		// the window whose handle is the object's hwndOwner,
-		//  depending on the dialog box mode
-		{
-			HWND hwndOwner = GetParameters().hwndOwner;
-			if (::IsWindow(hwndOwner))
-			{
-				::SendMessage(hwndOwner, WM_COMMAND,
-				    IDC_HELP_COMDLG, (LPARAM)IDM_HELP_PAGESETDLG);
-			}
-		}
-
 		virtual BOOL OnInitDialog()
 		//  Override this member method to perform special processing
 		//  when the printer box is initialized. Return TRUE.

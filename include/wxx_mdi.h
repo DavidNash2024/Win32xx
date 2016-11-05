@@ -126,7 +126,7 @@ namespace Win32xx
 	//
 	class CMDIFrame : public CFrame
 	{
-		friend class CMDIChild;     // CMDIChild uses m_hOrigMenu
+		friend class CMDIChild;     // CMDIChild uses CMDIFrame::UpdateFrameMenu
 
 	public:
 		// A nested class inside CMDIFrame

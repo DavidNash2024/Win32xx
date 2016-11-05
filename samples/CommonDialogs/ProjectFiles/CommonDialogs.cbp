@@ -184,6 +184,8 @@
 		<VirtualTargets>
 			<Add alias="All" targets="Debug Borland;Release Borland;Debug Microsoft Visual C++;Release Microsoft Visual C++;Debug MinGW GNU compiler;Release MinGW GNU compiler;" />
 		</VirtualTargets>
+		<Unit filename="../src/AboutBox.cpp" />
+		<Unit filename="../src/AboutBox.h" />
 		<Unit filename="../src/App.cpp" />
 		<Unit filename="../src/App.h" />
 		<Unit filename="../src/AppGlobal.cpp" />
@@ -192,12 +194,6 @@
 			<Option compilerVar="WINDRES" />
 		</Unit>
 		<Unit filename="../src/AppGlobalRC.h" />
-		<Unit filename="../src/AppHelp.cpp" />
-		<Unit filename="../src/AppHelp.h" />
-		<Unit filename="../src/AppHelp.rc">
-			<Option compilerVar="WINDRES" />
-		</Unit>
-		<Unit filename="../src/AppHelpRC.h" />
 		<Unit filename="../src/ColorChoice.cpp" />
 		<Unit filename="../src/ColorChoice.h" />
 		<Unit filename="../src/ColorDefs.h" />

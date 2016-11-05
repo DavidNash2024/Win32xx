@@ -61,7 +61,6 @@
 #include "default_resource.h"
 #include "ListBoxDlg.h"
 #include "ListBoxDlgRC.h"
-#include "AppHelpRC.h"
 
 /*============================================================================*/
 	CListBoxDlg::
@@ -90,16 +89,12 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)			/*
 {
 	switch (uMsg)
 	{
-	    case WM_COMMAND:
-	    {
-		switch (LOWORD(wParam))
-		{
-		    case IDM_HELP_LIST_BOX:
-			  // route the help message to the owner window
-			OnHelpButton();	
-			return TRUE;	
-		}
-	    }
+//	    case WM_COMMAND:
+//	    {
+//		switch (LOWORD(wParam))
+//		{
+//		}
+//	    }
 	    
 	    case WM_SYSCOMMAND:
 	    {
@@ -148,24 +143,6 @@ DoModal(HWND hWndOwner /* = 0 */)      					/*
 	  // and OnCancel() for the mechanism that implements this behavior.
 	::UpdateWindow(hWndOwner);
 	return (ok < INT_MAX ? ok : -1);
-}
-
-/*============================================================================*/
-	void CListBoxDlg::
-OnHelpButton()                                                          /*
-
-	Override base class member to send the font context help identifier to
-	the GW_OWNER window of this object.
-*-----------------------------------------------------------------------------*/
-{
-	  // route the help message to the owner window
-	HWND hwndOwner = GetWindow(GW_OWNER);
-	if (::IsWindow(hwndOwner))
-	{
-		::SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
-		    IDM_HELP_LIST_BOX);
-	}
-
 }
 
 /*============================================================================*/

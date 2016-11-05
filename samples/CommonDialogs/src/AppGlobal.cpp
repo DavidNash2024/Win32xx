@@ -53,10 +53,7 @@
 		CString& GetCompileDate()
 		CString& GetDocExt()
 		CString& GetFileFilter()
-		CString& GetHelpDir()	
-		CString& GetHelpPath()	
 		UINT     GetMaxMRU() 
-		BOOL     HasHelpFile()
 
 	Special Conventions:
 
@@ -93,7 +90,7 @@ CAppGlobal()                                                            /*
 
 	Here are initialized public data strings containing the AboutBox
 	information, the app path, the app directory, the app name, the
-	app exe name, the archive file name, and the help file name.
+	app exe name, and the archive file name.
 *-----------------------------------------------------------------------------*/
 {
           // extract the app name, directory, and  path names
@@ -113,17 +110,6 @@ CAppGlobal()                                                            /*
 	  // form the archive file path name
  	m_sArcvPath  = m_sArcvDir + _T("\\") + m_sAppName +
 	     LoadString(IDS_ARCHIVE_FILE_EXT);
-
-	  // the help file path name
-	m_sHelpDir  = m_sArcvDir; 
-	m_sHelpPath = m_sHelpDir + _T("\\") + m_sAppName +
-	    LoadString(IDS_HELP_FILE_EXT);
-
-	  // determine the availability of the help file
-	m_bHasHelpFile = (_taccess(m_sHelpPath, 0x04) == 0);
-	  // convey the a help file name to the AppHelp object (empty if none)
-	if (!m_bHasHelpFile)
-		m_sHelpPath.Empty();
 
 	  // the document default extension
 	m_sDocExt     = LoadString(IDS_DOC_DEFAULT_EXT);
@@ -150,7 +136,7 @@ CAppGlobal()                                                            /*
 #endif
 	m_sCompiled_on        = __DATE__;
 
-;	m_sAboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
+	m_sAboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
 	    _T("%s on %s"), LoadString(IDW_MAIN).c_str(), m_sAppName.c_str(),
 	    LoadString(IDS_APP_VERSION).c_str(), m_sWin32Version.c_str(),
 	    m_sCompiler.c_str(), m_sCompiled_on.c_str());

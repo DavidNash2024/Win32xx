@@ -123,10 +123,7 @@
 #define IDM_FONT_CHOICE                 120			
 #define IDM_COLOR_CHOICE                121
 
-  // help context and content toolbar and menu messages
-#define IDM_HELP_CONTENT                130			
-#define IDM_HELP_CONTEXT                131
-#define IDM_HELP_ACTIVE			WM_APP + 100
+#define IDC_ABOUT_MSG                   130
 
   // resource IDs of menu or toolbar icons, bitmaps, or other images
 #define IDI_COLOR_CHOICE                140			
@@ -135,6 +132,7 @@
   // resource IDs for client area controls (IDOK has its own, so not given here)
 #define IDC_RICHEDITBOX			150
 #define IDM_RICHEDWRAP                  151
+
 
   // rich edit notification to CMainFrame
 #define IDM_UPDATECONTROLUISTATE        WM_APP + 101

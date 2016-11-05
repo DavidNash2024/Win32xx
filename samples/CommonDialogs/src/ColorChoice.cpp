@@ -73,7 +73,6 @@
 #include "stdafx.h"
 #include "ColorChoice.h"
 #include "ListBoxDlgRC.h"
-#include "AppHelpRC.h"
 
 /*============================================================================*/
 	CColorChoice::
@@ -250,21 +249,6 @@ InitCustomColors()                                                      /*
 	rgbCustomColors[15] = RGB(200, 250, 255);
 
 	SetCustomColors(rgbCustomColors);						
-}
-
-/*============================================================================*/
-	void CColorChoice::
-OnHelpButton()	                                                        /*
-
-	Override base class member to send the font context help identifier to
-	the window whose handle is the object's hwndOwner.
------------------------------------------------------------------------------*/
-{
-	  // route the help message to the owner window
-	HWND hwndOwner = GetParameters().hwndOwner;
-	if (::IsWindow(hwndOwner))
-		::SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
-			IDM_HELP_COLORDLG);
 }
 
 /*============================================================================*/

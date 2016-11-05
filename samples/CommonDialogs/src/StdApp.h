@@ -80,8 +80,6 @@
 #include "ColorDefs.h"
 #include "CustomButton.h"
 #include "ColorChoice.h"
-#include "AppHelpRC.h"
-#include "AppHelp.h"
 #include "MyFileDlg.h"
 #include "MyFontDlg.h"
 #include "MyFindReplaceDlg.h"
@@ -90,6 +88,7 @@
 #include "Doc.h"
 #include "PrintInfo.h"
 #include "View.h"
+#include "AboutBox.h"
 #include "MainFrm.h"
 #include "App.h"
 
