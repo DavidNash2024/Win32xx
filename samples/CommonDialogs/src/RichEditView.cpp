@@ -594,8 +594,7 @@ OnPreparePrinting(CPrintInfo& info)                                    /*
 *-----------------------------------------------------------------------------*/
 {
 	  // set up the dialog to choose the printer and printing parameters
-	MyPrinter PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC |
-	    PD_SHOWHELP);
+	MyPrinter PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
 	PrintDlg.SetBoxTitle(_T("Print contents of rich edit box."));
 	info.InitInfo(&PrintDlg, 1, 0xffff, 1, 0xffff, 1);
 	if (!DoPreparePrinting(info))

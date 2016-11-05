@@ -30,7 +30,7 @@
 	tort or otherwise, arising from, out of, or in connection with, these
 	materials, the use thereof, or any other other dealings therewith.
 	
-	Implementation Notes:   The file dialog document type filter is a string
+	Implementation Notes:  The file dialog document type filter is a string
 	used to determine the types of names that files must have in order to be
 	displayed in the file list box. This string consists of substring pairs,
 	each of which specifies a descriptor and a type (or types). The first
@@ -65,7 +65,6 @@ STRINGTABLE
 	IDS_DATAPATH_SUBDIR	"win32++\\"
 	IDS_DOC_DEFAULT_EXT     ".txt"
 	IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
-	IDS_HELP_FILE_EXT       ".chm"
 	IDS_MAX_MRU_ENTRIES     "5"
 }
 

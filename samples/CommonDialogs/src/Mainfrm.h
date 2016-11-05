@@ -15,8 +15,7 @@
 	This particular frame class contains features a fixed-size form for the
 	display, with no resizing gripper tool at the end of the status bar,
 	and provisions for selection of client background color, selection of
-	edit box font, use of external serialization files, MRU lists, and
-	context help for all controls on the frame and client area.
+	edit box font, use of external serialization files, and MRU lists.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -112,10 +111,7 @@ CMainFrame : public CFrame						/*
 		
 			void 	AddMRUEntry(LPCTSTR szMRUEntry)
 				    { CFrame::AddMRUEntry (szMRUEntry);}
-			BOOL	DoContextHelp(WPARAM wParam);
 		virtual void    EmptyMRUList();
-		virtual BOOL    EngageContextHelp();
-		       AppHelp& GetAppHelp() {return m_AppHelp;}
 			CDoc& 	GetDoc() { return m_Doc; }
 			UINT    GetMRUSize() { return GetMRUEntries().size();}
 		virtual CStatusBar& GetStatusBar() const
@@ -133,7 +129,6 @@ CMainFrame : public CFrame						/*
 		    		{ return m_ColorChoice.GetTableColor(SBBg);}
 
 	protected:
-		virtual void    ConnectAppHelp();
 		virtual void	GetCtlColors(UINT nCtlColor, UINT nID, UINT& fg,
 				    UINT& bk, UINT& bg);
 		 CRichEditView& GetREView() { return m_View.GetREView();}
@@ -148,6 +143,7 @@ CMainFrame : public CFrame						/*
 		virtual void    OnEditReplace();
 		virtual void 	OnFileOpenMRU(UINT);
 		virtual void    OnFontChoice();
+		virtual BOOL    OnHelp();
 		virtual void    OnInitialUpdate(void);
 		virtual void 	OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
@@ -157,7 +153,6 @@ CMainFrame : public CFrame						/*
 		virtual void 	PreCreate(CREATESTRUCT& cs);
 		virtual BOOL 	SaveRegistrySettings(void);
 		virtual void	Serialize(CArchive &ar);
-		virtual void    SetContextHelpMessages(void);
 			BOOL	SetCheckStatus(UINT, BOOL, ControlBars);
 			BOOL    SetEnableStatus(UINT, BOOL, ControlBars);
 		virtual void 	SetReBarColors(COLORREF, COLORREF, COLORREF,
@@ -173,6 +168,7 @@ CMainFrame : public CFrame						/*
 		  // private data members
 		CDoc 	   m_Doc;	      // the document
 		CView	   m_View;	      // the view
+		AboutBox   m_AboutBox;        // the AboutBox dialog
                 UINT 	   m_win_x,           // serialized window x position
                            m_win_y,           // serialized window y position
                            m_width,           // serialized window width
@@ -180,7 +176,6 @@ CMainFrame : public CFrame						/*
 		UINT	   m_nMaxMRU;	      // maximum MRU entries, this app
 		HCURSOR    m_hCursor;         // current cursor shape
 		CBitmap    m_colorbmp;        // for the color choice menuitem
-		AppHelp    m_AppHelp;         // the context help object
 		CBrush     m_br;              // backbround brush object
 		BOOL       m_bWrapText;       // wrap text in rich edit if true.
 		CColorChoice m_ColorChoice;   // the control color choice

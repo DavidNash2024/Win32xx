@@ -11,9 +11,8 @@
 	applications using the Win32++ Windows interface classes, Copyright
 	(c) 2005-2016 David Nash, under permissions granted therein. This class
 	derives from the CFontDalog class found in the Win32++ Windows interface
-	framework. It permits customized handling of the HELP button to provide
-	context help, setting of the dialog title, and serialization.
-
+	framework. 
+	
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
 	additions, deletions, and other treatments of materials that may have
@@ -60,41 +59,24 @@
 
 #include "stdafx.h"
 #include "MyFontDlg.h"
-#include "AppHelpRC.h"
 
 /*============================================================================*/
 	MyFontDialog::
-MyFontDialog(DWORD dwFlags /* = CF_SHOWHELP */, HDC hdcPrinter /* = 0 */) /*
+MyFontDialog(DWORD dwFlags, HDC hdcPrinter /* = 0 */) 			/*
 
 	Create a simple default font dialog object with the title "Font", a
 	10pt Courier New typeface, and font, style, strikeout, underline, text
-	color, and help options enabled, as well as other options specified by
-	dwFlags. The hdcPrinter parameter, if non-zero, is a handle to a printer
-	device context for the printer on which the fonts are to be selected.
+	color, as well as other options specified by dwFlags. The hdcPrinter
+	parameter, if non-zero, is a handle to a printer device context for the
+	printer on which the fonts are to be selected.
 *-----------------------------------------------------------------------------*/
     : CFontDialog(dwFlags | CF_INITTOLOGFONTSTRUCT | CF_EFFECTS |
-	CF_ENABLEHOOK | CF_SHOWHELP , hdcPrinter)
+	CF_ENABLEHOOK, hdcPrinter)
 {
 	SetBoxTitle(_T("Font"));
           // default font, 10pt Courier New
 	m_Font.CreatePointFont(10, _T("Courier New"));
 	SetChoiceFont(m_Font);
-}
-
-/*============================================================================*/
-	void MyFontDialog::
-OnHelpButton()                                                          /*
-
-	Override base class member to send the font context help identifier to
-	the window whose handle is the CHOOSEFONT struct's hwndOwner.
-*-----------------------------------------------------------------------------*/
-{
-	HWND hwndOwner = GetParameters().hwndOwner;
-	if (::IsWindow(hwndOwner))
-	{
-		::SendMessage(hwndOwner, WM_COMMAND, IDC_HELP_COMDLG,
-		    IDM_HELP_FONTDLG);
-	}
 }
 
 /*============================================================================*/

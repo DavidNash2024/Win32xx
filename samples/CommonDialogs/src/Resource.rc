@@ -115,7 +115,6 @@ IDW_MAIN MENU
 
 	POPUP "&Help"
 	{
-		MENUITEM "Contents",               IDM_HELP_CONTENT
 		MENUITEM "&About",     		   IDW_ABOUT
 	}
 }
@@ -137,10 +136,9 @@ IDI_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
 IDW_MAIN                BITMAP DISCARDABLE  	"../src/res/Toolbar.bmp"
 
-/*============================================================================**
+/*============================================================================*/
 
-	Main Window Form Dialog                                         */
-
+  // Main Window Form Dialog
 IDD_FORM_DIALOG DIALOGEX 0, 0, 490, 410
 STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD | WS_VISIBLE
 EXSTYLE WS_EX_CLIENTEDGE
@@ -155,6 +153,20 @@ FONT 10, "Courier New", 0, 0
 			    10, 10, 290, 235, WS_EX_CLIENTEDGE |
 			    WS_EX_ACCEPTFILES
 }
+
+  // AboutBox Dialog
+IDW_ABOUT DIALOGEX 0, 0, 200, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+BEGIN
+    DEFPUSHBUTTON   "OK", IDOK, 80, 80, 40, 15
+    CTEXT           "Common Controls Demo", IDC_ABOUT_MSG, 30, 5, 160, 70
+    ICON            IDW_MAIN, 0, 5, 5, 20, 20
+END
+
+
 
 /*==============================================================================
 
@@ -174,7 +186,6 @@ IDW_MAIN ACCELERATORS
 	"P",            IDM_FILE_PREVIEW, VIRTKEY, SHIFT, CONTROL, NOINVERT
 	"P",		IDM_FILE_PAGESETUP,VIRTKEY, ALT, NOINVERT
 	"H",		IDW_ABOUT,  	 VIRTKEY, CONTROL, NOINVERT
-	VK_F1,          IDM_HELP_CONTEXT, VIRTKEY, SHIFT, NOINVERT
 	"Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
 	"R",            IDM_EDIT_REPLACE, VIRTKEY, CONTROL, NOINVERT
 	"Z",            IDM_EDIT_UNDO,   VIRTKEY, CONTROL, NOINVERT
@@ -187,7 +198,7 @@ IDW_MAIN ACCELERATORS
 	String Tables--tool tips and status labels			*/
 STRINGTABLE  // for the mainframe
 {
-	IDW_MAIN                "Common Dialogs Demo, with Context-Sensitive Help"
+	IDW_MAIN                "Common Dialogs Demo"
 	IDW_INDICATOR_CAPS      "CAP"
 	IDW_INDICATOR_NUM       "NUM"
 	IDW_INDICATOR_SCRL      "SCRL"
@@ -229,11 +240,9 @@ STRINGTABLE	  // standard edit menu or toolbar items
 	IDM_EDIT_DELETE         "Erase the selected Contents."
 }
 
-STRINGTABLE     // help menu or toolbar items
+STRINGTABLE     // about box and toolbar items
 {
 	IDW_ABOUT          	"Display information about this program."
-	IDM_HELP_CONTENT        "Show help document for this program."
-	IDM_HELP_CONTEXT        "Show help on topic selected."
 }
 
 STRINGTABLE     // window-related items

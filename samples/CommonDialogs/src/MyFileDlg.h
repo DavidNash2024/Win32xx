@@ -10,9 +10,7 @@
 
 	Contents Description: This file contains the declaration and
 	implementation of the MyFileDlg class, which is derived from the
-	CFileDalog class found in the Win32++ Windows interface framework. It
-	permits customized handling of the HELP button to provide context help
-	and setting of the dialog title.
+	CFileDalog class found in the Win32++ Windows interface framework. 
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -84,25 +82,6 @@ MyFileDialog : public CFileDialog
 		}
 			  
 	protected:
-		virtual void OnHelpButton()
-		  // Send the proper file dialog context help identifier to
-		  // the window whose handle is the OPENFILENAME struct's
-		  // hwndOwner.
-		{
-			HWND hwndOwner = GetParameters().hwndOwner;		
-			if (::IsWindow(hwndOwner))
-			{
-				BOOL isOpenDoc = GetParameters().Flags &	
-				    (OFN_FILEMUSTEXIST | OFN_PATHMUSTEXIST);
-				LPARAM lParam = IsOpenFileDialog() ?
-				    (isOpenDoc ? IDM_HELP_FILEDLG_OPEN :
-				        IDM_HELP_FILEDLG_NEW) :
-				    IDM_HELP_FILEDLG_SAVEAS;
-				::SendMessage(hwndOwner, WM_COMMAND,
-				    IDC_HELP_COMDLG, lParam);
-			}
-		}
-
 		virtual BOOL OnInitDialog()
 		// This method is activated within  immediately before
 		// the dialog box is displayed, and too late for any changes to

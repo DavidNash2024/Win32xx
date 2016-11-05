@@ -13,9 +13,8 @@
 	therein.
 
  	This particular view class contains features for selection of client
-	background color, selection of edit box font, use of external
-	serialization files, and context help for all controls in the client
-	area.
+	background color, selection of edit box font, and use of external
+	serialization files.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -172,12 +171,6 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 		Invalidate();
 		break;	// Also do default processing
 
-	    case WM_LBUTTONDOWN:  // user clicks in the client area
-		  // let the main frame WndProc() handle this as a click in
-		  // the client window
-	    	return ::SendMessage(m_hParent, IDM_HELP_ACTIVE,
-		    (WPARAM)IDW_MAIN, 0);
-
 	    case WM_CTLCOLORBTN:
 	    case WM_CTLCOLOREDIT:
 	    case WM_CTLCOLORDLG:
@@ -228,13 +221,8 @@ OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 	from a control. Otherwise, lParam is 0.
 **----------------------------------------------------------------------------*/
 {
+	UNREFERENCED_PARAMETER(wParam);
 	UNREFERENCED_PARAMETER(lParam);
-
-	  // check all OnCommand() messages: if help mode is active, let it
-	  // handle the wParam message and then return, returning TRUE;
-	  // otherwise, pass control on to the body of the procedure
-	if(::SendMessage(m_hParent, IDM_HELP_ACTIVE, wParam, 0))
-		return TRUE;
 
 //	UINT nID = LOWORD(wParam);
 //	switch (nID)
@@ -323,11 +311,6 @@ OnOK()                                                                  /*
 	disable the OK button, but would not destroy the form window.
 **----------------------------------------------------------------------------*/
 {
-	  // If help mode is active, let the main frame WndProc() handle the
-	  // IDOK message; otherwise, proceed on to process OnOK event.
-	if (::SendMessage(m_hParent, IDM_HELP_ACTIVE, IDOK, 0))
-		return;
-
 	::MessageBox(NULL, _T("OK Button Pressed."), _T("Information"),
 	    MB_OK | MB_ICONINFORMATION | MB_TASKMODAL);
 	TRACE("OK Button Pressed.\n");
@@ -348,7 +331,7 @@ OnPrintDocument()							/*
 	void CView::
 OnPrintPreview()							/*
 
-	Invoke the print preview dialog
+	Invoke the print preview dialog.
 *-----------------------------------------------------------------------------*/
 {
 	// TODO: not supported

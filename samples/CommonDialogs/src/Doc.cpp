@@ -451,7 +451,6 @@ OnNewDoc()                                                            /*
 	    GetExt(),  	 // extension defined by app
 	    GetFilePath(), // current open file path
 	    OFN_HIDEREADONLY |
-	    OFN_SHOWHELP |
 	    OFN_EXPLORER |
 	    OFN_NONETWORKBUTTON |
 	    OFN_ENABLESIZING,
@@ -499,7 +498,6 @@ OnOpenDoc()                                                            /*
 	    GetExt(), 		// extension defined by app
 	    GetFilePath(),	// current open file path
 	    OFN_HIDEREADONLY |  // flags
-	    OFN_SHOWHELP |
 	    OFN_EXPLORER |
 	    OFN_NONETWORKBUTTON |
 	    OFN_FILEMUSTEXIST |	 // only exising files allowed
@@ -535,7 +533,7 @@ OnPageSetup()								/*
 	Invoke the page setup dialog box and set printer parameters.
 *-----------------------------------------------------------------------------*/
 {
-	MyPageSetup PSD(PSD_SHOWHELP);
+	MyPageSetup PSD(PSD_MARGINS);
 	PSD.SetBoxTitle(_T("Page Parameter Setup"));
 	PSD.DoModal(theApp.GetMainWnd());
 
@@ -636,7 +634,6 @@ OnSaveDocAs()                                                            /*
 	    GetFilePath(), // current open file path
 	    OFN_HIDEREADONLY |
 	    OFN_OVERWRITEPROMPT |
-	    OFN_SHOWHELP |
 	    OFN_EXPLORER |
 	    OFN_ENABLEHOOK |
 	    OFN_NONETWORKBUTTON,
@@ -730,7 +727,7 @@ OpenDoc(const CString &file)						/*
 		m_Doc_file.Open(file, OPEN_EXISTING);
 		  // if there was no throw, the document opened: check for
 		  // ANSI or UNICODE mode
-		DWORD  length =(DWORD)m_Doc_file.GetLength(),
+		DWORD   length = (DWORD)m_Doc_file.GetLength(),
 			nbytes = 0;
 		char *buffer = new char[3];
 		if (!::ReadFile(m_Doc_file.GetHandle(), buffer, 2, &nbytes, NULL))

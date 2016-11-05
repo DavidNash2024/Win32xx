@@ -195,12 +195,6 @@
     <ClInclude Include="..\src\StdApp.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AppHelpRC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AppHelp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\RichEditView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -208,6 +202,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\src\PrintInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\AboutBox.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -239,9 +236,6 @@
     <ClCompile Include="..\src\ListBoxDlg.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\AppHelp.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ColorChoice.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -249,6 +243,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\RichEditView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AboutBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -260,9 +257,6 @@
       <Filter>Resource Files</Filter>
     </ResourceCompile>
     <ResourceCompile Include="..\src\ListBoxDlg.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
-    <ResourceCompile Include="..\src\AppHelp.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

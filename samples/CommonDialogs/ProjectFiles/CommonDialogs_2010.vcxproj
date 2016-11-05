@@ -128,11 +128,10 @@
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore.h" />
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
+    <ClInclude Include="..\src\AboutBox.h" />
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\AppGlobal.h" />
     <ClInclude Include="..\src\AppGlobalRC.h" />
-    <ClInclude Include="..\src\AppHelp.h" />
-    <ClInclude Include="..\src\AppHelpRC.h" />
     <ClInclude Include="..\src\ColorChoice.h" />
     <ClInclude Include="..\src\ColorDefs.h" />
     <ClInclude Include="..\src\CustomButton.h" />
@@ -153,9 +152,9 @@
     <ClInclude Include="..\src\View.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\AboutBox.cpp" />
     <ClCompile Include="..\src\App.cpp" />
     <ClCompile Include="..\src\AppGlobal.cpp" />
-    <ClCompile Include="..\src\AppHelp.cpp" />
     <ClCompile Include="..\src\ColorChoice.cpp" />
     <ClCompile Include="..\src\CustomButton.cpp" />
     <ClCompile Include="..\src\Doc.cpp" />
@@ -169,7 +168,6 @@
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\AppGlobal.rc" />
-    <ResourceCompile Include="..\src\AppHelp.rc" />
     <ResourceCompile Include="..\src\ListBoxDlg.rc" />
     <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>

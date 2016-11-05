@@ -13,9 +13,8 @@
 	therein.
 
  	This particular view class demonstrates methods for selection of client
-	background color, selection of edit box font, use of external
-	serialization files, and context help for all controls in the client
-	area. 
+	background color, selection of edit box font, and use of external
+	serialization files.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,

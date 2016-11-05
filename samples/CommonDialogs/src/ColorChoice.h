@@ -98,7 +98,6 @@ CColorChoice   : public CColorDialog					/*
 
 	protected:
 
-		virtual void 	OnHelpButton();	
 		virtual BOOL 	OnInitDialog();	
 		virtual void    SetWindowTitle() const
 				    {SetWindowText(m_sBoxTitle);}	

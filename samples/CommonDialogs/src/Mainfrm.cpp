@@ -15,8 +15,7 @@
 	This particular frame class contains features a fixed-size form for the
 	display, with no resizing gripper tool at the end of the status bar,
 	and provisions for selection of client background color, selection of
-	edit box font, use of external serialization files, MRU lists, and
-	context help for all controls on the frame and client area.
+	edit box font, use of external serialization files, and MRU lists.
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -97,45 +96,6 @@ CMainFrame() 								/*
 	ZeroMemory(&m_Wndpl, sizeof(WINDOWPLACEMENT));
 	  // Set m_View as the view window of the frame
 	SetView(m_View);
-	  // define the context help topics and controls they service
-	SetContextHelpMessages();
-}
-
-/*============================================================================*/
-	void CMainFrame::
-ConnectAppHelp() 							/*
-
-	Register the AppHelp object help .chm file name and the AppHelp About
-	Box credits information string.
-*-----------------------------------------------------------------------------*/
-{
-	  // inform context help of its .chm document name
-	m_AppHelp.ConnectAppHelp(theApp.GetHelpFile(),
-	    theAppGlobal.GetAboutBoxInfo());
-}
-
-/*============================================================================*/
-	BOOL CMainFrame::
-DoContextHelp(WPARAM wParam)						/*
-
-	This method is invoked when the user selects an item from a menu, when
-	a child control sends a notification message, or when an accelerator
-	keystroke is translated. If the frame is not in context help mode,
-	returns FALSE. When context help mode is active, the method returns
-	TRUE.  The low-order word of wParam identifies the command nID of the
-	menu or accelerator message. If this method is invoked from an
-	OnCommand() method, the high-order word is 1 if the message is from
-	an accelerator, or 0 if the message is from the menu. If it is invoked
-	as the result of WM_COMMAND or WM_SYSCOMMAND, the high-order word
-	carries a notification code.
-*-----------------------------------------------------------------------------*/
-{
-	if (!m_AppHelp.OnHelp(wParam))
-		return FALSE;
-
-	m_hCursor = ::LoadCursor(NULL, IDC_ARROW);
-	Invalidate();
-	return TRUE;
 }
 
 /*============================================================================*/
@@ -152,25 +112,6 @@ EmptyMRUList()                                                          /*
 	std::vector<CString>::const_iterator it;
 	for (it = MRUEntries.begin(); it != MRUEntries.end(); ++it)
 		RemoveMRUEntry(*it);
-}
-
-/*============================================================================*/
-	BOOL CMainFrame::
-EngageContextHelp() 							/*
-
-	Set the context help mode on and set cursors to the help cursor.
-*-----------------------------------------------------------------------------*/
-{
-	  // if context help is already active, no need to engage further
-	if (m_AppHelp.IsActive())
-		return FALSE;
-
-	  // set the cursor(s) in all controls to help, and show immediately
-	m_hCursor = ::LoadCursor(NULL, IDC_HELP);
-	SendMessage(WM_SETCURSOR, 0, 0);
-    	  // set help mode on
-    	m_AppHelp.EngageContextHelp();
-	return TRUE;
 }
 
 /*============================================================================*/
@@ -373,7 +314,6 @@ OnColorChoice()     		                                       	/*
 	The staus bar color has no message to redraw it, so it is set here.
 *-----------------------------------------------------------------------------*/
 {
-	  // set color choice help messages to go to the the main frame,
 	m_ColorChoice.DoModal(GetApp().GetMainWnd()); 
 	  // reset the status bar color
 	UINT selection = m_ColorChoice.GetSelectedColorID();
@@ -399,7 +339,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 	item from a menu, when a child control sends a notification message,
 	or when an accelerator keystroke is translated. Here, we respond to
 	menu selections, toolbar events, scrollbar actions, and accelerator
-	keys in both action and help modes.
+	keys.
 
 	The low-order word of wParam identifies the command ID of the menu
 	or accelerator message. The high-order word is 1 if the message is
@@ -416,19 +356,9 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	The method returns nonzero if it processes the message; otherwise it
 	returns zero.
-	
-	In this particular case, the command message may be directed toward
-	context help, in which case a separate method is invoked to display
-	the help topic indicated.  Otherwise, the command messages are assumed
-	to be for actions; these are routed to the more traditional message
-	handling methods.
 *-----------------------------------------------------------------------------*/
 {
 	UINT nID = LOWORD(wParam);
-	  // if context help mode is active, display the help topic for wParam
-	  // and return TRUE; otherwise, just pass through
-	if (DoContextHelp(wParam))
-		return TRUE;
 
 	  // map all MRU file messages to one representative
 	if(IDW_FILE_MRU_FILE1 <= nID &&
@@ -550,16 +480,8 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 		return TRUE;
 
 	    case IDW_ABOUT:         // invoked by F1 and Help->About menu item
-	    	return m_AppHelp.OnHelpAbout();
-
-	    case IDC_HELP_COMDLG:  // Handle help requests from common dialogs
-	    	return m_AppHelp.OnHelpID(LOWORD(lParam)); 
-
-	    case IDM_HELP_CONTENT:	// invoked by Help->Content menu item
-	    	return m_AppHelp.OnHelpID(nID);
-
-	    case IDM_HELP_CONTEXT: // invoked by Shift+F1 and Help button
-		return EngageContextHelp(); // initiates context help mode
+	    	OnHelp();
+		return TRUE;
 
 	    case IDW_VIEW_TOOLBAR:
 	    	OnViewToolBar(); // toggle tool bar
@@ -670,19 +592,18 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 	  // populate the initial control colors (will be overwritten by
 	  // deserialized values)
 	InitCtlColors();
-	  // and set the initial flags to show the help box and all colors
+	  // and set the initial flags to show all colors
 	CHOOSECOLOR cc = m_ColorChoice.GetParameters();
-	cc.Flags = CC_SHOWHELP | CC_FULLOPEN;
+	cc.Flags = CC_FULLOPEN;
 	cc.Flags |= CC_ANYCOLOR | CC_RGBINIT | CC_ENABLEHOOK;
 	  // setup the CColorChoice object
 	m_ColorChoice.SetParameters(cc);
 	  // tell CFrame the max MRU size
 	m_nMaxMRU = theAppGlobal.GetMaxMRU();
 	SetMRULimit(m_nMaxMRU);
-	  // set font choice help messages to go to the main frame,
-	  // set the initial flags to show the help box and use the font style,
+	  // set the initial flags to use the font style,
 	CHOOSEFONT cf = m_FontChoice.GetParameters();
-	cf.Flags |= CF_SHOWHELP | CF_USESTYLE;
+	cf.Flags |= CF_USESTYLE;
 	cf.lpszStyle = (LPTSTR)_T("Regular"); // initial font presumed regular
 	m_FontChoice.SetParameters(cf);
 	  // set the default font
@@ -691,8 +612,6 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 	m_FontChoice.SetChoiceFont(f);
 	m_FontChoice.SetColor(m_ColorChoice.GetTableColor(REdTxFg));
 	m_View.SetEditFont(f);
-	  // communicate help file name and about box contents to help object
-	ConnectAppHelp();
 	LoadPersistentData();
 	  // set the default status bar color
 	COLORREF sb = GetSBBkColor();
@@ -712,7 +631,7 @@ OnEditFind()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find a string..."));
 	m_FindRepDialog.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
-	    FR_ENABLEHOOK | FR_SHOWHELP, (HWND)*this);
+	    FR_ENABLEHOOK, (HWND)*this);
 }
 
 /*============================================================================*/
@@ -728,7 +647,7 @@ OnEditReplace()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find, then Replace"));
 	m_FindRepDialog.Create(FALSE, _T("Initial Text"), _T("Replace Text"),
-	    FR_DOWN | FR_SHOWHELP | FR_ENABLEHOOK, (HWND)*this);
+	    FR_DOWN | FR_ENABLEHOOK, (HWND)*this);
 }
 
 /*============================================================================*/
@@ -751,7 +670,6 @@ OnFontChoice()     		                                 	/*
         Select the view font typeface, characteristics, and color.
 *-----------------------------------------------------------------------------*/
 {
-	  // set font choice help messages to go to the the main frame,
 	HWND hOwnerWnd = GetApp().GetMainWnd();
           // open the dialog
 	m_FontChoice.SetBoxTitle(_T("Select font for rich edit box"));
@@ -769,6 +687,17 @@ OnFontChoice()     		                                 	/*
 	Invalidate();
 	UpdateControlUIState();
 	UpdateWindow();
+}
+
+/*============================================================================*/
+	BOOL CMainFrame::
+OnHelp()								/*
+
+	Overrides CFrame OnHelp().
+*-----------------------------------------------------------------------------*/
+{
+	m_AboutBox.OnHelpAbout();
+	return TRUE;
 }
 
 /*============================================================================*/
@@ -1051,54 +980,6 @@ SetCheckStatus(UINT nID, BOOL bCheck, ControlBars where)		/*
 }
 
 /*============================================================================*/
-	void CMainFrame::
-SetContextHelpMessages() 						/*
-
-	Define the set of all context help topics to be displayed for each of
-	the control identifiers that are serviced in this app, except for those
-	for CCommonDialog help boxes and the frame SC_MAXIMIZE, SC_MINIMIZE,
-	and SC_CLOSE boxes (these are defaults in the AppHelp class).
-*-----------------------------------------------------------------------------*/
-{
-	  // define the tool bar button and menu item topics
-	m_AppHelp.AddHelpTopic(IDM_FILE_NEW, 	   _T("NewDocument"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_OPEN, 	   _T("OpenExistingDocument"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_SAVE, 	   _T("SaveCurrentDocument"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_SAVEAS,    _T("SaveAsAnotherDocument"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_CLOSE, 	    _T("CloseCurrentDocument"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_PAGESETUP,  _T("PageSetupForPrintout"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_PRINT, 	    _T("PrintDocument"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_PREVIEW,    _T("PreviewPrintout"));
-	m_AppHelp.AddHelpTopic(IDM_FILE_EXIT,  	    _T("ExitTerminateProgram"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_UNDO, 	    _T("UndoFunction"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_REDO, 	    _T("RedoFunction"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_CUT, 	    _T("CutFunction"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_COPY, 	    _T("CopyFunction"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_PASTE, 	    _T("PasteFunction"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_DELETE,     _T("DeleteFunction"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_FIND, 	    _T("FindInDocument"));
-	m_AppHelp.AddHelpTopic(IDM_EDIT_REPLACE,    _T("ReplaceInDocument"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_CONTENT,    _T("Introduction"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_CONTEXT,    _T("Welcome"));
-	m_AppHelp.AddHelpTopic(IDM_COLOR_CHOICE,    _T("ColorChoiceFunction"));
-	m_AppHelp.AddHelpTopic(IDM_FONT_CHOICE,     _T("FontChoiceFunction"));
-	  // define client area controls topics
-	m_AppHelp.AddHelpTopic(IDC_RICHEDITBOX,	    _T("EditBoxUsage"));
-	m_AppHelp.AddHelpTopic(IDOK, 		    _T("OKButtonUsage"));
-	  // define common dialog help button topics
-	m_AppHelp.AddHelpTopic(IDM_HELP_COLORDLG,    _T("ColorDialogHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_FILEDLG_OPEN, _T("FileDialogOpenHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_FILEDLG_NEW, _T("FileDialogNewHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_FILEDLG_SAVEAS, _T("FileDialogSaveAsHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_FONTDLG,    _T("FontChoiceDialogHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_PAGESETDLG, _T("PageSetupDialogHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_PRINTDLG,   _T("PrinterDialogHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_FINDDLG,    _T("FindTextDialogHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_REPLACEDLG, _T("ReplaceTextDialogHelp"));
-	m_AppHelp.AddHelpTopic(IDM_HELP_LIST_BOX,   _T("ListBoxDialogHelp"));
-}
-
-/*============================================================================*/
 	BOOL CMainFrame::
 SetEnableStatus(UINT nID, BOOL status, ControlBars which)           	/*
 
@@ -1216,8 +1097,6 @@ SetupToolBar()                                                          /*
 	AddToolBarButton(0);  // Separator
 	AddToolBarButton(IDM_COLOR_CHOICE,  TRUE, 0, 9);
 	AddToolBarButton(IDM_FONT_CHOICE,   TRUE, 0, 10);
-	AddToolBarButton(0);  // Separator
-	AddToolBarButton(IDM_HELP_CONTEXT,  TRUE, 0, 11);
 	  // Set the toolbar image list: use defaults for hot and disabled
 	SetToolBarImages(RGB(255, 0, 255), IDW_MAIN, 0, 0);
 	  // Set icons for color and font choice menu items
@@ -1443,25 +1322,8 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 	    	UpdateControlUIState();
 		return TRUE;
 		
-	    case WM_HELP:
-	    {     // Handle the F1 requests for help. The HELPINFO in lParam
-		  // is of no use to the current context help class. The
-		  // system also sends this message on Shift+F1, so it is
-		  // necessary to distinguish which usage is in effect.
-		if (!m_AppHelp.IsActive())
-			m_AppHelp.OnHelpID(IDM_HELP_CONTENT);
-	    	return TRUE;
-	    }
-
-	    case IDM_HELP_ACTIVE:
-		return DoContextHelp(wParam);
-
 	    case WM_SYSCOMMAND:
 	    {
-		  // if in help mode, let it handle the wParam message
-	    	if (DoContextHelp(wParam))
-			return TRUE;
-
 		  // else process requests for action
 		switch (LOWORD(wParam))
 		{

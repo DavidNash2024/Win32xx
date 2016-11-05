@@ -181,15 +181,15 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\src\AboutBox.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\src\App.cpp"
 				>
 			</File>
 			<File
 				RelativePath="..\src\AppGlobal.cpp"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppHelp.cpp"
 				>
 			</File>
 			<File
@@ -255,6 +255,10 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
+				RelativePath="..\src\AboutBox.h"
+				>
+			</File>
+			<File
 				RelativePath="..\src\App.h"
 				>
 			</File>
@@ -264,14 +268,6 @@
 			</File>
 			<File
 				RelativePath="..\src\AppGlobalRC.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppHelp.h"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppHelpRC.h"
 				>
 			</File>
 			<File
@@ -358,10 +354,6 @@
 			>
 			<File
 				RelativePath="..\src\AppGlobal.rc"
-				>
-			</File>
-			<File
-				RelativePath="..\src\AppHelp.rc"
 				>
 			</File>
 			<File

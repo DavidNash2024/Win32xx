@@ -10,9 +10,7 @@
 
 	Contents Description: The MyFindREplaceDlg class declaration and
 	implementation. This class is derived from the CFindREplaceDalog class
-	found in the Win32++ Windows interface framework. It permits customized
-	handling of the HELP button to provide context help and setting of the
-	dialog title.
+	found in the Win32++ Windows interface framework. 
 
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
@@ -52,7 +50,6 @@
 #define MY_FIND_REPLACE_DLG_H
 
 #include "ListBoxDlgRC.h"
-#include "AppHelpRC.h"
 
 /*============================================================================*/
 	class
@@ -66,21 +63,6 @@ MyFindReplaceDialog : public CFindReplaceDialog
 		void SetBoxTitle(const CString& title) {m_sBoxTitle = title;}
 	
 	protected:
-		virtual void OnHelpButton()
-		  // Send the find or replace context help identifier to the
-		  //  window whose handle is the FINDREPLACE struct's hwndOwner,
-		  //  depending on the dialog box mode
-		{
-			HWND hwndOwner = GetParameters().hwndOwner;		
-			if (::IsWindow(hwndOwner))
-			{		
-				LPARAM lParam = IsFindDialogOnly()
-				    ? IDM_HELP_FINDDLG : IDM_HELP_REPLACEDLG;
-				::SendMessage(hwndOwner, WM_COMMAND,
-				    IDC_HELP_COMDLG, lParam);
-			}
-		}
-
 		virtual BOOL OnInitDialog()
 		  // Override this member method to perform special processing
 		 //  when the FindReplaceDialog  box is initialized. Return TRUE.

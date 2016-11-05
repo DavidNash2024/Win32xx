@@ -42,11 +42,10 @@
 	viz., CApp, CDoc, CMainFrame, and CView, are meant to be edited and
 	adapted to conform with the needs of each new application to which they
 	are applied. The code provided in this sample is meant to serve as the
-	template for applications that require context-sensitive help, full
-	color selection of frame, controls, and client area, font selection for
-	controls, standard file open and save-as dialogs, and most-recently used
-	list (MRU), with persistent data stored in and retrieved from archive
-	files.
+	template for applications that require full color selection of frame,
+	controls, and client area, font selection for controls, standard file
+	open and save-as dialogs, and most-recently used list (MRU), with
+	persistent data stored in and retrieved from archive files.
 	
  	Acknowledgement:
 		The author would like to thank and acknowledge the advice,
@@ -88,9 +87,9 @@ InitInstance()								/*
 	return TRUE on success. Returning FALSE terminates the program.
 	
 	Here, the About box information, app path, app directory, app name,
-	app exe name, archive file name, help file name and other constants
-	are generated and saved as public data members of this object via the
-	mere declaration of the CAppGlobal m_AppGlobal object in App.h.
+	app exe name, archive file name, and other constants are generated and
+	saved as public data members of this object via the mere declaration of
+	the CAppGlobal m_AppGlobal object in App.h.
 *-----------------------------------------------------------------------------*/
 {
 	  //Create the Frame Window

@@ -130,12 +130,6 @@
     <ClInclude Include="..\src\App.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\AppHelp.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\AppHelpRC.h">
-      <Filter>Resource Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ColorDefs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -193,6 +187,9 @@
     <ClInclude Include="..\src\RichEditView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\AboutBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\src\res\Win32++.manifest">
@@ -223,18 +220,12 @@
     <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-    <ResourceCompile Include="..\src\AppHelp.rc">
-      <Filter>Resource Files</Filter>
-    </ResourceCompile>
     <ResourceCompile Include="..\src\ListBoxDlg.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\App.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\AppHelp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\CustomButton.cpp">
@@ -268,6 +259,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\src\RichEditView.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AboutBox.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

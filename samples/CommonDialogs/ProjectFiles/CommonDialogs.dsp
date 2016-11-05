@@ -91,15 +91,15 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=..\src\AboutBox.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\App.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\src\AppGlobal.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\AppHelp.cpp
 # End Source File
 # Begin Source File
 
@@ -147,6 +147,30 @@ SOURCE=..\src\View.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\src\AboutBox.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\App.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\AppGlobal.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ColorChoice.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ColorDefs.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\CustomButton.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Doc.h
 # End Source File
 # Begin Source File
@@ -155,7 +179,35 @@ SOURCE=..\src\FrameApp.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\ListBoxDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\ListBoxDlgRC.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\Mainfrm.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFileDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFindReplaceDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyFontDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyPrinter.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\MyPrintInfo.h
 # End Source File
 # Begin Source File
 
@@ -163,7 +215,15 @@ SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\src\RichEditView.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\stdafx.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\src\targetver.h
 # End Source File
 # Begin Source File
 
@@ -173,6 +233,16 @@ SOURCE=..\src\View.h
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\src\AppGlobal.rc
+# End Source File
+
+# Begin Source File
+
+SOURCE=..\src\ListBoxDlg.rc
+# End Source File
+
 # Begin Source File
 
 SOURCE=..\src\Resource.rc

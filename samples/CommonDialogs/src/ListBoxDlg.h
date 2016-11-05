@@ -82,7 +82,6 @@ CListBoxDlg : public CCommonDialog        				/*
 	protected:
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 		virtual BOOL 	OnInitDialog();
-		virtual void 	OnHelpButton();
 		virtual void    SetWindowTitle() const
 				    { SetWindowText(m_sBoxTitle);}
 
