@@ -253,10 +253,6 @@ namespace Win32xx
 	inline void CWnd::Cleanup()
 	// Returns the CWnd to its default state
 	{
-		// Window should already be destroyed if managed
-		assert( (GetCWndPtr(*this) != this) || (!IsWindow()) );
-
-
 		if ( &GetApp() )
 			RemoveFromMap();
 
@@ -418,10 +414,10 @@ namespace Win32xx
 	inline HWND CWnd::Detach()
 	// Reverse an Attach
 	{
-		assert(IsWindow());
 		assert(m_PrevWindowProc);	// Only previously attached CWnds can be detached
 
-		SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+		if (IsWindow())
+			SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
 
 		HWND hWnd = GetHwnd();
 		Cleanup();
@@ -963,10 +959,9 @@ namespace Win32xx
 	{
 		assert(::IsWindow(hWnd));
 
-		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 		m_hWnd = hWnd;
-
 		AddToMap();			// Store the CWnd pointer in the HWND map
+		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
 	}
 #ifndef _WIN32_WCE
 	inline BOOL CWnd::UpdateData(CDataExchange& DX, BOOL bRetrieveAndValidate)
