@@ -209,6 +209,7 @@ namespace Win32xx
 		void SetTabText(LPCTSTR szText) { m_strTabText = szText; }
 		void SetTabText(UINT nTab, LPCTSTR szText);
 		void SetView(CWnd& Wnd);
+		std::vector<UINT>& GetToolBarData() { return m_vToolBarData; }
 
 	protected:
 		virtual void OnAttach();
@@ -4233,7 +4234,7 @@ namespace Win32xx
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
-		m_vToolBarData.push_back(nID);
+		GetToolBarData().push_back(nID);
 		GetToolBar().AddButton(nID, bEnabled);
 	}
 
@@ -4375,7 +4376,7 @@ namespace Win32xx
 		style |= CCS_NODIVIDER ;
 		GetToolBar().SetWindowLongPtr(GWL_STYLE, (LONG_PTR)style);
 		SetupToolBar();
-		if (m_vToolBarData.size() > 0)
+		if (GetToolBarData().size() > 0)
 		{
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
