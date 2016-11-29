@@ -237,31 +237,31 @@ namespace Win32xx
 		CMenuMetrics();
 		~CMenuMetrics();
 
-		CRect GetCheckBackgroundRect(const CRect& rcItem);
-		CRect GetCheckRect(const CRect& rcItem);
-		CRect GetGutterRect(const CRect& rcItem);
-		CSize GetItemSize(MenuItemData* pmd);
-		CRect GetSelectionRect(const CRect& rcItem);
-		CRect GetSeperatorRect(const CRect& rcItem);
-		CRect GetTextRect(const CRect& rcItem);
-		CSize GetTextSize(MenuItemData* pmd);
+		CRect GetCheckBackgroundRect(const CRect& rcItem) const;
+		CRect GetCheckRect(const CRect& rcItem) const;
+		CRect GetGutterRect(const CRect& rcItem) const;
+		CSize GetItemSize(MenuItemData* pmd) const;
+		CRect GetSelectionRect(const CRect& rcItem) const;
+		CRect GetSeperatorRect(const CRect& rcItem) const;
+		CRect GetTextRect(const CRect& rcItem) const;
+		CSize GetTextSize(MenuItemData* pmd) const;
 		void  Initialize();
-		CRect ScaleRect(const CRect& rcItem);
-		CSize ScaleSize(const CSize& szItem);
-		int   ToItemStateId(UINT uItemState);
-		int   ToCheckBackgroundStateId(int iStateId);
-		int   ToCheckStateId(UINT fType, int iStateId);
+		CRect ScaleRect(const CRect& rcItem) const;
+		CSize ScaleSize(const CSize& szItem) const;
+		int   ToItemStateId(UINT uItemState) const;
+		int   ToCheckBackgroundStateId(int iStateId) const;
+		int   ToCheckStateId(UINT fType, int iStateId) const;
 
 		// Wrappers for Windows API functions
-		HRESULT CloseThemeData();
-		HRESULT DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect);
-		HRESULT DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect);
-		HRESULT GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz);
-		HRESULT GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal);
-		HRESULT GetThemeMargins(HDC hdc, int iPartId, int iStateId, int iPropId, LPRECT prc, MARGINS* pMargins);
-		HRESULT GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect);
-		BOOL    IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId);
-		HANDLE  OpenThemeData(HWND hwnd, LPCWSTR pszClassList);
+		HRESULT CloseThemeData() const;
+		HRESULT DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect) const;
+		HRESULT DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect) const;
+		HRESULT GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const;
+		HRESULT GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal) const;
+		HRESULT GetThemeMargins(HDC hdc, int iPartId, int iStateId, int iPropId, LPRECT prc, MARGINS* pMargins) const;
+		HRESULT GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const;
+		BOOL    IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId) const;
+		HANDLE  OpenThemeData(HWND hwnd, LPCWSTR pszClassList) const;
 
 		HANDLE  m_hTheme;				// Theme handle
 		HWND m_hFrame;					// Handle to the frame window
@@ -679,7 +679,7 @@ namespace Win32xx
 			::FreeLibrary(m_hmodUXTheme);
 	}
 
-	inline HRESULT CMenuMetrics::CloseThemeData()
+	inline HRESULT CMenuMetrics::CloseThemeData() const
 	// Closes the theme data handle.
 	{
 		if (m_pfnCloseThemeData)
@@ -688,7 +688,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CMenuMetrics::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect)
+	inline HRESULT CMenuMetrics::DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect) const
 	// Draws the border and fill defined by the visual style for the specified control part.
 	{
 		assert(m_hTheme);
@@ -698,7 +698,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CMenuMetrics::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect)
+	inline HRESULT CMenuMetrics::DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect) const
 	// Draws text using the color and font defined by the visual style.
 	{
 		assert(m_hTheme);
@@ -708,7 +708,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CMenuMetrics::GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz)
+	inline HRESULT CMenuMetrics::GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const
 	// Calculates the original size of the part defined by a visual style.
 	{
 		assert(m_hTheme);
@@ -718,7 +718,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CMenuMetrics::GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal)
+	inline HRESULT CMenuMetrics::GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal) const
 	// Retrieves the value of an int property.
 	{
 		assert(m_hTheme);
@@ -728,7 +728,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CMenuMetrics::GetThemeMargins(HDC hdc, int iPartId, int iStateId, int iPropId, LPRECT prc, MARGINS* pMargins)
+	inline HRESULT CMenuMetrics::GetThemeMargins(HDC hdc, int iPartId, int iStateId, int iPropId, LPRECT prc, MARGINS* pMargins) const
 	// Retrieves the value of a MARGINS property.
 	{
 		assert(m_hTheme);
@@ -738,7 +738,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect)
+	inline HRESULT CMenuMetrics::GetThemeTextExtent(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, LPCRECT pBoundingRect, LPRECT pExtentRect) const
 	// Calculates the size and location of the specified text when rendered in the visual style font.
 	{
 		assert(m_hTheme);
@@ -748,7 +748,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId)
+	inline BOOL CMenuMetrics::IsThemeBackgroundPartiallyTransparent(int iPartId, int iStateId) const
 	// Retrieves whether the background specified by the visual style has transparent pieces or alpha-blended pieces.
 	{
 		assert(m_hTheme);
@@ -758,7 +758,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
-	inline HANDLE CMenuMetrics::OpenThemeData(HWND hwnd, LPCWSTR pszClassList)
+	inline HANDLE CMenuMetrics::OpenThemeData(HWND hwnd, LPCWSTR pszClassList) const
 	// Opens the theme data for a window and its associated class.
 	{
 		assert(hwnd);
@@ -768,7 +768,7 @@ namespace Win32xx
 		return NULL;
 	}
 
-	inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::GetCheckBackgroundRect(const CRect& rcItem) const
 	{
 		int cx = m_sizeCheck.cx + m_marCheck.Width();
 		int cy = m_sizeCheck.cy + m_marCheck.Height();
@@ -779,7 +779,7 @@ namespace Win32xx
 		return CRect(x, y, x + cx, y + cy);
 	}
 
-	inline CRect CMenuMetrics::GetGutterRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::GetGutterRect(const CRect& rcItem) const
 	{
 		int x = rcItem.left;
 		int y = rcItem.top;
@@ -789,7 +789,7 @@ namespace Win32xx
 		return CRect(x, y, x + cx, y + cy);
 	}
 
-	inline CRect CMenuMetrics::GetCheckRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::GetCheckRect(const CRect& rcItem) const
 	{
 		int x = rcItem.left + m_marCheckBackground.cxLeftWidth + m_marCheck.cxLeftWidth;
 		int y = rcItem.top + (rcItem.Height() - m_sizeCheck.cy)/2;
@@ -797,7 +797,7 @@ namespace Win32xx
 		return CRect(x, y, x + m_sizeCheck.cx, y + m_sizeCheck.cy);
 	}
 
-	inline CSize CMenuMetrics::GetItemSize(MenuItemData* pmd)
+	inline CSize CMenuMetrics::GetItemSize(MenuItemData* pmd) const
 	// Retrieve the size of the menu item
 	{
 		CSize size;
@@ -830,7 +830,7 @@ namespace Win32xx
 		return (size);
 	}
 
-	inline CRect CMenuMetrics::GetSelectionRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::GetSelectionRect(const CRect& rcItem) const
 	{
 		int x = rcItem.left + m_marItem.cxLeftWidth;
 		int y = rcItem.top;
@@ -838,7 +838,7 @@ namespace Win32xx
 		return CRect(x, y, rcItem.right - m_marItem.cxRightWidth, y + rcItem.Height());
 	}
 
-	inline CRect CMenuMetrics::GetSeperatorRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::GetSeperatorRect(const CRect& rcItem) const
 	{
 		int left = GetGutterRect(rcItem).right;
 		int top  = rcItem.top;
@@ -848,7 +848,7 @@ namespace Win32xx
 		return CRect(left, top, right, bottom);
 	}
 
-	inline CSize CMenuMetrics::GetTextSize(MenuItemData* pmd)
+	inline CSize CMenuMetrics::GetTextSize(MenuItemData* pmd) const
 	{
 		CSize sizeText;
 		assert(m_hFrame);
@@ -888,7 +888,7 @@ namespace Win32xx
 		return sizeText;
 	}
 
-	inline CRect CMenuMetrics::GetTextRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::GetTextRect(const CRect& rcItem) const
 	{
 		int left    = GetGutterRect(rcItem).Width() + m_marText.cxLeftWidth;
 		int top     = rcItem.top + m_marText.cyTopHeight;
@@ -898,7 +898,7 @@ namespace Win32xx
 		return CRect(left, top, right, bottom);
 	}
 
-	inline CRect CMenuMetrics::ScaleRect(const CRect& rcItem)
+	inline CRect CMenuMetrics::ScaleRect(const CRect& rcItem) const
 	// Re-scale the CRect to support the system's DPI
 	{
 		// DC for the desktop
@@ -916,7 +916,7 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline CSize CMenuMetrics::ScaleSize(const CSize& szItem)
+	inline CSize CMenuMetrics::ScaleSize(const CSize& szItem) const
 	// Re-scale the CSize to support the system's DPI
 	{
 		// DC for the desktop
@@ -932,7 +932,7 @@ namespace Win32xx
 		return sz;
 	}
 
-	inline int CMenuMetrics::ToItemStateId(UINT uItemState)
+	inline int CMenuMetrics::ToItemStateId(UINT uItemState) const
 	// Convert from item state to MENU_POPUPITEM state
 	{
 		const bool      IsDisabled   = ((uItemState & (ODS_INACTIVE | ODS_DISABLED)) != 0);
@@ -949,7 +949,7 @@ namespace Win32xx
 		return iState;
 	}
 
-	inline int CMenuMetrics::ToCheckBackgroundStateId(int iStateId)
+	inline int CMenuMetrics::ToCheckBackgroundStateId(int iStateId) const
 	// Convert to MENU_POPUPCHECKBACKGROUND
 	{
 		POPUPCHECKBACKGROUNDSTATES iStateIdCheckBackground;
@@ -963,7 +963,7 @@ namespace Win32xx
 		return iStateIdCheckBackground;
 	}
 
-	inline int CMenuMetrics::ToCheckStateId(UINT fType, int iStateId)
+	inline int CMenuMetrics::ToCheckStateId(UINT fType, int iStateId) const
 	// Convert to MENU_POPUPCHECK state
 	{
 		POPUPCHECKSTATES iStateIdCheck;
@@ -2319,6 +2319,8 @@ namespace Win32xx
 		SetFrameMenu(IDW_MAIN);
 		if (m_nMaxMRU > 0)
 			UpdateMRUMenu();
+
+		// Initialize the menu metrics
 		GetMenuMetrics().m_hFrame = *this;
 		GetMenuMetrics().Initialize();
 
