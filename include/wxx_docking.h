@@ -4373,7 +4373,7 @@ namespace Win32xx
 		// Create the toolbar
 		GetToolBar().Create(GetViewPage());
 		DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
-		style |= CCS_NODIVIDER ;
+		style |= CCS_NODIVIDER;
 		GetToolBar().SetWindowLongPtr(GWL_STYLE, (LONG_PTR)style);
 		SetupToolBar();
 		if (GetToolBarData().size() > 0)
@@ -4881,7 +4881,7 @@ namespace Win32xx
 	}
 
 	inline void CDockContainer::CViewPage::SetView(CWnd& wndView)
-	// Sets or changes the View window displayed within the frame
+	// Sets or changes the View window displayed within the container
 	{
 		if (m_pView != &wndView)
 		{
