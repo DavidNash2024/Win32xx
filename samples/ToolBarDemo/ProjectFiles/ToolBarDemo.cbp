@@ -38,6 +38,7 @@
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
+					<Add option="-vi-" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 					<Add directory="../../../include" />
@@ -131,7 +132,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-g3" />
-					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
 					<Add directory="../../../include" />
 				</Compiler>
@@ -162,29 +162,7 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
-					<Add option="-Wl,--enable-auto-import" />
-					<Add library="comctl32" />
-					<Add library="Ole32" />
-					<Add library="Oleaut32" />
-					<Add library="Uuid" />
-					<Add library="Ws2_32" />
-				</Linker>
-			</Target>
-			<Target title="MinGW-w64">
-				<Option output="GNU64/Debug/ToolBarDemo.exe" prefix_auto="0" extension_auto="0" />
-				<Option working_dir="GNU64/Debug" />
-				<Option object_output="GNU64/Debug" />
-				<Option type="0" />
-				<Option compiler="gnu_gcc_x64_compiler" />
-				<Compiler>
-					<Add option="-fexpensive-optimizations" />
-					<Add option="-g" />
-					<Add directory="../../../include" />
-				</Compiler>
-				<ResourceCompiler>
-					<Add directory="../../../include" />
-				</ResourceCompiler>
-				<Linker>
+					<Add option="-s" />
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />

@@ -19,14 +19,14 @@ CGDIPlusView::~CGDIPlusView()
 	GdiplusShutdown(m_gdiplusToken);
 }
 
-void CGDIPlusView::DrawCappedLine(CDC& dc) 
+void CGDIPlusView::DrawCappedLine(CDC& dc)
 {
 	Graphics graphics(dc);
 	// Draw capped line, width 8
 	Pen penCapped(Color(255, 0, 0, 255), 8);
-	Status stat = penCapped.SetStartCap(LineCapArrowAnchor);
-	stat = penCapped.SetEndCap(LineCapRoundAnchor);
-	stat = graphics.DrawLine(&penCapped, 10, 175, 300, 175);
+	penCapped.SetStartCap(LineCapArrowAnchor);
+	penCapped.SetEndCap(LineCapRoundAnchor);
+	graphics.DrawLine(&penCapped, 10, 175, 300, 175);
 }
 
 void CGDIPlusView::DrawGamaShapes(CDC& dc)
@@ -37,10 +37,10 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
 	// Put the points of a polygon in an array.
 	GraphicsPath pathGama;
 	int yOffset = 200;
-	Point points[] = {Point(75,  0  +yOffset), Point(100, 50+yOffset), 
+	Point points[] = {Point(75,  0  +yOffset), Point(100, 50+yOffset),
 					  Point(150, 50 +yOffset), Point(112, 75+yOffset),
-					  Point(150, 150+yOffset), Point(75,  100+yOffset), 
-					  Point(0,   150+yOffset), Point(37,  75+yOffset), 
+					  Point(150, 150+yOffset), Point(75,  100+yOffset),
+					  Point(0,   150+yOffset), Point(37,  75+yOffset),
 					  Point(0,   50 +yOffset), Point(50,  50+yOffset)};
 
 	// Use the array of points to construct a path.
@@ -54,8 +54,8 @@ void CGDIPlusView::DrawGamaShapes(CDC& dc)
 
 	// Set the colors of the points in the array.
 	Color colorsGama[] = {Color(255, 0, 0, 0),   Color(255, 0, 255, 0),
-					  Color(255, 0, 0, 255), Color(255, 255, 255, 255), 
-					  Color(255, 0, 0, 0),   Color(255, 0, 255, 0), 
+					  Color(255, 0, 0, 255), Color(255, 255, 255, 255),
+					  Color(255, 0, 0, 0),   Color(255, 0, 255, 0),
 					  Color(255, 0, 0, 255), Color(255, 255, 255, 255),
 					  Color(255, 0, 0, 0),   Color(255, 0, 255, 0)};
 
@@ -99,16 +99,16 @@ void CGDIPlusView::DrawSolidElipse(CDC& dc)
 	graphics.FillEllipse(&solidBrush, 160, 84, 100, 60);
 }
 
-void CGDIPlusView::DrawSolidLine(CDC& dc) 
+void CGDIPlusView::DrawSolidLine(CDC& dc)
 {
 	Graphics graphics(dc);
-	
+
 	// Draw solid line
 	Pen      penLine(Color(255, 0, 0, 255));
 	graphics.DrawLine(&penLine, 10, 70, 200, 70);
 }
 
-void CGDIPlusView::DrawText(CDC& dc) 
+void CGDIPlusView::DrawText(CDC& dc)
 {
 	Graphics graphics(dc);
 
@@ -117,7 +117,7 @@ void CGDIPlusView::DrawText(CDC& dc)
 	FontFamily  fontFamily(L"Times New Roman");
 	Font        font(&fontFamily, 24, FontStyleRegular, UnitPixel);
 	PointF      pointF(10.0f, 20.0f);
-   
+
 	graphics.DrawString(L"GDI+  Example", -1, &font, pointF, &brush);
 }
 
@@ -128,7 +128,7 @@ void CGDIPlusView::OnDraw(CDC& dc)
 	DrawCappedLine(dc);
 	DrawGradientElipse(dc);
 	DrawSolidElipse(dc);
-	DrawGamaShapes(dc); 
+	DrawGamaShapes(dc);
 }
 
 void CGDIPlusView::OnInitialUpdate()

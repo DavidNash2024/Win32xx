@@ -1,24 +1,24 @@
 [Project]
-FileName=Dialog_DEBUG.dev
-Name=Dialog
-UnitCount=10
+FileName=GDIPlus_RELEASE.dev
+Name=GDIPlus
+UnitCount=12
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=Dialog_private.rc
+PrivateResource=Frame_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D_DEBUG_@@__@@__@@_
-Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_
+CppCompiler=-D NDEBUG_@@__@@__@@__@@_
+Linker=-lComctl32_@@_-lOle32_@@_-lOleaut32_@@_-lUuid_@@_-lWs2_32_@@_-lGDIPlus_@@_-s_@@_
 IsCpp=1
 Icon=
-ExeOutput=.\Dev-C++\Debug
-ObjectOutput=.\Dev-C++\Debug
+ExeOutput=.\Dev-C++\Release
+ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=Dialog.exe
+OverrideOutputName=GDIPlus.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -26,13 +26,13 @@ UseCustomMakefile=0
 CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
-CompilerSet=4
-CompilerSettings=0000000100000000001000000
+CompilerSet=3
+CompilerSettings=0000000100000000000000000
 LogOutput=
 LogOutputEnabled=0
 
 [Unit1]
-FileName=..\src\DialogApp.cpp
+FileName=..\src\FrameApp.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -42,7 +42,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit2]
-FileName=..\src\DialogApp.h
+FileName=..\src\FrameApp.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -52,7 +52,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit3]
-FileName=..\src\main.cpp
+FileName=..\src\GDIPlusView.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -62,17 +62,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit4]
-FileName=..\src\MyDialog.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit5]
-FileName=..\src\MyDialog.h
+FileName=..\src\GDIPlusView.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -81,7 +71,37 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit5]
+FileName=..\src\main.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit6]
+FileName=..\src\Mainfrm.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit7]
+FileName=..\src\Mainfrm.h
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+CompileCpp=1
+
+[Unit8]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -91,8 +111,9 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit7]
+[Unit9]
 FileName=..\src\Resource.rc
+CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
@@ -119,7 +140,7 @@ ProductVersion=
 AutoIncBuildNr=0
 SyncProduct=0
 
-[Unit8]
+[Unit10]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -129,7 +150,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit11]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -139,8 +160,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit12]
 FileName=..\src\targetver.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit13]
+FileName=..\src\View.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\View.h
 CompileCpp=1
 Folder=Header
 Compile=1

@@ -11,7 +11,7 @@ PrivateResource=Round_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
-CppCompiler=-D _DEBUG_@@_-D _WIN32_IE=0x0400_@@__@@_
+CppCompiler=-D _DEBUG_@@__@@_
 Linker=-lComctl32_@@_
 IsCpp=1
 Icon=
@@ -26,8 +26,8 @@ UseCustomMakefile=0
 CustomMakefile=
 IncludeVersionInfo=0
 SupportXPThemes=0
-CompilerSet=0
-CompilerSettings=0000000000000000000000000
+CompilerSet=4
+CompilerSettings=0000000100000000001000000
 LogOutput=
 LogOutputEnabled=0
 

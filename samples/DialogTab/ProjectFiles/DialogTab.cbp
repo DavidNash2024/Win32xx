@@ -38,6 +38,7 @@
 				<Option compiler="bcc" />
 				<Compiler>
 					<Add option="-tWM" />
+					<Add option="-vi-" />
 					<Add option="-w-par" />
 					<Add option="-DNDEBUG" />
 					<Add directory="../../../include" />
@@ -127,7 +128,6 @@
 					<Add option="-Wall" />
 					<Add option="-g" />
 					<Add option="-g3" />
-					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
 					<Add directory="../../../include" />
 				</Compiler>
@@ -158,6 +158,7 @@
 					<Add directory="../../../include" />
 				</ResourceCompiler>
 				<Linker>
+					<Add option="-s" />
 					<Add option="-Wl,--enable-auto-import" />
 					<Add library="comctl32" />
 					<Add library="Ole32" />
