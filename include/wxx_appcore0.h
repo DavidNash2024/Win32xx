@@ -206,10 +206,10 @@ using namespace Win32xx;
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
 // In release mode, TRACE is ignored.
 #ifndef TRACE
-  #ifdef NDEBUG
-    #define TRACE(str) (void(0))
-  #else
+  #ifdef _DEBUG
     #define TRACE(str) Trace(str)
+  #else
+    #define TRACE(str) (void(0))
   #endif
 #endif
 
@@ -217,7 +217,7 @@ using namespace Win32xx;
 // In debug mode, VERIFY asserts if the expression evaluates to zero
 // In release mode, VERIFY evaluates the expression, but doesn't assert.
 #ifndef VERIFY
-  #ifndef NDEBUG
+  #ifdef _DEBUG
     #define VERIFY(f) assert(f)
   #else
     #define VERIFY(f) ((void)(f))

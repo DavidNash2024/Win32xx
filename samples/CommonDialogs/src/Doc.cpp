@@ -11,7 +11,7 @@
 	CommonDialogs SDI sample application using the Win32++ Windows interface
 	classes, Copyright (c) 2005-2016 David Nash, under permissions granted
 	therein.
-	
+
         Caveats: The copyright displayed above extends only to the author's
 	original contributions to the subject class, and to the alterations,
 	additions, deletions, and other treatments of materials that may have
@@ -48,14 +48,14 @@
 	this distinction is detected automatically if the double-byte encoding
 	only uses one of the first two bytes in the file as its initial
 	character.
-	
+
 	An open document has a file path name associated with it, which is
 	maintained in the CString m_open_doc_path. The CFile object m_Doc_file
 	is used to create or open this file and to read or write the contents of
 	the rich edit view window and then to immediately close the CFile
 	object. The internal form of the document itself remains open until
 	OnCloseDoc() is executed. At that point the path name is emptied.
-	
+
  	Acknowledgement:
 		The author would like to thank and acknowledge the advice,
 		critical review, insight, and assistance provided by David Nash
@@ -72,7 +72,7 @@
 
 *******************************************************************************/
 
-#include "stdafx.h"	
+#include "stdafx.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <io.h>
@@ -91,7 +91,7 @@ CDoc() 									/*
 	m_Doc_file_filter.Empty();
 	m_open_doc_path.Empty();
 	m_Doc_file.SetFilePath(m_open_doc_path);
-	
+
 	m_UnicodeMode = FALSE;
 	m_UnicodeFile = -1; // no file open
 #ifdef _UNICODE
@@ -134,7 +134,7 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)			/*
 	  // get current location or selection
 	FINDTEXTEX ftx;
 	ftx.chrg = r;
-	ftx.lpstrText = m_find_next.c_str();
+	ftx.lpstrText = (LPTSTR)m_find_next.c_str();
 	GetREView().FindText(dwFlags, ftx);
 	return ftx.chrgText;
 }
@@ -576,7 +576,7 @@ OnSaveDoc()								/*
 		OnSaveDocAs();
 		return TRUE;
 	}
-	
+
 	  // if no document is open or, if open, not dirty
 	if (!IsOpen() || !IsDirty())
 		return TRUE;
@@ -600,7 +600,7 @@ OnSaveDoc()								/*
 		m_Doc_is_open = TRUE;
 		GetFrame().AddMRUEntry(m_open_doc_path);
 	}
-	catch (...) // if there was an error 
+	catch (...) // if there was an error
 	{
 		CString msg = (CString)"Document file did not save." +
 		     m_open_doc_path;
@@ -783,7 +783,7 @@ Serialize(CArchive &ar)                                               	/*
 *-----------------------------------------------------------------------------*/
 {
 	// TODO: save and restore document elements
-	
+
 	  // perform loading or storing
         if (ar.IsStoring())
         {
