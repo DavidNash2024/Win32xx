@@ -1076,7 +1076,8 @@ namespace Win32xx
 		Headers.bstrVal = SysAllocString(T2W(pszHeaders));
 		BSTR url = SysAllocString(T2W(pszURL));
 
-		GetIWebBrowser2()->Navigate(url, &Flags, &TargetFrameName, &PostData, &Headers);
+		if (url)
+			GetIWebBrowser2()->Navigate(url, &Flags, &TargetFrameName, &PostData, &Headers);
 
 		VariantClear(&Flags);
 		VariantClear(&TargetFrameName);

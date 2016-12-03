@@ -812,8 +812,8 @@ namespace Win32xx
 		// Load the submenu
 		int nMaxedOffset = IsMDIChildMaxed()? 1:0;
 		m_hPopupMenu = ::GetSubMenu(m_hTopMenu, m_nHotItem - nMaxedOffset);
-		if (IsMDIChildMaxed() && (0 == m_nHotItem) )
-		m_hPopupMenu = pMaxMDIChild->GetSystemMenu(FALSE);
+		if (pMaxMDIChild && IsMDIChildMaxed() && (0 == m_nHotItem) )
+			m_hPopupMenu = pMaxMDIChild->GetSystemMenu(FALSE);
 
         // Retrieve the bounding rectangle for the toolbar button
 		CRect rc = GetItemRect(m_nHotItem);
@@ -867,7 +867,7 @@ namespace Win32xx
 		// Process MDI Child system menu
 		if (IsMDIChildMaxed())
 		{
-			if (pMaxMDIChild->GetSystemMenu(FALSE) == m_hPopupMenu )
+			if (pMaxMDIChild && pMaxMDIChild->GetSystemMenu(FALSE) == m_hPopupMenu )
 			{
 				if (nID)
 					pMaxMDIChild->SendMessage(WM_SYSCOMMAND, (WPARAM)nID, 0L);

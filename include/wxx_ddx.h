@@ -880,10 +880,13 @@ namespace Win32xx
 
 			// check the next window in the group, if any
 			hWndCtrl = ::GetWindow(hWndCtrl, GW_HWNDNEXT);
-			LRESULT lrButton = SendMessage(hWndCtrl, WM_GETDLGCODE, 0, 0L);
-			isRadioButton = (hWndCtrl != NULL && (lrButton & DLGC_RADIOBUTTON));
+			if (hWndCtrl)
+			{
+				LRESULT lrButton = SendMessage(hWndCtrl, WM_GETDLGCODE, 0, 0L);
+				isRadioButton = (hWndCtrl != NULL && (lrButton & DLGC_RADIOBUTTON));
 
-			firstInGroup =  (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
+				firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
+			}
 		}
 	}
 

@@ -1597,7 +1597,7 @@ namespace Win32xx
 		if (cf.dwMask & CFM_FACE)
 		{
 			m_LogFont.lfPitchAndFamily = cf.bPitchAndFamily;
-			lstrcpy(m_LogFont.lfFaceName, cf.szFaceName);
+			lstrcpyn(m_LogFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
 		}
 		else
 		{

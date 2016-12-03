@@ -283,7 +283,7 @@ namespace Win32xx
 		typedef HRESULT WINAPI GETTHEMEINT(HANDLE, int, int, int, int*);
 		typedef HRESULT WINAPI GETTHEMEMARGINS(HANDLE, HDC, int, int, int, LPRECT, MARGINS*);
 		typedef HRESULT WINAPI GETTHEMETEXTEXTENT(HANDLE, HDC, int, int, LPCWSTR, int, DWORD, LPCRECT, LPCRECT);
-		typedef HRESULT WINAPI ISTHEMEBGPARTTRANSPARENT(HANDLE, int, int);
+		typedef BOOL	WINAPI ISTHEMEBGPARTTRANSPARENT(HANDLE, int, int);
 		typedef HANDLE  WINAPI OPENTHEMEDATA(HWND, LPCWSTR);
 
 		// Pointers to functions defined in uxTheme.dll
@@ -755,7 +755,7 @@ namespace Win32xx
 		if (m_pfnIsThemeBGPartTransparent)
 			return m_pfnIsThemeBGPartTransparent(m_hTheme, iPartId, iStateId);
 
-		return E_NOTIMPL;
+		return FALSE;
 	}
 
 	inline HANDLE CMenuMetrics::OpenThemeData(HWND hwnd, LPCWSTR pszClassList) const
