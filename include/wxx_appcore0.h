@@ -572,7 +572,7 @@ namespace Win32xx
 		//  2603     Windows 8.1 and Windows Server 2012 r2
 
 		// Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
-		
+		//       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602). 
 		return nVersion;
 	}
 

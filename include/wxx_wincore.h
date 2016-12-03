@@ -209,32 +209,38 @@ namespace Win32xx
 
 	#ifndef _WIN32_WCE
 		// Import the GetMonitorInfo and MonitorFromWindow functions
+		typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
+		typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
+		LPMFW pfnMonitorFromWindow = 0;
 		HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
-		typedef BOOL (WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
-		typedef HMONITOR (WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
-		LPMFW pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
-	#ifdef _UNICODE
-		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
-	#else
-		LPGMI pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
-	#endif
-
-		// Take multi-monitor systems into account
-		if (pfnGetMonitorInfo && pfnMonitorFromWindow)
+		LPGMI pfnGetMonitorInfo = 0;
+		if (hUser32)
 		{
-			HMONITOR hActiveMonitor = pfnMonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST);
-			MONITORINFO mi;
-			ZeroMemory(&mi, sizeof(MONITORINFO));
-			mi.cbSize = sizeof(MONITORINFO);
 
-			if(pfnGetMonitorInfo(hActiveMonitor, &mi))
+			pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
+#ifdef _UNICODE
+			pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
+#else
+			pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
+#endif
+
+			// Take multi-monitor systems into account
+			if (pfnGetMonitorInfo && pfnMonitorFromWindow)
 			{
-				rcDesktop = mi.rcWork;
-				if (GetParent().GetHwnd() == NULL) rcParent = mi.rcWork;
+				HMONITOR hActiveMonitor = pfnMonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST);
+				MONITORINFO mi;
+				ZeroMemory(&mi, sizeof(MONITORINFO));
+				mi.cbSize = sizeof(MONITORINFO);
+
+				if (pfnGetMonitorInfo(hActiveMonitor, &mi))
+				{
+					rcDesktop = mi.rcWork;
+					if (GetParent().GetHwnd() == NULL) rcParent = mi.rcWork;
+				}
 			}
+			FreeLibrary(hUser32);
+#endif
 		}
-		FreeLibrary(hUser32);
-  #endif
 
 		// Calculate point to center the dialog over the portion of parent window on this monitor
 		rcParent.IntersectRect(rcParent, rcDesktop);
@@ -380,13 +386,16 @@ namespace Win32xx
 		}
 
 		// Automatically subclass predefined window class types
-		::GetClassInfo(GetApp().GetInstanceHandle(), lpszClassName, &wc);
-		if (wc.lpfnWndProc != GetApp().m_Callback)
+		if (lpszClassName)
 		{
-			Subclass(hWnd);
+			::GetClassInfo(GetApp().GetInstanceHandle(), lpszClassName, &wc);
+			if (wc.lpfnWndProc != GetApp().m_Callback)
+			{
+				Subclass(hWnd);
 
-			// Override this to perform tasks after the window is attached.
-			OnAttach();
+				// Override this to perform tasks after the window is attached.
+				OnAttach();
+			}
 		}
 
 		// Clear the CWnd pointer from TLS

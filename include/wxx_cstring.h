@@ -918,7 +918,7 @@ namespace Win32xx
 		LPSTR pszTemp = 0;
 		if (pszFormat)
 		{
-			DWORD dwResult = ::FormatMessageA(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, pszTemp, 0, &args);
+			DWORD dwResult = ::FormatMessageA(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, (LPSTR)&pszTemp, 0, &args);
 
 			if ( dwResult == 0 || pszTemp == 0 )
 				throw std::bad_alloc();
@@ -935,7 +935,7 @@ namespace Win32xx
 		LPWSTR pszTemp = 0;
 		if (pszFormat)
 		{
-			DWORD dwResult = ::FormatMessageW(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, pszTemp, 0, &args);
+			DWORD dwResult = ::FormatMessageW(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, (LPWSTR)&pszTemp, 0, &args);
 
 			if ( dwResult == 0 || pszTemp == 0 )
 				throw std::bad_alloc();

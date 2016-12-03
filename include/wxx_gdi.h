@@ -1725,7 +1725,7 @@ namespace Win32xx
 		logFont.lfCharSet = DEFAULT_CHARSET;
 		logFont.lfHeight = nPointSize;
 
-		lstrcpy(logFont.lfFaceName, lpszFaceName);
+		lstrcpyn(logFont.lfFaceName, lpszFaceName, LF_FACESIZE);
 
 		if (bBold)
 			logFont.lfWeight = FW_BOLD;
