@@ -146,7 +146,7 @@ namespace Win32xx
 		{
 
 		public:
-			CViewPage() : m_pView(NULL), m_pTab(NULL) {}
+			CViewPage() : m_pContainer(NULL), m_pView(NULL), m_pTab(NULL) {}
 			virtual ~CViewPage() {}
 			virtual CToolBar& GetToolBar() const	{return m_ToolBar;}
 			virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -629,6 +629,7 @@ namespace Win32xx
 	//
 	inline CDocker::CDockBar::CDockBar() : m_pDocker(NULL), m_DockBarWidth(4)
 	{
+		ZeroMemory(&m_DragPos, sizeof(m_DragPos));
 	}
 
 	inline CDocker::CDockBar::~CDockBar()
@@ -4464,7 +4465,7 @@ namespace Win32xx
 		{
 			TCHITTESTINFO info;
 			ZeroMemory(&info, sizeof(TCHITTESTINFO));
-			info.pt = CPoint((DWORD)lParam);
+			info.pt = CPoint((DWORD_PTR)lParam);
 			int nTab = HitTest(info);
 			if (nTab >= 0 && m_nTabPressed >= 0)
 			{

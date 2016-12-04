@@ -8,6 +8,8 @@ CDockContainer::GetToolBarData	member function
 Added CFrame::GetMenuMetrics	member function
 Added CFrame::GetToolBarData	member function
 Added CTab::GetMaxTabSize		member function
+Added CTime::operator ()		member function
+Added CTimeSpan::operator ()	member function
 
 Modified TRACE 					now implemented as a macro.
 

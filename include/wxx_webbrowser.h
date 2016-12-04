@@ -222,7 +222,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CAXWindow class
 	//
-	inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWndAX(NULL), m_pUnk(NULL)
+	inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWndAX(NULL), m_hWndStatus(0), m_pUnk(NULL)
 	{
 	}
 

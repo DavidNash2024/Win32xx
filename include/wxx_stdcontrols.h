@@ -445,7 +445,7 @@ namespace Win32xx
 	// Returns the client coordinates of the specified character.
 	{
 		assert(IsWindow());
-		return CPoint( static_cast<DWORD>(SendMessage(EM_POSFROMCHAR, (WPARAM)nChar, 0L)) );
+		return CPoint( static_cast<DWORD_PTR>(SendMessage(EM_POSFROMCHAR, (WPARAM)nChar, 0L)) );
 	}
 
 	inline void CEdit::SetHandle(HLOCAL hBuffer) const
@@ -763,7 +763,7 @@ namespace Win32xx
 	// Associates a value with a list box item.
 	{
 		assert(IsWindow());
-		return SetItemData(nIndex, (DWORD)(DWORD_PTR)pData);
+		return static_cast<int>(SendMessage(LB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)pData));
 	}
 
 	inline int CListBox::SetItemHeight(int nIndex, UINT cyItemHeight) const

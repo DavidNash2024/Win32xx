@@ -311,7 +311,7 @@ namespace Win32xx
 				(max != zero && max < val))
 			{
 				  // retrieve the control ID
-				int nIDC = ::GetWindowLong(m_hWndLastControl, 	GWL_ID);
+				int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, 	GWLP_ID);
 				CString str = CString(_T("Warning: Date-Time data is out of range "))
 								+ _T("in control ID ") + nIDC + _T(" \n");
 				TRACE(str);
@@ -417,7 +417,7 @@ namespace Win32xx
 			if ((min != zero && min > val) ||
 				(max != zero && max < val))
 			{
-				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+				int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
 				CString str = CString(_T("Warning: Calendar data is out of range "))
 							+ _T("in control ID ") + nIDC + _T(" \n");
 				TRACE(str);
@@ -458,7 +458,7 @@ namespace Win32xx
 			{
 	#ifdef _DEBUG
 				  // just leave a trace if writing to the control
-				int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+				int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
 				CString str = CString(_T("Warning: slider position is outside given "))
 							+ _T("limits in the control with ID ") + nIDC + _T(" \n");
 				TRACE(str);
@@ -492,7 +492,7 @@ namespace Win32xx
 		if (!m_bRetrieveAndValidate)
 		{
 			// just leave a debugging trace if writing to a control
-			int nIDC = ::GetWindowLong(m_hWndLastControl, GWL_ID);
+			int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
 			CString str = CString(_T("Warning: value is outside limits in control with ID "))
 						   + nIDC + _T(" \n");
 			TRACE(str);
