@@ -1259,16 +1259,20 @@ namespace Win32xx
 	//  The parameters are set to sensible values.
 	{
 		int MaxChars = 128;
-		MaxChars = MAX(MaxChars, lstrlen(fr.lpstrFindWhat));
-		MaxChars = MAX(MaxChars, lstrlen(fr.lpstrReplaceWith));
 
 		if (fr.lpstrFindWhat)
+		{
 			m_strFindWhat = fr.lpstrFindWhat;
+			MaxChars = MAX(MaxChars, lstrlen(fr.lpstrFindWhat));
+		}
 		else
 			m_strFindWhat.Empty();
 
 		if (fr.lpstrReplaceWith)
+		{
 			m_strReplaceWith = fr.lpstrReplaceWith;
+			MaxChars = MAX(MaxChars, lstrlen(fr.lpstrReplaceWith));
+		}
 		else
 			m_strReplaceWith.Empty();
 

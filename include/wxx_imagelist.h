@@ -191,21 +191,17 @@ namespace Win32xx
 			// Allocate an iterator for our CImageList data
 			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
-			CWinApp* pApp = &GetApp();
-			if (pApp)
+			CWinApp& App = GetApp();
+			App.m_csMapLock.Lock();
+			m = App.m_mapCImlData.find(m_pData->hImageList);
+			if (m != App.m_mapCImlData.end())
 			{
 				// Erase the CImageList data entry from the map
-				pApp->m_csMapLock.Lock();
-
-				m = pApp->m_mapCImlData.find(m_pData->hImageList);
-				if (m != pApp->m_mapCImlData.end())
-				{
-					pApp->m_mapCImlData.erase(m);
-					Success = TRUE;
-				}
-
-				pApp->m_csMapLock.Release();
+				App.m_mapCImlData.erase(m);
+				Success = TRUE;
 			}
+
+			App.m_csMapLock.Release();
 		}
 
 		return Success;

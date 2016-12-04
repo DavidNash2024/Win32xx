@@ -277,21 +277,17 @@ namespace Win32xx
 			// Allocate an iterator for our HMENU map
 			std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
-			CWinApp* pApp = &GetApp();
-			if (pApp)
+			CWinApp& App = GetApp();
+			App.m_csMapLock.Lock();
+			m = App.m_mapCMenuData.find(m_pData->hMenu);
+			if (m != App.m_mapCMenuData.end())
 			{
 				// Erase the Menu pointer entry from the map
-				pApp->m_csMapLock.Lock();
-
-				m = pApp->m_mapCMenuData.find(m_pData->hMenu);
-				if (m != pApp->m_mapCMenuData.end())
-				{
-					pApp->m_mapCMenuData.erase(m);
-					Success = TRUE;
-				}
-
-				pApp->m_csMapLock.Release();
+				App.m_mapCMenuData.erase(m);
+				Success = TRUE;
 			}
+
+			App.m_csMapLock.Release();
 		}
 
 		return Success;

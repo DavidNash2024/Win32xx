@@ -50,6 +50,7 @@ namespace Win32xx
 	public:
 		CRegKey();
 		CRegKey(HKEY hKey);
+		CRegKey(const CRegKey&);
 		~CRegKey();
 		operator HKEY() const { return m_hKey; }
 		CRegKey& operator =(CRegKey& key);
@@ -110,6 +111,11 @@ namespace Win32xx
 	inline CRegKey::CRegKey(HKEY hKey) : m_hKey(0)
 	{
 		Attach(hKey);
+	}
+
+	inline CRegKey::CRegKey(const CRegKey& Key)
+	{
+		m_hKey = Key.m_hKey;
 	}
 
 	inline CRegKey::~CRegKey()

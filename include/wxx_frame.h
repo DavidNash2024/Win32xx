@@ -220,7 +220,11 @@ namespace Win32xx
 		UINT  nPos;
 		std::vector<TCHAR> vItemText;
 
-		MenuItemData() : hMenu(0), nPos(0) { vItemText.assign(MAX_MENU_STRING, _T('\0')); }
+		MenuItemData() : hMenu(0), nPos(0) 
+		{ 
+			ZeroMemory(&mii, GetSizeofMenuItemInfo());
+			vItemText.assign(MAX_MENU_STRING, _T('\0')); 
+		}
 		LPTSTR GetItemText() {return &vItemText[0];}
 	};
 

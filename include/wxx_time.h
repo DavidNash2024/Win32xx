@@ -166,6 +166,8 @@ namespace Win32xx
 		bool 		  operator<=(const CTime& time) const;
 		bool 		  operator>=(const CTime& time) const;
 
+		operator time_t() const { return m_time; }
+
 		// CString conversion
 		CString 	Format(LPCTSTR pFormat) const;
 		CString 	Format(UINT nFormatID) const;
@@ -225,6 +227,8 @@ namespace Win32xx
 		bool 	  		operator>(const CTimeSpan& ts) const;
 		bool 	  		operator<=(const CTimeSpan& ts) const;
 		bool 	  		operator>=(const CTimeSpan& ts) const;
+
+		operator timespan_t() const { return m_timespan; }
 
 		// CString conversion
 		CString   	Format(LPCTSTR pFormat) const;
@@ -989,7 +993,8 @@ namespace Win32xx
 		// load CTime as x64
 		ULONGLONG tx64 = 0;
 		ar.Read(&tx64, size);
-		memcpy(&t, &tx64, sizeof(t));
+		time_t tt = (time_t)tx64;
+		t = CTime(tt);
 		return ar;
 	}
 
@@ -1002,7 +1007,8 @@ namespace Win32xx
 		UINT size = sizeof(tx64);
 		
 		// store CTime as x64
-		memcpy(&tx64, &t, sizeof(t));
+		time_t tt = t;
+		tx64 = tt;
 		ar.Write(&tx64, size);
 		return ar;
 	}
@@ -1287,7 +1293,8 @@ namespace Win32xx
 		// load CTimeSpan as x64
 		ULONGLONG tsx64 = 0;
 		ar.Read(&tsx64, size);
-		memcpy(&ts, &tsx64, sizeof(ts));
+		timespan_t tst = (timespan_t)tsx64;
+		ts = CTimeSpan(tst);
 		return ar;
 	}
 
@@ -1301,7 +1308,7 @@ namespace Win32xx
 		ar.Write(&size, sizeof(size));
 				
 		// store CTimeSpan as x64
-		memcpy(&tsx64, &ts, sizeof(ts));
+		tsx64 = ts;
 		ar.Write(&tsx64, size);
 		return ar;
 	}

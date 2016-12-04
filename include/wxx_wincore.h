@@ -378,10 +378,12 @@ namespace Win32xx
 		HWND hWnd = ::CreateWindowEx(dwExStyle, ClassName, lpszWindowName, dwStyle, x, y, nWidth, nHeight,
 								hWndParent, nIDorHMenu, GetApp().GetInstanceHandle(), lpParam);
 
+		// Tidy up
+		pTLSData->pWnd = NULL;
+		
 		if (hWnd == 0)
 		{
 			// Throw an exception when window creation fails
-			pTLSData->pWnd = NULL;
 			throw CWinException(_T("CreateWindowEx failed"));
 		}
 

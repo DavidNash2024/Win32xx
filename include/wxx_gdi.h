@@ -927,24 +927,28 @@ namespace Win32xx
 	class CMetaFileDC : public CDC
 	{
 	public:
-		CMetaFileDC() : m_hMF(0), m_hEMF(0) {}
+		CMetaFileDC() : m_IsEnhancedMeta(FALSE){}
 		virtual ~CMetaFileDC()
 		{
-			if (m_hMF != 0)
+			if (GetHDC())
 			{
-				::CloseMetaFile(GetHDC());
-				::DeleteMetaFile(m_hMF);
-			}
-			if (m_hEMF != 0)
-			{
-				::CloseEnhMetaFile(GetHDC());
-				::DeleteEnhMetaFile(m_hEMF);
+				if (m_IsEnhancedMeta)
+				{
+					HENHMETAFILE enhMeta = ::CloseEnhMetaFile(GetHDC());
+					::DeleteEnhMetaFile(enhMeta);
+				}
+				else
+				{
+					HMETAFILE hMeta = ::CloseMetaFile(GetHDC());
+					::DeleteMetaFile(hMeta);
+				}
 			}
 		}
 
 		void Create(LPCTSTR lpszFilename = NULL)
 		{
 			Attach(::CreateMetaFile(lpszFilename));
+			m_IsEnhancedMeta = FALSE;			
 		}
 
 		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT& rcBounds, LPCTSTR lpszDescription)
@@ -954,13 +958,13 @@ namespace Win32xx
 				throw CResourceException(_T("CreateEnhMetaFile failed"));
 
 			Attach(hDC);
+			m_IsEnhancedMeta = TRUE;			
 		}
 		HMETAFILE Close() {	return ::CloseMetaFile(GetHDC()); }
 		HENHMETAFILE CloseEnhanced() { return ::CloseEnhMetaFile(GetHDC()); }
 
 	private:
-		HMETAFILE m_hMF;
-		HENHMETAFILE m_hEMF;
+		BOOL m_IsEnhancedMeta;
 	};
 #endif
 
@@ -1183,21 +1187,17 @@ namespace Win32xx
 			// Allocate an iterator for our HDC map
 			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
-			CWinApp* pApp = &GetApp();
-			if (pApp)
+			CWinApp& App = GetApp();
+			App.m_csMapLock.Lock();
+			m = App.m_mapCGDIData.find(m_pData->hGDIObject);
+			if (m != App.m_mapCGDIData.end())
 			{
 				// Erase the CGDIObject pointer entry from the map
-				pApp->m_csMapLock.Lock();
-
-				m = pApp->m_mapCGDIData.find(m_pData->hGDIObject);
-				if (m != pApp->m_mapCGDIData.end())
-				{
-					pApp->m_mapCGDIData.erase(m);
-					Success = TRUE;
-				}
-
-				pApp->m_csMapLock.Release();
+				App.m_mapCGDIData.erase(m);
+				Success = TRUE;
 			}
+
+			App.m_csMapLock.Release();
 		}
 
 		return Success;
@@ -1407,7 +1407,7 @@ namespace Win32xx
 
 			int yOffset = 0;
 			int xOffset;
-			int Index;
+			size_t Index;
 
 			for (int Row=0; Row < bmiHeader.biHeight; ++Row)
 			{
@@ -1922,7 +1922,7 @@ namespace Win32xx
 	{
 		try
 		{
-			::ExtCreatePen(nPenStyle, nWidth, &LogBrush, nStyleCount, lpStyle);
+			Attach(::ExtCreatePen(nPenStyle, nWidth, &LogBrush, nStyleCount, lpStyle));
 		}
 
 		catch(...)
@@ -2507,21 +2507,19 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 			// Allocate an iterator for our Data map
 			std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
-			CWinApp* pApp = &GetApp();
-			if (pApp)
+			CWinApp& App = GetApp();		
+			App.m_csMapLock.Lock();
+			m = App.m_mapCDCData.find(m_pData->hDC);
+			if (m != App.m_mapCDCData.end())
 			{
 				// Erase the CDC data entry from the map
-				pApp->m_csMapLock.Lock();
-				m = pApp->m_mapCDCData.find(m_pData->hDC);
-				if (m != pApp->m_mapCDCData.end())
-				{
-					pApp->m_mapCDCData.erase(m);
-					Success = TRUE;
-				}
-
-				pApp->m_csMapLock.Release();
+				App.m_mapCDCData.erase(m);
+				Success = TRUE;
 			}
+
+			App.m_csMapLock.Release();
 		}
+
 		return Success;
 	}
 

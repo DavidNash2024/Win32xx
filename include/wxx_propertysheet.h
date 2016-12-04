@@ -671,6 +671,7 @@ namespace Win32xx
 		// Create the property sheet
 		ipResult = PropertySheet(ppsph);
 
+		// Tidy up
 		pTLSData->pWnd = NULL;
 
 		if (ipResult == -1)

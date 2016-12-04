@@ -1363,10 +1363,10 @@ namespace Win32xx
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
 		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
-		LRESULT dwValue = MonthCal_GetRange(*this, &MinMax);
+		LRESULT Value = MonthCal_GetRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
-		return dwValue;
+		return Value;
 	}
 
 	inline LRESULT CMonthCalendar::GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const

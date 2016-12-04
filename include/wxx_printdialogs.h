@@ -315,60 +315,58 @@ namespace Win32xx
 			// Global memory has already been allocated
 			LPDEVNAMES pDevNames = (LPDEVNAMES)::GlobalLock(m_hDevNames);
 			assert (pDevNames);
-			if (pDevNames)
-			{
-				// If our gobal memory is referencing the default printer
-				if (pDevNames && pDevNames->wDefault & DN_DEFAULTPRN)
-				{
-					// Get current default printer
-					PRINTDLG pd;
-					ZeroMemory(&pd, sizeof(PRINTDLG));
-					pd.lStructSize = sizeof(pd);
-					pd.Flags = PD_RETURNDEFAULT;
-					PrintDlg(&pd);
 
-					if (pd.hDevNames == 0)
+			// If our gobal memory is referencing the default printer
+			if (pDevNames && pDevNames->wDefault & DN_DEFAULTPRN)
+			{
+				// Get current default printer
+				PRINTDLG pd;
+				ZeroMemory(&pd, sizeof(PRINTDLG));
+				pd.lStructSize = sizeof(pd);
+				pd.Flags = PD_RETURNDEFAULT;
+				PrintDlg(&pd);
+
+				if (pd.hDevNames == 0)
+				{
+					// Printer was default, but now there are no printers.
+					::GlobalUnlock(m_hDevNames);
+					::GlobalUnlock(m_hDevMode);
+					GlobalFreeAll(m_hDevMode);
+					GlobalFreeAll(m_hDevNames);
+					m_hDevMode = 0;
+					m_hDevNames = 0;
+				}
+				else
+				{
+					// Compare current default printer to the one in global memory
+					LPDEVNAMES pDefDevNames = reinterpret_cast<LPDEVNAMES>(::GlobalLock(pd.hDevNames));
+					if (pDefDevNames)
 					{
-						// Printer was default, but now there are no printers.
-						::GlobalUnlock(m_hDevNames);
-						::GlobalUnlock(m_hDevMode);
-						GlobalFreeAll(m_hDevMode);
-						GlobalFreeAll(m_hDevNames);
-						m_hDevMode = 0;
-						m_hDevNames = 0;
+						if (lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDriverOffset,
+							reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDriverOffset) != 0 ||
+							lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDeviceOffset,
+								reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDeviceOffset) != 0 ||
+							lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wOutputOffset,
+								reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wOutputOffset) != 0)
+						{
+							// Default printer has changed. Reset the global memory.
+							::GlobalUnlock(m_hDevNames);
+							::GlobalUnlock(pd.hDevNames);
+							GlobalFreeAll(m_hDevMode);
+							GlobalFreeAll(m_hDevNames);
+
+							m_hDevMode = pd.hDevMode;
+							m_hDevNames = pd.hDevNames;
+						}
 					}
 					else
 					{
-						// Compare current default printer to the one in global memory
-						LPDEVNAMES pDefDevNames = reinterpret_cast<LPDEVNAMES>(::GlobalLock(pd.hDevNames));
-						if (pDefDevNames)
-						{
-							if (lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDriverOffset,
-								reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDriverOffset) != 0 ||
-								lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDeviceOffset,
-									reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wDeviceOffset) != 0 ||
-								lstrcmp(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wOutputOffset,
-									reinterpret_cast<LPCTSTR>(pDefDevNames) + pDefDevNames->wOutputOffset) != 0)
-							{
-								// Default printer has changed. Reset the global memory.
-								::GlobalUnlock(m_hDevNames);
-								::GlobalUnlock(pd.hDevNames);
-								GlobalFreeAll(m_hDevMode);
-								GlobalFreeAll(m_hDevNames);
+						// Printer was default, and unchanged. Keep the existing global memory.
+						::GlobalUnlock(m_hDevNames);
+						::GlobalUnlock(pd.hDevNames);
 
-								m_hDevMode = pd.hDevMode;
-								m_hDevNames = pd.hDevNames;
-							}
-						}
-						else
-						{
-							// Printer was default, and unchanged. Keep the existing global memory.
-							::GlobalUnlock(m_hDevNames);
-							::GlobalUnlock(pd.hDevNames);
-
-							GlobalFreeAll(pd.hDevMode);
-							GlobalFreeAll(pd.hDevNames);
-						}
+						GlobalFreeAll(pd.hDevMode);
+						GlobalFreeAll(pd.hDevNames);
 					}
 				}
 			}

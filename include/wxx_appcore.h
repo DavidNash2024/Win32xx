@@ -86,14 +86,14 @@ namespace Win32xx
 	// Definitions for the CWinThread class
 	//
 	inline CWinThread::CWinThread() : m_pfnThreadProc(0), m_pThreadParams(0), m_hThread(0),
-		                               m_nThreadID(0), m_hAccel(0), m_hWndAccel(0)
+		                               m_nThreadID(0), m_dwThreadID(0), m_hAccel(0), m_hWndAccel(0)
 	// Override CWinThread and use this constructor for GUI threads.
 	// InitInstance will be called when the thread runs.
 	{
 	}
 
 	inline CWinThread::CWinThread(PFNTHREADPROC pfnThreadProc, LPVOID pParam) : m_pfnThreadProc(0),
-		                m_pThreadParams(0), m_hThread(0), m_nThreadID(0), m_hAccel(0), m_hWndAccel(0)
+		                m_pThreadParams(0), m_hThread(0), m_nThreadID(0), m_dwThreadID(0), m_hAccel(0), m_hWndAccel(0)
 	// Use CWinThread directly and call this constructor for worker threads.
 	// Specify a pointer to the function to run when the thread starts.
 	// Specifying pParam for a worker thread is optional.
