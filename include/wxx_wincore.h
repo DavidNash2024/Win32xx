@@ -207,7 +207,7 @@ namespace Win32xx
 		if (GetParent().GetHwnd() != 0) rcParent = GetParent().GetWindowRect();
 		else rcParent = rcDesktop;
 
-	#ifndef _WIN32_WCE
+ #ifndef _WIN32_WCE
 		// Import the GetMonitorInfo and MonitorFromWindow functions
 		typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
 		typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
@@ -218,11 +218,11 @@ namespace Win32xx
 		{
 
 			pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
-#ifdef _UNICODE
+  #ifdef _UNICODE
 			pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
-#else
+  #else
 			pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");
-#endif
+  #endif
 
 			// Take multi-monitor systems into account
 			if (pfnGetMonitorInfo && pfnMonitorFromWindow)
@@ -239,8 +239,9 @@ namespace Win32xx
 				}
 			}
 			FreeLibrary(hUser32);
-#endif
+
 		}
+ #endif
 
 		// Calculate point to center the dialog over the portion of parent window on this monitor
 		rcParent.IntersectRect(rcParent, rcDesktop);
