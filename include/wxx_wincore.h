@@ -93,13 +93,14 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 //////////////////////////////////////
 //  Include the Win32++ header files
 
+#include "wxx_appcore.h"
 #include "wxx_wincore0.h"
 #include "wxx_gdi.h"
 #ifndef _WIN32_WCE
   #include "wxx_menu.h"
 #endif
 #include "wxx_ddx.h"
-#include "wxx_appcore.h"
+
 
 
 namespace Win32xx

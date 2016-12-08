@@ -1,17 +1,41 @@
 Version 8.4
 ===========
 
+* The CMetaFile a CEnhMetaFile classes have been added to the framework.
+ - CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
+   be used. CMetatFile objects are reference counted, so they can be safely
+   copied. CMetatFile automatically deletes the HMETAFILE when the last copy of
+   the CMetaFile object goes out of scope. The CMetaFileDC::Close function
+   returns a CMetaFile object.
+ - CEnhMetaFile wraps a HENHMETAFILE. CEnhMetaFile can be used anywhere a
+   HENHMETAFILE can be used. CEnhMetaFile objects are reference counted, 
+   so they can be safely copied. CEnhMetaFile automatically deletes the
+   HENHMETAFILE when the last copy of the CEnhMetaFile object goes out of
+   scope. The CMetaFileDC::CloseEnhanced function returns a CEnhMetaFile
+   object.
+   
+   
+* Added a MetaFile sample.   
+   
+   
+
+
 Changes in detail
 -----------------
-Added ::Trace					global function
-CDockContainer::GetToolBarData	member function
-Added CFrame::GetMenuMetrics	member function
-Added CFrame::GetToolBarData	member function
-Added CTab::GetMaxTabSize		member function
-Added CTime::operator ()		member function
-Added CTimeSpan::operator ()	member function
+Added CMetaFile							class
+Added CEnhMetaFile						class
+Added ::Trace							global function
+Added CDC::PlayMetaFile					member function
+Added CDockContainer::GetToolBarData	member function
+Added CFrame::GetMenuMetrics			member function
+Added CFrame::GetToolBarData			member function
+Added CTab::GetMaxTabSize				member function
+Added CTime::operator ()				member function
+Added CTimeSpan::operator ()			member function
 
-Modified TRACE 					now implemented as a macro.
+Modified TRACE 							now implemented as a macro.
+Modified CMetaFileDC::Close				now returns CMetaFile
+Modified CMetaFileDC::CloseEnhanced		now returns CEnhMetaFile
 
 
 

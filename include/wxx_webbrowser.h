@@ -237,8 +237,8 @@ namespace Win32xx
 	inline void CAXWindow::CreateControl(BSTR bstrClsid)
 	{
 		CLSID   clsid;
-		CLSIDFromString(bstrClsid, &clsid);
-		CreateControl(clsid);
+		if (NOERROR == CLSIDFromString(bstrClsid, &clsid))
+			CreateControl(clsid);
 	}
 
 	inline void CAXWindow::Activate(BOOL fFocus)
@@ -260,10 +260,10 @@ namespace Win32xx
 
 	inline void CAXWindow::CreateControl(REFCLSID clsid)
 	{
-		CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void**)&m_pUnk);
-
-		if (!m_pUnk)
+		if (S_OK != CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void**)&m_pUnk))
 			return;
+
+		assert(m_pUnk);
 
 		IOleObject* pioo;
 		HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
