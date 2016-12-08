@@ -152,6 +152,7 @@
 #include "wxx_appcore0.h"
 #include "wxx_wincore0.h"
 #include "wxx_exception.h"
+#include "wxx_metafile.h"
 
 
 // Disable macros from Windowsx.h
@@ -730,6 +731,10 @@ namespace Win32xx
 		BOOL OffsetWindowOrgEx(int nWidth, int nHeight, LPPOINT lpPoint) const;
 #endif
 
+		// MetaFile Functions
+		BOOL PlayMetaFile(HMETAFILE hMF) const;
+		BOOL PlayMetaFile(HENHMETAFILE hEnhMetaFile, const RECT& rcBounds) const;
+
 		// Printer Functions
 		int StartDoc(LPDOCINFO lpDocInfo) const;
 		int EndDoc() const;
@@ -927,45 +932,79 @@ namespace Win32xx
 	class CMetaFileDC : public CDC
 	{
 	public:
-		CMetaFileDC() : m_IsEnhancedMeta(FALSE){}
+		CMetaFileDC() : IsEnhMetaFile(FALSE) {}
 		virtual ~CMetaFileDC()
 		{
 			if (GetHDC())
 			{
-				if (m_IsEnhancedMeta)
-				{
-					HENHMETAFILE enhMeta = ::CloseEnhMetaFile(GetHDC());
-					::DeleteEnhMetaFile(enhMeta);
+				// Note we should not get here. 
+				TRACE("Warning! A MetaFile or EnhMetaFile was created but not closed\n");
+				if (IsEnhMetaFile)
+				{ 
+					::DeleteEnhMetaFile(CloseEnhanced());
 				}
 				else
 				{
-					HMETAFILE hMeta = ::CloseMetaFile(GetHDC());
-					::DeleteMetaFile(hMeta);
+					::DeleteMetaFile(Close());
 				}
+
+				Detach();
 			}
+
 		}
 
 		void Create(LPCTSTR lpszFilename = NULL)
 		{
-			Attach(::CreateMetaFile(lpszFilename));
-			m_IsEnhancedMeta = FALSE;			
-		}
-
-		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT& rcBounds, LPCTSTR lpszDescription)
-		{
-			HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, &rcBounds, lpszDescription);
+			assert(GetHDC() == 0);
+			HDC hDC = ::CreateMetaFile(lpszFilename);
 			if (hDC == 0)
-				throw CResourceException(_T("CreateEnhMetaFile failed"));
+				throw CResourceException(_T("Failed to create a DC for the MetaFile"));
 
 			Attach(hDC);
-			m_IsEnhancedMeta = TRUE;			
+			IsEnhMetaFile = FALSE;
 		}
-		HMETAFILE Close() {	return ::CloseMetaFile(GetHDC()); }
-		HENHMETAFILE CloseEnhanced() { return ::CloseEnhMetaFile(GetHDC()); }
+
+		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT* prcBounds, LPCTSTR lpszDescription)
+		{
+			assert(GetHDC() == 0);
+			HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, prcBounds, lpszDescription);
+			if (hDC == 0)
+				throw CResourceException(_T("Failed to create a DC for the EnhMetaFile"));
+
+			Attach(hDC);
+			IsEnhMetaFile = TRUE;
+		}
+
+		CMetaFile Close() 
+		// Closes the metafile and returns a CMetaFile object.
+		// The CMetaFile object automatically deletes the HMETAFILE when the last copy
+		// of the CMetaFile goes out of scope.
+		{
+			assert(GetHDC());
+			assert(IsEnhMetaFile == FALSE);
+
+			HMETAFILE hMeta = ::CloseMetaFile(GetHDC());
+			Detach();
+			return CMetaFile(hMeta);
+		}
+
+		CEnhMetaFile CloseEnhanced()
+		// Closes the enhanced metafile and returns a CEnhMetaFile object.
+		// The CEnhMetaFile object automatically deletes the HENHMETAFILE when the last copy
+		// of the CEnhMetaFile goes out of scope. 
+		{ 
+			assert(GetHDC());
+			assert(IsEnhMetaFile == TRUE);
+
+			HENHMETAFILE enhMeta = ::CloseEnhMetaFile(GetHDC());
+			Detach();
+			return CEnhMetaFile(enhMeta);
+		}
 
 	private:
-		BOOL m_IsEnhancedMeta;
+		BOOL IsEnhMetaFile;
 	};
+
 #endif
 
 
@@ -4096,6 +4135,21 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return ::ScaleWindowExtEx(m_pData->hDC, xNum, xDenom, yNum, yDenom, lpSize);
 	}
 #endif
+
+	// MetaFile Functions
+	inline BOOL CDC::PlayMetaFile(HMETAFILE hMF) const
+	// Displays the picture stored in the specified metafile. 
+	{
+		assert(m_pData->hDC);
+		return ::PlayMetaFile(m_pData->hDC, hMF);
+	}
+
+	inline BOOL CDC::PlayMetaFile(HENHMETAFILE hEnhMetaFile, const RECT& rcBounds) const
+	// Displays the picture stored in the specified enhanced-format metafile. 
+	{
+		assert(m_pData->hDC);
+		return ::PlayEnhMetaFile(m_pData->hDC, hEnhMetaFile, &rcBounds);
+	}
 
 	// Printer Functions
 	inline int CDC::StartDoc(LPDOCINFO lpDocInfo) const

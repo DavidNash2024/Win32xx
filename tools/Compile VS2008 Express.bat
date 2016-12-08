@@ -73,6 +73,8 @@ vcbuild /rebuild MDIFrameDemo\ProjectFiles\MDIDemo_2008.vcproj debug            
 vcbuild /rebuild MDIFrameDemo\ProjectFiles\MDIDemo_2008.vcproj release              >>"..\output\VS2008.log"
 vcbuild /rebuild MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2008.vcproj debug   >>"..\output\VS2008.log"
 vcbuild /rebuild MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2008.vcproj release	>>"..\output\VS2008.log"
+vcbuild /rebuild MetaFile\ProjectFiles\MetaFile_2008.vcproj debug                   >>"..\output\VS2008.log"
+vcbuild /rebuild MetaFile\ProjectFiles\MetaFile_2008.vcproj release	                >>"..\output\VS2008.log"
 vcbuild /rebuild NetClient\ProjectFiles\NetClient_2008.vcproj debug                 >>"..\output\VS2008.log"
 vcbuild /rebuild NetClient\ProjectFiles\NetClient_2008.vcproj release               >>"..\output\VS2008.log"
 vcbuild /rebuild NetServer\ProjectFiles\NetServer_2008.vcproj debug                 >>"..\output\VS2008.log"
