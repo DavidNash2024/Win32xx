@@ -345,7 +345,7 @@ LRESULT CMainFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Update the "Window" menu
 	m_MyTabbedMDI.GetListMenu();
 
-	return CFrame::OnInitMenuPopup(uMsg, wParam, lParam);
+	return CDockFrame::OnInitMenuPopup(uMsg, wParam, lParam);
 }
 
 BOOL CMainFrame::OnCloseDockers()
@@ -380,13 +380,13 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 
-	CFrame::OnMenuUpdate(nID);
+	CDockFrame::OnMenuUpdate(nID);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
-	CFrame::PreCreate(cs);
+	CDockFrame::PreCreate(cs);
 
 	// Hide the window initially by removing the WS_VISIBLE style
 	cs.style &= ~WS_VISIBLE;
@@ -394,7 +394,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 
 BOOL CMainFrame::SaveRegistrySettings()
 {
-	CFrame::SaveRegistrySettings();
+	CDockFrame::SaveRegistrySettings();
 
 	// Save the docker settings
 	SaveDockRegistrySettings(GetRegistryKeyName());
@@ -408,7 +408,7 @@ BOOL CMainFrame::SaveRegistrySettings()
 void CMainFrame::SetupMenuIcons()
 {
 	// Load the defualt set of icons from the toolbar
-	CFrame::SetupMenuIcons();
+	CDockFrame::SetupMenuIcons();
 
 	// Add some extra icons for menu items
 	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp().LoadIcon(IDI_SIMPLE));

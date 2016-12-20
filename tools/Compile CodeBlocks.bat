@@ -97,7 +97,7 @@ copy INIFrame\ProjectFiles\Microsoft\Debug\INIFrame.exe                 "..\outp
 copy MDIFrame\ProjectFiles\Microsoft\Debug\MDIFrame.exe                 "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy MDIFrameDemo\ProjectFiles\Microsoft\Debug\MDIDemo.exe              "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy MDIFrameSplitter\ProjectFiles\Microsoft\Debug\MDIFrameSplitter.exe "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
-copy MetaFile\ProjectFiles\Microsoft\Debug\MetatFile.exe                "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
+copy MetaFile\ProjectFiles\Microsoft\Debug\MetaFile.exe                "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy NetClient\ProjectFiles\Microsoft\Debug\NetClient.exe               "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy NetServer\ProjectFiles\Microsoft\Debug\NetServer.exe               "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy NotePad\ProjectFiles\Microsoft\Debug\Notepad.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"

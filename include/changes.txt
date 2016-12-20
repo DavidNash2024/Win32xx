@@ -29,9 +29,15 @@ Added CDC::PlayMetaFile					member function
 Added CDockContainer::GetToolBarData	member function
 Added CFrame::GetMenuMetrics			member function
 Added CFrame::GetToolBarData			member function
+Added CMDIChild::GetChildAccel
+Added CMDIChild::GetChildMenu
+Added CMDIFrame::UpdateFrameMenu
 Added CTab::GetMaxTabSize				member function
 Added CTime::operator ()				member function
 Added CTimeSpan::operator ()			member function
+
+Added UWM_MDIACTIVATED                  window message
+Added UWM_MDIDESTROYED                  window message
 
 Modified TRACE 							now implemented as a macro.
 Modified CMetaFileDC::Close				now returns CMetaFile
