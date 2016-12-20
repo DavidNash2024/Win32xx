@@ -71,8 +71,7 @@
 
 namespace Win32xx
 {
-    class CMDIChild;
-    class CMDIFrame;
+	class CMDIChild;
 	typedef Shared_Ptr<CMDIChild> MDIChildPtr;
 
 	/////////////////////////////////////
@@ -80,7 +79,6 @@ namespace Win32xx
 	//
 	class CMDIChild : public CWnd
 	{
-		friend class CMDIFrame;
 	public:
 		CMDIChild();
 		virtual ~CMDIChild();
@@ -90,10 +88,11 @@ namespace Win32xx
 		virtual void RecalcLayout();
 
 		// These functions aren't virtual, and shouldn't be overridden
+		HACCEL GetChildAccel() const { return m_hChildAccel; }
+		HMENU GetChildMenu() const { return m_ChildMenu; }
 		CWnd& GetView() const			{ assert(m_pView); return *m_pView; }
 		void SetView(CWnd& wndView);
 		void SetHandles(HMENU MenuName, HACCEL AccelName);
-		CMDIFrame& GetMDIFrame() const;
 		void MDIActivate() const;
 		void MDIDestroy() const;
 		void MDIMaximize() const;
@@ -114,43 +113,32 @@ namespace Win32xx
 		CMDIChild(const CMDIChild&);				// Disable copy construction
 		CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
 
-		CMDIFrame* m_pMDIFrame;		// pointer to the MDI Frame object
 		CWnd* m_pView;				// pointer to the View CWnd object
 		CMenu m_ChildMenu;
 		HACCEL m_hChildAccel;
 	};
 
-
+	
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
 	//
 	class CMDIFrame : public CFrame
 	{
-		friend class CMDIChild;     // CMDIChild uses CMDIFrame::UpdateFrameMenu
-
 	public:
 		// A nested class inside CMDIFrame
 		class CMDIClient : public CDocker::CDockClient
 		{
-			friend class CMDIFrame;
-
 		public:
-			CMDIClient() : m_pMDIFrame(0) {}
+			CMDIClient() {}
 			virtual ~CMDIClient() {}
-			CMDIFrame& GetMDIFrame() const;
 
 		protected:
 			// Overridable virtual functions
 			virtual HWND Create(HWND hWndParent);
 			virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnMDIDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam);
-			virtual LRESULT OnMDISetMenu(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		private:
-			CMDIFrame* m_pMDIFrame;
 		};
-
 
 		CMDIFrame();
 		virtual ~CMDIFrame() {}
@@ -180,14 +168,16 @@ namespace Win32xx
 		// Overridable virtual functions
 		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    OnClose();
-		virtual int		OnCreate(CREATESTRUCT& cs);
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMDIActivated(UINT, WPARAM wParam, LPARAM);
+		virtual LRESULT OnMDIDestroyed(UINT, WPARAM wParam, LPARAM);
 		virtual void    OnMenuUpdate(UINT nID);
 		virtual BOOL    OnViewStatusBar();
 		virtual BOOL    OnViewToolBar();
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    RecalcLayout();
 		virtual BOOL    PreTranslateMessage(MSG& Msg);
+		virtual void 	UpdateFrameMenu(CMenu Menu);
 
 		// Not intended to be overridden
 		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -196,7 +186,6 @@ namespace Win32xx
 		CMDIFrame(const CMDIFrame&);				// Disable copy construction
 		CMDIFrame& operator = (const CMDIFrame&);	// Disable assignment operator
 		void AppendMDIMenu(CMenu MenuWindow);
-		void UpdateFrameMenu(CMenu Menu);
 
 		std::vector<MDIChildPtr> m_vMDIChild;
 		mutable CMDIClient m_MDIClient;
@@ -248,7 +237,7 @@ namespace Win32xx
 			if (lr == 0)
 				lr = CDocker::OnNotify(wParam, lParam);
 
-			// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns		
+			// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 			return lr;
 		}
 
@@ -258,6 +247,8 @@ namespace Win32xx
 			switch (uMsg)
 			{
 
+			case UWM_MDIACTIVATED:		return CMDIFrame::OnMDIActivated(uMsg, wParam, lParam);
+			case UWM_MDIDESTROYED:		return CMDIFrame::OnMDIDestroyed(uMsg, wParam, lParam);
 			case WM_WINDOWPOSCHANGED:	return CMDIFrame::OnWindowPosChanged(uMsg, wParam, lParam);
 
 			case WM_ACTIVATE:		return CFrame::OnActivate(uMsg, wParam, lParam);
@@ -293,6 +284,7 @@ namespace Win32xx
 
 	};
 
+
 }
 
 
@@ -317,7 +309,6 @@ namespace Win32xx
 		assert(NULL != pMDIChild); // Cannot add Null MDI Child
 
 		m_vMDIChild.push_back(MDIChildPtr(pMDIChild));
-		pMDIChild->m_pMDIFrame = this;
 		pMDIChild->Create(GetMDIClient());
 
 		return *pMDIChild;
@@ -397,8 +388,8 @@ namespace Win32xx
 		CMenu Menu = GetFrameMenu();
 
 		if(GetActiveMDIChild())
-			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
-				Menu = GetActiveMDIChild()->m_ChildMenu;
+			if (GetActiveMDIChild()->GetChildMenu())
+				Menu = GetActiveMDIChild()->GetChildMenu();
 
 		return Menu;
 	}
@@ -468,7 +459,7 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::MDITile(int nType /* = 0*/) const
-	// Arrange all of the MDI child windows in a tile format. 
+	// Arrange all of the MDI child windows in a tile format.
 	{
 		// Possible values for nType are:
 		// MDITILE_HORIZONTAL	Tiles MDI child windows so that one window appears above another.
@@ -488,13 +479,6 @@ namespace Win32xx
 		}
 	}
 
-	inline int CMDIFrame::OnCreate(CREATESTRUCT& cs)
-	// Called when the MDI frame is created.
-	{
-		GetMDIClient().m_pMDIFrame = this;
-		return CFrame::OnCreate(cs);
-	}
-
 	inline LRESULT CMDIFrame::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Called when the menu's modal loop begins (WM_INITMENUPOPUP received)
 	{
@@ -512,7 +496,7 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::OnMenuUpdate(UINT nID)
-	// Updates the check buttons before displaying the menu	
+	// Updates the check buttons before displaying the menu
 	{
 		switch (nID)
 		{
@@ -531,8 +515,34 @@ namespace Win32xx
 			}
 			break;
 		}
-
 	}
+	
+	inline LRESULT CMDIFrame::OnMDIActivated(UINT, WPARAM wParam, LPARAM)
+	{
+		m_hActiveMDIChild = (HWND)wParam;
+
+		if (m_hActiveMDIChild)
+		{
+			CMDIChild* pMDIChild = static_cast<CMDIChild*>(GetCWndPtr(m_hActiveMDIChild));
+			assert ( dynamic_cast<CMDIChild*>(GetCWndPtr(m_hActiveMDIChild)) );
+			if (pMDIChild->GetChildMenu())
+				UpdateFrameMenu(pMDIChild->GetChildMenu());
+			else
+				UpdateFrameMenu(GetFrameMenu());
+			if (pMDIChild->GetChildAccel())
+				GetApp().SetAccelerators(pMDIChild->GetChildAccel(), *this);
+			else
+				GetApp().SetAccelerators(GetFrameAccel(), *this);
+		}
+
+		return 0L;
+	}
+
+	inline LRESULT CMDIFrame::OnMDIDestroyed(UINT, WPARAM wParam, LPARAM)
+	{
+		RemoveMDIChild((HWND)wParam);
+		return 0L;
+	}	
 
 	inline BOOL CMDIFrame::OnViewStatusBar()
 	// Called when the StatusBar is shown.
@@ -564,8 +574,8 @@ namespace Win32xx
 	}
 
 	inline BOOL CMDIFrame::PreTranslateMessage(MSG& Msg)
-	// Used to translate window messages before they are dispatched to the TranslateMessage and 
-	//  DispatchMessage Windows functions. 
+	// Used to translate window messages before they are dispatched to the TranslateMessage and
+	//  DispatchMessage Windows functions.
 	{
 		if (WM_KEYFIRST <= Msg.message && Msg.message <= WM_KEYLAST)
 		{
@@ -623,10 +633,15 @@ namespace Win32xx
 
 		if (GetActiveMDIChild())
 		{
-			if (GetActiveMDIChild()->m_ChildMenu.GetHandle())
-				UpdateFrameMenu(GetActiveMDIChild()->m_ChildMenu);
-			if (GetActiveMDIChild()->m_hChildAccel)
-				GetApp().SetAccelerators(GetActiveMDIChild()->m_hChildAccel, *this);
+			// Update the "Window" menu items
+			if (GetActiveMDIChild()->GetChildMenu())
+				UpdateFrameMenu(GetActiveMDIChild()->GetChildMenu());
+
+			// Update the accelerators
+			if (GetActiveMDIChild()->GetChildAccel())
+				GetApp().SetAccelerators(GetActiveMDIChild()->GetChildAccel(), *this);
+			else
+				GetApp().SetAccelerators(GetFrameAccel(), *this);
 		}
 		else
 		{
@@ -650,6 +665,8 @@ namespace Win32xx
 	}
 
 	inline void CMDIFrame::UpdateFrameMenu(CMenu Menu)
+	// Updates the frame menu. Also puts the list of CMDIChild windows in the "window" menu.
+	// The "window" menu item is assumed to be the second from the right. 
 	{
 		int nMenuItems = Menu.GetMenuItemCount();
 		if (nMenuItems > 0)
@@ -674,10 +691,14 @@ namespace Win32xx
 		}
 	}
 
+
+
 	inline LRESULT CMDIFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
+			case UWM_MDIACTIVATED:		return OnMDIActivated(uMsg, wParam, lParam);
+			case UWM_MDIDESTROYED:		return OnMDIDestroyed(uMsg, wParam, lParam);
 			case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
 
@@ -685,8 +706,8 @@ namespace Win32xx
 	}
 
 
-	/////////////////////////////////////
-	//Definitions for the CDockMDIChild class
+	////////////////////////////////////////////////////////
+	//Definitions for the CMDIFrame::CMDIClient nested class
 	//
 
 	inline HWND CMDIFrame::CMDIClient::Create(HWND hWndParent)
@@ -700,12 +721,6 @@ namespace Win32xx
 
 		// Create the view window
 		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), _T(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
-	}
-
-	inline CMDIFrame& CMDIFrame::CMDIClient::GetMDIFrame() const
-	{
-		assert ( dynamic_cast<CMDIFrame*>(m_pMDIFrame) );
-		return *m_pMDIFrame;
 	}
 
 	inline LRESULT CMDIFrame::CMDIClient::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
@@ -725,28 +740,17 @@ namespace Win32xx
 		CallWindowProc(GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
 
 		// Now remove MDI child
-		GetMDIFrame().RemoveMDIChild(reinterpret_cast<HWND>(wParam));
+		GetParent().SendMessage(UWM_MDIDESTROYED, wParam, 0);
 
 		return 0L;
-	}
-
-	inline LRESULT CMDIFrame::CMDIClient::OnMDISetMenu(UINT uMsg,WPARAM wParam, LPARAM lParam)
-	{
-		if (GetMDIFrame().IsMenuBarUsed())
-		{
-			return 0L;
-		}
-
-		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CMDIFrame::CMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{
-		case WM_MDIACTIVATE: return OnMDIActivate(uMsg, wParam, lParam);
-		case WM_MDIDESTROY:	return OnMDIDestroy(uMsg, wParam, lParam);
-		case WM_MDISETMENU:	return OnMDISetMenu(uMsg, wParam, lParam);
+		case WM_MDIACTIVATE:	return OnMDIActivate(uMsg, wParam, lParam);
+		case WM_MDIDESTROY:		return OnMDIDestroy(uMsg, wParam, lParam);
 		}
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
@@ -755,7 +759,7 @@ namespace Win32xx
 	/////////////////////////////////////
 	//Definitions for the CMDIChild class
 	//
-	inline CMDIChild::CMDIChild() : m_pMDIFrame(NULL), m_pView(NULL), m_hChildAccel(0)
+	inline CMDIChild::CMDIChild() : m_pView(NULL), m_hChildAccel(0)
 	{
 		// Set the MDI Child's menu and accelerator in the constructor, like this ...
 		//   HMENU hChildMenu = LoadMenu(GetApp().GetResourceHandle(), _T("MdiMenuView"));
@@ -833,18 +837,7 @@ namespace Win32xx
 		// Ensure bits revealed by round corners (XP themes) are redrawn
 		SetWindowPos(NULL, 0, 0, 0, 0, SWP_NOMOVE|SWP_NOSIZE|SWP_FRAMECHANGED);
 
-		if (m_ChildMenu.GetHandle())
-			GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
-		if (m_hChildAccel)
-			GetApp().SetAccelerators(m_hChildAccel, *this);
-
 		return GetHwnd();
-	}
-
-	inline CMDIFrame& CMDIChild::GetMDIFrame() const
-	{
-		assert( m_pMDIFrame );
-		return *m_pMDIFrame;
 	}
 
 	inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -889,6 +882,32 @@ namespace Win32xx
 
 		return 0;
 	}
+	
+	inline LRESULT CMDIChild::OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		UNREFERENCED_PARAMETER(uMsg);
+		UNREFERENCED_PARAMETER(wParam);
+
+		// This child is being activated
+		if (lParam == (LPARAM) GetHwnd())
+		{
+			GetAncestor().SendMessage(UWM_MDIACTIVATED, (WPARAM) GetHwnd(), 0);
+		}
+
+		// No child is being activated
+		if (lParam == 0)
+		{
+			GetAncestor().SendMessage(UWM_MDIACTIVATED, 0, 0);
+		}
+
+		return 0L;
+	}
+
+	inline LRESULT CMDIChild::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		RecalcLayout();
+		return FinalWindowProc(uMsg, wParam, lParam);
+	}
 
 	inline void CMDIChild::RecalcLayout()
 	{
@@ -905,15 +924,8 @@ namespace Win32xx
 		// Note: It is valid to call SetHandles before the window is created
 		if (IsWindow())
 		{
-			CWnd* pWnd = GetMDIFrame().GetActiveMDIChild();
-			if (pWnd == this)
-			{
-				if (m_ChildMenu.GetHandle())
-					GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
-
-				if (m_hChildAccel)
-					GetApp().SetAccelerators(m_hChildAccel, GetMDIFrame());
-			}
+			GetParent().SendMessage(WM_MDIACTIVATE, (WPARAM)GetHwnd(), 0L);
+			GetAncestor().SendMessage(UWM_MDIACTIVATED, (WPARAM)GetHwnd(), 0L);
 		}
 	}
 
@@ -942,40 +954,6 @@ namespace Win32xx
 				RecalcLayout();
 			}
 		}
-	}
-
-	inline LRESULT CMDIChild::OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		UNREFERENCED_PARAMETER(uMsg);
-		UNREFERENCED_PARAMETER(wParam);
-
-		// This child is being activated
-		if (lParam == (LPARAM) GetHwnd())
-		{
-			GetMDIFrame().m_hActiveMDIChild = *this;
-			// Set the menu to child default menu
-			if (m_ChildMenu.GetHandle())
-				GetMDIFrame().UpdateFrameMenu(m_ChildMenu);
-			if (m_hChildAccel)
-				GetApp().SetAccelerators(m_hChildAccel, *this);
-		}
-
-		// No child is being activated
-		if (lParam == 0)
-		{
-			GetMDIFrame().m_hActiveMDIChild = NULL;
-			// Set the menu to frame's original menu
-			GetMDIFrame().UpdateFrameMenu( GetMDIFrame().GetFrameMenu() );
-			GetApp().SetAccelerators(GetMDIFrame().GetFrameAccel(), *this);
-		}
-
-		return 0L;
-	}
-
-	inline LRESULT CMDIChild::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		RecalcLayout();
-		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)

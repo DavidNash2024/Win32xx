@@ -68,10 +68,13 @@
 #define UWM_GETRBTHEME        (WM_APP + 0x3F0D)	// Message - returns a pointer to ReBarTheme
 #define UWM_GETSBTHEME        (WM_APP + 0x3F0E)	// Message - returns a pointer to StatusBarTheme
 #define UWM_GETTBTHEME        (WM_APP + 0x3F0F) // Message - returns a pointer to ToolBarTheme
-#define UWM_POPUPMENU		  (WM_APP + 0x3F10)	// Message - creates the menubar popup menu
-#define UWM_TBRESIZE          (WM_APP + 0x3F11) // Message - sent by toolbar to parent. Used by the rebar
-#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F12)	// Message - sent to parent. Toolbar is resizing
-#define UWM_UPDATECOMMAND     (WM_APP + 0x3F13) // Message - sent before a menu is displayed. Used by OnMenuUpdate
+#define UWM_MDIACTIVATED      (WM_APP + 0x3F10) // Message - sent by MDI child to MDIFrame when it is activated
+#define UWM_MDIDESTROYED      (WM_APP + 0x3F11)	// Message - sent by MDI client when a MDI child is destroyed
+#define UWM_POPUPMENU		  (WM_APP + 0x3F12)	// Message - creates the menubar popup menu
+#define UWM_TBRESIZE          (WM_APP + 0x3F13) // Message - sent by toolbar to parent. Used by the rebar
+#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F14)	// Message - sent to parent. Toolbar is resizing
+#define UWM_UPDATECOMMAND     (WM_APP + 0x3F15) // Message - sent before a menu is displayed. Used by OnMenuUpdate
+
 #define UWN_BARSTART		  (WM_APP + 0x3F20)	// Notification - docker bar selected for move
 #define UWN_BARMOVE			  (WM_APP + 0x3F21)	// Notification - docker bar moved
 #define UWN_BAREND			  (WM_APP + 0x3F22)	// Notification - end of docker bar move
@@ -82,7 +85,6 @@
 #define UWN_TABDRAGGED        (WM_APP + 0x3F27)	// Notification - tab is being dragged
 #define UWN_TABCLOSE		  (WM_APP + 0x3F28)	// Notification - sent by CTab when a tab is about to be closed
 #define UWN_UNDOCKED		  (WM_APP + 0x3F29)	// Notification - sent by docker when undocked
-
 
 
 namespace Win32xx

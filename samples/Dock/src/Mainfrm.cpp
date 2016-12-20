@@ -124,7 +124,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		break;
 	}
 
-	CFrame::OnMenuUpdate(nID);
+	CDockFrame::OnMenuUpdate(nID);
 }
 
 BOOL CMainFrame::OnNoResize()
@@ -258,7 +258,7 @@ CDocker* CMainFrame::NewDockerFromID(int nID)
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
 	// Call the base class function first
-	CFrame::PreCreate(cs);
+	CDockFrame::PreCreate(cs);
 	
 	// Hide the window initially by removing the WS_VISIBLE style
 	cs.style &= ~WS_VISIBLE;
@@ -266,7 +266,7 @@ void CMainFrame::PreCreate(CREATESTRUCT& cs)
 
 BOOL CMainFrame::SaveRegistrySettings()
 {
-	if (CFrame::SaveRegistrySettings())
+	if (CDockFrame::SaveRegistrySettings())
 		return SaveDockRegistrySettings(GetRegistryKeyName());
 	else
 		return FALSE;
