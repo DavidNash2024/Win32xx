@@ -1,13 +1,13 @@
 [Project]
 FileName=MetaFile_DEBUG.dev
 Name=MetaFile
-UnitCount=3
+UnitCount=5
 Type=0
 Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=
+PrivateResource=MetaFile_DEBUG_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -62,9 +62,9 @@ BuildCmd=
 CompileCpp=1
 
 [Unit4]
-FileName=..\src\MetaFileApp.cpp
+FileName=..\src\resource.h
 CompileCpp=1
-Folder=Source
+Folder=Header
 Compile=1
 Link=1
 Priority=1000
@@ -72,11 +72,11 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit5]
-FileName=..\src\MetaFileApp.h
+FileName=..\src\Resource.rc
 CompileCpp=1
-Folder=Header
+Folder=Resource
 Compile=1
-Link=1
+Link=0
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=

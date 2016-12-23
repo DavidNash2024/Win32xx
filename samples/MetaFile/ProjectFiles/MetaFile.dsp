@@ -103,12 +103,20 @@ SOURCE=..\src\MetaView.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
+SOURCE=..\src\resource.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\src\MetaView.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
 
 # PROP Default_Filter "ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
+# Begin Source File
+
+SOURCE=..\src\Resource.rc
+# End Source File
 # End Group
 # End Target
 # End Project

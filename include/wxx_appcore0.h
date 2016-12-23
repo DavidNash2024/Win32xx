@@ -522,8 +522,8 @@ namespace Win32xx
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread		
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTLSLock;	// thread synchronisation for m_vTLSData
-		HINSTANCE m_hInstance;			// handle to the applications instance
-		HINSTANCE m_hResource;			// handle to the applications resources
+		HINSTANCE m_hInstance;			// handle to the application's instance
+		HINSTANCE m_hResource;			// handle to the application's resources
 		DWORD m_dwTlsData;				// Thread Local Storage data
 		WNDPROC m_Callback;				// callback address of CWnd::StaticWndowProc
 		HGLOBAL m_hDevMode;				// Used by CPrintDialog and CPageSetupDialog

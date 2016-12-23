@@ -169,7 +169,11 @@
 		</VirtualTargets>
 		<Unit filename="../src/MetaView.cpp" />
 		<Unit filename="../src/MetaView.h" />
+		<Unit filename="../src/Resource.rc">
+			<Option compilerVar="WINDRES" />
+		</Unit>
 		<Unit filename="../src/main.cpp" />
+		<Unit filename="../src/resource.h" />
 		<Extensions>
 			<code_completion />
 			<debugger />

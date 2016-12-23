@@ -138,6 +138,9 @@
     <ClInclude Include="..\src\MetaView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">
@@ -152,5 +155,10 @@
     <Filter Include="Header Files">
       <UniqueIdentifier>{1d058bdc-5a74-4ea2-ab13-9f0a0f984c33}</UniqueIdentifier>
     </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

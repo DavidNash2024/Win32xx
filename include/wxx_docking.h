@@ -258,7 +258,7 @@ namespace Win32xx
 	//  A CDocker window allows other CDocker windows to be "docked" inside it.
 	//  A CDocker can dock on the top, left, right or bottom side of a parent CDocker.
 	//  There is no theoretical limit to the number of CDockers within CDockers.
-	class CDocker : virtual public CWnd
+	class CDocker : public CWnd
 	{
 	public:
 		//  A nested class for the splitter bar that separates the docked panes.

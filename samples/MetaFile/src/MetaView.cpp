@@ -2,9 +2,18 @@
 // MetaView.cpp
 
 #include "MetaView.h"
+#include "resource.h"
 
 int CMetaView::OnCreate(CREATESTRUCT&)
 {
+	// Set the window's icon
+	SetIconSmall(IDW_MAIN);
+	SetIconLarge(IDW_MAIN);
+
+	// Set the window title
+	SetWindowText(LoadString(IDW_MAIN));
+
+
 	CMetaFileDC dcMeta;
 	// Creates an enhanced MetaFile called "Pattern.emf", and also the MetaFile device context
 	dcMeta.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
