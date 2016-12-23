@@ -142,7 +142,7 @@ BOOL CMainMDIFrame::OnFileClose()
 BOOL CMainMDIFrame::OnFileExit()
 {
 	// Issue a close request to the frame
-	CMDIFrame::PostMessage(WM_CLOSE);
+	CMDIDockFrame::PostMessage(WM_CLOSE);
 	return TRUE;
 }
 
@@ -186,7 +186,7 @@ BOOL CMainMDIFrame::OnMDITile()
 void CMainMDIFrame::SetupMenuIcons()
 {
 	// Add the default set of menu icons from the toolbar.
-	CFrame::SetupMenuIcons();
+	CMDIDockFrame::SetupMenuIcons();
 
 	// Add an extra icon for the New Docker menu item
 	AddMenuIcon(IDM_FILE_NEWDOCK, GetApp().LoadIcon(IDW_MAIN));

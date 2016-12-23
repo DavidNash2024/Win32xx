@@ -196,12 +196,20 @@
 				RelativePath="..\src\MetaView.h"
 				>
 			</File>
+			<File
+				RelativePath="..\src\resource.h"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
+			<File
+				RelativePath="..\src\Resource.rc"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Win32++"

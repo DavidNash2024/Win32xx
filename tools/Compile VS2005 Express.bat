@@ -74,6 +74,7 @@ vcbuild /rebuild MDIFrameDemo\ProjectFiles\MDIDemo_2005.vcproj debug            
 vcbuild /rebuild MDIFrameDemo\ProjectFiles\MDIDemo_2005.vcproj release              >>"..\output\VS2005.log"
 vcbuild /rebuild MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2005.vcproj debug   >>"..\output\VS2005.log"
 vcbuild /rebuild MDIFrameSplitter\ProjectFiles\MDIFrameSplitter_2005.vcproj release >>"..\output\VS2005.log"
+vcbuild /rebuild MetaFile\ProjectFiles\MetaFile_2005.vcproj debug                   >>"..\output\VS2005.log"
 vcbuild /rebuild MetaFile\ProjectFiles\MetaFile_2005.vcproj release                 >>"..\output\VS2005.log"
 vcbuild /rebuild NetClient\ProjectFiles\NetClient_2005.vcproj debug                 >>"..\output\VS2005.log"
 vcbuild /rebuild NetClient\ProjectFiles\NetClient_2005.vcproj release               >>"..\output\VS2005.log"

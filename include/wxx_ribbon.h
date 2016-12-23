@@ -38,15 +38,21 @@
 ///////////////////////////////////////////////////////
 // wxx_ribbon.h
 //  Declaration of the following classes:
-//  CRibbon, CRibbonFrame, and CRibbonDockFrame
+//  CRibbon, CRibbonFrameT, CRibbonFrame, CRibbonDockFrame
+//  CRibbonMDIFrame and CRibbonMDIDockFrame.
 //
 
 #ifndef _WIN32XX_RIBBON_H_
 #define _WIN32XX_RIBBON_H_
 
 
-// Notes: 1) The Windows 7 SDK must be installed and its directories added to the IDE
-//        2) The ribbon only works on OS Windows 7 and above
+// Notes :
+//	1) To compile code using the Ribbon UI you will need a Microsoft compiler.
+//	   Visual Studio Community 2013 (or later) is recommended, but older
+//	   Microsoft compilers can be used with the Windows 7 SDK.
+//	2) The Ribbon UI only runs on Windows 7 or later operating systems.If the
+//     code is run on an earlier operating system, it reverts back to a menu
+//     and toolbar.
 
 #include <UIRibbon.h>					// Contained within the Windows 7 SDK	
 #include <UIRibbonPropertyHelpers.h>
@@ -95,8 +101,8 @@ namespace Win32xx
 
 	};
 
-
-	class CRibbonFrame : public CFrame, public CRibbon
+	template <class T>
+	class CRibbonFrameT : public T, public CRibbon
 	{
 	public:
 		// A nested class for the MRU item properties
@@ -122,8 +128,8 @@ namespace Win32xx
 
 		typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
 
-		CRibbonFrame() {}
-		virtual ~CRibbonFrame() {}
+		CRibbonFrameT() {}
+		virtual ~CRibbonFrameT() {}
 		virtual CRect GetViewRect() const;
 		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
@@ -136,44 +142,34 @@ namespace Win32xx
 	};
 
 
-    class CRibbonDockFrame : public CDockFrame, public CRibbon
-    {
-    public:
-        // A nested class for the MRU item properties
-        class CRecentFiles : public IUISimplePropertySet
-        {
-        public:
-            CRecentFiles(PWSTR wszFullPath);
-            ~CRecentFiles() {}
+	class CRibbonFrame : public CRibbonFrameT<CFrame> 
+	{
+	public:
+		CRibbonFrame() {}
+		virtual ~CRibbonFrame() {}
+	};
+	
+	class CRibbonDockFrame : public CRibbonFrameT<CDockFrame>
+	{
+	public:
+		CRibbonDockFrame() {}
+		virtual ~CRibbonDockFrame() {}
+	};
+	
+	class CRibbonMDIFrame : public CRibbonFrameT<CMDIFrame> 
+	{
+	public:
+		CRibbonMDIFrame() {}
+		virtual ~CRibbonMDIFrame() {}		
+	};
+	
+	class CRibbonMDIDockFrame : public CRibbonFrameT<CMDIDockFrame>
+	{
+	public:
+		CRibbonMDIDockFrame() {}
+		virtual ~CRibbonMDIDockFrame() {}
+	};
 
-            // IUnknown methods.
-            STDMETHODIMP_(ULONG) AddRef();
-            STDMETHODIMP_(ULONG) Release();
-            STDMETHODIMP QueryInterface(REFIID iid, void** ppv);
-
-            // IUISimplePropertySet methods 
-            STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *value);
-
-        private:
-            LONG m_cRef;                        // Reference count.
-            WCHAR m_wszDisplayName[MAX_PATH];
-            WCHAR m_wszFullPath[MAX_PATH];
-        };
-
-        typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
-
-        CRibbonDockFrame() {}
-        virtual ~CRibbonDockFrame() {}
-        virtual CRect GetViewRect() const;
-        virtual int  OnCreate(CREATESTRUCT& cs);
-        virtual void OnDestroy();
-        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
-        virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
-        virtual void UpdateMRUMenu();
-
-    private:
-        std::vector<RecentFilesPtr> m_vRecentFiles;
-    };
 }
 
 
@@ -185,7 +181,6 @@ namespace Win32xx
 	//////////////////////////////////////////////
 	// Definitions for the CRibbon class
 	//
-
 	inline CRibbon::~CRibbon() 
 	{
 		// Reference count must be 1 or we have a leak!
@@ -350,8 +345,8 @@ namespace Win32xx
 	//////////////////////////////////////////////
 	// Definitions for the CRibbonFrame class
 	//
-
-	inline CRect CRibbonFrame::GetViewRect() const
+	template <class T>
+	inline CRect CRibbonFrameT<T>::GetViewRect() const
 	{
 		// Get the frame's client area
 		CRect rcClient = GetClientRect();
@@ -370,7 +365,8 @@ namespace Win32xx
 		return rcClient;
 	}
 
-	inline int CRibbonFrame::OnCreate(CREATESTRUCT& cs)
+	template <class T>
+	inline int CRibbonFrameT<T>::OnCreate(CREATESTRUCT& cs)
 	{
 		// OnCreate is called automatically during window creation when a
 		// WM_CREATE message received.
@@ -387,26 +383,28 @@ namespace Win32xx
 				SetUseReBar(FALSE);			// Don't use a ReBar
 				SetUseToolBar(FALSE);		// Don't use a ToolBar
 
-				CFrame::OnCreate(cs);
+				T::OnCreate(cs);
 				SetMenu(NULL);
 				ShowStatusBar(TRUE);
 			}		
 		}
 		else 
 		{
-			CFrame::OnCreate(cs);
+			T::OnCreate(cs);
 		}
 
 		return 0;
 	}
 
-	inline void CRibbonFrame::OnDestroy()
+	template <class T>
+	inline void CRibbonFrameT<T>::OnDestroy()
 	{
 		DestroyRibbon();
-		CFrame::OnDestroy();
+		T::OnDestroy();
 	}
 
-	inline STDMETHODIMP CRibbonFrame::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
+	template <class T>
+	inline STDMETHODIMP CRibbonFrameT<T>::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
 	{
 		UNREFERENCED_PARAMETER(viewId);
 		UNREFERENCED_PARAMETER(pView);
@@ -434,7 +432,8 @@ namespace Win32xx
 		return hr; 
 	}
 
-	inline HRESULT CRibbonFrame::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
+	template <class T>
+	inline HRESULT CRibbonFrameT<T>::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
 	{
 		LONG iCurrentFile = 0;
 		std::vector<CString> FileNames = GetMRUEntries();
@@ -468,19 +467,21 @@ namespace Win32xx
 		return hr;
 	}
 
-	inline void CRibbonFrame::UpdateMRUMenu()
+	template <class T>
+	inline void CRibbonFrameT<T>::UpdateMRUMenu()
 	{
 		// Suppress UpdateMRUMenu when ribbon is used
 		if (GetRibbonFramework() != 0) return;
 
-		CFrame::UpdateMRUMenu();
+		T::UpdateMRUMenu();
 	}
 
 
 	////////////////////////////////////////////////////////
 	// Declaration of the nested CRecentFiles class
 	//
-	inline CRibbonFrame::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(1)
+	template <class T>
+	inline CRibbonFrameT<T>::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(1)
 	{
 		SHFILEINFOW sfi;
 		DWORD_PTR dwPtr = NULL;
@@ -502,17 +503,20 @@ namespace Win32xx
 		}
 	}
 
-	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFiles::AddRef()
+	template <class T>
+	inline STDMETHODIMP_(ULONG) CRibbonFrameT<T>::CRecentFiles::AddRef()
 	{
 		return InterlockedIncrement(&m_cRef);
 	}
 
-	inline STDMETHODIMP_(ULONG) CRibbonFrame::CRecentFiles::Release()
+	template <class T>
+	inline STDMETHODIMP_(ULONG) CRibbonFrameT<T>::CRecentFiles::Release()
 	{
 		return InterlockedDecrement(&m_cRef);
 	}
 
-	inline STDMETHODIMP CRibbonFrame::CRecentFiles::QueryInterface(REFIID iid, void** ppv)
+	template <class T>
+	inline STDMETHODIMP CRibbonFrameT<T>::CRecentFiles::QueryInterface(REFIID iid, void** ppv)
 	{
 		if (!ppv)
 		{
@@ -538,7 +542,8 @@ namespace Win32xx
 	}
 
 	// IUISimplePropertySet methods.
-	inline STDMETHODIMP CRibbonFrame::CRecentFiles::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
+	template <class T>
+	inline STDMETHODIMP CRibbonFrameT<T>::CRecentFiles::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
 	{
 		HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
 
@@ -554,213 +559,6 @@ namespace Win32xx
 		return hr;
 	}
 
-
-    //////////////////////////////////////////////////
-    // Definitions for the CRibbonDockFrame class
-    //
-    inline CRect CRibbonDockFrame::GetViewRect() const
-    {
-        // Get the frame's client area
-        CRect rcClient = GetClientRect();
-
-        rcClient.top += GetRibbonHeight();
-
-        if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
-            rcClient = ExcludeChildRect(rcClient, GetStatusBar());
-
-        if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
-            rcClient = ExcludeChildRect(rcClient, GetReBar());
-        else
-            if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-                rcClient = ExcludeChildRect(rcClient, GetToolBar());
-
-        return rcClient;
-    }
-
-    inline int CRibbonDockFrame::OnCreate(CREATESTRUCT& cs)
-    {
-        // OnCreate is called automatically during window creation when a
-        // WM_CREATE message received.
-
-        // Tasks such as setting the icon, creating child windows, or anything
-        // associated with creating windows are normally performed here.
-
-        UNREFERENCED_PARAMETER(cs);
-
-        if (GetWinVersion() >= 2601)	// WinVersion >= Windows 7
-        {
-            if (CreateRibbon(*this))
-            {
-                SetUseReBar(FALSE);			// Don't use a ReBar
-                SetUseToolBar(FALSE);		// Don't use a ToolBar
-
-                CDockFrame::OnCreate(cs);
-                SetMenu(NULL);
-                ShowStatusBar(TRUE);
-            }
-        }
-        else
-        {
-            CDockFrame::OnCreate(cs);
-        }
-
-        return 0;
-    }
-
-    inline void CRibbonDockFrame::OnDestroy()
-    {
-        DestroyRibbon();
-        CDocker::OnDestroy();
-        CFrame::OnDestroy();
-    }
-
-    inline STDMETHODIMP CRibbonDockFrame::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
-    {
-        UNREFERENCED_PARAMETER(viewId);
-        UNREFERENCED_PARAMETER(pView);
-        UNREFERENCED_PARAMETER(uReasonCode);
-
-        HRESULT hr = E_NOTIMPL;
-
-        // Checks to see if the view that was changed was a Ribbon view.
-        if (UI_VIEWTYPE_RIBBON == typeId)
-        {
-            switch (verb)
-            {
-            case UI_VIEWVERB_CREATE:	// The view was newly created.
-                hr = S_OK;
-                break;
-            case UI_VIEWVERB_SIZE:		// Ribbon size has changed
-                RecalcLayout();
-                break;
-            case UI_VIEWVERB_DESTROY:	// The view was destroyed.
-                hr = S_OK;
-                break;
-            }
-        }
-
-        return hr;
-    }
-
-    inline HRESULT CRibbonDockFrame::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
-    {
-        LONG iCurrentFile = 0;
-        std::vector<CString> FileNames = GetMRUEntries();
-        std::vector<CString>::const_iterator iter;
-        int iFileCount = FileNames.size();
-        HRESULT hr = E_FAIL;
-        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
-        m_vRecentFiles.clear();
-
-        if (psa != NULL)
-        {
-            for (iter = FileNames.begin(); iter != FileNames.end(); ++iter)
-            {
-                CString strCurrentFile = (*iter);
-                WCHAR wszCurrentFile[MAX_PATH] = { 0L };
-                lstrcpynW(wszCurrentFile, T2W(strCurrentFile), MAX_PATH);
-
-                CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
-                m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));
-                hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pRecentFiles));
-                ++iCurrentFile;
-            }
-
-            SAFEARRAYBOUND sab = { (ULONG)iCurrentFile, 0 };
-            SafeArrayRedim(psa, &sab);
-            hr = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
-
-            SafeArrayDestroy(psa);	// Calls release for each element in the array
-        }
-
-        return hr;
-    }
-
-    inline void CRibbonDockFrame::UpdateMRUMenu()
-    {
-        // Suppress UpdateMRUMenu when ribbon is used
-        if (GetRibbonFramework() != 0) return;
-
-        CFrame::UpdateMRUMenu();
-    }
-
-
-    /////////////////////////////////////////////////////////////////////
-    // Declaration of the nested CRibbonDockFrame CRecentFiles class
-    //
-    inline CRibbonDockFrame::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(1)
-    {
-        SHFILEINFOW sfi;
-        DWORD_PTR dwPtr = NULL;
-        m_wszFullPath[0] = L'\0';
-        m_wszDisplayName[0] = L'\0';
-
-        if (NULL != lstrcpynW(m_wszFullPath, wszFullPath, MAX_PATH))
-        {
-            dwPtr = ::SHGetFileInfoW(wszFullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
-
-            if (dwPtr != NULL)
-            {
-                lstrcpynW(m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
-            }
-            else // Provide a reasonable fall back.
-            {
-                lstrcpynW(m_wszDisplayName, m_wszFullPath, MAX_PATH);
-            }
-        }
-    }
-
-    inline STDMETHODIMP_(ULONG) CRibbonDockFrame::CRecentFiles::AddRef()
-    {
-        return InterlockedIncrement(&m_cRef);
-    }
-
-    inline STDMETHODIMP_(ULONG) CRibbonDockFrame::CRecentFiles::Release()
-    {
-        return InterlockedDecrement(&m_cRef);
-    }
-
-    inline STDMETHODIMP CRibbonDockFrame::CRecentFiles::QueryInterface(REFIID iid, void** ppv)
-    {
-        if (!ppv)
-        {
-            return E_POINTER;
-        }
-
-        if (iid == __uuidof(IUnknown))
-        {
-            *ppv = static_cast<IUnknown*>(this);
-        }
-        else if (iid == __uuidof(IUISimplePropertySet))
-        {
-            *ppv = static_cast<IUISimplePropertySet*>(this);
-        }
-        else
-        {
-            *ppv = NULL;
-            return E_NOINTERFACE;
-        }
-
-        AddRef();
-        return S_OK;
-    }
-
-    // IUISimplePropertySet methods.
-    inline STDMETHODIMP CRibbonDockFrame::CRecentFiles::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
-    {
-        HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
-
-        if (key == UI_PKEY_Label)
-        {
-            hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
-        }
-        else if (key == UI_PKEY_LabelDescription)
-        {
-            hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
-        }
-
-        return hr;
-    }
 
 } // namespace Win32xx
 

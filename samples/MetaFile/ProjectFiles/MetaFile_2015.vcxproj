@@ -16,7 +16,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\MetaView.h" />
+    <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\wxx_metafile.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\src\Resource.rc" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{19CEEA56-2973-4E6A-818E-17DB81197AB5}</ProjectGuid>
