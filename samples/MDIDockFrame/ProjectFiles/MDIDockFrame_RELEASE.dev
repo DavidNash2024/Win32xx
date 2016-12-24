@@ -1,5 +1,5 @@
 [Project]
-FileName=DockMDIFrame_RELEASE.dev
+FileName=MDIDockFrame_RELEASE.dev
 Name=DockMDIFrame
 UnitCount=14
 Type=0
@@ -7,7 +7,7 @@ Ver=2
 ObjFiles=
 Includes=..\..\..\include
 Libs=
-PrivateResource=DockMDIFrame_private.rc
+PrivateResource=MDIDockFrame_private.rc
 ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Release
 ObjectOutput=.\Dev-C++\Release
 OverrideOutput=1
-OverrideOutputName=DockMDIFrame.exe
+OverrideOutputName=MDIDockFrame.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=

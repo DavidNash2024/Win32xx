@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual C++ Express 2008
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DockMDIFrame", "DockMDIFrame_2008.vcproj", "{559A59AB-A07A-4F51-8040-26364FC302EE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MDIDockFrame", "MDIDockFrame_2008.vcproj", "{559A59AB-A07A-4F51-8040-26364FC302EE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
