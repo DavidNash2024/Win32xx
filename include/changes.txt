@@ -24,14 +24,14 @@ approach worked OK, but a template approach has a number of advantages:
 New Features and Enhancements
 -----------------------------
 * Added CFrameT class template
-   - CFrame inherits from CFrameT<CWnd>.
-   - CDockFrame inherits from CFrameT<CDocker>.
+   - CFrame now inherits from CFrameT<CWnd>.
+   - CDockFrame now inherits from CFrameT<CDocker>.
    To use these classes, inherit your CMainFrame from either CFrame or 
    CDockFrame as before.
 
 * Added CMDIFrameT class template which inherits from CFrameT
-   - CMDIFrame inherits from CMDIFrameT<CFrame>
-   - CMDIDockFrame inherits from CMDIFrameT<CDockFrame>
+   - CMDIFrame now inherits from CMDIFrameT<CFrame>
+   - CMDIDockFrame now inherits from CMDIFrameT<CDockFrame>
    To use these classes, inherit your CMainFrame from either CMDIFrame
    or CMDIDockFrame as before.
    
@@ -51,18 +51,18 @@ New Features and Enhancements
 	   code is run on an earlier operating system, it reverts back to a menu
 	   and toolbar.
 	
-* The CMetaFile a CEnhMetaFile classes have been added to the framework.
+* The CMetaFile and CEnhMetaFile classes have been added to the framework.
  - CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
    be used. CMetatFile objects are reference counted, so they can be safely
-   copied. CMetatFile automatically deletes the HMETAFILE when the last copy of
-   the CMetaFile object goes out of scope. The CMetaFileDC::Close function
-   returns a CMetaFile object.
+   copied and returned from functions. CMetatFile automatically deletes
+   the HMETAFILE when the last copy of the CMetaFile object goes out of scope.
+   The CMetaFileDC::Close function returns a CMetaFile object.
  - CEnhMetaFile wraps a HENHMETAFILE. CEnhMetaFile can be used anywhere a
    HENHMETAFILE can be used. CEnhMetaFile objects are reference counted, 
-   so they can be safely copied. CEnhMetaFile automatically deletes the
-   HENHMETAFILE when the last copy of the CEnhMetaFile object goes out of
-   scope. The CMetaFileDC::CloseEnhanced function returns a CEnhMetaFile
-   object. 
+   so they can be safely copied and returned from functions. CEnhMetaFile
+   automatically deletes the HENHMETAFILE when the last copy of the 
+   CEnhMetaFile object goes out of scope. The CMetaFileDC::CloseEnhanced
+   function returns a CEnhMetaFile object. 
    
 * Added a MetaFile sample.   
 
@@ -311,7 +311,6 @@ Use CFiledDialog for these instead.
   to retrieve the window's CWnd pointer as an alternative to GetCWndPtr.
  - UWM_GETCWND returns the CWnd*
  - UWM_GETCFRAME returns the CWnd* for any object inherited from CFrame
- - UWM_GETCMDIFRAME returns the CWnd* for any object inherited from CMDIFrame
  - UWM_GETCDOCKER returns the CWnd* for any object inherited from CDocker
  - UWM_GETCDOCKCONTAINER returns the CWnd* for any object inherited from CDockContainer
  - UWM_GETCTABBEDMDI returns the CWnd* for any object inherited from CTabbedMDI
@@ -913,14 +912,6 @@ New Features and Enhancements
 * Updated CDialog
    - Added support for OnIdle in modal dialogs. Modeless dialogs already have
      OnIdle support.  	 
-* Updated FromHandle for CWnd, CDC, CBitmap, CBrush, CFont, CPalette, CPen, CRgn, 
-   CImageList and CMenu. They have been moved from global to their classes.
-* CWnd::FromHandlePernament has been added to retrieve a known CWnd for a HWND.
-   Unlike CWnd::FromHandle, this function never creates a new CWnd. It returns
-   NULL if the window handle is not found in the map of permanent CWnds.
-* Updated the TabDemo and DockTabbedMDI samples. These now demonstrate using a
-   dialog as the view window for the tab or docker.   
-
 
 
 Version 7.4

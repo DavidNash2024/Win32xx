@@ -59,7 +59,7 @@
 #define UWM_DRAWSBBKGND       (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.
 #define UWM_GETCDOCKCONTAINER (WM_APP + 0x3F05)	// Message - returns a pointer to this CWnd if it is a CDockContainer
 #define UWM_GETCDOCKER        (WM_APP + 0x3F06)	// Message - returns a pointer to this CWnd if it is a CDocker
-#define UWM_GETCFRAME         (WM_APP + 0x3F07)	// Message - returns a pointer to this CWnd if it is a CFrame
+#define UWM_GETCFRAMET        (WM_APP + 0x3F07)	// Message - returns a pointer to this CWnd if it is a CFrameT
 #define UWM_GETCTABBEDMDI     (WM_APP + 0x3F08)	// Message - returns a pointer to this CWnd if it is a CTabbedMDI
 #define UWM_GETCTOOLBAR       (WM_APP + 0x3F09)	// Message - returns a pointer to this CWnd if it is a CToolBar
 #define UWM_GETCWND           (WM_APP + 0x3F0A)	// Message - returns a pointer to this CWnd

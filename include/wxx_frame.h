@@ -46,8 +46,8 @@
 // single view window. Refer to mdi.h for frames that support several
 // child windows.
 
-// CFrame inherits from CFrameT<CWnd>
-// CFrame also uses each of the following classes:
+// CFrame inherits from CFrameT<CWnd>.
+// CFrameT uses each of the following classes:
 // * CReBar for managing the frame's rebar control.
 // * CMenuBar for managing the menu inside the rebar.
 // * CToolBar for managing the frame's toolbar.
@@ -216,9 +216,6 @@ namespace Win32xx
 	};
 
 
-	// Forward declaration of CFrame. Its defined later.
-	class CFrame;
-
 	struct MenuItemData
 	// Each Dropdown menu item has this data
 	{
@@ -238,7 +235,7 @@ namespace Win32xx
 
 	/////////////////////////////////////
 	// Declaration of the CMenuMetrics class
-	//  This class is used by CFrame to retrieve the size of the components
+	//  This class is used by CFrameT to retrieve the size of the components
 	//  used to perform owner-drawing of menu items.  Windows Visual Styles
 	//  are used to render menu items for systems running Aero (Vista and above).
 	//  Win32++ custom themes are used to render menu items for systems without Aero.
@@ -3689,7 +3686,7 @@ namespace Win32xx
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		HWND hFrame = pTLSData->hMainWnd;
-		CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(::SendMessage(hFrame, UWM_GETCFRAME, 0, 0));
+		CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(::SendMessage(hFrame, UWM_GETCFRAMET, 0, 0));
 		assert(pFrame);
 
 		if (HC_ACTION == nCode)
@@ -3846,7 +3843,7 @@ namespace Win32xx
 		case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
 		case UWM_DRAWRBBKGND:       return DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
 		case UWM_DRAWSBBKGND:       return DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
-		case UWM_GETCFRAME:			return reinterpret_cast<LRESULT>(this);
+		case UWM_GETCFRAMET:		return reinterpret_cast<LRESULT>(this);
 
 		} // switch uMsg
 
