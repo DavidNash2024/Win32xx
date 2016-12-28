@@ -58,6 +58,7 @@
 #include <UIRibbonPropertyHelpers.h>
 
 #include "wxx_frame.h"
+#include "wxx_dockframe.h"
 
 namespace Win32xx
 {

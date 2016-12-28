@@ -130,8 +130,9 @@ namespace Win32xx
 
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
-	//  This inherits from CDocker::CDockClient to support docking
-	class CMDIClient : public CDocker::CDockClient
+	// 
+	template <class T>
+	class CMDIClient : public T		// The template parameter T is either CWnd, or CDocker::CDockClient
 	{
 	public:
 		CMDIClient() {}
@@ -159,14 +160,14 @@ namespace Win32xx
 		virtual CMDIChild& AddMDIChild(CMDIChild* pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
 		virtual CMenu GetActiveMenu() const;
-		virtual CMDIClient& GetMDIClient() const { return m_MDIClient; }
+		virtual CWnd& GetMDIClient() const { return m_MDIClient; }
 		virtual BOOL IsMDIChildMaxed() const;
 		virtual BOOL IsMDIFrame() const { return TRUE; }
 		virtual void RemoveMDIChild(HWND hWnd);
 		virtual BOOL RemoveAllMDIChildren();
 
 		// These functions aren't virtual. Don't override these
-		const std::vector<MDIChildPtr>& GetAllMDIChildren() const {return m_vMDIChild;}
+		const std::vector<MDIChildPtr>& GetAllMDIChildren() const { return m_vMDIChild; }
 		void MDICascade(int nType = 0) const;
 		void MDIIconArrange() const;
 		void MDIMaximize() const;
@@ -200,41 +201,21 @@ namespace Win32xx
 		void AppendMDIMenu(CMenu MenuWindow);
 
 		std::vector<MDIChildPtr> m_vMDIChild;
-		mutable CMDIClient m_MDIClient;
+		mutable CMDIClient<CWnd> m_MDIClient;
 		HWND m_hActiveMDIChild;
 	};
 
-	
+
 	/////////////////////////////////////////
 	// Declaration of the CMDIFrame class
 	// Provides a Multiple Document Interface (MDI) frame
 	//
-	class CMDIFrame : public CMDIFrameT<CFrame> 
+	class CMDIFrame : public CMDIFrameT<CFrame>
 	{
 	public:
 		CMDIFrame() {}
 		virtual ~CMDIFrame() {}
 	};
-
-	/////////////////////////////////////////
-	// Declaration of the CMDIDockFrame class
-	// Provides a Multiple Document Interface (MDI) frame with docking
-	//
-	class CMDIDockFrame : public CMDIFrameT<CDockFrame>
-	{
-	public:
-		CMDIDockFrame()					{ SetView(GetMDIClient()); }
-		virtual ~CMDIDockFrame()		{}
-		void RecalcViewLayout()			{ RecalcDockLayout(); }
-
-		virtual CDocker::CDockClient& GetDockClient() const { return GetMDIClient(); }
-		virtual void SetView(CWnd&)		{ CDocker::SetView(GetMDIClient()); }
-
-	protected:
-		int OnCreate(CREATESTRUCT& cs)	{ return CFrameT<CDocker>::OnCreate(cs); }
-
-	};
-
 
 }
 
@@ -251,6 +232,7 @@ namespace Win32xx
 	template <class T>
 	inline CMDIFrameT<T>::CMDIFrameT() : m_hActiveMDIChild(NULL)
 	{
+		// The view for a CMDIFrame is the MDIClient
 		T::SetView(GetMDIClient());
 	}
 
@@ -687,7 +669,8 @@ namespace Win32xx
 	//////////////////////////////////////
 	//Definitions for the CMDIClient class
 	//
-	inline HWND CMDIClient::Create(HWND hWndParent)
+	template<class T>
+	inline HWND CMDIClient<T>::Create(HWND hWndParent)
 	{
 		assert(hWndParent != 0);
 
@@ -697,32 +680,35 @@ namespace Win32xx
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
 		// Create the view window
-		return CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), _T(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
+		return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDICLient"), _T(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
 	}
 
-	inline LRESULT CMDIClient::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
+	template <class T>
+	inline LRESULT CMDIClient<T>::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		// Suppress redraw to avoid flicker when activating maximised MDI children
-		SetRedraw(FALSE);
-		LRESULT lr = CallWindowProc(GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
-		SetRedraw(TRUE);
-		RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
+		T::SetRedraw(FALSE);
+		LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
+		T::SetRedraw(TRUE);
+		T::RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
 		return lr;
 	}
 
-	inline LRESULT CMDIClient::OnMDIDestroy(UINT, WPARAM wParam, LPARAM lParam)
+	template <class T>
+	inline LRESULT CMDIClient<T>::OnMDIDestroy(UINT, WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
-		CallWindowProc(GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
+		T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIDESTROY, wParam, lParam);
 
 		// Now remove MDI child
-		GetParent().SendMessage(UWM_MDIDESTROYED, wParam, 0);
+		T::GetParent().SendMessage(UWM_MDIDESTROYED, wParam, 0);
 
 		return 0L;
 	}
 
-	inline LRESULT CMDIClient::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	template <class T>
+	inline LRESULT CMDIClient<T>::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
 		{

@@ -40,10 +40,11 @@
 #include <wxx_cstring.h>		// Add CString, CStringA, CStringW
 #include <wxx_ddx.h>			// Add CDataExchange
 #include <wxx_dialog.h>			// Add CDialog, CResizer
-#include <wxx_docking.h>		// Add CDocker, CDockContianer
+#include <wxx_dockframe.h>		// Add CDockFrame, CMDIDockFrame
+#include <wxx_docking.h>		// Add CDocker, CDockContainer
 #include <wxx_exception.h>		// Add CException, CFileException, CNotSupportedException, CResourceException, CUserException, CWinException
 #include <wxx_file.h>			// Add CFile
-#include <wxx_frame.h>			// Add CFrame, CDockFrame
+#include <wxx_frame.h>			// Add CFrame
 #include <wxx_gdi.h>			// Add CDC, CGDIObject, CBitmap, CBrush, CFont, CPalatte, CPen, CRgn
 #include <wxx_imagelist.h>		// Add CImageList
 #include <wxx_listview.h>		// Add CListView
