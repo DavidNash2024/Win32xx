@@ -152,7 +152,7 @@ copy MDIDockFrame\ProjectFiles\Debug\MDIDockFrame.exe         "..\output\VS2010\
 copy MDIFrame\ProjectFiles\Debug\MDIFrame.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy MDIFrameDemo\ProjectFiles\Debug\MDIDemo.exe              "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy MDIFrameSplitter\ProjectFiles\Debug\MDIFrameSplitter.exe "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
-copy MetaFile\ProjectFiles\DebugMetaFile.exe                  "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
+copy MetaFile\ProjectFiles\Debug\MetaFile.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy NetClient\ProjectFiles\Debug\NetClient.exe               "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy NetServer\ProjectFiles\Debug\NetServer.exe               "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy NotePad\ProjectFiles\Debug\Notepad.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"

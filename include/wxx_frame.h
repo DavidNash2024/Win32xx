@@ -534,7 +534,7 @@ namespace Win32xx
 		virtual ~CFrame() {}
 	};
 
-	/////////////////////////////////////////
+/*	/////////////////////////////////////////
 	// Declaration of the CDockFrame class
 	// Provides a Single Document Interface (SDI) frame with docking
 	//
@@ -547,22 +547,22 @@ namespace Win32xx
 		virtual void SetView(CWnd& wndView)	{ CDocker::SetView(wndView); }
 
 	protected:
-		void RecalcViewLayout()				{ RecalcDockLayout(); }
+		virtual void RecalcViewLayout()				{ RecalcDockLayout(); }
 
-		int OnCreate(CREATESTRUCT& cs)
+		virtual int OnCreate(CREATESTRUCT& cs)
 		{
 			GetDockClient().Create(GetHwnd());
 			GetView().Create(GetDockClient());
 			return CFrameT<CDocker>::OnCreate(cs);
 		}
 
-		void OnDestroy()
+		virtual void OnDestroy()
 		{
 			CDocker::OnDestroy();
 			CFrameT<CDocker>::OnDestroy();
 		}
 
-		LRESULT OnNotify(WPARAM wParam, LPARAM lParam)
+		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam)
 		// Called when a notification from a child window (WM_NOTIFY) is received.
 		{
 			LRESULT lr = CFrameT<CDocker>::OnNotify(wParam, lParam);
@@ -573,7 +573,7 @@ namespace Win32xx
 			return lr;
 		}
 
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		// Handle the frame's window messages.
 		{
 			switch (uMsg)
@@ -590,9 +590,9 @@ namespace Win32xx
 			} // switch uMsg
 
 			return CFrameT<CDocker>::WndProcDefault(uMsg, wParam, lParam);
-		}
+		} 
 
-	};
+	}; */
 
 }
 
@@ -3686,7 +3686,7 @@ namespace Win32xx
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		HWND hFrame = pTLSData->hMainWnd;
-		CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(::SendMessage(hFrame, UWM_GETCFRAMET, 0, 0));
+		CFrameT<T>* pFrame = reinterpret_cast< CFrameT<T>* >(CWnd::GetCWndPtr(hFrame));
 		assert(pFrame);
 
 		if (HC_ACTION == nCode)
