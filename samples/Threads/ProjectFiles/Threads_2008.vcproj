@@ -301,6 +301,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_dockframe.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_docking.h"
 				>
 			</File>
@@ -338,6 +342,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_menubar.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_metafile.h"
 				>
 			</File>
 			<File
@@ -410,14 +418,6 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_treeview.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wxx_wceframe.h"
-				>
-			</File>
-			<File
-				RelativePath="..\..\..\include\wxx_wcestddef.h"
 				>
 			</File>
 			<File

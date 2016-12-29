@@ -123,12 +123,6 @@
     <ClInclude Include="..\..\..\include\wxx_treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -171,6 +165,12 @@
     <ClInclude Include="..\src\Files.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_dockframe.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_metafile.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">
@@ -195,38 +195,5 @@
     <CustomBuild Include="..\src\Ribbon.xml">
       <Filter>Source Files</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="..\src\res\Win32++.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\src\res\paint.ico" />
-    <Image Include="..\src\res\fileview.ico" />
-    <Image Include="..\src\res\toolbar.bmp" />
-    <Image Include="..\src\res\SDbottom.bmp" />
-    <Image Include="..\src\res\SDcenter.bmp" />
-    <Image Include="..\src\res\SDleft.bmp" />
-    <Image Include="..\src\res\SDmiddle.bmp" />
-    <Image Include="..\src\res\SDright.bmp" />
-    <Image Include="..\src\res\SDtop.bmp" />
-    <Image Include="..\src\res\classview.bmp" />
-    <Image Include="..\src\res\fileview.bmp" />
-    <Image Include="..\src\res\PasteL.bmp" />
-    <Image Include="..\src\res\FileNewL.bmp" />
-    <Image Include="..\src\res\FileOpenL.bmp" />
-    <Image Include="..\src\res\FileSaveL.bmp" />
-    <Image Include="..\src\res\FileSaveAsL.bmp" />
-    <Image Include="..\src\res\PrintL.bmp" />
-    <Image Include="..\src\res\CopyS.bmp" />
-    <Image Include="..\src\res\CutS.bmp" />
-    <Image Include="..\src\res\InfoL.bmp" />
-    <Image Include="..\src\res\ExitL.bmp" />
-    <Image Include="..\src\res\LineColorL.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\res\SplitH.cur" />
-    <None Include="..\src\res\SplitV.cur" />
-    <None Include="..\src\res\Cursor.cur" />
-    <None Include="..\src\Ribbon.bml" />
   </ItemGroup>
 </Project>
