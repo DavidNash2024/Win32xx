@@ -70,6 +70,7 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added wxx_dockframe.h                   header file
+Added wxx_metafile.h					header file
 Added CFrameT							class template
 Added CMDIFrameT						class template
 Added CRibbonFrameT 					class template

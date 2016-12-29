@@ -85,12 +85,6 @@
     <ClInclude Include="..\..\..\include\wxx_treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -132,6 +126,12 @@
     </ClInclude>
     <ClInclude Include="..\src\resource.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_dockframe.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_metafile.h">
+      <Filter>Win32++</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

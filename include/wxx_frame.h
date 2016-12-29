@@ -86,7 +86,6 @@
 #include "wxx_toolbar.h"
 #include "wxx_menubar.h"
 #include "wxx_rebar.h"
-#include "wxx_docking.h"
 #include "wxx_regkey.h"
 #include "default_resource.h"
 
@@ -533,66 +532,6 @@ namespace Win32xx
 		CFrame() {}
 		virtual ~CFrame() {}
 	};
-
-/*	/////////////////////////////////////////
-	// Declaration of the CDockFrame class
-	// Provides a Single Document Interface (SDI) frame with docking
-	//
-	class CDockFrame : public CFrameT<CDocker>
-	{
-	public:
-		CDockFrame() {}
-		virtual ~CDockFrame() {}
-		virtual CWnd& GetView()	const		{ return CDocker::GetView(); }
-		virtual void SetView(CWnd& wndView)	{ CDocker::SetView(wndView); }
-
-	protected:
-		virtual void RecalcViewLayout()				{ RecalcDockLayout(); }
-
-		virtual int OnCreate(CREATESTRUCT& cs)
-		{
-			GetDockClient().Create(GetHwnd());
-			GetView().Create(GetDockClient());
-			return CFrameT<CDocker>::OnCreate(cs);
-		}
-
-		virtual void OnDestroy()
-		{
-			CDocker::OnDestroy();
-			CFrameT<CDocker>::OnDestroy();
-		}
-
-		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam)
-		// Called when a notification from a child window (WM_NOTIFY) is received.
-		{
-			LRESULT lr = CFrameT<CDocker>::OnNotify(wParam, lParam);
-			if (lr == 0)
-				lr = CDocker::OnNotify(wParam, lParam);
-
-			// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
-			return lr;
-		}
-
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-		// Handle the frame's window messages.
-		{
-			switch (uMsg)
-			{			
-			case WM_ACTIVATE:			CDocker::OnActivate(uMsg, wParam, lParam); break;
-			case WM_MOUSEACTIVATE:		return CDocker::OnMouseActivate(uMsg, wParam, lParam);
-			case WM_SYSCOLORCHANGE:		CDocker::OnSysColorChange(uMsg, wParam, lParam); break;
-			
-			// Messages defined by Win32++
-			case UWM_DOCKACTIVATE:		return CDocker::OnDockActivated(uMsg, wParam, lParam);
-			case UWM_DOCKDESTROYED:		return CDocker::OnDockDestroyed(uMsg, wParam, lParam);
-			case UWM_GETCDOCKER:		return reinterpret_cast<LRESULT>(this);		
-
-			} // switch uMsg
-
-			return CFrameT<CDocker>::WndProcDefault(uMsg, wParam, lParam);
-		} 
-
-	}; */
 
 }
 

@@ -105,12 +105,6 @@
     <ClInclude Include="..\..\..\include\wxx_treeview.h">
       <Filter>Win32++</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wceframe.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\include\wxx_wcestddef.h">
-      <Filter>Win32++</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\include\wxx_webbrowser.h">
       <Filter>Win32++</Filter>
     </ClInclude>
@@ -156,6 +150,12 @@
     <ClInclude Include="..\..\..\include\wxx_themes.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_dockframe.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_metafile.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -175,5 +175,10 @@
     <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DateTime.dsp">
+      <Filter>Win32++</Filter>
+    </None>
   </ItemGroup>
 </Project>

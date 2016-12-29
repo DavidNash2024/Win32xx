@@ -60,7 +60,7 @@
 // CMDIDockFrame has access to the public and protected functions defined by
 // CMDIFrameT, CFrameT, CDocker and CWnd.
 //
-// Refer to the documentation for CMDIFrame, CFrameT, CDocker, and CWnd for a
+// Refer to the documentation for CMDIFrameT, CFrameT, CDocker, and CWnd for a
 // description of the functions available.  
 ///////////////////////////////////////////////////////////////////////////////
 
