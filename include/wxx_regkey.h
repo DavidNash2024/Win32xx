@@ -245,7 +245,7 @@ namespace Win32xx
 
 		if (lRes == ERROR_SUCCESS)
 		{
-			HRESULT hr = ::CLSIDFromString(T2OLE(szGUID), &guidValue);
+			HRESULT hr = ::CLSIDFromString(TtoOLE(szGUID), &guidValue);
 
 			if (FAILED(hr))
 				lRes = ERROR_INVALID_DATA;
@@ -324,7 +324,7 @@ namespace Win32xx
 		OLECHAR szGUID[64];
 		::StringFromGUID2(guidValue, szGUID, 64);
 
-		return SetStringValue(pszValueName, OLE2T(szGUID));
+		return SetStringValue(pszValueName, OLEtoT(szGUID));
 	}
 
 #if (WINVER >= 0x0600)

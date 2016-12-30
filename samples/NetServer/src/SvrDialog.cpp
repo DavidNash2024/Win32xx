@@ -70,13 +70,13 @@ void CTCPClientDlg::Receive()
 	std::vector<char> vChar( 1025, '\0' );
 	char* buf = &vChar.front();	// char array with 1025 elements initialised to '\0'
 	m_pSocket->Receive(buf, 1024, 0);
-	AppendText(IDC_EDIT_RECEIVE2, A2T(buf));
+	AppendText(IDC_EDIT_RECEIVE2, AtoT(buf));
 }
 
 void CTCPClientDlg::Send()
 {
 	CString sSend = m_EditSend.GetWindowText();
-	m_pSocket->Send(T2A(sSend), lstrlen(sSend), 0);
+	m_pSocket->Send(TtoA(sSend), lstrlen(sSend), 0);
 }
 
 
@@ -301,7 +301,7 @@ void CSvrDialog::OnSend()
 		case SOCK_DGRAM:
 			{
 				CString sSend = m_EditSend.GetWindowText();
-				m_MainSocket.SendTo(T2A(sSend), strlen(T2A(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
+				m_MainSocket.SendTo(TtoA(sSend), strlen(TtoA(sSend)), 0, (LPSOCKADDR)&m_saUDPClient, sizeof(m_saUDPClient));
 			}
 			break;
 	}
@@ -401,7 +401,7 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wParam)
 		}
 		break;
 	}
-	Append(IDC_EDIT_RECEIVE, A2T(bufArray));
+	Append(IDC_EDIT_RECEIVE, AtoT(bufArray));
 
 	return TRUE;
 }
@@ -434,7 +434,7 @@ BOOL CSvrDialog::StartServer()
 		in_addr addr;
 		ZeroMemory(&addr, sizeof(in_addr));
 		addr.S_un.S_addr = htonl(dwAddr);
-		strAddr = A2T( inet_ntoa(addr) );
+		strAddr = AtoT( inet_ntoa(addr) );
 	}
 
 	// Retrieve the local port number

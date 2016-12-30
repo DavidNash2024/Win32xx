@@ -68,7 +68,7 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
 	 catch (const CFileException& e)
 	 {
 		 CString str = CString("Failed to save file: ") + e.GetFilePath();
-		 MessageBox(str, A2T(e.what()), MB_OK);
+		 MessageBox(str, AtoT(e.what()), MB_OK);
 	 }
 
 	return bResult;

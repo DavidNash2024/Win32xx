@@ -290,7 +290,7 @@ namespace Win32xx
 		{
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
+			clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
 			clientService.sin_port = htons( (u_short)port );
 
 			RetVal = ::bind( m_Socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
@@ -353,7 +353,7 @@ namespace Win32xx
 		{
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
+			clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
 			clientService.sin_port = htons( (u_short)port );
 
 			RetVal = ::connect( m_Socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
@@ -512,7 +512,7 @@ namespace Win32xx
 
 #ifdef GetAddrInfo
 
-		return m_pfnGetAddrInfo(T2A(nodename), T2A(servname), hints, res);
+		return m_pfnGetAddrInfo(TtoA(nodename), TtoA(servname), hints, res);
 
 #else
 
@@ -696,7 +696,7 @@ namespace Win32xx
 		{
 			sockaddr_in clientService;
 			clientService.sin_family = AF_INET;
-			clientService.sin_addr.s_addr = inet_addr( T2A(addr) );
+			clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
 			clientService.sin_port = htons( (u_short)port );
 
 			RetVal = ::sendto( m_Socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );

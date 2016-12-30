@@ -87,7 +87,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
 		{
 			// Display the exception and allow the program to continue
 			CString Error = CString(e.GetText()) + "\n" + CString(e.GetErrorString());
-			::MessageBox(NULL, Error, A2T(e.what()), MB_ICONERROR) ;
+			::MessageBox(NULL, Error, AtoT(e.what()), MB_ICONERROR) ;
 
 			// return -1 here to close the main window and end the application
 		//	return -1;

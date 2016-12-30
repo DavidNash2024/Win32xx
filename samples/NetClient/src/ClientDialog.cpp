@@ -131,7 +131,7 @@ BOOL CClientDialog::OnSocketReceive()
 		return size;
 	}
 
-	AppendText( IDC_EDIT_RECEIVE, A2T(buf) );
+	AppendText( IDC_EDIT_RECEIVE, AtoT(buf) );
 	
 	return TRUE;
 }
@@ -277,7 +277,7 @@ void CClientDialog::OnStartClient()
 					in_addr addr;
 					ZeroMemory(&addr, sizeof(in_addr));
 					addr.S_un.S_addr = htonl(dwAddr);
-					strAddr = A2T( inet_ntoa(addr) );
+					strAddr = AtoT( inet_ntoa(addr) );
 				}
 
 				// Retrieve the local port number
@@ -362,7 +362,7 @@ void CClientDialog::OnSend()
 	case SOCK_STREAM:	// for TCP client
 		{
 			CString sSend = GetDlgItemText(IDC_EDIT_SEND);
-			if (SOCKET_ERROR == m_Client.Send(T2A(sSend), sSend.GetLength(), 0))
+			if (SOCKET_ERROR == m_Client.Send(TtoA(sSend), sSend.GetLength(), 0))
 				m_EditStatus.SetWindowText( _T("Send Failed") );
 		}
 		break;
@@ -387,10 +387,10 @@ void CClientDialog::OnSend()
 				in_addr addr;
 				ZeroMemory(&addr, sizeof(in_addr));
 				addr.S_un.S_addr = htonl(dwAddr);
-				strAddr = A2T( inet_ntoa(addr) );
+				strAddr = AtoT( inet_ntoa(addr) );
 			}
 
-			if (SOCKET_ERROR == m_Client.SendTo( T2A(strSend), strSend.GetLength(), 0, strAddr, port ))
+			if (SOCKET_ERROR == m_Client.SendTo( TtoA(strSend), strSend.GetLength(), 0, strAddr, port ))
 				m_EditStatus.SetWindowText( _T("SendTo Failed") );
 		}
 		break;

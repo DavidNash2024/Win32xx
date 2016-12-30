@@ -796,7 +796,7 @@ namespace Win32xx
 		if (IsAeroThemed())
 		{
 			CRect rcText;
-			GetThemeTextExtent(DesktopDC, MENU_POPUPITEM, 0, T2W(szItemText), lstrlen(szItemText),
+			GetThemeTextExtent(DesktopDC, MENU_POPUPITEM, 0, TtoW(szItemText), lstrlen(szItemText),
 						   DT_LEFT | DT_SINGLELINE, NULL, &rcText);
 
 			sizeText.SetSize(rcText.right + m_marText.Width(), rcText.bottom + m_marText.Height());
@@ -1754,11 +1754,11 @@ namespace Win32xx
 			int iStateId = GetMenuMetrics().ToItemStateId(pdis->itemState);
 
 			// Draw the item text before the tab
-			GetMenuMetrics().DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(ItemText), nTab, DT_SINGLELINE | DT_LEFT | DT_VCENTER | uAccel, 0, &rcText);
+			GetMenuMetrics().DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, TtoW(ItemText), nTab, DT_SINGLELINE | DT_LEFT | DT_VCENTER | uAccel, 0, &rcText);
 
 			// Draw text after tab, right aligned
 			if(nTab != -1)
-				GetMenuMetrics().DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, T2W(&ItemText[nTab + 1]), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | uAccel, 0, &rcText);
+				GetMenuMetrics().DrawThemeText(pdis->hDC, MENU_POPUPITEM, iStateId, TtoW(&ItemText[nTab + 1]), -1, DT_SINGLELINE | DT_RIGHT | DT_VCENTER | uAccel, 0, &rcText);
 		}
 		else
 		{

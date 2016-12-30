@@ -486,7 +486,7 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	{
 		CString str = _T("Failed to load:  ");
 		str += e.GetFilePath();
-		::MessageBox(NULL, str, A2T(e.what()), MB_ICONWARNING);
+		::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
 		return FALSE;
 	}
 

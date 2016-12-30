@@ -325,7 +325,7 @@ namespace Win32xx
 		virtual ~CProgressBar() {}
 
 		int  GetPos() const;
-		int  GetRange(BOOL fWhichLimit, const PPBRANGE& PBRange) const;
+		int  GetRange(BOOL fWhichLimit, const PBRANGE& PBRange) const;
 		int  GetRange(BOOL fWhichLimit) const;
 		int  OffsetPos(int nIncrement) const;
 		int  SetPos(int nNewPos) const;
@@ -1484,7 +1484,7 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(PBM_GETPOS, 0L, 0L));
 	}
 
-	inline int CProgressBar::GetRange(BOOL fWhichLimit, const PPBRANGE& PBRange) const
+	inline int CProgressBar::GetRange(BOOL fWhichLimit, const PBRANGE& PBRange) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
 		assert(IsWindow());

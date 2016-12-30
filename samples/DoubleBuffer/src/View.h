@@ -13,7 +13,7 @@ public:
 	CView();
 	virtual ~CView(){}
 
-	CBitmap CreateMaskBitmap(CBitmap& m_Blue, COLORREF clrTransparent);
+	CBitmap CreateMaskBitmap();
 
 protected:
 	virtual int  OnCreate(CREATESTRUCT& cs);

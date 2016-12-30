@@ -266,16 +266,16 @@ namespace Win32xx
 	public:
 		CString() {}
 		CString(const CString& str)           	: CStringT<TCHAR>(str) {}
-		CString(LPCSTR pszText)					: CStringT<TCHAR>(A2T(pszText)) {}
-		CString(LPCWSTR pszText)				: CStringT<TCHAR>(W2T(pszText))	{}
-		CString(LPCSTR pszText, int nLength)	: CStringT<TCHAR>(A2T(pszText), nLength) {}
-		CString(LPCWSTR pszText, int nLength)	: CStringT<TCHAR>(W2T(pszText), nLength) {}
+		CString(LPCSTR pszText)					: CStringT<TCHAR>(AtoT(pszText)) {}
+		CString(LPCWSTR pszText)				: CStringT<TCHAR>(WtoT(pszText))	{}
+		CString(LPCSTR pszText, int nLength)	: CStringT<TCHAR>(AtoT(pszText), nLength) {}
+		CString(LPCWSTR pszText, int nLength)	: CStringT<TCHAR>(WtoT(pszText), nLength) {}
 
 		CString(char ch, int nLength = 1)
 		{
 			char str[2] = {0};
 			str[0] = ch;
-			A2T tch(str);
+			AtoT tch(str);
 			m_str.assign(nLength, ((LPCTSTR)tch)[0]);
 		}
 
@@ -283,7 +283,7 @@ namespace Win32xx
 		{
 			WCHAR str[2] = {0};
 			str[0] = ch;
-			W2T tch(str);
+			WtoT tch(str);
 			m_str.assign(nLength, ((LPCTSTR)tch)[0]);
 		}
 
@@ -303,7 +303,7 @@ namespace Win32xx
 		{
 			char str[2] = {0};
 			str[0] = ch;
-			A2T tch(str);
+			AtoT tch(str);
 			m_str.assign(1, ((LPCTSTR)tch)[0]);
 			return *this;
 		}
@@ -312,32 +312,32 @@ namespace Win32xx
 		{
 			WCHAR str[2] = {0};
 			str[0] = ch;
-			W2T tch(str);
+			WtoT tch(str);
 			m_str.assign(1, ((LPCTSTR)tch)[0]);
 			return *this;
 		}
 
 		CString& operator = (LPCSTR pszText)
 		{
-			m_str.assign(A2T(pszText));
+			m_str.assign(AtoT(pszText));
 			return *this;
 		}
 
 		CString& operator = (LPCWSTR pszText)
 		{
-			m_str.assign(W2T(pszText));
+			m_str.assign(WtoT(pszText));
 			return *this;
 		}
 
 		CString& operator += (LPCSTR szText)
 		{
-			m_str.append(A2T(szText));
+			m_str.append(AtoT(szText));
 			return *this;
 		}
 
 		CString& operator += (LPCWSTR szText)
 		{
-			m_str.append(W2T(szText));
+			m_str.append(WtoT(szText));
 			return *this;
 		}
 
@@ -345,7 +345,7 @@ namespace Win32xx
 		{
 			char str[2] = {0};
 			str[0] = ch;
-			A2T tch(str);
+			AtoT tch(str);
 			m_str.append(1, ((LPCTSTR)tch)[0]);
 			return *this;
 		}
@@ -354,7 +354,7 @@ namespace Win32xx
 		{
 			WCHAR str[2] = {0};
 			str[0] = ch;
-			W2T tch(str);
+			WtoT tch(str);
 			m_str.append(1, ((LPCTSTR)tch)[0]);
 			return *this;
 		}
@@ -667,7 +667,7 @@ namespace Win32xx
 	// Allocates a BSTR from the CStringT content.
 	// Note: Ensure the returned BSTR is freed later with SysFreeString to avoid a memory leak.
 	{
-		BSTR bstr = ::SysAllocStringLen(A2W(m_str.c_str()), (UINT)m_str.size());
+		BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), (UINT)m_str.size());
 		if (bstr == NULL)
 			throw std::bad_alloc();
 
@@ -1267,7 +1267,7 @@ namespace Win32xx
 	{
 		assert(pBstr);
 
-		if ( !::SysReAllocStringLen(pBstr, A2W(m_str.c_str()), (UINT)m_str.length()) )
+		if ( !::SysReAllocStringLen(pBstr, AtoW(m_str.c_str()), (UINT)m_str.length()) )
 			throw std::bad_alloc();
 
 		return *pBstr;

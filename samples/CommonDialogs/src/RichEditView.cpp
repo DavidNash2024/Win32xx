@@ -200,7 +200,7 @@ StreamInFile(const CFile& file, BOOL mode)      			/*
 	{
 		CString str = _T("Failed to load:  ");
 		str += e.GetFilePath();
-		::MessageBox(NULL, str, A2T(e.what()), MB_ICONWARNING);
+		::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
 		return FALSE;
 	}
 
