@@ -11,7 +11,7 @@ CView::CView()
 {
 }
 
-CBitmap CView::CreateMaskBitmap(CBitmap& m_Blue, COLORREF clrTransparent)
+CBitmap CView::CreateMaskBitmap()
 {
 	BITMAP bm;
 	GetObject(m_Blue, sizeof(BITMAP), &bm);
@@ -26,6 +26,7 @@ CBitmap CView::CreateMaskBitmap(CBitmap& m_Blue, COLORREF clrTransparent)
 	SelectObject(dcMem, m_Blue);
 	dcMem2.SelectObject(bmMask);
 
+	COLORREF clrTransparent = RGB(255, 255, 255);
 	SetBkColor(dcMem, clrTransparent);
 	dcMem2.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem, 0, 0, SRCCOPY);
 	dcMem.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem2, 0, 0, SRCINVERT);
@@ -46,7 +47,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
 
 	m_Blue.LoadBitmap(IDB_BLUE);
 	m_Orange.LoadBitmap(IDB_ORANGE);
-	m_Mask = CreateMaskBitmap(m_Blue, RGB(255,255,255));
+	m_Mask = CreateMaskBitmap();
 
 	return 0;
 }

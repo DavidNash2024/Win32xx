@@ -51,21 +51,21 @@ namespace Win32xx
 	// Classes and functions (typedefs) for text conversions
 	//
 	//  This section defines the following text conversions:
-	//  A2BSTR		ANSI  to BSTR
-	//  A2OLE		ANSI  to OLE
-	//	A2T			ANSI  to TCHAR
-	//	A2W			ANSI  to WCHAR
-	//  OLE2A		OLE   to ANSI
-	//  OLE2T		OLE   to TCHAR
-	//  OLE2W		OLE   to WCHAR
-	//  T2A			TCHAR to ANSI
-	//  T2BSTR		TCHAR to BSTR
-	//  T2OLE       TCHAR to OLE
-	//  T2W			TCHAR to WCHAR
-	//  W2A			WCHAR to ANSI
-	//  W2BSTR		WCHAR to BSTR
-	//  W2OLE		WCHAR to OLE
-	//  W2T			WCHAR to TCHAR
+	//  AtoBSTR		ANSI  to BSTR
+	//  AtoOLE		ANSI  to OLE
+	//	AtoT		ANSI  to TCHAR
+	//	AtoW		ANSI  to WCHAR
+	//  OLEtoA		OLE   to ANSI
+	//  OLEtoT		OLE   to TCHAR
+	//  OLEtoW		OLE   to WCHAR
+	//  TtoA		TCHAR to ANSI
+	//  TtoBSTR		TCHAR to BSTR
+	//  TtoOLE      TCHAR to OLE
+	//  TtoW		TCHAR to WCHAR
+	//  WtoA		WCHAR to ANSI
+	//  WtoBSTR		WCHAR to BSTR
+	//  WtoOLE		WCHAR to OLE
+	//  WtoT		WCHAR to TCHAR
 
 	// About different character and string types:
 	// ------------------------------------------
@@ -85,35 +85,35 @@ namespace Win32xx
 	class CW2BSTR;
 
 	// typedefs for the well known text conversions
-	typedef CA2W A2W;
-	typedef CW2A W2A;
-	typedef CW2BSTR W2BSTR;
-	typedef CA2BSTR A2BSTR;
+	typedef CA2W AtoW;
+	typedef CW2A WtoA;
+	typedef CW2BSTR WtoBSTR;
+	typedef CA2BSTR AtoBSTR;
 	typedef CW2A BSTR2A;
 	typedef CW2W BSTR2W;
 
 #ifdef _UNICODE
-	typedef CA2W A2T;
-	typedef CW2A T2A;
-	typedef CW2W T2W;
-	typedef CW2W W2T;
-	typedef CW2BSTR T2BSTR;
+	typedef CA2W AtoT;
+	typedef CW2A TtoA;
+	typedef CW2W TtoW;
+	typedef CW2W WtoT;
+	typedef CW2BSTR TtoBSTR;
 	typedef BSTR2W BSTR2T;
 #else
-	typedef CA2A A2T;
-	typedef CA2A T2A;
-	typedef CA2W T2W;
-	typedef CW2A W2T;
-	typedef CA2BSTR T2BSTR;
+	typedef CA2A AtoT;
+	typedef CA2A TtoA;
+	typedef CA2W TtoW;
+	typedef CW2A WtoT;
+	typedef CA2BSTR TtoBSTR;
 	typedef BSTR2A BSTR2T;
 #endif
 
-	typedef A2W  A2OLE;
-	typedef T2W  T2OLE;
-	typedef CW2W W2OLE;
-	typedef W2A  OLE2A;
-	typedef W2T  OLE2T;
-	typedef CW2W OLE2W;
+	typedef AtoW  AtoOLE;
+	typedef TtoW  TtoOLE;
+	typedef CW2W WtoOLE;
+	typedef WtoA  OLEtoA;
+	typedef WtoT  OLEtoT;
+	typedef CW2W OLEtoW;
 
 	class CA2W
 	{
@@ -150,7 +150,7 @@ namespace Win32xx
 		//   CW2A utf8String(L"Some Text", CP_UTF8);
 		//
 		// or
-		//   SetWindowTextA( W2A(L"Some Text") ); The ANSI version of SetWindowText
+		//   SetWindowTextA( WtoA(L"Some Text") ); The ANSI version of SetWindowText
 		{
 			// Resize the vector and assign null char to each element
 			int length = WideCharToMultiByte(codePage, 0, pWStr, -1, NULL, 0, NULL, NULL) + 1;
@@ -216,7 +216,7 @@ namespace Win32xx
 	class CA2BSTR
 	{
 	public:
-		CA2BSTR(LPCSTR pStr) { m_bstrString = ::SysAllocString(A2W(pStr)); }
+		CA2BSTR(LPCSTR pStr) { m_bstrString = ::SysAllocString(AtoW(pStr)); }
 		~CA2BSTR() { ::SysFreeString(m_bstrString); }
 		operator BSTR() { return m_bstrString;}
 
@@ -235,13 +235,13 @@ namespace Win32xx
 	inline void Trace(LPCSTR str)
 	// Trace sends a string to the debug/output pane, or an external debugger
 	{
-		OutputDebugString(A2T(str));
+		OutputDebugString(AtoT(str));
 	}
 
 	inline void Trace(LPCWSTR str)
 	// Trace sends a string to the debug/output pane, or an external debugger
 	{
-		OutputDebugString(W2T(str));
+		OutputDebugString(WtoT(str));
 	}
 	
 	

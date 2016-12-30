@@ -97,6 +97,22 @@ Modified TRACE 							now implemented as a macro.
 Modified CMetaFileDC::Close				now returns CMetaFile
 Modified CMetaFileDC::CloseEnhanced		now returns CEnhMetaFile
 
+Renamed A2BSTR 	to	AtoBSTR
+Renamed	A2OLE 	to  AtoOLE
+Renamed	A2T		to	AtoT	
+Renamed	A2W		to	AtoW	
+Renamed	OLE2A	to	OLEtoA	
+Renamed	OLE2T	to 	OLEtoT	
+Renamed	OLE2W	to	OLEtoW	
+Renamed	T2A		to	TtoA	
+Renamed	T2BSTR	to	TtoBSTR	
+Renamed	T2OLE	to	TtoOLE  
+Renamed	T2W		to	TtoW	
+Renamed	W2A		to	WtoA	
+Renamed	W2BSTR	to	WtoBSTR	
+Renamed	W2OLE	to	WtoOLE	
+Renamed	W2T		to	WtoT	
+
 
 
 Version 8.3

@@ -450,7 +450,7 @@ namespace Win32xx
 			{
 				CString strCurrentFile = (*iter);
 				WCHAR wszCurrentFile[MAX_PATH] = {0L};
-				lstrcpynW(wszCurrentFile, T2W(strCurrentFile), MAX_PATH);
+				lstrcpynW(wszCurrentFile, TtoW(strCurrentFile), MAX_PATH);
 				
 				CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
 				m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));

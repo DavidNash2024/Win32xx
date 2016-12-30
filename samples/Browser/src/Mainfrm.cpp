@@ -325,7 +325,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 		return;
 
 	// Update the URL in the ComboboxEx edit box.
-	m_ComboboxEx.SetWindowText(W2T(bstrUrlName));
+	m_ComboboxEx.SetWindowText(WtoT(bstrUrlName));
 	m_View.SetFocus();
 }
 
@@ -393,7 +393,7 @@ void CMainFrame::OnPropertyChange(DISPPARAMS* pDispParams)
 {
 	CString str;
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
-		str.Format(_T("Property Change: %s\n"), (LPCTSTR)W2T(pDispParams->rgvarg[0].bstrVal));
+		str.Format(_T("Property Change: %s\n"), (LPCTSTR)WtoT(pDispParams->rgvarg[0].bstrVal));
 
 	TRACE(str);
 }
@@ -404,9 +404,9 @@ void CMainFrame::OnStatusTextChange(DISPPARAMS* pDispParams)
 
 	if (GetStatusBar().IsWindow() && lpStatusText)
 	{
-		if (lstrcmp(W2T(lpStatusText), _T("")))
+		if (lstrcmp(WtoT(lpStatusText), _T("")))
 		{
-			GetStatusBar().SetPartText(0, W2T(lpStatusText));
+			GetStatusBar().SetPartText(0, WtoT(lpStatusText));
 		}
 		else
 			GetStatusBar().SetPartText(0, _T("Done"));
@@ -421,7 +421,7 @@ void CMainFrame::OnTitleChange(DISPPARAMS* pDispParams)
 	if (pDispParams->cArgs > 0 && pDispParams->rgvarg[0].vt == VT_BSTR)
 	{
         str = CString(pDispParams->rgvarg[0].bstrVal) + _T(" - ") + LoadString(IDW_MAIN);
-		TRACE(W2T(pDispParams->rgvarg[0].bstrVal));
+		TRACE(WtoT(pDispParams->rgvarg[0].bstrVal));
 	}
 	else
 		str = LoadString(IDW_MAIN);

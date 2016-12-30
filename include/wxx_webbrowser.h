@@ -1025,7 +1025,7 @@ namespace Win32xx
 	// Gets the value associated with the specified property name.
 	{
 		VARIANT v;
-		GetIWebBrowser2()->GetProperty( T2BSTR(pszProperty), &v );
+		GetIWebBrowser2()->GetProperty( TtoBSTR(pszProperty), &v );
 		return v;
 	}
 
@@ -1063,7 +1063,7 @@ namespace Win32xx
 
 		VARIANT TargetFrameName;
 		TargetFrameName.vt = VT_BSTR;
-		TargetFrameName.bstrVal = SysAllocString(T2W(pszTargetFrameName));
+		TargetFrameName.bstrVal = SysAllocString(TtoW(pszTargetFrameName));
 
 		SAFEARRAY* psa = SafeArrayCreateVector(VT_UI1, 0, dwPostDataLen);
 		CopyMemory(psa->pvData, pvPostData, dwPostDataLen);
@@ -1073,8 +1073,8 @@ namespace Win32xx
 
 		VARIANT Headers;
 		Headers.vt = VT_BSTR;
-		Headers.bstrVal = SysAllocString(T2W(pszHeaders));
-		BSTR url = SysAllocString(T2W(pszURL));
+		Headers.bstrVal = SysAllocString(TtoW(pszHeaders));
+		BSTR url = SysAllocString(TtoW(pszURL));
 
 		if (url)
 			GetIWebBrowser2()->Navigate(url, &Flags, &TargetFrameName, &PostData, &Headers);
@@ -1101,7 +1101,7 @@ namespace Win32xx
 
 		VARIANT TargetFrameName;
 		TargetFrameName.vt = VT_BSTR;
-		TargetFrameName.bstrVal = SysAllocString(T2W(pszTargetFrameName));
+		TargetFrameName.bstrVal = SysAllocString(TtoW(pszTargetFrameName));
 
 		GetIWebBrowser2()->Navigate2(&PIDL, &Flags, &TargetFrameName, 0, 0);
 
@@ -1116,7 +1116,7 @@ namespace Win32xx
 	{
 		VARIANT URL;
 		URL.vt = VT_BSTR;
-		URL.bstrVal = SysAllocString(T2W(pszURL));
+		URL.bstrVal = SysAllocString(TtoW(pszURL));
 
 		VARIANT Flags;
 		Flags.vt = VT_I4;
@@ -1124,7 +1124,7 @@ namespace Win32xx
 
 		VARIANT TargetFrameName;
 		TargetFrameName.vt = VT_BSTR;
-		TargetFrameName.bstrVal = SysAllocString(T2W(pszTargetFrameName));
+		TargetFrameName.bstrVal = SysAllocString(TtoW(pszTargetFrameName));
 
 		// Store the pidl in a SafeArray, and assign the SafeArray to a VARIANT
 		SAFEARRAY* psa = SafeArrayCreateVector(VT_UI1, 0, dwPostDataLen);
@@ -1135,7 +1135,7 @@ namespace Win32xx
 
 		VARIANT Headers;
 		Headers.vt = VT_BSTR;
-		Headers.bstrVal = SysAllocString(T2W(pszHeaders));
+		Headers.bstrVal = SysAllocString(TtoW(pszHeaders));
 
 		GetIWebBrowser2()->Navigate2(&URL, &Flags, &TargetFrameName, &PostData, &Headers);
 
@@ -1149,7 +1149,7 @@ namespace Win32xx
 	inline void CWebBrowser::PutProperty(LPCTSTR pszProperty, const VARIANT& vtValue)
 	// Sets the value of a property associated with the object.
 	{
-		GetIWebBrowser2()->PutProperty(T2BSTR(pszProperty), vtValue);
+		GetIWebBrowser2()->PutProperty(TtoBSTR(pszProperty), vtValue);
 	}
 
 	inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, double dValue)
@@ -1158,7 +1158,7 @@ namespace Win32xx
 		VARIANT v;
 		v.vt = VT_I4;
 		v.dblVal = dValue;
-		GetIWebBrowser2()->PutProperty(T2BSTR(pszPropertyName), v);
+		GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
 		VariantClear(&v);
 	}
 
@@ -1168,7 +1168,7 @@ namespace Win32xx
 		VARIANT v;
 		v.vt = VT_I4;
 		v.lVal= lValue;
-		GetIWebBrowser2()->PutProperty(T2BSTR(pszPropertyName), v);
+		GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
 		VariantClear(&v);
 	}
 
@@ -1177,8 +1177,8 @@ namespace Win32xx
 	{
 		VARIANT v;
 		v.vt = VT_BSTR;
-		v.bstrVal= SysAllocString(T2W(lpszValue));
-		GetIWebBrowser2()->PutProperty(T2BSTR(pszPropertyName), v);
+		v.bstrVal= SysAllocString(TtoW(lpszValue));
+		GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
 		VariantClear(&v);
 	}
 
@@ -1188,7 +1188,7 @@ namespace Win32xx
 		VARIANT v;
 		v.vt = VT_I4;
 		v.iVal = nValue;
-		GetIWebBrowser2()->PutProperty(T2BSTR(pszPropertyName), v);
+		GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
 		VariantClear(&v);
 	}
 

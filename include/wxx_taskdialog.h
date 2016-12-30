@@ -492,7 +492,7 @@ namespace Win32xx
 		m_tc.pszContent = &m_vContent.front(); 
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_CONTENT, (LPARAM)(LPCWSTR)T2W(pszContent));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_CONTENT, (LPARAM)(LPCWSTR)TtoW(pszContent));
 	}
 
 	inline void CTaskDialog::SetDefaultButton(int nButtonID) 
@@ -531,7 +531,7 @@ namespace Win32xx
 		m_tc.pszCollapsedControlText = &m_vCollapsedControlText.front();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_EXPANDED_INFORMATION, (LPARAM)(LPCWSTR)T2W(pszExpandedInfo));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_EXPANDED_INFORMATION, (LPARAM)(LPCWSTR)TtoW(pszExpandedInfo));
 	}
 
 	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon) 
@@ -565,7 +565,7 @@ namespace Win32xx
 		m_tc.pszFooter = &m_vFooter.front();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)T2W(pszFooter));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)TtoW(pszFooter));
 	}
 
 	inline void CTaskDialog::SetMainIcon(HICON hMainIcon) 
@@ -601,7 +601,7 @@ namespace Win32xx
 		m_tc.pszMainInstruction = &m_vMainInstruction.front();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)T2W(pszMainInstruction));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)TtoW(pszMainInstruction));
 	}
 
 	inline void CTaskDialog::SetOptions(TASKDIALOG_FLAGS dwFlags)
@@ -734,7 +734,7 @@ namespace Win32xx
 			lstrcpy( &vTChar.front(), pFromTChar);
 		}
 		
-		lstrcpyW(&vWChar.front(), T2W(&vTChar.front()) );
+		lstrcpyW(&vWChar.front(), TtoW(&vTChar.front()) );
 	}
 
 	inline LRESULT CTaskDialog::TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -761,7 +761,7 @@ namespace Win32xx
 			OnTDHelp();
 			break;
 		case TDN_HYPERLINK_CLICKED:
-			OnTDHyperlinkClicked(W2T((LPCWSTR)lParam));
+			OnTDHyperlinkClicked(WtoT((LPCWSTR)lParam));
 			break;
 		case TDN_NAVIGATED:
 			OnTDNavigatePage();
@@ -804,7 +804,7 @@ namespace Win32xx
 	// Updates a text element on the Task Dialog.
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)(LPCWSTR)T2W(pszNewText));
+		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)(LPCWSTR)TtoW(pszNewText));
 	}
 
 }

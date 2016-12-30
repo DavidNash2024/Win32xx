@@ -53,7 +53,7 @@
 //	catch(const CException &e) // catch all exceptions inherited from CException
 // 	{
 //		// display the exception in a message box
-//		::MessageBox(NULL, LoadString(e.GetMessageID()), A2T(e.what()), MB_ICONERROR);
+//		::MessageBox(NULL, LoadString(e.GetMessageID()), AtoT(e.what()), MB_ICONERROR);
 //	}
 
 //
@@ -69,7 +69,7 @@
 //	catch(const CException &e) // catch all exceptions inherited from CException
 // 	{
 //		// display the exception in a message box
-//		::MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONERROR);
+//		::MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 //	}
 
   
@@ -342,7 +342,7 @@ namespace Win32xx
 	}
 	
 	inline const char* CFileException::what() const throw()
-	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CFileException";		
 	}
@@ -387,7 +387,7 @@ namespace Win32xx
 	}
 	
 	inline const char* CNotSupportedException::what() const throw()
-	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CNotSupportedException";		
 	}
@@ -430,7 +430,7 @@ namespace Win32xx
 	}
 	
 	inline const char* CResourceException::what() const throw()
-	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CResourceException";		
 	}
@@ -473,7 +473,7 @@ namespace Win32xx
 	}
 
 	inline const char* CUserException::what() const throw()
-	// Returns the exception type as a char string. Use A2T to convert this to TCHAR	
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR	
 	{
 		return "Win32xx::CUserException";
 	}
@@ -515,7 +515,7 @@ namespace Win32xx
 	}
 
 	inline const char * CWinException::what() const throw()
-	// Returns the exception type as a char string. Use A2T to convert this to TCHAR
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CWinException";
 	}

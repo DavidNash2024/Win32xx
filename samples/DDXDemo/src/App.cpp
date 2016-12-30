@@ -83,7 +83,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                               /*
 	catch (const CException& e)  
 	{
 		// Display the exception and quit
-		MessageBox(NULL, e.GetText(), A2T(e.what()), MB_ICONERROR);
+		MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
 		return -1;
 	}
@@ -92,7 +92,7 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)                               /*
 	catch (const std::exception &e)
 	{
 		  // Process the exception and quit
-		MessageBox(NULL, _T("An unhandled std::exception was thrown"), A2T(e.what()), MB_ICONERROR);  
+		MessageBox(NULL, _T("An unhandled std::exception was thrown"), AtoT(e.what()), MB_ICONERROR);  
 	//	e.what();
 		return -1;
 	}

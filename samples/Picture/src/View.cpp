@@ -76,7 +76,7 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 	ShowScrollBar(SB_VERT, FALSE);
 
 	// Create IPicture from image file
-	if (S_OK == ::OleLoadPicturePath(T2OLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
+	if (S_OK == ::OleLoadPicturePath(TtoOLE(szFile), NULL, 0, 0,	IID_IPicture, (LPVOID *)&m_pPicture))
 	{
 		CMainFrame& Frame = GetPicApp().GetMainFrame();
 		Frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
@@ -352,7 +352,7 @@ void CView::SavePicture(LPCTSTR szFile)
 	if (SUCCEEDED(m_pPicture->QueryInterface(IID_IPictureDisp,  (void**) &pDisp)))
 	{
 		// Save the IPicture image as a bitmap
-		OleSavePictureFile(pDisp,  T2BSTR(szFile));
+		OleSavePictureFile(pDisp,  TtoBSTR(szFile));
 		pDisp->Release();
 	}
 }
