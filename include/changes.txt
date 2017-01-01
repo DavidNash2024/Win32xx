@@ -16,7 +16,7 @@ approach worked OK, but a template approach has a number of advantages:
    inconvenience when casting a CWnd pointer to a CDocker pointer for
    example, as it required us to use dynamic_cast. 
 * The design is more scalable and the code is more reusable. For example, it
-   is now trivial to provide a Ribbon option to all frame types.
+   is now trivial to provide a Ribbon option for all frame types.
 * Usage hasn't changed and the code is backwards compatible. Just ensure that
    if you call the base class for CMainFrame, you call the correct one.
 
@@ -64,7 +64,11 @@ New Features and Enhancements
    CEnhMetaFile object goes out of scope. The CMetaFileDC::CloseEnhanced
    function returns a CEnhMetaFile object. 
    
-* Added a MetaFile sample.   
+* Added a MetaFile sample.
+
+* Renamed the text conversion typedefs. This allows Win32++ to be used
+  with ATL.
+
 
 
 Changes in detail

@@ -6,7 +6,7 @@
 //      url: https://sourceforge.net/projects/win32-framework
 //
 //
-// Copyright (c) 2005-2016  David Nash
+// Copyright (c) 2005-2017  David Nash
 //
 // Permission is hereby granted, free of charge, to
 // any person obtaining a copy of this software and
@@ -196,12 +196,7 @@ namespace Win32xx
 		while (status != 0)
 		{
 			// While idle, perform idle processing until OnIdle returns FALSE
-			// Exclude some messages to avoid calling OnIdle excessively
-			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) &&
-								(Msg.message != WM_TIMER) &&
-								(Msg.message != WM_MOUSEMOVE) &&
-								(Msg.message != WM_SETCURSOR) &&
-								OnIdle(lCount) != FALSE  )
+			while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) && OnIdle(lCount) != FALSE  )
 			{
 				++lCount;
 			}
