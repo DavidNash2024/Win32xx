@@ -73,6 +73,7 @@ void CMainFrame::OnInitialUpdate()
 	// The frame is now created.
 	// Place any additional startup code here.
 
+	WH_GETMESSAGE
 
 	TRACE("Frame created\n");
 }

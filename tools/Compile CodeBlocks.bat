@@ -19,6 +19,7 @@ if exist "..\output\MinGW" rmdir /s /q "..\output\MinGW"
 
 REM: Compile the code
 
+codeblocks.exe --rebuild Animation\ProjectFiles\Animation.cbp               >"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Browser\ProjectFiles\Browser.cbp                   >"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild CustomControl\ProjectFiles\CustomControl.cbp       >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild DateTime\ProjectFiles\DateTime.cbp                 >>"..\output\CodeBlocks.log"
@@ -71,6 +72,7 @@ mkdir "..\output\VS2003"
 mkdir "..\output\VS2003\Debug"
 
 ECHO "Copying VS2003 Debug files" >>"..\output\CodeBlocks.log"
+copy Animation\ProjectFiles\Microsoft\Debug\Animation.exe               "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Browser\ProjectFiles\Microsoft\Debug\Browser.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy CustomControl\ProjectFiles\Microsoft\Debug\CustomControl.exe       "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy DateTime\ProjectFiles\Microsoft\Debug\DateTime.exe                 "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
@@ -121,6 +123,7 @@ copy Tray\ProjectFiles\Microsoft\Debug\Tray.exe                         "..\outp
 mkdir "..\output\VS2003\Release"
 
 ECHO "Copying VS2003 Release files" >>"..\output\CodeBlocks.log"
+copy Animation\ProjectFiles\Microsoft\Release\Animation.exe               "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Browser\ProjectFiles\Microsoft\Release\Browser.exe                   "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy CustomControl\ProjectFiles\Microsoft\Release\CustomControl.exe       "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy DateTime\ProjectFiles\Microsoft\Release\DateTime.exe                 "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
@@ -174,6 +177,7 @@ mkdir "..\output\Borland"
 mkdir "..\output\Borland\Debug"
 
 ECHO "Copying Borland Debug files" >>"..\output\CodeBlocks.log"
+copy Animation\ProjectFiles\Borland\Debug\Animation.exe               "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Browser\ProjectFiles\Borland\Debug\Browser.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy CustomControl\ProjectFiles\Borland\Debug\CustomControl.exe       "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy DateTime\ProjectFiles\Borland\Debug\DateTime.exe                 "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
@@ -223,6 +227,7 @@ copy Tray\ProjectFiles\Borland\Debug\Tray.exe                         "..\output
 mkdir "..\output\Borland\Release"
 
 ECHO "Copying Borland Release files" >>"..\output\CodeBlocks.log"
+copy Animation\ProjectFiles\Borland\Release\Animation.exe               "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Browser\ProjectFiles\Borland\Release\Browser.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy CustomControl\ProjectFiles\Borland\Release\CustomControl.exe       "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy DateTime\ProjectFiles\Borland\Release\DateTime.exe                 "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
@@ -275,6 +280,7 @@ mkdir "..\output\MinGW"
 mkdir "..\output\MinGW\Debug"
 
 ECHO "Copying MinGW Debug files" >>"..\output\CodeBlocks.log"
+copy Animation\ProjectFiles\GNU\Debug\Animation.exe               "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Browser\ProjectFiles\GNU\Debug\Browser.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy CustomControl\ProjectFiles\GNU\Debug\CustomControl.exe       "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy DateTime\ProjectFiles\GNU\Debug\DateTime.exe                 "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
@@ -325,6 +331,7 @@ copy Tray\ProjectFiles\GNU\Debug\Tray.exe                         "..\output\Min
 mkdir "..\output\MinGW\Release"
 
 ECHO "Copying MinGW Release files" >>"..\output\CodeBlocks.log"
+copy Animation\ProjectFiles\GNU\Release\Animation.exe               "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Browser\ProjectFiles\GNU\Release\Browser.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy CustomControl\ProjectFiles\GNU\Release\CustomControl.exe       "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy DateTime\ProjectFiles\GNU\Release\DateTime.exe                 "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"

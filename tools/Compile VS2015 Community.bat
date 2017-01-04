@@ -18,6 +18,8 @@ if exist "..\output\VS2015\Tutorials" rmdir /s /q "..\output\VS2015\Tutorials"
 @echo on
 
 ::Compile code
+MSBuild Animation\ProjectFiles\Animation_2015.sln /p:Configuration=Debug                 > "..\output\VS2015.log"
+MSBuild Animation\ProjectFiles\Animation_2015.sln /p:Configuration=Release               >>"..\output\VS2015.log"
 MSBuild Browser\ProjectFiles\Browser_2015.sln /p:Configuration=Debug                     > "..\output\VS2015.log"
 MSBuild Browser\ProjectFiles\Browser_2015.sln /p:Configuration=Release                   >>"..\output\VS2015.log"
 MSBuild CommonDialogs\ProjectFiles\CommonDialogs_2015.sln /p:Configuration=Debug         >>"..\output\VS2015.log"
@@ -127,6 +129,7 @@ mkdir "..\output\VS2015"
 mkdir "..\output\VS2015\Debug"
 
 ECHO "Copying Debug Samples" >>"..\output\VS2015.log"
+copy Animation\ProjectFiles\Debug\Animation.exe               "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy Browser\ProjectFiles\Debug\Browser.exe                   "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy CommonDialogs\ProjectFiles\Debug\CommonDialogs.exe       "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy CustomControl\ProjectFiles\Debug\CustomControl.exe       "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
@@ -184,6 +187,7 @@ copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2015\
 mkdir "..\output\VS2015\Release"
 
 ECHO "Copying Release Samples" >>"..\output\VS2015.log"
+copy Animation\ProjectFiles\Release\Animation.exe             "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Browser\ProjectFiles\Release\Browser.exe                 "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy CommonDialogs\ProjectFiles\Release\CommonDialogs.exe     "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy CustomControl\ProjectFiles\Release\CustomControl.exe     "..\output\VS2015\Release"    >>"..\output\VS2015.log"

@@ -19,6 +19,8 @@ if exist "..\output\VS2005\Tutorials" rmdir /s /q "..\output\VS2005\Tutorials"
 
 
 ::Compile code
+devenv /build Debug Animation\ProjectFiles\Animation_2005.sln                       > "..\output\VS2005.log"
+devenv /build Release Animation\ProjectFiles\Animation_2005.sln                     >>"..\output\VS2005.log"
 devenv /build Debug Browser\ProjectFiles\Browser_2005.sln                       > "..\output\VS2005.log"
 devenv /build Release Browser\ProjectFiles\Browser_2005.sln                     >>"..\output\VS2005.log"
 devenv /build Debug CommonDialogs\ProjectFiles\CommonDialogs_2005.sln           >>"..\output\VS2005.log"
@@ -118,6 +120,7 @@ mkdir "..\output\VS2005"
 mkdir "..\output\VS2005\Debug"
 
 ECHO "Copying Debug Samples" >>"..\output\VS2005.log"
+copy Animation\ProjectFiles\Debug\Animation.exe               "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Browser\ProjectFiles\Debug\Browser.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy CommonDialogs\ProjectFiles\Debug\CommonDialogs.exe       "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy CustomControl\ProjectFiles\Debug\CustomControl.exe       "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
@@ -169,6 +172,7 @@ copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2005\
 mkdir "..\output\VS2005\Release"
 
 ECHO "Copying Release Samples" >>"..\output\VS2005.log"
+copy Animation\ProjectFiles\Release\Animation.exe               "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Browser\ProjectFiles\Release\Browser.exe                   "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy CommonDialogs\ProjectFiles\Release\CommonDialogs.exe       "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy CustomControl\ProjectFiles\Release\CustomControl.exe       "..\output\VS2005\Release"    >>"..\output\VS2005.log"

@@ -68,8 +68,8 @@ namespace Win32xx
 
 		BOOL Close() const;
 		BOOL Open(LPTSTR lpszName) const;
-		BOOL Play(UINT wFrom, UINT wTo, UINT cRepeat) const;
-		BOOL Seek(UINT wFrame) const;
+		BOOL Play(int nFrom, int nTo, int nRepeat) const;
+		BOOL Seek(int nFrame) const;
 		BOOL Stop() const;
 
 	protected:
@@ -530,20 +530,24 @@ namespace Win32xx
 		return Animate_Open(*this, lpszName);
 	}
 
-	inline BOOL CAnimation::Play(UINT wFrom, UINT wTo, UINT cRepeat) const
+	inline BOOL CAnimation::Play(int nFrom, int nTo, int nRepeat) const
 	// Plays an AVI clip in an animation control. The control plays the clip
 	//	in the background while the thread continues executing.
+	//	 nFrom : Zero - based index of the frame where playing begins. The value must be less than 65,536. 
+	//	 nTo:    Zero - based index of the frame where playing ends. The value must be less than 65,536. 
+	//           A value of - 1 means end with the last frame in the AVI clip.
+	//   nRepeat: Number of times to replay the AVI clip.A value of - 1 means replay the clip indefinitely.
 	{
 		assert(IsWindow());
-		return Animate_Play(*this, wFrom, wTo, cRepeat);
+		return Animate_Play(*this, nFrom, nTo, nRepeat);
 	}
 
-	inline BOOL CAnimation::Seek(UINT wFrame) const
+	inline BOOL CAnimation::Seek(int nFrame) const
 	// Directs an animation control to display a particular frame of an AVI clip.
 	// The control displays the clip in the background while the thread continues executing.
 	{
 		assert(IsWindow());
-		return Animate_Seek(*this, wFrame);
+		return Animate_Seek(*this, nFrame);
 	}
 
 	inline BOOL CAnimation::Stop() const

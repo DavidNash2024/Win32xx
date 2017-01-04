@@ -41,6 +41,8 @@
 namespace Win32xx
 {
 
+#ifndef _WIN32_WCE
+
 	struct CMetaFile_Data	// A structure that contains the data members for CMetaFile
 	{
 		// Constructor
@@ -114,6 +116,9 @@ namespace Win32xx
 	private:
 		CEnhMetaFile_Data* m_pData;
 	};
+
+#endif // _WIN32_WCE
+
 }
 
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -121,7 +126,7 @@ namespace Win32xx
 
 namespace Win32xx
 {
-
+#ifndef _WIN32_WCE
 	/////////////////////////////////////////////////////
 	// Definitions for the the CMetaFile class
 	//
@@ -277,6 +282,8 @@ namespace Win32xx
 		}
 	}
 
+#endif // _WIN32_WCE
+
 }  // namespace Win32xx
 
-#endif
+#endif // _WIN32XX_METAFILE_H_

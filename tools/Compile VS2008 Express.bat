@@ -19,6 +19,8 @@ if exist "..\output\VS2008\Tutorials" rmdir /s /q "..\output\VS2008\Tutorials"
 
 
 ::Compile code
+vcbuild /rebuild Animation\ProjectFiles\Animation_2008.vcproj debug                 > "..\output\VS2008.log"
+vcbuild /rebuild Animation\ProjectFiles\Animation_2008.vcproj release               >>"..\output\VS2008.log"
 vcbuild /rebuild Browser\ProjectFiles\Browser_2008.vcproj debug                     > "..\output\VS2008.log"
 vcbuild /rebuild Browser\ProjectFiles\Browser_2008.vcproj release                   >>"..\output\VS2008.log"
 vcbuild /rebuild CommonDialogs\ProjectFiles\CommonDialogs_2008.vcproj debug         >>"..\output\VS2008.log"
@@ -126,6 +128,7 @@ mkdir "..\output\VS2008"
 mkdir "..\output\VS2008\Debug"
 
 ECHO "Copying Debug Samples" >>"..\output\VS2008.log"
+copy Animation\ProjectFiles\Debug\Animation.exe               "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy Browser\ProjectFiles\Debug\Browser.exe                   "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy CommonDialogs\ProjectFiles\Debug\CommonDialogs.exe       "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
 copy CustomControl\ProjectFiles\Debug\CustomControl.exe       "..\output\VS2008\Debug"    >>"..\output\VS2008.log"
@@ -181,6 +184,7 @@ copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2008\
 mkdir "..\output\VS2008\Release"
 
 ECHO "Copying Release Samples" >>"..\output\VS2008.log"
+copy Animation\ProjectFiles\Release\Animation.exe               "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy Browser\ProjectFiles\Release\Browser.exe                   "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy CommonDialogs\ProjectFiles\Release\CommonDialogs.exe       "..\output\VS2008\Release"    >>"..\output\VS2008.log"
 copy CustomControl\ProjectFiles\Release\CustomControl.exe       "..\output\VS2008\Release"    >>"..\output\VS2008.log"

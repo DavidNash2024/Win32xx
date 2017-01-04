@@ -80,8 +80,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "../src/res/Star.ico"
-IDI_DIALOG           ICON                    "../src/res/Dialog.ICO"
+IDW_MAIN                ICON                    "../src/res/Tab.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

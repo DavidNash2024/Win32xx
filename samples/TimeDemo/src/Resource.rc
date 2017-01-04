@@ -132,7 +132,7 @@ IDW_MAIN MENU
 	The icon with the lowest ID value is placed first to ensure that
 	the application icon remains consistent on all systems.		*/
 
-IDW_MAIN                ICON                    "../src/res/TimeDemo.ico"
+IDW_MAIN                ICON                    "../src/res/Time.ico"
 IDM_COLOR_CHOICE        ICON                    "../src/res/crayonS.ico"
 IDM_FONT_CHOICE         ICON                    "../src/res/FontsS.ico"
 
