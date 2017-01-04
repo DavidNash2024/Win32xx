@@ -79,7 +79,7 @@ LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 	the application icon remains consistent on all systems.		*/
 
 
-IDW_MAIN           ICON           "../src/res/Dialog.ico"
+IDW_MAIN           ICON           "../src/res/Form.ico"
 
 /*==============================================================================
 

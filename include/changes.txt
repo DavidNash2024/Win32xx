@@ -62,12 +62,16 @@ New Features and Enhancements
    so they can be safely copied and returned from functions. CEnhMetaFile
    automatically deletes the HENHMETAFILE when the last copy of the 
    CEnhMetaFile object goes out of scope. The CMetaFileDC::CloseEnhanced
-   function returns a CEnhMetaFile object. 
+   function returns a CEnhMetaFile object.
+
+* Renamed the text conversion typedefs. 
+   This allows Win32++ to be used with ATL.   
    
 * Added a MetaFile sample.
+   This sample demonstrates how to create and display an enhanced metafile.
 
-* Renamed the text conversion typedefs. This allows Win32++ to be used
-  with ATL.
+* Added Animation sample.
+   This sample demonstrates how to use an animation control in a dialog.
 
 
 

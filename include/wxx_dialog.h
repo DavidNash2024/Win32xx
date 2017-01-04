@@ -647,8 +647,9 @@ namespace Win32xx
 			MSG* lpMsg = reinterpret_cast<MSG*>(lParam);
 			assert(lpMsg);
 
-			// only pre-translate keyboard events
-			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST))
+			// only pre-translate keyboard and mouse events
+			if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST)	||
+				(lpMsg->message >= WM_MOUSEFIRST && lpMsg->message <= WM_MOUSELAST))
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{

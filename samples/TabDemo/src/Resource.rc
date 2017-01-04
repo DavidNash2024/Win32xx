@@ -90,7 +90,7 @@ END
 
 // Icon with lowest ID value placed first to ensure application icon
 // remains consistent on all systems.
-IDW_MAIN                ICON                    "../src/res/Star.ico"
+IDW_MAIN                ICON                    "../src/res/Tab.ico"
 IDI_CLASSVIEW           ICON                    "../src/res/classview.ico"
 IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
 IDI_DIALOGVIEW          ICON                    "../src/res/Dialog.ico"

@@ -4,6 +4,16 @@
 1     RT_MANIFEST             "res/Win32++.manifest"
 
 
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDW_MAIN                ICON                    "../src/res/Dialog.ico"
+
+
 STRINGTABLE
 BEGIN
     IDS_WINDOWTITLE "Sample task dialog"

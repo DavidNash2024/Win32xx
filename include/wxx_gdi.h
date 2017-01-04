@@ -732,8 +732,10 @@ namespace Win32xx
 #endif
 
 		// MetaFile Functions
+#ifndef _WIN32_WCE
 		BOOL PlayMetaFile(HMETAFILE hMF) const;
 		BOOL PlayMetaFile(HENHMETAFILE hEnhMetaFile, const RECT& rcBounds) const;
+#endif
 
 		// Printer Functions
 		int StartDoc(LPDOCINFO lpDocInfo) const;
@@ -4134,7 +4136,6 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		assert(m_pData->hDC);
 		return ::ScaleWindowExtEx(m_pData->hDC, xNum, xDenom, yNum, yDenom, lpSize);
 	}
-#endif
 
 	// MetaFile Functions
 	inline BOOL CDC::PlayMetaFile(HMETAFILE hMF) const
@@ -4150,6 +4151,8 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		assert(m_pData->hDC);
 		return ::PlayEnhMetaFile(m_pData->hDC, hEnhMetaFile, &rcBounds);
 	}
+
+#endif // _WIN32_WCE
 
 	// Printer Functions
 	inline int CDC::StartDoc(LPDOCINFO lpDocInfo) const

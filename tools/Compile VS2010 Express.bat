@@ -18,6 +18,8 @@ if exist "..\output\VS2010\Tutorials" rmdir /s /q "..\output\VS2010\Tutorials"
 @echo on
 
 ::Compile code
+MSBuild Animation\ProjectFiles\Animation_2010.sln /p:Configuration=Debug                 > "..\output\VS2010.log"
+MSBuild Animation\ProjectFiles\Animation_2010.sln /p:Configuration=Release               >>"..\output\VS2010.log"
 MSBuild Browser\ProjectFiles\Browser_2010.sln /p:Configuration=Debug                     > "..\output\VS2010.log"
 MSBuild Browser\ProjectFiles\Browser_2010.sln /p:Configuration=Release                   >>"..\output\VS2010.log"
 MSBuild CommonDialogs\ProjectFiles\CommonDialogs_2010.sln /p:Configuration=Debug         >>"..\output\VS2010.log"
@@ -125,6 +127,7 @@ mkdir "..\output\VS2010"
 mkdir "..\output\VS2010\Debug"
 
 ECHO "Copying Debug Samples" >>"..\output\VS2010.log"
+copy Animation\ProjectFiles\Debug\Animation.exe               "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Browser\ProjectFiles\Debug\Browser.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy CommonDialogs\ProjectFiles\Debug\CommonDialogs.exe       "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy CustomControl\ProjectFiles\Debug\CustomControl.exe       "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
@@ -180,6 +183,7 @@ copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2010\
 mkdir "..\output\VS2010\Release"
 
 ECHO "Copying Release Samples" >>"..\output\VS2010.log"
+copy Animation\ProjectFiles\Release\Animation.exe             "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Browser\ProjectFiles\Release\Browser.exe                 "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy CommonDialogs\ProjectFiles\Release\CommonDialogs.exe     "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy CustomControl\ProjectFiles\Release\CustomControl.exe     "..\output\VS2010\Release"    >>"..\output\VS2010.log"
