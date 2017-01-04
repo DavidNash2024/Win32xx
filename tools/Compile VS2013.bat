@@ -122,6 +122,8 @@ devenv /build Debug TimeDemo\ProjectFiles\TimeDemo_2013.sln                 >>".
 devenv /build Release TimeDemo\ProjectFiles\TimeDemo_2013.sln               >>"..\output\VS2013.log"
 devenv /build Debug ToolBarDemo\ProjectFiles\ToolBarDemo_2013.sln           >>"..\output\VS2013.log"
 devenv /build Release ToolBarDemo\ProjectFiles\ToolBarDemo_2013.sln         >>"..\output\VS2013.log"
+devenv /build Debug ToolTips\ProjectFiles\ToolTips_2013.sln                 >>"..\output\VS2013.log"
+devenv /build Release ToolTips\ProjectFiles\ToolTips_2013.sln               >>"..\output\VS2013.log"
 devenv /build Debug Tray\ProjectFiles\Tray_2013.sln                         >>"..\output\VS2013.log"
 devenv /build Release Tray\ProjectFiles\Tray_2013.sln                       >>"..\output\VS2013.log"
 
@@ -182,6 +184,7 @@ copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2013\
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
+copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2013\Debug"    >>"..\output\VS2013.log"
 
 mkdir "..\output\VS2013\Release"
@@ -240,6 +243,7 @@ copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS201
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2013\Release"    >>"..\output\VS2013.log"
+copy ToolTips\ProjectFiles\Release\ToolTips.exe                 "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2013\Release"    >>"..\output\VS2013.log"
 
 REM: Change the directory to the Tutorials parent

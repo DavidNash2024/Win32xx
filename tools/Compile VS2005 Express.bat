@@ -114,6 +114,8 @@ vcbuild /rebuild TimeDemo\ProjectFiles\TimeDemo_2005.vcproj debug               
 vcbuild /rebuild TimeDemo\ProjectFiles\TimeDemo_2005.vcproj release                 >>"..\output\VS2005.log"
 vcbuild /rebuild ToolBarDemo\ProjectFiles\ToolBarDemo_2005.vcproj debug             >>"..\output\VS2005.log"
 vcbuild /rebuild ToolBarDemo\ProjectFiles\ToolBarDemo_2005.vcproj release           >>"..\output\VS2005.log"
+vcbuild /rebuild ToolTips\ProjectFiles\ToolTips_2005.vcproj debug                   >>"..\output\VS2005.log"
+vcbuild /rebuild ToolTips\ProjectFiles\ToolTips_2005.vcproj release                 >>"..\output\VS2005.log"
 vcbuild /rebuild Tray\ProjectFiles\Tray_2005.vcproj debug                           >>"..\output\VS2005.log"
 vcbuild /rebuild Tray\ProjectFiles\Tray_2005.vcproj release                         >>"..\output\VS2005.log"
 
@@ -168,6 +170,7 @@ copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2005\
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
+copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2005\Debug"    >>"..\output\VS2005.log"
 
 mkdir "..\output\VS2005\Release"
@@ -220,6 +223,7 @@ copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS200
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2005\Release"    >>"..\output\VS2005.log"
+copy ToolTips\ProjectFiles\Release\ToolTips.exe                 "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2005\Release"    >>"..\output\VS2005.log"
 
 REM: Change the directory to the Tutorials parent

@@ -65,6 +65,7 @@ codeblocks.exe --rebuild Themes\ProjectFiles\Themes.cbp                     >>".
 codeblocks.exe --rebuild Threads\ProjectFiles\Threads.cbp                   >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild TimeDemo\ProjectFiles\TimeDemo.cbp                 >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild ToolBarDemo\ProjectFiles\ToolBarDemo.cbp           >>"..\output\CodeBlocks.log"
+codeblocks.exe --rebuild ToolTips\ProjectFiles\ToolTips.cbp                 >>"..\output\CodeBlocks.log"
 codeblocks.exe --rebuild Tray\ProjectFiles\Tray.cbp                         >>"..\output\CodeBlocks.log"
 
 REM: Copy the executables to the testing directories
@@ -118,6 +119,7 @@ copy Themes\ProjectFiles\Microsoft\Debug\Themes.exe                     "..\outp
 copy Threads\ProjectFiles\Microsoft\Debug\Threads.exe                   "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy TimeDemo\ProjectFiles\Microsoft\Debug\TimeDemo.exe                 "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Microsoft\Debug\ToolBarDemo.exe           "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
+copy ToolTips\ProjectFiles\Microsoft\Debug\ToolTips.exe                 "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Microsoft\Debug\Tray.exe                         "..\output\VS2003\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\VS2003\Release"
@@ -169,6 +171,7 @@ copy Themes\ProjectFiles\Microsoft\Release\Themes.exe                     "..\ou
 copy Threads\ProjectFiles\Microsoft\Release\Threads.exe                   "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy TimeDemo\ProjectFiles\Microsoft\Release\TimeDemo.exe                 "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Microsoft\Release\ToolBarDemo.exe           "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
+copy ToolTips\ProjectFiles\Microsoft\Release\ToolTips.exe                 "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Microsoft\Release\Tray.exe                         "..\output\VS2003\Release"    >>"..\output\CodeBlocks.log"
 
 
@@ -222,6 +225,7 @@ copy Themes\ProjectFiles\Borland\Debug\Themes.exe                     "..\output
 copy Threads\ProjectFiles\Borland\Debug\Threads.exe                   "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy TimeDemo\ProjectFiles\Borland\Debug\TimeDemo.exe                 "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Borland\Debug\ToolBarDemo.exe           "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
+copy ToolTips\ProjectFiles\Borland\Debug\ToolTips.exe                 "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Debug\Tray.exe                         "..\output\Borland\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\Borland\Release"
@@ -272,6 +276,7 @@ copy Themes\ProjectFiles\Borland\Release\Themes.exe                     "..\outp
 copy Threads\ProjectFiles\Borland\Release\Threads.exe                   "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy TimeDemo\ProjectFiles\Borland\Release\TimeDemo.exe                 "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\Borland\Release\ToolBarDemo.exe           "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
+copy ToolTips\ProjectFiles\Borland\Release\ToolTips.exe                 "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\Borland\Release\Tray.exe                         "..\output\Borland\Release"    >>"..\output\CodeBlocks.log"
 
 
@@ -326,6 +331,7 @@ copy Themes\ProjectFiles\GNU\Debug\Themes.exe                     "..\output\Min
 copy Threads\ProjectFiles\GNU\Debug\Threads.exe                   "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy TimeDemo\ProjectFiles\GNU\Debug\TimeDemo.exe                 "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\GNU\Debug\ToolBarDemo.exe           "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
+copy ToolTips\ProjectFiles\GNU\Debug\ToolTips.exe                 "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\GNU\Debug\Tray.exe                         "..\output\MinGW\Debug"    >>"..\output\CodeBlocks.log"
 
 mkdir "..\output\MinGW\Release"
@@ -377,6 +383,7 @@ copy Themes\ProjectFiles\GNU\Release\Themes.exe                     "..\output\M
 copy Threads\ProjectFiles\GNU\Release\Threads.exe                   "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy TimeDemo\ProjectFiles\GNU\Release\TimeDemo.exe                 "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy ToolBarDemo\ProjectFiles\GNU\Release\ToolBarDemo.exe           "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
+copy ToolTips\ProjectFiles\GNU\Release\ToolTips.exe                 "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 copy Tray\ProjectFiles\GNU\\Release\Tray.exe                        "..\output\MinGW\Release"    >>"..\output\CodeBlocks.log"
 
 

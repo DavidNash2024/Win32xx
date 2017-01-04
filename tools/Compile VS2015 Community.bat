@@ -122,6 +122,8 @@ MSBuild TimeDemo\ProjectFiles\TimeDemo_2015.sln /p:Configuration=Debug          
 MSBuild TimeDemo\ProjectFiles\TimeDemo_2015.sln /p:Configuration=Release                 >>"..\output\VS2015.log"
 MSBuild ToolBarDemo\ProjectFiles\ToolBarDemo_2015.sln /p:Configuration=Debug             >>"..\output\VS2015.log"
 MSBuild ToolBarDemo\ProjectFiles\ToolBarDemo_2015.sln /p:Configuration=Release           >>"..\output\VS2015.log"
+MSBuild ToolTips\ProjectFiles\ToolTips_2015.sln /p:Configuration=Debug                   >>"..\output\VS2015.log"
+MSBuild ToolTips\ProjectFiles\ToolTips_2015.sln /p:Configuration=Release                 >>"..\output\VS2015.log"
 MSBuild Tray\ProjectFiles\Tray_2015.sln /p:Configuration=Debug                           >>"..\output\VS2015.log"
 MSBuild Tray\ProjectFiles\Tray_2015.sln /p:Configuration=Release                         >>"..\output\VS2015.log"
 
@@ -182,6 +184,7 @@ copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2015\
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
+copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2015\Debug"    >>"..\output\VS2015.log"
 
 mkdir "..\output\VS2015\Release"
@@ -240,6 +243,7 @@ copy Themes\ProjectFiles\Release\Themes.exe                   "..\output\VS2015\
 copy Threads\ProjectFiles\Release\Threads.exe                 "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy TimeDemo\ProjectFiles\Release\TimeDemo.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe         "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+copy ToolTips\ProjectFiles\Release\ToolTips.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Tray\ProjectFiles\Release\Tray.exe                       "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 
 
