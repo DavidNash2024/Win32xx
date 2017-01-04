@@ -120,6 +120,8 @@ devenv /build Debug TimeDemo\ProjectFiles\TimeDemo_2010.sln                 >>".
 devenv /build Release TimeDemo\ProjectFiles\TimeDemo_2010.sln               >>"..\output\VS2010.log"
 devenv /build Debug ToolBarDemo\ProjectFiles\ToolBarDemo_2010.sln           >>"..\output\VS2010.log"
 devenv /build Release ToolBarDemo\ProjectFiles\ToolBarDemo_2010.sln         >>"..\output\VS2010.log"
+devenv /build Debug ToolTips\ProjectFiles\ToolTips_2010.sln                 >>"..\output\VS2010.log"
+devenv /build Release ToolTips\ProjectFiles\ToolTips_2010.sln               >>"..\output\VS2010.log"
 devenv /build Debug Tray\ProjectFiles\Tray_2010.sln                         >>"..\output\VS2010.log"
 devenv /build Release Tray\ProjectFiles\Tray_2010.sln                       >>"..\output\VS2010.log"
 
@@ -178,6 +180,7 @@ copy Themes\ProjectFiles\Debug\Themes.exe                     "..\output\VS2010\
 copy Threads\ProjectFiles\Debug\Threads.exe                   "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy TimeDemo\ProjectFiles\Debug\TimeDemo.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy ToolBarDemo\ProjectFiles\Debug\ToolBarDemo.exe           "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
+copy ToolTips\ProjectFiles\Debug\ToolTips.exe                 "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Debug\Tray.exe                         "..\output\VS2010\Debug"    >>"..\output\VS2010.log"
 
 mkdir "..\output\VS2010\Release"
@@ -234,6 +237,7 @@ copy Themes\ProjectFiles\Release\Themes.exe                     "..\output\VS201
 copy Threads\ProjectFiles\Release\Threads.exe                   "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy TimeDemo\ProjectFiles\Release\TimeDemo.exe                 "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy ToolBarDemo\ProjectFiles\Release\ToolBarDemo.exe           "..\output\VS2010\Release"    >>"..\output\VS2010.log"
+copy ToolTips\ProjectFiles\Release\ToolTips.exe                 "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 copy Tray\ProjectFiles\Release\Tray.exe                         "..\output\VS2010\Release"    >>"..\output\VS2010.log"
 
 REM: Change the directory to the Tutorials parent

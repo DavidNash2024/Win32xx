@@ -72,6 +72,9 @@ New Features and Enhancements
 
 * Added Animation sample.
    This sample demonstrates how to use an animation control in a dialog.
+   
+* Added Tooltips sample.
+   This sample demonstrates how to add tooltips to controls in a modal dialog.   
 
 
 
@@ -97,6 +100,7 @@ Added CMDIFrame::UpdateFrameMenu		member function
 Added CTab::GetMaxTabSize				member function
 Added CTime::operator ()				member function
 Added CTimeSpan::operator ()			member function
+Added CToolTip::LoadToolInfo            member function
 
 Added UWM_MDIACTIVATED                  window message
 Added UWM_MDIDESTROYED                  window message
@@ -104,6 +108,12 @@ Added UWM_MDIDESTROYED                  window message
 Modified TRACE 							now implemented as a macro.
 Modified CMetaFileDC::Close				now returns CMetaFile
 Modified CMetaFileDC::CloseEnhanced		now returns CEnhMetaFile
+Modified CToolTip::AddTool
+Modified CToolTip::DelTool
+Modified CToolTip::GetText
+Modified CToolTip::GetToolInfo
+Modified CToolTip::SetToolRect
+Modified CToolTip::UpdateTipText
 
 Renamed A2BSTR 	to	AtoBSTR
 Renamed	A2OLE 	to  AtoOLE
@@ -120,7 +130,7 @@ Renamed	W2A		to	WtoA
 Renamed	W2BSTR	to	WtoBSTR	
 Renamed	W2OLE	to	WtoOLE	
 Renamed	W2T		to	WtoT	
-
+Renamed CToolTip::SetTTWindowTheme
 
 
 Version 8.3
