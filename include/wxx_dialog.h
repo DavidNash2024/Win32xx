@@ -280,30 +280,33 @@ namespace Win32xx
 				return 0L;
 			}	
 	    case WM_COMMAND:
-	        switch (LOWORD (wParam))
-	        {
-	        case IDOK:
-				OnOK();
-				return TRUE;
-			case IDCANCEL:
-				OnCancel();
-				return TRUE;
-			default:
+			{
+				if (HIWORD(wParam) == BN_CLICKED)
 				{
-					// Reflect this message if it's from a control
-					CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
-					if (pWnd != NULL)
-						lr = pWnd->OnCommand(wParam, lParam);
-
-					// Handle user commands
-					if (!lr)
-						lr =  OnCommand(wParam, lParam);
-
-					if (lr) return 0L;
+					switch (LOWORD(wParam))
+					{
+					case IDOK:
+						OnOK();
+						return TRUE;
+					case IDCANCEL:
+						OnCancel();
+						return TRUE;
+					}
 				}
-				break;  // Some commands require default processing
-	        }
-	        break;
+				
+				// Reflect this message if it's from a control
+				CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
+				if (pWnd != NULL)
+					lr = pWnd->OnCommand(wParam, lParam);
+
+				// Handle user commands
+				if (!lr)
+					lr =  OnCommand(wParam, lParam);
+
+				if (lr) return 0L; 
+			}
+			break;  // Some commands require default processing
+	 
 
 		case WM_DESTROY:
 			OnDestroy();

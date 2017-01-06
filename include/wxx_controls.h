@@ -2109,7 +2109,7 @@ namespace Win32xx
 	}
 
 	inline int CToolTip::SetMaxTipWidth(int iWidth)
-	// Sets the maximum width for a ToolTip window.
+	// Sets the maximum width for a ToolTip window in pixels.
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(TTM_SETMAXTIPWIDTH, 0L, (LPARAM)iWidth));
