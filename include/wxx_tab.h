@@ -236,8 +236,8 @@ namespace Win32xx
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual void RecalcLayout();
 		virtual BOOL SaveRegistrySettings(LPCTSTR szKeyName);
-		virtual void SetActiveMDIChild(CWnd* pWnd);
-		virtual void SetActiveMDITab(int nTab);
+		virtual void SetActiveMDIChild(CWnd* pWnd) const;
+		virtual void SetActiveMDITab(int nTab) const;
 
 	protected:
 		virtual HWND    Create(HWND hWndParent);
@@ -2035,7 +2035,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd)
+	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd) const
 	{
 		assert(pWnd);
 		int nPage = GetTab().GetTabIndex(pWnd);
@@ -2043,7 +2043,7 @@ namespace Win32xx
 			GetTab().SelectPage(nPage);
 	}
 
-	inline void CTabbedMDI::SetActiveMDITab(int iTab)
+	inline void CTabbedMDI::SetActiveMDITab(int iTab) const
 	{
 		assert(IsWindow());
 		assert(GetTab().IsWindow());

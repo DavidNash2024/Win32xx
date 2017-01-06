@@ -148,7 +148,7 @@ namespace Win32xx
 		const OPENFILENAME& GetParameters() const { return m_OFN; }		
 
 		// methods for setting parameters before DoModal()
-		BOOL	IsOpenFileDialog()					{ return m_bOpenFileDialog; }
+		BOOL	IsOpenFileDialog()	const			{ return m_bOpenFileDialog; }
 		void    SetDefExt(LPCTSTR szExt);
 		void    SetFileName(LPCTSTR szFileName);
 		void	SetFilter(LPCTSTR szFilter);

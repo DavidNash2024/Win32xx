@@ -61,7 +61,7 @@ namespace Win32xx
 		UINT	GetCallbackMask( ) const;
 		BOOL	GetCheckState( UINT nItem ) const;
 		BOOL	GetColumn( int iCol, LVCOLUMN& Column ) const;
-		BOOL	GetColumnOrderArray( LPINT piArray, int iCount = -1 );
+		BOOL	GetColumnOrderArray( LPINT piArray, int iCount = -1 ) const;
 		int		GetColumnWidth( int iCol ) const;
 		int		GetCountPerPage( ) const;
 		HWND	GetEditControl( ) const;
@@ -205,7 +205,7 @@ namespace Win32xx
 		return ListView_GetColumn( *this, iCol, &Column );
 	}
 
-	inline BOOL CListView::GetColumnOrderArray( LPINT piArray, int iCount /*= -1*/ )
+	inline BOOL CListView::GetColumnOrderArray( LPINT piArray, int iCount /*= -1*/ ) const
 	// Retrieves the current left-to-right order of columns in a list-view control.
 	{
 		assert(IsWindow());

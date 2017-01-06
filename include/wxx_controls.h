@@ -175,28 +175,28 @@ namespace Win32xx
 		BOOL	GetItem(int nPos, HDITEM& HeaderItem) const;
 		int		GetItemCount() const;
 		CRect	GetItemRect(int nIndex) const;
-		BOOL	GetOrderArray(LPINT piArray, int iCount);
+		BOOL	GetOrderArray(LPINT piArray, int iCount) const;
 		int		OrderToIndex(int nOrder) const;
 		CImageList SetImageList(HIMAGELIST himlNew) const;
-		BOOL	SetItem(int nPos, const HDITEM& HeaderItem);
-		BOOL	SetOrderArray(int iCount, LPINT piArray);
+		BOOL	SetItem(int nPos, const HDITEM& HeaderItem) const;
+		BOOL	SetOrderArray(int iCount, LPINT piArray) const;
 		int		GetBitmapMargin() const;
-		int		SetBitmapMargin(int nWidth);
+		int		SetBitmapMargin(int nWidth) const;
 
 		// Operations
 		CImageList CreateDragImage(int nIndex) const;
-		BOOL	DeleteItem(int nPos);
-		int		InsertItem(int nPos, const HDITEM& phdi);
-		BOOL	Layout(HDLAYOUT* pHeaderLayout);
+		BOOL	DeleteItem(int nPos) const;
+		int		InsertItem(int nPos, const HDITEM& phdi) const;
+		BOOL	Layout(HDLAYOUT* pHeaderLayout) const;
 #ifdef Header_SetHotDivider
-		int		SetHotDivider(CPoint pt);
-		int		SetHotDivider(int nIndex);
+		int		SetHotDivider(CPoint pt) const;
+		int		SetHotDivider(int nIndex) const;
 #endif
 #ifdef Header_ClearFilter
-		int		ClearAllFilters();
-		int		ClearFilter(int nColumn);
-		int		EditFilter(int nColumn, BOOL bDiscardChanges);
-		int		SetFilterChangeTimeout(DWORD dwTimeOut);
+		int		ClearAllFilters() const;
+		int		ClearFilter(int nColumn) const;
+		int		EditFilter(int nColumn, BOOL bDiscardChanges) const;
+		int		SetFilterChangeTimeout(DWORD dwTimeOut) const;
 #endif
 
 	protected:
@@ -216,8 +216,8 @@ namespace Win32xx
 
 		DWORD GetHotKey() const;
 		CString GetKeyName(UINT vk, BOOL fExtended) const;
-		void SetHotKey(DWORD dwKey);
-		void SetRules(WORD wInvalidComb, WORD wModifiers);
+		void SetHotKey(DWORD dwKey) const;
+		void SetRules(WORD wInvalidComb, WORD wModifiers) const;
 
 	protected:
 		// Overridables
@@ -234,14 +234,14 @@ namespace Win32xx
 		CIPAddress();
 		virtual ~CIPAddress() {}
 
-		void ClearAddress();
-		int GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3);
-		int GetAddress(DWORD& dwAddress);
+		void ClearAddress() const;
+		int GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3) const;
+		int GetAddress(DWORD& dwAddress) const;
 		BOOL IsBlank() const;
-		void SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3);
-		void SetAddress(DWORD dwAddress);
-		void SetFieldFocus(WORD nField);
-		void SetFieldRange(int nField, BYTE nLower, BYTE nUpper);
+		void SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3) const;
+		void SetAddress(DWORD dwAddress) const;
+		void SetFieldFocus(WORD nField) const;
+		void SetFieldRange(int nField, BYTE nLower, BYTE nUpper) const;
 
 	protected:
 		// Overridables
@@ -263,9 +263,9 @@ namespace Win32xx
 		int GetFirstDayOfWeek(BOOL* pbLocal = NULL) const;
 		CRect GetMinReqRect() const;
 		int GetMonthDelta() const;
-		COLORREF SetColor(int nRegion, COLORREF ref);
-		BOOL SetFirstDayOfWeek(int iDay, int* lpnOld = NULL);
-		int SetMonthDelta(int iDelta);
+		COLORREF SetColor(int nRegion, COLORREF ref) const;
+		BOOL SetFirstDayOfWeek(int iDay, int* lpnOld = NULL) const;
+		int SetMonthDelta(int iDelta) const;
 
 		// Operations
 		SYSTEMTIME GetCurSel() const;
@@ -274,13 +274,13 @@ namespace Win32xx
 		LRESULT GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
 		LRESULT GetSelRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
 		SYSTEMTIME GetToday() const;
-		LRESULT HitTest(MCHITTESTINFO& MCHitTest);
-		BOOL SetCurSel(const SYSTEMTIME& DateTime);
-		BOOL SetDayState(int nMonths, const MONTHDAYSTATE& States);
-		BOOL SetMaxSelCount(int nMax);
-		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
-		BOOL SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
-		void SetToday(const SYSTEMTIME&  DateTime);
+		LRESULT HitTest(MCHITTESTINFO& MCHitTest) const;
+		BOOL SetCurSel(const SYSTEMTIME& DateTime) const;
+		BOOL SetDayState(int nMonths, const MONTHDAYSTATE& States) const;
+		BOOL SetMaxSelCount(int nMax) const;
+		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const;
+		BOOL SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const;
+		void SetToday(const SYSTEMTIME&  DateTime) const;
 
 	protected:
 		// Overridables
@@ -299,15 +299,15 @@ namespace Win32xx
 
 		COLORREF GetMonthCalColor(int iColor) const;
 		HWND GetMonthCalCtrl() const;
-		CFont GetMonthCalFont();
+		CFont GetMonthCalFont() const;
 		DWORD GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const;
 		SYSTEMTIME GetTime(DWORD* pReturnCode = NULL) const;
-		COLORREF SetMonthCalColor(int iColor, COLORREF ref);
-		BOOL SetFormat(LPCTSTR pstrFormat);
-		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE);
-		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange);
-		BOOL SetTime(const SYSTEMTIME& TimeNew);
-		BOOL SetTimeNone();
+		COLORREF SetMonthCalColor(int iColor, COLORREF ref) const;
+		BOOL SetFormat(LPCTSTR pstrFormat) const;
+		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE) const;
+		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const;
+		BOOL SetTime(const SYSTEMTIME& TimeNew) const;
+		BOOL SetTimeNone() const;
 
 	protected:
 		// Overridables
@@ -454,40 +454,40 @@ namespace Win32xx
 		COLORREF GetTipTextColor() const;
 		int		 GetToolCount() const;
 		TOOLINFO GetToolInfo(HWND hWndControl) const;
-		void	 SetDelayTime(UINT nDelay);
-		void	 SetDelayTime(DWORD dwDuration, int iTime);
-		void	 SetMargin(const RECT& rc);
-		int		 SetMaxTipWidth(int iWidth);
-		void	 SetTipBkColor(COLORREF clr);
-		void	 SetTipTextColor(COLORREF clr);
-		void	 SetToolInfo(const TOOLINFO& ToolInfo);
+		void	 SetDelayTime(UINT nDelay) const;
+		void	 SetDelayTime(DWORD dwDuration, int iTime) const;
+		void	 SetMargin(const RECT& rc) const;
+		int		 SetMaxTipWidth(int iWidth) const;
+		void	 SetTipBkColor(COLORREF clr) const;
+		void	 SetTipTextColor(COLORREF clr) const;
+		void	 SetToolInfo(const TOOLINFO& ToolInfo) const;
 #if (_WIN32_IE >=0x0500)
 		CSize	 GetBubbleSize(const TOOLINFO& ToolInfo) const;
 #endif
 
 		//Operations
-		void Activate(BOOL bActivate);
-		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT nIDText);
-		BOOL AddTool(HWND hWndControl, UINT nIDText);
-		BOOL AddTool(HWND hWndControl, const RECT& rcTool, LPCTSTR lpszText = LPSTR_TEXTCALLBACK);
-		BOOL AddTool(HWND hWndControl, LPCTSTR lpszText = LPSTR_TEXTCALLBACK);
-		void DelTool(HWND hWndControl);
+		void Activate(BOOL bActivate) const;
+		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT nIDText) const;
+		BOOL AddTool(HWND hWndControl, UINT nIDText) const;
+		BOOL AddTool(HWND hWndControl, const RECT& rcTool, LPCTSTR lpszText = LPSTR_TEXTCALLBACK) const;
+		BOOL AddTool(HWND hWndControl, LPCTSTR lpszText = LPSTR_TEXTCALLBACK) const;
+		void DelTool(HWND hWndControl) const;
 		BOOL HitTest(HWND hWnd, CPoint pt, TOOLINFO& ToolInfo) const;
-		void Pop();
-		void RelayEvent(MSG& Msg);
-		void SetToolRect(HWND hWndControl, const RECT& rc);
-		void UpdateTipText(HWND hWndControl, LPCTSTR lpszText);
-		void UpdateTipText(HWND hWndControl, UINT nIDText);
-		void Update();
+		void Pop() const;
+		void RelayEvent(MSG& Msg) const;
+		void SetToolRect(HWND hWndControl, const RECT& rc) const;
+		void UpdateTipText(HWND hWndControl, LPCTSTR lpszText) const;
+		void UpdateTipText(HWND hWndControl, UINT nIDText) const;
+		void Update() const;
 
 #if (_WIN32_IE >=0x0500)
-		BOOL AdjustRect(RECT& rc, BOOL bLarger = TRUE);
+		BOOL AdjustRect(RECT& rc, BOOL bLarger = TRUE) const;
   #ifdef TTM_SETTITLE
-		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle);
+		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle) const;
   #endif
 #endif
 #if (WINVER >= 0x0501) && defined(TTM_SETWINDOWTHEME)
-		void SetTTWindowTheme(LPCWSTR lpstrTheme);
+		void SetTTWindowTheme(LPCWSTR lpstrTheme) const;
 #endif
 
 	protected:
@@ -940,14 +940,14 @@ namespace Win32xx
 		return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, iColor));
 	}
 
-	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr)
+	inline COLORREF CDateTime::SetMonthCalColor(int iColor, COLORREF clr) const
 	// Sets the color for a given portion of the month calendar within the date and time picker (DTP) control.
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(DateTime_SetMonthCalColor(*this, iColor, clr));
 	}
 
-	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat)
+	inline BOOL CDateTime::SetFormat(LPCTSTR pszFormat) const
 	// Sets the display of the date and time picker (DTP) control based on a given format string.
 	{
 		assert(IsWindow());
@@ -961,7 +961,7 @@ namespace Win32xx
 		return reinterpret_cast<HWND>(DateTime_GetMonthCal(*this));
 	}
 
-	inline CFont CDateTime::GetMonthCalFont()
+	inline CFont CDateTime::GetMonthCalFont() const
 	// Retrieves the font that the date and time picker (DTP) control's child month calendar control is currently using.
 	{
 		assert(IsWindow());
@@ -969,7 +969,7 @@ namespace Win32xx
 		return CFont(hFont);
 	}
 
-	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/)
+	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/) const
 	// Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
 	{
 		assert(IsWindow());
@@ -989,7 +989,7 @@ namespace Win32xx
 		return Result;
 	}
 
-	inline BOOL CDateTime::SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
+	inline BOOL CDateTime::SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const
 	// Sets the minimum and maximum allowable system times for the date and time picker (DTP) control.
 	{
 		assert(IsWindow());
@@ -1017,14 +1017,14 @@ namespace Win32xx
 		return SysTime;
 	}
 
-	inline BOOL CDateTime::SetTime(const SYSTEMTIME& TimeNew)
+	inline BOOL CDateTime::SetTime(const SYSTEMTIME& TimeNew) const
 	// Sets the date and time picker (DTP) control to a given date and time.
 	{
 		assert(IsWindow());
 		return DateTime_SetSystemtime(*this, GDT_VALID, &TimeNew);
 	}
 
-	inline BOOL CDateTime::SetTimeNone()
+	inline BOOL CDateTime::SetTimeNone() const
 	// Set the DTP control to "no date" and clear its check box.
 	// Only applies to DTP controls that are set to the DTS_SHOWNONE style.
 	{
@@ -1068,13 +1068,13 @@ namespace Win32xx
 		return str;
 	}
 
-	inline void CHotKey::SetHotKey(DWORD dwKey)
+	inline void CHotKey::SetHotKey(DWORD dwKey) const
 	{
 		assert(IsWindow());
 		SendMessage(HKM_SETHOTKEY, (WPARAM)dwKey, 0L);
 	}
 
-	inline void CHotKey::SetRules(WORD wInvalidComb, WORD wModifiers)
+	inline void CHotKey::SetRules(WORD wInvalidComb, WORD wModifiers) const
 	{
 		assert(IsWindow());
 		SendMessage(HKM_SETRULES, wInvalidComb, wModifiers);
@@ -1091,7 +1091,7 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
-	inline BOOL CHeader::DeleteItem(int nPos)
+	inline BOOL CHeader::DeleteItem(int nPos) const
 	{
 		assert(IsWindow());
 		return Header_DeleteItem(*this, nPos);
@@ -1124,19 +1124,19 @@ namespace Win32xx
 		return rc;
 	}
 
-	inline BOOL CHeader::GetOrderArray(LPINT piArray, int iCount)
+	inline BOOL CHeader::GetOrderArray(LPINT piArray, int iCount) const
 	{
 		assert(IsWindow());
 		return Header_GetOrderArray(*this, piArray, iCount);
 	}
 
-	inline int CHeader::InsertItem(int nPos, const HDITEM& hdi)
+	inline int CHeader::InsertItem(int nPos, const HDITEM& hdi) const
 	{
 		assert(IsWindow());
 		return Header_InsertItem(*this, nPos, &hdi);
 	}
 
-	inline BOOL CHeader::Layout(HDLAYOUT* pHeaderLayout)
+	inline BOOL CHeader::Layout(HDLAYOUT* pHeaderLayout) const
 	{
 		assert(IsWindow());
 		return Header_Layout(*this, pHeaderLayout);
@@ -1149,13 +1149,13 @@ namespace Win32xx
 	}
 
 #ifdef Header_SetHotDivider
-	inline int CHeader::SetHotDivider(CPoint pt)
+	inline int CHeader::SetHotDivider(CPoint pt) const
 	{
 		assert(IsWindow());
 		return Header_SetHotDivider(*this, TRUE, MAKELPARAM(pt.x, pt.y));
 	}
 
-	inline int CHeader::SetHotDivider(int nIndex)
+	inline int CHeader::SetHotDivider(int nIndex) const
 	{
 		assert(IsWindow());
 		return Header_SetHotDivider(*this, FALSE, nIndex);
@@ -1169,32 +1169,32 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
-	inline BOOL CHeader::SetItem(int nPos, const HDITEM& HeaderItem)
+	inline BOOL CHeader::SetItem(int nPos, const HDITEM& HeaderItem) const
 	{
 		assert(IsWindow());
 		return Header_SetItem(*this, nPos, &HeaderItem);
 	}
 
-	inline BOOL CHeader::SetOrderArray(int iCount, LPINT piArray)
+	inline BOOL CHeader::SetOrderArray(int iCount, LPINT piArray) const
 	{
 		assert(IsWindow());
 		return Header_SetOrderArray(*this, iCount, piArray);
 	}
 
 #ifdef Header_ClearFilter
-	inline int CHeader::ClearFilter(int nColumn)
+	inline int CHeader::ClearFilter(int nColumn) const
 	{
 		assert(IsWindow());
 		return Header_ClearFilter(*this, nColumn);
 	}
 
-	inline int CHeader::ClearAllFilters()
+	inline int CHeader::ClearAllFilters() const
 	{
 		assert(IsWindow());
 		return Header_ClearAllFilters(*this);
 	}
 
-	inline int CHeader::EditFilter(int nColumn, BOOL bDiscardChanges)
+	inline int CHeader::EditFilter(int nColumn, BOOL bDiscardChanges) const
 	{
 		assert(IsWindow());
 		return Header_EditFilter(*this, nColumn, LPARAM MAKELPARAM(bDiscardChanges, 0));
@@ -1206,13 +1206,13 @@ namespace Win32xx
 		return Header_GetBitmapMargin(*this);
 	}
 
-	inline int CHeader::SetBitmapMargin(int nWidth)
+	inline int CHeader::SetBitmapMargin(int nWidth) const
 	{
 		assert(IsWindow());
 		return Header_SetBitmapMargin(*this, nWidth);
 	}
 
-	inline int CHeader::SetFilterChangeTimeout(DWORD dwTimeOut)
+	inline int CHeader::SetFilterChangeTimeout(DWORD dwTimeOut) const
 	{
 		assert(IsWindow());
 		return Header_SetFilterChangeTimeout(*this, dwTimeOut);
@@ -1237,13 +1237,13 @@ namespace Win32xx
 			throw CNotSupportedException(_T("IP Address Control not supported!"));
 	}
 
-	inline void CIPAddress::ClearAddress()
+	inline void CIPAddress::ClearAddress() const
 	{
 		assert(IsWindow());
 		SendMessage(IPM_CLEARADDRESS, 0L, 0L);
 	}
 
-	inline int CIPAddress::GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3)
+	inline int CIPAddress::GetAddress(BYTE& nField0, BYTE& nField1, BYTE& nField2, BYTE& nField3) const
 	{
 		DWORD dwAddr;
 		int iValue = GetAddress(dwAddr);
@@ -1254,7 +1254,7 @@ namespace Win32xx
 		return iValue;
 	}
 
-	inline int CIPAddress::GetAddress(DWORD& dwAddress)
+	inline int CIPAddress::GetAddress(DWORD& dwAddress) const
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(IPM_GETADDRESS, 0L, (LPARAM)&dwAddress));
@@ -1266,25 +1266,25 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(IPM_ISBLANK, 0L, 0L));
 	}
 
-	inline void CIPAddress::SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3)
+	inline void CIPAddress::SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3) const
 	{
 		assert(IsWindow());
 		SendMessage(IPM_SETADDRESS, 0L, (LPARAM)MAKEIPADDRESS(nField0, nField1, nField2, nField3));
 	}
 
-	inline void CIPAddress::SetAddress(DWORD dwAddress)
+	inline void CIPAddress::SetAddress(DWORD dwAddress) const
 	{
 		assert(IsWindow());
 		SendMessage(IPM_SETADDRESS, 0L, (LPARAM)dwAddress);
 	}
 
-	inline void CIPAddress::SetFieldFocus(WORD nField)
+	inline void CIPAddress::SetFieldFocus(WORD nField) const
 	{
 		assert(IsWindow());
 		SendMessage(IPM_SETFOCUS, (WPARAM)nField, 0L);
 	}
 
-	inline void CIPAddress::SetFieldRange(int nField, BYTE nLower, BYTE nUpper)
+	inline void CIPAddress::SetFieldRange(int nField, BYTE nLower, BYTE nUpper) const
 	{
 		assert(IsWindow());
 		SendMessage(IPM_SETRANGE, MAKEIPRANGE(nLower, nUpper), (LPARAM)nField);
@@ -1396,35 +1396,35 @@ namespace Win32xx
 		return DateTime;
 	}
 
-	inline LRESULT CMonthCalendar::HitTest(MCHITTESTINFO& MCHitTest)
+	inline LRESULT CMonthCalendar::HitTest(MCHITTESTINFO& MCHitTest) const
 	//	Determines which portion of the month calendar control is at a given point on the screen.
 	{
 		assert(IsWindow());
 		return MonthCal_HitTest(*this, &MCHitTest);
 	}
 
-	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr)
+	inline COLORREF CMonthCalendar::SetColor(int nRegion, COLORREF clr) const
 	// Sets the color for a given portion of the month calendar control.
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(MonthCal_SetColor(*this, nRegion, clr));
 	}
 
-	inline BOOL CMonthCalendar::SetCurSel(const SYSTEMTIME& DateTime)
+	inline BOOL CMonthCalendar::SetCurSel(const SYSTEMTIME& DateTime) const
 	// Sets the currently selected date for the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_SetCurSel(*this, &DateTime);
 	}
 
-	inline BOOL CMonthCalendar::SetDayState(int nMonths, const MONTHDAYSTATE& State)
+	inline BOOL CMonthCalendar::SetDayState(int nMonths, const MONTHDAYSTATE& State) const
 	// Sets the day states for all months that are currently visible within the month calendar control.
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(MonthCal_SetDayState(*this, nMonths, &State));
 	}
 
-	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/)
+	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/) const
 	// Sets the first day of the week for the month calendar control.
 	{
 		assert(IsWindow());
@@ -1436,21 +1436,21 @@ namespace Win32xx
 		return static_cast<BOOL>(HIWORD(dwValue));
 	}
 
-	inline BOOL CMonthCalendar::SetMaxSelCount(int nMax)
+	inline BOOL CMonthCalendar::SetMaxSelCount(int nMax) const
 	// Sets the maximum number of days that can be selected in the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_SetMaxSelCount(*this, nMax);
 	}
 
-	inline int CMonthCalendar::SetMonthDelta(int iDelta)
+	inline int CMonthCalendar::SetMonthDelta(int iDelta) const
 	// Sets the scroll rate for the month calendar control.
 	{
 		assert(IsWindow());
 		return MonthCal_SetMonthDelta(*this, iDelta);
 	}
 
-	inline BOOL CMonthCalendar::SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
+	inline BOOL CMonthCalendar::SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const
 	// Sets the minimum and maximum allowable dates for the month calendar control.
 	{
 		SYSTEMTIME MinMax[2];
@@ -1462,7 +1462,7 @@ namespace Win32xx
 		return static_cast<BOOL>(MonthCal_SetRange(*this, dwLimit, &MinMax));
 	}
 
-	inline BOOL CMonthCalendar::SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange)
+	inline BOOL CMonthCalendar::SetSelRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const
 	// Sets the selection for the month calendar control to a given date range.
 	{
 		SYSTEMTIME MinMax[2];
@@ -1471,7 +1471,7 @@ namespace Win32xx
 		return static_cast<BOOL>(MonthCal_SetSelRange(*this, &MinMax));
 	}
 
-	inline void CMonthCalendar::SetToday(const SYSTEMTIME& DateTime)
+	inline void CMonthCalendar::SetToday(const SYSTEMTIME& DateTime) const
 	// Sets the "today" selection for the month calendar control.
 	{
 		assert(IsWindow());
@@ -1902,14 +1902,14 @@ namespace Win32xx
 	inline CToolTip::~CToolTip()
 	{}
 
-	inline void CToolTip::Activate(BOOL bActivate)
+	inline void CToolTip::Activate(BOOL bActivate) const
 	// Activates or deactivates a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_ACTIVATE, (WPARAM)bActivate, 0L);
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, UINT nIDText)
+	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, UINT nIDText) const
 	// Registers a tool with a ToolTip control.
 	// hWndControl specifies the window which triggers the tooltip.
 	// rcTool specifies the part of the window which triggers the tooltip.
@@ -1924,7 +1924,7 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWndControl, UINT nIDText)
+	inline BOOL CToolTip::AddTool(HWND hWndControl, UINT nIDText) const
 	// Registers a tool with a ToolTip control.
 	// hWndControl specifies the window which triggers the tooltip.
 	// nIDText specifies the ID of the text resource
@@ -1937,7 +1937,7 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/)
+	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/) const
 	// Registers a tool with a ToolTip control.
 	// hWndControl specifies the window which triggers the tooltip.
 	// rcTool specifies the part of the window which triggers the tooltip.
@@ -1952,7 +1952,7 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWndControl, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/)
+	inline BOOL CToolTip::AddTool(HWND hWndControl, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/) const
 	// Registers a tool with a ToolTip control.
 	// hWndControl specifies the window which triggers the tooltip.
 	// If lpszText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
@@ -1965,7 +1965,7 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline void CToolTip::DelTool(HWND hWndControl)
+	inline void CToolTip::DelTool(HWND hWndControl) const
 	// Removes a tool from a ToolTip control.
 	{
 		assert(IsWindow());
@@ -2073,49 +2073,49 @@ namespace Win32xx
 		ti.uId = (UINT_PTR)hControl;
 	}
 
-	inline void CToolTip::Pop()
+	inline void CToolTip::Pop() const
 	// Removes a displayed ToolTip window from view.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_POP, 0L, 0L);
 	}
 
-	inline void CToolTip::RelayEvent(MSG& Msg)
+	inline void CToolTip::RelayEvent(MSG& Msg) const
 	// Passes a mouse message to a ToolTip control for processing.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_RELAYEVENT, 0L, (LPARAM)&Msg);
 	}
 
-	inline void CToolTip::SetDelayTime(UINT nDelay)
+	inline void CToolTip::SetDelayTime(UINT nDelay) const
 	// Sets the initial delay for a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETDELAYTIME, TTDT_INITIAL, (LPARAM)nDelay);
 	}
 
-	inline void CToolTip::SetDelayTime(DWORD dwDuration, int iTime)
+	inline void CToolTip::SetDelayTime(DWORD dwDuration, int iTime) const
 	// Sets the initial, pop-up, and reshow durations for a ToolTip control.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETDELAYTIME, dwDuration, (LPARAM)iTime);
 	}
 
-	inline void CToolTip::SetMargin(const RECT& rc)
+	inline void CToolTip::SetMargin(const RECT& rc) const
 	// Sets the top, left, bottom, and right margins for a ToolTip window.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETMARGIN, 0L, (LPARAM)&rc);
 	}
 
-	inline int CToolTip::SetMaxTipWidth(int iWidth)
+	inline int CToolTip::SetMaxTipWidth(int iWidth) const
 	// Sets the maximum width for a ToolTip window in pixels.
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(TTM_SETMAXTIPWIDTH, 0L, (LPARAM)iWidth));
 	}
 
-	inline void CToolTip::SetTipBkColor(COLORREF clr)
+	inline void CToolTip::SetTipBkColor(COLORREF clr) const
 	// Sets the background color in a ToolTip window.
 	// Ignored when XP themes are active.
 	{
@@ -2123,7 +2123,7 @@ namespace Win32xx
 		SendMessage(TTM_SETTIPBKCOLOR, (WPARAM)clr, 0L);
 	}
 
-	inline void CToolTip::SetTipTextColor(COLORREF clr)
+	inline void CToolTip::SetTipTextColor(COLORREF clr) const
 	// Sets the text color in a ToolTip window.
 	// Ignored when XP themes are active.
 	{
@@ -2131,14 +2131,14 @@ namespace Win32xx
 		SendMessage(TTM_SETTIPTEXTCOLOR, (WPARAM)clr, 0L);
 	}
 
-	inline void CToolTip::SetToolInfo(const TOOLINFO& ToolInfo)
+	inline void CToolTip::SetToolInfo(const TOOLINFO& ToolInfo) const
 	// Sets the information that a ToolTip control maintains for a tool.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)&ToolInfo);
 	}
 
-	inline void CToolTip::SetToolRect(HWND hWndControl, const RECT& rc)
+	inline void CToolTip::SetToolRect(HWND hWndControl, const RECT& rc) const
 	// Sets a new bounding rectangle for a tool.
 	{
 		assert(IsWindow());
@@ -2148,14 +2148,14 @@ namespace Win32xx
 		SendMessage(TTM_NEWTOOLRECT, 0L, (LPARAM)&ti);
 	}
 
-	inline void CToolTip::Update()
+	inline void CToolTip::Update() const
 	// Forces the current tool to be redrawn.
 	{
 		assert(IsWindow());
 		SendMessage(TTM_UPDATE, 0L, 0L);
 	}
 
-	inline void CToolTip::UpdateTipText(HWND hWndControl, LPCTSTR lpszText)
+	inline void CToolTip::UpdateTipText(HWND hWndControl, LPCTSTR lpszText) const
 	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
@@ -2165,7 +2165,7 @@ namespace Win32xx
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
 
-	inline void CToolTip::UpdateTipText(HWND hWndControl, UINT nIDText)
+	inline void CToolTip::UpdateTipText(HWND hWndControl, UINT nIDText) const
 	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
@@ -2177,7 +2177,7 @@ namespace Win32xx
 	}
 
 #if (_WIN32_IE >=0x0500)
-	inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL bLarger /*= TRUE*/)
+	inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL bLarger /*= TRUE*/) const
 	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the
 	//  ToolTip window rectangle needed to display a specified text display rectangle.
 	{
@@ -2195,7 +2195,7 @@ namespace Win32xx
 	}
 
 #ifdef TTM_SETTITLE
-	inline BOOL CToolTip::SetTitle(UINT uIcon, LPCTSTR lpstrTitle)
+	inline BOOL CToolTip::SetTitle(UINT uIcon, LPCTSTR lpstrTitle) const
 	// Adds a standard icon and title string to a ToolTip.
 	{
 		assert(IsWindow());
@@ -2205,7 +2205,7 @@ namespace Win32xx
 #endif
 
 #if (WINVER >= 0x0501) && defined(TTM_SETWINDOWTHEME)
-	inline void CToolTip::SetTTWindowTheme(LPCWSTR lpstrTheme)
+	inline void CToolTip::SetTTWindowTheme(LPCWSTR lpstrTheme) const
 	// Sets the visual style of a ToolTip control.
 	{
 		assert(IsWindow());
