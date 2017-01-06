@@ -58,22 +58,22 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS& wc);
 
 		// Attributes
-		int GetParts();
+		int GetParts() const;
 
-		CRect GetPartRect(int iPart);
+		CRect GetPartRect(int iPart) const;
 		CString GetPartText(int iPart) const;
-		BOOL IsSimple();
+		BOOL IsSimple() const;
 		BOOL SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
 		BOOL SetPartWidth(int iPart, int iWidth) const;
-		HICON GetPartIcon(int iPart);
-		BOOL SetPartIcon(int iPart, HICON hIcon);
+		HICON GetPartIcon(int iPart) const;
+		BOOL SetPartIcon(int iPart, HICON hIcon) const;
 
 		// Operations
 		CStatusBar(const CStatusBar&);				// Disable copy construction
 		CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
 
 		BOOL CreateParts(int iParts, const int iPaneWidths[]) const;
-		void SetSimple(BOOL fSimple = TRUE);
+		void SetSimple(BOOL fSimple = TRUE) const;
 	};
 
 }
@@ -103,21 +103,21 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)iParts, (LPARAM)iPaneWidths));		
 	}
 
-	inline int CStatusBar::GetParts()
+	inline int CStatusBar::GetParts() const
 	// Retrieves a count of the parts in the status bar.
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
 	}
 
-	inline HICON CStatusBar::GetPartIcon(int iPart)
+	inline HICON CStatusBar::GetPartIcon(int iPart) const
 	// Retrieves the icon for a part in the status bar.
 	{
 		assert(IsWindow());
 		return reinterpret_cast<HICON>(SendMessage(SB_GETICON, (WPARAM)iPart, 0L));
 	}
 
-	inline CRect CStatusBar::GetPartRect(int iPart)
+	inline CRect CStatusBar::GetPartRect(int iPart) const
 	// Retrieves the bounding rectangle of a part in the status bar.
 	{
 		assert(IsWindow());
@@ -142,7 +142,7 @@ namespace Win32xx
 		return str;
 	}
 
-	inline BOOL CStatusBar::IsSimple()
+	inline BOOL CStatusBar::IsSimple() const
 	// Checks the status bar control to determine if it is in simple mode.
 	{
 		assert(IsWindow());
@@ -184,7 +184,7 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon)
+	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon) const
 	// Sets the icon for a part in the status bar.
 	{
 		assert(IsWindow());
@@ -228,7 +228,7 @@ namespace Win32xx
 		return bResult;
 	}
 
-	inline void CStatusBar::SetSimple(BOOL fSimple /* = TRUE*/)
+	inline void CStatusBar::SetSimple(BOOL fSimple /* = TRUE*/) const
 	// Specifies whether a status window displays simple text or displays all window parts
 	//  set by a previous SB_SETPARTS message.
 	{

@@ -90,9 +90,9 @@ namespace Win32xx
 #endif
 
 		//Operations
-		int Add(HBITMAP hbmImage, HBITMAP hbmMask) ;
-		int Add(HBITMAP hbmImage, COLORREF crMask);
-		int Add(HICON hIcon);
+		int Add(HBITMAP hbmImage, HBITMAP hbmMask) const;
+		int Add(HBITMAP hbmImage, COLORREF crMask) const;
+		int Add(HICON hIcon) const;
 		void Attach(HIMAGELIST hImageList);
 		BOOL BeginDrag(int nImage, CPoint ptHotSpot) const;
 		void DeleteImageList();
@@ -119,9 +119,9 @@ namespace Win32xx
 		operator HIMAGELIST () const;
 
 	private:
-		void AddToMap();
+		void AddToMap() const;
 		void Release();
-		BOOL RemoveFromMap();
+		BOOL RemoveFromMap() const;
 
 		CIml_Data* m_pData;
 	};
@@ -173,7 +173,7 @@ namespace Win32xx
 		Release();
 	}
 
-	inline void CImageList::AddToMap()
+	inline void CImageList::AddToMap() const
 	// Store the HIMAGELIST and CImageList pointer in the HIMAGELIST map
 	{
 		assert( &GetApp() );
@@ -182,7 +182,7 @@ namespace Win32xx
 		GetApp().AddCImlData(m_pData->hImageList, m_pData);
 	}
 
-	inline BOOL CImageList::RemoveFromMap()
+	inline BOOL CImageList::RemoveFromMap() const
 	{
 		BOOL Success = FALSE;
 
@@ -207,7 +207,7 @@ namespace Win32xx
 		return Success;
 	}
 
-	inline int CImageList::Add(HBITMAP hbmImage, HBITMAP hbmMask)
+	inline int CImageList::Add(HBITMAP hbmImage, HBITMAP hbmMask) const
 	// Adds an image or images to an image list, generating a mask from the specified bitmap.
 	// The hbmMask parameter can be NULL.
 	{
@@ -216,7 +216,7 @@ namespace Win32xx
 		return ImageList_Add(m_pData->hImageList, hbmImage, hbmMask );
 	}
 
-	inline int CImageList::Add(HBITMAP hbmImage, COLORREF crMask)
+	inline int CImageList::Add(HBITMAP hbmImage, COLORREF crMask) const
 	// Adds an image or images to an image list, using the specified color as the mask.
 	{
 		assert(m_pData);
@@ -224,7 +224,7 @@ namespace Win32xx
 		return ImageList_AddMasked(m_pData->hImageList, hbmImage, crMask);
 	}
 
-	inline int CImageList::Add(HICON hIcon)
+	inline int CImageList::Add(HICON hIcon) const
 	// Adds an Icon to the image list
 	{
 		assert(m_pData);

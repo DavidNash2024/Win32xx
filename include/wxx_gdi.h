@@ -181,7 +181,7 @@ namespace Win32xx
 
 	protected:
 		void	Release();
-		void SetManaged(bool IsManaged) { m_pData->IsManagedObject = IsManaged; }
+		void SetManaged(bool IsManaged) const { m_pData->IsManagedObject = IsManaged; }
 
 	private:
 		void	AddToMap();
@@ -222,9 +222,9 @@ namespace Win32xx
 		void GrayScaleBitmap();
 		void TintBitmap (int cRed, int cGreen, int cBlue);
 		int GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const;
-		int SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse);
+		int SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse) const;
 		CSize GetBitmapDimensionEx() const;
-		CSize SetBitmapDimensionEx(int nWidth, int nHeight);
+		CSize SetBitmapDimensionEx(int nWidth, int nHeight) const;
 #endif // !_WIN32_WCE
 
 		// Attributes
@@ -309,12 +309,12 @@ namespace Win32xx
 		// Attributes
 		int GetEntryCount() const;
 		UINT GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const;
-		UINT SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors);
+		UINT SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const;
 
 		// Operations
 #ifndef _WIN32_WCE
-		BOOL ResizePalette(UINT nNumEntries);
-		void AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors);
+		BOOL ResizePalette(UINT nNumEntries) const;
+		void AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const;
 #endif // !_WIN32_WCE
 
 		UINT GetNearestPaletteIndex (COLORREF crColor) const;
@@ -342,7 +342,7 @@ namespace Win32xx
 		LOGPEN GetLogPen() const;
 
 #ifndef _WIN32_WCE
-		HPEN ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
+		HPEN ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL) ;
 		EXTLOGPEN GetExtLogPen() const;
 #endif // !_WIN32_WCE
 
@@ -375,14 +375,14 @@ namespace Win32xx
 #endif // !_WIN32_WCE
 
 		// Operations
-		void SetRectRgn(int x1, int y1, int x2, int y2);
-		void SetRectRgn(const RECT& rc);
-		int CombineRgn(HRGN hrgnSrc1, HRGN hrgnSrc2, int nCombineMode);
-		int CombineRgn(HRGN hrgnSrc, int nCombineMode);
-		int CopyRgn(HRGN hrgnSrc);
+		void SetRectRgn(int x1, int y1, int x2, int y2) const;
+		void SetRectRgn(const RECT& rc) const;
+		int CombineRgn(HRGN hrgnSrc1, HRGN hrgnSrc2, int nCombineMode) const;
+		int CombineRgn(HRGN hrgnSrc, int nCombineMode) const;
+		int CopyRgn(HRGN hrgnSrc) const;
 		BOOL EqualRgn(HRGN hRgn) const;
-		int OffsetRgn(int x, int y);
-		int OffsetRgn(POINT& pt);
+		int OffsetRgn(int x, int y) const;
+		int OffsetRgn(POINT& pt) const;
 		int GetRgnBox(RECT& rc) const;
 		BOOL PtInRegion(int x, int y) const;
 		BOOL PtInRegion(POINT& pt) const;
@@ -513,7 +513,7 @@ namespace Win32xx
 
 		// Retrieve and Select Stock Objects
 		HGDIOBJ GetStockObject(int nIndex) const;
-		HGDIOBJ SelectStockObject(int nIndex);
+		HGDIOBJ SelectStockObject(int nIndex) const;
 
 		// Create Regions
 		int CreateRectRgn(int left, int top, int right, int bottom);
@@ -1408,7 +1408,7 @@ namespace Win32xx
 			return Size;
 		}
 
-		inline CSize CBitmap::SetBitmapDimensionEx(int nWidth, int nHeight)
+		inline CSize CBitmap::SetBitmapDimensionEx(int nWidth, int nHeight) const
 		// The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap.
 		// These dimensions can be used by applications; however, they are not used by the system.
 		{
@@ -1579,7 +1579,7 @@ namespace Win32xx
 			return ::GetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines,  pBits, pbmi, uColorUse);
 		}
 
-		inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse)
+		inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse) const
 		// Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
 		// A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
 		{
@@ -1901,7 +1901,7 @@ namespace Win32xx
 		return ::GetPaletteEntries((HPALETTE)GetHandle(), nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
-	inline UINT CPalette::SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
+	inline UINT CPalette::SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	// Sets RGB (red, green, blue) color values and flags in a range of entries in the palette.
 	{
 		assert(GetHandle() != NULL);
@@ -1909,14 +1909,14 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline void CPalette::AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors)
+	inline void CPalette::AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	// Replaces entries in the palette.
 	{
 		assert(GetHandle() != NULL);
 		::AnimatePalette((HPALETTE)GetHandle(), nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
-	inline BOOL CPalette::ResizePalette(UINT nNumEntries)
+	inline BOOL CPalette::ResizePalette(UINT nNumEntries) const
 	//  Increases or decreases the size of the palette based on the specified value.
 	{
 		assert(GetHandle() != NULL);
@@ -2170,35 +2170,35 @@ namespace Win32xx
 		return hRgn;
 	}
 
-	inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2)
+	inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2) const
 	// converts the region into a rectangular region with the specified coordinates.
 	{
 		assert(GetHandle() != NULL);
 		::SetRectRgn((HRGN)GetHandle(), x1, y1, x2, y2);
 	}
 
-	inline void CRgn::SetRectRgn(const RECT& rc)
+	inline void CRgn::SetRectRgn(const RECT& rc) const
 	// converts the region into a rectangular region with the specified coordinates.
 	{
 		assert(GetHandle() != NULL);
 		::SetRectRgn((HRGN)GetHandle(), rc.left, rc.top, rc.right, rc.bottom);
 	}
 
-	inline int CRgn::CombineRgn(HRGN hrgnSrc1, HRGN hrgnSrc2, int nCombineMode)
+	inline int CRgn::CombineRgn(HRGN hrgnSrc1, HRGN hrgnSrc2, int nCombineMode) const
 	// Combines two specified regions and stores the result.
 	{
 		assert(GetHandle() != NULL);
 		return ::CombineRgn((HRGN)GetHandle(), hrgnSrc1, hrgnSrc2, nCombineMode);
 	}
 
-	inline int CRgn::CombineRgn(HRGN hrgnSrc, int nCombineMode)
+	inline int CRgn::CombineRgn(HRGN hrgnSrc, int nCombineMode) const
 	// Combines the specified region with the current region.
 	{
 		assert(GetHandle() != NULL);
 		return ::CombineRgn((HRGN)GetHandle(), (HRGN)GetHandle(), hrgnSrc, nCombineMode);
 	}
 
-	inline int CRgn::CopyRgn(HRGN hrgnSrc)
+	inline int CRgn::CopyRgn(HRGN hrgnSrc) const
 	// Assigns the specified region to the current region.
 	{
 		assert(GetHandle() != NULL);
@@ -2213,14 +2213,14 @@ namespace Win32xx
 		return ::EqualRgn((HRGN)GetHandle(), hRgn);
 	}
 
-	inline int CRgn::OffsetRgn(int x, int y)
+	inline int CRgn::OffsetRgn(int x, int y) const
 	// Moves a region by the specified offsets.
 	{
 		assert(GetHandle() != NULL);
 		return ::OffsetRgn((HRGN)GetHandle(), x, y);
 	}
 
-	inline int CRgn::OffsetRgn(POINT& pt)
+	inline int CRgn::OffsetRgn(POINT& pt) const
 	// Moves a region by the specified offsets.
 	{
 		assert(GetHandle() != NULL);
@@ -3109,7 +3109,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return ::GetStockObject(nIndex);
 	}
 
-	inline HGDIOBJ CDC::SelectStockObject(int nIndex)
+	inline HGDIOBJ CDC::SelectStockObject(int nIndex) const
 	// Selects a stock brush, pen, or font into the device context.
 	// nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
 	//                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,

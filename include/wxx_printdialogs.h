@@ -221,7 +221,7 @@ namespace Win32xx
 		// Override these functions as required
 		virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 
-		// Not intended to be overriden
+		// Not intended to be overridden
 		INT_PTR DialogProcDefault(UINT, WPARAM, LPARAM);
 
 	private:

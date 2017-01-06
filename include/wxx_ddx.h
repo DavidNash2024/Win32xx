@@ -106,18 +106,18 @@ namespace Win32xx
 		virtual ~CDataExchange();
 
 		// Dialog Data Validation (DDV) functions
-		virtual void DDV_MaxChars(CString const& value, int nChars);
-		virtual void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal);
-		virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
-		virtual void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG);
-		virtual void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG);
-		virtual void DDV_MinMaxInt(int value, int minVal, int maxVal);
-		virtual void DDV_MinMaxLong(long value,  long minVal, long maxVal);
-		virtual void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&);
-		virtual void DDV_MinMaxShort(short value, short minVal, short maxVal);
-		virtual void DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal);
-		virtual void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal);
-		virtual void DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal);
+		virtual void DDV_MaxChars(CString const& value, int nChars) const;
+		virtual void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const;
+		virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
+		virtual void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG) const;
+		virtual void DDV_MinMaxFloat(float const& value, float minVal, float maxVal, int precision = FLT_DIG) const;
+		virtual void DDV_MinMaxInt(int value, int minVal, int maxVal) const;
+		virtual void DDV_MinMaxLong(long value,  long minVal, long maxVal) const;
+		virtual void DDV_MinMaxMonth(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
+		virtual void DDV_MinMaxShort(short value, short minVal, short maxVal) const;
+		virtual void DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal) const;
+		virtual void DDV_MinMaxUInt(UINT value, UINT minVal, UINT maxVal) const;
+		virtual void DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal) const;
 
 		// DDX Initialisation
 		virtual void DDX_Control(int nIDC, CWnd& rCtl);
@@ -150,9 +150,9 @@ namespace Win32xx
 		virtual void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);
 
 		// Helper operations
-		void virtual Fail(LPCTSTR message);
-		HWND GetLastControl() 		{ return m_hWndLastControl; }
-		HWND GetLastEditControl() 	{ return m_hWndLastEditControl; }
+		void virtual Fail(LPCTSTR message) const;
+		HWND GetLastControl()  const { return m_hWndLastControl; }
+		HWND GetLastEditControl() const { return m_hWndLastEditControl; }
 		void Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate);
 		HWND PrepareCtrl(int nIDC);   	// return HWND of control
 		HWND PrepareEditCtrl(int nIDC); // record this is an edit
@@ -260,7 +260,7 @@ namespace Win32xx
 	////////////////////////////////////////////////////////////////
 
 	//============================================================================
-	inline void CDataExchange::DDV_MaxChars(CString const& value, int nChars)
+	inline void CDataExchange::DDV_MaxChars(CString const& value, int nChars) const
 	//	Ensures that the length of value <= nChars when validating, otherwise
 	//  throws a CUserException. If writing, send the box the message to set
 	//  the limit to nChars, which must be at least one.
@@ -281,7 +281,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal)
+	inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise throws
 	//  a CUserException.  BYTE is unsigned char.
 	{
@@ -290,7 +290,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDateTime(SYSTEMTIME& refValue,
-		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange)
+		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange) const
 	//	When validating, this method sets the range of the DateTime control
 	//  associated with the last visited window control to the pair
 	//	(minRange, maxRange). When assigning, this method verifies
@@ -330,7 +330,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxDouble(double const& value, double minVal,
-		double maxVal, int precision /* = DBL_DIG */)
+		double maxVal, int precision /* = DBL_DIG */) const
 	//  Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -355,7 +355,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxFloat(float const& value, float minVal,
-		float maxVal, int precision /* = FLT_DIG */)
+		float maxVal, int precision /* = FLT_DIG */) const
 	//  Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -364,7 +364,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxInt(int value, int minVal, int maxVal)
+	inline void CDataExchange::DDV_MinMaxInt(int value, int minVal, int maxVal) const
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -372,7 +372,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxLong(long value, long minVal, long maxVal)
+	inline void CDataExchange::DDV_MinMaxLong(long value, long minVal, long maxVal) const
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -397,7 +397,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
-		const SYSTEMTIME& maxRange)
+		const SYSTEMTIME& maxRange) const
 	//	When validating, this method sets the range of the month
 	//	calendar control associated with the last visited window control to
 	//	(minRange, maxRange). When assigning, this method verifies
@@ -434,7 +434,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal)
+	inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal) const
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -442,7 +442,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal)
+	inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal) const
 	//	When validating, this method sets the range of the slider
 	//	control associated with the last visited window control to the pair
 	//	(minRange, maxRange). When assigning, this method verifies
@@ -473,7 +473,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal)
+	inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal) const
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -481,7 +481,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal)
+	inline void CDataExchange::DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal) const
 	//	Ensures that minVal <= value <= maxVal when validating, otherwise
 	//  throws a CUserException.
 	{
@@ -837,11 +837,11 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
 		// assure that the control is a radio button and part of a group
-		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) &WS_GROUP);
+		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && WS_GROUP);
 		assert(firstInGroup);
 
 		// assure the button is a radio button
-		BOOL isRadioButton = (BOOL)(::SendMessage(hWndCtrl,	WM_GETDLGCODE, 0, 0L) & DLGC_RADIOBUTTON);
+		BOOL isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && BS_RADIOBUTTON);
 		assert(isRadioButton);
 
 		// preset the returned value to empty in case no button is set
@@ -882,10 +882,8 @@ namespace Win32xx
 			hWndCtrl = ::GetWindow(hWndCtrl, GW_HWNDNEXT);
 			if (hWndCtrl)
 			{
-				LRESULT lrButton = SendMessage(hWndCtrl, WM_GETDLGCODE, 0, 0L);
-				isRadioButton = (hWndCtrl != NULL && (lrButton & DLGC_RADIOBUTTON));
-
-				firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
+				isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && BS_RADIOBUTTON);
+				firstInGroup  = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && WS_GROUP);
 			}
 		}
 	}
@@ -1186,7 +1184,7 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::Fail(LPCTSTR message)
+	inline void CDataExchange::Fail(LPCTSTR message) const
 	//	This function is called when a CUserException is caught while
 	//  validating the value in a control. This is a virtual function which can
 	//  be overridden as required.
