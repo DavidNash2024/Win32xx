@@ -93,7 +93,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_BubbleTT.AddTool(GetDlgItem(IDOK), _T("OK Button"));
 
 	// Modify tooltip for IDC_RADIO3
-	TOOLINFO ti1 = m_BubbleTT.GetToolInfo( GetDlgItem(IDC_RADIO3).GetHwnd());
+	TOOLINFO ti1 = m_BubbleTT.GetToolInfo( GetDlgItem(IDC_RADIO3));
 	ti1.uFlags |= TTF_CENTERTIP;
 	ti1.lpszText = (LPTSTR)_T("Modified tooltip for Radio Button 3");
 	m_BubbleTT.SetToolInfo(ti1);
@@ -108,6 +108,7 @@ BOOL CMyDialog::OnInitDialog()
 	// The tooltip will request the text to display via a TTN_GETDISPINFO notification
 	m_TT.AddTool(m_Edit, LPSTR_TEXTCALLBACK);
 	m_TT.AddTool(m_RichEdit, LPSTR_TEXTCALLBACK);
+	m_TT.SetMaxTipWidth(500);  
 
 
 #ifdef	TTM_SETTITLE	// not supported by some GNU compilers
@@ -126,6 +127,7 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lParam)
 {
 	switch (((LPNMHDR)lParam)->code)
 	{
+		// notification sent by the tooltip to allow text to be set.
 		case TTN_GETDISPINFO:
 		{
 			LPNMTTDISPINFO lpnmtdi = (LPNMTTDISPINFO)lParam;

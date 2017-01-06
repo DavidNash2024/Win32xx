@@ -130,7 +130,7 @@ Renamed	W2A		to	WtoA
 Renamed	W2BSTR	to	WtoBSTR	
 Renamed	W2OLE	to	WtoOLE	
 Renamed	W2T		to	WtoT	
-Renamed CToolTip::SetTTWindowTheme
+Renamed CToolTip::SetWindowTheme to CToolTip::SetTTWindowTheme
 
 
 Version 8.3
@@ -369,7 +369,6 @@ Added CFrame::GetInitValues		member function
 Added CFrame::SetInitValues		member function
 Added UWM_GETCWND 				window message.
 Added UWM_GETCFRAME 			window message.
-Added UWM_GETCMDIFRAME 			window message.
 Added UWM_GETCDOCKER 			window message.
 Added UWM_GETCDOCKCONTAINER 	window message.
 Added UWM_GETCTABBEDMDI 		window message.

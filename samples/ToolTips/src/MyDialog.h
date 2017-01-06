@@ -5,31 +5,18 @@
 #define MYDIALOG_H
 
 
-class CBubbleToolTip : public CToolTip
+class CBalloonToolTip : public CToolTip
 {
 public:
-
+	CBalloonToolTip() {}
+	virtual ~CBalloonToolTip() {}
 
 protected:
 	virtual void PreCreate(CREATESTRUCT& cs)
 	{
 		CToolTip::PreCreate(cs);
-		cs.style |= TTS_BALLOON;
+		cs.style |= TTS_BALLOON;	// Add the balloon style
 	}
-
-
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		switch (uMsg)
-		{
-		case TTM_RELAYEVENT:
-			break;
-		case WM_MOUSEMOVE:
-			break;
-		}
-		return WndProcDefault(uMsg, wParam, lParam);
-	}
-
 
 };
 
@@ -60,10 +47,10 @@ private:
 
 	CRichEdit m_RichEdit;
 	CEdit m_Edit;
-	CBubbleToolTip m_BubbleTT;
+	CBalloonToolTip m_BubbleTT;
 	CToolTip m_TT;
 	CString m_str;
-	HICON m_hInfo;
+	HICON m_hInfo;		// Icon used by tooltips for the RichEdit and Edit controls
 };
 
 #endif //MYDIALOG_H

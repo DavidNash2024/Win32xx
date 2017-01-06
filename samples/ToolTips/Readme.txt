@@ -14,11 +14,12 @@ Features demonstrated in this example
 * Responding to the TTN_GETDISPINFO notification to dynamically set tooltip text.
 
 
-About Dialogs
-=============
-Dialog applications are easy to create, provided we have access to a 
-resource editor to build the resource script file for us (often called
-resource.rc). Commercial compilers usually include a resource editor
-for this purpose, but free compilers generally don't. For a free 
-resource editor, try resedit from here: http://www.resedit.net/
+About ToolTip Controls
+======================
+ToolTips are hidden most of the time. They appear automatically, or pop up,
+when the user pauses the mouse pointer over a tool. The ToolTip appears near
+the pointer and disappears when the user clicks a mouse button or moves the
+pointer away from the tool.
+
+
 
