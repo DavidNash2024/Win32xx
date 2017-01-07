@@ -119,6 +119,15 @@ BOOL CMyDialog::OnInitDialog()
 		m_TT.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
 #endif
 
+	// Calculate left half and right have rectangles
+	CRect rcLeft = GetClientRect(); 
+	rcLeft.right = rcLeft.right / 2;
+	CRect rcRight = GetClientRect();
+	rcRight.left = rcRight.right / 2;
+
+	// Specify a tooltip using a RECT and a user ID
+	m_BubbleTT.AddTool(*this, rcLeft,  1, _T("Client area, left side"));
+	m_BubbleTT.AddTool(*this, rcRight, 2, _T("Client area, right side"));
 
 	return true;
 }

@@ -331,7 +331,7 @@ namespace Win32xx
 		int  SetPos(int nNewPos) const;
 		int  SetRange(short nMinRange, short nMaxRange) const;
 		int  SetStep(int nStepInc) const;
-		int  StepIt() const;	
+		int  StepIt() const;
 
 	protected:
 		// Overridables
@@ -449,11 +449,11 @@ namespace Win32xx
 		int		 GetDelayTime(DWORD dwDuration) const;
 		CRect	 GetMargin() const;
 		int		 GetMaxTipWidth() const;
-		CString	 GetText(HWND hWndControl) const;
+		CString	 GetText(HWND hWndControl, UINT uID = -1) const;
 		COLORREF GetTipBkColor() const;
 		COLORREF GetTipTextColor() const;
 		int		 GetToolCount() const;
-		TOOLINFO GetToolInfo(HWND hWndControl) const;
+		TOOLINFO GetToolInfo(HWND hWndControl, UINT uID = -1) const;
 		void	 SetDelayTime(UINT nDelay) const;
 		void	 SetDelayTime(DWORD dwDuration, int iTime) const;
 		void	 SetMargin(const RECT& rc) const;
@@ -462,22 +462,22 @@ namespace Win32xx
 		void	 SetTipTextColor(COLORREF clr) const;
 		void	 SetToolInfo(const TOOLINFO& ToolInfo) const;
 #if (_WIN32_IE >=0x0500)
-		CSize	 GetBubbleSize(const TOOLINFO& ToolInfo) const;
+		CSize	 GetBubbleSize(HWND hWndControl, UINT uID = -1) const;
 #endif
 
 		//Operations
 		void Activate(BOOL bActivate) const;
-		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT nIDText) const;
+		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, UINT nIDText) const;
 		BOOL AddTool(HWND hWndControl, UINT nIDText) const;
-		BOOL AddTool(HWND hWndControl, const RECT& rcTool, LPCTSTR lpszText = LPSTR_TEXTCALLBACK) const;
+		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, LPCTSTR lpszText = LPSTR_TEXTCALLBACK) const;
 		BOOL AddTool(HWND hWndControl, LPCTSTR lpszText = LPSTR_TEXTCALLBACK) const;
-		void DelTool(HWND hWndControl) const;
-		BOOL HitTest(HWND hWnd, CPoint pt, TOOLINFO& ToolInfo) const;
+		void DelTool(HWND hWndControl, UINT uID = -1) const;
+		BOOL HitTest(HWND hWnd, CPoint pt, const TOOLINFO& ToolInfo) const;
 		void Pop() const;
 		void RelayEvent(MSG& Msg) const;
-		void SetToolRect(HWND hWndControl, const RECT& rc) const;
-		void UpdateTipText(HWND hWndControl, LPCTSTR lpszText) const;
-		void UpdateTipText(HWND hWndControl, UINT nIDText) const;
+		void SetToolRect(const RECT& rc, HWND hWndControl, UINT uID = -1) const;
+		void UpdateTipText(LPCTSTR lpszText, HWND hWndControl, UINT uID = -1) const;
+		void UpdateTipText(UINT nIDText, HWND hWndControl, UINT uID = -1) const;
 		void Update() const;
 
 #if (_WIN32_IE >=0x0500)
@@ -492,7 +492,8 @@ namespace Win32xx
 
 	protected:
 		// Overridables
-		virtual void LoadToolInfo(TOOLINFO& ti, HWND hControl) const;
+		virtual void FillToolInfo(TOOLINFO& ti, HWND hControl) const;
+		virtual void FillToolInfo(TOOLINFO& ti, HWND hControl, const RECT& rc, UINT uID) const;
 		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
 		virtual void PreCreate(CREATESTRUCT& cs)
 		{
@@ -534,8 +535,8 @@ namespace Win32xx
 	inline BOOL CAnimation::Play(int nFrom, int nTo, int nRepeat) const
 	// Plays an AVI clip in an animation control. The control plays the clip
 	//	in the background while the thread continues executing.
-	//	 nFrom : Zero - based index of the frame where playing begins. The value must be less than 65,536. 
-	//	 nTo:    Zero - based index of the frame where playing ends. The value must be less than 65,536. 
+	//	 nFrom : Zero - based index of the frame where playing begins. The value must be less than 65,536.
+	//	 nTo:    Zero - based index of the frame where playing ends. The value must be less than 65,536.
 	//           A value of - 1 means end with the last frame in the AVI clip.
 	//   nRepeat: Number of times to replay the AVI clip.A value of - 1 means replay the clip indefinitely.
 	{
@@ -934,7 +935,7 @@ namespace Win32xx
 	}
 
 	inline COLORREF CDateTime::GetMonthCalColor(int iColor) const
-	// Retrieves the color for a given portion of the month calendar within the date and time picker (DTP) control. 
+	// Retrieves the color for a given portion of the month calendar within the date and time picker (DTP) control.
 	{
 		assert(IsWindow());
 		return static_cast<COLORREF>(DateTime_GetMonthCalColor(*this, iColor));
@@ -1013,7 +1014,7 @@ namespace Win32xx
 		DWORD Res = DateTime_GetSystemtime(*this, &SysTime);
 		if (pReturnCode)
 			*pReturnCode = Res;
-		
+
 		return SysTime;
 	}
 
@@ -1233,7 +1234,7 @@ namespace Win32xx
 			InitStruct.dwICC = ICC_INTERNET_CLASSES;
 			InitCommonControlsEx(&InitStruct);
 		}
-		else 
+		else
 			throw CNotSupportedException(_T("IP Address Control not supported!"));
 	}
 
@@ -1355,7 +1356,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
-		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));	
+		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));
 		int nCount = MonthCal_GetMonthRange(*this, dwFlags, MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
@@ -1367,7 +1368,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
-		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
+		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));
 		LRESULT Value = MonthCal_GetRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
@@ -1379,7 +1380,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME MinMax[2];
-		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));		
+		ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));
 		LRESULT Value = MonthCal_GetSelRange(*this, &MinMax);
 		MinRange = MinMax[0];
 		MaxRange = MinMax[1];
@@ -1495,7 +1496,7 @@ namespace Win32xx
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) &PBRange));
 	}
-	
+
 	inline int CProgressBar::GetRange(BOOL fWhichLimit) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
@@ -1909,18 +1910,18 @@ namespace Win32xx
 		SendMessage(TTM_ACTIVATE, (WPARAM)bActivate, 0L);
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, UINT nIDText) const
+	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, UINT nIDText) const
 	// Registers a tool with a ToolTip control.
 	// hWndControl specifies the window which triggers the tooltip.
 	// rcTool specifies the part of the window which triggers the tooltip.
-	// nIDText specifies the ID of the text resource
+	// nIDText specifies the ID of the text resource.
+	// uID is a user defined ID. It is required if the control has multiple tooltips.
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
+		FillToolInfo(ti, hWndControl, rcTool, uID);
 		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = MAKEINTRESOURCE(nIDText);
-		ti.rect = rcTool;
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
@@ -1931,24 +1932,24 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
+		FillToolInfo(ti, hWndControl);
 		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = MAKEINTRESOURCE(nIDText);
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/) const
+	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, LPCTSTR lpszText /*= LPSTR_TEXTCALLBACK*/) const
 	// Registers a tool with a ToolTip control.
 	// hWndControl specifies the window which triggers the tooltip.
 	// rcTool specifies the part of the window which triggers the tooltip.
 	// If lpszText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
 	//	messages are sent to the parent window.
+	// uID is a user defined ID. It is required if the control has multiple tooltips.
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
+		FillToolInfo(ti, hWndControl, rcTool, uID);
 		ti.lpszText = const_cast<LPTSTR>(lpszText);
-		ti.rect = rcTool;
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
@@ -1960,22 +1961,27 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
+		FillToolInfo(ti, hWndControl);
 		ti.lpszText = const_cast<LPTSTR>(lpszText);
 		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
 	}
 
-	inline void CToolTip::DelTool(HWND hWndControl) const
+	inline void CToolTip::DelTool(HWND hWndControl, UINT uID) const
 	// Removes a tool from a ToolTip control.
 	{
 		assert(IsWindow());
-		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
+		TOOLINFO ti = GetToolInfo(hWndControl, uID);
 		SendMessage(TTM_DELTOOL, 0L, (LPARAM)&ti);
 	}
 
 	inline int CToolTip::GetDelayTime(DWORD dwDuration) const
 	// Retrieves the initial, pop-up, and reshow durations currently set for a ToolTip control.
+	// Returns an intvalue with the specified duration in milliseconds.
+	//
+	// dwDuration is one of: 
+	//	TTDT_AUTOPOP - time the ToolTip window remains visible if the pointer is stationary 
+	//	TTDT_INITIAL - time the pointer must remain stationary before the ToolTip window appears. 
+	//	TTDT_RESHOW	 - time it takes for subsequent ToolTip windows to appear as the pointer moves from one tool to another.	
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(TTM_GETDELAYTIME, dwDuration, 0L));
@@ -1997,14 +2003,14 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TTM_GETMAXTIPWIDTH, 0L, 0L));
 	}
 
-	inline CString CToolTip::GetText(HWND hWndControl) const
-	// Retrieves the information a ToolTip control maintains about a tool.
+	inline CString CToolTip::GetText(HWND hWndControl, UINT uID) const
+	// Retrieves the text information a ToolTip control maintains about a tool.
 	{
 		assert(IsWindow());
 		CString str;
+		TOOLINFO ti = GetToolInfo(hWndControl, uID);
+
 		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed ToolTip is 80 characters for Windows XP and below
-		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
 		ti.lpszText = pszText;
 		SendMessage(TTM_GETTEXT, 0L, (LPARAM)&ti);
 		str.ReleaseBuffer();
@@ -2033,17 +2039,37 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TTM_GETTOOLCOUNT, 0L, 0L));
 	}
 
-	inline TOOLINFO CToolTip::GetToolInfo(HWND hWndControl) const
+	inline TOOLINFO CToolTip::GetToolInfo(HWND hWndControl, UINT uID) const
 	// Retrieves the information that a ToolTip control maintains about a tool.
+	// hWndControl is the control specified when the tooltip was added with AddTool.
+	// uID is the user ID (if any) specified when the tooltip was added with AddTool.
+	// Note:
+	// The TOOLINFO struct returned does not contain the ToolTip's text.
+	// Use GetText to retrieve a tool's text.
 	{
 		assert(IsWindow());
-		TOOLINFO ToolInfo;
-		LoadToolInfo(ToolInfo, hWndControl);
-		SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo);
+		TOOLINFO ToolInfo = { 0 };
+		ToolInfo.cbSize = sizeof(ToolInfo);
+		if (uID == (UINT)-1)
+		{
+			ToolInfo.hwnd = GetParent();
+			ToolInfo.uId = (UINT_PTR)hWndControl;
+		}
+		else
+		{
+			ToolInfo.hwnd = hWndControl;
+			ToolInfo.uId = uID;
+		}
+		
+		BOOL Result = (BOOL)SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo);
+		
+		// assert if we fail to retrieve the TOOLINFO
+		assert(Result);
+
 		return ToolInfo;
 	}
 
-	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, TOOLINFO& ToolInfo) const
+	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, const TOOLINFO& ToolInfo) const
 	// Tests a point to determine whether it is within the bounding rectangle of the
 	//  specified tool and, if it is, retrieves information about the tool.
 	{
@@ -2056,13 +2082,12 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0L, (LPARAM)&hti));
 	}
 
-	inline void CToolTip::LoadToolInfo(TOOLINFO& ti, HWND hControl) const
-	// Sets the TOOLINFO structure.
-	// Here we make some common sense assumptions about how the tooltip is used:
-	// 1) All notifications are passed to the parent window
-	// 2) The control is always identified by its hwnd (uses TTF_IDISHWND)
-	// 3) The tooltip always manages its messages (uses TTF_SUBCLASS)
-	// These assumptions make CToolTip simpler, without affecting usability
+	inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND hControl) const
+	// Fills the TOOLINFO structure. Used by AddTool.
+	// Notes:
+	// 1) Notifications are passed to the parent window.
+	// 2) The control is always identified by its hwnd.
+	// 3) The tooltip always manages its messages (uses TTF_SUBCLASS).
 	// Override this function to specify different uFlags.
 	{
 		ZeroMemory(&ti, sizeof(TOOLINFO));
@@ -2071,6 +2096,26 @@ namespace Win32xx
 		ti.hwnd = ::GetParent(m_hWnd);	// pass notifications to the parent window
 		ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
 		ti.uId = (UINT_PTR)hControl;
+	}
+
+	inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND hControl, const RECT& rc, UINT uID) const
+	// Fills the TOOLINFO structure. Used by AddTool.
+	// Notes:
+	// 1) Notifications are passed to the hControl window, not the parent window.
+	// 2) The control is always identified by its hwnd.
+	// 3) rc specifies which part of the control triggers the tooltip.
+	// 4) A unique uID is required if the control has multiple tooltips.
+	// 5) The tooltip always manages its messages (uses TTF_SUBCLASS).
+	// 6) The TTF_IDISHWND style is incompatible with using a RECT.
+	// Override this function to specify different uFlags.
+	{
+		ZeroMemory(&ti, sizeof(TOOLINFO));
+		ti.cbSize = sizeof(TOOLINFO);
+
+		ti.hwnd = hControl;
+		ti.uFlags = TTF_SUBCLASS;
+		ti.rect = rc;
+		ti.uId = uID;
 	}
 
 	inline void CToolTip::Pop() const
@@ -2138,12 +2183,11 @@ namespace Win32xx
 		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)&ToolInfo);
 	}
 
-	inline void CToolTip::SetToolRect(HWND hWndControl, const RECT& rc) const
+	inline void CToolTip::SetToolRect(const RECT& rc, HWND hWndControl, UINT uID) const
 	// Sets a new bounding rectangle for a tool.
 	{
 		assert(IsWindow());
-		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
+		TOOLINFO ti = GetToolInfo(hWndControl, uID);
 		ti.rect = rc;
 		SendMessage(TTM_NEWTOOLRECT, 0L, (LPARAM)&ti);
 	}
@@ -2155,23 +2199,20 @@ namespace Win32xx
 		SendMessage(TTM_UPDATE, 0L, 0L);
 	}
 
-	inline void CToolTip::UpdateTipText(HWND hWndControl, LPCTSTR lpszText) const
+	inline void CToolTip::UpdateTipText(LPCTSTR lpszText, HWND hWndControl, UINT uID) const
 	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
-		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
-		ti.lpszText = const_cast<LPTSTR>(lpszText);
+		TOOLINFO ti = GetToolInfo(hWndControl, uID);
+		ti.lpszText = (LPTSTR)lpszText;
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
 
-	inline void CToolTip::UpdateTipText(HWND hWndControl, UINT nIDText) const
+	inline void CToolTip::UpdateTipText(UINT nIDText, HWND hWndControl, UINT uID) const
 	// Sets the ToolTip text for a tool.
 	{
 		assert(IsWindow());
-		TOOLINFO ti;
-		LoadToolInfo(ti, hWndControl);
-		ti.hinst = GetApp().GetResourceHandle();
+		TOOLINFO ti = GetToolInfo(hWndControl, uID);
 		ti.lpszText = MAKEINTRESOURCE(nIDText);
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
@@ -2185,11 +2226,12 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)&rc));
 	}
 
-	inline CSize CToolTip::GetBubbleSize(const TOOLINFO& ToolInfo) const
+	inline CSize CToolTip::GetBubbleSize(HWND hWndControl, UINT uID) const
 	// Returns the width and height of a ToolTip control.
 	{
 		assert(IsWindow());
-		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, 0L, (LPARAM)&ToolInfo);
+		TOOLINFO ti = GetToolInfo(hWndControl, uID);
+		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, 0L, (LPARAM)&ti);
 		CSize sz(LOWORD(lr), HIWORD(lr));
 		return sz;
 	}
