@@ -4,12 +4,12 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-
+#include "wxx_scrollview.h"
 #include "ColourDialog.h"
 
 
 // Declaration of the CView class
-class CView : public CWnd
+class CView : public CScrollView
 {
 public:
 	CView();
@@ -23,16 +23,12 @@ protected:
 	virtual void    OnDraw(CDC& dc);
 	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    OnInitialUpdate();
-	virtual LRESULT OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CBitmap m_bmImage;
-	int m_xCurrentScroll;
-	int m_yCurrentScroll;
+	CSize	m_textSize;
 };
 
 

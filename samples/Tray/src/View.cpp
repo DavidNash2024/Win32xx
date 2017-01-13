@@ -9,7 +9,8 @@
 // Definitions for the CView class
 void CView::Minimize()
 {
-    NOTIFYICONDATA nid = { 0 };
+	NOTIFYICONDATA nid;
+	ZeroMemory(&nid, sizeof(nid));
     nid.cbSize = sizeof(NOTIFYICONDATA);
     nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;
@@ -171,7 +172,8 @@ void CView::PreCreate(CREATESTRUCT& cs)
 
 void CView::Restore()
 {
-    NOTIFYICONDATA nid = { 0 };
+    NOTIFYICONDATA nid;
+	ZeroMemory(&nid, sizeof(nid));
     nid.cbSize = sizeof(NOTIFYICONDATA);
     nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;

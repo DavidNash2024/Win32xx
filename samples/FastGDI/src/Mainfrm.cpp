@@ -106,8 +106,6 @@ BOOL CMainFrame::OnFileNew()
 	TB.DisableButton(IDM_FILE_SAVEAS);
 	TB.DisableButton(IDM_IMAGE_ADJUST);
 	GetMyView().LoadFileImage(NULL);
-	GetMyView().ShowScrollBar(SB_BOTH, FALSE);
-	GetMyView().Invalidate();
 
 	// Set the caption
 	SetWindowText(_T("FastGDI"));
@@ -135,7 +133,6 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 		// Resize the frame to match the bitmap
 		if (GetMyView().GetImage())
 		{
-			GetMyView().ShowScrollBar(SB_BOTH, FALSE);
 			CRect rcImage = GetMyView().GetImageRect();
 			AdjustFrameRect(rcImage);
 		}
@@ -191,7 +188,6 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
 	// Resize the frame to match the bitmap
 	if (GetMyView().GetImage())
 	{
-		GetMyView().ShowScrollBar(SB_BOTH, FALSE);
 		CRect rcImage = GetMyView().GetImageRect();
 		AdjustFrameRect(rcImage);
 	}

@@ -122,17 +122,6 @@
   #include "wxx_wcestddef.h"
 #endif
 
-// These messages are actually supported on Win98
-#if WINVER >= 0x0410
-  #ifndef WM_UNINITMENUPOPUP
-    #define WM_UNINITMENUPOPUP              0x0125
-  #endif
-
-  #ifndef WM_MENURBUTTONUP
-    #define WM_MENURBUTTONUP                0x0122
-  #endif
-#endif // WINVER == 0x0410
-
 #include "wxx_shared_ptr.h"
 
 // Required for WinCE

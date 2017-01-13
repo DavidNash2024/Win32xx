@@ -14,7 +14,8 @@ CView::CView()
 BOOL CView::OnColor()
 {
 	static COLORREF CustColors[16] = {0};	// array of custom colors
-	CHOOSECOLOR cc = {0};			// Structure used by ChooseColor
+	CHOOSECOLOR cc;							// Structure used by ChooseColor
+	ZeroMemory(&cc, sizeof(cc));
 
 	cc.lStructSize = sizeof(CHOOSECOLOR);
 	cc.Flags = CC_FULLOPEN | CC_RGBINIT;
