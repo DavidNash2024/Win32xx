@@ -2048,25 +2048,26 @@ namespace Win32xx
 	// Use GetText to retrieve a tool's text.
 	{
 		assert(IsWindow());
-		TOOLINFO ToolInfo = { 0 };
-		ToolInfo.cbSize = sizeof(ToolInfo);
+		TOOLINFO ti;
+		ZeroMemory(&ti, sizeof(ti));
+		ti.cbSize = sizeof(ti);
 		if (uID == (UINT)-1)
 		{
-			ToolInfo.hwnd = GetParent();
-			ToolInfo.uId = (UINT_PTR)hWndControl;
+			ti.hwnd = GetParent();
+			ti.uId = (UINT_PTR)hWndControl;
 		}
 		else
 		{
-			ToolInfo.hwnd = hWndControl;
-			ToolInfo.uId = uID;
+			ti.hwnd = hWndControl;
+			ti.uId = uID;
 		}
 		
-		BOOL Result = (BOOL)SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ToolInfo);
+		BOOL Result = (BOOL)SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ti);
 		
 		// assert if we fail to retrieve the TOOLINFO
 		assert(Result);
 
-		return ToolInfo;
+		return ti;
 	}
 
 	inline BOOL CToolTip::HitTest(HWND hWnd, CPoint pt, const TOOLINFO& ToolInfo) const

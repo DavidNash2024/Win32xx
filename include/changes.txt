@@ -63,6 +63,9 @@ New Features and Enhancements
    automatically deletes the HENHMETAFILE when the last copy of the 
    CEnhMetaFile object goes out of scope. The CMetaFileDC::CloseEnhanced
    function returns a CEnhMetaFile object.
+   
+* Added CScrollView
+  The scrollview class adds scrolling to a CWnd used as a view window.   
 
 * Renamed the text conversion typedefs. 
    This allows Win32++ to be used with ATL.   
