@@ -120,6 +120,7 @@ typedef  unsigned char  byte;
 #include <wxx_regkey.h>			// Add CRegKey
 //#include <wxx_ribbon.h>		// Add CRibbon, CRibbonFrame
 #include <wxx_richedit.h>		// Add CRichEdit
+#include <wxx_scrollview.h>		// Add CScrollView
 #include <wxx_shared_ptr.h>		// Add Shared_Ptr
 #include <wxx_socket.h>			// Add CSocket
 #include <wxx_statusbar.h>		// Add CStatusBar

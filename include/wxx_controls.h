@@ -1978,10 +1978,10 @@ namespace Win32xx
 	// Retrieves the initial, pop-up, and reshow durations currently set for a ToolTip control.
 	// Returns an intvalue with the specified duration in milliseconds.
 	//
-	// dwDuration is one of: 
-	//	TTDT_AUTOPOP - time the ToolTip window remains visible if the pointer is stationary 
-	//	TTDT_INITIAL - time the pointer must remain stationary before the ToolTip window appears. 
-	//	TTDT_RESHOW	 - time it takes for subsequent ToolTip windows to appear as the pointer moves from one tool to another.	
+	// dwDuration is one of:
+	//	TTDT_AUTOPOP - time the ToolTip window remains visible if the pointer is stationary
+	//	TTDT_INITIAL - time the pointer must remain stationary before the ToolTip window appears.
+	//	TTDT_RESHOW	 - time it takes for subsequent ToolTip windows to appear as the pointer moves from one tool to another.
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(TTM_GETDELAYTIME, dwDuration, 0L));
@@ -2061,11 +2061,8 @@ namespace Win32xx
 			ti.hwnd = hWndControl;
 			ti.uId = uID;
 		}
-		
-		BOOL Result = (BOOL)SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ti);
-		
-		// assert if we fail to retrieve the TOOLINFO
-		assert(Result);
+
+		VERIFY(SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ti));
 
 		return ti;
 	}
