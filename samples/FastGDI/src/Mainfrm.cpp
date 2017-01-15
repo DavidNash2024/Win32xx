@@ -298,20 +298,10 @@ void CMainFrame::SetupToolBar()
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	switch (uMsg)
-	{
-		case WM_SIZE:
-		{
-			// Remove scrollbars and redraw the view if the frame is maximized
-			if (wParam == SIZE_MAXIMIZED)
-			{
-				GetView().ShowScrollBar(SB_BOTH, FALSE);
-				GetView().Invalidate();
-			}
-			
-			break;
-		}
-	}
+//	switch (uMsg)
+//	{
+//
+//	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);
