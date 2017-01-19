@@ -10,9 +10,6 @@
 
 CView::CView()
 {
-	// Set the 'no bitmap' scroll size
-	m_textSize = CSize(400, 200);
-	SetScrollSizes(m_textSize);
 }
 
 CView::~CView()
@@ -45,8 +42,8 @@ BOOL CView::LoadFileImage(LPCTSTR szFilename)
 	}
 	else
 	{
-		// Set the 'no bitmap' scroll size
-		szTotal = m_textSize;
+		// Disable scrolling
+		szTotal = CSize(0, 0);
 		Invalidate();
 	}
 
@@ -119,8 +116,9 @@ void CView::OnDraw(CDC& dc)
 	}
 	else
 	{
-		CString cs = _T("Load a bitmap file");
-		dc.TextOut(50, 100, cs.c_str(), cs.GetLength());
+		// There is no image, so display a hint to get one
+		CRect rc = GetClientRect();
+		dc.DrawText(_T("Use the Menu or ToolBar to open a Bitmap File"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 }
 
@@ -144,7 +142,7 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		if ( !Frame.LoadFile(FileName) )	
 		{
 			TRACE ("Failed to load "); TRACE(FileName); TRACE("\n");
-			SetScrollSizes(m_textSize);
+			SetScrollSizes(CSize(0,0));
 			Invalidate();
 		}
 	}

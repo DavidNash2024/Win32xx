@@ -28,7 +28,6 @@ protected:
 
 private:
 	CBitmap m_bmImage;
-	CSize	m_textSize;
 };
 
 
