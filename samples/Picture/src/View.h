@@ -9,7 +9,7 @@
 
 
 // Declaration of the CView class
-class CView : public CWnd
+class CView : public CScrollView
 {
 public:
 	CView();
@@ -25,18 +25,13 @@ public:
 protected:
 	virtual void    OnDraw(CDC& dc);
 	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual int     OnCreate(CREATESTRUCT& cs);
-	virtual LRESULT OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	LPPICTURE m_pPicture;
 	CBrush	m_Brush;
-	int m_xCurrentScroll;
-	int	m_yCurrentScroll;
 };
 
 

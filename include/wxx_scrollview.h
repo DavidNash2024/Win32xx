@@ -35,6 +35,23 @@
 ////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////
+//
+// The CScrollView class adds scrolling to a view window. Inherit your
+// view window from CScrollView, and use the SetScrollSizes function
+// to set up the scrolling. Override OnDraw an specify the drawing to
+// the window as usual. 
+//
+// Use SetScrollSizes to specify the scrolling sizes.
+// Use SetScollSizes(CSize(0,0)) to disable scrolling.
+//
+// The default scrolling background is white. Use the SetScrollBkgnd
+// to set a different brush color.
+//
+/////////////////////////////////////////////////////////
+
+
+
 #ifndef _WIN32XX_SCROLLVIEW_H_
 #define _WIN32XX_SCROLLVIEW_H_
 
@@ -51,8 +68,9 @@
 namespace Win32xx
 {
 
-
+	///////////////////////////////////////
 	// Declaration of the CScrollView class
+	//
 	class CScrollView : public CWnd
 	{
 	public:
@@ -61,10 +79,12 @@ namespace Win32xx
 
 		CPoint GetScrollPosition()	{ return m_CurrentPos; }
 		CSize GetTotalScrollSize()	{ return m_sizeTotal; }
-		BOOL IsHScrollVisible()		{ return !!(GetWindowLongPtr(GWL_STYLE) &  WS_HSCROLL); }
-		BOOL IsVScrollVisible()		{ return !!(GetWindowLongPtr(GWL_STYLE) &  WS_VSCROLL); }
+		BOOL IsHScrollVisible()		{ return (GetWindowLongPtr(GWL_STYLE) &  WS_HSCROLL) != 0; }
+		BOOL IsVScrollVisible()		{ return (GetWindowLongPtr(GWL_STYLE) &  WS_VSCROLL) != 0; }
 		void SetScrollPosition(POINT pt);
-		void SetScrollSizes(CSize sizeTotal, CSize sizePage = CSize(0,0), CSize sizeLine = CSize(0,0));
+		void SetScrollSizes(CSize sizeTotal = CSize(0,0), CSize sizePage = CSize(0,0), CSize sizeLine = CSize(0,0));
+
+		void SetScrollBkgnd(CBrush brushBkgnd) { m_brushBkgnd = brushBkgnd; }
 
 	protected:
 		virtual void	FillOutsideRect(CDC& dc, HBRUSH hBrush);
@@ -84,6 +104,7 @@ namespace Win32xx
 		CSize m_sizeTotal;
 		CSize m_sizePage;
 		CSize m_sizeLine;
+		CBrush m_brushBkgnd;
 	};
 
 }
@@ -94,8 +115,13 @@ namespace Win32xx
 
 namespace Win32xx
 {
+
+	////////////////////////////////////////
+	// Definitions for the CScrollView class 
+	//
 	inline CScrollView::CScrollView()
 	{
+		m_brushBkgnd.CreateSolidBrush(RGB(255, 255, 255));
 	}
 
 	inline CScrollView::~CScrollView()
@@ -118,14 +144,18 @@ namespace Win32xx
 	}
 
 	inline BOOL CScrollView::OnEraseBkgnd(CDC& dc)
+	// Called when the background for the window is erased.
 	{
 		UNREFERENCED_PARAMETER(dc);
 
-		// Prevent the window background from being erased to reduce flicker
-		return TRUE;
+		if (m_sizeTotal == CSize(0, 0))
+			return FALSE;	// Allow background erasure when the scroll bars are disabled
+		else
+			return TRUE;	// Prevent background erasure to reduce flicker
 	}
 
 	inline LRESULT CScrollView::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when an event occurs in the horizontal scroll bar.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
@@ -173,38 +203,42 @@ namespace Win32xx
 	inline LRESULT CScrollView::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Override OnPaint so we can wrap code around OnDraw
 	{
-		UNREFERENCED_PARAMETER(uMsg);
-		UNREFERENCED_PARAMETER(wParam);
-		UNREFERENCED_PARAMETER(lParam);
 
-		CPaintDC dc(*this);
-		CMemDC dcMem(dc);
+		if (m_sizeTotal != CSize(0, 0))
+		{
+			CPaintDC dc(*this);
+			CMemDC dcMem(dc);
 
-		// ensure SetTotalScrollSize has been called
-		assert(m_sizeTotal.cx > 0);
-		assert(m_sizeTotal.cy > 0);
+			// negative sizes are not allowed.
+			assert(m_sizeTotal.cx > 0);
+			assert(m_sizeTotal.cy > 0);
 
-		// Create the compatible bitmap for the memory DC
-		dcMem.CreateCompatibleBitmap(GetDC(), m_sizeTotal.cx, m_sizeTotal.cy);
+			// Create the compatible bitmap for the memory DC
+			dcMem.CreateCompatibleBitmap(GetDC(), m_sizeTotal.cx, m_sizeTotal.cy);
 
-		// Set the background color
-		CRect rcTotal(CPoint(0, 0), m_sizeTotal);
-		dcMem.FillRect(rcTotal, (HBRUSH)GetStockObject(WHITE_BRUSH));
+			// Set the background color
+			CRect rcTotal(CPoint(0, 0), m_sizeTotal);
+			dcMem.FillRect(rcTotal, m_brushBkgnd);
 
-		// Call the overriden OnDraw function
-		OnDraw(dcMem);
+			// Call the overriden OnDraw function
+			OnDraw(dcMem);
 
-		// Copy the modified memory DC to the window's DC with scrolling offsets
-		dc.BitBlt(0, 0, m_sizeTotal.cx, m_sizeTotal.cy, dcMem, m_CurrentPos.x, m_CurrentPos.y, SRCCOPY);
+			// Copy the modified memory DC to the window's DC with scrolling offsets
+			dc.BitBlt(0, 0, m_sizeTotal.cx, m_sizeTotal.cy, dcMem, m_CurrentPos.x, m_CurrentPos.y, SRCCOPY);
 
-		// Set the area outside the scrolling area
-		FillOutsideRect(dc, (HBRUSH)GetStockObject(WHITE_BRUSH));
+			// Set the area outside the scrolling area
+			FillOutsideRect(dc, m_brushBkgnd);
 
-		// No more drawing required
-		return 0L;
+			// No more drawing required
+			return 0L;
+		}
+		
+		// Do default OnPaint if m_sizeTotal is zero
+		return CWnd::OnPaint(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CScrollView::OnMouseWheel(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when the mouse wheel is rotated.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
@@ -226,6 +260,7 @@ namespace Win32xx
 	}
 
 	inline LRESULT CScrollView::OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Called when an event occurs in the vertical scroll bar.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);
@@ -280,7 +315,7 @@ namespace Win32xx
 		UpdateBars();
 		Invalidate();
 
-		return 0L;
+		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
 	inline LRESULT CScrollView::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -296,16 +331,14 @@ namespace Win32xx
 		CRect rc(0, 0, pWinPos->cx, pWinPos->cy);
 
 		// Possibly hide the horizontal scroll bar
-		if (rc.Width() >= m_sizeTotal.cx)
+		if (rc.Width() > m_sizeTotal.cx)
 		{
-			m_CurrentPos.x = 0;
 			ShowScrollBar(SB_HORZ, FALSE);	// Can resize the window
 		}
 
 		// Possibly hide the vertical scroll bar
-		if (rc.Height() >= m_sizeTotal.cy)
+		if (rc.Height() > m_sizeTotal.cy)
 		{
-			m_CurrentPos.y = 0;
 			ShowScrollBar(SB_VERT, FALSE);	// Can resize the window
 		}
 
@@ -321,6 +354,7 @@ namespace Win32xx
 	}
 
 	inline void CScrollView::SetScrollPosition(POINT pt)
+	// Sets the current scroll position. 
 	{
 		assert(pt.x >= 0 && pt.x <= m_sizeTotal.cx);
 		assert(pt.y >= 0 && pt.y <= m_sizeTotal.cy);
@@ -330,6 +364,8 @@ namespace Win32xx
 	}
 
 	inline void CScrollView::SetScrollSizes(CSize sizeTotal, CSize sizePage, CSize sizeLine)
+	// Sets the various Scroll Size parameters.
+	// Note that a sizeTotal of CSize(0,0) turns scrolling off.
 	{
 		if (IsWindow())
 		{
@@ -356,75 +392,90 @@ namespace Win32xx
 	}
 
 	inline void CScrollView::UpdateBars()
+	// Updates the display state of the scrollbars and the scrollbar positions.
+	// Also scrolls display view as required.
+	// Note: This function can be called recursively.
 	{
 		if (IsWindow())
 		{
-			DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
-			CRect rcImage(0, 0, m_sizeTotal.cx, m_sizeTotal.cy);
-			AdjustWindowRectEx(&rcImage, 0, FALSE, dwExStyle);
-
-			CRect rcScrollView = GetClientRect();
-			AdjustWindowRectEx(&rcScrollView, 0, FALSE, dwExStyle);
-
-			SCROLLINFO si;
-			ZeroMemory(&si, sizeof(SCROLLINFO));
-			si.cbSize = sizeof(si);
-			si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
-			si.nMin = 0;
-
-			if (rcScrollView.Width() >= rcImage.Width())
+			if (m_sizeTotal == CSize(0, 0))
 			{
-				m_CurrentPos.x = 0;
-				ShowScrollBar(SB_HORZ, FALSE);
-			}
-			else
-			{
-				si.nMax = rcImage.Width();
-				si.nPage = rcScrollView.Width();
-				si.nPos = m_CurrentPos.x;
-				SetScrollInfo(SB_HORZ, si, TRUE);
-				ShowScrollBar(SB_HORZ, TRUE);
-			}
-
-			if (rcScrollView.Height() >= rcImage.Height())
-			{
-				m_CurrentPos.y = 0;
-				ShowScrollBar(SB_VERT, FALSE);
-			}
-			else
-			{
-				si.nMax = rcImage.Height();
-				si.nPage = rcScrollView.Height();
-				si.nPos = m_CurrentPos.y;
-				SetScrollInfo(SB_VERT, si, TRUE);
-				ShowScrollBar(SB_VERT, TRUE);
-			}
-
-			int xNewPos = MIN(m_CurrentPos.x, rcImage.Width() - rcScrollView.Width());
-			xNewPos = MAX(xNewPos, 0);
-			int xDelta = xNewPos - m_CurrentPos.x;
-
-			int yNewPos = MIN(m_CurrentPos.y, rcImage.Height() - rcScrollView.Height());
-			yNewPos = MAX(yNewPos, 0);
-			int yDelta = yNewPos - m_CurrentPos.y;
-
-			ScrollWindowEx(-xDelta, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-			m_CurrentPos.x = xNewPos;
-			m_CurrentPos.y = yNewPos;
-
-			// Ensure the scrollbars are only displayed if necessary
-			CRect rc = GetWindowRect();
-			if ((rc.Width() >= rcImage.Width()) && (rc.Height() >= rcImage.Height()))
-			{
-				ScrollWindowEx(m_CurrentPos.x, m_CurrentPos.y, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-				m_CurrentPos.x = 0;
-				m_CurrentPos.y = 0;
 				ShowScrollBar(SB_BOTH, FALSE);
+				m_CurrentPos = CPoint(0, 0);
+			}
+			else
+			{
+				DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
+				CRect rcImage(0, 0, m_sizeTotal.cx, m_sizeTotal.cy);
+				AdjustWindowRectEx(&rcImage, 0, FALSE, dwExStyle);
+
+				CRect rcScrollView = GetClientRect();
+				AdjustWindowRectEx(&rcScrollView, 0, FALSE, dwExStyle);
+
+				SCROLLINFO si;
+				ZeroMemory(&si, sizeof(SCROLLINFO));
+				si.cbSize = sizeof(si);
+				si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
+				si.nMin = 0;
+
+				if (rcScrollView.Width() >= rcImage.Width())
+				{
+					m_CurrentPos.x = 0;
+					ShowScrollBar(SB_HORZ, FALSE);
+				}
+				else
+				{
+					si.nMax = rcImage.Width();
+					si.nPage = rcScrollView.Width();
+					si.nPos = m_CurrentPos.x;
+					SetScrollInfo(SB_HORZ, si, TRUE);
+					ShowScrollBar(SB_HORZ, TRUE);
+				}
+
+				if (rcScrollView.Height() >= rcImage.Height())
+				{
+					m_CurrentPos.y = 0;
+					ShowScrollBar(SB_VERT, FALSE);
+				}
+				else
+				{
+					si.nMax = rcImage.Height();
+					si.nPage = rcScrollView.Height();
+					si.nPos = m_CurrentPos.y;
+					SetScrollInfo(SB_VERT, si, TRUE);
+					ShowScrollBar(SB_VERT, TRUE);
+				}
+
+				int cxScroll = IsVScrollVisible() ? GetSystemMetrics(SM_CXVSCROLL) : 0;
+				int cyScroll = IsHScrollVisible() ? GetSystemMetrics(SM_CYHSCROLL) : 0;
+
+				int xNewPos = MIN(m_CurrentPos.x, rcImage.Width() - GetWindowRect().Width() + cxScroll);
+				xNewPos = MAX(xNewPos, 0);
+				int xDelta = xNewPos - m_CurrentPos.x;
+
+				int yNewPos = MIN(m_CurrentPos.y, rcImage.Height() - GetWindowRect().Height() + cyScroll);
+				yNewPos = MAX(yNewPos, 0);
+				int yDelta = yNewPos - m_CurrentPos.y;
+
+				ScrollWindowEx(-xDelta, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+				m_CurrentPos.x = xNewPos;
+				m_CurrentPos.y = yNewPos;
+
+				// Ensure the scrollbars are only displayed if necessary
+				CRect rc = GetWindowRect();
+				if ((rc.Width() >= rcImage.Width()) && (rc.Height() >= rcImage.Height()))
+				{
+					ScrollWindowEx(m_CurrentPos.x, m_CurrentPos.y, NULL, NULL, NULL, NULL, SW_INVALIDATE);
+					m_CurrentPos.x = 0;
+					m_CurrentPos.y = 0;
+					ShowScrollBar(SB_BOTH, FALSE);
+				}
 			}
 		}
 	}
 
 	inline LRESULT CScrollView::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	// Default message handling
 	{
 		switch (uMsg)
 		{

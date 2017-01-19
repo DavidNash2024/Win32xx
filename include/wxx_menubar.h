@@ -43,6 +43,16 @@
 #include "wxx_controls.h"
 #include "wxx_toolbar.h"
 
+
+#ifndef WM_UNINITMENUPOPUP
+  #define WM_UNINITMENUPOPUP		0x0125
+#endif
+
+#ifndef WM_MENURBUTTONUP
+  #define WM_MENURBUTTONUP		0x0122
+#endif
+
+
 namespace Win32xx
 {
 

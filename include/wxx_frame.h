@@ -364,10 +364,7 @@ namespace Win32xx
 		// These functions aren't virtual, and shouldn't be overridden
 		CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
 		HACCEL GetFrameAccel() const				{ return m_hAccel; }
-		InitValues GetInitValues() const
-		{
-			return m_InitValues;
-		}
+		InitValues GetInitValues() const			{ return m_InitValues; }
 		CMenu& GetFrameMenu() const					{ return m_Menu; }
 		MenuTheme& GetMenuBarTheme() const			{ return m_MBTheme; }
 		CMenuMetrics& GetMenuMetrics()				{ return m_MenuMetrics; }
@@ -397,7 +394,7 @@ namespace Win32xx
 		void SetToolBarTheme(ToolBarTheme& TBT);
 
 	protected:
-		// Override these functions as required
+		// Override these functions as required.
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon);
 		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
 		virtual void AddMenuBarBand();
@@ -452,10 +449,8 @@ namespace Win32xx
 		virtual void ShowToolBar(BOOL bShow);
 		virtual void UpdateMRUMenu();
 
-		// Not intended to be overridden
-		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
-
-		// Current declarations of message handlers
+		// Current declarations of message handlers.
+		// Override these functions as required.
 		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -468,6 +463,7 @@ namespace Win32xx
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);
 
+		// Not intended to be overridden
 		BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
 		BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
 		BOOL GetUseReBar() const { return m_UseReBar; }
@@ -478,6 +474,8 @@ namespace Win32xx
 		void SetUseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
 		void SetUseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
 		void SetUseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
+
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		CFrameT(const CFrameT&);				// Disable copy construction

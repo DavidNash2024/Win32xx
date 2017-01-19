@@ -86,7 +86,6 @@ BOOL CMainFrame::OnFileMRU(WPARAM wParam)
 	{
 		RemoveMRUEntry(strMRUText);
 		m_View.NewPictureFile();
-		MessageBox(_T("Failed to load File"), _T("Error"), MB_OK);
 	}
 
 	return TRUE;
