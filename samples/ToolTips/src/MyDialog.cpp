@@ -105,6 +105,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_TT.SetWindowTheme(L" ", L" ");	// Turn XP themes off
 	m_TT.SetTipBkColor(RGB(255, 255, 125));
 
+	// Add controls to the standard Tooltip.
 	// The tooltip will request the text to display via a TTN_GETDISPINFO notification
 	m_TT.AddTool(m_Edit, LPSTR_TEXTCALLBACK);
 	m_TT.AddTool(m_RichEdit, LPSTR_TEXTCALLBACK);

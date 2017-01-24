@@ -339,38 +339,6 @@ OnPrintPreview()							/*
 
 /*============================================================================*/
 	void CView::
-PreCreate(CREATESTRUCT &cs)                                             /*
-
-	Set defaults used by the create function for the view window for
-	precise control over the window created.
-*-----------------------------------------------------------------------------*/
-{
-	  // a child window of the main frame, with h- and v-scrolling
-	cs.style = WS_CHILD;
-	  // Set the extended style: a 3-D look with border and sunken edge
-	cs.dwExStyle =
-	    WS_EX_CONTROLPARENT       // TAB key navigation
-	    ;
-}
-
-/*============================================================================*/
-	void CView::
-PreRegisterClass(WNDCLASS &wc)                                          /*
-
-	Set Window class parameters for precise control over the characteristics
-	of the window class created. See the WNDCLASS documentation for things
-	that can be set.  Here, we mainly justset some defaults.
-*-----------------------------------------------------------------------------*/
-{
-	  // Set the Window Class name
-	wc.lpszClassName = _T("CView");
-	  // Set the class style (not to be confused with the window styles
-	  // set in PreCreate)
-	wc.style = CS_DBLCLKS;	// Generate left button double click messages
-}
-
-/*============================================================================*/
-	void CView::
 Register(CDoc* pDoc)							/*
 
 	Register the view's document.

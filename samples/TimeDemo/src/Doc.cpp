@@ -394,11 +394,11 @@ NewDocument() 								/*
 	    + t8.Format(longDateFmt));
 
 	CString s9(_T("09-Mar-2014 3:37:40"));
-	CTime t9(s9);  // a CString conversion
+	CTime t9(GetTimeFromStr(s9));  // a CString conversion
 	PushContent(_T("  11. CTime t9(\"09-Mar-2014 3:37:40\")   CString  ")
 	    + t9.Format(longDateFmt));
 
-	CTime t10(_T("09-Mar-2014 3:37:40"));  // a LPCTSTR conversion
+	CTime t10(GetTimeFromStr(_T("09-Mar-2014 3:37:40")));  // a LPCTSTR conversion
 	PushContent(_T("  12. CTime t10(\"09-Mar-2014 2:37:40\")  LPCTSTR  ")
 	    + t10.Format(longDateFmt));
 
@@ -578,6 +578,149 @@ NewDocument() 								/*
 	m_bDoc_is_open = m_bDoc_is_dirty = true;
 	m_Doc_path.Empty();
 }
+
+/*============================================================================*/
+	CTime CDoc::
+GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const		/*
+
+	Construct a CTime as directed by the formatting CString timestr, whose
+	specifications appear below. Any nonconformity between timestr  and
+	these expected format standards will result in throwing an exception.
+	Acceptable formats are:
+
+		"yyyy/mo/da H:M:S"
+		"da-Mon-yyyy H:M:S"
+		"Month da, yyyy H:M:S"
+		"yyyy+doy H:M:S"
+
+	The year, month, day, hour, minute, and  second values must be consistent
+	with the requirements given in the description of the constructor of
+	CTime(year, month, day, hour, minute, second).  The date and  time
+	specifications are presumed to apply to the local zone. If H:M:S is not
+	present, then midnight is presumed, and  if just S is absent, zero
+	seconds is the default. The first form is assumed when the given date
+	string contains "/"; the second, when "-" appears; the third, when ","
+	is present; and  the fourth, when "+" is found.
+
+*---------------------------------------------------------------------------- - */
+{
+	assert(szTime);
+	CString timestr(szTime);
+	int  p1, p2, p3; // position indexes into timestr
+	int	len = timestr.GetLength();
+	int yyyy;   // year, 4 digits
+	int	mo;   	// month 1 - 12
+	int	da;   	// day 1-31
+	int	doy;	// day of year 1 - 366
+	int	H; 	// hour of day 0 - 23
+	int	M;	// minute of hour 0 - 59
+	int	S;	// seconds of minute 0 - 61 (leap years)
+
+	CString Month[] =   {_T("January"), _T("February"),
+				  _T("March"), _T("April"), _T("May"),
+				  _T("June"), _T("July"), _T("August"),
+				  _T("September"), _T("October"),
+				  _T("November"), _T("December")};
+	CString AbMonth[] = {_T("Jan"), _T("Feb"), _T("Mar"),
+				  _T("Apr"), _T("May"), _T("Jun"),
+				  _T("Jul"), _T("Aug"), _T("Sep"),
+				  _T("Oct"), _T("Nov"), _T("Dec")};
+
+	// find  H:M:S values
+	p1 = MIN(timestr.Find(_T(":")), len);
+	if (p1 >= 0)
+	{	  // the time of day is present
+		p2 = timestr.ReverseFind(_T(":"));
+		if (p1 == p2) // H:M only
+		{
+			p2 = MAX(timestr.ReverseFind(_T(" "), p1), 0);
+			p3 = MAX(timestr.Find(_T(" "), p1), (int)len);
+			H = _ttoi(timestr.Mid(p2 + 1, p1 - p2).c_str());
+			M = _ttoi(timestr.Mid(p1 + 1, p3 - p1).c_str());
+			S = 0;
+		}
+		else // H:M:S
+		{
+			p3 = MAX(timestr.ReverseFind(_T(" "), p1), (int)0);
+			H = _ttoi(timestr.Mid(p3, p1 - p3).c_str());
+			M = _ttoi(timestr.Mid(p1 + 1, p2 - p1).c_str());
+			p3 = MAX(timestr.Find(_T(" "), p1), (int)len);
+			S = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
+		}
+
+	}
+	else // no ":" present
+		H = M = S = 0;
+
+	// now handle the year, month and  day formats
+	p1 = timestr.Find(_T("/"));
+	if (p1 >= 0) // "yyyy/mo/da H:M:S"
+	{
+		p2 = timestr.Find(_T("/"), p1 + 1);
+		assert(p2 <= len);  // Invalid time conversion format.
+
+		p3   = MIN(timestr.Find(_T(" "), p2), (int)len);
+		yyyy = _ttoi(timestr.Mid(0, p1).c_str());
+		mo   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
+		da   = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
+		CTime t(yyyy, mo, da, H, M, S, nDST);
+		return t;
+	}
+
+	p1 = timestr.Find(_T("-"));
+	if (p1 >= 0)  // "da-Mon-yyyy H:M:D"
+	{
+		p2 = timestr.Find(_T("-"), p1 + 1);
+		assert(p2 <= len);  // Invalid time conversion format.
+
+		p3   = MIN(timestr.Find(_T(" "), p2), (int)len);
+		da   = _ttoi(timestr.Mid(0, p1).c_str());
+		CString mon  = timestr.Mid(p1 + 1, p2 - p1 - 1);
+		yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
+		for (mo = 0; mo < 12; mo++)
+			if (mon == AbMonth[mo])
+				break;
+		assert(mo != 12);  // Invalid time conversion format.
+
+		mo++;
+		CTime t(yyyy, mo, da, H, M, S, nDST);
+		return t;
+	}
+
+	p2 = timestr.Find(_T(", "));
+	if (p2 >= 0)  // "Month da, yyyy H:M:S"
+	{
+		p1 = timestr.Find(_T(" "));
+		assert(p1 <= p2);  // Invalid time conversion format.
+
+		p3   = MIN(timestr.Find(_T(" "), p2 + 2), (int)len);
+		CString month = timestr.Mid(0, p1);
+		da   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
+		yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
+		for (mo = 0; mo < 12; mo++)
+			if (month == Month[mo])
+				break;
+		assert(mo != 12);  // Invalid time conversion format.
+
+		mo++;
+		CTime t(yyyy, mo, da, H, M, S, nDST);
+		return t;
+	}
+
+	p1 = timestr.Find(_T("+"));
+	assert(p1 >= 0);  // Invalid time conversion format.
+	if (p1 >= 0)  // "yyyy+doy H:M:S"
+	{
+		p2 = MIN(timestr.Find(_T(" ")), (int)len);
+		yyyy = _ttoi(timestr.Mid(0, p1).c_str());
+		doy  = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
+		CTime t(yyyy, doy, H, M, S, nDST);
+		return t;
+	}
+
+	return CTime(0);
+}
+
 
 /*============================================================================*/
 	void CDoc::

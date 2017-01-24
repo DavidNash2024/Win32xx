@@ -14,13 +14,11 @@ class CView : public CScrollView
 public:
 	CView();
 	virtual ~CView();
-	virtual CRect GetImageRect();
-	virtual BOOL LoadPictureFile(LPCTSTR szFile);
-	virtual void NewPictureFile();
-	virtual void SavePicture(LPCTSTR szFile);
-	void Paint(HDC hDC);
-
-	LPPICTURE GetPicture() { return m_pPicture; }
+	CRect GetImageRect();
+	LPPICTURE GetPicture()	{ return m_pPicture; }
+	BOOL LoadPictureFile(LPCTSTR szFile);
+	void NewPictureFile();
+	void SavePicture(LPCTSTR szFile);
 
 protected:
 	virtual void    OnDraw(CDC& dc);

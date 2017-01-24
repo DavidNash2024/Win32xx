@@ -1,0 +1,239 @@
+/* (04-Aug-2016) [Tab/Indent: 8/8][Line/Box: 80/74]              (Resource.rc) *
+********************************************************************************
+|                                                                              |
+|                   Copyright (c) 2017, Robert C. Tausworthe                   |
+|                             All Rights Reserved.                             |
+|                         robert.c.tausworthe@ieee.org                         |
+|                                                                              |
+===============================================================================*
+
+	Contents Description: Typical application resources file. Adapted
+	to use Win32++ Windows interface classes, Copyright c) 2005-2017
+	David Nash, under permissions granted therein.
+
+        Caveats: The copyright displayed above extends only to the author's
+	original contributions to the subject class, and to the alterations,
+	additions, deletions, and other treatments of materials that may have
+	been extracted from the cited sources.  Unaltered portions of those
+	materials retain their original copyright status. The author hereby
+	grants permission to any person obtaining a copy of this treatment
+	of the subject class and any associated documentation composed by
+	the author, to utilize this material, free of charge and without
+	restriction or limitation, subject to the following conditions:
+
+		The above copyright notice, as well as that of David Nash
+		and Win32++, together with the respective permission
+		conditions shall be included in all copies or substantial
+		portions of this material so copied, modified, merged,
+		published, distributed, or otherwise held by others.
+
+	These materials are provided "as is", without warranty of any kind,
+	express or implied, including but not limited to: warranties of
+	merchantability, fitness for a particular purpose, and non-infringement.
+	In no event shall the authors or copyright holders be liable for any
+	claim, damages, or other liability, whether in an action of contract,
+	tort or otherwise, arising from, out of, or in connection with, these
+	materials, the use thereof, or any other other dealings therewith.
+
+	Special Conventions:
+
+	Programming Notes:
+                The programming standards roughly follow those established
+                by the 1997-1999 Jet Propulsion Laboratory Network Planning
+		and Preparation Subsystem project for C++ programming.
+
+	Originally a Microsoft Visual C++ generated resource script.
+
+ /******************************************************************************/
+
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+
+/*==============================================================================
+
+
+	Generated from the TEXTINCLUDE 2 resource.                      */
+
+#define APSTUDIO_HIDDEN_SYMBOLS
+#include "windows.h"
+#undef APSTUDIO_HIDDEN_SYMBOLS
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/*==============================================================================
+
+	English (United States) resources                               */
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+
+/*==============================================================================
+
+	RT_MANIFEST                                                     */
+
+1    RT_MANIFEST "../src/res/Win32++.manifest"
+
+/*==============================================================================
+
+	Menu                                                            */
+
+IDW_MAIN MENU
+{
+	POPUP "&File"
+	{
+		MENUITEM "&Open\tCtrl+O",         IDM_FILE_OPEN
+		MENUITEM "Close\tCtrl+W",         IDM_FILE_CLOSE
+		MENUITEM SEPARATOR
+		MENUITEM "Recent Files",	  IDW_FILE_MRU_FILE1, GRAYED
+		MENUITEM SEPARATOR
+		MENUITEM "E&xit\tCtrl+Q",         IDM_FILE_EXIT
+	}
+	POPUP "&View"
+	{
+		MENUITEM "&Tool Bar",     	  IDW_VIEW_TOOLBAR,   CHECKED
+		MENUITEM "&Status Bar",           IDW_VIEW_STATUSBAR, CHECKED
+		MENUITEM SEPARATOR
+	        MENUITEM "Font",		  IDM_FONT_CHOICE
+	        MENUITEM "Color",                 IDM_COLOR_CHOICE
+	}
+
+	POPUP "&Help"
+	{
+		MENUITEM "&About",     		   IDW_ABOUT
+	}
+}
+
+
+/*==============================================================================
+
+	Icon
+
+	The icon with the lowest ID value is placed first to ensure that
+	the application icon remains consistent on all systems.		*/
+
+IDW_MAIN                  ICON                  "../src/res/Dialog.ico"
+
+/*==============================================================================
+
+	Bitmaps                                                         */
+
+IDW_MAIN                  BITMAP                "../src/res//toolbar16.bmp"
+IDB_TOOLBAR               BITMAP                "../src/res/toolbar24.bmp"
+IDB_FONT_BMP    	  BITMAP  		"../src/res/FontsL.bmp"
+IDB_COLOR_BMP   	  BITMAP  		"../src/res/CrayonL.bmp"
+
+/*==============================================================================
+
+	About Dialog: triggered by CFrame::OnHelp() 			*/
+
+IDW_ABOUT DIALOGEX 200, 200, 200, 100
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
+    WS_CAPTION | WS_SYSMENU
+CAPTION "About"
+FONT 8, "MS Shell Dlg", 400, 0
+{
+	CTEXT	"ScrollWin Demo\nCompiled with MingW 4.8.1",
+		    IDM_CREDITS, 25, 4, 150, 95
+	ICON    IDW_MAIN, 0, 4, 4, 20, 20
+}
+
+/*==============================================================================
+
+	Accelerators                                                    */
+
+IDW_MAIN ACCELERATORS
+{
+	"O",            IDM_FILE_OPEN,   VIRTKEY, CONTROL, NOINVERT
+	"Q",            IDM_FILE_EXIT,   VIRTKEY, CONTROL, NOINVERT
+	"W",            IDM_COLOR_CHOICE, VIRTKEY, CONTROL, NOINVERT
+	"F",            IDM_FONT_CHOICE, VIRTKEY, CONTROL, NOINVERT
+	VK_F1,          IDW_ABOUT,       VIRTKEY, SHIFT, NOINVERT
+}
+
+/*==============================================================================
+
+	String Tables--tool tips and status labels			*/
+STRINGTABLE  // for the mainframe
+{
+	IDW_MAIN                "Common Dialogs Demo"
+	IDW_INDICATOR_CAPS      "CAP"
+	IDW_INDICATOR_NUM       "NUM"
+	IDW_INDICATOR_SCRL      "SCRL"
+	IDW_VIEW_TOOLBAR        "Show or hide the tool bar."
+	IDW_VIEW_STATUSBAR      "Show or hide the status bar."
+	IDM_COLOR_CHOICE        "Change the background color."
+	IDM_FONT_CHOICE         "Change the display font."
+}
+
+STRINGTABLE	  // standard file menu or toolbar items
+{
+	IDM_FILE_OPEN           "Open Existing Document."
+	IDM_FILE_CLOSE          "Close the current document."
+	IDW_FILE_MRU_FILE1      "Open this document"
+	IDW_FILE_MRU_FILE2      "Open this document"
+	IDW_FILE_MRU_FILE3      "Open this document"
+	IDW_FILE_MRU_FILE4      "Open this document"
+	IDW_FILE_MRU_FILE5      "Open this document"
+	  // add more mru IDs if needed
+	IDM_FILE_EXIT           "End the Program."
+}
+
+STRINGTABLE     // about box and toolbar items
+{
+	IDW_ABOUT          	"Display information about this program."
+}
+
+STRINGTABLE     // window-related items
+{
+	SC_CLOSE                "Close the Window."
+	SC_MAXIMIZE             "Maximize the Window."
+	SC_MINIMIZE             "Minimize the WIndow."
+	SC_MOVE                 "Move the Window."
+	SC_NEXTWINDOW           "Select Next Window."
+	SC_PREVWINDOW           "Select Previous Window."
+	SC_RESTORE              "Restore the Window."
+	SC_SIZE                 "Resize the Window."
+}
+
+
+#ifdef APSTUDIO_INVOKED
+/*==============================================================================
+
+	TEXTINCLUDE                                                     */
+
+1 TEXTINCLUDE 
+{
+	"resource.h\0"
+}
+
+2 TEXTINCLUDE 
+{
+	"#define APSTUDIO_HIDDEN_SYMBOLS\r\n"
+	"#include ""windows.h""\r\n"
+	"#undef APSTUDIO_HIDDEN_SYMBOLS\r\n"
+	"\0"
+}
+
+3 TEXTINCLUDE 
+{
+	"\r\n"
+	"\0"
+}
+
+/*-----------------------------------------------------------------------------*/
+#endif    // APSTUDIO_INVOKED
+
+
+STRINGTABLE
+{	  // app-specific program values
+	IDS_APP_VERSION         "Version 1.0 (2017)"
+	IDS_ARCHIVE_FILE_EXT    ".arc"
+	IDS_DATAPATH_SUBDIR	"win32++\\"
+	IDS_DOC_DEFAULT_EXT     ".txt"
+	IDS_FILE_FILTER         "Text Files (*.txt)|*.txt| All Files (*.*)|*.*||"
+	IDS_MAX_MRU_ENTRIES     "5"
+}
+/*-----------------------------------------------------------------------------*/
+#endif    // English (U.S.) resources
+
+

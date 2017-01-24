@@ -315,7 +315,7 @@ namespace Win32xx
 
 
 	//////////////////////////////////
-	// Declaration of the CFrameT class
+	// Declaration of the CFrameT class template
 	//
 	template <class T>		// The template parameter T is typically either CWnd or CDocker
 	class CFrameT : public T
@@ -415,19 +415,30 @@ namespace Win32xx
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
 		virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
+		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void OnClose();
 		virtual int  OnCreate(CREATESTRUCT& cs);
 		virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
 		virtual void OnDestroy();
+		virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);	
 		virtual BOOL OnHelp();
+		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMenuChar(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMenuSelect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void OnMenuUpdate(UINT nID);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
 		virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
 		virtual LRESULT OnRBNMinMax(LPNMHDR pNMHDR);
+		virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);	
+		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);		
 		virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
 		virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
 		virtual LRESULT OnUndocked();
+		virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);	
 		virtual BOOL OnViewStatusBar();
 		virtual BOOL OnViewToolBar();
 		virtual void PreCreate(CREATESTRUCT& cs);
@@ -446,22 +457,8 @@ namespace Win32xx
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
 		virtual void ShowMenu(BOOL bShow);
 		virtual void ShowStatusBar(BOOL bShow);
-		virtual void ShowToolBar(BOOL bShow);
+		virtual void ShowToolBar(BOOL bShow);		
 		virtual void UpdateMRUMenu();
-
-		// Current declarations of message handlers.
-		// Override these functions as required.
-		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMenuChar(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnMenuSelect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);
 
 		// Not intended to be overridden
 		BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
@@ -3476,6 +3473,9 @@ namespace Win32xx
 
 	template <class T>
 	inline void CFrameT<T>::SetupMenuIcons()
+	// Assigns icons to the dropdown menu items. By default the toolbar icons are
+	// added to the menu items. Override this function to assign additional or
+	// different icons to the drop down menu items.
 	{
 		// Add the set of toolbar images to the menu
 		if (GetToolBarData().size() > 0)

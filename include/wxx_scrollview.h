@@ -77,13 +77,13 @@ namespace Win32xx
 		CScrollView();
 		virtual ~CScrollView();
 
-		CPoint GetScrollPosition()	{ return m_CurrentPos; }
-		CSize GetTotalScrollSize()	{ return m_sizeTotal; }
-		BOOL IsHScrollVisible()		{ return (GetWindowLongPtr(GWL_STYLE) &  WS_HSCROLL) != 0; }
-		BOOL IsVScrollVisible()		{ return (GetWindowLongPtr(GWL_STYLE) &  WS_VSCROLL) != 0; }
+		CBrush GetScrollBkgnd() const    { return m_brushBkgnd; }
+		CPoint GetScrollPosition() const { return m_CurrentPos; }
+		CSize GetTotalScrollSize() const { return m_sizeTotal; }
+		BOOL IsHScrollVisible()	const	 { return (GetWindowLongPtr(GWL_STYLE) &  WS_HSCROLL) != FALSE; }
+		BOOL IsVScrollVisible()	const	 { return (GetWindowLongPtr(GWL_STYLE) &  WS_VSCROLL) != FALSE; }
 		void SetScrollPosition(POINT pt);
 		void SetScrollSizes(CSize sizeTotal = CSize(0,0), CSize sizePage = CSize(0,0), CSize sizeLine = CSize(0,0));
-
 		void SetScrollBkgnd(CBrush brushBkgnd) { m_brushBkgnd = brushBkgnd; }
 
 	protected:
@@ -96,7 +96,8 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
-		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		
+		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
 		void UpdateBars();
@@ -134,11 +135,11 @@ namespace Win32xx
 		CRect rcWindow = GetWindowRect();
 		ScreenToClient(rcWindow);
 
-		// Fill the right side with a white brush
+		// Fill the right side with the specified brush
 		CRect rcRight(m_sizeTotal.cx, 0, rcWindow.right, rcWindow.bottom);
 		dc.FillRect(rcRight, hBrush);
 
-		// Fill the bottom side with a white brush
+		// Fill the bottom side with the specified brush
 		CRect rcBottom(0, m_sizeTotal.cy, m_sizeTotal.cx, rcWindow.bottom);
 		dc.FillRect(rcBottom, hBrush);
 	}
@@ -412,13 +413,16 @@ namespace Win32xx
 				CRect rcScrollView = GetClientRect();
 				AdjustWindowRectEx(&rcScrollView, 0, FALSE, dwExStyle);
 
+				CRect rc = GetWindowRect();
+
 				SCROLLINFO si;
 				ZeroMemory(&si, sizeof(SCROLLINFO));
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 				si.nMin = 0;
+				bool IsBarNotRequired = ((rc.Width() >= rcImage.Width()) && (rc.Height() >= rcImage.Height()));
 
-				if (rcScrollView.Width() >= rcImage.Width())
+				if  ( (rcScrollView.Width() >= rcImage.Width()) || IsBarNotRequired )
 				{
 					m_CurrentPos.x = 0;
 					ShowScrollBar(SB_HORZ, FALSE);
@@ -432,7 +436,7 @@ namespace Win32xx
 					ShowScrollBar(SB_HORZ, TRUE);
 				}
 
-				if (rcScrollView.Height() >= rcImage.Height())
+				if ( (rcScrollView.Height() >= rcImage.Height()) || IsBarNotRequired )
 				{
 					m_CurrentPos.y = 0;
 					ShowScrollBar(SB_VERT, FALSE);
@@ -460,16 +464,6 @@ namespace Win32xx
 				ScrollWindowEx(-xDelta, -yDelta, NULL, NULL, NULL, NULL, SW_INVALIDATE);
 				m_CurrentPos.x = xNewPos;
 				m_CurrentPos.y = yNewPos;
-
-				// Ensure the scrollbars are only displayed if necessary
-				CRect rc = GetWindowRect();
-				if ((rc.Width() >= rcImage.Width()) && (rc.Height() >= rcImage.Height()))
-				{
-					ScrollWindowEx(m_CurrentPos.x, m_CurrentPos.y, NULL, NULL, NULL, NULL, SW_INVALIDATE);
-					m_CurrentPos.x = 0;
-					m_CurrentPos.y = 0;
-					ShowScrollBar(SB_BOTH, FALSE);
-				}
 			}
 		}
 	}
