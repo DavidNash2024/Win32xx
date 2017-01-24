@@ -99,10 +99,8 @@ namespace Win32xx
 	public:
 		CMDIDockFrame();
 		virtual ~CMDIDockFrame() {}
-		virtual void RecalcViewLayout();
 
 		virtual CWnd& GetMDIClient() const		{ return m_DockMDIClient; }
-		virtual void SetView(CWnd&)				{ CDocker::SetView(GetMDIClient()); }
 		virtual CDocker::CDockClient& GetDockClient() const { return m_DockMDIClient; }
 
 	protected:
@@ -185,12 +183,6 @@ namespace Win32xx
 	{ 
 		// The view window for a CMDIDockFrame is the MDI Client
 		SetView(GetMDIClient());
-	}
-	
-	inline void CMDIDockFrame::RecalcViewLayout()
-	// Re-positions the view window
-	{ 
-		RecalcDockLayout();
 	}
 	
 	inline int CMDIDockFrame::OnCreate(CREATESTRUCT& cs)

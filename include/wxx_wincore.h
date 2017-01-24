@@ -1298,6 +1298,8 @@ namespace Win32xx
 	inline ULONG_PTR CWnd::GetClassLongPtr(int nIndex) const
 	// The GetClassLongPtr function retrieves the specified value from the
 	// WNDCLASSEX structure associated with the window.
+	// Possible nIndex values: GCL_CBCLSEXTRA, GCL_CBWNDEXTRA, GCLP_ HBRBACKGROUND, GCLP_HCURSOR,
+	// GCLP_HICON, GCLP_HICONSM, GCLP_HMODULE, GCLP_MENUNAME, GCL_STYLE, GCLP_WNDPROC.
 	{
 		assert(IsWindow());
 		return ::GetClassLongPtr(*this, nIndex);
@@ -1412,13 +1414,6 @@ namespace Win32xx
 		return CWnd(::GetParent(*this));
 	}
 
-	inline LONG_PTR CWnd::GetWindowLongPtr(int nIndex) const
-	// The GetWindowLongPtr function retrieves information about the window.
-	{
-		assert(IsWindow());
-		return ::GetWindowLongPtr(*this, nIndex);
-	}
-
 	inline BOOL CWnd::GetScrollInfo(int fnBar, SCROLLINFO& si) const
 	// The GetScrollInfo function retrieves the parameters of a scroll bar, including
 	// the minimum and maximum scrolling positions, the page size, and the position
@@ -1463,6 +1458,16 @@ namespace Win32xx
 		assert(IsWindow());
 		return CWindowDC(*this);
 	}
+	
+	inline LONG_PTR CWnd::GetWindowLongPtr(int nIndex) const
+	// The GetWindowLongPtr function retrieves information about the window.
+	// Possible nIndex values: GWL_EXSTYLE, GWL_STYLE, GWLP_WNDPROC, GWLP_HINSTANCE
+	// GWLP_HWNDPARENT, GWLP_ID, GWLP_USERDATA.
+	// Additional nIndex values for dialogs: DWLP_DLGPROC, DWLP_MSGRESULT, DWLP_USER.
+	{
+		assert(IsWindow());
+		return ::GetWindowLongPtr(*this, nIndex);
+	}	
 
 	inline CRect CWnd::GetWindowRect() const
 	// retrieves the dimensions of the bounding rectangle of the window.
@@ -1723,10 +1728,33 @@ namespace Win32xx
 	inline ULONG_PTR CWnd::SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const
 	// The SetClassLongPtr function replaces the specified value at the specified offset in the
 	// extra class memory or the WNDCLASSEX structure for the class to which the window belongs.
+	// Possible nIndex values: GCL_CBCLSEXTRA, GCL_CBWNDEXTRA, GCLP_ HBRBACKGROUND, GCLP_HCURSOR,
+	// GCLP_HICON, GCLP_HICONSM, GCLP_HMODULE, GCLP_MENUNAME, GCL_STYLE, GCLP_WNDPROC.
 	{
 		assert(IsWindow());
 		return ::SetClassLongPtr(*this, nIndex, dwNewLong);
 	}
+	
+	inline LONG_PTR CWnd::SetDlgCtrlID(int idCtrl) const
+	// Assigns an id to the window. Note that only child windows can have an ID assigned
+	{
+		assert(IsWindow());
+		return SetWindowLongPtr(GWLP_ID, idCtrl);
+	}
+
+	inline BOOL CWnd::SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const
+	// The SetDlgItemInt function sets the text of a control in a dialog box to the string representation of a specified integer value.
+	{
+		assert(IsWindow());
+		return ::SetDlgItemInt(*this, nIDDlgItem, uValue, bSigned);
+	}
+
+	inline BOOL CWnd::SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const
+	// The SetDlgItemText function sets the title or text of a control in a dialog box.
+	{
+		assert(IsWindow());
+		return ::SetDlgItemText(*this, nIDDlgItem, lpString);
+	}	
 
 	inline CWnd CWnd::SetFocus() const
 	// The SetFocus function sets the keyboard focus to the window.
@@ -1771,9 +1799,19 @@ namespace Win32xx
 		assert(IsWindow());
 		return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, (WPARAM)bRedraw, 0L));
 	}
+	
+	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const
+	// Creates a timer with the specified time-out value.
+	{
+		assert(IsWindow());
+		return ::SetTimer(*this, nIDEvent, uElapse, lpTimerFunc);
+	}	
 
 	inline LONG_PTR CWnd::SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const
 	// The SetWindowLongPtr function changes an attribute of the window.
+	// Possible nIndex values: GWL_EXSTYLE, GWL_STYLE, GWLP_WNDPROC, GWLP_HINSTANCE
+	// GWLP_HWNDPARENT, GWLP_ID, GWLP_USERDATA.
+	// Additional nIndex values for dialogs: DWLP_DLGPROC, DWLP_MSGRESULT, DWLP_USER.
 	{
 		assert(IsWindow());
 		return ::SetWindowLongPtr(*this, nIndex, dwNewLong);
@@ -1811,34 +1849,6 @@ namespace Win32xx
 			Rgn.Detach();	// The system owns the region now
 
 		return iResult;
-	}
-
-	inline LONG_PTR CWnd::SetDlgCtrlID(int idCtrl) const
-	// Assigns an id to the window. Note that only child windows can have an ID assigned
-	{
-		assert(IsWindow());
-		return SetWindowLongPtr(GWLP_ID, idCtrl);
-	}
-
-	inline BOOL CWnd::SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL bSigned) const
-	// The SetDlgItemInt function sets the text of a control in a dialog box to the string representation of a specified integer value.
-	{
-		assert(IsWindow());
-		return ::SetDlgItemInt(*this, nIDDlgItem, uValue, bSigned);
-	}
-
-	inline BOOL CWnd::SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const
-	// The SetDlgItemText function sets the title or text of a control in a dialog box.
-	{
-		assert(IsWindow());
-		return ::SetDlgItemText(*this, nIDDlgItem, lpString);
-	}
-
-	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const
-	// Creates a timer with the specified time-out value.
-	{
-		assert(IsWindow());
-		return ::SetTimer(*this, nIDEvent, uElapse, lpTimerFunc);
 	}
 
 	inline BOOL CWnd::SetWindowText(LPCTSTR lpString) const
@@ -2218,7 +2228,7 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////////////////////
-	// Definitions of CString functions that required CWinApp
+	// Definitions of CString functions that require CWinApp
 	//
 
 	template <class T>

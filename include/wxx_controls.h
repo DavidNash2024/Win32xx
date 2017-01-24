@@ -476,9 +476,9 @@ namespace Win32xx
 		void Pop() const;
 		void RelayEvent(MSG& Msg) const;
 		void SetToolRect(const RECT& rc, HWND hWndControl, UINT uID = -1) const;
+		void Update() const;
 		void UpdateTipText(LPCTSTR lpszText, HWND hWndControl, UINT uID = -1) const;
 		void UpdateTipText(UINT nIDText, HWND hWndControl, UINT uID = -1) const;
-		void Update() const;
 
 #if (_WIN32_IE >=0x0500)
 		BOOL AdjustRect(RECT& rc, BOOL bLarger = TRUE) const;
@@ -494,13 +494,8 @@ namespace Win32xx
 		// Overridables
 		virtual void FillToolInfo(TOOLINFO& ti, HWND hControl) const;
 		virtual void FillToolInfo(TOOLINFO& ti, HWND hControl, const RECT& rc, UINT uID) const;
-		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = TOOLTIPS_CLASS; ; }
-		virtual void PreCreate(CREATESTRUCT& cs)
-		{
-			cs.dwExStyle = WS_EX_TOOLWINDOW;
-			cs.style = WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP;
-		}
-
+		virtual void PreCreate(CREATESTRUCT& cs);
+		virtual void PreRegisterClass(WNDCLASS& wc);
 	private:
 		CToolTip(const CToolTip&);				// Disable copy construction
 		CToolTip& operator = (const CToolTip&);	// Disable assignment operator
@@ -2121,6 +2116,17 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SendMessage(TTM_POP, 0L, 0L);
+	}
+
+	inline void CToolTip::PreCreate(CREATESTRUCT& cs)
+	{
+		cs.dwExStyle = WS_EX_TOOLWINDOW;
+		cs.style = WS_POPUP | TTS_NOPREFIX | TTS_ALWAYSTIP;
+	}
+
+	inline void  CToolTip::PreRegisterClass(WNDCLASS& wc)
+	{
+		wc.lpszClassName = TOOLTIPS_CLASS;
 	}
 
 	inline void CToolTip::RelayEvent(MSG& Msg) const

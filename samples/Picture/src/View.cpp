@@ -119,9 +119,22 @@ int CView::OnCreate(CREATESTRUCT& cs)
 
 void CView::OnDraw(CDC& dc)
 {
-	Paint(dc);
-}
+	if (m_pPicture)
+	{
+		// get width and height of picture
+		long hmWidth;
+		long hmHeight;
+		m_pPicture->get_Width(&hmWidth);
+		m_pPicture->get_Height(&hmHeight);
 
+		// convert himetric to pixels
+		int nWidth = MulDiv(hmWidth, GetDeviceCaps(dc, LOGPIXELSX), HIMETRIC_INCH);
+		int nHeight = MulDiv(hmHeight, GetDeviceCaps(dc, LOGPIXELSY), HIMETRIC_INCH);
+
+		// Render the picture to the DC
+		m_pPicture->Render(dc, 0, 0, nWidth, nHeight, 0, hmHeight, hmWidth, -hmHeight, NULL);
+	}
+}
 
 LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
@@ -144,27 +157,6 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 	
 	return 0L;
-}
-
-
-
-void CView::Paint(HDC hDC)
-{
-	if (m_pPicture)
-	{
-		// get width and height of picture
-		long hmWidth;
-		long hmHeight;
-		m_pPicture->get_Width(&hmWidth);
-		m_pPicture->get_Height(&hmHeight);
-
-		// convert himetric to pixels
-		int nWidth	= MulDiv(hmWidth, GetDeviceCaps(hDC, LOGPIXELSX), HIMETRIC_INCH);
-		int nHeight	= MulDiv(hmHeight, GetDeviceCaps(hDC, LOGPIXELSY), HIMETRIC_INCH);
-
-		// Render the picture to the DC
-		m_pPicture->Render(hDC, 0, 0, nWidth, nHeight, 0, hmHeight, hmWidth, -hmHeight, NULL);
-	}
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)

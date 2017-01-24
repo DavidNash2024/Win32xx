@@ -62,6 +62,9 @@
 
 namespace Win32xx
 {
+	//////////////////////////////////////////////
+	// Declaration of the CRibbon class
+	//
 	// Defines the callback entry-point methods for the Ribbon framework.
 	class CRibbon : public IUICommandHandler, public IUIApplication
 	{
@@ -102,6 +105,9 @@ namespace Win32xx
 
 	};
 
+	//////////////////////////////////////////////
+	// Declaration of the CRibbonFrameT class template
+	//
 	template <class T>
 	class CRibbonFrameT : public T, public CRibbon
 	{
@@ -344,7 +350,7 @@ namespace Win32xx
 	
 	
 	//////////////////////////////////////////////
-	// Definitions for the CRibbonFrame class
+	// Definitions for the CRibbonFrameT class template
 	//
 	template <class T>
 	inline CRect CRibbonFrameT<T>::GetViewRect() const

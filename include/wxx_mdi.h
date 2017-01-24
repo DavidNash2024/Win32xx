@@ -147,7 +147,7 @@ namespace Win32xx
 	};
 
 	/////////////////////////////////////
-	// Declaration of the CMDIFrame class
+	// Declaration of the CMDIFrameT class template
 	//
 	template <class T>		// The template parameter T is typically either CFrame or CDockFrame
 	class CMDIFrameT : public T
@@ -178,8 +178,7 @@ namespace Win32xx
 		void SetActiveMDIChild(CMDIChild* pChild);
 
 	protected:
-		// Overridable virtual functions
-		virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		// Overridable virtual functions	
 		virtual void    OnClose();
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMDIActivated(UINT, WPARAM wParam, LPARAM);
@@ -193,6 +192,7 @@ namespace Win32xx
 		virtual void 	UpdateFrameMenu(CMenu Menu);
 
 		// Not intended to be overridden
+		LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:

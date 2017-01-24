@@ -4,12 +4,13 @@ Version 8.4
 This version of Win32++ introduces class templates to provide the different
 types of frames. Frames can support a Single Document Interface (SDI) or a
 Multiple Document Interface (MDI). They might or might not support docking,
-and they might or might not support the Ribbon user interface (UI). Each of
-these optional features are provided using class templates.
+and they might or might not support the Ribbon Framework. Each of these
+optional features are provided using class templates.
 
 The previous implementation of frames used multiple inheritance to add optional
-features such docking and the Ribbon UI to frames. The multiple inheritance
-approach worked OK, but a template approach has a number of advantages:
+features such docking and the Ribbon Framework to frames. The multiple
+inheritance approach worked OK, but a template approach has a number of
+advantages:
 
 * The code without multiple inheritance is simpler.
 * Virtual inheritance is no longer required. It was was a bit of an
@@ -44,12 +45,12 @@ New Features and Enhancements
    To use these class, inherit your CMainFrame from either CRibbonFrame, 
    CRibbonDockFrame, CRibbonMDIFrame or CRibbonMDIDockFrame.
    Notes:
-    1) To compile code using the Ribbon UI you will need a Microsoft compiler.
-       Visual Studio Community 2013 (or later) is recommended, but older 
-       Microsoft compilers can be used with the Windows 7 SDK.
-    2) The Ribbon UI only runs on Windows 7 or later operating systems. If the
-	   code is run on an earlier operating system, it reverts back to a menu
-	   and toolbar.
+    1) To compile code using the Ribbon Framework you will need a Microsoft
+       compiler. Visual Studio Community 2013 (or later) is recommended, but
+	   older Microsoft compilers can be used with the Windows 7 SDK.
+    2) The Ribbon Framework only runs on Windows 7 or later operating systems.
+  	   If the code is run on an earlier operating system, it reverts back to a
+	   menu and toolbar.
 	
 * The CMetaFile and CEnhMetaFile classes have been added to the framework.
  - CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
@@ -92,18 +93,18 @@ Added CRibbonMDIFrame 					class
 Added CRibbonMDIDockFrame 				class
 Added CMetaFile							class
 Added CEnhMetaFile						class
+Added CScrollView                       class
 Added ::Trace							global function
 Added CDC::PlayMetaFile					member function
 Added CDockContainer::GetToolBarData	member function
-Added CFrame::GetMenuMetrics			member function
-Added CFrame::GetToolBarData			member function
+Added CFrameT::GetMenuMetrics			member function
+Added CFrameT::GetToolBarData			member function
 Added CMDIChild::GetChildAccel			member function
 Added CMDIChild::GetChildMenu			member function
-Added CMDIFrame::UpdateFrameMenu		member function
+Added CMDIFrameT::UpdateFrameMenu		member function
 Added CTab::GetMaxTabSize				member function
 Added CTime::operator ()				member function
 Added CTimeSpan::operator ()			member function
-Added CToolTip::LoadToolInfo            member function
 
 Added UWM_MDIACTIVATED                  window message
 Added UWM_MDIDESTROYED                  window message

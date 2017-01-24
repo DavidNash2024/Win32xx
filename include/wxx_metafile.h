@@ -65,7 +65,7 @@ namespace Win32xx
 	// Declaration of the the CMetaFile class
 	//
 	// CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
-	// be used. CMetatFile objects are reference counted, so they can be safely
+	// be used. CMetaFile objects are reference counted, so they can be safely
 	// copied. CMetatFile automatically deletes the HMETAFILE when the last copy of
 	// the CMetaFile object goes out of scope. The CMetaFileDC::Close function
 	// returns a CMetaFile object.
@@ -80,10 +80,11 @@ namespace Win32xx
 		CMetaFile& operator = (const CMetaFile& rhs);
 		void operator = (const HMETAFILE hMetaFile);
 		operator HMETAFILE() { return m_pData->hMetaFile; }
-		void Attach(HMETAFILE hMetaFile);
-		void Release();
 
 	private:
+		void Attach(HMETAFILE hMetaFile);
+		void Release();
+		
 		CMetaFile_Data* m_pData;
 	};
 
@@ -109,11 +110,10 @@ namespace Win32xx
 		void operator = (const HENHMETAFILE hEnhMetaFile);
 		operator HENHMETAFILE() { return m_pData->hEnhMetaFile; }
 
+	private:		
 		void Attach(HENHMETAFILE hEnhMetaFile);
 		void Release();
 
-
-	private:
 		CEnhMetaFile_Data* m_pData;
 	};
 

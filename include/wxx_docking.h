@@ -199,6 +199,7 @@ namespace Win32xx
 		HICON GetTabIcon() const		{ return m_hTabIcon; }
 		LPCTSTR GetTabText() const		{ return m_strTabText; }
 		virtual CToolBar& GetToolBar()	const { return GetViewPage().GetToolBar(); }
+		std::vector<UINT>& GetToolBarData() { return m_vToolBarData; }
 		CWnd& GetView()	const			{ return GetViewPage().GetView(); }
 		void SetActiveContainer(CDockContainer* pContainer);
 		void SetDockCaption(LPCTSTR szCaption) { m_csCaption = szCaption; }
@@ -209,7 +210,7 @@ namespace Win32xx
 		void SetTabText(LPCTSTR szText) { m_strTabText = szText; }
 		void SetTabText(UINT nTab, LPCTSTR szText);
 		void SetView(CWnd& Wnd);
-		std::vector<UINT>& GetToolBarData() { return m_vToolBarData; }
+
 
 	protected:
 		virtual void OnAttach();

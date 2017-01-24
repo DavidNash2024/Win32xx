@@ -119,8 +119,6 @@ CView : public CDialog							/*
 		virtual BOOL 	OnInitDialog();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual void 	OnOK();
-		virtual void 	PreCreate(CREATESTRUCT &cs);
-		virtual void 	PreRegisterClass(WNDCLASS &wc);
 		virtual	void 	Serialize(CArchive &ar);
 
 	private:
