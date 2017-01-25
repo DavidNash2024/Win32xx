@@ -83,7 +83,7 @@ CMainFrame : public CFrame						/*
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
 		virtual BOOL	OnProcessMRU(WPARAM wParam, LPARAM lParam);
 		virtual void 	PreCreate(CREATESTRUCT& cs);
-		virtual BOOL 	PreTranslateMessage(MSG *Msg);
+		virtual BOOL 	PreTranslateMessage(MSG &Msg);
 		virtual BOOL 	SaveRegistrySettings(void);
 		virtual void    SetupToolBar(void);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);

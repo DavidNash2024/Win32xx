@@ -228,13 +228,13 @@ Paint(CDC& dcMem)                                    			/*
 	if (TheDoc().GetLength() > 0)
 	{
 		int  doc_length = TheDoc().GetLength(),
-		     vu_length  = GetClientSize().cy + 1;
+		     vu_length  = GetClientSize().cy;
 		  // get scroll bar current position: sp is the upper-left-most  
 		  // character in the display
 		CPoint sp = GetScrollPosition();
 		  // set variables for the position coordinates
-		int	topline = MAX((UINT)sp.y, (UINT)0),
-			leftcol = MAX((UINT)sp.x, (UINT)0);
+		int	topline = MAX(sp.y, 0),
+			leftcol = MAX(sp.x, 0);
 		  // display the current view
 		for (int i = 0; i < vu_length; i++)
 		{
@@ -297,7 +297,7 @@ PreRegisterClass(WNDCLASS &wc)                                          /*
 
 /*============================================================================*/
 	BOOL CView::
-PreTranslateMessage(MSG *msg)                                           /*
+PreTranslateMessage(MSG &msg)                                           /*
 
 	Used by CWinApp to translate window messages before they are dispatched
 	to theTranslateMessage and DispatchMessage Windows functions in the

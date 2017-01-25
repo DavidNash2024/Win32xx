@@ -431,7 +431,7 @@ PreCreate(CREATESTRUCT& cs)                                             /*
 
 /*============================================================================*/
 	BOOL CMainFrame::
-PreTranslateMessage(MSG *Msg)                                           /*
+PreTranslateMessage(MSG &Msg)                                           /*
 
 	Pretranslates the system message uMsg from the mainframe message loop
 	before they are dispatched to theTranslateMessage and DispatchMessage

@@ -94,7 +94,7 @@ AddRecord(const CString& entry)						/*
 	{
 		final.Delete(tab, 1);
 		int nspaces = tabwidth - (tab % tabwidth);
-		tabbing =  (nspaces == 0 ?
+		tabbing = (nspaces == 0 ?
 		    spaces.Left(tabwidth) : spaces.Left(nspaces));
 		final.Insert(tab, tabbing);
 	}
@@ -241,69 +241,61 @@ OpenDoc(const CString& file)						/*
 		m_bDoc_is_open = TRUE;
 		m_open_doc_path = m_fDoc_file.GetFilePath();
 		m_stDoc_width = 0;
-		CHAR a[2]; ZeroMemory(a, 2);
-		WCHAR w[2]; ZeroMemory(w, 2 * sizeof(WCHAR));
-		TCHAR entry[MAX_STRING_SIZE]; 
-		ZeroMemory(entry,  MAX_STRING_SIZE * sizeof(TCHAR));
+		CStringA a;
+		CStringW w;
+		CString entry, t;
 		UINT length = (UINT)m_fDoc_file.GetLength();
 		if (length > 2)
-			m_fDoc_file.Read(a, 2);
+		{
+			m_fDoc_file.Read(a.GetBuffer(2), 2);
+			a.ReleaseBuffer(2);
+		}
 		else
 			a[0] = a[1] = 1;
 		BOOL UnicodeFile = (a[0] == 0 || a[1] == 0);
 		m_fDoc_file.SeekToBegin();
-		UINT charsize = UnicodeFile ? 2 : 1,
-		     nchars = length / charsize,
-		     strloc = 0;
+		UINT charsize = (UnicodeFile ? sizeof(WCHAR) : sizeof(CHAR)),
+		     nchars  = length / charsize;
 		m_doclines.clear();
 		for (UINT fileloc = 0; fileloc < nchars; fileloc++)
 		{
 			if(UnicodeFile)
 			{
-				UINT n = m_fDoc_file.Read(w, charsize);
+				UINT n = m_fDoc_file.Read(w.GetBuffer(charsize),
+				    charsize);
+				w.ReleaseBuffer(charsize);
 				if (n != charsize)
 					throw CUserException(_T("Read error."));
 
-				if (w[0] == L'\n' || w[0] == L'\0')
-				{
-					entry[strloc] = 0;
-					m_stDoc_width = MAX(m_stDoc_width,
-					    strloc);
-					strloc = 0;
-					AddRecord(entry);
-				}
-				else if (w[0] == L'\r')
-					continue;
-				else
-					entry[strloc++] = w[0];
+				t = WtoT(w);
 			}
-			else // ANSI
+			else // ANSI file
 			{
-				UINT n = m_fDoc_file.Read(a, charsize);
+				UINT n = m_fDoc_file.Read(a.GetBuffer(charsize),
+				    charsize);
+				a.ReleaseBuffer(charsize);
 				if (n != charsize)
 					throw CUserException(_T("Read error."));
 
-				if (a[0] == '\n' || a[0] == '\0')
-				{
-					entry[strloc] = 0;
-					m_stDoc_width = MAX(m_stDoc_width,
-					    strloc);
-					strloc = 0;
-					AddRecord(entry);
-				}
-				else if (a[0] == '\r')
-					continue;
-				else
-					entry[strloc++] = a[0];
+				t = AtoT(a);
+
 			}
+			if (t[0] == _T('\n') || t[0] == _T('\0'))
+			{
+				AddRecord(entry);
+				m_stDoc_width = MAX(m_stDoc_width, 
+				    (UINT)entry.GetLength());
+				entry.Empty();
+			}
+			else if (t[0] == _T('\r'))
+				continue;
+
+			else 
+				entry += t;
 		}
-		  // if there is an unrecorded record, enter it now
-		if (strloc > 0)
-		{
-			entry[strloc] = 0;
-			m_stDoc_width = MAX(m_stDoc_width, strloc);
+		  // if there is an as-yet unentered record, add it now
+		if (entry.GetLength() > 0)
 			AddRecord(entry);
-		}
 		ok = TRUE;
 	}
 	catch (...)

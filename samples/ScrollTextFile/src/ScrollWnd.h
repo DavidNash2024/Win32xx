@@ -85,7 +85,7 @@ CScrollWnd : public CWnd						/*
 		virtual void    Paint(CDC& dcMem);
 		virtual void 	PreCreate(CREATESTRUCT &cs);
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
-		virtual BOOL 	PreTranslateMessage(MSG *Msg);
+		virtual BOOL 	PreTranslateMessage(MSG &Msg);
 		virtual	void 	Serialize(CArchive &ar);
 		void		SetAppSize(CSize sz) {m_app_size = sz;}
 		void            SetMappingMode(int mapMode)
@@ -112,7 +112,6 @@ CScrollWnd : public CWnd						/*
                 COLORREF	m_rgbBkColor;      // window background color
 		CBrush 		m_brBkGnd;         // window background brush
 		BOOL		m_bIamBusy;	   // prevent recursive msgs
-		CSize		m_scroll_size;	   // scroll bar sizes
 	};
 /*----------------------------------------------------------------------------*/
 #endif // CSCROLLWIN_H_DEFINED

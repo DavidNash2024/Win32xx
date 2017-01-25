@@ -117,7 +117,7 @@ CMainFrame : public CFrame						/*
 		virtual CStatusBar& GetStatusBar() const
 				{ return const_cast<NoResizeGripperStatusBar&>
 				  (m_NoResizeGripperStatusBar); }
-		virtual void	RemoveMRUEntry(const CString& szMRUEntry)
+		virtual void	RemoveMRUEntry(LPCTSTR szMRUEntry)
 				    {CFrame::RemoveMRUEntry(szMRUEntry);}
 			void    SetSBBkColor(COLORREF clr)
 				    { GetStatusBar().SendMessage(SB_SETBKCOLOR,

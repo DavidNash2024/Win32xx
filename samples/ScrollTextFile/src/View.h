@@ -107,7 +107,7 @@ CView : public CScrollWnd                                              /*
 		virtual void    Paint(CDC& dcMem);
 		virtual void 	PreCreate(CREATESTRUCT &cs);
 		virtual void 	PreRegisterClass(WNDCLASS &wc);
-		virtual BOOL 	PreTranslateMessage(MSG *Msg);
+		virtual BOOL 	PreTranslateMessage(MSG &Msg);
 		virtual void    SetScrollAppInfo();
      		virtual void    TextLineOut(CDC&, UINT, UINT, CString);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
