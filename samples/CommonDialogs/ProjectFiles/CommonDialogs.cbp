@@ -150,7 +150,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="htmlhelp" />
 					<Add directory="../src/help" />
 				</Linker>
 			</Target>
@@ -176,7 +175,6 @@
 					<Add library="Oleaut32" />
 					<Add library="Uuid" />
 					<Add library="Ws2_32" />
-					<Add library="htmlhelp" />
 					<Add directory="../src/help" />
 				</Linker>
 			</Target>

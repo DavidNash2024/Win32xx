@@ -95,7 +95,10 @@ AddColorChoice(UINT nID, const CString& usage, COLORREF color) 		/*
 *-----------------------------------------------------------------------------*/
 {
 	UINT size = GetTableSize();
-	ctl_color triple = {nID, usage, color};
+	ctl_color triple;
+	triple.nID = nID;
+	triple.usage = usage;
+	triple.color = color;
 	m_ColorTable.push_back(triple);
 	return (UINT)GetTableSize() == size + 1;
 }
@@ -112,7 +115,7 @@ DeleteTableEntry(UINT index)						/*
 }
 
 /*============================================================================*/
-	INT_PTR CColorChoice:: 
+	INT_PTR CColorChoice::
 DoModal(HWND hWndOwner /* = 0 */) 					/*
 
         Show the CListBoxDlg dialog box with the list of candidate control
@@ -132,7 +135,7 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 	for (UINT i = 0; i < GetTableSize(); i++)
 		m_LBDlg.AddListItem(m_ColorTable[i].usage);
 	  // Make the control be modal so the choice is returned at
-	  // termination. 
+	  // termination.
 	m_nSelection = (UINT)-1;
 	int selection = m_LBDlg.DoModal(hWndOwner);
 	  // if invalid, go no further
@@ -141,9 +144,9 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 
 	  // register the current control color in the color choice struct
 	  // with the base class
-	SetColor(m_ColorTable[selection].color);	
+	SetColor(m_ColorTable[selection].color);
 	  // invoke the control and save the result on success
-	if(CColorDialog::DoModal(hWndOwner) ==  IDOK)	
+	if(CColorDialog::DoModal(hWndOwner) ==  IDOK)
 	{
 		m_ColorTable[selection].color = CColorDialog::GetColor();
 		m_nSelection =m_ColorTable[selection].nID;
@@ -163,7 +166,7 @@ GetTableColor(UINT nID) 						/*
 	UINT idx = GetTableIndex(nID);
 	if (idx == (UINT)-1)
 		return RGB(0, 0, 0);
-		
+
 	return m_ColorTable[idx].color;
 }
 
@@ -196,7 +199,7 @@ GetTableIndex(UINT nID)                                                 /*
 	  // ignore the invocation if the table is empty
 	if (GetTableSize() == 0 || nID == 0)
 		return (UINT)-1; // default value
-		
+
 	UINT idx = 0;
  	std::vector<ctl_color>::iterator it;
 	for (it = m_ColorTable.begin(); it != m_ColorTable.end() &&
@@ -204,7 +207,7 @@ GetTableIndex(UINT nID)                                                 /*
 		;
 	if (idx >= GetTableSize())
 		idx = (UINT)-1;
-		
+
 	return idx;
 }
 
@@ -217,7 +220,7 @@ GetTableUsage(UINT nID)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	CString usage = (idx == (UINT)-1 ? _T("") : m_ColorTable[idx].usage);
+	CString usage = (idx == (UINT)-1 ? _T("") : m_ColorTable[idx].usage.c_str());
 	return  usage;
 }
 
@@ -248,7 +251,7 @@ InitCustomColors()                                                      /*
 	rgbCustomColors[14] = RGB(200, 200, 155);
 	rgbCustomColors[15] = RGB(200, 250, 255);
 
-	SetCustomColors(rgbCustomColors);						
+	SetCustomColors(rgbCustomColors);
 }
 
 /*============================================================================*/
@@ -262,7 +265,7 @@ OnInitDialog()                                                          /*
 	  // do the base class initialization first (it currently does nothing)
 	CDialog::OnInitDialog();
 	SetWindowTitle();
-	InitCustomColors();  
+	InitCustomColors();
 	return TRUE;
 }
 
@@ -281,8 +284,8 @@ Serialize(CArchive &ar)                                               	/*
 		  // save the current color
 		ar << GetParameters().rgbResult;
         	  // save the custom colors
-		ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );	
-		ar << ao;	
+		ArchiveObject ao(GetCustomColors(), 16 * sizeof(COLORREF) );
+		ar << ao;
 		  // save the color table entries
 		ar << GetTableSize();
 		std::vector<ctl_color>::iterator it;
@@ -303,7 +306,7 @@ Serialize(CArchive &ar)                                               	/*
 		COLORREF cr[16];
 		ArchiveObject ao(cr, 16 * sizeof(COLORREF));
 		ar >> ao;
-		SetCustomColors(cr);	
+		SetCustomColors(cr);
 		  // recover the color table entries
 		UINT n;
 		ar >> n;
@@ -315,7 +318,7 @@ Serialize(CArchive &ar)                                               	/*
 			ar >> (*it).nID;
 			ar >> (*it).usage;
 			ar >> (*it).color;
-		}	
+		}
 	}
 
 	CColorDialog::Serialize(ar);

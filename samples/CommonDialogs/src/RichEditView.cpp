@@ -58,6 +58,10 @@
 #include "stdafx.h"
 #include "StdApp.h"
 
+#ifndef CFM_BACKCOLOR
+#define CFM_BACKCOLOR		0x04000000
+#endif
+
 /*============================================================================*/
 	CRichEditView::
 CRichEditView()                                                         /*
@@ -247,7 +251,7 @@ StreamOutFile(const CFile& file, BOOL mode)                             /*
 /*******************************************************************************
 
 	Static Callback Functions
-	
+
 *=============================================================================*/
 	DWORD CALLBACK CRichEditView::
 StreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*

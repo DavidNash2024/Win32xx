@@ -134,6 +134,12 @@
 #include "ScrollWnd.h"
 #include "resource.h"
 
+
+#ifndef WHEEL_DELTA
+#define WHEEL_DELTA                     120
+#endif
+
+
 static const COLORREF rgbDefaultBkColor  	  = RGB(255, 255, 255);
 static const UINT current_ScrollRanges_schema     = 1;
 static const UINT current_ScrollIncrements_schema = 1;
@@ -320,9 +326,6 @@ OnInitialUpdate()                                                       /*
 	SetScrollRanges(0, 100, 0, 100);
 	  // set initial increments
 	SetScrollIncrements(1, 1, 1, 1);
-	  // get the scroll bar sizes
-	m_scroll_size = CSize(::GetSystemMetrics(SM_CXVSCROLL), 
-	    ::GetSystemMetrics(SM_CYHSCROLL));
 	  // hide the scroll bars until needed
 	TRACE("CScrollWnd window created\n");
 }
@@ -577,7 +580,7 @@ PreRegisterClass(WNDCLASS &wc)                                          /*
 
 /*============================================================================*/
 	BOOL CScrollWnd::
-PreTranslateMessage(MSG *msg)                                           /*
+PreTranslateMessage(MSG &msg)                                           /*
 
 	Used by CWinApp to translate window messages before they are dispatched
 	to theTranslateMessage and DispatchMessage Windows functions in the
@@ -659,14 +662,17 @@ SetNewViewSize()							/*
 	if (m_app_size.cx != 0 && m_app_size.cy != 0)
 	{
 		CSize app = ScrlToDev(m_app_size);
-		BOOL AC = (app.cx > client.cx - m_scroll_size.cx) &&
-			     (app.cy > client.cy - m_scroll_size.cy),
+		  // get the scroll bar sizes
+		int scrollbar_x = ::GetSystemMetrics(SM_CXVSCROLL), 
+		    scrollbar_y = ::GetSystemMetrics(SM_CYHSCROLL);
+		BOOL A = (app.cx > client.cx - scrollbar_x),
 		     B = app.cx > client.cx,
+		     C = (app.cy > client.cy - scrollbar_y),
 		     D = app.cy > client.cy;
-		if (B || AC)
-			view.cx -= m_scroll_size.cx;
-		if (D || AC)
-			view.cy -= m_scroll_size.cy;
+		if (B || A && D)
+			view.cx -= scrollbar_x;
+		if (D || B && C)
+			view.cy -= scrollbar_y;
 	}
 	m_client_size = DevToScrl(client);
 	m_view_size   = DevToScrl(view);

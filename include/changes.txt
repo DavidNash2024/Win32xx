@@ -78,7 +78,14 @@ New Features and Enhancements
    This sample demonstrates how to use an animation control in a dialog.
    
 * Added Tooltips sample.
-   This sample demonstrates how to add tooltips to controls in a modal dialog.   
+   This sample demonstrates how to add tooltips to controls in a modal dialog.
+
+* Added ScrollTextFile sample.
+   This sample displays the contents of a text file in a scrollable window.
+
+* Added ContextHelp sample
+   Displays help topics from a chm file. The help topics are chosen based on
+   the current cursor position.     
 
 
 

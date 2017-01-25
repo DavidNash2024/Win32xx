@@ -221,7 +221,7 @@ namespace Win32xx
 			CRect rcTotal(CPoint(0, 0), m_sizeTotal);
 			dcMem.FillRect(rcTotal, m_brushBkgnd);
 
-			// Call the overriden OnDraw function
+			// Call the overridden OnDraw function
 			OnDraw(dcMem);
 
 			// Copy the modified memory DC to the window's DC with scrolling offsets
@@ -407,44 +407,46 @@ namespace Win32xx
 			else
 			{
 				DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
-				CRect rcImage(0, 0, m_sizeTotal.cx, m_sizeTotal.cy);
-				AdjustWindowRectEx(&rcImage, 0, FALSE, dwExStyle);
+				CRect rcTotal(0, 0, m_sizeTotal.cx, m_sizeTotal.cy);
+				AdjustWindowRectEx(&rcTotal, 0, FALSE, dwExStyle);
 
-				CRect rcScrollView = GetClientRect();
-				AdjustWindowRectEx(&rcScrollView, 0, FALSE, dwExStyle);
+				// CRect of view, size affected by scroll bars
+				CRect rcClient = GetClientRect();
+				AdjustWindowRectEx(&rcClient, 0, FALSE, dwExStyle);
 
-				CRect rc = GetWindowRect();
+				// CRect of view, unaffected by scroll bars
+				CRect rcView = GetWindowRect();
 
 				SCROLLINFO si;
 				ZeroMemory(&si, sizeof(SCROLLINFO));
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 				si.nMin = 0;
-				bool IsBarNotRequired = ((rc.Width() >= rcImage.Width()) && (rc.Height() >= rcImage.Height()));
+				bool IsBarNotRequired = ((rcView.Width() >= rcTotal.Width()) && (rcView.Height() >= rcTotal.Height()));
 
-				if  ( (rcScrollView.Width() >= rcImage.Width()) || IsBarNotRequired )
+				if  ( (rcClient.Width() >= rcTotal.Width()) || IsBarNotRequired )
 				{
 					m_CurrentPos.x = 0;
 					ShowScrollBar(SB_HORZ, FALSE);
 				}
 				else
 				{
-					si.nMax = rcImage.Width();
-					si.nPage = rcScrollView.Width();
+					si.nMax = rcTotal.Width();
+					si.nPage = rcClient.Width();
 					si.nPos = m_CurrentPos.x;
 					SetScrollInfo(SB_HORZ, si, TRUE);
 					ShowScrollBar(SB_HORZ, TRUE);
 				}
 
-				if ( (rcScrollView.Height() >= rcImage.Height()) || IsBarNotRequired )
+				if ( (rcClient.Height() >= rcTotal.Height()) || IsBarNotRequired )
 				{
 					m_CurrentPos.y = 0;
 					ShowScrollBar(SB_VERT, FALSE);
 				}
 				else
 				{
-					si.nMax = rcImage.Height();
-					si.nPage = rcScrollView.Height();
+					si.nMax = rcTotal.Height();
+					si.nPage = rcClient.Height();
 					si.nPos = m_CurrentPos.y;
 					SetScrollInfo(SB_VERT, si, TRUE);
 					ShowScrollBar(SB_VERT, TRUE);
@@ -453,11 +455,11 @@ namespace Win32xx
 				int cxScroll = IsVScrollVisible() ? GetSystemMetrics(SM_CXVSCROLL) : 0;
 				int cyScroll = IsHScrollVisible() ? GetSystemMetrics(SM_CYHSCROLL) : 0;
 
-				int xNewPos = MIN(m_CurrentPos.x, rcImage.Width() - GetWindowRect().Width() + cxScroll);
+				int xNewPos = MIN(m_CurrentPos.x, rcTotal.Width() - rcView.Width() + cxScroll);
 				xNewPos = MAX(xNewPos, 0);
 				int xDelta = xNewPos - m_CurrentPos.x;
 
-				int yNewPos = MIN(m_CurrentPos.y, rcImage.Height() - GetWindowRect().Height() + cyScroll);
+				int yNewPos = MIN(m_CurrentPos.y, rcTotal.Height() - rcView.Height() + cyScroll);
 				yNewPos = MAX(yNewPos, 0);
 				int yDelta = yNewPos - m_CurrentPos.y;
 
