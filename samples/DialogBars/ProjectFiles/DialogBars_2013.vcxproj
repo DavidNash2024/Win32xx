@@ -51,6 +51,7 @@
     <ClInclude Include="..\..\..\include\wxx_regkey.h" />
     <ClInclude Include="..\..\..\include\wxx_ribbon.h" />
     <ClInclude Include="..\..\..\include\wxx_richedit.h" />
+    <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
     <ClInclude Include="..\..\..\include\wxx_shared_ptr.h" />
     <ClInclude Include="..\..\..\include\wxx_socket.h" />
     <ClInclude Include="..\..\..\include\wxx_statusbar.h" />

@@ -153,6 +153,9 @@
     <ClInclude Include="..\..\..\include\wxx_metafile.h">
       <Filter>Win32++</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\include\wxx_scrollview.h">
+      <Filter>Win32++</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Win32++">
@@ -172,15 +175,5 @@
     <ResourceCompile Include="..\src\Resource.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Manifest Include="..\src\res\Win32++.manifest" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="..\src\res\Dialog.ico" />
-    <Image Include="..\src\res\Zapotec.bmp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\src\res\upload.avi" />
   </ItemGroup>
 </Project>

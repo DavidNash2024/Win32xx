@@ -389,6 +389,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_scrollview.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_shared_ptr.h"
 				>
 			</File>

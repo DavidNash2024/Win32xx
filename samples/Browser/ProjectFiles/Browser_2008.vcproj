@@ -377,6 +377,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\include\wxx_scrollview.h"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\include\wxx_shared_ptr.h"
 				>
 			</File>
@@ -418,6 +422,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\include\wxx_treeview.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wceframe.h"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\include\wxx_wcestddef.h"
 				>
 			</File>
 			<File

@@ -94,6 +94,7 @@
   #pragma option -w-8026            // functions with exception specifications are not expanded inline
   #pragma option -w-8027		    // function not expanded inline
   #pragma option -w-8030			// Temporary used for 'rhs'
+  #pragma option -w-8004			// Assigned value is never used
   #define STRICT 1
 #endif
 

@@ -562,6 +562,30 @@ Serialize(CArchive& ar)                                               /*
         }
 }
 
+	void CMainFrame::
+SetupMenuIcons()
+{
+	const int NO_ID = 1;
+	std::vector<UINT> MenuIDs;
+
+	MenuIDs.push_back(NO_ID);				// New
+	MenuIDs.push_back(IDM_FILE_OPEN);
+	MenuIDs.push_back(NO_ID);				// Save
+	MenuIDs.push_back(NO_ID);				// SaveAs
+	MenuIDs.push_back(IDM_FILE_EXIT);
+	MenuIDs.push_back(NO_ID);				// Drop down
+	MenuIDs.push_back(NO_ID);				// Cut
+	MenuIDs.push_back(NO_ID);				// copy
+	MenuIDs.push_back(NO_ID);				// Paste
+	MenuIDs.push_back(NO_ID);				// Delete
+	MenuIDs.push_back(NO_ID);				// Print
+	MenuIDs.push_back(NO_ID);				// Print
+	MenuIDs.push_back(IDM_FONT_CHOICE);
+	MenuIDs.push_back(IDM_COLOR_CHOICE);
+
+	AddMenuIcons(MenuIDs, RGB(192, 192, 192), IDW_MAIN, 0);
+}
+
 /*============================================================================*/
 	void CMainFrame::
 SetupToolBar()                                                          /*

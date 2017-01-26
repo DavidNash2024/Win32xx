@@ -111,6 +111,7 @@
   <ItemGroup>
     <ClInclude Include="..\..\..\include\wxx_dockframe.h" />
     <ClInclude Include="..\..\..\include\wxx_metafile.h" />
+    <ClInclude Include="..\..\..\include\wxx_scrollview.h" />
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\AppHelp.h" />
     <ClInclude Include="..\src\ContextHelp.h" />
