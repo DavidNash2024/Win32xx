@@ -50,7 +50,7 @@
 
 #include "stdafx.h"
 
-static	const 	COLORREF rgbDefaultTxColor  = RGB(0, 0, 0);
+static  const 	COLORREF rgbDefaultTxColor  = RGB(0, 0, 0);
 static	const 	int	 nDefaultFontSize   = 10;
 static	const 	TCHAR	 lpszFaceDefault[]  = _T("Courier New");
 

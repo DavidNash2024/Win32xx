@@ -85,6 +85,7 @@ CMainFrame : public CFrame						/*
 		virtual void 	PreCreate(CREATESTRUCT& cs);
 		virtual BOOL 	PreTranslateMessage(MSG &Msg);
 		virtual BOOL 	SaveRegistrySettings(void);
+		virtual void	SetupMenuIcons();
 		virtual void    SetupToolBar(void);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM, LPARAM);
 

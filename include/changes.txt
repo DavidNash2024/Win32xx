@@ -85,7 +85,7 @@ New Features and Enhancements
 
 * Added ContextHelp sample
    Displays help topics from a chm file. The help topics are chosen based on
-   the current cursor position.     
+   the current mouse position.     
 
 
 
