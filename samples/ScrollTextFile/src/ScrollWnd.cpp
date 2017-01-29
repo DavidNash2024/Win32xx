@@ -59,7 +59,7 @@
 	they may access the current values of limits, increments, and  position.
 	It is up to the user then to draw the application client area in
 	accordance with these limits, page sizes, increments, and  positions.
-	
+
 	It is common practice that the current scroll position refers to that
 	part of the displayed material that appears at the top left corner of
 	the view.
@@ -75,7 +75,7 @@
 	a page size equal to the screenwidth, in characters. In a case as this,
 	the user is obligated to provide the mapping between logical scrolling
 	and device units.
-	
+
 	If the view is a photograph or drawing, limits and increments may be
 	scaled to represent pixels, or scaled to fit any of the CDC mapping
 	modes, such as MM_TWIPS or MM_HIENGLISH. See the Microsoft MSDN
@@ -86,15 +86,15 @@
 	units--here, pixels--must be used. If the screen display is to be
 	converted to another device, such as a printer context, then the device
 	units change to fit that context, such as dots in the printer context.
-	
+
 	It is therefore necessary in such cases, to maintain device
 	independence, to choose a mapping mode other than MM_TEXT, which
 	equates logical units to device units, i.e., pixels or dots. The choice
 	of this mapping mode is up to the application. When the derived view
 	class needs to translate the scroll position for display purposes,
-	the device context function LPtoDP() can be used to convert logical 
+	the device context function LPtoDP() can be used to convert logical
 	units to device units and its inverse, DPtoLP() can be used to convert
-	device units to logical units. The device context class knows how to 
+	device units to logical units. The device context class knows how to
 	make the appropriate transformations for the selected device in these
 	mapping modes.
 
@@ -118,9 +118,9 @@
 		Paint
 		SetScrollAppInfo
 
-	Others may be optionally overridden, identified by their virtual 
+	Others may be optionally overridden, identified by their virtual
 	declaration in CScrollWnd.h
-	
+
 ================================================================================
 
 	Programming Notes:
@@ -133,11 +133,6 @@
 #include "stdafx.h"
 #include "ScrollWnd.h"
 #include "resource.h"
-
-
-#ifndef WHEEL_DELTA
-#define WHEEL_DELTA                     120
-#endif
 
 
 static const COLORREF rgbDefaultBkColor  	  = RGB(255, 255, 255);
@@ -218,7 +213,7 @@ OnDraw(CDC& sDC)                                                        /*
 
 	Draw and display the application scroll window's owner-supplied content.
 	Called when part or all of the window needs to be redrawn. There is no
-	need to override this method unless buffered display of the window is 
+	need to override this method unless buffered display of the window is
 	unwanted.
 *-----------------------------------------------------------------------------*/
 {
@@ -308,7 +303,7 @@ OnHScroll(WPARAM wParam, LPARAM lParam)      	 			/*
 	    default:	// the rest are immaterial
 		break;
 	}
- 	  // Reset new horizontal scroll position	
+ 	  // Reset new horizontal scroll position
 	SetScrollPosition(pos);
 	Invalidate(FALSE);
 	return 0;
@@ -450,8 +445,8 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)        			/*
 	a vertical scrollbar.  Although LOWORD(wParam) contains the key flags,
 	HIWORD(wParam) gives the (signed) wheel rotation, GET_X_LPARAM(lParam)
 	is the horizontal position of the pointer, and  GET_Y_LPARAM(lParam)
-	is the vertical position of pointer, theseflags and  positions are 
-	unused here.  The incoming rotation parameter will be a multiple of 
+	is the vertical position of pointer, theseflags and  positions are
+	unused here.  The incoming rotation parameter will be a multiple of
 	the WHEEL_DELTA value, which is set at 120. Each such unit here scrolls
 	one virtical increment. The function returns 0.
 *-----------------------------------------------------------------------------*/
@@ -532,7 +527,7 @@ OnVScroll(WPARAM wParam, LPARAM lParam)        				/*
 	    default:
 		break;
 	}
-	  // Reset new vertical scroll position 
+	  // Reset new vertical scroll position
 	SetScrollPosition(pos);
 	Invalidate(FALSE);
 	return 0;
@@ -590,7 +585,7 @@ PreTranslateMessage(MSG &msg)                                           /*
 *-----------------------------------------------------------------------------*/
 {
 	UNREFERENCED_PARAMETER(msg);
-	
+
 //	HWND   hwnd	= msg->hwnd;
 //	UINT   message	= msg->message;
 //	WPARAM wParam	= msg->wParam;
@@ -639,19 +634,19 @@ Serialize(CArchive &ar)                                               /*
 		m_brBkGnd = CBrush(m_rgbBkColor);
       	}
 }
-	
+
 /*============================================================================*/
 	void CScrollWnd::
 SetNewViewSize()							/*
 
 	Compute the logical view size of the client window that may or may not
 	have scroll bars present. Each scroll bar will be assumed to appear when
-	the extent of the application either exceeds the size of the client 
-	size when no scroll bar blocks its edge, or exceeds the adjusted 
-	client size when a scroll bar is present. On exit, the determined sizes 
-	may be used directly to determine the presence of scroll bars. The 
-	method for determining scroll bar presence is derived in the article, 
-	ScrollBarsCriteria.pdf, and the notation used here is that of the 
+	the extent of the application either exceeds the size of the client
+	size when no scroll bar blocks its edge, or exceeds the adjusted
+	client size when a scroll bar is present. On exit, the determined sizes
+	may be used directly to determine the presence of scroll bars. The
+	method for determining scroll bar presence is derived in the article,
+	ScrollBarsCriteria.pdf, and the notation used here is that of the
 	article.
 *-----------------------------------------------------------------------------*/
 {
@@ -663,21 +658,21 @@ SetNewViewSize()							/*
 	{
 		CSize app = ScrlToDev(m_app_size);
 		  // get the scroll bar sizes
-		int scrollbar_x = ::GetSystemMetrics(SM_CXVSCROLL), 
+		int scrollbar_x = ::GetSystemMetrics(SM_CXVSCROLL),
 		    scrollbar_y = ::GetSystemMetrics(SM_CYHSCROLL);
 		BOOL A = (app.cx > client.cx - scrollbar_x),
 		     B = app.cx > client.cx,
 		     C = (app.cy > client.cy - scrollbar_y),
 		     D = app.cy > client.cy;
-		if (B || A && D)
+		if (B || (A && D))
 			view.cx -= scrollbar_x;
-		if (D || B && C)
+		if (D || (B && C))
 			view.cy -= scrollbar_y;
 	}
 	m_client_size = DevToScrl(client);
 	m_view_size   = DevToScrl(view);
 }
-	
+
 /*============================================================================*/
 	void CScrollWnd::
 SetScrollIncrements(int hLine, int hPage, int vLine, int vPage)		/*

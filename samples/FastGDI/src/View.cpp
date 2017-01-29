@@ -25,7 +25,7 @@ BOOL CView::LoadFileImage(LPCTSTR szFilename)
 
 	if (szFilename)
 	{
-		m_bmImage.LoadImage(szFilename, 0, 0, LR_LOADFROMFILE);
+		m_bmImage.LoadImage(szFilename, LR_LOADFROMFILE);
 		if (!m_bmImage.GetHandle())
 		{
 			CString str("Failed to load file:  ");

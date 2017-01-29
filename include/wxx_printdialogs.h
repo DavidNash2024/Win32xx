@@ -370,8 +370,8 @@ namespace Win32xx
 					}
 				}
 			}
-			else
-				::GlobalUnlock(m_hDevNames);
+			
+			::GlobalUnlock(m_hDevNames);
 		}
 	}
 

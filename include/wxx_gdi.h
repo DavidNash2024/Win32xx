@@ -208,8 +208,8 @@ namespace Win32xx
 		// Create and load methods
 		BOOL LoadBitmap(LPCTSTR lpszName);
 		BOOL LoadBitmap(int nID);
-		BOOL LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
-		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
+		BOOL LoadImage(LPCTSTR lpszName, UINT fuLoad);
+		BOOL LoadImage(UINT nID, UINT fuLoad);
 		BOOL LoadOEMBitmap(UINT nIDBitmap);
 		HBITMAP CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID pBits);
 		HBITMAP CreateCompatibleBitmap(HDC hdc, int nWidth, int nHeight);
@@ -461,8 +461,8 @@ namespace Win32xx
 		HBITMAP GetCurrentBitmap() const;
 		BOOL LoadBitmap(UINT nID);
 		BOOL LoadBitmap(LPCTSTR lpszName);
-		BOOL LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad);
-		BOOL LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad);
+		BOOL LoadImage(UINT nID, UINT fuLoad);
+		BOOL LoadImage(LPCTSTR lpszName, UINT fuLoad);
 		BOOL LoadOEMBitmap(UINT nIDBitmap); // for OBM_/OCR_/OIC
 
 #ifndef _WIN32_WCE
@@ -1296,18 +1296,18 @@ namespace Win32xx
 		return (0 != hBitmap);	// boolean expression
 	}
 
-	inline BOOL CBitmap::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
+	inline BOOL CBitmap::LoadImage(UINT nID, UINT fuLoad)
 	// Loads a bitmap from a resource using the resource ID.
 	{
-		return LoadImage(MAKEINTRESOURCE(nID), cxDesired, cyDesired, fuLoad);
+		return LoadImage(MAKEINTRESOURCE(nID), fuLoad);
 	}
 
-	inline BOOL CBitmap::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
+	inline BOOL CBitmap::LoadImage(LPCTSTR lpszName, UINT fuLoad)
 	// Loads a bitmap from a resource using the resource string.
 	{
 		assert( &GetApp() );
 
-		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, cxDesired, cyDesired, fuLoad);
+		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, fuLoad);
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
@@ -2767,21 +2767,25 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return bResult;
 	}
 
-	inline BOOL CDC::LoadImage(UINT nID, int cxDesired, int cyDesired, UINT fuLoad)
-	// Loads a bitmap from the resource and selects it into the device context
+	inline BOOL CDC::LoadImage(UINT nID, UINT fuLoad)
+	// Loads a bitmap from the resource and selects it into the device context.
+	// The fuLoad parameter can be one of  LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, 
+	//	LR_LOADFROMFILE, LR_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED and LR_VGACOLOR.
 	// Returns TRUE if successful
 	{
-		return LoadImage(nID, cxDesired, cyDesired, fuLoad);
+		return LoadImage(nID, fuLoad);
 	}
 
-	inline BOOL CDC::LoadImage(LPCTSTR lpszName, int cxDesired, int cyDesired, UINT fuLoad)
-	// Loads a bitmap from the resource and selects it into the device context
+	inline BOOL CDC::LoadImage(LPCTSTR lpszName, UINT fuLoad)
+	// Loads a bitmap from the resource and selects it into the device context.
+	// The fuLoad parameter can be one of  LR_DEFAULTCOLOR, LR_CREATEDIBSECTION, 
+	//	LR_LOADFROMFILE, LR_LOADTRANSPARENT, LR_MONOCHROME, LR_SHARED and LR_VGACOLOR.
 	// Returns TRUE if successful
 	{
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		BOOL bResult = bitmap.LoadImage(lpszName, cxDesired, cyDesired, fuLoad);
+		BOOL bResult = bitmap.LoadImage(lpszName, fuLoad);
 
 		if (bResult)
 		{

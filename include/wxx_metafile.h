@@ -35,6 +35,22 @@
 ////////////////////////////////////////////////////////
 
 
+////////////////////////////////////////////////////////
+// A metafile is a collection of structures that store a picture in a 
+// device-independent format. Device independence is the one feature that sets
+// metafiles apart from bitmaps. Unlike a bitmap, a metafile guarantees device
+// independence. There is a drawback to metafiles however, they are generally
+// drawn more slowly than bitmaps.
+//
+// In 1993, the 32-bit version of Win32/GDI introduced the Enhanced Metafile
+// (EMF), a newer version with additional commands. EMF is also used as a
+// graphics language for printer drivers. Microsoft recommends that
+// "Windows-format" (WMF) functions only "rarely" be used and "enhanced-format"
+// (EMF) functions be used instead.
+//
+////////////////////////////////////////////////////////
+
+
 #ifndef _WIN32XX_METAFILE_H_
 #define _WIN32XX_METAFILE_H_
 
@@ -43,23 +59,6 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-	struct CMetaFile_Data	// A structure that contains the data members for CMetaFile
-	{
-		// Constructor
-		CMetaFile_Data() : hMetaFile(0), Count(1L)  {}
-
-		HMETAFILE hMetaFile;
-		long	Count;
-	};
-
-	struct CEnhMetaFile_Data	// A structure that contains the data members for CEnhMetaFile
-	{
-		// Constructor
-		CEnhMetaFile_Data() : hEnhMetaFile(0), Count(1L) {}
-
-		HENHMETAFILE hEnhMetaFile;
-		long	Count;
-	};
 
 	/////////////////////////////////////////////////////
 	// Declaration of the the CMetaFile class
@@ -82,6 +81,15 @@ namespace Win32xx
 		operator HMETAFILE() { return m_pData->hMetaFile; }
 
 	private:
+		struct CMetaFile_Data	// A structure that contains the data members for CMetaFile
+		{
+			// Constructor
+			CMetaFile_Data() : hMetaFile(0), Count(1L)  {}
+
+			HMETAFILE hMetaFile;
+			long	Count;
+		};
+		
 		void Attach(HMETAFILE hMetaFile);
 		void Release();
 		
@@ -110,7 +118,16 @@ namespace Win32xx
 		void operator = (const HENHMETAFILE hEnhMetaFile);
 		operator HENHMETAFILE() { return m_pData->hEnhMetaFile; }
 
-	private:		
+	private:
+		struct CEnhMetaFile_Data	// A structure that contains the data members for CEnhMetaFile
+		{
+			// Constructor
+			CEnhMetaFile_Data() : hEnhMetaFile(0), Count(1L) {}
+
+			HENHMETAFILE hEnhMetaFile;
+			long	Count;
+		};
+	
 		void Attach(HENHMETAFILE hEnhMetaFile);
 		void Release();
 

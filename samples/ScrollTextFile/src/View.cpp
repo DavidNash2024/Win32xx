@@ -229,16 +229,13 @@ Paint(CDC& dcMem)                                    			/*
 	{
 		int  doc_length = TheDoc().GetLength(),
 		     vu_length  = GetClientSize().cy;
-		  // get scroll bar current position: sp is the upper-left-most  
-		  // character in the display
+		  // get scroll bar current position: sp is the 
+		  // upper-left-most character in the display
 		CPoint sp = GetScrollPosition();
-		  // set variables for the position coordinates
-		int	topline = MAX(sp.y, 0),
-			leftcol = MAX(sp.x, 0);
 		  // display the current view
 		for (int i = 0; i < vu_length; i++)
 		{
-			int j = i + topline;
+			int j = i + sp.y;
 			if (j > doc_length)
 				continue;
 
@@ -246,7 +243,7 @@ Paint(CDC& dcMem)                                    			/*
 				  // for the demo only:
 				s = _T("---- end of document ----");
 			else
-				s =  TheDoc().GetRecord(j, leftcol); 
+				s =  TheDoc().GetRecord(j, sp.x); 
 
 			TextLineOut(dcMem, 0, i, s.c_str());
 		}

@@ -7,20 +7,6 @@ Multiple Document Interface (MDI). They might or might not support docking,
 and they might or might not support the Ribbon Framework. Each of these
 optional features are provided using class templates.
 
-The previous implementation of frames used multiple inheritance to add optional
-features such docking and the Ribbon Framework to frames. The multiple
-inheritance approach worked OK, but a template approach has a number of
-advantages:
-
-* The code without multiple inheritance is simpler.
-* Virtual inheritance is no longer required. It was was a bit of an
-   inconvenience when casting a CWnd pointer to a CDocker pointer for
-   example, as it required us to use dynamic_cast. 
-* The design is more scalable and the code is more reusable. For example, it
-   is now trivial to provide a Ribbon option for all frame types.
-* Usage hasn't changed and the code is backwards compatible. Just ensure that
-   if you call the base class for CMainFrame, you call the correct one.
-
 
 New Features and Enhancements
 -----------------------------
@@ -30,7 +16,7 @@ New Features and Enhancements
    To use these classes, inherit your CMainFrame from either CFrame or 
    CDockFrame as before.
 
-* Added CMDIFrameT class template which inherits from CFrameT
+* Added CMDIFrameT class template
    - CMDIFrame now inherits from CMDIFrameT<CFrame>
    - CMDIDockFrame now inherits from CMDIFrameT<CDockFrame>
    To use these classes, inherit your CMainFrame from either CMDIFrame
@@ -51,6 +37,12 @@ New Features and Enhancements
     2) The Ribbon Framework only runs on Windows 7 or later operating systems.
   	   If the code is run on an earlier operating system, it reverts back to a
 	   menu and toolbar.
+	   
+* Added CScrollView
+  The CScrollView class adds scrolling to a CWnd used as a view window. To
+  use this class, inherit the View window from CScrollView and use the
+  SetScrollSizes function to enable scrolling. No change needs to be made
+  to the code in OnDraw to allow it to be scrolled.	   
 	
 * The CMetaFile and CEnhMetaFile classes have been added to the framework.
  - CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
@@ -58,6 +50,7 @@ New Features and Enhancements
    copied and returned from functions. CMetatFile automatically deletes
    the HMETAFILE when the last copy of the CMetaFile object goes out of scope.
    The CMetaFileDC::Close function returns a CMetaFile object.
+   
  - CEnhMetaFile wraps a HENHMETAFILE. CEnhMetaFile can be used anywhere a
    HENHMETAFILE can be used. CEnhMetaFile objects are reference counted, 
    so they can be safely copied and returned from functions. CEnhMetaFile
@@ -65,30 +58,27 @@ New Features and Enhancements
    CEnhMetaFile object goes out of scope. The CMetaFileDC::CloseEnhanced
    function returns a CEnhMetaFile object.
    
-* Added CScrollView
-  The scrollview class adds scrolling to a CWnd used as a view window.   
-
 * Renamed the text conversion typedefs. 
-   This allows Win32++ to be used with ATL.   
-   
-* Added a MetaFile sample.
-   This sample demonstrates how to create and display an enhanced metafile.
+   This allows Win32++ to be used with ATL.
 
-* Added Animation sample.
+* Added the following samples.
+ 1) Animation sample.
    This sample demonstrates how to use an animation control in a dialog.
+	
+ 2) ContextHelp sample.
+   Displays help topics from a chm file. The help topics are chosen based on
+   the current mouse position.
    
-* Added Tooltips sample.
+ 3) MetaFile sample.
+   This sample demonstrates how to create and display an enhanced metafile.
+   
+ 4) ScrollTextFile sample.
+   This sample displays the contents of a text file in a scrollable window.   
+   
+ 5) Tooltips sample.
    This sample demonstrates how to add tooltips to controls in a modal dialog.
 
-* Added ScrollTextFile sample.
-   This sample displays the contents of a text file in a scrollable window.
-
-* Added ContextHelp sample
-   Displays help topics from a chm file. The help topics are chosen based on
-   the current mouse position.     
-
-
-
+   
 Changes in detail
 -----------------
 Added wxx_dockframe.h                   header file
@@ -117,6 +107,8 @@ Added UWM_MDIACTIVATED                  window message
 Added UWM_MDIDESTROYED                  window message
 
 Modified TRACE 							now implemented as a macro.
+Modified CBitmap::LoadImage
+Modified CDC::LoadImage
 Modified CMetaFileDC::Close				now returns CMetaFile
 Modified CMetaFileDC::CloseEnhanced		now returns CEnhMetaFile
 Modified CToolTip::AddTool

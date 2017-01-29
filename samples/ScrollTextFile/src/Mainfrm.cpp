@@ -192,13 +192,23 @@ OnCreate(CREATESTRUCT& cs)                                               /*
 	if (rtn != 0)
 		return rtn;
 
+	GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), TRUE);
+	  // determine the availability of the archive file
+	if (::_taccess(TheApp().GetArcvPath(), 4) != 0)
+	{
+		CString msg = _T("Default values are being used on this first\n")
+		    _T("startup. Your customized settings, colors, and font\n")
+		    _T("will be restored in future usages.\n");
+		::MessageBox(NULL, msg, _T("Information"), MB_OK |
+		    MB_ICONINFORMATION | MB_TASKMODAL);
+		return rtn;
+	}
 	  // get archved values
 	try
 	{
 		SetMRULimit(m_nMaxMRU);
 		  // get archived values
-		CArchive ar(TheApp().GetArcvPath(), 
-		    CArchive::load);
+		CArchive ar(TheApp().GetArcvPath(), CArchive::load);
 	          // deserialize in the same order as serialized
 		ar >> TheApp();	// for the app
 		ar >> *this;	// for the frame
@@ -224,7 +234,6 @@ OnCreate(CREATESTRUCT& cs)                                               /*
 		m_Wndpl.length = sizeof(WINDOWPLACEMENT);
 		SetWindowPlacement(m_Wndpl);
 	}
-	GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), TRUE);
 	return rtn;
 }
 
@@ -307,6 +316,13 @@ OnFileOpenMRU(UINT nIndex)						/*
 		  // show the document
 		Invalidate();
 		UpdateWindow();
+	}
+	else // problem: bad file in MRU
+	{
+		RemoveMRUEntry(mru_entry);
+		::MessageBox(NULL, _T("File could not be opened and read."), 
+		      _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
+		OnFileClose();
 	}
 }
 
@@ -562,28 +578,35 @@ Serialize(CArchive& ar)                                               /*
         }
 }
 
+/*============================================================================*/
 	void CMainFrame::
-SetupMenuIcons()
+SetupMenuIcons()							/*
+
+	Called by the framework to assigns icons to dropdown menu items. By 
+	default the toolbar icons are added to the menu items by position. The 
+	base class is overridden here to assign icons to the drop down menu 
+	items by command ID.
+*-----------------------------------------------------------------------------*/
 {
 	const int NO_ID = 1;
 	std::vector<UINT> MenuIDs;
 
 	MenuIDs.push_back(NO_ID);				// New
-	MenuIDs.push_back(IDM_FILE_OPEN);
+	MenuIDs.push_back(IDM_FILE_OPEN);			// Open
 	MenuIDs.push_back(NO_ID);				// Save
 	MenuIDs.push_back(NO_ID);				// SaveAs
-	MenuIDs.push_back(IDM_FILE_EXIT);
-	MenuIDs.push_back(NO_ID);				// Drop down
+	MenuIDs.push_back(IDM_FILE_CLOSE);			// Close
+	MenuIDs.push_back(IDM_FILE_EXIT);			// File Exit
 	MenuIDs.push_back(NO_ID);				// Cut
-	MenuIDs.push_back(NO_ID);				// copy
+	MenuIDs.push_back(NO_ID);				// Copy
 	MenuIDs.push_back(NO_ID);				// Paste
 	MenuIDs.push_back(NO_ID);				// Delete
 	MenuIDs.push_back(NO_ID);				// Print
 	MenuIDs.push_back(NO_ID);				// Print
-	MenuIDs.push_back(IDM_FONT_CHOICE);
-	MenuIDs.push_back(IDM_COLOR_CHOICE);
+	MenuIDs.push_back(IDM_FONT_CHOICE);			// Font choice
+	MenuIDs.push_back(IDM_COLOR_CHOICE);			// Bkgr color
 
-	AddMenuIcons(MenuIDs, RGB(192, 192, 192), IDW_MAIN, 0);
+	AddMenuIcons(MenuIDs, RGB(255, 0, 255), IDW_MAIN, 0);
 }
 
 /*============================================================================*/
@@ -594,7 +617,7 @@ SetupToolBar()                                                          /*
 	bitmaps, to connect the tool bar buttons to Resource IDs of the
 	toolbar buttons, and to define the order of appearance of the buttons
 	on the toolbar at runtime.
-	*-----------------------------------------------------------------------------*/
+*-----------------------------------------------------------------------------*/
 {
 	  // Connect button IDs to button icons, show enabled status, and
 	  // give the explicit image index iImage of each button in the bitmap.
