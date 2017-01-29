@@ -47,10 +47,23 @@
 #ifndef CSCROLLWIN_H_DEFINED
 #define CSCROLLWIN_H_DEFINED
 
+
+#ifndef WHEEL_DELTA
+#define WHEEL_DELTA       120
+#endif // WHEEL_DELTA
+
+#ifndef MM_MIN
+#define MM_MIN            MM_TEXT
+#endif // MM_MIN
+
+#ifndef MM_MAX
+#define MM_MAX            MM_ANISOTROPIC
+#endif // MM_MAX
+
 const SIZE ScrollSizeDefault = {0, 0};
 
 /*============================================================================*/
-	class 
+	class
 CScrollWnd : public CWnd						/*
 
 	A scrollable window class.
@@ -74,7 +87,7 @@ CScrollWnd : public CWnd						/*
 		int		GetMappingMode()const { return m_nMapMode;}
 		CSize		GetViewSize() {return m_view_size;};
 		COLORREF        GetWndBkColor() { return m_rgbBkColor;}
-		BOOL		IsHVisible() const; 
+		BOOL		IsHVisible() const;
 		BOOL		IsVVisible() const;
 		virtual void 	OnDraw(CDC& sDC);
 		LRESULT 	OnHScroll(WPARAM, LPARAM);

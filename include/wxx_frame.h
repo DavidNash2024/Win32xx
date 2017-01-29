@@ -332,7 +332,7 @@ namespace Win32xx
 			BOOL  ShowToolBar;
 
 			// Display StatusBar and ToolBar by default
-			InitValues() : ShowCmd(SW_SHOW), ShowStatusBar(1), ShowToolBar(1) {}	// constructor
+			InitValues() : ShowCmd(SW_SHOW), ShowStatusBar(TRUE), ShowToolBar(TRUE) {}	// constructor
 		};
 
 		CFrameT();
@@ -396,7 +396,7 @@ namespace Win32xx
 	protected:
 		// Override these functions as required.
 		virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon);
-		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID);
+		virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT BitmapID, UINT BitmapDisabledID);
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwBandStyle, UINT nID);
@@ -967,11 +967,14 @@ namespace Win32xx
 	template <class T>
 	inline BOOL CFrameT<T>::AddMenuIcon(int nID_MenuItem, HICON hIcon)
 	// Adds an icon to an internal ImageList for use with popup menu items.
+	// The image size for menu icons should be 16x16.
 	{
 		// Create a new ImageList if required
 		if (NULL == m_imlMenu.GetHandle())
 		{
-			m_imlMenu.Create(16, 16, ILC_COLOR32 | ILC_MASK, 1, 0);
+			int cxImage = 16;
+			int cyImage = 16;
+			m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
 			m_vMenuIcons.clear();
 		}
 
@@ -990,10 +993,9 @@ namespace Win32xx
 	}
 
 	template <class T>
-	inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT ToolBarID, UINT ToolBarDisabledID)
+	inline UINT CFrameT<T>::AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT BitmapID, UINT BitmapDisabledID)
 	// Adds the icons from a bitmap resource to an internal ImageList for use with popup menu items.
-	// Note:  If existing images are a different size to the new ones, the old ones will be removed!
-	//        The ToolBarDisabledID is ignored unless ToolBarID and ToolBarDisabledID bitmaps are the same size.
+	// Note:  Images for menu icons should be sized 16x16 or 16x15 pixels. Larger images are ignored.
 	{
 		// Count the MenuData entries excluding separators
 		int iImages = 0;
@@ -1006,70 +1008,70 @@ namespace Win32xx
 		}
 
 		// Load the button images from Resource ID
-		CBitmap Bitmap(ToolBarID);
+		CBitmap Bitmap(BitmapID);
 
 		if ((0 == iImages) || (!Bitmap))
 			return static_cast<UINT>(m_vMenuIcons.size());	// No valid images, so nothing to do!
 
 		BITMAP bm = Bitmap.GetBitmapData();
-		int iImageHeight = bm.bmHeight;
-		int iImageWidth  = MAX(bm.bmHeight, 16);
+		int cxImage = bm.bmHeight;
 
-		// Create the ImageList if required
-		if (NULL == m_imlMenu.GetHandle() )
+		if (cxImage <= 16)		// images should be 16x16 or 16x15
 		{
-			m_imlMenu.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
-			m_vMenuIcons.clear();
-		}
-		else
-		{
-			CSize szImage = m_imlMenu.GetIconSize();
-			if (iImageHeight != szImage.cy)
+			cxImage = 16;
+			int cyImage = 16;
+
+			// Create the ImageList if required
+			if (NULL == m_imlMenu.GetHandle())
 			{
-				TRACE("Unable to add icons. The new icons are a different size to the old ones\n");
-				return static_cast<UINT>(m_vMenuIcons.size());
+				m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, iImages, 0);
+				m_vMenuIcons.clear();
 			}
-		}
 
-		// Add the resource IDs to the m_vMenuIcons vector
-		std::vector<UINT>::const_iterator iter;
-		for (iter = MenuData.begin(); iter != MenuData.end(); ++iter)
-		{
-			if ((*iter) != 0)
+			// Add the resource IDs to the m_vMenuIcons vector
+			std::vector<UINT>::const_iterator iter;
+			for (iter = MenuData.begin(); iter != MenuData.end(); ++iter)
 			{
-				m_vMenuIcons.push_back(*iter);
+				if ((*iter) != 0)
+				{
+					m_vMenuIcons.push_back(*iter);
+				}
 			}
-		}
 
-		// Add the images to the ImageList
-		m_imlMenu.Add(Bitmap, crMask);
+			// Add the images to the ImageList
+			m_imlMenu.Add(Bitmap, crMask);
 
-		// Create the Disabled imagelist
-		if (ToolBarDisabledID != 0)
-		{
-			m_imlMenuDis.DeleteImageList();
-			m_imlMenuDis.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, iImages, 0);
-
-			CBitmap BitmapDisabled(ToolBarDisabledID);
-			BITMAP bmDis = BitmapDisabled.GetBitmapData();
-
-			int iImageWidthDis  = bmDis.bmWidth / iImages;
-			int iImageHeightDis = bmDis.bmHeight;
-
-			// Normal and Disabled icons must be the same size
-			if ((iImageWidthDis == iImageWidth) && (iImageHeightDis == iImageHeight))
+			// Create the Disabled imagelist
+			if (BitmapDisabledID != 0)
 			{
-				m_imlMenuDis.Add(BitmapDisabled, crMask);
+				m_imlMenuDis.DeleteImageList();
+				m_imlMenuDis.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, iImages, 0);
+
+				CBitmap BitmapDisabled(BitmapDisabledID);
+				BITMAP bmDis = BitmapDisabled.GetBitmapData();
+				int cyImageDis = bmDis.bmHeight;
+
+				// Disabled icons must be 16x16 or 16x15
+				if (cyImageDis <= 16)
+				{
+					m_imlMenuDis.Add(BitmapDisabled, crMask);
+				}
+				else
+				{
+					m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
+				}
 			}
 			else
 			{
+				m_imlMenuDis.DeleteImageList();
 				m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
 			}
+
 		}
 		else
 		{
-			m_imlMenuDis.DeleteImageList();
-			m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
+			TRACE("AddMenuIcons: Failed to add images. Menu Icons should be 16x16 or 15x16");
+			;;
 		}
 
 		// return the number of menu icons
@@ -2142,7 +2144,7 @@ namespace Win32xx
 
 		m_strKeyName = szKeyName;
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Frame Settings");
-		BOOL bRet = FALSE;
+		BOOL isOK = FALSE;
 		InitValues Values;
 		CRegKey Key;
 		if (ERROR_SUCCESS == Key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
@@ -2171,7 +2173,7 @@ namespace Win32xx
 				Values.ShowStatusBar = dwStatusBar & 1;
 				Values.ShowToolBar = dwToolBar & 1;
 
-				bRet = TRUE;
+				isOK = TRUE;
 			}
 
 			catch (const CUserException& e)
@@ -2191,7 +2193,7 @@ namespace Win32xx
 		}
 
 		SetInitValues(Values);
-		return bRet;
+		return isOK;
 	}
 
 	template <class T>
@@ -3059,11 +3061,7 @@ namespace Win32xx
 	// is used to load and store the initial values, usually saved in the
 	// registry or an INI file.
 	{
-		// Values is a const ref, so copy the members individually
-		m_InitValues.rcPos = Values.rcPos;
-		m_InitValues.ShowCmd = Values.ShowCmd;
-		m_InitValues.ShowStatusBar = Values.ShowStatusBar;
-		m_InitValues.ShowToolBar = Values.ShowToolBar;
+		m_InitValues = Values;
 	}
 
 	template <class T>

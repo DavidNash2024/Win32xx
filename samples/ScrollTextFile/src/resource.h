@@ -51,17 +51,16 @@
 #include "default_resource.h"
 
   //Resource IDs for standard menu items and ToolBar items
-#define IDM_FILE_OPEN                   1002
-#define IDM_FILE_CLOSE                  1007
-#define IDM_FILE_EXIT                   1008
-#define IDM_FONT_CHOICE                 1020
-#define IDM_COLOR_CHOICE                1021
-#define IDM_CREDITS                     1024
+#define IDM_FILE_OPEN                   1000
+#define IDM_FILE_CLOSE                  1001
+#define IDM_FILE_EXIT                   1002
+#define IDM_FONT_CHOICE                 1003
+#define IDM_COLOR_CHOICE                1004
+#define IDM_CREDITS                     1005
 
   // bitmap identifiers
-#define IDB_FONT_BMP                    1100
-#define IDB_COLOR_BMP                   1101
-#define IDB_TOOLBAR                     1103
+#define IDB_TOOLBAR                     1100
+
   // toolbar identifiers (not used)
 #define IDB_TOOLBAR_NORM                1200
 #define IDB_TOOLBAR_HOT                 1201
