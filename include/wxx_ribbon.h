@@ -387,17 +387,21 @@ namespace Win32xx
 		{	
 			if (CreateRibbon(*this))
 			{
-				SetUseReBar(FALSE);			// Don't use a ReBar
-				SetUseToolBar(FALSE);		// Don't use a ToolBar
-
-				T::OnCreate(cs);
-				SetMenu(NULL);
-				ShowStatusBar(TRUE);
-			}		
+				SetUseReBar(FALSE);		// Don't use a ReBar
+				SetUseToolBar(FALSE);	// Don't use a ToolBar
+			}
+			else
+			{
+				TRACE("Failed to create Ribbon\n");
+				DestroyRibbon();
+			}
 		}
-		else 
+
+		T::OnCreate(cs);
+		if (GetRibbonFramework())
 		{
-			T::OnCreate(cs);
+			SetMenu(NULL);				// Disable the window menu
+			SetFrameMenu((HMENU)0);
 		}
 
 		return 0;

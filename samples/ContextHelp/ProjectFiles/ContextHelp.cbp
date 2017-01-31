@@ -30,6 +30,7 @@
 					<Add library="import32" />
 					<Add library="shlwapi" />
 					<Add library="htmlhelp" />
+					<Add directory="../lib/Borland55" />
 				</Linker>
 			</Target>
 			<Target title="Release Borland">
@@ -55,6 +56,7 @@
 					<Add library="cw32mt" />
 					<Add library="shlwapi" />
 					<Add library="htmlhelp" />
+					<Add directory="../lib/Borland55" />
 				</Linker>
 			</Target>
 			<Target title="Debug Microsoft Visual C++">
@@ -143,7 +145,7 @@
 					<Add option="-D__DEBUG__" />
 					<Add option="-D_DEBUG" />
 					<Add directory="../../../include" />
-					<Add directory="../help" />
+					<Add directory="../include/MinGW" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="../../../include" />
@@ -157,7 +159,7 @@
 					<Add library="Ws2_32" />
 					<Add library="shlwapi" />
 					<Add library="htmlhelp" />
-					<Add directory="../help" />
+					<Add directory="../lib/MinGW" />
 				</Linker>
 			</Target>
 			<Target title="Release MinGW GNU compiler">
@@ -170,7 +172,7 @@
 					<Add option="-Wall" />
 					<Add option="-DNDEBUG" />
 					<Add directory="../../../include" />
-					<Add directory="../help" />
+					<Add directory="../include/MinGW" />
 				</Compiler>
 				<ResourceCompiler>
 					<Add directory="../../../include" />
@@ -185,7 +187,7 @@
 					<Add library="Ws2_32" />
 					<Add library="shlwapi" />
 					<Add library="htmlhelp" />
-					<Add directory="../help" />
+					<Add directory="../lib/MinGW" />
 				</Linker>
 			</Target>
 		</Build>

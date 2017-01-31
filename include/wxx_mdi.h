@@ -629,24 +629,27 @@ namespace Win32xx
 	// Updates the frame menu. Also puts the list of CMDIChild windows in the "window" menu.
 	// The "window" menu item is assumed to be the second from the right.
 	{
-		int nMenuItems = Menu.GetMenuItemCount();
-		if (nMenuItems > 0)
+		if (Menu.GetHandle())
 		{
-			// The Window menu is typically second from the right
-			int nWindowItem = MAX (nMenuItems -2, 0);
-			CMenu MenuWindow = Menu.GetSubMenu(nWindowItem);
-
-			if (MenuWindow.GetHandle())
+			int nMenuItems = Menu.GetMenuItemCount();
+			if (nMenuItems > 0)
 			{
-				if (T::IsMenuBarUsed())
+				// The Window menu is typically second from the right
+				int nWindowItem = MAX(nMenuItems - 2, 0);
+				CMenu MenuWindow = Menu.GetSubMenu(nWindowItem);
+
+				if (MenuWindow.GetHandle())
 				{
-					AppendMDIMenu(MenuWindow);
-					T::GetMenuBar().SetMenu(Menu);
-				}
-				else
-				{
-					GetMDIClient().SendMessage(WM_MDISETMENU, (WPARAM)Menu.GetHandle(), (LPARAM)MenuWindow.GetHandle());
-					T::DrawMenuBar();
+					if (T::IsMenuBarUsed())
+					{
+						AppendMDIMenu(MenuWindow);
+						T::GetMenuBar().SetMenu(Menu);
+					}
+					else
+					{
+						GetMDIClient().SendMessage(WM_MDISETMENU, (WPARAM)Menu.GetHandle(), (LPARAM)MenuWindow.GetHandle());
+						T::DrawMenuBar();
+					}
 				}
 			}
 		}

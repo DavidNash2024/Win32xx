@@ -6,6 +6,8 @@
 // include the Resource IDs defined by Win32++
 #include "default_resource.h"
 
+// include the automatically generated header for ribbon resources
+#include "RibbonUI.h"
 
 //Resource IDs for menu items and ToolBar items
 #define IDM_FILE_NEW                    121
