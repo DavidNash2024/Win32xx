@@ -7,6 +7,10 @@
 // include the Resource IDs defined by Win32++
 #include "default_resource.h"
 
+// include the automatically generated header for ribbon resources
+#include "RibbonUI.h"
+
+
 #define IDS_APP_TITLE           120
 #define IDI_SIMPLERIBBON        121
 #define IDI_SMALL               122

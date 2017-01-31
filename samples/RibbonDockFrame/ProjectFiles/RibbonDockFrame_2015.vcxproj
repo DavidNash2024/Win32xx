@@ -116,16 +116,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <ExecutablePath>C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files\Microsoft SDKs\Windows\v7.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\Microsoft SDKs\Windows\v7.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <EmbedManifest>false</EmbedManifest>
-    <ExecutablePath>C:\Program Files\Microsoft SDKs\Windows\v7.0\Bin;$(ExecutablePath)</ExecutablePath>
-    <IncludePath>C:\Program Files\Microsoft SDKs\Windows\v7.0\Include;$(IncludePath)</IncludePath>
-    <LibraryPath>C:\Program Files\Microsoft SDKs\Windows\v7.0\Lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

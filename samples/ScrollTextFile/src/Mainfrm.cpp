@@ -582,30 +582,34 @@ Serialize(CArchive& ar)                                               /*
 	void CMainFrame::
 SetupMenuIcons()							/*
 
-	Called by the framework to assigns icons to dropdown menu items. By 
-	default the toolbar icons are added to the menu items by position. The 
-	base class is overridden here to assign icons to the drop down menu 
-	items by command ID.
+	Called by the framework to assigns bitmaps to dropdown menu items. By 
+	default the toolbar button bitmaps are added to menu items by position, 
+	rather than by command ID. The  base class is overridden here to allow 
+	images on drop down menu items to be assigned by command ID.  This step 
+	is necessary when the toolbar buttons are not in the same  order as the 
+	command IDs.
 *-----------------------------------------------------------------------------*/
 {
-	const int NO_ID = 1;
+	   // determine the number of buttons on the IDW_MAIN toolbar
+	CBitmap Bitmap(IDW_MAIN);
+	assert (Bitmap.GetHandle());
+	BITMAP bm = Bitmap.GetBitmapData();
+	int nImages = bm.bmWidth / bm.bmHeight;
+	  // make a vector spanning the number of buttons on the toolbar and 
+	  // fill it initially with empty IDs
 	std::vector<UINT> MenuIDs;
+	const int NO_ID = 1;
+	MenuIDs.assign(nImages, NO_ID);
 
-	MenuIDs.push_back(NO_ID);				// New
-	MenuIDs.push_back(IDM_FILE_OPEN);			// Open
-	MenuIDs.push_back(NO_ID);				// Save
-	MenuIDs.push_back(NO_ID);				// SaveAs
-	MenuIDs.push_back(IDM_FILE_CLOSE);			// Close
-	MenuIDs.push_back(IDM_FILE_EXIT);			// File Exit
-	MenuIDs.push_back(NO_ID);				// Cut
-	MenuIDs.push_back(NO_ID);				// Copy
-	MenuIDs.push_back(NO_ID);				// Paste
-	MenuIDs.push_back(NO_ID);				// Delete
-	MenuIDs.push_back(NO_ID);				// Print
-	MenuIDs.push_back(NO_ID);				// Print
-	MenuIDs.push_back(IDM_FONT_CHOICE);			// Font choice
-	MenuIDs.push_back(IDM_COLOR_CHOICE);			// Bkgr color
-
+	  // now fill in just those that are used in the menu using the 
+	  // indexes of the buttons on IDW_MAIN and the command ID in the form:
+	  // MenuIDs[index] = nCommandID;
+	MenuIDs[ 1] = IDM_FILE_OPEN;
+	MenuIDs[ 4] = IDM_FILE_CLOSE;
+	MenuIDs[ 5] = IDM_FILE_EXIT;
+	MenuIDs[12] = IDM_FONT_CHOICE;
+	MenuIDs[13] = IDM_COLOR_CHOICE;
+	  // replace the current menu image list with this one
 	AddMenuIcons(MenuIDs, RGB(255, 0, 255), IDW_MAIN, 0);
 }
 
@@ -622,11 +626,11 @@ SetupToolBar()                                                          /*
 	  // Connect button IDs to button icons, show enabled status, and
 	  // give the explicit image index iImage of each button in the bitmap.
 	  // Add the toolbar buttons in the order they are to appear at runtime.
-	AddToolBarButton(IDM_FILE_OPEN,    TRUE, 0, 1);
-	AddToolBarButton(IDM_FILE_CLOSE,   TRUE, 0, 4);
+	AddToolBarButton(IDM_FILE_OPEN,    TRUE, 0,  1);
+	AddToolBarButton(IDM_FILE_CLOSE,   TRUE, 0,  4);
 	AddToolBarButton(0);  // Separator
-	AddToolBarButton(IDM_FONT_CHOICE,   TRUE, 0, 12);
-	AddToolBarButton(IDM_COLOR_CHOICE,  TRUE, 0, 13);
+	AddToolBarButton(IDM_FONT_CHOICE,  TRUE, 0, 12);
+	AddToolBarButton(IDM_COLOR_CHOICE, TRUE, 0, 13);
 	AddToolBarButton(0);  // Separator
 	  // Set the toolbar image list: use defaults for hot and disabled
 	SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR, 0, 0);

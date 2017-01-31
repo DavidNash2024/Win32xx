@@ -21,6 +21,10 @@
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 
 /////////////////////////////////////////////////////////////////////////////
+// Add the automatically generated resources for the ribbon
+   #include "RibbonUI.rc"
+
+/////////////////////////////////////////////////////////////////////////////
 //
 // RT_MANIFEST
 //
@@ -217,9 +221,6 @@ BEGIN
     IDW_FILE_MRU_FILE5       "Open this document"
 END
 
-//////////////////////////////////////////////////////
-// Ribbon
-#include "RibbonUI.rc"
 
 
 #endif    // English (U.S.) resources

@@ -1,0 +1,4 @@
+
+To convert htmlhelp.lib for use by Borland version 5.5, use the following:
+
+C:\Borland\BCC55\Bin>implib  htmlhelp.lib C:\Windows\system32\hhctrl.ocx
