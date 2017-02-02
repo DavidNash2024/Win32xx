@@ -241,7 +241,12 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 void CMainFrame::OnF1()
 // Called when the F1 key is pressed
 {
-	m_AppHelp.ShowHelpTopic(_T("Introduction"));
+	UINT nID = GetIDFromCursorPos();
+
+	if (nID != 0)
+		m_AppHelp.ShowHelpTopic(nID);
+	else
+		m_AppHelp.ShowHelpTopic(_T("Introduction"));
 }
 
 void CMainFrame::OnFileExit()
