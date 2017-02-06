@@ -19,12 +19,10 @@ public:
 	virtual ~CMainFrame();
 
 	CDoc& GetDoc() { return m_Doc; }
-
 	void LoadFile(LPCTSTR str);
 	void MRUFileOpen(UINT nMRUIndex);
 
 	LRESULT OnDropFile(WPARAM wParam);
-
 	void OnFileExit();
 	void OnFileNew();
 	void OnFileOpen();

@@ -77,6 +77,9 @@ New Features and Enhancements
    
  5) Tooltips sample.
    This sample demonstrates how to add tooltips to controls in a modal dialog.
+   
+ 6) RibbonMDIFrame sample.
+   This sample demonstrates how to use the Window 7 ribbon with a MDI frame. 
 
    
 Changes in detail
@@ -98,6 +101,7 @@ Added CFrameT::GetMenuMetrics			member function
 Added CFrameT::GetToolBarData			member function
 Added CMDIChild::GetChildAccel			member function
 Added CMDIChild::GetChildMenu			member function
+Added CMDIFrameT::OnMDIMaximized        member function
 Added CMDIFrameT::UpdateFrameMenu		member function
 Added CTab::GetMaxTabSize				member function
 Added CTime::operator ()				member function

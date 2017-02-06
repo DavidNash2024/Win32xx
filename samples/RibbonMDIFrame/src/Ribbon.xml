@@ -1,0 +1,343 @@
+<?xml version='1.0' encoding='utf-8'?>
+<Application xmlns='http://schemas.microsoft.com/windows/2009/Ribbon'>
+  <!-- Commands section -->
+  <Application.Commands>
+
+    <!-- Tab Definitions -->
+    <Command Name="cmdTabHome" Comment="Tab Definitions" Id="10000" >
+      <Command.LabelTitle>
+        <String Id ="10001">Home</String>
+      </Command.LabelTitle>
+    </Command>
+
+    <!-- Group Definitions -->
+    <Command Name="cmdGroup1" Comment ="Group Definitions" Id ="11000">
+      <Command.LabelTitle>
+        <String Id ="11001">Document</String>
+      </Command.LabelTitle>
+    </Command>
+    <Command Name="cmdGroup2" Id ="11010">
+      <Command.LabelTitle>
+        <String Id ="11011">Clipboard</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id="11012">res/PasteL.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+    <Command Name="cmdViewGroup" Id="11020">
+      <Command.LabelTitle>
+        <String Id ="11021">View</String>
+      </Command.LabelTitle>  
+    </Command>
+    <Command Name="cmdMDIGroup" Id="11030">
+      <Command.LabelTitle>
+        <String Id ="11031">Multiple Document Interface</String>
+      </Command.LabelTitle>  
+    </Command>	
+    <Command Name="cmdGroupRichFont" Id="11040">
+      <Command.LabelTitle>
+        <String Id ="11041">Rich Font</String>
+      </Command.LabelTitle>
+    </Command>
+
+    <!-- Button Definitions -->
+    <Command Name="cmdNew" Symbol="IDC_CMD_NEW" Comment="Button Definitions" Id ="12000" 
+	  TooltipTitle="New MDI"
+	  TooltipDescription="Creates a New MDI child">
+      <Command.LabelTitle>
+        <String Id ="12001">New</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12002">res/FileNewL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdOpen" Symbol="IDC_CMD_OPEN" Id ="12010"
+	  TooltipTitle="Open File"
+	  TooltipDescription="Opens an existing file">
+      <Command.LabelTitle>
+        <String Id ="12011">Open</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12012">res/FileOpenL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdSave" Symbol="IDC_CMD_SAVE" Id ="12020"
+	  TooltipTitle="Save File"
+	  TooltipDescription="Overwrite the existing file">
+      <Command.LabelTitle>
+        <String Id ="12021">Save</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12022">res/FileSaveL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdSaveAs" Symbol="IDC_CMD_SAVEAS" Id ="12030"
+	  TooltipTitle="Save As"
+	  TooltipDescription="Choose the file name and save the file">	
+      <Command.LabelTitle>
+        <String Id ="12031">Save As</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12032">res/FileSaveAsL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdPrint" Symbol="IDC_CMD_PRINT" Id ="12040"
+	  TooltipTitle="Print"
+	  TooltipDescription="Print the document">		
+      <Command.LabelTitle>
+        <String Id ="12041">Print</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12042">res/PrintL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdCopy" Symbol="IDC_CMD_COPY" Id ="12050">
+      <Command.LabelTitle>
+        <String Id ="12051">Copy</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12052">res/CopyS.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+    <Command Name="cmdCut" Symbol="IDC_CMD_CUT" Id =" 12060">
+      <Command.LabelTitle>
+        <String Id ="12061">Cut</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12062">res/CutS.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+    <Command Name="cmdPaste" Symbol="IDC_CMD_PASTE" Id ="12070">
+      <Command.LabelTitle>
+        <String Id ="12071">Paste</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12072">res/PasteL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+	<Command Name="cmdMDIMin" Symbol="IDC_CMD_MDIMIN" Id ="12080">
+      <Command.LabelTitle>
+        <String Id ="12081">MDI Minimize</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12082">res/MDIMin.bmp</Image>
+      </Command.SmallImages>
+    </Command>	
+	<Command Name="cmdMDICascade" Symbol="IDC_CMD_MDICASCADE" Id ="12090">
+      <Command.LabelTitle>
+        <String Id ="12091">MDI Cascade</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12092">res/MDICascade.bmp</Image>
+      </Command.SmallImages>
+    </Command>	
+	<Command Name="cmdMDITile" Symbol="IDC_CMD_MDITILE" Id ="12100">
+      <Command.LabelTitle>
+        <String Id ="12101">MDI Tile</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12102">res/MDITile.bmp</Image>
+      </Command.SmallImages>
+    </Command>	
+	<Command Name="cmdMDIArrange" Symbol="IDC_CMD_MDIARRANGE" Id ="12110">
+      <Command.LabelTitle>
+        <String Id ="12111">Arrange Icons</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12112">res/MDIArrange.bmp</Image>
+      </Command.SmallImages>
+    </Command>		
+	<Command Name="cmdMDIMax" Symbol="IDC_CMD_MDIMAX" Id ="12120">
+      <Command.LabelTitle>
+        <String Id ="12121">MDI Maximize</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12122">res/MDIMax.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+	<Command Name="cmdMDIRes" Symbol="IDC_CMD_MDIRESTORE" Id ="12130">
+      <Command.LabelTitle>
+        <String Id ="12131">MDI Restore</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12132">res/MDIRestore.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+	<Command Name="cmdMDIClose" Symbol="IDC_CMD_MDICLOSE" Id ="12140">
+      <Command.LabelTitle>
+        <String Id ="12141">MDI Close</String>
+      </Command.LabelTitle>
+      <Command.SmallImages>
+        <Image Id ="12142">res/MDIClose.bmp</Image>
+      </Command.SmallImages>
+    </Command>
+	<Command Name="cmdShowStatus" Symbol="IDC_CMD_SHOWSTATUS" Id ="12150">
+      <Command.LabelTitle>
+        <String Id ="12151">Status bar</String>
+      </Command.LabelTitle>
+    </Command>	
+    <Command Name="cmdAbout" Symbol="IDC_CMD_ABOUT" Id="12200">
+      <Command.LabelTitle>
+        <String Id ="12201">About</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12202">res/InfoL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+    <Command Name="cmdExit" Symbol="IDC_CMD_EXIT" Id="12210">
+      <Command.LabelTitle>
+        <String Id ="12211">Exit</String>
+      </Command.LabelTitle>
+      <Command.LargeImages>
+        <Image Id ="12212">res/ExitL.bmp</Image>
+      </Command.LargeImages>
+    </Command>
+
+    <!-- DropDownColorPickers -->     
+    <Command Name="cmdDropDownColorPickerThemeColors"
+         Symbol="IDC_PEN_COLOR"
+         Comment="DropDownColorPicker ThemeColors"
+         Id="13000"
+         LabelTitle="TextColor"
+         LabelDescription="ThemeColors\ndescription.">
+           <Command.LargeImages>
+             <Image Id="13001">res/LineColorL.bmp</Image>
+           </Command.LargeImages>
+         </Command>
+     
+    <!-- Definitions of miscellaneous items -->
+    <Command Name="cmdMRUFileMenu" Symbol="IDC_MRUMENU" Id="14010"/>
+    <Command Name="cmdMRUList" Symbol="IDC_MRULIST" Id="14020"/>
+    <Command Name="cmdQAT" Symbol="IDC_QAT" Id="14030"/>
+    <Command Name="cmdCustomizeQAT" Symbol="IDC_CUSTOMIZE_QAT" Id="14040"/>
+    <Command Name="cmdHelp" Symbol="IDC_RIBBONHELP" Id="14050" />
+  </Application.Commands>
+  
+  <!-- Views section -->
+  <Application.Views>
+    <Ribbon>
+	  <!-- Custom Layout Template -->
+      <Ribbon.SizeDefinitions>
+        <SizeDefinition Name="ColorPickerAndCheckBox">
+          <ControlNameMap>
+            <ControlNameDefinition Name="button1" />
+            <ControlNameDefinition Name="button2" />
+          </ControlNameMap>
+          <GroupSizeDefinition Size="Large">
+            <Row> 
+              <ControlGroup>
+                <ControlSizeDefinition ControlName="button1" ImageSize="Large" IsLabelVisible="true" />
+                <ControlSizeDefinition ControlName="button2" ImageSize="Small" IsLabelVisible="true" />
+              </ControlGroup>
+            </Row>
+          </GroupSizeDefinition>
+          <GroupSizeDefinition Size="Medium">
+            <Row> 
+              <ControlGroup>
+                <ControlSizeDefinition ControlName="button1" ImageSize="Large" IsLabelVisible="true" />
+                <ControlSizeDefinition ControlName="button2" ImageSize="Small" IsLabelVisible="true" />
+              </ControlGroup>
+            </Row>
+          </GroupSizeDefinition>
+          <GroupSizeDefinition Size="Small">
+            <Row>
+              <ControlGroup>
+                <ControlSizeDefinition ControlName="button1" ImageSize="Small" IsLabelVisible="true" />
+                <ControlSizeDefinition ControlName="button2" ImageSize="Small" IsLabelVisible="true" />
+              </ControlGroup>
+            </Row>
+          </GroupSizeDefinition>		  
+        </SizeDefinition> 
+      </Ribbon.SizeDefinitions>	
+
+      <!-- Application Menu -->
+      <Ribbon.ApplicationMenu>
+        <ApplicationMenu CommandName="cmdMRUFileMenu">
+          <ApplicationMenu.RecentItems>
+            <RecentItems CommandName="cmdMRUList" MaxCount="16" EnablePinning="false"/>   
+          </ApplicationMenu.RecentItems>
+          <MenuGroup Class="MajorItems">
+            <Button CommandName="cmdNew" />
+            <Button CommandName="cmdOpen" />
+            <Button CommandName="cmdSave" />
+            <Button CommandName="cmdSaveAs" />
+          </MenuGroup>
+          <MenuGroup>
+            <Button CommandName="cmdPrint" />
+          </MenuGroup>
+          <MenuGroup>
+            <Button CommandName="cmdAbout" />
+          </MenuGroup>
+          <MenuGroup>
+            <Button CommandName="cmdExit" />
+          </MenuGroup>
+        </ApplicationMenu>
+      </Ribbon.ApplicationMenu>     
+      
+      <!-- Tabs -->
+      <Ribbon.Tabs>
+        <Tab CommandName="cmdTabHome">
+          <Tab.ScalingPolicy>
+            <ScalingPolicy>
+              <ScalingPolicy.IdealSizes>
+                <!-- This describes the maximum size of each group in the tab. -->
+                <Scale Group="cmdGroup1" Size="Large" />
+                <Scale Group="cmdGroup2" Size="Medium" />
+				        <Scale Group="cmdViewGroup" Size="Medium" />
+				        <Scale Group="cmdMDIGroup" Size="Medium" />
+              </ScalingPolicy.IdealSizes>
+              <!-- This describes the order and how the groups shrink when the window is resized. -->
+              <Scale Group="cmdGroup1" Size="Medium" />
+              <Scale Group="cmdGroup2" Size="Popup" />
+			        <Scale Group="cmdViewGroup" Size="Popup" />
+            </ScalingPolicy>
+          </Tab.ScalingPolicy>
+          <Group CommandName="cmdGroup1" SizeDefinition="FourButtons">
+            <Button CommandName="cmdNew" />
+            <Button CommandName="cmdOpen" />
+            <Button CommandName="cmdSave" />
+            <Button CommandName="cmdSaveAs" />
+          </Group>
+          <Group CommandName="cmdGroup2" SizeDefinition="ThreeButtons-OneBigAndTwoSmall">
+            <Button CommandName="cmdPaste" />
+            <Button CommandName="cmdCopy" />
+            <Button CommandName="cmdCut" />
+          </Group>
+          <Group CommandName="cmdViewGroup" SizeDefinition="ColorPickerAndCheckBox">
+            <DropDownColorPicker 
+               CommandName="cmdDropDownColorPickerThemeColors"
+               ColorTemplate="ThemeColors"
+               IsNoColorButtonVisible = "false"/>
+			      <CheckBox CommandName="cmdShowStatus" /> 
+          </Group>			
+		      <Group CommandName="cmdMDIGroup" SizeDefinition="FiveOrSixButtons">
+			      <Button CommandName="cmdMDICascade" />
+			      <Button CommandName="cmdMDITile" />
+			      <Button CommandName="cmdMDIArrange" />
+			      <Button CommandName="cmdMDIMin" />
+            <Button CommandName="cmdMDIRes" />
+			      <Button CommandName="cmdMDIClose" /> 			
+          </Group>
+        </Tab>
+      </Ribbon.Tabs>
+      
+      <!-- Help button -->
+      <Ribbon.HelpButton>
+        <HelpButton CommandName="cmdHelp" />
+      </Ribbon.HelpButton>
+      
+      <!-- Quick Access toolbar -->
+      <Ribbon.QuickAccessToolbar>
+        <QuickAccessToolbar CommandName="cmdQAT" CustomizeCommandName="cmdCustomizeQAT">
+          <QuickAccessToolbar.ApplicationDefaults>       
+            <Button CommandName="cmdNew" ApplicationDefaults.IsChecked="true" />         
+            <Button CommandName="cmdOpen" ApplicationDefaults.IsChecked="true" />        
+            <Button CommandName="cmdSave" ApplicationDefaults.IsChecked="true" />
+            <Button CommandName="cmdPrint" ApplicationDefaults.IsChecked="true" />
+          </QuickAccessToolbar.ApplicationDefaults>
+        </QuickAccessToolbar>
+      </Ribbon.QuickAccessToolbar>
+    </Ribbon>
+  </Application.Views>
+</Application>
+

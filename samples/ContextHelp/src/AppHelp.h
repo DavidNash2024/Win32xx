@@ -16,6 +16,7 @@ public:
 	~CAppHelp() {}
 	
 	void About();
+	void AddHelpTopic(UINT nID, LPCTSTR szTopic);
 	void SetCommandHelpTopics();
 	void SetClientHelpTopics();
 	void SetCredits(LPCTSTR szCredits);

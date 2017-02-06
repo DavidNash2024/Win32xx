@@ -117,8 +117,8 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
 			PROPVARIANT var;
 			if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
 			{	
-				UINT color = var.uintVal;
-				m_View.SetPenColor((COLORREF)color);
+				COLORREF color = PropVariantToUInt32WithDefault(var, 0);
+				m_View.SetPenColor(color);
 			}
 		}
 	}		
@@ -238,7 +238,6 @@ void CMainFrame::OnFileSaveAs()
 			AddMRUEntry(m_PathName);
 		}
 	}
-
 }
 
 // Sends the bitmap extracted from the View window to a printer of your choice

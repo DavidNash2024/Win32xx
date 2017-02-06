@@ -70,10 +70,11 @@
 #define UWM_GETTBTHEME        (WM_APP + 0x3F0F) // Message - returns a pointer to ToolBarTheme
 #define UWM_MDIACTIVATED      (WM_APP + 0x3F10) // Message - sent by MDI child to MDIFrame when it is activated
 #define UWM_MDIDESTROYED      (WM_APP + 0x3F11)	// Message - sent by MDI client when a MDI child is destroyed
-#define UWM_POPUPMENU		  (WM_APP + 0x3F12)	// Message - creates the menubar popup menu
-#define UWM_TBRESIZE          (WM_APP + 0x3F13) // Message - sent by toolbar to parent. Used by the rebar
-#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F14)	// Message - sent to parent. Toolbar is resizing
-#define UWM_UPDATECOMMAND     (WM_APP + 0x3F15) // Message - sent before a menu is displayed. Used by OnMenuUpdate
+#define UWM_MDIGETACTIVE      (WM_APP + 0x3F12)	// Message - sent by MDI client when the state of a MDI child is queried
+#define UWM_POPUPMENU		  (WM_APP + 0x3F13)	// Message - creates the menubar popup menu
+#define UWM_TBRESIZE          (WM_APP + 0x3F14) // Message - sent by toolbar to parent. Used by the rebar
+#define UWM_TBWINPOSCHANGING  (WM_APP + 0x3F15)	// Message - sent to parent. Toolbar is resizing
+#define UWM_UPDATECOMMAND     (WM_APP + 0x3F16) // Message - sent before a menu is displayed. Used by OnMenuUpdate
 
 #define UWN_BARSTART		  (WM_APP + 0x3F20)	// Notification - docker bar selected for move
 #define UWN_BARMOVE			  (WM_APP + 0x3F21)	// Notification - docker bar moved
