@@ -10,77 +10,82 @@ CAppHelp::CAppHelp()
 	SetFrameHelpTopics();
 }
 
+void CAppHelp::AddHelpTopic(UINT nID, LPCTSTR szTopic)
+{
+	m_ContextHelp.AddHelpTopic(nID, szTopic);
+}
+
 void CAppHelp::SetCommandHelpTopics()
 // Define the context help topics to be displayed for the menu items and the toolbar.
 {
 	// define the tool bar button and menu item topics
-	m_ContextHelp.AddHelpTopic(IDW_MENUBAR, _T("ToolbarandMenuItems"));
-	m_ContextHelp.AddHelpTopic(IDW_STATUSBAR, _T("StatusbarTopics"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_NEW, _T("NewDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_OPEN, _T("OpenExistingDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_SAVE, _T("SaveCurrentDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_SAVEAS, _T("SaveAsAnotherDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_CLOSE, _T("CloseCurrentDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_PRINT, _T("PrintDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_PRINT_PREVIEW, _T("PreviewPrintout"));
-	m_ContextHelp.AddHelpTopic(IDM_FILE_EXIT, _T("ExitTerminateProgram"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_UNDO, _T("UndoFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_REDO, _T("RedoFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_CUT, _T("CutFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_COPY, _T("CopyFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_PASTE, _T("PasteFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_DELETE, _T("DeleteFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_FIND, _T("FindInDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_EDIT_REPLACE, _T("ReplaceInDocument"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_CONTENT, _T("Introduction"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_CONTEXT, _T("Welcome"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_ABOUT, _T("AboutThisProgram"));
-	m_ContextHelp.AddHelpTopic(IDM_COLOR_CHOICE, _T("ColorChoiceFunction"));
-	m_ContextHelp.AddHelpTopic(IDM_FONT_CHOICE, _T("FontChoiceFunction"));
+	AddHelpTopic(IDW_MENUBAR, _T("ToolbarandMenuItems"));
+	AddHelpTopic(IDW_STATUSBAR, _T("StatusbarTopics"));
+	AddHelpTopic(IDM_FILE_NEW, _T("NewDocument"));
+	AddHelpTopic(IDM_FILE_OPEN, _T("OpenExistingDocument"));
+	AddHelpTopic(IDM_FILE_SAVE, _T("SaveCurrentDocument"));
+	AddHelpTopic(IDM_FILE_SAVEAS, _T("SaveAsAnotherDocument"));
+	AddHelpTopic(IDM_FILE_CLOSE, _T("CloseCurrentDocument"));
+	AddHelpTopic(IDM_FILE_PRINT, _T("PrintDocument"));
+	AddHelpTopic(IDM_FILE_PRINT_PREVIEW, _T("PreviewPrintout"));
+	AddHelpTopic(IDM_FILE_EXIT, _T("ExitTerminateProgram"));
+	AddHelpTopic(IDM_EDIT_UNDO, _T("UndoFunction"));
+	AddHelpTopic(IDM_EDIT_REDO, _T("RedoFunction"));
+	AddHelpTopic(IDM_EDIT_CUT, _T("CutFunction"));
+	AddHelpTopic(IDM_EDIT_COPY, _T("CopyFunction"));
+	AddHelpTopic(IDM_EDIT_PASTE, _T("PasteFunction"));
+	AddHelpTopic(IDM_EDIT_DELETE, _T("DeleteFunction"));
+	AddHelpTopic(IDM_EDIT_FIND, _T("FindInDocument"));
+	AddHelpTopic(IDM_EDIT_REPLACE, _T("ReplaceInDocument"));
+	AddHelpTopic(IDM_HELP_CONTENT, _T("Introduction"));
+	AddHelpTopic(IDM_HELP_CONTEXT, _T("Welcome"));
+	AddHelpTopic(IDM_HELP_ABOUT, _T("AboutThisProgram"));
+	AddHelpTopic(IDM_COLOR_CHOICE, _T("ColorChoiceFunction"));
+	AddHelpTopic(IDM_FONT_CHOICE, _T("FontChoiceFunction"));
 
 	// standard menu topics
-	m_ContextHelp.AddHelpTopic(IDW_VIEW_TOOLBAR, _T("ToolbarTopics"));
-	m_ContextHelp.AddHelpTopic(IDW_VIEW_STATUSBAR, _T("StatusbarTopics"));
-	m_ContextHelp.AddHelpTopic(IDW_ABOUT, _T("AboutThisProgram"));
+	AddHelpTopic(IDW_VIEW_TOOLBAR, _T("ToolbarTopics"));
+	AddHelpTopic(IDW_VIEW_STATUSBAR, _T("StatusbarTopics"));
+	AddHelpTopic(IDW_ABOUT, _T("AboutThisProgram"));
 }
 
 void CAppHelp::SetClientHelpTopics()
 {
 	// define the help topics for the client area controls
-	m_ContextHelp.AddHelpTopic(IDD_DIALOG1,        _T("clientwindowcontrols")); // dialog client area
-	m_ContextHelp.AddHelpTopic(IDC_RICHEDIT1,	     _T("RichEditBoxUsage"));
-	m_ContextHelp.AddHelpTopic(IDC_EDIT1,	    	 _T("EditBoxUsage"));
-	m_ContextHelp.AddHelpTopic(ID_RADIO_A, 	     _T("RadioButtonUsage"));
-	m_ContextHelp.AddHelpTopic(ID_RADIO_B, 	     _T("RadioButtonUsage"));
-	m_ContextHelp.AddHelpTopic(ID_RADIO_C, 	     _T("RadioButtonUsage"));
-	m_ContextHelp.AddHelpTopic(ID_CHECK_A, 	     _T("CheckBoxUsage"));
-	m_ContextHelp.AddHelpTopic(ID_CHECK_B, 	     _T("CheckBoxUsage"));
-	m_ContextHelp.AddHelpTopic(ID_CHECK_C, 	     _T("CheckBoxUsage"));
-	m_ContextHelp.AddHelpTopic(IDC_BUTTON1, 	     _T("Button1Usage"));
-	m_ContextHelp.AddHelpTopic(IDC_STATUS, 	     _T("StatusBoxContent"));
-	m_ContextHelp.AddHelpTopic(IDC_BITMAP1, 	     _T("BitmapContent"));
-	m_ContextHelp.AddHelpTopic(IDOK,	     	     _T("OKButtonUsage"));
+	AddHelpTopic(IDD_DIALOG1,        _T("clientwindowcontrols")); // dialog client area
+	AddHelpTopic(IDC_RICHEDIT1,	     _T("RichEditBoxUsage"));
+	AddHelpTopic(IDC_EDIT1,	    	 _T("EditBoxUsage"));
+	AddHelpTopic(ID_RADIO_A, 	     _T("RadioButtonUsage"));
+	AddHelpTopic(ID_RADIO_B, 	     _T("RadioButtonUsage"));
+	AddHelpTopic(ID_RADIO_C, 	     _T("RadioButtonUsage"));
+	AddHelpTopic(ID_CHECK_A, 	     _T("CheckBoxUsage"));
+	AddHelpTopic(ID_CHECK_B, 	     _T("CheckBoxUsage"));
+	AddHelpTopic(ID_CHECK_C, 	     _T("CheckBoxUsage"));
+	AddHelpTopic(IDC_BUTTON1, 	     _T("Button1Usage"));
+	AddHelpTopic(IDC_STATUS, 	     _T("StatusBoxContent"));
+	AddHelpTopic(IDC_BITMAP1, 	     _T("BitmapContent"));
+	AddHelpTopic(IDOK,	     	     _T("OKButtonUsage"));
 	
 	// define common dialog help button topics
-	m_ContextHelp.AddHelpTopic(IDM_HELP_COLORDLG,      _T("ColorDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FILEDLG_OPEN,  _T("FileDialogOpenHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FILEDLG_NEW,   _T("FileDialogNewHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FILEDLG_SAVEAS, _T("FileDialogSaveAsHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FONTDLG,       _T("FontChoiceDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_PAGESETDLG,    _T("PageSetupDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_PRINTDLG,      _T("PrinterDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_FINDDLG,       _T("FindTextDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDM_HELP_REPLACEDLG,    _T("ReplaceTextDialogHelp"));
-	m_ContextHelp.AddHelpTopic(IDC_LIST1,   			_T("ListBoxDialogHelp"));
+	AddHelpTopic(IDM_HELP_COLORDLG,      _T("ColorDialogHelp"));
+	AddHelpTopic(IDM_HELP_FILEDLG_OPEN,  _T("FileDialogOpenHelp"));
+	AddHelpTopic(IDM_HELP_FILEDLG_NEW,   _T("FileDialogNewHelp"));
+	AddHelpTopic(IDM_HELP_FILEDLG_SAVEAS, _T("FileDialogSaveAsHelp"));
+	AddHelpTopic(IDM_HELP_FONTDLG,       _T("FontChoiceDialogHelp"));
+	AddHelpTopic(IDM_HELP_PAGESETDLG,    _T("PageSetupDialogHelp"));
+	AddHelpTopic(IDM_HELP_PRINTDLG,      _T("PrinterDialogHelp"));
+	AddHelpTopic(IDM_HELP_FINDDLG,       _T("FindTextDialogHelp"));
+	AddHelpTopic(IDM_HELP_REPLACEDLG,    _T("ReplaceTextDialogHelp"));
+	AddHelpTopic(IDC_LIST1,   			_T("ListBoxDialogHelp"));
 }
 
 void CAppHelp::SetFrameHelpTopics()
 {
 	// define the context help topics for the frame
-	m_ContextHelp.AddHelpTopic(IDFR_CLOSE,		_T("ExitTerminateProgram"));
-	m_ContextHelp.AddHelpTopic(IDFR_SYSTEMMENU,	_T("ProgramIcon"));
-	m_ContextHelp.AddHelpTopic(IDFR_CAPTION,		_T("AppTitleBar"));
-	m_ContextHelp.AddHelpTopic(IDFR_GRIPPER, _T("ResizeGripper"));
+	AddHelpTopic(IDFR_CLOSE,		_T("ExitTerminateProgram"));
+	AddHelpTopic(IDFR_SYSTEMMENU,	_T("ProgramIcon"));
+	AddHelpTopic(IDFR_CAPTION,		_T("AppTitleBar"));
+	AddHelpTopic(IDFR_GRIPPER, _T("ResizeGripper"));
 }
 
 void CAppHelp::SetHelpFilePath(LPCTSTR chmName)

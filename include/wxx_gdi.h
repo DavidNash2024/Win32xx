@@ -2736,7 +2736,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline HBITMAP CDC::GetCurrentBitmap() const
-	// Retrieves a pointer to the currently selected bitmap object
+	// Retrieves the handle of the currently selected bitmap
 	{
 		assert(m_pData->hDC);
 		return static_cast<HBITMAP>(::GetCurrentObject(m_pData->hDC, OBJ_BITMAP));
@@ -2853,7 +2853,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline HBRUSH CDC::GetCurrentBrush() const
-	// Retrieves a pointer to the currently selected brush object
+	// Retrieves the handle of the currently selected brush object
 	{
 		assert(m_pData->hDC);
 		return static_cast<HBRUSH>(::GetCurrentObject(m_pData->hDC, OBJ_BRUSH));
@@ -2931,7 +2931,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline HFONT CDC::GetCurrentFont() const
-	// Retrieves a pointer to the current font object
+	// Retrieves the handle to the current font object
 	{
 		assert(m_pData->hDC);
 		return static_cast<HFONT>(::GetCurrentObject(m_pData->hDC, OBJ_FONT));
@@ -2995,7 +2995,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline HPALETTE CDC::GetCurrentPalette() const
-	// Retrieves a pointer to the currently selected palette
+	// Retrieves the handle to the currently selected palette
 	{
 		assert(m_pData->hDC);
 		return static_cast<HPALETTE>(::GetCurrentObject(m_pData->hDC, OBJ_PAL));
@@ -3085,7 +3085,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 	}
 
 	inline HPEN CDC::GetCurrentPen() const
-	// Retrieves a pointer to the currently selected pen
+	// Retrieves the handle to the currently selected pen
 	{
 		assert(m_pData->hDC);
 		return static_cast<HPEN>(::GetCurrentObject(m_pData->hDC, OBJ_PEN));
