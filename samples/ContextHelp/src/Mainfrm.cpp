@@ -76,7 +76,7 @@ CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosingTopic(FALSE)
 		LoadString(IDS_APP_VERSION).c_str(), sWin32Version.c_str(),
 		sCompiler.c_str(), date.c_str());
 
-	m_AppHelp.SetCredits(sAboutBoxInfo);
+	m_HelpAbout.SetCredits(sAboutBoxInfo);
 }
 
 CMainFrame::~CMainFrame()
@@ -164,6 +164,13 @@ CString CMainFrame::MakeAppDataPath(const CString& subpath)
 	return app_data_path;
 }
 
+void CMainFrame::NotImplemented() const
+{
+	::MessageBox(NULL, _T("Feature not implemented."),
+		_T("Information"), MB_OK | MB_ICONINFORMATION |
+		MB_TASKMODAL);
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
@@ -204,7 +211,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case ID_RADIO_C:		m_View.OnRangeOfIds_Radio(nID - ID_RADIO_A);
 		return TRUE;
 				 
-	case IDM_HELP_ABOUT:	m_AppHelp.About();		return TRUE;	// Menu item
+	case IDM_HELP_ABOUT:	m_HelpAbout.DoModal();		return TRUE;	// Menu item
 	case IDM_HELP_CONTENT:	ShowHelpTopic(nID);		return TRUE;	// Menu item
 	case IDM_HELP_CONTEXT:	ChooseHelpTopic(); 		return TRUE;	// Toolbar Button
 	case IDM_SHIFT_F1:		OnShiftF1();			return TRUE;	// Accelerator
@@ -420,7 +427,7 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	switch (uMsg)
 	{
 	case WM_SETCURSOR:		return OnSetCursor(uMsg, wParam, lParam);			// Modify the cursor when appropriate
-//	case WM_SYSCOMMAND:		return OnSysCommand(uMsg, wParam, lParam);			// Add SC_CONTEXTHELP support
+	case WM_SYSCOMMAND:		return OnSysCommand(uMsg, wParam, lParam);			// Add SC_CONTEXTHELP support
 	case WM_HELP:			return 0L;											// Suppress default handling on F1 and SHIFT F1
 	case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);			// Handle left mouse click
 	}

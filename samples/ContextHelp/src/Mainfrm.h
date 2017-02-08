@@ -48,17 +48,14 @@ protected:
 
 private:
 
-	void NotImplemented()
-	{
-		::MessageBox(NULL, _T("Feature not implemented."),
-		    _T("Information"), MB_OK | MB_ICONINFORMATION |
-		    MB_TASKMODAL);
-	}
+	void NotImplemented() const;
 
 	CView 		m_View;
 	CDoc 		m_Doc;
-	CAppHelp	m_AppHelp;	// Help object for context help and help about dialog
 	BOOL    	m_IsChoosingTopic;	// TRUE while choosing a topic
+	CAppHelp	m_AppHelp;			// Help object for context help 
+	CHelpAbout	m_HelpAbout;		// the AboutBox dialog
+
 };
 
 // A global function to provide access to the CDoc class
