@@ -1,0 +1,98 @@
+﻿<html>
+	
+<head>
+	<title>Creating Help Files</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="generator" content="HelpNDoc Personal Edition 4.5.0.497">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+	
+	</head>
+
+<body>
+
+<div id="topic_header">
+			<div id="topic_header_content">
+				<h1>Creating Help Files</h1>
+				
+				<div id="topic_breadcrumb">
+					<a href="GettingStarted.htm">Getting Started</a> &rsaquo;&rsaquo; </div>
+				</div>
+			<div id="topic_header_nav">
+				<a href="GettingStarted.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+				<a href="Gettinghelp.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+				<a href="Systemrequirements.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+				</div>
+			<div class="clear"></div>
+		</div>
+	<div id="topic_content">
+		
+<p></p>
+<h3 class="rvps11"><span class="rvts0"><span class="rvts20">Creating and Editing Help Files for a</span></span></h3>
+
+<h3 class="rvps11"><span class="rvts0"><span class="rvts20">WINAPI C++ Application</span></span></h3>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+
+<p class="rvps7"><span class="rvts6">Here's how to create a help file, like this one.</span></p>
+
+<p class="rvps7"><span class="rvts22"><br/></span></p>
+<p class="rvps7"><span class="rvts22"><br/></span></p>
+
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+
+<li class="rvps7"><span class="rvts22">Get MS the HTML Help Workshop:</span><span class="rvts6"> Go to MSDN, download (free) the help workshop, and install it. The link for this is</span></li>
+
+</ul>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+
+<p class="rvps7"><span class="rvts6"> &nbsp; &nbsp;</span><a class="rvts25" href="https://www.microsoft.com/en-us/download/details.aspx?id=21138">https://www.microsoft.com/en-us/download/details.aspx?id=21138</a></p>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+
+<li class="rvps7"><span class="rvts22">Copy the help header and library</span><span class="rvts6">. &nbsp;The HTML Help Workshop normally installs into the directory </span></li>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps18"><span class="rvts26">C:\Program Files\HTML Help Workshop\</span></p>
+<p class="rvps18"><span class="rvts6"><br/></span></p>
+<p class="rvps16"><span class="rvts23">In the </span><span class="rvts27">include</span><span class="rvts23"> subdirectory of the above, find the header file </span><span class="rvts27">htmlhelp.h</span><span class="rvts23">. Place a copy of this in your compiler's include path, which for &nbsp;the MinGW compler is something like </span><span class="rvts28">C:...\\MinGW\include</span><span class="rvts23">. &nbsp;Then, in </span><span class="rvts28">C:\Program Files\HTML Help Workshop\lib</span><span class="rvts23"> find the library file </span><span class="rvts28">htmlhelp.lib</span><span class="rvts23">. Put a copy of this in your compiler's </span><span class="rvts28">lib</span><span class="rvts23"> directory. &nbsp;In MinGW, this may be something like </span><span class="rvts28">C:\...\MinGW\lib</span><span class="rvts23">; in this case, the name will need to be changed to </span><span class="rvts28">libhtmlhelp.a</span><span class="rvts23">. Renaming to the MinGW convention is not actually necessary, but it makes the nature of the file clearer. As found by the MinGW project staff, this file is a static library that calls</span><span class="rvts28"> LoadLibrary/GetProcAddress</span><span class="rvts23"> to access the file </span><span class="rvts28">C:\WINDOWS\SYSTEM32\hhctrl.ocx</span><span class="rvts23">, not an import library, that can be linked by ld.</span></p>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li class="rvps7"><span class="rvts22">Create the help file (.chm)</span><span class="rvts6">. The Compiled HTML help file, of which these instructions are an instance of, may be created in a number of ways. One way is to read the user manual that comes with the HTML Help Workshop. That method can be somewhat daunting for the non-HTML savvy individuals who must create the HTML topic files; but having done so, its </span><span class="rvts29">hhw.exe</span><span class="rvts6"> utility creates the manual rather handily.</span></li>
+</ul>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps16"><span class="rvts23">Another way is to use a CHM editor, which removes the writer's necessity to know how to create HTML topic files. &nbsp;Some of these editors have a version that is free for noncommercial use, with modestly priced upgrades for added features. One such example is HelpNDoc4, whose freeware WYSIWYG version deposits a banner in each topic stating that this tool was used to generate the help guide. The banner is absent in their commercial versions. &nbsp;You may download the free version from </span></p>
+<p class="rvps16"><span class="rvts23"><br/></span></p>
+<p class="rvps16"><span class="rvts23"> &nbsp; &nbsp; &nbsp; &nbsp;</span><a class="rvts30" href="http://www.helpndoc.com/download">http://www.helpndoc.com/download</a></p>
+<p class="rvps16"><span class="rvts23"><br/></span></p>
+<p class="rvps16"><span class="rvts23">You create the document as a series of topics ordered as a hierarchy that is displayed by its table of contents. Features for generating an index are also present.</span></p>
+<p class="rvps16"><span class="rvts23"><br/></span></p>
+<ul style="text-indent: 0px; margin-left: 24px; list-style-position: outside; list-style-type: disc;">
+<li class="rvps16" style="margin-left: 0px"><span class="rvts31">Accessing topics from your program</span><span class="rvts23">. The interface between your C++ program and a CHM file is particularly simple when the Win32++ &nbsp;C++ library is used, as is the current application, whose User Guide is the subject of this CHM document. &nbsp;The CHM guide invocations are made using the features illustrated in this ContextHelp sample program. The program declares an object of the context help class and adds the help ID string of each topic to be accessed, along with the corresponding numeric ID of a program control or feature, to the object's help table. &nbsp;The full path name of the CHM file is also made known to the object. &nbsp;When the context help mode is triggered by the program and one of the controls or features is actuated, the context help object engages this CHM file and the description of the topic appears. &nbsp;Detailed instructions on the code that needs to be inserted into the </span><span class="rvts28">CMainFrame.cpp</span><span class="rvts23"> and </span><span class="rvts28">View.cpp</span><span class="rvts23"> files appears in the </span><span class="rvts28">AppHelp.cpp</span><span class="rvts23"> file. &nbsp;These fragmentary instructions&nbsp;</span><span class="rvts23"> assume a C++ source file architecture with </span><span class="rvts28">CMainFrame</span><span class="rvts23"> and </span><span class="rvts28">CView</span><span class="rvts23"> classes presume that the programmer has some familiarity with the basic message loops and message handling in these classes. The simplest way to define the topic string identifiers defined in the help table is to use the same text strings as used for as the topic names in the CHM file.&nbsp;</span><span class="rvts23"> This practice is illustrated in this CHM guide</span></li>
+</ul>
+<p></p>
+<!-- <p class="rvps9"><span class="rvts14">Created with the Personal Edition of HelpNDoc: </span><a class="rvts15" href="http://www.helpndoc.com/create-epub-ebooks">Write EPub books for the iPad</a></p> -->
+</div>
+	
+	
+	</body>
+	
+</html>
+

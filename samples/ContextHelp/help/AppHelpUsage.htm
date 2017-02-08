@@ -1,0 +1,156 @@
+﻿<!--
+	Using the AppHelp Class
+-->
+<html>
+	
+<head>
+	<title>Using the AppHelp Class</title>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<meta name="generator" content="HelpNDoc Personal Edition 4.5.0.497">
+	
+	<link type="text/css" rel="stylesheet" media="all" href="css/reset.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/base.css" />
+	<link type="text/css" rel="stylesheet" media="all" href="css/hnd.css" />
+	<!--[if lte IE 8]>
+		<link type="text/css" rel="stylesheet" media="all" href="css/ielte8.css" />
+	<![endif]-->
+	<style type="text/css">
+		#topic_header
+		{
+			background-color: #EFEFEF;
+		}
+	</style>
+	<script type="text/javascript" src="js/chmRelative.js"></script>
+	
+</head>
+
+<body>
+
+<div id="topic_header">
+	<div id="topic_header_content">
+		<h1>Using the AppHelp Class</h1>
+		<div id="topic_breadcrumb">
+			<a href="GettingStarted.htm">Getting Started</a> &rsaquo;&rsaquo; 
+		</div>
+	</div>
+
+	<div id="topic_header_nav">
+		<a href="GettingStarted.htm"><img src="img/arrow_up.png" alt="Parent"/></a>
+				
+		<a href="Systemrequirements.htm"><img src="img/arrow_left.png" alt="Previous"/></a>
+				
+		<a href="FrameButtonResponses.htm"><img src="img/arrow_right.png" alt="Next"/></a>
+				
+	</div>
+
+	<div class="clear"></div>
+</div>
+<div id="topic_content">
+		
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	This class provides access to help information in two forms: First, as
+	a modeless dialog bearing whatever information, or "credits," the user
+	desires to post there; this dialog is commonly called the "About Box",
+	and it is made to appear whenever the 
+	<span class="rvts28">IDM_HELP_ABOUT</span> message is sent to
+	the frame's OnCommand() method. This invokes the 
+	<span class="rvts28">AppHelp::About()</span> constructor. 
+	Typically, an application will invoke this form of help by
+	activating the <span class="rvts28">Help->About</span> 
+	topic on the main menu.
+</span></p>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	The second form is the display of topical information held in a Compiled
+	HTML (<span class="rvts28">.chm</span>) file. This file 
+	contains a set of "topics", or strings that
+	may be searched for using a special htmlhelp object. When it is sent
+	one of the topic strings, the <span class="rvts28">.chm</span>
+	help file is searched for an entry
+	matching the topic. If found, the corresponding manual page displays.
+	String topics are made to correspond to control IDs by the
+	<span class="rvts28">AppHelp::AddHelpTopic()</span> member.
+</span></p>
+	
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	Assistance in peparing the help guide to contain the application's
+	topics may be found in the file
+</span></p>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<span class="rvts28"><PRE>
+	Adding HTML Help to MinGW.html
+</PRE></span>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	which is included in the help directory of this sample program. It may
+	also be accessed at a number of sites using an internet search. While
+	being oriented to the MinGW compiler specifically, this article relates,
+	by inference, how to do this for other platforms.
+</span></p>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	This topical type of help is termed "context help mode", and may be
+	invoked in one of several ways. The usual help mode is intended to use
+	the F1 function key, either as F1 itself, or as Shift+F1. Whenever
+	either one of these keys is pressed, the system sends the main window
+	a <span class="rvts28">IDM_F1</span> or 
+	<span class="rvts28">IDM_SHIFT_F1</span> message, to which the 
+	application sends to the AppHelp class
+	for response. When the F1 key is the one pressed, AppHelp responds by
+	displaying any topic that has been assigned to the control having
+	current keyboard or mouse focus.
+</span></p>
+	
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	When Shift+F1 is pressed, the AppHelp class causes the cursor to change
+	its shape from the application cursor to the help-cursor, which takes
+	the shape of a question mark. The next control that is selected by
+	mouse, accelerator key, or tab navigation will cause the topic assigned
+	to that control ID to be displayed. At this point the application cursor
+	is restored.
+</span></p>
+	
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	The Shift+F1 style of context help may also be invoked by selecting 
+	either of the context help buttons, on the toolbar or on the caption bar.
+</span></p>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	The suite of files comprising the suite of help functions is composed of
+</span></p>
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<span class="rvts28"><PRE>
+	AppHelp.h	declaration of the AppHelp class
+	AppHelp.cpp     implementation of the AppHelp class
+	ContextHelp.h	declaration of context help part of AppHelp
+	ContextHelp.cpp	implementatin of the context help methods
+	HelpAbout.h	declaration of the AboutBox part of AppHelp
+	HelpAbout.cpp	implementation of the AboutBox dialog
+	resource.h	defines help function resource IDs
+	resource.rc	contains AppHelp resources
+</PRE></span>
+
+
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6">
+	Consult the usage of these elements in the ContextHelp sample program for more information on using these features.
+</span></p>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+<p class="rvps7"><span class="rvts6"><br/></span></p>
+
+</div>
+</body>
+</html>
+

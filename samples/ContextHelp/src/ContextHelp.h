@@ -56,7 +56,7 @@ class CContextHelp : public CWnd
 		void			SetHelpFilePath(LPCTSTR chmName)	{ m_HelpFilePath = chmName; }
 
 	private:
-		CString		m_HelpFilePath;				// Help file path
+		CString			m_HelpFilePath;			// Help file path
 		std::map<UINT, CString> m_HelpTopics;	// Map of help topics
 
 };

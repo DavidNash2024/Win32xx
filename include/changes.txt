@@ -72,15 +72,15 @@ New Features and Enhancements
  3) MetaFile sample.
    This sample demonstrates how to create and display an enhanced metafile.
    
- 4) ScrollTextFile sample.
+ 4) RibbonMDIFrame sample.
+   This sample demonstrates how to use the Window 7 ribbon with a MDI frame.    
+   
+ 5) ScrollTextFile sample.
    This sample displays the contents of a text file in a scrollable window.   
    
- 5) Tooltips sample.
+ 6) ToolTips sample.
    This sample demonstrates how to add tooltips to controls in a modal dialog.
    
- 6) RibbonMDIFrame sample.
-   This sample demonstrates how to use the Window 7 ribbon with a MDI frame. 
-
    
 Changes in detail
 -----------------

@@ -10,11 +10,6 @@ CAppHelp::CAppHelp()
 	SetFrameHelpTopics();
 }
 
-void CAppHelp::AddHelpTopic(UINT nID, LPCTSTR szTopic)
-{
-	m_ContextHelp.AddHelpTopic(nID, szTopic);
-}
-
 void CAppHelp::SetCommandHelpTopics()
 // Define the context help topics to be displayed for the menu items and the toolbar.
 {
@@ -42,10 +37,6 @@ void CAppHelp::SetCommandHelpTopics()
 	AddHelpTopic(IDM_HELP_ABOUT, _T("AboutThisProgram"));
 	AddHelpTopic(IDM_COLOR_CHOICE, _T("ColorChoiceFunction"));
 	AddHelpTopic(IDM_FONT_CHOICE, _T("FontChoiceFunction"));
-
-	// standard menu topics
-	AddHelpTopic(IDW_VIEW_TOOLBAR, _T("ToolbarTopics"));
-	AddHelpTopic(IDW_VIEW_STATUSBAR, _T("StatusbarTopics"));
 	AddHelpTopic(IDW_ABOUT, _T("AboutThisProgram"));
 }
 
@@ -83,34 +74,8 @@ void CAppHelp::SetFrameHelpTopics()
 {
 	// define the context help topics for the frame
 	AddHelpTopic(IDFR_CLOSE,		_T("ExitTerminateProgram"));
-	AddHelpTopic(IDFR_SYSTEMMENU,	_T("ProgramIcon"));
+	AddHelpTopic(IDFR_SYSTEMMENU,	_T("SystemMenu"));
 	AddHelpTopic(IDFR_CAPTION,		_T("AppTitleBar"));
-	AddHelpTopic(IDFR_GRIPPER, _T("ResizeGripper"));
-}
-
-void CAppHelp::SetHelpFilePath(LPCTSTR chmName)
-{
-	m_ContextHelp.SetHelpFilePath(chmName);
-}
-
-void CAppHelp::ShowHelpTopic(UINT nID)
-// Display the context help for the specified topic
-{
-	m_ContextHelp.ShowHelpTopic(nID);
-}
-
-void CAppHelp::ShowHelpTopic(LPCTSTR topic)
-// Display the context help for the specified topic
-{
-	m_ContextHelp.ShowHelpTopic(topic);
-}
-
-void CAppHelp::About()
-{
-	m_HelpAbout.DoModal();
-}
-
-void CAppHelp::SetCredits(LPCTSTR szCredits)
-{
-	m_HelpAbout.SetCredits(szCredits);
+	AddHelpTopic(IDFR_GRIPPER,		_T("ResizeGripper"));
+	AddHelpTopic(IDFR_HELP,			_T("TitleBarQuestionBox"));
 }
