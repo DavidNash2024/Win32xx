@@ -1098,7 +1098,7 @@ namespace Win32xx
 		if (rcTab.Width() < 0)
 			rcTab.left = rcTab.right;
 
-		int offset = -1; // Required for RTL layout
+		int offset = RTL ? -1 : 0;	// Required for RTL layout
 		CRgn rgnSrc2;
 		rgnSrc2.CreateRectRgn(rcTab.left, rcTab.top, rcTab.right + offset, rcTab.bottom);
 		CRgn rgnClip;

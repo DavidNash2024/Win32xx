@@ -204,7 +204,6 @@ namespace Win32xx
 
 		std::vector<MDIChildPtr> m_vMDIChild;
 		mutable CMDIClient<CWnd> m_MDIClient;
-		HWND m_hActiveMDIChild;
 	};
 
 
@@ -232,7 +231,7 @@ namespace Win32xx
 	// Definitions for the CMDIFrameT class
 	//
 	template <class T>
-	inline CMDIFrameT<T>::CMDIFrameT() : m_hActiveMDIChild(NULL)
+	inline CMDIFrameT<T>::CMDIFrameT()
 	{
 		// The view for a CMDIFrame is the MDIClient
 		T::SetView(GetMDIClient());
@@ -343,7 +342,8 @@ namespace Win32xx
 	inline CMDIChild* CMDIFrameT<T>::GetActiveMDIChild() const
 	// Returns a pointer to the active MDI child
 	{
-		return static_cast<CMDIChild*>(T::GetCWndPtr(m_hActiveMDIChild));
+		HWND hActiveChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+		return static_cast<CMDIChild*>(T::GetCWndPtr(hActiveChild));
 	}
 
 	template <class T>
@@ -377,7 +377,7 @@ namespace Win32xx
 	// Maximize the MDI child
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = m_hActiveMDIChild;
+		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDIMAXIMIZE, (WPARAM)hMDIChild, 0L);
 	}
 
@@ -386,7 +386,7 @@ namespace Win32xx
 	// Activates the next MDI child
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = m_hActiveMDIChild;
+		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
 	}
 
@@ -395,7 +395,7 @@ namespace Win32xx
 	// Activates the previous MDI child
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = m_hActiveMDIChild;
+		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
 	}
 
@@ -404,7 +404,7 @@ namespace Win32xx
 	// Restores a mimimized MDI child
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = m_hActiveMDIChild;
+		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDIRESTORE, (WPARAM)hMDIChild, 0L);
 	}
 
@@ -475,12 +475,12 @@ namespace Win32xx
 	inline LRESULT CMDIFrameT<T>::OnMDIActivated(UINT, WPARAM wParam, LPARAM)
 	// Called when a MDI child is activated
 	{
-		m_hActiveMDIChild = (HWND)wParam;
+		HWND hActiveMDIChild = (HWND)wParam;
 
-		if (m_hActiveMDIChild)
+		if (hActiveMDIChild)
 		{
-			CMDIChild* pMDIChild = static_cast<CMDIChild*>(T::GetCWndPtr(m_hActiveMDIChild));
-			assert ( dynamic_cast<CMDIChild*>(T::GetCWndPtr(m_hActiveMDIChild)) );
+			CMDIChild* pMDIChild = static_cast<CMDIChild*>(T::GetCWndPtr(hActiveMDIChild));
+			assert ( dynamic_cast<CMDIChild*>(T::GetCWndPtr(hActiveMDIChild)) );
 			if (pMDIChild->GetChildMenu())
 				UpdateFrameMenu(pMDIChild->GetChildMenu());
 			else
@@ -680,7 +680,7 @@ namespace Win32xx
 			case UWM_MDIDESTROYED:		return OnMDIDestroyed(uMsg, wParam, lParam);
 			case UWM_MDIGETACTIVE:
 			{
-				if (lParam && m_hActiveMDIChild)
+				if (wParam && lParam)
 				{
 					LPBOOL pIsMDIChildMax = (LPBOOL)lParam;
 					OnMDIMaximized(*pIsMDIChildMax);
@@ -740,10 +740,10 @@ namespace Win32xx
 	inline LRESULT CMDIClient<T>::OnMDIGetActive(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Do default processing first
-		T::CallWindowProc(T::GetPrevWindowProc(), uMsg, wParam, lParam);
+		LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), uMsg, wParam, lParam);
 
-		SendMessage(T::GetParent(), UWM_MDIGETACTIVE, wParam, lParam);
-		return 0L;
+		SendMessage(T::GetParent(), UWM_MDIGETACTIVE, (WPARAM)lr, lParam);
+		return lr;
 	}
 
 	template <class T>

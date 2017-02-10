@@ -2374,7 +2374,7 @@ namespace Win32xx
 				if (hMDIChild)
 				{
 					HWND hMDIClient = ::GetParent(hMDIChild);
-					HWND hMDIActive = (HWND)SendMessage(hMDIClient, WM_MDIGETACTIVE, 0, 0);
+					HWND hMDIActive = (HWND)SendMessage(hMDIClient, WM_MDIGETACTIVE, 0L, 0L);
 
 					if (hMDIActive && hMDIActive != hMDIChild)
 						return NULL;	// Parent is a MDI child, but not the active one
