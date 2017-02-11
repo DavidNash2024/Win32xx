@@ -68,7 +68,7 @@ namespace Win32xx
 		LONG EnumKey(DWORD iIndex, LPTSTR pszName, LPDWORD pnNameLength, FILETIME* pftLastWriteTime = NULL) const;
 		LONG Flush() const;
 		HKEY GetKey()  const { return m_hKey; }
-		LONG NotifyChangeKeyValue(BOOL bWatchSubtree, DWORD dwNotifyFilter, HANDLE hEvent, BOOL bAsync = TRUE) const;
+		LONG NotifyChangeKeyValue(BOOL WatchSubtree, DWORD dwNotifyFilter, HANDLE hEvent, BOOL IsAsync = TRUE) const;
 		LONG Open(HKEY hKeyParent, LPCTSTR lpszKeyName, REGSAM samDesired = KEY_READ | KEY_WRITE);
 		LONG QueryBinaryValue(LPCTSTR pszValueName, void* pValue, ULONG* pnBytes) const;
 		LONG QueryDWORDValue(LPCTSTR pszValueName, DWORD& dwValue) const;
@@ -201,11 +201,11 @@ namespace Win32xx
 		return ::RegFlushKey(m_hKey);
 	}
 
-	inline LONG CRegKey::NotifyChangeKeyValue(BOOL bWatchSubtree, DWORD dwNotifyFilter, HANDLE hEvent, BOOL bAsync) const
+	inline LONG CRegKey::NotifyChangeKeyValue(BOOL WatchSubtree, DWORD dwNotifyFilter, HANDLE hEvent, BOOL IsAsync) const
 	// Notifies the caller about changes to the attributes or contents of the registry key.
 	{
 		assert(m_hKey);
-		return ::RegNotifyChangeKeyValue(m_hKey, bWatchSubtree, dwNotifyFilter, hEvent, bAsync);
+		return ::RegNotifyChangeKeyValue(m_hKey, WatchSubtree, dwNotifyFilter, hEvent, IsAsync);
 	}
 
 	inline LONG CRegKey::Open(HKEY hKeyParent, LPCTSTR lpszKeyName, REGSAM samDesired)

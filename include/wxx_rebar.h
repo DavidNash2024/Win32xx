@@ -63,13 +63,13 @@ namespace Win32xx
 		int  IDToIndex(UINT uBandID) const;
 		BOOL InsertBand(const int nBand, REBARBANDINFO& rbbi) const;
 		BOOL IsBandVisible(int nBand) const;
-		void MaximizeBand(UINT uBand, BOOL fIdeal = FALSE) const;
+		void MaximizeBand(UINT uBand, BOOL IsIdeal = FALSE) const;
 		void MinimizeBand(UINT uBand) const;
 		BOOL MoveBand(UINT uFrom, UINT uTo) const;
 		void MoveBandsLeft() const;
 		BOOL ResizeBand(const int nBand, const CSize& sz) const;
-		BOOL ShowGripper(int nBand, BOOL fShow) const;
-		BOOL ShowBand(int nBand, BOOL fShow) const;
+		BOOL ShowGripper(int nBand, BOOL Show) const;
+		BOOL ShowBand(int nBand, BOOL Show) const;
 		BOOL SizeToRect(CRect& rect) const;
 
 		// Attributes
@@ -347,11 +347,11 @@ namespace Win32xx
 		wc.lpszClassName =  REBARCLASSNAME;
 	}
 
-	inline void CReBar::MaximizeBand(UINT uBand, BOOL fIdeal /*= FALSE*/) const
+	inline void CReBar::MaximizeBand(UINT uBand, BOOL IsIdeal /*= FALSE*/) const
 	// Resizes a band in a rebar control to either its ideal or largest size.
 	{
 		assert(IsWindow());
-		SendMessage(RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)fIdeal);
+		SendMessage(RB_MAXIMIZEBAND, (WPARAM)uBand, (LPARAM)IsIdeal);
 	}
 
 	inline void CReBar::MinimizeBand(UINT uBand) const
@@ -530,14 +530,14 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(RB_SETBARINFO, 0L, (LPARAM)&rbi));
 	}
 
-	inline BOOL CReBar::ShowBand(int nBand, BOOL fShow) const
+	inline BOOL CReBar::ShowBand(int nBand, BOOL Show) const
 	// Show or hide a band
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(RB_SHOWBAND, (WPARAM)nBand, (LPARAM)fShow));
+		return static_cast<BOOL>(SendMessage(RB_SHOWBAND, (WPARAM)nBand, (LPARAM)Show));
 	}
 
-	inline BOOL CReBar::ShowGripper(int nBand, BOOL fShow) const
+	inline BOOL CReBar::ShowGripper(int nBand, BOOL Show) const
 	// Show or hide the band's gripper
 	{
 		assert(IsWindow());
@@ -547,7 +547,7 @@ namespace Win32xx
 		rbbi.cbSize = GetSizeofRBBI();
 		rbbi.fMask = RBBIM_STYLE;
 		GetBandInfo(nBand, rbbi);
-		if (fShow)
+		if (Show)
 		{
 			rbbi.fStyle |= RBBS_GRIPPERALWAYS;
 			rbbi.fStyle &= ~RBBS_NOGRIPPER;

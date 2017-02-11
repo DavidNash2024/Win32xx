@@ -150,12 +150,12 @@ namespace Win32xx
 	inline BOOL CFile::Close()
 	// Closes the file associated with this object. Closed file can no longer be read or written to.
 	{
-		BOOL bResult = TRUE;
+		BOOL IsClosed = TRUE;
 		if (m_hFile != 0)
-			bResult = CloseHandle(m_hFile);
+			IsClosed = CloseHandle(m_hFile);
 
 		m_hFile = 0;
-		return bResult;
+		return IsClosed;
 	}
 
 	inline BOOL CFile::Flush()

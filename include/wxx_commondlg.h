@@ -137,7 +137,7 @@ namespace Win32xx
 	public:
 
 		// Constructor/destructor
-		CFileDialog (BOOL bOpenFileDialog = TRUE,
+		CFileDialog (BOOL IsOpenFileDialog = TRUE,
 				LPCTSTR pszDefExt = NULL,
 				LPCTSTR pszFileName = NULL,
 				DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT,
@@ -157,7 +157,7 @@ namespace Win32xx
 		const OPENFILENAME& GetParameters() const { return m_OFN; }
 
 		// methods for setting parameters before DoModal()
-		BOOL	IsOpenFileDialog()	const			{ return m_bOpenFileDialog; }
+		BOOL	IsOpenFileDialog()	const			{ return m_IsOpenFileDialog; }
 		void    SetDefExt(LPCTSTR szExt);
 		void    SetFileName(LPCTSTR szFileName);
 		void	SetFilter(LPCTSTR szFilter);
@@ -182,7 +182,7 @@ namespace Win32xx
 		INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
-		BOOL 			m_bOpenFileDialog;  // TRUE = open, FALSE = save
+		BOOL 			m_IsOpenFileDialog;  // TRUE = open, FALSE = save
 		CString   		m_sFilter;          // File filter string
 		CString			m_sFileName;		// File name string
 		CString			m_sTitle;			// Dialog title
@@ -198,11 +198,11 @@ namespace Win32xx
 	{
 	public:
 		// constructor and destructor
-		CFindReplaceDialog(BOOL bFindDialogOnly = TRUE);
+		CFindReplaceDialog(BOOL IsFindDialogOnly = TRUE);
 		virtual ~CFindReplaceDialog() {}
 
         virtual HWND Create(HWND hWndParent = 0);
-		virtual BOOL Create(BOOL bFindDialogOnly,
+		virtual BOOL Create(BOOL IsFindDialogOnly,
 						LPCTSTR sFindWhat,
 						LPCTSTR sReplaceWith = NULL,
 						DWORD dwFlags = FR_DOWN,
@@ -215,7 +215,7 @@ namespace Win32xx
 		CString GetFindString() const;      // get find string
 		CString	GetReplaceString() const;   // get replacement string
 		const	FINDREPLACE& GetParameters() const	{ return m_FR; }
-		BOOL	IsFindDialogOnly() const			{ return m_bFindDialogOnly; }
+		BOOL	IsFindDialogOnly() const			{ return m_IsFindDialogOnly; }
 		BOOL 	IsTerminating();      	    // TRUE = terminate dialog
 		BOOL 	MatchCase() const;          // TRUE = matching case
 		BOOL 	MatchWholeWord() const;     // TRUE = whole words only
@@ -234,7 +234,7 @@ namespace Win32xx
 
 	private:
 		FINDREPLACE 	m_FR;				// FindReplace parameters
-		BOOL			m_bFindDialogOnly;	// TRUE for a find only dialog
+		BOOL			m_IsFindDialogOnly;	// TRUE for a find only dialog
 		CString 		m_strFindWhat;		// The Find string
 		CString 		m_strReplaceWith;	// The Replace string
 	};
@@ -427,11 +427,11 @@ namespace Win32xx
 		m_CC.hwndOwner = hWndOwner;
 
 		// invoke the control and save the result on success
-		BOOL ok = ::ChooseColor(&m_CC);
+		BOOL IsValid = ::ChooseColor(&m_CC);
 
 		m_hWnd = 0;
 
-		if (!ok)
+		if (!IsValid)
 		{
 			DWORD dwError = CommDlgExtendedError();
 			if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
@@ -481,12 +481,12 @@ namespace Win32xx
 	//
 
 	//============================================================================
-	inline CFileDialog::CFileDialog(BOOL bOpenFileDialog  /* = TRUE */,
+	inline CFileDialog::CFileDialog(BOOL IsOpenFileDialog  /* = TRUE */,
 		LPCTSTR pszDefExt /* = NULL */,
 		LPCTSTR pszFileName /* = NULL */,
 		DWORD dwFlags /* = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT */,
 		LPCTSTR pszFilter /* = NULL */)
-	// Construct a CFileDialog object. bOpenFileDialog specifies the type of
+	// Construct a CFileDialog object. IsOpenFileDialog specifies the type of
 	// dialog box, OpenFile or SaveFile. The file's default extent and name can
 	// be specified, along with the flags for the OPENFILENAME struct.
 	// The pszFilter contains a series of string pairs that specify file filters,
@@ -494,7 +494,7 @@ namespace Win32xx
 	// struct in the Windows API documentation.
 	{
 		// set open/saveas toggle
-		m_bOpenFileDialog = bOpenFileDialog;
+		m_IsOpenFileDialog = IsOpenFileDialog;
 
 		// clear out the OPENFILENAME structure
 		ZeroMemory(&m_OFN, sizeof(m_OFN));
@@ -623,7 +623,7 @@ namespace Win32xx
 
 		m_OFN.hwndOwner = hWndOwner;
 		m_OFN.lpstrFile = m_sFileName.GetBuffer(m_OFN.nMaxFile);
-		int ok = (m_bOpenFileDialog ? ::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
+		int ok = (m_IsOpenFileDialog ? ::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
 		m_sFileName.ReleaseBuffer();
 		m_OFN.lpstrFile = const_cast<LPTSTR>(m_sFileName.c_str());
 		m_hWnd = 0;
@@ -703,8 +703,8 @@ namespace Win32xx
 	{
 		assert(pos >= 0);
 
-		BOOL bExplorer = m_OFN.Flags & OFN_EXPLORER;
-		TCHAR chDelimiter = (bExplorer ? _T('\0') : _T(' '));
+		BOOL IsExplorer = m_OFN.Flags & OFN_EXPLORER;
+		TCHAR chDelimiter = (IsExplorer ? _T('\0') : _T(' '));
 
 		CString strFile(m_OFN.lpstrFile + pos, m_OFN.nMaxFile);	// strFile can contain NULLs
 		int Index = 0;
@@ -726,7 +726,7 @@ namespace Win32xx
 
 		// Fill strPath with the path
 		CString strPath = m_OFN.lpstrFile; // strPath is terminated by first NULL
-		if (!bExplorer)
+		if (!IsExplorer)
 		{
 			int nDeliminator = strPath.Find(chDelimiter);
 			strPath = strPath.Left(nDeliminator);
@@ -734,7 +734,7 @@ namespace Win32xx
 
 		// Fill strFileName with the file name
 		CString strFileName = m_OFN.lpstrFile + pos + Index;
-		if (!bExplorer)
+		if (!IsExplorer)
 		{
 			int nDeliminator = strFileName.Find(chDelimiter);
 			if (nDeliminator > 0)
@@ -1062,12 +1062,12 @@ namespace Win32xx
 	//
 
 	//============================================================================
-	inline CFindReplaceDialog::CFindReplaceDialog(BOOL bFindDialogOnly /* = TRUE */)
+	inline CFindReplaceDialog::CFindReplaceDialog(BOOL IsFindDialogOnly /* = TRUE */)
 	// Constructor for CCFindReplaceDialog. Refer to the Windows API documentation
 	// for information of the FINDREPLACE structure.
 	{
 		ZeroMemory(&m_FR, sizeof(m_FR));
-		m_bFindDialogOnly = bFindDialogOnly;
+		m_IsFindDialogOnly = IsFindDialogOnly;
 		SetParameters(m_FR);
 	}
 
@@ -1075,12 +1075,12 @@ namespace Win32xx
 	//	Create and display either a Find or indReplace dialog box.
 	inline HWND CFindReplaceDialog::Create(HWND hParentWnd /* = 0*/)
 	{
-		Create(m_bFindDialogOnly, m_FR.lpstrFindWhat, m_FR.lpstrReplaceWith, m_FR.Flags, hParentWnd);
+		Create(m_IsFindDialogOnly, m_FR.lpstrFindWhat, m_FR.lpstrReplaceWith, m_FR.Flags, hParentWnd);
 	    return m_hWnd;
 	}
 
 	//============================================================================
-	inline BOOL CFindReplaceDialog::Create(BOOL bFindDialogOnly, LPCTSTR pszFindWhat,
+	inline BOOL CFindReplaceDialog::Create(BOOL IsFindDialogOnly, LPCTSTR pszFindWhat,
 			LPCTSTR pszReplaceWith, DWORD dwFlags, HWND hParentWnd /* = 0*/)
 	//	Create and display either a Find or indReplace dialog box. lpszFindWhat
 	//  is the search string, and lpszReplaceWith is the replace string.
@@ -1091,7 +1091,7 @@ namespace Win32xx
 		assert( &GetApp() );	// Test if Win32++ has been started
 		assert(!IsWindow());	// Only one window per CWnd instance allowed
 
-		m_bFindDialogOnly = bFindDialogOnly;
+		m_IsFindDialogOnly = IsFindDialogOnly;
 
 		// Ensure this thread has the TLS index set
 		TLSData* pTLSData = GetApp().SetTlsData();
@@ -1112,7 +1112,7 @@ namespace Win32xx
 
 		// Display the dialog box
 		HWND hWnd;
-		if (bFindDialogOnly)
+		if (IsFindDialogOnly)
 			hWnd = ::FindText(&m_FR);
 		else
 			hWnd = ::ReplaceText(&m_FR);

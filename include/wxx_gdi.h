@@ -272,7 +272,7 @@ namespace Win32xx
 
 		// Create methods
 		HFONT CreateFontIndirect(const LOGFONT& LogFont);
-		HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc = NULL, BOOL bBold = FALSE, BOOL bItalic = FALSE);
+		HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc = NULL, BOOL IsBold = FALSE, BOOL IsItalic = FALSE);
 		HFONT CreatePointFontIndirect(const LOGFONT& LogFont, HDC hdc = NULL);
 
 #ifndef _WIN32_WCE
@@ -498,11 +498,11 @@ namespace Win32xx
 #endif
 
 		// Create and select Palettes
-		void CreatePalette(LPLOGPALETTE pLogPalette, BOOL bForceBkgnd);
-		HPALETTE SelectPalette(HPALETTE hPalette, BOOL bForceBkgnd);
+		void CreatePalette(LPLOGPALETTE pLogPalette, BOOL ForceBkgnd);
+		HPALETTE SelectPalette(HPALETTE hPalette, BOOL ForceBkgnd);
 
 #ifndef _WIN32_WCE
-		void CreateHalftonePalette(BOOL bForceBkgnd);
+		void CreateHalftonePalette(BOOL ForceBkgnd);
 #endif
 
 		// Create Pens
@@ -590,7 +590,7 @@ namespace Win32xx
 		BOOL DrawFrameControl(const RECT& rc, UINT nType, UINT nState) const;
 		BOOL FillRect(const RECT& rc, HBRUSH hBrush) const;
 		BOOL FillRgn(HRGN hRgn, HBRUSH hBrush) const;
-		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const;
+		void GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL IsVertical) const;
 		BOOL InvertRect(const RECT& rc) const;
 		void SolidFill(COLORREF Color, const RECT& rc) const;
 
@@ -1758,7 +1758,7 @@ namespace Win32xx
 		return hFont;
 	}
 
-	inline HFONT CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc /*= NULL*/, BOOL bBold /*= FALSE*/, BOOL bItalic /*= FALSE*/)
+	inline HFONT CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc /*= NULL*/, BOOL IsBold /*= FALSE*/, BOOL IsItalic /*= FALSE*/)
 	// Creates a font of a specified typeface and point size.
 	{
 		LOGFONT logFont;
@@ -1768,9 +1768,9 @@ namespace Win32xx
 
 		lstrcpyn(logFont.lfFaceName, lpszFaceName, LF_FACESIZE);
 
-		if (bBold)
+		if (IsBold)
 			logFont.lfWeight = FW_BOLD;
-		if (bItalic)
+		if (IsItalic)
 			logFont.lfItalic = (BYTE)TRUE;
 
 		return CreatePointFontIndirect(logFont, hdc);
@@ -2482,7 +2482,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		BitBlt(x, y, cx, cy, dcImage, 0, 0, SRCINVERT);
 	}
 
-	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL bVertical) const
+	inline void CDC::GradientFill(COLORREF Color1, COLORREF Color2, const RECT& rc, BOOL IsVertical) const
 	// An efficient color gradient filler compatible with all Windows operating systems
 	{
 		int Width = rc.right - rc.left;
@@ -2498,7 +2498,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 		COLORREF OldBkColor = GetBkColor();
 
-		if (bVertical)
+		if (IsVertical)
 		{
 			for(int i=0; i < Width; ++i)
 			{
@@ -2756,15 +2756,15 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		BOOL bResult = bitmap.LoadBitmap(lpszName);
+		BOOL IsLoaded = bitmap.LoadBitmap(lpszName);
 
-		if (bResult)
+		if (IsLoaded)
 		{
 			SelectObject(bitmap);
 			m_pData->Bitmap = bitmap;
 		}
 
-		return bResult;
+		return IsLoaded;
 	}
 
 	inline BOOL CDC::LoadImage(UINT nID, UINT fuLoad)
@@ -2785,15 +2785,15 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		BOOL bResult = bitmap.LoadImage(lpszName, fuLoad);
+		BOOL IsLoaded = bitmap.LoadImage(lpszName, fuLoad);
 
-		if (bResult)
+		if (IsLoaded)
 		{
 			SelectObject(bitmap);
 			m_pData->Bitmap = bitmap;
 		}
 
-		return bResult;
+		return IsLoaded;
 	}
 
 	inline BOOL CDC::LoadOEMBitmap(UINT nIDBitmap) // for OBM_/OCR_/OIC_
@@ -2803,15 +2803,15 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		assert(m_pData->hDC);
 
 		CBitmap bitmap;
-		BOOL bResult = bitmap.LoadOEMBitmap(nIDBitmap);
+		BOOL IsLoaded = bitmap.LoadOEMBitmap(nIDBitmap);
 
-		if (bResult)
+		if (IsLoaded)
 		{
 			SelectObject(bitmap);
 			m_pData->Bitmap = bitmap;
 		}
 
-		return bResult;
+		return IsLoaded;
 	}
 
 #ifndef _WIN32_WCE
@@ -2982,14 +2982,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 #endif
 
 	// Palette functions
-	inline void CDC::CreatePalette(LPLOGPALETTE pLogPalette, BOOL bForceBkgnd)
+	inline void CDC::CreatePalette(LPLOGPALETTE pLogPalette, BOOL ForceBkgnd)
 	// Creates and selects a palette
 	{
 		assert(m_pData->hDC);
 
 		CPalette palette;
 		palette.CreatePalette(pLogPalette);
-		SelectPalette(palette, bForceBkgnd);
+		SelectPalette(palette, ForceBkgnd);
 		m_pData->Palette = palette;
 		RealizePalette();
 	}
@@ -3009,11 +3009,11 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		return GetNearestColor(crColor);
 	}
 
-	inline HPALETTE CDC::SelectPalette(const HPALETTE hPalette, BOOL bForceBkgnd)
+	inline HPALETTE CDC::SelectPalette(const HPALETTE hPalette, BOOL ForceBkgnd)
 	// Use this to attach an existing palette.
 	{
 		assert(m_pData->hDC);
-		return static_cast<HPALETTE>(::SelectPalette(m_pData->hDC, hPalette, bForceBkgnd));
+		return static_cast<HPALETTE>(::SelectPalette(m_pData->hDC, hPalette, ForceBkgnd));
 	}
 
 	inline void CDC::RealizePalette() const
@@ -3025,14 +3025,14 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 
 #ifndef _WIN32_WCE
 
-	inline void CDC::CreateHalftonePalette(BOOL bForceBkgnd)
+	inline void CDC::CreateHalftonePalette(BOOL ForceBkgnd)
 	// Creates and selects halftone palette
 	{
 		assert(m_pData->hDC);
 
 		CPalette palette;
 		palette.CreateHalftonePalette(*this);
-		::SelectPalette(m_pData->hDC, palette, bForceBkgnd);
+		::SelectPalette(m_pData->hDC, palette, ForceBkgnd);
 		m_pData->Palette = palette;
 		::RealizePalette(m_pData->hDC);
 	}

@@ -100,7 +100,7 @@ namespace Win32xx
 		BOOL DragEnter(HWND hWndLock, CPoint point) const;
 		BOOL DragLeave(HWND hWndLock) const;
 		BOOL DragMove(CPoint pt) const;
-		BOOL DragShowNolock(BOOL bShow) const;
+		BOOL DragShowNolock(BOOL Show) const;
 		BOOL Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const;
 		BOOL DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
 		BOOL DrawIndirect(const IMAGELISTDRAWPARAMS& imldp);
@@ -408,10 +408,10 @@ namespace Win32xx
 		return ImageList_DragMove(pt.x, pt.y);
 	}
 
-	inline BOOL CImageList::DragShowNolock(BOOL bShow) const
+	inline BOOL CImageList::DragShowNolock(BOOL Show) const
 	// Shows or hides the drag image during a drag operation, without locking the window.
 	{
-		return ImageList_DragShowNolock(bShow);
+		return ImageList_DragShowNolock(Show);
 	}
 
 	inline BOOL CImageList::Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const

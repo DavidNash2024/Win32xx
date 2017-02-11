@@ -119,13 +119,13 @@ namespace Win32xx
 		int   SetCurSel(int nIndex) const;
 		int   SetDroppedWidth(int nWidth) const;
 		BOOL  SetEditSel(int nStartChar, int nEndChar) const;
-		int   SetExtendedUI(BOOL bExtended = TRUE) const;
+		int   SetExtendedUI(BOOL IsExtended = TRUE) const;
 		void  SetHorizontalExtent(UINT nExtent ) const;
 		int   SetItemData(int nIndex, DWORD dwItemData) const;
 		int   SetItemHeight(int nIndex, UINT cyItemHeight) const;
 		LCID  SetLocale( LCID NewLocale ) const;
 		int   SetTopIndex(int nIndex) const;
-		void  ShowDropDown(BOOL bShow = TRUE) const;
+		void  ShowDropDown(BOOL Show = TRUE) const;
 
 	protected:
 		// Overridables
@@ -195,7 +195,7 @@ namespace Win32xx
 #ifdef Header_ClearFilter
 		int		ClearAllFilters() const;
 		int		ClearFilter(int nColumn) const;
-		int		EditFilter(int nColumn, BOOL bDiscardChanges) const;
+		int		EditFilter(int nColumn, BOOL DiscardChanges) const;
 		int		SetFilterChangeTimeout(DWORD dwTimeOut) const;
 #endif
 
@@ -215,7 +215,7 @@ namespace Win32xx
 		virtual ~CHotKey() {}
 
 		DWORD GetHotKey() const;
-		CString GetKeyName(UINT vk, BOOL fExtended) const;
+		CString GetKeyName(UINT vk, BOOL IsExtended) const;
 		void SetHotKey(DWORD dwKey) const;
 		void SetRules(WORD wInvalidComb, WORD wModifiers) const;
 
@@ -304,7 +304,7 @@ namespace Win32xx
 		SYSTEMTIME GetTime(DWORD* pReturnCode = NULL) const;
 		COLORREF SetMonthCalColor(int iColor, COLORREF ref) const;
 		BOOL SetFormat(LPCTSTR pstrFormat) const;
-		void SetMonthCalFont(HFONT hFont, BOOL bRedraw = TRUE) const;
+		void SetMonthCalFont(HFONT hFont, BOOL Redraw = TRUE) const;
 		BOOL SetRange(const SYSTEMTIME& MinRange, const SYSTEMTIME& MaxRange) const;
 		BOOL SetTime(const SYSTEMTIME& TimeNew) const;
 		BOOL SetTimeNone() const;
@@ -325,8 +325,8 @@ namespace Win32xx
 		virtual ~CProgressBar() {}
 
 		int  GetPos() const;
-		int  GetRange(BOOL fWhichLimit, const PBRANGE& PBRange) const;
-		int  GetRange(BOOL fWhichLimit) const;
+		int  GetRange(BOOL WhichLimit, const PBRANGE& PBRange) const;
+		int  GetRange(BOOL WhichLimit) const;
 		int  OffsetPos(int nIncrement) const;
 		int  SetPos(int nNewPos) const;
 		int  SetRange(short nMinRange, short nMaxRange) const;
@@ -352,10 +352,10 @@ namespace Win32xx
 		BOOL GetScrollInfo(SCROLLINFO& si)  const;
 		int  GetScrollPos()  const;
 		BOOL GetScrollRange(int& MinPos, int& MaxPos)  const;
-		BOOL SetScrollInfo(const SCROLLINFO& si, BOOL bRedraw = TRUE )  const;
-		int  SetScrollPos(int nPos, BOOL bRedraw)  const;
-		BOOL SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw = TRUE )  const;
-		BOOL ShowScrollBar(BOOL bShow)  const;
+		BOOL SetScrollInfo(const SCROLLINFO& si, BOOL Redraw = TRUE )  const;
+		int  SetScrollPos(int nPos, BOOL Redraw)  const;
+		BOOL SetScrollRange( int nMinPos, int nMaxPos, BOOL Redraw = TRUE )  const;
+		BOOL ShowScrollBar(BOOL Show)  const;
 
 	protected:
 		// Overridables
@@ -373,7 +373,7 @@ namespace Win32xx
 		virtual ~CSlider() {}
 
 		void ClearSel() const;
-		void ClearTics(BOOL bRedraw = FALSE ) const;
+		void ClearTics(BOOL Redraw = FALSE ) const;
 		HWND GetBuddy(BOOL fLocation = TRUE ) const;
 		CRect GetChannelRect() const;
 		int  GetLineSize() const;
@@ -392,10 +392,10 @@ namespace Win32xx
 		HWND SetBuddy(HWND hBuddy, BOOL fLocation = TRUE ) const;
 		int  SetLineSize(int nSize) const;
 		int  SetPageSize(int nSize) const;
-		void SetPos(int nPos, BOOL bRedraw = FALSE) const;
-		void SetRangeMax(int nMax, BOOL bRedraw = FALSE) const;
-		void SetRangeMin(int nMin, BOOL bRedraw = FALSE) const;
-		void SetSelection(int nMin, int nMax, BOOL bRedraw = FALSE) const;
+		void SetPos(int nPos, BOOL Redraw = FALSE) const;
+		void SetRangeMax(int nMax, BOOL Redraw = FALSE) const;
+		void SetRangeMin(int nMin, BOOL Redraw = FALSE) const;
+		void SetSelection(int nMin, int nMax, BOOL Redraw = FALSE) const;
 		BOOL SetTic(int nTic) const;
 		void SetTicFreq(int nFreq)  const;
 		int  SetTipSide(int nLocation) const;
@@ -466,7 +466,7 @@ namespace Win32xx
 #endif
 
 		//Operations
-		void Activate(BOOL bActivate) const;
+		void Activate(BOOL Activate) const;
 		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, UINT nIDText) const;
 		BOOL AddTool(HWND hWndControl, UINT nIDText) const;
 		BOOL AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, LPCTSTR lpszText = LPSTR_TEXTCALLBACK) const;
@@ -481,7 +481,7 @@ namespace Win32xx
 		void UpdateTipText(UINT nIDText, HWND hWndControl, UINT uID = -1) const;
 
 #if (_WIN32_IE >=0x0500)
-		BOOL AdjustRect(RECT& rc, BOOL bLarger = TRUE) const;
+		BOOL AdjustRect(RECT& rc, BOOL IsLarger = TRUE) const;
   #ifdef TTM_SETTITLE
 		BOOL SetTitle(UINT uIcon, LPCTSTR lpstrTitle) const;
   #endif
@@ -789,12 +789,12 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(CB_SETEDITSEL, 0L, (LPARAM)MAKELONG(nStartChar,nEndChar)));
 	}
 
-	inline int  CComboBox::SetExtendedUI(BOOL bExtended) const
+	inline int  CComboBox::SetExtendedUI(BOOL IsExtended) const
 	// Selects either the default user interface or the extended user interface for the combo box that
 	// has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETEXTENDEDUI, (WPARAM)bExtended, 0L));
+		return static_cast<int>(SendMessage(CB_SETEXTENDEDUI, (WPARAM)IsExtended, 0L));
 	}
 
 	inline void CComboBox::SetHorizontalExtent(UINT nExtent ) const
@@ -832,11 +832,11 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(CB_SETTOPINDEX, (WPARAM)nIndex, 0L));
 	}
 
-	inline void CComboBox::ShowDropDown(BOOL bShow) const
+	inline void CComboBox::ShowDropDown(BOOL Show) const
 	// Shows or hides the list box of the combo box that has the CBS_DROPDOWN or CBS_DROPDOWNLIST style.
 	{
 		assert(IsWindow());
-		SendMessage(CB_SHOWDROPDOWN, (WPARAM)bShow, 0L);
+		SendMessage(CB_SHOWDROPDOWN, (WPARAM)Show, 0L);
 	}
 
 
@@ -965,11 +965,11 @@ namespace Win32xx
 		return CFont(hFont);
 	}
 
-	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL bRedraw /*= TRUE*/) const
+	inline void CDateTime::SetMonthCalFont(HFONT hFont, BOOL Redraw /*= TRUE*/) const
 	// Sets the font to be used by the date and time picker (DTP) control's child month calendar control.
 	{
 		assert(IsWindow());
-		DateTime_SetMonthCalFont(*this, hFont, MAKELONG(bRedraw, 0));
+		DateTime_SetMonthCalFont(*this, hFont, MAKELONG(Redraw, 0));
 	}
 
 	inline DWORD CDateTime::GetRange(SYSTEMTIME& MinRange, SYSTEMTIME& MaxRange) const
@@ -1038,14 +1038,14 @@ namespace Win32xx
 		return static_cast<DWORD>(SendMessage(HKM_GETHOTKEY, 0L, 0L));
 	}
 
-	inline CString CHotKey::GetKeyName(UINT vk, BOOL fExtended) const
+	inline CString CHotKey::GetKeyName(UINT vk, BOOL IsExtended) const
 	{
 		// Translate the virtual-key code to a scan code
 		LONG lScan = MapVirtualKey(vk, 0);
 
 		// Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
 		LPARAM lParam = lScan << 16;
-		if (fExtended)
+		if (IsExtended)
 			lParam |= 0x01000000L;
 
 		CString str;
@@ -1190,10 +1190,10 @@ namespace Win32xx
 		return Header_ClearAllFilters(*this);
 	}
 
-	inline int CHeader::EditFilter(int nColumn, BOOL bDiscardChanges) const
+	inline int CHeader::EditFilter(int nColumn, BOOL DiscardChanges) const
 	{
 		assert(IsWindow());
-		return Header_EditFilter(*this, nColumn, LPARAM MAKELPARAM(bDiscardChanges, 0));
+		return Header_EditFilter(*this, nColumn, LPARAM MAKELPARAM(DiscardChanges, 0));
 	}
 
 	inline int CHeader::GetBitmapMargin() const
@@ -1485,18 +1485,18 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(PBM_GETPOS, 0L, 0L));
 	}
 
-	inline int CProgressBar::GetRange(BOOL fWhichLimit, const PBRANGE& PBRange) const
+	inline int CProgressBar::GetRange(BOOL WhichLimit, const PBRANGE& PBRange) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) &PBRange));
+		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)WhichLimit, (LPARAM) &PBRange));
 	}
 
-	inline int CProgressBar::GetRange(BOOL fWhichLimit) const
+	inline int CProgressBar::GetRange(BOOL WhichLimit) const
 	// Retrieves information about the current high and low limits of the progress bar control.
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)fWhichLimit, (LPARAM) 0L));
+		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)WhichLimit, (LPARAM) 0L));
 	}
 
 	inline int CProgressBar::OffsetPos(int nIncrement) const
@@ -1569,34 +1569,34 @@ namespace Win32xx
 		return ::GetScrollRange(*this, SB_CTL, &MinPos, &MaxPos);
 	}
 
-	inline BOOL CScrollBar::SetScrollInfo(const SCROLLINFO& si, BOOL bRedraw )  const
+	inline BOOL CScrollBar::SetScrollInfo(const SCROLLINFO& si, BOOL Redraw )  const
 	// Sets the parameters of the scroll bar, including the minimum and maximum scrolling positions,
 	// the page size, and the position of the scroll box (thumb).
 	{
 		assert(IsWindow());
-		return ::SetScrollInfo(*this, SB_CTL, &si, bRedraw);
+		return ::SetScrollInfo(*this, SB_CTL, &si, Redraw);
 	}
 
-	inline int CScrollBar::SetScrollPos(int nPos, BOOL bRedraw)  const
+	inline int CScrollBar::SetScrollPos(int nPos, BOOL Redraw)  const
 	// Sets the position of the scroll box (thumb) in the scroll bar and, if requested,
 	// redraws the scroll bar to reflect the new position of the scroll box.
 	{
 		assert(IsWindow());
-		return ::SetScrollPos(*this, SB_CTL, nPos, bRedraw);
+		return ::SetScrollPos(*this, SB_CTL, nPos, Redraw);
 	}
 
-	inline BOOL CScrollBar::SetScrollRange( int nMinPos, int nMaxPos, BOOL bRedraw )  const
+	inline BOOL CScrollBar::SetScrollRange( int nMinPos, int nMaxPos, BOOL Redraw )  const
 	// Sets the minimum and maximum scroll box positions for the scroll bar.
 	{
 		assert(IsWindow());
-		return ::SetScrollRange(*this, SB_CTL, nMinPos, nMaxPos, bRedraw);
+		return ::SetScrollRange(*this, SB_CTL, nMinPos, nMaxPos, Redraw);
 	}
 
-	inline BOOL CScrollBar::ShowScrollBar(BOOL bShow)  const
+	inline BOOL CScrollBar::ShowScrollBar(BOOL Show)  const
 	// Shows or hides the scroll bar.
 	{
 		assert(IsWindow());
-		return ::ShowScrollBar(*this, SB_CTL, bShow);
+		return ::ShowScrollBar(*this, SB_CTL, Show);
 	}
 
 	////////////////////////////////////////
@@ -1609,11 +1609,11 @@ namespace Win32xx
 		SendMessage(TBM_CLEARSEL, 0L, 0L);
 	}
 
-	inline void CSlider::ClearTics(BOOL bRedraw) const
+	inline void CSlider::ClearTics(BOOL Redraw) const
 	// Removes the current tick marks from the trackbar.
 	{
 		assert(IsWindow());
-		SendMessage(TBM_CLEARTICS, (WPARAM)bRedraw, 0L);
+		SendMessage(TBM_CLEARTICS, (WPARAM)Redraw, 0L);
 	}
 
 	inline HWND CSlider::GetBuddy(BOOL fLocation) const
@@ -1749,32 +1749,32 @@ namespace Win32xx
 		return static_cast<int>(SendMessage(TBM_SETPAGESIZE, 0L, (LPARAM)nSize));
 	}
 
-	inline void CSlider::SetPos(int nPos, BOOL bRedraw) const
+	inline void CSlider::SetPos(int nPos, BOOL Redraw) const
 	// Sets the current logical position of the slider in the trackbar.
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETPOS, (WPARAM)bRedraw, (LPARAM)nPos);
+		SendMessage(TBM_SETPOS, (WPARAM)Redraw, (LPARAM)nPos);
 	}
 
-	inline void CSlider::SetRangeMax(int nMax, BOOL bRedraw) const
+	inline void CSlider::SetRangeMax(int nMax, BOOL Redraw) const
 	// Sets the maximum logical position for the slider in the trackbar.
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETRANGEMAX, (WPARAM)bRedraw, (LPARAM)nMax);
+		SendMessage(TBM_SETRANGEMAX, (WPARAM)Redraw, (LPARAM)nMax);
 	}
 
-	inline void CSlider::SetRangeMin(int nMin, BOOL bRedraw) const
+	inline void CSlider::SetRangeMin(int nMin, BOOL Redraw) const
 	// Sets the minimum logical position for the slider in the trackbar.
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETRANGEMIN, (WPARAM)bRedraw, (LPARAM)nMin);
+		SendMessage(TBM_SETRANGEMIN, (WPARAM)Redraw, (LPARAM)nMin);
 	}
 
-	inline void CSlider::SetSelection(int nMin, int nMax, BOOL bRedraw) const
+	inline void CSlider::SetSelection(int nMin, int nMax, BOOL Redraw) const
 	// Sets the starting and ending positions for the available selection range in the trackbar.
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETSEL, (WPARAM)bRedraw, (LPARAM)MAKELONG(nMax, nMin));
+		SendMessage(TBM_SETSEL, (WPARAM)Redraw, (LPARAM)MAKELONG(nMax, nMin));
 	}
 
 	inline BOOL CSlider::SetTic(int nTic) const
@@ -1898,11 +1898,11 @@ namespace Win32xx
 	inline CToolTip::~CToolTip()
 	{}
 
-	inline void CToolTip::Activate(BOOL bActivate) const
+	inline void CToolTip::Activate(BOOL Activate) const
 	// Activates or deactivates a ToolTip control.
 	{
 		assert(IsWindow());
-		SendMessage(TTM_ACTIVATE, (WPARAM)bActivate, 0L);
+		SendMessage(TTM_ACTIVATE, (WPARAM)Activate, 0L);
 	}
 
 	inline BOOL CToolTip::AddTool(HWND hWndControl, const RECT& rcTool, UINT uID, UINT nIDText) const
@@ -2222,12 +2222,12 @@ namespace Win32xx
 	}
 
 #if (_WIN32_IE >=0x0500)
-	inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL bLarger /*= TRUE*/) const
+	inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL IsLarger /*= TRUE*/) const
 	// Calculates a ToolTip control's text display rectangle from its window rectangle, or the
 	//  ToolTip window rectangle needed to display a specified text display rectangle.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)bLarger, (LPARAM)&rc));
+		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)IsLarger, (LPARAM)&rc));
 	}
 
 	inline CSize CToolTip::GetBubbleSize(HWND hWndControl, UINT uID) const

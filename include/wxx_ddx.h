@@ -153,7 +153,7 @@ namespace Win32xx
 		void virtual Fail(LPCTSTR message) const;
 		HWND GetLastControl()  const { return m_hWndLastControl; }
 		HWND GetLastEditControl() const { return m_hWndLastEditControl; }
-		void Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate);
+		void Init(CWnd& dlgWnd, BOOL RetrieveAndValidate);
 		HWND PrepareCtrl(int nIDC);   	// return HWND of control
 		HWND PrepareEditCtrl(int nIDC); // record this is an edit
 
@@ -163,7 +163,7 @@ namespace Win32xx
 		HWND  m_hWndLastControl;   		// handle of last-accessed control
 		HWND  m_hWndLastEditControl; 	// handle of last edit control
 		BOOL  m_bEditLastControl;  		// most recent control is an edit box
-		BOOL  m_bRetrieveAndValidate;	// TRUE means retrieve and validate data
+		BOOL  m_RetrieveAndValidate;	// TRUE means retrieve and validate data
 		HWND  m_hWndParent;        		// parent window
 
 		// Message strings. They are assigned in the constructor.
@@ -227,7 +227,7 @@ namespace Win32xx
 		m_hWndLastControl = 0;
 		m_hWndLastEditControl = 0;
 		m_bEditLastControl = FALSE;
-		m_bRetrieveAndValidate = FALSE;
+		m_RetrieveAndValidate = FALSE;
 		m_hWndParent = 0;
 
 		// DDX anomaly prompting messages
@@ -266,7 +266,7 @@ namespace Win32xx
 	//  the limit to nChars, which must be at least one.
 	{
 		assert(nChars >= 1);  // must allow at least one char
-		if (m_bRetrieveAndValidate && value.GetLength() > nChars)
+		if (m_RetrieveAndValidate && value.GetLength() > nChars)
 		{
 			CString message;
 			message.Format(DDV_MSG_STRING_SIZE, value.c_str(), (long)nChars);
@@ -305,7 +305,7 @@ namespace Win32xx
 		ULONGLONG max = SystemTimeToULL(maxRange);
 		assert(min == zero || max == zero || min <= max);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			if ((min != zero && min > val) ||
 				(max != zero && max < val))
@@ -338,7 +338,7 @@ namespace Win32xx
 		if (minVal <= value && value <= maxVal)
 			return;
 
-		if (!m_bRetrieveAndValidate)
+		if (!m_RetrieveAndValidate)
 		{
 			// just leave a debugging trace if writing to a control
 			TRACE(_T("Warning: control data is out of range.\n"));
@@ -381,7 +381,7 @@ namespace Win32xx
 			return;
 
 		// just leave a debugging trace if writing to a control
-		if (!m_bRetrieveAndValidate)
+		if (!m_RetrieveAndValidate)
 		{
 			TRACE(_T("Warning: current control data is out of range.\n"));
 			return;     // don't stop
@@ -412,7 +412,7 @@ namespace Win32xx
 		ULONGLONG max = SystemTimeToULL(maxRange);
 		assert(min == zero || max == zero || min <= max);
 
-		if (!m_bRetrieveAndValidate)
+		if (!m_RetrieveAndValidate)
 		{
 			if ((min != zero && min > val) ||
 				(max != zero && max < val))
@@ -452,7 +452,7 @@ namespace Win32xx
 	//	in debug mode.
 	{
 		assert(minVal <= maxVal);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			if (minVal > value || maxVal < value)
 			{
@@ -489,7 +489,7 @@ namespace Win32xx
 		if (minVal <= value && value <= maxVal)
 			return;
 
-		if (!m_bRetrieveAndValidate)
+		if (!m_RetrieveAndValidate)
 		{
 			// just leave a debugging trace if writing to a control
 			int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
@@ -521,7 +521,7 @@ namespace Win32xx
 	{
 		if (!rCtl.IsWindow())    // not subclassed yet
 		{
-			assert (!m_bRetrieveAndValidate);
+			assert (!m_RetrieveAndValidate);
 			HWND hWndCtrl = PrepareCtrl(nIDC);
 			assert(hWndCtrl);
 			rCtl.Attach(hWndCtrl);
@@ -543,12 +543,12 @@ namespace Win32xx
 	//	the combo box control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, index is set
 	//	to the index of the current combo box selection. If no item is
-	//	selected, index is set to 0. When m_DX.m_bRetrieveAndValidate is false,
+	//	selected, index is set to 0. When m_DX.m_RetrieveAndValidate is false,
 	//	the index item is selected.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			index = (int)::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0L);
 		else
 			::SendMessage(hWndCtrl, CB_SETCURSEL, (WPARAM)index, 0L);
@@ -562,14 +562,14 @@ namespace Win32xx
 	//	data exchange for the state of the combo box control appearing within
 	//	the DDX/DDV object m_DX with the control numbered nIDC. On reading the
 	//	list box, the combo box edit window value is returned as the value.
-	//	When m_DX.m_bRetrieveAndValidate is false, the list of the combo box
+	//	When m_DX.m_RetrieveAndValidate is false, the list of the combo box
 	//	is searched for an item that begins with the characters in the value
 	//	string. If a matching item is found, it is selected and copied to the
 	//	edit control. If the search is unsuccessful, the current edit control
 	//	is not changed.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			// get the current edit item text or drop list static where possible
 			int nLen = ::GetWindowTextLength(hWndCtrl);
@@ -608,7 +608,7 @@ namespace Win32xx
 	//	data exchange for the state of the combo box control appearing within
 	//	the DDX/DDV object m_DX with the control numbered nIDC. On reading the
 	//	list box, the combo box edit window value is returned as the value.
-	//	When m_DX.m_bRetrieveAndValidate is false, a case-insensitive search is
+	//	When m_DX.m_RetrieveAndValidate is false, a case-insensitive search is
 	//	made in the prevailing sort sense for the first list box string in
 	//	the combo box that matches the string specified in the value parameter.
 	//	If a matching item is found, it is selected and copied to the edit
@@ -616,7 +616,7 @@ namespace Win32xx
 	//	is not changed.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			DDX_CBString(nIDC, value);
 		}
@@ -644,7 +644,7 @@ namespace Win32xx
 	//	with the control numbered nIDC to and from the given int value.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			value = (int)::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L);
 			assert(value == BST_CHECKED || value == BST_UNCHECKED ||
@@ -675,7 +675,7 @@ namespace Win32xx
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			DateTime_GetSystemtime(hWndCtrl, &value);
 		else
 			DateTime_SetSystemtime(hWndCtrl, GDT_VALID, &value);
@@ -689,11 +689,11 @@ namespace Win32xx
 	//	state of the list box control appearing within the DDX/DDV object m_DX
 	//	with the control numbered nIDC. When this function is called, index
 	//	is set to the index of the current list box selection. If no item
-	//	is selected, index is set to LB_ERR. When m_DX.m_bRetrieveAndValidate is
+	//	is selected, index is set to LB_ERR. When m_DX.m_RetrieveAndValidate is
 	//	false, the index item is selected.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			index = (int)::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L);
 		else
 			::SendMessage(hWndCtrl, LB_SETCURSEL, (WPARAM)index, 0L);
@@ -705,11 +705,11 @@ namespace Win32xx
 	//	DDX/DDV object m_DX with the control numbered nIDC using the given
 	//	CString value. On reading the list box, the selected item is returned
 	//	in value. If no item is selected, value is set to a string of zero
-	//	length. When m_bRetrieveAndValidate is false, the item having the given
+	//	length. When m_RetrieveAndValidate is false, the item having the given
 	//	case-insensitive value as a prefix, if it exists, is selected.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			 // find the index of the item selected in the list box
 			int index = (int)::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L);
@@ -752,11 +752,11 @@ namespace Win32xx
 	//	the DDX/DDV object m_DX with the control numbered nIDC. On reading the
 	//	list box, the current list box selection is returned as the value.
 	//	If no item is selected, value is set to a string of zero length. When
-	//	m_DX.m_bRetrieveAndValidate is false, the item having the entire given
+	//	m_DX.m_RetrieveAndValidate is false, the item having the entire given
 	//	case-insensitive value as its prefix, if any exists, is selected.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			// read and return the CString value
 			DDX_LBString(nIDC, value);
@@ -797,7 +797,7 @@ namespace Win32xx
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			MonthCal_GetCurSel(hWndCtrl, &value);
 			value.wHour = 0;
@@ -816,12 +816,12 @@ namespace Win32xx
 	//	progress value for that object. It performs a data exchange for the
 	//	slider control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, value is set
-	//	to the current slider entry.  When m_DX.m_bRetrieveAndValidate
+	//	to the current slider entry.  When m_DX.m_RetrieveAndValidate
 	//	is false, the slider entry is set to value.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			value = (int) ::SendMessage(hWndCtrl, PBM_GETPOS, 0, 0);
 		else
 			::SendMessage(hWndCtrl, PBM_SETPOS, value, 0);
@@ -845,7 +845,7 @@ namespace Win32xx
 		assert(isRadioButton);
 
 		// preset the returned value to empty in case no button is set
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			value = -1;
 
 		// traverse all buttons in the group: we've already established
@@ -855,7 +855,7 @@ namespace Win32xx
 		{
 			if (isRadioButton) // this control in the group is a radio button
 			{
-				if (m_bRetrieveAndValidate) // if asked to read the control
+				if (m_RetrieveAndValidate) // if asked to read the control
 				{
 					if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L) != 0) // is this button set?
 					{
@@ -895,12 +895,12 @@ namespace Win32xx
 	//	value for that object. It performs a data exchange for the state of
 	//	the scroll bar control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, value is set
-	//	to the current scroll bar position.  When m_DX.m_bRetrieveAndValidate
+	//	to the current scroll bar position.  When m_DX.m_RetrieveAndValidate
 	//	is false, the scroll bar position is set to value.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			value = ::GetScrollPos(hWndCtrl, SB_CTL);
 		else
 			::SetScrollPos(hWndCtrl, SB_CTL, value, TRUE);
@@ -913,12 +913,12 @@ namespace Win32xx
 	//	position value for that object. It performs a data exchange for the
 	//	slider control appearing within the DDX/DDV object m_DX with
 	//	the control numbered nIDC. When this function is called, value is set
-	//	to the current slider entry.  When m_DX.m_bRetrieveAndValidate
+	//	to the current slider entry.  When m_DX.m_RetrieveAndValidate
 	//	is false, the slider entry is set to value.
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 			value = (int) ::SendMessage(hWndCtrl, TBM_GETPOS, 0, 0);
 		else
 			::SendMessage(hWndCtrl, TBM_SETPOS, TRUE, value);
@@ -936,7 +936,7 @@ namespace Win32xx
 	//	data value of type BYTE.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			BYTE oldvalue = value;
 			CString str;
@@ -963,7 +963,7 @@ namespace Win32xx
 	//	data value of type short.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			short oldvalue = value;
 			CString str;
@@ -990,7 +990,7 @@ namespace Win32xx
 	//	data value of type int.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			int oldvalue = value;
 			CString str;
@@ -1017,7 +1017,7 @@ namespace Win32xx
 	//	data value of type UINT.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			UINT oldvalue = value;
 			CString str;
@@ -1044,7 +1044,7 @@ namespace Win32xx
 	//	data value of type long.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			long oldvalue = value;
 			CString str;
@@ -1071,7 +1071,7 @@ namespace Win32xx
 	//	data value of type ULONG.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			ULONG oldvalue = value;
 			CString str;
@@ -1098,7 +1098,7 @@ namespace Win32xx
 	//	data value of type float with the given precision.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			float oldvalue = value;
 			CString str;
@@ -1125,7 +1125,7 @@ namespace Win32xx
 	//	data value of type double with the given precision.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			double oldvalue = value;
 			CString str;
@@ -1152,7 +1152,7 @@ namespace Win32xx
 	//	data value of type CString.
 	{
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			value.GetWindowText(hWndCtrl);
 		}
@@ -1170,7 +1170,7 @@ namespace Win32xx
 		assert(value);
 
 		HWND hWndCtrl = PrepareEditCtrl(nIDC);
-		if (m_bRetrieveAndValidate)
+		if (m_RetrieveAndValidate)
 		{
 			CString str;
 			str.GetWindowText(hWndCtrl);
@@ -1191,7 +1191,7 @@ namespace Win32xx
 	{
 		::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 
-		if (!m_bRetrieveAndValidate)
+		if (!m_RetrieveAndValidate)
 		{
 			TRACE(_T("Warning: CDataExchange::Fail() called while "));
 			TRACE(_T("writing to a control.\n"));
@@ -1213,14 +1213,14 @@ namespace Win32xx
 	}
 
 	//============================================================================
-	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL bRetrieveAndValidate)
+	inline void CDataExchange::Init(CWnd& dlgWnd, BOOL RetrieveAndValidate)
 	// Used by CWnd::UpdateData() to initialize the CDataExchange members.
 	{
 		// the window has to be valid
 		assert(dlgWnd.IsWindow());
 
 		// record the default action and parent window
-		m_bRetrieveAndValidate = bRetrieveAndValidate;
+		m_RetrieveAndValidate = RetrieveAndValidate;
 		m_hWndParent       = dlgWnd;
 		m_hWndLastControl  = NULL;
 	}

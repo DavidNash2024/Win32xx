@@ -94,7 +94,7 @@ namespace Win32xx
 		BOOL	SetBkColor( COLORREF clrBk ) const;
 		BOOL	SetBkImage( LVBKIMAGE& plvbkImage ) const;
 		BOOL	SetCallbackMask( UINT nMask ) const;
-		void	SetCheckState( int iItem, BOOL fCheck = TRUE ) const;
+		void	SetCheckState( int iItem, BOOL Checked = TRUE ) const;
 		BOOL	SetColumn( int iCol, const LVCOLUMN& pColumn ) const;
 		BOOL	SetColumnOrderArray( int iCount, LPINT piArray ) const;
 		BOOL	SetColumnWidth( int iCol, int cx ) const;
@@ -129,7 +129,7 @@ namespace Win32xx
 		BOOL	DeleteColumn( int iCol ) const;
 		BOOL	DeleteItem( int iItem ) const;
 		HWND	EditLabel( int iItem ) const;
-		BOOL	EnsureVisible( int iItem, BOOL fPartialOK ) const;
+		BOOL	EnsureVisible( int iItem, BOOL IsPartialOK ) const;
 		int		FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
 		int		HitTest( LVHITTESTINFO& HitTestInfo ) const;
         int		HitTest( CPoint pt, UINT* pFlags = NULL ) const;
@@ -471,12 +471,12 @@ namespace Win32xx
 		return ListView_SetCallbackMask( *this, nMask );
 	}
 
-	inline void CListView::SetCheckState( int iItem, BOOL fCheck /*= TRUE*/ ) const
+	inline void CListView::SetCheckState( int iItem, BOOL Checked /*= TRUE*/ ) const
 	// Used to select or deselect an item in a list-view control.
 	// This macro should only be used for list-view controls with the LVS_EX_CHECKBOXES style.
 	{
 		assert(IsWindow());
-		ListView_SetItemState(*this, iItem, INDEXTOSTATEIMAGEMASK((fCheck!=FALSE)?2:1),LVIS_STATEIMAGEMASK);
+		ListView_SetItemState(*this, iItem, INDEXTOSTATEIMAGEMASK((Checked!=FALSE)?2:1),LVIS_STATEIMAGEMASK);
 	}
 
 	inline BOOL CListView::SetColumn( int iCol, const LVCOLUMN& Column ) const
@@ -742,12 +742,12 @@ namespace Win32xx
 		return ListView_EditLabel( *this, iItem );
 	}
 
-	inline BOOL CListView::EnsureVisible( int iItem, BOOL fPartialOK ) const
+	inline BOOL CListView::EnsureVisible( int iItem, BOOL IsPartialOK ) const
 	// Ensures that a list-view item is either entirely or partially visible,
 	// scrolling the list-view control if necessary.
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)fPartialOK ));
+		return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)IsPartialOK ));
 	}
 
 	inline int CListView::FindItem( LVFINDINFO& FindInfo, int iStart /*= -1*/ ) const

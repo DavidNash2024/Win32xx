@@ -173,8 +173,8 @@ namespace Win32xx
 			CRect rcInit;
 			CRect rcOld;
 			Alignment corner;
-			BOOL bFixedWidth;
-			BOOL bFixedHeight;
+			BOOL IsFixedWidth;
+			BOOL IsFixedHeight;
     		HWND hWnd;
 		};
 
@@ -358,10 +358,10 @@ namespace Win32xx
 		case WM_ERASEBKGND:
 			{
 				CDC dc((HDC)wParam);
-				BOOL bResult;
+				BOOL PreventErasure;
 				
-				bResult = OnEraseBkgnd(dc);
-				if (bResult) return TRUE;
+				PreventErasure = OnEraseBkgnd(dc);
+				if (PreventErasure) return TRUE;
 			}
 			break;
 
@@ -686,15 +686,15 @@ namespace Win32xx
 	//
 	// The alignment corner should be set to the closest corner of the dialog. Allowed
 	// values are topleft, topright, bottomleft, and bottomright.
-	// Set bFixedWidth to TRUE if the width should be fixed instead of variable.
-	// Set bFixedHeight to TRUE if the height should be fixed instead of variable.
+	// Set IsFixedWidth to TRUE if the width should be fixed instead of variable.
+	// Set IsFixedHeight to TRUE if the height should be fixed instead of variable.
 	{
 		assert(hWnd);
 
     	ResizeData rd;
     	rd.corner = corner;
-    	rd.bFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
-    	rd.bFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
+    	rd.IsFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
+    	rd.IsFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
 		CRect rcInit;
 		::GetWindowRect(hWnd, &rcInit);
 		::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2);
@@ -908,26 +908,26 @@ namespace Win32xx
 			switch( (*iter).corner )
     		{
     		case topleft:
-				width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+				width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
     			left   = (*iter).rcInit.left;
     			top    = (*iter).rcInit.top;
     			break;
     		case topright:
-    			width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+    			width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
     			left   = (*iter).rcInit.right - width - m_rcInit.Width() + rcCurrent.Width();
     			top    = (*iter).rcInit.top;
     			break;
     		case bottomleft:
-				width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+				width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
     			left   = (*iter).rcInit.left;
     			top    = (*iter).rcInit.bottom - height - m_rcInit.Height() + rcCurrent.Height();
     			break;
     		case bottomright:
-    			width  = (*iter).bFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-    			height = (*iter).bFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
+    			width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
+    			height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
     			left   = (*iter).rcInit.right   - width - m_rcInit.Width() + rcCurrent.Width();
     			top    = (*iter).rcInit.bottom  - height - m_rcInit.Height() + rcCurrent.Height();
     			break;
