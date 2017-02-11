@@ -375,11 +375,11 @@ namespace Win32xx
 
 	inline BOOL CMenuBar::IsMDIChildMaxed() const
 	{
-		BOOL bMaxed = FALSE;
+		BOOL IsMaxed = FALSE;
 		if (GetMDIClient())
-			GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
+			GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&IsMaxed);
 
-		return bMaxed;
+		return IsMaxed;
 	}
 
 	inline BOOL CMenuBar::IsMDIFrame() const
@@ -857,13 +857,13 @@ namespace Win32xx
 		pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
 
 		// Display the shortcut menu
-		BOOL bRightToLeft = FALSE;
+		BOOL IsRightToLeft = FALSE;
 
 #if (WINVER >= 0x0500)
-		bRightToLeft = ((GetAncestor().GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
+		IsRightToLeft = ((GetAncestor().GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
 #endif
 
-		int xPos = bRightToLeft? rc.right : rc.left;
+		int xPos = IsRightToLeft? rc.right : rc.left;
 		UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
 			xPos, rc.bottom, *this, &tpm);
 

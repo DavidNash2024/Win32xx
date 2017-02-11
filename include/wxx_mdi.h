@@ -130,7 +130,7 @@ namespace Win32xx
 
 	/////////////////////////////////////
 	// Declaration of the CMDIFrame class
-	// 
+	//
 	template <class T>
 	class CMDIClient : public T		// The template parameter T is either CWnd, or CDocker::CDockClient
 	{
@@ -179,7 +179,7 @@ namespace Win32xx
 		void SetActiveMDIChild(CMDIChild* pChild);
 
 	protected:
-		// Overridable virtual functions	
+		// Overridable virtual functions
 		virtual void    OnClose();
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMDIActivated(UINT uMsg, WPARAM wParam, LPARAM);
@@ -350,9 +350,9 @@ namespace Win32xx
 	inline BOOL CMDIFrameT<T>::IsMDIChildMaxed() const
 	// Returns TRUE if a MDI child is maximized
 	{
-		BOOL bMaxed = FALSE;
-		GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMaxed);
-		return bMaxed;
+		BOOL IsMaxed = FALSE;
+		GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&IsMaxed);
+		return IsMaxed;
 	}
 
 	template <class T>
@@ -506,7 +506,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::OnMDIMaximized(BOOL IsMax)
 	// Called when a MDI Child maximized state of the MDI child is checked
 	{
-		// Override this function to take an action when a MDI child is 
+		// Override this function to take an action when a MDI child is
 		// maximized or restored from maximized.
 
 		UNREFERENCED_PARAMETER(IsMax);
@@ -572,7 +572,7 @@ namespace Win32xx
 	inline BOOL CMDIFrameT<T>::RemoveAllMDIChildren()
 	// Removes all MDI children.
 	{
-		BOOL bResult = TRUE;
+		BOOL Succeeded = TRUE;
 		int Children = (int)m_vMDIChild.size();
 
 		// Remove the children in reverse order
@@ -584,10 +584,10 @@ namespace Win32xx
 			pMDIChild->SendMessage(WM_SYSCOMMAND, SC_CLOSE, 0L);
 
 			if (pMDIChild->IsWindow())
-				bResult = FALSE;
+				Succeeded = FALSE;
 		}
 
-		return bResult;
+		return Succeeded;
 	}
 
 	template <class T>
@@ -635,9 +635,6 @@ namespace Win32xx
 		assert ( pChild->IsWindow() );
 
 		GetMDIClient().SendMessage(WM_MDIACTIVATE, (WPARAM)pChild->GetHwnd(), 0L);
-
-		// Verify
-		assert ( m_hActiveMDIChild == pChild->GetHwnd() );
 	}
 
 	template <class T>
@@ -791,11 +788,11 @@ namespace Win32xx
 		PreCreate(cs);
 
 		//Determine if the window should be created maximized
-		BOOL bMax = FALSE;
+		BOOL Max = FALSE;
 		CWnd* pParent = GetCWndPtr(hWndParent);
 		assert(pParent);
-		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&bMax);
-		bMax = bMax | (cs.style & WS_MAXIMIZE);
+		pParent->SendMessage(WM_MDIGETACTIVE, 0L, (LPARAM)&Max);
+		Max = Max | (cs.style & WS_MAXIMIZE);
 
 		// Set the Window Class Name
 		CString ClassName = _T("Win32++ MDI Child");
@@ -830,7 +827,7 @@ namespace Win32xx
 		CreateEx(dwExStyle, ClassName, cs.lpszName, dwStyle, x, y,
 			cx, cy, pParent->GetHwnd(), cs.hMenu, cs.lpCreateParams);
 
-		if (bMax)
+		if (Max)
 			ShowWindow(SW_MAXIMIZE);
 
 		// Turn redraw back on

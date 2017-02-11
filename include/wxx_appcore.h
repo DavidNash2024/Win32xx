@@ -232,7 +232,7 @@ namespace Win32xx
 		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
 		// keyboard and mouse events.
 
-		BOOL Processed = FALSE;
+		BOOL IsProcessed = FALSE;
 
 		// only pre-translate mouse and keyboard input events
 		if ((Msg.message >= WM_KEYFIRST && Msg.message <= WM_KEYLAST) ||
@@ -240,7 +240,7 @@ namespace Win32xx
 		{
 			// Process keyboard accelerators
 			if ( ::TranslateAccelerator(GetAcceleratorsWindow(), GetAcceleratorTable(), &Msg))
-				Processed = TRUE;
+				IsProcessed = TRUE;
 			else
 			{
 				// Search the chain of parents for pretranslated messages.
@@ -249,15 +249,15 @@ namespace Win32xx
 					CWnd* pWnd = GetApp().GetCWndFromMap(hWnd);
 					if (pWnd)
 					{
-						Processed = pWnd->PreTranslateMessage(Msg);
-						if(Processed)
+						IsProcessed = pWnd->PreTranslateMessage(Msg);
+						if(IsProcessed)
 							break;
 					}
 				}
 			}
 		}
 
-		return Processed;
+		return IsProcessed;
 	}
 
 	inline BOOL CWinThread::PostThreadMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) const

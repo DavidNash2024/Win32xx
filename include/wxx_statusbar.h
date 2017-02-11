@@ -73,7 +73,7 @@ namespace Win32xx
 		CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
 
 		BOOL CreateParts(int iParts, const int iPaneWidths[]) const;
-		void SetSimple(BOOL fSimple = TRUE) const;
+		void SetSimple(BOOL IsSimple = TRUE) const;
 	};
 
 }
@@ -177,11 +177,11 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		
-		BOOL bResult = FALSE;
+		BOOL Succeeded = FALSE;
 		if (static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L) >= iPart))
-			bResult = static_cast<BOOL>(SendMessage(SB_SETTEXT, (WPARAM)(iPart | Style), (LPARAM)szText));
+			Succeeded = static_cast<BOOL>(SendMessage(SB_SETTEXT, (WPARAM)(iPart | Style), (LPARAM)szText));
 
-		return bResult;
+		return Succeeded;
 	}
 
 	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon) const
@@ -223,17 +223,17 @@ namespace Win32xx
 		}
 
 		// Set the StatusBar parts with our new parts count and part widths
-		BOOL bResult = static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)NewPartsCount, (LPARAM)pNewPartWidthArray));
+		BOOL Succeeded = static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)NewPartsCount, (LPARAM)pNewPartWidthArray));
 
-		return bResult;
+		return Succeeded;
 	}
 
-	inline void CStatusBar::SetSimple(BOOL fSimple /* = TRUE*/) const
+	inline void CStatusBar::SetSimple(BOOL IsSimple /* = TRUE*/) const
 	// Specifies whether a status window displays simple text or displays all window parts
 	//  set by a previous SB_SETPARTS message.
 	{
 		assert(IsWindow());
-		SendMessage(SB_SIMPLE, (WPARAM)fSimple, 0L);
+		SendMessage(SB_SIMPLE, (WPARAM)IsSimple, 0L);
 	}
 
 } // namespace Win32xx

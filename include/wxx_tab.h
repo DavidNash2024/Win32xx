@@ -110,12 +110,12 @@ namespace Win32xx
 		virtual void RecalcLayout();
 		virtual void RemoveTabPage(int nPage);
 		virtual void SelectPage(int nPage);
-		virtual void SetFixedWidth(BOOL bEnabled);
-		virtual void SetFont(HFONT hFont, BOOL bRedraw = 1);
-		virtual void SetOwnerDraw(BOOL bEnabled);
-		virtual void SetShowButtons(BOOL bShow);
+		virtual void SetFixedWidth(BOOL IsEnabled);
+		virtual void SetFont(HFONT hFont, BOOL Redraw = TRUE);
+		virtual void SetOwnerDraw(BOOL IsEnabled);
+		virtual void SetShowButtons(BOOL Show);
 		virtual void SetTabIcon(int i, HICON hIcon);
-		virtual void SetTabsAtTop(BOOL bTop);
+		virtual void SetTabsAtTop(BOOL IsAtTop);
 		virtual void SetTabText(UINT nTab, LPCTSTR szText);
 		virtual void ShowListDialog();
 		virtual void ShowListMenu();
@@ -132,7 +132,7 @@ namespace Win32xx
 		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
-		void		AdjustRect(BOOL fLarger, RECT *prc) const;
+		void		AdjustRect(BOOL IsLarger, RECT *prc) const;
 		BOOL		DeleteAllItems() const;
 		BOOL		DeleteItem(int iItem) const;
 		void		DeselectAll(UINT fExcludeFocus) const;
@@ -145,7 +145,7 @@ namespace Win32xx
 		BOOL		GetItemRect(int iItem, RECT& rc) const;
 		int			GetRowCount() const;
 		HWND		GetToolTips() const;
-		BOOL		HighlightItem(INT idItem, WORD fHighlight) const;
+		BOOL		HighlightItem(INT idItem, WORD Highlight) const;
 		int			HitTest(TCHITTESTINFO& info) const;
 		int			InsertItem(int iItem, const LPTCITEM pItem) const;
 		void		RemoveImage(int iImage) const;
@@ -787,7 +787,7 @@ namespace Win32xx
 		NMHDR nmhdr;
 		ZeroMemory(&nmhdr, sizeof(NMHDR));
 		nmhdr.hwndFrom = *this;
-		nmhdr.code = UWN_TABCHANGED;
+		nmhdr.code = UMN_TABCHANGED;
 
 		if (GetParent().IsWindow())
 			GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
@@ -1220,11 +1220,11 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::SetFixedWidth(BOOL bEnabled)
+	inline void CTab::SetFixedWidth(BOOL IsEnabled)
 	// Enable or disable fixed tab width.
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-		if (bEnabled)
+		if (IsEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_FIXEDWIDTH);
 
@@ -1243,19 +1243,19 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	inline void CTab::SetFont(HFONT hFont, BOOL bRedraw /* = 1 */)
+	inline void CTab::SetFont(HFONT hFont, BOOL Redraw /* = 1 */)
 	// Sets the font and adjusts the tab height to match
 	{
 		int HeightGap = 5;
 		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
-		CWnd::SetFont(hFont, bRedraw);
+		CWnd::SetFont(hFont, Redraw);
 	}
 
-	inline void CTab::SetOwnerDraw(BOOL bEnabled)
+	inline void CTab::SetOwnerDraw(BOOL IsEnabled)
 	// Enable or disable owner draw
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-		if (bEnabled)
+		if (IsEnabled)
 		{
 			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
 
@@ -1274,10 +1274,10 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
-	inline void CTab::SetShowButtons(BOOL bShow)
+	inline void CTab::SetShowButtons(BOOL Show)
 	// Allows the list and close buttons to be shown or hidden.
 	{
-		m_IsShowingButtons = bShow;
+		m_IsShowingButtons = Show;
 		RecalcLayout();
 	}
 
@@ -1302,12 +1302,12 @@ namespace Win32xx
 		}
 	}
 
-	inline void CTab::SetTabsAtTop(BOOL bTop)
+	inline void CTab::SetTabsAtTop(BOOL IsAtTop)
 	// Positions the tabs at the top or bottom of the control
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 
-		if (bTop)
+		if (IsAtTop)
 			dwStyle &= ~TCS_BOTTOM;
 		else
 			dwStyle |= TCS_BOTTOM;
@@ -1489,12 +1489,12 @@ namespace Win32xx
 	}
 
 	// Wrappers for Win32 Macros
-	inline void CTab::AdjustRect(BOOL fLarger, RECT *prc) const
+	inline void CTab::AdjustRect(BOOL IsLarger, RECT *prc) const
 	// Calculates a tab control's display area given a window rectangle, or calculates
 	//  the window rectangle that would correspond to a specified display area.
 	{
 		assert(IsWindow());
-		TabCtrl_AdjustRect(*this, fLarger, prc);
+		TabCtrl_AdjustRect(*this, IsLarger, prc);
 	}
 
 	inline BOOL CTab::DeleteAllItems() const
@@ -1582,11 +1582,11 @@ namespace Win32xx
 		return TabCtrl_GetToolTips(*this);
 	}
 
-	inline BOOL CTab::HighlightItem(INT idItem, WORD fHighlight) const
+	inline BOOL CTab::HighlightItem(INT idItem, WORD Highlight) const
 	// Sets the highlight state of a tab item.
 	{
 		assert(IsWindow());
-		return TabCtrl_HighlightItem(*this, idItem, fHighlight);
+		return TabCtrl_HighlightItem(*this, idItem, Highlight);
 	}
 
 	inline int CTab::HitTest(TCHITTESTINFO& info) const
@@ -1797,7 +1797,7 @@ namespace Win32xx
 
 	inline BOOL CTabbedMDI::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
-		BOOL bResult = FALSE;
+		BOOL IsLoaded = FALSE;
 
 		if (szKeyName)
 		{
@@ -1828,17 +1828,17 @@ namespace Win32xx
 						AddMDIChild(pWnd, TabText, dwIDTab);
 						i++;
 						SubKeyName.Format(_T("ID%d"), i);
-						bResult = TRUE;
+						IsLoaded = TRUE;
 					}
 					else
 					{
 						TRACE("Failed to get TabbedMDI info from registry");
-						bResult = FALSE;
+						IsLoaded = FALSE;
 						break;
 					}
 				}
 
-				if (bResult)
+				if (IsLoaded)
 				{
 					// Load Active MDI Tab from the registry
 					SubKeyName = _T("Active MDI Tab");
@@ -1851,10 +1851,10 @@ namespace Win32xx
 			}
 		}
 
-		if (!bResult)
+		if (!IsLoaded)
 			CloseAllMDIChildren();
 
-		return bResult;
+		return IsLoaded;
 	}
 
 	inline CWnd* CTabbedMDI::NewMDIChildFromID(int /*idMDIChild*/)
@@ -1897,7 +1897,7 @@ namespace Win32xx
 		switch(pnmhdr->code)
 		{
 
-		case UWN_TABCHANGED:
+		case UMN_TABCHANGED:
 			RecalcLayout();
 			break;
 

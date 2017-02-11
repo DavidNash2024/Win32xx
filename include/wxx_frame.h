@@ -400,7 +400,7 @@ namespace Win32xx
 		virtual void AddMenuBarBand();
 		virtual void AddMRUEntry(LPCTSTR szMRUEntry);
 		virtual void AddToolBarBand(CToolBar& TB, DWORD dwBandStyle, UINT nID);
-		virtual void AddToolBarButton(UINT nID, BOOL bEnabled = TRUE, LPCTSTR szText = 0, int iImage = -1);
+		virtual void AddToolBarButton(UINT nID, BOOL IsEnabled = TRUE, LPCTSTR szText = 0, int iImage = -1);
 		virtual void CreateToolBar();
 		virtual LRESULT CustomDrawMenuBar(NMHDR* pNMHDR);
 		virtual LRESULT CustomDrawToolBar(NMHDR* pNMHDR);
@@ -455,9 +455,9 @@ namespace Win32xx
 		virtual void SetupToolBar();
 		virtual void SetTheme();
 		virtual void SetToolBarImages(COLORREF crMask, UINT ToolBarID, UINT ToolBarHotID, UINT ToolBarDisabledID);
-		virtual void ShowMenu(BOOL bShow);
-		virtual void ShowStatusBar(BOOL bShow);
-		virtual void ShowToolBar(BOOL bShow);		
+		virtual void ShowMenu(BOOL Show);
+		virtual void ShowStatusBar(BOOL Show);
+		virtual void ShowToolBar(BOOL Show);		
 		virtual void UpdateMRUMenu();
 
 		// Not intended to be overridden
@@ -1139,13 +1139,13 @@ namespace Win32xx
 	}
 
 	template <class T>
-	inline void CFrameT<T>::AddToolBarButton(UINT nID, BOOL bEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */, int iImage /* = -1 */)
+	inline void CFrameT<T>::AddToolBarButton(UINT nID, BOOL IsEnabled /* = TRUE*/, LPCTSTR szText /* = 0 */, int iImage /* = -1 */)
 	// Adds Resource IDs to toolbar buttons.
 	// A resource ID of 0 is a separator
 	{
 		GetToolBarData().push_back(nID);
 
-		GetToolBar().AddButton(nID, bEnabled, iImage);
+		GetToolBar().AddButton(nID, IsEnabled, iImage);
 
 		if(0 != szText)
 			GetToolBar().SetButtonText(nID, szText);
@@ -1593,13 +1593,13 @@ namespace Win32xx
 		}
 		else
 		{
-			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			BOOL bSelected = pdis->itemState & ODS_SELECTED;
+			BOOL IsDisabled = pdis->itemState & ODS_GRAYED;
+			BOOL IsSelected = pdis->itemState & ODS_SELECTED;
 			CRect rcDraw = pdis->rcItem;
 			CDC dcDraw(pdis->hDC);
 			MenuTheme& MBT = GetMenuBarTheme();
 
-			if ((bSelected) && (!bDisabled))
+			if ((IsSelected) && (!IsDisabled))
 			{
 				// draw selected item background
 				CBrush Brush(MBT.clrHot1);
@@ -1720,8 +1720,8 @@ namespace Win32xx
 		// draw the image
 		if (iImage >= 0 )
 		{
-			BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-			if ((bDisabled) && (m_imlMenuDis.GetHandle()))
+			BOOL IsDisabled = pdis->itemState & ODS_GRAYED;
+			if ((IsDisabled) && (m_imlMenuDis.GetHandle()))
 				m_imlMenuDis.Draw(pdis->hDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
 			else
 				m_imlMenu.Draw(pdis->hDC, iImage, CPoint(rc.left, rc.top), ILD_TRANSPARENT);
@@ -1734,8 +1734,8 @@ namespace Win32xx
 	{
 		MenuItemData* pmid = reinterpret_cast<MenuItemData*>(pdis->itemData);
 		LPCTSTR ItemText = pmid->GetItemText();
-		BOOL bDisabled = pdis->itemState & ODS_GRAYED;
-		COLORREF colorText = GetSysColor(bDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
+		BOOL IsDisabled = pdis->itemState & ODS_GRAYED;
+		COLORREF colorText = GetSysColor(IsDisabled ?  COLOR_GRAYTEXT : COLOR_MENUTEXT);
 
 		// Calculate the text rect size
 		CRect rcText = GetMenuMetrics().GetTextRect(pdis->rcItem);
@@ -2096,7 +2096,7 @@ namespace Win32xx
 		assert(!m_strKeyName.IsEmpty()); // KeyName must be set before calling LoadRegistryMRUSettings
 
 		CRegKey Key;
-		BOOL bRet = FALSE;
+		BOOL SettingsLoaded = FALSE;
 		SetMRULimit(nMaxMRU);
 		std::vector<CString> vMRUEntries;
 		CString strKey = _T("Software\\") + m_strKeyName + _T("\\Recent Files");
@@ -2130,10 +2130,10 @@ namespace Win32xx
 
 			// successfully loaded all MRU values, so store them
 			m_vMRUEntries = vMRUEntries;
-			bRet = TRUE;
+			SettingsLoaded = TRUE;
 		}
 
-		return bRet;
+		return SettingsLoaded;
 	}
 
 	template <class T>
@@ -3045,8 +3045,8 @@ namespace Win32xx
 		if (IsMenuBarUsed())
 		{
 			GetMenuBar().SetMenu( GetFrameMenu() );
-			BOOL bShow = (hMenu != NULL);	// boolean expression
-			ShowMenu(bShow);
+			BOOL Show = (hMenu != NULL);	// boolean expression
+			ShowMenu(Show);
 		}
 		else
 		{
@@ -3541,10 +3541,10 @@ namespace Win32xx
 	}
 
 	template <class T>
-	inline void CFrameT<T>::ShowMenu(BOOL bShow)
+	inline void CFrameT<T>::ShowMenu(BOOL Show)
 	// Hides or shows the menu
 	{
-		if (bShow)
+		if (Show)
 		{
 			if (IsReBarUsed())
 				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), TRUE);
@@ -3570,12 +3570,12 @@ namespace Win32xx
 	}
 
 	template <class T>
-	inline void CFrameT<T>::ShowStatusBar(BOOL bShow)
+	inline void CFrameT<T>::ShowStatusBar(BOOL Show)
 	// Hides or shows the status bar
 	{
 		if (GetStatusBar().IsWindow())
 		{
-			if (bShow)
+			if (Show)
 			{
 				GetStatusBar().ShowWindow(SW_SHOW);
 			}
@@ -3591,12 +3591,12 @@ namespace Win32xx
 	}
 
 	template <class T>
-	inline void CFrameT<T>::ShowToolBar(BOOL bShow)
+	inline void CFrameT<T>::ShowToolBar(BOOL Show)
 	// Hides or shows the tool bar
 	{
 		if (GetToolBar().IsWindow())
 		{
-			if (bShow)
+			if (Show)
 			{
 				if (IsReBarUsed())
 					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), TRUE);
@@ -3738,15 +3738,15 @@ namespace Win32xx
 				mii.wID = IDW_FILE_MRU_FILE1 + index;
 				mii.dwTypeData = const_cast<LPTSTR>(MRUStrings[index].c_str());
 
-				BOOL bResult;
+				BOOL Succeeded;
 				if (index == MaxMRUIndex)
 					// Replace the last MRU entry first
-					bResult = FileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
+					Succeeded = FileMenu.SetMenuItemInfo(IDW_FILE_MRU_FILE1, mii, FALSE);
 				else
 					// Insert the other MRU entries next
-					bResult = FileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
+					Succeeded = FileMenu.InsertMenuItem(IDW_FILE_MRU_FILE1 + index + 1, mii, FALSE);
 
-				if (!bResult)
+				if (!Succeeded)
 				{
 					TRACE("Failed to set MRU menu item\n");
 					break;

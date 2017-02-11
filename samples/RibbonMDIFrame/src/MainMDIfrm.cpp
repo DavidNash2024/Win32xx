@@ -90,10 +90,10 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
 	{
 		// Set the initial status bar check box
 		InitValues Values = GetInitValues();
-		BOOL boolValue = Values.ShowStatusBar;
+		BOOL ShowStatusBar = Values.ShowStatusBar;
 		PROPVARIANT var;
 
-		InitPropVariantFromBoolean(boolValue, &var);
+		InitPropVariantFromBoolean(ShowStatusBar, &var);
 		GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SHOWSTATUS, UI_PKEY_BooleanValue, var);
 
 		// Disable some Ribbon buttons
