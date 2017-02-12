@@ -27,8 +27,8 @@ public:
 	virtual ~CViewText() {}
 
 protected:
+	virtual void OnAttach();
 	virtual void PreCreate(CREATESTRUCT& cs); 
-	virtual void OnInitialUpdate(); 
 
 };
 
@@ -37,7 +37,7 @@ class CViewTree : public CTreeView
 public:
 	CViewTree();
 	virtual ~CViewTree();
-	virtual void OnInitialUpdate();
+	virtual void OnAttach();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:
@@ -52,7 +52,7 @@ public:
 	virtual ~CViewList();
 	virtual int  AddItem(LPCTSTR szText, int nImage);
 	virtual void InsertItems();
-	virtual void OnInitialUpdate();
+	virtual void OnAttach();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 

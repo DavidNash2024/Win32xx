@@ -23,8 +23,8 @@ public:
 	void ViewReport();
 
 protected:
+	virtual void OnAttach();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
 	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);
 	virtual LRESULT OnNMReturn(LPNMHDR pNMHDR);

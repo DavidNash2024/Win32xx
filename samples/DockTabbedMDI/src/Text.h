@@ -23,10 +23,9 @@ public:
 	void OnEditUndo();
 
 protected:
+	virtual void OnAttach();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnInitialUpdate();
 	void PreCreate(CREATESTRUCT& cs);
-
 
 private:
 	CFont m_Font;

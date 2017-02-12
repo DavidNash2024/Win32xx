@@ -16,8 +16,8 @@ public:
 	virtual ~CViewFiles();
 	virtual int  AddItem(LPCTSTR szText, int nImage);
 	virtual void InsertItems();
+	virtual void OnAttach();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 

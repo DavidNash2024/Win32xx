@@ -19,7 +19,7 @@ CViewOutput::~CViewOutput()
 {
 }
 
-void CViewOutput::OnInitialUpdate()
+void CViewOutput::OnAttach()
 {
 	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));

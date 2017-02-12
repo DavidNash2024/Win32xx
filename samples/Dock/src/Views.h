@@ -30,8 +30,8 @@ public:
 	virtual ~CViewText() {}
 
 protected:
+	virtual void OnAttach();
 	virtual void PreCreate(CREATESTRUCT& cs); 
-	virtual void OnInitialUpdate(); 
 
 };
 
@@ -43,8 +43,8 @@ public:
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 protected:
+	virtual void OnAttach();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
@@ -58,8 +58,8 @@ public:
 	virtual ~CViewList();
 	virtual int  AddItem(LPCTSTR szText, int nImage);
 	virtual void InsertItems();
+	virtual void OnAttach();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

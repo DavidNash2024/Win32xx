@@ -37,12 +37,7 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
-void CViewClasses::OnDestroy()
-{
-	SetImageList(NULL, LVSIL_SMALL);
-}
-
-void CViewClasses::OnInitialUpdate()
+void CViewClasses::OnAttach()
 {
 	//set the image lists
 	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -76,6 +71,11 @@ void CViewClasses::OnInitialUpdate()
 	// Expand some tree-view items
 	Expand(htiRoot, TVE_EXPAND);
 	Expand(htiCTreeViewApp, TVE_EXPAND);
+}
+
+void CViewClasses::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
 }
 
 void CViewClasses::PreCreate(CREATESTRUCT& cs)

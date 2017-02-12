@@ -55,7 +55,6 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-
 int CMDIChildText::OnCreate(CREATESTRUCT& cs)
 {
 	SetWindowText(_T("Text Window"));

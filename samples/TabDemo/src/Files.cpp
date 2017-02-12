@@ -19,7 +19,7 @@ CViewFiles::~CViewFiles()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewFiles::OnInitialUpdate()
+void CViewFiles::OnAttach()
 {
 	// Set the image lists
 	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);

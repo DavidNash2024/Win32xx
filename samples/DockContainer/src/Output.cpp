@@ -19,7 +19,7 @@ CViewOutput::~CViewOutput()
 {
 }
 
-void CViewOutput::OnInitialUpdate()
+void CViewOutput::OnAttach()
 {
 	SetWindowText(_T("Output Window"));
 }

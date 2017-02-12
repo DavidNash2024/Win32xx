@@ -14,6 +14,18 @@ CRichView::~CRichView()
 {
 }
 
+void CRichView::OnAttach()
+{
+	//increase the text limit of the rich edit window
+	LimitText(-1);
+
+	//Determine which messages will be passed to the parent
+	DWORD dwMask = ENM_KEYEVENTS | ENM_DROPFILES;
+	SetEventMask(dwMask);
+
+	SetFontDefaults();
+}
+
 void CRichView::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
@@ -21,18 +33,6 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
 
 	cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
 	cs.lpszClass = RICHEDIT_CLASS; // RichEdit ver 2.0
-}
-
-void CRichView::OnInitialUpdate()
-{
-	//increase the text limit of the rich edit window
-	LimitText(-1);
-
-	//Determine which messages will be passed to the parent
-	DWORD dwMask = ENM_KEYEVENTS | ENM_DROPFILES ;
-	SetEventMask(dwMask);
-
-	SetFontDefaults();
 }
 
 void CRichView::SetFontDefaults()

@@ -18,7 +18,7 @@ public:
 
 protected:
 	virtual void PreCreate(CREATESTRUCT& cs); 
-	virtual void OnInitialUpdate(); 
+	virtual void OnAttach(); 
 
 };
 
