@@ -321,7 +321,6 @@ namespace Win32xx
 		protected:
 			virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT	OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-			virtual LRESULT	OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCCalcSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 			virtual LRESULT OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1022,6 +1021,7 @@ namespace Win32xx
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDocker->IsDocked())
 			{
+				// Give the view window focus unless its child already has it
 				if (!GetView().IsChild(GetFocus()))
 					GetView().SetFocus();
 
@@ -1053,6 +1053,7 @@ namespace Win32xx
 			m_Oldpt.y = GET_Y_LPARAM(lParam);
 			if (m_pDocker->IsDocked())
 			{
+				// Give the view window focus unless its child already has it
 				if (!GetView().IsChild(GetFocus()))
 					GetView().SetFocus();
 
@@ -1107,17 +1108,6 @@ namespace Win32xx
 		ReleaseCapture();
 		CWindowDC dc(*this);
 		DrawCloseButton(dc, m_IsOldFocusStored);
-
-		return FinalWindowProc(uMsg, wParam, lParam);
-	}
-
-	inline LRESULT CDocker::CDockClient::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// Focus changed, so redraw the captions
-	{
-		if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CAPTION))
-		{
-			m_pDocker->GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE, 0, 0);
-		}
 
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
@@ -1890,7 +1880,8 @@ namespace Win32xx
 	//
 	inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockActive(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), 
 					m_IsClosing(FALSE), m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
-					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0)
+					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), 
+					m_hDockUnderPoint(0)
 	{
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
@@ -2195,7 +2186,10 @@ namespace Win32xx
 		{
 			GetAncestor().SetForegroundWindow();
 
-			pDocker->GetView().SetFocus();
+			// Give the view window focus unless its child already has it
+			if (!pDocker->GetView().IsChild(GetFocus()))
+				pDocker->GetView().SetFocus();
+
 			GetTopmostDocker()->SetRedraw(FALSE);
 			RecalcDockLayout();
 			GetTopmostDocker()->SetRedraw(TRUE);
@@ -2297,9 +2291,10 @@ namespace Win32xx
 			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / (double)GetDockAncestor()->GetWindowRect().Height();
 		}
 
-		// Redraw the docked windows
-		GetAncestor().SetFocus();
-		pDocker->GetView().SetFocus();
+		// Give the view window focus unless its child already has it
+		if (!pDocker->GetView().IsChild(GetFocus()))
+			pDocker->GetView().SetFocus();
+
 		RecalcDockLayout();
 
 		// Update the Dock captions
@@ -2859,9 +2854,16 @@ namespace Win32xx
 		return pDocker;
 	}
 
-	inline LRESULT CDocker::OnActivate(UINT, WPARAM, LPARAM)
+	inline LRESULT CDocker::OnActivate(UINT, WPARAM wParam, LPARAM)
 	{
 		GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
+
+		if ((wParam != WA_INACTIVE) && (this != GetDockAncestor()) && IsUndocked())
+		{
+			// Give the view window focus unless its child already has it
+			if (!GetView().IsChild(GetFocus()))
+				GetView().SetFocus();
+		}
 
 		return 0L;
 	}
@@ -3124,14 +3126,10 @@ namespace Win32xx
 	{
 		CPoint pt = GetCursorPos();
 
-		if (IsWindow() && PtInRect(GetDockClient().GetWindowRect(), pt))
+		if (PtInRect(GetDockClient().GetWindowRect(), pt)) // only for this docker
 		{
 			GetDockAncestor()->m_pDockActive = this;
 			DrawAllCaptions();
-
-			// If the view window won't accept focus, give it to the DockClient
-			if (!GetView().IsChild(GetFocus()))
-				GetDockClient().GetView().SetFocus();
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -3733,7 +3731,7 @@ namespace Win32xx
 				pDock->GetView().SetFocus();
 
 			// If the view window won't accept focus, give it to the DockClient
-			if (!pDock->GetView().IsChild(GetFocus()))
+			if (!pDock->GetDockClient().IsChild(GetFocus()))
 				pDock->GetDockClient().GetView().SetFocus();
 
 			// Update the captions
@@ -3992,6 +3990,10 @@ namespace Win32xx
 		{
 			SetUndockPosition(pt);
 		}
+
+		// Give the view window focus unless its child already has it
+		if (!GetView().IsChild(GetFocus()))
+			GetView().SetFocus();
 
 		RecalcDockLayout();
 		if ((pDockUndockedFrom) && (pDockUndockedFrom->GetTopmostDocker() != GetTopmostDocker()))

@@ -30,7 +30,6 @@ void CMainFrame::OnInitialUpdate()
 {
 	DragAcceptFiles(TRUE);
 	SetWindowTitle();
-	m_RichView.SetFocus();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -622,7 +621,6 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case UWM_CHANGEVIEW:
 		SetView(m_RichView);
-		m_RichView.SetFocus();
 
 		// Supress Frame drawing
 		SetRedraw(FALSE);

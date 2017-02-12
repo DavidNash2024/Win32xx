@@ -81,7 +81,7 @@ void CView::OnDraw(CDC& dc)
 
 	// Centre some text in our view window
 	CRect rc = GetClientRect();
-	CString cs = LoadString(IDW_MAIN);
+	CString cs = LoadString(IDS_DRAWTEXT);
 	dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 

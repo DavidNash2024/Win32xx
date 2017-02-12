@@ -40,39 +40,3 @@ CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
 	return pView;
 }
 
-LRESULT CMyTabbedMDI::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	UINT_PTR nIDTimer = 101;
-
-	switch(uMsg)
-	{
-	case WM_PARENTNOTIFY:
-		{
-			if (LOWORD(wParam) == WM_LBUTTONDOWN)
-			{
-				// Test if we are over a tab. If so, set at timer.
-				CPoint pt = GetCursorPos();
-				ScreenToClient(pt);
-				TCHITTESTINFO info;
-				ZeroMemory(&info, sizeof(TCHITTESTINFO));
-				info.pt = pt;
-				GetTab().HitTest(info);
-				if (info.flags != TCHT_NOWHERE) 
-					SetTimer(nIDTimer, 100, NULL);
-			}
-		}
-		break;
-	case WM_TIMER:
-		if (wParam == nIDTimer)
-		{
-			KillTimer(nIDTimer);
-
-			// return focus to active child when tab is pressed
-			GetActiveMDIChild()->SetFocus();
-		}
-		break;
-	}
-
-	return WndProcDefault(uMsg, wParam, lParam);
-}
-

@@ -158,7 +158,7 @@ namespace Win32xx
 		virtual ~CMDIFrameT() {}
 
 		// Overridable virtual functions
-		virtual CMDIChild& AddMDIChild(CMDIChild* pMDIChild);
+		virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
 		virtual CMDIChild* GetActiveMDIChild() const;
 		virtual CMenu GetActiveMenu() const;
 		virtual CWnd& GetMDIClient() const { return m_MDIClient; }
@@ -238,7 +238,7 @@ namespace Win32xx
 	}
 
 	template <class T>
-	inline CMDIChild& CMDIFrameT<T>::AddMDIChild(CMDIChild* pMDIChild)
+	inline CMDIChild* CMDIFrameT<T>::AddMDIChild(CMDIChild* pMDIChild)
 	// Adds a MDI child to the MDI frame. The pointer to the MDI child will be
 	//  automatically deleted when the MDI Frame destroys the MDI child.
 	{
@@ -247,7 +247,7 @@ namespace Win32xx
 		m_vMDIChild.push_back(MDIChildPtr(pMDIChild));
 		pMDIChild->Create(GetMDIClient());
 
-		return *pMDIChild;
+		return pMDIChild;
 	}
 
 	template <class T>
@@ -892,6 +892,7 @@ namespace Win32xx
 		if (lParam == (LPARAM) GetHwnd())
 		{
 			GetAncestor().SendMessage(UWM_MDIACTIVATED, (WPARAM) GetHwnd(), 0);
+			GetView().SetFocus();
 		}
 
 		// No child is being activated

@@ -46,7 +46,7 @@
 #define IDM_VIEW_ARROWS                 176
 #define IDM_VIEW_CARDS                  177
 
-#define IDM_WIN8                       180
+#define IDM_WIN10                       180
 #define IDM_WIN7                      181
 #define IDM_BLUE                        182
 #define IDM_GREY                        183
