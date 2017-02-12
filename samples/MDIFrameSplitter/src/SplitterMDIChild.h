@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////
-// SimpleMDIChild.h
-//  Declaration of the CSimpleView and CSimpleMDIChild class
+// SplitterMDIChild.h
+//  Declaration of the CSimpleView and CSplitterMDIChild class
 
 #ifndef MDICHILDVIEW_H
 #define MDICHILDVIEW_H
@@ -38,12 +38,12 @@ private:
 
 };
 
-// Declaration of CSimpleMDIChild
-class CSimpleMDIChild : public CMDIChild
+// Declaration of CSplitterMDIChild
+class CSplitterMDIChild : public CMDIChild
 {
 public:
-	CSimpleMDIChild();
-	virtual ~CSimpleMDIChild();
+	CSplitterMDIChild();
+	virtual ~CSplitterMDIChild();
 
 protected:
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);

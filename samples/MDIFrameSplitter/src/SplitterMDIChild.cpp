@@ -1,11 +1,11 @@
 //////////////////////////////////////////////
-// SimpleMDIChild.cpp
-//  Definitions for the CSimpleView and CSimpleMDIChild classes
+// SplitterMDIChild.cpp
+//  Definitions for the CSimpleView and CSplitterMDIChild classes
 
 #include "stdafx.h"
 #include "Files.h"
 #include "Output.h"
-#include "SimpleMDIChild.h"
+#include "SplitterMDIChild.h"
 #include "resource.h"
 
 
@@ -42,8 +42,8 @@ LRESULT CSimpleView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
-// CSimpleMDIChild definitions
-CSimpleMDIChild::CSimpleMDIChild()
+// CSplitterMDIChild definitions
+CSplitterMDIChild::CSplitterMDIChild()
 {
     // Set m_View as the view window of the MDI child
 	SetView(m_View);
@@ -52,14 +52,14 @@ CSimpleMDIChild::CSimpleMDIChild()
 	SetHandles(LoadMenu(GetApp().GetResourceHandle(), _T("MdiMenuView")), NULL);
 }
 
-CSimpleMDIChild::~CSimpleMDIChild()
+CSplitterMDIChild::~CSplitterMDIChild()
 {
 }
 
-int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
+int CSplitterMDIChild::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window caption
-	SetWindowText( _T("Simple Window") );
+	SetWindowText( _T("Splitter Window") );
 	
     // Set the window icons
     SetIconLarge(IDI_VIEW);
@@ -68,7 +68,7 @@ int CSimpleMDIChild::OnCreate(CREATESTRUCT& cs)
 	return CMDIChild::OnCreate(cs);
 }
 
-void CSimpleMDIChild::OnInitialUpdate()
+void CSplitterMDIChild::OnInitialUpdate()
 {
 	// Add Child dockers
 	DWORD dwStyle = DS_CLIENTEDGE | DS_NO_UNDOCK;
@@ -79,7 +79,7 @@ void CSimpleMDIChild::OnInitialUpdate()
 	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 0, 0);	
 }
 
-BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CSplitterMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 {
     // Respond to menu and toolbar input
 
@@ -97,13 +97,13 @@ BOOL CSimpleMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-void CSimpleMDIChild::OnColor(COLORREF rgb)
+void CSplitterMDIChild::OnColor(COLORREF rgb)
 {
 	m_View.GetSimpleView().SetColor(rgb);
 	m_View.GetSimpleView().Invalidate();
 }
 
-LRESULT CSimpleMDIChild::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CSplitterMDIChild::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	m_View.RecalcDockLayout();
 
@@ -111,7 +111,7 @@ LRESULT CSimpleMDIChild::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-LRESULT CSimpleMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CSplitterMDIChild::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{

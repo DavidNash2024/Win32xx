@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #include "mainMDIfrm.h"
-#include "SimpleMDIChild.h"
+#include "SplitterMDIChild.h"
 #include "resource.h"
 
 
@@ -139,7 +139,7 @@ BOOL CMainMDIFrame::OnFileExit()
 
 BOOL CMainMDIFrame::OnFileNew()
 {
-	AddMDIChild(new CSimpleMDIChild);
+	AddMDIChild(new CSplitterMDIChild);
 	return TRUE;
 }
 

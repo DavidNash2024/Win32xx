@@ -134,7 +134,10 @@
 				RelativePath="..\src\Output.cpp">
 			</File>
 			<File
-				RelativePath="..\src\SimpleMDIChild.cpp">
+				RelativePath="..\src\SplitterMDIChild.cpp">
+			</File>
+			<File
+				RelativePath="..\src\SplitterMDIChild.h">
 			</File>
 			<File
 				RelativePath="..\src\StdAfx.cpp">
@@ -158,9 +161,6 @@
 			</File>
 			<File
 				RelativePath="..\src\resource.h">
-			</File>
-			<File
-				RelativePath="..\src\SimpleMDIChild.h">
 			</File>
 			<File
 				RelativePath="..\src\stdafx.h">

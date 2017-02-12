@@ -58,14 +58,11 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 
 int CMDIChildText::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(cs);
-	m_TextView.Create(*this);
-
 	SetWindowText(_T("Text Window"));
 	SetIconLarge(IDI_TEXT);
 	SetIconSmall(IDI_TEXT);
 	
-	return 0;
+	return CMDIChild::OnCreate(cs);
 }
 
 
