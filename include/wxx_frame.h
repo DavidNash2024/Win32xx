@@ -2324,6 +2324,7 @@ namespace Win32xx
 
 		if (!GetView().IsWindow())
 			GetView().Create(*this);
+		GetView().SetFocus();
 
 		// Adjust fonts to match the desktop theme
 		T::SendMessage(WM_SYSCOLORCHANGE);

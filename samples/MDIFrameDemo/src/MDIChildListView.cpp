@@ -118,13 +118,11 @@ CMDIChildListView::~CMDIChildListView()
 
 int CMDIChildListView::OnCreate(CREATESTRUCT& cs)
 {
-	UNREFERENCED_PARAMETER(cs);
-	m_ListView.Create(*this);
-	
 	SetWindowText( _T("List-View Window") );
 	SetIconLarge(IDI_FILES);
 	SetIconSmall(IDI_FILES);
-	return 0;
+	
+	return CMDIChild::OnCreate(cs);
 }
 
 

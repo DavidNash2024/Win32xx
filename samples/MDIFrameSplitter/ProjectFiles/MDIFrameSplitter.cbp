@@ -186,8 +186,8 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/SimpleMDIChild.cpp" />
-		<Unit filename="../src/SimpleMDIChild.h" />
+		<Unit filename="../src/SplitterMDIChild.cpp" />
+		<Unit filename="../src/SplitterMDIChild.h" />
 		<Unit filename="../src/main.cpp" />
 		<Unit filename="../src/resource.h" />
 		<Unit filename="../src/stdafx.h">

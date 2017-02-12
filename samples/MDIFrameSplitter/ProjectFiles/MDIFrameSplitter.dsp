@@ -111,7 +111,7 @@ SOURCE=..\src\Output.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\SimpleMDIChild.cpp
+SOURCE=..\src\SplitterMDIChild.cpp
 # End Source File
 # Begin Source File
 
@@ -143,7 +143,7 @@ SOURCE=..\src\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\SimpleMDIChild.h
+SOURCE=..\src\SplitterMDIChild.h
 # End Source File
 # Begin Source File
 

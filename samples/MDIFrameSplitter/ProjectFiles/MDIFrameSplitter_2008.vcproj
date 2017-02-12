@@ -201,7 +201,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleMDIChild.cpp"
+				RelativePath="..\src\SplitterMDIChild.cpp"
 				>
 			</File>
 			<File
@@ -251,7 +251,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\src\SimpleMDIChild.h"
+				RelativePath="..\src\SplitterMDIChild.h"
 				>
 			</File>
 			<File
