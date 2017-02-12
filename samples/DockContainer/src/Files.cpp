@@ -18,12 +18,7 @@ CViewFiles::~CViewFiles()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewFiles::OnDestroy()
-{
-	SetImageList(NULL, LVSIL_SMALL);
-}
-
-void CViewFiles::OnInitialUpdate()
+void CViewFiles::OnAttach()
 {
 	// Set the image lists
 	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -37,6 +32,11 @@ void CViewFiles::OnInitialUpdate()
 
 	SetColumns();
 	InsertItems();
+}
+
+void CViewFiles::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
 }
 
 int CViewFiles::AddItem(LPCTSTR szText, int nImage)

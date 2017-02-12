@@ -19,8 +19,8 @@ public:
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 	
 protected:
+	virtual void OnAttach();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
 	virtual void PreCreate(CREATESTRUCT& cs);
 
 private:

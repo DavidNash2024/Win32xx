@@ -17,8 +17,8 @@ public:
 	virtual ~CViewOutput();
 
 protected:
+	virtual void OnAttach();
 	virtual void PreCreate(CREATESTRUCT& cs); 
-	virtual void OnInitialUpdate(); 
 
 };
 

@@ -19,7 +19,7 @@ CViewClasses::~CViewClasses()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewClasses::OnInitialUpdate()
+void CViewClasses::OnAttach()
 {
 	//set the image lists
 	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);

@@ -12,7 +12,7 @@ public:
 	CViewTree();
 	virtual ~CViewTree();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
+	virtual void OnAttach();
 	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:

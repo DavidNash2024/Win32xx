@@ -13,11 +13,10 @@ public:
 	virtual void SetFontDefaults();
 
 protected:
+	virtual void OnAttach();
 	virtual void PreCreate(CREATESTRUCT& cs);
-	virtual void OnInitialUpdate();
 
 private:
-//	HMODULE m_hInstRichEdit;
 	CFont   m_Font;
 
 };

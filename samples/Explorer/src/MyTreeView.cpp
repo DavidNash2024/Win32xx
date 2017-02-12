@@ -365,20 +365,20 @@ BOOL CMyTreeView::GetRootItems()
 	return FALSE;
 }
 
-void CMyTreeView::OnDestroy()
-{
-	m_pItems.clear();
-}
-
-void CMyTreeView::OnInitialUpdate()
+void CMyTreeView::OnAttach()
 {
 	// Get a copy of the system image lists
 	SHFILEINFO  sfi;
 
-	HIMAGELIST hSmall =  reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0,
-							&sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
+	HIMAGELIST hSmall = reinterpret_cast<HIMAGELIST>(::SHGetFileInfo(_T("C:\\"), 0,
+		&sfi, sizeof(SHFILEINFO), SHGFI_SYSICONINDEX | SHGFI_SMALLICON));
 
 	SetImageList(hSmall, LVSIL_NORMAL);
+}
+
+void CMyTreeView::OnDestroy()
+{
+	m_pItems.clear();
 }
 
 void CMyTreeView::PreCreate(CREATESTRUCT& cs)

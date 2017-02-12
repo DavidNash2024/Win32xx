@@ -18,7 +18,7 @@ CViewText::~CViewText()
 {
 }
 
-void CViewText::OnInitialUpdate()
+void CViewText::OnAttach()
 {
 	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }

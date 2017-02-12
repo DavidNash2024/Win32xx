@@ -41,7 +41,7 @@ CViewList::~CViewList()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewList::OnInitialUpdate()
+void CViewList::OnAttach()
 {
 	// Set the image lists
 	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -132,7 +132,7 @@ CViewTree::~CViewTree()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewTree::OnInitialUpdate()
+void CViewTree::OnAttach()
 {
 	//set the image lists
 	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -188,7 +188,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 
 ///////////////////////////////////////////////
 // CViewText functions
-void CViewText::OnInitialUpdate()
+void CViewText::OnAttach()
 {
 	SetWindowText(_T("Text Edit Window\r\n\r\n\r\n\r\n You can type some text here ..."));
 }

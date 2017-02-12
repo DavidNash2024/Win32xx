@@ -12,7 +12,7 @@ class CViewWeb : public CWebBrowser
 public:
 	CViewWeb() {}
 	virtual ~CViewWeb() {}
-	virtual void OnInitialUpdate();
+	virtual int OnCreate(CREATESTRUCT& cs);
 
 };
 

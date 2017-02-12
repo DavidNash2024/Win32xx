@@ -544,13 +544,7 @@ BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
 	return TRUE;
 }
 
-void CMyListView::OnDestroy()
-{
-	m_pItems.clear();
-	m_csfCurFolder.Delete();
-}
-
-void CMyListView::OnInitialUpdate()
+void CMyListView::OnAttach()
 {
 	//Set the image lists
 	SetImageLists();
@@ -580,6 +574,12 @@ void CMyListView::OnInitialUpdate()
 
 	//Set initial the view style as report
 	ViewReport();
+}
+
+void CMyListView::OnDestroy()
+{
+	m_pItems.clear();
+	m_csfCurFolder.Delete();
 }
 
 void CMyListView::PreCreate(CREATESTRUCT& cs)

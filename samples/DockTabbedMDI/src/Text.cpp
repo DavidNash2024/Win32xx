@@ -18,6 +18,16 @@ CViewText::~CViewText()
 {
 }
 
+void CViewText::OnAttach()
+{
+	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+		CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
+
+	SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
+
+	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
+}
+
 BOOL CViewText::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
@@ -64,16 +74,6 @@ void CViewText::OnEditRedo()
 void CViewText::OnEditUndo()
 {
 	SendMessage(EM_UNDO, 0, 0);
-}
-
-void CViewText::OnInitialUpdate()
-{
-	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-
-	SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
-	
-	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
 void CViewText::PreCreate(CREATESTRUCT& cs)

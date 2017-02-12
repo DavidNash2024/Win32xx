@@ -20,8 +20,8 @@ public:
 	BOOL SelectFromListView(Cpidl& CpidlFull);
 
  protected:
+	virtual void    OnAttach();
 	virtual void    OnDestroy();
-	virtual void    OnInitialUpdate();
 	virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnNMRClick(LPNMHDR pNMHDR);
 	virtual LRESULT OnTVNGetDispInfo(LPNMTVDISPINFO pNMTVDI);

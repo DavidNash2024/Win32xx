@@ -14,10 +14,9 @@ public:
 
 protected:
 	virtual void PreCreate(CREATESTRUCT& cs);
-	virtual void OnInitialUpdate();
+	virtual void OnAttach();
 
 private:
-//	HMODULE m_hInstRichEdit;
 	CFont   m_Font;
 
 };

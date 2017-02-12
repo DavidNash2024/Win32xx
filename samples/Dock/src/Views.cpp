@@ -60,12 +60,7 @@ CViewList::~CViewList()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewList::OnDestroy()
-{
-	SetImageList(NULL, LVSIL_SMALL);
-}
-
-void CViewList::OnInitialUpdate()
+void CViewList::OnAttach()
 {
 	// Set the image lists
 	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -79,6 +74,11 @@ void CViewList::OnInitialUpdate()
 
 	SetColumns();
 	InsertItems();
+}
+
+void CViewList::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
 }
 
 int CViewList::AddItem(LPCTSTR szText, int nImage)
@@ -182,12 +182,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	return InsertItem(tvis);
 }
 
-void CViewTree::OnDestroy()
-{
-	SetImageList(NULL, LVSIL_SMALL);
-}
-
-void CViewTree::OnInitialUpdate()
+void CViewTree::OnAttach()
 {
 	//set the image lists
 	m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
@@ -223,6 +218,11 @@ void CViewTree::OnInitialUpdate()
 	Expand(htiCTreeViewApp, TVE_EXPAND); 
 }
 
+void CViewTree::OnDestroy()
+{
+	SetImageList(NULL, LVSIL_SMALL);
+}
+
 LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch(uMsg)
@@ -234,7 +234,7 @@ LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 ///////////////////////////////////////////////
 // CViewText functions
-void CViewText::OnInitialUpdate()
+void CViewText::OnAttach()
 {
 	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
