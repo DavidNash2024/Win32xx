@@ -153,7 +153,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                "Frame Window"
+    IDW_MAIN                "Frame application using an INI file"
 	IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"

@@ -107,7 +107,8 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                 "Minimize from the Option menu"
+    IDW_MAIN                 "Tray Application"
+    IDS_DRAWTEXT             "Minimize from the Option menu"
 END
 
 #endif    // English (U.S.) resources

@@ -57,7 +57,7 @@ BOOL CMainFrame::ChooseColor(UINT nColor)
 
 	switch (nColor)
 	{
-	case IDM_WIN8:		// Recommended for Windows 8 and Windows 10
+	case IDM_WIN10:		// Recommended for Windows 8 and Windows 10
 		{
 			SetReBarColors( RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240) );
 
@@ -333,7 +333,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_PINK:			 return ChooseColor(IDM_PINK);
 	case IDM_GOLD:			 return ChooseColor(IDM_GOLD);
 	case IDM_BLACK:			 return ChooseColor(IDM_BLACK);
-	case IDM_WIN8:			 return ChooseColor(IDM_WIN8); 
+	case IDM_WIN10:			 return ChooseColor(IDM_WIN10); 
 	case IDM_USE_THEMES:	 return OnUseThemes();
 	case IDM_BAND_COLORS:	 return OnBandColors();
 	case IDM_FLAT_STYLE:	 return OnFlatStyle();
@@ -564,7 +564,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	}
 
 	// Check the color menu item and make it a radio item 
-	GetFrameMenu().CheckMenuRadioItem(IDM_WIN8, IDM_BLACK, m_nColor, 0);
+	GetFrameMenu().CheckMenuRadioItem(IDM_WIN10, IDM_BLACK, m_nColor, 0);
 
 	// Call the base class member function
 	CFrame::OnMenuUpdate(nID);

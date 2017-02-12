@@ -326,7 +326,6 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
 	// Update the URL in the ComboboxEx edit box.
 	m_ComboboxEx.SetWindowText(WtoT(bstrUrlName));
-	m_View.SetFocus();
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)

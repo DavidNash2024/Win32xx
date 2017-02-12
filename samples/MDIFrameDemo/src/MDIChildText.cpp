@@ -68,23 +68,4 @@ int CMDIChildText::OnCreate(CREATESTRUCT& cs)
 	return 0;
 }
 
-LRESULT CMDIChildText::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	UNREFERENCED_PARAMETER(uMsg);
-	UNREFERENCED_PARAMETER(wParam);
-	UNREFERENCED_PARAMETER(lParam);
 
-	m_TextView.SetFocus();
-	return 0L;
-}
-
-LRESULT CMDIChildText::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-	switch (uMsg)
-	{
-	case WM_SETFOCUS:	return OnSetFocus(uMsg, wParam, lParam);
-	}
-
-	// Do default processing for other messages
-	return WndProcDefault(uMsg, wParam, lParam);
-}

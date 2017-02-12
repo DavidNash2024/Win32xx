@@ -30,7 +30,6 @@ void CMainFrame::OnInitialUpdate()
 {
 	DragAcceptFiles(TRUE);
 	SetWindowTitle();
-	m_RichView.SetFocus();
 }
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)

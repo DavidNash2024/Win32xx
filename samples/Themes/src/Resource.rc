@@ -57,7 +57,7 @@ BEGIN
     END
     POPUP "&Theme"
     BEGIN
-		MENUITEM "Windows 8",                   IDM_WIN8
+		MENUITEM "Windows 10",                  IDM_WIN10
         MENUITEM "Windows 7",                   IDM_WIN7
         MENUITEM "Blue",                        IDM_BLUE
         MENUITEM "Grey",                        IDM_GREY
@@ -246,8 +246,8 @@ END
 
 STRINGTABLE 
 BEGIN
-	IDM_WIN8               "Windows 8 and Windows 10 theme"
-	IDM_WIN7              "Vista & Windows 7 theme"
+	IDM_WIN10                "Windows 8 and Windows 10 theme"
+	IDM_WIN7                "Vista & Windows 7 theme"
     IDM_BLUE                "Blue theme"
     IDM_GREY                "Grey theme"
     IDM_OLIVE               "Olive theme"

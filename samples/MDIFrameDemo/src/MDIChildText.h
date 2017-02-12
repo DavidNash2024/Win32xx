@@ -27,8 +27,6 @@ public:
 protected:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int  OnCreate(CREATESTRUCT& cs);
-	virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CViewText m_TextView;

@@ -392,7 +392,7 @@ END
 
 STRINGTABLE
 BEGIN
-    IDW_MAIN                "MDI Demo"
+    IDW_MAIN                "MDI Frame Application with different MDI children"
 	IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
