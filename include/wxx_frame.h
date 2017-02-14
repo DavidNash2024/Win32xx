@@ -3273,7 +3273,7 @@ namespace Win32xx
 			case Win7:	// A pale blue color scheme suitable for Vista and Windows 7
 				{
 					MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
-					ReBarTheme rbt = {t, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), f, f, f, t, t, f};
+					ReBarTheme rbt = {t, RGB(225, 230, 255), RGB(240, 242, 250), RGB(248, 248, 248), RGB(180, 200, 230), f, f, t, t, t, f};
 					StatusBarTheme sbt = {t, RGB(225, 230, 255), RGB(240, 242, 250)};
 					ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 
