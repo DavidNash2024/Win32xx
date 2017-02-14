@@ -2,8 +2,9 @@
 // Button.cpp
 
 #include "stdafx.h"
-#include "DialogDemoApp.h"
 #include "MyButton.h"
+#include "DialogDemoApp.h"
+
 
 LRESULT CMyButton::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {

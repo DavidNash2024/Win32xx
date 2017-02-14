@@ -6,7 +6,6 @@
 #define MDICHILDVIEW_H
 
 
-
 // Declaration of CSimpleView
 class CSimpleView : public CWnd
 {

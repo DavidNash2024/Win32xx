@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "SplitterApp.h"
-#include "resource.h"
 
 
 CSplitterApp::CSplitterApp()

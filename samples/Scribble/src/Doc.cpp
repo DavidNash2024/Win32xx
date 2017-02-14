@@ -1,7 +1,7 @@
 
 #include "stdafx.h"
-#include "ScribbleApp.h"
 #include "Doc.h"
+#include "ScribbleApp.h"
 
 
 const CView& CDoc::GetView() const

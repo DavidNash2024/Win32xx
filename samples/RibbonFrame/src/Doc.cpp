@@ -1,8 +1,7 @@
 
 #include "stdafx.h"
-#include "RibbonApp.h"
 #include "Doc.h"
-
+#include "RibbonApp.h"
 
 const CView& CDoc::GetView() const
 {

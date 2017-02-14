@@ -4,9 +4,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-#include "wxx_scrollview.h"
-#include "ColourDialog.h"
-
 
 // Declaration of the CView class
 class CView : public CScrollView

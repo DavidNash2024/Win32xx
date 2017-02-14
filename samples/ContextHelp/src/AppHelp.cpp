@@ -10,6 +10,16 @@ CAppHelp::CAppHelp()
 	SetFrameHelpTopics();
 }
 
+void CAppHelp::About()
+{
+	m_HelpAbout.DoModal();
+}
+
+void CAppHelp::AddHelpTopic(UINT nID, LPCTSTR topic)
+{
+	m_ContextHelp.AddHelpTopic(nID, topic);
+}
+
 void CAppHelp::SetCommandHelpTopics()
 // Define the context help topics to be displayed for the menu items and the toolbar.
 {
@@ -45,7 +55,7 @@ void CAppHelp::SetCommandHelpTopics()
 void CAppHelp::SetClientHelpTopics()
 {
 	// define the help topic for the dialog's client area
-	AddHelpTopic(IDD_DIALOG1,		_T("clientwindowcontrols")); 
+	AddHelpTopic(IDD_DIALOG1,		_T("clientwindowcontrols"));
 	
 	// define the help topics for the client area controls
 	AddHelpTopic(IDC_RICHEDIT1,		_T("RichEditBoxUsage"));
@@ -60,18 +70,6 @@ void CAppHelp::SetClientHelpTopics()
 	AddHelpTopic(IDC_STATUS,		_T("StatusBoxContent"));
 	AddHelpTopic(IDC_BITMAP1,		_T("BitmapContent"));
 	AddHelpTopic(IDOK,				_T("OKButtonUsage"));
-	
-	// define help topics for the common dialog help buttons
-	AddHelpTopic(IDM_HELP_COLORDLG,      _T("ColorDialogHelp"));
-	AddHelpTopic(IDM_HELP_FILEDLG_OPEN,  _T("FileDialogOpenHelp"));
-	AddHelpTopic(IDM_HELP_FILEDLG_NEW,   _T("FileDialogNewHelp"));
-	AddHelpTopic(IDM_HELP_FILEDLG_SAVEAS, _T("FileDialogSaveAsHelp"));
-	AddHelpTopic(IDM_HELP_FONTDLG,       _T("FontChoiceDialogHelp"));
-	AddHelpTopic(IDM_HELP_PAGESETDLG,    _T("PageSetupDialogHelp"));
-	AddHelpTopic(IDM_HELP_PRINTDLG,      _T("PrinterDialogHelp"));
-	AddHelpTopic(IDM_HELP_FINDDLG,       _T("FindTextDialogHelp"));
-	AddHelpTopic(IDM_HELP_REPLACEDLG,    _T("ReplaceTextDialogHelp"));
-	AddHelpTopic(IDC_LIST1,   			 _T("ListBoxDialogHelp"));
 }
 
 void CAppHelp::SetFrameHelpTopics()
@@ -82,4 +80,26 @@ void CAppHelp::SetFrameHelpTopics()
 	AddHelpTopic(IDFR_CAPTION,		_T("AppTitleBar"));
 	AddHelpTopic(IDFR_GRIPPER,		_T("ResizeGripper"));
 	AddHelpTopic(IDFR_HELP,			_T("TitleBarQuestionBox"));
+}
+
+void CAppHelp::SetHelpFilePath(LPCTSTR chmName)
+{
+	m_ContextHelp.SetHelpFilePath(chmName);
+}
+
+void CAppHelp::ShowHelpTopic(UINT nID)
+// Display the context help for the specified topic
+{
+	m_ContextHelp.ShowHelpTopic(nID);
+}
+
+void CAppHelp::ShowHelpTopic(LPCTSTR topic)
+// Display the context help for the specified topic
+{
+	m_ContextHelp.ShowHelpTopic(topic);
+}
+
+void CAppHelp::SetCredits(LPCTSTR szCredits)
+{
+	m_HelpAbout.SetCredits(szCredits);
 }

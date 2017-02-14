@@ -3,6 +3,7 @@
 #ifndef WIN32XX_DOC_H
 #define WIN32XX_DOC_H
 
+
 #include "View.h"
 
 // CDoc holds the application's data. It inherits from CObject

@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "DialogApp.h"
-#include "resource.h"
 
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)

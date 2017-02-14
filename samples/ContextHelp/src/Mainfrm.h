@@ -5,9 +5,7 @@
 #define MAINFRM_H
 
 
-#include "wxx_frame.h"
 #include "AppHelp.h"
-#include "App.h"
 #include "View.h"
 #include "Doc.h"
 
@@ -20,9 +18,9 @@ public:
 	virtual ~CMainFrame();
 
 	void	ChooseHelpTopic();
+	CString CreateAppDataFolder(const CString& subfolder);
 	CDoc&	GetDoc()	{ return m_Doc; }
 	UINT	GetIDFromCursorPos();
-	CString MakeAppDataPath(const CString& subpath);
 	void	OnF1();
 	void 	OnFileExit();
 	void	OnShiftF1();
@@ -47,19 +45,13 @@ protected:
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-
-	void NotImplemented() const;
+	void	NotImplemented() const;
 
 	CView 		m_View;
 	CDoc 		m_Doc;
-	BOOL    	m_IsChoosingTopic;	// TRUE while choosing a topic
-	CAppHelp	m_AppHelp;			// Help object for context help 
-	CHelpAbout	m_HelpAbout;		// the AboutBox dialog
-
+	CAppHelp	m_AppHelp;	// Help object for context help and help about dialog
 };
 
-// A global function to provide access to the CDoc class
-CDoc& GetDoc();
 
 #endif //MAINFRM_H
 

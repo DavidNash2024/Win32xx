@@ -2,9 +2,9 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "resource.h"
-#include "PictureApp.h"
 #include "Mainfrm.h"
+#include "PictureApp.h"
+#include "resource.h"
 
 
 // Definitions for the CMainFrame class

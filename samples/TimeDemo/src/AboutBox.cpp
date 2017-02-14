@@ -50,8 +50,9 @@
 
 #include "stdafx.h"
 #include "AboutBox.h"
-#include "Resource.h"
 #include "App.h"
+#include "Resource.h"
+
 
 /*============================================================================*/
 	AboutBox::

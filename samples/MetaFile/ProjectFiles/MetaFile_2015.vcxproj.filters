@@ -12,9 +12,6 @@
     <ClInclude Include="..\src\resource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\wxx_metafile.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MetaView.h">
       <Filter>Header Files</Filter>
     </ClInclude>

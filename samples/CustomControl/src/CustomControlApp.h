@@ -5,7 +5,6 @@
 #define CUSTOMCONTROLAPP_H
 
 #include "MyDialog.h"
-#include "MyWebControl.h"
 
 
 // Declaration of the CDialogApp class

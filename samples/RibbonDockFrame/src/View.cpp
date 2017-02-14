@@ -3,7 +3,7 @@
 //  Definitions for the CView class
 
 #include "stdafx.h"
-#include "RibbonApp.h"
+#include "View.h"
 #include "resource.h"
 
 

@@ -6,7 +6,6 @@
 #define MAINMDIFRM_H
 
 
-
 // MDI frames are inherited from CMDIFrame
 class CMainMDIFrame : public CMDIFrame
 {

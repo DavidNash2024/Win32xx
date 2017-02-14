@@ -5,7 +5,6 @@
 #define VIEW_H
 
 
-
 // Declaration of the CView class
 class CView : public CWnd
 {

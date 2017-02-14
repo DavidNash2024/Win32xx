@@ -5,8 +5,6 @@
 #define MYDIALOG_H
 
 
-#include "resource.h"
-
 // Declaration of the CButtonDialog class
 class CButtonDialog : public CDialog
 {

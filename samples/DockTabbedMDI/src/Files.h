@@ -6,8 +6,6 @@
 #define FILES_H
 
 
-#include "resource.h"
-
 // Declaration of the CViewFiles class
 class CViewFiles : public CListView
 {

@@ -2,8 +2,8 @@
 // CustomControlApp.cpp
 
 #include "stdafx.h"
-#include "resource.h"
 #include "CustomControlApp.h"
+#include "resource.h"
 
 
 // Definitions for the CDialogApp class

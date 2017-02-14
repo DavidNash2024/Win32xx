@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "MyThread.h"
-#include "ThreadApp.h"
 
 
 CMyThread::CMyThread(int nThread) :  m_TestWnd(nThread), m_nThread(nThread)

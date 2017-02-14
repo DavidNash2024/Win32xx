@@ -2,8 +2,10 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "TabDemoApp.h"
 #include "mainfrm.h"
+#include "Classes.h"
+#include "Files.h"
+#include "MyDialog.h"
 #include "resource.h"
 
 

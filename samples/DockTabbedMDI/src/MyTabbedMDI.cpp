@@ -3,7 +3,12 @@
 
 #include "stdafx.h"
 #include "MyTabbedMDI.h"
-#include "Mainfrm.h"
+#include "Browser.h"
+#include "Classes.h"
+#include "Files.h"
+#include "Output.h"
+#include "Rect.h"
+#include "Text.h"
 
 CMyTabbedMDI::CMyTabbedMDI()
 {

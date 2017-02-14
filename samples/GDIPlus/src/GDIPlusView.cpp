@@ -4,6 +4,7 @@
 
 #include "stdafx.h"
 #include "GDIPlusView.h"
+
 using namespace Gdiplus;
 
 CGDIPlusView::CGDIPlusView()

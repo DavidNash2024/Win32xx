@@ -59,7 +59,6 @@
     <ClInclude Include="..\..\..\include\wxx_wincore0.h" />
     <ClInclude Include="..\src\MetaView.h" />
     <ClInclude Include="..\src\resource.h" />
-    <ClInclude Include="..\src\wxx_metafile.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\src\Resource.rc" />

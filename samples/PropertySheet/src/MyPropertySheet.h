@@ -5,7 +5,6 @@
 #define MYPROPERTYSHEET_H
 
 
-
 class CMyPropertySheet : public CPropertySheet
 {
 public:

@@ -3,7 +3,6 @@
 //  Definitions for CViewFiles 
 
 #include "stdafx.h"
-#include "TabDemoApp.h"
 #include "Files.h"
 #include "resource.h"
 

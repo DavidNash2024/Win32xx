@@ -5,8 +5,8 @@
 
 #include "stdafx.h"
 #include "Classes.h"
-#include "resource.h"
 #include "ContainerApp.h"
+#include "resource.h"
 
 
 ///////////////////////////////////////////////

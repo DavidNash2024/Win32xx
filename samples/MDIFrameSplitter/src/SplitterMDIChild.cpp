@@ -3,9 +3,9 @@
 //  Definitions for the CSimpleView and CSplitterMDIChild classes
 
 #include "stdafx.h"
+#include "SplitterMDIChild.h"
 #include "Files.h"
 #include "Output.h"
-#include "SplitterMDIChild.h"
 #include "resource.h"
 
 

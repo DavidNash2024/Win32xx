@@ -2,8 +2,8 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "resource.h"
 #include "mainfrm.h"
+#include "resource.h"
 
 
 // Definitions for the CMainFrame class

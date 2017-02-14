@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "SvrDialog.h"
-#include "DialogApp.h"
 #include "resource.h"
 
 

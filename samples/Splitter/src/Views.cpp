@@ -3,7 +3,6 @@
 //              CViewTree and CViewText classes
 
 #include "stdafx.h"
-#include "SplitterApp.h"
 #include "Views.h"
 #include "resource.h"
 

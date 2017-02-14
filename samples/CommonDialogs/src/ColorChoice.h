@@ -58,8 +58,6 @@
 #ifndef CCOLORCHOICE_H
 #define CCOLORCHOICE_H
 
-#include "stdafx.h"
-
 #include "ColorDefs.h"
 #include "ListBoxDlg.h"
 #include "ListBoxDlgRC.h"

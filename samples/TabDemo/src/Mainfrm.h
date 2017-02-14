@@ -5,11 +5,6 @@
 #define MAINFRM_H
 
 
-#include "Classes.h"
-#include "Files.h"
-#include "MyDialog.h"
-
-
 // Declaration of the CMainFrame class
 class CMainFrame : public CFrame
 {

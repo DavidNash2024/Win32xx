@@ -7,12 +7,6 @@
 #include "mainfrm.h"
 
 
-// A global function to provide access to the CFormDoc class
-CFormDoc& GetDoc()
-{
-	return GetSdiApp().GetMainFrame().GetDoc();
-}
-
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame() : m_SdiView(IDD_DIALOG1)
 {

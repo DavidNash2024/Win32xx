@@ -55,8 +55,9 @@
 
 #include "stdafx.h"
 #include "MySlider.h"
-#include "resource.h"
 #include "App.h"
+#include "resource.h"
+
 
 /*============================================================================*/
 	LRESULT CMySlider::

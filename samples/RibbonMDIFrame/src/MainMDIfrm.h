@@ -6,7 +6,6 @@
 #define MAINMDIFRM_H
 
 
-#include "wxx_ribbon.h"
 #include "Doc.h"
 
 

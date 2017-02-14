@@ -2,8 +2,8 @@
 // FormView.cpp
 
 #include "stdafx.h"
-#include "FormDoc.h"
 #include "FormView.h"
+#include "FormDoc.h"
 #include "FormApp.h"
 #include "resource.h"
 
@@ -33,6 +33,11 @@ INT_PTR CFormView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
+}
+
+CFormDoc& CFormView::GetDoc()
+{
+	return GetSdiApp().GetMainFrame().GetDoc();
 }
 
 void CFormView::OnButton()

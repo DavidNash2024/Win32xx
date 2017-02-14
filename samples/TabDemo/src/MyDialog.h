@@ -5,7 +5,6 @@
 #define MYDIALOG_H
 
 
-
 // Declaration of the CViewDialog class
 class CViewDialog : public CDialog
 {

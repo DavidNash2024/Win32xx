@@ -5,8 +5,6 @@
 #define MYCOMBO_H
 
 
-#include "resource.h"
-
 class CMyCombo : public CComboBoxEx
 {
 public:

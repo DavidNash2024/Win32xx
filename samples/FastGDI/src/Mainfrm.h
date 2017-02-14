@@ -6,7 +6,6 @@
 
 
 #include "View.h"
-#include "ColourDialog.h"
 
 
 // Declaration of the CMainFrame class

@@ -3,8 +3,8 @@
 //  Definitions for the CView class
 
 #include "stdafx.h"
-#include "FastGDIApp.h"
 #include "view.h"
+#include "FastGDIApp.h"
 #include "resource.h"
 
 

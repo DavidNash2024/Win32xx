@@ -6,9 +6,9 @@
 #define MAINWND_H
 
 
-#include "TestWnd.h"
-#include "MyDialog.h"
 #include "MyEdit.h"
+#include "TestWnd.h"
+
 
 typedef Shared_Ptr<CTestWindow> TestWindowPtr;
 

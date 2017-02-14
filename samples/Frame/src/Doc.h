@@ -3,7 +3,6 @@
 #ifndef WIN32XX_DOC_H
 #define WIN32XX_DOC_H
 
-#include "View.h"
 
 // CDoc holds the application's data. It inherits from CObject
 // to perform data serialization to and from the archive.
@@ -19,7 +18,6 @@ public:
 	void Serialize(CArchive& ar);
 
 private:
-//	int m_MemberVariable;
 
 };
 

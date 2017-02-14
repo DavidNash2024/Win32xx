@@ -2,8 +2,14 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "TabbedMDIApp.h"
 #include "mainfrm.h"
+#include "Browser.h"
+#include "Classes.h"
+#include "Files.h"
+#include "MyDialog.h"
+#include "Output.h"
+#include "Rect.h"
+#include "text.h"
 #include "resource.h"
 
 

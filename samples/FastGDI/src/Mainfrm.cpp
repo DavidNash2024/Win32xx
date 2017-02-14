@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "mainfrm.h"
+#include "ColourDialog.h"
 #include "resource.h"
 
 

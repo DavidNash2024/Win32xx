@@ -6,7 +6,6 @@
 #define OUTPUT_H
 
 
-#include <richedit.h>
 #include "resource.h"
 
 // Declaration of the CViewText class

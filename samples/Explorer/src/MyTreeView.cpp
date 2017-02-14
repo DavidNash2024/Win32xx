@@ -3,10 +3,8 @@
 //  Definitions for the CMyTreeView and TreeItemData classes
 
 #include "stdafx.h"
-#include "ExplorerApp.h"
-#include "Mainfrm.h"
 #include "MyTreeView.h"
-#include "MyListView.h"
+#include "ExplorerApp.h"
 #include "resource.h"
 
 ////////////////////////////////

@@ -5,7 +5,6 @@
 #define MAINFRM_H
 
 
-#include "wxx_frame.h"
 #include "FormApp.h"
 #include "FormView.h"
 #include "FormDoc.h"
@@ -41,8 +40,6 @@ private:
 	CFormDoc m_Doc;
 };
 
-// A global function to provide access to the CFormDoc class
-CFormDoc& GetDoc(); 
 
 #endif //MAINFRM_H
 

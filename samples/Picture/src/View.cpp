@@ -4,8 +4,8 @@
 
 
 #include "stdafx.h"
-#include "PictureApp.h"
 #include "view.h"
+#include "PictureApp.h"
 #include "resource.h"
 
 #define HIMETRIC_INCH	2540

@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "MyEdit.h"
 
+
 CMyEdit::CMyEdit()
 // Constructor
 {

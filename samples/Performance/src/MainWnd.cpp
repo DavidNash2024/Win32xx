@@ -3,8 +3,9 @@
 //  Definitions for the CMainWindow class
 
 #include "stdafx.h"
-#include "PerfApp.h"
 #include "MainWnd.h"
+#include "MyDialog.h"
+#include "PerfApp.h"
 #include "resource.h"
 
 

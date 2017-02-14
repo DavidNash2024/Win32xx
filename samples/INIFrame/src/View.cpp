@@ -3,11 +3,17 @@
 //  Definitions for the CView class
 
 #include "stdafx.h"
-#include "view.h"
+#include "View.h"
+#include "FrameApp.h"
 
 
 CView::CView()
 {
+}
+
+CDoc& CView::GetDoc()
+{
+	return GetFrameApp().GetMainFrame().GetDoc();
 }
 
 void CView::OnDraw(CDC& dc)
