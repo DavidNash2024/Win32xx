@@ -65,6 +65,7 @@ void CView::OnInitialUpdate()
 	// OnInitialUpdate is called after the window is created.
 	// Tasks which are to be done after the window is created go here.
 
+	RedrawWindow();
 	TRACE("OnInitialUpdate\n");
 }
 
