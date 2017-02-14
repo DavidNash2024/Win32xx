@@ -48,7 +48,7 @@ class CContextHelp : public CWnd
 		
 		virtual void	AddHelpTopic(UINT nID, LPCTSTR topic);
 		virtual HWND	CreateHtmlHelp(HWND hwndCaller, LPCTSTR szString, UINT uCommand, DWORD dwData);
-		virtual	UINT	GetIDFromCursorPos() const;
+		virtual UINT	GetIDFromCursorPos() const;
 		virtual void	ShowHelpTopic(UINT nID);
 		virtual void	ShowHelpTopic(LPCTSTR topic);
 

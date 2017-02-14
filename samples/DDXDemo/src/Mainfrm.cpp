@@ -60,9 +60,11 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-#include "resource.h"
-#include "App.h"
 #include "mainfrm.h"
+#include "App.h"
+#include "resource.h"
+
+
 
 static const LPCTSTR registryKeyName = _T("Win32++\\DDX-DDVDemo");
 

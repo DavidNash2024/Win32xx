@@ -94,7 +94,6 @@ IDW_MAIN                ICON                    "../src/res/ContextHelp.ico"
 // Bitmap
 //
 
-//IDW_MAIN                BITMAP                  "../src/res/toolbar.bmp"
 IDW_MAIN                BITMAP                  "../src/res/Toolbar16.bmp"
 IDB_TOOLBAR_NORM        BITMAP                  "../src/res/Toolbar24.bmp"
 IDB_BITMAP1             BITMAP                  "../src/res/Zapotec.bmp"
@@ -104,37 +103,16 @@ IDB_BITMAP1             BITMAP                  "../src/res/Zapotec.bmp"
 // Dialog
 //
 
-//IDW_ABOUT DIALOGEX 0, 0, 186, 90
-//STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_VISIBLE |
-//    WS_CAPTION | WS_SYSMENU
-//CAPTION "About"
-//FONT 8, "MS Shell Dlg", 400, 0
-//BEGIN
-//    DEFPUSHBUTTON   "OK",IDOK,68,49,50,14
-//    CTEXT           "Form Application",IDC_STATIC,60,22,64,11
-//    ICON            IDW_MAIN,0,4,4,20,20
-//END
-
 IDW_ABOUT DIALOGEX 200, 200, 300, 150
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP |
     WS_VISIBLE | WS_CAPTION | WS_SYSMENU
 CAPTION "About"
 FONT 8, "MS Shell Dlg", 400, 0
-{
-	CTEXT   "This is the baseline About box"
-	/*	 "that appears\n"
-		 "both when there is no help file and when \n"
-		"the Help->About menu item is selected and no\n"
-		"textual message has been assigned to the\n"
-		"IDC_ABOUT_CREDITS string. Nominally this \n"
-		"string should contain something like: \n\n"
-		"<copyright owner, date, restrictions>\n"
-		"<app name>\nCompiled with <your compiler>"
-		"<\nVersion: x.y (date of issue)>" */,
-		IDC_ABOUT_CREDITS, 25, 10, 250, 100
-
+BEGIN
+	// This dialog's text is set by the application
+	CTEXT   "",	IDC_ABOUT_CREDITS, 25, 10, 250, 100
 	ICON    IDW_MAIN, 0, 4, 4, 20, 20
-}
+END
 
 
 IDD_DIALOG1 DIALOGEX 0, 0, 321, 199
@@ -230,13 +208,14 @@ BEGIN
     IDW_MAIN                "Context Help Demo Program"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-	IDW_INDICATOR_CAPS  "CAP"
+	IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"
-    IDS_DATAPATH_SUBDIR	    "win32++\\"
-    IDS_HELP_FILE_EXT       ".chm"
-    IDS_APP_VERSION         "Version 1.0 (2016)"
+    IDS_GROUP_FOLDER	    "Win32++\\"
+	IDS_APP_NAME            "ContextHelp"
+	IDS_HELP_FILE           "ContextHelp.chm"
+    IDS_APP_VERSION         "Version 1.0 (2017)"
 END
 
 STRINGTABLE

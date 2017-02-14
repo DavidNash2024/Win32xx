@@ -2,9 +2,8 @@
 // ColourDialog.cpp
 
 #include "stdafx.h"
-#include "FastGDIApp.h"
-#include "Mainfrm.h"
 #include "ColourDialog.h"
+#include "FastGDIApp.h"
 #include "resource.h"
 
 

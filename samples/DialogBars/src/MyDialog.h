@@ -8,7 +8,6 @@
 #include "ProgressBar.h"
 #include "ScrollBar.h"
 #include "Slider.h"
-#include "resource.h"
 
 
 // Declaration of the CMyDialog class

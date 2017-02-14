@@ -5,13 +5,6 @@
 #define MAINFRM_H
 
 
-#include "Rect.h"
-#include "Classes.h"
-#include "Files.h"
-#include "Text.h"
-#include "Output.h"
-#include "MyDialog.h"
-#include "Browser.h"
 #include "MyTabbedMDI.h"
 
 enum DockIDs

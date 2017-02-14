@@ -6,7 +6,6 @@
 #define MYEDIT_H
 
 
-
 class CMyEdit : public CEdit
 {
 public:

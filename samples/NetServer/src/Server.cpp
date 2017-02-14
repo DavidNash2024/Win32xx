@@ -2,8 +2,9 @@
 // Server.cpp
 
 #include "stdafx.h"
-#include "DialogApp.h"
 #include "Server.h"
+#include "DialogApp.h"
+
 
 
 /////////////////////////////////////////

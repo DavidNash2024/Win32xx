@@ -2,10 +2,7 @@
 // SplitterPanes.cpp
 
 #include "stdafx.h"
-#include "SplitterApp.h"
-#include "Mainfrm.h"
 #include "SplitterPanes.h"
-
 
 
 CDockText::CDockText() 

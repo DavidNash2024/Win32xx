@@ -3,7 +3,6 @@
 //              and CDockText classes
 
 #include "stdafx.h"
-#include "TabbedMDIApp.h"
 #include "Text.h"
 #include "resource.h"
 

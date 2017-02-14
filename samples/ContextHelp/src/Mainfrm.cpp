@@ -2,60 +2,66 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include <io.h>
-#include "resource.h"
-#include "App.h"
 #include "mainfrm.h"
+#include "App.h"
+#include "resource.h"
 
 
-// A global function to provide access to the CDoc class
-CDoc& GetDoc()
-{
-	return TheApp().GetMainFrame().GetDoc();
-}
 
+///////////////////////////////////////
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosingTopic(FALSE)
+CMainFrame::CMainFrame() : m_View(IDD_DIALOG1)
+// Constructor
 {
-	// Constructor for CMainFrame. Its called after CFrame's constructor
-
-	// Set m_View as the view window of the frame
+	// Set the modeless dialog as the view window of the frame
 	SetView(m_View);
+
+	CString AppName = LoadString(IDS_APP_NAME);
+	CString GroupFolder = LoadString(IDS_GROUP_FOLDER);
 
 	// Set the registry key name, and load the initial window position
 	// Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\SdiDocViewForm"));
+	LoadRegistrySettings(GroupFolder + AppName);
 
 
-    ////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////
 	// Set the path to the chm help file for m_AppHelp
-	
-	// extract the app name, directory, and  path names
-    CString AppPath;
-	::GetModuleFileName(NULL, AppPath.GetBuffer(FILENAME_MAX), FILENAME_MAX);
-	AppPath.ReleaseBuffer();
-	CFile f; // no file opened here, just using the name parsing parts
-	f.SetFilePath(AppPath);
-	CString AppTitle = f.GetFileTitle();
-	CString AppName  = f.GetFileNameWOExt();
 
-	// make the help file path name
-	CString HelpDir  = MakeAppDataPath(LoadString(IDS_DATAPATH_SUBDIR) + AppName);
-	CString HelpPath = HelpDir + _T("\\") + AppName + LoadString(IDS_HELP_FILE_EXT);
+	// generate the help file directory and path strings
+	CString HelpFilename = LoadString(IDS_HELP_FILE);
+	CString HelpDir = CreateAppDataFolder(GroupFolder + AppName);
+	CString HelpPath = HelpDir + _T("\\") + HelpFilename;
+
+	if (!::PathFileExists(HelpPath))
+	{
+		// The Help file is not in AppDataPath yet so copy it there
+		CString OrigHelpPath = _T("..\\help\\") + HelpFilename;
+
+		if (!::CopyFile(OrigHelpPath, HelpPath, TRUE))
+		{
+			// The file copy failed, so set the path to the current folder.
+			// The Help file might be located with the program's executable.
+			HelpPath = HelpFilename;
+		}
+	}
 
 	if (::PathFileExists(HelpPath))
 	{
-		// communicate help file name to AppHelp object
+		// Specify the help file used by CAppHelp
 		m_AppHelp.SetHelpFilePath(HelpPath);
+	}
+	else
+	{
+		::MessageBox(NULL, _T("Failed to find ") + LoadString(IDS_HELP_FILE), _T("File not found"), MB_ICONWARNING);
 	}
 
 	/////////////////////////////////////////////////
 	// generate about box credits (PUT YOUR OWN HERE)
 
-	// make Win32++ version string
+	// generate the Win32++ version string
 	UINT ver = _WIN32XX_VER;
-	CString sWin32Version;
-	sWin32Version.Format(_T("Win32++ Version %d.%d.%d"), ver / 0x100,
+	CString Win32Version;
+	Win32Version.Format(_T("using Win32++ Version %d.%d.%d"), ver / 0x100,
 		(ver % 0x100) / 0x10, (ver % 0x10));
 
 	// generate compiler information for the About box
@@ -65,18 +71,19 @@ CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosingTopic(FALSE)
 		__GNUC_PATCHLEVEL__);
 #elif defined(_MSC_VER)
 	sCompiler.Format(_T("MS C++ %d.%d"), _MSC_VER / 100, _MSC_VER % 100);
+#elif defined(__BORLANDC__)
+	sCompiler = _T("a Borland compiler");
 #else
 	sCompiler = _T("(unknown compiler name)");
 #endif
 
-	CString sAboutBoxInfo;
-	CString date = __DATE__;
-	sAboutBoxInfo.Format(_T("%s\n\n(%s.exe)\n%s\n%s\ncompiled with ")
-		_T("%s on %s"), LoadString(IDW_MAIN).c_str(), AppName.c_str(),
-		LoadString(IDS_APP_VERSION).c_str(), sWin32Version.c_str(),
-		sCompiler.c_str(), date.c_str());
-
-	m_HelpAbout.SetCredits(sAboutBoxInfo);
+	// Set the information used in the Help About dialog
+	CString AboutBoxInfo = LoadString(IDW_MAIN);
+	AboutBoxInfo += _T("\n") + LoadString(IDS_APP_VERSION);
+	AboutBoxInfo += _T("\ncompiled with ") + sCompiler;
+	AboutBoxInfo += _T(" on ") + CString(__DATE__);
+	AboutBoxInfo += _T("\n") + Win32Version;
+	m_AppHelp.SetCredits(AboutBoxInfo);
 }
 
 CMainFrame::~CMainFrame()
@@ -85,10 +92,42 @@ CMainFrame::~CMainFrame()
 }
 
 void CMainFrame::ChooseHelpTopic()
+// Enables choose topic mode
 {
-	m_IsChoosingTopic = TRUE;
 	::SetCursor(::LoadCursor(NULL, IDC_HELP));
 	SetCapture();
+}
+
+CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
+// Return a string consisting of the APPDATA folder with the specified
+// folder appended. Create this folder if it does not exist. Throws a
+// CUserException if the folder creation fails.
+{
+	::SetLastError(0);
+	CString app_data_path = GetAppDataPath();
+
+	int from = 0;
+	int to = subfolder.GetLength();
+	while (from < to)
+	{
+		int nextbk = subfolder.Find(_T("\\"), from);
+		int nextfwd = subfolder.Find(_T("/"), from);
+		int next = MAX(nextbk, nextfwd);
+		if (next < 0)
+			next = to;
+
+		CString add = subfolder.Mid(from, next - from);
+		app_data_path += _T("\\") + add;
+		if (!SUCCEEDED(::CreateDirectory(app_data_path, 0)))
+		{
+			CString msg = app_data_path + _T("\nDirectory creation error.");
+			throw CUserException(msg);
+		}
+
+		from = ++next;
+	}
+
+	return app_data_path;
 }
 
 UINT CMainFrame::GetIDFromCursorPos()
@@ -132,39 +171,8 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
 	return TRUE;
 }
 
-CString CMainFrame::MakeAppDataPath(const CString& subpath)
-  // Return a string consisting of the APPDATA environmental path with the
-  // given subpath appended.  Create this path if it does not exist. If
-  // an error is encountered, throw a user exception.
-{
-	::SetLastError(0);
-	CString app_data_path = GetAppDataPath();
-
-	int from = 0;
-	int to = subpath.GetLength();
-	while (from < to)
-	{
-		int nextbk = subpath.Find(_T("\\"), from);
-		int nextfwd = subpath.Find(_T("/"), from);
-		int next = MAX(nextbk, nextfwd);
-		if (next < 0)
-			next = to;
-
-		CString add = subpath.Mid(from, next - from);
-		app_data_path += _T("\\") + add;
-		if (!SUCCEEDED(::CreateDirectory(app_data_path, 0)))
-		{
-			CString msg = app_data_path + _T("\nDirectory creation error.");
-			throw CUserException(msg);
-		}
-
-		from = ++next;
-	}
-
-	return app_data_path;
-}
-
 void CMainFrame::NotImplemented() const
+// Used for some toolbar buttons
 {
 	::MessageBox(NULL, _T("Feature not implemented."),
 		_T("Information"), MB_OK | MB_ICONINFORMATION |
@@ -172,6 +180,7 @@ void CMainFrame::NotImplemented() const
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+// Processes accelerators, toolbar buttons and menu input
 {
 	UNREFERENCED_PARAMETER(lParam);
 	UINT nID = LOWORD(wParam);
@@ -185,7 +194,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_FILE_PRINT:     NotImplemented();      return TRUE;
 	case IDM_FILE_PRINT_PREVIEW: NotImplemented();  return TRUE;
 	case IDM_FILE_CLOSE:     NotImplemented();      return TRUE;
-	
+
 	case IDM_EDIT_UNDO:      NotImplemented();      return TRUE;
 	case IDM_EDIT_REDO:      NotImplemented();      return TRUE;
 	case IDM_EDIT_CUT:       NotImplemented();      return TRUE;
@@ -194,29 +203,29 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_EDIT_FIND:      NotImplemented();      return TRUE;
 	case IDM_EDIT_REPLACE:   NotImplemented();      return TRUE;
 	case IDM_EDIT_DELETE:    NotImplemented();      return TRUE;
-	
+
 	case IDM_FONT_CHOICE:    NotImplemented();      return TRUE;
 	case IDM_COLOR_CHOICE:   NotImplemented();      return TRUE;
 
-	case ID_CHECK_A:		m_View.OnCheckA();		return TRUE;
-	case ID_CHECK_B:		m_View.OnCheckB();		return TRUE;
-	case ID_CHECK_C:		m_View.OnCheckC();		return TRUE;
-	
-	case IDM_FILE_EXIT:		OnFileExit();			return TRUE;
+	case ID_CHECK_A:		 m_View.OnCheckA();		return TRUE;
+	case ID_CHECK_B:		 m_View.OnCheckB();		return TRUE;
+	case ID_CHECK_C:		 m_View.OnCheckC();		return TRUE;
+
+	case IDM_FILE_EXIT:		 OnFileExit();			return TRUE;
 	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		return TRUE;
-	case IDW_VIEW_TOOLBAR:	OnViewToolBar();		return TRUE;
-	
+	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		return TRUE;
+
 	case ID_RADIO_A:
 	case ID_RADIO_B:		// intentionally blank
 	case ID_RADIO_C:		m_View.OnRangeOfIds_Radio(nID - ID_RADIO_A);
 		return TRUE;
-				 
-	case IDM_HELP_ABOUT:	m_HelpAbout.DoModal();		return TRUE;	// Menu item
+
+	case IDM_HELP_ABOUT:	m_AppHelp.About();		return TRUE;	// Menu item
 	case IDM_HELP_CONTENT:	ShowHelpTopic(nID);		return TRUE;	// Menu item
 	case IDM_HELP_CONTEXT:	ChooseHelpTopic(); 		return TRUE;	// Toolbar Button
 	case IDM_SHIFT_F1:		OnShiftF1();			return TRUE;	// Accelerator
 	case IDM_F1:			OnF1();					return TRUE;	// Accelerator
-	
+
 	}
 
 	return FALSE;
@@ -236,7 +245,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 	// call the base class function
 	int Res = CFrame::OnCreate(cs);
-	
+
 	// Add control IDs for various windows
 	GetView().SetWindowLongPtr(GWLP_ID, IDD_DIALOG1);
 	GetMenuBar().SetWindowLongPtr(GWLP_ID, IDW_MENUBAR);
@@ -266,7 +275,7 @@ void CMainFrame::OnInitialUpdate()
 {
 	// The frame is now created.
 	// Place any additional startup code here.
-	
+
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -289,7 +298,7 @@ LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Handle the left mouse button click.
 // Note: When the frame has mouse capture, clicks over child windows are processed here too.
 {
-	if (m_IsChoosingTopic)
+	if (GetCapture() == m_hWnd)
 	{
 		UINT nID = GetIDFromCursorPos();
 		ShowHelpTopic(nID);
@@ -303,7 +312,7 @@ LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 LRESULT CMainFrame::OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Modify the cursor when appropriate
 {
-	if (m_IsChoosingTopic)
+	if (GetCapture() == m_hWnd)
 	{
 		::SetCursor(::LoadCursor(NULL, IDC_HELP));
 		return TRUE;
@@ -343,7 +352,7 @@ void CMainFrame::OnUpdateRangeOfIds_Radio(UINT nID)
 	BOOL bCheck = (curRadio == adjId);
 	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
 	CMenu RadioMenu = GetFrameMenu().GetSubMenu(nFileItem);
-	if (bCheck)  
+	if (bCheck)
 		RadioMenu.CheckMenuRadioItem(ID_RADIO_A, ID_RADIO_C, nID, 0);
 }
 
@@ -370,7 +379,7 @@ void CMainFrame::SetupToolBar()
 	// Set the Resource IDs for the toolbar buttons: start out with a
 	// separator just to give some space at the left of the toolbar
 	AddToolBarButton(0);  // Separator
-	
+
 	// Connect button IDs to button icons, show enabled status, and
 	// give the explicit image index iImage of each button in the bitmap.
 	// Add the toolbar buttons in the order they are to appear at runtime.
@@ -400,7 +409,7 @@ void CMainFrame::SetupToolBar()
 	AddToolBarButton(IDM_HELP_CONTENT,  TRUE, 0, 17);
 	AddToolBarButton(IDM_HELP_CONTEXT,  TRUE, 0, 18);
 	AddToolBarButton(0);  // Separator
-	  
+
 	// Set the toolbar image list: use defaults for hot and disabled
 	SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, 0, 0);
 }
@@ -419,7 +428,6 @@ void CMainFrame::ShowHelpTopic(UINT nID)
 // Display the context help for the specified topic
 {
 	m_AppHelp.ShowHelpTopic(nID);
-	m_IsChoosingTopic = FALSE;
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

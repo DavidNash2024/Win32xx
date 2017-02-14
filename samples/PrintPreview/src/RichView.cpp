@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #include "richview.h"
-//#include <richedit.h>
 
 
 CRichView::CRichView()

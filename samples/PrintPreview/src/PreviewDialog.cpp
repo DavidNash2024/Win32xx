@@ -2,8 +2,8 @@
 // PreviewDialog.cpp
 
 #include "stdafx.h"
-#include "TextApp.h"
 #include "PreviewDialog.h"
+#include "TextApp.h"
 #include "resource.h"
 
 

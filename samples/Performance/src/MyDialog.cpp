@@ -7,7 +7,6 @@
 #include "resource.h"
 
 
-
 // Definitions for the CMyDialog class
 CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {

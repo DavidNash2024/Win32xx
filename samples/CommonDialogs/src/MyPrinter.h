@@ -58,8 +58,7 @@
 #define MYPRINTER_H
 
 /******************************************************************************/
-
-#include "wxx_printdialogs.h"		
+	
 #include "ListBoxDlgRC.h"
 
 #define TF(b) (b ? _T("true") : _T("false"))

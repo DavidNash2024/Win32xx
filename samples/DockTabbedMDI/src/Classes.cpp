@@ -7,6 +7,7 @@
 #include "Classes.h"
 #include "resource.h"
 #include "TabbedMDIApp.h"
+#include "resource.h"
 
 
 ///////////////////////////////////////////////

@@ -6,9 +6,6 @@
 #define TEXT_H
 
 
-#include <richedit.h>
-
-
 // Declaration of the CViewText class
 class CViewText : public CRichEdit
 {

@@ -2,8 +2,8 @@
 // Client.cpp
 
 #include "stdafx.h"
-#include "DialogApp.h"
 #include "Client.h"
+#include "DialogApp.h"
 
 
 void CClientSocket::OnConnect()

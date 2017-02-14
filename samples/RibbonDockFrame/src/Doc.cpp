@@ -1,7 +1,8 @@
 
+
 #include "stdafx.h"
-#include "RibbonApp.h"
 #include "Doc.h"
+#include "View.h"
 
 
 BOOL CDoc::FileOpen(LPCTSTR szFilename)

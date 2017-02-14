@@ -1,12 +1,10 @@
 ///////////////////////////////////////
-// FormView.h
+// View.h
 
 #ifndef SDI_VIEW_H
 #define SDI_VIEW_H
 
-#include "wxx_dialog.h"
-#include "resource.h"
-
+class CDoc;
 
 // Declaration of the CView class
 class CView : public CDialog
@@ -15,6 +13,8 @@ public:
 	CView(UINT nResID);
 	virtual ~CView();
 	virtual HWND Create(HWND hParent);
+
+	CDoc& GetDoc();
 
 	void OnRangeOfIds_Radio(UINT nIdAdjust);
 	void OnCheckA();

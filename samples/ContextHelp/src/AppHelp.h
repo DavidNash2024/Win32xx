@@ -6,21 +6,28 @@
 #include "HelpAbout.h"
 
 
-// The CAppHelp class derives from the CContextHelp class in 
-// order to implement application-specific features. A CFrame-based
-// architecture is assumed.
+// The CAppHelp class uses composition to combine the features of the
+//  CContextHelp and CHelpAbout classes.
 
-class CAppHelp : public CContextHelp
+class CAppHelp
 {
 public:
 	CAppHelp();
 	~CAppHelp() {}
-
+	
+	void About();
+	void AddHelpTopic(UINT nID, LPCTSTR topic);
 	void SetCommandHelpTopics();
 	void SetClientHelpTopics();
+	void SetCredits(LPCTSTR szCredits);
 	void SetFrameHelpTopics();
+	void SetHelpFilePath(LPCTSTR chmName);
+	void ShowHelpTopic(UINT nID);
+	void ShowHelpTopic(LPCTSTR topic);
 
 private:
+	CContextHelp m_ContextHelp;
+	CHelpAbout m_HelpAbout;
 };
 
 

@@ -1,9 +1,8 @@
 //////////////////////////////////////////////////
-// FormApp.h
+// App.h
 
 #ifndef SDI_APP_H
 #define SDI_APP_H
-
 
 #include "Mainfrm.h"
 

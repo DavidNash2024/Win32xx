@@ -58,7 +58,6 @@
 #ifndef MAINFRM_H
 #define MAINFRM_H
 
-#include "App.h"
 #include "View.h"
 #include "Doc.h"
 

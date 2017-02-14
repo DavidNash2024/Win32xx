@@ -2,8 +2,8 @@
 // ComboBoxEx.cpp
 
 #include "stdafx.h"
-#include "BrowserApp.h"
 #include "MyCombo.h"
+#include "resource.h"
 
 
 void CMyCombo::PreCreate(CREATESTRUCT& cs)

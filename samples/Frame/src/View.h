@@ -4,7 +4,6 @@
 #ifndef VIEW_H
 #define VIEW_H
 
-//Forward declaration
 class CDoc;
 
 // Declaration of the CView class
@@ -13,7 +12,7 @@ class CView : public CWnd
 public:
 	CView();
 	virtual ~CView(){}
-
+	CDoc& GetDoc();
 
 protected:
 	virtual void OnDraw(CDC& dc);

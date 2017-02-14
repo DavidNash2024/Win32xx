@@ -5,11 +5,7 @@
 #define MAINFRM_H
 
 
-#include "Classes.h"
-#include "Files.h"
 #include "Simple.h"
-#include "Text.h"
-#include "Output.h"
 
 
 // Declaration of the CMainFrame class

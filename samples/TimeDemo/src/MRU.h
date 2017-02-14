@@ -57,7 +57,6 @@
 #ifndef GPP_MRU_H_FILE
 #define GPP_MRU_H_FILE
 
-#include <vector>
 
 
 /*============================================================================*/

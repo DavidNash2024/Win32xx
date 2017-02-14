@@ -4,7 +4,6 @@
 
 
 #include "stdafx.h"
-#include "ContainerApp.h"
 #include "Output.h"
 #include "resource.h"
 

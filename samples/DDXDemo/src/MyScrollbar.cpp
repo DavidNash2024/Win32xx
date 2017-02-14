@@ -55,8 +55,9 @@
 
 #include "stdafx.h"
 #include "MyScrollbar.h"
-#include "resource.h"
 #include "App.h"
+#include "resource.h"
+
 
 /*============================================================================*/
 	CMyScrollBar::

@@ -6,22 +6,8 @@
 // include the Resource IDs defined by Win32++
 #include "default_resource.h"
 
-// resource ID for About dialog string (see CContextHelp.cpp for rationale).
-#define IDC_ABOUT_CREDITS	        200
-
-// message identifiers for common dialog communications
-#define IDM_HELP_COLORDLG              	210			
-#define IDM_HELP_FILEDLG_OPEN          	211			
-#define IDM_HELP_FILEDLG_NEW            212			
-#define IDM_HELP_FILEDLG_SAVEAS        	213			
-#define IDM_HELP_FINDDLG               	214			
-#define IDM_HELP_REPLACEDLG            	215			
-#define IDM_HELP_FONTDLG               	216			
-#define IDM_HELP_PRINTDLG              	217			
-#define IDM_HELP_PAGESETDLG            	218			
-#define IDM_HELP_LIST_BOX              	219			
-// the common dialog help message
-#define IDC_HELP_COMDLG                	220			
+// resource ID for the About dialog text.
+#define IDC_ABOUT_CREDITS	            200
 
 // IDs for non-client areas of the frame
 // Add IDFR_NCFRAME to the value returned by the WM_NCHITTEST message
@@ -61,37 +47,34 @@
 #define IDM_SHIFT_F1                    323
 #define IDM_F1                          324
 
-// bitmap identifiers
-#define IDB_FONT_BMP                    325
-#define IDB_COLOR_BMP                   326
+//Resource IDs for the app's menu-items
+#define ID_RADIO_A                      330
+#define ID_RADIO_B                      331
+#define ID_RADIO_C                      332
+#define ID_CHECK_A                      333
+#define ID_CHECK_B                      334
+#define ID_CHECK_C                      335
 
 // resource string identifiers
-#define IDS_DATAPATH_SUBDIR             330
-#define IDS_HELP_FILE_EXT               331
-#define IDS_APP_VERSION                 332
+#define IDS_GROUP_FOLDER                340
+#define IDS_APP_NAME                    341
+#define IDS_HELP_FILE                   342
+#define IDS_APP_VERSION                 343
 
 // toolbar bitmap identifier
-#define IDB_TOOLBAR_NORM                340
-
-//Resource IDs for the app's menu-items
-#define ID_RADIO_A                      400
-#define ID_RADIO_B                      401
-#define ID_RADIO_C                      402
-#define ID_CHECK_A                      410
-#define ID_CHECK_B                      411
-#define ID_CHECK_C                      412
+#define IDB_TOOLBAR_NORM                350
 
 //Resource IDs for the dialog
-#define IDD_DIALOG1                     501
-#define IDC_EDIT1                       520
-#define IDC_LIST1                       521
-#define IDC_BUTTON1                     522
-#define IDC_RICHEDIT1                   523
-#define IDC_BITMAP1                     530
-#define IDC_GROUP1                      531
-#define IDC_STATUS                      532
-#define IDC_HOTKEY1                     540
-#define IDB_BITMAP1                     550
+#define IDD_DIALOG1                     401
+#define IDC_EDIT1                       420
+#define IDC_LIST1                       421
+#define IDC_BUTTON1                     422
+#define IDC_RICHEDIT1                   423
+#define IDC_BITMAP1                     430
+#define IDC_GROUP1                      431
+#define IDC_STATUS                      432
+#define IDC_HOTKEY1                     440
+#define IDB_BITMAP1                     450
 
 // Next default values for new objects
 // 

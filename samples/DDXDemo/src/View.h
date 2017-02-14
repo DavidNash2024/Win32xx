@@ -61,7 +61,6 @@
 #define SDI_VIEW_H
 
 
-#include "resource.h"
 #include "MyButton.h"
 #include "MySlider.h"
 #include "MyScrollbar.h"

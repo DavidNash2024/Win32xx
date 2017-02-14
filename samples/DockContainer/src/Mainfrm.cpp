@@ -2,9 +2,12 @@
 // Mainfrm.cpp
 
 #include "stdafx.h"
-#include "resource.h"
-#include "ContainerApp.h"
 #include "mainfrm.h"
+#include "Classes.h"
+#include "Files.h"
+#include "Output.h"
+#include "Text.h"
+#include "resource.h"
 
 
 // Definitions for the CMainFrame class

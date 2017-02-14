@@ -81,7 +81,6 @@
 *******************************************************************************/
 
 #include "stdafx.h"
-#include "wxx_printdialogs.h"
 #include "PrintInfo.h"
 
 
