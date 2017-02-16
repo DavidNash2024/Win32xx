@@ -2184,7 +2184,7 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-			GetAncestor().SetForegroundWindow();
+			GetTopmostDocker()->SetForegroundWindow();
 
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
@@ -2196,8 +2196,9 @@ namespace Win32xx
 			GetTopmostDocker()->RedrawWindow();
 
 			// Update the Dock captions
-			GetDockAncestor()->m_pDockActive = pDocker;
-			DrawAllCaptions();
+		//	GetDockAncestor()->m_pDockActive = pDocker;
+			SetActiveDocker(pDocker);
+		//	DrawAllCaptions();
 		}
 	}
 
@@ -2243,6 +2244,22 @@ namespace Win32xx
 			{
 				pContainer->AddContainer( (*riter).pContainer, TRUE);
 			}
+		}
+
+		// Redraw the docked windows
+		if (GetAncestor().IsWindowVisible())
+		{
+			GetTopmostDocker()->SetForegroundWindow();
+
+			// Give the view window focus unless its child already has it
+			if (!pDocker->GetView().IsChild(GetFocus()))
+				pDocker->GetView().SetFocus();
+
+			// Update the Dock captions
+			CDockContainer* pContainer = pDocker->GetContainer()->GetContainerParent();
+		//	GetDockAncestor()->m_pDockActive = pContainer->GetDocker();
+		//	DrawAllCaptions();
+			SetActiveDocker(pContainer->GetDocker());
 		}
 	}
 
@@ -2291,15 +2308,26 @@ namespace Win32xx
 			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / (double)GetDockAncestor()->GetWindowRect().Height();
 		}
 
-		// Give the view window focus unless its child already has it
-		if (!pDocker->GetView().IsChild(GetFocus()))
-			pDocker->GetView().SetFocus();
+		// Redraw the docked windows
+		if (GetAncestor().IsWindowVisible())
+		{
+		//	GetAncestor().SetForegroundWindow();
+			GetTopmostDocker()->SetForegroundWindow();
 
-		RecalcDockLayout();
+			// Give the view window focus unless its child already has it
+			if (!pDocker->GetView().IsChild(GetFocus()))
+				pDocker->GetView().SetFocus();
 
-		// Update the Dock captions
-		GetDockAncestor()->m_pDockActive = pDocker;
-		DrawAllCaptions();
+			GetTopmostDocker()->SetRedraw(FALSE);
+			RecalcDockLayout();
+			GetTopmostDocker()->SetRedraw(TRUE);
+			GetTopmostDocker()->RedrawWindow();
+
+			// Update the Dock captions
+		//	GetDockAncestor()->m_pDockActive = pDocker;
+		//	DrawAllCaptions();
+			SetActiveDocker(pDocker);
+		}
 	}
 
 	inline void CDocker::DrawAllCaptions()
@@ -2351,10 +2379,10 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
-	// Returns the docker whose child window is active.
-	// Returns NULL if the docker is an inactive window, or a child of an inactive window.
+	// Returns the active docker the active docker. The active docker's caption is
+	// drawn with a different color
 	{
-		if (GetDockAncestor()->m_pDockActive)
+	/*	if (GetDockAncestor()->m_pDockActive)
 		{
 			CWnd* pTopmostActive = GetDockAncestor()->m_pDockActive->GetTopmostDocker();
 			if (GetActiveWindow() == pTopmostActive->GetHwnd())
@@ -2379,7 +2407,8 @@ namespace Win32xx
 			}
 		}
 
-		return NULL;
+		return NULL; */
+		return GetDockAncestor()->m_pDockActive;
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -3128,8 +3157,9 @@ namespace Win32xx
 
 		if (PtInRect(GetDockClient().GetWindowRect(), pt)) // only for this docker
 		{
-			GetDockAncestor()->m_pDockActive = this;
-			DrawAllCaptions();
+		//	GetDockAncestor()->m_pDockActive = this;
+		//	DrawAllCaptions();
+			SetActiveDocker(this);
 		}
 
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -3721,22 +3751,20 @@ namespace Win32xx
 	// Sets the active docker.
 	{
 		assert(pDock->IsWindow());
+		assert(pDock->SendMessage(UWM_GETCDOCKER));
 
-		if (pDock->SendMessage(UWM_GETCDOCKER))
-		{
-			GetDockAncestor()->m_pDockActive = pDock;
+		GetDockAncestor()->m_pDockActive = pDock;
 			
-			// Give focus to the view window unless its child already has it
-			if (!pDock->GetView().IsChild(GetFocus()))
-				pDock->GetView().SetFocus();
+		//	// Give focus to the view window unless its child already has it
+		//	if (!pDock->GetView().IsChild(GetFocus()))
+		//		pDock->GetView().SetFocus();
 
-			// If the view window won't accept focus, give it to the DockClient
-			if (!pDock->GetDockClient().IsChild(GetFocus()))
-				pDock->GetDockClient().GetView().SetFocus();
+		//	// If the view window won't accept focus, give it to the DockClient
+		//	if (!pDock->GetDockClient().IsChild(GetFocus()))
+		//		pDock->GetDockClient().GetView().SetFocus();
 
-			// Update the captions
-			DrawAllCaptions();
-		}
+		// Update the captions
+		DrawAllCaptions();
 	}
 
 	inline void CDocker::SetDockStyle(DWORD dwDockStyle)
