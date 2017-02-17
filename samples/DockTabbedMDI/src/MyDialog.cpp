@@ -38,10 +38,10 @@ INT_PTR CViewDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Pass resizing messages on to the resizer
 	m_Resizer.HandleMessage(uMsg, wParam, lParam);
 
-//	switch (uMsg)
-//	{
-		//Additional messages to be handled go here
-//	}
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
+	}
 
 	// Pass unhandled messages on to parent DialogProc
 	return DialogProcDefault(uMsg, wParam, lParam);
@@ -106,6 +106,12 @@ BOOL CViewDialog::OnInitDialog()
 	m_Resizer.AddChild(m_RichEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 	
 	return true;
+}
+
+LRESULT CViewDialog::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 void CViewDialog::OnOK()

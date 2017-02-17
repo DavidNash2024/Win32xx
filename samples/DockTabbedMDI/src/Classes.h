@@ -22,6 +22,7 @@ protected:
 	virtual void OnAttach();
 	virtual void OnDestroy();
 	virtual void PreCreate(CREATESTRUCT& cs);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CImageList m_imlNormal;

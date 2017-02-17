@@ -102,6 +102,17 @@ void CViewFiles::InsertItems()
 	SetSubItem(item, 2, _T("Folder"));
 }
 
+LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:
+		SetFocus();
+		break;
+	}
+
+	return WndProcDefault(uMsg, wParam, lParam);
+}
 
 
 ///////////////////////////////////////////////
