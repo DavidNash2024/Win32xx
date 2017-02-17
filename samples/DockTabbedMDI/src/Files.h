@@ -18,6 +18,7 @@ public:
 	virtual void OnDestroy();
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
 	CImageList m_imlSmall;

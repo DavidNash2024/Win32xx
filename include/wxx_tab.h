@@ -1032,10 +1032,7 @@ namespace Win32xx
 		// Prevent the tab control from grabbing focus when we have a view
 		if (GetActiveView() && !m_IsClosePressed)
 		{
-			// return focus back to the child window that had it before
-			HWND hwndPrevFocus = reinterpret_cast<HWND>(wParam);
-			if (IsChild(hwndPrevFocus))
-				::SetFocus(hwndPrevFocus);
+			GetActiveView()->SetFocus();
 		}
 
 		return FinalWindowProc(uMsg, wParam, lParam);
@@ -2054,6 +2051,14 @@ namespace Win32xx
 	{
 		switch(uMsg)
 		{
+		case WM_SETFOCUS:
+		{
+			if (GetActiveMDIChild() && GetActiveMDIChild()->IsWindow())
+				GetActiveMDIChild()->SetFocus();
+
+			return 0L;
+
+		}
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		case UWM_GETCTABBEDMDI:		return reinterpret_cast<LRESULT>(this);
 		}

@@ -507,7 +507,6 @@ namespace Win32xx
 		BOOL IsDragAutoResize() const;
 		BOOL IsRelated(HWND hWnd) const;
 		BOOL IsUndocked() const;
-		void SetActiveDocker(CDocker* pDock);
 		void SetBarColor(COLORREF color) {GetDockBar().SetColor(color);}
 		void SetBarWidth(int nWidth) {GetDockBar().SetWidth(nWidth);}
 		void SetCaption(LPCTSTR szCaption);
@@ -542,6 +541,7 @@ namespace Win32xx
 		virtual LRESULT OnExitSizeMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -582,7 +582,6 @@ namespace Win32xx
 		CTargetBottom	m_TargetBottom;
 		CDocker*		m_pDockParent;
 		CDocker*		m_pDockAncestor;
-		CDocker*		m_pDockActive;				// Only used by the DockAncestor
 
 		std::vector <CDocker*> m_vDockChildren;		// Docker's immediate children
 		std::vector <DockPtr> m_vAllDockChildren;	// All descendants of the DockAncestor (only used by the DockAncestor)
@@ -1023,7 +1022,7 @@ namespace Win32xx
 			{
 				// Give the view window focus unless its child already has it
 				if (!GetView().IsChild(GetFocus()))
-					GetView().SetFocus();
+					m_pDocker->SetFocus();
 
 				// Update the close button
 				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
@@ -1055,7 +1054,7 @@ namespace Win32xx
 			{
 				// Give the view window focus unless its child already has it
 				if (!GetView().IsChild(GetFocus()))
-					GetView().SetFocus();
+					m_pDocker->SetFocus();
 
 				// Update the close button
 				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
@@ -1878,10 +1877,10 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDocker class
 	//
-	inline CDocker::CDocker() : m_pDockParent(NULL), m_pDockActive(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE), 
-					m_IsClosing(FALSE), m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0), m_nDockID(0),
-					m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0), m_DockStyle(0), 
-					m_hDockUnderPoint(0)
+	inline CDocker::CDocker() : m_pDockParent(NULL), m_IsBlockMove(FALSE), m_IsUndocking(FALSE),
+		            m_IsClosing(FALSE), m_IsDragging(FALSE), m_IsDragAutoResize(TRUE), m_DockStartSize(0),
+		            m_nDockID(0), m_nRedrawCount(0), m_NCHeight(0), m_dwDockZone(0), m_DockSizeRatio(1.0),
+		            m_DockStyle(0), m_hDockUnderPoint(0)
 	{
 		// Assume this docker is the DockAncestor for now.
 		m_pDockAncestor = this;
@@ -1891,9 +1890,6 @@ namespace Win32xx
 
 	inline CDocker::~CDocker()
 	{
-		if (GetDockAncestor()->m_pDockActive == this)
-			GetDockAncestor()->m_pDockActive = 0;
-
 		GetDockBar().Destroy();
 
 		std::vector<DockPtr>::const_iterator iter;
@@ -2184,11 +2180,11 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-			GetTopmostDocker()->SetForegroundWindow();
+		//	GetTopmostDocker()->SetForegroundWindow();
 
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->GetView().SetFocus();
+				pDocker->SetFocus();
 
 			GetTopmostDocker()->SetRedraw(FALSE);
 			RecalcDockLayout();
@@ -2196,9 +2192,7 @@ namespace Win32xx
 			GetTopmostDocker()->RedrawWindow();
 
 			// Update the Dock captions
-		//	GetDockAncestor()->m_pDockActive = pDocker;
-			SetActiveDocker(pDocker);
-		//	DrawAllCaptions();
+			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
 		}
 	}
 
@@ -2249,17 +2243,14 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-			GetTopmostDocker()->SetForegroundWindow();
+		//	GetTopmostDocker()->SetForegroundWindow();
 
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->GetView().SetFocus();
+				pDocker->SetFocus();
 
 			// Update the Dock captions
-			CDockContainer* pContainer = pDocker->GetContainer()->GetContainerParent();
-		//	GetDockAncestor()->m_pDockActive = pContainer->GetDocker();
-		//	DrawAllCaptions();
-			SetActiveDocker(pContainer->GetDocker());
+			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
 		}
 	}
 
@@ -2311,12 +2302,11 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-		//	GetAncestor().SetForegroundWindow();
-			GetTopmostDocker()->SetForegroundWindow();
+		//	GetTopmostDocker()->SetForegroundWindow();
 
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->GetView().SetFocus();
+				pDocker->SetFocus();
 
 			GetTopmostDocker()->SetRedraw(FALSE);
 			RecalcDockLayout();
@@ -2324,9 +2314,7 @@ namespace Win32xx
 			GetTopmostDocker()->RedrawWindow();
 
 			// Update the Dock captions
-		//	GetDockAncestor()->m_pDockActive = pDocker;
-		//	DrawAllCaptions();
-			SetActiveDocker(pDocker);
+			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
 		}
 	}
 
@@ -2379,36 +2367,27 @@ namespace Win32xx
 	}
 
 	inline CDocker* CDocker::GetActiveDocker() const
-	// Returns the active docker the active docker. The active docker's caption is
-	// drawn with a different color
+	// Returns the docker that has a child window with keyboard focus. 
+	// The active docker's caption is drawn with a different color.
 	{
-	/*	if (GetDockAncestor()->m_pDockActive)
+		CDocker* pDockActive = NULL;
+		HWND hWndTest = ::GetFocus();
+
+		while (hWndTest != 0)
 		{
-			CWnd* pTopmostActive = GetDockAncestor()->m_pDockActive->GetTopmostDocker();
-			if (GetActiveWindow() == pTopmostActive->GetHwnd())
-			{
-				return GetDockAncestor()->m_pDockActive;
-			}
+			HWND hWndParent = ::GetParent(hWndTest);
+			if (hWndParent == hWndTest) break;		// could be owned window, not parent
+			hWndTest = hWndParent;
 			
-			if (pTopmostActive->IsWindow() && (GetActiveWindow() == pTopmostActive->GetAncestor(GA_ROOT)))
+			CDocker* pDock = (CDocker*)::SendMessage(hWndTest, UWM_GETCDOCKER, 0, 0);
+			if (pDock)
 			{
-				// if the topmost docker has a parent, the parent could be a MDI child.
-				HWND hMDIChild = pTopmostActive->GetParent();
-				if (hMDIChild)
-				{
-					HWND hMDIClient = ::GetParent(hMDIChild);
-					HWND hMDIActive = (HWND)SendMessage(hMDIClient, WM_MDIGETACTIVE, 0L, 0L);
-
-					if (hMDIActive && hMDIActive != hMDIChild)
-						return NULL;	// Parent is a MDI child, but not the active one
-				}
-
-				return GetDockAncestor()->m_pDockActive;
+				pDockActive = pDock;
+				break;
 			}
 		}
 
-		return NULL; */
-		return GetDockAncestor()->m_pDockActive;
+		return pDockActive;
 	}
 
 	inline CDocker* CDocker::GetDockAncestor() const
@@ -2891,7 +2870,8 @@ namespace Win32xx
 		{
 			// Give the view window focus unless its child already has it
 			if (!GetView().IsChild(GetFocus()))
-				GetView().SetFocus();
+				//	GetView().SetFocus();
+				SetFocus();
 		}
 
 		return 0L;
@@ -3151,18 +3131,16 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline LRESULT CDocker::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	inline LRESULT CDocker::OnMouseActivate(UINT, WPARAM, LPARAM)
 	{
 		CPoint pt = GetCursorPos();
 
 		if (PtInRect(GetDockClient().GetWindowRect(), pt)) // only for this docker
 		{
-		//	GetDockAncestor()->m_pDockActive = this;
-		//	DrawAllCaptions();
-			SetActiveDocker(this);
+			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
 		}
 
-		return CWnd::WndProcDefault(uMsg, wParam, lParam);
+		return 0L;	// Return 0 to stop propogating this message to parent windows
 	}
 
 	inline LRESULT CDocker::OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -3747,26 +3725,6 @@ namespace Win32xx
 		}
 	}
 
-	inline void CDocker::SetActiveDocker(CDocker* pDock)
-	// Sets the active docker.
-	{
-		assert(pDock->IsWindow());
-		assert(pDock->SendMessage(UWM_GETCDOCKER));
-
-		GetDockAncestor()->m_pDockActive = pDock;
-			
-		//	// Give focus to the view window unless its child already has it
-		//	if (!pDock->GetView().IsChild(GetFocus()))
-		//		pDock->GetView().SetFocus();
-
-		//	// If the view window won't accept focus, give it to the DockClient
-		//	if (!pDock->GetDockClient().IsChild(GetFocus()))
-		//		pDock->GetDockClient().GetView().SetFocus();
-
-		// Update the captions
-		DrawAllCaptions();
-	}
-
 	inline void CDocker::SetDockStyle(DWORD dwDockStyle)
 	{
 		if (IsWindow())
@@ -4021,7 +3979,7 @@ namespace Win32xx
 
 		// Give the view window focus unless its child already has it
 		if (!GetView().IsChild(GetFocus()))
-			GetView().SetFocus();
+			SetFocus();
 
 		RecalcDockLayout();
 		if ((pDockUndockedFrom) && (pDockUndockedFrom->GetTopmostDocker() != GetTopmostDocker()))
@@ -4108,7 +4066,8 @@ namespace Win32xx
 					pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 				}
 				pDockNew->GetDockBar().SetParent(pDockOld->GetParent());
-				pDockNew->GetView().SetFocus();
+			//	pDockNew->GetView().SetFocus();
+				pDockNew->SetFocus();
 
 				// Transfer the Dock children to the new docker
 				pDockOld->MoveDockChildren(pDockNew);
@@ -4152,6 +4111,23 @@ namespace Win32xx
 		pDocker->BringWindowToTop();
 	}
 
+	inline LRESULT CDocker::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		// Sets the focus to the view (or its child)
+		HWND hwndPrevFocus = reinterpret_cast<HWND>(wParam);
+		if (GetView().IsChild(hwndPrevFocus))
+		{
+			// return focus back to the child of the active view that had it before
+			::SetFocus(hwndPrevFocus);
+		}
+		else
+		{
+			GetView().SetFocus();
+		}
+		
+		return FinalWindowProc(uMsg, wParam, lParam);
+	}
+
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -4161,6 +4137,7 @@ namespace Win32xx
 		case WM_EXITSIZEMOVE:		return OnExitSizeMove(uMsg, wParam, lParam);
 		case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(uMsg, wParam, lParam);
+		case WM_SETFOCUS:			return OnSetFocus(uMsg, wParam, lParam);
 		case WM_SIZE:				return OnSize(uMsg, wParam, lParam);
 		case WM_SYSCOLORCHANGE:		return OnSysColorChange(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);

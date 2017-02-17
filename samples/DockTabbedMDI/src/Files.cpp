@@ -100,7 +100,19 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnDestroy()
 {
 	SetImageList(NULL, LVSIL_SMALL);
-}		
+}
+
+LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:
+		SetFocus();
+		break;
+	}
+
+	return WndProcDefault(uMsg, wParam, lParam);
+}
 
 
 ///////////////////////////////////////////////

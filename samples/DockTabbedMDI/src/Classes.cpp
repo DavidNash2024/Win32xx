@@ -85,7 +85,17 @@ void CViewClasses::PreCreate(CREATESTRUCT& cs)
 	cs.lpszClass = WC_TREEVIEW;
 }
 
+LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:
+		SetFocus();
+		break;
+	}
 
+	return WndProcDefault(uMsg, wParam, lParam);
+}
 
 ///////////////////////////////////////////////
 // CContainClasses functions

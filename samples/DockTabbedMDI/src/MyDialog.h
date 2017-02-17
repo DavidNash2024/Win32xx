@@ -18,6 +18,7 @@ protected:
 	virtual void OnCancel();
 	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void OnOK();
 
 private:
