@@ -127,6 +127,9 @@ BOOL CViewDialog::OnInitDialog()
 
 LRESULT CViewDialog::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+	if (!IsChild(::GetFocus()))
+		SetFocus();
+
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
