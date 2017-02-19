@@ -42,7 +42,8 @@ New Features and Enhancements
   The CScrollView class adds scrolling to a CWnd used as a view window. To
   use this class, inherit the View window from CScrollView and use the
   SetScrollSizes function to enable scrolling. No change needs to be made
-  to the code in OnDraw to allow it to be scrolled.	   
+  to the code in OnDraw to allow it to be scrolled.	CScrollView is used in
+  the FastGDI and Picture samples.  
 	
 * The CMetaFile and CEnhMetaFile classes have been added to the framework.
  - CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
@@ -60,7 +61,7 @@ New Features and Enhancements
    
 * Renamed the text conversion typedefs. 
    This allows Win32++ to be used with ATL.
-
+   
 * Added the following samples.
  1) Animation sample.
    This sample demonstrates how to use an animation control in a dialog.
@@ -85,38 +86,39 @@ New Features and Enhancements
 Changes in detail
 -----------------
 Added wxx_dockframe.h                   header file
-Added wxx_metafile.h					header file
-Added CFrameT							class template
-Added CMDIFrameT						class template
-Added CRibbonFrameT 					class template
-Added CRibbonMDIFrame 					class
-Added CRibbonMDIDockFrame 				class
-Added CMetaFile							class
-Added CEnhMetaFile						class
+Added wxx_metafile.h                    header file
+Added CFrameT                           class template
+Added CMDIFrameT                        class template
+Added CRibbonFrameT                     class template
+Added CRibbonMDIFrame                   class
+Added CRibbonMDIDockFrame               class
+Added CMetaFile                         class
+Added CEnhMetaFile                      class
 Added CScrollView                       class
-Added ::Trace							global function
-Added CDC::PlayMetaFile					member function
-Added CDockContainer::GetToolBarData	member function
-Added CFrameT::GetMenuMetrics			member function
-Added CFrameT::GetToolBarData			member function
-Added CFrameT::IsVistaMenuUsed			member function
-Added CFrameT::OnSettingChange			member function
-Added CMDIChild::GetChildAccel			member function
-Added CMDIChild::GetChildMenu			member function
+Added ::Trace                           global function
+Added CDC::PlayMetaFile                 member function
+Added CDockContainer::GetToolBarData    member function
+Added CFrameT::GetMenuMetrics           member function
+Added CFrameT::GetToolBarData           member function
+Added CFrameT::IsVistaMenuUsed          member function
+Added CFrameT::OnSettingChange          member function
+Added CMDIChild::GetChildAccel          member function
+Added CMDIChild::GetChildMenu           member function
 Added CMDIFrameT::OnMDIMaximized        member function
-Added CMDIFrameT::UpdateFrameMenu		member function
-Added CTab::GetMaxTabSize				member function
-Added CTime::operator ()				member function
-Added CTimeSpan::operator ()			member function
+Added CMDIFrameT::UpdateFrameMenu       member function
+Added CTab::GetMaxTabSize               member function
+Added CTabbedMDI::OnSetFocus            member function
+Added CTime::operator ()                member function
+Added CTimeSpan::operator ()            member function
 
 Added UWM_MDIACTIVATED                  window message
 Added UWM_MDIDESTROYED                  window message
 
-Modified TRACE 							now implemented as a macro.
+Modified TRACE                          now implemented as a macro.
 Modified CBitmap::LoadImage
 Modified CDC::LoadImage
-Modified CMetaFileDC::Close				now returns CMetaFile
-Modified CMetaFileDC::CloseEnhanced		now returns CEnhMetaFile
+Modified CMetaFileDC::Close             now returns CMetaFile
+Modified CMetaFileDC::CloseEnhanced     now returns CEnhMetaFile
 Modified CToolTip::AddTool
 Modified CToolTip::DelTool
 Modified CToolTip::GetText

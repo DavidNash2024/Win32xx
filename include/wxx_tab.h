@@ -245,6 +245,7 @@ namespace Win32xx
 		virtual void 	OnAttach();
 		virtual void    OnDestroy();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
 		virtual BOOL	OnTabClose(int nPage);
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -1310,6 +1311,8 @@ namespace Win32xx
 			dwStyle |= TCS_BOTTOM;
 
 		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		
+		RedrawWindow();
 		RecalcLayout();
 	}
 
@@ -2047,18 +2050,19 @@ namespace Win32xx
 		GetTab().SelectPage(iTab);
 	}
 
+	inline LRESULT CTabbedMDI::OnSetFocus(UINT, WPARAM, LPARAM)
+	{
+		if (GetActiveMDIChild() && GetActiveMDIChild()->IsWindow())
+			GetActiveMDIChild()->SetFocus();
+
+		return 0L;
+	}
+
 	inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
 		{
-		case WM_SETFOCUS:
-		{
-			if (GetActiveMDIChild() && GetActiveMDIChild()->IsWindow())
-				GetActiveMDIChild()->SetFocus();
-
-			return 0L;
-
-		}
+		case WM_SETFOCUS:			return OnSetFocus(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		case UWM_GETCTABBEDMDI:		return reinterpret_cast<LRESULT>(this);
 		}

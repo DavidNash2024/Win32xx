@@ -6,6 +6,7 @@
 #include "resource.h"
 
 
+
 // Definitions for the CViewDialog class
 CViewDialog::CViewDialog(UINT nResID) : CDialog(nResID)
 {
@@ -58,16 +59,32 @@ void CViewDialog::OnClose()
 	// Suppress the WM_CLOSE message that is sent by pressing an Esc key in the RichEdit controls.
 }
 
+void CViewDialog::OnRadioButton(UINT nButton)
+{
+	SendDlgItemMessage(IDC_RADIO1, BM_SETCHECK, FALSE, 0);
+	SendDlgItemMessage(IDC_RADIO2, BM_SETCHECK, FALSE, 0);
+	SendDlgItemMessage(IDC_RADIO3, BM_SETCHECK, FALSE, 0);
+	SendDlgItemMessage(IDC_RADIO1 + nButton, BM_SETCHECK, TRUE, 0);
+
+	CString str;
+	str.Format(_T("Radio%d"), nButton+1);
+	AppendText(IDC_RICHEDIT2, str);
+	TRACE(str); TRACE("\n");
+}
+
 BOOL CViewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
     {
 	case IDC_BUTTON1:	OnButton();		return TRUE;
-	case IDC_RADIO1:	OnRadio1();		return TRUE;
-	case IDC_RADIO2:	OnRadio2();		return TRUE;
-	case IDC_RADIO3:	OnRadio3();		return TRUE;
+
+	case IDC_RADIO1:	// intentionally blank
+	case IDC_RADIO2:
+	case IDC_RADIO3:	OnRadioButton(nID - IDC_RADIO1);	return TRUE;
+
 	case IDC_CHECK1:	OnCheck1();		return TRUE;
 	case IDC_CHECK2:	OnCheck2();		return TRUE;
 	case IDC_CHECK3:	OnCheck3();		return TRUE;
@@ -110,7 +127,6 @@ BOOL CViewDialog::OnInitDialog()
 
 LRESULT CViewDialog::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	SetFocus();
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
@@ -142,24 +158,6 @@ void CViewDialog::OnCheck3()
 {
 	AppendText(IDC_RICHEDIT2, _T("Check Box 3"));
 	TRACE("Check Box 3\n");
-}
-
-void CViewDialog::OnRadio1()
-{
-	AppendText(IDC_RICHEDIT2, _T("Radio 1"));
-	TRACE("Radio 1\n");
-}
-
-void CViewDialog::OnRadio2()
-{
-	AppendText(IDC_RICHEDIT2, _T("Radio 2"));
-	TRACE("Radio 2\n");
-}
-
-void CViewDialog::OnRadio3()
-{
-	AppendText(IDC_RICHEDIT2, _T("Radio 3"));
-	TRACE("Radio 3\n");
 }
 
 

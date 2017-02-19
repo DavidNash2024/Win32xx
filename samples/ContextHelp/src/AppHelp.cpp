@@ -10,9 +10,9 @@ CAppHelp::CAppHelp()
 	SetFrameHelpTopics();
 }
 
-void CAppHelp::About()
+void CAppHelp::About(HWND hParent)
 {
-	m_HelpAbout.DoModal();
+	m_HelpAbout.DoModal(hParent);
 }
 
 void CAppHelp::AddHelpTopic(UINT nID, LPCTSTR topic)

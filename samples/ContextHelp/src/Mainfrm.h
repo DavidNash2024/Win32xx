@@ -5,9 +5,9 @@
 #define MAINFRM_H
 
 
-#include "AppHelp.h"
 #include "View.h"
 #include "Doc.h"
+#include "AppHelp.h"
 
 
 // Declaration of the CMainFrame class
