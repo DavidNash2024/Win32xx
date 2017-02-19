@@ -220,7 +220,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case ID_RADIO_C:		m_View.OnRangeOfIds_Radio(nID - ID_RADIO_A);
 		return TRUE;
 
-	case IDM_HELP_ABOUT:	m_AppHelp.About();		return TRUE;	// Menu item
+	case IDM_HELP_ABOUT:	m_AppHelp.About(*this);	return TRUE;	// Menu item
 	case IDM_HELP_CONTENT:	ShowHelpTopic(nID);		return TRUE;	// Menu item
 	case IDM_HELP_CONTEXT:	ChooseHelpTopic(); 		return TRUE;	// Toolbar Button
 	case IDM_SHIFT_F1:		OnShiftF1();			return TRUE;	// Accelerator

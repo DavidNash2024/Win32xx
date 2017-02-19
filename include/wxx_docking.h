@@ -541,7 +541,6 @@ namespace Win32xx
 		virtual LRESULT OnExitSizeMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNCLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1022,7 +1021,7 @@ namespace Win32xx
 			{
 				// Give the view window focus unless its child already has it
 				if (!GetView().IsChild(GetFocus()))
-					m_pDocker->SetFocus();
+					m_pDocker->GetView().SetFocus();
 
 				// Update the close button
 				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
@@ -1054,7 +1053,7 @@ namespace Win32xx
 			{
 				// Give the view window focus unless its child already has it
 				if (!GetView().IsChild(GetFocus()))
-					m_pDocker->SetFocus();
+					m_pDocker->GetView().SetFocus();
 
 				// Update the close button
 				if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
@@ -2180,11 +2179,9 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-		//	GetTopmostDocker()->SetForegroundWindow();
-
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->SetFocus();
+				pDocker->GetView().SetFocus();
 
 			GetTopmostDocker()->SetRedraw(FALSE);
 			RecalcDockLayout();
@@ -2243,11 +2240,9 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-		//	GetTopmostDocker()->SetForegroundWindow();
-
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->SetFocus();
+				pDocker->GetView().SetFocus();
 
 			// Update the Dock captions
 			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
@@ -2302,11 +2297,9 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
-		//	GetTopmostDocker()->SetForegroundWindow();
-
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->SetFocus();
+				pDocker->GetView().SetFocus();
 
 			GetTopmostDocker()->SetRedraw(FALSE);
 			RecalcDockLayout();
@@ -2870,8 +2863,7 @@ namespace Win32xx
 		{
 			// Give the view window focus unless its child already has it
 			if (!GetView().IsChild(GetFocus()))
-				//	GetView().SetFocus();
-				SetFocus();
+				GetView().SetFocus();
 		}
 
 		return 0L;
@@ -3979,7 +3971,7 @@ namespace Win32xx
 
 		// Give the view window focus unless its child already has it
 		if (!GetView().IsChild(GetFocus()))
-			SetFocus();
+			GetView().SetFocus();
 
 		RecalcDockLayout();
 		if ((pDockUndockedFrom) && (pDockUndockedFrom->GetTopmostDocker() != GetTopmostDocker()))
@@ -4066,8 +4058,7 @@ namespace Win32xx
 					pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
 				}
 				pDockNew->GetDockBar().SetParent(pDockOld->GetParent());
-			//	pDockNew->GetView().SetFocus();
-				pDockNew->SetFocus();
+				pDockNew->GetView().SetFocus();
 
 				// Transfer the Dock children to the new docker
 				pDockOld->MoveDockChildren(pDockNew);
@@ -4111,23 +4102,6 @@ namespace Win32xx
 		pDocker->BringWindowToTop();
 	}
 
-	inline LRESULT CDocker::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	{
-		// Sets the focus to the view (or its child)
-		HWND hwndPrevFocus = reinterpret_cast<HWND>(wParam);
-		if (GetView().IsChild(hwndPrevFocus))
-		{
-			// return focus back to the child of the active view that had it before
-			::SetFocus(hwndPrevFocus);
-		}
-		else
-		{
-			GetView().SetFocus();
-		}
-		
-		return FinalWindowProc(uMsg, wParam, lParam);
-	}
-
 	inline LRESULT CDocker::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch (uMsg)
@@ -4137,7 +4111,6 @@ namespace Win32xx
 		case WM_EXITSIZEMOVE:		return OnExitSizeMove(uMsg, wParam, lParam);
 		case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 		case WM_NCLBUTTONDBLCLK:	return OnNCLButtonDblClk(uMsg, wParam, lParam);
-		case WM_SETFOCUS:			return OnSetFocus(uMsg, wParam, lParam);
 		case WM_SIZE:				return OnSize(uMsg, wParam, lParam);
 		case WM_SYSCOLORCHANGE:		return OnSysColorChange(uMsg, wParam, lParam);
 		case WM_WINDOWPOSCHANGING:	return OnWindowPosChanging(uMsg, wParam, lParam);

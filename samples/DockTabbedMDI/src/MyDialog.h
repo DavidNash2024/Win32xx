@@ -24,12 +24,10 @@ protected:
 private:
 	void AppendText(int nID, LPCTSTR szText);
 	void OnButton();
-	void OnRadio1();
-	void OnRadio2();
-	void OnRadio3();
 	void OnCheck1();
 	void OnCheck2();
 	void OnCheck3();
+	void OnRadioButton(UINT nButton);
 
 	CResizer m_Resizer;
 

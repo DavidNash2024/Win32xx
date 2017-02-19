@@ -15,7 +15,7 @@ public:
 	CAppHelp();
 	~CAppHelp() {}
 	
-	void About();
+	void About(HWND hParent = 0);
 	void AddHelpTopic(UINT nID, LPCTSTR topic);
 	void SetCommandHelpTopics();
 	void SetClientHelpTopics();
