@@ -837,11 +837,11 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
 		// assure that the control is a radio button and part of a group
-		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && WS_GROUP);
+		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
 		assert(firstInGroup);
 
 		// assure the button is a radio button
-		BOOL isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && BS_RADIOBUTTON);
+		BOOL isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON));
 		assert(isRadioButton);
 
 		// preset the returned value to empty in case no button is set
@@ -882,8 +882,8 @@ namespace Win32xx
 			hWndCtrl = ::GetWindow(hWndCtrl, GW_HWNDNEXT);
 			if (hWndCtrl)
 			{
-				isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && BS_RADIOBUTTON);
-				firstInGroup  = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) && WS_GROUP);
+				isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON));
+				firstInGroup  = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
 			}
 		}
 	}

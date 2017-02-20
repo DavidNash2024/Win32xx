@@ -159,6 +159,8 @@ namespace Win32xx
 		Subclass(hWnd);		// Set the window's callback to CWnd::StaticWindowProc
 
 		OnAttach();
+		
+		// Post a message to trigger a call of OnInitialUpdate
 		PostMessage(UWM_WINDOWCREATED);
 
 		return TRUE;
@@ -405,7 +407,7 @@ namespace Win32xx
 		// Clear the CWnd pointer from TLS
 		pTLSData->pWnd = NULL;
 
-		// Window creation is complete. Now call OnInitialUpdate
+		// Post a message to trigger a call of OnInitialUpdate
 		PostMessage(UWM_WINDOWCREATED);
 
 		return hWnd;

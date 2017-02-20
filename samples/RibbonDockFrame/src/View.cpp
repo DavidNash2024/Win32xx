@@ -26,6 +26,13 @@ void CView::DrawLine(int x, int y)
 	dcClient.LineTo(x, y);
 }
 
+std::vector<PlotPoint>* CView::GetAllPoints()
+{
+	LRESULT lr = GetAncestor().SendMessage(UWN_GETALLPOINTS, 0, 0);
+	assert(lr);
+	return reinterpret_cast<std::vector<PlotPoint>*>(lr);
+}
+
 int CView::OnCreate(CREATESTRUCT&)
 {
 	// Support Drag and Drop on this window
@@ -103,6 +110,14 @@ LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
+LRESULT CView::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Respond to a mouse click on the window
+{
+	// Set window focus. The docker will now report this as active.
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
 LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// hold down the left mouse button and move mouse to draw lines.
@@ -119,23 +134,6 @@ LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
-std::vector<PlotPoint>* CView::GetAllPoints()
-{
-	LRESULT lr = GetAncestor().SendMessage(UWN_GETALLPOINTS, 0, 0);
-	assert(lr);
-	return reinterpret_cast<std::vector<PlotPoint>*>(lr);
-}
-
-void CView::SendPoint(int x, int y, bool PenDown)
-{
-	PlotPoint pp;
-	pp.x = x;
-	pp.y = y;
-	pp.PenDown = PenDown;
-	pp.color = m_PenColor;
-	GetAncestor().SendMessage(UWM_SENDPOINT, (WPARAM)&pp, 0);
-}
-
 void CView::PreCreate(CREATESTRUCT& cs)
 {
 	// Set the extra style to provide a sunken effect
@@ -150,12 +148,23 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 	wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
 }
 
+void CView::SendPoint(int x, int y, bool PenDown)
+{
+	PlotPoint pp;
+	pp.x = x;
+	pp.y = y;
+	pp.PenDown = PenDown;
+	pp.color = m_PenColor;
+	GetAncestor().SendMessage(UWM_SENDPOINT, (WPARAM)&pp, 0);
+}
+
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
 	case WM_DROPFILES:		return OnDropFiles(uMsg, wParam, lParam);
 	case WM_LBUTTONDOWN:	return OnLButtonDown(uMsg, wParam, lParam);
+	case WM_MOUSEACTIVATE:	return OnMouseActivate(uMsg, wParam, lParam);
 	case WM_MOUSEMOVE:		return OnMouseMove(uMsg, wParam, lParam);
 	case WM_LBUTTONUP:		return OnLButtonUp(uMsg, wParam, lParam);	
 	}

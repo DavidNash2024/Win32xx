@@ -13,6 +13,7 @@ class CSimpleView : public CWnd
 public:
 	CSimpleView();
 	virtual void OnDraw(CDC& dc);
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	

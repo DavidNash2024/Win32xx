@@ -20,6 +20,7 @@ void CViewSimple::OnDraw(CDC& dc)
 LRESULT CViewSimple::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Respond to a mouse click on the window
 {
+	// Set window focus. The docker will now report this as active.
 	SetFocus();
 	return FinalWindowProc(uMsg, wParam, lParam);
 }
@@ -38,8 +39,8 @@ LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-	case WM_SIZE:				return OnSize(uMsg, wParam, lParam);
 	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
+	case WM_SIZE:				return OnSize(uMsg, wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
@@ -55,6 +56,39 @@ CViewList::CViewList()
 CViewList::~CViewList()
 {
 	if (IsWindow()) DeleteAllItems();
+}
+
+int CViewList::AddItem(LPCTSTR szText, int nImage)
+{
+	LVITEM lvi;
+	ZeroMemory(&lvi, sizeof(LVITEM));
+	lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+	lvi.iImage = nImage;
+	lvi.pszText = (LPTSTR)szText;
+
+	return InsertItem(lvi);
+}
+
+void CViewList::InsertItems()
+{
+	// Add 4th item
+	int item = AddItem(_T("ListViewApp.h"), 2);
+	SetSubItem(item, 1, _T("1 KB"));
+	SetSubItem(item, 2, _T("C Header file"));
+
+	// add 3rd item
+	item = AddItem(_T("ListViewApp.cpp"), 1);
+	SetSubItem(item, 1, _T("3 KB"));
+	SetSubItem(item, 2, _T("C++ Source file"));
+
+	// add 2nd item
+	item = AddItem(_T("main.cpp"), 1);
+	SetSubItem(item, 1, _T("1 KB"));
+	SetSubItem(item, 2, _T("C++ Source file"));
+
+	// add 1st item
+	item = AddItem(_T("ListView"), 0);
+	SetSubItem(item, 2, _T("Folder"));
 }
 
 void CViewList::OnAttach()
@@ -78,15 +112,11 @@ void CViewList::OnDestroy()
 	SetImageList(NULL, LVSIL_SMALL);
 }
 
-int CViewList::AddItem(LPCTSTR szText, int nImage)
+LRESULT CViewList::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	LVITEM lvi;
-	ZeroMemory(&lvi, sizeof(LVITEM));
-	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
-	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
-
-	return InsertItem(lvi);
+	// Set window focus. The docker will now report this as active.
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 void CViewList::SetColumns()
@@ -119,35 +149,11 @@ BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1));
 }
 
-void CViewList::InsertItems()
-{
-	// Add 4th item
-	int item = AddItem(_T("ListViewApp.h"), 2);
-	SetSubItem(item, 1, _T("1 KB"));
-	SetSubItem(item, 2, _T("C Header file"));
-
-	// add 3rd item
-	item = AddItem(_T("ListViewApp.cpp"), 1);
-	SetSubItem(item, 1, _T("3 KB"));
-	SetSubItem(item, 2, _T("C++ Source file"));
-
-	// add 2nd item
-	item = AddItem(_T("main.cpp"), 1);
-	SetSubItem(item, 1, _T("1 KB"));
-	SetSubItem(item, 2, _T("C++ Source file"));
-
-	// add 1st item
-	item = AddItem(_T("ListView"), 0);
-	SetSubItem(item, 2, _T("Folder"));
-}
-
 LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-	case WM_MOUSEACTIVATE:
-		SetFocus();
-		break;
+	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
@@ -161,9 +167,9 @@ CViewTree::CViewTree()
 
 CViewTree::~CViewTree()
 {
-	if (IsWindow()) DeleteAllItems();
+	if (IsWindow())
+		DeleteAllItems();
 }
-
 
 HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 {
@@ -223,13 +229,19 @@ void CViewTree::OnDestroy()
 	SetImageList(NULL, LVSIL_SMALL);
 }
 
+LRESULT CViewTree::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+{
+	// Set window focus. The docker will now report this as active.
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
+
 LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch(uMsg)
 	{
-	case WM_MOUSEACTIVATE:
-		SetFocus();
-		break;
+	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

@@ -28,6 +28,26 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
+void CMainFrame::LoadDefaultDockers()
+{
+	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
+
+	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
+
+								   // Add the parent dockers
+	CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);
+	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
+
+	// Add the remaining dockers
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
+	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
+
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
+	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
+	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
+}
+
 CDocker* CMainFrame::NewDockerFromID(int nID)
 {
 	CDocker* pDock = NULL;
@@ -70,7 +90,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	// OnCommand responds to menu and and toolbar input
-	switch(LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	case IDM_FILE_EXIT:			return OnFileExit();
 	case IDM_DOCK_DEFAULT:		return OnDockDefault();
@@ -81,6 +102,22 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	}
 
 	return FALSE;
+}
+
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
+{
+	// OnCreate controls the way the frame is created.
+	// Overriding CFrame::OnCreate is optional.
+	// Uncomment the lines below to change frame options.
+
+	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
+	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
+	// SetUseReBar(FALSE);				// Don't use a ReBar
+	// SetUseThemes(FALSE);				// Don't use themes
+	// SetUseToolBar(FALSE);			// Don't use a ToolBar
+
+	// call the base class function
+	return CDockFrame::OnCreate(cs);
 }
 
 BOOL CMainFrame::OnDockDefault()
@@ -106,22 +143,6 @@ BOOL CMainFrame::OnFileExit()
 	return TRUE;
 }
 
-int CMainFrame::OnCreate(CREATESTRUCT& cs)
-{
-	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::OnCreate is optional.
-	// Uncomment the lines below to change frame options.
-
-	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
-	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
-	// SetUseReBar(FALSE);				// Don't use a ReBar
-	// SetUseThemes(FALSE);				// Don't use themes
-	// SetUseToolBar(FALSE);			// Don't use a ToolBar
-
-	// call the base class function
-	return CDockFrame::OnCreate(cs);
-}
-
 void CMainFrame::OnInitialUpdate()
 {
 	SetDockStyle(DS_CLIENTEDGE);
@@ -134,25 +155,6 @@ void CMainFrame::OnInitialUpdate()
 	ShowWindow( GetInitValues().ShowCmd );
 }
 
-void CMainFrame::LoadDefaultDockers()
-{
-	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
-
-	DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
-	
-	// Add the parent dockers
-	CDocker* pDockRight  = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);	
-	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
-
-	// Add the remaining dockers
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
-	pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
-
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
-	pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
-	pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
-}
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {

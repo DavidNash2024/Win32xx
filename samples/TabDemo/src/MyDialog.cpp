@@ -51,15 +51,17 @@ BOOL CViewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
     {
 	case IDC_BUTTON1:	OnButton();		return TRUE;
-	case IDC_RADIO1:	OnRadio1();		return TRUE;
-	case IDC_RADIO2:	OnRadio2();		return TRUE;
-	case IDC_RADIO3:	OnRadio3();		return TRUE;
 	case IDC_CHECK1:	OnCheck1();		return TRUE;
 	case IDC_CHECK2:	OnCheck2();		return TRUE;
 	case IDC_CHECK3:	OnCheck3();		return TRUE;
+
+	case IDC_RADIO1:	// intentionally blank
+	case IDC_RADIO2:
+	case IDC_RADIO3:	OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, nID); return TRUE;
     }
 
 	return FALSE;
@@ -146,20 +148,18 @@ void CViewDialog::OnCheck3()
 	TRACE("Check Box 3\n");
 }
 
-void CViewDialog::OnRadio1()
+void CViewDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
 {
-	AppendText(IDC_RICHEDIT2, _T("Radio 1"));
-	TRACE("Radio 1\n");
-}
+	for (UINT nID = nIDFirst; nID <= nIDLast; nID++)
+	{
+		SendDlgItemMessage(nID, BM_SETCHECK, FALSE, 0);
+	}
 
-void CViewDialog::OnRadio2()
-{
-	AppendText(IDC_RICHEDIT2, _T("Radio 2"));
-	TRACE("Radio 2\n");
-}
+	SendDlgItemMessage(nIDClicked, BM_SETCHECK, TRUE, 0);
 
-void CViewDialog::OnRadio3()
-{
-	AppendText(IDC_RICHEDIT2, _T("Radio 3"));
-	TRACE("Radio 3\n");
+	CString str;
+	int nButton = nIDClicked - nIDFirst + 1;
+	str.Format(_T("Radio%d"), nButton);
+	AppendText(IDC_RICHEDIT2, str);
+	TRACE(str); TRACE("\n");
 }

@@ -21,6 +21,13 @@ void CViewRect::OnDestroy()
 	KillTimer(1);
 }
 
+LRESULT CViewRect::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Respond to a mouse click on the window
+{
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
 LRESULT CViewRect::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(uMsg);
@@ -73,8 +80,9 @@ LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_TIMER:	return OnTimer(uMsg, wParam, lParam);
-	case WM_SIZE:   return OnSize(uMsg, wParam, lParam);
+	case WM_MOUSEACTIVATE:	return OnMouseActivate(uMsg, wParam, lParam);
+	case WM_SIZE:			return OnSize(uMsg, wParam, lParam);
+	case WM_TIMER:			return OnTimer(uMsg, wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);

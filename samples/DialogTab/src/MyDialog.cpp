@@ -33,32 +33,44 @@ BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
-    {
-	case IDC_BUTTON1:
-		TRACE("Push Button Pressed\n");
-		return TRUE;
+	UINT nID = LOWORD(wParam);
+	switch (nID)
+	{
+	case IDC_BUTTON1:	return OnButton();
+	case IDC_CHECK1:	return OnCheck1();
+	case IDC_CHECK2:	return OnCheck2();
+	case IDC_CHECK3:	return OnCheck3();
+
 	case IDC_RADIO1:
-		TRACE("Radio Button 1\n");
-		return TRUE;
-	case IDC_RADIO2:
-		TRACE("Radio Button 2\n");
-		return TRUE;
-	case IDC_RADIO3:
-		TRACE("Radio Button 3\n");
-		return TRUE;
-	case IDC_CHECK1:
-		TRACE("Check Box 1\n");
-		return TRUE;
-	case IDC_CHECK2:
-		TRACE("Check Box 2\n");
-		return TRUE;
-	case IDC_CHECK3:
-		TRACE("Check Box 3\n");
-		return TRUE;
-    } //switch (LOWORD(wParam))
+	case IDC_RADIO2:	// intentionally blank
+	case IDC_RADIO3:	return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, nID);
+	}
 
 	return FALSE;
+}
+
+BOOL CButtonDialog::OnButton()
+{
+	TRACE("Push Button Pressed\n");
+	return TRUE;
+}
+
+BOOL CButtonDialog::OnCheck1()
+{
+	TRACE("Check Box 1\n");
+	return TRUE;
+}
+
+BOOL CButtonDialog::OnCheck2()
+{
+	TRACE("Check Box 2\n");
+	return TRUE;
+}
+
+BOOL CButtonDialog::OnCheck3()
+{
+	TRACE("Check Box 3\n");
+	return TRUE;
 }
 
 INT_PTR CButtonDialog::OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -77,6 +89,23 @@ INT_PTR CButtonDialog::OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		return (INT_PTR)m_Brush.GetHandle();
 	else
 		return FinalWindowProc(uMsg, wParam, lParam);
+}
+
+BOOL CButtonDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
+{
+	for (UINT nID = nIDFirst; nID <= nIDLast; nID++)
+	{
+		SendDlgItemMessage(nID, BM_SETCHECK, FALSE, 0);
+	}
+
+	SendDlgItemMessage(nIDClicked, BM_SETCHECK, TRUE, 0);
+
+	CString str;
+	int nButton = nIDClicked - nIDFirst + 1;
+	str.Format(_T("Radio%d"), nButton);
+	TRACE(str); TRACE("\n");
+
+	return  TRUE;
 }
 
 

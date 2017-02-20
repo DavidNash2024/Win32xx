@@ -12,6 +12,7 @@ class CViewRect : public CWnd
 public:
 	virtual int OnCreate(CREATESTRUCT& cs);
 	virtual void OnDestroy();
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

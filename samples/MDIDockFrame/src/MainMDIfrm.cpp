@@ -89,7 +89,8 @@ void CMainMDIFrame::OnInitialUpdate()
 
 BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
 	{
 	case IDM_FILE_NEWDOCK:		return OnFileNewDocker();
 	case IDM_FILE_NEWMDI:		return OnFileNewMDI();

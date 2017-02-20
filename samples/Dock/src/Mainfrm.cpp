@@ -33,13 +33,76 @@ CMainFrame::~CMainFrame()
 	// Destructor for CMainFrame.
 }
 
+void CMainFrame::LoadDefaultDockers()
+{
+	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
+
+	CDocker* pDockLeft = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, 200, ID_DOCK_CLASSES1);
+	CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, 200, ID_DOCK_CLASSES2);
+	CDocker* pDockTop = AddDockedChild(new CDockText, DS_DOCKED_TOP, 100, ID_DOCK_TEXT1);
+	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, 100, ID_DOCK_TEXT2);
+
+	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES1);
+	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES2);
+	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE1);
+	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE2);
+
+	// Adjust dockstyles as per menu selections
+	SetDockStyles();
+}
+
+CDocker* CMainFrame::NewDockerFromID(int nID)
+{
+	CDocker* pDock = NULL;
+	switch (nID)
+	{
+	case ID_DOCK_CLASSES1:
+		pDock = new CDockClasses;
+		break;
+	case ID_DOCK_CLASSES2:
+		pDock = new CDockClasses;
+		break;
+	case ID_DOCK_FILES1:
+		pDock = new CDockFiles;
+		break;
+	case ID_DOCK_FILES2:
+		pDock = new CDockFiles;
+		break;
+	case ID_DOCK_SIMPLE1:
+		pDock = new CDockSimple;
+		break;
+	case ID_DOCK_SIMPLE2:
+		pDock = new CDockSimple;
+		break;
+	case ID_DOCK_TEXT1:
+		pDock = new CDockText;
+		break;
+	case ID_DOCK_TEXT2:
+		pDock = new CDockText;
+		break;
+	default:
+		TRACE("Unknown Dock ID\n");
+		break;
+	}
+
+	return pDock;
+}
+
+BOOL CMainFrame::On3DBorder()
+{
+	m_Use3DBorder = !m_Use3DBorder;
+	SetDockStyles();
+	return TRUE;
+}
+
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
 	// OnCommand responds to menu and and toolbar input
 
-	switch(LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	case IDM_FILE_EXIT:			return OnFileExit();
 	case IDM_DOCK_DEFAULT:		return OnDockDefault();
@@ -59,12 +122,43 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-BOOL CMainFrame::OnFileExit()
+int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
-	// Issue a close request to the frame
-	PostMessage(WM_CLOSE);
+	// OnCreate controls the way the frame is created.
+	// Overriding CFrame::OnCreate is optional.
+	// Uncomment the lines below to change frame options.
+
+	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
+	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
+	// SetUseReBar(FALSE);				// Don't use a ReBar
+	// SetUseThemes(FALSE);				// Don't use themes
+	// SetUseToolBar(FALSE);			// Don't use a ToolBar
+
+	// call the base class function
+	return CDockFrame::OnCreate(cs);
+}
+
+BOOL CMainFrame::OnDockCloseAll()
+{
+	CloseAllDockers();
 	return TRUE;
 }
+
+BOOL CMainFrame::OnDynamicResize()
+{
+	// Dragging the docker's splitter bar will either dynamicly resize the dockers
+	// during the dragging, or simply display a hashed splitter bar.
+	std::vector<CDocker*>::const_iterator iter;
+	m_UseDynamicResize = !m_UseDynamicResize;
+
+	for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+	{
+		(*iter)->SetDragAutoResize(m_UseDynamicResize);
+	}
+	return TRUE;
+}
+
+
 
 BOOL CMainFrame::OnDockDefault()
 {
@@ -76,25 +170,26 @@ BOOL CMainFrame::OnDockDefault()
 	return TRUE;
 }
 
-BOOL CMainFrame::OnPropResize()
+BOOL CMainFrame::OnFileExit()
 {
-	m_UseProportionalResize = !m_UseProportionalResize;
-	SetDockStyles();
+	// Issue a close request to the frame
+	PostMessage(WM_CLOSE);
 	return TRUE;
 }
 
-BOOL CMainFrame::On3DBorder()
+void CMainFrame::OnInitialUpdate()
 {
-	m_Use3DBorder = !m_Use3DBorder;
-	SetDockStyles();
-	return TRUE;
-}
+	SetDockStyle(DS_CLIENTEDGE);
 
-BOOL CMainFrame::OnNoUndocking()
-{
-	m_DisableUndocking = !m_DisableUndocking;
+	// Load dock settings
+	if (!LoadDockRegistrySettings(GetRegistryKeyName()))
+		LoadDefaultDockers();
+
+	// Adjust dockstyles as per menu selections
 	SetDockStyles();
-	return TRUE;
+
+	// PreCreate initially set the window as invisible, so show it now.
+	ShowWindow(GetInitValues().ShowCmd);
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -127,10 +222,11 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	CDockFrame::OnMenuUpdate(nID);
 }
 
-BOOL CMainFrame::OnNoResize()
+BOOL CMainFrame::OnNoDockClose()
 {
-	m_DisableResize = !m_DisableResize;
+	m_DisableDockClose = !m_DisableDockClose;
 	SetDockStyles();
+	RedrawWindow();
 	return TRUE;
 }
 
@@ -141,118 +237,25 @@ BOOL CMainFrame::OnNoDockLR()
 	return TRUE;
 }
 
-BOOL CMainFrame::OnNoDockClose()
+BOOL CMainFrame::OnNoResize()
 {
-	m_DisableDockClose = !m_DisableDockClose;
+	m_DisableResize = !m_DisableResize;
 	SetDockStyles();
-	RedrawWindow();
-	return TRUE;
-} 
-
-BOOL CMainFrame::OnDockCloseAll()
-{
-	CloseAllDockers();
 	return TRUE;
 }
 
-BOOL CMainFrame::OnDynamicResize()
+BOOL CMainFrame::OnNoUndocking()
 {
-	// Dragging the docker's splitter bar will either dynamicly resize the dockers
-	// during the dragging, or simply display a hashed splitter bar.
-	std::vector<CDocker*>::const_iterator iter;
-	m_UseDynamicResize = !m_UseDynamicResize;
-
-	for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
-	{
-		(*iter)->SetDragAutoResize(m_UseDynamicResize);
-	}
+	m_DisableUndocking = !m_DisableUndocking;
+	SetDockStyles();
 	return TRUE;
 }
 
-int CMainFrame::OnCreate(CREATESTRUCT& cs)
+BOOL CMainFrame::OnPropResize()
 {
-	// OnCreate controls the way the frame is created.
-	// Overriding CFrame::OnCreate is optional.
-	// Uncomment the lines below to change frame options.
-
-	// SetUseIndicatorStatus(FALSE);	// Don't show keyboard indicators in the StatusBar
-	// SetUseMenuStatus(FALSE);			// Don't show menu descriptions in the StatusBar
-	// SetUseReBar(FALSE);				// Don't use a ReBar
-	// SetUseThemes(FALSE);				// Don't use themes
-	// SetUseToolBar(FALSE);			// Don't use a ToolBar
-
-	// call the base class function
-	return CDockFrame::OnCreate(cs);
-}
-
-void CMainFrame::OnInitialUpdate()
-{
-	SetDockStyle(DS_CLIENTEDGE);
-
-	// Load dock settings
-	if (!LoadDockRegistrySettings(GetRegistryKeyName()))
-		LoadDefaultDockers();
-
-	// Adjust dockstyles as per menu selections
+	m_UseProportionalResize = !m_UseProportionalResize;
 	SetDockStyles();
-
-	// PreCreate initially set the window as invisible, so show it now.
-	ShowWindow( GetInitValues().ShowCmd );
-}
-
-void CMainFrame::LoadDefaultDockers()
-{
-	// Note: The  DockIDs are used for saving/restoring the dockers state in the registry
-
-	CDocker* pDockLeft   = AddDockedChild(new CDockClasses, DS_DOCKED_LEFT, 200, ID_DOCK_CLASSES1);
-	CDocker* pDockRight  = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT, 200, ID_DOCK_CLASSES2);
-	CDocker* pDockTop    = AddDockedChild(new CDockText, DS_DOCKED_TOP, 100, ID_DOCK_TEXT1);
-	CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM, 100, ID_DOCK_TEXT2);
-
-	pDockLeft->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES1);
-	pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_BOTTOM, 150, ID_DOCK_FILES2);
-	pDockTop->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE1);
-	pDockBottom->AddDockedChild(new CDockSimple, DS_DOCKED_RIGHT, 100, ID_DOCK_SIMPLE2);
-
-	// Adjust dockstyles as per menu selections
-	SetDockStyles();
-}
-
-CDocker* CMainFrame::NewDockerFromID(int nID)
-{
-	CDocker* pDock = NULL;
-	switch(nID)
-	{
-	case ID_DOCK_CLASSES1:
-		pDock = new CDockClasses;
-		break;
-	case ID_DOCK_CLASSES2:
-		pDock = new CDockClasses;					
-		break;
-	case ID_DOCK_FILES1:
-		pDock = new CDockFiles;
-		break;
-	case ID_DOCK_FILES2:
-		pDock = new CDockFiles;
-		break;
-	case ID_DOCK_SIMPLE1:
-		pDock = new CDockSimple;
-		break;
-	case ID_DOCK_SIMPLE2:
-		pDock = new CDockSimple;
-		break;
-	case ID_DOCK_TEXT1:
-		pDock = new CDockText;
-		break;
-	case ID_DOCK_TEXT2:
-		pDock = new CDockText;
-		break;
-	default:
-		TRACE("Unknown Dock ID\n");
-		break;
-	}
-
-	return pDock;
+	return TRUE;
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)

@@ -138,8 +138,8 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	// OnCommand responds to menu and and toolbar input
-
-	switch(LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	case IDM_FILE_NEW:		OnFileNew();	return TRUE;
 	case IDM_HELP_ABOUT:	OnHelpAbout();	return TRUE;

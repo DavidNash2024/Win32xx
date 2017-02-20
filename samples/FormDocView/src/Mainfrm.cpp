@@ -56,15 +56,17 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	}
 
 	if ((nID >= ID_RADIO_A) && (nID <= ID_RADIO_C)) 
-		OnUpdateRangeOfIds_Radio(nID);
+		OnUpdateRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);
+
+	CFrame::OnMenuUpdate(nID);
 }
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
-	WORD wpLo = LOWORD(wParam);
+	UINT nID = LOWORD(wParam);
     
-	switch(LOWORD(wParam))
+	switch(nID)
 	{
 	case ID_CHECK_A:		 m_SdiView.OnCheckA();	return TRUE;
 	case ID_CHECK_B:		 m_SdiView.OnCheckB();	return TRUE;
@@ -73,9 +75,10 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		return TRUE;
 	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		return TRUE;
     case IDM_HELP_ABOUT:	 OnHelp();				return TRUE;
+	
 	case ID_RADIO_A:
 	case ID_RADIO_B:		// intentionally blank
-	case ID_RADIO_C:		m_SdiView.OnRangeOfIds_Radio(wpLo - ID_RADIO_A);	return TRUE;
+	case ID_RADIO_C:		m_SdiView.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);	return TRUE;
     }
 
   return FALSE;
@@ -122,15 +125,12 @@ void CMainFrame::OnUpdateCheckC(UINT nID)
 	GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
 }
 
-void CMainFrame::OnUpdateRangeOfIds_Radio(UINT nID)
+void CMainFrame::OnUpdateRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nID)
 {
-	UINT adjId = nID - ID_RADIO_A;
-	UINT curRadio = GetDoc().GetRadio();
-	BOOL bCheck = (curRadio == adjId);
 	int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
 	CMenu RadioMenu = GetFrameMenu().GetSubMenu(nFileItem);
-	if (bCheck)  
-		RadioMenu.CheckMenuRadioItem(ID_RADIO_A, ID_RADIO_C, nID, 0);
+	if (GetDoc().GetRadio() == nID)
+		RadioMenu.CheckMenuRadioItem(nIDFirst, nIDLast, nID, 0);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)

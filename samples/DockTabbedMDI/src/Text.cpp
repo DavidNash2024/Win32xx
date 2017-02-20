@@ -30,8 +30,9 @@ void CViewText::OnAttach()
 BOOL CViewText::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
-
-	switch (LOWORD(wParam))
+	
+	UINT nID = LOWORD(wParam);
+	switch (nID)
 	{
 	case IDM_EDIT_COPY:		OnEditCopy();	return TRUE;
 	case IDM_EDIT_PASTE:	OnEditPaste();	return TRUE;

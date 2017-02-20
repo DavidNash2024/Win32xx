@@ -41,10 +41,11 @@ CDoc& CView::GetDoc()
 	return TheApp().GetMainFrame().GetDoc();
 }
 
-void CView::OnButton()
+BOOL CView::OnButton()
 {
 	SetDlgItemText(IDC_STATUS, _T("Button Pressed"));
 	TRACE("Button Pressed\n");
+	return TRUE;
 }
 
 void CView::OnCancel()
@@ -67,14 +68,14 @@ BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	switch (nID)
 	{
-	case IDC_BUTTON1:	OnButton();	return TRUE;
-	case ID_CHECK_A:	OnCheckA();	return TRUE;
-	case ID_CHECK_B:	OnCheckB();	return TRUE;
-	case ID_CHECK_C:	OnCheckC();	return TRUE;
+	case IDC_BUTTON1:	return OnButton();
+	case ID_CHECK_A:	return OnCheckA();
+	case ID_CHECK_B:	return OnCheckB();
+	case ID_CHECK_C:	return OnCheckC();
+
 	case ID_RADIO_A:
 	case ID_RADIO_B:	// intentionally blank
-	case ID_RADIO_C:	OnRangeOfIds_Radio(nID - ID_RADIO_A);
-				    return TRUE;
+	case ID_RADIO_C:	return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);
 	} 
   
 	return FALSE;
@@ -123,7 +124,7 @@ BOOL CView::OnInitDialog()
 	m_CheckC.SetCheck(bCheck);
 
 	UINT curRadio = GetDoc().GetRadio();
-	OnRangeOfIds_Radio(curRadio);
+	OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, curRadio);
 	
 	// Initialize dialog resizing
 	m_Resizer.Initialize( *this, CRect(0, 0, 300, 270) );
@@ -153,7 +154,7 @@ void CView::OnOK()
 
 
 
-void CView::OnCheckA()
+BOOL CView::OnCheckA()
 {
 	TRACE("Check Box A\n");
 	BOOL bCheck = GetDoc().GetCheckA();
@@ -162,9 +163,10 @@ void CView::OnCheckA()
 	GetDoc().SetCheckA(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
+	return TRUE;
 }
 
-void CView::OnCheckB()
+BOOL CView::OnCheckB()
 {
 	TRACE("Check Box B\n");
 	BOOL bCheck = GetDoc().GetCheckB();
@@ -173,9 +175,10 @@ void CView::OnCheckB()
 	GetDoc().SetCheckB(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
+	return TRUE;
 }
 
-void CView::OnCheckC()
+BOOL CView::OnCheckC()
 {
 	TRACE("Check Box C\n");
 	BOOL bCheck = GetDoc().GetCheckC();
@@ -184,18 +187,23 @@ void CView::OnCheckC()
 	GetDoc().SetCheckC(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
+	return TRUE;
 }
 
-void CView::OnRangeOfIds_Radio(UINT nIdAdjust)
+BOOL CView::OnRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
 {
-	SendDlgItemMessage(ID_RADIO_A, BM_SETCHECK, FALSE, 0);
-	SendDlgItemMessage(ID_RADIO_B, BM_SETCHECK, FALSE, 0);
-	SendDlgItemMessage(ID_RADIO_C, BM_SETCHECK, FALSE, 0);
-	SendDlgItemMessage(ID_RADIO_A + nIdAdjust, BM_SETCHECK, TRUE, 0);
-	GetDoc().SetRadio(nIdAdjust);
+	for (UINT nID = nIDFirst; nID <= nIDLast; nID++)
+	{
+		SendDlgItemMessage(nID, BM_SETCHECK, FALSE, 0);
+	}
 
+	SendDlgItemMessage(nIDClicked, BM_SETCHECK, TRUE, 0);
+
+	GetDoc().SetRadio(nIDClicked);
 	SetDlgItemText(IDC_STATUS, _T("Radio changed"));
 	TRACE("Radio changed\n");
+	
+	return TRUE;
 }
 
 

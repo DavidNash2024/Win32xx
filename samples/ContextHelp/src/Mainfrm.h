@@ -27,7 +27,7 @@ public:
 	void 	OnUpdateCheckA(UINT nID);
 	void 	OnUpdateCheckB(UINT nID);
 	void 	OnUpdateCheckC(UINT nID);
-	void 	OnUpdateRangeOfIds_Radio(UINT nID);
+	void	OnUpdateRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nID);
 	void 	ShowHelpTopic(UINT nID);
 
 protected:

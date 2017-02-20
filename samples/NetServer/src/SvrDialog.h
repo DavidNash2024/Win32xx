@@ -53,8 +53,8 @@ public:
 	BOOL OnSocketDisconnect(WPARAM wParam);
 	BOOL OnSocketReceive(WPARAM wParam);
 	BOOL OnSocketAccept();
-	void OnSend();
-	void OnStartServer();
+	BOOL OnSend();
+	BOOL OnStartServer();
 	BOOL StartServer();
 	void StopServer();
 

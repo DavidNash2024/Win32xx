@@ -23,12 +23,10 @@ protected:
 private:
 	void AppendText(int nID, LPCTSTR szText);
 	void OnButton();
-	void OnRadio1();
-	void OnRadio2();
-	void OnRadio3();
 	void OnCheck1();
 	void OnCheck2();
 	void OnCheck3();
+	void OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 
 	CResizer m_Resizer;
 

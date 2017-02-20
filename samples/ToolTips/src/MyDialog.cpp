@@ -38,16 +38,18 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
-    {
+	UINT nID = LOWORD(wParam);
+	switch (nID)
+	{
 	case IDC_BUTTON1:	return OnButton();
-	case IDC_RADIO1:	return OnRadio1();
-	case IDC_RADIO2:	return OnRadio2();
-	case IDC_RADIO3:	return OnRadio3();
 	case IDC_CHECK1:	return OnCheck1();
 	case IDC_CHECK2:	return OnCheck2();
 	case IDC_CHECK3:	return OnCheck3();
-    }
+
+	case IDC_RADIO1:	// intentionally blank
+	case IDC_RADIO2:
+	case IDC_RADIO3:	return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, nID);
+	}
 
 	return FALSE;
 }
@@ -194,24 +196,20 @@ BOOL CMyDialog::OnCheck3()
 	return TRUE;
 }
 
-BOOL CMyDialog::OnRadio1()
+BOOL CMyDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
 {
-	SetDlgItemText(IDC_STATIC3, _T("Radio 1"));
-	TRACE("Radio 1\n");
+	for (UINT nID = nIDFirst; nID <= nIDLast; nID++)
+	{
+		SendDlgItemMessage(nID, BM_SETCHECK, FALSE, 0);
+	}
+
+	SendDlgItemMessage(nIDClicked, BM_SETCHECK, TRUE, 0);
+
+	CString str;
+	int nButton = nIDClicked - nIDFirst + 1;
+	str.Format(_T("Radio%d"), nButton);
+	SetDlgItemText(IDC_STATIC3, str);
+	TRACE(str); TRACE("\n");
+
 	return TRUE;
 }
-
-BOOL CMyDialog::OnRadio2()
-{
-	SetDlgItemText(IDC_STATIC3, _T("Radio 2"));
-	TRACE("Radio 2\n");
-	return TRUE;
-}
-
-BOOL CMyDialog::OnRadio3()
-{
-	SetDlgItemText(IDC_STATIC3, _T("Radio 3"));
-	TRACE("Radio 3\n");
-	return TRUE;
-}
-

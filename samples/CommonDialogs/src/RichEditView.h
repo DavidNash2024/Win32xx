@@ -86,7 +86,7 @@ CRichEditView : public CRichEdit                                        /*
 
 	protected:
 		BOOL 	DoPreparePrinting(CPrintInfo& info);
-		void 	OnInitialUpdate();
+		void 	OnAttach();
 		void    GetPageBreaks(CPrintInfo&);
 		void 	OnBeginPrinting(CDC& DC, CPrintInfo& info);
 		void 	OnEndPrinting(CDC& DC, CPrintInfo& info);
