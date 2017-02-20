@@ -14,10 +14,12 @@ public:
 	virtual ~CViewFiles();
 	virtual int  AddItem(LPCTSTR szText, int nImage);
 	virtual void InsertItems();
+	virtual void OnAttach();
 	virtual void OnDestroy();
-	virtual void OnInitialUpdate();
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
+	virtual LRESULT WndProc(UINT uMsg, WPARAM wPAram, LPARAM lParam);
 
 private:
 	CImageList m_imlSmall;

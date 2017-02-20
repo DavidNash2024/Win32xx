@@ -22,6 +22,14 @@ void CSimpleView::OnDraw(CDC& dc)
 	dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
+LRESULT CSimpleView::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Respond to a mouse click on the window
+{
+	// Set window focus. The docker will now report this as active.
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
 LRESULT CSimpleView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(uMsg);
@@ -35,7 +43,8 @@ LRESULT CSimpleView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_SIZE:	return OnSize(uMsg, wParam, lParam);
+	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
+	case WM_SIZE:				return OnSize(uMsg, wParam, lParam);
 	}
 
 	// Do default processing for other messages
@@ -85,7 +94,8 @@ BOOL CSplitterMDIChild::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
 	{
 	case IDM_COLOR_BLACK:	OnColor(RGB(0,0,0));		return TRUE;
 	case IDM_COLOR_RED:		OnColor(RGB(255,0,0));		return TRUE;

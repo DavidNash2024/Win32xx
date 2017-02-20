@@ -23,12 +23,10 @@ protected:
 
 private:
 	BOOL OnButton();
-	BOOL OnRadio1();
-	BOOL OnRadio2();
-	BOOL OnRadio3();
 	BOOL OnCheck1();
 	BOOL OnCheck2();
 	BOOL OnCheck3();
+	BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 
 	CResizer m_Resizer;
 

@@ -158,7 +158,8 @@ BOOL CPreviewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
     {
 	case IDC_BUTTONPRINT:	return OnPrintButton();
 	case IDC_BUTTONPREV:	return OnPrevButton();

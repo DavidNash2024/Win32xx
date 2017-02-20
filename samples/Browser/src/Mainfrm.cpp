@@ -209,7 +209,8 @@ BOOL CMainFrame::OnEditDelete()
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	// Respond to menu and and toolbar input
-	switch(LOWORD(wParam))
+	UINT nID = LOWORD(wParam);	
+	switch(nID)
 	{
 	case IDM_FILE_EXIT:		 return OnFileExit();
 	case IDM_HELP_ABOUT:	 return OnHelpAbout();

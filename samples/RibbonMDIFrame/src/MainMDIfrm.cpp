@@ -122,7 +122,8 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
 	{
 	case IDM_FILE_NEW:			OnFileNew();			return TRUE;
 	case IDM_FILE_EXIT:			OnFileExit();			return TRUE;

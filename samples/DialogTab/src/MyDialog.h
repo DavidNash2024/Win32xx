@@ -15,6 +15,11 @@ public:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	BOOL OnButton();
+	BOOL OnCheck1();
+	BOOL OnCheck2();
+	BOOL OnCheck3();
+	BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 
 protected:
 	virtual void OnOK() {}		// supress closing dialog with the enter key

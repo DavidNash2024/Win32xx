@@ -42,7 +42,8 @@ BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	case IDM_EDIT_COPY:
 		GetView().SendMessage(WM_COPY, 0, 0);

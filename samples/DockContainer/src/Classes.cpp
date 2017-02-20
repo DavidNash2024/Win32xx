@@ -78,6 +78,14 @@ void CViewClasses::OnDestroy()
 	SetImageList(NULL, LVSIL_SMALL);
 }
 
+LRESULT CViewClasses::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Respond to a mouse click on the window
+{
+	// Set window focus. The docker will now report this as active.
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
+}
+
 void CViewClasses::PreCreate(CREATESTRUCT& cs)
 {
 	cs.style = TVS_NOTOOLTIPS|WS_CHILD;
@@ -88,9 +96,7 @@ LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	switch (uMsg)
 	{
-	case WM_MOUSEACTIVATE:
-		SetFocus();
-		break;
+	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
@@ -139,8 +145,8 @@ BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	// OnCommand responds to menu and and toolbar input
-
-	switch(LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	case IDM_FILE_NEW:		return OnFileNew();
 	case IDM_HELP_ABOUT:	return OnHelpAbout();

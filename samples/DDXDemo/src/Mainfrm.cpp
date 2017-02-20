@@ -183,8 +183,8 @@ OnCommand(WPARAM wParam, LPARAM lParam)  				/*
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	WORD wpLo = LOWORD(wParam);
-	switch(wpLo)
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	    case IDM_FILE_EXIT:
 	    	OnFileExit();
@@ -205,7 +205,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)  				/*
 	    case IDC_RADIO_A:
 	    case IDC_RADIO_B:
 	    case IDC_RADIO_C:
-		TheView().m_iRadioA = wpLo - IDC_RADIO_A;
+		TheView().m_iRadioA = nID - IDC_RADIO_A;
 		UpdateDialog(SENDTOCONTROL);
 	    	return TRUE;
 

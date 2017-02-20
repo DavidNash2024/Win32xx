@@ -16,6 +16,7 @@ public:
 	virtual void InsertItems();
 	virtual void OnAttach();
 	virtual void OnDestroy();
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void SetColumns();
 	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);

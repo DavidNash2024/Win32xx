@@ -179,14 +179,11 @@ BOOL CSvrDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	// Respond to the various dialog buttons
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
     {
-	case IDC_BUTTON_START:
-		OnStartServer();
-		return TRUE;
-	case IDC_BUTTON_SEND:
-		OnSend();
-		return TRUE;
+	case IDC_BUTTON_START:		return OnStartServer();
+	case IDC_BUTTON_SEND:		return OnSend();
     } //switch (LOWORD(wParam))
 
 	return FALSE;
@@ -232,7 +229,7 @@ BOOL CSvrDialog::OnInitDialog()
 	return true;
 }
 
-void CSvrDialog::OnStartServer()
+BOOL CSvrDialog::OnStartServer()
 {
 	// Respond to the Start/Stop Button press
 	TRACE("Start/Stop Button Pressed\n");
@@ -241,7 +238,7 @@ void CSvrDialog::OnStartServer()
 	{
 		// Attempt to start the server
 		if (!StartServer())
-			return;
+			return FALSE;
 
 		// Update the dialog
 		m_ButtonStart.SetWindowText( _T("Stop Server") );
@@ -286,9 +283,11 @@ void CSvrDialog::OnStartServer()
 		}
 	}
 	m_IsServerStarted = !m_IsServerStarted;
+
+	return m_IsServerStarted;
 }
 
-void CSvrDialog::OnSend()
+BOOL CSvrDialog::OnSend()
 {
 	// Responds to the send button
 
@@ -304,6 +303,8 @@ void CSvrDialog::OnSend()
 			}
 			break;
 	}
+
+	return TRUE;
 }
 
 BOOL CSvrDialog::OnSocketAccept()

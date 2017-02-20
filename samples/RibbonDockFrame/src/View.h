@@ -48,6 +48,7 @@ protected:
 	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual void PreRegisterClass(WNDCLASS& wc);

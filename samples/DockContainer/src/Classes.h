@@ -21,6 +21,7 @@ public:
 protected:
 	virtual void OnAttach();
 	virtual void OnDestroy();
+	virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void PreCreate(CREATESTRUCT& cs);
 	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 

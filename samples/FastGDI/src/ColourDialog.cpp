@@ -20,7 +20,9 @@ CColourDialog::~CColourDialog()
 
 BOOL CColourDialog::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 {
-	switch (LOWORD(wParam))
+
+	UINT nID = LOWORD(wParam);
+	switch (nID)
 	{
 	case IDC_CHECK1:
 		OnGrayScale();

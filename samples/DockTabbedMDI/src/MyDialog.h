@@ -23,11 +23,11 @@ protected:
 
 private:
 	void AppendText(int nID, LPCTSTR szText);
-	void OnButton();
-	void OnCheck1();
-	void OnCheck2();
-	void OnCheck3();
-	void OnRadioButton(UINT nButton);
+	BOOL OnButton();
+	BOOL OnCheck1();
+	BOOL OnCheck2();
+	BOOL OnCheck3();
+	BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 
 	CResizer m_Resizer;
 

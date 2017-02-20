@@ -32,7 +32,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch(LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch(nID)
 	{
 	case IDM_FILE_OPEN:			return OnFileOpen();
 	case IDM_FILE_SAVE:			return OnFileSave();

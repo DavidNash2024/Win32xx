@@ -81,7 +81,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
+	UINT nID = LOWORD(wParam);
+	switch (nID)
 	{
 	case IDM_FILE_EXIT:			return OnFileExit();
 	case IDM_HELP_ABOUT:		return OnHelp();

@@ -18,12 +18,45 @@ CViewFiles::~CViewFiles()
 	if (IsWindow()) DeleteAllItems();
 }
 
-void CViewFiles::OnInitialUpdate()
+int CViewFiles::AddItem(LPCTSTR szText, int nImage)
+{
+	LVITEM lvi;
+	ZeroMemory(&lvi, sizeof(lvi));
+	lvi.mask = LVIF_TEXT | LVIF_IMAGE;
+	lvi.iImage = nImage;
+	lvi.pszText = (LPTSTR)szText;
+
+	return InsertItem(lvi);
+}
+
+void CViewFiles::InsertItems()
+{
+	// Add 4th item
+	int item = AddItem(_T("ListViewApp.h"), 2);
+	SetSubItem(item, 1, _T("1 KB"));
+	SetSubItem(item, 2, _T("C Header file"));
+
+	// add 3rd item
+	item = AddItem(_T("ListViewApp.cpp"), 1);
+	SetSubItem(item, 1, _T("3 KB"));
+	SetSubItem(item, 2, _T("C++ Source file"));
+
+	// add 2nd item
+	item = AddItem(_T("main.cpp"), 1);
+	SetSubItem(item, 1, _T("1 KB"));
+	SetSubItem(item, 2, _T("C++ Source file"));
+
+	// add 1st item
+	item = AddItem(_T("ListView"), 0);
+	SetSubItem(item, 2, _T("Folder"));
+}
+
+void CViewFiles::OnAttach()
 {
 	// Set the image lists
 	m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
 	CBitmap bm(IDB_FILEVIEW);
-	m_imlSmall.Add( bm, RGB(255, 0, 255) );
+	m_imlSmall.Add(bm, RGB(255, 0, 255));
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
@@ -34,15 +67,17 @@ void CViewFiles::OnInitialUpdate()
 	InsertItems();
 }
 
-int CViewFiles::AddItem(LPCTSTR szText, int nImage)
+void CViewFiles::OnDestroy()
 {
-	LVITEM lvi;
-	ZeroMemory(&lvi, sizeof(lvi));
-	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
-	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
+	SetImageList(NULL, LVSIL_SMALL);
+}
 
-	return InsertItem(lvi);
+LRESULT CViewFiles::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Respond to a mouse click on the window
+{
+	// Set window focus. The docker will now report this as active.
+	SetFocus();
+	return FinalWindowProc(uMsg, wParam, lParam);
 }
 
 void CViewFiles::SetColumns()
@@ -75,32 +110,15 @@ BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0L, (LPARAM)&lvi1));
 }
 
-void CViewFiles::InsertItems()
+LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// Add 4th item
-	int item = AddItem(_T("ListViewApp.h"), 2);
-	SetSubItem(item, 1, _T("1 KB"));
-	SetSubItem(item, 2, _T("C Header file"));
+	switch (uMsg)
+	{
+	case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
+	}
 
-	// add 3rd item
-	item = AddItem(_T("ListViewApp.cpp"), 1);
-	SetSubItem(item, 1, _T("3 KB"));
-	SetSubItem(item, 2, _T("C++ Source file"));
-
-	// add 2nd item
-	item = AddItem(_T("main.cpp"), 1);
-	SetSubItem(item, 1, _T("1 KB"));
-	SetSubItem(item, 2, _T("C++ Source file"));
-
-	// add 1st item
-	item = AddItem(_T("ListView"), 0);
-	SetSubItem(item, 2, _T("Folder"));
+	return WndProcDefault(uMsg, wParam, lParam);
 }
-
-void CViewFiles::OnDestroy()
-{
-	SetImageList(NULL, LVSIL_SMALL);
-}		
 
 
 ///////////////////////////////////////////////

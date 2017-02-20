@@ -15,11 +15,12 @@ public:
 	virtual HWND Create(HWND hParent);
 
 	CDoc& GetDoc();
-
-	void OnRangeOfIds_Radio(UINT nIdAdjust);
-	void OnCheckA();
-	void OnCheckB();
-	void OnCheckC();
+	
+	BOOL OnButton();
+	BOOL OnCheckA();
+	BOOL OnCheckB();
+	BOOL OnCheckC();
+	BOOL OnRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 	
 protected:
 	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -31,7 +32,7 @@ protected:
 
 //private:
 public:
-	void OnButton();
+
 
 	CResizer m_Resizer;
 

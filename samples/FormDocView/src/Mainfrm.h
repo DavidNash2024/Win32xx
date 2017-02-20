@@ -33,7 +33,7 @@ private:
 	void OnUpdateCheckA(UINT nID);
 	void OnUpdateCheckB(UINT nID);
 	void OnUpdateCheckC(UINT nID);
-	void OnUpdateRangeOfIds_Radio(UINT nID);
+	void OnUpdateRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nID);
 
 	CFormView m_SdiView;
 	CFormDoc m_Doc;
