@@ -80,10 +80,12 @@ The file download from Sourceforge includes the following:
 The sample applications include:
  * Browser - An Internet browser application with an event sink.
  * CommonDialogs - a Demo of windows common dialogs, such as File/Save
+ * ContextHelp - Shows how to incorporate context help into an application. 
  * CustomControl - Shows how to put a web browser in a custom control for use in a dialog.
  * DateTime - A demo of a Date/time dialog for displaying and changing the time
  * DDXDemo - Demonstrates Dialog Data Exchange and validation. 
  * Dialog - An example of a simple dialog application.
+ * DialogBars - Demonstrates yhr use of a slider, scrollbar and progressbar control in a dialog.
  * DialogDemo - An interactive dialog application demonstrating slider controls and progress bars.
  * DialogResizing - An example of a resizable dialog.
  * DialogTab - A dialog application with a tab control.
@@ -119,6 +121,7 @@ The sample applications include:
  * RibbonSimple - Demonstrates how to use the Windows 7 ribbon with a simple window.
  * RoundWindow - Demonstrates how to use Win32++ to create a round window.
  * Scribble - A simple drawing application.
+ * ScrollTextFile - displays a text file in a scrollable window.
  * Simple - Creates a simple window.
  * Splitter - Demonstrates how to use dockers to create splitter windows.
  * StatusBar - Demonstrates various things which can be done with the status bar.
