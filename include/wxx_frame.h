@@ -3275,8 +3275,7 @@ namespace Win32xx
 			case Win8:	// A pale blue scheme without gradients, suitable for Windows 8, 8.1, and 10
 				{
 					MenuTheme mt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(240, 250, 255), RGB(120, 170, 220), RGB(127, 127, 255)};
-				//	ReBarTheme rbt = {T, RGB(235, 237, 250), RGB(235, 237, 250), RGB(220, 225, 240), RGB(220, 225, 240), F, F, T, F, T, F};
-					ReBarTheme rbt = { t, RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), f, f, t, f, t, f };
+					ReBarTheme rbt = {t, RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), RGB(235, 237, 250), f, f, t, f, t, f };
 					StatusBarTheme sbt = {t, RGB(235, 237, 250), RGB(235, 237, 250)};
 					ToolBarTheme tbt = {t, RGB(180, 250, 255), RGB(140, 190, 255), RGB(150, 220, 255), RGB(80, 100, 255), RGB(127, 127, 255)};
 

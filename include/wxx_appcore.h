@@ -220,6 +220,10 @@ namespace Win32xx
 	}
 
 	inline BOOL CWinThread::OnIdle(LONG lCount)
+	// This functions is called by the MessageLoop. It is called when the message queue
+	// is empty. Return TRUE to continue idle processing or FALSE to end idle processing
+	// until another message is queued.	lCount is incremented each time OnIdle is called,
+	// and reset to 0 each time a new messages is processed.
 	{
 		UNREFERENCED_PARAMETER(lCount);
 
@@ -227,11 +231,10 @@ namespace Win32xx
 	}
 
 	inline BOOL CWinThread::PreTranslateMessage(MSG& Msg)
+	// This functions is called by the MessageLoop. It processes the
+	// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
+	// keyboard and mouse events.
 	{
-		// This functions is called by the MessageLoop. It processes the
-		// keyboard accelerator keys and calls CWnd::PreTranslateMessage for
-		// keyboard and mouse events.
-
 		BOOL IsProcessed = FALSE;
 
 		// only pre-translate mouse and keyboard input events
@@ -292,12 +295,16 @@ namespace Win32xx
 	}
 
 	inline BOOL CWinThread::SetThreadPriority(int nPriority) const
+	// Sets the priority of this thread. The nPriority parameter can
+	// be -7, -6, -5, -4, -3, 3, 4, 5, or 6 or other values permitted
+	// by the SetThreadPriority Windows API function.
 	{
 		assert(m_hThread);
 		return ::SetThreadPriority(m_hThread, nPriority);
 	}
 
 	inline DWORD CWinThread::SuspendThread() const
+	// Suspends this thread. Use ResumeThread to resume the thread.
 	{
 		assert(m_hThread);
 		return ::SuspendThread(m_hThread);
@@ -393,6 +400,7 @@ namespace Win32xx
 	}
 
 	inline void CWinApp::AddCDCData(HDC hDC, CDC_Data* pData)
+	// Adds a HDC and CDC_Data* pair to the map.
 	{
 		m_csMapLock.Lock();
 		m_mapCDCData.insert(std::make_pair(hDC, pData));
@@ -400,6 +408,7 @@ namespace Win32xx
 	}
 
 	inline void CWinApp::AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData)
+	// Adds a HGDIOBJ and CGDI_Data* pair to the map.
 	{
 		m_csMapLock.Lock();
 		m_mapCGDIData.insert(std::make_pair(hGDI, pData));
@@ -407,6 +416,7 @@ namespace Win32xx
 	}
 
 	inline void CWinApp::AddCImlData(HIMAGELIST hIml, CIml_Data* pData)
+	// Adds a HIMAGELIST and Ciml_Data* pair to the map.
 	{
 		m_csMapLock.Lock();
 		m_mapCImlData.insert(std::make_pair(hIml, pData));
@@ -415,6 +425,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 	inline void CWinApp::AddCMenuData(HMENU hMenu, CMenu_Data* pData)
+	// Adds a HMENU and CMenu_Data* to the map.
 	{
 		m_csMapLock.Lock();
 		m_mapCMenuData.insert(std::make_pair(hMenu, pData));
@@ -608,6 +619,7 @@ namespace Win32xx
 	}
 
 	inline int CWinApp::Run()
+	// Runs the applications message loop.
 	{
 		// InitInstance runs the App's initialization code
 		if (InitInstance())
@@ -624,11 +636,10 @@ namespace Win32xx
 	}
 
 	inline void CWinApp::SetCallback()
+	// Registers a temporary window class so we can get the callback
+	// address of CWnd::StaticWindowProc.
+	// This technique works for all Window versions, including WinCE.
 	{
-		// Registers a temporary window class so we can get the callback
-		// address of CWnd::StaticWindowProc.
-		// This technique works for all Window versions, including WinCE.
-
 		WNDCLASS wcDefault;
 		ZeroMemory(&wcDefault, sizeof(WNDCLASS));
 
@@ -659,12 +670,11 @@ namespace Win32xx
 	}
 
 	inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)
+	// This function stores the 'this' pointer in a static variable.
+	// Once stored, it can be used later to return the 'this' pointer.
+	// CWinApp's constructor calls this function and sets the static variable.
+	// CWinApp's destructor calls this function with a value of -1.	
 	{
-		// This function stores the 'this' pointer in a static variable.
-		// Once stored, it can be used later to return the 'this' pointer.
-		// CWinApp's constructor calls this function and sets the static variable.
-		// CWinApp's destructor calls this function with a value of -1.
-
 		static CWinApp* pWinApp = 0;
 
 		if (reinterpret_cast<CWinApp*>(-1) == pThis)

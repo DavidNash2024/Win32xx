@@ -154,6 +154,8 @@ namespace Win32xx
 		CStringT(const T * pszText);
 		CStringT(T ch, int nLength = 1);
 		CStringT(const T * pszText, int nLength);
+		CStringT(int val);
+		CStringT(double val);
 
 		CStringT& operator = (const CStringT& str);
 		CStringT& operator = (const T ch);
@@ -270,6 +272,8 @@ namespace Win32xx
 		CString(LPCWSTR pszText)				: CStringT<TCHAR>(WtoT(pszText))	{}
 		CString(LPCSTR pszText, int nLength)	: CStringT<TCHAR>(AtoT(pszText), nLength) {}
 		CString(LPCWSTR pszText, int nLength)	: CStringT<TCHAR>(WtoT(pszText), nLength) {}
+		CString(int val)						: CStringT<TCHAR>(val) {}
+		CString(double val)						: CStringT<TCHAR>(val) {}
 
 		CString(char ch, int nLength = 1)
 		{
@@ -480,6 +484,20 @@ namespace Win32xx
 	{
 		memcpy(GetBuffer(nLength), pszText, nLength*sizeof(T));
 		ReleaseBuffer(nLength);
+	}
+
+	template <class T>
+	inline CStringT<T>::CStringT(int val)
+	// Constructor. Assigns from an integer value.
+	{
+		Format(_T("%d"), val);
+	}
+
+	template <class T>
+	// Constructor. Assigns from a double value.
+	inline CStringT<T>::CStringT(double val)
+	{
+		Format(_T("%g"), val);
 	}
 
 	template <class T>
