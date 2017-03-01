@@ -192,7 +192,6 @@ OnCreate(CREATESTRUCT& cs)                                               /*
 	if (rtn != 0)
 		return rtn;
 
-	GetReBar().ShowGripper(GetReBar().GetBand(GetToolBar()), TRUE);
 	  // determine the availability of the archive file
 	if (::_taccess(TheApp().GetArcvPath(), 4) != 0)
 	{

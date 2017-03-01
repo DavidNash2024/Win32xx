@@ -2,16 +2,16 @@
 // targetver.h is used to define the Windows API macros that target the 
 // version of the Windows operating system you wish to support.
 
-#ifndef WINVER
+
 // For Windows 95
 //#define WINVER          0x0400
 //#define _WIN32_WINDOWS  0x0400
 //#define _WIN32_IE       0x0400
 
 // For Windows 98
-//#define WINVER          0x0410
-//#define _WIN32_WINDOWS  0x0410
-//#define _WIN32_IE       0x0401
+#define WINVER          0x0410
+#define _WIN32_WINDOWS  0x0410
+#define _WIN32_IE       0x0401
 
 // For Windows NT4
 //#define WINVER          0x0400
@@ -19,9 +19,9 @@
 //#define _WIN32_IE       0x0400
 
 // For Windows ME
-#define WINVER          0x0500
-#define _WIN32_WINNT    0x0500
-#define _WIN32_IE       0x0500
+//#define WINVER          0x0500
+//#define _WIN32_WINDOWS  0x0490
+//#define _WIN32_IE       0x0500
 
 // For Windows 2000
 //#define WINVER          0x0500
@@ -59,4 +59,9 @@
 //#define _WIN32_IE       0x0A00
 //#define NTDDI_VERSION   0x06030000
 
-#endif
+//For Windows 10
+//#define WINVER          0x0A00
+//#define _WIN32_WINNT    0x0A00
+//#define _WIN32_IE       0x0A00
+//#define NTDDI_VERSION   0x0A000000
+

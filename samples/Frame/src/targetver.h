@@ -59,4 +59,9 @@
 //#define _WIN32_IE       0x0A00
 //#define NTDDI_VERSION   0x06030000
 
+//For Windows 10
+//#define WINVER          0x0A00
+//#define _WIN32_WINNT    0x0A00
+//#define _WIN32_IE       0x0A00
+//#define NTDDI_VERSION   0x0A000000
 
