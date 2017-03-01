@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////
-// targetver.h is used to define the Windows API macros that target the
+// targetver.h is used to define the Windows API macros that target the 
 // version of the Windows operating system you wish to support.
 
 
@@ -20,7 +20,7 @@
 
 // For Windows ME
 //#define WINVER          0x0500
-//#define _WIN32_WINNT    0x0500
+//#define _WIN32_WINDOWS  0x0490
 //#define _WIN32_IE       0x0500
 
 // For Windows 2000
@@ -59,4 +59,9 @@
 //#define _WIN32_IE       0x0A00
 //#define NTDDI_VERSION   0x06030000
 
+//For Windows 10
+//#define WINVER          0x0A00
+//#define _WIN32_WINNT    0x0A00
+//#define _WIN32_IE       0x0A00
+//#define NTDDI_VERSION   0x0A000000
 
