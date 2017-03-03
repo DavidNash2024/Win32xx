@@ -14,10 +14,6 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 	
-	BOOL ReadFile(LPCTSTR szFileName);
-	void SetFileName(LPCTSTR szFullFileName);
-	void SetWindowTitle();
-	BOOL WriteFile(LPCTSTR szFileName);
 	static  DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 	static  DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 
@@ -38,6 +34,12 @@ public:
 	BOOL OnOptionsFont();
 	BOOL OnOptionsWrap();
 
+	BOOL ReadFile(LPCTSTR szFileName);
+	void SaveModifiedText();
+	void SetPathName(LPCTSTR szFullFileName);
+	void SetWindowTitle();
+	BOOL WriteFile(LPCTSTR szFileName);
+
 protected:
 	virtual void OnClose();
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -49,7 +51,7 @@ protected:
 	
 private:
 	CRichView m_RichView;
-	CString m_strPathName;
+	CString m_PathName;
 	BOOL m_IsWrapped;
 };
 

@@ -15,10 +15,10 @@ public:
 	CMainFrame();
 	virtual ~CMainFrame();
 
-	BOOL ReadFile(LPCTSTR szFileName);
-	void SetFileName(LPCTSTR szFullFileName);
-	void SetWindowTitle();
-	BOOL WriteFile(LPCTSTR szFileName);
+	CRect GetPrintRect();
+	CRect GetPageRect();
+	CRichEdit& GetRichView() { return m_RichView; }
+
 	static  DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 	static  DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
 
@@ -42,10 +42,12 @@ public:
 	BOOL OnOptionsFont();
 	BOOL OnOptionsWrap();
 
-	CRect GetPrintRect();
-	CRect GetPageRect();
-	CRichEdit& GetRichView() { return m_RichView; }
 	void QuickPrint(CPrintDialog& PrintDlg);
+	BOOL ReadFile(LPCTSTR szFileName);
+	void SaveModifiedText();
+	void SetPathName(LPCTSTR szFullFileName);
+	void SetWindowTitle();
+	BOOL WriteFile(LPCTSTR szFileName);
 
 protected:
 	virtual void OnClose();
@@ -61,7 +63,7 @@ protected:
 private:
 	CPreviewDialog	m_PrintPreview;
 	CRichView m_RichView;
-	CString m_strPathName;
+	CString m_PathName;
 	BOOL m_IsWrapped;
 
 };

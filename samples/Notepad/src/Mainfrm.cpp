@@ -6,11 +6,9 @@
 #include "resource.h"
 
 
-
 // definitions for the CMainFrame class
 CMainFrame::CMainFrame() : m_IsWrapped(FALSE)
 {
-	m_strPathName = _T("");
 	SetView(m_RichView);
 
 	// Set the registry key name, and load the initial window position
@@ -25,36 +23,35 @@ CMainFrame::~CMainFrame()
 {
 }
 
-void CMainFrame::OnInitialUpdate()
+DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
 {
-	DragAcceptFiles(TRUE);
-	SetWindowTitle();
+	// Required for StreamIn
+	if (!cb)
+		return (1);
+
+	*pcb = 0;
+	if (!::ReadFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
+		::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
+
+	return 0;
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
 {
-	NMHDR* pNMH;
-	pNMH = (LPNMHDR) lParam;
-	switch (pNMH->code)
-	{
-	case EN_DROPFILES:
-		{
-			ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-			HDROP hDropInfo = (HDROP) ENDrop->hDrop;
-			OnDropFiles(hDropInfo);
-		}
-		return TRUE;
-	}
+	// Required for StreamOut
+	if (!cb)
+		return (1);
 
-	return CFrame::OnNotify(wParam, lParam);
+	*pcb = 0;
+	if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
+		::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
+	return 0;
 }
 
 void CMainFrame::OnClose()
 {
 	//Check for unsaved text
-	if ( m_RichView.GetModify() )
-		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
-			OnFileSave();
+	SaveModifiedText();
 
 	// Call the base function
 	CFrame::OnClose();
@@ -102,12 +99,48 @@ BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 
 	if (ReadFile(szFileName))
 	{
-		m_strPathName = szFileName;
+		m_PathName = szFileName;
 		ReadFile(szFileName);
 		SetWindowTitle();
 		AddMRUEntry(szFileName);
 	}
 
+	return TRUE;
+}
+
+BOOL CMainFrame::OnEditCut()
+{
+	m_RichView.Cut();
+	return TRUE;
+}
+
+BOOL CMainFrame::OnEditCopy()
+{
+	m_RichView.Copy();
+	return TRUE;
+}
+
+BOOL CMainFrame::OnEditPaste()
+{
+	m_RichView.PasteSpecial(CF_TEXT);
+	return TRUE;
+}
+
+BOOL CMainFrame::OnEditDelete()
+{
+	m_RichView.Clear();
+	return TRUE;
+}
+
+BOOL CMainFrame::OnEditRedo()
+{
+	m_RichView.Redo();
+	return TRUE;
+}
+
+BOOL CMainFrame::OnEditUndo()
+{
+	m_RichView.Undo();
 	return TRUE;
 }
 
@@ -124,7 +157,7 @@ BOOL CMainFrame::OnFileMRU(WPARAM wParam)
 	CString strMRUText = GetMRUEntry(nMRUIndex);
 
 	if (ReadFile(strMRUText))
-		m_strPathName = strMRUText;
+		m_PathName = strMRUText;
 	else
 		RemoveMRUEntry(strMRUText);
 
@@ -134,8 +167,11 @@ BOOL CMainFrame::OnFileMRU(WPARAM wParam)
 
 BOOL CMainFrame::OnFileNew()
 {
+	//Check for unsaved text
+	SaveModifiedText();
+
 	m_RichView.SetWindowText(_T(""));
-	m_strPathName = _T("");
+	m_PathName.Empty();
 	SetWindowTitle();
 	m_RichView.SetFontDefaults();
 	m_RichView.SetModify(FALSE);
@@ -201,7 +237,7 @@ BOOL CMainFrame::OnFilePrint()
 			DOCINFO di;
 			ZeroMemory(&di, sizeof(di));
 			di.cbSize = sizeof(DOCINFO);
-			di.lpszDocName = m_strPathName;
+			di.lpszDocName = m_PathName;
 
 			// Do not print to file.
 			di.lpszOutput = NULL;
@@ -255,40 +291,58 @@ BOOL CMainFrame::OnFilePrint()
 	return TRUE;
 }
 
-BOOL CMainFrame::OnEditCut()
+BOOL CMainFrame::OnFileOpen()
 {
-	m_RichView.Cut();
+	// szFilters is a text string that includes two file name filters:
+	// "*.my" for "MyType Files" and "*.*' for "All Files."
+	LPCTSTR szFilters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
+	CFileDialog FileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, szFilters);
+	
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		CString str = FileDlg.GetPathName();
+		ReadFile(str);
+		SetPathName(str);
+		AddMRUEntry(str);
+		SetWindowTitle();
+	}
+
 	return TRUE;
 }
 
-BOOL CMainFrame::OnEditCopy()
+BOOL CMainFrame::OnFileSave()
 {
-	m_RichView.Copy();
+	if (m_PathName.IsEmpty())
+		OnFileSaveAs();
+	else
+		WriteFile(m_PathName);
+
 	return TRUE;
 }
 
-BOOL CMainFrame::OnEditPaste()
+BOOL CMainFrame::OnFileSaveAs()
 {
-	m_RichView.PasteSpecial(CF_TEXT);
+	// szFilter is a text string that includes two file name filters:
+	// "*.my" for "MyType Files" and "*.*' for "All Files."
+	LPCTSTR szFilters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
+	CFileDialog FileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, szFilters);
+
+	if (FileDlg.DoModal(*this) == IDOK)
+	{
+		CString str = FileDlg.GetPathName();
+		WriteFile(str);
+		SetPathName(str);
+		AddMRUEntry(str);
+		SetWindowTitle();
+	}
+
 	return TRUE;
 }
 
-BOOL CMainFrame::OnEditDelete()
+void CMainFrame::OnInitialUpdate()
 {
-	m_RichView.Clear();
-	return TRUE;
-}
-
-BOOL CMainFrame::OnEditRedo()
-{
-	m_RichView.Redo();
-	return TRUE;
-}
-
-BOOL CMainFrame::OnEditUndo()
-{
-	m_RichView.Undo();
-	return TRUE;
+	DragAcceptFiles(TRUE);
+	SetWindowTitle();
 }
 
 void CMainFrame::OnMenuUpdate(UINT nID)
@@ -301,21 +355,39 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	CFrame::OnMenuUpdate(nID);
 }
 
+LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+{
+	NMHDR* pNMH;
+	pNMH = (LPNMHDR)lParam;
+	switch (pNMH->code)
+	{
+	case EN_DROPFILES:
+	{
+		ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
+		HDROP hDropInfo = (HDROP)ENDrop->hDrop;
+		OnDropFiles(hDropInfo);
+	}
+	return TRUE;
+	}
+
+	return CFrame::OnNotify(wParam, lParam);
+}
+
 BOOL CMainFrame::OnOptionsFont()
 {
 	// Retrieve the current character format
 	CHARFORMAT2 cf2;
-	ZeroMemory (&cf2, sizeof(cf2));
+	ZeroMemory(&cf2, sizeof(cf2));
 	cf2.cbSize = sizeof(cf2);
-	cf2.dwMask = CFM_COLOR|CFM_FACE|CFM_EFFECTS;
+	cf2.dwMask = CFM_COLOR | CFM_FACE | CFM_EFFECTS;
 	m_RichView.GetDefaultCharFormat(cf2);
 
 	// Fill the LOGFONT struct from CHARFORMAT2
 	LOGFONT lf;
 	ZeroMemory(&lf, sizeof(lf));
 	lstrcpy(lf.lfFaceName, cf2.szFaceName);
-	lf.lfHeight = cf2.yHeight/15;
-	lf.lfWeight = (cf2.dwEffects & CFE_BOLD)? 700 : 400;
+	lf.lfHeight = cf2.yHeight / 15;
+	lf.lfWeight = (cf2.dwEffects & CFE_BOLD) ? 700 : 400;
 	lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);
 
 	// Display the Choose Font dialog
@@ -345,6 +417,9 @@ BOOL CMainFrame::OnOptionsWrap()
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 {
+	//Check for unsaved text
+	SaveModifiedText();
+
 	try
 	{
 		// Open the file for reading
@@ -352,8 +427,8 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 		File.Open(szFileName, OPEN_EXISTING);
 
 		EDITSTREAM es;
-		es.dwCookie =  (DWORD_PTR) File.GetHandle();
-		es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
+		es.dwCookie = (DWORD_PTR)File.GetHandle();
+		es.pfnCallback = (EDITSTREAMCALLBACK)MyStreamInCallback;
 		m_RichView.StreamIn(SF_TEXT, es);
 
 		//Clear the modified text flag
@@ -371,102 +446,17 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	return TRUE;
 }
 
-BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
+void CMainFrame::SaveModifiedText()
 {
-	try
-	{
-		// Open the file for writing
-		CFile File;
-		File.Open(szFileName, CREATE_ALWAYS);
-
-		EDITSTREAM es;
-		es.dwCookie =  (DWORD_PTR) File.GetHandle();
-		es.dwError = 0;
-		es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamOutCallback;
-		m_RichView.StreamOut(SF_TEXT, es);
-
-		//Clear the modified text flag
-		m_RichView.SetModify(FALSE);
-	}
-
-	catch (const CFileException&)
-	{
-		CString str = _T("Failed to write:  ");
-		str += szFileName;
-		::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
-		return FALSE;
-	}
-
-	return TRUE;
+	//Check for unsaved text
+	if (m_RichView.GetModify())
+		if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
+			OnFileSave();
 }
 
-BOOL CMainFrame::OnFileOpen()
+void CMainFrame::SetPathName(LPCTSTR szFilePathName)
 {
-	// szFilters is a text string that includes two file name filters:
-	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	LPCTSTR szFilters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
-	CFileDialog FileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, szFilters);
-	
-	if (FileDlg.DoModal(*this) == IDOK)
-	{
-		CString str = FileDlg.GetPathName();
-		ReadFile(str);
-		SetFileName(str);
-		AddMRUEntry(str);
-		SetWindowTitle();
-	}
-
-	return TRUE;
-}
-
-BOOL CMainFrame::OnFileSave()
-{
-	if (m_strPathName == _T(""))
-		OnFileSaveAs();
-	else
-		WriteFile(m_strPathName);
-
-	return TRUE;
-}
-
-BOOL CMainFrame::OnFileSaveAs()
-{
-	// szFilter is a text string that includes two file name filters:
-	// "*.my" for "MyType Files" and "*.*' for "All Files."
-	LPCTSTR szFilters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
-	CFileDialog FileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, szFilters);
-
-	if (FileDlg.DoModal(*this) == IDOK)
-	{
-		CString str = FileDlg.GetPathName();
-		WriteFile(str);
-		SetFileName(str);
-		AddMRUEntry(str);
-		SetWindowTitle();
-	}
-
-	return TRUE;
-}
-
-void CMainFrame::SetFileName(LPCTSTR szFilePathName)
-{
-	//Truncate and save file name
-	int i = lstrlen(szFilePathName)+1;
-	while ((--i > 0) && (szFilePathName[i-1] != _T('\\')));
-
-	m_strPathName = szFilePathName+i;
-}
-
-void CMainFrame::SetWindowTitle()
-{
-    CString Title;
-
-	if (m_strPathName == _T(""))
-		Title = _T("TextEdit");
-	else
-		Title = m_strPathName + _T(" - TextEdit");
-
-	SetWindowText(Title);
+	m_PathName = szFilePathName;
 }
 
 void CMainFrame::SetupToolBar()
@@ -486,6 +476,18 @@ void CMainFrame::SetupToolBar()
 
 }
 
+void CMainFrame::SetWindowTitle()
+{
+	CString Title;
+
+	if (m_PathName.IsEmpty())
+		Title = _T("TextEdit");
+	else
+		Title = m_PathName + _T(" - TextEdit");
+
+	SetWindowText(Title);
+}
+
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 //	switch (uMsg)
@@ -496,28 +498,32 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return WndProcDefault(uMsg, wParam, lParam);
 }
 
-DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
+BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 {
-	// Required for StreamIn
-	if (!cb)
-		return (1);
+	try
+	{
+		// Open the file for writing
+		CFile File;
+		File.Open(szFileName, CREATE_ALWAYS);
 
-	*pcb = 0;
-	if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
-		::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
+		EDITSTREAM es;
+		es.dwCookie = (DWORD_PTR)File.GetHandle();
+		es.dwError = 0;
+		es.pfnCallback = (EDITSTREAMCALLBACK)MyStreamOutCallback;
+		m_RichView.StreamOut(SF_TEXT, es);
 
-	return 0;
-}
+		//Clear the modified text flag
+		m_RichView.SetModify(FALSE);
+	}
 
-DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
-{
-	// Required for StreamOut
-	if(!cb)
-		return (1);
+	catch (const CFileException&)
+	{
+		CString str = _T("Failed to write:  ");
+		str += szFileName;
+		::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
+		return FALSE;
+	}
 
-	*pcb = 0;
-	if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
-		::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
-	return 0;
+	return TRUE;
 }
 
