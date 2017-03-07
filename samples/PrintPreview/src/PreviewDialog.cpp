@@ -271,9 +271,8 @@ void CPreviewDialog::PreviewPage(UINT nPage)
 	CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
 	CDC dcPrinter = PrintDlg.GetPrinterDC();
 	
-	// Create a memory DC for the preview pane
-	CDC dcPreview = GetPreviewPane().GetDC(); 
-	CMemDC dcMem(dcPreview);
+	// Create a memory DC for the printer
+	CMemDC dcMem(dcPrinter);
 
 	// Assign values to the FORMATRANGE struct
 	FORMATRANGE fr;
@@ -285,23 +284,31 @@ void CPreviewDialog::PreviewPage(UINT nPage)
 	fr.chrg.cpMin = (nPage > 0) ? m_PageBreaks[nPage - 1] : 0;
 	fr.chrg.cpMax = m_PageBreaks[nPage];
 
-	// Create a compatible bitmap for the memory DC
-	double rescale = 1.15;
-	int Width = (int)(rescale * GetDeviceCaps(dcPreview, LOGPIXELSX) * (dcPrinter.GetDeviceCaps(HORZRES) / dcPrinter.GetDeviceCaps(LOGPIXELSX)));
-	int Height = (int)(rescale * GetDeviceCaps(dcPreview, LOGPIXELSY) * (dcPrinter.GetDeviceCaps(VERTRES) / dcPrinter.GetDeviceCaps(LOGPIXELSY)));
+	// The amount we shink the size of the bitmap
+	int Shink = 8;	
 
-	dcMem.CreateCompatibleBitmap(dcPreview, Width, Height);
+	// Create a compatible bitmap for the memory DC
+	int Width = dcPrinter.GetDeviceCaps(HORZRES);
+	int Height = dcPrinter.GetDeviceCaps(VERTRES);
+	
+	CDC dcPreview = GetPreviewPane().GetDC();
+	dcMem.CreateCompatibleBitmap(dcPreview, Width / Shink, Height / Shink);
+
+	dcMem.SetMapMode(MM_ANISOTROPIC);
+	dcMem.SetWindowExtEx(Width, Height, NULL);
+	dcMem.SetViewportExtEx(Width / Shink, Height / Shink, NULL);
+
+	// Fill the bitmap with a white background
 	CRect rc(0, 0, Width, Height);
 	dcMem.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
 
 	// Display text from the richedit control on the memory dc
-	dcMem.SetMapMode(MM_TEXT);
 	GetRichView().FormatRange(fr, TRUE);
 
 	// Tell the control to release the cached information.
 	GetRichView().FormatRange();
 
-	// Save the bitmap from the memory DC
+	// Detach the bitmap from the memory DC and save it
 	CBitmap Bitmap = dcMem.DetachBitmap();
 	GetPreviewPane().SetBitmap(Bitmap);
 
