@@ -1,5 +1,5 @@
 Win32++   Version 8.4
-Release Date: TBA
+Release Date: 10th March 2017
 
      David Nash
      email: dnash@bigpond.net.au

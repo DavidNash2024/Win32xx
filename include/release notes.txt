@@ -14,7 +14,9 @@ Win32++ supports the following compilers and development environments:
 * Microsoft Visual C++ 2010 Express Edition
 * Microsoft Visual C++ 2012 Express Edition
 * Microsoft Visual C++ 2013 Express Edition
+* Microsoft Visual Studio Community 2013 
 * Microsoft Visual Studio Community 2015
+* Microsoft Visual Studio Community 2017
 * Microsoft Visual Studio 6.0
 * Microsoft Visual Studio.net 2003
 * Microsoft Visual Studio.net 2005
