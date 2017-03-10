@@ -82,6 +82,9 @@ New Features and Enhancements
  6) ToolTips sample.
    This sample demonstrates how to add tooltips to controls in a modal dialog.
    
+* Improved the PrintPreview sample. It now accurately renders the preview, 
+   irrespective of the font and paper size.   
+   
    
 Changes in detail
 -----------------

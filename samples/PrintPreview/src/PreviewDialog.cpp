@@ -98,7 +98,9 @@ void CPreviewPane::Render(CDC& dc)
 			xBorder = (rcClient.Width() - PreviewWidth) / 2;
 		}
 
-		// Copy from the memory dc to the PreviewPane's DC with stretching.
+		// Copy from the memory dc to the PreviewPane's DC with stretching.		
+		dc.SetStretchBltMode(HALFTONE);			// provides smoother bitmap rendering
+		::SetBrushOrgEx((HDC)dc, xBorder, yBorder, NULL);
 		dc.StretchBlt(xBorder, yBorder, PreviewWidth, PreviewHeight, dcMem, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 	
 		// Draw a grey border around the preview
@@ -271,7 +273,8 @@ void CPreviewDialog::PreviewPage(UINT nPage)
 	CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
 	CDC dcPrinter = PrintDlg.GetPrinterDC();
 	
-	// Create a memory DC for the printer
+	// Create a memory DC for the printer.
+	// Note: we use the printer's DC here to render text accurately
 	CMemDC dcMem(dcPrinter);
 
 	// Assign values to the FORMATRANGE struct
@@ -284,19 +287,20 @@ void CPreviewDialog::PreviewPage(UINT nPage)
 	fr.chrg.cpMin = (nPage > 0) ? m_PageBreaks[nPage - 1] : 0;
 	fr.chrg.cpMax = m_PageBreaks[nPage];
 
-	// The amount we shink the size of the bitmap
-	int Shink = 8;	
-
 	// Create a compatible bitmap for the memory DC
 	int Width = dcPrinter.GetDeviceCaps(HORZRES);
 	int Height = dcPrinter.GetDeviceCaps(VERTRES);
+
+	// A bitmap to hold all the pixels of the printed page would be too large.
+	// Shrinking its dimensions by 4 reduces it to 1/16th its original size.
+	int Shrink = Width > 10000? 8 : 4;
 	
 	CDC dcPreview = GetPreviewPane().GetDC();
-	dcMem.CreateCompatibleBitmap(dcPreview, Width / Shink, Height / Shink);
+	dcMem.CreateCompatibleBitmap(dcPreview, Width / Shrink, Height / Shrink);
 
 	dcMem.SetMapMode(MM_ANISOTROPIC);
 	dcMem.SetWindowExtEx(Width, Height, NULL);
-	dcMem.SetViewportExtEx(Width / Shink, Height / Shink, NULL);
+	dcMem.SetViewportExtEx( Width / Shrink, Height / Shrink, NULL);
 
 	// Fill the bitmap with a white background
 	CRect rc(0, 0, Width, Height);
