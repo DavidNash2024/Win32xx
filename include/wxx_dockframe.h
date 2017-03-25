@@ -1,5 +1,5 @@
-// Win32++   Version 8.4
-// Release Date: 10th March 2017
+// Win32++   Version 8.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -81,10 +81,15 @@ namespace Win32xx
 		virtual void SetView(CWnd& wndView)	{ CDocker::SetView(wndView); }
 
 	protected:
-		virtual void RecalcViewLayout();
+		virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual int OnCreate(CREATESTRUCT& cs);
 		virtual void OnDestroy();
+		virtual LRESULT OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual void RecalcViewLayout();
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	};
@@ -122,11 +127,11 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CDockFrame class
 	//
-	
-	inline void CDockFrame::RecalcViewLayout()
-	// Re-positions the view window
-	{ 
-		RecalcDockLayout(); 
+
+	inline LRESULT CDockFrame::OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		CDocker::OnActivate(uMsg, wParam, lParam);
+		return CFrameT<CDocker>::OnActivate(uMsg, wParam, lParam);
 	}
 
 	inline int CDockFrame::OnCreate(CREATESTRUCT& cs)
@@ -143,6 +148,21 @@ namespace Win32xx
 		CDocker::OnDestroy();
 		CFrameT<CDocker>::OnDestroy();
 	}
+	
+	inline LRESULT CDockFrame::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return CDocker::OnDockActivated(uMsg, wParam, lParam);
+	}
+
+	inline LRESULT CDockFrame::OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return CDocker::OnDockDestroyed(uMsg, wParam, lParam);
+	}
+
+	inline LRESULT CDockFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		return CDocker::OnMouseActivate(uMsg, wParam, lParam);	
+	}
 
 	inline LRESULT CDockFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	// Called when a notification from a child window (WM_NOTIFY) is received.
@@ -155,18 +175,30 @@ namespace Win32xx
 		return lr;
 	}
 
+	inline LRESULT CDockFrame::OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
+	{
+		CDocker::OnSysColorChange(uMsg, wParam, lParam);
+		return CFrameT<CDocker>::OnSysColorChange(uMsg, wParam, lParam);
+	}
+
+	inline void CDockFrame::RecalcViewLayout()
+		// Re-positions the view window
+	{
+		RecalcDockLayout();
+	}
+
 	inline LRESULT CDockFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Handle the frame's window messages.
 	{
 		switch (uMsg)
 		{			
-		case WM_ACTIVATE:			CDocker::OnActivate(uMsg, wParam, lParam); break;
-		case WM_MOUSEACTIVATE:		return CDocker::OnMouseActivate(uMsg, wParam, lParam);
-		case WM_SYSCOLORCHANGE:		CDocker::OnSysColorChange(uMsg, wParam, lParam); break;
+		case WM_ACTIVATE:			return OnActivate(uMsg, wParam, lParam);
+		case WM_MOUSEACTIVATE:		return OnMouseActivate(uMsg, wParam, lParam);
+		case WM_SYSCOLORCHANGE:		return OnSysColorChange(uMsg, wParam, lParam);
 		
 		// Messages defined by Win32++
-		case UWM_DOCKACTIVATE:		return CDocker::OnDockActivated(uMsg, wParam, lParam);
-		case UWM_DOCKDESTROYED:		return CDocker::OnDockDestroyed(uMsg, wParam, lParam);
+		case UWM_DOCKACTIVATE:		return OnDockActivated(uMsg, wParam, lParam);
+		case UWM_DOCKDESTROYED:		return OnDockDestroyed(uMsg, wParam, lParam);
 		case UWM_GETCDOCKER:		return reinterpret_cast<LRESULT>(this);		
 
 		} // switch uMsg

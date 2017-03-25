@@ -47,11 +47,14 @@ public:
 	void LoadDefaultMDIs();
 	void SetContainerTabsAtTop(BOOL bTop);
 	void SetMDITabsAtTop(BOOL bTop);
+
+
 	
 protected:
 	virtual CDocker* NewDockerFromID(int idDock);
 	virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual int     OnCreate(CREATESTRUCT& cs);
+	virtual LRESULT OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    OnInitialUpdate();
 	virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual void    OnMenuUpdate(UINT nID);
@@ -66,6 +69,7 @@ private:
 	BOOL m_IsContainerTabsAtTop;
 	BOOL m_IsHideSingleTab;
 	BOOL m_IsMDITabsAtTop;
+	CDocker* m_pActiveDocker;
 };
 
 #endif //MAINFRM_H

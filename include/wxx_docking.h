@@ -1,5 +1,5 @@
-// Win32++   Version 8.4
-// Release Date: 10th March 2017
+// Win32++   Version 8.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -469,6 +469,7 @@ namespace Win32xx
 		virtual void DockInContainer(CDocker* pDocker, DWORD dwDockStyle);
 		virtual CDockContainer* GetContainer() const;
 		virtual CDocker* GetActiveDocker() const;
+		virtual CWnd*	 GetActiveView() const;
 		virtual CDocker* GetDockAncestor() const;
 		virtual CDocker* GetDockFromID(int n_DockID) const;
 		virtual CDocker* GetDockFromView(CWnd* pView) const;
@@ -2383,6 +2384,22 @@ namespace Win32xx
 		return pDockActive;
 	}
 
+	inline CWnd* CDocker::GetActiveView() const
+	// Returns a Docker's active view. Returns the container's active view for a docker with
+	//	a DockContainer, returns the the active MDI child for a docker with a TabbedMDI, 
+	//	or the docker's view for a simple docker. Can return NULL.
+	{
+		CWnd* pView;
+		if (GetContainer())
+			pView = GetContainer()->GetActiveView();
+		else if (GetTabbedMDI())
+			pView = GetTabbedMDI()->GetActiveMDIChild();
+		else
+			pView = &GetView();
+
+		return pView;
+	}
+
 	inline CDocker* CDocker::GetDockAncestor() const
 	// The GetDockAncestor function retrieves the pointer to the
 	//  ancestor (root docker parent) of the Docker.
@@ -2857,10 +2874,10 @@ namespace Win32xx
 
 	inline LRESULT CDocker::OnActivate(UINT, WPARAM wParam, LPARAM)
 	{
-		GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
-
 		if ((wParam != WA_INACTIVE) && (this != GetDockAncestor()) && IsUndocked())
 		{
+			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
+
 			// Give the view window focus unless its child already has it
 			if (!GetView().IsChild(GetFocus()))
 				GetView().SetFocus();

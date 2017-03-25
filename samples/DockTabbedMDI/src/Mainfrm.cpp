@@ -15,7 +15,7 @@
 
 // Definitions for the CMainFrame class
 CMainFrame::CMainFrame() : m_IsContainerTabsAtTop(FALSE), m_IsHideSingleTab(TRUE), 
-							m_IsMDITabsAtTop(TRUE)
+							m_IsMDITabsAtTop(TRUE), m_pActiveDocker(NULL)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -180,8 +180,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
 	default:
 	{
-		// Pass the command on to the view window with focus
-		GetFocus().SendMessage(WM_COMMAND, wParam, lParam);
+		// Pass the command on to the view of the active docker
+		m_pActiveDocker->GetActiveView()->SendMessage(WM_COMMAND, wParam, lParam);
 	}
 	}
 
@@ -225,6 +225,17 @@ BOOL CMainFrame::OnDefaultLayout()
 	SetRedraw(TRUE);
 	RedrawWindow();
 	return TRUE;
+}
+
+LRESULT CMainFrame::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Store the active docker in preparation for menu input. Excludes active 
+// docker change for undocked dockers when using the menu.
+{
+	CPoint pt = GetCursorPos();
+	if (WindowFromPoint(pt) != GetMenuBar())
+		m_pActiveDocker = GetActiveDocker();
+
+	return CDockFrame::OnDockActivated(uMsg, wParam, lParam);
 }
 
 BOOL CMainFrame::OnFileExit()
@@ -347,10 +358,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		CMenu EditMenu = GetFrameMenu().GetSubMenu(1);
 
 		// Get the pointer to the active view
-		if (GetActiveDocker() == this)
-			pView = m_MyTabbedMDI.GetActiveMDIChild();
-		else if (GetActiveDocker() && GetActiveDocker()->IsDocked())
-			pView = GetActiveDocker()->GetContainer()->GetActiveView();
+		pView = m_pActiveDocker->GetActiveView();
 
 		// Enable the Edit menu items for CViewText windows, disable them otherwise
 		UINT Flags = (dynamic_cast<CViewText*>(pView))? MF_ENABLED : MF_GRAYED;
