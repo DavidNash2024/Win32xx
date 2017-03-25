@@ -1,5 +1,5 @@
-// Win32++   Version 8.4
-// Release Date: 10th March 2017
+// Win32++   Version 8.4.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -53,7 +53,7 @@
 // WM_APP range: 0x8000 through 0xBFFF
 // Note: The numbers defined for window messages don't always need to be unique. View windows defined by users for example,
 //  could use other user defined messages with the same number as those below without issue. 
-#define UWM_DOCKACTIVATE      (WM_APP + 0x3F01) // Message - sent to dock ancestor when a docker is activated or deactivated.
+#define UWM_DOCKACTIVATE      (WM_APP + 0x3F01) // Message - sent to dock ancestor when a docker is activated.
 #define UWM_DOCKDESTROYED	  (WM_APP + 0x3F02)	// Message - posted when docker is destroyed
 #define UWM_DRAWRBBKGND       (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
 #define UWM_DRAWSBBKGND       (WM_APP + 0x3F04)	// Message - sent by statusbar to parent to perform background drawing. Return TRUE if handled.

@@ -1,3 +1,17 @@
+Version 8.4.1
+=============
+
+Changes in detail
+-----------------
+Added CDocker::GetActiveView
+Added CDockFrame::OnActivate
+Added CDockFrame::OnDockActivated
+Added CDockFrame::OnDockDestroyed
+Added CDockFrame::OnMouseActivate
+Added CDockFrame::OnSysColorChange
+
+
+
 Version 8.4
 ===========
 
