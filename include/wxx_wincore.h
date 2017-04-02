@@ -1089,25 +1089,14 @@ namespace Win32xx
 			break;	// Note: Some controls require default processing.
 		case WM_NOTIFY:
 			{
-				// Do Notification reflection if it came from a CWnd object
+				// Do notification reflection if message came from a child window.
+				// Restricting OnNotifyReflect to child windows avoids double handling.
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
 				CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
 
-				// Skip notification reflection for rebars and tabs to avoid double handling
-				CString ClassName = GetClassName();
-				if ( (ClassName != _T("ReBarWindow32")) && (ClassName != _T("SysTabControl32")) )
-				{
-					if (pWndFrom != NULL)
+				if (pWndFrom != NULL)
+					if (::GetParent(hwndFrom) == m_hWnd)
 						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
-					else
-					{
-						// Some controls (eg ListView) have child windows.
-						// Reflect those notifications too.
-						CWnd* pWndFromParent = GetApp().GetCWndFromMap(::GetParent(hwndFrom));
-						if (pWndFromParent != NULL)
-							lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
-					}
-				}
 
 				// Handle user notifications
 				if (lr == 0L) lr = OnNotify(wParam, lParam);

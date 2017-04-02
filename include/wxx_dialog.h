@@ -313,20 +313,14 @@ namespace Win32xx
 			break;
 		case WM_NOTIFY:
 			{
-				// Do Notification reflection if it came from a CWnd object
+				// Do notification reflection if message came from a child window.
+				// Restricting OnNotifyReflect to child windows avoids double handling.
 				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
-				CWnd* pWndFrom = GetCWndPtr(hwndFrom);
+				CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
 
 				if (pWndFrom != NULL)
-					lr = pWndFrom->OnNotifyReflect(wParam, lParam);
-				else
-				{
-					// Some controls (eg ListView) have child windows.
-					// Reflect those notifications too.
-					CWnd* pWndFromParent = GetCWndPtr(::GetParent(hwndFrom));
-					if (pWndFromParent != NULL)
-						lr = pWndFromParent->OnNotifyReflect(wParam, lParam);
-				}
+					if (::GetParent(hwndFrom) == m_hWnd)
+						lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 	
 				// Handle user notifications
 				if (!lr) lr = OnNotify(wParam, lParam);

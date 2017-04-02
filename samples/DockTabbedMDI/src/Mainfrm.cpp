@@ -228,6 +228,7 @@ BOOL CMainFrame::OnDefaultLayout()
 }
 
 LRESULT CMainFrame::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
+// Called when a docker is activated.
 // Store the active docker in preparation for menu input. Excludes active 
 // docker change for undocked dockers when using the menu.
 {
@@ -354,13 +355,11 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 	// Only for the Menu IDs we wish to modify
 	if (nID >= IDM_EDIT_UNDO && nID <= IDM_EDIT_DELETE)
 	{
-		CWnd* pView = 0;
-		CMenu EditMenu = GetFrameMenu().GetSubMenu(1);
-
 		// Get the pointer to the active view
-		pView = m_pActiveDocker->GetActiveView();
-
-		// Enable the Edit menu items for CViewText windows, disable them otherwise
+		CWnd* pView = m_pActiveDocker->GetActiveView();
+	
+		// Enable the Edit menu items for CViewText views, disable them otherwise
+		CMenu EditMenu = GetFrameMenu().GetSubMenu(1);
 		UINT Flags = (dynamic_cast<CViewText*>(pView))? MF_ENABLED : MF_GRAYED;
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
@@ -431,6 +430,9 @@ void CMainFrame::SetupMenuIcons()
 	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
 	AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILEVIEW));
 	AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSVIEW));
+
+	// Remove the checkmark for container tabs at top
+	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 }
 
 void CMainFrame::SetupToolBar()
@@ -450,9 +452,6 @@ void CMainFrame::SetupToolBar()
 
 	AddToolBarButton( 0 );	// Separator
 	AddToolBarButton( IDM_HELP_ABOUT );
-
-	// Remove the checkmark for container tabs at top
-	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
