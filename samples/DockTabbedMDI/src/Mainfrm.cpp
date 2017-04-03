@@ -147,7 +147,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDM_CONTAINER_TOP:		return OnContainerTabsAtTop();
 	case IDM_DEFAULT_LAYOUT:	return OnDefaultLayout();
 	case IDM_FILE_NEW:			return OnFileNew();
-	case IDM_FILE_NEWSIMPLE:	return OnFileNewSimple();
+	case IDM_FILE_NEWBROWSER:	return OnFileNewSimple();
 	case IDM_FILE_NEWRECT:		return OnFileNewRect();
 	case IDM_FILE_NEWTEXT:		return OnFileNewText();
 	case IDM_FILE_NEWTREE:		return OnFileNewTree();
@@ -425,7 +425,7 @@ void CMainFrame::SetupMenuIcons()
 	CDockFrame::SetupMenuIcons();
 
 	// Add some extra icons for menu items
-	AddMenuIcon(IDM_FILE_NEWSIMPLE, GetApp().LoadIcon(IDI_SIMPLE));
+	AddMenuIcon(IDM_FILE_NEWBROWSER, GetApp().LoadIcon(IDI_GLOBE));
 	AddMenuIcon(IDM_FILE_NEWRECT, GetApp().LoadIcon(IDI_RECT));
 	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
 	AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILEVIEW));

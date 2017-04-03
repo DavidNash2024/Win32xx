@@ -30,7 +30,7 @@
 #define IDB_STATUS                      132
 
 // Icons for container tabs
-#define IDI_SIMPLE                      133
+#define IDI_GLOBE                       133
 #define IDI_RECT                        134
 #define IDI_DIALOGVIEW                  135
 #define IDI_CLASSVIEW                   136
@@ -39,7 +39,7 @@
 
 // Menu Resource
 #define IDM_NEWMENU                     140
-#define IDM_FILE_NEWSIMPLE              141
+#define IDM_FILE_NEWBROWSER              141
 #define IDM_FILE_NEWRECT                142
 #define IDM_FILE_NEWTEXT                143
 #define IDM_FILE_NEWTREE                144
