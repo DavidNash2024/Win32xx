@@ -2387,6 +2387,7 @@ inline CDC::CDC(HDC hDC, HWND hWnd /*= 0*/)
 		HDC hDC = m_pData->hDC;
 		RemoveFromMap();
 		m_pData->hDC = 0;
+		::RestoreDC(hDC, m_pData->nSavedDCState);
 
 		if (m_pData->Count > 0)
 		{

@@ -36,7 +36,7 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
+        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
@@ -81,7 +81,7 @@ IDM_NEWMENU MENU
 BEGIN
     POPUP "New"
     BEGIN
-        MENUITEM "New &Simple",                 IDM_FILE_NEWSIMPLE
+        MENUITEM "New &Browser",                IDM_FILE_NEWBROWSER
         MENUITEM "New &Rectangle",              IDM_FILE_NEWRECT
         MENUITEM "New &Text",                   IDM_FILE_NEWTEXT
         MENUITEM "New TreeView",                IDM_FILE_NEWTREE
@@ -101,8 +101,8 @@ IDW_MAIN                ICON                    "../src/res/Docking.ico"
 IDI_CLASSVIEW           ICON                    "../src/res/classview.ico"
 IDI_DIALOGVIEW          ICON                    "../src/res/Dialog.ico"
 IDI_FILEVIEW            ICON                    "../src/res/fileview.ico"
+IDI_GLOBE               ICON                    "../src/res/Globe.ico"
 IDI_RECT                ICON                    "../src/res/rect.ico"
-IDI_SIMPLE              ICON                    "../src/res/simple.ico"
 IDI_TEXT                ICON                    "../src/res/text.ico"
 
 /////////////////////////////////////////////////////////////////////////////
@@ -238,7 +238,7 @@ END
 
 STRINGTABLE 
 BEGIN
-    IDM_FILE_NEWSIMPLE      "Create Simple MDI Child"
+    IDM_FILE_NEWBROWSER     "Create Simple MDI Child"
     IDM_FILE_NEWRECT        "Create Rect MDI Child"
     IDM_FILE_NEWTEXT        "Create Text MDI Child"
 END
