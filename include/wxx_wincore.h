@@ -718,7 +718,7 @@ namespace Win32xx
 		// }
 
 		// return 0L for unhandled notifications
-		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for dialogs
 		return 0L;
 	}
 
@@ -739,7 +739,7 @@ namespace Win32xx
 		// }
 
 		// return 0L for unhandled notifications
-		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
+		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for dialogs
 		return 0L;
 	}
 

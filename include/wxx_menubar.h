@@ -801,7 +801,6 @@ namespace Win32xx
 		case TBN_HOTITEMCHANGE:	return OnTBNHotItemChange((LPNMTBHOTITEM) lParam);
 		}
 
-		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 		return 0L;
 	}
 

@@ -171,7 +171,6 @@ namespace Win32xx
 		if (lr == 0)
 			lr = CDocker::OnNotify(wParam, lParam);
 
-		// The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for non-zero returns
 		return lr;
 	}
 

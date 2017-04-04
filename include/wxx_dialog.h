@@ -377,6 +377,17 @@ namespace Win32xx
 		case WM_PARENTNOTIFY:
 			return MessageReflect(uMsg, wParam, lParam);
 
+		case UWM_GETCDIALOG:	// Returns a pointer to this CDialog object
+		{
+			assert(this == GetCWndPtr(m_hWnd));
+
+			// Set the return code
+			if (IsWindow())
+				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)this);
+			
+			return TRUE;
+		}
+
 	    } // switch(uMsg)
 	    
 		return 0;
@@ -650,9 +661,11 @@ namespace Win32xx
 			{
 				for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
 				{
-					CDialog* pDialog = static_cast<CDialog*>(GetCWndPtr(hWnd));
-					if (pDialog && (lstrcmp(pDialog->GetClassName(), _T("#32770")) == 0))	// only for dialogs
+					// Only CDialogs respond to this message
+					CDialog* pDialog = reinterpret_cast<CDialog*>(::SendMessage(hWnd, UWM_GETCDIALOG, 0, 0));
+					if (pDialog != 0)
 					{
+						assert(GetCWndPtr(hWnd));
 						if (pDialog->PreTranslateMessage(*lpMsg))
 							return 1; // Eat the message
 
