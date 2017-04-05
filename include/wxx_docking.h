@@ -1299,7 +1299,7 @@ namespace Win32xx
 			if (lr != 0)
 				lr = m_pDocker->SendMessage(uMsg, wParam, lParam);
 	
-			return 0;
+			return lr;
 		}
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
