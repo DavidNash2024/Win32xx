@@ -1290,7 +1290,17 @@ namespace Win32xx
 		case WM_NCMOUSEMOVE:		return OnNCMouseMove(uMsg, wParam, lParam);
 		case WM_NCPAINT:			return OnNCPaint(uMsg, wParam, lParam);
 		case WM_NCMOUSELEAVE:		return OnNCMouseLeave(uMsg, wParam, lParam);
-		case WM_NOTIFY:				return m_pDocker->SendMessage(uMsg, wParam, lParam);
+		case WM_NOTIFY:
+		{
+			// Perform default handling for WM_NOTIFY
+			LRESULT lr = CWnd::WndProcDefault(uMsg, wParam, lParam);
+			
+			// Also forward WM_NOTIFY to the docker 
+			if (lr != 0)
+				lr = m_pDocker->SendMessage(uMsg, wParam, lParam);
+	
+			return 0;
+		}
 		case WM_WINDOWPOSCHANGED:	return OnWindowPosChanged(uMsg, wParam, lParam);
 		}
 
