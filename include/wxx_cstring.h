@@ -1042,6 +1042,7 @@ namespace Win32xx
 	template <>
 	inline void CStringT<CHAR>::GetWindowText(HWND hWndCtrl)
 	{
+		Empty();
 		int nLength = ::GetWindowTextLengthA(hWndCtrl);
 		if (nLength > 0)
 		{
@@ -1054,6 +1055,7 @@ namespace Win32xx
 	template <>
 	inline void CStringT<WCHAR>::GetWindowText(HWND hWndCtrl)
 	{
+		Empty();
 		int nLength = ::GetWindowTextLengthW(hWndCtrl);
 		if (nLength > 0)
 		{
@@ -1067,8 +1069,7 @@ namespace Win32xx
 	inline void CStringT<CHAR>::GetErrorString(DWORD dwError)
 	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
-		m_str.erase();
-
+		Empty();
 		CHAR* pTemp = 0;
 		DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 		::FormatMessageA(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pTemp, 1, NULL);
@@ -1080,8 +1081,7 @@ namespace Win32xx
 	inline void CStringT<WCHAR>::GetErrorString(DWORD dwError)
 	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
-		m_str.erase();
-
+		Empty();
 		WCHAR* pTemp = 0;
 		DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
 		::FormatMessageW(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&pTemp, 1, NULL);
