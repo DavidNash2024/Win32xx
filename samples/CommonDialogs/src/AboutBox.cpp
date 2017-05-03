@@ -72,7 +72,7 @@ OnHelpAbout()                                                       	/*
 {
 	  // Ensure that only one About dialog displays even for multiple
 	  // activation commands
-	CString s = TheApp().GetAppGlobal().GetAboutBoxInfo();
+	CString s = theAppGlobal.GetAboutBoxInfo();
 	if (!IsWindow())
 		Create();  // make the AboutBox modeless
 
