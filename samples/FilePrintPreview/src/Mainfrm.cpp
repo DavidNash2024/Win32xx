@@ -128,7 +128,7 @@ OnCreate(CREATESTRUCT& cs)						/*
 	// SetUseIndicatorStatus(FALSE); // Don't show keyboard indicators in the StatusBar
 	// SetUseMenuStatus(FALSE);	 // Don't show menu descriptions in the StatusBar
 	// SetUseReBar(FALSE);		 // Don't use a ReBar
-	SetUseThemes(FALSE);		 // Don't use themes
+	// SetUseThemes(FALSE);		 // Don't use themes
 	// SetUseToolBar(FALSE);	 // Don't use a ToolBar
 
 	  // call the base class function
@@ -575,15 +575,18 @@ SetupMenuIcons()							/*
 	AddMenuIcon(IDM_FILE_PREVIEW,	 GetApp().LoadIcon(IDI_PRINTPREVIEW));
 	AddMenuIcon(IDM_FILE_QUICKPRINT, GetApp().LoadIcon(IDI_QUICKPRINT));
 	AddMenuIcon(IDM_FILE_PRINT,	 GetApp().LoadIcon(IDI_PRINT));
+#ifndef NO_MENU_BOXES
 	  // options menu font dialog icon
 	AddMenuIcon(IDM_OPTIONS_FONT,	 GetApp().LoadIcon(IDI_FONT_OPTION));
-	  // set options menu wrap radio button default unselected icons
-	AddMenuIcon(IDM_WRAP_NONE,	 GetApp().LoadIcon(IDI_RADIO_OFF));
-	AddMenuIcon(IDM_WRAP_WINDOW,	 GetApp().LoadIcon(IDI_RADIO_OFF));
-	AddMenuIcon(IDM_WRAP_PRINTER,	 GetApp().LoadIcon(IDI_RADIO_OFF));
-	  // set toolbar and status bar check boxes off icons
-	AddMenuIcon(IDW_VIEW_TOOLBAR,	 GetApp().LoadIcon(IDI_CHECKBOX_OFF));
-	AddMenuIcon(IDW_VIEW_STATUSBAR,	 GetApp().LoadIcon(IDI_CHECKBOX_OFF));
+	  // set options menu radio button unselected icon
+	HICON check_box_unselected =     GetApp().LoadIcon(IDI_CHECKBOX_OFF);
+	AddMenuIcon(IDM_WRAP_NONE,	 check_box_unselected);
+	AddMenuIcon(IDM_WRAP_WINDOW,	 check_box_unselected);
+	AddMenuIcon(IDM_WRAP_PRINTER,	 check_box_unselected);
+	  // set toolbar and status bar check boxes unselected icons
+	AddMenuIcon(IDW_VIEW_TOOLBAR,	 check_box_unselected);
+	AddMenuIcon(IDW_VIEW_STATUSBAR,	 check_box_unselected);
+#endif
 	CFrame::SetupMenuIcons();
 }
 

@@ -79,9 +79,8 @@
 #define IDI_PRINTSETUP                  191
 #define IDI_QUICKPRINT                  192
 #define IDI_PRINT                       193
-#define IDI_RADIO_OFF			194
-#define IDI_FONT_OPTION			196
-#define IDI_CHECKBOX_OFF		197
+#define IDI_FONT_OPTION			194
+#define IDI_CHECKBOX_OFF		195
 
   // resource IDs of the print preview setup dialog
 #define IDD_PREVIEW_SETUP		200
