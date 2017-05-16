@@ -9,8 +9,9 @@ Added CDockFrame::OnDockActivated
 Added CDockFrame::OnDockDestroyed
 Added CDockFrame::OnMouseActivate
 Added CDockFrame::OnSysColorChange
+Added  UWM_GETCDIALIOG message
 
-
+Added FilePrintPreview sample
 
 Version 8.4
 ===========

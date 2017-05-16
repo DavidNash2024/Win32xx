@@ -378,6 +378,7 @@ namespace Win32xx
 			return MessageReflect(uMsg, wParam, lParam);
 
 		case UWM_GETCDIALOG:	// Returns a pointer to this CDialog object
+		case UWM_GETCWND:
 		{
 			assert(this == GetCWndPtr(m_hWnd));
 

@@ -5,8 +5,11 @@
 #define GDIPLUSVIEW_H
 
 #include <objidl.h>
+
+#pragma warning (disable : 4458) // disable warning: declaration hides class member
 #include <gdiplus.h>
-//#pragma comment (lib,"Gdiplus.lib")
+#pragma warning (default : 4458) // return warning to default
+
 
 // Declaration of the CGDIPlusView class
 class CGDIPlusView : public CWnd
