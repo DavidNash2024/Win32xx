@@ -55,7 +55,6 @@ namespace ShellWrapper
 
 		LPITEMIDLIST m_pidl;
 		LPITEMIDLIST m_pidlParent;
-		LPMALLOC m_pMalloc;
 	};
 
 
