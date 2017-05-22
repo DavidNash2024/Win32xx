@@ -1079,7 +1079,6 @@ namespace Win32xx
 		else
 		{
 			TRACE("AddMenuIcons: Failed to add images. Menu Icons should be 16x16 or 15x16");
-			;;
 		}
 
 		// return the number of menu icons

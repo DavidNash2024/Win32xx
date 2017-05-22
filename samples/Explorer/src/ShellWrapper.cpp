@@ -269,7 +269,8 @@ namespace ShellWrapper
 	{
 		LPCITEMIDLIST* pPidlArray;
 		pPidlArray = (LPCITEMIDLIST*)::CoTaskMemAlloc(sizeof(LPITEMIDLIST) * nItems);
-		if(!pPidlArray) return 0;
+		if(!pPidlArray)
+			throw CWinException(_T("Failed to allocate memory for pidl array"));
 
 		for(UINT i = 0; i < nItems; i++)
 			pPidlArray[i] = cpidlArray[i].GetPidl();
@@ -338,12 +339,10 @@ namespace ShellWrapper
 	//Cpidl function definitions
 	Cpidl::Cpidl() : m_pidl(NULL), m_pidlParent(NULL)
 	{
-		::SHGetMalloc(&m_pMalloc);
 	}
 
 	Cpidl::Cpidl(const Cpidl& cpidlSource) : m_pidl(NULL), m_pidlParent(NULL)
 	{
-		::SHGetMalloc(&m_pMalloc);
 		Copy(cpidlSource);
 	}
 
@@ -371,9 +370,7 @@ namespace ShellWrapper
 	{
 		Delete();
 		if (m_pidlParent)
-			m_pMalloc->Free(m_pidlParent);
-
-		m_pMalloc->Release();
+			::CoTaskMemFree(m_pidlParent);
 	}
 
 	void Cpidl::Attach(LPCITEMIDLIST pidl)
@@ -388,7 +385,8 @@ namespace ShellWrapper
 	void Cpidl::Delete()
 	{
 		if (m_pidl)
-			m_pMalloc->Free(m_pidl);
+			::CoTaskMemFree(m_pidl);
+
 		m_pidl = NULL;
 	}
 
@@ -426,8 +424,9 @@ namespace ShellWrapper
 
 		//Allocate memory for m_pidl
 		cbSource = GetSize(pidlSource);
-		m_pidl = (LPITEMIDLIST)m_pMalloc->Alloc(cbSource);
-		if (!m_pidl) return;
+		m_pidl = (LPITEMIDLIST)::CoTaskMemAlloc(cbSource);
+		if (!m_pidl)
+			throw CWinException(_T("Failed to allocate memory for pidl"));
 
 		::CopyMemory(m_pidl, pidlSource, cbSource);
 	}
@@ -437,7 +436,7 @@ namespace ShellWrapper
 	// Delete m_pidlParent
 		UINT nSize = GetSize(m_pidl);
 		if (m_pidlParent)
-			m_pMalloc->Free(m_pidlParent);
+			::CoTaskMemFree(m_pidlParent);
 		m_pidlParent = NULL;
 
 	// Make sure it's a valid PIDL.
@@ -445,9 +444,9 @@ namespace ShellWrapper
 			return(NULL);
 
 	// Copy m_pidl to m_pidlParent
-		m_pidlParent = (LPITEMIDLIST)m_pMalloc->Alloc(nSize);
+		m_pidlParent = (LPITEMIDLIST)::CoTaskMemAlloc(nSize);
 		if (!m_pidlParent)
-			return NULL;
+			throw CWinException(_T("Failed to allocate pidlParent memory"));
 
 		::CopyMemory(m_pidlParent, m_pidl, nSize);
 
@@ -465,6 +464,7 @@ namespace ShellWrapper
 			// Remove the last item, set it's size to 0.
 			pidlTemp->mkid.cb = 0;
 		}
+
 		return m_pidlParent;
 	}
 
@@ -514,15 +514,16 @@ namespace ShellWrapper
 
 		// Create a new ITEMIDLIST that is the size of both pidlParent and pidlRel,
 		// then copy pidlParent and pidlRel to the new list.
-		m_pidl = (LPITEMIDLIST)m_pMalloc->Alloc(cb1 + cb2);
-		if (m_pidl)
-		{
-			::ZeroMemory(m_pidl, cb1 + cb2);
-			if (pidlParent)
-				::CopyMemory(m_pidl, pidlParent, cb1);
+		m_pidl = (LPITEMIDLIST)::CoTaskMemAlloc(cb1 + cb2);
+		if (!m_pidl)
+			throw CWinException(_T("Failed to allocate memory for pidl"));
 
-			::CopyMemory(((LPBYTE)m_pidl) + cb1, pidlRel, cb2);
-		}
+		::ZeroMemory(m_pidl, cb1 + cb2);
+		if (pidlParent)
+			::CopyMemory(m_pidl, pidlParent, cb1);
+
+		::CopyMemory(((LPBYTE)m_pidl) + cb1, pidlRel, cb2);
+
 	}
 
 	UINT Cpidl::GetSize(LPCITEMIDLIST pidl)

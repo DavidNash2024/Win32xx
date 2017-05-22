@@ -283,7 +283,7 @@ namespace Win32xx
 				break;
 
 			case SB_LINEDOWN: // User clicked the bottom arrow.
-				yNewPos = m_CurrentPos.y + m_sizeLine.cy;;
+				yNewPos = m_CurrentPos.y + m_sizeLine.cy;
 				break;
 
 			case SB_THUMBTRACK: // User dragging the scroll box.
