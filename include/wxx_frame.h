@@ -2374,14 +2374,16 @@ namespace Win32xx
 	inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
 	// OwnerDraw is used to render the popup menu items
 	{
-		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT) lParam;
-		if (pdis->CtlType != ODT_MENU)
-			return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
+		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lParam;
+		assert(pdis);
 
-		if (!IsRectEmpty(&pdis->rcItem))
+		if (IsMenu((HMENU)pdis->hwndItem) && (!IsRectEmpty(&pdis->rcItem)))
+		{
 			DrawMenuItem(pdis);
+			return TRUE;
+		}
 
-		return TRUE;
+		return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
 	}
 
 	template <class T>
