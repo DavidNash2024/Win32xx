@@ -43,7 +43,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_Animation.Open(MAKEINTRESOURCE(IDA_UPLOAD_AVI));
 	m_Animation.Play(0, -1, -1);
 
-	return true;
+	return TRUE;
 }
 
 

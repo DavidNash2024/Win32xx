@@ -192,7 +192,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog"));
 	m_Tab.SelectPage(0);
 
-	return true;
+	return TRUE;
 }
 
 void CMyDialog::OnOK()

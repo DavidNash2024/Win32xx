@@ -6,9 +6,13 @@
 
 #include <objidl.h>
 
+#ifdef _MSC_VER
 #pragma warning (disable : 4458) // disable warning: declaration hides class member
+#endif
 #include <gdiplus.h>
+#ifdef _MSC_VER
 #pragma warning (default : 4458) // return warning to default
+#endif
 
 
 // Declaration of the CGDIPlusView class

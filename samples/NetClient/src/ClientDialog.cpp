@@ -237,7 +237,7 @@ BOOL CClientDialog::OnInitDialog()
 		m_EditIP6Address.EnableWindow(FALSE);
 	}
 
-	return true;
+	return TRUE;
 }
 
 void CClientDialog::OnStartClient()

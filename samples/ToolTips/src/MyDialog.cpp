@@ -132,7 +132,7 @@ BOOL CMyDialog::OnInitDialog()
 	m_BubbleTT.AddTool(*this, rcLeft,  1, _T("Client area, left side"));
 	m_BubbleTT.AddTool(*this, rcRight, 2, _T("Client area, right side"));
 
-	return true;
+	return TRUE;
 }
 
 LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lParam)

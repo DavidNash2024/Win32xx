@@ -32,7 +32,7 @@ BOOL CMyDialog::OnInitDialog()
 	AttachItem(IDC_SCROLLBAR1, m_ScrollBar);
 	AttachItem(IDC_SLIDER1, m_Slider);
 
-	return true;
+	return TRUE;
 }
 
 void CMyDialog::OnOK()

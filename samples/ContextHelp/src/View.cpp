@@ -143,7 +143,7 @@ BOOL CView::OnInitDialog()
 	m_Resizer.AddChild(m_Group,    bottomright, RD_STRETCH_HEIGHT);
 	m_Resizer.AddChild(m_Status,   bottomright, RD_STRETCH_HEIGHT);
 
-	return true;
+	return TRUE;
 }
 
 void CView::OnOK()
