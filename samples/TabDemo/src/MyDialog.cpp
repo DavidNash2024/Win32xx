@@ -113,7 +113,7 @@ BOOL CViewDialog::OnInitDialog()
 	m_Resizer.AddChild(m_RichEdit1, topright, RD_STRETCH_WIDTH);
 	m_Resizer.AddChild(m_RichEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
 	
-	return true;
+	return TRUE;
 }
 
 void CViewDialog::OnOK()

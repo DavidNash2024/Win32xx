@@ -90,7 +90,7 @@ BOOL CMyDialog::OnInitDialog()
 	// Set timer for 1000 miliseconds
 	SetTimer(ID_TIMER, 1000, 0);
 
-	return true;
+	return TRUE;
 }
 
 LRESULT CMyDialog::OnNotify(WPARAM wParam, LPARAM lParam)

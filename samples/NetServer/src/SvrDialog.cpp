@@ -226,7 +226,7 @@ BOOL CSvrDialog::OnInitDialog()
 		m_EditIP6Address.EnableWindow(FALSE);
 	}
 
-	return true;
+	return TRUE;
 }
 
 BOOL CSvrDialog::OnStartServer()

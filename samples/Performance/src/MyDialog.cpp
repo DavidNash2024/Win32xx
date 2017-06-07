@@ -33,7 +33,7 @@ BOOL CMyDialog::OnInitDialog()
 	SetDlgItemText(IDC_WINDOWS,  _T("10"));
 	SetDlgItemText(IDC_MESSAGES, _T("1000000"));
 
-	return true;
+	return TRUE;
 }
 
 void CMyDialog::OnOK()

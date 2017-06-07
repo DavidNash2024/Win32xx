@@ -190,7 +190,7 @@ BOOL CPreviewDialog::OnInitDialog()
 	m_Resizer.AddChild(m_PreviewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
 	m_CurrentPage = 0;
-	return true;
+	return TRUE;
 }
 
 BOOL CPreviewDialog::OnNextButton()

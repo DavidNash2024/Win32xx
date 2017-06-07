@@ -363,7 +363,7 @@ OnInitDialog()								/*
 		m_ComboZoom.AddString(m_Scale[i]);
 	m_ComboZoom.SetCurSel(0);
 
-	return true;
+	return TRUE;
 }
 
 /*============================================================================*/
