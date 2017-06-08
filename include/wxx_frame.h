@@ -1846,7 +1846,8 @@ namespace Win32xx
 							T::ScreenToClient(rcChild);
 
 							// Determine our drawing rectangle
-							int StartPad = IsXPThemed()? 2: 0;							CRect rcDraw = rcBand;
+							int StartPad = IsXPThemed()? 2: 0;
+							CRect rcDraw = rcBand;
 							CRect rcBorders = ReBar.GetBandBorders(nBand);
 							if (IsVertical)
 							{
