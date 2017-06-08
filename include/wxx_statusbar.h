@@ -151,7 +151,7 @@ namespace Win32xx
 
 	inline BOOL CStatusBar::OnEraseBkgnd(CDC& dc)
 	{
-		// Permit the parent window to handle the drawing of the ReBar's background.
+		// Permit the parent window to handle the drawing of the StatusBar's background.
 		// Return TRUE to suppress default background drawing.
 		return (0 != GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc, (LPARAM)this));
 	}
