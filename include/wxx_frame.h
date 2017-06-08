@@ -2837,10 +2837,6 @@ namespace Win32xx
 		if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
 		{
 			GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
-			GetStatusBar().Invalidate();
-			if (GetUseMenuStatus())
-				GetStatusBar().SetWindowText(GetStatusText());
-
 			SetStatusIndicators();
 		}
 
