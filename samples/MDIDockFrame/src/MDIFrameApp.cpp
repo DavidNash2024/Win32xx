@@ -12,8 +12,7 @@ CMDIFrameApp::CMDIFrameApp()
 BOOL CMDIFrameApp::InitInstance()
 {
     //Create the Window
-	if (m_MainMDIFrame.Create() == 0)
-		return FALSE;	// End the application if the window creation fails
+	m_MainMDIFrame.Create();	// throws a CWinException on failure  
 
 	return TRUE;
 }

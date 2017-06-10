@@ -266,7 +266,6 @@ namespace Win32xx
 		if (lr != S_OK)
 		{
 			// Throw an exception to indicate task dialog creation failure
-			// Note: GetLastError message is not used
 			if (lr == E_OUTOFMEMORY)
 				throw CWinException(_T("TaskDialogIndirect failed, out of memory"));
 			if (lr == E_INVALIDARG)

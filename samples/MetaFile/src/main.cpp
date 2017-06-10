@@ -13,7 +13,7 @@ public:
 	virtual ~CApp() {}
 	virtual BOOL InitInstance()
 	{
-		m_MetaView.Create();
+		m_MetaView.Create();	// throws a CWinException on failure  
 		return TRUE;
 	}
 

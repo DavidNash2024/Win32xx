@@ -54,7 +54,7 @@ BOOL CTaskDialogApp::InitInstance()
 	td.SetFooterIcon(TD_INFORMATION_ICON);
 
 	// Run the task dialog
-	HRESULT hr = td.DoModal();
+	HRESULT hr = td.DoModal();	// throws a CWinException on failure  
 
 	// Respond to the result
 	if (SUCCEEDED(hr))
