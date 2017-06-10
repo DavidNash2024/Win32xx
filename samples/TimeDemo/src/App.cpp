@@ -232,12 +232,7 @@ InitInstance()								/*
 	    IntDat(compiled_on).c_str());
 
 	  //Create the Frame Window
-	if (!m_Frame.Create())
-	{	  //End the program if the frame window creation fails
-		::MessageBox(NULL, _T("Failed to create Frame window"),
-		    _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
-		return FALSE;
-	}
+	m_Frame.Create(); 	// throws a CWinException on failure  
 
 	return TRUE;
 }

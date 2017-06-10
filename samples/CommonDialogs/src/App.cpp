@@ -93,13 +93,7 @@ InitInstance()								/*
 *-----------------------------------------------------------------------------*/
 {
 	  //Create the Frame Window
-	if (!m_Frame.Create())
-	{	  //End the program if the frame window creation fails
-		CString msg = _T("Failed to create Frame window");
-		::MessageBox(NULL, msg, _T("Error"), MB_OK |
-				    MB_ICONEXCLAMATION | MB_TASKMODAL);
-		return FALSE;
-	}
+	m_Frame.Create();	// throws a CWinException on failure  
 
 	return TRUE;
 }

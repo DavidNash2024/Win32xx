@@ -15,7 +15,7 @@ CThreadApp::~CThreadApp()
 
 BOOL CThreadApp::InitInstance()
 {
-	m_MainWnd.Create();
+	m_MainWnd.Create();	// throws a CWinException on failure  
 
 	return TRUE;
 }

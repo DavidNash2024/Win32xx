@@ -200,11 +200,8 @@ InitInstance()								/*
 	    sCompiler.c_str(), date.c_str());
 
 	  // Create the Frame Window after the archive file name is known
-	if (!m_Frame.Create())
-	{	  //End the program if the frame window creation fails
-		ErrorMessageBox(_T("Failed to create Frame window"));
-		return FALSE;
-	}
+	m_Frame.Create();	// throws a CWinException on failure  
+	
 	return TRUE;
 }
 
