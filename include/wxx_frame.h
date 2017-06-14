@@ -3173,6 +3173,7 @@ namespace Win32xx
 		{
 			// Calculate the width of the text indicators
 			CClientDC dcStatus(GetStatusBar());
+			dcStatus.SelectObject(GetStatusBar().GetFont());
 			CString CAP = LoadString(IDW_INDICATOR_CAPS);
 			CString NUM = LoadString(IDW_INDICATOR_NUM);
 			CString SCRL = LoadString(IDW_INDICATOR_SCRL);
@@ -3182,16 +3183,15 @@ namespace Win32xx
 
 			// Adjust for DPI aware
 			int dpiX = dcStatus.GetDeviceCaps(LOGPIXELSX);
-			csCAP.cx  = MulDiv(csCAP.cx, dpiX, 96);
-			csNUM.cx  = MulDiv(csNUM.cx, dpiX, 96);
-			csSCRL.cx = MulDiv(csSCRL.cx, dpiX, 96);
+			int GripWidth = 20;
+			GripWidth = MulDiv(GripWidth, dpiX, 96);
 
 			// Get the coordinates of the window's client area.
 			CRect rcClient = T::GetClientRect();
 			int width = MAX(300, rcClient.right);
 
 			// Create 4 panes
-			GetStatusBar().SetPartWidth(0, width - (csCAP.cx+csNUM.cx+csSCRL.cx+20));
+			GetStatusBar().SetPartWidth(0, width - (csCAP.cx + csNUM.cx + csSCRL.cx + GripWidth));
 			GetStatusBar().SetPartWidth(1, csCAP.cx);
 			GetStatusBar().SetPartWidth(2, csNUM.cx);
 			GetStatusBar().SetPartWidth(3, csSCRL.cx);
