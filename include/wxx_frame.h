@@ -3174,31 +3174,37 @@ namespace Win32xx
 			// Calculate the width of the text indicators
 			CClientDC dcStatus(GetStatusBar());
 			dcStatus.SelectObject(GetStatusBar().GetFont());
-			CString CAP = LoadString(IDW_INDICATOR_CAPS);
-			CString NUM = LoadString(IDW_INDICATOR_NUM);
-			CString SCRL = LoadString(IDW_INDICATOR_SCRL);
-			CSize csCAP  = dcStatus.GetTextExtentPoint32(CAP, lstrlen(CAP)+1);
-			CSize csNUM  = dcStatus.GetTextExtentPoint32(NUM, lstrlen(NUM)+1);
-			CSize csSCRL = dcStatus.GetTextExtentPoint32(SCRL, lstrlen(SCRL)+1);
+			CString Cap = LoadString(IDW_INDICATOR_CAPS);
+			CString Num = LoadString(IDW_INDICATOR_NUM);
+			CString Scrl = LoadString(IDW_INDICATOR_SCRL);
+			CSize csCap = dcStatus.GetTextExtentPoint32(Cap, Cap.GetLength());
+			CSize csNum = dcStatus.GetTextExtentPoint32(Num, Num.GetLength());
+			CSize csScrl = dcStatus.GetTextExtentPoint32(Scrl, Scrl.GetLength());
+
+			int cxGripper = 20;
+			int cxBorder = 8;
 
 			// Adjust for DPI aware
+			int dpiDefault = 96;
 			int dpiX = dcStatus.GetDeviceCaps(LOGPIXELSX);
-			int GripWidth = 20;
-			GripWidth = MulDiv(GripWidth, dpiX, 96);
+			cxGripper = MulDiv(cxGripper, dpiX, dpiDefault);
+			csCap.cx += cxBorder;
+			csNum.cx += cxBorder;
+			csScrl.cx += cxBorder;
 
 			// Get the coordinates of the window's client area.
 			CRect rcClient = T::GetClientRect();
 			int width = MAX(300, rcClient.right);
 
 			// Create 4 panes
-			GetStatusBar().SetPartWidth(0, width - (csCAP.cx + csNUM.cx + csSCRL.cx + GripWidth));
-			GetStatusBar().SetPartWidth(1, csCAP.cx);
-			GetStatusBar().SetPartWidth(2, csNUM.cx);
-			GetStatusBar().SetPartWidth(3, csSCRL.cx);
+			GetStatusBar().SetPartWidth(0, width - (csCap.cx + csNum.cx + csScrl.cx + cxGripper));
+			GetStatusBar().SetPartWidth(1, csCap.cx);
+			GetStatusBar().SetPartWidth(2, csNum.cx);
+			GetStatusBar().SetPartWidth(3, csScrl.cx);
 
-			CString Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? CAP : CString("");
-			CString Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? NUM : CString("");
-			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? SCRL: CString("");
+			CString Status1 = (::GetKeyState(VK_CAPITAL) & 0x0001)? Cap : CString("");
+			CString Status2 = (::GetKeyState(VK_NUMLOCK) & 0x0001)? Num : CString("");
+			CString Status3 = (::GetKeyState(VK_SCROLL)  & 0x0001)? Scrl: CString("");
 
 			// Only update indicators if the text has changed
 			if (Status1 != m_OldStatus[0])  GetStatusBar().SetPartText(1, Status1);
