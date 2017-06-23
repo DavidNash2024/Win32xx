@@ -7,7 +7,7 @@
 
 void CMySlider::OnInitialUpdate()
 {
-	// Called automatically via AttachDlgItem
+	// Called automatically via AttachItem
 
 	// Set a tic mark every ten units for the slider control
 	SetTicFreq(10);

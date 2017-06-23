@@ -58,10 +58,9 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconLarge(IDW_MAIN);
 	SetIconSmall(IDW_MAIN);
 
-	// Attach the edit control to m_Edit
+	// Attach the controls to our CWnd member objects.
 	AttachItem(IDC_EDIT1, m_Edit);
-
-	// Attach the rich edit control to m_RichEdit
+	AttachItem(IDC_LIST1, m_ListBox);
 	AttachItem(IDC_RICHEDIT1, m_RichEdit);
 
 	// Put some text in the edit boxes
@@ -69,8 +68,11 @@ BOOL CMyDialog::OnInitDialog()
 	SetDlgItemText(IDC_RICHEDIT1, _T("Rich Edit Window"));
 
 	// Put some text in the list box
-	for (int i = 0 ; i < 8 ; i++)
-		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+	for (int i = 0; i < 8; i++)
+		m_ListBox.AddString(_T("ListBox"));
+
+
+	size_t s = sizeof(m_ListBox);
 
 	return TRUE;
 }
