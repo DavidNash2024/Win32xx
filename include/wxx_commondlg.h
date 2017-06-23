@@ -656,8 +656,7 @@ namespace Win32xx
 	// 	file names.
 	{
 		CString strResult = GetPathName();
-		int pos = MAX(strResult.ReverseFind(_T("\\")),
-			strResult.ReverseFind(_T("/")));
+		int pos = strResult.ReverseFind(_T("\\"));
 		if (pos >= 0)
 			return strResult.Mid(pos + 1);
 
@@ -755,9 +754,9 @@ namespace Win32xx
 			int nPathLen = strPath.GetLength();
 			TCHAR ch = strPath.GetAt(nPathLen -1);
 
-			if ((ch == _T('\\')) || (ch == _T('/')))
+			if (ch == _T('\\'))
 			{
-				// Path already ends with _T('\\') or _T('/')
+				// Path already ends with _T('\\')
 				return strPath + strFileName;
 			}
 		}
@@ -773,8 +772,7 @@ namespace Win32xx
 	//  directory separation character.
 	{
 		CString strResult = GetPathName();
-		int pos = MAX(strResult.ReverseFind(_T("\\")),
-			strResult.ReverseFind(_T("/")));
+		int pos = strResult.ReverseFind(_T("\\"));
 		if (pos >= 0)
 			return strResult.Left(pos + 1);
 

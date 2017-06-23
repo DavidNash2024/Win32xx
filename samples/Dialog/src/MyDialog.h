@@ -27,8 +27,10 @@ private:
 	BOOL OnCheck3();
 	BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 
-	CRichEdit m_RichEdit;
 	CEdit m_Edit;
+	CListBox m_ListBox;
+	CRichEdit m_RichEdit;
+
 };
 
 #endif //MYDIALOG_H

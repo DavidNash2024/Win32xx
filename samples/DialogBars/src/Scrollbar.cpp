@@ -13,7 +13,7 @@ CMyScrollBar::CMyScrollBar()
 
 void CMyScrollBar::OnInitialUpdate()
 {
-	// Called automatically via AttachDlgItem
+	// Called automatically via AttachItem
 
 	// Set the Scroll bar position
 	SetScroll(0);
