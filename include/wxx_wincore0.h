@@ -176,6 +176,7 @@ namespace Win32xx
 		CWnd  GetNextDlgTabItem(HWND hCtl, BOOL IsPrevious) const;
 		CWnd  GetParent() const;
 		BOOL  GetScrollInfo(int fnBar, SCROLLINFO& si) const;
+		DWORD GetStyle() const;
 		CRect GetUpdateRect(BOOL Erase) const;
 		int GetUpdateRgn(HRGN hRgn, BOOL Erase) const;
 		CWnd  GetWindow(UINT uCmd) const;
@@ -226,6 +227,7 @@ namespace Win32xx
 		CWnd  SetParent(HWND hWndParent) const;
 		BOOL  SetRedraw(BOOL Redraw = TRUE) const;
 		int   SetScrollInfo(int fnBar, const SCROLLINFO& si, BOOL Redraw) const;
+		void  SetStyle(DWORD dwStyle) const;
 		UINT_PTR SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const;
 		LONG_PTR SetWindowLongPtr(int nIndex, LONG_PTR dwNewLong) const;
 		BOOL  SetWindowPos(HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;

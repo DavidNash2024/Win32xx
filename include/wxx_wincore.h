@@ -416,10 +416,13 @@ namespace Win32xx
 	inline void CWnd::Destroy()
 	// Destroys the window and returns the CWnd back to its default state, ready for reuse.
 	{
-		if (GetCWndPtr(*this) == this)
+		if (&GetApp())			// Is the CWinApp object still valid?
 		{
-			if (IsWindow())
-				::DestroyWindow(*this);
+			if (GetCWndPtr(*this) == this)
+			{
+				if (IsWindow())
+					::DestroyWindow(*this);
+			}
 		}
 
 		// Return the CWnd to its default state
@@ -1414,6 +1417,13 @@ namespace Win32xx
 		return ::GetScrollInfo(*this, fnBar, &si);
 	}
 
+	inline DWORD CWnd::GetStyle() const
+	// Retrieves the window's window style
+	{
+		assert(IsWindow());
+		return static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
+	}
+
 	inline CRect CWnd::GetUpdateRect(BOOL Erase) const
 	// The GetUpdateRect function retrieves the coordinates of the smallest rectangle that completely
 	// encloses the update region of the specified window.
@@ -1789,6 +1799,13 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, (WPARAM)Redraw, 0L));
+	}
+
+	inline void CWnd::SetStyle(DWORD dwStyle) const
+	// Assigns a new windows style to the window
+	{
+		assert(IsWindow());
+		::SetWindowLongPtr(*this, GWL_STYLE, dwStyle);
 	}
 	
 	inline UINT_PTR CWnd::SetTimer(UINT_PTR nIDEvent, UINT uElapse, TIMERPROC lpTimerFunc) const

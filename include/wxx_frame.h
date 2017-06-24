@@ -3181,7 +3181,8 @@ namespace Win32xx
 			CSize csNum = dcStatus.GetTextExtentPoint32(Num, Num.GetLength());
 			CSize csScrl = dcStatus.GetTextExtentPoint32(Scrl, Scrl.GetLength());
 
-			int cxGripper = 20;
+			BOOL HasGripper = GetStatusBar().GetWindowLongPtr(GWL_STYLE) & SBARS_SIZEGRIP;
+			int cxGripper = HasGripper? 20 : 0;
 			int cxBorder = 8;
 
 			// Adjust for DPI aware
