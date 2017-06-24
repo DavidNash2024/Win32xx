@@ -53,6 +53,7 @@ namespace Win32xx
 		virtual ~CStatusBar() {}
 
 		// Overridables
+		virtual HWND Create(HWND hWndParent);
 		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
 		virtual void PreRegisterClass(WNDCLASS& wc);
@@ -90,6 +91,28 @@ namespace Win32xx
 	//
 	inline CStatusBar::CStatusBar()
 	{
+	}
+
+	inline HWND CStatusBar::Create(HWND hWndParent)
+	// Creates the window. This is the default method of window creation.
+	{
+		// Acquire the CREATESTRUCT parameters
+		CREATESTRUCT cs;
+		ZeroMemory(&cs, sizeof(CREATESTRUCT));
+		PreCreate(cs);
+
+		// Add the gripper style if the parent window is resizable
+		DWORD dwParentStyle = ::GetWindowLongPtr(hWndParent, GWL_STYLE);
+		if (dwParentStyle & WS_THICKFRAME)
+		{
+			cs.style |= SBARS_SIZEGRIP;
+		}
+
+		// Create the status bar window
+		HWND hWnd = CreateEx(cs.dwExStyle, STATUSCLASSNAME, 0, cs.style,
+			cs.x, cs.y, cs.cx, cs.cy, hWndParent, 0);
+
+		return hWnd;
 	}
 
 	inline BOOL CStatusBar::CreateParts(int iParts, const int iPaneWidths[]) const
@@ -158,7 +181,7 @@ namespace Win32xx
 
 	inline void CStatusBar::PreCreate(CREATESTRUCT& cs)
 	{
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM | SBARS_SIZEGRIP;
+		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
 	}
 
 	inline void CStatusBar::PreRegisterClass(WNDCLASS& wc)
