@@ -56,11 +56,9 @@ namespace Win32xx
 		virtual HWND Create(HWND hWndParent);
 		virtual BOOL OnEraseBkgnd(CDC& dc);
 		virtual void PreCreate(CREATESTRUCT& cs);
-		virtual void PreRegisterClass(WNDCLASS& wc);
 
 		// Attributes
 		int GetParts() const;
-
 		CRect GetPartRect(int iPart) const;
 		CString GetPartText(int iPart) const;
 		BOOL IsSimple() const;
@@ -99,7 +97,6 @@ namespace Win32xx
 		// Acquire the CREATESTRUCT parameters
 		CREATESTRUCT cs;
 		ZeroMemory(&cs, sizeof(CREATESTRUCT));
-		PreCreate(cs);
 
 		// Add the gripper style if the parent window is resizable
 		DWORD dwParentStyle = ::GetWindowLongPtr(hWndParent, GWL_STYLE);
@@ -108,9 +105,11 @@ namespace Win32xx
 			cs.style |= SBARS_SIZEGRIP;
 		}
 
+		PreCreate(cs);
+
 		// Create the status bar window
 		HWND hWnd = CreateEx(cs.dwExStyle, STATUSCLASSNAME, 0, cs.style,
-			cs.x, cs.y, cs.cx, cs.cy, hWndParent, 0);
+			cs.x, cs.y, cs.cx, cs.cy, hWndParent, 0, cs.lpCreateParams);
 
 		return hWnd;
 	}
@@ -180,14 +179,9 @@ namespace Win32xx
 	}
 
 	inline void CStatusBar::PreCreate(CREATESTRUCT& cs)
+	// Called by CStatusBar::Create to set some window parameters
 	{
-		cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
-	}
-
-	inline void CStatusBar::PreRegisterClass(WNDCLASS& wc)
-	{
-		// Set the Window Class
-		wc.lpszClassName =  STATUSCLASSNAME;
+		cs.style |= WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
 	}
 
 	inline BOOL CStatusBar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
