@@ -676,6 +676,8 @@ namespace Win32xx
 			}
 		}
 
+		// The HHOOK parameter in CallNextHookEx should be supplied for Win95, Win98 and WinME.
+		// The HHOOK parameter is ignored for Windows NT and above.
 		return ::CallNextHookEx(pTLSData->hMsgHook, nCode, wParam, lParam);
 	}
 #endif
