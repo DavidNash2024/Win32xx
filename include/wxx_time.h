@@ -153,17 +153,17 @@ namespace Win32xx
 		CTime& 	operator=(const time_t& t);
 
 		// Computational operators
-		const CTimeSpan operator-(const CTime& t) const;
-		const CTime	  operator-(const CTimeSpan& ts) const;
-		const CTime   operator+(const CTimeSpan& ts) const;
 		CTime&  operator+=(const CTimeSpan& ts);
 		CTime&  operator-=(const CTimeSpan& ts);
-		bool 		  operator==(const CTime& t) const;
-		bool 		  operator!=(const CTime& t) const;
-		bool 		  operator<(const CTime& time) const;
-		bool 		  operator>(const CTime& time) const;
-		bool 		  operator<=(const CTime& time) const;
-		bool 		  operator>=(const CTime& time) const;
+		const CTimeSpan operator-(const CTime& t) const;
+		const CTime	operator-(const CTimeSpan& ts) const;
+		const CTime operator+(const CTimeSpan& ts) const;
+		bool 		operator==(const CTime& t) const;
+		bool 		operator!=(const CTime& t) const;
+		bool 		operator<(const CTime& time) const;
+		bool 		operator>(const CTime& time) const;
+		bool 		operator<=(const CTime& time) const;
+		bool 		operator>=(const CTime& time) const;
 
 		operator time_t() const { return m_time; }
 
@@ -215,17 +215,17 @@ namespace Win32xx
 		CTimeSpan& operator=(const timespan_t& t);
 
 		// computational operators
-		const CTimeSpan		operator-() const;
-		const CTimeSpan 	operator-(CTimeSpan& ts) const;
-		const CTimeSpan 	operator+(CTimeSpan& ts) const;
+		const CTimeSpan	operator-() const;
+		const CTimeSpan operator-(CTimeSpan& ts) const;
+		const CTimeSpan operator+(CTimeSpan& ts) const;
 		CTimeSpan& operator+=(CTimeSpan& ts);
 		CTimeSpan& operator-=(CTimeSpan& ts);
-		bool 	  		operator==(const CTimeSpan& ts) const;
-		bool 	  		operator!=(const CTimeSpan& ts) const;
-		bool 	  		operator<(const CTimeSpan& ts) const;
-		bool 	  		operator>(const CTimeSpan& ts) const;
-		bool 	  		operator<=(const CTimeSpan& ts) const;
-		bool 	  		operator>=(const CTimeSpan& ts) const;
+		bool 	   operator==(const CTimeSpan& ts) const;
+		bool 	   operator!=(const CTimeSpan& ts) const;
+		bool 	   operator<(const CTimeSpan& ts) const;
+		bool 	   operator>(const CTimeSpan& ts) const;
+		bool 	   operator<=(const CTimeSpan& ts) const;
+		bool 	   operator>=(const CTimeSpan& ts) const;
 
 		operator timespan_t() const { return m_timespan; }
 
