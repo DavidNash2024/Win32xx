@@ -17,5 +17,5 @@ Features demonstrated in this example
 * Using the TintBitmap function to manipulate the bitmap date directly.
 * Use of double buffering to render GDI quickly.
 * Automatically resize the frame to match the image size when its loaded.
-* Using the ScrollView class to display scroll bars.
+* Inheriting the view from CScrollView to display scroll bars.
 * Use of drag and drop
