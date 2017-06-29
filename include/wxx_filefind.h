@@ -161,8 +161,8 @@ namespace Win32xx
 	inline BOOL CFileFind::FindFirstFile(LPCTSTR pstrName /* = NULL */)
 	//	Searches a directory for a file or subdirectory with a name that matches
 	//	the pstrName. pstrName can contain a valid directory or path, and a
-	//  file name that can contain the '?' and '*' wildcard characters.
-	//  A name of "*.*" is used if no name is specified.
+	//	file name that can contain the '?' and '*' wildcard characters.
+	//	A name of "*.*" is used if no name is specified.
 	//	Returns TRUE if a matching file was found, FALSE otherwise.
 	{
 		// Reset the this to default
@@ -221,11 +221,11 @@ namespace Win32xx
 
 	//============================================================================
 	inline DWORD CFileFind::GetFileAttributes() const
-	// Returns the found file's attributes. Possible attributes are:
-	// FILE_ATTRIBUTE_ARCHIVE; FILE_ATTRIBUTE_COMPRESSED; FILE_ATTRIBUTE_DIRECTORY;
-	// FILE_ATTRIBUTE_ENCRYPTED; FILE_ATTRIBUTE_HIDDEN; FILE_ATTRIBUTE_NORMAL;
-	// FILE_ATTRIBUTE_OFFLINE; FILE_ATTRIBUTE_READONLY; FILE_ATTRIBUTE_REPARSE_POINT;
-	// FILE_ATTRIBUTE_SPARSE_FILE; FILE_ATTRIBUTE_SYSTEM; FILE_ATTRIBUTE_TEMPORARY.
+	//	Returns the found file's attributes. Possible attributes are:
+	//	FILE_ATTRIBUTE_ARCHIVE; FILE_ATTRIBUTE_COMPRESSED; FILE_ATTRIBUTE_DIRECTORY;
+	//	FILE_ATTRIBUTE_ENCRYPTED; FILE_ATTRIBUTE_HIDDEN; FILE_ATTRIBUTE_NORMAL;
+	//	FILE_ATTRIBUTE_OFFLINE; FILE_ATTRIBUTE_READONLY; FILE_ATTRIBUTE_REPARSE_POINT;
+	//	FILE_ATTRIBUTE_SPARSE_FILE; FILE_ATTRIBUTE_SYSTEM; FILE_ATTRIBUTE_TEMPORARY.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);	
 		return m_FindData.dwFileAttributes;
@@ -302,7 +302,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline FILETIME CFileFind::GetLastWriteTime() const
-	// Return the last write time of the found file
+	//	Return the last write time of the found file
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return m_FindData.ftLastWriteTime;
@@ -331,6 +331,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsArchived() const
+	//	Return TRUE if the archive attribute is set
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_ARCHIVE) != 0;
@@ -339,6 +340,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsCompressed() const
+	//	Return TRUE if the found file is compressed.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_COMPRESSED) != 0;
@@ -347,6 +349,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsDirectory() const
+	//	Return TRUE if the found file is a directory.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) != 0;
@@ -355,6 +358,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsDots() const
+	//	Return TRUE if the found file is the current directory or parent directory.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		LPCTSTR fn = m_FindData.cFileName;
@@ -365,6 +369,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsHidden() const
+	//	Return TRUE if the found file is hidden.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) != 0;
@@ -373,6 +378,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsNormal() const
+	//	Return TRUE if the found file has the FILE_ATTRIBUTE_NORMAL attribute.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_NORMAL) != 0;
@@ -381,6 +387,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsReadOnly() const
+	//	Return TRUE if the found file is read only.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_READONLY) != 0;
@@ -389,6 +396,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsSystem() const
+	//	Return TRUE if the found file is a system file.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) != 0;
@@ -397,6 +405,7 @@ namespace Win32xx
 
 	//============================================================================
 	inline BOOL CFileFind::IsTemporary() const
+	//	Return TRUE if the found file is a temporary file.
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
 		return (m_FindData.dwFileAttributes & FILE_ATTRIBUTE_TEMPORARY) != 0;

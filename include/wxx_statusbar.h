@@ -175,12 +175,13 @@ namespace Win32xx
 	{
 		// Permit the parent window to handle the drawing of the StatusBar's background.
 		// Return TRUE to suppress default background drawing.
-		return (0 != GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc, (LPARAM)this));
+		return (GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc, (LPARAM)this) != 0);
 	}
 
 	inline void CStatusBar::PreCreate(CREATESTRUCT& cs)
 	// Called by CStatusBar::Create to set some window parameters
 	{
+		// cs.style is preset to SBARS_SIZEGRIP if the parent has the WS_THICKFRAME style.
 		cs.style |= WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
 	}
 

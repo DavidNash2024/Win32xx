@@ -158,6 +158,8 @@ BOOL CComboBoxDialog::OnInitDialog()
 //
 CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
 {
+	m_pButtonDlg = NULL;
+	m_pComboDlg = NULL;
 }
 
 CMyDialog::~CMyDialog()
@@ -188,9 +190,14 @@ BOOL CMyDialog::OnInitDialog()
 	SetIconSmall(IDW_MAIN);
 	
 	AttachItem(IDC_TAB1, m_Tab);
-	m_Tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog"));
-	m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog"));
+
+	m_pButtonDlg = (CButtonDialog*)m_Tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog"));
+	m_pComboDlg = (CComboBoxDialog*)m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog"));
 	m_Tab.SelectPage(0);
+
+	// Add some checkmarks to buttons to the button dialog
+	m_pButtonDlg->CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO2);
+	m_pButtonDlg->CheckDlgButton(IDC_CHECK1, BST_CHECKED);
 
 	return TRUE;
 }

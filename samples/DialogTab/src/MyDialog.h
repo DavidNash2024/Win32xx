@@ -15,15 +15,15 @@ public:
 	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam);
 	virtual INT_PTR OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam);
+
+	virtual void OnOK() {}		// supress closing dialog with the enter key
+	virtual void OnCancel() {}	// supress closing dialog with the esc key
+
 	BOOL OnButton();
 	BOOL OnCheck1();
 	BOOL OnCheck2();
 	BOOL OnCheck3();
 	BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
-
-protected:
-	virtual void OnOK() {}		// supress closing dialog with the enter key
-	virtual void OnCancel() {}	// supress closing dialog with the esc key
 
 private:
 	CBrush m_Brush;
@@ -61,6 +61,8 @@ protected:
 
 private:
 	CTab m_Tab;
+	CButtonDialog* m_pButtonDlg;
+	CComboBoxDialog* m_pComboDlg;
 };
 
 #endif //MYDIALOG_H
