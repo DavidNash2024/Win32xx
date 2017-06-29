@@ -159,7 +159,7 @@ BOOL CView::OnCheckA()
 	TRACE("Check Box A\n");
 	BOOL bCheck = GetDoc().GetCheckA();
 	bCheck = !bCheck;  // Toggle
-	SendDlgItemMessage(ID_CHECK_A, BM_SETCHECK, bCheck, 0);
+	CheckDlgButton(ID_CHECK_A, bCheck);
 	GetDoc().SetCheckA(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
@@ -171,7 +171,7 @@ BOOL CView::OnCheckB()
 	TRACE("Check Box B\n");
 	BOOL bCheck = GetDoc().GetCheckB();
 	bCheck = !bCheck;  // Toggle
-	SendDlgItemMessage(ID_CHECK_B, BM_SETCHECK, bCheck, 0);
+	CheckDlgButton(ID_CHECK_B, bCheck);
 	GetDoc().SetCheckB(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
@@ -183,7 +183,7 @@ BOOL CView::OnCheckC()
 	TRACE("Check Box C\n");
 	BOOL bCheck = GetDoc().GetCheckC();
 	bCheck = !bCheck;  // Toggle
-	SendDlgItemMessage(ID_CHECK_C, BM_SETCHECK, bCheck, 0);
+	CheckDlgButton(ID_CHECK_C, bCheck);
 	GetDoc().SetCheckC(bCheck);
 
 	SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
@@ -192,12 +192,7 @@ BOOL CView::OnCheckC()
 
 BOOL CView::OnRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
 {
-	for (UINT nID = nIDFirst; nID <= nIDLast; nID++)
-	{
-		SendDlgItemMessage(nID, BM_SETCHECK, FALSE, 0);
-	}
-
-	SendDlgItemMessage(nIDClicked, BM_SETCHECK, TRUE, 0);
+	CheckRadioButton(nIDFirst, nIDLast, nIDClicked);
 
 	GetDoc().SetRadio(nIDClicked);
 	SetDlgItemText(IDC_STATUS, _T("Radio changed"));
