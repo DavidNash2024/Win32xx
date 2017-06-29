@@ -155,12 +155,7 @@ BOOL CViewDialog::OnCheck3()
 
 BOOL CViewDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
 {
-	for (UINT nID = nIDFirst; nID <= nIDLast; nID++)
-	{
-		SendDlgItemMessage(nID, BM_SETCHECK, FALSE, 0);
-	}
-
-	SendDlgItemMessage(nIDClicked, BM_SETCHECK, TRUE, 0);
+	CheckRadioButton(nIDFirst, nIDLast, nIDClicked);
 
 	CString str;
 	int nButton = nIDClicked - nIDFirst + 1;

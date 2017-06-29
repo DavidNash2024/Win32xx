@@ -58,7 +58,8 @@ LRESULT CClientDialog::OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(lParam);
 
 	// Give focus to the Send Edit box
-	SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
+	if (m_EditSend.IsWindow())
+		GotoDlgCtrl(m_EditSend);
 
 	return TRUE;
 }
@@ -75,7 +76,7 @@ BOOL CClientDialog::OnSocketConnect()
 	m_ButtonConnect.EnableWindow( TRUE );
 
 	// Move focus to the Send Edit box
-	SendMessage(WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
+	GotoDlgCtrl(m_EditSend);
 	SetForegroundWindow();
 
 	// Update the dialog
@@ -192,7 +193,7 @@ BOOL CClientDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDC_BUTTON_SEND:
 		OnSend();
 		// Give keyboard focus to the Send edit box
-		SendMessage( WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE);
+		GotoDlgCtrl(m_EditSend);
 		return TRUE;
     } //switch (LOWORD(wParam))
 
@@ -225,11 +226,11 @@ BOOL CClientDialog::OnInitDialog()
 
 	// Set the initial state of the dialog
 	m_EditIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
-	m_RadioIP4.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
+	m_RadioIP4.SetCheck(BST_CHECKED);
 	m_EditStatus.SetWindowText( _T("Not Connected") );
 	m_EditPort.SetWindowText( _T("3000") );
-	m_RadioTCP.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
-	m_IP4Address.SendMessage( IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1) );
+	m_RadioTCP.SetCheck(BST_CHECKED);
+	m_IP4Address.SetAddress( MAKEIPADDRESS(127, 0, 0, 1));
 
 	if (!m_Client.IsIPV6Supported())
 	{
@@ -244,10 +245,10 @@ void CClientDialog::OnStartClient()
 {
 	TRACE("Connect/Disconnect Button Pressed\n");
 
-	LRESULT lr = m_RadioTCP.SendMessage( BM_GETCHECK, 0, 0 );
+	LRESULT lr = m_RadioTCP.GetCheck();
 	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
-	lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
+	lr = m_RadioIP4.GetCheck();
 	int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
 	if (!m_IsClientConnected)
@@ -274,7 +275,7 @@ void CClientDialog::OnStartClient()
 				else
 				{
 					DWORD dwAddr = 0;
-					m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
+					m_IP4Address.GetAddress(dwAddr);
 					in_addr addr;
 					ZeroMemory(&addr, sizeof(in_addr));
 					addr.S_un.S_addr = htonl(dwAddr);
@@ -325,7 +326,7 @@ void CClientDialog::OnStartClient()
 				m_RadioUDP.EnableWindow( FALSE );
 				m_ButtonConnect.SetWindowText( _T("Disconnect") );
 				m_EditStatus.SetWindowText( _T("Ready to Send") );
-				SendMessage( WM_NEXTDLGCTL, (WPARAM)(HWND)m_EditSend, TRUE );
+				GotoDlgCtrl(m_EditSend);
 				m_IsClientConnected = TRUE;
 			}
 			break;
@@ -369,7 +370,7 @@ void CClientDialog::OnSend()
 		break;
 	case SOCK_DGRAM:	// for UDP client
 		{
-			LRESULT lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
+			LRESULT lr = m_RadioIP4.GetCheck();
 			int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 
 			UINT port = GetDlgItemInt(m_EditPort.GetDlgCtrlID(), FALSE);
@@ -384,7 +385,7 @@ void CClientDialog::OnSend()
 			else
 			{
 				DWORD dwAddr = 0;
-				m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
+				m_IP4Address.GetAddress(dwAddr);
 				in_addr addr;
 				ZeroMemory(&addr, sizeof(in_addr));
 				addr.S_un.S_addr = htonl(dwAddr);

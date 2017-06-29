@@ -215,11 +215,11 @@ BOOL CSvrDialog::OnInitDialog()
 
 	// Set the initial state of the dialog
 	m_EditIP6Address.SetWindowText( _T("0000:0000:0000:0000:0000:0000:0000:0001") );
-	m_RadioIP4.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
-	m_IP4Address.SendMessage( IPM_SETADDRESS, 0, MAKEIPADDRESS(127, 0, 0, 1) );
+	m_RadioIP4.SetCheck(BST_CHECKED);
+	m_IP4Address.SetAddress(MAKEIPADDRESS(127, 0, 0, 1));
 	m_EditStatus.SetWindowText( _T("Server Stopped") );
 	m_EditPort.SetWindowText( _T("3000") );
-	m_RadioTCP.SendMessage( BM_SETCHECK, BST_CHECKED, 0 );
+	m_RadioTCP.SetCheck(BST_CHECKED);
 	if (!m_MainSocket.IsIPV6Supported())
 	{
 		m_RadioIP6.EnableWindow(FALSE);
@@ -397,7 +397,7 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wParam)
 			TRACE("[Received:] "); TRACE(bufArray); TRACE("\n");
 			m_ButtonSend.EnableWindow(TRUE);
 			m_EditSend.EnableWindow(TRUE);
-			SendMessage( WM_NEXTDLGCTL, (WPARAM)GetDlgItem(IDC_EDIT_SEND).GetHwnd(), TRUE );
+			GotoDlgCtrl(GetDlgItem(IDC_EDIT_SEND));
 		}
 		break;
 	}
@@ -408,11 +408,11 @@ BOOL CSvrDialog::OnSocketReceive(WPARAM wParam)
 
 BOOL CSvrDialog::StartServer()
 {
-	LRESULT lr = m_RadioTCP.SendMessage( BM_GETCHECK, 0, 0 );
+	LRESULT lr = m_RadioTCP.GetCheck();
 	m_SocketType = (lr == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
 	// Create the main socket
-	lr = m_RadioIP4.SendMessage( BM_GETCHECK, 0, 0 );
+	lr = m_RadioIP4.GetCheck();
 	int IPfamily = (lr == BST_CHECKED)? PF_INET : PF_INET6 ;
 	if (!m_MainSocket.Create(IPfamily, m_SocketType))
 	{
@@ -430,7 +430,7 @@ BOOL CSvrDialog::StartServer()
 	else
 	{
 		DWORD dwAddr = 0;
-		m_IP4Address.SendMessage( IPM_GETADDRESS, 0, (LPARAM) (LPDWORD) &dwAddr );
+		m_IP4Address.GetAddress(dwAddr);
 		in_addr addr;
 		ZeroMemory(&addr, sizeof(in_addr));
 		addr.S_un.S_addr = htonl(dwAddr);

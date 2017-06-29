@@ -73,7 +73,7 @@ private:
 
 	// Nested classes for this dialog's child windows
 	// Nesting is optional. Its done to keep the IDE's class view tidy.
-	class CIP4Address : public CWnd {};
+	class CIP4Address : public CIPAddress {};
 	class CEditIP6Address : public CEdit {};
 	class CEditStatus : public CEdit {};
 	class CEditPort : public CEdit {};

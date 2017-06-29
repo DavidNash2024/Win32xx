@@ -39,7 +39,7 @@ public:
 
 	// Nested classes for this dialog's child windows
 	// Nesting is optional. Its done to keep the IDE's class view tidy.
-	class CIPAddress : public CWnd {};
+	class CIP4Address : public CIPAddress {};
 	class CEditIP6Address : public CEdit {};
 	class CEditStatus : public CEdit {};
 	class CEditPort : public CEdit {};
@@ -52,7 +52,7 @@ public:
 	class CRadioTCP : public CButton {};
 	class CRadioUDP : public CButton {};
 
-	CIPAddress	m_IP4Address;
+	CIP4Address	m_IP4Address;
 	CEditIP6Address	m_EditIP6Address;
 	CEditStatus m_EditStatus;
 	CEditPort	m_EditPort;
