@@ -95,9 +95,9 @@ namespace Win32xx
 	public:
 		CTab();
 		virtual ~CTab();
-		virtual int  AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
-		virtual int  AddTabPage(CWnd* pView, LPCTSTR szTabText, int nID_Icon, UINT idTab = 0);
-		virtual int  AddTabPage(CWnd* pView, LPCTSTR szTabText);
+		virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab);
+		virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR szTabText, int nID_Icon, UINT idTab = 0);
+		virtual CWnd*  AddTabPage(CWnd* pView, LPCTSTR szTabText);
 		virtual CRect GetCloseRect() const;
 		virtual CRect GetListRect() const;
 		virtual CMenu& GetListMenu();
@@ -313,7 +313,7 @@ namespace Win32xx
 	{
 	}
 
-	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
+	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
 	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
 	// and deletes the CWnd object when the window is destroyed.
 	{
@@ -348,10 +348,10 @@ namespace Win32xx
 			NotifyChanged();
 		}
 
-		return iNewPage;
+		return pView;
 	}
 
-	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
+	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
 	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
 	// and deletes the CWnd object when the window is destroyed.
 	{
@@ -359,7 +359,7 @@ namespace Win32xx
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
-	inline int CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText)
+	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText)
 	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
 	// and deletes the CWnd object when the window is destroyed.
 	{

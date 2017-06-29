@@ -69,8 +69,8 @@ namespace Win32xx
 		virtual ~CFile();
 		operator HANDLE() const;
 
-		virtual BOOL Close();
-		virtual BOOL Flush();
+		virtual void Close();
+		virtual void Flush();
 		virtual CString GetFileDirectory() const;
 		virtual const CString& GetFileName() const;
 		virtual CString GetFileNameExt() const;
@@ -82,18 +82,18 @@ namespace Win32xx
 		virtual ULONGLONG GetPosition() const;
 		virtual void Open(LPCTSTR pszFileName, UINT nOpenFlags);
 		virtual UINT Read(void* pBuf, UINT nCount);
-		static BOOL Remove(LPCTSTR pszFileName);
-		static BOOL Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
+		static void Remove(LPCTSTR pszFileName);
+		static void Rename(LPCTSTR pszOldName, LPCTSTR pszNewName);
 		virtual ULONGLONG Seek(LONGLONG lOff, UINT nFrom);
 		virtual void SeekToBegin();
 		virtual ULONGLONG SeekToEnd();
-		virtual BOOL SetLength(ULONGLONG NewLen);
+		virtual void SetLength(ULONGLONG NewLen);
 		virtual void Write(const void* pBuf, UINT nCount);
 
 #ifndef _WIN32_WCE
-		virtual BOOL LockRange(ULONGLONG Pos, ULONGLONG Count);
+		virtual void LockRange(ULONGLONG Pos, ULONGLONG Count);
 		virtual void SetFilePath(LPCTSTR pszNewName);
-		virtual BOOL UnlockRange(ULONGLONG Pos, ULONGLONG Count);
+		virtual void UnlockRange(ULONGLONG Pos, ULONGLONG Count);
 #endif
 
 	private:
@@ -139,7 +139,8 @@ namespace Win32xx
 
 	inline CFile::~CFile()
 	{
-		Close();
+		if (m_hFile != 0)
+			::CloseHandle(m_hFile);
 	}
 
 	inline CFile::operator HANDLE() const
@@ -147,22 +148,28 @@ namespace Win32xx
 		return m_hFile;
 	}
 
-	inline BOOL CFile::Close()
+	inline void CFile::Close()
 	// Closes the file associated with this object. Closed file can no longer be read or written to.
 	{
-		BOOL IsClosed = TRUE;
+
 		if (m_hFile != 0)
-			IsClosed = CloseHandle(m_hFile);
+		{
+			if (!::CloseHandle(m_hFile))
+			{
+				m_hFile = 0;
+				throw CFileException(GetFilePath(), _T("Failed to close file"));
+			}
+		}
 
 		m_hFile = 0;
-		return IsClosed;
 	}
 
-	inline BOOL CFile::Flush()
+	inline void CFile::Flush()
 	// Causes any remaining data in the file buffer to be written to the file.
 	{
 		assert(m_hFile);
-		return FlushFileBuffers(m_hFile);
+		if ( !::FlushFileBuffers(m_hFile))
+			throw CFileException(GetFilePath(), _T("Failed to flush file"));
 	}
 
 	inline HANDLE CFile::GetHandle() const
@@ -263,7 +270,7 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CFile::LockRange(ULONGLONG Pos, ULONGLONG Count)
+	inline void CFile::LockRange(ULONGLONG Pos, ULONGLONG Count)
 	// Locks a range of bytes in and open file.
 	{
 		assert(m_hFile);
@@ -273,7 +280,8 @@ namespace Win32xx
 		DWORD dwCountHigh = (DWORD)(Count >> 32);
 		DWORD dwCountLow = (DWORD)(Count & 0xFFFFFFFF);
 
-		return ::LockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh);
+		if (!::LockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh))
+			throw CFileException(GetFilePath(), _T("Failed to lock the file"));
 	}
 #endif
 
@@ -355,16 +363,18 @@ namespace Win32xx
 		return dwRead;
 	}
 
-	inline BOOL CFile::Rename(LPCTSTR pszOldName, LPCTSTR pszNewName)
+	inline void CFile::Rename(LPCTSTR pszOldName, LPCTSTR pszNewName)
 	// Renames the specified file.
 	{
-		return ::MoveFile(pszOldName, pszNewName);
+		if (!::MoveFile(pszOldName, pszNewName))
+			throw CFileException(pszOldName, _T("Failed to rename file"));
 	}
 
-	inline BOOL CFile::Remove(LPCTSTR pszFileName)
+	inline void CFile::Remove(LPCTSTR pszFileName)
 	// Deletes the specified file.
 	{
-		return ::DeleteFile(pszFileName);
+		if (!::DeleteFile(pszFileName))
+			throw CFileException(pszFileName, _T("Failed to delete file"));
 	}
 
 	inline ULONGLONG CFile::Seek(LONGLONG lOff, UINT nFrom)
@@ -419,17 +429,18 @@ namespace Win32xx
 	}
 #endif
 
-	inline BOOL CFile::SetLength(ULONGLONG NewLen)
+	inline void CFile::SetLength(ULONGLONG NewLen)
 	// Changes the length of the file to the specified value.
 	{
 		assert(m_hFile);
 
 		Seek(NewLen, FILE_BEGIN);
-		return ::SetEndOfFile(m_hFile);
+		if (!::SetEndOfFile(m_hFile))
+			throw CFileException(GetFilePath(), _T("Failed to change the file length"));
 	}
 
 #ifndef _WIN32_WCE
-	inline BOOL CFile::UnlockRange(ULONGLONG Pos, ULONGLONG Count)
+	inline void CFile::UnlockRange(ULONGLONG Pos, ULONGLONG Count)
 	// Unlocks a range of bytes in an open file.
 	{
 		assert(m_hFile);
@@ -439,7 +450,8 @@ namespace Win32xx
 		DWORD dwCountHigh = (DWORD)(Count >> 32);
 		DWORD dwCountLow = (DWORD)(Count & 0xFFFFFFFF);
 
-		return ::UnlockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh);
+		if (!::UnlockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh))
+			throw CFileException(GetFilePath(), _T("Failed to unlock the file"));
 	}
 #endif
 

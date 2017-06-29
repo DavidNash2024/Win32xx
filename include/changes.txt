@@ -1,8 +1,32 @@
 Version 8.4.1
 =============
 
+New Features and Enhancements
+-----------------------------
+* Added CFileFind class
+  The CFileFind provides a means of finding one or more files that match
+  a search string. Information can be extracted from each file found.
+  
+* Updated the CFile class
+  The following function now throw an exception on failure:
+    - Rename
+    - Remove
+    - Flush
+    - Close
+	- SetLength
+	- LockRange
+	- UnlockRange 
+
+* Updated the status bar
+- A gripper is added if the parent window has the WS_THICKFRAME style.
+- The sizes of the indicators are determined more accurately in frames.
+
+
 Changes in detail
 -----------------
+Added CFileFind class
+Added CWnd::GetStyle
+Added CWnd::SetStyle
 Added CDocker::GetActiveView
 Added CDockFrame::OnActivate
 Added CDockFrame::OnDockActivated
@@ -10,8 +34,18 @@ Added CDockFrame::OnDockDestroyed
 Added CDockFrame::OnMouseActivate
 Added CDockFrame::OnSysColorChange
 Added  UWM_GETCDIALIOG message
-
 Added FilePrintPreview sample
+Added StatusBarEx sample
+
+Modified CFile::Rename			now throws an exception on failure 
+Modified CFile::Remove		    now throws an exception on failure 
+Modified CFile::Flush		    now throws an exception on failure 
+Modified CFile::Close		    now throws an exception on failure 
+Modified CFile::SetLength		now throws an exception on failure 
+Modified CFile::LockRange		now throws an exception on failure 
+Modified CFile::UnlockRange		now throws an exception on failure
+Modified CTab::AddTabPage       now returns CWnd* 
+
 
 Version 8.4
 ===========
