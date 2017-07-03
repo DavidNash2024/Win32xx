@@ -44,11 +44,14 @@
 #include <wxx_docking.h>		// Add CDocker, CDockContainer
 #include <wxx_exception.h>		// Add CException, CFileException, CNotSupportedException, CResourceException, CUserException, CWinException
 #include <wxx_file.h>			// Add CFile
+#include <wxx_filefind.h>		// Add CFileFind
 #include <wxx_frame.h>			// Add CFrame
 #include <wxx_gdi.h>			// Add CDC, CGDIObject, CBitmap, CBrush, CFont, CPalatte, CPen, CRgn
 #include <wxx_imagelist.h>		// Add CImageList
 #include <wxx_listview.h>		// Add CListView
 #include <wxx_mdi.h>			// Add CMDIChild, CMDIFrame, CDockMDIFrame
+#include <wxx_menu.h>			// Add CMenu
+#include <wxx_metafile.h>       // Add CMetaFile and CEnhMetaFile
 #include <wxx_printdialogs.h>	// Add CPageSetupDialog, CPrintSetupDialog
 #include <wxx_propertysheet.h>	// Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>			// Add CRebar

@@ -47,6 +47,7 @@
 				// CNotSupportedException, CResourceException,
 				// CUserException, CWinException
 #include <wxx_file.h>		// CFile
+#include <wxx_filefind.h>	// Add CFileFind
 #include <wxx_frame.h>		// CFrame, CDockFrame
 #include <wxx_gdi.h>		// CDC, CGDIObject, CBitmap, CBrush, CFont,
 				// CPalatte, CPen, CRgn
