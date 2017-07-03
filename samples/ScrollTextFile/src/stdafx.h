@@ -106,6 +106,7 @@ typedef  unsigned char  byte;
 #include <wxx_ddx.h>
 #include <wxx_docking.h>
 #include <wxx_file.h>
+#include <wxx_filefind.h>
 #include <wxx_frame.h>
 #include <wxx_gdi.h>
 #include <wxx_imagelist.h>

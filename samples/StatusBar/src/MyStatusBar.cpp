@@ -90,4 +90,4 @@ LRESULT CMyStatusBar::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	}
 
 	return WndProcDefault(uMsg, wParam, lParam);
-} 
+}

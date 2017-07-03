@@ -10,7 +10,7 @@
 
 ///////////////////////////////////////
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_View(IDD_DIALOG1)
+CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosing(FALSE)
 // Constructor
 {
 	// Set the modeless dialog as the view window of the frame
@@ -96,6 +96,7 @@ void CMainFrame::ChooseHelpTopic()
 {
 	::SetCursor(::LoadCursor(NULL, IDC_HELP));
 	SetCapture();
+	m_IsChoosing = TRUE;
 }
 
 CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
@@ -302,6 +303,7 @@ LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 		UINT nID = GetIDFromCursorPos();
 		ShowHelpTopic(nID);
 		ReleaseCapture();
+		m_IsChoosing = FALSE;
 		return 0L;
 	}
 
@@ -311,7 +313,7 @@ LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 LRESULT CMainFrame::OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Modify the cursor when appropriate
 {
-	if (GetCapture() == m_hWnd)
+	if (m_IsChoosing)
 	{
 		::SetCursor(::LoadCursor(NULL, IDC_HELP));
 		return TRUE;
