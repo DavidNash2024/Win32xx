@@ -42,10 +42,8 @@
 
 namespace Win32xx
 {
-
-	//////////////////////////////////////
-	// Declaration of the CStatusBar class
-	//
+	
+	// The CStatusBar class provides the functionality of a status bar control.
 	class CStatusBar : public CWnd
 	{
 	public:
@@ -91,8 +89,9 @@ namespace Win32xx
 	{
 	}
 
-	inline HWND CStatusBar::Create(HWND hWndParent)
-	// Creates the window. This is the default method of window creation.
+	
+	// Creates the window. This is the default method of window creation.	
+	inline HWND CStatusBar::Create(HWND hWndParent)	
 	{
 		// Acquire the CREATESTRUCT parameters
 		CREATESTRUCT cs;
@@ -114,10 +113,11 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline BOOL CStatusBar::CreateParts(int iParts, const int iPaneWidths[]) const
+	
 	// Sets the number of parts in a status window and the coordinate of the right edge of each part. 
 	// If an element of iPaneWidths is -1, the right edge of the corresponding part extends
-	//  to the border of the window
+	// to the border of the window.	
+	inline BOOL CStatusBar::CreateParts(int iParts, const int iPaneWidths[]) const
 	{
 		assert(IsWindow());
 		assert(iParts <= 256);	
@@ -125,22 +125,25 @@ namespace Win32xx
 		return static_cast<BOOL>(SendMessage(SB_SETPARTS, (WPARAM)iParts, (LPARAM)iPaneWidths));		
 	}
 
+	
+	// Retrieves a count of the parts in the status bar.	
 	inline int CStatusBar::GetParts() const
-	// Retrieves a count of the parts in the status bar.
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
 	}
 
+
+	// Retrieves the icon for a part in the status bar.	
 	inline HICON CStatusBar::GetPartIcon(int iPart) const
-	// Retrieves the icon for a part in the status bar.
 	{
 		assert(IsWindow());
 		return reinterpret_cast<HICON>(SendMessage(SB_GETICON, (WPARAM)iPart, 0L));
 	}
 
+	
+	// Retrieves the bounding rectangle of a part in the status bar.	
 	inline CRect CStatusBar::GetPartRect(int iPart) const
-	// Retrieves the bounding rectangle of a part in the status bar.
 	{
 		assert(IsWindow());
 		
@@ -149,8 +152,9 @@ namespace Win32xx
 		return rc;
 	}
 
+	
+	// Retrieves the text from a part in the status bar.	
 	inline CString CStatusBar::GetPartText(int iPart) const
-	// Retrieves the text from a part in the status bar.
 	{
 		assert(IsWindow());
 		CString PaneText;
@@ -164,13 +168,16 @@ namespace Win32xx
 		return str;
 	}
 
+	
+	// Checks the status bar control to determine if it is in simple mode.	
 	inline BOOL CStatusBar::IsSimple() const
-	// Checks the status bar control to determine if it is in simple mode.
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(SB_ISSIMPLE, 0L, 0L));
 	}
 
+	
+	// Called when the background needs erasing
 	inline BOOL CStatusBar::OnEraseBkgnd(CDC& dc)
 	{
 		// Permit the parent window to handle the drawing of the StatusBar's background.
@@ -178,20 +185,23 @@ namespace Win32xx
 		return (GetParent().SendMessage(UWM_DRAWSBBKGND, (WPARAM)&dc, (LPARAM)this) != 0);
 	}
 
-	inline void CStatusBar::PreCreate(CREATESTRUCT& cs)
+	
 	// Called by CStatusBar::Create to set some window parameters
+	inline void CStatusBar::PreCreate(CREATESTRUCT& cs)
 	{
 		// cs.style is preset to SBARS_SIZEGRIP if the parent has the WS_THICKFRAME style.
 		cs.style |= WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM;
 	}
 
-	inline BOOL CStatusBar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
-	// Available Styles: Combinations of ...
+	
+	// Set the text in a status bar part.
+	// The Style parameter can be a combinations of ...
 	//0					The text is drawn with a border to appear lower than the plane of the window.
 	//SBT_NOBORDERS		The text is drawn without borders.
 	//SBT_OWNERDRAW		The text is drawn by the parent window.
 	//SBT_POPOUT		The text is drawn with a border to appear higher than the plane of the window.
-	//SBT_RTLREADING	The text will be displayed in the opposite direction to the text in the parent window.
+	//SBT_RTLREADING	The text will be displayed in the opposite direction to the text in the parent window.	
+	inline BOOL CStatusBar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
 	{
 		assert(IsWindow());
 		
@@ -202,19 +212,19 @@ namespace Win32xx
 		return Succeeded;
 	}
 
+	
+	// Sets the icon for a part in the status bar.	
 	inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon) const
-	// Sets the icon for a part in the status bar.
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(SB_SETICON, (WPARAM)iPart, (LPARAM) hIcon));
 	}
+	
 
+	// Changes the width of an existing pane, or creates a new pane with the specified width.
+	// A width of -1 for the last part sets the width to the border of the window.	
 	inline BOOL CStatusBar::SetPartWidth(int iPart, int iWidth) const
 	{
-		// This changes the width of an existing pane, or creates a new pane
-		// with the specified width.
-		// A width of -1 for the last part sets the width to the border of the window.
-
 		assert(IsWindow());
 		assert(iPart >= 0 && iPart <= 255);
 
@@ -246,9 +256,10 @@ namespace Win32xx
 		return Succeeded;
 	}
 
-	inline void CStatusBar::SetSimple(BOOL IsSimple /* = TRUE*/) const
+	
 	// Specifies whether a status window displays simple text or displays all window parts
-	//  set by a previous SB_SETPARTS message.
+	// set by a previous SB_SETPARTS message.	
+	inline void CStatusBar::SetSimple(BOOL IsSimple /* = TRUE*/) const
 	{
 		assert(IsWindow());
 		SendMessage(SB_SIMPLE, (WPARAM)IsSimple, 0L);

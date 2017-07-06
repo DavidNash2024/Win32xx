@@ -47,7 +47,7 @@ namespace Win32xx
 {
 	///////////////////////////////////////////////////
 	// Declaration of the CAXWindow class
-	// This class implements an ActiveX control container
+	// This class implements an ActiveX control container.
 	class CAXWindow : public IOleClientSite, public IOleInPlaceSite, public IOleInPlaceFrame,
 							public IOleControlSite, public IDispatch
 	{
@@ -135,14 +135,12 @@ namespace Win32xx
 
 	///////////////////////////////////////////////
 	// Declaration of the CWebBrowser class
-	// This class uses an AciveX Container provided by
-	// CAXWindow to host the IWebBrower2 interface.
+	// This class provides the functionality of a WebBrower, using the IWebBrower2 interface.
 	class CWebBrowser : public CWnd
 	{
 	public:
 		CWebBrowser();
 		virtual ~CWebBrowser();
-
 
 		//Attributes
 		LPDISPATCH GetApplication() const;
@@ -222,10 +220,12 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CAXWindow class
 	//
+	
 	inline CAXWindow::CAXWindow() : m_cRefs(1), m_hWndAX(NULL), m_hWndStatus(0), m_pUnk(NULL)
 	{
 	}
 
+	
 	inline CAXWindow::~CAXWindow()
 	{
 		if (m_pUnk)
@@ -234,6 +234,7 @@ namespace Win32xx
 		Release();
 	}
 
+	
 	inline void CAXWindow::CreateControl(BSTR bstrClsid)
 	{
 		CLSID   clsid;
@@ -241,6 +242,7 @@ namespace Win32xx
 			CreateControl(clsid);
 	}
 
+	
 	inline void CAXWindow::Activate(BOOL fFocus)
 	{
 		if (!m_pUnk)
@@ -258,6 +260,7 @@ namespace Win32xx
 		}
 	}
 
+	
 	inline void CAXWindow::CreateControl(REFCLSID clsid)
 	{
 		if (S_OK != CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void**)&m_pUnk))
@@ -282,50 +285,59 @@ namespace Win32xx
 		}
 	}
 
+	
 	inline STDMETHODIMP_(ULONG) CAXWindow::AddRef()
 	{
 		return ++m_cRefs;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::CanInPlaceActivate()
 	{
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::ContextSensitiveHelp(BOOL EnterMode)
 	{
 		UNREFERENCED_PARAMETER(EnterMode);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::DeactivateAndUndo()
 	{
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::DiscardUndoState()
 	{
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::EnableModeless(BOOL Enable)
 	{
 		UNREFERENCED_PARAMETER(Enable);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetBorder(LPRECT lprectBorder)
 	{
 		UNREFERENCED_PARAMETER(lprectBorder);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetContainer(LPOLECONTAINER* ppContainer)
 	{
 		UNREFERENCED_PARAMETER(ppContainer);
 		return E_NOINTERFACE;
 	}
 
+	
 	inline IDispatch* CAXWindow::GetDispatch()
 	{
 		if (!m_pUnk)
@@ -337,6 +349,7 @@ namespace Win32xx
 		return pdisp;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetExtendedControl(IDispatch** ppDisp)
 	{
 		if (ppDisp == NULL)
@@ -348,6 +361,7 @@ namespace Win32xx
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid)
 	{
 		UNREFERENCED_PARAMETER((IID)riid);		// IID cast required for the MinGW compiler
@@ -359,6 +373,7 @@ namespace Win32xx
 		return DISP_E_UNKNOWNNAME;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, LPMONIKER* ppMk)
 	{
 		UNREFERENCED_PARAMETER(dwAssign);
@@ -367,6 +382,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo)
 	{
 		UNREFERENCED_PARAMETER(itinfo);
@@ -375,12 +391,14 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetTypeInfoCount(unsigned int* pctinfo)
 	{
 		UNREFERENCED_PARAMETER(pctinfo);
 		return E_NOTIMPL;
 	}
 
+	
 	inline IUnknown* CAXWindow::GetUnknown()
 	{
 		if (!m_pUnk)
@@ -390,6 +408,7 @@ namespace Win32xx
 		return m_pUnk;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetWindow(HWND* lphwnd)
 	{
 		if (!IsWindow(m_hWndAX))
@@ -399,6 +418,7 @@ namespace Win32xx
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::GetWindowContext (IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppIIPUIWin,
 									  LPRECT lprcPosRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo)
 	{
@@ -424,6 +444,7 @@ namespace Win32xx
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS lpMenuWidths)
 	{
 		UNREFERENCED_PARAMETER(hmenuShared);
@@ -431,6 +452,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
 	{
 		UNREFERENCED_PARAMETER(dispid);
@@ -444,56 +466,66 @@ namespace Win32xx
 		return DISP_E_MEMBERNOTFOUND;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::LockInPlaceActive(BOOL Lock)
 	{
 		UNREFERENCED_PARAMETER(Lock);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnControlInfoChanged()
 	{
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnFocus(BOOL fGotFocus)
 	{
 		UNREFERENCED_PARAMETER(fGotFocus);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnInPlaceActivate()
 	{
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnInPlaceDeactivate()
 	{
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnPosRectChange(LPCRECT lprcPosRect)
 	{
 		UNREFERENCED_PARAMETER(lprcPosRect);
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnShowWindow(BOOL Show)
 	{
 		UNREFERENCED_PARAMETER(Show);
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnUIActivate()
 	{
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::OnUIDeactivate(BOOL fUndoable)
 	{
 		UNREFERENCED_PARAMETER(fUndoable);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::QueryInterface(REFIID riid, void** ppvObject)
 	{
 		if (!ppvObject)
@@ -525,11 +557,13 @@ namespace Win32xx
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP_(ULONG) CAXWindow::Release()
 	{
 		return --m_cRefs;
 	}
 
+	
 	inline void CAXWindow::Remove()
 	{
 		if (!m_pUnk)
@@ -555,34 +589,40 @@ namespace Win32xx
 
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::RemoveMenus(HMENU hmenuShared)
 	{
 		UNREFERENCED_PARAMETER(hmenuShared);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::RequestBorderSpace(LPCBORDERWIDTHS lpborderwidths)
 	{
 		UNREFERENCED_PARAMETER(lpborderwidths);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::RequestNewObjectLayout()
 	{
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::SaveObject()
 	{
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::Scroll(SIZE scrollExtent)
 	{
 		UNREFERENCED_PARAMETER(scrollExtent);
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR lpszObjName)
 	{
 		UNREFERENCED_PARAMETER(pActiveObject);
@@ -590,12 +630,14 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::SetBorderSpace(LPCBORDERWIDTHS lpborderwidths)
 	{
 		UNREFERENCED_PARAMETER(lpborderwidths);
 		return E_NOTIMPL;
 	}
 
+	
 	inline void CAXWindow::SetLocation(int x, int y, int width, int height)
 	{
 		m_rcControl.SetRect(x, y, x + width, y + height);
@@ -612,6 +654,7 @@ namespace Win32xx
 		pipo->Release();
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::SetMenu(HMENU hmenuShared, HOLEMENU holemenu, HWND hwndActiveObject)
 	{
 		UNREFERENCED_PARAMETER(hmenuShared);
@@ -620,11 +663,13 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
+	
 	inline void CAXWindow::SetParent(HWND hWndParent)
 	{
 		m_hWndAX = hWndParent;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pszStatusText)
 	{
 		if (NULL == pszStatusText)
@@ -645,11 +690,13 @@ namespace Win32xx
 		return S_OK;
 	}
 
+	
 	inline void CAXWindow::SetStatusWindow(HWND hWndStatus)
 	{
 		m_hWndStatus = hWndStatus;
 	}
 
+	
 	inline void CAXWindow::SetVisible(BOOL IsVisible)
 	{
 		if (!m_pUnk)
@@ -671,16 +718,19 @@ namespace Win32xx
 		pioo->Release();
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::ShowObject()
 	{
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::ShowPropertyFrame()
 	{
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD dwFlags)
 	{
 		UNREFERENCED_PARAMETER(pptlHimetric);
@@ -689,6 +739,7 @@ namespace Win32xx
 		return E_NOTIMPL;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG lpmsg, WORD wID)
 	{
 		UNREFERENCED_PARAMETER(lpmsg);
@@ -696,6 +747,7 @@ namespace Win32xx
 		return S_OK;
 	}
 
+	
 	inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, DWORD grfModifiers)
 	{
 		UNREFERENCED_PARAMETER(pMsg);
@@ -703,6 +755,7 @@ namespace Win32xx
 		return S_FALSE;
 	}
 
+	
 	inline void CAXWindow::TranslateKey(MSG msg)
 	{
 		if (!m_pUnk)
@@ -721,11 +774,13 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CWebBrowser class
 	//
+	
 	inline CWebBrowser::CWebBrowser() : m_pIWebBrowser2(0)
 	{
 		OleInitialize(NULL);
 	}
 
+	
 	inline CWebBrowser::~CWebBrowser()
 	{
 		if (m_pIWebBrowser2)
@@ -737,6 +792,8 @@ namespace Win32xx
 		OleUninitialize();
 	}
 
+	
+	// Adds the IWebBrowser interface to the ActiveX container window.	
 	inline void CWebBrowser::AddWebBrowserControl()
 	{
 		GetAXWindow().CreateControl(CLSID_WebBrowser);
@@ -759,12 +816,16 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Called when the WebBrowser window is created and the HWND is attached this object. 
 	inline void CWebBrowser::OnAttach()
 	{
 		if (NULL == m_pIWebBrowser2)
 			AddWebBrowserControl();
 	}
 
+	
+	// Called when the web browser window is created.
 	inline int CWebBrowser::OnCreate(CREATESTRUCT& cs)
 	{
 		UNREFERENCED_PARAMETER(cs);
@@ -772,17 +833,23 @@ namespace Win32xx
 		return 0;
 	}
 
+	
+	// Called when the window is destroyed.
 	inline void CWebBrowser::OnDestroy()
 	{
 		GetAXWindow().Remove();
 	}
 
+	
+	// Called when the window is resized.
 	inline void CWebBrowser::OnSize(int width, int height)
 	{
 		// position the container
 		GetAXWindow().SetLocation(0, 0, width, height);
 	}
 
+	
+	// Provides default message processing for the web browser window.
 	inline LRESULT CWebBrowser::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -795,56 +862,63 @@ namespace Win32xx
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
+	
+	// Retrieves the automation object for the application that is hosting the WebBrowser Control.	
 	inline LPDISPATCH CWebBrowser::GetApplication() const
-	// Retrieves the automation object for the application that is hosting the WebBrowser Control.
 	{
 		LPDISPATCH Value;
 		GetIWebBrowser2()->get_Application(&Value);
 		return Value;
 	}
 
+	
+	// Retrieves a value that indicates whether the object is engaged in a navigation or downloading operation.	
 	inline BOOL CWebBrowser::GetBusy() const
-	// Retrieves a value that indicates whether the object is engaged in a navigation or downloading operation.
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 		GetIWebBrowser2()->get_Busy(&Value);
 		return static_cast<BOOL>(Value);
 	}
-
-	inline LPDISPATCH CWebBrowser::GetContainer() const
+	
+	
 	// Retrieves an object reference to a container.
+	inline LPDISPATCH CWebBrowser::GetContainer() const
 	{
 		LPDISPATCH Value;
 		GetIWebBrowser2()->get_Container(&Value);
 		return Value;
 	}
 
+	
+	// Retrieves a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.	
 	inline BOOL CWebBrowser::GetFullScreen() const
-	// Retrieves a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 		GetIWebBrowser2()->get_FullScreen(&Value);
 		return static_cast<BOOL>(Value);
 	}
 
+	
+	// Retrieves the height of the object.	
 	inline long CWebBrowser::GetHeight() const
-	// Retrieves the height of the object.
 	{
 		long lValue;
 		GetIWebBrowser2()->get_Height(&lValue);
 		return lValue;
 	}
 
+	
+	// Retrieves the coordinate of the left edge of the object.	
 	inline long CWebBrowser::GetLeft() const
-	// Retrieves the coordinate of the left edge of the object.
 	{
 		long lValue;
 		GetIWebBrowser2()->get_Left(&lValue);
 		return lValue;
 	}
 
+	
+	// Retrieves the path or title of the resource that is currently displayed.	
 	inline CString CWebBrowser::GetLocationName() const
-	// Retrieves the path or title of the resource that is currently displayed.
 	{
 		BSTR bstr;
 		GetIWebBrowser2()->get_LocationName(&bstr);
@@ -853,8 +927,9 @@ namespace Win32xx
 		return str;
 	}
 
+	
+	// Retrieves the URL of the resource that is currently displayed.	
 	inline CString CWebBrowser::GetLocationURL() const
-	// Retrieves the URL of the resource that is currently displayed.
 	{
 		BSTR bstr;
 		GetIWebBrowser2()->get_LocationURL(&bstr);
@@ -863,6 +938,8 @@ namespace Win32xx
 		return str;
 	}
 
+	
+	// Retrieves the accumulated  length of the ITEMIDLIST. 
 	inline UINT CWebBrowser::GetPidlLength(LPITEMIDLIST pidl)
 	{
 		assert(pidl);
@@ -880,24 +957,27 @@ namespace Win32xx
 		return cbPidl;
 	}
 
+	
+	// Retrieves a value that indicates whether the object is operating in offline mode.	
 	inline BOOL CWebBrowser::GetOffline() const
-	// Retrieves a value that indicates whether the object is operating in offline mode.
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 		GetIWebBrowser2()->get_Offline(&Value);
 		return static_cast<BOOL>(Value);
 	}
 
+	
+	// Retrieves the ready state of the object.	
 	inline READYSTATE CWebBrowser::GetReadyState() const
-	// Retrieves the ready state of the object.
 	{
 		READYSTATE rsValue;
 		GetIWebBrowser2()->get_ReadyState(&rsValue);
 		return rsValue;
 	}
 
+	
+	// Retrieves a value that indicates whether the object is registered as a top-level browser window.	
 	inline BOOL CWebBrowser::GetRegisterAsBrowser() const
-	// Retrieves a value that indicates whether the object is registered as a top-level browser window.
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 #if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
@@ -906,32 +986,36 @@ namespace Win32xx
 		return static_cast<BOOL>(Value);
 	}
 
+	
+	// Retrieves the theater mode state of the object.	
 	inline BOOL CWebBrowser::GetTheaterMode() const
-	// Retrieves the theater mode state of the object.
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 		GetIWebBrowser2()->get_TheaterMode(&Value);
 		return static_cast<BOOL>(Value);
 	}
 
+	
+	// Retrieves the coordinate of the top edge of the object.	
 	inline long CWebBrowser::GetTop() const
-	// Retrieves the coordinate of the top edge of the object.
 	{
 		long lValue;
 		GetIWebBrowser2()->get_Top(&lValue);
 		return lValue;
 	}
-
+	
+	
+	//Returns TRUE  if the object is a top-level container.
 	inline BOOL CWebBrowser::GetTopLevelContainer() const
-	//Retrieves a value that indicates whether the object is a top-level container.
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 		GetIWebBrowser2()->get_TopLevelContainer(&Value);
 		return static_cast<BOOL>(Value);
 	}
 
+	
+	// Retrieves the user type name of the contained document object.	
 	inline CString CWebBrowser::GetType() const
-	// Retrieves the user type name of the contained document object.
 	{
 		BSTR bString;
 		GetIWebBrowser2()->get_Type(&bString);
@@ -939,123 +1023,143 @@ namespace Win32xx
 		SysFreeString(bString);
 		return str;
 	}
-
-	inline BOOL CWebBrowser::GetVisible() const
+	
+	
 	// Retrieves a value that indicates whether the object is visible or hidden.
+	inline BOOL CWebBrowser::GetVisible() const
 	{
 		VARIANT_BOOL Value = VARIANT_FALSE;
 		GetIWebBrowser2()->get_Visible(&Value);
 		return static_cast<BOOL>(Value);
 	}
 
+	
+	// Retrieves the width of the object.	
 	inline long CWebBrowser::GetWidth() const
-	// Retrieves the width of the object.
 	{
 		long lValue;
 		GetIWebBrowser2()->get_Width(&lValue);
 		return lValue;
 	}
 
+	
+	// Sets a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.	
 	inline void CWebBrowser::SetFullScreen(BOOL IsFullScreen)
-	// Sets a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.
 	{
 		VARIANT_BOOL vBool = IsFullScreen ? VARIANT_TRUE : VARIANT_FALSE;
 		GetIWebBrowser2()->put_FullScreen(vBool);
 	}
 
+	
+	// Sets the height of the object.	
 	inline void CWebBrowser::SetHeight(long Height)
-	// Sets the height of the object.
 	{
 		GetIWebBrowser2()->put_Height(Height);
 	}
-
-	inline void CWebBrowser::SetLeft(long LeftEdge)
+	
+	
 	// Sets the coordinate of the left edge of the object.
+	inline void CWebBrowser::SetLeft(long LeftEdge)
 	{
 		GetIWebBrowser2()->put_Left(LeftEdge);
 	}
 
+	
+	// Sets a value that indicates whether the object is operating in offline mode.	
 	inline void CWebBrowser::SetOffline(BOOL IsOffline)
-	// Sets a value that indicates whether the object is operating in offline mode.
 	{
 		VARIANT_BOOL vBool = IsOffline ? VARIANT_TRUE : VARIANT_FALSE;
 		GetIWebBrowser2()->put_Offline(vBool);
 	}
-
-	inline void CWebBrowser::SetRegisterAsBrowser(BOOL IsBrowser)
+	
+	
 	// Sets a value that indicates whether the object is registered as a top-level browser window.
+	inline void CWebBrowser::SetRegisterAsBrowser(BOOL IsBrowser)
 	{
 		VARIANT_BOOL vBool = IsBrowser ? VARIANT_TRUE : VARIANT_FALSE;
 		GetIWebBrowser2()->put_RegisterAsBrowser(vBool);
 	}
 
+	
+	// Sets the theatre mode state of the object.	
 	inline void CWebBrowser::SetTheaterMode(BOOL IsTheaterMode)
-	// Sets the theatre mode state of the object.
 	{
 		VARIANT_BOOL vBool = IsTheaterMode ? VARIANT_TRUE : VARIANT_FALSE;
 		GetIWebBrowser2()->put_TheaterMode(vBool);
 	}
 
-	inline void CWebBrowser::SetTop(long TopEdge)
+	
 	// Sets the coordinate of the top edge of the object.
+	inline void CWebBrowser::SetTop(long TopEdge)
+
 	{
 		GetIWebBrowser2()->put_Top(TopEdge);
 	}
 
+	
+	// Sets a value that indicates whether the object is visible or hidden.	
 	inline void CWebBrowser::SetVisible(BOOL IsVisible)
-	// Sets a value that indicates whether the object is visible or hidden.
 	{
 		VARIANT_BOOL vBool = IsVisible ? VARIANT_TRUE : VARIANT_FALSE;
 		GetIWebBrowser2()->put_Visible(vBool);
 	}
 
-	inline void CWebBrowser::SetWidth(long Width)
+	
 	// Sets the width of the object.
+	inline void CWebBrowser::SetWidth(long Width)
+
 	{
 		GetIWebBrowser2()->put_Width(Width);
 	}
 
+	
+	// Executes a command using the IOleCommandTarget interface.	
 	inline void CWebBrowser::ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut)
-	// Executes a command using the IOleCommandTarget interface.
 	{
 		GetIWebBrowser2()->ExecWB(cmdID, cmdexecopt, pvaIn, pvaOut);
 	}
 
+	
+	// Gets the value associated with the specified property name.	
 	inline VARIANT CWebBrowser::GetProperty( LPCTSTR pszProperty )
-	// Gets the value associated with the specified property name.
 	{
 		VARIANT v;
 		GetIWebBrowser2()->GetProperty( TtoBSTR(pszProperty), &v );
 		return v;
 	}
 
+	
+	// Navigates backward one item in the history list.	
 	inline void CWebBrowser::GoBack()
-	// Navigates backward one item in the history list.
 	{
 		GetIWebBrowser2()->GoBack();
 	}
 
+	
+	// Navigates forward one item in the history list.	
 	inline void CWebBrowser::GoForward()
-	// Navigates forward one item in the history list.
 	{
 		GetIWebBrowser2()->GoForward();
 	}
 
+	
+	// Navigates to the current home or start page.	
 	inline void CWebBrowser::GoHome()
-	// Navigates to the current home or start page.
 	{
 		GetIWebBrowser2()->GoHome();
 	}
-
-	inline void CWebBrowser::GoSearch()
+	
+	
 	// Navigates to the current search page.
+	inline void CWebBrowser::GoSearch()
 	{
 		GetIWebBrowser2()->GoSearch();
 	}
 
+	
+	// Navigates to a resource identified by a URL or to a file identified by a full path.	
 	inline void CWebBrowser::Navigate(LPCTSTR pszURL,   DWORD dwFlags /*= 0*/, LPCTSTR pszTargetFrameName /*= NULL*/,
 					LPCTSTR pszHeaders /*= NULL*/, LPVOID pvPostData /*= NULL*/,   DWORD dwPostDataLen /*= 0*/)
-	// Navigates to a resource identified by a URL or to a file identified by a full path.
 	{
 		VARIANT Flags;
 		Flags.vt = VT_I4;
@@ -1085,8 +1189,9 @@ namespace Win32xx
 		VariantClear(&Headers);
 	}
 
+	
+	// Navigates the browser to a location specified by a pointer to an item identifier list (PIDL) for an entity in the Microsoft Windows Shell namespace.	
 	inline void CWebBrowser::Navigate2(LPITEMIDLIST pIDL, DWORD dwFlags /*= 0*/, LPCTSTR pszTargetFrameName /*= NULL*/)
-	// Navigates the browser to a location specified by a pointer to an item identifier list (PIDL) for an entity in the Microsoft Windows Shell namespace.
 	{
 		UINT cb = GetPidlLength(pIDL);
 		LPSAFEARRAY psa = SafeArrayCreateVector(VT_UI1, 0, cb);
@@ -1109,10 +1214,11 @@ namespace Win32xx
 		VariantClear(&Flags);
 		VariantClear(&TargetFrameName);
 	}
-
+	
+	
+	// Navigates the browser to a location that is expressed as a URL.
 	inline void CWebBrowser::Navigate2(LPCTSTR pszURL, DWORD dwFlags /*= 0*/, LPCTSTR pszTargetFrameName /*= NULL*/,
 					 LPCTSTR pszHeaders /*= NULL*/,   LPVOID pvPostData /*= NULL*/, DWORD dwPostDataLen /*= 0*/)
-	// Navigates the browser to a location that is expressed as a URL.
 	{
 		VARIANT URL;
 		URL.vt = VT_BSTR;
@@ -1146,14 +1252,16 @@ namespace Win32xx
 		VariantClear(&Headers);
 	}
 
+	
+	// Sets the value of a property associated with the object.	
 	inline void CWebBrowser::PutProperty(LPCTSTR pszProperty, const VARIANT& vtValue)
-	// Sets the value of a property associated with the object.
 	{
 		GetIWebBrowser2()->PutProperty(TtoBSTR(pszProperty), vtValue);
 	}
 
+	
+	// Sets the value of a property associated with the object.	
 	inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, double dValue)
-	// Sets the value of a property associated with the object.
 	{
 		VARIANT v;
 		v.vt = VT_I4;
@@ -1162,8 +1270,9 @@ namespace Win32xx
 		VariantClear(&v);
 	}
 
+	
+	// Sets the value of a property associated with the object.	
 	inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, long lValue)
-	// Sets the value of a property associated with the object.
 	{
 		VARIANT v;
 		v.vt = VT_I4;
@@ -1172,8 +1281,9 @@ namespace Win32xx
 		VariantClear(&v);
 	}
 
+	
+	// Sets the value of a property associated with the object.	
 	inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, LPCTSTR lpszValue)
-	// Sets the value of a property associated with the object.
 	{
 		VARIANT v;
 		v.vt = VT_BSTR;
@@ -1182,8 +1292,9 @@ namespace Win32xx
 		VariantClear(&v);
 	}
 
+	
+	// Sets the value of a property associated with the object.	
 	inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, short nValue)
-	// Sets the value of a property associated with the object.
 	{
 		VARIANT v;
 		v.vt = VT_I4;
@@ -1192,14 +1303,16 @@ namespace Win32xx
 		VariantClear(&v);
 	}
 
+	
+	// Reloads the file that is currently displayed in the object.	
 	inline void CWebBrowser::Refresh()
-	// Reloads the file that is currently displayed in the object.
 	{
 		GetIWebBrowser2()->Refresh();
 	}
 
+	
+	// Reloads the file that is currently displayed with the specified refresh level.	
 	inline void CWebBrowser::Refresh2(int nLevel)
-	// Reloads the file that is currently displayed with the specified refresh level.
 	{
 		VARIANT v;
 		v.vt = VT_I4;
@@ -1208,8 +1321,9 @@ namespace Win32xx
 		VariantClear(&v);
 	}
 
+	
+	// Cancels a pending navigation or download, and stops dynamic page elements, such as background sounds and animations.	
 	inline void CWebBrowser::Stop()
-	// Cancels a pending navigation or download, and stops dynamic page elements, such as background sounds and animations.
 	{
 		GetIWebBrowser2()->Stop();
 	}

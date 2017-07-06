@@ -258,7 +258,8 @@ namespace Win32xx
 	typedef Shared_Ptr<CRgn> RgnPtr;
 
 
-	struct CGDI_Data	// A structure that contains the data members for CGDIObject
+	// A structure that contains the data members for CGDIObject.
+	struct CGDI_Data	
 	{
 		// Constructor
 		CGDI_Data() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
@@ -268,7 +269,9 @@ namespace Win32xx
 		bool	IsManagedObject;
 	};
 
-	struct CIml_Data	// A structure that contains the data members for CImageList
+	
+	// A structure that contains the data members for CImageList.	
+	struct CIml_Data
 	{
 		// Constructor
 		CIml_Data() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
@@ -279,7 +282,9 @@ namespace Win32xx
 	};
 
   #ifndef _WIN32_WCE
-	struct CMenu_Data	// A structure that contains the data members for CMenu
+
+	// A structure that contains the data members for CMenu.
+	struct CMenu_Data
 	{
 		// Constructor
 		CMenu_Data() : hMenu(0), IsManagedMenu(FALSE), Count(1L) {}
@@ -289,39 +294,51 @@ namespace Win32xx
 		bool IsManagedMenu;
 		long Count;
 	};
+	
   #endif
 
-	struct CompareHDC		// The comparison function object used by CWinApp::m_mapHDC
+	// The comparison function object used by CWinApp::m_mapHDC
+	struct CompareHDC
 	{
 		bool operator()(HDC const a, const HDC b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	struct CompareGDI		// The comparison function object used by CWinApp::m_mapGDI
+	
+	// The comparison function object used by CWinApp::m_mapGDI	
+	struct CompareGDI
 	{
 		bool operator()(HGDIOBJ const a, const HGDIOBJ b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	struct CompareHIMAGELIST // The comparison function object used by CWinApp::m_mapHIMAGELIST
+	
+	// The comparison function object used by CWinApp::m_mapHIMAGELIST	
+	struct CompareHIMAGELIST
 	{
 		bool operator()(HIMAGELIST const a, const HIMAGELIST b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	struct CompareHMENU		// The comparison function object used by CWinApp::m_mapHMENU
+	
+	// The comparison function object used by CWinApp::m_mapHMENU	
+	struct CompareHMENU
 	{
 		bool operator()(HMENU const a, const HMENU b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
-
-	struct CompareHWND		// The comparison function object used by CWinApp::m_mapHWND
+	
+	
+	// The comparison function object used by CWinApp::m_mapHWND
+	struct CompareHWND
 	{
 		bool operator()(HWND const a, const HWND b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	struct TLSData			// Used for Thread Local Storage (TLS)
+	
+	// Used for Thread Local Storage (TLS)	
+	struct TLSData			
 	{
 		CWnd* pWnd;			// pointer to CWnd object for Window creation
 		HWND  hMainWnd;		//	handle to the main window for the thread (usually CFrame)
@@ -334,11 +351,7 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////
-	// Declarations for the CCriticalSection class
-	// This class is used for thread synchronisation
-	//
-	// Note: All locks are released when the CCriticalSection object is
-	//       destroyed, making this class exception safe.
+	// This class is used for thread synchronisation.
 	class CCriticalSection
 	{
 	public:
@@ -353,15 +366,16 @@ namespace Win32xx
 			::DeleteCriticalSection(&m_cs);
 		}
 
+
+		// Enter the critical section and increment the lock count.
 		void Lock() 	
-		// Enter the critical section and increment the lock count
 		{
 			::EnterCriticalSection(&m_cs); 
 			InterlockedIncrement(&m_count);
 		}
 		
+		// Leave the critical section and decrement the lock count.		
 		void Release()
-		// Leave the critical section and decrement the lock count
 		{ 
 			assert (m_count > 0);
 			if (m_count > 0)
@@ -382,8 +396,7 @@ namespace Win32xx
 
 
 	///////////////////////////////////
-	// Declaration of the CObject class
-	//
+	// The CObject class provides support for Serialization by CArchive.
 	class CObject
 	{
 	public:
@@ -396,13 +409,12 @@ namespace Win32xx
 	};
 
 
-	// typedef for _beginthreadex's callback function
+	// typedef for _beginthreadex's callback function.
 	typedef UINT (WINAPI *PFNTHREADPROC)(LPVOID);
 
 
 	//////////////////////////////////////
-	// Declaration of the CWinThread class
-	//
+	// CWinApp manages a thread. For a GUI thread, it runs the message loop.
 	class CWinThread : public CObject
 	{
 	public:
@@ -449,8 +461,8 @@ namespace Win32xx
 	};
 
 	///////////////////////////////////
-	// Declaration of the CWinApp class
-	//
+	// CWinApp manages the application, and runs the application's message loop.
+	// There can only be one instance of CWinApp.
 	class CWinApp : public CWinThread
 	{
 		// Provide these access to CWinApp's private members:
@@ -531,23 +543,16 @@ namespace Win32xx
 	// Global Functions
 	//
 
+	// Returns a reference to the CWinApp derived class.
 	inline CWinApp& GetApp()
-	// Returns a reference to the CWinApp derived class
 	{
 		return *CWinApp::SetnGetThis();
 	}
 
 
   #ifndef _WIN32_WCE
-	inline int GetWinVersion()
-	{
-		DWORD dwVersion = GetVersion();
-		int Platform = (dwVersion < 0x80000000)? 2:1;
-		int MajorVer = LOBYTE(LOWORD(dwVersion));
-		int MinorVer = HIBYTE(LOWORD(dwVersion));
-
-		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
-
+	
+	// Retrieves the window version
 		// Return values and window versions:
 		//  1400     Windows 95
 		//  1410     Windows 98
@@ -560,12 +565,32 @@ namespace Win32xx
 		//  2601     Windows 7 and Windows Server 2008 r2
 		//  2602     Windows 8 and Windows Server 2012
 		//  2603     Windows 8.1 and Windows Server 2012 r2
-
 		// Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
-		//       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602). 
+		//       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602). 	
+	inline int GetWinVersion()
+	{
+		DWORD dwVersion = GetVersion();
+		int Platform = (dwVersion < 0x80000000)? 2:1;
+		int MajorVer = LOBYTE(LOWORD(dwVersion));
+		int MinorVer = HIBYTE(LOWORD(dwVersion));
+
+		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
 		return nVersion;
 	}
+	
 
+	// Retrieves the version of common control dll used.
+	// return values and DLL versions
+	// 400  dll ver 4.00	Windows 95/Windows NT 4.0
+	// 470  dll ver 4.70	Internet Explorer 3.x
+	// 471  dll ver 4.71	Internet Explorer 4.0
+	// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
+	// 580  dll ver 5.80	Internet Explorer 5
+	// 581  dll ver 5.81	Windows 2000 and Windows ME
+	// 582  dll ver 5.82	Windows XP, Vista, Windows 7 etc. without XP themes
+	// 600  dll ver 6.00	Windows XP with XP themes
+	// 610  dll ver 6.10	Windows Vista with XP themes
+	// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes	
 	inline int GetComCtlVersion()
 	{
 		// Load the Common Controls DLL
@@ -604,24 +629,14 @@ namespace Win32xx
 
 		::FreeLibrary(hComCtl);
 
-		// return values and DLL versions
-		// 400  dll ver 4.00	Windows 95/Windows NT 4.0
-		// 470  dll ver 4.70	Internet Explorer 3.x
-		// 471  dll ver 4.71	Internet Explorer 4.0
-		// 472  dll ver 4.72	Internet Explorer 4.01 and Windows 98
-		// 580  dll ver 5.80	Internet Explorer 5
-		// 581  dll ver 5.81	Windows 2000 and Windows ME
-		// 582  dll ver 5.82	Windows XP, Vista, Windows 7 etc. without XP themes
-		// 600  dll ver 6.00	Windows XP with XP themes
-		// 610  dll ver 6.10	Windows Vista with XP themes
-		// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
-
 		return ComCtlVer;
 	}
   #endif
 
   // Required for WinCE
   #ifndef lstrcpyn
+	
+	// Copies a specified number of characters from a source string into a buffer.
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
 	{
 		if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
@@ -631,6 +646,8 @@ namespace Win32xx
 		lpstrDest[nLen] = _T('\0');
 		return lpstrRet;
 	}
+	
+	
   #endif // !lstrcpyn	
 
 }

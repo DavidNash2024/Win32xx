@@ -51,6 +51,7 @@
 namespace Win32xx
 {
 
+	// This struct holds the information for each tab page.
 	struct TabPageInfo
 	{
 		CString TabText;	// The tab's text
@@ -66,6 +67,8 @@ namespace Win32xx
 		UINT nPage;
 	};
 
+	
+	// The CTab class provides the functionality of a tab control.
 	class CTab : public CWnd
 	{
 	protected:
@@ -214,7 +217,8 @@ namespace Win32xx
 	};
 
 	////////////////////////////////////////
-	// Declaration of the CTabbedMDI class
+	// The CTabbedMDI class combines many of the features of a MDI Frame and a tab control. 
+	// Each MDI child is displayed as a separate tab page.
 	class CTabbedMDI : public CWnd
 	{
 	public:
@@ -304,18 +308,21 @@ namespace Win32xx
 	//////////////////////////////////////////////////////////
 	// Definitions for the CTab class
 	//
+
 	inline CTab::CTab() : m_pActiveView(NULL), m_IsShowingButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
 							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
 	{
 	}
 
+	
 	inline CTab::~CTab()
 	{
 	}
 
+	
+	// Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
+	// and deletes the CWnd object when the window is destroyed.	
 	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, HICON hIcon, UINT idTab)
-	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
-	// and deletes the CWnd object when the window is destroyed.
 	{
 		assert(pView);
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
@@ -351,21 +358,25 @@ namespace Win32xx
 		return pView;
 	}
 
+	
+	// Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
+	// and deletes the CWnd object when the window is destroyed.	
 	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
-	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
-	// and deletes the CWnd object when the window is destroyed.
 	{
 		HICON hIcon = (HICON)LoadImage(GetApp().GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED);
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
+	
+	// Adds a tab page. The framework assumes ownership of the CWnd pointer provided,
+	// and deletes the CWnd object when the window is destroyed.	
 	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText)
-	// Adds a tab. The framework assumes ownership of the CWnd pointer provided,
-	// and deletes the CWnd object when the window is destroyed.
 	{
 		return AddTabPage(pView, szTabText, (HICON)0, 0);
 	}
 
+	
+	// Draws the close button
 	inline void CTab::DrawCloseButton(CDC& dcDraw)
 	{
 		// The close button isn't displayed on Win95
@@ -450,6 +461,8 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Draws the list button.
 	inline void CTab::DrawListButton(CDC& dcDraw)
 	{
 		// The list button isn't displayed on Win95
@@ -526,6 +539,8 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Draw the tabs.
 	inline void CTab::DrawTabs(CDC& dcMem)
 	{
 		// Draw the tab buttons:
@@ -577,6 +592,8 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Draw the tab borders.
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
 	{
 		BOOL IsBottomTab = (BOOL)GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
@@ -632,8 +649,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Returns the dimensions of the bounding rectangle of the close button.	
 	inline CRect CTab::GetCloseRect() const
-	// Returns the dimensions of the bounding rectangle of the close button.
 	{
 		CRect rcClose;
 		if (GetShowButtons())
@@ -655,8 +673,9 @@ namespace Win32xx
 		return rcClose;
 	}
 
+	
+	// Returns a reference to the list menu.	
 	inline CMenu& CTab::GetListMenu()
-	// Returns a reference to the list menu.
 	{
 		if (!IsMenu(m_ListMenu))
 			m_ListMenu.CreatePopupMenu();
@@ -686,8 +705,9 @@ namespace Win32xx
 		return m_ListMenu;
 	}
 
+	
+	// Returns the dimensions of the bounding rectangle of the list button.	
 	inline CRect CTab::GetListRect() const
-	// Returns the dimensions of the bounding rectangle of the list button.
 	{
 		CRect rcList;
 		if (GetShowButtons())
@@ -700,8 +720,9 @@ namespace Win32xx
 		return rcList;
 	}
 
+	
+	// Returns the size of the largest tab	
 	inline SIZE CTab::GetMaxTabSize() const
-	// Returns the size of the largest tab
 	{
 		CSize Size;
 
@@ -732,13 +753,16 @@ namespace Win32xx
 		return Size;
 	}
 
+	
+	// Returns TRUE if the control's tabs are placed at the top	
 	inline BOOL CTab::GetTabsAtTop() const
-	// Returns TRUE if the control's tabs are placed at the top
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		return (!(dwStyle & TCS_BOTTOM));
 	}
 
+	
+	// Retrieves the height of the text.
 	inline int CTab::GetTextHeight() const
 	{
 		CClientDC dcClient(*this);
@@ -747,8 +771,9 @@ namespace Win32xx
 		return szText.cy;
 	}
 
+	
+	// Returns the index of the tab given its view window.	
 	inline int CTab::GetTabIndex(CWnd* pWnd) const
-	// Returns the index of the tab given its view window.
 	{
 		assert(pWnd);
 
@@ -760,29 +785,33 @@ namespace Win32xx
 
 		return -1;
 	}
-
-	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab) const
+	
+	
 	// Returns the tab page info struct for the specified tab.
+	inline TabPageInfo CTab::GetTabPageInfo(UINT nTab) const
 	{
 		assert (nTab < m_vTabPageInfo.size());
-
 		return m_vTabPageInfo[nTab];
 	}
 
+	
+	// Returns the image ID for the specified tab.	
 	inline int CTab::GetTabImageID(UINT nTab) const
-	// Returns the image ID for the specified tab.
 	{
 		assert (nTab < m_vTabPageInfo.size());
 		return m_vTabPageInfo[nTab].iImage;
 	}
 
+	
+	// Returns the text for the specified tab.	
 	inline CString CTab::GetTabText(UINT nTab) const
-	// Returns the text for the specified tab.
 	{
 		assert (nTab < m_vTabPageInfo.size());
 		return m_vTabPageInfo[nTab].TabText;
 	}
 
+	
+	// Sends a UMN_TABCHANGED notification.
 	inline void CTab::NotifyChanged()
 	{
 		NMHDR nmhdr;
@@ -794,6 +823,8 @@ namespace Win32xx
 			GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
+	
+	// Sends a UWN_TABDRAGGED notification.	
 	inline void CTab::NotifyDragged()
 	{
 		NMHDR nmhdr;
@@ -803,6 +834,8 @@ namespace Win32xx
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
 	}
 
+	
+	// Sends a UWN_TABCLOSE notification.		
 	inline BOOL CTab::NotifyTabClosing(int nPage)
 	{
 		int idCtrl = GetDlgCtrlID();
@@ -816,8 +849,9 @@ namespace Win32xx
 		return (BOOL)GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
 	}
 
+	
+	// Called when this object is attached to a tab control.	
 	inline void CTab::OnAttach()
-	// Called when this object is attached to a tab control
 	{
 		// Create and assign the image list
 		m_imlODTab.DeleteImageList();
@@ -853,6 +887,8 @@ namespace Win32xx
 		SelectPage(0);
 	}
 
+	
+	// Called when the background is erased,
 	inline LRESULT CTab::OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
@@ -861,6 +897,8 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when the left mouse button is pressed.
 	inline LRESULT CTab::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
@@ -883,6 +921,8 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when the left mouse button is released.
 	inline LRESULT CTab::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		ReleaseCapture();
@@ -908,6 +948,8 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+
+	// Called when the mouse moves outside of the window.
 	inline LRESULT CTab::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CClientDC dc(*this);
@@ -919,13 +961,13 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when the mouse is moved.
 	inline LRESULT CTab::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CPoint pt;
 		pt.x = GET_X_LPARAM(lParam);
 		pt.y = GET_Y_LPARAM(lParam);
-
-
 
 		if (!m_IsListMenuActive && m_IsListPressed)
 		{
@@ -960,6 +1002,8 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Perform a hit test on the non-client area.
 	inline LRESULT CTab::OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Ensure we have an arrow cursor when the tab has no view window
@@ -975,6 +1019,8 @@ namespace Win32xx
 		return CWnd::WndProcDefault(uMsg, wParam, lParam);
 	}
 
+	
+	// Handle the notifications we send.
 	inline LRESULT CTab::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(wParam);
@@ -988,6 +1034,8 @@ namespace Win32xx
 		return 0L;
 	}
 
+	
+	// Called when a different tab is selected.
 	inline LRESULT CTab::OnTCNSelChange(LPNMHDR pNMHDR)
 	{
 		UNREFERENCED_PARAMETER(pNMHDR);
@@ -999,17 +1047,23 @@ namespace Win32xx
 		return 0L;
 	}
 
+	
+	// Called when this tab control loses focus
 	inline LRESULT CTab::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		m_IsClosePressed = FALSE;
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when the left mouse button is double clicked.
 	inline LRESULT CTab::OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return OnLButtonDown(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when this control needs to be painted.
 	inline LRESULT CTab::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
@@ -1027,6 +1081,8 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when this control acquires keyboard focus. 
 	inline LRESULT CTab::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Prevent the tab control from grabbing focus when we have a view
@@ -1038,12 +1094,16 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called after the tab control is resized.
 	inline LRESULT CTab::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		RecalcLayout();
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Called while the tab control is being resized.
 	inline LRESULT CTab::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// A little hack to reduce tab flicker
@@ -1060,11 +1120,12 @@ namespace Win32xx
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Paint the control manually.
+	// Microsoft's drawing for a tab control has quite a bit of flicker, so we do our own.
+	// We use double buffering and regions to eliminate flicker.
 	inline void CTab::Paint()
 	{
-		// Microsoft's drawing for a tab control has quite a bit of flicker, so we do our own.
-		// We use double buffering and regions to eliminate flicker
-
 		BOOL RTL = FALSE;
 #if (WINVER >= 0x0500)
 		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
@@ -1128,19 +1189,24 @@ namespace Win32xx
 			dcView.BitBlt(0, 0, rcClient.Width(), rcClient.Height(), dcMem, 0, 0, SRCCOPY);
 	}
 
+	
+	// Set the window style before it is created.
 	inline void CTab::PreCreate(CREATESTRUCT &cs)
 	{
 		// For Tabs on the bottom, add the TCS_BOTTOM style
 		cs.style = WS_CHILD | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | WS_VISIBLE;
 	}
 
+	
+	// Set the window class.
 	inline void CTab::PreRegisterClass(WNDCLASS& wc)
 	{
 		wc.lpszClassName = WC_TABCONTROL;
 	}
 
+	
+	// Repositions the child windows of the tab control.	
 	inline void CTab::RecalcLayout()
-	// Repositions the child windows of the tab control.
 	{
 		if (IsWindow())
 		{
@@ -1158,8 +1224,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Removes a tab and its view page.	
 	inline void CTab::RemoveTabPage(int nPage)
-	// Removes a tab and its view page
 	{
 		if ((nPage < 0) || (nPage > (int)m_vTabPageInfo.size() -1))
 			return;
@@ -1205,8 +1272,9 @@ namespace Win32xx
 
 	}
 
+	
+	// Selects the tab and the view page.
 	inline void CTab::SelectPage(int nPage)
-	// Selects the tab and the view page
 	{
 		if ((nPage >= 0) && (nPage < GetItemCount()))
 		{
@@ -1217,8 +1285,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Enable or disable fixed tab width.	
 	inline void CTab::SetFixedWidth(BOOL IsEnabled)
-	// Enable or disable fixed tab width.
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (IsEnabled)
@@ -1240,16 +1309,18 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	
+	// Sets the font and adjusts the tab height to match.	
 	inline void CTab::SetFont(HFONT hFont, BOOL Redraw /* = 1 */)
-	// Sets the font and adjusts the tab height to match
 	{
 		int HeightGap = 5;
 		SetTabHeight( MAX(20, GetTextHeight() + HeightGap) );
 		CWnd::SetFont(hFont, Redraw);
 	}
 
+	
+	// Enable or disable owner draw.	
 	inline void CTab::SetOwnerDraw(BOOL IsEnabled)
-	// Enable or disable owner draw
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 		if (IsEnabled)
@@ -1271,15 +1342,17 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	
+	// Allows the list and close buttons to be shown or hidden.	
 	inline void CTab::SetShowButtons(BOOL Show)
-	// Allows the list and close buttons to be shown or hidden.
 	{
 		m_IsShowingButtons = Show;
 		RecalcLayout();
 	}
 
+	
+	// Changes or sets the tab's icon.	
 	inline void CTab::SetTabIcon(int i, HICON hIcon)
-	// Changes or sets the tab's icon
 	{
 		assert (GetItemCount() > i);
 		TCITEM tci;
@@ -1299,8 +1372,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Positions the tabs at the top or bottom of the control.	
 	inline void CTab::SetTabsAtTop(BOOL IsAtTop)
-	// Positions the tabs at the top or bottom of the control
 	{
 		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
 
@@ -1315,8 +1389,9 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	
+	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.	
 	inline void CTab::SetTabSize()
-	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
 	{
 		if (GetItemCount() > 0)
 		{
@@ -1335,9 +1410,11 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Allows the text to be changed on an existing tab.
 	inline void CTab::SetTabText(UINT nTab, LPCTSTR szText)
 	{
-		// Allows the text to be changed on an existing tab
+
 		if (nTab < GetAllTabs().size())
 		{
 			TCITEM Item;
@@ -1350,8 +1427,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Sets or changes the View window displayed within the tab page.	
 	inline void CTab::ShowActiveView(CWnd* pView)
-	// Sets or changes the View window displayed within the tab page
 	{
 		if (pView != m_pActiveView)
 		{
@@ -1380,8 +1458,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Displays the list of windows in a popup menu.	
 	inline void CTab::ShowListMenu()
-	// Displays the list of windows in a popup menu
 	{
 		if (!m_IsListPressed)
 		{
@@ -1403,9 +1482,10 @@ namespace Win32xx
 		DrawListButton(dc);
 	}
 
+	
+	// Definition of a dialog template which displays a List Box.	
 	inline void CTab::ShowListDialog()
-	{
-		// Definition of a dialog template which displays a List Box
+	{	
 		unsigned char dlg_Template[] =
 		{
 			0x01,0x00,0xff,0xff,0x00,0x00,0x00,0x00,0x00,0x00,0x04,0x00,0xc8,0x00,0xc8,0x90,0x03,
@@ -1435,8 +1515,9 @@ namespace Win32xx
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 
+	
+	// Swaps the two specified tabs.	
 	inline void CTab::SwapTabs(UINT nTab1, UINT nTab2)
-	// Swaps the two specified tabs.
 	{
 		if ((nTab1 < GetAllTabs().size()) && (nTab2 < GetAllTabs().size()) && (nTab1 != nTab2))
 		{
@@ -1465,6 +1546,8 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Provides the default message handling for the tab control.
 	inline LRESULT CTab::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -1488,195 +1571,222 @@ namespace Win32xx
 	}
 
 	// Wrappers for Win32 Macros
-	inline void CTab::AdjustRect(BOOL IsLarger, RECT *prc) const
+	
 	// Calculates a tab control's display area given a window rectangle, or calculates
-	//  the window rectangle that would correspond to a specified display area.
+	//  the window rectangle that would correspond to a specified display area.	
+	inline void CTab::AdjustRect(BOOL IsLarger, RECT *prc) const
 	{
 		assert(IsWindow());
 		TabCtrl_AdjustRect(*this, IsLarger, prc);
 	}
 
+	
+	// Removes all items from a tab control.	
 	inline BOOL CTab::DeleteAllItems() const
-	// Removes all items from a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_DeleteAllItems(*this);
 	}
 
+	
+	// Removes an item from a tab control.	
 	inline BOOL CTab::DeleteItem(int iItem) const
-	// Removes an item from a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_DeleteItem(*this, iItem);
 	}
 
+	
+	// Resets items in a tab control, clearing any that were set to the TCIS_BUTTONPRESSED state.	
 	inline void CTab::DeselectAll(UINT fExcludeFocus) const
-	// Resets items in a tab control, clearing any that were set to the TCIS_BUTTONPRESSED state.
 	{
 		assert(IsWindow());
 		TabCtrl_DeselectAll(*this, fExcludeFocus);
 	}
 
+	
+	// Returns the index of the item that has the focus in a tab control.	
 	inline int CTab::GetCurFocus() const
-	// Returns the index of the item that has the focus in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetCurFocus(*this);
 	}
 
+	
+	// Determines the currently selected tab in a tab control.	
 	inline int CTab::GetCurSel() const
-	// Determines the currently selected tab in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetCurSel(*this);
 	}
-
-	inline DWORD CTab::GetExtendedStyle() const
+	
+	
 	// Retrieves the extended styles that are currently in use for the tab control.
+	inline DWORD CTab::GetExtendedStyle() const
 	{
 		assert(IsWindow());
 		return TabCtrl_GetExtendedStyle(*this);
 	}
 
+	
+	// Retrieves the image list associated with a tab control.	
 	inline CImageList CTab::GetImageList() const
-	// Retrieves the image list associated with a tab control.
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = TabCtrl_GetImageList(*this);
 		return CImageList(himl);
 	}
 
+	
+	// Retrieves information about a tab in a tab control.	
 	inline BOOL CTab::GetItem(int iItem, LPTCITEM pitem) const
-	// Retrieves information about a tab in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetItem(*this, iItem, pitem);
 	}
 
+	
+	// Retrieves the number of tabs in the tab control.	
 	inline int CTab::GetItemCount() const
-	// Retrieves the number of tabs in the tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetItemCount(*this);
 	}
 
+	
+	// Retrieves the bounding rectangle for a tab in a tab control.	
 	inline BOOL CTab::GetItemRect(int iItem, RECT& rc) const
-	// Retrieves the bounding rectangle for a tab in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetItemRect(*this, iItem, &rc);
 	}
 
+	
+	// Retrieves the current number of rows of tabs in a tab control.	
 	inline int CTab::GetRowCount() const
-	// Retrieves the current number of rows of tabs in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetRowCount(*this);
 	}
 
+	
+	// Retrieves a handle to the ToolTip control associated with a tab control.	
 	inline HWND CTab::GetToolTips() const
-	// Retrieves a handle to the ToolTip control associated with a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_GetToolTips(*this);
 	}
 
+	
+	// Sets the highlight state of a tab item.	
 	inline BOOL CTab::HighlightItem(INT idItem, WORD Highlight) const
-	// Sets the highlight state of a tab item.
 	{
 		assert(IsWindow());
 		return TabCtrl_HighlightItem(*this, idItem, Highlight);
 	}
 
+	
+	// Determines which tab, if any, is at a specified screen position.	
 	inline int CTab::HitTest(TCHITTESTINFO& info) const
-	// Determines which tab, if any, is at a specified screen position.
 	{
 		assert(IsWindow());
 		return TabCtrl_HitTest(*this, &info);
 	}
 
+	
+	// Inserts a new tab in a tab control.	
 	inline int CTab::InsertItem(int iItem, const LPTCITEM pItem) const
-	// Inserts a new tab in a tab control.
 	{
 		assert(IsWindow());
 		assert(pItem);
 		return TabCtrl_InsertItem(*this, iItem, pItem);
 	}
 
+	
+	// Removes an image from a tab control's image list.	
 	inline void CTab::RemoveImage(int iImage) const
-	// Removes an image from a tab control's image list.
 	{
 		assert(IsWindow());
 		TabCtrl_RemoveImage(*this, iImage);
 	}
 
+	
+	// Sets the focus to a specified tab in a tab control.	
 	inline void CTab::SetCurFocus(int iItem) const
-	// Sets the focus to a specified tab in a tab control.
 	{
 		assert(IsWindow());
 		TabCtrl_SetCurFocus(*this, iItem);
 	}
 
+	
+	// Selects a tab in a tab control.	
 	inline int CTab::SetCurSel(int iItem) const
-	// Selects a tab in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_SetCurSel(*this, iItem);
 	}
 
+	
+	// Sets the extended styles that the tab control will use.	
 	inline DWORD CTab::SetExtendedStyle(DWORD dwExStyle) const
-	// Sets the extended styles that the tab control will use.
 	{
 		assert(IsWindow());
 		return TabCtrl_SetExtendedStyle(*this, dwExStyle);
 	}
 
+	
+	// Assigns an image list to a tab control.	
 	inline CImageList CTab::SetImageList(HIMAGELIST himlNew) const
-	// Assigns an image list to a tab control.
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = TabCtrl_SetImageList( *this, himlNew );
 		return CImageList(himl);
 	}
 
+	
+	// Sets some or all of a tab's attributes.	
 	inline BOOL CTab::SetItem(int iItem, LPTCITEM pItem) const
-	// Sets some or all of a tab's attributes.
 	{
 		assert(IsWindow());
 		assert(pItem);
 		return TabCtrl_SetItem(*this, iItem, pItem);
 	}
 
+	
+	// Sets the number of bytes per tab reserved for application-defined data in a tab control.	
 	inline BOOL CTab::SetItemExtra(int cb) const
-	// Sets the number of bytes per tab reserved for application-defined data in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_SetItemExtra(*this, cb);
 	}
 
+	
+	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.	
 	inline DWORD CTab::SetItemSize(int cx, int cy) const
-	// Sets the width and height of tabs in a fixed-width or owner-drawn tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_SetItemSize(*this, cx, cy);
 	}
 
+	
+	// Sets the minimum width of items in a tab control.	
 	inline int CTab::SetMinTabWidth(int cx) const
-	// Sets the minimum width of items in a tab control.
 	{
 		assert(IsWindow());
 		return TabCtrl_SetMinTabWidth(*this, cx);
 	}
 
+	
+	// Sets the amount of space (padding) around each tab's icon and label in a tab control.	
 	inline void CTab::SetPadding(int cx, int cy) const
-	// Sets the amount of space (padding) around each tab's icon and label in a tab control.
 	{
 		assert(IsWindow());
 		TabCtrl_SetPadding(*this, cx, cy);
 	}
 
+	
+	// Assigns a ToolTip control to a tab control.	
 	inline void CTab::SetToolTips(HWND hToolTip) const
-	// Assigns a ToolTip control to a tab control.
 	{
 		assert(IsWindow());
 		TabCtrl_SetToolTips(*this, hToolTip);
@@ -1684,19 +1794,22 @@ namespace Win32xx
 
 	////////////////////////////////////////
 	// Definitions for the CTabbedMDI class
+	
 	inline CTabbedMDI::CTabbedMDI()
 	{
 		GetTab().SetShowButtons(TRUE);
 	}
 
+	
 	inline CTabbedMDI::~CTabbedMDI()
 	{
 	}
 
-	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
+	
 	// Adds a MDI tab, given a pointer to the view window, and the tab's text.
 	// The framework assumes ownership of the CWnd pointer provided, and deletes
-	// the CWnd object when the window is destroyed.
+	// the CWnd object when the window is destroyed.	
+	inline CWnd* CTabbedMDI::AddMDIChild(CWnd* pView, LPCTSTR szTabText, int idMDIChild /*= 0*/)
 	{
 		assert(pView); // Cannot add Null CWnd*
 		assert(lstrlen(szTabText) < MAX_MENU_STRING);
@@ -1710,6 +1823,8 @@ namespace Win32xx
 		return pView;
 	}
 
+	
+	// Closes the active MDI child.
 	inline void CTabbedMDI::CloseActiveMDI()
 	{
 		int nTab = GetTab().GetCurSel();
@@ -1719,6 +1834,8 @@ namespace Win32xx
 		RecalcLayout();
 	}
 
+	
+	// Closes all MDI children.
 	inline void CTabbedMDI::CloseAllMDIChildren()
 	{
 		while (GetMDIChildCount() > 0)
@@ -1727,6 +1844,8 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Closes the specified MDI child.
 	inline void CTabbedMDI::CloseMDIChild(int nTab)
 	{
 		GetTab().RemoveTabPage(nTab);
@@ -1735,6 +1854,8 @@ namespace Win32xx
 			GetActiveMDIChild()->RedrawWindow();
 	}
 
+	
+	// Creates the TabbedMDI window.
 	inline HWND CTabbedMDI::Create(HWND hWndParent /* = NULL*/)
 	{
 		CLIENTCREATESTRUCT clientcreate ;
@@ -1750,6 +1871,8 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Retrieves a pointer to the active MDI child.
 	inline CWnd* CTabbedMDI::GetActiveMDIChild() const
 	{
 		CWnd* pView = NULL;
@@ -1763,11 +1886,15 @@ namespace Win32xx
 		return pView;
 	}
 
+	
+	// Retrieves the index of the active MDI child.
 	inline int CTabbedMDI::GetActiveMDITab() const
 	{
 		return GetTab().GetCurSel();
 	}
 
+	
+	// Retrieves a pointer to the specified MDI child.
 	inline CWnd* CTabbedMDI::GetMDIChild(int nTab) const
 	{
 		assert(nTab >= 0);
@@ -1775,18 +1902,24 @@ namespace Win32xx
 		return GetTab().GetTabPageInfo(nTab).pView;
 	}
 
+	
+	// Returns the count of MDI children.
 	inline int CTabbedMDI::GetMDIChildCount() const
 	{
 		return static_cast<int>( GetTab().GetAllTabs().size() );
 	}
 
-	inline int   CTabbedMDI::GetMDIChildID(int nTab) const
+	
+	// Retrieves the ID of the specified MDI child.
+	inline int CTabbedMDI::GetMDIChildID(int nTab) const
 	{
 		assert(nTab >= 0);
 		assert(nTab < GetMDIChildCount());
 		return GetTab().GetTabPageInfo(nTab).idTab;
 	}
 
+	
+	// Retrieves the title of the specified MDI child.
 	inline LPCTSTR CTabbedMDI::GetMDIChildTitle(int nTab) const
 	{
 		assert(nTab >= 0);
@@ -1794,6 +1927,8 @@ namespace Win32xx
 		return GetTab().GetTabPageInfo(nTab).TabText;
 	}
 
+	
+	// Load the MDI children layout from the registry.
 	inline BOOL CTabbedMDI::LoadRegistrySettings(LPCTSTR szKeyName)
 	{
 		BOOL IsLoaded = FALSE;
@@ -1856,6 +1991,8 @@ namespace Win32xx
 		return IsLoaded;
 	}
 
+	
+	// Override this function to create new MDI children from IDs
 	inline CWnd* CTabbedMDI::NewMDIChildFromID(int /*idMDIChild*/)
 	{
 		// Override this function to create new MDI children from IDs as shown below
@@ -1876,6 +2013,8 @@ namespace Win32xx
 		return pView;
 	}
 
+	
+	// Called when the TabbeMDI window is created. (The HWND is attached to CTabbedMDI).
 	inline void CTabbedMDI::OnAttach()
 	{
 		GetTab().Create(*this);
@@ -1883,11 +2022,15 @@ namespace Win32xx
 		GetTab().SetOwnerDraw(TRUE);
 	}
 
+	
+	// Called when the TabbeMDI window is destroyed.
 	inline void CTabbedMDI::OnDestroy()
 	{
 		CloseAllMDIChildren();
 	}
 
+	
+	// Handles notifications.
 	inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
 	{
 		LPNMHDR pnmhdr = (LPNMHDR)lParam;
@@ -1932,9 +2075,10 @@ namespace Win32xx
 		return 0L;
 	}
 
-	inline BOOL CTabbedMDI::OnTabClose(int nPage)
+	
 	// Override this function to determine what happens when a tab is about to close.
-	// Return TRUE to allow the tab to close, or FALSE to prevent the tab closing.
+	// Return TRUE to allow the tab to close, or FALSE to prevent the tab closing.	
+	inline BOOL CTabbedMDI::OnTabClose(int nPage)
 	{
 		UNREFERENCED_PARAMETER(nPage);
 
@@ -1942,12 +2086,16 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	
+	// Called when the tabbedMDI window is resized.
 	inline LRESULT CTabbedMDI::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		RecalcLayout();
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
 
+	
+	// Repositions the child windows.
 	inline void CTabbedMDI::RecalcLayout()
 	{
 		if (GetTab().IsWindow())
@@ -1967,6 +2115,8 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Saves the MDI children layout in the registry.
 	inline BOOL CTabbedMDI::SaveRegistrySettings(LPCTSTR szKeyName)
 	{
 		if (szKeyName)
@@ -2033,6 +2183,8 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	
+	// Makes the specified MDI child active.
 	inline void CTabbedMDI::SetActiveMDIChild(CWnd* pWnd) const
 	{
 		assert(pWnd);
@@ -2041,6 +2193,8 @@ namespace Win32xx
 			GetTab().SelectPage(nPage);
 	}
 
+	
+	// Makes the specified MDI child active.
 	inline void CTabbedMDI::SetActiveMDITab(int iTab) const
 	{
 		assert(IsWindow());
@@ -2048,6 +2202,8 @@ namespace Win32xx
 		GetTab().SelectPage(iTab);
 	}
 
+	
+	// Called when the CTabbedMDI window acquires keyboard focus.
 	inline LRESULT CTabbedMDI::OnSetFocus(UINT, WPARAM, LPARAM)
 	{
 		if (GetActiveMDIChild() && GetActiveMDIChild()->IsWindow())
@@ -2056,6 +2212,8 @@ namespace Win32xx
 		return 0L;
 	}
 
+	
+	// Provides default handling for the window's messages.
 	inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)

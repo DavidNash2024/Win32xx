@@ -246,13 +246,15 @@ namespace Win32xx
 		int		lstrlenT(const WCHAR* pszText)	{ return lstrlenW(pszText); }
 	};
 
-
+	// CStringA is a char only version of CString
 	typedef CStringT<CHAR> CStringA;
+
+	// CStringW is a WCHAR only version of CString
 	typedef CStringT<WCHAR> CStringW;
 
 	///////////////////////////////////
-	// Definition of the CString class
-	//
+	// A CString object provides a safer and a more convenient alternative to an 
+	// array of char or WCHAR when working with text strings.
 	class CString : public CStringT<TCHAR>
 	{
 		friend CString operator + (const CString& string1, const CString& string2);
@@ -442,93 +444,105 @@ namespace Win32xx
 	/////////////////////////////////////////////
 	// Definition of the CStringT class template
 	//
+	
+	// Constructor.	
 	template <class T>
 	inline CStringT<T>::CStringT()
-	// Constructor.
 	{
 	}
 
+	
+	// Destructor.	
 	template <class T>
 	inline CStringT<T>::~CStringT()
-	// Destructor.
 	{
 	}
 
+	
+	// Constructor. Assigns from a CStringT<T>.	
 	template <class T>
 	inline CStringT<T>::CStringT(const CStringT& str)
-	// Constructor. Assigns from a CStringT<T>.
 	{
 		m_str.assign(str.m_str);
 	}
 
+	
+	// Constructor. Assigns from from a const T* character array.	
 	template <class T>
 	inline CStringT<T>::CStringT(const T* pszText)
-	// Constructor. Assigns from from a const T* character array.
 	{
 		m_str.assign(pszText);
 	}
 
+	
+	// Constructor. Assigns from 1 or more T characters.	
 	template <class T>
 	inline CStringT<T>::CStringT(T ch, int nLength)
-	// Constructor. Assigns from 1 or more T characters.
 	{
 		T str[2] = {0};
 		str[0] = ch;
 		m_str.assign(nLength, str[0]);
 	}
-
-	template <class T>
-	inline CStringT<T>::CStringT(const T* pszText, int nLength)
+	
+	
 	// Constructor. Assigns from a const T* possibly containing null characters.
 	// Ensure the size of the text buffer holds nLength or more characters
+	template <class T>
+	inline CStringT<T>::CStringT(const T* pszText, int nLength)
 	{
 		memcpy(GetBuffer(nLength), pszText, nLength*sizeof(T));
 		ReleaseBuffer(nLength);
 	}
 
+	
+	// Constructor. Assigns from an integer value.	
 	template <class T>
 	inline CStringT<T>::CStringT(int val)
-	// Constructor. Assigns from an integer value.
 	{
 		Format(_T("%d"), val);
 	}
 
+	
+	// Constructor. Assigns from a double value.	
 	template <class T>
-	// Constructor. Assigns from a double value.
 	inline CStringT<T>::CStringT(double val)
 	{
 		Format(_T("%g"), val);
 	}
 
+	
+	// Assign from a const CStringT<T>.	
 	template <class T>
-	// Assign from a const CStringT<T>.
 	inline CStringT<T>& CStringT<T>::operator = (const CStringT<T>& str)
 	{
 		m_str.assign(str.m_str);
 		return *this;
 	}
 
+	
+	// Assign from a T character.	
 	template <class T>
 	inline CStringT<T>& CStringT<T>::operator = (T ch)
-	// Assign from a T character.
 	{
 		T str[2] = {0};
 		str[0] = ch;
 		m_str.assign(1, str[0]);
 		return *this;
 	}
-
-	template <class T>
+	
+	
 	// Assign from a const T* character array.
+	template <class T>
 	inline CStringT<T>& CStringT<T>::operator = (const T* pszText)
 	{
 		m_str.assign(pszText);
 		return *this;
 	}
-
+	
+	
+	// Assign from an int converted to CHAR array.
 	template <>
 	inline CStringT<CHAR>& CStringT<CHAR>::operator = (int val)
-	// Assign from an int converted to CHAR array.
 	{
 		CStringT str;
 		str.Format("%d", val);
@@ -536,9 +550,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Assign from an int converted to a WCHAR array.	
 	template <>
 	inline CStringT<WCHAR>& CStringT<WCHAR>::operator = (int val)
-	// Assign from an int converted to a WCHAR array.
 	{
 		CStringT str;
 		str.Format(L"%d", val);
@@ -546,9 +561,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Assign from a double converted to a CHAR array.	
 	template <>
 	inline CStringT<CHAR>& CStringT<CHAR>::operator = (double val)
-	// Assign from a double converted to a CHAR array.
 	{
 		CStringT str;
 		str.Format("%g", val);
@@ -556,9 +572,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Assign from a double converted to a WCHAR array.	
 	template <>
 	inline CStringT<WCHAR>& CStringT<WCHAR>::operator = (double val)
-	// Assign from a double converted to a WCHAR array.
 	{
 		CStringT str;
 		str.Format(L"%g", val);
@@ -566,73 +583,82 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Returns TRUE if the strings have the same content.	
 	template <class T>
 	inline bool CStringT<T>::operator == (const T* pszText) const
-	// Returns TRUE if the strings have the same content.
 	{
 		assert(pszText);
 		return (0 == Compare(pszText));
 	}
 
+	
+	// Returns TRUE if the strings have the same content.
+	// Can compare CStringTs containing null characters.	
 	template <class T>
 	inline bool CStringT<T>::operator == (const CStringT& str) const
-	// Returns TRUE if the strings have the same content.
-	// Can compare CStringTs containing null characters.
 	{
 		return m_str == str.m_str;
 	}
 
+	
+	// Returns TRUE if the strings have a different content.	
 	template <class T>
 	inline bool CStringT<T>::operator != (const T* pszText) const
-	// Returns TRUE if the strings have a different content.
 	{
 		assert(pszText);
 		return Compare(pszText) != 0;
 	}
 
+	
+	// Returns TRUE if the strings have a different content.
+	// Can compares CStringTs containing null characters.	
 	template <class T>
 	inline bool CStringT<T>::operator != (const CStringT& str) const
-	// Returns TRUE if the strings have a different content.
-	// Can compares CStringTs containing null characters.
 	{
 		return m_str != str.m_str;
 	}
 
+	
+	// Function call operator. Returns a const T* character array.	
 	template <class T>
 	inline CStringT<T>::operator const T*() const
-	// Function call operator. Returns a const T* character array.
 	{
 		return m_str.c_str();
 	}
 
+	
+	// Subscript operator. Returns the T character at the specified index.	
 	template <class T>
 	inline T& CStringT<T>::operator [] (int nIndex)
-	// Subscript operator. Returns the T character at the specified index.
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
 		return m_str[nIndex];
 	}
 
+	
+	// Addition assignment. Appends CStringT<T>.	
 	template <class T>
 	inline CStringT<T>& CStringT<T>::operator += (const CStringT& str)
-	// Addition assignment. Appends CStringT<T>.
 	{
 		m_str.append(str.m_str);
 		return *this;
 	}
 
+	
+	// Addition assignment. Appends const T* character array.	
 	template <class T>
 	inline CStringT<T>& CStringT<T>::operator += (const T* szText)
-	// Addition assignment. Appends const T* character array.
 	{
 		m_str.append(szText);
 		return *this;
 	}
 
+	
+	// Addition assignment. Appends a T character.	
 	template <class T>
 	inline CStringT<T>& CStringT<T>::operator += (T ch)
-	// Addition assignment. Appends a T character.
 	{
 		T str[2] = {0};
 		str[0] = ch;
@@ -640,9 +666,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Addition assignment. Appends an int converted to a CHAR character array.	
 	template <>
 	inline CStringT<CHAR>& CStringT<CHAR>::operator += (int val)
-	// Addition assignment. Appends an int converted to a CHAR character array.
 	{
 		CStringT str;
 		str.Format("%d", val);
@@ -650,9 +677,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Addition assignment. Appends an int converted to a WCHAR character array.	
 	template <>
 	inline CStringT<WCHAR>& CStringT<WCHAR>::operator += (int val)
-	// Addition assignment. Appends an int converted to a WCHAR character array.
 	{
 		CStringT str;
 		str.Format(L"%d", val);
@@ -660,9 +688,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Addition assignment. Appends a double converted to a CHAR character array.	
 	template <>
 	inline CStringT<CHAR>& CStringT<CHAR>::operator += (double val)
-	// Addition assignment. Appends a double converted to a CHAR character array.
 	{
 		CStringT str;
 		str.Format("%g", val);
@@ -670,9 +699,10 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Addition assignment. Appends a double converted to a WCHAR character array.	
 	template <>
 	inline CStringT<WCHAR>& CStringT<WCHAR>::operator += (double val)
-	// Addition assignment. Appends a double converted to a WCHAR character array.
 	{
 		CStringT str;
 		str.Format(L"%g", val);
@@ -680,10 +710,11 @@ namespace Win32xx
 		return *this;
 	}
 
+	
+	// Allocates a BSTR from the CStringT content.
+	// Note: Ensure the returned BSTR is freed later with SysFreeString to avoid a memory leak.	
 	template <>
 	inline BSTR CStringT<CHAR>::AllocSysString() const
-	// Allocates a BSTR from the CStringT content.
-	// Note: Ensure the returned BSTR is freed later with SysFreeString to avoid a memory leak.
 	{
 		BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), (UINT)m_str.size());
 		if (bstr == NULL)
@@ -692,10 +723,11 @@ namespace Win32xx
 		return bstr;
 	}
 
+	
+	// Allocates a BSTR from the CStringT content.
+	// Note: Free the returned string later with SysFreeString to avoid a memory leak.	
 	template <>
 	inline BSTR CStringT<WCHAR>::AllocSysString() const
-	// Allocates a BSTR from the CStringT content.
-	// Note: Free the returned string later with SysFreeString to avoid a memory leak.
 	{
 		BSTR bstr = ::SysAllocStringLen(m_str.c_str(), (UINT)m_str.size());
 		if (bstr == NULL)
@@ -704,9 +736,10 @@ namespace Win32xx
 		return bstr;
 	}
 
+	
+	// Appends formatted data to an the CStringT content.	
 	template <class T>
 	inline void CStringT<T>::AppendFormat(const T* pszFormat,...)
-	// Appends formatted data to an the CStringT content.
 	{
 		CStringT str;
 
@@ -717,17 +750,19 @@ namespace Win32xx
 
 		m_str.append(str);
 	}
-
+	
+	
+	// Assigns the specified number of charaters from pszText to the CStringT.
 	template <class T>
 	inline void	CStringT<T>::Assign(const T* pszText, int nCount)
-	// Assigns the specified number of charaters from pszText to the CStringT.
 	{
 		m_str.assign(pszText, nCount);
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings using locale-specific information.	
 	template <>
 	inline int CStringT<CHAR>::Collate(const CHAR* pszText) const
-	// Performs a case sensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
 		int res = CompareStringA(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
@@ -739,9 +774,10 @@ namespace Win32xx
 		return 0;
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings using locale-specific information.	
 	template <>
 	inline int CStringT<WCHAR>::Collate(const WCHAR* pszText) const
-	// Performs a case sensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
 		int res = CompareStringW(LOCALE_USER_DEFAULT, 0, m_str.c_str(), -1, pszText, -1);
@@ -753,9 +789,10 @@ namespace Win32xx
 		return 0;
 	}
 
+	
+	// Performs a case insensitive comparison of the two strings using locale-specific information.	
 	template <>
 	inline int CStringT<CHAR>::CollateNoCase(const CHAR* pszText) const
-	// Performs a case insensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
 		int res = CompareStringA(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, pszText, -1);
@@ -766,10 +803,11 @@ namespace Win32xx
 
 		return 0;
 	}
-
+	
+	
+	// Performs a case insensitive comparison of the two strings using locale-specific information.
 	template <>
 	inline int CStringT<WCHAR>::CollateNoCase(const WCHAR* pszText) const
-	// Performs a case insensitive comparison of the two strings using locale-specific information.
 	{
 		assert(pszText);
 		int res = CompareStringW(LOCALE_USER_DEFAULT, NORM_IGNORECASE, m_str.c_str(), -1, pszText, -1);
@@ -781,41 +819,46 @@ namespace Win32xx
 		return 0;
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <>
 	inline int CStringT<CHAR>::Compare(const CHAR* pszText) const
-	// Performs a case sensitive comparison of the two strings.
 	{
 		assert(pszText);
 		return lstrcmpA(m_str.c_str(), pszText);
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <>
 	inline int CStringT<WCHAR>::Compare(const WCHAR* pszText) const
-	// Performs a case sensitive comparison of the two strings.
 	{
 		assert(pszText);
 		return lstrcmpW(m_str.c_str(), pszText);
 	}
 
+	
+	// Performs a case insensitive comparison of the two strings.	
 	template <>
 	inline int CStringT<CHAR>::CompareNoCase(const CHAR* pszText) const
-	// Performs a case insensitive comparison of the two strings.
 	{
 		assert(pszText);
 		return lstrcmpiA(m_str.c_str(), pszText);
 	}
-
+	
+	
+	// Performs a case insensitive comparison of the two strings.
 	template <>
 	inline int CStringT<WCHAR>::CompareNoCase(const WCHAR* pszText) const
-	// Performs a case insensitive comparison of the two strings.
 	{
 		assert(pszText);
 		return lstrcmpiW(m_str.c_str(), pszText);
 	}
 
+	
+	// Deletes a character or characters from the string.	
 	template <class T>
 	inline int CStringT<T>::Delete(int nIndex, int nCount /* = 1 */)
-	// Deletes a character or characters from the string.
 	{
 		assert(nIndex >= 0);
 		assert(nCount >= 0);
@@ -824,16 +867,18 @@ namespace Win32xx
 		return static_cast<int>(m_str.size());
 	}
 
+	
+	// Erases the contents of the string.	
 	template <class T>
 	inline void CStringT<T>::Empty()
-	// Erases the contents of the string.
 	{
 		m_str.erase();
 	}
 
+	
+	// Finds a character in the string.	
 	template <class T>
 	inline int CStringT<T>::Find(T ch, int nIndex /* = 0 */) const
-	// Finds a character in the string.
 	{
 		assert(nIndex >= 0);
 		size_t s = m_str.find(ch, nIndex);
@@ -842,9 +887,10 @@ namespace Win32xx
 		return static_cast<int>(s);
 	}
 
+	
+	// Finds a substring within the string.	
 	template <class T>
 	inline int CStringT<T>::Find(const T* pszText, int nIndex /* = 0 */) const
-	// Finds a substring within the string.
 	{
 		assert(pszText);
 		assert(nIndex >= 0);
@@ -854,9 +900,10 @@ namespace Win32xx
 		return static_cast<int>(s);
 	}
 
+	
+	// Finds the first matching character from a set.	
 	template <class T>
 	inline int CStringT<T>::FindOneOf(const T* pszText) const
-	// Finds the first matching character from a set.
 	{
 		assert(pszText);
 		size_t s = m_str.find_first_of(pszText);
@@ -865,9 +912,10 @@ namespace Win32xx
 		return static_cast<int>(s);
 	}
 
+	
+	// Formats the string as sprintf does.	
 	template <class T>
 	inline void CStringT<T>::Format(const T* pszFormat,...)
-	// Formats the string as sprintf does.
 	{
 		va_list args;
 		va_start(args, pszFormat);
@@ -875,9 +923,10 @@ namespace Win32xx
 		va_end(args);
 	}
 
+	
+	// Formats the string using a variable list of arguments.	
 	template <>
 	inline void CStringT<CHAR>::FormatV(const CHAR*  pszFormat, va_list args)
-	// Formats the string using a variable list of arguments.
 	{
 
 		if (pszFormat)
@@ -896,10 +945,11 @@ namespace Win32xx
 			m_str.assign(&vBuffer[0]);
 		}
 	}
-
+	
+	
+	// Formats the string using a variable list of arguments.
 	template <>
 	inline void CStringT<WCHAR>::FormatV(const WCHAR*  pszFormat, va_list args)
-	// Formats the string using a variable list of arguments.
 	{
 
 		if (pszFormat)
@@ -918,10 +968,11 @@ namespace Win32xx
 			m_str.assign(&vBuffer[0]);
 		}
 	}
-
+	
+	
+	// Formats a message string.
 	template <class T>
 	inline void CStringT<T>::FormatMessage(const T* pszFormat,...)
-	// Formats a message string.
 	{
 		va_list args;
 		va_start(args, pszFormat);
@@ -929,9 +980,10 @@ namespace Win32xx
 		va_end(args);
 	}
 
+	
+	// Formats a message string using a variable argument list.	
 	template <>
 	inline void CStringT<CHAR>::FormatMessageV(const CHAR* pszFormat, va_list args)
-	// Formats a message string using a variable argument list.
 	{
 		LPSTR pszTemp = 0;
 		if (pszFormat)
@@ -945,10 +997,11 @@ namespace Win32xx
 			LocalFree(pszTemp);
 		}
 	}
-
+	
+	
+	// Formats a message string using a variable argument list.
 	template <>
 	inline void CStringT<WCHAR>::FormatMessageV(const WCHAR* pszFormat, va_list args)
-	// Formats a message string using a variable argument list.
 	{
 		LPWSTR pszTemp = 0;
 		if (pszFormat)
@@ -962,25 +1015,26 @@ namespace Win32xx
 			LocalFree(pszTemp);
 		}
 	}
-
+	
+	
+	// Returns the character at the specified location within the string.
 	template <class T>
 	inline T CStringT<T>::GetAt(int nIndex) const
-	// Returns the character at the specified location within the string.
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
 		return m_str[nIndex];
 	}
 
-	template <class T>
-	inline T* CStringT<T>::GetBuffer(int nMinBufLength)
+	
 	// Creates a buffer of nMinBufLength characters (+1 extra for NULL termination) and returns
 	// a pointer to this buffer. This buffer can be used by any function which accepts a LPTSTR.
 	// Care must be taken not to exceed the length of the buffer. Use ReleaseBuffer to safely
 	// copy this buffer back to the CStringT object.
-	//
 	// Note: The buffer uses a vector. Vectors are required to be contiguous in memory under
-	//       the current standard, whereas std::strings do not have this requirement.
+	//       the current standard, whereas std::strings do not have this requirement.	
+	template <class T>
+	inline T* CStringT<T>::GetBuffer(int nMinBufLength)
 	{
 		assert (nMinBufLength >= 0);
 
@@ -1002,9 +1056,10 @@ namespace Win32xx
 	}
 
 #ifndef _WIN32_WCE
+
+	// Sets the string to the value of the specified environment variable.
 	template <>
 	inline bool CStringT<CHAR>::GetEnvironmentVariable(const CHAR* pszVar)
-	// Sets the string to the value of the specified environment variable.
 	{
 		assert(pszVar);
 		Empty();
@@ -1020,9 +1075,10 @@ namespace Win32xx
 		return (nLength != 0);
 	}
 
+	
+	// Sets the string to the value of the specified environment variable.	
 	template <>
 	inline bool CStringT<WCHAR>::GetEnvironmentVariable(const WCHAR* pszVar)
-	// Sets the string to the value of the specified environment variable.
 	{
 		assert(pszVar);
 		Empty();
@@ -1037,8 +1093,11 @@ namespace Win32xx
 
 		return (nLength != 0);
 	}
+	
 #endif // _WIN32_WCE
 
+	
+	// Retrieves the a window's text.
 	template <>
 	inline void CStringT<CHAR>::GetWindowText(HWND hWndCtrl)
 	{
@@ -1051,7 +1110,9 @@ namespace Win32xx
 			m_str = &vBuffer[0];
 		}
 	}
-
+	
+	
+	// Retrieves a window's text.
 	template <>
 	inline void CStringT<WCHAR>::GetWindowText(HWND hWndCtrl)
 	{
@@ -1065,9 +1126,10 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).	
 	template <>
 	inline void CStringT<CHAR>::GetErrorString(DWORD dwError)
-	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
 		Empty();
 		CHAR* pTemp = 0;
@@ -1077,9 +1139,10 @@ namespace Win32xx
 		::LocalFree(pTemp);
 	}
 
+	
+	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).	
 	template <>
 	inline void CStringT<WCHAR>::GetErrorString(DWORD dwError)
-	// Returns the error string for the specified System Error Code (e.g from GetLastErrror).
 	{
 		Empty();
 		WCHAR* pTemp = 0;
@@ -1089,9 +1152,10 @@ namespace Win32xx
 		::LocalFree(pTemp);
 	}
 
+	
+	// Inserts a single character or a substring at the given index within the string.	
 	template <class T>
 	inline int CStringT<T>::Insert(int nIndex, T ch)
-	// Inserts a single character or a substring at the given index within the string.
 	{
 		assert(nIndex >= 0);
 		assert(ch);
@@ -1100,26 +1164,29 @@ namespace Win32xx
 		return static_cast<int>(m_str.size());
 	}
 
+	
+	// Inserts a single character or a substring at the given index within the string.	
 	template <class T>
 	inline int CStringT<T>::Insert(int nIndex, const CStringT& str)
-	// Inserts a single character or a substring at the given index within the string.
 	{
 		assert(nIndex >= 0);
 
 		m_str.insert(nIndex, str);
 		return static_cast<int>(m_str.size());
 	}
-
+	
+	
+	// Returns TRUE if the string is empty
 	template <class T>
 	inline bool CStringT<T>::IsEmpty() const
-	// Returns TRUE if the string is empty
 	{
 		return m_str.empty();
 	}
 
+	
+	// Extracts the left part of a string.	
 	template <class T>
 	inline CStringT<T> CStringT<T>::Left(int nCount) const
-	// Extracts the left part of a string.
 	{
 		assert(nCount >= 0);
 
@@ -1128,39 +1195,44 @@ namespace Win32xx
 		return str;
 	}
 
+	
+	// Converts all the characters in this string to lowercase characters.
 	template <class T>
 	inline void CStringT<T>::MakeLower()
-	// Converts all the characters in this string to lowercase characters.
 	{
 		std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::tolower);
 	}
 
+	
+	// Reverses the string.
 	template <class T>
 	inline void CStringT<T>::MakeReverse()
-	// Reverses the string.
 	{
 		// Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
 		std::reverse(m_str.begin(), m_str.end());
 	}
 
+	
+	// Converts all the characters in this string to uppercase characters.	
 	template <class T>
 	inline void CStringT<T>::MakeUpper()
-	// Converts all the characters in this string to uppercase characters.
 	{
 		// Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
 		std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::toupper);
 	}
-
+	
+	
+	// Extracts the middle part of a string.
 	template <class T>
 	inline CStringT<T> CStringT<T>::Mid(int nFirst) const
-	// Extracts the middle part of a string.
 	{
 		return Mid(nFirst, GetLength());
 	}
 
+	
+	// Extracts the middle part of a string.	
 	template <class T>
 	inline CStringT<T> CStringT<T>::Mid(int nFirst, int nCount) const
-	// Extracts the middle part of a string.
 	{
 		assert(nFirst >= 0);
 		assert(nCount >= 0);
@@ -1169,30 +1241,33 @@ namespace Win32xx
 		str.m_str.assign(m_str, nFirst, nCount);
 		return str;
 	}
-
+	
+	
+	// Search for a substring within the string, starting from the end.
 	template <class T>
 	inline int CStringT<T>::ReverseFind(const T* pszText, int nIndex /* = -1 */) const
-	// Search for a substring within the string, starting from the end.
 	{
 		assert(pszText);
 		return static_cast<int>(m_str.rfind(pszText, nIndex));
 	}
 
+	
+	// Sets the character at the specified position to the specified value.	
 	template <class T>
 	inline void CStringT<T>::SetAt(int nIndex, T ch)
-	// Sets the character at the specified position to the specified value.
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
 		m_str[nIndex] = ch;
 	}
-
-	template <class T>
-	inline void CStringT<T>::ReleaseBuffer( int nNewLength /*= -1*/ )
+	
+	
 	// This copies the contents of the buffer (acquired by GetBuffer) to this CStringT,
 	// and releases the contents of the buffer. The default length of -1 copies from the
 	// buffer until a null terminator is reached. If the buffer doesn't contain a null
 	// terminator, you must specify the buffer's length.
+	template <class T>
+	inline void CStringT<T>::ReleaseBuffer( int nNewLength /*= -1*/ )
 	{
 		assert (nNewLength <= (int)m_buf.size());
 
@@ -1211,9 +1286,10 @@ namespace Win32xx
 		m_buf.clear();
 	}
 
+	
+	// Removes each occurrence of the specified substring from the string.	
 	template <class T>
 	inline int CStringT<T>::Remove(const T* pszText)
-	// Removes each occurrence of the specified substring from the string.
 	{
 		assert(pszText);
 
@@ -1227,10 +1303,11 @@ namespace Win32xx
 		}
 		return nCount;
 	}
-
+	
+	
+	// Replaces each occurrence of the old character with the new character.
 	template <class T>
 	inline int CStringT<T>::Replace(T chOld, T chNew)
-	// Replaces each occurrence of the old character with the new character.
 	{
 		int nCount = 0;
 		typename std::basic_string<T>::iterator it;
@@ -1246,10 +1323,11 @@ namespace Win32xx
 		}
 		return nCount;
 	}
-
+	
+	
+	// Replaces each occurrence of the old substring with the new substring.
 	template <class T>
 	inline int CStringT<T>::Replace(const T* pszOld, const T* pszNew)
-	// Replaces each occurrence of the old substring with the new substring.
 	{
 		assert(pszOld);
 		assert(pszNew);
@@ -1267,9 +1345,10 @@ namespace Win32xx
 		return nCount;
 	}
 
+	
+	// Extracts the right part of a string.	
 	template <class T>
 	inline CStringT<T> CStringT<T>::Right(int nCount) const
-	// Extracts the right part of a string.
 	{
 		assert(nCount >= 0);
 
@@ -1277,11 +1356,12 @@ namespace Win32xx
 		str.m_str.assign(m_str, m_str.size() - nCount, nCount);
 		return str;
 	}
-
-	template <>
-	inline BSTR CStringT<CHAR>::SetSysString(BSTR* pBstr) const
+	
+	
 	// Sets an existing BSTR object to the string.
 	// Note: Ensure the returned BSTR is freed later with SysFreeString to avoid a memory leak.
+	template <>
+	inline BSTR CStringT<CHAR>::SetSysString(BSTR* pBstr) const
 	{
 		assert(pBstr);
 
@@ -1290,10 +1370,11 @@ namespace Win32xx
 
 		return *pBstr;
 	}
-
+	
+	
+	// Sets an existing BSTR object to the string.
 	template <>
 	inline BSTR CStringT<WCHAR>::SetSysString(BSTR* pBstr) const
-	// Sets an existing BSTR object to the string.
 	{
 		assert(pBstr);
 
@@ -1302,11 +1383,12 @@ namespace Win32xx
 
 		return *pBstr;
 	}
-
-	template <class T>
-	inline CStringT<T> CStringT<T>::SpanExcluding(const T* pszText) const
+	
+	
 	// Extracts characters from the string, starting with the first character,
 	// that are not in the set of characters identified by pszCharSet.
+	template <class T>
+	inline CStringT<T> CStringT<T>::SpanExcluding(const T* pszText) const
 	{
 		assert (pszText);
 
@@ -1321,9 +1403,10 @@ namespace Win32xx
 		return str;
 	}
 
+	
+	// Extracts a substring that contains only the characters in a set.	
 	template <class T>
 	inline CStringT<T> CStringT<T>::SpanIncluding(const T* pszText) const
-	// Extracts a substring that contains only the characters in a set.
 	{
 		assert (pszText);
 
@@ -1338,9 +1421,10 @@ namespace Win32xx
 		return str;
 	}
 
+	
+	// Extracts specified tokens in a target string.	
 	template <class T>
 	inline CStringT<T> CStringT<T>::Tokenize(const T* pszTokens, int& iStart) const
-	// Extracts specified tokens in a target string.
 	{
 		assert(pszTokens);
 
@@ -1359,18 +1443,20 @@ namespace Win32xx
 		}
 		return str;
 	}
-
+	
+	
+	// Trims all leading and trailing whitespace characters from the string.
 	template <class T>
 	inline void CStringT<T>::Trim()
-	// Trims all leading and trailing whitespace characters from the string.
 	{
 		TrimLeft();
 		TrimRight();
 	}
 
+	
+	// Trims leading whitespace characters from the string.	
 	template <class T>
 	inline void CStringT<T>::TrimLeft()
-	// Trims leading whitespace characters from the string.
 	{
 		// This method is supported by the Borland 5.5 compiler
 		typename std::basic_string<T>::iterator iter;
@@ -1383,24 +1469,27 @@ namespace Win32xx
 		m_str.erase(m_str.begin(), iter);
 	}
 
+	
+	// Trims the specified character from the beginning of the string.	
 	template <class T>
 	inline void CStringT<T>::TrimLeft(T chTarget)
-	// Trims the specified character from the beginning of the string.
 	{
 		m_str.erase(0, m_str.find_first_not_of(chTarget));
 	}
 
+	
+	// Trims the specified set of characters from the beginning of the string.	
 	template <class T>
 	inline void CStringT<T>::TrimLeft(const T* pszTargets)
-	// Trims the specified set of characters from the beginning of the string.
 	{
 		assert(pszTargets);
 		m_str.erase(0, m_str.find_first_not_of(pszTargets));
 	}
-
+	
+	
+	// Trims trailing whitespace characters from the string.
 	template <class T>
 	inline void CStringT<T>::TrimRight()
-	// Trims trailing whitespace characters from the string.
 	{
 		// This method is supported by the Borland 5.5 compiler
 		typename std::basic_string<T>::reverse_iterator riter;
@@ -1413,18 +1502,20 @@ namespace Win32xx
 		m_str.erase(riter.base(), m_str.end());
 	}
 
+	
+	// Trims the specified character from the end of the string.	
 	template <class T>
 	inline void CStringT<T>::TrimRight(T chTarget)
-	// Trims the specified character from the end of the string.
 	{
 		size_t pos = m_str.find_last_not_of(chTarget);
 		if (pos != std::string::npos)
 			m_str.erase(++pos);
 	}
 
+	
+	// Trims the specified set of characters from the end of the string.	
 	template <class T>
 	inline void CStringT<T>::TrimRight(const T* pszTargets)
-	// Trims the specified set of characters from the end of the string.
 	{
 		assert(pszTargets);
 
@@ -1433,9 +1524,10 @@ namespace Win32xx
 			m_str.erase(++pos);
 	}
 
+	
+	// Reduces the length of the string to the specified amount.	
 	template <class T>
 	inline void CStringT<T>::Truncate(int nNewLength)
-	// Reduces the length of the string to the specified amount.
 	{
 		if (nNewLength < GetLength())
 		{
@@ -1449,144 +1541,162 @@ namespace Win32xx
 	// CStringT global operator functions
 	//  These functions are declared as friends of CStringT.
 	//
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, const CStringT<CHAR>& string2)
-	// Addition operator.
 	{
 		CStringT<CHAR> str(string1);
 		str.m_str.append(string2.m_str);
 		return str;
 	}
-
+	
+	
+	// Addition operator.
 	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, const CStringT<WCHAR>& string2)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str(string1);
 		str.m_str.append(string2.m_str);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, const CHAR* pszText)
-	// Addition operator.
 	{
 		CStringT<CHAR> str(string1);
 		str.m_str.append(pszText);
 		return str;
 	}
-
+	
+	
+	// Addition operator.
 	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, const WCHAR* pszText)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str(string1);
 		str.m_str.append(pszText);
 		return str;
 	}
-
-	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, CHAR ch)
+	
+	
 	// Addition operator.
+	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, CHAR ch)
 	{
 		CStringT<CHAR> str(string1);
 		str.m_str.append(1, ch);
 		return str;
 	}
-
-	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, WCHAR ch)
+	
+	
 	// Addition operator.
+	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, WCHAR ch)
 	{
 		CStringT<WCHAR> str(string1);
 		str.m_str.append(1, ch);
 		return str;
 	}
-
-	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, int val)
+	
+	
 	// Addition operator.
+	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, int val)
 	{
 		CStringT<CHAR> str;
 		str.Format("%s%a", string1.c_str(), val);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, int val)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str;
 		str.Format(L"%s%d", string1.c_str(), val);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (const CStringT<CHAR>& string1, double val)
-	// Addition operator.
 	{
 		CStringT<CHAR> str;
 		str.Format("%s%g", string1.c_str(), val);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<WCHAR> operator + (const CStringT<WCHAR>& string1, double val)
-	// Addition operator.
 	{
         CStringT<WCHAR> str;
         str.Format(L"%s%g", string1.c_str(), val);
         return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (const CHAR* pszText, const CStringT<CHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<CHAR> str(pszText);
 		str.m_str.append(string1);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<WCHAR> operator + (const WCHAR* pszText, const CStringT<WCHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str(pszText);
 		str.m_str.append(string1);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (CHAR ch, const CStringT<CHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<CHAR> str(ch);
 		str.m_str.append(string1);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<WCHAR> operator + (WCHAR ch, const CStringT<WCHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str(ch);
 		str.m_str.append(string1);
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (int val, const CStringT<CHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<CHAR> str;
 		str.Format("%d%s", val, string1.c_str());
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<WCHAR> operator + (int val, const CStringT<WCHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str;
 		str.Format(L"%d%s", val, string1.c_str());
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<CHAR> operator + (double val, const CStringT<CHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<CHAR> str;
 		str.Format("%g%s", val, string1.c_str());
 		return str;
 	}
 
+	
+	// Addition operator.	
 	inline CStringT<WCHAR> operator + (double val, const CStringT<WCHAR>& string1)
-	// Addition operator.
 	{
 		CStringT<WCHAR> str;
 		str.Format(L"%g%s", val, string1.c_str());
@@ -1594,58 +1704,65 @@ namespace Win32xx
 	}
 
 
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool operator < (const CStringT<T>& string1, const CStringT<T>& string2)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(string2) < 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool operator > (const CStringT<T>& string1, const CStringT<T>& string2)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(string2) > 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool operator <= (const CStringT<T>& string1, const CStringT<T>& string2)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(string2) <= 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool operator >= (const CStringT<T>& string1, const CStringT<T>& string2)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(string2) >= 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool	operator < (const CStringT<T>& string1, const T* pszText)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(pszText) < 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool	operator > (const CStringT<T>& string1, const T* pszText)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(pszText) > 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool operator <= (const CStringT<T>& string1, const T* pszText)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(pszText) <= 0);	// boolean expression
 	}
 
+	
+	// Performs a case sensitive comparison of the two strings.	
 	template <class T>
 	inline bool operator >= (const CStringT<T>& string1, const T* pszText)
-	// Performs a case sensitive comparison of the two strings.
 	{
 		return (string1.Compare(pszText) >= 0);	// boolean expression
 	}
@@ -1722,10 +1839,11 @@ namespace Win32xx
 	//////////////////////////////////////////////
 	// CString global functions
 	//
-	inline CString GetAppDataPath()
+	
 	// Returns the path to the AppData folder. Returns an empty CString if
 	// the Operating System doesn't support the use of an AppData folder.
-	// The AppData folder is available in Windows 2000 and above.
+	// The AppData folder is available in Windows 2000 and above.	
+	inline CString GetAppDataPath()
 	{
 		CString AppData;
 
@@ -1766,10 +1884,11 @@ namespace Win32xx
 		return AppData;
 	}
 
-	inline std::vector<CString> GetCommandLineArgs()
+	
 	// Retrieves the command line arguments and stores them in a vector of CString.
 	// Similar to CommandLineToArgvW, but supports all versions of Windows,
-	// supports ANSI and Unicode, and doesn't require the user to use LocalFree.
+	// supports ANSI and Unicode, and doesn't require the user to use LocalFree.	
+	inline std::vector<CString> GetCommandLineArgs()
 	{
 		std::vector<CString> CommandLineArgs;
 		CString CommandLine = GetCommandLine();

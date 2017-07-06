@@ -51,7 +51,7 @@
 #include <wxx_listview.h>		// Add CListView
 #include <wxx_mdi.h>			// Add CMDIChild, CMDIFrame, CDockMDIFrame
 #include <wxx_menu.h>			// Add CMenu
-#include <wxx_metafile.h>       // Add CMetaFile and CEnhMetaFile
+#include <wxx_metafile.h>       // Add CMetaFile, CEnhMetaFile
 #include <wxx_printdialogs.h>	// Add CPageSetupDialog, CPrintSetupDialog
 #include <wxx_propertysheet.h>	// Add CPropertyPage, CPropertySheet
 #include <wxx_rebar.h>			// Add CRebar

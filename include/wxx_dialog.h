@@ -77,7 +77,7 @@
 
 namespace Win32xx
 {
-
+	// This class displays and manages a dialog.
 	class CDialog : public CWnd
 	{
 
@@ -153,7 +153,10 @@ namespace Win32xx
 	// Resize Dialog alignments
 	enum Alignment { topleft, topright, bottomleft, bottomright };
 
-    class CResizer
+	
+    // The CResizer class can be used to rearrange a dialog's child
+    // windows when the dialog is resized.	
+	class CResizer
     {
 	public:
 		CResizer() : m_hParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
@@ -202,6 +205,7 @@ namespace Win32xx
     ////////////////////////////////////
 	// Definitions for the CDialog class
 	//
+	
 	inline CDialog::CDialog(LPCTSTR lpszResName) : m_IsModal(TRUE), 
 						m_lpszResName(lpszResName), m_lpTemplate(NULL)
 	{
@@ -235,15 +239,17 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Attaches a dialog item to a CWnd	
 	inline void CDialog::AttachItem(int nID, CWnd& Wnd)
-	// Attach a dialog item to a CWnd
 	{
 		Wnd.AttachDlgItem(nID, *this);
 	}
 
+	
+	// Override this function in your class derived from CDialog if you wish to handle messages.	
 	inline INT_PTR CDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derived from CDialog if you wish to handle messages
 		// A typical function might look like this:
 
 		//	switch (uMsg)
@@ -261,8 +267,9 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
+	
+	// All DialogProc functions should pass unhandled messages to this function.
 	inline INT_PTR CDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// All DialogProc functions should pass unhandled messages to this function
 	{
 		LRESULT lr = 0;
 
@@ -394,9 +401,11 @@ namespace Win32xx
 		return 0;
 
 	} // INT_PTR CALLBACK CDialog::DialogProc(...)
-
-	inline INT_PTR CDialog::DoModal(HWND hWndParent /* = 0 */)
-	// Create a modal dialog. A modal dialog box must be closed by the user before the application continues.	
+	
+	
+	// Creates a modal dialog. A modal dialog box must be closed by the user 
+	// before the application continues.
+	inline INT_PTR CDialog::DoModal(HWND hWndParent /* = 0 */)	
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
@@ -452,8 +461,9 @@ namespace Win32xx
 		return nResult;
 	}
 
+	
+	// Creates a modeless dialog.
 	inline HWND CDialog::DoModeless(HWND hParent /* = 0 */)
-	// Create a modeless dialog.
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
@@ -470,7 +480,7 @@ namespace Win32xx
 		HINSTANCE hInstance = GetApp().GetInstanceHandle();
 		HWND hWnd;
 
-		// Create a modeless dialog
+		// Create the modeless dialog
 		if (IsIndirect())
 			hWnd = ::CreateDialogIndirect(hInstance, m_lpTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
 		else
@@ -492,9 +502,10 @@ namespace Win32xx
 
 		return hWnd;
 	}
+	
 
+	// Ends a modal or modeless dialog.	
 	inline void CDialog::EndDialog(INT_PTR nResult)
-	// Ends a modal or modeless dialog.
 	{
 		assert(IsWindow());
 
@@ -504,35 +515,41 @@ namespace Win32xx
 			Destroy();
 	}
 
+	
+	// Called when the Cancel button is pressed. Override to customize OnCancel behaviour.	
 	inline void CDialog::OnCancel()
-	// Called when the Cancel button is pressed. Override to customize OnCancel behaviour
 	{
 		EndDialog(IDCANCEL);
 	}
 	
+	
+	// Called when the Close button is pressed.
 	inline void CDialog::OnClose()
 	{
 		EndDialog(0);
 	}
 
+	
+	// Called when the dialog is initialized.
+	// Override it in your derived class to automatically perform tasks.
+	// The return value is used by WM_INITDIALOG.	
 	inline BOOL CDialog::OnInitDialog()
 	{
-		// Called when the dialog is initialized
-		// Override it in your derived class to automatically perform tasks
-		// The return value is used by WM_INITDIALOG
-
 		return TRUE;
 	}
 
+	
+	// Called when the OK button is pressed. Override to customize OnOK behaviour.
 	inline void CDialog::OnOK()
 	{
-		// Override to customize OnOK behaviour
 		if ( IsWindow() )
 			EndDialog(IDOK);
 	}
 
+	
+	// Override this function to filter mouse and keyboard messages prior to 
+	// being passed to the DialogProc.	
 	inline BOOL CDialog::PreTranslateMessage(MSG& Msg)
-	// Override this function to filter mouse and keyboard messages prior to being passed to the message loop.
 	{
 		// allow the dialog to translate keyboard input
 		if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
@@ -556,9 +573,10 @@ namespace Win32xx
 
 		return FALSE;
 	}
-
-	inline DWORD CDialog::GetDefID() const
+	
+	
 	// Retrieves the identifier of the default push button control for the dialog. 
+	inline DWORD CDialog::GetDefID() const
 	{
 		assert(IsWindow());
 		DWORD dwID = 0;
@@ -569,42 +587,49 @@ namespace Win32xx
 		return dwID;	
 	}
 
+	
+	// Sets the keyboard focus to the specified control.
 	inline void CDialog::GotoDlgCtrl(HWND hWndCtrl)
-	// Sets the keyboard focus to the specified control
 	{
 		assert(IsWindow());
 		assert(::IsWindow(hWndCtrl));
 		SendMessage(WM_NEXTDLGCTL, (WPARAM)hWndCtrl, TRUE);
 	}
-
-	inline BOOL CDialog::MapDialogRect(RECT& rc) const
+	
+	
 	// Converts the dialog box units to screen units (pixels).
+	inline BOOL CDialog::MapDialogRect(RECT& rc) const
 	{
 		assert(IsWindow());
 		return ::MapDialogRect(*this, &rc);
 	}
 
+	
+	// Sets the keyboard focus to the next dialog control.	
 	inline void CDialog::NextDlgCtrl() const
-	// Sets the keyboard focus to the next dialog control.
 	{
 		assert(IsWindow());
 		SendMessage(WM_NEXTDLGCTL, FALSE, FALSE);
 	}
 
+	
+	// Sets the keyboard focus to the previous dialog control.	
 	inline void CDialog::PrevDlgCtrl() const
-	// Sets the keyboard focus to the previous dialog control.
 	{
 		assert(IsWindow());
 		SendMessage(WM_NEXTDLGCTL, TRUE, FALSE);
 	}
 
+	
+	// Changes the identifier of the default push button for a dialog box.	
 	inline void CDialog::SetDefID(UINT nID)
-	// Changes the identifier of the default push button for a dialog box.
 	{
 		assert(IsWindow());
 		SendMessage(DM_SETDEFID, (WPARAM)nID, 0L);
 	}
 
+	
+	// This callback function passes messages to DialogProc
 	inline INT_PTR CALLBACK CDialog::StaticDialogProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// Find the CWnd pointer mapped to this HWND
@@ -631,8 +656,9 @@ namespace Win32xx
 
 
 #ifndef _WIN32_WCE
+	
+	// Used by Modal Dialogs for idle processing and PreTranslateMessage.	
 	inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
-	// Used by Modal Dialogs for idle processing and PreTranslateMessage
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		MSG Msg;
@@ -676,8 +702,6 @@ namespace Win32xx
 			}
 		}
 
-		// The HHOOK parameter in CallNextHookEx should be supplied for Win95, Win98 and WinME.
-		// The HHOOK parameter is ignored for Windows NT and above.
 		return ::CallNextHookEx(pTLSData->hMsgHook, nCode, wParam, lParam);
 	}
 #endif
@@ -690,14 +714,13 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
 
-	void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
     // Adds a child window (usually a dialog control) to the set of windows managed by
 	// the Resizer.
-	//
-	// The alignment corner should be set to the closest corner of the dialog. Allowed
-	// values are topleft, topright, bottomleft, and bottomright.
+	// The alignment corner should be set to the closest corner of the dialog. 
+	// Allowed values are topleft, topright, bottomleft, and bottomright.
 	// Set IsFixedWidth to TRUE if the width should be fixed instead of variable.
-	// Set IsFixedHeight to TRUE if the height should be fixed instead of variable.
+	// Set IsFixedHeight to TRUE if the height should be fixed instead of variable.	
+	void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
 	{
 		assert(hWnd);
 
@@ -714,8 +737,9 @@ namespace Win32xx
 		m_vResizeData.insert(m_vResizeData.begin(), rd);
     }
 
+	
+	// Performs the resizing and scrolling. Call this function from within the window's DialogProc.	
 	inline void CResizer::HandleMessage(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// Performs the resizing and scrolling. Call this function from within the window's DialogProc.
 	{
 		switch (uMsg)
 		{
@@ -735,11 +759,11 @@ namespace Win32xx
 		}
 	}
 
-    void inline CResizer::Initialize(HWND hParent, const RECT& rcMin, const RECT& rcMax)
+	
 	// Sets up the Resizer by specifying the parent window (usually a dialog),
-	//  and the minimum and maximum allowed rectangle sizes.
-	//
-	// Note:hParent can either be a CWnd or a window handle (HWND)
+	// and the minimum and maximum allowed rectangle sizes.
+	// Note:hParent can either be a CWnd or a window handle (HWND)	
+    void inline CResizer::Initialize(HWND hParent, const RECT& rcMin, const RECT& rcMax)
     {
 		assert (::IsWindow(hParent));
 
@@ -757,8 +781,9 @@ namespace Win32xx
 		::SetClassLongPtr(hParent, GCL_STYLE, dwStyle);
     }
 
+	
+	// Called to perform horizontal scrolling.	
 	void inline CResizer::OnHScroll(UINT, WPARAM wParam, LPARAM)
-	// Called to perform horizontal scrolling.
 	{
 		int xNewPos;
 
@@ -810,8 +835,9 @@ namespace Win32xx
 		::SetScrollInfo(m_hParent, SB_HORZ, &si, TRUE);
 	}
 
+	
+	// Called to perform vertical scrolling.	
 	void inline CResizer::OnVScroll(UINT, WPARAM wParam, LPARAM)
-	// // Called to perform vertical scrolling.
 	{
 		int yNewPos;
 
@@ -863,9 +889,10 @@ namespace Win32xx
 		::SetScrollInfo(m_hParent, SB_VERT, &si, TRUE);
 	}
 
-    void inline CResizer::RecalcLayout()
+	
     // Repositions the child windows. Call this function when handling
-	// the WM_SIZE message in the parent window.
+	// the WM_SIZE message in the parent window.	
+    void inline CResizer::RecalcLayout()
 	{
     	assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
 		assert (::IsWindow(m_hParent));

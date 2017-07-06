@@ -115,6 +115,8 @@
 namespace Win32xx
 {
 
+	// Shared_Ptr is a smart pointer suitable for elements in a vector.
+	// Shared_Ptr behaves much like the shared_ptr introduced in C++11 
 	template <class T1>
 	class Shared_Ptr
 	{

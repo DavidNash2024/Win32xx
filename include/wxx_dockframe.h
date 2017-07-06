@@ -69,9 +69,7 @@ namespace Win32xx
 {
 
 	/////////////////////////////////////////
-	// Declaration of the CDockFrame class
 	// Provides a Single Document Interface (SDI) frame with docking
-	//
 	class CDockFrame : public CFrameT<CDocker>
 	{
 	public:
@@ -96,9 +94,7 @@ namespace Win32xx
 	
 	
 	/////////////////////////////////////////
-	// Declaration of the CMDIDockFrame class
 	// Provides a Multiple Document Interface (MDI) frame with docking
-	//
 	class CMDIDockFrame : public CMDIFrameT<CDockFrame>
 	{
 	public:
@@ -128,32 +124,38 @@ namespace Win32xx
 	// Definitions for the CDockFrame class
 	//
 
+	// Called when the frame window is activated.	
 	inline LRESULT CDockFrame::OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CDocker::OnActivate(uMsg, wParam, lParam);
 		return CFrameT<CDocker>::OnActivate(uMsg, wParam, lParam);
 	}
 
+	
+	// Called when the frame window is created.
 	inline int CDockFrame::OnCreate(CREATESTRUCT& cs)
-	// Called when the frame window is created
 	{
 		GetDockClient().Create(GetHwnd());
 		GetView().Create(GetDockClient());
 		return CFrameT<CDocker>::OnCreate(cs);
 	}
 
+	
+	// Called when the frame window is destroyed.
 	inline void CDockFrame::OnDestroy()
-	// Called when the frame window is destroyed
 	{
 		CDocker::OnDestroy();
 		CFrameT<CDocker>::OnDestroy();
 	}
 	
+	
+	// Called when a docker is activated.
 	inline LRESULT CDockFrame::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return CDocker::OnDockActivated(uMsg, wParam, lParam);
 	}
 
+	// Called when a docker is destroyed.
 	inline LRESULT CDockFrame::OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		return CDocker::OnDockDestroyed(uMsg, wParam, lParam);
@@ -174,20 +176,24 @@ namespace Win32xx
 		return lr;
 	}
 
+	
+	// Called when the system colors are changed.
 	inline LRESULT CDockFrame::OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		CDocker::OnSysColorChange(uMsg, wParam, lParam);
 		return CFrameT<CDocker>::OnSysColorChange(uMsg, wParam, lParam);
 	}
 
+	
+	// Repositions the view window	
 	inline void CDockFrame::RecalcViewLayout()
-		// Re-positions the view window
 	{
 		RecalcDockLayout();
 	}
 
+	
+	// Process the frame's window messages.
 	inline LRESULT CDockFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// Handle the frame's window messages.
 	{
 		switch (uMsg)
 		{			
@@ -209,15 +215,16 @@ namespace Win32xx
 	// Definitions for the CMDIDockFrame class
 	//	
 	
+	// Constructor.	
 	inline CMDIDockFrame::CMDIDockFrame()
-	// Constructor.
 	{ 
 		// The view window for a CMDIDockFrame is the MDI Client
 		SetView(GetMDIClient());
 	}
 	
+	
+	// Called when the frame window is created	
 	inline int CMDIDockFrame::OnCreate(CREATESTRUCT& cs)
-	// Called when the frame window is created
 	{ 
 		return CFrameT<CDocker>::OnCreate(cs);
 	}
