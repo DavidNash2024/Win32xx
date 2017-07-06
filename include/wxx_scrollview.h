@@ -68,9 +68,11 @@
 namespace Win32xx
 {
 
-	///////////////////////////////////////
-	// Declaration of the CScrollView class
-	//
+	///////////////////////////////////////////////
+	// The CScrollView class adds scrolling to a view window. Inherit your
+	// view window from CScrollView, and use the SetScrollSizes function
+	// to set up the scrolling. Override OnDraw and perform the drawing to
+	// the window as usual.
 	class CScrollView : public CWnd
 	{
 	public:
@@ -120,15 +122,20 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions for the CScrollView class 
 	//
+	
 	inline CScrollView::CScrollView()
 	{
 		m_brushBkgnd.CreateSolidBrush(RGB(255, 255, 255));
 	}
 
+	
 	inline CScrollView::~CScrollView()
 	{
 	}
 
+	
+	// Fills the area of the view that appears outside of the scrolling area.
+	// Can be used in OnEraseBkgnd to draw the background efficiently.
 	inline void CScrollView::FillOutsideRect(CDC& dc, HBRUSH hBrush)
 	{
 		// Get the window size in client area co-ordinates
@@ -144,8 +151,9 @@ namespace Win32xx
 		dc.FillRect(rcBottom, hBrush);
 	}
 
-	inline BOOL CScrollView::OnEraseBkgnd(CDC& dc)
+
 	// Called when the background for the window is erased.
+	inline BOOL CScrollView::OnEraseBkgnd(CDC& dc)
 	{
 		UNREFERENCED_PARAMETER(dc);
 
@@ -155,8 +163,9 @@ namespace Win32xx
 			return TRUE;	// Prevent background erasure to reduce flicker
 	}
 
+	
+	// Called when an event occurs in the horizontal scroll bar.	
 	inline LRESULT CScrollView::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// Called when an event occurs in the horizontal scroll bar.
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(lParam);

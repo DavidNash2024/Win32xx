@@ -108,11 +108,9 @@ namespace Win32xx
 	//////////////////////////////////////////////////
 	// Declaration of the CFileException class
 	//
-	//	This exception is used by CArchive and CFile to indicate
-	//  a problem creating or accessing a file. 
-	//
+	// This exception is used by CArchive and CFile to indicate
+	// a problem creating or accessing a file. 
 	// Note: Each function guarantees not to throw an exception
-	//
 	class CFileException : public CException
 	{
 	public:
@@ -132,11 +130,9 @@ namespace Win32xx
 	//////////////////////////////////////////////////
 	// Declaration of the CNotSupportedException class
 	//
-	//	This exception is used by the Win32++ framework to indicate
-	//  errors that prevent Win32++ from running. 
-	//
+	// This exception is used by the Win32++ framework to indicate
+	// errors that prevent Win32++ from running. 
 	// Note: Each function guarantees not to throw an exception
-	//
 	class CNotSupportedException : public CException
 	{
 	public:
@@ -150,11 +146,9 @@ namespace Win32xx
 	//////////////////////////////////////////////////
 	// Declaration of the CResourceException class
 	//
-	//	This exception is used by the Win32++ framework to indicate
-	//  a failure to create a GDI resource. 
-	//
+	// This exception is used by the Win32++ framework to indicate
+	// a failure to create a GDI resource. 
 	// Note: Each function guarantees not to throw an exception
-	//
 	class CResourceException : public CException
 	{
 	public:
@@ -168,14 +162,12 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Declaration of the CUserException class
 	//
-	//  This exception it thrown by CDataExchange when verifications fail.
-	//  It is also the exception that is typically thrown by users.
-	//	Users have the option of specifying text when the exception is thrown,
-	//  and the option of specifying a message ID which could load text from
-	//	a resource.
-	//
+	// This exception it thrown by CDataExchange when verifications fail.
+	// It is also the exception that is typically thrown by users.
+	// Users have the option of specifying text when the exception is thrown,
+	// and the option of specifying a message ID which could load text from
+	// a resource.
 	// Note: Each function guarantees not to throw an exception
-	//
 	class CUserException : public CException
 	{
 	public:
@@ -189,11 +181,9 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Declaration of the CWinException class
 	//
-	//  This is thrown when an attempt to create a thread or window fails.
-	//  GetErrorString can be used to retrieve the reason for the failure.
-	//
+	// This is thrown when an attempt to create a thread or window fails.
+	// GetErrorString can be used to retrieve the reason for the failure.
 	// Note: Each function guarantees not to throw an exception
-	//
 	class CWinException : public CException
 	{
 	public:
@@ -207,9 +197,10 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CException class
 	//
+	
+	// CException constructor	
 	inline CException::CException(int nMessageID)
 			: m_nMessageID(nMessageID), m_Error(::GetLastError())
-	// CException constructor
 	{
 		memset(m_szText, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
@@ -220,9 +211,10 @@ namespace Win32xx
 		::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 	}
 
+	
+	// CException constructor	
 	inline CException::CException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 			: m_nMessageID(nMessageID), m_Error(::GetLastError())
-	// CException constructor
 	{
 		memset(m_szText, 0, MAX_STRING_SIZE * sizeof(TCHAR));
 		memset(m_szErrorString, 0, MAX_STRING_SIZE * sizeof(TCHAR));
@@ -235,32 +227,37 @@ namespace Win32xx
 		::FormatMessage(dwFlags, NULL, m_Error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_szErrorString, MAX_STRING_SIZE-1, NULL);
 	}
 
+	
+	// CException destructor	
 	inline CException::~CException() throw()
-	// CException destructor
 	{
 	}
 
+	
+	// Returns the error reported by GetLastError	
 	inline DWORD CException::GetError() const throw()
-	// Returns the error reported by GetLastError
 	{
 		return m_Error;
 	}
 
+	
+	// Retrieves the error string from GetLastError.	
 	inline LPCTSTR CException::GetErrorString() const throw()
-	// Retrieves the error string from GetLastError.
 	{
 		return m_szErrorString;
 	}	
 
-	inline int CException::GetMessageID() const throw()
+	
 	// Retrieves the message ID specified when the exception is thrown.
-	// This could be a resource ID for a string in the resource script (resource.rc).
+	// This could be a resource ID for a string in the resource script (resource.rc).	
+	inline int CException::GetMessageID() const throw()
 	{
 		return m_nMessageID;
 	}
 
+	
+	// Retrieves the string specified when the exception is thrown.	
 	inline LPCTSTR CException::GetText() const throw()
-	// Retrieves the string specified when the exception is thrown.
 	{
 		return m_szText;
 	}	
@@ -269,9 +266,10 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CFileException class
 	//
+	
+	// CFileException constructor	
 	inline CFileException::CFileException(LPCTSTR szFilePath, int nMessageID)
 		: CException(nMessageID)
-	// CFileException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CFileException thrown ***\n"));
@@ -290,9 +288,10 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CFileException constructor	
 	inline CFileException::CFileException(LPCTSTR szFilePath, LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 		: CException(pszText, nMessageID)
-	// CFileException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CFileException thrown ***\n"));
@@ -317,19 +316,22 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 
+	
+	// CFileException destructor	
 	inline CFileException::~CFileException() throw()
-	// CFileException destructor
 	{
 	}
 	
+	
+	// Returns the filename and path specified when the exception was thrown	
 	inline LPCTSTR CFileException::GetFilePath() const throw()
-	// Returns the filename and path specified when the exception was thrown
 	{
 		return m_szFilePath;
 	}
 
+	
+	// Returns the filename excluding the path.	
 	inline LPCTSTR CFileException::GetFileName() const throw()
-	// Returns the filename excluding the path.
 	{
 		// Get the index of the first character after the last '\'
 		int index = lstrlen(m_szFilePath);
@@ -341,8 +343,9 @@ namespace Win32xx
 		return m_szFilePath + index;	// pointer arithmetic
 	}
 	
+	
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR	
 	inline const char* CFileException::what() const throw()
-	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CFileException";		
 	}
@@ -351,9 +354,10 @@ namespace Win32xx
 	//////////////////////////////////////////////////
 	// Definitions of the CNotSupportedException class
 	//	
+	
+	// CNotSupportedException constructor	
 	inline CNotSupportedException::CNotSupportedException(int nMessageID)
 		: CException(nMessageID)
-	// CNotSupportedException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CNotSupportedException thrown ***\n"));
@@ -362,9 +366,10 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CNotSupportedException constructor	
 	inline CNotSupportedException::CNotSupportedException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 		: CException(pszText, nMessageID)
-	// CNotSupportedException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CNotSupportedException thrown ***\n"));
@@ -379,15 +384,17 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CNotSupportedException destructor	
 	inline CNotSupportedException::~CNotSupportedException() throw()
-	// CNotSupportedException destructor
 	{
 		if (GetError() != 0)
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR	
 	inline const char* CNotSupportedException::what() const throw()
-	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CNotSupportedException";		
 	}
@@ -395,10 +402,11 @@ namespace Win32xx
 	
 	//////////////////////////////////////////////////
 	// Definitions of the CResourceException class
-	//	
+	//
+	
+	// CResourceException constructor	
 	inline CResourceException::CResourceException(int nMessageID)
 		: CException(nMessageID)
-	// CResourceException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CResourceException thrown ***\n"));
@@ -407,9 +415,10 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CResourceException constructor	
 	inline CResourceException::CResourceException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
 		: CException(pszText, nMessageID)
-	// CResourceException constructor
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CResourceException thrown ***\n"));
@@ -424,13 +433,15 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CResourceException destructor	
 	inline CResourceException::~CResourceException() throw()
-	// CResourceException destructor
 	{
 	}
 	
+	
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR	
 	inline const char* CResourceException::what() const throw()
-	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CResourceException";		
 	}
@@ -439,9 +450,10 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Definitions of the CUserException class
 	//
+	
+	// CUserException constructor		
 	inline CUserException::CUserException(int nMessageID)
-			: CException(nMessageID)
-	// CUserException constructor			
+			: CException(nMessageID)	
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CUserException thrown ***\n"));
@@ -450,9 +462,10 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CUserException constructor	
 	inline CUserException::CUserException(LPCTSTR pszText /*= NULL*/, int nMessageID /*= 0*/)
-			: CException(pszText, nMessageID)
-	// CUserException constructor		
+			: CException(pszText, nMessageID)	
 	{
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CUserException thrown ***\n"));
@@ -467,13 +480,15 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 
-	inline CUserException::~CUserException() throw()
+	
 	// CUserException destructor		
+	inline CUserException::~CUserException() throw()
 	{
 	}
-
-	inline const char* CUserException::what() const throw()
+	
+	
 	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR	
+	inline const char* CUserException::what() const throw()
 	{
 		return "Win32xx::CUserException";
 	}
@@ -482,9 +497,10 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CWinException class
 	//
+	
+	// CWinException constructor		
 	inline CWinException::CWinException(int nMessageID)
 		: CException(nMessageID)
-	// CWinException constructor	
 	{	
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CWinException thrown ***\n"));
@@ -493,9 +509,10 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
+	
+	// CWinException constructor	
 	inline CWinException::CWinException(LPCTSTR pszText, int nMessageID) 
 		: CException(pszText, nMessageID)
-	// CWinException constructor
 	{	
 		// Display some text in the debugger
 		::OutputDebugString(_T("*** CWinException thrown ***\n"));
@@ -509,13 +526,15 @@ namespace Win32xx
 			::OutputDebugString(GetErrorString());
 	}
 	
-	inline CWinException::~CWinException() throw()
+	
 	// CWinException destructor		
+	inline CWinException::~CWinException() throw()
 	{
 	}
 
+	
+	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR	
 	inline const char * CWinException::what() const throw()
-	// Returns the exception type as a char string. Use AtoT to convert this to TCHAR
 	{
 		return "Win32xx::CWinException";
 	}

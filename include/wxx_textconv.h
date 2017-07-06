@@ -232,14 +232,15 @@ namespace Win32xx
 	// Global Functions
 	//
 	
+	// Trace sends a string to the debug/output pane, or an external debugger	
 	inline void Trace(LPCSTR str)
-	// Trace sends a string to the debug/output pane, or an external debugger
 	{
 		OutputDebugString(AtoT(str));
 	}
 
+	
+	// Trace sends a string to the debug/output pane, or an external debugger	
 	inline void Trace(LPCWSTR str)
-	// Trace sends a string to the debug/output pane, or an external debugger
 	{
 		OutputDebugString(WtoT(str));
 	}

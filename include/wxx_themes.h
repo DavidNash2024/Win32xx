@@ -64,6 +64,7 @@ namespace Win32xx
 		COLORREF clrOutline;	// Colour for border outline
 	};
 
+	
 	// Defines the theme colors and options for the ReBar
 	struct ReBarTheme
 	{
@@ -79,6 +80,7 @@ namespace Win32xx
 		BOOL ShortBands;        // Allows bands to be shorter than maximum available width
 		BOOL UseLines;			// Displays horizontal lines between bands
 	};
+	
 
 	// Defines the theme colors and options for the StatusBar
 	struct StatusBarTheme
@@ -87,6 +89,7 @@ namespace Win32xx
 		COLORREF clrBkgnd1;		// Colour 1 for statusbar background
 		COLORREF clrBkgnd2;		// Colour 2 for statusbar background
 	};
+	
 
 	// Defines the theme colors for the ToolBar
 	struct ToolBarTheme
@@ -102,8 +105,8 @@ namespace Win32xx
 
   #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
 	
-	inline BOOL IsAeroThemed()
 	// Returns TRUE if Aero themes are being used.
+	inline BOOL IsAeroThemed()
 	{
 		BOOL IsAeroThemed = FALSE;
 
@@ -131,8 +134,9 @@ namespace Win32xx
 		return IsAeroThemed;
 	}
 
+	
+	// Returns TRUE if XP themes are being used.	
 	inline BOOL IsXPThemed()
-	// Returns TRUE if XP themes are being used.
 	{
 		BOOL IsXPThemed = FALSE;
 

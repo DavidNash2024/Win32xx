@@ -60,60 +60,59 @@
 #include <time.h>
 
 
+//	The CTime class is based internally on the time_t data type, which is
+//	measured in seconds past the January 1, 00:00:00 1970 UTC epoch. Thus,
+//	any given time_t instant is strictly a UTC epoch, which may then be
+//	rendered, using standard C library functions, as either a UTC or local
+//	time.  Local instants may further appear as standard or daylight times.
+//	Thus, the base epoch on a system in the PST zone will be displayed as
+//	December 31, 1969 16:00:00. Any attempt to construct or evaluate a date
+//	before this epoch will assert or be in error. Even though the time_t
+//	type is implemented (in MinGW, anyway) as a signed integer type, 
+//	negative values are not allowed.
+
+//	On systems where time_t is defined as a 32-bit integer, there is an
+//	upper date limit of January 18, 19:14:07, 2038. On 64-bit systems,
+//	there is no such upper date limit.
+
+//	Windows also has other time types that also interface with the CTime
+//	type. These are FILETIME, SYSTEMTIME, and MS-DOS date and time, each
+//	of which are described in the MSDN API documentation. Basically:
+
+//	FILETIME is a structure containing a 64-bit value representing the
+//	number of 100-nanosecond intervals since January 1, 1601 UTC.
+
+//	SYSTEMTIME is a structure representing a date and  time using individual
+//	values for the month, day, year, weekday, hour, minute, second, and
+//	millisecond. This is not useful in itself, but must be translated into
+//	a FILETIME or time_t.
+
+//	MS-DOS date and time are two 16-bit words packed with day, month, year
+//  and second, minute, hour fields.  The format may be found in the MSDN
+//	Library article on DosDateTimeToFileTime().
+
+
+
 namespace Win32xx
 {
 
-	////////////////////////////////////////////////////////
-	//
-	//	Local types, constants, etc.
 
-	// define an alias for struct tm
+	// define the time_tm type.
 	typedef struct tm time_tm;
 
-	// define the CTimeSpan data type
+	// define the timespane_t type.
 	// This can be int or __int64 depending on the compiler
-	// VS2005 and above defaults to __int64
 	typedef time_t timespan_t;
 
 	// forward declaration
 	class CTimeSpan;
 
-	// declaration of a non-CTime-class (i.e., global) time conversion utility
+	// Declaration of a global time conversion function.
 	time_t UTCtime(time_tm *atm);
 
 
-	//============================================================================
+	// The CTime class represents an absolute time and date.
 	class CTime
-	//	The CTime class is based internally on the time_t data type, which is
-	//	measured in seconds past the January 1, 00:00:00 1970 UTC epoch. Thus,
-	//	any given time_t instant is strictly a UTC epoch, which may then be
-	//	rendered, using standard C library functions, as either a UTC or local
-	//	time.  Local instants may further appear as standard or daylight times.
-	//	Thus, the base epoch on a system in the PST zone will be displayed as
-	//	December 31, 1969 16:00:00. Any attempt to construct or evaluate a date
-	//	before this epoch will assert or be in error. Even though the time_t
-	//	type is implemented (in MinGW, anyway) as a signed integer type, 
-	//	negative values are not allowed.
-
-	//	On systems where time_t is defined as a 32-bit integer, there is an
-	//	upper date limit of January 18, 19:14:07, 2038. On 64-bit systems,
-	//	there is no such upper date limit.
-
-	//	Windows also has other time types that also interface with the CTime
-	//	type. These are FILETIME, SYSTEMTIME, and MS-DOS date and time, each
-	//	of which are described in the MSDN API documentation. Basically:
-
-	//	FILETIME is a structure containing a 64-bit value representing the
-	//	number of 100-nanosecond intervals since January 1, 1601 UTC.
-
-	//	SYSTEMTIME is a structure representing a date and  time using individual
-	//	values for the month, day, year, weekday, hour, minute, second, and
-	//	millisecond. This is not useful in itself, but must be translated into
-	//	a FILETIME or time_t.
-
-	//	MS-DOS date and time are two 16-bit words packed with day, month, year
-	//  and second, minute, hour fields.  The format may be found in the MSDN
-	//	Library article on DosDateTimeToFileTime().
 	{
 		// global friends.  These functions can access private members
 		friend  CArchive& operator<<(CArchive&, CTime&);
@@ -184,13 +183,10 @@ namespace Win32xx
 
 	};
 
-	//============================================================================
-	class CTimeSpan
+
 	//	The CTimeSpan class defines the data type for differences between two
-	//	CTime values, measured in seconds of time. It also defines procedures
-	//	for combining that data type with that of CTime to produce CTime
-	//	elements that differ by a specified span of time and  methods to
-	//	extract and  display CTimeSpan values.
+	//	CTime values, measured in seconds of time.	
+	class CTimeSpan
 	{
 		friend class CTime;		// CTime can access private members
 	
@@ -250,18 +246,8 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	////////////////////////////////////////////////////////////////
-	//
-	//	Implementation of the CTime class
-	//
-	////////////////////////////////////////////////////////////////
-
-	//============================================================================
+	// Returns the time_t t corresponding to the date given in atm as a UTC time. 
 	inline time_t UTCtime(time_tm* atm)
-	//	Return the time_t t corresponding to the date given in atm as a UTC
-	//	time. That is, gmtime(t) == atm.  This is equal to the local time_t
-	//	of the atm plus the current time zone bias. This method asserts if
-	//  atm is NULL or corresponds to an invalid time.
 	{
 		// compute the local time from atm
 		assert(atm != NULL);           // atm must exist
@@ -276,33 +262,31 @@ namespace Win32xx
 		return t0;
 	}
 
-	//============================================================================
+
+	// Constructs an CTime object initialized to the Jan 1, 1970 00:00:00 epoch.	
 	inline CTime::CTime()
-	//	Construct an CTime object initialized to the Jan 1, 1970 00:00:00 epoch.
-	//	This constructor allows defining CTime object arrays, which may then
-	//	be initialized prior to use.
 	{
 		m_time = 0;
 	}
 
-	//============================================================================
+
+	// Constructs a CTime object from another (valid) CTime object t.	
 	inline CTime::CTime(const CTime& t)
-	//	Construct a CTime object from another (valid) CTime object t.
 	{
 		m_time = t.m_time;
 	}
 
-	//============================================================================
+
+	// Constructs a CTime object from the time_t value t, or assert if t is invalid.	
 	inline CTime::CTime(time_t t)
-	//	Construct a CTime object from the time_t value t, or assert if t is invalid.
 	{
 		assert(::gmtime(&t));
 		m_time = t;
 	}
+		
 
-	//============================================================================
+	// Constructs a CTime object from the time_tm atm, or assert if atm is invalid
 	inline CTime::CTime(time_tm& atm)
-	//	Construct a CTime object from the time_tm atm, or assert if atm is invalid
 	{
 		// compute the object time_t
 		m_time = ::mktime(&atm);
@@ -310,16 +294,12 @@ namespace Win32xx
 		// check for acceptable range
 		assert(m_time != -1);
 	}
+	
 
-	//============================================================================
+	// Constructs a CTime of the nthwk occurrence of the given wkday (0..6)
+	// in the mo month of yr year, at hr:min:sec of that day, local time.
 	inline CTime::CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr,
 	    UINT min, UINT sec, int nDST /* = -1 */)
-	//	Construct a CTime of the nthwk occurrence of the given wkday (0..6)
-	//	in the mo month of yr year, at hr:min:sec of that day, local time.
-	//	Restrictions on yr, mo, hr, min, and  sec are the same as cited in the
-	//	constructor CTime(yr, mo, da, hr, min, sec, nDST). Otherwise,
-	//		wkday   0-6
-	//		nthwk   no constraint
 	{
 		// validate parameters w.r.t. ranges
 		assert(yr >= 1969);	// Last few hours of 1969 might be a valid local time
@@ -358,27 +338,15 @@ namespace Win32xx
 		assert(m_time != -1);
 	}
 
-	//============================================================================
+
+	// Constructs a CTime object from local time elements. Each element is
+	// constrained to lie within the following UTC ranges:
+	//   year 		1970–2038 (on 32-bit systems)
+	//   month 		1–12
+	//   day 		1–31
+	//   hour, min, sec	no constraint
 	inline CTime::CTime(UINT year, UINT month, UINT day, UINT hour, UINT min,
 		UINT sec, int nDST /* = -1 */)
-	//	Construct a CTime object from local time elements. Each element is
-	//	constrained to lie within the following UTC ranges:
-	//		year 		1970–2038 (on 32-bit systems)
-	//		month 		1–12
-	//		day 		1–31
-	//		hour, min, sec	no constraint
-	// 
-	//   Note:
-	//      These valid ranges apply to UTC time. The local time zone might
-	//      be shifted up to + or - 11 hours from UTC time. Hence the last
-	//	    few hours of 1969 (local time) might be a valid time.
-
-	//	The nDST value indicates whether daylight savings time is in effect.
-	//	It can have one of three values, as follows:
-	//              nDST == 0   Standard time is in effect.
-	//              nDST >  0   Daylight savings time is in effect.
-	//              nDST <  0   The default. Automatically computes whether
-	//			    standard time or daylight time is in effect.
 	{
 		// validate parameters w.r.t. ranges
 		assert(1 <= day && day   <= 31);
@@ -394,12 +362,10 @@ namespace Win32xx
 		assert(m_time != -1);
 	}
 
-	//============================================================================
+
+	// Constructs a CTime using the day-of-year doy, where doy = 1 is
+	// January 1 in the specified year.
 	inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int nDST /* = -1 */)
-	//	Construct a CTime using the day-of-year doy, where doy = 1 is
-	//	January 1 in the specified year.  Restrictions on yr, hr, min, and  sec
-	//	are the same as in CTime(yr, mo, da, hr, min, sec, nDST). There is no
-	//	constraint on doy.
 	{
 		// validate parameters w.r.t. ranges
 		assert(yr >= 1969);  // Last few hours of 1969 might be a valid local time
@@ -421,13 +387,9 @@ namespace Win32xx
 		assert(m_time != -1);
 	}
 
-	//============================================================================
+
+	// Constructs a CTime object from the MS-DOS wDosDate and wDosTime values.
 	inline CTime::CTime(WORD wDosDate, WORD wDosTime, int nDST /* = -1 */)
-	//	Construct a CTime object from the MS-DOS wDosDate and wDosTime values.
-	//	These are formats used by MS-DOS. The date is a packed 16-bit value
-	//	in which bits in the value represent the day, month, and years past 1980. The
-	//	time is a packed 16-bit value in which bits in the value represent
-	//	the hour, minute, and  second.
 	{
 		FILETIME ft;
 		VERIFY( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) );
@@ -435,9 +397,9 @@ namespace Win32xx
 		m_time = t.m_time;
 	}
 
-	//============================================================================
+
+	// Constructs a CTime object from a SYSTEMTIME structure st.
 	inline CTime::CTime(const SYSTEMTIME& st, int nDST /* = -1 */)
-	//	 Construct a CTime object from a SYSTEMTIME structure st.
 	{
 		CTime t((UINT)st.wYear, (UINT)st.wMonth, (UINT)st.wDay, (UINT)st.wHour,
 			(UINT)st.wMinute, (UINT)st.wSecond, nDST); // asserts if invalid
@@ -445,9 +407,9 @@ namespace Win32xx
 		m_time = t.m_time;
 	}
 
-	//============================================================================
+
+	// Constructs a CTime object from a (UTC) FILETIME structure ft.
 	inline CTime::CTime(const FILETIME& ft, int nDST /* = -1 */)
-	//	Construct a CTime object from a (UTC) FILETIME structure ft.
 	{
 		// start by converting ft (a UTC time) to local time
 		FILETIME localTime;
@@ -462,11 +424,10 @@ namespace Win32xx
 		m_time = t.m_time;
 	}
 
-	//============================================================================
+
+	// Converts *this CTime object into a FILETIME structure and stores it
+	// in ft. Returns true if successful.
 	inline bool CTime::GetAsFileTime(FILETIME& ft) const
-	//	Convert *this CTime object into a FILETIME structure and  store it
-	//	in st. The FILETIME data structure initialized by this function will
-	//	reflect the UTC time of this object. Return true if successful.
 	{
 		bool rval = false;
 		time_tm* ptm = GetGmtTm();
@@ -484,12 +445,10 @@ namespace Win32xx
 		return rval;
 	}
 
-	//============================================================================
+
+	// Converts *this CTime object into a SYSTEMTIME structure and stores it
+	// in st. Returns true if successful.
 	inline bool CTime::GetAsSystemTime(SYSTEMTIME& st) const
-	//	Convert *this CTime object into a SYSTEMTIME structure and  store it
-	//	in st. The SYSTEMTIME data structure initialized by this function will
-	//	reflect the local time of this object and  will have its wMilliseconds
-	//	member set to zero. Return true if successful.
 	{
 		bool rval = false;
 		time_tm* ptm = GetLocalTm();
@@ -511,11 +470,11 @@ namespace Win32xx
 		return rval;
 	}
 
-	//============================================================================
+
+	// Returns a pointer to a time_tm that contains a decomposition of *this
+	// CTime object expressed in UTC. If ptm is non NULL, this decomposition
+	// is also copied into ptm.
 	inline time_tm* CTime::GetGmtTm(time_tm* ptm) const
-	//	Return a pointer to a time_tm that contains a decomposition of *this
-	//	CTime object expressed in UTC. If ptm is non NULL, this decomposition
-	//	is also copied into ptm.
 	{
 		if (ptm != NULL)
 		{
@@ -530,11 +489,11 @@ namespace Win32xx
 			return ::gmtime(&m_time);
 	}
 
-	//============================================================================
+
+	// Return a pointer to a time_tm that contains a decomposition of *this
+	// CTime object expressed in the local time base. If ptm is non NULL, this
+	// decomposition is also copied into ptm.
 	inline time_tm* CTime::GetLocalTm(time_tm* ptm) const
-	//	Return a pointer to a time_tm that contains a decomposition of *this
-	//	CTime object expressed in the local time base. If ptm is non NULL, this
-	//	decomposition is also copied into ptm.
 	{
 		if (ptm != NULL)
 		{
@@ -549,96 +508,96 @@ namespace Win32xx
 			return ::localtime(&m_time);
 	}
 
-	//============================================================================
+
+	// Return *this time as a time_t value.
 	inline time_t  CTime::GetTime() const
-	//	Return *this time as a time_t value.
 	{
 		return m_time;
 	}
 
-	//============================================================================
+
+	// Returns the year of *this time object, local (true) or UTC (false).
 	inline int	CTime::GetYear(bool local /* = true */) const
-	//	Return the year of *this time object, local (true) or UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return 1900 + ptmbuffer->tm_year;
 	}
 
-	//============================================================================
+
+	// Returns the month of *this time object (1 through 12), local (true) or
+	// UTC (false).
 	inline int	CTime::GetMonth(bool local /* = true */) const
-	//	Return the month of *this time object (1 through 12), local (true)  or
-	//	UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_mon + 1;
 	}
 
-	//============================================================================
+
+	// Returns the day of *this object (1 through 31), local (true) or
+	// UTC (false).
 	inline int	CTime::GetDay(bool local /* = true */) const
-	//	Return the day of *this object (1 through 31), local (true)  or
-	//	UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_mday ;
 	}
 
-	//============================================================================
+
+	// Returns the hour of *this object (0 through 23), local (true) or
+	// UTC (false).
 	inline int	CTime::GetHour(bool local /* = true */) const
-	//	Return the hour of *this object (0 through 23), local (true)  or
-	//	UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_hour;
 	}
 
-	//============================================================================
+
+	// Returns the minute of *this object (0 through 59), local (true) or
+	// UTC (false).
 	inline int	CTime::GetMinute(bool local /* = true */) const
-	//	Return the minute of *this object (0 through 59), local (true)  or
-	//	UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_min;
 	}
 
-	//============================================================================
+
+	// Returns the second of *this object (0 through 61), local (true) or
+	// UTC (false).
 	inline int	CTime::GetSecond(bool local /* = true */) const
-	//	Return the second of *this object (0 through 61), local (true)  or
-	//	UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_sec;
 	}
 
-	//============================================================================
+
+	// Returns the day of the week of *this object (0–6, Sunday = 0), local
+	// (true) or UTC (false).
 	inline int	CTime::GetDayOfWeek(bool local /* = true */) const
-	//	Return the day of the week of *this object (0–6, Sunday = 0), local
-	//	(true) or UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_wday;
 	}
 
-	//============================================================================
+
+	// Returns the day of the year of *this object (1-366), local (true)  or
+	// UTC (false).
 	inline int	CTime::GetDayOfYear(bool local /* = true */) const
-	//	Return the day of the year of *this object (1-366), local (true)  or
-	//	UTC (false).
 	{
 		time_tm* ptmbuffer = (local ? GetLocalTm(NULL) : GetGmtTm());
 		return ptmbuffer->tm_yday + 1;
 	}
 
-	//============================================================================
+
+	// Assigns the CTime t value to *this
 	inline CTime& CTime::operator=(const CTime& t)
-	//	Assign the CTime t value to *this
 	{
 		// Self assignment is safe
 		m_time = t.m_time;
 		return *this;
 	}
 
-	//============================================================================
+
+	// Assigns the time_t value to *this time.
 	inline CTime& CTime::operator=(const time_t& t)
-	//	Assign the time_t value to *this time.
 	{
 		assert(t >= 0);
 		// Self assignment is safe
@@ -646,99 +605,103 @@ namespace Win32xx
 		return *this;
 	}
 
-	//============================================================================
+
+	// Returns the time span between *this time and  time t
 	inline const CTimeSpan CTime::operator-(const CTime& t) const
-	//	Return the time span between *this time and  time t
 	{
 		timespan_t d = (timespan_t)(m_time - t.m_time);
 		CTimeSpan t0(d);
 		return  t0;
 	}
 
-	//============================================================================
+
+	// Returns the CTime that is the time span ts before *this time.
 	inline const CTime CTime::operator-(const CTimeSpan& ts) const
-	//	Return the CTime that is the time span ts before *this time.
 	{
 		time_t d = m_time - ts.m_timespan;
 		CTime t(d);  // asserts if d is invalid
 		return t;
 	}
 
-	//============================================================================
+
+	// Returns the CTime that is the time span ts after *this time.
 	inline const CTime CTime::operator+(const CTimeSpan& ts) const
-	//	Return the CTime that is the time span ts after *this time.
 	{
 		time_t s = m_time + ts.m_timespan;
 		CTime t(s); // asserts if s is invalid
 		return t;
 	}
 
-	//============================================================================
+
+
+	// Increments *this time by the time span ts and  return this CTime.
 	inline CTime& CTime::operator+=(const CTimeSpan& ts)
-	//	Increment *this time by the time span ts and  return this CTime.
 	{
 		m_time += ts.m_timespan;
 		assert(m_time >= 0); // Invalid addition to time object.
 		return *this;
 	}
 
-	//============================================================================
+
+	// Decrements *this time by the time span ts and  return this CTime.
 	inline CTime& CTime::operator-=(const CTimeSpan& ts)
-	//	Decrement *this time by the time span ts and  return this CTime.
 	{
 		m_time -= ts.m_timespan;
 		assert(m_time >= 0); //Invalid subtraction from time object.
 		return *this;
 	}
 
-	//============================================================================
+
+	// Returns true if *this and t are the same times.
 	inline bool CTime::operator==(const CTime& t) const
-	//	Return true if *this and t are the same times.
 	{
 		return m_time == t.m_time;
 	}
 
-	//============================================================================
+
+	// Returns true if *this and t are not the same times.
 	inline bool CTime::operator!=(const CTime& t) const
-	//	Return true if *this and t are not the same times.
 	{
 		return m_time != t.m_time;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time is less than time t.
 	inline bool CTime::operator<(const CTime& t) const
-	//	Return true if *this time is less than time t.
 	{
 		return m_time < t.m_time;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time is greater than time t.
 	inline bool CTime::operator>(const CTime& t) const
-	//	Return true if *this time is greater than time t.
 	{
 		return m_time > t.m_time;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time is less than or equal to time t.
 	inline bool CTime::operator<=(const CTime& time) const
-	//	Return true if *this time is less than or equal to time t.
 	{
 		return m_time <= time.m_time;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time is greater than or equal to time t.
 	inline bool CTime::operator>=(const CTime& time) const
-	//	Return true if *this time is greater than or equal to time t.
 	{
 		return m_time >= time.m_time;
 	}
 
-	//============================================================================
+
+	// Returns a CString that contains formatted time. The pFormat parammater
+	// is a formatting string similar to the printf formatting string. 
+	// The valid format directives are
+	//	 %D - number of days
+	//	 %H - hour (0-23)
+	//	 %M - minute (0-59)
+	//	 %S - seconds (0-59)
 	inline CString CTime::Format(LPCTSTR pFormat) const
-	//	Create a formatted representation of this date/time value as a local
-	//	time. If  this CTime object is null or invalid, the return value is
-	//	an empty CString. The pFormat string is converted using the conventions
-	//	of the C function strftime(). Consult the C++ reference for details.
 	{
 		const size_t  maxTimeBufferSize = 128;
 		TCHAR szBuffer[maxTimeBufferSize];
@@ -749,23 +712,25 @@ namespace Win32xx
 		return CString(szBuffer);
 	}
 
-	//============================================================================
+	
+	// Returns a CString that contains formatted time. The FormatID parammater
+	// specifies a resource containing the formatting string which is similar
+	// to the printf formatting string.  The valid format directives are
+	//   %D - number of days
+	//   %H - hour (0-23)
+	//   %M - minute (0-59)
+	//   %S - seconds (0-59)
 	inline CString CTime::Format(UINT nFormatID) const
-	//	Create a formatted representation of this date/time value as a local
-	//	time, in the same manner as an LPCTSTR argument, but nFormatID
-	//	identifies a resource string.
 	{
 		CString strFormat;
 		VERIFY( strFormat.LoadString(nFormatID) );
 		return Format(strFormat);
 	}
 
-	//============================================================================
+
+	// Returns a CString that contains formatted time as a UTC time. The pFormat 
+	// parammater is a formatting string similar to the printf formatting string.
 	inline CString CTime::FormatGmt(LPCTSTR pFormat) const
-	//	Create a formatted representation of this date/time value as a UTC
-	//	time. If  this CTime object is null or invalid, the return value is
-	//	an empty CString. The pFormat string is converted using the conventions
-	//	of the C function strftime(). Consult the C++ reference for details.
 	{
 		const size_t  maxTimeBufferSize = 128;
 		TCHAR szBuffer[maxTimeBufferSize];
@@ -781,11 +746,11 @@ namespace Win32xx
 		return CString(szBuffer);
 	}
 
-	//============================================================================
+
+	// Returns a CString that contains formatted timeas a UTC time. The FormatID
+	// parammater specifies a resource containing the formatting string which is
+	// similar to the printf formatting string.
 	inline CString CTime::FormatGmt(UINT nFormatID) const
-	//	Create a formatted representation of this date/time value as a UTC
-	//	time, in the same manner as an LPCTSTR argument, but nFormatID
-	//	identifies a resource string.
 	{
 		CString strFormat;
 		VERIFY( strFormat.LoadString(nFormatID) );
@@ -796,18 +761,17 @@ namespace Win32xx
 	//	Static and  Friend Functions
 	//
 
-	//============================================================================
+	
+	// Returns a CTime holding the current system time.
 	inline CTime CTime::GetCurrentTime()
-	//	This is a static method that return the current system time as a
-	//	CTime object.
 	{
 		return CTime(::time(NULL));
 	}
 
-	//============================================================================
+
+	// Returns a FILETIME structure containing the FILETIME ft
+	// increased by addend seconds.
 	inline FILETIME CTime::FileTimePlus(const FILETIME& ft, double addend)
-	//	This is a static function to return a FILETIME structure containing the
-	//	FILETIME ft increased by addend seconds.
 	{
 		// convert ft to unsigned long long
 		ULONGLONG ftlong = (ULONGLONG)
@@ -836,10 +800,9 @@ namespace Win32xx
 	// Global functions within the Win32xx namespace
 	//
 
-	//============================================================================
+	// Reads a CTime from the archive and stores it in t. 
+	// Throws an exception on failure.
 	inline CArchive& operator>>(CArchive& ar, CTime& t)
-	//	Read a CTime from the archive and  store it in t.  Throw an exception if
-	//	unable to do so correctly.
 	{
 		UINT size;
 		ar.Read(&size, sizeof(UINT));
@@ -857,10 +820,9 @@ namespace Win32xx
 		return ar;
 	}
 
-	//============================================================================
+	// Writes the time t into the archive file.
+	// Throw an exception on failure.
 	inline CArchive& operator<<(CArchive& ar, CTime& t)
-	//	Write the time t into the archive file. Throw an exception if an
-	//	error occurs.
 	{
 		ULONGLONG tx64 = 0;
 		UINT size = sizeof(tx64);
@@ -879,29 +841,25 @@ namespace Win32xx
 	//
 	///////////////////////////////////////////////////////////////
 
-	//============================================================================
+
 	inline CTimeSpan::CTimeSpan()
-	//	Construct an CTimeSpan object initialized to 0.
 	{
 		m_timespan = 0;
 	}
 
-	//============================================================================
+
 	inline CTimeSpan::CTimeSpan(timespan_t t)
-	//	Construct a CTimeSpan object from time_t type t. This value is the
-	//	difference between two absolute time_t values.
 	{
 		m_timespan = t;
 	}
 
-	//============================================================================
+
+	// Contructs a CTimeSpan. Valid parameter ranges:
+	//   lDays  0–24,855 (approximately)
+	//   nHours 0–23
+	//   nMins  0–59
+	//   nSecs  0–59
 	inline CTimeSpan::CTimeSpan(long lDays, int nHours, int nMins, int nSecs)
-	//	Construct a CTimeSpan object from given time elements, where each
-	//	element is constrained to the following ranges:
-	//		lDays 	0–24,855 (approximately)
-	//		nHours 	0–23
-	//		nMins 	0–59
-	//		nSecs 	0–59
 	{
 		int sec_per_day  = 86400;
 		int sec_per_hour = 3600;
@@ -910,185 +868,182 @@ namespace Win32xx
 			nMins * sec_per_min + nSecs;
 	}
 
-	//============================================================================
+
 	inline CTimeSpan::CTimeSpan(const CTimeSpan& ts)
-	//	Construct a CTimeSpan object from another CTimeSpan value.
 	{
 		m_timespan = ts.m_timespan;
 	}
 
-	//============================================================================
+
+	// Returns the number of complete days in this CTimeSpan.
 	inline LONGLONG CTimeSpan::GetDays() const
-	//	Return the number of complete days in this CTimeSpan.  This value may
-	//	be negative if the time span is negative.
 	{
 		int sec_per_day = 86400;
 		return m_timespan / sec_per_day;
 	}
 
-	//============================================================================
+	// Returns the total number of complete hours in this CTimeSpan.
 	inline LONGLONG CTimeSpan::GetTotalHours() const
-	//	Return the total number of complete hours in this CTimeSpan.
 	{
 		int sec_per_hour = 3600;
 		return m_timespan / sec_per_hour;
 	}
 
-	//============================================================================
+
+	// Returns the total number of complete minutes in this CTimeSpan.
 	inline LONGLONG CTimeSpan::GetTotalMinutes() const
-	//	Return the total number of complete minutes in this CTimeSpan.
 	{
 		int sec_per_min = 60;
 		return m_timespan / sec_per_min;
 	}
 
-	//============================================================================
+
+	// Returns the total number of complete seconds in this CTimeSpan.
 	inline LONGLONG CTimeSpan::GetTotalSeconds() const
-	//	Return the total number of complete seconds in this CTimeSpan.
 	{
 		return m_timespan;
 	}
 
-	//============================================================================
+
+	// Return the number of hours in the day component of this time
+	// span (–23 through 23).
 	inline int CTimeSpan::GetHours() const
-	//	Return the number of hours in the day component of this time
-	//	span (–23 through 23).
 	{
 		int sec_per_hour  = 3600;
 		int hours_per_day = 24;
 		return static_cast<int>((m_timespan / sec_per_hour) % hours_per_day);
 	}
 
-	//============================================================================
+
+	// Returns the number of minutes in the hour component of this time
+	// span (–59 through 59).
 	inline int CTimeSpan::GetMinutes() const
-	//	Return the number of minutes in the hour component of this time
-	//	span (–59 through 59).
 	{
 		int sec_per_min = 60;
 		return static_cast<int>((m_timespan / sec_per_min) % sec_per_min);
 	}
 
-	//============================================================================
+
+	// Returns the number of seconds in the minute component of this time
+	// span (–59 through 59).
 	inline int CTimeSpan::GetSeconds() const
-	//	Return the number of seconds in the minute component of this time
-	//	span (–59 through 59).
 	{
 		int sec_per_min = 60;
 		return static_cast<int>(m_timespan % sec_per_min);
 	}
 
-	//============================================================================
+
+	// Assigns the CTimeSpan ts to *this time span.
 	inline CTimeSpan& CTimeSpan::operator=(const CTimeSpan& ts)
-	//	Assign the CTimeSpan ts to *this time span
 	{
 		// Self assignment is safe
 		m_timespan = ts.m_timespan;
 		return *this;
 	}
 
-	//============================================================================
+
+	// Assigns the timespan_t t value to *this time span.
 	inline CTimeSpan& CTimeSpan::operator=(const timespan_t& t)
-	//	Assign the timespan_t t value to *this time span.
 	{
 		// Self assignment is safe
 		m_timespan = t;
 		return *this;
 	}
 
-	//============================================================================
+
+	// Returns the negated value of *this time span.
 	inline const CTimeSpan CTimeSpan::operator-() const
-	//	Return the negated value of *this time span.
 	{
 		CTimeSpan t0(-m_timespan);
 		return  t0;
 	}
 
-	//============================================================================
+
+	// Returns the result of subtracting the time span ts from *this time span.
 	inline const CTimeSpan CTimeSpan::operator-(CTimeSpan& ts) const
-	//	Return the result of subtracting the time span ts from *this time span.
 	{
 		timespan_t d = m_timespan - ts.m_timespan;
 		CTimeSpan tsp(d);
 		return tsp;
 	}
 
-	//============================================================================
+
+	// Returns the result of adding the time span ts to *this time span.
 	inline const CTimeSpan CTimeSpan::operator+(CTimeSpan& ts) const
-	//	Return the result of adding the time span ts to *this time span.
 	{
 		timespan_t s = m_timespan + ts.m_timespan;
 		CTimeSpan tsp(s);
 		return tsp;
 	}
 
-	//============================================================================
+
+	// Increases *this time span by the ts time span and  return the result.
 	inline CTimeSpan& CTimeSpan::operator+=(CTimeSpan& ts)
-	//	Increase *this time span by the ts time span and  return the result.
 	{
 		m_timespan += ts.m_timespan;
 		return *this;
 	}
 
-	//============================================================================
+
+	// Decreases *this time span by the ts time span and  return the result.
 	inline CTimeSpan& CTimeSpan::operator-=(CTimeSpan& ts)
-	//	Decrease *this time span by the ts time span and  return the result.
 	{
 		m_timespan -= ts.m_timespan;
 		return *this;
 	}
 
-	//============================================================================
+
+	// Returns true if the time span ts equals *this one.
 	inline bool CTimeSpan::operator==(const CTimeSpan& ts) const
-	//	Return true if the time span ts equals *this one.
 	{
 		return m_timespan == ts.m_timespan;
 	}
 
-	//============================================================================
+
+	// Returns true if the time span ts does not equal *this one.=
 	inline bool CTimeSpan::operator!=(const CTimeSpan& ts) const
-	//	Return true if the time span ts does not equal *this one.
 	{
 		return m_timespan != ts.m_timespan;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time span is less than the ts time span.
 	inline bool CTimeSpan::operator<(const CTimeSpan& ts) const
-	//	Return true if *this time span is less than the ts time span.
 	{
 		return m_timespan < ts.m_timespan;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time span is greater than the ts time span.
 	inline bool CTimeSpan::operator>(const CTimeSpan& ts) const
-	//	Return true if *this time span is greater than the ts time span.
 	{
 		return m_timespan > ts.m_timespan;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time span is less than or equal to the ts
+	// time span.
 	inline bool CTimeSpan::operator<=(const CTimeSpan& ts) const
-	//	Return true if *this time span is less than or equal to the ts
-	//	time span.
 	{
 		return m_timespan <= ts.m_timespan;
 	}
 
-	//============================================================================
+
+	// Returns true if *this time span is greater than or equal to the ts
+	// time span.
 	inline bool CTimeSpan::operator>=(const CTimeSpan& ts) const
-	//	Return true if *this time span is greater than or equal to the ts
-	//	time span.
 	{
 		return m_timespan >= ts.m_timespan;
 	}
 
-	//============================================================================*/
+
+	// Returns a rendering of *this CTimeSpan object in CString form using the
+	// pFormat as the template. The valid format directives are
+	//   %D - number of days
+	//   %H - hour (0-23)
+	//   %M - minute (0-59)
+	//   %S - seconds (0-59)
 	inline CString CTimeSpan::Format(LPCTSTR pFormat) const
-	//	Return a rendering of *this CTimeSpan object in CString form using the
-	//	pFormat as the template. The valid format directives are
-	//	      %D - number of days
-	//	      %H - hour (0-23)
-	//	      %M - minute (0-59)
-	//	      %S - seconds (0-59)
 	{
 		CString fmt0 = pFormat;
 		CString insert;
@@ -1116,15 +1071,15 @@ namespace Win32xx
 		return fmt0;
 	}
 
-	//============================================================================
+
+	// Returns a rendering of *this CTimeSpan object in CString form using the
+	// string resource having the nFormatID identifier as the template. The
+	// valid format directives are
+	//   %D - number of days
+	//   %H - hour (0-23)
+	//   %M - minute (0-59)
+	//   %S - seconds (0-59)
 	inline CString CTimeSpan::Format(UINT nFormatID) const
-	//	Return a rendering of *this CTimeSpan object in CString form using the
-	//	string resource having the nFormatID identifier as the template. The
-	//	valid format directives are
-	//	      %D - number of days
-	//	      %H - hour (0-23)
-	//	      %M - minute (0-59)
-	//	      %S - seconds (0-59)
 	{
 		CString strFormat;
 		VERIFY( strFormat.LoadString(nFormatID) );
@@ -1136,10 +1091,10 @@ namespace Win32xx
 	// Global functions within the Win32xx namespace
 	//
 
-	//============================================================================
+
+	// Reads a CTimeSpan object from the archive and  store it in t. Throw an
+	// exception if unable to do so correctly.
 	inline CArchive& operator>>(CArchive& ar, CTimeSpan& ts)
-	//	Read a CTimeSpan object from the archive and  store it in t.  Throw an
-	//	exception if unable to do so correctly.
 	{
 		UINT size;
 		ar.Read(&size, sizeof(size));
@@ -1157,10 +1112,10 @@ namespace Win32xx
 		return ar;
 	}
 
-	//============================================================================
+
+	// Writes the time span object s into the archive file. Throw an exception
+	// if an error occurs.
 	inline CArchive& operator<<(CArchive &ar, CTimeSpan& ts)
-	//	Write the time span object s into the archive file. Throw an exception
-	//	if an error occurs.
 	{
 		ULONGLONG tsx64 = 0;
 		UINT size = sizeof(tsx64);

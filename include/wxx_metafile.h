@@ -61,14 +61,11 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////////////////
-	// Declaration of the the CMetaFile class
-	//
 	// CMetaFile wraps a HMETAFILE. CMetaFile can be used anywhere a HMETAFILE can
 	// be used. CMetaFile objects are reference counted, so they can be safely
 	// copied. CMetatFile automatically deletes the HMETAFILE when the last copy of
 	// the CMetaFile object goes out of scope. The CMetaFileDC::Close function
 	// returns a CMetaFile object.
-	//
 	class CMetaFile
 	{
 	public:
@@ -98,15 +95,12 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////////////////
-	// Declaration of the the CEnhMetaFile class
-	//
 	// CEnhMetaFile wraps a HENHMETAFILE. CEnhMetaFile can be used anywhere a
 	// HENHMETAFILE can be used. CEnhMetaFile objects are reference counted, 
 	// so they can be safely copied. CEnhMetaFile automatically deletes the
 	// HENHMETAFILE when the last copy of the CEnhMetaFile object goes out of
 	// scope. The CMetaFileDC::CloseEnhanced function returns a CEnhMetaFile
 	// object.
-	//
 	class CEnhMetaFile
 	{
 	public:
@@ -152,23 +146,27 @@ namespace Win32xx
 		m_pData = new CMetaFile_Data;
 	}
 
+	
 	inline CMetaFile::CMetaFile(HMETAFILE hMetaFile)
 	{
 		m_pData = new CMetaFile_Data;
 		m_pData->hMetaFile = hMetaFile;
 	}
 
+	
 	inline CMetaFile::CMetaFile(const CMetaFile& rhs)
 	{
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
 	}
 
+	
 	inline CMetaFile::~CMetaFile()
 	{
 		Release();
 	}
 
+	
 	inline CMetaFile& CMetaFile::operator = (const CMetaFile& rhs)
 	{
 		if (this != &rhs)
@@ -181,14 +179,16 @@ namespace Win32xx
 		return *this;
 	}
 
+	
 	inline void CMetaFile::operator = (const HMETAFILE hMetaFile)
 	{
 		Attach(hMetaFile);
 	}
 
+	
+	// Attaches an existing HMETAFILE to this CMetaFile
+	// The HMETAFILE can be NULL	
 	inline void CMetaFile::Attach(HMETAFILE hMetaFile)
-		// Attaches an existing HMETAFILE to this CMetaFile
-		// The HMETAFILE can be NULL
 	{
 		assert(m_pData);
 
@@ -205,6 +205,7 @@ namespace Win32xx
 		}
 	}
 
+	
 	inline void CMetaFile::Release()
 	{
 		assert(m_pData);
@@ -230,23 +231,27 @@ namespace Win32xx
 		m_pData = new CEnhMetaFile_Data;
 	}
 
+	
 	inline CEnhMetaFile::CEnhMetaFile(HENHMETAFILE hEnhMetaFile)
 	{
 		m_pData = new CEnhMetaFile_Data;
 		m_pData->hEnhMetaFile = hEnhMetaFile;
 	}
 
+	
 	inline CEnhMetaFile::CEnhMetaFile(const CEnhMetaFile& rhs)
 	{
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
 	}
 
+	
 	inline CEnhMetaFile::~CEnhMetaFile()
 	{
 		Release();
 	}
 
+	
 	inline CEnhMetaFile& CEnhMetaFile::operator = (const CEnhMetaFile& rhs)
 	{
 		if (this != &rhs)
@@ -259,14 +264,16 @@ namespace Win32xx
 		return *this;
 	}
 
+	
 	inline void CEnhMetaFile::operator = (const HENHMETAFILE hEnhMetaFile)
 	{
 		Attach(hEnhMetaFile);
 	}
-
+	
+	
+	// Attaches an existing HENHMETAFILE to this CEnhMetaFile
+	// The HENHMETAFILE can be NULL
 	inline void CEnhMetaFile::Attach(HENHMETAFILE hEnhMetaFile)
-		// Attaches an existing HENHMETAFILE to this CEnhMetaFile
-		// The HENHMETAFILE can be NULL
 	{
 		assert(m_pData);
 
@@ -282,6 +289,7 @@ namespace Win32xx
 			m_pData->hEnhMetaFile = hEnhMetaFile;
 		}
 	}
+	
 
 	inline void CEnhMetaFile::Release()
 	{

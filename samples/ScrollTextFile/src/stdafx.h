@@ -112,6 +112,7 @@ typedef  unsigned char  byte;
 #include <wxx_imagelist.h>
 #include <wxx_listview.h>
 #include <wxx_mdi.h>
+#include <wxx_metafile.h>
 #include <wxx_propertysheet.h>
 #include <wxx_rebar.h>
 #include <wxx_regkey.h>

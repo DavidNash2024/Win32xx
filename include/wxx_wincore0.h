@@ -97,8 +97,8 @@ namespace Win32xx
 
 
 	////////////////////////////////
-	// Declaration of the CWnd class
-	//
+	// The CWnd class provides the functionality of a generic window.
+	// Other classes which provide the functionality of more specialized windows inherit from CWnd.
 	class CWnd : public CObject
 	{
 	friend class CCommonDialog;

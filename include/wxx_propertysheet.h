@@ -70,6 +70,9 @@ namespace Win32xx
     class CPropertyPage;
 	typedef Shared_Ptr<CPropertyPage> PropertyPagePtr;
 
+	
+	// This class provides support for property pages. A property page is an
+	// individual page used in a property sheet.
 	class CPropertyPage : public CDialog
 	{
 	public:
@@ -114,6 +117,9 @@ namespace Win32xx
 		CString m_Title;
 	};
 
+	
+	// This class provides support for a property sheet. A property sheet is 
+	// also known as a tab dialog box. It has one or more property pages.	
 	class CPropertySheet : public CWnd
 	{
 	public:
@@ -171,6 +177,7 @@ namespace Win32xx
 	//////////////////////////////////////////
 	// Definitions for the CPropertyPage class
 	//
+	
 	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/) : CDialog((UINT)0)
 	{
 		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
@@ -186,17 +193,18 @@ namespace Win32xx
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
 	}
 
+	
+	// Disables the Cancel button and changes the text of the OK button to "Close."	
 	inline void CPropertyPage::CancelToClose() const
-	// Disables the Cancel button and changes the text of the OK button to "Close."
 	{
 		assert(IsWindow());
 		SendMessage(PSM_CANCELTOCLOSE, 0L, 0L);
 	}
 
 
+	// Override this function to process the property page's window message
 	inline INT_PTR CPropertyPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		// Override this function in your class derived from CPropertyPage if you wish to handle messages
 		// A typical function might look like this:
 
 		//	switch (uMsg)
@@ -214,8 +222,10 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
+	
+	// Provides default handling for the property page's message.
+	// The DialogProc functions should pass unhandled messages to this function	
 	inline INT_PTR CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
-	// All DialogProc functions should pass unhandled messages to this function
 	{
 		switch (uMsg)
 	    {
@@ -227,97 +237,98 @@ namespace Win32xx
 
 	} // INT_PTR CALLBACK CPropertyPage::DialogProc(...)
 
+	
+	// Returns TRUE if the button is enabled	
 	inline BOOL CPropertyPage::IsButtonEnabled(int iButton) const	
 	{
-		// returns TRUE if the button is enabled
 		assert(IsWindow());
 		return GetParent().GetDlgItem(iButton).IsWindowEnabled();
 	}
 
+
+	// This function is called for each page when the Apply, OK or Close button is pressed.
+	// Override this function in your derived class to perform tasks when actions are applied.	
 	inline BOOL CPropertyPage::OnApply()
 	{
-		// This function is called for each page when the Apply, OK or Close button is pressed
-		// Override this function in your derived class if required.
-
 		// Return TRUE to accept the changes; otherwise FALSE.
-
 		return TRUE;
 	}
 
+	
+	// This function is called for each page when the Cancel button is pressed
+	// Override this function in your derived class when if the cancel button is pressed.	
 	inline void CPropertyPage::OnCancel()
 	{
-		// This function is called for each page when the Cancel button is pressed
-		// Override this function in your derived class if required.
 	}
 
+	
+	// This function is called in response to the PSN_HELP notification.	
 	inline void CPropertyPage::OnHelp()
 	{
-		// This function is called in response to the PSN_HELP notification.
+
 		SendMessage(*this, WM_COMMAND, ID_HELP, 0L);
 	}
 
+	
+	// Called when the cancel button is pressed, and before the cancel has taken place
+	// Returns TRUE to prevent the cancel operation, or FALSE to allow it.	
 	inline BOOL CPropertyPage::OnQueryCancel()
-	{
-		// Called when the cancel button is pressed, and before the cancel has taken place
-		// Returns TRUE to prevent the cancel operation, or FALSE to allow it.
-
-		// Return FALSE to allow the cance to proceed; otherwise TRUE.
-		
+	{		
 		return FALSE;    // Allow cancel to proceed
 	}
-
+	
+	
+	// Responds to a query request from the Property Sheet.
+	// The values for wParam and lParam are the ones set by the CPropertySheet::QuerySiblings call.
+	// return FALSE to allow other siblings to be queried, or
+	// return TRUE to stop query at this page.
 	inline BOOL CPropertyPage::OnQuerySiblings(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(uMsg);
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		// Responds to a query request from the Property Sheet.
-		// The values for wParam and lParam are the ones set by
-		// the CPropertySheet::QuerySiblings call
-
-		// return FALSE to allow other siblings to be queried, or
-		// return TRUE to stop query at this page.
-
 		return FALSE;
 	}
 
+	// Called when the user chooses the Cancel button
 	inline void CPropertyPage::OnReset()
 	{
-
 		OnCancel();
 	}
 
+	
+	// Called when the property page is created.
+	// Override this function to perform operations when the property page is created.	
 	inline BOOL CPropertyPage::OnInitDialog()
 	{
-		// Called when the property page is created
-		// Override this function in your derived class if required.
-
 		return TRUE; // Pass Keyboard control to handle in WPARAM
 	}
 
+	
+	// This is called in response to a PSN_KILLACTIVE notification, which
+	// is sent whenever the OK or Apply button is pressed.
+	// It provides an opportunity to validate the page contents before it's closed.
+	// Return TRUE to prevent the page from losing the activation, or FALSE to allow it.	
 	inline BOOL CPropertyPage::OnKillActive()
 	{
-		// This is called in response to a PSN_KILLACTIVE notification, which
-		// is sent whenever the OK or Apply button is pressed.
-		// It provides an opportunity to validate the page contents before it's closed.
-		// Return TRUE to prevent the page from losing the activation, or FALSE to allow it.
-
 		return FALSE;
 	}
 
+	
+	// Called when the OK button is pressed if OnApply for each page returns TRUE.
+	// Override this function to perform tasks when	the property sheet is closed.
 	inline void CPropertyPage::OnOK()
 	{
-		// Called when the OK button is pressed if OnApply for each page returns TRUE.
-		// Override this function in your derived class if required.
-
 		// Close the modeless propertysheet
 		GetParent().PostMessage(WM_CLOSE);
 	}
 
+	
+	// Handles the WM_NOTIFY message and call the appropriate functions.
 	inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
 	{
-		// Handle the WM_NOTIFY message and call the appropriate functions
+
 		UNREFERENCED_PARAMETER(wParam);
 
 		LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
@@ -359,46 +370,45 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	
+	// Called when a page becomes active. Override this function to perform tasks
+	// when a page is activated.
+	// Return TRUE if the page was successfully set active; otherwise FALSE.	
 	inline BOOL CPropertyPage::OnSetActive()
 	{
-		// Called when a page becomes active
-		// Override this function in your derived class if required.
-
-		// Return TRUE if the page was successfully set active; otherwise FALSE.
-
 		return TRUE;
 	}
 
+	
+	// This function is called when the Back button is pressed on a wizard page.
+	// Override this function to perform tasks when the back button is pressed.
+	// Return TRUE to allow the wizard to go to the previous page; otherwise return FALSE.	
 	inline BOOL CPropertyPage::OnWizardBack()
 	{
-		// This function is called when the Back button is pressed on a wizard page
-		// Override this function in your derived class if required.
-
-		// Return TRUE to allow the wizard to go to the previous page; otherwise return FALSE.
-
 		return TRUE;
 	}
 
+
+	// This function is called when the Finish button is pressed on a wizard page.
+	// Override this function to perform tasks when the wizard is finished.
+	// Return TRUE if the property sheet is destroyed when the wizard finishes; otherwise return FALSE.
 	inline BOOL CPropertyPage::OnWizardFinish()
 	{
-		// This function is called when the Finish button is pressed on a wizard page
-		// Override this function in your derived class if required.
-
-		// Return Value:
-		// TRUE if the property sheet is destroyed when the wizard finishes; otherwise return FALSE.
-
 		return TRUE; // Allow wizard to finish
 	}
 
+	
+	// This function is called when the Next button is pressed on a wizard page.
+	// Override this function in your derived class when the next button is pressed.
+	// Return TRUE to allow the wizard to go to the next page; otherwise return FALSE.	
 	inline BOOL CPropertyPage::OnWizardNext()
 	{
-		// This function is called when the Next button is pressed on a wizard page
-		// Override this function in your derived class if required.
-
-		// Return TRUE to allow the wizard to go to the next page; otherwise return FALSE.
 		return TRUE;
 	}
 
+	
+	// Override this function to filter mouse and keyboard messages prior to 
+	// being passed to the DialogProc.		
 	inline BOOL CPropertyPage::PreTranslateMessage(MSG& Msg)
 	{
 		// allow the tab control to translate keyboard input
@@ -419,21 +429,21 @@ namespace Win32xx
 		return CWnd::PreTranslateMessage(Msg);
 	}
 
+	
+	// Sent to a property sheet, which then forwards the message to each of its pages.
+	// Set wParam and lParam to values you want passed to the property pages.
+	// Returns the non-zero value from a page in the property sheet, or zero if no page
+	// returns a non-zero value.	
 	inline LRESULT CPropertyPage::QuerySiblings(WPARAM wParam, LPARAM lParam) const
 	{
-		// Sent to a property sheet, which then forwards the message to each of its pages.
-		// Set wParam and lParam to values you want passed to the property pages.
-		// Returns the non-zero value from a page in the property sheet, or zero if no page
-		// returns a non-zero value.
-
 		assert(IsWindow());
 		return GetParent().SendMessage(PSM_QUERYSIBLINGS, wParam, lParam);
 	}
 
+	
+	// The property sheet will enable the Apply button if IsChanged is TRUE.	
 	inline void CPropertyPage::SetModified(BOOL IsChanged) const
 	{
-		// The property sheet will enable the Apply button if IsChanged is TRUE.
-
 		assert(IsWindow());
 
 		if (IsChanged)
@@ -441,7 +451,9 @@ namespace Win32xx
 		else
 			GetParent().SendMessage(PSM_UNCHANGED, (WPARAM)GetHwnd(), 0L);
 	}
+	
 
+	// Sets the title of the property page.
 	inline void CPropertyPage::SetTitle(LPCTSTR szTitle)
 	{
 		if (szTitle)
@@ -458,18 +470,20 @@ namespace Win32xx
 		m_PSP.pszTitle = m_Title;
 	}
 
+	
+	// Enables or disables the various buttons on a wizard property page.
+	// dwFlags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
+	//	PSWIZB_BACK				Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
+	//	PSWIZB_DISABLEDFINISH	Display a disabled Finish button.
+	//	PSWIZB_FINISH			Display an enabled Finish button.
+	//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.	
 	inline void CPropertyPage::SetWizardButtons(DWORD dwFlags) const
 	{
-		// dwFlags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
-		//	PSWIZB_BACK				Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
-		//	PSWIZB_DISABLEDFINISH	Display a disabled Finish button.
-		//	PSWIZB_FINISH			Display an enabled Finish button.
-		//	PSWIZB_NEXT				Enable the Next button. If this flag is not set, the Next button is displayed as disabled.
-
 		assert ( IsWindow() );
 		PropSheet_SetWizButtons(::GetParent(*this), dwFlags);
 	}
 
+	
 	inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)
 	{
 		assert( &GetApp() );
@@ -493,6 +507,7 @@ namespace Win32xx
 		return TRUE;
 	}
 
+	
 	inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		assert( &GetApp() );
@@ -517,6 +532,7 @@ namespace Win32xx
 	///////////////////////////////////////////
 	// Definitions for the CPropertySheet class
 	//
+	
 	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hParent /* = 0*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
@@ -537,6 +553,7 @@ namespace Win32xx
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
+	
 	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hParent /* = 0*/)
 	{
 		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
@@ -557,10 +574,11 @@ namespace Win32xx
 		m_PSH.pfnCallback      = (PFNPROPSHEETCALLBACK)CPropertySheet::Callback;
 	}
 
-	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
+	
 	// Adds a Property Page to the Property Sheet
     // The framework assumes ownership of the CPropertyPage pointer provided,
-	// and deletes the CPropertyPage object when the PropertySheet is destroyed.
+	// and deletes the CPropertyPage object when the PropertySheet is destroyed.	
+	inline CPropertyPage* CPropertySheet::AddPage(CPropertyPage* pPage)
 	{
 		assert(NULL != pPage);
 
@@ -579,8 +597,9 @@ namespace Win32xx
 		return pPage;
 	}
 
+	
+	// Builds the array of PROPSHEETPAGE.	
 	inline void CPropertySheet::BuildPageArray()
-	// Builds the PROPSHEETPAGE array
 	{
 		m_vPSP.clear();
 		std::vector<PropertyPagePtr>::const_iterator iter;
@@ -591,6 +610,8 @@ namespace Win32xx
 		m_PSH.ppsp = pPSPArray;
 	}
 
+	// Override this function to filter mouse and keyboard messages prior to 
+	// being passed to the DialogProc.	
 	inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
 	{
 		assert( &GetApp() );
@@ -625,8 +646,9 @@ namespace Win32xx
 		}
 	}
 
+	
+	// Creates a modeless Property Sheet	
 	inline HWND CPropertySheet::Create(HWND hParent /*= 0*/)
-	// Creates a modeless Property Sheet
 	{
 		assert( &GetApp() );
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
@@ -650,9 +672,9 @@ namespace Win32xx
 		return hWnd;
 	}
 
-	inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER ppsph)
-	// Display either a modal or modeless property sheet, depending on the PROPSHEETHEADER flags.
 	
+	// Display either a modal or modeless property sheet, depending on the PROPSHEETHEADER flags.	
+	inline INT_PTR CPropertySheet::CreatePropertySheet(LPCPROPSHEETHEADER ppsph)
 	{
 		assert( &GetApp() );
 
@@ -680,6 +702,8 @@ namespace Win32xx
 		return ipResult;
 	}
 
+	
+	// Removes the specified button.
 	inline void CPropertySheet::DestroyButton(int IDButton)
 	{
 		assert(IsWindow());
@@ -692,16 +716,19 @@ namespace Win32xx
 			::EnableWindow(hwndButton, FALSE);
 		}
 	}
+	
 
+	// Called when a property sheet is destroyed.
+	// Note: To destroy a property sheet from within an application, post a WM_CLOSE	
 	inline void CPropertySheet::Destroy()
-	// Note: To destroy a property sheet from within an application, post a WM_CLOSE
 	{
 		CWnd::Destroy();
 		m_vPages.clear();
 	}
 
+	
+	// Create a modal property sheet	
 	inline int CPropertySheet::DoModal()
-	// Create a modal property sheet
 	{
 		assert( &GetApp() );
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
@@ -719,6 +746,8 @@ namespace Win32xx
 		return nResult;
 	}
 
+	
+	// Retrieves the property sheets active property page.
 	inline CPropertyPage* CPropertySheet::GetActivePage() const
 	{
 		assert(IsWindow());
@@ -732,14 +761,17 @@ namespace Win32xx
 
 		return pPage;
 	}
-
-	inline int CPropertySheet::GetPageCount() const
+	
+	
 	// Returns the number of Property Pages in this Property Sheet
+	inline int CPropertySheet::GetPageCount() const
 	{
 		assert(IsWindow());
 		return static_cast<int>(m_vPages.size());
 	}
 
+	
+	// Returns the index of the specified property page.
 	inline int CPropertySheet::GetPageIndex(CPropertyPage* pPage) const
 	{
 		assert(IsWindow());
@@ -751,26 +783,32 @@ namespace Win32xx
 		}
 		return -1;
 	}
+	
 
+	// Returns the handle to the Property Sheet's tab control	
 	inline HWND CPropertySheet::GetTabControl() const
-	// Returns the handle to the Property Sheet's tab control
 	{
 		assert(IsWindow());
 		return reinterpret_cast<HWND>(SendMessage(PSM_GETTABCONTROL, 0L, 0L));
 	}
 
+	
+	// Returns TRUE of the property sheet is modeless.
 	inline BOOL CPropertySheet::IsModeless() const
 	{
 		return (m_PSH.dwFlags & PSH_MODELESS);
 	}
 
+	
+	// Returns TRUE if this property sheet is a wizard.
 	inline BOOL CPropertySheet::IsWizard() const
 	{
 		return (m_PSH.dwFlags & PSH_WIZARD);
 	}
 
+	
+	// Removes a Property Page from the Property Sheet.	
 	inline void CPropertySheet::RemovePage(CPropertyPage* pPage)
-	// Removes a Property Page from the Property Sheet
 	{
 		assert(IsWindow());
 
@@ -782,6 +820,9 @@ namespace Win32xx
 		m_PSH.nPages = (int)m_vPages.size();
 	}
 
+	
+	// Override this function to filter mouse and keyboard messages prior to 
+	// being passed to WndProc.	
 	inline BOOL CPropertySheet::PreTranslateMessage(MSG& Msg)
 	{
 		// allow sheet to translate Ctrl+Tab, Shift+Ctrl+Tab, Ctrl+PageUp, and Ctrl+PageDown
@@ -801,12 +842,16 @@ namespace Win32xx
 		return CWnd::PreTranslateMessage(Msg);
 	}
 
+	
+	// Activates the specified property page.
 	inline BOOL CPropertySheet::SetActivePage(int nPage)
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(*this, PSM_SETCURSEL, nPage, 0L));
 	}
 
+	
+	// Activates the specified property page.
 	inline BOOL CPropertySheet::SetActivePage(CPropertyPage* pPage)
 	{
 		assert(IsWindow());
@@ -817,15 +862,17 @@ namespace Win32xx
 		return FALSE;
 	}
 
+	
+	// Sets the property sheet's icon	
 	inline void CPropertySheet::SetIcon(UINT idIcon)
-	// Sets the property sheet's icon
 	{
 		m_PSH.pszIcon = MAKEINTRESOURCE(idIcon);
 		m_PSH.dwFlags |= PSH_USEICONID;
 	}
 
+	
+	// Sets the property sheet's title	
 	inline void CPropertySheet::SetTitle(LPCTSTR szTitle)
-	// Sets the property sheet's title
 	{
 		if (szTitle)
 			m_Title = szTitle;
@@ -835,9 +882,10 @@ namespace Win32xx
 		m_PSH.pszCaption = m_Title;
 	}
 
-	inline void CPropertySheet::SetWizardMode(BOOL IsWizard)
+	
 	// A Wizard is a form of property sheet that displays the pages in sequence.
-	// This function enables or disables Wizard mode for the property sheet.
+	// This function enables or disables Wizard mode for the property sheet.	
+	inline void CPropertySheet::SetWizardMode(BOOL IsWizard)
 	{
 		if (IsWizard)
 			m_PSH.dwFlags |= PSH_WIZARD;

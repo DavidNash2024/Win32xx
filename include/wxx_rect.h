@@ -64,7 +64,6 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////
-	// Definition of the CSize class
 	// This class can be used to replace the SIZE structure
 	class CSize : public SIZE
 	{
@@ -99,7 +98,6 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////
-	// Definition of the CPoint class
 	// This class can be used to replace the POINT structure
 	class CPoint : public POINT
 	{
@@ -139,7 +137,6 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////
-	// Definition of the CRect class
 	// This class can be used to replace the RECT structure.
 	class CRect : public RECT
 	{
@@ -230,6 +227,8 @@ namespace Win32xx
 	////////////////////////////////////////
 	// Global Functions
 	//	
+	
+	// Returns a CPoint holding the current cursor position.
 	inline CPoint GetCursorPos()
 	{
 		CPoint pt;
