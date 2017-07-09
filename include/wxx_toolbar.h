@@ -181,7 +181,7 @@ namespace Win32xx
 		int iImages = bm.bmWidth / iImageWidth;
 
 		TBADDBITMAP tbab;
-		ZeroMemory(&tbab, sizeof(TBADDBITMAP));
+		ZeroMemory(&tbab, sizeof(tbab));
 		tbab.hInst = GetApp().GetResourceHandle();
 		tbab.nID   = ToolBarID;
 		int iResult = static_cast<int>(SendMessage(TB_ADDBITMAP, (WPARAM)iImages, (LPARAM)&tbab));
@@ -219,7 +219,7 @@ namespace Win32xx
 
 		// TBBUTTON structure for each button in the toolbar
 		TBBUTTON tbb;
-		ZeroMemory(&tbb, sizeof(TBBUTTON));
+		ZeroMemory(&tbb, sizeof(tbb));
 
 		if (nID == 0)
 		{
@@ -390,7 +390,7 @@ namespace Win32xx
 
 		int iIndex = CommandToIndex(idButton);
 		TBBUTTON tbb;
-		ZeroMemory(&tbb, sizeof(TBBUTTON));
+		ZeroMemory(&tbb, sizeof(tbb));
 		SendMessage(TB_GETBUTTON, (WPARAM)iIndex, (LPARAM) &tbb);
 
 		return tbb.fsStyle;
@@ -420,7 +420,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TBBUTTON tbb;
-		ZeroMemory(&tbb, sizeof(TBBUTTON));
+		ZeroMemory(&tbb, sizeof(tbb));
 		SendMessage(TB_GETBUTTON, (WPARAM)iIndex, (LPARAM) &tbb);
 
 		// returns zero if failed
@@ -744,7 +744,7 @@ namespace Win32xx
 		int iImages = bm.bmWidth / iImageWidth;
 
 		TBREPLACEBITMAP tbrb;
-		ZeroMemory(&tbrb, sizeof(TBREPLACEBITMAP));
+		ZeroMemory(&tbrb, sizeof(tbrb));
 		tbrb.hInstNew = GetApp().GetResourceHandle();
 		tbrb.hInstOld = tbrb.hInstNew;
 		tbrb.nIDNew = NewToolBarID;
@@ -820,15 +820,15 @@ namespace Win32xx
 	{
 		// Retrieve existing state and style
 		TBBUTTON tb;
-		ZeroMemory(&tb, sizeof(TBBUTTON));
+		ZeroMemory(&tb, sizeof(tb));
 		BOOL Succeeded = GetButton(CommandToIndex(idButton), tb);
 		assert(Succeeded);
 
         if (Succeeded)
         {
             TBBUTTONINFO tbbi;
-			ZeroMemory(&tbbi, sizeof(TBBUTTONINFO));
-            tbbi.cbSize = sizeof(TBBUTTONINFO);
+			ZeroMemory(&tbbi, sizeof(tbbi));
+            tbbi.cbSize = sizeof(tbbi);
             tbbi.dwMask = TBIF_COMMAND | TBIF_IMAGE | TBIF_STYLE | TBIF_STATE;
             tbbi.idCommand = idButtonNew;
             tbbi.iImage = iImage;
@@ -870,8 +870,8 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TBBUTTONINFO tbbi;
-		ZeroMemory(&tbbi, sizeof(TBBUTTONINFO));
-		tbbi.cbSize = sizeof(TBBUTTONINFO);
+		ZeroMemory(&tbbi, sizeof(tbbi));
+		tbbi.cbSize = sizeof(tbbi);
 		tbbi.dwMask = TBIF_STYLE;
 		tbbi.fsStyle = Style;
 
@@ -929,7 +929,7 @@ namespace Win32xx
 		if (Succeeded)
 		{
 			TBBUTTON tbb;
-			ZeroMemory(&tbb, sizeof(TBBUTTON));
+			ZeroMemory(&tbb, sizeof(tbb));
 			Succeeded = static_cast<BOOL>(SendMessage(TB_GETBUTTON, (WPARAM)iIndex, (LPARAM)&tbb));
 
 			tbb.iString = iString;
@@ -969,8 +969,8 @@ namespace Win32xx
 		//        i.e. Win95 with IE4 / NT with IE4   or later	
 
 		TBBUTTONINFO tbbi;
-		ZeroMemory(&tbbi, sizeof(TBBUTTONINFO));
-		tbbi.cbSize = sizeof(TBBUTTONINFO);
+		ZeroMemory(&tbbi, sizeof(tbbi));
+		tbbi.cbSize = sizeof(tbbi);
 		tbbi.dwMask = TBIF_SIZE;
 		tbbi.cx = static_cast<WORD>(nWidth);
 		BOOL Succeeded = static_cast<BOOL>(SendMessage(TB_SETBUTTONINFO, (WPARAM)idButton, (LPARAM)&tbbi));

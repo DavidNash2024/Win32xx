@@ -67,9 +67,7 @@ OnAttach()								/*
 *-----------------------------------------------------------------------------*/
 {
 	SetWindowText(_T("Win32++"));
-	NONCLIENTMETRICS ncm;
-	ncm.cbSize = GetSizeofNonClientMetrics();
-	SystemParametersInfo(SPI_GETNONCLIENTMETRICS, ncm.cbSize, &ncm, 0);
+	NONCLIENTMETRICS ncm = GetNonClientMetrics();
 	LOGFONT lf = ncm.lfMessageFont;
 	lf.lfUnderline = TRUE;
 	m_UrlFont.CreateFontIndirect(lf);

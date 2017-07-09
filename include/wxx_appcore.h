@@ -204,7 +204,7 @@ namespace Win32xx
 	inline int CWinThread::MessageLoop()
 	{
 		MSG Msg;
-		ZeroMemory(&Msg, sizeof(MSG));
+		ZeroMemory(&Msg, sizeof(Msg));
 		int status = 1;
 		LONG lCount = 0;
 
@@ -384,7 +384,7 @@ namespace Win32xx
 		m_hInstance = (HINSTANCE)GetModuleHandle(0);
 #else
 		MEMORY_BASIC_INFORMATION mbi;
-		ZeroMemory(&mbi, sizeof(MEMORY_BASIC_INFORMATION));
+		ZeroMemory(&mbi, sizeof(mbi));
 		static int Address = 0;
 		VirtualQuery( &Address, &mbi, sizeof(mbi) );
 		assert(mbi.AllocationBase);
@@ -691,7 +691,7 @@ namespace Win32xx
 	inline void CWinApp::SetCallback()
 	{
 		WNDCLASS wcDefault;
-		ZeroMemory(&wcDefault, sizeof(WNDCLASS));
+		ZeroMemory(&wcDefault, sizeof(wcDefault));
 
 		LPCTSTR szClassName		= _T("Win32++ Temporary Window Class");
 		wcDefault.hInstance		= GetInstanceHandle();

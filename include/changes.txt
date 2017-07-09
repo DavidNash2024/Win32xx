@@ -33,9 +33,12 @@ Added CDockFrame::OnDockActivated
 Added CDockFrame::OnDockDestroyed
 Added CDockFrame::OnMouseActivate
 Added CDockFrame::OnSysColorChange
-Added  UWM_GETCDIALIOG message
-Added FilePrintPreview sample
-Added StatusBarEx sample
+Added ::GetNonClientMetrics()
+Added UWM_GETCDIALIOG message
+
+Added Direct2D           sample
+Added FilePrintPreview   sample
+Added StatusBarEx        sample
 
 Modified CFile::Rename			now throws an exception on failure 
 Modified CFile::Remove		    now throws an exception on failure 
@@ -44,7 +47,9 @@ Modified CFile::Close		    now throws an exception on failure
 Modified CFile::SetLength		now throws an exception on failure 
 Modified CFile::LockRange		now throws an exception on failure 
 Modified CFile::UnlockRange		now throws an exception on failure
-Modified CTab::AddTabPage       now returns CWnd* 
+Modified CTab::AddTabPage       now returns CWnd*
+
+Removed ::GetSizeofNonClientMetrics   Use ::GetNonClientMetrics instead
 
 
 Version 8.4

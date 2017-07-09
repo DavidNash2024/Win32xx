@@ -873,7 +873,7 @@ namespace Win32xx
 
 		// Position popup above toolbar if it won't fit below
 		TPMPARAMS tpm;
-		tpm.cbSize = sizeof(TPMPARAMS);
+		tpm.cbSize = sizeof(tpm);
 		tpm.rcExclude = rc;
 
 		// Set the hot button
@@ -1106,7 +1106,7 @@ namespace Win32xx
 			// Create an extra button for the MDI child system menu
 			// Later we will custom draw the window icon over this button
 			TBBUTTON tbb;
-			ZeroMemory(&tbb, sizeof(TBBUTTON));
+			ZeroMemory(&tbb, sizeof(tbb));
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
 			tbb.iString = (INT_PTR)_T(" ");
@@ -1118,7 +1118,7 @@ namespace Win32xx
 		{
 			// Assign the ToolBar Button struct
 			TBBUTTON tbb;
-			ZeroMemory(&tbb, sizeof(TBBUTTON));
+			ZeroMemory(&tbb, sizeof(tbb));
 			tbb.idCommand = i  + nMaxedOffset;	// Each button needs a unique ID
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;

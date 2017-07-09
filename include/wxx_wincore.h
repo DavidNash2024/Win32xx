@@ -239,8 +239,8 @@ namespace Win32xx
 			{
 				HMONITOR hActiveMonitor = pfnMonitorFromWindow(*this, MONITOR_DEFAULTTONEAREST);
 				MONITORINFO mi;
-				ZeroMemory(&mi, sizeof(MONITORINFO));
-				mi.cbSize = sizeof(MONITORINFO);
+				ZeroMemory(&mi, sizeof(mi));
+				mi.cbSize = sizeof(mi);
 
 				if (pfnGetMonitorInfo(hActiveMonitor, &mi))
 				{
@@ -286,10 +286,10 @@ namespace Win32xx
 		assert( &GetApp() );
 
 		WNDCLASS wc;
-		ZeroMemory(&wc, sizeof(WNDCLASS));
+		ZeroMemory(&wc, sizeof(wc));
 
 		CREATESTRUCT cs;
-		ZeroMemory(&cs, sizeof(CREATESTRUCT));
+		ZeroMemory(&cs, sizeof(cs));
 
 		// Set the WNDCLASS parameters
 		PreRegisterClass(wc);
@@ -370,7 +370,7 @@ namespace Win32xx
 			ClassName = lpszClassName;
 
 		WNDCLASS wc;
-		ZeroMemory(&wc, sizeof(WNDCLASS));
+		ZeroMemory(&wc, sizeof(wc));
 		wc.lpszClassName = ClassName;
 		wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
 		wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
@@ -889,7 +889,7 @@ namespace Win32xx
 
 		// Check to see if this classname is already registered
 		WNDCLASS wcTest;
-		ZeroMemory(&wcTest, sizeof(WNDCLASS));
+		ZeroMemory(&wcTest, sizeof(wcTest));
 		BOOL Done = FALSE;
 
 		if (::GetClassInfo(GetApp().GetInstanceHandle(), wc.lpszClassName, &wcTest))
@@ -952,12 +952,13 @@ namespace Win32xx
 		assert( &GetApp() );
 		assert(IsWindow());
 
+		int cxIcon = ::GetSystemMetrics(SM_CXICON);
+		int cyIcon = ::GetSystemMetrics(SM_CYICON);
+
 #ifndef _WIN32_WCE
-		HICON hIconLarge = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, ::GetSystemMetrics(SM_CXICON),
-							::GetSystemMetrics(SM_CYICON), LR_SHARED);
+		HICON hIconLarge = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED);
 #else
-		HICON hIconLarge = (HICON)GetApp().LoadImage(nIcon), IMAGE_ICON, ::GetSystemMetrics(SM_CXICON),
-							::GetSystemMetrics(SM_CYICON), 0);
+		HICON hIconLarge = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxIcon, cyIcon, 0);
 #endif
 
 		if (hIconLarge != 0)
@@ -975,12 +976,13 @@ namespace Win32xx
 		assert( &GetApp() );
 		assert(IsWindow());
 
+		int cxSmallIcon = ::GetSystemMetrics(SM_CXSMICON);
+		int cySmallIcon = ::GetSystemMetrics(SM_CYSMICON);
+
 #ifndef _WIN32_WCE
-		HICON hIconSmall = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, ::GetSystemMetrics (SM_CXSMICON),
-							::GetSystemMetrics (SM_CYSMICON), LR_SHARED);
+		HICON hIconSmall = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxSmallIcon, cySmallIcon, LR_SHARED);
 #else
-		HICON hIconSmall = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, ::GetSystemMetrics (SM_CXSMICON),
-							::GetSystemMetrics (SM_CYSMICON), 0);
+		HICON hIconSmall = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxSmallIcon, cySmallIcon, 0);
 #endif
 
 		if (hIconSmall != 0)
@@ -2525,17 +2527,23 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE		// for Win32/64 operating systems, not WinCE
 
-	// This function correctly determines the sizeof NONCLIENTMETRICS	
-	inline UINT GetSizeofNonClientMetrics()
+
+	// Returns a NONCLIENTMETRICS struct filled from the system parameters.
+	inline NONCLIENTMETRICS GetNonClientMetrics()
 	{
+		NONCLIENTMETRICS ncm;
+		ZeroMemory(&ncm, sizeof(ncm));
+		ncm.cbSize = sizeof(NONCLIENTMETRICS);
 
 #if (WINVER >= 0x0600)
 		// Is OS version less than Vista, adjust size to correct value
 		if (GetWinVersion() < 2600)
-			return CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
-#endif
+			ncm.cbSize = CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
+#endif	
 
-		return sizeof(NONCLIENTMETRICS);
+		::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+
+		return ncm;
 	}
 
 	
@@ -2581,23 +2589,18 @@ namespace Win32xx
 			{
 				// Load the full set of common controls
 				INITCOMMONCONTROLSEX InitStruct;
-				InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+				InitStruct.dwSize = sizeof(InitStruct);
 				InitStruct.dwICC = ICC_WIN95_CLASSES | ICC_BAR_CLASSES | ICC_COOL_CLASSES | ICC_DATE_CLASSES;
 
 
 #if (!defined _WIN32_WCE && _WIN32_IE >= 0x0401)
 				if (GetComCtlVersion() > 470)
-				{
 					InitStruct.dwICC |= ICC_INTERNET_CLASSES | ICC_NATIVEFNTCTL_CLASS | ICC_PAGESCROLLER_CLASS | ICC_USEREX_CLASSES;
-				}
 #endif
 
 				// Call InitCommonControlsEx
 				if (!(pfnInitEx(&InitStruct)))
-				{
 					InitCommonControls();
-				}
-
 			}
 			else
 			{

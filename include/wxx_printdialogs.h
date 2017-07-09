@@ -312,7 +312,7 @@ namespace Win32xx
 			{
 				// Get current default printer
 				PRINTDLG pd;
-				ZeroMemory(&pd, sizeof(PRINTDLG));
+				ZeroMemory(&pd, sizeof(pd));
 				pd.lStructSize = sizeof(pd);
 				pd.Flags = PD_RETURNDEFAULT;
 				PrintDlg(&pd);

@@ -182,6 +182,8 @@ namespace Win32xx
 		};
 
     private:
+		static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lParam);
+
         HWND m_hParent;
     	std::vector<ResizeData> m_vResizeData;
 
@@ -662,7 +664,7 @@ namespace Win32xx
 	{
 		TLSData* pTLSData = GetApp().GetTlsData();
 		MSG Msg;
-		ZeroMemory(&Msg, sizeof(MSG));
+		ZeroMemory(&Msg, sizeof(Msg));
 		LONG lCount = 0;
 
 		// While idle, perform idle processing until OnIdle returns FALSE
@@ -714,15 +716,15 @@ namespace Win32xx
 	// Definitions for the CResizer class
 	//
 
-    // Adds a child window (usually a dialog control) to the set of windows managed by
-	// the Resizer.
+    // Adds or updates the information about a child window managed by CResizer.
 	// The alignment corner should be set to the closest corner of the dialog. 
 	// Allowed values are topleft, topright, bottomleft, and bottomright.
 	// Set IsFixedWidth to TRUE if the width should be fixed instead of variable.
 	// Set IsFixedHeight to TRUE if the height should be fixed instead of variable.	
 	void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
 	{
-		assert(hWnd);
+		assert(::IsWindow(hWnd));
+		assert(::GetParent(hWnd) == m_hParent);
 
     	ResizeData rd;
     	rd.corner = corner;
@@ -734,8 +736,37 @@ namespace Win32xx
 		rd.rcInit = rcInit;
 		rd.hWnd = hWnd;
 
-		m_vResizeData.insert(m_vResizeData.begin(), rd);
+		std::vector<ResizeData>::iterator iter;
+		for (iter = m_vResizeData.begin(); iter != m_vResizeData.end(); ++ iter)
+		{
+			if ( iter->hWnd == hWnd)
+			{
+				// Replace the value
+				*iter = rd;
+				break;
+			}
+		}
+
+		// Add the value
+		if (iter == m_vResizeData.end())
+			m_vResizeData.push_back(rd);
     }
+
+
+	// A callback function used by EnumChildWindows.
+	inline BOOL CALLBACK CResizer::EnumWindowsProc(HWND hwnd, LPARAM lParam)
+	{
+		CResizer* pResizer = (CResizer*)lParam;
+
+		// Only for a child, not other decendants.
+		if (::GetParent(hwnd) == pResizer->m_hParent)
+		{
+			// Add the child window to set of windows managed by CResizer.
+			pResizer->AddChild(hwnd, topleft, 0);
+		}
+
+		return TRUE;
+	}
 
 	
 	// Performs the resizing and scrolling. Call this function from within the window's DialogProc.	
@@ -779,6 +810,9 @@ namespace Win32xx
 		DWORD dwStyle = (DWORD)::GetClassLongPtr(hParent, GCL_STYLE);
 		dwStyle |= WS_HSCROLL | WS_VSCROLL;
 		::SetClassLongPtr(hParent, GCL_STYLE, dwStyle);
+
+		// Calls AddChild for each child window with default settings.
+		::EnumChildWindows(hParent, EnumWindowsProc, (LPARAM)this);
     }
 
 	
@@ -828,7 +862,7 @@ namespace Win32xx
 
 		// Reset the scroll bar.
 		SCROLLINFO si;
-		ZeroMemory(&si, sizeof(SCROLLINFO));
+		ZeroMemory(&si, sizeof(si));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_POS;
 		si.nPos   = m_xScrollPos;
@@ -882,7 +916,7 @@ namespace Win32xx
 
 		// Reset the scroll bar.
 		SCROLLINFO si;
-		ZeroMemory(&si, sizeof(SCROLLINFO));
+		ZeroMemory(&si, sizeof(si));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_POS;
 		si.nPos   = m_yScrollPos;
@@ -904,7 +938,7 @@ namespace Win32xx
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
 		m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_rcMin.Height() - rcCurrent.Height()) );
 		SCROLLINFO si;
-		ZeroMemory(&si, sizeof(SCROLLINFO));
+		ZeroMemory(&si, sizeof(si));
 		si.cbSize = sizeof(si);
 		si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
 		si.nMax   =	m_rcMin.Width();

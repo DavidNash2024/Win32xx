@@ -805,7 +805,7 @@ namespace Win32xx
 	inline CArchive& operator>>(CArchive& ar, CTime& t)
 	{
 		UINT size;
-		ar.Read(&size, sizeof(UINT));
+		ar.Read(&size, sizeof(size));
 		if (size != sizeof(ULONGLONG))
 		{
 			CString str = ar.GetFile().GetFilePath();

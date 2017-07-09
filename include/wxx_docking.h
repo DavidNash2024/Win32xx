@@ -829,10 +829,7 @@ namespace Win32xx
 			m_IsOldFocusStored = Focus;
 
 			// Set the font for the title
-			NONCLIENTMETRICS info;
-			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-			info.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			NONCLIENTMETRICS info = GetNonClientMetrics();
 			dcMem.CreateFontIndirect(info.lfStatusFont);
 
 			// Set the Colours
@@ -1116,7 +1113,7 @@ namespace Win32xx
 		if (!m_IsTracking)
 		{
 			TRACKMOUSEEVENT TrackMouseEventStruct;
-			ZeroMemory(&TrackMouseEventStruct, sizeof(TRACKMOUSEEVENT));
+			ZeroMemory(&TrackMouseEventStruct, sizeof(TrackMouseEventStruct));
 			TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 			TrackMouseEventStruct.dwFlags = TME_LEAVE|TME_NONCLIENT;
 			TrackMouseEventStruct.hwndTrack = *this;
@@ -2563,10 +2560,7 @@ namespace Win32xx
 
 	inline int CDocker::GetTextHeight()
 	{
-		NONCLIENTMETRICS info;
-		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		NONCLIENTMETRICS info = GetNonClientMetrics();
 		LOGFONT lf = info.lfStatusFont;
 
 		CClientDC dc(*this);
@@ -4044,7 +4038,7 @@ namespace Win32xx
 
 		// Send the undock notification to the frame
 		NMHDR nmhdr;
-		ZeroMemory(&nmhdr, sizeof(NMHDR));
+		ZeroMemory(&nmhdr, sizeof(nmhdr));
 		nmhdr.hwndFrom = GetHwnd();
 		nmhdr.code = UWN_UNDOCKED;
 		nmhdr.idFrom = m_nDockID;
@@ -4306,7 +4300,7 @@ namespace Win32xx
 		if (IsWindow())
 		{
 			TCITEM tie;
-			ZeroMemory(&tie, sizeof(TCITEM));
+			ZeroMemory(&tie, sizeof(tie));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = ci.iImage;
 			tie.pszText = const_cast<LPTSTR>(m_vContainerInfo[iNewPage].Title.c_str());
@@ -4404,10 +4398,7 @@ namespace Win32xx
 		{
 			CSize TempSize;
 			CClientDC dc(*this);
-			NONCLIENTMETRICS info;
-			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-			info.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			NONCLIENTMETRICS info = GetNonClientMetrics();
 			dc.CreateFontIndirect(info.lfStatusFont);
 			TempSize = dc.GetTextExtentPoint32(iter->Title, lstrlen(iter->Title));
 			if (TempSize.cx > Size.cx)
@@ -4462,10 +4453,7 @@ namespace Win32xx
 		GetODImageList().Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
 		// Set the tab control's font
-		NONCLIENTMETRICS info;
-		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		NONCLIENTMETRICS info = GetNonClientMetrics();
 		GetTabFont().CreateFontIndirect(info.lfStatusFont);
 		SetFont(GetTabFont());
 
@@ -4504,7 +4492,7 @@ namespace Win32xx
 		{
 			// Add tabs for each view.
 			TCITEM tie;
-			ZeroMemory(&tie, sizeof(TCITEM));
+			ZeroMemory(&tie, sizeof(tie));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vContainerInfo[i].iImage;
 			tie.pszText = const_cast<LPTSTR>(m_vContainerInfo[i].Title.c_str());
@@ -4523,7 +4511,7 @@ namespace Win32xx
 
 		CPoint pt((DWORD)lParam);
 		TCHITTESTINFO info;
-		ZeroMemory(&info, sizeof(TCHITTESTINFO));
+		ZeroMemory(&info, sizeof(info));
 		info.pt = pt;
 		m_nTabPressed = HitTest(info);
 
@@ -4575,7 +4563,7 @@ namespace Win32xx
 		if (IsLeftButtonDown())
 		{
 			TCHITTESTINFO info;
-			ZeroMemory(&info, sizeof(TCHITTESTINFO));
+			ZeroMemory(&info, sizeof(info));
 			info.pt = CPoint((DWORD_PTR)lParam);
 			int nTab = HitTest(info);
 			if (nTab >= 0 && m_nTabPressed >= 0)
@@ -4883,14 +4871,14 @@ namespace Win32xx
 			ContainerInfo CI2 = GetContainerParent()->m_vContainerInfo[nTab2];
 
 			TCITEM Item1;
-			ZeroMemory(&Item1, sizeof(TCITEM));
+			ZeroMemory(&Item1, sizeof(Item1));
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = CI1.Title.GetLength()+1;
 			Item1.pszText = const_cast<LPTSTR>(CI1.Title.c_str());
 			GetItem(nTab1, &Item1);
 
 			TCITEM Item2;
-			ZeroMemory(&Item2, sizeof(TCITEM));
+			ZeroMemory(&Item2, sizeof(Item2));
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = CI2.Title.GetLength()+1;
 			Item2.pszText = const_cast<LPTSTR>(CI2.Title.c_str());

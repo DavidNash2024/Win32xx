@@ -703,10 +703,7 @@ namespace Win32xx
 		else
 		{
 			// Get the font used in menu items
-			NONCLIENTMETRICS info;
-			ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-			info.cbSize = GetSizeofNonClientMetrics();
-			SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+			NONCLIENTMETRICS info = GetNonClientMetrics();
 
 			// Default menu items are bold, so take this into account
 			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
@@ -981,10 +978,7 @@ namespace Win32xx
 		m_UseReBar = (GetComCtlVersion() > 470)? TRUE : FALSE;
 
 		// Set the fonts.
-		NONCLIENTMETRICS info;
-		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		NONCLIENTMETRICS info = GetNonClientMetrics();
 		m_fntMenuBar.CreateFontIndirect(info.lfMenuFont);
 		m_fntStatusBar.CreateFontIndirect(info.lfStatusFont);
 	}
@@ -1117,7 +1111,7 @@ namespace Win32xx
 	inline void CFrameT<T>::AddMenuBarBand()
 	{
 		REBARBANDINFO rbbi;
-		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+		ZeroMemory(&rbbi, sizeof(rbbi));
 
 		rbbi.fMask      = RBBIM_STYLE | RBBIM_CHILD | RBBIM_ID;
 		rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT;
@@ -1163,7 +1157,7 @@ namespace Win32xx
 
 		// Fill the REBARBAND structure.
 		REBARBANDINFO rbbi;
-		ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+		ZeroMemory(&rbbi, sizeof(rbbi));
 
 		rbbi.fMask      = RBBIM_STYLE |  RBBIM_CHILD | RBBIM_ID;
 		rbbi.fStyle     = dwBandStyle;
@@ -1385,7 +1379,7 @@ namespace Win32xx
 
 						int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L));
 						TBBUTTON tbb;
-						ZeroMemory(&tbb, sizeof(TBBUTTON));
+						ZeroMemory(&tbb, sizeof(tbb));
 						pTB->SendMessage(TB_GETBUTTON, (WPARAM)nButton, (LPARAM)&tbb);
 						int iImage = (int)tbb.iBitmap;
 
@@ -1878,7 +1872,7 @@ namespace Win32xx
 
 							// Determine the size of the child window
 							REBARBANDINFO rbbi;
-							ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+							ZeroMemory(&rbbi, sizeof(rbbi));
 							rbbi.fMask = RBBIM_CHILD ;
 							ReBar.GetBandInfo(nBand, rbbi);
 							CRect rcChild;
@@ -2033,7 +2027,7 @@ namespace Win32xx
 	{
 		int nMenuItemCount = ::GetMenuItemCount(hMenu);
 		MENUITEMINFO mii;
-		ZeroMemory(&mii, sizeof(MENUITEMINFO));
+		ZeroMemory(&mii, sizeof(mii));
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		for (int nItem = 0 ; nItem < nMenuItemCount; ++nItem)
@@ -2485,7 +2479,7 @@ namespace Win32xx
 			m_vMenuItemData.push_back(ItemDataPtr(pItem));	// Store pItem in smart pointer for later automatic deletion
 
 			MENUITEMINFO mii;
-			ZeroMemory(&mii, sizeof(MENUITEMINFO));
+			ZeroMemory(&mii, sizeof(mii));
 			mii.cbSize = GetSizeofMenuItemInfo();
 
 			// Use old fashioned MIIM_TYPE instead of MIIM_FTYPE for MS VC6 compatibility
@@ -2752,10 +2746,7 @@ namespace Win32xx
 			}
 		}
 
-		NONCLIENTMETRICS info;
-		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo (SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		NONCLIENTMETRICS info = GetNonClientMetrics();
 
 		if (GetStatusBar().IsWindow())
 		{
@@ -2836,7 +2827,7 @@ namespace Win32xx
 		{
 			// Undo OwnerDraw and put the text back.
 			MENUITEMINFO mii;
-			ZeroMemory(&mii, sizeof(MENUITEMINFO));
+			ZeroMemory(&mii, sizeof(mii));
 			mii.cbSize = GetSizeofMenuItemInfo();
 
 			mii.fMask = MIIM_TYPE | MIIM_DATA;
@@ -3053,8 +3044,8 @@ namespace Win32xx
 
 				// Store the window position in the registry
 				WINDOWPLACEMENT Wndpl;
-				ZeroMemory(&Wndpl, sizeof(WINDOWPLACEMENT));
-				Wndpl.length = sizeof(WINDOWPLACEMENT);
+				ZeroMemory(&Wndpl, sizeof(Wndpl));
+				Wndpl.length = sizeof(Wndpl);
 
 				if (T::GetWindowPlacement(Wndpl))
 				{
@@ -3199,7 +3190,7 @@ namespace Win32xx
 			CRect rcBorder = RB.GetBandBorders(nBand);
 
 			REBARBANDINFO rbbi;
-			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+			ZeroMemory(&rbbi, sizeof(rbbi));
 			rbbi.fMask = RBBIM_CHILDSIZE | RBBIM_SIZE;
 			RB.GetBandInfo(nBand, rbbi);
 
@@ -3784,7 +3775,7 @@ namespace Win32xx
 		if (nBand >= 0)
 		{
 			REBARBANDINFO rbbi;
-			ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
+			ZeroMemory(&rbbi, sizeof(rbbi));
 			CClientDC dcMenuBar(GetMenuBar());
 			dcMenuBar.SelectObject(GetMenuBar().GetFont());
 			CSize sizeMenuBar = dcMenuBar.GetTextExtentPoint32(_T("\tSomeText"), lstrlen(_T("\tSomeText")));
@@ -3848,7 +3839,7 @@ namespace Win32xx
 
 		// Set MRU menu items
 		MENUITEMINFO mii;
-		ZeroMemory(&mii, sizeof(MENUITEMINFO));
+		ZeroMemory(&mii, sizeof(mii));
 		mii.cbSize = GetSizeofMenuItemInfo();
 
 		// We place the MRU items under the left most menu item
