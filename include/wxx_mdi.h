@@ -826,8 +826,8 @@ namespace Win32xx
 		CREATESTRUCT cs;
 		WNDCLASS wc;
 
-		ZeroMemory(&cs, sizeof(CREATESTRUCT));
-		ZeroMemory(&wc, sizeof(WNDCLASS));
+		ZeroMemory(&cs, sizeof(cs));
+		ZeroMemory(&wc, sizeof(wc));
 
 		//Call PreCreate in case its overloaded
 		PreCreate(cs);

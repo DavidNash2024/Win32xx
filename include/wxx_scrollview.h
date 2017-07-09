@@ -427,7 +427,7 @@ namespace Win32xx
 				CRect rcView = GetWindowRect();
 
 				SCROLLINFO si;
-				ZeroMemory(&si, sizeof(SCROLLINFO));
+				ZeroMemory(&si, sizeof(si));
 				si.cbSize = sizeof(si);
 				si.fMask = SIF_RANGE | SIF_PAGE | SIF_POS;
 				si.nMin = 0;

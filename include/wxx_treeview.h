@@ -230,7 +230,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TVITEM tvi;
-		ZeroMemory(&tvi, sizeof(TVITEM));
+		ZeroMemory(&tvi, sizeof(tvi));
 		tvi.mask = TVIF_PARAM;
 		tvi.hItem = hItem;
 		TreeView_GetItem( *this, &tvi );
@@ -252,7 +252,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TVITEM tvi;
-		ZeroMemory(&tvi, sizeof(TVITEM));
+		ZeroMemory(&tvi, sizeof(tvi));
 		tvi.mask = TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 		tvi.hItem = hItem;
 		BOOL Succeeded = TreeView_GetItem( *this, &tvi );
@@ -281,7 +281,7 @@ namespace Win32xx
 		if (nTextMax > 0)
 		{
 			TVITEM tvi;
-			ZeroMemory(&tvi, sizeof(TVITEM));
+			ZeroMemory(&tvi, sizeof(tvi));
 			tvi.hItem = hItem;
 			tvi.mask = TVIF_TEXT;
 			tvi.cchTextMax = nTextMax;
@@ -468,7 +468,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TVITEM tvi;
-		ZeroMemory(&tvi, sizeof(TVITEM));
+		ZeroMemory(&tvi, sizeof(tvi));
 		tvi.hItem = hItem;
 		tvi.mask  = nMask;
 		tvi.pszText = const_cast<LPTSTR>(szText);
@@ -487,7 +487,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TVITEM tvi;
-		ZeroMemory(&tvi, sizeof(TVITEM));
+		ZeroMemory(&tvi, sizeof(tvi));
 		tvi.hItem = hItem;
 		tvi.mask = TVIF_PARAM;
 		tvi.lParam = dwData;
@@ -509,7 +509,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TVITEM tvi;
-		ZeroMemory(&tvi, sizeof(TVITEM));
+		ZeroMemory(&tvi, sizeof(tvi));
 		tvi.hItem = hItem;
 		tvi.iImage = nImage;
 		tvi.iSelectedImage = nSelectedImage;
@@ -524,7 +524,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		TVITEM tvi;
-		ZeroMemory(&tvi, sizeof(TVITEM));
+		ZeroMemory(&tvi, sizeof(tvi));
 		tvi.hItem = hItem;
 		tvi.pszText = const_cast<LPTSTR>(szText);
 		tvi.mask = TVIF_TEXT;

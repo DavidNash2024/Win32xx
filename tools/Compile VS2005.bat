@@ -107,6 +107,8 @@ devenv /build Debug Splitter\ProjectFiles\Splitter_2005.sln                     
 devenv /build Release Splitter\ProjectFiles\Splitter_2005.sln                   >>"..\output\VS2005.log"
 devenv /build Debug StatusBar\ProjectFiles\StatusBar_2005.sln                   >>"..\output\VS2005.log"
 devenv /build Release StatusBar\ProjectFiles\StatusBar_2005.sln                 >>"..\output\VS2005.log"
+devenv /build Debug StatusBarEx\ProjectFiles\StatusBarEx_2005.sln               >>"..\output\VS2005.log"
+devenv /build Release StatusBarEx\ProjectFiles\StatusBarEx_2005.sln             >>"..\output\VS2005.log"
 devenv /build Debug TabDemo\ProjectFiles\TabDemo_2005.sln                       >>"..\output\VS2005.log"
 devenv /build Release TabDemo\ProjectFiles\TabDemo_2005.sln                     >>"..\output\VS2005.log"
 devenv /build Debug Themes\ProjectFiles\Themes_2005.sln                         >>"..\output\VS2005.log"

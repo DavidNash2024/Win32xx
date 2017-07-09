@@ -95,7 +95,7 @@ namespace Win32xx
 	{
 		// Acquire the CREATESTRUCT parameters
 		CREATESTRUCT cs;
-		ZeroMemory(&cs, sizeof(CREATESTRUCT));
+		ZeroMemory(&cs, sizeof(cs));
 
 		// Add the gripper style if the parent window is resizable
 		DWORD dwParentStyle = ::GetWindowLongPtr(hWndParent, GWL_STYLE);

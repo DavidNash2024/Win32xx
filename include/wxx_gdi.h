@@ -248,7 +248,7 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		HBRUSH CreateHatchBrush(int nIndex, COLORREF crColor);
-		HBRUSH CreateBrushIndirect(const LOGBRUSH& LogBrush);
+		HBRUSH CreateBrushIndirect(const LOGBRUSH& logBrush);
 		HBRUSH CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
 		HBRUSH CreateDIBPatternBrushPt(LPCVOID pPackedDIB, UINT nUsage);
 #endif // !defined(_WIN32_WCE)
@@ -263,14 +263,14 @@ namespace Win32xx
 	public:
 		CFont();
 		CFont(HFONT hFont);
-		CFont(const LOGFONT& LogFont);
+		CFont(const LOGFONT& logFont);
 		operator HFONT() const;
 		virtual ~CFont();
 
 		// Create methods
-		HFONT CreateFontIndirect(const LOGFONT& LogFont);
+		HFONT CreateFontIndirect(const LOGFONT& logFont);
 		HFONT CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc = NULL, BOOL IsBold = FALSE, BOOL IsItalic = FALSE);
-		HFONT CreatePointFontIndirect(const LOGFONT& LogFont, HDC hdc = NULL);
+		HFONT CreatePointFontIndirect(const LOGFONT& logFont, HDC hdc = NULL);
 
 #ifndef _WIN32_WCE
 		HFONT CreateFont(int nHeight, int nWidth, int nEscapement,
@@ -327,17 +327,17 @@ namespace Win32xx
 		CPen(HPEN hPen);
 		CPen(int nPenStyle, int nWidth, COLORREF crColor);
 #ifndef _WIN32_WCE
-		CPen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
+		CPen(int nPenStyle, int nWidth, const LOGBRUSH& logBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL);
 #endif // !_WIN32_WCE
 		operator HPEN() const;
 		virtual ~CPen();
 
 		HPEN CreatePen(int nPenStyle, int nWidth, COLORREF crColor);
-		HPEN CreatePenIndirect(const LOGPEN& LogPen);
+		HPEN CreatePenIndirect(const LOGPEN& logPen);
 		LOGPEN GetLogPen() const;
 
 #ifndef _WIN32_WCE
-		HPEN ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL) ;
+		HPEN ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& logBrush, int nStyleCount = 0, const DWORD* lpStyle = NULL) ;
 		EXTLOGPEN GetExtLogPen() const;
 #endif // !_WIN32_WCE
 
@@ -474,7 +474,7 @@ namespace Win32xx
 		LOGBRUSH GetLogBrush() const;
 
 #ifndef _WIN32_WCE
-		void CreateBrushIndirect(const LOGBRUSH& LogBrush);
+		void CreateBrushIndirect(const LOGBRUSH& logBrush);
 		void CreateHatchBrush(int fnStyle, COLORREF rgb);
 		void CreateDIBPatternBrush(HGLOBAL hglbDIBPacked, UINT fuColorSpec);
 		void CreateDIBPatternBrushPt(LPCVOID lpPackedDIB, UINT iUsage);
@@ -502,7 +502,7 @@ namespace Win32xx
 
 		// Create Pens
 		void CreatePen(int nStyle, int nWidth, COLORREF rgb);
-		void CreatePenIndirect(const LOGPEN& LogPen);
+		void CreatePenIndirect(const LOGPEN& logPen);
 		HPEN GetCurrentPen() const;
 		LOGPEN GetLogPen() const;
 
@@ -672,10 +672,10 @@ namespace Win32xx
 #endif
 
 		// Clipping and Region Functions
-		int  ExcludeClipRect(int Left, int Top, int Right, int BottomRect) const;
+		int  ExcludeClipRect(int left, int top, int right, int bottom) const;
 		int  ExcludeClipRect(const RECT& rc) const;
 		int  GetClipBox(RECT& rc) const;
-		int  IntersectClipRect(int Left, int Top, int Right, int Bottom) const;
+		int  IntersectClipRect(int left, int top, int right, int bottom) const;
 		int  IntersectClipRect(const RECT& rc) const;
 		BOOL RectVisible(const RECT& rc) const;
 		int  SelectClipRgn(HRGN hRgn) const;
@@ -1033,7 +1033,7 @@ namespace Win32xx
 		CBitmapInfoPtr(HBITMAP hBitmap)
 		{
 			BITMAP bmSource;
-			::GetObject(hBitmap, sizeof(BITMAP), &bmSource);
+			::GetObject(hBitmap, sizeof(bmSource), &bmSource);
 
 			// Convert the color format to a count of bits.
 			WORD cClrBits = (WORD)(bmSource.bmPlanes * bmSource.bmBitsPixel);
@@ -1431,8 +1431,8 @@ namespace Win32xx
 		{
 			assert(GetHandle() != NULL);
 			BITMAP bmp;
-			ZeroMemory(&bmp, sizeof(BITMAP));
-			::GetObject(GetHandle(), sizeof(BITMAP), &bmp);
+			ZeroMemory(&bmp, sizeof(bmp));
+			::GetObject(GetHandle(), sizeof(bmp), &bmp);
 			return bmp;
 		}
 
@@ -1707,9 +1707,9 @@ namespace Win32xx
 
 	
 	// Creates a logical brush from style, color, and pattern specified in the LOGPRUSH struct.	
-	inline HBRUSH CBrush::CreateBrushIndirect(const LOGBRUSH& LogBrush)
+	inline HBRUSH CBrush::CreateBrushIndirect(const LOGBRUSH& logBrush)
 	{
-		HBRUSH hBrush = ::CreateBrushIndirect(&LogBrush);
+		HBRUSH hBrush = ::CreateBrushIndirect(&logBrush);
 		if (hBrush == 0)
 			throw CResourceException(_T("CreateBrushIndirect failed"));
 
@@ -1764,10 +1764,10 @@ namespace Win32xx
 	inline LOGBRUSH CBrush::GetLogBrush() const
 	{
 		assert(GetHandle() != NULL);
-		LOGBRUSH LogBrush;
-		ZeroMemory(&LogBrush, sizeof(LOGBRUSH));
-		::GetObject (GetHandle(), sizeof(LOGBRUSH), &LogBrush);
-		return LogBrush;
+		LOGBRUSH logBrush;
+		ZeroMemory(&logBrush, sizeof(logBrush));
+		::GetObject (GetHandle(), sizeof(logBrush), &logBrush);
+		return logBrush;
 	}
 
 
@@ -1785,11 +1785,11 @@ namespace Win32xx
 	}
 
 	
-	inline CFont::CFont(const LOGFONT& LogFont)
+	inline CFont::CFont(const LOGFONT& logFont)
 	{
 		try
 		{
-			CreateFontIndirect(LogFont);
+			CreateFontIndirect(logFont);
 		}
 
 		catch(...)
@@ -1812,9 +1812,9 @@ namespace Win32xx
 
 	
 	// Creates a logical font that has the specified characteristics.	
-	inline HFONT CFont::CreateFontIndirect(const LOGFONT& LogFont)
+	inline HFONT CFont::CreateFontIndirect(const LOGFONT& logFont)
 	{
-		HFONT hFont = ::CreateFontIndirect(&LogFont);
+		HFONT hFont = ::CreateFontIndirect(&logFont);
 		if (hFont == 0)
 			throw CResourceException(_T("CreateFontIndirect"));
 
@@ -1828,7 +1828,7 @@ namespace Win32xx
 	inline HFONT CFont::CreatePointFont(int nPointSize, LPCTSTR lpszFaceName, HDC hdc /*= NULL*/, BOOL IsBold /*= FALSE*/, BOOL IsItalic /*= FALSE*/)
 	{
 		LOGFONT logFont;
-		ZeroMemory(&logFont, sizeof(LOGFONT));
+		ZeroMemory(&logFont, sizeof(logFont));
 		logFont.lfCharSet = DEFAULT_CHARSET;
 		logFont.lfHeight = nPointSize;
 
@@ -1846,13 +1846,13 @@ namespace Win32xx
 	// Creates a font of a specified typeface and point size.
 	// This function automatically converts the height in lfHeight to logical units
 	// using the specified device context.	
-	inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& LogFont, HDC hdc /* = NULL*/)
+	inline HFONT CFont::CreatePointFontIndirect(const LOGFONT& logFont, HDC hdc /* = NULL*/)
 	{
 		HDC hDC1 = (hdc != NULL) ? hdc : ::GetDC(HWND_DESKTOP);
 		CDC dc(hDC1);
 
 		// convert nPointSize to logical units based on hDC
-		LOGFONT logFont = LogFont;
+		LOGFONT logFont1 = logFont;
 
 #ifndef _WIN32_WCE
 		POINT pt = { 0, 0 };
@@ -1862,13 +1862,13 @@ namespace Win32xx
 		POINT ptOrg = { 0, 0 };
 		::DPtoLP(dc, &ptOrg, 1);
 
-		logFont.lfHeight = -abs(pt.y - ptOrg.y);
+		logFont1.lfHeight = -abs(pt.y - ptOrg.y);
 #else // CE specific
 		// DP and LP are always the same on CE
-		logFont.lfHeight = -abs(((::GetDeviceCaps(hDC1, LOGPIXELSY)* logFont.lfHeight)/ 720));
+		logFont1.lfHeight = -abs(((::GetDeviceCaps(hDC1, LOGPIXELSY)* logFont.lfHeight)/ 720));
 #endif // _WIN32_WCE
 
-		return CreateFontIndirect (logFont);
+		return CreateFontIndirect (logFont1);
 	}
 
 #ifndef _WIN32_WCE
@@ -1899,10 +1899,10 @@ namespace Win32xx
 	inline LOGFONT CFont::GetLogFont() const
 	{
 		assert(GetHandle() != NULL);
-		LOGFONT LogFont;
-		ZeroMemory(&LogFont, sizeof(LOGFONT));
-		::GetObject(GetHandle(), sizeof(LOGFONT), &LogFont);
-		return LogFont;
+		LOGFONT logFont;
+		ZeroMemory(&logFont, sizeof(logFont));
+		::GetObject(GetHandle(), sizeof(logFont), &logFont);
+		return logFont;
 	}
 
 
@@ -2042,11 +2042,11 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
+	inline CPen::CPen(int nPenStyle, int nWidth, const LOGBRUSH& logBrush, int nStyleCount /*= 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
 		try
 		{
-			Attach(::ExtCreatePen(nPenStyle, nWidth, &LogBrush, nStyleCount, lpStyle));
+			Attach(::ExtCreatePen(nPenStyle, nWidth, &logBrush, nStyleCount, lpStyle));
 		}
 
 		catch(...)
@@ -2080,9 +2080,9 @@ namespace Win32xx
 
 	
 	// Creates a logical pen that has the style, width, and color specified in a structure.	
-	inline HPEN CPen::CreatePenIndirect(const LOGPEN& LogPen)
+	inline HPEN CPen::CreatePenIndirect(const LOGPEN& logPen)
 	{
-		HPEN hPen = ::CreatePenIndirect(&LogPen);
+		HPEN hPen = ::CreatePenIndirect(&logPen);
 		Attach(hPen);
 		SetManaged(true);
 		return hPen;
@@ -2094,18 +2094,18 @@ namespace Win32xx
 	{
 		assert(GetHandle() != NULL);
 
-		LOGPEN LogPen;
-		ZeroMemory(&LogPen, sizeof(LOGPEN));
-		::GetObject(GetHandle(), sizeof(LOGPEN), &LogPen);
-		return LogPen;
+		LOGPEN logPen;
+		ZeroMemory(&logPen, sizeof(logPen));
+		::GetObject(GetHandle(), sizeof(logPen), &logPen);
+		return logPen;
 	}
 
 #ifndef _WIN32_WCE
 
 	// Creates a logical cosmetic or geometric pen that has the specified style, width, and brush attributes.
-	inline HPEN CPen::ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& LogBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
+	inline HPEN CPen::ExtCreatePen(int nPenStyle, int nWidth, const LOGBRUSH& logBrush, int nStyleCount /* = 0*/, const DWORD* lpStyle /*= NULL*/)
 	{
-		HPEN hPen = ::ExtCreatePen(nPenStyle, nWidth, &LogBrush, nStyleCount, lpStyle);
+		HPEN hPen = ::ExtCreatePen(nPenStyle, nWidth, &logBrush, nStyleCount, lpStyle);
 		Attach(hPen);
 		SetManaged(true);
 		return hPen;
@@ -2117,10 +2117,10 @@ namespace Win32xx
 	{
 		assert(GetHandle() != NULL);
 
-		EXTLOGPEN ExLogPen;
-		ZeroMemory(&ExLogPen, sizeof(EXTLOGPEN));
-		::GetObject(GetHandle(), sizeof(EXTLOGPEN), &ExLogPen);
-		return ExLogPen;
+		EXTLOGPEN exLogPen;
+		ZeroMemory(&exLogPen, sizeof(exLogPen));
+		::GetObject(GetHandle(), sizeof(exLogPen), &exLogPen);
+		return exLogPen;
 	}
 	
 #endif // !_WIN32_WCE
@@ -2885,7 +2885,7 @@ namespace Win32xx
 
 		HBITMAP hbm = (HBITMAP)::GetCurrentObject(m_pData->hDC, OBJ_BITMAP);
 		BITMAP bm;
-		ZeroMemory(&bm, sizeof(BITMAP));
+		ZeroMemory(&bm, sizeof(bm));
 		::GetObject(hbm, sizeof(bm), &bm);
 		return bm;
 	}
@@ -3032,21 +3032,21 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HBRUSH hBrush = (HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH);
-		LOGBRUSH lBrush;
-		ZeroMemory(&lBrush, sizeof(LOGBRUSH));
-		::GetObject(hBrush, sizeof(lBrush), &lBrush);
-		return lBrush;
+		LOGBRUSH logBrush;
+		ZeroMemory(&logBrush, sizeof(logBrush));
+		::GetObject(hBrush, sizeof(logBrush), &logBrush);
+		return logBrush;
 	}
 
 #ifndef _WIN32_WCE
 
 	// Creates the brush and selects it into the device context.
-	inline void CDC::CreateBrushIndirect(const LOGBRUSH& LogBrush)
+	inline void CDC::CreateBrushIndirect(const LOGBRUSH& logBrush)
 	{
 		assert(m_pData->hDC);
 
 		CBrush brush;
-		brush.CreateBrushIndirect(LogBrush);
+		brush.CreateBrushIndirect(logBrush);
 		SelectObject(brush);
 		m_pData->Brush = brush;
 	}
@@ -3118,10 +3118,10 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HFONT hFont = (HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT);
-		LOGFONT lFont;
-		ZeroMemory(&lFont, sizeof(LOGFONT));
-		::GetObject(hFont, sizeof(lFont), &lFont);
-		return lFont;
+		LOGFONT logFont;
+		ZeroMemory(&logFont, sizeof(logFont));
+		::GetObject(hFont, sizeof(logFont), &logFont);
+		return logFont;
 	}
 
 #ifndef _WIN32_WCE
@@ -3263,12 +3263,12 @@ namespace Win32xx
 	
 	
 	// Creates the pen and selects it into the device context.
-	inline void CDC::CreatePenIndirect (const LOGPEN& LogPen)
+	inline void CDC::CreatePenIndirect (const LOGPEN& logPen)
 	{
 		assert(m_pData->hDC);
 
 		CPen pen;
-		pen.CreatePenIndirect(LogPen);
+		pen.CreatePenIndirect(logPen);
 		SelectObject(pen);
 		m_pData->Pen = pen;
 	}
@@ -3288,10 +3288,10 @@ namespace Win32xx
 		assert(m_pData->hDC);
 
 		HPEN hPen = (HPEN)::GetCurrentObject(m_pData->hDC, OBJ_PEN);
-		LOGPEN lPen;
-		ZeroMemory(&lPen, sizeof(LOGPEN));
-		::GetObject(hPen, sizeof(lPen), &lPen);
-		return lPen;
+		LOGPEN logPen;
+		ZeroMemory(&logPen, sizeof(logPen));
+		::GetObject(hPen, sizeof(logPen), &logPen);
+		return logPen;
 	}
 	
 	////////////////////////////////////
@@ -3536,10 +3536,10 @@ namespace Win32xx
 	
 	// Creates a new clipping region that consists of the existing clipping region minus
 	// the specified rectangle.	
-	inline int CDC::ExcludeClipRect(int Left, int Top, int Right, int BottomRect) const
+	inline int CDC::ExcludeClipRect(int left, int top, int right, int bottom) const
 	{
 		assert(m_pData->hDC);
-		return ::ExcludeClipRect(m_pData->hDC, Left, Top, Right, BottomRect);
+		return ::ExcludeClipRect(m_pData->hDC, left, top, right, bottom);
 	}
 
 	
@@ -3564,10 +3564,10 @@ namespace Win32xx
 	
 	// Creates a new clipping region from the intersection of the current clipping region and
 	// the specified rectangle.	
-	inline int CDC::IntersectClipRect(int Left, int Top, int Right, int Bottom) const
+	inline int CDC::IntersectClipRect(int left, int top, int right, int bottom) const
 	{
 		assert(m_pData->hDC);
-		return ::IntersectClipRect(m_pData->hDC, Left, Top, Right, Bottom);
+		return ::IntersectClipRect(m_pData->hDC, left, top, right, bottom);
 	}
 
 	

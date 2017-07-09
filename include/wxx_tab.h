@@ -344,7 +344,7 @@ namespace Win32xx
 		if (IsWindow())
 		{
 			TCITEM tie;
-			ZeroMemory(&tie, sizeof(TCITEM));
+			ZeroMemory(&tie, sizeof(tie));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = tpi.iImage;
 			tie.pszText = const_cast<LPTSTR>(tpi.TabText.c_str());
@@ -732,7 +732,7 @@ namespace Win32xx
 			dcClient.SelectObject(m_TabFont);
 			CString str;
 			TCITEM tcItem;
-			ZeroMemory(&tcItem, sizeof(TCITEM));
+			ZeroMemory(&tcItem, sizeof(tcItem));
 			tcItem.mask = TCIF_TEXT |TCIF_IMAGE;
 			tcItem.cchTextMax = MAX_MENU_STRING;
 			tcItem.pszText = str.GetBuffer(MAX_MENU_STRING);
@@ -815,7 +815,7 @@ namespace Win32xx
 	inline void CTab::NotifyChanged()
 	{
 		NMHDR nmhdr;
-		ZeroMemory(&nmhdr, sizeof(NMHDR));
+		ZeroMemory(&nmhdr, sizeof(nmhdr));
 		nmhdr.hwndFrom = *this;
 		nmhdr.code = UMN_TABCHANGED;
 
@@ -828,7 +828,7 @@ namespace Win32xx
 	inline void CTab::NotifyDragged()
 	{
 		NMHDR nmhdr;
-		ZeroMemory(&nmhdr, sizeof(NMHDR));
+		ZeroMemory(&nmhdr, sizeof(nmhdr));
 		nmhdr.hwndFrom = *this;
 		nmhdr.code = UWN_TABDRAGGED;
 		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
@@ -859,10 +859,7 @@ namespace Win32xx
 
 		// Set the tab control's font
 		m_TabFont.DeleteObject();
-		NONCLIENTMETRICS info;
-		ZeroMemory(&info, sizeof(NONCLIENTMETRICS));
-		info.cbSize = GetSizeofNonClientMetrics();
-		SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(info), &info, 0);
+		NONCLIENTMETRICS info = GetNonClientMetrics();
 		m_TabFont.CreateFontIndirect(info.lfStatusFont);
 
 		SetFont(m_TabFont, TRUE);
@@ -875,7 +872,7 @@ namespace Win32xx
 		{
 			// Add tabs for each view.
 			TCITEM tie;
-			ZeroMemory(&tie, sizeof(TCITEM));
+			ZeroMemory(&tie, sizeof(tie));
 			tie.mask = TCIF_TEXT | TCIF_IMAGE;
 			tie.iImage = m_vTabPageInfo[i].iImage;
 			tie.pszText = const_cast<LPTSTR>(m_vTabPageInfo[i].TabText.c_str());
@@ -977,7 +974,7 @@ namespace Win32xx
 		if (!m_IsTracking)
 		{
 			TRACKMOUSEEVENT TrackMouseEventStruct;
-			ZeroMemory(&TrackMouseEventStruct, sizeof(TRACKMOUSEEVENT));
+			ZeroMemory(&TrackMouseEventStruct, sizeof(TrackMouseEventStruct));
 			TrackMouseEventStruct.cbSize = sizeof(TrackMouseEventStruct);
 			TrackMouseEventStruct.dwFlags = TME_LEAVE;
 			TrackMouseEventStruct.hwndTrack = *this;
@@ -1356,7 +1353,7 @@ namespace Win32xx
 	{
 		assert (GetItemCount() > i);
 		TCITEM tci;
-		ZeroMemory(&tci, sizeof(TCITEM));
+		ZeroMemory(&tci, sizeof(tci));
 		tci.mask = TCIF_IMAGE;
 		GetItem(i, &tci);
 		if (tci.iImage >= 0)
@@ -1418,7 +1415,7 @@ namespace Win32xx
 		if (nTab < GetAllTabs().size())
 		{
 			TCITEM Item;
-			ZeroMemory(&Item, sizeof(TCITEM));
+			ZeroMemory(&Item, sizeof(Item));
 			Item.mask = TCIF_TEXT;
 			Item.pszText = const_cast<LPTSTR>(szText);
 
@@ -1526,14 +1523,14 @@ namespace Win32xx
 			int nLength = 30;
 
 			TCITEM Item1;
-			ZeroMemory(&Item1, sizeof(TCITEM));
+			ZeroMemory(&Item1, sizeof(Item1));
 			Item1.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item1.cchTextMax = nLength;
 			Item1.pszText = const_cast<LPTSTR>(T1.TabText.c_str());
 			GetItem(nTab1, &Item1);
 
 			TCITEM Item2;
-			ZeroMemory(&Item2, sizeof(TCITEM));
+			ZeroMemory(&Item2, sizeof(Item2));
 			Item2.mask = TCIF_IMAGE | TCIF_PARAM | TCIF_RTLREADING | TCIF_STATE | TCIF_TEXT;
 			Item2.cchTextMax = nLength;
 			Item2.pszText = const_cast<LPTSTR>(T2.TabText.c_str());
@@ -2049,7 +2046,7 @@ namespace Win32xx
 				GetTab().ScreenToClient(pt);
 
 				TCHITTESTINFO info;
-				ZeroMemory(&info, sizeof(TCHITTESTINFO));
+				ZeroMemory(&info, sizeof(info));
 				info.pt = pt;
 				int nTab = GetTab().HitTest(info);
 				if (nTab >= 0)

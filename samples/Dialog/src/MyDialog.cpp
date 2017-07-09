@@ -71,9 +71,6 @@ BOOL CMyDialog::OnInitDialog()
 	for (int i = 0; i < 8; i++)
 		m_ListBox.AddString(_T("ListBox"));
 
-
-	size_t s = sizeof(m_ListBox);
-
 	return TRUE;
 }
 

@@ -250,16 +250,16 @@ namespace Win32xx
 		virtual INT_PTR	DoModal(HWND hWndOwner = 0);
 		CHARFORMAT	GetCharFormat(void) const;
 		COLORREF	GetColor(void) const 		{ return m_CF.rgbColors;}
-		CString GetFaceName(void) const			{ return m_LogFont.lfFaceName;}
-		LOGFONT	GetLogFont(void) const			{ return m_LogFont;}
+		CString GetFaceName(void) const			{ return m_logFont.lfFaceName;}
+		LOGFONT	GetLogFont(void) const			{ return m_logFont;}
 		const CHOOSEFONT& GetParameters() const { return m_CF; }
 		int 	GetSize(void) const;
 		CString GetStyleName(void) const		{ return m_strStyleName;}
-		long 	GetWeight(void) const  			{ return m_LogFont.lfWeight;}
-		BOOL 	IsBold(void) const				{ return (m_LogFont.lfWeight >= FW_SEMIBOLD);}
-		BOOL 	IsItalic(void) const			{ return m_LogFont.lfItalic;}
-		BOOL 	IsStrikeOut(void) const			{ return m_LogFont.lfStrikeOut;}
-		BOOL 	IsUnderline(void) const 		{ return m_LogFont.lfUnderline;}
+		long 	GetWeight(void) const  			{ return m_logFont.lfWeight;}
+		BOOL 	IsBold(void) const				{ return (m_logFont.lfWeight >= FW_SEMIBOLD);}
+		BOOL 	IsItalic(void) const			{ return m_logFont.lfItalic;}
+		BOOL 	IsStrikeOut(void) const			{ return m_logFont.lfStrikeOut;}
+		BOOL 	IsUnderline(void) const 		{ return m_logFont.lfUnderline;}
 		void    SetColor(const COLORREF rgb)	{ m_CF.rgbColors = rgb;}
 		void	SetParameters(CHOOSEFONT cf);
 
@@ -274,7 +274,7 @@ namespace Win32xx
 		DWORD FillInLogFont(const CHARFORMAT& cf);
 
 		// private data
-		LOGFONT 	m_LogFont;			// Font characteristics
+		LOGFONT 	m_logFont;			// Font characteristics
 		CHOOSEFONT	m_CF;				// ChooseFont parameters
 		CString		m_strStyleName;		// Style name on the dialog
 	};
@@ -344,7 +344,7 @@ namespace Win32xx
 	inline CColorDialog::CColorDialog(COLORREF clrInit /* = 0 */, DWORD dwFlags /* = 0 */)
 	{
 		// set the parameters in the CHOOSECOLOR struct
-		ZeroMemory(&m_CC,  sizeof(CHOOSECOLOR));
+		ZeroMemory(&m_CC,  sizeof(m_CC));
 		m_CC.rgbResult = clrInit;
 		m_CC.Flags = dwFlags;
 
@@ -1277,7 +1277,7 @@ namespace Win32xx
 		else
 			m_strReplaceWith.Empty();
 
-		m_FR.lStructSize		= sizeof(FINDREPLACE);
+		m_FR.lStructSize		= sizeof(m_FR);
 		m_FR.hwndOwner			= 0;		// Set this in Create
 		m_FR.hInstance			= GetApp().GetInstanceHandle();
 		m_FR.Flags				= fr.Flags;
@@ -1307,7 +1307,7 @@ namespace Win32xx
 		HDC hdcPrinter /* = 0 */)
 	{
 		  // clear out logfont, style name, and choose font structure
-		ZeroMemory(&m_LogFont, sizeof(m_LogFont));
+		ZeroMemory(&m_logFont, sizeof(m_logFont));
 		ZeroMemory(&m_CF, sizeof(m_CF));
 
 		// set dialog parameters
@@ -1341,7 +1341,7 @@ namespace Win32xx
 		HDC hdcPrinter /* =  0 */)
 	{
 		// clear out logfont, style name, and choose font structure
-		ZeroMemory(&m_LogFont, sizeof(m_LogFont));
+		ZeroMemory(&m_logFont, sizeof(m_logFont));
 		ZeroMemory(&m_CF, sizeof(m_CF));
 
 		// set dialog parameters
@@ -1370,7 +1370,7 @@ namespace Win32xx
 	inline CFontDialog::CFontDialog(DWORD dwFlags /* = 0 */, HDC hdcPrinter /* =  0 */)
 	{
 		// clear out logfont, style name, and choose font structure
-		ZeroMemory(&m_LogFont, sizeof(m_LogFont));
+		ZeroMemory(&m_logFont, sizeof(m_logFont));
 		ZeroMemory(&m_CF, sizeof(m_CF));
 
 		// set dialog parameters
@@ -1534,7 +1534,7 @@ namespace Win32xx
 		int pxpi = GetDeviceCaps(hdc, LOGPIXELSY);
 
 		// point size is (pixel height) * 72 / pxpi, so in 1/10ths size is
-		int charsize = -MulDiv(m_LogFont.lfHeight, 720, pxpi);
+		int charsize = -MulDiv(m_logFont.lfHeight, 720, pxpi);
 		::ReleaseDC(NULL, hdc);
 		return charsize;
 	}
@@ -1547,7 +1547,7 @@ namespace Win32xx
 
 	
 	// Translate the font character format cf properties of a CRichEdit control
-	// into elements of the m_LogFont member and settings of the option flags.
+	// into elements of the m_logFont member and settings of the option flags.
 	inline DWORD CFontDialog::FillInLogFont(const CHARFORMAT& cf)
 	{
 		DWORD dwFlags = 0;
@@ -1556,58 +1556,58 @@ namespace Win32xx
 			CDC dc;
 			dc.CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
 			LONG yPerInch = dc.GetDeviceCaps(LOGPIXELSY);
-			m_LogFont.lfHeight = -(int) ((cf.yHeight * yPerInch) / 1440);
+			m_logFont.lfHeight = -(int) ((cf.yHeight * yPerInch) / 1440);
 		}
 		else
-			m_LogFont.lfHeight = 0;
+			m_logFont.lfHeight = 0;
 
-		m_LogFont.lfWidth = 0;
-		m_LogFont.lfEscapement = 0;
-		m_LogFont.lfOrientation = 0;
+		m_logFont.lfWidth = 0;
+		m_logFont.lfEscapement = 0;
+		m_logFont.lfOrientation = 0;
 
 		if ((cf.dwMask & (CFM_ITALIC|CFM_BOLD)) == (CFM_ITALIC|CFM_BOLD))
 		{
-			m_LogFont.lfWeight = (cf.dwEffects & CFE_BOLD) ? FW_BOLD : FW_NORMAL;
-			m_LogFont.lfItalic = (cf.dwEffects & CFE_ITALIC) ? TRUE : FALSE;
+			m_logFont.lfWeight = (cf.dwEffects & CFE_BOLD) ? FW_BOLD : FW_NORMAL;
+			m_logFont.lfItalic = (cf.dwEffects & CFE_ITALIC) ? TRUE : FALSE;
 		}
 		else
 		{
 			dwFlags |= CF_NOSTYLESEL;
-			m_LogFont.lfWeight = FW_DONTCARE;
-			m_LogFont.lfItalic = FALSE;
+			m_logFont.lfWeight = FW_DONTCARE;
+			m_logFont.lfItalic = FALSE;
 		}
 
 		if ((cf.dwMask & (CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR)) ==
 			(CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR))
 		{
 			dwFlags |= CF_EFFECTS;
-			m_LogFont.lfUnderline = (cf.dwEffects & CFE_UNDERLINE) ? TRUE : FALSE;
-			m_LogFont.lfStrikeOut = (cf.dwEffects & CFE_STRIKEOUT) ? TRUE : FALSE;
+			m_logFont.lfUnderline = (cf.dwEffects & CFE_UNDERLINE) ? TRUE : FALSE;
+			m_logFont.lfStrikeOut = (cf.dwEffects & CFE_STRIKEOUT) ? TRUE : FALSE;
 		}
 		else
 		{
-			m_LogFont.lfUnderline = (BYTE)FALSE;
-			m_LogFont.lfStrikeOut = (BYTE)FALSE;
+			m_logFont.lfUnderline = (BYTE)FALSE;
+			m_logFont.lfStrikeOut = (BYTE)FALSE;
 		}
 
 		if (cf.dwMask & CFM_CHARSET)
-			m_LogFont.lfCharSet = cf.bCharSet;
+			m_logFont.lfCharSet = cf.bCharSet;
 		else
 			dwFlags |= CF_NOSCRIPTSEL;
 
-		m_LogFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
-		m_LogFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
-		m_LogFont.lfQuality = DEFAULT_QUALITY;
+		m_logFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
+		m_logFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
+		m_logFont.lfQuality = DEFAULT_QUALITY;
 
 		if (cf.dwMask & CFM_FACE)
 		{
-			m_LogFont.lfPitchAndFamily = cf.bPitchAndFamily;
-			lstrcpyn(m_LogFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
+			m_logFont.lfPitchAndFamily = cf.bPitchAndFamily;
+			lstrcpyn(m_logFont.lfFaceName, cf.szFaceName, LF_FACESIZE);
 		}
 		else
 		{
-			m_LogFont.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
-			m_LogFont.lfFaceName[0] = (TCHAR)0;
+			m_logFont.lfPitchAndFamily = DEFAULT_PITCH|FF_DONTCARE;
+			m_logFont.lfFaceName[0] = (TCHAR)0;
 		}
 
 		return dwFlags;
@@ -1619,19 +1619,19 @@ namespace Win32xx
 	inline void CFontDialog::SetParameters(CHOOSEFONT cf)
 	{
 		if (cf.lpLogFont)
-			m_LogFont = *cf.lpLogFont;
+			m_logFont = *cf.lpLogFont;
 		else
-			ZeroMemory(&m_LogFont, sizeof(LOGFONT));
+			ZeroMemory(&m_logFont, sizeof(m_logFont));
 
 		if (cf.lpszStyle)
 			m_strStyleName = cf.lpszStyle;
 		else
 			m_strStyleName.Empty();
 
-		m_CF.lStructSize	= sizeof(CHOOSEFONT);
+		m_CF.lStructSize	= sizeof(m_CF);
 		m_CF.hwndOwner		= 0;		// Set this in DoModal
 		m_CF.hDC			= cf.hDC;
-		m_CF.lpLogFont		= &m_LogFont;
+		m_CF.lpLogFont		= &m_logFont;
 		m_CF.iPointSize		= cf.iPointSize;
 		m_CF.Flags			= cf.Flags;
 		m_CF.rgbColors		= cf.rgbColors;

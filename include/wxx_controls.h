@@ -1089,7 +1089,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		SYSTEMTIME SysTime;
-		ZeroMemory(&SysTime,  sizeof(SYSTEMTIME));
+		ZeroMemory(&SysTime,  sizeof(SysTime));
 		DWORD Res = DateTime_GetSystemtime(*this, &SysTime);
 		if (pReturnCode)
 			*pReturnCode = Res;
@@ -1365,7 +1365,7 @@ namespace Win32xx
 		{
 			// Call InitCommonControlsEx
 			INITCOMMONCONTROLSEX InitStruct;
-			InitStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+			InitStruct.dwSize = sizeof(InitStruct);
 			InitStruct.dwICC = ICC_INTERNET_CLASSES;
 			InitCommonControlsEx(&InitStruct);
 		}
@@ -2321,7 +2321,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TTHITTESTINFO hti;
-		ZeroMemory(&hti, sizeof(TTHITTESTINFO));
+		ZeroMemory(&hti, sizeof(hti));
 		hti.hwnd = hWnd;
 		hti.pt = pt;
 		hti.ti = ToolInfo;
@@ -2337,8 +2337,8 @@ namespace Win32xx
 	// Override this function to specify different uFlags.
 	inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND hControl) const
 	{
-		ZeroMemory(&ti, sizeof(TOOLINFO));
-		ti.cbSize = sizeof(TOOLINFO);
+		ZeroMemory(&ti, sizeof(ti));
+		ti.cbSize = sizeof(ti);
 
 		ti.hwnd = ::GetParent(m_hWnd);	// pass notifications to the parent window
 		ti.uFlags = TTF_IDISHWND | TTF_SUBCLASS;
@@ -2357,8 +2357,8 @@ namespace Win32xx
 	// Override this function to specify different uFlags.
 	inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND hControl, const RECT& rc, UINT uID) const
 	{
-		ZeroMemory(&ti, sizeof(TOOLINFO));
-		ti.cbSize = sizeof(TOOLINFO);
+		ZeroMemory(&ti, sizeof(ti));
+		ti.cbSize = sizeof(ti);
 
 		ti.hwnd = hControl;
 		ti.uFlags = TTF_SUBCLASS;

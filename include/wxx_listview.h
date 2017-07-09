@@ -318,7 +318,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVITEM lvi;
-		ZeroMemory(&lvi, sizeof(LVITEM));
+		ZeroMemory(&lvi, sizeof(lvi));
 		lvi.iItem = iItem;
 		lvi.mask = LVIF_PARAM;
 		ListView_GetItem(*this, &lvi);
@@ -368,7 +368,7 @@ namespace Win32xx
 		if (nTextMax > 0)
 		{
 			LVITEM lvi;
-			ZeroMemory(&lvi, sizeof(LVITEM));
+			ZeroMemory(&lvi, sizeof(lvi));
 			lvi.iItem = iItem;
 			lvi.iSubItem = iSubItem;
 			lvi.mask = LVIF_TEXT;
@@ -630,7 +630,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVITEM lvi;
-		ZeroMemory(&lvi, sizeof(LVITEM));
+		ZeroMemory(&lvi, sizeof(lvi));
 		lvi.iItem = iItem;
 		lvi.iSubItem = iSubItem;
 		lvi.mask = nMask;
@@ -667,7 +667,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVITEM lvi;
-		ZeroMemory(&lvi, sizeof(LVITEM));
+		ZeroMemory(&lvi, sizeof(lvi));
 		lvi.iItem = iItem;
 		lvi.lParam = dwData;
 		lvi.mask = LVIF_PARAM;
@@ -845,7 +845,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVHITTESTINFO hti;
-		ZeroMemory(&hti, sizeof(LVHITTESTINFO));
+		ZeroMemory(&hti, sizeof(hti));
 		hti.flags = *pFlags;
 		hti.pt = pt;
 		return ListView_HitTest( *this, &hti );
@@ -867,7 +867,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVCOLUMN lvc;
-		ZeroMemory(&lvc, sizeof(LVCOLUMN));
+		ZeroMemory(&lvc, sizeof(lvc));
 		lvc.mask = LVCF_TEXT|LVCF_ORDER|LVCF_FMT;
 		if (-1 != iWidth)
 		{
@@ -902,7 +902,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVITEM lvi;
-		ZeroMemory(&lvi, sizeof(LVITEM));
+		ZeroMemory(&lvi, sizeof(lvi));
 		lvi.iItem = iItem;
 		lvi.pszText = const_cast<LPTSTR>(pszText);
 		lvi.mask = LVIF_TEXT;
@@ -916,7 +916,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		LVITEM lvi;
-		ZeroMemory(&lvi, sizeof(LVITEM));
+		ZeroMemory(&lvi, sizeof(lvi));
 		lvi.iItem = iItem;
 		lvi.pszText = const_cast<LPTSTR>(pszText);
 		lvi.iImage = iImage;

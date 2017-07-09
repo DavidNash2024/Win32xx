@@ -221,7 +221,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		// REBARINFO describes overall rebar control characteristics
-		rbi.cbSize = sizeof(REBARINFO);
+		rbi.cbSize = sizeof(rbi);
 		return static_cast<BOOL>(SendMessage(RB_GETBARINFO, 0L, (LPARAM)&rbi));
 	}
 
@@ -290,7 +290,7 @@ namespace Win32xx
 
 		// Get the rebar band with the point
 		RBHITTESTINFO rbhti;
-		ZeroMemory(&rbhti, sizeof(RBHITTESTINFO));
+		ZeroMemory(&rbhti, sizeof(rbhti));
 		rbhti.pt = pt;
 		int iBand = HitTest(rbhti);
 
@@ -564,7 +564,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 
-		rbi.cbSize = sizeof(REBARINFO);
+		rbi.cbSize = sizeof(rbi);
 		return static_cast<BOOL>(SendMessage(RB_SETBARINFO, 0L, (LPARAM)&rbi));
 	}
 	

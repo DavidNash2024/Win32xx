@@ -180,10 +180,10 @@ namespace Win32xx
 	
 	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/) : CDialog((UINT)0)
 	{
-		ZeroMemory(&m_PSP, sizeof(PROPSHEETPAGE));
+		ZeroMemory(&m_PSP, sizeof(m_PSP));
 		SetTitle(szTitle);
 
-		m_PSP.dwSize        = sizeof(PROPSHEETPAGE);
+		m_PSP.dwSize        = sizeof(m_PSP);
 		m_PSP.dwFlags       |= PSP_USECALLBACK;
 		m_PSP.hInstance     = GetApp().GetResourceHandle();
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
@@ -535,7 +535,7 @@ namespace Win32xx
 	
 	inline CPropertySheet::CPropertySheet(UINT nIDCaption, HWND hParent /* = 0*/)
 	{
-		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
+		ZeroMemory(&m_PSH, sizeof(m_PSH));
 		SetTitle(LoadString(nIDCaption));
 
 #ifdef _WIN32_WCE
@@ -556,7 +556,7 @@ namespace Win32xx
 	
 	inline CPropertySheet::CPropertySheet(LPCTSTR pszCaption /*= NULL*/, HWND hParent /* = 0*/)
 	{
-		ZeroMemory(&m_PSH, sizeof (PROPSHEETHEADER));
+		ZeroMemory(&m_PSH, sizeof (m_PSH));
 		SetTitle(pszCaption);
 
 #ifdef _WIN32_WCE
