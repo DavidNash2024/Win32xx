@@ -284,7 +284,7 @@ namespace Win32xx
 			{
 				// Add Separator
 				if (nWindow == 0)
-					MenuWindow.AppendMenu(MF_SEPARATOR, 0, (LPCTSTR)NULL);
+					MenuWindow.AppendMenu(MF_SEPARATOR, 0, reinterpret_cast<LPCTSTR>(NULL));
 
 				// Add a menu entry for each MDI child (up to 9)
 				if (nWindow < 9)
@@ -346,7 +346,7 @@ namespace Win32xx
 	template <class T>
 	inline CMDIChild* CMDIFrameT<T>::GetActiveMDIChild() const
 	{
-		HWND hActiveChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+		HWND hActiveChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 		return static_cast<CMDIChild*>(T::GetCWndPtr(hActiveChild));
 	}
 	
@@ -385,7 +385,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDIMaximize() const
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+		HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 		GetMDIClient().SendMessage(WM_MDIMAXIMIZE, (WPARAM)hMDIChild, 0L);
 	}
 	
@@ -395,7 +395,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDINext() const
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+		HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 		GetMDIClient().SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, FALSE);
 	}
 	
@@ -405,7 +405,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDIPrev() const
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+		HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 		GetMDIClient().SendMessage(WM_MDINEXT, (WPARAM)hMDIChild, TRUE);
 	}
 
@@ -415,7 +415,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDIRestore() const
 	{
 		assert(T::IsWindow());
-		HWND hMDIChild = (HWND)GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
+		HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
 		GetMDIClient().SendMessage(WM_MDIRESTORE, (WPARAM)hMDIChild, 0L);
 	}
 
@@ -456,7 +456,7 @@ namespace Win32xx
 			assert(pMaxMDIChild);
 
 			// Suppress owner drawing of the MDI child's system menu
-			if (::GetSystemMenu(*pMaxMDIChild, FALSE) == (HMENU) wParam)
+			if (::GetSystemMenu(*pMaxMDIChild, FALSE) == reinterpret_cast<HMENU>(wParam))
 				return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 		}
 
@@ -492,7 +492,7 @@ namespace Win32xx
 	template <class T>
 	inline LRESULT CMDIFrameT<T>::OnMDIActivated(UINT, WPARAM wParam, LPARAM)
 	{
-		HWND hActiveMDIChild = (HWND)wParam;
+		HWND hActiveMDIChild = reinterpret_cast<HWND>(wParam);
 
 		if (hActiveMDIChild)
 		{
@@ -516,7 +516,7 @@ namespace Win32xx
 	template <class T>
 	inline LRESULT CMDIFrameT<T>::OnMDIDestroyed(UINT, WPARAM wParam, LPARAM)
 	{
-		RemoveMDIChild((HWND)wParam);
+		RemoveMDIChild(reinterpret_cast<HWND>(wParam));
 		return 0L;
 	}
 
@@ -597,7 +597,7 @@ namespace Win32xx
 	inline BOOL CMDIFrameT<T>::RemoveAllMDIChildren()
 	{
 		BOOL Succeeded = TRUE;
-		int Children = (int)m_vMDIChild.size();
+		int Children = static_cast<int>(m_vMDIChild.size());
 
 		// Remove the children in reverse order
 		for (int i = Children-1; i >= 0; --i)

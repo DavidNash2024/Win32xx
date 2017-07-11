@@ -282,7 +282,7 @@ namespace Win32xx
 			char str[2] = {0};
 			str[0] = ch;
 			AtoT tch(str);
-			m_str.assign(nLength, ((LPCTSTR)tch)[0]);
+			m_str.assign(nLength, static_cast<LPCTSTR>(tch)[0]);
 		}
 
 		CString(WCHAR ch, int nLength = 1)
@@ -290,7 +290,7 @@ namespace Win32xx
 			WCHAR str[2] = {0};
 			str[0] = ch;
 			WtoT tch(str);
-			m_str.assign(nLength, ((LPCTSTR)tch)[0]);
+			m_str.assign(nLength, static_cast<LPCTSTR>(tch)[0]);
 		}
 
 		CString& operator = (const CString& str)
@@ -310,7 +310,7 @@ namespace Win32xx
 			char str[2] = {0};
 			str[0] = ch;
 			AtoT tch(str);
-			m_str.assign(1, ((LPCTSTR)tch)[0]);
+			m_str.assign(1, static_cast<LPCTSTR>(tch)[0]);
 			return *this;
 		}
 
@@ -319,7 +319,7 @@ namespace Win32xx
 			WCHAR str[2] = {0};
 			str[0] = ch;
 			WtoT tch(str);
-			m_str.assign(1, ((LPCTSTR)tch)[0]);
+			m_str.assign(1, static_cast<LPCTSTR>(tch)[0]);
 			return *this;
 		}
 
@@ -352,7 +352,7 @@ namespace Win32xx
 			char str[2] = {0};
 			str[0] = ch;
 			AtoT tch(str);
-			m_str.append(1, ((LPCTSTR)tch)[0]);
+			m_str.append(1, static_cast<LPCTSTR>(tch)[0]);
 			return *this;
 		}
 
@@ -361,7 +361,7 @@ namespace Win32xx
 			WCHAR str[2] = {0};
 			str[0] = ch;
 			WtoT tch(str);
-			m_str.append(1, ((LPCTSTR)tch)[0]);
+			m_str.append(1, static_cast<LPCTSTR>(tch)[0]);
 			return *this;
 		}
 
@@ -716,7 +716,7 @@ namespace Win32xx
 	template <>
 	inline BSTR CStringT<CHAR>::AllocSysString() const
 	{
-		BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), (UINT)m_str.size());
+		BSTR bstr = ::SysAllocStringLen(AtoW(m_str.c_str()), static_cast<UINT>(m_str.size()));
 		if (bstr == NULL)
 			throw std::bad_alloc();
 
@@ -729,7 +729,7 @@ namespace Win32xx
 	template <>
 	inline BSTR CStringT<WCHAR>::AllocSysString() const
 	{
-		BSTR bstr = ::SysAllocStringLen(m_str.c_str(), (UINT)m_str.size());
+		BSTR bstr = ::SysAllocStringLen(m_str.c_str(), static_cast<UINT>(m_str.size()));
 		if (bstr == NULL)
 			throw std::bad_alloc();
 
@@ -988,7 +988,8 @@ namespace Win32xx
 		LPSTR pszTemp = 0;
 		if (pszFormat)
 		{
-			DWORD dwResult = ::FormatMessageA(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, (LPSTR)&pszTemp, 0, &args);
+			DWORD dwResult = ::FormatMessageA(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, 
+				                   pszFormat, 0, 0, reinterpret_cast<LPSTR>(&pszTemp), 0, &args);
 
 			if ( dwResult == 0 || pszTemp == 0 )
 				throw std::bad_alloc();
@@ -1006,7 +1007,8 @@ namespace Win32xx
 		LPWSTR pszTemp = 0;
 		if (pszFormat)
 		{
-			DWORD dwResult = ::FormatMessageW(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, pszFormat, 0, 0, (LPWSTR)&pszTemp, 0, &args);
+			DWORD dwResult = ::FormatMessageW(FORMAT_MESSAGE_FROM_STRING|FORMAT_MESSAGE_ALLOCATE_BUFFER, 
+				                  pszFormat, 0, 0, (LPWSTR)&pszTemp, 0, &args);
 
 			if ( dwResult == 0 || pszTemp == 0 )
 				throw std::bad_alloc();
@@ -1134,7 +1136,7 @@ namespace Win32xx
 		Empty();
 		CHAR* pTemp = 0;
 		DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-		::FormatMessageA(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&pTemp, 1, NULL);
+		::FormatMessageA(dwFlags, NULL, dwError, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&pTemp), 1, NULL);
 		m_str.assign(pTemp);
 		::LocalFree(pTemp);
 	}
@@ -1269,7 +1271,7 @@ namespace Win32xx
 	template <class T>
 	inline void CStringT<T>::ReleaseBuffer( int nNewLength /*= -1*/ )
 	{
-		assert (nNewLength <= (int)m_buf.size());
+		assert (nNewLength <= static_cast<int>(m_buf.size()));
 
 		if (-1 == nNewLength)
 		{
@@ -1365,7 +1367,7 @@ namespace Win32xx
 	{
 		assert(pBstr);
 
-		if ( !::SysReAllocStringLen(pBstr, AtoW(m_str.c_str()), (UINT)m_str.length()) )
+		if ( !::SysReAllocStringLen(pBstr, AtoW(m_str.c_str()), static_cast<UINT>(m_str.length())) )
 			throw std::bad_alloc();
 
 		return *pBstr;
@@ -1378,7 +1380,7 @@ namespace Win32xx
 	{
 		assert(pBstr);
 
-		if ( !::SysReAllocStringLen(pBstr, m_str.c_str(), (UINT)m_str.length()) )
+		if ( !::SysReAllocStringLen(pBstr, m_str.c_str(), static_cast<UINT>(m_str.length())) )
 			throw std::bad_alloc();
 
 		return *pBstr;
@@ -1434,7 +1436,7 @@ namespace Win32xx
 		size_t pos1 = m_str.find_first_not_of(pszTokens, iStart);
 		size_t pos2 = m_str.find_first_of(pszTokens, pos1);
 
-		iStart = (int)pos2 + 1;
+		iStart = static_cast<int>(pos2) + 1;
 		if (pos2 == m_str.npos)
 			iStart = -1;
 

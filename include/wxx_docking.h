@@ -1596,7 +1596,7 @@ namespace Win32xx
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_IsOverContainer = (BOOL)pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER);
+		m_IsOverContainer = pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER);
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();
@@ -2181,7 +2181,7 @@ namespace Win32xx
 			if (pDocker->m_DockStartSize >= (Width - BarWidth))
 				pDocker->SetDockSize(MAX(Width/2 - BarWidth, BarWidth));
 
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / (double)GetWindowRect().Width();
+			pDocker->m_DockSizeRatio = static_cast<double>(pDocker->m_DockStartSize) / static_cast<double>(GetWindowRect().Width());
 		}
 		else
 		{
@@ -2190,7 +2190,7 @@ namespace Win32xx
 			if (pDocker->m_DockStartSize >= (Height - BarWidth))
 				pDocker->SetDockSize(MAX(Height/2 - BarWidth, BarWidth));
 
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / (double)GetWindowRect().Height();
+			pDocker->m_DockSizeRatio = static_cast<double>(pDocker->m_DockStartSize) / static_cast<double>(GetWindowRect().Height());
 		}
 
 		// Redraw the docked windows
@@ -2293,6 +2293,10 @@ namespace Win32xx
 		pDocker->SetParent(*GetDockAncestor());
 		pDocker->GetDockBar().SetParent(*GetDockAncestor());
 
+		double dockStartSize = static_cast<double>(pDocker->m_DockStartSize);
+		double ancestorHeight = static_cast<double>(GetDockAncestor()->GetWindowRect().Height());
+		double ancestorWidth = static_cast<double>(GetDockAncestor()->GetWindowRect().Width());
+
 		// Limit the docked size to half the parent's size if it won't fit inside parent
 		if (((dwDockStyle & 0xF)  == DS_DOCKED_LEFT) || ((dwDockStyle &0xF)  == DS_DOCKED_RIGHT))
 		{
@@ -2301,7 +2305,7 @@ namespace Win32xx
 			if (pDocker->m_DockStartSize >= (Width - BarWidth))
 				pDocker->SetDockSize(MAX(Width/2 - BarWidth, BarWidth));
 
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / (double)GetDockAncestor()->GetWindowRect().Width();
+			pDocker->m_DockSizeRatio = dockStartSize / ancestorWidth;
 		}
 		else
 		{
@@ -2310,7 +2314,7 @@ namespace Win32xx
 			if (pDocker->m_DockStartSize >= (Height - BarWidth))
 				pDocker->SetDockSize(MAX(Height/2 - BarWidth, BarWidth));
 
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / (double)GetDockAncestor()->GetWindowRect().Height();
+			pDocker->m_DockSizeRatio = dockStartSize / ancestorHeight;
 		}
 
 		// Redraw the docked windows
@@ -2396,7 +2400,7 @@ namespace Win32xx
 			if (hWndParent == hWndTest) break;		// could be owned window, not parent
 			hWndTest = hWndParent;
 			
-			CDocker* pDock = (CDocker*)::SendMessage(hWndTest, UWM_GETCDOCKER, 0, 0);
+			CDocker* pDock = reinterpret_cast<CDocker*>(::SendMessage(hWndTest, UWM_GETCDOCKER, 0, 0));
 			if (pDock)
 			{
 				pDockActive = pDock;
@@ -2521,9 +2525,9 @@ namespace Win32xx
 
 		double DockSize = 0;
 		if ((GetDockStyle() & DS_DOCKED_LEFT) || (GetDockStyle() & DS_DOCKED_RIGHT))
-			DockSize = (double)(rcParent.Width()*m_DockSizeRatio);
+			DockSize = rcParent.Width()*m_DockSizeRatio;
 		else if ((GetDockStyle() & DS_DOCKED_TOP) || (GetDockStyle() & DS_DOCKED_BOTTOM))
-			DockSize = (double)(rcParent.Height()*m_DockSizeRatio);
+			DockSize = rcParent.Height()*m_DockSizeRatio;
 		else if ((GetDockStyle() & DS_DOCKED_CONTAINER))
 			DockSize = 0;
 
@@ -2696,7 +2700,7 @@ namespace Win32xx
 				}
 
 				// Remove dockers without parents from vDockList
-				for (UINT n = (UINT)vDockList.size(); n > 0; --n)
+				for (UINT n = static_cast<UINT>(vDockList.size()); n > 0; --n)
 				{
 					iter = vDockList.begin() + n-1;
 					if ((*iter).DockParentID == 0)
@@ -2810,7 +2814,7 @@ namespace Win32xx
 								UINT uOldID = pOldDocker->GetDockID();
 
 								std::vector<UINT>::const_iterator it = std::find(vTabOrder.begin(), vTabOrder.end(), uOldID);
-								UINT uOldTab = (UINT)(it - vTabOrder.begin());
+								UINT uOldTab = static_cast<UINT>((it - vTabOrder.begin()));
 
 								if (uTab != uOldTab)
 									pParentContainer->SwapTabs(uTab, uOldTab);
@@ -3393,7 +3397,7 @@ namespace Win32xx
 			rc.OffsetRect(-rc.left, -rc.top);
 		}
 
-		HDWP hdwp = BeginDeferWindowPos((int)m_vDockChildren.size() +2);
+		HDWP hdwp = BeginDeferWindowPos(static_cast<int>(m_vDockChildren.size()) +2);
 
 		// Step 1: Calculate the position of each Docker child, DockBar, and Client window.
 		//   The Client area = the docker rect minus the area of dock children and the dock bar (splitter bar).
@@ -3413,13 +3417,13 @@ namespace Win32xx
 
 				if (RTL)
 				{
-					rcChild.left = rcChild.right - (int)DockSize;
+					rcChild.left = rcChild.right - static_cast<int>(DockSize);
 					rcChild.left = MIN(rcChild.left, rc.right - minSize);
 					rcChild.left = MAX(rcChild.left, rc.left + minSize);
 				}
 				else
 				{
-					rcChild.right = rcChild.left + (int)DockSize;
+					rcChild.right = rcChild.left + static_cast<int>(DockSize);
 					rcChild.right = MAX(rcChild.right, rc.left + minSize);
 					rcChild.right = MIN(rcChild.right, rc.right - minSize);
 				}
@@ -3430,13 +3434,13 @@ namespace Win32xx
 
 				if (RTL)
 				{
-					rcChild.right = rcChild.left + (int)DockSize;
+					rcChild.right = rcChild.left + static_cast<int>(DockSize);
 					rcChild.right = MAX(rcChild.right, rc.left + minSize);
 					rcChild.right = MIN(rcChild.right, rc.right - minSize);
 				}
 				else
 				{
-					rcChild.left = rcChild.right - (int)DockSize;
+					rcChild.left = rcChild.right - static_cast<int>(DockSize);
 					rcChild.left = MIN(rcChild.left, rc.right - minSize);
 					rcChild.left = MAX(rcChild.left, rc.left + minSize);
 				}
@@ -3446,7 +3450,7 @@ namespace Win32xx
 				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 
-				rcChild.bottom = rcChild.top + (int)DockSize;
+				rcChild.bottom = rcChild.top + static_cast<int>(DockSize);
 				rcChild.bottom = MAX(rcChild.bottom, rc.top + minSize);
 				rcChild.bottom = MIN(rcChild.bottom, rc.bottom - minSize);
 				break;
@@ -3454,7 +3458,7 @@ namespace Win32xx
 				if ((*iter)->GetDockStyle() & DS_NO_FIXED_RESIZE)
 					DockSize = MIN((*iter)->m_DockSizeRatio*(GetWindowRect().Height()), rcChild.Height());
 
-				rcChild.top = rcChild.bottom - (int)DockSize;
+				rcChild.top = rcChild.bottom - static_cast<int>(DockSize);
 				rcChild.top = MIN(rcChild.top, rc.bottom - minSize);
 				rcChild.top = MAX(rcChild.top, rc.top + minSize);
 
@@ -3609,35 +3613,39 @@ namespace Win32xx
 
 		CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
 
+		double dockStartSize = static_cast<double>(pDocker->m_DockStartSize);
+		double parentWidth = static_cast<double>(rcDockParent.Width());
+		double parentHeight = static_cast<double>(rcDockParent.Height());
+
 		switch (pDocker->GetDockStyle() & 0xF)
 		{
 		case DS_DOCKED_LEFT:
-			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - (int)(.5* dBarWidth);
-			else     DockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - (int)(.5* dBarWidth);
+			if (RTL) DockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - static_cast<int>(.5* dBarWidth);
+			else     DockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - static_cast<int>(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Width());
+			pDocker->m_DockSizeRatio = dockStartSize / parentWidth;
 			break;
 		case DS_DOCKED_RIGHT:
-			if (RTL)  DockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - (int)(.5* dBarWidth);
-			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - (int)(.5* dBarWidth);
+			if (RTL)  DockSize = MAX(pt.x, iBarWidth / 2) - rcDock.left - static_cast<int>(.5* dBarWidth);
+			else      DockSize = rcDock.right - MAX(pt.x, iBarWidth / 2) - static_cast<int>(.5* dBarWidth);
 
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Width());
+			pDocker->m_DockSizeRatio = dockStartSize / parentWidth;
 			break;
 		case DS_DOCKED_TOP:
-			DockSize = MAX(pt.y, iBarWidth / 2) - rcDock.top - (int)(.5* dBarWidth);
+			DockSize = MAX(pt.y, iBarWidth / 2) - rcDock.top - static_cast<int>(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Height());
+			pDocker->m_DockSizeRatio = dockStartSize / parentHeight;
 			break;
 		case DS_DOCKED_BOTTOM:
-			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth / 2) - (int)(.5* dBarWidth);
+			DockSize = rcDock.bottom - MAX(pt.y, iBarWidth / 2) - static_cast<int>(.5* dBarWidth);
 			DockSize = MAX(-iBarWidth, DockSize);
 			pDocker->SetDockSize(DockSize);
-			pDocker->m_DockSizeRatio = ((double)pDocker->m_DockStartSize) / ((double)rcDockParent.Height());
+			pDocker->m_DockSizeRatio = dockStartSize / parentHeight;
 			break;
 		}
 
@@ -3873,12 +3881,12 @@ namespace Win32xx
 			case DS_DOCKED_LEFT:
 			case DS_DOCKED_RIGHT:
 				m_DockStartSize = MIN(DockSize,rc.Width());
-				m_DockSizeRatio = ((double)m_DockStartSize)/((double)rc.Width());
+				m_DockSizeRatio = static_cast<double>(m_DockStartSize) / static_cast<double>(rc.Width());
 				break;
 			case DS_DOCKED_TOP:
 			case DS_DOCKED_BOTTOM:
 				m_DockStartSize = MIN(DockSize,rc.Height());
-				m_DockSizeRatio = ((double)m_DockStartSize)/((double)rc.Height());
+				m_DockSizeRatio = static_cast<double>(m_DockStartSize) / static_cast<double>(rc.Height());
 				break;
 			}
 
@@ -4235,7 +4243,7 @@ namespace Win32xx
 	// the one being dragged. Top level windows are enumurated in Z order.	
 	inline BOOL CALLBACK CDocker::EnumWindowsProc(HWND hWndTop, LPARAM lParam)
 	{
-		CDocker* This = (CDocker*)lParam;
+		CDocker* This = reinterpret_cast<CDocker*>(lParam);
 		assert(dynamic_cast<CDocker*>(This));
 		CPoint pt = This->m_DockPoint;
 
@@ -4293,7 +4301,7 @@ namespace Win32xx
 		}
 		else
 		{
-			iNewPage = (int)m_vContainerInfo.size();
+			iNewPage = static_cast<int>(m_vContainerInfo.size());
 			m_vContainerInfo.push_back(ci);
 		}
 
@@ -4342,7 +4350,7 @@ namespace Win32xx
 	inline CDockContainer* CDockContainer::GetActiveContainer() const
 	{
 		assert(m_pContainerParent);
-		assert((int)m_pContainerParent->m_vContainerInfo.size() > m_pContainerParent->m_iCurrentPage);
+		assert(static_cast<int>(m_pContainerParent->m_vContainerInfo.size()) > m_pContainerParent->m_iCurrentPage);
 		return m_pContainerParent->m_vContainerInfo[m_pContainerParent->m_iCurrentPage].pContainer;
 	}
 
@@ -4377,7 +4385,7 @@ namespace Win32xx
 		assert(pContainer);
 		int iReturn = -1;
 
-		for (int i = 0; i < (int)m_pContainerParent->m_vContainerInfo.size(); ++i)
+		for (int i = 0; i < static_cast<int>(m_pContainerParent->m_vContainerInfo.size()); ++i)
 		{
 			if (m_pContainerParent->m_vContainerInfo[i].pContainer == pContainer)
 				iReturn = i;
@@ -4488,7 +4496,7 @@ namespace Win32xx
 		SetOwnerDraw(TRUE);
 
 		// Add tabs for each container.
-		for (int i = 0; i < (int)m_vContainerInfo.size(); ++i)
+		for (int i = 0; i < static_cast<int>(m_vContainerInfo.size()); ++i)
 		{
 			// Add tabs for each view.
 			TCITEM tie;
@@ -4703,7 +4711,7 @@ namespace Win32xx
 			m_pContainerParent->SelectPage(nPage);
 		else
 		{
-			if ((nPage >= 0) && (nPage < (int)m_vContainerInfo.size() ))
+			if ((nPage >= 0) && (nPage < static_cast<int>(m_vContainerInfo.size())))
 			{
 				if (GetCurSel() != nPage)
 					SetCurSel(nPage);
@@ -4762,7 +4770,7 @@ namespace Win32xx
 	
 	inline void CDockContainer::SetTabIcon(UINT nID_Icon)
 	{
-		HICON hIcon = (HICON)GetApp().LoadImage(nID_Icon, IMAGE_ICON, 0, 0, LR_SHARED);
+		HICON hIcon = reinterpret_cast<HICON>(GetApp().LoadImage(nID_Icon, IMAGE_ICON, 0, 0, LR_SHARED));
 		SetTabIcon(hIcon);
 	}
 
@@ -4778,7 +4786,7 @@ namespace Win32xx
 		int nItemHeight = 1;
 		if ((GetItemCount() != 1) || !m_IsHideSingleTab)
 		{
-			nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/(int)m_vContainerInfo.size());
+			nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width()-2)/static_cast<int>(m_vContainerInfo.size()));
 			nItemHeight = MAX(20, GetTextHeight() + 5);
 		}
 		SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, nItemHeight));

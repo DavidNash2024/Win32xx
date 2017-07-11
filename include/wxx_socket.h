@@ -275,7 +275,7 @@ namespace Win32xx
 			}
 
 			// Bind the IP address to the listening socket
-			RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			RetVal =  ::bind( m_Socket, AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
 			if ( RetVal == SOCKET_ERROR )
 			{
 				TRACE("Bind failed\n");
@@ -339,7 +339,7 @@ namespace Win32xx
 			}
 
 			// Bind the IP address to the listening socket
-			RetVal = Connect( AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			RetVal = Connect( AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
 			if ( RetVal == SOCKET_ERROR )
 			{
 				TRACE("Connect failed\n");
@@ -544,7 +544,7 @@ namespace Win32xx
 		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS |
 					  FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_MAX_WIDTH_MASK,
 					  NULL, ErrorCode, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-					  (LPTSTR)&Message, 1024, NULL);
+					  reinterpret_cast<LPTSTR>(&Message), 1024, NULL);
 
 		if (Message)
 		{
@@ -708,7 +708,7 @@ namespace Win32xx
 				return SOCKET_ERROR;
 			}
 
-			RetVal = ::sendto(m_Socket, send, len, flags, AddrInfo->ai_addr, (int)AddrInfo->ai_addrlen );
+			RetVal = ::sendto(m_Socket, send, len, flags, AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
 			if ( RetVal == SOCKET_ERROR )
 			{
 				TRACE("SendTo failed\n");
@@ -754,10 +754,10 @@ namespace Win32xx
 		StopEvents();	// Ensure the thread isn't already running
 #ifdef _WIN32_WCE
 		DWORD ThreadID;	// a return variable required for Win95, Win98, WinME
-		m_hEventThread = (HANDLE)::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
+		m_hEventThread = reinterpret_cast<HANDLE>(::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CSocket::EventThread, (LPVOID) this, 0, &ThreadID));
 #else
 		UINT ThreadID;	// a return variable required for Win95, Win98, WinME
-		m_hEventThread = (HANDLE)::_beginthreadex(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID);
+		m_hEventThread = reinterpret_cast<HANDLE>(::_beginthreadex(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID));
 #endif
 	}
 

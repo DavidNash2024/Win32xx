@@ -191,7 +191,7 @@ namespace Win32xx
 	{
 	public:
 		CAtoA(LPCSTR pStr) : m_pStr(pStr) {}
-		operator LPCSTR() { return (LPSTR)m_pStr; }
+		operator LPCSTR() { return static_cast<LPCSTR>(m_pStr); }
 
 	private:
 		CAtoA(const CAtoA&);

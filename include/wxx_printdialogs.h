@@ -906,7 +906,7 @@ namespace Win32xx
 			return 0;
 
 		// The parent of paint sample window is the Page Setup dialog.
-		CPageSetupDialog* pDlg = (CPageSetupDialog*)GetCWndPtr(::GetParent(hWnd));
+		CPageSetupDialog* pDlg = static_cast<CPageSetupDialog*>(GetCWndPtr(::GetParent(hWnd)));
 		if (pDlg == NULL)
 			return 0;
 
@@ -928,7 +928,7 @@ namespace Win32xx
 			{
 				assert(lParam);
 				RECT rc = *((LPRECT)lParam);
-				return pDlg->OnDrawPage((HDC)wParam, message, rc);
+				return pDlg->OnDrawPage(reinterpret_cast<HDC>(wParam), message, rc);
 			}
 		}
 		return 0;

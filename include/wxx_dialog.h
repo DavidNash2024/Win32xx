@@ -360,7 +360,7 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC dc((HDC)wParam);
+				CDC dc(reinterpret_cast<HDC>(wParam));
 				BOOL PreventErasure;
 				
 				PreventErasure = OnEraseBkgnd(dc);
@@ -756,9 +756,9 @@ namespace Win32xx
 	// A callback function used by EnumChildWindows.
 	inline BOOL CALLBACK CResizer::EnumWindowsProc(HWND hwnd, LPARAM lParam)
 	{
-		CResizer* pResizer = (CResizer*)lParam;
+		CResizer* pResizer = reinterpret_cast<CResizer*>(lParam);
 
-		// Only for a child, not other decendants.
+		// Only for a child, not other descendants.
 		if (::GetParent(hwnd) == pResizer->m_hParent)
 		{
 			// Add the child window to set of windows managed by CResizer.
@@ -966,7 +966,7 @@ namespace Win32xx
 		std::vector<ResizeData>::iterator iter;
 
 		// Allocates memory for a multiple-window- position structure. 
-		HDWP hdwp = ::BeginDeferWindowPos((int)m_vResizeData.size());
+		HDWP hdwp = ::BeginDeferWindowPos(static_cast<int>(m_vResizeData.size()));
 
     	for (iter = m_vResizeData.begin(); iter != m_vResizeData.end(); ++iter)
     	{

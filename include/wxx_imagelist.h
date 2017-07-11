@@ -599,7 +599,7 @@ namespace Win32xx
 				COLORREF crMask = RGB(200, 199, 200);
 				if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
 				{
-					HPALETTE hPal = (HPALETTE)GetCurrentObject(DesktopDC, OBJ_PAL);
+					HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
 					UINT Index = GetNearestPaletteIndex(hPal, crMask);
 					if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
 				}

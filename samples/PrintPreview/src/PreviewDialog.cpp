@@ -100,7 +100,7 @@ void CPreviewPane::Render(CDC& dc)
 
 		// Copy from the memory dc to the PreviewPane's DC with stretching.		
 		dc.SetStretchBltMode(HALFTONE);			// provides smoother bitmap rendering
-		::SetBrushOrgEx((HDC)dc, xBorder, yBorder, NULL);
+		::SetBrushOrgEx(dc, xBorder, yBorder, NULL);
 		dc.StretchBlt(xBorder, yBorder, PreviewWidth, PreviewHeight, dcMem, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
 	
 		// Draw a grey border around the preview

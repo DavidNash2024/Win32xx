@@ -43,7 +43,7 @@ CMainFrame()								/*
 	SetView(m_View);
 	  // Set the registry key name, and load the initial window position
 	  // Use a registry key name like "CompanyName\\Application"
-	LoadRegistrySettings(_T("Win32++\\StatusBar Demo"));
+	LoadRegistrySettings(_T("Win32++\\StatusBarEx Sample"));
 }
 
 /*============================================================================*/

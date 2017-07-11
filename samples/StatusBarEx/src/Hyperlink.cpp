@@ -138,7 +138,7 @@ OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)		/*
 
 	if (uMsg ==  WM_CTLCOLORSTATIC)
 	{
-		CDC dc((HDC)wParam);
+		CDC dc(reinterpret_cast<HDC>(wParam));
 		dc.SolidFill(HYBkgrColor, GetClientRect());
 		dc.SetTextColor( m_IsUrlVisited? m_crVisited : m_crNotVisited);
 		dc.SetBkMode(TRANSPARENT);

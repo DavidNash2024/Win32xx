@@ -84,7 +84,7 @@ namespace Win32xx
 	class CCommonDialog : public CDialog
 	{
 	public:
-		CCommonDialog(UINT nID = 0) : CDialog((UINT)nID) {}
+		CCommonDialog(UINT nID = 0) : CDialog(nID) {}
 		virtual ~CCommonDialog(){}
 
 	protected:
@@ -580,7 +580,7 @@ namespace Win32xx
 		if (message == UWM_LBSELCHSTRING)
 		{	// handle the registered list box selection change
 			// notifications:
-			OnLBSelChangedNotify((UINT)wParam, LOWORD(lParam), HIWORD(lParam));
+			OnLBSelChangedNotify(static_cast<UINT>(wParam), LOWORD(lParam), HIWORD(lParam));
 			return 0;
 		}
 
@@ -1556,7 +1556,7 @@ namespace Win32xx
 			CDC dc;
 			dc.CreateDC(_T("DISPLAY"), NULL, NULL, NULL);
 			LONG yPerInch = dc.GetDeviceCaps(LOGPIXELSY);
-			m_logFont.lfHeight = -(int) ((cf.yHeight * yPerInch) / 1440);
+			m_logFont.lfHeight = - (cf.yHeight * yPerInch) / 1440;
 		}
 		else
 			m_logFont.lfHeight = 0;

@@ -297,7 +297,7 @@ namespace Win32xx
 
 	inline void CTab::CSelectDialog::OnOK()
 	{
-		int iSelect = (int)SendDlgItemMessage(IDC_LIST, LB_GETCURSEL, 0, 0);
+		int iSelect = static_cast<int>(SendDlgItemMessage(IDC_LIST, LB_GETCURSEL, 0, 0));
 		if (iSelect != LB_ERR)
 			EndDialog(iSelect);
 		else
@@ -338,7 +338,7 @@ namespace Win32xx
 		else
 			tpi.iImage = -1;
 
-		int iNewPage = (int)m_vTabPageInfo.size();
+		int iNewPage = static_cast<int>(m_vTabPageInfo.size());
 		m_vTabPageInfo.push_back(tpi);
 
 		if (IsWindow())
@@ -363,7 +363,8 @@ namespace Win32xx
 	// and deletes the CWnd object when the window is destroyed.	
 	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
 	{
-		HICON hIcon = (HICON)LoadImage(GetApp().GetResourceHandle(), MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED);
+		HICON hIcon = reinterpret_cast<HICON>(LoadImage(GetApp().GetResourceHandle(), 
+			                                  MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED));
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
@@ -372,7 +373,7 @@ namespace Win32xx
 	// and deletes the CWnd object when the window is destroyed.	
 	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText)
 	{
-		return AddTabPage(pView, szTabText, (HICON)0, 0);
+		return AddTabPage(pView, szTabText, reinterpret_cast<HICON>(0), 0);
 	}
 
 	
@@ -528,7 +529,7 @@ namespace Win32xx
 			// Manually draw list button
 			dcDraw.CreatePen(PS_SOLID, 1, RGB(64, 64, 64));
 
-			int MaxLength = (int)(0.65 * rcList.Width());
+			int MaxLength = static_cast<int>(0.65 * rcList.Width());
 			int topGap = 1 + rcList.Height()/3;
 			for (int i = 0; i <= MaxLength/2; ++i)
 			{
@@ -596,7 +597,7 @@ namespace Win32xx
 	// Draw the tab borders.
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
 	{
-		BOOL IsBottomTab = (BOOL)GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
+		BOOL IsBottomTab = GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
 
 		// Draw a lighter rectangle touching the tab buttons
 		CRect rcItem;
@@ -777,7 +778,7 @@ namespace Win32xx
 	{
 		assert(pWnd);
 
-		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
+		for (int i = 0; i < static_cast<int>(m_vTabPageInfo.size()); ++i)
 		{
 			if (m_vTabPageInfo[i].pView == pWnd)
 				return i;
@@ -846,7 +847,7 @@ namespace Win32xx
 		TabNMHDR.nPage = nPage;
 
 		// The default return value is zero
-		return (BOOL)GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
+		return GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
 	}
 
 	
@@ -868,7 +869,7 @@ namespace Win32xx
 		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
 			SetImageList(m_imlODTab);
 
-		for (int i = 0; i < (int)m_vTabPageInfo.size(); ++i)
+		for (int i = 0; i < static_cast<int>(m_vTabPageInfo.size()); ++i)
 		{
 			// Add tabs for each view.
 			TCITEM tie;
@@ -1225,7 +1226,7 @@ namespace Win32xx
 	// Removes a tab and its view page.	
 	inline void CTab::RemoveTabPage(int nPage)
 	{
-		if ((nPage < 0) || (nPage > (int)m_vTabPageInfo.size() -1))
+		if ((nPage < 0) || (nPage > static_cast<int>(m_vTabPageInfo.size() -1)))
 			return;
 
 		// Remove the tab
@@ -1508,7 +1509,7 @@ namespace Win32xx
 			SelectDialog.AddItem(GetAllTabs()[u].TabText);
 		}
 
-		int iSelected = (int)SelectDialog.DoModal(*this);
+		int iSelected = static_cast<int>(SelectDialog.DoModal(*this));
 		if (iSelected >= 0) SelectPage(iSelected);
 	}
 
@@ -2063,7 +2064,7 @@ namespace Win32xx
 
 		case UWN_TABCLOSE:
 			{
-				TABNMHDR* pTabNMHDR = (TABNMHDR*)lParam;
+				TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(lParam);
 				return !OnTabClose(pTabNMHDR->nPage);
 			}
 
@@ -2137,12 +2138,12 @@ namespace Win32xx
 					TabPageInfo pdi = GetTab().GetTabPageInfo(i);
 
 					SubKeyName.Format(_T("ID%d"), i);
-					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, (LPBYTE)&pdi.idTab, sizeof(int)))
+					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, reinterpret_cast<LPCBYTE>(&pdi.idTab), sizeof(int)))
 						throw (CUserException(_T("RegSetValueEx Failed")));
 
 					SubKeyName.Format(_T("Text%d"), i);
 					CString TabText = GetTab().GetTabPageInfo(i).TabText;
-					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_SZ, (LPBYTE)TabText.c_str(), (1 + TabText.GetLength() )*sizeof(TCHAR)))
+					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_SZ, reinterpret_cast<LPCBYTE>(TabText.c_str()), (1 + TabText.GetLength() )*sizeof(TCHAR)))
 						throw (CUserException(_T("RegSetValueEx Failed")));
 				}
 

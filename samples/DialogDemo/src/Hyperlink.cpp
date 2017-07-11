@@ -69,7 +69,7 @@ LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	// Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
 	if (uMsg ==  WM_CTLCOLORSTATIC)
 	{
-		CDC dc((HDC)wParam);
+		CDC dc(reinterpret_cast<HDC>(wParam));
 		dc.SetTextColor( m_IsUrlVisited? m_crVisited : m_crNotVisited);
 		dc.SetBkMode(TRANSPARENT);
 		dc.SelectObject(m_UrlFont);

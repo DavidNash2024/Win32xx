@@ -135,9 +135,9 @@ namespace Win32xx
 		if (NULL == m_pThreadParams) m_pThreadParams = this;
 
 #ifdef _WIN32_WCE
-		m_hThread = (HANDLE)::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_dwThreadID);
+		m_hThread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_dwThreadID));
 #else
-		m_hThread = (HANDLE)::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc, m_pThreadParams, initflag, &m_nThreadID);
+		m_hThread = reinterpret_cast<HANDLE>(::_beginthreadex(pSecurityAttributes, stack_size, m_pfnThreadProc, m_pThreadParams, initflag, &m_nThreadID));
 #endif
 
 		if (m_hThread == 0)

@@ -288,7 +288,8 @@ namespace Win32xx
 	// a CUserException.  BYTE is unsigned char.	
 	inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const
 	{
-		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
+		DDV_MinMaxULong(static_cast<ULONG>(value), static_cast<ULONG>(minVal),
+			            static_cast<ULONG>(maxVal));
 	}
 	
 
@@ -303,7 +304,7 @@ namespace Win32xx
 		const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange) const
 
 	{
-		ULONGLONG zero = (ULONGLONG)0;
+		ULONGLONG zero = 0L;
 		ULONGLONG val = SystemTimeToULL(refValue);
 		ULONGLONG min = SystemTimeToULL(minRange);
 		ULONGLONG max = SystemTimeToULL(maxRange);
@@ -315,7 +316,7 @@ namespace Win32xx
 				(max != zero && max < val))
 			{
 				  // retrieve the control ID
-				int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, 	GWLP_ID);
+				int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
 				CString str = CString(_T("Warning: Date-Time data is out of range "))
 								+ _T("in control ID ") + nIDC + _T(" \n");
 				TRACE(str);
@@ -363,8 +364,8 @@ namespace Win32xx
 	inline void CDataExchange::DDV_MinMaxFloat(float const& value, float minVal,
 		float maxVal, int precision /* = FLT_DIG */) const
 	{
-		DDV_MinMaxDouble((double)value, (double)minVal, (double)maxVal,
-			precision);
+		DDV_MinMaxDouble(static_cast<double>(value), static_cast<double>(minVal), 
+			static_cast<double>(maxVal), precision);
 	}
 
 
@@ -410,7 +411,7 @@ namespace Win32xx
 	inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
 		const SYSTEMTIME& maxRange) const
 	{
-		ULONGLONG zero = (ULONGLONG)0;
+		ULONGLONG zero = 0L;
 		ULONGLONG val = SystemTimeToULL(refValue);
 		ULONGLONG min = SystemTimeToULL(minRange);
 		ULONGLONG max = SystemTimeToULL(maxRange);
@@ -421,7 +422,7 @@ namespace Win32xx
 			if ((min != zero && min > val) ||
 				(max != zero && max < val))
 			{
-				int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
+				int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
 				CString str = CString(_T("Warning: Calendar data is out of range "))
 							+ _T("in control ID ") + nIDC + _T(" \n");
 				TRACE(str);
@@ -462,7 +463,7 @@ namespace Win32xx
 			{
 	#ifdef _DEBUG
 				  // just leave a trace if writing to the control
-				int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
+				int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
 				CString str = CString(_T("Warning: slider position is outside given "))
 							+ _T("limits in the control with ID ") + nIDC + _T(" \n");
 				TRACE(str);
@@ -481,7 +482,8 @@ namespace Win32xx
 	// throws a CUserException.
 	inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal) const
 	{
-		DDV_MinMaxULong((ULONG)value, (ULONG)minVal, (ULONG)maxVal);
+		DDV_MinMaxULong(static_cast<ULONG>(value), static_cast<ULONG>(minVal),
+			            static_cast<ULONG>(maxVal));
 	}
 	
 
@@ -496,7 +498,7 @@ namespace Win32xx
 		if (!m_RetrieveAndValidate)
 		{
 			// just leave a debugging trace if writing to a control
-			int nIDC = (int)::GetWindowLongPtr(m_hWndLastControl, GWLP_ID);
+			int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
 			CString str = CString(_T("Warning: value is outside limits in control with ID "))
 						   + nIDC + _T(" \n");
 			TRACE(str);
@@ -552,7 +554,7 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
 		if (m_RetrieveAndValidate)
-			index = (int)::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0L);
+			index = static_cast<int>(::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0L));
 		else
 			::SendMessage(hWndCtrl, CB_SETCURSEL, (WPARAM)index, 0L);
 	}
@@ -626,8 +628,8 @@ namespace Win32xx
 		else if (value != _T(""))	// write to control
 		{
 			// set current selection based on data string
-			int i = (int)::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT,
-				(WPARAM)-1, (LPARAM)value.c_str());
+			int i = static_cast<int>(::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT,
+				(WPARAM)-1, (LPARAM)value.c_str()));
 			if (i < 0)
 			{
 				// set the edit text (will be ignored if a DROPDOWNLIST)
@@ -649,7 +651,7 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		if (m_RetrieveAndValidate)
 		{
-			value = (int)::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L);
+			value = static_cast<int>(::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L));
 			assert(value == BST_CHECKED || value == BST_UNCHECKED ||
 				value == BST_INDETERMINATE);
 		}
@@ -697,7 +699,7 @@ namespace Win32xx
 	{
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 		if (m_RetrieveAndValidate)
-			index = (int)::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L);
+			index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L));
 		else
 			::SendMessage(hWndCtrl, LB_SETCURSEL, (WPARAM)index, 0L);
 	}
@@ -715,11 +717,11 @@ namespace Win32xx
 		if (m_RetrieveAndValidate)
 		{
 			 // find the index of the item selected in the list box
-			int index = (int)::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L);
+			int index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L));
 			if (index != -1)
 			{
 				// if text was selected, read it into the CString
-				int nLen = (int)::SendMessage(hWndCtrl, LB_GETTEXTLEN, index, 0L);
+				int nLen = static_cast<int>(::SendMessage(hWndCtrl, LB_GETTEXTLEN, index, 0L));
 				::SendMessage(hWndCtrl, LB_GETTEXT, index, (LPARAM)value.GetBuffer(nLen));
 
 				value.ReleaseBuffer();
@@ -734,8 +736,8 @@ namespace Win32xx
 		{
 			// search the the entire list box for the given value
 			// and select it if it is found
-			int index  = (int)::SendMessage(hWndCtrl, LB_SELECTSTRING,
-				(WPARAM)-1, (LPARAM)value.c_str());
+			int index  = static_cast<int>(::SendMessage(hWndCtrl, LB_SELECTSTRING,
+				(WPARAM)-1, (LPARAM)value.c_str()));
 
 			if (index == LB_ERR)
 			{
@@ -769,8 +771,8 @@ namespace Win32xx
 			// find the first entry that matches the entire value,
 			// in a case insensitive search, perhaps in sorted order,
 			// if the box has that style
-			int index = (int)::SendMessage(hWndCtrl, LB_FINDSTRINGEXACT,
-				(WPARAM)-1, (LPARAM)value.c_str());
+			int index = static_cast<int>(::SendMessage(hWndCtrl, LB_FINDSTRINGEXACT,
+				(WPARAM)-1, (LPARAM)value.c_str()));
 
 			if (index < 0)
 			{
@@ -825,7 +827,7 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
 		if (m_RetrieveAndValidate)
-			value = (int) ::SendMessage(hWndCtrl, PBM_GETPOS, 0, 0);
+			value = static_cast<int>(::SendMessage(hWndCtrl, PBM_GETPOS, 0, 0));
 		else
 			::SendMessage(hWndCtrl, PBM_SETPOS, value, 0);
 	}
@@ -840,11 +842,11 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
 		// assure that the control is a radio button and part of a group
-		BOOL firstInGroup = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
+		BOOL firstInGroup = ::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP;
 		assert(firstInGroup);
 
 		// assure the button is a radio button
-		BOOL isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON));
+		BOOL isRadioButton = ::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON);
 		assert(isRadioButton);
 
 		// preset the returned value to empty in case no button is set
@@ -885,8 +887,8 @@ namespace Win32xx
 			hWndCtrl = ::GetWindow(hWndCtrl, GW_HWNDNEXT);
 			if (hWndCtrl)
 			{
-				isRadioButton = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON));
-				firstInGroup  = (BOOL)(::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP);
+				isRadioButton = ::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & (BS_RADIOBUTTON | BS_AUTORADIOBUTTON);
+				firstInGroup  = ::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP;
 			}
 		}
 	}
@@ -922,7 +924,7 @@ namespace Win32xx
 		HWND hWndCtrl = PrepareCtrl(nIDC);
 
 		if (m_RetrieveAndValidate)
-			value = (int) ::SendMessage(hWndCtrl, TBM_GETPOS, 0, 0);
+			value = static_cast<int>(::SendMessage(hWndCtrl, TBM_GETPOS, 0, 0));
 		else
 			::SendMessage(hWndCtrl, TBM_SETPOS, TRUE, value);
 	}
@@ -954,7 +956,7 @@ namespace Win32xx
 		else
 		{
 			tStringStream tss;
-			tss << (int)value;
+			tss << static_cast<int>(value);
 			::SetWindowText(hWndCtrl, tss.str().c_str());
 		}
 	}
@@ -1269,8 +1271,8 @@ namespace Win32xx
 	inline ULONGLONG SystemTimeToULL(const SYSTEMTIME &systime)
 	{
 		FILETIME ft;
-		SystemTimeToFileTime(&systime, &ft);
-		return ((ULONGLONG)(ft.dwHighDateTime) << 32 | ft.dwLowDateTime);
+		SystemTimeToFileTime(&systime, &ft);	
+		return static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
 	}
 
 }	// namespace Win32xx

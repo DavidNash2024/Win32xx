@@ -322,7 +322,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(IsMenu(m_pData->hMenu));
-		return ::AppendMenu(m_pData->hMenu, uFlags, uIDNewItem, (LPCTSTR)hBitmap);
+		return ::AppendMenu(m_pData->hMenu, uFlags, uIDNewItem, reinterpret_cast<LPCTSTR>(hBitmap));
 	}
 	
 	
@@ -613,7 +613,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(IsMenu(m_pData->hMenu));
-		return ::InsertMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, (LPCTSTR)hBitmap);
+		return ::InsertMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, reinterpret_cast<LPCTSTR>(hBitmap));
 	}
 	
 	
@@ -691,7 +691,7 @@ namespace Win32xx
 	{
 		assert(m_pData);
 		assert(IsMenu(m_pData->hMenu));
-		return ::ModifyMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, (LPCTSTR)hBitmap);
+		return ::ModifyMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, reinterpret_cast<LPCTSTR>(hBitmap));
 	}
 	
 
