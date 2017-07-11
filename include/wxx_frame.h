@@ -706,7 +706,7 @@ namespace Win32xx
 			NONCLIENTMETRICS info = GetNonClientMetrics();
 
 			// Default menu items are bold, so take this into account
-			if ((int)::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED) != -1)
+			if (static_cast<int>(::GetMenuDefaultItem(pmd->hMenu, TRUE, GMDI_USEDISABLED)) != -1)
 				info.lfMenuFont.lfWeight = FW_BOLD;
 
 			// Calculate the size of the text
@@ -1269,7 +1269,7 @@ namespace Win32xx
 				{
 					CDC dcDraw(lpNMCustomDraw->nmcd.hdc);
 					CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
-					HICON hIcon = (HICON)pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0L);
+					HICON hIcon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0L));
 					if (NULL == hIcon)
 						hIcon = GetApp().LoadStandardIcon(IDI_APPLICATION);
 
@@ -1381,7 +1381,7 @@ namespace Win32xx
 						TBBUTTON tbb;
 						ZeroMemory(&tbb, sizeof(tbb));
 						pTB->SendMessage(TB_GETBUTTON, (WPARAM)nButton, (LPARAM)&tbb);
-						int iImage = (int)tbb.iBitmap;
+						int iImage = static_cast<int>(tbb.iBitmap);
 
 						// Calculate text size.
 						CString str;
@@ -1750,7 +1750,7 @@ namespace Win32xx
 
 		// get the icon's location in the imagelist
 		int iImage = -1;
-		for (int i = 0 ; i < (int)m_vMenuIcons.size(); ++i)
+		for (int i = 0 ; i < static_cast<int>(m_vMenuIcons.size()); ++i)
 		{
 			if (pdis->itemID == m_vMenuIcons[i])
 				iImage = i;
@@ -2428,7 +2428,7 @@ namespace Win32xx
 		LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lParam;
 		assert(pdis);
 
-		if (IsMenu((HMENU)pdis->hwndItem) && (!IsRectEmpty(&pdis->rcItem)))
+		if (IsMenu(reinterpret_cast<HMENU>(pdis->hwndItem)) && (!IsRectEmpty(&pdis->rcItem)))
 		{
 			DrawMenuItem(pdis);
 			return TRUE;
@@ -2471,7 +2471,7 @@ namespace Win32xx
 		if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
 			return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
 
-		CMenu Menu((HMENU)wParam);
+		CMenu Menu(reinterpret_cast<HMENU>(wParam));
 
 		for (UINT i = 0; i < Menu.GetMenuItemCount(); ++i)
 		{
@@ -2548,7 +2548,7 @@ namespace Win32xx
 		if (m_UseMenuStatus && GetStatusBar().IsWindow())
 		{
 			int nID = LOWORD (wParam);
-			CMenu Menu((HMENU) lParam);
+			CMenu Menu(reinterpret_cast<HMENU>(lParam));
 
 			if ((Menu != T::GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
 				GetStatusBar().SetWindowText(LoadString(nID));
@@ -2671,7 +2671,7 @@ namespace Win32xx
 		// Find the ToolBar that generated the tooltip
 		CPoint pt(GetMessagePos());
 		HWND hWnd = ::WindowFromPoint(pt);
-		CToolBar* pToolBar = (CToolBar*)::SendMessage(hWnd, UWM_GETCTOOLBAR, 0, 0);
+		CToolBar* pToolBar = reinterpret_cast<CToolBar*>(::SendMessage(hWnd, UWM_GETCTOOLBAR, 0, 0));
 
 		// Set the tooltip's text from the ToolBar button's CommandID.
 		if (pToolBar)
@@ -2823,7 +2823,7 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(wParam);
 		UNREFERENCED_PARAMETER(lParam);
 
-		for (int nItem = (int)m_vMenuItemData.size() - 1; nItem >= 0; --nItem)
+		for (int nItem = static_cast<int>(m_vMenuItemData.size()) - 1; nItem >= 0; --nItem)
 		{
 			// Undo OwnerDraw and put the text back.
 			MENUITEMINFO mii;

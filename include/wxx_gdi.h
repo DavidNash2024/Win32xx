@@ -60,15 +60,15 @@
 //	  HDC hdcClient = ::GetDC(GetHwnd());
 //    HDC hdcMem = ::CreateCompatibleDC(hdcClient);
 //    HBITMAP hBitmap = ::CreateCompatibleBitmap(hdcClient, cx, cy);
-//	  HBITMAP hOldBitmap = (HBITMAP)::SelectObject(hdcMem, hBitmap);
+//	  HBITMAP hOldBitmap = reinterpret_cast<HBITMAP>(::SelectObject(hdcMem, hBitmap));
 //    HPEN hPen = ::CreatePen(PS_SOLID, 1, RGB(255,0,0);
-//    HPEN hOldPen = (HPEN)::SelectObject(hdcMem, hPen);
+//    HPEN hOldPen = reinterpret_cast<HPEN>(::SelectObject(hdcMem, hPen));
 //	  ::MoveToEx(hdcMem, 0, 0, NULL);
 //    ::LineTo(hdcMem, 50, 50);
 //    ::SelectObject(hdcMem, hOldPen);
 //    ::DeleteObject(hPen);
 //    hPen = ::CreatePen(PS_SOLID, 1, RGB(0,255,0);
-//    hOldPen = (HPEN)::SelectObject(hdcMem, hPen);
+//    hOldPen = reinterpret_cast<HPEN>(::SelectObject(hdcMem, hPen));
 //    ::LineTo(hdcMem, 80, 80);
 //	  ::BitBlt(hdcClient, 0, 0, cx, cy, hdcMem, 0, 0);
 //    ::SelectObject(hdcMem, hOldPen);
@@ -1045,7 +1045,7 @@ namespace Win32xx
 			else                     cClrBits = 32;
 
 			// Allocate memory for the BITMAPINFO structure.
-			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * (int)(1 << cClrBits);
+			UINT uQuadSize = (cClrBits == 24)? 0 : sizeof(RGBQUAD) * static_cast<int>(1 << cClrBits);
 			m_bmi.assign(sizeof(BITMAPINFOHEADER) + uQuadSize, 0);
 			m_pbmiArray = (LPBITMAPINFO) &m_bmi[0];
 
@@ -1319,7 +1319,7 @@ namespace Win32xx
 	{
 		assert( &GetApp() );
 
-		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR);
+		HBITMAP hBitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, LR_DEFAULTCOLOR));
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
@@ -1341,7 +1341,7 @@ namespace Win32xx
 	{
 		assert( &GetApp() );
 
-		HBITMAP hBitmap = (HBITMAP)::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, fuLoad);
+		HBITMAP hBitmap = reinterpret_cast<HBITMAP>(::LoadImage(GetApp().GetResourceHandle(), lpszName, IMAGE_BITMAP, 0, 0, fuLoad));
 		if (hBitmap != 0)
 		{
 			Attach(hBitmap);
@@ -1444,7 +1444,7 @@ namespace Win32xx
 		{
 			assert(GetHandle() != NULL);
 			CSize Size;
-			::GetBitmapDimensionEx((HBITMAP)GetHandle(), &Size);
+			::GetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), &Size);
 			return Size;
 		}
 
@@ -1455,7 +1455,7 @@ namespace Win32xx
 		{
 			assert(GetHandle() != NULL);
 			CSize Size;
-			::SetBitmapDimensionEx((HBITMAP)GetHandle(), nWidth, nHeight, Size);
+			::SetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), nWidth, nHeight, Size);
 			return Size;
 		}
 
@@ -1624,7 +1624,7 @@ namespace Win32xx
 		inline int CBitmap::GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const
 		{
 			assert(GetHandle() != NULL);
-			return ::GetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines,  pBits, pbmi, uColorUse);
+			return ::GetDIBits(hdc, reinterpret_cast<HBITMAP>(GetHandle()), uStartScan, cScanLines,  pBits, pbmi, uColorUse);
 		}
 
 		
@@ -1633,7 +1633,7 @@ namespace Win32xx
 		inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse) const
 		{
 			assert(GetHandle() != NULL);
-			return ::SetDIBits(hdc, (HBITMAP)GetHandle(), uStartScan, cScanLines, pBits, pbmi, uColorUse);
+			return ::SetDIBits(hdc, reinterpret_cast<HBITMAP>(GetHandle()), uStartScan, cScanLines, pBits, pbmi, uColorUse);
 		}
 		
 #endif // !_WIN32_WCE
@@ -1974,7 +1974,7 @@ namespace Win32xx
 	inline UINT CPalette::GetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	{
 		assert(GetHandle() != NULL);
-		return ::GetPaletteEntries((HPALETTE)GetHandle(), nStartIndex, nNumEntries, lpPaletteColors);
+		return ::GetPaletteEntries(reinterpret_cast<HPALETTE>(GetHandle()), nStartIndex, nNumEntries, lpPaletteColors);
 	}
 	
 	
@@ -1982,7 +1982,7 @@ namespace Win32xx
 	inline UINT CPalette::SetPaletteEntries(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	{
 		assert(GetHandle() != NULL);
-		return ::SetPaletteEntries((HPALETTE)GetHandle(), nStartIndex, nNumEntries, lpPaletteColors);
+		return ::SetPaletteEntries(reinterpret_cast<HPALETTE>(GetHandle()), nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
 #ifndef _WIN32_WCE
@@ -1991,7 +1991,7 @@ namespace Win32xx
 	inline void CPalette::AnimatePalette(UINT nStartIndex, UINT nNumEntries, LPPALETTEENTRY lpPaletteColors) const
 	{
 		assert(GetHandle() != NULL);
-		::AnimatePalette((HPALETTE)GetHandle(), nStartIndex, nNumEntries, lpPaletteColors);
+		::AnimatePalette(reinterpret_cast<HPALETTE>(GetHandle()), nStartIndex, nNumEntries, lpPaletteColors);
 	}
 
 	
@@ -1999,7 +1999,7 @@ namespace Win32xx
 	inline BOOL CPalette::ResizePalette(UINT nNumEntries) const
 	{
 		assert(GetHandle() != NULL);
-		return ::ResizePalette((HPALETTE)GetHandle(), nNumEntries);
+		return ::ResizePalette(reinterpret_cast<HPALETTE>(GetHandle()), nNumEntries);
 	}
 	
 #endif // !_WIN32_WCE
@@ -2008,7 +2008,7 @@ namespace Win32xx
 	inline UINT CPalette::GetNearestPaletteIndex(COLORREF crColor) const
 	{
 		assert(GetHandle() != NULL);
-		return ::GetNearestPaletteIndex((HPALETTE)GetHandle(), crColor);
+		return ::GetNearestPaletteIndex(reinterpret_cast<HPALETTE>(GetHandle()), crColor);
 	}
 
 
@@ -2276,7 +2276,7 @@ namespace Win32xx
 	inline void CRgn::SetRectRgn(int x1, int y1, int x2, int y2) const
 	{
 		assert(GetHandle() != NULL);
-		::SetRectRgn((HRGN)GetHandle(), x1, y1, x2, y2);
+		::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), x1, y1, x2, y2);
 	}
 
 	
@@ -2284,7 +2284,7 @@ namespace Win32xx
 	inline void CRgn::SetRectRgn(const RECT& rc) const
 	{
 		assert(GetHandle() != NULL);
-		::SetRectRgn((HRGN)GetHandle(), rc.left, rc.top, rc.right, rc.bottom);
+		::SetRectRgn(reinterpret_cast<HRGN>(GetHandle()), rc.left, rc.top, rc.right, rc.bottom);
 	}
 
 	
@@ -2292,7 +2292,7 @@ namespace Win32xx
 	inline int CRgn::CombineRgn(HRGN hrgnSrc1, HRGN hrgnSrc2, int nCombineMode) const
 	{
 		assert(GetHandle() != NULL);
-		return ::CombineRgn((HRGN)GetHandle(), hrgnSrc1, hrgnSrc2, nCombineMode);
+		return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), hrgnSrc1, hrgnSrc2, nCombineMode);
 	}
 
 	
@@ -2300,7 +2300,7 @@ namespace Win32xx
 	inline int CRgn::CombineRgn(HRGN hrgnSrc, int nCombineMode) const
 	{
 		assert(GetHandle() != NULL);
-		return ::CombineRgn((HRGN)GetHandle(), (HRGN)GetHandle(), hrgnSrc, nCombineMode);
+		return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), (HRGN)GetHandle(), hrgnSrc, nCombineMode);
 	}
 
 	
@@ -2309,7 +2309,7 @@ namespace Win32xx
 	{
 		assert(GetHandle() != NULL);
 		assert(hrgnSrc);
-		return ::CombineRgn((HRGN)GetHandle(), hrgnSrc, NULL, RGN_COPY);
+		return ::CombineRgn(reinterpret_cast<HRGN>(GetHandle()), hrgnSrc, NULL, RGN_COPY);
 	}
 	
 	
@@ -2317,7 +2317,7 @@ namespace Win32xx
 	inline BOOL CRgn::EqualRgn(HRGN hRgn) const
 	{
 		assert(GetHandle() != NULL);
-		return ::EqualRgn((HRGN)GetHandle(), hRgn);
+		return ::EqualRgn(reinterpret_cast<HRGN>(GetHandle()), hRgn);
 	}
 	
 	
@@ -2325,7 +2325,7 @@ namespace Win32xx
 	inline int CRgn::OffsetRgn(int x, int y) const
 	{
 		assert(GetHandle() != NULL);
-		return ::OffsetRgn((HRGN)GetHandle(), x, y);
+		return ::OffsetRgn(reinterpret_cast<HRGN>(GetHandle()), x, y);
 	}
 	
 	
@@ -2333,7 +2333,7 @@ namespace Win32xx
 	inline int CRgn::OffsetRgn(POINT& pt) const
 	{
 		assert(GetHandle() != NULL);
-		return ::OffsetRgn((HRGN)GetHandle(), pt.x, pt.y);
+		return ::OffsetRgn(reinterpret_cast<HRGN>(GetHandle()), pt.x, pt.y);
 	}
 	
 	
@@ -2342,7 +2342,7 @@ namespace Win32xx
 	inline int CRgn::GetRgnBox(RECT& rc) const
 	{
 		assert(GetHandle() != NULL);
-		return ::GetRgnBox((HRGN)GetHandle(), &rc);
+		return ::GetRgnBox(reinterpret_cast<HRGN>(GetHandle()), &rc);
 	}
 	
 	
@@ -2350,7 +2350,7 @@ namespace Win32xx
 	inline int CRgn::GetRegionData(LPRGNDATA lpRgnData, int nDataSize) const
 	{
 		assert(GetHandle() != NULL);
-		return static_cast<int>(::GetRegionData((HRGN)GetHandle(), nDataSize, lpRgnData));
+		return static_cast<int>(::GetRegionData(reinterpret_cast<HRGN>(GetHandle()), nDataSize, lpRgnData));
 	}
 
 	
@@ -2358,7 +2358,7 @@ namespace Win32xx
 	inline BOOL CRgn::PtInRegion(int x, int y) const
 	{
 		assert(GetHandle() != NULL);
-		return ::PtInRegion((HRGN)GetHandle(), x, y);
+		return ::PtInRegion(reinterpret_cast<HRGN>(GetHandle()), x, y);
 	}
 	
 	
@@ -2366,7 +2366,7 @@ namespace Win32xx
 	inline BOOL CRgn::PtInRegion(POINT& pt) const
 	{
 		assert(GetHandle() != NULL);
-		return ::PtInRegion((HRGN)GetHandle(), pt.x, pt.y);
+		return ::PtInRegion(reinterpret_cast<HRGN>(GetHandle()), pt.x, pt.y);
 	}
 	
 	
@@ -2374,7 +2374,7 @@ namespace Win32xx
 	inline BOOL CRgn::RectInRegion(const RECT& rc) const
 	{
 		assert(GetHandle() != NULL);
-		return ::RectInRegion((HRGN)GetHandle(), &rc);
+		return ::RectInRegion(reinterpret_cast<HRGN>(GetHandle()), &rc);
 	}
 
 
@@ -2729,7 +2729,7 @@ namespace Win32xx
 	inline HBRUSH CDC::SelectObject(HBRUSH hBrush) const
 	{
 		assert(m_pData);
-		return (HBRUSH)::SelectObject(m_pData->hDC, hBrush);
+		return reinterpret_cast<HBRUSH>(::SelectObject(m_pData->hDC, hBrush));
 	}
 	
 
@@ -2737,7 +2737,7 @@ namespace Win32xx
 	inline HFONT CDC::SelectObject(HFONT hFont) const
 	{
 		assert(m_pData);
-		return (HFONT)::SelectObject(m_pData->hDC, hFont);
+		return reinterpret_cast<HFONT>(::SelectObject(m_pData->hDC, hFont));
 	}
 
 	
@@ -2745,7 +2745,7 @@ namespace Win32xx
 	inline HPEN CDC::SelectObject(HPEN hPen) const
 	{
 		assert(m_pData);
-		return (HPEN)::SelectObject(m_pData->hDC, hPen);
+		return reinterpret_cast<HPEN>(::SelectObject(m_pData->hDC, hPen));
 	}
 
 
@@ -2753,7 +2753,7 @@ namespace Win32xx
 	inline int CDC::SelectObject(HRGN hRgn) const
 	{
 		assert(m_pData);
-		return (int)(INT_PTR)::SelectObject(m_pData->hDC, hRgn);
+		return reinterpret_cast<int>(::SelectObject(m_pData->hDC, hRgn));
 	}
 
 
@@ -3031,7 +3031,7 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 
-		HBRUSH hBrush = (HBRUSH)::GetCurrentObject(m_pData->hDC, OBJ_BRUSH);
+		HBRUSH hBrush = reinterpret_cast<HBRUSH>(::GetCurrentObject(m_pData->hDC, OBJ_BRUSH));
 		LOGBRUSH logBrush;
 		ZeroMemory(&logBrush, sizeof(logBrush));
 		::GetObject(hBrush, sizeof(logBrush), &logBrush);
@@ -3117,7 +3117,7 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 
-		HFONT hFont = (HFONT)::GetCurrentObject(m_pData->hDC, OBJ_FONT);
+		HFONT hFont = reinterpret_cast<HFONT>(::GetCurrentObject(m_pData->hDC, OBJ_FONT));
 		LOGFONT logFont;
 		ZeroMemory(&logFont, sizeof(logFont));
 		::GetObject(hFont, sizeof(logFont), &logFont);
@@ -3287,7 +3287,7 @@ namespace Win32xx
 	{
 		assert(m_pData->hDC);
 
-		HPEN hPen = (HPEN)::GetCurrentObject(m_pData->hDC, OBJ_PEN);
+		HPEN hPen = reinterpret_cast<HPEN>(::GetCurrentObject(m_pData->hDC, OBJ_PEN));
 		LOGPEN logPen;
 		ZeroMemory(&logPen, sizeof(logPen));
 		::GetObject(hPen, sizeof(logPen), &logPen);

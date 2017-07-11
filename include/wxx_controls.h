@@ -1147,7 +1147,7 @@ namespace Win32xx
 		{
 			nBufferLen *= 4;
 			LPTSTR pszStr = str.GetBuffer(nBufferLen);
-			nStrLen = ::GetKeyNameText((LONG)lParam, pszStr, nBufferLen + 1);
+			nStrLen = ::GetKeyNameText(static_cast<LONG>(lParam), pszStr, nBufferLen + 1);
 			str.ReleaseBuffer();
 		}
 
@@ -2298,7 +2298,7 @@ namespace Win32xx
 		TOOLINFO ti;
 		ZeroMemory(&ti, sizeof(ti));
 		ti.cbSize = sizeof(ti);
-		if (uID == (UINT)-1)
+		if (uID == static_cast<UINT>(-1))
 		{
 			ti.hwnd = GetParent();
 			ti.uId = (UINT_PTR)hWndControl;
@@ -2480,7 +2480,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TOOLINFO ti = GetToolInfo(hWndControl, uID);
-		ti.lpszText = (LPTSTR)lpszText;
+		ti.lpszText = const_cast<LPTSTR>(lpszText);
 		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
 	}
 

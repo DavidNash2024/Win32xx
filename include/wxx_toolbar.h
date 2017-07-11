@@ -790,7 +790,7 @@ namespace Win32xx
 		if (m_OldToolBarID)
 			Succeeded = ReplaceBitmap(nID);
 		else
-			Succeeded = (BOOL)AddBitmap(nID);
+			Succeeded = AddBitmap(nID);
 
 		return Succeeded;
 	}

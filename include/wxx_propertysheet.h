@@ -178,7 +178,7 @@ namespace Win32xx
 	// Definitions for the CPropertyPage class
 	//
 	
-	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/) : CDialog((UINT)0)
+	inline CPropertyPage::CPropertyPage(UINT nIDTemplate, LPCTSTR szTitle /* = 0*/) : CDialog(static_cast<UINT>(0))
 	{
 		ZeroMemory(&m_PSP, sizeof(m_PSP));
 		SetTitle(szTitle);
@@ -592,7 +592,7 @@ namespace Win32xx
 			PropSheet_AddPage(*this, hpsp);
 		}
 
-		m_PSH.nPages = (int)m_vPages.size();
+		m_PSH.nPages = static_cast<int>(m_vPages.size());
 
 		return pPage;
 	}
@@ -739,7 +739,7 @@ namespace Win32xx
 
 		// Create the Property Sheet
 		m_PSH.dwFlags &= ~PSH_MODELESS;
-		int nResult = (int)CreatePropertySheet(&m_PSH);
+		int nResult = static_cast<int>(CreatePropertySheet(&m_PSH));
 
 		m_vPages.clear();
 
@@ -817,7 +817,7 @@ namespace Win32xx
 			SendMessage(*this, PSM_REMOVEPAGE, nPage, 0L);
 
 		m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
-		m_PSH.nPages = (int)m_vPages.size();
+		m_PSH.nPages = static_cast<int>(m_vPages.size());
 	}
 
 	

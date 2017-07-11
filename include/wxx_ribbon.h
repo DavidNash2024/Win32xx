@@ -425,7 +425,7 @@ namespace Win32xx
 		if (GetRibbonFramework())
 		{
 			SetMenu(NULL);				// Disable the window menu
-			SetFrameMenu((HMENU)0);
+			SetFrameMenu(reinterpret_cast<HMENU>(0));
 		}
 
 		return 0;
@@ -498,7 +498,7 @@ namespace Win32xx
 				++iCurrentFile;
 			}
 
-			SAFEARRAYBOUND sab = {(ULONG)iCurrentFile, 0};
+			SAFEARRAYBOUND sab = {static_cast<ULONG>(iCurrentFile), 0};
 			SafeArrayRedim(psa, &sab);
 			hr = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
 

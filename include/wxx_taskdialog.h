@@ -359,7 +359,7 @@ namespace Win32xx
 		HMODULE hModule = LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hModule);
 		
-		BOOL Succeeded = (BOOL)::GetProcAddress(hModule, "TaskDialogIndirect");
+		BOOL Succeeded = (::GetProcAddress(hModule, "TaskDialogIndirect") != FALSE);
 		
 		::FreeLibrary(hModule);
 		return Succeeded;
@@ -585,7 +585,7 @@ namespace Win32xx
 	//  or a value passed via MAKEINTRESOURCE
 	inline void CTaskDialog::SetFooterIcon(LPCTSTR lpszFooterIcon) 
 	{
-		m_tc.pszFooterIcon = (LPCWSTR)lpszFooterIcon;
+		m_tc.pszFooterIcon = const_cast<LPCWSTR>(lpszFooterIcon);
 
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)lpszFooterIcon);
@@ -621,7 +621,7 @@ namespace Win32xx
 	// TD_SHIELD_ICON		A shield icon appears in the task dialog.
 	inline void CTaskDialog::SetMainIcon(LPCTSTR lpszMainIcon)
 	{
-		m_tc.pszMainIcon = (LPCWSTR)lpszMainIcon;
+		m_tc.pszMainIcon = const_cast<LPCWSTR>(lpszMainIcon);
 		
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)lpszMainIcon);
@@ -748,7 +748,7 @@ namespace Win32xx
 		
 		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
 		{
-			CString cs = LoadString((UINT)pFromTChar);
+			CString cs = LoadString(reinterpret_cast<UINT>(pFromTChar));
 			int len = pFromTChar? cs.GetLength() + 1 : 1;
 			vTChar.assign(len, _T('\0'));
 			vWChar.assign(len, _T('\0'));
@@ -773,7 +773,7 @@ namespace Win32xx
 		switch(uMsg)
 		{
 		case TDN_BUTTON_CLICKED:
-			return OnTDButtonClicked((int)wParam);
+			return OnTDButtonClicked(static_cast<int>(wParam));
 
 		case TDN_CREATED:
 			OnTDCreated();
@@ -785,25 +785,25 @@ namespace Win32xx
 			OnTDConstructed();
 			break;
 		case TDN_EXPANDO_BUTTON_CLICKED:
-			OnTDExpandButtonClicked((BOOL)wParam);
+			OnTDExpandButtonClicked(static_cast<BOOL>(wParam));
 			break;
 		case TDN_HELP:
 			OnTDHelp();
 			break;
 		case TDN_HYPERLINK_CLICKED:
-			OnTDHyperlinkClicked(WtoT((LPCWSTR)lParam));
+			OnTDHyperlinkClicked(WtoT(reinterpret_cast<LPCWSTR>(lParam)));
 			break;
 		case TDN_NAVIGATED:
 			OnTDNavigatePage();
 			break;
 		case TDN_RADIO_BUTTON_CLICKED:
-			OnTDRadioButtonClicked((int)wParam);
+			OnTDRadioButtonClicked(static_cast<int>(wParam));
 			break;
 		case TDN_TIMER:
 			return OnTDTimer((DWORD)wParam);
 
 		case TDN_VERIFICATION_CLICKED:
-			OnTDVerificationCheckboxClicked((BOOL)wParam);
+			OnTDVerificationCheckboxClicked(static_cast<BOOL>(wParam));
 			break;
 		}
 

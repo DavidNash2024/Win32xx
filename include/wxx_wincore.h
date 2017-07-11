@@ -350,7 +350,7 @@ namespace Win32xx
 		int y = rc.top;
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
-		HMENU hMenu = hWndParent? (HMENU)(INT_PTR)nID : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
+		HMENU hMenu = hWndParent ? reinterpret_cast<HMENU>(nID) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
 
 		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
 	}
@@ -372,7 +372,7 @@ namespace Win32xx
 		WNDCLASS wc;
 		ZeroMemory(&wc, sizeof(wc));
 		wc.lpszClassName = ClassName;
-		wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+		wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 		wc.hCursor		 = ::LoadCursor(NULL, IDC_ARROW);
 
 		// Register the window class (if not already registered)
@@ -859,7 +859,7 @@ namespace Win32xx
 		// 1) The lpszClassName must be set for this function to take effect.
 		// 2) No other defaults are set, so the following settings might prove useful
 		//     wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);
-		//     wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+		//     wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 		//     wc.hIcon = ::LoadIcon(NULL, IDI_APPLICATION);
 		// 3) The styles that can be set here are WNDCLASS styles. These are a different
 		//     set of styles to those set by CREATESTRUCT (used in PreCreate).
@@ -956,9 +956,9 @@ namespace Win32xx
 		int cyIcon = ::GetSystemMetrics(SM_CYICON);
 
 #ifndef _WIN32_WCE
-		HICON hIconLarge = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED);
+		HICON hIconLarge = reinterpret_cast<HICON>(GetApp().LoadImage(nIcon, IMAGE_ICON, cxIcon, cyIcon, LR_SHARED));
 #else
-		HICON hIconLarge = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxIcon, cyIcon, 0);
+		HICON hIconLarge = reinterpret_cast<HICON>(GetApp().LoadImage(nIcon, IMAGE_ICON, cxIcon, cyIcon, 0));
 #endif
 
 		if (hIconLarge != 0)
@@ -980,9 +980,9 @@ namespace Win32xx
 		int cySmallIcon = ::GetSystemMetrics(SM_CYSMICON);
 
 #ifndef _WIN32_WCE
-		HICON hIconSmall = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxSmallIcon, cySmallIcon, LR_SHARED);
+		HICON hIconSmall = reinterpret_cast<HICON>(GetApp().LoadImage(nIcon, IMAGE_ICON, cxSmallIcon, cySmallIcon, LR_SHARED));
 #else
-		HICON hIconSmall = (HICON)GetApp().LoadImage(nIcon, IMAGE_ICON, cxSmallIcon, cySmallIcon, 0);
+		HICON hIconSmall = reinterpret_cast<HICON>(GetApp().LoadImage(nIcon, IMAGE_ICON, cxSmallIcon, cySmallIcon, 0));
 #endif
 
 		if (hIconSmall != 0)
@@ -1170,7 +1170,7 @@ namespace Win32xx
 
 		case WM_ERASEBKGND:
 			{
-				CDC dc((HDC)wParam);
+				CDC dc(reinterpret_cast<HDC>(wParam));
 				BOOL PreventErasure;
 
 				PreventErasure = OnEraseBkgnd(dc);
@@ -1201,7 +1201,7 @@ namespace Win32xx
 			break;				// Do default processing when message not already processed
 
 		case UWM_UPDATECOMMAND:
-			OnMenuUpdate((UINT)wParam); // Perform menu updates
+			OnMenuUpdate(static_cast<UINT>(wParam)); // Perform menu updates
 			break;
 
 		case UWM_GETCWND:
@@ -1995,7 +1995,7 @@ namespace Win32xx
 	inline int CWnd::SetWindowRgn(CRgn& Rgn, BOOL Redraw /*= TRUE*/) const
 	{
 		assert(IsWindow());
-		HRGN hRgn = (HRGN)Rgn.GetHandle();
+		HRGN hRgn = reinterpret_cast<HRGN>(Rgn.GetHandle());
 		int iResult = ::SetWindowRgn(*this, hRgn, Redraw);
 		if (iResult && hRgn)
 			Rgn.Detach();	// The system owns the region now
@@ -2580,9 +2580,9 @@ namespace Win32xx
 			typedef BOOL WINAPI INIT_EX(INITCOMMONCONTROLSEX*);
 
 #ifdef _WIN32_WCE
-			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, _T("InitCommonControlsEx"));
+			INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, _T("InitCommonControlsEx")));
 #else
-			INIT_EX* pfnInitEx = (INIT_EX*)::GetProcAddress(hComCtl, "InitCommonControlsEx");
+			INIT_EX* pfnInitEx = reinterpret_cast<INIT_EX*>(::GetProcAddress(hComCtl, "InitCommonControlsEx"));
 #endif
 
 			if (pfnInitEx)

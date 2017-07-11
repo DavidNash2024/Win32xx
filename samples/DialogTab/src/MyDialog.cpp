@@ -186,8 +186,8 @@ BOOL CMyDialog::OnInitDialog()
 	
 	AttachItem(IDC_TAB1, m_Tab);
 
-	m_pButtonDlg = (CButtonDialog*)m_Tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog"));
-	m_pComboDlg = (CComboBoxDialog*)m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog"));
+	m_pButtonDlg = static_cast<CButtonDialog*>(m_Tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog")));
+	m_pComboDlg = static_cast<CComboBoxDialog*>(m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog")));
 	m_Tab.SelectPage(0);
 
 	// Add some checkmarks to buttons to the button dialog

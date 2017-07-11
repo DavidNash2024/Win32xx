@@ -238,7 +238,7 @@ namespace Win32xx
 	{
 		assert(m_hKey);
 		DWORD dwType = REG_BINARY;
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)pValue, pnBytes);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, static_cast<LPBYTE>(pValue), pnBytes);
 	}
 
 	
@@ -248,7 +248,7 @@ namespace Win32xx
 		assert(m_hKey);
 		DWORD dwType = REG_DWORD;
 		DWORD nBytes = sizeof(DWORD);
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)&dwValue, &nBytes);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, reinterpret_cast<LPBYTE>(&dwValue), &nBytes);
 	}
 
 	
@@ -279,7 +279,7 @@ namespace Win32xx
 	{
 		assert(m_hKey);
 		DWORD dwType = REG_MULTI_SZ;
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)pszValue, pnChars);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, reinterpret_cast<LPBYTE>(pszValue), pnChars);
 	}
 	
 	
@@ -288,7 +288,7 @@ namespace Win32xx
 	{
 		assert(m_hKey);
 		DWORD dwType = REG_SZ;
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)pszValue, pnChars);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, reinterpret_cast<LPBYTE>(pszValue), pnChars);
 	}
 	
 	
@@ -296,7 +296,7 @@ namespace Win32xx
 	inline LONG CRegKey::QueryValue(LPCTSTR pszValueName, DWORD* pdwType, void* pData, ULONG* pnBytes) const
 	{
 		assert(m_hKey);
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, pdwType, (LPBYTE)pData, pnBytes);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, pdwType, static_cast<LPBYTE>(pData), pnBytes);
 	}
 
 	
@@ -331,7 +331,7 @@ namespace Win32xx
 	inline LONG CRegKey::SetBinaryValue(LPCTSTR pszValueName, const void* pValue, ULONG nBytes) const
 	{
 		assert(m_hKey);
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_BINARY, (LPBYTE)pValue, nBytes);
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_BINARY, static_cast<LPCBYTE>(pValue), nBytes);
 	}
 	
 	
@@ -339,7 +339,7 @@ namespace Win32xx
 	inline LONG CRegKey::SetDWORDValue(LPCTSTR pszValueName, DWORD dwValue) const
 	{
 		assert(m_hKey);
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_DWORD, (LPBYTE)&dwValue, sizeof(DWORD));
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_DWORD, reinterpret_cast<LPBYTE>(&dwValue), sizeof(DWORD));
 	}
 	
 	
@@ -391,7 +391,7 @@ namespace Win32xx
 			nLength = lstrlen(pszTemp) +1;
 		}
 
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_MULTI_SZ, (LPBYTE)pszValue, nBytes);
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_MULTI_SZ, reinterpret_cast<LPCBYTE>(pszValue), nBytes);
 	}
 
 	
@@ -399,7 +399,7 @@ namespace Win32xx
 	inline LONG CRegKey::SetStringValue(LPCTSTR pszValueName, LPCTSTR pszValue, DWORD dwType) const
 	{
 		assert(m_hKey);
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, dwType, (LPBYTE)pszValue, lstrlen(pszValue)*sizeof(TCHAR));
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, dwType, reinterpret_cast<LPCBYTE>(pszValue), lstrlen(pszValue)*sizeof(TCHAR));
 	}
 
 	
@@ -407,7 +407,7 @@ namespace Win32xx
 	inline LONG CRegKey::SetValue(LPCTSTR pszValueName, DWORD dwType, const void* pValue, ULONG nBytes) const
 	{
 		assert(m_hKey);
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, dwType, (BYTE*)pValue, nBytes);
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, dwType, reinterpret_cast<const BYTE*>(pValue), nBytes);
 	}
 
 #ifdef REG_QWORD
@@ -418,7 +418,7 @@ namespace Win32xx
 		assert(m_hKey);
 		DWORD dwType = REG_QWORD;
 		DWORD nBytes = sizeof(ULONGLONG);
-		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, (LPBYTE)&qwValue, &nBytes);
+		return ::RegQueryValueEx(m_hKey, pszValueName, 0, &dwType, reinterpret_cast<LPBYTE>(&qwValue), &nBytes);
 	}
 
 	
@@ -426,7 +426,7 @@ namespace Win32xx
 	inline LONG CRegKey::SetQWORDValue(LPCTSTR pszValueName, ULONGLONG qwValue) const
 	{
 		assert(m_hKey);
-		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_QWORD, (LPBYTE)&qwValue, sizeof(ULONGLONG) );
+		return ::RegSetValueEx(m_hKey, pszValueName, 0, REG_QWORD, reinterpret_cast<LPBYTE>(&qwValue), sizeof(ULONGLONG) );
 	}
 
 #endif

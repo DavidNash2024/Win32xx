@@ -51,7 +51,7 @@ void CView::PreRegisterClass(WNDCLASS& wc)
 	wc.lpszClassName = _T("Win32++ View");
 
 	// Set a background brush to white
-	wc.hbrBackground = (HBRUSH)::GetStockObject(WHITE_BRUSH);
+	wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
 
 	// Set the default cursor
 	wc.hCursor = ::LoadCursor(NULL, IDC_ARROW);

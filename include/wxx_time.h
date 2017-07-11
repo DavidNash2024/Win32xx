@@ -256,7 +256,7 @@ namespace Win32xx
 		time_tm* ptm0 = ::gmtime(&t0); // atm0 = UTC time of atm
 		time_t t1 = ::mktime(ptm0);    // atm0 = localtime(t1)
 		assert(t1 != -1);
-		timespan_t zt = (timespan_t)(t0 - t1);  // time zone bias
+		timespan_t zt = static_cast<timespan_t>(t0 - t1);  // time zone bias
 		t0 += zt;
 		assert(::gmtime(&t0));
 		return t0;
@@ -313,8 +313,8 @@ namespace Win32xx
 		// the first-of-month epoch in the given year to yield the desired
 		// date.  To start, compute the first of the month in the given year
 		// at the given hour, minute, and  second.
-		time_tm atm = {(int)sec, (int)min, (int)hr, (int)1, (int)(mo - 1),
-			(int)(yr - 1900), (int)0, (int)0, nDST};
+		time_tm atm = { static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hr), 
+			           1, static_cast<int>(mo - 1), static_cast<int>(yr - 1900), 0, 0, nDST};
 
 		// get the (valid) local time of the UTC time corresponding to this
 		time_t t1st = UTCtime(&atm);
@@ -354,8 +354,9 @@ namespace Win32xx
 		assert(year >= 1969);  // Last few hours of 1969 might be a valid local time
 
 		// fill out a time_tm with the calendar date
-		time_tm atm = {(int)sec, (int)min, (int)hour, (int)day,
-			(int)(month - 1), (int)(year - 1900), (int)0, (int)0, nDST};
+		time_tm atm = {static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hour),
+			static_cast<int>(day), static_cast<int>(month - 1), static_cast<int>(year - 1900),
+			0, 0, nDST};
 
 		// compute the object time_t
 		m_time = ::mktime(&atm);
@@ -371,8 +372,8 @@ namespace Win32xx
 		assert(yr >= 1969);  // Last few hours of 1969 might be a valid local time
 
 		// fill out a time_tm with the calendar date for Jan 1, yr, hr:min:sec
-		time_tm atm1st = {(int)sec, (int)min, (int)hr, (int)1,
-			(int)0, (int)(yr - 1900), (int)0, (int)0, nDST};
+		time_tm atm1st = {static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hr),
+			1, 0, static_cast<int>(yr - 1900), 0, 0, nDST};
 
 		// get the local time of the UTC time corresponding to this
 		time_t Jan1 = UTCtime(&atm1st);
@@ -401,8 +402,9 @@ namespace Win32xx
 	// Constructs a CTime object from a SYSTEMTIME structure st.
 	inline CTime::CTime(const SYSTEMTIME& st, int nDST /* = -1 */)
 	{
-		CTime t((UINT)st.wYear, (UINT)st.wMonth, (UINT)st.wDay, (UINT)st.wHour,
-			(UINT)st.wMinute, (UINT)st.wSecond, nDST); // asserts if invalid
+		CTime t(static_cast<UINT>(st.wYear), static_cast<UINT>(st.wMonth), 
+			static_cast<UINT>(st.wDay), static_cast<UINT>(st.wHour),
+			static_cast<UINT>(st.wMinute), static_cast<UINT>(st.wSecond, nDST)); // asserts if invalid
 
 		m_time = t.m_time;
 	}
@@ -609,7 +611,7 @@ namespace Win32xx
 	// Returns the time span between *this time and  time t
 	inline const CTimeSpan CTime::operator-(const CTime& t) const
 	{
-		timespan_t d = (timespan_t)(m_time - t.m_time);
+		timespan_t d = static_cast<timespan_t>(m_time - t.m_time);
 		CTimeSpan t0(d);
 		return  t0;
 	}
@@ -774,15 +776,14 @@ namespace Win32xx
 	inline FILETIME CTime::FileTimePlus(const FILETIME& ft, double addend)
 	{
 		// convert ft to unsigned long long
-		ULONGLONG ftlong = (ULONGLONG)
-			(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
+		ULONGLONG ftlong = static_cast<ULONGLONG>(ft.dwHighDateTime) << 32 | ft.dwLowDateTime;
 		BOOL sign = FALSE;
 		if (addend < 0.)
 		{
 			sign = TRUE;
 			addend = -addend;
 		}
-		ULONGLONG ftaddend = (ULONGLONG)(addend * 10000000);
+		ULONGLONG ftaddend = static_cast<ULONGLONG>(addend) * 10000000;
 		if (sign)
 		{
 			assert(ftlong >= ftaddend); //FILETIME addition underflow.
@@ -815,7 +816,7 @@ namespace Win32xx
 		// load CTime as x64
 		ULONGLONG tx64 = 0;
 		ar.Read(&tx64, size);
-		time_t tt = (time_t)tx64;
+		time_t tt = static_cast<time_t>(tx64);
 		t = CTime(tt);
 		return ar;
 	}
@@ -1107,7 +1108,7 @@ namespace Win32xx
 		// load CTimeSpan as x64
 		ULONGLONG tsx64 = 0;
 		ar.Read(&tsx64, size);
-		timespan_t tst = (timespan_t)tsx64;
+		timespan_t tst = static_cast<timespan_t>(tsx64);
 		ts = CTimeSpan(tst);
 		return ar;
 	}

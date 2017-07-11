@@ -722,7 +722,7 @@ namespace Win32xx
 		case WM_MENUSELECT:
 			{
 				// store info about selected item
-				m_hSelMenu = (HMENU)lParam;
+				m_hSelMenu = reinterpret_cast<HMENU>(lParam);
 				m_IsSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
 
 				// Reflect message back to the frame window
@@ -1109,7 +1109,7 @@ namespace Win32xx
 			ZeroMemory(&tbb, sizeof(tbb));
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE ;
-			tbb.iString = (INT_PTR)_T(" ");
+			tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
 			SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb);
 			SetButtonText(0, _T("    "));
 		}
@@ -1122,7 +1122,7 @@ namespace Win32xx
 			tbb.idCommand = i  + nMaxedOffset;	// Each button needs a unique ID
 			tbb.fsState = TBSTATE_ENABLED;
 			tbb.fsStyle = TBSTYLE_BUTTON | TBSTYLE_AUTOSIZE | TBSTYLE_DROPDOWN;
-			tbb.iString = (INT_PTR)_T(" ");
+			tbb.iString = reinterpret_cast<INT_PTR>(_T(" "));
 			SendMessage(TB_ADDBUTTONS, 1, (WPARAM)&tbb);
 
 			// Add the menu title to the string table

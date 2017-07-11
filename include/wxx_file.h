@@ -270,7 +270,7 @@ namespace Win32xx
 		DWORD LowPosEnd = SetFilePointer(m_hFile, 0, &HighPosEnd, FILE_END);
 		SetFilePointer(m_hFile, LowPosCur, &HighPosCur, FILE_BEGIN);
 
-		ULONGLONG Result = ((ULONGLONG)HighPosEnd << 32) + LowPosEnd;
+		ULONGLONG Result = (static_cast<ULONGLONG>(HighPosEnd) << 32) + LowPosEnd;
 		return Result;
 	}
 
@@ -282,7 +282,7 @@ namespace Win32xx
 		LONG High = 0;
 		DWORD LowPos = SetFilePointer(m_hFile, 0, &High, FILE_CURRENT);
 
-		ULONGLONG Result = ((ULONGLONG)High << 32) + LowPos;
+		ULONGLONG Result = (static_cast<ULONGLONG>(High) << 32) + LowPos;
 		return Result;
 	}
 
@@ -411,7 +411,7 @@ namespace Win32xx
 
 		DWORD LowPos = SetFilePointer(m_hFile, Low, &High, nFrom);
 
-		ULONGLONG Result = ((ULONGLONG)High << 32) + LowPos;
+		ULONGLONG Result = (static_cast<ULONGLONG>(High) << 32) + LowPos;
 		return Result;
 	}
 

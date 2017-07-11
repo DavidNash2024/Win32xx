@@ -201,7 +201,7 @@ namespace Win32xx
 {
 	// Constructs a CArchive object.
 	// The specified file must already be open for loading or storing.	
-	inline CArchive::CArchive(CFile& File, mode Mode) : m_Schema((UINT)-1), m_IsFileManaged(false)
+	inline CArchive::CArchive(CFile& File, mode Mode) : m_Schema(static_cast<UINT>(-1)), m_IsFileManaged(false)
 	{
 		m_pFile = &File;
 
@@ -219,7 +219,7 @@ namespace Win32xx
 	// Constructs a CArchive object.
 	// A file with the specified name is created for storing (if required), and
 	// also opened. A failure to open the file will throw an exception.	
-	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_pFile(0), m_Schema((UINT)-1)
+	inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_pFile(0), m_Schema(static_cast<UINT>(-1))
 	{
 		m_IsFileManaged = true;
 

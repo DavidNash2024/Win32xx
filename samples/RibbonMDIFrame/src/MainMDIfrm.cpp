@@ -297,7 +297,7 @@ LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	case UWM_SIMPLECREATED:
 		{
-			CSimpleView* pSimpleView = (CSimpleView*)wParam;
+			CSimpleView* pSimpleView = reinterpret_cast<CSimpleView*>(wParam);
 			assert(pSimpleView);
 
 			if (GetRibbonFramework())

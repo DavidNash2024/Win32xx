@@ -102,16 +102,18 @@ LRESULT CColourDialog::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	UNREFERENCED_PARAMETER(uMsg);
 	UNREFERENCED_PARAMETER(wParam);
 
+	HWND hWnd = reinterpret_cast<HWND>(lParam);
+
 	// Update the text for the colour's edit control
-	int nPos = SendMessage((HWND)lParam, TBM_GETPOS, 0, 0);
+	int nPos = SendMessage(hWnd, TBM_GETPOS, 0, 0);
 	TCHAR Text[5];
 	wsprintf(Text, _T("%d\0"), nPos);
 
-	if ((HWND)lParam == m_RedSlider)
+	if (hWnd == m_RedSlider)
 		m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
-	else if ((HWND)lParam == m_GreenSlider)
+	else if (hWnd == m_GreenSlider)
 		m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
-	else if ((HWND)lParam == m_BlueSlider)
+	else if (hWnd == m_BlueSlider)
 		m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
 
 	// Store the colour values
