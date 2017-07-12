@@ -68,7 +68,7 @@
 //	Thus, the base epoch on a system in the PST zone will be displayed as
 //	December 31, 1969 16:00:00. Any attempt to construct or evaluate a date
 //	before this epoch will assert or be in error. Even though the time_t
-//	type is implemented (in MinGW, anyway) as a signed integer type, 
+//	type is implemented (in MinGW, anyway) as a signed integer type,
 //	negative values are not allowed.
 
 //	On systems where time_t is defined as a 32-bit integer, there is an
@@ -185,11 +185,11 @@ namespace Win32xx
 
 
 	//	The CTimeSpan class defines the data type for differences between two
-	//	CTime values, measured in seconds of time.	
+	//	CTime values, measured in seconds of time.
 	class CTimeSpan
 	{
 		friend class CTime;		// CTime can access private members
-	
+
 	public:
 		// Constructors
 		CTimeSpan();
@@ -246,7 +246,7 @@ namespace Win32xx
 namespace Win32xx
 {
 
-	// Returns the time_t t corresponding to the date given in atm as a UTC time. 
+	// Returns the time_t t corresponding to the date given in atm as a UTC time.
 	inline time_t UTCtime(time_tm* atm)
 	{
 		// compute the local time from atm
@@ -263,27 +263,27 @@ namespace Win32xx
 	}
 
 
-	// Constructs an CTime object initialized to the Jan 1, 1970 00:00:00 epoch.	
+	// Constructs an CTime object initialized to the Jan 1, 1970 00:00:00 epoch.
 	inline CTime::CTime()
 	{
 		m_time = 0;
 	}
 
 
-	// Constructs a CTime object from another (valid) CTime object t.	
+	// Constructs a CTime object from another (valid) CTime object t.
 	inline CTime::CTime(const CTime& t)
 	{
 		m_time = t.m_time;
 	}
 
 
-	// Constructs a CTime object from the time_t value t, or assert if t is invalid.	
+	// Constructs a CTime object from the time_t value t, or assert if t is invalid.
 	inline CTime::CTime(time_t t)
 	{
 		assert(::gmtime(&t));
 		m_time = t;
 	}
-		
+
 
 	// Constructs a CTime object from the time_tm atm, or assert if atm is invalid
 	inline CTime::CTime(time_tm& atm)
@@ -294,7 +294,7 @@ namespace Win32xx
 		// check for acceptable range
 		assert(m_time != -1);
 	}
-	
+
 
 	// Constructs a CTime of the nthwk occurrence of the given wkday (0..6)
 	// in the mo month of yr year, at hr:min:sec of that day, local time.
@@ -313,7 +313,7 @@ namespace Win32xx
 		// the first-of-month epoch in the given year to yield the desired
 		// date.  To start, compute the first of the month in the given year
 		// at the given hour, minute, and  second.
-		time_tm atm = { static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hr), 
+		time_tm atm = { static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hr),
 			           1, static_cast<int>(mo - 1), static_cast<int>(yr - 1900), 0, 0, nDST};
 
 		// get the (valid) local time of the UTC time corresponding to this
@@ -331,7 +331,7 @@ namespace Win32xx
 		time_t tnthwkdy = t1st + nthwkday * sec_per_day;
 		ptm1 = ::gmtime(&tnthwkdy);
 		assert(ptm1);
-		
+
 		// compute the object time_t
 		ptm1->tm_isdst = nDST;
 		m_time = ::mktime(ptm1);
@@ -378,10 +378,10 @@ namespace Win32xx
 		// get the local time of the UTC time corresponding to this
 		time_t Jan1 = UTCtime(&atm1st);
 		int sec_per_day = 86400;
-		time_t tDoy = Jan1 + (doy - 1) * sec_per_day;	
+		time_t tDoy = Jan1 + (doy - 1) * sec_per_day;
 		time_tm* ptm = ::gmtime(&tDoy);
 		assert(ptm);
-		
+
 		// compute the object time_t
 		ptm->tm_isdst = nDST;
 		m_time = ::mktime(ptm);
@@ -402,9 +402,9 @@ namespace Win32xx
 	// Constructs a CTime object from a SYSTEMTIME structure st.
 	inline CTime::CTime(const SYSTEMTIME& st, int nDST /* = -1 */)
 	{
-		CTime t(static_cast<UINT>(st.wYear), static_cast<UINT>(st.wMonth), 
+		CTime t(static_cast<UINT>(st.wYear), static_cast<UINT>(st.wMonth),
 			static_cast<UINT>(st.wDay), static_cast<UINT>(st.wHour),
-			static_cast<UINT>(st.wMinute), static_cast<UINT>(st.wSecond, nDST)); // asserts if invalid
+			static_cast<UINT>(st.wMinute), static_cast<UINT>(st.wSecond), nDST); // asserts if invalid
 
 		m_time = t.m_time;
 	}
@@ -443,7 +443,7 @@ namespace Win32xx
 			SystemTimeToFileTime(&st, &ft);
 			rval = true;
 		}
-		
+
 		return rval;
 	}
 
@@ -697,7 +697,7 @@ namespace Win32xx
 
 
 	// Returns a CString that contains formatted time. The pFormat parammater
-	// is a formatting string similar to the printf formatting string. 
+	// is a formatting string similar to the printf formatting string.
 	// The valid format directives are
 	//	 %D - number of days
 	//	 %H - hour (0-23)
@@ -714,7 +714,7 @@ namespace Win32xx
 		return CString(szBuffer);
 	}
 
-	
+
 	// Returns a CString that contains formatted time. The FormatID parammater
 	// specifies a resource containing the formatting string which is similar
 	// to the printf formatting string.  The valid format directives are
@@ -730,7 +730,7 @@ namespace Win32xx
 	}
 
 
-	// Returns a CString that contains formatted time as a UTC time. The pFormat 
+	// Returns a CString that contains formatted time as a UTC time. The pFormat
 	// parammater is a formatting string similar to the printf formatting string.
 	inline CString CTime::FormatGmt(LPCTSTR pFormat) const
 	{
@@ -763,7 +763,7 @@ namespace Win32xx
 	//	Static and  Friend Functions
 	//
 
-	
+
 	// Returns a CTime holding the current system time.
 	inline CTime CTime::GetCurrentTime()
 	{
@@ -801,7 +801,7 @@ namespace Win32xx
 	// Global functions within the Win32xx namespace
 	//
 
-	// Reads a CTime from the archive and stores it in t. 
+	// Reads a CTime from the archive and stores it in t.
 	// Throws an exception on failure.
 	inline CArchive& operator>>(CArchive& ar, CTime& t)
 	{
@@ -827,7 +827,7 @@ namespace Win32xx
 	{
 		ULONGLONG tx64 = 0;
 		UINT size = sizeof(tx64);
-		
+
 		// store CTime as x64
 		time_t tt = t;
 		tx64 = tt;
@@ -1104,7 +1104,7 @@ namespace Win32xx
 			CString str = ar.GetFile().GetFilePath();
 			throw CFileException(str, _T("Failed to read CTimeSpan from archive"));
 		}
-		
+
 		// load CTimeSpan as x64
 		ULONGLONG tsx64 = 0;
 		ar.Read(&tsx64, size);
@@ -1121,7 +1121,7 @@ namespace Win32xx
 		ULONGLONG tsx64 = 0;
 		UINT size = sizeof(tsx64);
 		ar.Write(&size, sizeof(size));
-				
+
 		// store CTimeSpan as x64
 		tsx64 = ts;
 		ar.Write(&tsx64, size);

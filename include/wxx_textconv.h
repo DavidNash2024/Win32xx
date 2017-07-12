@@ -160,7 +160,7 @@ namespace Win32xx
 			WideCharToMultiByte(codePage, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
 		}
 
-		~CWtoA() 
+		~CWtoA()
 		{
 			m_pWStr = 0;
 		}
@@ -225,27 +225,27 @@ namespace Win32xx
 		CAtoBSTR& operator= (const CAtoBSTR&);
 		BSTR m_bstrString;
 	};
-	
+
 
 
 	////////////////////////////////////////
 	// Global Functions
 	//
-	
-	// Trace sends a string to the debug/output pane, or an external debugger	
+
+	// Trace sends a string to the debug/output pane, or an external debugger
 	inline void Trace(LPCSTR str)
 	{
 		OutputDebugString(AtoT(str));
 	}
 
-	
-	// Trace sends a string to the debug/output pane, or an external debugger	
+
+	// Trace sends a string to the debug/output pane, or an external debugger
 	inline void Trace(LPCWSTR str)
 	{
 		OutputDebugString(WtoT(str));
 	}
-	
-	
+
+
 } // namespace Win32xx
 
 #endif // _WIN32XX_TEXTCONV_H_

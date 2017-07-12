@@ -299,15 +299,15 @@ namespace Win32xx
 	{
 	}
 
-	
+
 	// Called when the dialog is initialized. Override it in your derived class
-	// to automatically perform tasks. The return value is used by WM_INITDIALOG	
+	// to automatically perform tasks. The return value is used by WM_INITDIALOG
 	inline BOOL CCommonDialog::OnInitDialog()
 	{
 		return TRUE;
 	}
 
-	
+
 	// The callback function for the common dialog's hook procedure. Messages
 	// intercepted by the hook procedure are processed here, and forwarded
 	// on to the virtual DialogProc function.
@@ -360,7 +360,7 @@ namespace Win32xx
 		SetParameters(m_CC);
 	}
 
-	
+
 	// Dialog procedure for the Color dialog. Override this function to
 	// customise the message handling.
 	inline INT_PTR CColorDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -386,7 +386,7 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	
+
 	// The Default message handling for CColorDialog. Don't override this
 	// function, override DialogProc instead.
 	// Note: OnCancel and OnOK are called by DoModal.
@@ -404,7 +404,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	
+
 	// Display the ChooseColor common dialog box and select the current color.
 	// An exception is thrown if the dialog box isn't created.
 	inline INT_PTR CColorDialog::DoModal(HWND hWndOwner /* = 0 */)
@@ -440,7 +440,7 @@ namespace Win32xx
 		return IDOK;
 	}
 
-	
+
 	// The rgbCustomColors parameter is a pointer to an array of 16 COLORREF.
 	// If the rgbCustomColors is NULL, all custom colors are set to white,
 	// otherwise they are set to the colors specified in the rgbCustomColors array.
@@ -453,7 +453,7 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	// Sets the various parameters of the CHOOSECOLOR struct.
 	// The parameters are set to sensible values.
 	inline void	CColorDialog::SetParameters(CHOOSECOLOR cc)
@@ -506,7 +506,7 @@ namespace Win32xx
 		SetParameters(m_OFN);
 	}
 
-	
+
 	// Dialog procedure for the FileOpen and FileSave dialogs. Override
 	// this function to customise the message handling.
 	inline INT_PTR CFileDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -532,7 +532,7 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	
+
 	// The Default message handling for CFileDialog. Don't override this function,
 	// override DialogProc instead.
 	// Note: OnCancel and OnOK are called by DoModal.
@@ -639,7 +639,7 @@ namespace Win32xx
 		return IDOK;
 	}
 
-	
+
 	// Return the name of the file that was entered in the DoModal() operation.
 	// This name consists of only the file title and extension. If the
 	// OFN_ALLOWMULTISELECT flag is specified, only the first file path selected
@@ -656,7 +656,7 @@ namespace Win32xx
 		return strResult;
 	}
 
-	
+
 	// Return the file name's extension entered during the DoModal() operation.
 	// If the OFN_ALLOWMULTISELECT option set, only the extension on the first
 	// file path selected will be returned.
@@ -671,7 +671,7 @@ namespace Win32xx
 		return strResult;
 	}
 
-	
+
 	// Return the title of the file entered in the DoModal() operation. The
 	// title consists of the full path name with directory path and extension
 	// removed.
@@ -685,7 +685,7 @@ namespace Win32xx
 		return strResult;
 	}
 
-	
+
 	// Return the next file path name from a group of files selected. The
 	// OFN_ALLOWMULTISELECT flag allows multiple files to be selected. Use pos = 0
 	// to retrieve the first file. The pos parameter is updated to point to the
@@ -757,7 +757,7 @@ namespace Win32xx
 		return strPath + _T("\\") + strFileName;
 	}
 
-	
+
 	// Return the path name of the folder or directory of files retrieved
 	// from the dialog. The final character of the name includes the
 	// directory separation character.
@@ -772,7 +772,7 @@ namespace Win32xx
 		return strResult;
 	}
 
-	
+
 	// Returns the full path name of the file that was retrieved from the dialog.
 	// If the m_OFN.Flags member includes the OFN_ALLOWMULTISELECT option,
 	// this method returns only the first selected file. Use the GetNextPathName
@@ -791,7 +791,7 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	// Normally, overriding this function is not warranted because the
 	// framework provides default validation of file names.
 	// Override this function and return TRUE to reject a file name for
@@ -802,7 +802,7 @@ namespace Win32xx
 		return 0L;
 	}
 
-	
+
 	// Override this method to handle the WM_NOTIFY CDN_INITDONE message.
 	// The notification message is sent when the system has finished arranging
 	// controls in the Open or SaveAs dialog to make room for the controls of
@@ -812,7 +812,7 @@ namespace Win32xx
 	{
 	}
 
-	
+
 	// Override this method to handle the WM_NOTIFY CDN_SELCHANGE message.
 	// The notification message is sent when the user selects a new file or
 	// folder in the file list of the Open or SaveAs dialog box. Notification
@@ -821,7 +821,7 @@ namespace Win32xx
 	{
 	}
 
-	
+
 	// Override this method to handle the WM_NOTIFY CDN_SELCHANGE message.
 	// The notification message is sent when the user selects a new file or
 	// folder in the file list of the Open or SaveAs dialog box. Notification
@@ -830,7 +830,7 @@ namespace Win32xx
 	{
 	}
 
-	
+
 	// This method is called whenever the current selection in a list box is
 	// about to change. Override this method to provide custom handling of
 	// selection changes in the list box. The ID of the list or combo box in
@@ -844,7 +844,7 @@ namespace Win32xx
 
 	}
 
-	
+
 	// This method handles the WM_NOTIFY message loop functions of the hook
 	// procedure.
 	inline LRESULT CFileDialog::OnNotify(WPARAM wParam, LPARAM lParam)
@@ -886,7 +886,7 @@ namespace Win32xx
 		return FALSE;   // not handled
 	}
 
-	
+
 	// Override this function to provide custom handling of share violations.
 	// Normally, this function is not needed because the framework provides
 	// default checking of share violations and displays a message box if a
@@ -894,7 +894,7 @@ namespace Win32xx
 	// violation occurred is lpszPathName. To disable share violation checking,
 	// use the bitwise OR operator to combine the flag OFN_SHAREAWARE with
 	// m_OFN.Flags.
-       
+
 	// Return one of the following values to indicate how the dialog box
 	// should handle the sharing violation.
 	// OFN_SHAREFALLTHROUGH  - Accept the file name
@@ -909,7 +909,7 @@ namespace Win32xx
 		return OFN_SHAREWARN; // default:
 	}
 
-	
+
 	// Override this method to handle the WM_NOTIFY CDN_TYPECHANGE message.
 	// The notification message is sent when the user selects a new file type
 	// from the list of file types in the Open or SaveAs dialog box.
@@ -919,7 +919,7 @@ namespace Win32xx
 	{
 	}
 
-	
+
 	// Set the default extension of the dialog box to pszExt.
 	// Only the first three characters are sent to the dialog.
 	inline void CFileDialog::SetDefExt(LPCTSTR pszExt)
@@ -936,7 +936,7 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	// Set the initial file name in the dialog box to pszFileName.
 	inline void CFileDialog::SetFileName(LPCTSTR pszFileName)
 	{
@@ -953,12 +953,12 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	// Set the file choice dialog file name filter string to pszFilter.
 	// The string is a pair of strings delimited by NULL or '|'
 	// The string must be either double terminated, or use '|' instead of '\0'
 	// For Example: _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0")
-	//          or: _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*|")	
+	//          or: _T("Text Files (*.txt)|*.txt|All Files (*.*)|*.*|")
 	inline void CFileDialog::SetFilter(LPCTSTR szFilter)
 	{
 		// Clear any existing filter
@@ -994,7 +994,7 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	// Sets the various parameters of the OPENFILENAME struct.
 	// The parameters are set to sensible values.
 	inline void CFileDialog::SetParameters(OPENFILENAME ofn)
@@ -1031,7 +1031,7 @@ namespace Win32xx
 		m_OFN.lpfnHook			= reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
 	}
 
-	
+
 	// Sets the title of the fileopen or filesave dialog.
 	inline void CFileDialog::SetTitle(LPCTSTR szTitle)
 
@@ -1070,7 +1070,7 @@ namespace Win32xx
 	    return m_hWnd;
 	}
 
-	
+
 	// Create and display either a Find or indReplace dialog box. lpszFindWhat
 	// is the search string, and lpszReplaceWith is the replace string.
 	// Set dwFlags to a combination of one or more flags the dialog box.
@@ -1122,9 +1122,9 @@ namespace Win32xx
 		return TRUE;
 	}
 
-	
+
 	// Dialog procedure for the Find and Replace dialogs. Override this function
-	// to customise the message handling.	
+	// to customise the message handling.
 	inline INT_PTR CFindReplaceDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		//	Message intercepted by the hook procedure are passed here.
@@ -1148,7 +1148,7 @@ namespace Win32xx
 
 	// The Default message handling for CFindReplaceDialog. Don't override this function,
 	// override DialogProc instead.
-	// Note: OnCancel and OnOK are called by DoModal.	
+	// Note: OnCancel and OnOK are called by DoModal.
 	inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
@@ -1172,7 +1172,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	
+
 	// Call this function to determine whether the user wants to find the next
 	// occurrence of the search string.
 	inline BOOL CFindReplaceDialog::FindNext() const
@@ -1180,14 +1180,14 @@ namespace Win32xx
 		return ((m_FR.Flags & FR_FINDNEXT )!= 0);
 	}
 
-	
+
 	// Call this function to return the default string to find.
 	inline	CString CFindReplaceDialog::GetFindString() const
 	{
 		return m_FR.lpstrFindWhat;
 	}
 
-	
+
 	// Return a pointer to the current Find/Replace dialog box. This may be
 	// used when owner window responds to the UWM_FINDMSGSTRING message.
 	// The lParam value is that passed in the UWM_FINDMSGSTRING message.
@@ -1199,21 +1199,21 @@ namespace Win32xx
 		return pDlg;
 	}
 
-	
+
 	// Call this function to return the current replace string.
 	inline CString CFindReplaceDialog::GetReplaceString() const
 	{
 		return m_FR.lpstrReplaceWith == NULL ? _T("") : m_FR.lpstrReplaceWith;
 	}
 
-	
+
 	// Returns TRUE if the user has decided to terminate the dialog box;
 	inline BOOL CFindReplaceDialog::IsTerminating()
 	{
 		return ((m_FR.Flags & FR_DIALOGTERM) != 0);
 	}
 
-	
+
 	// Return TRUE if the user wants to find occurrences of the search string
 	// that exactly match the case of the search string; otherwise FALSE.
 	inline BOOL CFindReplaceDialog::MatchCase() const
@@ -1221,7 +1221,7 @@ namespace Win32xx
 		return ((m_FR.Flags & FR_MATCHCASE) != 0);
 	}
 
-	
+
 	// Return TRUE if the user wants to match only the entire words of the
 	// search string.
 	inline BOOL CFindReplaceDialog::MatchWholeWord() const
@@ -1330,13 +1330,13 @@ namespace Win32xx
 		SetParameters(m_CF);
 	}
 
-	
+
 	// Construct a CFontDialog dialog object that can be used to create a font
 	// for use in a rich edit control. The charformat points to a CHARFORMAT
 	// data structure that allows setting some of the font's characteristics
 	// for a rich edit control.
 	// Refer to the description of the CHOOSEFONT structure in the Windows API
-	// documentation for more information on these parameters.	
+	// documentation for more information on these parameters.
 	inline CFontDialog::CFontDialog(const CHARFORMAT& charformat, DWORD dwFlags /* = 0 */,
 		HDC hdcPrinter /* =  0 */)
 	{
@@ -1365,8 +1365,8 @@ namespace Win32xx
 		SetParameters(m_CF);
 	}
 
-	
-	// Construct a default CFontDialog object.	
+
+	// Construct a default CFontDialog object.
 	inline CFontDialog::CFontDialog(DWORD dwFlags /* = 0 */, HDC hdcPrinter /* =  0 */)
 	{
 		// clear out logfont, style name, and choose font structure
@@ -1391,7 +1391,7 @@ namespace Win32xx
 		SetParameters(m_CF);
 	}
 
-	
+
 	// Dialog procedure for the Font dialog. Override this function
 	// to customise the message handling.
 	inline INT_PTR CFontDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -1417,7 +1417,7 @@ namespace Win32xx
 		return DialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	
+
 	// The Default message handling for CFontDialog.
 	// Don't override this function, override DialogProc instead.
 	// Note: OnCancel and OnOK are called by DoModal.
@@ -1437,7 +1437,7 @@ namespace Win32xx
 		return 0;
 	}
 
-	
+
 	// Display the FontDialog. hWndOwner specifies dialog's owner window.
 	inline INT_PTR CFontDialog::DoModal(HWND hWndOwner /* = 0 */)
 	{
@@ -1476,7 +1476,7 @@ namespace Win32xx
 		return IDOK;
 	}
 
-	
+
 	// Returns the CHARFORMAT of this font object, as translated from the
 	// information in the m_FR CHOOSEFONT struct.
 	inline CHARFORMAT CFontDialog::GetCharFormat() const
@@ -1524,7 +1524,7 @@ namespace Win32xx
 		return chfmt;
 	}
 
-	
+
 	// Return the current font size, in 1/10th points (1 pt = 1/72 inch).
 	inline int CFontDialog::GetSize() const
 	{
@@ -1539,13 +1539,13 @@ namespace Win32xx
 		return charsize;
 	}
 
-	
+
 	// Called when the OK button is pressed on the Font Dialog.
 	inline void CFontDialog::OnOK()
 	{
 	}
 
-	
+
 	// Translate the font character format cf properties of a CRichEdit control
 	// into elements of the m_logFont member and settings of the option flags.
 	inline DWORD CFontDialog::FillInLogFont(const CHARFORMAT& cf)
@@ -1613,7 +1613,7 @@ namespace Win32xx
 		return dwFlags;
 	}
 
-	
+
 	// Sets the various parameters of the CHOOSEFONT struct.
 	// The parameters are set to safe values.
 	inline void CFontDialog::SetParameters(CHOOSEFONT cf)

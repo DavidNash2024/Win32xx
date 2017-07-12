@@ -222,12 +222,12 @@ namespace Win32xx
 	// CPoint member function definitions
 	inline CRect CPoint::operator + (LPCRECT prc) const	{ return CRect(*prc) + *this; }
 	inline CRect CPoint::operator - (LPCRECT prc) const	{ return CRect(*prc) - *this; }
-	
-	
+
+
 	////////////////////////////////////////
 	// Global Functions
-	//	
-	
+	//
+
 	// Returns a CPoint holding the current cursor position.
 	inline CPoint GetCursorPos()
 	{
@@ -235,7 +235,7 @@ namespace Win32xx
 		::GetCursorPos(&pt);
 		return pt;
 	}
-	
+
 } // namespace Win32xx
 
 #endif // _WIN32XX_RECT_H_
