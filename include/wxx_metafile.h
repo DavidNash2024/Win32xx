@@ -36,7 +36,7 @@
 
 
 ////////////////////////////////////////////////////////
-// A metafile is a collection of structures that store a picture in a 
+// A metafile is a collection of structures that store a picture in a
 // device-independent format. Device independence is the one feature that sets
 // metafiles apart from bitmaps. Unlike a bitmap, a metafile guarantees device
 // independence. There is a drawback to metafiles however, they are generally
@@ -86,17 +86,17 @@ namespace Win32xx
 			HMETAFILE hMetaFile;
 			long	Count;
 		};
-		
+
 		void Attach(HMETAFILE hMetaFile);
 		void Release();
-		
+
 		CMetaFile_Data* m_pData;
 	};
 
 
 	/////////////////////////////////////////////////////
 	// CEnhMetaFile wraps a HENHMETAFILE. CEnhMetaFile can be used anywhere a
-	// HENHMETAFILE can be used. CEnhMetaFile objects are reference counted, 
+	// HENHMETAFILE can be used. CEnhMetaFile objects are reference counted,
 	// so they can be safely copied. CEnhMetaFile automatically deletes the
 	// HENHMETAFILE when the last copy of the CEnhMetaFile object goes out of
 	// scope. The CMetaFileDC::CloseEnhanced function returns a CEnhMetaFile
@@ -121,7 +121,7 @@ namespace Win32xx
 			HENHMETAFILE hEnhMetaFile;
 			long	Count;
 		};
-	
+
 		void Attach(HENHMETAFILE hEnhMetaFile);
 		void Release();
 
@@ -146,27 +146,27 @@ namespace Win32xx
 		m_pData = new CMetaFile_Data;
 	}
 
-	
+
 	inline CMetaFile::CMetaFile(HMETAFILE hMetaFile)
 	{
 		m_pData = new CMetaFile_Data;
 		m_pData->hMetaFile = hMetaFile;
 	}
 
-	
+
 	inline CMetaFile::CMetaFile(const CMetaFile& rhs)
 	{
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	
+
 	inline CMetaFile::~CMetaFile()
 	{
 		Release();
 	}
 
-	
+
 	inline CMetaFile& CMetaFile::operator = (const CMetaFile& rhs)
 	{
 		if (this != &rhs)
@@ -179,15 +179,15 @@ namespace Win32xx
 		return *this;
 	}
 
-	
+
 	inline void CMetaFile::operator = (const HMETAFILE hMetaFile)
 	{
 		Attach(hMetaFile);
 	}
 
-	
+
 	// Attaches an existing HMETAFILE to this CMetaFile
-	// The HMETAFILE can be NULL	
+	// The HMETAFILE can be NULL
 	inline void CMetaFile::Attach(HMETAFILE hMetaFile)
 	{
 		assert(m_pData);
@@ -205,7 +205,7 @@ namespace Win32xx
 		}
 	}
 
-	
+
 	inline void CMetaFile::Release()
 	{
 		assert(m_pData);
@@ -231,27 +231,27 @@ namespace Win32xx
 		m_pData = new CEnhMetaFile_Data;
 	}
 
-	
+
 	inline CEnhMetaFile::CEnhMetaFile(HENHMETAFILE hEnhMetaFile)
 	{
 		m_pData = new CEnhMetaFile_Data;
 		m_pData->hEnhMetaFile = hEnhMetaFile;
 	}
 
-	
+
 	inline CEnhMetaFile::CEnhMetaFile(const CEnhMetaFile& rhs)
 	{
 		m_pData = rhs.m_pData;
 		InterlockedIncrement(&m_pData->Count);
 	}
 
-	
+
 	inline CEnhMetaFile::~CEnhMetaFile()
 	{
 		Release();
 	}
 
-	
+
 	inline CEnhMetaFile& CEnhMetaFile::operator = (const CEnhMetaFile& rhs)
 	{
 		if (this != &rhs)
@@ -264,13 +264,13 @@ namespace Win32xx
 		return *this;
 	}
 
-	
+
 	inline void CEnhMetaFile::operator = (const HENHMETAFILE hEnhMetaFile)
 	{
 		Attach(hEnhMetaFile);
 	}
-	
-	
+
+
 	// Attaches an existing HENHMETAFILE to this CEnhMetaFile
 	// The HENHMETAFILE can be NULL
 	inline void CEnhMetaFile::Attach(HENHMETAFILE hEnhMetaFile)
@@ -289,7 +289,7 @@ namespace Win32xx
 			m_pData->hEnhMetaFile = hEnhMetaFile;
 		}
 	}
-	
+
 
 	inline void CEnhMetaFile::Release()
 	{

@@ -40,7 +40,7 @@
 // The CScrollView class adds scrolling to a view window. Inherit your
 // view window from CScrollView, and use the SetScrollSizes function
 // to set up the scrolling. Override OnDraw and perform the drawing to
-// the window as usual. 
+// the window as usual.
 //
 // Use SetScrollSizes to specify the scrolling sizes.
 // Use SetScollSizes(CSize(0,0)) to disable scrolling.
@@ -98,7 +98,7 @@ namespace Win32xx
 		virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void    PreCreate(CREATESTRUCT& cs);
-		
+
 		LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
@@ -120,20 +120,20 @@ namespace Win32xx
 {
 
 	////////////////////////////////////////
-	// Definitions for the CScrollView class 
+	// Definitions for the CScrollView class
 	//
-	
+
 	inline CScrollView::CScrollView()
 	{
 		m_brushBkgnd.CreateSolidBrush(RGB(255, 255, 255));
 	}
 
-	
+
 	inline CScrollView::~CScrollView()
 	{
 	}
 
-	
+
 	// Fills the area of the view that appears outside of the scrolling area.
 	// Can be used in OnEraseBkgnd to draw the background efficiently.
 	inline void CScrollView::FillOutsideRect(CDC& dc, HBRUSH hBrush)
@@ -163,8 +163,8 @@ namespace Win32xx
 			return TRUE;	// Prevent background erasure to reduce flicker
 	}
 
-	
-	// Called when an event occurs in the horizontal scroll bar.	
+
+	// Called when an event occurs in the horizontal scroll bar.
 	inline LRESULT CScrollView::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(uMsg);
@@ -242,7 +242,7 @@ namespace Win32xx
 			// No more drawing required
 			return 0L;
 		}
-		
+
 		// Do default OnPaint if m_sizeTotal is zero
 		return CWnd::OnPaint(uMsg, wParam, lParam);
 	}
@@ -364,7 +364,7 @@ namespace Win32xx
 	}
 
 	inline void CScrollView::SetScrollPosition(POINT pt)
-	// Sets the current scroll position. 
+	// Sets the current scroll position.
 	{
 		assert(pt.x >= 0 && pt.x <= m_sizeTotal.cx);
 		assert(pt.y >= 0 && pt.y <= m_sizeTotal.cy);

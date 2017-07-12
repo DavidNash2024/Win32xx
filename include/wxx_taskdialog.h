@@ -39,12 +39,12 @@
 // wxx_taskdialog.h
 //  Declaration of the CTaskDialog class
 
-// A task dialog is a dialog box that can be used to display information 
-// and receive simple input from the user. Like a message box, it is 
-// formatted by the operating system according to parameters you set. 
+// A task dialog is a dialog box that can be used to display information
+// and receive simple input from the user. Like a message box, it is
+// formatted by the operating system according to parameters you set.
 // However, a task dialog has many more features than a message box.
 
-// NOTES:  
+// NOTES:
 //  Task Dialogs are only supported on Windows Vista and above.
 //  Task Dialogs require XP themes enabled (use version 6 of Common Controls)
 //  Task Dialogs are always modal.
@@ -83,9 +83,6 @@ namespace Win32xx
 		BOOL GetVerificationCheckboxState() const;
 		static BOOL IsSupported();
 		void NavigateTo(CTaskDialog& TaskDialog) const;
-		void RemoveAllButtons();
-		void RemoveAllRadioButtons();
-		void Reset();
 		void SetCommonButtons(TASKDIALOG_COMMON_BUTTON_FLAGS dwCommonButtons);
 		void SetContent(LPCTSTR pszContent);
 		void SetDefaultButton(int nButtonID);
@@ -106,9 +103,7 @@ namespace Win32xx
 		void SetVerificationCheckbox(BOOL IsChecked) const;
 		void SetVerificationCheckboxText(LPCTSTR pszVerificationText);
 		void SetWindowTitle(LPCTSTR pszWindowTitle);
-		void StoreText(std::vector<WCHAR>& vWChar, LPCTSTR pFromTChar);
 		void UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText) const;
-		
 
 	protected:
 		// Override these functions as required
@@ -124,30 +119,42 @@ namespace Win32xx
 		virtual BOOL OnTDTimer(DWORD dwTickCount);
 		virtual void OnTDVerificationCheckboxClicked(BOOL IsChecked);
 		virtual LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		// Not intended to be overwritten
 		LRESULT TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 	private:
+		struct TaskButton
+		{
+			TaskButton(UINT nID, LPCTSTR pszText) : buttonID(nID)
+			{
+				if (IS_INTRESOURCE(pszText))		// support MAKEINTRESOURCE
+					buttonText = LoadString(reinterpret_cast<UINT>(pszText));
+				else
+					buttonText = pszText;
+			}
+
+			UINT buttonID;
+			CString buttonText;
+		};
+
 		CTaskDialog(const CTaskDialog&);				// Disable copy construction
 		CTaskDialog& operator = (const CTaskDialog&);	// Disable assignment operator
-
+		CString CTaskDialog::FillString(LPCTSTR pText);
+		void Reset();
 		static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData);
 
-		std::vector<TASKDIALOG_BUTTON> m_vButtons;
-		std::vector<TASKDIALOG_BUTTON> m_vRadioButtons;
+		std::vector<TaskButton> m_vButtons;
+		std::vector<TaskButton> m_vRadioButtons;
 
-		std::vector< std::vector<WCHAR> > m_vButtonsText;		// A vector of WCHAR vectors
-		std::vector< std::vector<WCHAR> > m_vRadioButtonsText;	// A vector of WCHAR vectors
-
-		std::vector<WCHAR> m_vWindowTitle;
-		std::vector<WCHAR> m_vMainInstruction;
-		std::vector<WCHAR> m_vContent;
-		std::vector<WCHAR> m_vVerificationText;
-		std::vector<WCHAR> m_vExpandedInformation;
-		std::vector<WCHAR> m_vExpandedControlText;
-		std::vector<WCHAR> m_vCollapsedControlText;
-		std::vector<WCHAR> m_vFooter;
+		CString m_strCollapsedControlText;
+		CString m_strContent;
+		CString m_strExpandedControlText;
+		CString m_strExpandedInformation;
+		CString m_strFooter;
+		CString m_strMainInstruction;
+		CString m_strVerificationText;
+		CString m_strWindowTitle;
 
 		TASKDIALOGCONFIG m_tc;
 		int		m_SelectedButtonID;
@@ -171,86 +178,94 @@ namespace Win32xx
 		m_tc.pfCallback = CTaskDialog::StaticTaskDialogProc;
 	}
 
-	
-	// Adds a command control or push button to the Task Dialog.	
+
+	// Adds a command control or push button to the Task Dialog.
 	inline void CTaskDialog::AddCommandControl(int nButtonID, LPCTSTR pszCaption)
 	{
 		assert (GetHwnd() == NULL);
 
-		std::vector<WCHAR> vButtonText;
-		StoreText(vButtonText, pszCaption);
-		m_vButtonsText.push_back(vButtonText);	// m_vButtonsText is a vector of vector<WCHAR>'s
-
-		TASKDIALOG_BUTTON tdb;
-		tdb.nButtonID = nButtonID;
-		tdb.pszButtonText = &m_vButtonsText.back().front();
-
-		m_vButtons.push_back(tdb);
+		TaskButton tb(nButtonID, pszCaption);
+		m_vButtons.push_back(tb);
 	}
 
-	
-	// Adds a radio button to the Task Dialog.	
+
+	// Adds a radio button to the Task Dialog.
 	inline void CTaskDialog::AddRadioButton(int nRadioButtonID, LPCTSTR pszCaption)
 	{
 		assert (GetHwnd() == NULL);
 
-		std::vector<WCHAR> vRadioButtonText;
-		StoreText(vRadioButtonText, pszCaption);
-		m_vRadioButtonsText.push_back(vRadioButtonText);	// m_vRadioButtonsText is a vector of vector<WCHAR>'s
-
-		TASKDIALOG_BUTTON tdb;
-		tdb.nButtonID = nRadioButtonID;
-		tdb.pszButtonText = &m_vRadioButtonsText.back().front();
-
-		m_vRadioButtons.push_back(tdb);
+		TaskButton tb(nRadioButtonID, pszCaption);
+		m_vRadioButtons.push_back(tb);
 	}
 
-	
+
 	// Adds a range of radio buttons to the Task Dialog.
-	// Assumes the resource ID of the button and it's string match 	
+	// Assumes the resource ID of the button and it's string match
 	inline void CTaskDialog::AddRadioButtonGroup(int nIDRadioButtonsFirst, int nIDRadioButtonsLast)
 	{
 		assert (GetHwnd() == NULL);
 		assert(nIDRadioButtonsFirst > 0);
 		assert(nIDRadioButtonsLast > nIDRadioButtonsFirst);
 
-		TASKDIALOG_BUTTON tdb;
 		for (int nID = nIDRadioButtonsFirst; nID <= nIDRadioButtonsLast; ++nID)
 		{
-			tdb.nButtonID = nID;
-			tdb.pszButtonText = MAKEINTRESOURCEW(nID);
-			m_vRadioButtons.push_back(tdb);			
+			TaskButton tb(nID, MAKEINTRESOURCEW(nID));
+			m_vRadioButtons.push_back(tb);
 		}
 	}
 
-	
-	// Simulates the action of a button click in the Task Dialog.	
+
+	// Simulates the action of a button click in the Task Dialog.
 	inline void CTaskDialog::ClickButton(int nButtonID) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_CLICK_BUTTON, (WPARAM)nButtonID, 0); 
+		SendMessage(TDM_CLICK_BUTTON, (WPARAM)nButtonID, 0);
 	}
 
-	
-	// Simulates the action of a radio button click in the TaskDialog.	
+
+	// Simulates the action of a radio button click in the TaskDialog.
 	inline void CTaskDialog::ClickRadioButton(int nRadioButtonID) const
 	{
 		assert(GetHwnd());
 		SendMessage(TDM_CLICK_RADIO_BUTTON, (WPARAM)nRadioButtonID, 0);
 	}
 
-	
-	// Creates and displays the Task Dialog.	
+
+	// Creates and displays the Task Dialog.
 	inline LRESULT CTaskDialog::DoModal(HWND hParent /* = NULL */)
 	{
 		assert (GetHwnd() == NULL);
 
+		std::vector<TaskButton>::const_iterator it;
+
+		// Build a vector of button info. This will be used later as an array.
+		std::vector<TASKDIALOG_BUTTON> vButtons;
+		for (it = m_vButtons.begin(); it != m_vButtons.end(); ++it)
+		{
+			TASKDIALOG_BUTTON tb;
+			tb.nButtonID = (*it).buttonID;
+			tb.pszButtonText = (*it).buttonText;
+			vButtons.push_back(tb);
+		}
+
+		// Build a vector of radio button info. This will be used later as an array.
+		std::vector<TASKDIALOG_BUTTON> vRadioButtons;
+		for (it = m_vRadioButtons.begin(); it != m_vRadioButtons.end(); ++it)
+		{
+			TASKDIALOG_BUTTON tb;
+			tb.nButtonID = (*it).buttonID;
+			tb.pszButtonText = (*it).buttonText;
+			vRadioButtons.push_back(tb);
+		}
+
 		m_hWnd = 0;
+
+		// Fill the TASKDIALOGCONFIG struct.
 		m_tc.cbSize = sizeof(m_tc);
-		m_tc.pButtons = m_vButtons.empty()? NULL : &m_vButtons.front();
-		m_tc.cButtons = m_vButtons.size();
-		m_tc.pRadioButtons = m_vRadioButtons.empty()? NULL : &m_vRadioButtons.front();
-		m_tc.cRadioButtons = m_vRadioButtons.size();
+		m_tc.pButtons = vButtons.empty()? NULL : &vButtons.front();
+		m_tc.cButtons = vButtons.size();
+		m_tc.pRadioButtons = vRadioButtons.empty()? NULL : &vRadioButtons.front();
+		m_tc.cRadioButtons = vRadioButtons.size();
 		m_tc.hwndParent = hParent;
 
 		// Ensure this thread has the TLS index set
@@ -271,6 +286,7 @@ namespace Win32xx
 		FreeLibrary(hComCtl);
 		pTLSData->pWnd = NULL;
 		m_hWnd = 0;
+		Reset();
 
 		if (lr != S_OK)
 		{
@@ -287,7 +303,7 @@ namespace Win32xx
 	}
 
 
-	// Adds a shield icon to indicate that the button's action requires elevated privileges. 	
+	// Adds a shield icon to indicate that the button's action requires elevated privileges.
 	inline void CTaskDialog::ElevateButton(int nButtonID, BOOL IsElevated) const
 	{
 		assert(GetHwnd());
@@ -295,15 +311,15 @@ namespace Win32xx
 	}
 
 
-	// Enables or disables a push button in the TaskDialog.	
+	// Enables or disables a push button in the TaskDialog.
 	inline void CTaskDialog::EnableButton(int nButtonID, BOOL IsEnabled) const
 	{
 		assert(GetHwnd());
 		SendMessage(TDM_ENABLE_BUTTON, (WPARAM)nButtonID, (LPARAM)IsEnabled);
 	}
-	
-	
-	// Enables or disables a radio button in the TaskDialog.	
+
+
+	// Enables or disables a radio button in the TaskDialog.
 	inline void CTaskDialog::EnableRadioButton(int nRadioButtonID, BOOL IsEnabled) const
 	{
 		assert(GetHwnd());
@@ -311,61 +327,71 @@ namespace Win32xx
 	}
 
 	
-	// Returns the TASKDIALOGCONFIG structure for the Task Dialog.	
+	// Fills a CString from a string resource or a text string.
+	inline CString CTaskDialog::CTaskDialog::FillString(LPCTSTR pText)
+	{
+		if (IS_INTRESOURCE(pText))		// support MAKEINTRESOURCE
+			return LoadString(reinterpret_cast<UINT>(pText));
+		else
+			return pText;
+	}
+
+
+	// Returns the TASKDIALOGCONFIG structure for the Task Dialog.
 	inline TASKDIALOGCONFIG CTaskDialog::GetConfig() const
 	{
 		return m_tc;
 	}
 
-	
+
 	// Returns the Task Dialog's options. These are a combination of:
 	//  TDF_ENABLE_HYPERLINKS, TDF_USE_HICON_MAIN, TDF_USE_HICON_FOOTER, TDF_ALLOW_DIALOG_CANCELLATION,
 	//  TDF_USE_COMMAND_LINKS, TDF_USE_COMMAND_LINKS_NO_ICON, TDF_EXPAND_FOOTER_AREA, TDF_EXPANDED_BY_DEFAULT,
 	//  TDF_VERIFICATION_FLAG_CHECKED, TDF_SHOW_PROGRESS_BAR, TDF_SHOW_MARQUEE_PROGRESS_BAR, TDF_CALLBACK_TIMER,
-	//  TDF_POSITION_RELATIVE_TO_WINDOW, TDF_RTL_LAYOUT, TDF_NO_DEFAULT_RADIO_BUTTON, TDF_CAN_BE_MINIMIZED.	
+	//  TDF_POSITION_RELATIVE_TO_WINDOW, TDF_RTL_LAYOUT, TDF_NO_DEFAULT_RADIO_BUTTON, TDF_CAN_BE_MINIMIZED.
 	inline TASKDIALOG_FLAGS CTaskDialog::GetOptions() const
 	{
 		return m_tc.dwFlags;
 	}
 
-	
-	// Returns the ID of the selected button. 	
+
+	// Returns the ID of the selected button.
 	inline int CTaskDialog::GetSelectedButtonID() const
 	{
 		assert (GetHwnd() == NULL);
 		return m_SelectedButtonID;
 	}
 
-	
-	// Returns the ID of the selected radio button.	
-	inline int CTaskDialog::GetSelectedRadioButtonID() const 
+
+	// Returns the ID of the selected radio button.
+	inline int CTaskDialog::GetSelectedRadioButtonID() const
 	{
 		assert (GetHwnd() == NULL);
-		return m_SelectedRadioButtonID; 
+		return m_SelectedRadioButtonID;
 	}
-		
-		
-	// Returns the state of the verification check box.		
+
+
+	// Returns the state of the verification check box.
 	inline BOOL CTaskDialog::GetVerificationCheckboxState() const
 	{
 		assert (GetHwnd() == NULL);
 		return m_VerificationCheckboxState;
 	}
-	
-	
+
+
 	// Returns true if TaskDialogs are supported on this system.
 	inline BOOL CTaskDialog::IsSupported()
 	{
 		HMODULE hModule = LoadLibrary(_T("COMCTL32.DLL"));
 		assert(hModule);
-		
+
 		BOOL Succeeded = (::GetProcAddress(hModule, "TaskDialogIndirect") != FALSE);
-		
+
 		::FreeLibrary(hModule);
 		return Succeeded;
 	}
-	
-	
+
+
 	// Replaces the information displayed by the task dialog.
 	inline void CTaskDialog::NavigateTo(CTaskDialog& TaskDialog) const
 	{
@@ -374,111 +400,94 @@ namespace Win32xx
 		SendMessage(TDM_NAVIGATE_PAGE, 0, (LPARAM)&tc);
 	}
 
-	
-	// Called when the user selects a button or command link.	
+
+	// Called when the user selects a button or command link.
 	inline BOOL CTaskDialog::OnTDButtonClicked(int nButtonID)
-	{ 
+	{
 		UNREFERENCED_PARAMETER(nButtonID);
-		
+
 		// return TRUE to prevent the task dialog from closing
 		return FALSE;
 	}
 
-	
-	// Called when the task dialog is constructed, before it is displayed.	
+
+	// Called when the task dialog is constructed, before it is displayed.
 	inline void CTaskDialog::OnTDConstructed()
 	{
 	}
 
-	
-	// Called when the task dialog is displayed.	
+
+	// Called when the task dialog is displayed.
 	inline void CTaskDialog::OnTDCreated()
 	{
 	}
-	
-	
-	// Called when the task dialog is destroyed.	
+
+
+	// Called when the task dialog is destroyed.
 	inline void CTaskDialog::OnTDDestroyed()
 	{
+		Reset();
 	}
-	
-	
-	// Called when the expand button is clicked.	
+
+
+	// Called when the expand button is clicked.
 	inline void CTaskDialog::OnTDExpandButtonClicked(BOOL IsExpanded)
 	{
 		UNREFERENCED_PARAMETER(IsExpanded);
 	}
 
 
-	// Called when the user presses F1 on the keyboard.	
+	// Called when the user presses F1 on the keyboard.
 	inline void CTaskDialog::OnTDHelp()
 	{
 	}
 
-	
-	// Called when the user clicks on a hyperlink.	
+
+	// Called when the user clicks on a hyperlink.
 	inline void CTaskDialog::OnTDHyperlinkClicked(LPCTSTR pszHref)
 	{
 		UNREFERENCED_PARAMETER(pszHref);
 	}
-	
-	
-	// Called when a navigation has occurred.	
+
+
+	// Called when a navigation has occurred.
 	inline void CTaskDialog::OnTDNavigatePage()
 	{
 	}
-	
-	
-	// Called when the user selects a radio button.	
+
+
+	// Called when the user selects a radio button.
 	inline BOOL CTaskDialog::OnTDRadioButtonClicked(int nRadioButtonID)
 	{
 		UNREFERENCED_PARAMETER(nRadioButtonID);
-		return TRUE; 
+		return TRUE;
 	}
-	
-	
-	// Called every 200 milliseconds (approximately) when the TDF_CALLBACK_TIMER flag is set. 	
-	inline BOOL CTaskDialog::OnTDTimer(DWORD dwTickCount) 
+
+
+	// Called every 200 milliseconds (approximately) when the TDF_CALLBACK_TIMER flag is set.
+	inline BOOL CTaskDialog::OnTDTimer(DWORD dwTickCount)
 	{
 		UNREFERENCED_PARAMETER(dwTickCount);
 
-		// return TRUE to reset the tick count 
+		// return TRUE to reset the tick count
 		return FALSE;
 	}
-	
-	
-	// Called when the user clicks the Task Dialog verification check box.	
+
+
+	// Called when the user clicks the Task Dialog verification check box.
 	inline void CTaskDialog::OnTDVerificationCheckboxClicked(BOOL IsChecked)
 	{
 		UNREFERENCED_PARAMETER(IsChecked);
 	}
-	
-	
-	// Removes all push buttons from the task dialog.
-	inline void CTaskDialog::RemoveAllButtons()
-	{
-		assert (GetHwnd() == NULL);
-		m_vButtons.clear();
-		m_vButtonsText.clear();
-	}
-	
-	
-	// Removes all radio buttons from the task dialog.
-	inline void CTaskDialog::RemoveAllRadioButtons()
-	{
-		assert (GetHwnd() == NULL);
-		m_vRadioButtons.clear();
-		m_vRadioButtonsText.clear();
-	}
 
-	
-	// Returns the dialog to its default state.	
+
+	// Returns the dialog to its default state.
 	inline void CTaskDialog::Reset()
 	{
 		assert (GetHwnd() == NULL);
 
-		RemoveAllButtons();
-		RemoveAllRadioButtons();
+		m_vButtons.clear();
+		m_vRadioButtons.clear();
 		ZeroMemory(&m_tc, sizeof(m_tc));
 		m_tc.cbSize = sizeof(m_tc);
 		m_tc.pfCallback = CTaskDialog::StaticTaskDialogProc;
@@ -487,20 +496,20 @@ namespace Win32xx
 		m_SelectedRadioButtonID = 0;
 		m_VerificationCheckboxState = FALSE;
 
-		m_vWindowTitle.clear();
-		m_vMainInstruction.clear();
-		m_vContent.clear();
-		m_vVerificationText.clear();
-		m_vExpandedInformation.clear();
-		m_vExpandedControlText.clear();
-		m_vCollapsedControlText.clear();
-		m_vFooter.clear();
+		m_strCollapsedControlText.Empty();
+		m_strContent.Empty();
+		m_strExpandedControlText.Empty();
+		m_strExpandedInformation.Empty();
+		m_strFooter.Empty();
+		m_strMainInstruction.Empty();
+		m_strVerificationText.Empty();
+		m_strWindowTitle.Empty();
 	}
-	
-	
+
+
 	// The dwCommonButtons parameter can be a combination of:
 	//	TDCBF_OK_BUTTON			OK button
-	//	TDCBF_YES_BUTTON		Yes button	
+	//	TDCBF_YES_BUTTON		Yes button
 	//	TDCBF_NO_BUTTON			No button
 	//	TDCBF_CANCEL_BUTTON		Cancel button
 	//	TDCBF_RETRY_BUTTON		Retry button
@@ -508,39 +517,39 @@ namespace Win32xx
 	inline void CTaskDialog::SetCommonButtons(TASKDIALOG_COMMON_BUTTON_FLAGS dwCommonButtons)
 	{
 		assert (GetHwnd() == NULL);
-		m_tc.dwCommonButtons = dwCommonButtons; 
+		m_tc.dwCommonButtons = dwCommonButtons;
 	}
 
-	
-	// Sets the task dialog's primary content.	
+
+	// Sets the task dialog's primary content.
 	inline void CTaskDialog::SetContent(LPCTSTR pszContent)
 	{
-		StoreText(m_vContent, pszContent);
-		m_tc.pszContent = &m_vContent.front(); 
+		m_strContent = FillString(pszContent);
+		m_tc.pszContent = m_strContent.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_CONTENT, (LPARAM)(LPCWSTR)TtoW(pszContent));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_CONTENT, (LPARAM)m_strContent.c_str());
 	}
-	
-	
+
+
 	// Sets the task dialog's default button.
 	// Can be either a button ID or one of the common buttons.
-	inline void CTaskDialog::SetDefaultButton(int nButtonID) 
+	inline void CTaskDialog::SetDefaultButton(int nButtonID)
 	{
 		assert (GetHwnd() == NULL);
 		m_tc.nDefaultButton = nButtonID;
 	}
 
-	
-	// Sets the default radio button.	
-	inline void CTaskDialog::SetDefaultRadioButton(int nRadioButtonID) 
+
+	// Sets the default radio button.
+	inline void CTaskDialog::SetDefaultRadioButton(int nRadioButtonID)
 	{
 		assert (GetHwnd() == NULL);
 		m_tc.nDefaultRadioButton = nRadioButtonID;
 	}
-	
-	
-	// The width of the task dialog's client area. If 0, the 
+
+
+	// The width of the task dialog's client area. If 0, the
 	// task dialog manager will calculate the ideal width.
 	inline void CTaskDialog::SetDialogWidth(UINT nWidth /*= 0*/)
 	{
@@ -548,34 +557,34 @@ namespace Win32xx
 		m_tc.cxWidth = nWidth;
 	}
 
-	
-	// Sets the text in the expandable area of the Task Dialog.	
+
+	// Sets the text in the expandable area of the Task Dialog.
 	inline void CTaskDialog::SetExpansionArea(LPCTSTR pszExpandedInfo, LPCTSTR pszExpandedLabel /* = _T("")*/, LPCTSTR pszCollapsedLabel /* = _T("")*/)
 	{
-		StoreText(m_vExpandedInformation, pszExpandedInfo);
-		m_tc.pszExpandedInformation = &m_vExpandedInformation.front();
-		
-		StoreText(m_vExpandedControlText, pszExpandedLabel);
-		m_tc.pszExpandedControlText = &m_vExpandedControlText.front();
-		
-		StoreText(m_vCollapsedControlText, pszCollapsedLabel);
-		m_tc.pszCollapsedControlText = &m_vCollapsedControlText.front();
+		m_strExpandedInformation = FillString(pszExpandedInfo);
+		m_tc.pszExpandedInformation = m_strExpandedInformation.c_str();
+
+		m_strExpandedControlText = FillString(pszExpandedLabel);
+		m_tc.pszExpandedControlText = m_strExpandedControlText.c_str();
+
+		m_strCollapsedControlText = FillString(pszCollapsedLabel);
+		m_tc.pszCollapsedControlText = m_strCollapsedControlText.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_EXPANDED_INFORMATION, (LPARAM)(LPCWSTR)TtoW(pszExpandedInfo));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_EXPANDED_INFORMATION, (LPARAM)m_strExpandedInformation.c_str());
 	}
 
-	
-	// Sets the icon that will be displayed in the Task Dialog's footer.	
-	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon) 
+
+	// Sets the icon that will be displayed in the Task Dialog's footer.
+	inline void CTaskDialog::SetFooterIcon(HICON hFooterIcon)
 	{
 		m_tc.hFooterIcon = hFooterIcon;
 
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)hFooterIcon);
 	}
-	
-	
+
+
 	// Sets the icon that will be displayed in the Task Dialog's footer.
 	// Possible icons:
 	// TD_ERROR_ICON		A stop-sign icon appears in the task dialog.
@@ -583,36 +592,36 @@ namespace Win32xx
 	// TD_INFORMATION_ICON	An icon consisting of a lowercase letter i in a circle appears in the task dialog.
 	// TD_SHIELD_ICON		A shield icon appears in the task dialog.
 	//  or a value passed via MAKEINTRESOURCE
-	inline void CTaskDialog::SetFooterIcon(LPCTSTR lpszFooterIcon) 
+	inline void CTaskDialog::SetFooterIcon(LPCTSTR lpszFooterIcon)
 	{
 		m_tc.pszFooterIcon = const_cast<LPCWSTR>(lpszFooterIcon);
 
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)lpszFooterIcon);
 	}
-	
-	
+
+
 	// Sets the text that will be displayed in the Task Dialog's footer.
 	inline void CTaskDialog::SetFooterText(LPCTSTR pszFooter)
 	{
-		StoreText(m_vFooter, pszFooter);
-		m_tc.pszFooter = &m_vFooter.front();
+		m_strFooter = FillString(pszFooter);
+		m_tc.pszFooter = m_strFooter.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)TtoW(pszFooter));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)m_strFooter.c_str());
 	}
 
-	
-	// Sets Task Dialog's main icon.	
-	inline void CTaskDialog::SetMainIcon(HICON hMainIcon) 
+
+	// Sets Task Dialog's main icon.
+	inline void CTaskDialog::SetMainIcon(HICON hMainIcon)
 	{
 		m_tc.hMainIcon = hMainIcon;
 
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)hMainIcon);
 	}
-	
-	
+
+
 	// Sets Task Dialog's main icon.
 	// Possible icons:
 	// TD_ERROR_ICON		A stop-sign icon appears in the task dialog.
@@ -622,23 +631,23 @@ namespace Win32xx
 	inline void CTaskDialog::SetMainIcon(LPCTSTR lpszMainIcon)
 	{
 		m_tc.pszMainIcon = const_cast<LPCWSTR>(lpszMainIcon);
-		
+
 		if (IsWindow())
 			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)lpszMainIcon);
 	}
-	
-	
+
+
 	// Sets the Task Dialog's main instruction text.
-	inline void CTaskDialog::SetMainInstruction(LPCTSTR pszMainInstruction) 
+	inline void CTaskDialog::SetMainInstruction(LPCTSTR pszMainInstruction)
 	{
-		StoreText(m_vMainInstruction, pszMainInstruction);
-		m_tc.pszMainInstruction = &m_vMainInstruction.front();
+		m_strMainInstruction = FillString(pszMainInstruction);
+		m_tc.pszMainInstruction = m_strMainInstruction.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)(LPCWSTR)TtoW(pszMainInstruction));
+			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)m_strMainInstruction.c_str());
 	}
 
-	
+
 	// Sets the Task Dialog's options. These are a combination of:
 	//  TDF_ENABLE_HYPERLINKS, TDF_USE_HICON_MAIN, TDF_USE_HICON_FOOTER, TDF_ALLOW_DIALOG_CANCELLATION,
 	//  TDF_USE_COMMAND_LINKS, TDF_USE_COMMAND_LINKS_NO_ICON, TDF_EXPAND_FOOTER_AREA, TDF_EXPANDED_BY_DEFAULT,
@@ -650,66 +659,66 @@ namespace Win32xx
 		m_tc.dwFlags = dwFlags;
 	}
 
-	
-	// Starts and stops the marquee display of the progress bar, and sets the speed of the marquee.	
+
+	// Starts and stops the marquee display of the progress bar, and sets the speed of the marquee.
 	inline void CTaskDialog::SetProgressBarMarquee(BOOL IsEnabled /* = TRUE*/, int nMarqueeSpeed /* = 0*/) const
 	{
 		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_MARQUEE, (WPARAM)IsEnabled, (LPARAM)nMarqueeSpeed);
 	}
 
-	
-	// Sets the current position for a progress bar.	
+
+	// Sets the current position for a progress bar.
 	inline void CTaskDialog::SetProgressBarPosition(int nProgressPos) const
 	{
 		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_POS, (WPARAM)nProgressPos, 0);
 	}
-	
-	
+
+
 	// Sets the minimum and maximum values for the hosted progress bar.
 	inline void CTaskDialog::SetProgressBarRange(int nMinRange, int nMaxRange) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_SET_PROGRESS_BAR_RANGE, 0, MAKELPARAM(nMinRange, nMaxRange)); 
+		SendMessage(TDM_SET_PROGRESS_BAR_RANGE, 0, MAKELPARAM(nMinRange, nMaxRange));
 	}
-	
-	
+
+
 	// Sets the current state of the progress bar. Possible states are:
 	//  PBST_NORMAL, PBST_PAUSE, PBST_ERROR.
 	inline void CTaskDialog::SetProgressBarState(int nNewState /* = PBST_NORMAL*/) const
 	{
 		assert(GetHwnd());
 		SendMessage(TDM_SET_PROGRESS_BAR_STATE, (WPARAM)nNewState, 0);
-	} 
+	}
 
-	
-	// Simulates a click on the verification checkbox of the Task Dialog, if it exists.	
+
+	// Simulates a click on the verification checkbox of the Task Dialog, if it exists.
 	inline void CTaskDialog::SetVerificationCheckbox(BOOL IsChecked) const
 	{
 		assert(GetHwnd());
 		SendMessage(TDM_CLICK_VERIFICATION, (WPARAM)IsChecked, (LPARAM)IsChecked);
 	}
 
-	
-	// Sets the text for the verification check box.	
+
+	// Sets the text for the verification check box.
 	inline void CTaskDialog::SetVerificationCheckboxText(LPCTSTR pszVerificationText)
 	{
 		assert (GetHwnd() == NULL);
-		StoreText(m_vVerificationText, pszVerificationText);
-		m_tc.pszVerificationText = &m_vVerificationText.front();
+		m_strVerificationText = FillString(pszVerificationText);
+		m_tc.pszVerificationText = m_strVerificationText.c_str();
 	}
-	
-	
+
+
 	// Sets the Task Dialog's window title.
 	inline void CTaskDialog::SetWindowTitle(LPCTSTR pszWindowTitle)
 	{
 		assert (GetHwnd() == NULL);
-		StoreText(m_vWindowTitle, pszWindowTitle);
-		m_tc.pszWindowTitle = &m_vWindowTitle.front(); 
+		m_strWindowTitle = FillString(pszWindowTitle);
+		m_tc.pszWindowTitle = m_strWindowTitle.c_str();
 	}
-	
-	
+
+
 	// TaskDialogs direct their messages here.
 	inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData)
 	{
@@ -740,34 +749,8 @@ namespace Win32xx
 
 	} // LRESULT CALLBACK StaticTaskDialogProc(...)
 
-	
-	// Stores a TChar string in a WCHAR vector	
-	inline void CTaskDialog::StoreText(std::vector<WCHAR>& vWChar, LPCTSTR pFromTChar)
-	{
-		std::vector<TCHAR> vTChar;
-		
-		if (IS_INTRESOURCE(pFromTChar))		// support MAKEINTRESOURCE
-		{
-			CString cs = LoadString(reinterpret_cast<UINT>(pFromTChar));
-			int len = pFromTChar? cs.GetLength() + 1 : 1;
-			vTChar.assign(len, _T('\0'));
-			vWChar.assign(len, _T('\0'));
-			if (pFromTChar)
-				lstrcpy( &vTChar.front(), cs);
-		}
-		else
-		{
-			int len = lstrlen(pFromTChar) +1;
-			vTChar.assign(len, _T('\0'));
-			vWChar.assign(len, _T('\0'));	
-			lstrcpy( &vTChar.front(), pFromTChar);
-		}
-		
-		lstrcpyW(&vWChar.front(), TtoW(&vTChar.front()) );
-	}
 
-	
-	// Provides default handling of Task Dialog's messages.	
+	// Provides default handling of Task Dialog's messages.
 	inline LRESULT CTaskDialog::TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		switch(uMsg)
@@ -778,7 +761,7 @@ namespace Win32xx
 		case TDN_CREATED:
 			OnTDCreated();
 			break;
-		case TDN_DESTROYED:		
+		case TDN_DESTROYED:
 			OnTDDestroyed();
 			break;
 		case TDN_DIALOG_CONSTRUCTED:
@@ -810,8 +793,8 @@ namespace Win32xx
 		return S_OK;
 	}
 
-	
-	// Override this function modify how the task dialog's messages are handled.	
+
+	// Override this function modify how the task dialog's messages are handled.
 	inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// A typical function might look like this:
@@ -831,8 +814,11 @@ namespace Win32xx
 		return TaskDialogProcDefault(uMsg, wParam, lParam);
 	}
 
-	
-	// Updates a text element on the Task Dialog.	
+
+	// Updates a text element on the TaskDialog after it is created. The size of the TaskDialog
+	// is not adjusted to accomodate the new text.
+	// Possible eElement values are:
+	// TDE_CONTENT, TDE_EXPANDED_INFORMATION, TDE_FOOTER, TDE_MAIN_INSTRUCTION.
 	inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText) const
 	{
 		assert(GetHwnd());

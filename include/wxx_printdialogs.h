@@ -96,8 +96,8 @@ namespace Win32xx
 	//  CGlobalLock is based on code by Rob Caldecott
 	//
 	//////////////////////////////////////////////////////////////////
-	
-	
+
+
 	//////////////////////////////////////
 	// CGlobaLock is a template class used to provide a self unlocking
 	// object to global memory. It is used to provide convenient access
@@ -292,7 +292,7 @@ namespace Win32xx
 
 	// Allocates the global memory for the default printer if required.
 	// Resets the global memory if we were using the default printer, and the
-	// default printer has changed.	
+	// default printer has changed.
 	inline void CWinApp::UpdateDefaultPrinter()
 	{
 		if (m_hDevNames == 0)
@@ -361,7 +361,7 @@ namespace Win32xx
 					}
 				}
 			}
-			
+
 			::GlobalUnlock(m_hDevNames);
 		}
 	}
@@ -369,7 +369,7 @@ namespace Win32xx
 	/////////////////////////////////////////
 	// Definitions for the CPrintDialog class
 	//
-	
+
 
 	// Constructor for CPrintDialog class. The dwFlags parameter specifies the
 	// flags for the PRINTDLG structure. Refer to the description of the
@@ -407,8 +407,8 @@ namespace Win32xx
 			::DeleteDC(m_PD.hDC);
 	}
 
-	
-	// Returns the printer's device context.	
+
+	// Returns the printer's device context.
 	inline CDC CPrintDialog::GetPrinterDC() const
 	{
 		CDC dc;
@@ -434,9 +434,9 @@ namespace Win32xx
 		return dc;
 	}
 
-	
+
 	// Dialog procedure for the Font dialog. Override this function
-	// to customise the message handling.	
+	// to customise the message handling.
 	inline INT_PTR CPrintDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		//  A typical override might look like this:
@@ -461,7 +461,7 @@ namespace Win32xx
 
 	//	The default message handling for CPrintDialog. Don't override this
 	//	function, override DialogProc instead.
-	//	Note: OnCancel and OnOK are called by DoModal.	
+	//	Note: OnCancel and OnOK are called by DoModal.
 	inline INT_PTR CPrintDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
@@ -491,7 +491,7 @@ namespace Win32xx
 
 	// Display the print dialog, and allow the user to select various options.
 	// An exception is thrown if the dialog isn't created.
-	// An exception is thrown if there is no default printer.	
+	// An exception is thrown if there is no default printer.
 	inline INT_PTR CPrintDialog::DoModal( HWND hWndOwner /* = 0 */)
 	{
 		assert( &GetApp() );	// Test if Win32++ has been started
@@ -551,7 +551,7 @@ namespace Win32xx
 	}
 
 
-	// Retrieves the number of copies requested.	
+	// Retrieves the number of copies requested.
 	inline int CPrintDialog::GetCopies() const
 	{
 		if (m_PD.Flags & PD_USEDEVMODECOPIES)
@@ -563,7 +563,7 @@ namespace Win32xx
 
 	// Sets the printer and the page settings to default, without displaying a dialog.
 	// The hDevMode and hDevNames memory is freed and reallocated.
-	// Returns TRUE if a default printer exists.	
+	// Returns TRUE if a default printer exists.
 	inline BOOL CPrintDialog::GetDefaults()
 	{
 		// Reset global memory
@@ -590,7 +590,7 @@ namespace Win32xx
 	}
 
 
-	// Retrieves the name of the currently selected printer device.	
+	// Retrieves the name of the currently selected printer device.
 	inline CString CPrintDialog::GetDeviceName() const
 	{
 		CString str;
@@ -629,7 +629,7 @@ namespace Win32xx
 	}
 
 
-	// Retrieves the name of the currently selected printer driver.	
+	// Retrieves the name of the currently selected printer driver.
 	inline CString CPrintDialog::GetDriverName() const
 	{
 		CString str;
@@ -644,14 +644,14 @@ namespace Win32xx
 	}
 
 
-	// Retrieves the starting page of the print range.	
+	// Retrieves the starting page of the print range.
 	inline int CPrintDialog::GetFromPage() const
 	{
 		return (PrintRange() ? m_PD.nFromPage : -1);
 	}
 
 
-	// Retrieves the name of the currently selected printer port.	
+	// Retrieves the name of the currently selected printer port.
 	inline CString CPrintDialog::GetPortName() const
 	{
 		CString str;
@@ -665,7 +665,7 @@ namespace Win32xx
 	}
 
 
-	// Retrieves the ending page of the print range.	
+	// Retrieves the ending page of the print range.
 	inline int CPrintDialog::GetToPage() const
 	{
 		return (PrintRange() ? m_PD.nToPage : -1);
@@ -679,7 +679,7 @@ namespace Win32xx
 		return !PrintRange() && !PrintSelection() ? TRUE : FALSE;
 	}
 
-	
+
 	// Call this function after calling DoModal to determine whether the printer
 	// should collate all printed copies of the document.
 	inline BOOL CPrintDialog::PrintCollate() const
@@ -690,7 +690,7 @@ namespace Win32xx
 			return (m_PD.Flags & PD_COLLATE ? TRUE : FALSE);
 	}
 
-	
+
 	// Call this function after calling DoModal to determine whether to print
 	// only a range of pages in the document.
 	inline BOOL CPrintDialog::PrintRange() const
@@ -698,7 +698,7 @@ namespace Win32xx
 		return m_PD.Flags & PD_PAGENUMS ? TRUE : FALSE;
 	}
 
-	
+
 	// Call this function after calling DoModal to determine whether to print
 	// only the currently selected items.
 	inline BOOL CPrintDialog::PrintSelection() const
@@ -706,7 +706,7 @@ namespace Win32xx
 		return m_PD.Flags & PD_SELECTION ? TRUE : FALSE;
 	}
 
-	
+
 	// Set the parameters of the PRINTDLG structure to sensible values
 	inline void CPrintDialog::SetParameters(PRINTDLG& pd)
 	{
@@ -733,7 +733,7 @@ namespace Win32xx
 	// Definitions for the CPageSetupDialog class
 	//
 
-	
+
 	// Constructor for CPageSetupDialog class. The dwFlags parameter specifies the
 	// flags for the PAGESETUPDLG structure. Refer to the description of the
 	// PAGESETUPDLG struct in the Windows API documentation.
@@ -749,7 +749,7 @@ namespace Win32xx
 		SetParameters(m_PSD);
 	}
 
-	
+
 	// Dialog procedure for the PageSetup dialog. Override this function
 	// to customise the message handling.
 	inline INT_PTR CPageSetupDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -776,7 +776,7 @@ namespace Win32xx
 
 	//	The Default message handling for CPageSetupDialog. Don't override this
 	//	function, override DialogProc instead.
-	//	Note: OnCancel and OnOK are called by DoModal.	
+	//	Note: OnCancel and OnOK are called by DoModal.
 	inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		UNREFERENCED_PARAMETER(lParam);
@@ -807,7 +807,7 @@ namespace Win32xx
 
 	// Display the Page Setup dialog, and allow the user to select various options.
 	// An exception is thrown if the dialog isn't created.
-	// An exception is thrown if there is no default printer.	
+	// An exception is thrown if there is no default printer.
 	inline INT_PTR CPageSetupDialog::DoModal(HWND hWndOwner /* = 0 */)
 	{
 		assert(&GetApp());		// Test if Win32++ has been started
@@ -864,25 +864,25 @@ namespace Win32xx
 	// unlocks the memory when it goes out of scope.
 	// Usage:
 	//  CDevMode pDevMode = GetDevMode();
-	//  Then use pDevMode as if it were a LPDEVMODE	
+	//  Then use pDevMode as if it were a LPDEVMODE
 	inline CDevMode CPageSetupDialog::GetDevMode() const
 	{
 		return CDevMode(GetApp().m_hDevMode);
 	}
 
-	
+
 	// Returns a pointer to the locked hDevNames memory encapsulated in a CDevNames object.
 	// There is no need to unlock this memory. The CDevNames object automatically
 	// unlocks the memory when it goes out of scope.
 	// Usage:
 	//  CDevNames pDevNames = GetDevNames();
-	//  Then use pDevNames as if it were a LPDEVNAMES	
+	//  Then use pDevNames as if it were a LPDEVNAMES
 	inline CDevNames CPageSetupDialog::GetDevNames() const
 	{
 		return CDevNames(GetApp().m_hDevNames);
 	}
 
-	
+
 	// Call this function after a call to DoModal to retrieve the margins of the printer.
 	inline void CPageSetupDialog::GetMargins(RECT& rcMargin, RECT& rcMinMargin) const
 	{
@@ -897,9 +897,9 @@ namespace Win32xx
 		return CSize(m_PSD.ptPaperSize.x, m_PSD.ptPaperSize.y);
 	}
 
-	
+
 	// This function receives messages that allow the drawing of the paint sample page
-	// in the Page Setup dialog box to be customized.	
+	// in the Page Setup dialog box to be customized.
 	inline INT_PTR CALLBACK CPageSetupDialog::PaintHookProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (hWnd == 0)
@@ -937,7 +937,7 @@ namespace Win32xx
 
 	// Override this function to customize drawing of the sample page in the Page Setup dialog box.
 	// It is called in response to the following messages: WM_PSD_FULLPAGERECT; WM_PSD_MINMARGINRECT;
-	// WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.	
+	// WM_PSD_MARGINRECT; WM_PSD_GREEKTEXTRECT; WM_PSD_ENVSTAMPRECT; and WM_PSD_YAFULLPAGERECT.
 	inline UINT CPageSetupDialog::OnDrawPage(HDC hDC, UINT nMessage, const RECT& /* rc*/)
 	{
 		UNREFERENCED_PARAMETER(hDC);
@@ -957,7 +957,7 @@ namespace Win32xx
 	}
 
 
-	// Set the parameters of the PAGESETUPDLG structure to sensible values	
+	// Set the parameters of the PAGESETUPDLG structure to sensible values
 	inline void CPageSetupDialog::SetParameters(PAGESETUPDLG& psd)
 	{
 		m_PSD.lStructSize		= sizeof(m_PSD);

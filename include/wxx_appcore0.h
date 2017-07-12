@@ -39,7 +39,7 @@
 #ifndef _WIN32XX_APPCORE0_H_
 #define _WIN32XX_APPCORE0_H_
 
-	
+
 ///////////////////////////////////////////////////////
 // wxx_appcore0.h
 // This file contains the declarations of the following set of classes.
@@ -145,7 +145,7 @@
   #define DWLP_DLGPROC       DWL_DLGPROC
   #define DWLP_MSGRESULT     DWL_MSGRESULT
   #define DWLP_USER          DWL_USER
-  #define DWORD_PTR          DWORD 
+  #define DWORD_PTR          DWORD
   #define LONG_PTR           LONG
   #define ULONG_PTR          LONG
 #endif
@@ -259,7 +259,7 @@ namespace Win32xx
 
 
 	// A structure that contains the data members for CGDIObject.
-	struct CGDI_Data	
+	struct CGDI_Data
 	{
 		// Constructor
 		CGDI_Data() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
@@ -269,8 +269,8 @@ namespace Win32xx
 		bool	IsManagedObject;
 	};
 
-	
-	// A structure that contains the data members for CImageList.	
+
+	// A structure that contains the data members for CImageList.
 	struct CIml_Data
 	{
 		// Constructor
@@ -294,7 +294,7 @@ namespace Win32xx
 		bool IsManagedMenu;
 		long Count;
 	};
-	
+
   #endif
 
 	// The comparison function object used by CWinApp::m_mapHDC
@@ -304,31 +304,31 @@ namespace Win32xx
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	
-	// The comparison function object used by CWinApp::m_mapGDI	
+
+	// The comparison function object used by CWinApp::m_mapGDI
 	struct CompareGDI
 	{
 		bool operator()(HGDIOBJ const a, const HGDIOBJ b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	
-	// The comparison function object used by CWinApp::m_mapHIMAGELIST	
+
+	// The comparison function object used by CWinApp::m_mapHIMAGELIST
 	struct CompareHIMAGELIST
 	{
 		bool operator()(HIMAGELIST const a, const HIMAGELIST b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	
-	// The comparison function object used by CWinApp::m_mapHMENU	
+
+	// The comparison function object used by CWinApp::m_mapHMENU
 	struct CompareHMENU
 	{
 		bool operator()(HMENU const a, const HMENU b) const
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
-	
-	
+
+
 	// The comparison function object used by CWinApp::m_mapHWND
 	struct CompareHWND
 	{
@@ -336,9 +336,9 @@ namespace Win32xx
 			{return ((DWORD_PTR)a < (DWORD_PTR)b);}
 	};
 
-	
-	// Used for Thread Local Storage (TLS)	
-	struct TLSData			
+
+	// Used for Thread Local Storage (TLS)
+	struct TLSData
 	{
 		CWnd* pWnd;			// pointer to CWnd object for Window creation
 		HWND  hMainWnd;		//	handle to the main window for the thread (usually CFrame)
@@ -356,27 +356,27 @@ namespace Win32xx
 	{
 	public:
 		CCriticalSection() : m_count(0)	{ ::InitializeCriticalSection(&m_cs); }
-		~CCriticalSection()	
-		{ 
+		~CCriticalSection()
+		{
 			while (m_count > 0)
 			{
 				Release();
 			}
-			
+
 			::DeleteCriticalSection(&m_cs);
 		}
 
 
 		// Enter the critical section and increment the lock count.
-		void Lock() 	
+		void Lock()
 		{
-			::EnterCriticalSection(&m_cs); 
+			::EnterCriticalSection(&m_cs);
 			InterlockedIncrement(&m_count);
 		}
-		
-		// Leave the critical section and decrement the lock count.		
+
+		// Leave the critical section and decrement the lock count.
 		void Release()
-		{ 
+		{
 			assert (m_count > 0);
 			if (m_count > 0)
 			{
@@ -388,7 +388,7 @@ namespace Win32xx
 	private:
 		CCriticalSection ( const CCriticalSection& );
 		CCriticalSection& operator = ( const CCriticalSection& );
-		
+
 		CRITICAL_SECTION m_cs;
 		long m_count;
 	};
@@ -512,7 +512,7 @@ namespace Win32xx
 		void GlobalFreeAll(HGLOBAL hGlobal);
 		CDC_Data* GetCDCData(HDC hDC);
 		CGDI_Data* GetCGDIData(HGDIOBJ hObject);
-		CIml_Data* GetCImlData(HIMAGELIST himl);	
+		CIml_Data* GetCImlData(HIMAGELIST himl);
 		void	SetCallback();
 		void UpdateDefaultPrinter();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
@@ -521,7 +521,7 @@ namespace Win32xx
 		std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
-		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread		
+		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
 		CCriticalSection m_csTLSLock;	// thread synchronisation for m_vTLSData
 		HINSTANCE m_hInstance;			// handle to the application's instance
@@ -538,7 +538,7 @@ namespace Win32xx
 #endif
 
 	};
-	
+
 	////////////////////////////////////////
 	// Global Functions
 	//
@@ -551,7 +551,7 @@ namespace Win32xx
 
 
   #ifndef _WIN32_WCE
-	
+
 	// Retrieves the window version
 		// Return values and window versions:
 		//  1400     Windows 95
@@ -566,7 +566,7 @@ namespace Win32xx
 		//  2602     Windows 8 and Windows Server 2012
 		//  2603     Windows 8.1 and Windows Server 2012 r2
 		// Note: For windows 8.1 and above, the value returned is also affected by the embedded manifest
-		//       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602). 	
+		//       Applications not manifested for Windows 8.1 or Windows 10 will return the Windows 8 OS (2602).
 	inline int GetWinVersion()
 	{
 		DWORD dwVersion = GetVersion();
@@ -577,7 +577,7 @@ namespace Win32xx
 		int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
 		return nVersion;
 	}
-	
+
 
 	// Retrieves the version of common control dll used.
 	// return values and DLL versions
@@ -590,7 +590,7 @@ namespace Win32xx
 	// 582  dll ver 5.82	Windows XP, Vista, Windows 7 etc. without XP themes
 	// 600  dll ver 6.00	Windows XP with XP themes
 	// 610  dll ver 6.10	Windows Vista with XP themes
-	// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes	
+	// 616  dll ver 6.16    Windows Vista SP1 or Windows 7 with XP themes
 	inline int GetComCtlVersion()
 	{
 		// Load the Common Controls DLL
@@ -635,7 +635,7 @@ namespace Win32xx
 
   // Required for WinCE
   #ifndef lstrcpyn
-	
+
 	// Copies a specified number of characters from a source string into a buffer.
 	inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
 	{
@@ -646,9 +646,9 @@ namespace Win32xx
 		lpstrDest[nLen] = _T('\0');
 		return lpstrRet;
 	}
-	
-	
-  #endif // !lstrcpyn	
+
+
+  #endif // !lstrcpyn
 
 }
 

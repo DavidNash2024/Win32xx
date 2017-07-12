@@ -52,7 +52,7 @@
 // Messages defined by Win32++
 // WM_APP range: 0x8000 through 0xBFFF
 // Note: The numbers defined for window messages don't always need to be unique. View windows defined by users for example,
-//  could use other user defined messages with the same number as those below without issue. 
+//  could use other user defined messages with the same number as those below without issue.
 #define UWM_DOCKACTIVATE      (WM_APP + 0x3F01)	// Message - sent to dock ancestor when a docker is activated.
 #define UWM_DOCKDESTROYED     (WM_APP + 0x3F02)	// Message - posted when docker is destroyed
 #define UWM_DRAWRBBKGND       (WM_APP + 0x3F03)	// Message - sent by rebar to parent to perform background drawing. Return TRUE if handled.
@@ -118,10 +118,10 @@ namespace Win32xx
 		virtual BOOL AttachDlgItem(UINT nID, HWND hwndParent);
 		virtual void CenterWindow() const;
 		virtual HWND Create(HWND hParent = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, 
-		                      DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent, 
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName,
+		                      DWORD dwStyle, int x, int y, int nWidth, int nHeight, HWND hWndParent,
 							  HMENU nIDorHMenu, LPVOID lpParam = NULL);
-		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, 
+		virtual HWND CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName,
 		                      DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam = NULL);
 		virtual void Destroy();
 		virtual HWND Detach();
@@ -304,7 +304,7 @@ namespace Win32xx
 		virtual void PreRegisterClass(WNDCLASS& wc);
 		virtual BOOL PreTranslateMessage(MSG& Msg);
 		virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-		
+
 		// Not intended to be overridden
 		virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
