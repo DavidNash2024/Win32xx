@@ -7,7 +7,7 @@ New Features and Enhancements
   The CFileFind provides a means of finding one or more files that match
   a search string. Information can be extracted from each file found.
   
-* Add CFolderDialog class
+* Added CFolderDialog class
   This class wraps SHBrowseForFolder to display a dialog for choosing a folder.  
   
 * Updated the CFile class
