@@ -55,7 +55,7 @@
 //		if (fd.DoModal() == IDOK)
 //		{
 //			// Do something with the folder found
-//			TRACE(fd.GetFolderPath()); TRACE("\n");
+//			MessageBox(fd.GetFolderPath(), _T("Folder Chosen"), MB_OK);
 //		}
 //
 //		// Release the memory allocated for pidlRoot.
@@ -221,7 +221,7 @@ namespace Win32xx
 
 
 	// Returns the path of the selected folder.
-	CString CFolderDialog::GetFolderPath() const
+	inline CString CFolderDialog::GetFolderPath() const
 	{
 		CString str;
 		SHGetPathFromIDList(m_vPidl.back(), str.GetBuffer(MAX_PATH));
