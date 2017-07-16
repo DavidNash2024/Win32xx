@@ -1462,7 +1462,7 @@ namespace Win32xx
 	inline HICON CWnd::GetIcon(BOOL IsBigIcon) const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HICON>(SendMessage(WM_GETICON, (WPARAM)IsBigIcon, 0));
+		return reinterpret_cast<HICON>(SendMessage(WM_GETICON, IsBigIcon, 0));
 	}
 
 
@@ -1902,7 +1902,7 @@ namespace Win32xx
 	inline void CWnd::SetFont(HFONT hFont, BOOL Redraw /* = TRUE*/) const
 	{
 		assert(IsWindow());
-		SendMessage(WM_SETFONT, (WPARAM)hFont, (LPARAM)Redraw);
+		SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(hFont), Redraw);
 	}
 
 
@@ -1910,7 +1910,7 @@ namespace Win32xx
 	inline HICON CWnd::SetIcon(HICON hIcon, BOOL IsBigIcon) const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HICON>(SendMessage(WM_SETICON, (WPARAM)IsBigIcon, (LPARAM)hIcon));
+		return reinterpret_cast<HICON>(SendMessage(WM_SETICON, IsBigIcon, reinterpret_cast<LPARAM>(hIcon)));
 	}
 
 
@@ -1936,7 +1936,7 @@ namespace Win32xx
 	inline BOOL CWnd::SetRedraw(BOOL Redraw /*= TRUE*/) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, (WPARAM)Redraw, 0L));
+		return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, Redraw, 0L));
 	}
 
 
@@ -2289,7 +2289,7 @@ namespace Win32xx
 	inline void CWnd::Print(HDC hDC, DWORD dwFlags) const
 	{
 		assert(IsWindow());
-		SendMessage(*this, WM_PRINT, (WPARAM)hDC, (LPARAM)dwFlags);
+		SendMessage(*this, WM_PRINT, reinterpret_cast<WPARAM>(hDC), dwFlags);
 	}
 
 

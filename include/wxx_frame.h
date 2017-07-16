@@ -423,6 +423,8 @@ namespace Win32xx
 		virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
 		virtual void OnDestroy();
 		virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDrawRBBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
+		virtual LRESULT OnDrawSBBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual BOOL OnHelp();
 		virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -1231,7 +1233,8 @@ namespace Win32xx
 		if (IsReBarSupported() && m_UseReBar)
 		{
 			SIZE MaxSize = GetToolBar().GetMaxSize();
-			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)GetToolBar().GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(GetToolBar().GetHwnd()),
+				                    reinterpret_cast<LPARAM>(&MaxSize));
 
 			if (GetReBarTheme().UseThemes && GetReBarTheme().LockMenuBand)
 			{
@@ -1318,7 +1321,7 @@ namespace Win32xx
 					int nLength = static_cast<int>(GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L));
 					if (nLength > 0)
 					{
-						GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, (LPARAM)str.GetBuffer(nLength));
+						GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, reinterpret_cast<LPARAM>(str.GetBuffer(nLength)));
 						str.ReleaseBuffer();
 					}
 
@@ -1377,10 +1380,10 @@ namespace Win32xx
 						DWORD dwTBStyle = (DWORD)pTB->SendMessage(TB_GETSTYLE, 0L, 0L);
 						int nStyle = pTB->GetButtonStyle(dwItem);
 
-						int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, (WPARAM) dwItem, 0L));
+						int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, dwItem, 0L));
 						TBBUTTON tbb;
 						ZeroMemory(&tbb, sizeof(tbb));
-						pTB->SendMessage(TB_GETBUTTON, (WPARAM)nButton, (LPARAM)&tbb);
+						pTB->SendMessage(TB_GETBUTTON, nButton, reinterpret_cast<LPARAM>(&tbb));
 						int iImage = static_cast<int>(tbb.iBitmap);
 
 						// Calculate text size.
@@ -1389,7 +1392,7 @@ namespace Win32xx
 						if (pTB->HasText())	// Does any button have text?
 						{
 							dcDraw.SelectObject(pTB->GetFont());
-							LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, (LPARAM)str.GetBuffer(MAX_MENU_STRING));
+							LRESULT lr = pTB->SendMessage(TB_GETBUTTONTEXT, dwItem, reinterpret_cast<LPARAM>(str.GetBuffer(MAX_MENU_STRING)));
 							str.ReleaseBuffer();
 							if (lr> 0)
 							{
@@ -2438,6 +2441,34 @@ namespace Win32xx
 	}
 
 
+	// Called when the Rebar's background is redrawn.
+	template<class T>
+	inline LRESULT CFrameT<T>::OnDrawRBBkgnd(UINT, WPARAM wParam, LPARAM lParam)
+	{
+		CDC* pDC = reinterpret_cast<CDC*>(wParam);
+		assert(dynamic_cast<CDC*>(pDC));
+
+		CReBar* pReBar = reinterpret_cast<CReBar*>(lParam);
+		assert(dynamic_cast<CReBar*>(pReBar));
+
+		return DrawReBarBkgnd(*pDC, *pReBar);
+	}
+
+
+	// Called when the StatusBar's background is redrawn.
+	template<class T>
+	inline LRESULT CFrameT<T>::OnDrawSBBkgnd(UINT, WPARAM wParam, LPARAM lParam)
+	{
+		CDC* pDC = reinterpret_cast<CDC*>(wParam);
+		assert(dynamic_cast<CDC*>(pDC));
+
+		CStatusBar* pStatusBar = reinterpret_cast<CStatusBar*>(lParam);
+		assert(dynamic_cast<CStatusBar*>(pStatusBar));
+
+		return DrawStatusBarBkgnd(*pDC, *pStatusBar);
+	}
+
+
 	// Called to display help (WM_HELP received or selected via menu).
 	template <class T>
 	inline BOOL CFrameT<T>::OnHelp()
@@ -2489,7 +2520,7 @@ namespace Win32xx
 
 			// Send message for menu updates
 			UINT menuItem = Menu.GetMenuItemID(i);
-			T::SendMessage(UWM_UPDATECOMMAND, (WPARAM)menuItem, 0L);
+			T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0L);
 
 			// Specify owner-draw for the menu item type
 			if (Menu.GetMenuItemInfo(i, mii, TRUE))
@@ -3486,7 +3517,8 @@ namespace Win32xx
 		if (GetReBar().IsWindow())
 		{
 			SIZE MaxSize = ToolBar.GetMaxSize();
-			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)ToolBar.GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(ToolBar.GetHwnd()),
+				reinterpret_cast<LPARAM>(&MaxSize));
 		}
 	}
 
@@ -3520,7 +3552,8 @@ namespace Win32xx
 		if (GetReBar().IsWindow())
 		{
 			SIZE MaxSize = ToolBar.GetMaxSize();
-			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)ToolBar.GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(ToolBar.GetHwnd()),
+				reinterpret_cast<LPARAM>(&MaxSize));
 		}
 	}
 
@@ -3553,7 +3586,8 @@ namespace Win32xx
 		if (GetReBar().IsWindow())
 		{
 			SIZE MaxSize = ToolBar.GetMaxSize();
-			GetReBar().SendMessage(UWM_TBRESIZE, (WPARAM)ToolBar.GetHwnd(), (LPARAM)&MaxSize);
+			GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(ToolBar.GetHwnd()),
+				reinterpret_cast<LPARAM>(&MaxSize));
 		}
 	}
 
@@ -3665,14 +3699,14 @@ namespace Win32xx
 		if (Show)
 		{
 			if (IsReBarUsed())
-				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), TRUE);
+				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
 			else
 				T::SetMenu(m_Menu);
 		}
 		else
 		{
 			if (IsReBarUsed())
-				GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetMenuBar()), FALSE);
+				GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), FALSE);
 			else
 				T::SetMenu(NULL);
 		}
@@ -3719,14 +3753,14 @@ namespace Win32xx
 			if (Show)
 			{
 				if (IsReBarUsed())
-					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), TRUE);
+					GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
 				else
 					GetToolBar().ShowWindow(SW_SHOW);
 			}
 			else
 			{
 				if (IsReBarUsed())
-					GetReBar().SendMessage(RB_SHOWBAND, (WPARAM)GetReBar().GetBand(GetToolBar()), FALSE);
+					GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
 				else
 					GetToolBar().ShowWindow(SW_HIDE);
 			}
@@ -3912,8 +3946,8 @@ namespace Win32xx
 		case UWM_GETRBTHEME:		return reinterpret_cast<LRESULT>(&GetReBarTheme());
 		case UWM_GETSBTHEME:		return reinterpret_cast<LRESULT>(&GetStatusBarTheme());
 		case UWM_GETTBTHEME:		return reinterpret_cast<LRESULT>(&GetToolBarTheme());
-		case UWM_DRAWRBBKGND:       return DrawReBarBkgnd(*((CDC*) wParam), *((CReBar*) lParam));
-		case UWM_DRAWSBBKGND:       return DrawStatusBarBkgnd(*((CDC*) wParam), *((CStatusBar*) lParam));
+		case UWM_DRAWRBBKGND:       return OnDrawRBBkgnd(uMsg, wParam, lParam);
+		case UWM_DRAWSBBKGND:       return OnDrawSBBkgnd(uMsg, wParam, lParam);
 		case UWM_GETCFRAMET:		return reinterpret_cast<LRESULT>(this);
 
 		} // switch uMsg

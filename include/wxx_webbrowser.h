@@ -681,10 +681,10 @@ namespace Win32xx
 		WideCharToMultiByte(CP_ACP, 0, pszStatusText, -1, status, MAX_PATH, NULL, NULL);
 
 		if (IsWindow(m_hWndStatus))
-			SendMessage(m_hWndStatus, SB_SETTEXT, (WPARAM)0, (LPARAM)status);
+			SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(status));
 	#else
 		if (IsWindow(m_hWndStatus))
-			SendMessage(m_hWndStatus, SB_SETTEXT, (WPARAM)0, (LPARAM)pszStatusText);
+			SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(pszStatusText));
 	#endif
 
 		return S_OK;

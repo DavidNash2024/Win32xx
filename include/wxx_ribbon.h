@@ -348,6 +348,8 @@ namespace Win32xx
 			m_pRibbonFramework->Release();
 			m_pRibbonFramework = NULL;
 		}
+
+		::CoUninitialize();
 	}
 
 

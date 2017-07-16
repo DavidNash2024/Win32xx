@@ -716,7 +716,7 @@ namespace Win32xx
 		m_DragPos.ptPos = GetCursorPos();
 		m_DragPos.ptPos.x += 1;
 		m_DragPos.pDocker = m_pDocker;
-		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&m_DragPos);
+		GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&m_DragPos));
 	}
 
 	inline void CDocker::CDockBar::SetColor(COLORREF color)
@@ -1224,7 +1224,7 @@ namespace Win32xx
 		DragPos.pDocker = m_pDocker;
 
 		// Send a DragPos notification to the docker
-		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
+		GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&DragPos));
 	}
 
 	inline void CDocker::CDockClient::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF Foregnd2, COLORREF Backgnd2, COLORREF PenColor)
@@ -2447,7 +2447,7 @@ namespace Win32xx
 
 		m_hDockUnderPoint = 0;
 		m_DockPoint = pt;
-		EnumWindows(EnumWindowsProc, (LPARAM)this);
+		EnumWindows(EnumWindowsProc, reinterpret_cast<LPARAM>(this));
 
 		// Step 2: Find the docker child whose view window has the point
 		CDocker* pDockTarget = NULL;
@@ -3072,7 +3072,7 @@ namespace Win32xx
 
 		// Post a docker destroyed message
 		if ( GetDockAncestor()->IsWindow() )
-			GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, (WPARAM)this, 0L);
+			GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, reinterpret_cast<WPARAM>(this), 0L);
 	}
 
 
@@ -3801,7 +3801,7 @@ namespace Win32xx
 		CDocker* pDocker = GetDockUnderDragPoint(DragPos.ptPos);
 
 		if (pDocker)
-			pDocker->SendMessage(WM_NOTIFY, 0L, (LPARAM)&DragPos);
+			pDocker->SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&DragPos));
 		else
 		{
 			if (GetDockHint().IsWindow())
@@ -4053,12 +4053,12 @@ namespace Win32xx
 		HWND hFrame = GetDockAncestor()->GetAncestor();
 		assert(hFrame);
 
-		::SendMessage(hFrame, WM_NOTIFY, (WPARAM)m_nDockID, (LPARAM)&nmhdr);
+		::SendMessage(hFrame, WM_NOTIFY, m_nDockID, reinterpret_cast<LPARAM>(&nmhdr));
 
 		// Initiate the window move
 		SetCursorPos(pt.x, pt.y);
 		ScreenToClient(pt);
-		PostMessage(WM_SYSCOMMAND, (WPARAM)(SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
+		PostMessage(WM_SYSCOMMAND, (SC_MOVE|0x0002), MAKELPARAM(pt.x, pt.y));
 	}
 
 

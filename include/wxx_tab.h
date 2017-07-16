@@ -284,7 +284,7 @@ namespace Win32xx
 	{
 		for (UINT u = 0; u < m_vItems.size(); ++u)
 		{
-			SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, (LPARAM) m_vItems[u].c_str());
+			SendDlgItemMessage(IDC_LIST, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(m_vItems[u].c_str()));
 		}
 
 		return true;
@@ -309,8 +309,9 @@ namespace Win32xx
 	// Definitions for the CTab class
 	//
 
-	inline CTab::CTab() : m_pActiveView(NULL), m_IsShowingButtons(FALSE), m_IsTracking(FALSE), m_IsClosePressed(FALSE),
-							m_IsListPressed(FALSE), m_IsListMenuActive(FALSE), m_nTabHeight(0)
+	inline CTab::CTab() : m_pActiveView(NULL), m_IsShowingButtons(FALSE), m_IsTracking(FALSE), 
+	                      m_IsClosePressed(FALSE), m_IsListPressed(FALSE), m_IsListMenuActive(FALSE),
+	                      m_nTabHeight(0)
 	{
 	}
 
@@ -364,7 +365,7 @@ namespace Win32xx
 	inline CWnd* CTab::AddTabPage(CWnd* pView, LPCTSTR szTabText, int idIcon, UINT idTab /* = 0*/)
 	{
 		HICON hIcon = reinterpret_cast<HICON>(LoadImage(GetApp().GetResourceHandle(),
-			                                  MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED));
+		                                  MAKEINTRESOURCE(idIcon), IMAGE_ICON, 0, 0, LR_SHARED));
 		return AddTabPage(pView, szTabText, hIcon, idTab);
 	}
 
@@ -821,7 +822,7 @@ namespace Win32xx
 		nmhdr.code = UMN_TABCHANGED;
 
 		if (GetParent().IsWindow())
-			GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+			GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&nmhdr));
 	}
 
 
@@ -832,7 +833,7 @@ namespace Win32xx
 		ZeroMemory(&nmhdr, sizeof(nmhdr));
 		nmhdr.hwndFrom = *this;
 		nmhdr.code = UWN_TABDRAGGED;
-		GetParent().SendMessage(WM_NOTIFY, 0L, (LPARAM)&nmhdr);
+		GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&nmhdr));
 	}
 
 
@@ -847,7 +848,7 @@ namespace Win32xx
 		TabNMHDR.nPage = nPage;
 
 		// The default return value is zero
-		return GetParent().SendMessage(WM_NOTIFY, idCtrl, (LPARAM)&TabNMHDR);
+		return GetParent().SendMessage(WM_NOTIFY, idCtrl, reinterpret_cast<LPARAM>(&TabNMHDR));
 	}
 
 
@@ -1816,7 +1817,8 @@ namespace Win32xx
 
 		// Fake a WM_MOUSEACTIVATE to propagate focus change to dockers
 		if (IsWindow())
-			GetParent().SendMessage(WM_MOUSEACTIVATE, (WPARAM)GetAncestor().GetHwnd(), MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
+			GetParent().SendMessage(WM_MOUSEACTIVATE, reinterpret_cast<WPARAM>(GetAncestor().GetHwnd()), 
+			                           MAKELPARAM(HTCLIENT,WM_LBUTTONDOWN));
 
 		return pView;
 	}
@@ -2125,11 +2127,13 @@ namespace Win32xx
 
 			try
 			{
-				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(HKEY_CURRENT_USER, KeyName, 0, NULL, REG_OPTION_NON_VOLATILE,
+                                                     KEY_ALL_ACCESS, NULL, &hKey, NULL))
 					throw (CUserException(_T("RegCreateKeyEx Failed")));
 
 				RegDeleteKey(hKey, _T("MDI Children"));
-				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
+				if (ERROR_SUCCESS != RegCreateKeyEx(hKey, _T("MDI Children"), 0, NULL, REG_OPTION_NON_VOLATILE,
+                                                     KEY_ALL_ACCESS, NULL, &hKeyMDIChild, NULL))
 					throw (CUserException(_T("RegCreateKeyEx Failed")));
 
 				for (int i = 0; i < GetMDIChildCount(); ++i)
@@ -2143,7 +2147,10 @@ namespace Win32xx
 
 					SubKeyName.Format(_T("Text%d"), i);
 					CString TabText = GetTab().GetTabPageInfo(i).TabText;
-					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_SZ, reinterpret_cast<const BYTE*>(TabText.c_str()), (1 + TabText.GetLength() )*sizeof(TCHAR)))
+					if (ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_SZ, 
+					                                       reinterpret_cast<const BYTE*>(TabText.c_str()),
+					                                       (1 + TabText.GetLength() )*sizeof(TCHAR))
+					                                       )
 						throw (CUserException(_T("RegSetValueEx Failed")));
 				}
 

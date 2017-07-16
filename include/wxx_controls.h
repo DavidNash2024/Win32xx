@@ -328,7 +328,7 @@ namespace Win32xx
 
 	private:
 		CDateTime(const CDateTime&);				// Disable copy construction
-		CDateTime& operator = (const CDateTime&);	// Disable assignment operator								// Used by GetMonthCalFont
+		CDateTime& operator = (const CDateTime&);	// Disable assignment operator
 	};
 
 
@@ -591,7 +591,7 @@ namespace Win32xx
 	inline int  CComboBox::AddString(LPCTSTR lpszString) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_ADDSTRING, 0L, (LPARAM)lpszString));
+		return static_cast<int>(SendMessage(CB_ADDSTRING, 0L, reinterpret_cast<LPARAM>(lpszString)));
 	}
 
 
@@ -623,7 +623,7 @@ namespace Win32xx
 	inline int  CComboBox::DeleteString(int nIndex) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_DELETESTRING, (WPARAM)nIndex, 0L));
+		return static_cast<int>(SendMessage(CB_DELETESTRING, nIndex, 0L));
 	}
 
 
@@ -632,7 +632,7 @@ namespace Win32xx
 	inline int  CComboBox::Dir(UINT attr, LPCTSTR lpszWildCard ) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_DIR, (WPARAM)attr, (LPARAM)lpszWildCard));
+		return static_cast<int>(SendMessage(CB_DIR, attr, reinterpret_cast<LPARAM>(lpszWildCard)));
 	}
 
 
@@ -641,7 +641,7 @@ namespace Win32xx
 	inline int  CComboBox::FindString(int nIndexStart, LPCTSTR lpszString) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_FINDSTRING, (WPARAM)nIndexStart, (LPARAM)lpszString));
+		return static_cast<int>(SendMessage(CB_FINDSTRING, nIndexStart, reinterpret_cast<LPARAM>(lpszString)));
 	}
 
 
@@ -649,7 +649,7 @@ namespace Win32xx
 	inline int  CComboBox::FindStringExact(int nIndexStart, LPCTSTR lpszString) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_FINDSTRINGEXACT, (WPARAM)nIndexStart, (LPARAM)lpszString));
+		return static_cast<int>(SendMessage(CB_FINDSTRINGEXACT, nIndexStart, reinterpret_cast<LPARAM>(lpszString)));
 	}
 
 
@@ -674,7 +674,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		CRect rc;
-		SendMessage(CB_GETDROPPEDCONTROLRECT, 0L, (LPARAM)&rc);
+		SendMessage(CB_GETDROPPEDCONTROLRECT, 0L, reinterpret_cast<LPARAM>(&rc));
 		return rc;
 	}
 
@@ -726,7 +726,7 @@ namespace Win32xx
 	inline DWORD CComboBox::GetItemData(int nIndex) const
 	{
 		assert(IsWindow());
-		return static_cast<DWORD>(SendMessage(CB_GETITEMDATA, (WPARAM)nIndex, 0L));
+		return static_cast<DWORD>(SendMessage(CB_GETITEMDATA, nIndex, 0L));
 	}
 
 
@@ -734,7 +734,7 @@ namespace Win32xx
 	inline int  CComboBox::GetItemHeight(int nIndex) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_GETITEMHEIGHT, (WPARAM)nIndex, 0L));
+		return static_cast<int>(SendMessage(CB_GETITEMHEIGHT, nIndex, 0L));
 	}
 
 
@@ -742,7 +742,7 @@ namespace Win32xx
 	inline int  CComboBox::GetLBText(int nIndex, LPTSTR lpszText) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_GETLBTEXT, (WPARAM)nIndex, (LPARAM)lpszText));
+		return static_cast<int>(SendMessage(CB_GETLBTEXT, nIndex, reinterpret_cast<LPARAM>(lpszText)));
 	}
 
 
@@ -750,7 +750,7 @@ namespace Win32xx
 	inline int  CComboBox::GetLBTextLen(int nIndex) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_GETLBTEXTLEN, (WPARAM)nIndex, 0L));
+		return static_cast<int>(SendMessage(CB_GETLBTEXTLEN, nIndex, 0L));
 	}
 
 
@@ -775,7 +775,7 @@ namespace Win32xx
 	inline int  CComboBox::InitStorage(int nItems, int nBytes) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_INITSTORAGE, (WPARAM)nItems, (LPARAM)nBytes));
+		return static_cast<int>(SendMessage(CB_INITSTORAGE, nItems, nBytes));
 	}
 
 
@@ -784,7 +784,7 @@ namespace Win32xx
 	inline int  CComboBox::InsertString(int nIndex, LPCTSTR lpszString) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_INSERTSTRING, (WPARAM)nIndex, (LPARAM)lpszString));
+		return static_cast<int>(SendMessage(CB_INSERTSTRING, nIndex, reinterpret_cast<LPARAM>(lpszString)));
 	}
 
 
@@ -800,7 +800,7 @@ namespace Win32xx
 	inline void CComboBox::LimitText(int nMaxChars) const
 	{
 		assert(IsWindow());
-		SendMessage(CB_LIMITTEXT, (WPARAM)nMaxChars, 0L);
+		SendMessage(CB_LIMITTEXT, nMaxChars, 0L);
 	}
 
 
@@ -817,7 +817,7 @@ namespace Win32xx
 	inline int  CComboBox::SelectString(int nStartAfter, LPCTSTR lpszString) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SELECTSTRING, (WPARAM)nStartAfter, (LPARAM)lpszString));
+		return static_cast<int>(SendMessage(CB_SELECTSTRING, nStartAfter, reinterpret_cast<LPARAM>(lpszString)));
 	}
 
 
@@ -825,7 +825,7 @@ namespace Win32xx
 	inline int  CComboBox::SetCurSel(int nIndex) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETCURSEL, (WPARAM)nIndex, 0L));
+		return static_cast<int>(SendMessage(CB_SETCURSEL, nIndex, 0L));
 	}
 
 
@@ -834,7 +834,7 @@ namespace Win32xx
 	inline int  CComboBox::SetDroppedWidth(int nWidth) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETDROPPEDWIDTH, (WPARAM)nWidth, 0L));
+		return static_cast<int>(SendMessage(CB_SETDROPPEDWIDTH, nWidth, 0L));
 	}
 
 
@@ -842,7 +842,7 @@ namespace Win32xx
 	inline BOOL CComboBox::SetEditSel(int nStartChar, int nEndChar) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(CB_SETEDITSEL, 0L, (LPARAM)MAKELONG(nStartChar,nEndChar)));
+		return static_cast<BOOL>(SendMessage(CB_SETEDITSEL, 0L, MAKELONG(nStartChar,nEndChar)));
 	}
 
 
@@ -851,7 +851,7 @@ namespace Win32xx
 	inline int  CComboBox::SetExtendedUI(BOOL IsExtended) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETEXTENDEDUI, (WPARAM)IsExtended, 0L));
+		return static_cast<int>(SendMessage(CB_SETEXTENDEDUI, IsExtended, 0L));
 	}
 
 
@@ -859,7 +859,7 @@ namespace Win32xx
 	inline void CComboBox::SetHorizontalExtent(UINT nExtent ) const
 	{
 		assert(IsWindow());
-		SendMessage(CB_SETHORIZONTALEXTENT, (WPARAM)nExtent, 0L);
+		SendMessage(CB_SETHORIZONTALEXTENT, nExtent, 0L);
 	}
 
 
@@ -867,7 +867,7 @@ namespace Win32xx
 	inline int  CComboBox::SetItemData(int nIndex, DWORD dwItemData) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETITEMDATA, (WPARAM)nIndex, (LPARAM)dwItemData));
+		return static_cast<int>(SendMessage(CB_SETITEMDATA, nIndex, dwItemData));
 	}
 
 
@@ -875,7 +875,7 @@ namespace Win32xx
 	inline int  CComboBox::SetItemHeight(int nIndex, UINT cyItemHeight) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETITEMHEIGHT, (WPARAM)nIndex, (LPARAM)cyItemHeight));
+		return static_cast<int>(SendMessage(CB_SETITEMHEIGHT, nIndex, cyItemHeight));
 	}
 
 
@@ -883,7 +883,7 @@ namespace Win32xx
 	inline LCID CComboBox::SetLocale( LCID NewLocale ) const
 	{
 		assert(IsWindow());
-		return static_cast<LCID>(SendMessage(CB_SETLOCALE, (WPARAM)NewLocale, 0L));
+		return static_cast<LCID>(SendMessage(CB_SETLOCALE, NewLocale, 0L));
 	}
 
 
@@ -891,7 +891,7 @@ namespace Win32xx
 	inline int  CComboBox::SetTopIndex(int nIndex) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CB_SETTOPINDEX, (WPARAM)nIndex, 0L));
+		return static_cast<int>(SendMessage(CB_SETTOPINDEX, nIndex, 0L));
 	}
 
 
@@ -899,7 +899,7 @@ namespace Win32xx
 	inline void CComboBox::ShowDropDown(BOOL Show) const
 	{
 		assert(IsWindow());
-		SendMessage(CB_SHOWDROPDOWN, (WPARAM)Show, 0L);
+		SendMessage(CB_SHOWDROPDOWN, Show, 0L);
 	}
 
 
@@ -911,7 +911,7 @@ namespace Win32xx
 	inline int  CComboBoxEx::DeleteItem(int nIndex ) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CBEM_DELETEITEM, (WPARAM)nIndex, 0L));
+		return static_cast<int>(SendMessage(CBEM_DELETEITEM, nIndex, 0L));
 	}
 
 
@@ -952,7 +952,7 @@ namespace Win32xx
 	inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM& CBItem) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0L, (LPARAM)&CBItem));
+		return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)));
 	}
 
 
@@ -968,7 +968,7 @@ namespace Win32xx
 	inline int CComboBoxEx::InsertItem(const COMBOBOXEXITEM& CBItem) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)&CBItem));
+		return static_cast<int>(SendMessage(CBEM_INSERTITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)));
 	}
 
 
@@ -976,7 +976,7 @@ namespace Win32xx
 	inline DWORD CComboBoxEx::SetExtendedStyle(DWORD dwExMask, DWORD dwExStyles ) const
 	{
 		assert(IsWindow());
-		return static_cast<DWORD>(SendMessage(CBEM_SETEXTENDEDSTYLE, (WPARAM)dwExMask, (LPARAM)dwExStyles));
+		return static_cast<DWORD>(SendMessage(CBEM_SETEXTENDEDSTYLE, dwExMask, dwExStyles));
 	}
 
 
@@ -984,7 +984,8 @@ namespace Win32xx
 	inline CImageList CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
 	{
 		assert(IsWindow());
-		HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0L, (LPARAM)himlNew));
+		HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0L, 
+		                                               reinterpret_cast<LPARAM>(himlNew)));
 		return CImageList(himl);
 	}
 
@@ -993,7 +994,7 @@ namespace Win32xx
 	inline BOOL CComboBoxEx::SetItem(const COMBOBOXEXITEM& CBItem) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0L, (LPARAM)&CBItem));
+		return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)));
 	}
 
 	////////////////////////////////////////
@@ -1159,7 +1160,7 @@ namespace Win32xx
 	inline void CHotKey::SetHotKey(DWORD dwKey) const
 	{
 		assert(IsWindow());
-		SendMessage(HKM_SETHOTKEY, (WPARAM)dwKey, 0L);
+		SendMessage(HKM_SETHOTKEY, static_cast<WPARAM>(dwKey), 0L);
 	}
 
 
@@ -1222,7 +1223,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		CRect rc;
-		SendMessage(HDM_GETITEMRECT, (WPARAM)nIndex, (WPARAM)&rc);
+		SendMessage(HDM_GETITEMRECT, static_cast<WPARAM>(nIndex), reinterpret_cast<LPARAM>(&rc));
 		return rc;
 	}
 
@@ -1325,7 +1326,7 @@ namespace Win32xx
 	inline int CHeader::EditFilter(int nColumn, BOOL DiscardChanges) const
 	{
 		assert(IsWindow());
-		return Header_EditFilter(*this, nColumn, LPARAM MAKELPARAM(DiscardChanges, 0));
+		return Header_EditFilter(*this, nColumn, MAKELPARAM(DiscardChanges, 0));
 	}
 
 
@@ -1399,7 +1400,7 @@ namespace Win32xx
 	inline int CIPAddress::GetAddress(DWORD& dwAddress) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(IPM_GETADDRESS, 0L, (LPARAM)&dwAddress));
+		return static_cast<int>(SendMessage(IPM_GETADDRESS, 0L, reinterpret_cast<LPARAM>(&dwAddress)));
 	}
 
 
@@ -1415,7 +1416,7 @@ namespace Win32xx
 	inline void CIPAddress::SetAddress(BYTE nField0, BYTE nField1, BYTE nField2, BYTE nField3) const
 	{
 		assert(IsWindow());
-		SendMessage(IPM_SETADDRESS, 0L, (LPARAM)MAKEIPADDRESS(nField0, nField1, nField2, nField3));
+		SendMessage(IPM_SETADDRESS, 0L, MAKEIPADDRESS(nField0, nField1, nField2, nField3));
 	}
 
 
@@ -1423,7 +1424,7 @@ namespace Win32xx
 	inline void CIPAddress::SetAddress(DWORD dwAddress) const
 	{
 		assert(IsWindow());
-		SendMessage(IPM_SETADDRESS, 0L, (LPARAM)dwAddress);
+		SendMessage(IPM_SETADDRESS, 0L, dwAddress);
 	}
 
 
@@ -1432,7 +1433,7 @@ namespace Win32xx
 	inline void CIPAddress::SetFieldFocus(WORD nField) const
 	{
 		assert(IsWindow());
-		SendMessage(IPM_SETFOCUS, (WPARAM)nField, 0L);
+		SendMessage(IPM_SETFOCUS, nField, 0L);
 	}
 
 
@@ -1440,7 +1441,7 @@ namespace Win32xx
 	inline void CIPAddress::SetFieldRange(int nField, BYTE nLower, BYTE nUpper) const
 	{
 		assert(IsWindow());
-		SendMessage(IPM_SETRANGE, MAKEIPRANGE(nLower, nUpper), (LPARAM)nField);
+		SendMessage(IPM_SETRANGE, MAKEIPRANGE(nLower, nUpper), nField);
 	}
 
 
@@ -1669,7 +1670,7 @@ namespace Win32xx
 	inline int CProgressBar::GetRange(BOOL WhichLimit, const PBRANGE& PBRange) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)WhichLimit, (LPARAM) &PBRange));
+		return static_cast<int>(SendMessage(PBM_GETRANGE, WhichLimit, reinterpret_cast<LPARAM>(&PBRange)));
 	}
 
 
@@ -1677,7 +1678,7 @@ namespace Win32xx
 	inline int CProgressBar::GetRange(BOOL WhichLimit) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_GETRANGE, (WPARAM)WhichLimit, (LPARAM) 0L));
+		return static_cast<int>(SendMessage(PBM_GETRANGE, WhichLimit, 0L));
 	}
 
 
@@ -1686,7 +1687,7 @@ namespace Win32xx
 	inline int CProgressBar::OffsetPos(int nIncrement) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_DELTAPOS, (WPARAM)nIncrement, 0L));
+		return static_cast<int>(SendMessage(PBM_DELTAPOS, nIncrement, 0L));
 	}
 
 
@@ -1694,7 +1695,7 @@ namespace Win32xx
 	inline int CProgressBar::SetPos(int nNewPos) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_SETPOS, (WPARAM)nNewPos, 0L));
+		return static_cast<int>(SendMessage(PBM_SETPOS, nNewPos, 0L));
 	}
 
 
@@ -1702,7 +1703,7 @@ namespace Win32xx
 	inline int CProgressBar::SetRange(short nMinRange, short nMaxRange) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_SETRANGE, 0L, (LPARAM) MAKELPARAM (nMinRange, nMaxRange)));
+		return static_cast<int>(SendMessage(PBM_SETRANGE, 0L, MAKELPARAM(nMinRange, nMaxRange)));
 	}
 
 
@@ -1710,7 +1711,7 @@ namespace Win32xx
 	inline int CProgressBar::SetStep(int nStepInc) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(PBM_SETSTEP, (WPARAM)nStepInc, 0L));
+		return static_cast<int>(SendMessage(PBM_SETSTEP, nStepInc, 0L));
 	}
 
 
@@ -1809,7 +1810,7 @@ namespace Win32xx
 	inline void CSlider::ClearTics(BOOL Redraw) const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_CLEARTICS, (WPARAM)Redraw, 0L);
+		SendMessage(TBM_CLEARTICS, Redraw, 0L);
 	}
 
 
@@ -1817,7 +1818,7 @@ namespace Win32xx
 	inline HWND CSlider::GetBuddy(BOOL fLocation) const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HWND>(SendMessage(TBM_GETBUDDY, (WPARAM)fLocation, 0L));
+		return reinterpret_cast<HWND>(SendMessage(TBM_GETBUDDY, fLocation, 0L));
 	}
 
 
@@ -1826,7 +1827,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		CRect rc;
-		SendMessage(TBM_GETCHANNELRECT, 0L, (LPARAM)&rc);
+		SendMessage(TBM_GETCHANNELRECT, 0L,reinterpret_cast<LPARAM>(&rc));
 		return rc;
 	}
 
@@ -1909,7 +1910,7 @@ namespace Win32xx
 	inline CRect CSlider::GetThumbRect() const
 	{
 		CRect rc;
-		SendMessage(TBM_GETTHUMBRECT, 0L, (LPARAM)&rc);
+		SendMessage(TBM_GETTHUMBRECT, 0L, reinterpret_cast<LPARAM>(&rc));
 		return rc;
 	}
 
@@ -1918,7 +1919,7 @@ namespace Win32xx
 	inline int CSlider::GetTic(int nTic ) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(TBM_GETTIC, (WPARAM)nTic, 0L));
+		return static_cast<int>(SendMessage(TBM_GETTIC, nTic, 0L));
 	}
 
 
@@ -1926,7 +1927,7 @@ namespace Win32xx
 	inline int  CSlider::GetTicPos(int nTic) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(TBM_GETTICPOS, (WPARAM)nTic, 0L));
+		return static_cast<int>(SendMessage(TBM_GETTICPOS, nTic, 0L));
 	}
 
 
@@ -1942,7 +1943,7 @@ namespace Win32xx
 	inline HWND CSlider::SetBuddy(HWND hBuddy, BOOL fLocation /*= TRUE*/ ) const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HWND>(SendMessage(TBM_SETBUDDY, (WPARAM)fLocation, (LPARAM)hBuddy));
+		return reinterpret_cast<HWND>(SendMessage(TBM_SETBUDDY, fLocation, reinterpret_cast<LPARAM>(hBuddy)));
 	}
 
 
@@ -1951,7 +1952,7 @@ namespace Win32xx
 	inline int  CSlider::SetLineSize(int nSize) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(TBM_SETLINESIZE, 0L, (LPARAM)nSize));
+		return static_cast<int>(SendMessage(TBM_SETLINESIZE, 0L, nSize));
 	}
 
 
@@ -1960,7 +1961,7 @@ namespace Win32xx
 	inline int  CSlider::SetPageSize(int nSize) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(TBM_SETPAGESIZE, 0L, (LPARAM)nSize));
+		return static_cast<int>(SendMessage(TBM_SETPAGESIZE, 0L, nSize));
 	}
 
 
@@ -1968,7 +1969,7 @@ namespace Win32xx
 	inline void CSlider::SetPos(int nPos, BOOL Redraw) const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETPOS, (WPARAM)Redraw, (LPARAM)nPos);
+		SendMessage(TBM_SETPOS, Redraw, nPos);
 	}
 
 
@@ -1976,7 +1977,7 @@ namespace Win32xx
 	inline void CSlider::SetRangeMax(int nMax, BOOL Redraw) const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETRANGEMAX, (WPARAM)Redraw, (LPARAM)nMax);
+		SendMessage(TBM_SETRANGEMAX, Redraw, nMax);
 	}
 
 
@@ -1984,7 +1985,7 @@ namespace Win32xx
 	inline void CSlider::SetRangeMin(int nMin, BOOL Redraw) const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETRANGEMIN, (WPARAM)Redraw, (LPARAM)nMin);
+		SendMessage(TBM_SETRANGEMIN, Redraw, nMin);
 	}
 
 
@@ -1992,7 +1993,7 @@ namespace Win32xx
 	inline void CSlider::SetSelection(int nMin, int nMax, BOOL Redraw) const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETSEL, (WPARAM)Redraw, (LPARAM)MAKELONG(nMax, nMin));
+		SendMessage(TBM_SETSEL, Redraw, MAKELONG(nMax, nMin));
 	}
 
 
@@ -2000,7 +2001,7 @@ namespace Win32xx
 	inline BOOL CSlider::SetTic(int nTic) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TBM_SETTIC, 0L, (LPARAM)nTic));
+		return static_cast<BOOL>(SendMessage(TBM_SETTIC, 0L, nTic));
 	}
 
 
@@ -2008,7 +2009,7 @@ namespace Win32xx
 	inline void CSlider::SetTicFreq(int nFreq)  const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETTICFREQ, (WPARAM)nFreq, 0L);
+		SendMessage(TBM_SETTICFREQ, nFreq, 0L);
 	}
 
 
@@ -2016,7 +2017,7 @@ namespace Win32xx
 	inline int  CSlider::SetTipSide(int nLocation) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(TBM_SETTIPSIDE, (WPARAM)nLocation, 0L));
+		return static_cast<int>(SendMessage(TBM_SETTIPSIDE, nLocation, 0L));
 	}
 
 
@@ -2024,7 +2025,7 @@ namespace Win32xx
 	inline void CSlider::SetToolTips(HWND hToolTip) const
 	{
 		assert(IsWindow());
-		SendMessage(TBM_SETTOOLTIPS, (WPARAM)hToolTip, 0L);
+		SendMessage(TBM_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0L);
 	}
 
 	////////////////////////////////////////
@@ -2035,7 +2036,7 @@ namespace Win32xx
 	inline int CSpinButton::GetAccel(int cAccels, LPUDACCEL paAccels) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(UDM_GETACCEL, (WPARAM)cAccels, (LPARAM)paAccels));
+		return static_cast<int>(SendMessage(UDM_GETACCEL, cAccels, reinterpret_cast<LPARAM>(paAccels)));
 	}
 
 
@@ -2089,7 +2090,7 @@ namespace Win32xx
 	inline BOOL CSpinButton::SetAccel(int cAccels, LPUDACCEL paAccels) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(UDM_SETACCEL, (WPARAM)cAccels, (LPARAM)paAccels));
+		return static_cast<BOOL>(SendMessage(UDM_SETACCEL, cAccels, reinterpret_cast<LPARAM>(paAccels)));
 	}
 
 
@@ -2097,7 +2098,7 @@ namespace Win32xx
 	inline int CSpinButton::SetBase(int nBase) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(UDM_SETBASE, (WPARAM)nBase, 0L));
+		return static_cast<int>(SendMessage(UDM_SETBASE, nBase, 0L));
 	}
 
 
@@ -2105,7 +2106,7 @@ namespace Win32xx
 	inline HWND CSpinButton::SetBuddy(HWND hBuddy) const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HWND>(SendMessage(UDM_SETBUDDY, (WPARAM)hBuddy, 0L));
+		return reinterpret_cast<HWND>(SendMessage(UDM_SETBUDDY, reinterpret_cast<WPARAM>(hBuddy), 0L));
 	}
 
 
@@ -2113,7 +2114,7 @@ namespace Win32xx
 	inline int CSpinButton::SetPos(int nPos) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(UDM_SETPOS, 0L, (LPARAM)MAKELONG ((short) nPos, 0)));
+		return static_cast<int>(SendMessage(UDM_SETPOS, 0L, MAKELONG ((short) nPos, 0)));
 	}
 
 
@@ -2121,7 +2122,7 @@ namespace Win32xx
 	inline void CSpinButton::SetRange(int nLower, int nUpper) const
 	{
 		assert(IsWindow());
-		SendMessage(UDM_SETRANGE, 0L, (LPARAM)MAKELONG(nUpper, nLower));
+		SendMessage(UDM_SETRANGE, 0L, MAKELONG(nUpper, nLower));
 	}
 
 	////////////////////////////////////////
@@ -2141,7 +2142,7 @@ namespace Win32xx
 	inline void CToolTip::Activate(BOOL Activate) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_ACTIVATE, (WPARAM)Activate, 0L);
+		SendMessage(TTM_ACTIVATE, Activate, 0L);
 	}
 
 
@@ -2157,7 +2158,7 @@ namespace Win32xx
 		FillToolInfo(ti, hWndControl, rcTool, uID);
 		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = MAKEINTRESOURCE(nIDText);
-		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
 	}
 
 
@@ -2171,7 +2172,7 @@ namespace Win32xx
 		FillToolInfo(ti, hWndControl);
 		ti.hinst = GetApp().GetResourceHandle();
 		ti.lpszText = MAKEINTRESOURCE(nIDText);
-		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
 	}
 
 
@@ -2187,7 +2188,7 @@ namespace Win32xx
 		TOOLINFO ti;
 		FillToolInfo(ti, hWndControl, rcTool, uID);
 		ti.lpszText = const_cast<LPTSTR>(lpszText);
-		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
 	}
 
 
@@ -2201,7 +2202,7 @@ namespace Win32xx
 		TOOLINFO ti;
 		FillToolInfo(ti, hWndControl);
 		ti.lpszText = const_cast<LPTSTR>(lpszText);
-		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, (LPARAM)&ti));
+		return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
 	}
 
 
@@ -2210,7 +2211,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TOOLINFO ti = GetToolInfo(hWndControl, uID);
-		SendMessage(TTM_DELTOOL, 0L, (LPARAM)&ti);
+		SendMessage(TTM_DELTOOL, 0L, reinterpret_cast<LPARAM>(&ti));
 	}
 
 
@@ -2233,7 +2234,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		CRect rc;
-		SendMessage(TTM_GETMARGIN, 0L, (LPARAM)&rc);
+		SendMessage(TTM_GETMARGIN, 0L, reinterpret_cast<LPARAM>(&rc));
 		return rc;
 	}
 
@@ -2255,7 +2256,7 @@ namespace Win32xx
 
 		LPTSTR pszText = str.GetBuffer(80);	// Maximum allowed ToolTip is 80 characters for Windows XP and below
 		ti.lpszText = pszText;
-		SendMessage(TTM_GETTEXT, 0L, (LPARAM)&ti);
+		SendMessage(TTM_GETTEXT, 0L, reinterpret_cast<LPARAM>(&ti));
 		str.ReleaseBuffer();
 
 		return str;
@@ -2309,7 +2310,7 @@ namespace Win32xx
 			ti.uId = uID;
 		}
 
-		VERIFY(SendMessage(TTM_GETTOOLINFO, 0L, (LPARAM)&ti));
+		VERIFY(SendMessage(TTM_GETTOOLINFO, 0L, reinterpret_cast<LPARAM>(&ti)));
 
 		return ti;
 	}
@@ -2325,7 +2326,7 @@ namespace Win32xx
 		hti.hwnd = hWnd;
 		hti.pt = pt;
 		hti.ti = ToolInfo;
-		return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0L, (LPARAM)&hti));
+		return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0L, reinterpret_cast<LPARAM>(&hti)));
 	}
 
 
@@ -2394,7 +2395,7 @@ namespace Win32xx
 	inline void CToolTip::RelayEvent(MSG& Msg) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_RELAYEVENT, 0L, (LPARAM)&Msg);
+		SendMessage(TTM_RELAYEVENT, 0L, reinterpret_cast<LPARAM>(&Msg));
 	}
 
 
@@ -2402,7 +2403,7 @@ namespace Win32xx
 	inline void CToolTip::SetDelayTime(UINT nDelay) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETDELAYTIME, TTDT_INITIAL, (LPARAM)nDelay);
+		SendMessage(TTM_SETDELAYTIME, TTDT_INITIAL, nDelay);
 	}
 
 
@@ -2410,7 +2411,7 @@ namespace Win32xx
 	inline void CToolTip::SetDelayTime(DWORD dwDuration, int iTime) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETDELAYTIME, dwDuration, (LPARAM)iTime);
+		SendMessage(TTM_SETDELAYTIME, dwDuration, iTime);
 	}
 
 
@@ -2419,7 +2420,7 @@ namespace Win32xx
 
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETMARGIN, 0L, (LPARAM)&rc);
+		SendMessage(TTM_SETMARGIN, 0L, reinterpret_cast<LPARAM>(&rc));
 	}
 
 
@@ -2427,7 +2428,7 @@ namespace Win32xx
 	inline int CToolTip::SetMaxTipWidth(int iWidth) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage(TTM_SETMAXTIPWIDTH, 0L, (LPARAM)iWidth));
+		return static_cast<int>(SendMessage(TTM_SETMAXTIPWIDTH, 0L, iWidth));
 	}
 
 
@@ -2436,7 +2437,7 @@ namespace Win32xx
 	inline void CToolTip::SetTipBkColor(COLORREF clr) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETTIPBKCOLOR, (WPARAM)clr, 0L);
+		SendMessage(TTM_SETTIPBKCOLOR, clr, 0L);
 	}
 
 
@@ -2445,7 +2446,7 @@ namespace Win32xx
 	inline void CToolTip::SetTipTextColor(COLORREF clr) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETTIPTEXTCOLOR, (WPARAM)clr, 0L);
+		SendMessage(TTM_SETTIPTEXTCOLOR, clr, 0L);
 	}
 
 
@@ -2453,7 +2454,7 @@ namespace Win32xx
 	inline void CToolTip::SetToolInfo(const TOOLINFO& ToolInfo) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETTOOLINFO, 0L, (LPARAM)&ToolInfo);
+		SendMessage(TTM_SETTOOLINFO, 0L, reinterpret_cast<LPARAM>(&ToolInfo));
 	}
 
 
@@ -2463,7 +2464,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti = GetToolInfo(hWndControl, uID);
 		ti.rect = rc;
-		SendMessage(TTM_NEWTOOLRECT, 0L, (LPARAM)&ti);
+		SendMessage(TTM_NEWTOOLRECT, 0L, reinterpret_cast<LPARAM>(&ti));
 	}
 
 
@@ -2481,7 +2482,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti = GetToolInfo(hWndControl, uID);
 		ti.lpszText = const_cast<LPTSTR>(lpszText);
-		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
+		SendMessage(TTM_UPDATETIPTEXT, 0L, reinterpret_cast<LPARAM>(&ti));
 	}
 
 
@@ -2491,7 +2492,7 @@ namespace Win32xx
 		assert(IsWindow());
 		TOOLINFO ti = GetToolInfo(hWndControl, uID);
 		ti.lpszText = MAKEINTRESOURCE(nIDText);
-		SendMessage(TTM_UPDATETIPTEXT, 0L, (LPARAM)&ti);
+		SendMessage(TTM_UPDATETIPTEXT, 0L, reinterpret_cast<LPARAM>(&ti));
 	}
 
 #if (_WIN32_IE >=0x0500)
@@ -2501,7 +2502,7 @@ namespace Win32xx
 	inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL IsLarger /*= TRUE*/) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, (WPARAM)IsLarger, (LPARAM)&rc));
+		return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, IsLarger, reinterpret_cast<LPARAM>(&rc)));
 	}
 
 
@@ -2510,7 +2511,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		TOOLINFO ti = GetToolInfo(hWndControl, uID);
-		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, 0L, (LPARAM)&ti);
+		LRESULT lr = SendMessage(TTM_GETBUBBLESIZE, 0L, reinterpret_cast<LPARAM>(&ti));
 		CSize sz(LOWORD(lr), HIWORD(lr));
 		return sz;
 	}
@@ -2522,7 +2523,7 @@ namespace Win32xx
 
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(TTM_SETTITLE, (WPARAM)uIcon, (LPARAM)lpstrTitle));
+		return static_cast<BOOL>(SendMessage(TTM_SETTITLE, uIcon, reinterpret_cast<LPARAM>(lpstrTitle)));
 	}
 
 #endif
@@ -2534,7 +2535,7 @@ namespace Win32xx
 	inline void CToolTip::SetTTWindowTheme(LPCWSTR lpstrTheme) const
 	{
 		assert(IsWindow());
-		SendMessage(TTM_SETWINDOWTHEME, 0L, (LPARAM)lpstrTheme);
+		SendMessage(TTM_SETWINDOWTHEME, 0L, reinterpret_cast<LPARAM>(lpstrTheme));
 	}
 
 #endif
