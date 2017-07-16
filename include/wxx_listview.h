@@ -428,7 +428,7 @@ namespace Win32xx
 	inline int CListView::GetStringWidth( LPCTSTR pszString ) const
 	{
 		assert(IsWindow());
-		return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0L, (LPARAM)pszString ));
+		return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0L, reinterpret_cast<LPARAM>(pszString)));
 	}
 
 
@@ -694,7 +694,7 @@ namespace Win32xx
 	inline BOOL CListView::SetItemState( int iItem, LVITEM& Item ) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(LVM_SETITEMSTATE, (WPARAM)iItem, (LPARAM)&Item));
+		return static_cast<BOOL>(SendMessage(LVM_SETITEMSTATE, iItem, reinterpret_cast<LPARAM>(&Item)));
 	}
 
 
@@ -742,7 +742,7 @@ namespace Win32xx
 	inline HWND CListView::SetToolTips( HWND hToolTip ) const
 	{
 		assert(IsWindow());
-		return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, (WPARAM)hToolTip, 0L));
+		return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0L));
 	}
 
 
@@ -819,7 +819,7 @@ namespace Win32xx
 	inline BOOL CListView::EnsureVisible( int iItem, BOOL IsPartialOK ) const
 	{
 		assert(IsWindow());
-		return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, (WPARAM)iItem, (LPARAM)IsPartialOK ));
+		return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, iItem, IsPartialOK ));
 	}
 
 

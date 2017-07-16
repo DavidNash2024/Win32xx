@@ -411,6 +411,7 @@ namespace Win32xx
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
+		assert(m_lpTemplate || m_lpszResName);	// Dialog layout must be defined.
 
 		INT_PTR nResult = 0;
 		m_IsModal=TRUE;
@@ -469,6 +470,7 @@ namespace Win32xx
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
+		assert(m_lpTemplate || m_lpszResName);	// Dialog definition required.
 
 		m_IsModal=FALSE;
 		m_hWnd = 0;
@@ -595,7 +597,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		assert(::IsWindow(hWndCtrl));
-		SendMessage(WM_NEXTDLGCTL, (WPARAM)hWndCtrl, TRUE);
+		SendMessage(WM_NEXTDLGCTL, reinterpret_cast<WPARAM>(hWndCtrl), TRUE);
 	}
 
 
@@ -627,7 +629,7 @@ namespace Win32xx
 	inline void CDialog::SetDefID(UINT nID)
 	{
 		assert(IsWindow());
-		SendMessage(DM_SETDEFID, (WPARAM)nID, 0L);
+		SendMessage(DM_SETDEFID, nID, 0L);
 	}
 
 
@@ -812,7 +814,7 @@ namespace Win32xx
 		::SetClassLongPtr(hParent, GCL_STYLE, dwStyle);
 
 		// Calls AddChild for each child window with default settings.
-		::EnumChildWindows(hParent, EnumWindowsProc, (LPARAM)this);
+		::EnumChildWindows(hParent, EnumWindowsProc, reinterpret_cast<LPARAM>(this));
     }
 
 

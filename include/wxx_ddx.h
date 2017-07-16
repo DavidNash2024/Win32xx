@@ -473,8 +473,8 @@ namespace Win32xx
 		}
 
 		// set the range tuple
-		::SendMessage(m_hWndLastControl,TBM_SETRANGEMIN, (WPARAM)FALSE, (LPARAM)minVal);
-		::SendMessage(m_hWndLastControl, TBM_SETRANGEMAX, (WPARAM)TRUE, (LPARAM)maxVal);
+		::SendMessage(m_hWndLastControl,TBM_SETRANGEMIN, FALSE, minVal);
+		::SendMessage(m_hWndLastControl, TBM_SETRANGEMAX, TRUE, maxVal);
 	}
 
 
@@ -482,8 +482,7 @@ namespace Win32xx
 	// throws a CUserException.
 	inline void CDataExchange::DDV_MinMaxUInt( UINT value, UINT minVal, UINT maxVal) const
 	{
-		DDV_MinMaxULong(static_cast<ULONG>(value), static_cast<ULONG>(minVal),
-			            static_cast<ULONG>(maxVal));
+		DDV_MinMaxULong(value, minVal, maxVal);
 	}
 
 
@@ -556,7 +555,7 @@ namespace Win32xx
 		if (m_RetrieveAndValidate)
 			index = static_cast<int>(::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0L));
 		else
-			::SendMessage(hWndCtrl, CB_SETCURSEL, (WPARAM)index, 0L);
+			::SendMessage(hWndCtrl, CB_SETCURSEL, index, 0L);
 	}
 
 
@@ -595,8 +594,8 @@ namespace Win32xx
 		else
 		{
 			// set the current selection based on value string
-			if (::SendMessage(hWndCtrl, CB_SELECTSTRING, (WPARAM)-1,
-				(LPARAM)value.c_str()) == CB_ERR)
+			if (::SendMessage(hWndCtrl, CB_SELECTSTRING, static_cast<WPARAM>(-1),
+				reinterpret_cast<WPARAM>(value.c_str())) == CB_ERR)
 			{
 				// value was not found, so just set the edit text
 				// (this will be ignored if the control is a DROPDOWNLIST)
@@ -629,7 +628,7 @@ namespace Win32xx
 		{
 			// set current selection based on data string
 			int i = static_cast<int>(::SendMessage(hWndCtrl, CB_FINDSTRINGEXACT,
-				(WPARAM)-1, (LPARAM)value.c_str()));
+				static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(value.c_str())));
 			if (i < 0)
 			{
 				// set the edit text (will be ignored if a DROPDOWNLIST)
@@ -665,7 +664,7 @@ namespace Win32xx
 				value = 0;  // set default to off
 			}
 
-			::SendMessage(hWndCtrl, BM_SETCHECK, (WPARAM)value, 0L);
+			::SendMessage(hWndCtrl, BM_SETCHECK, value, 0L);
 		}
 	}
 
@@ -701,7 +700,7 @@ namespace Win32xx
 		if (m_RetrieveAndValidate)
 			index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L));
 		else
-			::SendMessage(hWndCtrl, LB_SETCURSEL, (WPARAM)index, 0L);
+			::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0L);
 	}
 
 
@@ -722,7 +721,7 @@ namespace Win32xx
 			{
 				// if text was selected, read it into the CString
 				int nLen = static_cast<int>(::SendMessage(hWndCtrl, LB_GETTEXTLEN, index, 0L));
-				::SendMessage(hWndCtrl, LB_GETTEXT, index, (LPARAM)value.GetBuffer(nLen));
+				::SendMessage(hWndCtrl, LB_GETTEXT, index, reinterpret_cast<LPARAM>(value.GetBuffer(nLen)));
 
 				value.ReleaseBuffer();
 			}
@@ -737,7 +736,7 @@ namespace Win32xx
 			// search the the entire list box for the given value
 			// and select it if it is found
 			int index  = static_cast<int>(::SendMessage(hWndCtrl, LB_SELECTSTRING,
-				(WPARAM)-1, (LPARAM)value.c_str()));
+				static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(value.c_str())));
 
 			if (index == LB_ERR)
 			{
@@ -772,7 +771,7 @@ namespace Win32xx
 			// in a case insensitive search, perhaps in sorted order,
 			// if the box has that style
 			int index = static_cast<int>(::SendMessage(hWndCtrl, LB_FINDSTRINGEXACT,
-				(WPARAM)-1, (LPARAM)value.c_str()));
+				static_cast<WPARAM>(-1), reinterpret_cast<LPARAM>(value.c_str())));
 
 			if (index < 0)
 			{

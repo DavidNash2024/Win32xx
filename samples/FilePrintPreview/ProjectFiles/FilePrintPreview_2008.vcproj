@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="PrintPreview"
+	Name="FilePrintPreview"
 	ProjectGUID="{83948024-5DDD-4800-A629-A7873D14267C}"
-	RootNamespace="PrintPreview"
+	RootNamespace="FilePrintPreview"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>

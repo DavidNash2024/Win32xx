@@ -219,7 +219,7 @@ namespace Win32xx
 	inline void CTaskDialog::ClickButton(int nButtonID) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_CLICK_BUTTON, (WPARAM)nButtonID, 0);
+		SendMessage(TDM_CLICK_BUTTON, nButtonID, 0);
 	}
 
 
@@ -227,7 +227,7 @@ namespace Win32xx
 	inline void CTaskDialog::ClickRadioButton(int nRadioButtonID) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_CLICK_RADIO_BUTTON, (WPARAM)nRadioButtonID, 0);
+		SendMessage(TDM_CLICK_RADIO_BUTTON, nRadioButtonID, 0);
 	}
 
 
@@ -307,7 +307,7 @@ namespace Win32xx
 	inline void CTaskDialog::ElevateButton(int nButtonID, BOOL IsElevated) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE, (WPARAM)nButtonID, (LPARAM)IsElevated);
+		SendMessage(TDM_SET_BUTTON_ELEVATION_REQUIRED_STATE, nButtonID, IsElevated);
 	}
 
 
@@ -315,7 +315,7 @@ namespace Win32xx
 	inline void CTaskDialog::EnableButton(int nButtonID, BOOL IsEnabled) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_ENABLE_BUTTON, (WPARAM)nButtonID, (LPARAM)IsEnabled);
+		SendMessage(TDM_ENABLE_BUTTON, nButtonID, IsEnabled);
 	}
 
 
@@ -323,7 +323,7 @@ namespace Win32xx
 	inline void CTaskDialog::EnableRadioButton(int nRadioButtonID, BOOL IsEnabled) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_ENABLE_RADIO_BUTTON, (WPARAM)nRadioButtonID, (LPARAM)IsEnabled);
+		SendMessage(TDM_ENABLE_RADIO_BUTTON, nRadioButtonID, IsEnabled);
 	}
 
 	
@@ -397,7 +397,7 @@ namespace Win32xx
 	{
 		assert(GetHwnd());
 		TASKDIALOGCONFIG tc = TaskDialog.GetConfig();
-		SendMessage(TDM_NAVIGATE_PAGE, 0, (LPARAM)&tc);
+		SendMessage(TDM_NAVIGATE_PAGE, 0, reinterpret_cast<LPARAM>(&tc));
 	}
 
 
@@ -528,7 +528,7 @@ namespace Win32xx
 		m_tc.pszContent = m_strContent.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_CONTENT, (LPARAM)m_strContent.c_str());
+			SendMessage(TDM_SET_ELEMENT_TEXT, TDE_CONTENT, reinterpret_cast<LPARAM>(m_strContent.c_str()));
 	}
 
 
@@ -571,7 +571,7 @@ namespace Win32xx
 		m_tc.pszCollapsedControlText = m_strCollapsedControlText.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_EXPANDED_INFORMATION, (LPARAM)m_strExpandedInformation.c_str());
+			SendMessage(TDM_SET_ELEMENT_TEXT, TDE_EXPANDED_INFORMATION, reinterpret_cast<LPARAM>(m_strExpandedInformation.c_str()));
 	}
 
 
@@ -581,7 +581,7 @@ namespace Win32xx
 		m_tc.hFooterIcon = hFooterIcon;
 
 		if (IsWindow())
-			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)hFooterIcon);
+			SendMessage(TDM_UPDATE_ICON, TDIE_ICON_FOOTER, reinterpret_cast<LPARAM>(hFooterIcon));
 	}
 
 
@@ -597,7 +597,7 @@ namespace Win32xx
 		m_tc.pszFooterIcon = const_cast<LPCWSTR>(lpszFooterIcon);
 
 		if (IsWindow())
-			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_FOOTER, (LPARAM)lpszFooterIcon);
+			SendMessage(TDM_UPDATE_ICON, TDIE_ICON_FOOTER, reinterpret_cast<LPARAM>(lpszFooterIcon));
 	}
 
 
@@ -608,7 +608,7 @@ namespace Win32xx
 		m_tc.pszFooter = m_strFooter.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)m_strFooter.c_str());
+			SendMessage(TDM_SET_ELEMENT_TEXT, TDE_FOOTER, reinterpret_cast<LPARAM>(m_strFooter.c_str()));
 	}
 
 
@@ -618,7 +618,7 @@ namespace Win32xx
 		m_tc.hMainIcon = hMainIcon;
 
 		if (IsWindow())
-			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)hMainIcon);
+			SendMessage(TDM_UPDATE_ICON, TDIE_ICON_MAIN, reinterpret_cast<LPARAM>(hMainIcon));
 	}
 
 
@@ -633,7 +633,7 @@ namespace Win32xx
 		m_tc.pszMainIcon = const_cast<LPCWSTR>(lpszMainIcon);
 
 		if (IsWindow())
-			SendMessage(TDM_UPDATE_ICON, (WPARAM)TDIE_ICON_MAIN, (LPARAM)lpszMainIcon);
+			SendMessage(TDM_UPDATE_ICON, TDIE_ICON_MAIN, reinterpret_cast<LPARAM>(lpszMainIcon));
 	}
 
 
@@ -644,7 +644,7 @@ namespace Win32xx
 		m_tc.pszMainInstruction = m_strMainInstruction.c_str();
 
 		if (IsWindow())
-			SendMessage(TDM_SET_ELEMENT_TEXT, (WPARAM)TDE_FOOTER, (LPARAM)m_strMainInstruction.c_str());
+			SendMessage(TDM_SET_ELEMENT_TEXT, TDE_FOOTER, reinterpret_cast<LPARAM>(m_strMainInstruction.c_str()));
 	}
 
 
@@ -664,7 +664,7 @@ namespace Win32xx
 	inline void CTaskDialog::SetProgressBarMarquee(BOOL IsEnabled /* = TRUE*/, int nMarqueeSpeed /* = 0*/) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_SET_PROGRESS_BAR_MARQUEE, (WPARAM)IsEnabled, (LPARAM)nMarqueeSpeed);
+		SendMessage(TDM_SET_PROGRESS_BAR_MARQUEE, IsEnabled, nMarqueeSpeed);
 	}
 
 
@@ -672,7 +672,7 @@ namespace Win32xx
 	inline void CTaskDialog::SetProgressBarPosition(int nProgressPos) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_SET_PROGRESS_BAR_POS, (WPARAM)nProgressPos, 0);
+		SendMessage(TDM_SET_PROGRESS_BAR_POS, nProgressPos, 0);
 	}
 
 
@@ -689,7 +689,7 @@ namespace Win32xx
 	inline void CTaskDialog::SetProgressBarState(int nNewState /* = PBST_NORMAL*/) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_SET_PROGRESS_BAR_STATE, (WPARAM)nNewState, 0);
+		SendMessage(TDM_SET_PROGRESS_BAR_STATE, nNewState, 0);
 	}
 
 
@@ -697,7 +697,7 @@ namespace Win32xx
 	inline void CTaskDialog::SetVerificationCheckbox(BOOL IsChecked) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_CLICK_VERIFICATION, (WPARAM)IsChecked, (LPARAM)IsChecked);
+		SendMessage(TDM_CLICK_VERIFICATION, IsChecked, IsChecked);
 	}
 
 
@@ -756,7 +756,7 @@ namespace Win32xx
 		switch(uMsg)
 		{
 		case TDN_BUTTON_CLICKED:
-			return OnTDButtonClicked(static_cast<int>(wParam));
+			return OnTDButtonClicked(wParam);
 
 		case TDN_CREATED:
 			OnTDCreated();
@@ -768,7 +768,7 @@ namespace Win32xx
 			OnTDConstructed();
 			break;
 		case TDN_EXPANDO_BUTTON_CLICKED:
-			OnTDExpandButtonClicked(static_cast<BOOL>(wParam));
+			OnTDExpandButtonClicked(wParam);
 			break;
 		case TDN_HELP:
 			OnTDHelp();
@@ -780,13 +780,13 @@ namespace Win32xx
 			OnTDNavigatePage();
 			break;
 		case TDN_RADIO_BUTTON_CLICKED:
-			OnTDRadioButtonClicked(static_cast<int>(wParam));
+			OnTDRadioButtonClicked(wParam);
 			break;
 		case TDN_TIMER:
-			return OnTDTimer((DWORD)wParam);
+			return OnTDTimer(wParam);
 
 		case TDN_VERIFICATION_CLICKED:
-			OnTDVerificationCheckboxClicked(static_cast<BOOL>(wParam));
+			OnTDVerificationCheckboxClicked(wParam);
 			break;
 		}
 
@@ -822,7 +822,8 @@ namespace Win32xx
 	inline void CTaskDialog::UpdateElementText(TASKDIALOG_ELEMENTS eElement, LPCTSTR pszNewText) const
 	{
 		assert(GetHwnd());
-		SendMessage(TDM_UPDATE_ELEMENT_TEXT, (WPARAM)eElement, (LPARAM)(LPCWSTR)TtoW(pszNewText));
+		CString NewText = pszNewText;
+		SendMessage(TDM_UPDATE_ELEMENT_TEXT, eElement, reinterpret_cast<LPARAM>(NewText.c_str()));
 	}
 
 }

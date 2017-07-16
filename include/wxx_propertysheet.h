@@ -189,7 +189,7 @@ namespace Win32xx
 		m_PSP.pszTemplate   = MAKEINTRESOURCE(nIDTemplate);
 		m_PSP.pszTitle      = m_Title;
 		m_PSP.pfnDlgProc    = (DLGPROC)CPropertyPage::StaticDialogProc;
-		m_PSP.lParam        = (LPARAM)this;
+		m_PSP.lParam        = reinterpret_cast<LPARAM>(this);
 		m_PSP.pfnCallback   = CPropertyPage::StaticPropSheetPageProc;
 	}
 
@@ -415,7 +415,7 @@ namespace Win32xx
 		if (Msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
 			(Msg.wParam == VK_TAB || Msg.wParam == VK_PRIOR || Msg.wParam == VK_NEXT))
 		{
-			if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)&Msg))
+			if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0L, reinterpret_cast<LPARAM>(&Msg)))
 				return TRUE;
 		}
 
@@ -447,9 +447,9 @@ namespace Win32xx
 		assert(IsWindow());
 
 		if (IsChanged)
-			GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0L);
+			GetParent().SendMessage(PSM_CHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0L);
 		else
-			GetParent().SendMessage(PSM_UNCHANGED, (WPARAM)GetHwnd(), 0L);
+			GetParent().SendMessage(PSM_UNCHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0L);
 	}
 
 
@@ -829,7 +829,7 @@ namespace Win32xx
 		if (Msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
 			(Msg.wParam == VK_TAB || Msg.wParam == VK_PRIOR || Msg.wParam == VK_NEXT))
 		{
-			if (SendMessage(PSM_ISDIALOGMESSAGE, 0L, (LPARAM)&Msg))
+			if (SendMessage(PSM_ISDIALOGMESSAGE, 0L, reinterpret_cast<LPARAM>(&Msg)))
 				return TRUE;
 		}
 
