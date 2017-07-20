@@ -135,10 +135,10 @@ AttachControl(UINT nIDC, CWnd& rCtl)               			/*
 	already beensubclassed, do nothing.
 *-----------------------------------------------------------------------------*/
 {
-	if ((HWND)rCtl)
+	if (rCtl.GetHwnd())
 		return;    // already subclassed
 
-	HWND hWndCtrl = ::GetDlgItem((HWND)*this, nIDC);
+	HWND hWndCtrl = ::GetDlgItem(*this, nIDC);
 	rCtl.Attach(hWndCtrl);
 }
 
@@ -183,8 +183,8 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 
 	    case WM_DRAWITEM:
 	    {
-	    	LPDRAWITEMSTRUCT lpDrawItemStruct = (LPDRAWITEMSTRUCT)lParam;
-		UINT nID = (UINT)wParam;
+	    	LPDRAWITEMSTRUCT lpDrawItemStruct = reinterpret_cast<LPDRAWITEMSTRUCT>(lParam);
+			UINT nID = static_cast<UINT>(wParam);
 	    	if (nID == IDOK)
 	    		m_OK.DrawItem(lpDrawItemStruct);
     		return TRUE;
@@ -244,7 +244,7 @@ OnDropFiles(HDROP hDroinfo)                                            /*
 *-----------------------------------------------------------------------------*/
 {
 	TCHAR szFileName[_MAX_PATH];
-	::DragQueryFile((HDROP)hDroinfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+	::DragQueryFile((HDROP)hDroinfo, 0, szFileName, _MAX_PATH);
 	GetDoc().OpenDoc(szFileName);
 	return TRUE;
 }

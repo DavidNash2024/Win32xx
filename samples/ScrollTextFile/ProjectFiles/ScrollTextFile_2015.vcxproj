@@ -71,6 +71,7 @@
     <ClInclude Include="..\src\App.h" />
     <ClInclude Include="..\src\Doc.h" />
     <ClInclude Include="..\src\FontEx.h" />
+    <ClInclude Include="..\src\GlobalUtils.h" />
     <ClInclude Include="..\src\Mainfrm.h" />
     <ClInclude Include="..\src\resource.h" />
     <ClInclude Include="..\src\ScrollWnd.h" />

@@ -31,14 +31,14 @@ BOOL CMyCombo::AddItems()
         int iImage;
         int iSelectedImage;
         int iIndent;
-        LPTSTR pszText;
+        LPCTSTR pszText;        // Note: LPTSTR would be incorrect here.
     } ITEMINFO;
 
     ITEMINFO IInf[ ] =
 	{
-        { 0, 0,  0, (LPTSTR)_T("Item 1")},
-        { 1, 1,  0, (LPTSTR)_T("Item 2")},
-        { 2, 2,  0, (LPTSTR)_T("Item 3")}
+        { 0, 0,  0, _T("Item 1")},
+        { 1, 1,  0, _T("Item 2")},
+        { 2, 2,  0, _T("Item 3")}
     };
 
     int MaxItems = 3;
@@ -48,14 +48,15 @@ BOOL CMyCombo::AddItems()
 		ZeroMemory(&cbei, sizeof(COMBOBOXEXITEM));
 		cbei.mask = CBEIF_TEXT | CBEIF_INDENT | CBEIF_IMAGE| CBEIF_SELECTEDIMAGE;
         cbei.iItem          = i;
-        cbei.pszText        = IInf[i].pszText;
+        cbei.pszText        = const_cast<LPTSTR>(IInf[i].pszText);
         cbei.cchTextMax     = sizeof(IInf[i].pszText);
         cbei.iImage         = IInf[i].iImage;
         cbei.iSelectedImage = IInf[i].iSelectedImage;
         cbei.iIndent        = IInf[i].iIndent;
+		LPARAM lparam = reinterpret_cast<LPARAM>(&cbei);
 
         // Add the items to the ComboBox's dropdown list
-        if(-1 == SendMessage(CBEM_INSERTITEM, 0L, (LPARAM)&cbei))
+        if(-1 == SendMessage(CBEM_INSERTITEM, 0L, lparam))
             return FALSE;
     }
 
@@ -76,7 +77,7 @@ void CMyCombo::SetImages(int nImages, UINT ImageID)
 	int cx = bmData.bmHeight;
 
 	m_imlImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, nImages, 0);
-	m_imlImages.Add( bm, RGB(255,0,255) );	
+	m_imlImages.Add(bm, RGB(255, 0, 255));
 }
 
 void CMyCombo::OnDestroy()

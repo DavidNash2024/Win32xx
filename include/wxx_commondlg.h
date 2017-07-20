@@ -719,17 +719,17 @@ namespace Win32xx
 		CString strPath = m_OFN.lpstrFile; // strPath is terminated by first NULL
 		if (!IsExplorer)
 		{
-			int nDeliminator = strPath.Find(chDelimiter);
-			strPath = strPath.Left(nDeliminator);
+			int delimiter = strPath.Find(chDelimiter);
+			strPath = strPath.Left(delimiter);
 		}
 
 		// Fill strFileName with the file name
 		CString strFileName = m_OFN.lpstrFile + pos + Index;
 		if (!IsExplorer)
 		{
-			int nDeliminator = strFileName.Find(chDelimiter);
-			if (nDeliminator > 0)
-				strFileName = strFileName.Left(nDeliminator);
+			int delimiter = strFileName.Find(chDelimiter);
+			if (delimiter > 0)
+				strFileName = strFileName.Left(delimiter);
 		}
 
 		// Update pos to point to the next file

@@ -224,7 +224,7 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
 
 			//Store a pointer to the TreeItemData in the lParam and m_pItems
 			TreeItemData* pItem = new TreeItemData(cpidlParent, cpidlRel, cParentFolder);
-			tvItem.lParam = (LPARAM)pItem;
+			tvItem.lParam = reinterpret_cast<LPARAM>(pItem);
 			m_pItems.push_back(pItem);
 
 			//text and images are done on a callback basis
@@ -322,7 +322,7 @@ BOOL CMyTreeView::GetRootItems()
 
 		//Store a pointer to the TreeItemData in the lParam and m_pItems
 		TreeItemData* pItem = new TreeItemData(cpidlDesk);
-		tvItem.lParam = (LPARAM)pItem;
+		tvItem.lParam = reinterpret_cast<LPARAM>(pItem);
 		m_pItems.push_back(pItem);
 
 		//text and images are done on a callback basis

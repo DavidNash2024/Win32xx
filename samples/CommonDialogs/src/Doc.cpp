@@ -134,7 +134,7 @@ FindNext(const MyFindReplaceDialog& FR, CHARRANGE r)			/*
 	  // get current location or selection
 	FINDTEXTEX ftx;
 	ftx.chrg = r;
-	ftx.lpstrText = (LPTSTR)m_find_next.c_str();
+	ftx.lpstrText = const_cast<LPTSTR>(m_find_next.c_str());
 	GetREView().FindText(dwFlags, ftx);
 	return ftx.chrgText;
 }

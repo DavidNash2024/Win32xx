@@ -20,16 +20,16 @@ void CViewDialog::AppendText(int nID, LPCTSTR szText)
 	// This function appends text to an edit control
 
 	// Append Line Feed
-	int ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	LRESULT ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	if (ndx)
 	{
-		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+		SendDlgItemMessage(nID, EM_SETSEL, ndx, ndx);
 		SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM)(_T("\r\n")));
 	}
 
 	// Append text
-	ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
-	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
+	ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	SendDlgItemMessage(nID, EM_SETSEL, ndx, ndx);
 	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM)szText);
 }
 

@@ -45,11 +45,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
+
 	Acknowledgement:
 	The author would like to thank and acknowledge the advice, critical
 	review, insight, and assistance provided by David Nash in the development
-	of this work.		
+	of this work.
 
 ********************************************************************************
 
@@ -294,7 +294,7 @@ AssignToolTips() 								/*
 	Assign tool tips to all controls in the client area.
 *-----------------------------------------------------------------------------*/
 {
-	HWND hParent = HWND((CWnd &)(*this));
+	HWND hParent = *this;
 	if (!m_ToolTip.Create(hParent))
 	{
 		TRACE(_T("unable to create tool tips\n"));
@@ -352,6 +352,7 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)			/*
 	while both wParam and lParam specify message-specific information.
 *-----------------------------------------------------------------------------*/
 {
+	m_Resizer.HandleMessage(uMsg, wParam, lParam);
 	  // Add case statements for each messages to be handled here
 	switch (uMsg)
 	{
@@ -363,12 +364,12 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)			/*
 	    case WM_CTLCOLORSTATIC:
 		  // for these messages, wParam has the control's hdc and
 		  // lParam has the control's hwnd
-		return OnCtlColor((HDC)wParam, (HWND)lParam, uMsg);
+		return OnCtlColor(reinterpret_cast<HDC>(wParam), reinterpret_cast<HWND>(lParam), uMsg);
 
 	    case WM_DRAWITEM:
 	    {
-	    	LPDRAWITEMSTRUCT lpDrawItemStruct = (LPDRAWITEMSTRUCT)lParam;
-		UINT nID = (UINT)wParam;
+	    	LPDRAWITEMSTRUCT lpDrawItemStruct = reinterpret_cast<LPDRAWITEMSTRUCT>(lParam);
+			UINT nID = static_cast<UINT>(wParam);
 	    	if (nID == IDOK)
 	    	{
 	    		m_StatusButton.DrawItem(lpDrawItemStruct);
@@ -769,6 +770,8 @@ OnInitDialog()								/*
 	  // Connect controls to IDs and read default data values into them.
 	UpdateDialog(SENDTOCONTROL);
 
+	  // set resizer minimum rectangle that enables scrolling
+	m_Resizer.Initialize( *this, CRect(0, 0, 920, 580));
 	  // Set the rich edit control text foreground and background colors
 	  // and the control background color.  This is needed only once (not
 	  // like other controls set in OnCtlColor()).
@@ -858,12 +861,12 @@ OnNotify(WPARAM wParam, LPARAM lParam)                                  /*
 	override handles these notifications.
 *-----------------------------------------------------------------------------*/
 {
-	NMHDR *pNMHdr = (LPNMHDR)lParam;
+	NMHDR *pNMHdr = reinterpret_cast<LPNMHDR>(lParam);
 
 	  // deal with setting the focus for date-time controls
-	if (pNMHdr->code == (UINT)NM_SETFOCUS)
+	if (pNMHdr->code == static_cast<UINT>(NM_SETFOCUS))
 	{
-		m_nIDFocus = (int)wParam;
+		m_nIDFocus = static_cast<int>(wParam);
 		return TRUE;
 	}
 	return FALSE;
@@ -877,7 +880,7 @@ PreTranslateMessage(MSG& Msg)  						/*
 	message loop.
 *-----------------------------------------------------------------------------*/
 {
-	if ((HWND)m_ToolTip != NULL)
+	if (m_ToolTip.IsWindow())
 		m_ToolTip.RelayEvent(Msg);
 
 	return CWnd::PreTranslateMessage(Msg);

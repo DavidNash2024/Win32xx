@@ -64,7 +64,7 @@ int CViewList::AddItem(LPCTSTR szText, int nImage)
 	ZeroMemory(&lvi, sizeof(LVITEM));
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE;
 	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
+	lvi.pszText = const_cast<LPTSTR>(szText);
 
 	return InsertItem(lvi);
 }
@@ -100,7 +100,7 @@ void CViewList::OnAttach()
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();
@@ -145,8 +145,8 @@ BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.mask = LVIF_TEXT;
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
-	lvi1.pszText = (LPTSTR)szText;
-	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1));
+	lvi1.pszText = const_cast<LPTSTR>(szText);
+	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)));
 }
 
 LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -178,7 +178,7 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 	tvi.iImage = iImage;
 	tvi.iSelectedImage = iImage;
-	tvi.pszText = (LPTSTR)szText;
+	tvi.pszText = const_cast<LPTSTR>(szText);
 
 	TVINSERTSTRUCT tvis;
 	ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
@@ -197,7 +197,7 @@ void CViewTree::OnAttach()
 	SetImageList(m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
 	dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
 	SetWindowLongPtr(GWL_STYLE, dwStyle);
 

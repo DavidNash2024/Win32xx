@@ -1,14 +1,14 @@
 [Project]
-FileName=PrintPreview_DEBUG.dev
+FileName=FilePrintPreview_DEBUG.dev
 Name=PrintPreview
 UnitCount=15
 Type=0
 Ver=2
 ObjFiles=
-Includes=C:\Tausware\win32++\include
+Includes=..\..\..\include
 Libs=
 PrivateResource=R1Win32_private.rc
-ResourceIncludes=C:\Tausware\win32++\include
+ResourceIncludes=..\..\..\include
 MakeIncludes=
 Compiler=
 CppCompiler=-D _DEBUG_@@_-g_@@_-O0_@@__@@_
@@ -18,7 +18,7 @@ Icon=
 ExeOutput=.\Dev-C++\Debug
 ObjectOutput=.\Dev-C++\Debug
 OverrideOutput=0
-OverrideOutputName=PrintPreview_DEBUG.exe
+OverrideOutputName=FilePrintPreview_DEBUG.exe
 HostApplication=
 Folders=Header,Resource,Source,Win32++
 CommandLine=
@@ -151,17 +151,7 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit12]
-FileName=..\src\PreviewDialog.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit13]
-FileName=..\src\PreviewDialog.h
+FileName=..\src\PrintUtil.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -170,10 +160,20 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit14]
-FileName=..\src\PrintUtil.h
+[Unit13]
+FileName=..\src\PrintUtil.cpp
 CompileCpp=1
-Folder=
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit14]
+FileName=..\src\PrintPreview.cpp
+CompileCpp=1
+Folder=Source
 Compile=1
 Link=1
 Priority=1000
@@ -191,9 +191,9 @@ OverrideBuildCmd=0
 BuildCmd=
 
 [Unit15]
-FileName=..\src\PrintUtil.cpp
+FileName=..\src\PrintPreview.h
 CompileCpp=1
-Folder=
+Folder=Header
 Compile=1
 Link=1
 Priority=1000

@@ -110,6 +110,7 @@ typedef  unsigned char  byte;
 #include <wxx_exception.h>		// Add CException, CFileException, CNotSupportedException, CResourceException, CUserException, CWinException
 #include <wxx_file.h>			// Add CFile
 #include <wxx_filefind.h>		// Add CFileFind
+#include <wxx_folderdialog.h> 	// Add CFolderDialog
 #include <wxx_frame.h>			// Add CFrame
 #include <wxx_gdi.h>			// Add CDC, CGDIObject, CBitmap, CBrush, CFont, CPalatte, CPen, CRgn
 #include <wxx_imagelist.h>		// Add CImageList

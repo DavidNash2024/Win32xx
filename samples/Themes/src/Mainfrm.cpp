@@ -376,7 +376,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 		// Set the band styles and positions
 		for (int i = 0; i < GetReBar().GetBandCount(); ++i)
 		{
-			if (i < (int)m_vBandStyles.size())
+			if (i < static_cast<int>(m_vBandStyles.size()))
 			{
 				// Move the band to the correct position
 				int iFrom = GetReBar().IDToIndex(m_vBandIDs[i]);
@@ -390,7 +390,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 				GetReBar().SetBandInfo(i, rbbi);
 			}
 		
-			if (i < (int)m_vBandSizes.size())
+			if (i < static_cast<int>(m_vBandSizes.size()))
 			{
 				// Set the band's size
 				REBARBANDINFO rbbi;

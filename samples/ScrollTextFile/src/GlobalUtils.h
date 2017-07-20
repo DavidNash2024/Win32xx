@@ -150,8 +150,8 @@ static const TCHAR	sEolChars[]	= _T("\n\r");
 static const TCHAR	sEmpty[]	= _T("");
 static const TCHAR	sAllFiles[]	= _T("*.*");
 static const TCHAR 	sWhitespace[] 	= _T(" \t\n\r\f\v");
-static const UINT	nSearchFail	= (UINT)-1;
-static const UINT	nMaxSize_t	= (UINT)-1;
+static const UINT	nSearchFail	= static_cast<UINT>(-1);
+static const UINT	nMaxSize_t	= static_cast<UINT>(-1);
 
 //static const UINT CTL_OFFSET	= 0x100;
 //static const UINT CTL_DOWN	= CTL_OFFSET + VK_DOWN;

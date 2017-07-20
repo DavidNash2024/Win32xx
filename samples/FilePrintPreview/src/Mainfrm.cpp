@@ -144,7 +144,7 @@ OnDropFiles(HDROP hDropInfo)						/*
 *-----------------------------------------------------------------------------*/
 {
 	TCHAR szFileName[_MAX_PATH];
-	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+	::DragQueryFile(hDropInfo, 0, szFileName, _MAX_PATH);
 
 	if (ReadFile(szFileName))
 	{

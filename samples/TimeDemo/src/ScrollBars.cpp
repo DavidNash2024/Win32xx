@@ -463,7 +463,7 @@ OnMouseWheel(WPARAM wParam, LPARAM lParam)        			/*
 		return 0;
 
 	  // set the new position: first get (signed) rotation units
-	int wheelunits = (int)(short)HIWORD(wParam),
+	int wheelunits = static_cast<int>(HIWORD(wParam)),
 	  // convert to line increments, maintaining sign
 	rotation = ::MulDiv(-wheelunits, m_increments.m_v_line, WHEEL_DELTA);
 	m_scroll_position.y += rotation;

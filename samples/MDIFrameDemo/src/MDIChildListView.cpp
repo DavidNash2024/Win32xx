@@ -45,7 +45,7 @@ int CViewList::AddItem(LPCTSTR szText, int nImage)
 	ZeroMemory(&lvi, sizeof(LVITEM));
 	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
 	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
+	lvi.pszText = const_cast<LPTSTR>(szText);
 
 	return InsertItem(lvi);
 }
@@ -76,7 +76,7 @@ BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.mask = LVIF_TEXT;
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
-	lvi1.pszText = (LPTSTR)szText;
+	lvi1.pszText = const_cast<LPTSTR>(szText);
 	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0L, (LPARAM)&lvi1));
 }
 

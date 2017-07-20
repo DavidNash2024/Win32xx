@@ -64,18 +64,18 @@ BOOL CColourDialog::OnInitDialog()
 	m_BlueSlider.AttachDlgItem(IDC_SLIDER_BLUE, *this);
 
 	// Set Trackbar ranges
-	m_RedSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
-	m_GreenSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
-	m_BlueSlider.SendMessage(TBM_SETRANGE,  (WPARAM)TRUE, (LPARAM)MAKELONG(-255, 255));
+	m_RedSlider.SendMessage(TBM_SETRANGE, TRUE, MAKELONG(-255, 255));
+	m_GreenSlider.SendMessage(TBM_SETRANGE, TRUE, MAKELONG(-255, 255));
+	m_BlueSlider.SendMessage(TBM_SETRANGE, TRUE, MAKELONG(-255, 255));
 
 	// Attach the Edit controls to CWnd objects
 	m_RedEdit.AttachDlgItem(IDC_EDIT_RED, *this);
 	m_GreenEdit.AttachDlgItem(IDC_EDIT_GREEN, *this);
 	m_BlueEdit.AttachDlgItem(IDC_EDIT_BLUE, *this);
 
-	m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
-	m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
-	m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)_T("0"));
+	m_RedEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(_T("0")));
+	m_GreenEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(_T("0")));
+	m_BlueEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(_T("0")));
 
 	// Create the two image previews
 	m_Preview.AttachDlgItem(IDC_PREVIEW, *this);
@@ -110,11 +110,11 @@ LRESULT CColourDialog::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	wsprintf(Text, _T("%d\0"), nPos);
 
 	if (hWnd == m_RedSlider)
-		m_RedEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
+		m_RedEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
 	else if (hWnd == m_GreenSlider)
-		m_GreenEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
+		m_GreenEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
 	else if (hWnd == m_BlueSlider)
-		m_BlueEdit.SendMessage(WM_SETTEXT, 0, (LPARAM)&Text);
+		m_BlueEdit.SendMessage(WM_SETTEXT, 0, reinterpret_cast<LPARAM>(&Text));
 
 	// Store the colour values
 	m_cRed   = m_RedSlider.SendMessage(TBM_GETPOS);
@@ -210,15 +210,15 @@ void CColourDialog::CreateImagePreviews()
 
 	if (bm.bmWidth < bm.bmHeight*rcView.Width()/rcView.Height())
 	{
-		AspectRatio = (double)bm.bmWidth / (double)bm.bmHeight;
-		nWidthDest = (int)(rcView.Height()*AspectRatio);
+		AspectRatio = static_cast<double>(bm.bmWidth) / static_cast<double>(bm.bmHeight);
+		nWidthDest = static_cast<int>(rcView.Height()*AspectRatio);
 		nHeightDest = rcView.Height();
 	}
 	else
 	{
-		AspectRatio = (double)bm.bmHeight / (double)bm.bmWidth;
+		AspectRatio = static_cast<double>(bm.bmHeight) / static_cast<double>(bm.bmWidth);
 		nWidthDest = rcView.Width();
-		nHeightDest = (int)(rcView.Width()*AspectRatio);
+		nHeightDest = static_cast<int>(rcView.Width()*AspectRatio);
 	}
 
 	// Create the Device Contexts and compatible bitmaps

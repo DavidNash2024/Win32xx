@@ -35,14 +35,14 @@ BOOL CDXView::CDXThread::InitInstance()
 int CDXView::CDXThread::MessageLoop()
 // Here we override CWinThread::MessageLoop to accommodate the special needs of DirectX
 {
-	MSG Msg;
-	ZeroMemory(&Msg, sizeof(MSG));
-	while( Msg.message != WM_QUIT )
+	MSG msg;
+	ZeroMemory(&msg, sizeof(msg));
+	while( msg.message != WM_QUIT )
 	{
-		if ( PeekMessage(&Msg, NULL, 0U, 0U, PM_REMOVE))
+		if ( PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
 		{
-			::TranslateMessage(&Msg);
-			::DispatchMessage(&Msg);
+			::TranslateMessage(&msg);
+			::DispatchMessage(&msg);
 		}
 		else
 		{
@@ -52,7 +52,7 @@ int CDXView::CDXThread::MessageLoop()
 		}
 	}
 
-	return LOWORD(Msg.wParam);
+	return LOWORD(msg.wParam);
 } 
 
 /////////////////////////////////////////////////
@@ -78,7 +78,8 @@ HRESULT CDXView::CDX::InitD3D( HWND hWnd )
 // Initializes Direct3D
 {
     // Create the D3D object.
-    if( NULL == ( m_pD3D = Direct3DCreate9( D3D_SDK_VERSION ) ) )
+	m_pD3D = Direct3DCreate9(D3D_SDK_VERSION);
+    if (m_pD3D == NULL)
         return E_FAIL;
 
 	CRect rc = GetClientRect();
@@ -93,10 +94,10 @@ HRESULT CDXView::CDX::InitD3D( HWND hWnd )
 	m_d3dpp.BackBufferHeight = rc.Height();
 
     // Create the D3DDevice
-    if( FAILED( m_pD3D->CreateDevice( D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
+    if (FAILED(m_pD3D->CreateDevice(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, hWnd,
                                     //  D3DCREATE_SOFTWARE_VERTEXPROCESSING,
 										D3DCREATE_HARDWARE_VERTEXPROCESSING,
-                                      &m_d3dpp, &m_pd3dDevice ) ) )
+                                      &m_d3dpp, &m_pd3dDevice)))
     {
         return E_FAIL;
     }
@@ -118,18 +119,18 @@ HRESULT CDXView::CDX::InitGeometry()
     };
 
     // Create the vertex buffer.
-    if( FAILED( m_pd3dDevice->CreateVertexBuffer( 3*sizeof(CUSTOMVERTEX),
-                                                  0, D3DFVF_XYZ | D3DFVF_DIFFUSE,
-                                                  D3DPOOL_MANAGED, &m_pVB, NULL ) ) )
+    if (FAILED(m_pd3dDevice->CreateVertexBuffer(3 * sizeof(CUSTOMVERTEX),
+                                                0, D3DFVF_XYZ | D3DFVF_DIFFUSE,
+                                                D3DPOOL_MANAGED, &m_pVB, NULL)))
     {
         return E_FAIL;
     }
 
     // Fill the vertex buffer.
     VOID* pVertices;
-    if( FAILED( m_pVB->Lock( 0, sizeof(g_Vertices), (void**)&pVertices, 0 ) ) )
+    if (FAILED(m_pVB->Lock(0, sizeof(g_Vertices), &pVertices, 0)))
         return E_FAIL;
-    memcpy( pVertices, g_Vertices, sizeof(g_Vertices) );
+    memcpy(pVertices, g_Vertices, sizeof(g_Vertices));
     m_pVB->Unlock();
 
     return S_OK;
@@ -140,10 +141,10 @@ int CDXView::CDX::OnCreate(CREATESTRUCT& cs)
 	UNREFERENCED_PARAMETER(cs);
 
 	// Initialize Direct3D
-	if( SUCCEEDED( InitD3D( *this ) ) )
+	if (SUCCEEDED(InitD3D(*this)))
 	{
 		// Create the scene geometry
-        if( SUCCEEDED( InitGeometry() ) )
+        if (SUCCEEDED(InitGeometry()))
         {
 			// Show the window
 			ShowWindow(SW_SHOWDEFAULT);
@@ -229,8 +230,10 @@ void CDXView::CDX::Render()
 		case D3D_OK:
 			{
 				CRect rcClient = GetClientRect();
-				bool bNeedResize = (int)m_d3dpp.BackBufferWidth != rcClient.Width() || (int)m_d3dpp.BackBufferHeight != rcClient.Height();
-				if (bNeedResize)
+				int backBufferWidth = static_cast<int>(m_d3dpp.BackBufferWidth);
+				int backBufferHeight = static_cast<int>(m_d3dpp.BackBufferHeight);
+				bool isResizeNeeded = backBufferWidth != rcClient.Width() || backBufferHeight != rcClient.Height();
+				if (isResizeNeeded)
 				{
 					m_d3dpp.BackBufferWidth		= rcClient.Width();
 					m_d3dpp.BackBufferHeight	= rcClient.Height();

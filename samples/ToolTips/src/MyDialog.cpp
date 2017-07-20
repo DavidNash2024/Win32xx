@@ -95,9 +95,9 @@ BOOL CMyDialog::OnInitDialog()
 	m_BubbleTT.AddTool(GetDlgItem(IDOK), _T("OK Button"));
 
 	// Modify tooltip for IDC_RADIO3
-	TOOLINFO ti1 = m_BubbleTT.GetToolInfo( GetDlgItem(IDC_RADIO3));
+	TOOLINFO ti1 = m_BubbleTT.GetToolInfo(GetDlgItem(IDC_RADIO3));
 	ti1.uFlags |= TTF_CENTERTIP;
-	ti1.lpszText = (LPTSTR)_T("Modified tooltip for Radio Button 3");
+	ti1.lpszText = const_cast<LPTSTR>(_T("Modified tooltip for Radio Button 3"));
 	m_BubbleTT.SetToolInfo(ti1);
 
 	// Create a standard tooltip for the Edit and RichEdit controls
@@ -111,19 +111,19 @@ BOOL CMyDialog::OnInitDialog()
 	// The tooltip will request the text to display via a TTN_GETDISPINFO notification
 	m_TT.AddTool(m_Edit, LPSTR_TEXTCALLBACK);
 	m_TT.AddTool(m_RichEdit, LPSTR_TEXTCALLBACK);
-	m_TT.SetMaxTipWidth(500);  
+	m_TT.SetMaxTipWidth(500);
 
 
 #ifdef	TTM_SETTITLE	// not supported by some GNU compilers
 	// Add Title and Icon to the tooltip (a pretty icon for Vista and above)
 	if (GetWinVersion() >= 2600)
-		m_TT.SetTitle((UINT)m_hInfo, _T("Displaying the contents of the control ..."));
+		m_TT.SetTitle(reinterpret_cast<UINT>(m_hInfo), _T("Displaying the contents of the control ..."));
 	else
 		m_TT.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
 #endif
 
 	// Calculate left half and right have rectangles
-	CRect rcLeft = GetClientRect(); 
+	CRect rcLeft = GetClientRect();
 	rcLeft.right = rcLeft.right / 2;
 	CRect rcRight = GetClientRect();
 	rcRight.left = rcRight.right / 2;
@@ -148,13 +148,13 @@ LRESULT CMyDialog::OnNotify(WPARAM, LPARAM lParam)
 			{
 				m_str = m_Edit.GetWindowText();
 				if (m_str.IsEmpty()) m_str = "No text to display";
-				lpnmtdi->lpszText = (LPTSTR)m_str.c_str();
+				lpnmtdi->lpszText = const_cast<LPTSTR>(m_str.c_str());
 			}
 			else if (lpnmtdi->hdr.idFrom == (UINT_PTR)m_RichEdit.GetHwnd())
 			{
 				m_str = m_RichEdit.GetWindowText();
 				if (m_str.IsEmpty()) m_str = "No text to display";
-				lpnmtdi->lpszText = (LPTSTR)m_str.c_str();
+				lpnmtdi->lpszText = const_cast<LPTSTR>(m_str.c_str());
 			}
 		}
 	}

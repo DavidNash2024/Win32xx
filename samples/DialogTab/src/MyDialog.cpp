@@ -77,7 +77,7 @@ INT_PTR CButtonDialog::OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Set the background color of the dialog
 	if (IsXPThemed()) 
-		return (INT_PTR)m_Brush.GetHandle();
+		return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
 	else
 		return FinalWindowProc(uMsg, wParam, lParam);
 }
@@ -86,7 +86,7 @@ INT_PTR CButtonDialog::OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	// Set the background color of static controls
 	if (IsXPThemed()) 
-		return (INT_PTR)m_Brush.GetHandle();
+		return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
 	else
 		return FinalWindowProc(uMsg, wParam, lParam);
 }
@@ -122,12 +122,12 @@ INT_PTR CComboBoxDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 	// Set the background color of the dialog
 	case WM_CTLCOLORDLG:
-		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
+		if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
 		break;
 	
 	// Set the background color of static controls
 	case WM_CTLCOLORSTATIC:
-		if (IsXPThemed()) return (INT_PTR)m_Brush.GetHandle();
+		if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
 		break;
 	
 	}
@@ -140,9 +140,9 @@ BOOL CComboBoxDialog::OnInitDialog()
 	// Put some text in the Combo Boxes
 	for (int i = 0 ; i < 6 ; i++)
 	{
-		SendDlgItemMessage(IDC_COMBO1, CB_ADDSTRING, 0, (LPARAM) _T("C Box 1"));
-		SendDlgItemMessage(IDC_COMBO2, CB_ADDSTRING, 0, (LPARAM) _T("C Box 2"));
-		SendDlgItemMessage(IDC_COMBO3, CB_ADDSTRING, 0, (LPARAM) _T("C Box 3"));
+		SendDlgItemMessage(IDC_COMBO1, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("C Box 1")));
+		SendDlgItemMessage(IDC_COMBO2, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("C Box 2")));
+		SendDlgItemMessage(IDC_COMBO3, CB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("C Box 3")));
 	}
 
 	return TRUE;

@@ -385,7 +385,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDIMaximize() const
 	{
 		assert(T::IsWindow());
-		WPARAM hMDIChild = reinterpret_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+		WPARAM hMDIChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDIMAXIMIZE, hMDIChild, 0L);
 	}
 
@@ -395,7 +395,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDINext() const
 	{
 		assert(T::IsWindow());
-		WPARAM hMDIChild = reinterpret_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+		WPARAM hMDIChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDINEXT, hMDIChild, FALSE);
 	}
 
@@ -405,7 +405,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDIPrev() const
 	{
 		assert(T::IsWindow());
-		WPARAM hMDIChild = reinterpret_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+		WPARAM hMDIChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDINEXT, hMDIChild, TRUE);
 	}
 
@@ -415,7 +415,7 @@ namespace Win32xx
 	inline void CMDIFrameT<T>::MDIRestore() const
 	{
 		assert(T::IsWindow());
-		WPARAM hMDIChild = reinterpret_cast<WPARAM>(GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+		WPARAM hMDIChild = GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0L, 0L);
 		GetMDIClient().SendMessage(WM_MDIRESTORE, hMDIChild, 0L);
 	}
 

@@ -116,15 +116,15 @@ LoadDocRegistry(LPCTSTR szKeyName)                                      /*
 	    _T("\\Document Settings");
 	if (ERROR_SUCCESS == key.Open(HKEY_CURRENT_USER, strKey, KEY_READ))
 	{
-		m_iByte     = (BYTE)RegQueryDWORDValue(key, _T("Byte1"));
-		m_iShort    = (short)RegQueryDWORDValue(key, _T("Short1"));
+		m_iByte     = static_cast<BYTE>(RegQueryDWORDValue(key, _T("Byte1")));
+		m_iShort    = static_cast<short>(RegQueryDWORDValue(key, _T("Short1")));
 		m_iInt      = RegQueryDWORDValue(key, _T("Int1"));
 		m_iUINT     = RegQueryDWORDValue(key, _T("UINT1"));
 		m_iLong     = RegQueryDWORDValue(key, _T("Long1"));
 		m_ULong     = RegQueryDWORDValue(key, _T("ULong1"));
 		CString s   = RegQueryStringValue(key, _T("Float1"));
 		LPTSTR p;
-		m_fFloat    = (float)_tcstod(s.c_str(), &p);
+		m_fFloat    = static_cast<float>(_tcstod(s.c_str(), &p));
 		s           = RegQueryStringValue(key, _T("Double1"));
 		m_dDouble   = _tcstod(s, &p);
 		s           = RegQueryStringValue(key, _T("LPTSTR1"));
@@ -200,8 +200,7 @@ RegQueryStringValue(CRegKey &key, LPCTSTR pName)  			/*
 {
 	ULONG len = 256;
 	CString sValue;
-	if (ERROR_SUCCESS == key.QueryStringValue(pName,
-	    (LPTSTR)sValue.GetBuffer(255), &len))
+	if (ERROR_SUCCESS == key.QueryStringValue(pName, sValue.GetBuffer(255), &len))
 	{
 		sValue.ReleaseBuffer();
 		return sValue;
@@ -250,9 +249,9 @@ SaveDocRegistry(LPCTSTR szKeyName)                                      /*
 		key.SetDWORDValue(_T("ComboBox1x"), m_iComboBox);
 		key.SetDWORDValue(_T("Slider1"),    m_iSlider);
 		ULONG size = sizeof(SYSTEMTIME);
-		key.SetBinaryValue(_T("MyDateTime"), (void*)&m_stDateTime,
+		key.SetBinaryValue(_T("MyDateTime"), static_cast<void*>(&m_stDateTime),
 		    size);
-		key.SetBinaryValue(_T("MoCalendar1"), (void*)&m_stMoCalendar,
+		key.SetBinaryValue(_T("MoCalendar1"), static_cast<void*>(&m_stMoCalendar),
 		    size);
 	}
 }

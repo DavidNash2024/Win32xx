@@ -144,9 +144,9 @@ void CMainWindow::PerformanceTest()
 void CMainWindow::SendText(LPCTSTR str)
 {
 	// Send text to the Edit window
-	m_Edit.SendMessage(EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)str);
-	m_Edit.SendMessage(EM_REPLACESEL,  (WPARAM)FALSE, (LPARAM)_T("\r\n"));
-	m_Edit.SendMessage(EM_SCROLLCARET, (WPARAM)0,     (LPARAM)0);
+	m_Edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(str));
+	m_Edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(_T("\r\n")));
+	m_Edit.SendMessage(EM_SCROLLCARET, 0, 0);
 
 	TRACE(str);
 	TRACE("\n");

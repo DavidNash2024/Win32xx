@@ -165,7 +165,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
 	TCHAR szFileName[_MAX_PATH];
-	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+	::DragQueryFile(hDropInfo, 0, szFileName, _MAX_PATH);
 
 	if (ReadFile(szFileName))
 	{
@@ -422,7 +422,7 @@ LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 	case EN_DROPFILES:
 	{
 		ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-		HDROP hDropInfo = (HDROP)ENDrop->hDrop;
+		HDROP hDropInfo = reinterpret_cast<HDROP>(ENDrop->hDrop);
 		OnDropFiles(hDropInfo);
 	}
 	return TRUE;
@@ -547,8 +547,8 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 		File.Open(szFileName, OPEN_EXISTING);
 
 		EDITSTREAM es;
-		es.dwCookie =  (DWORD_PTR) File.GetHandle();
-		es.pfnCallback = (EDITSTREAMCALLBACK) MyStreamInCallback;
+		es.dwCookie =  reinterpret_cast<DWORD_PTR>(File.GetHandle());
+		es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
 		m_RichView.StreamIn(SF_TEXT, es);
 
 		//Clear the modified text flag
@@ -656,9 +656,9 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 		File.Open(szFileName, CREATE_ALWAYS);
 
 		EDITSTREAM es;
-		es.dwCookie = (DWORD_PTR)File.GetHandle();
+		es.dwCookie = reinterpret_cast<DWORD_PTR>(File.GetHandle());
 		es.dwError = 0;
-		es.pfnCallback = (EDITSTREAMCALLBACK)MyStreamOutCallback;
+		es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
 		m_RichView.StreamOut(SF_TEXT, es);
 
 		//Clear the modified text flag

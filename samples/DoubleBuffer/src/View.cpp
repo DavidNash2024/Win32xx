@@ -106,7 +106,7 @@ LRESULT CView::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
 	CMemDC dcMem3(dc);
 	dcMem3.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
-	dcMem3.SolidFill(RGB(255,255,255), rc);
+	dcMem3.SolidFill(RGB(255, 255, 255), rc);
 
 	// Copy the orange ball to the memory DC
 	dcMem3.BitBlt(x, 0, m_BallSize.cx, m_BallSize.cy, dcMemOrange, 0, 0, SRCCOPY);

@@ -17,18 +17,18 @@ void CTCPClientDlg::AppendText(int nID, LPCTSTR buf)
 	// This function appends some text to an edit control
 
 	// Append Line Feed
-	int ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	LRESULT ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	if (ndx)
 	{
 
-		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-		SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) (_T( "\r\n")));
+		SendDlgItemMessage(nID, EM_SETSEL, ndx, ndx);
+		SendDlgItemMessage(nID, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(_T( "\r\n")));
 	}
 
 	// Append text
-	ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
-	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) buf);
+	ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	SendDlgItemMessage(nID, EM_SETSEL, ndx, ndx);
+	SendDlgItemMessage(nID, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(buf));
 }
 
 void CTCPClientDlg::OnClose()
@@ -100,18 +100,18 @@ void CSvrDialog::Append(int nID, LPCTSTR buf)
 	// This function appends some text to an edit control
 
 	// Append Line Feed
-	int ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	LRESULT ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
 	if (ndx)
 	{
 
-		SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-		SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) (_T( "\r\n")));
+		SendDlgItemMessage(nID, EM_SETSEL, ndx, ndx);
+		SendDlgItemMessage(nID, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(_T("\r\n")));
 	}
 
 	// Append text
-	ndx = (int)SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
-	SendDlgItemMessage(nID, EM_SETSEL, (WPARAM)ndx, (LPARAM)ndx);
-	SendDlgItemMessage(nID, EM_REPLACESEL, 0, (LPARAM) buf);
+	ndx = SendDlgItemMessage(nID, WM_GETTEXTLENGTH, 0, 0);
+	SendDlgItemMessage(nID, EM_SETSEL, ndx, ndx);
+	SendDlgItemMessage(nID, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(buf));
 }
 
 INT_PTR CSvrDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -328,7 +328,7 @@ BOOL CSvrDialog::OnSocketAccept()
 
 	// Reposition the chat dialog
 	CRect rc = pDialog->GetWindowRect();
-	int offset = 4 * ((int)m_ConnectedClients.size() - 1);
+	int offset = 4 * (static_cast<int>(m_ConnectedClients.size()) - 1);
 	pDialog->MoveWindow(rc.left + offset, rc.top + offset + 80, rc.Width(), rc.Height(), TRUE);
 	pDialog->ShowWindow();
 

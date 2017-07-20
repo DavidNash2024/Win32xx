@@ -67,7 +67,7 @@ BOOL CMyDialog::OnInitDialog()
 
 	// Put some text in the list box
 	for (int i = 0 ; i < 8 ; i++)
-		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, (LPARAM) _T("List Box"));
+		SendDlgItemMessage(IDC_LIST1, LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(_T("List Box")));
 
 	return TRUE;
 }

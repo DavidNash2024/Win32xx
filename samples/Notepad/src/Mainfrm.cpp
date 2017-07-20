@@ -95,7 +95,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
 	TCHAR szFileName[_MAX_PATH];
-	::DragQueryFile((HDROP)hDropInfo, 0, (LPTSTR)szFileName, _MAX_PATH);
+	::DragQueryFile(hDropInfo, 0, szFileName, _MAX_PATH);
 
 	if (ReadFile(szFileName))
 	{
@@ -357,14 +357,14 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 
 LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
 {
-	NMHDR* pNMH;
-	pNMH = (LPNMHDR)lParam;
+	NMHDR* pNMH = reinterpret_cast<LPNMHDR>(lParam);
+
 	switch (pNMH->code)
 	{
 	case EN_DROPFILES:
 	{
 		ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-		HDROP hDropInfo = (HDROP)ENDrop->hDrop;
+		HDROP hDropInfo = reinterpret_cast<HDROP>(ENDrop->hDrop);
 		OnDropFiles(hDropInfo);
 	}
 	return TRUE;
@@ -388,7 +388,7 @@ BOOL CMainFrame::OnOptionsFont()
 	lstrcpy(lf.lfFaceName, cf2.szFaceName);
 	lf.lfHeight = cf2.yHeight / 15;
 	lf.lfWeight = (cf2.dwEffects & CFE_BOLD) ? 700 : 400;
-	lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);
+	lf.lfItalic = (cf2.dwEffects & CFE_ITALIC);
 
 	// Display the Choose Font dialog
 	CFontDialog LogFont(lf, CF_SCREENFONTS | CF_EFFECTS);
@@ -427,8 +427,8 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 		File.Open(szFileName, OPEN_EXISTING);
 
 		EDITSTREAM es;
-		es.dwCookie = (DWORD_PTR)File.GetHandle();
-		es.pfnCallback = (EDITSTREAMCALLBACK)MyStreamInCallback;
+		es.dwCookie = reinterpret_cast<DWORD_PTR>(File.GetHandle());
+		es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
 		m_RichView.StreamIn(SF_TEXT, es);
 
 		//Clear the modified text flag
@@ -507,9 +507,9 @@ BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
 		File.Open(szFileName, CREATE_ALWAYS);
 
 		EDITSTREAM es;
-		es.dwCookie = (DWORD_PTR)File.GetHandle();
+		es.dwCookie = reinterpret_cast<DWORD_PTR>(File.GetHandle());
 		es.dwError = 0;
-		es.pfnCallback = (EDITSTREAMCALLBACK)MyStreamOutCallback;
+		es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
 		m_RichView.StreamOut(SF_TEXT, es);
 
 		//Clear the modified text flag

@@ -58,7 +58,7 @@
 //			MessageBox(fd.GetFolderPath(), _T("Folder Chosen"), MB_OK);
 //		}
 //
-//		// Release the memory allocated for pidlRoot.
+//		// Release the memory allocated for our pidlRoot.
 //		CoTaskMemFree(pidlRoot);
 //
 
@@ -67,8 +67,38 @@
 
 
 #include "wxx_dialog.h"
+
+#ifdef _MSC_VER
+  #pragma warning (disable : 4091)	// temporarily disable C4091 warning
+#endif 
+ 
 #include <shlobj.h>
 
+#ifdef _MSC_VER
+  #pragma warning (default : 4091)	// re-enable C4091 warning
+#endif  
+
+#ifndef BIF_NONEWFOLDERBUTTON
+
+  #define BIF_NONEWFOLDERBUTTON	0x00000200
+
+  // message from browser
+  #define BFFM_INITIALIZED        1
+  #define BFFM_SELCHANGED         2
+  #define BFFM_VALIDATEFAILEDA    3   // lParam:szPath ret:1(cont),0(EndDialog)
+  #define BFFM_VALIDATEFAILEDW    4   // lParam:wzPath ret:1(cont),0(EndDialog)
+  #define BFFM_IUNKNOWN           5   // provides IUnknown to client. lParam: IUnknown*
+
+  // messages to browser
+  #define BFFM_SETSTATUSTEXTA     (WM_USER + 100)
+  #define BFFM_ENABLEOK           (WM_USER + 101)
+  #define BFFM_SETSELECTIONA      (WM_USER + 102)
+  #define BFFM_SETSELECTIONW      (WM_USER + 103)
+  #define BFFM_SETSTATUSTEXTW     (WM_USER + 104)
+  #define BFFM_SETOKTEXT          (WM_USER + 105) // Unicode only
+  #define BFFM_SETEXPANDED        (WM_USER + 106) // Unicode only
+
+#endif
 
 namespace Win32xx
 {
@@ -122,15 +152,16 @@ namespace Win32xx
 //~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
+
 namespace Win32xx
 {
 
-	inline CFolderDialog::CFolderDialog(UINT nID) : CDialog(nID), m_imageIndex(0), m_pidlRoot(0)
+	inline CFolderDialog::CFolderDialog(UINT nID) : CDialog(nID), m_pidlRoot(0), m_imageIndex(0)
 	{
 		ZeroMemory(&m_bi, sizeof(m_bi));
 		m_bi.lpfn = BrowseCallbackProc;
 		m_bi.lParam = reinterpret_cast<LPARAM>(this);
-		
+
 		// Set the default flags.
 		//  BIF_NEWDIALOGSTYLE    - Only return file system directories.
 		//  BIF_NEWDIALOGSTYLE    - Provides a resizable dialog without an edit box.
@@ -138,7 +169,7 @@ namespace Win32xx
 		m_flags = BIF_RETURNONLYFSDIRS |BIF_NEWDIALOGSTYLE | BIF_NONEWFOLDERBUTTON;
 		::CoInitialize(NULL);
 	}
- 
+
 
 	inline CFolderDialog::~CFolderDialog()
 	{
@@ -249,13 +280,13 @@ namespace Win32xx
 	//	SetExpanded(L"C:\\Program Files");
 	//	SetSelection(_T("C:\\Temp"));
 	}
-	
+
 
 	// Called when an IUnknown interface is available to the dialog box.
 	inline void CFolderDialog::OnIUnknown(LPARAM)
-	{		
+	{
 	}
-	
+
 
 	// Called when the OK button is pressed.
 	inline void CFolderDialog::OnOK()
@@ -267,11 +298,11 @@ namespace Win32xx
 	inline void CFolderDialog::OnSelChanged()
 	{
 	}
-	
+
 
 	// Called when the user typed an invalid name into the dialog's edit box.
 	inline int CFolderDialog::OnValidateFailed(LPARAM)
-	{	
+	{
 		// returns zero to dismiss the dialog or nonzero to keep the dialog displayed.
 		return 1;
 	}
@@ -297,28 +328,28 @@ namespace Win32xx
 		SendMessage(BFFM_SETOKTEXT, 0, (LPARAM)pszText);
 	}
 
-	
+
 	// Sets the location of the root folder from which to start browsing.
 	inline void CFolderDialog::SetRoot(LPITEMIDLIST pidl)
 	{
 		m_pidlRoot = pidl;
 	}
 
-	
+
 	// Specifies the path of a folder to select.
 	inline void CFolderDialog::SetSelection(LPITEMIDLIST pItemIDList)
 	{
 		SendMessage(BFFM_SETSELECTION, FALSE, (LPARAM)pItemIDList);
 	}
 
-	
+
 	// Specifies the path of a folder to select.
 	inline void CFolderDialog::SetSelection(LPCTSTR pszPath)
 	{
 		SendMessage(BFFM_SETSELECTION, TRUE, (LPARAM)pszPath);
 	}
 
-	
+
 	// Sets the status text.
 	// This is incompatible with the BIF_USENEWUI or BIF_NEWDIALOGSTYLE flags.
 	inline void CFolderDialog::SetStatusText(LPCTSTR pszText)
@@ -327,7 +358,7 @@ namespace Win32xx
 	}
 
 
-	// Sets the title of the folder browse dialog.
+	// Sets the title of the browse for folder dialog.
 	inline void CFolderDialog::SetTitle(LPCTSTR pszTitle)
 	{
 		if (pszTitle)

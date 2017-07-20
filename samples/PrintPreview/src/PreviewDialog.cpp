@@ -86,14 +86,14 @@ void CPreviewPane::Render(CDC& dc)
 		if ((rcClient.Width() - 2*Border)*ratio < (rcClient.Height() - 2*Border))
 		{
 			PreviewWidth = rcClient.Width() - (2*Border);
-			PreviewHeight = (int)(PreviewWidth * ratio);
+			PreviewHeight = static_cast<int>(PreviewWidth * ratio);
 
 			yBorder = (rcClient.Height() - PreviewHeight) / 2;
 		}
 		else
 		{
 			PreviewHeight = rcClient.Height() - (2*Border);
-			PreviewWidth = (int)(PreviewHeight / ratio);
+			PreviewWidth = static_cast<int>(PreviewHeight / ratio);
 
 			xBorder = (rcClient.Width() - PreviewWidth) / 2;
 		}

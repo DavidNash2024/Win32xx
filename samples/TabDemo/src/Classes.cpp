@@ -61,7 +61,7 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 	tvi.iImage = iImage;
 	tvi.iSelectedImage = iImage;
-	tvi.pszText = (LPTSTR)szText;
+	tvi.pszText = const_cast<LPTSTR>(szText);
 
 	TVINSERTSTRUCT tvis;
 	ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));

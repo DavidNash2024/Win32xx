@@ -22,7 +22,7 @@ DWORD CFormDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
   DWORD   dwType;
   DWORD   dwCount = sizeof(DWORD);
   DWORD   dwValue = 0;
-  if (ERROR_SUCCESS == RegQueryValueEx(hKey, pName, NULL, &dwType, (LPBYTE)&dwValue, &dwCount))
+  if (ERROR_SUCCESS == RegQueryValueEx(hKey, pName, NULL, &dwType, reinterpret_cast<LPBYTE>(&dwValue), &dwCount))
 	  return dwValue;
   else
 	  return 0;
