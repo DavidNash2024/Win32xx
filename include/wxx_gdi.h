@@ -2753,7 +2753,8 @@ namespace Win32xx
 	inline int CDC::SelectObject(HRGN hRgn) const
 	{
 		assert(m_pData);
-		return reinterpret_cast<int>(::SelectObject(m_pData->hDC, hRgn));
+		HGDIOBJ object = ::SelectObject(m_pData->hDC, hRgn);
+		return reinterpret_cast<int>(object);
 	}
 
 

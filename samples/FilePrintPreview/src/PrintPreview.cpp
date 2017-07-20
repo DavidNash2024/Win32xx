@@ -394,7 +394,7 @@ OnOK()									/*
 	{
 		CString sPage = m_EditPage.GetWindowText();
 		TCHAR *stop;
-		UINT nPage = (UINT)_tcstol(sPage, &stop, 10);
+		UINT nPage = _tcstol(sPage, &stop, 10);
 		nPage = MIN(MAX(1, nPage), m_nNumPreviewPages);
 		OnPreviewPage(m_nCurrentPage = nPage - 1);
 	}
@@ -537,7 +537,7 @@ OnZoomChange()							/*
 		TCHAR *stop;
 		m_ComboZoom.GetLBText(selection, val);
 		m_PreviewPane.
-		    SetPaneZoomState((int)_tcstol(val, &stop, 10));
+		    SetPaneZoomState(_tcstol(val, &stop, 10));
 	}
 	m_PreviewPane.ShowScrollBars(selection == ZOOM_OUT ? 
 	    FALSE : TRUE);
@@ -604,8 +604,7 @@ RegQueryStringValue(CRegKey &key, LPCTSTR pName)  			/*
 {
 	ULONG len = 256;
 	CString sValue;
-	if (ERROR_SUCCESS == key.QueryStringValue(pName,
-	    (LPTSTR)sValue.GetBuffer(255), &len))
+	if (ERROR_SUCCESS == key.QueryStringValue(pName, sValue.GetBuffer(255), &len))
 	{
 		sValue.ReleaseBuffer();
 		return sValue;
@@ -779,8 +778,8 @@ GetZoom()								/*
 		  // The zoom factor zf is
 		DSize zf(1.0 / zoom.cx - 1.0, 1.0 / zoom.cy - 1.0);
 		ScrollSize = CSize(m_ZoomState == ZOOM_WIDTH ? 0 :
-		    MAX(0, Bitmap.cx + 2 * BORDER - (int)(Preview.cx * zf.cx)),
-		    MAX(0, Bitmap.cy + 2 * BORDER - (int)(Preview.cy * zf.cy)));
+		    MAX(0, Bitmap.cx + 2 * BORDER - static_cast<int>(Preview.cx * zf.cx)),
+		    MAX(0, Bitmap.cy + 2 * BORDER - static_cast<int>(Preview.cy * zf.cy)));
 		  // Reset the scrolling sizes only if the bars are visible 
 		  // and either (1) the zoom state changed, or (2) the size 
 		  // has chanted and the scaling is not ZOOM_WIDTH, or, (3) 
@@ -867,7 +866,7 @@ OnDraw(CDC& dc)								/*
 		  // Copy from the memory DC to the PreviewPane's DC with 
 		  // scaling, using HALFTONE anti-aliasing for better quality
 		dc.SetStretchBltMode(HALFTONE);
-		::SetBrushOrgEx((HDC)dc, Border.cx, Border.cy, NULL);
+		::SetBrushOrgEx(dc, Border.cx, Border.cy, NULL);
 		dc.StretchBlt(Border.cx, Border.cy, Preview.cx, Preview.cy, 
 		    dcMem, p.x, p.y,  int(Preview.cx / zoom.cx), 
 		    int(Preview.cy / zoom.cy), SRCCOPY);
@@ -1105,14 +1104,14 @@ OnInitDialog()								/*
 	CString s;
 	m_ScreenInches = GetParent().GetScreenSize();
 	s.Format(_T("% .2f"), m_ScreenInches.cx);;
-	::SetWindowText((HWND)m_ScreenWidth, s.c_str());
+	m_ScreenWidth.SetWindowText(s.c_str());
 	s.Format(_T("% .2f"), m_ScreenInches.cy);;
-	::SetWindowText((HWND)m_ScreenHeight, s.c_str());
+	m_ScreenHeight.SetWindowText(s.c_str());
 	m_Preview = GetParent().GetInitPreviewSize();
 	s.Format(_T("% .2f"), m_Preview.cx);;
-	::SetWindowText((HWND)m_PreviewWidth, s.c_str());
+	m_PreviewWidth.SetWindowText(s.c_str());
 	s.Format(_T("% .2f"), m_Preview.cy);;
-	::SetWindowText((HWND)m_PreviewHeight, s.c_str());
+	m_PreviewHeight.SetWindowText(s.c_str());
 
 	return TRUE;
 }
@@ -1201,7 +1200,7 @@ OnOK()									/*
 	try
 	{
 		  // check the screen width box value
-		s.GetWindowText((HWND)m_ScreenWidth);
+		s.GetWindowText(m_ScreenWidth);
 		double sw = _tcstod(s.c_str(), &end); // nothing but the number
 		if (sw > 0.0 && *end == 0)
 			screen.cx = sw;
@@ -1209,7 +1208,7 @@ OnOK()									/*
 			throw  _T("Bad screen width entry");
 
 		  // check the screen box height
-		s.GetWindowText((HWND)m_ScreenHeight);
+		s.GetWindowText(m_ScreenHeight);
 		double sh = _tcstod(s.c_str(), &end);
 		if (sh > 0.0 && *end == 0)
 			screen.cy = sh;
@@ -1217,7 +1216,7 @@ OnOK()									/*
 			throw _T("Bad screen height entry");
 
 		  // check the initial preview width
-		s.GetWindowText((HWND)m_PreviewWidth);
+		s.GetWindowText(m_PreviewWidth);
 		double pw = _tcstod(s.c_str(), &end);
 		if (pw > 0.0 && *end == 0)
 			preview.cx = pw;
@@ -1225,7 +1224,7 @@ OnOK()									/*
 			throw _T("Bad preview width entry");
 
 		  // check the initial preview height
-		s.GetWindowText((HWND)m_PreviewHeight);
+		s.GetWindowText(m_PreviewHeight);
 		double ph = _tcstod(s.c_str(), &end);
 		if (ph > 0.0 && *end == 0)
 			preview.cy = ph;

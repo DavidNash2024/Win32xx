@@ -244,7 +244,7 @@ OpenDoc(const CString& file)						/*
 		CStringA a;
 		CStringW w;
 		CString entry, t;
-		UINT length = (UINT)m_fDoc_file.GetLength();
+		UINT length = static_cast<UINT>(m_fDoc_file.GetLength());
 		if (length > 2)
 		{
 			m_fDoc_file.Read(a.GetBuffer(2), 2);
@@ -284,7 +284,7 @@ OpenDoc(const CString& file)						/*
 			{
 				AddRecord(entry);
 				m_stDoc_width = MAX(m_stDoc_width, 
-				    (UINT)entry.GetLength());
+				    static_cast<UINT>(entry.GetLength()));
 				entry.Empty();
 			}
 			else if (t[0] == _T('\r'))

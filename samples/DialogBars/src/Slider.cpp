@@ -29,7 +29,7 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 			CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
 			MyDialog.SetProgress(nPos);		// Set the progress bar position
-			MyDialog.SetScroll(nPos);			// Set the scroll bar position
+			MyDialog.SetScroll(nPos);		// Set the scroll bar position
 			MyDialog.SetStatic(TRUE, nPos);	// Set the static text
 			break;
 		}
@@ -41,7 +41,6 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
 void CMySlider::SetSlider(int nPos)
 {
 	// Set the slider position
-	// SendMessage(TBM_SETPOS, TRUE, nPos);
 	SetPos(nPos, TRUE);
 }
 

@@ -1,7 +1,7 @@
 [Project]
-FileName=PrintPreview_RELEASE.dev
+FileName=FilePrintPreview_RELEASE.dev
 Name=PrintPreview
-UnitCount=14
+UnitCount=15
 Type=0
 Ver=2
 ObjFiles=
@@ -51,16 +51,6 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit1]
-FileName=..\src\main.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit2]
 FileName=..\src\Mainfrm.cpp
 CompileCpp=1
 Folder=Source
@@ -70,7 +60,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit3]
+[Unit2]
 FileName=..\src\Mainfrm.h
 CompileCpp=1
 Folder=Header
@@ -80,7 +70,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit4]
+[Unit3]
 FileName=..\src\resource.h
 CompileCpp=1
 Folder=Header
@@ -90,8 +80,9 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit5]
+[Unit4]
 FileName=..\src\Resource.rc
+CompileCpp=1
 Folder=Resource
 Compile=1
 Link=0
@@ -99,17 +90,17 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit6]
+[Unit5]
 FileName=..\src\RichView.cpp
-CompileCpp=1
 Folder=Source
 Compile=1
 Link=1
 Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
+CompileCpp=1
 
-[Unit7]
+[Unit6]
 FileName=..\src\RichView.h
 CompileCpp=1
 Folder=Header
@@ -119,7 +110,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit8]
+[Unit7]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -129,7 +120,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit9]
+[Unit8]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -139,7 +130,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit10]
+[Unit9]
 FileName=..\src\targetver.h
 CompileCpp=1
 Folder=Header
@@ -149,8 +140,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit11]
-FileName=..\src\TextApp.cpp
+[Unit10]
+FileName=..\src\App.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -159,8 +150,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit12]
-FileName=..\src\TextApp.h
+[Unit11]
+FileName=..\src\App.h
 CompileCpp=1
 Folder=Header
 Compile=1
@@ -169,8 +160,8 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit13]
-FileName=..\src\PreviewDialog.cpp
+[Unit12]
+FileName=..\src\PrintPreview.cpp
 CompileCpp=1
 Folder=Source
 Compile=1
@@ -179,8 +170,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
+[Unit13]
+FileName=..\src\PrintPreview.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
 [Unit14]
-FileName=..\src\PreviewDialog.h
+FileName=..\src\PrintUtil.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit15]
+FileName=..\src\PrintUtil.h
 CompileCpp=1
 Folder=Header
 Compile=1

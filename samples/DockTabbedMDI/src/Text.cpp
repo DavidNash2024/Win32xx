@@ -22,7 +22,7 @@ void CViewText::OnAttach()
 	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
 		CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 
-	SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0);
+	SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(m_Font.GetHandle()), 0);
 
 	SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }

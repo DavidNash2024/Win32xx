@@ -43,8 +43,8 @@ LRESULT CHyperlink::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		m_IsClicked = FALSE;
 		CPoint pt;
-		pt.x = (short)LOWORD(lParam);
-		pt.y = (short)HIWORD(lParam);
+		pt.x = LOWORD(lParam);
+		pt.y = HIWORD(lParam);
 		ClientToScreen(pt);
 		CRect rc = GetWindowRect(); 
 
@@ -59,7 +59,9 @@ void CHyperlink::OpenUrl()
 {
 	TCHAR szUrl[ MAX_PATH + 1 ] = _T("http://sourceforge.net/projects/win32-framework/");
 
-	if( (int)(LRESULT)::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL ) > 32)
+	HINSTANCE result = ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, SW_SHOWNORMAL);
+
+	if (reinterpret_cast<int>(result) > 32)
 	{
 		m_IsUrlVisited = TRUE;
 

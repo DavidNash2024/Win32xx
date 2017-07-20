@@ -67,14 +67,14 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 				UINT  idCmd;
 
 				//find the largest ID in the menu
-				while((idCmd = Popup.GetMenuItemID(i)) != (UINT)-1)
+				while((idCmd = Popup.GetMenuItemID(i)) != static_cast<UINT>(-1))
 				{
 					if(idCmd > idCmdFirst)
 						idCmdFirst = idCmd;
 					i++;
 				}
 
-				hr = ccm.QueryContextMenu(Popup, 0, ++idCmdFirst, (UINT)-1, CMF_NORMAL | CMF_EXPLORE);
+				hr = ccm.QueryContextMenu(Popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
 
 				if(SUCCEEDED(hr))
 				{
@@ -178,7 +178,7 @@ void CMyListView::DoDefault(int iItem)
 					if(SUCCEEDED(hr))
 					{
 						UINT idCmd = Popup.GetMenuItemID(0);
-						if(idCmd && (idCmd != (UINT)-1))
+						if(idCmd && (idCmd != static_cast<UINT>(-1)))
 						{
 							//determine if the item is a folder
 							ULONG ulAttr = SFGAO_HASSUBFOLDER | SFGAO_FOLDER;
@@ -398,7 +398,7 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
 	UNREFERENCED_PARAMETER(pNMHDR);
 
 	//get the item that has the focus
-	int nItem = static_cast<int>(SendMessage(LVM_GETNEXTITEM, (WPARAM) -1, (LPARAM) MAKELPARAM (LVNI_FOCUSED, 0)));
+	int nItem = static_cast<int>(SendMessage(LVM_GETNEXTITEM, static_cast<WPARAM>(-1), MAKELPARAM (LVNI_FOCUSED, 0)));
 
 	if(nItem != -1)
 		DoDefault(nItem);
@@ -445,7 +445,7 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
 
 			//Store a pointer to the ListItemData in the lParam and m_pItems
 			ListItemData* pItem = new ListItemData(cpidlParent, cpidlRel, cPFolder);
-			lvItem.lParam = (LPARAM)pItem;
+			lvItem.lParam = reinterpret_cast<LPARAM>(pItem);
 			m_pItems.push_back(pItem);
 
 			//text and images are done on a callback basis

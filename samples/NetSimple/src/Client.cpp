@@ -51,7 +51,7 @@ int main()
 	{
 		getline(cin, s);
 		if (s == "quit") break;
-		int i = Client.Send(s.c_str(), (int)s.length(), 0);
+		int i = Client.Send(s.c_str(), static_cast<int>(s.length()), 0);
 		cout << "Sending  " << i << " characters\n";
 	}
 

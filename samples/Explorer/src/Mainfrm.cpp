@@ -59,7 +59,7 @@ void CMainFrame::DoPopupMenu()
 void CMainFrame::OnInitialUpdate()
 {
 	// Add the right window pane
-	int Width = (int) (GetWindowRect().Width() * 0.3);
+	int Width = GetWindowRect().Width() / 3;
 	DWORD dwDockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
 	m_pLeftPane = static_cast<CLeftPane*>(m_RightPane.AddDockedChild(new CLeftPane, dwDockStyle, Width));
 

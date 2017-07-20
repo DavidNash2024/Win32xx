@@ -38,11 +38,11 @@
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
 		Planning and Preparation Subsystem project for C++ programming.
-		
+
 	Acknowledgement:
 	The author would like to thank and acknowledge the advice, critical
 	review, insight, and assistance provided by David Nash in the development
-	of this work.		
+	of this work.
 
 ********************************************************************************
 
@@ -139,7 +139,7 @@ GetDocLength() const							/*
 	Return the document length, in records.
 *----------------------------------------------------------------------------*/
 {
-	return (int)m_doc_content.size();
+	return static_cast<int>(m_doc_content.size());
 }
 
 /*============================================================================*/
@@ -155,7 +155,7 @@ GetDocOpenFileName(const CString &title) const				/*
 //	CFile File;
 //	CString str = File.OpenFileDialog(0, OFN_HIDEREADONLY |
 //	    OFN_OVERWRITEPROMPT, title, m_file_dlg_filter);
-	
+
 //	if (str.IsEmpty())
 //		::MessageBox(NULL, _T("No document name was selected.\n")
 //			_T("The document cannot be opened."),
@@ -634,17 +634,17 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const		/*
 		if (p1 == p2) // H:M only
 		{
 			p2 = MAX(timestr.ReverseFind(_T(" "), p1), 0);
-			p3 = MAX(timestr.Find(_T(" "), p1), (int)len);
+			p3 = MAX(timestr.Find(_T(" "), p1), static_cast<int>(len));
 			H = _ttoi(timestr.Mid(p2 + 1, p1 - p2).c_str());
 			M = _ttoi(timestr.Mid(p1 + 1, p3 - p1).c_str());
 			S = 0;
 		}
 		else // H:M:S
 		{
-			p3 = MAX(timestr.ReverseFind(_T(" "), p1), (int)0);
+			p3 = MAX(timestr.ReverseFind(_T(" "), p1), static_cast<int>(0));
 			H = _ttoi(timestr.Mid(p3, p1 - p3).c_str());
 			M = _ttoi(timestr.Mid(p1 + 1, p2 - p1).c_str());
-			p3 = MAX(timestr.Find(_T(" "), p1), (int)len);
+			p3 = MAX(timestr.Find(_T(" "), p1), static_cast<int>(len));
 			S = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
 		}
 
@@ -659,7 +659,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const		/*
 		p2 = timestr.Find(_T("/"), p1 + 1);
 		assert(p2 <= len);  // Invalid time conversion format.
 
-		p3   = MIN(timestr.Find(_T(" "), p2), (int)len);
+		p3   = MIN(timestr.Find(_T(" "), p2), static_cast<int>(len));
 		yyyy = _ttoi(timestr.Mid(0, p1).c_str());
 		mo   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
 		da   = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
@@ -673,7 +673,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const		/*
 		p2 = timestr.Find(_T("-"), p1 + 1);
 		assert(p2 <= len);  // Invalid time conversion format.
 
-		p3   = MIN(timestr.Find(_T(" "), p2), (int)len);
+		p3   = MIN(timestr.Find(_T(" "), p2), static_cast<int>(len));
 		da   = _ttoi(timestr.Mid(0, p1).c_str());
 		CString mon  = timestr.Mid(p1 + 1, p2 - p1 - 1);
 		yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2).c_str());
@@ -693,7 +693,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const		/*
 		p1 = timestr.Find(_T(" "));
 		assert(p1 <= p2);  // Invalid time conversion format.
 
-		p3   = MIN(timestr.Find(_T(" "), p2 + 2), (int)len);
+		p3   = MIN(timestr.Find(_T(" "), p2 + 2), static_cast<int>(len));
 		CString month = timestr.Mid(0, p1);
 		da   = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
 		yyyy = _ttoi(timestr.Mid(p2 + 1, p3 - p2 - 1).c_str());
@@ -711,7 +711,7 @@ GetTimeFromStr(LPCTSTR szTime, int nDST /* = -1 */) const		/*
 	assert(p1 >= 0);  // Invalid time conversion format.
 	if (p1 >= 0)  // "yyyy+doy H:M:S"
 	{
-		p2 = MIN(timestr.Find(_T(" ")), (int)len);
+		p2 = MIN(timestr.Find(_T(" ")), static_cast<int>(len));
 		yyyy = _ttoi(timestr.Mid(0, p1).c_str());
 		doy  = _ttoi(timestr.Mid(p1 + 1, p2 - p1 - 1).c_str());
 		CTime t(yyyy, doy, H, M, S, nDST);
@@ -854,8 +854,8 @@ SaveDocAs(void)							/*
 Serialize(CArchive &ar)                                               	/*
 
         Serialize or deserialize the CDoc document from the archive ar,
-	depending on the sense of ar.IsStoring().  Throw exceptions during 
-	reading or writing if the process fails at any point.  Return true 
+	depending on the sense of ar.IsStoring().  Throw exceptions during
+	reading or writing if the process fails at any point.  Return true
 	if all goes well, or false if it didn't.
 *-----------------------------------------------------------------------------*/
 {

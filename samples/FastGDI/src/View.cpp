@@ -81,9 +81,9 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
 
 		File.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
 		File.Write((LPCVOID) pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
-		File.Write((LPCVOID) lpvBits, (int) pbmih->biSizeImage);
+		File.Write((LPCVOID) lpvBits, pbmih->biSizeImage);
 
-		if (File.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + (int) pbmih->biSizeImage)
+		if (File.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + pbmih->biSizeImage)
 			bResult = TRUE;
 	 }
 

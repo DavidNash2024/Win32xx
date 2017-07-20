@@ -25,7 +25,7 @@ const double inner_margin = 0.3;	// inches
 const double outer_margin = 0.15;	// inches
 
 static const int TWIPSperIn = 1440;
-static int InchesToTWIPS(double inches) { return (int)(TWIPSperIn * inches);}
+static int InchesToTWIPS(double inches) { return static_cast<int>(TWIPSperIn * inches);}
 
 /*============================================================================*/
 	CRect 

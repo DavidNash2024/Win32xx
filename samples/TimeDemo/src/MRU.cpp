@@ -263,7 +263,7 @@ UpdateMRUMenu()                          				/*
 	  // find in the leftmost submenu (i.e., the one with index 0)
 	CMenu fileMenu = m_theFrame->GetFrameMenu().GetSubMenu(0);
 	  // compute the index of the last entry in the MRU list
-	int iLast = (int)MIN(m_vMRUEntries.size(), m_nMaxMRU) -  1;
+	int iLast = static_cast<int>(MIN(m_vMRUEntries.size(), m_nMaxMRU)) -  1;
 	  // if there is no leftmost submenu, or if there are no entries to
 	  // post, or if we cannot modify the first entry to indicate an empty
 	  // MRU list, we cannot proceed
@@ -278,7 +278,7 @@ UpdateMRUMenu()                          				/*
 
 	  // remove all the other MRU Menu entries
 	for (int i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 +
-	    (int)m_nMaxMRU; ++i)
+	    static_cast<int>(m_nMaxMRU); ++i)
 		fileMenu.DeleteMenu(i, MF_BYCOMMAND);
 	  // if the list is not empty, there's more to do
 	if (iLast >= 0)

@@ -130,7 +130,7 @@ DoModal(HWND hWndOwner /* = 0 */)      					/*
 		m_hWndOwner = hWndOwner;
 	if (m_hWndOwner == 0)
 		m_hWndOwner = GetApp().GetMainWnd();
-	int ok = (int) CDialog::DoModal(m_hWndOwner);
+	int ok = static_cast<int>(CDialog::DoModal(m_hWndOwner));
 	  // NOTE: the CDialog class message loop handles the passage of
 	  // execution to OnOK() or OnCancel(), the ending of the dialog, and
 	  // the determination of the return value. Since the CDialog::()
@@ -185,7 +185,7 @@ OnInitDialog()								/*
 	CDialog::OnInitDialog();
 	SetWindowTitle();
 	  // subclass the dialog controls
-	HWND hWndCtrl = ::GetDlgItem((HWND)*this, IDC_LIST_BOX);
+	HWND hWndCtrl = ::GetDlgItem(*this, IDC_LIST_BOX);
 	m_ListBox.Attach(hWndCtrl);
 	m_ListBox.ResetContent();
 	for (UINT i = 0; i < m_sList.size(); i++)

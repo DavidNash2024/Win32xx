@@ -27,7 +27,7 @@ void CViewFiles::OnAttach()
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
+	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
 	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();
@@ -40,7 +40,7 @@ int CViewFiles::AddItem(LPCTSTR szText, int nImage)
 	ZeroMemory(&lvi, sizeof(LVITEM));
 	lvi.mask = LVIF_TEXT|LVIF_IMAGE;
 	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
+	lvi.pszText = const_cast<LPTSTR>(szText);
 
 	return InsertItem(lvi);
 }
@@ -71,8 +71,8 @@ BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.mask = LVIF_TEXT;
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
-	lvi1.pszText = (LPTSTR)szText;
-	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, (LPARAM)&lvi1));
+	lvi1.pszText = const_cast<LPTSTR>(szText);
+	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)));
 }
 
 void CViewFiles::InsertItems()

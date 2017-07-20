@@ -364,7 +364,7 @@ namespace Win32xx
 	inline void CWceFrame::SetButtons(const std::vector<UINT> ToolBarData)
 	{
 		int iImages = 0;
-		int iNumButtons = (int)ToolBarData.size();
+		int iNumButtons = static_cast<int>(ToolBarData.size());
 
 		if (iNumButtons > 0)
 		{

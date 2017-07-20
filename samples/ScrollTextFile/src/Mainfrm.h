@@ -76,7 +76,7 @@ CMainFrame : public CFrame						/*
 		virtual void 	OnFileExit(void);
 		virtual void 	OnFileOpenMRU(UINT);
 		virtual void 	OnFileOpen(void);
-        	virtual void   	OnFontChoice(void) { m_View.ClientFontChoice();}
+        virtual void   	OnFontChoice(void) { m_View.ClientFontChoice();}
 		virtual BOOL	OnHelp(void);
 		virtual void 	OnInitialUpdate(void);
 		virtual void 	OnMenuUpdate(UINT nID);

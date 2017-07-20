@@ -58,9 +58,9 @@
 
 // To use CDataExchange, perform the following steps:
 // * Override DoDataExchange and specify the appropriate DDX and DDV functions.
-// * Call UpdateData(FALSE) to initialize the controls and assign their values.
-//    This is typically done in the dialog's OnInitDialog function.
-// * Call UpdateData(TRUE) to validate and retrieve the control data.
+// * Call UpdateData(dataExchange, FALSE) to initialize the controls and assign
+//    their values. This is typically done in the dialog's OnInitDialog function.
+// * Call UpdateData(dataExchange, TRUE) to validate and retrieve the control data.
 
 
 #ifndef _WIN32XX_DDX_H_

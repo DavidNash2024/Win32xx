@@ -82,10 +82,9 @@ class CMainFrame;
 
 /*============================================================================*/
 	class
-CView
+CView	: public CDialog						/*
 
-/*----------------------------------------------------------------------------*/
-	: public CDialog
+*-----------------------------------------------------------------------------*/
 {
 	friend class CMainFrame;
 	friend class CMySlider;
@@ -111,7 +110,7 @@ CView
 		virtual BOOL 	OnInitDialog();
 		virtual void 	OnOK();
 		virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-		virtual BOOL 	PreTranslateMessage(MSG& Msg);  
+		virtual BOOL 	PreTranslateMessage(MSG& Msg);
 		virtual void 	UpdateParameters();
 
 		  // DDX/DDV variables that need to be visible to friends
@@ -157,6 +156,9 @@ CView
 		SYSTEMTIME      m_stDateTime,
 				m_stMoCalendar;
 		
+		  // to enable scrolling if reduced
+		CResizer	m_Resizer;
+
 		  // controls on the form that need to be attached
 		CMyComboBox      m_ComboBox;
 		CMyDateTime      m_DateTime;

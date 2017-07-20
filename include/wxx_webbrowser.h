@@ -40,7 +40,16 @@
 #include "wxx_appcore0.h"
 #include <exdisp.h>
 #include <ocidl.h>
+
+#ifdef _MSC_VER
+  #pragma warning (disable : 4091)	// temporarily disable C4091 warning
+#endif 
+ 
 #include <shlobj.h>
+
+#ifdef _MSC_VER
+  #pragma warning (default : 4091)	// re-enable C4091 warning
+#endif 
 
 
 namespace Win32xx

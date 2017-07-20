@@ -128,10 +128,10 @@ IDtoPart(UINT nIDSeek)							/*
 	status bar PartInfo vector if it exists there; otherwise, return -1.
 *-----------------------------------------------------------------------------*/
 {
-	UINT size = m_statusbar_part.size();
-	for (UINT i = 0; i < size; i++)
+	int size = m_statusbar_part.size();
+	for (int i = 0; i < size; i++)
 		if (m_statusbar_part[i].ID == nIDSeek)
-			return (int)i;
+			return i;
 
 	return -1;
 }

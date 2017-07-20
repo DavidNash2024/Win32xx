@@ -117,8 +117,11 @@ OpenUrl()								/*
 {
 	TCHAR szUrl[ MAX_PATH + 1 ] = 
 	    _T("http://sourceforge.net/projects/win32-framework/");
-	if((int)(LRESULT)::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL, 
-	    SW_SHOWNORMAL ) > 32)
+	
+	HINSTANCE result = ::ShellExecute(NULL, _T("open"), szUrl, NULL, NULL,
+		SW_SHOWNORMAL);
+
+	if (reinterpret_cast<int>(result) > 32)
 	{
 		m_IsUrlVisited = TRUE;
 		  // redraw the StatusBar to update the color

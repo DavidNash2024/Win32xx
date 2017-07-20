@@ -24,7 +24,7 @@ int CViewFiles::AddItem(LPCTSTR szText, int nImage)
 	ZeroMemory(&lvi, sizeof(LVITEM));
 	lvi.mask = LVIF_TEXT | LVIF_IMAGE;
 	lvi.iImage = nImage;
-	lvi.pszText = (LPTSTR)szText;
+	lvi.pszText = const_cast<LPTSTR>(szText);
 
 	return InsertItem(lvi);
 }
@@ -91,7 +91,7 @@ void CViewFiles::SetColumns()
 	lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
 	lvColumn.fmt = LVCFMT_LEFT;
 	lvColumn.cx = 120;
-	TCHAR szString[3][20] = {_T("Name"), TEXT("Size"), _T("Type")};
+	TCHAR szString[3][20] = {_T("Name"), _T("Size"), _T("Type")};
 	for(int i = 0; i < 3; ++i)
 	{
 		lvColumn.pszText = szString[i];
@@ -106,8 +106,8 @@ BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
 	lvi1.mask = LVIF_TEXT;
 	lvi1.iItem = nItem;
 	lvi1.iSubItem = nSubItem;
-	lvi1.pszText = (LPTSTR)szText;
-	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0L, (LPARAM)&lvi1));
+	lvi1.pszText = const_cast<LPTSTR>(szText);
+	return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0L, reinterpret_cast<LPARAM>(&lvi1)));
 }
 
 LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

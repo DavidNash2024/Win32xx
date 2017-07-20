@@ -26,7 +26,7 @@ BOOL CDoc::FileOpen(LPCTSTR szFilename)
 	{
 		// An exception occurred. Display the relevant information.
 		::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-		
+
 		GetAllPoints().clear();
 	}
 
@@ -81,8 +81,8 @@ void CDoc::Print()
 			memset(&di, 0, sizeof(DOCINFO));
 			di.cbSize = sizeof(DOCINFO);
 			di.lpszDocName = _T("Scribble Printout");
-			di.lpszOutput = (LPTSTR)NULL;
-			di.lpszDatatype = (LPTSTR)NULL;
+			di.lpszOutput = static_cast<LPTSTR>(NULL);
+			di.lpszDatatype = static_cast<LPTSTR>(NULL);
 			di.fwType = 0;
 
 			// Begin a print job by calling the StartDoc function.
@@ -113,22 +113,25 @@ void CDoc::Print()
 			MemDC.GetDIBits(bmView, 0, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
 			// Determine the scaling factors required to print the bitmap and retain its original proportions.
-			float fLogPelsX1 = (float)ViewDC.GetDeviceCaps(LOGPIXELSX);
-			float fLogPelsY1 = (float)ViewDC.GetDeviceCaps(LOGPIXELSY);
-			float fLogPelsX2 = (float)GetDeviceCaps(dcPrint, LOGPIXELSX);
-			float fLogPelsY2 = (float)GetDeviceCaps(dcPrint, LOGPIXELSY);
+			float fLogPelsX1 = static_cast<float>(ViewDC.GetDeviceCaps(LOGPIXELSX));
+			float fLogPelsY1 = static_cast<float>(ViewDC.GetDeviceCaps(LOGPIXELSY));
+			float fLogPelsX2 = static_cast<float>(GetDeviceCaps(dcPrint, LOGPIXELSX));
+			float fLogPelsY2 = static_cast<float>(GetDeviceCaps(dcPrint, LOGPIXELSY));
 			float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
 			float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
 
 			// Compute the coordinates of the upper left corner of the centered bitmap.
 			int cWidthPels = GetDeviceCaps(dcPrint, HORZRES);
-			int xLeft = ((cWidthPels / 2) - ((int)(((float)Width) * fScaleX)) / 2);
 			int cHeightPels = GetDeviceCaps(dcPrint, VERTRES);
-			int yTop = ((cHeightPels / 2) - ((int)(((float)Height) * fScaleY)) / 2);
+			int scaledWidth = static_cast<int>(static_cast<float>(Width) * fScaleX);
+			int scaledHeight = static_cast<int>(static_cast<float>(Height) * fScaleY);
+			int xLeft = (cWidthPels - scaledWidth) / 2;
+			int yTop = (cHeightPels - scaledHeight) / 2;
 
 			// Use StretchDIBits to scale the bitmap and maintain its original proportions
-			if (GDI_ERROR == (UINT)StretchDIBits(dcPrint, xLeft, yTop, (int)((float)Width * fScaleX),
-				(int)((float)Height * fScaleY), 0, 0, Width, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY))
+			UINT result = StretchDIBits(dcPrint, xLeft, yTop, scaledWidth, scaledHeight, 0, 0, Width, Height,
+			                            pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
+			if (GDI_ERROR == result)
 			{
 				throw CUserException(_T("Failed to resize image for printing"));
 			}
@@ -149,7 +152,7 @@ void CDoc::Print()
 		CString strMsg = CString(e.GetText());
 		if (e.GetError() != 0)
 			strMsg = strMsg + CString("\n") + e.GetErrorString();
-		
+
 		CString strType = CString(e.what());
 		::MessageBox(NULL, strMsg, strType, MB_ICONWARNING);
 	}
@@ -165,7 +168,7 @@ void CDoc::Serialize(CArchive &ar)
 		// Store the number of points
 		UINT nPoints = GetAllPoints().size();
 		ar << nPoints;
-		
+
 		// Store the PlotPoint data
 		std::vector<PlotPoint>::iterator iter;
 		for (iter = GetAllPoints().begin(); iter < GetAllPoints().end(); ++iter)

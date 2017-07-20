@@ -28,7 +28,7 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 	tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
 	tvi.iImage = iImage;
 	tvi.iSelectedImage = iImage;
-	tvi.pszText = (LPTSTR)szText;
+	tvi.pszText = const_cast<LPTSTR>(szText);
 
 	TVINSERTSTRUCT tvis;
 	ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
@@ -103,7 +103,7 @@ CContainClasses::CContainClasses()
 {
 	SetTabText(_T("ClassView"));
 	SetTabIcon(IDI_CLASSVIEW);
-	SetDockCaption (_T("Class View - Docking container"));
+	SetDockCaption(_T("Class View - Docking container"));
 	SetView(m_ViewClasses);
 }
 
@@ -127,7 +127,7 @@ void CContainClasses::AddCombo()
 
 	// Adjust the toolbar height to accomodate the ComboBoxEx control
 	CRect rc = m_ComboBoxEx.GetWindowRect();
-	TB.SetButtonSize( rc.Height(), rc.Height() );
+	TB.SetButtonSize(rc.Height(), rc.Height());
 
 	// Add the ComboBox's items
 	m_ComboBoxEx.AddItems();

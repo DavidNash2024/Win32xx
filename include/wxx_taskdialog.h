@@ -328,7 +328,7 @@ namespace Win32xx
 
 	
 	// Fills a CString from a string resource or a text string.
-	inline CString CTaskDialog::CTaskDialog::FillString(LPCTSTR pText)
+	inline CString CTaskDialog::FillString(LPCTSTR pText)
 	{
 		if (IS_INTRESOURCE(pText))		// support MAKEINTRESOURCE
 			return LoadString(reinterpret_cast<UINT>(pText));

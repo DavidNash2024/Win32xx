@@ -411,7 +411,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDM_EDIT_UNDO:
 	    {
-	    	if (::GetFocus() !=(HWND)GetREView())
+	    	if (::GetFocus() != GetREView())
 			return ::SendMessage(::GetFocus(), EM_UNDO, 0, 0);
 
 	    	m_Doc.OnUndo();
@@ -421,7 +421,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDM_EDIT_REDO:
 	    {
-	    	if (::GetFocus() !=(HWND)GetREView())
+	    	if (::GetFocus() != GetREView())
 			return ::SendMessage(::GetFocus(), EM_REDO, 0, 0);
 
 	    	m_Doc.OnRedo();
@@ -431,7 +431,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDM_EDIT_CUT:
 	    {
-	    	if (::GetFocus() !=(HWND)GetREView())
+	    	if (::GetFocus() != GetREView())
 			return ::SendMessage(::GetFocus(), WM_CUT, 0, 0);
 
 	    	m_Doc.OnCut();
@@ -441,7 +441,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDM_EDIT_COPY:
 	    {
-	    	if (::GetFocus() !=(HWND)GetREView())
+	    	if (::GetFocus() != GetREView())
 			return ::SendMessage(::GetFocus(), WM_COPY, 0, 0);
 
 	    	m_Doc.OnCopy();
@@ -451,7 +451,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDM_EDIT_PASTE:
 	    {
-	    	if (::GetFocus() !=(HWND)GetREView())
+	    	if (::GetFocus() != GetREView())
 			return ::SendMessage(::GetFocus(), WM_PASTE, 0, 0);
 
 	    	m_Doc.OnPaste();
@@ -461,7 +461,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)					/*
 
 	    case IDM_EDIT_DELETE:
 	    {
-	    	if (::GetFocus() !=(HWND)GetREView())
+	    	if (::GetFocus() != GetREView())
 			return ::SendMessage(::GetFocus(), WM_CLEAR, 0, 0);
 
 	    	m_Doc.OnDelete();
@@ -604,7 +604,7 @@ OnCreate(CREATESTRUCT& rcs)                                            /*
 	  // set the initial flags to use the font style,
 	CHOOSEFONT cf = m_FontChoice.GetParameters();
 	cf.Flags |= CF_USESTYLE;
-	cf.lpszStyle = (LPTSTR)_T("Regular"); // initial font presumed regular
+	cf.lpszStyle = const_cast<LPTSTR>(_T("Regular")); // initial font presumed regular
 	m_FontChoice.SetParameters(cf);
 	  // set the default font
 	CFont f;
@@ -631,7 +631,7 @@ OnEditFind()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find a string..."));
 	m_FindRepDialog.Create(TRUE, _T("Initial Text"), _T(""), FR_DOWN |
-	    FR_ENABLEHOOK, (HWND)*this);
+	    FR_ENABLEHOOK, *this);
 }
 
 /*============================================================================*/
@@ -647,7 +647,7 @@ OnEditReplace()                                                            /*
 {
 	m_FindRepDialog.SetBoxTitle(_T("Find, then Replace"));
 	m_FindRepDialog.Create(FALSE, _T("Initial Text"), _T("Replace Text"),
-	    FR_DOWN | FR_ENABLEHOOK, (HWND)*this);
+	    FR_DOWN | FR_ENABLEHOOK, *this);
 }
 
 /*============================================================================*/
@@ -1205,7 +1205,7 @@ UpdateMRUMenu()                          				/*
 	  // find in the leftmost submenu (i.e., the one with index 0)
 	CMenu fileMenu = GetFrameMenu().GetSubMenu(0);
 	  // compute the index of the last entry in the MRU list
-	int iLast = (int)MIN(GetMRUSize(), m_nMaxMRU) -  1;
+	int iLast = static_cast<int>(MIN(GetMRUSize(), m_nMaxMRU)) -  1;
 	  // if there is no leftmost submenu, or if there are no entries to
 	  // post, or if we cannot modify the first entry to indicate an empty
 	  // MRU list, we cannot proceed
@@ -1221,7 +1221,7 @@ UpdateMRUMenu()                          				/*
 
 	  // remove all the other MRU Menu entries
 	for (int i = IDW_FILE_MRU_FILE2; i <= IDW_FILE_MRU_FILE1 +
-	    (int)m_nMaxMRU; ++i)
+	    static_cast<int>(m_nMaxMRU); ++i)
 		fileMenu.DeleteMenu(i, MF_BYCOMMAND);
 	  // if the list is not empty, there's more to do
 	if (iLast >= 0)
@@ -1310,7 +1310,7 @@ WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                        /*
 	    case WM_CTLCOLORLISTBOX:
 	    case WM_CTLCOLORSCROLLBAR:
 	    case WM_CTLCOLORSTATIC:
-		return OnCtlColor((HDC)wParam, (HWND)lParam, uMsg);
+		return OnCtlColor(reinterpret_cast<HDC>(wParam), reinterpret_cast<HWND>(lParam), uMsg);
 
 	    case WM_SETCURSOR:
 	    {

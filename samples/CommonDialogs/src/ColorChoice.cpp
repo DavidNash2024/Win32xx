@@ -100,7 +100,7 @@ AddColorChoice(UINT nID, const CString& usage, COLORREF color) 		/*
 	triple.usage = usage;
 	triple.color = color;
 	m_ColorTable.push_back(triple);
-	return (UINT)GetTableSize() == size + 1;
+	return (GetTableSize() == size + 1);
 }
 
 /*============================================================================*/
@@ -136,7 +136,7 @@ DoModal(HWND hWndOwner /* = 0 */) 					/*
 		m_LBDlg.AddListItem(m_ColorTable[i].usage);
 	  // Make the control be modal so the choice is returned at
 	  // termination.
-	m_nSelection = (UINT)-1;
+	m_nSelection = static_cast<UINT>(-1);
 	int selection = m_LBDlg.DoModal(hWndOwner);
 	  // if invalid, go no further
 	if (selection < 0)
@@ -164,7 +164,7 @@ GetTableColor(UINT nID) 						/*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	if (idx == (UINT)-1)
+	if (idx == static_cast<UINT>(-1))
 		return RGB(0, 0, 0);
 
 	return m_ColorTable[idx].color;
@@ -180,7 +180,7 @@ GetBrush(UINT nID) 							/*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	COLORREF color = (idx == (UINT)-1 ?
+	COLORREF color = (idx == static_cast<UINT>(-1) ?
 	    RGB(0, 0, 0) : m_ColorTable[idx].color);
 	CBrush br;
   	br.CreateSolidBrush(color);
@@ -192,13 +192,13 @@ GetBrush(UINT nID) 							/*
 GetTableIndex(UINT nID)                                                 /*
 
 	Return the color table index of the entry having the given nID. Return
-	(UINT)-1 if nID is zero or the table is empty.  Throw an exception if
-	nID is nonzero and is not in the table.
+	static_cast<UINT>(-1) if nID is zero or the table is empty.  Throw an
+	exception if nID is nonzero and is not in the table.
 *-----------------------------------------------------------------------------*/
 {
 	  // ignore the invocation if the table is empty
 	if (GetTableSize() == 0 || nID == 0)
-		return (UINT)-1; // default value
+		return static_cast<UINT>(-1); // default value
 
 	UINT idx = 0;
  	std::vector<ctl_color>::iterator it;
@@ -206,7 +206,7 @@ GetTableIndex(UINT nID)                                                 /*
 	    (*it).nID != nID; ++it, ++idx)
 		;
 	if (idx >= GetTableSize())
-		idx = (UINT)-1;
+		idx = static_cast<UINT>(-1);
 
 	return idx;
 }
@@ -220,7 +220,7 @@ GetTableUsage(UINT nID)                                                 /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	CString usage = (idx == (UINT)-1 ? _T("") : m_ColorTable[idx].usage.c_str());
+	CString usage = (idx == static_cast<UINT>(-1) ? _T("") : m_ColorTable[idx].usage.c_str());
 	return  usage;
 }
 
@@ -333,7 +333,7 @@ SetTableColor(UINT nID, COLORREF rgb)                                   /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	if (idx == (UINT)-1)
+	if (idx == static_cast<UINT>(-1))
 		return;
 
 	m_ColorTable[idx].color = rgb;
@@ -348,7 +348,7 @@ SetTableUsage(UINT nID, const CString& s)                               /*
 *-----------------------------------------------------------------------------*/
 {
 	UINT idx = GetTableIndex(nID);
-	if (idx == (UINT)-1)
+	if (idx == static_cast<UINT>(-1))
 		return;
 
 	m_ColorTable[idx].usage = s;
