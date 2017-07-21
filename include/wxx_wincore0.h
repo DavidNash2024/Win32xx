@@ -169,6 +169,7 @@ namespace Win32xx
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL& IsTranslated, BOOL IsSigned) const;
 		UINT  GetDlgItemInt(int nIDDlgItem, BOOL IsSigned) const;
 		CString GetDlgItemText(int nIDDlgItem) const;
+		DWORD GetExStyle() const;
 		CWnd  GetFocus() const;
 		CFont GetFont() const;
 		HICON GetIcon(BOOL IsBigIcon) const;
@@ -220,6 +221,7 @@ namespace Win32xx
 		LONG_PTR SetDlgCtrlID(int idCtrl) const;
 		BOOL  SetDlgItemInt(int nIDDlgItem, UINT uValue, BOOL IsSigned) const;
 		BOOL  SetDlgItemText(int nIDDlgItem, LPCTSTR lpString) const;
+		void  SetExStyle(DWORD dwExStyle) const;
 		CWnd  SetFocus() const;
 		void  SetFont(HFONT hFont, BOOL Redraw = TRUE) const;
 		BOOL  SetForegroundWindow() const;

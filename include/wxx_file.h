@@ -293,10 +293,10 @@ namespace Win32xx
 	{
 		assert(m_hFile);
 
-		DWORD dwPosHigh = (DWORD)(Pos >> 32);
-		DWORD dwPosLow = (DWORD)(Pos & 0xFFFFFFFF);
-		DWORD dwCountHigh = (DWORD)(Count >> 32);
-		DWORD dwCountLow = (DWORD)(Count & 0xFFFFFFFF);
+		DWORD dwPosHigh = static_cast<DWORD>(Pos >> 32);
+		DWORD dwPosLow = static_cast<DWORD>(Pos & 0xFFFFFFFF);
+		DWORD dwCountHigh = static_cast<DWORD>(Count >> 32);
+		DWORD dwCountLow = static_cast<DWORD>(Count & 0xFFFFFFFF);
 
 		if (!::LockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh))
 			throw CFileException(GetFilePath(), _T("Failed to lock the file"));
@@ -473,10 +473,10 @@ namespace Win32xx
 	{
 		assert(m_hFile);
 
-		DWORD dwPosHigh = (DWORD)(Pos >> 32);
-		DWORD dwPosLow = (DWORD)(Pos & 0xFFFFFFFF);
-		DWORD dwCountHigh = (DWORD)(Count >> 32);
-		DWORD dwCountLow = (DWORD)(Count & 0xFFFFFFFF);
+		DWORD dwPosHigh = static_cast<DWORD>(Pos >> 32);
+		DWORD dwPosLow = static_cast<DWORD>(Pos & 0xFFFFFFFF);
+		DWORD dwCountHigh = static_cast<DWORD>(Count >> 32);
+		DWORD dwCountLow = static_cast<DWORD>(Count & 0xFFFFFFFF);
 
 		if (!::UnlockFile(m_hFile, dwPosLow, dwPosHigh, dwCountLow, dwCountHigh))
 			throw CFileException(GetFilePath(), _T("Failed to unlock the file"));

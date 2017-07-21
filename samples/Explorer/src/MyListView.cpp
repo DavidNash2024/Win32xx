@@ -606,26 +606,26 @@ void CMyListView::SetImageLists()
 
 void CMyListView::ViewLargeIcons()
 {
-	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
-	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
+	DWORD dwStyle = GetStyle();
+	SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_ICON );
 }
 
 void CMyListView::ViewSmallIcons()
 {
-	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
-	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
+	DWORD dwStyle = GetStyle();
+	SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_SMALLICON);
 }
 
 void CMyListView::ViewList()
 {
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
+	DWORD dwStyle = GetStyle();
+	SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_LIST);
 }
 
 void CMyListView::ViewReport()
 {
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
-	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+	DWORD dwStyle = GetStyle();
+	SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 }
 
 LRESULT CMyListView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

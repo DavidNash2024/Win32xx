@@ -102,8 +102,8 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 {
 	// Update the check state of the various menu items
 	
-	BOOL bDraw  = m_View.GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED;
-	BOOL bFixed = m_View.GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH;
+	BOOL bDraw  = m_View.GetStyle() & TCS_OWNERDRAWFIXED;
+	BOOL bFixed = m_View.GetStyle() & TCS_FIXEDWIDTH;
 
 	switch (nID) 
 	{
@@ -199,14 +199,14 @@ BOOL CMainFrame::OnTabClose()
 
 BOOL CMainFrame::OnTabFixedWidth()
 {
-	BOOL bFixed = m_View.GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH;
+	BOOL bFixed = m_View.GetStyle() & TCS_FIXEDWIDTH;
 	m_View.SetFixedWidth(!bFixed);
 	return TRUE;
 }
 
 BOOL CMainFrame::OnTabOwnerDraw()
 {
-	BOOL bDraw = m_View.GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED;
+	BOOL bDraw = m_View.GetStyle() & TCS_OWNERDRAWFIXED;
 	m_View.SetOwnerDraw(!bDraw);
 	return TRUE;
 }

@@ -386,8 +386,8 @@ namespace Win32xx
 
 		if (!m_IsShowingButtons) return;
 		if (!GetActiveView()) return;
-		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH)) return;
-		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)) return;
+		if (!(GetStyle() & TCS_FIXEDWIDTH)) return;
+		if (!(GetStyle() & TCS_OWNERDRAWFIXED)) return;
 
 		// Determine the close button's drawing position relative to the window
 		CRect rcClose = GetCloseRect();
@@ -472,8 +472,8 @@ namespace Win32xx
 
 		if (!m_IsShowingButtons) return;
 		if (!GetActiveView()) return;
-		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_FIXEDWIDTH)) return;
-		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)) return;
+		if (!(GetStyle() & TCS_FIXEDWIDTH)) return;
+		if (!(GetStyle() & TCS_OWNERDRAWFIXED)) return;
 
 		// Determine the list button's drawing position relative to the window
 		CRect rcList = GetListRect();
@@ -598,7 +598,7 @@ namespace Win32xx
 	// Draw the tab borders.
 	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
 	{
-		BOOL IsBottomTab = GetWindowLongPtr(GWL_STYLE) & TCS_BOTTOM;
+		BOOL IsBottomTab = GetStyle() & TCS_BOTTOM;
 
 		// Draw a lighter rectangle touching the tab buttons
 		CRect rcItem;
@@ -759,7 +759,7 @@ namespace Win32xx
 	// Returns TRUE if the control's tabs are placed at the top
 	inline BOOL CTab::GetTabsAtTop() const
 	{
-		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = GetStyle();
 		return (!(dwStyle & TCS_BOTTOM));
 	}
 
@@ -848,7 +848,7 @@ namespace Win32xx
 		TabNMHDR.nPage = nPage;
 
 		// The default return value is zero
-		return GetParent().SendMessage(WM_NOTIFY, idCtrl, reinterpret_cast<LPARAM>(&TabNMHDR));
+		return static_cast<BOOL>(GetParent().SendMessage(WM_NOTIFY, idCtrl, reinterpret_cast<LPARAM>(&TabNMHDR)));
 	}
 
 
@@ -867,7 +867,7 @@ namespace Win32xx
 		SetFont(m_TabFont, TRUE);
 
 		// Assign ImageList unless we are owner drawn
-		if (!(GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
+		if (!(GetStyle() & TCS_OWNERDRAWFIXED))
 			SetImageList(m_imlODTab);
 
 		for (int i = 0; i < static_cast<int>(m_vTabPageInfo.size()); ++i)
@@ -890,7 +890,7 @@ namespace Win32xx
 	// Called when the background is erased,
 	inline LRESULT CTab::OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
+		if (GetStyle() & TCS_OWNERDRAWFIXED)
 			return 0;
 
 		return FinalWindowProc(uMsg, wParam, lParam);
@@ -1065,7 +1065,7 @@ namespace Win32xx
 	// Called when this control needs to be painted.
 	inline LRESULT CTab::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
-		if (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED)
+		if (GetStyle() & TCS_OWNERDRAWFIXED)
 		{
 			// Remove all pending paint requests
 			PAINTSTRUCT ps;
@@ -1106,7 +1106,7 @@ namespace Win32xx
 	inline LRESULT CTab::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
 	{
 		// A little hack to reduce tab flicker
-		if (IsWindowVisible() && (GetWindowLongPtr(GWL_STYLE) & TCS_OWNERDRAWFIXED))
+		if (IsWindowVisible() && (GetStyle() & TCS_OWNERDRAWFIXED))
 		{
 			LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
 			pWinPos->flags |= SWP_NOREDRAW;
@@ -1127,7 +1127,7 @@ namespace Win32xx
 	{
 		BOOL RTL = FALSE;
 #if (WINVER >= 0x0500)
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		RTL = (GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
 		// Create the memory DC and bitmap
@@ -1288,10 +1288,10 @@ namespace Win32xx
 	// Enable or disable fixed tab width.
 	inline void CTab::SetFixedWidth(BOOL IsEnabled)
 	{
-		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = GetStyle();
 		if (IsEnabled)
 		{
-			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_FIXEDWIDTH);
+			SetStyle(dwStyle | TCS_FIXEDWIDTH);
 
 			// Remove Image list for fixed width and Owner drawn tabs
 			if (dwStyle & TCS_OWNERDRAWFIXED)
@@ -1301,7 +1301,7 @@ namespace Win32xx
 		}
 		else
 		{
-			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_FIXEDWIDTH);
+			SetStyle(dwStyle & ~TCS_FIXEDWIDTH);
 			SetImageList(m_imlODTab);
 		}
 
@@ -1321,10 +1321,10 @@ namespace Win32xx
 	// Enable or disable owner draw.
 	inline void CTab::SetOwnerDraw(BOOL IsEnabled)
 	{
-		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = GetStyle();
 		if (IsEnabled)
 		{
-			SetWindowLongPtr(GWL_STYLE, dwStyle | TCS_OWNERDRAWFIXED);
+			SetStyle(dwStyle | TCS_OWNERDRAWFIXED);
 
 			// Remove Image list for tabs with both fixed width and Owner drawn tabs
 			if (dwStyle & TCS_FIXEDWIDTH)
@@ -1334,7 +1334,7 @@ namespace Win32xx
 		}
 		else
 		{
-			SetWindowLongPtr(GWL_STYLE, dwStyle & ~TCS_OWNERDRAWFIXED);
+			SetStyle(dwStyle & ~TCS_OWNERDRAWFIXED);
 			SetImageList(m_imlODTab);
 		}
 
@@ -1375,14 +1375,14 @@ namespace Win32xx
 	// Positions the tabs at the top or bottom of the control.
 	inline void CTab::SetTabsAtTop(BOOL IsAtTop)
 	{
-		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = GetStyle();
 
 		if (IsAtTop)
 			dwStyle &= ~TCS_BOTTOM;
 		else
 			dwStyle |= TCS_BOTTOM;
 
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		SetStyle(dwStyle);
 
 		RedrawWindow();
 		RecalcLayout();

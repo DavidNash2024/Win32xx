@@ -85,8 +85,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 	CFrame::OnCreate(cs);
 
 	// Add the CCS_ADJUSTABLE style to the ToolBar
-	DWORD dwStyle = GetToolBar().GetWindowLongPtr(GWL_STYLE);
-	GetToolBar().SetWindowLongPtr(GWL_STYLE, CCS_ADJUSTABLE|dwStyle);
+	DWORD dwStyle = GetToolBar().GetStyle();
+	GetToolBar().SetStyle(CCS_ADJUSTABLE|dwStyle);
 
 	// Untick the Large Icons menu item
 	GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);

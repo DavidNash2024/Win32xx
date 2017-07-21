@@ -103,7 +103,7 @@ namespace Win32xx
 		DWORD	SetExtendedStyle( DWORD dwNewStyle ) const;
 		HCURSOR SetHotCursor( HCURSOR hCursor ) const;
 		int		SetHotItem( int nIndex ) const;
-		DWORD	SetHoverTime( DWORD dwHoverTime = (DWORD)-1 ) const;
+		DWORD	SetHoverTime( DWORD dwHoverTime = static_cast<DWORD>(-1) ) const;
 		CSize	SetIconSpacing( int cx, int cy ) const;
 		CSize	SetIconSpacing( CSize sz ) const;
 		CImageList SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
@@ -571,7 +571,7 @@ namespace Win32xx
 
 
 	// Sets the amount of time that the mouse cursor must hover over an item before it is selected.
-	inline DWORD CListView::SetHoverTime( DWORD dwHoverTime /*= (DWORD)-1*/ ) const
+	inline DWORD CListView::SetHoverTime( DWORD dwHoverTime /*= -1*/ ) const
 	{
 		assert(IsWindow());
 		return ListView_SetHoverTime( *this, dwHoverTime );

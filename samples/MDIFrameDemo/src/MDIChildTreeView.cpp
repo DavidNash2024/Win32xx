@@ -33,9 +33,9 @@ void CViewTree::OnAttach()
 	SetImageList(m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
-	DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = GetStyle();
 	dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-	SetWindowLongPtr(GWL_STYLE, dwStyle);
+	SetStyle(dwStyle);
 
 	DeleteAllItems();
 

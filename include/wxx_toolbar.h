@@ -494,7 +494,7 @@ namespace Win32xx
 			cyMaxSize += rcItem.Height();
 		}
 
-		if (GetWindowLongPtr(GWL_STYLE) & CCS_VERT)
+		if (GetStyle() & CCS_VERT)
 			sz.cy = cyMaxSize;
 		else
 			sz.cx = cxMaxSize;

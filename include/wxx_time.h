@@ -792,8 +792,8 @@ namespace Win32xx
 		else
 			ftlong += ftaddend;
 		FILETIME fts;
-		fts.dwHighDateTime = (DWORD)(ftlong >> 32);
-		fts.dwLowDateTime  = (DWORD)(ftlong & ~0);
+		fts.dwHighDateTime = static_cast<DWORD>(ftlong >> 32);
+		fts.dwLowDateTime  = static_cast<DWORD>(ftlong & ~0);
 		return fts;
 	}
 

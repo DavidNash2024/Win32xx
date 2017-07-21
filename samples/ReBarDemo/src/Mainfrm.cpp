@@ -45,57 +45,57 @@ CRect CMainFrame::GetViewRect() const
 
 void CMainFrame::OnBottom()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 	dwStyle &= ~(CCS_VERT);
 	dwStyle |= CCS_BOTTOM;
 	SetWrapState(&m_ToolBar, FALSE);
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	
-	dwStyle = m_ReBar.GetWindowLongPtr(GWL_STYLE);
+	dwStyle = m_ReBar.GetStyle();
 	dwStyle &= ~(CCS_VERT);
 	dwStyle |= CCS_BOTTOM;
-	m_ReBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ReBar.SetStyle(dwStyle);
 	RecalcLayout();
 }
 
 void CMainFrame::OnLeft()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 	dwStyle &= ~(CCS_BOTTOM);
 	dwStyle |= CCS_LEFT;
 	SetWrapState(&m_ToolBar, TRUE);
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	
-	dwStyle = m_ReBar.GetWindowLongPtr(GWL_STYLE);
+	dwStyle = m_ReBar.GetStyle();
 	dwStyle &= ~(CCS_BOTTOM);
 	dwStyle |= CCS_LEFT;
-	m_ReBar.SetWindowLongPtr(GWL_STYLE, dwStyle);	
+	m_ReBar.SetStyle(dwStyle);	
 	RecalcLayout();
 }
 
 void CMainFrame::OnRight()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 	dwStyle |= CCS_RIGHT;
 	SetWrapState(&m_ToolBar, TRUE);
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	
-	dwStyle = m_ReBar.GetWindowLongPtr(GWL_STYLE);
+	dwStyle = m_ReBar.GetStyle();
 	dwStyle |= CCS_RIGHT;
-	m_ReBar.SetWindowLongPtr(GWL_STYLE, dwStyle);	
+	m_ReBar.SetStyle(dwStyle);	
 	RecalcLayout();
 }
 
 void CMainFrame::OnTop()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 	dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
 	SetWrapState(&m_ToolBar, FALSE);
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 
-	dwStyle = m_ReBar.GetWindowLongPtr(GWL_STYLE);
+	dwStyle = m_ReBar.GetStyle();
 	dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
-	m_ReBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ReBar.SetStyle(dwStyle);
 	RecalcLayout();
 }
 
@@ -314,7 +314,7 @@ void CMainFrame::SetReBarPos()
 	CRect rc = CFrame::GetViewRect();
 	int cyRB = MIN(cxRB, rc.Height());
 
-	DWORD dwStyle = m_ReBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ReBar.GetStyle();
 	dwStyle &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
 
 	switch(dwStyle)

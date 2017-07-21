@@ -727,7 +727,7 @@ OpenDoc(const CString &file)						/*
 		m_Doc_file.Open(file, OPEN_EXISTING);
 		  // if there was no throw, the document opened: check for
 		  // ANSI or UNICODE mode
-		DWORD   length = (DWORD)m_Doc_file.GetLength(),
+		DWORD   length = static_cast<DWORD>(m_Doc_file.GetLength()),
 			nbytes = 0;
 		char *buffer = new char[3];
 		if (!::ReadFile(m_Doc_file.GetHandle(), buffer, 2, &nbytes, NULL))

@@ -82,8 +82,8 @@ namespace Win32xx
 		CBrush GetScrollBkgnd() const    { return m_brushBkgnd; }
 		CPoint GetScrollPosition() const { return m_CurrentPos; }
 		CSize GetTotalScrollSize() const { return m_sizeTotal; }
-		BOOL IsHScrollVisible()	const	 { return (GetWindowLongPtr(GWL_STYLE) &  WS_HSCROLL) != FALSE; }
-		BOOL IsVScrollVisible()	const	 { return (GetWindowLongPtr(GWL_STYLE) &  WS_VSCROLL) != FALSE; }
+		BOOL IsHScrollVisible()	const	 { return (GetStyle() &  WS_HSCROLL) != FALSE; }
+		BOOL IsVScrollVisible()	const	 { return (GetStyle() &  WS_VSCROLL) != FALSE; }
 		void SetScrollPosition(POINT pt);
 		void SetScrollSizes(CSize sizeTotal = CSize(0,0), CSize sizePage = CSize(0,0), CSize sizeLine = CSize(0,0));
 		void SetScrollBkgnd(CBrush brushBkgnd) { m_brushBkgnd = brushBkgnd; }
@@ -415,7 +415,7 @@ namespace Win32xx
 			}
 			else
 			{
-				DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
+				DWORD dwExStyle = GetExStyle();
 				CRect rcTotal(0, 0, m_sizeTotal.cx, m_sizeTotal.cy);
 				AdjustWindowRectEx(&rcTotal, 0, FALSE, dwExStyle);
 

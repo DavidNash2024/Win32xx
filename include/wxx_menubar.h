@@ -900,7 +900,7 @@ namespace Win32xx
 		BOOL IsRightToLeft = FALSE;
 
 #if (WINVER >= 0x0500)
-		IsRightToLeft = ((GetAncestor().GetWindowLongPtr(GWL_EXSTYLE)) & WS_EX_LAYOUTRTL);
+		IsRightToLeft = ((GetAncestor().GetExStyle()) & WS_EX_LAYOUTRTL);
 #endif
 
 		int xPos = IsRightToLeft? rc.right : rc.left;

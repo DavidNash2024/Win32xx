@@ -1598,7 +1598,7 @@ namespace Win32xx
 	inline BOOL CMonthCalendar::SetFirstDayOfWeek(int iDay, int* pnOld/* = NULL*/) const
 	{
 		assert(IsWindow());
-		DWORD dwValue = (DWORD)MonthCal_SetFirstDayOfWeek(*this, iDay);
+		DWORD dwValue = static_cast<DWORD>(MonthCal_SetFirstDayOfWeek(*this, iDay));
 
 		if(pnOld)
 			*pnOld = LOWORD(dwValue);
