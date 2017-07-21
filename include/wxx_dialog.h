@@ -324,7 +324,9 @@ namespace Win32xx
 			{
 				// Do notification reflection if message came from a child window.
 				// Restricting OnNotifyReflect to child windows avoids double handling.
-				HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
+				LPNMHDR pNmhdr = reinterpret_cast<LPNMHDR>(lParam);
+				assert(pNmhdr);
+				HWND hwndFrom = pNmhdr->hwndFrom;
 				CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
 
 				if (pWndFrom != NULL)
@@ -336,7 +338,7 @@ namespace Win32xx
 
 				// Set the return code for notifications
 				if (IsWindow())
-					SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)lr);
+					SetWindowLongPtr(DWLP_MSGRESULT, static_cast<LONG_PTR>(lr));
 
 				return lr;
 			}
@@ -393,7 +395,7 @@ namespace Win32xx
 
 			// Set the return code
 			if (IsWindow())
-				SetWindowLongPtr(DWLP_MSGRESULT, (LONG_PTR)this);
+				SetWindowLongPtr(DWLP_MSGRESULT, reinterpret_cast<LONG_PTR>(this));
 
 			return TRUE;
 		}
@@ -470,7 +472,7 @@ namespace Win32xx
 	{
 		assert( &GetApp() );		// Test if Win32++ has been started
 		assert(!IsWindow());		// Only one window per CWnd instance allowed
-		assert(m_lpTemplate || m_lpszResName);	// Dialog definition required.
+		assert(m_lpTemplate || m_lpszResName);	// Dialog layout must be defined.
 
 		m_IsModal=FALSE;
 		m_hWnd = 0;
@@ -809,7 +811,7 @@ namespace Win32xx
 		m_vResizeData.clear();
 
 		// Add scroll bar support to the parent window
-		DWORD dwStyle = (DWORD)::GetClassLongPtr(hParent, GCL_STYLE);
+		DWORD dwStyle = static_cast<DWORD>(::GetClassLongPtr(hParent, GCL_STYLE));
 		dwStyle |= WS_HSCROLL | WS_VSCROLL;
 		::SetClassLongPtr(hParent, GCL_STYLE, dwStyle);
 

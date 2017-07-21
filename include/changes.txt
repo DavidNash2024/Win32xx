@@ -29,7 +29,9 @@ Changes in detail
 -----------------
 Added CFileFind class
 Added CFolderDialog class
+Added CWnd::GetExStyle
 Added CWnd::GetStyle
+Added CWnd::SetExStyle
 Added CWnd::SetStyle
 Added CDocker::GetActiveView
 Added CDockFrame::OnActivate

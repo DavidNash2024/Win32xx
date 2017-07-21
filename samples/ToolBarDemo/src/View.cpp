@@ -28,39 +28,39 @@ BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 
 void CView::OnBottom()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 
 	dwStyle &= ~(CCS_VERT);
 	dwStyle |= CCS_BOTTOM;
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	RecalcLayout();
 }
 
 void CView::OnLeft()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 
 	dwStyle &= ~(CCS_BOTTOM);
 	dwStyle |= CCS_LEFT;
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	RecalcLayout();
 }
 
 void CView::OnRight()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 
 	dwStyle |= CCS_RIGHT;
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	RecalcLayout();
 }
 
 void CView::OnTop()
 {
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 
 	dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 	RecalcLayout();
 }
 
@@ -82,7 +82,7 @@ int CView::OnCreate(CREATESTRUCT& cs)
 	DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS
 					| TBSTYLE_FLAT | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER ;
 
-	m_ToolBar.SetWindowLongPtr(GWL_STYLE, dwStyle);
+	m_ToolBar.SetStyle(dwStyle);
 
 	// Add the ToolBar buttons
 	TBBUTTON ButtonInfo[] =
@@ -179,7 +179,7 @@ void CView::RecalcLayout()
 	int cxClient = GetClientRect().Width();
 	int cyClient = GetClientRect().Height();
 
-	DWORD dwStyle = m_ToolBar.GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = m_ToolBar.GetStyle();
 	dwStyle &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
 
 	switch(dwStyle)

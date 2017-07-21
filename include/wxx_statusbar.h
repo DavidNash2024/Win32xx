@@ -98,7 +98,7 @@ namespace Win32xx
 		ZeroMemory(&cs, sizeof(cs));
 
 		// Add the gripper style if the parent window is resizable
-		DWORD dwParentStyle = ::GetWindowLongPtr(hWndParent, GWL_STYLE);
+		DWORD dwParentStyle = static_cast<DWORD>(::GetWindowLongPtr(hWndParent, GWL_STYLE));
 		if (dwParentStyle & WS_THICKFRAME)
 		{
 			cs.style |= SBARS_SIZEGRIP;

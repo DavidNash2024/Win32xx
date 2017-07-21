@@ -798,7 +798,7 @@ namespace Win32xx
 		rcClose.left = rcClose.right - cx;
 
 #if (WINVER >= 0x0500)
-		if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		if (GetExStyle() & WS_EX_LAYOUTRTL)
 		{
 			rcClose.left = rc.left + gap;
 			rcClose.right = rcClose.left + cx;
@@ -822,7 +822,7 @@ namespace Win32xx
 			// Create and set up our memory DC
 			CRect rc = GetWindowRect();
 			CMemDC dcMem(dc);
-			int rcAdjust = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)? 2 : 0;
+			int rcAdjust = (GetExStyle() & WS_EX_CLIENTEDGE)? 2 : 0;
 			int Width = MAX(rc.Width() -rcAdjust, 0);
 			int Height = m_pDocker->m_NCHeight + rcAdjust;
 			dcMem.CreateCompatibleBitmap(dc, Width, Height);
@@ -860,7 +860,7 @@ namespace Win32xx
 				DrawCloseButton(dcMem, Focus);
 
 			// Draw the 3D border
-			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+			if (GetExStyle() & WS_EX_CLIENTEDGE)
 				Draw3DBorder(rc);
 
 			// Copy the Memory DC to the window's DC
@@ -880,7 +880,7 @@ namespace Win32xx
 			UINT uState = GetCloseRect().PtInRect(GetCursorPos())? m_IsClosePressed && IsLeftButtonDown()? 2 : 1 : 0;
 			ScreenToClient(rcClose);
 
-			if (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+			if (GetExStyle() & WS_EX_CLIENTEDGE)
 			{
 				rcClose.OffsetRect(2, m_pDocker->m_NCHeight+2);
 				if (GetWindowRect().Height() < (m_pDocker->m_NCHeight+4))
@@ -1208,7 +1208,7 @@ namespace Win32xx
 			cs.dwExStyle = WS_EX_CLIENTEDGE;
 
 #if (WINVER >= 0x0500)
-		if (m_pDocker->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		if (m_pDocker->GetExStyle() & WS_EX_LAYOUTRTL)
 			cs.dwExStyle |= WS_EX_LAYOUTRTL;
 #endif
 
@@ -1320,7 +1320,7 @@ namespace Win32xx
 	{
 		// Calculate the hint window's position for container docking
 		CRect rcHint = pDockTarget->GetDockClient().GetWindowRect();
-		if (pDockTarget->GetDockClient().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+		if (pDockTarget->GetDockClient().GetExStyle() & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
 		pDockTarget->ScreenToClient(rcHint);
 
@@ -1334,14 +1334,14 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #if (WINVER >= 0x0500)
-		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		RTL = (pDockTarget->GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
 		// Calculate the hint window's position for inner docking
 		CDockClient* pDockClient = &pDockTarget->GetDockClient();
 		CRect rcHint = pDockClient->GetWindowRect();
 
-		if (pDockClient->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+		if (pDockClient->GetExStyle() & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
 		pDockTarget->ScreenToClient(rcHint);
 
@@ -1390,7 +1390,7 @@ namespace Win32xx
 		// Calculate the hint window's position for outer docking
 		CDocker* pDockTarget = pDockDrag->GetDockAncestor();
 		CRect rcHint = pDockTarget->GetViewRect();
-		if (pDockTarget->GetDockClient().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_CLIENTEDGE)
+		if (pDockTarget->GetDockClient().GetExStyle() & WS_EX_CLIENTEDGE)
 			rcHint.InflateRect(-2, -2);
 
 		int Width;
@@ -1398,7 +1398,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (pDockTarget->GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		RTL = (pDockTarget->GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
 		int BarWidth = pDockDrag->GetBarWidth();
@@ -1596,7 +1596,7 @@ namespace Win32xx
 		if (NULL == pDockTarget) return FALSE;
 
 		if (!IsWindow())	Create();
-		m_IsOverContainer = pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER);
+		m_IsOverContainer = static_cast<BOOL>(pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER));
 
 		// Redraw the target if the dock target changes
 		if (m_pOldDockTarget != pDockTarget)	Invalidate();
@@ -1997,7 +1997,7 @@ namespace Win32xx
 
 		// Change the Docker to a POPUP window
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-		pDocker->SetWindowLongPtr(GWL_STYLE, dwStyle);
+		pDocker->SetStyle(dwStyle);
 		pDocker->SetRedraw(FALSE);
 		pDocker->SetParent(0);
 		pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
@@ -2243,7 +2243,7 @@ namespace Win32xx
 			pDocker->m_pDockParent = this;
 			pDocker->m_IsBlockMove = FALSE;
 			pDocker->ShowWindow(SW_HIDE);
-			pDocker->SetWindowLongPtr(GWL_STYLE, WS_CHILD);
+			pDocker->SetStyle(WS_CHILD);
 			pDocker->SetDockStyle(dwDockStyle);
 			pDocker->SetParent(*this);
 			pDocker->GetDockBar().SetParent(*GetDockAncestor());
@@ -2283,7 +2283,7 @@ namespace Win32xx
 		// Set the dock styles
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
 		pDocker->m_IsBlockMove = FALSE;
-		pDocker->SetWindowLongPtr(GWL_STYLE, dwStyle);
+		pDocker->SetStyle(dwStyle);
 		pDocker->ShowWindow(SW_HIDE);
 		pDocker->SetDockStyle(dwDockStyle);
 
@@ -2984,10 +2984,10 @@ namespace Win32xx
 		UNREFERENCED_PARAMETER(cs);
 
 #if (WINVER >= 0x0500)
-		if (GetParent().GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL)
+		if (GetParent().GetExStyle() & WS_EX_LAYOUTRTL)
 		{
-			DWORD dwExStyle = (DWORD)GetWindowLongPtr(GWL_EXSTYLE);
-			SetWindowLongPtr(GWL_EXSTYLE, dwExStyle | WS_EX_LAYOUTRTL);
+			DWORD dwExStyle = static_cast<DWORD>(GetExStyle());
+			SetExStyle(dwExStyle | WS_EX_LAYOUTRTL);
 		}
 #endif
 
@@ -3004,7 +3004,7 @@ namespace Win32xx
 
 		// Now remove the WS_POPUP style. It was required to allow this window
 		// to be owned by the frame window.
-		SetWindowLongPtr(GWL_STYLE, WS_CHILD);
+		SetStyle(WS_CHILD);
 		SetParent(GetParent());		// Reinstate the window's parent
 
 		// Set the default colour for the splitter bar if it hasn't already been set
@@ -3389,7 +3389,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		RTL = (GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
 		if (IsDocked())
@@ -3608,7 +3608,7 @@ namespace Win32xx
 
 		BOOL RTL = FALSE;
 #ifdef WS_EX_LAYOUTRTL
-		RTL = (GetWindowLongPtr(GWL_EXSTYLE) & WS_EX_LAYOUTRTL);
+		RTL = (GetExStyle() & WS_EX_LAYOUTRTL);
 #endif
 
 		CRect rcDockParent = pDocker->m_pDockParent->GetWindowRect();
@@ -3821,15 +3821,15 @@ namespace Win32xx
 			{
 				if (dwDockStyle & DS_CLIENTEDGE)
 				{
-					DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE)|WS_EX_CLIENTEDGE;
-					GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, (LONG_PTR)dwExStyle);
-					GetDockClient().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
+					DWORD dwExStyle = GetDockClient().GetExStyle() | WS_EX_CLIENTEDGE;
+					GetDockClient().SetExStyle(dwExStyle);
+					GetDockClient().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_FRAME);
 				}
 				else
 				{
-					DWORD dwExStyle = (DWORD)GetDockClient().GetWindowLongPtr(GWL_EXSTYLE);
+					DWORD dwExStyle = GetDockClient().GetExStyle();
 					dwExStyle &= ~WS_EX_CLIENTEDGE;
-					GetDockClient().SetWindowLongPtr(GWL_EXSTYLE, (LONG_PTR)dwExStyle);
+					GetDockClient().SetExStyle(dwExStyle);
 					GetDockClient().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
 				}
 			}
@@ -3978,7 +3978,7 @@ namespace Win32xx
 	inline void CDocker::ConvertToChild(HWND hWndParent)
 	{
 		DWORD dwStyle = WS_CHILD | WS_VISIBLE;
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		SetStyle(dwStyle);
 		SetParent(hWndParent);
 		GetDockBar().SetParent(hWndParent);
 	}
@@ -3989,7 +3989,7 @@ namespace Win32xx
 		// Change the window to an "undocked" style
 		ShowWindow(SW_HIDE);
 		DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
-		SetWindowLongPtr(GWL_STYLE, (LONG_PTR)dwStyle);
+		SetStyle(dwStyle);
 
 		// Change the window's parent and reposition it
 		GetDockBar().ShowWindow(SW_HIDE);
@@ -4164,7 +4164,7 @@ namespace Win32xx
 					CRect rc = pDockOld->GetWindowRect();
 					pDockNew->ShowWindow(SW_HIDE);
 					DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-					pDockNew->SetWindowLongPtr(GWL_STYLE, (LONG_PTR)dwStyle);
+					pDockNew->SetStyle(dwStyle);
 					pDockNew->m_pDockParent = 0;
 					pDockNew->SetParent(0);
 					pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
@@ -4476,16 +4476,16 @@ namespace Win32xx
 
 		// Create the toolbar
 		GetToolBar().Create(GetViewPage());
-		DWORD style = (DWORD)GetToolBar().GetWindowLongPtr(GWL_STYLE);
+		DWORD style = GetToolBar().GetStyle();
 		style |= CCS_NODIVIDER;
-		GetToolBar().SetWindowLongPtr(GWL_STYLE, (LONG_PTR)style);
+		GetToolBar().SetStyle(style);
 		SetupToolBar();
 		if (GetToolBarData().size() > 0)
 		{
 			// Set the toolbar images
 			// A mask of 192,192,192 is compatible with AddBitmap (for Win95)
 			if (!GetToolBar().SendMessage(TB_GETIMAGELIST,  0L, 0L))
-				SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+				SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
 
 			GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
 		}
@@ -4517,7 +4517,7 @@ namespace Win32xx
 	{
 		UNREFERENCED_PARAMETER(wParam);
 
-		CPoint pt((DWORD)lParam);
+		CPoint pt(lParam);
 		TCHITTESTINFO info;
 		ZeroMemory(&info, sizeof(info));
 		info.pt = pt;

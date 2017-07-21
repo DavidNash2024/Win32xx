@@ -76,12 +76,12 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
 		BITMAPFILEHEADER hdr;
 		ZeroMemory(&hdr, sizeof(BITMAPFILEHEADER));
 		hdr.bfType = 0x4d42;        // 0x42 = "B" 0x4d = "M"
-		hdr.bfSize = (DWORD) (sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
-		hdr.bfOffBits = (DWORD) sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD);
+		hdr.bfSize = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
+		hdr.bfOffBits = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD));
 
-		File.Write((LPCVOID) &hdr, sizeof(BITMAPFILEHEADER));
-		File.Write((LPCVOID) pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
-		File.Write((LPCVOID) lpvBits, pbmih->biSizeImage);
+		File.Write(&hdr, sizeof(BITMAPFILEHEADER));
+		File.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
+		File.Write(lpvBits, pbmih->biSizeImage);
 
 		if (File.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + pbmih->biSizeImage)
 			bResult = TRUE;

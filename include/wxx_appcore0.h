@@ -68,9 +68,9 @@
 // These are suitable for Windows 95
 #ifndef WINVER
   #define WINVER          0x0400
-#endif
-#ifndef _WIN32_WINDOWS
-  #define _WIN32_WINDOWS  0x0400
+  #ifndef _WIN32_WINDOWS
+    #define _WIN32_WINDOWS  0x0400
+  #endif
 #endif
 #ifndef _WIN32_IE
  #define _WIN32_IE        0x0400
@@ -196,10 +196,10 @@ using namespace Win32xx;
 // In debug mode, TRACE send text to the debug/output pane, or an external debugger
 // In release mode, TRACE is ignored.
 #ifndef TRACE
-  #ifdef _DEBUG
-    #define TRACE(str) Trace(str)
-  #else
+  #ifdef NDEBUG
     #define TRACE(str) (void(0))
+  #else
+    #define TRACE(str) Trace(str)
   #endif
 #endif
 
@@ -207,10 +207,10 @@ using namespace Win32xx;
 // In debug mode, VERIFY asserts if the expression evaluates to zero
 // In release mode, VERIFY evaluates the expression, but doesn't assert.
 #ifndef VERIFY
-  #ifdef _DEBUG
-    #define VERIFY(f) assert(f)
-  #else
+  #ifdef NDEBUG
     #define VERIFY(f) ((void)(f))
+  #else
+    #define VERIFY(f) assert(f)
   #endif
 #endif
 

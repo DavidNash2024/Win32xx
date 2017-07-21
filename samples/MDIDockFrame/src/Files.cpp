@@ -54,8 +54,8 @@ void CViewFiles::OnAttach()
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
-	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+	DWORD dwStyle = GetStyle();
+	SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();
 	InsertItems();

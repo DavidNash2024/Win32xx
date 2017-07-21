@@ -267,7 +267,7 @@ SetStatusIndicators() 							/*
 	  // SB_AUTOSIZE's, and calculate committed width
 	UINT nAutoWidths = 0;
 	  // make room for a gripper control if the style says it's there
-	UINT cxGripper = (GetWindowLongPtr(GWL_STYLE) & SBARS_SIZEGRIP) != 0 ?
+	UINT cxGripper = (GetStyle() & SBARS_SIZEGRIP) != 0 ?
 		GRIPPER_SIZE : 0;
 	UINT cumulativeWidths = cxGripper; // space for gripper, if present
 	for (UINT i = 0; i < nIDCount; i++)

@@ -194,7 +194,7 @@ IsHVisible() const								/*
 	Return TRUE if the horizontal scroll bar is visible, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-	return (GetWindowLongPtr(GWL_STYLE) &  WS_HSCROLL) != 0;
+	return (GetStyle() &  WS_HSCROLL) != 0;
 }
 
 /*============================================================================*/
@@ -204,7 +204,7 @@ IsVVisible() const								/*
 	Return TRUE if the vertical scroll bar is visible, FALSE otherwise.
 *-----------------------------------------------------------------------------*/
 {
-	return (GetWindowLongPtr(GWL_STYLE) &  WS_VSCROLL) != 0;
+	return (GetStyle() &  WS_VSCROLL) != 0;
 }
 
 /*============================================================================*/

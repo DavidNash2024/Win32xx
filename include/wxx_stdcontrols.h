@@ -274,7 +274,7 @@ namespace Win32xx
 	inline UINT CButton::GetButtonStyle() const
 	{
 		assert(IsWindow());
-		return static_cast<UINT>(GetWindowLongPtr(GWL_STYLE) & 0xFFFF);
+		return static_cast<UINT>(GetStyle() & 0xFFFF);
 	}
 
 

@@ -49,8 +49,8 @@ void CViewList::OnAttach()
 	SetImageList(m_imlSmall, LVSIL_SMALL);
 
 	// Set the report style
-	DWORD dwStyle = static_cast<DWORD>(GetWindowLongPtr(GWL_STYLE));
-	SetWindowLongPtr(GWL_STYLE, (dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+	DWORD dwStyle = GetStyle();
+	SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 
 	SetColumns();
 	InsertItems();
@@ -140,9 +140,9 @@ void CViewTree::OnAttach()
 	SetImageList(m_imlNormal, LVSIL_NORMAL);
 
 	// Adjust style to show lines and [+] button
-	DWORD dwStyle = GetWindowLongPtr(GWL_STYLE);
+	DWORD dwStyle = GetStyle();
 	dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-	SetWindowLongPtr(GWL_STYLE, dwStyle);
+	SetStyle(dwStyle);
 
 	DeleteAllItems();
 

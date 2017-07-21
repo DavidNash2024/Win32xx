@@ -1191,8 +1191,8 @@ namespace Win32xx
 	{
 		// Adjust for the view styles
 		CRect rc = rcView;
-		DWORD dwStyle = (DWORD)GetView().GetWindowLongPtr(GWL_STYLE);
-		DWORD dwExStyle = (DWORD)GetView().GetWindowLongPtr(GWL_EXSTYLE);
+		DWORD dwStyle = GetView().GetStyle();
+		DWORD dwExStyle = GetView().GetExStyle();
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
 		// Calculate the new frame height
@@ -1201,8 +1201,8 @@ namespace Win32xx
 		int Height = rc.Height() + rcFrameBefore.Height() - rcViewBefore.Height();
 
 		// Adjust for the frame styles
-		dwStyle = (DWORD)T::GetWindowLongPtr(GWL_STYLE);
-		dwExStyle = (DWORD)T::GetWindowLongPtr(GWL_EXSTYLE);
+		dwStyle = T::GetStyle();
+		dwExStyle = T::GetExStyle();
 		AdjustWindowRectEx(&rc, dwStyle, FALSE, dwExStyle);
 
 		// Calculate final rect size, and reposition frame
@@ -1265,7 +1265,7 @@ namespace Win32xx
 			{
 				CRect rcRect = lpNMCustomDraw->nmcd.rc;
 				int nState = lpNMCustomDraw->nmcd.uItemState;
-				DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
+				DWORD dwItem = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
 
 				if (IsMDIChildMaxed() && (0 == dwItem))
 				// Draw over MDI Max button
@@ -1376,8 +1376,8 @@ namespace Win32xx
 						CDC dcDraw(lpNMCustomDraw->nmcd.hdc);
 						CRect rcRect = lpNMCustomDraw->nmcd.rc;
 						int nState = lpNMCustomDraw->nmcd.uItemState;
-						DWORD dwItem = (DWORD)lpNMCustomDraw->nmcd.dwItemSpec;
-						DWORD dwTBStyle = (DWORD)pTB->SendMessage(TB_GETSTYLE, 0L, 0L);
+						DWORD dwItem = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
+						DWORD dwTBStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0L, 0L));
 						int nStyle = pTB->GetButtonStyle(dwItem);
 
 						int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, dwItem, 0L));
@@ -1841,7 +1841,7 @@ namespace Win32xx
 		{
 			assert(ReBar.IsWindow());
 
-			BOOL IsVertical = ReBar.GetWindowLongPtr(GWL_STYLE) & CCS_VERT;
+			BOOL IsVertical = ReBar.GetStyle() & CCS_VERT;
 
 			// Create our memory DC
 			CRect rcReBar = ReBar.GetClientRect();
@@ -3298,7 +3298,7 @@ namespace Win32xx
 			CSize csNum = dcStatus.GetTextExtentPoint32(Num, Num.GetLength());
 			CSize csScrl = dcStatus.GetTextExtentPoint32(Scrl, Scrl.GetLength());
 
-			BOOL HasGripper = GetStatusBar().GetWindowLongPtr(GWL_STYLE) & SBARS_SIZEGRIP;
+			BOOL HasGripper = GetStatusBar().GetStyle() & SBARS_SIZEGRIP;
 			int cxGripper = HasGripper? 20 : 0;
 			int cxBorder = 8;
 

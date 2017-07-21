@@ -149,9 +149,9 @@ void CMyPropertySheet::OnInitialUpdate()
 	// Remove system menu for wizards
 	if (IsWizard())
 	{
-		DWORD dwStyle = (DWORD)GetWindowLongPtr(GWL_STYLE);
+		DWORD dwStyle = GetStyle();
 		dwStyle &= ~WS_SYSMENU;
-		SetWindowLongPtr(GWL_STYLE, dwStyle);
+		SetStyle(dwStyle);
 	}
 
 	CenterWindow();

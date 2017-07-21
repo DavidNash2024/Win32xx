@@ -350,7 +350,9 @@ namespace Win32xx
 		int y = rc.top;
 		int cx = rc.right - rc.left;
 		int cy = rc.bottom - rc.top;
-		HMENU hMenu = hWndParent ? reinterpret_cast<HMENU>(nID) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
+
+		INT_PTR idMenu = nID;
+		HMENU hMenu = hWndParent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
 
 		return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
 	}
@@ -448,7 +450,7 @@ namespace Win32xx
 		assert(m_PrevWindowProc);	// Only previously attached CWnds can be detached
 
 		if (IsWindow())
-			SetWindowLongPtr(GWLP_WNDPROC, (LONG_PTR)m_PrevWindowProc);
+			SetWindowLongPtr(GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_PrevWindowProc));
 
 		HWND hWnd = GetHwnd();
 		Cleanup();
@@ -1031,7 +1033,8 @@ namespace Win32xx
 
 		m_hWnd = hWnd;
 		AddToMap();			// Store the CWnd pointer in the HWND map
-		m_PrevWindowProc = (WNDPROC)::SetWindowLongPtr(hWnd, GWLP_WNDPROC, (LONG_PTR)CWnd::StaticWindowProc);
+		m_PrevWindowProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(hWnd, GWLP_WNDPROC, 
+			                             reinterpret_cast<LONG_PTR>(CWnd::StaticWindowProc)));
 	}
 
 #ifndef _WIN32_WCE
@@ -1438,6 +1441,14 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return ::GetDlgItemInt(*this, nIDDlgItem, NULL, IsSigned);
+	}
+
+
+	// Retrieves the window's extended window style.
+	inline DWORD CWnd::GetExStyle() const
+	{
+		assert(IsWindow());
+		return static_cast<DWORD>(GetWindowLongPtr(GWL_EXSTYLE));
 	}
 
 
@@ -1887,6 +1898,14 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return ::SetDlgItemText(*this, nIDDlgItem, lpString);
+	}
+
+
+	// Assigns a new windows extended style to the window.
+	inline void CWnd::SetExStyle(DWORD dwExStyle) const
+	{
+		assert(IsWindow());
+		::SetWindowLongPtr(*this, GWL_EXSTYLE, dwExStyle);
 	}
 
 
