@@ -27,6 +27,7 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
+Added CEnhMetaFileDC
 Added CFileFind class
 Added CFolderDialog class
 Added CWnd::GetExStyle

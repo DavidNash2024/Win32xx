@@ -14,8 +14,8 @@ int CMetaView::OnCreate(CREATESTRUCT&)
 	SetWindowText(LoadString(IDW_MAIN));
 
 
-	CMetaFileDC dcMeta;
-	// Creates an enhanced MetaFile called "Pattern.emf", and also the MetaFile device context
+	CEnhMetaFileDC dcMeta;
+	// Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
 	dcMeta.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
 	
 	// Draw to the Metafile device context

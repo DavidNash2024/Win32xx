@@ -23,10 +23,10 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	CWinApp theApp;
 
 	// Create a CMyWindow object
-	CMyWindow MyWindow;
+	CMyWindow myWindow;
 
 	// Create (and display) the window
-	MyWindow.Create();
+	myWindow.Create();
 
 	// Run the application's message loop
 	return theApp.Run();

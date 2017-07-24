@@ -18,16 +18,16 @@ CView::~CView()
 void CView::DrawLine(int x, int y)
 // Draws a line in the window's client area
 {
-	CClientDC dcClient(*this);
-	dcClient.CreatePen(PS_SOLID, 1, GetAllPoints().back().color);
-	dcClient.MoveTo(GetAllPoints().back().x, GetAllPoints().back().y);
-	dcClient.LineTo(x, y);
+	CClientDC clientDC(*this);
+	clientDC.CreatePen(PS_SOLID, 1, GetAllPoints().back().color);
+	clientDC.MoveTo(GetAllPoints().back().x, GetAllPoints().back().y);
+	clientDC.LineTo(x, y);
 }
 
 CDoc& CView::GetDoc()
 {
-	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
-	return Frame.GetDoc();
+	CMainFrame& frame = GetScribbleApp().GetMainFrame();
+	return frame.GetDoc();
 }
 
 std::vector<PlotPoint>& CView::GetAllPoints()
@@ -48,16 +48,16 @@ void CView::OnDraw(CDC& dc)
 {
 	if (GetAllPoints().size() > 0)
 	{
-		bool bDraw = false;  //Start with the pen up
+		bool isDrawing = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < GetAllPoints().size(); i++)
 		{
 			dc.CreatePen(PS_SOLID, 1, GetAllPoints()[i].color);
-			if (bDraw)
+			if (isDrawing)
 				dc.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
 			else
 				dc.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
 			
-			bDraw = GetAllPoints()[i].PenDown;
+			isDrawing = GetAllPoints()[i].PenDown;
 		}
 	}
 }

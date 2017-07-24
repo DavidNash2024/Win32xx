@@ -4,13 +4,13 @@
 BOOL CDoc::FileOpen(LPCTSTR szFilename)
 {
 	GetAllPoints().clear();
-	BOOL bResult = FALSE;
+	BOOL isFileOpened = FALSE;
 
 	try
 	{
 		CArchive ar(szFilename, CArchive::load);
 		ar >> *this;
-		bResult = TRUE;
+		isFileOpened = TRUE;
 	}
 
 	catch (const CFileException &e)
@@ -21,18 +21,18 @@ BOOL CDoc::FileOpen(LPCTSTR szFilename)
 		GetAllPoints().clear();
 	}
 
-	return bResult;
+	return isFileOpened;
 }
 
 BOOL CDoc::FileSave(LPCTSTR szFilename)
 {
-	BOOL bResult = FALSE;
+	BOOL isFileSaved = FALSE;
 
 	try
 	{
 		CArchive ar(szFilename, CArchive::store);
 		ar << *this;
-		bResult = TRUE;
+		isFileSaved = TRUE;
 	}
 	catch (const CFileException &e)
 	{
@@ -40,7 +40,7 @@ BOOL CDoc::FileSave(LPCTSTR szFilename)
 		::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
 	}
 
-	return bResult;
+	return isFileSaved;
 }
 
 void CDoc::Serialize(CArchive &ar)
@@ -83,11 +83,11 @@ void CDoc::Serialize(CArchive &ar)
 
 void CDoc::StorePoint(int x, int y, bool PenDown, COLORREF PenColor)
 {
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
-	P1.color = PenColor;
+	PlotPoint pp;
+	pp.x = x;
+	pp.y = y;
+	pp.PenDown = PenDown;
+	pp.color = PenColor;
 
-	m_points.push_back(P1); //Add the point to the vector
+	m_points.push_back(pp); //Add the point to the vector
 }

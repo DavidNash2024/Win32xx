@@ -351,7 +351,10 @@ namespace Win32xx
 
 
 	/////////////////////////////////////////
-	// This class is used for thread synchronisation.
+	// This class is used for thread synchronisation. A critical section object 
+	// provides synchronization similar to that provided by a mutex object, 
+	// except that a critical section can be used only by the threads of a
+	// single process. Critical sections are faster and more efficient than mutexes.
 	class CCriticalSection
 	{
 	public:
@@ -393,6 +396,22 @@ namespace Win32xx
 		long m_count;
 	};
 
+	
+	/////////////////////////////////////////
+	// Provides a convenient RAII-style mechanism for owning a CCriticalSection
+	// for the duration of a scoped block. Automatically locks the specified
+	// CCriticalSection when constructed, and releases the critical section
+	// when destroyed.
+	class CThreadLock
+	{
+	public:
+		CThreadLock(CCriticalSection& cs) : m_cs(cs) { m_cs.Lock(); }
+		~CThreadLock() { m_cs.Release(); }
+
+	private:
+		CThreadLock& operator= (const CThreadLock&);	// Disable assignment operator
+		CCriticalSection& m_cs;
+	};
 
 
 	///////////////////////////////////
@@ -522,8 +541,7 @@ namespace Win32xx
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
-		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND
-		CCriticalSection m_csTLSLock;	// thread synchronisation for m_vTLSData
+		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND etc.
 		HINSTANCE m_hInstance;			// handle to the application's instance
 		HINSTANCE m_hResource;			// handle to the application's resources
 		DWORD m_dwTlsData;				// Thread Local Storage data

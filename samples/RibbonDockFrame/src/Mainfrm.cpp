@@ -295,20 +295,15 @@ void CMainFrame::OnFilePrint()
 			float fLogPelsY1 = static_cast<float>(ViewDC.GetDeviceCaps(LOGPIXELSY));
 			float fLogPelsX2 = static_cast<float>(GetDeviceCaps(dcPrint, LOGPIXELSX));
 			float fLogPelsY2 = static_cast<float>(GetDeviceCaps(dcPrint, LOGPIXELSY));
-			float fScaleX = MAX(fLogPelsX1, fLogPelsX2) / MIN(fLogPelsX1, fLogPelsX2);
-			float fScaleY = MAX(fLogPelsY1, fLogPelsY2) / MIN(fLogPelsY1, fLogPelsY2);
+			float fScaleX = fLogPelsX2 / fLogPelsX1;
+			float fScaleY = fLogPelsY2 / fLogPelsY1;
 
-			// Compute the coordinates of the upper left corner of the centered bitmap.
-			int cWidthPels = GetDeviceCaps(dcPrint, HORZRES);
-			int cHeightPels = GetDeviceCaps(dcPrint, VERTRES);
 			int scaledWidth = static_cast<int>(static_cast<float>(Width) * fScaleX);
 			int scaledHeight = static_cast<int>(static_cast<float>(Height) * fScaleY);
-			int xLeft = (cWidthPels - scaledWidth) / 2;
-			int yTop = (cHeightPels - scaledHeight) / 2;
 
 			// Use StretchDIBits to scale the bitmap and maintain its original proportions
-			UINT result = StretchDIBits(dcPrint, xLeft, yTop, scaledWidth, scaledHeight,
-				0, 0, Width, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
+			UINT result = StretchDIBits(dcPrint, 0, 0, scaledWidth, scaledHeight, 0, 0, Width, Height,
+			                            pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
 			if (GDI_ERROR == result)
 			{
 				throw CUserException(_T("Failed to resize image for printing"));

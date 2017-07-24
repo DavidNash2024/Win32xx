@@ -198,7 +198,7 @@ namespace Win32xx
 			std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
 			CWinApp& App = GetApp();
-			App.m_csMapLock.Lock();
+			CThreadLock(App.m_csMapLock);
 			m = App.m_mapCImlData.find(m_pData->hImageList);
 			if (m != App.m_mapCImlData.end())
 			{
@@ -207,7 +207,6 @@ namespace Win32xx
 				Success = TRUE;
 			}
 
-			App.m_csMapLock.Release();
 		}
 
 		return Success;

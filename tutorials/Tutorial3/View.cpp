@@ -16,9 +16,9 @@ CView::~CView()
 void CView::DrawLine(int x, int y)
 // Draws a line in the window's client area
 {
-	CClientDC dcClient(*this);
-	dcClient.MoveTo(m_OldPt.x, m_OldPt.y);
-	dcClient.LineTo(x, y);
+	CClientDC clientDC(*this);
+	clientDC.MoveTo(m_OldPt.x, m_OldPt.y);
+	clientDC.LineTo(x, y);
 }
 
 void CView::OnDestroy()
