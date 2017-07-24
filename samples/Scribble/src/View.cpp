@@ -19,16 +19,16 @@ CView::~CView()
 
 void CView::DrawLine(int x, int y)
 {
-	CClientDC dcClient(*this);
-	dcClient.CreatePen(PS_SOLID, 1, GetAllPoints().back().color);
-	dcClient.MoveTo(GetAllPoints().back().x, GetAllPoints().back().y);
-	dcClient.LineTo(x, y);
+	CClientDC clientDC(*this);
+	clientDC.CreatePen(PS_SOLID, 1, GetAllPoints().back().color);
+	clientDC.MoveTo(GetAllPoints().back().x, GetAllPoints().back().y);
+	clientDC.LineTo(x, y);
 }
 
 CDoc& CView::GetDoc()
 {
-	CMainFrame& Frame = GetScribbleApp().GetMainFrame();
-	return Frame.GetDoc();
+	CMainFrame& frame = GetScribbleApp().GetMainFrame();
+	return frame.GetDoc();
 }
 
 std::vector<PlotPoint>& CView::GetAllPoints()
@@ -47,31 +47,31 @@ void CView::OnDraw(CDC& dc)
 {
 	// Here we use double buffering (drawing to a memory DC) for smoother rendering
 	// Set up our Memory DC and bitmap
-	CMemDC dcMem(dc);
-	int Width = GetClientRect().Width();
-	int Height = GetClientRect().Height();
-	dcMem.CreateCompatibleBitmap(dc, Width, Height);
-	dcMem.FillRect(GetClientRect(), m_Brush);
+	CMemDC memDC(dc);
+	int width = GetClientRect().Width();
+	int height = GetClientRect().Height();
+	memDC.CreateCompatibleBitmap(dc, width, height);
+	memDC.FillRect(GetClientRect(), m_Brush);
 
 
 	if (GetAllPoints().size() > 0)
 	{
-		bool bDraw = false;  //Start with the pen up
+		bool isDrawing = false;  //Start with the pen up
 		for (UINT i = 0 ; i < GetAllPoints().size(); ++i)
 		{
-			dcMem.CreatePen(PS_SOLID, 1, GetAllPoints()[i].color);
+			memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].color);
 
-			if (bDraw)
-				dcMem.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
+			if (isDrawing)
+				memDC.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
 			else
-				dcMem.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
+				memDC.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
 
-			bDraw = GetAllPoints()[i].PenDown;
+			isDrawing = GetAllPoints()[i].PenDown;
 		}
 	}
 
 	// Copy from the memory DC to our painting dc
-	dc.BitBlt(0, 0, Width, Height, dcMem, 0, 0, SRCCOPY);
+	dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
 
 LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)

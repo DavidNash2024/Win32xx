@@ -360,8 +360,8 @@ namespace Win32xx
 
 	inline CWinApp::CWinApp() : m_Callback(NULL), m_hDevMode(0), m_hDevNames(0)
 	{
-		CCriticalSection csAppStart;
-		csAppStart.Lock();
+		CCriticalSection cs;
+		CThreadLock threadLock(cs);
 		if ( 0 != SetnGetThis() )
 		{
 			// Test if this is the only instance of CWinApp
@@ -377,7 +377,6 @@ namespace Win32xx
 		}
 
 		SetnGetThis(this);
-		csAppStart.Release();
 
 		// Set the instance handle
 #ifdef _WIN32_WCE
@@ -428,27 +427,24 @@ namespace Win32xx
 	// Adds a HDC and CDC_Data* pair to the map.
 	inline void CWinApp::AddCDCData(HDC hDC, CDC_Data* pData)
 	{
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m_mapCDCData.insert(std::make_pair(hDC, pData));
-		m_csMapLock.Release();
 	}
 
 
 	// Adds a HGDIOBJ and CGDI_Data* pair to the map.
 	inline void CWinApp::AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData)
 	{
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m_mapCGDIData.insert(std::make_pair(hGDI, pData));
-		m_csMapLock.Release();
 	}
 
 
 	// Adds a HIMAGELIST and Ciml_Data* pair to the map.
 	inline void CWinApp::AddCImlData(HIMAGELIST hIml, CIml_Data* pData)
 	{
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m_mapCImlData.insert(std::make_pair(hIml, pData));
-		m_csMapLock.Release();
 	}
 
 #ifndef _WIN32_WCE
@@ -456,9 +452,8 @@ namespace Win32xx
 	// Adds a HMENU and CMenu_Data* to the map.
 	inline void CWinApp::AddCMenuData(HMENU hMenu, CMenu_Data* pData)
 	{
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m_mapCMenuData.insert(std::make_pair(hMenu, pData));
-		m_csMapLock.Release();
 	}
 
 #endif
@@ -494,13 +489,12 @@ namespace Win32xx
 
 		// Find the CDC data mapped to this HDC
 		CDC_Data* pCDCData = 0;
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m = m_mapCDCData.find(hDC);
 
 		if (m != m_mapCDCData.end())
 			pCDCData = m->second;
 
-		m_csMapLock.Release();
 		return pCDCData;
 	}
 
@@ -512,13 +506,12 @@ namespace Win32xx
 
 		// Find the CGDIObject data mapped to this HGDIOBJ
 		CGDI_Data* pCGDIData = 0;
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m = m_mapCGDIData.find(hObject);
 
 		if (m != m_mapCGDIData.end())
 			pCGDIData = m->second;
 
-		m_csMapLock.Release();
 		return pCGDIData;
 	}
 
@@ -530,13 +523,12 @@ namespace Win32xx
 
 		// Find the CImageList data mapped to this HIMAGELIST
 		CIml_Data* pCImlData = 0;
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m = m_mapCImlData.find(himl);
 
 		if (m != m_mapCImlData.end())
 			pCImlData = m->second;
 
-		m_csMapLock.Release();
 		return pCImlData;
 	}
 
@@ -549,13 +541,12 @@ namespace Win32xx
 
 		// Find the CMenu data mapped to this HMENU
 		CMenu_Data* pCMenuData = 0;
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m = m_mapCMenuData.find(hMenu);
 
 		if (m != m_mapCMenuData.end())
 			pCMenuData = m->second;
 
-		m_csMapLock.Release();
 		return pCMenuData;
 	}
 
@@ -569,13 +560,12 @@ namespace Win32xx
 
 		// Find the CWnd pointer mapped to this HWND
 		CWnd* pWnd = 0;
-		m_csMapLock.Lock();
+		CThreadLock mapLock(m_csMapLock);
 		m = m_mapHWND.find(hWnd);
 
 		if (m != m_mapHWND.end())
 			pWnd = m->second;
 
-		m_csMapLock.Release();
 		return pWnd;
 	}
 
@@ -757,9 +747,9 @@ namespace Win32xx
 		{
 			pTLSData = new TLSData;
 
-			m_csTLSLock.Lock();
+			CCriticalSection cs;
+			CThreadLock TLSLock(cs);
 			m_vTLSData.push_back(pTLSData);	// store as a Shared_Ptr
-			m_csTLSLock.Release();
 
 			::TlsSetValue(m_dwTlsData, pTLSData);
 		}

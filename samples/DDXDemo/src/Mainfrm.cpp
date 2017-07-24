@@ -308,11 +308,11 @@ PreCreate(CREATESTRUCT& cs)   						/*
 
 	   // specify a title bar and border with a window-menu on the title bar
 	cs.style = WS_VISIBLE	// must be present, or screen is blank
-//	    | WS_OVERLAPPED     // implied, the default 0x00000000L.
+	    | WS_OVERLAPPED     // implied, the default 0x00000000L.
 	    | WS_CAPTION        // redundant, but put in anyway
 	    | WS_SYSMENU        // adds close box at top right
 	    | WS_MINIMIZEBOX    // adds minimize box to close box
-//	    | WS_THICKFRAME     // enables resizing, unwanted here
+	    | WS_THICKFRAME     // enables resizing, unwanted here
 	    ;
 	cs.dwExStyle = WS_EX_CLIENTEDGE;
 }

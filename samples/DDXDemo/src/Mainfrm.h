@@ -61,19 +61,6 @@
 #include "View.h"
 #include "Doc.h"
 
-/*******************************************************************************
-
-	Declaration and Implementation of the NoResizeStatusBar class
-
-*=============================================================================*/
-	class
-NoResizeStatusBar : public CStatusBar
-
-/*----------------------------------------------------------------------------*/
-{
-	void PreCreate(CREATESTRUCT& cs)
-	{ cs.style = WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | CCS_BOTTOM; }
-};
 
 /*******************************************************************************
 
@@ -94,8 +81,6 @@ CMainFrame : public CFrame
 		BOOL UpdateDialog(BOOL bReadFromControl = SENDTOCONTROL);
 
 	protected:
-		virtual CStatusBar& GetStatusBar() const{ return
-		    const_cast<NoResizeStatusBar&>(m_NoResizeStatusBar); }
 		virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
 		virtual void OnClose();					
 		virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -113,7 +98,6 @@ CMainFrame : public CFrame
 	private:
 		CView	m_View;
 		CDoc	m_Doc;
-		NoResizeStatusBar m_NoResizeStatusBar;
 		std::vector<UINT> m_vBandIDs;
 		std::vector<UINT> m_vBandStyles;
 		std::vector<UINT> m_vBandSizes;

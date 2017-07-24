@@ -158,8 +158,6 @@ BOOL CMainFrame::OnDynamicResize()
 	return TRUE;
 }
 
-
-
 BOOL CMainFrame::OnDockDefault()
 {
 	SetRedraw(FALSE);	// Suppress drawing to the frame window

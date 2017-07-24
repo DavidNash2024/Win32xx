@@ -16,9 +16,9 @@ CView::~CView()
 void CView::DrawLine(int x, int y)
 // Draws a line in the window's client area
 {
-	CClientDC dcClient(*this);
-	dcClient.MoveTo(m_points.back().x, m_points.back().y);
-	dcClient.LineTo(x, y);
+	CClientDC clientDC(*this);
+	clientDC.MoveTo(m_points.back().x, m_points.back().y);
+	clientDC.LineTo(x, y);
 }
 
 void CView::OnDestroy()
@@ -49,12 +49,12 @@ void CView::OnDraw(CDC& dc)
 void CView::StorePoint(int x, int y, bool PenDown)
 // Adds a point to the vector of PlotPoints
 {
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
+	PlotPoint pp;
+	pp.x = x;
+	pp.y = y;
+	pp.PenDown = PenDown;
 
-	m_points.push_back(P1); //Add the point to the vector
+	m_points.push_back(pp); //Add the point to the vector
 }
 
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)

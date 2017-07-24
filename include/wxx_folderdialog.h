@@ -36,6 +36,15 @@
 
 
 ////////////////////////////////////////////////////////
+// CFolderDialog class.
+//  This class wraps SHBrowseForFolder to display a dialog for
+//  choosing a folder.
+//
+//  The memory for the PIDL(s) created by this class is
+//  freed when the object goes out of scope.
+
+
+////////////////////////////////////////////////////////
 //
 //	Coding example.
 //
@@ -69,20 +78,26 @@
 #include "wxx_dialog.h"
 
 #ifdef _MSC_VER
-  #pragma warning (disable : 4091)	// temporarily disable C4091 warning
-#endif 
- 
+  #pragma warning (disable : 4091)	// temporarily disable warning: 'typedef': ignored
+#endif
+
 #include <shlobj.h>
 
 #ifdef _MSC_VER
   #pragma warning (default : 4091)	// re-enable C4091 warning
-#endif  
+#endif
 
+
+// Support older compilers
 #ifndef BIF_NONEWFOLDERBUTTON
 
-  #define BIF_NONEWFOLDERBUTTON	0x00000200
+  #define BIF_NONEWFOLDERBUTTON	0x0200
 
-  // message from browser
+  #ifndef BIF_NEWDIALOGSTYLE
+    #define BIF_NEWDIALOGSTYLE    0x0040
+  #endif
+
+  // messages from browser
   #define BFFM_INITIALIZED        1
   #define BFFM_SELCHANGED         2
   #define BFFM_VALIDATEFAILEDA    3   // lParam:szPath ret:1(cont),0(EndDialog)

@@ -144,9 +144,8 @@ namespace Win32xx
 		RemoveFromMap();
 
 		// Add the (HWND, CWnd*) pair to the map
-		GetApp().m_csMapLock.Lock();
+		CThreadLock(GetApp().m_csMapLock);
 		GetApp().m_mapHWND.insert(std::make_pair(GetHwnd(), this));
-		GetApp().m_csMapLock.Release();
 	}
 
 
@@ -1054,7 +1053,7 @@ namespace Win32xx
 
 		// A critical section ensures threads update the data seperately
 		CCriticalSection ccs;
-		ccs.Lock();
+		CThreadLock threadLock(ccs);
 
 		DX.Init(*this, RetrieveAndValidate);
 
@@ -1075,8 +1074,6 @@ namespace Win32xx
 			// Validation has failed. Call the Fail to display the error.
 			DX.Fail( e.GetText() );
 		}
-
-		ccs.Release();
 
 		return ok;
 	}

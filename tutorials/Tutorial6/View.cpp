@@ -29,27 +29,27 @@ void CView::OnDraw(CDC& dc)
 {
 	if (m_points.size() > 0)
 	{
-		bool bDraw = false;  //Start with the pen up
+		bool isDrawing = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
-			if (bDraw)
+			if (isDrawing)
 				dc.LineTo(m_points[i].x, m_points[i].y);
 			else
 				dc.MoveTo(m_points[i].x, m_points[i].y);
 			
-			bDraw = m_points[i].PenDown;
+			isDrawing = m_points[i].PenDown;
 		}
 	}
 }
 
 void CView::StorePoint(int x, int y, bool PenDown)
 {
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
+	PlotPoint pp;
+	pp.x = x;
+	pp.y = y;
+	pp.PenDown = PenDown;
 
-	m_points.push_back(P1); //Add the point to the vector
+	m_points.push_back(pp); //Add the point to the vector
 }
 
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)

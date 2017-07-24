@@ -19,10 +19,10 @@ CView::~CView()
 void CView::DrawLine(int x, int y)
 // Draws a line in the window's client area
 {
-	CClientDC dcClient(*this);
-	dcClient.CreatePen(PS_SOLID, 1, m_points.back().color);
-	dcClient.MoveTo(m_points.back().x, m_points.back().y);
-	dcClient.LineTo(x, y);
+	CClientDC clientDC(*this);
+	clientDC.CreatePen(PS_SOLID, 1, m_points.back().color);
+	clientDC.MoveTo(m_points.back().x, m_points.back().y);
+	clientDC.LineTo(x, y);
 }
 
 void CView::OnDraw(CDC& dc)
@@ -30,29 +30,29 @@ void CView::OnDraw(CDC& dc)
 {
 	if (m_points.size() > 0)
 	{
-		bool bDraw = false;  //Start with the pen up
+		bool isDrawing = false;  //Start with the pen up
 		for (unsigned int i = 0 ; i < m_points.size(); i++)
 		{
 			dc.CreatePen(PS_SOLID, 1, m_points[i].color);
-			if (bDraw)
+			if (isDrawing)
 				dc.LineTo(m_points[i].x, m_points[i].y);
 			else
 				dc.MoveTo(m_points[i].x, m_points[i].y);
 			
-			bDraw = m_points[i].PenDown;
+			isDrawing = m_points[i].PenDown;
 		}
 	}
 }
 
 void CView::StorePoint(int x, int y, bool PenDown)
 {
-	PlotPoint P1;
-	P1.x = x;
-	P1.y = y;
-	P1.PenDown = PenDown;
-	P1.color = m_PenColor;
+	PlotPoint pp;
+	pp.x = x;
+	pp.y = y;
+	pp.PenDown = PenDown;
+	pp.color = m_PenColor;
 
-	m_points.push_back(P1); //Add the point to the vector
+	m_points.push_back(pp); //Add the point to the vector
 }
 
 LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)

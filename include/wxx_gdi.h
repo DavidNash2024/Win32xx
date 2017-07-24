@@ -899,6 +899,24 @@ namespace Win32xx
 			}
 		}
 
+		CPaintDC(const CPaintDC& rhs)	// Copy constructor
+		{
+			m_hWndPaint = rhs.m_hWndPaint;
+			m_ps = rhs.m_ps;
+		}
+
+		CPaintDC& operator = (const CPaintDC& rhs)
+		{
+			if (this != &rhs)
+			{
+				CDC::operator=(rhs);
+				m_hWndPaint = rhs.m_hWndPaint;
+				m_ps = rhs.m_ps;
+			}
+
+			return *this;
+		}
+
 		virtual ~CPaintDC()
 		{
 			::EndPaint(m_hWndPaint, &m_ps);
@@ -943,53 +961,40 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
 	///////////////////////////////////////////////
-	// CMetaFileDC provides the functionality of a GDI device context for a metafile or enhanced metafile.
+	// CMetaFileDC provides the functionality of a GDI device context for a metafile.
 	class CMetaFileDC : public CDC
 	{
 	public:
-		CMetaFileDC() : IsEnhMetaFile(FALSE) {}
+		CMetaFileDC() {}
 		virtual ~CMetaFileDC()
 		{
 			if (GetHDC())
 			{
 				// Note we should not get here.
 				TRACE("Warning! A MetaFile or EnhMetaFile was created but not closed\n");
-				if (IsEnhMetaFile)
-				{
-					::DeleteEnhMetaFile(CloseEnhanced());
-				}
-				else
-				{
-					::DeleteMetaFile(Close());
-				}
-
+				::DeleteMetaFile(Close());
 				Detach();
 			}
-
 		}
 
 		void Create(LPCTSTR lpszFilename = NULL)
 		{
-			assert(GetHDC() == 0);
-			HDC hDC = ::CreateMetaFile(lpszFilename);
-			if (hDC == 0)
-				throw CResourceException(_T("Failed to create a DC for the MetaFile"));
+			try
+			{
+				assert(GetHDC() == 0);
+				HDC hDC = ::CreateMetaFile(lpszFilename);
+				if (hDC == 0)
+					throw CResourceException(_T("Failed to create a DC for the MetaFile"));
 
-			Attach(hDC);
-			IsEnhMetaFile = FALSE;
+				Attach(hDC);
+				SetManaged(true);
+			}
+			catch (...)
+			{
+				Release();	// Cleanup
+				throw;		// Rethrow
+			}
 		}
-
-		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT* prcBounds, LPCTSTR lpszDescription)
-		{
-			assert(GetHDC() == 0);
-			HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, prcBounds, lpszDescription);
-			if (hDC == 0)
-				throw CResourceException(_T("Failed to create a DC for the EnhMetaFile"));
-
-			Attach(hDC);
-			IsEnhMetaFile = TRUE;
-		}
-
 
 		// Closes the metafile and returns a CMetaFile object.
 		// The CMetaFile object automatically deletes the HMETAFILE when the last copy
@@ -997,13 +1002,49 @@ namespace Win32xx
 		CMetaFile Close()
 		{
 			assert(GetHDC());
-			assert(IsEnhMetaFile == FALSE);
 
 			HMETAFILE hMeta = ::CloseMetaFile(GetHDC());
 			Detach();
 			return CMetaFile(hMeta);
 		}
 
+	};
+
+	///////////////////////////////////////////////
+	// CEnhMetaFileDC provides the functionality of a GDI device context for an enhanced metafile.
+	class CEnhMetaFileDC : public CDC
+	{
+	public:
+		CEnhMetaFileDC() {}
+		virtual ~CEnhMetaFileDC()
+		{
+			if (GetHDC())
+			{
+				// Note we should not get here.
+				TRACE("Warning! An EnhMetaFile was created but not closed\n");
+				::DeleteEnhMetaFile(CloseEnhanced());
+				Detach();
+			}
+		}
+
+		void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT* prcBounds, LPCTSTR lpszDescription)
+		{
+			try
+			{
+				assert(GetHDC() == 0);
+				HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, prcBounds, lpszDescription);
+				if (hDC == 0)
+					throw CResourceException(_T("Failed to create a DC for the EnhMetaFile"));
+
+				Attach(hDC);
+				SetManaged(true);
+			}
+			catch (...)
+			{
+				Release();	// Cleanup
+				throw;		// Rethrow
+			}
+		}
 
 		// Closes the enhanced metafile and returns a CEnhMetaFile object.
 		// The CEnhMetaFile object automatically deletes the HENHMETAFILE when the last copy
@@ -1011,16 +1052,14 @@ namespace Win32xx
 		CEnhMetaFile CloseEnhanced()
 		{
 			assert(GetHDC());
-			assert(IsEnhMetaFile == TRUE);
 
 			HENHMETAFILE enhMeta = ::CloseEnhMetaFile(GetHDC());
 			Detach();
 			return CEnhMetaFile(enhMeta);
 		}
 
-	private:
-		BOOL IsEnhMetaFile;
 	};
+
 
 #endif
 
@@ -1253,7 +1292,7 @@ namespace Win32xx
 			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
 			CWinApp& App = GetApp();
-			App.m_csMapLock.Lock();
+			CThreadLock(App.m_csMapLock);
 			m = App.m_mapCGDIData.find(m_pData->hGDIObject);
 			if (m != App.m_mapCGDIData.end())
 			{
@@ -1262,7 +1301,6 @@ namespace Win32xx
 				Success = TRUE;
 			}
 
-			App.m_csMapLock.Release();
 		}
 
 		return Success;
@@ -2679,7 +2717,7 @@ namespace Win32xx
 			std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
 			CWinApp& App = GetApp();
-			App.m_csMapLock.Lock();
+			CThreadLock(App.m_csMapLock);
 			m = App.m_mapCDCData.find(m_pData->hDC);
 			if (m != App.m_mapCDCData.end())
 			{
@@ -2688,7 +2726,6 @@ namespace Win32xx
 				Success = TRUE;
 			}
 
-			App.m_csMapLock.Release();
 		}
 
 		return Success;

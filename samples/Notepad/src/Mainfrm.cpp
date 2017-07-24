@@ -301,10 +301,13 @@ BOOL CMainFrame::OnFileOpen()
 	if (FileDlg.DoModal(*this) == IDOK)
 	{
 		CString str = FileDlg.GetPathName();
-		ReadFile(str);
-		SetPathName(str);
-		AddMRUEntry(str);
-		SetWindowTitle();
+
+		if (ReadFile(str))
+		{
+			SetPathName(str);
+			AddMRUEntry(str);
+			SetWindowTitle();
+		}
 	}
 
 	return TRUE;
@@ -426,6 +429,14 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 		CFile File;
 		File.Open(szFileName, OPEN_EXISTING);
 
+		// Restrict the file size to something a richedit control can handle.
+		ULONGLONG fileLength = File.GetLength();
+		if (fileLength > 100000000)
+		{
+			throw CFileException(szFileName, _T("File is too large!"));
+			return FALSE;
+		}
+
 		EDITSTREAM es;
 		es.dwCookie = reinterpret_cast<DWORD_PTR>(File.GetHandle());
 		es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
@@ -439,6 +450,8 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 	{
 		CString str = _T("Failed to load:  ");
 		str += e.GetFilePath();
+		str += "\n";
+		str += e.GetText();
 		::MessageBox(NULL, str, AtoT(e.what()), MB_ICONWARNING);
 		return FALSE;
 	}
