@@ -863,7 +863,9 @@ namespace Win32xx
 		assert(nIndex >= 0);
 		assert(nCount >= 0);
 
-		m_str.erase(nIndex, nCount);
+		if (nIndex < GetLength())
+			m_str.erase(nIndex, nCount);
+		
 		return static_cast<int>(m_str.size());
 	}
 
@@ -931,7 +933,8 @@ namespace Win32xx
 
 		if (pszFormat)
 		{
-			int nResult = -1, nLength = 256;
+			int nResult = -1;
+			int nLength = 256;
 
 			// A vector is used to store the CHAR array
 			std::vector<CHAR> vBuffer;
@@ -954,7 +957,8 @@ namespace Win32xx
 
 		if (pszFormat)
 		{
-			int nResult = -1, nLength = 256;
+			int nResult = -1;
+			int nLength = 256;
 
 			// A vector is used to store the WCHAR array
 			std::vector<WCHAR> vBuffer;
@@ -1025,7 +1029,12 @@ namespace Win32xx
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
-		return m_str[nIndex];
+		T ch = 0;
+
+		if ((nIndex >= 0) && (nIndex < GetLength()))
+			ch = m_str[nIndex];
+
+		return ch;
 	}
 
 
@@ -1162,7 +1171,9 @@ namespace Win32xx
 		assert(nIndex >= 0);
 		assert(ch);
 
+		nIndex = MIN(nIndex, GetLength());
 		m_str.insert(nIndex, &ch, 1);
+		
 		return static_cast<int>(m_str.size());
 	}
 
@@ -1173,7 +1184,9 @@ namespace Win32xx
 	{
 		assert(nIndex >= 0);
 
+		nIndex = MIN(nIndex, GetLength());
 		m_str.insert(nIndex, str);
+		
 		return static_cast<int>(m_str.size());
 	}
 
@@ -1240,7 +1253,9 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CStringT str;
-		str.m_str.assign(m_str, nFirst, nCount);
+		if (nFirst <= GetLength())
+			str.m_str.assign(m_str, nFirst, nCount);
+
 		return str;
 	}
 
@@ -1260,7 +1275,9 @@ namespace Win32xx
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());
-		m_str[nIndex] = ch;
+		
+		if ((nIndex >= 0) && (nIndex < GetLength()))
+			m_str[nIndex] = ch;
 	}
 
 
@@ -1355,6 +1372,7 @@ namespace Win32xx
 		assert(nCount >= 0);
 
 		CStringT str;
+		nCount = MIN(nCount, GetLength());
 		str.m_str.assign(m_str, m_str.size() - nCount, nCount);
 		return str;
 	}

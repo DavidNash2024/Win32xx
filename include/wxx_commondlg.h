@@ -739,7 +739,6 @@ namespace Win32xx
 		else
 			pos = pos + Index + nFileLen +1;
 
-
 		if (!strPath.IsEmpty())
 		{
 			// Get the last character from the path
@@ -797,7 +796,6 @@ namespace Win32xx
 	// Override this function and return TRUE to reject a file name for
 	// any application specific reasons.
 	inline LRESULT CFileDialog::OnFileNameOK()
-
 	{
 		return 0L;
 	}
@@ -1063,7 +1061,7 @@ namespace Win32xx
 	}
 
 
-	// Create and display either a Find or indReplace dialog box.
+	// Create and display either a Find or FindReplace dialog box.
 	inline HWND CFindReplaceDialog::Create(HWND hParentWnd /* = 0*/)
 	{
 		Create(m_IsFindDialogOnly, m_FR.lpstrFindWhat, m_FR.lpstrReplaceWith, m_FR.Flags, hParentWnd);
