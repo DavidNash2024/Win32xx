@@ -51,10 +51,12 @@
 // 2) CObject: A base class for CWnd and any other class that uses serialization.
 //             It provides a virtual Serialize function for use by CArchive.
 //
-// 3) CWinThread: This class is the parent class for CWinApp. It is also the
+// 3) CThreadLock: Provides a RAII-style wrapper for CCriticalSection.
+//
+// 4) CWinThread: This class is the parent class for CWinApp. It is also the
 //            class used to create additional GUI and worker threads.
 //
-// 4) CWinApp: This class is used start Win32++ and run the message loop. You
+// 5) CWinApp: This class is used start Win32++ and run the message loop. You
 //            should inherit from this class to start Win32++ in your own
 //            application.
 
@@ -409,6 +411,7 @@ namespace Win32xx
 		~CThreadLock() { m_cs.Release(); }
 
 	private:
+		CThreadLock(const CThreadLock&);				// Disable copy construction
 		CThreadLock& operator= (const CThreadLock&);	// Disable assignment operator
 		CCriticalSection& m_cs;
 	};
@@ -532,7 +535,7 @@ namespace Win32xx
 		CDC_Data* GetCDCData(HDC hDC);
 		CGDI_Data* GetCGDIData(HGDIOBJ hObject);
 		CIml_Data* GetCImlData(HIMAGELIST himl);
-		void	SetCallback();
+		void SetCallback();
 		void UpdateDefaultPrinter();
 		static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
@@ -541,7 +544,9 @@ namespace Win32xx
 		std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
 		std::map<HWND, CWnd*, CompareHWND> m_mapHWND;		// maps window handles to CWnd objects
 		std::vector<TLSDataPtr> m_vTLSData;		// vector of TLSData smart pointers, one for each thread
+		CCriticalSection m_csGDILock;	// thread synchronisation for m_mapCDCData and m_mapCGDIData.
 		CCriticalSection m_csMapLock;	// thread synchronisation for m_mapHWND etc.
+		CCriticalSection m_csPrintLock;	// thread synchronisation for printing.
 		HINSTANCE m_hInstance;			// handle to the application's instance
 		HINSTANCE m_hResource;			// handle to the application's resources
 		DWORD m_dwTlsData;				// Thread Local Storage data

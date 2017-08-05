@@ -411,8 +411,8 @@ namespace Win32xx
 	// Returns the printer's device context.
 	inline CDC CPrintDialog::GetPrinterDC() const
 	{
+		CThreadLock Threadlock(GetApp().m_csPrintLock);
 		CDC dc;
-
 		GetApp().UpdateDefaultPrinter();
 
 		if ((GetApp().m_hDevNames != 0) && (GetApp().m_hDevMode != 0))
@@ -497,6 +497,9 @@ namespace Win32xx
 		assert( &GetApp() );	// Test if Win32++ has been started
 		assert(!IsWindow());	// Only one window per CWnd instance allowed
 
+		// Ensure only one print dialog is running at a time.
+		CThreadLock Threadlock(GetApp().m_csPrintLock);
+								
 		// Update the default printer
 		GetApp().UpdateDefaultPrinter();
 
@@ -566,6 +569,8 @@ namespace Win32xx
 	// Returns TRUE if a default printer exists.
 	inline BOOL CPrintDialog::GetDefaults()
 	{
+		CThreadLock Threadlock(GetApp().m_csPrintLock);
+
 		// Reset global memory
 		GlobalFreeAll();
 
@@ -812,6 +817,9 @@ namespace Win32xx
 	{
 		assert(&GetApp());		// Test if Win32++ has been started
 		assert(!IsWindow());	// Only one window per CWnd instance allowed
+		
+		// Ensure only one page-setup dialog is running at a time.
+		CThreadLock Threadlock(GetApp().m_csPrintLock);
 
 		// Update the default printer
 		GetApp().UpdateDefaultPrinter();
