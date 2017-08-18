@@ -1100,7 +1100,7 @@ namespace Win32xx
 		}
 		else
 		{
-			TRACE("AddMenuIcons: Failed to add images. Menu Icons should be 16x16 or 15x16");
+			TRACE("AddMenuIcons: Failed to add images. Menu Icons should be 16x16 or 15x16\n");
 		}
 
 		// return the number of menu icons.
@@ -1221,7 +1221,9 @@ namespace Win32xx
 			GetToolBar().Create(*this);	// Create the toolbar without a rebar.
 
 		// Set a default ImageList for the ToolBar.
-		SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
+		CBitmap bm(IDW_MAIN);
+		if (bm.GetHandle() != 0)
+			SetToolBarImages(RGB(192,192,192), IDW_MAIN, 0, 0);
 
 		SetupToolBar();
 
