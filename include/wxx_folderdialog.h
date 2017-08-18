@@ -201,7 +201,7 @@ namespace Win32xx
 	// from a Browse dialog box displayed in response to a call to SHBrowseForFolder.
 	inline int CALLBACK CFolderDialog::BrowseCallbackProc(HWND hwnd, UINT uMsg, LPARAM lParam, LPARAM lpData)
 	{
-		CFolderDialog* pThis = (CFolderDialog*)lpData;
+		CFolderDialog* pThis = reinterpret_cast<CFolderDialog*>(lpData);
 		int result = 0;
 
 		if (pThis->m_hWnd == 0)
@@ -271,7 +271,7 @@ namespace Win32xx
 	{
 		CString str;
 		SHGetPathFromIDList(m_vPidl.back(), str.GetBuffer(MAX_PATH));
-		str.ReleaseBuffer(MAX_PATH);
+		str.ReleaseBuffer();
 
 		return str;
 	}

@@ -595,6 +595,7 @@ namespace Win32xx
 
 
 	// Assigns an image list to the list-view control.
+	// Valid iImageListType values: LVSIL_NORMAL, LVSIL_SMALL, LVSIL_STATE.
 	inline CImageList CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
 	{
 		assert(IsWindow());

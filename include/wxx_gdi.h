@@ -117,9 +117,9 @@
 
 // Notes:
 //  * When the CDC object drops out of scope, its destructor is called, releasing
-//     or deleting the device context as appropriate.
+//     or deleting the device context if Win32++ created it.
 //  * When the destructor for CBitmap, CBrush, CPalette, CPen and CRgn are called,
-//     the destructor is called deleting their GDI object.
+//     the destructor is called deleting their GDI object if Win32++ created it.
 //  * When the CDC object's destructor is called, any GDI objects created by one of
 //     the CDC member functions (CDC::CreatePen for example) will be deleted.
 //  * Bitmaps can only be selected into one device context at a time.

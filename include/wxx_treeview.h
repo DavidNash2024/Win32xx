@@ -75,7 +75,7 @@ namespace Win32xx
 		int		GetItemHeight() const;
 		BOOL	GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
 		BOOL	GetItemRect(HTREEITEM hItem, CRect& rc, BOOL IsTextOnly) const;
-		CString GetItemText(HTREEITEM hItem, UINT nTextMax /* = 260 */) const;
+		CString GetItemText(HTREEITEM hItem, UINT nTextMax = 260) const;
 		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
 		HTREEITEM GetNextSibling(HTREEITEM hItem) const;
@@ -91,7 +91,7 @@ namespace Win32xx
 		UINT	GetVisibleCount() const;
 		BOOL	ItemHasChildren(HTREEITEM hItem) const;
 		COLORREF SetBkColor(COLORREF clrBk) const;
-		CImageList SetImageList(HIMAGELIST himlNew, int nType) const;
+		CImageList SetImageList(HIMAGELIST himlNew, int nType = TVSIL_NORMAL) const;
 		void	SetIndent(int indent) const;
 		BOOL	SetInsertMark(HTREEITEM hItem, BOOL After = TRUE) const;
 		COLORREF SetInsertMarkColor(COLORREF clrInsertMark) const;
@@ -421,7 +421,7 @@ namespace Win32xx
 
 	// Sets the normal or state image list for a tree-view control
 	// and redraws the control using the new images.
-	inline CImageList CTreeView::SetImageList(HIMAGELIST himlNew, int nType) const
+	inline CImageList CTreeView::SetImageList(HIMAGELIST himlNew, int nType /*= TVSIL_NORMAL*/) const
 	{
 		assert(IsWindow());
 		HIMAGELIST himl = TreeView_SetImageList( *this, himlNew, nType );
