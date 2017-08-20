@@ -1607,11 +1607,24 @@ namespace Win32xx
 		if (IsVistaMenuUsed())
 		{
 			// Draw the Submenu arrow.
+			// We extract the bitmap from DrawFrameControl to support Windows 10
 			if (pmid->mii.hSubMenu)
 			{
 				CRect rcSubMenu = pdis->rcItem;
 				rcSubMenu.left = pdis->rcItem.right - GetMenuMetrics().m_marItem.cxRightWidth - GetMenuMetrics().m_marText.cxRightWidth;
-				GetMenuMetrics().DrawThemeBackground(pdis->hDC, MENU_POPUPSUBMENU, GetMenuMetrics().ToCheckStateId(pmid->mii.fType, iStateId), &rcSubMenu, NULL);
+
+				// Copy the menu's arrow to a memory DC
+				CMemDC dcMem(dcDraw);
+				dcMem.CreateBitmap(rcSubMenu.Width(), rcSubMenu.Height(), 1, 1, NULL);
+				CRect rc(0, 0, rcSubMenu.Width(), rcSubMenu.Height());
+				dcMem.DrawFrameControl(rc, DFC_MENU, DFCS_MENUARROW);
+
+				// Mask the arrow image back to the menu's dc
+				CMemDC MaskDC(dcDraw);
+				MaskDC.CreateCompatibleBitmap(pdis->hDC, rcSubMenu.Width(), rcSubMenu.Height());
+				MaskDC.BitBlt(0, 0, rcSubMenu.Width(), rcSubMenu.Height(), MaskDC, 0, 0, WHITENESS);
+				MaskDC.BitBlt(0, 0, rcSubMenu.Width(), rcSubMenu.Height(), dcMem, 0, 0, SRCAND);
+				dcDraw.BitBlt(rcSubMenu.left, rcSubMenu.top, rcSubMenu.Width(), rcSubMenu.Height(), MaskDC, 0, 0, SRCAND);
 			}
 
 			// Suppress further drawing to prevent an incorrect Submenu arrow being drawn.
