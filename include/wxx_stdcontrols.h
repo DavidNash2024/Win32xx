@@ -75,7 +75,7 @@ namespace Win32xx
 		void SetCheck(int nCheckState) const;
 		HCURSOR SetCursor(HCURSOR hCursor) const;
 		HICON SetIcon(HICON hIcon) const;
-		void SetState(BOOL IsHighlighted) const;
+		void SetState(UINT uState) const;
 
 	protected:
 		// Overridables
@@ -370,10 +370,10 @@ namespace Win32xx
 	// BST_INDETERMINATE
 	// BST_PUSHED
 	// BST_UNCHECKED
-	inline void CButton::SetState(BOOL IsHighlighted) const
+	inline void CButton::SetState(UINT uState) const
 	{
 		assert(IsWindow());
-		SendMessage(BM_SETSTATE, IsHighlighted, 0L);
+		SendMessage(BM_SETSTATE, uState, 0L);
 	}
 
 

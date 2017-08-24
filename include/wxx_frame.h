@@ -2363,7 +2363,8 @@ namespace Win32xx
 		}
 
 		// Setup the menu
-		SetFrameMenu(IDW_MAIN);
+		HMENU hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+		SetFrameMenu(hMenu); // 0 if IDW_MAIN menu resource is missing
 		if (m_nMaxMRU > 0)
 			UpdateMRUMenu();
 
