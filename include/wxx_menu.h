@@ -292,7 +292,7 @@ namespace Win32xx
 			std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
 			CWinApp& App = GetApp();
-			CThreadLock(App.m_csMapLock);
+			CThreadLock mapLock(App.m_csMapLock);
 			m = App.m_mapCMenuData.find(m_pData->hMenu);
 			if (m != App.m_mapCMenuData.end())
 			{

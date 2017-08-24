@@ -427,7 +427,7 @@ namespace Win32xx
 	// Adds a HDC and CDC_Data* pair to the map.
 	inline void CWinApp::AddCDCData(HDC hDC, CDC_Data* pData)
 	{
-		CThreadLock mapLock(m_csMapLock);
+		CThreadLock mapLock(m_csGDILock);
 		m_mapCDCData.insert(std::make_pair(hDC, pData));
 	}
 
@@ -435,7 +435,7 @@ namespace Win32xx
 	// Adds a HGDIOBJ and CGDI_Data* pair to the map.
 	inline void CWinApp::AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData)
 	{
-		CThreadLock mapLock(m_csMapLock);
+		CThreadLock mapLock(m_csGDILock);
 		m_mapCGDIData.insert(std::make_pair(hGDI, pData));
 	}
 
@@ -489,7 +489,7 @@ namespace Win32xx
 
 		// Find the CDC data mapped to this HDC
 		CDC_Data* pCDCData = 0;
-		CThreadLock mapLock(m_csMapLock);
+		CThreadLock mapLock(m_csGDILock);
 		m = m_mapCDCData.find(hDC);
 
 		if (m != m_mapCDCData.end())
@@ -506,7 +506,7 @@ namespace Win32xx
 
 		// Find the CGDIObject data mapped to this HGDIOBJ
 		CGDI_Data* pCGDIData = 0;
-		CThreadLock mapLock(m_csMapLock);
+		CThreadLock mapLock(m_csGDILock);
 		m = m_mapCGDIData.find(hObject);
 
 		if (m != m_mapCGDIData.end())
