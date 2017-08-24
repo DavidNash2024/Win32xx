@@ -22,12 +22,17 @@ New Features and Enhancements
 
 * Updated the status bar
 - A gripper is added if the parent window has the WS_THICKFRAME style.
-- The sizes of the indicators are determined more accurately in frames.
+
+* Updated frames
+- The sizes of the indicators in the status bar are determined more accurately.
+- A toolbar bitmap is now optional (icons can be used instead).
+- A menu for the frame is now optional.
+- The menu arrow button is now rendered correctly on Windows 10.
 
 
 Changes in detail
 -----------------
-Added CEnhMetaFileDC
+Added CEnhMetaFileDC class
 Added CFileFind class
 Added CFolderDialog class
 Added CWnd::GetExStyle
