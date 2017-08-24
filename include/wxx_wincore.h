@@ -144,7 +144,7 @@ namespace Win32xx
 		RemoveFromMap();
 
 		// Add the (HWND, CWnd*) pair to the map
-		CThreadLock(GetApp().m_csMapLock);
+		CThreadLock mapLock(GetApp().m_csMapLock);
 		GetApp().m_mapHWND.insert(std::make_pair(GetHwnd(), this));
 	}
 
@@ -928,7 +928,7 @@ namespace Win32xx
 			CWinApp& App = GetApp();
 
 			// Erase the CWnd pointer entry from the map
-			App.m_csMapLock.Lock();
+			CThreadLock mapLock(App.m_csMapLock);
 			for (m = App.m_mapHWND.begin(); m != App.m_mapHWND.end(); ++m)
 			{
 				if (this == m->second)
@@ -938,8 +938,6 @@ namespace Win32xx
 					break;
 				}
 			}
-
-			App.m_csMapLock.Release();
 
 		}
 
@@ -1053,7 +1051,7 @@ namespace Win32xx
 
 		// A critical section ensures threads update the data seperately
 		CCriticalSection ccs;
-		CThreadLock threadLock(ccs);
+		CThreadLock TLSLock(ccs);
 
 		DX.Init(*this, RetrieveAndValidate);
 

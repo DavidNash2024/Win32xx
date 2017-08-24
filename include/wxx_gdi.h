@@ -1292,7 +1292,7 @@ namespace Win32xx
 			std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
 			CWinApp& App = GetApp();
-			CThreadLock(App.m_csGDILock);
+			CThreadLock mapLock(App.m_csGDILock);
 			m = App.m_mapCGDIData.find(m_pData->hGDIObject);
 			if (m != App.m_mapCGDIData.end())
 			{
@@ -2717,7 +2717,7 @@ namespace Win32xx
 			std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
 			CWinApp& App = GetApp();
-			CThreadLock(App.m_csGDILock);
+			CThreadLock mapLock(App.m_csGDILock);
 			m = App.m_mapCDCData.find(m_pData->hDC);
 			if (m != App.m_mapCDCData.end())
 			{
