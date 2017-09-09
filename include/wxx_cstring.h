@@ -169,6 +169,7 @@ namespace Win32xx
 		bool	 operator != (const CStringT& str) const;
 				 operator const T*() const;
 		T&   	 operator [] (int nIndex);
+		const T& operator [] (int nIndex) const;
 		CStringT& operator += (const CStringT& str);
 		CStringT& operator += (const T* szText);
 		CStringT& operator += (const T ch);
@@ -631,6 +632,16 @@ namespace Win32xx
 	// Subscript operator. Returns the T character at the specified index.
 	template <class T>
 	inline T& CStringT<T>::operator [] (int nIndex)
+	{
+		assert(nIndex >= 0);
+		assert(nIndex < GetLength());	
+		return m_str[nIndex];
+	}
+
+
+	// Subscript operator. Returns the T character at the specified index.
+	template <class T>
+	inline const T& CStringT<T>::operator [] (int nIndex) const
 	{
 		assert(nIndex >= 0);
 		assert(nIndex < GetLength());

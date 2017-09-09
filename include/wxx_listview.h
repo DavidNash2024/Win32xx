@@ -107,7 +107,7 @@ namespace Win32xx
 		CSize	SetIconSpacing( int cx, int cy ) const;
 		CSize	SetIconSpacing( CSize sz ) const;
 		CImageList SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
-		BOOL	SetItem( LVITEM& pItem ) const;
+		BOOL	SetItem( LVITEM& Item ) const;
 		BOOL	SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
 						UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const;
 		void	SetItemCount( int iCount ) const;

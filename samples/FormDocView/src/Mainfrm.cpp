@@ -42,7 +42,7 @@ void CMainFrame::OnFileExit()
 void CMainFrame::OnMenuUpdate(UINT nID)
 {
 	// Update the check state of the various menu items
-	switch (nID) 
+	switch (nID)
 	{
 	case ID_CHECK_A:
 		OnUpdateCheckA(nID);
@@ -55,7 +55,7 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		break;
 	}
 
-	if ((nID >= ID_RADIO_A) && (nID <= ID_RADIO_C)) 
+	if ((nID >= ID_RADIO_A) && (nID <= ID_RADIO_C))
 		OnUpdateRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);
 
 	CFrame::OnMenuUpdate(nID);
@@ -65,7 +65,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
 	UNREFERENCED_PARAMETER(lParam);
 	UINT nID = LOWORD(wParam);
-    
+
 	switch(nID)
 	{
 	case ID_CHECK_A:		 m_SdiView.OnCheckA();	return TRUE;
@@ -75,14 +75,26 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	case IDW_VIEW_STATUSBAR: OnViewStatusBar();		return TRUE;
 	case IDW_VIEW_TOOLBAR:	 OnViewToolBar();		return TRUE;
     case IDM_HELP_ABOUT:	 OnHelp();				return TRUE;
-	
+
 	case ID_RADIO_A:
 	case ID_RADIO_B:		// intentionally blank
 	case ID_RADIO_C:		m_SdiView.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);	return TRUE;
+
+	case IDM_EDIT_COPY:
+	{
+		GetFocus().SendMessage(WM_COPY);
+		return TRUE;
+	}
+
+	case IDM_EDIT_PASTE:
+	{
+		GetFocus().SendMessage(WM_PASTE);
+		return TRUE;
+	}
     }
 
   return FALSE;
-} 
+}
 
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
 {
@@ -104,7 +116,7 @@ void CMainFrame::OnInitialUpdate()
 {
 	// The frame is now created.
 	// Place any additional startup code here.
-	
+
 }
 
 void CMainFrame::OnUpdateCheckA(UINT nID)
@@ -169,7 +181,7 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //	switch (uMsg)
 //	{
 //		Add case statements for each messages to be handled here
-//	} 
+//	}
 
 	// pass unhandled messages on for default processing
 	return WndProcDefault(uMsg, wParam, lParam);

@@ -67,7 +67,7 @@ namespace Win32xx
 	class CRibbon : public IUICommandHandler, public IUIApplication
 	{
 	public:
-		CRibbon() : m_cRef(1), m_pRibbonFramework(NULL) {}
+		CRibbon() : m_cRef(0), m_pRibbonFramework(NULL) {}
 		~CRibbon();
 
 		// IUnknown methods.
@@ -199,8 +199,8 @@ namespace Win32xx
 
 	inline CRibbon::~CRibbon()
 	{
-		// Reference count must be 1 or we have a leak!
-		assert(m_cRef == 1);
+		// Reference count must be 0 or we have a leak!
+		assert(m_cRef == 0);
 	}
 
 	//////////////////////////////////
@@ -526,7 +526,7 @@ namespace Win32xx
 	// Declaration of the nested CRecentFiles class
 	//
 	template <class T>
-	inline CRibbonFrameT<T>::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(1)
+	inline CRibbonFrameT<T>::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(0)
 	{
 		SHFILEINFOW sfi;
 		DWORD_PTR dwPtr = NULL;
