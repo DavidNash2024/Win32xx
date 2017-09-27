@@ -164,7 +164,6 @@ namespace Win32xx
 	// Retrieves the handle of this thread.
 	inline HANDLE CWinThread::GetThread() const
 	{
-		assert(m_hThread);
 		return m_hThread;
 	}
 
