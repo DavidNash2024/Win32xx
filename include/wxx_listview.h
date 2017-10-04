@@ -77,7 +77,7 @@ namespace Win32xx
 		int		GetItemCount( ) const;
 		DWORD_PTR GetItemData( int iItem ) const;
 		BOOL	GetItemPosition( int iItem, CPoint& pt ) const;
-		BOOL	GetItemRect( int iItem, CRect& rc, UINT nCode ) const;
+		BOOL	GetItemRect( int iItem, RECT& rc, UINT nCode ) const;
 		UINT	GetItemState( int iItem, UINT nMask ) const;
 		CString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
 		int		GetNextItem( int iItem, int iFlags ) const;
@@ -86,12 +86,12 @@ namespace Win32xx
 		UINT	GetSelectedCount( ) const;
 		int		GetSelectionMark( ) const;
 		int		GetStringWidth( LPCTSTR pszString ) const;
-		BOOL	GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const;
+		BOOL	GetSubItemRect( int iItem, int iSubItem, int iCode, RECT& rc ) const;
 		COLORREF GetTextBkColor( ) const;
 		COLORREF GetTextColor( ) const;
 		HWND	GetToolTips( ) const;
 		int		GetTopIndex( ) const;
-		BOOL	GetViewRect( CRect& rc ) const;
+		BOOL	GetViewRect( RECT& rc ) const;
 		void	GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const;
 		BOOL	SetBkColor( COLORREF clrBk ) const;
 		BOOL	SetBkImage( LVBKIMAGE& plvbkImage ) const;
@@ -335,7 +335,7 @@ namespace Win32xx
 
 
 	// Retrieves the bounding rectangle for all or part of an item in the current view.
-	inline BOOL CListView::GetItemRect( int iItem, CRect& rc, UINT nCode ) const
+	inline BOOL CListView::GetItemRect( int iItem, RECT& rc, UINT nCode ) const
 	{
 		assert(IsWindow());
 		return ListView_GetItemRect( *this, iItem, &rc, nCode );
@@ -433,7 +433,7 @@ namespace Win32xx
 
 
 	// Retrieves information about the rectangle that surrounds a subitem in the list-view control.
-	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, CRect& rc ) const
+	inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, RECT& rc ) const
 	{
 		assert(IsWindow());
 		return ListView_GetSubItemRect( *this, iItem, iSubItem, iCode, &rc );
@@ -473,7 +473,7 @@ namespace Win32xx
 
 
 	// Retrieves the bounding rectangle of all items in the list-view control.
-	inline BOOL CListView::GetViewRect( CRect& rc ) const
+	inline BOOL CListView::GetViewRect( RECT& rc ) const
 	{
 		assert(IsWindow());
 		return ListView_GetViewRect( *this, &rc );

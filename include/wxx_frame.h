@@ -270,7 +270,7 @@ namespace Win32xx
 
 		// Wrappers for Windows API functions
 		HRESULT CloseThemeData() const;
-		HRESULT DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT *pRect, const RECT *pClipRect) const;
+		HRESULT DrawThemeBackground(HDC hdc, int iPartId, int iStateId, const RECT* pRect, const RECT* pClipRect) const;
 		HRESULT DrawThemeText(HDC hdc, int iPartId, int iStateId, LPCWSTR pszText, int iCharCount, DWORD dwTextFlags, DWORD dwTextFlags2, LPCRECT pRect) const;
 		HRESULT GetThemePartSize(HDC hdc, int iPartId, int iStateId, LPCRECT prc, THEMESIZE eSize, SIZE* psz) const;
 		HRESULT GetThemeInt(int iPartId, int iStateId, int iPropId, int* piVal) const;

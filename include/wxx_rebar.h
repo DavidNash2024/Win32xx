@@ -69,7 +69,7 @@ namespace Win32xx
 		BOOL ResizeBand(const int nBand, const CSize& sz) const;
 		BOOL ShowGripper(int nBand, BOOL Show) const;
 		BOOL ShowBand(int nBand, BOOL Show) const;
-		BOOL SizeToRect(CRect& rect) const;
+		BOOL SizeToRect(RECT& rect) const;
 
 		// Attributes
 		int  GetBand(const HWND hWnd) const;
@@ -471,7 +471,9 @@ namespace Win32xx
 	{
 		HWND hToolBar = reinterpret_cast<HWND>(wParam);
 		LPSIZE pToolBarSize = reinterpret_cast<LPSIZE>(lParam);
-		ResizeBand(GetBand(hToolBar), *pToolBarSize);
+		int nBand = GetBand(hToolBar);
+		if (nBand != -1) 
+			ResizeBand(nBand, *pToolBarSize);
 
 		return FinalWindowProc(uMsg, wParam, lParam);
 	}
@@ -605,7 +607,7 @@ namespace Win32xx
 
 	// Attempts to find the best layout of the bands for the given rectangle.
 	// The rebar bands will be arranged and wrapped as necessary to fit the rectangle.
-	inline BOOL CReBar::SizeToRect(CRect& rect) const
+	inline BOOL CReBar::SizeToRect(RECT& rect) const
 	{
 		assert(IsWindow());
 		return static_cast<BOOL>(SendMessage(RB_SIZETORECT, 0L, reinterpret_cast<LPARAM>(&rect)));
