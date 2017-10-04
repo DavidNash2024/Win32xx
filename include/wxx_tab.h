@@ -167,7 +167,7 @@ namespace Win32xx
 		virtual void	DrawCloseButton(CDC& dcDraw);
 		virtual void	DrawListButton(CDC& dcDraw);
 		virtual void	DrawTabs(CDC& dcMem);
-		virtual void	DrawTabBorders(CDC& dcMem, CRect& rcTab);
+		virtual void	DrawTabBorders(CDC& dcMem, RECT& rcTab);
 		virtual void    OnAttach();
 		virtual BOOL    OnEraseBkgnd(CDC&) { return TRUE;}
 		virtual LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
@@ -596,7 +596,7 @@ namespace Win32xx
 
 
 	// Draw the tab borders.
-	inline void CTab::DrawTabBorders(CDC& dcMem, CRect& rcTab)
+	inline void CTab::DrawTabBorders(CDC& dcMem, RECT& rcTab)
 	{
 		BOOL IsBottomTab = GetStyle() & TCS_BOTTOM;
 

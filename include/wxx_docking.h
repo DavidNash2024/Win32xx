@@ -305,7 +305,7 @@ namespace Win32xx
 		public:
 			CDockClient();
 			virtual ~CDockClient() {}
-			virtual void Draw3DBorder(RECT& Rect);
+			virtual void Draw3DBorder(const RECT& Rect);
 			virtual void DrawCaption();
 			virtual void DrawCloseButton(CDC& DrawDC, BOOL Focus);
 			virtual CRect GetCloseRect() const;
@@ -559,7 +559,7 @@ namespace Win32xx
 		void DrawAllCaptions();
 		void DrawHashBar(HWND hBar, POINT Pos);
 		void ConvertToChild(HWND hWndParent);
-		void ConvertToPopup(const CRect& rc);
+		void ConvertToPopup(const RECT& rc);
 		void MoveDockChildren(CDocker* pDockTarget);
 		void MoveDockInContainerChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
@@ -758,7 +758,7 @@ namespace Win32xx
 		m_PenColor = RGB(160, 150, 140);
 	}
 
-	inline void CDocker::CDockClient::Draw3DBorder(RECT& Rect)
+	inline void CDocker::CDockClient::Draw3DBorder(const RECT& Rect)
 	{
 		// Imitates the drawing of the WS_EX_CLIENTEDGE extended style
 		// This draws a 2 pixel border around the specified Rect
@@ -3984,7 +3984,7 @@ namespace Win32xx
 	}
 
 
-	inline void CDocker::ConvertToPopup(const CRect& rc)
+	inline void CDocker::ConvertToPopup(const RECT& rc)
 	{
 		// Change the window to an "undocked" style
 		ShowWindow(SW_HIDE);

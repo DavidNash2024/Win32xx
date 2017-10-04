@@ -74,7 +74,7 @@ namespace Win32xx
 		DWORD_PTR GetItemData(HTREEITEM hItem) const;
 		int		GetItemHeight() const;
 		BOOL	GetItemImage(HTREEITEM hItem, int& nImage, int& nSelectedImage ) const;
-		BOOL	GetItemRect(HTREEITEM hItem, CRect& rc, BOOL IsTextOnly) const;
+		BOOL	GetItemRect(HTREEITEM hItem, RECT& rc, BOOL IsTextOnly) const;
 		CString GetItemText(HTREEITEM hItem, UINT nTextMax = 260) const;
 		HTREEITEM GetLastVisible() const;
 		HTREEITEM GetNextItem(HTREEITEM hItem, UINT nCode) const;
@@ -263,7 +263,7 @@ namespace Win32xx
 
 
 	// Retrieves the bounding rectangle for a tree-view item and indicates whether the item is visible.
-	inline BOOL CTreeView::GetItemRect(HTREEITEM hItem, CRect& rc, BOOL IsTextOnly) const
+	inline BOOL CTreeView::GetItemRect(HTREEITEM hItem, RECT& rc, BOOL IsTextOnly) const
 	{
 		assert(IsWindow());
 		return TreeView_GetItemRect( *this, hItem, &rc, IsTextOnly );

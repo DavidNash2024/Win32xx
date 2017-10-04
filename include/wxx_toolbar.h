@@ -47,7 +47,7 @@ namespace Win32xx
 {
 
 	///////////////////////////////////////////////
-	// The CToolBar class provides the functionality a toolbar edit control.
+	// The CToolBar class provides the functionality a toolbar control.
 	class CToolBar : public CWnd
 	{
 	public:
@@ -81,6 +81,7 @@ namespace Win32xx
 		CString GetButtonText(int idButton) const;
 		int   GetCommandID(int iIndex) const;
 		CImageList GetDisabledImageList();
+		DWORD GetExtendedStyle() const;
 		int   GetHotItem() const;
 		CImageList GetHotImageList();
 		CImageList GetImageList();
@@ -436,6 +437,13 @@ namespace Win32xx
 		return CImageList(himl);
 	}
 
+	// Retrieves the he extended styles currently in use for the toolbar control.
+	// Possible extended styles: TBSTYLE_EX_DRAWDDARROWS, TBSTYLE_EX_HIDECLIPPEDBUTTONS, TBSTYLE_EX_DOUBLEBUFFER and TBSTYLE_EX_MIXEDBUTTONS
+	inline DWORD CToolBar::GetExtendedStyle() const
+	{
+		assert(IsWindow());
+		return (DWORD)SendMessage(TB_GETEXTENDEDSTYLE, 0L, 0L);
+	}
 
 	// Retrieves the image list that a ToolBar control uses to display hot buttons.
 	inline CImageList CToolBar::GetHotImageList()

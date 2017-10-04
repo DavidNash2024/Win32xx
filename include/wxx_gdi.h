@@ -541,9 +541,9 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 		BOOL Arc(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-		BOOL Arc(RECT& rc, POINT ptStart, POINT ptEnd) const;
+		BOOL Arc(const RECT& rc, POINT ptStart, POINT ptEnd) const;
 		BOOL ArcTo(int x1, int y1, int x2, int y2, int x3, int y3, int x4, int y4) const;
-		BOOL ArcTo(RECT& rc, POINT ptStart, POINT ptEnd) const;
+		BOOL ArcTo(const RECT& rc, POINT ptStart, POINT ptEnd) const;
 		BOOL AngleArc(int x, int y, int nRadius, float fStartAngle, float fSweepAngle) const;
 		BOOL CloseFigure() const;
 		int  GetROP2() const;
@@ -741,7 +741,7 @@ namespace Win32xx
 		int SetAbortProc(BOOL (CALLBACK* lpfn)(HDC, int)) const;
 
 		// Text Functions
-		int   DrawText(LPCTSTR lpszString, int nCount, RECT& rc, UINT nFormat) const;
+		int   DrawText(LPCTSTR lpszString, int nCount, const RECT& rc, UINT nFormat) const;
 		BOOL  ExtTextOut(int x, int y, UINT nOptions, const RECT& rc, LPCTSTR lpszString, int nCount = -1, LPINT lpDxWidths = NULL) const;
 		COLORREF GetBkColor() const;
 		int   GetBkMode() const;
@@ -755,7 +755,7 @@ namespace Win32xx
 		COLORREF SetTextColor(COLORREF crColor) const;
 
 #ifndef _WIN32_WCE
-		int   DrawTextEx(LPTSTR lpszString, int nCount, RECT& rc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const;
+		int   DrawTextEx(LPTSTR lpszString, int nCount, const RECT& rc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const;
 		DWORD GetCharacterPlacement(LPCTSTR pString, int nCount, int nMaxExtent,
 		                            LPGCP_RESULTS pResults, DWORD dwFlags) const;
 
@@ -764,7 +764,7 @@ namespace Win32xx
 		CSize GetTabbedTextExtent(LPCTSTR lpszString, int nCount, int nTabPositions, LPINT lpnTabStopPositions) const;
 		int   GetTextCharacterExtra() const;
 		CSize GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const;
-		CSize GetTextExtentPoint32(CString& str) const;
+		CSize GetTextExtentPoint32(LPCTSTR lpszString) const;
 		BOOL  GrayString(HBRUSH hBrush, GRAYSTRINGPROC lpOutputFunc, LPARAM lpData, int nCount, int x, int y, int nWidth, int nHeight) const;
 		int   SetTextCharacterExtra(int nCharExtra) const;
 		int   SetTextJustification(int nBreakExtra, int nBreakCount) const;
@@ -3808,7 +3808,7 @@ namespace Win32xx
 
 
 	// Draws an elliptical arc.
-	inline BOOL CDC::Arc(RECT& rc, POINT ptStart, POINT ptEnd) const
+	inline BOOL CDC::Arc(const RECT& rc, POINT ptStart, POINT ptEnd) const
 	{
 		assert(m_pData->hDC);
 		return ::Arc(m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
@@ -3825,7 +3825,7 @@ namespace Win32xx
 
 
 	// Draws an elliptical arc.
-	inline BOOL CDC::ArcTo(RECT& rc, POINT ptStart, POINT ptEnd) const
+	inline BOOL CDC::ArcTo(const RECT& rc, POINT ptStart, POINT ptEnd) const
 	{
 		assert(m_pData->hDC);
 		return ::ArcTo (m_pData->hDC, rc.left, rc.top, rc.right, rc.bottom,
@@ -4638,10 +4638,10 @@ namespace Win32xx
 
 
 	// Draws formatted text in the specified rectangle.
-	inline int CDC::DrawText(LPCTSTR lpszString, int nCount, RECT& rc, UINT nFormat) const
+	inline int CDC::DrawText(LPCTSTR lpszString, int nCount, const RECT& rc, UINT nFormat) const
 	{
 		assert(m_pData->hDC);
-		return ::DrawText(m_pData->hDC, lpszString, nCount, &rc, nFormat );
+		return ::DrawText(m_pData->hDC, lpszString, nCount, (LPRECT)&rc, nFormat );
 	}
 
 
@@ -4729,10 +4729,10 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
 	// Draws formatted text in the specified rectangle with more formatting options.
-	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, RECT& rc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const
+	inline int CDC::DrawTextEx(LPTSTR lpszString, int nCount, const RECT& rc, UINT nFormat, LPDRAWTEXTPARAMS lpDTParams) const
 	{
 		assert(m_pData->hDC);
-		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, &rc, nFormat, lpDTParams);
+		return ::DrawTextEx(m_pData->hDC, lpszString, nCount, (LPRECT)&rc, nFormat, lpDTParams);
 	}
 
 
@@ -4766,6 +4766,8 @@ namespace Win32xx
 	inline CSize CDC::GetTextExtentPoint32(LPCTSTR lpszString, int nCount) const
 	{
 		assert(m_pData->hDC);
+		assert(lpszString);
+		assert(nCount <= lstrlen(lpszString));
 		CSize sz;
 		::GetTextExtentPoint32(m_pData->hDC, lpszString, nCount, &sz);
 		return sz;
@@ -4773,10 +4775,10 @@ namespace Win32xx
 
 
 	// Computes the width and height of the specified string of text.
-	inline CSize CDC::GetTextExtentPoint32(CString& str) const
+	inline CSize CDC::GetTextExtentPoint32(LPCTSTR lpszString) const
 	{
-		CSize sz;
-		return GetTextExtentPoint32(str.c_str(), str.GetLength());
+		assert(lpszString);
+		return GetTextExtentPoint32(lpszString, lstrlen(lpszString));
 	}
 
 
