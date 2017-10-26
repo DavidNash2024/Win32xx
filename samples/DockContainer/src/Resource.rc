@@ -48,6 +48,11 @@ BEGIN
         MENUITEM "&Default Layout",             IDM_DOCK_DEFAULT
         MENUITEM "&Close All",                  IDM_DOCK_CLOSEALL
     END
+	POPUP "&Options"
+	BEGIN
+	    MENUITEM "Container Tabs at Top",       IDM_CONTAINER_TOP, CHECKED
+	    MENUITEM "Hide Single Container Tab",   IDM_HIDE_SINGLE_TAB, CHECKED
+	END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About",                      IDM_HELP_ABOUT

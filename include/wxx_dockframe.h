@@ -137,6 +137,9 @@ namespace Win32xx
 	{
 		GetDockClient().Create(GetHwnd());
 		GetView().Create(GetDockClient());
+		
+		// Set the caption height based on text height
+		SetCaptionHeight( MAX(20, GetTextHeight() + 5) );
 		return CFrameT<CDocker>::OnCreate(cs);
 	}
 

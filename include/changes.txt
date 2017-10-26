@@ -21,31 +21,39 @@ New Features and Enhancements
 	- UnlockRange 
 
 * Updated the status bar
-- A gripper is added if the parent window has the WS_THICKFRAME style.
+  - A gripper is added if the parent window has the WS_THICKFRAME style.
+
+* Updated docking frames
+  - A CDockContainer can now be used as the view window for docking frames 
+    (inherited from CDockFrame for example). This container can have zero
+	or more tabs. The DockContainer sample now uses a CDockContainer as the
+	frame's view window.
 
 * Updated frames
-- The sizes of the indicators in the status bar are determined more accurately.
-- A toolbar bitmap is now optional (icons can be used instead).
-- A menu for the frame is now optional.
-- The menu arrow button is now rendered correctly on Windows 10.
+  - The sizes of the indicators in the status bar are determined more accurately.
+  - A toolbar bitmap is now optional (icons can be used instead).
+  - A menu for the frame is now optional.
+  - The menu arrow button is now rendered correctly on Windows 10.
 
 
 Changes in detail
 -----------------
-Added CEnhMetaFileDC class
-Added CFileFind class
-Added CFolderDialog class
-Added CWnd::GetExStyle
-Added CWnd::GetStyle
-Added CWnd::SetExStyle
-Added CWnd::SetStyle
 Added CDocker::GetActiveView
+Added CDocker::SaveContainerRegistrySettings
 Added CDockFrame::OnActivate
 Added CDockFrame::OnDockActivated
 Added CDockFrame::OnDockDestroyed
 Added CDockFrame::OnMouseActivate
 Added CDockFrame::OnSysColorChange
+Added CEnhMetaFileDC class
+Added CFileFind class
+Added CFolderDialog class
 Added CToolBar::GetExtendedStyle
+Added CWnd::GetExStyle
+Added CWnd::GetStyle
+Added CWnd::SetExStyle
+Added CWnd::SetStyle
+
 Added ::GetNonClientMetrics
 Added UWM_GETCDIALIOG message
 

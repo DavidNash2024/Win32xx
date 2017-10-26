@@ -188,8 +188,6 @@
 		<Unit filename="../src/Resource.rc">
 			<Option compilerVar="WINDRES" />
 		</Unit>
-		<Unit filename="../src/Simple.cpp" />
-		<Unit filename="../src/Simple.h" />
 		<Unit filename="../src/StdAfx.cpp" />
 		<Unit filename="../src/Text.cpp" />
 		<Unit filename="../src/Text.h" />

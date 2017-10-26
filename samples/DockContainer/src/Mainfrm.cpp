@@ -11,7 +11,7 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_IsContainerTabsAtTop(FALSE), m_IsHideSingleTab(TRUE)
 {
 	// Constructor for CMainFrame. Its called after CFrame's constructor
 
@@ -26,6 +26,22 @@ CMainFrame::CMainFrame()
 CMainFrame::~CMainFrame()
 {
 	// Destructor for CMainFrame.
+}
+
+void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
+{
+	m_IsHideSingleTab = HideSingle;
+	std::vector<CDocker*>::const_iterator iter;
+
+	// Set the Tab position for each container
+	for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+	{
+		CDockContainer* pContainer = (*iter)->GetContainer();
+		if (pContainer && pContainer->IsWindow())
+		{
+			pContainer->SetHideSingleTab(HideSingle);
+		}
+	}
 }
 
 void CMainFrame::LoadDefaultDockers()
@@ -93,15 +109,24 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 	UINT nID = LOWORD(wParam);
 	switch(nID)
 	{
+	case IDM_CONTAINER_TOP:		return OnContainerTabsAtTop();
 	case IDM_FILE_EXIT:			return OnFileExit();
 	case IDM_DOCK_DEFAULT:		return OnDockDefault();
 	case IDM_DOCK_CLOSEALL:		return OnDockCloseAll();
 	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
 	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
 	case IDM_HELP_ABOUT:		return OnHelp();
+	case IDM_HIDE_SINGLE_TAB:	return OnHideSingleTab();
 	}
 
 	return FALSE;
+}
+
+BOOL CMainFrame::OnContainerTabsAtTop()
+// Reposition the tabs in the containers
+{
+	SetContainerTabsAtTop(!m_IsContainerTabsAtTop);
+	return TRUE;
 }
 
 int CMainFrame::OnCreate(CREATESTRUCT& cs)
@@ -143,6 +168,12 @@ BOOL CMainFrame::OnFileExit()
 	return TRUE;
 }
 
+BOOL CMainFrame::OnHideSingleTab()
+{
+	HideSingleContainerTab(!m_IsHideSingleTab);
+	return TRUE;
+}
+
 void CMainFrame::OnInitialUpdate()
 {
 	SetDockStyle(DS_CLIENTEDGE);
@@ -151,10 +182,32 @@ void CMainFrame::OnInitialUpdate()
 	if (!LoadDockRegistrySettings(GetRegistryKeyName()))
 		LoadDefaultDockers();
 
+	// Hide the container's tab if it has just one tab
+	HideSingleContainerTab(m_IsHideSingleTab);
+
 	// PreCreate initially set the window as invisible, so show it now.
 	ShowWindow( GetInitValues().ShowCmd );
 }
 
+void CMainFrame::OnMenuUpdate(UINT nID)
+// Called when menu items are about to be displayed
+{
+	UINT uCheck;
+	switch (nID)
+	{
+	case IDM_CONTAINER_TOP:
+		uCheck = (m_IsContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+		GetFrameMenu().CheckMenuItem(nID, uCheck);
+		break;
+
+	case IDM_HIDE_SINGLE_TAB:
+		uCheck = (m_IsHideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
+		GetFrameMenu().CheckMenuItem(nID, uCheck);
+		break;
+	}
+
+	CDockFrame::OnMenuUpdate(nID);
+}
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
 {
@@ -171,6 +224,22 @@ BOOL CMainFrame::SaveRegistrySettings()
 		return SaveDockRegistrySettings(GetRegistryKeyName());
 	else
 		return FALSE;
+}
+
+void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
+{
+	m_IsContainerTabsAtTop = bTop;
+	std::vector<CDocker*>::const_iterator iter;
+
+	// Set the Tab position for each container
+	for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
+	{
+		CDockContainer* pContainer = (*iter)->GetContainer();
+		if (pContainer && pContainer->IsWindow())
+		{
+			pContainer->SetTabsAtTop(bTop);
+		}
+	}
 }
 
 void CMainFrame::SetupToolBar()
