@@ -119,10 +119,6 @@ SOURCE=..\src\Output.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\src\Simple.cpp
-# End Source File
-# Begin Source File
-
 SOURCE=..\src\StdAfx.cpp
 # End Source File
 # Begin Source File
@@ -160,10 +156,6 @@ SOURCE=..\src\Output.h
 # Begin Source File
 
 SOURCE=..\src\resource.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\src\Simple.h
 # End Source File
 # Begin Source File
 

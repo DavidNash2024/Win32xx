@@ -47,9 +47,6 @@ void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
 		}
 	}
 
-	// Set the menu checkmark
-	UINT uCheck = (HideSingle) ? MF_CHECKED : MF_UNCHECKED;
-	GetFrameMenu().CheckMenuItem(IDM_HIDE_SINGLE_TAB, uCheck);
 }
 
 void CMainFrame::LoadDefaultDockers()
@@ -364,6 +361,24 @@ void CMainFrame::OnMenuUpdate(UINT nID)
 		EditMenu.EnableMenuItem(nID, MF_BYCOMMAND | Flags);
 	}
 
+	UINT uCheck;
+	switch (nID)
+	{
+	case IDM_CONTAINER_TOP:
+		uCheck = (m_IsContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+		GetFrameMenu().CheckMenuItem(nID, uCheck);
+		break;
+
+	case IDM_HIDE_SINGLE_TAB:
+		uCheck = (m_IsHideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
+		GetFrameMenu().CheckMenuItem(nID, uCheck);
+		break;
+
+	case IDM_TABBEDMDI_TOP:
+		uCheck = (m_IsMDITabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+		GetFrameMenu().CheckMenuItem(nID, uCheck);
+	}
+
 	CDockFrame::OnMenuUpdate(nID);
 }
 
@@ -403,20 +418,12 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
 			pContainer->SetTabsAtTop(bTop);
 		}
 	}
-
-	// Set the menu checkmark
-	UINT uCheck = (bTop) ? MF_CHECKED : MF_UNCHECKED;
-	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, uCheck);
 }
 
 void CMainFrame::SetMDITabsAtTop(BOOL bTop)
 {
 	m_IsMDITabsAtTop = bTop;
 	m_MyTabbedMDI.GetTab().SetTabsAtTop(bTop);
-
-	// Set the menu checkmark
-	UINT uCheck = (bTop) ? MF_CHECKED : MF_UNCHECKED;
-	GetFrameMenu().CheckMenuItem(IDM_TABBEDMDI_TOP, uCheck);
 }
 
 void CMainFrame::SetupMenuIcons()
@@ -430,9 +437,6 @@ void CMainFrame::SetupMenuIcons()
 	AddMenuIcon(IDM_FILE_NEWTEXT, GetApp().LoadIcon(IDI_TEXT));
 	AddMenuIcon(IDM_FILE_NEWLIST, GetApp().LoadIcon(IDI_FILEVIEW));
 	AddMenuIcon(IDM_FILE_NEWTREE, GetApp().LoadIcon(IDI_CLASSVIEW));
-
-	// Remove the checkmark for container tabs at top
-	GetFrameMenu().CheckMenuItem(IDM_CONTAINER_TOP, MF_UNCHECKED);
 }
 
 void CMainFrame::SetupToolBar()

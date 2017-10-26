@@ -1,7 +1,7 @@
 [Project]
 FileName=DockContainer_DEBUG.dev
 Name=ContainerDocking
-UnitCount=22
+UnitCount=20
 Type=0
 Ver=2
 ObjFiles=
@@ -141,26 +141,6 @@ AutoIncBuildNr=0
 SyncProduct=0
 
 [Unit16]
-FileName=..\src\Simple.cpp
-CompileCpp=1
-Folder=Source
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit17]
-FileName=..\src\Simple.h
-CompileCpp=1
-Folder=Header
-Compile=1
-Link=1
-Priority=1000
-OverrideBuildCmd=0
-BuildCmd=
-
-[Unit18]
 FileName=..\src\StdAfx.cpp
 CompileCpp=1
 Folder=Source
@@ -170,7 +150,7 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit19]
+[Unit17]
 FileName=..\src\stdafx.h
 CompileCpp=1
 Folder=Header
@@ -180,8 +160,28 @@ Priority=1000
 OverrideBuildCmd=0
 BuildCmd=
 
-[Unit20]
+[Unit18]
 FileName=..\src\targetver.h
+CompileCpp=1
+Folder=Header
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit19]
+FileName=..\src\Text.cpp
+CompileCpp=1
+Folder=Source
+Compile=1
+Link=1
+Priority=1000
+OverrideBuildCmd=0
+BuildCmd=
+
+[Unit20]
+FileName=..\src\Text.h
 CompileCpp=1
 Folder=Header
 Compile=1

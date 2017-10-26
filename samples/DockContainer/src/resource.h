@@ -23,6 +23,8 @@
 #define IDM_EDIT_PASTE                  134
 #define IDM_EDIT_DELETE                 135
 #define IDM_HELP_ABOUT                  140
+#define IDM_CONTAINER_TOP               141
+#define IDM_HIDE_SINGLE_TAB             142
 
 // Bitmaps for the ClassView, FileFiew and ComboBoxEx ImageLists
 #define IDB_CLASSVIEW                   150
