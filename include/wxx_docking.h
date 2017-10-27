@@ -3971,7 +3971,7 @@ namespace Win32xx
 	{
 		GetDockClient().SetCaption(szCaption);
 
-		if (IsWindow())
+		if (IsWindow() && (this != GetDockAncestor()))
 			SetWindowText(szCaption);
 	}
 

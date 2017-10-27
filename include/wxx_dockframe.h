@@ -223,6 +223,7 @@ namespace Win32xx
 	{
 		// The view window for a CMDIDockFrame is the MDI Client
 		SetView(GetMDIClient());
+		GetDockClient().SetDocker(this);
 	}
 
 
