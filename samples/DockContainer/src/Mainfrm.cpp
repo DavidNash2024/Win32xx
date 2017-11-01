@@ -150,6 +150,8 @@ BOOL CMainFrame::OnDockDefault()
 	SetRedraw(FALSE);
 	CloseAllDockers();
 	LoadDefaultDockers();
+	HideSingleContainerTab(m_IsHideSingleTab);
+	SetContainerTabsAtTop(m_IsContainerTabsAtTop);
 	SetRedraw(TRUE);
 	RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
 	return TRUE;
