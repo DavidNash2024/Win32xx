@@ -173,7 +173,7 @@ namespace Win32xx
 	public:
 		CDockContainer();
 		virtual ~CDockContainer();
-		virtual void AddContainer(CDockContainer* pContainer, BOOL Insert = FALSE);
+		virtual void AddContainer(CDockContainer* pContainer, BOOL Insert = FALSE, BOOL SelecPage = TRUE);
 		virtual void AddToolBarButton(UINT nID, BOOL IsEnabled = TRUE);
 		virtual CDockContainer* GetContainerFromIndex(UINT nPage);
 		virtual CDockContainer* GetContainerFromView(CWnd* pView) const;
@@ -183,7 +183,7 @@ namespace Win32xx
 		virtual int GetTabImageID(UINT nTab) const;
 		virtual CString GetTabText(UINT nTab) const;
 		virtual void RecalcLayout();
-		virtual void RemoveContainer(CDockContainer* pWnd);
+		virtual void RemoveContainer(CDockContainer* pWnd, BOOL UpdateParent = TRUE);
 		virtual void SelectPage(int nPage);
 		virtual void SetTabSize();
 		virtual void SetupToolBar();
@@ -466,7 +466,7 @@ namespace Win32xx
 		virtual void Close();
 		virtual void CloseAllDockers();
 		virtual void Dock(CDocker* pDocker, UINT uDockSide);
-		virtual void DockInContainer(CDocker* pDocker, DWORD dwDockStyle);
+		virtual void DockInContainer(CDocker* pDocker, DWORD dwDockStyle, BOOL SelectPage = TRUE);
 		virtual CDockContainer* GetContainer() const;
 		virtual CDocker* GetActiveDocker() const;
 		virtual CWnd*	 GetActiveView() const;
@@ -561,7 +561,7 @@ namespace Win32xx
 		void DrawAllCaptions();
 		void DrawHashBar(HWND hBar, POINT Pos);
 		void ConvertToChild(HWND hWndParent);
-		void ConvertToPopup(const RECT& rc);
+		void ConvertToPopup(const RECT& rc, BOOL ShowUndocked);
 		void MoveDockChildren(CDocker* pDockTarget);
 		void MoveDockInContainerChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
@@ -569,7 +569,7 @@ namespace Win32xx
 		void ResizeDockers(LPDRAGPOS pdp);
 		CDocker* SeparateFromDock();
 		void SendNotify(UINT nMessageID);
-		void SetUndockPosition(CPoint pt);
+		void SetUndockPosition(CPoint pt, BOOL ShowUndocked);
 		std::vector<CDocker*> SortDockers();
 		static BOOL CALLBACK EnumWindowsProc(HWND hWndTop, LPARAM lParam);
 
@@ -1185,7 +1185,7 @@ namespace Win32xx
 						int lastTab = static_cast<int>(pParent->GetAllContainers().size()) - 1;
 						assert(lastTab >= 0);
 						CDockContainer* pContainerLast = pContainer->GetContainerFromIndex(lastTab);
-						m_pDocker->GetDockAncestor()->UndockContainer(pContainerLast, GetCursorPos(), TRUE);
+						m_pDocker->GetDockAncestor()->UndockContainer(pContainerLast, GetCursorPos(), FALSE);
 
 						while (pParent->GetAllContainers().size() > 0)
 						{
@@ -1199,7 +1199,9 @@ namespace Win32xx
 						}
 
 						pContainerLast->SetActiveContainer(pActive);
-						m_pDocker->RecalcDockLayout();
+						pContainerLast->GetDocker()->ShowWindow(SW_SHOW);
+						pContainerLast->RedrawWindow();
+						m_pDocker->GetDockAncestor()->RecalcDockLayout();
 					}
 
 				}
@@ -2281,7 +2283,7 @@ namespace Win32xx
 
 
 	// Add a container to an existing container.
-	inline void CDocker::DockInContainer(CDocker* pDocker, DWORD dwDockStyle)
+	inline void CDocker::DockInContainer(CDocker* pDocker, DWORD dwDockStyle, BOOL SelectPage)
 	{
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && GetContainer())
 		{
@@ -2320,7 +2322,7 @@ namespace Win32xx
 			// Insert the containers in reverse order
 			for (riter = AllContainers.rbegin(); riter < AllContainers.rend(); ++riter)
 			{
-				pContainer->AddContainer( (*riter).pContainer, TRUE);
+				pContainer->AddContainer( (*riter).pContainer, TRUE, SelectPage);
 			}
 		}
 
@@ -2328,11 +2330,11 @@ namespace Win32xx
 		if (GetAncestor().IsWindowVisible())
 		{
 			// Give the view window focus unless its child already has it
-			if (!pDocker->GetView().IsChild(GetFocus()))
-				pDocker->GetView().SetFocus();
+	//		if (!pDocker->GetView().IsChild(GetFocus()))
+	//			pDocker->GetView().SetFocus();
 
 			// Update the Dock captions
-			GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
+	//		GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
 		}
 
 		pDocker->RecalcDockLayout();
@@ -2658,7 +2660,7 @@ namespace Win32xx
 				if (pContainer == pContainer->GetContainerParent())
 					UndockContainer(pContainer, GetCursorPos(), FALSE);
 				else
-					pContainer->GetContainerParent()->RemoveContainer(pContainer);
+					pContainer->GetContainerParent()->RemoveContainer(pContainer, FALSE);
 			}
 			else
 			{
@@ -3252,7 +3254,7 @@ namespace Win32xx
 			break;
 		case DS_DOCKED_CONTAINER:
 			{
-				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone);
+				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone, FALSE);
 				CDockContainer* pContainer = GetContainer();
 				assert(pContainer);
 				pContainer->SelectPage(0);
@@ -4090,7 +4092,7 @@ namespace Win32xx
 				for (iter = m_vDockChildren.begin() + 1; iter != m_vDockChildren.end(); ++iter)
 					(*iter)->ShowWindow(SW_HIDE);
 
-				pDockFirstChild->ConvertToPopup(GetWindowRect());
+				pDockFirstChild->ConvertToPopup(GetWindowRect(), TRUE);
 				pDockFirstChild->GetDockBar().ShowWindow(SW_HIDE);
 			}
 
@@ -4109,7 +4111,7 @@ namespace Win32xx
 	}
 
 
-	inline void CDocker::ConvertToPopup(const RECT& rc)
+	inline void CDocker::ConvertToPopup(const RECT& rc, BOOL ShowUndocked)
 	{
 		// Change the window to an "undocked" style
 		ShowWindow(SW_HIDE);
@@ -4123,9 +4125,10 @@ namespace Win32xx
 		SetWindowPos(0, 0, 0, 0, 0, SWP_NOSENDCHANGING|SWP_HIDEWINDOW|SWP_NOREDRAW);
 		m_pDockParent = 0;
 		SetParent(0);
-		SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED|SWP_NOOWNERZORDER);
-		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
 
+		DWORD dwStyleShow = ShowUndocked? SWP_SHOWWINDOW : 0;
+		SetWindowPos(NULL, rc, dwStyleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+		GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
 		SetWindowText(GetCaption().c_str());
 	}
 
@@ -4160,7 +4163,7 @@ namespace Win32xx
 	}
 
 
-	inline void CDocker::SetUndockPosition(CPoint pt)
+	inline void CDocker::SetUndockPosition(CPoint pt, BOOL ShowUndocked)
 	{
 		m_IsUndocking = TRUE;
 		CRect rc;
@@ -4170,7 +4173,8 @@ namespace Win32xx
 		if ( !rcTest.PtInRect(pt))
 			rc.SetRect(pt.x - rc.Width()/2, pt.y - m_NCHeight/2, pt.x + rc.Width()/2, pt.y - m_NCHeight/2 + rc.Height());
 
-		ConvertToPopup(rc);
+		ConvertToPopup(rc, ShowUndocked);
+			
 		m_IsUndocking = FALSE;
 
 		// Send the undock notification to the frame
@@ -4203,10 +4207,7 @@ namespace Win32xx
 		CDocker* pDockUndockedFrom = SeparateFromDock();
 
 		// Position and draw the undocked window, unless it is about to be closed
-		if (ShowUndocked)
-		{
-			SetUndockPosition(pt);
-		}
+		SetUndockPosition(pt, ShowUndocked);
 
 		// Give the view window focus unless its child already has it
 		if (!GetView().IsChild(GetFocus()))
@@ -4323,7 +4324,7 @@ namespace Win32xx
 			// This is a child container, so simply remove it from the parent
 			CDockContainer* pContainerParent = GetContainer();
 			assert(pContainerParent);
-			pContainerParent->RemoveContainer(pContainer);
+			pContainerParent->RemoveContainer(pContainer, ShowUndocked);
 			pContainerParent->SetTabSize();
 			pContainerParent->SetFocus();
 			if (pContainerParent->GetViewPage().IsWindow())
@@ -4414,7 +4415,7 @@ namespace Win32xx
 
 	// Adds a container to the group. Set Insert to TRUE to insert the container as the
 	//  first tab, or FALSE to add it as the last tab.
-	inline void CDockContainer::AddContainer(CDockContainer* pContainer, BOOL Insert /* = FALSE */)
+	inline void CDockContainer::AddContainer(CDockContainer* pContainer, BOOL Insert /* = FALSE */, BOOL SelecPage)
 	{
 		assert(pContainer);
 		assert(this == m_pContainerParent); // Must be performed by parent container
@@ -4442,7 +4443,10 @@ namespace Win32xx
 			tie.iImage = ci.iImage;
 			tie.pszText = const_cast<LPTSTR>(m_vContainerInfo[iNewPage].Title.c_str());
 			InsertItem(iNewPage, &tie);
-			SelectPage(iNewPage);
+
+			if (SelecPage)
+				SelectPage(iNewPage);
+			
 			SetTabSize();
 		}
 
@@ -4758,7 +4762,7 @@ namespace Win32xx
 	{
 		// Sets the focus to the active view (or its child)
 		HWND hwndPrevFocus = reinterpret_cast<HWND>(wParam);
-		if (GetActiveView())
+		if (GetActiveView() && GetActiveView()->IsWindow())
 		{
 			if (GetActiveView()->IsChild(hwndPrevFocus))
 			{
@@ -4816,7 +4820,7 @@ namespace Win32xx
 	}
 
 
-	inline void CDockContainer::RemoveContainer(CDockContainer* pWnd)
+	inline void CDockContainer::RemoveContainer(CDockContainer* pWnd, BOOL UpdateParent)
 	{
 		assert(pWnd);
 
@@ -4846,7 +4850,7 @@ namespace Win32xx
 
 		// Display next lowest page
 		m_iCurrentPage = MAX(iTab - 1, 0);
-		if (IsWindow())
+		if (IsWindow() && UpdateParent)
 		{
 			if (GetItemCount() > 0)
 				SelectPage(m_iCurrentPage);
