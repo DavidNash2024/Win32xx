@@ -235,9 +235,9 @@ namespace Win32xx
 		::CloseHandle(m_Stopped);
 
 		// Terminate the  Windows Socket services
-		::WSACleanup();
+		VERIFY(::WSACleanup() == 0);
 
-		::FreeLibrary(m_hWS2_32);
+		VERIFY(::FreeLibrary(m_hWS2_32) != 0);
 	}
 
 

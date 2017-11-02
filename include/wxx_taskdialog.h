@@ -283,7 +283,7 @@ namespace Win32xx
 		// Call TaskDialogIndirect through our function pointer
 		LRESULT lr = pTaskDialogIndirect(&m_tc, &m_SelectedButtonID, &m_SelectedRadioButtonID, &m_VerificationCheckboxState);
 
-		FreeLibrary(hComCtl);
+		VERIFY(::FreeLibrary(hComCtl) != 0);
 		pTLSData->pWnd = NULL;
 		m_hWnd = 0;
 		Reset();
@@ -387,7 +387,7 @@ namespace Win32xx
 
 		BOOL Succeeded = (::GetProcAddress(hModule, "TaskDialogIndirect") != FALSE);
 
-		::FreeLibrary(hModule);
+		VERIFY(::FreeLibrary(hModule) != 0);
 		return Succeeded;
 	}
 

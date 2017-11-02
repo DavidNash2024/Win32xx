@@ -3388,21 +3388,18 @@ namespace Win32xx
 				BOOL IsEnabled = FALSE;
 				m_IsDragging = TRUE;
 				SetCursor(LoadCursor(NULL, IDC_ARROW));
+				::SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &IsEnabled, 0);
 
-				if (SystemParametersInfo(SPI_GETDRAGFULLWINDOWS, 0, &IsEnabled, 0))
-				{
-					// Turn on DragFullWindows for this move
-					SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
+				// Turn on DragFullWindows for this move
+				::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, TRUE, 0, 0);
 
-					// Process this message
-					DefWindowProc(WM_SYSCOMMAND, wParam, lParam);
+				// Process this message
+				DefWindowProc(WM_SYSCOMMAND, wParam, lParam);
 
-					// Return DragFullWindows to its previous state
-					SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, IsEnabled, 0, 0);
-					return 0L;
-				}
+				// Return DragFullWindows to its previous state
+				::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, IsEnabled, 0, 0);
+				return 0L;
 			}
-			break;
 		case SC_CLOSE:
 			// The close button is pressed on an undocked docker
 			m_IsClosing = TRUE;
@@ -3892,7 +3889,7 @@ namespace Win32xx
 			nID = 0;
 		else
 			nID = pDocker->GetDockID();
-		
+
 		if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), nID))
 			throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
 
@@ -4174,7 +4171,7 @@ namespace Win32xx
 			rc.SetRect(pt.x - rc.Width()/2, pt.y - m_NCHeight/2, pt.x + rc.Width()/2, pt.y - m_NCHeight/2 + rc.Height());
 
 		ConvertToPopup(rc, ShowUndocked);
-			
+
 		m_IsUndocking = FALSE;
 
 		// Send the undock notification to the frame
@@ -4446,7 +4443,7 @@ namespace Win32xx
 
 			if (SelecPage)
 				SelectPage(iNewPage);
-			
+
 			SetTabSize();
 		}
 

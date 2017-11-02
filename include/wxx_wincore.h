@@ -210,7 +210,7 @@ namespace Win32xx
 		CRect rcDesktop;
 
 		// Get screen dimensions excluding task bar
-		::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0);
+		VERIFY(::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0) != 0);
 
 		// Get the parent window dimensions (parent could be the desktop)
 		if (GetParent().GetHwnd() != 0) rcParent = GetParent().GetWindowRect();
@@ -247,7 +247,7 @@ namespace Win32xx
 					if (GetParent().GetHwnd() == NULL) rcParent = mi.rcWork;
 				}
 			}
-			FreeLibrary(hUser32);
+			VERIFY(::FreeLibrary(hUser32) != 0);
 
 		}
  #endif
@@ -519,7 +519,7 @@ namespace Win32xx
 			if (pfnGetAncestor)
 				hWnd = (*pfnGetAncestor)(*this, gaFlags);
 
-			::FreeLibrary(hModule);
+			VERIFY(::FreeLibrary(hModule) != 0);
 		}
 
 		if (!pfnGetAncestor)
@@ -543,7 +543,7 @@ namespace Win32xx
 		assert(IsWindow());
 
 		CString str;
-		::GetClassName(*this, str.GetBuffer(MAX_STRING_SIZE), MAX_STRING_SIZE);
+		VERIFY(::GetClassName(*this, str.GetBuffer(MAX_STRING_SIZE), MAX_STRING_SIZE) != 0);
 		str.ReleaseBuffer();
 		return str;
 	}
@@ -1375,7 +1375,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		CRect rc;
-		::GetClientRect(*this, &rc);
+		VERIFY(::GetClientRect(*this, &rc) != 0);
 		return rc;
 	}
 
@@ -1574,7 +1574,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		CRect rc;
-		::GetWindowRect(*this, &rc);
+		VERIFY(::GetWindowRect(*this, &rc) != 0);
 		return rc;
 	}
 
@@ -1683,7 +1683,7 @@ namespace Win32xx
 	inline void  CWnd::MapWindowPoints(HWND hWndTo, POINT& pt) const
 	{
 		assert(IsWindow());
-		::MapWindowPoints(*this, hWndTo, &pt, 1);
+		VERIFY(::MapWindowPoints(*this, hWndTo, &pt, 1) != 0);
 	}
 
 
@@ -1692,7 +1692,7 @@ namespace Win32xx
 	inline void CWnd::MapWindowPoints(HWND hWndTo, RECT& rc) const
 	{
 		assert(IsWindow());
-		::MapWindowPoints(*this, hWndTo, (LPPOINT)&rc, 2);
+		VERIFY(::MapWindowPoints(*this, hWndTo, (LPPOINT)&rc, 2) != 0);
 	}
 
 
@@ -1701,7 +1701,7 @@ namespace Win32xx
 	inline void CWnd::MapWindowPoints(HWND hWndTo, LPPOINT ptArray, UINT nCount) const
 	{
 		assert(IsWindow());
-		::MapWindowPoints(*this, hWndTo, (LPPOINT)ptArray, nCount);
+		VERIFY(::MapWindowPoints(*this, hWndTo, (LPPOINT)ptArray, nCount) != 0);
 	}
 
 
@@ -2044,7 +2044,7 @@ namespace Win32xx
 
 			hr = pfn(*this, pszSubAppName, pszSubIdList);
 
-			::FreeLibrary(hMod);
+			VERIFY(::FreeLibrary(hMod) != 0);
 		}
 
 #endif
@@ -2555,7 +2555,7 @@ namespace Win32xx
 			ncm.cbSize = CCSIZEOF_STRUCT(NONCLIENTMETRICS, lfMessageFont);
 #endif
 
-		::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0);
+		VERIFY(::SystemParametersInfo(SPI_GETNONCLIENTMETRICS, sizeof(ncm), &ncm, 0) != 0);
 
 		return ncm;
 	}
@@ -2622,7 +2622,7 @@ namespace Win32xx
 				InitCommonControls();
 			}
 
-			::FreeLibrary(hComCtl);
+			VERIFY(::FreeLibrary(hComCtl) != 0);
 		}
 	}
 

@@ -127,7 +127,7 @@ namespace Win32xx
 						IsAeroThemed = TRUE;
 					}
 				}
-				::FreeLibrary(hMod);
+				VERIFY(::FreeLibrary(hMod) != 0);
 			}
 		}
 
@@ -158,7 +158,7 @@ namespace Win32xx
 						IsXPThemed = (GetComCtlVersion() >= 600);
 					}
 				}
-				::FreeLibrary(hMod);
+				VERIFY(::FreeLibrary(hMod) != 0);
 			}
 		}
 
