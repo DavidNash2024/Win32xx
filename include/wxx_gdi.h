@@ -1072,7 +1072,7 @@ namespace Win32xx
 		CBitmapInfoPtr(HBITMAP hBitmap)
 		{
 			BITMAP bmSource;
-			::GetObject(hBitmap, sizeof(bmSource), &bmSource);
+			VERIFY(::GetObject(hBitmap, sizeof(bmSource), &bmSource) != 0);
 
 			// Convert the color format to a count of bits.
 			WORD cClrBits = (WORD)(bmSource.bmPlanes * bmSource.bmBitsPixel);
@@ -1470,7 +1470,7 @@ namespace Win32xx
 			assert(GetHandle() != NULL);
 			BITMAP bmp;
 			ZeroMemory(&bmp, sizeof(bmp));
-			::GetObject(GetHandle(), sizeof(bmp), &bmp);
+			VERIFY(::GetObject(GetHandle(), sizeof(bmp), &bmp) != 0);
 			return bmp;
 		}
 
@@ -1804,7 +1804,7 @@ namespace Win32xx
 		assert(GetHandle() != NULL);
 		LOGBRUSH logBrush;
 		ZeroMemory(&logBrush, sizeof(logBrush));
-		::GetObject (GetHandle(), sizeof(logBrush), &logBrush);
+		VERIFY(::GetObject (GetHandle(), sizeof(logBrush), &logBrush) != 0);
 		return logBrush;
 	}
 
@@ -1939,7 +1939,7 @@ namespace Win32xx
 		assert(GetHandle() != NULL);
 		LOGFONT logFont;
 		ZeroMemory(&logFont, sizeof(logFont));
-		::GetObject(GetHandle(), sizeof(logFont), &logFont);
+		VERIFY(::GetObject(GetHandle(), sizeof(logFont), &logFont) != 0);
 		return logFont;
 	}
 
@@ -2003,7 +2003,7 @@ namespace Win32xx
 	{
 		assert(GetHandle() != NULL);
 		WORD nEntries = 0;
-		::GetObject(GetHandle(), sizeof(WORD), &nEntries);
+		VERIFY(::GetObject(GetHandle(), sizeof(WORD), &nEntries) != 0);
 		return static_cast<int>(nEntries);
 	}
 
@@ -2134,7 +2134,7 @@ namespace Win32xx
 
 		LOGPEN logPen;
 		ZeroMemory(&logPen, sizeof(logPen));
-		::GetObject(GetHandle(), sizeof(logPen), &logPen);
+		VERIFY(::GetObject(GetHandle(), sizeof(logPen), &logPen) != 0);
 		return logPen;
 	}
 
@@ -2157,7 +2157,7 @@ namespace Win32xx
 
 		EXTLOGPEN exLogPen;
 		ZeroMemory(&exLogPen, sizeof(exLogPen));
-		::GetObject(GetHandle(), sizeof(exLogPen), &exLogPen);
+		VERIFY(::GetObject(GetHandle(), sizeof(exLogPen), &exLogPen) != 0);
 		return exLogPen;
 	}
 
@@ -2924,7 +2924,7 @@ namespace Win32xx
 		HBITMAP hbm = (HBITMAP)::GetCurrentObject(m_pData->hDC, OBJ_BITMAP);
 		BITMAP bm;
 		ZeroMemory(&bm, sizeof(bm));
-		::GetObject(hbm, sizeof(bm), &bm);
+		VERIFY(::GetObject(hbm, sizeof(bm), &bm) != 0);
 		return bm;
 	}
 
@@ -3072,7 +3072,7 @@ namespace Win32xx
 		HBRUSH hBrush = reinterpret_cast<HBRUSH>(::GetCurrentObject(m_pData->hDC, OBJ_BRUSH));
 		LOGBRUSH logBrush;
 		ZeroMemory(&logBrush, sizeof(logBrush));
-		::GetObject(hBrush, sizeof(logBrush), &logBrush);
+		VERIFY(::GetObject(hBrush, sizeof(logBrush), &logBrush) != 0);
 		return logBrush;
 	}
 
@@ -3158,7 +3158,7 @@ namespace Win32xx
 		HFONT hFont = reinterpret_cast<HFONT>(::GetCurrentObject(m_pData->hDC, OBJ_FONT));
 		LOGFONT logFont;
 		ZeroMemory(&logFont, sizeof(logFont));
-		::GetObject(hFont, sizeof(logFont), &logFont);
+		VERIFY(::GetObject(hFont, sizeof(logFont), &logFont) != 0);
 		return logFont;
 	}
 
@@ -3328,7 +3328,7 @@ namespace Win32xx
 		HPEN hPen = reinterpret_cast<HPEN>(::GetCurrentObject(m_pData->hDC, OBJ_PEN));
 		LOGPEN logPen;
 		ZeroMemory(&logPen, sizeof(logPen));
-		::GetObject(hPen, sizeof(logPen), &logPen);
+		VERIFY(::GetObject(hPen, sizeof(logPen), &logPen) != 0);
 		return logPen;
 	}
 

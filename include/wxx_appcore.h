@@ -687,7 +687,7 @@ namespace Win32xx
 		wcDefault.lpfnWndProc	= CWnd::StaticWindowProc;
 		wcDefault.lpszClassName = szClassName;
 
-		::RegisterClass(&wcDefault);
+		VERIFY(::RegisterClass(&wcDefault) != 0);
 
 		// Retrieve the class information
 		ZeroMemory(&wcDefault, sizeof(wcDefault));
@@ -696,7 +696,7 @@ namespace Win32xx
 		// Save the callback address of CWnd::StaticWindowProc
 		assert(wcDefault.lpfnWndProc);	// Assert fails when running UNICODE build on ANSI OS.
 		m_Callback = wcDefault.lpfnWndProc;
-		::UnregisterClass(szClassName, GetInstanceHandle());
+		VERIFY(::UnregisterClass(szClassName, GetInstanceHandle()) != 0);
 	}
 
 

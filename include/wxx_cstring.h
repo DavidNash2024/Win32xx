@@ -1907,7 +1907,7 @@ namespace Win32xx
 				AppData.ReleaseBuffer();
 			}
 
-			FreeLibrary(hShell);
+			VERIFY(::FreeLibrary(hShell) != 0);
 		}
 
 #endif // _WIN32_WCE

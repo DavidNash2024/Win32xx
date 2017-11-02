@@ -735,8 +735,8 @@ namespace Win32xx
     	rd.IsFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
     	rd.IsFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
 		CRect rcInit;
-		::GetWindowRect(hWnd, &rcInit);
-		::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2);
+		VERIFY(::GetWindowRect(hWnd, &rcInit) != 0);
+		VERIFY(::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2) != 0);
 		rd.rcInit = rcInit;
 		rd.hWnd = hWnd;
 
@@ -803,7 +803,7 @@ namespace Win32xx
 		assert (::IsWindow(hParent));
 
     	m_hParent = hParent;
-		::GetClientRect(hParent, &m_rcInit);
+		VERIFY(::GetClientRect(hParent, &m_rcInit) != 0);
 
     	m_rcMin = rcMin;
     	m_rcMax = rcMax;
@@ -858,7 +858,7 @@ namespace Win32xx
 		// Scroll the window.
 		xNewPos = MAX(0, xNewPos);
 		CRect rc;
-		::GetClientRect(m_hParent, &rc);
+		VERIFY(::GetClientRect(m_hParent, &rc) != 0);
 		xNewPos = MIN( xNewPos, GetMinRect().Width() - rc.Width() );
 		int xDelta = xNewPos - m_xScrollPos;
 		m_xScrollPos = xNewPos;
@@ -912,7 +912,7 @@ namespace Win32xx
 		// Scroll the window.
 		yNewPos = MAX(0, yNewPos);
 		CRect rc;
-		GetClientRect(m_hParent, &rc);
+		VERIFY(::GetClientRect(m_hParent, &rc) != 0);
 		yNewPos = MIN( yNewPos, GetMinRect().Height() - rc.Height() );
 		int yDelta = yNewPos - m_yScrollPos;
 		m_yScrollPos = yNewPos;
@@ -936,7 +936,7 @@ namespace Win32xx
 		assert (::IsWindow(m_hParent));
 
 		CRect rcCurrent;
-		::GetClientRect(m_hParent, &rcCurrent);
+		VERIFY(::GetClientRect(m_hParent, &rcCurrent) != 0);
 
 		// Adjust the scrolling if required
 		m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
@@ -956,7 +956,7 @@ namespace Win32xx
 
 		// Note: calls to SetScrollInfo may have changed the client rect, so
 		// we get it again.
-		::GetClientRect(m_hParent, &rcCurrent);
+		VERIFY(::GetClientRect(m_hParent, &rcCurrent) != 0);
 
     	rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
     	rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
@@ -1024,7 +1024,7 @@ namespace Win32xx
     	}
 
 		// Reposition all the child windows simultaneously.
-		::EndDeferWindowPos(hdwp);
+		VERIFY(::EndDeferWindowPos(hdwp) != 0);
     }
 
 #endif // #ifndef _WIN32_WCE

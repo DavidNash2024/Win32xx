@@ -197,9 +197,9 @@ namespace Win32xx
 		// Destroy the window before freeing the DLL
 		Destroy();
 
-		FreeLibrary(m_hmodRich1);
+		VERIFY(::FreeLibrary(m_hmodRich1) != 0);
 		if (m_hmodRich2)
-			FreeLibrary(m_hmodRich2);
+			VERIFY(::FreeLibrary(m_hmodRich2) != 0);
 	}
 
 
