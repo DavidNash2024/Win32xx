@@ -735,8 +735,8 @@ namespace Win32xx
     	rd.IsFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
     	rd.IsFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
 		CRect rcInit;
-		VERIFY(::GetWindowRect(hWnd, &rcInit) != 0);
-		VERIFY(::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2) != 0);
+		::GetWindowRect(hWnd, &rcInit);
+		::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2);
 		rd.rcInit = rcInit;
 		rd.hWnd = hWnd;
 

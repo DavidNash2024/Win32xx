@@ -247,7 +247,7 @@ namespace Win32xx
 					if (GetParent().GetHwnd() == NULL) rcParent = mi.rcWork;
 				}
 			}
-			VERIFY(::FreeLibrary(hUser32) != 0);
+			::FreeLibrary(hUser32);
 
 		}
  #endif
@@ -519,7 +519,7 @@ namespace Win32xx
 			if (pfnGetAncestor)
 				hWnd = (*pfnGetAncestor)(*this, gaFlags);
 
-			VERIFY(::FreeLibrary(hModule) != 0);
+			::FreeLibrary(hModule);
 		}
 
 		if (!pfnGetAncestor)
@@ -1683,7 +1683,7 @@ namespace Win32xx
 	inline void  CWnd::MapWindowPoints(HWND hWndTo, POINT& pt) const
 	{
 		assert(IsWindow());
-		VERIFY(::MapWindowPoints(*this, hWndTo, &pt, 1) != 0);
+		::MapWindowPoints(*this, hWndTo, &pt, 1);
 	}
 
 
@@ -1692,7 +1692,7 @@ namespace Win32xx
 	inline void CWnd::MapWindowPoints(HWND hWndTo, RECT& rc) const
 	{
 		assert(IsWindow());
-		VERIFY(::MapWindowPoints(*this, hWndTo, (LPPOINT)&rc, 2) != 0);
+		::MapWindowPoints(*this, hWndTo, (LPPOINT)&rc, 2);
 	}
 
 
@@ -1701,7 +1701,7 @@ namespace Win32xx
 	inline void CWnd::MapWindowPoints(HWND hWndTo, LPPOINT ptArray, UINT nCount) const
 	{
 		assert(IsWindow());
-		VERIFY(::MapWindowPoints(*this, hWndTo, (LPPOINT)ptArray, nCount) != 0);
+		::MapWindowPoints(*this, hWndTo, (LPPOINT)ptArray, nCount);
 	}
 
 
@@ -2044,7 +2044,7 @@ namespace Win32xx
 
 			hr = pfn(*this, pszSubAppName, pszSubIdList);
 
-			VERIFY(::FreeLibrary(hMod) != 0);
+			::FreeLibrary(hMod);
 		}
 
 #endif
@@ -2622,7 +2622,7 @@ namespace Win32xx
 				InitCommonControls();
 			}
 
-			VERIFY(::FreeLibrary(hComCtl) != 0);
+			::FreeLibrary(hComCtl);
 		}
 	}
 
