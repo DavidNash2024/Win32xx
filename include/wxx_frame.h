@@ -565,7 +565,7 @@ namespace Win32xx
 			CloseThemeData();
 
 		if (m_hmodUXTheme != 0)
-			VERIFY(::FreeLibrary(m_hmodUXTheme)!= 0);
+			::FreeLibrary(m_hmodUXTheme);
 	}
 
 
@@ -2150,7 +2150,7 @@ namespace Win32xx
 			PFNGETCURRENTTHEMENAME pfn = (PFNGETCURRENTTHEMENAME)GetProcAddress(hMod, "GetCurrentThemeName");
 			pfn(0, 0, ThemeName, 30, 0, 0);
 
-			VERIFY(::FreeLibrary(hMod) != 0);
+			::FreeLibrary(hMod);
 		}
 
 		return CString(ThemeName);

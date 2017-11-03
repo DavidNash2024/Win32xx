@@ -2267,6 +2267,8 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
+			GetTopmostDocker()->SetForegroundWindow();
+
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
 				pDocker->GetView().SetFocus();
@@ -2393,6 +2395,8 @@ namespace Win32xx
 		// Redraw the docked windows
 		if (GetAncestor().IsWindowVisible())
 		{
+			GetTopmostDocker()->SetForegroundWindow();
+
 			// Give the view window focus unless its child already has it
 			if (!pDocker->GetView().IsChild(GetFocus()))
 				pDocker->GetView().SetFocus();
@@ -3254,10 +3258,17 @@ namespace Win32xx
 			break;
 		case DS_DOCKED_CONTAINER:
 			{
-				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone, FALSE);
 				CDockContainer* pContainer = GetContainer();
 				assert(pContainer);
-				pContainer->SelectPage(0);
+				CDockContainer* pActive = 0;
+				if (pDocker->GetContainer())
+					pActive = pDocker->GetContainer()->GetActiveContainer();
+				
+				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone, FALSE);
+				if (pActive)
+					pContainer->SetActiveContainer(pActive);
+				else
+					pContainer->SelectPage(0);
 			}
 			break;
 		case DS_DOCKED_LEFTMOST:

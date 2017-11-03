@@ -650,7 +650,7 @@ namespace Win32xx
 				ComCtlVer = 471;	// InitializeFlatSB is unique to version 4.71
 		}
 
-		VERIFY(::FreeLibrary(hComCtl) != 0);
+		::FreeLibrary(hComCtl);
 
 		return ComCtlVer;
 	}
