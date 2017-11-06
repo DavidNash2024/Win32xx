@@ -90,6 +90,8 @@ namespace Win32xx
 		CComboBox() {}
 		virtual ~CComboBox() {}
 
+		virtual int CompareItem(LPCOMPAREITEMSTRUCT pCompareItemStruct);
+
 		int   AddString(LPCTSTR lpszString) const;
 		void  Clear() const;
 		void  Copy() const;
@@ -131,6 +133,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
+		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM, LPARAM lParam);
 		virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = _T("ComboBox"); }
 
 	private:
@@ -595,6 +598,23 @@ namespace Win32xx
 	}
 
 
+	// Called by in response to the WM_COMPAREITEM message to determine the relative position
+	// of a new item in a sorted owner-draw list box. Override this function in an owner-drawn
+	// Combo-Box to specify the sort order when items are added using AddString.
+	inline int CComboBox::CompareItem(LPCOMPAREITEMSTRUCT)
+	{
+		// The return value indicates the relative position of the two items.
+		// It may be any of the values shown in the following table.
+		//
+		//	Value Meaning
+		//	-1 Item 1 precedes item 2 in the sorted order.
+		//	 0 Items 1 and 2 are equivalent in the sorted order.
+		//	 1 Item 1 follows item 2 in the sorted order.
+
+		return 0;
+	}
+
+
 	// Deletes the current selection, if any, from the combo box's edit control.
 	inline void CComboBox::Clear() const
 	{
@@ -785,6 +805,22 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(CB_INSERTSTRING, nIndex, reinterpret_cast<LPARAM>(lpszString)));
+	}
+
+	// Handle messages reflected back from the parent window.
+	// Override this function in your derived class to handle these special messages:
+	// WM_COMMAND, WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG, WM_CTLCOLORLISTBOX,
+	// WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
+	// WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
+	// WM_COMPAREITEM, WM_PARENTNOTIFY.
+	inline LRESULT CComboBox::OnMessageReflect(UINT uMsg, WPARAM, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_COMPAREITEM:	return CompareItem((LPCOMPAREITEMSTRUCT)lParam);
+		}
+
+		return 0;	// Allow other messages to be handled elsewhere. 
 	}
 
 

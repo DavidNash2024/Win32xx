@@ -563,7 +563,7 @@ namespace Win32xx
 		void ConvertToChild(HWND hWndParent);
 		void ConvertToPopup(const RECT& rc, BOOL ShowUndocked);
 		void MoveDockChildren(CDocker* pDockTarget);
-		void MoveDockInContainerChildren(CDocker* pDockTarget);
+	//	void MoveDockInContainerChildren(CDocker* pDockTarget);
 		void PromoteFirstChild();
 		void RecalcDockChildLayout(CRect& rc);
 		void ResizeDockers(LPDRAGPOS pdp);
@@ -2290,7 +2290,8 @@ namespace Win32xx
 		if ((dwDockStyle & DS_DOCKED_CONTAINER) && GetContainer())
 		{
 			// Transfer any dock children to this docker
-			pDocker->MoveDockInContainerChildren(this);
+			pDocker->MoveDockChildren(this);
+		//	pDocker->MoveDockInContainerChildren(this);
 
 			// Transfer container children to the target container
 			CDockContainer* pContainer = GetContainer();
@@ -2976,7 +2977,7 @@ namespace Win32xx
 		m_vDockChildren.clear();
 	}
 
-	inline void CDocker::MoveDockInContainerChildren(CDocker* pDockTarget)
+/*	inline void CDocker::MoveDockInContainerChildren(CDocker* pDockTarget)
 	{
 		std::vector<CDocker*>::const_iterator iter;
 
@@ -2989,7 +2990,7 @@ namespace Win32xx
 			pDockTarget->DockInContainer( pDocker, dwDockStyle );
 		}
 	}
-
+*/
 
 	// Used in LoadRegistrySettings. Creates a new Docker from the specified ID.
 	inline CDocker* CDocker::NewDockerFromID(int nID)
@@ -3264,6 +3265,7 @@ namespace Win32xx
 				if (pDocker->GetContainer())
 					pActive = pDocker->GetContainer()->GetActiveContainer();
 				
+		//		pDocker->MoveDockChildren(this);
 				DockInContainer(pDocker, pDocker->GetDockStyle() | DockZone, FALSE);
 				if (pActive)
 					pContainer->SetActiveContainer(pActive);

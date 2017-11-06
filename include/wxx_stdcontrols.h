@@ -161,6 +161,9 @@ namespace Win32xx
 		CListBox() {}
 		virtual ~CListBox() {}
 
+		// Virtual functions
+		int CompareItem(LPCOMPAREITEMSTRUCT pCompareItemStruct);
+
 		// General Operations
 		int  GetCount() const;
 		int  GetHorizontalExtent() const;
@@ -211,6 +214,7 @@ namespace Win32xx
 
 	protected:
 		// Overridables
+		virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
 		virtual void PreRegisterClass(WNDCLASS& wc);
 
 	private:
@@ -741,6 +745,22 @@ namespace Win32xx
 	// Definitions for the CListbox class
 	//
 
+	// Called by in response to the WM_COMPAREITEM message to determine the relative position
+	// of a new item in a sorted owner-draw list box. Override this function in an owner-drawn
+	// List-Box to specify the sort order when items are added using AddString.
+	inline int CListBox::CompareItem(LPCOMPAREITEMSTRUCT)
+	{
+		// The return value indicates the relative position of the two items.
+		// It may be any of the values shown in the following table.
+		//
+		//	Value Meaning
+		//	-1 Item 1 precedes item 2 in the sorted order.
+		//	 0 Items 1 and 2 are equivalent in the sorted order.
+		//	 1 Item 1 follows item 2 in the sorted order.
+
+		return 0;
+	}
+
 	// Returns the number of items in the list box.
 	inline int CListBox::GetCount() const
 	{
@@ -1065,6 +1085,27 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 		return static_cast<int>(SendMessage(LB_SELECTSTRING, nStartAfter, reinterpret_cast<LPARAM>(lpszItem)));
+	}
+
+
+	// Handle messages reflected back from the parent window.
+	// Override this function in your derived class to handle these special messages:
+	// WM_COMMAND, WM_CTLCOLORBTN, WM_CTLCOLOREDIT, WM_CTLCOLORDLG, WM_CTLCOLORLISTBOX,
+	// WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
+	// WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
+	// WM_COMPAREITEM, WM_PARENTNOTIFY.
+	inline LRESULT CListBox::OnMessageReflect(UINT uMsg, WPARAM, LPARAM lParam)
+	{
+		switch (uMsg)
+		{
+		case WM_COMPAREITEM:
+			{
+				LPCOMPAREITEMSTRUCT pCompareItemStruct = (LPCOMPAREITEMSTRUCT)lParam;
+				return CompareItem(pCompareItemStruct);
+			}
+		}
+
+		return 0;	// Allow other messages to be handled elsewhere. 
 	}
 
 

@@ -127,12 +127,13 @@ namespace Win32xx
 		// Attributes
 		const std::vector<TabPageInfo>& GetAllTabs() const { return m_vTabPageInfo; }
 		CImageList GetODImageList() const	{ return m_imlODTab; }
-		CFont& GetTabFont() const		{ return m_TabFont; }
-		BOOL GetShowButtons() const		{ return m_IsShowingButtons; }
-		int GetTabHeight() const		{ return m_nTabHeight; }
+		CFont& GetTabFont() const			{ return m_TabFont; }
+		BOOL GetShowButtons() const			{ return m_IsShowingButtons; }
+		int GetTabHeight() const			{ return m_nTabHeight; }
 		SIZE GetMaxTabSize() const;
-		CWnd* GetActiveView() const		{ return m_pActiveView; }
-		void SetTabHeight(int nTabHeight) { m_nTabHeight = nTabHeight; NotifyChanged();}
+		CWnd* GetActiveView() const			{ return m_pActiveView; }
+		void SetBlankPageColor(COLORREF clr) { m_BlankPageColor = clr; }
+		void SetTabHeight(int nTabHeight)	{ m_nTabHeight = nTabHeight; NotifyChanged();}
 
 		// Wrappers for Win32 Macros
 		void		AdjustRect(BOOL IsLarger, RECT *prc) const;
@@ -214,6 +215,7 @@ namespace Win32xx
 		BOOL m_IsListPressed;
 		BOOL m_IsListMenuActive;
 		int m_nTabHeight;
+		COLORREF m_BlankPageColor;
 	};
 
 	////////////////////////////////////////
@@ -313,6 +315,7 @@ namespace Win32xx
 	                      m_IsClosePressed(FALSE), m_IsListPressed(FALSE), m_IsListMenuActive(FALSE),
 	                      m_nTabHeight(0)
 	{
+		m_BlankPageColor = GetSysColor(COLOR_BTNFACE);
 	}
 
 
@@ -1139,8 +1142,7 @@ namespace Win32xx
 		if (GetItemCount() == 0)
 		{
 			// No tabs, so simply display a grey background and exit
-			COLORREF rgbDialog = GetSysColor(COLOR_BTNFACE);
-			dcView.SolidFill(rgbDialog, rcClient);
+			dcView.SolidFill(m_BlankPageColor, rcClient);
 			return;
 		}
 
