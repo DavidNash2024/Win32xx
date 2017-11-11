@@ -310,7 +310,7 @@ namespace Win32xx
 	}
 
 
-	//	Return the directory part of the name search string
+	//	Return the directory part of the name search string.
 	inline CString CFileFind::GetRoot() const
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);
@@ -318,7 +318,7 @@ namespace Win32xx
 	}
 
 
-	//	Return TRUE if the archive attribute is set
+	//	Return TRUE if the archive attribute is set.
 	inline BOOL CFileFind::IsArchived() const
 	{
 		assert(m_hFileFind != INVALID_HANDLE_VALUE);

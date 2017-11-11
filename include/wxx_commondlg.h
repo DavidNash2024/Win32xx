@@ -616,7 +616,7 @@ namespace Win32xx
 		m_OFN.hwndOwner = hWndOwner;
 		m_OFN.lpstrFile = m_sFileName.GetBuffer(m_OFN.nMaxFile);
 		int ok = (m_IsOpenFileDialog ? ::GetOpenFileName(&m_OFN) : ::GetSaveFileName(&m_OFN));
-		m_sFileName.ReleaseBuffer();
+		m_sFileName.ReleaseBuffer(m_OFN.nMaxFile);
 		m_OFN.lpstrFile = const_cast<LPTSTR>(m_sFileName.c_str());
 		m_hWnd = 0;
 
@@ -1017,7 +1017,13 @@ namespace Win32xx
 		m_OFN.lpstrCustomFilter = ofn.lpstrCustomFilter;
 		m_OFN.nMaxCustFilter	= MAX(_MAX_PATH, ofn.nMaxCustFilter);
 		m_OFN.nFilterIndex		= ofn.nFilterIndex;
-		m_OFN.nMaxFile			= MAX(_MAX_PATH, ofn.nMaxFile);
+
+		// Allocate a bigger buffer for multiple files
+		if (ofn.Flags & OFN_ALLOWMULTISELECT)
+			m_OFN.nMaxFile = MAX(_MAX_PATH * 256, ofn.nMaxFile);
+		else
+			m_OFN.nMaxFile = MAX(_MAX_PATH, ofn.nMaxFile);
+
 		m_OFN.lpstrFileTitle	= ofn.lpstrFileTitle;
 		m_OFN.nMaxFileTitle		= MAX(_MAX_PATH, ofn.nMaxFileTitle);
 		m_OFN.lpstrInitialDir	= ofn.lpstrInitialDir;

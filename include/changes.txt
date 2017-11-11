@@ -42,32 +42,33 @@ New Features and Enhancements
 
 Changes in detail
 -----------------
-Added CEnhMetaFileDC class
-Added CFileFind class
-Added CFolderDialog class
+Added CEnhMetaFileDC                                 class
+Added CFileFind                                      class
+Added CFolderDialog                                  class
+Added CThreadLock                                    class
 
-Added CComboBox::CompareItem
-Added CDocker::GetActiveView
-Added CDocker::SaveContainerRegistrySettings
-Added CDockFrame::OnActivate
-Added CDockFrame::OnDockActivated
-Added CDockFrame::OnDockDestroyed
-Added CDockFrame::OnMouseActivate
-Added CDockFrame::OnSysColorChange
-Added CListBox::CompareItem
-Added CTab::SetBlankPageColor
-Added CToolBar::GetExtendedStyle
-Added CWnd::GetExStyle
-Added CWnd::GetStyle
-Added CWnd::SetExStyle
-Added CWnd::SetStyle
+Added CComboBox::CompareItem                         member function
+Added CDocker::GetActiveView                         member function
+Added CDocker::SaveContainerRegistrySettings         member function
+Added CDockFrame::OnActivate                         member function
+Added CDockFrame::OnDockActivated                    member function
+Added CDockFrame::OnDockDestroyed                    member function
+Added CDockFrame::OnMouseActivate                    member function
+Added CDockFrame::OnSysColorChange                   member function
+Added CListBox::CompareItem                          member function
+Added CTab::SetBlankPageColor                        member function
+Added CToolBar::GetExtendedStyle                     member function
+Added CWnd::GetExStyle                               member function
+Added CWnd::GetStyle                                 member function
+Added CWnd::SetExStyle                               member function
+Added CWnd::SetStyle                                 member function
 
-Added ::GetNonClientMetrics
-Added UWM_GETCDIALIOG message
+Added ::GetNonClientMetrics                          global function
+Added UWM_GETCDIALIOG                                message
 
-Added Direct2D           sample
-Added FilePrintPreview   sample
-Added StatusBarEx        sample
+Added Direct2D                                       sample
+Added FilePrintPreview                               sample
+Added StatusBarEx                                    sample
 
 Modified CFile::Rename			now throws an exception on failure 
 Modified CFile::Remove		    now throws an exception on failure 
