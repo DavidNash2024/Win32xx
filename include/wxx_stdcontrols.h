@@ -162,7 +162,7 @@ namespace Win32xx
 		virtual ~CListBox() {}
 
 		// Virtual functions
-		int CompareItem(LPCOMPAREITEMSTRUCT pCompareItemStruct);
+		virtual int CompareItem(LPCOMPAREITEMSTRUCT pCompareItemStruct);
 
 		// General Operations
 		int  GetCount() const;

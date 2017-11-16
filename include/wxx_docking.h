@@ -3877,6 +3877,7 @@ namespace Win32xx
 	}
 
 
+	// Stores the docking container configuration in the registry.
 	inline void CDocker::SaveContainerRegistrySettings(CRegKey& KeyDock, CDockContainer* pContainer, UINT& nContainer)
 	{
 		CRegKey KeyContainer;

@@ -1646,6 +1646,15 @@ namespace Win32xx
 
 	// The IsDlgButtonChecked function determines whether a button control has a check mark next to it
 	// or whether a three-state button control is grayed, checked, or neither.
+	//
+	// The return value from a button created with the BS_AUTOCHECKBOX, BS_AUTORADIOBUTTON, BS_AUTO3STATE, 
+	// BS_CHECKBOX, BS_RADIOBUTTON, or BS_3STATE style can be one of the following:
+	// BST_CHECKED Button is checked. 
+	// BST_INDETERMINATE Button is grayed, indicating an indeterminate state (applies only if the button
+	//		has the BS_3STATE or BS_AUTO3STATE style).
+	// BST_UNCHECKED Button is cleared.
+	//
+	// If the button has any other style, the return value is zero.
 	inline UINT CWnd::IsDlgButtonChecked(int nIDButton) const
 	{
 		assert(IsWindow());

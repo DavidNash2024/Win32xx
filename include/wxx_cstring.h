@@ -1292,10 +1292,9 @@ namespace Win32xx
 	}
 
 
-	// This copies the contents of the buffer (acquired by GetBuffer) to this CStringT,
-	// and releases the contents of the buffer. The default length of -1 copies from the
-	// buffer until a null terminator is reached. If the buffer doesn't contain a null
-	// terminator, you must specify the buffer's length.
+	// This copies the contents of the buffer (acquired by GetBuffer) to this CStringT.
+	// The default length of -1 copies from the buffer until a null terminator is reached. 
+	// If the buffer doesn't contain a null terminator, you must specify the buffer's length.
 	template <class T>
 	inline void CStringT<T>::ReleaseBuffer( int nNewLength /*= -1*/ )
 	{
@@ -1313,7 +1312,6 @@ namespace Win32xx
 		std::advance(it_end, nNewLength);
 
 		std::copy(m_buf.begin(), it_end, m_str.begin());
-		m_buf.clear();
 	}
 
 

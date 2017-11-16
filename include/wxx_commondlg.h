@@ -602,6 +602,10 @@ namespace Win32xx
 
 	// Display either a FileOpen or FileSave dialog, and allow the user to
 	// select various options. An exception is thrown if the dialog isn't created.
+	// If the OFN_ALLOWMULTISELECT flag is used, the size of the buffer required 
+	// to hold the file names can be quite large. An exception is thrown if the
+	// buffer size specified by m_OFN.nMaxFile turns out to be too small.
+	// Use SetParamaters to set a larger size if required.
 	inline INT_PTR CFileDialog::DoModal(HWND hWndOwner /* = 0 */)
 	{
 		assert( &GetApp() );	// Test if Win32++ has been started
@@ -697,7 +701,8 @@ namespace Win32xx
 		BOOL IsExplorer = m_OFN.Flags & OFN_EXPLORER;
 		TCHAR chDelimiter = (IsExplorer ? _T('\0') : _T(' '));
 
-		CString strFile(m_OFN.lpstrFile + pos, m_OFN.nMaxFile);	// strFile can contain NULLs
+		int bufferSize = MIN(_MAX_PATH, m_OFN.nMaxFile - pos);
+		CString strFile(m_OFN.lpstrFile + pos, bufferSize);	// strFile can contain NULLs
 		int Index = 0;
 		if (pos == 0)
 		{
