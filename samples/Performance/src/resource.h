@@ -3,8 +3,13 @@
 
 //{{NO_DEPENDENCIES}}
 // Microsoft Visual C++ generated include file.
-// Used by Performance.rc
+// Used by Resource.rc
 //
+
+// Support XP themes on older compilers
+#ifndef RT_MANIFEST
+  #define RT_MANIFEST 24
+#endif
 
 // include the Resource IDs defined by Win32++
 #include "default_resource.h"
