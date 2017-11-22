@@ -739,7 +739,7 @@ namespace Win32xx
 
 		// Update pos to point to the next file
 		int nFileLen = lstrlen(strFileName);
-		if (strFile.GetAt(nFileLen + 1) == _T('\0'))
+		if (strFile.GetAt(Index + nFileLen + 1) == _T('\0'))
 			pos = -1;
 		else
 			pos = pos + Index + nFileLen +1;
