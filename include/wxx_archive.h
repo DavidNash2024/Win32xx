@@ -785,7 +785,7 @@ namespace Win32xx
 
 			Read(buf, nChars*2);
 
-#ifdef _UNICODE
+#ifdef UNICODE
 			memcpy(string.GetBuffer(nChars), buf, nChars*2);
 #else
 			// Convert the archive string from Wide to Ansi
@@ -802,7 +802,7 @@ namespace Win32xx
 
 			Read(buf, nChars);
 
-#ifdef _UNICODE
+#ifdef UNICODE
 			// Convert the archive string from Ansi to Wide
 			MultiByteToWideChar(CP_ACP, 0, buf, nChars, string.GetBuffer(nChars), nChars);
 #else

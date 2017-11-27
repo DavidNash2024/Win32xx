@@ -288,7 +288,7 @@ namespace Win32xx
 	{
 		assert(IsWindow());
 
-	#ifdef _UNICODE
+	#ifdef UNICODE
 		UINT em_findText = EM_FINDTEXTEXW;
 	 #else
          UINT em_findText = EM_FINDTEXTEX;

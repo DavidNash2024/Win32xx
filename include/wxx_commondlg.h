@@ -701,7 +701,7 @@ namespace Win32xx
 		BOOL IsExplorer = m_OFN.Flags & OFN_EXPLORER;
 		TCHAR chDelimiter = (IsExplorer ? _T('\0') : _T(' '));
 
-		int bufferSize = MIN(_MAX_PATH, m_OFN.nMaxFile - pos);
+		int bufferSize = MIN(MAX_PATH, m_OFN.nMaxFile - pos);
 		CString strFile(m_OFN.lpstrFile + pos, bufferSize);	// strFile can contain NULLs
 		int Index = 0;
 		if (pos == 0)
@@ -982,7 +982,7 @@ namespace Win32xx
 			{
 				// szFilter doesn't contain '|', so it should be double terminated
 				int i = 0;
-				while (i < _MAX_PATH)
+				while (i < MAX_PATH)
 				{
 					// Search for double termination
 					if (szFilter[i] == _T('\0') && szFilter[i + 1] == _T('\0'))
@@ -1020,17 +1020,17 @@ namespace Win32xx
 		m_OFN.hwndOwner			= 0;			// Set this in DoModal
 		m_OFN.hInstance			= GetApp().GetInstanceHandle();
 		m_OFN.lpstrCustomFilter = ofn.lpstrCustomFilter;
-		m_OFN.nMaxCustFilter	= MAX(_MAX_PATH, ofn.nMaxCustFilter);
+		m_OFN.nMaxCustFilter	= MAX(MAX_PATH, ofn.nMaxCustFilter);
 		m_OFN.nFilterIndex		= ofn.nFilterIndex;
 
 		// Allocate a bigger buffer for multiple files
 		if (ofn.Flags & OFN_ALLOWMULTISELECT)
-			m_OFN.nMaxFile = MAX(_MAX_PATH * 256, ofn.nMaxFile);
+			m_OFN.nMaxFile = MAX(MAX_PATH * 256, ofn.nMaxFile);
 		else
-			m_OFN.nMaxFile = MAX(_MAX_PATH, ofn.nMaxFile);
+			m_OFN.nMaxFile = MAX(MAX_PATH, ofn.nMaxFile);
 
 		m_OFN.lpstrFileTitle	= ofn.lpstrFileTitle;
-		m_OFN.nMaxFileTitle		= MAX(_MAX_PATH, ofn.nMaxFileTitle);
+		m_OFN.nMaxFileTitle		= MAX(MAX_PATH, ofn.nMaxFileTitle);
 		m_OFN.lpstrInitialDir	= ofn.lpstrInitialDir;
 		m_OFN.Flags				= ofn.Flags;
 		m_OFN.nFileOffset		= ofn.nFileOffset;
