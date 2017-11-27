@@ -227,7 +227,7 @@ namespace Win32xx
 		{
 
 			pfnMonitorFromWindow = (LPMFW)::GetProcAddress(hUser32, "MonitorFromWindow");
-  #ifdef _UNICODE
+  #ifdef UNICODE
 			pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoW");
   #else
 			pfnGetMonitorInfo = (LPGMI)::GetProcAddress(hUser32, "GetMonitorInfoA");

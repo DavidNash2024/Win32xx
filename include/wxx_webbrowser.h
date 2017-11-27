@@ -684,7 +684,7 @@ namespace Win32xx
 		if (NULL == pszStatusText)
 			return E_POINTER;
 
-	#ifndef _UNICODE
+	#ifndef UNICODE
 		char status[MAX_PATH];
 		// Convert the Wide string to char
 		WideCharToMultiByte(CP_ACP, 0, pszStatusText, -1, status, MAX_PATH, NULL, NULL);

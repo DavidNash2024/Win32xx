@@ -92,7 +92,7 @@ namespace Win32xx
 	typedef CWtoA BSTRtoA;
 	typedef CWtoW BSTRtoW;
 
-#ifdef _UNICODE
+#ifdef UNICODE
 	typedef CAtoW AtoT;
 	typedef CWtoA TtoA;
 	typedef CWtoW TtoW;
@@ -130,7 +130,11 @@ namespace Win32xx
 				MultiByteToWideChar(codePage, 0, pStr, -1, &m_vWideArray[0], length);
 			}
 		}
-		~CAtoW() {}
+		~CAtoW()
+		{
+			// Clear the array.
+			std::fill(m_vWideArray.begin(), m_vWideArray.end(), L'\0');
+		}
 		operator LPCWSTR() { return m_pStr? &m_vWideArray[0] : NULL; }
 		operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_vWideArray[0] : (LPOLESTR)NULL; }
 
@@ -162,7 +166,8 @@ namespace Win32xx
 
 		~CWtoA()
 		{
-			m_pWStr = 0;
+			// Clear the array.
+			std::fill(m_vAnsiArray.begin(), m_vAnsiArray.end(), '\0');
 		}
 		operator LPCSTR() { return m_pWStr? &m_vAnsiArray[0] : NULL; }
 
