@@ -9,28 +9,28 @@
 class CMainMDIFrame : public CMDIDockFrame
 {
 public:
-	CMainMDIFrame();
-	virtual ~CMainMDIFrame();
+    CMainMDIFrame();
+    virtual ~CMainMDIFrame();
 
-	BOOL OnFileClose();
-	BOOL OnFileExit();
-	BOOL OnFileNewDocker();
-	BOOL OnFileNewMDI();
-	BOOL OnFileOpen();
-	BOOL OnFileSave();
-	BOOL OnFilePrint();
-	BOOL OnMDICascade();
-	BOOL OnMDICloseAll();
-	BOOL OnMDIIconArrange();
-	BOOL OnMDITile();
+    BOOL OnFileClose();
+    BOOL OnFileExit();
+    BOOL OnFileNewDocker();
+    BOOL OnFileNewMDI();
+    BOOL OnFileOpen();
+    BOOL OnFileSave();
+    BOOL OnFilePrint();
+    BOOL OnMDICascade();
+    BOOL OnMDICloseAll();
+    BOOL OnMDIIconArrange();
+    BOOL OnMDITile();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(CREATESTRUCT& cs);
-	virtual void OnInitialUpdate();
-	virtual void SetupMenuIcons();
-	virtual void SetupToolBar();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void SetupMenuIcons();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 };
 

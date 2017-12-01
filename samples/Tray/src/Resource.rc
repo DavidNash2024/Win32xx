@@ -50,10 +50,10 @@ BEGIN
     BEGIN
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
-	POPUP "&Options"
-	BEGIN
-		MENUITEM "Minimize to Tray",            IDM_MINTOTRAY
-	END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "Minimize to Tray",            IDM_MINTOTRAY
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -62,13 +62,13 @@ END
 
 IDM_MINIMIZED MENU
 BEGIN
-	POPUP "MIN"
-	BEGIN
-		MENUITEM "&Restore",                    IDM_MIN_RESTORE
-		MENUITEM SEPARATOR
-		MENUITEM "&About",                      IDM_MIN_ABOUT
-		MENUITEM "&Exit",                       IDM_MIN_EXIT
-	END
+    POPUP "MIN"
+    BEGIN
+        MENUITEM "&Restore",                    IDM_MIN_RESTORE
+        MENUITEM SEPARATOR
+        MENUITEM "&About",                      IDM_MIN_ABOUT
+        MENUITEM "&Exit",                       IDM_MIN_EXIT
+    END
 END
 
 

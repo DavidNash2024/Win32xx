@@ -13,8 +13,8 @@ class CSimpleApp : public CWinApp
 public:
     CSimpleApp();
     virtual ~CSimpleApp() {}
-	virtual BOOL InitInstance();
-	CView& GetView() { return m_View; }
+    virtual BOOL InitInstance();
+    CView& GetView() { return m_View; }
 
 private:
     CView m_View;

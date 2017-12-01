@@ -10,13 +10,13 @@
 class CThreadApp : public CWinApp
 {
 public:
-	CThreadApp();
-	virtual ~CThreadApp();
-	virtual BOOL InitInstance();
-	CMainWindow& GetMainWnd() {return m_MainWnd;}
+    CThreadApp();
+    virtual ~CThreadApp();
+    virtual BOOL InitInstance();
+    CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:
-	CMainWindow m_MainWnd;	
+    CMainWindow m_MainWnd;  
 };
 
 

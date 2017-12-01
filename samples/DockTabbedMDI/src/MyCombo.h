@@ -10,17 +10,17 @@
 class CMyCombo : public CComboBoxEx
 {
 public:
-	CMyCombo();
-	virtual ~CMyCombo();
-	BOOL AddItems();
-	virtual void OnDestroy();
-	void SetImages(int nImages, UINT ImageID);
+    CMyCombo();
+    virtual ~CMyCombo();
+    BOOL AddItems();
+    virtual void OnDestroy();
+    void SetImages(int nImages, UINT ImageID);
 
 protected:
-	virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CImageList m_imlImages;
+    CImageList m_imlImages;
 };
 
 

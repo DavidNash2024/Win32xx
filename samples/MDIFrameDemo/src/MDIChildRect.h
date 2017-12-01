@@ -10,15 +10,15 @@
 class CViewRect : public CWnd
 {
 public:
-	virtual int  OnCreate(CREATESTRUCT& cs);
-	virtual void OnDestroy();
-	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnDestroy();
+    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	int m_cxClientMax;
-	int m_cyClientMax;
+    int m_cxClientMax;
+    int m_cyClientMax;
 };
 
 
@@ -26,15 +26,15 @@ private:
 class CMDIChildRect : public CMDIChild
 {
 public:
-	CMDIChildRect();
-	virtual ~CMDIChildRect();
+    CMDIChildRect();
+    virtual ~CMDIChildRect();
 
 protected:
-	virtual int OnCreate(CREATESTRUCT& cs);
+    virtual int OnCreate(CREATESTRUCT& cs);
 
 private:
-	CViewRect m_RectView;
-	CMenu m_Menu;
+    CViewRect m_RectView;
+    CMenu m_Menu;
 
 };
 

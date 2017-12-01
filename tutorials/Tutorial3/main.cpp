@@ -12,6 +12,6 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     // Start Win32++
     CScribbleApp theApp;
 
-	// Run the application
+    // Run the application
     return theApp.Run();
 }

@@ -9,12 +9,12 @@
 class CTaskDialogApp : public CWinApp
 {
 public:
-	CTaskDialogApp();
-	virtual ~CTaskDialogApp();
-	virtual BOOL InitInstance();
+    CTaskDialogApp();
+    virtual ~CTaskDialogApp();
+    virtual BOOL InitInstance();
 
 private:
-//	CTaskDialog m_TaskDialog;
+//  CTaskDialog m_TaskDialog;
 };
 
 

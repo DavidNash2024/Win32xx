@@ -9,7 +9,7 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     // Start Win32++
     CSimpleApp MyApp;
 
-	// Run the application
+    // Run the application
     return MyApp.Run();
 }
 

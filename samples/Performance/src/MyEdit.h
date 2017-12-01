@@ -9,14 +9,14 @@
 class CMyEdit : public CEdit
 {
 public:
-	CMyEdit();
+    CMyEdit();
 
 protected:
-	virtual void OnAttach();
-	virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void OnAttach();
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CFont m_Font;
+    CFont m_Font;
 };
 
 #endif // MYEDIT_H

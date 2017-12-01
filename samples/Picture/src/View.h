@@ -12,24 +12,24 @@
 class CView : public CScrollView
 {
 public:
-	CView();
-	virtual ~CView();
-	CRect GetImageRect();
-	LPPICTURE GetPicture()	{ return m_pPicture; }
-	BOOL LoadPictureFile(LPCTSTR szFile);
-	void NewPictureFile();
-	void SavePicture(LPCTSTR szFile);
+    CView();
+    virtual ~CView();
+    CRect GetImageRect();
+    LPPICTURE GetPicture()  { return m_pPicture; }
+    BOOL LoadPictureFile(LPCTSTR szFile);
+    void NewPictureFile();
+    void SavePicture(LPCTSTR szFile);
 
 protected:
-	virtual void    OnDraw(CDC& dc);
-	virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual int     OnCreate(CREATESTRUCT& cs);
-	virtual void    PreCreate(CREATESTRUCT& cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void    OnDraw(CDC& dc);
+    virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual int     OnCreate(CREATESTRUCT& cs);
+    virtual void    PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	LPPICTURE m_pPicture;
-	CBrush	m_Brush;
+    LPPICTURE m_pPicture;
+    CBrush  m_Brush;
 };
 
 

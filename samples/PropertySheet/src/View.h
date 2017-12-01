@@ -9,14 +9,14 @@
 class CView : public CWnd
 {
 public:
-	CView();
-	virtual ~CView(){}
+    CView();
+    virtual ~CView(){}
 
 protected:
-	virtual void OnDraw(CDC& dc);
-	virtual void OnInitialUpdate();
-	virtual void PreCreate(CREATESTRUCT& cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnDraw(CDC& dc);
+    virtual void OnInitialUpdate();
+    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 

@@ -13,10 +13,10 @@ class CLeftPane : public CDocker
 {
 public:
     CLeftPane();
-	virtual ~CLeftPane() {}
+    virtual ~CLeftPane() {}
 
 private:
-	CMyTreeView m_View;
+    CMyTreeView m_View;
 };
 
 
@@ -24,10 +24,10 @@ class CRightPane : public CDocker
 {
 public:
     CRightPane();
-	virtual ~CRightPane() {}
+    virtual ~CRightPane() {}
 
 private:
-	CMyListView m_View;
+    CMyListView m_View;
 };
 
 

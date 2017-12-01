@@ -12,13 +12,13 @@ CDialogApp::CDialogApp() : MyDialog(IDD_COMCTLS)
 
 BOOL CDialogApp::InitInstance()
 {
-	//Display the Modal Dialog
-	MyDialog.DoModal();
+    //Display the Modal Dialog
+    MyDialog.DoModal();
 
-	//End the program
-	::PostQuitMessage(0);
+    //End the program
+    ::PostQuitMessage(0);
 
-	return TRUE;
+    return TRUE;
 }
 
 CDialogApp::~CDialogApp()

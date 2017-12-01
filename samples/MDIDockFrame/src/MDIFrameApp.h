@@ -12,8 +12,8 @@ class CMDIFrameApp : public CWinApp
 public:
     CMDIFrameApp();
     virtual ~CMDIFrameApp() {}
-	virtual BOOL InitInstance();
-	CMainMDIFrame& GetMDIFrame() { return m_MainMDIFrame; }
+    virtual BOOL InitInstance();
+    CMainMDIFrame& GetMDIFrame() { return m_MainMDIFrame; }
 
 private:
     CMainMDIFrame m_MainMDIFrame;

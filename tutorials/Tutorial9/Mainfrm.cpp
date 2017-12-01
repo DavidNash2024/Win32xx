@@ -8,8 +8,8 @@
 
 CMainFrame::CMainFrame()
 {
-	// Set m_View as the view window of the frame
-	SetView(m_View);
+    // Set m_View as the view window of the frame
+    SetView(m_View);
 }
 
 CMainFrame::~CMainFrame()
@@ -18,106 +18,106 @@ CMainFrame::~CMainFrame()
 
 BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	// Process the messages from the Menu and Tool Bar
+    // Process the messages from the Menu and Tool Bar
 
-	UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lParam);
 
-	switch (LOWORD(wParam))
-	{
-	case IDM_FILE_NEW:			OnFileNew();		return TRUE;
-	case IDM_FILE_OPEN:			OnFileOpen();		return TRUE;
-	case IDM_FILE_SAVE:			OnFileSave();		return TRUE;
-	case IDM_FILE_SAVEAS:		OnFileSaveAs();		return TRUE;
-	case IDM_FILE_PRINT:		OnFilePrint();		return TRUE;
-	case IDM_PEN_COLOR:			OnPenColor();		return TRUE;
-	case IDM_FILE_EXIT:			OnFileExit();		return TRUE;
-	case IDW_VIEW_STATUSBAR:	return OnViewStatusBar();
-	case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
-	case IDM_HELP_ABOUT:		return OnHelp();
-	}
+    switch (LOWORD(wParam))
+    {
+    case IDM_FILE_NEW:          OnFileNew();        return TRUE;
+    case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
+    case IDM_FILE_SAVE:         OnFileSave();       return TRUE;
+    case IDM_FILE_SAVEAS:       OnFileSaveAs();     return TRUE;
+    case IDM_FILE_PRINT:        OnFilePrint();      return TRUE;
+    case IDM_PEN_COLOR:         OnPenColor();       return TRUE;
+    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;
+    case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
+    case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
+    case IDM_HELP_ABOUT:        return OnHelp();
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 LRESULT CMainFrame::OnDropFile(WPARAM wParam)
 // Called in response to the UWM_DROPFILE user defined message
 {
-	// wParam is a pointer (LPCTSTR) to the filename
-	LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
-	assert(szFileName);
+    // wParam is a pointer (LPCTSTR) to the filename
+    LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
+    assert(szFileName);
 
-	// Load the file
-	LoadFile(szFileName);
-	return 0L;
+    // Load the file
+    LoadFile(szFileName);
+    return 0L;
 }
 
 void CMainFrame::OnFileExit()
 {
-	// Issue a close request to the frame
-	PostMessage(WM_CLOSE);
+    // Issue a close request to the frame
+    PostMessage(WM_CLOSE);
 }
 
 void CMainFrame::OnFileNew()
 {
-	GetDoc().GetAllPoints().clear();
-	m_PathName = _T("");
-	GetView().Invalidate();
+    GetDoc().GetAllPoints().clear();
+    m_PathName = _T("");
+    GetView().Invalidate();
 }
 
 void CMainFrame::LoadFile(LPCTSTR str)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
-	// Retrieve the PlotPoint data
-	if (GetDoc().FileOpen(str))
-	{
-		// Save the filename
-		m_PathName = str;
-	}
-	else
-		m_PathName=_T("");
+    // Retrieve the PlotPoint data
+    if (GetDoc().FileOpen(str))
+    {
+        // Save the filename
+        m_PathName = str;
+    }
+    else
+        m_PathName=_T("");
 
-	GetView().Invalidate();
+    GetView().Invalidate();
 }
 
 void CMainFrame::OnFileOpen()
 {
-	CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-	FileDlg.SetTitle(_T("Open File"));
+    CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+    FileDlg.SetTitle(_T("Open File"));
 
-	// Bring up the file open dialog retrieve the selected filename
-	if (FileDlg.DoModal(*this) == IDOK)
-	{
-		// Load the file
-		LoadFile(FileDlg.GetPathName());
-	}
+    // Bring up the file open dialog retrieve the selected filename
+    if (FileDlg.DoModal(*this) == IDOK)
+    {
+        // Load the file
+        LoadFile(FileDlg.GetPathName());
+    }
 }
 
 void CMainFrame::OnFileSave()
 {
-	if (m_PathName == _T(""))
-		OnFileSaveAs();
-	else
-		GetDoc().FileSave(m_PathName);
+    if (m_PathName == _T(""))
+        OnFileSaveAs();
+    else
+        GetDoc().FileSave(m_PathName);
 }
 
 void CMainFrame::OnFileSaveAs()
 {
-	CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-	FileDlg.SetTitle(_T("Save File"));
+    CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+    FileDlg.SetTitle(_T("Save File"));
 
-	// Bring up the file open dialog retrieve the selected filename
-	if (FileDlg.DoModal(*this) == IDOK)
-	{
-		CString str = FileDlg.GetPathName();
+    // Bring up the file open dialog retrieve the selected filename
+    if (FileDlg.DoModal(*this) == IDOK)
+    {
+        CString str = FileDlg.GetPathName();
 
-		// Save the file
-		if (GetDoc().FileSave(str))
-		{
-			// Save the file name
-			m_PathName = str;
-			AddMRUEntry(m_PathName);
-		}
-	}
+        // Save the file
+        if (GetDoc().FileSave(str))
+        {
+            // Save the file name
+            m_PathName = str;
+            AddMRUEntry(m_PathName);
+        }
+    }
 
 }
 
@@ -125,60 +125,60 @@ void CMainFrame::OnFileSaveAs()
 // This function provides a useful reference for printing bitmaps in general
 void CMainFrame::OnFilePrint()
 {
-	// Pass the print job to CDoc
-	GetDoc().Print();
+    // Pass the print job to CDoc
+    GetDoc().Print();
 }
 
 void CMainFrame::OnPenColor()
 {
-	// array of custom colors, initialized to white
-	static COLORREF CustColors[16] = {	RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
-										RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
-	
-	CColorDialog ColorDlg;
-	ColorDlg.SetCustomColors(CustColors);
-	
-	// Initialize the Choose Color dialog
-	if (ColorDlg.DoModal(*this) == IDOK)
-	{
-		// Store the custom colors in the static array
-		memcpy(CustColors, ColorDlg.GetCustomColors(), 16*sizeof(COLORREF));
-		
-		// Retrieve the chosen color
-		m_View.SetPenColor(ColorDlg.GetColor());
-	}
+    // array of custom colors, initialized to white
+    static COLORREF CustColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+                                        RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
+    
+    CColorDialog ColorDlg;
+    ColorDlg.SetCustomColors(CustColors);
+    
+    // Initialize the Choose Color dialog
+    if (ColorDlg.DoModal(*this) == IDOK)
+    {
+        // Store the custom colors in the static array
+        memcpy(CustColors, ColorDlg.GetCustomColors(), 16*sizeof(COLORREF));
+        
+        // Retrieve the chosen color
+        m_View.SetPenColor(ColorDlg.GetColor());
+    }
 }
 
 void CMainFrame::SetupToolBar()
 // Configures the ToolBar
 {
-	// Define our toolbar buttons
-	AddToolBarButton( IDM_FILE_NEW   );
-	AddToolBarButton( IDM_FILE_OPEN  );
-	AddToolBarButton( IDM_FILE_SAVE  );
-	AddToolBarButton( 0 );				// Separator
-	AddToolBarButton( IDM_EDIT_CUT,   FALSE );
-	AddToolBarButton( IDM_EDIT_COPY,  FALSE );
-	AddToolBarButton( IDM_EDIT_PASTE, FALSE );
-	AddToolBarButton( IDM_FILE_PRINT );
-	AddToolBarButton( 0 );				// Separator
-	AddToolBarButton( IDM_PEN_COLOR );
-	AddToolBarButton( 0 );				// Separator
-	AddToolBarButton( IDM_HELP_ABOUT );
+    // Define our toolbar buttons
+    AddToolBarButton( IDM_FILE_NEW   );
+    AddToolBarButton( IDM_FILE_OPEN  );
+    AddToolBarButton( IDM_FILE_SAVE  );
+    AddToolBarButton( 0 );              // Separator
+    AddToolBarButton( IDM_EDIT_CUT,   FALSE );
+    AddToolBarButton( IDM_EDIT_COPY,  FALSE );
+    AddToolBarButton( IDM_EDIT_PASTE, FALSE );
+    AddToolBarButton( IDM_FILE_PRINT );
+    AddToolBarButton( 0 );              // Separator
+    AddToolBarButton( IDM_PEN_COLOR );
+    AddToolBarButton( 0 );              // Separator
+    AddToolBarButton( IDM_HELP_ABOUT );
 }
 
 LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 // Called to handle the window's messages
 {
-	switch (uMsg)
-	{
-	case UWM_DROPFILE:		return OnDropFile(wParam);
+    switch (uMsg)
+    {
+    case UWM_DROPFILE:      return OnDropFile(wParam);
 
-	}
+    }
 
-	//Use the default message handling for remaining messages
-	return WndProcDefault(uMsg, wParam, lParam);
+    //Use the default message handling for remaining messages
+    return WndProcDefault(uMsg, wParam, lParam);
 }
 

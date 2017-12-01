@@ -7,60 +7,60 @@
 |                                                                              |
 ===============================================================================*
 
-	Contents Description: Standard Declarations File. This file is used 
-	for precompiled headers. Rarely modified header files should be 
-	included.  Based on code provided by Lynn Allan to Win32++ sample
-	projects, Copyright (c) 2005-2017 David Nash, under permissions
-	granted therein.
-	
-	Adapted for use in this application.
+    Contents Description: Standard Declarations File. This file is used 
+    for precompiled headers. Rarely modified header files should be 
+    included.  Based on code provided by Lynn Allan to Win32++ sample
+    projects, Copyright (c) 2005-2017 David Nash, under permissions
+    granted therein.
+    
+    Adapted for use in this application.
 
         Caveats: The copyright displayed above extends only to the author's
-	original contributions to the subject class, and  to the alterations,
-	additions, deletions, and  other treatments of materials that may have
-	been extracted from the cited sources.  Unaltered portions of those
-	materials retain their original copyright status. The author hereby
-	grants permission to any person obtaining a copy of this treatment
-	of the subject class and  any associated documentation composed by
-	the author, to utilize this material, free of charge and  without
-	restriction or limitation, subject to the following conditions:
+    original contributions to the subject class, and  to the alterations,
+    additions, deletions, and  other treatments of materials that may have
+    been extracted from the cited sources.  Unaltered portions of those
+    materials retain their original copyright status. The author hereby
+    grants permission to any person obtaining a copy of this treatment
+    of the subject class and  any associated documentation composed by
+    the author, to utilize this material, free of charge and  without
+    restriction or limitation, subject to the following conditions:
 
-		The above copyright notice, as well as that of David Nash
-		and Win32++, together with the respective permission
-		conditions shall be included in all copies or substantial
-		portions of this material so copied, modified, merged,
-		published, distributed, or otherwise held by others.
+        The above copyright notice, as well as that of David Nash
+        and Win32++, together with the respective permission
+        conditions shall be included in all copies or substantial
+        portions of this material so copied, modified, merged,
+        published, distributed, or otherwise held by others.
 
-	These materials are provided "as is", without warranty of any kind,
-	express or implied, including but not limited to: warranties of
-	merchantability, fitness for a particular purpose, and non-infringement.
-	In no event shall the authors or copyright holders be liable for any
-	claim, damages, or other liability, whether in an action of contract,
-	tort or otherwise, arising from, out of, or in connection with, these
-	materials, the use thereof, or any other other dealings therewith.
+    These materials are provided "as is", without warranty of any kind,
+    express or implied, including but not limited to: warranties of
+    merchantability, fitness for a particular purpose, and non-infringement.
+    In no event shall the authors or copyright holders be liable for any
+    claim, damages, or other liability, whether in an action of contract,
+    tort or otherwise, arising from, out of, or in connection with, these
+    materials, the use thereof, or any other other dealings therewith.
 
-	To use precompiled headers, do the following:
-	1) Add the set of rarely changed headers to stdafx.h
-	2) Include stdafx.h in each cpp file. It must be included first.
-	3) Compile stdafx.h into the precompiled hearder stdafx.h.gch by
-	   including stdafx.mak into the makefile in the project options:
+    To use precompiled headers, do the following:
+    1) Add the set of rarely changed headers to stdafx.h
+    2) Include stdafx.h in each cpp file. It must be included first.
+    3) Compile stdafx.h into the precompiled hearder stdafx.h.gch by
+       including stdafx.mak into the makefile in the project options:
 
-		all-before: stdafx.h.gch
+        all-before: stdafx.h.gch
                 stdafx.h.gch: stdafx.h
-			$(CPP) -c stdafx.h -o stdafx.h.gch $(CXXFLAGS)
+            $(CPP) -c stdafx.h -o stdafx.h.gch $(CXXFLAGS)
 
-	4) Add stdafx.cpp to your project source files.
+    4) Add stdafx.cpp to your project source files.
 
-	Special Conventions:
+    Special Conventions:
 
-	Programming Notes:
+    Programming Notes:
                 The programming standards roughly follow those established
                 by the 1997-1999 Jet Propulsion Laboratory Deep Space Network
-		Planning and Preparation Subsystem project for C++ programming.
+        Planning and Preparation Subsystem project for C++ programming.
 
 ********************************************************************************
 
-	Declaration of the stdafx headers precompiled for this application
+    Declaration of the stdafx headers precompiled for this application
 
 *******************************************************************************/
 
@@ -77,22 +77,22 @@ typedef  unsigned char  byte;
 // Based on code provided by Lynn Allan
 
 // Predefinitions for windows.h go here
-//#define WIN32_LEAN_AND_MEAN	// Exclude rarely-used stuff from Windows headers
-#include "targetver.h"	// Set the supported window features
+//#define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
+#include "targetver.h"  // Set the supported window features
 
 // Specify Win32xx specific predefinitions here
-//#define NO_USING_NAMESPACE		// Don't use Win32xx namespace
+//#define NO_USING_NAMESPACE        // Don't use Win32xx namespace
 
-#if defined(_MSC_VER) && _MSC_VER == 1200 	// For Visual Studio 6
-  #pragma warning (disable : 4786)	// identifier was truncated
-  #pragma warning (disable : 4702)	// unreachable code (bugs in Microsoft's STL)
+#if defined(_MSC_VER) && _MSC_VER == 1200   // For Visual Studio 6
+  #pragma warning (disable : 4786)  // identifier was truncated
+  #pragma warning (disable : 4702)  // unreachable code (bugs in Microsoft's STL)
 #endif
 
 // Rarely modified header files should be included here
 #include <vector>
 #include <map>
 #include <string>
-#include <sstream>		// Add support for stringstream
+#include <sstream>      // Add support for stringstream
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

@@ -12,13 +12,13 @@
 class CTabDemoApp : public CWinApp
 {
 public:
-	CTabDemoApp();
-	virtual ~CTabDemoApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CTabDemoApp();
+    virtual ~CTabDemoApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

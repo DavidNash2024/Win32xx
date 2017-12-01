@@ -16,7 +16,7 @@
 
 //Resource IDs for the dialog
 #define IDD_DIALOG1                     121
-#define IDC_BUTTONSET					141
+#define IDC_BUTTONSET                   141
 #define IDC_BUTTONCANCEL                142 
 #define IDC_MONTHCALENDAR1              143
 #define IDC_DATETIMEPICKER1             144

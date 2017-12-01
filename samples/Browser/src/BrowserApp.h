@@ -13,8 +13,8 @@ class CBrowserApp : public CWinApp
 public:
     CBrowserApp();
     virtual ~CBrowserApp() {}
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
     CMainFrame m_Frame;

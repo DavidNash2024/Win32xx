@@ -12,10 +12,10 @@ CMyThread::CMyThread(int nThread) :  m_TestWnd(nThread), m_nThread(nThread)
 
 BOOL CMyThread::InitInstance()
 {
-	// This function runs when the thread starts
+    // This function runs when the thread starts
 
-	// Create a test window for this thread
-	m_TestWnd.Create();
+    // Create a test window for this thread
+    m_TestWnd.Create();
 
-	return TRUE;	// return TRUE to run the message loop
+    return TRUE;    // return TRUE to run the message loop
 }

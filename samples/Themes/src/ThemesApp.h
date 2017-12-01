@@ -11,13 +11,13 @@
 class CThemesApp : public CWinApp
 {
 public:
-	CThemesApp();
-	virtual ~CThemesApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CThemesApp();
+    virtual ~CThemesApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

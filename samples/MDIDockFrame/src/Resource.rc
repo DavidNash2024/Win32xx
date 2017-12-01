@@ -36,8 +36,8 @@ IDW_MAIN MENU
 BEGIN
     POPUP "&File"
     BEGIN
-		MENUITEM "New Docker",					IDM_FILE_NEWDOCK
-        MENUITEM "New MDI",						IDM_FILE_NEWMDI
+        MENUITEM "New Docker",                  IDM_FILE_NEWDOCK
+        MENUITEM "New MDI",                     IDM_FILE_NEWMDI
         MENUITEM SEPARATOR
         MENUITEM "Exit",                        IDM_FILE_EXIT
     END
@@ -46,7 +46,7 @@ BEGIN
         MENUITEM "Tool Bar",                    IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "Status Bar",                  IDW_VIEW_STATUSBAR, CHECKED
     END
-	POPUP "&Window"
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
@@ -63,7 +63,7 @@ MDIMENUVIEW MENU
 BEGIN
     POPUP "&File"
     BEGIN
-		MENUITEM "New Docker\tCtrl+D",          IDM_FILE_NEWDOCK
+        MENUITEM "New Docker\tCtrl+D",          IDM_FILE_NEWDOCK
         MENUITEM "New MDI\tCtrl+M",             IDM_FILE_NEWMDI
         MENUITEM "Close",                       IDM_FILE_CLOSE
         MENUITEM SEPARATOR
@@ -216,7 +216,7 @@ BEGIN
 END
 
 STRINGTABLE 
-BEGIN	
+BEGIN   
     IDW_MDI_CASCADE      "Cascade MDI Windows"
     IDW_MDI_TILE         "Tile MDI Windows"
     IDW_MDI_ARRANGE      "Arrange Icons"
@@ -227,8 +227,8 @@ BEGIN
     IDW_CHILD4              "Activate this window"
     IDW_CHILD5              "Activate this window"
     IDW_CHILD6              "Activate this window"
-	IDW_CHILD7              "Activate this window"
-	IDW_CHILD8              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
     IDW_CHILD9              "Activate this window"
     IDW_CHILD10             "Select a window"
 END
@@ -236,7 +236,7 @@ END
 STRINGTABLE
 BEGIN
     IDM_FILE_NEWDOCK        "Create a New Docking Window"
-	IDM_FILE_NEWMDI			"Create a New MDI Window"
+    IDM_FILE_NEWMDI         "Create a New MDI Window"
     IDM_FILE_OPEN           "Open Existing Document"
     IDM_FILE_SAVE           "Save the Document"
     IDM_FILE_SAVEAS         "Save the Document with a new name"
@@ -275,8 +275,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	  SC_NEXTWINDOW           "Select Next Window"
-	  SC_PREVWINDOW           "Select Previous Window"
+      SC_NEXTWINDOW           "Select Next Window"
+      SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

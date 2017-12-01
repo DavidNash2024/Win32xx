@@ -6,7 +6,7 @@
 #include "default_resource.h"
 
 // String resource ID
-#define IDS_HELLO						100
+#define IDS_HELLO                       100
 
 
 // Next default values for new objects

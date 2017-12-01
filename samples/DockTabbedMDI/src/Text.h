@@ -13,44 +13,44 @@
 class CViewText : public CRichEdit
 {
 public:
-	CViewText();
-	virtual ~CViewText();
-	void OnEditCopy();
-	void OnEditPaste();
-	void OnEditCut();
-	void OnEditDelete();
-	void OnEditRedo();
-	void OnEditUndo();
+    CViewText();
+    virtual ~CViewText();
+    void OnEditCopy();
+    void OnEditPaste();
+    void OnEditCut();
+    void OnEditDelete();
+    void OnEditRedo();
+    void OnEditUndo();
 
 protected:
-	virtual void OnAttach();
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	void PreCreate(CREATESTRUCT& cs);
+    virtual void OnAttach();
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CFont m_Font;
+    CFont m_Font;
 };
 
 // Declaration of the CContainText class
 class CContainText : public CDockContainer
 {
 public:
-	CContainText();
-	~CContainText() {}
+    CContainText();
+    ~CContainText() {}
 
 private:
-	CViewText m_ViewText;
+    CViewText m_ViewText;
 };
 
 // Declaration of the CDockText class
 class CDockText : public CDocker
 {
 public:
-	CDockText();
-	virtual ~CDockText() {}
+    CDockText();
+    virtual ~CDockText() {}
 
 private:
-	CContainText m_View;
+    CContainText m_View;
 
 };
 

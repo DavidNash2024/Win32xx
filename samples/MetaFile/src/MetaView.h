@@ -13,15 +13,15 @@
 class CMetaView : public CWnd
 {
 public:
-	CMetaView() {}
+    CMetaView() {}
     virtual ~CMetaView() {}
-	virtual int OnCreate(CREATESTRUCT&);
-	virtual void OnDraw(CDC& dc);
+    virtual int OnCreate(CREATESTRUCT&);
+    virtual void OnDraw(CDC& dc);
     virtual void OnDestroy();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CEnhMetaFile  m_EnhMetaFile;
+    CEnhMetaFile  m_EnhMetaFile;
 
 };
 

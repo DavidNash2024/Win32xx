@@ -9,29 +9,29 @@
 class CViewTree : public CTreeView
 {
 public:
-	CViewTree();
-	virtual ~CViewTree();
-	virtual void OnDestroy();
-	virtual void OnAttach();
-	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+    CViewTree();
+    virtual ~CViewTree();
+    virtual void OnDestroy();
+    virtual void OnAttach();
+    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:
-	CImageList m_imlNormal;
+    CImageList m_imlNormal;
 };
 
 
 class CMDIChildTreeView : public CMDIChild
 {
 public:
-	CMDIChildTreeView();
-	virtual ~CMDIChildTreeView();
+    CMDIChildTreeView();
+    virtual ~CMDIChildTreeView();
 
 protected:
-	virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
-	CViewTree m_TreeView;
-	CMenu m_Menu;
+    CViewTree m_TreeView;
+    CMenu m_Menu;
 };
 
 #endif  //MDICHILDTREEVIEW_H

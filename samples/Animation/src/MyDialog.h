@@ -10,16 +10,16 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID);
-	virtual ~CMyDialog();
+    CMyDialog(UINT nResID);
+    virtual ~CMyDialog();
 
 protected:
-	virtual void OnDestroy();
-	virtual BOOL OnInitDialog();
-	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnDestroy();
+    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CAnimation m_Animation;
+    CAnimation m_Animation;
 
 };
 

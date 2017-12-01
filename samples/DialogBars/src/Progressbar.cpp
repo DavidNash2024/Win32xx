@@ -7,7 +7,7 @@
 
 void CMyProgressBar::SetProgress(int nPos)
 {
-	// Set the progress bar position
-	SetPos(nPos);
+    // Set the progress bar position
+    SetPos(nPos);
 }
 

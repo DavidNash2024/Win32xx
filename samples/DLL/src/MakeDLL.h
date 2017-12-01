@@ -6,9 +6,9 @@
 BOOL APIENTRY DllMain( HANDLE hModule, DWORD  ul_reason_for_call, LPVOID lpReserved );
 
 
-extern "C"	// Required by MinGW compiler to avoid name mangling
+extern "C"  // Required by MinGW compiler to avoid name mangling
 {
-	// The list of exported dll functions go here
+    // The list of exported dll functions go here
     void __declspec(dllexport) ShowDialog();
 }
 

@@ -11,15 +11,15 @@
 // CViewWeb functions
 int CViewWeb::OnCreate(CREATESTRUCT& cs)
 {
-	CWebBrowser::OnCreate(cs);
+    CWebBrowser::OnCreate(cs);
 
-	// Load the Win32++ home page
-	Navigate2(_T("http://sourceforge.net/projects/win32-framework/"));
+    // Load the Win32++ home page
+    Navigate2(_T("http://sourceforge.net/projects/win32-framework/"));
 
 #ifndef _DEBUG
-	// Suppress Java script errors
-	GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
+    // Suppress Java script errors
+    GetIWebBrowser2()->put_Silent(VARIANT_TRUE);
 #endif
 
-	return 0;
+    return 0;
 }

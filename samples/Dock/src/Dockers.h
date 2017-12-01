@@ -12,11 +12,11 @@
 class CDockSimple : public CDocker
 {
 public:
-	CDockSimple();
-	virtual ~CDockSimple() {}
+    CDockSimple();
+    virtual ~CDockSimple() {}
 
 private:
-	CViewSimple m_View;
+    CViewSimple m_View;
 
 };
 
@@ -24,11 +24,11 @@ private:
 class CDockClasses : public CDocker
 {
 public:
-	CDockClasses();
-	virtual ~CDockClasses() {}
+    CDockClasses();
+    virtual ~CDockClasses() {}
 
 private:
-	CViewTree m_View;
+    CViewTree m_View;
 
 };
 
@@ -36,11 +36,11 @@ private:
 class CDockFiles : public CDocker
 {
 public:
-	CDockFiles();
-	virtual ~CDockFiles() {}
+    CDockFiles();
+    virtual ~CDockFiles() {}
 
 private:
-	CViewList m_View;
+    CViewList m_View;
 
 };
 
@@ -48,11 +48,11 @@ private:
 class CDockText : public CDocker
 {
 public:
-	CDockText();
-	virtual ~CDockText() {}
+    CDockText();
+    virtual ~CDockText() {}
 
 private:
-	CViewText m_View;
+    CViewText m_View;
 
 };
 

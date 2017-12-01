@@ -11,20 +11,20 @@
 class CDoc : public CObject
 {
 public:
-	CDoc() {}
-	~CDoc() {}
+    CDoc() {}
+    ~CDoc() {}
 
-	std::vector<PlotPoint>& GetAllPoints() {return m_points;}	// returns a vector of PlotPoint data
-	const CView& GetView() const;	
-	BOOL FileOpen(LPCTSTR szFilename);
-	BOOL FileSave(LPCTSTR szFilename);
-	void Print();
-	void Serialize(CArchive &ar);
-	void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
+    std::vector<PlotPoint>& GetAllPoints() {return m_points;}   // returns a vector of PlotPoint data
+    const CView& GetView() const;   
+    BOOL FileOpen(LPCTSTR szFilename);
+    BOOL FileSave(LPCTSTR szFilename);
+    void Print();
+    void Serialize(CArchive &ar);
+    void StorePoint(int x, int y, bool PenDown, COLORREF PenColor);
 
 private:
-	std::vector<PlotPoint> m_points;	// Points of lines to draw
+    std::vector<PlotPoint> m_points;    // Points of lines to draw
 
 };
 
-#endif	// WIN32XX_DOC_H
+#endif  // WIN32XX_DOC_H

@@ -11,13 +11,13 @@
 class CFastGDIApp : public CWinApp
 {
 public:
-	CFastGDIApp();
-	virtual ~CFastGDIApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CFastGDIApp();
+    virtual ~CFastGDIApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

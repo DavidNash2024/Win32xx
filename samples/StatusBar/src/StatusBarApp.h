@@ -11,13 +11,13 @@
 class CStatusBarApp : public CWinApp
 {
 public:
-	CStatusBarApp();
-	virtual ~CStatusBarApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CStatusBarApp();
+    virtual ~CStatusBarApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

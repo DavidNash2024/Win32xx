@@ -12,7 +12,7 @@
 #include "default_resource.h"
 
 // resource ID for the About dialog text.
-#define IDC_ABOUT_CREDITS	            200
+#define IDC_ABOUT_CREDITS               200
 
 // IDs for non-client areas of the frame
 // Add IDFR_NCFRAME to the value returned by the WM_NCHITTEST message

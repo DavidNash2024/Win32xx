@@ -12,13 +12,13 @@
 class CPropertySheetApp : public CWinApp
 {
 public:
-	CPropertySheetApp();
-	virtual ~CPropertySheetApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CPropertySheetApp();
+    virtual ~CPropertySheetApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

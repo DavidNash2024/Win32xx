@@ -53,7 +53,7 @@ BEGIN
         MENUITEM "Copy\tCtrl+C",                IDM_EDIT_COPY, GRAYED
         MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE, GRAYED
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
-    END	
+    END 
     POPUP "&View"
     BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
@@ -218,7 +218,7 @@ BEGIN
     IDW_MAIN                "Tabbed MDI"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"
@@ -249,7 +249,7 @@ BEGIN
     IDM_FILE_NEWLIST        "Create List-View MDI Child"
     IDM_CONTAINER_TOP       "Place Tabs at the top of the containers"
     IDM_TABBEDMDI_TOP       "Place Tabs at the top of the MDITab"
-	IDM_HIDE_SINGLE_TAB     "Hide single tabs in containers"
+    IDM_HIDE_SINGLE_TAB     "Hide single tabs in containers"
     IDM_DEFAULT_LAYOUT      "Restore default dock layout"
     IDM_CLOSE_DOCKERS       "Close all docked and undocked windows"
     IDM_CLOSE_MDIS          "Close all MDI Children"

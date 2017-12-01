@@ -12,13 +12,13 @@
 class CExplorerApp : public CWinApp
 {
 public:
-	CExplorerApp();
-	virtual ~CExplorerApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CExplorerApp();
+    virtual ~CExplorerApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 // returns a reference to the CExplorerApp object

@@ -17,10 +17,10 @@ CDialogApp::~CDialogApp()
 
 BOOL CDialogApp::InitInstance()
 {
-	//Display the Modeless Dialog
-	// A modeless dialog gives us an opportunity to pretranslatate messages 
-	m_MyDialog.Create();	// throws a CWinException on failure  
+    //Display the Modeless Dialog
+    // A modeless dialog gives us an opportunity to pretranslatate messages 
+    m_MyDialog.Create();    // throws a CWinException on failure  
 
-	return TRUE;
+    return TRUE;
 }
 

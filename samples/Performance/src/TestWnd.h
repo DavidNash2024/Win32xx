@@ -10,21 +10,21 @@
 class CTestWindow : public CWnd
 {
 public:
-	CTestWindow();
-	virtual ~CTestWindow(){}
-	virtual void CreateWin(int i);
-	virtual void OnInitialUpdate();
+    CTestWindow();
+    virtual ~CTestWindow(){}
+    virtual void CreateWin(int i);
+    virtual void OnInitialUpdate();
 
 private:
-	enum Constants
-	{
-		WM_WINDOWCREATED     = WM_USER+1,
-		WM_TESTMESSAGE       = WM_USER+2
-	};
+    enum Constants
+    {
+        WM_WINDOWCREATED     = WM_USER+1,
+        WM_TESTMESSAGE       = WM_USER+2
+    };
 
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	int m_nWindow;
+    int m_nWindow;
 };
 
 

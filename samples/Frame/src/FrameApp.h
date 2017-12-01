@@ -11,13 +11,13 @@
 class CFrameApp : public CWinApp
 {
 public:
-	CFrameApp();
-	virtual ~CFrameApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CFrameApp();
+    virtual ~CFrameApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

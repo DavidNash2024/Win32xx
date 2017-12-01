@@ -20,17 +20,17 @@ CViewOutput::~CViewOutput()
 
 void CViewOutput::OnAttach()
 {
-	m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
-		            CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
+    m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+                    CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 
-	SetFont(m_Font, FALSE);
-	SetWindowText(_T("Read Only Output Window"));
+    SetFont(m_Font, FALSE);
+    SetWindowText(_T("Read Only Output Window"));
 }
 
 void CViewOutput::PreCreate(CREATESTRUCT& cs)
 {
-	cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
-				WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL | ES_READONLY;
+    cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD | 
+                WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL | ES_READONLY;
 }
 
 
@@ -38,10 +38,10 @@ void CViewOutput::PreCreate(CREATESTRUCT& cs)
 //  Definitions for the CContainOutput class
 CContainOutput::CContainOutput() 
 {
-	SetView(m_ViewOutput); 
-	SetDockCaption (_T("Output View - Docking container"));
-	SetTabText(_T("Output"));
-	SetTabIcon(IDI_TEXT);
+    SetView(m_ViewOutput); 
+    SetDockCaption (_T("Output View - Docking container"));
+    SetTabText(_T("Output"));
+    SetTabIcon(IDI_TEXT);
 } 
 
 
@@ -49,10 +49,10 @@ CContainOutput::CContainOutput()
 //  Definitions for the CDockOutput class
 CDockOutput::CDockOutput()
 {
-	// Set the view window to our edit control
-	SetView(m_View);
+    // Set the view window to our edit control
+    SetView(m_View);
 
-	// Set the width of the splitter bar
-	SetBarWidth(8);
+    // Set the width of the splitter bar
+    SetBarWidth(8);
 }
 

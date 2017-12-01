@@ -26,7 +26,7 @@
 #define IDM_EDIT_COPY                   133
 #define IDM_EDIT_PASTE                  134
 #define IDM_EDIT_DELETE                 135
-#define IDM_EDIT_TAB		            136
+#define IDM_EDIT_TAB                    136
 #define IDM_HELP_ABOUT                  140
 
 #define IDM_VIEW_SMALLICON              150

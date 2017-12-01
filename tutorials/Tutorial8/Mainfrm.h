@@ -16,31 +16,31 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame();
-	virtual ~CMainFrame();
+    CMainFrame();
+    virtual ~CMainFrame();
 
-	CDoc& GetDoc() { return m_Doc; }
-	void LoadFile(LPCTSTR str);
+    CDoc& GetDoc() { return m_Doc; }
+    void LoadFile(LPCTSTR str);
 
-	LRESULT OnDropFile(WPARAM wParam);
+    LRESULT OnDropFile(WPARAM wParam);
 
-	void OnFileExit();
-	void OnFileNew();
-	void OnFileOpen();
-	void OnFilePrint();
-	void OnFileSave();
-	void OnFileSaveAs();
-	void OnPenColor();
+    void OnFileExit();
+    void OnFileNew();
+    void OnFileOpen();
+    void OnFilePrint();
+    void OnFileSave();
+    void OnFileSaveAs();
+    void OnPenColor();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void SetupToolBar();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CView m_View;
-	CDoc m_Doc;
-	CString m_PathName;
+    CView m_View;
+    CDoc m_Doc;
+    CString m_PathName;
 
 };
 

@@ -14,115 +14,115 @@ CMyDialog::~CMyDialog()
 
 void CMyDialog::AddToButton()
 {
-	//get the control window
-	HWND hwButton = GetDlgItem(IDC_BUTTON1);
-	
-	//set text to show in control
-	TCHAR szBufW[16];
-	wsprintf(szBufW, L"Button %d", m_nCounter);
-	::Button_SetText(hwButton, szBufW);
-	return;
+    //get the control window
+    HWND hwButton = GetDlgItem(IDC_BUTTON1);
+    
+    //set text to show in control
+    TCHAR szBufW[16];
+    wsprintf(szBufW, L"Button %d", m_nCounter);
+    ::Button_SetText(hwButton, szBufW);
+    return;
 }
 
 void CMyDialog::AddToComboBox()
 {
-	//get the control window
-	HWND hwComboBox = GetDlgItem(IDC_COMBO1);
-	
-	//set text to show in control
-	TCHAR szBufW[16];
-	wsprintf(szBufW, L"ComboBox %d", m_nCounter);
-	if (m_nCounter)
-	{
-		ComboBox_AddString(hwComboBox, szBufW);
-		::ComboBox_SetText(hwComboBox, szBufW);
-		ComboBox_SetCurSel(hwComboBox, m_nCounter-1);
-	}
-	else 
-	{
-		ComboBox_ResetContent(hwComboBox); 
-		ComboBox_ShowDropdown(hwComboBox, FALSE);
-	}
+    //get the control window
+    HWND hwComboBox = GetDlgItem(IDC_COMBO1);
+    
+    //set text to show in control
+    TCHAR szBufW[16];
+    wsprintf(szBufW, L"ComboBox %d", m_nCounter);
+    if (m_nCounter)
+    {
+        ComboBox_AddString(hwComboBox, szBufW);
+        ::ComboBox_SetText(hwComboBox, szBufW);
+        ComboBox_SetCurSel(hwComboBox, m_nCounter-1);
+    }
+    else 
+    {
+        ComboBox_ResetContent(hwComboBox); 
+        ComboBox_ShowDropdown(hwComboBox, FALSE);
+    }
 }
 
 void CMyDialog::AddToEdit()
 {
-	//get the control window
-	HWND hwEdit = GetDlgItem(IDC_EDIT1 ); 
-	
-	//set text to show in control
-	TCHAR szBufW[16];
-	wsprintf(szBufW, L"Edit %d\r\n", m_nCounter);
-	if (m_nCounter)
-		Edit_ReplaceSel(hwEdit, szBufW); 
-	else
-		::SetWindowText(hwEdit, L""); 
+    //get the control window
+    HWND hwEdit = GetDlgItem(IDC_EDIT1 ); 
+    
+    //set text to show in control
+    TCHAR szBufW[16];
+    wsprintf(szBufW, L"Edit %d\r\n", m_nCounter);
+    if (m_nCounter)
+        Edit_ReplaceSel(hwEdit, szBufW); 
+    else
+        ::SetWindowText(hwEdit, L""); 
 }
 
 void CMyDialog::AddToListBox()
 {
-	//get the control window
-	HWND hwListBox = GetDlgItem(IDC_LIST1); 
-	
-	//set text to show in control
-	TCHAR szBufW[16];
-	wsprintf(szBufW, L"ListBox %d", m_nCounter);
-	if (m_nCounter)
-		ListBox_AddString(hwListBox, szBufW);
-	else
-		ListBox_ResetContent(hwListBox); 
+    //get the control window
+    HWND hwListBox = GetDlgItem(IDC_LIST1); 
+    
+    //set text to show in control
+    TCHAR szBufW[16];
+    wsprintf(szBufW, L"ListBox %d", m_nCounter);
+    if (m_nCounter)
+        ListBox_AddString(hwListBox, szBufW);
+    else
+        ListBox_ResetContent(hwListBox); 
 }
 
 void CMyDialog::AddToScrollBars()
 {
-	//get the control window
-	HWND hwScrollBarH = GetDlgItem(IDC_SCROLLBAR1);
-	HWND hwScrollBarV = GetDlgItem(IDC_SCROLLBAR2);
-	
-	//set scroll bar range
-	ScrollBar_SetRange(hwScrollBarH, 0, 10, FALSE);
-	ScrollBar_SetRange(hwScrollBarV, 0, 10, FALSE);
-	
-	//set scroll bar position
-	ScrollBar_SetPos(hwScrollBarH, m_nCounter, TRUE);
-	ScrollBar_SetPos(hwScrollBarV, m_nCounter, TRUE);
+    //get the control window
+    HWND hwScrollBarH = GetDlgItem(IDC_SCROLLBAR1);
+    HWND hwScrollBarV = GetDlgItem(IDC_SCROLLBAR2);
+    
+    //set scroll bar range
+    ScrollBar_SetRange(hwScrollBarH, 0, 10, FALSE);
+    ScrollBar_SetRange(hwScrollBarV, 0, 10, FALSE);
+    
+    //set scroll bar position
+    ScrollBar_SetPos(hwScrollBarH, m_nCounter, TRUE);
+    ScrollBar_SetPos(hwScrollBarV, m_nCounter, TRUE);
 }
 
 BOOL CMyDialog::OnInitDialog()
 {
-	//Set the Icon
-	SetIconLarge(IDW_MAIN);
-	SetIconSmall(IDW_MAIN);
+    //Set the Icon
+    SetIconLarge(IDW_MAIN);
+    SetIconSmall(IDW_MAIN);
 
-	// Set a timer to animate the controls on the dialog window
-	SetTimer(ID_TIMER, 500, NULL);
+    // Set a timer to animate the controls on the dialog window
+    SetTimer(ID_TIMER, 500, NULL);
 
-	return true;
+    return true;
 }
 
 void CMyDialog::OnOK()
 {
-	::MessageBox(NULL, TEXT("DONE Button Pressed.  Program will exit now."), TEXT("Button"), MB_OK);
-	CDialog::OnOK();
+    ::MessageBox(NULL, TEXT("DONE Button Pressed.  Program will exit now."), TEXT("Button"), MB_OK);
+    CDialog::OnOK();
 }
 
 INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch (uMsg)
     {
-	case WM_TIMER:
-		m_nCounter > 9 ? m_nCounter = 0 : m_nCounter++;
-		AddToEdit();
-		AddToListBox();
-		AddToScrollBars();
-		AddToComboBox();
-		AddToButton();
+    case WM_TIMER:
+        m_nCounter > 9 ? m_nCounter = 0 : m_nCounter++;
+        AddToEdit();
+        AddToListBox();
+        AddToScrollBars();
+        AddToComboBox();
+        AddToButton();
     break;
 
     } // switch(uMsg)
-	
-	return DialogProcDefault(uMsg, wParam, lParam);
-	
+    
+    return DialogProcDefault(uMsg, wParam, lParam);
+    
 } // INT_PTR CALLBACK DialogProc(...)
 
 

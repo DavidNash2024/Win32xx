@@ -9,17 +9,17 @@
 // Definitions for the CView class
 void CView::Minimize()
 {
-	NOTIFYICONDATA nid;
-	ZeroMemory(&nid, sizeof(nid));
+    NOTIFYICONDATA nid;
+    ZeroMemory(&nid, sizeof(nid));
     nid.cbSize = sizeof(NOTIFYICONDATA);
     nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;
     nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     nid.uCallbackMessage = MSG_TRAYICON;
-	nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
-		::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
+    nid.hIcon = (HICON) (::LoadImage (GetModuleHandle(NULL), MAKEINTRESOURCE (IDW_MAIN), IMAGE_ICON,
+        ::GetSystemMetrics (SM_CXSMICON), ::GetSystemMetrics (SM_CYSMICON), 0));
 
-	lstrcpy(nid.szTip, _T("Tray Demo tooltip"));
+    lstrcpy(nid.szTip, _T("Tray Demo tooltip"));
 
     Shell_NotifyIcon(NIM_ADD, &nid);
     ShowWindow(SW_HIDE);
@@ -28,153 +28,153 @@ void CView::Minimize()
 
 void CView::OnAbout()
 {
-	MessageBox(_T("Tray Example: Demonstrates minimizing a window to the tray."), _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
+    MessageBox(_T("Tray Example: Demonstrates minimizing a window to the tray."), _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
 }
 
 int CView::OnCreate(CREATESTRUCT& cs)
 {
-	// OnCreate is called automatically during window creation when a
-	// WM_CREATE message received.
+    // OnCreate is called automatically during window creation when a
+    // WM_CREATE message received.
 
-	// Tasks such as setting the icon, creating child windows, or anything
-	// associated with creating windows are normally performed here.
+    // Tasks such as setting the icon, creating child windows, or anything
+    // associated with creating windows are normally performed here.
 
-	UNREFERENCED_PARAMETER(cs);
+    UNREFERENCED_PARAMETER(cs);
 
-	// Set the window's icon
-	SetIconSmall(IDW_MAIN);
-	SetIconLarge(IDW_MAIN);
+    // Set the window's icon
+    SetIconSmall(IDW_MAIN);
+    SetIconLarge(IDW_MAIN);
 
-	SetWindowText(LoadString(IDW_MAIN).c_str());		// Window title
+    SetWindowText(LoadString(IDW_MAIN).c_str());        // Window title
 
-	TRACE("OnCreate\n");
+    TRACE("OnCreate\n");
 
-	return 0;
+    return 0;
 }
 
 BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
 {
-	// OnCommand responds to menu and and toolbar input
+    // OnCommand responds to menu and and toolbar input
 
-	UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lParam);
 
-	UINT nID = LOWORD(wParam);
-	switch(nID)
-	{
-	case IDM_MINTOTRAY:		Minimize();		return TRUE;
-	case IDM_FILE_EXIT:		OnFileExit();	return TRUE;
-	case IDM_HELP_ABOUT:	OnAbout();		return TRUE;
-	}
+    UINT nID = LOWORD(wParam);
+    switch(nID)
+    {
+    case IDM_MINTOTRAY:     Minimize();     return TRUE;
+    case IDM_FILE_EXIT:     OnFileExit();   return TRUE;
+    case IDM_HELP_ABOUT:    OnAbout();      return TRUE;
+    }
 
-	return FALSE;
+    return FALSE;
 }
 
 void CView::OnDestroy()
 {
-	// End the application when the window is destroyed
-	::PostQuitMessage(0);
+    // End the application when the window is destroyed
+    ::PostQuitMessage(0);
 }
 
 void CView::OnDraw(CDC& dc)
 {
-	// OnPaint is called automatically whenever a part of the
-	// window needs to be repainted.
+    // OnPaint is called automatically whenever a part of the
+    // window needs to be repainted.
 
-	// Centre some text in our view window
-	CRect rc = GetClientRect();
-	CString cs = LoadString(IDS_DRAWTEXT);
-	dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    // Centre some text in our view window
+    CRect rc = GetClientRect();
+    CString cs = LoadString(IDS_DRAWTEXT);
+    dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnFileExit()
 {
-	// End the application
-	::PostQuitMessage(0);
+    // End the application
+    ::PostQuitMessage(0);
 }
 
 void CView::OnInitialUpdate()
 {
-	// OnInitialUpdate is called after the window is created.
-	// Tasks which are to be done after the window is created go here.
+    // OnInitialUpdate is called after the window is created.
+    // Tasks which are to be done after the window is created go here.
 
-	TRACE("OnInitialUpdate\n");
+    TRACE("OnInitialUpdate\n");
 }
 
 LRESULT CView::OnSize(UINT, WPARAM, LPARAM)
 {
-	// Force the window to be repainted during resizing
-	Invalidate();
-	return 0L;
+    // Force the window to be repainted during resizing
+    Invalidate();
+    return 0L;
 }
 
 LRESULT CView::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// Maximize and Minimuze requests end up here
+    // Maximize and Minimuze requests end up here
 
-	if (wParam == SC_MINIMIZE)	// User pressed minimize button
-	{
-		Minimize();
-		return 0L;
-	}
+    if (wParam == SC_MINIMIZE)  // User pressed minimize button
+    {
+        Minimize();
+        return 0L;
+    }
 
-	return FinalWindowProc(uMsg, wParam, lParam);
-}	
+    return FinalWindowProc(uMsg, wParam, lParam);
+}   
 
 LRESULT CView::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// For a NOTIFYICONDATA with uVersion= 0, wParam and lParam have the following values:
-	// The wParam parameter contains the identifier of the taskbar icon in which the event occurred.
-	// The lParam parameter holds the mouse or keyboard message associated with the event.
+    // For a NOTIFYICONDATA with uVersion= 0, wParam and lParam have the following values:
+    // The wParam parameter contains the identifier of the taskbar icon in which the event occurred.
+    // The lParam parameter holds the mouse or keyboard message associated with the event.
     UNREFERENCED_PARAMETER(uMsg);
-	
-	if (wParam != IDW_MAIN)
-		return 0L;
+    
+    if (wParam != IDW_MAIN)
+        return 0L;
 
-	if (lParam == WM_LBUTTONUP)
+    if (lParam == WM_LBUTTONUP)
     {
         Restore();
     }
     else if (lParam == WM_RBUTTONUP)
     {
-		CMenu TopMenu(IDM_MINIMIZED);
-		CMenu SubMenu = TopMenu.GetSubMenu(0);
+        CMenu TopMenu(IDM_MINIMIZED);
+        CMenu SubMenu = TopMenu.GetSubMenu(0);
 
         SetForegroundWindow();
-		CPoint pt = GetCursorPos();
-		UINT uSelected = SubMenu.TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, *this, NULL);
+        CPoint pt = GetCursorPos();
+        UINT uSelected = SubMenu.TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, *this, NULL);
 
-		switch (uSelected)
-		{
-		case IDM_MIN_RESTORE: Restore(); break;
-		case IDM_MIN_ABOUT:   OnAbout(); break;
-		case IDM_MIN_EXIT:    Destroy(); break;
-		}
+        switch (uSelected)
+        {
+        case IDM_MIN_RESTORE: Restore(); break;
+        case IDM_MIN_ABOUT:   OnAbout(); break;
+        case IDM_MIN_EXIT:    Destroy(); break;
+        }
     }
 
-	return 0;
+    return 0;
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
 {
-	// This function will be called automatically by Create. It provides an
-	// opportunity to set various window parameters prior to window creation.
-	// You are not required to set these parameters, any paramters which
-	// aren't specified are set to reasonable defaults.
+    // This function will be called automatically by Create. It provides an
+    // opportunity to set various window parameters prior to window creation.
+    // You are not required to set these parameters, any paramters which
+    // aren't specified are set to reasonable defaults.
 
-	// Set some optional parameters for the window
-	cs.dwExStyle = WS_EX_CLIENTEDGE;		// Extended style
-	cs.lpszClass = _T("View Window");		// Window Class
-	cs.x = 50;								// top x
-	cs.y = 50;								// top y
-	cs.cx = 400;							// width
-	cs.cy = 300;							// height
-	cs.hMenu =  LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
+    // Set some optional parameters for the window
+    cs.dwExStyle = WS_EX_CLIENTEDGE;        // Extended style
+    cs.lpszClass = _T("View Window");       // Window Class
+    cs.x = 50;                              // top x
+    cs.y = 50;                              // top y
+    cs.cx = 400;                            // width
+    cs.cy = 300;                            // height
+    cs.hMenu =  LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
 }
 
 void CView::Restore()
 {
     NOTIFYICONDATA nid;
-	ZeroMemory(&nid, sizeof(nid));
+    ZeroMemory(&nid, sizeof(nid));
     nid.cbSize = sizeof(NOTIFYICONDATA);
     nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;
@@ -185,17 +185,17 @@ void CView::Restore()
 
 LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	// This function is our message procedure. We process the messages for
-	// the view window here.  Unprocessed messages are passed on for
-	//  default processing.
+    // This function is our message procedure. We process the messages for
+    // the view window here.  Unprocessed messages are passed on for
+    //  default processing.
 
-	switch(uMsg)
-	{
-	case WM_SIZE:       return OnSize(uMsg, wParam, lParam);
-	case WM_SYSCOMMAND: return OnSysCommand(uMsg, wParam, lParam);
-	case MSG_TRAYICON:  return OnTrayIcon(uMsg, wParam, lParam);
-	}
+    switch(uMsg)
+    {
+    case WM_SIZE:       return OnSize(uMsg, wParam, lParam);
+    case WM_SYSCOMMAND: return OnSysCommand(uMsg, wParam, lParam);
+    case MSG_TRAYICON:  return OnTrayIcon(uMsg, wParam, lParam);
+    }
 
-	// pass unhandled messages on for default processing
-	return WndProcDefault(uMsg, wParam, lParam);
+    // pass unhandled messages on for default processing
+    return WndProcDefault(uMsg, wParam, lParam);
 }

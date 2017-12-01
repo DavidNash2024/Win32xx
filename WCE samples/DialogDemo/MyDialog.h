@@ -9,20 +9,20 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID);
-	virtual ~CMyDialog();
-	void AddToEdit();
-	void AddToListBox();
-	void AddToScrollBars();
-	void AddToComboBox();
-	void AddToButton();
+    CMyDialog(UINT nResID);
+    virtual ~CMyDialog();
+    void AddToEdit();
+    void AddToListBox();
+    void AddToScrollBars();
+    void AddToComboBox();
+    void AddToButton();
 
 private:
-	virtual BOOL OnInitDialog();
-	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual void OnOK();
+    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnOK();
 
-	int m_nCounter;
+    int m_nCounter;
 };
 
 #endif //MYDIALOG_H

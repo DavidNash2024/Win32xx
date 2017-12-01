@@ -11,13 +11,13 @@
 class CTabbedMDIApp : public CWinApp
 {
 public:
-	CTabbedMDIApp();
-	virtual ~CTabbedMDIApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CTabbedMDIApp();
+    virtual ~CTabbedMDIApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

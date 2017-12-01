@@ -13,9 +13,9 @@
 
 
 //Resource IDs for the dialog
-#define IDD_CLIENT						120
-#define IDC_EDIT_STATUS					121
-#define IDC_EDIT_PORT					122
+#define IDD_CLIENT                      120
+#define IDC_EDIT_STATUS                 121
+#define IDC_EDIT_PORT                   122
 #define IDC_EDIT_SEND                   123
 #define IDC_EDIT_RECEIVE                124
 #define IDC_BUTTON_START                125
@@ -24,9 +24,9 @@
 #define IDC_IPADDRESS                   128
 #define IDC_RADIO_TCP                   129
 #define IDC_RADIO_UDP                   130
-#define IDC_EDIT_IPV6ADDRESS			131
-#define IDC_RADIO_IPV4					132
-#define IDC_RADIO_IPV6					133
+#define IDC_EDIT_IPV6ADDRESS            131
+#define IDC_RADIO_IPV4                  132
+#define IDC_RADIO_IPV6                  133
 #define IDC_RADIO_GROUP                 134
 
 // Next default values for new objects

@@ -11,13 +11,13 @@
 class CTextApp : public CWinApp
 {
 public:
-	CTextApp(); 
-	virtual ~CTextApp()  {}
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CTextApp(); 
+    virtual ~CTextApp()  {}
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

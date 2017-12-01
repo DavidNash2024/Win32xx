@@ -13,7 +13,7 @@
 
 //Resource IDs for menu items and ToolBar items
 #define IDM_FILE_NEWDOCK                121
-#define IDM_FILE_NEWMDI	                122
+#define IDM_FILE_NEWMDI                 122
 #define IDM_FILE_OPEN                   123
 #define IDM_FILE_SAVE                   124
 #define IDM_FILE_SAVEAS                 125

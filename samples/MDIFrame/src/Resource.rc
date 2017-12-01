@@ -45,7 +45,7 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
-	POPUP "&Window"
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
@@ -195,10 +195,10 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "MDI Frame"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
-    IDW_READY               "Ready"	
+    IDW_READY               "Ready" 
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
     IDW_MDI_CASCADE         "Cascade MDI Windows"
@@ -211,8 +211,8 @@ BEGIN
     IDW_CHILD4              "Activate this window"
     IDW_CHILD5              "Activate this window"
     IDW_CHILD6              "Activate this window"
-	IDW_CHILD7              "Activate this window"
-	IDW_CHILD8              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
     IDW_CHILD9              "Activate this window"
     IDW_CHILD10             "Select a window"
 END
@@ -258,8 +258,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

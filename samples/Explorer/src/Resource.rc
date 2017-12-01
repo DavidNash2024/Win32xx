@@ -66,12 +66,12 @@ END
 IDM_VIEWMENU MENU
 BEGIN
     POPUP "View"
-	BEGIN
-		MENUITEM "Large Icons",                 IDM_VIEW_LARGEICON
-		MENUITEM "Small Icons",                 IDM_VIEW_SMALLICON
-		MENUITEM "List",                        IDM_VIEW_LIST
-		MENUITEM "Details",                     IDM_VIEW_REPORT
-	END
+    BEGIN
+        MENUITEM "Large Icons",                 IDM_VIEW_LARGEICON
+        MENUITEM "Small Icons",                 IDM_VIEW_SMALLICON
+        MENUITEM "List",                        IDM_VIEW_LIST
+        MENUITEM "Details",                     IDM_VIEW_REPORT
+    END
 END
 
 
@@ -130,7 +130,7 @@ BEGIN
     "C",            IDM_EDIT_COPY,           VIRTKEY, CONTROL, NOINVERT
     "X",            IDM_EDIT_CUT,            VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,          VIRTKEY, CONTROL, NOINVERT
-	"Y",            IDM_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
+    "Y",            IDM_EDIT_REDO,           VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,           VIRTKEY, CONTROL, NOINVERT
     "N",            IDM_FILE_NEW,            VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,           VIRTKEY, CONTROL, NOINVERT
@@ -175,10 +175,10 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                 "Simple Explorer"
-	IDW_INDICATOR_CAPS       "CAP"
+    IDW_INDICATOR_CAPS       "CAP"
     IDW_INDICATOR_NUM        "NUM"
     IDW_INDICATOR_SCRL       "SCRL"
-    IDW_READY                "Ready"	
+    IDW_READY                "Ready"    
 END
 
 STRINGTABLE
@@ -228,8 +228,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	SC_NEXTWINDOW           "Select Next Window"
-	SC_PREVWINDOW           "Select Previous Window"
+    SC_NEXTWINDOW           "Select Next Window"
+    SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

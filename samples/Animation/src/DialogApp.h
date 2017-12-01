@@ -11,12 +11,12 @@
 class CDialogApp : public CWinApp
 {
 public:
-	CDialogApp(); 
-	virtual ~CDialogApp();
-	virtual BOOL InitInstance();
+    CDialogApp(); 
+    virtual ~CDialogApp();
+    virtual BOOL InitInstance();
 
 private:
-	CMyDialog m_MyDialog;
+    CMyDialog m_MyDialog;
 };
 
 // returns a reference to the CDialogApp object

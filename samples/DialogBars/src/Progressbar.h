@@ -9,10 +9,10 @@
 class CMyProgressBar : public CProgressBar
 {
 public:
-	CMyProgressBar() {}
-	virtual ~CMyProgressBar() {}
-	
-	void SetProgress(int nPos);
+    CMyProgressBar() {}
+    virtual ~CMyProgressBar() {}
+    
+    void SetProgress(int nPos);
 };
 
 

@@ -45,7 +45,7 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
-	POPUP "&Window"
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
@@ -166,7 +166,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT	
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT  
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
@@ -212,7 +212,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "MDI Frame with MDI children splitter windows"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"
@@ -228,8 +228,8 @@ BEGIN
     IDW_CHILD4              "Activate this window"
     IDW_CHILD5              "Activate this window"
     IDW_CHILD6              "Activate this window"
-	IDW_CHILD7              "Activate this window"
-	IDW_CHILD8              "Activate this window"
+    IDW_CHILD7              "Activate this window"
+    IDW_CHILD8              "Activate this window"
     IDW_CHILD9              "Activate this window"
     IDW_CHILD10             "Select a window"
 END
@@ -275,8 +275,8 @@ BEGIN
     SC_MAXIMIZE             "Maximize the Window"
     SC_MINIMIZE             "Minimize the WIndow"
     SC_MOVE                 "Move the Window"
-	  SC_NEXTWINDOW           "Select Next Window"
-	  SC_PREVWINDOW           "Select Previous Window"
+      SC_NEXTWINDOW           "Select Next Window"
+      SC_PREVWINDOW           "Select Previous Window"
     SC_RESTORE              "Restore the Window"
     SC_SIZE                 "Resize the Window"
 END

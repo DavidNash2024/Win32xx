@@ -13,8 +13,8 @@ class CRibbonFrameApp : public CWinApp
 public:
     CRibbonFrameApp();
     virtual ~CRibbonFrameApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
     CMainFrame m_Frame;
