@@ -11,12 +11,12 @@
 class CButton : public CWnd
 {
 public:
-	CButton() {}
-	virtual ~CButton();
-	virtual void PreCreate(CREATESTRUCT &cs);
+    CButton() {}
+    virtual ~CButton();
+    virtual void PreCreate(CREATESTRUCT &cs);
 
 protected:
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 };
 

@@ -11,9 +11,9 @@ CDXApp::CDXApp()
 
 BOOL CDXApp::InitInstance()
 {
-	//Create the Window
-	m_Frame.Create();
+    //Create the Window
+    m_Frame.Create();
 
-	return TRUE;
+    return TRUE;
 }
 

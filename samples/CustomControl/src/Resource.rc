@@ -50,7 +50,7 @@ EXSTYLE WS_EX_APPWINDOW
 CAPTION "Resizable dialog with a Custom Control"
 FONT 8, "MS Shell Dlg", 0, 0
 BEGIN
-	CONTROL      "", IDC_CUSTOMWEB, "WebControl", 0, 11,23,288,146
+    CONTROL      "", IDC_CUSTOMWEB, "WebControl", 0, 11,23,288,146
 END
 
 

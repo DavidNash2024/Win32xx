@@ -7,23 +7,23 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	try
-	{
-		// Start Win32++
-		CApp theApp;
+    try
+    {
+        // Start Win32++
+        CApp theApp;
 
-		// Run the application
-		return theApp.Run();
-	}
-	
-	// catch all unhandled CException types
-	catch (const CException &e)
-	{
-		// Display the exception and quit
-		MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+        // Run the application
+        return theApp.Run();
+    }
+    
+    // catch all unhandled CException types
+    catch (const CException &e)
+    {
+        // Display the exception and quit
+        MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
-		return -1;
-	}
+        return -1;
+    }
 }
 
 
@@ -38,9 +38,9 @@ CApp::~CApp()
 
 BOOL CApp::InitInstance()
 {
-	//Create the Frame Window
-	m_Frame.Create();	// throws a CWinException on failure  
+    //Create the Frame Window
+    m_Frame.Create();   // throws a CWinException on failure  
 
-	return TRUE;
+    return TRUE;
 }
 

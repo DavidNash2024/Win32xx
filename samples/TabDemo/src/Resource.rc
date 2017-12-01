@@ -38,7 +38,7 @@ BEGIN
     BEGIN
         MENUITEM "New Files Tab",               IDM_NEW_FILES
         MENUITEM "New Classes Tab",             IDM_NEW_CLASSES
-		MENUITEM "New Dialog Tab",              IDM_NEW_DIALOG
+        MENUITEM "New Dialog Tab",              IDM_NEW_DIALOG
         MENUITEM "Close Tab",                   IDM_CLOSE_TAB
         MENUITEM SEPARATOR
         MENUITEM "E&xit",                       IDM_FILE_EXIT
@@ -61,8 +61,8 @@ BEGIN
     POPUP "&Options"
     BEGIN
         MENUITEM "Owner Draw",                  IDM_TAB_DRAW, CHECKED
-		MENUITEM "Fixed Tab Width",             IDM_TAB_FIXED, CHECKED
-		MENUITEM SEPARATOR
+        MENUITEM "Fixed Tab Width",             IDM_TAB_FIXED, CHECKED
+        MENUITEM SEPARATOR
         MENUITEM "Tabs at Top",                 IDM_TAB_TOP, CHECKED
         MENUITEM "Show Buttons",                IDM_TAB_BUTTONS, CHECKED
     END
@@ -78,7 +78,7 @@ BEGIN
     BEGIN
         MENUITEM "New Files Tab",               IDM_NEW_FILES
         MENUITEM "New Classes Tab",             IDM_NEW_CLASSES
-		MENUITEM "New Dialog Tab",              IDM_NEW_DIALOG
+        MENUITEM "New Dialog Tab",              IDM_NEW_DIALOG
     END
 END
 
@@ -195,7 +195,7 @@ BEGIN
     IDW_MAIN                "Tab Demo"
     IDW_VIEW_TOOLBAR        "Show or hide the tool bar"
     IDW_VIEW_STATUSBAR      "Show or hide the status bar"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"
@@ -220,8 +220,8 @@ BEGIN
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
-	IDM_NEW_TAB             "Add a new tab"
-	IDM_CLOSE_TAB           "Close the tab"
+    IDM_NEW_TAB             "Add a new tab"
+    IDM_CLOSE_TAB           "Close the tab"
     IDM_TAB_DRAW            "Enable Owner Draw"
     IDM_TAB_FIXED           "Use fixed width tabs"
     IDM_TAB_TOP             "Place tabs at the top of the control"

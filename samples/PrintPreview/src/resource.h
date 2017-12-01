@@ -45,8 +45,8 @@
 #define IDI_PRINT                       173
 
 // user defined window messages
-#define UWM_CHANGEVIEW     (WM_APP + 0x0001)	// wParam and lParam are ignored
-#define UWM_PRINTNOW       (WM_APP + 0x0002)	// wParam and lParam are ignored	
+#define UWM_CHANGEVIEW     (WM_APP + 0x0001)    // wParam and lParam are ignored
+#define UWM_PRINTNOW       (WM_APP + 0x0002)    // wParam and lParam are ignored    
 
 // Next default values for new objects
 // 

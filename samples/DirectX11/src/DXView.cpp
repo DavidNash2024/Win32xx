@@ -43,7 +43,7 @@ HRESULT CompileShaderFromFile(WCHAR* szFileName, LPCSTR szEntryPoint, LPCSTR szS
 //--------------------------------------------------------------------------------------
 CDXView::~CDXView()
 {
-	CleanupDevice();
+    CleanupDevice();
 }
 
 //--------------------------------------------------------------------------------------
@@ -51,21 +51,21 @@ CDXView::~CDXView()
 //--------------------------------------------------------------------------------------
 void CDXView::CleanupDevice()
 {
-	if (m_pImmediateContext) m_pImmediateContext->ClearState();
+    if (m_pImmediateContext) m_pImmediateContext->ClearState();
 
-	if (m_pConstantBuffer) m_pConstantBuffer->Release();
-	if (m_pVertexBuffer) m_pVertexBuffer->Release();
-	if (m_pIndexBuffer) m_pIndexBuffer->Release();
-	if (m_pVertexLayout) m_pVertexLayout->Release();
-	if (m_pVertexShader) m_pVertexShader->Release();
-	if (m_pPixelShader) m_pPixelShader->Release();
-	if (m_pRenderTargetView) m_pRenderTargetView->Release();
-	if (m_pSwapChain1) m_pSwapChain1->Release();
-	if (m_pSwapChain) m_pSwapChain->Release();
-	if (m_pImmediateContext1) m_pImmediateContext1->Release();
-	if (m_pImmediateContext) m_pImmediateContext->Release();
-	if (m_pd3dDevice1) m_pd3dDevice1->Release();
-	if (m_pd3dDevice) m_pd3dDevice->Release();
+    if (m_pConstantBuffer) m_pConstantBuffer->Release();
+    if (m_pVertexBuffer) m_pVertexBuffer->Release();
+    if (m_pIndexBuffer) m_pIndexBuffer->Release();
+    if (m_pVertexLayout) m_pVertexLayout->Release();
+    if (m_pVertexShader) m_pVertexShader->Release();
+    if (m_pPixelShader) m_pPixelShader->Release();
+    if (m_pRenderTargetView) m_pRenderTargetView->Release();
+    if (m_pSwapChain1) m_pSwapChain1->Release();
+    if (m_pSwapChain) m_pSwapChain->Release();
+    if (m_pImmediateContext1) m_pImmediateContext1->Release();
+    if (m_pImmediateContext) m_pImmediateContext->Release();
+    if (m_pd3dDevice1) m_pd3dDevice1->Release();
+    if (m_pd3dDevice) m_pd3dDevice->Release();
 }
 
 //--------------------------------------------------------------------------------------
@@ -100,7 +100,7 @@ HRESULT CDXView::InitDevice()
         D3D_FEATURE_LEVEL_10_1,
         D3D_FEATURE_LEVEL_10_0,
     };
-	UINT numFeatureLevels = ARRAYSIZE(featureLevels);
+    UINT numFeatureLevels = ARRAYSIZE(featureLevels);
 
     for (UINT driverTypeIndex = 0; driverTypeIndex < numDriverTypes; driverTypeIndex++)
     {
@@ -232,34 +232,34 @@ HRESULT CDXView::InitDevice()
         return hr;
     }
 
-	// Create the vertex shader
-	hr = m_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_pVertexShader);
-	if (FAILED(hr))
-	{	
-		pVSBlob->Release();
+    // Create the vertex shader
+    hr = m_pd3dDevice->CreateVertexShader(pVSBlob->GetBufferPointer(), pVSBlob->GetBufferSize(), nullptr, &m_pVertexShader);
+    if (FAILED(hr))
+    {   
+        pVSBlob->Release();
         return hr;
-	}
+    }
 
     // Define the input layout
     D3D11_INPUT_ELEMENT_DESC layout[] =
     {
         { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
         { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-	};
-	UINT numElements = ARRAYSIZE( layout );
+    };
+    UINT numElements = ARRAYSIZE( layout );
 
     // Create the input layout
-	hr = m_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
+    hr = m_pd3dDevice->CreateInputLayout(layout, numElements, pVSBlob->GetBufferPointer(),
                                           pVSBlob->GetBufferSize(), &m_pVertexLayout);
-	pVSBlob->Release();
-	if (FAILED(hr))
+    pVSBlob->Release();
+    if (FAILED(hr))
         return hr;
 
     // Set the input layout
     m_pImmediateContext->IASetInputLayout(m_pVertexLayout);
 
-	// Compile the pixel shader
-	ID3DBlob* pPSBlob = nullptr;
+    // Compile the pixel shader
+    ID3DBlob* pPSBlob = nullptr;
     hr = CompileShaderFromFile(L"DirectX11.fx", "PS", "ps_4_0", &pPSBlob);
     if (FAILED(hr))
     {
@@ -268,9 +268,9 @@ HRESULT CDXView::InitDevice()
         return hr;
     }
 
-	// Create the pixel shader
-	hr = m_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pPixelShader);
-	pPSBlob->Release();
+    // Create the pixel shader
+    hr = m_pd3dDevice->CreatePixelShader(pPSBlob->GetBufferPointer(), pPSBlob->GetBufferSize(), nullptr, &m_pPixelShader);
+    pPSBlob->Release();
     if (FAILED(hr))
         return hr;
 
@@ -287,13 +287,13 @@ HRESULT CDXView::InitDevice()
         { XMFLOAT3( -1.0f, -1.0f, 1.0f ), XMFLOAT4( 0.0f, 0.0f, 0.0f, 1.0f ) },
     };
     D3D11_BUFFER_DESC bd;
-	ZeroMemory(&bd, sizeof(bd));
+    ZeroMemory(&bd, sizeof(bd));
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof(SimpleVertex) * 8;
     bd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	bd.CPUAccessFlags = 0;
+    bd.CPUAccessFlags = 0;
     D3D11_SUBRESOURCE_DATA InitData;
-	ZeroMemory(&InitData, sizeof(InitData));
+    ZeroMemory(&InitData, sizeof(InitData));
     InitData.pSysMem = vertices;
     hr = m_pd3dDevice->CreateBuffer( &bd, &InitData, &m_pVertexBuffer );
     if (FAILED(hr))
@@ -328,7 +328,7 @@ HRESULT CDXView::InitDevice()
     bd.Usage = D3D11_USAGE_DEFAULT;
     bd.ByteWidth = sizeof(WORD) * 36;        // 36 vertices needed for 12 triangles in a triangle list
     bd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	bd.CPUAccessFlags = 0;
+    bd.CPUAccessFlags = 0;
     InitData.pSysMem = indices;
     hr = m_pd3dDevice->CreateBuffer(&bd, &InitData, &m_pIndexBuffer);
     if (FAILED(hr))
@@ -340,57 +340,57 @@ HRESULT CDXView::InitDevice()
     // Set primitive topology
     m_pImmediateContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-	// Create the constant buffer
-	bd.Usage = D3D11_USAGE_DEFAULT;
-	bd.ByteWidth = sizeof(ConstantBuffer);
-	bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	bd.CPUAccessFlags = 0;
+    // Create the constant buffer
+    bd.Usage = D3D11_USAGE_DEFAULT;
+    bd.ByteWidth = sizeof(ConstantBuffer);
+    bd.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+    bd.CPUAccessFlags = 0;
     hr = m_pd3dDevice->CreateBuffer(&bd, nullptr, &m_pConstantBuffer);
     if (FAILED(hr))
         return hr;
 
     // Initialize the world matrix
-	m_World = XMMatrixIdentity();
+    m_World = XMMatrixIdentity();
 
     // Initialize the view matrix
-	XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
-	XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-	m_View = XMMatrixLookAtLH(Eye, At, Up);
+    XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
+    XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
+    m_View = XMMatrixLookAtLH(Eye, At, Up);
 
     // Initialize the projection matrix
-	m_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f);
+    m_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f);
 
     return S_OK;
 }
 
 int CDXView::OnCreate(CREATESTRUCT& cs)
 {
-	// OnCreate is called automatically during window creation when a
-	// WM_CREATE message received.
+    // OnCreate is called automatically during window creation when a
+    // WM_CREATE message received.
 
-	// Tasks such as setting the icon, creating child windows, or anything
-	// associated with creating windows are normally performed here.
+    // Tasks such as setting the icon, creating child windows, or anything
+    // associated with creating windows are normally performed here.
 
-	UNREFERENCED_PARAMETER(cs);
+    UNREFERENCED_PARAMETER(cs);
 
-	// Set the window's icon
-	SetIconSmall(IDI_DIRECTX11);
-	SetIconLarge(IDI_DIRECTX11);
+    // Set the window's icon
+    SetIconSmall(IDI_DIRECTX11);
+    SetIconLarge(IDI_DIRECTX11);
 
-	// Set the window title
-	SetWindowText(LoadString(IDS_APP_TITLE));
+    // Set the window title
+    SetWindowText(LoadString(IDS_APP_TITLE));
 
-	if (FAILED(InitDevice()))
-	{
-		MessageBox(_T("DirectX Failed to Initialize"), _T("Error"), MB_OK);
-		
-		// Window creation failed
-		return -1;
-	}
+    if (FAILED(InitDevice()))
+    {
+        MessageBox(_T("DirectX Failed to Initialize"), _T("Error"), MB_OK);
+        
+        // Window creation failed
+        return -1;
+    }
 
-	TRACE("OnCreate\n");
-	return 0;
+    TRACE("OnCreate\n");
+    return 0;
 }
 
 //--------------------------------------------------------------------------------------
@@ -398,8 +398,8 @@ int CDXView::OnCreate(CREATESTRUCT& cs)
 //--------------------------------------------------------------------------------------
 void CDXView::PreCreate(CREATESTRUCT& cs)
 {
-	cs.cx = 800;
-	cs.cy = 600;
+    cs.cx = 800;
+    cs.cy = 600;
 }
 
 //--------------------------------------------------------------------------------------
@@ -425,7 +425,7 @@ void CDXView::Render()
     //
     // Animate the cube
     //
-	m_World = XMMatrixRotationY( t );
+    m_World = XMMatrixRotationY( t );
 
     //
     // Clear the back buffer
@@ -436,18 +436,18 @@ void CDXView::Render()
     // Update variables
     //
     ConstantBuffer cb;
-	cb.mWorld = XMMatrixTranspose(m_World);
-	cb.mView = XMMatrixTranspose(m_View);
-	cb.mProjection = XMMatrixTranspose(m_Projection);
-	m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
+    cb.mWorld = XMMatrixTranspose(m_World);
+    cb.mView = XMMatrixTranspose(m_View);
+    cb.mProjection = XMMatrixTranspose(m_Projection);
+    m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     //
     // Renders a triangle
     //
-	m_pImmediateContext->VSSetShader(m_pVertexShader, nullptr, 0);
-	m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
-	m_pImmediateContext->PSSetShader(m_pPixelShader, nullptr, 0);
-	m_pImmediateContext->DrawIndexed(36, 0, 0);        // 36 vertices needed for 12 triangles in a triangle list
+    m_pImmediateContext->VSSetShader(m_pVertexShader, nullptr, 0);
+    m_pImmediateContext->VSSetConstantBuffers(0, 1, &m_pConstantBuffer);
+    m_pImmediateContext->PSSetShader(m_pPixelShader, nullptr, 0);
+    m_pImmediateContext->DrawIndexed(36, 0, 0);        // 36 vertices needed for 12 triangles in a triangle list
 
     //
     // Present our back buffer to our front buffer
@@ -460,20 +460,20 @@ void CDXView::Render()
 //--------------------------------------------------------------------------------------
 LRESULT CDXView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
-	PAINTSTRUCT ps;
-	HDC hdc;
+    PAINTSTRUCT ps;
+    HDC hdc;
 
-	switch (uMsg)
-	{
-	case WM_PAINT:
-		hdc = BeginPaint(ps);
-		EndPaint(ps);
-		break;
+    switch (uMsg)
+    {
+    case WM_PAINT:
+        hdc = BeginPaint(ps);
+        EndPaint(ps);
+        break;
 
-	case WM_DESTROY:
-		PostQuitMessage(0);
-		break;
-	}
+    case WM_DESTROY:
+        PostQuitMessage(0);
+        break;
+    }
 
-	return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(uMsg, wParam, lParam);
 }

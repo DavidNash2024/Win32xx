@@ -7,11 +7,11 @@
 class CDXApp : public CWinApp
 {
 public:
-	virtual BOOL InitInstance();
-	virtual int MessageLoop();
+    virtual BOOL InitInstance();
+    virtual int MessageLoop();
 
 private:
-	CDXView m_DXView;
+    CDXView m_DXView;
 
 };
 

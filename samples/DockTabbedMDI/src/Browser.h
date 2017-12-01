@@ -10,9 +10,9 @@
 class CViewWeb : public CWebBrowser
 {
 public:
-	CViewWeb() {}
-	virtual ~CViewWeb() {}
-	virtual int OnCreate(CREATESTRUCT& cs);
+    CViewWeb() {}
+    virtual ~CViewWeb() {}
+    virtual int OnCreate(CREATESTRUCT& cs);
 
 };
 

@@ -12,13 +12,13 @@
 class CPerformanceApp : public CWinApp
 {
 public:
-	CPerformanceApp();
-	virtual ~CPerformanceApp();
-	virtual BOOL InitInstance();
-	CMainWindow& GetMainWnd() {return m_MainWnd;}
+    CPerformanceApp();
+    virtual ~CPerformanceApp();
+    virtual BOOL InitInstance();
+    CMainWindow& GetMainWnd() {return m_MainWnd;}
 
 private:
-	CMainWindow m_MainWnd;	
+    CMainWindow m_MainWnd;  
 };
 
 

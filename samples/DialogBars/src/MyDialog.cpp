@@ -17,54 +17,54 @@ CMyDialog::~CMyDialog()
 
 void CMyDialog::OnDestroy()
 {
-	// End the application
-	::PostQuitMessage(0);
+    // End the application
+    ::PostQuitMessage(0);
 }
 
 BOOL CMyDialog::OnInitDialog()
 {
-	// Set the Icon
-	SetIconLarge(IDW_MAIN);
-	SetIconSmall(IDW_MAIN);
+    // Set the Icon
+    SetIconLarge(IDW_MAIN);
+    SetIconSmall(IDW_MAIN);
 
-	// Attach the dialog items to the CWnd objects
-	AttachItem(IDC_PROGRESS1, m_ProgressBar);
-	AttachItem(IDC_SCROLLBAR1, m_ScrollBar);
-	AttachItem(IDC_SLIDER1, m_Slider);
+    // Attach the dialog items to the CWnd objects
+    AttachItem(IDC_PROGRESS1, m_ProgressBar);
+    AttachItem(IDC_SCROLLBAR1, m_ScrollBar);
+    AttachItem(IDC_SLIDER1, m_Slider);
 
-	return TRUE;
+    return TRUE;
 }
 
 void CMyDialog::OnOK()
 {
-	MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
-	CDialog::OnOK();
+    MessageBox(_T("OK Button Pressed.  Program will exit now."), _T("Button"), MB_OK);
+    CDialog::OnOK();
 }
 
 void CMyDialog::SetProgress(int nPos)
 {
-	m_ProgressBar.SetProgress(nPos);
+    m_ProgressBar.SetProgress(nPos);
 }
 
 void CMyDialog::SetScroll(int nPos)
 {
-	m_ScrollBar.SetScroll(nPos);
+    m_ScrollBar.SetScroll(nPos);
 }
 
 void CMyDialog::SetSlider(int nPos)
 {
-	m_Slider.SetPos(nPos, TRUE);
+    m_Slider.SetPos(nPos, TRUE);
 }
 
 void CMyDialog::SetStatic(BOOL IsSlider, int nPos)
 {
-	CString str;
-	if (IsSlider)
-		str.Format(_T("Slider Position %d"), nPos);
-	else
-		str.Format(_T("Scroll Position %d"), nPos);
+    CString str;
+    if (IsSlider)
+        str.Format(_T("Slider Position %d"), nPos);
+    else
+        str.Format(_T("Scroll Position %d"), nPos);
 
-	// Set the text in the static control
-	SetDlgItemText(IDC_STATIC2, str);
+    // Set the text in the static control
+    SetDlgItemText(IDC_STATIC2, str);
 }
 

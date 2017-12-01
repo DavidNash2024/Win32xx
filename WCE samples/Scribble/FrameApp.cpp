@@ -6,9 +6,9 @@ CWceFrameApp::CWceFrameApp()
 
 BOOL CWceFrameApp::InitInstance()
 {
-	//Create the Window
+    //Create the Window
     m_Frame.Create();
 
-	return TRUE;
+    return TRUE;
 }
 

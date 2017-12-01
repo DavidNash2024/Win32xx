@@ -8,7 +8,7 @@
 // User defined message
 #define USER_ACCEPT     WM_APP+1
 #define USER_CONNECT    WM_APP+2
-#define USER_DISCONNECT	WM_APP+3
+#define USER_DISCONNECT WM_APP+3
 #define USER_RECEIVE    WM_APP+4
 
 
@@ -48,11 +48,11 @@
 class CServerSocket : public CSocket
 {
 public:
-	CServerSocket() { }
-	virtual ~CServerSocket() { }
-	virtual void OnAccept();
-	virtual void OnDisconnect();
-	virtual void OnReceive();
+    CServerSocket() { }
+    virtual ~CServerSocket() { }
+    virtual void OnAccept();
+    virtual void OnDisconnect();
+    virtual void OnReceive();
 };
 
 

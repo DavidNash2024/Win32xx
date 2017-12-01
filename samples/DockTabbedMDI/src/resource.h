@@ -57,17 +57,17 @@
 
 //Resource IDs for the dialog
 #define IDD_MYDIALOG                    161
-#define IDC_RADIO1						162
-#define IDC_RADIO2						163
-#define IDC_RADIO3						164
-#define IDC_CHECK1						165
-#define IDC_CHECK2						166
-#define IDC_CHECK3						167
-#define IDC_EDIT1						170
-#define IDC_LIST1						171
-#define IDC_BUTTON1						172
-#define IDC_RICHEDIT1					173
-#define IDC_RICHEDIT2					174
+#define IDC_RADIO1                      162
+#define IDC_RADIO2                      163
+#define IDC_RADIO3                      164
+#define IDC_CHECK1                      165
+#define IDC_CHECK2                      166
+#define IDC_CHECK3                      167
+#define IDC_EDIT1                       170
+#define IDC_LIST1                       171
+#define IDC_BUTTON1                     172
+#define IDC_RICHEDIT1                   173
+#define IDC_RICHEDIT2                   174
 #define IDC_STATIC1                     180
 #define IDC_STATIC2                     181
 #define IDC_STATIC3                     182

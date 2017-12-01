@@ -12,8 +12,8 @@ class CMDIFrameSplitterApp : public CWinApp
 public:
     CMDIFrameSplitterApp();
     virtual ~CMDIFrameSplitterApp() {}
-	virtual BOOL InitInstance();
-	CMainMDIFrame& GetMDIFrame() { return m_MainMDIFrame; }
+    virtual BOOL InitInstance();
+    CMainMDIFrame& GetMDIFrame() { return m_MainMDIFrame; }
 
 private:
     CMainMDIFrame m_MainMDIFrame;

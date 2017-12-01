@@ -10,15 +10,15 @@
 class CViewSimple : public CWnd
 {
 public:
-	CViewSimple();
-	virtual void OnDraw(CDC& dc);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
-	COLORREF GetColor() {return m_Color;}
-	void SetColor(COLORREF color) { m_Color = color; }
+    CViewSimple();
+    virtual void OnDraw(CDC& dc);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    
+    COLORREF GetColor() {return m_Color;}
+    void SetColor(COLORREF color) { m_Color = color; }
 
 private:
-	COLORREF m_Color;
+    COLORREF m_Color;
 };
 
 
@@ -26,18 +26,18 @@ private:
 class CMDIChildSimple : public CMDIChild
 {
 public:
-	CMDIChildSimple();
-	virtual ~CMDIChildSimple();
+    CMDIChildSimple();
+    virtual ~CMDIChildSimple();
 
 protected:
-	virtual void OnClose();
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(CREATESTRUCT& cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnClose();
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CViewSimple m_View;
-	CMenu m_Menu;
+    CViewSimple m_View;
+    CMenu m_Menu;
 };
 
 #endif  //MDICHILDVIEW_H

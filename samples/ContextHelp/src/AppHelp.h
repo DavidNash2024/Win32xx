@@ -12,22 +12,22 @@
 class CAppHelp
 {
 public:
-	CAppHelp();
-	~CAppHelp() {}
-	
-	void About(HWND hParent = 0);
-	void AddHelpTopic(UINT nID, LPCTSTR topic);
-	void SetCommandHelpTopics();
-	void SetClientHelpTopics();
-	void SetCredits(LPCTSTR szCredits);
-	void SetFrameHelpTopics();
-	void SetHelpFilePath(LPCTSTR chmName);
-	void ShowHelpTopic(UINT nID);
-	void ShowHelpTopic(LPCTSTR topic);
+    CAppHelp();
+    ~CAppHelp() {}
+    
+    void About(HWND hParent = 0);
+    void AddHelpTopic(UINT nID, LPCTSTR topic);
+    void SetCommandHelpTopics();
+    void SetClientHelpTopics();
+    void SetCredits(LPCTSTR szCredits);
+    void SetFrameHelpTopics();
+    void SetHelpFilePath(LPCTSTR chmName);
+    void ShowHelpTopic(UINT nID);
+    void ShowHelpTopic(LPCTSTR topic);
 
 private:
-	CContextHelp m_ContextHelp;
-	CHelpAbout m_HelpAbout;
+    CContextHelp m_ContextHelp;
+    CHelpAbout m_HelpAbout;
 };
 
 

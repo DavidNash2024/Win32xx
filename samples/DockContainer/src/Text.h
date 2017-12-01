@@ -10,12 +10,12 @@
 class CViewText : public CRichEdit
 {
 public:
-	CViewText();
-	virtual ~CViewText();
+    CViewText();
+    virtual ~CViewText();
 
 protected:
-	virtual void PreCreate(CREATESTRUCT& cs); 
-	virtual void OnAttach(); 
+    virtual void PreCreate(CREATESTRUCT& cs); 
+    virtual void OnAttach(); 
 
 };
 
@@ -23,22 +23,22 @@ protected:
 class CContainText : public CDockContainer
 {
 public:
-	CContainText();
-	~CContainText() {}
+    CContainText();
+    ~CContainText() {}
 
 private:
-	CViewText m_ViewText;
+    CViewText m_ViewText;
 };
 
 // Declaration of the CDockText class
 class CDockText : public CDocker
 {
 public:
-	CDockText();
-	virtual ~CDockText() {}
+    CDockText();
+    virtual ~CDockText() {}
 
 private:
-	CContainText m_View;
+    CContainText m_View;
 
 };
 

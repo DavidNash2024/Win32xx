@@ -13,8 +13,8 @@ class CDXApp : public CWinApp
 public:
     CDXApp();
     virtual ~CDXApp() {}
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
     CMainFrame m_Frame;

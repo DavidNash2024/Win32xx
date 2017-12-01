@@ -11,13 +11,13 @@
 class CToolBarDemoApp : public CWinApp
 {
 public:
-	CToolBarDemoApp();
-	virtual ~CToolBarDemoApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CToolBarDemoApp();
+    virtual ~CToolBarDemoApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

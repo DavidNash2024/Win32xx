@@ -13,12 +13,12 @@
 class CViewOutput : public CRichEdit
 {
 public:
-	CViewOutput();
-	virtual ~CViewOutput();
+    CViewOutput();
+    virtual ~CViewOutput();
 
 protected:
-	virtual void OnAttach();
-	virtual void PreCreate(CREATESTRUCT& cs); 
+    virtual void OnAttach();
+    virtual void PreCreate(CREATESTRUCT& cs); 
 
 };
 
@@ -26,29 +26,29 @@ protected:
 class CContainOutput : public CDockContainer
 {
 public:
-	CContainOutput() 
-	{
-		SetView(m_ViewOutput); 
-		SetDockCaption (_T("Output View - Docking container"));
-		SetTabText(_T("Output"));
-		SetTabIcon(IDI_TEXT);
-	} 
-	~CContainOutput() {}
+    CContainOutput() 
+    {
+        SetView(m_ViewOutput); 
+        SetDockCaption (_T("Output View - Docking container"));
+        SetTabText(_T("Output"));
+        SetTabIcon(IDI_TEXT);
+    } 
+    ~CContainOutput() {}
 
 private:
-	CViewOutput m_ViewOutput;
+    CViewOutput m_ViewOutput;
 };
 
 // Declaration of the CDockText class
 class CDockOutput : public CDocker
 {
 public:
-	CDockOutput();
-	virtual ~CDockOutput() {}
-	virtual int OnCreate(CREATESTRUCT& cs);
+    CDockOutput();
+    virtual ~CDockOutput() {}
+    virtual int OnCreate(CREATESTRUCT& cs);
 
 private:
-	CContainOutput m_View;
+    CContainOutput m_View;
 
 };
 

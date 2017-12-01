@@ -10,8 +10,8 @@ class CWceFrameApp : public CWinApp
 public:
     CWceFrameApp();
     virtual ~CWceFrameApp() {}
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
     CMainFrame m_Frame;

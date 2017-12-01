@@ -13,8 +13,8 @@ class CRoundApp : public CWinApp
 public:
     CRoundApp();
     virtual ~CRoundApp() {}
-	virtual BOOL InitInstance();
-	CView& GetView() { return m_View; }
+    virtual BOOL InitInstance();
+    CView& GetView() { return m_View; }
 
 private:
     CView m_View;

@@ -11,13 +11,13 @@
 class CDoubleBufferApp : public CWinApp
 {
 public:
-	CDoubleBufferApp();
-	virtual ~CDoubleBufferApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CDoubleBufferApp();
+    virtual ~CDoubleBufferApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

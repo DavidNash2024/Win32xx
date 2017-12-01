@@ -5,10 +5,10 @@
 class CWebControl : public CWebBrowser
 {
 public: 
-	CWebControl();
+    CWebControl();
 
 protected:
-	virtual void OnInitialUpdate();
+    virtual void OnInitialUpdate();
 };
 
 

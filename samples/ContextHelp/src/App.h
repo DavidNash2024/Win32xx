@@ -11,13 +11,13 @@
 class CApp : public CWinApp
 {
 public:
-  CApp();
-  virtual ~CApp();
-  virtual BOOL InitInstance();
-  CMainFrame& GetMainFrame() { return m_Frame; }
+    CApp();
+    virtual ~CApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-  CMainFrame m_Frame;
+    CMainFrame m_Frame;
 
 };
 

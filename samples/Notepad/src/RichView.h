@@ -8,16 +8,16 @@
 class CRichView : public CRichEdit
 {
 public:
-	CRichView();
-	virtual ~CRichView();
-	virtual void SetFontDefaults();
+    CRichView();
+    virtual ~CRichView();
+    virtual void SetFontDefaults();
 
 protected:
-	virtual void OnAttach();
-	virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void OnAttach();
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CFont   m_Font;
+    CFont   m_Font;
 
 };
 

@@ -11,13 +11,13 @@
 class CDlgSubclassApp : public CWinApp
 {
 public:
-	CDlgSubclassApp();
-	virtual ~CDlgSubclassApp();
-	virtual BOOL InitInstance();
-	CMyDialog& GetDialog() {return m_MyDialog;}
+    CDlgSubclassApp();
+    virtual ~CDlgSubclassApp();
+    virtual BOOL InitInstance();
+    CMyDialog& GetDialog() {return m_MyDialog;}
 
 private:
-	CMyDialog m_MyDialog;
+    CMyDialog m_MyDialog;
 };
 
 

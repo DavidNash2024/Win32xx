@@ -12,13 +12,13 @@
 class CFormApp : public CWinApp
 {
 public:
-  CFormApp();
-  virtual ~CFormApp();
-  virtual BOOL InitInstance();
-  CMainFrame& GetMainFrame() { return m_Frame; }
+    CFormApp();
+    virtual ~CFormApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-  CMainFrame m_Frame;
+    CMainFrame m_Frame;
 
 };
 

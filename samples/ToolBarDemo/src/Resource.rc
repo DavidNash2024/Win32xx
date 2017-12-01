@@ -62,8 +62,8 @@ BEGIN
     END
     POPUP "&ToolBar"
     BEGIN
-		MENUITEM "&Default ToolBar",            IDM_TOOLBAR_DEFAULT
-		MENUITEM "&Large Icons",                IDM_TOOLBAR_BIGICONS, CHECKED
+        MENUITEM "&Default ToolBar",            IDM_TOOLBAR_DEFAULT
+        MENUITEM "&Large Icons",                IDM_TOOLBAR_BIGICONS, CHECKED
         MENUITEM "&Customize",                  IDM_TOOLBAR_CUSTOMIZE
     END
     POPUP "&Help"
@@ -167,7 +167,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "ToolBar Demo"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"
@@ -193,9 +193,9 @@ BEGIN
     IDM_EDIT_COPY           "Copy the Selected Contents to the Clipboard"
     IDM_EDIT_PASTE          "Paste the Clipboard Contents to the Document"
     IDM_EDIT_DELETE         "Erase the selected Contents"
-	IDM_TOOLBAR_CUSTOMIZE   "Customize the ToolBar"
-	IDM_TOOLBAR_DEFAULT     "Return the ToolBar buttons back to Default"
-	IDM_TOOLBAR_BIGICONS    "Toggle Big Icons On or Off"
+    IDM_TOOLBAR_CUSTOMIZE   "Customize the ToolBar"
+    IDM_TOOLBAR_DEFAULT     "Return the ToolBar buttons back to Default"
+    IDM_TOOLBAR_BIGICONS    "Toggle Big Icons On or Off"
     IDM_HELP_ABOUT          "Display Information about this program"
 END
 

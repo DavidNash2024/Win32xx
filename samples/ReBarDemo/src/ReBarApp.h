@@ -11,13 +11,13 @@
 class CReBarApp : public CWinApp
 {
 public:
-	CReBarApp();
-	virtual ~CReBarApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CReBarApp();
+    virtual ~CReBarApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

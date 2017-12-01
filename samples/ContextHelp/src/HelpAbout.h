@@ -5,17 +5,17 @@
 class CHelpAbout : public CDialog
 {
 public:
-	CHelpAbout();
-	virtual ~CHelpAbout() {}
+    CHelpAbout();
+    virtual ~CHelpAbout() {}
 
-	const CString& GetCredits() const	{ return m_Credits; }
-	void SetCredits(LPCTSTR szCredits)	{ m_Credits = szCredits; }
+    const CString& GetCredits() const   { return m_Credits; }
+    void SetCredits(LPCTSTR szCredits)  { m_Credits = szCredits; }
 
-protected:	
-	virtual BOOL 	OnInitDialog();
+protected:  
+    virtual BOOL    OnInitDialog();
 
 private:
-	CString 	m_Credits;			// AboutBox contents
+    CString     m_Credits;          // AboutBox contents
 
 };
 

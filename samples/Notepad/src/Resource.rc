@@ -57,11 +57,11 @@ BEGIN
         MENUITEM "Paste\tCtrl+V",               IDM_EDIT_PASTE
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE
     END
-	POPUP "&Options"
-	BEGIN
-	    MENUITEM "Font",                        IDM_OPTIONS_FONT
-		MENUITEM "Word Wrap",                   IDM_OPTIONS_WRAP, CHECKED
-	END
+    POPUP "&Options"
+    BEGIN
+        MENUITEM "Font",                        IDM_OPTIONS_FONT
+        MENUITEM "Word Wrap",                   IDM_OPTIONS_WRAP, CHECKED
+    END
     POPUP "&View"
     BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
@@ -162,7 +162,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                 "Frame Window"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"

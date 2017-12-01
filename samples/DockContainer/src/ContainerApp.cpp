@@ -17,10 +17,10 @@ CDockContainerApp::~CDockContainerApp()
 
 BOOL CDockContainerApp::InitInstance()
 {
-	//Create the Frame Window
-	m_Frame.Create();	// throws a CWinException on failure  	
+    //Create the Frame Window
+    m_Frame.Create();   // throws a CWinException on failure    
 
-	return TRUE;
+    return TRUE;
 }
 
 

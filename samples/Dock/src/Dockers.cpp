@@ -9,13 +9,13 @@
 //  Definitions for the CDockSimple class
 CDockSimple::CDockSimple()
 {
-	// Set the view window for the simple docker
-	SetView(m_View);
+    // Set the view window for the simple docker
+    SetView(m_View);
 
-	// Set the width of the splitter bar
-	SetBarWidth(8);
+    // Set the width of the splitter bar
+    SetBarWidth(8);
 
-	SetCaption (_T("Simple View - Docking"));
+    SetCaption (_T("Simple View - Docking"));
 }
 
 
@@ -23,13 +23,13 @@ CDockSimple::CDockSimple()
 //  Definitions for the CDockText class
 CDockText::CDockText()
 {
-	// Set the view window to our edit control
-	SetView(m_View);
+    // Set the view window to our edit control
+    SetView(m_View);
 
-	// Set the width of the splitter bar
-	SetBarWidth(8);
+    // Set the width of the splitter bar
+    SetBarWidth(8);
 
-	SetCaption (_T("Text View - Docking"));
+    SetCaption (_T("Text View - Docking"));
 }
 
 
@@ -37,13 +37,13 @@ CDockText::CDockText()
 //  Definitions for the CDockClasses class
 CDockClasses::CDockClasses()
 {
-	// Set the view window to our TreeView control
-	SetView(m_View);
+    // Set the view window to our TreeView control
+    SetView(m_View);
 
-	// Set the width of the splitter bar
-	SetBarWidth(8);
+    // Set the width of the splitter bar
+    SetBarWidth(8);
 
-	SetCaption (_T("Class View - Docking"));
+    SetCaption (_T("Class View - Docking"));
 }
 
 
@@ -51,13 +51,13 @@ CDockClasses::CDockClasses()
 //  Definitions for the CDockFiles class
 CDockFiles::CDockFiles()
 {
-	// Set the view window to our ListView control
-	SetView(m_View);
+    // Set the view window to our ListView control
+    SetView(m_View);
 
-	// Set the width of the splitter bar
-	SetBarWidth(8);
+    // Set the width of the splitter bar
+    SetBarWidth(8);
 
-	SetCaption (_T("Files View - Docking"));
+    SetCaption (_T("Files View - Docking"));
 }
 
 

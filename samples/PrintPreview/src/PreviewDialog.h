@@ -12,19 +12,19 @@
 class CPreviewPane : public CWnd
 {
 public:
-	CPreviewPane();
-	virtual ~CPreviewPane() {}
+    CPreviewPane();
+    virtual ~CPreviewPane() {}
 
-	void Render(CDC& dc);
-	void SetBitmap(CBitmap& Bitmap) { m_Bitmap = Bitmap; }
+    void Render(CDC& dc);
+    void SetBitmap(CBitmap& Bitmap) { m_Bitmap = Bitmap; }
 
 protected:
-	virtual void OnDraw(CDC& dc);
-	virtual BOOL OnEraseBkgnd(CDC&);
-	virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnDraw(CDC& dc);
+    virtual BOOL OnEraseBkgnd(CDC&);
+    virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CBitmap m_Bitmap;
+    CBitmap m_Bitmap;
 
 };
 
@@ -35,38 +35,38 @@ private:
 class CPreviewDialog : public CDialog
 {
 public:
-	CPreviewDialog(UINT nResID);
-	virtual ~CPreviewDialog();
+    CPreviewDialog(UINT nResID);
+    virtual ~CPreviewDialog();
 
-	CPreviewPane& GetPreviewPane()  { return m_PreviewPane; }
-	CRichEdit& GetRichView();
-	BOOL DoPrintPreview(RECT rcPage, RECT rcPrintArea);
-	BOOL OnPrintButton();
-	BOOL OnNextButton();
-	BOOL OnPrevButton();
-	BOOL OnCloseButton();
-	void PreviewPage(UINT nPage);
-	void UpdateButtons();
+    CPreviewPane& GetPreviewPane()  { return m_PreviewPane; }
+    CRichEdit& GetRichView();
+    BOOL DoPrintPreview(RECT rcPage, RECT rcPrintArea);
+    BOOL OnPrintButton();
+    BOOL OnNextButton();
+    BOOL OnPrevButton();
+    BOOL OnCloseButton();
+    void PreviewPage(UINT nPage);
+    void UpdateButtons();
 
 protected:
-	virtual BOOL OnInitDialog();
-	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
 
 private:
-	CResizer m_Resizer;
-	CPreviewPane m_PreviewPane;
-	CButton m_ButtonPrint;
-	CButton m_ButtonNext;
-	CButton m_ButtonPrev;
-	CButton m_ButtonClose;
+    CResizer m_Resizer;
+    CPreviewPane m_PreviewPane;
+    CButton m_ButtonPrint;
+    CButton m_ButtonNext;
+    CButton m_ButtonPrev;
+    CButton m_ButtonClose;
 
-	UINT	m_CurrentPage;
-	CRect	m_rcPage;
-	CRect	m_rcPrintArea;
+    UINT    m_CurrentPage;
+    CRect   m_rcPage;
+    CRect   m_rcPrintArea;
 
 public:
-	std::vector<int> m_PageBreaks;
+    std::vector<int> m_PageBreaks;
 
 };
 

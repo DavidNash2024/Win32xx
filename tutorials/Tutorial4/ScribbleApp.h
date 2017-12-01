@@ -12,7 +12,7 @@ class CScribbleApp : public CWinApp
 public:
     CScribbleApp();
     virtual ~CScribbleApp() {}
-	virtual BOOL InitInstance();
+    virtual BOOL InitInstance();
 
 private:
     CView m_View;

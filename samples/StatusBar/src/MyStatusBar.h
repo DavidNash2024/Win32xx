@@ -6,20 +6,20 @@
 class CMyStatusBar : public CStatusBar
 {
 public:
-	CMyStatusBar() {}
-	virtual ~CMyStatusBar() {}
+    CMyStatusBar() {}
+    virtual ~CMyStatusBar() {}
 
 protected:
-	virtual void OnAttach();
-	virtual BOOL OnEraseBkgnd(CDC& dc);
-	virtual void PreCreate(CREATESTRUCT& cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnAttach();
+    virtual BOOL OnEraseBkgnd(CDC& dc);
+    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-	void SetStatusParts();
+    void SetStatusParts();
 
 private:
-	CHyperlink m_Hyperlink;
-	CProgressBar m_ProgressBar;
+    CHyperlink m_Hyperlink;
+    CProgressBar m_ProgressBar;
 };
 
 
@@ -37,4 +37,4 @@ private:
 
 
 
-#endif  	// MYSTATUSBAR_H
+#endif      // MYSTATUSBAR_H

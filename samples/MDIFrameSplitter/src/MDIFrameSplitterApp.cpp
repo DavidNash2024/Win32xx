@@ -12,9 +12,9 @@ CMDIFrameSplitterApp::CMDIFrameSplitterApp()
 BOOL CMDIFrameSplitterApp::InitInstance()
 {
     //Create the Window
-	m_MainMDIFrame.Create();	// throws a CWinException on failure  
+    m_MainMDIFrame.Create();    // throws a CWinException on failure  
 
-	return TRUE;
+    return TRUE;
 }
 
 

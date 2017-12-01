@@ -13,8 +13,8 @@ class CSimpleRibbonApp : public CWinApp
 public:
     CSimpleRibbonApp();
     virtual ~CSimpleRibbonApp();
-	virtual BOOL InitInstance();
-	CView& GetView() { return m_View; }
+    virtual BOOL InitInstance();
+    CView& GetView() { return m_View; }
 
 private:
     CView m_View;

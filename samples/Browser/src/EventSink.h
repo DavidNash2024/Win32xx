@@ -15,7 +15,7 @@
 #define DISPID_DOCUMENTCOMPLETE   259
 
 
-class CMainFrame;	// Forward declaration
+class CMainFrame;   // Forward declaration
 
 ///////////////////////////////////////////////
 // About the CEventSink class.
@@ -25,23 +25,23 @@ class CMainFrame;	// Forward declaration
 class CEventSink : public IDispatch
 {
 public:
-	CEventSink();
-	void SetSink(CMainFrame* pSink) {m_pSink = pSink;}
+    CEventSink();
+    void SetSink(CMainFrame* pSink) {m_pSink = pSink;}
 
-	// IUnknown Methods
-	STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
-	STDMETHODIMP_(ULONG) AddRef();
-	STDMETHODIMP_(ULONG) Release();
+    // IUnknown Methods
+    STDMETHODIMP QueryInterface(REFIID riid, void** ppvObject);
+    STDMETHODIMP_(ULONG) AddRef();
+    STDMETHODIMP_(ULONG) Release();
 
-	// IDispatch Methods
-	STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
-	STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
-	STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
-	STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
+    // IDispatch Methods
+    STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
+    STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
+    STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
+    STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
 
 private:
-	ULONG		m_cRefs;	// ref count
-	CMainFrame*	m_pSink;	// Send the notifications here
+    ULONG       m_cRefs;    // ref count
+    CMainFrame* m_pSink;    // Send the notifications here
 };
 
 #endif // EVENTSINK_H

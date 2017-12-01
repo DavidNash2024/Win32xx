@@ -10,31 +10,31 @@
 class CDockText : public CDocker
 {
 public:
-	CDockText();
-	virtual ~CDockText() {}
+    CDockText();
+    virtual ~CDockText() {}
 
 private:
-	CViewText m_View;
+    CViewText m_View;
 };
 
 class CDockTree : public CDocker
 {
 public:
-	CDockTree();
-	virtual ~CDockTree() {}
+    CDockTree();
+    virtual ~CDockTree() {}
 
 private:
-	CViewTree m_View;
+    CViewTree m_View;
 };
 
 class CDockList : public CDocker
 {
 public:
-	CDockList();
-	virtual ~CDockList() {}
+    CDockList();
+    virtual ~CDockList() {}
 
 private:
-	CViewList m_View;
+    CViewList m_View;
 };
 
 #endif // SPLITTERPANES_H

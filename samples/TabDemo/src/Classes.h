@@ -9,14 +9,14 @@
 class CViewClasses : public CTreeView
 {
 public:
-	CViewClasses();
-	virtual ~CViewClasses();
-	virtual void OnAttach();
-	virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+    CViewClasses();
+    virtual ~CViewClasses();
+    virtual void OnAttach();
+    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
 
 private:
-	CImageList m_imlNormal;
-	
+    CImageList m_imlNormal;
+    
 };
 
 

@@ -14,20 +14,20 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID);
-	CMyDialog(LPCTSTR lpszResName);
-	void SetStatic(LPCTSTR szString);
-	virtual ~CMyDialog();
+    CMyDialog(UINT nResID);
+    CMyDialog(LPCTSTR lpszResName);
+    void SetStatic(LPCTSTR szString);
+    virtual ~CMyDialog();
 
 protected:
-	virtual BOOL OnInitDialog();
-	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnCommand(UINT nID);
-	virtual void OnOK();
+    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(UINT nID);
+    virtual void OnOK();
 
 private:
-	CButton m_Button;
-	CHyperlink m_Hyperlink;
+    CButton m_Button;
+    CHyperlink m_Hyperlink;
 };
 
 #endif //MYDIALOG_H

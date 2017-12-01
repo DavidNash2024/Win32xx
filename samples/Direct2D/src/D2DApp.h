@@ -13,23 +13,23 @@ public:
     CD2DApp();
     ~CD2DApp();
 
-	BOOL InitInstance();
-	ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }
+    BOOL InitInstance();
+    ID2D1Factory* GetD2DFactory() { return m_pDirect2dFactory; }
 
 private:
     HRESULT CreateDeviceIndependentResources();
 
-	CD2DView m_View;
-	ID2D1Factory* m_pDirect2dFactory;		
+    CD2DView m_View;
+    ID2D1Factory* m_pDirect2dFactory;       
 };
 
 inline ID2D1Factory* GetD2DFactory()
 {
-	return ((CD2DApp&)GetApp()).GetD2DFactory();
+    return ((CD2DApp&)GetApp()).GetD2DFactory();
 }
 
 
 #endif //  _D2DAPP_H_
 
 
-	
+    

@@ -52,13 +52,13 @@ BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
     END
-	POPUP "&Window"
-	BEGIN
-		MENUITEM "&Cascade\tShift+F5", IDW_MDI_CASCADE
-		MENUITEM "&Tile\tShift+F4", IDW_MDI_TILE
-		MENUITEM "Arrange &Icons", IDW_MDI_ARRANGE
-		MENUITEM "Close &All", IDW_MDI_CLOSEALL
-	END	
+    POPUP "&Window"
+    BEGIN
+        MENUITEM "&Cascade\tShift+F5", IDW_MDI_CASCADE
+        MENUITEM "&Tile\tShift+F4", IDW_MDI_TILE
+        MENUITEM "Arrange &Icons", IDW_MDI_ARRANGE
+        MENUITEM "Close &All", IDW_MDI_CLOSEALL
+    END 
     POPUP "&Help"
     BEGIN
         MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -111,7 +111,7 @@ BEGIN
     "X",            IDM_EDIT_CUT,           VIRTKEY, CONTROL, NOINVERT
     "V",            IDM_EDIT_PASTE,         VIRTKEY, CONTROL, NOINVERT
     "Z",            IDM_EDIT_UNDO,          VIRTKEY, CONTROL, NOINVERT
-    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT	
+    "Y",            IDM_EDIT_REDO,          VIRTKEY, CONTROL, NOINVERT  
     "N",            IDM_FILE_NEW,           VIRTKEY, CONTROL, NOINVERT
     "O",            IDM_FILE_OPEN,          VIRTKEY, CONTROL, NOINVERT
     "P",            IDM_FILE_PRINT,         VIRTKEY, CONTROL, NOINVERT
@@ -155,7 +155,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "Ribbon MDI Frame Application"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"

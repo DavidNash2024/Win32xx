@@ -12,13 +12,13 @@
 class CPictureApp : public CWinApp
 {
 public:
-	CPictureApp();
-	virtual ~CPictureApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CPictureApp();
+    virtual ~CPictureApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 
@@ -26,7 +26,7 @@ private:
 inline CPictureApp& GetPicApp() { return static_cast<CPictureApp&>(GetApp()); }
 
 // User Defined message
-#define UWM_FILELOADED		 (WM_APP + 1)	// Message - Sent by CView to parent to indicate file loaded.
+#define UWM_FILELOADED       (WM_APP + 1)   // Message - Sent by CView to parent to indicate file loaded.
 
 
 #endif // define PICTUREAPP_H

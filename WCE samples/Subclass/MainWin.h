@@ -12,15 +12,15 @@
 class CMainWin : public CWnd
 {
 public:
-	CMainWin();
-	~CMainWin() {}
+    CMainWin();
+    ~CMainWin() {}
 
 protected:
-	LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	int OnCreate(CREATESTRUCT& cs);
+    LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    int OnCreate(CREATESTRUCT& cs);
 
 private:
-	CButton m_Button;
+    CButton m_Button;
 };
 
 

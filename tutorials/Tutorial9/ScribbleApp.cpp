@@ -12,5 +12,5 @@ BOOL CScribbleApp::InitInstance()
     //Create the Window
     m_Frame.Create();
 
-	return TRUE;
+    return TRUE;
 }

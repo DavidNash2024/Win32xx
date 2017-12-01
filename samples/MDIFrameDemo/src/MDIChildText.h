@@ -9,28 +9,28 @@
 class CViewText : public CRichEdit
 {
 public:
-	CViewText();
-	virtual ~CViewText();
-	virtual void OnAttach();
+    CViewText();
+    virtual ~CViewText();
+    virtual void OnAttach();
 
 private:
-	CFont	m_Font;
+    CFont   m_Font;
 };
 
 
 class CMDIChildText : public CMDIChild
 {
 public:
-	CMDIChildText();
-	virtual ~CMDIChildText();
+    CMDIChildText();
+    virtual ~CMDIChildText();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
-	CViewText m_TextView;
-	CMenu m_Menu;
+    CViewText m_TextView;
+    CMenu m_Menu;
 };
 
 #endif  //MDICHILDTEXT_H

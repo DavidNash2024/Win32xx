@@ -5,61 +5,61 @@
 
 BOOL CDoc::FileLoad(LPCTSTR szFilename)
 {
-	BOOL IsLoaded = FALSE;
+    BOOL IsLoaded = FALSE;
 
-	// Return CDoc data to default
+    // Return CDoc data to default
 
-	try
-	{
-		CArchive ar(szFilename, CArchive::load);
-		ar >> *this;		// Uses the Serialize function
-		IsLoaded = TRUE;
-	}
+    try
+    {
+        CArchive ar(szFilename, CArchive::load);
+        ar >> *this;        // Uses the Serialize function
+        IsLoaded = TRUE;
+    }
 
-	catch (const CFileException &e)
-	{
-		// An exception occurred. Display the relevant information.
-		::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
-		
-		// Return CDoc data to default
-	}
+    catch (const CFileException &e)
+    {
+        // An exception occurred. Display the relevant information.
+        ::MessageBox(NULL, e.GetText(), _T("Failed to Load File"), MB_ICONWARNING);
+        
+        // Return CDoc data to default
+    }
 
-	return IsLoaded;
+    return IsLoaded;
 }
 
 BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 {
-	BOOL IsStored = FALSE;
+    BOOL IsStored = FALSE;
 
-//	try
-//	{
-//		CArchive ar(szFilename, CArchive::store);
-//		ar << *this;		// Uses the Serialize function
-//		IsStored = TRUE;
-//	}
-//	catch (const CFileException &e)
-//	{
-//		// An exception occurred. Display the relevant information.
-//		::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
-//	}
+//  try
+//  {
+//      CArchive ar(szFilename, CArchive::store);
+//      ar << *this;        // Uses the Serialize function
+//      IsStored = TRUE;
+//  }
+//  catch (const CFileException &e)
+//  {
+//      // An exception occurred. Display the relevant information.
+//      ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
+//  }
 
-	return IsStored;
+    return IsStored;
 }
 
 void CDoc::Serialize(CArchive& /* ar */)
 // Uses CArchive to stream data to or from a file
 {
 
-//	if (ar.IsStoring())
-//	{
-//		// Store data in archive
-//		ar << m_MemberVariable;
-//	}
-//	else
-//	{
-//		// Load data from archive
-//		ar >> m_MemberVariable;
-//	}
+//  if (ar.IsStoring())
+//  {
+//      // Store data in archive
+//      ar << m_MemberVariable;
+//  }
+//  else
+//  {
+//      // Load data from archive
+//      ar >> m_MemberVariable;
+//  }
 
 }
 

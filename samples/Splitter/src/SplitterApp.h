@@ -11,13 +11,13 @@
 class CSplitterApp : public CWinApp
 {
 public:
-	CSplitterApp();
-	virtual ~CSplitterApp()  {}
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CSplitterApp();
+    virtual ~CSplitterApp()  {}
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

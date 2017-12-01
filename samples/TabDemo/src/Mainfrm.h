@@ -9,32 +9,32 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame();
-	virtual ~CMainFrame();
+    CMainFrame();
+    virtual ~CMainFrame();
 
-	BOOL OnFileExit();
-	BOOL OnNewClassesTab();
-	BOOL OnNewDialogTab();
-	BOOL OnNewFilesTab();
-	BOOL OnNewTab();
-	BOOL OnShowButtons();
-	BOOL OnTabsAtTop();
-	BOOL OnTabClose();
-	BOOL OnTabFixedWidth();
-	BOOL OnTabOwnerDraw();
+    BOOL OnFileExit();
+    BOOL OnNewClassesTab();
+    BOOL OnNewDialogTab();
+    BOOL OnNewFilesTab();
+    BOOL OnNewTab();
+    BOOL OnShowButtons();
+    BOOL OnTabsAtTop();
+    BOOL OnTabClose();
+    BOOL OnTabFixedWidth();
+    BOOL OnTabOwnerDraw();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(CREATESTRUCT& cs);
-	virtual void OnInitialUpdate();
-	virtual void OnMenuUpdate(UINT nID);
-	virtual void PreCreate(CREATESTRUCT& cs);
-	virtual void SetupMenuIcons();
-	virtual void SetupToolBar();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual void OnMenuUpdate(UINT nID);
+    virtual void PreCreate(CREATESTRUCT& cs);
+    virtual void SetupMenuIcons();
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CTab m_View;
+    CTab m_View;
 
 };
 

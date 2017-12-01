@@ -6,9 +6,9 @@
 //--------------------------------------------------------------------------------------
 BOOL CDXApp::InitInstance()
 {
-	m_DXView.Create();
+    m_DXView.Create();
 
-	return TRUE;
+    return TRUE;
 }
 
 //--------------------------------------------------------------------------------------
@@ -16,22 +16,22 @@ BOOL CDXApp::InitInstance()
 //--------------------------------------------------------------------------------------
 int CDXApp::MessageLoop()
 {
-	// Main message loop
-	MSG msg;
-	ZeroMemory(&msg, sizeof(msg));
-	while (WM_QUIT != msg.message)
-	{
-		if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
-		{
-			TranslateMessage(&msg);
-			DispatchMessage(&msg);
-		}
-		else
-		{
-			m_DXView.Render();
-		}
-	}
+    // Main message loop
+    MSG msg;
+    ZeroMemory(&msg, sizeof(msg));
+    while (WM_QUIT != msg.message)
+    {
+        if (PeekMessage(&msg, nullptr, 0, 0, PM_REMOVE))
+        {
+            TranslateMessage(&msg);
+            DispatchMessage(&msg);
+        }
+        else
+        {
+            m_DXView.Render();
+        }
+    }
 
-	return LOWORD(msg.wParam);
+    return LOWORD(msg.wParam);
 }
 

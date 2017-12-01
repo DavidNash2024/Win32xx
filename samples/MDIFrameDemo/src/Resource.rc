@@ -57,10 +57,10 @@ BEGIN
         MENUITEM "Delete\tDel",                 IDM_EDIT_DELETE, GRAYED
     END
     POPUP "&View"
-	BEGIN
+    BEGIN
         MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
         MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
+    END
     POPUP "&Help"
     BEGIN
         MENUITEM "&About",                      IDM_HELP_ABOUT
@@ -97,19 +97,19 @@ BEGIN
     END
     POPUP "&Edit"
     BEGIN
-	    MENUITEM "Undo",                        IDM_EDIT_UNDO
-	    MENUITEM "Redo",                        IDM_EDIT_REDO
-	    MENUITEM SEPARATOR
-	    MENUITEM "Cu&t",                        IDM_EDIT_CUT
-	    MENUITEM "&Copy",                       IDM_EDIT_COPY
-	    MENUITEM "&Paste",                      IDM_EDIT_PASTE
-	    MENUITEM "De&lete",                     IDM_EDIT_DELETE
+        MENUITEM "Undo",                        IDM_EDIT_UNDO
+        MENUITEM "Redo",                        IDM_EDIT_REDO
+        MENUITEM SEPARATOR
+        MENUITEM "Cu&t",                        IDM_EDIT_CUT
+        MENUITEM "&Copy",                       IDM_EDIT_COPY
+        MENUITEM "&Paste",                      IDM_EDIT_PASTE
+        MENUITEM "De&lete",                     IDM_EDIT_DELETE
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
     POPUP "&Color"
     BEGIN
         MENUITEM "&Black",                      IDM_COLOR_BLACK
@@ -125,9 +125,9 @@ BEGIN
         MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
         MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -146,20 +146,20 @@ BEGIN
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
-	POPUP "&Window"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
         MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
         MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -178,20 +178,20 @@ BEGIN
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
-	POPUP "&Window"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
         MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
         MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -210,20 +210,20 @@ BEGIN
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
-	POPUP "&Window"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
         MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
         MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -242,20 +242,20 @@ BEGIN
         MENUITEM "E&xit",                       IDM_FILE_EXIT
     END
     POPUP "&View"
-	BEGIN
-	    MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
-	    MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
-	END
-	POPUP "&Window"
+    BEGIN
+        MENUITEM "&Tool Bar",                   IDW_VIEW_TOOLBAR, CHECKED
+        MENUITEM "&Status Bar",                 IDW_VIEW_STATUSBAR, CHECKED
+    END
+    POPUP "&Window"
     BEGIN
         MENUITEM "&Cascade\tShift+F5",          IDW_MDI_CASCADE
         MENUITEM "&Tile\tShift+F4",             IDW_MDI_TILE
         MENUITEM "Arrange &Icons",              IDW_MDI_ARRANGE
         MENUITEM "Close &All",                  IDW_MDI_CLOSEALL
     END
-	POPUP "&Help"
-	BEGIN
-	    MENUITEM "&About",                      IDM_HELP_ABOUT
+    POPUP "&Help"
+    BEGIN
+        MENUITEM "&About",                      IDM_HELP_ABOUT
     END
 END
 
@@ -393,7 +393,7 @@ END
 STRINGTABLE
 BEGIN
     IDW_MAIN                "MDI Frame Application with different MDI children"
-	IDW_INDICATOR_CAPS      "CAP"
+    IDW_INDICATOR_CAPS      "CAP"
     IDW_INDICATOR_NUM       "NUM"
     IDW_INDICATOR_SCRL      "SCRL"
     IDW_READY               "Ready"

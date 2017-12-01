@@ -14,8 +14,8 @@ class CScribbleApp : public CWinApp
 public:
     CScribbleApp();
     virtual ~CScribbleApp() {}
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
     CMainFrame m_Frame;

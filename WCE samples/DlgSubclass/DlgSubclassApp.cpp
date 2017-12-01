@@ -12,13 +12,13 @@ CDlgSubclassApp::CDlgSubclassApp() : m_MyDialog(IDD_DIALOG1)
 
 BOOL CDlgSubclassApp::InitInstance()
 {
-	//Display the Modal Dialog
-	m_MyDialog.DoModal();
+    //Display the Modal Dialog
+    m_MyDialog.DoModal();
 
-	//End the program
-	::PostQuitMessage(0);
+    //End the program
+    ::PostQuitMessage(0);
 
-	return TRUE;
+    return TRUE;
 }
 
 CDlgSubclassApp::~CDlgSubclassApp()

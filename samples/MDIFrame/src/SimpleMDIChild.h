@@ -11,16 +11,16 @@
 class CSimpleView : public CWnd
 {
 public:
-	CSimpleView();
-	virtual void OnDraw(CDC& dc);
-	virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	
-	COLORREF GetColor() {return m_Color;}
-	void SetColor(COLORREF color) { m_Color = color; }
+    CSimpleView();
+    virtual void OnDraw(CDC& dc);
+    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    
+    COLORREF GetColor() {return m_Color;}
+    void SetColor(COLORREF color) { m_Color = color; }
 
 private:
-	COLORREF m_Color;
+    COLORREF m_Color;
 };
 
 
@@ -28,17 +28,17 @@ private:
 class CSimpleMDIChild : public CMDIChild
 {
 public:
-	CSimpleMDIChild();
-	virtual ~CSimpleMDIChild();
+    CSimpleMDIChild();
+    virtual ~CSimpleMDIChild();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int OnCreate(CREATESTRUCT& cs);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual int OnCreate(CREATESTRUCT& cs);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CSimpleView m_View;
-	CMenu m_Menu;
+    CSimpleView m_View;
+    CMenu m_Menu;
 };
 
 #endif  //MDICHILDVIEW_H

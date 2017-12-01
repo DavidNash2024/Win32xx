@@ -11,26 +11,26 @@
 class CMainFrame : public CFrame
 {
 public:
-	CMainFrame();
-	virtual ~CMainFrame();
+    CMainFrame();
+    virtual ~CMainFrame();
 
-	CDXView& GetDXView() const { return const_cast<CDXView&>(m_DXView); }
+    CDXView& GetDXView() const { return const_cast<CDXView&>(m_DXView); }
 
-	BOOL OnFileExit();
-	BOOL OnFileOpen();
-	BOOL OnFilePrint();
-	BOOL OnFileSave();
+    BOOL OnFileExit();
+    BOOL OnFileOpen();
+    BOOL OnFilePrint();
+    BOOL OnFileSave();
 
 protected:
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual int  OnCreate(CREATESTRUCT& cs);
-	virtual void OnInitialUpdate();
-	virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-	virtual void SetupToolBar();
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual void OnInitialUpdate();
+    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual void SetupToolBar();
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	CDXView m_DXView;
+    CDXView m_DXView;
 };
 
 #endif //MAINFRM_H

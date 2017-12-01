@@ -10,25 +10,25 @@
 class CMyDialog : public CDialog
 {
 public:
-	CMyDialog(UINT nResID);
-	virtual ~CMyDialog();
+    CMyDialog(UINT nResID);
+    virtual ~CMyDialog();
 
 protected:
-	virtual void OnDestroy();
-	virtual BOOL OnInitDialog();
-	virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-	virtual void OnOK();
+    virtual void OnDestroy();
+    virtual BOOL OnInitDialog();
+    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual void OnOK();
 
 private:
-	BOOL OnButton();
-	BOOL OnCheck1();
-	BOOL OnCheck2();
-	BOOL OnCheck3();
-	BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    BOOL OnButton();
+    BOOL OnCheck1();
+    BOOL OnCheck2();
+    BOOL OnCheck3();
+    BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
 
-	CEdit	  m_Edit;
-	CRichEdit m_RichEdit;
+    CEdit     m_Edit;
+    CRichEdit m_RichEdit;
 };
 
 #endif //MYDIALOG_H

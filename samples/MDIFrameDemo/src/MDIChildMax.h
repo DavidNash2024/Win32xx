@@ -10,28 +10,28 @@
 class CViewMax : public CWnd
 {
 public:
-	CViewMax() {}
-	virtual ~CViewMax() {}
+    CViewMax() {}
+    virtual ~CViewMax() {}
 
 protected:
-	virtual void OnDraw(CDC& dc);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnDraw(CDC& dc);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 };
 
 // Declaration of CMDIChildMax
 class CMDIChildMax : public CMDIChild
 {
 public:
-	CMDIChildMax();
-	virtual ~CMDIChildMax();
+    CMDIChildMax();
+    virtual ~CMDIChildMax();
 
 protected:
-	virtual int OnCreate(CREATESTRUCT& cs);
-	virtual void PreCreate(CREATESTRUCT& cs);
+    virtual int OnCreate(CREATESTRUCT& cs);
+    virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-	CViewMax m_MaxView;
-	CMenu m_Menu;
+    CViewMax m_MaxView;
+    CMenu m_Menu;
 };
 
 #endif  //MDICHILDMAX_H

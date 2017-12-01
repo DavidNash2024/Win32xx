@@ -9,17 +9,17 @@
 class CViewList : public CListView
 {
 public:
-	CViewList();
-	virtual ~CViewList();
-	virtual int  AddItem(LPCTSTR szText, int nImage);
-	virtual void OnAttach();
-	virtual void OnDestroy();
-	virtual void InsertItems();
-	virtual void SetColumns();
-	virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
+    CViewList();
+    virtual ~CViewList();
+    virtual int  AddItem(LPCTSTR szText, int nImage);
+    virtual void OnAttach();
+    virtual void OnDestroy();
+    virtual void InsertItems();
+    virtual void SetColumns();
+    virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
 
 private:
-	CImageList m_imlSmall;
+    CImageList m_imlSmall;
 
 };
 
@@ -27,15 +27,15 @@ private:
 class CMDIChildListView : public CMDIChild
 {
 public:
-	CMDIChildListView();
-	virtual ~CMDIChildListView();
+    CMDIChildListView();
+    virtual ~CMDIChildListView();
 
 protected:
-	virtual int  OnCreate(CREATESTRUCT& cs);
+    virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
-	CViewList m_ListView;
-	CMenu m_Menu;
+    CViewList m_ListView;
+    CMenu m_Menu;
 
 };
 

@@ -13,8 +13,8 @@ class CTrayApp : public CWinApp
 public:
     CTrayApp();
     virtual ~CTrayApp() {}
-	virtual BOOL InitInstance();
-	CView& GetView() { return m_View; }
+    virtual BOOL InitInstance();
+    CView& GetView() { return m_View; }
 
 private:
     CView m_View;

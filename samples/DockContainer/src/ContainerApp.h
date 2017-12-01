@@ -11,13 +11,13 @@
 class CDockContainerApp : public CWinApp
 {
 public:
-	CDockContainerApp();
-	virtual ~CDockContainerApp();
-	virtual BOOL InitInstance();
-	CMainFrame& GetMainFrame() { return m_Frame; }
+    CDockContainerApp();
+    virtual ~CDockContainerApp();
+    virtual BOOL InitInstance();
+    CMainFrame& GetMainFrame() { return m_Frame; }
 
 private:
-	CMainFrame m_Frame;
+    CMainFrame m_Frame;
 };
 
 

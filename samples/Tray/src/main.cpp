@@ -7,21 +7,21 @@
 
 int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	try
-	{
-		// Start Win32++
-		CTrayApp theApp;
+    try
+    {
+        // Start Win32++
+        CTrayApp theApp;
 
-		// Run the application
-		return theApp.Run();
-	}
+        // Run the application
+        return theApp.Run();
+    }
 
-	// catch all unhandled CException types
-	catch (const CException &e)
-	{
-		// Display the exception and quit
-		MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
+    // catch all unhandled CException types
+    catch (const CException &e)
+    {
+        // Display the exception and quit
+        MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
 
-		return -1;
-	}
+        return -1;
+    }
 }

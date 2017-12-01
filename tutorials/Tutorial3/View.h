@@ -13,20 +13,20 @@
 class CView : public CWnd
 {
 public:
-	CView();
-	virtual ~CView();
+    CView();
+    virtual ~CView();
 
 protected:
-	virtual void OnDestroy();
-	virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-	virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void OnDestroy();
+    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
 private:
-	void DrawLine(int x, int y);
+    void DrawLine(int x, int y);
 
-	POINT m_OldPt;
+    POINT m_OldPt;
 
 };
 

@@ -11,13 +11,13 @@
 class CSubclassApp : public CWinApp
 {
 public:
-	CSubclassApp();
-	virtual ~CSubclassApp();
-	virtual BOOL InitInstance();
-	CMainWin& GetWin() { return m_Win; }
+    CSubclassApp();
+    virtual ~CSubclassApp();
+    virtual BOOL InitInstance();
+    CMainWin& GetWin() { return m_Win; }
 
 private:
-	CMainWin m_Win;
+    CMainWin m_Win;
 };
 
 
