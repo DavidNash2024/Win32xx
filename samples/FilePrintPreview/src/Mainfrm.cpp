@@ -123,15 +123,19 @@ OnCreate(CREATESTRUCT& cs)                      /*
 {
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
-    // The default for the following variables is TRUE
 
-    // SetUseIndicatorStatus(FALSE); // Don't show keyboard indicators in the StatusBar
-    // SetUseMenuStatus(FALSE);  // Don't show menu descriptions in the StatusBar
-    // SetUseReBar(FALSE);       // Don't use a ReBar
-    // SetUseThemes(FALSE);      // Don't use themes
-    // SetUseToolBar(FALSE);     // Don't use a ToolBar
+	// A menu is added if the IDW_MAIN menu resource is defined.
+	// Frames have all options enabled by default. 
+	// Use the following functions to disable options.
 
-      // call the base class function
+    // SetUseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
+    // SetUseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
+    // SetUseReBar(FALSE);              // Don't use a ReBar
+	// SetUseStatusBar(FALSE);          // Don't use a StatusBar
+    // SetUseThemes(FALSE);             // Don't use themes
+    // SetUseToolBar(FALSE);            // Don't use a ToolBar
+
+    // call the base class function
     return CFrame::OnCreate(cs);
 }
 

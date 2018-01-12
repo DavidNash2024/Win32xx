@@ -232,7 +232,13 @@ copy DockTabbedMDI\ProjectFiles\Release\DockTabbedMDI.exe     "..\output\VS2015\
 copy DoubleBuffer\ProjectFiles\Release\DoubleBuffer.exe       "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Explorer\ProjectFiles\Release\Explorer.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy FastGDI\ProjectFiles\Release\FastGDI.exe                 "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+<<<<<<< .mine
+copy FilePrintPreview\ProjectFiles\Release\FilePrintPreview.exe  "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+||||||| .r2286
+copy FilePrintPreview\ProjectFiles\Release\FielPrintPreview.exe "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+=======
 copy FilePrintPreview\ProjectFiles\Release\FilePrintPreview.exe "..\output\VS2015\Release"    >>"..\output\VS2015.log"
+>>>>>>> .r2293
 copy FormDocView\ProjectFiles\Release\FormDemo.exe            "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy Frame\ProjectFiles\Release\Frame.exe                     "..\output\VS2015\Release"    >>"..\output\VS2015.log"
 copy INIFrame\ProjectFiles\Release\INIFrame.exe               "..\output\VS2015\Release"    >>"..\output\VS2015.log"

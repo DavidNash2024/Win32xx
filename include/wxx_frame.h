@@ -469,11 +469,13 @@ namespace Win32xx
         BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
         BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
         BOOL GetUseReBar() const { return m_UseReBar; }
+		BOOL GetUseStatusBar() const { return m_UseStatusBar; }
         BOOL GetUseThemes() const { return m_UseThemes; }
         BOOL GetUseToolBar() const { return m_UseToolBar; }
         void SetUseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
         void SetUseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
         void SetUseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
+		void SetUseStatusBar(BOOL UseStatusBar) { m_UseStatusBar = UseStatusBar; }
         void SetUseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
         void SetUseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
 
@@ -524,6 +526,7 @@ namespace Win32xx
         BOOL m_UseIndicatorStatus;          // set to TRUE to see indicators in status bar
         BOOL m_UseMenuStatus;               // set to TRUE to see menu and toolbar updates in status bar
         BOOL m_UseReBar;                    // set to TRUE if ReBars are to be used
+		BOOL m_UseStatusBar;                // set to TRUE if the statusbar is used
         BOOL m_UseThemes;                   // set to TRUE if themes are to be used
         BOOL m_UseToolBar;                  // set to TRUE if the toolbar is used
 
@@ -964,7 +967,7 @@ namespace Win32xx
     template <class T>
     inline CFrameT<T>::CFrameT() : m_AboutDialog(IDW_ABOUT), m_hAccel(0), m_pView(NULL), m_nMaxMRU(0), m_hOldFocus(0),
                               m_DrawArrowBkgrnd(FALSE), m_KbdHook(0), m_UseIndicatorStatus(TRUE),
-                              m_UseMenuStatus(TRUE), m_UseThemes(TRUE), m_UseToolBar(TRUE)
+                              m_UseMenuStatus(TRUE), m_UseStatusBar(TRUE), m_UseThemes(TRUE), m_UseToolBar(TRUE)
     {
         ZeroMemory(&m_MBTheme, sizeof(m_MBTheme));
         ZeroMemory(&m_RBTheme, sizeof(m_RBTheme));
@@ -2373,22 +2376,31 @@ namespace Win32xx
         GetMenuMetrics().Initialize();
 
         // Create the ToolBar
-        if (m_UseToolBar)
+        if (GetUseToolBar())
         {
             CreateToolBar();
             ShowToolBar(GetInitValues().ShowToolBar);
         }
         else
         {
-            GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
+			if (IsMenu(GetFrameMenu()))
+				GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
         }
 
         SetupMenuIcons();
 
         // Create the status bar
-        GetStatusBar().Create(*this);
-        GetStatusBar().SetFont(m_fntStatusBar, FALSE);
-        ShowStatusBar(GetInitValues().ShowStatusBar);
+		if (GetUseStatusBar())
+		{
+			GetStatusBar().Create(*this);
+			GetStatusBar().SetFont(m_fntStatusBar, FALSE);
+			ShowStatusBar(GetInitValues().ShowStatusBar);
+		}
+		else
+		{
+			if (IsMenu(GetFrameMenu()))
+				GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
+		}
 
         if (m_UseIndicatorStatus)
             SetStatusIndicators();
