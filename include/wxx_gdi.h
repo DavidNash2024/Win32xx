@@ -899,7 +899,7 @@ namespace Win32xx
             }
         }
 
-        CPaintDC(const CPaintDC& rhs)   // Copy constructor
+        CPaintDC(const CPaintDC& rhs)  : CDC(rhs) // Copy constructor
         {
             m_hWndPaint = rhs.m_hWndPaint;
             m_ps = rhs.m_ps;
