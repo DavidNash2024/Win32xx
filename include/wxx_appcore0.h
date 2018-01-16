@@ -436,7 +436,7 @@ namespace Win32xx
 
 
     //////////////////////////////////////
-    // CWinApp manages a thread. For a GUI thread, it runs the message loop.
+    // CWinThread manages a thread. For a GUI thread, it runs the message loop.
     class CWinThread : public CObject
     {
     public:

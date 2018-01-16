@@ -1364,7 +1364,7 @@ namespace Win32xx
             LRESULT lr = CWnd::WndProcDefault(uMsg, wParam, lParam);
 
             // Also forward WM_NOTIFY to the docker
-            if (lr != 0)
+            if (lr == 0)
                 lr = m_pDocker->SendMessage(uMsg, wParam, lParam);
 
             return lr;
