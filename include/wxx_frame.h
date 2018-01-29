@@ -1,5 +1,5 @@
-// Win32++   Version 8.5
-// Release Date: 1st December 2017
+// Win32++   Version 8.5.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -397,6 +397,7 @@ namespace Win32xx
 
     protected:
         // Override these functions as required.
+        virtual void AddDisabledMenuImage(HICON hIcon, COLORREF clrMask);
         virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon);
         virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT BitmapID, UINT BitmapDisabledID);
         virtual void AddMenuBarBand();
@@ -469,13 +470,13 @@ namespace Win32xx
         BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
         BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
         BOOL GetUseReBar() const { return m_UseReBar; }
-		BOOL GetUseStatusBar() const { return m_UseStatusBar; }
+        BOOL GetUseStatusBar() const { return m_UseStatusBar; }
         BOOL GetUseThemes() const { return m_UseThemes; }
         BOOL GetUseToolBar() const { return m_UseToolBar; }
         void SetUseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
         void SetUseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
         void SetUseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
-		void SetUseStatusBar(BOOL UseStatusBar) { m_UseStatusBar = UseStatusBar; }
+        void SetUseStatusBar(BOOL UseStatusBar) { m_UseStatusBar = UseStatusBar; }
         void SetUseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
         void SetUseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
 
@@ -526,7 +527,7 @@ namespace Win32xx
         BOOL m_UseIndicatorStatus;          // set to TRUE to see indicators in status bar
         BOOL m_UseMenuStatus;               // set to TRUE to see menu and toolbar updates in status bar
         BOOL m_UseReBar;                    // set to TRUE if ReBars are to be used
-		BOOL m_UseStatusBar;                // set to TRUE if the statusbar is used
+        BOOL m_UseStatusBar;                // set to TRUE if the statusbar is used
         BOOL m_UseThemes;                   // set to TRUE if themes are to be used
         BOOL m_UseToolBar;                  // set to TRUE if the toolbar is used
 
@@ -996,16 +997,55 @@ namespace Win32xx
     }
 
 
+    // Adds the grayscale image of the specified icon the disabled menu image-list.
+    // This function is called by AddMenuIcon.
+    template <class T>
+    inline void CFrameT<T>::AddDisabledMenuImage(HICON hIcon, COLORREF crMask)
+    {
+        CClientDC DesktopDC(NULL);
+        CMemDC dcMem(NULL);
+        int cx = 16;
+        int cy = 16;
+
+        dcMem.CreateCompatibleBitmap(DesktopDC, cx, cy);
+        CRect rc;
+        rc.SetRect(0, 0, cx, cy);
+
+        // Set the mask color to grey for the new ImageList
+        if (GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
+        {
+            HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
+            UINT Index = GetNearestPaletteIndex(hPal, crMask);
+            if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
+        }
+
+        dcMem.SolidFill(crMask, rc);
+
+        // Draw the icon on the memory DC
+        ::DrawIconEx(dcMem, 0, 0, hIcon, cx, cy, 0, 0, DI_NORMAL);
+
+        // Detach the bitmap so we can use it.
+        CBitmap Bitmap = dcMem.DetachBitmap();
+        Bitmap.ConvertToDisabled(crMask);
+
+        if (m_imlMenuDis.GetHandle() == 0)
+            m_imlMenuDis.Create(cx, cy, ILC_COLOR24 | ILC_MASK, 1, 0);
+
+        m_imlMenuDis.Add(Bitmap, crMask);
+    }
+
+
     // Adds an icon to an internal ImageList for use with popup menu items.
     // The image size for menu icons should be 16x16.
     template <class T>
     inline BOOL CFrameT<T>::AddMenuIcon(int nID_MenuItem, HICON hIcon)
     {
+        int cxImage = 16;
+        int cyImage = 16;
+        
         // Create a new ImageList if required.
         if (NULL == m_imlMenu.GetHandle())
         {
-            int cxImage = 16;
-            int cyImage = 16;
             m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
             m_vMenuIcons.clear();
         }
@@ -1014,9 +1054,8 @@ namespace Win32xx
         {
             m_vMenuIcons.push_back(nID_MenuItem);
 
-            // Recreate the Disabled imagelist.
-            m_imlMenuDis.DeleteImageList();
-            m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
+            COLORREF mask = RGB(200, 199, 200);
+            AddDisabledMenuImage(hIcon, mask);
 
             return TRUE;
         }
@@ -1433,6 +1472,8 @@ namespace Win32xx
                         if (nState & CDIS_DISABLED)
                         {
                             imlToolBar = pTB->GetDisabledImageList();
+                            if (imlToolBar.GetHandle() == 0)
+                                imlToolBar.CreateDisabledImageList(pTB->GetImageList());
                         }
                         else if (nState & (CDIS_HOT | CDIS_SELECTED | CDIS_CHECKED))
                         {
@@ -2368,8 +2409,11 @@ namespace Win32xx
         // Setup the menu
         HMENU hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(IDW_MAIN));
         SetFrameMenu(hMenu); // 0 if IDW_MAIN menu resource is missing
-        if (m_nMaxMRU > 0)
-            UpdateMRUMenu();
+        if (hMenu != 0)
+        {
+            if (m_nMaxMRU > 0)
+                UpdateMRUMenu();
+        }
 
         // Initialize the menu metrics
         GetMenuMetrics().m_hFrame = *this;
@@ -2383,24 +2427,24 @@ namespace Win32xx
         }
         else
         {
-			if (IsMenu(GetFrameMenu()))
-				GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
+            if (IsMenu(GetFrameMenu()))
+                GetFrameMenu().EnableMenuItem(IDW_VIEW_TOOLBAR, MF_GRAYED);
         }
 
         SetupMenuIcons();
 
         // Create the status bar
-		if (GetUseStatusBar())
-		{
-			GetStatusBar().Create(*this);
-			GetStatusBar().SetFont(m_fntStatusBar, FALSE);
-			ShowStatusBar(GetInitValues().ShowStatusBar);
-		}
-		else
-		{
-			if (IsMenu(GetFrameMenu()))
-				GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
-		}
+        if (GetUseStatusBar())
+        {
+            GetStatusBar().Create(*this);
+            GetStatusBar().SetFont(m_fntStatusBar, FALSE);
+            ShowStatusBar(GetInitValues().ShowStatusBar);
+        }
+        else
+        {
+            if (IsMenu(GetFrameMenu()))
+                GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
+        }
 
         if (m_UseIndicatorStatus)
             SetStatusIndicators();

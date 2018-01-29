@@ -1,3 +1,22 @@
+Version 8.5.1
+=============
+
+New Features and Enhancements
+-----------------------------
+* Updated frames
+ - Additional toolbars have better support for disabled buttons.
+ - Optimised the creation of the image list for disabled menu icons.
+ - Optimised AddMenuIcon (the disabled image-list isn't recreated unnecessarily).
+ - Added SetUseStatusBar option for OnCreate.
+
+
+Changes in detail
+-----------------
+Added CBitmap::ConvertToDisabled                     member function
+Added CFrameT::AddDisabledMenuImage                  member function
+
+
+
 Version 8.5
 ===========
 
