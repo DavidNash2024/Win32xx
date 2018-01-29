@@ -1,5 +1,5 @@
-// Win32++   Version 8.5
-// Release Date: 1st December 2017
+// Win32++   Version 8.5.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -218,6 +218,7 @@ namespace Win32xx
         HBITMAP CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse);
         HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
         HBITMAP CreateBitmapIndirect(const BITMAP& Bitmap);
+        void    ConvertToDisabled(/*CBitmap bitmap,*/ COLORREF clrMask) const;
         void GrayScaleBitmap();
         void TintBitmap (int cRed, int cGreen, int cBlue);
         int GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const;
@@ -1408,271 +1409,307 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-        // Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
-        inline HBITMAP CBitmap::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+    // Converts the bitmap to a pale grayscale image suitable for disabled icons.
+    inline void CBitmap::ConvertToDisabled(/*CBitmap bitmap,*/ COLORREF clrMask) const
+    {
+        BITMAP bm = GetBitmapData();
+
+        // Copy the image data into the 'bits' byte array.
+        CWindowDC dc(HWND_DESKTOP);
+        CBitmapInfoPtr pbmi(*this);
+        dc.GetDIBits(*this, 0, bm.bmHeight, NULL, pbmi, DIB_RGB_COLORS);
+        DWORD size = pbmi->bmiHeader.biSizeImage;
+        std::vector<byte> vBits(size, 0);
+        byte* bits = &vBits[0];
+        dc.GetDIBits(*this, 0, bm.bmHeight, bits, pbmi, DIB_RGB_COLORS);
+
+        // convert the image to pale gray scale.
+        int stride = bm.bmWidth + (bm.bmWidth * bm.bmBitsPixel / 8) % 4;
+        for (int y = 0; y < bm.bmHeight; y++)
         {
-            assert(&GetApp());
-            HBITMAP hBitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
-            if (hBitmap == 0)
-                throw CResourceException(_T("CreateMappedBitmap failed"));
-
-            Attach(hBitmap);
-            SetManaged(true);
-            return hBitmap;
-        }
-
-#endif // !_WIN32_WCE
-
-        // Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).
-        inline HBITMAP CBitmap::CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
-        {
-            HBITMAP hBitmap = ::CreateBitmap(nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
-            if (hBitmap == 0)
-                throw CResourceException(_T("CreateBitmap failed"));
-
-            Attach(hBitmap);
-            SetManaged(true);
-            return hBitmap;
-        }
-
-#ifndef _WIN32_WCE
-
-        // Creates a bitmap with the width, height, and color format specified in the BITMAP structure.
-        inline HBITMAP CBitmap::CreateBitmapIndirect(const BITMAP& Bitmap)
-        {
-            HBITMAP hBitmap = ::CreateBitmapIndirect(&Bitmap);
-            if (hBitmap == 0)
-                throw CResourceException(_T("CreateBitmapIndirect failed"));
-
-            Attach(hBitmap);
-            SetManaged(true);
-            return hBitmap;
-        }
-
-#endif // !_WIN32_WCE
-
-        // Creates a bitmap compatible with the device that is associated with the specified device context.
-        inline HBITMAP CBitmap::CreateCompatibleBitmap(HDC hdc, int nWidth, int nHeight)
-        {
-            HBITMAP hBitmap = ::CreateCompatibleBitmap(hdc, nWidth, nHeight);
-            if (hBitmap == 0)
-                throw CResourceException(_T("CreateCompatibleBitmap"));
-
-            Attach(hBitmap);
-            SetManaged(true);
-            return hBitmap;
-        }
-
-
-        // Retrieves the BITMAP structure.
-        inline BITMAP CBitmap::GetBitmapData() const
-        {
-            assert(GetHandle() != NULL);
-            BITMAP bmp;
-            ZeroMemory(&bmp, sizeof(bmp));
-            VERIFY(::GetObject(GetHandle(), sizeof(bmp), &bmp) != 0);
-            return bmp;
-        }
-
-#ifndef _WIN32_WCE
-
-        // Retrieves the dimensions of a compatible bitmap.
-        // The retrieved dimensions must have been set by the SetBitmapDimensionEx function.
-        inline CSize CBitmap::GetBitmapDimensionEx() const
-        {
-            assert(GetHandle() != NULL);
-            CSize Size;
-            ::GetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), &Size);
-            return Size;
-        }
-
-
-        // The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap.
-        // These dimensions can be used by applications; however, they are not used by the system.
-        inline CSize CBitmap::SetBitmapDimensionEx(int nWidth, int nHeight) const
-        {
-            assert(GetHandle() != NULL);
-            CSize Size;
-            ::SetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), nWidth, nHeight, Size);
-            return Size;
-        }
-
-
-        // Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
-        // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
-        inline HBITMAP CBitmap::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse)
-        {
-            HBITMAP hBitmap = ::CreateDIBitmap(hdc, pbmih, dwInit, pbInit, pbmi, uColorUse);
-            Attach(hBitmap);
-            SetManaged(true);
-            return hBitmap;
-        }
-
-
-        // Convert a bitmap image to grey scale.
-        inline void CBitmap::GrayScaleBitmap()
-        {
-            // Create our LPBITMAPINFO object
-            CBitmapInfoPtr pbmi(*this);
-            BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
-
-            // Create the reference DC for GetDIBits to use
-            CMemDC dcMem(NULL);
-
-            // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-            GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-            std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
-            byte* pByteArray = &vBits[0];
-
-            dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-            UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
-
-            int yOffset = 0;
-            int xOffset;
-            size_t Index;
-
-            for (int Row=0; Row < bmiHeader.biHeight; ++Row)
+            for (int x = 0; x < stride; x++)
             {
-                xOffset = 0;
+                int i = (x + y * stride) * bm.bmBitsPixel / 8;
 
-                for (int Column=0; Column < bmiHeader.biWidth; ++Column)
-                {
-                    // Calculate Index
-                    Index = yOffset + xOffset;
+                // skip for colors matching the mask
+                if ((bits[i + 2] == GetRValue(clrMask)) &&
+                    (bits[i + 1] == GetGValue(clrMask)) &&
+                    (bits[i + 0] == GetBValue(clrMask)))
+                    continue;
 
-                    BYTE byGray = (BYTE) ((pByteArray[Index] + pByteArray[Index+1]*6 + pByteArray[Index+2] *3)/10);
-                    pByteArray[Index]   = byGray;
-                    pByteArray[Index+1] = byGray;
-                    pByteArray[Index+2] = byGray;
+                BYTE gray = BYTE(95 + (bits[i + 2] * 3 + bits[i + 1] * 6 + bits[i + 0]) / 20);
+                bits[i + 0] = bits[i + 1] = bits[i + 2] = gray;
+            }
+        }
 
-                    // Increment the horizontal offset
-                    xOffset += bmiHeader.biBitCount >> 3;
-                }
+        dc.SetDIBits(*this, 0, bm.bmHeight, bits, pbmi, DIB_RGB_COLORS);
+    }
+    
+    // Creates a new bitmap using the bitmap data and colors specified by the bitmap resource and the color mapping information.
+    inline HBITMAP CBitmap::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
+    {
+        assert(&GetApp());
+        HBITMAP hBitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+        if (hBitmap == 0)
+            throw CResourceException(_T("CreateMappedBitmap failed"));
 
-                // Increment vertical offset
-                yOffset += nWidthBytes;
+        Attach(hBitmap);
+        SetManaged(true);
+        return hBitmap;
+    }
+
+#endif // !_WIN32_WCE
+
+    // Creates a bitmap with the specified width, height, and color format (color planes and bits-per-pixel).
+    inline HBITMAP CBitmap::CreateBitmap(int nWidth, int nHeight, UINT nPlanes, UINT nBitsPerPixel, LPCVOID lpBits)
+    {
+        HBITMAP hBitmap = ::CreateBitmap(nWidth, nHeight, nPlanes, nBitsPerPixel, lpBits);
+        if (hBitmap == 0)
+            throw CResourceException(_T("CreateBitmap failed"));
+
+        Attach(hBitmap);
+        SetManaged(true);
+        return hBitmap;
+    }
+
+#ifndef _WIN32_WCE
+
+    // Creates a bitmap with the width, height, and color format specified in the BITMAP structure.
+    inline HBITMAP CBitmap::CreateBitmapIndirect(const BITMAP& Bitmap)
+    {
+        HBITMAP hBitmap = ::CreateBitmapIndirect(&Bitmap);
+        if (hBitmap == 0)
+            throw CResourceException(_T("CreateBitmapIndirect failed"));
+
+        Attach(hBitmap);
+        SetManaged(true);
+        return hBitmap;
+    }
+
+#endif // !_WIN32_WCE
+
+    // Creates a bitmap compatible with the device that is associated with the specified device context.
+    inline HBITMAP CBitmap::CreateCompatibleBitmap(HDC hdc, int nWidth, int nHeight)
+    {
+        HBITMAP hBitmap = ::CreateCompatibleBitmap(hdc, nWidth, nHeight);
+        if (hBitmap == 0)
+            throw CResourceException(_T("CreateCompatibleBitmap"));
+
+        Attach(hBitmap);
+        SetManaged(true);
+        return hBitmap;
+    }
+
+
+    // Retrieves the BITMAP structure.
+    inline BITMAP CBitmap::GetBitmapData() const
+    {
+        assert(GetHandle() != NULL);
+        BITMAP bmp;
+        ZeroMemory(&bmp, sizeof(bmp));
+        VERIFY(::GetObject(GetHandle(), sizeof(bmp), &bmp) != 0);
+        return bmp;
+    }
+
+#ifndef _WIN32_WCE
+
+    // Retrieves the dimensions of a compatible bitmap.
+    // The retrieved dimensions must have been set by the SetBitmapDimensionEx function.
+    inline CSize CBitmap::GetBitmapDimensionEx() const
+    {
+        assert(GetHandle() != NULL);
+        CSize Size;
+        ::GetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), &Size);
+        return Size;
+    }
+
+
+    // The SetBitmapDimensionEx function assigns preferred dimensions to a bitmap.
+    // These dimensions can be used by applications; however, they are not used by the system.
+    inline CSize CBitmap::SetBitmapDimensionEx(int nWidth, int nHeight) const
+    {
+        assert(GetHandle() != NULL);
+        CSize Size;
+        ::SetBitmapDimensionEx(reinterpret_cast<HBITMAP>(GetHandle()), nWidth, nHeight, Size);
+        return Size;
+    }
+
+
+    // Creates a compatible bitmap (DDB) from a DIB and, optionally, sets the bitmap bits.
+    // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
+    inline HBITMAP CBitmap::CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse)
+    {
+        HBITMAP hBitmap = ::CreateDIBitmap(hdc, pbmih, dwInit, pbInit, pbmi, uColorUse);
+        Attach(hBitmap);
+        SetManaged(true);
+        return hBitmap;
+    }
+
+
+    // Convert a bitmap image to grey scale.
+    inline void CBitmap::GrayScaleBitmap()
+    {
+        // Create our LPBITMAPINFO object
+        CBitmapInfoPtr pbmi(*this);
+        BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
+
+        // Create the reference DC for GetDIBits to use
+        CMemDC dcMem(NULL);
+
+        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
+        GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+        std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
+        byte* pByteArray = &vBits[0];
+
+        dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
+
+        int yOffset = 0;
+        int xOffset;
+        size_t Index;
+
+        for (int Row=0; Row < bmiHeader.biHeight; ++Row)
+        {
+            xOffset = 0;
+
+            for (int Column=0; Column < bmiHeader.biWidth; ++Column)
+            {
+                // Calculate Index
+                Index = yOffset + xOffset;
+
+                BYTE byGray = (BYTE) ((pByteArray[Index] + pByteArray[Index+1]*6 + pByteArray[Index+2] *3)/10);
+                pByteArray[Index]   = byGray;
+                pByteArray[Index+1] = byGray;
+                pByteArray[Index+2] = byGray;
+
+                // Increment the horizontal offset
+                xOffset += bmiHeader.biBitCount >> 3;
             }
 
-            // Save the modified colour back into our source DDB
-            SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+            // Increment vertical offset
+            yOffset += nWidthBytes;
         }
 
+        // Save the modified colour back into our source DDB
+        SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+    }
 
-        // Modifies the colour of the Device Dependant Bitmap, by the colour.
-        // correction values specified. The correction values can range from -255 to +255.
-        // This function gains its speed by accessing the bitmap colour information
-        // directly, rather than using GetPixel/SetPixel.
-        inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
+
+    // Modifies the colour of the Device Dependant Bitmap, by the colour.
+    // correction values specified. The correction values can range from -255 to +255.
+    // This function gains its speed by accessing the bitmap colour information
+    // directly, rather than using GetPixel/SetPixel.
+    inline void CBitmap::TintBitmap (int cRed, int cGreen, int cBlue)
+    {
+        // Create our LPBITMAPINFO object
+        CBitmapInfoPtr pbmi(*this);
+        BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
+
+        bmiHeader.biBitCount = 24;
+
+        // Create the reference DC for GetDIBits to use
+        CMemDC dcMem(NULL);
+
+        // Use GetDIBits to create a DIB from our DDB, and extract the colour data
+        GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+        std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
+        byte* pByteArray = &vBits[0];
+
+        dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+        UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
+
+        // Ensure sane colour correction values
+        cBlue  = MIN(cBlue, 255);
+        cBlue  = MAX(cBlue, -255);
+        cRed   = MIN(cRed, 255);
+        cRed   = MAX(cRed, -255);
+        cGreen = MIN(cGreen, 255);
+        cGreen = MAX(cGreen, -255);
+
+        // Pre-calculate the RGB modification values
+        int b1 = 256 - cBlue;
+        int g1 = 256 - cGreen;
+        int r1 = 256 - cRed;
+
+        int b2 = 256 + cBlue;
+        int g2 = 256 + cGreen;
+        int r2 = 256 + cRed;
+
+        // Modify the colour
+        int yOffset = 0;
+        int xOffset;
+        int Index;
+        for (int Row=0; Row < bmiHeader.biHeight; ++Row)
         {
-            // Create our LPBITMAPINFO object
-            CBitmapInfoPtr pbmi(*this);
-            BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
+            xOffset = 0;
 
-            bmiHeader.biBitCount = 24;
-
-            // Create the reference DC for GetDIBits to use
-            CMemDC dcMem(NULL);
-
-            // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-            GetDIBits(dcMem, 0, bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
-            std::vector<byte> vBits(bmiHeader.biSizeImage, 0);
-            byte* pByteArray = &vBits[0];
-
-            dcMem.GetDIBits(*this, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
-            UINT nWidthBytes = bmiHeader.biSizeImage/bmiHeader.biHeight;
-
-            // Ensure sane colour correction values
-            cBlue  = MIN(cBlue, 255);
-            cBlue  = MAX(cBlue, -255);
-            cRed   = MIN(cRed, 255);
-            cRed   = MAX(cRed, -255);
-            cGreen = MIN(cGreen, 255);
-            cGreen = MAX(cGreen, -255);
-
-            // Pre-calculate the RGB modification values
-            int b1 = 256 - cBlue;
-            int g1 = 256 - cGreen;
-            int r1 = 256 - cRed;
-
-            int b2 = 256 + cBlue;
-            int g2 = 256 + cGreen;
-            int r2 = 256 + cRed;
-
-            // Modify the colour
-            int yOffset = 0;
-            int xOffset;
-            int Index;
-            for (int Row=0; Row < bmiHeader.biHeight; ++Row)
+            for (int Column=0; Column < bmiHeader.biWidth; ++Column)
             {
-                xOffset = 0;
+                // Calculate Index
+                Index = yOffset + xOffset;
 
-                for (int Column=0; Column < bmiHeader.biWidth; ++Column)
-                {
-                    // Calculate Index
-                    Index = yOffset + xOffset;
+                // Adjust the colour values
+                if (cBlue > 0)
+                    pByteArray[Index]   = (BYTE)(cBlue + (((pByteArray[Index] *b1)) >>8));
+                else if (cBlue < 0)
+                    pByteArray[Index]   = (BYTE)((pByteArray[Index] *b2) >>8);
 
-                    // Adjust the colour values
-                    if (cBlue > 0)
-                        pByteArray[Index]   = (BYTE)(cBlue + (((pByteArray[Index] *b1)) >>8));
-                    else if (cBlue < 0)
-                        pByteArray[Index]   = (BYTE)((pByteArray[Index] *b2) >>8);
+                if (cGreen > 0)
+                    pByteArray[Index+1] = (BYTE)(cGreen + (((pByteArray[Index+1] *g1)) >>8));
+                else if (cGreen < 0)
+                    pByteArray[Index+1] = (BYTE)((pByteArray[Index+1] *g2) >>8);
 
-                    if (cGreen > 0)
-                        pByteArray[Index+1] = (BYTE)(cGreen + (((pByteArray[Index+1] *g1)) >>8));
-                    else if (cGreen < 0)
-                        pByteArray[Index+1] = (BYTE)((pByteArray[Index+1] *g2) >>8);
+                if (cRed > 0)
+                    pByteArray[Index+2] = (BYTE)(cRed + (((pByteArray[Index+2] *r1)) >>8));
+                else if (cRed < 0)
+                    pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
 
-                    if (cRed > 0)
-                        pByteArray[Index+2] = (BYTE)(cRed + (((pByteArray[Index+2] *r1)) >>8));
-                    else if (cRed < 0)
-                        pByteArray[Index+2] = (BYTE)((pByteArray[Index+2] *r2) >>8);
-
-                    // Increment the horizontal offset
-                    xOffset += bmiHeader.biBitCount >> 3;
-                }
-
-                // Increment vertical offset
-                yOffset += nWidthBytes;
+                // Increment the horizontal offset
+                xOffset += bmiHeader.biBitCount >> 3;
             }
 
-            // Save the modified colour back into our source DDB
-            SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+            // Increment vertical offset
+            yOffset += nWidthBytes;
         }
+
+        // Save the modified colour back into our source DDB
+        SetDIBits(dcMem, 0, bmiHeader.biHeight, pByteArray, pbmi, DIB_RGB_COLORS);
+    }
 
 #endif // !_WIN32_WCE
 
-        // Creates a DIB that applications can write to directly. The function gives you
-        // a pointer to the location of the bitmap bit values. You can supply a handle to
-        // a file-mapping object that the function will use to create the bitmap,
-        // or you can let the system allocate the memory for the bitmap.
-        // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
-        inline HBITMAP CBitmap::CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset)
-        {
-            HBITMAP hBitmap = ::CreateDIBSection(hdc, pbmi, uColorUse, ppvBits, hSection, dwOffset);
-            Attach(hBitmap);
-            SetManaged(true);
-            return hBitmap;
-        }
+    // Creates a DIB that applications can write to directly. The function gives you
+    // a pointer to the location of the bitmap bit values. You can supply a handle to
+    // a file-mapping object that the function will use to create the bitmap,
+    // or you can let the system allocate the memory for the bitmap.
+    // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
+    inline HBITMAP CBitmap::CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT uColorUse, LPVOID* ppvBits, HANDLE hSection, DWORD dwOffset)
+    {
+        HBITMAP hBitmap = ::CreateDIBSection(hdc, pbmi, uColorUse, ppvBits, hSection, dwOffset);
+        Attach(hBitmap);
+        SetManaged(true);
+        return hBitmap;
+    }
 
 #ifndef _WIN32_WCE
 
-        // Retrieves the bits of the specified compatible bitmap and copies them
-        // into a buffer as a DIB using the specified format.
-        // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
-        inline int CBitmap::GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const
-        {
-            assert(GetHandle() != NULL);
-            return ::GetDIBits(hdc, reinterpret_cast<HBITMAP>(GetHandle()), uStartScan, cScanLines,  pBits, pbmi, uColorUse);
-        }
+    // Retrieves the bits of the specified compatible bitmap and copies them
+    // into a buffer as a DIB using the specified format.
+    // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
+    inline int CBitmap::GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const
+    {
+        assert(GetHandle() != NULL);
+        return ::GetDIBits(hdc, reinterpret_cast<HBITMAP>(GetHandle()), uStartScan, cScanLines,  pBits, pbmi, uColorUse);
+    }
 
 
-        // Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
-        // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
-        inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse) const
-        {
-            assert(GetHandle() != NULL);
-            return ::SetDIBits(hdc, reinterpret_cast<HBITMAP>(GetHandle()), uStartScan, cScanLines, pBits, pbmi, uColorUse);
-        }
+    // Sets the pixels in a compatible bitmap (DDB) using the color data found in the specified DIB.
+    // A CBitmapInfoPtr object can be used for the LPBITMAPINFO parameter.
+    inline int CBitmap::SetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines, LPCVOID pBits, const LPBITMAPINFO pbmi, UINT uColorUse) const
+    {
+        assert(GetHandle() != NULL);
+        return ::SetDIBits(hdc, reinterpret_cast<HBITMAP>(GetHandle()), uStartScan, cScanLines, pBits, pbmi, uColorUse);
+    }
 
 #endif // !_WIN32_WCE
 

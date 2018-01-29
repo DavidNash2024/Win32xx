@@ -1,5 +1,5 @@
-// Win32++   Version 8.5
-// Release Date: 1st December 2017
+// Win32++   Version 8.5.1
+// Release Date: TBA
 //
 //      David Nash
 //      email: dnash@bigpond.net.au
@@ -608,23 +608,9 @@ namespace Win32xx
                 // Draw the image on the memory DC
                 ImageList_Draw(himlNormal, i, dcMem , 0, 0, ILD_NORMAL);
 
-                // Convert colored pixels to gray
-                for (int x = 0 ; x < cx; ++x)
-                {
-                    for (int y = 0; y < cy; ++y)
-                    {
-                        COLORREF clr = ::GetPixel(dcMem, x, y);
-
-                        if (clr != crMask)
-                        {
-                            BYTE byGray = (BYTE) (95 + (GetRValue(clr) *3 + GetGValue(clr)*6 + GetBValue(clr))/20);
-                            dcMem.SetPixel(x, y, RGB(byGray, byGray, byGray));
-                        }
-                    }
-                }
-
                 // Detach the bitmap so we can use it.
                 CBitmap Bitmap = dcMem.DetachBitmap();
+                Bitmap.ConvertToDisabled(crMask);
                 Add(Bitmap, crMask);
             }
         }
