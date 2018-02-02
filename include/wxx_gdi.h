@@ -215,10 +215,10 @@ namespace Win32xx
         HBITMAP CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT uColorUse, LPVOID* pBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
+        void    ConvertToDisabled(COLORREF clrMask) const;
         HBITMAP CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse);
         HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
         HBITMAP CreateBitmapIndirect(const BITMAP& Bitmap);
-        void    ConvertToDisabled(/*CBitmap bitmap,*/ COLORREF clrMask) const;
         void GrayScaleBitmap();
         void TintBitmap (int cRed, int cGreen, int cBlue);
         int GetDIBits(HDC hdc, UINT uStartScan, UINT cScanLines,  LPVOID pBits, LPBITMAPINFO pbmi, UINT uColorUse) const;
@@ -1409,37 +1409,60 @@ namespace Win32xx
 
 #ifndef _WIN32_WCE
 
-    // Converts the bitmap to a pale grayscale image suitable for disabled icons.
-    inline void CBitmap::ConvertToDisabled(/*CBitmap bitmap,*/ COLORREF clrMask) const
+    // Rapidly converts the bitmap image to pale grayscale image suitable for disabled icons.
+    // The clrMask is the transparent color. Pixels with this color are not converted.
+    // Supports 32 bit, 24 bit, 16 bit and 8 bit colors.
+    // For 16 and 8 bit colors, ensure the clrMask is a color in the current palette.
+    inline void CBitmap::ConvertToDisabled(COLORREF clrMask) const
     {
         BITMAP bm = GetBitmapData();
+
+        // Requires 8 bits per pixel
+        if (bm.bmBitsPixel < 8)
+            return;
 
         // Copy the image data into the 'bits' byte array.
         CWindowDC dc(HWND_DESKTOP);
         CBitmapInfoPtr pbmi(*this);
+        BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
+        bmiHeader.biBitCount = 24;
         dc.GetDIBits(*this, 0, bm.bmHeight, NULL, pbmi, DIB_RGB_COLORS);
         DWORD size = pbmi->bmiHeader.biSizeImage;
         std::vector<byte> vBits(size, 0);
         byte* bits = &vBits[0];
         dc.GetDIBits(*this, 0, bm.bmHeight, bits, pbmi, DIB_RGB_COLORS);
 
-        // convert the image to pale gray scale.
-        int stride = bm.bmWidth + (bm.bmWidth * bm.bmBitsPixel / 8) % 4;
-        for (int y = 0; y < bm.bmHeight; y++)
+        UINT nWidthBytes = bmiHeader.biSizeImage / bmiHeader.biHeight;
+        int yOffset = 0;
+        int xOffset;
+        size_t Index;
+
+        for (int Row = 0; Row < bmiHeader.biHeight; ++Row)
         {
-            for (int x = 0; x < stride; x++)
+            xOffset = 0;
+
+            for (int Column = 0; Column < bmiHeader.biWidth; ++Column)
             {
-                int i = (x + y * stride) * bm.bmBitsPixel / 8;
+                // Calculate Index
+                Index = yOffset + xOffset;
 
                 // skip for colors matching the mask
-                if ((bits[i + 2] == GetRValue(clrMask)) &&
-                    (bits[i + 1] == GetGValue(clrMask)) &&
-                    (bits[i + 0] == GetBValue(clrMask)))
-                    continue;
+                if ((bits[Index + 0] != GetRValue(clrMask)) &&
+                    (bits[Index + 1] != GetGValue(clrMask)) &&
+                    (bits[Index + 2] != GetBValue(clrMask)))
+                {
+                    BYTE byGray = BYTE(95 + (bits[Index + 2] * 3 + bits[Index + 1] * 6 + bits[Index + 0]) / 20);
+                    bits[Index] = byGray;
+                    bits[Index + 1] = byGray;
+                    bits[Index + 2] = byGray;
+                }
 
-                BYTE gray = BYTE(95 + (bits[i + 2] * 3 + bits[i + 1] * 6 + bits[i + 0]) / 20);
-                bits[i + 0] = bits[i + 1] = bits[i + 2] = gray;
+                // Increment the horizontal offset
+                xOffset += bmiHeader.biBitCount >> 3;
             }
+
+            // Increment vertical offset
+            yOffset += nWidthBytes;
         }
 
         dc.SetDIBits(*this, 0, bm.bmHeight, bits, pbmi, DIB_RGB_COLORS);
@@ -1546,12 +1569,18 @@ namespace Win32xx
     }
 
 
-    // Convert a bitmap image to grey scale.
+    // Convert a bitmap image to gray scale.
     inline void CBitmap::GrayScaleBitmap()
     {
+        // Requires 248 bits per pixel
+        BITMAP bm = GetBitmapData();
+        if (bm.bmBitsPixel < 8)
+            return;
+
         // Create our LPBITMAPINFO object
         CBitmapInfoPtr pbmi(*this);
         BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
+        bmiHeader.biBitCount = 24;
 
         // Create the reference DC for GetDIBits to use
         CMemDC dcMem(NULL);
@@ -1604,7 +1633,6 @@ namespace Win32xx
         // Create our LPBITMAPINFO object
         CBitmapInfoPtr pbmi(*this);
         BITMAPINFOHEADER& bmiHeader = pbmi->bmiHeader;
-
         bmiHeader.biBitCount = 24;
 
         // Create the reference DC for GetDIBits to use

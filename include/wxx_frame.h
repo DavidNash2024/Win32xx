@@ -1022,7 +1022,7 @@ namespace Win32xx
         dcMem.SolidFill(crMask, rc);
 
         // Draw the icon on the memory DC
-        ::DrawIconEx(dcMem, 0, 0, hIcon, cx, cy, 0, 0, DI_NORMAL);
+        dcMem.DrawIconEx(0, 0, hIcon, cx, cy, 0, 0, DI_NORMAL);
 
         // Detach the bitmap so we can use it.
         CBitmap Bitmap = dcMem.DetachBitmap();
@@ -1054,8 +1054,17 @@ namespace Win32xx
         {
             m_vMenuIcons.push_back(nID_MenuItem);
 
-            COLORREF mask = RGB(200, 199, 200);
-            AddDisabledMenuImage(hIcon, mask);
+            // Set the mask color to grey for the new ImageList
+            COLORREF crMask = RGB(200, 200, 200);
+            CClientDC DesktopDC(HWND_DESKTOP);
+            if (GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
+            {
+                HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
+                UINT Index = GetNearestPaletteIndex(hPal, crMask);
+                if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
+            }
+
+            AddDisabledMenuImage(hIcon, crMask);
 
             return TRUE;
         }

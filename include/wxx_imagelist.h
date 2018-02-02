@@ -595,14 +595,13 @@ namespace Win32xx
                 rc.SetRect(0, 0, cx, cx);
 
                 // Set the mask color to grey for the new ImageList
-                COLORREF crMask = RGB(200, 199, 200);
-                if ( GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
+                COLORREF crMask = RGB(200, 200, 200);
+                if (GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
                 {
                     HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
                     UINT Index = GetNearestPaletteIndex(hPal, crMask);
                     if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
                 }
-
                 dcMem.SolidFill(crMask, rc);
 
                 // Draw the image on the memory DC
