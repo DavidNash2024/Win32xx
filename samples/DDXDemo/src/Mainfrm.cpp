@@ -241,11 +241,12 @@ OnCreate(CREATESTRUCT& cs)                          /*
 {
     // Uncomment the lines below to change frame options.
 
-    // SetUseIndicatorStatus(FALSE); // Don't show keyboard indicators
-    // SetUseMenuStatus(FALSE);  // Don't show menu item descriptions
-    // SetUseReBar(FALSE);       // Don't use a ReBar
-    // SetUseThemes(FALSE);      // Don't use themes
-    // SetUseToolBar(FALSE);     // Don't use a ToolBar
+    // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
+    // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
+    // UseReBar(FALSE);              // Don't use a ReBar
+	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseThemes(FALSE);             // Don't use themes
+    // UseToolBar(FALSE);            // Don't use a ToolBar
 
     // call the base class function
     int rtn = CFrame::OnCreate(cs);  

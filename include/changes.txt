@@ -7,14 +7,31 @@ New Features and Enhancements
  - Additional toolbars have better support for disabled buttons.
  - Optimised the creation of the image list for disabled menu icons.
  - Optimised AddMenuIcon (the disabled image-list isn't recreated unnecessarily).
- - Added SetUseStatusBar option for OnCreate.
+ - Added UseStatusBar option for OnCreate.
+ - Relaxed restrictions on size of images for menu icons. This provides better 
+    support for larger screen scaling available on windows 10 for DPI aware apps. 
 
 
 Changes in detail
 -----------------
-Added CBitmap::ConvertToDisabled                     member function
-Added CFrameT::AddDisabledMenuImage                  member function
+Added CBitmap::ConvertToDisabled                 member function
+Added CFrameT::AddDisabledMenuImage              member function
+Added CFrameT::IsUsingStatusBar                  member function
+Added CFrameT::UseStatusBar                      member function
 
+Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
+
+Renamed CFrameT::GetUseIndicatorStatus    to     CFrameT::IsUsingIndicatorStatus
+Renamed CFrameT::GetUseMenuStatus         to     CFrameT::IsUsingMenuStatus
+Renamed CFrameT::GetUseReBar              to     CFrameT::IsUsingReBar
+Renamed CFrameT::GetUseThemes             to     CFrameT::IsUsingThemes
+Renamed CFrameT::GetUseToolBar            to     CFrameT::IsUsingToolBar
+Renamed CFrameT::SetUseIndicatorStatus    to     CFrameT::UseIndicatorStatus
+Renamed CFrameT::SetUseMenuStatus         to     CFrameT::UseMenuStatus
+Renamed CFrameT::SetUseReBar              to     CFrameT::UseReBar
+Renamed CFrameT::SetUseThemes             to     CFrameT::UseThemes
+Renamed CFrameT::SetUseToolBar            to     CFrameT::UseToolBar
+                                         
 
 
 Version 8.5
