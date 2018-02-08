@@ -413,8 +413,8 @@ namespace Win32xx
         {
             if (CreateRibbon(*this))
             {
-                SetUseReBar(FALSE);     // Don't use a ReBar
-                SetUseToolBar(FALSE);   // Don't use a ToolBar
+                UseReBar(FALSE);     // Don't use a ReBar
+                UseToolBar(FALSE);   // Don't use a ToolBar
             }
             else
             {

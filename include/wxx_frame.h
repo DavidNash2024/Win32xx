@@ -397,8 +397,8 @@ namespace Win32xx
 
     protected:
         // Override these functions as required.
-        virtual void AddDisabledMenuImage(HICON hIcon, COLORREF clrMask);
-        virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon);
+        virtual void AddDisabledMenuImage(HICON hIcon, COLORREF clrMask, int iconWidth = 16);
+        virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int iconWidth = 16);
         virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT BitmapID, UINT BitmapDisabledID);
         virtual void AddMenuBarBand();
         virtual void AddMRUEntry(LPCTSTR szMRUEntry);
@@ -467,18 +467,18 @@ namespace Win32xx
         virtual void UpdateMRUMenu();
 
         // Not intended to be overridden
-        BOOL GetUseIndicatorStatus() const { return m_UseIndicatorStatus; }
-        BOOL GetUseMenuStatus() const { return m_UseMenuStatus; }
-        BOOL GetUseReBar() const { return m_UseReBar; }
-        BOOL GetUseStatusBar() const { return m_UseStatusBar; }
-        BOOL GetUseThemes() const { return m_UseThemes; }
-        BOOL GetUseToolBar() const { return m_UseToolBar; }
-        void SetUseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
-        void SetUseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
-        void SetUseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
-        void SetUseStatusBar(BOOL UseStatusBar) { m_UseStatusBar = UseStatusBar; }
-        void SetUseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
-        void SetUseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
+        BOOL IsUsingIndicatorStatus() const { return m_UseIndicatorStatus; }
+        BOOL IsUsingMenuStatus() const { return m_UseMenuStatus; }
+        BOOL IsUsingReBar() const { return m_UseReBar; }
+        BOOL IsUsingStatusBar() const { return m_UseStatusBar; }
+        BOOL IsUsingThemes() const { return m_UseThemes; }
+        BOOL IsUsingToolBar() const { return m_UseToolBar; }
+        void UseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
+        void UseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
+        void UseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
+        void UseStatusBar(BOOL UseStatusBar) { m_UseStatusBar = UseStatusBar; }
+        void UseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
+        void UseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
 
         LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
@@ -1000,12 +1000,12 @@ namespace Win32xx
     // Adds the grayscale image of the specified icon the disabled menu image-list.
     // This function is called by AddMenuIcon.
     template <class T>
-    inline void CFrameT<T>::AddDisabledMenuImage(HICON hIcon, COLORREF crMask)
+    inline void CFrameT<T>::AddDisabledMenuImage(HICON hIcon, COLORREF crMask, int iconWidth)
     {
         CClientDC DesktopDC(NULL);
         CMemDC dcMem(NULL);
-        int cx = 16;
-        int cy = 16;
+        int cx = iconWidth;
+        int cy = iconWidth;
 
         dcMem.CreateCompatibleBitmap(DesktopDC, cx, cy);
         CRect rc;
@@ -1031,24 +1031,29 @@ namespace Win32xx
         if (m_imlMenuDis.GetHandle() == 0)
             m_imlMenuDis.Create(cx, cy, ILC_COLOR24 | ILC_MASK, 1, 0);
 
-        m_imlMenuDis.Add(Bitmap, crMask);
+		// Ensure we add an image with the same size.
+		assert(m_imlMenuDis.GetIconSize().cx == cx);
+
+		m_imlMenuDis.Add(Bitmap, crMask);
     }
 
 
     // Adds an icon to an internal ImageList for use with popup menu items.
-    // The image size for menu icons should be 16x16.
     template <class T>
-    inline BOOL CFrameT<T>::AddMenuIcon(int nID_MenuItem, HICON hIcon)
+    inline BOOL CFrameT<T>::AddMenuIcon(int nID_MenuItem, HICON hIcon, int iconWidth /* = 16*/)
     {
-        int cxImage = 16;
-        int cyImage = 16;
-        
+        int cxImage = iconWidth;
+        int cyImage = iconWidth;
+
         // Create a new ImageList if required.
         if (NULL == m_imlMenu.GetHandle())
         {
             m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
             m_vMenuIcons.clear();
         }
+
+		// Ensure we add an image with the same size.
+		assert(m_imlMenuDis.GetIconSize().cx == cxImage);
 
         if (m_imlMenu.Add(hIcon) != -1)
         {
@@ -1064,7 +1069,7 @@ namespace Win32xx
                 if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
             }
 
-            AddDisabledMenuImage(hIcon, crMask);
+            AddDisabledMenuImage(hIcon, crMask, iconWidth);
 
             return TRUE;
         }
@@ -1083,9 +1088,7 @@ namespace Win32xx
         for (UINT i = 0 ; i < MenuData.size(); ++i)
         {
             if (MenuData[i] != 0)   // Don't count separators
-            {
                 ++iImages;
-            }
         }
 
         // Load the button images from Resource ID.
@@ -1096,62 +1099,41 @@ namespace Win32xx
 
         BITMAP bm = Bitmap.GetBitmapData();
         int cxImage = bm.bmHeight;
+		int cyImage = bm.bmHeight;
 
-        if (cxImage <= 16)      // images should be 16x16 or 16x15
+        // Create the ImageList if required.
+        if (NULL == m_imlMenu.GetHandle())
         {
-            cxImage = 16;
-            int cyImage = 16;
+            m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, iImages, 0);
+            m_vMenuIcons.clear();
+        }
 
-            // Create the ImageList if required.
-            if (NULL == m_imlMenu.GetHandle())
-            {
-                m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, iImages, 0);
-                m_vMenuIcons.clear();
-            }
+        // Add the resource IDs to the m_vMenuIcons vector.
+        std::vector<UINT>::const_iterator iter;
+        for (iter = MenuData.begin(); iter != MenuData.end(); ++iter)
+        {
+            if ((*iter) != 0)
+                m_vMenuIcons.push_back(*iter);
+        }
 
-            // Add the resource IDs to the m_vMenuIcons vector.
-            std::vector<UINT>::const_iterator iter;
-            for (iter = MenuData.begin(); iter != MenuData.end(); ++iter)
-            {
-                if ((*iter) != 0)
-                {
-                    m_vMenuIcons.push_back(*iter);
-                }
-            }
+        // Add the images to the ImageList.
+        m_imlMenu.Add(Bitmap, crMask);
 
-            // Add the images to the ImageList.
-            m_imlMenu.Add(Bitmap, crMask);
+        // Create the Disabled imagelist.
+        if (BitmapDisabledID != 0)
+        {
+            m_imlMenuDis.DeleteImageList();
+            m_imlMenuDis.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, iImages, 0);
 
-            // Create the Disabled imagelist.
-            if (BitmapDisabledID != 0)
-            {
-                m_imlMenuDis.DeleteImageList();
-                m_imlMenuDis.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, iImages, 0);
+            CBitmap BitmapDisabled(BitmapDisabledID);
 
-                CBitmap BitmapDisabled(BitmapDisabledID);
-                BITMAP bmDis = BitmapDisabled.GetBitmapData();
-                int cyImageDis = bmDis.bmHeight;
-
-                // Disabled icons must be 16x16 or 16x15
-                if (cyImageDis <= 16)
-                {
-                    m_imlMenuDis.Add(BitmapDisabled, crMask);
-                }
-                else
-                {
-                    m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
-                }
-            }
-            else
-            {
-                m_imlMenuDis.DeleteImageList();
-                m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
-            }
+            m_imlMenuDis.Add(BitmapDisabled, crMask);
 
         }
         else
         {
-            TRACE("AddMenuIcons: Failed to add images. Menu Icons should be 16x16 or 15x16\n");
+            m_imlMenuDis.DeleteImageList();
+            m_imlMenuDis.CreateDisabledImageList(m_imlMenu);
         }
 
         // return the number of menu icons.
@@ -1810,8 +1792,9 @@ namespace Win32xx
             return;
 
         // Get icon size
-        int Iconx = GetMenuMetrics().m_sizeCheck.cx;
-        int Icony = GetMenuMetrics().m_sizeCheck.cy;
+		CSize iconSize = m_imlMenu.GetIconSize();
+		int Iconx = iconSize.cx;
+		int Icony = iconSize.cy;
 
         // get the drawing rectangle
         CRect rc = pdis->rcItem;
@@ -2429,7 +2412,7 @@ namespace Win32xx
         GetMenuMetrics().Initialize();
 
         // Create the ToolBar
-        if (GetUseToolBar())
+        if (IsUsingToolBar())
         {
             CreateToolBar();
             ShowToolBar(GetInitValues().ShowToolBar);
@@ -2443,7 +2426,7 @@ namespace Win32xx
         SetupMenuIcons();
 
         // Create the status bar
-        if (GetUseStatusBar())
+        if (IsUsingStatusBar())
         {
             GetStatusBar().Create(*this);
             GetStatusBar().SetFont(m_fntStatusBar, FALSE);

@@ -480,7 +480,7 @@ namespace Win32xx
         case IDW_VIEW_TOOLBAR:
             {
                 BOOL IsVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
-                GetActiveMenu().EnableMenuItem(nID, T::GetUseToolBar() ? MF_ENABLED : MF_DISABLED);
+                GetActiveMenu().EnableMenuItem(nID, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
                 GetActiveMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
