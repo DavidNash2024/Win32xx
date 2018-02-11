@@ -31,7 +31,7 @@ CRect CMainFrame::GetViewRect() const
     if (GetStatusBar().IsWindow() && (GetStatusBar().IsWindowVisible()))
         rcClient = ExcludeChildRect(rcClient, GetStatusBar());
 
-    if (IsReBarSupported() && GetUseReBar() && GetReBar().IsWindow())
+    if (IsReBarSupported() && IsUsingReBar() && GetReBar().IsWindow())
         rcClient = ExcludeChildRect(rcClient, GetReBar());
     else
         if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
@@ -277,7 +277,7 @@ void CMainFrame::RecalcLayout()
     {
         GetStatusBar().SetWindowPos(NULL, 0, 0, 0, 0, SWP_SHOWWINDOW);
         GetStatusBar().Invalidate();
-        if (GetUseMenuStatus())
+        if (IsUsingMenuStatus())
             GetStatusBar().SetWindowText(GetStatusText());
 
         SetStatusIndicators();

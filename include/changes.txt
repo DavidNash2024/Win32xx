@@ -18,6 +18,15 @@ Added CBitmap::ConvertToDisabled                 member function
 Added CFrameT::AddDisabledMenuImage              member function
 Added CFrameT::IsUsingStatusBar                  member function
 Added CFrameT::UseStatusBar                      member function
+Added CImageList::Copy
+Added CImageList::GetBkColor
+Added CImageList::GetDragImage
+Added CImageList::EndDrag
+Added CImageList::ExtractIcon
+Added CImageList::Read
+Added CImageList::SetBkColor
+Added CImageList::SetDragCursorImage
+Added CImageLIst::Write
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
 
@@ -31,7 +40,7 @@ Renamed CFrameT::SetUseMenuStatus         to     CFrameT::UseMenuStatus
 Renamed CFrameT::SetUseReBar              to     CFrameT::UseReBar
 Renamed CFrameT::SetUseThemes             to     CFrameT::UseThemes
 Renamed CFrameT::SetUseToolBar            to     CFrameT::UseToolBar
-                                         
+
 
 
 Version 8.5

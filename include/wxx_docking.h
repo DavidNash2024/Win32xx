@@ -194,7 +194,7 @@ namespace Win32xx
         CWnd* GetActiveView() const;
         const std::vector<ContainerInfo>& GetAllContainers() const {return m_pContainerParent->m_vContainerInfo;}
         CDockContainer* GetContainerParent() const { return m_pContainerParent; }
-        CString& GetDockCaption() const { return m_csCaption; }
+        const CString& GetDockCaption() const { return m_csCaption; }
         CDocker* GetDocker() const      { return m_pDocker; }
         HICON GetTabIcon() const        { return m_hTabIcon; }
         LPCTSTR GetTabText() const      { return m_strTabText; }
@@ -311,7 +311,7 @@ namespace Win32xx
             virtual CRect GetCloseRect() const;
             virtual void SendNotify(UINT nMessageID);
 
-            CString& GetCaption() const     { return m_csCaption; }
+            const CString& GetCaption() const     { return m_csCaption; }
             CWnd& GetView() const           { assert (m_pView); return *m_pView; }
             void SetDocker(CDocker* pDocker)    { m_pDocker = pDocker;}
             void SetCaption(LPCTSTR szCaption)  { m_csCaption = szCaption; }
@@ -500,7 +500,7 @@ namespace Win32xx
         const std::vector <CDocker*> & GetDockChildren() const      {return m_vDockChildren;}
         const std::vector <CDocker*> & GetAllDockers()  const       {return m_vAllDockers;}
         int GetBarWidth() const             {return GetDockBar().GetWidth();}
-        CString& GetCaption() const         {return GetDockClient().GetCaption();}
+        const CString& GetCaption() const         {return GetDockClient().GetCaption();}
         int GetDockID() const               {return m_nDockID;}
         CDocker* GetDockParent() const      {return m_pDockParent;}
         DWORD GetDockStyle() const          {return m_DockStyle;}
