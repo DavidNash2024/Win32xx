@@ -1572,7 +1572,7 @@ namespace Win32xx
     // Convert a bitmap image to gray scale.
     inline void CBitmap::GrayScaleBitmap()
     {
-        // Requires 248 bits per pixel
+        // Requires 8 bits per pixel
         BITMAP bm = GetBitmapData();
         if (bm.bmBitsPixel < 8)
             return;

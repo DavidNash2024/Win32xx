@@ -558,7 +558,6 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
         if (fileLength > 100000000)
         {
             throw CFileException(szFileName, _T("File is too large!"));
-            return FALSE;
         }
 
         EDITSTREAM es;

@@ -297,7 +297,7 @@ BOOL CMainFrame::OnFileOpen()
     // "*.my" for "MyType Files" and "*.*' for "All Files."
     LPCTSTR szFilters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
     CFileDialog FileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, szFilters);
-    
+
     if (FileDlg.DoModal(*this) == IDOK)
     {
         CString str = FileDlg.GetPathName();
@@ -391,7 +391,7 @@ BOOL CMainFrame::OnOptionsFont()
     lstrcpy(lf.lfFaceName, cf2.szFaceName);
     lf.lfHeight = cf2.yHeight / 15;
     lf.lfWeight = (cf2.dwEffects & CFE_BOLD) ? 700 : 400;
-    lf.lfItalic = (cf2.dwEffects & CFE_ITALIC);
+    lf.lfItalic = ( BYTE(cf2.dwEffects) & CFE_ITALIC );
 
     // Display the Choose Font dialog
     CFontDialog LogFont(lf, CF_SCREENFONTS | CF_EFFECTS);
@@ -434,7 +434,6 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
         if (fileLength > 100000000)
         {
             throw CFileException(szFileName, _T("File is too large!"));
-            return FALSE;
         }
 
         EDITSTREAM es;
