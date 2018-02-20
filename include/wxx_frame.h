@@ -1031,9 +1031,6 @@ namespace Win32xx
         if (m_imlMenuDis.GetHandle() == 0)
             m_imlMenuDis.Create(cx, cy, ILC_COLOR24 | ILC_MASK, 1, 0);
 
-		// Ensure we add an image with the same size.
-		assert(m_imlMenuDis.GetIconSize().cx == cx);
-
 		m_imlMenuDis.Add(Bitmap, crMask);
     }
 
@@ -1051,9 +1048,6 @@ namespace Win32xx
             m_imlMenu.Create(cxImage, cyImage, ILC_COLOR32 | ILC_MASK, 1, 0);
             m_vMenuIcons.clear();
         }
-
-		// Ensure we add an image with the same size.
-		assert(m_imlMenuDis.GetIconSize().cx == cxImage);
 
         if (m_imlMenu.Add(hIcon) != -1)
         {
