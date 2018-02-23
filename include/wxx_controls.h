@@ -105,11 +105,13 @@ namespace Win32xx
         CRect GetDroppedControlRect() const;
         BOOL  GetDroppedState() const;
         int   GetDroppedWidth() const;
+		HWND  GetEditCtrl() const;
         DWORD GetEditSel() const;
         BOOL  GetExtendedUI() const;
         int   GetHorizontalExtent() const;
         DWORD GetItemData(int nIndex) const;
         int   GetItemHeight(int nIndex) const;
+		HWND  GetLBCtrl() const;
         int   GetLBText(int nIndex, LPTSTR lpszText) const;
         int   GetLBTextLen(int nIndex) const;
         LCID  GetLocale() const;
@@ -716,6 +718,18 @@ namespace Win32xx
     }
 
 
+	// Returns the handle to the edit box.
+	inline HWND  CComboBox::GetEditCtrl() const
+	{
+		COMBOBOXINFO cbi;
+		ZeroMemory(&cbi, sizeof(cbi));
+		cbi.cbSize = sizeof(cbi);
+		VERIFY(::GetComboBoxInfo(*this, &cbi));
+
+		return cbi.hwndItem;
+	}
+
+
     // Gets the starting and ending character positions of the current selection
     // in the edit control of the combo box.
     inline DWORD CComboBox::GetEditSel() const
@@ -756,6 +770,18 @@ namespace Win32xx
         assert(IsWindow());
         return static_cast<int>(SendMessage(CB_GETITEMHEIGHT, nIndex, 0L));
     }
+
+
+	// returns the handle to the drop-down list.
+	HWND  CComboBox::GetLBCtrl() const
+	{
+		COMBOBOXINFO cbi;
+		ZeroMemory(&cbi, sizeof(cbi));
+		cbi.cbSize = sizeof(cbi);
+		VERIFY(::GetComboBoxInfo(*this, &cbi));
+
+		return cbi.hwndList;
+	}
 
 
     //  Retrieves a string from the list of the combo box.
