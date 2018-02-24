@@ -105,13 +105,11 @@ namespace Win32xx
         CRect GetDroppedControlRect() const;
         BOOL  GetDroppedState() const;
         int   GetDroppedWidth() const;
-		HWND  GetEditCtrl() const;
         DWORD GetEditSel() const;
         BOOL  GetExtendedUI() const;
         int   GetHorizontalExtent() const;
         DWORD GetItemData(int nIndex) const;
         int   GetItemHeight(int nIndex) const;
-		HWND  GetLBCtrl() const;
         int   GetLBText(int nIndex, LPTSTR lpszText) const;
         int   GetLBTextLen(int nIndex) const;
         LCID  GetLocale() const;
@@ -132,6 +130,11 @@ namespace Win32xx
         LCID  SetLocale( LCID NewLocale ) const;
         int   SetTopIndex(int nIndex) const;
         void  ShowDropDown(BOOL Show = TRUE) const;
+
+#if WINVER >= 0x0500
+        HWND  GetEditCtrl() const;
+		HWND  GetLBCtrl() const;
+#endif
 
     protected:
         // Overridables
@@ -718,6 +721,7 @@ namespace Win32xx
     }
 
 
+#if WINVER >= 0x0500
 	// Returns the handle to the edit box.
 	inline HWND  CComboBox::GetEditCtrl() const
 	{
@@ -728,7 +732,7 @@ namespace Win32xx
 
 		return cbi.hwndItem;
 	}
-
+#endif
 
     // Gets the starting and ending character positions of the current selection
     // in the edit control of the combo box.
@@ -772,8 +776,9 @@ namespace Win32xx
     }
 
 
+#if WINVER >= 0x0500
 	// returns the handle to the drop-down list.
-	HWND  CComboBox::GetLBCtrl() const
+	inline HWND  CComboBox::GetLBCtrl() const
 	{
 		COMBOBOXINFO cbi;
 		ZeroMemory(&cbi, sizeof(cbi));
@@ -782,7 +787,7 @@ namespace Win32xx
 
 		return cbi.hwndList;
 	}
-
+#endif
 
     //  Retrieves a string from the list of the combo box.
     inline int  CComboBox::GetLBText(int nIndex, LPTSTR lpszText) const
@@ -846,7 +851,7 @@ namespace Win32xx
         case WM_COMPAREITEM:    return CompareItem((LPCOMPAREITEMSTRUCT)lParam);
         }
 
-        return 0;   // Allow other messages to be handled elsewhere. 
+        return 0;   // Allow other messages to be handled elsewhere.
     }
 
 
@@ -1046,7 +1051,7 @@ namespace Win32xx
     inline CImageList CComboBoxEx::SetImageList(HIMAGELIST himlNew) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0L, 
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(CBEM_SETIMAGELIST, 0L,
                                                        reinterpret_cast<LPARAM>(himlNew)));
         return CImageList(himl);
     }
