@@ -309,7 +309,9 @@ namespace Win32xx
     {
         // read, simply and  in binary mode, the size into the lpBuf
         assert(m_pFile);
-        m_pFile->Read(lpBuf, size);
+		UINT nBytes = m_pFile->Read(lpBuf, size);
+		if (nBytes != size)
+			throw CFileException(m_pFile->GetFilePath(), _T("Failed to read from archive."));
     }
 
     // Record the archived data schema number.  This acts as a version number
