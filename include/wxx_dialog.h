@@ -170,6 +170,8 @@ namespace Win32xx
         virtual void RecalcLayout();
         CRect GetMinRect() const { return m_rcMin; }
         CRect GetMaxRect() const { return m_rcMax; }
+		void  SetMinRect(const RECT& rcMin) { m_rcMin = rcMin; }
+		void  SetMaxRect(const RECT& rcMax) { m_rcMax = rcMax; }
 
         struct ResizeData
         {
