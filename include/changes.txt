@@ -29,6 +29,8 @@ Added CImageList::Read
 Added CImageList::SetBkColor
 Added CImageList::SetDragCursorImage
 Added CImageLIst::Write
+Added CResizer::SetMinRect
+Added CResizer::SetMaxRect
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
 
