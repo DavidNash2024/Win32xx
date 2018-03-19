@@ -1014,7 +1014,7 @@ namespace Win32xx
 
         SetFileName(ofn.lpstrFile);
         SetFilter(ofn.lpstrFilter);
-        SetTitle(ofn.lpstrFile);
+        SetTitle(ofn.lpstrFileTitle);
 
         m_OFN.lStructSize       = StructSize;
         m_OFN.hwndOwner         = 0;            // Set this in DoModal
