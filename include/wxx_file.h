@@ -214,7 +214,7 @@ namespace Win32xx
         CString Extension;
 
         int dot = m_FileName.ReverseFind(_T("."));
-        if (dot > 1)
+        if (dot > 0)
             Extension = m_FileName.Mid(dot+1, lstrlen(m_FileName));
 
         return Extension;
