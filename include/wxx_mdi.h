@@ -556,7 +556,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CMDIFrameT<T>::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        if (T::IsMenuBarUsed())
+        if (T::IsUsingMenuBar())
         {
             // Refresh MenuBar Window
             T::GetMenuBar().SetMenu(T::GetMenuBar().GetMenu());
@@ -645,7 +645,7 @@ namespace Win32xx
         }
         else
         {
-            if (T::IsMenuBarUsed())
+            if (T::IsUsingMenuBar())
                 T::GetMenuBar().SetMenu( T::GetFrameMenu() );
             else
                 T::SetMenu( T::GetFrameMenu() );
@@ -681,7 +681,7 @@ namespace Win32xx
 
                 if (MenuWindow.GetHandle())
                 {
-                    if (T::IsMenuBarUsed())
+                    if (T::IsUsingMenuBar())
                     {
                         AppendMDIMenu(MenuWindow);
                         T::GetMenuBar().SetMenu(Menu);

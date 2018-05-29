@@ -2002,8 +2002,6 @@ namespace Win32xx
 
     // The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
     // or top-level window.
-    // The SetWindowPos function changes the size, position, and Z order of a child, pop-up,
-    // or top-level window.
     // The pInsertAfter can one of:  &wndTop, &wndTopMost, &wndBottom, or &wndNoTopMost.
     inline BOOL CWnd::SetWindowPos(HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const
     {

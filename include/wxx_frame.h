@@ -365,8 +365,8 @@ namespace Win32xx
         // These functions aren't virtual, and shouldn't be overridden
         CRect ExcludeChildRect(CRect& rcClient, HWND hChild) const;
         HACCEL GetFrameAccel() const                { return m_hAccel; }
-        InitValues GetInitValues() const            { return m_InitValues; }
         CMenu& GetFrameMenu() const                 { return m_Menu; }
+		InitValues GetInitValues() const            { return m_InitValues; }
         MenuTheme& GetMenuBarTheme() const          { return m_MBTheme; }
         CMenuMetrics& GetMenuMetrics()              { return m_MenuMetrics; }
         std::vector<CString> GetMRUEntries() const  { return m_vMRUEntries; }
@@ -379,10 +379,6 @@ namespace Win32xx
         ToolBarTheme& GetToolBarTheme() const       { return m_TBTheme; }
         CString GetStatusText() const               { return m_strStatusText; }
         CString GetTitle() const                    { return T::GetWindowText(); }
-        BOOL IsMenuBarUsed() const                  { return (GetMenuBar().IsWindow()); }
-        BOOL IsReBarSupported() const               { return (GetComCtlVersion() > 470); }
-        BOOL IsReBarUsed() const                    { return (GetReBar().IsWindow()); }
-        BOOL IsVistaMenuUsed() const                { return m_MenuMetrics.IsVistaMenu(); }
         void SetAccelerators(UINT ID_ACCEL);
         void SetFrameMenu(UINT ID_MENU);
         void SetFrameMenu(HMENU hMenu);
@@ -467,12 +463,15 @@ namespace Win32xx
         virtual void UpdateMRUMenu();
 
         // Not intended to be overridden
+		BOOL IsReBarSupported() const { return (GetComCtlVersion() > 470); }
         BOOL IsUsingIndicatorStatus() const { return m_UseIndicatorStatus; }
+		BOOL IsUsingMenuBar() const { return GetMenuBar().IsWindow(); }
         BOOL IsUsingMenuStatus() const { return m_UseMenuStatus; }
         BOOL IsUsingReBar() const { return m_UseReBar; }
         BOOL IsUsingStatusBar() const { return m_UseStatusBar; }
         BOOL IsUsingThemes() const { return m_UseThemes; }
         BOOL IsUsingToolBar() const { return m_UseToolBar; }
+		BOOL IsUsingVistaMenu() const { return m_MenuMetrics.IsVistaMenu(); }
         void UseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
         void UseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
         void UseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
@@ -1317,7 +1316,7 @@ namespace Win32xx
                 if (GetMenuBarTheme().UseThemes)
                 {
                     // Leave a pixel gap above and below the drawn rectangle.
-                    if (IsVistaMenuUsed())
+                    if (IsUsingVistaMenu())
                         rcRect.InflateRect(0, -2);
                     else
                         rcRect.InflateRect(0, -1);
@@ -1588,14 +1587,14 @@ namespace Win32xx
         MenuTheme& MBT = GetMenuBarTheme();
         CDC dcDraw(pdis->hDC);
 
-        if (IsVistaMenuUsed() && GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
+        if (IsUsingVistaMenu() && GetMenuMetrics().IsThemeBackgroundPartiallyTransparent(MENU_POPUPITEM, iStateId))
         {
             GetMenuMetrics().DrawThemeBackground(pdis->hDC, MENU_POPUPBACKGROUND, 0, &pdis->rcItem, NULL);
         }
 
         // Draw the gutter.
         CRect rcGutter = GetMenuMetrics().GetGutterRect(pdis->rcItem);
-        if (IsVistaMenuUsed())
+        if (IsUsingVistaMenu())
             GetMenuMetrics().DrawThemeBackground(pdis->hDC, MENU_POPUPGUTTER, 0, &rcGutter, NULL);
         else
             dcDraw.GradientFill(MBT.clrPressed1, MBT.clrPressed2, rcGutter, TRUE);
@@ -1603,7 +1602,7 @@ namespace Win32xx
         if (pmid->mii.fType & MFT_SEPARATOR)
         {
             // Draw the separator.
-            if (IsVistaMenuUsed())
+            if (IsUsingVistaMenu())
             {
                 CRect rcSeparator = GetMenuMetrics().GetSeperatorRect(pdis->rcItem);
                 GetMenuMetrics().DrawThemeBackground(pdis->hDC, MENU_POPUPSEPARATOR, 0, &rcSeparator, NULL);
@@ -1633,7 +1632,7 @@ namespace Win32xx
             DrawMenuItemText(pdis);
         }
 
-        if (IsVistaMenuUsed())
+        if (IsUsingVistaMenu())
         {
             // Draw the Submenu arrow.
             // We extract the bitmap from DrawFrameControl to support Windows 10
@@ -1670,7 +1669,7 @@ namespace Win32xx
     {
         // Draw the item background
         CRect rcSelection = GetMenuMetrics().GetSelectionRect(pdis->rcItem);
-        if (IsVistaMenuUsed())
+        if (IsUsingVistaMenu())
         {
             int iStateId = GetMenuMetrics().ToItemStateId(pdis->itemState);
             GetMenuMetrics().DrawThemeBackground(pdis->hDC, MENU_POPUPITEM, iStateId, &rcSelection, NULL);
@@ -1713,7 +1712,7 @@ namespace Win32xx
         CRect rcBk;
         CDC dcDraw(pdis->hDC);
 
-        if (IsVistaMenuUsed())
+        if (IsUsingVistaMenu())
         {
             int iStateId = GetMenuMetrics().ToItemStateId(pdis->itemState);
             CRect rcCheckBackground = GetMenuMetrics().GetCheckBackgroundRect(pdis->rcItem);
@@ -1841,7 +1840,7 @@ namespace Win32xx
         }
 
         // Draw the item text.
-        if (IsVistaMenuUsed())
+        if (IsUsingVistaMenu())
         {
             ULONG uAccel = ((pdis->itemState & ODS_NOACCEL) ? DT_HIDEPREFIX : 0);
             int iStateId = GetMenuMetrics().ToItemStateId(pdis->itemState);
@@ -2617,7 +2616,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
     {
-        if ((IsMenuBarUsed()) && (LOWORD(wParam)!= VK_SPACE))
+        if ((IsUsingMenuBar()) && (LOWORD(wParam)!= VK_SPACE))
         {
             // Activate MenuBar for key pressed with Alt key held down
             GetMenuBar().OnMenuChar(WM_MENUCHAR, wParam, lParam);
@@ -2881,7 +2880,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
     {
-        if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsMenuBarUsed())
+        if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsUsingMenuBar())
         {
             GetMenuBar().OnSysCommand(WM_SYSCOMMAND, wParam, lParam);
             return 0L;
@@ -3002,7 +3001,7 @@ namespace Win32xx
         }
 
         // Resize the rebar or toolbar
-        if (IsReBarUsed())
+        if (GetReBar().IsWindow())
         {
             GetReBar().SendMessage(WM_SIZE, 0L, 0L);
             GetReBar().Invalidate();
@@ -3015,12 +3014,12 @@ namespace Win32xx
             RecalcViewLayout();
 
         // Adjust rebar bands
-        if (IsReBarUsed())
+        if (IsUsingReBar())
         {
             if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
                 GetReBar().MoveBandsLeft();
 
-            if (IsMenuBarUsed())
+            if (IsUsingMenuBar())
                 SetMenuBarBandSize();
         }
     }
@@ -3225,7 +3224,7 @@ namespace Win32xx
     {
         m_Menu.Attach(hMenu);
 
-        if (IsMenuBarUsed())
+        if (IsUsingMenuBar())
         {
             GetMenuBar().SetMenu( GetFrameMenu() );
             BOOL Show = (hMenu != NULL);    // boolean expression
@@ -3756,14 +3755,14 @@ namespace Win32xx
     {
         if (Show)
         {
-            if (IsReBarUsed())
+            if (IsUsingReBar())
                 GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
             else
                 T::SetMenu(m_Menu);
         }
         else
         {
-            if (IsReBarUsed())
+            if (IsUsingReBar())
                 GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), FALSE);
             else
                 T::SetMenu(NULL);
@@ -3810,14 +3809,14 @@ namespace Win32xx
         {
             if (Show)
             {
-                if (IsReBarUsed())
+                if (IsUsingReBar())
                     GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
                 else
                     GetToolBar().ShowWindow(SW_SHOW);
             }
             else
             {
-                if (IsReBarUsed())
+                if (IsUsingReBar())
                     GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
                 else
                     GetToolBar().ShowWindow(SW_HIDE);
