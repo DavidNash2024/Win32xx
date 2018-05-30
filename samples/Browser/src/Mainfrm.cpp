@@ -274,7 +274,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     CFrame::OnCreate(cs);
 
     // Add the combo box band to the rebar
-    if (IsReBarUsed())
+    if (GetReBar().IsWindow())
     {
         int Height = 22;
         AddComboBoxBand(Height);
@@ -438,7 +438,7 @@ void CMainFrame::SetupMenuIcons()
     // Add menu icons from the IDW_MAIN bitmap resource
     
     std::vector<UINT> IconData;     // a vector of Resource IDs
-    if (IsReBarUsed())
+    if (GetReBar().IsWindow())
     {
         // Load the Resource IDs for popup menu items
         IconData.push_back(IDM_FILE_NEW);

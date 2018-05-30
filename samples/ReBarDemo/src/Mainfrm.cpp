@@ -284,7 +284,7 @@ void CMainFrame::RecalcLayout()
     }
 
     // Resize the rebar or toolbar
-    if (IsReBarUsed())
+    if (GetReBar().IsWindow())
     {
         GetReBar().SendMessage(WM_SIZE, 0L, 0L);
         GetReBar().Invalidate();
@@ -300,12 +300,12 @@ void CMainFrame::RecalcLayout()
     CFrame::RecalcLayout();
 
     // Adjust rebar bands
-    if (IsReBarUsed())
+    if (GetReBar().IsWindow())
     {
         if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
             GetReBar().MoveBandsLeft();
 
-        if (IsMenuBarUsed())
+        if (GetMenuBar().IsWindow())
             SetMenuBarBandSize();
     }
 }

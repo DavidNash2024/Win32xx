@@ -370,8 +370,8 @@ namespace Win32xx
         MenuTheme& GetMenuBarTheme() const          { return m_MBTheme; }
         CMenuMetrics& GetMenuMetrics()              { return m_MenuMetrics; }
         std::vector<CString> GetMRUEntries() const  { return m_vMRUEntries; }
-        CString GetMRUEntry(UINT nIndex);
-        UINT GetMRULimit()                          { return m_nMaxMRU; }
+        CString GetMRUEntry(UINT nIndex) const;
+        UINT GetMRULimit()  const                   { return m_nMaxMRU; }
         CString GetRegistryKeyName() const          { return m_strKeyName; }
         ReBarTheme& GetReBarTheme() const           { return m_RBTheme; }
         StatusBarTheme& GetStatusBarTheme() const   { return m_SBTheme; }
@@ -463,15 +463,14 @@ namespace Win32xx
         virtual void UpdateMRUMenu();
 
         // Not intended to be overridden
-		BOOL IsReBarSupported() const { return (GetComCtlVersion() > 470); }
+        BOOL IsReBarSupported() const { return (GetComCtlVersion() > 470); }
         BOOL IsUsingIndicatorStatus() const { return m_UseIndicatorStatus; }
-		BOOL IsUsingMenuBar() const { return GetMenuBar().IsWindow(); }
         BOOL IsUsingMenuStatus() const { return m_UseMenuStatus; }
         BOOL IsUsingReBar() const { return m_UseReBar; }
         BOOL IsUsingStatusBar() const { return m_UseStatusBar; }
         BOOL IsUsingThemes() const { return m_UseThemes; }
         BOOL IsUsingToolBar() const { return m_UseToolBar; }
-		BOOL IsUsingVistaMenu() const { return m_MenuMetrics.IsVistaMenu(); }
+        BOOL IsUsingVistaMenu() const { return m_MenuMetrics.IsVistaMenu(); }
         void UseIndicatorStatus(BOOL UseIndicatorStatus) { m_UseIndicatorStatus = UseIndicatorStatus; }
         void UseMenuStatus(BOOL UseMenuStatus) { m_UseMenuStatus = UseMenuStatus; }
         void UseReBar(BOOL UseReBar) { m_UseReBar = UseReBar; }
@@ -1030,7 +1029,7 @@ namespace Win32xx
         if (m_imlMenuDis.GetHandle() == 0)
             m_imlMenuDis.Create(cx, cy, ILC_COLOR24 | ILC_MASK, 1, 0);
 
-		m_imlMenuDis.Add(Bitmap, crMask);
+        m_imlMenuDis.Add(Bitmap, crMask);
     }
 
 
@@ -2118,7 +2117,7 @@ namespace Win32xx
 
     // Returns a MRU entry given its index.
     template <class T>
-    inline CString CFrameT<T>::GetMRUEntry(UINT nIndex)
+    inline CString CFrameT<T>::GetMRUEntry(UINT nIndex) const
     {
         CString strPathName;
         if (nIndex < m_vMRUEntries.size())
@@ -2616,7 +2615,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
     {
-        if ((IsUsingMenuBar()) && (LOWORD(wParam)!= VK_SPACE))
+        if ((GetMenuBar().IsWindow()) && (LOWORD(wParam)!= VK_SPACE))
         {
             // Activate MenuBar for key pressed with Alt key held down
             GetMenuBar().OnMenuChar(WM_MENUCHAR, wParam, lParam);
@@ -2880,7 +2879,7 @@ namespace Win32xx
     template <class T>
     inline LRESULT CFrameT<T>::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
     {
-        if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && IsUsingMenuBar())
+        if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && GetMenuBar().IsWindow())
         {
             GetMenuBar().OnSysCommand(WM_SYSCOMMAND, wParam, lParam);
             return 0L;
@@ -3019,7 +3018,7 @@ namespace Win32xx
             if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
                 GetReBar().MoveBandsLeft();
 
-            if (IsUsingMenuBar())
+            if (GetMenuBar().IsWindow())
                 SetMenuBarBandSize();
         }
     }
@@ -3224,7 +3223,7 @@ namespace Win32xx
     {
         m_Menu.Attach(hMenu);
 
-        if (IsUsingMenuBar())
+        if (GetMenuBar().IsWindow())
         {
             GetMenuBar().SetMenu( GetFrameMenu() );
             BOOL Show = (hMenu != NULL);    // boolean expression
