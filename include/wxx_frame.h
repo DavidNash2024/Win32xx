@@ -1241,7 +1241,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::CreateToolBar()
     {
-        if (IsReBarSupported() && m_UseReBar)
+        if (GetReBar().IsWindow())
             AddToolBarBand(GetToolBar(), RBBS_BREAK|RBBS_GRIPPERALWAYS, IDW_TOOLBAR);   // Create the toolbar inside rebar
         else
             GetToolBar().Create(*this); // Create the toolbar without a rebar.
@@ -1258,7 +1258,7 @@ namespace Win32xx
             TRACE("Warning ... No resource IDs assigned to the toolbar\n");
         }
 
-        if (IsReBarSupported() && m_UseReBar)
+        if (GetReBar().IsWindow())
         {
             SIZE MaxSize = GetToolBar().GetMaxSize();
             GetReBar().SendMessage(UWM_TBRESIZE, reinterpret_cast<WPARAM>(GetToolBar().GetHwnd()),
@@ -2378,7 +2378,7 @@ namespace Win32xx
         SetTheme();
 
         // Create the rebar and menubar
-        if (IsReBarSupported() && m_UseReBar)
+        if (IsReBarSupported() && IsUsingReBar())
         {
             // Create the rebar
             GetReBar().Create(*this);
@@ -2431,7 +2431,7 @@ namespace Win32xx
                 GetFrameMenu().EnableMenuItem(IDW_VIEW_STATUSBAR, MF_GRAYED);
         }
 
-        if (m_UseIndicatorStatus)
+        if (IsUsingIndicatorStatus())
             SetStatusIndicators();
 
         // Create the view window
@@ -2633,7 +2633,7 @@ namespace Win32xx
     {
         // Set the StatusBar text when we hover over a menu.
         // Only popup submenus have status strings.
-        if (m_UseMenuStatus && GetStatusBar().IsWindow())
+        if (IsUsingMenuStatus() && GetStatusBar().IsWindow())
         {
             int nID = LOWORD (wParam);
             CMenu Menu(reinterpret_cast<HMENU>(lParam));
@@ -2667,7 +2667,7 @@ namespace Win32xx
         case IDW_VIEW_TOOLBAR:
             {
                 BOOL IsVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-                GetFrameMenu().EnableMenuItem(nID, m_UseToolBar ? MF_ENABLED : MF_DISABLED);
+                GetFrameMenu().EnableMenuItem(nID, GetToolBar().IsWindow() ? MF_ENABLED : MF_DISABLED);
                 GetFrameMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
@@ -2842,7 +2842,7 @@ namespace Win32xx
             m_fntStatusBar.DeleteObject();
             m_fntStatusBar.CreateFontIndirect(info.lfStatusFont);
             GetStatusBar().SetFont(m_fntStatusBar, TRUE);
-            if (m_UseMenuStatus)
+            if (IsUsingMenuStatus())
                 GetStatusBar().SetWindowText(m_strStatusText);
 
             SetStatusIndicators();
@@ -2950,7 +2950,7 @@ namespace Win32xx
     template <class T>
     inline BOOL CFrameT<T>::OnViewToolBar()
     {
-        BOOL Show = m_UseToolBar && !GetToolBar().IsWindowVisible();
+        BOOL Show = GetToolBar().IsWindow() && !GetToolBar().IsWindowVisible();
         ShowToolBar(Show);
         return TRUE;
     }
@@ -3014,7 +3014,7 @@ namespace Win32xx
             RecalcViewLayout();
 
         // Adjust rebar bands
-        if (IsUsingReBar())
+        if (GetReBar().IsWindow())
         {
             if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
                 GetReBar().MoveBandsLeft();
@@ -3343,7 +3343,7 @@ namespace Win32xx
     template <class T>
     inline void CFrameT<T>::SetStatusIndicators()
     {
-        if (GetStatusBar().IsWindow() && (m_UseIndicatorStatus))
+        if (GetStatusBar().IsWindow() && (IsUsingIndicatorStatus()))
         {
             // Calculate the width of the text indicators
             CClientDC dcStatus(GetStatusBar());
@@ -3415,12 +3415,12 @@ namespace Win32xx
         // Avoid themes if using less than 16 bit colors
         CClientDC DesktopDC(NULL);
         if (DesktopDC.GetDeviceCaps(BITSPIXEL) < 16)
-            m_UseThemes = FALSE;
+            UseThemes(FALSE);
 
         BOOL t = TRUE;
         BOOL f = FALSE;
 
-        if (m_UseThemes)
+        if (IsUsingThemes())
         {
             // Retrieve the XP theme name
             m_XPThemeName = GetThemeName();
@@ -3755,14 +3755,14 @@ namespace Win32xx
     {
         if (Show)
         {
-            if (IsUsingReBar())
+            if (GetReBar().IsWindow())
                 GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), TRUE);
             else
                 T::SetMenu(m_Menu);
         }
         else
         {
-            if (IsUsingReBar())
+            if (GetReBar().IsWindow())
                 GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetMenuBar()), FALSE);
             else
                 T::SetMenu(NULL);
@@ -3809,14 +3809,14 @@ namespace Win32xx
         {
             if (Show)
             {
-                if (IsUsingReBar())
+                if (GetReBar().IsWindow())
                     GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), TRUE);
                 else
                     GetToolBar().ShowWindow(SW_SHOW);
             }
             else
             {
-                if (IsUsingReBar())
+                if (GetReBar().IsWindow())
                     GetReBar().SendMessage(RB_SHOWBAND, GetReBar().GetBand(GetToolBar()), FALSE);
                 else
                     GetToolBar().ShowWindow(SW_HIDE);
