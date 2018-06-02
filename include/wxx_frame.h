@@ -371,7 +371,7 @@ namespace Win32xx
         CMenuMetrics& GetMenuMetrics()              { return m_MenuMetrics; }
         std::vector<CString> GetMRUEntries() const  { return m_vMRUEntries; }
         CString GetMRUEntry(UINT nIndex);
-        UINT GetMRULimit()  const                   { return m_nMaxMRU; }
+        UINT GetMRULimit() const                    { return m_nMaxMRU; }
         CString GetRegistryKeyName() const          { return m_strKeyName; }
         ReBarTheme& GetReBarTheme() const           { return m_RBTheme; }
         StatusBarTheme& GetStatusBarTheme() const   { return m_SBTheme; }
