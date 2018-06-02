@@ -370,7 +370,7 @@ namespace Win32xx
         MenuTheme& GetMenuBarTheme() const          { return m_MBTheme; }
         CMenuMetrics& GetMenuMetrics()              { return m_MenuMetrics; }
         std::vector<CString> GetMRUEntries() const  { return m_vMRUEntries; }
-        CString GetMRUEntry(UINT nIndex) const;
+        CString GetMRUEntry(UINT nIndex);
         UINT GetMRULimit()  const                   { return m_nMaxMRU; }
         CString GetRegistryKeyName() const          { return m_strKeyName; }
         ReBarTheme& GetReBarTheme() const           { return m_RBTheme; }
@@ -2117,7 +2117,7 @@ namespace Win32xx
 
     // Returns a MRU entry given its index.
     template <class T>
-    inline CString CFrameT<T>::GetMRUEntry(UINT nIndex) const
+    inline CString CFrameT<T>::GetMRUEntry(UINT nIndex)
     {
         CString strPathName;
         if (nIndex < m_vMRUEntries.size())
