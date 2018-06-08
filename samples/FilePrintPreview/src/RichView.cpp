@@ -13,7 +13,7 @@
     functions. This work has been developed under the co-authorship of 
     Robert C. Tausworthe and David Nash, and released under the copyright 
     provisions of the Win32++ framework software, copyright (c) David Nash,
-    2005-2017. The former author acknowledges and thanks the latter for his 
+    2005-2018. The former author acknowledges and thanks the latter for his 
     patient direction and inspiration in the development of the classes of 
     these classes.
 
@@ -50,11 +50,9 @@ OnAttach()                              /*
 {
       //increase the text limit of the rich edit window
     LimitText(-1);
-
       //Determine which messages will be passed to the parent
     DWORD dwMask = ENM_KEYEVENTS | ENM_DROPFILES;
     SetEventMask(dwMask);
-
     SetFontDefaults();
 }
 
@@ -150,7 +148,6 @@ PreCreate(CREATESTRUCT& cs)                     /*
 {
     cs.style = ES_AUTOHSCROLL | ES_AUTOVSCROLL | ES_MULTILINE | WS_CHILD |
         WS_CLIPCHILDREN | WS_HSCROLL | WS_VISIBLE | WS_VSCROLL;
-
     cs.dwExStyle = WS_EX_CLIENTEDGE | WS_EX_ACCEPTFILES;
     cs.lpszClass = RICHEDIT_CLASS; // RichEdit ver 2.0
 }
@@ -255,7 +252,6 @@ ReadFile(LPCTSTR szFileName)                        /*
         es.dwCookie = (DWORD_PTR) File.GetHandle();
         es.pfnCallback = (EDITSTREAMCALLBACK) RVStreamInCallback;
         StreamIn(SF_TEXT, es);
-
         //Clear the modified text flag
         SetModify(FALSE);
     }
@@ -309,24 +305,24 @@ WordWrap(WordWrapType setting)                      /*
     switch (setting)
     {
         case WRAP_NONE:
-        SetTargetDevice(NULL, 1);
-        break;
+			SetTargetDevice(NULL, 1);
+			break;
 
         case WRAP_WINDOW:
-        SetTargetDevice(NULL, 0);
-        break;
+			SetTargetDevice(NULL, 0);
+			break;
 
         case WRAP_PRINTER:
         {
-        CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-        CDC dcPrinter = PrintDlg.GetPrinterDC();
-        CRect rc = GetPrintRect(dcPrinter);
-        SetTargetDevice(dcPrinter, rc.Width());
-        break;
+			CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+			CDC dcPrinter = PrintDlg.GetPrinterDC();
+			CRect rc = GetPrintRect(dcPrinter);
+			SetTargetDevice(dcPrinter, rc.Width());
+			break;
         }
         
         default:
-        break;
+			break;
     }
 }
 
@@ -347,7 +343,6 @@ WriteFile(LPCTSTR szFileName)                       /*
         es.dwError = 0;
         es.pfnCallback = (EDITSTREAMCALLBACK) RVStreamOutCallback;
         StreamOut(SF_TEXT, es);
-
           //Clear the modified text flag
         SetModify(FALSE);
     }
@@ -378,8 +373,7 @@ RVStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)   /*
         return (1);
 
     *pcb = 0;
-    if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb,
-        NULL))
+    if (!::ReadFile((HANDLE)(DWORD_PTR) dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
         ::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
@@ -396,8 +390,7 @@ RVStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)  /*
         return (1);
 
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb,
-        NULL))
+    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
         ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }

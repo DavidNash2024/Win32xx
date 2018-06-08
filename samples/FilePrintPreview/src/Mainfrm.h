@@ -13,7 +13,7 @@
     window. This work has been developed under the co-authorship of Robert
     Tausworthe and David Nash, and released under the copyright provisions 
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2017. The former author acknowledges and thanks the latter for his 
+    2005-2018. The former author acknowledges and thanks the latter for his 
     patient direction and inspiration in the development of the classes of 
     these classes.
 
@@ -63,27 +63,27 @@ CMainFrame : public CFrame                                              /*
         void    QuickPrint(CPrintDialog& PrintDlg);
         BOOL    ReadFile(LPCTSTR szFileName);
         void    SetPathName(LPCTSTR szFilePathName)
-                {   m_PathName = szFilePathName;}
+					{   m_PathName = szFilePathName;}
         void    SetWindowTitle();
         BOOL    WriteFile(LPCTSTR szFileName);
 
     protected:
         virtual void    OnClose();
         virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
-        virtual int OnCreate(CREATESTRUCT& cs);
+        virtual int		OnCreate(CREATESTRUCT& cs);
         virtual void    OnInitialUpdate();
         virtual void    OnMenuUpdate(UINT nID);
         virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
         virtual void    PreCreate(CREATESTRUCT& cs);
-            void    SaveModifiedText();
+				void	SaveModifiedText();
         virtual void    SetupMenuIcons();
         virtual void    SetupToolBar();
         virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
     private:
         CPrintPreview   m_PrintPreview;
-        CRichView   m_RichView;
-        CString     m_PathName;
+        CRichView		m_RichView;
+        CString			m_PathName;
         WordWrapType    m_WrapOption;
 };
 /*----------------------------------------------------------------------------*/
