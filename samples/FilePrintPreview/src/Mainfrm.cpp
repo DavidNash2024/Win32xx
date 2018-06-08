@@ -14,7 +14,7 @@
     This work has been developed under the co-authorship of Robert C. 
     Tausworthe and David Nash, and released under the copyright provisions 
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2017. The former author acknowledges and thanks the latter for his 
+    2005-2018. The former author acknowledges and thanks the latter for his 
     patient direction and inspiration in the development of the classes of 
     these classes.
 
@@ -24,11 +24,15 @@
 #include "mainfrm.h"
 #include <richedit.h>
 #include "resource.h"
-#include "PrintUtil.h"
+
+  // Registry key for saving and loading screen and initial print preview
+  // sizes. The persistent items appear in the registry key
+  // "Software\\" + LPCTSTR FRAME_REGISTRY_KEY_NAME + "\\Frame Settings"
+static const LPCTSTR FRAME_REGISTRY_KEY_NAME = _T("Win32++\\FilePrintPreview");
 
 /*============================================================================*/
     CMainFrame::
-CMainFrame()                                /*
+CMainFrame()															/*
 
     Construct the main frame object for the PrintPreviewClass demo.
 *-----------------------------------------------------------------------------*/
@@ -37,17 +41,15 @@ CMainFrame()                                /*
     SetPathName(_T(""));
     SetView(m_RichView);
 
-    // Set the registry key name, and load the initial window position
-    // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(_T("Win32++\\PrintPreview Class Demo"));
-
-    // Load the settings from the registry with 5 MRU entries
+      // Set the registry key name, and load the initial window position
+    LoadRegistrySettings(FRAME_REGISTRY_KEY_NAME);
+      // Load the settings from the registry with 5 MRU entries
     LoadRegistryMRUSettings(5);
 }
 
 /*============================================================================*/
     CMainFrame::
-~CMainFrame()                               /*
+~CMainFrame()															/*
 
     Destructor.
 *-----------------------------------------------------------------------------*/
@@ -56,7 +58,7 @@ CMainFrame()                                /*
 
 /*============================================================================*/
     void CMainFrame::
-OnClose()                               /*
+OnClose()																/*
 
     Save the document file, if modified, and shut down the program.
 *-----------------------------------------------------------------------------*/
@@ -64,13 +66,13 @@ OnClose()                               /*
     ShowToolBar(TRUE);
       //Check for unsaved text
     SaveModifiedText();
-      // Call the base function
+      // Call the base function, which calls SaveRegistrySettings()
     CFrame::OnClose();
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnCommand(WPARAM wParam, LPARAM lParam)                 /*
+OnCommand(WPARAM wParam, LPARAM lParam)									/*
 
     Route all command messages to their proper handlers.
 *-----------------------------------------------------------------------------*/
@@ -80,42 +82,41 @@ OnCommand(WPARAM wParam, LPARAM lParam)                 /*
     UINT msg = LOWORD(wParam);
     switch (msg)
     {
-        case IDM_FILE_NEW:      return OnFileNew();
-        case IDM_FILE_OPEN:     return OnFileOpen();
-        case IDM_FILE_SAVE:     return OnFileSave();
-        case IDM_FILE_SAVEAS:   return OnFileSaveAs();
+        case IDM_FILE_NEW:			return OnFileNew();
+        case IDM_FILE_OPEN:			return OnFileOpen();
+        case IDM_FILE_SAVE:			return OnFileSave();
+        case IDM_FILE_SAVEAS:		return OnFileSaveAs();
         case IDM_FILE_PRINTSETUP:   return OnFilePrintSetup(*this);
-        case IDM_FILE_PREVIEW:  return OnFilePreview();
-        case IDM_FILE_PRINT:    return OnFilePrint(*this);
+        case IDM_FILE_PREVIEW:		return OnFilePreview();
+        case IDM_FILE_PRINT:		return OnFilePrint(*this);
         case IDM_FILE_QUICKPRINT:   return OnFileQuickPrint();
-        case IDM_EDIT_COPY:     return OnEditCopy();
-        case IDM_EDIT_PASTE:    return OnEditPaste();
-        case IDM_EDIT_CUT:      return OnEditCut();
-        case IDM_EDIT_DELETE:   return OnEditDelete();
-        case IDM_EDIT_REDO:     return OnEditRedo();
-        case IDM_EDIT_UNDO:     return OnEditUndo();
-        case IDM_FILE_EXIT:     return OnFileExit();
+        case IDM_EDIT_COPY:			return OnEditCopy();
+        case IDM_EDIT_PASTE:		return OnEditPaste();
+        case IDM_EDIT_CUT:			return OnEditCut();
+        case IDM_EDIT_DELETE:		return OnEditDelete();
+        case IDM_EDIT_REDO:			return OnEditRedo();
+        case IDM_EDIT_UNDO:			return OnEditUndo();
+        case IDM_FILE_EXIT:			return OnFileExit();
         case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
-        case IDW_VIEW_TOOLBAR:  return OnViewToolBar();
+        case IDW_VIEW_TOOLBAR:		return OnViewToolBar();
         case IDM_WRAP_NONE: 
         case IDM_WRAP_WINDOW:
         case IDM_WRAP_PRINTER:
             return OnOptionsWrap((WordWrapType)(msg - IDM_WRAP_NONE));
-        case IDM_OPTIONS_FONT:  return OnOptionsFont();
-        case IDM_HELP_ABOUT:    return OnHelp();
+        case IDM_OPTIONS_FONT:		return OnOptionsFont();
+        case IDM_HELP_ABOUT:		return OnHelp();
         case IDW_FILE_MRU_FILE1:
         case IDW_FILE_MRU_FILE2:
         case IDW_FILE_MRU_FILE3:
         case IDW_FILE_MRU_FILE4:
         case IDW_FILE_MRU_FILE5:    return OnFileMRU(wParam);
     }
-
     return FALSE;
 }
 
 /*============================================================================*/
     int CMainFrame::
-OnCreate(CREATESTRUCT& cs)                      /*
+OnCreate(CREATESTRUCT& cs)												/*
 
     Specify values that control the way the frame is created. Overriding
     CFrame::OnCreate is optional.
@@ -131,7 +132,7 @@ OnCreate(CREATESTRUCT& cs)                      /*
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -141,7 +142,7 @@ OnCreate(CREATESTRUCT& cs)                      /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnDropFiles(HDROP hDropInfo)                        /*
+OnDropFiles(HDROP hDropInfo)											/*
 
     Enable files dropped in the client area to be opened. Any file 
     currently open is closed.
@@ -163,7 +164,7 @@ OnDropFiles(HDROP hDropInfo)                        /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditCopy()                                /*
+OnEditCopy()															/*
 
     Copy the current selection (if any) to the clipboard.
 *-----------------------------------------------------------------------------*/
@@ -174,7 +175,7 @@ OnEditCopy()                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditCut()                             /*
+OnEditCut()																/*
 
     Cut the current selection (if any) into the clipboard.
 *-----------------------------------------------------------------------------*/
@@ -185,7 +186,7 @@ OnEditCut()                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditDelete()                              /*
+OnEditDelete()															/*
 
     Delete the current selection (if any).
 *-----------------------------------------------------------------------------*/
@@ -196,7 +197,7 @@ OnEditDelete()                              /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditPaste()                               /*
+OnEditPaste()															/*
 
     Copy the clipboard contents, if any, into the rich edit control at the
     caret, replacing any selected item(s).
@@ -208,7 +209,7 @@ OnEditPaste()                               /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditRedo()                                /*
+OnEditRedo()															/*
 
     Reapply the last edit function to the rich edit control.
 *-----------------------------------------------------------------------------*/
@@ -219,7 +220,7 @@ OnEditRedo()                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnEditUndo()                                /*
+OnEditUndo()															/*
 
     Remove the effects of the last edit function to the rich edit control.
 *-----------------------------------------------------------------------------*/
@@ -230,7 +231,7 @@ OnEditUndo()                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileExit()                                /*
+OnFileExit()															/*
 
     Close the application.
 *-----------------------------------------------------------------------------*/
@@ -242,14 +243,17 @@ OnFileExit()                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileMRU(WPARAM wParam)                        /*
+OnFileMRU(WPARAM wParam)												/*
 
     Load the file whose path appears in the MRU list at the index given
-    in the wParam.
+    in the wParam, if one exists. Return TRUE on termination.
 *-----------------------------------------------------------------------------*/
 {
     UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
     CString strMRUText = GetMRUEntry(nMRUIndex);
+	  // skip this if the MRU list is empty
+	if (strMRUText.IsEmpty())
+		return TRUE;
 
     if (ReadFile(strMRUText))
         SetPathName(strMRUText);
@@ -262,7 +266,7 @@ OnFileMRU(WPARAM wParam)                        /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileNew()                             /*
+OnFileNew()																/*
 
     Close any existing open document and create a new empty one.
 *-----------------------------------------------------------------------------*/
@@ -280,7 +284,7 @@ OnFileNew()                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileOpen()                                /*
+OnFileOpen()															/*
 
     Prompt the user for a document file name and, if valid, load this file
     into the application.
@@ -307,7 +311,7 @@ OnFileOpen()                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFilePreview()                             /*
+OnFilePreview()															/*
 
     Create the print preview window with the displayed file title in the
     caption window and the document in separate the display window.
@@ -318,7 +322,7 @@ OnFilePreview()                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFilePrint(HWND parent)                        /*
+OnFilePrint(HWND parent)												/*
 
     Print the currently loaded document o the currently selected printer.
 *-----------------------------------------------------------------------------*/
@@ -354,7 +358,7 @@ OnFilePrint(HWND parent)                        /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFilePrintSetup(HWND parent)                       /*
+OnFilePrintSetup(HWND parent)											/*
 
     Display the printer setup dialog to select a printer and associated
     parameters for printing or previewing the current document.
@@ -372,11 +376,8 @@ OnFilePrintSetup(HWND parent)                       /*
     PrintDlg.SetParameters(pd);
     try
     {
-        // Display the print dialog
-        if (PrintDlg.DoModal(parent) == IDOK)
-        {
-            PrintDlg.GetPrinterDC();
-        }
+          // Display the print dialog
+		PrintDlg.DoModal(parent);
     }
     catch (const CWinException& /* e */)
     {
@@ -390,7 +391,7 @@ OnFilePrintSetup(HWND parent)                       /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileQuickPrint()                          /*
+OnFileQuickPrint()														/*
 
     Print the current document using the currently selected printer
     parameters, without bringing up the printer dialog box.
@@ -404,7 +405,7 @@ OnFileQuickPrint()                          /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileSave()                                /*
+OnFileSave()															/*
 
     Save the current document.
 *-----------------------------------------------------------------------------*/
@@ -419,7 +420,7 @@ OnFileSave()                                /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnFileSaveAs()                              /*
+OnFileSaveAs()															/*
 
     Save the current document under a new name and make this the current
     document.
@@ -444,19 +445,20 @@ OnFileSaveAs()                              /*
 
 /*============================================================================*/
     void CMainFrame::
-OnInitialUpdate()                           /*
+OnInitialUpdate()														/*
 
     Perform initializations necessary for application startup.
 *-----------------------------------------------------------------------------*/
 {
     DragAcceptFiles(TRUE);
     SetWindowTitle();
-    OnFileMRU(IDW_FILE_MRU_FILE1); // for debugging: reopen last file
+	  // reopen most recently used file
+    OnFileMRU(IDW_FILE_MRU_FILE1);
 }
 
 /*============================================================================*/
     void CMainFrame::
-OnMenuUpdate(UINT nID)                          /*
+OnMenuUpdate(UINT nID)													/*
 
     Called by the framework to update the menu item with identifier nID.
 *-----------------------------------------------------------------------------*/
@@ -474,7 +476,7 @@ OnMenuUpdate(UINT nID)                          /*
 
 /*============================================================================*/
     LRESULT CMainFrame::
-OnNotify(WPARAM wParam, LPARAM lParam)                  /*
+OnNotify(WPARAM wParam, LPARAM lParam)									/*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -484,19 +486,18 @@ OnNotify(WPARAM wParam, LPARAM lParam)                  /*
     {
         case EN_DROPFILES:
         {
-        ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
-        HDROP hDropInfo = (HDROP) ENDrop->hDrop;
-        OnDropFiles(hDropInfo);
+			ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
+			HDROP hDropInfo = (HDROP) ENDrop->hDrop;
+			OnDropFiles(hDropInfo);
         }
         return TRUE;
     }
-
     return CFrame::OnNotify(wParam, lParam);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnOptionsFont()                             /*
+OnOptionsFont()															/*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -505,7 +506,7 @@ OnOptionsFont()                             /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-OnOptionsWrap(WordWrapType option)                              /*
+OnOptionsWrap(WordWrapType option)										/*
 
     Set the rich view word wrap option.
 *-----------------------------------------------------------------------------*/
@@ -517,7 +518,7 @@ OnOptionsWrap(WordWrapType option)                              /*
 
 /*============================================================================*/
     void CMainFrame::
-PreCreate(CREATESTRUCT& cs)                     /*
+PreCreate(CREATESTRUCT& cs)												/*
 
     Customize the CREATESTRUCT structure prior to creation of the frame.
 *-----------------------------------------------------------------------------*/
@@ -530,7 +531,7 @@ PreCreate(CREATESTRUCT& cs)                     /*
 
 /*============================================================================*/
     void CMainFrame::
-QuickPrint(CPrintDialog& PrintDlg)                  /*
+QuickPrint(CPrintDialog& PrintDlg)										/*
 
     Print the document without bringing up the print dialog box using the
     PrintDlg object.
@@ -541,7 +542,7 @@ QuickPrint(CPrintDialog& PrintDlg)                  /*
 
 /*============================================================================*/
     BOOL CMainFrame::
-ReadFile(LPCTSTR szFileName)                        /*
+ReadFile(LPCTSTR szFileName)											/*
 
     Open the szFileName file as a rich edit view stream for display in
     the main window.
@@ -554,13 +555,13 @@ ReadFile(LPCTSTR szFileName)                        /*
 
 /*============================================================================*/
     void CMainFrame::
-SaveModifiedText()                          /*
+SaveModifiedText()														/*
 
     If the current document has been changed, save it; otherwise do
     nothing.
 *-----------------------------------------------------------------------------*/
 {
-    //Check for unsaved text
+      //Check for unsaved text
     if (m_RichView.GetModify())
         if (::MessageBox(NULL, _T("Save changes to this document?"), 
             _T("Question..."), MB_YESNO | MB_ICONQUESTION) == IDYES)
@@ -569,7 +570,7 @@ SaveModifiedText()                          /*
 
 /*============================================================================*/
     void CMainFrame::
-SetupMenuIcons()                            /*
+SetupMenuIcons()														/*
 
     Override to add icons to the main menu items not having toolbar icons.
 *-----------------------------------------------------------------------------*/
@@ -578,25 +579,23 @@ SetupMenuIcons()                            /*
     AddMenuIcon(IDM_FILE_PRINTSETUP, GetApp().LoadIcon(IDI_PRINTSETUP));
     AddMenuIcon(IDM_FILE_PREVIEW,    GetApp().LoadIcon(IDI_PRINTPREVIEW));
     AddMenuIcon(IDM_FILE_QUICKPRINT, GetApp().LoadIcon(IDI_QUICKPRINT));
-    AddMenuIcon(IDM_FILE_PRINT,  GetApp().LoadIcon(IDI_PRINT));
-#ifndef NO_MENU_BOXES
+    AddMenuIcon(IDM_FILE_PRINT,		 GetApp().LoadIcon(IDI_PRINT));
       // options menu font dialog icon
     AddMenuIcon(IDM_OPTIONS_FONT,    GetApp().LoadIcon(IDI_FONT_OPTION));
       // set options menu radio button unselected icon
     HICON check_box_unselected =     GetApp().LoadIcon(IDI_CHECKBOX_OFF);
-    AddMenuIcon(IDM_WRAP_NONE,   check_box_unselected);
+    AddMenuIcon(IDM_WRAP_NONE,		 check_box_unselected);
     AddMenuIcon(IDM_WRAP_WINDOW,     check_box_unselected);
     AddMenuIcon(IDM_WRAP_PRINTER,    check_box_unselected);
       // set toolbar and status bar check boxes unselected icons
     AddMenuIcon(IDW_VIEW_TOOLBAR,    check_box_unselected);
     AddMenuIcon(IDW_VIEW_STATUSBAR,  check_box_unselected);
-#endif
     CFrame::SetupMenuIcons();
 }
 
 /*============================================================================*/
     void CMainFrame::
-SetupToolBar()                              /*
+SetupToolBar()															/*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -616,23 +615,23 @@ SetupToolBar()                              /*
 
 /*============================================================================*/
     void CMainFrame::
-SetWindowTitle()                            /*
+SetWindowTitle()														/*
 
 *-----------------------------------------------------------------------------*/
 {
     CString Title;
 
     if (GetPathName().IsEmpty())
-        Title = _T("PrintPreview Demo");
+        Title = _T("FilePrintPreview Demo");
     else
-        Title = GetPathName() + _T(" - PrintPreview Demo");
+        Title = GetPathName();
 
     SetWindowText(Title);
 }
 
 /*============================================================================*/
     BOOL CMainFrame::
-WriteFile(LPCTSTR szFileName)                       /*
+WriteFile(LPCTSTR szFileName)											/*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -641,7 +640,7 @@ WriteFile(LPCTSTR szFileName)                       /*
 
 /*=============================================================================*/
     LRESULT CMainFrame::
-WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)            /*
+WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
 
     The mainframe message pocessing procedure.
 *-----------------------------------------------------------------------------*/

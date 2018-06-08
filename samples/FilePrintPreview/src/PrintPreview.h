@@ -14,24 +14,24 @@
     window. This work has been developed under the co-authorship of Robert
     Tausworthe and David Nash, and released under the copyright provisions 
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2017. The former author acknowledges and thanks the latter for his 
+    2005-2018. The former author acknowledges and thanks the latter for his 
     patient direction and inspiration in the development of the classes of 
     these classes.
 
 *******************************************************************************/
 
-
-#ifndef PRINTPREVIEW_H
-#define PRINTPREVIEW_H
+#ifndef PRINT_PREVIEW_H
+#define PRINT_PREVIEW_H
 
 #include "resource.h"
+#include "PrintUtil.h"
 
 class CPrintPreview;
 class CPreviewPane;
 
 /*=============================================================================*/
     class
-DSize                                   /*
+DSize																	/*
 
     A size class with double numeric entries. The features of this class
     are largely the same as those of CSize(int, int).
@@ -63,7 +63,7 @@ DSize                                   /*
 
 /*============================================================================*/
     class
-PreviewSetup    : public CDialog                    /*
+PreviewSetup    : public CDialog										/*
 
     The preview setup dialog class, which permits input of screen and
     initial preview window sizes, as well as particulars for the printer
@@ -74,12 +74,13 @@ PreviewSetup    : public CDialog                    /*
         PreviewSetup(UINT nResID);
         
         void    GetSizes(DSize& scrn, DSize& pvw)
-                { scrn = m_ScreenInches; pvw = m_Preview;}
+					{ scrn = m_ScreenInches; pvw = m_PreviewInches;}
 
     protected:
-        CPrintPreview& GetParent()
-                { HWND h = ::GetParent(*this);
-                  return *(CPrintPreview*)GetCWndPtr(h);}
+		virtual void	DoDataExchange(CDataExchange& DX);
+        CPrintPreview&	GetParent()
+							{ HWND h = ::GetParent(*this);
+							  return *(CPrintPreview*)GetCWndPtr(h);}
         virtual BOOL    OnInitDialog();
         virtual INT_PTR DialogProc(UINT uMsg, WPARAM, LPARAM);
         virtual BOOL    OnCommand(WPARAM, LPARAM);
@@ -92,26 +93,23 @@ PreviewSetup    : public CDialog                    /*
                     { HWND h = GetDlgItem(nID);
                       return m_TT.AddTool(h, nID); }
             HWND    CreateToolTip(HWND hDlg)
-                    {   HWND rtn = m_TT.Create(hDlg);
-                      // Turn XP themes off
-                    m_TT.SetWindowTheme(L" ", L" ");
-                    m_TT.SetTipBkColor(RGB(150, 255, 255));
-                    return rtn;
-                    }
+						{   HWND rtn = m_TT.Create(hDlg);
+							  // Turn XP themes off
+							m_TT.SetWindowTheme(L" ", L" ");
+							return rtn;}
+			void    InitializeToolTips();
+
           // private data
-        CButton m_PageSetup;
-        CEdit   m_PreviewWidth,
-            m_PreviewHeight,
-            m_ScreenWidth,
-            m_ScreenHeight;
-        DSize   m_ScreenInches,
-            m_Preview;
-        CToolTip m_TT;
+ 		CDataExchange	m_DX;
+		CButton			m_PageSetup;
+        DSize			m_ScreenInches,
+						m_PreviewInches;
+        CToolTip		m_TT;
 };
     
 /*=============================================================================*/
     class
-CPreviewPane : public CScrollView                   /*
+CPreviewPane : public CScrollView										/*
 
     A custom class that renders a scrollable bitmap in the client area of
     the CPrintPreview dialog window.
@@ -122,16 +120,16 @@ CPreviewPane : public CScrollView                   /*
         virtual ~CPreviewPane() {}
 
             void    SetBitmap(CBitmap& Bitmap)
-                    { m_Bitmap = Bitmap; }
+						{ m_Bitmap = Bitmap; }
             void    SetPaneZoomState(int val)
-                    { m_PrevZoomState = m_ZoomState;
-                      m_ZoomState = val;}
+						{ m_PrevZoomState = m_ZoomState;
+						  m_ZoomState = val;}
             void    ShowScrollBars(BOOL b) {m_ShowScrollBars = b;}
 
     protected:
-        CPrintPreview& GetParent()
-                    { HWND h = ::GetParent(*this);
-                      return *(CPrintPreview*)GetCWndPtr(h);}
+        CPrintPreview&	GetParent()
+							{ HWND h = ::GetParent(*this);
+							  return *(CPrintPreview*)GetCWndPtr(h);}
         virtual void    OnDraw(CDC& dc);
         virtual BOOL    OnEraseBkgnd(CDC&);
         virtual LRESULT OnHScroll(UINT , WPARAM , LPARAM );
@@ -142,12 +140,12 @@ CPreviewPane : public CScrollView                   /*
     private:
         DSize   GetZoom();
 
-        BOOL    m_ShowScrollBars;
-        CBitmap m_Bitmap;
-        int m_ZoomState,
-            m_PrevZoomState;
-        CSize   m_ScrollSize,
-            m_LastWindowSize;
+		BOOL			m_ShowScrollBars;
+        CBitmap			m_Bitmap;
+        int				m_ZoomState,
+						m_PrevZoomState;
+        CSize			m_ScrollSize,
+						m_LastWindowSize;
 };
 
 /*******************************************************************************
@@ -165,24 +163,22 @@ CPrintPreview : public CDialog                                         /*
         CPrintPreview(UINT nResID, DWORD dwFlags = HIDE_HELP);
         virtual ~CPrintPreview();
 
-            BOOL    ClosePreview();
-            DSize   GetInitPreviewSize() {return m_InitialPreview;}
+            BOOL		ClosePreview();
             CPreviewPane& GetPreviewPane() 
-                    { return m_PreviewPane;}
-            DSize   GetPrinterScreenRatio() 
-                    { return m_PrinterScreenResRatio;}
-            DSize   GetScreenSize() 
-                    {return m_ScreenInches;}
-            void    InitializeContexts();
-            BOOL    OnPreview(const CString&); 
-            void    ResetWindows() 
-                { SetWindowSizes(); 
-                  OnPreviewPage(m_nCurrentPage);}
-            void    SetInitPreviewSize(DSize initview) 
-                    { m_InitialPreview = initview;}
-            void    SetScreenSize(DSize siz) { m_ScreenInches = siz;}
+							{ return m_PreviewPane;}
+            DSize		GetPreviewSize() 
+							{return m_PreviewInches;}
+            DSize		GetPrinterScreenRatio() 
+							{ return m_PrinterScreenResRatio;}
+            DSize		GetScreenSize() 
+							{return m_ScreenInches;}
+            void		InitializeContexts();
+            BOOL		OnPreview(const CString&); 
+            void		ResetWindows() 
+							{ SetWindowSizes(); OnPreviewPage(m_nCurrentPage);}
 
     protected:
+		virtual void	DoDataExchange(CDataExchange& DX);
         virtual void    DocPageToBmp(UINT);
         virtual void    DoPreparePreview();
         virtual INT_PTR DialogProc(UINT uMsg, WPARAM, LPARAM);
@@ -196,23 +192,23 @@ CPrintPreview : public CDialog                                         /*
         virtual void    SaveSizesRegistry();
 
           // preview particulars
-        CString     m_sDocPath; // previewed document path
-        CDC     m_dcPrinter;    // printer context
-        CMemDC      m_dcMem;    // memory context
-        CPreviewPane    m_PreviewPane;  // preview window
-        UINT        m_nCurrentPage, // page number, zero based
-                m_nNumPreviewPages, // total pages
-                m_shrink;   // printer / screen resolution
+        CString     m_sDocPath;				// previewed document path
+        CDC			m_dcPrinter;			// printer context
+        CMemDC      m_dcMem;				// memory context
+        CPreviewPane m_PreviewPane;			// preview window
+        UINT        m_nCurrentPage,			// page number, zero based
+					m_nNumPreviewPages;		// total pages
+		double		m_shrink;				// printer/screen ratio
 
     private:
         BOOL    AddToolTip(UINT nID)
-                {   HWND h = GetDlgItem(nID);
-                return m_TT.AddTool(h, nID); }
+					{ HWND h = GetDlgItem(nID);
+					  return m_TT.AddTool(h, nID); }
         HWND    CreateToolTip(HWND hDlg)
-                {   HWND rtn = m_TT.Create(hDlg);
-                  // Turn XP themes off
-                m_TT.SetWindowTheme(L" ", L" ");
-                return rtn;}
+					{ HWND rtn = m_TT.Create(hDlg);
+					    // Turn XP themes off
+					  m_TT.SetWindowTheme(L" ", L" ");
+					  return rtn;}
         void    InitializeControls();
         void    InitializeToolTips();
         BOOL    OnFirstButton();
@@ -222,12 +218,14 @@ CPrintPreview : public CDialog                                         /*
         BOOL    OnPreviewHelp();
         BOOL    OnPrintButton();
         BOOL    OnZoomChange();
+		void	PopulateScaleBox();
         BOOL    PreviewAndPageSetup();
         void    PreviewPage(UINT nPage);
         CString RegQueryStringValue(CRegKey &key, LPCTSTR pName);
         void    SetWindowSizes();
         void    UpdateButtons();
 
+		CDataExchange	m_DX;
           // preview dialog controls
         CButton     m_ButtonPrint;
         CButton     m_ButtonSetup;
@@ -238,24 +236,22 @@ CPrintPreview : public CDialog                                         /*
         CButton     m_ButtonPrev;
         CButton     m_ButtonClose;
         CComboBox   m_ComboZoom;
-        CButton         m_ButtonPvwHelp;
+        CButton     m_ButtonPvwHelp;
         CResizer    m_Resizer;
         CToolTip    m_TT;
-        DWORD       m_dwFlags;  // dialog invocation flags
-        BOOL        m_IgnoreMessages; // while within UpdateButtons()
-        std::vector<CString> m_Scale;   // scale selection choices
+        DWORD       m_dwFlags;				// dialog invocation flags
           // button bitmaps
         CBitmap     m_FirstPage,
-                m_PrevPage,
-                m_NextPage,
-                m_LastPage;
+					m_PrevPage,
+					m_NextPage,
+		            m_LastPage;
           // screen, initial preview size, and print page setup
-        PreviewSetup    m_SetupDlg; // setup dialog
-        DSize       m_ScreenInches, // screen size, in inches
-                m_InitialPreview,  // preview size, inches
-                m_PrinterScreenResRatio; // PrinterPPI/ScreenPPI
-        CSize       m_PrinterDots,  // printer size, in dots
-                m_ScreenPixels; // screen size, in pixels
+        PreviewSetup m_SetupDlg;			// setup dialog
+        DSize       m_ScreenInches,			// screen size, in inches
+					m_PreviewInches,		// preview size, inches
+					m_PrinterScreenResRatio; // PrinterPPI/ScreenPPI
+        CSize       m_PrinterDots,			// printer size, in dots
+					m_ScreenPixels;			// screen size, in pixels
 };
 /*----------------------------------------------------------------------------*/
-#endif //PRINTPREVIEW_H
+#endif // PRINT_PREVIEW_H

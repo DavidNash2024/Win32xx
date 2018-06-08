@@ -302,7 +302,7 @@ namespace Win32xx
     // The comparison function object used by CWinApp::m_mapHDC
     struct CompareHDC
     {
-        bool operator()(HDC const a, const HDC b) const
+        bool operator()(const HDC a, const HDC b) const
             {return ((DWORD_PTR)a < (DWORD_PTR)b);}
     };
 
@@ -310,7 +310,7 @@ namespace Win32xx
     // The comparison function object used by CWinApp::m_mapGDI
     struct CompareGDI
     {
-        bool operator()(HGDIOBJ const a, const HGDIOBJ b) const
+        bool operator()(const HGDIOBJ a, const HGDIOBJ b) const
             {return ((DWORD_PTR)a < (DWORD_PTR)b);}
     };
 
@@ -318,7 +318,7 @@ namespace Win32xx
     // The comparison function object used by CWinApp::m_mapHIMAGELIST
     struct CompareHIMAGELIST
     {
-        bool operator()(HIMAGELIST const a, const HIMAGELIST b) const
+        bool operator()(const HIMAGELIST a, const HIMAGELIST b) const
             {return ((DWORD_PTR)a < (DWORD_PTR)b);}
     };
 
@@ -326,7 +326,7 @@ namespace Win32xx
     // The comparison function object used by CWinApp::m_mapHMENU
     struct CompareHMENU
     {
-        bool operator()(HMENU const a, const HMENU b) const
+        bool operator()(const HMENU a, const HMENU b) const
             {return ((DWORD_PTR)a < (DWORD_PTR)b);}
     };
 
@@ -334,7 +334,7 @@ namespace Win32xx
     // The comparison function object used by CWinApp::m_mapHWND
     struct CompareHWND
     {
-        bool operator()(HWND const a, const HWND b) const
+        bool operator()(const HWND a, const HWND b) const
             {return ((DWORD_PTR)a < (DWORD_PTR)b);}
     };
 

@@ -14,7 +14,7 @@
     This work has been developed under the co-authorship of Robert C. 
     Tausworthe and David Nash, and released under the copyright provisions 
     of the Win32++ Interface Classes software, copyright (c) David Nash,
-    2005-2017. The former author acknowledges and thanks the latter for his 
+    2005-2018. The former author acknowledges and thanks the latter for his 
     patient direction and inspiration in the development of the classes of 
     these classes.
 
@@ -30,10 +30,9 @@ InitInstance()                                                          /*
     Called by the framework to create the frame
 *-----------------------------------------------------------------------------*/
 {
-    //Create the Frame Window
+      //Create the Frame Window
     m_Frame.Create();   // throws a CWinException on failure  
-
-    return TRUE;
+	return TRUE;
 }
 
 /*******************************************************************************
@@ -62,8 +61,6 @@ WinMain(HINSTANCE, HINSTANCE, LPSTR, int)               /*
     {
         // Display the exception and quit
         MessageBox(NULL, e.GetText(), AtoT(e.what()), MB_ICONERROR);
-
         return -1;
     }
 }
-

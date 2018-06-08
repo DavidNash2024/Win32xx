@@ -13,7 +13,7 @@
     functions. This work has been developed under the co-authorship of 
     Robert C. Tausworthe and David Nash, and released under the copyright 
     provisions of the Win32++ framework software, copyright (c) David Nash,
-    2005-2017. The former author acknowledges and thanks the latter for his 
+    2005-2018. The former author acknowledges and thanks the latter for his 
     patient direction and inspiration in the development of the classes of 
     these classes.
 
@@ -32,7 +32,7 @@ enum WordWrapType
 
 /*============================================================================*/
     class 
-CRichView : public CRichEdit                                /*
+CRichView : public CRichEdit											/*
 
     This class is the customized class derived from the CRichEdit class
     for the PrintPreview sample program utilizing a rich edit window.
@@ -47,10 +47,10 @@ CRichView : public CRichEdit                                /*
         virtual void    PrintDC(UINT, CDC&, CDC&);
         virtual BOOL    ReadFile(LPCTSTR szFileName);
         virtual void    SetFontDefaults();
-            void    SetDocName(LPCTSTR &szFileName)
-                    { m_sDocPath = szFileName;}
+				void    SetDocName(LPCTSTR &szFileName)
+							{ m_sDocPath = szFileName;}
         virtual void    PrintPages(CPrintDialog& PrintDlg);
-            void    WordWrap(WordWrapType setting);
+				void    WordWrap(WordWrapType setting);
         virtual BOOL    WriteFile(LPCTSTR szFileName);
     
     protected:
@@ -63,9 +63,9 @@ CRichView : public CRichEdit                                /*
     private:
           // static callback functions
         static  DWORD CALLBACK RVStreamInCallback(DWORD dwCookie,
-                LPBYTE pbBuff, LONG cb, LONG *pcb);
+					LPBYTE pbBuff, LONG cb, LONG *pcb);
         static  DWORD CALLBACK RVStreamOutCallback(DWORD dwCookie,
-                LPBYTE pbBuff, LONG cb, LONG *pcb);
+					LPBYTE pbBuff, LONG cb, LONG *pcb);
         
         CFont   m_Font;
         CString m_sDocPath;

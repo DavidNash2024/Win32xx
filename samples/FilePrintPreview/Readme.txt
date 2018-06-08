@@ -36,12 +36,14 @@ application to set special device contexts, determine pagination, and set the
 number of pages in the preview. The CPrintPreview::OnPrepareDC() method is 
 overridden to make any adjustments of the device contexts needed on a page-by-page 
 basis. The PrintPreview::DocPageToBmp() method is overridden to format a document
-page for preview and to deposit the image into a memory device context. This ompatible bitmap is then copied to the PreviewPane's device context, rescaled to
+page for preview and to deposit the image into a memory device context. This 
+compatible bitmap is then copied to the PreviewPane's device context, rescaled to
 fit the window in the chosen scale. 
 
 So that the functionality of this architecture may be demonstrated, the base
 CPrintPreview class DoPreparePreview(), OnPrepareDC(), and DocPageToBmp() methods
-use the RichEdit features of the predecessor sample programs. Other usages of the RichEdit class as the RichView window and in the printer functions remain the same 
+use the RichEdit features of the predecessor sample programs. Other usages of the
+RichEdit class as the RichView window and in the printer functions remain the same 
 as in the ancestor sample programs.
 
 Features demonstrated in this example
