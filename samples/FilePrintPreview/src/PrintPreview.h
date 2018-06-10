@@ -73,9 +73,6 @@ PreviewSetup    : public CDialog										/*
     public:
         PreviewSetup(UINT nResID);
         
-        void    GetSizes(DSize& scrn, DSize& pvw)
-					{ scrn = m_ScreenInches; pvw = m_PreviewInches;}
-
     protected:
 		virtual void	DoDataExchange(CDataExchange& DX);
         CPrintPreview&	GetParent()
@@ -102,8 +99,6 @@ PreviewSetup    : public CDialog										/*
           // private data
  		CDataExchange	m_DX;
 		CButton			m_PageSetup;
-        DSize			m_ScreenInches,
-						m_PreviewInches;
         CToolTip		m_TT;
 };
     
@@ -174,8 +169,10 @@ CPrintPreview : public CDialog                                         /*
 							{return m_ScreenInches;}
             void		InitializeContexts();
             BOOL		OnPreview(const CString&); 
-            void		ResetWindows() 
-							{ SetWindowSizes(); OnPreviewPage(m_nCurrentPage);}
+  			void		SetSizes(DSize scrn, DSize prevw)
+							{ m_ScreenInches = scrn; m_PreviewInches = prevw;}
+
+		friend class PreviewSetup;
 
     protected:
 		virtual void	DoDataExchange(CDataExchange& DX);
