@@ -98,14 +98,14 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
     {
         case WM_SYSCOMMAND:
         {
-        switch (LOWORD(wParam))
-        {
-            case SC_CLOSE: // close the window
-            SaveSizesRegistry();
-            Destroy();
-            return TRUE;
-        }
-        break;
+			switch (LOWORD(wParam))
+			{
+				case SC_CLOSE: // close the window
+					SaveSizesRegistry();
+					Destroy();
+					return TRUE;
+			}
+			break;
         }
     }
       // Pass unhandled messages on to parent DialogProc
@@ -335,8 +335,6 @@ OnInitDialog()															/*
         m_dcPrinter.GetDeviceCaps(VERTRES));
 	  // fill combo box with scale values
 	PopulateScaleBox();
-      // set printer and screen contexts and scaling
-    InitializeContexts();
       // If screen and initial preview window sizes are initially out of 
 	  // bounds, prompt the user for entry of sizes that are acceptable. 
 	  // Do not take zero for an answer.
@@ -359,7 +357,6 @@ OnInitDialog()															/*
     m_nCurrentPage = 0;
 	  // update controls
 	UpdateData(m_DX, SENDTOCONTROL);
-
     return TRUE;
 }
 
@@ -417,7 +414,6 @@ OnLastButton()															/*
 *-----------------------------------------------------------------------------*/
 {
     OnPreviewPage(m_nCurrentPage = m_nNumPreviewPages - 1);
-    UpdateButtons();
     return TRUE;
 }
 
@@ -582,17 +578,11 @@ PreviewAndPageSetup()													/*
 *-----------------------------------------------------------------------------*/
 {
     if (m_SetupDlg.DoModal(*this) == IDOK)
-    {
-        DSize s, p;
-        m_SetupDlg.GetSizes(s, p);
-        if (s != m_ScreenInches || p != m_PreviewInches)
-        {
-            m_ScreenInches   = s;
-            m_PreviewInches = p;
-        }
-        return TRUE; 
-    }
-    return FALSE; 
+	{
+		SetWindowSizes();
+		return TRUE;
+	}
+	return FALSE;
 }
 
 /*============================================================================*/
@@ -683,17 +673,18 @@ SetWindowSizes()														/*
         (m_ScreenPixels.cy / m_ScreenInches.cy));
     m_PrinterScreenResRatio = DSize((PrinterPPI.cx / ScreenPPI.cx) / m_shrink,
         (PrinterPPI.cy / ScreenPPI.cy) / m_shrink);
-      // compute the initial dialog size, in m_ScreenPixels
-    CSize Frame(int(m_PreviewInches.cx * ScreenPPI.cx), 
+      // compute the initial preview size, in pixels
+    CSize frame(int(m_PreviewInches.cx * ScreenPPI.cx), 
         int(m_PreviewInches.cy * ScreenPPI.cy));
       // set the dialog size
     CRect rcWorkArea;
     ::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcWorkArea, 0);
-    CRect rcPos(0, 0, MIN(Frame.cx, rcWorkArea.Width()), 
-        MIN(Frame.cy, rcWorkArea.Height()));
-    SetWindowPos(NULL, rcPos, SWP_SHOWWINDOW);
+	CSize screen(rcWorkArea.Width(), rcWorkArea.Height());
+	CSize preview(MIN(frame.cx, screen.cx), MIN(frame.cy, screen.cy));
       // center the preview window on the screen
-	CenterWindow();
+	CSize ctr((screen.cx - preview.cx) / 2, (screen.cy - preview.cy) / 2);
+    CRect rcPos(ctr.cx, ctr.cy, ctr.cx + preview.cx, ctr.cy + preview.cy);
+    SetWindowPos(NULL, rcPos, SWP_SHOWWINDOW);
 }
 
 /*============================================================================*/
@@ -713,7 +704,6 @@ UpdateButtons()															/*
     m_EditPage.SetWindowText(page);
     page.Format(_T(" of %d"), end_page);
     SetDlgItemText(IDC_PREVIEW_OFPAGES, page.c_str());
-    Invalidate();
 }
 
 /*******************************************************************************
@@ -1107,16 +1097,16 @@ DoDataExchange(CDataExchange& DX)										/*
 	and validation of values entered into, and read from, these controls.
 *-----------------------------------------------------------------------------*/
 {
-	CWnd::DoDataExchange(DX);
-	m_DX.DDX_Control(IDC_PAGE_SETUP,     m_PageSetup);
-	m_DX.DDX_Text(IDC_SCREEN_WIDTH,		 m_ScreenInches.cx);
-	m_DX.DDV_MinMaxDouble(m_ScreenInches.cx, SCREEN_MIN, SCREEN_MAX);
-	m_DX.DDX_Text(IDC_SCREEN_HEIGHT,	 m_ScreenInches.cy);
-	m_DX.DDV_MinMaxDouble(m_ScreenInches.cy, SCREEN_MIN, SCREEN_MAX);
-	m_DX.DDX_Text(IDC_PREVIEW_WIDTH,	 m_PreviewInches.cx);
-	m_DX.DDV_MinMaxDouble(m_PreviewInches.cx, PREVIEW_MIN, SCREEN_MAX);
-	m_DX.DDX_Text(IDC_PREVIEW_HEIGHT,	 m_PreviewInches.cy);
-	m_DX.DDV_MinMaxDouble(m_PreviewInches.cy, PREVIEW_MIN, SCREEN_MAX);
+	CPrintPreview& pvw = GetParent();
+	DX.DDX_Control(IDC_PAGE_SETUP,	m_PageSetup);
+	DX.DDX_Text(IDC_SCREEN_WIDTH,pvw.m_ScreenInches.cx);
+	DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cx, SCREEN_MIN, SCREEN_MAX);
+	DX.DDX_Text(IDC_SCREEN_HEIGHT,	pvw.m_ScreenInches.cy);
+	DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cy, SCREEN_MIN, SCREEN_MAX);
+	DX.DDX_Text(IDC_PREVIEW_WIDTH,	pvw.m_PreviewInches.cx);
+	DX.DDV_MinMaxDouble(pvw.m_PreviewInches.cx, PREVIEW_MIN, SCREEN_MAX);
+	DX.DDX_Text(IDC_PREVIEW_HEIGHT,	pvw.m_PreviewInches.cy);
+	DX.DDV_MinMaxDouble(pvw.m_PreviewInches.cy, PREVIEW_MIN, SCREEN_MAX);
 }
 
 /*============================================================================*/
@@ -1134,7 +1124,6 @@ InitializeToolTips()														/*
     AddToolTip(IDC_PAGE_SETUP);
 	AddToolTip(IDOK);
 	AddToolTip(IDCANCEL);
-
 }
 
 /*============================================================================*/
@@ -1150,12 +1139,8 @@ OnInitDialog()															/*
 	UpdateData(m_DX, SENDTOCONTROL);
      // Add tooltips to the preview buttons
 	InitializeToolTips();
-      // put the screen and preview initialsizes in the edit boxes
-    m_ScreenInches  = GetParent().GetScreenSize();
-    m_PreviewInches = GetParent().GetPreviewSize();	
- 	  // update controls
+  	  // update controls
 	UpdateData(m_DX, SENDTOCONTROL);
-
     return TRUE;
 }
 
@@ -1214,7 +1199,7 @@ OnPageSetupButton()														/*
      TheApp().TheFrame().SendMessage(WM_COMMAND, IDM_FILE_PRINTSETUP, 0);
       // in case the page setup has changed the preview layout, reset the
       // context and resize as necessary
-    GetParent().ResetWindows();
+    GetParent().SetWindowSizes();
 
     return TRUE;
 }
@@ -1242,7 +1227,5 @@ OnOK()																	/*
 	if (!UpdateData(m_DX, READFROMCONTROL))
 		return;
 
-	  // in case the chosen preview size doesn't match the current size
-    GetParent().ResetWindows();
     CDialog::OnOK();
 }
