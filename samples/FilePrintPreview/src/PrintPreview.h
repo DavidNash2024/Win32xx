@@ -75,7 +75,7 @@ PreviewSetup    : public CDialog										/*
         
     protected:
 		virtual void	DoDataExchange(CDataExchange& DX);
-        CPrintPreview&	GetParent()
+        CPrintPreview&	GetPreviewWnd()
 							{ HWND h = ::GetParent(*this);
 							  return *(CPrintPreview*)GetCWndPtr(h);}
         virtual BOOL    OnInitDialog();
@@ -100,6 +100,8 @@ PreviewSetup    : public CDialog										/*
  		CDataExchange	m_DX;
 		CButton			m_PageSetup;
         CToolTip		m_TT;
+		DSize			m_InScreenInches,
+						m_InPreviewInches;
 };
     
 /*=============================================================================*/
@@ -122,7 +124,7 @@ CPreviewPane : public CScrollView										/*
             void    ShowScrollBars(BOOL b) {m_ShowScrollBars = b;}
 
     protected:
-        CPrintPreview&	GetParent()
+        CPrintPreview&	GetPreviewWnd()
 							{ HWND h = ::GetParent(*this);
 							  return *(CPrintPreview*)GetCWndPtr(h);}
         virtual void    OnDraw(CDC& dc);
