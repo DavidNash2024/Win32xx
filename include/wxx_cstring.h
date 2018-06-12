@@ -634,7 +634,7 @@ namespace Win32xx
     inline T& CStringT<T>::operator [] (int nIndex)
     {
         assert(nIndex >= 0);
-        assert(nIndex < GetLength());   
+        assert(nIndex < GetLength());
         return m_str[nIndex];
     }
 
@@ -876,7 +876,7 @@ namespace Win32xx
 
         if (nIndex < GetLength())
             m_str.erase(nIndex, nCount);
-        
+
         return static_cast<int>(m_str.size());
     }
 
@@ -1184,7 +1184,7 @@ namespace Win32xx
 
         nIndex = MIN(nIndex, GetLength());
         m_str.insert(nIndex, &ch, 1);
-        
+
         return static_cast<int>(m_str.size());
     }
 
@@ -1197,7 +1197,7 @@ namespace Win32xx
 
         nIndex = MIN(nIndex, GetLength());
         m_str.insert(nIndex, str);
-        
+
         return static_cast<int>(m_str.size());
     }
 
@@ -1223,10 +1223,18 @@ namespace Win32xx
 
 
     // Converts all the characters in this string to lowercase characters.
-    template <class T>
-    inline void CStringT<T>::MakeLower()
+    template <>
+    inline void CStringT<CHAR>::MakeLower()
     {
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::tolower);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(), (CHAR(*)(int))::tolower);
+    }
+
+
+    // Converts all the characters in this string to lowercase characters.
+    template <>
+    inline void CStringT<WCHAR>::MakeLower()
+    {
+		std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towlower);
     }
 
 
@@ -1240,11 +1248,20 @@ namespace Win32xx
 
 
     // Converts all the characters in this string to uppercase characters.
-    template <class T>
-    inline void CStringT<T>::MakeUpper()
+    template <>
+    inline void CStringT<CHAR>::MakeUpper()
     {
         // Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
-        std::transform(m_str.begin(), m_str.end(), m_str.begin(), &::toupper);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(), (CHAR(*)(int))::toupper);
+    }
+
+
+    // Converts all the characters in this string to uppercase characters.
+    template <>
+    inline void CStringT<WCHAR>::MakeUpper()
+    {
+        // Error 2285 with Borland 5.5 occurs here unless option -tWM is used instead of -tW
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towupper);
     }
 
 
@@ -1286,14 +1303,14 @@ namespace Win32xx
     {
         assert(nIndex >= 0);
         assert(nIndex < GetLength());
-        
+
         if ((nIndex >= 0) && (nIndex < GetLength()))
             m_str[nIndex] = ch;
     }
 
 
     // This copies the contents of the buffer (acquired by GetBuffer) to this CStringT.
-    // The default length of -1 copies from the buffer until a null terminator is reached. 
+    // The default length of -1 copies from the buffer until a null terminator is reached.
     // If the buffer doesn't contain a null terminator, you must specify the buffer's length.
     template <class T>
     inline void CStringT<T>::ReleaseBuffer( int nNewLength /*= -1*/ )
@@ -1484,14 +1501,29 @@ namespace Win32xx
 
 
     // Trims leading whitespace characters from the string.
-    template <class T>
-    inline void CStringT<T>::TrimLeft()
+    template <>
+    inline void CStringT<CHAR>::TrimLeft()
     {
         // This method is supported by the Borland 5.5 compiler
-        typename std::basic_string<T>::iterator iter;
+        std::basic_string<CHAR>::iterator iter;
         for (iter = m_str.begin(); iter != m_str.end(); ++iter)
         {
-            if (!_istspace(*iter))
+            if (!isspace(*iter))
+                break;
+        }
+
+        m_str.erase(m_str.begin(), iter);
+    }
+
+        // Trims leading whitespace characters from the string.
+    template <>
+    inline void CStringT<WCHAR>::TrimLeft()
+    {
+        // This method is supported by the Borland 5.5 compiler
+        std::basic_string<WCHAR>::iterator iter;
+        for (iter = m_str.begin(); iter != m_str.end(); ++iter)
+        {
+            if (!iswspace(*iter))
                 break;
         }
 
@@ -1517,14 +1549,30 @@ namespace Win32xx
 
 
     // Trims trailing whitespace characters from the string.
-    template <class T>
-    inline void CStringT<T>::TrimRight()
+    template <>
+    inline void CStringT<CHAR>::TrimRight()
     {
         // This method is supported by the Borland 5.5 compiler
-        typename std::basic_string<T>::reverse_iterator riter;
+        std::basic_string<CHAR>::reverse_iterator riter;
         for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
         {
-            if (!_istspace(*riter))
+            if (!isspace(*riter))
+                break;
+        }
+
+        m_str.erase(riter.base(), m_str.end());
+    }
+
+
+    // Trims trailing whitespace characters from the string.
+    template <>
+    inline void CStringT<WCHAR>::TrimRight()
+    {
+        // This method is supported by the Borland 5.5 compiler
+        std::basic_string<WCHAR>::reverse_iterator riter;
+        for (riter = m_str.rbegin(); riter < m_str.rend(); ++riter)
+        {
+            if (!iswspace(*riter))
                 break;
         }
 

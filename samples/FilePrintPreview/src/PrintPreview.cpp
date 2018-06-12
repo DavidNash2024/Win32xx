@@ -341,7 +341,7 @@ OnInitDialog()															/*
     while (m_ScreenInches.cx < SCREEN_MIN || m_ScreenInches.cx > SCREEN_MAX  ||
 		m_ScreenInches.cy < SCREEN_MIN    || m_ScreenInches.cy > SCREEN_MAX  ||
 		m_PreviewInches.cx < PREVIEW_MIN  || m_PreviewInches.cx > SCREEN_MAX ||
-		m_PreviewInches.cx < PREVIEW_MIN  || m_PreviewInches.cx > SCREEN_MAX)
+		m_PreviewInches.cy < PREVIEW_MIN  || m_PreviewInches.cy > SCREEN_MAX)
     {
 	    if (!PreviewAndPageSetup())
         {
@@ -507,7 +507,7 @@ OnPrintButton()															/*
     Respond to requests for printing the document.
 *-----------------------------------------------------------------------------*/
 {
-    TheApp().TheFrame().PostMessage(WM_COMMAND, IDM_FILE_PRINT, 0);
+    GetFrame().PostMessage(WM_COMMAND, IDM_FILE_PRINT, 0);
     ClosePreview();
     return TRUE; 
 }
@@ -758,7 +758,7 @@ GetZoom()																/*
       // The unit_zoom is meant to provide a screen image equal in size to 
       // the printer page size. However, some difference may be seen on
       // some monitors due to roundoff.
-    DSize printerScreenRatio = GetParent().GetPrinterScreenRatio();
+    DSize printerScreenRatio = GetPreviewWnd().GetPrinterScreenRatio();
     DSize unit_zoom = DSize(1.0 / printerScreenRatio.cx, 
         1.0 / printerScreenRatio.cx);
       // get client, bitmap, and preview window sizes
@@ -1097,7 +1097,7 @@ DoDataExchange(CDataExchange& DX)										/*
 	and validation of values entered into, and read from, these controls.
 *-----------------------------------------------------------------------------*/
 {
-	CPrintPreview& pvw = GetParent();
+	CPrintPreview& pvw = GetPreviewWnd();
 	DX.DDX_Control(IDC_PAGE_SETUP,	m_PageSetup);
 	DX.DDX_Text(IDC_SCREEN_WIDTH,pvw.m_ScreenInches.cx);
 	DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cx, SCREEN_MIN, SCREEN_MAX);
@@ -1141,6 +1141,9 @@ OnInitDialog()															/*
 	InitializeToolTips();
   	  // update controls
 	UpdateData(m_DX, SENDTOCONTROL);
+	  // save incoming sizes in case of cancel
+	m_InScreenInches  = GetPreviewWnd().m_ScreenInches;
+	m_InPreviewInches = GetPreviewWnd().m_PreviewInches;
     return TRUE;
 }
 
@@ -1196,10 +1199,10 @@ OnPageSetupButton()														/*
 	if (!UpdateData(m_DX, READFROMCONTROL))
 		return TRUE;
 
-     TheApp().TheFrame().SendMessage(WM_COMMAND, IDM_FILE_PRINTSETUP, 0);
+     GetFrame().SendMessage(WM_COMMAND, IDM_FILE_PRINTSETUP, 0);
       // in case the page setup has changed the preview layout, reset the
       // context and resize as necessary
-    GetParent().SetWindowSizes();
+    GetPreviewWnd().SetWindowSizes();
 
     return TRUE;
 }
@@ -1211,6 +1214,9 @@ OnCancel()																/*
     Handle the cancel message from the preview setup dialog.
 *-----------------------------------------------------------------------------*/
 {
+	GetPreviewWnd().m_ScreenInches = m_InScreenInches;
+	GetPreviewWnd().m_PreviewInches = m_InPreviewInches;
+
     CDialog::OnCancel();
 }
 
