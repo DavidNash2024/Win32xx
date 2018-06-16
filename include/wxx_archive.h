@@ -185,9 +185,9 @@ namespace Win32xx
         CArchive& operator = (const CArchive&); // Disable assignment operator
 
         // private data members
+		UINT    m_Schema;           // archive version schema
         CFile*  m_pFile;            // archive file FILE
         bool    m_IsStoring;        // archive direction switch
-        UINT    m_Schema;           // archive version schema
         bool    m_IsFileManaged;    // delete the CFile pointer in destructor;
 
     };
@@ -518,7 +518,7 @@ namespace Win32xx
     inline CArchive& CArchive::operator<<(const CString& string)
     {
         UINT nChars = string.GetLength();
-        bool IsUnicode = sizeof(TCHAR) -1;
+        bool IsUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
         *this << IsUnicode;
@@ -938,7 +938,7 @@ namespace Win32xx
     inline void CArchive::WriteString(LPCTSTR string)
     {
         UINT nChars = lstrlen(string);
-        bool IsUnicode = sizeof(TCHAR) -1;
+        bool IsUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
         *this << IsUnicode;

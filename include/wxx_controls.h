@@ -1598,7 +1598,7 @@ namespace Win32xx
         assert(IsWindow());
         SYSTEMTIME MinMax[2];
         ZeroMemory(MinMax, 2*sizeof(SYSTEMTIME));
-        LRESULT Value = MonthCal_GetRange(*this, &MinMax);
+        LRESULT Value = SendMessage(MCM_GETRANGE, 0, reinterpret_cast<LPARAM>(&MinMax));
         MinRange = MinMax[0];
         MaxRange = MinMax[1];
         return Value;

@@ -1034,7 +1034,7 @@ namespace Win32xx
                     m_pDocker->GetView().SetFocus();
 
                 // Update the close button
-                if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+                if ( !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
                     DrawCloseButton(dc, m_IsOldFocusStored);
@@ -1066,7 +1066,7 @@ namespace Win32xx
                     m_pDocker->GetView().SetFocus();
 
                 // Update the close button
-                if ((0 != m_pDocker) && !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
+                if ( !(m_pDocker->GetDockStyle() & DS_NO_CLOSE))
                 {
                     CWindowDC dc(*this);
                     DrawCloseButton(dc, m_IsOldFocusStored);

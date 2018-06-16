@@ -136,6 +136,7 @@ namespace Win32xx
     inline CFileFind::CFileFind()
     {
         m_hFileFind = INVALID_HANDLE_VALUE;
+        ZeroMemory(&m_FindData, sizeof(m_FindData));
     }
 
 

@@ -1030,8 +1030,9 @@ namespace Win32xx
 
         m_hWnd = hWnd;
         AddToMap();         // Store the CWnd pointer in the HWND map
-        m_PrevWindowProc = reinterpret_cast<WNDPROC>(::SetWindowLongPtr(hWnd, GWLP_WNDPROC, 
-                                         reinterpret_cast<LONG_PTR>(CWnd::StaticWindowProc)));
+        LONG_PTR pWndProc = reinterpret_cast<LONG_PTR>(CWnd::StaticWindowProc);
+        LONG_PTR pRes = ::SetWindowLongPtr(hWnd, GWLP_WNDPROC, pWndProc);
+        m_PrevWindowProc = reinterpret_cast<WNDPROC>(pRes);
     }
 
 #ifndef _WIN32_WCE
