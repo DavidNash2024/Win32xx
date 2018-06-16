@@ -110,7 +110,18 @@ namespace Win32xx
         // Constructors and Destructors
         CGlobalLock() : m_h(0), m_p(0)  {}
         CGlobalLock(HANDLE h) : m_h(h)  { Lock(); }
+        CGlobalLock(const CGlobalLock& rhs)
+        {
+            m_h = rhs.m_h;
+            m_p = rhs.m_p;
+        }
         ~CGlobalLock()                  { Unlock(); }
+        CGlobalLock& operator= (const CGlobalLock& rhs)
+        {
+            m_h = rhs.m_h;
+            m_p = rhs.m_p;
+            return *this;
+        }
 
         T* Get() const          { return m_p; }                 // Returns the pointer
 

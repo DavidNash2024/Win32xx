@@ -326,21 +326,21 @@ namespace Win32xx
     // Specifies the path of a folder to expand in the Browse dialog box.
     inline void CFolderDialog::SetExpanded(LPCWSTR pszPath)
     {
-        SendMessage(BFFM_SETEXPANDED, TRUE, (LPARAM)pszPath);
+        SendMessage(BFFM_SETEXPANDED, TRUE, reinterpret_cast<LPARAM>(pszPath));
     }
 
 
     // Specifies the path of a folder to expand in the Browse dialog box.
     inline void CFolderDialog::SetExpanded(LPITEMIDLIST pItemIDList)
     {
-        SendMessage(BFFM_SETEXPANDED, FALSE, (LPARAM)pItemIDList);
+        SendMessage(BFFM_SETEXPANDED, FALSE, reinterpret_cast<LPARAM>(pItemIDList));
     }
 
 
     // Sets the text of the OK button.
     inline void CFolderDialog::SetOKText(LPCWSTR pszText)
     {
-        SendMessage(BFFM_SETOKTEXT, 0, (LPARAM)pszText);
+        SendMessage(BFFM_SETOKTEXT, 0, reinterpret_cast<LPARAM>(pszText));
     }
 
 
@@ -354,14 +354,14 @@ namespace Win32xx
     // Specifies the path of a folder to select.
     inline void CFolderDialog::SetSelection(LPITEMIDLIST pItemIDList)
     {
-        SendMessage(BFFM_SETSELECTION, FALSE, (LPARAM)pItemIDList);
+        SendMessage(BFFM_SETSELECTION, FALSE, reinterpret_cast<LPARAM>(pItemIDList));
     }
 
 
     // Specifies the path of a folder to select.
     inline void CFolderDialog::SetSelection(LPCTSTR pszPath)
     {
-        SendMessage(BFFM_SETSELECTION, TRUE, (LPARAM)pszPath);
+        SendMessage(BFFM_SETSELECTION, TRUE, reinterpret_cast<LPARAM>(pszPath));
     }
 
 
@@ -369,7 +369,7 @@ namespace Win32xx
     // This is incompatible with the BIF_USENEWUI or BIF_NEWDIALOGSTYLE flags.
     inline void CFolderDialog::SetStatusText(LPCTSTR pszText)
     {
-        SendMessage(BFFM_SETSTATUSTEXT, 0, (LPARAM)pszText);
+        SendMessage(BFFM_SETSTATUSTEXT, 0, reinterpret_cast<LPARAM>(pszText));
     }
 
 
