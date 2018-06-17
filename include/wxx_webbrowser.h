@@ -886,7 +886,7 @@ namespace Win32xx
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_Busy(&Value);
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 
@@ -904,7 +904,7 @@ namespace Win32xx
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_FullScreen(&Value);
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 
@@ -972,7 +972,7 @@ namespace Win32xx
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_Offline(&Value);
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 
@@ -989,10 +989,10 @@ namespace Win32xx
     inline BOOL CWebBrowser::GetRegisterAsBrowser() const
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
-#if defined(__BORLANDC__) && (__BORLANDC__ < 0x600)
+#if !defined(__BORLANDC__) || (__BORLANDC__ >= 0x600)
         GetIWebBrowser2()->get_RegisterAsBrowser(&Value);
 #endif
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 
@@ -1001,7 +1001,7 @@ namespace Win32xx
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_TheaterMode(&Value);
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 
@@ -1019,7 +1019,7 @@ namespace Win32xx
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_TopLevelContainer(&Value);
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 
@@ -1039,7 +1039,7 @@ namespace Win32xx
     {
         VARIANT_BOOL Value = VARIANT_FALSE;
         GetIWebBrowser2()->get_Visible(&Value);
-        return static_cast<BOOL>(Value);
+        return (Value != 0);
     }
 
 

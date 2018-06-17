@@ -146,7 +146,7 @@ BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
     lvi1.iItem = nItem;
     lvi1.iSubItem = nSubItem;
     lvi1.pszText = const_cast<LPTSTR>(szText);
-    return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)));
+    return (SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)) != 0);
 }
 
 LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)

@@ -1285,7 +1285,7 @@ namespace Win32xx
     inline BOOL CWnd::ClientToScreen(RECT& rc) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(::MapWindowPoints(*this, NULL, (LPPOINT)&rc, 2));
+        return (::MapWindowPoints(*this, NULL, (LPPOINT)&rc, 2) != 0);
     }
 
 
@@ -1807,7 +1807,7 @@ namespace Win32xx
     inline BOOL CWnd::ScreenToClient(RECT& rc) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(::MapWindowPoints(NULL, *this, (LPPOINT)&rc, 2));
+        return (::MapWindowPoints(NULL, *this, (LPPOINT)&rc, 2) != 0);
     }
 
 
@@ -1960,7 +1960,7 @@ namespace Win32xx
     inline BOOL CWnd::SetRedraw(BOOL Redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(::SendMessage(*this, WM_SETREDRAW, Redraw, 0L));
+        return (::SendMessage(*this, WM_SETREDRAW, Redraw, 0L) != 0);
     }
 
 

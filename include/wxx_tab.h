@@ -851,7 +851,7 @@ namespace Win32xx
         TabNMHDR.nPage = nPage;
 
         // The default return value is zero
-        return static_cast<BOOL>(GetParent().SendMessage(WM_NOTIFY, idCtrl, reinterpret_cast<LPARAM>(&TabNMHDR)));
+        return (GetParent().SendMessage(WM_NOTIFY, idCtrl, reinterpret_cast<LPARAM>(&TabNMHDR)) != 0);
     }
 
 
