@@ -695,7 +695,7 @@ namespace Win32xx
     inline BOOL CListView::SetItemState( int iItem, LVITEM& Item ) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(LVM_SETITEMSTATE, iItem, reinterpret_cast<LPARAM>(&Item)));
+        return (SendMessage(LVM_SETITEMSTATE, iItem, reinterpret_cast<LPARAM>(&Item)) != 0);
     }
 
 
@@ -820,7 +820,7 @@ namespace Win32xx
     inline BOOL CListView::EnsureVisible( int iItem, BOOL IsPartialOK ) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(LVM_ENSUREVISIBLE, iItem, IsPartialOK ));
+        return (SendMessage(LVM_ENSUREVISIBLE, iItem, IsPartialOK ) != 0);
     }
 
 

@@ -139,7 +139,7 @@ namespace Win32xx
     inline BOOL CReBar::DeleteBand(int nBand) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(RB_DELETEBAND, nBand, 0L));
+        return (SendMessage(RB_DELETEBAND, nBand, 0L) != 0);
     }
 
 
@@ -193,7 +193,7 @@ namespace Win32xx
 
         // REBARBANDINFO describes individual BAND characteristics
         rbbi.cbSize = GetSizeofRBBI();
-        return static_cast<BOOL>(SendMessage(RB_GETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)));
+        return (SendMessage(RB_GETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)) != 0);
     }
 
 
@@ -222,7 +222,7 @@ namespace Win32xx
 
         // REBARINFO describes overall rebar control characteristics
         rbi.cbSize = sizeof(rbi);
-        return static_cast<BOOL>(SendMessage(RB_GETBARINFO, 0L, reinterpret_cast<LPARAM>(&rbi)));
+        return (SendMessage(RB_GETBARINFO, 0L, reinterpret_cast<LPARAM>(&rbi)) != 0);
     }
 
 
@@ -324,7 +324,7 @@ namespace Win32xx
         assert(IsWindow());
 
         rbbi.cbSize = GetSizeofRBBI();
-        return static_cast<BOOL>(SendMessage(RB_INSERTBAND, nBand, reinterpret_cast<LPARAM>(&rbbi)));
+        return (SendMessage(RB_INSERTBAND, nBand, reinterpret_cast<LPARAM>(&rbbi)) != 0);
     }
 
 
@@ -388,7 +388,7 @@ namespace Win32xx
     inline BOOL CReBar::MoveBand(UINT uFrom, UINT uTo) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(RB_MOVEBAND, uFrom, uTo));
+        return (SendMessage(RB_MOVEBAND, uFrom, uTo) != 0);
     }
 
 
@@ -527,7 +527,7 @@ namespace Win32xx
         rbbi.fMask  |= RBBIM_BACKGROUND;
         rbbi.hbmBack = hbmBackground;
 
-        return static_cast<BOOL>(SendMessage(RB_SETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)));
+        return (SendMessage(RB_SETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)) != 0);
     }
 
 
@@ -545,7 +545,7 @@ namespace Win32xx
         rbbi.clrFore = clrFore;
         rbbi.clrBack = clrBack;
 
-        return static_cast<BOOL>(SendMessage(RB_SETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)));
+        return (SendMessage(RB_SETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)) != 0);
     }
 
 
@@ -557,7 +557,7 @@ namespace Win32xx
 
         // REBARBANDINFO describes individual BAND characteristics
         rbbi.cbSize = GetSizeofRBBI();
-        return static_cast<BOOL>(SendMessage(RB_SETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)));
+        return (SendMessage(RB_SETBANDINFO, nBand, reinterpret_cast<LPARAM>(&rbbi)) != 0);
     }
 
 
@@ -568,7 +568,7 @@ namespace Win32xx
         assert(IsWindow());
 
         rbi.cbSize = sizeof(rbi);
-        return static_cast<BOOL>(SendMessage(RB_SETBARINFO, 0L, reinterpret_cast<LPARAM>(&rbi)));
+        return (SendMessage(RB_SETBARINFO, 0L, reinterpret_cast<LPARAM>(&rbi)) != 0);
     }
 
 
@@ -576,7 +576,7 @@ namespace Win32xx
     inline BOOL CReBar::ShowBand(int nBand, BOOL Show) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(RB_SHOWBAND, nBand, Show));
+        return (SendMessage(RB_SHOWBAND, nBand, Show) != 0);
     }
 
 
@@ -610,7 +610,7 @@ namespace Win32xx
     inline BOOL CReBar::SizeToRect(RECT& rect) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(RB_SIZETORECT, 0L, reinterpret_cast<LPARAM>(&rect)));
+        return (SendMessage(RB_SIZETORECT, 0L, reinterpret_cast<LPARAM>(&rect)) != 0);
     }
 
 

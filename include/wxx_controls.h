@@ -708,7 +708,7 @@ namespace Win32xx
     inline BOOL CComboBox::GetDroppedState() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CB_GETDROPPEDSTATE, 0L, 0L));
+        return (SendMessage(CB_GETDROPPEDSTATE, 0L, 0L) != 0);
     }
 
 
@@ -747,7 +747,7 @@ namespace Win32xx
     inline BOOL CComboBox::GetExtendedUI() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CB_GETEXTENDEDUI, 0L, 0L));
+        return (SendMessage(CB_GETEXTENDEDUI, 0L, 0L) != 0);
     }
 
 
@@ -909,7 +909,7 @@ namespace Win32xx
     inline BOOL CComboBox::SetEditSel(int nStartChar, int nEndChar) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CB_SETEDITSEL, 0L, MAKELONG(nStartChar,nEndChar)));
+        return (SendMessage(CB_SETEDITSEL, 0L, MAKELONG(nStartChar,nEndChar)) != 0);
     }
 
 
@@ -1019,7 +1019,7 @@ namespace Win32xx
     inline BOOL CComboBoxEx::GetItem(COMBOBOXEXITEM& CBItem) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CBEM_GETITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)));
+        return (SendMessage(CBEM_GETITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)) != 0);
     }
 
 
@@ -1027,7 +1027,7 @@ namespace Win32xx
     inline BOOL CComboBoxEx::HasEditChanged () const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CBEM_HASEDITCHANGED, 0L, 0L));
+        return (SendMessage(CBEM_HASEDITCHANGED, 0L, 0L) != 0);
     }
 
 
@@ -1061,7 +1061,7 @@ namespace Win32xx
     inline BOOL CComboBoxEx::SetItem(const COMBOBOXEXITEM& CBItem) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(CBEM_SETITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)));
+        return (SendMessage(CBEM_SETITEM, 0L, reinterpret_cast<LPARAM>(&CBItem)) != 0);
     }
 
     ////////////////////////////////////////
@@ -1475,7 +1475,7 @@ namespace Win32xx
     inline BOOL CIPAddress::IsBlank() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(IPM_ISBLANK, 0L, 0L));
+        return (SendMessage(IPM_ISBLANK, 0L, 0L) != 0);
     }
 
 
@@ -1624,7 +1624,7 @@ namespace Win32xx
         assert(IsWindow());
         SYSTEMTIME DateTime;
         ZeroMemory(&DateTime, sizeof(DateTime));
-        VERIFY(MonthCal_GetToday(*this, &DateTime));
+        VERIFY (SendMessage(MCM_GETTODAY, 0, reinterpret_cast<LPARAM>(&DateTime)));
         return DateTime;
     }
 
@@ -1657,7 +1657,7 @@ namespace Win32xx
     inline BOOL CMonthCalendar::SetDayState(int nMonths, const MONTHDAYSTATE& State) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(MonthCal_SetDayState(*this, nMonths, &State));
+        return (MonthCal_SetDayState(*this, nMonths, &State) != 0);
     }
 
 
@@ -1670,7 +1670,7 @@ namespace Win32xx
         if(pnOld)
             *pnOld = LOWORD(dwValue);
 
-        return static_cast<BOOL>(HIWORD(dwValue));
+        return (HIWORD(dwValue) != 0);
     }
 
 
@@ -1699,7 +1699,7 @@ namespace Win32xx
         MinMax[0] = MinRange;
         MinMax[1] = MaxRange;
 
-        return static_cast<BOOL>(MonthCal_SetRange(*this, dwLimit, &MinMax));
+        return (MonthCal_SetRange(*this, dwLimit, &MinMax) != 0);
     }
 
 
@@ -1709,7 +1709,7 @@ namespace Win32xx
         SYSTEMTIME MinMax[2];
         MinMax[0] = MinRange;
         MinMax[1] = MaxRange;
-        return static_cast<BOOL>(MonthCal_SetSelRange(*this, &MinMax));
+        return (MonthCal_SetSelRange(*this, &MinMax) != 0);
     }
 
 
@@ -2068,7 +2068,7 @@ namespace Win32xx
     inline BOOL CSlider::SetTic(int nTic) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TBM_SETTIC, 0L, nTic));
+        return (SendMessage(TBM_SETTIC, 0L, nTic) != 0);
     }
 
 
@@ -2157,7 +2157,7 @@ namespace Win32xx
     inline BOOL CSpinButton::SetAccel(int cAccels, LPUDACCEL paAccels) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(UDM_SETACCEL, cAccels, reinterpret_cast<LPARAM>(paAccels)));
+        return (SendMessage(UDM_SETACCEL, cAccels, reinterpret_cast<LPARAM>(paAccels)) != 0);
     }
 
 
@@ -2225,7 +2225,7 @@ namespace Win32xx
         FillToolInfo(ti, hWndControl, rcTool, uID);
         ti.hinst = GetApp().GetResourceHandle();
         ti.lpszText = MAKEINTRESOURCE(nIDText);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
+        return (SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)) != 0);
     }
 
 
@@ -2239,7 +2239,7 @@ namespace Win32xx
         FillToolInfo(ti, hWndControl);
         ti.hinst = GetApp().GetResourceHandle();
         ti.lpszText = MAKEINTRESOURCE(nIDText);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
+        return (SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)) != 0);
     }
 
 
@@ -2255,7 +2255,7 @@ namespace Win32xx
         TOOLINFO ti;
         FillToolInfo(ti, hWndControl, rcTool, uID);
         ti.lpszText = const_cast<LPTSTR>(lpszText);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
+        return (SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)) != 0);
     }
 
 
@@ -2269,7 +2269,7 @@ namespace Win32xx
         TOOLINFO ti;
         FillToolInfo(ti, hWndControl);
         ti.lpszText = const_cast<LPTSTR>(lpszText);
-        return static_cast<BOOL>(SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)));
+        return (SendMessage(TTM_ADDTOOL, 0L, reinterpret_cast<LPARAM>(&ti)) != 0);
     }
 
 
@@ -2393,7 +2393,7 @@ namespace Win32xx
         hti.hwnd = hWnd;
         hti.pt = pt;
         hti.ti = ToolInfo;
-        return static_cast<BOOL>(SendMessage(TTM_HITTEST, 0L, reinterpret_cast<LPARAM>(&hti)));
+        return (SendMessage(TTM_HITTEST, 0L, reinterpret_cast<LPARAM>(&hti)) != 0);
     }
 
 
@@ -2569,7 +2569,7 @@ namespace Win32xx
     inline BOOL CToolTip::AdjustRect(RECT& rc, BOOL IsLarger /*= TRUE*/) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TTM_ADJUSTRECT, IsLarger, reinterpret_cast<LPARAM>(&rc)));
+        return (SendMessage(TTM_ADJUSTRECT, IsLarger, reinterpret_cast<LPARAM>(&rc)) != 0);
     }
 
 
@@ -2590,7 +2590,7 @@ namespace Win32xx
 
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TTM_SETTITLE, uIcon, reinterpret_cast<LPARAM>(lpstrTitle)));
+        return (SendMessage(TTM_SETTITLE, uIcon, reinterpret_cast<LPARAM>(lpstrTitle)) != 0);
     }
 
 #endif

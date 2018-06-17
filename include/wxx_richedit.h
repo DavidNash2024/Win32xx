@@ -877,7 +877,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT& cf) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)));
+        return (SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)) != 0);
     }
 
 
@@ -885,7 +885,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT2& cf) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)));
+        return (SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)) != 0);
     }
 
 

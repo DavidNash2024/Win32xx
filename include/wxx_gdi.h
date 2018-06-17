@@ -4135,7 +4135,7 @@ namespace Win32xx
     inline BOOL CDC::FillRect(const RECT& rc, HBRUSH hBrush) const
     {
         assert(m_pData->hDC);
-        return static_cast<BOOL>(::FillRect(m_pData->hDC, &rc, hBrush));
+        return (::FillRect(m_pData->hDC, &rc, hBrush) != 0);
     }
 
 
@@ -4213,7 +4213,7 @@ namespace Win32xx
     inline BOOL CDC::FrameRect(const RECT& rc, HBRUSH hBrush) const
     {
         assert(m_pData->hDC);
-        return static_cast<BOOL>(::FrameRect(m_pData->hDC, &rc, hBrush));
+        return (::FrameRect(m_pData->hDC, &rc, hBrush) != 0);
     }
 
 
@@ -4221,7 +4221,7 @@ namespace Win32xx
     inline BOOL CDC::FrameRgn(HRGN hRgn, HBRUSH hBrush, int nWidth, int nHeight) const
     {
         assert(m_pData->hDC);
-        return static_cast<BOOL>(::FrameRgn(m_pData->hDC, hRgn, hBrush, nWidth, nHeight));
+        return (::FrameRgn(m_pData->hDC, hRgn, hBrush, nWidth, nHeight) != 0);
     }
 
 
@@ -4237,7 +4237,7 @@ namespace Win32xx
     inline BOOL CDC::PaintRgn(HRGN hRgn) const
     {
         assert(m_pData->hDC);
-        return static_cast<BOOL>(::PaintRgn(m_pData->hDC, hRgn));
+        return (::PaintRgn(m_pData->hDC, hRgn) != 0);
     }
 
 

@@ -122,7 +122,7 @@ namespace Win32xx
         assert(IsWindow());
         assert(iParts <= 256);
 
-        return static_cast<BOOL>(SendMessage(SB_SETPARTS, iParts, reinterpret_cast<LPARAM>(iPaneWidths)));
+        return (SendMessage(SB_SETPARTS, iParts, reinterpret_cast<LPARAM>(iPaneWidths)) != 0);
     }
 
 
@@ -173,7 +173,7 @@ namespace Win32xx
     inline BOOL CStatusBar::IsSimple() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(SB_ISSIMPLE, 0L, 0L));
+        return (SendMessage(SB_ISSIMPLE, 0L, 0L) != 0);
     }
 
 
@@ -208,8 +208,7 @@ namespace Win32xx
 
         BOOL Succeeded = FALSE;
         if (static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L) >= iPart))
-            Succeeded = static_cast<BOOL>(SendMessage(SB_SETTEXT, (iPart | Style), 
-                            reinterpret_cast<LPARAM>(szText)));
+            Succeeded = (SendMessage(SB_SETTEXT, (iPart | Style), reinterpret_cast<LPARAM>(szText)) != 0);
 
         return Succeeded;
     }
@@ -219,7 +218,7 @@ namespace Win32xx
     inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(SB_SETICON, iPart, reinterpret_cast<LPARAM>(hIcon)));
+        return (SendMessage(SB_SETICON, iPart, reinterpret_cast<LPARAM>(hIcon)) != 0);
     }
 
 
@@ -253,8 +252,7 @@ namespace Win32xx
         }
 
         // Set the StatusBar parts with our new parts count and part widths
-        BOOL Succeeded = static_cast<BOOL>(SendMessage(SB_SETPARTS, NewPartsCount, 
-                                            reinterpret_cast<LPARAM>(pNewPartWidthArray)));
+        BOOL Succeeded = (SendMessage(SB_SETPARTS, NewPartsCount, reinterpret_cast<LPARAM>(pNewPartWidthArray)) != 0);
 
         return Succeeded;
     }

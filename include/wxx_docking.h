@@ -1667,7 +1667,7 @@ namespace Win32xx
         if (NULL == pDockTarget) return FALSE;
 
         if (!IsWindow())    Create();
-        m_IsOverContainer = static_cast<BOOL>(pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER));
+        m_IsOverContainer = (pDockTarget->GetView().SendMessage(UWM_GETCDOCKCONTAINER) != 0);
 
         // Redraw the target if the dock target changes
         if (m_pOldDockTarget != pDockTarget)    Invalidate();
@@ -4170,7 +4170,7 @@ namespace Win32xx
     {
         Redraw? ++m_nRedrawCount : --m_nRedrawCount ;
 
-        return static_cast<BOOL>(SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L));
+        return (SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L) != 0);
     }
 
 
@@ -5100,7 +5100,7 @@ namespace Win32xx
     {
         BOOL IsHandled = FALSE;
         if (GetContainer()->GetActiveContainer() && GetContainer()->GetActiveContainer()->IsWindow())
-            IsHandled = static_cast<BOOL>(GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam));
+            IsHandled = (GetContainer()->GetActiveContainer()->SendMessage(WM_COMMAND, wParam, lParam) != 0);
 
         return IsHandled;
     }

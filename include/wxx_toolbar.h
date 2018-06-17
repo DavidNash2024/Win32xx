@@ -235,7 +235,7 @@ namespace Win32xx
         }
 
         // Add the button to the toolbar
-        return static_cast<BOOL>(SendMessage(TB_ADDBUTTONS, 1L, reinterpret_cast<LPARAM>(&tbb)));
+        return (SendMessage(TB_ADDBUTTONS, 1L, reinterpret_cast<LPARAM>(&tbb)) != 0);
     }
 
 
@@ -243,7 +243,7 @@ namespace Win32xx
     inline BOOL CToolBar::AddButtons(UINT uNumButtons, LPTBBUTTON lpButtons) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ADDBUTTONS, uNumButtons, reinterpret_cast<LPARAM>(lpButtons)));
+        return (SendMessage(TB_ADDBUTTONS, uNumButtons, reinterpret_cast<LPARAM>(lpButtons)) != 0);
     }
 
 
@@ -323,7 +323,7 @@ namespace Win32xx
     inline BOOL CToolBar::DisableButton(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ENABLEBUTTON, idButton, MAKELONG(FALSE, 0)));
+        return (SendMessage(TB_ENABLEBUTTON, idButton, MAKELONG(FALSE, 0)) != 0);
     }
 
 
@@ -331,7 +331,7 @@ namespace Win32xx
     inline BOOL CToolBar::EnableButton(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ENABLEBUTTON, idButton, MAKELONG(TRUE,0 )));
+        return (SendMessage(TB_ENABLEBUTTON, idButton, MAKELONG(TRUE,0 )) != 0);
     }
 
 
@@ -339,7 +339,7 @@ namespace Win32xx
     inline BOOL CToolBar::GetButton(int iButton, TBBUTTON& Button) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_GETBUTTON, iButton, reinterpret_cast<LPARAM>(&Button)));
+        return (SendMessage(TB_GETBUTTON, iButton, reinterpret_cast<LPARAM>(&Button)) != 0);
     }
 
 
@@ -574,7 +574,7 @@ namespace Win32xx
     inline BOOL CToolBar::HideButton(int idButton, BOOL Show) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_HIDEBUTTON, idButton, MAKELONG (Show, 0)));
+        return (SendMessage(TB_HIDEBUTTON, idButton, MAKELONG (Show, 0)) != 0);
     }
 
 
@@ -606,7 +606,7 @@ namespace Win32xx
     inline BOOL CToolBar::Indeterminate(int idButton, BOOL fIndeterminate) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_INDETERMINATE, idButton, MAKELONG (fIndeterminate, 0)));
+        return (SendMessage(TB_INDETERMINATE, idButton, MAKELONG (fIndeterminate, 0)) != 0);
     }
 
 
@@ -614,7 +614,7 @@ namespace Win32xx
     inline BOOL CToolBar::InsertButton(int iButton, TBBUTTON& Button) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_INSERTBUTTON, iButton, reinterpret_cast<LPARAM>(&Button)));
+        return (SendMessage(TB_INSERTBUTTON, iButton, reinterpret_cast<LPARAM>(&Button)) != 0);
     }
 
 
@@ -622,7 +622,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonHidden(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONHIDDEN, idButton, 0L));
+        return (SendMessage(TB_ISBUTTONHIDDEN, idButton, 0L) != 0);
     }
 
 
@@ -630,7 +630,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonHighlighted(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONHIGHLIGHTED, idButton, 0L));
+        return (SendMessage(TB_ISBUTTONHIGHLIGHTED, idButton, 0L) != 0);
     }
 
 
@@ -638,7 +638,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonIndeterminate(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONINDETERMINATE, idButton, 0L));
+        return (SendMessage(TB_ISBUTTONINDETERMINATE, idButton, 0L) != 0);
     }
 
 
@@ -646,7 +646,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonPressed(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_ISBUTTONPRESSED, idButton, 0L));
+        return (SendMessage(TB_ISBUTTONPRESSED, idButton, 0L) != 0);
     }
 
 
@@ -669,7 +669,7 @@ namespace Win32xx
     inline BOOL CToolBar::MarkButton(int idButton, BOOL Highlight /*= TRUE*/ ) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_MARKBUTTON, idButton, Highlight));
+        return (SendMessage(TB_MARKBUTTON, idButton, Highlight) != 0);
     }
 
 
@@ -677,7 +677,7 @@ namespace Win32xx
     inline BOOL CToolBar::MoveButton(UINT uOldPos, UINT uNewPos) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_MOVEBUTTON, uOldPos, uNewPos));
+        return (SendMessage(TB_MOVEBUTTON, uOldPos, uNewPos) != 0);
     }
 
 
@@ -734,7 +734,7 @@ namespace Win32xx
     inline BOOL CToolBar::PressButton(int idButton, BOOL Press) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_PRESSBUTTON, idButton, MAKELONG(Press, 0)));
+        return (SendMessage(TB_PRESSBUTTON, idButton, MAKELONG(Press, 0)) != 0);
     }
 
 
@@ -759,7 +759,7 @@ namespace Win32xx
         tbrb.nIDOld = m_OldToolBarID;
         tbrb.nButtons  = iImages;
 
-        BOOL Succeeded = static_cast<BOOL>(SendMessage(TB_REPLACEBITMAP, iImages, reinterpret_cast<LPARAM>(&tbrb)));
+        BOOL Succeeded = (SendMessage(TB_REPLACEBITMAP, iImages, reinterpret_cast<LPARAM>(&tbrb)) != 0);
         if (Succeeded)
             m_OldToolBarID = NewToolBarID;
 
@@ -810,7 +810,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetBitmapSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETBITMAPSIZE, 0L, MAKELONG(cx, cy)));
+        return (SendMessage(TB_SETBITMAPSIZE, 0L, MAKELONG(cx, cy)) != 0);
     }
 
 
@@ -819,7 +819,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy)));
+        return (SendMessage(TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy)) != 0);
     }
 
 
@@ -860,7 +860,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonState(int idButton, UINT State) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETSTATE, idButton, MAKELONG (State, 0)));
+        return (SendMessage(TB_SETSTATE, idButton, MAKELONG (State, 0)) != 0);
     }
 
 
@@ -885,7 +885,7 @@ namespace Win32xx
 
         // Note:  TB_SETBUTTONINFO requires comctl32.dll version 4.71 or later
         //        i.e. Win95 with IE4 / NT with IE4   or later
-        return static_cast<BOOL>(SendMessage(TB_SETBUTTONINFO, idButton, reinterpret_cast<LPARAM>(&tbbi)));
+        return (SendMessage(TB_SETBUTTONINFO, idButton, reinterpret_cast<LPARAM>(&tbbi)) != 0);
     }
 
 
@@ -938,7 +938,7 @@ namespace Win32xx
         {
             TBBUTTON tbb;
             ZeroMemory(&tbb, sizeof(tbb));
-            Succeeded = static_cast<BOOL>(SendMessage(TB_GETBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)));
+            Succeeded = (SendMessage(TB_GETBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)) != 0);
 
             tbb.iString = iString;
 
@@ -946,10 +946,10 @@ namespace Win32xx
             SetRedraw(FALSE);
 
             if (Succeeded)
-                Succeeded = static_cast<BOOL>(SendMessage(TB_DELETEBUTTON, iIndex, 0L));
+                Succeeded = (SendMessage(TB_DELETEBUTTON, iIndex, 0L) != 0);
 
             if (Succeeded)
-                Succeeded = static_cast<BOOL>(SendMessage(TB_INSERTBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)));
+                Succeeded = (SendMessage(TB_INSERTBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)) != 0);
 
             // Ensure the button now includes some text rows
             if (SendMessage(TB_GETTEXTROWS, 0L, 0L) == 0)
@@ -981,7 +981,7 @@ namespace Win32xx
         tbbi.cbSize = sizeof(tbbi);
         tbbi.dwMask = TBIF_SIZE;
         tbbi.cx = static_cast<WORD>(nWidth);
-        BOOL Succeeded = static_cast<BOOL>(SendMessage(TB_SETBUTTONINFO, idButton, reinterpret_cast<LPARAM>(&tbbi)));
+        BOOL Succeeded = (SendMessage(TB_SETBUTTONINFO, idButton, reinterpret_cast<LPARAM>(&tbbi)) != 0);
 
         // Send a changed message to the parent (used by the ReBar)
         SIZE MaxSize = GetMaxSize();
@@ -995,7 +995,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetCommandID(int iIndex, int idButton) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETCMDID, iIndex, idButton));
+        return (SendMessage(TB_SETCMDID, iIndex, idButton) != 0);
     }
 
 
@@ -1055,7 +1055,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetIndent(int iIndent) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETINDENT, iIndent, 0L));
+        return (SendMessage(TB_SETINDENT, iIndent, 0L) != 0);
     }
 
 
@@ -1063,7 +1063,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetMaxTextRows(int iMaxRows) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETMAXTEXTROWS, iMaxRows, 0L));
+        return (SendMessage(TB_SETMAXTEXTROWS, iMaxRows, 0L) != 0);
     }
 
 
@@ -1071,7 +1071,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetPadding(int cx, int cy) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(TB_SETPADDING, 0L, MAKELONG(cx, cy)));
+        return (SendMessage(TB_SETPADDING, 0L, MAKELONG(cx, cy)) != 0);
     }
 
 

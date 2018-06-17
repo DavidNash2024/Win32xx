@@ -396,7 +396,7 @@ namespace Win32xx
     inline BOOL CEdit::CanUndo() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_CANUNDO, 0L, 0L));
+        return (SendMessage(EM_CANUNDO, 0L, 0L) != 0);
     }
 
 
@@ -471,7 +471,7 @@ namespace Win32xx
     inline BOOL CEdit::GetModify() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_GETMODIFY, 0L, 0L));
+        return (SendMessage(EM_GETMODIFY, 0L, 0L) != 0);
     }
 
 
@@ -561,7 +561,7 @@ namespace Win32xx
     inline BOOL CEdit::FmtLines(BOOL AddEOL) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_FMTLINES, AddEOL, 0L));
+        return (SendMessage(EM_FMTLINES, AddEOL, 0L) != 0);
     }
 
 
@@ -630,7 +630,7 @@ namespace Win32xx
     inline BOOL CEdit::SetReadOnly(BOOL IsReadOnly) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_SETREADONLY, IsReadOnly, 0L));
+        return (SendMessage(EM_SETREADONLY, IsReadOnly, 0L) != 0);
     }
 
 
@@ -674,7 +674,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops(int nTabStops, LPINT rgTabStops) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, nTabStops, reinterpret_cast<LPARAM>(rgTabStops)));
+        return (SendMessage(EM_SETTABSTOPS, nTabStops, reinterpret_cast<LPARAM>(rgTabStops)) != 0);
     }
 
 
@@ -682,7 +682,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops() const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage( EM_SETTABSTOPS, 0L, 0L));
+        return (SendMessage( EM_SETTABSTOPS, 0L, 0L) != 0);
     }
 
 
@@ -690,7 +690,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops(const int& cxEachStop) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(EM_SETTABSTOPS, 1, reinterpret_cast<LPARAM>(&cxEachStop)));
+        return (SendMessage(EM_SETTABSTOPS, 1, reinterpret_cast<LPARAM>(&cxEachStop)) != 0);
     }
 
 
@@ -912,7 +912,7 @@ namespace Win32xx
     inline BOOL CListBox::SetTabStops(int nTabStops, LPINT rgTabStops) const
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(LB_SETTABSTOPS, nTabStops, reinterpret_cast<LPARAM>(rgTabStops)));
+        return (SendMessage(LB_SETTABSTOPS, nTabStops, reinterpret_cast<LPARAM>(rgTabStops)) != 0);
     }
 
 
@@ -928,7 +928,7 @@ namespace Win32xx
     // Sets the tab stops to those specified in a specified array.
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(LB_SETTABSTOPS, 1, reinterpret_cast<LPARAM>(&cxEachStop)));
+        return (SendMessage(LB_SETTABSTOPS, 1, reinterpret_cast<LPARAM>(&cxEachStop))!= 0);
     }
 
 

@@ -847,7 +847,7 @@ namespace Win32xx
     inline BOOL CPropertySheet::SetActivePage(int nPage)
     {
         assert(IsWindow());
-        return static_cast<BOOL>(SendMessage(*this, PSM_SETCURSEL, nPage, 0L));
+        return (SendMessage(*this, PSM_SETCURSEL, nPage, 0L) != 0);
     }
 
 
