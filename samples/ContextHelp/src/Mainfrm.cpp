@@ -119,7 +119,7 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 
         CString add = subfolder.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-        if (!SUCCEEDED(::CreateDirectory(app_data_path, 0)))
+        if (::CreateDirectory(app_data_path, 0) != 0)
         {
             CString msg = app_data_path + _T("\nDirectory creation error.");
             throw CUserException(msg);

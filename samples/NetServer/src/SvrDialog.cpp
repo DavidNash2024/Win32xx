@@ -85,6 +85,8 @@ void CTCPClientDlg::Send()
 CSvrDialog::CSvrDialog(UINT nResID) : CDialog(nResID), m_IsServerStarted(FALSE), 
                                       m_SocketType(SOCK_STREAM)
 {
+	ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
+
     // Add support for the IP Address control
     // It requires Win95 with IE4 intergrated or a later version of Windows OS.
     LoadCommonControlsEx();

@@ -9,7 +9,7 @@
 
 
 // Definitions for the CView class
-CView::CView(UINT nResID) : CDialog(nResID)
+CView::CView(UINT nResID) : CDialog(nResID), m_hParent(0)
 {
 }
 

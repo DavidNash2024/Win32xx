@@ -7,7 +7,7 @@
 #include "PerfApp.h"
 
 
-CTestWindow::CTestWindow()
+CTestWindow::CTestWindow() : m_nWindow(0)
 {
 }
 

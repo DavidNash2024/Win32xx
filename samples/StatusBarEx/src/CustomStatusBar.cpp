@@ -260,7 +260,7 @@ SetStatusIndicators()                           /*
 *-----------------------------------------------------------------------------*/
 {
     UINT nIDCount = m_statusbar_part.size();
-    if (!IsWindow() || !IsWindow() || nIDCount == 0)
+    if (!IsWindow() || nIDCount == 0)
         return;
 
       // load panes with specified nID strings, count the number of 
