@@ -133,11 +133,13 @@ void CMainFrame::OnMenuUpdate(UINT nID)
             UINT uCheck = (bDraw)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, uCheck);
         }
+		break;
     case IDM_TAB_FIXED:
         {
             UINT uCheck = (bFixed)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_FIXED, uCheck);
         }
+		break;
     }
 
     CFrame::OnMenuUpdate(nID);

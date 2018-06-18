@@ -6,7 +6,7 @@
 #include "resource.h"
 
 
-CMainFrame::CMainFrame()
+CMainFrame::CMainFrame() : m_pDockText(0), m_pDockTree(0), m_pDockList(0)
 {
     SetView(m_MainView);
 
