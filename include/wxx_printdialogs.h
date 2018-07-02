@@ -429,18 +429,14 @@ namespace Win32xx
 
         if ((GetApp().m_hDevNames != 0) && (GetApp().m_hDevMode != 0))
         {
-            LPDEVNAMES pDevNames = CDevNames(GetApp().m_hDevNames);
-            if (pDevNames)
-            {
-                LPDEVMODE pDevMode = CDevMode(GetApp().m_hDevMode);
-                if (pDevMode)
-                {
-                    dc.CreateDC(reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDriverOffset,
-                        reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wDeviceOffset,
-                        reinterpret_cast<LPCTSTR>(pDevNames) + pDevNames->wOutputOffset,
-                        pDevMode);
-                }
-            }
+            CDevNames cdevNames(GetApp().m_hDevNames);
+            CDevMode cdevMode(GetApp().m_hDevMode);
+            LPCTSTR devNames = cdevNames;
+
+            dc.CreateDC(devNames + cdevNames->wDriverOffset,
+                devNames + cdevNames->wDeviceOffset,
+                devNames + cdevNames->wOutputOffset,
+                cdevMode);
         }
 
         return dc;
@@ -614,7 +610,8 @@ namespace Win32xx
         if (GetApp().m_hDevNames != 0)
         {
             CDevNames pDev = GetDevNames();
-            LPCTSTR name = static_cast<LPCTSTR>(pDev) + pDev->wDeviceOffset;
+            LPCTSTR devNames = pDev;
+            LPCTSTR name = devNames + pDev->wDeviceOffset;
             str = name;
         }
 
@@ -653,7 +650,8 @@ namespace Win32xx
         if (GetApp().m_hDevNames != 0)
         {
             CDevNames pDev = GetDevNames();
-            LPCTSTR name = static_cast<LPCTSTR>(pDev) + pDev->wDriverOffset;
+            LPCTSTR devNames = pDev;
+            LPCTSTR name = devNames + pDev->wDriverOffset;
             str =  name;
         }
 
@@ -675,7 +673,8 @@ namespace Win32xx
         if (GetApp().m_hDevNames != 0)
         {
             CDevNames pDev = GetDevNames();
-            LPCTSTR name = static_cast<LPCTSTR>(pDev) + pDev->wOutputOffset;
+            LPCTSTR devNames = pDev;
+            LPCTSTR name = devNames + pDev->wOutputOffset;
             str = name;
         }
         return str;
