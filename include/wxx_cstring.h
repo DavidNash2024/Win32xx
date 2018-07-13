@@ -89,7 +89,7 @@
 #define _WIN32XX_CSTRING_H_
 
 
-#include <assert.h>
+#include <cassert>
 #include <tchar.h>
 #include <stdio.h>
 #include <string>
@@ -1329,6 +1329,7 @@ namespace Win32xx
         std::advance(it_end, nNewLength);
 
         std::copy(m_buf.begin(), it_end, m_str.begin());
+		m_buf.clear();
     }
 
 

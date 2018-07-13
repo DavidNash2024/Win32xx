@@ -93,7 +93,7 @@ typedef  unsigned char  byte;
 #include <map>
 #include <string>
 #include <sstream>      // Add support for stringstream
-#include <assert.h>
+#include <cassert>
 #include <stdio.h>
 #include <stdlib.h>
 #include <tchar.h>

@@ -102,7 +102,7 @@
 #define _WIN32XX_SHARED_PTR_
 
 
-#include <assert.h>
+#include <cassert>
 #include <algorithm>        // For std::swap
 #include <winsock2.h>       // must include before windows.h
 #include <windows.h>        // For InterlockedIncrement and InterlockedDecrement
