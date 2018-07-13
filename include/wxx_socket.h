@@ -754,10 +754,10 @@ namespace Win32xx
         StopEvents();   // Ensure the thread isn't already running
 #ifdef _WIN32_WCE
         DWORD ThreadID; // a return variable required for Win95, Win98, WinME
-        m_hEventThread = reinterpret_cast<HANDLE>(::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CSocket::EventThread, (LPVOID) this, 0, &ThreadID));
+        m_hEventThread = reinterpret_cast<HANDLE>(::CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)CSocket::EventThread, this, 0, &ThreadID));
 #else
         UINT ThreadID;  // a return variable required for Win95, Win98, WinME
-        m_hEventThread = reinterpret_cast<HANDLE>(::_beginthreadex(NULL, 0, CSocket::EventThread, (LPVOID) this, 0, &ThreadID));
+        m_hEventThread = reinterpret_cast<HANDLE>(::_beginthreadex(NULL, 0, CSocket::EventThread, this, 0, &ThreadID));
 #endif
     }
 

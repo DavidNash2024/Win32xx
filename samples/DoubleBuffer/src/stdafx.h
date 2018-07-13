@@ -28,7 +28,7 @@
 #include <map>                  // Add support for std::map
 #include <string>               // Add support for std::string
 #include <sstream>              // Add support for stringstream
-#include <assert.h>             // Add support for the assert macro
+#include <cassert>              // Add support for the assert macro
 #include <stdio.h>              // Add support for C style printf, sprintf, etc.
 #include <stdlib.h>             // Add support for C style character conversions atoi etc. 
 #include <tchar.h>              // Add support for C style TCHARs.

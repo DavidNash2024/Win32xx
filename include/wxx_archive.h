@@ -185,8 +185,8 @@ namespace Win32xx
         CArchive& operator = (const CArchive&); // Disable assignment operator
 
         // private data members
-		UINT    m_Schema;           // archive version schema
         CFile*  m_pFile;            // archive file FILE
+        UINT    m_Schema;           // archive version schema
         bool    m_IsStoring;        // archive direction switch
         bool    m_IsFileManaged;    // delete the CFile pointer in destructor;
 

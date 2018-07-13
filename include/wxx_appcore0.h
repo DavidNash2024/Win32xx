@@ -105,7 +105,7 @@
 #endif
 
 
-#include <assert.h>
+#include <cassert>
 #include <vector>
 #include <algorithm>
 #include <string>
