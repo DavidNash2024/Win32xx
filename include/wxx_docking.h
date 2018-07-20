@@ -719,7 +719,7 @@ namespace Win32xx
         m_DragPos.ptPos = GetCursorPos();
         m_DragPos.ptPos.x += 1;
         m_DragPos.pDocker = m_pDocker;
-        GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&m_DragPos));
+        GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&m_DragPos));
     }
 
     inline void CDocker::CDockBar::SetColor(COLORREF color)
@@ -737,7 +737,7 @@ namespace Win32xx
         switch (uMsg)
         {
         case WM_SETCURSOR:      return OnSetCursor(uMsg, wParam, lParam);
-        case WM_ERASEBKGND:     return 0L;
+        case WM_ERASEBKGND:     return 0;
         case WM_LBUTTONDOWN:    return OnLButtonDown(uMsg, wParam, lParam);
         case WM_LBUTTONUP:      return OnLButtonUp(uMsg, wParam, lParam);
         case WM_MOUSEMOVE:      return OnMouseMove(uMsg, wParam, lParam);
@@ -1040,7 +1040,7 @@ namespace Win32xx
                     DrawCloseButton(dc, m_IsOldFocusStored);
                 }
 
-                return 0L;
+                return 0;
             }
         }
         return CWnd::WndProcDefault(uMsg, wParam, lParam);
@@ -1072,7 +1072,7 @@ namespace Win32xx
                     DrawCloseButton(dc, m_IsOldFocusStored);
                 }
 
-                return 0L;
+                return 0;
             }
         }
 
@@ -1152,7 +1152,7 @@ namespace Win32xx
             {
                 // Discard phantom mouse move messages
                 if ( (m_Oldpt.x == GET_X_LPARAM(lParam) ) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
-                    return 0L;
+                    return 0;
 
                 if (IsLeftButtonDown() && (wParam == HTCAPTION)  && (m_IsCaptionPressed))
                 {
@@ -1171,7 +1171,7 @@ namespace Win32xx
             {
                 // Discard phantom mouse move messages
                 if ((m_Oldpt.x == GET_X_LPARAM(lParam)) && (m_Oldpt.y == GET_Y_LPARAM(lParam)))
-                    return 0L;
+                    return 0;
 
                 if (IsLeftButtonDown() && (wParam == HTCAPTION) && (m_IsCaptionPressed))
                 {
@@ -1295,7 +1295,7 @@ namespace Win32xx
         DragPos.pDocker = m_pDocker;
 
         // Send a DragPos notification to the docker
-        GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&DragPos));
+        GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&DragPos));
     }
 
     inline void CDocker::CDockClient::SetCaptionColors(COLORREF Foregnd1, COLORREF Backgnd1, COLORREF Foregnd2, COLORREF Backgnd2, COLORREF PenColor)
@@ -3029,7 +3029,7 @@ namespace Win32xx
                 GetView().SetFocus();
         }
 
-        return 0L;
+        return 0;
     }
 
     inline LRESULT CDocker::OnBarStart(LPDRAGPOS pdp)
@@ -3040,7 +3040,7 @@ namespace Win32xx
             DrawHashBar(pdp->hdr.hwndFrom, pt);
         m_OldPoint = pt;
 
-        return 0L;
+        return 0;
     }
 
     inline LRESULT CDocker::OnBarMove(LPDRAGPOS pdp)
@@ -3061,7 +3061,7 @@ namespace Win32xx
             m_OldPoint = pt;
         }
 
-        return 0L;
+        return 0;
     }
 
     inline LRESULT CDocker::OnBarEnd(LPDRAGPOS pdp)
@@ -3073,7 +3073,7 @@ namespace Win32xx
             DrawHashBar(pdp->hdr.hwndFrom, pt);
 
         ResizeDockers(pdp);
-        return 0L;
+        return 0;
     }
 
 
@@ -3171,7 +3171,7 @@ namespace Win32xx
 
         // Post a docker destroyed message
         if ( GetDockAncestor()->IsWindow() )
-            GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, reinterpret_cast<WPARAM>(this), 0L);
+            GetDockAncestor()->PostMessage(UWM_DOCKDESTROYED, reinterpret_cast<WPARAM>(this), 0);
     }
 
 
@@ -3203,7 +3203,7 @@ namespace Win32xx
             }
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -3226,14 +3226,14 @@ namespace Win32xx
             SendMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(pdp->ptPos.x, pdp->ptPos.y));
         }
 
-        return 0L;
+        return 0;
     }
 
 
     inline LRESULT CDocker::OnDockMove(LPDRAGPOS pdp)
     {
         CheckAllTargets(pdp);
-        return 0L;
+        return 0;
     }
 
 
@@ -3288,7 +3288,7 @@ namespace Win32xx
         GetDockHint().Destroy();
         CloseAllTargets();
 
-        return 0L;
+        return 0;
     }
 
 
@@ -3302,7 +3302,7 @@ namespace Win32xx
         m_IsDragging = FALSE;
         SendNotify(UWN_DOCKEND);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -3315,7 +3315,7 @@ namespace Win32xx
             GetDockAncestor()->PostMessage(UWM_DOCKACTIVATE);
         }
 
-        return 0L;  // Return 0 to stop propogating this message to parent windows
+        return 0;  // Return 0 to stop propogating this message to parent windows
     }
 
 
@@ -3344,7 +3344,7 @@ namespace Win32xx
             }
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -3411,7 +3411,7 @@ namespace Win32xx
 
                 // Return DragFullWindows to its previous state
                 ::SystemParametersInfo(SPI_SETDRAGFULLWINDOWS, IsEnabled, 0, 0);
-                return 0L;
+                return 0;
             }
         case SC_CLOSE:
             // The close button is pressed on an undocked docker
@@ -3939,7 +3939,7 @@ namespace Win32xx
         CDocker* pDocker = GetDockUnderDragPoint(DragPos.ptPos);
 
         if (pDocker)
-            pDocker->SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&DragPos));
+            pDocker->SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&DragPos));
         else
         {
             if (GetDockHint().IsWindow())
@@ -4170,7 +4170,7 @@ namespace Win32xx
     {
         Redraw? ++m_nRedrawCount : --m_nRedrawCount ;
 
-        return (SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0L) != 0);
+        return (SendMessage(WM_SETREDRAW, (m_nRedrawCount >= 0), 0) != 0);
     }
 
 
@@ -4633,10 +4633,10 @@ namespace Win32xx
             {
                 // Set the toolbar images
                 // A mask of 192,192,192 is compatible with AddBitmap (for Win95)
-                if (!GetToolBar().SendMessage(TB_GETIMAGELIST, 0L, 0L))
+                if (!GetToolBar().SendMessage(TB_GETIMAGELIST, 0, 0))
                     SetToolBarImages(RGB(192, 192, 192), IDW_MAIN, 0, 0);
 
-                GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+                GetToolBar().SendMessage(TB_AUTOSIZE, 0, 0);
             }
             else
                 GetToolBar().Destroy();
@@ -4726,7 +4726,7 @@ namespace Win32xx
         {
             TCHITTESTINFO info;
             ZeroMemory(&info, sizeof(info));
-            info.pt = CPoint((DWORD_PTR)lParam);
+            info.pt = CPoint(static_cast<DWORD_PTR>(lParam));
             int nTab = HitTest(info);
             if (nTab >= 0 && m_nTabPressed >= 0)
             {
@@ -4753,7 +4753,7 @@ namespace Win32xx
         case TCN_SELCHANGE: return OnTCNSelChange(pNMHDR);
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -4765,7 +4765,7 @@ namespace Win32xx
         int nPage = GetCurSel();
         SelectPage(nPage);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -4957,7 +4957,7 @@ namespace Win32xx
             nItemWidth = MIN(25 + GetMaxTabTextSize().cx, (rc.Width() - 2) / static_cast<int>(m_vContainerInfo.size()));
             nItemHeight = MAX(20, GetTextHeight() + 5);
         }
-        SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, nItemHeight));
+        SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, nItemHeight));
     }
 
 
@@ -5152,7 +5152,7 @@ namespace Win32xx
             break;
         } // switch LPNMHDR
 
-        return 0L;
+        return 0;
     }
 
 
@@ -5168,7 +5168,7 @@ namespace Win32xx
         CRect rc = GetClientRect();
         if (GetToolBar().IsWindow())
         {
-            GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+            GetToolBar().SendMessage(TB_AUTOSIZE, 0, 0);
             CRect rcToolBar = GetToolBar().GetClientRect();
             rc.top += rcToolBar.Height();
         }

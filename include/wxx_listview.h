@@ -412,7 +412,7 @@ namespace Win32xx
     inline UINT CListView::GetSelectedCount( ) const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage( LVM_GETSELECTEDCOUNT, 0L, 0L ));
+        return static_cast<UINT>(SendMessage( LVM_GETSELECTEDCOUNT, 0, 0 ));
     }
 
 
@@ -420,7 +420,7 @@ namespace Win32xx
     inline int CListView::GetSelectionMark( ) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage( LVM_GETSELECTIONMARK, 0L, 0L ));
+        return static_cast<int>(SendMessage( LVM_GETSELECTIONMARK, 0, 0 ));
     }
 
 
@@ -428,7 +428,7 @@ namespace Win32xx
     inline int CListView::GetStringWidth( LPCTSTR pszString ) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0L, reinterpret_cast<LPARAM>(pszString)));
+        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, reinterpret_cast<LPARAM>(pszString)));
     }
 
 
@@ -743,7 +743,7 @@ namespace Win32xx
     inline HWND CListView::SetToolTips( HWND hToolTip ) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0L));
+        return reinterpret_cast<HWND>(SendMessage(LVM_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0));
     }
 
 

@@ -288,7 +288,7 @@ namespace Win32xx
         case WM_CLOSE:
             {
                 OnClose();
-                return 0L;
+                return 0;
             }
         case WM_COMMAND:
             {
@@ -314,7 +314,7 @@ namespace Win32xx
                 if (!lr)
                     lr =  OnCommand(wParam, lParam);
 
-                if (lr) return 0L;
+                if (lr) return 0;
             }
             break;  // Some commands require default processing
 
@@ -588,7 +588,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         DWORD dwID = 0;
-        LRESULT LR = SendMessage(DM_GETDEFID, 0L, 0L);
+        LRESULT LR = SendMessage(DM_GETDEFID, 0, 0);
         if (DC_HASDEFID == HIWORD(LR))
             dwID = LOWORD(LR);
 
@@ -633,7 +633,7 @@ namespace Win32xx
     inline void CDialog::SetDefID(UINT nID)
     {
         assert(IsWindow());
-        SendMessage(DM_SETDEFID, nID, 0L);
+        SendMessage(DM_SETDEFID, nID, 0);
     }
 
 

@@ -437,9 +437,9 @@ namespace Win32xx
 
         if (ptm)
         {
-            SYSTEMTIME st = {(WORD)(1900 + ptm->tm_year), (WORD)(1 + ptm->tm_mon),
-                (WORD)ptm->tm_wday, (WORD)ptm->tm_mday, (WORD)ptm->tm_hour,
-                (WORD)ptm->tm_min, (WORD)ptm->tm_sec, (WORD)0};
+            SYSTEMTIME st = {static_cast<WORD>(1900 + ptm->tm_year), static_cast<WORD>(1 + ptm->tm_mon),
+                static_cast<WORD>(ptm->tm_wday), static_cast<WORD>(ptm->tm_mday), static_cast<WORD>(ptm->tm_hour),
+                static_cast<WORD>(ptm->tm_min), static_cast<WORD>(ptm->tm_sec), 0};
             SystemTimeToFileTime(&st, &ft);
             rval = true;
         }
@@ -458,13 +458,13 @@ namespace Win32xx
 
         if (ptm)
         {
-            st.wYear    = (WORD) (1900 + ptm->tm_year);
-            st.wMonth   = (WORD) (1 + ptm->tm_mon);
-            st.wDayOfWeek   = (WORD) ptm->tm_wday;
-            st.wDay     = (WORD) ptm->tm_mday;
-            st.wHour    = (WORD) ptm->tm_hour;
-            st.wMinute  = (WORD) ptm->tm_min;
-            st.wSecond  = (WORD) ptm->tm_sec;
+            st.wYear    = static_cast<WORD>(1900 + ptm->tm_year);
+            st.wMonth   = static_cast<WORD>(1 + ptm->tm_mon);
+            st.wDayOfWeek   = static_cast<WORD>(ptm->tm_wday);
+            st.wDay     = static_cast<WORD>(ptm->tm_mday);
+            st.wHour    = static_cast<WORD>(ptm->tm_hour);
+            st.wMinute  = static_cast<WORD>(ptm->tm_min);
+            st.wSecond  = static_cast<WORD>(ptm->tm_sec);
             st.wMilliseconds = 0;
             rval = true;
         }

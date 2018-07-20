@@ -215,7 +215,7 @@ namespace Win32xx
     inline BOOL CRichEdit::CanPaste(UINT /* nFormat = 0 */) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_CANPASTE, 0L, 0L));
+        return (0 != SendMessage(EM_CANPASTE, 0, 0));
     }
 
 
@@ -223,7 +223,7 @@ namespace Win32xx
     inline BOOL CRichEdit::CanRedo() const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_CANREDO, 0L, 0L));
+        return (0 != SendMessage(EM_CANREDO, 0, 0));
     }
 
 
@@ -231,7 +231,7 @@ namespace Win32xx
     inline BOOL CRichEdit::CanUndo() const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_CANUNDO, 0L, 0L));
+        return (0 != SendMessage(EM_CANUNDO, 0, 0));
     }
 
 
@@ -239,7 +239,7 @@ namespace Win32xx
     inline int CRichEdit::CharFromPos(CPoint pt) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_CHARFROMPOS, reinterpret_cast<WPARAM>(&pt), 0L));
+        return static_cast<int>(SendMessage(EM_CHARFROMPOS, reinterpret_cast<WPARAM>(&pt), 0));
     }
 
 
@@ -247,7 +247,7 @@ namespace Win32xx
     inline void CRichEdit::Clear() const
     {
         assert(IsWindow());
-        SendMessage(WM_CLEAR, 0L, 0L);
+        SendMessage(WM_CLEAR, 0, 0);
     }
 
 
@@ -255,7 +255,7 @@ namespace Win32xx
     inline void CRichEdit::Copy() const
     {
         assert(IsWindow());
-        SendMessage(WM_COPY, 0L, 0L);
+        SendMessage(WM_COPY, 0, 0);
     }
 
 
@@ -263,7 +263,7 @@ namespace Win32xx
     inline void CRichEdit::Cut() const
     {
         assert(IsWindow());
-        SendMessage(WM_CUT, 0L, 0L);
+        SendMessage(WM_CUT, 0, 0);
     }
 
 
@@ -271,7 +271,7 @@ namespace Win32xx
     inline BOOL CRichEdit::DisplayBand(const RECT& rcDisplay) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_DISPLAYBAND, 0L, reinterpret_cast<LPARAM>(&rcDisplay)));
+        return (0 != SendMessage(EM_DISPLAYBAND, 0, reinterpret_cast<LPARAM>(&rcDisplay)));
     }
 
 
@@ -279,7 +279,7 @@ namespace Win32xx
     inline void CRichEdit::EmptyUndoBuffer() const
     {
         assert(IsWindow());
-        SendMessage(EM_EMPTYUNDOBUFFER, 0L, 0L);
+        SendMessage(EM_EMPTYUNDOBUFFER, 0, 0);
     }
 
 
@@ -353,7 +353,7 @@ namespace Win32xx
     inline long CRichEdit::GetEventMask() const
     {
         assert(IsWindow());
-        return static_cast<long>(SendMessage(EM_GETEVENTMASK, 0L, 0L));
+        return static_cast<long>(SendMessage(EM_GETEVENTMASK, 0, 0));
     }
 
 
@@ -361,7 +361,7 @@ namespace Win32xx
     inline int CRichEdit::GetFirstVisibleLine() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_GETFIRSTVISIBLELINE, 0L, 0L));
+        return static_cast<int>(SendMessage(EM_GETFIRSTVISIBLELINE, 0, 0));
     }
 
 
@@ -371,7 +371,7 @@ namespace Win32xx
         assert(IsWindow());
 
         IRichEditOle* pRichEditOle = NULL;
-        SendMessage(EM_GETOLEINTERFACE, 0L, reinterpret_cast<LPARAM>(pRichEditOle));
+        SendMessage(EM_GETOLEINTERFACE, 0, reinterpret_cast<LPARAM>(pRichEditOle));
         return pRichEditOle;
     }
 
@@ -380,7 +380,7 @@ namespace Win32xx
     inline long CRichEdit::GetLimitText() const
     {
         assert(IsWindow());
-        return static_cast<long>(SendMessage(EM_GETLIMITTEXT, 0L, 0L));
+        return static_cast<long>(SendMessage(EM_GETLIMITTEXT, 0, 0));
     }
 
 
@@ -407,7 +407,7 @@ namespace Win32xx
     inline int CRichEdit::GetLineCount() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_GETLINECOUNT, 0L, 0L));
+        return static_cast<int>(SendMessage(EM_GETLINECOUNT, 0, 0));
     }
 
 
@@ -415,7 +415,7 @@ namespace Win32xx
     inline BOOL CRichEdit::GetModify() const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_GETMODIFY, 0L, 0L));
+        return (0 != SendMessage(EM_GETMODIFY, 0, 0));
     }
 
 
@@ -423,7 +423,7 @@ namespace Win32xx
     inline UINT CRichEdit::GetOptions() const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(EM_GETOPTIONS, 0L, 0L));
+        return static_cast<UINT>(SendMessage(EM_GETOPTIONS, 0, 0));
     }
 
 
@@ -431,7 +431,7 @@ namespace Win32xx
     inline DWORD CRichEdit::GetParaFormat(PARAFORMAT& pf) const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(EM_GETPARAFORMAT, 0L, reinterpret_cast<LPARAM>(&pf)));
+        return static_cast<DWORD>(SendMessage(EM_GETPARAFORMAT, 0, reinterpret_cast<LPARAM>(&pf)));
     }
 
 
@@ -439,7 +439,7 @@ namespace Win32xx
     inline DWORD CRichEdit::GetParaFormat(PARAFORMAT2& pf) const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(EM_GETPARAFORMAT, 0L, reinterpret_cast<LPARAM>(&pf)));
+        return static_cast<DWORD>(SendMessage(EM_GETPARAFORMAT, 0, reinterpret_cast<LPARAM>(&pf)));
     }
 
 
@@ -457,7 +457,7 @@ namespace Win32xx
     inline void CRichEdit::GetRect(RECT& rc) const
     {
         assert(IsWindow());
-        SendMessage(EM_GETRECT, 0L, reinterpret_cast<LPARAM>(&rc));
+        SendMessage(EM_GETRECT, 0, reinterpret_cast<LPARAM>(&rc));
     }
 
 
@@ -465,7 +465,7 @@ namespace Win32xx
     inline UNDONAMEID CRichEdit::GetRedoName() const
     {
         assert(IsWindow());
-        return static_cast<UNDONAMEID>(SendMessage(EM_GETREDONAME, 0L, 0L));
+        return static_cast<UNDONAMEID>(SendMessage(EM_GETREDONAME, 0, 0));
     }
 
 
@@ -473,7 +473,7 @@ namespace Win32xx
     inline void CRichEdit::GetSel(CHARRANGE& cr) const
     {
         assert(IsWindow());
-        SendMessage(EM_EXGETSEL, 0L, reinterpret_cast<LPARAM>(&cr));
+        SendMessage(EM_EXGETSEL, 0, reinterpret_cast<LPARAM>(&cr));
     }
 
 
@@ -483,7 +483,7 @@ namespace Win32xx
         assert(IsWindow());
         CHARRANGE cr;
 
-        SendMessage(EM_EXGETSEL, 0L, reinterpret_cast<LPARAM>(&cr));
+        SendMessage(EM_EXGETSEL, 0, reinterpret_cast<LPARAM>(&cr));
         nStartChar = cr.cpMin;
         nEndChar   = cr.cpMax;
     }
@@ -509,7 +509,7 @@ namespace Win32xx
     inline WORD CRichEdit::GetSelectionType() const
     {
         assert(IsWindow());
-        return static_cast<WORD>(SendMessage(EM_SELECTIONTYPE, 0L, 0L));
+        return static_cast<WORD>(SendMessage(EM_SELECTIONTYPE, 0, 0));
     }
 
 
@@ -517,7 +517,7 @@ namespace Win32xx
     inline long CRichEdit::GetSelText(LPSTR lpBuf) const
     {
         assert(IsWindow());
-        return static_cast<long>(SendMessage(EM_GETSELTEXT, 0L, reinterpret_cast<LPARAM>(lpBuf)));
+        return static_cast<long>(SendMessage(EM_GETSELTEXT, 0, reinterpret_cast<LPARAM>(lpBuf)));
     }
 
 
@@ -527,7 +527,7 @@ namespace Win32xx
         assert(IsWindow());
 
         CString str;
-        int nBuff = static_cast<int>(SendMessage(EM_GETSELTEXT, 0L, 0L));
+        int nBuff = static_cast<int>(SendMessage(EM_GETSELTEXT, 0, 0));
         SendMessage(EM_GETSELTEXT, 0, reinterpret_cast<LPARAM>(str.GetBuffer(nBuff)));
         str.ReleaseBuffer();
         return str;
@@ -538,7 +538,7 @@ namespace Win32xx
     inline long CRichEdit::GetTextLength() const
     {
         assert(IsWindow());
-        return static_cast<long>(SendMessage(WM_GETTEXTLENGTH, 0L, 0L));
+        return static_cast<long>(SendMessage(WM_GETTEXTLENGTH, 0, 0));
     }
 
 
@@ -550,7 +550,7 @@ namespace Win32xx
         gtle.flags = dwFlags;
         gtle.codepage = uCodePage;
 
-        return static_cast<long>(SendMessage(EM_GETTEXTLENGTHEX, reinterpret_cast<WPARAM>(&gtle), 0L));
+        return static_cast<long>(SendMessage(EM_GETTEXTLENGTHEX, reinterpret_cast<WPARAM>(&gtle), 0));
     }
 
 
@@ -558,7 +558,7 @@ namespace Win32xx
     inline UINT CRichEdit::GetTextMode() const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(EM_GETTEXTMODE, 0L, 0L));
+        return static_cast<UINT>(SendMessage(EM_GETTEXTMODE, 0, 0));
     }
 
 
@@ -585,7 +585,7 @@ namespace Win32xx
     inline UNDONAMEID CRichEdit::GetUndoName() const
     {
         assert(IsWindow());
-        return static_cast<UNDONAMEID>(SendMessage(EM_GETREDONAME, 0L, 0L));
+        return static_cast<UNDONAMEID>(SendMessage(EM_GETREDONAME, 0, 0));
     }
 
 
@@ -598,7 +598,7 @@ namespace Win32xx
             SetOptions(ECOOP_SET, ECO_NOHIDESEL);
         }
 
-        SendMessage(EM_HIDESELECTION, Hide, 0L);
+        SendMessage(EM_HIDESELECTION, Hide, 0);
     }
 
 
@@ -614,7 +614,7 @@ namespace Win32xx
     inline long CRichEdit::LineFromChar(long nIndex) const
     {
         assert(IsWindow());
-        return static_cast<long>(SendMessage(EM_EXLINEFROMCHAR, 0L, nIndex));
+        return static_cast<long>(SendMessage(EM_EXLINEFROMCHAR, 0, nIndex));
     }
 
 
@@ -622,7 +622,7 @@ namespace Win32xx
     inline int CRichEdit::LineIndex(int nLine /* = -1 */) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_LINEINDEX, nLine, 0L));
+        return static_cast<int>(SendMessage(EM_LINEINDEX, nLine, 0));
     }
 
 
@@ -630,7 +630,7 @@ namespace Win32xx
     inline int CRichEdit::LineLength(int nLine /* = -1 */) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_LINELENGTH, nLine, 0L));
+        return static_cast<int>(SendMessage(EM_LINELENGTH, nLine, 0));
     }
 
 
@@ -646,7 +646,7 @@ namespace Win32xx
     inline void CRichEdit::Paste() const
     {
         assert(IsWindow());
-        SendMessage(WM_PASTE, 0L, 0L);
+        SendMessage(WM_PASTE, 0, 0);
     }
 
 
@@ -657,7 +657,7 @@ namespace Win32xx
 
         REPASTESPECIAL rps;
         rps.dwAspect = dwAspect;
-        rps.dwParam = (DWORD_PTR)hMF;
+        rps.dwParam = reinterpret_cast<DWORD_PTR>(hMF);
         SendMessage(EM_PASTESPECIAL, nClipFormat, reinterpret_cast<LPARAM>(&rps));
     }
 
@@ -666,7 +666,7 @@ namespace Win32xx
     inline CPoint CRichEdit::PosFromChar(UINT nChar) const
     {
         assert(IsWindow());
-        DWORD dwPos = static_cast<DWORD>(SendMessage(EM_POSFROMCHAR, 0L, nChar));
+        DWORD dwPos = static_cast<DWORD>(SendMessage(EM_POSFROMCHAR, 0, nChar));
         return CPoint(LOWORD(dwPos), HIWORD(dwPos));
     }
 
@@ -675,7 +675,7 @@ namespace Win32xx
     inline BOOL CRichEdit::Redo() const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_REDO, 0L, 0L));
+        return (0 != SendMessage(EM_REDO, 0, 0));
     }
 
 
@@ -691,7 +691,7 @@ namespace Win32xx
     inline void CRichEdit::RequestResize() const
     {
         assert(IsWindow());
-        SendMessage(EM_REQUESTRESIZE, 0L, 0L);
+        SendMessage(EM_REQUESTRESIZE, 0, 0);
     }
 
 
@@ -699,7 +699,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetAutoURLDetect(BOOL Enable /* = TRUE */) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_AUTOURLDETECT, Enable, 0L));
+        return (0 != SendMessage(EM_AUTOURLDETECT, Enable, 0));
     }
 
 
@@ -715,7 +715,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetDefaultCharFormat(CHARFORMAT& cf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)));
+        return (0 != SendMessage(EM_SETCHARFORMAT, 0, reinterpret_cast<LPARAM>(&cf)));
     }
 
 
@@ -723,7 +723,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetDefaultCharFormat(CHARFORMAT2& cf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)));
+        return (0 != SendMessage(EM_SETCHARFORMAT, 0, reinterpret_cast<LPARAM>(&cf)));
     }
 
 
@@ -731,7 +731,7 @@ namespace Win32xx
     inline DWORD CRichEdit::SetEventMask(DWORD dwEventMask) const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(EM_SETEVENTMASK, 0L, dwEventMask));
+        return static_cast<DWORD>(SendMessage(EM_SETEVENTMASK, 0, dwEventMask));
     }
 
 
@@ -739,7 +739,7 @@ namespace Win32xx
     inline void CRichEdit::SetModify(BOOL IsModified /* = TRUE */) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETMODIFY, IsModified, 0L);
+        SendMessage(EM_SETMODIFY, IsModified, 0);
     }
 
 
@@ -747,7 +747,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetOLECallback(IRichEditOleCallback* pCallback) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETOLECALLBACK, 0L, reinterpret_cast<LPARAM>(pCallback)));
+        return (0 != SendMessage(EM_SETOLECALLBACK, 0, reinterpret_cast<LPARAM>(pCallback)));
     }
 
 
@@ -766,7 +766,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetParaFormat(PARAFORMAT& pf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETPARAFORMAT, 0L, reinterpret_cast<LPARAM>(&pf)));
+        return (0 != SendMessage(EM_SETPARAFORMAT, 0, reinterpret_cast<LPARAM>(&pf)));
     }
 
 
@@ -774,7 +774,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetParaFormat(PARAFORMAT2& pf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETPARAFORMAT, 0L, reinterpret_cast<LPARAM>(&pf)));
+        return (0 != SendMessage(EM_SETPARAFORMAT, 0, reinterpret_cast<LPARAM>(&pf)));
     }
 
 
@@ -791,7 +791,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetReadOnly(BOOL IsReadOnly /* = TRUE*/) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETREADONLY, IsReadOnly, 0L));
+        return (0 != SendMessage(EM_SETREADONLY, IsReadOnly, 0));
     }
 
 
@@ -800,7 +800,7 @@ namespace Win32xx
     inline void CRichEdit::SetRect(const RECT& rc) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETRECT, 0L, reinterpret_cast<LPARAM>(&rc));
+        SendMessage(EM_SETRECT, 0, reinterpret_cast<LPARAM>(&rc));
     }
 
 
@@ -812,7 +812,7 @@ namespace Win32xx
         CHARRANGE cr;
         cr.cpMin = nStartChar;
         cr.cpMax = nEndChar;
-        SendMessage(EM_EXSETSEL, 0L, reinterpret_cast<LPARAM>(&cr));
+        SendMessage(EM_EXSETSEL, 0, reinterpret_cast<LPARAM>(&cr));
     }
 
 
@@ -820,7 +820,7 @@ namespace Win32xx
     inline void CRichEdit::SetSel(CHARRANGE& cr) const
     {
         assert(IsWindow());
-        SendMessage(EM_EXSETSEL, 0L, reinterpret_cast<LPARAM>(&cr));
+        SendMessage(EM_EXSETSEL, 0, reinterpret_cast<LPARAM>(&cr));
     }
 
 
@@ -828,7 +828,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetSelectionCharFormat(CHARFORMAT& cf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)));
+        return (0 != SendMessage(EM_SETCHARFORMAT, 0, reinterpret_cast<LPARAM>(&cf)));
     }
 
 
@@ -836,7 +836,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetSelectionCharFormat(CHARFORMAT2& cf) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)));
+        return (0 != SendMessage(EM_SETCHARFORMAT, 0, reinterpret_cast<LPARAM>(&cf)));
     }
 
 
@@ -860,7 +860,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetTextMode(UINT fMode) const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_SETTEXTMODE, fMode, 0L));
+        return (0 != SendMessage(EM_SETTEXTMODE, fMode, 0));
     }
 
 
@@ -869,7 +869,7 @@ namespace Win32xx
     inline UINT CRichEdit::SetUndoLimit(UINT nLimit) const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(EM_SETUNDOLIMIT, nLimit, 0L));
+        return static_cast<UINT>(SendMessage(EM_SETUNDOLIMIT, nLimit, 0));
     }
 
 
@@ -877,7 +877,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT& cf) const
     {
         assert(IsWindow());
-        return (SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)) != 0);
+        return (SendMessage(EM_SETCHARFORMAT, 0, reinterpret_cast<LPARAM>(&cf)) != 0);
     }
 
 
@@ -885,7 +885,7 @@ namespace Win32xx
     inline BOOL CRichEdit::SetWordCharFormat(CHARFORMAT2& cf) const
     {
         assert(IsWindow());
-        return (SendMessage(EM_SETCHARFORMAT, 0L, reinterpret_cast<LPARAM>(&cf)) != 0);
+        return (SendMessage(EM_SETCHARFORMAT, 0, reinterpret_cast<LPARAM>(&cf)) != 0);
     }
 
 
@@ -894,7 +894,7 @@ namespace Win32xx
     inline void CRichEdit::StopGroupTyping() const
     {
         assert(IsWindow());
-        SendMessage(EM_STOPGROUPTYPING, 0L, 0L);
+        SendMessage(EM_STOPGROUPTYPING, 0, 0);
     }
 
 
@@ -918,7 +918,7 @@ namespace Win32xx
     inline BOOL CRichEdit::Undo() const
     {
         assert(IsWindow());
-        return (0 != SendMessage(EM_UNDO, 0L, 0L));
+        return (0 != SendMessage(EM_UNDO, 0, 0));
     }
 
 }

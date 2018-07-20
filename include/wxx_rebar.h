@@ -125,7 +125,7 @@ namespace Win32xx
     ///////////////////////////////////
     // Definitions for the CReBar class
     //
-    inline CReBar::CReBar() : m_IsDragging(FALSE), m_hMenuBar(0), m_Orig_lParam(0L)
+    inline CReBar::CReBar() : m_IsDragging(FALSE), m_hMenuBar(0), m_Orig_lParam(0)
     {
     }
 
@@ -139,7 +139,7 @@ namespace Win32xx
     inline BOOL CReBar::DeleteBand(int nBand) const
     {
         assert(IsWindow());
-        return (SendMessage(RB_DELETEBAND, nBand, 0L) != 0);
+        return (SendMessage(RB_DELETEBAND, nBand, 0) != 0);
     }
 
 
@@ -181,7 +181,7 @@ namespace Win32xx
     inline int  CReBar::GetBandCount() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(RB_GETBANDCOUNT, 0L, 0L));
+        return static_cast<int>(SendMessage(RB_GETBANDCOUNT, 0, 0));
     }
 
 
@@ -211,7 +211,7 @@ namespace Win32xx
     inline UINT CReBar::GetBarHeight() const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(RB_GETBARHEIGHT, 0L, 0L));
+        return static_cast<UINT>(SendMessage(RB_GETBARHEIGHT, 0, 0));
     }
 
 
@@ -222,7 +222,7 @@ namespace Win32xx
 
         // REBARINFO describes overall rebar control characteristics
         rbi.cbSize = sizeof(rbi);
-        return (SendMessage(RB_GETBARINFO, 0L, reinterpret_cast<LPARAM>(&rbi)) != 0);
+        return (SendMessage(RB_GETBARINFO, 0, reinterpret_cast<LPARAM>(&rbi)) != 0);
     }
 
 
@@ -230,7 +230,7 @@ namespace Win32xx
     inline UINT CReBar::GetRowCount() const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(RB_GETROWCOUNT, 0L, 0L));
+        return static_cast<UINT>(SendMessage(RB_GETROWCOUNT, 0, 0));
     }
 
 
@@ -238,7 +238,7 @@ namespace Win32xx
     inline int CReBar::GetRowHeight(int nRow) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(RB_GETROWHEIGHT, nRow, 0L));
+        return static_cast<int>(SendMessage(RB_GETROWHEIGHT, nRow, 0));
     }
 
 
@@ -267,7 +267,7 @@ namespace Win32xx
     inline HWND CReBar::GetToolTips() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(RB_GETTOOLTIPS, 0L, 0L));
+        return reinterpret_cast<HWND>(SendMessage(RB_GETTOOLTIPS, 0, 0));
     }
 
 
@@ -276,7 +276,7 @@ namespace Win32xx
     inline int CReBar::HitTest(RBHITTESTINFO& rbht) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(RB_HITTEST, 0L, reinterpret_cast<LPARAM>(&rbht)));
+        return static_cast<int>(SendMessage(RB_HITTEST, 0, reinterpret_cast<LPARAM>(&rbht)));
     }
 
 
@@ -314,7 +314,7 @@ namespace Win32xx
     inline int CReBar::IDToIndex(UINT uBandID) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(RB_IDTOINDEX, uBandID, 0L));
+        return static_cast<int>(SendMessage(RB_IDTOINDEX, uBandID, 0));
     }
 
 
@@ -380,7 +380,7 @@ namespace Win32xx
     inline void CReBar::MinimizeBand(UINT uBand) const
     {
         assert(IsWindow());
-        SendMessage(RB_MINIMIZEBAND, uBand, 0L);
+        SendMessage(RB_MINIMIZEBAND, uBand, 0);
     }
 
 
@@ -406,7 +406,7 @@ namespace Win32xx
                 // Maximize the last band on each row
                 if (IsBandVisible(nBand))
                 {
-                    SendMessage(RB_MAXIMIZEBAND, nBand, 0L);
+                    SendMessage(RB_MAXIMIZEBAND, nBand, 0);
                     OldrcTop = rc.top;
                 }
             }
@@ -427,7 +427,7 @@ namespace Win32xx
     // Called when the left button is released.
     inline LRESULT CReBar::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0L, 0L));
+        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
         if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
         {
             // Use move messages to limit the resizing of bands
@@ -450,7 +450,7 @@ namespace Win32xx
     {
         if (m_IsDragging)
         {
-            ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0L, 0L));
+            ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
             if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
             {
                 // We want to lock the first row in place, but allow other bands to move!
@@ -458,7 +458,7 @@ namespace Win32xx
                 int y = GET_Y_LPARAM(lParam);
 
                 if (y <= GetRowHeight(0))
-                    return 0L;  // throw this message away
+                    return 0;  // throw this message away
             }
         }
 
@@ -487,7 +487,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(lParam);
 
         // Adjust size for toolbars inside a rebar
-        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0L, 0L));
+        ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
 
         // A boolean expression
         return ( pTheme && pTheme->UseThemes && pTheme->ShortBands );
@@ -568,7 +568,7 @@ namespace Win32xx
         assert(IsWindow());
 
         rbi.cbSize = sizeof(rbi);
-        return (SendMessage(RB_SETBARINFO, 0L, reinterpret_cast<LPARAM>(&rbi)) != 0);
+        return (SendMessage(RB_SETBARINFO, 0, reinterpret_cast<LPARAM>(&rbi)) != 0);
     }
 
 
@@ -610,7 +610,7 @@ namespace Win32xx
     inline BOOL CReBar::SizeToRect(RECT& rect) const
     {
         assert(IsWindow());
-        return (SendMessage(RB_SIZETORECT, 0L, reinterpret_cast<LPARAM>(&rect)) != 0);
+        return (SendMessage(RB_SIZETORECT, 0, reinterpret_cast<LPARAM>(&rect)) != 0);
     }
 
 
@@ -618,7 +618,7 @@ namespace Win32xx
     inline void CReBar::SetToolTips(HWND hToolTip) const
     {
         assert(IsWindow());
-        SendMessage(RB_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0L);
+        SendMessage(RB_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0);
     }
 
 

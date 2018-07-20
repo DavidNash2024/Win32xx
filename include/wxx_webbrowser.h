@@ -260,7 +260,7 @@ namespace Win32xx
         if (fFocus)
         {
             IOleObject* pioo;
-            HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
+            HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
             if (FAILED(hr))
                 return;
 
@@ -272,13 +272,13 @@ namespace Win32xx
 
     inline void CAXWindow::CreateControl(REFCLSID clsid)
     {
-        if (S_OK != CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, (void**)&m_pUnk))
+        if (S_OK != CoCreateInstance(clsid, NULL, CLSCTX_INPROC_SERVER | CLSCTX_LOCAL_SERVER, IID_IUnknown, reinterpret_cast<void**>(&m_pUnk)))
             return;
 
         assert(m_pUnk);
 
         IOleObject* pioo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
+        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
         if (FAILED(hr))
             return;
 
@@ -286,7 +286,7 @@ namespace Win32xx
         pioo->Release();
 
         IPersistStreamInit* ppsi;
-        hr = m_pUnk->QueryInterface(IID_IPersistStreamInit, (void**)&ppsi);
+        hr = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
         if (SUCCEEDED(hr))
         {
             ppsi->InitNew();
@@ -354,7 +354,7 @@ namespace Win32xx
 
         IDispatch*  pdisp;
 
-        m_pUnk->QueryInterface(IID_IDispatch, (void**)&pdisp);
+        m_pUnk->QueryInterface(IID_IDispatch, reinterpret_cast<void**>(&pdisp));
         return pdisp;
     }
 
@@ -364,7 +364,7 @@ namespace Win32xx
         if (ppDisp == NULL)
             return E_INVALIDARG;
 
-        *ppDisp = (IDispatch*)this;
+        *ppDisp = static_cast<IDispatch*>(this);
         (*ppDisp)->AddRef();
 
         return S_OK;
@@ -541,19 +541,19 @@ namespace Win32xx
             return E_POINTER;
 
         if (IsEqualIID(riid, IID_IOleClientSite))
-            *ppvObject = (IOleClientSite*)this;
+            *ppvObject = static_cast<IOleClientSite*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceSite))
-            *ppvObject = (IOleInPlaceSite*)this;
+            *ppvObject = static_cast<IOleInPlaceSite*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceFrame))
-            *ppvObject = (IOleInPlaceFrame*)this;
+            *ppvObject = static_cast<IOleInPlaceFrame*>(this);
         else if (IsEqualIID(riid, IID_IOleInPlaceUIWindow))
-            *ppvObject = (IOleInPlaceUIWindow*)this;
+            *ppvObject = static_cast<IOleInPlaceUIWindow*>(this);
         else if (IsEqualIID(riid, IID_IOleControlSite))
-            *ppvObject = (IOleControlSite*)this;
+            *ppvObject = static_cast<IOleControlSite*>(this);
         else if (IsEqualIID(riid, IID_IOleWindow))
             *ppvObject = this;
         else if (IsEqualIID(riid, IID_IDispatch))
-            *ppvObject = (IDispatch*)this;
+            *ppvObject = static_cast<IDispatch*>(this);
         else if (IsEqualIID(riid, IID_IUnknown))
             *ppvObject = this;
         else
@@ -579,7 +579,7 @@ namespace Win32xx
             return;
 
         IOleObject* pioo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
+        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
         if (SUCCEEDED(hr))
         {
             pioo->Close(OLECLOSE_NOSAVE);
@@ -588,7 +588,7 @@ namespace Win32xx
         }
 
         IOleInPlaceObject* pipo;
-        hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, (void**)&pipo);
+        hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
         if (SUCCEEDED(hr))
         {
             pipo->UIDeactivate();
@@ -655,7 +655,7 @@ namespace Win32xx
             return;
 
         IOleInPlaceObject* pipo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, (void**)&pipo);
+        HRESULT hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
         if (FAILED(hr))
             return;
 
@@ -712,7 +712,7 @@ namespace Win32xx
             return;
 
         IOleObject* pioo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, (void**)&pioo);
+        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
         if (FAILED(hr))
             return;
 
@@ -771,7 +771,7 @@ namespace Win32xx
             return;
 
         IOleInPlaceActiveObject* pao;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleInPlaceActiveObject, (void**)&pao);
+        HRESULT hr = m_pUnk->QueryInterface(IID_IOleInPlaceActiveObject, reinterpret_cast<void**>(&pao));
         if (FAILED(hr))
             return;
 
@@ -814,7 +814,7 @@ namespace Win32xx
         if(pUnk)
         {
             // Store the pointer to the WebBrowser control
-            HRESULT hr = pUnk->QueryInterface(IID_IWebBrowser2, (void**)&m_pIWebBrowser2);
+            HRESULT hr = pUnk->QueryInterface(IID_IWebBrowser2, reinterpret_cast<void**>(&m_pIWebBrowser2));
             pUnk->Release();
 
             // Navigate to an empty page
@@ -958,9 +958,9 @@ namespace Win32xx
             cbPidl += pidl->mkid.cb;
 
             // Walk to next item
-            BYTE* ptr = (BYTE*)pidl;
+            BYTE* ptr = reinterpret_cast<BYTE*>(pidl);
             ptr += pidl->mkid.cb;
-            pidl = (LPITEMIDLIST)ptr;
+            pidl = reinterpret_cast<LPITEMIDLIST>(ptr);
         }
 
         return cbPidl;

@@ -203,7 +203,7 @@ namespace Win32xx
         void  MapWindowPoints(HWND hWndTo, LPPOINT ptArray, UINT nCount) const;
         BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL Repaint = TRUE) const;
         BOOL  MoveWindow(const RECT& rc, BOOL Repaint = TRUE) const;
-        BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
+        BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
         BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
         BOOL  RedrawWindow(const RECT& rcUpdate, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
         BOOL  RedrawWindow(HRGN hRgn, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
@@ -212,7 +212,7 @@ namespace Win32xx
         BOOL  ScreenToClient(POINT& Point) const;
         BOOL  ScreenToClient(RECT& rc) const;
         LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
-        LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0L, LPARAM lParam = 0L) const;
+        LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
         LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
         BOOL  SendNotifyMessage(UINT Msg, WPARAM wParam, LPARAM lParam) const;
         CWnd  SetActiveWindow() const;

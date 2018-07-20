@@ -491,7 +491,7 @@ namespace Win32xx
             for (iter = FileNames.begin(); iter != FileNames.end(); ++iter)
             {
                 CString strCurrentFile = (*iter);
-                WCHAR wszCurrentFile[MAX_PATH] = {0L};
+                WCHAR wszCurrentFile[MAX_PATH] = {0};
                 lstrcpynW(wszCurrentFile, TtoW(strCurrentFile), MAX_PATH);
 
                 CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);

@@ -825,7 +825,7 @@ namespace Win32xx
         nmhdr.code = UMN_TABCHANGED;
 
         if (GetParent().IsWindow())
-            GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&nmhdr));
+            GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&nmhdr));
     }
 
 
@@ -836,7 +836,7 @@ namespace Win32xx
         ZeroMemory(&nmhdr, sizeof(nmhdr));
         nmhdr.hwndFrom = *this;
         nmhdr.code = UWN_TABDRAGGED;
-        GetParent().SendMessage(WM_NOTIFY, 0L, reinterpret_cast<LPARAM>(&nmhdr));
+        GetParent().SendMessage(WM_NOTIFY, 0, reinterpret_cast<LPARAM>(&nmhdr));
     }
 
 
@@ -1033,7 +1033,7 @@ namespace Win32xx
         case TCN_SELCHANGE: return OnTCNSelChange(pNMHDR);
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -1046,7 +1046,7 @@ namespace Win32xx
         int nPage = GetCurSel();
         ShowActiveView(m_vTabPageInfo[nPage].pView);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -1077,7 +1077,7 @@ namespace Win32xx
 
             // Now call our local Paint
             Paint();
-            return 0L;
+            return 0;
         }
 
         return FinalWindowProc(uMsg, wParam, lParam);
@@ -1405,7 +1405,7 @@ namespace Win32xx
             int nItemWidth = MIN( GetMaxTabSize().cx, (rc.Width() - xGap)/GetItemCount() );
             nItemWidth = MAX(nItemWidth, 0);
 
-            SendMessage(TCM_SETITEMSIZE, 0L, MAKELPARAM(nItemWidth, m_nTabHeight));
+            SendMessage(TCM_SETITEMSIZE, 0, MAKELPARAM(nItemWidth, m_nTabHeight));
 
             NotifyChanged();
         }
@@ -2074,7 +2074,7 @@ namespace Win32xx
 
         }   // switch(pnmhdr->code)
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2159,7 +2159,7 @@ namespace Win32xx
                 // Add Active Tab to the registry
                 CString SubKeyName = _T("Active MDI Tab");
                 int nTab = GetActiveMDITab();
-                if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, (LPBYTE)&nTab, sizeof(int)))
+                if(ERROR_SUCCESS != RegSetValueEx(hKeyMDIChild, SubKeyName, 0, REG_DWORD, reinterpret_cast<LPBYTE>(&nTab), sizeof(int)))
                     throw (CUserException(_T("RegSetValueEx failed")));
 
                 RegCloseKey(hKeyMDIChild);
@@ -2216,7 +2216,7 @@ namespace Win32xx
         if (GetActiveMDIChild() && GetActiveMDIChild()->IsWindow())
             GetActiveMDIChild()->SetFocus();
 
-        return 0L;
+        return 0;
     }
 
 

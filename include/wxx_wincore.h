@@ -716,7 +716,7 @@ namespace Win32xx
         if (Wnd != NULL)
             return Wnd->OnMessageReflect(uMsg, wParam, lParam);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -743,8 +743,8 @@ namespace Win32xx
         //      Handle your reflected messages here
         // }
 
-        // return 0L for unhandled messages
-        return 0L;
+        // return 0 for unhandled messages
+        return 0;
     }
 
 
@@ -769,9 +769,9 @@ namespace Win32xx
         //      For many notifications, the return value doesn't matter, but for some it does.
         // }
 
-        // return 0L for unhandled notifications
+        // return 0 for unhandled notifications
         // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for dialogs
-        return 0L;
+        return 0;
     }
 
 
@@ -792,9 +792,9 @@ namespace Win32xx
         //      Return the value recommended by the Windows API documentation.
         // }
 
-        // return 0L for unhandled notifications
+        // return 0 for unhandled notifications
         // The framework will call SetWindowLongPtr(DWLP_MSGRESULT, lr) for dialogs
-        return 0L;
+        return 0;
     }
 
 
@@ -822,7 +822,7 @@ namespace Win32xx
             }
 
             // No more drawing required
-            return 0L;
+            return 0;
         }
 
         // Allow window controls to do their default drawing
@@ -1103,11 +1103,11 @@ namespace Win32xx
     // All WndProc functions should pass unhandled window messages to this function.
     inline LRESULT CWnd::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
     {
-        LRESULT lr = 0L;
+        LRESULT lr = 0;
         if (UWM_WINDOWCREATED == uMsg)
         {
             OnInitialUpdate();
-            return 0L;
+            return 0;
         }
 
         switch (uMsg)
@@ -1115,7 +1115,7 @@ namespace Win32xx
         case WM_CLOSE:
             {
                 OnClose();
-                return 0L;
+                return 0;
             }
         case WM_COMMAND:
             {
@@ -1125,10 +1125,10 @@ namespace Win32xx
                     lr = pWnd->OnCommand(wParam, lParam);
 
                 // Handle user commands
-                if (0L == lr)
+                if (0 == lr)
                     lr =  OnCommand(wParam, lParam);
 
-                if (0L != lr) return 0L;
+                if (0 != lr) return 0;
             }
             break;  // Note: Some MDI commands require default processing
         case WM_CREATE:
@@ -1154,8 +1154,8 @@ namespace Win32xx
                         lr = pWndFrom->OnNotifyReflect(wParam, lParam);
 
                 // Handle user notifications
-                if (lr == 0L) lr = OnNotify(wParam, lParam);
-                if (lr != 0L) return lr;
+                if (lr == 0) lr = OnNotify(wParam, lParam);
+                if (lr != 0) return lr;
                 break;
             }
 
@@ -1165,7 +1165,7 @@ namespace Win32xx
                 OnPaint(uMsg, wParam, lParam);
             }
 
-            return 0L;
+            return 0;
 
         case WM_ERASEBKGND:
             {
@@ -1195,7 +1195,7 @@ namespace Win32xx
         case WM_PARENTNOTIFY:
             {
                 lr = MessageReflect(uMsg, wParam, lParam);
-                if (lr != 0L) return lr;    // Message processed so return
+                if (lr != 0) return lr;    // Message processed so return
             }
             break;              // Do default processing when message not already processed
 
@@ -1744,7 +1744,7 @@ namespace Win32xx
     // The PostMessage function places (posts) a message in the message queue
     // associated with the thread that created the window and returns without
     // waiting for the thread to process the message.
-    inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const
+    inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
     {
         assert(IsWindow());
         return ::PostMessage(*this, uMsg, wParam, lParam);
@@ -1822,7 +1822,7 @@ namespace Win32xx
     // The SendMessage function sends the specified message to a window or windows.
     // It calls the window procedure for the window and does not return until the
     // window procedure has processed the message.
-    inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0L*/, LPARAM lParam /*= 0L*/) const
+    inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
     {
         assert(IsWindow());
         return ::SendMessage(*this, uMsg, wParam, lParam);
@@ -1960,7 +1960,7 @@ namespace Win32xx
     inline BOOL CWnd::SetRedraw(BOOL Redraw /*= TRUE*/) const
     {
         assert(IsWindow());
-        return (::SendMessage(*this, WM_SETREDRAW, Redraw, 0L) != 0);
+        return (::SendMessage(*this, WM_SETREDRAW, Redraw, 0) != 0);
     }
 
 

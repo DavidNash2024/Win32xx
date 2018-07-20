@@ -260,7 +260,7 @@ namespace Win32xx
     inline int CToolBar::AddStrings(LPCTSTR lpszStrings) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_ADDSTRING, 0L, reinterpret_cast<LPARAM>(lpszStrings)));
+        return static_cast<int>(SendMessage(TB_ADDSTRING, 0, reinterpret_cast<LPARAM>(lpszStrings)));
     }
 
 
@@ -268,7 +268,7 @@ namespace Win32xx
     inline void CToolBar::Autosize() const
     {
         assert(IsWindow());
-        SendMessage(TB_AUTOSIZE, 0L, 0L);
+        SendMessage(TB_AUTOSIZE, 0, 0);
     }
 
 
@@ -287,7 +287,7 @@ namespace Win32xx
         assert(IsWindow());
 
         // returns -1 on fail
-        return static_cast<int>(SendMessage(TB_COMMANDTOINDEX, idButton, 0L));
+        return static_cast<int>(SendMessage(TB_COMMANDTOINDEX, idButton, 0));
     }
 
 
@@ -306,7 +306,7 @@ namespace Win32xx
     inline BOOL CToolBar::DeleteButton(int iButton) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_DELETEBUTTON, iButton, 0L));
+        return static_cast<int>(SendMessage(TB_DELETEBUTTON, iButton, 0));
     }
 
 
@@ -347,7 +347,7 @@ namespace Win32xx
     inline int CToolBar::GetButtonCount() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_BUTTONCOUNT, 0L, 0L));
+        return static_cast<int>(SendMessage(TB_BUTTONCOUNT, 0, 0));
     }
 
 
@@ -356,7 +356,7 @@ namespace Win32xx
     inline DWORD CToolBar::GetButtonSize() const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(TB_GETBUTTONSIZE, 0L, 0L));
+        return static_cast<DWORD>(SendMessage(TB_GETBUTTONSIZE, 0, 0));
     }
 
 
@@ -372,7 +372,7 @@ namespace Win32xx
     inline UINT CToolBar::GetButtonState(int idButton) const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(TB_GETSTATE, idButton, 0L));
+        return static_cast<UINT>(SendMessage(TB_GETSTATE, idButton, 0));
     }
 
 
@@ -403,7 +403,7 @@ namespace Win32xx
     {
         assert(IsWindow());
 
-        int Length = static_cast<int>(SendMessage(TB_GETBUTTONTEXT, idButton, 0L));
+        int Length = static_cast<int>(SendMessage(TB_GETBUTTONTEXT, idButton, 0));
         CString str;
         if (Length > 0)
         {
@@ -433,7 +433,7 @@ namespace Win32xx
     inline CImageList CToolBar::GetDisabledImageList()
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETDISABLEDIMAGELIST, 0L, 0L));
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETDISABLEDIMAGELIST, 0, 0));
         return CImageList(himl);
     }
 
@@ -442,14 +442,14 @@ namespace Win32xx
     inline DWORD CToolBar::GetExtendedStyle() const
     {
         assert(IsWindow());
-        return (DWORD)SendMessage(TB_GETEXTENDEDSTYLE, 0L, 0L);
+        return static_cast<DWORD>(SendMessage(TB_GETEXTENDEDSTYLE, 0, 0));
     }
 
     // Retrieves the image list that a ToolBar control uses to display hot buttons.
     inline CImageList CToolBar::GetHotImageList()
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETHOTIMAGELIST, 0L, 0L));
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETHOTIMAGELIST, 0, 0));
         return CImageList(himl);
     }
 
@@ -458,7 +458,7 @@ namespace Win32xx
     inline int CToolBar::GetHotItem() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_GETHOTITEM, 0L, 0L));
+        return static_cast<int>(SendMessage(TB_GETHOTITEM, 0, 0));
     }
 
 
@@ -466,7 +466,7 @@ namespace Win32xx
     inline CImageList CToolBar::GetImageList()
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETIMAGELIST, 0L, 0L));
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_GETIMAGELIST, 0, 0));
         return CImageList(himl);
     }
 
@@ -476,7 +476,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         CRect rc;
-        int iCount = static_cast<int>(SendMessage(TB_BUTTONCOUNT, 0L, 0L));
+        int iCount = static_cast<int>(SendMessage(TB_BUTTONCOUNT, 0, 0));
 
         if (iCount >= iIndex)
             SendMessage(TB_GETITEMRECT, iIndex, reinterpret_cast<LPARAM>(&rc));
@@ -490,7 +490,7 @@ namespace Win32xx
     {
         assert(IsWindow());
         CSize sz;
-        SendMessage(TB_GETMAXSIZE, 0L, reinterpret_cast<LPARAM>(&sz));
+        SendMessage(TB_GETMAXSIZE, 0, reinterpret_cast<LPARAM>(&sz));
 
         // This fixes a Windows bug calculating the size when TBSTYLE_DROPDOWN is used.
         int cxMaxSize = 0;
@@ -516,7 +516,7 @@ namespace Win32xx
     inline DWORD CToolBar::GetPadding() const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(TB_GETPADDING, 0L, 0L));
+        return static_cast<DWORD>(SendMessage(TB_GETPADDING, 0, 0));
     }
 
     inline CRect CToolBar::GetRect(int idButton) const
@@ -533,7 +533,7 @@ namespace Win32xx
     inline int CToolBar::GetRows() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_GETROWS, 0L, 0L));
+        return static_cast<int>(SendMessage(TB_GETROWS, 0, 0));
     }
 
 
@@ -541,7 +541,7 @@ namespace Win32xx
     inline int CToolBar::GetTextRows() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_GETTEXTROWS, 0L, 0L));
+        return static_cast<int>(SendMessage(TB_GETTEXTROWS, 0, 0));
     }
 
 
@@ -549,7 +549,7 @@ namespace Win32xx
     inline HWND CToolBar::GetToolTips() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(TB_GETTOOLTIPS, 0L, 0L));
+        return reinterpret_cast<HWND>(SendMessage(TB_GETTOOLTIPS, 0, 0));
     }
 
 
@@ -561,7 +561,7 @@ namespace Win32xx
 
         for (int i = 0 ; i < GetButtonCount(); ++i)
         {
-            if (SendMessage(TB_GETBUTTONTEXT, GetCommandID(i), 0L) != -1)
+            if (SendMessage(TB_GETBUTTONTEXT, GetCommandID(i), 0) != -1)
                 Succeeded = TRUE;
         }
 
@@ -588,7 +588,7 @@ namespace Win32xx
         CPoint pt = GetCursorPos();
         ScreenToClient(pt);
 
-        int nButtons = static_cast<int>(SendMessage(TB_BUTTONCOUNT, 0L, 0L));
+        int nButtons = static_cast<int>(SendMessage(TB_BUTTONCOUNT, 0, 0));
         int iButton = -1;
 
         for (int i = 0 ; i < nButtons; ++i)
@@ -622,7 +622,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonHidden(int idButton) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONHIDDEN, idButton, 0L) != 0);
+        return (SendMessage(TB_ISBUTTONHIDDEN, idButton, 0) != 0);
     }
 
 
@@ -630,7 +630,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonHighlighted(int idButton) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONHIGHLIGHTED, idButton, 0L) != 0);
+        return (SendMessage(TB_ISBUTTONHIGHLIGHTED, idButton, 0) != 0);
     }
 
 
@@ -638,7 +638,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonIndeterminate(int idButton) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONINDETERMINATE, idButton, 0L) != 0);
+        return (SendMessage(TB_ISBUTTONINDETERMINATE, idButton, 0) != 0);
     }
 
 
@@ -646,7 +646,7 @@ namespace Win32xx
     inline BOOL CToolBar::IsButtonPressed(int idButton) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_ISBUTTONPRESSED, idButton, 0L) != 0);
+        return (SendMessage(TB_ISBUTTONPRESSED, idButton, 0) != 0);
     }
 
 
@@ -685,11 +685,11 @@ namespace Win32xx
     inline void CToolBar::OnAttach()
     {
         // We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-        SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0L);
+        SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
 
         // allows buttons to have a separate drop-down arrow
         // Note: TBN_DROPDOWN notification is sent by a ToolBar control when the user clicks a drop-down button
-        SendMessage(TB_SETEXTENDEDSTYLE, 0L, TBSTYLE_EX_DRAWDDARROWS);
+        SendMessage(TB_SETEXTENDEDSTYLE, 0, TBSTYLE_EX_DRAWDDARROWS);
     }
 
 
@@ -810,7 +810,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetBitmapSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETBITMAPSIZE, 0L, MAKELONG(cx, cy)) != 0);
+        return (SendMessage(TB_SETBITMAPSIZE, 0, MAKELONG(cx, cy)) != 0);
     }
 
 
@@ -819,7 +819,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetButtonSize(int cx, int cy) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETBUTTONSIZE, 0L, MAKELONG(cx, cy)) != 0);
+        return (SendMessage(TB_SETBUTTONSIZE, 0, MAKELONG(cx, cy)) != 0);
     }
 
 
@@ -946,14 +946,14 @@ namespace Win32xx
             SetRedraw(FALSE);
 
             if (Succeeded)
-                Succeeded = (SendMessage(TB_DELETEBUTTON, iIndex, 0L) != 0);
+                Succeeded = (SendMessage(TB_DELETEBUTTON, iIndex, 0) != 0);
 
             if (Succeeded)
                 Succeeded = (SendMessage(TB_INSERTBUTTON, iIndex, reinterpret_cast<LPARAM>(&tbb)) != 0);
 
             // Ensure the button now includes some text rows
-            if (SendMessage(TB_GETTEXTROWS, 0L, 0L) == 0)
-                SendMessage(TB_SETMAXTEXTROWS, 1L, 0L);
+            if (SendMessage(TB_GETTEXTROWS, 0, 0) == 0)
+                SendMessage(TB_SETMAXTEXTROWS, 1L, 0);
 
             // Turn on ToolBar drawing
             SetRedraw(TRUE);
@@ -1003,7 +1003,7 @@ namespace Win32xx
     inline CImageList CToolBar::SetDisableImageList(HIMAGELIST himlDisabled)
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETDISABLEDIMAGELIST, 0L, reinterpret_cast<LPARAM>(himlDisabled)));
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETDISABLEDIMAGELIST, 0, reinterpret_cast<LPARAM>(himlDisabled)));
         return CImageList(himl);
     }
 
@@ -1021,7 +1021,7 @@ namespace Win32xx
     inline DWORD CToolBar::SetExtendedStyle(DWORD dwExStyle) const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(TB_SETEXTENDEDSTYLE, 0L, dwExStyle));
+        return static_cast<DWORD>(SendMessage(TB_SETEXTENDEDSTYLE, 0, dwExStyle));
     }
 
 
@@ -1029,7 +1029,7 @@ namespace Win32xx
     inline CImageList CToolBar::SetHotImageList(HIMAGELIST himlHot)
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETHOTIMAGELIST, 0L, reinterpret_cast<LPARAM>(himlHot)));
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETHOTIMAGELIST, 0, reinterpret_cast<LPARAM>(himlHot)));
         return CImageList(himl);
     }
 
@@ -1038,7 +1038,7 @@ namespace Win32xx
     inline int CToolBar::SetHotItem(int iHot) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(TB_SETHOTITEM, iHot, 0L));
+        return static_cast<int>(SendMessage(TB_SETHOTITEM, iHot, 0));
     }
 
 
@@ -1046,7 +1046,7 @@ namespace Win32xx
     inline CImageList CToolBar::SetImageList(HIMAGELIST himlNormal)
     {
         assert(IsWindow());
-        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETIMAGELIST, 0L, reinterpret_cast<LPARAM>(himlNormal)));
+        HIMAGELIST himl = reinterpret_cast<HIMAGELIST>(SendMessage(TB_SETIMAGELIST, 0, reinterpret_cast<LPARAM>(himlNormal)));
         return CImageList(himl);
     }
 
@@ -1055,7 +1055,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetIndent(int iIndent) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETINDENT, iIndent, 0L) != 0);
+        return (SendMessage(TB_SETINDENT, iIndent, 0) != 0);
     }
 
 
@@ -1063,7 +1063,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetMaxTextRows(int iMaxRows) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETMAXTEXTROWS, iMaxRows, 0L) != 0);
+        return (SendMessage(TB_SETMAXTEXTROWS, iMaxRows, 0) != 0);
     }
 
 
@@ -1071,7 +1071,7 @@ namespace Win32xx
     inline BOOL CToolBar::SetPadding(int cx, int cy) const
     {
         assert(IsWindow());
-        return (SendMessage(TB_SETPADDING, 0L, MAKELONG(cx, cy)) != 0);
+        return (SendMessage(TB_SETPADDING, 0, MAKELONG(cx, cy)) != 0);
     }
 
 
@@ -1080,7 +1080,7 @@ namespace Win32xx
     inline void CToolBar::SetToolTips(HWND hToolTip) const
     {
         assert(IsWindow());
-        SendMessage(TB_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0L);
+        SendMessage(TB_SETTOOLTIPS, reinterpret_cast<WPARAM>(hToolTip), 0);
     }
 
 

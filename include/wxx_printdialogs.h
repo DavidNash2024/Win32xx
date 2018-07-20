@@ -124,11 +124,11 @@ namespace Win32xx
         }
 
         T* Get() const          { return m_p; }                 // Returns the pointer
+        LPCTSTR c_str() const;                                  // Returns the LPCTSTR (for DEVNAMES only)
 
         // operator overloads
         operator T*() const     { return m_p; }                 // Conversion operator to pointer
         T* operator->() const   { assert(m_p); return m_p; }    // Pointer operator
-        operator LPCTSTR() const;                               // Conversion operator to LPCTSTR (for DEVNAMES only)
         T& operator*() const    { assert(m_p); return *m_p; }   // Dereference operator
 
         CGlobalLock& operator=(HANDLE h)                        // Assignment operator
@@ -172,7 +172,7 @@ namespace Win32xx
     };
 
     template <>
-    inline CGlobalLock<DEVNAMES>::operator LPCTSTR() const
+    inline LPCTSTR CGlobalLock<DEVNAMES>::c_str() const
     {
         assert(m_p != NULL);
         return reinterpret_cast<LPCTSTR>(m_p);
@@ -431,7 +431,7 @@ namespace Win32xx
         {
             CDevNames cdevNames(GetApp().m_hDevNames);
             CDevMode cdevMode(GetApp().m_hDevMode);
-            LPCTSTR devNames = cdevNames;
+            LPCTSTR devNames = cdevNames.c_str();
 
             dc.CreateDC(devNames + cdevNames->wDriverOffset,
                 devNames + cdevNames->wDeviceOffset,
@@ -610,7 +610,7 @@ namespace Win32xx
         if (GetApp().m_hDevNames != 0)
         {
             CDevNames pDev = GetDevNames();
-            LPCTSTR devNames = pDev;
+            LPCTSTR devNames = pDev.c_str();
             LPCTSTR name = devNames + pDev->wDeviceOffset;
             str = name;
         }
@@ -650,7 +650,7 @@ namespace Win32xx
         if (GetApp().m_hDevNames != 0)
         {
             CDevNames pDev = GetDevNames();
-            LPCTSTR devNames = pDev;
+            LPCTSTR devNames = pDev.c_str();
             LPCTSTR name = devNames + pDev->wDriverOffset;
             str =  name;
         }
@@ -673,7 +673,7 @@ namespace Win32xx
         if (GetApp().m_hDevNames != 0)
         {
             CDevNames pDev = GetDevNames();
-            LPCTSTR devNames = pDev;
+            LPCTSTR devNames = pDev.c_str();
             LPCTSTR name = devNames + pDev->wOutputOffset;
             str = name;
         }

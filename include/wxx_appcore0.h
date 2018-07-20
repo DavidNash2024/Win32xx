@@ -129,7 +129,7 @@
 
 // Required for WinCE
 #ifndef TLS_OUT_OF_INDEXES
-  #define TLS_OUT_OF_INDEXES ((DWORD_PTR) -1)
+  #define TLS_OUT_OF_INDEXES (static_cast<DWORD_PTR>(-1))
 #endif
 #ifndef WM_PARENTNOTIFY
   #define WM_PARENTNOTIFY 0x0210
@@ -303,7 +303,7 @@ namespace Win32xx
     struct CompareHDC
     {
         bool operator()(const HDC a, const HDC b) const
-            {return ((DWORD_PTR)a < (DWORD_PTR)b);}
+            {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
 
@@ -311,7 +311,7 @@ namespace Win32xx
     struct CompareGDI
     {
         bool operator()(const HGDIOBJ a, const HGDIOBJ b) const
-            {return ((DWORD_PTR)a < (DWORD_PTR)b);}
+            {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
 
@@ -319,7 +319,7 @@ namespace Win32xx
     struct CompareHIMAGELIST
     {
         bool operator()(const HIMAGELIST a, const HIMAGELIST b) const
-            {return ((DWORD_PTR)a < (DWORD_PTR)b);}
+            {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
 
@@ -327,7 +327,7 @@ namespace Win32xx
     struct CompareHMENU
     {
         bool operator()(const HMENU a, const HMENU b) const
-            {return ((DWORD_PTR)a < (DWORD_PTR)b);}
+            {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
 
@@ -335,7 +335,7 @@ namespace Win32xx
     struct CompareHWND
     {
         bool operator()(const HWND a, const HWND b) const
-            {return ((DWORD_PTR)a < (DWORD_PTR)b);}
+            {return (reinterpret_cast<DWORD_PTR>(a) < reinterpret_cast<DWORD_PTR>(b));}
     };
 
 

@@ -184,7 +184,7 @@ namespace Win32xx
             m_IsKeyMode = TRUE;
             SetHotItem(ID);
             m_IsMenuActive = TRUE;
-            PostMessage(UWM_POPUPMENU, 0L, 0L);
+            PostMessage(UWM_POPUPMENU, 0, 0);
         }
         else
             ::MessageBeep(MB_OK);
@@ -347,7 +347,7 @@ namespace Win32xx
         ScreenToClient(pt);
 
         // Update mouse mouse position for hot tracking
-        SendMessage(WM_MOUSEMOVE, 0L, MAKELONG(pt.x, pt.y));
+        SendMessage(WM_MOUSEMOVE, 0, MAKELONG(pt.x, pt.y));
     }
 
 
@@ -357,7 +357,7 @@ namespace Win32xx
         CWnd* pMDIChild = NULL;
         if (GetMDIClient())
         {
-            HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, 0L));
+            HWND hMDIChild = reinterpret_cast<HWND>(GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, 0));
             pMDIChild = GetCWndPtr(hMDIChild);
         }
 
@@ -369,7 +369,7 @@ namespace Win32xx
     inline CWnd* CMenuBar::GetMDIClient() const
     {
         CWnd* pMDIClient = NULL;
-        HWND hWnd = reinterpret_cast<HWND>(::SendMessage(m_hFrame, UWM_GETFRAMEVIEW, 0L, 0L));
+        HWND hWnd = reinterpret_cast<HWND>(::SendMessage(m_hFrame, UWM_GETFRAMEVIEW, 0, 0));
         CWnd* pWnd = GetCWndPtr(hWnd);
         if (pWnd && pWnd->GetClassName() == _T("MDIClient"))
             pMDIClient = pWnd;
@@ -393,7 +393,7 @@ namespace Win32xx
     {
         BOOL IsMaxed = FALSE;
         if (GetMDIClient())
-            GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0L, reinterpret_cast<LPARAM>(&IsMaxed));
+            GetMDIClient()->SendMessage(WM_MDIGETACTIVE, 0, reinterpret_cast<LPARAM>(&IsMaxed));
 
         return IsMaxed;
     }
@@ -421,7 +421,7 @@ namespace Win32xx
     inline void CMenuBar::OnAttach()
     {
         // We must send this message before sending the TB_ADDBITMAP or TB_ADDBUTTONS message
-        SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0L);
+        SendMessage(TB_BUTTONSTRUCTSIZE, sizeof(TBBUTTON), 0);
 
         TLSData* pTLSData = GetApp().GetTlsData();
         m_hFrame = pTLSData->hMainWnd;
@@ -443,7 +443,7 @@ namespace Win32xx
             ExitMenu();
         ::SendMessage(m_hFrame, WM_EXITMENULOOP, wParam, lParam);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -451,7 +451,7 @@ namespace Win32xx
     inline LRESULT CMenuBar::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
     {
         ::SendMessage(m_hFrame, WM_INITMENUPOPUP, wParam, lParam);
-        return 0L;
+        return 0;
     }
 
 
@@ -478,7 +478,7 @@ namespace Win32xx
         case VK_UP:
         case VK_RETURN:
             // Always use PostMessage for USER_POPUPMENU (not SendMessage)
-            PostMessage(UWM_POPUPMENU, 0L, 0L);
+            PostMessage(UWM_POPUPMENU, 0, 0);
             break;
 
         case VK_LEFT:
@@ -499,7 +499,7 @@ namespace Win32xx
                 if (SendMessage(TB_MAPACCELERATOR, wParam, reinterpret_cast<LPARAM>(&ID)))
                 {
                     m_nHotItem = ID;
-                    PostMessage(UWM_POPUPMENU, 0L, 0L);
+                    PostMessage(UWM_POPUPMENU, 0, 0);
                 }
                 else
                     ::MessageBeep(MB_OK);
@@ -507,7 +507,7 @@ namespace Win32xx
             break;
         } // switch (wParam)
 
-        return 0L;  // Discard these messages
+        return 0;  // Discard these messages
     }
 
 
@@ -560,12 +560,12 @@ namespace Win32xx
                 if (HitTest() == 0)
                 {
                     m_nHotItem = 0;
-                    PostMessage(UWM_POPUPMENU, 0L, 0L);
+                    PostMessage(UWM_POPUPMENU, 0, 0);
                 }
             }
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -597,7 +597,7 @@ namespace Win32xx
                 if (m_MDIRect[1].PtInRect(pt))
                 {
                     if (MDI_RESTORE == m_nMDIButton)
-                        pMDIClient->PostMessage(WM_MDIRESTORE, reinterpret_cast<WPARAM>(pMDIChild->GetHwnd()), 0L);
+                        pMDIClient->PostMessage(WM_MDIRESTORE, reinterpret_cast<WPARAM>(pMDIChild->GetHwnd()), 0);
                 }
 
                 if (m_MDIRect[2].PtInRect(pt))
@@ -610,7 +610,7 @@ namespace Win32xx
         m_nMDIButton = 0;
         ExitMenu();
 
-        return 0L;
+        return 0;
     }
 
 
@@ -639,9 +639,9 @@ namespace Win32xx
 
                     m_IsMenuActive = FALSE;
                     m_IsKeyMode = TRUE;
-                    SendMessage(WM_CANCELMODE, 0L, 0L);
+                    SendMessage(WM_CANCELMODE, 0, 0);
                     SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
-                    SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+                    SendMessage(TB_SETHOTITEM, m_nHotItem, 0);
                     ExitMenu();
                     break;
 
@@ -654,11 +654,11 @@ namespace Win32xx
 
                     // Move left to next topmenu item
                     (m_nHotItem > 0)? --m_nHotItem : m_nHotItem = GetButtonCount()-1;
-                    SendMessage(WM_CANCELMODE, 0L, 0L);
+                    SendMessage(WM_CANCELMODE, 0, 0);
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
-                    PostMessage(UWM_POPUPMENU, 0L, 0L);
-                    PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+                    PostMessage(UWM_POPUPMENU, 0, 0);
+                    PostMessage(WM_KEYDOWN, VK_DOWN, 0);
                     break;
 
                 case VK_RIGHT:
@@ -670,11 +670,11 @@ namespace Win32xx
 
                     // Move right to next topmenu item
                     (m_nHotItem < GetButtonCount()-1)? ++m_nHotItem : m_nHotItem = 0;
-                    SendMessage(WM_CANCELMODE, 0L, 0L);
+                    SendMessage(WM_CANCELMODE, 0, 0);
 
                     // Always use PostMessage for USER_POPUPMENU (not SendMessage)
-                    PostMessage(UWM_POPUPMENU, 0L, 0L);
-                    PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+                    PostMessage(UWM_POPUPMENU, 0, 0);
+                    PostMessage(WM_KEYDOWN, VK_DOWN, 0);
                     break;
 
                 case VK_RETURN:
@@ -697,7 +697,7 @@ namespace Win32xx
                 if (HitTest() >= 0)
                 {
                     // Cancel popup when we hit a button a second time
-                    SendMessage(WM_CANCELMODE, 0L, 0L);
+                    SendMessage(WM_CANCELMODE, 0, 0);
                     return TRUE;
                 }
             }
@@ -713,7 +713,7 @@ namespace Win32xx
 
                 UINT nID = ChildMenu.GetDefaultItem(FALSE, 0);
                 if (nID)
-                    pMDIChild->PostMessage(WM_SYSCOMMAND, nID, 0L);
+                    pMDIChild->PostMessage(WM_SYSCOMMAND, nID, 0);
             }
 
             m_IsExitAfter = TRUE;
@@ -745,7 +745,7 @@ namespace Win32xx
                 ScreenToClient(pt);
 
                 // Reflect messages back to the MenuBar for hot tracking
-                SendMessage(WM_MOUSEMOVE, 0L, MAKELPARAM(pt.x, pt.y));
+                SendMessage(WM_MOUSEMOVE, 0, MAKELPARAM(pt.x, pt.y));
             }
             break;
 
@@ -839,7 +839,7 @@ namespace Win32xx
         case TBN_HOTITEMCHANGE: return OnTBNHotItemChange((LPNMTBHOTITEM) lParam);
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -849,7 +849,7 @@ namespace Win32xx
     {
         if (m_IsKeyMode)
             // Simulate a down arrow key press
-            PostMessage(WM_KEYDOWN, VK_DOWN, 0L);
+            PostMessage(WM_KEYDOWN, VK_DOWN, 0);
 
         m_IsKeyMode = FALSE;
         m_IsExitAfter = FALSE;
@@ -877,7 +877,7 @@ namespace Win32xx
         tpm.rcExclude = rc;
 
         // Set the hot button
-        SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+        SendMessage(TB_SETHOTITEM, m_nHotItem, 0);
         SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(TRUE, 0));
 
         m_IsSelPopup = FALSE;
@@ -920,7 +920,7 @@ namespace Win32xx
             if (pMaxMDIChild && pMaxMDIChild->GetSystemMenu(FALSE) == m_hPopupMenu )
             {
                 if (nID)
-                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, nID, 0L);
+                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, nID, 0);
             }
         }
 
@@ -928,7 +928,7 @@ namespace Win32xx
         if (m_IsKeyMode)
             GrabFocus();
 
-        return 0L;
+        return 0;
     }
 
 
@@ -946,7 +946,7 @@ namespace Win32xx
             }
             else
                 // Handle key pressed with Alt held down
-                DoAltKey((WORD)lParam);
+                DoAltKey(static_cast<WORD>(lParam));
         }
 
         return FinalWindowProc(uMsg, wParam, lParam);
@@ -958,7 +958,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(lParam);
 
         if ((VK_MENU == wParam) || (VK_F10 == wParam))
-            return 0L;
+            return 0;
 
         return FinalWindowProc(uMsg, wParam, lParam);
     }
@@ -971,7 +971,7 @@ namespace Win32xx
         if ((VK_MENU == wParam) || (VK_F10 == wParam))
         {
             ExitMenu();
-            return 0L;
+            return 0;
         }
 
         return FinalWindowProc(uMsg, wParam, lParam);
@@ -983,9 +983,9 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(pNMTB);
 
         // Always use PostMessage for USER_POPUPMENU (not SendMessage)
-        PostMessage(UWM_POPUPMENU, 0L, 0L);
+        PostMessage(UWM_POPUPMENU, 0, 0);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -1004,10 +1004,10 @@ namespace Win32xx
                 {
                     SendMessage(TB_PRESSBUTTON, m_nHotItem, MAKELONG(FALSE, 0));
                     m_nHotItem = nButton;
-                    SendMessage(WM_CANCELMODE, 0L, 0L);
+                    SendMessage(WM_CANCELMODE, 0, 0);
 
                     //Always use PostMessage for USER_POPUPMENU (not SendMessage)
-                    PostMessage(UWM_POPUPMENU, 0L, 0L);
+                    PostMessage(UWM_POPUPMENU, 0, 0);
                 }
                 m_nHotItem = nButton;
             }
@@ -1016,11 +1016,11 @@ namespace Win32xx
             if ((flag & HICF_LEAVING) && m_IsKeyMode)
             {
                 m_nHotItem = pNMHI->idOld;
-                PostMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+                PostMessage(TB_SETHOTITEM, m_nHotItem, 0);
             }
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -1079,7 +1079,7 @@ namespace Win32xx
     inline void CMenuBar::SetHotItem(int nHot)
     {
         m_nHotItem = nHot;
-        SendMessage(TB_SETHOTITEM, m_nHotItem, 0L);
+        SendMessage(TB_SETHOTITEM, m_nHotItem, 0);
     }
 
 
@@ -1092,14 +1092,14 @@ namespace Win32xx
         int nMaxedOffset = (IsMDIChildMaxed()? 1:0);
 
         // Remove any existing buttons
-        while (SendMessage(TB_BUTTONCOUNT,  0L, 0L) > 0)
+        while (SendMessage(TB_BUTTONCOUNT,  0, 0) > 0)
         {
-            if(!SendMessage(TB_DELETEBUTTON, 0L, 0L))
+            if(!SendMessage(TB_DELETEBUTTON, 0, 0))
                 break;
         }
 
         // Set the Bitmap size to zero
-        SendMessage(TB_SETBITMAPSIZE, 0L, MAKELPARAM(0, 0));
+        SendMessage(TB_SETBITMAPSIZE, 0, MAKELPARAM(0, 0));
 
         if (IsMDIChildMaxed())
         {
@@ -1161,7 +1161,7 @@ namespace Win32xx
     {
         switch (uMsg)
         {
-        case WM_CHAR:               return 0L;  // Discard these messages
+        case WM_CHAR:               return 0;  // Discard these messages
         case WM_DRAWITEM:           return OnDrawItem(uMsg, wParam, lParam);
         case WM_EXITMENULOOP:       return OnExitMenuLoop(uMsg, wParam, lParam);
         case WM_INITMENUPOPUP:      return OnInitMenuPopup(uMsg, wParam, lParam);

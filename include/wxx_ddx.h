@@ -272,7 +272,7 @@ namespace Win32xx
         if (m_RetrieveAndValidate && value.GetLength() > nChars)
         {
             CString message;
-            message.Format(DDV_MSG_STRING_SIZE, value.c_str(), (long)nChars);
+            message.Format(DDV_MSG_STRING_SIZE, value.c_str(), nChars);
 
             throw CUserException(message);
         }
@@ -288,8 +288,7 @@ namespace Win32xx
     // a CUserException.  BYTE is unsigned char.
     inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const
     {
-        DDV_MinMaxULong(static_cast<ULONG>(value), static_cast<ULONG>(minVal),
-                        static_cast<ULONG>(maxVal));
+		  DDV_MinMaxULong(value, minVal, maxVal);
     }
 
 
@@ -304,7 +303,7 @@ namespace Win32xx
         const  SYSTEMTIME& minRange, const  SYSTEMTIME& maxRange) const
 
     {
-        ULONGLONG zero = 0L;
+        ULONGLONG zero = 0;
         ULONGLONG val = SystemTimeToULL(refValue);
         ULONGLONG min = SystemTimeToULL(minRange);
         ULONGLONG max = SystemTimeToULL(maxRange);
@@ -373,7 +372,7 @@ namespace Win32xx
     // throws a CUserException.
     inline void CDataExchange::DDV_MinMaxInt(int value, int minVal, int maxVal) const
     {
-        DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
+        DDV_MinMaxLong(value, minVal, maxVal);
     }
 
 
@@ -411,7 +410,7 @@ namespace Win32xx
     inline void CDataExchange::DDV_MinMaxMonth(SYSTEMTIME& refValue, const SYSTEMTIME& minRange,
         const SYSTEMTIME& maxRange) const
     {
-        ULONGLONG zero = 0L;
+        ULONGLONG zero = 0;
         ULONGLONG val = SystemTimeToULL(refValue);
         ULONGLONG min = SystemTimeToULL(minRange);
         ULONGLONG max = SystemTimeToULL(maxRange);
@@ -443,7 +442,7 @@ namespace Win32xx
     // throws a CUserException.
     inline void CDataExchange::DDV_MinMaxShort(short value, short minVal, short maxVal) const
     {
-        DDV_MinMaxLong((long)value, (long)minVal, (long)maxVal);
+        DDV_MinMaxLong(value, minVal, maxVal);
     }
 
 
@@ -553,9 +552,9 @@ namespace Win32xx
         HWND hWndCtrl = PrepareCtrl(nIDC);
 
         if (m_RetrieveAndValidate)
-            index = static_cast<int>(::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0L));
+            index = static_cast<int>(::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0));
         else
-            ::SendMessage(hWndCtrl, CB_SETCURSEL, index, 0L);
+            ::SendMessage(hWndCtrl, CB_SETCURSEL, index, 0);
     }
 
 
@@ -637,7 +636,7 @@ namespace Win32xx
             else
             {
                 // select it
-                ::SendMessage(hWndCtrl, CB_SETCURSEL, i, 0L);
+                ::SendMessage(hWndCtrl, CB_SETCURSEL, i, 0);
             }
         }
     }
@@ -650,7 +649,7 @@ namespace Win32xx
         HWND hWndCtrl = PrepareCtrl(nIDC);
         if (m_RetrieveAndValidate)
         {
-            value = static_cast<int>(::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L));
+            value = static_cast<int>(::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0));
             assert(value == BST_CHECKED || value == BST_UNCHECKED ||
                 value == BST_INDETERMINATE);
         }
@@ -664,7 +663,7 @@ namespace Win32xx
                 value = 0;  // set default to off
             }
 
-            ::SendMessage(hWndCtrl, BM_SETCHECK, value, 0L);
+            ::SendMessage(hWndCtrl, BM_SETCHECK, value, 0);
         }
     }
 
@@ -698,9 +697,9 @@ namespace Win32xx
     {
         HWND hWndCtrl = PrepareCtrl(nIDC);
         if (m_RetrieveAndValidate)
-            index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L));
+            index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0));
         else
-            ::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0L);
+            ::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0);
     }
 
 
@@ -716,11 +715,11 @@ namespace Win32xx
         if (m_RetrieveAndValidate)
         {
              // find the index of the item selected in the list box
-            int index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0L));
+            int index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0));
             if (index != -1)
             {
                 // if text was selected, read it into the CString
-                int nLen = static_cast<int>(::SendMessage(hWndCtrl, LB_GETTEXTLEN, index, 0L));
+                int nLen = static_cast<int>(::SendMessage(hWndCtrl, LB_GETTEXTLEN, index, 0));
                 ::SendMessage(hWndCtrl, LB_GETTEXT, index, reinterpret_cast<LPARAM>(value.GetBuffer(nLen)));
 
                 value.ReleaseBuffer();
@@ -782,7 +781,7 @@ namespace Win32xx
             else
             {
                 // select it
-                ::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0L);
+                ::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0);
             }
         }
     }
@@ -861,7 +860,7 @@ namespace Win32xx
             {
                 if (m_RetrieveAndValidate) // if asked to read the control
                 {
-                    if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0L) != 0) // is this button set?
+                    if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0) != 0) // is this button set?
                     {
                         // Record the value the first time, but if it happens again, there
                         // is an error--only one button checked is allowed.
@@ -872,7 +871,7 @@ namespace Win32xx
                 else // if asked to select the radio button,
                 {
                     // then select it
-                    ::SendMessage(hWndCtrl, BM_SETCHECK, (iButton == value), 0L);
+                    ::SendMessage(hWndCtrl, BM_SETCHECK, (iButton == value), 0);
                 }
                 iButton++;
             }
