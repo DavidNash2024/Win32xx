@@ -1076,7 +1076,7 @@ namespace Win32xx
             VERIFY(::GetObject(hBitmap, sizeof(bmSource), &bmSource) != 0);
 
             // Convert the color format to a count of bits.
-            WORD cClrBits = (WORD)(bmSource.bmPlanes * bmSource.bmBitsPixel);
+            WORD cClrBits = static_cast<WORD>(bmSource.bmPlanes * bmSource.bmBitsPixel);
             if (cClrBits == 1)       cClrBits = 1;
             else if (cClrBits <= 4)  cClrBits = 4;
             else if (cClrBits <= 8)  cClrBits = 8;
@@ -1472,7 +1472,7 @@ namespace Win32xx
     inline HBITMAP CBitmap::CreateMappedBitmap(UINT nIDBitmap, UINT nFlags /*= 0*/, LPCOLORMAP lpColorMap /*= NULL*/, int nMapSize /*= 0*/)
     {
         assert(&GetApp());
-        HBITMAP hBitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+        HBITMAP hBitmap = ::CreateMappedBitmap(GetApp().GetResourceHandle(), nIDBitmap, static_cast<WORD>(nFlags), lpColorMap, nMapSize);
         if (hBitmap == 0)
             throw CResourceException(_T("CreateMappedBitmap failed"));
 
@@ -3087,7 +3087,7 @@ namespace Win32xx
         assert(m_pData->hDC);
 
         CBitmap bitmap;
-        bitmap.CreateMappedBitmap(nIDBitmap, (WORD)nFlags, lpColorMap, nMapSize);
+        bitmap.CreateMappedBitmap(nIDBitmap, static_cast<WORD>(nFlags), lpColorMap, nMapSize);
         SelectObject(bitmap);
         m_pData->Bitmap = bitmap;
     }

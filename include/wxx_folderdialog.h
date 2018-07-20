@@ -262,7 +262,7 @@ namespace Win32xx
     // Enables or disables the OK button
     inline void CFolderDialog::EnableOK(BOOL bEnable /*TRUE*/)
     {
-        SendMessage(BFFM_ENABLEOK, bEnable, 0L);
+        SendMessage(BFFM_ENABLEOK, bEnable, 0);
     }
 
 

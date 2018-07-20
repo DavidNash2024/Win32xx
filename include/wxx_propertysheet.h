@@ -198,7 +198,7 @@ namespace Win32xx
     inline void CPropertyPage::CancelToClose() const
     {
         assert(IsWindow());
-        SendMessage(PSM_CANCELTOCLOSE, 0L, 0L);
+        SendMessage(PSM_CANCELTOCLOSE, 0, 0);
     }
 
 
@@ -266,7 +266,7 @@ namespace Win32xx
     inline void CPropertyPage::OnHelp()
     {
 
-        SendMessage(*this, WM_COMMAND, ID_HELP, 0L);
+        SendMessage(*this, WM_COMMAND, ID_HELP, 0);
     }
 
 
@@ -337,7 +337,7 @@ namespace Win32xx
         switch(pNotify->hdr.code)
         {
         case PSN_SETACTIVE:
-            return OnSetActive() ? 0L : -1L;
+            return OnSetActive() ? 0 : -1L;
         case PSN_KILLACTIVE:
             return OnKillActive();
         case PSN_APPLY:
@@ -353,9 +353,9 @@ namespace Win32xx
         case PSN_QUERYCANCEL:
             return OnQueryCancel();
         case PSN_WIZNEXT:
-            return OnWizardNext()? 0L : -1L;
+            return OnWizardNext()? 0 : -1L;
         case PSN_WIZBACK:
-            return OnWizardBack()? 0L : -1L;
+            return OnWizardBack()? 0 : -1L;
         case PSN_WIZFINISH:
             return !OnWizardFinish();
         case PSN_HELP:
@@ -415,7 +415,7 @@ namespace Win32xx
         if (Msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (Msg.wParam == VK_TAB || Msg.wParam == VK_PRIOR || Msg.wParam == VK_NEXT))
         {
-            if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0L, reinterpret_cast<LPARAM>(&Msg)))
+            if (GetParent().SendMessage(PSM_ISDIALOGMESSAGE, 0, reinterpret_cast<LPARAM>(&Msg)))
                 return TRUE;
         }
 
@@ -447,9 +447,9 @@ namespace Win32xx
         assert(IsWindow());
 
         if (IsChanged)
-            GetParent().SendMessage(PSM_CHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0L);
+            GetParent().SendMessage(PSM_CHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0);
         else
-            GetParent().SendMessage(PSM_UNCHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0L);
+            GetParent().SendMessage(PSM_UNCHANGED, reinterpret_cast<WPARAM>(GetHwnd()), 0);
     }
 
 
@@ -755,7 +755,7 @@ namespace Win32xx
         CPropertyPage* pPage = NULL;
         if (GetHwnd() != 0)
         {
-            HWND hPage = reinterpret_cast<HWND>(SendMessage(PSM_GETCURRENTPAGEHWND, 0L, 0L));
+            HWND hPage = reinterpret_cast<HWND>(SendMessage(PSM_GETCURRENTPAGEHWND, 0, 0));
             pPage = static_cast<CPropertyPage*>(GetCWndPtr(hPage));
         }
 
@@ -789,7 +789,7 @@ namespace Win32xx
     inline HWND CPropertySheet::GetTabControl() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HWND>(SendMessage(PSM_GETTABCONTROL, 0L, 0L));
+        return reinterpret_cast<HWND>(SendMessage(PSM_GETTABCONTROL, 0, 0));
     }
 
 
@@ -814,7 +814,7 @@ namespace Win32xx
 
         int nPage = GetPageIndex(pPage);
         if (GetHwnd() != 0)
-            SendMessage(*this, PSM_REMOVEPAGE, nPage, 0L);
+            SendMessage(*this, PSM_REMOVEPAGE, nPage, 0);
 
         m_vPages.erase(m_vPages.begin() + nPage, m_vPages.begin() + nPage+1);
         m_PSH.nPages = static_cast<int>(m_vPages.size());
@@ -829,7 +829,7 @@ namespace Win32xx
         if (Msg.message == WM_KEYDOWN && GetAsyncKeyState(VK_CONTROL) < 0 &&
             (Msg.wParam == VK_TAB || Msg.wParam == VK_PRIOR || Msg.wParam == VK_NEXT))
         {
-            if (SendMessage(PSM_ISDIALOGMESSAGE, 0L, reinterpret_cast<LPARAM>(&Msg)))
+            if (SendMessage(PSM_ISDIALOGMESSAGE, 0, reinterpret_cast<LPARAM>(&Msg)))
                 return TRUE;
         }
 
@@ -847,7 +847,7 @@ namespace Win32xx
     inline BOOL CPropertySheet::SetActivePage(int nPage)
     {
         assert(IsWindow());
-        return (SendMessage(*this, PSM_SETCURSEL, nPage, 0L) != 0);
+        return (SendMessage(*this, PSM_SETCURSEL, nPage, 0) != 0);
     }
 
 

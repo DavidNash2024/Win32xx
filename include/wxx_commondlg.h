@@ -802,7 +802,7 @@ namespace Win32xx
     // any application specific reasons.
     inline LRESULT CFileDialog::OnFileNameOK()
     {
-        return 0L;
+        return 0;
     }
 
 

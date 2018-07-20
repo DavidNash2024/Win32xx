@@ -250,7 +250,7 @@ namespace Win32xx
         int nBuffSize = m_FilePath.GetLength();
         if (nBuffSize > 0)
         {
-            ::GetFileTitle(m_FilePath, FileTitle.GetBuffer(nBuffSize), (WORD)nBuffSize);
+            ::GetFileTitle(m_FilePath, FileTitle.GetBuffer(nBuffSize), static_cast<WORD>(nBuffSize));
             FileTitle.ReleaseBuffer();
         }
 

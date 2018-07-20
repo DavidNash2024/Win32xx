@@ -130,7 +130,7 @@ namespace Win32xx
     inline int CStatusBar::GetParts() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
+        return static_cast<int>(SendMessage(SB_GETPARTS, 0, 0));
     }
 
 
@@ -138,7 +138,7 @@ namespace Win32xx
     inline HICON CStatusBar::GetPartIcon(int iPart) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(SB_GETICON, iPart, 0L));
+        return reinterpret_cast<HICON>(SendMessage(SB_GETICON, iPart, 0));
     }
 
 
@@ -160,7 +160,7 @@ namespace Win32xx
         CString PaneText;
 
         // Get size of Text array
-        int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0L));
+        int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0));
         CString str;
 
         SendMessage(SB_GETTEXT, iPart, reinterpret_cast<LPARAM>(str.GetBuffer(iChars)));
@@ -173,7 +173,7 @@ namespace Win32xx
     inline BOOL CStatusBar::IsSimple() const
     {
         assert(IsWindow());
-        return (SendMessage(SB_ISSIMPLE, 0L, 0L) != 0);
+        return (SendMessage(SB_ISSIMPLE, 0, 0) != 0);
     }
 
 
@@ -207,7 +207,7 @@ namespace Win32xx
         assert(IsWindow());
 
         BOOL Succeeded = FALSE;
-        if (static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L) >= iPart))
+        if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= iPart))
             Succeeded = (SendMessage(SB_SETTEXT, (iPart | Style), reinterpret_cast<LPARAM>(szText)) != 0);
 
         return Succeeded;
@@ -230,7 +230,7 @@ namespace Win32xx
         assert(iPart >= 0 && iPart <= 255);
 
         // Fill the PartWidths vector with the current width of the StatusBar parts
-        int PartsCount = static_cast<int>(SendMessage(SB_GETPARTS, 0L, 0L));
+        int PartsCount = static_cast<int>(SendMessage(SB_GETPARTS, 0, 0));
         std::vector<int> PartWidths(PartsCount, 0);
         int* pPartWidthArray = &PartWidths[0];
         SendMessage(SB_GETPARTS, PartsCount, reinterpret_cast<LPARAM>(pPartWidthArray));
@@ -263,7 +263,7 @@ namespace Win32xx
     inline void CStatusBar::SetSimple(BOOL IsSimple /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(SB_SIMPLE, IsSimple, 0L);
+        SendMessage(SB_SIMPLE, IsSimple, 0);
     }
 
 } // namespace Win32xx

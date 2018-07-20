@@ -267,7 +267,7 @@ namespace Win32xx
     inline HBITMAP CButton::GetBitmap() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HBITMAP>(SendMessage(BM_GETIMAGE, IMAGE_BITMAP, 0L));
+        return reinterpret_cast<HBITMAP>(SendMessage(BM_GETIMAGE, IMAGE_BITMAP, 0));
     }
 
 
@@ -289,7 +289,7 @@ namespace Win32xx
     inline int CButton::GetCheck() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(BM_GETCHECK, 0L, 0L));
+        return static_cast<int>(SendMessage(BM_GETCHECK, 0, 0));
     }
 
 
@@ -297,7 +297,7 @@ namespace Win32xx
     inline HCURSOR CButton::GetCursor() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HCURSOR>(SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0L));
+        return reinterpret_cast<HCURSOR>(SendMessage(BM_GETIMAGE, IMAGE_CURSOR, 0));
     }
 
 
@@ -305,7 +305,7 @@ namespace Win32xx
     inline HICON CButton::GetIcon() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(BM_GETIMAGE, IMAGE_ICON, 0L));
+        return reinterpret_cast<HICON>(SendMessage(BM_GETIMAGE, IMAGE_ICON, 0));
     }
 
 
@@ -318,7 +318,7 @@ namespace Win32xx
     inline UINT CButton::GetState() const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(BM_GETSTATE, 0L, 0L));
+        return static_cast<UINT>(SendMessage(BM_GETSTATE, 0, 0));
     }
 
 
@@ -348,7 +348,7 @@ namespace Win32xx
     inline void CButton::SetCheck(int nCheckState) const
     {
         assert(IsWindow());
-        SendMessage(BM_SETCHECK, nCheckState, 0L);
+        SendMessage(BM_SETCHECK, nCheckState, 0);
     }
 
 
@@ -377,7 +377,7 @@ namespace Win32xx
     inline void CButton::SetState(UINT uState) const
     {
         assert(IsWindow());
-        SendMessage(BM_SETSTATE, uState, 0L);
+        SendMessage(BM_SETSTATE, uState, 0);
     }
 
 
@@ -396,7 +396,7 @@ namespace Win32xx
     inline BOOL CEdit::CanUndo() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_CANUNDO, 0L, 0L) != 0);
+        return (SendMessage(EM_CANUNDO, 0, 0) != 0);
     }
 
 
@@ -404,7 +404,7 @@ namespace Win32xx
     inline int CEdit::CharFromPos(CPoint pt) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_CHARFROMPOS, 0L, MAKELPARAM(pt.x, pt.y)));
+        return static_cast<int>(SendMessage(EM_CHARFROMPOS, 0, MAKELPARAM(pt.x, pt.y)));
     }
 
 
@@ -413,7 +413,7 @@ namespace Win32xx
     inline int CEdit::GetFirstVisibleLine() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_GETFIRSTVISIBLELINE, 0L, 0L));
+        return static_cast<int>(SendMessage(EM_GETFIRSTVISIBLELINE, 0, 0));
     }
 
 
@@ -422,7 +422,7 @@ namespace Win32xx
     inline HLOCAL CEdit::GetHandle() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HLOCAL>(SendMessage(EM_GETHANDLE, 0L, 0L));
+        return reinterpret_cast<HLOCAL>(SendMessage(EM_GETHANDLE, 0, 0));
     }
 
 
@@ -430,7 +430,7 @@ namespace Win32xx
     inline UINT CEdit::GetLimitText() const
     {
         assert(IsWindow());
-        return static_cast<UINT>(SendMessage(EM_GETLIMITTEXT, 0L, 0L));
+        return static_cast<UINT>(SendMessage(EM_GETLIMITTEXT, 0, 0));
     }
 
 
@@ -455,7 +455,7 @@ namespace Win32xx
     inline int CEdit::GetLineCount() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_GETLINECOUNT, 0L, 0L));
+        return static_cast<int>(SendMessage(EM_GETLINECOUNT, 0, 0));
     }
 
 
@@ -463,7 +463,7 @@ namespace Win32xx
     inline DWORD CEdit::GetMargins() const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(EM_GETMARGINS, 0L, 0L));
+        return static_cast<DWORD>(SendMessage(EM_GETMARGINS, 0, 0));
     }
 
 
@@ -471,7 +471,7 @@ namespace Win32xx
     inline BOOL CEdit::GetModify() const
     {
         assert(IsWindow());
-        return (SendMessage(EM_GETMODIFY, 0L, 0L) != 0);
+        return (SendMessage(EM_GETMODIFY, 0, 0) != 0);
     }
 
 
@@ -479,7 +479,7 @@ namespace Win32xx
     inline TCHAR CEdit::GetPasswordChar() const
     {
         assert(IsWindow());
-        return static_cast<TCHAR>(SendMessage(EM_GETPASSWORDCHAR, 0L, 0L));
+        return static_cast<TCHAR>(SendMessage(EM_GETPASSWORDCHAR, 0, 0));
     }
 
 
@@ -487,7 +487,7 @@ namespace Win32xx
     inline void CEdit::GetRect(RECT& rc) const
     {
         assert(IsWindow());
-        SendMessage(EM_GETRECT, 0L, reinterpret_cast<LPARAM>(&rc));
+        SendMessage(EM_GETRECT, 0, reinterpret_cast<LPARAM>(&rc));
     }
 
 
@@ -503,7 +503,7 @@ namespace Win32xx
     inline DWORD CEdit::GetSel() const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(EM_GETSEL, 0L, 0L));
+        return static_cast<DWORD>(SendMessage(EM_GETSEL, 0, 0));
     }
 
 
@@ -511,7 +511,7 @@ namespace Win32xx
     inline CPoint CEdit::PosFromChar(UINT nChar) const
     {
         assert(IsWindow());
-        return CPoint( static_cast<DWORD_PTR>(SendMessage(EM_POSFROMCHAR, nChar, 0L)) );
+        return CPoint( static_cast<DWORD_PTR>(SendMessage(EM_POSFROMCHAR, nChar, 0)) );
     }
 
 
@@ -520,7 +520,7 @@ namespace Win32xx
     inline void CEdit::SetHandle(HLOCAL hBuffer) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETHANDLE, reinterpret_cast<WPARAM>(hBuffer), 0L);
+        SendMessage(EM_SETHANDLE, reinterpret_cast<WPARAM>(hBuffer), 0);
     }
 
 
@@ -528,7 +528,7 @@ namespace Win32xx
     inline void CEdit::SetLimitText(UINT nMax) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETLIMITTEXT, nMax, 0L);
+        SendMessage(EM_SETLIMITTEXT, nMax, 0);
     }
 
 
@@ -544,7 +544,7 @@ namespace Win32xx
     inline void CEdit::SetModify(BOOL IsModified) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETMODIFY, IsModified, 0L);
+        SendMessage(EM_SETMODIFY, IsModified, 0);
     }
 
 
@@ -552,7 +552,7 @@ namespace Win32xx
     inline void CEdit::EmptyUndoBuffer() const
     {
         assert(IsWindow());
-        SendMessage(EM_EMPTYUNDOBUFFER, 0L, 0L);
+        SendMessage(EM_EMPTYUNDOBUFFER, 0, 0);
     }
 
 
@@ -561,7 +561,7 @@ namespace Win32xx
     inline BOOL CEdit::FmtLines(BOOL AddEOL) const
     {
         assert(IsWindow());
-        return (SendMessage(EM_FMTLINES, AddEOL, 0L) != 0);
+        return (SendMessage(EM_FMTLINES, AddEOL, 0) != 0);
     }
 
 
@@ -570,7 +570,7 @@ namespace Win32xx
     inline void CEdit::LimitText(int nChars) const
     {
         assert(IsWindow());
-        SendMessage(EM_LIMITTEXT, nChars, 0L);
+        SendMessage(EM_LIMITTEXT, nChars, 0);
     }
 
 
@@ -579,7 +579,7 @@ namespace Win32xx
     inline int CEdit::LineFromChar(int nIndex) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_LINEFROMCHAR, nIndex, 0L));
+        return static_cast<int>(SendMessage(EM_LINEFROMCHAR, nIndex, 0));
     }
 
 
@@ -588,7 +588,7 @@ namespace Win32xx
     inline int CEdit::LineIndex(int nLine) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_LINEINDEX, nLine, 0L));
+        return static_cast<int>(SendMessage(EM_LINEINDEX, nLine, 0));
     }
 
 
@@ -597,7 +597,7 @@ namespace Win32xx
     inline int CEdit::LineLength(int nLine) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(EM_LINELENGTH, nLine, 0L));
+        return static_cast<int>(SendMessage(EM_LINELENGTH, nLine, 0));
     }
 
 
@@ -622,7 +622,7 @@ namespace Win32xx
     inline void CEdit::SetPasswordChar(TCHAR ch) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETPASSWORDCHAR, ch, 0L);
+        SendMessage(EM_SETPASSWORDCHAR, ch, 0);
     }
 
 
@@ -630,7 +630,7 @@ namespace Win32xx
     inline BOOL CEdit::SetReadOnly(BOOL IsReadOnly) const
     {
         assert(IsWindow());
-        return (SendMessage(EM_SETREADONLY, IsReadOnly, 0L) != 0);
+        return (SendMessage(EM_SETREADONLY, IsReadOnly, 0) != 0);
     }
 
 
@@ -638,7 +638,7 @@ namespace Win32xx
     inline void CEdit::SetRect(const RECT& rc) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETRECT, 0L, reinterpret_cast<LPARAM>(&rc));
+        SendMessage(EM_SETRECT, 0, reinterpret_cast<LPARAM>(&rc));
     }
 
 
@@ -646,7 +646,7 @@ namespace Win32xx
     inline void CEdit::SetRectNP(const RECT& rc) const
     {
         assert(IsWindow());
-        SendMessage(EM_SETRECTNP, 0L, reinterpret_cast<LPARAM>(&rc));
+        SendMessage(EM_SETRECTNP, 0, reinterpret_cast<LPARAM>(&rc));
     }
 
 
@@ -656,7 +656,7 @@ namespace Win32xx
         assert(IsWindow());
         SendMessage(EM_SETSEL, LOWORD(dwSelection), HIWORD(dwSelection));
         if (!NotScrolled)
-            SendMessage(EM_SCROLLCARET, 0L, 0L);
+            SendMessage(EM_SCROLLCARET, 0, 0);
     }
 
 
@@ -666,7 +666,7 @@ namespace Win32xx
         assert(IsWindow());
         SendMessage(EM_SETSEL, nStartChar, nEndChar);
         if (!NotScrolled)
-            SendMessage(EM_SCROLLCARET, 0L, 0L);
+            SendMessage(EM_SCROLLCARET, 0, 0);
     }
 
 
@@ -682,7 +682,7 @@ namespace Win32xx
     inline BOOL CEdit::SetTabStops() const
     {
         assert(IsWindow());
-        return (SendMessage( EM_SETTABSTOPS, 0L, 0L) != 0);
+        return (SendMessage( EM_SETTABSTOPS, 0, 0) != 0);
     }
 
 
@@ -698,7 +698,7 @@ namespace Win32xx
     inline void CEdit::Clear() const
     {
         assert(IsWindow());
-        SendMessage(WM_CLEAR, 0L, 0L);
+        SendMessage(WM_CLEAR, 0, 0);
     }
 
 
@@ -706,7 +706,7 @@ namespace Win32xx
     inline void CEdit::Copy() const
     {
         assert(IsWindow());
-        SendMessage(WM_COPY, 0L, 0L);
+        SendMessage(WM_COPY, 0, 0);
     }
 
 
@@ -714,7 +714,7 @@ namespace Win32xx
     inline void CEdit::Cut() const
     {
         assert(IsWindow());
-        SendMessage(WM_CUT, 0L, 0L);
+        SendMessage(WM_CUT, 0, 0);
     }
 
 
@@ -722,7 +722,7 @@ namespace Win32xx
     inline void CEdit::Paste() const
     {
         assert(IsWindow());
-        SendMessage(WM_PASTE, 0L, 0L);
+        SendMessage(WM_PASTE, 0, 0);
     }
 
 
@@ -730,7 +730,7 @@ namespace Win32xx
     inline void CEdit::Undo() const
     {
         assert(IsWindow());
-        SendMessage(EM_UNDO, 0L, 0L);
+        SendMessage(EM_UNDO, 0, 0);
     }
 
 
@@ -765,7 +765,7 @@ namespace Win32xx
     inline int CListBox::GetCount() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETCOUNT, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETCOUNT, 0, 0));
     }
 
 
@@ -773,7 +773,7 @@ namespace Win32xx
     inline int CListBox::GetHorizontalExtent() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETHORIZONTALEXTENT, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETHORIZONTALEXTENT, 0, 0));
     }
 
 
@@ -781,7 +781,7 @@ namespace Win32xx
     inline DWORD CListBox::GetItemData(int nIndex) const
     {
         assert(IsWindow());
-        return static_cast<DWORD>(SendMessage(LB_GETITEMDATA, nIndex, 0L));
+        return static_cast<DWORD>(SendMessage(LB_GETITEMDATA, nIndex, 0));
     }
 
 
@@ -789,7 +789,7 @@ namespace Win32xx
     inline void* CListBox::GetItemDataPtr(int nIndex) const
     {
         assert(IsWindow());
-        return reinterpret_cast<LPVOID>(SendMessage(LB_GETITEMDATA, nIndex, 0L));
+        return reinterpret_cast<LPVOID>(SendMessage(LB_GETITEMDATA, nIndex, 0));
     }
 
 
@@ -797,7 +797,7 @@ namespace Win32xx
     inline int CListBox::GetItemHeight(int nIndex) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETITEMHEIGHT, nIndex, 0L));
+        return static_cast<int>(SendMessage(LB_GETITEMHEIGHT, nIndex, 0));
     }
 
 
@@ -814,7 +814,7 @@ namespace Win32xx
     inline LCID CListBox::GetLocale() const
     {
         assert(IsWindow());
-        return static_cast<LCID>(SendMessage(LB_GETLOCALE, 0L, 0L));
+        return static_cast<LCID>(SendMessage(LB_GETLOCALE, 0, 0));
     }
 
 
@@ -822,7 +822,7 @@ namespace Win32xx
     inline int CListBox::GetSel(int nIndex) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETSEL, nIndex, 0L));
+        return static_cast<int>(SendMessage(LB_GETSEL, nIndex, 0));
     }
 
 
@@ -838,7 +838,7 @@ namespace Win32xx
     inline int CListBox::GetTextLen(int nIndex) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage( LB_GETTEXTLEN, nIndex, 0L));
+        return static_cast<int>(SendMessage( LB_GETTEXTLEN, nIndex, 0));
     }
 
 
@@ -846,7 +846,7 @@ namespace Win32xx
     inline int CListBox::GetTopIndex() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETTOPINDEX, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETTOPINDEX, 0, 0));
     }
 
 
@@ -854,7 +854,7 @@ namespace Win32xx
     inline UINT CListBox::ItemFromPoint(CPoint pt, BOOL& bOutside) const
     {
         assert(IsWindow());
-        DWORD dw = static_cast<DWORD>(SendMessage(LB_ITEMFROMPOINT, 0L, MAKELPARAM(pt.x, pt.y)));
+        DWORD dw = static_cast<DWORD>(SendMessage(LB_ITEMFROMPOINT, 0, MAKELPARAM(pt.x, pt.y)));
         bOutside = !!HIWORD(dw);
         return LOWORD(dw);
     }
@@ -864,7 +864,7 @@ namespace Win32xx
     inline void CListBox::SetColumnWidth(int cxWidth) const
     {
         assert(IsWindow());
-        SendMessage(LB_SETCOLUMNWIDTH, cxWidth, 0L);
+        SendMessage(LB_SETCOLUMNWIDTH, cxWidth, 0);
     }
 
 
@@ -872,7 +872,7 @@ namespace Win32xx
     inline void CListBox::SetHorizontalExtent(int cxExtent) const
     {
         assert(IsWindow());
-        SendMessage(LB_SETHORIZONTALEXTENT, cxExtent, 0L);
+        SendMessage(LB_SETHORIZONTALEXTENT, cxExtent, 0);
     }
 
 
@@ -904,7 +904,7 @@ namespace Win32xx
     inline LCID CListBox::SetLocale(LCID nNewLocale) const
     {
         assert(IsWindow());
-        return static_cast<LCID>(SendMessage(LB_SETLOCALE, nNewLocale, 0L));
+        return static_cast<LCID>(SendMessage(LB_SETLOCALE, nNewLocale, 0));
     }
 
 
@@ -920,7 +920,7 @@ namespace Win32xx
     inline void CListBox::SetTabStops() const
     {
         assert(IsWindow());
-        SendMessage(LB_SETTABSTOPS, 0L, 0L);
+        SendMessage(LB_SETTABSTOPS, 0, 0);
     }
 
 
@@ -936,7 +936,7 @@ namespace Win32xx
     inline int CListBox::SetTopIndex(int nIndex) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_SETTOPINDEX, nIndex, 0L));
+        return static_cast<int>(SendMessage(LB_SETTOPINDEX, nIndex, 0));
     }
 
 
@@ -944,7 +944,7 @@ namespace Win32xx
     inline int CListBox::GetCurSel() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETCURSEL, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETCURSEL, 0, 0));
     }
 
 
@@ -952,7 +952,7 @@ namespace Win32xx
     inline int CListBox::SetCurSel(int nSelect) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_SETCURSEL, nSelect, 0L));
+        return static_cast<int>(SendMessage(LB_SETCURSEL, nSelect, 0));
     }
 
 
@@ -960,7 +960,7 @@ namespace Win32xx
     inline int CListBox::GetAnchorIndex() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETANCHORINDEX, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETANCHORINDEX, 0, 0));
     }
 
 
@@ -968,7 +968,7 @@ namespace Win32xx
     inline int CListBox::GetCaretIndex() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETCARETINDEX, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETCARETINDEX, 0, 0));
     }
 
 
@@ -976,7 +976,7 @@ namespace Win32xx
     inline int CListBox::GetSelCount() const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_GETSELCOUNT, 0L, 0L));
+        return static_cast<int>(SendMessage(LB_GETSELCOUNT, 0, 0));
     }
 
 
@@ -1004,7 +1004,7 @@ namespace Win32xx
     inline void CListBox::SetAnchorIndex(int nIndex) const
     {
         assert(IsWindow());
-        SendMessage(LB_SETANCHORINDEX, nIndex, 0L);
+        SendMessage(LB_SETANCHORINDEX, nIndex, 0);
     }
 
 
@@ -1028,7 +1028,7 @@ namespace Win32xx
     inline int CListBox::AddString(LPCTSTR lpszItem) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_ADDSTRING, 0L, reinterpret_cast<LPARAM>(lpszItem)));
+        return static_cast<int>(SendMessage(LB_ADDSTRING, 0, reinterpret_cast<LPARAM>(lpszItem)));
     }
 
 
@@ -1036,7 +1036,7 @@ namespace Win32xx
     inline int CListBox::DeleteString(UINT nIndex) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage(LB_DELETESTRING, nIndex, 0L));
+        return static_cast<int>(SendMessage(LB_DELETESTRING, nIndex, 0));
     }
 
 
@@ -1076,7 +1076,7 @@ namespace Win32xx
     inline void CListBox::ResetContent() const
     {
         assert(IsWindow());
-        SendMessage(LB_RESETCONTENT, 0L, 0L);
+        SendMessage(LB_RESETCONTENT, 0, 0);
     }
 
 
@@ -1124,7 +1124,7 @@ namespace Win32xx
     inline HBITMAP CStatic::GetBitmap() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HBITMAP>(SendMessage(STM_GETIMAGE, IMAGE_BITMAP, 0L));
+        return reinterpret_cast<HBITMAP>(SendMessage(STM_GETIMAGE, IMAGE_BITMAP, 0));
     }
 
 
@@ -1132,7 +1132,7 @@ namespace Win32xx
     inline HCURSOR CStatic::GetCursor() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HCURSOR>(SendMessage(STM_GETIMAGE, IMAGE_CURSOR, 0L));
+        return reinterpret_cast<HCURSOR>(SendMessage(STM_GETIMAGE, IMAGE_CURSOR, 0));
     }
 
 
@@ -1141,7 +1141,7 @@ namespace Win32xx
 
     {
         assert(IsWindow());
-        return reinterpret_cast<HENHMETAFILE>(SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0L));
+        return reinterpret_cast<HENHMETAFILE>(SendMessage(STM_GETIMAGE, IMAGE_ENHMETAFILE, 0));
     }
 
 
@@ -1149,7 +1149,7 @@ namespace Win32xx
     inline HICON CStatic::GetIcon() const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(STM_GETIMAGE, IMAGE_ICON, 0L));
+        return reinterpret_cast<HICON>(SendMessage(STM_GETIMAGE, IMAGE_ICON, 0));
     }
 
 

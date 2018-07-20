@@ -207,7 +207,7 @@ namespace Win32xx
 
         UpdateBars();
 
-        return 0L;
+        return 0;
     }
 
     inline LRESULT CScrollView::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -240,7 +240,7 @@ namespace Win32xx
             FillOutsideRect(dc, m_brushBkgnd);
 
             // No more drawing required
-            return 0L;
+            return 0;
         }
 
         // Do default OnPaint if m_sizeTotal is zero
@@ -266,7 +266,7 @@ namespace Win32xx
 
         UpdateBars();
 
-        return 0L;
+        return 0;
     }
 
     inline LRESULT CScrollView::OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
@@ -312,7 +312,7 @@ namespace Win32xx
 
         UpdateBars();
 
-        return 0L;
+        return 0;
     }
 
     inline LRESULT CScrollView::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)

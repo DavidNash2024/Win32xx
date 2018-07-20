@@ -1299,7 +1299,7 @@ namespace Win32xx
                 {
                     CDC dcDraw(lpNMCustomDraw->nmcd.hdc);
                     CWnd* pActiveChild = GetMenuBar().GetActiveMDIChild();
-                    HICON hIcon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0L));
+                    HICON hIcon = reinterpret_cast<HICON>(pActiveChild->SendMessage(WM_GETICON, ICON_SMALL, 0));
                     if (NULL == hIcon)
                         hIcon = GetApp().LoadStandardIcon(IDI_APPLICATION);
 
@@ -1345,7 +1345,7 @@ namespace Win32xx
                     }
 
                     CString str;
-                    int nLength = static_cast<int>(GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0L));
+                    int nLength = static_cast<int>(GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, 0));
                     if (nLength > 0)
                     {
                         GetMenuBar().SendMessage(TB_GETBUTTONTEXT, lpNMCustomDraw->nmcd.dwItemSpec, reinterpret_cast<LPARAM>(str.GetBuffer(nLength)));
@@ -1375,7 +1375,7 @@ namespace Win32xx
             break;
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -1404,10 +1404,10 @@ namespace Win32xx
                         CRect rcRect = lpNMCustomDraw->nmcd.rc;
                         int nState = lpNMCustomDraw->nmcd.uItemState;
                         DWORD dwItem = static_cast<DWORD>(lpNMCustomDraw->nmcd.dwItemSpec);
-                        DWORD dwTBStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0L, 0L));
+                        DWORD dwTBStyle = static_cast<DWORD>(pTB->SendMessage(TB_GETSTYLE, 0, 0));
                         int nStyle = pTB->GetButtonStyle(dwItem);
 
-                        int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, dwItem, 0L));
+                        int nButton = static_cast<int>(pTB->SendMessage(TB_COMMANDTOINDEX, dwItem, 0));
                         TBBUTTON tbb;
                         ZeroMemory(&tbb, sizeof(tbb));
                         pTB->SendMessage(TB_GETBUTTON, nButton, reinterpret_cast<LPARAM>(&tbb));
@@ -1573,7 +1573,7 @@ namespace Win32xx
                 }
             }
         }
-        return 0L;
+        return 0;
     }
 
 
@@ -2337,7 +2337,7 @@ namespace Win32xx
         if (GetView().IsWindow() && GetView().SendMessage(UWM_GETCDOCKER))
             GetView().PostMessage(UWM_DOCKACTIVATE);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2462,7 +2462,7 @@ namespace Win32xx
                 return CustomDrawToolBar(pNMHDR);
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2576,7 +2576,7 @@ namespace Win32xx
 
             // Send message for menu updates
             UINT menuItem = Menu.GetMenuItemID(i);
-            T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0L);
+            T::SendMessage(UWM_UPDATECOMMAND, menuItem, 0);
 
             // Specify owner-draw for the menu item type
             if (Menu.GetMenuItemInfo(i, mii, TRUE))
@@ -2586,14 +2586,14 @@ namespace Win32xx
                     pItem->hMenu = Menu;
                     pItem->nPos = i;
                     pItem->mii = mii;
-                    mii.dwItemData = (DWORD_PTR)pItem;
+                    mii.dwItemData = reinterpret_cast<DWORD_PTR>(pItem);
                     mii.fType |= MFT_OWNERDRAW;
                     Menu.SetMenuItemInfo(i, mii, TRUE); // Store pItem in mii
                 }
             }
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2644,7 +2644,7 @@ namespace Win32xx
 
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2704,7 +2704,7 @@ namespace Win32xx
 
         RecalcLayout();
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2717,7 +2717,7 @@ namespace Win32xx
         if (GetReBarTheme().UseThemes && GetReBarTheme().BandsLeft)
             GetReBar().MoveBandsLeft();
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2730,7 +2730,7 @@ namespace Win32xx
         if (GetReBarTheme().UseThemes && GetReBarTheme().ShortBands)
             return 1L;  // Suppress maximise or minimise rebar band
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2747,7 +2747,7 @@ namespace Win32xx
             m_DrawArrowBkgrnd = (pTB->GetButtonStyle(iItem) & TBSTYLE_DROPDOWN);
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2778,7 +2778,7 @@ namespace Win32xx
             }
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2790,7 +2790,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(lParam);
 
         SetStatusIndicators();
-        return 0L;
+        return 0;
     }
 
 
@@ -2800,7 +2800,7 @@ namespace Win32xx
     inline LRESULT CFrameT<T>::OnSettingChange(UINT, WPARAM, LPARAM)
     {
         T::RedrawWindow();
-        return 0L;
+        return 0;
     }
 
 
@@ -2812,7 +2812,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(lParam);
 
         RecalcLayout();
-        return 0L;
+        return 0;
     }
 
 
@@ -2868,9 +2868,9 @@ namespace Win32xx
 
         // Forward the message to the view window
         if (GetView().IsWindow())
-            GetView().PostMessage(WM_SYSCOLORCHANGE, 0L, 0L);
+            GetView().PostMessage(WM_SYSCOLORCHANGE, 0, 0);
 
-        return 0L;
+        return 0;
     }
 
 
@@ -2882,7 +2882,7 @@ namespace Win32xx
         if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && GetMenuBar().IsWindow())
         {
             GetMenuBar().OnSysCommand(WM_SYSCOMMAND, wParam, lParam);
-            return 0L;
+            return 0;
         }
 
         if (SC_MINIMIZE == wParam)
@@ -2931,7 +2931,7 @@ namespace Win32xx
                 break;
         }
 
-        return 0L;
+        return 0;
     }
 
 
@@ -3002,11 +3002,11 @@ namespace Win32xx
         // Resize the rebar or toolbar
         if (GetReBar().IsWindow())
         {
-            GetReBar().SendMessage(WM_SIZE, 0L, 0L);
+            GetReBar().SendMessage(WM_SIZE, 0, 0);
             GetReBar().Invalidate();
         }
         else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-            GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+            GetToolBar().SendMessage(TB_AUTOSIZE, 0, 0);
 
         // Position the view window
         if (GetView().IsWindow())
@@ -3982,7 +3982,7 @@ namespace Win32xx
         {
         case WM_ACTIVATE:       return OnActivate(uMsg, wParam, lParam);
         case WM_DRAWITEM:       return OnDrawItem(uMsg, wParam, lParam);
-        case WM_ERASEBKGND:     return 0L;
+        case WM_ERASEBKGND:     return 0;
         case WM_HELP:           return OnHelp();
         case WM_INITMENUPOPUP:  return OnInitMenuPopup(uMsg, wParam, lParam);
         case WM_MENUCHAR:       return OnMenuChar(uMsg, wParam, lParam);
