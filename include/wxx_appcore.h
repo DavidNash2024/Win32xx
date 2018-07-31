@@ -359,8 +359,6 @@ namespace Win32xx
 
     inline CWinApp::CWinApp() : m_Callback(NULL), m_hDevMode(0), m_hDevNames(0)
     {
-        CCriticalSection cs;
-        CThreadLock threadLock(cs);
         if ( 0 != SetnGetThis() )
         {
             // Test if this is the only instance of CWinApp
@@ -419,7 +417,7 @@ namespace Win32xx
             ::TlsFree(m_dwTlsData);
         }
 
-        SetnGetThis(reinterpret_cast<CWinApp*>(-1));
+        SetnGetThis(0, true);
     }
 
 
@@ -713,15 +711,18 @@ namespace Win32xx
     // This function stores the 'this' pointer in a static variable.
     // Once stored, it can be used later to return the 'this' pointer.
     // CWinApp's constructor calls this function and sets the static variable.
-    // CWinApp's destructor calls this function with a value of -1.
-    inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/)
+    // CWinApp's destructor resets pWinApp to 0.
+    inline CWinApp* CWinApp::SetnGetThis(CWinApp* pThis /*= 0*/, bool reset /*= false*/)
     {
         static CWinApp* pWinApp = 0;
 
-        if (reinterpret_cast<CWinApp*>(-1) == pThis)
-            pWinApp = 0;
-        else if (!pWinApp)
+        if (pWinApp == 0)
             pWinApp = pThis;
+        else
+            assert(pThis == 0);
+
+        if (reset)
+            pWinApp = 0;
 
         return pWinApp;
     }
@@ -746,8 +747,7 @@ namespace Win32xx
         {
             pTLSData = new TLSData;
 
-            CCriticalSection cs;
-            CThreadLock TLSLock(cs);
+            CThreadLock TLSLock(m_csAppLock);
             m_vTLSData.push_back(pTLSData); // store as a Shared_Ptr
 
             ::TlsSetValue(m_dwTlsData, pTLSData);

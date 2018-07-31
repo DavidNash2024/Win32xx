@@ -357,6 +357,8 @@ namespace Win32xx
     // provides synchronization similar to that provided by a mutex object, 
     // except that a critical section can be used only by the threads of a
     // single process. Critical sections are faster and more efficient than mutexes.
+    // The CCriticalSection object should be created in the primary thread. Create
+    // them as member variables in your CWinApp derrived class.
     class CCriticalSection
     {
     public:
@@ -531,19 +533,20 @@ namespace Win32xx
         void AddCDCData(HDC hDC, CDC_Data* pData);
         void AddCGDIData(HGDIOBJ hGDI, CGDI_Data* pData);
         void AddCImlData(HIMAGELIST hIml, CIml_Data* pData);
-        void GlobalFreeAll(HGLOBAL hGlobal);
         CDC_Data* GetCDCData(HDC hDC);
         CGDI_Data* GetCGDIData(HGDIOBJ hObject);
         CIml_Data* GetCImlData(HIMAGELIST himl);
+        void GlobalFreeAll(HGLOBAL hGlobal);
         void SetCallback();
+        static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
         void UpdateDefaultPrinter();
-        static CWinApp* SetnGetThis(CWinApp* pThis = 0);
 
         std::map<HDC, CDC_Data*, CompareHDC> m_mapCDCData;
         std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
         std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
         std::map<HWND, CWnd*, CompareHWND> m_mapHWND;       // maps window handles to CWnd objects
         std::vector<TLSDataPtr> m_vTLSData;     // vector of TLSData smart pointers, one for each thread
+        CCriticalSection m_csAppLock;   // thread synchronisation for CWinApp and TLS.
         CCriticalSection m_csGDILock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
         CCriticalSection m_csMapLock;   // thread synchronisation for m_mapHWND etc.
         CCriticalSection m_csPrintLock; // thread synchronisation for printing.
@@ -569,7 +572,9 @@ namespace Win32xx
     // Returns a reference to the CWinApp derived class.
     inline CWinApp& GetApp()
     {
-        return *CWinApp::SetnGetThis();
+        CWinApp* pApp = CWinApp::SetnGetThis();
+        assert(pApp);
+        return *pApp;
     }
 
 

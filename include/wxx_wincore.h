@@ -1051,8 +1051,7 @@ namespace Win32xx
         assert(IsWindow());
 
         // A critical section ensures threads update the data seperately
-        CCriticalSection ccs;
-        CThreadLock TLSLock(ccs);
+        CThreadLock TLSLock(GetApp().m_csAppLock);
 
         DX.Init(*this, RetrieveAndValidate);
 
