@@ -12,10 +12,10 @@ class CMainFrame : public CWceFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnDraw(CDC& dc);   
     virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 #endif   // MAINFRM_H

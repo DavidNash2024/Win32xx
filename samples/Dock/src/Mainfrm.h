@@ -40,24 +40,24 @@ public:
     void SetDockStyles();
 
 protected:
-    virtual CDocker* NewDockerFromID(int nID);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual CDocker* NewDockerFromID(int id);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT nID);
+    virtual void OnMenuUpdate(UINT id);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupToolBar();
 
 private:
-    CViewSimple m_View;
-    BOOL m_UseProportionalResize;
-    BOOL m_Use3DBorder;
-    BOOL m_DisableUndocking;
-    BOOL m_DisableResize;
-    BOOL m_DisableDockLR;
-    BOOL m_DisableDockClose;
-    BOOL m_UseDynamicResize;
+    CViewSimple m_view;
+    BOOL m_useProportionalResize;
+    BOOL m_use3DBorder;
+    BOOL m_disableUndocking;
+    BOOL m_disableResize;
+    BOOL m_disableDockLR;
+    BOOL m_disableDockClose;
+    BOOL m_useDynamicResize;
 };
 
 #endif //MAINFRM_H

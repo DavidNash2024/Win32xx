@@ -39,8 +39,8 @@ BOOL CD2DApp::InitInstance()
 
         if (SUCCEEDED(hr))
         {
-            m_View.Create();    // Throws a CWinException on failure.
-            m_View.SetWindowText(_T("Direct2D Demo"));
+            m_view.Create();    // Throws a CWinException on failure.
+            m_view.SetWindowText(_T("Direct2D Demo"));
             return TRUE;
         }
         else

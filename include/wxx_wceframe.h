@@ -179,8 +179,8 @@ namespace Win32xx
 #ifdef SHELL_AYGSHELL
         SHMENUBARINFO mbi;
 
-        memset(&mbi, 0, sizeof(SHMENUBARINFO));
-        mbi.cbSize     = sizeof(SHMENUBARINFO);
+        memset(&mbi, 0, sizeof(mbi));
+        mbi.cbSize     = sizeof(mbi);
         mbi.hwndParent = hParent;
         mbi.nToolBarId = IDW_MAIN;
         mbi.hInstRes   = GetApp().GetInstanceHandle();

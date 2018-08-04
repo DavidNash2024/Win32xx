@@ -10,14 +10,14 @@ const CView& CDoc::GetView() const
     return static_cast<CView&>(frame.GetView());
 }
 
-BOOL CDoc::FileOpen(LPCTSTR szFilename)
+BOOL CDoc::FileOpen(LPCTSTR filename)
 {
     GetAllPoints().clear();
     BOOL isFileOpened = FALSE;
 
     try
     {
-        CArchive ar(szFilename, CArchive::load);
+        CArchive ar(filename, CArchive::load);
         ar >> *this;
         isFileOpened = TRUE;
     }
@@ -33,13 +33,13 @@ BOOL CDoc::FileOpen(LPCTSTR szFilename)
     return isFileOpened;
 }
 
-BOOL CDoc::FileSave(LPCTSTR szFilename)
+BOOL CDoc::FileSave(LPCTSTR filename)
 {
     BOOL isFileSaved = FALSE;
 
     try
     {
-        CArchive ar(szFilename, CArchive::store);
+        CArchive ar(filename, CArchive::store);
         ar << *this;
         isFileSaved = TRUE;
     }
@@ -56,102 +56,98 @@ BOOL CDoc::FileSave(LPCTSTR szFilename)
 // This function provides a useful reference for printing bitmaps in general
 void CDoc::Print()
 {
-    // Get the dimensions of the View window
-    CRect viewRect = GetView().GetClientRect();
-    int width = viewRect.Width();
-    int height = viewRect.Height();
+	// Get the dimensions of the View window
+	CRect viewRect = GetView().GetClientRect();
+	int width = viewRect.Width();
+	int height = viewRect.Height();
 
-    // Copy the bitmap from the View window
-    CClientDC viewDC(GetView());
-    CMemDC memDC(viewDC);
-    CBitmap viewBitmap;
-    viewBitmap.CreateCompatibleBitmap(viewDC, width, height);
-    memDC.SelectObject(viewBitmap);
-    BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
+	// Copy the bitmap from the View window
+	CClientDC viewDC(GetView());
+	CMemDC memDC(viewDC);
+	CBitmap bmView;
+	bmView.CreateCompatibleBitmap(viewDC, width, height);
+	memDC.SelectObject(bmView);
+	BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
 
-    CPrintDialog PrintDlg;
+	CPrintDialog printDlg;
 
-    try
-    {
-        // Bring up a dialog to choose the printer
-        if (PrintDlg.DoModal(GetView()) == IDOK)    // throws exception if there is no default printer
-        {
-            // Zero and then initialize the members of a DOCINFO structure.
-            DOCINFO di;
-            memset(&di, 0, sizeof(DOCINFO));
-            di.cbSize = sizeof(DOCINFO);
-            di.lpszDocName = _T("Scribble Printout");
-            di.lpszOutput = static_cast<LPTSTR>(NULL);
-            di.lpszDatatype = static_cast<LPTSTR>(NULL);
-            di.fwType = 0;
+	try
+	{
+		// Bring up a dialog to choose the printer
+		if (printDlg.DoModal(GetView()) == IDOK)    // throws exception if there is no default printer
+		{
+			// Zero and then initialize the members of a DOCINFO structure.
+			DOCINFO di;
+			memset(&di, 0, sizeof(DOCINFO));
+			di.cbSize = sizeof(DOCINFO);
+			di.lpszDocName = _T("Scribble Printout");
+			di.lpszOutput = static_cast<LPTSTR>(NULL);
+			di.lpszDatatype = static_cast<LPTSTR>(NULL);
+			di.fwType = 0;
 
-            // Begin a print job by calling the StartDoc function.
-            CDC printDC = PrintDlg.GetPrinterDC();
-            if (SP_ERROR == StartDoc(printDC, &di))
-                throw CUserException(_T("Failed to start print job"));
+			// Begin a print job by calling the StartDoc function.
+			CDC printDC = printDlg.GetPrinterDC();
+			if (SP_ERROR == StartDoc(printDC, &di))
+				throw CUserException(_T("Failed to start print job"));
 
-            // Inform the driver that the application is about to begin sending data.
-            if (0 > StartPage(printDC))
-                throw CUserException(_T("StartPage failed"));
+			// Inform the driver that the application is about to begin sending data.
+			if (0 > StartPage(printDC))
+				throw CUserException(_T("StartPage failed"));
 
-            BITMAPINFOHEADER bi;
-            ZeroMemory(&bi, sizeof(BITMAPINFOHEADER));
-            bi.biSize = sizeof(BITMAPINFOHEADER);
-            bi.biHeight = height;
-            bi.biWidth = width;
-            bi.biPlanes = 1;
-            bi.biBitCount = 24;
-            bi.biCompression = BI_RGB;
+			BITMAPINFOHEADER bi;
+			ZeroMemory(&bi, sizeof(bi));
+			bi.biSize = sizeof(bi);
+			bi.biHeight = height;
+			bi.biWidth = width;
+			bi.biPlanes = 1;
+			bi.biBitCount = 24;
+			bi.biCompression = BI_RGB;
 
-            // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
-            // Get the size of the image data
-            memDC.GetDIBits(viewBitmap, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+			// Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
+			// Get the size of the image data
+			memDC.GetDIBits(bmView, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
-            // Retrieve the image data
-            std::vector<byte> imageData(bi.biSizeImage, 0); // a vector to hold the byte array
-            byte* byteArray = &imageData.front();
-            memDC.GetDIBits(viewBitmap, 0, height, byteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+			// Retrieve the image data
+			std::vector<byte> vBits(bi.biSizeImage, 0); // a vector to hold the byte array
+			byte* pByteArray = &vBits.front();
+			memDC.GetDIBits(bmView, 0, height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
-            // Determine the scaling factors required to print the bitmap and retain its original proportions.
-            float xViewPixels = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSX));
-            float yViewPixels = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSY));
-            float xPrintPixels = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSX));
-            float yPrintPixels = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSY));
-            float scaleX = xPrintPixels / xViewPixels;
-            float scaleY = yPrintPixels / yViewPixels;
+			// Determine the scaling factors required to print the bitmap and retain its original proportions.
+			float logPelsX1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSX));
+			float logPelsY1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSY));
+			float logPelsX2 = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSX));
+			float logPelsY2 = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSY));
+			float scaleX = logPelsX2 / logPelsX1;
+			float scaleY = logPelsY2 / logPelsY1;
 
-            int scaledWidth = static_cast<int>(static_cast<float>(width) * scaleX);
-            int scaledHeight = static_cast<int>(static_cast<float>(height) * scaleY);
+			int scaledWidth = static_cast<int>(static_cast<float>(width) * scaleX);
+			int scaledHeight = static_cast<int>(static_cast<float>(height) * scaleY);
 
-            // Use StretchDIBits to scale the bitmap and maintain its original proportions
-            UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0, width, height,
-                                        byteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
-            if (GDI_ERROR == result)
-            {
-                throw CUserException(_T("Failed to resize image for printing"));
-            }
+			// Use StretchDIBits to scale the bitmap and maintain its original proportions
+			UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0, width, height,
+				pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
+			if (GDI_ERROR == result)
+			{
+				throw CUserException(_T("Failed to resize image for printing"));
+			}
 
-            // Inform the driver that the page is finished.
-            if (0 > EndPage(printDC))
-                throw CUserException(_T("EndPage failed"));
+			// Inform the driver that the page is finished.
+			if (0 > EndPage(printDC))
+				throw CUserException(_T("EndPage failed"));
 
-            // Inform the driver that document has ended.
-            if (0 > EndDoc(printDC))
-                throw CUserException(_T("EndDoc failed"));
-        }
-    }
+			// Inform the driver that document has ended.
+			if (0 > EndDoc(printDC))
+				throw CUserException(_T("EndDoc failed"));
+		}
+	}
 
-    catch (const CException& e)
-    {
-        // Display a message box indicating why printing failed.
-        CString text = CString(e.GetText());
-        if (e.GetError() != 0)
-            text = text + CString("\n") + e.GetErrorString();
-        
-        CString strType = CString(e.what());
-        ::MessageBox(NULL, text, strType, MB_ICONWARNING);
-    }
-
+	catch (const CException& e)
+	{
+		// Display a message box indicating why printing failed.
+		CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+		CString type = CString(e.what());
+		::MessageBox(NULL, message, type, MB_ICONWARNING);
+	}
 }
 
 void CDoc::Serialize(CArchive &ar)
@@ -161,8 +157,8 @@ void CDoc::Serialize(CArchive &ar)
     if (ar.IsStoring())
     {
         // Store the number of points
-        UINT nPoints = GetAllPoints().size();
-        ar << nPoints;
+        UINT points = GetAllPoints().size();
+        ar << points;
         
         // Store the PlotPoint data
         std::vector<PlotPoint>::iterator iter;
@@ -174,15 +170,15 @@ void CDoc::Serialize(CArchive &ar)
     }
     else
     {
-        UINT nPoints;
+        UINT points;
         PlotPoint pp;
         GetAllPoints().clear();
 
         // Load the number of points
-        ar >> nPoints;
+        ar >> points;
 
         // Load the PlotPoint data
-        for (UINT u = 0; u < nPoints; ++u)
+        for (UINT u = 0; u < points; ++u)
         {
             ArchiveObject ao( &pp, sizeof(pp) );
             ar >> ao;
@@ -192,13 +188,13 @@ void CDoc::Serialize(CArchive &ar)
 
 }
 
-void CDoc::StorePoint(int x, int y, bool PenDown, COLORREF PenColor)
+void CDoc::StorePoint(int x, int y, bool isPenDown, COLORREF penColor)
 {
     PlotPoint pp;
     pp.x = x;
     pp.y = y;
-    pp.PenDown = PenDown;
-    pp.color = PenColor;
+    pp.isPenDown = isPenDown;
+    pp.color = penColor;
 
     m_points.push_back(pp); //Add the point to the vector
 }

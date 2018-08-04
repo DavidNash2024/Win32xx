@@ -15,8 +15,8 @@ struct PlotPoint
 {
     int x;
     int y;
-    bool PenDown;
-    COLORREF color;
+    bool isPenDown;
+    COLORREF penColor;
 };
 
 
@@ -26,24 +26,24 @@ public:
     CView();
     virtual ~CView();
 
-    COLORREF GetPenColor() { return m_PenColor; }
-    void SetPenColor(COLORREF Color) { m_PenColor = Color; }
+    COLORREF GetPenColor() { return m_penColor; }
+    void SetPenColor(COLORREF color) { m_penColor = color; }
 
 protected:
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     void DrawLine(int x, int y);
     void StorePoint(int x, int y, bool PenDown);
-    CBrush m_Brush;
+    CBrush m_brush;
     std::vector<PlotPoint> m_points;    // Points of lines to draw  COLORREF m_PenColor;
-    COLORREF m_PenColor;
+    COLORREF m_penColor;
 };
 
 

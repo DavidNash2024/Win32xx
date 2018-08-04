@@ -12,7 +12,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -24,13 +24,13 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch(nID)
     {
     case IDM_FILE_EXIT:      return OnFileExit();
@@ -83,23 +83,23 @@ void CMainFrame::OnInitialUpdate()
 BOOL CMainFrame::OnModeless()
 {
     // Permit only one Modeless property sheet
-    if (!m_ModelessPS.IsWindow())
+    if (!m_modelessPS.IsWindow())
     {
-        m_ModelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-        m_ModelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-        m_ModelessPS.SetTitle(_T("Modeless Property Sheet"));
-        m_ModelessPS.Create(*this);
+		m_modelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
+		m_modelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+		m_modelessPS.SetTitle(_T("Modeless Property Sheet"));
+		m_modelessPS.Create(*this);
     }
     else
-        m_ModelessPS.SetForegroundWindow();
+		m_modelessPS.SetForegroundWindow();
 
     return TRUE;
 }
 
 BOOL CMainFrame::OnModal()
 {
-    if (m_ModelessPS.IsWindow())
-        m_ModelessPS.Destroy();
+    if (m_modelessPS.IsWindow())
+		m_modelessPS.Destroy();
 
     CMyPropertySheet mps(_T("Modal Property Sheet"), *this);
     mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
@@ -135,13 +135,13 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
         // Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

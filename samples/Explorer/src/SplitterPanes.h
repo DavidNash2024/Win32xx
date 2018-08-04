@@ -16,7 +16,7 @@ public:
     virtual ~CLeftPane() {}
 
 private:
-    CMyTreeView m_View;
+    CMyTreeView m_view;
 };
 
 
@@ -27,7 +27,7 @@ public:
     virtual ~CRightPane() {}
 
 private:
-    CMyListView m_View;
+    CMyListView m_view;
 };
 
 

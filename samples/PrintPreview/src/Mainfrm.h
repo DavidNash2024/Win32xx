@@ -17,10 +17,10 @@ public:
 
     CRect GetPrintRect();
     CRect GetPageRect();
-    CRichEdit& GetRichView() { return m_RichView; }
+    CRichEdit& GetRichView() { return m_richView; }
 
-    static  DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
-    static  DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
+    static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
+    static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
 
     BOOL OnDropFiles(HDROP hDropInfo);
     BOOL OnEditCut();
@@ -29,7 +29,7 @@ public:
     BOOL OnEditDelete();
     BOOL OnEditRedo();
     BOOL OnEditUndo();
-    BOOL OnFileMRU(WPARAM wParam);
+    BOOL OnFileMRU(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileNew();
     BOOL OnFileOpen();
@@ -42,29 +42,29 @@ public:
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
 
-    void QuickPrint(CPrintDialog& PrintDlg);
-    BOOL ReadFile(LPCTSTR szFileName);
+    void QuickPrint(CPrintDialog& printDlg);
+    BOOL ReadFile(LPCTSTR fileName);
     void SaveModifiedText();
-    void SetPathName(LPCTSTR szFullFileName);
+    void SetPathName(LPCTSTR fullFileName);
     void SetWindowTitle();
-    BOOL WriteFile(LPCTSTR szFileName);
+    BOOL WriteFile(LPCTSTR fileName);
 
 protected:
     virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT nID);
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual void OnMenuUpdate(UINT id);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    CPreviewDialog  m_PrintPreview;
-    CRichView m_RichView;
-    CString m_PathName;
-    BOOL m_IsWrapped;
+    CPreviewDialog  m_printPreview;
+    CRichView m_richView;
+    CString m_pathName;
+    BOOL m_isWrapped;
 
 };
 

@@ -21,10 +21,10 @@ CViewFiles::~CViewFiles()
 void CViewFiles::OnAttach()
 {
     // Set the image lists
-    m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bmImage(IDB_FILEVIEW);
-    m_imlSmall.Add( bmImage, RGB(255, 0, 255) );
-    SetImageList(m_imlSmall, LVSIL_SMALL);
+    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    CBitmap image(IDB_FILEVIEW);
+	m_smallImages.Add( image, RGB(255, 0, 255) );
+    SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
     DWORD dwStyle = GetStyle();
@@ -34,13 +34,13 @@ void CViewFiles::OnAttach()
     InsertItems();
 }
 
-int CViewFiles::AddItem(LPCTSTR szText, int nImage)
+int CViewFiles::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
-    ZeroMemory(&lvi, sizeof(LVITEM));
+    ZeroMemory(&lvi, sizeof(lvi));
     lvi.mask = LVIF_TEXT|LVIF_IMAGE;
-    lvi.iImage = nImage;
-    lvi.pszText = const_cast<LPTSTR>(szText);
+    lvi.iImage = image;
+    lvi.pszText = const_cast<LPTSTR>(text);
 
     return InsertItem(lvi);
 }
@@ -51,27 +51,27 @@ void CViewFiles::SetColumns()
     DeleteAllItems();
 
     //initialise the columns
-    LV_COLUMN lvColumn;
-    ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
-    lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    lvColumn.fmt = LVCFMT_LEFT;
-    lvColumn.cx = 120;
-    TCHAR szString[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
+    LV_COLUMN column;
+    ZeroMemory(&column, sizeof(column));
+	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+	column.fmt = LVCFMT_LEFT;
+	column.cx = 120;
+    TCHAR string[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
     for(int i = 0; i < 3; ++i)
     {
-        lvColumn.pszText = szString[i];
-        InsertColumn(i, lvColumn);
+		column.pszText = string[i];
+        InsertColumn(i, column);
     }
 }
 
-BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
+BOOL CViewFiles::SetSubItem(int item, int subItem, LPCTSTR text)
 {
     LVITEM lvi1;
-    ZeroMemory(&lvi1, sizeof(LVITEM));
+    ZeroMemory(&lvi1, sizeof(lvi1));
     lvi1.mask = LVIF_TEXT;
-    lvi1.iItem = nItem;
-    lvi1.iSubItem = nSubItem;
-    lvi1.pszText = const_cast<LPTSTR>(szText);
+    lvi1.iItem = item;
+    lvi1.iSubItem = subItem;
+    lvi1.pszText = const_cast<LPTSTR>(text);
     return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)));
 }
 

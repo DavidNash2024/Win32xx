@@ -28,7 +28,7 @@ public:
     void    DiscardDeviceResources();
     LRESULT OnDisplayChange(UINT, WPARAM, LPARAM);
     HRESULT OnRender();
-    LRESULT OnSize(UINT, WPARAM wParam, LPARAM lParm);
+    LRESULT OnSize(UINT, WPARAM wparam, LPARAM lparm);
     void    OnResize(UINT width, UINT height);
 
 protected:
@@ -37,7 +37,7 @@ protected:
     virtual LRESULT OnPaint(UINT, WPARAM, LPARAM);
     virtual void PreCreate(CREATESTRUCT&cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     ID2D1HwndRenderTarget* m_pRenderTarget;

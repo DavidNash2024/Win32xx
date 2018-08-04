@@ -19,7 +19,7 @@ public:
     virtual BOOL InitInstance();
 
 private:
-    CMainFrame m_Frame;
+    CMainFrame m_frame;
 };
 
 #endif //SCRIBBLEAPP_H

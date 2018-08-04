@@ -14,24 +14,24 @@ CView::CView()
 CBitmap CView::CreateMaskBitmap()
 {
     BITMAP bm;
-    GetObject(m_Blue, sizeof(BITMAP), &bm);
-    CBitmap bmMask;
-    bmMask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
-    m_BallSize.cx = bm.bmWidth;
-    m_BallSize.cy = bm.bmHeight;
+    GetObject(m_blue, sizeof(BITMAP), &bm);
+    CBitmap mask;
+	mask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
+    m_ballSize.cx = bm.bmWidth;
+    m_ballSize.cy = bm.bmHeight;
 
     CMemDC dcMem(0);
     CMemDC dcMem2(0);
 
-    SelectObject(dcMem, m_Blue);
-    dcMem2.SelectObject(bmMask);
+    SelectObject(dcMem, m_blue);
+    dcMem2.SelectObject(mask);
 
-    COLORREF clrTransparent = RGB(255, 255, 255);
-    SetBkColor(dcMem, clrTransparent);
+    COLORREF transparent = RGB(255, 255, 255);
+    SetBkColor(dcMem, transparent);
     dcMem2.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem, 0, 0, SRCCOPY);
     dcMem.BitBlt(0, 0, bm.bmWidth, bm.bmHeight, dcMem2, 0, 0, SRCINVERT);
 
-    return bmMask;
+    return mask;
 }
 
 void CView::OnDraw(CDC& dc)
@@ -45,9 +45,9 @@ int CView::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER (cs);
 
-    m_Blue.LoadBitmap(IDB_BLUE);
-    m_Orange.LoadBitmap(IDB_ORANGE);
-    m_Mask = CreateMaskBitmap();
+    m_blue.LoadBitmap(IDB_BLUE);
+    m_orange.LoadBitmap(IDB_ORANGE);
+    m_mask = CreateMaskBitmap();
 
     return 0;
 }
@@ -60,7 +60,7 @@ void CView::OnInitialUpdate()
     SetTimer(ID_TIMER, 10, 0);
 }
 
-LRESULT CView::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CClientDC dc(*this);
     CRect rc = GetClientRect();
@@ -72,9 +72,9 @@ LRESULT CView::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
     static int cy = 1;
 
     x = x + cx;
-    if (x > rc.Width() - m_BallSize.cx)
+    if (x > rc.Width() - m_ballSize.cx)
     {
-        x = rc.Width() - m_BallSize.cx;
+        x = rc.Width() - m_ballSize.cx;
         cx = -1;
     }
     else if (x < 0)
@@ -84,9 +84,9 @@ LRESULT CView::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
     
     y = y + cy;
-    if (y > rc.Height() - m_BallSize.cy)
+    if (y > rc.Height() - m_ballSize.cy)
     {
-        y = rc.Height() - m_BallSize.cy;
+        y = rc.Height() - m_ballSize.cy;
         cy = -1;
     }
     else if (y < 0)
@@ -96,20 +96,20 @@ LRESULT CView::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     CMemDC dcMemMask(dc);
-    dcMemMask.SelectObject(m_Mask);
+    dcMemMask.SelectObject(m_mask);
     
     CMemDC dcMemOrange(dc);
-    dcMemOrange.SelectObject(m_Orange);
+    dcMemOrange.SelectObject(m_orange);
 
     CMemDC dcMemBlue(dc);
-    dcMemBlue.SelectObject(m_Blue);
+    dcMemBlue.SelectObject(m_blue);
 
     CMemDC dcMem3(dc);
     dcMem3.CreateCompatibleBitmap(dc, rc.Width(), rc.Height());
     dcMem3.SolidFill(RGB(255, 255, 255), rc);
 
     // Copy the orange ball to the memory DC
-    dcMem3.BitBlt(x, 0, m_BallSize.cx, m_BallSize.cy, dcMemOrange, 0, 0, SRCCOPY);
+    dcMem3.BitBlt(x, 0, m_ballSize.cx, m_ballSize.cy, dcMemOrange, 0, 0, SRCCOPY);
 
     // Copy the blue ball to the memory DC with mask
     dcMem3.BitBlt(0, y, 64, 64, dcMemMask, 0, 0, SRCERASE);
@@ -119,7 +119,7 @@ LRESULT CView::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
     // Copy the memory DC to the client DC
     dc.BitBlt(0,0, rc.Width(), rc.Height(), dcMem3, 0, 0, SRCCOPY);
     
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -151,16 +151,16 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // All window messages for this window pass through WndProc
 {
-    switch (uMsg)
+    switch (msg)
     {
-        case WM_TIMER:  return OnTimer(uMsg, wParam, lParam);
+        case WM_TIMER:  return OnTimer(msg, wparam, lparam);
     }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

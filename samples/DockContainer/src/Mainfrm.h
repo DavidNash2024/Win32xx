@@ -31,8 +31,8 @@ public:
     BOOL OnHideSingleTab();
     
 protected:
-    virtual CDocker* NewDockerFromID(int nID);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual CDocker* NewDockerFromID(int id);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT nID);
@@ -41,12 +41,12 @@ protected:
     virtual void SetupToolBar();
 
 private:
-    void HideSingleContainerTab(BOOL HideSingle);
-    void SetContainerTabsAtTop(BOOL bTop);
+    void HideSingleContainerTab(BOOL hideSingle);
+    void SetContainerTabsAtTop(BOOL isAtTop);
 
-    CDockContainer m_View;
-    BOOL m_IsContainerTabsAtTop;
-    BOOL m_IsHideSingleTab;
+    CDockContainer m_view;
+    BOOL m_isContainerTabsAtTop;
+    BOOL m_hideSingleTab;
 
 };
 

@@ -16,18 +16,18 @@ public:
     ~CAppHelp() {}
     
     void About(HWND hParent = 0);
-    void AddHelpTopic(UINT nID, LPCTSTR topic);
+    void AddHelpTopic(UINT id, LPCTSTR topic);
     void SetCommandHelpTopics();
     void SetClientHelpTopics();
-    void SetCredits(LPCTSTR szCredits);
+    void SetCredits(LPCTSTR credits);
     void SetFrameHelpTopics();
     void SetHelpFilePath(LPCTSTR chmName);
-    void ShowHelpTopic(UINT nID);
+    void ShowHelpTopic(UINT id);
     void ShowHelpTopic(LPCTSTR topic);
 
 private:
-    CContextHelp m_ContextHelp;
-    CHelpAbout m_HelpAbout;
+    CContextHelp m_contextHelp;
+    CHelpAbout m_helpAbout;
 };
 
 

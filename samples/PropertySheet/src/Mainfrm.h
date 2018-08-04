@@ -22,15 +22,15 @@ public:
     BOOL OnWizard();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
-    CMyPropertySheet m_ModelessPS;
+    CView m_view;
+    CMyPropertySheet m_modelessPS;
 };
 
 #endif //MAINFRM_H

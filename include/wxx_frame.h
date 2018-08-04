@@ -393,7 +393,7 @@ namespace Win32xx
 
     protected:
         // Override these functions as required.
-        virtual void AddDisabledMenuImage(HICON hIcon, COLORREF clrMask, int iconWidth = 16);
+        virtual void AddDisabledMenuImage(HICON hIcon, COLORREF mask, int iconWidth = 16);
         virtual BOOL AddMenuIcon(int nID_MenuItem, HICON hIcon, int iconWidth = 16);
         virtual UINT AddMenuIcons(const std::vector<UINT>& MenuData, COLORREF crMask, UINT BitmapID, UINT BitmapDisabledID);
         virtual void AddMenuBarBand();
@@ -414,33 +414,33 @@ namespace Win32xx
         virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
         virtual BOOL LoadRegistryMRUSettings(UINT nMaxMRU = 0);
         virtual void MeasureMenuItem(MEASUREITEMSTRUCT *pmis);
-        virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void OnClose();
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual LRESULT OnCustomDraw(LPNMHDR pNMHDR);
         virtual void OnDestroy();
-        virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnDrawRBBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnDrawSBBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDrawRBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDrawSBBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnHelp();
-        virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMenuChar(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMenuSelect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual void OnMenuUpdate(UINT nID);
-        virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMenuSelect(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual void OnMenuUpdate(UINT id);
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnRBNHeightChange(LPNMHDR pNMHDR);
         virtual LRESULT OnRBNLayoutChanged(LPNMHDR pNMHDR);
         virtual LRESULT OnRBNMinMax(LPNMHDR pNMHDR);
-        virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSettingChange(UINT, WPARAM, LPARAM);
-        virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
         virtual LRESULT OnTTNGetDispInfo(LPNMTTDISPINFO pNMTDI);
         virtual LRESULT OnUndocked();
-        virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnViewStatusBar();
         virtual BOOL OnViewToolBar();
         virtual void PreCreate(CREATESTRUCT& cs);
@@ -478,14 +478,14 @@ namespace Win32xx
         void UseThemes(BOOL UseThemes) { m_UseThemes = UseThemes; }
         void UseToolBar(BOOL UseToolBar) { m_UseToolBar = UseToolBar; }
 
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CFrameT(const CFrameT&);                // Disable copy construction
         CFrameT& operator = (const CFrameT&);   // Disable assignment operator
         CSize GetTBImageSize(CBitmap* pbm);
         void UpdateMenuBarBandSize();
-        static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam);
+        static LRESULT CALLBACK StaticKeyboardProc(int nCode, WPARAM wparam, LPARAM lparam);
 
         std::vector<ItemDataPtr> m_vMenuItemData;   // vector of MenuItemData pointers
         std::vector<CString> m_vMRUEntries; // Vector of CStrings for MRU entries
@@ -2311,13 +2311,13 @@ namespace Win32xx
 
     // Called when the frame is activated (WM_ACTIVATE received)
     template <class T>
-    inline LRESULT CFrameT<T>::OnActivate(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnActivate(UINT, WPARAM wparam, LPARAM lparam)
     {
         // Perform default processing first
-        CWnd::WndProcDefault(WM_ACTIVATE, wParam, lParam);
+        CWnd::WndProcDefault(WM_ACTIVATE, wparam, lparam);
 
 
-        if (LOWORD(wParam) == WA_INACTIVE)
+        if (LOWORD(wparam) == WA_INACTIVE)
         {
             // Save the hwnd of the window which currently has focus.
             // This must be CFrame window itself or a child window.
@@ -2482,9 +2482,9 @@ namespace Win32xx
 
     // OwnerDraw is used to render the popup menu items.
     template <class T>
-    inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnDrawItem(UINT, WPARAM wparam, LPARAM lparam)
     {
-        LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lParam;
+        LPDRAWITEMSTRUCT pdis = (LPDRAWITEMSTRUCT)lparam;
         assert(pdis);
 
         if (IsMenu(reinterpret_cast<HMENU>(pdis->hwndItem)) && (!IsRectEmpty(&pdis->rcItem)))
@@ -2493,18 +2493,18 @@ namespace Win32xx
             return TRUE;
         }
 
-        return CWnd::WndProcDefault(WM_DRAWITEM, wParam, lParam);
+        return CWnd::WndProcDefault(WM_DRAWITEM, wparam, lparam);
     }
 
 
     // Called when the Rebar's background is redrawn.
     template<class T>
-    inline LRESULT CFrameT<T>::OnDrawRBBkgnd(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnDrawRBBkgnd(UINT, WPARAM wparam, LPARAM lparam)
     {
-        CDC* pDC = reinterpret_cast<CDC*>(wParam);
+        CDC* pDC = reinterpret_cast<CDC*>(wparam);
         assert(dynamic_cast<CDC*>(pDC));
 
-        CReBar* pReBar = reinterpret_cast<CReBar*>(lParam);
+        CReBar* pReBar = reinterpret_cast<CReBar*>(lparam);
         assert(dynamic_cast<CReBar*>(pReBar));
 
         return DrawReBarBkgnd(*pDC, *pReBar);
@@ -2513,12 +2513,12 @@ namespace Win32xx
 
     // Called when the StatusBar's background is redrawn.
     template<class T>
-    inline LRESULT CFrameT<T>::OnDrawSBBkgnd(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnDrawSBBkgnd(UINT, WPARAM wparam, LPARAM lparam)
     {
-        CDC* pDC = reinterpret_cast<CDC*>(wParam);
+        CDC* pDC = reinterpret_cast<CDC*>(wparam);
         assert(dynamic_cast<CDC*>(pDC));
 
-        CStatusBar* pStatusBar = reinterpret_cast<CStatusBar*>(lParam);
+        CStatusBar* pStatusBar = reinterpret_cast<CStatusBar*>(lparam);
         assert(dynamic_cast<CStatusBar*>(pStatusBar));
 
         return DrawStatusBarBkgnd(*pDC, *pStatusBar);
@@ -2548,17 +2548,17 @@ namespace Win32xx
 
     // Called when the menu's modal loop begins (WM_INITMENUPOPUP received).
     template <class T>
-    inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
     {
         // The system menu shouldn't be owner drawn
-        if (HIWORD(lParam))
-            return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+        if (HIWORD(lparam))
+            return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
 
         // Not supported on Win95 or WinNT
         if ((GetWinVersion() == 1400) || (GetWinVersion() == 2400))
-            return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+            return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
 
-        CMenu Menu(reinterpret_cast<HMENU>(wParam));
+        CMenu Menu(reinterpret_cast<HMENU>(wparam));
 
         for (UINT i = 0; i < Menu.GetMenuItemCount(); ++i)
         {
@@ -2600,11 +2600,11 @@ namespace Win32xx
     // Called before the Popup menu is displayed, so that the MEASUREITEMSTRUCT
     // values can be assigned with the menu item's dimensions.
     template <class T>
-    inline LRESULT CFrameT<T>::OnMeasureItem(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnMeasureItem(UINT, WPARAM wparam, LPARAM lparam)
     {
-        LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lParam;
+        LPMEASUREITEMSTRUCT pmis = (LPMEASUREITEMSTRUCT) lparam;
         if (pmis->CtlType != ODT_MENU)
-            return CWnd::WndProcDefault(WM_MEASUREITEM, wParam, lParam);
+            return CWnd::WndProcDefault(WM_MEASUREITEM, wparam, lparam);
 
         MeasureMenuItem(pmis);
         return TRUE;
@@ -2613,31 +2613,31 @@ namespace Win32xx
 
     // Called when a menu is active, and a key is pressed other than an accelerator.
     template <class T>
-    inline LRESULT CFrameT<T>::OnMenuChar(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnMenuChar(UINT, WPARAM wparam, LPARAM lparam)
     {
-        if ((GetMenuBar().IsWindow()) && (LOWORD(wParam)!= VK_SPACE))
+        if ((GetMenuBar().IsWindow()) && (LOWORD(wparam)!= VK_SPACE))
         {
             // Activate MenuBar for key pressed with Alt key held down
-            GetMenuBar().OnMenuChar(WM_MENUCHAR, wParam, lParam);
-            return -1L;
+            GetMenuBar().OnMenuChar(WM_MENUCHAR, wparam, lparam);
+            return -1;
         }
 
-        return T::FinalWindowProc(WM_MENUCHAR, wParam, lParam);
+        return T::FinalWindowProc(WM_MENUCHAR, wparam, lparam);
     }
 
 
     // Called when a menu item is selected.
     template <class T>
-    inline LRESULT CFrameT<T>::OnMenuSelect(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnMenuSelect(UINT, WPARAM wparam, LPARAM lparam)
     {
         // Set the StatusBar text when we hover over a menu.
         // Only popup submenus have status strings.
         if (IsUsingMenuStatus() && GetStatusBar().IsWindow())
         {
-            int nID = LOWORD (wParam);
-            CMenu Menu(reinterpret_cast<HMENU>(lParam));
+            int nID = LOWORD (wparam);
+            CMenu Menu(reinterpret_cast<HMENU>(lparam));
 
-            if ((Menu != T::GetMenu()) && (nID != 0) && !(HIWORD(wParam) & MF_POPUP))
+            if ((Menu != T::GetMenu()) && (nID != 0) && !(HIWORD(wparam) & MF_POPUP))
                 GetStatusBar().SetWindowText(LoadString(nID));
             else
                 GetStatusBar().SetWindowText(m_strStatusText);
@@ -2652,22 +2652,22 @@ namespace Win32xx
     // or disable the menu item, or add a check mark. Also call this base function to
     // update the 'Tool Bar' and 'Status Bar' menu status.
     template <class T>
-    inline void CFrameT<T>::OnMenuUpdate(UINT nID)
+    inline void CFrameT<T>::OnMenuUpdate(UINT id)
     {
         // Update the check buttons before displaying the menu.
-        switch(nID)
+        switch(id)
         {
         case IDW_VIEW_STATUSBAR:
             {
                 BOOL IsVisible = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
-                GetFrameMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+                GetFrameMenu().CheckMenuItem(id, IsVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
         case IDW_VIEW_TOOLBAR:
             {
                 BOOL IsVisible = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-                GetFrameMenu().EnableMenuItem(nID, GetToolBar().IsWindow() ? MF_ENABLED : MF_DISABLED);
-                GetFrameMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+                GetFrameMenu().EnableMenuItem(id, GetToolBar().IsWindow() ? MF_ENABLED : MF_DISABLED);
+                GetFrameMenu().CheckMenuItem(id, IsVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
         }
@@ -2676,23 +2676,23 @@ namespace Win32xx
 
     // Called when a notification from a child window (WM_NOTIFY) is received.
     template <class T>
-    inline LRESULT CFrameT<T>::OnNotify(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(wparam);
 
-        LPNMHDR pNMHDR = (LPNMHDR)lParam;
+        LPNMHDR pNMHDR = (LPNMHDR)lparam;
         switch (pNMHDR->code)
         {
         case NM_CUSTOMDRAW:     return OnCustomDraw(pNMHDR);
         case RBN_HEIGHTCHANGE:  return OnRBNHeightChange(pNMHDR);
         case RBN_LAYOUTCHANGED: return OnRBNLayoutChanged(pNMHDR);
         case RBN_MINMAX:        return OnRBNMinMax(pNMHDR);
-        case TBN_DROPDOWN:      return OnTBNDropDown((LPNMTOOLBAR)lParam);
-        case TTN_GETDISPINFO:   return OnTTNGetDispInfo((LPNMTTDISPINFO)lParam);
+        case TBN_DROPDOWN:      return OnTBNDropDown((LPNMTOOLBAR)lparam);
+        case TTN_GETDISPINFO:   return OnTTNGetDispInfo((LPNMTTDISPINFO)lparam);
         case UWN_UNDOCKED:      return OnUndocked();
         }
 
-        return CWnd::OnNotify(wParam, lParam);
+        return CWnd::OnNotify(wparam, lparam);
     }
 
 
@@ -2728,7 +2728,7 @@ namespace Win32xx
         UNREFERENCED_PARAMETER(pNMHDR);
 
         if (GetReBarTheme().UseThemes && GetReBarTheme().ShortBands)
-            return 1L;  // Suppress maximise or minimise rebar band
+            return 1;  // Suppress maximise or minimise rebar band
 
         return 0;
     }
@@ -2784,10 +2784,10 @@ namespace Win32xx
 
     // Called when the frame window (not a child window) receives focus.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSetFocus(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnSetFocus(UINT, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         SetStatusIndicators();
         return 0;
@@ -2806,10 +2806,10 @@ namespace Win32xx
 
     // Called when the frame window is resized.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSize(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnSize(UINT, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         RecalcLayout();
         return 0;
@@ -2819,10 +2819,10 @@ namespace Win32xx
     // Called in response to a WM_SYSCOLORCHANGE message. This message is sent
     // to all top-level windows when a change is made to a system color setting.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSysColorChange(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnSysColorChange(UINT, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         // Honour theme color changes
         if (GetReBar().IsWindow())
@@ -2877,19 +2877,19 @@ namespace Win32xx
     // Called in response to a WM_SYSCOMMAND notification. This notification
     // is passed on to the MenuBar to process alt keys and maximise or restore.
     template <class T>
-    inline LRESULT CFrameT<T>::OnSysCommand(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnSysCommand(UINT, WPARAM wparam, LPARAM lparam)
     {
-        if ((SC_KEYMENU == wParam) && (VK_SPACE != lParam) && GetMenuBar().IsWindow())
+        if ((SC_KEYMENU == wparam) && (VK_SPACE != lparam) && GetMenuBar().IsWindow())
         {
-            GetMenuBar().OnSysCommand(WM_SYSCOMMAND, wParam, lParam);
+            GetMenuBar().OnSysCommand(WM_SYSCOMMAND, wparam, lparam);
             return 0;
         }
 
-        if (SC_MINIMIZE == wParam)
+        if (SC_MINIMIZE == wparam)
             m_hOldFocus = ::GetFocus();
 
         // Pass remaining system commands on for default processing
-        return T::FinalWindowProc(WM_SYSCOMMAND, wParam, lParam);
+        return T::FinalWindowProc(WM_SYSCOMMAND, wparam, lparam);
     }
 
 
@@ -2905,10 +2905,10 @@ namespace Win32xx
     // Called when the drop-down menu or submenu has been destroyed.
     // Win95 & WinNT don't support the WM_UNINITMENUPOPUP message.
     template <class T>
-    inline LRESULT CFrameT<T>::OnUnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::OnUnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         for (int nItem = static_cast<int>(m_vMenuItemData.size()) - 1; nItem >= 0; --nItem)
         {
@@ -3836,7 +3836,7 @@ namespace Win32xx
 
     // Called by the keyboard hook to update status information.
     template <class T>
-    inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int nCode, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CALLBACK CFrameT<T>::StaticKeyboardProc(int nCode, WPARAM wparam, LPARAM lparam)
     {
         TLSData* pTLSData = GetApp().GetTlsData();
         HWND hFrame = pTLSData->hMainWnd;
@@ -3845,7 +3845,7 @@ namespace Win32xx
 
         if (HC_ACTION == nCode)
         {
-            if ((wParam ==  VK_CAPITAL) || (wParam == VK_NUMLOCK) || (wParam == VK_SCROLL))
+            if ((wparam ==  VK_CAPITAL) || (wparam == VK_NUMLOCK) || (wparam == VK_SCROLL))
             {
                 pFrame->SetStatusIndicators();
             }
@@ -3853,7 +3853,7 @@ namespace Win32xx
 
         // The HHOOK parameter in CallNextHookEx should be supplied for Win95, Win98 and WinME.
         // The HHOOK parameter is ignored for Windows NT and above.
-        return ::CallNextHookEx(pFrame->m_KbdHook, nCode, wParam, lParam);
+        return ::CallNextHookEx(pFrame->m_KbdHook, nCode, wparam, lparam);
     }
 
 
@@ -3976,25 +3976,25 @@ namespace Win32xx
     // Provides default processing of the frame window's messages.
     // The frame's WndProc function should pass unhandled window messages to this function.
     template <class T>
-    inline LRESULT CFrameT<T>::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFrameT<T>::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_ACTIVATE:       return OnActivate(uMsg, wParam, lParam);
-        case WM_DRAWITEM:       return OnDrawItem(uMsg, wParam, lParam);
+        case WM_ACTIVATE:       return OnActivate(msg, wparam, lparam);
+        case WM_DRAWITEM:       return OnDrawItem(msg, wparam, lparam);
         case WM_ERASEBKGND:     return 0;
         case WM_HELP:           return OnHelp();
-        case WM_INITMENUPOPUP:  return OnInitMenuPopup(uMsg, wParam, lParam);
-        case WM_MENUCHAR:       return OnMenuChar(uMsg, wParam, lParam);
-        case WM_MEASUREITEM:    return OnMeasureItem(uMsg, wParam, lParam);
-        case WM_MENUSELECT:     return OnMenuSelect(uMsg, wParam, lParam);
-        case WM_SETFOCUS:       return OnSetFocus(uMsg, wParam, lParam);
-        case WM_SETTINGCHANGE:  return OnSettingChange(uMsg, wParam, lParam);
-        case WM_SIZE:           return OnSize(uMsg, wParam, lParam);
-        case WM_SYSCOLORCHANGE: return OnSysColorChange(uMsg, wParam, lParam);
-        case WM_SYSCOMMAND:     return OnSysCommand(uMsg, wParam, lParam);
-        case WM_UNINITMENUPOPUP:  return OnUnInitMenuPopup(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGED: return T::FinalWindowProc(uMsg, wParam, lParam);
+        case WM_INITMENUPOPUP:  return OnInitMenuPopup(msg, wparam, lparam);
+        case WM_MENUCHAR:       return OnMenuChar(msg, wparam, lparam);
+        case WM_MEASUREITEM:    return OnMeasureItem(msg, wparam, lparam);
+        case WM_MENUSELECT:     return OnMenuSelect(msg, wparam, lparam);
+        case WM_SETFOCUS:       return OnSetFocus(msg, wparam, lparam);
+        case WM_SETTINGCHANGE:  return OnSettingChange(msg, wparam, lparam);
+        case WM_SIZE:           return OnSize(msg, wparam, lparam);
+        case WM_SYSCOLORCHANGE: return OnSysColorChange(msg, wparam, lparam);
+        case WM_SYSCOMMAND:     return OnSysCommand(msg, wparam, lparam);
+        case WM_UNINITMENUPOPUP:  return OnUnInitMenuPopup(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED: return T::FinalWindowProc(msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_GETFRAMEVIEW:      return reinterpret_cast<LRESULT>(GetView().GetHwnd());
@@ -4002,13 +4002,13 @@ namespace Win32xx
         case UWM_GETRBTHEME:        return reinterpret_cast<LRESULT>(&GetReBarTheme());
         case UWM_GETSBTHEME:        return reinterpret_cast<LRESULT>(&GetStatusBarTheme());
         case UWM_GETTBTHEME:        return reinterpret_cast<LRESULT>(&GetToolBarTheme());
-        case UWM_DRAWRBBKGND:       return OnDrawRBBkgnd(uMsg, wParam, lParam);
-        case UWM_DRAWSBBKGND:       return OnDrawSBBkgnd(uMsg, wParam, lParam);
+        case UWM_DRAWRBBKGND:       return OnDrawRBBkgnd(msg, wparam, lparam);
+        case UWM_DRAWSBBKGND:       return OnDrawSBBkgnd(msg, wparam, lparam);
         case UWM_GETCFRAMET:        return reinterpret_cast<LRESULT>(this);
 
-        } // switch uMsg
+        } // switch msg
 
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 

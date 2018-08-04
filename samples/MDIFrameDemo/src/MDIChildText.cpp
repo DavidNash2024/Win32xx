@@ -18,32 +18,32 @@ CViewText::~CViewText()
 void CViewText::OnAttach()
 {
     //Set font
-    if (!m_Font)
+    if (!m_font)
     {
-        m_Font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+        m_font.CreateFont(16, 0, 0, 0, FW_DONTCARE, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
             CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
     }
 
-    SendMessage(WM_SETFONT, (WPARAM)m_Font.GetHandle(), 0L);
+    SendMessage(WM_SETFONT, (WPARAM)m_font.GetHandle(), 0);
 }
 
 CMDIChildText::CMDIChildText()
 {
-    m_Menu.LoadMenu(_T("MdiMenuText"));
-    SetHandles(m_Menu, NULL);
-    SetView(m_TextView);
+    m_menu.LoadMenu(_T("MdiMenuText"));
+    SetHandles(m_menu, NULL);
+    SetView(m_textView);
 }
 
 CMDIChildText::~CMDIChildText()
 {   
 }
 
-BOOL CMDIChildText::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMDIChildText::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_EDIT_COPY:
         GetView().SendMessage(WM_COPY, 0, 0);

@@ -24,11 +24,11 @@ public:
 
 protected:
     virtual void OnAttach();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     void PreCreate(CREATESTRUCT& cs);
 
 private:
-    CFont m_Font;
+    CFont m_font;
 };
 
 // Declaration of the CContainText class
@@ -39,7 +39,7 @@ public:
     ~CContainText() {}
 
 private:
-    CViewText m_ViewText;
+    CViewText m_viewText;
 };
 
 // Declaration of the CDockText class
@@ -50,7 +50,7 @@ public:
     virtual ~CDockText() {}
 
 private:
-    CContainText m_View;
+    CContainText m_view;
 
 };
 

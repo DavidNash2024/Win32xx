@@ -6,10 +6,10 @@
 #include "MainWnd.h"
 
 
-CMainWindow::CMainWindow() : m_nWindowsCreated(0)
+CMainWindow::CMainWindow() : m_windowsCount(0)
 {
     // Set the number of threads
-    m_nTestWnd = 20;
+    m_maxWindows = 20;
 
     // A couple of notes in case you're tempted to test how many threads with test windows can be created ...
 
@@ -20,26 +20,26 @@ CMainWindow::CMainWindow() : m_nWindowsCreated(0)
     // Note 4: This sample is intended as "proof of concept" only. A well written program should not require 20 GUI threads!
 }
 
-void CMainWindow::AppendText(LPCTSTR szStr)
+void CMainWindow::AppendText(LPCTSTR text)
 {
     // This function appends text to an edit control
 
     // Append Line Feed
-    LRESULT ndx = m_EditWnd.SendMessage(WM_GETTEXTLENGTH, 0, 0);
+    LRESULT ndx = m_editWnd.SendMessage(WM_GETTEXTLENGTH, 0, 0);
     if (ndx)
     {
-        m_EditWnd.SendMessage(EM_SETSEL, ndx, ndx);
-        m_EditWnd.SendMessage(EM_REPLACESEL, 0, (LPARAM) (_T("\r\n")));
+        m_editWnd.SendMessage(EM_SETSEL, ndx, ndx);
+        m_editWnd.SendMessage(EM_REPLACESEL, 0, (LPARAM) (_T("\r\n")));
     }
 
 
     // Append text
-    ndx = m_EditWnd.SendMessage(WM_GETTEXTLENGTH, 0, 0);
-    m_EditWnd.SendMessage(EM_SETSEL, ndx, ndx);
-    m_EditWnd.SendMessage(EM_REPLACESEL, 0, (LPARAM) szStr);
+    ndx = m_editWnd.SendMessage(WM_GETTEXTLENGTH, 0, 0);
+    m_editWnd.SendMessage(EM_SETSEL, ndx, ndx);
+    m_editWnd.SendMessage(EM_REPLACESEL, 0, (LPARAM)text);
 
     // Also send output to the debugger for display
-    TRACE(szStr);
+    TRACE(text);
     TRACE(_T("\n"));
 }
 
@@ -58,11 +58,11 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
     UNREFERENCED_PARAMETER(cs);
 
     // Create the Edit child window to display text
-    m_EditWnd.Create(*this);
+    m_editWnd.Create(*this);
 
 
     // Create each CMyThread object
-    for (int i = 1 ; i <= m_nTestWnd ; i++)
+    for (int i = 1 ; i <= m_maxWindows ; i++)
     {
         CMyThread* pMyThread = new CMyThread(i);
         m_vMyThread.push_back(pMyThread);
@@ -121,7 +121,7 @@ void CMainWindow::OnDestroy()
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
-    str.Format( _T("%d Test windows created in seperate threads"), m_nTestWnd );
+    str.Format( _T("%d Test windows created in seperate threads"), m_maxWindows );
     AppendText(str);
 }
 
@@ -129,28 +129,26 @@ void CMainWindow::OnWindowCreated()
 {
     // Message recieved when a test window is created
     CString str;
-    ++m_nWindowsCreated;
-    str.Format( _T("Created Window %d"), m_nWindowsCreated );
-    if (m_nWindowsCreated >= 455)
-        TRACE("");
+    ++m_windowsCount;
+    str.Format( _T("Created Window %d"), m_windowsCount);
     AppendText(str);
 
-    if (m_nWindowsCreated == m_nTestWnd)
+    if (m_windowsCount == m_maxWindows)
         OnAllWindowsCreated();
 }
 
-LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_WINDOWCREATED:
         OnWindowCreated();
         break;
     case WM_SIZE:
-        m_EditWnd.SetWindowPos(0, GetClientRect(), 0);
+        m_editWnd.SetWindowPos(0, GetClientRect(), 0);
         break;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

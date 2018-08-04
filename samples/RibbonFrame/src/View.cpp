@@ -8,9 +8,9 @@
 #include "resource.h"
 
 
-CView::CView() : m_PenColor(RGB(0,0,0))
+CView::CView() : m_penColor(RGB(0,0,0))
 {
-    m_Brush.CreateSolidBrush(RGB(255,255,230));
+    m_brush.CreateSolidBrush(RGB(255,255,230));
 }
 
 CView::~CView()
@@ -51,21 +51,21 @@ void CView::OnDraw(CDC& dc)
     int width = GetClientRect().Width();
     int height = GetClientRect().Height();
     memDC.CreateCompatibleBitmap(dc, width, height);
-    memDC.FillRect(GetClientRect(), m_Brush);
+    memDC.FillRect(GetClientRect(), m_brush);
 
     if (GetAllPoints().size() > 0)
     {
-        bool bDraw = false;  //Start with the pen up
-        for (UINT i = 0 ; i < GetAllPoints().size(); ++i)
+        bool isPenDown = false;  //Start with the pen up
+        for (size_t i = 0 ; i < GetAllPoints().size(); ++i)
         {
             memDC.CreatePen(PS_SOLID, 1, GetAllPoints()[i].color);
 
-            if (bDraw)
+            if (isPenDown)
                 memDC.LineTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
             else
                 memDC.MoveTo(GetAllPoints()[i].x, GetAllPoints()[i].y);
 
-            bDraw = GetAllPoints()[i].PenDown;
+			isPenDown = GetAllPoints()[i].isPenDown;
         }
     }
 
@@ -73,60 +73,60 @@ void CView::OnDraw(CDC& dc)
     dc.BitBlt(0, 0, width, height, memDC, 0, 0, SRCCOPY);
 }
 
-LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(lparam);
 
-    HDROP hDrop = (HDROP)wParam;
-    UINT nLength = DragQueryFile(hDrop, 0, 0, 0);
+    HDROP hDrop = (HDROP)wparam;
+    UINT length = DragQueryFile(hDrop, 0, 0, 0);
 
-    if (nLength > 0)
+    if (length > 0)
     {
-        CString FileName;
-        DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
-        FileName.ReleaseBuffer();
+        CString fileName;
+        DragQueryFile(hDrop, 0, fileName.GetBuffer(length), length+1);
+        fileName.ReleaseBuffer();
 
         // Send a user defined message to the frame window
-        GetParent().SendMessage(UWM_DROPFILE, (WPARAM)FileName.c_str(), 0);
+        GetParent().SendMessage(UWM_DROPFILE, (WPARAM)fileName.c_str(), 0);
 
         DragFinish(hDrop);
     }
-    return 0L;
+    return 0;
 }
 
-LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Capture mouse input.
     SetCapture();
-    GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
+    GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true, m_penColor);
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     //Release the capture on the mouse
     ReleaseCapture();
-    GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), false, m_PenColor);
+    GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), false, m_penColor);
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // hold down the left mouse button and move mouse to draw lines.
-    if ( (wParam & MK_LBUTTON) && (GetCapture() == *this) )
+    if ( (wparam & MK_LBUTTON) && (GetCapture() == *this) )
     {
         CString str;
-        str.Format( _T("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam) );
+        str.Format( _T("Draw Point:  %hd, %hd\n"), GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam) );
         TRACE(str);
 
-        DrawLine(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
-        GetDoc().StorePoint(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam), true, m_PenColor);
+        DrawLine(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
+        GetDoc().StorePoint(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam), true, m_penColor);
     }
     
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -138,23 +138,23 @@ void CView::PreCreate(CREATESTRUCT& cs)
 void CView::PreRegisterClass(WNDCLASS& wc)
 {
     // Set the background brush, class name and cursor
-    wc.hbrBackground = m_Brush;
+    wc.hbrBackground = m_brush;
     wc.lpszClassName = _T("Scribble Window");
     wc.hCursor = GetApp().LoadCursor(IDC_CURSOR1);
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_DROPFILES:      return OnDropFiles(uMsg, wParam, lParam);
-    case WM_LBUTTONDOWN:    return OnLButtonDown(uMsg, wParam, lParam);
-    case WM_MOUSEMOVE:      return OnMouseMove(uMsg, wParam, lParam);
-    case WM_LBUTTONUP:      return OnLButtonUp(uMsg, wParam, lParam);   
+    case WM_DROPFILES:      return OnDropFiles(msg, wparam, lparam);
+    case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+    case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+    case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
     }
 
     //Use the default message handling for remaining messages
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

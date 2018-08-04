@@ -181,33 +181,33 @@ LRESULT CD2DView::OnPaint(UINT, WPARAM, LPARAM)
     OnRender();
     ValidateRect();
 
-    return 0L;
+    return 0;
 }
 
-LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lParam)
+LRESULT CD2DView::OnSize(UINT, WPARAM, LPARAM lparam)
 {
-    UINT width = LOWORD(lParam);
-    UINT height = HIWORD(lParam);
+    UINT width = LOWORD(lparam);
+    UINT height = HIWORD(lparam);
     OnResize(width, height);
 
-    return 0L;
+    return 0;
 }
 
 LRESULT CD2DView::OnDisplayChange(UINT, WPARAM, LPARAM)
 {
     Invalidate();
-    return 0L;
+    return 0;
 }
         
-LRESULT CD2DView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CD2DView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_DISPLAYCHANGE:  return OnDisplayChange(uMsg, wParam, lParam);
-    case WM_SIZE:           return OnSize(uMsg, wParam, lParam);
+    case WM_DISPLAYCHANGE:  return OnDisplayChange(msg, wparam, lparam);
+    case WM_SIZE:           return OnSize(msg, wparam, lparam);
     }
 
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

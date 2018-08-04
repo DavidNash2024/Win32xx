@@ -16,13 +16,13 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc() { return m_Doc; }
-    void LoadFile(LPCTSTR str);
+    CDoc& GetDoc() { return m_doc; }
+    void LoadFile(LPCTSTR fileName);
 
-    LRESULT OnDropFile(WPARAM wParam);
+    LRESULT OnDropFile(WPARAM wparam);
 
     void OnFileExit();
-    void OnFileMRU(WPARAM wParam);
+    void OnFileMRU(WPARAM wparam);
     void OnFileNew();
     void OnFileOpen();
     void OnFileSave();
@@ -31,16 +31,16 @@ public:
     void OnPenColor();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
-    CDoc m_Doc;
-    CString m_PathName;
+    CView m_view;
+    CDoc m_doc;
+    CString m_pathName;
 
 };
 

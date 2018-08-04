@@ -143,13 +143,13 @@ namespace Win32xx
         // These functions aren't virtual, and shouldn't be overridden
         HDC   BeginPaint(PAINTSTRUCT& ps) const;
         BOOL  BringWindowToTop() const;
-        LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const;
+        LRESULT CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wparam, LPARAM lparam) const;
         BOOL  CheckDlgButton(int nIDButton, UINT uCheck) const;
         BOOL  CheckRadioButton(int nIDFirstButton, int nIDLastButton, int nIDCheckButton) const;
         CWnd  ChildWindowFromPoint(POINT pt) const;
         BOOL  ClientToScreen(POINT& pt) const;
         BOOL  ClientToScreen(RECT& rc) const;
-        LRESULT DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+        LRESULT DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const;
         HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT uFlags) const;
         HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rc, UINT uFlags) const;
         BOOL  DrawMenuBar() const;
@@ -203,18 +203,18 @@ namespace Win32xx
         void  MapWindowPoints(HWND hWndTo, LPPOINT ptArray, UINT nCount) const;
         BOOL  MoveWindow(int x, int y, int nWidth, int nHeight, BOOL Repaint = TRUE) const;
         BOOL  MoveWindow(const RECT& rc, BOOL Repaint = TRUE) const;
-        BOOL  PostMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
-        BOOL  PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
+        BOOL  PostMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
+        BOOL  PostMessage(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
         BOOL  RedrawWindow(const RECT& rcUpdate, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
         BOOL  RedrawWindow(HRGN hRgn, UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
         BOOL  RedrawWindow(UINT flags = RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN) const;
         int   ReleaseDC(HDC hDC) const;
         BOOL  ScreenToClient(POINT& Point) const;
         BOOL  ScreenToClient(RECT& rc) const;
-        LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const;
-        LRESULT SendMessage(UINT uMsg, WPARAM wParam = 0, LPARAM lParam = 0) const;
-        LRESULT SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const;
-        BOOL  SendNotifyMessage(UINT Msg, WPARAM wParam, LPARAM lParam) const;
+        LRESULT SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wparam, LPARAM lparam) const;
+        LRESULT SendMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
+        LRESULT SendMessage(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
+        BOOL  SendNotifyMessage(UINT Msg, WPARAM wparam, LPARAM lparam) const;
         CWnd  SetActiveWindow() const;
         CWnd  SetCapture() const;
         ULONG_PTR SetClassLongPtr(int nIndex, LONG_PTR dwNewLong) const;
@@ -288,9 +288,9 @@ namespace Win32xx
 
     protected:
         // Override these functions as required
-        virtual LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void OnAttach();
-        virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+        virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
         virtual void OnClose();
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
@@ -298,17 +298,17 @@ namespace Win32xx
         virtual BOOL OnEraseBkgnd(CDC& dc);
         virtual void OnInitialUpdate();
         virtual void OnMenuUpdate(UINT nID);
-        virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
         virtual BOOL PreTranslateMessage(MSG& Msg);
-        virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
         // Not intended to be overridden
-        virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         HWND m_hWnd;                    // handle to this object's window
 
@@ -317,11 +317,11 @@ namespace Win32xx
         CWnd& operator = (const CWnd&); // Disable assignment operator
         CWnd(HWND hWnd);                // Private constructor used internally
 
-        static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+        static LRESULT CALLBACK StaticWindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
         void AddToMap();
         void Cleanup();
-        LRESULT MessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT MessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
         BOOL RegisterClass(WNDCLASS& wc);
         BOOL RemoveFromMap();
         void Subclass(HWND hWnd);

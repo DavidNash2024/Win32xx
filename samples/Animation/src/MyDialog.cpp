@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
@@ -21,15 +21,15 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
         //Additional messages to be handled go here
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 BOOL CMyDialog::OnInitDialog()
@@ -38,10 +38,10 @@ BOOL CMyDialog::OnInitDialog()
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
 
-    AttachItem(IDC_ANIMATE1, m_Animation);
+    AttachItem(IDC_ANIMATE1, m_animation);
 
-    m_Animation.Open(MAKEINTRESOURCE(IDA_UPLOAD_AVI));
-    m_Animation.Play(0, -1, -1);
+    m_animation.Open(MAKEINTRESOURCE(IDA_UPLOAD_AVI));
+    m_animation.Play(0, -1, -1);
 
     return TRUE;
 }

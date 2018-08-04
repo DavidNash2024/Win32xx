@@ -19,38 +19,38 @@ public:
 
     void    ChooseHelpTopic();
     CString CreateAppDataFolder(const CString& subfolder);
-    CDoc&   GetDoc()    { return m_Doc; }
+    CDoc&   GetDoc()    { return m_doc; }
     UINT    GetIDFromCursorPos();
     void    OnF1();
     void    OnFileExit();
     void    OnShiftF1();
-    void    OnUpdateCheckA(UINT nID);
-    void    OnUpdateCheckB(UINT nID);
-    void    OnUpdateCheckC(UINT nID);
-    void    OnUpdateRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nID);
-    void    ShowHelpTopic(UINT nID);
+    void    OnUpdateCheckA(UINT id);
+    void    OnUpdateCheckB(UINT id);
+    void    OnUpdateCheckC(UINT id);
+    void    OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
+    void    ShowHelpTopic(UINT id);
 
 protected:
-    virtual BOOL    LoadRegistrySettings(LPCTSTR szKeyName);
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    LoadRegistrySettings(LPCTSTR keyName);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
-    virtual void    OnMenuUpdate(UINT nID);
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual void    OnMenuUpdate(UINT id);
+    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual BOOL    SaveRegistrySettings();
     virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     void    NotImplemented() const;
 
-    CView       m_View;
-    CDoc        m_Doc;
-    CAppHelp    m_AppHelp;  // Help object for context help and help about dialog
-    BOOL        m_IsChoosing;
+    CView       m_view;
+    CDoc        m_doc;
+    CAppHelp    m_appHelp;  // Help object for context help and help about dialog
+    BOOL        m_isChoosing;
 };
 
 

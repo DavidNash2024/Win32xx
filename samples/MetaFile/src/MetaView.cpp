@@ -14,21 +14,21 @@ int CMetaView::OnCreate(CREATESTRUCT&)
     SetWindowText(LoadString(IDW_MAIN));
 
 
-    CEnhMetaFileDC dcMeta;
+    CEnhMetaFileDC metaDC;
     // Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
-    dcMeta.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
+	metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
     
     // Draw to the Metafile device context
-    dcMeta.Rectangle(0, 0, 100, 100);
-    dcMeta.MoveTo(0, 0);
-    dcMeta.LineTo(100, 100);
-    dcMeta.MoveTo(0, 100);
-    dcMeta.LineTo(100, 0);
-    dcMeta.CreateSolidBrush(RGB(0, 255, 0));
-    dcMeta.Ellipse(20, 20, 80, 80);
+	metaDC.Rectangle(0, 0, 100, 100);
+	metaDC.MoveTo(0, 0);
+	metaDC.LineTo(100, 100);
+	metaDC.MoveTo(0, 100);
+	metaDC.LineTo(100, 0);
+	metaDC.CreateSolidBrush(RGB(0, 255, 0));
+	metaDC.Ellipse(20, 20, 80, 80);
 
     // Close the metafile. The CEnhMetaFile is now ready for use.
-    m_EnhMetaFile = dcMeta.CloseEnhanced();
+    m_enhMetaFile = metaDC.CloseEnhanced();
 
     return 0;
 }
@@ -50,7 +50,7 @@ void CMetaView::OnDraw(CDC& dc)
         for (int y = 0; y < 10; y++)
         {
             dc.SetWindowOrgEx(-100 * x, -100 * y, NULL);        
-            dc.PlayMetaFile(m_EnhMetaFile, rc);
+            dc.PlayMetaFile(m_enhMetaFile, rc);
         }
     }
 }
@@ -60,15 +60,15 @@ void CMetaView::OnDestroy()
     PostQuitMessage(0);
 }
 
-LRESULT CMetaView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMetaView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_SIZE:
         RedrawWindow();
         return 0;
     }
         
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

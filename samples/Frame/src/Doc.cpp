@@ -3,17 +3,17 @@
 #include "Doc.h"
 
 
-BOOL CDoc::FileLoad(LPCTSTR szFilename)
+BOOL CDoc::FileLoad(LPCTSTR filename)
 {
-    BOOL bResult = FALSE;
+    BOOL result = FALSE;
 
     // Return CDoc data to default
 
     try
     {
-        CArchive ar(szFilename, CArchive::load);
+        CArchive ar(filename, CArchive::load);
         ar >> *this;        // Uses the Serialize function
-        bResult = TRUE;
+        result = TRUE;
     }
 
     catch (const CFileException &e)
@@ -24,18 +24,18 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
         // Return CDoc data to default
     }
 
-    return bResult;
+    return result;
 }
 
-BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
+BOOL CDoc::FileStore(LPCTSTR /* filename */)
 {
-    BOOL bResult = FALSE;
+    BOOL result = FALSE;
 
 //  try
 //  {
-//      CArchive ar(szFilename, CArchive::store);
+//      CArchive ar(filename, CArchive::store);
 //      ar << *this;        // Uses the Serialize function
-//      bResult = TRUE;
+//      result = TRUE;
 //  }
 //  catch (const CFileException &e)
 //  {
@@ -43,7 +43,7 @@ BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 //      ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
 //  }
 
-    return bResult;
+    return result;
 }
 
 void CDoc::Serialize(CArchive& /* ar */)
@@ -53,12 +53,12 @@ void CDoc::Serialize(CArchive& /* ar */)
 //  if (ar.IsStoring())
 //  {
 //      // Store data in archive
-//      ar << m_MemberVariable;
+//      ar << m_memberVariable;
 //  }
 //  else
 //  {
 //      // Load data from archive
-//      ar >> m_MemberVariable;
+//      ar >> m_memberVariable;
 //  }
 
 }

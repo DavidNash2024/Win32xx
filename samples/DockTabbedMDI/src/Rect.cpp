@@ -21,71 +21,71 @@ void CViewRect::OnDestroy()
     KillTimer(1);
 }
 
-LRESULT CViewRect::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
 {
     SetFocus();
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CViewRect::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
+    UNREFERENCED_PARAMETER(msg);
 
     // If not minimized, save the window size
-    if (wParam != SIZE_MINIMIZED)
+    if (wparam != SIZE_MINIMIZED)
     {
-        m_cxClientMax = LOWORD (lParam) ;
+        m_cxClientMax = LOWORD (lparam) ;
         if (m_cxClientMax < 1)
             m_cxClientMax = 1;
 
-        m_cyClientMax = HIWORD (lParam) ;
+        m_cyClientMax = HIWORD (lparam) ;
         if (m_cyClientMax < 1)
             m_cyClientMax = 1;
     }
 
-    return 0L;
+    return 0;
 }
 
-LRESULT CViewRect::OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::OnTimer(UINT msg, WPARAM wparam, LPARAM lparam)
 // Display a random rectangle
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(wParam);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(wparam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    int nRed, nGreen, nBlue;
-    int xLeft, xRight, yTop, yBottom;
-    xLeft   = rand () % m_cxClientMax;
-    xRight  = rand () % m_cxClientMax;
-    yTop    = rand () % m_cyClientMax;
-    yBottom = rand () % m_cyClientMax;
-    nRed    = rand () & 255;
-    nGreen  = rand () & 255;
-    nBlue   = rand () & 255;
+    int red, green, blue;
+    int left, right, top, bottom;
+    left   = rand () % m_cxClientMax;
+    right  = rand () % m_cxClientMax;
+    top    = rand () % m_cyClientMax;
+    bottom = rand () % m_cyClientMax;
+    red    = rand () & 255;
+    green  = rand () & 255;
+    blue   = rand () & 255;
 
     CClientDC RectDC(*this);
-    RectDC.CreateSolidBrush (RGB (nRed, nGreen, nBlue));
+    RectDC.CreateSolidBrush (RGB (red, green, blue));
 
-    int Left   = (xLeft < xRight) ? xLeft : xRight;
-    int Top    = (yTop < yBottom) ? yTop  : yBottom;
-    int Right  = (xLeft > xRight) ? xLeft : xRight;
-    int Bottom = (yTop > yBottom) ? yTop  : yBottom;
-    RectDC.Rectangle(Left, Top, Right, Bottom);
+    int rcLeft   = (left < right) ? left : right;
+    int rcTop    = (top < bottom) ? top  : bottom;
+    int rcRight  = (left > right) ? left : right;
+    int rcBottom = (top > bottom) ? top  : bottom;
+    RectDC.Rectangle(rcLeft, rcTop, rcRight, rcBottom);
 
-    return 0L;
+    return 0;
 }
 
-LRESULT CViewRect::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewRect::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_MOUSEACTIVATE:  return OnMouseActivate(uMsg, wParam, lParam);
-    case WM_SIZE:           return OnSize(uMsg, wParam, lParam);
-    case WM_TIMER:          return OnTimer(uMsg, wParam, lParam);
+    case WM_MOUSEACTIVATE:  return OnMouseActivate(msg, wparam, lparam);
+    case WM_SIZE:           return OnSize(msg, wparam, lparam);
+    case WM_TIMER:          return OnTimer(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

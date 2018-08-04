@@ -18,10 +18,10 @@ public:
 
 protected:
     virtual void OnDestroy();
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     void DrawLine(int x, int y);

@@ -27,24 +27,24 @@ CView::~CView()
 CRect CView::GetImageRect()
 {
     // get width and height of picture
-    long hmWidth = 0;
-    long hmHeight = 0;
+    long width = 0;
+    long height = 0;
 
     if (m_pPicture)
     {
-        m_pPicture->get_Width(&hmWidth);
-        m_pPicture->get_Height(&hmHeight);
+        m_pPicture->get_Width(&width);
+        m_pPicture->get_Height(&height);
     }
 
     // convert himetric to pixels
     CClientDC dc(*this);
-    int nWidth  = MulDiv(hmWidth, dc.GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
-    int nHeight = MulDiv(hmHeight, dc.GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
+    int widthInPixels  = MulDiv(width, dc.GetDeviceCaps(LOGPIXELSX), HIMETRIC_INCH);
+    int heightInPixels = MulDiv(height, dc.GetDeviceCaps(LOGPIXELSY), HIMETRIC_INCH);
 
-    CRect rcImage;
-    rcImage.right = MAX(nWidth, 200);
-    rcImage.bottom = MAX(nHeight, 200);
-    return rcImage;
+    CRect imageRect;
+	imageRect.right = MAX(widthInPixels, 200);
+	imageRect.bottom = MAX(heightInPixels, 200);
+    return imageRect;
 }
 
 void CView::NewPictureFile()
@@ -58,12 +58,12 @@ void CView::NewPictureFile()
         SetScrollSizes();
     }
 
-    CMainFrame& Frame = GetPicApp().GetMainFrame();
-    Frame.SetWindowText(LoadString(IDW_MAIN).c_str());
+    CMainFrame& frame = GetPicApp().GetMainFrame();
+    frame.SetWindowText(LoadString(IDW_MAIN).c_str());
     Invalidate();
 }
 
-BOOL CView::LoadPictureFile(LPCTSTR szFile)
+BOOL CView::LoadPictureFile(LPCTSTR fileName)
 {
     if (m_pPicture)
     {
@@ -74,27 +74,27 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
     BOOL IsPictureLoaded;
 
     // Create IPicture from image file
-    if (S_OK == ::OleLoadPicturePath(TtoOLE(szFile), NULL, 0, 0,    IID_IPicture, (LPVOID *)&m_pPicture))
+    if (S_OK == ::OleLoadPicturePath(TtoOLE(fileName), NULL, 0, 0,    IID_IPicture, (LPVOID *)&m_pPicture))
     {
-        CMainFrame& Frame = GetPicApp().GetMainFrame();
-        Frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)szFile);
+        CMainFrame& frame = GetPicApp().GetMainFrame();
+        frame.SendMessage(UWM_FILELOADED, 0, (LPARAM)fileName);
         Invalidate();
         CSize size = CSize(GetImageRect().Width(), GetImageRect().Height());
         SetScrollSizes(size);
         IsPictureLoaded = TRUE;
 
-        TRACE("Succesfully loaded: "); TRACE(szFile); TRACE("\n");
+        TRACE("Succesfully loaded: "); TRACE(fileName); TRACE("\n");
     }
     else
     {
         CString str("Failed to load: ");
-        str += szFile;
+        str += fileName;
         MessageBox(str, _T("Load Picture Failed"), MB_ICONWARNING);
         TRACE(str); TRACE("\n");
 
         // Set Frame title back to default
-        CMainFrame& Frame = GetPicApp().GetMainFrame();
-        Frame.SetWindowText(LoadString(IDW_MAIN).c_str());
+        CMainFrame& frame = GetPicApp().GetMainFrame();
+        frame.SetWindowText(LoadString(IDW_MAIN).c_str());
         SetScrollSizes();
         IsPictureLoaded = FALSE;
     }
@@ -105,11 +105,11 @@ BOOL CView::LoadPictureFile(LPCTSTR szFile)
 int CView::OnCreate(CREATESTRUCT& cs)
 {
     // Set the window background to black
-    m_Brush.CreateSolidBrush(RGB(0,0,0));
-    SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
+    m_brush.CreateSolidBrush(RGB(0,0,0));
+    SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_brush.GetHandle());
 
     // Set a black background brush for scrolling. 
-    SetScrollBkgnd(m_Brush);
+    SetScrollBkgnd(m_brush);
 
     // Support Drag and Drop on this window
     DragAcceptFiles(TRUE);
@@ -122,32 +122,32 @@ void CView::OnDraw(CDC& dc)
     if (m_pPicture)
     {
         // get width and height of picture
-        long hmWidth;
-        long hmHeight;
-        m_pPicture->get_Width(&hmWidth);
-        m_pPicture->get_Height(&hmHeight);
+        long width;
+        long height;
+        m_pPicture->get_Width(&width);
+        m_pPicture->get_Height(&height);
 
         // convert himetric to pixels
-        int nWidth = MulDiv(hmWidth, GetDeviceCaps(dc, LOGPIXELSX), HIMETRIC_INCH);
-        int nHeight = MulDiv(hmHeight, GetDeviceCaps(dc, LOGPIXELSY), HIMETRIC_INCH);
+        int widthInPixels = MulDiv(width, GetDeviceCaps(dc, LOGPIXELSX), HIMETRIC_INCH);
+        int HeightInPixels = MulDiv(height, GetDeviceCaps(dc, LOGPIXELSY), HIMETRIC_INCH);
 
         // Render the picture to the DC
-        m_pPicture->Render(dc, 0, 0, nWidth, nHeight, 0, hmHeight, hmWidth, -hmHeight, NULL);
+        m_pPicture->Render(dc, 0, 0, widthInPixels, HeightInPixels, 0, height, width, -height, NULL);
     }
 }
 
-LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(lparam);
 
-    HDROP hDrop = (HDROP)wParam;
-    UINT nLength = DragQueryFile(hDrop, 0, 0, 0);
+    HDROP hDrop = (HDROP)wparam;
+    UINT length = DragQueryFile(hDrop, 0, 0, 0);
 
-    if (nLength > 0)
+    if (length > 0)
     {
         CString FileName;
-        DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
+        DragQueryFile(hDrop, 0, FileName.GetBuffer(length), length +1);
         FileName.ReleaseBuffer();
 
         if ( !LoadPictureFile(FileName) )
@@ -156,7 +156,7 @@ LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
         DragFinish(hDrop);
     }
     
-    return 0L;
+    return 0;
 }
 
 void CView::PreCreate(CREATESTRUCT& cs)
@@ -170,7 +170,7 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-void CView::SavePicture(LPCTSTR szFile)
+void CView::SavePicture(LPCTSTR fileName)
 {
     // get a IPictureDisp interface from your IPicture pointer
     IPictureDisp *pDisp = NULL;
@@ -178,20 +178,20 @@ void CView::SavePicture(LPCTSTR szFile)
     if (SUCCEEDED(m_pPicture->QueryInterface(IID_IPictureDisp,  (void**) &pDisp)))
     {
         // Save the IPicture image as a bitmap
-        OleSavePictureFile(pDisp,  TtoBSTR(szFile));
+        OleSavePictureFile(pDisp,  TtoBSTR(fileName));
         pDisp->Release();
     }
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_DROPFILES:          return OnDropFiles(uMsg, wParam, lParam);
+    case WM_DROPFILES:          return OnDropFiles(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

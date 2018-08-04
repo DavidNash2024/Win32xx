@@ -215,7 +215,7 @@ namespace Win32xx
         HBITMAP CreateDIBSection(HDC hdc, const LPBITMAPINFO pbmi, UINT uColorUse, LPVOID* pBits, HANDLE hSection, DWORD dwOffset);
 
 #ifndef _WIN32_WCE
-        void    ConvertToDisabled(COLORREF clrMask) const;
+        void    ConvertToDisabled(COLORREF mask) const;
         HBITMAP CreateDIBitmap(HDC hdc, const BITMAPINFOHEADER* pbmih, DWORD dwInit, LPCVOID pbInit, const LPBITMAPINFO pbmi, UINT uColorUse);
         HBITMAP CreateMappedBitmap(UINT nIDBitmap, UINT nFlags = 0, LPCOLORMAP lpColorMap = NULL, int nMapSize = 0);
         HBITMAP CreateBitmapIndirect(const BITMAP& Bitmap);
@@ -525,7 +525,7 @@ namespace Win32xx
 
         // Wrappers for WinAPI functions
 #ifndef _WIN32_WCE
-        int EnumObjects(int nObjectType, GOBJENUMPROC lpObjectFunc, LPARAM lParam) const;
+        int EnumObjects(int nObjectType, GOBJENUMPROC lpObjectFunc, LPARAM lparam) const;
 #endif
 
         // Point and Line Drawing Functions
@@ -606,7 +606,7 @@ namespace Win32xx
 
         // Bitmap Functions
         BOOL BitBlt(int x, int y, int nWidth, int nHeight, HDC hdcSrc, int xSrc, int ySrc, DWORD dwRop) const;
-        void DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF clrMask) const;
+        void DrawBitmap(int x, int y, int cx, int cy, HBITMAP hbmImage, COLORREF mask) const;
         BOOL MaskBlt(int nXDest, int nYDest, int nWidth, int nHeight, HDC hdcSrc,
                            int nXSrc, int nYSrc, HBITMAP hbmMask, int xMask, int  yMask,
                            DWORD dwRop) const;
@@ -1410,10 +1410,10 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     // Rapidly converts the bitmap image to pale grayscale image suitable for disabled icons.
-    // The clrMask is the transparent color. Pixels with this color are not converted.
+    // The mask is the transparent color. Pixels with this color are not converted.
     // Supports 32 bit, 24 bit, 16 bit and 8 bit colors.
-    // For 16 and 8 bit colors, ensure the clrMask is a color in the current palette.
-    inline void CBitmap::ConvertToDisabled(COLORREF clrMask) const
+    // For 16 and 8 bit colors, ensure the mask is a color in the current palette.
+    inline void CBitmap::ConvertToDisabled(COLORREF mask) const
     {
         BITMAP bm = GetBitmapData();
 
@@ -1447,9 +1447,9 @@ namespace Win32xx
                 Index = yOffset + xOffset;
 
                 // skip for colors matching the mask
-                if ((bits[Index + 0] != GetRValue(clrMask)) &&
-                    (bits[Index + 1] != GetGValue(clrMask)) &&
-                    (bits[Index + 2] != GetBValue(clrMask)))
+                if ((bits[Index + 0] != GetRValue(mask)) &&
+                    (bits[Index + 1] != GetGValue(mask)) &&
+                    (bits[Index + 2] != GetBValue(mask)))
                 {
                     BYTE byGray = BYTE(95 + (bits[Index + 2] * 3 + bits[Index + 1] * 6 + bits[Index + 0]) / 20);
                     bits[Index] = byGray;
@@ -2631,10 +2631,10 @@ namespace Win32xx
     // Enumerates the pens or brushes available for the device context. This function calls
     // the application-defined callback function once for each available object, supplying
     // data describing that object.
-    inline int CDC::EnumObjects(int nObjectType, GOBJENUMPROC lpObjectFunc, LPARAM lParam) const
+    inline int CDC::EnumObjects(int nObjectType, GOBJENUMPROC lpObjectFunc, LPARAM lparam) const
     {
         assert(m_pData->hDC);
-        return ::EnumObjects(m_pData->hDC, nObjectType, lpObjectFunc, lParam);
+        return ::EnumObjects(m_pData->hDC, nObjectType, lpObjectFunc, lparam);
     }
 
 #endif
@@ -2694,11 +2694,11 @@ namespace Win32xx
 
     // Draws the specified bitmap to the specified DC using the mask colour provided as the transparent colour
     // Suitable for use with a Window DC or a memory DC
-    inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP hBitmap, COLORREF clrMask) const
+    inline void CDC::DrawBitmap(int x, int y, int cx, int cy, HBITMAP hBitmap, COLORREF mask) const
     {
         // Create the Image memory DC
         CMemDC dcImage(*this);
-        dcImage.SetBkColor(clrMask);
+        dcImage.SetBkColor(mask);
         ::SelectObject(dcImage, hBitmap);
 
         // Create the Mask memory DC

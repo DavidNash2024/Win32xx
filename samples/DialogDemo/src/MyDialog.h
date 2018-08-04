@@ -13,16 +13,16 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
-    CMyDialog(LPCTSTR lpszResName);
-    void SetStatic(LPCTSTR szString);
+    CMyDialog(UINT resID);
+    CMyDialog(LPCTSTR resName);
+    void SetStatic(LPCTSTR text);
     virtual ~CMyDialog();
 
 protected:
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 private:
@@ -30,12 +30,12 @@ private:
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
-    BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
-    CRichEdit   m_RichEdit;
-    CMyButton   m_Button;
-    CHyperlink  m_Hyperlink;
-    CListBox    m_ListBox;
+    CRichEdit   m_richEdit;
+    CMyButton   m_button;
+    CHyperlink  m_hyperlink;
+    CListBox    m_listBox;
 };
 
 #endif //MYDIALOG_H

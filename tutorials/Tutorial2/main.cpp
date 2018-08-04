@@ -27,13 +27,13 @@ public:
     virtual BOOL InitInstance();
 
 private:
-    CView m_View;
+    CView m_view;
 };
 
 BOOL CSimpleApp::InitInstance()
 {
     // Create the Window
-    m_View.Create();
+    m_view.Create();
 
     return TRUE;
 }

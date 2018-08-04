@@ -17,8 +17,8 @@ public:
     virtual ~CMainFrame();
     
     void ConnectEvents();
-    CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_View; }
-    CEdit* GetComboEdit() const { return m_ComboboxEx.GetEdit(); }
+    CWebBrowser& GetBrowser() const { return (CWebBrowser&)m_view; }
+    CEdit* GetComboEdit() const { return m_comboboxEx.GetEdit(); }
     IConnectionPoint* GetConnectionPoint(REFIID riid);
     void OnBeforeNavigate2(DISPPARAMS* pDispParams);
     void OnCommandStateChange(DISPPARAMS* pDispParams);
@@ -47,18 +47,18 @@ public:
 
 protected:
     void AddComboBoxBand(int Listbox_Height);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CWebBrowser m_View;
-    CEventSink  m_EventSink;        // Routes event notifications from IWebBrowser
-    CMyCombo    m_ComboboxEx;
+    CWebBrowser m_view;
+    CEventSink  m_eventSink;        // Routes event notifications from IWebBrowser
+    CMyCombo    m_comboboxEx;
     DWORD       m_eventCookie;      // Token that uniquely identifies this connection
 };
 

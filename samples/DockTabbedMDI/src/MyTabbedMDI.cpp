@@ -14,10 +14,10 @@ CMyTabbedMDI::CMyTabbedMDI()
 {
 }
 
-CWnd* CMyTabbedMDI::NewMDIChildFromID(int idMDIChild)
+CWnd* CMyTabbedMDI::NewMDIChildFromID(int mdiChild)
 {
     CWnd* pView = NULL;
-    switch(idMDIChild)
+    switch(mdiChild)
     {
     case ID_MDI_CLASSES:
         pView = new CViewClasses;

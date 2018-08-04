@@ -18,10 +18,10 @@ public:
     virtual int OnCreate(CREATESTRUCT&);
     virtual void OnDraw(CDC& dc);
     virtual void OnDestroy();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CEnhMetaFile  m_EnhMetaFile;
+    CEnhMetaFile  m_enhMetaFile;
 
 };
 

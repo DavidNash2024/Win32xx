@@ -9,26 +9,26 @@
 class CViewDialog : public CDialog
 {
 public:
-    CViewDialog(UINT nResID);
+    CViewDialog(UINT resID);
     virtual ~CViewDialog();
 
 protected:
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
 private:
-    void AppendText(int nID, LPCTSTR szText);
+    void AppendText(int id, LPCTSTR text);
     void OnButton();
     void OnCheck1();
     void OnCheck2();
     void OnCheck3();
-    void OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    void OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
-    CResizer m_Resizer;
+    CResizer m_resizer;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done here to keep the IDE's class view tidy.
@@ -42,15 +42,15 @@ private:
     class CRichEdit1 : public CRichEdit {};
     class CRichEdit2 : public CRichEdit {};
     
-    CRadioA     m_RadioA; 
-    CRadioB     m_RadioB;
-    CRadioC     m_RadioC;
-    CCheckA     m_CheckA;
-    CCheckB     m_CheckB;
-    CCheckC     m_CheckC;
-    CButton1    m_Button;
-    CRichEdit1  m_RichEdit1;
-    CRichEdit2  m_RichEdit2;
+    CRadioA     m_radioA; 
+    CRadioB     m_radioB;
+    CRadioC     m_radioC;
+    CCheckA     m_checkA;
+    CCheckB     m_checkB;
+    CCheckC     m_checkC;
+    CButton1    m_button;
+    CRichEdit1  m_richEdit1;
+    CRichEdit2  m_richEdit2;
 };
 
 #endif //MYDIALOG_H

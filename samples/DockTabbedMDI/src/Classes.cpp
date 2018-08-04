@@ -21,14 +21,14 @@ CViewClasses::~CViewClasses()
     if (IsWindow()) DeleteAllItems();
 }
 
-HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
+HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
     ZeroMemory(&tvi, sizeof(TVITEM));
     tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = iImage;
-    tvi.iSelectedImage = iImage;
-    tvi.pszText = const_cast<LPTSTR>(szText);
+    tvi.iImage = image;
+    tvi.iSelectedImage = image;
+    tvi.pszText = const_cast<LPTSTR>(text);
 
     TVINSERTSTRUCT tvis;
     ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
@@ -41,15 +41,15 @@ HTREEITEM CViewClasses::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 void CViewClasses::OnAttach()
 {
     //set the image lists
-    m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bm(IDB_CLASSVIEW);
-    m_imlNormal.Add( bm, RGB(255, 0, 0) );
-    SetImageList(m_imlNormal,  LVSIL_NORMAL);
+    m_normalImages.Add( bm, RGB(255, 0, 0) );
+    SetImageList(m_normalImages,  LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
-    DWORD dwStyle = GetStyle();
-    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-    SetStyle(dwStyle);
+    DWORD style = GetStyle();
+    style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
+    SetStyle(style);
 
     DeleteAllItems();
 
@@ -85,16 +85,16 @@ void CViewClasses::PreCreate(CREATESTRUCT& cs)
     cs.lpszClass = WC_TREEVIEW;
 }
 
-LRESULT CViewClasses::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewClasses::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_MOUSEACTIVATE:
         SetFocus();
         break;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 ///////////////////////////////////////////////
@@ -104,42 +104,42 @@ CContainClasses::CContainClasses()
     SetTabText(_T("ClassView"));
     SetTabIcon(IDI_CLASSVIEW);
     SetDockCaption(_T("Class View - Docking container"));
-    SetView(m_ViewClasses);
+    SetView(m_viewClasses);
 }
 
 void CContainClasses::AddCombo()
 {
     int nComboWidth = 120;
-    CToolBar& TB = GetToolBar();
-    if (TB.CommandToIndex(IDM_FILE_SAVE) < 0) return;
+    CToolBar& tb = GetToolBar();
+    if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
     // Adjust button width and convert to separator
-    TB.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
-    TB.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
+	tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
+	tb.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
 
     // Determine the size and position of the ComboBox
-    int nIndex = TB.CommandToIndex(IDM_FILE_SAVE);
-    CRect rect = TB.GetItemRect(nIndex);
+    int index = tb.CommandToIndex(IDM_FILE_SAVE);
+    CRect rect = tb.GetItemRect(index);
 
     // Create the ComboboxEx window
-    m_ComboBoxEx.Create(TB);
-    m_ComboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
+    m_comboBoxEx.Create(tb);
+    m_comboBoxEx.SetWindowPos(NULL, rect, SWP_NOACTIVATE);
 
     // Adjust the toolbar height to accomodate the ComboBoxEx control
-    CRect rc = m_ComboBoxEx.GetWindowRect();
-    TB.SetButtonSize(rc.Height(), rc.Height());
+    CRect rc = m_comboBoxEx.GetWindowRect();
+	tb.SetButtonSize(rc.Height(), rc.Height());
 
     // Add the ComboBox's items
-    m_ComboBoxEx.AddItems();
+    m_comboBoxEx.AddItems();
 }
 
-BOOL CContainClasses::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CContainClasses::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
     // OnCommand responds to menu and and toolbar input
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_FILE_NEW:      OnFileNew();    return TRUE;
     case IDM_HELP_ABOUT:    OnHelpAbout();  return TRUE;
@@ -192,7 +192,7 @@ void CContainClasses::SetupToolBar()
 //  Definitions for the CDockClasses class
 CDockClasses::CDockClasses()
 {
-    SetView(m_Classes);
+    SetView(m_classes);
 
     // Set the width of the splitter bar
     SetBarWidth(8);

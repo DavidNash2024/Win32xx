@@ -94,16 +94,16 @@ namespace Win32xx
     protected:
         //Overridables
         virtual BOOL OnEraseBkgnd(CDC& dc);
-        virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnTBWinPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnToolBarResize(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnTBWinPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnToolBarResize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
         // Not intended to be overridden
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CReBar(const CReBar&);              // Disable copy construction
@@ -415,38 +415,38 @@ namespace Win32xx
 
 
     // Called when the left mouse button is pressed.
-    inline LRESULT CReBar::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CReBar::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        m_Orig_lParam = lParam; // Store the x,y position
+        m_Orig_lParam = lparam; // Store the x,y position
         m_IsDragging = TRUE;
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the left button is released.
-    inline LRESULT CReBar::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CReBar::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
         if (pTheme && pTheme->UseThemes && pTheme->LockMenuBand)
         {
             // Use move messages to limit the resizing of bands
-            int y = GET_Y_LPARAM(lParam);
+            int y = GET_Y_LPARAM(lparam);
 
             if (y <= GetRowHeight(0))
             {
                 // Use x,y from WM_LBUTTONDOWN for WM_LBUTTONUP position
-                lParam = m_Orig_lParam;
+                lparam = m_Orig_lParam;
             }
         }
         m_IsDragging = FALSE;
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the mouse is moved over the window.
-    inline LRESULT CReBar::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CReBar::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (m_IsDragging)
         {
@@ -455,36 +455,36 @@ namespace Win32xx
             {
                 // We want to lock the first row in place, but allow other bands to move!
                 // Use move messages to limit the resizing of bands
-                int y = GET_Y_LPARAM(lParam);
+                int y = GET_Y_LPARAM(lparam);
 
                 if (y <= GetRowHeight(0))
                     return 0;  // throw this message away
             }
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when a child toolbar window is resized.
-    inline LRESULT CReBar::OnToolBarResize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CReBar::OnToolBarResize(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        HWND hToolBar = reinterpret_cast<HWND>(wParam);
-        LPSIZE pToolBarSize = reinterpret_cast<LPSIZE>(lParam);
+        HWND hToolBar = reinterpret_cast<HWND>(wparam);
+        LPSIZE pToolBarSize = reinterpret_cast<LPSIZE>(lparam);
         int nBand = GetBand(hToolBar);
         if (nBand != -1) 
             ResizeBand(nBand, *pToolBarSize);
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when a child toolbar window is resizing.
-    inline LRESULT CReBar::OnTBWinPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CReBar::OnTBWinPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         // Adjust size for toolbars inside a rebar
         ReBarTheme* pTheme = reinterpret_cast<ReBarTheme*>(GetParent().SendMessage(UWM_GETRBTHEME, 0, 0));
@@ -623,22 +623,22 @@ namespace Win32xx
 
 
     // Provides default processing of this window's messages.
-    inline LRESULT CReBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CReBar::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
 
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_MOUSEMOVE:      return OnMouseMove(uMsg, wParam, lParam);
-        case WM_LBUTTONDOWN:    return OnLButtonDown(uMsg, wParam, lParam);
-        case WM_LBUTTONUP:      return OnLButtonUp(uMsg, wParam, lParam);
+        case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+        case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+        case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
 
         // Messages defined by Win32++
-        case UWM_TBRESIZE:  return OnToolBarResize(uMsg, wParam, lParam);
-        case UWM_TBWINPOSCHANGING:  return OnTBWinPosChanging(uMsg, wParam, lParam);
+        case UWM_TBRESIZE:  return OnToolBarResize(msg, wparam, lparam);
+        case UWM_TBWINPOSCHANGING:  return OnTBWinPosChanging(msg, wparam, lparam);
         }
 
         // pass unhandled messages on for default processing
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 } // namespace Win32xx

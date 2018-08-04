@@ -12,19 +12,19 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT id);
     virtual ~CMyDialog();
 
 protected:
     virtual void OnDestroy();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
 private:
-    CResizer m_Resizer;
-    CWebControl m_MyControl;
+    CResizer m_resizer;
+    CWebControl m_myControl;
 };
 
 #endif //MYDIALOG_H

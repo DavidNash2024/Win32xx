@@ -15,7 +15,7 @@ public:
     virtual ~CButton() {}
 
 protected:
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 };
 

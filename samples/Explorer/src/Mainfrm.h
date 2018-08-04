@@ -18,9 +18,9 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     void DoPopupMenu();
-    CMyListView& GetListView() const {return static_cast<CMyListView&>(m_RightPane.GetView());}
+    CMyListView& GetListView() const {return static_cast<CMyListView&>(m_rightPane.GetView());}
     CMyTreeView& GetTreeView() const {return static_cast<CMyTreeView&>(m_pLeftPane->GetView());}
-    BOOL GetShowHidden() {return m_ShowHidden;}
+    BOOL GetShowHidden() {return m_showHidden;}
     BOOL OnFileExit();  
     BOOL OnViewLargeIcon();
     BOOL OnViewList();
@@ -31,16 +31,16 @@ public:
 
 protected:
     virtual void OnInitialUpdate();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     CLeftPane* m_pLeftPane;
-    CRightPane m_RightPane;
-    BOOL m_ShowHidden;
+    CRightPane m_rightPane;
+    BOOL m_showHidden;
 };
 
 #endif  //MAINFRM_H

@@ -13,20 +13,20 @@ int CMainWin::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
 
-    m_Button.Create(*this);
+    m_button.Create(*this);
     return 0;
 }
 
-LRESULT CMainWin::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWin::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
         case WM_DESTROY:
             // Terminate the application.
             ::PostQuitMessage(0);
-            return 0L;
+            return 0;
     }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

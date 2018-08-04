@@ -16,61 +16,61 @@ CView::~CView()
 {
 }
 
-BOOL CView::LoadFileImage(LPCTSTR szFilename)
+BOOL CView::LoadFileImage(LPCTSTR filename)
 {
     // Only bitmap images (bmp files) can be loaded
     
-    m_bmImage.DeleteObject();
-    CSize szTotal;
+    m_image.DeleteObject();
+    CSize totalSize;
 
-    if (szFilename)
+    if (filename)
     {
-        m_bmImage.LoadImage(szFilename, LR_LOADFROMFILE);
-        if (!m_bmImage.GetHandle())
+        m_image.LoadImage(filename, LR_LOADFROMFILE);
+        if (!m_image.GetHandle())
         {
             CString str("Failed to load file:  ");
-            str += szFilename;
+            str += filename;
             MessageBox(str, _T("File Load Error"), MB_ICONWARNING);
         }
     }
 
-    if (m_bmImage.GetHandle())
+    if (m_image.GetHandle())
     {
         // Set the image scroll size
-        szTotal.cx = GetImageRect().Width();
-        szTotal.cy = GetImageRect().Height();
+		totalSize.cx = GetImageRect().Width();
+		totalSize.cy = GetImageRect().Height();
     }
     else
     {
         // Disable scrolling
-        szTotal = CSize(0, 0);
+		totalSize = CSize(0, 0);
         Invalidate();
     }
 
-    SetScrollSizes(szTotal);
-    return (m_bmImage.GetHandle()!= 0);
+    SetScrollSizes(totalSize);
+    return (m_image.GetHandle()!= 0);
 }
 
-BOOL CView::SaveFileImage(LPCTSTR pszFile)
+BOOL CView::SaveFileImage(LPCTSTR fileName)
  {
-     CFile File;
+     CFile file;
      BOOL bResult = FALSE;
      try
      {
-         File.Open(pszFile, OPEN_ALWAYS);
+         file.Open(fileName, OPEN_ALWAYS);
      
         // Create our LPBITMAPINFO object
-        CBitmapInfoPtr pbmi(m_bmImage);
+        CBitmapInfoPtr pbmi(m_image);
 
         // Create the reference DC for GetDIBits to use
-        CMemDC MemDC(NULL);
+        CMemDC memDC(NULL);
 
         // Use GetDIBits to create a DIB from our DDB, and extract the colour data
-        MemDC.GetDIBits(m_bmImage, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
+        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, NULL, pbmi, DIB_RGB_COLORS);
         std::vector<byte> vBits(pbmi->bmiHeader.biSizeImage, 0);
         byte* lpvBits = &vBits.front();
 
-        MemDC.GetDIBits(m_bmImage, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
+        memDC.GetDIBits(m_image, 0, pbmi->bmiHeader.biHeight, lpvBits, pbmi, DIB_RGB_COLORS);
 
         LPBITMAPINFOHEADER pbmih = &pbmi->bmiHeader;
         BITMAPFILEHEADER hdr;
@@ -79,11 +79,11 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
         hdr.bfSize = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof(RGBQUAD) + pbmih->biSizeImage);
         hdr.bfOffBits = static_cast<DWORD>(sizeof(BITMAPFILEHEADER) + pbmih->biSize + pbmih->biClrUsed * sizeof (RGBQUAD));
 
-        File.Write(&hdr, sizeof(BITMAPFILEHEADER));
-        File.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
-        File.Write(lpvBits, pbmih->biSizeImage);
+        file.Write(&hdr, sizeof(BITMAPFILEHEADER));
+        file.Write(pbmih, sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD));
+        file.Write(lpvBits, pbmih->biSizeImage);
 
-        if (File.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + pbmih->biSizeImage)
+        if (file.GetLength() == sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + pbmih->biClrUsed * sizeof (RGBQUAD) + pbmih->biSizeImage)
             bResult = TRUE;
      }
 
@@ -99,7 +99,7 @@ BOOL CView::SaveFileImage(LPCTSTR pszFile)
 CRect CView::GetImageRect()
 {
     BITMAP bm;
-    m_bmImage.GetObject(sizeof(BITMAP), &bm);
+    m_image.GetObject(sizeof(BITMAP), &bm);
 
     CRect rc;
     rc.right = bm.bmWidth;
@@ -110,9 +110,9 @@ CRect CView::GetImageRect()
 
 void CView::OnDraw(CDC& dc)
 {
-    if (m_bmImage.GetHandle())
+    if (m_image.GetHandle())
     {
-        dc.SelectObject(m_bmImage);
+        dc.SelectObject(m_image);
     }
     else
     {
@@ -122,32 +122,32 @@ void CView::OnDraw(CDC& dc)
     }
 }
 
-LRESULT CView::OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(lparam);
 
-    HDROP hDrop = (HDROP)wParam;
-    UINT nLength = DragQueryFile(hDrop, 0, 0, 0);
+    HDROP hDrop = (HDROP)wparam;
+    UINT length = DragQueryFile(hDrop, 0, 0, 0);
 
-    if (nLength > 0)
+    if (length > 0)
     {
-        CString FileName;
-        DragQueryFile(hDrop, 0, FileName.GetBuffer(nLength), nLength+1);
-        FileName.ReleaseBuffer();
+        CString fileName;
+        DragQueryFile(hDrop, 0, fileName.GetBuffer(length), length+1);
+        fileName.ReleaseBuffer();
         DragFinish(hDrop);
 
         CMainFrame& Frame = GetFrameApp().GetMainFrame();
 
-        if ( !Frame.LoadFile(FileName) )    
+        if ( !Frame.LoadFile(fileName) )    
         {
-            TRACE ("Failed to load "); TRACE(FileName); TRACE("\n");
+            TRACE ("Failed to load "); TRACE(fileName); TRACE("\n");
             SetScrollSizes(CSize(0,0));
             Invalidate();
         }
     }
     
-    return 0L;
+    return 0;
 }
 
 void CView::OnInitialUpdate()
@@ -170,14 +170,14 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.dwExStyle = WS_EX_CLIENTEDGE;
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_DROPFILES:          return OnDropFiles(uMsg, wParam, lParam);
+    case WM_DROPFILES:          return OnDropFiles(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -17,11 +17,11 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc() { return m_Doc; }
+    CDoc& GetDoc() { return m_doc; }
     void LoadFile(LPCTSTR str);
-    void MRUFileOpen(UINT nMRUIndex);
+    void MRUFileOpen(UINT mruIndex);
 
-    LRESULT OnDropFile(WPARAM wParam);
+    LRESULT OnDropFile(WPARAM wparam);
     void OnFileExit();
     void OnFileNew();
     void OnFileOpen();
@@ -33,16 +33,16 @@ public:
     void SetPenColor(COLORREF clr);
 
 protected:
-    virtual STDMETHODIMP Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
-    virtual STDMETHODIMP UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key, __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue);
-    BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual STDMETHODIMP Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp);
+    virtual STDMETHODIMP UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key, __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue);
+    BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
-    CDoc m_Doc;
-    CString m_PathName;
+    CView m_view;
+    CDoc m_doc;
+    CString m_pathName;
 
 };
 

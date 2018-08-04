@@ -18,13 +18,13 @@ CViewFiles::~CViewFiles()
     if (IsWindow()) DeleteAllItems();
 }
 
-int CViewFiles::AddItem(LPCTSTR szText, int nImage)
+int CViewFiles::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
     ZeroMemory(&lvi, sizeof(LVITEM));
     lvi.mask = LVIF_TEXT | LVIF_IMAGE;
-    lvi.iImage = nImage;
-    lvi.pszText = const_cast<LPTSTR>(szText);
+    lvi.iImage = image;
+    lvi.pszText = const_cast<LPTSTR>(text);
 
     return InsertItem(lvi);
 }
@@ -54,14 +54,14 @@ void CViewFiles::InsertItems()
 void CViewFiles::OnAttach()
 {
     // Set the image lists
-    m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bm(IDB_FILEVIEW);
-    m_imlSmall.Add(bm, RGB(255, 0, 255) );
-    SetImageList(m_imlSmall, LVSIL_SMALL);
+    m_smallImages.Add(bm, RGB(255, 0, 255) );
+    SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
-    DWORD dwStyle = GetStyle();
-    SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+    DWORD style = GetStyle();
+    SetStyle((style & ~LVS_TYPEMASK) | LVS_REPORT);
 
     SetColumns();
     InsertItems();
@@ -72,12 +72,12 @@ void CViewFiles::OnDestroy()
     SetImageList(NULL, LVSIL_SMALL);
 }
 
-LRESULT CViewFiles::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewFiles::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CViewFiles::SetColumns()
@@ -91,33 +91,33 @@ void CViewFiles::SetColumns()
     lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
     lvColumn.fmt = LVCFMT_LEFT;
     lvColumn.cx = 120;
-    TCHAR szString[3][20] = {_T("Name"), _T("Size"), _T("Type")};
+    TCHAR string[3][20] = {_T("Name"), _T("Size"), _T("Type")};
     for(int i = 0; i < 3; ++i)
     {
-        lvColumn.pszText = szString[i];
+        lvColumn.pszText = string[i];
         InsertColumn(i, lvColumn);
     }
 }
 
-BOOL CViewFiles::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
+BOOL CViewFiles::SetSubItem(int item, int subItem, LPCTSTR text)
 {
     LVITEM lvi1;
     ZeroMemory(&lvi1, sizeof(LVITEM));
     lvi1.mask = LVIF_TEXT;
-    lvi1.iItem = nItem;
-    lvi1.iSubItem = nSubItem;
-    lvi1.pszText = const_cast<LPTSTR>(szText);
-    return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0L, reinterpret_cast<LPARAM>(&lvi1)));
+    lvi1.iItem = item;
+    lvi1.iSubItem = subItem;
+    lvi1.pszText = const_cast<LPTSTR>(text);
+    return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)));
 }
 
-LRESULT CViewFiles::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewFiles::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(uMsg, wParam, lParam);
+    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 
@@ -128,14 +128,14 @@ CContainFiles::CContainFiles()
     SetTabText(_T("FileView"));
     SetTabIcon(IDI_FILEVIEW);
     SetDockCaption (_T("File View - Docking container"));
-    SetView(m_ViewFiles);
+    SetView(m_viewFiles);
 }
 
 /////////////////////////////////////////////////
 //  Definitions for the CDockFiles class
 CDockFiles::CDockFiles() 
 { 
-    SetView(m_Files);
+    SetView(m_files);
 
     // Set the width of the splitter bar
     SetBarWidth(8);

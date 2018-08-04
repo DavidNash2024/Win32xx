@@ -17,13 +17,13 @@ protected:
     virtual void OnInitialUpdate();
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMenuBar m_MenuBar;
-    CReBar m_ReBar;
-    CToolBar m_ToolBar;
-    CImageList m_ToolBarImages;
+    CMenuBar m_menuBar;
+    CReBar m_reBar;
+    CToolBar m_toolBar;
+    CImageList m_toolBarImages;
 };
 
 

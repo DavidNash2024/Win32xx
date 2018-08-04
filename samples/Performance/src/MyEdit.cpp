@@ -10,7 +10,7 @@ CMyEdit::CMyEdit()
 // Constructor
 {
     // Create the font for the Edit window
-    m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
                     CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 }
 
@@ -18,7 +18,7 @@ void CMyEdit::OnAttach()
 // Called after the edit window is created
 {
     // Set the font for the Edit window
-    SetFont(m_Font, FALSE);
+    SetFont(m_font, FALSE);
 }
 
 void CMyEdit::PreCreate(CREATESTRUCT& cs)

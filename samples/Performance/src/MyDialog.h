@@ -9,12 +9,12 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
 protected:
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 };

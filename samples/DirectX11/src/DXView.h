@@ -43,7 +43,7 @@ public:
 protected:
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     D3D_DRIVER_TYPE         m_driverType = D3D_DRIVER_TYPE_NULL;
@@ -61,9 +61,9 @@ private:
     ID3D11Buffer*           m_pVertexBuffer = nullptr;
     ID3D11Buffer*           m_pIndexBuffer = nullptr;
     ID3D11Buffer*           m_pConstantBuffer = nullptr;
-    XMMATRIX                m_World;
-    XMMATRIX                m_View;
-    XMMATRIX                m_Projection;
+    XMMATRIX                m_world;
+    XMMATRIX                m_view;
+    XMMATRIX                m_projection;
 
 };
 

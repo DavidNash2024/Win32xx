@@ -12,12 +12,12 @@ CAppHelp::CAppHelp()
 
 void CAppHelp::About(HWND hParent)
 {
-    m_HelpAbout.DoModal(hParent);
+    m_helpAbout.DoModal(hParent);
 }
 
-void CAppHelp::AddHelpTopic(UINT nID, LPCTSTR topic)
+void CAppHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 {
-    m_ContextHelp.AddHelpTopic(nID, topic);
+    m_contextHelp.AddHelpTopic(id, topic);
 }
 
 void CAppHelp::SetCommandHelpTopics()
@@ -84,22 +84,22 @@ void CAppHelp::SetFrameHelpTopics()
 
 void CAppHelp::SetHelpFilePath(LPCTSTR chmName)
 {
-    m_ContextHelp.SetHelpFilePath(chmName);
+    m_contextHelp.SetHelpFilePath(chmName);
 }
 
-void CAppHelp::ShowHelpTopic(UINT nID)
+void CAppHelp::ShowHelpTopic(UINT id)
 // Display the context help for the specified topic
 {
-    m_ContextHelp.ShowHelpTopic(nID);
+    m_contextHelp.ShowHelpTopic(id);
 }
 
 void CAppHelp::ShowHelpTopic(LPCTSTR topic)
 // Display the context help for the specified topic
 {
-    m_ContextHelp.ShowHelpTopic(topic);
+    m_contextHelp.ShowHelpTopic(topic);
 }
 
-void CAppHelp::SetCredits(LPCTSTR szCredits)
+void CAppHelp::SetCredits(LPCTSTR credits)
 {
-    m_HelpAbout.SetCredits(szCredits);
+    m_helpAbout.SetCredits(credits);
 }

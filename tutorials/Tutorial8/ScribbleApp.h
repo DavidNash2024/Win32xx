@@ -17,10 +17,10 @@ public:
     CScribbleApp();
     virtual ~CScribbleApp() {}
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_Frame; }
+    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
-    CMainFrame m_Frame;
+    CMainFrame m_frame;
 };
 
 // returns a reference to the CScribbleApp object

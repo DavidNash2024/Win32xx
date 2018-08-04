@@ -21,7 +21,7 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs); 
 
 private:
-    CFont m_Font;
+    CFont m_font;
 };
 
 // Declaration of the CContainText class
@@ -32,7 +32,7 @@ public:
     ~CContainOutput() {}
 
 private:
-    CViewOutput m_ViewOutput;
+    CViewOutput m_viewOutput;
 };
 
 // Declaration of the CDockText class
@@ -43,7 +43,7 @@ public:
     virtual ~CDockOutput() {}
 
 private:
-    CContainOutput m_View;
+    CContainOutput m_view;
 
 };
 

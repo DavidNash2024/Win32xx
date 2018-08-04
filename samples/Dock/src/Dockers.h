@@ -16,7 +16,7 @@ public:
     virtual ~CDockSimple() {}
 
 private:
-    CViewSimple m_View;
+    CViewSimple m_view;
 
 };
 
@@ -28,7 +28,7 @@ public:
     virtual ~CDockClasses() {}
 
 private:
-    CViewTree m_View;
+    CViewTree m_view;
 
 };
 
@@ -40,7 +40,7 @@ public:
     virtual ~CDockFiles() {}
 
 private:
-    CViewList m_View;
+    CViewList m_view;
 
 };
 
@@ -52,7 +52,7 @@ public:
     virtual ~CDockText() {}
 
 private:
-    CViewText m_View;
+    CViewText m_view;
 
 };
 

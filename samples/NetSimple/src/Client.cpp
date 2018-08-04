@@ -24,17 +24,17 @@ public:
 
 int main()
 {
-    CClientSocket Client;
+    CClientSocket client;
 
     // Create the socket to communicate with the Server
-    if (!Client.Create(AF_INET, SOCK_STREAM))
+    if (!client.Create(AF_INET, SOCK_STREAM))
     {
         cout << "Failed to create socket\n" ;
         return 0;
     }
 
     // Connect to the server
-    if (SOCKET_ERROR == Client.Connect("127.0.0.1", 3000))
+    if (SOCKET_ERROR == client.Connect("127.0.0.1", 3000))
     {
         cout << "Failed to connect to server. Was it running?\n";
         return 0;
@@ -43,7 +43,7 @@ int main()
     cout << "Type data to send, type quit to exit\n";
 
     // Monitor the client socket for network events, such as data ready to receive
-    Client.StartEvents();
+    client.StartEvents();
 
     // Send data to the server
     string s;
@@ -51,7 +51,7 @@ int main()
     {
         getline(cin, s);
         if (s == "quit") break;
-        int i = Client.Send(s.c_str(), static_cast<int>(s.length()), 0);
+        int i = client.Send(s.c_str(), static_cast<int>(s.length()), 0);
         cout << "Sending  " << i << " characters\n";
     }
 

@@ -9,7 +9,7 @@
 
 
 // Definitions for the CView class
-CView::CView(UINT nResID) : CDialog(nResID), m_hParent(0)
+CView::CView(UINT resID) : CDialog(resID), m_hParent(0)
 {
 }
 
@@ -23,17 +23,17 @@ HWND CView::Create(HWND hParent = 0)
     return DoModeless(hParent);
 }
 
-INT_PTR CView::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CView::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    m_Resizer.HandleMessage(uMsg, wParam, lParam);
+    m_resizer.HandleMessage(msg, wparam, lparam);
 
-//  switch (uMsg)                                                           
+//  switch (msg)                                                           
 //  {                                                                       
 //      Add case statements for each message to be handled here
 //  }               
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 CDoc& CView::GetDoc()
@@ -61,10 +61,10 @@ void CView::OnClose()
     // An edit control will send WM_CLOSE to the dialog if the Esc button is pressed.
 }
 
-BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
-    WORD nID = LOWORD(wParam);
+    UNREFERENCED_PARAMETER(lparam);
+    WORD nID = LOWORD(wparam);
 
     switch (nID)
     {
@@ -88,20 +88,20 @@ BOOL CView::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Attach CWnd objects to the dialog items
-    AttachItem(IDC_BUTTON1, m_Button);
-    AttachItem(ID_CHECK_A,  m_CheckA);
-    AttachItem(ID_CHECK_B,  m_CheckB);
-    AttachItem(ID_CHECK_C,  m_CheckC);
-    AttachItem(IDC_EDIT1,   m_Edit);
-    AttachItem(IDC_LIST1,   m_ListBox);
-    AttachItem(IDOK,    m_OK);
-    AttachItem(ID_RADIO_A,  m_RadioA);
-    AttachItem(ID_RADIO_B,  m_RadioB);
-    AttachItem(ID_RADIO_C,  m_RadioC);
-    AttachItem(IDC_RICHEDIT1, m_RichEdit);
-    AttachItem(IDC_GROUP1,  m_Group);
-    AttachItem(IDC_STATUS,  m_Status);
-    AttachItem(IDC_BITMAP1, m_Picture);
+    AttachItem(IDC_BUTTON1, m_button);
+    AttachItem(ID_CHECK_A,  m_checkA);
+    AttachItem(ID_CHECK_B,  m_checkB);
+    AttachItem(ID_CHECK_C,  m_checkC);
+    AttachItem(IDC_EDIT1,   m_edit);
+    AttachItem(IDC_LIST1,   m_listBox);
+    AttachItem(IDOK,    m_ok);
+    AttachItem(ID_RADIO_A,  m_radioA);
+    AttachItem(ID_RADIO_B,  m_radioB);
+    AttachItem(ID_RADIO_C,  m_radioC);
+    AttachItem(IDC_RICHEDIT1, m_richEdit);
+    AttachItem(IDC_GROUP1,  m_group);
+    AttachItem(IDC_STATUS,  m_status);
+    AttachItem(IDC_BITMAP1, m_picture);
     
     // Put some text in the edit boxes
     SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
@@ -110,38 +110,38 @@ BOOL CView::OnInitDialog()
     // Put some text in the list box
     for (int i = 0 ; i < 8 ; i++) 
     {
-        m_ListBox.AddString(_T("List Box"));
+        m_listBox.AddString(_T("List Box"));
     }
 
     // Set initial button states
     BOOL bCheck = GetDoc().GetCheckA();
-    m_CheckA.SetCheck(bCheck);
+    m_checkA.SetCheck(bCheck);
 
     bCheck = GetDoc().GetCheckB();
-    m_CheckB.SetCheck(bCheck);
+    m_checkB.SetCheck(bCheck);
 
     bCheck = GetDoc().GetCheckC();
-    m_CheckC.SetCheck(bCheck);
+    m_checkC.SetCheck(bCheck);
 
     UINT curRadio = GetDoc().GetRadio();
     OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, curRadio);
     
     // Initialize dialog resizing
-    m_Resizer.Initialize( *this, CRect(0, 0, 300, 270) );
-    m_Resizer.AddChild(m_RadioA,   topleft, 0);
-    m_Resizer.AddChild(m_RadioB,   topleft, 0);
-    m_Resizer.AddChild(m_RadioC,   topleft, 0);
-    m_Resizer.AddChild(m_CheckA,   topleft, 0);
-    m_Resizer.AddChild(m_CheckB,   topleft, 0);
-    m_Resizer.AddChild(m_CheckC,   topleft, 0);
-    m_Resizer.AddChild(m_Button,   topleft, 0);
-    m_Resizer.AddChild(m_Edit,     topleft, RD_STRETCH_WIDTH);
-    m_Resizer.AddChild(m_ListBox,  topleft, RD_STRETCH_WIDTH);
-    m_Resizer.AddChild(m_RichEdit, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
-    m_Resizer.AddChild(m_Picture,  topright, 0);
-    m_Resizer.AddChild(m_OK,       bottomright, 0);
-    m_Resizer.AddChild(m_Group,    bottomright, RD_STRETCH_HEIGHT);
-    m_Resizer.AddChild(m_Status,   bottomright, RD_STRETCH_HEIGHT);
+    m_resizer.Initialize( *this, CRect(0, 0, 300, 270) );
+	m_resizer.AddChild(m_radioA,   topleft, 0);
+	m_resizer.AddChild(m_radioB,   topleft, 0);
+	m_resizer.AddChild(m_radioC,   topleft, 0);
+	m_resizer.AddChild(m_checkA,   topleft, 0);
+	m_resizer.AddChild(m_checkB,   topleft, 0);
+	m_resizer.AddChild(m_checkC,   topleft, 0);
+	m_resizer.AddChild(m_button,   topleft, 0);
+	m_resizer.AddChild(m_edit,     topleft, RD_STRETCH_WIDTH);
+	m_resizer.AddChild(m_listBox,  topleft, RD_STRETCH_WIDTH);
+	m_resizer.AddChild(m_richEdit, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+	m_resizer.AddChild(m_picture,  topright, 0);
+	m_resizer.AddChild(m_ok,       bottomright, 0);
+	m_resizer.AddChild(m_group,    bottomright, RD_STRETCH_HEIGHT);
+	m_resizer.AddChild(m_status,   bottomright, RD_STRETCH_HEIGHT);
 
     return TRUE;
 }
@@ -157,10 +157,10 @@ void CView::OnOK()
 BOOL CView::OnCheckA()
 {
     TRACE("Check Box A\n");
-    BOOL bCheck = GetDoc().GetCheckA();
-    bCheck = !bCheck;  // Toggle
-    CheckDlgButton(ID_CHECK_A, bCheck);
-    GetDoc().SetCheckA(bCheck);
+    BOOL checkA = GetDoc().GetCheckA();
+	checkA = !checkA;  // Toggle
+    CheckDlgButton(ID_CHECK_A, checkA);
+    GetDoc().SetCheckA(checkA);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box A toggled"));
     return TRUE;
@@ -169,10 +169,10 @@ BOOL CView::OnCheckA()
 BOOL CView::OnCheckB()
 {
     TRACE("Check Box B\n");
-    BOOL bCheck = GetDoc().GetCheckB();
-    bCheck = !bCheck;  // Toggle
-    CheckDlgButton(ID_CHECK_B, bCheck);
-    GetDoc().SetCheckB(bCheck);
+    BOOL checkB = GetDoc().GetCheckB();
+	checkB = !checkB;  // Toggle
+    CheckDlgButton(ID_CHECK_B, checkB);
+    GetDoc().SetCheckB(checkB);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box B toggled"));
     return TRUE;
@@ -181,20 +181,20 @@ BOOL CView::OnCheckB()
 BOOL CView::OnCheckC()
 {
     TRACE("Check Box C\n");
-    BOOL bCheck = GetDoc().GetCheckC();
-    bCheck = !bCheck;  // Toggle
-    CheckDlgButton(ID_CHECK_C, bCheck);
-    GetDoc().SetCheckC(bCheck);
+    BOOL checkC = GetDoc().GetCheckC();
+	checkC = !checkC;  // Toggle
+    CheckDlgButton(ID_CHECK_C, checkC);
+    GetDoc().SetCheckC(checkC);
 
     SetDlgItemText(IDC_STATUS, _T("Check Box C toggled"));
     return TRUE;
 }
 
-BOOL CView::OnRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
+BOOL CView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
-    CheckRadioButton(nIDFirst, nIDLast, nIDClicked);
+    CheckRadioButton(idFirst, idLast, idClicked);
 
-    GetDoc().SetRadio(nIDClicked);
+    GetDoc().SetRadio(idClicked);
     SetDlgItemText(IDC_STATUS, _T("Radio changed"));
     TRACE("Radio changed\n");
     

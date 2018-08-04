@@ -13,25 +13,25 @@ public:
     virtual ~CView(){}
 
     void RecalcLayout();
-    void SetWrapState(BOOL bWrap);
+    void SetWrapState(BOOL isWrapped);
     void OnBottom();
     void OnLeft();
     void OnRight();
     void OnTop();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CToolBar m_ToolBar;
-    CImageList m_ToolBarImages;
+    CToolBar m_toolBar;
+    CImageList m_toolBarImages;
 };
 
 

@@ -39,7 +39,7 @@ CApp::~CApp()
 BOOL CApp::InitInstance()
 {
     //Create the Frame Window
-    m_Frame.Create();   // throws a CWinException on failure  
+    m_frame.Create();   // throws a CWinException on failure  
 
     return TRUE;
 }

@@ -12,20 +12,20 @@
 //
 void CServerSocket::OnDisconnect()
 {
-    CSvrDialog& Dialog = GetDlgApp().GetDialog();
-    Dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(this), 0);
+    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    dialog.PostMessage(USER_DISCONNECT, reinterpret_cast<WPARAM>(this), 0);
 }
 
 void CServerSocket::OnAccept()
 {
-    CSvrDialog& Dialog = GetDlgApp().GetDialog();
-    Dialog.PostMessage(USER_ACCEPT, 0, 0);
+    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    dialog.PostMessage(USER_ACCEPT, 0, 0);
 }
 
 void CServerSocket::OnReceive()
 {
-    CSvrDialog& Dialog = GetDlgApp().GetDialog();
-    Dialog.PostMessage(USER_RECEIVE, reinterpret_cast<WPARAM>(this), 0);
+    CSvrDialog& dialog = GetDlgApp().GetDialog();
+    dialog.PostMessage(USER_RECEIVE, reinterpret_cast<WPARAM>(this), 0);
 }
 
 

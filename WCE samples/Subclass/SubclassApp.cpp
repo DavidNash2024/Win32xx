@@ -14,7 +14,7 @@ BOOL CSubclassApp::InitInstance()
     TRACE("Move the mouse over the button to see messages");
 
     //Create the Outer Window
-    m_Win.Create();
+    m_win.Create();
 
     return TRUE;
 }

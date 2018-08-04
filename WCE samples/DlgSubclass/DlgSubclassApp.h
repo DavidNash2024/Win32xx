@@ -14,10 +14,10 @@ public:
     CDlgSubclassApp();
     virtual ~CDlgSubclassApp();
     virtual BOOL InitInstance();
-    CMyDialog& GetDialog() {return m_MyDialog;}
+    CMyDialog& GetDialog() {return m_myDialog;}
 
 private:
-    CMyDialog m_MyDialog;
+    CMyDialog m_myDialog;
 };
 
 

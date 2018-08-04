@@ -7,9 +7,9 @@
 
 
 // definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_PrintPreview(IDD_PRINTPREVIEW), m_IsWrapped(FALSE)
+CMainFrame::CMainFrame() : m_printPreview(IDD_PRINTPREVIEW), m_isWrapped(FALSE)
 {
-    SetView(m_RichView);
+    SetView(m_richView);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -29,22 +29,22 @@ CRect CMainFrame::GetPageRect()
     CRect rcPage;
 
     // Get the device contect of the default or currently chosen printer
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    CDC dcPrinter = PrintDlg.GetPrinterDC();
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CDC dcPrinter = printDlg.GetPrinterDC();
 
     // Get the printer page specifications
-    int nHorizRes = dcPrinter.GetDeviceCaps(HORZRES);
-    int nVertRes = dcPrinter.GetDeviceCaps(VERTRES);
-    int nLogPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);
-    int nLogPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);
+    int horizRes = dcPrinter.GetDeviceCaps(HORZRES);
+    int vertRes = dcPrinter.GetDeviceCaps(VERTRES);
+    int logPixelsX = dcPrinter.GetDeviceCaps(LOGPIXELSX);
+    int logPixelsY = dcPrinter.GetDeviceCaps(LOGPIXELSY);
 
     int margin = 200;   // 1440 TWIPS = 1 inch.
     int tpi = 1440;     // twips per inch 
 
     rcPage.left = margin;
     rcPage.top = margin;
-    rcPage.right = (nHorizRes / nLogPixelsX) * tpi - margin;
-    rcPage.bottom = (nVertRes / nLogPixelsY) * tpi - margin;
+    rcPage.right = (horizRes / logPixelsX) * tpi - margin;
+    rcPage.bottom = (vertRes / logPixelsY) * tpi - margin;
 
     return rcPage;
 }
@@ -68,27 +68,27 @@ CRect CMainFrame::GetPrintRect()
     return rcPrintArea;
 }
 
-DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
+DWORD CALLBACK CMainFrame::MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamIn
     if (!cb)
         return (1);
 
     *pcb = 0;
-    if (!::ReadFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
+    if (!::ReadFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
         ::MessageBox(NULL, _T("ReadFile Failed"), _T(""), MB_OK);
 
     return 0;
 }
 
-DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb)
+DWORD CALLBACK CMainFrame::MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb)
 {
     // Required for StreamOut
     if (!cb)
         return (1);
 
     *pcb = 0;
-    if (!::WriteFile((HANDLE)(DWORD_PTR)dwCookie, pbBuff, cb, (LPDWORD)pcb, NULL))
+    if (!::WriteFile((HANDLE)(DWORD_PTR)cookie, pBuffer, cb, (LPDWORD)pcb, NULL))
         ::MessageBox(NULL, _T("WriteFile Failed"), _T(""), MB_OK);
     return 0;
 }
@@ -104,11 +104,11 @@ void CMainFrame::OnClose()
     CFrame::OnClose();
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch (nID)
     {
     case IDM_FILE_NEW:          return OnFileNew();
@@ -136,7 +136,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     case IDW_FILE_MRU_FILE2:
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
-    case IDW_FILE_MRU_FILE5:    return OnFileMRU(wParam);
+    case IDW_FILE_MRU_FILE5:    return OnFileMRU(wparam);
     }
 
     return FALSE;
@@ -160,7 +160,7 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 
     // Create the PrintPreview dialog. It is initially hidden.  
-    m_PrintPreview.Create(*this);
+    m_printPreview.Create(*this);
 
     // call the base class function
     return  CFrame::OnCreate(cs);
@@ -168,15 +168,15 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 
 BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 {
-    TCHAR szFileName[_MAX_PATH];
-    ::DragQueryFile(hDropInfo, 0, szFileName, _MAX_PATH);
+    TCHAR fileName[_MAX_PATH];
+    ::DragQueryFile(hDropInfo, 0, fileName, _MAX_PATH);
 
-    if (ReadFile(szFileName))
+    if (ReadFile(fileName))
     {
-        m_PathName = szFileName;
-        ReadFile(szFileName);
+        m_pathName = fileName;
+        ReadFile(fileName);
         SetWindowTitle();
-        AddMRUEntry(szFileName);
+        AddMRUEntry(fileName);
     }
 
     return TRUE;
@@ -184,37 +184,37 @@ BOOL CMainFrame::OnDropFiles(HDROP hDropInfo)
 
 BOOL CMainFrame::OnEditCut()
 {
-    m_RichView.Cut();
+    m_richView.Cut();
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditCopy()
 {
-    m_RichView.Copy();
+    m_richView.Copy();
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditPaste()
 {
-    m_RichView.PasteSpecial(CF_TEXT);
+    m_richView.PasteSpecial(CF_TEXT);
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditDelete()
 {
-    m_RichView.Clear();
+	m_richView.Clear();
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditRedo()
 {
-    m_RichView.Redo();
+	m_richView.Redo();
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditUndo()
 {
-    m_RichView.Undo();
+	m_richView.Undo();
     return TRUE;
 }
 
@@ -225,15 +225,15 @@ BOOL CMainFrame::OnFileExit()
     return TRUE;
 }
 
-BOOL CMainFrame::OnFileMRU(WPARAM wParam)
+BOOL CMainFrame::OnFileMRU(WPARAM wparam)
 {
-    UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-    CString strMRUText = GetMRUEntry(nMRUIndex);
+    UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+    CString mruText = GetMRUEntry(mruIndex);
 
-    if (ReadFile(strMRUText))
-        m_PathName = strMRUText;
+    if (ReadFile(mruText))
+        m_pathName = mruText;
     else
-        RemoveMRUEntry(strMRUText);
+        RemoveMRUEntry(mruText);
 
     SetWindowTitle();
     return TRUE;
@@ -244,27 +244,27 @@ BOOL CMainFrame::OnFileNew()
     //Check for unsaved text
     SaveModifiedText();
 
-    m_RichView.SetWindowText(_T(""));
-    m_PathName.Empty();
+    m_richView.SetWindowText(_T(""));
+    m_pathName.Empty();
     SetWindowTitle();
-    m_RichView.SetFontDefaults();
-    m_RichView.SetModify(FALSE);
+    m_richView.SetFontDefaults();
+    m_richView.SetModify(FALSE);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFilePreview()
 {
     // Verify a print preview is possible
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    CDC dcPrinter = PrintDlg.GetPrinterDC();
-    if (dcPrinter.GetHDC() == 0)
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CDC printerDC = printDlg.GetPrinterDC();
+    if (printerDC.GetHDC() == 0)
     {
         MessageBox(_T("Print preview requires a printer to copy settings from"), _T("No Printer found"), MB_ICONWARNING);
         return FALSE;
     }
 
-    m_PrintPreview.DoPrintPreview(GetPageRect(), GetPrintRect());
-    SetView(m_PrintPreview);
+    m_printPreview.DoPrintPreview(GetPageRect(), GetPrintRect());
+    SetView(m_printPreview);
 
     // Supress Frame drawing
     SetRedraw(FALSE);
@@ -284,12 +284,12 @@ BOOL CMainFrame::OnFileOpen()
 {
     // szFilters is a text string that includes two file name filters:
     // "*.my" for "MyType Files" and "*.*' for "All Files."
-    LPCTSTR szFilters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
-    CFileDialog FileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, szFilters);
+    LPCTSTR filters = _T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0");
+    CFileDialog fileDlg(TRUE, _T("txt"), NULL, OFN_FILEMUSTEXIST, filters);
 
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
+        CString str = fileDlg.GetPathName();
 
         if (ReadFile(str))
         {
@@ -305,21 +305,21 @@ BOOL CMainFrame::OnFileOpen()
 BOOL CMainFrame::OnFilePrint()
 {
     // Prepare the print dialog
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    PRINTDLG pd = PrintDlg.GetParameters();
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    PRINTDLG pd = printDlg.GetParameters();
     pd.nCopies = 1;
     pd.nFromPage = 0xFFFF;
     pd.nToPage = 0xFFFF;
     pd.nMinPage = 1;
     pd.nMaxPage = 0xFFFF;
-    PrintDlg.SetParameters(pd);
+    printDlg.SetParameters(pd);
 
     try
     {
         // Display the print dialog
-        if (PrintDlg.DoModal(*this) == IDOK)
+        if (printDlg.DoModal(*this) == IDOK)
         {
-            QuickPrint(PrintDlg);
+            QuickPrint(printDlg);
         }
         else
             return FALSE;
@@ -338,21 +338,21 @@ BOOL CMainFrame::OnFilePrint()
 BOOL CMainFrame::OnFilePrintSetup()
 {
     // Prepare the print dialog
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC | PD_PRINTSETUP);
-    PRINTDLG pd = PrintDlg.GetParameters();
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC | PD_PRINTSETUP);
+    PRINTDLG pd = printDlg.GetParameters();
     pd.nCopies = 1;
     pd.nFromPage = 0xFFFF;
     pd.nToPage = 0xFFFF;
     pd.nMinPage = 1;
     pd.nMaxPage = 0xFFFF;
-    PrintDlg.SetParameters(pd);
+    printDlg.SetParameters(pd);
 
     try
     {
         // Display the print dialog
-        if (PrintDlg.DoModal(*this) == IDOK)
+        if (printDlg.DoModal(*this) == IDOK)
         {
-            CDC dcPrinter = PrintDlg.GetPrinterDC();
+            CDC dcPrinter = printDlg.GetPrinterDC();
         }
     }
 
@@ -377,10 +377,10 @@ BOOL CMainFrame::OnFileQuickPrint()
 
 BOOL CMainFrame::OnFileSave()
 {
-    if (m_PathName.IsEmpty())
+    if (m_pathName.IsEmpty())
         OnFileSaveAs();
     else
-        WriteFile(m_PathName);
+        WriteFile(m_pathName);
 
     return TRUE;
 }
@@ -389,12 +389,12 @@ BOOL CMainFrame::OnFileSaveAs()
 {
     // szFilter is a text string that includes two file name filters:
     // "*.my" for "MyType Files" and "*.*' for "All Files."
-    LPCTSTR szFilters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
-    CFileDialog FileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, szFilters);
+    LPCTSTR filters(_T("Text Files (*.txt)\0*.txt\0All Files (*.*)\0*.*\0"));
+    CFileDialog fileDlg(FALSE, _T("txt"), NULL, OFN_OVERWRITEPROMPT, filters);
 
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
+        CString str = fileDlg.GetPathName();
         WriteFile(str);
         SetPathName(str);
         AddMRUEntry(str);
@@ -410,32 +410,32 @@ void CMainFrame::OnInitialUpdate()
     SetWindowTitle();
 }
 
-void CMainFrame::OnMenuUpdate(UINT nID)
+void CMainFrame::OnMenuUpdate(UINT id)
 {
-    if (nID == IDM_OPTIONS_WRAP)
+    if (id == IDM_OPTIONS_WRAP)
     {
-        GetFrameMenu().CheckMenuItem(nID, m_IsWrapped ? MF_CHECKED : MF_UNCHECKED);
+        GetFrameMenu().CheckMenuItem(id, m_isWrapped ? MF_CHECKED : MF_UNCHECKED);
     }
 
-    CFrame::OnMenuUpdate(nID);
+    CFrame::OnMenuUpdate(id);
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     NMHDR* pNMH;
-    pNMH = (LPNMHDR)lParam;
+    pNMH = (LPNMHDR)lparam;
     switch (pNMH->code)
     {
     case EN_DROPFILES:
     {
-        ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lParam);
+        ENDROPFILES* ENDrop = reinterpret_cast<ENDROPFILES*>(lparam);
         HDROP hDropInfo = reinterpret_cast<HDROP>(ENDrop->hDrop);
         OnDropFiles(hDropInfo);
     }
     return TRUE;
     }
 
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 BOOL CMainFrame::OnOptionsFont()
@@ -445,7 +445,7 @@ BOOL CMainFrame::OnOptionsFont()
     ZeroMemory(&cf2, sizeof(cf2));
     cf2.cbSize = sizeof(cf2);
     cf2.dwMask = CFM_COLOR | CFM_FACE | CFM_EFFECTS;
-    m_RichView.GetDefaultCharFormat(cf2);
+    m_richView.GetDefaultCharFormat(cf2);
 
     // Fill the LOGFONT struct from CHARFORMAT2
     LOGFONT lf;
@@ -456,18 +456,18 @@ BOOL CMainFrame::OnOptionsFont()
     lf.lfItalic = (BYTE)(cf2.dwEffects & CFE_ITALIC);
 
     // Display the Choose Font dialog
-    CFontDialog LogFont(lf, CF_SCREENFONTS | CF_EFFECTS);
-    if (LogFont.DoModal(*this) == IDOK)
+    CFontDialog logFont(lf, CF_SCREENFONTS | CF_EFFECTS);
+    if (logFont.DoModal(*this) == IDOK)
     {
         // Set the Font
-        CFont RichFont(LogFont.GetLogFont());
-        m_RichView.SetFont(RichFont, TRUE);
+        CFont RichFont(logFont.GetLogFont());
+        m_richView.SetFont(RichFont, TRUE);
 
         // Set the font color
-        cf2.crTextColor = LogFont.GetColor();
+        cf2.crTextColor = logFont.GetColor();
         cf2.dwEffects = 0;
         cf2.dwMask = CFM_COLOR;
-        m_RichView.SetDefaultCharFormat(cf2);
+        m_richView.SetDefaultCharFormat(cf2);
     }
 
     return TRUE;
@@ -475,21 +475,21 @@ BOOL CMainFrame::OnOptionsFont()
 
 BOOL CMainFrame::OnOptionsWrap()
 {
-    m_RichView.SetTargetDevice(NULL, m_IsWrapped);
-    m_IsWrapped = !m_IsWrapped;
+    m_richView.SetTargetDevice(NULL, m_isWrapped);
+    m_isWrapped = !m_isWrapped;
     return TRUE;
 }
 
-void CMainFrame::QuickPrint(CPrintDialog& PrintDlg)
+void CMainFrame::QuickPrint(CPrintDialog& printDlg)
 // Print the document without bringing up a print dialog
 {
-    CDC dcPrinter = PrintDlg.GetPrinterDC();
+    CDC printerDC = printDlg.GetPrinterDC();
 
     // Assign values to the FORMATRANGE struct
     FORMATRANGE fr;
     ZeroMemory(&fr, sizeof(fr));
-    fr.hdc = dcPrinter;
-    fr.hdcTarget = dcPrinter;
+    fr.hdc = printerDC;
+    fr.hdcTarget = printerDC;
 
     fr.rcPage = GetPageRect();
     fr.rc = GetPrintRect();
@@ -502,29 +502,29 @@ void CMainFrame::QuickPrint(CPrintDialog& PrintDlg)
     DOCINFO di;
     ZeroMemory(&di, sizeof(di));
     di.cbSize = sizeof(DOCINFO);
-    di.lpszDocName = m_PathName;
+    di.lpszDocName = m_pathName;
     di.lpszOutput = NULL;   // Do not print to file.
-    dcPrinter.StartDoc(&di);
+	printerDC.StartDoc(&di);
 
     LONG lTextLength;   // Length of document.
     LONG lTextPrinted;  // Amount of document printed.
 
     // Find out real size of document in characters.
-    lTextLength = m_RichView.GetTextLengthEx(GTL_NUMCHARS);
+    lTextLength = m_richView.GetTextLengthEx(GTL_NUMCHARS);
 
     do
     {
         // Start the page.
-        dcPrinter.StartPage();
+		printerDC.StartPage();
 
         // Print as much text as can fit on a page. The return value is
         // the index of the first character on the next page. Using TRUE
         // for the wParam parameter causes the text to be printed.
-        lTextPrinted = m_RichView.FormatRange(fr, TRUE);
-        m_RichView.DisplayBand(fr.rc);
+        lTextPrinted = m_richView.FormatRange(fr, TRUE);
+        m_richView.DisplayBand(fr.rc);
 
         // Print last page.
-        dcPrinter.EndPage();
+		printerDC.EndPage();
 
         // If there is more text to print, adjust the range of characters
         // to start printing at the first character of the next page.
@@ -536,10 +536,10 @@ void CMainFrame::QuickPrint(CPrintDialog& PrintDlg)
     } while (lTextPrinted < lTextLength);
 
     // Tell the control to release cached information.
-    m_RichView.FormatRange();
+    m_richView.FormatRange();
 
     // End the print job
-    dcPrinter.EndDoc();
+	printerDC.EndDoc();
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
@@ -563,10 +563,10 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
         EDITSTREAM es;
         es.dwCookie =  reinterpret_cast<DWORD_PTR>(File.GetHandle());
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamInCallback);
-        m_RichView.StreamIn(SF_TEXT, es);
+        m_richView.StreamIn(SF_TEXT, es);
 
         //Clear the modified text flag
-        m_RichView.SetModify(FALSE);
+        m_richView.SetModify(FALSE);
     }
 
     catch (const CFileException& e)
@@ -585,14 +585,14 @@ BOOL CMainFrame::ReadFile(LPCTSTR szFileName)
 void CMainFrame::SaveModifiedText()
 {
     //Check for unsaved text
-    if (m_RichView.GetModify())
+    if (m_richView.GetModify())
         if (::MessageBox(NULL, _T("Save changes to this document"), _T("TextEdit"), MB_YESNO | MB_ICONWARNING) == IDYES)
             OnFileSave();
 }
 
-void CMainFrame::SetPathName(LPCTSTR szFilePathName)
+void CMainFrame::SetPathName(LPCTSTR filePathName)
 {
-    m_PathName = szFilePathName;
+    m_pathName = filePathName;
 }
 
 void CMainFrame::SetupMenuIcons()
@@ -624,20 +624,20 @@ void CMainFrame::SetWindowTitle()
 {
     CString Title;
 
-    if (m_PathName.IsEmpty())
+    if (m_pathName.IsEmpty())
         Title = _T("PrintPreview Demo");
     else
-        Title = m_PathName + _T(" - PrintPreview Demo");
+        Title = m_pathName + _T(" - PrintPreview Demo");
 
     SetWindowText(Title);
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case UWM_CHANGEVIEW:
-        SetView(m_RichView);
+        SetView(m_richView);
 
         // Supress Frame drawing
         SetRedraw(FALSE);
@@ -659,31 +659,31 @@ LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
-BOOL CMainFrame::WriteFile(LPCTSTR szFileName)
+BOOL CMainFrame::WriteFile(LPCTSTR fileName)
 {
     try
     {
         // Open the file for writing
-        CFile File;
-        File.Open(szFileName, CREATE_ALWAYS);
+        CFile file;
+        file.Open(fileName, CREATE_ALWAYS);
 
         EDITSTREAM es;
-        es.dwCookie = reinterpret_cast<DWORD_PTR>(File.GetHandle());
+        es.dwCookie = reinterpret_cast<DWORD_PTR>(file.GetHandle());
         es.dwError = 0;
         es.pfnCallback = reinterpret_cast<EDITSTREAMCALLBACK>(MyStreamOutCallback);
-        m_RichView.StreamOut(SF_TEXT, es);
+        m_richView.StreamOut(SF_TEXT, es);
 
         //Clear the modified text flag
-        m_RichView.SetModify(FALSE);
+        m_richView.SetModify(FALSE);
     }
 
     catch (const CFileException&)
     {
         CString str = _T("Failed to write:  ");
-        str += szFileName;
+        str += fileName;
         ::MessageBox(NULL, str, _T("Warning"), MB_ICONWARNING);
         return FALSE;
     }

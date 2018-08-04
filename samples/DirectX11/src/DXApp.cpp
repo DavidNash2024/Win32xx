@@ -6,7 +6,7 @@
 //--------------------------------------------------------------------------------------
 BOOL CDXApp::InitInstance()
 {
-    m_DXView.Create();
+    m_dxView.Create();
 
     return TRUE;
 }
@@ -28,7 +28,7 @@ int CDXApp::MessageLoop()
         }
         else
         {
-            m_DXView.Render();
+            m_dxView.Render();
         }
     }
 

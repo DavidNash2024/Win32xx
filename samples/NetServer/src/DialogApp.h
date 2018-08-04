@@ -15,10 +15,10 @@ public:
     CDialogApp(); 
     virtual ~CDialogApp();
     virtual BOOL InitInstance();
-    CSvrDialog& GetDialog() {return m_SvrDialog;}
+    CSvrDialog& GetDialog() {return m_svrDialog;}
 
 private:
-    CSvrDialog m_SvrDialog;
+    CSvrDialog m_svrDialog;
 };
 
 

@@ -9,20 +9,20 @@
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 }
 
 CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the Menu and Tool Bar
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    switch (LOWORD(wParam))
+    switch (LOWORD(wparam))
     {
     case IDM_FILE_NEW:          OnFileNew();        return TRUE;
     case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
@@ -73,22 +73,22 @@ void CMainFrame::OnFileSaveAs()
 void CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
-    static COLORREF CustColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+    static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
     
-    CColorDialog ColorDlg;
-    ColorDlg.SetCustomColors(CustColors);
+    CColorDialog colorDlg;
+    colorDlg.SetCustomColors(custColors);
     
     // Initialize the Choose Color dialog
-    if (ColorDlg.DoModal(*this) == IDOK)
+    if (colorDlg.DoModal(*this) == IDOK)
     {
         // Store the custom colors in the static array
-        memcpy(CustColors, ColorDlg.GetCustomColors(), 16*sizeof(COLORREF));
+        memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
         
         // Retrieve the chosen color
-        m_View.SetPenColor(ColorDlg.GetColor());
+        m_view.SetPenColor(colorDlg.GetColor());
     }
 }
 
@@ -109,13 +109,13 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 
-//  } // switch (uMsg)
+//  } // switch (msg)
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 } // LRESULT CMainFrame::WndProc(...)
 

@@ -14,10 +14,10 @@ public:
     CRoundApp();
     virtual ~CRoundApp() {}
     virtual BOOL InitInstance();
-    CView& GetView() { return m_View; }
+    CView& GetView() { return m_view; }
 
 private:
-    CView m_View;
+    CView m_view;
 };
 
 

@@ -15,7 +15,7 @@ BOOL CSimpleApp::InitInstance()
     // This function is called automatically when the application starts
 
     // Create the Window
-    m_View.Create();
+    m_view.Create();
 
     return TRUE;
 }

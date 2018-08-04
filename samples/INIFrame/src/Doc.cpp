@@ -3,7 +3,7 @@
 #include "Doc.h"
 
 
-BOOL CDoc::FileLoad(LPCTSTR szFilename)
+BOOL CDoc::FileLoad(LPCTSTR filename)
 {
     BOOL bResult = FALSE;
 
@@ -11,7 +11,7 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
 
     try
     {
-        CArchive ar(szFilename, CArchive::load);
+        CArchive ar(filename, CArchive::load);
         ar >> *this;        // Uses the Serialize function
         bResult = TRUE;
     }
@@ -27,15 +27,15 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
     return bResult;
 }
 
-BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
+BOOL CDoc::FileStore(LPCTSTR /* filename */)
 {
-    BOOL bResult = FALSE;
+    BOOL result = FALSE;
 
 //  try
 //  {
-//      CArchive ar(szFilename, CArchive::store);
+//      CArchive ar(filename, CArchive::store);
 //      ar << *this;        // Uses the Serialize function
-//      bResult = TRUE;
+//      result = TRUE;
 //  }
 //  catch (const CFileException &e)
 //  {
@@ -43,7 +43,7 @@ BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 //      ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
 //  }
 
-    return bResult;
+    return result;
 }
 
 void CDoc::Serialize(CArchive& /* ar */)

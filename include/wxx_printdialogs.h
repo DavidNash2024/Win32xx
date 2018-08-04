@@ -445,11 +445,11 @@ namespace Win32xx
 
     // Dialog procedure for the Font dialog. Override this function
     // to customise the message handling.
-    inline INT_PTR CPrintDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CPrintDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  A typical override might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -463,16 +463,16 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     //  The default message handling for CPrintDialog. Don't override this
     //  function, override DialogProc instead.
     //  Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CPrintDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CPrintDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
         switch (message)
         {
@@ -483,7 +483,7 @@ namespace Win32xx
 
             case WM_COMMAND:
             {
-                switch (LOWORD(wParam))
+                switch (LOWORD(wparam))
                 {
                     case pshHelp:
                     OnHelpButton();
@@ -768,11 +768,11 @@ namespace Win32xx
 
     // Dialog procedure for the PageSetup dialog. Override this function
     // to customise the message handling.
-    inline INT_PTR CPageSetupDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CPageSetupDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  A typical override might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -786,16 +786,16 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     //  The Default message handling for CPageSetupDialog. Don't override this
     //  function, override DialogProc instead.
     //  Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CPageSetupDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
         switch (message)
         {
@@ -806,7 +806,7 @@ namespace Win32xx
 
         case WM_COMMAND:
             {
-                switch (LOWORD(wParam))
+                switch (LOWORD(wparam))
                 {
                 case pshHelp:
                     OnHelpButton();
@@ -919,7 +919,7 @@ namespace Win32xx
 
     // This function receives messages that allow the drawing of the paint sample page
     // in the Page Setup dialog box to be customized.
-    inline INT_PTR CALLBACK CPageSetupDialog::PaintHookProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CALLBACK CPageSetupDialog::PaintHookProc(HWND hWnd, UINT message, WPARAM wparam, LPARAM lparam)
     {
         if (hWnd == 0)
             return 0;
@@ -933,9 +933,9 @@ namespace Win32xx
         {
         case WM_PSD_PAGESETUPDLG:
             {
-                assert(lParam);
-                PAGESETUPDLG psd = *((LPPAGESETUPDLG)lParam);
-                return pDlg->OnPreDrawPage(LOWORD(wParam), HIWORD(wParam), psd);
+                assert(lparam);
+                PAGESETUPDLG psd = *((LPPAGESETUPDLG)lparam);
+                return pDlg->OnPreDrawPage(LOWORD(wparam), HIWORD(wparam), psd);
             }
 
         case WM_PSD_FULLPAGERECT:
@@ -945,9 +945,9 @@ namespace Win32xx
         case WM_PSD_ENVSTAMPRECT:
         case WM_PSD_YAFULLPAGERECT:
             {
-                assert(lParam);
-                RECT rc = *((LPRECT)lParam);
-                return pDlg->OnDrawPage(reinterpret_cast<HDC>(wParam), message, rc);
+                assert(lparam);
+                RECT rc = *((LPRECT)lparam);
+                return pDlg->OnDrawPage(reinterpret_cast<HDC>(wparam), message, rc);
             }
         }
         return 0;

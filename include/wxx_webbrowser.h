@@ -211,7 +211,7 @@ namespace Win32xx
         virtual void OnSize(int width, int height);
 
         // Not intended to be overridden
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         UINT    GetPidlLength(LPITEMIDLIST pidl);
@@ -859,16 +859,16 @@ namespace Win32xx
 
 
     // Provides default message processing for the web browser window.
-    inline LRESULT CWebBrowser::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWebBrowser::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch(uMsg)
+        switch(msg)
         {
         case WM_SIZE:
-            OnSize(LOWORD(lParam), HIWORD(lParam));
+            OnSize(LOWORD(lparam), HIWORD(lparam));
             break;
         }
 
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 

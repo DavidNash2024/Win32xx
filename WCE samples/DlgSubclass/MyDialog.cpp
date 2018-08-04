@@ -7,36 +7,36 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
-CMyDialog::CMyDialog(LPCTSTR lpszResName) : CDialog(lpszResName)
-{
-}
+//CMyDialog::CMyDialog(LPCTSTR lpszResName) : CDialog(lpszResName)
+//{
+//}
 
 CMyDialog::~CMyDialog()
 {
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
         //Additional messages to be handled go here
 //  }
 
 
     //Use the dialogframe default message handling for remaining messages
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
-BOOL CMyDialog::OnCommand(UINT nID)
+BOOL CMyDialog::OnCommand(UINT id)
 {
-//  switch (nID)
+//  switch (id)
 //   {
 
-//   } //switch (nID)
+//   }
 
     return TRUE;
 }
@@ -51,10 +51,10 @@ BOOL CMyDialog::OnInitDialog()
     ::SetDlgItemText(GetHwnd(), IDC_EDIT1, TEXT("Edit Control"));
 
     // Turn our button into a MyButton object
-    m_Button.AttachDlgItem(IDC_BUTTON2, *this);
+    m_button.AttachDlgItem(IDC_BUTTON2, *this);
 
     // Turn our static control into a hyperlink
-    m_Hyperlink.AttachDlgItem(IDC_STATIC4, *this);
+    m_hyperlink.AttachDlgItem(IDC_STATIC4, *this);
 
     return true;
 }

@@ -74,13 +74,13 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.cy = 300;                            // height
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // This function is our message procedure. We process the messages for
     // the view window here.  Unprocessed messages are passed on for
     //  default processing.
 
-    switch(uMsg)
+    switch(msg)
     {
     case WM_SIZE:
         OnSize();
@@ -88,5 +88,5 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

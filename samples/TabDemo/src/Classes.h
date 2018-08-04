@@ -12,10 +12,10 @@ public:
     CViewClasses();
     virtual ~CViewClasses();
     virtual void OnAttach();
-    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR sxText, int iImage);
+    virtual HTREEITEM AddItem(HTREEITEM hParent, LPCTSTR text, int image);
 
 private:
-    CImageList m_imlNormal;
+    CImageList m_normalImages;
     
 };
 

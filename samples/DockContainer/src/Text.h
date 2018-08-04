@@ -27,7 +27,7 @@ public:
     ~CContainText() {}
 
 private:
-    CViewText m_ViewText;
+    CViewText m_viewText;
 };
 
 // Declaration of the CDockText class
@@ -38,7 +38,7 @@ public:
     virtual ~CDockText() {}
 
 private:
-    CContainText m_View;
+    CContainText m_view;
 
 };
 

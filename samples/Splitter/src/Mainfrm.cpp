@@ -8,7 +8,7 @@
 
 CMainFrame::CMainFrame() : m_pDockText(0), m_pDockTree(0), m_pDockList(0)
 {
-    SetView(m_MainView);
+    SetView(m_mainView);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -19,11 +19,11 @@ CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch(nID)
     {
     case IDM_FILE_EXIT:         return OnFileExit();
@@ -47,25 +47,25 @@ BOOL CMainFrame::OnFileExit()
 void CMainFrame::OnInitialUpdate()
 {
     // Set the styles for splitter panes
-    DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
-    SetDockStyle(dwStyle);
+    DWORD style = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+    SetDockStyle(style);
 
-    CRect rcView = GetViewRect();
+    CRect viewRect = GetViewRect();
 
     // Add the bottom pane first. It is a child of the main pane.
-    m_pDockTree = static_cast<CDockTree*>(AddDockedChild(new CDockTree, dwStyle|DS_DOCKED_BOTTOM, rcView.Height()/2));
+    m_pDockTree = static_cast<CDockTree*>(AddDockedChild(new CDockTree, style|DS_DOCKED_BOTTOM, viewRect.Height()/2));
 
     // Add the bottom right pane. It is a child of the bottom pane 
-    m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
+    m_pDockList = static_cast<CDockList*>(m_pDockTree->AddDockedChild(new CDockList, style|DS_DOCKED_RIGHT, viewRect.Width()/2));
 
     // Add the top right pane. It is a child of the main pane.
-    m_pDockText = static_cast<CDockText*>(AddDockedChild(new CDockText, dwStyle|DS_DOCKED_RIGHT, rcView.Width()/2));
+    m_pDockText = static_cast<CDockText*>(AddDockedChild(new CDockText, style|DS_DOCKED_RIGHT, viewRect.Width()/2));
 
 }
 
 BOOL CMainFrame::OnViewList()
 {
-    DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+    DWORD style = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
     if (m_pDockList->IsDocked())
     {
         m_pDockList->Hide();
@@ -73,7 +73,7 @@ BOOL CMainFrame::OnViewList()
     }
     else
     {
-        m_pDockTree->Dock(m_pDockList, dwStyle | DS_DOCKED_RIGHT);
+        m_pDockTree->Dock(m_pDockList, style | DS_DOCKED_RIGHT);
         GetFrameMenu().CheckMenuItem(IDM_VIEW_LIST, MF_CHECKED);
     }
 
@@ -82,7 +82,7 @@ BOOL CMainFrame::OnViewList()
 
 BOOL CMainFrame::OnViewText()
 {
-    DWORD dwStyle = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
+    DWORD style = DS_NO_UNDOCK | DS_NO_CAPTION | DS_CLIENTEDGE;
 
     if (m_pDockText->IsDocked())
     {
@@ -91,7 +91,7 @@ BOOL CMainFrame::OnViewText()
     }
     else
     {
-        Dock(m_pDockText, dwStyle | DS_DOCKED_RIGHT);
+        Dock(m_pDockText, style | DS_DOCKED_RIGHT);
         GetFrameMenu().CheckMenuItem(IDM_VIEW_TEXT, MF_CHECKED);
     }
 
@@ -114,14 +114,14 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

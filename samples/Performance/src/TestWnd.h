@@ -24,7 +24,7 @@ private:
 
     virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
 
-    int m_nWindow;
+    int m_windowCount;
 };
 
 

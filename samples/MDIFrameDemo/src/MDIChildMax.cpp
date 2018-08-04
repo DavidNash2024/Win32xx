@@ -7,33 +7,14 @@
 #include "resource.h"
 
 
-// CViewMax definitions
-void CViewMax::OnDraw(CDC& dc)
-{
-    //Centre some text in our view window
-    CRect rc = GetClientRect();
-    dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
-}
-
-LRESULT CViewMax::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch (uMsg)
-    {
-        case WM_SIZE:
-            Invalidate();
-            return 0L;
-
-    }
-    return WndProcDefault(uMsg, wParam, lParam);
-}
-
-
+////////////////////////////
 // CMDIChildMax definitions
+
 CMDIChildMax::CMDIChildMax()
 {
-    m_Menu.LoadMenu(_T("MdiMenuMax"));
-    SetHandles(m_Menu, NULL);
-    SetView(m_MaxView);
+    m_menu.LoadMenu(_T("MdiMenuMax"));
+    SetHandles(m_menu, NULL);
+    SetView(m_maxView);
 }
 
 CMDIChildMax::~CMDIChildMax()
@@ -54,3 +35,25 @@ void CMDIChildMax::PreCreate(CREATESTRUCT& cs)
     cs.style = WS_MAXIMIZE;
 }
 
+
+////////////////////////
+// CViewMax definitions
+
+void CViewMax::OnDraw(CDC& dc)
+{
+	//Centre some text in our view window
+	CRect rc = GetClientRect();
+	dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+}
+
+LRESULT CViewMax::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
+{
+	switch (msg)
+	{
+	case WM_SIZE:
+		Invalidate();
+		return 0;
+
+	}
+	return WndProcDefault(msg, wparam, lparam);
+}

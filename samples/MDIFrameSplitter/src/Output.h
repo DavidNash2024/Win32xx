@@ -28,7 +28,7 @@ class CContainOutput : public CDockContainer
 public:
     CContainOutput() 
     {
-        SetView(m_ViewOutput); 
+        SetView(m_viewOutput); 
         SetDockCaption (_T("Output View - Docking container"));
         SetTabText(_T("Output"));
         SetTabIcon(IDI_TEXT);
@@ -36,7 +36,7 @@ public:
     ~CContainOutput() {}
 
 private:
-    CViewOutput m_ViewOutput;
+    CViewOutput m_viewOutput;
 };
 
 // Declaration of the CDockText class
@@ -48,7 +48,7 @@ public:
     virtual int OnCreate(CREATESTRUCT& cs);
 
 private:
-    CContainOutput m_View;
+    CContainOutput m_view;
 
 };
 

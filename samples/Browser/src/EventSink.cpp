@@ -3,13 +3,13 @@
 #include "MainFrm.h"
 
 
-CEventSink::CEventSink() : m_cRefs(1), m_pSink(NULL)
+CEventSink::CEventSink() : m_refcount(1), m_pSink(NULL)
 {
 }
 
 STDMETHODIMP_(ULONG) CEventSink::AddRef()
 {
-    return ++m_cRefs;
+    return ++m_refcount;
 }
 
 STDMETHODIMP CEventSink::QueryInterface(REFIID riid, void** ppvObject)
@@ -120,6 +120,6 @@ STDMETHODIMP CEventSink::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFla
 
 STDMETHODIMP_(ULONG) CEventSink::Release()
 {
-    return --m_cRefs;
+    return --m_refcount;
 }
 

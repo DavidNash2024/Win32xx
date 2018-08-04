@@ -16,16 +16,16 @@ void CViewSimple::OnDraw(CDC& dc)
     dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(uMsg)
+    switch(msg)
     {
     case WM_SIZE:
         Invalidate();
         break;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 
@@ -43,26 +43,26 @@ CViewList::~CViewList()
 void CViewList::OnAttach()
 {
     // Set the image lists
-    m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bmImage(IDB_FILEVIEW);
-    m_imlSmall.Add( bmImage, RGB(255, 0, 255) );
-    SetImageList(m_imlSmall, LVSIL_SMALL);
+	m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    CBitmap image(IDB_FILEVIEW);
+	m_smallImages.Add(image, RGB(255, 0, 255) );
+    SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
-    DWORD dwStyle = GetStyle();
-    SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
+    DWORD style = GetStyle();
+    SetStyle((style & ~LVS_TYPEMASK) | LVS_REPORT);
 
     SetColumns();
     InsertItems();
 }
 
-int CViewList::AddItem(LPCTSTR szText, int nImage)
+int CViewList::AddItem(LPCTSTR text, int image)
 {
     LVITEM lvi;
     ZeroMemory(&lvi, sizeof(LVITEM));
     lvi.mask = LVIF_TEXT|LVIF_IMAGE;
-    lvi.iImage = nImage;
-    lvi.pszText = const_cast<LPTSTR>(szText);
+    lvi.iImage = image;
+    lvi.pszText = const_cast<LPTSTR>(text);
 
     return InsertItem(lvi);
 }
@@ -73,27 +73,27 @@ void CViewList::SetColumns()
     DeleteAllItems();
 
     //initialise the columns
-    LV_COLUMN lvColumn;
-    ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
-    lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    lvColumn.fmt = LVCFMT_LEFT;
-    lvColumn.cx = 120;
-    TCHAR szString[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
+    LV_COLUMN column;
+    ZeroMemory(&column, sizeof(column));
+	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+	column.fmt = LVCFMT_LEFT;
+	column.cx = 120;
+    TCHAR string[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
     for(int i = 0; i < 3; ++i)
     {
-        lvColumn.pszText = szString[i];
-        InsertColumn(i, lvColumn);
+		column.pszText = string[i];
+        InsertColumn(i, column);
     }
 }
 
-BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
+BOOL CViewList::SetSubItem(int item, int subItem, LPCTSTR text)
 {
     LVITEM lvi1;
-    ZeroMemory(&lvi1, sizeof(LVITEM));
+    ZeroMemory(&lvi1, sizeof(lvi1));
     lvi1.mask = LVIF_TEXT;
-    lvi1.iItem = nItem;
-    lvi1.iSubItem = nSubItem;
-    lvi1.pszText = const_cast<LPTSTR>(szText);
+    lvi1.iItem = item;
+    lvi1.iSubItem = subItem;
+    lvi1.pszText = const_cast<LPTSTR>(text);
     return static_cast<BOOL>(SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)));
 }
 
@@ -134,15 +134,15 @@ CViewTree::~CViewTree()
 void CViewTree::OnAttach()
 {
     //set the image lists
-    m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bmImage(IDB_CLASSVIEW);
-    m_imlNormal.Add( bmImage, RGB(255, 0, 0) );
-    SetImageList(m_imlNormal, LVSIL_NORMAL);
+	m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    CBitmap image(IDB_CLASSVIEW);
+	m_smallImages.Add(image, RGB(255, 0, 0) );
+    SetImageList(m_smallImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
-    DWORD dwStyle = GetStyle();
-    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-    SetStyle(dwStyle);
+    DWORD style = GetStyle();
+	style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
+    SetStyle(style);
 
     DeleteAllItems();
 
@@ -167,17 +167,17 @@ void CViewTree::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
+HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
-    ZeroMemory(&tvi, sizeof(TVITEM));
+    ZeroMemory(&tvi, sizeof(tvi));
     tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = iImage;
-    tvi.iSelectedImage = iImage;
-    tvi.pszText = (LPTSTR)szText;
+    tvi.iImage = image;
+    tvi.iSelectedImage = image;
+    tvi.pszText = (LPTSTR)text;
 
     TVINSERTSTRUCT tvis;
-    ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
+    ZeroMemory(&tvis, sizeof(tvis));
     tvis.hParent = hParent;
     tvis.item = tvi;
 

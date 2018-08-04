@@ -161,14 +161,14 @@ void CGDIPlusView::RegisterClass(WNDCLASS& wc)
     wc.style = CS_DBLCLKS;  // Generate left button double click messages
 }
 
-LRESULT CGDIPlusView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CGDIPlusView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -11,20 +11,20 @@ class CView : public CScrollView
 public:
     CView();
     virtual ~CView();
-    virtual BOOL LoadFileImage(LPCTSTR szFilename);
-    virtual BOOL SaveFileImage(LPCTSTR pszFile);
-    CBitmap& GetImage() {return m_bmImage;}
+    virtual BOOL LoadFileImage(LPCTSTR filename);
+    virtual BOOL SaveFileImage(LPCTSTR filename);
+    CBitmap& GetImage() {return m_image;}
     virtual CRect GetImageRect();
 
 protected:
     virtual void    OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CBitmap m_bmImage;
+    CBitmap m_image;
 };
 
 

@@ -17,7 +17,7 @@ class CMainWindow : public CWnd
 public:
     CMainWindow();
     virtual ~CMainWindow() {}
-    virtual void AppendText(LPCTSTR szStr);
+    virtual void AppendText(LPCTSTR text);
     virtual HWND Create(HWND hParent = 0);
     virtual void OnAllWindowsCreated();
     virtual void OnWindowCreated();
@@ -26,7 +26,7 @@ protected:
     virtual void OnClose();
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     enum Constants
@@ -36,9 +36,9 @@ private:
     };
 
     std::vector<MyThreadPtr> m_vMyThread;// A vectore of CMyThread smart pointers
-    int m_nTestWnd;                     // Number of additional test windows to be created
-    int m_nWindowsCreated;              // Count of windows actually created
-    CMyEdit m_EditWnd;
+    int m_maxWindows;                // Number of additional test windows to be created
+    int m_windowsCount;              // Count of windows actually created
+    CMyEdit m_editWnd;
 };
 
 

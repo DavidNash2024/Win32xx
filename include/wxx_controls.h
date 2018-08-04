@@ -138,7 +138,7 @@ namespace Win32xx
 
     protected:
         // Overridables
-        virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM, LPARAM lParam);
+        virtual LRESULT OnMessageReflect(UINT msg, WPARAM, LPARAM lparam);
         virtual void PreRegisterClass(WNDCLASS& wc) { wc.lpszClassName = _T("ComboBox"); }
 
     private:
@@ -844,11 +844,11 @@ namespace Win32xx
     // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
     // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
     // WM_COMPAREITEM, WM_PARENTNOTIFY.
-    inline LRESULT CComboBox::OnMessageReflect(UINT uMsg, WPARAM, LPARAM lParam)
+    inline LRESULT CComboBox::OnMessageReflect(UINT msg, WPARAM, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_COMPAREITEM:    return CompareItem((LPCOMPAREITEMSTRUCT)lParam);
+        case WM_COMPAREITEM:    return CompareItem((LPCOMPAREITEMSTRUCT)lparam);
         }
 
         return 0;   // Allow other messages to be handled elsewhere.
@@ -1202,9 +1202,9 @@ namespace Win32xx
         LONG lScan = MapVirtualKey(vk, 0);
 
         // Construct an LPARAM with the scan code in Bits 16-23, and an extended flag in bit 24
-        LPARAM lParam = lScan << 16;
+        LPARAM lparam = lScan << 16;
         if (IsExtended)
-            lParam |= 0x01000000L;
+            lparam |= 0x01000000L;
 
         CString str;
         int nBufferLen = 64;
@@ -1215,7 +1215,7 @@ namespace Win32xx
         {
             nBufferLen *= 4;
             LPTSTR pszStr = str.GetBuffer(nBufferLen);
-            nStrLen = ::GetKeyNameText(static_cast<LONG>(lParam), pszStr, nBufferLen + 1);
+            nStrLen = ::GetKeyNameText(static_cast<LONG>(lparam), pszStr, nBufferLen + 1);
             str.ReleaseBuffer();
         }
 

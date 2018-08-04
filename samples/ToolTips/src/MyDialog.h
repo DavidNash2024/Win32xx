@@ -25,15 +25,15 @@ protected:
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
 protected:
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 private:
@@ -41,12 +41,12 @@ private:
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
-    BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
-    CRichEdit m_RichEdit;
-    CEdit m_Edit;
-    CBalloonToolTip m_BubbleTT;
-    CToolTip m_TT;
+    CRichEdit m_richEdit;
+    CEdit m_edit;
+    CBalloonToolTip m_bubbleTT;
+    CToolTip m_toolTip;
     CString m_str;
     HICON m_hInfo;      // Icon used by tooltips for the RichEdit and Edit controls
 };

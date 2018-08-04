@@ -13,7 +13,7 @@
 CMainFrame::CMainFrame()
 {
     //Set the tab control as the fram's view window
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -25,14 +25,14 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_CLOSE_TAB:         return OnTabClose();
     case IDM_FILE_EXIT:         return OnFileExit();
@@ -72,9 +72,9 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     CFrame::OnCreate(cs);
     
     // Turn on the tab's owner draw and fixed width tabs
-    m_View.SetFixedWidth(TRUE);
-    m_View.SetOwnerDraw(TRUE);
-    m_View.SetShowButtons(TRUE);
+    m_view.SetFixedWidth(TRUE);
+    m_view.SetOwnerDraw(TRUE);
+    m_view.SetShowButtons(TRUE);
 
     return 0;
 }
@@ -90,76 +90,76 @@ BOOL CMainFrame::OnFileExit()
 void CMainFrame::OnInitialUpdate()
 {   
     // Add some tabs to the tab control
-    m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-    m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-    m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-    m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-    m_View.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+    m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+	m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
 
-    m_View.SelectPage(0);
+	m_view.SelectPage(0);
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow();
 }
 
-void CMainFrame::OnMenuUpdate(UINT nID)
+void CMainFrame::OnMenuUpdate(UINT id)
 {
     // Update the check state of the various menu items
     
-    BOOL bDraw  = m_View.GetStyle() & TCS_OWNERDRAWFIXED;
-    BOOL bFixed = m_View.GetStyle() & TCS_FIXEDWIDTH;
+    BOOL isOwnerDraw  = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
+    BOOL isFixed = m_view.GetStyle() & TCS_FIXEDWIDTH;
 
-    switch (nID) 
+    switch (id) 
     {
 
     case IDM_TAB_TOP:
         {
-            BOOL bTop = m_View.GetTabsAtTop();
-            UINT uCheck = (bTop)? MF_CHECKED : MF_UNCHECKED;
-            GetFrameMenu().CheckMenuItem(IDM_TAB_TOP, uCheck);
+            BOOL isAtTop = m_view.GetTabsAtTop();
+            UINT check = (isAtTop)? MF_CHECKED : MF_UNCHECKED;
+            GetFrameMenu().CheckMenuItem(IDM_TAB_TOP, check);
         }
         break;
     case IDM_TAB_BUTTONS:
         {
-            BOOL bShow = m_View.GetShowButtons();
-            UINT uCheck = (bShow)? MF_CHECKED : MF_UNCHECKED;
-            GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, uCheck);
-            UINT uEnable = (bDraw && bFixed)? MF_ENABLED : MF_GRAYED;
-            GetFrameMenu().EnableMenuItem(IDM_TAB_BUTTONS, uEnable);
+            BOOL isShown = m_view.GetShowButtons();
+            UINT check = (isShown)? MF_CHECKED : MF_UNCHECKED;
+            GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, check);
+            UINT enable = (isOwnerDraw && isFixed)? MF_ENABLED : MF_GRAYED;
+            GetFrameMenu().EnableMenuItem(IDM_TAB_BUTTONS, enable);
         }
         break;
     case IDM_TAB_DRAW:
         {
-            UINT uCheck = (bDraw)? MF_CHECKED : MF_UNCHECKED;
-            GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, uCheck);
+            UINT check = (isOwnerDraw)? MF_CHECKED : MF_UNCHECKED;
+            GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, check);
         }
 		break;
     case IDM_TAB_FIXED:
         {
-            UINT uCheck = (bFixed)? MF_CHECKED : MF_UNCHECKED;
-            GetFrameMenu().CheckMenuItem(IDM_TAB_FIXED, uCheck);
+            UINT check = (isFixed)? MF_CHECKED : MF_UNCHECKED;
+            GetFrameMenu().CheckMenuItem(IDM_TAB_FIXED, check);
         }
 		break;
     }
 
-    CFrame::OnMenuUpdate(nID);
+    CFrame::OnMenuUpdate(id);
 }
 
 BOOL CMainFrame::OnNewFilesTab()
 {
-    m_View.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+    m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
     return TRUE;
 }
 
 BOOL CMainFrame::OnNewClassesTab()
 {
-    m_View.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+	m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
     return TRUE;
 }
 
 BOOL CMainFrame::OnNewDialogTab()
 {
-    m_View.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+	m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
     return TRUE;
 }
 
@@ -168,59 +168,59 @@ BOOL CMainFrame::OnNewTab()
     // Creates the popup menu when the "New" toolbar button is pressed
 
     // Position the popup menu
-    CToolBar& TB = GetToolBar();
-    RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_NEW_TAB));
-    TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+    CToolBar& tb = GetToolBar();
+    RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_NEW_TAB));
+	tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(TPMPARAMS);
     tpm.rcExclude = rc;
 
     // Load the popup menu
-    CMenu TopMenu(IDM_NEWMENU);
-    CMenu PopupMenu = TopMenu.GetSubMenu(0);
+    CMenu topMenu(IDM_NEWMENU);
+    CMenu popupMenu = topMenu.GetSubMenu(0);
 
     // Start the popup menu
-    PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
     return TRUE;
 }
 
 BOOL CMainFrame::OnShowButtons()
 {
-    BOOL bShow = m_View.GetShowButtons();
-    m_View.SetShowButtons(!bShow);
-    m_View.RedrawWindow();
+    BOOL isShown = m_view.GetShowButtons();
+	m_view.SetShowButtons(!isShown);
+	m_view.RedrawWindow();
     return TRUE;
 }
 
 BOOL CMainFrame::OnTabClose()
 {
-    int iTab = m_View.GetCurSel();
+    int tab = m_view.GetCurSel();
 
-    if (iTab >= 0)
-        m_View.RemoveTabPage(iTab);
+    if (tab >= 0)
+		m_view.RemoveTabPage(tab);
 
     return TRUE;
 }
 
 BOOL CMainFrame::OnTabFixedWidth()
 {
-    BOOL bFixed = m_View.GetStyle() & TCS_FIXEDWIDTH;
-    m_View.SetFixedWidth(!bFixed);
+    BOOL isFixed = m_view.GetStyle() & TCS_FIXEDWIDTH;
+	m_view.SetFixedWidth(!isFixed);
     return TRUE;
 }
 
 BOOL CMainFrame::OnTabOwnerDraw()
 {
-    BOOL bDraw = m_View.GetStyle() & TCS_OWNERDRAWFIXED;
-    m_View.SetOwnerDraw(!bDraw);
+    BOOL isOwnerDraw = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
+	m_view.SetOwnerDraw(!isOwnerDraw);
     return TRUE;
 }
 
 BOOL CMainFrame::OnTabsAtTop()
 {
-    BOOL bTop = m_View.GetTabsAtTop();
-    m_View.SetTabsAtTop(!bTop);
+    BOOL isAtTop = m_view.GetTabsAtTop();
+	m_view.SetTabsAtTop(!isAtTop);
     return TRUE;
 }
 
@@ -266,14 +266,14 @@ void CMainFrame::SetupToolBar()
     GetFrameMenu().CheckMenuItem(IDM_TAB_BUTTONS, MF_UNCHECKED);
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

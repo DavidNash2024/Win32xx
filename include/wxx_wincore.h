@@ -478,12 +478,12 @@ namespace Win32xx
 
     // Pass messages on to the appropriate default window procedure
     // CMDIChild and CMDIFrame override this function
-    inline LRESULT CWnd::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (m_PrevWindowProc)
-            return ::CallWindowProc(m_PrevWindowProc, *this, uMsg, wParam, lParam);
+            return ::CallWindowProc(m_PrevWindowProc, *this, msg, wparam, lparam);
         else
-            return ::DefWindowProc(*this, uMsg, wParam, lParam);
+            return ::DefWindowProc(*this, msg, wparam, lparam);
     }
 
 
@@ -583,14 +583,15 @@ namespace Win32xx
 
 
     // Called when the user interacts with the menu or toolar.
-    inline BOOL CWnd::OnCommand(WPARAM wParam, LPARAM lParam)
+    inline BOOL CWnd::OnCommand(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         // Override this to handle WM_COMMAND messages, for example
 
-        //  switch (LOWORD(wParam))
+		//  UINT id = LOWORD(wparam);
+        //  switch (id)
         //  {
         //  case IDM_FILE_NEW:
         //      OnFileNew();
@@ -675,10 +676,10 @@ namespace Win32xx
 
 
     // A function used internally to call OnMessageReflect. Don't call or override this function.
-    inline LRESULT CWnd::MessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::MessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         HWND hWnd = 0;
-        switch (uMsg)
+        switch (msg)
         {
         case WM_COMMAND:
         case WM_CTLCOLORBTN:
@@ -691,22 +692,22 @@ namespace Win32xx
         case WM_VKEYTOITEM:
         case WM_HSCROLL:
         case WM_VSCROLL:
-            hWnd = reinterpret_cast<HWND>(lParam);
+            hWnd = reinterpret_cast<HWND>(lparam);
             break;
 
         case WM_DRAWITEM:
         case WM_MEASUREITEM:
         case WM_DELETEITEM:
         case WM_COMPAREITEM:
-            hWnd = GetDlgItem(static_cast<int>(wParam));
+            hWnd = GetDlgItem(static_cast<int>(wparam));
             break;
 
         case WM_PARENTNOTIFY:
-            switch(LOWORD(wParam))
+            switch(LOWORD(wparam))
             {
             case WM_CREATE:
             case WM_DESTROY:
-                hWnd = reinterpret_cast<HWND>(lParam);
+                hWnd = reinterpret_cast<HWND>(lparam);
                 break;
             }
         }
@@ -714,7 +715,7 @@ namespace Win32xx
         CWnd* Wnd = GetApp().GetCWndFromMap(hWnd);
 
         if (Wnd != NULL)
-            return Wnd->OnMessageReflect(uMsg, wParam, lParam);
+            return Wnd->OnMessageReflect(msg, wparam, lparam);
 
         return 0;
     }
@@ -727,18 +728,18 @@ namespace Win32xx
     // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
     // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
     // WM_COMPAREITEM, WM_PARENTNOTIFY.
-    inline LRESULT CWnd::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
         // This function processes those special messages (see above) sent
         // by some older controls, and reflects them back to the originating CWnd object.
         // Override this function in your derived class to handle these special messages.
 
         // Your overriding function should look like this ...
 
-        // switch (uMsg)
+        // switch (msg)
         // {
         //      Handle your reflected messages here
         // }
@@ -749,10 +750,10 @@ namespace Win32xx
 
 
     // Processes notification (WM_NOTIFY) messages from a child window.
-    inline LRESULT CWnd::OnNotify(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         // You can use either OnNotifyReflect or OnNotify to handle notifications
         // Override OnNotifyReflect to handle notifications in the CWnd class that
@@ -762,7 +763,7 @@ namespace Win32xx
 
         // Your overriding function should look like this ...
 
-        // switch (((LPNMHDR)lParam)->code)
+        // switch (((LPNMHDR)lparam)->code)
         // {
         //      Handle your notifications from the CHILD window here
         //      Return the value recommended by the Windows API documentation.
@@ -776,17 +777,17 @@ namespace Win32xx
 
 
     // Processes the notification (WM_NOTIFY) messages in the child window that originated them.
-    inline LRESULT CWnd::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         // Override OnNotifyReflect to handle notifications in the CWnd class that
         //   generated the notification.
 
         // Your overriding function should look like this ...
 
-        // switch (((LPNMHDR)lParam)->code)
+        // switch (((LPNMHDR)lparam)->code)
         // {
         //      Handle your notifications from this window here
         //      Return the value recommended by the Windows API documentation.
@@ -799,7 +800,7 @@ namespace Win32xx
 
 
     // Called when the window paints its client area.
-    inline LRESULT CWnd::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Window controls and other subclassed windows are expected to do their own
         // drawing, so we don't call OnDraw for those.
@@ -826,7 +827,7 @@ namespace Win32xx
         }
 
         // Allow window controls to do their default drawing
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -925,15 +926,15 @@ namespace Win32xx
             // Allocate an iterator for our HWND map
             std::map<HWND, CWnd*, CompareHWND>::iterator m;
 
-            CWinApp& App = GetApp();
+            CWinApp& app = GetApp();
 
             // Erase the CWnd pointer entry from the map
-            CThreadLock mapLock(App.m_csMapLock);
-            for (m = App.m_mapHWND.begin(); m != App.m_mapHWND.end(); ++m)
+            CThreadLock mapLock(app.m_csMapLock);
+            for (m = app.m_mapHWND.begin(); m != app.m_mapHWND.end(); ++m)
             {
                 if (this == m->second)
                 {
-                    App.m_mapHWND.erase(m);
+                    app.m_mapHWND.erase(m);
                     Success = TRUE;
                     break;
                 }
@@ -995,7 +996,7 @@ namespace Win32xx
 
     // All CWnd windows direct their messages here. This function redirects the message
     // to the CWnd's WndProc function.
-    inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CALLBACK CWnd::StaticWindowProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam)
     {
         assert( &GetApp() );
 
@@ -1018,7 +1019,7 @@ namespace Win32xx
             w->AddToMap();
         }
 
-        return w->WndProc(uMsg, wParam, lParam);
+        return w->WndProc(msg, wparam, lparam);
 
     } // LRESULT CALLBACK StaticWindowProc(...)
 
@@ -1080,11 +1081,11 @@ namespace Win32xx
 
     // Processes this window's message. Override this function in your class
     // derived from CWnd to handle window messages.
-    inline LRESULT CWnd::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:  return OnMessage1();
         //  case MESSAGE2:  return OnMessage2();
@@ -1094,22 +1095,22 @@ namespace Win32xx
         // Alternatively, return FinalWindowProc to continue with default processing.
 
         // Always pass unhandled messages on to WndProcDefault
-        return WndProcDefault(uMsg, wParam, lParam);
+        return WndProcDefault(msg, wparam, lparam);
     }
 
 
     // Provides default processing for this window's messages.
     // All WndProc functions should pass unhandled window messages to this function.
-    inline LRESULT CWnd::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CWnd::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         LRESULT lr = 0;
-        if (UWM_WINDOWCREATED == uMsg)
+        if (UWM_WINDOWCREATED == msg)
         {
             OnInitialUpdate();
             return 0;
         }
 
-        switch (uMsg)
+        switch (msg)
         {
         case WM_CLOSE:
             {
@@ -1119,20 +1120,20 @@ namespace Win32xx
         case WM_COMMAND:
             {
                 // Reflect this message if it's from a control
-                CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lParam));
+                CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
                 if (pWnd != NULL)
-                    lr = pWnd->OnCommand(wParam, lParam);
+                    lr = pWnd->OnCommand(wparam, lparam);
 
                 // Handle user commands
                 if (0 == lr)
-                    lr =  OnCommand(wParam, lParam);
+                    lr =  OnCommand(wparam, lparam);
 
                 if (0 != lr) return 0;
             }
             break;  // Note: Some MDI commands require default processing
         case WM_CREATE:
             {
-                LPCREATESTRUCT pcs = (LPCREATESTRUCT) lParam;
+                LPCREATESTRUCT pcs = (LPCREATESTRUCT) lparam;
                 if (pcs == NULL)
                     throw CWinException(_T("WM_CREATE failed"));
 
@@ -1145,15 +1146,15 @@ namespace Win32xx
             {
                 // Do notification reflection if message came from a child window.
                 // Restricting OnNotifyReflect to child windows avoids double handling.
-                HWND hwndFrom = ((LPNMHDR)lParam)->hwndFrom;
+                HWND hwndFrom = ((LPNMHDR)lparam)->hwndFrom;
                 CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
 
                 if (pWndFrom != NULL)
                     if (::GetParent(hwndFrom) == m_hWnd)
-                        lr = pWndFrom->OnNotifyReflect(wParam, lParam);
+                        lr = pWndFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
-                if (lr == 0) lr = OnNotify(wParam, lParam);
+                if (lr == 0) lr = OnNotify(wparam, lparam);
                 if (lr != 0) return lr;
                 break;
             }
@@ -1161,14 +1162,14 @@ namespace Win32xx
         case WM_PAINT:
             {
                 // OnPaint calls OnDraw when appropriate
-                OnPaint(uMsg, wParam, lParam);
+                OnPaint(msg, wparam, lparam);
             }
 
             return 0;
 
         case WM_ERASEBKGND:
             {
-                CDC dc(reinterpret_cast<HDC>(wParam));
+                CDC dc(reinterpret_cast<HDC>(wparam));
                 BOOL PreventErasure;
 
                 PreventErasure = OnEraseBkgnd(dc);
@@ -1193,13 +1194,13 @@ namespace Win32xx
         case WM_VSCROLL:
         case WM_PARENTNOTIFY:
             {
-                lr = MessageReflect(uMsg, wParam, lParam);
+                lr = MessageReflect(msg, wparam, lparam);
                 if (lr != 0) return lr;    // Message processed so return
             }
             break;              // Do default processing when message not already processed
 
         case UWM_UPDATECOMMAND:
-            OnMenuUpdate(static_cast<UINT>(wParam)); // Perform menu updates
+            OnMenuUpdate(static_cast<UINT>(wparam)); // Perform menu updates
             break;
 
         case UWM_GETCWND:
@@ -1208,10 +1209,10 @@ namespace Win32xx
                 return reinterpret_cast<LRESULT>(this);
             }
 
-        } // switch (uMsg)
+        } // switch (msg)
 
         // Now hand all messages to the default procedure
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
 
     } // LRESULT CWnd::WindowProc(...)
 
@@ -1238,10 +1239,10 @@ namespace Win32xx
     }
 
 
-    inline LRESULT CWnd::CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wParam, LPARAM lParam) const
+    inline LRESULT CWnd::CallWindowProc(WNDPROC lpPrevWndFunc, UINT Msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
-        return ::CallWindowProc(lpPrevWndFunc, *this, Msg, wParam, lParam);
+        return ::CallWindowProc(lpPrevWndFunc, *this, Msg, wparam, lparam);
     }
 
 
@@ -1307,10 +1308,10 @@ namespace Win32xx
 
 
     // This function provides default processing for any window messages that an application does not process.
-    inline LRESULT CWnd::DefWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam) const
+    inline LRESULT CWnd::DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
-        return ::DefWindowProc(*this, uMsg, wParam, lParam);
+        return ::DefWindowProc(*this, msg, wparam, lparam);
     }
 
 
@@ -1743,21 +1744,21 @@ namespace Win32xx
     // The PostMessage function places (posts) a message in the message queue
     // associated with the thread that created the window and returns without
     // waiting for the thread to process the message.
-    inline BOOL CWnd::PostMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
+    inline BOOL CWnd::PostMessage(UINT msg, WPARAM wparam /*= 0*/, LPARAM lparam /*= 0*/) const
     {
         assert(IsWindow());
-        return ::PostMessage(*this, uMsg, wParam, lParam);
+        return ::PostMessage(*this, msg, wparam, lparam);
     }
 
 
     // The PostMessage function places (posts) a message in the message queue
     // associated with the thread that created the window and returns without
     // waiting for the thread to process the message.
-    inline BOOL CWnd::PostMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+    inline BOOL CWnd::PostMessage(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) const
     {
         // Required by by some macros
         assert(IsWindow());
-        return ::PostMessage(hWnd, uMsg, wParam, lParam);
+        return ::PostMessage(hWnd, msg, wparam, lparam);
     }
 
 
@@ -1811,31 +1812,31 @@ namespace Win32xx
 
 
     // The SendDlgItemMessage function sends a message to the specified control in a dialog box.
-    inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wParam, LPARAM lParam) const
+    inline LRESULT CWnd::SendDlgItemMessage(int nIDDlgItem, UINT Msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
-        return ::SendDlgItemMessage(*this, nIDDlgItem, Msg, wParam, lParam);
+        return ::SendDlgItemMessage(*this, nIDDlgItem, Msg, wparam, lparam);
     }
 
 
     // The SendMessage function sends the specified message to a window or windows.
     // It calls the window procedure for the window and does not return until the
     // window procedure has processed the message.
-    inline LRESULT CWnd::SendMessage(UINT uMsg, WPARAM wParam /*= 0*/, LPARAM lParam /*= 0*/) const
+    inline LRESULT CWnd::SendMessage(UINT msg, WPARAM wparam /*= 0*/, LPARAM lparam /*= 0*/) const
     {
         assert(IsWindow());
-        return ::SendMessage(*this, uMsg, wParam, lParam);
+        return ::SendMessage(*this, msg, wparam, lparam);
     }
 
 
     // The SendMessage function sends the specified message to a window or windows.
     // It calls the window procedure for the window and does not return until the
     // window procedure has processed the message.
-    inline LRESULT CWnd::SendMessage(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam) const
+    inline LRESULT CWnd::SendMessage(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) const
     {
         // Required by by some macros
         assert(IsWindow());
-        return ::SendMessage(hWnd, uMsg, wParam, lParam);
+        return ::SendMessage(hWnd, msg, wparam, lparam);
     }
 
 
@@ -1843,10 +1844,10 @@ namespace Win32xx
     // calling thread, SendNotifyMessage calls the window procedure for the window and does not return until the window procedure
     // has processed the message. If the window was created by a different thread, SendNotifyMessage passes the message to the
     // window procedure and returns immediately; it does not wait for the window procedure to finish processing the message.
-    inline BOOL CWnd::SendNotifyMessage(UINT Msg, WPARAM wParam, LPARAM lParam) const
+    inline BOOL CWnd::SendNotifyMessage(UINT Msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
-        return ::SendNotifyMessage(*this, Msg, wParam, lParam);
+        return ::SendNotifyMessage(*this, Msg, wparam, lparam);
     }
 
 
@@ -2554,7 +2555,7 @@ namespace Win32xx
     {
         NONCLIENTMETRICS ncm;
         ZeroMemory(&ncm, sizeof(ncm));
-        ncm.cbSize = sizeof(NONCLIENTMETRICS);
+        ncm.cbSize = sizeof(ncm);
 
 #if (WINVER >= 0x0600)
         // Is OS version less than Vista, adjust size to correct value

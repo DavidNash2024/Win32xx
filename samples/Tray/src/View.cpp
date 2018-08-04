@@ -11,7 +11,7 @@ void CView::Minimize()
 {
     NOTIFYICONDATA nid;
     ZeroMemory(&nid, sizeof(nid));
-    nid.cbSize = sizeof(NOTIFYICONDATA);
+    nid.cbSize = sizeof(nid);
     nid.hWnd = GetHwnd();
     nid.uID = IDW_MAIN;
     nid.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
@@ -23,12 +23,13 @@ void CView::Minimize()
 
     Shell_NotifyIcon(NIM_ADD, &nid);
     ShowWindow(SW_HIDE);
-    m_IsMinimized = true;
+    m_isMinimized = true;
 }
 
 void CView::OnAbout()
 {
-    MessageBox(_T("Tray Example: Demonstrates minimizing a window to the tray."), _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
+	CString str = _T("Tray Example: Demonstrates minimizing a window to the tray.");
+    MessageBox(str, _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
 }
 
 int CView::OnCreate(CREATESTRUCT& cs)
@@ -52,14 +53,14 @@ int CView::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_MINTOTRAY:     Minimize();     return TRUE;
     case IDM_FILE_EXIT:     OnFileExit();   return TRUE;
@@ -82,8 +83,8 @@ void CView::OnDraw(CDC& dc)
 
     // Centre some text in our view window
     CRect rc = GetClientRect();
-    CString cs = LoadString(IDS_DRAWTEXT);
-    dc.DrawText(cs, cs.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
+    CString text = LoadString(IDS_DRAWTEXT);
+    dc.DrawText(text, text.GetLength(), rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
 void CView::OnFileExit()
@@ -104,44 +105,44 @@ LRESULT CView::OnSize(UINT, WPARAM, LPARAM)
 {
     // Force the window to be repainted during resizing
     Invalidate();
-    return 0L;
+    return 0;
 }
 
-LRESULT CView::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Maximize and Minimuze requests end up here
 
-    if (wParam == SC_MINIMIZE)  // User pressed minimize button
+    if (wparam == SC_MINIMIZE)  // User pressed minimize button
     {
         Minimize();
-        return 0L;
+        return 0;
     }
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }   
 
-LRESULT CView::OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    // For a NOTIFYICONDATA with uVersion= 0, wParam and lParam have the following values:
-    // The wParam parameter contains the identifier of the taskbar icon in which the event occurred.
-    // The lParam parameter holds the mouse or keyboard message associated with the event.
-    UNREFERENCED_PARAMETER(uMsg);
+    // For a NOTIFYICONDATA with uVersion= 0, wparam and lparam have the following values:
+    // The wparam parameter contains the identifier of the taskbar icon in which the event occurred.
+    // The lparam parameter holds the mouse or keyboard message associated with the event.
+    UNREFERENCED_PARAMETER(msg);
     
-    if (wParam != IDW_MAIN)
-        return 0L;
+    if (wparam != IDW_MAIN)
+        return 0;
 
-    if (lParam == WM_LBUTTONUP)
+    if (lparam == WM_LBUTTONUP)
     {
         Restore();
     }
-    else if (lParam == WM_RBUTTONUP)
+    else if (lparam == WM_RBUTTONUP)
     {
-        CMenu TopMenu(IDM_MINIMIZED);
-        CMenu SubMenu = TopMenu.GetSubMenu(0);
+        CMenu topMenu(IDM_MINIMIZED);
+        CMenu subMenu = topMenu.GetSubMenu(0);
 
         SetForegroundWindow();
-        CPoint pt = GetCursorPos();
-        UINT uSelected = SubMenu.TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pt.x, pt.y, *this, NULL);
+        CPoint pos = GetCursorPos();
+        UINT uSelected = subMenu.TrackPopupMenu(TPM_RETURNCMD | TPM_NONOTIFY, pos.x, pos.y, *this, NULL);
 
         switch (uSelected)
         {
@@ -180,22 +181,22 @@ void CView::Restore()
     nid.uID = IDW_MAIN;
     Shell_NotifyIcon(NIM_DELETE, &nid);
     ShowWindow(SW_SHOW);
-    m_IsMinimized = false;
+    m_isMinimized = false;
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // This function is our message procedure. We process the messages for
     // the view window here.  Unprocessed messages are passed on for
     //  default processing.
 
-    switch(uMsg)
+    switch(msg)
     {
-    case WM_SIZE:       return OnSize(uMsg, wParam, lParam);
-    case WM_SYSCOMMAND: return OnSysCommand(uMsg, wParam, lParam);
-    case MSG_TRAYICON:  return OnTrayIcon(uMsg, wParam, lParam);
+    case WM_SIZE:       return OnSize(msg, wparam, lparam);
+    case WM_SYSCOMMAND: return OnSysCommand(msg, wparam, lparam);
+    case MSG_TRAYICON:  return OnTrayIcon(msg, wparam, lparam);
     }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

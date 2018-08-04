@@ -16,7 +16,7 @@ BOOL CBrowserApp::InitInstance()
     // This function is called automatically when the application starts
 
     // Create the Frame
-    m_Frame.Create();   // throws a CWinException on failure
+    m_frame.Create();   // throws a CWinException on failure
 
     return TRUE;
 }

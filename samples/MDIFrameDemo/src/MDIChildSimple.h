@@ -12,13 +12,13 @@ class CViewSimple : public CWnd
 public:
     CViewSimple();
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
-    COLORREF GetColor() {return m_Color;}
-    void SetColor(COLORREF color) { m_Color = color; }
+    COLORREF GetColor() {return m_color;}
+    void SetColor(COLORREF color) { m_color = color; }
 
 private:
-    COLORREF m_Color;
+    COLORREF m_color;
 };
 
 
@@ -31,13 +31,13 @@ public:
 
 protected:
     virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CViewSimple m_View;
-    CMenu m_Menu;
+    CViewSimple m_view;
+    CMenu m_menu;
 };
 
 #endif  //MDICHILDVIEW_H

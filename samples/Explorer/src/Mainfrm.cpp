@@ -6,10 +6,10 @@
 #include "resource.h"
 
 
-CMainFrame::CMainFrame()  : m_pLeftPane(0), m_ShowHidden(FALSE)
+CMainFrame::CMainFrame()  : m_pLeftPane(0), m_showHidden(FALSE)
 {
     // Set m_MainView as the view window of the frame
-    SetView(m_RightPane);
+    SetView(m_rightPane);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -25,43 +25,43 @@ void CMainFrame::DoPopupMenu()
     // Creates the popup menu for the "View Menu" toolbar button
 
     // Position the popup menu
-    CToolBar& TB = GetToolBar();
-    CRect rc = TB.GetItemRect(TB.CommandToIndex(IDM_VIEWMENU));
-    TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+    CToolBar& tb = GetToolBar();
+    CRect rc = tb.GetItemRect(tb.CommandToIndex(IDM_VIEWMENU));
+	tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
-    tpm.cbSize = sizeof(TPMPARAMS);
+    tpm.cbSize = sizeof(tpm);
     tpm.rcExclude = rc;
 
     // Load the popup menu
-    CMenu TopMenu(IDM_VIEWMENU);
-    CMenu PopupMenu = TopMenu.GetSubMenu(0);
+    CMenu topMenu(IDM_VIEWMENU);
+    CMenu popupMenu = topMenu.GetSubMenu(0);
 
     // Put a radio check in the currently checked item
     MENUITEMINFO mii;
-    ZeroMemory(&mii, sizeof(MENUITEMINFO));
+    ZeroMemory(&mii, GetSizeofMenuItemInfo());
     for (int i = 3 ; i < 7 ; i++)
     {
         ZeroMemory(&mii, GetSizeofMenuItemInfo());
         mii.cbSize = GetSizeofMenuItemInfo();
 
         mii.fMask  = MIIM_STATE | MIIM_ID;
-        CMenu SubMenu = GetFrameMenu().GetSubMenu(1);
-        SubMenu.GetMenuItemInfo(i, mii, TRUE);
+        CMenu subMenu = GetFrameMenu().GetSubMenu(1);
+        subMenu.GetMenuItemInfo(i, mii, TRUE);
         if (mii.fState & MFS_CHECKED)
-            TopMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
+            topMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, mii.wID, 0);
     }
 
     // Start the popup menu
-    PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 }
 
 void CMainFrame::OnInitialUpdate()
 {
     // Add the right window pane
-    int Width = GetWindowRect().Width() / 3;
-    DWORD dwDockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
-    m_pLeftPane = static_cast<CLeftPane*>(m_RightPane.AddDockedChild(new CLeftPane, dwDockStyle, Width));
+    int width = GetWindowRect().Width() / 3;
+    DWORD dockStyle = DS_DOCKED_LEFT  | DS_NO_UNDOCK | DS_NO_CAPTION;
+    m_pLeftPane = static_cast<CLeftPane*>(m_rightPane.AddDockedChild(new CLeftPane, dockStyle, width));
 
     // All windows are now created, so populate the treeview
     GetTreeView().GetRootItems();
@@ -70,19 +70,19 @@ void CMainFrame::OnInitialUpdate()
     GetFrameMenu().CheckMenuItem(IDM_SHOW_HIDDEN, MF_UNCHECKED);
 
     // Place Radio button in view menu
-    CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
-    ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
 
     // Uncomment the following to use a hash bar and disable of auto resizing 
     // m_RightPane.SetDragAutoResize(FALSE);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDM_HELP_ABOUT:        return OnHelp();
@@ -140,10 +140,10 @@ BOOL CMainFrame::OnViewLargeIcon()
 BOOL CMainFrame::OnViewList()
 {
     // Handle the the View submenu
-    CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewList();
-    ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_LIST, 0);
     return TRUE;
 }
 
@@ -157,52 +157,52 @@ BOOL CMainFrame::OnViewMenu()
 BOOL CMainFrame::OnViewReport()
 {
     // Handle the the View submenu
-    CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewReport();
-    ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_REPORT, 0);
     return TRUE;
 }
 
 BOOL CMainFrame::OnViewSmallIcon()
 {
     // Handle the the View submenu
-    CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
     GetListView().ViewSmallIcons();
-    ViewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
+    viewMenu.CheckMenuRadioItem(IDM_VIEW_SMALLICON, IDM_VIEW_REPORT, IDM_VIEW_SMALLICON, 0);
     return TRUE;
 }
 
 BOOL CMainFrame::OnShowHidden()
 {
     // Handle the the View submenu
-    CMenu ViewMenu = GetFrameMenu().GetSubMenu(1);
+    CMenu viewMenu = GetFrameMenu().GetSubMenu(1);
 
-    m_ShowHidden = !m_ShowHidden;
-    ViewMenu.CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_ShowHidden)? MF_CHECKED : MF_UNCHECKED);
+    m_showHidden = !m_showHidden;
+    viewMenu.CheckMenuItem(IDM_SHOW_HIDDEN, (TRUE == m_showHidden)? MF_CHECKED : MF_UNCHECKED);
 
     // Refresh the Listview display
     GetListView().DoDisplay();
     return TRUE;
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Notification from our dropdown button is recieved if Comctl32.dll version
     // is 4.70 or later (IE v3 required).
-    switch(((LPNMHDR)lParam)->code)
+    switch(((LPNMHDR)lparam)->code)
     {
         //Menu for dropdown toolbar button
         case TBN_DROPDOWN:
         {
-            if (((LPNMHDR)lParam)->hwndFrom == GetToolBar())
+            if (((LPNMHDR)lparam)->hwndFrom == GetToolBar())
                 DoPopupMenu();
         }
 
     } //switch LPNMHDR
 
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 void CMainFrame::SetupToolBar()
@@ -231,19 +231,19 @@ void CMainFrame::SetupToolBar()
     // Setting this style requires comctl32.dll version 4.72 or later
     if (GetComCtlVersion() >= 472)
     {
-        CToolBar& TB = GetToolBar();
-        TB.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+        CToolBar& tb = GetToolBar();
+		tb.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
     }
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //
 //  }
 
     // pass any unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

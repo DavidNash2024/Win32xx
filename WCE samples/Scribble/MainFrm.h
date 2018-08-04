@@ -13,30 +13,30 @@ class CMainFrame : public CWceFrame
 public:
     CMainFrame();
     virtual ~CMainFrame() {}
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void SetPen(COLORREF Color);
 
 protected:
     virtual void DrawLine(short x, short y);
     virtual void OnDraw(CDC& dc);   
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void StorePoint(int x, int y, bool PenDown);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     struct PlotPoint
     {
         short x;
         short y;
-        bool PenDown;
-        COLORREF color;
+        bool isPenDown;
+        COLORREF penColor;
     };
 
     std::vector<PlotPoint> m_points;    // Points of lines to draw
-    COLORREF m_PenColor;
+    COLORREF m_penColor;
 };
 
 #endif   //VIEW_H

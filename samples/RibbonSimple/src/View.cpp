@@ -92,15 +92,15 @@ void CView::PreCreate(CREATESTRUCT& cs)
     cs.cy = 300;                            // height
 }
 
-STDMETHODIMP CView::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
+STDMETHODIMP CView::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCommandExecutionProperties)
 {
     UNREFERENCED_PARAMETER(pCommandExecutionProperties);
     UNREFERENCED_PARAMETER(ppropvarValue);
     UNREFERENCED_PARAMETER(key);
     UNREFERENCED_PARAMETER(verb);
 
-    HRESULT hr = S_OK;
-    switch(nCmdID)
+    HRESULT result = S_OK;
+    switch(cmdID)
     {
     case cmdButton1:
         TRACE("Button 1\n");
@@ -134,16 +134,16 @@ STDMETHODIMP CView::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTY
         break;
     }
 
-    return hr; 
+    return result;
 }
 
-STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
+STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode)
 {
     UNREFERENCED_PARAMETER(viewId);
     UNREFERENCED_PARAMETER(pView);
-    UNREFERENCED_PARAMETER(uReasonCode);
+    UNREFERENCED_PARAMETER(reasonCode);
 
-    HRESULT hr = E_NOTIMPL;
+    HRESULT result = E_NOTIMPL;
 
     // Checks to see if the view that was changed was a Ribbon view.
     if (UI_VIEWTYPE_RIBBON == typeId)
@@ -151,23 +151,23 @@ STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* p
         switch (verb)
         {                           
         case UI_VIEWVERB_CREATE:    // The view was newly created.
-            hr = S_OK;
+			result = S_OK;
             break;
         case UI_VIEWVERB_SIZE:      //  The ribbon's size has changed           
-            hr = S_OK;
+			result = S_OK;
             break;          
         case UI_VIEWVERB_DESTROY:   // The view was destroyed.
-            hr = S_OK;
+			result = S_OK;
             break;
         }
     }  
 
-    return hr; 
+    return result;
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_SIZE:
         OnSize();
@@ -175,6 +175,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

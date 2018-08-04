@@ -50,23 +50,23 @@ CContextHelp::~CContextHelp()
 {
 }
 
-void CContextHelp::AddHelpTopic(UINT nID, LPCTSTR topic)
+void CContextHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 // Add the (control-nID, string topic) pair to the help topic table.
 // Assert if a duplicate id entered.
 {
-    assert(nID);
+    assert(id);
     assert(topic);
     std::map<UINT, CString>::const_iterator m;
 
     // Ensure this isn't a duplicate entry
-    m = m_HelpTopics.find(nID);
-    assert(m == m_HelpTopics.end());
+    m = m_helpTopics.find(id);
+    assert(m == m_helpTopics.end());
 
     // Add the topic to the map
-    m_HelpTopics.insert(std::make_pair(nID, topic));
+    m_helpTopics.insert(std::make_pair(id, topic));
 }
 
-HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR szString, UINT uCommand, DWORD dwData)
+HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command, DWORD data)
 // Creates the HtmlHelp window, and binds this object to its HWND.
 // hwndCaller: The handle (HWND) of the window calling HtmlHelp, typically ::GetDesktopWindow().
 //              The help window is owned by this window.
@@ -80,7 +80,7 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR szString, UINT uComma
     if (m_hWnd != 0) Detach();
 
     // Create the HtmlHelp window
-    HWND hWnd = HtmlHelp(hwndCaller, szString, uCommand, dwData);
+    HWND hWnd = HtmlHelp(hwndCaller, string, command, data);
 
     // Throw an exception if the window wasn't created
     if (hWnd == 0) throw CWinException(_T("Failed to initiate Context Help"));
@@ -106,7 +106,7 @@ UINT CContextHelp::GetIDFromCursorPos() const
     return nID;
 }
 
-void CContextHelp::ShowHelpTopic(UINT nID)
+void CContextHelp::ShowHelpTopic(UINT id)
 // Display the application guide topic corresponding to the numeric
 // identifier nID, if present in the help table, and if the topic exists
 // in the guide.
@@ -114,18 +114,18 @@ void CContextHelp::ShowHelpTopic(UINT nID)
     std::map<UINT, CString>::const_iterator m;
 
     // Find the CString mapped to this UINT
-    m = m_HelpTopics.find(nID);
-    CString Topic = (m != m_HelpTopics.end()) ? m->second : CString(_T("FeatureNotDescribed"));
+    m = m_helpTopics.find(id);
+    CString topic = (m != m_helpTopics.end()) ? m->second : CString(_T("FeatureNotDescribed"));
 
-    ShowHelpTopic(Topic);
+    ShowHelpTopic(topic);
 }
 
 void CContextHelp::ShowHelpTopic(LPCTSTR topic)
 // Display the application guide topic, if present, or show the topic
 // in a message box if there is no such topic in the guide.
 {
-    CString topic_url = (topic[0] == 0) ? CString(_T("")) : _T("::/") + (CString)topic + _T(".htm");
-    CString seek_url = m_HelpFilePath + topic_url;
+    CString topic_url = (topic[0] == 0) ? CString(_T("")) : _T("::/") + CString(topic) + _T(".htm");
+    CString seek_url = m_helpFilePath + topic_url;
 
     try
     {
@@ -137,7 +137,7 @@ void CContextHelp::ShowHelpTopic(LPCTSTR topic)
         // if no help guide topic was opened, show that this happened
         CString s;
         CString fmt = _T("Help topic could not be located:\n\n%s%s");
-        CString add = (m_HelpFilePath.IsEmpty() ? _T("\n\nNo help guide exists.")
+        CString add = (m_helpFilePath.IsEmpty() ? _T("\n\nNo help guide exists.")
             : _T("\n\nMake sure the .chm file is in the .exe directory."));
 
         s.Format(fmt, topic, add.c_str());

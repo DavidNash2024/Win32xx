@@ -18,12 +18,13 @@ typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 class CTCPClientDlg : public CDialog
 {
 public:
-    CTCPClientDlg(UINT nResID);
+    CTCPClientDlg(UINT resID);
     virtual ~CTCPClientDlg() {}
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnClose();
     virtual BOOL OnInitDialog();
-    void AppendText(int nID, LPCTSTR buf);
+
+    void AppendText(int id, LPCTSTR buf);
     void Receive();
     void Send();
 
@@ -36,9 +37,9 @@ private:
     class CEditReceive : public CEdit {};
     class CButtonSend : public CButton {};
 
-    CEditSend   m_EditSend;
-    CEditReceive m_EditReceive;
-    CButtonSend m_ButtonSend;
+    CEditSend   m_editSend;
+    CEditReceive m_editReceive;
+    CButtonSend m_buttonSend;
 };
 
 
@@ -46,12 +47,12 @@ private:
 class CSvrDialog : public CDialog
 {
 public:
-    CSvrDialog(UINT nResID);
+    CSvrDialog(UINT resID);
     virtual ~CSvrDialog();
-    void Append(int nID, LPCTSTR buf);
+    void Append(int id, LPCTSTR buf);
     void LoadCommonControlsEx();
-    BOOL OnSocketDisconnect(WPARAM wParam);
-    BOOL OnSocketReceive(WPARAM wParam);
+    BOOL OnSocketDisconnect(WPARAM wparam);
+    BOOL OnSocketReceive(WPARAM wparam);
     BOOL OnSocketAccept();
     BOOL OnSend();
     BOOL OnStartServer();
@@ -59,16 +60,16 @@ public:
     void StopServer();
 
 protected:
-    virtual void OnDestroy();
+	virtual void OnClose();
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
 
 private:
-    CServerSocket m_MainSocket;
-    std::map<ServerSocketPtr, TCPClientDlgPtr> m_ConnectedClients;// Stores TCP client sockets and TCP client dialogs
-    BOOL m_IsServerStarted;
-    int  m_SocketType;              // either SOCK_STREAM or SOCK_DGRAM
+    CServerSocket m_mainSocket;
+    std::map<ServerSocketPtr, TCPClientDlgPtr> m_connectedClients;// Stores TCP client sockets and TCP client dialogs
+    BOOL m_isServerStarted;
+    int  m_socketType;              // either SOCK_STREAM or SOCK_DGRAM
     sockaddr_in6  m_saUDPClient;    // connected UPD client's sockaddr  
 
     // Nested classes for this dialog's child windows
@@ -86,18 +87,18 @@ private:
     class CRadioTCP : public CButton {};
     class CRadioUDP : public CButton {};
 
-    CIP4Address m_IP4Address;
-    CEditIP6Address m_EditIP6Address;
-    CEditStatus m_EditStatus;
-    CEditPort   m_EditPort;
-    CEditSend   m_EditSend;
-    CEditReceive m_EditReceive;
-    CButtonStart m_ButtonStart;
-    CButtonSend m_ButtonSend;
-    CRadioIP4   m_RadioIP4;
-    CRadioIP6   m_RadioIP6;
-    CRadioTCP   m_RadioTCP;
-    CRadioUDP   m_RadioUDP;
+    CIP4Address m_ip4Address;
+    CEditIP6Address m_editIP6Address;
+    CEditStatus m_editStatus;
+    CEditPort   m_editPort;
+    CEditSend   m_editSend;
+    CEditReceive m_editReceive;
+    CButtonStart m_buttonStart;
+    CButtonSend m_buttonSend;
+    CRadioIP4   m_radioIP4;
+    CRadioIP6   m_radioIP6;
+    CRadioTCP   m_radioTCP;
+    CRadioUDP   m_radioUDP;
 
 };
 

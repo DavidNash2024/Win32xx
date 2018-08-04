@@ -4,8 +4,8 @@
 #include "stdafx.h"
 #include "Hyperlink.h"
 
-CHyperlink::CHyperlink() : m_IsUrlVisited(FALSE), m_IsClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
-                            m_crNotVisited(RGB(0,0,255))
+CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_visitedColor(RGB(128, 0, 128)),
+                            m_notVisitedColor(RGB(0,0,255))
 {
     // Create the cursor
     m_hCursor = ::LoadCursor(NULL, IDC_HAND);
@@ -25,26 +25,26 @@ void CHyperlink::OnAttach()
     NONCLIENTMETRICS ncm = GetNonClientMetrics();
     LOGFONT lf = ncm.lfMessageFont;
     lf.lfUnderline = TRUE;
-    m_UrlFont.CreateFontIndirect(lf);
+    m_urlFont.CreateFontIndirect(lf);
 }
 
-LRESULT CHyperlink::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     SetCapture();
-    m_IsClicked = TRUE;
+    m_isClicked = TRUE;
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CHyperlink::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     ReleaseCapture();
-    if(m_IsClicked)
+    if(m_isClicked)
     {
-        m_IsClicked = FALSE;
+        m_isClicked = FALSE;
         CPoint pt;
-        pt.x = LOWORD(lParam);
-        pt.y = HIWORD(lParam);
+        pt.x = LOWORD(lparam);
+        pt.y = HIWORD(lparam);
         ClientToScreen(pt);
         CRect rc = GetWindowRect(); 
 
@@ -52,7 +52,7 @@ LRESULT CHyperlink::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
             OpenUrl();
     }
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CHyperlink::OpenUrl()
@@ -63,29 +63,29 @@ void CHyperlink::OpenUrl()
 
     if (reinterpret_cast<int>(result) > 32)
     {
-        m_IsUrlVisited = TRUE;
+        m_isUrlVisited = TRUE;
 
         // redraw the StatusBar to update the color
         GetParent().RedrawWindow();
     }
 }
 
-LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
     // Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
-    if (uMsg ==  WM_CTLCOLORSTATIC)
+    if (msg ==  WM_CTLCOLORSTATIC)
     {
-        CDC dc(reinterpret_cast<HDC>(wParam));
-        dc.SetTextColor( m_IsUrlVisited? m_crVisited : m_crNotVisited);
+        CDC dc(reinterpret_cast<HDC>(wparam));
+        dc.SetTextColor( m_isUrlVisited? m_visitedColor : m_notVisitedColor);
         dc.SetBkMode(TRANSPARENT);
-        dc.SelectObject(m_UrlFont);
+        dc.SelectObject(m_urlFont);
 
         // Return a NULL brush for a transparent background
         return (LRESULT)GetStockObject(NULL_BRUSH);
     }
-    return 0L;
+    return 0;
 }
 
 LRESULT CHyperlink::OnSetCursor(UINT, WPARAM, LPARAM)
@@ -93,20 +93,20 @@ LRESULT CHyperlink::OnSetCursor(UINT, WPARAM, LPARAM)
     // Must use ::SetCursor here. CStatic::SetCursor does not do the same thing. 
     ::SetCursor(m_hCursor);
     
-    return 1L;  // Non-zero return prevents default processing
+    return 1;  // Non-zero return prevents default processing
 }
 
-LRESULT CHyperlink::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_LBUTTONDOWN:  return OnLButtonDown(uMsg, wParam, lParam);
-    case WM_LBUTTONUP:    return OnLButtonUp(uMsg, wParam, lParam);
-    case WM_SETCURSOR:    return OnSetCursor(uMsg, wParam, lParam); 
+    case WM_LBUTTONDOWN:  return OnLButtonDown(msg, wparam, lparam);
+    case WM_LBUTTONUP:    return OnLButtonUp(msg, wparam, lparam);
+    case WM_SETCURSOR:    return OnSetCursor(msg, wparam, lparam);
     case WM_NCHITTEST:    return HTCLIENT;      // Claim that the mouse is in a client area
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

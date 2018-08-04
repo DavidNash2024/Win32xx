@@ -9,32 +9,32 @@
 /////////////////////////////////////////////
 // Definitions for the CButtonDialog class
 //
-CButtonDialog::CButtonDialog(UINT nResID) : CDialog(nResID) 
+CButtonDialog::CButtonDialog(UINT resID) : CDialog(resID) 
 {
-    m_Brush.CreateSolidBrush(RGB(255, 255, 255));
+    m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
 CButtonDialog::~CButtonDialog() 
 {
 }
 
-INT_PTR CButtonDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CButtonDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_CTLCOLORDLG:    return OnCtlColorDlg(uMsg, wParam, lParam);
-    case WM_CTLCOLORSTATIC: return OnCtlColorStatic(uMsg, wParam, lParam);  
+    case WM_CTLCOLORDLG:    return OnCtlColorDlg(msg, wparam, lparam);
+    case WM_CTLCOLORSTATIC: return OnCtlColorStatic(msg, wparam, lparam);
     }
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
-BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CButtonDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDC_BUTTON1:   return OnButton();
     case IDC_CHECK1:    return OnCheck1();
@@ -43,7 +43,7 @@ BOOL CButtonDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
     case IDC_RADIO1:
     case IDC_RADIO2:    // intentionally blank
-    case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, nID);
+    case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
     }
 
     return FALSE;
@@ -73,30 +73,30 @@ BOOL CButtonDialog::OnCheck3()
     return TRUE;
 }
 
-INT_PTR CButtonDialog::OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CButtonDialog::OnCtlColorDlg(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the background color of the dialog
     if (IsXPThemed()) 
-        return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
+        return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
     else
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
 }
 
-INT_PTR CButtonDialog::OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CButtonDialog::OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set the background color of static controls
     if (IsXPThemed()) 
-        return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
+        return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
     else
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
 }
 
-BOOL CButtonDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
+BOOL CButtonDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
-    CheckRadioButton(nIDFirst, nIDLast, nIDClicked);
+    CheckRadioButton(idFirst, idLast, idClicked);
 
     CString str;
-    int nButton = nIDClicked - nIDFirst + 1;
+    int nButton = idClicked - idFirst + 1;
     str.Format(_T("Radio%d"), nButton);
     TRACE(str); TRACE("\n");
 
@@ -107,32 +107,32 @@ BOOL CButtonDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClick
 /////////////////////////////////////////////
 // Definitions for the CComboBoxDialog class
 //
-CComboBoxDialog::CComboBoxDialog(UINT nResID) : CDialog(nResID) 
+CComboBoxDialog::CComboBoxDialog(UINT resID) : CDialog(resID) 
 {
-    m_Brush.CreateSolidBrush(RGB(255, 255, 255));
+    m_brush.CreateSolidBrush(RGB(255, 255, 255));
 }
 
 CComboBoxDialog::~CComboBoxDialog() 
 {
 }
 
-INT_PTR CComboBoxDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CComboBoxDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     // Set the background color of the dialog
     case WM_CTLCOLORDLG:
-        if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
+        if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
         break;
     
     // Set the background color of static controls
     case WM_CTLCOLORSTATIC:
-        if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_Brush.GetHandle());
+        if (IsXPThemed()) return reinterpret_cast<INT_PTR>(m_brush.GetHandle());
         break;
     
     }
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 BOOL CComboBoxDialog::OnInitDialog()
@@ -151,7 +151,7 @@ BOOL CComboBoxDialog::OnInitDialog()
 /////////////////////////////////////////
 // Definitions for the CMyDialog class
 //
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
     m_pButtonDlg = NULL;
     m_pComboDlg = NULL;
@@ -161,15 +161,15 @@ CMyDialog::~CMyDialog()
 {
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 void CMyDialog::OnDestroy()
@@ -184,11 +184,11 @@ BOOL CMyDialog::OnInitDialog()
     SetIconLarge(IDW_MAIN);
     SetIconSmall(IDW_MAIN);
     
-    AttachItem(IDC_TAB1, m_Tab);
+    AttachItem(IDC_TAB1, m_tab);
 
-    m_pButtonDlg = static_cast<CButtonDialog*>(m_Tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog")));
-    m_pComboDlg = static_cast<CComboBoxDialog*>(m_Tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog")));
-    m_Tab.SelectPage(0);
+    m_pButtonDlg = static_cast<CButtonDialog*>(m_tab.AddTabPage(new CButtonDialog(IDD_BUTTONS), _T("Button Dialog")));
+    m_pComboDlg = static_cast<CComboBoxDialog*>(m_tab.AddTabPage(new CComboBoxDialog(IDD_COMBOBOXES), _T("ComboBox Dialog")));
+    m_tab.SelectPage(0);
 
     // Add some checkmarks to buttons to the button dialog
     m_pButtonDlg->CheckRadioButton(IDC_RADIO1, IDC_RADIO3, IDC_RADIO2);

@@ -18,11 +18,11 @@ CMyTreeView::~CMyTreeView()
     DeleteItems();
 }
 
-int CALLBACK CMyTreeView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+int CALLBACK CMyTreeView::CompareProc(LPARAM param1, LPARAM param2, LPARAM paramSort)
 {
-    UNREFERENCED_PARAMETER(lParamSort);
-    TreeItemData* pItem1 = reinterpret_cast<TreeItemData*>(lParam1);
-    TreeItemData* pItem2 = reinterpret_cast<TreeItemData*>(lParam2);
+    UNREFERENCED_PARAMETER(paramSort);
+    TreeItemData* pItem1 = reinterpret_cast<TreeItemData*>(param1);
+    TreeItemData* pItem2 = reinterpret_cast<TreeItemData*>(param2);
     HRESULT hr;
 
     hr = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelCpidl(), pItem2->GetRelCpidl());
@@ -37,22 +37,22 @@ void CMyTreeView::DeleteItems()
     m_pItems.clear();
 }
 
-void CMyTreeView::DoContextMenu(CPoint& ptScreen)
+void CMyTreeView::DoContextMenu(CPoint& point)
 {
     TVHITTESTINFO  tvhti;
-    tvhti.pt = ptScreen;
+    tvhti.pt = point;
     ScreenToClient(tvhti.pt);
     tvhti.flags = LVHT_NOWHERE;
     HitTest(tvhti);
 
     if(TVHT_ONITEM & tvhti.flags)
-        DoItemMenu(tvhti.hItem , ptScreen);
+        DoItemMenu(tvhti.hItem , point);
 }
 
-void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
+void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& point)
 {
     TVITEM tvItem;
-    ZeroMemory(&tvItem, sizeof(TVITEM));
+    ZeroMemory(&tvItem, sizeof(tvItem));
     tvItem.mask = TVIF_PARAM;
     tvItem.hItem = hItem;
 
@@ -74,18 +74,18 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
 
             if(SUCCEEDED(hr))
             {
-                CMenu Popup;
-                Popup.CreatePopupMenu();
-                if(Popup.GetHandle())
+                CMenu popup;
+                popup.CreatePopupMenu();
+                if(popup.GetHandle())
                 {
-                    hr = cm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+                    hr = cm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
 
                     if(SUCCEEDED(hr))
                     {
                         cm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
-                        UINT idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON ,
-                            ptScreen.x, ptScreen.y, *this, NULL);
+                        UINT idCmd = popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON ,
+                            point.x, point.y, *this, NULL);
 
                         //A Treeview control sometimes requires this to end the
                         // TrackPopupMenu properly
@@ -94,8 +94,8 @@ void CMyTreeView::DoItemMenu(HTREEITEM hItem, CPoint& ptScreen)
                         if(idCmd)
                         {
                             CMINVOKECOMMANDINFO  cmi;
-                            ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
-                            cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
+                            ZeroMemory(&cmi, sizeof(cmi));
+                            cmi.cbSize = sizeof(cmi);
                             cmi.hwnd = GetHwnd();
                             cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - 1);
                             cmi.nShow = SW_SHOWNORMAL;
@@ -117,7 +117,7 @@ LRESULT CMyTreeView::OnNMRClick(LPNMHDR pNMHDR)
     CPoint ptScreen = GetCursorPos();
     DoContextMenu(ptScreen);
 
-    return 0L;
+    return 0;
 }
 
 LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
@@ -157,7 +157,7 @@ LRESULT CMyTreeView::OnTVNGetDispInfo(LPNMTVDISPINFO pDI)
             pDI->item.iSelectedImage = sfi.iIcon;
     }
 
-    return 0L;
+    return 0;
 }
 
 
@@ -174,7 +174,7 @@ LRESULT CMyTreeView::OnTVNExpanding(LPNMTREEVIEW pNMTV)
         break;
     }
 
-    return 0L;
+    return 0;
 }
 
 LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
@@ -184,38 +184,38 @@ LRESULT CMyTreeView::OnTVNSelChanged(LPNMTREEVIEW pNMTV)
     CMyListView& LeftView = GetExplorerApp().GetMainFrame().GetListView();
     LeftView.DisplayFolder(pItem->GetParentFolder(), pItem->GetFullCpidl(), pItem->GetRelCpidl());
 
-    return 0L;
+    return 0;
 }
 
-LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CMyTreeView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMHDR  lpnmh = (LPNMHDR) lParam;
+    LPNMHDR  lpnmh = (LPNMHDR)lparam;
 
     switch(lpnmh->code)
     {
     case NM_RCLICK:         return OnNMRClick(lpnmh);
-    case TVN_GETDISPINFO:   return OnTVNGetDispInfo((LPNMTVDISPINFO)lParam);
-    case TVN_ITEMEXPANDING: return OnTVNExpanding((LPNMTREEVIEW)lParam);
-    case TVN_SELCHANGED:    return OnTVNSelChanged((LPNMTREEVIEW)lParam);
+    case TVN_GETDISPINFO:   return OnTVNGetDispInfo((LPNMTVDISPINFO)lparam);
+    case TVN_ITEMEXPANDING: return OnTVNExpanding((LPNMTREEVIEW)lparam);
+    case TVN_SELCHANGED:    return OnTVNSelChanged((LPNMTREEVIEW)lparam);
     }
 
     return 0;
 }
 
-void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder, Cpidl& cpidlParent)
+void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& parentFolder, Cpidl& cpidlParent)
 {
-    CEnumIDList cEnum;
-    if(SUCCEEDED(cParentFolder.EnumObjects(NULL, SHCONTF_FOLDERS | SHCONTF_INCLUDEHIDDEN, cEnum)))
+    CEnumIDList list;
+    if(SUCCEEDED(parentFolder.EnumObjects(NULL, SHCONTF_FOLDERS | SHCONTF_INCLUDEHIDDEN, list)))
     {
-        ULONG ulFetched = 1;
+        ULONG fetched = 1;
         Cpidl cpidlRel;
 
         //enumerate the item's PIDLs
-        while(S_OK == (cEnum.Next(1, cpidlRel, ulFetched)) && ulFetched)
+        while(S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
         {
             TVITEM         tvItem;
             TVINSERTSTRUCT tvInsert;
-            ULONG          ulAttribs;
+            ULONG          attribs;
             ZeroMemory(&tvItem, sizeof(TVITEM));            
             ZeroMemory(&tvInsert, sizeof(TVINSERTSTRUCT));
 
@@ -223,7 +223,7 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
             tvItem.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
 
             //Store a pointer to the TreeItemData in the lParam and m_pItems
-            TreeItemData* pItem = new TreeItemData(cpidlParent, cpidlRel, cParentFolder);
+            TreeItemData* pItem = new TreeItemData(cpidlParent, cpidlRel, parentFolder);
             tvItem.lParam = reinterpret_cast<LPARAM>(pItem);
             m_pItems.push_back(pItem);
 
@@ -232,12 +232,12 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
             tvItem.iImage = tvItem.iSelectedImage = I_IMAGECALLBACK;
 
             //determine if the item has children or shared
-            ulAttribs = SFGAO_HASSUBFOLDER | SFGAO_FOLDER | SFGAO_SHARE;
-            cParentFolder.GetAttributesOf(1, cpidlRel, ulAttribs);
-            tvItem.cChildren = (ulAttribs & SFGAO_HASSUBFOLDER);
+            attribs = SFGAO_HASSUBFOLDER | SFGAO_FOLDER | SFGAO_SHARE;
+            parentFolder.GetAttributesOf(1, cpidlRel, attribs);
+            tvItem.cChildren = (attribs & SFGAO_HASSUBFOLDER);
 
             //determine if the item is shared
-            if(ulAttribs & SFGAO_SHARE)
+            if(attribs & SFGAO_SHARE)
             {
                 tvItem.mask |= TVIF_STATE;
                 tvItem.stateMask |= TVIS_OVERLAYMASK;
@@ -250,7 +250,7 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
             tvInsert.hParent = hParentItem;
 
             InsertItem(tvInsert);
-            ulFetched = 0;
+            fetched = 0;
         }
     }
 }
@@ -258,7 +258,7 @@ void CMyTreeView::EnumObjects(HTREEITEM hParentItem, CShellFolder& cParentFolder
 BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
 {
     TVITEM tvItem;
-    ZeroMemory(&tvItem, sizeof(TVITEM));
+    ZeroMemory(&tvItem, sizeof(tvItem));
     tvItem.mask = TVIF_PARAM;
     tvItem.hItem = hParentItem;
     if (!GetItem(tvItem))
@@ -271,21 +271,21 @@ BOOL CMyTreeView::GetChildItems(HTREEITEM hParentItem)
     SendMessage(WM_SETREDRAW, FALSE, 0);
 
     TreeItemData* pItem = reinterpret_cast<TreeItemData*>(tvItem.lParam);
-    CShellFolder cParentFolder;
-    HRESULT        hr;
+    CShellFolder parentFolder;
+    HRESULT      hr;
 
     //if the parent folder is NULL, then we are at the root of the namespace, so the parent of this item is the desktop folder
     if(!pItem->GetParentFolder().GetIShellFolder())
-        hr = cParentFolder.SHGetDesktopFolder();
+        hr = parentFolder.SHGetDesktopFolder();
 
     //otherwise we need to get the IShellFolder for this item
     else
-        hr = pItem->GetParentFolder().BindToObject(pItem->GetRelCpidl(), NULL, IID_IShellFolder, cParentFolder);
+        hr = pItem->GetParentFolder().BindToObject(pItem->GetRelCpidl(), NULL, IID_IShellFolder, parentFolder);
 
     if(FAILED(hr))
         return FALSE;
 
-    EnumObjects(hParentItem, cParentFolder, pItem->GetFullCpidl());
+    EnumObjects(hParentItem, parentFolder, pItem->GetFullCpidl());
 
     //sort the new items
     TV_SORTCB tvSort;
@@ -314,8 +314,8 @@ BOOL CMyTreeView::GetRootItems()
         TV_ITEM           tvItem;
         TV_INSERTSTRUCT   tvInsert;
         HTREEITEM         hParentItem;
-        ZeroMemory(&tvItem, sizeof(TV_ITEM));
-        ZeroMemory(&tvInsert, sizeof(TV_INSERTSTRUCT));             
+        ZeroMemory(&tvItem, sizeof(tvItem));
+        ZeroMemory(&tvInsert, sizeof(tvInsert));
 
         //fill in the TVITEM structure for this item
         tvItem.mask = TVIF_PARAM | TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE | TVIF_CHILDREN;
@@ -407,7 +407,7 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
     while (hChild != NULL)
     {
         //Get the TVITEM structure for this item
-        ZeroMemory(&tvItem, sizeof(TVITEM));
+        ZeroMemory(&tvItem, sizeof(tvItem));
         tvItem.mask = TVIF_PARAM;
         tvItem.hItem = hChild;
         if(!GetItem(tvItem))
@@ -431,9 +431,9 @@ BOOL CMyTreeView::SelectFromListView(Cpidl& cpidlFull)
     return FALSE;
 }
 
-LRESULT CMyTreeView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyTreeView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
         case WM_DRAWITEM:
         case WM_MENUCHAR:
@@ -441,12 +441,12 @@ LRESULT CMyTreeView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         case WM_INITMENUPOPUP:
         {
             if(m_ccm2.GetIContextMenu2())
-                m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
+                m_ccm2.HandleMenuMsg(msg, wparam, lparam);
         }
         break;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 ///////////////////////////////////
@@ -457,9 +457,9 @@ CMyTreeView::TreeItemData::TreeItemData(Cpidl& cpidl)
     m_cpidlFull = cpidl;
 }
 
-CMyTreeView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
+CMyTreeView::TreeItemData::TreeItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& parentFolder)
 {
-    m_cParentFolder = cParentFolder;
+    m_parentFolder = parentFolder;
     m_cpidlFull     = cpidlParent + cpidlRel;
     m_cpidlRel      = cpidlRel;
 }

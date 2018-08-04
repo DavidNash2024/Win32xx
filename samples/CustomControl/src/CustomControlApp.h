@@ -13,11 +13,11 @@ class CCustomControlApp : public CWinApp
 public:
     CCustomControlApp();
     virtual ~CCustomControlApp();
-    CMyDialog& GetDialog() {return m_MyDialog;}
+    CMyDialog& GetDialog() {return m_myDialog;}
     virtual BOOL InitInstance();
 
 private:
-    CMyDialog m_MyDialog;
+    CMyDialog m_myDialog;
 };
 
 

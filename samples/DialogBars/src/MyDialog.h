@@ -14,13 +14,13 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
-    void SetProgress(int nPos);
-    void SetScroll(int nPos);
-    void SetSlider(int nPos);
-    void SetStatic(BOOL IsSlider, int nPos);
+    void SetProgress(int pos);
+    void SetScroll(int pos);
+    void SetSlider(int pos);
+    void SetStatic(BOOL isSlider, int pos);
 
 protected:
     virtual void OnDestroy();
@@ -28,9 +28,9 @@ protected:
     virtual void OnOK();
 
 private:
-    CMyProgressBar m_ProgressBar;
-    CMyScrollBar m_ScrollBar;
-    CMySlider m_Slider;
+    CMyProgressBar m_progressBar;
+    CMyScrollBar m_scrollBar;
+    CMySlider m_slider;
 };
 
 #endif //MYDIALOG_H

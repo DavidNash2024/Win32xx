@@ -8,38 +8,38 @@
 // Definitions for the CView class
 CView::CView()
 {
-    m_Brush.CreateSolidBrush( RGB(250, 230, 100) );
+    m_brush.CreateSolidBrush( RGB(250, 230, 100) );
 }
 
 BOOL CView::OnColor()
 {
-    static COLORREF CustColors[16] = {0};   // array of custom colors
+    static COLORREF custColors[16] = {0};   // array of custom colors
     CHOOSECOLOR cc;                         // Structure used by ChooseColor
     ZeroMemory(&cc, sizeof(cc));
 
     cc.lStructSize = sizeof(CHOOSECOLOR);
     cc.Flags = CC_FULLOPEN | CC_RGBINIT;
-    cc.rgbResult = m_Brush.GetLogBrush().lbColor;
-    cc.lpCustColors = CustColors;
+    cc.rgbResult = m_brush.GetLogBrush().lbColor;
+    cc.lpCustColors = custColors;
     cc.hwndOwner = *this;
     
     // Initiate the Choose Color dialog
     if (ChooseColor(&cc)==TRUE) 
     {
-        m_Brush = CreateSolidBrush(cc.rgbResult);
-        SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_Brush.GetHandle());
+        m_brush = CreateSolidBrush(cc.rgbResult);
+        SetClassLongPtr(GCLP_HBRBACKGROUND, (LONG_PTR)m_brush.GetHandle());
         Invalidate();
     }
 
     return TRUE;
 }
 
-BOOL CView::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+	UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+	UINT id= LOWORD(wparam);
+    switch (id)
     {
     case IDM_COLOR:     return OnColor();
     case IDM_EXIT:      return OnExit();
@@ -68,8 +68,8 @@ int CView::OnCreate(CREATESTRUCT& cs)
 
     // Create a circular region
     CRgn rgn;
-    m_Rect = CRect(50, 50, 300, 300);
-    rgn.CreateEllipticRgnIndirect(m_Rect);
+    m_rect = CRect(50, 50, 300, 300);
+    rgn.CreateEllipticRgnIndirect(m_rect);
 
     // assign the region to the window
     SetWindowRgn(rgn, FALSE);
@@ -90,7 +90,7 @@ void CView::OnDraw(CDC& dc)
     // window needs to be repainted.
 
     // Centre some text in our view window
-    CRect rc = m_Rect;
+    CRect rc = m_rect;
     rc.OffsetRect(0, -GetSystemMetrics(SM_CYCAPTION) );
     CString cs = LoadString(IDW_MAIN);
     dc.SetBkMode(TRANSPARENT);
@@ -134,86 +134,86 @@ void CView::PreRegisterClass(WNDCLASS& wc)
     // This function will be called automatically by Create.
     // Here we set the window's class paramaters.
 
-    wc.hbrBackground = m_Brush;                 // Background color
+    wc.hbrBackground = m_brush;                 // Background color
     wc.lpszClassName = _T("Round Window");      // Class Name
     wc.hCursor = ::LoadCursor(NULL,IDC_ARROW);  // Arrow cursor
 }
 
-LRESULT CView::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a left mouse button press
 {
     SetCapture();
     
     // Save the relative mouse position
-    m_Point = GetCursorPos();
-    ScreenToClient(m_Point);
+    m_point = GetCursorPos();
+    ScreenToClient(m_point);
 
     // Adjust client co-ords to window co-ords.
-    m_Point.x += GetSystemMetrics(SM_CXFIXEDFRAME);
-    m_Point.y += GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFIXEDFRAME);
+    m_point.x += GetSystemMetrics(SM_CXFIXEDFRAME);
+    m_point.y += GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFIXEDFRAME);
 
     // Pass this message on for default processing
-    return FinalWindowProc(uMsg, wParam, lParam);
+	return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a left mouse button release
 {
     ReleaseCapture();
 
     // Pass this message on for default processing
-    return FinalWindowProc(uMsg, wParam, lParam);
+	return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse move
 {
-    if (wParam & MK_LBUTTON)
+	if (wparam & MK_LBUTTON)
     {
         CPoint pt = GetCursorPos();
 
-        int x = pt.x - m_Point.x;
-        int y = pt.y - m_Point.y;
+        int x = pt.x - m_point.x;
+        int y = pt.y - m_point.y;
 
         // Move the window
         SetWindowPos(NULL, x, y, 0, 0, SWP_NOSIZE);
     }
 
     // Pass this message on for default processing
-    return FinalWindowProc(uMsg, wParam, lParam);
+	return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to Right mouse button press
 {
     // Create the menu
-    CMenu Popup;
-    Popup.CreatePopupMenu();
-    Popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
-    Popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
+    CMenu popup;
+	popup.CreatePopupMenu();
+	popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
+	popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
     
     // Initiate the popup menu
     CPoint pt = GetCursorPos();
-    Popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, GetHwnd());
+	popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, GetHwnd());
 
     // Pass this message on for default processing
-    return FinalWindowProc(uMsg, wParam, lParam);
+	return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // This function is our message procedure. We process the messages for
     // the view window here.  Unprocessed messages are passed on for
     //  default processing.
 
-    switch(uMsg)
+	switch (msg)
     {
-        case WM_LBUTTONDOWN:    return OnLButtonDown(uMsg, wParam, lParam);
-        case WM_LBUTTONUP:      return OnLButtonUp(uMsg, wParam, lParam);
-        case WM_MOUSEMOVE:      return OnMouseMove(uMsg, wParam, lParam);
-        case WM_RBUTTONDOWN:    return OnRButtonDown(uMsg, wParam, lParam);
+	case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+	case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+	case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+	case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
     }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+	return WndProcDefault(msg, wparam, lparam);
 }

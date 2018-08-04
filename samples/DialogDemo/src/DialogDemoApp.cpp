@@ -7,7 +7,7 @@
 
 
 // Definitions for the CDialogApp class
-CDialogDemoApp::CDialogDemoApp() : m_MyDialog(IDD_DIALOG1)
+CDialogDemoApp::CDialogDemoApp() : m_myDialog(IDD_DIALOG1)
 {
 }
 
@@ -18,7 +18,7 @@ CDialogDemoApp::~CDialogDemoApp()
 BOOL CDialogDemoApp::InitInstance()
 {
     //Display the Modal Dialog
-    m_MyDialog.DoModal();   // throws a CWinException on failure  
+    m_myDialog.DoModal();   // throws a CWinException on failure  
 
     return TRUE;
 }

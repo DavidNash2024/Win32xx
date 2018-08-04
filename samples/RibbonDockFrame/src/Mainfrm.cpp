@@ -16,7 +16,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     // Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -32,14 +32,14 @@ CMainFrame::~CMainFrame()
     DestroyRibbon();
 }
 
-STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
+STDMETHODIMP CMainFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
     // This function is called when a ribbon button is pressed. 
     // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation 
 
     if (UI_EXECUTIONVERB_EXECUTE == verb)
     {
-        switch(nCmdID)
+        switch(cmdID)
         {
         case IDC_CMD_NEW:       OnFileNew();        break;
         case IDC_CMD_OPEN:      OnFileOpen();       break;
@@ -59,7 +59,7 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
         default:
             {
                 CString str;
-                str.Format(_T("Unknown Button %d\n"),nCmdID);
+                str.Format(_T("Unknown Button %d\n"),cmdID);
                 TRACE(str);
             }
             break;
@@ -69,14 +69,14 @@ STDMETHODIMP CMainFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PRO
     return S_OK;
 }
 
-void CMainFrame::MRUFileOpen(UINT nMRUIndex)
+void CMainFrame::MRUFileOpen(UINT mruIndex)
 {
-    CString strMRUText = GetMRUEntry(nMRUIndex);
+    CString mruText = GetMRUEntry(mruIndex);
 
-    if (GetDoc().FileOpen(strMRUText))
-        m_PathName = strMRUText;
+    if (GetDoc().FileOpen(mruText))
+        m_pathName = mruText;
     else
-        RemoveMRUEntry(strMRUText);
+        RemoveMRUEntry(mruText);
 
     GetView().Invalidate();
 }
@@ -85,8 +85,8 @@ void CMainFrame::OnMRUList(const PROPERTYKEY* key, const PROPVARIANT* ppropvarVa
 {
     if (ppropvarValue != NULL && key != NULL && UI_PKEY_SelectedItem == *key)
     {
-        UINT uSelectedMRUItem = ppropvarValue->ulVal;
-        MRUFileOpen(uSelectedMRUItem);
+        UINT mruItem = ppropvarValue->ulVal;
+        MRUFileOpen(mruItem);
     }
 }
 
@@ -107,7 +107,7 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
             if (0 <= pCmdExProp->GetValue(UI_PKEY_Color, &var))
             {   
                 UINT color = var.uintVal;
-                m_View.SetPenColor((COLORREF)color);
+                m_view.SetPenColor((COLORREF)color);
             }
         }
     }       
@@ -116,16 +116,16 @@ void CMainFrame::OnPenColor(const PROPVARIANT* ppropvarValue, IUISimplePropertyS
 void CMainFrame::SetPenColor(COLORREF clr)
 {
     // Used when there isn't a ribbon
-    m_View.SetPenColor(clr);
+    m_view.SetPenColor(clr);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the (non-ribbon) Menu and Tool Bar
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch (nID)
     {
     case IDM_FILE_NEW:          OnFileNew();            return TRUE;
@@ -141,7 +141,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     case IDW_FILE_MRU_FILE4:
     case IDW_FILE_MRU_FILE5:
         {
-            UINT uMRUEntry = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
+            UINT uMRUEntry = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
             MRUFileOpen(uMRUEntry);
             return TRUE;
         }
@@ -165,66 +165,66 @@ void CMainFrame::OnFileExit()
     PostMessage(WM_CLOSE);
 }
 
-void CMainFrame::LoadFile(LPCTSTR str)
+void CMainFrame::LoadFile(LPCTSTR fileName)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
     // Retrieve the PlotPoint data
-    if (GetDoc().FileOpen(str))
+    if (GetDoc().FileOpen(fileName))
     {
         // Save the filename
-        m_PathName = str;
-        AddMRUEntry(str);
+        m_pathName = fileName;
+        AddMRUEntry(fileName);
     }
     else
-        m_PathName=_T("");
+        m_pathName=_T("");
 
     GetView().Invalidate();
 }
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    FileDlg.SetTitle(_T("Open File"));
+    CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+    fileDlg.SetTitle(_T("Open File"));
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // Load the file
-        LoadFile(FileDlg.GetPathName());
+        LoadFile(fileDlg.GetPathName());
     }
 }
 
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
-    m_PathName = _T("");
+    m_pathName = _T("");
     GetView().Invalidate();
 }
 
 void CMainFrame::OnFileSave()
 {
-    if (m_PathName == _T(""))
+    if (m_pathName == _T(""))
         OnFileSaveAs();
     else
-        GetDoc().FileSave(m_PathName);
+        GetDoc().FileSave(m_pathName);
 }
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    FileDlg.SetTitle(_T("Save File"));
+    CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+    fileDlg.SetTitle(_T("Save File"));
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
+        CString str = fileDlg.GetPathName();
 
         // Save the file
         if (GetDoc().FileSave(str))
         {
             // Save the file name
-            m_PathName = str;
-            AddMRUEntry(m_PathName);
+            m_pathName = str;
+            AddMRUEntry(m_pathName);
         }
     }
 
@@ -235,24 +235,24 @@ void CMainFrame::OnFileSaveAs()
 void CMainFrame::OnFilePrint()
 {
     // Get the dimensions of the View window
-    CRect rcView = GetView().GetClientRect();
-    int Width = rcView.Width();
-    int Height = rcView.Height();
+    CRect viewRect = GetView().GetClientRect();
+    int width = viewRect.Width();
+    int height = viewRect.Height();
 
     // Copy the bitmap from the View window
-    CClientDC ViewDC(GetView());
-    CMemDC MemDC(ViewDC);
+    CClientDC viewDC(GetView());
+    CMemDC memDC(viewDC);
     CBitmap bmView;
-    bmView.CreateCompatibleBitmap(ViewDC, Width, Height);
-    MemDC.SelectObject(bmView);
-    BitBlt(MemDC, 0, 0, Width, Height, ViewDC, 0, 0, SRCCOPY);
+    bmView.CreateCompatibleBitmap(viewDC, width, height);
+    memDC.SelectObject(bmView);
+    BitBlt(memDC, 0, 0, width, height, viewDC, 0, 0, SRCCOPY);
 
-    CPrintDialog PrintDlg;
+    CPrintDialog printDlg;
 
     try
     {
         // Bring up a dialog to choose the printer
-        if (PrintDlg.DoModal(GetView()) == IDOK)    // throws exception if there is no default printer
+        if (printDlg.DoModal(GetView()) == IDOK)    // throws exception if there is no default printer
         {
             // Zero and then initialize the members of a DOCINFO structure.
             DOCINFO di;
@@ -264,45 +264,45 @@ void CMainFrame::OnFilePrint()
             di.fwType = 0;
 
             // Begin a print job by calling the StartDoc function.
-            CDC dcPrint = PrintDlg.GetPrinterDC();
-            if (SP_ERROR == StartDoc(dcPrint, &di))
+            CDC printDC = printDlg.GetPrinterDC();
+            if (SP_ERROR == StartDoc(printDC, &di))
                 throw CUserException(_T("Failed to start print job"));
 
             // Inform the driver that the application is about to begin sending data.
-            if (0 > StartPage(dcPrint))
+            if (0 > StartPage(printDC))
                 throw CUserException(_T("StartPage failed"));
 
             BITMAPINFOHEADER bi;
-            ZeroMemory(&bi, sizeof(BITMAPINFOHEADER));
-            bi.biSize = sizeof(BITMAPINFOHEADER);
-            bi.biHeight = Height;
-            bi.biWidth = Width;
+            ZeroMemory(&bi, sizeof(bi));
+            bi.biSize = sizeof(bi);
+            bi.biHeight = height;
+            bi.biWidth = width;
             bi.biPlanes = 1;
             bi.biBitCount = 24;
             bi.biCompression = BI_RGB;
 
             // Note: BITMAPINFO and BITMAPINFOHEADER are the same for 24 bit bitmaps
             // Get the size of the image data
-            MemDC.GetDIBits(bmView, 0, Height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+            memDC.GetDIBits(bmView, 0, height, NULL, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
             // Retrieve the image data
             std::vector<byte> vBits(bi.biSizeImage, 0); // a vector to hold the byte array
             byte* pByteArray = &vBits.front();
-            MemDC.GetDIBits(bmView, 0, Height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
+            memDC.GetDIBits(bmView, 0, height, pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS);
 
             // Determine the scaling factors required to print the bitmap and retain its original proportions.
-            float fLogPelsX1 = static_cast<float>(ViewDC.GetDeviceCaps(LOGPIXELSX));
-            float fLogPelsY1 = static_cast<float>(ViewDC.GetDeviceCaps(LOGPIXELSY));
-            float fLogPelsX2 = static_cast<float>(GetDeviceCaps(dcPrint, LOGPIXELSX));
-            float fLogPelsY2 = static_cast<float>(GetDeviceCaps(dcPrint, LOGPIXELSY));
-            float fScaleX = fLogPelsX2 / fLogPelsX1;
-            float fScaleY = fLogPelsY2 / fLogPelsY1;
+            float logPelsX1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSX));
+            float logPelsY1 = static_cast<float>(viewDC.GetDeviceCaps(LOGPIXELSY));
+            float logPelsX2 = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSX));
+            float logPelsY2 = static_cast<float>(GetDeviceCaps(printDC, LOGPIXELSY));
+            float scaleX = logPelsX2 / logPelsX1;
+            float scaleY = logPelsY2 / logPelsY1;
 
-            int scaledWidth = static_cast<int>(static_cast<float>(Width) * fScaleX);
-            int scaledHeight = static_cast<int>(static_cast<float>(Height) * fScaleY);
+            int scaledWidth = static_cast<int>(static_cast<float>(width) * scaleX);
+            int scaledHeight = static_cast<int>(static_cast<float>(height) * scaleY);
 
             // Use StretchDIBits to scale the bitmap and maintain its original proportions
-            UINT result = StretchDIBits(dcPrint, 0, 0, scaledWidth, scaledHeight, 0, 0, Width, Height,
+            UINT result = StretchDIBits(printDC, 0, 0, scaledWidth, scaledHeight, 0, 0, width, height,
                                         pByteArray, reinterpret_cast<BITMAPINFO*>(&bi), DIB_RGB_COLORS, SRCCOPY);
             if (GDI_ERROR == result)
             {
@@ -310,11 +310,11 @@ void CMainFrame::OnFilePrint()
             }
 
             // Inform the driver that the page is finished.
-            if (0 > EndPage(dcPrint))
+            if (0 > EndPage(printDC))
                 throw CUserException(_T("EndPage failed"));
 
             // Inform the driver that document has ended.
-            if (0 > EndDoc(dcPrint))
+            if (0 > EndDoc(printDC))
                 throw CUserException(_T("EndDoc failed"));
         }
     }
@@ -322,9 +322,9 @@ void CMainFrame::OnFilePrint()
     catch (const CException& e)
     {
         // Display a message box indicating why printing failed.
-        CString strMsg = CString(e.GetText()) + CString("\n") + e.GetErrorString();
-        CString strType = CString(e.what());
-        ::MessageBox(NULL, strMsg, strType, MB_ICONWARNING);
+        CString message = CString(e.GetText()) + CString("\n") + e.GetErrorString();
+        CString type = CString(e.what());
+        ::MessageBox(NULL, message, type, MB_ICONWARNING);
     }
 
 }
@@ -332,10 +332,10 @@ void CMainFrame::OnFilePrint()
 void CMainFrame::OnInitialUpdate()
 {
     // Add some Dockers to the Ribbon Frame
-    DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
-    int DockWidth = 150;
-    CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | dwStyle, DockWidth);
-    CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | dwStyle, DockWidth);
+    DWORD style = DS_CLIENTEDGE; // The style added to each docker
+    int dockWidth = 150;
+    CDocker* pDock1 = AddDockedChild(new CDockFiles, DS_DOCKED_LEFT | style, dockWidth);
+    CDocker* pDock2 = AddDockedChild(new CDockFiles, DS_DOCKED_RIGHT | style, dockWidth);
 
     assert (pDock1->GetContainer());
     assert (pDock2->GetContainer());
@@ -363,52 +363,52 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-STDMETHODIMP CMainFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
+STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
 {   
     // This function is called when a ribbon button is updated. 
     // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
-    HRESULT hr = E_NOTIMPL;
+    HRESULT result = E_NOTIMPL;
     if(UI_PKEY_Enabled == key)
     {
         return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
     }
 
-    switch(nCmdID)
+    switch(cmdID)
     {
     case IDC_MRULIST:
         // Set up the Most Recently Used (MRU) menu
         if (UI_PKEY_Label == key)
         {
             WCHAR label[MAX_PATH] = L"Recent Files";
-            hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
+			result = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
         }
         else if (UI_PKEY_RecentItems == key)
         {
-            hr = PopulateRibbonRecentItems(newValue);
+			result = PopulateRibbonRecentItems(newValue);
         }
         break;
 
     case IDC_PEN_COLOR:
         // Set the initial pen color
-        hr = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
+		result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
     } 
 
-    return hr;
+    return result;
 }
 
-LRESULT CMainFrame::OnDropFile(WPARAM wParam)
+LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Called in reponse to a UWM_DROPFILE message
 {
     // wParam is a pointer (LPCTSTR) to the filename
-    LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
-    assert(szFileName);
+    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+    assert(fileName);
     
     // Load the file
-    LoadFile(szFileName);
-    return 0L;
+    LoadFile(fileName);
+    return 0;
 }
 
 LRESULT CMainFrame::OnGetAllPoints()
@@ -421,27 +421,27 @@ LRESULT CMainFrame::OnGetAllPoints()
     return reinterpret_cast<LRESULT>(pAllPoints);
 }
 
-LRESULT CMainFrame::OnSendPoint(WPARAM wParam)
+LRESULT CMainFrame::OnSendPoint(WPARAM wparam)
 // Called in response to a UWM_SENDPOINT message
 {
     // wParam is a pointer to the vector of PlotPoints
-    PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wParam);
+    PlotPoint* pPP = reinterpret_cast<PlotPoint*>(wparam);
 
     // Dereference the pointer and store the vector of PlotPoints in CDoc
     GetDoc().StorePoint(*pPP);
-    return 0L;
+    return 0;
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case UWM_DROPFILE:          return OnDropFile(wParam);
+    case UWM_DROPFILE:          return OnDropFile(wparam);
     case UWN_GETALLPOINTS:      return OnGetAllPoints();
-    case UWM_SENDPOINT:         return OnSendPoint(wParam);
+    case UWM_SENDPOINT:         return OnSendPoint(wparam);
     }
 
     //Use the default message handling for remaining messages
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

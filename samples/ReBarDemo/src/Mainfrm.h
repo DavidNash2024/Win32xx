@@ -22,23 +22,23 @@ public:
     void OnRight();
     void OnTop();
     void SetReBarPos();
-    void SetWrapState(CToolBar* pToolBar, BOOL bWrap);
+    void SetWrapState(CToolBar* pToolBar, BOOL isWrapped);
 
 protected:
     virtual CRect   GetViewRect() const;
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    SetupToolBar();
     virtual void    RecalcLayout();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wmaram, LPARAM lmaram);
 
 private:
-    CReBar m_ReBar;
-    CToolBar m_ToolBar;
-    CImageList m_ToolBarImages;
-    CView m_View;
+    CReBar m_reBar;
+    CToolBar m_toolBar;
+    CImageList m_toolBarImages;
+    CView m_view;
 };
 
 #endif //MAINFRM_H

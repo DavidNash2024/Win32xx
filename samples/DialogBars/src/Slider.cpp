@@ -13,24 +13,24 @@ void CMySlider::OnInitialUpdate()
     SetTicFreq(10);
 }
 
-LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMySlider::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(wParam);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(wparam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    switch (uMsg)
+    switch (msg)
     {
     case WM_HSCROLL:
         {
             // Get the slider bar position
-            int nPos = GetPos();
+            int pos = GetPos();
 
             // Get a pointer to the MyDialog object
             CMyDialog& MyDialog = GetDialogApp().GetDialog();
 
-            MyDialog.SetProgress(nPos);     // Set the progress bar position
-            MyDialog.SetScroll(nPos);       // Set the scroll bar position
-            MyDialog.SetStatic(TRUE, nPos); // Set the static text
+            MyDialog.SetProgress(pos);     // Set the progress bar position
+            MyDialog.SetScroll(pos);       // Set the scroll bar position
+            MyDialog.SetStatic(TRUE, pos); // Set the static text
             break;
         }
     }
@@ -38,9 +38,9 @@ LRESULT CMySlider::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
     return 0;
 }
 
-void CMySlider::SetSlider(int nPos)
+void CMySlider::SetSlider(int pos)
 {
     // Set the slider position
-    SetPos(nPos, TRUE);
+    SetPos(pos, TRUE);
 }
 

@@ -8,34 +8,34 @@
 class CColourDialog : public CDialog
 {
 public:
-    CColourDialog(UINT nResID, CBitmap& bmImage);
+    CColourDialog(UINT resID, CBitmap& image);
     virtual ~CColourDialog();
     void CreateImagePreviews();
     
 protected:
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL    OnInitDialog();
     virtual void    OnOK();
-    virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     void OnGrayScale();
-    LRESULT OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
     void    PaintPreview();
 
     // CWnd object for the dialog controls to attach to
-    CWnd m_RedSlider;
-    CWnd m_GreenSlider;
-    CWnd m_BlueSlider;
-    CWnd m_RedEdit;
-    CWnd m_GreenEdit;
-    CWnd m_BlueEdit;
-    CWnd m_Preview;
+    CWnd m_redSlider;
+    CWnd m_greenSlider;
+    CWnd m_blueSlider;
+    CWnd m_redEdit;
+    CWnd m_greenEdit;
+    CWnd m_blueEdit;
+    CWnd m_preview;
 
-    CBitmap m_bmImage;
-    CBitmap m_bmPreview;
-    CBitmap m_bmPreviewOrig;
+    CBitmap m_image;
+    CBitmap m_previewImage;
+    CBitmap m_previewOrigImage;
     int m_cRed;
     int m_cGreen;
     int m_cBlue;

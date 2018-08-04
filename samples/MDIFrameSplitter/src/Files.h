@@ -14,17 +14,17 @@ public:
     virtual ~CViewFiles();
 
 protected:
-    virtual int  AddItem(LPCTSTR szText, int nImage);
+    virtual int  AddItem(LPCTSTR text, int image);
     virtual void InsertItems();
     virtual void OnAttach();
     virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void SetColumns();
-    virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL SetSubItem(int item, int subItem, LPCTSTR text);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CImageList m_imlSmall;
+    CImageList m_smallImages;
 };
 
 // Declaration of the CContainFiles class
@@ -35,7 +35,7 @@ public:
     ~CContainFiles() {}
 
 private:
-    CViewFiles m_ViewFiles;
+    CViewFiles m_viewFiles;
 };
 
 // Declaration of the CDockFiles class
@@ -47,7 +47,7 @@ public:
     virtual int OnCreate(CREATESTRUCT& cs);
 
 private:
-    CContainFiles m_Files;
+    CContainFiles m_files;
 };
 
 

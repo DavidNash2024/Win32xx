@@ -9,7 +9,7 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
     void AddToEdit();
     void AddToListBox();
@@ -19,10 +19,10 @@ public:
 
 private:
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
-    int m_nCounter;
+    int m_counter;
 };
 
 #endif //MYDIALOG_H

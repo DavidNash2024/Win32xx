@@ -19,16 +19,16 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDraw(CDC& dc);
     virtual void OnInitialUpdate();
-    virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CBitmap m_Blue;
-    CBitmap m_Orange;
-    CBitmap m_Mask;
-    CSize m_BallSize;
+    CBitmap m_blue;
+    CBitmap m_orange;
+    CBitmap m_mask;
+    CSize m_ballSize;
 };
 
 
