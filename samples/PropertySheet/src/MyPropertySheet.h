@@ -8,19 +8,19 @@
 class CMyPropertySheet : public CPropertySheet
 {
 public:
-    CMyPropertySheet(LPCTSTR pszCaption = NULL, HWND hParent = NULL);
+    CMyPropertySheet(LPCTSTR caption = NULL, HWND hParent = NULL);
     virtual void OnClose() { TRACE("OnClose\n"); CPropertySheet::OnClose(); }
     virtual void OnDestroy() { TRACE("OnDestroy\n"); }
     virtual void OnInitialUpdate();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 };
 
 class CButtonPage : public CPropertyPage
 {
 public:
-    CButtonPage(UINT nIDTemplate, LPCTSTR szTitle = NULL);
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    CButtonPage(UINT templateID, LPCTSTR title = NULL);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnApply();
     virtual void OnCancel();
     virtual BOOL OnInitDialog();
@@ -33,8 +33,8 @@ public:
 class CComboPage : public CPropertyPage
 {
 public:
-    CComboPage(UINT nIDTemplate, LPCTSTR szTitle  = NULL);
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    CComboPage(UINT templateID, LPCTSTR title  = NULL);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual BOOL OnSetActive();
     virtual BOOL OnApply()

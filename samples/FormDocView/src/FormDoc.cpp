@@ -9,7 +9,7 @@
 
 
 // Definitions for the CFormDoc class
-CFormDoc::CFormDoc() : m_CheckA(FALSE), m_CheckB(FALSE), m_CheckC(FALSE), m_Radio(0)
+CFormDoc::CFormDoc() : m_isCheckA(FALSE), m_isCheckB(FALSE), m_isCheckC(FALSE), m_radio(0)
 {
 }
 
@@ -17,49 +17,49 @@ CFormDoc::~CFormDoc()
 {
 }
 
-DWORD CFormDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
+DWORD CFormDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR keyName)
 {
   DWORD   dwType;
   DWORD   dwCount = sizeof(DWORD);
   DWORD   dwValue = 0;
-  if (ERROR_SUCCESS == RegQueryValueEx(hKey, pName, NULL, &dwType, reinterpret_cast<LPBYTE>(&dwValue), &dwCount))
+  if (ERROR_SUCCESS == RegQueryValueEx(hKey, keyName, NULL, &dwType, reinterpret_cast<LPBYTE>(&dwValue), &dwCount))
       return dwValue;
   else
       return 0;
 }
 
-void CFormDoc::LoadDocRegistry(LPCTSTR szKeyName)
+void CFormDoc::LoadDocRegistry(LPCTSTR keyName)
 {
     HKEY hKey;
     CString strKey = _T("Software\\");
-    strKey += szKeyName;
+    strKey += keyName;
     strKey += _T("\\Document Settings");
     if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0,
         KEY_READ, &hKey))
     {
-        m_CheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
-        m_CheckB = GetRegDwordFromOpenKey(hKey, _T("CheckB")) & 1;
-        m_CheckC = GetRegDwordFromOpenKey(hKey, _T("CheckC")) & 1;
-        m_Radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
+        m_isCheckA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
+        m_isCheckB = GetRegDwordFromOpenKey(hKey, _T("CheckB")) & 1;
+        m_isCheckC = GetRegDwordFromOpenKey(hKey, _T("CheckC")) & 1;
+        m_radio = GetRegDwordFromOpenKey(hKey, _T("Radio"));
 
         RegCloseKey(hKey);
     }
 }
 
-void CFormDoc::SaveDocRegistry(LPCTSTR szKeyName)
+void CFormDoc::SaveDocRegistry(LPCTSTR keyName)
 {
     HKEY hKey;
-    CString strKey = _T("Software\\");
-    strKey += szKeyName;
-    strKey += _T("\\Document Settings");
+    CString fullKeyName = _T("Software\\");
+	fullKeyName += keyName;
+	fullKeyName += _T("\\Document Settings");
 
-    RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
+    RegCreateKeyEx(HKEY_CURRENT_USER, fullKeyName, 0, NULL,
     REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
-    RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_CheckA, sizeof(BOOL));
-    RegSetValueEx(hKey, _T("CheckB"), 0, REG_DWORD, (LPBYTE)&m_CheckB, sizeof(BOOL));
-    RegSetValueEx(hKey, _T("CheckC"), 0, REG_DWORD, (LPBYTE)&m_CheckC, sizeof(BOOL));
-    RegSetValueEx(hKey, _T("Radio"), 0, REG_DWORD, (LPBYTE)&m_Radio, sizeof(BOOL));
+    RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_isCheckA, sizeof(BOOL));
+    RegSetValueEx(hKey, _T("CheckB"), 0, REG_DWORD, (LPBYTE)&m_isCheckB, sizeof(BOOL));
+    RegSetValueEx(hKey, _T("CheckC"), 0, REG_DWORD, (LPBYTE)&m_isCheckC, sizeof(BOOL));
+    RegSetValueEx(hKey, _T("Radio"), 0, REG_DWORD, (LPBYTE)&m_radio, sizeof(BOOL));
 
     RegCloseKey(hKey);
 }

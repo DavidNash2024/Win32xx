@@ -38,7 +38,7 @@ COLORREF CMainMDIFrame::GetColorFromPicker() const
     return color;
 }
 
-STDMETHODIMP CMainMDIFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
+STDMETHODIMP CMainMDIFrame::Execute(UINT32 cmdID, UI_EXECUTIONVERB verb, const PROPERTYKEY* key, const PROPVARIANT* ppropvarValue, IUISimplePropertySet* pCmdExProp)
 {
     // This function is called when a ribbon button is pressed. 
     // Refer to IUICommandHandler::Execute in the Windows 7 SDK documentation
@@ -47,7 +47,7 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const 
 
     if (UI_EXECUTIONVERB_EXECUTE == verb)
     {
-        switch(nCmdID)
+        switch(cmdID)
         {
         // Document Group
         case IDC_CMD_NEW:           OnFileNew();        break;
@@ -72,7 +72,7 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const 
         default:
             {
                 CString str;
-                str.Format(_T("Unknown Button %d\n"),nCmdID);
+                str.Format(_T("Unknown Button %d\n"),cmdID);
                 TRACE(str);
             }
             break;
@@ -84,16 +84,16 @@ STDMETHODIMP CMainMDIFrame::Execute(UINT32 nCmdID, UI_EXECUTIONVERB verb, const 
 
 int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
 {
-    int Res = CRibbonMDIFrame::OnCreate(cs);
+    int result = CRibbonMDIFrame::OnCreate(cs);
 
     if (GetRibbonFramework())
     {
         // Set the initial status bar check box
-        InitValues Values = GetInitValues();
-        BOOL ShowStatusBar = Values.ShowStatusBar;
+        InitValues values = GetInitValues();
+        BOOL showStatusBar = values.ShowStatusBar;
         PROPVARIANT var;
 
-        InitPropVariantFromBoolean(ShowStatusBar, &var);
+        InitPropVariantFromBoolean(showStatusBar, &var);
         GetRibbonFramework()->SetUICommandProperty(IDC_CMD_SHOWSTATUS, UI_PKEY_BooleanValue, var);
 
         // Disable some Ribbon buttons
@@ -113,16 +113,16 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
         GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
     }
 
-    return Res;
+    return result;
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the (non-ribbon) Menu and Tool Bar
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch (nID)
     {
     case IDM_FILE_NEW:          OnFileNew();            return TRUE;
@@ -176,13 +176,13 @@ void CMainMDIFrame::OnMDIMinimize()
         pChild->SendMessage(WM_SYSCOMMAND, SC_MINIMIZE, 0);
 }
 
-void CMainMDIFrame::OnMDIMaximized(BOOL IsMax)
+void CMainMDIFrame::OnMDIMaximized(BOOL isMax)
 {
     if (GetRibbonFramework())
     {
         // Enable MDI Ribbon when the MDI child is maximized
         PROPVARIANT var;
-        InitPropVariantFromBoolean(IsMax, &var);
+        InitPropVariantFromBoolean(isMax, &var);
         GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDICLOSE, UI_PKEY_Enabled, var);
         GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIMIN, UI_PKEY_Enabled, var);
         GetRibbonFramework()->SetUICommandProperty(IDC_CMD_MDIRESTORE, UI_PKEY_Enabled, var);
@@ -254,50 +254,50 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 nCmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
+STDMETHODIMP CMainMDIFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  __in_opt  const PROPVARIANT *currentValue, __out PROPVARIANT *newValue) 
 {   
     // This function is called when a ribbon button is updated. 
     // Refer to IUICommandHandler::UpdateProperty in the Windows 7 SDK documentation
     UNREFERENCED_PARAMETER(currentValue);
 
-    HRESULT hr = E_NOTIMPL;
+    HRESULT result = E_NOTIMPL;
     if(UI_PKEY_Enabled == key)
     {
         return UIInitPropertyFromBoolean(UI_PKEY_Enabled, TRUE, newValue);
     }
 
-    switch(nCmdID)
+    switch(cmdID)
     {
     case IDC_MRULIST:
         // Set up the Most Recently Used (MRU) menu
         if (UI_PKEY_Label == key)
         {
             WCHAR label[MAX_PATH] = L"Recent Files";
-            hr = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
+			result = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
         }
         else if (UI_PKEY_RecentItems == key)
         {
-            hr = PopulateRibbonRecentItems(newValue);
+			result = PopulateRibbonRecentItems(newValue);
         }
         break;
 
     case IDC_PEN_COLOR:
         // Set the initial pen color
-        hr = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
+		result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
     } 
 
-    return hr;
+    return result;
 }
 
-LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called to handle the window's messages
 {
-    switch (uMsg)
+    switch (msg)
     {
     case UWM_SIMPLECREATED:
         {
-            CSimpleView* pSimpleView = reinterpret_cast<CSimpleView*>(wParam);
+            CSimpleView* pSimpleView = reinterpret_cast<CSimpleView*>(wparam);
             assert(pSimpleView);
 
             if (GetRibbonFramework())
@@ -308,6 +308,6 @@ LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     //Use the default message handling for remaining messages
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

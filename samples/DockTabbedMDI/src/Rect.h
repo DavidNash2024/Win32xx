@@ -12,10 +12,10 @@ class CViewRect : public CWnd
 public:
     virtual int OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
-    virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnTimer(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnTimer(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     int m_cxClientMax;

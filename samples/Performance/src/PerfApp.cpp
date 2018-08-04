@@ -15,7 +15,7 @@ CPerformanceApp::~CPerformanceApp()
 
 BOOL CPerformanceApp::InitInstance()
 {
-    m_MainWnd.Create(); // throws a CWinException on failure  
+    m_mainWnd.Create(); // throws a CWinException on failure  
 
     return TRUE;
 }

@@ -16,11 +16,11 @@ public:
     ~CMainWin() {}
 
 protected:
-    LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     int OnCreate(CREATESTRUCT& cs);
 
 private:
-    CButton m_Button;
+    CButton m_button;
 };
 
 

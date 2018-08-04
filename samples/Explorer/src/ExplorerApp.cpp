@@ -21,7 +21,7 @@ BOOL CExplorerApp::InitInstance()
     if (SUCCEEDED(CoInitialize(NULL)))
     {
         //Create the Frame Window
-        m_Frame.Create();   // throws a CWinException on failure  
+        m_frame.Create();   // throws a CWinException on failure  
     }
     else
     {

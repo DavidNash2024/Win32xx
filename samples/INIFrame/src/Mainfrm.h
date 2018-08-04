@@ -16,7 +16,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc() {return m_Doc; }
+    CDoc& GetDoc() {return m_doc; }
 
     BOOL    OnFileExit();
     BOOL    OnFileOpen();
@@ -24,23 +24,23 @@ public:
     BOOL    OnFileSave();
     
     CString ItoT(int i);
-    int     TtoI(LPCTSTR szString);
+    int     TtoI(LPCTSTR string);
     
     CString GetINIPath();
-    void SerializeINI(BOOL IsStoring);
+    void SerializeINI(BOOL isStoring);
 
 protected:
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnClose();
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
-    CDoc m_Doc;
+    CView m_view;
+    CDoc m_doc;
 
 };
 

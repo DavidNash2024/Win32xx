@@ -17,33 +17,33 @@ void CViewSimple::OnDraw(CDC& dc)
     dc.DrawText(_T("Simple View"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CViewSimple::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewSimple::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse click on the window
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CViewSimple::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewSimple::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(wParam);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(wparam);
+    UNREFERENCED_PARAMETER(lparam);
 
     Invalidate();
-    return 0L;
+    return 0;
 }
 
-LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(uMsg)
+    switch(msg)
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(uMsg, wParam, lParam);
-    case WM_SIZE:               return OnSize(uMsg, wParam, lParam);
+    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+    case WM_SIZE:               return OnSize(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 
@@ -94,10 +94,10 @@ void CViewList::InsertItems()
 void CViewList::OnAttach()
 {
     // Set the image lists
-    m_imlSmall.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bmImage(IDB_FILEVIEW);
-    m_imlSmall.Add( bmImage, RGB(255, 0, 255) );
-    SetImageList(m_imlSmall, LVSIL_SMALL);
+    m_smallImages.Add( bmImage, RGB(255, 0, 255) );
+    SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
     DWORD dwStyle = GetStyle();
@@ -112,11 +112,11 @@ void CViewList::OnDestroy()
     SetImageList(NULL, LVSIL_SMALL);
 }
 
-LRESULT CViewList::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewList::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CViewList::SetColumns()
@@ -125,38 +125,38 @@ void CViewList::SetColumns()
     DeleteAllItems();
 
     //initialise the columns
-    LV_COLUMN lvColumn;
-    ZeroMemory(&lvColumn, sizeof(LV_COLUMN));
-    lvColumn.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    lvColumn.fmt = LVCFMT_LEFT;
-    lvColumn.cx = 120;
-    TCHAR szString[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
+    LV_COLUMN column;
+    ZeroMemory(&column, sizeof(column));
+	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+	column.fmt = LVCFMT_LEFT;
+	column.cx = 120;
+    TCHAR string[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
     for(int i = 0; i < 3; ++i)
     {
-        lvColumn.pszText = szString[i];
-        InsertColumn(i, lvColumn);
+		column.pszText = string[i];
+        InsertColumn(i, column);
     }
 }
 
-BOOL CViewList::SetSubItem(int nItem, int nSubItem, LPCTSTR szText)
+BOOL CViewList::SetSubItem(int item, int subItem, LPCTSTR text)
 {
     LVITEM lvi1;
-    ZeroMemory(&lvi1, sizeof(LVITEM));
+    ZeroMemory(&lvi1, sizeof(lvi1));
     lvi1.mask = LVIF_TEXT;
-    lvi1.iItem = nItem;
-    lvi1.iSubItem = nSubItem;
-    lvi1.pszText = const_cast<LPTSTR>(szText);
+    lvi1.iItem = item;
+    lvi1.iSubItem = subItem;
+    lvi1.pszText = const_cast<LPTSTR>(text);
     return (SendMessage(LVM_SETITEM, 0, reinterpret_cast<LPARAM>(&lvi1)) != 0);
 }
 
-LRESULT CViewList::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewList::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(uMsg)
+    switch(msg)
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(uMsg, wParam, lParam);
+    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 ///////////////////////////////////////////////
@@ -171,14 +171,14 @@ CViewTree::~CViewTree()
         DeleteAllItems();
 }
 
-HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
+HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
     ZeroMemory(&tvi, sizeof(TVITEM));
     tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = iImage;
-    tvi.iSelectedImage = iImage;
-    tvi.pszText = const_cast<LPTSTR>(szText);
+    tvi.iImage = image;
+    tvi.iSelectedImage = image;
+    tvi.pszText = const_cast<LPTSTR>(text);
 
     TVINSERTSTRUCT tvis;
     ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
@@ -191,10 +191,10 @@ HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
 void CViewTree::OnAttach()
 {
     //set the image lists
-    m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap bmImage(IDB_CLASSVIEW);
-    m_imlNormal.Add( bmImage, RGB(255, 0, 0) );
-    SetImageList(m_imlNormal, LVSIL_NORMAL);
+    m_normalImages.Add( bmImage, RGB(255, 0, 0) );
+    SetImageList(m_normalImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
     DWORD dwStyle = GetStyle();
@@ -229,22 +229,22 @@ void CViewTree::OnDestroy()
     SetImageList(NULL, LVSIL_SMALL);
 }
 
-LRESULT CViewTree::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewTree::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Set window focus. The docker will now report this as active.
     SetFocus();
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 
-LRESULT CViewTree::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewTree::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(uMsg)
+    switch(msg)
     {
-    case WM_MOUSEACTIVATE:      return OnMouseActivate(uMsg, wParam, lParam);
+    case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 ///////////////////////////////////////////////

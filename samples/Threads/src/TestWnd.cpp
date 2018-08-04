@@ -17,7 +17,7 @@ HWND CTestWindow::Create(HWND hParent)
 
     CString Title;
     Title.Format( _T("Test Window %d"), m_nWindow );
-    return CreateEx(0L, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+    return CreateEx(0, NULL, Title, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         380 + 20*m_nWindow, 40 + 20*m_nWindow, 300, 200, NULL, NULL);
 }
 

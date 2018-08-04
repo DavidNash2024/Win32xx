@@ -7,7 +7,7 @@
 
 CDockText::CDockText() 
 {
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(6);
@@ -16,7 +16,7 @@ CDockText::CDockText()
 
 CDockTree::CDockTree() 
 {
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(12);
@@ -25,7 +25,7 @@ CDockTree::CDockTree()
 
 CDockList::CDockList() 
 {
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(6);

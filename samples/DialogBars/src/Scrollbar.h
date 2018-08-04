@@ -11,10 +11,10 @@ public:
     CMyScrollBar();
     virtual ~CMyScrollBar() {}
 
-    virtual LRESULT OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
-    virtual void SetScroll(int nPos);
+    virtual void SetScroll(int pos);
 
 private:
     SCROLLINFO m_si;

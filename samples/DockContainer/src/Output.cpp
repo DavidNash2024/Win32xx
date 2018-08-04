@@ -35,7 +35,7 @@ void CViewOutput::PreCreate(CREATESTRUCT& cs)
 CDockOutput::CDockOutput()
 {
     // Set the view window to our edit control
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(8);

@@ -3,7 +3,7 @@
 
 
 
-CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
+CMainFrame::CMainFrame() : m_penColor(RGB(0,0,0))
 {
     // Set the Resource IDs for the toolbar buttons
     AddToolBarButton( 0 );          // Separator
@@ -16,15 +16,15 @@ CMainFrame::CMainFrame() : m_PenColor(RGB(0,0,0))
 void CMainFrame::DrawLine(short x, short y)
 {
     CDC dc = GetDC();
-    dc.CreatePen(PS_SOLID, 1, m_points.back().color);
+    dc.CreatePen(PS_SOLID, 1, m_points.back().penColor);
     dc.MoveTo(m_points.back().x, m_points.back().y);
     dc.LineTo(x, y);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM /*lparam*/)
 {
     // Respond to menu and toolbar selections
-    switch (LOWORD(wParam))
+    switch (LOWORD(wparam))
     {
     // Respond to menu items
     case IDM_NEW:
@@ -40,19 +40,19 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM /*lParam*/)
 
     // Respond to ToolBar buttons
     case IDM_RED:
-        m_PenColor = RGB(255, 0, 0);
+        m_penColor = RGB(255, 0, 0);
         TRACE("Red Pen Selected \n");
         return TRUE;
     case IDM_BLUE:
-        m_PenColor = RGB(0, 0, 255);
+        m_penColor = RGB(0, 0, 255);
         TRACE("Blue Pen Selected \n");
         return TRUE;
     case IDM_GREEN:
-        m_PenColor = RGB(0, 191, 0);
+        m_penColor = RGB(0, 191, 0);
         TRACE("Green Pen Selected \n");
         return TRUE;
     case IDM_BLACK:
-        m_PenColor = RGB(0, 0, 0);
+        m_penColor = RGB(0, 0, 0);
         TRACE("Black Pen Selected \n");
         return TRUE;
 
@@ -70,16 +70,16 @@ void CMainFrame::OnDraw(CDC& dc)
     // Redraw our client area
     if (m_points.size() > 0)
     {
-        bool bDraw = false;  //Start with the pen up
+        bool isPenDown = false;  //Start with the pen up
         for (unsigned int i = 0 ; i < m_points.size(); i++)
         {
-            dc.CreatePen(PS_SOLID, 1, m_points[i].color);
-            if (bDraw)
+            dc.CreatePen(PS_SOLID, 1, m_points[i].penColor);
+            if (isPenDown)
                 dc.LineTo(m_points[i].x, m_points[i].y);
             else
                 dc.MoveTo(m_points[i].x, m_points[i].y);
             
-            bDraw = m_points[i].PenDown;
+            isPenDown = m_points[i].isPenDown;
         }
     }
 }
@@ -89,79 +89,79 @@ void CMainFrame::OnInitialUpdate()
     // Startup code goes here
 }
 
-LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(wParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(wparam);
 
     // Capture mouse input.
     SetCapture();
 
-    StorePoint(LOWORD(lParam), HIWORD(lParam), true);
+    StorePoint(LOWORD(lparam), HIWORD(lparam), true);
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CMainFrame::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(wParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(wparam);
 
     //Release the capture on the mouse
     ReleaseCapture();
 
-    StorePoint(LOWORD(lParam), HIWORD(lParam), false);
+    StorePoint(LOWORD(lparam), HIWORD(lparam), false);
     
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CMainFrame::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
+    UNREFERENCED_PARAMETER(msg);
 
     // hold down the left mouse button and move mouse to draw lines.
-    if (wParam & MK_LBUTTON)
+    if (wparam & MK_LBUTTON)
     {   
         TCHAR str[80];
-        ::wsprintf(str, TEXT("Draw Point:  %hd, %hd\n"), LOWORD(lParam), HIWORD(lParam));
+        ::wsprintf(str, TEXT("Draw Point:  %hd, %hd\n"), LOWORD(lparam), HIWORD(lparam));
         TRACE(str);
 
-        DrawLine(LOWORD(lParam), HIWORD(lParam));
-        StorePoint(LOWORD(lParam), HIWORD(lParam), true);
+        DrawLine(LOWORD(lparam), HIWORD(lparam));
+        StorePoint(LOWORD(lparam), HIWORD(lparam), true);
     }
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CMainFrame::SetPen(COLORREF color)
 {
-    m_PenColor = color;
+    m_penColor = color;
 }
 
-void CMainFrame::StorePoint(int x, int y, bool PenDown)
+void CMainFrame::StorePoint(int x, int y, bool isPenDown)
 {
     PlotPoint P1;
     P1.x = x;
     P1.y = y;
-    P1.PenDown = PenDown;
-    P1.color = m_PenColor;
+    P1.isPenDown = isPenDown;
+    P1.penColor = m_penColor;
 
     m_points.push_back(P1); //Add the point to the vector
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // handle left mouse button up/down and mouse move messages
     // a seperate function for each case keeps the code tidy.
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_LBUTTONDOWN:    return  OnLButtonDown(uMsg, wParam, lParam);
-    case WM_MOUSEMOVE:      return  OnMouseMove(uMsg, wParam, lParam);
-    case WM_LBUTTONUP:      return  OnLButtonUp(uMsg, wParam, lParam);
+    case WM_LBUTTONDOWN:    return  OnLButtonDown(msg, wparam, lparam);
+    case WM_MOUSEMOVE:      return  OnMouseMove(msg, wparam, lparam);
+    case WM_LBUTTONUP:      return  OnLButtonUp(msg, wparam, lparam);
     }
 
     // Pass unhandled messages on to WndProcDefault
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

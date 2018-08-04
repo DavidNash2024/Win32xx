@@ -16,24 +16,24 @@ public:
 
 protected:
     virtual BOOL OnColor();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnDestroy();
     virtual void OnDraw(CDC& dc);
     virtual BOOL OnExit();
     virtual void OnInitialUpdate();
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+	virtual LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void PreRegisterClass(WNDCLASS& wc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CBrush m_Brush;
-    CPoint m_Point;
-    CRect m_Rect;
+    CBrush m_brush;
+    CPoint m_point;
+    CRect m_rect;
 };
 
 #endif

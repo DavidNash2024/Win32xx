@@ -20,19 +20,19 @@ public:
     BOOL    OnFileSave();
 
 protected:
-    virtual CStatusBar& GetStatusBar() const    { return const_cast<CMyStatusBar&>(m_MyStatusBar); }
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual CStatusBar& GetStatusBar() const    { return const_cast<CMyStatusBar&>(m_myStatusBar); }
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
-    CMyStatusBar m_MyStatusBar;
+    CView m_view;
+    CMyStatusBar m_myStatusBar;
 };
 
 #endif //MAINFRM_H

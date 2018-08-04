@@ -6,14 +6,14 @@
 #include "DialogApp.h"
 
 
-CDialogApp::CDialogApp() : MyDialog(IDD_COMCTLS)
+CDialogApp::CDialogApp() : myDialog(IDD_COMCTLS)
 {
 }
 
 BOOL CDialogApp::InitInstance()
 {
     //Display the Modal Dialog
-    MyDialog.DoModal();
+    myDialog.DoModal();
 
     //End the program
     ::PostQuitMessage(0);

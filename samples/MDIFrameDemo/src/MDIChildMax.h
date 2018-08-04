@@ -15,7 +15,7 @@ public:
 
 protected:
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 // Declaration of CMDIChildMax
@@ -30,8 +30,8 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-    CViewMax m_MaxView;
-    CMenu m_Menu;
+    CViewMax m_maxView;
+    CMenu m_menu;
 };
 
 #endif  //MDICHILDMAX_H

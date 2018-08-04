@@ -19,20 +19,20 @@ CViewText::~CViewText()
 
 void CViewText::OnAttach()
 {
-    m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
         CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
 
-    SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(m_Font.GetHandle()), 0);
+    SendMessage(WM_SETFONT, reinterpret_cast<WPARAM>(m_font.GetHandle()), 0);
 
     SetWindowText(_T("Text Edit Window\r\n\r\n You can type some text here ..."));
 }
 
-BOOL CViewText::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CViewText::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
     
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_EDIT_COPY:     OnEditCopy();   return TRUE;
     case IDM_EDIT_PASTE:    OnEditPaste();  return TRUE;
@@ -90,7 +90,7 @@ CContainText::CContainText()
     SetDockCaption (_T("Text View - Docking container"));
     SetTabText(_T("Text"));
     SetTabIcon(IDI_TEXT);
-    SetView(m_ViewText);
+    SetView(m_viewText);
 } 
 
 
@@ -99,7 +99,7 @@ CContainText::CContainText()
 CDockText::CDockText()
 {
     // Set the view window to our edit control
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(8);

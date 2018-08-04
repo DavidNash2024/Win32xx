@@ -19,15 +19,15 @@ BOOL CDXView::CDXThread::InitInstance()
 {
     // This function runs when the thread starts
 
-    CMainFrame& Frame = GetDXApp().GetMainFrame();
-    CDXView& DXView = Frame.GetDXView();
-    CDX& DX = DXView.GetDX();
+    CMainFrame& frame = GetDXApp().GetMainFrame();
+    CDXView& dxView = frame.GetDXView();
+    CDX& DX = dxView.GetDX();
     
     // assign the m_pDX member variable
     m_pDX = &DX;
 
     // Create the DX window
-    DX.Create(DXView);
+    DX.Create(dxView);
 
     return TRUE;    // return TRUE to run the message loop
 }
@@ -112,7 +112,7 @@ HRESULT CDXView::CDX::InitGeometry()
 // Creates the scene geometry.
 {
     // Initialize three vertices for rendering a triangle
-    CUSTOMVERTEX g_Vertices[] =
+    CUSTOMVERTEX vertices[] =
     {
         { -1.0f,-1.0f, 0.0f, 0xffff0000, },
         {  1.0f,-1.0f, 0.0f, 0xff0000ff, },
@@ -129,9 +129,9 @@ HRESULT CDXView::CDX::InitGeometry()
 
     // Fill the vertex buffer.
     VOID* pVertices;
-    if (FAILED(m_pVB->Lock(0, sizeof(g_Vertices), &pVertices, 0)))
+    if (FAILED(m_pVB->Lock(0, sizeof(vertices), &pVertices, 0)))
         return E_FAIL;
-    memcpy(pVertices, g_Vertices, sizeof(g_Vertices));
+    memcpy(pVertices, vertices, sizeof(vertices));
     m_pVB->Unlock();
 
     return S_OK;
@@ -164,13 +164,13 @@ void CDXView::CDX::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-LRESULT CDXView::CDX::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDXView::CDX::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    int cx = GET_X_LPARAM(lParam);
-    int cy = GET_Y_LPARAM(lParam);
+    int cx = GET_X_LPARAM(lparam);
+    int cy = GET_Y_LPARAM(lparam);
     
     SetWindowPos(NULL, 0, 0, cx, cy, SWP_SHOWWINDOW);
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 void CDXView::CDX::PreCreate(CREATESTRUCT& cs)
@@ -292,14 +292,14 @@ void CDXView::CDX::SetupDefaultRenderStates()
     m_pd3dDevice->SetRenderState( D3DRS_LIGHTING, FALSE );
 }
 
-LRESULT CDXView::CDX::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDXView::CDX::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(uMsg)
+    switch(msg)
     {
-        case UWM_RESIZE: return OnSize(uMsg, wParam, lParam);
+        case UWM_RESIZE: return OnSize(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 
@@ -309,32 +309,32 @@ LRESULT CDXView::CDX::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 CDXView::~CDXView()
 {
     // Ensure the DXThread ends before destroying this object.
-    ::WaitForSingleObject(m_DXThread.GetThread(), INFINITE);
+    ::WaitForSingleObject(m_dxThread.GetThread(), INFINITE);
 }
 
 int CDXView::OnCreate(CREATESTRUCT& cs)
 {
     // Create our thread. The thread creates the DX child window when starts
-    m_DXThread.CreateThread();
+    m_dxThread.CreateThread();
     
     return CWnd::OnCreate(cs);
 }
 
-LRESULT CDXView::OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDXView::OnSize(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    if (m_DX.IsWindow())
-        m_DX.PostMessage(UWM_RESIZE, wParam, lParam);
+    if (m_dx.IsWindow())
+        m_dx.PostMessage(UWM_RESIZE, wparam, lparam);
 
-    return FinalWindowProc(uMsg, wParam, lParam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
-LRESULT CDXView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch(uMsg)
+    switch(msg)
     {
-        case WM_SIZE: return OnSize(uMsg, wParam, lParam);
+        case WM_SIZE: return OnSize(msg, wparam, lparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

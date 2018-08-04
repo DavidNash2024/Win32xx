@@ -13,7 +13,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_MyView as the view window of the frame
-    SetView(m_MyView);
+    SetView(m_myView);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -42,11 +42,11 @@ BOOL CMainFrame::OnAdjustImage()
     return TRUE;
 }
 
-void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
+void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray)
 {
     GetMyView().GetImage().TintBitmap(cRed, cGreen, cBlue);
     
-    if (bGray)
+    if (isGray)
     {
         GetMyView().GetImage().GrayScaleBitmap();
     }
@@ -54,11 +54,11 @@ void CMainFrame::ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray)
     GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch(nID)
     {
     case IDM_FILE_EXIT:         return OnFileExit();
@@ -73,7 +73,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     case IDW_FILE_MRU_FILE1:
     case IDW_FILE_MRU_FILE2:    // Intentionally blank
     case IDW_FILE_MRU_FILE3:
-    case IDW_FILE_MRU_FILE4:    return OnFileOpenMRU(wParam, lParam);
+    case IDW_FILE_MRU_FILE4:    return OnFileOpenMRU(wparam, lparam);
     }
 
     return FALSE;
@@ -119,21 +119,21 @@ BOOL CMainFrame::OnFileNew()
     return TRUE;
 }
 
-BOOL CMainFrame::LoadFile(CString& FileName)
+BOOL CMainFrame::LoadFile(CString& fileName)
 {
     // Load the bitmap
-    BOOL IsFileLoaded = m_MyView.LoadFileImage(FileName);
+    BOOL IsFileLoaded = m_myView.LoadFileImage(fileName);
 
     if (IsFileLoaded)
     {
         // Save the filename
-        m_PathName = FileName;
-        AddMRUEntry(FileName);
+        m_pathName = fileName;
+        AddMRUEntry(fileName);
 
         // Turn on the ToolBar adjust button
-        CToolBar& TB = GetToolBar();
-        TB.EnableButton(IDM_FILE_SAVEAS);
-        TB.EnableButton(IDM_IMAGE_ADJUST);
+        CToolBar& tb = GetToolBar();
+		tb.EnableButton(IDM_FILE_SAVEAS);
+		tb.EnableButton(IDM_IMAGE_ADJUST);
         GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
         // Resize the frame to match the bitmap
@@ -146,7 +146,7 @@ BOOL CMainFrame::LoadFile(CString& FileName)
         GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
         // Set the caption
-        CString str = _T("FastGDI - ") + m_PathName;
+        CString str = _T("FastGDI - ") + m_pathName;
         SetWindowText(str);
     }
 
@@ -155,30 +155,30 @@ BOOL CMainFrame::LoadFile(CString& FileName)
 
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
+    CFileDialog fileDlg(TRUE, _T("bmp"), NULL, OFN_FILEMUSTEXIST, _T("Bitmap Files (*.bmp)\0*.bmp\0\0"));
     
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
+        CString str = fileDlg.GetPathName();
         LoadFile(str);
     }
 
     return TRUE;
 }
 
-BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-    CString strMRUText = GetMRUEntry(nMRUIndex);
-    CToolBar& TB = GetToolBar();
+    UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+    CString mruText = GetMRUEntry(mruIndex);
+    CToolBar& tb = GetToolBar();
 
-    if (m_MyView.LoadFileImage(strMRUText))
+    if (m_myView.LoadFileImage(mruText))
     {
-        m_PathName = strMRUText;
-        TB.EnableButton(IDM_FILE_SAVEAS);
-        TB.EnableButton(IDM_IMAGE_ADJUST);
+        m_pathName = mruText;
+		tb.EnableButton(IDM_FILE_SAVEAS);
+		tb.EnableButton(IDM_IMAGE_ADJUST);
 
         // Adjust the window size
         CRect rcImage = GetMyView().GetImageRect();
@@ -186,9 +186,9 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
     }
     else
     {
-        RemoveMRUEntry(strMRUText);
-        TB.DisableButton(IDM_FILE_SAVEAS);
-        TB.DisableButton(IDM_IMAGE_ADJUST);
+        RemoveMRUEntry(mruText);
+		tb.DisableButton(IDM_FILE_SAVEAS);
+		tb.DisableButton(IDM_IMAGE_ADJUST);
     }
 
     // Resize the frame to match the bitmap
@@ -201,14 +201,14 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wParam, LPARAM lParam)
     GetMyView().RedrawWindow(RDW_NOERASE|RDW_INVALIDATE|RDW_UPDATENOW);
 
     // Set the caption
-    CString str = _T("FastGDI - ") + m_PathName;
+    CString str = _T("FastGDI - ") + m_pathName;
     SetWindowText(str);
     return TRUE;
 }
 
 BOOL CMainFrame::OnFileSave()
 {
-    SaveFile(m_PathName);
+    SaveFile(m_pathName);
     return TRUE;
 }
 
@@ -233,12 +233,12 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-inline void CMainFrame::OnMenuUpdate(UINT nID)
+inline void CMainFrame::OnMenuUpdate(UINT id)
 // Called when menu items are about to be displayed
 {
     bool IsImageLoaded = (GetMyView().GetImage() != 0);
 
-    switch(nID)
+    switch(id)
     {
     case IDM_FILE_SAVE:
         GetFrameMenu().EnableMenuItem(IDM_FILE_SAVE, IsImageLoaded? MF_ENABLED : MF_GRAYED);
@@ -252,16 +252,16 @@ inline void CMainFrame::OnMenuUpdate(UINT nID)
     }
 }
 
-void CMainFrame::SaveFile(CString& str)
+void CMainFrame::SaveFile(CString& fileName)
 {
     bool DoSave = TRUE;
 
     try
     {
         CFile File;
-        File.Open(str, OPEN_EXISTING);
+        File.Open(fileName, OPEN_EXISTING);
     
-        if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + str, MB_YESNO | MB_ICONWARNING))
+        if (IDYES != MessageBox(_T("File already exists. Do you wish to overwrite it?"), _T("Saving file ") + fileName, MB_YESNO | MB_ICONWARNING))
             DoSave = FALSE;
     }
 
@@ -272,15 +272,15 @@ void CMainFrame::SaveFile(CString& str)
 
     if (DoSave)
     {
-        m_PathName = str;
+        m_pathName = fileName;
         
         // Set the caption
-        CString Title = _T("FastGDI - ") + m_PathName;
+        CString Title = _T("FastGDI - ") + m_pathName;
         SetWindowText(Title);       
         
         // Save the file
-        m_MyView.SaveFileImage(str);
-        AddMRUEntry(str);
+        m_myView.SaveFileImage(fileName);
+        AddMRUEntry(fileName);
         TRACE("File Saved\n");
     }
 }
@@ -302,14 +302,14 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(192, 192, 192), IDB_TOOLBAR_BIG, 0, 0);
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

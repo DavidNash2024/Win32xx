@@ -29,7 +29,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    void HideSingleContainerTab(BOOL HideSingle);
+    void HideSingleContainerTab(BOOL hideSingle);
     BOOL OnCloseMDIs();
     BOOL OnCloseDockers();
     BOOL OnContainerTabsAtTop();
@@ -45,30 +45,30 @@ public:
     BOOL OnMDITabsAtTop();
     void LoadDefaultDockers();
     void LoadDefaultMDIs();
-    void SetContainerTabsAtTop(BOOL bTop);
-    void SetMDITabsAtTop(BOOL bTop);
+    void SetContainerTabsAtTop(BOOL atTop);
+    void SetMDITabsAtTop(BOOL atTop);
 
 
     
 protected:
-    virtual CDocker* NewDockerFromID(int idDock);
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual CDocker* NewDockerFromID(int dockID);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnMenuUpdate(UINT nID);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual BOOL    SaveRegistrySettings();
     virtual void    SetupMenuIcons();
     virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CMyTabbedMDI m_MyTabbedMDI;
-    BOOL m_IsContainerTabsAtTop;
-    BOOL m_IsHideSingleTab;
-    BOOL m_IsMDITabsAtTop;
+    CMyTabbedMDI m_myTabbedMDI;
+    BOOL m_isContainerTabsAtTop;
+    BOOL m_isHideSingleTab;
+    BOOL m_isMDITabsAtTop;
     CDocker* m_pActiveDocker;
 };
 

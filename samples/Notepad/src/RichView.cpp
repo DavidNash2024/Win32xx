@@ -19,8 +19,8 @@ void CRichView::OnAttach()
     LimitText(-1);
 
     //Determine which messages will be passed to the parent
-    DWORD dwMask = ENM_KEYEVENTS | ENM_DROPFILES;
-    SetEventMask(dwMask);
+    DWORD mask = ENM_KEYEVENTS | ENM_DROPFILES;
+    SetEventMask(mask);
 
     SetFontDefaults();
 }
@@ -37,10 +37,10 @@ void CRichView::PreCreate(CREATESTRUCT& cs)
 void CRichView::SetFontDefaults()
 {
     //Set font
-    if (m_Font.GetHandle() == 0)
-        m_Font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
+    if (m_font.GetHandle() == 0)
+        m_font.CreateFont(16, 0, 0, 0, FW_NORMAL, 0, 0, 0, ANSI_CHARSET, OUT_DEFAULT_PRECIS,
                     CLIP_DEFAULT_PRECIS, DEFAULT_QUALITY, FF_MODERN, _T("Courier New"));
-    SetFont(m_Font, FALSE);
+    SetFont(m_font, FALSE);
 
 // Required for Dev-C++
 #ifndef IMF_AUTOFONT
@@ -48,8 +48,8 @@ void CRichView::SetFontDefaults()
 #endif
 
     // Prevent Unicode characters from changing the font
-    LRESULT lres = SendMessage(EM_GETLANGOPTIONS, 0, 0);
-    lres &= ~IMF_AUTOFONT;
-    SendMessage(EM_SETLANGOPTIONS, 0, lres);
+    LRESULT result = SendMessage(EM_GETLANGOPTIONS, 0, 0);
+	result &= ~IMF_AUTOFONT;
+    SendMessage(EM_SETLANGOPTIONS, 0, result);
 }
 

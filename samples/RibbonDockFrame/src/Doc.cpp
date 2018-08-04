@@ -5,16 +5,16 @@
 #include "View.h"
 
 
-BOOL CDoc::FileOpen(LPCTSTR szFilename)
+BOOL CDoc::FileOpen(LPCTSTR filename)
 {
     GetAllPoints().clear();
-    BOOL bResult = FALSE;
+    BOOL result = FALSE;
 
     try
     {
-        CArchive ar(szFilename, CArchive::load);
+        CArchive ar(filename, CArchive::load);
         ar >> *this;
-        bResult = TRUE;
+        result = TRUE;
     }
 
     catch (const CFileException &e)
@@ -25,26 +25,26 @@ BOOL CDoc::FileOpen(LPCTSTR szFilename)
         GetAllPoints().clear();
     }
 
-    return bResult;
+    return result;
 }
 
-BOOL CDoc::FileSave(LPCTSTR szFilename)
+BOOL CDoc::FileSave(LPCTSTR filename)
 {
-    BOOL bResult = TRUE;
+    BOOL result = TRUE;
 
     try
     {
-        CArchive ar(szFilename, CArchive::store);
+        CArchive ar(filename, CArchive::store);
         ar << *this;
     }
     catch (const CFileException &e)
     {
         // An exception occurred. Display the relevant information.
         ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
-        bResult = FALSE;
+        result = FALSE;
     }
 
-    return bResult;
+    return result;
 }
 
 void CDoc::Serialize(CArchive &ar)
@@ -54,8 +54,8 @@ void CDoc::Serialize(CArchive &ar)
     if (ar.IsStoring())
     {
         // Store the number of points
-        UINT nPoints = GetAllPoints().size();
-        ar << nPoints;
+        UINT points = GetAllPoints().size();
+        ar << points;
         
         // Store the PlotPoint data
         std::vector<PlotPoint>::iterator iter;
@@ -68,15 +68,15 @@ void CDoc::Serialize(CArchive &ar)
     }
     else
     {
-        UINT nPoints;
+        UINT points;
         PlotPoint pp;
         GetAllPoints().clear();
 
         // Load the number of points
-        ar >> nPoints;
+        ar >> points;
 
         // Load the PlotPoint data
-        for (UINT u = 0; u < nPoints; ++u)
+        for (UINT u = 0; u < points; ++u)
         {
             ArchiveObject ao( &pp, sizeof(pp) );
             ar >> ao;

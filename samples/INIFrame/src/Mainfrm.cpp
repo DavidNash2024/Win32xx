@@ -12,7 +12,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     // Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Normally we would use LoadRegistrySettings here, but this
     // is omitted in this sample. We use an ini file instead.
@@ -26,14 +26,14 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
@@ -91,10 +91,10 @@ void CMainFrame::OnInitialUpdate()
 
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE);
+    CFileDialog fileDlg(TRUE);
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -105,10 +105,10 @@ BOOL CMainFrame::OnFileOpen()
 
 BOOL CMainFrame::OnFileSave()
 {
-    CFileDialog FileDlg(FALSE);
+    CFileDialog fileDlg(FALSE);
 
     // Bring up the file save dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -120,11 +120,11 @@ BOOL CMainFrame::OnFileSave()
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
-    CPrintDialog Printdlg;
+    CPrintDialog printdlg;
 
     try
     {
-        INT_PTR Res = Printdlg.DoModal(*this);
+        INT_PTR result = printdlg.DoModal(*this);
 
         // Retrieve the printer DC
         // CDC dcPrinter = Printdlg.GetPrinterDC();
@@ -132,7 +132,7 @@ BOOL CMainFrame::OnFilePrint()
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
 
-        return (Res == IDOK);   // boolean expression
+        return (result == IDOK);   // boolean expression
     }
 
     catch (const CWinException& /* e */)
@@ -143,16 +143,16 @@ BOOL CMainFrame::OnFilePrint()
     }
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Process notification messages sent by child windows
-//  switch(((LPNMHDR)lParam)->code)
+//  switch(((LPNMHDR)lparam)->code)
 //  {
 //      Add case statements for each notification message here
 //  }
 
     // Some notifications should return a value when handled
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 CString CMainFrame::ItoT(int i)
@@ -164,11 +164,11 @@ CString CMainFrame::ItoT(int i)
     return CString(tss.str().c_str());
 }
 
-int CMainFrame::TtoI(LPCTSTR szString)
+int CMainFrame::TtoI(LPCTSTR string)
 // TCHAR to Integer.
 {
     // tStringStream is a TCHAR std::stringstream
-    tStringStream tss(szString);
+    tStringStream tss(string);
     int res;
     tss >> res;
     return res;
@@ -177,89 +177,89 @@ int CMainFrame::TtoI(LPCTSTR szString)
 CString CMainFrame::GetINIPath()
 // Returns the path used for the INI file.
 {
-    CString FilePath = GetAppDataPath();
+    CString filePath = GetAppDataPath();
 
-    if (!FilePath.IsEmpty())
+    if (!filePath.IsEmpty())
     {
         // Create the directory if required
-        FilePath += _T("\\Win32++");
-        CreateDirectory(FilePath, NULL);
-        FilePath += _T("\\INIFrame");
-        CreateDirectory(FilePath, NULL);
+        filePath += _T("\\Win32++");
+        CreateDirectory(filePath, NULL);
+        filePath += _T("\\INIFrame");
+        CreateDirectory(filePath, NULL);
 
         // Note: on Win2000 and above we could create the folders in a single step:
         // FilePath += _T("\\Win32++\\INIFrame");
         // SHCreateDirectory(NULL, FilePath);   // supported on Win2000 and above
     }
     else
-        FilePath = _T(".");
+        filePath = _T(".");
 
-    return FilePath;
+    return filePath;
 }
 
-void CMainFrame::SerializeINI(BOOL IsStoring) 
+void CMainFrame::SerializeINI(BOOL isStoring) 
 // Load values to, or restore values from the ini file
 {
-    CString FileName = GetINIPath() + _T("\\Frame.ini");
-    CString Key("Frame Settings");
+    CString fileName = GetINIPath() + _T("\\Frame.ini");
+    CString key("Frame Settings");
 
-    WINDOWPLACEMENT Wndpl;
-    ZeroMemory(&Wndpl, sizeof(WINDOWPLACEMENT));
-    Wndpl.length = sizeof(WINDOWPLACEMENT);
+    WINDOWPLACEMENT wndpl;
+    ZeroMemory(&wndpl, sizeof(wndpl));
+	wndpl.length = sizeof(wndpl);
     
-    if (IsStoring)
+    if (isStoring)
     {   
-        GetWindowPlacement(Wndpl);
+        GetWindowPlacement(wndpl);
 
-        CRect rc = Wndpl.rcNormalPosition;
+        CRect rc = wndpl.rcNormalPosition;
         UINT top = MAX(rc.top, 0);
         UINT left = MAX(rc.left, 0);
         UINT width = MAX(rc.Width(), 100);
         UINT height = MAX(rc.Height(), 50);
-        UINT showCmd = Wndpl.showCmd;
+        UINT showCmd = wndpl.showCmd;
 
-        ::WritePrivateProfileString(NULL, NULL, NULL, FileName);
+        ::WritePrivateProfileString(NULL, NULL, NULL, fileName);
 
         // Write the Frame window's position and show state 
-        ::WritePrivateProfileString (Key, _T("Left"),       ItoT(left), FileName);
-        ::WritePrivateProfileString (Key, _T("Top"),        ItoT(top), FileName);
-        ::WritePrivateProfileString (Key, _T("Width"),      ItoT(width), FileName);
-        ::WritePrivateProfileString (Key, _T("Height"),     ItoT(height), FileName);
-        ::WritePrivateProfileString (Key, _T("ShowCmd"),    ItoT(showCmd), FileName);
+        ::WritePrivateProfileString (key, _T("Left"),       ItoT(left), fileName);
+        ::WritePrivateProfileString (key, _T("Top"),        ItoT(top), fileName);
+        ::WritePrivateProfileString (key, _T("Width"),      ItoT(width), fileName);
+        ::WritePrivateProfileString (key, _T("Height"),     ItoT(height), fileName);
+        ::WritePrivateProfileString (key, _T("ShowCmd"),    ItoT(showCmd), fileName);
 
         // Write the StatusBar and ToolBar show state.
-        DWORD dwShowStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
-        DWORD dwShowToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
-        ::WritePrivateProfileString (Key, _T("StatusBar"),  ItoT(dwShowStatusBar), FileName);
-        ::WritePrivateProfileString (Key, _T("ToolBar"),    ItoT(dwShowToolBar), FileName);
+        DWORD showStatusBar = GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible();
+        DWORD showToolBar = GetToolBar().IsWindow() && GetToolBar().IsWindowVisible();
+        ::WritePrivateProfileString (key, _T("StatusBar"),  ItoT(showStatusBar), fileName);
+        ::WritePrivateProfileString (key, _T("ToolBar"),    ItoT(showToolBar), fileName);
     }
     else 
     {
-        InitValues Values;
+        InitValues values;
 
         UINT failed = 999999;
-        CString Error("Error: GPPS failed");
+        CString error("Error: GPPS failed");
         
-        UINT Left = ::GetPrivateProfileInt(Key, _T("Left"), failed, FileName);
-        UINT Top = ::GetPrivateProfileInt (Key, _T("Top"), failed, FileName);
-        UINT Width = ::GetPrivateProfileInt (Key, _T("Width"), failed, FileName);
-        UINT Height = ::GetPrivateProfileInt (Key, _T("Height"), failed, FileName);
-        UINT ShowCmd = ::GetPrivateProfileInt (Key, _T("ShowCmd"), failed, FileName);
+        UINT left = ::GetPrivateProfileInt(key, _T("Left"), failed, fileName);
+        UINT top = ::GetPrivateProfileInt (key, _T("Top"), failed, fileName);
+        UINT width = ::GetPrivateProfileInt (key, _T("Width"), failed, fileName);
+        UINT height = ::GetPrivateProfileInt (key, _T("Height"), failed, fileName);
+        UINT showCmd = ::GetPrivateProfileInt (key, _T("ShowCmd"), failed, fileName);
 
-        if (Left != failed && Top != failed && Width != failed && Height != failed && ShowCmd != failed) 
+        if (left != failed && top != failed && width != failed && height != failed && showCmd != failed) 
         {
-            Values.rcPos = CRect(Left, Top, Left + Width, Top + Height);
-            Values.ShowCmd = ShowCmd;
+            values.rcPos = CRect(left, top, left + width, top + height);
+            values.ShowCmd = showCmd;
 
             // Set the show state of the status bar
-            UINT ShowStatus = ::GetPrivateProfileInt (Key, _T("StatusBar"), 0, FileName);
-            if (ShowStatus != failed)
-                Values.ShowStatusBar = ShowStatus;
+            UINT showStatus = ::GetPrivateProfileInt (key, _T("StatusBar"), 0, fileName);
+            if (showStatus != failed)
+                values.ShowStatusBar = showStatus;
 
             // Set the show state of the tool bar
-            UINT ShowTool = ::GetPrivateProfileInt (Key, _T("ToolBar"), 0, FileName);
-            if (ShowTool != failed)
-                Values.ShowToolBar = ShowTool;
+            UINT showTool = ::GetPrivateProfileInt (key, _T("ToolBar"), 0, fileName);
+            if (showTool != failed)
+                values.ShowToolBar = showTool;
         }
         else
         {
@@ -267,7 +267,7 @@ void CMainFrame::SerializeINI(BOOL IsStoring)
             ;;
         }
 
-        SetInitValues(Values);
+        SetInitValues(values);
     }
 }
 
@@ -290,14 +290,14 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

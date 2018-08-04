@@ -62,7 +62,7 @@
 #endif
 
 #ifndef GET_WHEEL_DELTA_WPARAM
-  #define GET_WHEEL_DELTA_WPARAM(wParam)  ((short)HIWORD(wParam))
+  #define GET_WHEEL_DELTA_WPARAM(wparam)  ((short)HIWORD(wparam))
 #endif
 
 namespace Win32xx
@@ -91,15 +91,15 @@ namespace Win32xx
     protected:
         virtual void    FillOutsideRect(CDC& dc, HBRUSH hBrush);
         virtual BOOL    OnEraseBkgnd(CDC& dc);
-        virtual LRESULT OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseWheel(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    PreCreate(CREATESTRUCT& cs);
 
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         void UpdateBars();
@@ -165,14 +165,14 @@ namespace Win32xx
 
 
     // Called when an event occurs in the horizontal scroll bar.
-    inline LRESULT CScrollView::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(lparam);
 
         int xNewPos;
 
-        switch (LOWORD(wParam))
+        switch (LOWORD(wparam))
         {
         case SB_PAGEUP: // User clicked the scroll bar shaft left of the scroll box.
             xNewPos = m_CurrentPos.x - m_sizePage.cx;
@@ -191,7 +191,7 @@ namespace Win32xx
             break;
 
         case SB_THUMBTRACK: // User dragging the scroll box.
-            xNewPos = HIWORD(wParam);
+            xNewPos = HIWORD(wparam);
             break;
 
         default:
@@ -210,7 +210,7 @@ namespace Win32xx
         return 0;
     }
 
-    inline LRESULT CScrollView::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     // Override OnPaint so we can wrap code around OnDraw
     {
 
@@ -244,16 +244,16 @@ namespace Win32xx
         }
 
         // Do default OnPaint if m_sizeTotal is zero
-        return CWnd::OnPaint(uMsg, wParam, lParam);
+        return CWnd::OnPaint(msg, wparam, lparam);
     }
 
-    inline LRESULT CScrollView::OnMouseWheel(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::OnMouseWheel(UINT msg, WPARAM wparam, LPARAM lparam)
     // Called when the mouse wheel is rotated.
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(lparam);
 
-        int WheelDelta = GET_WHEEL_DELTA_WPARAM(wParam);
+        int WheelDelta = GET_WHEEL_DELTA_WPARAM(wparam);
         int cyPos = ::MulDiv(WheelDelta, m_sizeLine.cy, WHEEL_DELTA);
 
         // Scroll the window.
@@ -269,15 +269,15 @@ namespace Win32xx
         return 0;
     }
 
-    inline LRESULT CScrollView::OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam)
     // Called when an event occurs in the vertical scroll bar.
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(lparam);
 
         int yNewPos;
 
-        switch (LOWORD(wParam))
+        switch (LOWORD(wparam))
         {
             case SB_PAGEUP: // User clicked the scroll bar shaft above the scroll box.
                 yNewPos = m_CurrentPos.y - m_sizePage.cy;
@@ -296,7 +296,7 @@ namespace Win32xx
                 break;
 
             case SB_THUMBTRACK: // User dragging the scroll box.
-                yNewPos = HIWORD(wParam);
+                yNewPos = HIWORD(wparam);
                 break;
 
             default:
@@ -315,20 +315,20 @@ namespace Win32xx
         return 0;
     }
 
-    inline LRESULT CScrollView::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     // Called after a window's size has changed.
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         UpdateBars();
         Invalidate();
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
-    inline LRESULT CScrollView::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     // Called before the window's size is changed.
     {
         // We hide the scrollbars early in response to WM_WINDOWPOSCHANGING.
@@ -336,7 +336,7 @@ namespace Win32xx
         //  unexpected results due to recursion.
 
         // Retrieve the future size of the window
-        LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+        LPWINDOWPOS pWinPos = (LPWINDOWPOS)lparam;
         assert(pWinPos);
         CRect rc(0, 0, pWinPos->cx, pWinPos->cy);
 
@@ -352,7 +352,7 @@ namespace Win32xx
             ShowScrollBar(SB_VERT, FALSE);  // Can resize the window
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
     inline void CScrollView::PreCreate(CREATESTRUCT& cs)
@@ -479,21 +479,21 @@ namespace Win32xx
         }
     }
 
-    inline LRESULT CScrollView::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CScrollView::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     // Default message handling
     {
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_HSCROLL:            return OnHScroll(uMsg, wParam, lParam);
-        case WM_MOUSEWHEEL:         return OnMouseWheel(uMsg, wParam, lParam);
-        case WM_PAINT:              return OnPaint(uMsg, wParam, lParam);
-        case WM_VSCROLL:            return OnVScroll(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(uMsg, wParam, lParam);
+        case WM_HSCROLL:            return OnHScroll(msg, wparam, lparam);
+        case WM_MOUSEWHEEL:         return OnMouseWheel(msg, wparam, lparam);
+        case WM_PAINT:              return OnPaint(msg, wparam, lparam);
+        case WM_VSCROLL:            return OnVScroll(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         }
 
         // Pass unhandled messages on for default processing
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 }
 

@@ -13,7 +13,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -25,14 +25,14 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_FILE_OPEN:      return OnFileOpen();
     case IDM_FILE_SAVE:      return OnFileSave();
@@ -71,16 +71,16 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     return 0;
 }
 
-LRESULT CMainFrame::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
+    UNREFERENCED_PARAMETER(msg);
 
     // Perform the owner draw for Part 3 in the status bar
-    LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT) lParam;
+    LPDRAWITEMSTRUCT pDrawItem = (LPDRAWITEMSTRUCT)lparam;
     
     if (pDrawItem->CtlID == STATUS_ID) // Message comes from the status bar
     {
-        CRect rcPart = pDrawItem->rcItem;
+        CRect partRect = pDrawItem->rcItem;
         CDC dc;
         dc.Attach(pDrawItem->hDC);
     
@@ -91,16 +91,16 @@ LRESULT CMainFrame::OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
         dc.CreateFontIndirect(lf);
         
         // Display the gradient background and text
-        dc.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), rcPart, TRUE);
+        dc.GradientFill(RGB(230, 180, 0), RGB(240, 210, 90), partRect, TRUE);
         dc.SetTextColor(RGB(10,20,250));
         dc.SetBkMode(TRANSPARENT);
-        dc.TextOut(rcPart.left,rcPart.top,_T("Owner Draw"), 10);
+        dc.TextOut(partRect.left, partRect.top,_T("Owner Draw"), 10);
 
         return TRUE;
     }
 
     // Allow the frame to perform owner drawing menu items.
-    return CFrame::OnDrawItem(uMsg, wParam, lParam);
+    return CFrame::OnDrawItem(msg, wparam, lparam);
 }
 
 BOOL CMainFrame::OnFileExit()
@@ -121,10 +121,10 @@ void CMainFrame::OnInitialUpdate()
 
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE);
+    CFileDialog fileDlg(TRUE);
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -135,10 +135,10 @@ BOOL CMainFrame::OnFileOpen()
 
 BOOL CMainFrame::OnFileSave()
 {
-    CFileDialog FileDlg(FALSE);
+    CFileDialog fileDlg(FALSE);
 
     // Bring up the file save dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -150,11 +150,11 @@ BOOL CMainFrame::OnFileSave()
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
-    CPrintDialog Printdlg;
+    CPrintDialog printdlg;
 
     try
     {
-        INT_PTR Res = Printdlg.DoModal(*this);
+        INT_PTR Res = printdlg.DoModal(*this);
 
         // Retrieve the printer DC
         // CDC dcPrinter = Printdlg.GetPrinterDC();
@@ -173,16 +173,16 @@ BOOL CMainFrame::OnFilePrint()
     }
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Process notification messages sent by child windows
-//  switch(((LPNMHDR)lParam)->code)
+//  switch(((LPNMHDR)lparam)->code)
 //  {
 //      Add case statements for each notification message here
 //  }
 
     // Some notifications should return a value when handled
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
@@ -216,14 +216,14 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

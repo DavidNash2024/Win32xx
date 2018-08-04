@@ -14,7 +14,7 @@ public:
     virtual void OnAttach();
 
 private:
-    CFont   m_Font;
+    CFont   m_font;
 };
 
 
@@ -25,12 +25,12 @@ public:
     virtual ~CMDIChildText();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
-    CViewText m_TextView;
-    CMenu m_Menu;
+    CViewText m_textView;
+    CMenu m_menu;
 };
 
 #endif  //MDICHILDTEXT_H

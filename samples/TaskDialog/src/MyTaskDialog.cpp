@@ -5,10 +5,10 @@
 #include "MyTaskDialog.h"
 
 
-BOOL CMyTaskDialog::OnTDButtonClicked(int nButtonID)
+BOOL CMyTaskDialog::OnTDButtonClicked(int buttonID)
 // Called when the user selects a button or command link.
 { 
-    UNREFERENCED_PARAMETER(nButtonID);
+    UNREFERENCED_PARAMETER(buttonID);
     TRACE("Button or command link pressed\n");
     
     // we could return TRUE to prevent the task dialog from closing
@@ -33,10 +33,10 @@ void CMyTaskDialog::OnTDDestroyed()
     TRACE("Task Dialog Destroyed\n");
 }
 
-void CMyTaskDialog::OnTDExpandButtonClicked(BOOL bExpanded)
+void CMyTaskDialog::OnTDExpandButtonClicked(BOOL isExpanded)
 // Called when the expand button is clicked.
 {
-    UNREFERENCED_PARAMETER(bExpanded);
+    UNREFERENCED_PARAMETER(isExpanded);
     TRACE("Expand Button Pressed\n");
 }
 
@@ -46,10 +46,10 @@ void CMyTaskDialog::OnTDHelp()
     TRACE("F1 Pressed\n");
 }
 
-void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR pszHref)
+void CMyTaskDialog::OnTDHyperlinkClicked(LPCTSTR pHyperlink)
 // Called when the user clicks on a hyperlink.
 {
-    UNREFERENCED_PARAMETER(pszHref);
+    UNREFERENCED_PARAMETER(pHyperlink);
     TRACE("Hyperlink clicked\n");
 }
 
@@ -59,18 +59,18 @@ void CMyTaskDialog::OnTDNavigatePage()
     TRACE("Navigation occurred\n");
 }
 
-BOOL CMyTaskDialog::OnTDRadioButtonClicked(int nRadioButtonID)
+BOOL CMyTaskDialog::OnTDRadioButtonClicked(int radioButtonID)
 // Called when the user selects a radio button.
 {
-    UNREFERENCED_PARAMETER(nRadioButtonID);
+    UNREFERENCED_PARAMETER(radioButtonID);
     TRACE("Radio Button Clicked\n");
     return TRUE; 
 }
 
-BOOL CMyTaskDialog::OnTDTimer(DWORD dwTickCount)  
+BOOL CMyTaskDialog::OnTDTimer(DWORD tickCount)  
 // Called every 200 milliseconds (aproximately) when the TDF_CALLBACK_TIMER flag is set. 
 {
-    UNREFERENCED_PARAMETER(dwTickCount);
+    UNREFERENCED_PARAMETER(tickCount);
     static int i = 0;
     if (i <= 100)
         SetProgressBarPosition(++i);
@@ -78,15 +78,15 @@ BOOL CMyTaskDialog::OnTDTimer(DWORD dwTickCount)
     return FALSE;
 }
 
-void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL bChecked)
+void CMyTaskDialog::OnTDVerificationCheckboxClicked(BOOL isChecked)
 // Called when the user clicks the Task Dialog verification check box.
 {
-    UNREFERENCED_PARAMETER(bChecked);
+    UNREFERENCED_PARAMETER(isChecked);
     TRACE("Verification Checkbox Clicked\n");
 }
 
-LRESULT CMyTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyTaskDialog::TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 
-    return TaskDialogProcDefault(uMsg, wParam, lParam);
+    return TaskDialogProcDefault(msg, wparam, lparam);
 }

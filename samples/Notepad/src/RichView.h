@@ -17,7 +17,7 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-    CFont   m_Font;
+    CFont   m_font;
 
 };
 

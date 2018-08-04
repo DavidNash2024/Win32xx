@@ -21,7 +21,7 @@ class CMyTabbedMDI : public CTabbedMDI
 public:
     CMyTabbedMDI();
     virtual ~CMyTabbedMDI() {}
-    virtual CWnd* NewMDIChildFromID(int idMDIChild);
+    virtual CWnd* NewMDIChildFromID(int mdiChild);
 };
 
 #endif

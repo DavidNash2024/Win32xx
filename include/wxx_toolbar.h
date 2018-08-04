@@ -128,12 +128,12 @@ namespace Win32xx
         // Overridables
         virtual void OnAttach();
         virtual void OnDestroy();
-        virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void PreCreate(CREATESTRUCT& cs);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
         // Not intended to be overridden
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CToolBar(const CToolBar&);              // Disable copy construction
@@ -235,7 +235,7 @@ namespace Win32xx
         }
 
         // Add the button to the toolbar
-        return (SendMessage(TB_ADDBUTTONS, 1L, reinterpret_cast<LPARAM>(&tbb)) != 0);
+        return (SendMessage(TB_ADDBUTTONS, 1, reinterpret_cast<LPARAM>(&tbb)) != 0);
     }
 
 
@@ -700,18 +700,18 @@ namespace Win32xx
 
 
     // Called when the toolbar is resized.
-    inline LRESULT CToolBar::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CToolBar::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
 
         //  Used by ReBar controls to adjust ToolBar window size
-        if ( GetParent().SendMessage(UWM_TBWINPOSCHANGING, reinterpret_cast<WPARAM>(GetHwnd()), lParam) )
+        if ( GetParent().SendMessage(UWM_TBWINPOSCHANGING, reinterpret_cast<WPARAM>(GetHwnd()), lparam) )
         {
-            LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+            LPWINDOWPOS pWinPos = (LPWINDOWPOS)lparam;
             pWinPos->cx = GetMaxSize().cx;
             pWinPos->cy = GetMaxSize().cy;
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -953,7 +953,7 @@ namespace Win32xx
 
             // Ensure the button now includes some text rows
             if (SendMessage(TB_GETTEXTROWS, 0, 0) == 0)
-                SendMessage(TB_SETMAXTEXTROWS, 1L, 0);
+                SendMessage(TB_SETMAXTEXTROWS, 1, 0);
 
             // Turn on ToolBar drawing
             SetRedraw(TRUE);
@@ -1085,16 +1085,16 @@ namespace Win32xx
 
 
     // Provides default processing of the toolbar's messages.
-    inline LRESULT CToolBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CToolBar::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(uMsg, wParam, lParam);
+        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         case UWM_GETCTOOLBAR:       return reinterpret_cast<LRESULT>(this);
         }
 
         // pass unhandled messages on for default processing
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 } // namespace Win32xx

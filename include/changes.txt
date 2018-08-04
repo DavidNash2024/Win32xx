@@ -3,17 +3,26 @@ Version 8.5.1
 
 New Features and Enhancements
 -----------------------------
+* Added CEvent
+* Added CMutex
+* Added CSemaphore
 * Updated frames
  - Additional toolbars have better support for disabled buttons.
  - Optimised the creation of the image list for disabled menu icons.
  - Optimised AddMenuIcon (the disabled image-list isn't recreated unnecessarily).
  - Added UseStatusBar option for OnCreate.
  - Relaxed restrictions on size of images for menu icons. This provides better 
-    support for larger screen scaling available on windows 10 for DPI aware apps. 
+    support for larger screen scaling available on windows 10 for DPI aware apps.
+
+* Updated CImageList	
 
 
 Changes in detail
 -----------------
+Added wxx_mutex.h                                header file
+Added CEvent                                     class
+Added CMutex                                     class
+Added CSemaphore                                 class
 Added CBitmap::ConvertToDisabled                 member function
 Added CComboBox::GetEditCtrl                     member function
 Added CComboBox::GetLBCtrl                       member function
@@ -31,6 +40,7 @@ Added CImageList::SetDragCursorImage
 Added CImageLIst::Write
 Added CResizer::SetMinRect
 Added CResizer::SetMaxRect
+Added CWinThread::IsRunning
 
 Modified CFrameT::AddMenuIcon                    added optional iconWidth argument
 

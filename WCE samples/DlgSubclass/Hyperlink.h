@@ -15,22 +15,22 @@ class CHyperlink :  public CWnd
 public:
     CHyperlink();
     virtual ~CHyperlink();
-    virtual BOOL AttachDlgItem(UINT nID, CWnd& Parent);
+    virtual BOOL AttachDlgItem(UINT id, CWnd& parent);
     void OnLButtonDown();
     void OnLButtonUp(LPARAM lParam);
 
 protected:
     virtual void OpenUrl();
-    virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    BOOL    m_bUrlVisited;
-    BOOL    m_bClicked;
-    COLORREF m_crVisited;
-    COLORREF m_crNotVisited;
+    BOOL    m_isUrlVisited;
+    BOOL    m_isClicked;
+    COLORREF m_visitedColor;
+    COLORREF m_notVisitedColor;
     HCURSOR m_hCursor;
-    CFont   m_UrlFont;
+    CFont   m_urlFont;
 };
 
 #endif // HYPERLINK_H

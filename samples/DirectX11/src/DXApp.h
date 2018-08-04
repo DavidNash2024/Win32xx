@@ -11,7 +11,7 @@ public:
     virtual int MessageLoop();
 
 private:
-    CDXView m_DXView;
+    CDXView m_dxView;
 
 };
 

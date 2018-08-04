@@ -7,14 +7,14 @@
 
 
 // Definitions for the CDialogApp class
-CDialogApp::CDialogApp() : m_SvrDialog(IDD_SERVER)
+CDialogApp::CDialogApp() : m_svrDialog(IDD_SERVER)
 {
 }
 
 BOOL CDialogApp::InitInstance()
 {
     //Display the Modal Dialog
-    m_SvrDialog.DoModeless();   // throws a CWinException on failure  
+    m_svrDialog.DoModeless();   // throws a CWinException on failure   
 
     return TRUE;
 }

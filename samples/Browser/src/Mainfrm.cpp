@@ -10,10 +10,10 @@
 CMainFrame::CMainFrame()
 {
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set CMainFrame as our event sink
-    m_EventSink.SetSink(this);
+    m_eventSink.SetSink(this);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -28,12 +28,12 @@ CMainFrame::~CMainFrame()
 void CMainFrame::AddComboBoxBand(int Listbox_Height)
 {
     // Create the ComboboxEx window
-    m_ComboboxEx.Create(GetReBar());
+    m_comboboxEx.Create(GetReBar());
 
     // Put the window in a new rebar band
     REBARBANDINFO rbbi;
-    ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
-    rbbi.cbSize     = sizeof(REBARBANDINFO);
+    ZeroMemory(&rbbi, sizeof(rbbi));
+    rbbi.cbSize     = sizeof(rbbi);
     rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
     rbbi.cyMinChild = Listbox_Height;
     rbbi.cyMaxChild = Listbox_Height;
@@ -41,7 +41,7 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
     rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
     rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
     rbbi.clrBack    = GetReBarTheme().clrBand1;
-    rbbi.hwndChild  = m_ComboboxEx.GetHwnd();
+    rbbi.hwndChild  = m_comboboxEx.GetHwnd();
     rbbi.lpText     = const_cast<LPTSTR>(_T("Address"));
 
     GetReBar().InsertBand(-1, rbbi);
@@ -58,7 +58,7 @@ void CMainFrame::ConnectEvents()
     if(!pcp)
         return;
 
-    pcp->Advise(&m_EventSink, &m_eventCookie);
+    pcp->Advise(&m_eventSink, &m_eventCookie);
     pcp->Release();
     pUnk->Release();
 }
@@ -91,9 +91,9 @@ void CMainFrame::OnBeforeNavigate2(DISPPARAMS* pDispParams)
 
 void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
 {
-    CToolBar& TB = GetToolBar();
+    CToolBar& tb = GetToolBar();
 
-    if (TB.IsWindow())
+    if (tb.IsWindow())
     {
         if ((pDispParams) && (pDispParams->cArgs == 2))
         {
@@ -105,11 +105,11 @@ void CMainFrame::OnCommandStateChange(DISPPARAMS* pDispParams)
                     switch (nCommand)
                     {
                     case 1: // Navigate forward:
-                        bEnable ? TB.EnableButton(IDM_FORWARD) : TB.DisableButton(IDM_FORWARD);
+                        bEnable ? tb.EnableButton(IDM_FORWARD) : tb.DisableButton(IDM_FORWARD);
 
                         break;
                     case 2: // Navigate back:
-                        bEnable ? TB.EnableButton(IDM_BACK) : TB.DisableButton(IDM_BACK);
+                        bEnable ? tb.EnableButton(IDM_BACK) : tb.DisableButton(IDM_BACK);
                         break;
                     }
                 }
@@ -134,31 +134,31 @@ BOOL CMainFrame::OnHelpAbout()
 
 BOOL CMainFrame::OnBack()
 {
-    m_View.GoBack();
+    m_view.GoBack();
     return TRUE;
 }
 
 BOOL CMainFrame::OnForward()
 {
-    m_View.GoForward();
+	m_view.GoForward();
     return TRUE;
 }
 
 BOOL CMainFrame::OnRefresh()
 {
-    m_View.Refresh();
+	m_view.Refresh();
     return TRUE;
 }
 
 BOOL CMainFrame::OnStop()
 {
-    m_View.Stop();
+	m_view.Stop();
     return TRUE;
 }
 
 BOOL CMainFrame::OnHome()
 {
-    m_View.GoHome();
+	m_view.GoHome();
     return TRUE;
 }
 
@@ -167,7 +167,7 @@ BOOL CMainFrame::OnEditCut()
     if (GetFocus() == *GetComboEdit())
         GetComboEdit()->Cut();
     else
-        m_View.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+		m_view.ExecWB( OLECMDID_CUT, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
@@ -177,7 +177,7 @@ BOOL CMainFrame::OnEditCopy()
     if (GetFocus() == *GetComboEdit())
         GetComboEdit()->Copy();
     else
-        m_View.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+		m_view.ExecWB( OLECMDID_COPY, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
@@ -187,7 +187,7 @@ BOOL CMainFrame::OnEditPaste()
     if (GetFocus() == *GetComboEdit())
         GetComboEdit()->Paste();
     else
-        m_View.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+		m_view.ExecWB( OLECMDID_PASTE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
@@ -201,15 +201,15 @@ BOOL CMainFrame::OnEditDelete()
     if (GetFocus() == *GetComboEdit())
         GetComboEdit()->Clear();
     else
-        m_View.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
+		m_view.ExecWB( OLECMDID_DELETE, OLECMDEXECOPT_DODEFAULT, NULL, NULL );
 
     return TRUE;
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Respond to menu and and toolbar input
-    UINT nID = LOWORD(wParam);  
+    UINT nID = LOWORD(wparam);  
     switch(nID)
     {
     case IDM_FILE_EXIT:      return OnFileExit();
@@ -228,18 +228,18 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     }
 
     // Handle notification WM_COMMAND from ComboboxEx
-    if(reinterpret_cast<HWND>(lParam) == m_ComboboxEx.GetHwnd())
+    if(reinterpret_cast<HWND>(lparam) == m_comboboxEx.GetHwnd())
     {
-        switch(HIWORD(wParam))
+        switch(HIWORD(wparam))
         {
         case CBN_SELCHANGE:
             // User made selection from list
             {
                 // Get text from edit box
-                CString str = m_ComboboxEx.GetWindowText();
+                CString str = m_comboboxEx.GetWindowText();
 
                 // Navigate to web page
-                m_View.Navigate(str);
+				m_view.Navigate(str);
             }
             return TRUE;
         }
@@ -276,8 +276,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // Add the combo box band to the rebar
     if (GetReBar().IsWindow())
     {
-        int Height = 22;
-        AddComboBoxBand(Height);
+        int height = 22;
+        AddComboBoxBand(height);
     }
 
     ConnectEvents();
@@ -305,7 +305,7 @@ void CMainFrame::OnInitialUpdate()
     // The frame is now created.
     // Place any additional startup code here.
 
-    m_View.GoHome();
+	m_view.GoHome();
 }
 
 void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
@@ -330,7 +330,7 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
         return;
 
     // Update the URL in the ComboboxEx edit box.
-    m_ComboboxEx.SetWindowText(WtoT(bstrUrlName));
+    m_comboboxEx.SetWindowText(WtoT(bstrUrlName));
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
@@ -339,36 +339,36 @@ void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)
     TRACE("NewWindow2\n");
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    switch (((LPNMHDR)lParam)->code)
+    switch (((LPNMHDR)lparam)->code)
     {
     case CBEN_ENDEDIT:
         {
-            switch (((PNMCBEENDEDIT)lParam)->iWhy)
+            switch (((PNMCBEENDEDIT)lparam)->iWhy)
             {
             case CBENF_RETURN:
                 // User hit return in edit box
                 {
                     // Get text from edit box
-                    CString str = m_ComboboxEx.GetWindowText();
+                    CString str = m_comboboxEx.GetWindowText();
 
                     // Insert text into the list box.
-                    COMBOBOXEXITEM CBXitem;
-                    ZeroMemory(&CBXitem, sizeof(COMBOBOXEXITEM));
-                    CBXitem.mask = CBEIF_TEXT;
-                    CBXitem.pszText = const_cast<LPTSTR>(str.c_str());
-                    m_ComboboxEx.InsertItem(CBXitem);
+                    COMBOBOXEXITEM item;
+                    ZeroMemory(&item, sizeof(item));
+					item.mask = CBEIF_TEXT;
+					item.pszText = const_cast<LPTSTR>(str.c_str());
+                    m_comboboxEx.InsertItem(item);
 
                     // Navigate to the web page
-                    m_View.Navigate(str);
+					m_view.Navigate(str);
                     return FALSE;
                 }
             }
         }
     }
 
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 void CMainFrame::OnProgressChange(DISPPARAMS* pDispParams)
@@ -437,21 +437,21 @@ void CMainFrame::SetupMenuIcons()
 {
     // Add menu icons from the IDW_MAIN bitmap resource
     
-    std::vector<UINT> IconData;     // a vector of Resource IDs
+    std::vector<UINT> iconData;     // a vector of Resource IDs
     if (GetReBar().IsWindow())
     {
         // Load the Resource IDs for popup menu items
-        IconData.push_back(IDM_FILE_NEW);
-        IconData.push_back(IDM_FILE_OPEN);
-        IconData.push_back(IDM_FILE_SAVE);
-        IconData.push_back(IDM_EDIT_CUT);
-        IconData.push_back(IDM_EDIT_COPY);
-        IconData.push_back(IDM_EDIT_PASTE);
-        IconData.push_back(IDM_FILE_PRINT);
-        IconData.push_back(IDM_HELP_ABOUT);
+		iconData.push_back(IDM_FILE_NEW);
+		iconData.push_back(IDM_FILE_OPEN);
+		iconData.push_back(IDM_FILE_SAVE);
+		iconData.push_back(IDM_EDIT_CUT);
+		iconData.push_back(IDM_EDIT_COPY);
+		iconData.push_back(IDM_EDIT_PASTE);
+		iconData.push_back(IDM_FILE_PRINT);
+		iconData.push_back(IDM_HELP_ABOUT);
     }
 
-    AddMenuIcons(IconData, RGB(192, 192, 192), IDW_MAIN, 0);
+    AddMenuIcons(iconData, RGB(192, 192, 192), IDW_MAIN, 0);
 
 }
 
@@ -467,8 +467,8 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HOME );
 
     // Set the image lists for normal, hot and disabled buttons
-    int BitsPerPixel = GetDesktopWindow().GetDC().GetDeviceCaps(BITSPIXEL);
-    if (GetWinVersion() >= 2501 && BitsPerPixel == 32)
+    int bitsPerPixel = GetDesktopWindow().GetDC().GetDeviceCaps(BITSPIXEL);
+    if (GetWinVersion() >= 2501 && bitsPerPixel == 32)
     {
         // Load the 32bit bitmaps if we can, otherwise load 24bit ones.
         CBitmap bm(IDB_TOOLBAR32_NORM);
@@ -485,14 +485,14 @@ void CMainFrame::SetupToolBar()
 
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
         //Additional messages to be handled go here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -12,30 +12,30 @@
 class CClientDialog : public CDialog
 {
 public:
-    CClientDialog(UINT nResID);
+    CClientDialog(UINT resID);
     virtual ~CClientDialog();
 
-    LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     BOOL OnSocketDisconnect();
     BOOL OnSocketConnect();
     BOOL OnSocketReceive();
 
 protected:
-    virtual void OnDestroy();
+    virtual void OnClose();
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
 
 //private:
 public:
-    void AppendText(int nID, LPCTSTR buf);
+    void AppendText(int id, LPCTSTR buf);
     void LoadCommonControlsEx();
     void OnStartClient();
     void OnSend();
 
-    CClientSocket m_Client;
-    BOOL m_IsClientConnected;
-    int  m_SocketType;
+    CClientSocket m_client;
+    BOOL m_isClientConnected;
+    int  m_socketType;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
@@ -52,18 +52,18 @@ public:
     class CRadioTCP : public CButton {};
     class CRadioUDP : public CButton {};
 
-    CIP4Address m_IP4Address;
-    CEditIP6Address m_EditIP6Address;
-    CEditStatus m_EditStatus;
-    CEditPort   m_EditPort;
-    CEditSend   m_EditSend;
-    CEditReceive m_EditReceive;
-    CButtonConnect m_ButtonConnect;
-    CButtonSend m_ButtonSend;
-    CRadioIP4   m_RadioIP4;
-    CRadioIP6   m_RadioIP6;
-    CRadioTCP   m_RadioTCP;
-    CRadioUDP   m_RadioUDP;
+    CIP4Address m_ip4Address;
+    CEditIP6Address m_editIP6Address;
+    CEditStatus m_editStatus;
+    CEditPort   m_editPort;
+    CEditSend   m_editSend;
+    CEditReceive m_editReceive;
+    CButtonConnect m_buttonConnect;
+    CButtonSend m_buttonSend;
+    CRadioIP4   m_radioIP4;
+    CRadioIP6   m_radioIP6;
+    CRadioTCP   m_radioTCP;
+    CRadioUDP   m_radioUDP;
 
 };
 

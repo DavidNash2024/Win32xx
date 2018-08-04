@@ -11,7 +11,7 @@ class CFormDoc;
 class CFormView : public CDialog
 {
 public:
-    CFormView(UINT nResID);
+    CFormView(UINT resID);
     virtual ~CFormView();
     virtual HWND Create(HWND hParent);
 
@@ -21,20 +21,20 @@ public:
     BOOL OnCheckA();
     BOOL OnCheckB();
     BOOL OnCheckC();
-    BOOL OnRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    BOOL OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
 protected:
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
     virtual void OnOK();
 
 private:
 
 
-    CResizer m_Resizer;
+    CResizer m_resizer;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done to keep the IDE's class view tidy.
@@ -55,20 +55,20 @@ private:
     class COK : public CButton {};
     class CGroup : public CWnd {};
     
-    CRadioA     m_RadioA; 
-    CRadioB     m_RadioB;
-    CRadioC     m_RadioC;
-    CCheckA     m_CheckA;
-    CCheckB     m_CheckB;
-    CCheckC     m_CheckC;
-    CMyButton   m_Button;
-    CMyListBox  m_ListBox;
-    CMyEdit     m_Edit;
-    CMyRichEdit m_RichEdit;
-    CMyPicture  m_Picture;
-    CMyStatus       m_Status;
-    COK         m_OK;
-    CGroup      m_Group;
+    CRadioA     m_radioA; 
+    CRadioB     m_radioB;
+    CRadioC     m_radioC;
+    CCheckA     m_checkA;
+    CCheckB     m_checkB;
+    CCheckC     m_checkC;
+    CMyButton   m_button;
+    CMyListBox  m_listBox;
+    CMyEdit     m_edit;
+    CMyRichEdit m_richEdit;
+    CMyPicture  m_picture;
+    CMyStatus   m_status;
+    COK         m_ok;
+    CGroup      m_group;
 
 };
 

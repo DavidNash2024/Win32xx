@@ -16,15 +16,15 @@ public:
     virtual ~CPreviewPane() {}
 
     void Render(CDC& dc);
-    void SetBitmap(CBitmap& Bitmap) { m_Bitmap = Bitmap; }
+    void SetBitmap(CBitmap& bitmap) { m_bitmap = bitmap; }
 
 protected:
     virtual void OnDraw(CDC& dc);
     virtual BOOL OnEraseBkgnd(CDC&);
-    virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CBitmap m_Bitmap;
+    CBitmap m_bitmap;
 
 };
 
@@ -35,38 +35,38 @@ private:
 class CPreviewDialog : public CDialog
 {
 public:
-    CPreviewDialog(UINT nResID);
+    CPreviewDialog(UINT resID);
     virtual ~CPreviewDialog();
 
-    CPreviewPane& GetPreviewPane()  { return m_PreviewPane; }
+    CPreviewPane& GetPreviewPane()  { return m_previewPane; }
     CRichEdit& GetRichView();
-    BOOL DoPrintPreview(RECT rcPage, RECT rcPrintArea);
+    BOOL DoPrintPreview(RECT pageRect, RECT printArea);
     BOOL OnPrintButton();
     BOOL OnNextButton();
     BOOL OnPrevButton();
     BOOL OnCloseButton();
-    void PreviewPage(UINT nPage);
+    void PreviewPage(UINT page);
     void UpdateButtons();
 
 protected:
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
 
 private:
-    CResizer m_Resizer;
-    CPreviewPane m_PreviewPane;
-    CButton m_ButtonPrint;
-    CButton m_ButtonNext;
-    CButton m_ButtonPrev;
-    CButton m_ButtonClose;
+    CResizer m_resizer;
+    CPreviewPane m_previewPane;
+    CButton m_buttonPrint;
+    CButton m_buttonNext;
+    CButton m_buttonPrev;
+    CButton m_buttonClose;
 
-    UINT    m_CurrentPage;
-    CRect   m_rcPage;
-    CRect   m_rcPrintArea;
+    UINT    m_currentPage;
+    CRect   m_pageRect;
+    CRect   m_printArea;
 
 public:
-    std::vector<int> m_PageBreaks;
+    std::vector<int> m_pageBreaks;
 
 };
 

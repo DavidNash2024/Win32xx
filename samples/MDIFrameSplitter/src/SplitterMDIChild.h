@@ -11,30 +11,30 @@ class CSimpleView : public CWnd
 {
 public:
     CSimpleView();
-    COLORREF GetColor() {return m_Color;}
-    void SetColor(COLORREF color) { m_Color = color; }
+    COLORREF GetColor() {return m_color;}
+    void SetColor(COLORREF color) { m_color = color; }
 
 protected:
     virtual void OnDraw(CDC& dc);
-    virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    COLORREF m_Color;
+    COLORREF m_color;
 };
 
 // Declaration of the CDockSimple class
 class CDockSimple : public CDocker
 {
 public:
-    CDockSimple() {SetView(m_View);}
+    CDockSimple() {SetView(m_view);}
     virtual ~CDockSimple() {}
 
-    CSimpleView& GetSimpleView() { return m_View; }
+    CSimpleView& GetSimpleView() { return m_view; }
 
 private:
-    CSimpleView m_View;
+    CSimpleView m_view;
 
 };
 
@@ -46,15 +46,15 @@ public:
     virtual ~CSplitterMDIChild();
 
 protected:
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void    OnColor(COLORREF rgb);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CDockSimple m_View;
+    CDockSimple m_view;
 };
 
 #endif  //MDICHILDVIEW_H

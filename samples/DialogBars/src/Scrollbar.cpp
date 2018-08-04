@@ -19,17 +19,17 @@ void CMyScrollBar::OnInitialUpdate()
     SetScroll(0);
 }
 
-LRESULT CMyScrollBar::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyScrollBar::OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(uMsg);
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(msg);
+    UNREFERENCED_PARAMETER(lparam);
 
     // Get a pointer to the MyDialog object
-    CMyDialog& MyDialog = GetDialogApp().GetDialog();
+    CMyDialog& myDialog = GetDialogApp().GetDialog();
 
     GetScrollInfo(m_si);
 
-    switch (LOWORD (wParam))
+    switch (LOWORD (wparam))
     {
     // user clicked left arrow
     case SB_LINELEFT:
@@ -60,30 +60,30 @@ LRESULT CMyScrollBar::OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
-    MyDialog.SetScroll(m_si.nPos);          // Set the scroll bar position
-    MyDialog.SetSlider(m_si.nPos);          // Set the slider position
-    MyDialog.SetProgress(m_si.nPos);         // Set the progress bar position
-    MyDialog.SetStatic(FALSE, m_si.nPos);    // Set the static text
+    myDialog.SetScroll(m_si.nPos);          // Set the scroll bar position
+    myDialog.SetSlider(m_si.nPos);          // Set the slider position
+    myDialog.SetProgress(m_si.nPos);         // Set the progress bar position
+    myDialog.SetStatic(FALSE, m_si.nPos);    // Set the static text
 
-    return 0L;
+    return 0;
 }
 
-LRESULT CMyScrollBar::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyScrollBar::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_HSCROLL:    return OnHScroll(uMsg, wParam, lParam);
+    case WM_HSCROLL:    return OnHScroll(msg, wparam, lparam);
     }
 
-    return 0L;
+    return 0;
 }
 
-void CMyScrollBar::SetScroll(int nPos)
+void CMyScrollBar::SetScroll(int pos)
 {
     m_si.cbSize = sizeof(SCROLLINFO);
-    m_si.nPos = nPos;
+    m_si.nPos = pos;
     m_si.nPage = 10;
     m_si.nMax = 100 + (m_si.nPage -1);
     m_si.fMask = SIF_ALL;

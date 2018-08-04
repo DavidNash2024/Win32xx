@@ -111,12 +111,12 @@ namespace Win32xx
         // These are the functions you might wish to override
         virtual void OnClose();
         virtual int  OnCreate(CREATESTRUCT& cs);
-        virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
         // Not intended to be overridden
-        LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CMDIChild(const CMDIChild&);                // Disable copy construction
@@ -140,10 +140,10 @@ namespace Win32xx
     protected:
         // Overridable virtual functions
         virtual HWND Create(HWND hWndParent);
-        virtual LRESULT OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMDIDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMDIGetActive(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMDIDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     };
 
     /////////////////////////////////////
@@ -180,21 +180,21 @@ namespace Win32xx
     protected:
         // Overridable virtual functions
         virtual void    OnClose();
-        virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMDIActivated(UINT uMsg, WPARAM wParam, LPARAM);
-        virtual LRESULT OnMDIDestroyed(UINT uMsg, WPARAM wParam, LPARAM);
+        virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMDIActivated(UINT msg, WPARAM wparam, LPARAM);
+        virtual LRESULT OnMDIDestroyed(UINT msg, WPARAM wparam, LPARAM);
         virtual void    OnMDIMaximized(BOOL IsMaxed);
         virtual void    OnMenuUpdate(UINT nID);
         virtual BOOL    OnViewStatusBar();
         virtual BOOL    OnViewToolBar();
-        virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL    PreTranslateMessage(MSG& Msg);
         virtual void    RecalcLayout();
         virtual void    UpdateFrameMenu(CMenu Menu);
 
         // Not intended to be overridden
-        LRESULT FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CMDIFrameT(const CMDIFrameT&);              // Disable copy construction
@@ -336,9 +336,9 @@ namespace Win32xx
 
     // Overrides CWnd::FinalWindowProc to call DefFrameProc instead of DefWindowProc.
     template <class T>
-    inline LRESULT CMDIFrameT<T>::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIFrameT<T>::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        return ::DefFrameProc(*this, GetMDIClient(), uMsg, wParam, lParam);
+        return ::DefFrameProc(*this, GetMDIClient(), msg, wparam, lparam);
     }
 
 
@@ -448,7 +448,7 @@ namespace Win32xx
 
     // Called when the menu's modal loop begins (WM_INITMENUPOPUP received).
     template <class T>
-    inline LRESULT CMDIFrameT<T>::OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIFrameT<T>::OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (IsMDIChildMaxed())
         {
@@ -456,11 +456,11 @@ namespace Win32xx
             assert(pMaxMDIChild);
 
             // Suppress owner drawing of the MDI child's system menu
-            if (::GetSystemMenu(*pMaxMDIChild, FALSE) == reinterpret_cast<HMENU>(wParam))
-                return CWnd::WndProcDefault(WM_INITMENUPOPUP, wParam, lParam);
+            if (::GetSystemMenu(*pMaxMDIChild, FALSE) == reinterpret_cast<HMENU>(wparam))
+                return CWnd::WndProcDefault(WM_INITMENUPOPUP, wparam, lparam);
         }
 
-        return T::OnInitMenuPopup(uMsg, wParam, lParam);
+        return T::OnInitMenuPopup(msg, wparam, lparam);
     }
 
 
@@ -490,9 +490,9 @@ namespace Win32xx
 
     // Called when a MDI child is activated.
     template <class T>
-    inline LRESULT CMDIFrameT<T>::OnMDIActivated(UINT, WPARAM wParam, LPARAM)
+    inline LRESULT CMDIFrameT<T>::OnMDIActivated(UINT, WPARAM wparam, LPARAM)
     {
-        HWND hActiveMDIChild = reinterpret_cast<HWND>(wParam);
+        HWND hActiveMDIChild = reinterpret_cast<HWND>(wparam);
 
         if (hActiveMDIChild)
         {
@@ -514,9 +514,9 @@ namespace Win32xx
 
     // Called when a MDI child is destroyed.
     template <class T>
-    inline LRESULT CMDIFrameT<T>::OnMDIDestroyed(UINT, WPARAM wParam, LPARAM)
+    inline LRESULT CMDIFrameT<T>::OnMDIDestroyed(UINT, WPARAM wparam, LPARAM)
     {
-        RemoveMDIChild(reinterpret_cast<HWND>(wParam));
+        RemoveMDIChild(reinterpret_cast<HWND>(wparam));
         return 0;
     }
 
@@ -554,7 +554,7 @@ namespace Win32xx
 
     // Called when the MDI frame has been resized.
     template <class T>
-    inline LRESULT CMDIFrameT<T>::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIFrameT<T>::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (T::GetMenuBar().IsWindow())
         {
@@ -562,7 +562,7 @@ namespace Win32xx
             T::GetMenuBar().SetMenu(T::GetMenuBar().GetMenu());
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -700,26 +700,26 @@ namespace Win32xx
 
     // Provides default processing for the MDI frame window's messages.
     template <class T>
-    inline LRESULT CMDIFrameT<T>::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIFrameT<T>::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-            case UWM_MDIACTIVATED:      return OnMDIActivated(uMsg, wParam, lParam);
-            case UWM_MDIDESTROYED:      return OnMDIDestroyed(uMsg, wParam, lParam);
+            case UWM_MDIACTIVATED:      return OnMDIActivated(msg, wparam, lparam);
+            case UWM_MDIDESTROYED:      return OnMDIDestroyed(msg, wparam, lparam);
             case UWM_MDIGETACTIVE:
             {
-                if (wParam && lParam)
+                if (wparam && lparam)
                 {
-                    LPBOOL pIsMDIChildMax = (LPBOOL)lParam;
+                    LPBOOL pIsMDIChildMax = (LPBOOL)lparam;
                     OnMDIMaximized(*pIsMDIChildMax);
                 }
                 break;
 
             }
-            case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(uMsg, wParam, lParam);
+            case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         }
 
-        return T::WndProcDefault(uMsg, wParam, lParam);
+        return T::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -745,11 +745,11 @@ namespace Win32xx
 
     // Called when the MDI child window is activated.
     template <class T>
-    inline LRESULT CMDIClient<T>::OnMDIActivate(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIClient<T>::OnMDIActivate(UINT, WPARAM wparam, LPARAM lparam)
     {
         // Suppress redraw to avoid flicker when activating maximised MDI children
         T::SetRedraw(FALSE);
-        LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIACTIVATE, wParam, lParam);
+        LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), WM_MDIACTIVATE, wparam, lparam);
         T::SetRedraw(TRUE);
         T::RedrawWindow(RDW_FRAME | RDW_INVALIDATE | RDW_ALLCHILDREN);
 
@@ -759,13 +759,13 @@ namespace Win32xx
 
     // Called when a MDI child window is destroyed.
     template <class T>
-    inline LRESULT CMDIClient<T>::OnMDIDestroy(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIClient<T>::OnMDIDestroy(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Do default processing first
-        T::CallWindowProc(T::GetPrevWindowProc(), uMsg, wParam, lParam);
+        T::CallWindowProc(T::GetPrevWindowProc(), msg, wparam, lparam);
 
         // Now remove MDI child
-        T::GetParent().SendMessage(UWM_MDIDESTROYED, wParam, 0);
+        T::GetParent().SendMessage(UWM_MDIDESTROYED, wparam, 0);
 
         return 0;
     }
@@ -773,28 +773,28 @@ namespace Win32xx
 
     // Called when the active MDI child is requested.
     template <class T>
-    inline LRESULT CMDIClient<T>::OnMDIGetActive(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIClient<T>::OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Do default processing first
-        LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), uMsg, wParam, lParam);
+        LRESULT lr = T::CallWindowProc(T::GetPrevWindowProc(), msg, wparam, lparam);
 
-        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, lr, lParam);
+        SendMessage(T::GetParent(), UWM_MDIGETACTIVE, lr, lparam);
         return lr;
     }
 
 
     // Provides default processing for the MDIClient window's messages.
     template <class T>
-    inline LRESULT CMDIClient<T>::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIClient<T>::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_MDIACTIVATE:    return OnMDIActivate(uMsg, wParam, lParam);
-        case WM_MDIDESTROY:     return OnMDIDestroy(uMsg, wParam, lParam);
-        case WM_MDIGETACTIVE:   return OnMDIGetActive(uMsg, wParam, lParam);
+        case WM_MDIACTIVATE:    return OnMDIActivate(msg, wparam, lparam);
+        case WM_MDIDESTROY:     return OnMDIDestroy(msg, wparam, lparam);
+        case WM_MDIGETACTIVE:   return OnMDIGetActive(msg, wparam, lparam);
         }
 
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 
@@ -888,9 +888,9 @@ namespace Win32xx
 
 
     // Overrides CWnd::FinalWindowProc to call DefMDIChildProc instead of DefWindowProc.
-    inline LRESULT CMDIChild::FinalWindowProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIChild::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        return ::DefMDIChildProc(*this, uMsg, wParam, lParam);
+        return ::DefMDIChildProc(*this, msg, wparam, lparam);
     }
 
 
@@ -945,20 +945,20 @@ namespace Win32xx
 
 
     // Called when the MDI child is activated.
-    inline LRESULT CMDIChild::OnMDIActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIChild::OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
 
         // This child is being activated
-        if (lParam == reinterpret_cast<LPARAM>(GetHwnd()))
+        if (lparam == reinterpret_cast<LPARAM>(GetHwnd()))
         {
             GetAncestor().SendMessage(UWM_MDIACTIVATED, reinterpret_cast<WPARAM>(GetHwnd()), 0);
             GetView().SetFocus();
         }
 
         // No child is being activated
-        if (lParam == 0)
+        if (lparam == 0)
         {
             GetAncestor().SendMessage(UWM_MDIACTIVATED, 0, 0);
         }
@@ -968,10 +968,10 @@ namespace Win32xx
 
 
     // Called when the MDI child is resized.
-    inline LRESULT CMDIChild::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIChild::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         RecalcLayout();
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -1028,14 +1028,14 @@ namespace Win32xx
 
 
     // Provides the default processing for the MDI child's window messages.
-    inline LRESULT CMDIChild::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMDIChild::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-            case WM_MDIACTIVATE:        return OnMDIActivate(uMsg, wParam, lParam);
-            case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(uMsg, wParam, lParam);
+            case WM_MDIACTIVATE:        return OnMDIActivate(msg, wparam, lparam);
+            case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         }
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 

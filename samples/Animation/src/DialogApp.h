@@ -16,7 +16,7 @@ public:
     virtual BOOL InitInstance();
 
 private:
-    CMyDialog m_MyDialog;
+    CMyDialog m_myDialog;
 };
 
 // returns a reference to the CDialogApp object

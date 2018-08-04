@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
@@ -20,10 +20,10 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Pass resizing messages on to the resizer
-    m_Resizer.HandleMessage(uMsg, wParam, lParam);
+    m_resizer.HandleMessage(msg, wparam, lparam);
 
 //  switch (uMsg)
 //  {
@@ -31,7 +31,7 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam); 
+    return DialogProcDefault(msg, wparam, lparam); 
 }
 
 void CMyDialog::OnCancel()
@@ -58,22 +58,22 @@ void CMyDialog::OnOK()
     // Press the "Ctrl" key
     ip.ki.wVk = VK_CONTROL;
     ip.ki.dwFlags = 0;
-    SendInput(1, &ip, sizeof(INPUT));
+    SendInput(1, &ip, sizeof(ip));
 
     // Press the "M" key
     ip.ki.wVk = 'M';
     ip.ki.dwFlags = 0;
-    SendInput(1, &ip, sizeof(INPUT));
+    SendInput(1, &ip, sizeof(ip));
     
     // Release the "M" key
     ip.ki.wVk = 'M';
     ip.ki.dwFlags = KEYEVENTF_KEYUP;
-    SendInput(1, &ip, sizeof(INPUT)); 
+    SendInput(1, &ip, sizeof(ip)); 
     
     // Release the "Ctrl" key
     ip.ki.wVk = VK_CONTROL;
     ip.ki.dwFlags = KEYEVENTF_KEYUP;
-    SendInput(1, &ip, sizeof(INPUT));
+    SendInput(1, &ip, sizeof(ip));
 
 #endif
 }
@@ -85,11 +85,11 @@ BOOL CMyDialog::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Attach the custom control to a CWnd object
-    m_MyControl.AttachDlgItem(IDC_CUSTOMWEB, *this);
+    m_myControl.AttachDlgItem(IDC_CUSTOMWEB, *this);
 
     // Support automatic resizing
-    m_Resizer.Initialize( *this, CRect(0, 0, 300, 200) );
-    m_Resizer.AddChild(m_MyControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
+    m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
+    m_resizer.AddChild(m_myControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
     
     return TRUE;
 }

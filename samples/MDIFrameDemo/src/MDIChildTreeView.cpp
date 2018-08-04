@@ -27,15 +27,15 @@ void CViewTree::OnDestroy()
 void CViewTree::OnAttach()
 {
     //set the image lists
-    m_imlNormal.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
-    CBitmap bmImage(IDB_CLASSVIEW);
-    m_imlNormal.Add( bmImage, RGB(255, 0, 0) );
-    SetImageList(m_imlNormal, LVSIL_NORMAL);
+    m_normalImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
+    CBitmap image(IDB_CLASSVIEW);
+    m_normalImages.Add( image, RGB(255, 0, 0) );
+    SetImageList(m_normalImages, LVSIL_NORMAL);
 
     // Adjust style to show lines and [+] button
-    DWORD dwStyle = GetStyle();
-    dwStyle |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
-    SetStyle(dwStyle);
+    DWORD style = GetStyle();
+    style |= TVS_HASBUTTONS | TVS_HASLINES | TVS_LINESATROOT;
+    SetStyle(style);
 
     DeleteAllItems();
 
@@ -60,17 +60,17 @@ void CViewTree::OnAttach()
     Expand(htiCTreeViewApp, TVE_EXPAND);
 }
 
-HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR szText, int iImage)
+HTREEITEM CViewTree::AddItem(HTREEITEM hParent, LPCTSTR text, int image)
 {
     TVITEM tvi;
-    ZeroMemory(&tvi, sizeof(TVITEM));
+    ZeroMemory(&tvi, sizeof(tvi));
     tvi.mask = TVIF_TEXT | TVIF_IMAGE | TVIF_SELECTEDIMAGE;
-    tvi.iImage = iImage;
-    tvi.iSelectedImage = iImage;
-    tvi.pszText = const_cast<LPTSTR>(szText);
+    tvi.iImage = image;
+    tvi.iSelectedImage = image;
+    tvi.pszText = const_cast<LPTSTR>(text);
 
     TVINSERTSTRUCT tvis;
-    ZeroMemory(&tvis, sizeof(TVINSERTSTRUCT));
+    ZeroMemory(&tvis, sizeof(tvis));
     tvis.hParent = hParent;
     tvis.item = tvi;
 

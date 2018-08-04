@@ -33,13 +33,13 @@ public:
     BOOL OnMDITile();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 #endif  //MAINMDIFRM_H

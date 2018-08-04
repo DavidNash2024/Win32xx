@@ -9,27 +9,27 @@
 class CViewDialog : public CDialog
 {
 public:
-    CViewDialog(UINT nResID);
+    CViewDialog(UINT resID);
     virtual ~CViewDialog();
 
 protected:
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnCancel();
     virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 private:
-    void AppendText(int nID, LPCTSTR szText);
+    void AppendText(int id, LPCTSTR text);
     BOOL OnButton();
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
-    BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
-    CResizer m_Resizer;
+    CResizer m_resizer;
 
     // Nested classes for this dialog's child windows
     // Nesting is optional. Its done here to keep the IDE's class view tidy.
@@ -43,15 +43,15 @@ private:
     class CRichEdit1 : public CRichEdit {};
     class CRichEdit2 : public CRichEdit {};
     
-    CRadioA     m_RadioA; 
-    CRadioB     m_RadioB;
-    CRadioC     m_RadioC;
-    CCheckA     m_CheckA;
-    CCheckB     m_CheckB;
-    CCheckC     m_CheckC;
-    CButton1    m_Button;
-    CRichEdit1  m_RichEdit1;
-    CRichEdit2  m_RichEdit2;
+    CRadioA     m_radioA; 
+    CRadioB     m_radioB;
+    CRadioC     m_radioC;
+    CCheckA     m_checkA;
+    CCheckB     m_checkB;
+    CCheckC     m_checkC;
+    CButton1    m_button;
+    CRichEdit1  m_richEdit1;
+    CRichEdit2  m_richEdit2;
 };
 
 // Declaration of the CContainDialog class
@@ -62,7 +62,7 @@ public:
     ~CContainDialog() {}
 
 private:
-    CViewDialog m_ViewDialog;
+    CViewDialog m_viewDialog;
 };
 
 // Declaration of the CDockDialog class
@@ -73,7 +73,7 @@ public:
     virtual ~CDockDialog() {}
 
 private:
-    CContainDialog m_View;
+    CContainDialog m_view;
 
 };
 

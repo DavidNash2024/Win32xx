@@ -4,8 +4,8 @@
 
 
 
-CMyDialog::CMyDialog(UINT nResID)
-    : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID)
+    : CDialog(resID)
 {
 }
 
@@ -32,17 +32,17 @@ void CMyDialog::OnOK()
     CDialog::OnOK();
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 // Add any messages to be handled inside the switch statement
 
 
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //
-//  } // switch(uMsg)
+//  } // switch(msg)
     
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
     
 } // INT_PTR CALLBACK DialogProc(...)
 

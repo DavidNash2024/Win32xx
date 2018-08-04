@@ -7,14 +7,14 @@
 
 
 // Definitions for the CDialogApp class
-CDialogApp::CDialogApp() : m_ClientDialog(IDD_CLIENT)
+CDialogApp::CDialogApp() : m_clientDialog(IDD_CLIENT)
 {
 }
 
 BOOL CDialogApp::InitInstance()
 {
     //Display the Modal Dialog
-    m_ClientDialog.DoModeless();    // throws a CWinException on failure  
+    m_clientDialog.DoModeless();    // throws a CWinException on failure  
 
     return TRUE;
 }

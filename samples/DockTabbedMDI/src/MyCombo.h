@@ -14,7 +14,7 @@ public:
     virtual ~CMyCombo();
     BOOL AddItems();
     virtual void OnDestroy();
-    void SetImages(int nImages, UINT ImageID);
+    void SetImages(int images, UINT imageID);
 
 protected:
     virtual void PreCreate(CREATESTRUCT& cs);

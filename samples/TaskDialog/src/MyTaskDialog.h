@@ -11,18 +11,18 @@ public:
     virtual ~CMyTaskDialog() {}
 
 protected:
-    virtual BOOL OnTDButtonClicked(int nButtonID);
+    virtual BOOL OnTDButtonClicked(int buttonID);
     virtual void OnTDConstructed();
     virtual void OnTDCreated();
     virtual void OnTDDestroyed();
-    virtual void OnTDExpandButtonClicked(BOOL bExpanded);
+    virtual void OnTDExpandButtonClicked(BOOL isExpanded);
     virtual void OnTDHelp();
-    virtual void OnTDHyperlinkClicked(LPCTSTR pszHref);
+    virtual void OnTDHyperlinkClicked(LPCTSTR pHyperlink);
     virtual void OnTDNavigatePage();
-    virtual BOOL OnTDRadioButtonClicked(int nRadioButtonID);
-    virtual BOOL OnTDTimer(DWORD dwTickCount);
-    virtual void OnTDVerificationCheckboxClicked(BOOL bChecked);    
-    virtual LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnTDRadioButtonClicked(int radioButtonID);
+    virtual BOOL OnTDTimer(DWORD tickCount);
+    virtual void OnTDVerificationCheckboxClicked(BOOL isChecked);    
+    virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 #endif

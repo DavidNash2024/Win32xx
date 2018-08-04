@@ -20,9 +20,9 @@ void CButton::PreCreate(CREATESTRUCT &cs)
     cs.lpszName = TEXT("OK");
 }
 
-LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_MOUSEMOVE:
         TRACE("WndProc - WM_MOUSEMOVE Message\n");
@@ -46,5 +46,5 @@ LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // Pass unhandled messages on for default processing
-    return CWnd::WndProc(uMsg, wParam, lParam);
+    return CWnd::WndProc(msg, wparam, lparam);
 }

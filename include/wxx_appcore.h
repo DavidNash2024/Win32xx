@@ -112,10 +112,9 @@ namespace Win32xx
         {
             // A thread's state is set to signalled when the thread terminates.
             // If your thread is still running at this point, you have a bug.
-            if (WaitForSingleObject(m_hThread, 0) != 0)
+            if (IsRunning())
             {
-                TRACE("*** Error *** Ending CWinThread before ending its thread\n");
-                assert(FALSE);
+                TRACE("*** Warning *** Ending CWinThread before ending its thread\n");
             }
 
             // Close the thread's handle
@@ -133,6 +132,12 @@ namespace Win32xx
     {
         if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
         if (NULL == m_pThreadParams) m_pThreadParams = this;
+
+		if (m_hThread)
+		{
+			assert(!IsRunning());
+			CloseHandle(m_hThread);
+		}
 
 #ifdef _WIN32_WCE
         m_hThread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_dwThreadID));
@@ -282,10 +287,10 @@ namespace Win32xx
 
     // Posts a message to the thread. The message will reach the MessageLoop, but
     // will not call a CWnd's WndProc.
-    inline BOOL CWinThread::PostThreadMessage(UINT uMsg, WPARAM wParam, LPARAM lParam) const
+    inline BOOL CWinThread::PostThreadMessage(UINT msg, WPARAM wparam, LPARAM lparam) const
     {
         assert(m_hThread);
-        return ::PostThreadMessage(GetThreadID(), uMsg, wParam, lParam);
+        return ::PostThreadMessage(GetThreadID(), msg, wparam, lparam);
     }
 
 

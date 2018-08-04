@@ -13,10 +13,10 @@ public:
     CDialogApp(); 
     virtual ~CDialogApp();
     virtual BOOL InitInstance();
-    CMyDialog& GetDialog() {return m_MyDialog;}
+    CMyDialog& GetDialog() {return m_myDialog;}
 
 private:
-    CMyDialog m_MyDialog;
+    CMyDialog m_myDialog;
 };
 
 // returns a reference to the CDialogApp object

@@ -13,13 +13,13 @@ protected:
     virtual void OnAttach();
     virtual BOOL OnEraseBkgnd(CDC& dc);
     virtual void PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
     void SetStatusParts();
 
 private:
-    CHyperlink m_Hyperlink;
-    CProgressBar m_ProgressBar;
+    CHyperlink m_hyperlink;
+    CProgressBar m_progressBar;
 };
 
 

@@ -15,13 +15,13 @@ void CMyStatusBar::OnAttach()
     SendMessage(SB_SETBKCOLOR, 0, RGB(125, 230, 255));
 
     // Create the Hyperlink
-    m_Hyperlink.Create(*this);
-    m_Hyperlink.SetWindowPos(NULL, CRect(3,3,100, 20), SWP_SHOWWINDOW);
+    m_hyperlink.Create(*this);
+    m_hyperlink.SetWindowPos(NULL, CRect(3,3,100, 20), SWP_SHOWWINDOW);
 
     // Create the ProgressBar
-    m_ProgressBar.Create(*this);
-    CRect rcPart = GetPartRect(1);
-    m_ProgressBar.SetWindowPos(NULL, rcPart, SWP_SHOWWINDOW);
+    m_progressBar.Create(*this);
+    CRect partRect = GetPartRect(1);
+    m_progressBar.SetWindowPos(NULL, partRect, SWP_SHOWWINDOW);
 
     // Add the icon
     SetPartIcon(2, (HICON)GetApp().LoadImage(MAKEINTRESOURCE(IDW_MAIN), IMAGE_ICON, 16, 16));
@@ -55,25 +55,25 @@ void CMyStatusBar::PreCreate(CREATESTRUCT& cs)
 void CMyStatusBar::SetStatusParts()
 {
     // Create the StatusBar parts
-    CRect rcClient = GetClientRect();
-    int width = MAX(270, rcClient.right);
+    CRect clientRect = GetClientRect();
+    int width = MAX(270, clientRect.right);
     SetPartWidth(0, width - 210);
     SetPartWidth(1, 100);
     SetPartWidth(2, 20);
     SetPartWidth(3, 90); 
 }
 
-LRESULT CMyStatusBar::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyStatusBar::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 
-    switch(uMsg)
+    switch(msg)
     {
     case WM_TIMER:
         {   
             // Change the Progress Bar indication
-            m_ProgressBar.OffsetPos(1);
-            if (m_ProgressBar.GetRange(FALSE) == m_ProgressBar.GetPos())
-                m_ProgressBar.SetPos(0);
+            m_progressBar.OffsetPos(1);
+            if (m_progressBar.GetRange(FALSE) == m_progressBar.GetPos())
+                m_progressBar.SetPos(0);
 
             break;
         }
@@ -83,11 +83,11 @@ LRESULT CMyStatusBar::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
             SetStatusParts();
 
             // Reposition the Progress Bar
-            CRect rcPart = GetPartRect(1);
-            m_ProgressBar.SetWindowPos(NULL, rcPart, SWP_SHOWWINDOW);
+            CRect partRect = GetPartRect(1);
+            m_progressBar.SetWindowPos(NULL, partRect, SWP_SHOWWINDOW);
             break;
         }
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

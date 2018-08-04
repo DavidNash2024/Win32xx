@@ -17,24 +17,20 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    void LoadFile(LPCTSTR str);
-
     void OnFileExit();
-    void OnFileMRU(WPARAM wParam);
     void OnFileNew();
     void OnFileOpen();
     void OnFileSave();
     void OnFileSaveAs();
     void OnFilePrint();
-    void OnPenColor();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
+    CView m_view;
 
 };
 

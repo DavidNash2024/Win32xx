@@ -79,16 +79,16 @@ namespace Win32xx
         CPropertyPage (UINT nIDTemplate, LPCTSTR szTitle = NULL);
         virtual ~CPropertyPage() {}
 
-        virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual BOOL OnApply();
         virtual void OnCancel();
         virtual void OnHelp();
         virtual BOOL OnInitDialog();
         virtual BOOL OnKillActive();
-        virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual void OnOK();
         virtual BOOL OnQueryCancel();
-        virtual BOOL OnQuerySiblings(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual BOOL OnQuerySiblings(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void OnReset();
         virtual BOOL OnSetActive();
         virtual BOOL OnWizardBack();
@@ -97,10 +97,10 @@ namespace Win32xx
         virtual BOOL PreTranslateMessage(MSG& Msg);
 
         void CancelToClose() const;
-        INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
         PROPSHEETPAGE GetPSP() const {return m_PSP;}
         BOOL IsButtonEnabled(int iButton) const;
-        LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam) const;
+        LRESULT QuerySiblings(WPARAM wparam, LPARAM lparam) const;
         void SetModified(BOOL IsChanged) const;
         void SetTitle(LPCTSTR szTitle);
         void SetWizardButtons(DWORD dwFlags) const;
@@ -110,8 +110,8 @@ namespace Win32xx
         CPropertyPage(const CPropertyPage&);                // Disable copy construction
         CPropertyPage& operator = (const CPropertyPage&);   // Disable assignment operator
 
-        static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp);
-        static INT_PTR CALLBACK StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam);
+        static UINT CALLBACK StaticPropSheetPageProc(HWND hwnd, UINT msg, LPPROPSHEETPAGE ppsp);
+        static INT_PTR CALLBACK StaticDialogProc(HWND hwndDlg, UINT msg, WPARAM wparam, LPARAM lparam);
 
         PROPSHEETPAGE m_PSP;
         CString m_Title;
@@ -159,7 +159,7 @@ namespace Win32xx
         CPropertySheet(const CPropertySheet&);              // Disable copy construction
         CPropertySheet& operator = (const CPropertySheet&); // Disable assignment operator
         void BuildPageArray();
-        static void CALLBACK Callback(HWND hwnd, UINT uMsg, LPARAM lParam);
+        static void CALLBACK Callback(HWND hwnd, UINT msg, LPARAM lparam);
 
         CString m_Title;
         std::vector<PropertyPagePtr> m_vPages;  // vector of CPropertyPage
@@ -203,11 +203,11 @@ namespace Win32xx
 
 
     // Override this function to process the property page's window message
-    inline INT_PTR CPropertyPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CPropertyPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Win32 API message
         //      OnMessage1();   // A user defined function
@@ -219,21 +219,21 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     // Provides default handling for the property page's message.
     // The DialogProc functions should pass unhandled messages to this function
-    inline INT_PTR CPropertyPage::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CPropertyPage::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
         case PSM_QUERYSIBLINGS:
-            return OnQuerySiblings(uMsg, wParam, lParam);
+            return OnQuerySiblings(msg, wparam, lparam);
         }
 
-        return CDialog::DialogProcDefault(uMsg, wParam, lParam);
+        return CDialog::DialogProcDefault(msg, wparam, lparam);
 
     } // INT_PTR CALLBACK CPropertyPage::DialogProc(...)
 
@@ -279,14 +279,14 @@ namespace Win32xx
 
 
     // Responds to a query request from the Property Sheet.
-    // The values for wParam and lParam are the ones set by the CPropertySheet::QuerySiblings call.
+    // The values for wparam and lparam are the ones set by the CPropertySheet::QuerySiblings call.
     // return FALSE to allow other siblings to be queried, or
     // return TRUE to stop query at this page.
-    inline BOOL CPropertyPage::OnQuerySiblings(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline BOOL CPropertyPage::OnQuerySiblings(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         return FALSE;
     }
@@ -326,12 +326,12 @@ namespace Win32xx
 
 
     // Handles the WM_NOTIFY message and call the appropriate functions.
-    inline LRESULT CPropertyPage::OnNotify(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CPropertyPage::OnNotify(WPARAM wparam, LPARAM lparam)
     {
 
-        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(wparam);
 
-        LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lParam;
+        LPPSHNOTIFY pNotify = (LPPSHNOTIFY)lparam;
         assert(pNotify);
 
         switch(pNotify->hdr.code)
@@ -353,9 +353,9 @@ namespace Win32xx
         case PSN_QUERYCANCEL:
             return OnQueryCancel();
         case PSN_WIZNEXT:
-            return OnWizardNext()? 0 : -1L;
+            return OnWizardNext()? 0 : -1;
         case PSN_WIZBACK:
-            return OnWizardBack()? 0 : -1L;
+            return OnWizardBack()? 0 : -1;
         case PSN_WIZFINISH:
             return !OnWizardFinish();
         case PSN_HELP:
@@ -431,13 +431,13 @@ namespace Win32xx
 
 
     // Sent to a property sheet, which then forwards the message to each of its pages.
-    // Set wParam and lParam to values you want passed to the property pages.
+    // Set wparam and lparam to values you want passed to the property pages.
     // Returns the non-zero value from a page in the property sheet, or zero if no page
     // returns a non-zero value.
-    inline LRESULT CPropertyPage::QuerySiblings(WPARAM wParam, LPARAM lParam) const
+    inline LRESULT CPropertyPage::QuerySiblings(WPARAM wparam, LPARAM lparam) const
     {
         assert(IsWindow());
-        return GetParent().SendMessage(PSM_QUERYSIBLINGS, wParam, lParam);
+        return GetParent().SendMessage(PSM_QUERYSIBLINGS, wparam, lparam);
     }
 
 
@@ -484,14 +484,14 @@ namespace Win32xx
     }
 
 
-    inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT uMsg, LPPROPSHEETPAGE ppsp)
+    inline UINT CALLBACK CPropertyPage::StaticPropSheetPageProc(HWND hwnd, UINT msg, LPPROPSHEETPAGE ppsp)
     {
         assert( &GetApp() );
         UNREFERENCED_PARAMETER(hwnd);
 
         // Note: the hwnd is always NULL
 
-        switch (uMsg)
+        switch (msg)
         {
         case PSPCB_CREATE:
             {
@@ -508,7 +508,7 @@ namespace Win32xx
     }
 
 
-    inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CALLBACK CPropertyPage::StaticDialogProc(HWND hwndDlg, UINT msg, WPARAM wparam, LPARAM lparam)
     {
         assert( &GetApp() );
 
@@ -525,7 +525,7 @@ namespace Win32xx
             pPage->AddToMap();
         }
 
-        return pPage->DialogProc(uMsg, wParam, lParam);
+        return pPage->DialogProc(msg, wparam, lparam);
     }
 
 
@@ -612,16 +612,16 @@ namespace Win32xx
 
     // Override this function to filter mouse and keyboard messages prior to
     // being passed to the DialogProc.
-    inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT uMsg, LPARAM lParam)
+    inline void CALLBACK CPropertySheet::Callback(HWND hwnd, UINT msg, LPARAM lparam)
     {
         assert( &GetApp() );
 
-        switch(uMsg)
+        switch(msg)
         {
-        //called before the dialog is created, hwnd = NULL, lParam points to dialog resource
+        //called before the dialog is created, hwnd = NULL, lparam points to dialog resource
         case PSCB_PRECREATE:
             {
-                LPDLGTEMPLATE  lpTemplate = (LPDLGTEMPLATE)lParam;
+                LPDLGTEMPLATE  lpTemplate = (LPDLGTEMPLATE)lparam;
 
                 if(!(lpTemplate->style & WS_SYSMENU))
                 {

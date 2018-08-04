@@ -16,10 +16,10 @@ public:
     CDialogApp();
     virtual ~CDialogApp();
     virtual BOOL InitInstance();
-    CMyDialog& GetDlg() { return MyDialog; }
+    CMyDialog& GetDlg() { return myDialog; }
 
 private:
-    CMyDialog MyDialog;
+    CMyDialog myDialog;
 };
 
 

@@ -9,7 +9,7 @@
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -23,13 +23,13 @@ CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the Menu and Tool Bar
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    switch (LOWORD(wParam))
+    switch (LOWORD(wparam))
     {
     case IDM_FILE_NEW:          OnFileNew();        return TRUE;
     case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
@@ -43,7 +43,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     case IDW_FILE_MRU_FILE2:
     case IDW_FILE_MRU_FILE3:
     case IDW_FILE_MRU_FILE4:
-    case IDW_FILE_MRU_FILE5:    OnFileMRU(wParam);  return TRUE;
+    case IDW_FILE_MRU_FILE5:    OnFileMRU(wparam);  return TRUE;
 
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
@@ -79,16 +79,16 @@ void CMainFrame::OnFileExit()
     PostMessage(WM_CLOSE);
 }
 
-void CMainFrame::OnFileMRU(WPARAM wParam)
+void CMainFrame::OnFileMRU(WPARAM wparam)
 // Called when a MRU file is selected from the menu
 {
-    UINT nMRUIndex = LOWORD(wParam) - IDW_FILE_MRU_FILE1;
-    CString strMRUText = GetMRUEntry(nMRUIndex);
+    UINT mruIndex = LOWORD(wparam) - IDW_FILE_MRU_FILE1;
+    CString mruText = GetMRUEntry(mruIndex);
 
-    if (GetDoc().FileOpen(strMRUText))
-        m_PathName = strMRUText;
+    if (GetDoc().FileOpen(mruText))
+        m_pathName = mruText;
     else
-        RemoveMRUEntry(strMRUText);
+        RemoveMRUEntry(mruText);
 
     GetView().Invalidate();
 }
@@ -96,75 +96,75 @@ void CMainFrame::OnFileMRU(WPARAM wParam)
 void CMainFrame::OnFileNew()
 {
     GetDoc().GetAllPoints().clear();
-    m_PathName = _T("");
+    m_pathName = _T("");
     GetView().Invalidate();
 }
 
-void CMainFrame::LoadFile(LPCTSTR str)
+void CMainFrame::LoadFile(LPCTSTR fileName)
 // Called by OnFileOpen and in response to a UWM_DROPFILE message
 {
     // Retrieve the PlotPoint data
-    if (GetDoc().FileOpen(str))
+    if (GetDoc().FileOpen(fileName))
     {
         // Save the filename
-        m_PathName = str;
-        AddMRUEntry(str);
+        m_pathName = fileName;
+        AddMRUEntry(fileName);
     }
     else
-        m_PathName=_T("");
+        m_pathName=_T("");
 
     GetView().Invalidate();
 }
 
-LRESULT CMainFrame::OnDropFile(WPARAM wParam)
+LRESULT CMainFrame::OnDropFile(WPARAM wparam)
 // Called in response to the UWM_DROPFILE user defined message
 {
-    // wParam is a pointer (LPCTSTR) to the filename
-    LPCTSTR szFileName = reinterpret_cast<LPCTSTR>(wParam);
-    assert(szFileName);
+    // wparam is a pointer (LPCTSTR) to the filename
+    LPCTSTR fileName = reinterpret_cast<LPCTSTR>(wparam);
+    assert(fileName);
 
     // Load the file
-    LoadFile(szFileName);
-    return 0L;
+    LoadFile(fileName);
+    return 0;
 }
 
 void CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    FileDlg.SetTitle(_T("Open File"));
+    CFileDialog fileDlg(TRUE, _T("dat"), 0, OFN_FILEMUSTEXIST, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+    fileDlg.SetTitle(_T("Open File"));
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // Load the file
-        LoadFile(FileDlg.GetPathName());
+        LoadFile(fileDlg.GetPathName());
     }
 }
 
 void CMainFrame::OnFileSave()
 {
-    if (m_PathName == _T(""))
+    if (m_pathName == _T(""))
         OnFileSaveAs();
     else
-        GetDoc().FileSave(m_PathName);
+        GetDoc().FileSave(m_pathName);
 }
 
 void CMainFrame::OnFileSaveAs()
 {
-    CFileDialog FileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
-    FileDlg.SetTitle(_T("Save File"));
+    CFileDialog fileDlg(FALSE, _T("dat"), 0, OFN_OVERWRITEPROMPT, _T("Scribble Files (*.dat)\0*.dat\0\0"));
+    fileDlg.SetTitle(_T("Save File"));
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
-        CString str = FileDlg.GetPathName();
+        CString fileName = fileDlg.GetPathName();
 
         // Save the file
-        if (GetDoc().FileSave(str))
+        if (GetDoc().FileSave(fileName))
         {
             // Save the file name
-            m_PathName = str;
-            AddMRUEntry(m_PathName);
+            m_pathName = fileName;
+            AddMRUEntry(m_pathName);
         }
     }
 
@@ -194,22 +194,22 @@ void CMainFrame::OnInitialUpdate()
 void CMainFrame::OnPenColor()
 {
     // array of custom colors, initialized to white
-    static COLORREF CustColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
+    static COLORREF custColors[16] = {  RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255),
                                         RGB(255,255,255), RGB(255,255,255), RGB(255,255,255), RGB(255,255,255) };
     
-    CColorDialog ColorDlg;
-    ColorDlg.SetCustomColors(CustColors);
+    CColorDialog colorDlg;
+    colorDlg.SetCustomColors(custColors);
     
     // Initialize the Choose Color dialog
-    if (ColorDlg.DoModal(*this) == IDOK)
+    if (colorDlg.DoModal(*this) == IDOK)
     {
         // Store the custom colors in the static array
-        memcpy(CustColors, ColorDlg.GetCustomColors(), 16*sizeof(COLORREF));
+        memcpy(custColors, colorDlg.GetCustomColors(), 16*sizeof(COLORREF));
         
         // Retrieve the chosen color
-        m_View.SetPenColor(ColorDlg.GetColor());
+        m_view.SetPenColor(colorDlg.GetColor());
     }
 }
 
@@ -231,14 +231,14 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called to handle the window's messages
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case UWM_DROPFILE:      return OnDropFile(wParam);
+    case UWM_DROPFILE:      return OnDropFile(wparam);
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

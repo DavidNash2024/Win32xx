@@ -10,21 +10,21 @@
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
 protected:
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 private:
 
-    CDateTime       m_DateTime;
-    CMonthCalendar  m_MonthCal;
+    CDateTime       m_dateTime;
+    CMonthCalendar  m_monthCal;
 
 };
 

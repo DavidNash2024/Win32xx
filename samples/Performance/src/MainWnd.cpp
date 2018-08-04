@@ -9,7 +9,7 @@
 #include "resource.h"
 
 
-CMainWindow::CMainWindow() : m_nTestMessages(0), m_nTestWindows(0), m_nWindowsCreated(0)
+CMainWindow::CMainWindow() : m_testMessages(0), m_testWindows(0), m_windowsCreated(0)
 {
 }
 
@@ -28,16 +28,16 @@ HWND CMainWindow::Create(HWND hParent /*= 0*/)
         rc, hParent, 0);
 }
 
-void CMainWindow::CreateTestWindows(int nWindows)
+void CMainWindow::CreateTestWindows(int windows)
 {
-    m_nTestWindows = nWindows;
+    m_testWindows = windows;
 
-    for (int i = 0 ; i < nWindows ; i++)
+    for (int i = 0 ; i < windows; i++)
     {
         // Create the test windows
         TestWindowPtr pTestWindow = new CTestWindow();
-        m_pCTestWindows.push_back(pTestWindow);
-        m_pCTestWindows[i]->CreateWin(i);
+        m_pTestWindows.push_back(pTestWindow);
+        m_pTestWindows[i]->CreateWin(i);
     }
 }
 
@@ -45,7 +45,7 @@ int CMainWindow::OnCreate(CREATESTRUCT& cs)
 {
     UNREFERENCED_PARAMETER(cs);
 
-    m_Edit.Create(*this);
+    m_edit.Create(*this);
 
     return 0;
 }
@@ -59,8 +59,8 @@ void CMainWindow::OnDestroy()
 
 void CMainWindow::OnInitialUpdate()
 {
-    CMyDialog MyDialog(IDD_DIALOG1);
-    MyDialog.DoModal(*this);
+    CMyDialog myDialog(IDD_DIALOG1);
+    myDialog.DoModal(*this);
 }
 
 LRESULT CMainWindow::OnSize()
@@ -68,39 +68,39 @@ LRESULT CMainWindow::OnSize()
     CRect r = GetClientRect();
 
     // Resize the edit window when the main window is resized
-    m_Edit.MoveWindow(0, 0, r.right - r.left, r.bottom - r.top, TRUE);
+    m_edit.MoveWindow(0, 0, r.right - r.left, r.bottom - r.top, TRUE);
 
-    return 0L;
+    return 0;
 }
 
 
 LRESULT CMainWindow::OnWindowCreated()
 {
     // Message recieved when a test window is created
-    if (++m_nWindowsCreated == m_nTestWindows)
+    if (++m_windowsCreated == m_testWindows)
         OnAllWindowsCreated();
     
-    return 0L;
+    return 0;
 }
 
 void CMainWindow::OnAllWindowsCreated()
 {
     CString str;
-    str.Format(_T("%d  Windows Created"), m_nTestWindows);
+    str.Format(_T("%d  Windows Created"), m_testWindows);
     SendText(str);
     SendText(_T("Ready to run performance test"));
 
-    int nResult = MessageBox(_T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);
-    if (nResult != IDOK) return;
+    int result = MessageBox(_T("Start the Performance Test?"), _T("Ready"), MB_OKCANCEL | MB_ICONEXCLAMATION);
+    if (result != IDOK) return;
 
     PerformanceTest();
 
     // Loop the performance test
-    nResult = IDYES;
-    while(nResult == IDYES)
+	result = IDYES;
+    while(result == IDYES)
     {
-        nResult = MessageBox(_T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
-        if (nResult != IDYES) break;
+		result = MessageBox(_T("Run Test Again?"), _T("Ready"), MB_YESNO | MB_ICONEXCLAMATION);
+        if (result != IDYES) break;
 
         PerformanceTest();
     }
@@ -109,33 +109,33 @@ void CMainWindow::OnAllWindowsCreated()
 
 void CMainWindow::PerformanceTest()
 {
-    LRESULT lr = 0;
-    int nMessages = 0;
+    LRESULT result = 0;
+    int messages = 0;
 
     SendText(_T(""));
     CString str;
-    str.Format(str, _T("Sending %d  Messages"), m_nTestMessages);
+    str.Format(str, _T("Sending %d  Messages"), m_testMessages);
     SendText(str);
 
     // Choose a Window handle(HWND) to send the messages to
-    HWND hWnd = m_pCTestWindows[(m_nTestWindows-1)/2]->GetHwnd();
+    HWND hWnd = m_pTestWindows[(m_testWindows-1)/2]->GetHwnd();
 
     // Store the starting time
     DWORD tStart = ::GetTickCount();
 
     // Send the messages
-    while(nMessages++ < m_nTestMessages)
-        lr = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
+    while(messages++ < m_testMessages)
+		result = ::SendMessage(hWnd, WM_TESTMESSAGE, 0, 0);
 
     // Calculate the time the messages took to send
     DWORD tEnd = ::GetTickCount();
     DWORD mSeconds = tEnd - tStart;
 
     // Display the results
-    str.Format(_T("%d milliseconds to process %d messages"), mSeconds, m_nTestMessages);
+    str.Format(_T("%d milliseconds to process %d messages"), mSeconds, m_testMessages);
     SendText(str);
 
-    str.Format(_T("%d total messages sent\n"), lr);
+    str.Format(_T("%d total messages sent\n"), result);
     TRACE(str);
 
     MessageBox(str, _T("Info"), MB_OK);
@@ -144,22 +144,22 @@ void CMainWindow::PerformanceTest()
 void CMainWindow::SendText(LPCTSTR str)
 {
     // Send text to the Edit window
-    m_Edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(str));
-    m_Edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(_T("\r\n")));
-    m_Edit.SendMessage(EM_SCROLLCARET, 0, 0);
+    m_edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(str));
+	m_edit.SendMessage(EM_REPLACESEL, FALSE, reinterpret_cast<LPARAM>(_T("\r\n")));
+	m_edit.SendMessage(EM_SCROLLCARET, 0, 0);
 
     TRACE(str);
     TRACE("\n");
 }
 
-LRESULT CMainWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_SIZE:           return OnSize();
     case WM_WINDOWCREATED:  return OnWindowCreated();
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

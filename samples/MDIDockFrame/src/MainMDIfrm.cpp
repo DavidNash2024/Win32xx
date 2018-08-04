@@ -21,10 +21,10 @@ CMainMDIFrame::~CMainMDIFrame()
 
 BOOL CMainMDIFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE);
+    CFileDialog fileDlg(TRUE);
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -35,10 +35,10 @@ BOOL CMainMDIFrame::OnFileOpen()
 
 BOOL CMainMDIFrame::OnFileSave()
 {
-    CFileDialog FileDlg(FALSE);
+    CFileDialog fileDlg(FALSE);
 
     // Bring up the file save dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -87,10 +87,10 @@ void CMainMDIFrame::OnInitialUpdate()
     AddMDIChild(new CSimpleMDIChild);
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_NEWDOCK:      return OnFileNewDocker();
     case IDM_FILE_NEWMDI:       return OnFileNewMDI();
@@ -111,7 +111,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
         {
             // Pass to active child...
             if (GetActiveMDIChild())
-                GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+                GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam, lparam);
         }
         break ;
     }
@@ -214,14 +214,14 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
 //  pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

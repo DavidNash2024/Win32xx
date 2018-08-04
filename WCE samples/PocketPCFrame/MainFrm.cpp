@@ -15,10 +15,10 @@ CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Respond to menu and toolbar selections
-    switch (LOWORD(wParam))
+    switch (LOWORD(wparam))
     {
     // Respond to menu items
     case IDM_EDIT_CUT:
@@ -63,8 +63,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 void CMainFrame::OnDraw(CDC& dc)
 {
     CRect rc = GetViewRect();
-    CString strHello = LoadString(IDS_HELLO);
-    dc.DrawText(strHello, strHello.GetLength(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+    CString hello = LoadString(IDS_HELLO);
+    dc.DrawText(hello, hello.GetLength(), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 
@@ -74,13 +74,13 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame Created\n");
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //
 //  }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

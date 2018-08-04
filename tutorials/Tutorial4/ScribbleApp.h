@@ -15,5 +15,5 @@ public:
     virtual BOOL InitInstance();
 
 private:
-    CView m_View;
+    CView m_view;
 };

@@ -14,27 +14,27 @@ class CFormDoc
 public:
     CFormDoc();
     virtual ~CFormDoc();
-    void  LoadDocRegistry(LPCTSTR szKeyName);
-    void  SaveDocRegistry(LPCTSTR szKeyName);
+    void  LoadDocRegistry(LPCTSTR keyName);
+    void  SaveDocRegistry(LPCTSTR keyName);
     DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
 
-    BOOL  GetCheckA() { return m_CheckA; }
-    void  SetCheckA(BOOL IsChecked) { m_CheckA = IsChecked; }
+    BOOL  GetCheckA() { return m_isCheckA; }
+    void  SetCheckA(BOOL IsChecked) { m_isCheckA = IsChecked; }
 
-    BOOL  GetCheckB() { return m_CheckB; }
-    void  SetCheckB(BOOL IsChecked) { m_CheckB = IsChecked; }
+    BOOL  GetCheckB() { return m_isCheckB; }
+    void  SetCheckB(BOOL IsChecked) { m_isCheckB = IsChecked; }
 
-    BOOL  GetCheckC() { return m_CheckC; }
-    void  SetCheckC(BOOL IsChecked) { m_CheckC = IsChecked; }
+    BOOL  GetCheckC() { return m_isCheckC; }
+    void  SetCheckC(BOOL IsChecked) { m_isCheckC = IsChecked; }
 
-    UINT  GetRadio() { return m_Radio; }
-    void  SetRadio(UINT radio) { m_Radio = radio; }
+    UINT  GetRadio() { return m_radio; }
+    void  SetRadio(UINT radio) { m_radio = radio; }
 
 private:
-    BOOL  m_CheckA;
-    BOOL  m_CheckB;
-    BOOL  m_CheckC;
-    UINT  m_Radio;
+    BOOL  m_isCheckA;
+    BOOL  m_isCheckB;
+    BOOL  m_isCheckC;
+    UINT  m_radio;
 };
 
 #endif //SDI_DOC_H

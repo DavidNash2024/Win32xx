@@ -28,10 +28,10 @@ BOOL CMyCombo::AddItems()
 {
     typedef struct
     {
-        int iImage;
-        int iSelectedImage;
-        int iIndent;
-        LPCTSTR pszText;        // Note: LPTSTR would be incorrect here.
+        int image;
+        int selectedImage;
+        int indent;
+        LPCTSTR text;        // Note: LPTSTR would be incorrect here.
     } ITEMINFO;
 
     ITEMINFO IInf[ ] =
@@ -45,18 +45,18 @@ BOOL CMyCombo::AddItems()
     for(int i = 0; i < MaxItems; ++i)
     {
         COMBOBOXEXITEM cbei;
-        ZeroMemory(&cbei, sizeof(COMBOBOXEXITEM));
+        ZeroMemory(&cbei, sizeof(cbei));
         cbei.mask = CBEIF_TEXT | CBEIF_INDENT | CBEIF_IMAGE| CBEIF_SELECTEDIMAGE;
         cbei.iItem          = i;
-        cbei.pszText        = const_cast<LPTSTR>(IInf[i].pszText);
-        cbei.cchTextMax     = sizeof(IInf[i].pszText);
-        cbei.iImage         = IInf[i].iImage;
-        cbei.iSelectedImage = IInf[i].iSelectedImage;
-        cbei.iIndent        = IInf[i].iIndent;
+        cbei.pszText        = const_cast<LPTSTR>(IInf[i].text);
+        cbei.cchTextMax     = sizeof(IInf[i].text);
+        cbei.iImage         = IInf[i].image;
+        cbei.iSelectedImage = IInf[i].selectedImage;
+        cbei.iIndent        = IInf[i].indent;
         LPARAM lparam = reinterpret_cast<LPARAM>(&cbei);
 
         // Add the items to the ComboBox's dropdown list
-        if(-1 == SendMessage(CBEM_INSERTITEM, 0L, lparam))
+        if(-1 == SendMessage(CBEM_INSERTITEM, 0, lparam))
             return FALSE;
     }
 
@@ -66,11 +66,11 @@ BOOL CMyCombo::AddItems()
     return TRUE;
 }
 
-void CMyCombo::SetImages(int nImages, UINT ImageID)
+void CMyCombo::SetImages(int nImages, UINT imageID)
 {
     m_imlImages.DeleteImageList();
 
-    CBitmap bm(ImageID);
+    CBitmap bm(imageID);
     assert(bm.GetHandle());
     BITMAP bmData = bm.GetBitmapData();
     int cy = bmData.bmWidth / nImages;

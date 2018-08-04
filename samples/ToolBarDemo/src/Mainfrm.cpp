@@ -7,12 +7,12 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_UseBigIcons(FALSE)
+CMainFrame::CMainFrame() : m_useBigIcons(FALSE)
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -33,25 +33,25 @@ LRESULT CMainFrame::OnBeginAdjust(LPNMTOOLBAR pNMTB)
     assert (dynamic_cast<CToolBar*> (pToolBar));
     
     int nResetCount = pToolBar->GetButtonCount();
-    m_vTBBReset.clear();
+    m_resetButtons.clear();
 
     for (int i = 0; i < nResetCount; i++)
     {
         TBBUTTON tbb;
         pToolBar->GetButton(i, tbb);
-        m_vTBBReset.push_back(tbb);
+        m_resetButtons.push_back(tbb);
     }
 
     return TRUE;
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch(nID)
     {
     case IDM_FILE_OPEN:         return OnFileOpen();
@@ -90,8 +90,8 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     CFrame::OnCreate(cs);
 
     // Add the CCS_ADJUSTABLE style to the ToolBar
-    DWORD dwStyle = GetToolBar().GetStyle();
-    GetToolBar().SetStyle(CCS_ADJUSTABLE|dwStyle);
+    DWORD style = GetToolBar().GetStyle();
+    GetToolBar().SetStyle(CCS_ADJUSTABLE|style);
 
     // Untick the Large Icons menu item
     GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | MF_UNCHECKED);
@@ -105,7 +105,7 @@ LRESULT CMainFrame::OnCustHelp(LPNMHDR pNMHDR)
     UNREFERENCED_PARAMETER(pNMHDR);
     MessageBox(_T("Help Button Pressed"), _T("Help"), MB_ICONINFORMATION | MB_OK);
 
-    return 0L;
+    return 0;
 }
 
 LRESULT CMainFrame::OnEndAdjust(LPNMHDR pNMHDR)
@@ -125,10 +125,10 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE);
+    CFileDialog fileDlg(TRUE);
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -139,10 +139,10 @@ BOOL CMainFrame::OnFileOpen()
 
 BOOL CMainFrame::OnFileSave()
 {
-    CFileDialog FileDlg(FALSE);
+    CFileDialog fileDlg(FALSE);
 
     // Bring up the file save dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -154,19 +154,19 @@ BOOL CMainFrame::OnFileSave()
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
-    CPrintDialog Printdlg;
+    CPrintDialog printdlg;
 
     try
     {
-        INT_PTR Res = Printdlg.DoModal(*this);
+        INT_PTR result = printdlg.DoModal(*this);
 
         // Retrieve the printer DC
-        // CDC dcPrinter = Printdlg.GetPrinterDC();
+        // CDC dcPrinter = printdlg.GetPrinterDC();
 
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
 
-        return (Res == IDOK);   // boolean expression
+        return (result == IDOK);   // boolean expression
     }
 
     catch (const CWinException& /* e */)
@@ -188,25 +188,25 @@ void CMainFrame::OnInitialUpdate()
     SaveTBDefault();
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Process notification messages sent by child windows
 {
-    LPNMTOOLBAR pNMTB = (LPNMTOOLBAR)lParam;
+    LPNMTOOLBAR pNMTB = (LPNMTOOLBAR)lparam;
     
     switch(pNMTB->hdr.code)
     {
     case TBN_QUERYDELETE:   return OnQueryDelete(pNMTB);
     case TBN_QUERYINSERT:   return OnQueryInsert(pNMTB);
-    case TBN_CUSTHELP:      return OnCustHelp((LPNMHDR)lParam);
+    case TBN_CUSTHELP:      return OnCustHelp((LPNMHDR)lparam);
     case TBN_GETBUTTONINFO: return OnGetButtonInfo(pNMTB);
     case TBN_BEGINADJUST:   return OnBeginAdjust(pNMTB);
-    case TBN_ENDADJUST:     return OnEndAdjust((LPNMHDR)lParam);
+    case TBN_ENDADJUST:     return OnEndAdjust((LPNMHDR)lparam);
     case TBN_TOOLBARCHANGE: return OnToolBarChange(pNMTB);
     case TBN_RESET:         return OnReset(pNMTB); 
     }
 
     // Some notifications should return a value when handled
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
@@ -214,7 +214,7 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 // of available buttons. Return FALSE when all buttons have been added.
 {
     // An array of TBBUTTON that contains all possible buttons
-    TBBUTTON ButtonInfo[] =
+    TBBUTTON buttonInfo[] =
     {
         { 0, IDM_FILE_NEW,      TBSTATE_ENABLED, 0, {0}, 0, 0 },
         { 1, IDM_FILE_OPEN,     TBSTATE_ENABLED, 0, {0}, 0, 0 },
@@ -228,7 +228,7 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 
     // An array of Button text strings (LPCTSTRs).
     // These are displayed in the customize dialog.
-    LPCTSTR ButtonText[] = 
+    LPCTSTR buttonText[] = 
     { 
         _T("New Document"), 
         _T("Open File"), 
@@ -242,12 +242,12 @@ LRESULT CMainFrame::OnGetButtonInfo(LPNMTOOLBAR pNMTB)
 
     // Pass the next button from the array. There is no need to filter out buttons
     // that are already used. They will be ignored.
-    int nButtons = sizeof(ButtonInfo) / sizeof(TBBUTTON);
+    int buttons = sizeof(buttonInfo) / sizeof(TBBUTTON);
     
-    if (pNMTB->iItem < nButtons)
+    if (pNMTB->iItem < buttons)
     {
-        pNMTB->tbButton = ButtonInfo[pNMTB->iItem];
-        lstrcpyn(pNMTB->pszText, ButtonText[pNMTB->iItem], pNMTB->cchText);
+        pNMTB->tbButton = buttonInfo[pNMTB->iItem];
+        lstrcpyn(pNMTB->pszText, buttonText[pNMTB->iItem], pNMTB->cchText);
         return TRUE;    // Load the next button.
     }
 
@@ -289,10 +289,10 @@ LRESULT CMainFrame::OnReset(LPNMTOOLBAR pNMTB)
     }
     
     // Restore buttons from info stored in m_vTBBReset
-    int nResetCount = m_vTBBReset.size();
+    int nResetCount = m_resetButtons.size();
     for (int j = 0; j < nResetCount; j++)
     {
-        TBBUTTON tbb = m_vTBBReset[j];
+        TBBUTTON tbb = m_resetButtons[j];
         pToolBar->InsertButton(j, tbb);
     }
 
@@ -315,11 +315,11 @@ LRESULT CMainFrame::OnToolBarChange(LPNMTOOLBAR pNMTB)
 BOOL CMainFrame::OnTBBigIcons()
 // Toggle the Image size for the ToolBar by changing Image Lists.
 {
-    m_UseBigIcons = !m_UseBigIcons;
+    m_useBigIcons = !m_useBigIcons;
 
-    GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_UseBigIcons ? MF_CHECKED : MF_UNCHECKED));
+    GetFrameMenu().CheckMenuItem(IDM_TOOLBAR_BIGICONS, MF_BYCOMMAND | (m_useBigIcons ? MF_CHECKED : MF_UNCHECKED));
 
-    if (m_UseBigIcons)
+    if (m_useBigIcons)
     {
         // Set Large Images. 3 Imagelists - Normal, Hot and Disabled
         SetToolBarImages(RGB(192,192,192), IDB_NORMAL, IDB_HOT, IDB_DISABLED);
@@ -346,17 +346,17 @@ BOOL CMainFrame::OnTBDefault()
 // Set the Toolbar back to its intial settings.
 {
     // Remove all current buttons
-    int nCount = GetToolBar().GetButtonCount();
-    for (int i = nCount - 1; i >= 0; i--)
+    int count = GetToolBar().GetButtonCount();
+    for (int i = count - 1; i >= 0; i--)
     {
         GetToolBar().DeleteButton(i);
     }
     
     // Restore buttons from info stored in m_vTBBDefault
-    int nDefaultCount = m_vTBBDefault.size();
+    int nDefaultCount = m_defaultButtons.size();
     for (int j = 0; j < nDefaultCount; j++)
     {
-        TBBUTTON tbb = m_vTBBDefault[j];
+        TBBUTTON tbb = m_defaultButtons[j];
         GetToolBar().InsertButton(j, tbb);
     }
 
@@ -373,7 +373,7 @@ void CMainFrame::SaveTBDefault()
     {
         TBBUTTON tbb;
         GetToolBar().GetButton(i, tbb);
-        m_vTBBDefault.push_back(tbb);
+		m_defaultButtons.push_back(tbb);
     }
 }
 
@@ -396,14 +396,14 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

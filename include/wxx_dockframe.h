@@ -79,16 +79,16 @@ namespace Win32xx
         virtual void SetView(CWnd& wndView) { CDocker::SetView(wndView); }
 
     protected:
-        virtual LRESULT OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual int OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
-        virtual LRESULT OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void RecalcViewLayout();
-        virtual LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     };
 
@@ -125,10 +125,10 @@ namespace Win32xx
     //
 
     // Called when the frame window is activated.
-    inline LRESULT CDockFrame::OnActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        CDocker::OnActivate(uMsg, wParam, lParam);
-        return CFrameT<CDocker>::OnActivate(uMsg, wParam, lParam);
+        CDocker::OnActivate(msg, wparam, lparam);
+        return CFrameT<CDocker>::OnActivate(msg, wparam, lparam);
     }
 
 
@@ -153,38 +153,38 @@ namespace Win32xx
 
 
     // Called when a docker is activated.
-    inline LRESULT CDockFrame::OnDockActivated(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        return CDocker::OnDockActivated(uMsg, wParam, lParam);
+        return CDocker::OnDockActivated(msg, wparam, lparam);
     }
 
     // Called when a docker is destroyed.
-    inline LRESULT CDockFrame::OnDockDestroyed(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::OnDockDestroyed(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        return CDocker::OnDockDestroyed(uMsg, wParam, lParam);
+        return CDocker::OnDockDestroyed(msg, wparam, lparam);
     }
 
-    inline LRESULT CDockFrame::OnMouseActivate(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::OnMouseActivate(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        return CDocker::OnMouseActivate(uMsg, wParam, lParam);
+        return CDocker::OnMouseActivate(msg, wparam, lparam);
     }
 
-    inline LRESULT CDockFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::OnNotify(WPARAM wparam, LPARAM lparam)
     // Called when a notification from a child window (WM_NOTIFY) is received.
     {
-        LRESULT lr = CFrameT<CDocker>::OnNotify(wParam, lParam);
+        LRESULT lr = CFrameT<CDocker>::OnNotify(wparam, lparam);
         if (lr == 0)
-            lr = CDocker::OnNotify(wParam, lParam);
+            lr = CDocker::OnNotify(wparam, lparam);
 
         return lr;
     }
 
 
     // Called when the system colors are changed.
-    inline LRESULT CDockFrame::OnSysColorChange(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::OnSysColorChange(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        CDocker::OnSysColorChange(uMsg, wParam, lParam);
-        return CFrameT<CDocker>::OnSysColorChange(uMsg, wParam, lParam);
+        CDocker::OnSysColorChange(msg, wparam, lparam);
+        return CFrameT<CDocker>::OnSysColorChange(msg, wparam, lparam);
     }
 
 
@@ -196,22 +196,22 @@ namespace Win32xx
 
 
     // Process the frame's window messages.
-    inline LRESULT CDockFrame::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CDockFrame::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
-        case WM_ACTIVATE:           return OnActivate(uMsg, wParam, lParam);
-        case WM_MOUSEACTIVATE:      return OnMouseActivate(uMsg, wParam, lParam);
-        case WM_SYSCOLORCHANGE:     return OnSysColorChange(uMsg, wParam, lParam);
+        case WM_ACTIVATE:           return OnActivate(msg, wparam, lparam);
+        case WM_MOUSEACTIVATE:      return OnMouseActivate(msg, wparam, lparam);
+        case WM_SYSCOLORCHANGE:     return OnSysColorChange(msg, wparam, lparam);
 
         // Messages defined by Win32++
-        case UWM_DOCKACTIVATE:      return OnDockActivated(uMsg, wParam, lParam);
-        case UWM_DOCKDESTROYED:     return OnDockDestroyed(uMsg, wParam, lParam);
+        case UWM_DOCKACTIVATE:      return OnDockActivated(msg, wparam, lparam);
+        case UWM_DOCKDESTROYED:     return OnDockDestroyed(msg, wparam, lparam);
         case UWM_GETCDOCKER:        return reinterpret_cast<LRESULT>(this);
 
-        } // switch uMsg
+        } // switch msg
 
-        return CFrameT<CDocker>::WndProcDefault(uMsg, wParam, lParam);
+        return CFrameT<CDocker>::WndProcDefault(msg, wparam, lparam);
     }
 
     //////////////////////////////////////////

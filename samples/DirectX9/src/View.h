@@ -47,9 +47,9 @@ class CDXView : public CWnd
     protected:
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
-        virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void PreCreate(CREATESTRUCT& cs);
-        virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         LPDIRECT3D9       m_pD3D;           // Used to create the D3DDevice
@@ -76,16 +76,16 @@ public:
     CDXView() {}
     virtual ~CDXView();
 
-    CDX& GetDX() const { return const_cast<CDX&>(m_DX); }
+    CDX& GetDX() const { return const_cast<CDX&>(m_dx); }
 
 protected:
     virtual int OnCreate(CREATESTRUCT& cs);
-    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CDX m_DX;
-    CDXThread m_DXThread;
+    CDX m_dx;
+    CDXThread m_dxThread;
 };
 
 

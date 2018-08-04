@@ -14,10 +14,10 @@ public:
     CSubclassApp();
     virtual ~CSubclassApp();
     virtual BOOL InitInstance();
-    CMainWin& GetWin() { return m_Win; }
+    CMainWin& GetWin() { return m_win; }
 
 private:
-    CMainWin m_Win;
+    CMainWin m_win;
 };
 
 

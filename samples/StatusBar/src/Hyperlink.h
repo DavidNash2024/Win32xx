@@ -21,22 +21,22 @@ public:
     CHyperlink();
     virtual ~CHyperlink();
     virtual void OnAttach();
-    LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    LRESULT OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
 
 protected:
     virtual void OpenUrl();
-    virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    BOOL    m_IsUrlVisited;
-    BOOL    m_IsClicked;
-    COLORREF m_crVisited;
-    COLORREF m_crNotVisited;
+    BOOL    m_isUrlVisited;
+    BOOL    m_isClicked;
+    COLORREF m_visitedColor;
+    COLORREF m_notVisitedColor;
     HCURSOR m_hCursor;
-    CFont   m_UrlFont;
+    CFont   m_urlFont;
 };
 
 #endif // HYPERLINK_H

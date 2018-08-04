@@ -13,15 +13,15 @@
 CPreviewPane::CPreviewPane()
 {
     // The entry for the dialog's control in resource.rc must match this name.
-    CString ClassName = _T("PreviewPane");
+    CString className = _T("PreviewPane");
 
     // Register the window class for use as a custom control in the dialog
     WNDCLASS wc;
     ZeroMemory(&wc, sizeof(WNDCLASS));
 
-    if (!::GetClassInfo(GetApp().GetInstanceHandle(), ClassName, &wc))
+    if (!::GetClassInfo(GetApp().GetInstanceHandle(), className, &wc))
     {
-        wc.lpszClassName = ClassName;
+        wc.lpszClassName = className;
         wc.lpfnWndProc = ::DefWindowProc;
         wc.hInstance = GetApp().GetInstanceHandle();
         wc.hbrBackground = (HBRUSH)GetStockObject(GRAY_BRUSH);
@@ -29,7 +29,7 @@ CPreviewPane::CPreviewPane()
         ::RegisterClass(&wc);
     }
 
-    assert(::GetClassInfo(GetApp().GetInstanceHandle(), ClassName, &wc));
+    assert(::GetClassInfo(GetApp().GetInstanceHandle(), className, &wc));
 }
 
 BOOL CPreviewPane::OnEraseBkgnd(CDC& )
@@ -60,61 +60,61 @@ LRESULT CPreviewPane::OnPaint(UINT, WPARAM, LPARAM)
     }
 
     // No more drawing required
-    return 0L;
+    return 0;
 }
 
 void CPreviewPane::Render(CDC& dc)
 // Copies the bitmap (m_Bitmap) to the PreviewPane, scaling the image 
 //  to fit the window.
 {
-    if (m_Bitmap.GetHandle())
+    if (m_bitmap.GetHandle())
     {
-        CMemDC dcMem(dc);
-        dcMem.SelectObject(m_Bitmap);
-        BITMAP bm = m_Bitmap.GetBitmapData();
-        int Border = 20;
+        CMemDC memDC(dc);
+		memDC.SelectObject(m_bitmap);
+        BITMAP bm = m_bitmap.GetBitmapData();
+        int border = 20;
         CRect rcClient = GetClientRect();
 
         double ratio = double(bm.bmHeight) / double(bm.bmWidth);
-        int PreviewWidth;
-        int PreviewHeight;
+        int previewWidth;
+        int previewHeight;
         
         // These borders center the preview with the PreviewPane.
-        int xBorder = Border;
-        int yBorder = Border;
+        int xBorder = border;
+        int yBorder = border;
 
-        if ((rcClient.Width() - 2*Border)*ratio < (rcClient.Height() - 2*Border))
+        if ((rcClient.Width() - 2*border)*ratio < (rcClient.Height() - 2*border))
         {
-            PreviewWidth = rcClient.Width() - (2*Border);
-            PreviewHeight = static_cast<int>(PreviewWidth * ratio);
+            previewWidth = rcClient.Width() - (2*border);
+            previewHeight = static_cast<int>(previewWidth * ratio);
 
-            yBorder = (rcClient.Height() - PreviewHeight) / 2;
+            yBorder = (rcClient.Height() - previewHeight) / 2;
         }
         else
         {
-            PreviewHeight = rcClient.Height() - (2*Border);
-            PreviewWidth = static_cast<int>(PreviewHeight / ratio);
+            previewHeight = rcClient.Height() - (2*border);
+            previewWidth = static_cast<int>(previewHeight / ratio);
 
-            xBorder = (rcClient.Width() - PreviewWidth) / 2;
+            xBorder = (rcClient.Width() - previewWidth) / 2;
         }
 
         // Copy from the memory dc to the PreviewPane's DC with stretching.     
         dc.SetStretchBltMode(HALFTONE);         // provides smoother bitmap rendering
         ::SetBrushOrgEx(dc, xBorder, yBorder, NULL);
-        dc.StretchBlt(xBorder, yBorder, PreviewWidth, PreviewHeight, dcMem, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
+        dc.StretchBlt(xBorder, yBorder, previewWidth, previewHeight, memDC, 0, 0, bm.bmWidth, bm.bmHeight, SRCCOPY);
     
         // Draw a grey border around the preview
         // OnEraseBkgnd suppresses background drawing to avoid flicker on Windows XP and earlier 
-        CRect rcFill(0, 0, xBorder, PreviewHeight + yBorder);
+        CRect rcFill(0, 0, xBorder, previewHeight + yBorder);
         dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 
-        rcFill.SetRect(0, 0, PreviewWidth + xBorder, yBorder);
+        rcFill.SetRect(0, 0, previewWidth + xBorder, yBorder);
         dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 
-        rcFill.SetRect(PreviewWidth + xBorder, 0, rcClient.Width(), rcClient.Height());
+        rcFill.SetRect(previewWidth + xBorder, 0, rcClient.Width(), rcClient.Height());
         dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
 
-        rcFill.SetRect(0, PreviewHeight + yBorder, rcClient.Width(), rcClient.Height());
+        rcFill.SetRect(0, previewHeight + yBorder, rcClient.Width(), rcClient.Height());
         dc.FillRect(rcFill, HBRUSH(::GetStockObject(GRAY_BRUSH)));
     }
 }
@@ -122,7 +122,7 @@ void CPreviewPane::Render(CDC& dc)
 ///////////////////////////////////////////
 // Definitions for the CPreviewDialog class
 //
-CPreviewDialog::CPreviewDialog(UINT nResID) : CDialog(nResID), m_CurrentPage(0)
+CPreviewDialog::CPreviewDialog(UINT resID) : CDialog(resID), m_currentPage(0)
 {
 }
 
@@ -136,18 +136,18 @@ CRichEdit& CPreviewDialog::GetRichView()
     return MainFrame.GetRichView();
 }
 
-INT_PTR CPreviewDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CPreviewDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Pass resizing messages on to the resizer
-    m_Resizer.HandleMessage(uMsg, wParam, lParam);
+    m_resizer.HandleMessage(msg, wparam, lparam);
 
-//  switch (uMsg)
+//  switch (msg)
 //  {
         //Additional messages to be handled go here
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 BOOL CPreviewDialog::OnCloseButton()
@@ -156,11 +156,11 @@ BOOL CPreviewDialog::OnCloseButton()
     return TRUE;
 }
 
-BOOL CPreviewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CPreviewDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch (nID)
     {
     case IDC_BUTTONPRINT:   return OnPrintButton();
@@ -175,27 +175,27 @@ BOOL CPreviewDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CPreviewDialog::OnInitDialog()
 {
     // Attach the dialog controls to CWnd objects
-    AttachItem(IDC_BUTTONPRINT, m_ButtonPrint);
-    AttachItem(IDC_BUTTONPREV, m_ButtonPrev);
-    AttachItem(IDC_BUTTONNEXT, m_ButtonNext);
-    AttachItem(IDC_BUTTONCLOSE, m_ButtonClose);
-    AttachItem(IDC_CUSTOM1, m_PreviewPane);
+    AttachItem(IDC_BUTTONPRINT, m_buttonPrint);
+    AttachItem(IDC_BUTTONPREV, m_buttonPrev);
+    AttachItem(IDC_BUTTONNEXT, m_buttonNext);
+    AttachItem(IDC_BUTTONCLOSE, m_buttonClose);
+    AttachItem(IDC_CUSTOM1, m_previewPane);
 
     // Support dialog resizing
-    m_Resizer.Initialize(*this, CRect(0, 0, 100, 120));
-    m_Resizer.AddChild(m_ButtonPrint, topleft, 0);
-    m_Resizer.AddChild(m_ButtonPrev, topleft, 0);
-    m_Resizer.AddChild(m_ButtonNext, topleft, 0);
-    m_Resizer.AddChild(m_ButtonClose, topleft, 0);
-    m_Resizer.AddChild(m_PreviewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+    m_resizer.Initialize(*this, CRect(0, 0, 100, 120));
+	m_resizer.AddChild(m_buttonPrint, topleft, 0);
+	m_resizer.AddChild(m_buttonPrev, topleft, 0);
+	m_resizer.AddChild(m_buttonNext, topleft, 0);
+	m_resizer.AddChild(m_buttonClose, topleft, 0);
+	m_resizer.AddChild(m_previewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
-    m_CurrentPage = 0;
+    m_currentPage = 0;
     return TRUE;
 }
 
 BOOL CPreviewDialog::OnNextButton()
 {
-    PreviewPage(++m_CurrentPage);
+    PreviewPage(++m_currentPage);
     UpdateButtons();
 
     return TRUE;
@@ -203,7 +203,7 @@ BOOL CPreviewDialog::OnNextButton()
 
 BOOL CPreviewDialog::OnPrevButton()
 {
-    PreviewPage(--m_CurrentPage);
+    PreviewPage(--m_currentPage);
     UpdateButtons();
     
     return TRUE;
@@ -215,21 +215,21 @@ BOOL CPreviewDialog::OnPrintButton()
     return TRUE; 
 }
 
-BOOL CPreviewDialog::DoPrintPreview(RECT rcPage, RECT rcPrintArea)
+BOOL CPreviewDialog::DoPrintPreview(RECT page, RECT printArea)
 {
-    m_rcPage = rcPage;
-    m_rcPrintArea = rcPrintArea;
+    m_pageRect = page;
+    m_printArea = printArea;
 
     // Get the device contect of the default or currently chosen printer
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    CDC dcPrinter = PrintDlg.GetPrinterDC();
-    dcPrinter.SetMapMode(MM_TEXT);
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CDC printerDC = printDlg.GetPrinterDC();
+	printerDC.SetMapMode(MM_TEXT);
 
     FORMATRANGE fr;
-    fr.hdcTarget = dcPrinter;
-    fr.hdc = dcPrinter;
-    fr.rcPage = rcPage;
-    fr.rc = rcPrintArea;
+    fr.hdcTarget = printerDC;
+    fr.hdc = printerDC;
+    fr.rcPage = page;
+    fr.rc = printArea;
     fr.chrg.cpMin = 0;
     fr.chrg.cpMax = -1;
 
@@ -238,73 +238,73 @@ BOOL CPreviewDialog::DoPrintPreview(RECT rcPage, RECT rcPrintArea)
     lTextLength = GetRichView().GetTextLengthEx(GTL_NUMCHARS);
 
     // Calculate the page breaks
-    LONG lTextPrinted;  // Amount of document printed.
-    m_PageBreaks.clear();
+    LONG textPrinted;  // Amount of document printed.
+    m_pageBreaks.clear();
     do
     {
-        lTextPrinted = GetRichView().FormatRange(fr, FALSE);
+        textPrinted = GetRichView().FormatRange(fr, FALSE);
 
-        if (lTextPrinted < lTextLength)
+        if (textPrinted < lTextLength)
         {
-            fr.chrg.cpMin = lTextPrinted;
+            fr.chrg.cpMin = textPrinted;
             fr.chrg.cpMax = -1;
-            m_PageBreaks.push_back(lTextPrinted);
+            m_pageBreaks.push_back(textPrinted);
         }
-    } while (lTextPrinted < lTextLength);
+    } while (textPrinted < lTextLength);
 
-    m_PageBreaks.push_back(-1);
+    m_pageBreaks.push_back(-1);
 
     // Clear the cache
     GetRichView().FormatRange();
 
     // Preview the first page;
-    m_CurrentPage = 0;
+    m_currentPage = 0;
     PreviewPage(0);
 
     return TRUE;
 }
 
-void CPreviewDialog::PreviewPage(UINT nPage)
+void CPreviewDialog::PreviewPage(UINT page)
 {
-    assert(m_PageBreaks.size() > 0);
-    assert(nPage < m_PageBreaks.size());
+    assert(m_pageBreaks.size() > 0);
+    assert(page < m_pageBreaks.size());
 
     // Get the device contect of the default or currently chosen printer
-    CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-    CDC dcPrinter = PrintDlg.GetPrinterDC();
+    CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+    CDC printerDC = printDlg.GetPrinterDC();
     
     // Create a memory DC for the printer.
     // Note: we use the printer's DC here to render text accurately
-    CMemDC dcMem(dcPrinter);
+    CMemDC memDC(printerDC);
 
     // Assign values to the FORMATRANGE struct
     FORMATRANGE fr;
     ZeroMemory(&fr, sizeof(fr));
-    fr.hdcTarget = dcPrinter;
-    fr.hdc = dcMem;
-    fr.rcPage = m_rcPage;
-    fr.rc = m_rcPrintArea;
-    fr.chrg.cpMin = (nPage > 0) ? m_PageBreaks[nPage - 1] : 0;
-    fr.chrg.cpMax = m_PageBreaks[nPage];
+    fr.hdcTarget = printerDC;
+    fr.hdc = memDC;
+    fr.rcPage = m_pageRect;
+    fr.rc = m_printArea;
+    fr.chrg.cpMin = (page > 0) ? m_pageBreaks[page - 1] : 0;
+    fr.chrg.cpMax = m_pageBreaks[page];
 
     // Create a compatible bitmap for the memory DC
-    int Width = dcPrinter.GetDeviceCaps(HORZRES);
-    int Height = dcPrinter.GetDeviceCaps(VERTRES);
+    int width = printerDC.GetDeviceCaps(HORZRES);
+    int height = printerDC.GetDeviceCaps(VERTRES);
 
     // A bitmap to hold all the pixels of the printed page would be too large.
     // Shrinking its dimensions by 4 reduces it to 1/16th its original size.
-    int Shrink = Width > 10000? 8 : 4;
+    int shrink = width > 10000? 8 : 4;
     
-    CDC dcPreview = GetPreviewPane().GetDC();
-    dcMem.CreateCompatibleBitmap(dcPreview, Width / Shrink, Height / Shrink);
+    CDC previewDC = GetPreviewPane().GetDC();
+	memDC.CreateCompatibleBitmap(previewDC, width / shrink, height / shrink);
 
-    dcMem.SetMapMode(MM_ANISOTROPIC);
-    dcMem.SetWindowExtEx(Width, Height, NULL);
-    dcMem.SetViewportExtEx( Width / Shrink, Height / Shrink, NULL);
+	memDC.SetMapMode(MM_ANISOTROPIC);
+	memDC.SetWindowExtEx(width, height, NULL);
+	memDC.SetViewportExtEx( width / shrink, height / shrink, NULL);
 
     // Fill the bitmap with a white background
-    CRect rc(0, 0, Width, Height);
-    dcMem.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
+    CRect rc(0, 0, width, height);
+	memDC.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
 
     // Display text from the richedit control on the memory dc
     GetRichView().FormatRange(fr, TRUE);
@@ -313,17 +313,17 @@ void CPreviewDialog::PreviewPage(UINT nPage)
     GetRichView().FormatRange();
 
     // Detach the bitmap from the memory DC and save it
-    CBitmap Bitmap = dcMem.DetachBitmap();
-    GetPreviewPane().SetBitmap(Bitmap);
+    CBitmap bitmap = memDC.DetachBitmap();
+    GetPreviewPane().SetBitmap(bitmap);
 
     // Display the print preview
     UpdateButtons();
-    GetPreviewPane().Render(dcPreview);
+    GetPreviewPane().Render(previewDC);
 }
 
 void CPreviewDialog::UpdateButtons()
 {
-    m_ButtonNext.EnableWindow(m_CurrentPage < m_PageBreaks.size() - 1);
-    m_ButtonPrev.EnableWindow(m_CurrentPage > 0);
+    m_buttonNext.EnableWindow(m_currentPage < m_pageBreaks.size() - 1);
+    m_buttonPrev.EnableWindow(m_currentPage > 0);
 }
 

@@ -3,8 +3,8 @@
 
 #include "Hyperlink.h"
 
-CHyperlink::CHyperlink() : m_bUrlVisited(FALSE), m_bClicked(FALSE), m_crVisited(RGB(128, 0, 128)),
-                            m_crNotVisited(RGB(0,0,255))
+CHyperlink::CHyperlink() : m_isUrlVisited(FALSE), m_isClicked(FALSE), m_visitedColor(RGB(128, 0, 128)),
+                            m_notVisitedColor(RGB(0,0,255))
 {
     // Create the cursor
     m_hCursor = ::LoadCursor(NULL, IDC_HAND);
@@ -18,33 +18,33 @@ CHyperlink::~CHyperlink()
 {
 }
 
-BOOL CHyperlink::AttachDlgItem(UINT nID, CWnd& Parent)
+BOOL CHyperlink::AttachDlgItem(UINT id, CWnd& Parent)
 {
-    BOOL bSuccess = CWnd::AttachDlgItem(nID, Parent);;
+    BOOL result = CWnd::AttachDlgItem(id, Parent);;
 
     LOGFONT lf = GetFont().GetLogFont();
     lf.lfUnderline = TRUE;
-    m_UrlFont.CreateFontIndirect(&lf);
+    m_urlFont.CreateFontIndirect(lf);
 
-    return bSuccess;
+    return result;
 }
 
 void CHyperlink::OnLButtonDown()
 {
     SetCapture();
-    m_bClicked = TRUE;
+    m_isClicked = TRUE;
 }
 
-void CHyperlink::OnLButtonUp(LPARAM lParam)
+void CHyperlink::OnLButtonUp(LPARAM lparam)
 {
     ReleaseCapture();
-    if(m_bClicked)
+    if(m_isClicked)
     {
-        m_bClicked = FALSE;
+        m_isClicked = FALSE;
         POINT pt;
         RECT rc;
-        pt.x = (short)LOWORD(lParam);
-        pt.y = (short)HIWORD(lParam);
+        pt.x = (short)LOWORD(lparam);
+        pt.y = (short)HIWORD(lparam);
         ClientToScreen(pt);
         rc = GetWindowRect();
 
@@ -55,16 +55,16 @@ void CHyperlink::OnLButtonUp(LPARAM lParam)
 
 void CHyperlink::OpenUrl()
 {
-    SHELLEXECUTEINFO ExecInfo = {0};;
-    ExecInfo.cbSize = sizeof(SHELLEXECUTEINFO);
-    ExecInfo.lpVerb = TEXT("open");
-    ExecInfo.lpFile = TEXT("iexplore.exe");
-    ExecInfo.lpParameters = GetWindowText();
+    SHELLEXECUTEINFO execInfo = {0};;
+    execInfo.cbSize = sizeof(SHELLEXECUTEINFO);
+    execInfo.lpVerb = TEXT("open");
+    execInfo.lpFile = TEXT("iexplore.exe");
+    execInfo.lpParameters = GetWindowText();
 
-    if (ShellExecuteEx(&ExecInfo))
+    if (ShellExecuteEx(&execInfo))
 
     {
-        m_bUrlVisited = TRUE;
+        m_isUrlVisited = TRUE;
 
         // redraw the window to update the color
         Invalidate();
@@ -73,42 +73,42 @@ void CHyperlink::OpenUrl()
         TRACE("ShellExecuteEx Failed");
 }
 
-LRESULT CHyperlink::OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Messages such as WM_CTLCOLORSTATIC are reflected back to the CWnd object that created them.
-    if (uMsg ==  WM_CTLCOLORSTATIC)
+    if (msg ==  WM_CTLCOLORSTATIC)
     {
-        CDC dc((HDC)wParam);
+        CDC dc((HDC)wparam);
 
-        dc.SetTextColor(m_bUrlVisited? m_crVisited : m_crNotVisited);
+        dc.SetTextColor(m_isUrlVisited? m_visitedColor : m_notVisitedColor);
         dc.SetBkMode(TRANSPARENT);
-        dc.SelectObject(m_UrlFont);
+        dc.SelectObject(m_urlFont);
         dc.Detach();
         return (LRESULT)::GetSysColorBrush(COLOR_BTNFACE);
     }
-    return 0L;
+    return 0;
 }
 
-LRESULT CHyperlink::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CHyperlink::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_LBUTTONDOWN:
         OnLButtonDown();
         break;
 
     case WM_LBUTTONUP:
-        OnLButtonUp(lParam);
+        OnLButtonUp(lparam);
         break;
 
     case WM_SETCURSOR:
         ::SetCursor(m_hCursor);
-        return 1L;
+        return 1;
 
     }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault( uMsg, wParam, lParam );
+    return WndProcDefault( msg, wparam, lparam );
 }
 
 

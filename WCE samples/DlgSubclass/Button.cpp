@@ -4,10 +4,10 @@
 #include "DlgSubclassApp.h"
 #include "Button.h"
 
-LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CButton::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     CMyDialog& dialog = GetSubApp().GetDialog();
-    switch (uMsg)
+    switch (msg)
     {
     case WM_MOUSEMOVE:
         TRACE("CButton::WndProc - WM_MOUSEMOVE Message\n");
@@ -32,5 +32,5 @@ LRESULT CButton::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

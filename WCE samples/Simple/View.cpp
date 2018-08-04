@@ -9,14 +9,14 @@ void CView::OnDraw(CDC& dc)
     rc.bottom = rc.bottom/2;
 
     // Draw some text in our rectangle
-    LPCTSTR szString = TEXT("Use Debug mode. Click here");
-    dc.DrawText(szString, lstrlen(szString), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
+    LPCTSTR string = TEXT("Use Debug mode. Click here");
+    dc.DrawText(string, lstrlen(string), rc, DT_SINGLELINE | DT_VCENTER | DT_CENTER);
 }
 
 
-LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
         case WM_DESTROY:
             // Terminate the application.
@@ -33,6 +33,6 @@ LRESULT CView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // Pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

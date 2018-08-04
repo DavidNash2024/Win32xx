@@ -24,17 +24,17 @@ public:
     BOOL OnTabOwnerDraw();
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT nID);
+    virtual void OnMenuUpdate(UINT id);
     virtual void PreCreate(CREATESTRUCT& cs);
     virtual void SetupMenuIcons();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CTab m_View;
+    CTab m_view;
 
 };
 

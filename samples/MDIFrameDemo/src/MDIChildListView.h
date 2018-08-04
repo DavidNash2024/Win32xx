@@ -11,15 +11,15 @@ class CViewList : public CListView
 public:
     CViewList();
     virtual ~CViewList();
-    virtual int  AddItem(LPCTSTR szText, int nImage);
+    virtual int  AddItem(LPCTSTR text, int image);
     virtual void OnAttach();
     virtual void OnDestroy();
     virtual void InsertItems();
     virtual void SetColumns();
-    virtual BOOL SetSubItem(int nItem, int nSubItem, LPCTSTR szText);
+    virtual BOOL SetSubItem(int item, int subItem, LPCTSTR text);
 
 private:
-    CImageList m_imlSmall;
+    CImageList m_smallImages;
 
 };
 
@@ -34,8 +34,8 @@ protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
 
 private:
-    CViewList m_ListView;
-    CMenu m_Menu;
+    CViewList m_listView;
+    CMenu m_menu;
 
 };
 

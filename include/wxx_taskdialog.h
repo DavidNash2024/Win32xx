@@ -118,10 +118,10 @@ namespace Win32xx
         virtual BOOL OnTDRadioButtonClicked(int nRadioButtonID);
         virtual BOOL OnTDTimer(DWORD dwTickCount);
         virtual void OnTDVerificationCheckboxClicked(BOOL IsChecked);
-        virtual LRESULT TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
         // Not intended to be overwritten
-        LRESULT TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT TaskDialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         struct TaskButton
@@ -142,7 +142,7 @@ namespace Win32xx
         CTaskDialog& operator = (const CTaskDialog&);   // Disable assignment operator
         CString CTaskDialog::FillString(LPCTSTR pText);
         void Reset();
-        static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData);
+        static HRESULT CALLBACK StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wparam, LPARAM lparam, LONG_PTR dwRefData);
 
         std::vector<TaskButton> m_vButtons;
         std::vector<TaskButton> m_vRadioButtons;
@@ -720,7 +720,7 @@ namespace Win32xx
 
 
     // TaskDialogs direct their messages here.
-    inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wParam, LPARAM lParam, LONG_PTR dwRefData)
+    inline HRESULT CALLBACK CTaskDialog::StaticTaskDialogProc(HWND hWnd, UINT uNotification, WPARAM wparam, LPARAM lparam, LONG_PTR dwRefData)
     {
         UNREFERENCED_PARAMETER(dwRefData);
 
@@ -745,18 +745,18 @@ namespace Win32xx
             t->AddToMap();
         }
 
-        return t->TaskDialogProc(uNotification, wParam, lParam);
+        return t->TaskDialogProc(uNotification, wparam, lparam);
 
     } // LRESULT CALLBACK StaticTaskDialogProc(...)
 
 
     // Provides default handling of Task Dialog's messages.
-    inline LRESULT CTaskDialog::TaskDialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTaskDialog::TaskDialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch(uMsg)
+        switch(msg)
         {
         case TDN_BUTTON_CLICKED:
-            return OnTDButtonClicked(wParam);
+            return OnTDButtonClicked(wparam);
 
         case TDN_CREATED:
             OnTDCreated();
@@ -768,25 +768,25 @@ namespace Win32xx
             OnTDConstructed();
             break;
         case TDN_EXPANDO_BUTTON_CLICKED:
-            OnTDExpandButtonClicked(wParam);
+            OnTDExpandButtonClicked(wparam);
             break;
         case TDN_HELP:
             OnTDHelp();
             break;
         case TDN_HYPERLINK_CLICKED:
-            OnTDHyperlinkClicked(WtoT(reinterpret_cast<LPCWSTR>(lParam)));
+            OnTDHyperlinkClicked(WtoT(reinterpret_cast<LPCWSTR>(lparam)));
             break;
         case TDN_NAVIGATED:
             OnTDNavigatePage();
             break;
         case TDN_RADIO_BUTTON_CLICKED:
-            OnTDRadioButtonClicked(wParam);
+            OnTDRadioButtonClicked(wparam);
             break;
         case TDN_TIMER:
-            return OnTDTimer(wParam);
+            return OnTDTimer(wparam);
 
         case TDN_VERIFICATION_CLICKED:
-            OnTDVerificationCheckboxClicked(wParam);
+            OnTDVerificationCheckboxClicked(wparam);
             break;
         }
 
@@ -795,11 +795,11 @@ namespace Win32xx
 
 
     // Override this function modify how the task dialog's messages are handled.
-    inline LRESULT CTaskDialog::TaskDialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTaskDialog::TaskDialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -811,7 +811,7 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to TaskDialogProcDefault
-        return TaskDialogProcDefault(uMsg, wParam, lParam);
+        return TaskDialogProcDefault(msg, wparam, lparam);
     }
 
 

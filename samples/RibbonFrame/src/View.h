@@ -19,7 +19,7 @@ struct PlotPoint
 {
     int x;
     int y;
-    bool PenDown;
+    bool isPenDown;
     COLORREF color;
 };
 
@@ -32,8 +32,8 @@ public:
 
     CDoc& GetDoc();
     std::vector<PlotPoint>& GetAllPoints();
-    COLORREF GetPenColor() { return m_PenColor; }
-    void SetPenColor(COLORREF Color) { m_PenColor = Color; }
+    COLORREF GetPenColor() { return m_penColor; }
+    void SetPenColor(COLORREF Color) { m_penColor = Color; }
 
 protected:
     virtual int OnCreate(CREATESTRUCT&);
@@ -49,8 +49,8 @@ protected:
 private:
     void DrawLine(int x, int y);
 
-    CBrush m_Brush;
-    COLORREF m_PenColor;
+    CBrush m_brush;
+    COLORREF m_penColor;
 
 };
 

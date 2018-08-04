@@ -14,10 +14,10 @@ public:
     CDialogApp(); 
     virtual ~CDialogApp();
     virtual BOOL InitInstance();
-    CClientDialog& GetDialog() {return m_ClientDialog;}
+    CClientDialog& GetDialog() {return m_clientDialog;}
 
 private:
-    CClientDialog m_ClientDialog;
+    CClientDialog m_clientDialog;
 };
 
 

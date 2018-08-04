@@ -120,9 +120,9 @@ namespace ShellWrapper
         m_pIContextMenu2 = pIContextMenu2;
     }
 
-    HRESULT CContextMenu2::HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    HRESULT CContextMenu2::HandleMenuMsg(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        HRESULT hr = m_pIContextMenu2->HandleMenuMsg(uMsg, wParam, lParam);
+        HRESULT hr = m_pIContextMenu2->HandleMenuMsg(msg, wparam, lparam);
 
         if((hr != S_OK) && (hr !=E_NOTIMPL))
         {
@@ -185,11 +185,11 @@ namespace ShellWrapper
         return hr;
     }
 
-    HRESULT CShellFolder::CompareIDs(LPARAM lParam, const Cpidl& cpidl1, const Cpidl& cpidl2)
+    HRESULT CShellFolder::CompareIDs(LPARAM lparam, const Cpidl& cpidl1, const Cpidl& cpidl2)
     {
         LPITEMIDLIST pidl1 = cpidl1.GetPidl();
         LPITEMIDLIST pidl2 = cpidl2.GetPidl();
-        return m_IShellFolder->CompareIDs(lParam, pidl1, pidl2);
+        return m_IShellFolder->CompareIDs(lparam, pidl1, pidl2);
     }
 
     void CShellFolder::Copy(LPSHELLFOLDER Source)

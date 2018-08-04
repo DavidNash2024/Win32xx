@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
@@ -28,9 +28,9 @@ BOOL CMyDialog::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Attach the dialog items to the CWnd objects
-    AttachItem(IDC_PROGRESS1, m_ProgressBar);
-    AttachItem(IDC_SCROLLBAR1, m_ScrollBar);
-    AttachItem(IDC_SLIDER1, m_Slider);
+    AttachItem(IDC_PROGRESS1, m_progressBar);
+    AttachItem(IDC_SCROLLBAR1, m_scrollBar);
+    AttachItem(IDC_SLIDER1, m_slider);
 
     return TRUE;
 }
@@ -41,28 +41,28 @@ void CMyDialog::OnOK()
     CDialog::OnOK();
 }
 
-void CMyDialog::SetProgress(int nPos)
+void CMyDialog::SetProgress(int pos)
 {
-    m_ProgressBar.SetProgress(nPos);
+    m_progressBar.SetProgress(pos);
 }
 
-void CMyDialog::SetScroll(int nPos)
+void CMyDialog::SetScroll(int pos)
 {
-    m_ScrollBar.SetScroll(nPos);
+    m_scrollBar.SetScroll(pos);
 }
 
-void CMyDialog::SetSlider(int nPos)
+void CMyDialog::SetSlider(int pos)
 {
-    m_Slider.SetPos(nPos, TRUE);
+    m_slider.SetPos(pos, TRUE);
 }
 
-void CMyDialog::SetStatic(BOOL IsSlider, int nPos)
+void CMyDialog::SetStatic(BOOL isSlider, int pos)
 {
     CString str;
-    if (IsSlider)
-        str.Format(_T("Slider Position %d"), nPos);
+    if (isSlider)
+        str.Format(_T("Slider Position %d"), pos);
     else
-        str.Format(_T("Scroll Position %d"), nPos);
+        str.Format(_T("Scroll Position %d"), pos);
 
     // Set the text in the static control
     SetDlgItemText(IDC_STATIC2, str);

@@ -18,11 +18,11 @@ public:
     CMainWindow();
     virtual ~CMainWindow();
     virtual HWND Create(HWND hParent = 0);
-    virtual void CreateTestWindows(int nWindows);
+    virtual void CreateTestWindows(int windows);
     virtual void OnAllWindowsCreated();
     virtual void PerformanceTest();
     virtual void SendText(LPCTSTR str);
-    virtual void SetTestMessages(int nTestMessages) {m_nTestMessages = nTestMessages;}
+    virtual void SetTestMessages(int testMessages) {m_testMessages = testMessages;}
 
 protected:
     virtual int  OnCreate(CREATESTRUCT& cs);
@@ -30,7 +30,7 @@ protected:
     virtual void OnInitialUpdate();
     virtual LRESULT OnSize();
     virtual LRESULT OnWindowCreated();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     enum Constants
@@ -39,11 +39,11 @@ private:
         WM_TESTMESSAGE       = WM_USER+2    // the test message
     };
 
-    std::vector<TestWindowPtr> m_pCTestWindows; // A vector CTestWindow smart pointers
-    CMyEdit m_Edit;         // Handle to the edit window
-    int m_nTestMessages;    // Number of test messages to be sent
-    int m_nTestWindows;     // Number of test windows to create
-    int m_nWindowsCreated;  // Number of windows created
+    std::vector<TestWindowPtr> m_pTestWindows; // A vector CTestWindow smart pointers
+    CMyEdit m_edit;         // Handle to the edit window
+    int m_testMessages;    // Number of test messages to be sent
+    int m_testWindows;     // Number of test windows to create
+    int m_windowsCreated;  // Number of windows created
 };
 
 

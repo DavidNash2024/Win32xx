@@ -67,7 +67,7 @@ namespace ShellWrapper
         virtual ~CContextMenu2();
 
         void Attach(IContextMenu2* pIContextMenu2);
-        virtual HRESULT HandleMenuMsg(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual HRESULT HandleMenuMsg(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual IContextMenu2* GetIContextMenu2() {return m_pIContextMenu2;}
         void Release();
 
@@ -118,7 +118,7 @@ namespace ShellWrapper
         virtual ~CShellFolder();
         virtual void Delete();
         virtual HRESULT BindToObject(const Cpidl& pidl, LPBC pbc, REFIID riid, CShellFolder& NewFolder);
-        virtual HRESULT CompareIDs(LPARAM lParam, const Cpidl& cpidl1, const Cpidl& cpidl2);
+        virtual HRESULT CompareIDs(LPARAM lparam, const Cpidl& cpidl1, const Cpidl& cpidl2);
         virtual void Copy(const CShellFolder& Source);
         virtual void Copy(LPSHELLFOLDER Source);
         virtual HRESULT CreateViewObject(HWND hwnd, REFIID riid, CContextMenu& ccm);

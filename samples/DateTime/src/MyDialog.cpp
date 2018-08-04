@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
     if (GetComCtlVersion() < 471)
         ::MessageBox(NULL,  _T("Date Time control not supported"), _T(""), MB_OK );
@@ -23,37 +23,37 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_TIMER:  
-        if (wParam == ID_TIMER)
+        if (wparam == ID_TIMER)
         {
             // Update the time displayed every second
             SYSTEMTIME lt;
             GetLocalTime(&lt);
-            m_DateTime.SetTime(lt);
+            m_dateTime.SetTime(lt);
 
             return 0;
         }
     }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
-BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDC_BUTTONSET:
         {
-            SYSTEMTIME month = m_MonthCal.GetCurSel();      
-            SYSTEMTIME all   = m_DateTime.GetTime();
+            SYSTEMTIME month = m_monthCal.GetCurSel();      
+            SYSTEMTIME all   = m_dateTime.GetTime();
             
             all.wDay = month.wDay;
             all.wMonth = month.wMonth;
@@ -84,8 +84,8 @@ BOOL CMyDialog::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Attach the dialog items to the CWnd objects
-    AttachItem(IDC_DATETIMEPICKER1, m_DateTime);
-    AttachItem(IDC_MONTHCALENDAR1, m_MonthCal);
+    AttachItem(IDC_DATETIMEPICKER1, m_dateTime);
+    AttachItem(IDC_MONTHCALENDAR1, m_monthCal);
 
     // Set timer for 1000 miliseconds
     SetTimer(ID_TIMER, 1000, 0);
@@ -93,11 +93,11 @@ BOOL CMyDialog::OnInitDialog()
     return TRUE;
 }
 
-LRESULT CMyDialog::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMyDialog::OnNotify(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(wParam);
+    UNREFERENCED_PARAMETER(wparam);
 
-    switch (((LPNMHDR)lParam)->code)
+    switch (((LPNMHDR)lparam)->code)
     {
     case DTN_DATETIMECHANGE:
         // Stop the timer when the DataeTime's time is changed  
@@ -109,7 +109,7 @@ LRESULT CMyDialog::OnNotify(WPARAM wParam, LPARAM lParam)
         break;
     }
 
-    return 0L;
+    return 0;
 }
 
 void CMyDialog::OnOK()

@@ -7,46 +7,46 @@
 #include "PerfApp.h"
 
 
-CTestWindow::CTestWindow() : m_nWindow(0)
+CTestWindow::CTestWindow() : m_windowCount(0)
 {
 }
 
 void CTestWindow::CreateWin(int i)
 {
-    m_nWindow = i + 1;
+	m_windowCount = i + 1;
     TCHAR str[80];
-    wsprintf(str, _T("Test Window %d"), m_nWindow);
-    CreateEx(0L, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
+    wsprintf(str, _T("Test Window %d"), m_windowCount);
+    CreateEx(0, NULL, str, WS_OVERLAPPEDWINDOW | WS_VISIBLE,
         420, 50 + 4*i, 300, 200, NULL, NULL);
 }
 
 void CTestWindow::OnInitialUpdate()
 {
     // Get a pointer to the CMainWnd object
-    CMainWindow& MainWnd = GetPerfApp().GetMainWnd();
+    CMainWindow& mainWnd = GetPerfApp().GetMainWnd();
 
     // Post a message to MainWnd when the window is created. 
-    MainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
+    mainWnd.PostMessage(WM_WINDOWCREATED, 0, 0);
 }
 
-LRESULT CTestWindow::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CTestWindow::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    static LRESULT nMessages = 0;
-    switch (uMsg)
+    static LRESULT messages = 0;
+    switch (msg)
     {
     case WM_CLOSE:
         {
             CString str;
-            str.Format(str, _T("Closing test Window #%d\n"), m_nWindow);
+            str.Format(str, _T("Closing test Window #%d\n"), m_windowCount);
             TRACE(str);
         }
         break;
 
     case WM_TESTMESSAGE:
         // return the number of WM_TESTMESSAGE messages processsed so far
-        return ++nMessages;
+        return ++messages;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

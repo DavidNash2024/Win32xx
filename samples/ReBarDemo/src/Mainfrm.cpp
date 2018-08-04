@@ -12,7 +12,7 @@ CMainFrame::CMainFrame()
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -37,77 +37,77 @@ CRect CMainFrame::GetViewRect() const
         if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
             rcClient = ExcludeChildRect(rcClient, GetToolBar());
 
-    if (m_ReBar.IsWindow())
-        rcClient = ExcludeChildRect(rcClient, m_ReBar);
+    if (m_reBar.IsWindow())
+        rcClient = ExcludeChildRect(rcClient, m_reBar);
 
     return rcClient;
 }
 
 void CMainFrame::OnBottom()
 {
-    DWORD dwStyle = m_ToolBar.GetStyle();
+    DWORD dwStyle = m_toolBar.GetStyle();
     dwStyle &= ~(CCS_VERT);
     dwStyle |= CCS_BOTTOM;
-    SetWrapState(&m_ToolBar, FALSE);
-    m_ToolBar.SetStyle(dwStyle);
+    SetWrapState(&m_toolBar, FALSE);
+    m_toolBar.SetStyle(dwStyle);
     
-    dwStyle = m_ReBar.GetStyle();
+    dwStyle = m_reBar.GetStyle();
     dwStyle &= ~(CCS_VERT);
     dwStyle |= CCS_BOTTOM;
-    m_ReBar.SetStyle(dwStyle);
+    m_reBar.SetStyle(dwStyle);
     RecalcLayout();
 }
 
 void CMainFrame::OnLeft()
 {
-    DWORD dwStyle = m_ToolBar.GetStyle();
+    DWORD dwStyle = m_toolBar.GetStyle();
     dwStyle &= ~(CCS_BOTTOM);
     dwStyle |= CCS_LEFT;
-    SetWrapState(&m_ToolBar, TRUE);
-    m_ToolBar.SetStyle(dwStyle);
+    SetWrapState(&m_toolBar, TRUE);
+    m_toolBar.SetStyle(dwStyle);
     
-    dwStyle = m_ReBar.GetStyle();
+    dwStyle = m_reBar.GetStyle();
     dwStyle &= ~(CCS_BOTTOM);
     dwStyle |= CCS_LEFT;
-    m_ReBar.SetStyle(dwStyle);  
+    m_reBar.SetStyle(dwStyle);  
     RecalcLayout();
 }
 
 void CMainFrame::OnRight()
 {
-    DWORD dwStyle = m_ToolBar.GetStyle();
+    DWORD dwStyle = m_toolBar.GetStyle();
     dwStyle |= CCS_RIGHT;
-    SetWrapState(&m_ToolBar, TRUE);
-    m_ToolBar.SetStyle(dwStyle);
+    SetWrapState(&m_toolBar, TRUE);
+    m_toolBar.SetStyle(dwStyle);
     
-    dwStyle = m_ReBar.GetStyle();
+    dwStyle = m_reBar.GetStyle();
     dwStyle |= CCS_RIGHT;
-    m_ReBar.SetStyle(dwStyle);  
+    m_reBar.SetStyle(dwStyle);  
     RecalcLayout();
 }
 
 void CMainFrame::OnTop()
 {
-    DWORD dwStyle = m_ToolBar.GetStyle();
+    DWORD dwStyle = m_toolBar.GetStyle();
     dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
-    SetWrapState(&m_ToolBar, FALSE);
-    m_ToolBar.SetStyle(dwStyle);
+    SetWrapState(&m_toolBar, FALSE);
+    m_toolBar.SetStyle(dwStyle);
 
-    dwStyle = m_ReBar.GetStyle();
+    dwStyle = m_reBar.GetStyle();
     dwStyle &= ~(CCS_VERT | CCS_BOTTOM);
-    m_ReBar.SetStyle(dwStyle);
+    m_reBar.SetStyle(dwStyle);
     RecalcLayout();
 }
 
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_FILE_OPEN:         return OnFileOpen();
     case IDM_FILE_SAVE:         return OnFileSave();
@@ -147,26 +147,26 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // call the base class function
     CFrame::OnCreate(cs);
 
-    DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS 
+    DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS 
                      | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER | RBS_VARHEIGHT ;
-    m_ReBar.CreateEx(0, REBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), *this, 0);
+    m_reBar.CreateEx(0, REBARCLASSNAME, 0, style, CRect(0,0,0,0), *this, 0);
 
-    dwStyle |= TBSTYLE_FLAT;
+    style |= TBSTYLE_FLAT;
 
     // Create the ToolBar's image list from 4 icons
-    m_ToolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
-    m_ToolBarImages.Add(GetApp().LoadIcon(IDI_TOP));
-    m_ToolBarImages.Add(GetApp().LoadIcon(IDI_LEFT));
-    m_ToolBarImages.Add(GetApp().LoadIcon(IDI_RIGHT));
-    m_ToolBarImages.Add(GetApp().LoadIcon(IDI_BOTTOM));
+    m_toolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_TOP));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_LEFT));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_RIGHT));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_BOTTOM));
 
     // Create the ToolBar
-    dwStyle |= TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
-    m_ToolBar.CreateEx(0, TOOLBARCLASSNAME, 0, dwStyle, CRect(0,0,0,0), m_ReBar, 0);
-    m_ToolBar.SetImageList(m_ToolBarImages);
+    style |= TBSTYLE_TOOLTIPS | TBSTYLE_FLAT;
+    m_toolBar.CreateEx(0, TOOLBARCLASSNAME, 0, style, CRect(0,0,0,0), m_reBar, 0);
+    m_toolBar.SetImageList(m_toolBarImages);
 
     // Add the ToolBar buttons
-    TBBUTTON ButtonInfo[] =
+    TBBUTTON buttonInfo[] =
     {
         { 0, IDM_TOP,       TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
         { 1, IDM_LEFT,      TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
@@ -174,17 +174,17 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
         { 3, IDM_BOTTOM,    TBSTATE_ENABLED, TBSTYLE_BUTTON|TBSTYLE_CHECK|TBSTYLE_GROUP, {0}, 0, 0 },
         { 0, 0,             TBSTATE_ENABLED, TBSTYLE_SEP,                                {0}, 0, 0 }
     };   // Last button is a separator 
-    m_ToolBar.AddButtons(5, ButtonInfo);
+    m_toolBar.AddButtons(5, buttonInfo);
 
     // Fill the REBARBAND structure
     REBARBANDINFO rbbi;
     ZeroMemory(&rbbi, sizeof(REBARBANDINFO));
     rbbi.fMask      = RBBIM_CHILD |RBBIM_CHILDSIZE| RBBIM_ID | RBBIM_SIZE | RBBIM_STYLE;
     rbbi.fStyle     = RBBS_BREAK;
-    rbbi.hwndChild  = m_ToolBar.GetHwnd();
+    rbbi.hwndChild  = m_toolBar.GetHwnd();
     rbbi.wID        = IDC_BANDARROWS;
-    rbbi.cyMinChild = m_ToolBar.GetMaxSize().cy+1;
-    m_ReBar.InsertBand(-1, rbbi);
+    rbbi.cyMinChild = m_toolBar.GetMaxSize().cy+1;
+    m_reBar.InsertBand(-1, rbbi);
 
     return 0;
 }
@@ -198,10 +198,10 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE);
+    CFileDialog fileDlg(TRUE);
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -212,10 +212,10 @@ BOOL CMainFrame::OnFileOpen()
 
 BOOL CMainFrame::OnFileSave()
 {
-    CFileDialog FileDlg(FALSE);
+    CFileDialog fileDlg(FALSE);
 
     // Bring up the file save dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -227,11 +227,11 @@ BOOL CMainFrame::OnFileSave()
 BOOL CMainFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
-    CPrintDialog Printdlg;
+    CPrintDialog printdlg;
 
     try
     {
-        INT_PTR Res = Printdlg.DoModal(*this);
+        INT_PTR result = printdlg.DoModal(*this);
 
         // Retrieve the printer DC
         // CDC dcPrinter = Printdlg.GetPrinterDC();
@@ -239,7 +239,7 @@ BOOL CMainFrame::OnFilePrint()
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
 
-        return (Res == IDOK);   // boolean expression
+        return (result == IDOK);   // boolean expression
     }
 
     catch (const CWinException& /* e */)
@@ -258,15 +258,15 @@ void CMainFrame::OnInitialUpdate()
     TRACE("Frame created\n");
 }
 
-LRESULT CMainFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 // Process notification messages sent by child windows
 {
-//  switch (((LPNMHDR)lParam)->code)
+//  switch (((LPNMHDR)lparam)->code)
 //  {
 //  }
 
     // Some notifications should return a value when handled
-    return CFrame::OnNotify(wParam, lParam);
+    return CFrame::OnNotify(wparam, lparam);
 }
 
 void CMainFrame::RecalcLayout()
@@ -286,14 +286,14 @@ void CMainFrame::RecalcLayout()
     // Resize the rebar or toolbar
     if (GetReBar().IsWindow())
     {
-        GetReBar().SendMessage(WM_SIZE, 0L, 0L);
+        GetReBar().SendMessage(WM_SIZE, 0, 0);
         GetReBar().Invalidate();
     }
     else if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-        GetToolBar().SendMessage(TB_AUTOSIZE, 0L, 0L);
+        GetToolBar().SendMessage(TB_AUTOSIZE, 0, 0);
 
     // Position the additional rebar at the top, left, right or bottom of the view.
-    if (m_ReBar.IsWindow())
+    if (m_reBar.IsWindow())
         SetReBarPos();
 
     // Position the view window
@@ -313,37 +313,37 @@ void CMainFrame::RecalcLayout()
 void CMainFrame::SetReBarPos()
 {
     int cxRB = 0;
-    for (UINT u = 0 ; u < m_ReBar.GetRowCount(); ++u)
-        cxRB += m_ReBar.GetRowHeight(u);
+    for (UINT u = 0 ; u < m_reBar.GetRowCount(); ++u)
+        cxRB += m_reBar.GetRowHeight(u);
 
     CRect rc = CFrame::GetViewRect();
     int cyRB = MIN(cxRB, rc.Height());
 
-    DWORD dwStyle = m_ReBar.GetStyle();
-    dwStyle &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
+    DWORD style = m_reBar.GetStyle();
+    style &= CCS_VERT | CCS_BOTTOM; // Filter unwanted styles
 
-    switch(dwStyle)
+    switch(style)
     {
     case CCS_LEFT:
-        m_ReBar.SetWindowPos(NULL, 0, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
-        m_ToolBar.PressButton(IDM_LEFT, TRUE);
+        m_reBar.SetWindowPos(NULL, 0, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
+        m_toolBar.PressButton(IDM_LEFT, TRUE);
         break;
     case CCS_RIGHT:
-        m_ReBar.SetWindowPos(NULL, rc.Width() - cxRB, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
-        m_ToolBar.PressButton(IDM_RIGHT, TRUE);
+        m_reBar.SetWindowPos(NULL, rc.Width() - cxRB, rc.top, cxRB, rc.Height(), SWP_SHOWWINDOW);
+        m_toolBar.PressButton(IDM_RIGHT, TRUE);
         break;
     case CCS_BOTTOM:
-        m_ReBar.SetWindowPos(NULL, 0, rc.bottom - cyRB, rc.Width(), cyRB, SWP_SHOWWINDOW);
-        m_ToolBar.PressButton(IDM_BOTTOM, TRUE);
+        m_reBar.SetWindowPos(NULL, 0, rc.bottom - cyRB, rc.Width(), cyRB, SWP_SHOWWINDOW);
+        m_toolBar.PressButton(IDM_BOTTOM, TRUE);
         break;
     default:
-        m_ReBar.SetWindowPos(NULL, 0, rc.top, rc.Width(), cyRB, SWP_SHOWWINDOW);    
-        m_ToolBar.PressButton(IDM_TOP, TRUE);
+        m_reBar.SetWindowPos(NULL, 0, rc.top, rc.Width(), cyRB, SWP_SHOWWINDOW);    
+        m_toolBar.PressButton(IDM_TOP, TRUE);
         break;
     }
 
     Invalidate();
-    m_ReBar.RedrawWindow();     
+    m_reBar.RedrawWindow();     
 }
 
 void CMainFrame::SetupToolBar()
@@ -367,23 +367,23 @@ void CMainFrame::SetupToolBar()
 
 // Note: Vertical toolbars require each button to have TBSTATE_WRAP, set for group buttons to work.
 //       Horizontal toolbars require the TBSTATE_WRAP removed.
-void CMainFrame::SetWrapState(CToolBar* pToolBar, BOOL bWrap)
+void CMainFrame::SetWrapState(CToolBar* pToolBar, BOOL isWrapped)
 {
-    for (int i = 0; i < m_ToolBar.GetButtonCount(); ++i)
+    for (int i = 0; i < m_toolBar.GetButtonCount(); ++i)
     {
-        int nID = pToolBar->GetCommandID(i);
-        pToolBar->SetButtonState(nID, TBSTATE_ENABLED | (bWrap? TBSTATE_WRAP : 0));
+        int id = pToolBar->GetCommandID(i);
+        pToolBar->SetButtonState(id, TBSTATE_ENABLED | (isWrapped ? TBSTATE_WRAP : 0));
     }
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -9,11 +9,11 @@
 
 ////////////////////////////////
 //CMyListView function definitions
-int CALLBACK CMyListView::CompareProc(LPARAM lParam1, LPARAM lParam2, LPARAM lParamSort)
+int CALLBACK CMyListView::CompareProc(LPARAM param1, LPARAM param2, LPARAM paramSort)
 {
-    UNREFERENCED_PARAMETER(lParamSort);
-    ListItemData*  pItem1 = reinterpret_cast<ListItemData*>(lParam1);
-    ListItemData*  pItem2 = reinterpret_cast<ListItemData*>(lParam2);
+    UNREFERENCED_PARAMETER(paramSort);
+    ListItemData*  pItem1 = reinterpret_cast<ListItemData*>(param1);
+    ListItemData*  pItem2 = reinterpret_cast<ListItemData*>(param2);
 
     HRESULT hr = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelPidl(), pItem2->GetRelPidl());
 
@@ -37,20 +37,20 @@ void CMyListView::DeleteItems()
     m_pItems.clear();
 }
 
-void CMyListView::DisplayFolder(CShellFolder& cParentFolder, Cpidl& cpidlFull, Cpidl& cpidlRel)
+void CMyListView::DisplayFolder(CShellFolder& parentFolder, Cpidl& cpidlFull, Cpidl& cpidlRel)
 {
     m_cpidlCurFull = cpidlFull;
-    if(cParentFolder.GetIShellFolder())
-        cParentFolder.BindToObject(cpidlRel, NULL, IID_IShellFolder, m_csfCurFolder);
+    if(parentFolder.GetIShellFolder())
+        parentFolder.BindToObject(cpidlRel, NULL, IID_IShellFolder, m_csfCurFolder);
     else
         m_csfCurFolder.SHGetDesktopFolder();
 
     DoDisplay();
 }
 
-void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
+void CMyListView::DoBackgroundMenu(CPoint& point)
 {
-    HRESULT        hr;
+    HRESULT hr;
     if(m_csfCurFolder.GetIShellFolder())
     {
         CContextMenu ccm;
@@ -58,36 +58,36 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
 
         if(SUCCEEDED(hr))
         {
-            CMenu Popup;
-            Popup.CreatePopupMenu();
-            if(Popup.GetHandle())
+            CMenu popup;
+			popup.CreatePopupMenu();
+            if(popup.GetHandle())
             {
                 int   i = 0;
                 UINT  idCmdFirst = 0;
                 UINT  idCmd;
 
                 //find the largest ID in the menu
-                while((idCmd = Popup.GetMenuItemID(i)) != static_cast<UINT>(-1))
+                while((idCmd = popup.GetMenuItemID(i)) != static_cast<UINT>(-1))
                 {
                     if(idCmd > idCmdFirst)
                         idCmdFirst = idCmd;
                     i++;
                 }
 
-                hr = ccm.QueryContextMenu(Popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
+                hr = ccm.QueryContextMenu(popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
 
                 if(SUCCEEDED(hr))
                 {
                     ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
-                    idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-                        ptScreen.x, ptScreen.y, *this, NULL);
+                    idCmd = popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
+						point.x, point.y, *this, NULL);
 
                     if(idCmd)
                     {
                         CMINVOKECOMMANDINFO  cmi;
-                        ZeroMemory(&cmi, sizeof(CMINVOKECOMMANDINFO));
-                        cmi.cbSize = sizeof(CMINVOKECOMMANDINFO);
+                        ZeroMemory(&cmi, sizeof(cmi));
+                        cmi.cbSize = sizeof(cmi);
                         cmi.hwnd = GetParent();
                         cmi.lpVerb = (LPCSTR)(INT_PTR)(idCmd - idCmdFirst);
                         cmi.nShow = SW_SHOWNORMAL;
@@ -105,10 +105,10 @@ void CMyListView::DoBackgroundMenu(CPoint& ptScreen)
     }
 }
 
-void CMyListView::DoContextMenu(CPoint& ptScreen)
+void CMyListView::DoContextMenu(CPoint& point)
 {
     LVHITTESTINFO  lvhti;
-    lvhti.pt = ptScreen;
+    lvhti.pt = point;
     ScreenToClient(lvhti.pt);
     lvhti.flags = LVHT_NOWHERE;
     HitTest(lvhti);
@@ -116,78 +116,78 @@ void CMyListView::DoContextMenu(CPoint& ptScreen)
     if(LVHT_ONITEM & lvhti.flags)
     {
         //get the selected items
-        UINT  nItems = GetSelectedCount();
-        std::vector<int> vItems(nItems, 0);
+        UINT  items = GetSelectedCount();
+        std::vector<int> vItems(items, 0);
         int* pItemArray = &vItems.front();
 
         if(pItemArray)
         {
             UINT  i;
-            int   nCurItem;
+            int   curItem;
 
             //put the item clicked on first in the list
             pItemArray[0] = lvhti.iItem;
 
-            for(i = 1, nCurItem = -1; i < nItems; ++i)
+            for(i = 1, curItem = -1; i < items; ++i)
             {
-                nCurItem = GetNextItem(nCurItem, LVNI_SELECTED);
-                if(nCurItem != lvhti.iItem)
-                    pItemArray[i] = nCurItem;
+                curItem = GetNextItem(curItem, LVNI_SELECTED);
+                if(curItem != lvhti.iItem)
+                    pItemArray[i] = curItem;
                 else
                     --i;
             }
 
-            DoItemMenu(pItemArray, nItems, ptScreen);
+            DoItemMenu(pItemArray, items, point);
         }
     }
     else
-        DoBackgroundMenu(ptScreen);
+        DoBackgroundMenu(point);
 }
 
-void CMyListView::DoDefault(int iItem)
+void CMyListView::DoDefault(int item)
 {
     LVITEM   lvItem;
     ZeroMemory(&lvItem, sizeof(LVITEM));
     lvItem.mask = LVIF_PARAM;
-    lvItem.iItem = iItem;
+    lvItem.iItem = item;
 
     if(GetItem(lvItem))
     {
         HRESULT        hr;
         ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
-        CShellFolder csFolder;
+        CShellFolder   folder;
         CContextMenu ccm;
-        csFolder = pInfo->GetParentFolder();
+		folder = pInfo->GetParentFolder();
 
-        if (!csFolder.GetIShellFolder())
-            csFolder.SHGetDesktopFolder();
+        if (!folder.GetIShellFolder())
+			folder.SHGetDesktopFolder();
 
-        if(csFolder.GetIShellFolder())
+        if(folder.GetIShellFolder())
         {
             Cpidl* pCpidl = &(pInfo->GetRelPidl());
-            hr = csFolder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
+            hr = folder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
 
             if(SUCCEEDED(hr))
             {
-                CMenu Popup;
-                Popup.CreatePopupMenu();
-                if(Popup.GetHandle())
+                CMenu popup;
+				popup.CreatePopupMenu();
+                if(popup.GetHandle())
                 {
-                    hr = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+                    hr = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
 
                     if(SUCCEEDED(hr))
                     {
-                        UINT idCmd = Popup.GetMenuItemID(0);
+                        UINT idCmd = popup.GetMenuItemID(0);
                         if(idCmd && (idCmd != static_cast<UINT>(-1)))
                         {
                             //determine if the item is a folder
                             ULONG ulAttr = SFGAO_HASSUBFOLDER | SFGAO_FOLDER;
-                            csFolder.GetAttributesOf(1, pInfo->GetRelPidl(), ulAttr);
+							folder.GetAttributesOf(1, pInfo->GetRelPidl(), ulAttr);
 
                             if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
                             {
-                                CMainFrame& MainFrame = GetExplorerApp().GetMainFrame();
-                                MainFrame.GetTreeView().SelectFromListView(pInfo->GetFullPidl());
+                                CMainFrame& mainFrame = GetExplorerApp().GetMainFrame();
+                                mainFrame.GetTreeView().SelectFromListView(pInfo->GetFullPidl());
                             }
                             else
                             {
@@ -229,7 +229,7 @@ void CMyListView::DoDisplay()
     }
 }
 
-void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
+void CMyListView::DoItemMenu(LPINT pItems, UINT cbItems, CPoint& point)
 {
     std::vector<Cpidl> vpidl(cbItems);
     Cpidl* pidlArray = &vpidl.front();
@@ -239,7 +239,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
         LVITEM lvItem;
         ZeroMemory(&lvItem, sizeof(LVITEM));
         lvItem.mask = LVIF_PARAM;
-        lvItem.iItem = piItems[i];
+        lvItem.iItem = pItems[i];
         if(GetItem(lvItem))
         {
             ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
@@ -268,7 +268,7 @@ void CMyListView::DoItemMenu(LPINT piItems, UINT cbItems, CPoint& ptScreen)
                         ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
                         UINT  idCmd;
                         idCmd = Popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-                                    ptScreen.x, ptScreen.y, *this, NULL);
+                                    point.x, point.y, *this, NULL);
 
                         if(idCmd)
                         {
@@ -301,7 +301,7 @@ LRESULT CMyListView::OnNMRClick(LPNMHDR pNMHDR)
     ::GetCursorPos(&ptScreen);
     DoContextMenu(ptScreen);
 
-    return 0L;
+    return 0;
 }
 
 LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
@@ -314,28 +314,28 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
         TCHAR szFileName[MAX_PATH];
         GetFullFileName(pItem->GetFullPidl().GetPidl(), szFileName);
 
-        ULONG ulAttr = SFGAO_CANDELETE | SFGAO_FOLDER;
-        pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelPidl(), ulAttr);
+        ULONG attr = SFGAO_CANDELETE | SFGAO_FOLDER;
+        pItem->GetParentFolder().GetAttributesOf(1, pItem->GetRelPidl(), attr);
 
         HANDLE hFile;
 
         //A trick to help get a quick response from CreateFile
-        if (ulAttr & SFGAO_CANDELETE)
+        if (attr & SFGAO_CANDELETE)
             hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
                 OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
         else
             hFile = ::CreateFile (szFileName, 0, FILE_SHARE_READ, NULL,
                 0, FILE_ATTRIBUTE_NORMAL | FILE_FLAG_BACKUP_SEMANTICS, NULL);
 
-        TCHAR szText[32];
-        int nMaxLength = sizeof(szText)/sizeof(szText[0])-1;
+        TCHAR text[32];
+        int nMaxLength = sizeof(text)/sizeof(text[0])-1;
 
         switch(pdi->item.iSubItem)
         {
         case 0:  //name
             {
                 SHFILEINFO sfi;
-                ZeroMemory(&sfi, sizeof(SHFILEINFO));
+                ZeroMemory(&sfi, sizeof(sfi));
                 //get the display name of the item
                 if (pItem->GetFullPidl().SHGetFileInfo(0, sfi, SHGFI_PIDL | SHGFI_DISPLAYNAME))
                     ::lstrcpyn(pdi->item.pszText, sfi.szDisplayName, pdi->item.cchTextMax -1);
@@ -346,7 +346,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
                 TCHAR szSize[32];
 
                 //report the size files and not folders
-                if ((hFile != INVALID_HANDLE_VALUE)&&(~ulAttr & SFGAO_FOLDER))
+                if ((hFile != INVALID_HANDLE_VALUE)&&(~attr & SFGAO_FOLDER))
                 {
                     GetFileSizeText(hFile, szSize);
                     ::lstrcpyn(pdi->item.pszText, szSize, nMaxLength -1);
@@ -367,8 +367,8 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             {
                 if (hFile != INVALID_HANDLE_VALUE)
                 {
-                    GetLastWriteTime(hFile, szText);
-                    ::lstrcpyn(pdi->item.pszText, szText, nMaxLength -1);
+                    GetLastWriteTime(hFile, text);
+                    ::lstrcpyn(pdi->item.pszText, text, nMaxLength -1);
                 }
                 else
                     ::lstrcpy(pdi->item.pszText, _T(""));
@@ -390,7 +390,7 @@ LRESULT CMyListView::OnLVNDispInfo(NMLVDISPINFO* pdi)
             pdi->item.iImage = sfi.iIcon;
     }
 
-    return 0L;
+    return 0;
 }
 
 LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
@@ -398,53 +398,53 @@ LRESULT CMyListView::OnNMReturn(LPNMHDR pNMHDR)
     UNREFERENCED_PARAMETER(pNMHDR);
 
     //get the item that has the focus
-    int nItem = static_cast<int>(SendMessage(LVM_GETNEXTITEM, static_cast<WPARAM>(-1), MAKELPARAM (LVNI_FOCUSED, 0)));
+    int item = static_cast<int>(SendMessage(LVM_GETNEXTITEM, static_cast<WPARAM>(-1), MAKELPARAM (LVNI_FOCUSED, 0)));
 
-    if(nItem != -1)
-        DoDefault(nItem);
+    if(item != -1)
+        DoDefault(item);
 
-    return 0L;
+    return 0;
 }
 
-LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lParam)
+LRESULT CMyListView::OnNotifyReflect(WPARAM, LPARAM lparam)
 {
-    LPNMHDR  pNMHDR = (LPNMHDR) lParam;
+    LPNMHDR  pNMHDR = (LPNMHDR)lparam;
 
     switch(pNMHDR->code)
     {
     case NM_RCLICK:         return OnNMRClick(pNMHDR);
-    case LVN_GETDISPINFO:   return OnLVNDispInfo(reinterpret_cast<NMLVDISPINFO*>(lParam));
+    case LVN_GETDISPINFO:   return OnLVNDispInfo(reinterpret_cast<NMLVDISPINFO*>(lparam));
     case NM_DBLCLK:         return OnNMReturn(pNMHDR);
     case NM_RETURN:         return OnNMReturn(pNMHDR);
     }
     return 0;
 }
 
-void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
+void CMyListView::EnumObjects(CShellFolder& folder, Cpidl& cpidlParent)
 {
-    CEnumIDList cEnum;
+    CEnumIDList list;
 
-    int grFlags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
+    int flags = SHCONTF_FOLDERS | SHCONTF_NONFOLDERS;
     if ( GetExplorerApp().GetMainFrame().GetShowHidden() )
-        grFlags |= SHCONTF_INCLUDEHIDDEN;
+        flags |= SHCONTF_INCLUDEHIDDEN;
 
-    if(SUCCEEDED(cPFolder.EnumObjects(NULL, grFlags, cEnum)))
+    if(SUCCEEDED(folder.EnumObjects(NULL, flags, list)))
     {
-        ULONG ulFetched = 1;
+        ULONG fetched = 1;
         Cpidl cpidlRel;
 
         //enumerate the item's PIDLs
-        while(S_OK == (cEnum.Next(1, cpidlRel, ulFetched)) && ulFetched)
+        while(S_OK == (list.Next(1, cpidlRel, fetched)) && fetched)
         {
             LVITEM lvItem;
-            ZeroMemory(&lvItem, sizeof(LVITEM));
-            ULONG  ulAttr;
+            ZeroMemory(&lvItem, sizeof(lvItem));
+            ULONG  attr;
 
             //fill in the TV_ITEM structure for this item
             lvItem.mask = LVIF_PARAM | LVIF_TEXT | LVIF_IMAGE | LVIF_STATE;
 
             //Store a pointer to the ListItemData in the lParam and m_pItems
-            ListItemData* pItem = new ListItemData(cpidlParent, cpidlRel, cPFolder);
+            ListItemData* pItem = new ListItemData(cpidlParent, cpidlRel, folder);
             lvItem.lParam = reinterpret_cast<LPARAM>(pItem);
             m_pItems.push_back(pItem);
 
@@ -453,24 +453,24 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
             lvItem.iImage = I_IMAGECALLBACK;
 
             //determine if the item's icon characteristics
-            ulAttr = SFGAO_SHARE | SFGAO_LINK | SFGAO_GHOSTED;
-            cPFolder.GetAttributesOf(1, cpidlRel, ulAttr);
+            attr = SFGAO_SHARE | SFGAO_LINK | SFGAO_GHOSTED;
+            folder.GetAttributesOf(1, cpidlRel, attr);
 
-            if(ulAttr & SFGAO_SHARE)
+            if(attr & SFGAO_SHARE)
             {
                 lvItem.mask |= LVIF_STATE;
                 lvItem.stateMask |= LVIS_OVERLAYMASK;
                 lvItem.state |= INDEXTOOVERLAYMASK(1); //1 is the index for the shared overlay image
             }
 
-            if (ulAttr & SFGAO_LINK)
+            if (attr & SFGAO_LINK)
             {
                 lvItem.mask |= LVIF_STATE;
                 lvItem.stateMask |= LVIS_OVERLAYMASK;
                 lvItem.state |= INDEXTOOVERLAYMASK(2); //2 is the index for the link overlay image
             }
 
-            if(ulAttr & SFGAO_GHOSTED)
+            if(attr & SFGAO_GHOSTED)
             {
                 lvItem.mask |= LVIF_STATE;
                 lvItem.stateMask |= LVIS_CUT;
@@ -478,7 +478,7 @@ void CMyListView::EnumObjects(CShellFolder& cPFolder, Cpidl& cpidlParent)
             }
 
             InsertItem(lvItem);
-            ulFetched = 0;
+            fetched = 0;
         }
     }
 }
@@ -517,29 +517,29 @@ BOOL CMyListView::GetFileSizeText(HANDLE hFile, LPTSTR lpszSize)
     return TRUE;
 }
 
-BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR lpszString)
+BOOL CMyListView::GetLastWriteTime(HANDLE hFile, LPTSTR string)
 {
-    FILETIME ftCreate, ftAccess, ftWrite;
+    FILETIME create, access, write;
     SYSTEMTIME stLocal;
     FILETIME ftLocal;
     TCHAR szTime[32];
     TCHAR szDate[32];
 
     // Retrieve the file times for the file.
-    if (!::GetFileTime(hFile, &ftCreate, &ftAccess, &ftWrite))
+    if (!::GetFileTime(hFile, &create, &access, &write))
         return FALSE;
 
     // Convert the last-write time to local time.
-    ::FileTimeToLocalFileTime(&ftWrite, &ftLocal);
+    ::FileTimeToLocalFileTime(&write, &ftLocal);
     ::FileTimeToSystemTime(&ftLocal, &stLocal);
 
     // Build a string showing the date and time with regional settings.
     ::GetDateFormat(LOCALE_USER_DEFAULT, DATE_SHORTDATE, &stLocal, NULL, szDate, 31);
     ::GetTimeFormat(LOCALE_USER_DEFAULT, TIME_NOSECONDS, &stLocal, NULL, szTime, 31);
 
-    ::lstrcpy(lpszString, szDate);
-    ::lstrcat(lpszString, _T(" "));
-    ::lstrcat(lpszString, szTime);
+    ::lstrcpy(string, szDate);
+    ::lstrcat(string, _T(" "));
+    ::lstrcat(string, szTime);
 
     return TRUE;
 }
@@ -550,26 +550,26 @@ void CMyListView::OnAttach()
     SetImageLists();
 
     //Set up the colmns for report mode
-    TCHAR szText[256];
+    TCHAR text[256];
     LVCOLUMN lvc;
     ZeroMemory(&lvc, sizeof(LVCOLUMN));
     lvc.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-    int iColumns = 4;   //Number of columns
-    int ColSize[4] = {150, 70, 100, 120}; // width of columns in pixels
+    int columns = 4;   //Number of columns
+    int colSizes[4] = {150, 70, 100, 120}; // width of columns in pixels
 
-    for (int iCol = 0; iCol < iColumns; iCol++)
+    for (int i = 0; i < columns; i++)
     {
-        lvc.iSubItem = iCol;
-        lvc.pszText = szText;
-        lvc.cx = ColSize[iCol];
+        lvc.iSubItem = i;
+        lvc.pszText = text;
+        lvc.cx = colSizes[i];
 
-        if (1 == iCol) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
+        if (1 == i) lvc.fmt = LVCFMT_RIGHT; // right-aligned column
         else lvc.fmt = LVCFMT_LEFT;     //left-aligned column
 
-        ::LoadString(GetApp().GetInstanceHandle(), IDS_COLUMN1 + iCol,
-            szText, sizeof(szText)/sizeof(szText[0]));
+        ::LoadString(GetApp().GetInstanceHandle(), IDS_COLUMN1 + i,
+            text, sizeof(text)/sizeof(text[0]));
 
-        InsertColumn(iCol, lvc);
+        InsertColumn(i, lvc);
     }
 
     //Set initial the view style as report
@@ -628,9 +628,9 @@ void CMyListView::ViewReport()
     SetStyle((dwStyle & ~LVS_TYPEMASK) | LVS_REPORT);
 }
 
-LRESULT CMyListView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyListView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_DRAWITEM:
     case WM_MENUCHAR:
@@ -638,19 +638,19 @@ LRESULT CMyListView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     case WM_INITMENUPOPUP:
         {
             if(m_ccm2.GetIContextMenu2())
-                m_ccm2.HandleMenuMsg(uMsg, wParam, lParam);
+                m_ccm2.HandleMenuMsg(msg, wparam, lparam);
         }
         break;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 ///////////////////////////////////
 //ListItemData function definitions
 CMyListView::ListItemData::ListItemData(Cpidl& cpidlParent, Cpidl& cpidlRel, CShellFolder& cParentFolder)
 {
-    m_cParentFolder = cParentFolder;
+    m_parentFolder = cParentFolder;
     m_cpidlFull     = cpidlParent + cpidlRel;
     m_cpidlRel      = cpidlRel;
 }

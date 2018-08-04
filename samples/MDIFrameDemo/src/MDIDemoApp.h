@@ -13,10 +13,10 @@ public:
     CMDIDemoApp();
     virtual ~CMDIDemoApp() {}
     virtual BOOL InitInstance();
-    CMainMDIFrame& GetMDIFrame() { return m_MainMDIFrame; }
+    CMainMDIFrame& GetMDIFrame() { return m_mainMDIFrame; }
 
 private:
-    CMainMDIFrame m_MainMDIFrame;
+    CMainMDIFrame m_mainMDIFrame;
 
 };
 

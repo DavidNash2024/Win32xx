@@ -8,12 +8,12 @@
 
 CLeftPane::CLeftPane()
 { 
-    SetView(m_View);
+    SetView(m_view);
 }
 
 CRightPane::CRightPane()
 {
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(6);

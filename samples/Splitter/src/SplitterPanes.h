@@ -14,7 +14,7 @@ public:
     virtual ~CDockText() {}
 
 private:
-    CViewText m_View;
+    CViewText m_view;
 };
 
 class CDockTree : public CDocker
@@ -24,7 +24,7 @@ public:
     virtual ~CDockTree() {}
 
 private:
-    CViewTree m_View;
+    CViewTree m_view;
 };
 
 class CDockList : public CDocker
@@ -34,7 +34,7 @@ public:
     virtual ~CDockList() {}
 
 private:
-    CViewList m_View;
+    CViewList m_view;
 };
 
 #endif // SPLITTERPANES_H

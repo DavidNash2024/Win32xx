@@ -350,16 +350,16 @@ HRESULT CDXView::InitDevice()
         return hr;
 
     // Initialize the world matrix
-    m_World = XMMatrixIdentity();
+    m_world = XMMatrixIdentity();
 
     // Initialize the view matrix
     XMVECTOR Eye = XMVectorSet(0.0f, 1.0f, -5.0f, 0.0f);
     XMVECTOR At = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
     XMVECTOR Up = XMVectorSet(0.0f, 1.0f, 0.0f, 0.0f);
-    m_View = XMMatrixLookAtLH(Eye, At, Up);
+    m_view = XMMatrixLookAtLH(Eye, At, Up);
 
     // Initialize the projection matrix
-    m_Projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f);
+    m_projection = XMMatrixPerspectiveFovLH(XM_PIDIV2, width / (FLOAT)height, 0.01f, 100.0f);
 
     return S_OK;
 }
@@ -425,7 +425,7 @@ void CDXView::Render()
     //
     // Animate the cube
     //
-    m_World = XMMatrixRotationY( t );
+    m_world = XMMatrixRotationY( t );
 
     //
     // Clear the back buffer
@@ -436,9 +436,9 @@ void CDXView::Render()
     // Update variables
     //
     ConstantBuffer cb;
-    cb.mWorld = XMMatrixTranspose(m_World);
-    cb.mView = XMMatrixTranspose(m_View);
-    cb.mProjection = XMMatrixTranspose(m_Projection);
+    cb.mWorld = XMMatrixTranspose(m_world);
+    cb.mView = XMMatrixTranspose(m_view);
+    cb.mProjection = XMMatrixTranspose(m_projection);
     m_pImmediateContext->UpdateSubresource(m_pConstantBuffer, 0, nullptr, &cb, 0, 0);
 
     //
@@ -458,12 +458,12 @@ void CDXView::Render()
 //--------------------------------------------------------------------------------------
 // Window Procedure. Handles window messages.
 //--------------------------------------------------------------------------------------
-LRESULT CDXView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CDXView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     PAINTSTRUCT ps;
     HDC hdc;
 
-    switch (uMsg)
+    switch (msg)
     {
     case WM_PAINT:
         hdc = BeginPaint(ps);
@@ -475,5 +475,5 @@ LRESULT CDXView::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

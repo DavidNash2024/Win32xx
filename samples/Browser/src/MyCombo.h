@@ -10,17 +10,17 @@ class CMyCombo : public CComboBoxEx
 public:
     CMyCombo() {}
     virtual ~CMyCombo() {}
-    CEdit* GetEdit() const { return &m_Edit; } 
+    CEdit* GetEdit() const { return &m_edit; } 
 
 protected:
     virtual void OnAttach()
     {
-        m_Edit.Attach(GetEditCtrl());
+        m_edit.Attach(GetEditCtrl());
     }
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-    mutable CEdit m_Edit;
+    mutable CEdit m_edit;
 };
 
 

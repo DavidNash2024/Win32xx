@@ -214,7 +214,7 @@ namespace Win32xx
 
     protected:
         // Overridables
-        virtual LRESULT OnMessageReflect(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnMessageReflect(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void PreRegisterClass(WNDCLASS& wc);
 
     private:
@@ -1094,13 +1094,13 @@ namespace Win32xx
     // WM_CTLCOLORSCROLLBAR, WM_CTLCOLORSTATIC, WM_CHARTOITEM,  WM_VKEYTOITEM,
     // WM_HSCROLL, WM_VSCROLL, WM_DRAWITEM, WM_MEASUREITEM, WM_DELETEITEM,
     // WM_COMPAREITEM, WM_PARENTNOTIFY.
-    inline LRESULT CListBox::OnMessageReflect(UINT uMsg, WPARAM, LPARAM lParam)
+    inline LRESULT CListBox::OnMessageReflect(UINT msg, WPARAM, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
         case WM_COMPAREITEM:
             {
-                LPCOMPAREITEMSTRUCT pCompareItemStruct = (LPCOMPAREITEMSTRUCT)lParam;
+                LPCOMPAREITEMSTRUCT pCompareItemStruct = (LPCOMPAREITEMSTRUCT)lparam;
                 return CompareItem(pCompareItemStruct);
             }
         }

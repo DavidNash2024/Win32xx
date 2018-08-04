@@ -12,16 +12,16 @@ CMainFrame::CMainFrame()
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
-    m_UseProportionalResize = FALSE;
-    m_Use3DBorder = TRUE;
-    m_DisableUndocking = FALSE;
-    m_DisableResize = FALSE;
-    m_DisableDockLR = FALSE;
-    m_DisableDockClose = FALSE;
-    m_UseDynamicResize = TRUE;
+    m_useProportionalResize = FALSE;
+    m_use3DBorder = TRUE;
+    m_disableUndocking = FALSE;
+    m_disableResize = FALSE;
+    m_disableDockLR = FALSE;
+    m_disableDockClose = FALSE;
+    m_useDynamicResize = TRUE;
 
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -51,10 +51,10 @@ void CMainFrame::LoadDefaultDockers()
     SetDockStyles();
 }
 
-CDocker* CMainFrame::NewDockerFromID(int nID)
+CDocker* CMainFrame::NewDockerFromID(int id)
 {
     CDocker* pDock = NULL;
-    switch (nID)
+    switch (id)
     {
     case ID_DOCK_CLASSES1:
         pDock = new CDockClasses;
@@ -90,19 +90,19 @@ CDocker* CMainFrame::NewDockerFromID(int nID)
 
 BOOL CMainFrame::On3DBorder()
 {
-    m_Use3DBorder = !m_Use3DBorder;
+    m_use3DBorder = !m_use3DBorder;
     SetDockStyles();
     return TRUE;
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
     // OnCommand responds to menu and and toolbar input
 
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_FILE_EXIT:         return OnFileExit();
     case IDM_DOCK_DEFAULT:      return OnDockDefault();
@@ -153,11 +153,11 @@ BOOL CMainFrame::OnDynamicResize()
     // Dragging the docker's splitter bar will either dynamicly resize the dockers
     // during the dragging, or simply display a hashed splitter bar.
     std::vector<CDocker*>::const_iterator iter;
-    m_UseDynamicResize = !m_UseDynamicResize;
+    m_useDynamicResize = !m_useDynamicResize;
 
     for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
     {
-        (*iter)->SetDragAutoResize(m_UseDynamicResize);
+        (*iter)->SetDragAutoResize(m_useDynamicResize);
     }
     return TRUE;
 }
@@ -194,39 +194,39 @@ void CMainFrame::OnInitialUpdate()
     ShowWindow(GetInitValues().ShowCmd);
 }
 
-void CMainFrame::OnMenuUpdate(UINT nID)
+void CMainFrame::OnMenuUpdate(UINT id)
 {
-    switch(nID)
+    switch(id)
     {
     case IDM_PROP_RESIZE:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_UseProportionalResize ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_useProportionalResize ? MF_CHECKED : MF_UNCHECKED));
         break;
     case IDM_3DBORDER:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_Use3DBorder ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_use3DBorder ? MF_CHECKED : MF_UNCHECKED));
         break;
     case IDM_NO_UNDOCK:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableUndocking ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableUndocking ? MF_CHECKED : MF_UNCHECKED));
         break;
     case IDM_NO_RESIZE:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableResize ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableResize ? MF_CHECKED : MF_UNCHECKED));
         break;
     case IDM_NO_DOCK_LR:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockLR ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockLR ? MF_CHECKED : MF_UNCHECKED));
         break;
     case IDM_NO_DOCK_CLOSE:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_DisableDockClose ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_disableDockClose ? MF_CHECKED : MF_UNCHECKED));
         break;
     case IDM_DYNAMIC_RESIZE:
-        GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (m_UseDynamicResize ? MF_CHECKED : MF_UNCHECKED));
+        GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (m_useDynamicResize ? MF_CHECKED : MF_UNCHECKED));
         break;
     }
 
-    CDockFrame::OnMenuUpdate(nID);
+    CDockFrame::OnMenuUpdate(id);
 }
 
 BOOL CMainFrame::OnNoDockClose()
 {
-    m_DisableDockClose = !m_DisableDockClose;
+    m_disableDockClose = !m_disableDockClose;
     SetDockStyles();
     RedrawWindow();
     return TRUE;
@@ -234,28 +234,28 @@ BOOL CMainFrame::OnNoDockClose()
 
 BOOL CMainFrame::OnNoDockLR()
 {
-    m_DisableDockLR = !m_DisableDockLR;
+    m_disableDockLR = !m_disableDockLR;
     SetDockStyles();
     return TRUE;
 }
 
 BOOL CMainFrame::OnNoResize()
 {
-    m_DisableResize = !m_DisableResize;
+    m_disableResize = !m_disableResize;
     SetDockStyles();
     return TRUE;
 }
 
 BOOL CMainFrame::OnNoUndocking()
 {
-    m_DisableUndocking = !m_DisableUndocking;
+    m_disableUndocking = !m_disableUndocking;
     SetDockStyles();
     return TRUE;
 }
 
 BOOL CMainFrame::OnPropResize()
 {
-    m_UseProportionalResize = !m_UseProportionalResize;
+    m_useProportionalResize = !m_useProportionalResize;
     SetDockStyles();
     return TRUE;
 }
@@ -283,20 +283,20 @@ void CMainFrame::SetDockStyles()
 
     for (iter = GetAllDockers().begin(); iter < GetAllDockers().end(); ++iter)
     {
-        DWORD dwStyle = (*iter)->GetDockStyle();
+        DWORD style = (*iter)->GetDockStyle();
         
         // Filter unwanted styles
-        dwStyle &= 0xF400F;
+		style &= 0xF400F;
     
         // Add styles selected from the menu
-        if (m_UseProportionalResize)    dwStyle |= DS_NO_FIXED_RESIZE;
-        if (m_Use3DBorder)              dwStyle |= DS_CLIENTEDGE;
-        if (m_DisableUndocking)         dwStyle |= DS_NO_UNDOCK;
-        if (m_DisableResize)            dwStyle |= DS_NO_RESIZE;
-        if (m_DisableDockLR)            dwStyle |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
-        if (m_DisableDockClose)         dwStyle |= DS_NO_CLOSE;
+        if (m_useProportionalResize)    style |= DS_NO_FIXED_RESIZE;
+        if (m_use3DBorder)              style |= DS_CLIENTEDGE;
+        if (m_disableUndocking)         style |= DS_NO_UNDOCK;
+        if (m_disableResize)            style |= DS_NO_RESIZE;
+        if (m_disableDockLR)            style |= DS_NO_DOCKCHILD_LEFT | DS_NO_DOCKCHILD_RIGHT;
+        if (m_disableDockClose)         style |= DS_NO_CLOSE;
 
-        (*iter)->SetDockStyle(dwStyle);
+        (*iter)->SetDockStyle(style);
     }
 }
 

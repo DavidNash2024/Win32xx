@@ -109,7 +109,7 @@ namespace Win32xx
         CImageList SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
         BOOL    SetItem( LVITEM& Item ) const;
         BOOL    SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
-                        UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const;
+                        UINT nState, UINT nStateMask, LPARAM lparam, int iIndent ) const;
         void    SetItemCount( int iCount ) const;
         void    SetItemCountEx( int iCount, DWORD dwFlags = LVSICF_NOINVALIDATEALL ) const;
         BOOL    SetItemData( int iItem, DWORD_PTR dwData ) const;
@@ -312,7 +312,7 @@ namespace Win32xx
     }
 
 
-    // Retrieves the value(lParam) specific to the item.
+    // Retrieves the value(lparam) specific to the item.
     inline DWORD_PTR CListView::GetItemData( int iItem ) const
     {
         assert(IsWindow());
@@ -615,7 +615,7 @@ namespace Win32xx
     //      LPTSTR pszText;
     //      int cchTextMax;
     //      int iImage;
-    //      LPARAM lParam;
+    //      LPARAM lparam;
     // } LVITEM, *LVITEM&;
     inline BOOL CListView::SetItem( LVITEM& Item ) const
     {
@@ -626,7 +626,7 @@ namespace Win32xx
 
     // Sets some or all of a list-view item's attributes.
     inline BOOL CListView::SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
-                    UINT nState, UINT nStateMask, LPARAM lParam, int iIndent ) const
+                    UINT nState, UINT nStateMask, LPARAM lparam, int iIndent ) const
     {
         assert(IsWindow());
 
@@ -639,7 +639,7 @@ namespace Win32xx
         lvi.iImage = iImage;
         lvi.state = nState;
         lvi.stateMask = nStateMask;
-        lvi.lParam = lParam;
+        lvi.lParam = lparam;
         lvi.iIndent = iIndent;
 
         return ListView_SetItem( *this, &lvi);
@@ -662,7 +662,7 @@ namespace Win32xx
     }
 
 
-    // Sets the value(lParam) specific to the item.
+    // Sets the value(lparam) specific to the item.
     inline BOOL CListView::SetItemData( int iItem, DWORD_PTR dwData ) const
     {
         assert(IsWindow());

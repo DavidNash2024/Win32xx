@@ -6,13 +6,13 @@
 #include "resource.h"
 
 
-CButtonPage::CButtonPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPropertyPage(nIDTemplate, szTitle)
+CButtonPage::CButtonPage(UINT templateID, LPCTSTR title /* = NULL*/) : CPropertyPage(templateID, title)
 {
 }
 
-INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CButtonPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     // on any command notification, tell the property sheet to enable the Apply button
     case WM_COMMAND:
@@ -25,14 +25,14 @@ INT_PTR CButtonPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 BOOL CButtonPage::OnApply()
 { 
     TRACE ("Appy button pressed\n"); 
 
-    GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0L);
+    GetParent().SendMessage(PSM_CHANGED, (WPARAM)GetHwnd(), 0);
     return Validate();
 }
 
@@ -80,7 +80,7 @@ BOOL CButtonPage::Validate()
     // This is where we validate (and save) the contents of this page before it is closed
     // Here we would extract and test the values from th ButtonPage dialog:
 
-    BOOL IsValid = TRUE;
+    BOOL isValid = TRUE;
 
 // Tell the user what went wrong
 //  if (IsValid)
@@ -88,17 +88,17 @@ BOOL CButtonPage::Validate()
 //  else
 //      TRACE("Button Page Validation passed\n");
     
-    return IsValid;
+    return isValid;
 }
 
-CComboPage::CComboPage(UINT nIDTemplate, LPCTSTR szTitle /* = NULL*/) : CPropertyPage(nIDTemplate, szTitle)
+CComboPage::CComboPage(UINT templateID, LPCTSTR title /* = NULL*/) : CPropertyPage(templateID, title)
 {
 }
 
-INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CComboPage::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
 
-    switch (uMsg)
+    switch (msg)
     {
     // on any command notification, tell the property sheet to enable the Apply button
     case WM_COMMAND:
@@ -111,7 +111,7 @@ INT_PTR CComboPage::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
         break;
     }
 
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
 BOOL CComboPage::OnInitDialog()
@@ -149,22 +149,22 @@ void CMyPropertySheet::OnInitialUpdate()
     // Remove system menu for wizards
     if (IsWizard())
     {
-        DWORD dwStyle = GetStyle();
-        dwStyle &= ~WS_SYSMENU;
-        SetStyle(dwStyle);
+        DWORD style = GetStyle();
+        style &= ~WS_SYSMENU;
+        SetStyle(style);
     }
 
     CenterWindow();
 }
 
-LRESULT CMyPropertySheet::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMyPropertySheet::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //
 //  }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);    
+    return WndProcDefault(msg, wparam, lparam);    
 }
 

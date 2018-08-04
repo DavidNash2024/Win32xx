@@ -4,7 +4,7 @@
 #include "windowsx.h"
 
 
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID), m_nCounter(0)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID), m_counter(0)
 {
 }
 
@@ -18,9 +18,9 @@ void CMyDialog::AddToButton()
     HWND hwButton = GetDlgItem(IDC_BUTTON1);
     
     //set text to show in control
-    TCHAR szBufW[16];
-    wsprintf(szBufW, L"Button %d", m_nCounter);
-    ::Button_SetText(hwButton, szBufW);
+    WCHAR text[16];
+    wsprintf(text, L"Button %d", m_counter);
+    ::Button_SetText(hwButton, text);
     return;
 }
 
@@ -30,13 +30,13 @@ void CMyDialog::AddToComboBox()
     HWND hwComboBox = GetDlgItem(IDC_COMBO1);
     
     //set text to show in control
-    TCHAR szBufW[16];
-    wsprintf(szBufW, L"ComboBox %d", m_nCounter);
-    if (m_nCounter)
+    WCHAR text[16];
+    wsprintf(text, L"ComboBox %d", m_counter);
+    if (m_counter)
     {
-        ComboBox_AddString(hwComboBox, szBufW);
-        ::ComboBox_SetText(hwComboBox, szBufW);
-        ComboBox_SetCurSel(hwComboBox, m_nCounter-1);
+        ComboBox_AddString(hwComboBox, text);
+        ::ComboBox_SetText(hwComboBox, text);
+        ComboBox_SetCurSel(hwComboBox, m_counter-1);
     }
     else 
     {
@@ -51,10 +51,10 @@ void CMyDialog::AddToEdit()
     HWND hwEdit = GetDlgItem(IDC_EDIT1 ); 
     
     //set text to show in control
-    TCHAR szBufW[16];
-    wsprintf(szBufW, L"Edit %d\r\n", m_nCounter);
-    if (m_nCounter)
-        Edit_ReplaceSel(hwEdit, szBufW); 
+    WCHAR text[16];
+    wsprintf(text, L"Edit %d\r\n", m_counter);
+    if (m_counter)
+        Edit_ReplaceSel(hwEdit, text); 
     else
         ::SetWindowText(hwEdit, L""); 
 }
@@ -65,10 +65,10 @@ void CMyDialog::AddToListBox()
     HWND hwListBox = GetDlgItem(IDC_LIST1); 
     
     //set text to show in control
-    TCHAR szBufW[16];
-    wsprintf(szBufW, L"ListBox %d", m_nCounter);
-    if (m_nCounter)
-        ListBox_AddString(hwListBox, szBufW);
+    WCHAR text[16];
+    wsprintf(text, L"ListBox %d", m_counter);
+    if (m_counter)
+        ListBox_AddString(hwListBox, text);
     else
         ListBox_ResetContent(hwListBox); 
 }
@@ -84,8 +84,8 @@ void CMyDialog::AddToScrollBars()
     ScrollBar_SetRange(hwScrollBarV, 0, 10, FALSE);
     
     //set scroll bar position
-    ScrollBar_SetPos(hwScrollBarH, m_nCounter, TRUE);
-    ScrollBar_SetPos(hwScrollBarV, m_nCounter, TRUE);
+    ScrollBar_SetPos(hwScrollBarH, m_counter, TRUE);
+    ScrollBar_SetPos(hwScrollBarV, m_counter, TRUE);
 }
 
 BOOL CMyDialog::OnInitDialog()
@@ -106,12 +106,12 @@ void CMyDialog::OnOK()
     CDialog::OnOK();
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_TIMER:
-        m_nCounter > 9 ? m_nCounter = 0 : m_nCounter++;
+        m_counter > 9 ? m_counter = 0 : m_counter++;
         AddToEdit();
         AddToListBox();
         AddToScrollBars();
@@ -121,7 +121,7 @@ INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
 
     } // switch(uMsg)
     
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
     
 } // INT_PTR CALLBACK DialogProc(...)
 

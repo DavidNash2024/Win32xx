@@ -3,17 +3,17 @@
 #include "Doc.h"
 
 
-BOOL CDoc::FileLoad(LPCTSTR szFilename)
+BOOL CDoc::FileLoad(LPCTSTR filename)
 {
-    BOOL IsLoaded = FALSE;
+    BOOL isLoaded = FALSE;
 
     // Return CDoc data to default
 
     try
     {
-        CArchive ar(szFilename, CArchive::load);
+        CArchive ar(filename, CArchive::load);
         ar >> *this;        // Uses the Serialize function
-        IsLoaded = TRUE;
+        isLoaded = TRUE;
     }
 
     catch (const CFileException &e)
@@ -24,12 +24,12 @@ BOOL CDoc::FileLoad(LPCTSTR szFilename)
         // Return CDoc data to default
     }
 
-    return IsLoaded;
+    return isLoaded;
 }
 
-BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
+BOOL CDoc::FileStore(LPCTSTR /* filename */)
 {
-    BOOL IsStored = FALSE;
+    BOOL isStored = FALSE;
 
 //  try
 //  {
@@ -43,7 +43,7 @@ BOOL CDoc::FileStore(LPCTSTR /* szFilename */)
 //      ::MessageBox(NULL, e.GetText(), _T("Failed to Save File"), MB_ICONWARNING);
 //  }
 
-    return IsStored;
+    return isStored;
 }
 
 void CDoc::Serialize(CArchive& /* ar */)
@@ -53,12 +53,12 @@ void CDoc::Serialize(CArchive& /* ar */)
 //  if (ar.IsStoring())
 //  {
 //      // Store data in archive
-//      ar << m_MemberVariable;
+//      ar << m_memberVariable;
 //  }
 //  else
 //  {
 //      // Load data from archive
-//      ar >> m_MemberVariable;
+//      ar >> m_memberVariable;
 //  }
 
 }

@@ -8,7 +8,7 @@
 
 
 // CViewSimple definitions
-CViewSimple::CViewSimple() : m_Color(RGB(0,0,255))
+CViewSimple::CViewSimple() : m_color(RGB(0,0,255))
 {
 }
 
@@ -16,13 +16,13 @@ void CViewSimple::OnDraw(CDC& dc)
 {
     //Centre some text in our view window
     CRect rc = GetClientRect();
-    dc.SetTextColor(m_Color);
+    dc.SetTextColor(m_color);
     dc.DrawText(_T("View Window"), -1, rc, DT_CENTER|DT_VCENTER|DT_SINGLELINE);
 }
 
-LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CViewSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_SIZE:
         // Force the window to be repainted
@@ -31,15 +31,15 @@ LRESULT CViewSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
     // Do default processing for other messages
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 // CMDIChildSimple definitions
 CMDIChildSimple::CMDIChildSimple()
 {
-    m_Menu.LoadMenu(_T("MdiMenuView"));
-    SetHandles(m_Menu, NULL);
-    SetView(m_View);
+    m_menu.LoadMenu(_T("MdiMenuView"));
+    SetHandles(m_menu, NULL);
+    SetView(m_view);
 }
 
 CMDIChildSimple::~CMDIChildSimple()
@@ -63,31 +63,31 @@ void CMDIChildSimple::OnClose()
         MDIDestroy();
 }
 
-BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_COLOR_BLACK:
-        m_View.SetColor(RGB(0,0,0));
+        m_view.SetColor(RGB(0,0,0));
         Invalidate();
         return TRUE;
     case IDM_COLOR_RED:
-        m_View.SetColor(RGB(255, 0, 0));
+		m_view.SetColor(RGB(255, 0, 0));
         Invalidate();
         return TRUE;
     case IDM_COLOR_GREEN:
-        m_View.SetColor(RGB(0, 255, 0));
+		m_view.SetColor(RGB(0, 255, 0));
         Invalidate();
         return TRUE;
     case IDM_COLOR_BLUE:
-        m_View.SetColor(RGB(0, 0, 255));
+		m_view.SetColor(RGB(0, 0, 255));
         Invalidate();
         return TRUE;
     case IDM_COLOR_WHITE:
-        m_View.SetColor(RGB(255, 255, 255));
+		m_view.SetColor(RGB(255, 255, 255));
         Invalidate();
         return TRUE;
     }
@@ -95,13 +95,13 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wParam, LPARAM lParam)
     return FALSE;
 }
 
-LRESULT CMDIChildSimple::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMDIChildSimple::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //      Add case statements for each messages to be handled here
 //  }
 
     // Do default processing for other messages
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }

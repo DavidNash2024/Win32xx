@@ -36,7 +36,7 @@ CContainText::CContainText()
     SetDockCaption(_T("Text View - Docking container"));
     SetTabText(_T("Text"));
     SetTabIcon(IDI_TEXT);
-    SetView(m_ViewText);
+    SetView(m_viewText);
 } 
 
 
@@ -45,7 +45,7 @@ CContainText::CContainText()
 CDockText::CDockText()
 {
     // Set the view window to our edit control
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the width of the splitter bar
     SetBarWidth(8);

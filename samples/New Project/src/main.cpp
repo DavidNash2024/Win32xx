@@ -30,8 +30,8 @@ int APIENTRY WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     CWinApp theApp;
 
     // Create our view window
-    CView MyWin;
-    MyWin.Create();
+    CView myWin;
+    myWin.Create();
 
     // Run the application's message loop
     return theApp.Run();

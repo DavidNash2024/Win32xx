@@ -16,20 +16,20 @@ public:
     virtual ~CView();
     CRect GetImageRect();
     LPPICTURE GetPicture()  { return m_pPicture; }
-    BOOL LoadPictureFile(LPCTSTR szFile);
+    BOOL LoadPictureFile(LPCTSTR fileName);
     void NewPictureFile();
-    void SavePicture(LPCTSTR szFile);
+    void SavePicture(LPCTSTR fileName);
 
 protected:
     virtual void    OnDraw(CDC& dc);
-    virtual LRESULT OnDropFiles(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnDropFiles(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
     LPPICTURE m_pPicture;
-    CBrush  m_Brush;
+    CBrush  m_brush;
 };
 
 

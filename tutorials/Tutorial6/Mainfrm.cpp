@@ -9,20 +9,20 @@
 CMainFrame::CMainFrame()
 {
     // Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 }
 
 CMainFrame::~CMainFrame()
 {
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Process the messages from the Menu and Tool Bar
 
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    switch (LOWORD(wParam))
+    switch (LOWORD(wparam))
     {
     case IDM_FILE_NEW:          OnFileNew();        return TRUE;
     case IDM_FILE_OPEN:         OnFileOpen();       return TRUE;
@@ -33,7 +33,8 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     case IDW_VIEW_STATUSBAR:    return OnViewStatusBar();
     case IDW_VIEW_TOOLBAR:      return OnViewToolBar();
     case IDM_HELP_ABOUT:        return OnHelp();
-    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;    }
+    case IDM_FILE_EXIT:         OnFileExit();       return TRUE;    
+	}
 
     return FALSE;
 }
@@ -87,13 +88,13 @@ void CMainFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 
-//  } // switch (uMsg)
+//  } // switch (msg)
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 } // LRESULT CMainFrame::WndProc(...)
 

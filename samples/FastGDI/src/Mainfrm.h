@@ -15,29 +15,29 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CView& GetMyView() {return m_MyView;}
-    void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL bGray);
+    CView& GetMyView() {return m_myView;}
+    void ModifyBitmap(int cRed, int cGreen, int cBlue, BOOL isGray);
     BOOL OnAdjustImage();
     BOOL OnFileExit();
     BOOL OnFileSave();
     BOOL OnFileSaveAs();
     BOOL OnFileNew();
     BOOL OnFileOpen();
-    BOOL OnFileOpenMRU(WPARAM wParam, LPARAM lParam);
-    BOOL LoadFile(CString& FileName);
-    void SaveFile(CString& str);
+    BOOL OnFileOpenMRU(WPARAM wparam, LPARAM lparam);
+    BOOL LoadFile(CString& fileName);
+    void SaveFile(CString& fileName);
 
 protected:
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();
-    virtual void OnMenuUpdate(UINT nID);
+    virtual void OnMenuUpdate(UINT id);
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_MyView;
-    CString m_PathName;
+    CView m_myView;
+    CString m_pathName;
 
 };
 

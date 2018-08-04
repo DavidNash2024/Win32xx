@@ -14,7 +14,7 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
 
-    CDoc& GetDoc()      { return m_Doc; }
+    CDoc& GetDoc()      { return m_doc; }
 
     BOOL    OnFileExit();
     BOOL    OnFileOpen();
@@ -22,17 +22,17 @@ public:
     BOOL    OnFileSave();
 
 protected:
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int     OnCreate(CREATESTRUCT& cs);
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual void    SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    CView m_View;
-    CDoc m_Doc;
+    CView m_view;
+    CDoc m_doc;
 };
 
 #endif //MAINFRM_H

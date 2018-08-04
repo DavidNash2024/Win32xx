@@ -96,7 +96,7 @@ namespace Win32xx
         BOOL    SetInsertMark(HTREEITEM hItem, BOOL After = TRUE) const;
         COLORREF SetInsertMarkColor(COLORREF clrInsertMark) const;
         BOOL    SetItem(TVITEM& Item) const;
-        BOOL    SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam) const;
+        BOOL    SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lparam) const;
         BOOL    SetItemData(HTREEITEM hItem, DWORD_PTR dwData) const;
         int     SetItemHeight(SHORT cyItem) const;
         BOOL    SetItemImage(HTREEITEM hItem, int nImage, int nSelectedImage) const;
@@ -463,7 +463,7 @@ namespace Win32xx
 
 
     // Sets some or all of a tree-view item's attributes.
-    inline BOOL CTreeView::SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lParam) const
+    inline BOOL CTreeView::SetItem(HTREEITEM hItem, UINT nMask, LPCTSTR szText, int nImage, int nSelectedImage, UINT nState, UINT nStateMask, LPARAM lparam) const
     {
         assert(IsWindow());
 
@@ -476,7 +476,7 @@ namespace Win32xx
         tvi.iSelectedImage = nSelectedImage;
         tvi.state = nState;
         tvi.stateMask = nStateMask;
-        tvi.lParam = lParam;
+        tvi.lParam = lparam;
         return TreeView_SetItem( *this, &tvi );
     }
 

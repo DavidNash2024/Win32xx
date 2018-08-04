@@ -11,12 +11,12 @@
 
 
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_IsContainerTabsAtTop(FALSE), m_IsHideSingleTab(TRUE)
+CMainFrame::CMainFrame() : m_isContainerTabsAtTop(FALSE), m_hideSingleTab(TRUE)
 {
     // Constructor for CMainFrame. Its called after CFrame's constructor
 
     //Set m_View as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
@@ -28,9 +28,9 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
+void CMainFrame::HideSingleContainerTab(BOOL hideSingle)
 {
-    m_IsHideSingleTab = HideSingle;
+    m_hideSingleTab = hideSingle;
     std::vector<CDocker*>::const_iterator iter;
 
     // Set the Tab position for each container
@@ -39,7 +39,7 @@ void CMainFrame::HideSingleContainerTab(BOOL HideSingle)
         CDockContainer* pContainer = (*iter)->GetContainer();
         if (pContainer && pContainer->IsWindow())
         {
-            pContainer->SetHideSingleTab(HideSingle);
+            pContainer->SetHideSingleTab(hideSingle);
         }
     }
 }
@@ -48,26 +48,26 @@ void CMainFrame::LoadDefaultDockers()
 {
     // Note: The  DockIDs are used for saving/restoring the dockers state in the registry
 
-    DWORD dwStyle = DS_CLIENTEDGE; // The style added to each docker
+    DWORD style = DS_CLIENTEDGE; // The style added to each docker
 
                                    // Add the parent dockers
-    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | dwStyle, 200, ID_DOCK_CLASSES1);
-    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | dwStyle, 100, ID_DOCK_TEXT1);
+    CDocker* pDockRight = AddDockedChild(new CDockClasses, DS_DOCKED_RIGHT | style, 200, ID_DOCK_CLASSES1);
+    CDocker* pDockBottom = AddDockedChild(new CDockText, DS_DOCKED_BOTTOM | style, 100, ID_DOCK_TEXT1);
 
     // Add the remaining dockers
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES1);
-    pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_CLASSES2);
-    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | dwStyle, 200, ID_DOCK_FILES2);
+    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 200, ID_DOCK_FILES1);
+    pDockRight->AddDockedChild(new CDockClasses, DS_DOCKED_CONTAINER | style, 200, ID_DOCK_CLASSES2);
+    pDockRight->AddDockedChild(new CDockFiles, DS_DOCKED_CONTAINER | style, 200, ID_DOCK_FILES2);
 
-    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT1);
-    pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_TEXT2);
-    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | dwStyle, 100, ID_DOCK_OUTPUT2);
+    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT1);
+    pDockBottom->AddDockedChild(new CDockText, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_TEXT2);
+    pDockBottom->AddDockedChild(new CDockOutput, DS_DOCKED_CONTAINER | style, 100, ID_DOCK_OUTPUT2);
 }
 
-CDocker* CMainFrame::NewDockerFromID(int nID)
+CDocker* CMainFrame::NewDockerFromID(int id)
 {
     CDocker* pDock = NULL;
-    switch(nID)
+    switch(id)
     {
     case ID_DOCK_CLASSES1:
         pDock = new CDockClasses;
@@ -101,13 +101,13 @@ CDocker* CMainFrame::NewDockerFromID(int nID)
     return pDock;
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
     // OnCommand responds to menu and and toolbar input
-    UINT nID = LOWORD(wParam);
-    switch(nID)
+    UINT id = LOWORD(wparam);
+    switch(id)
     {
     case IDM_CONTAINER_TOP:     return OnContainerTabsAtTop();
     case IDM_FILE_EXIT:         return OnFileExit();
@@ -125,7 +125,7 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 BOOL CMainFrame::OnContainerTabsAtTop()
 // Reposition the tabs in the containers
 {
-    SetContainerTabsAtTop(!m_IsContainerTabsAtTop);
+    SetContainerTabsAtTop(!m_isContainerTabsAtTop);
     return TRUE;
 }
 
@@ -154,8 +154,8 @@ BOOL CMainFrame::OnDockDefault()
     SetRedraw(FALSE);
     CloseAllDockers();
     LoadDefaultDockers();
-    HideSingleContainerTab(m_IsHideSingleTab);
-    SetContainerTabsAtTop(m_IsContainerTabsAtTop);
+    HideSingleContainerTab(m_hideSingleTab);
+    SetContainerTabsAtTop(m_isContainerTabsAtTop);
     SetRedraw(TRUE);
     RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
     return TRUE;
@@ -176,7 +176,7 @@ BOOL CMainFrame::OnFileExit()
 
 BOOL CMainFrame::OnHideSingleTab()
 {
-    HideSingleContainerTab(!m_IsHideSingleTab);
+    HideSingleContainerTab(!m_hideSingleTab);
     return TRUE;
 }
 
@@ -189,30 +189,30 @@ void CMainFrame::OnInitialUpdate()
         LoadDefaultDockers();
 
     // Hide the container's tab if it has just one tab
-    HideSingleContainerTab(m_IsHideSingleTab);
+    HideSingleContainerTab(m_hideSingleTab);
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow( GetInitValues().ShowCmd );
 }
 
-void CMainFrame::OnMenuUpdate(UINT nID)
+void CMainFrame::OnMenuUpdate(UINT id)
 // Called when menu items are about to be displayed
 {
-    UINT uCheck;
-    switch (nID)
+    UINT check;
+    switch (id)
     {
     case IDM_CONTAINER_TOP:
-        uCheck = (m_IsContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
-        GetFrameMenu().CheckMenuItem(nID, uCheck);
+		check = (m_isContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
         break;
 
     case IDM_HIDE_SINGLE_TAB:
-        uCheck = (m_IsHideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
-        GetFrameMenu().CheckMenuItem(nID, uCheck);
+		check = (m_hideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
         break;
     }
 
-    CDockFrame::OnMenuUpdate(nID);
+    CDockFrame::OnMenuUpdate(id);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
@@ -232,9 +232,9 @@ BOOL CMainFrame::SaveRegistrySettings()
         return FALSE;
 }
 
-void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
+void CMainFrame::SetContainerTabsAtTop(BOOL isAtTop)
 {
-    m_IsContainerTabsAtTop = bTop;
+    m_isContainerTabsAtTop = isAtTop;
     std::vector<CDocker*>::const_iterator iter;
 
     // Set the Tab position for each container
@@ -243,7 +243,7 @@ void CMainFrame::SetContainerTabsAtTop(BOOL bTop)
         CDockContainer* pContainer = (*iter)->GetContainer();
         if (pContainer && pContainer->IsWindow())
         {
-            pContainer->SetTabsAtTop(bTop);
+            pContainer->SetTabsAtTop(isAtTop);
         }
     }
 }

@@ -14,8 +14,8 @@ public:
     CDoc() {}
     ~CDoc() {}
 
-    BOOL FileLoad(LPCTSTR szFilename);
-    BOOL FileStore(LPCTSTR szFilename);
+    BOOL FileLoad(LPCTSTR filename);
+    BOOL FileStore(LPCTSTR filename);
     void Serialize(CArchive& ar);
 
 private:

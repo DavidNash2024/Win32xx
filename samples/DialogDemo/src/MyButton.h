@@ -12,13 +12,13 @@ public:
     virtual ~CMyButton() {}
 
 protected:
-    virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnRButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 };
 
 

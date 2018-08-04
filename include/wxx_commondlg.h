@@ -94,7 +94,7 @@ namespace Win32xx
         virtual void    OnOK()  {}      // a required to override
 
         // static callback
-        static INT_PTR CALLBACK CDHookProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
+        static INT_PTR CALLBACK CDHookProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
     };
 
@@ -119,7 +119,7 @@ namespace Win32xx
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 
         // Not intended to be overridden
-        INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         // private data
@@ -177,7 +177,7 @@ namespace Win32xx
         virtual void    OnTypeChange();
 
         // Not intended to be overridden
-        INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         BOOL            m_IsOpenFileDialog;  // TRUE = open, FALSE = save
@@ -221,13 +221,13 @@ namespace Win32xx
         BOOL    SearchDown() const;         // TRUE = down, FALSE = up
         void    SetParameters(FINDREPLACE fr);
 
-        static CFindReplaceDialog* GetNotifier(LPARAM lParam);
+        static CFindReplaceDialog* GetNotifier(LPARAM lparam);
 
     protected:
         virtual INT_PTR DialogProc(UINT, WPARAM, LPARAM);
 
         // Not intended to be overridden
-        INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         FINDREPLACE     m_FR;               // FindReplace parameters
@@ -268,7 +268,7 @@ namespace Win32xx
         virtual void    OnOK();
 
         // Not intended to be overridden
-        INT_PTR DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         DWORD FillInLogFont(const CHARFORMAT& cf);
@@ -311,7 +311,7 @@ namespace Win32xx
     // The callback function for the common dialog's hook procedure. Messages
     // intercepted by the hook procedure are processed here, and forwarded
     // on to the virtual DialogProc function.
-    inline INT_PTR CALLBACK CCommonDialog::CDHookProc(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CALLBACK CCommonDialog::CDHookProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Find the CWnd pointer mapped to this HWND
         CCommonDialog* pCommonDlg = static_cast<CCommonDialog*>(GetCWndPtr(hWnd));
@@ -330,7 +330,7 @@ namespace Win32xx
             pCommonDlg->Attach(hWnd);
         }
 
-        return pCommonDlg->DialogProc(uMsg, wParam, lParam);
+        return pCommonDlg->DialogProc(msg, wparam, lparam);
     }
 
 
@@ -363,7 +363,7 @@ namespace Win32xx
 
     // Dialog procedure for the Color dialog. Override this function to
     // customise the message handling.
-    inline INT_PTR CColorDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CColorDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
         //  Note: OnCancel and OnOK are not called here. They are called by DoModal
@@ -371,7 +371,7 @@ namespace Win32xx
 
         //  A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -383,21 +383,21 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     // The Default message handling for CColorDialog. Don't override this
     // function, override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CColorDialog::DialogProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CColorDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
-        switch (uMsg)
+        switch (msg)
         {
         case WM_INITDIALOG:     return OnInitDialog();
-        case WM_COMMAND:        if (LOWORD(wParam) == pshHelp)  OnHelpButton();
+        case WM_COMMAND:        if (LOWORD(wparam) == pshHelp)  OnHelpButton();
         }
 
         // Return 0 to allow default processing of the message.
@@ -509,7 +509,7 @@ namespace Win32xx
 
     // Dialog procedure for the FileOpen and FileSave dialogs. Override
     // this function to customise the message handling.
-    inline INT_PTR CFileDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CFileDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
         //  Note: OnCancel and OnOK are not called here. They are called by DoModal
@@ -517,7 +517,7 @@ namespace Win32xx
 
         //  A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -529,14 +529,14 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     // The Default message handling for CFileDialog. Don't override this function,
     // override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline  INT_PTR CFileDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
+    inline  INT_PTR CFileDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
     {
         switch (message)
         {
@@ -549,7 +549,7 @@ namespace Win32xx
             case WM_COMMAND:
             {
                 // handle the HELP button for old-style file dialogs:
-                if (LOWORD(wParam) == pshHelp)
+                if (LOWORD(wparam) == pshHelp)
                     OnHelpButton();
 
                 return 0;
@@ -560,7 +560,7 @@ namespace Win32xx
                 // handle messages for Explorer-style hook procedures:
                 if (m_OFN.Flags & OFN_EXPLORER)
                 {
-                    LRESULT lr = OnNotify(wParam, lParam);
+                    LRESULT lr = OnNotify(wparam, lparam);
                     SetWindowLongPtr(DWLP_MSGRESULT, lr);
                     return lr;
                 }
@@ -580,14 +580,14 @@ namespace Win32xx
         if (message == UWM_LBSELCHSTRING)
         {   // handle the registered list box selection change
             // notifications:
-            OnLBSelChangedNotify(static_cast<UINT>(wParam), LOWORD(lParam), HIWORD(lParam));
+            OnLBSelChangedNotify(static_cast<UINT>(wparam), LOWORD(lparam), HIWORD(lparam));
             return 0;
         }
 
         if (message == UWM_SHAREVISTRING)
         {   // handle a sharing violation for the selected file that
             // occurred when the user clicked the OK button.
-            return OnShareViolation(reinterpret_cast<LPCTSTR>(lParam));
+            return OnShareViolation(reinterpret_cast<LPCTSTR>(lparam));
         }
 
         if (message == UWM_FILEOKSTRING)
@@ -850,11 +850,11 @@ namespace Win32xx
 
     // This method handles the WM_NOTIFY message loop functions of the hook
     // procedure.
-    inline LRESULT CFileDialog::OnNotify(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CFileDialog::OnNotify(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(wparam);
 
-        OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lParam);
+        OFNOTIFY* pNotify = reinterpret_cast<OFNOTIFY*>(lparam);
         assert(pNotify);
         switch(pNotify->hdr.code)
         {
@@ -1134,12 +1134,12 @@ namespace Win32xx
 
     // Dialog procedure for the Find and Replace dialogs. Override this function
     // to customise the message handling.
-    inline INT_PTR CFindReplaceDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CFindReplaceDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
         //  A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -1151,16 +1151,16 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     // The Default message handling for CFindReplaceDialog. Don't override this function,
     // override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CFindReplaceDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
         switch (message)
         {
@@ -1171,7 +1171,7 @@ namespace Win32xx
 
         case WM_COMMAND:
             {
-                if (LOWORD(wParam) == pshHelp)
+                if (LOWORD(wparam) == pshHelp)
                     OnHelpButton();
 
                 return 0;
@@ -1199,11 +1199,11 @@ namespace Win32xx
 
     // Return a pointer to the current Find/Replace dialog box. This may be
     // used when owner window responds to the UWM_FINDMSGSTRING message.
-    // The lParam value is that passed in the UWM_FINDMSGSTRING message.
-    inline CFindReplaceDialog* CFindReplaceDialog::GetNotifier(LPARAM lParam)
+    // The lparam value is that passed in the UWM_FINDMSGSTRING message.
+    inline CFindReplaceDialog* CFindReplaceDialog::GetNotifier(LPARAM lparam)
     {
-        assert(lParam != 0);
-        LPFINDREPLACE pFR = reinterpret_cast<LPFINDREPLACE>(lParam);
+        assert(lparam != 0);
+        LPFINDREPLACE pFR = reinterpret_cast<LPFINDREPLACE>(lparam);
         CFindReplaceDialog* pDlg = reinterpret_cast<CFindReplaceDialog*>(pFR->lCustData);
         return pDlg;
     }
@@ -1403,7 +1403,7 @@ namespace Win32xx
 
     // Dialog procedure for the Font dialog. Override this function
     // to customise the message handling.
-    inline INT_PTR CFontDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CFontDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         //  Message intercepted by the hook procedure are passed here.
         //  Note: OnCancel and OnOK are not called here. They are called by DoModal
@@ -1411,7 +1411,7 @@ namespace Win32xx
 
         //  A typical function might look like this:
 
-        //  switch (uMsg)
+        //  switch (msg)
         //  {
         //  case MESSAGE1:      // Some Windows API message
         //      OnMessage1();   // A user defined function
@@ -1423,23 +1423,23 @@ namespace Win32xx
         //  }
 
         // Always pass unhandled messages on to DialogProcDefault
-        return DialogProcDefault(uMsg, wParam, lParam);
+        return DialogProcDefault(msg, wparam, lparam);
     }
 
 
     // The Default message handling for CFontDialog.
     // Don't override this function, override DialogProc instead.
     // Note: OnCancel and OnOK are called by DoModal.
-    inline INT_PTR CFontDialog::DialogProcDefault(UINT message, WPARAM wParam, LPARAM lParam)
+    inline INT_PTR CFontDialog::DialogProcDefault(UINT message, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
         if (message == WM_INITDIALOG)
         {
             OnInitDialog();
         }
 
         // dispatch special commdlg messages
-        if (message == WM_COMMAND && LOWORD(wParam) == pshHelp)
+        if (message == WM_COMMAND && LOWORD(wparam) == pshHelp)
             OnHelpButton();
 
         // default processing

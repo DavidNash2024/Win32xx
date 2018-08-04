@@ -10,45 +10,45 @@
 
 ///////////////////////////////////////
 // Definitions for the CMainFrame class
-CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosing(FALSE)
+CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 // Constructor
 {
     // Set the modeless dialog as the view window of the frame
-    SetView(m_View);
+    SetView(m_view);
 
-    CString AppName = LoadString(IDS_APP_NAME);
-    CString GroupFolder = LoadString(IDS_GROUP_FOLDER);
+    CString appName = LoadString(IDS_APP_NAME);
+    CString groupFolder = LoadString(IDS_GROUP_FOLDER);
 
     // Set the registry key name, and load the initial window position
     // Use a registry key name like "CompanyName\\Application"
-    LoadRegistrySettings(GroupFolder + AppName);
+    LoadRegistrySettings(groupFolder + appName);
 
 
     ////////////////////////////////////////////////////////
     // Set the path to the chm help file for m_AppHelp
 
     // generate the help file directory and path strings
-    CString HelpFilename = LoadString(IDS_HELP_FILE);
-    CString HelpDir = CreateAppDataFolder(GroupFolder + AppName);
-    CString HelpPath = HelpDir + _T("\\") + HelpFilename;
+    CString helpFilename = LoadString(IDS_HELP_FILE);
+    CString helpDir = CreateAppDataFolder(groupFolder + appName);
+    CString helpPath = helpDir + _T("\\") + helpFilename;
 
-    if (!::PathFileExists(HelpPath))
+    if (!::PathFileExists(helpPath))
     {
         // The Help file is not in AppDataPath yet so copy it there
-        CString OrigHelpPath = _T("..\\help\\") + HelpFilename;
+        CString OrigHelpPath = _T("..\\help\\") + helpFilename;
 
-        if (!::CopyFile(OrigHelpPath, HelpPath, TRUE))
+        if (!::CopyFile(OrigHelpPath, helpPath, TRUE))
         {
             // The file copy failed, so set the path to the current folder.
             // The Help file might be located with the program's executable.
-            HelpPath = HelpFilename;
+            helpPath = helpFilename;
         }
     }
 
-    if (::PathFileExists(HelpPath))
+    if (::PathFileExists(helpPath))
     {
         // Specify the help file used by CAppHelp
-        m_AppHelp.SetHelpFilePath(HelpPath);
+        m_appHelp.SetHelpFilePath(helpPath);
     }
     else
     {
@@ -60,8 +60,8 @@ CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosing(FALSE)
 
     // generate the Win32++ version string
     UINT ver = _WIN32XX_VER;
-    CString Win32Version;
-    Win32Version.Format(_T("using Win32++ Version %d.%d.%d"), ver / 0x100,
+    CString win32Version;
+    win32Version.Format(_T("using Win32++ Version %d.%d.%d"), ver / 0x100,
         (ver % 0x100) / 0x10, (ver % 0x10));
 
     // generate compiler information for the About box
@@ -78,12 +78,12 @@ CMainFrame::CMainFrame() : m_View(IDD_DIALOG1), m_IsChoosing(FALSE)
 #endif
 
     // Set the information used in the Help About dialog
-    CString AboutBoxInfo = LoadString(IDW_MAIN);
-    AboutBoxInfo += _T("\n") + LoadString(IDS_APP_VERSION);
-    AboutBoxInfo += _T("\ncompiled with ") + sCompiler;
-    AboutBoxInfo += _T(" on ") + CString(__DATE__);
-    AboutBoxInfo += _T("\n") + Win32Version;
-    m_AppHelp.SetCredits(AboutBoxInfo);
+    CString aboutBoxInfo = LoadString(IDW_MAIN);
+    aboutBoxInfo += _T("\n") + LoadString(IDS_APP_VERSION);
+    aboutBoxInfo += _T("\ncompiled with ") + sCompiler;
+    aboutBoxInfo += _T(" on ") + CString(__DATE__);
+    aboutBoxInfo += _T("\n") + win32Version;
+    m_appHelp.SetCredits(aboutBoxInfo);
 }
 
 CMainFrame::~CMainFrame()
@@ -96,7 +96,7 @@ void CMainFrame::ChooseHelpTopic()
 {
     ::SetCursor(::LoadCursor(NULL, IDC_HELP));
     SetCapture();
-    m_IsChoosing = TRUE;
+    m_isChoosing = TRUE;
 }
 
 CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
@@ -164,9 +164,9 @@ UINT CMainFrame::GetIDFromCursorPos()
     return nID;
 }
 
-BOOL CMainFrame::LoadRegistrySettings(LPCTSTR szKeyName)
+BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 {
-    CFrame::LoadRegistrySettings(szKeyName);
+    CFrame::LoadRegistrySettings(keyName);
     GetDoc().LoadDocRegistry(GetRegistryKeyName().c_str());
 
     return TRUE;
@@ -180,11 +180,11 @@ void CMainFrame::NotImplemented() const
         MB_TASKMODAL);
 }
 
-BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 // Processes accelerators, toolbar buttons and menu input
 {
-    UNREFERENCED_PARAMETER(lParam);
-    UINT nID = LOWORD(wParam);
+    UNREFERENCED_PARAMETER(lparam);
+    UINT nID = LOWORD(wparam);
 
     switch(nID)
     {
@@ -208,9 +208,9 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     case IDM_FONT_CHOICE:    NotImplemented();      return TRUE;
     case IDM_COLOR_CHOICE:   NotImplemented();      return TRUE;
 
-    case ID_CHECK_A:         m_View.OnCheckA();     return TRUE;
-    case ID_CHECK_B:         m_View.OnCheckB();     return TRUE;
-    case ID_CHECK_C:         m_View.OnCheckC();     return TRUE;
+    case ID_CHECK_A:         m_view.OnCheckA();     return TRUE;
+    case ID_CHECK_B:         m_view.OnCheckB();     return TRUE;
+    case ID_CHECK_C:         m_view.OnCheckC();     return TRUE;
 
     case IDM_FILE_EXIT:      OnFileExit();          return TRUE;
     case IDW_VIEW_STATUSBAR: OnViewStatusBar();     return TRUE;
@@ -218,9 +218,9 @@ BOOL CMainFrame::OnCommand(WPARAM wParam, LPARAM lParam)
 
     case ID_RADIO_A:
     case ID_RADIO_B:        // intentionally blank
-    case ID_RADIO_C:        m_View.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);   return TRUE;
+    case ID_RADIO_C:        m_view.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);   return TRUE;
 
-    case IDM_HELP_ABOUT:    m_AppHelp.About(*this); return TRUE;    // Menu item
+    case IDM_HELP_ABOUT:    m_appHelp.About(*this); return TRUE;    // Menu item
     case IDM_HELP_CONTENT:  ShowHelpTopic(nID);     return TRUE;    // Menu item
     case IDM_HELP_CONTEXT:  ChooseHelpTopic();      return TRUE;    // Toolbar Button
     case IDM_SHIFT_F1:      OnShiftF1();            return TRUE;    // Accelerator
@@ -261,12 +261,12 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
 void CMainFrame::OnF1()
 // Called when the F1 key is pressed
 {
-    UINT nID = GetIDFromCursorPos();
+    UINT id = GetIDFromCursorPos();
 
-    if (nID != 0)
-        m_AppHelp.ShowHelpTopic(nID);
+    if (id != 0)
+        m_appHelp.ShowHelpTopic(id);
     else
-        m_AppHelp.ShowHelpTopic(_T("Introduction"));
+        m_appHelp.ShowHelpTopic(_T("Introduction"));
 }
 
 void CMainFrame::OnFileExit()
@@ -282,23 +282,23 @@ void CMainFrame::OnInitialUpdate()
 
 }
 
-void CMainFrame::OnMenuUpdate(UINT nID)
+void CMainFrame::OnMenuUpdate(UINT id)
 {
     // Update the check state of the various menu items
-    switch (nID)
+    switch (id)
     {
-    case ID_CHECK_A:    OnUpdateCheckA(nID);    break;
-    case ID_CHECK_B:    OnUpdateCheckB(nID);    break;
-    case ID_CHECK_C:    OnUpdateCheckC(nID);    break;
+    case ID_CHECK_A:    OnUpdateCheckA(id);    break;
+    case ID_CHECK_B:    OnUpdateCheckB(id);    break;
+    case ID_CHECK_C:    OnUpdateCheckC(id);    break;
     }
 
-    if ((nID >= ID_RADIO_A) && (nID <= ID_RADIO_C))
-        OnUpdateRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);
+    if ((id >= ID_RADIO_A) && (id <= ID_RADIO_C))
+        OnUpdateRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
 
-    CFrame::OnMenuUpdate(nID);
+    CFrame::OnMenuUpdate(id);
 }
 
-LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 // Handle the left mouse button click.
 // Note: When the frame has mouse capture, clicks over child windows are processed here too.
 {
@@ -307,23 +307,23 @@ LRESULT CMainFrame::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
         UINT nID = GetIDFromCursorPos();
         ShowHelpTopic(nID);
         ReleaseCapture();
-        m_IsChoosing = FALSE;
-        return 0L;
+        m_isChoosing = FALSE;
+        return 0;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
-LRESULT CMainFrame::OnSetCursor(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnSetCursor(UINT msg, WPARAM wparam, LPARAM lparam)
 // Modify the cursor when appropriate
 {
-    if (m_IsChoosing)
+    if (m_isChoosing)
     {
         ::SetCursor(::LoadCursor(NULL, IDC_HELP));
         return TRUE;
     }
 
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 void CMainFrame::OnShiftF1()
@@ -332,30 +332,30 @@ void CMainFrame::OnShiftF1()
     ChooseHelpTopic();
 }
 
-void CMainFrame::OnUpdateCheckA(UINT nID)
+void CMainFrame::OnUpdateCheckA(UINT id)
 {
-    BOOL bCheck = GetDoc().GetCheckA();
-    GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+    BOOL checkA = GetDoc().GetCheckA();
+    GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkA ? MF_CHECKED : MF_UNCHECKED));
 }
 
-void CMainFrame::OnUpdateCheckB(UINT nID)
+void CMainFrame::OnUpdateCheckB(UINT id)
 {
-    BOOL bCheck = GetDoc().GetCheckB();
-    GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+    BOOL checkB = GetDoc().GetCheckB();
+    GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkB ? MF_CHECKED : MF_UNCHECKED));
 }
 
-void CMainFrame::OnUpdateCheckC(UINT nID)
+void CMainFrame::OnUpdateCheckC(UINT id)
 {
-    BOOL bCheck = GetDoc().GetCheckC();
-    GetFrameMenu().CheckMenuItem(nID, MF_BYCOMMAND | (bCheck ? MF_CHECKED : MF_UNCHECKED));
+    BOOL checkC = GetDoc().GetCheckC();
+    GetFrameMenu().CheckMenuItem(id, MF_BYCOMMAND | (checkC ? MF_CHECKED : MF_UNCHECKED));
 }
 
-void CMainFrame::OnUpdateRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nID)
+void CMainFrame::OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id)
 {
-    int nFileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
-    CMenu RadioMenu = GetFrameMenu().GetSubMenu(nFileItem);
-    if (GetDoc().GetRadio() == nID)
-        RadioMenu.CheckMenuRadioItem(nIDFirst, nIDLast, nID, 0);
+    int fileItem = GetMenuItemPos(GetFrameMenu(), _T("Select"));
+    CMenu RadioMenu = GetFrameMenu().GetSubMenu(fileItem);
+    if (GetDoc().GetRadio() == id)
+        RadioMenu.CheckMenuRadioItem(idFirst, idLast, id, 0);
 }
 
 void CMainFrame::PreCreate(CREATESTRUCT& cs)
@@ -416,34 +416,34 @@ void CMainFrame::SetupToolBar()
     SetToolBarImages(RGB(255, 0, 255), IDB_TOOLBAR_NORM, 0, 0);
 }
 
-LRESULT CMainFrame::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called for a System Command such as SC_CLOSE, SC_CONTEXTHELP etc.
 {
-    if (wParam == SC_CONTEXTHELP)
+    if (wparam == SC_CONTEXTHELP)
         ChooseHelpTopic();
 
     // Now call CFrame's OnSysCommand
-    return CFrame::OnSysCommand(uMsg, wParam, lParam);
+    return CFrame::OnSysCommand(msg, wparam, lparam);
 }
 
-void CMainFrame::ShowHelpTopic(UINT nID)
+void CMainFrame::ShowHelpTopic(UINT id)
 // Display the context help for the specified topic
 {
-    m_AppHelp.ShowHelpTopic(nID);
+    m_appHelp.ShowHelpTopic(id);
 }
 
-LRESULT CMainFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
-    case WM_SETCURSOR:      return OnSetCursor(uMsg, wParam, lParam);           // Modify the cursor when appropriate
-    case WM_SYSCOMMAND:     return OnSysCommand(uMsg, wParam, lParam);          // Add SC_CONTEXTHELP support
-    case WM_HELP:           return 0L;                                          // Suppress default handling on F1 and SHIFT F1
-    case WM_LBUTTONDOWN:    return OnLButtonDown(uMsg, wParam, lParam);         // Handle left mouse click
+    case WM_SETCURSOR:      return OnSetCursor(msg, wparam, lparam);           // Modify the cursor when appropriate
+    case WM_SYSCOMMAND:     return OnSysCommand(msg, wparam, lparam);          // Add SC_CONTEXTHELP support
+    case WM_HELP:           return 0;                                          // Suppress default handling on F1 and SHIFT F1
+    case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);         // Handle left mouse click
     }
 
     // pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 
 

@@ -9,12 +9,12 @@
 class CButtonDialog : public CDialog
 {
 public:
-    CButtonDialog(UINT nResID);
+    CButtonDialog(UINT resID);
     ~CButtonDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
-    virtual INT_PTR OnCtlColorDlg(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual INT_PTR OnCtlColorStatic(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
+    virtual INT_PTR OnCtlColorDlg(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual INT_PTR OnCtlColorStatic(UINT msg, WPARAM wparam, LPARAM lparam);
 
     virtual void OnOK() {}      // supress closing dialog with the enter key
     virtual void OnCancel() {}  // supress closing dialog with the esc key
@@ -23,18 +23,18 @@ public:
     BOOL OnCheck1();
     BOOL OnCheck2();
     BOOL OnCheck3();
-    BOOL OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked);
+    BOOL OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked);
 
 private:
-    CBrush m_Brush;
+    CBrush m_brush;
 };
 
 class CComboBoxDialog : public CDialog
 {
 public:
-    CComboBoxDialog (UINT nResID);
+    CComboBoxDialog (UINT resID);
     ~CComboBoxDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnInitDialog();
 
 protected:
@@ -42,7 +42,7 @@ protected:
     virtual void OnCancel() {}  // supress closing dialog with the esc key
 
 private:
-    CBrush m_Brush;
+    CBrush m_brush;
 };
 
 
@@ -50,17 +50,17 @@ private:
 class CMyDialog : public CDialog
 {
 public:
-    CMyDialog(UINT nResID);
+    CMyDialog(UINT resID);
     virtual ~CMyDialog();
 
 protected:
     virtual void OnDestroy();
     virtual BOOL OnInitDialog();
-    virtual INT_PTR DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void OnOK();
 
 private:
-    CTab m_Tab;
+    CTab m_tab;
     CButtonDialog* m_pButtonDlg;
     CComboBoxDialog* m_pComboDlg;
 };

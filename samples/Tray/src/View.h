@@ -8,7 +8,7 @@
 class CView : public CWnd
 {
 public:
-    CView() : m_IsMinimized(FALSE) {}
+    CView() : m_isMinimized(FALSE) {}
     virtual ~CView() {}
     void Minimize();
     void Restore();
@@ -16,19 +16,19 @@ public:
 protected:
     virtual void    OnAbout();
     virtual int     OnCreate(CREATESTRUCT& cs);
-    virtual BOOL    OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL    OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void    OnDestroy();
     virtual void    OnDraw(CDC& dc);    
     virtual void    OnFileExit();
     virtual void    OnInitialUpdate();
-    virtual LRESULT OnSize(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
-    virtual LRESULT OnTrayIcon(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnSize(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
+    virtual LRESULT OnTrayIcon(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    PreCreate(CREATESTRUCT& cs);
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    BOOL m_IsMinimized;
+    BOOL m_isMinimized;
 };
 
 #endif

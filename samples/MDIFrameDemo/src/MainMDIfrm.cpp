@@ -34,29 +34,29 @@ BOOL CMainMDIFrame::OnFileNew()
     // Creates the popup menu when the "New" toolbar button is pressed
 
     // Position the popup menu
-    CToolBar& TB = GetToolBar();
-    RECT rc = TB.GetItemRect(TB.CommandToIndex(IDM_FILE_NEW));
-    TB.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+    CToolBar& tb = GetToolBar();
+    RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_FILE_NEW));
+	tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
-    tpm.cbSize = sizeof(TPMPARAMS);
+    tpm.cbSize = sizeof(tpm);
     tpm.rcExclude = rc;
 
     // Load the popup menu
-    CMenu TopMenu(IDM_NEWMENU);
-    CMenu PopupMenu = TopMenu.GetSubMenu(0);
+    CMenu topMenu(IDM_NEWMENU);
+    CMenu popupMenu = topMenu.GetSubMenu(0);
 
     // Start the popup menu
-    PopupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
+    popupMenu.TrackPopupMenuEx(TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL, rc.left, rc.bottom, *this, &tpm);
 
     return TRUE;
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_FILE_NEW:       return OnFileNew();
     case IDM_FILE_NEWVIEW:   return OnFileNewView();
@@ -77,7 +77,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     default:    // Pass to active child...
         {
             if (GetActiveMDIChild())
-                GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+                GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam, lparam);
         }
         break ;
 
@@ -182,23 +182,23 @@ BOOL CMainMDIFrame::OnMDITile()
     return TRUE; 
 }
 
-LRESULT CMainMDIFrame::OnNotify(WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::OnNotify(WPARAM wparam, LPARAM lparam)
 {
     // Notification from our dropdown button is recieved if Comctl32.dll version
     // is 4.70 or later (IE v3 required).
-    switch(((LPNMHDR)lParam)->code)
+    switch(((LPNMHDR)lparam)->code)
     {
         //Menu for dropdown toolbar button
         case TBN_DROPDOWN:
         {
-            if (((LPNMHDR)lParam)->hwndFrom == GetToolBar())
+            if (((LPNMHDR)lparam)->hwndFrom == GetToolBar())
                 OnFileNew();
         }
         break;
 
     } //switch LPNMHDR
 
-    return CMDIFrame::OnNotify(wParam, lParam);
+    return CMDIFrame::OnNotify(wparam, lparam);
 }
 
 void CMainMDIFrame::SetupMenuIcons()
@@ -246,14 +246,14 @@ void CMainMDIFrame::SetupToolBar()
     }
 }
 
-LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
 //       Add case statements for each messages to be handled here
 //  }
 
 //  pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -18,10 +18,10 @@ CMainMDIFrame::~CMainMDIFrame()
 {
 }
 
-BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMainMDIFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     
-    UINT nID = LOWORD(wParam);
+    UINT nID = LOWORD(wparam);
     switch (nID)
     {
     case IDM_FILE_NEW:          return OnFileNew();
@@ -41,7 +41,7 @@ BOOL CMainMDIFrame::OnCommand(WPARAM wParam, LPARAM lParam)
     default:    // Pass to active child...
         {
             if (GetActiveMDIChild())
-                GetActiveMDIChild()->SendMessage(WM_COMMAND, wParam, lParam);
+                GetActiveMDIChild()->SendMessage(WM_COMMAND, wparam, lparam);
         }
         break ;
     }
@@ -70,10 +70,10 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT& cs)
 
 BOOL CMainMDIFrame::OnFileOpen()
 {
-    CFileDialog FileDlg(TRUE);
+    CFileDialog fileDlg(TRUE);
 
     // Bring up the file open dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -84,10 +84,10 @@ BOOL CMainMDIFrame::OnFileOpen()
 
 BOOL CMainMDIFrame::OnFileSave()
 {
-    CFileDialog FileDlg(FALSE);
+    CFileDialog fileDlg(FALSE);
 
     // Bring up the file save dialog retrieve the selected filename
-    if (FileDlg.DoModal(*this) == IDOK)
+    if (fileDlg.DoModal(*this) == IDOK)
     {
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
@@ -99,19 +99,19 @@ BOOL CMainMDIFrame::OnFileSave()
 BOOL CMainMDIFrame::OnFilePrint()
 {
     // Bring up a dialog to choose the printer
-    CPrintDialog Printdlg;
+    CPrintDialog printdlg;
 
     try
     {
-        INT_PTR Res = Printdlg.DoModal(*this);
+        INT_PTR result = printdlg.DoModal(*this);
 
         // Retrieve the printer DC
-        // CDC dcPrinter = Printdlg.GetPrinterDC();
+        // CDC printerDC = printdlg.GetPrinterDC();
 
         // TODO:
         // Add your own code here. Refer to the tutorial for additional information
 
-        return (Res == IDOK);   // boolean expression
+        return (result == IDOK);   // boolean expression
     }
 
     catch (const CWinException& /* e */)
@@ -189,9 +189,9 @@ void CMainMDIFrame::SetupToolBar()
     AddToolBarButton( IDM_HELP_ABOUT );
 }
 
-LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+LRESULT CMainMDIFrame::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-    switch (uMsg)
+    switch (msg)
     {
     case WM_MOUSEACTIVATE:
         // Called when a MDI child is activated with a mouse click
@@ -207,6 +207,6 @@ LRESULT CMainMDIFrame::WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
     }
 
 //  pass unhandled messages on for default processing
-    return WndProcDefault(uMsg, wParam, lParam);
+    return WndProcDefault(msg, wparam, lparam);
 }
 

@@ -8,14 +8,14 @@ public:
     CHelpAbout();
     virtual ~CHelpAbout() {}
 
-    const CString& GetCredits() const   { return m_Credits; }
-    void SetCredits(LPCTSTR szCredits)  { m_Credits = szCredits; }
+    const CString& GetCredits() const   { return m_credits; }
+    void SetCredits(LPCTSTR credits)  { m_credits = credits; }
 
 protected:  
     virtual BOOL    OnInitDialog();
 
 private:
-    CString     m_Credits;          // AboutBox contents
+    CString     m_credits;          // AboutBox contents
 
 };
 

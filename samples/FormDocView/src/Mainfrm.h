@@ -15,11 +15,11 @@ class CMainFrame : public CFrame
 public:
     CMainFrame();
     virtual ~CMainFrame();
-    CFormDoc& GetDoc()      { return m_Doc; }
+    CFormDoc& GetDoc()      { return m_doc; }
 
 protected:
-    virtual BOOL LoadRegistrySettings(LPCTSTR szKeyName);
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL LoadRegistrySettings(LPCTSTR keyName);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnFileExit();
     virtual void OnInitialUpdate();
@@ -27,16 +27,16 @@ protected:
     virtual void OnMenuUpdate(UINT nID);
     virtual BOOL SaveRegistrySettings();
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
 
 private:
-    void OnUpdateCheckA(UINT nID);
-    void OnUpdateCheckB(UINT nID);
-    void OnUpdateCheckC(UINT nID);
-    void OnUpdateRangeOfIDs(UINT nIDFirst, UINT nIDLast, UINT nID);
+    void OnUpdateCheckA(UINT id);
+    void OnUpdateCheckB(UINT id);
+    void OnUpdateCheckC(UINT id);
+    void OnUpdateRangeOfIDs(UINT idFirst, UINT idLast, UINT id);
 
-    CFormView m_SdiView;
-    CFormDoc m_Doc;
+    CFormView m_sdiView;
+    CFormDoc m_doc;
 };
 
 

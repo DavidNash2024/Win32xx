@@ -7,7 +7,7 @@
 
 
 // Definitions for the CMyDialog class
-CMyDialog::CMyDialog(UINT nResID) : CDialog(nResID)
+CMyDialog::CMyDialog(UINT resID) : CDialog(resID)
 {
 }
 
@@ -21,23 +21,23 @@ void CMyDialog::OnDestroy()
     ::PostQuitMessage(0);
 }
 
-INT_PTR CMyDialog::DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CMyDialog::DialogProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-//  switch (uMsg)
+//  switch (msg)
 //  {
         //Additional messages to be handled go here
 //  }
 
     // Pass unhandled messages on to parent DialogProc
-    return DialogProcDefault(uMsg, wParam, lParam);
+    return DialogProcDefault(msg, wparam, lparam);
 }
 
-BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
+BOOL CMyDialog::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-    UNREFERENCED_PARAMETER(lParam);
+    UNREFERENCED_PARAMETER(lparam);
 
-    UINT nID = LOWORD(wParam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDC_BUTTON1:   return OnButton();
     case IDC_CHECK1:    return OnCheck1();
@@ -46,7 +46,7 @@ BOOL CMyDialog::OnCommand(WPARAM wParam, LPARAM lParam)
 
     case IDC_RADIO1:
     case IDC_RADIO2:    // intentionally blank
-    case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, nID);
+    case IDC_RADIO3:    return OnRangeOfRadioIDs(IDC_RADIO1, IDC_RADIO3, id);
     }
 
     return FALSE;
@@ -59,9 +59,9 @@ BOOL CMyDialog::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Attach the controls to our CWnd member objects.
-    AttachItem(IDC_EDIT1, m_Edit);
-    AttachItem(IDC_LIST1, m_ListBox);
-    AttachItem(IDC_RICHEDIT1, m_RichEdit);
+    AttachItem(IDC_EDIT1, m_edit);
+    AttachItem(IDC_LIST1, m_listBox);
+    AttachItem(IDC_RICHEDIT1, m_richEdit);
 
     // Put some text in the edit boxes
     SetDlgItemText(IDC_EDIT1, _T("Edit Control"));
@@ -69,7 +69,7 @@ BOOL CMyDialog::OnInitDialog()
 
     // Put some text in the list box
     for (int i = 0; i < 8; i++)
-        m_ListBox.AddString(_T("ListBox"));
+        m_listBox.AddString(_T("ListBox"));
 
     return TRUE;
 }
@@ -108,12 +108,12 @@ BOOL CMyDialog::OnCheck3()
     return TRUE;
 }
 
-BOOL CMyDialog::OnRangeOfRadioIDs(UINT nIDFirst, UINT nIDLast, UINT nIDClicked)
+BOOL CMyDialog::OnRangeOfRadioIDs(UINT idFirst, UINT idLast, UINT idClicked)
 {
-    CheckRadioButton(nIDFirst, nIDLast, nIDClicked);
+    CheckRadioButton(idFirst, idLast, idClicked);
 
     CString str;
-    int nButton = nIDClicked - nIDFirst + 1;
+    int nButton = idClicked - idFirst + 1;
     str.Format(_T("Radio%d"), nButton);
     TRACE(str); TRACE("\n");
     

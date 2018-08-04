@@ -14,8 +14,8 @@ public:
     CMainFrame();
     virtual ~CMainFrame();
     
-    static  DWORD CALLBACK MyStreamInCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
-    static  DWORD CALLBACK MyStreamOutCallback(DWORD dwCookie, LPBYTE pbBuff, LONG cb, LONG *pcb);
+    static  DWORD CALLBACK MyStreamInCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
+    static  DWORD CALLBACK MyStreamOutCallback(DWORD cookie, LPBYTE pBuffer, LONG cb, LONG *pcb);
 
     BOOL OnDropFiles(HDROP hDropInfo);
     BOOL OnEditCut();
@@ -24,7 +24,7 @@ public:
     BOOL OnEditDelete();
     BOOL OnEditRedo();
     BOOL OnEditUndo();
-    BOOL OnFileMRU(WPARAM wParam);
+    BOOL OnFileMRU(WPARAM wparam);
     BOOL OnFileExit();
     BOOL OnFileNew();
     BOOL OnFileOpen();
@@ -34,25 +34,25 @@ public:
     BOOL OnOptionsFont();
     BOOL OnOptionsWrap();
 
-    BOOL ReadFile(LPCTSTR szFileName);
+    BOOL ReadFile(LPCTSTR fileName);
     void SaveModifiedText();
-    void SetPathName(LPCTSTR szFullFileName);
+    void SetPathName(LPCTSTR fullFileName);
     void SetWindowTitle();
-    BOOL WriteFile(LPCTSTR szFileName);
+    BOOL WriteFile(LPCTSTR fileName);
 
 protected:
     virtual void OnClose();
-    virtual BOOL OnCommand(WPARAM wParam, LPARAM lParam);
+    virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual void OnInitialUpdate();
     virtual void OnMenuUpdate(UINT nID);
-    virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+    virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
     virtual void SetupToolBar();
-    virtual LRESULT WndProc(UINT uMsg, WPARAM wParam, LPARAM lParam);
+    virtual LRESULT WndProc(UINT msg, WPARAM wparam, LPARAM lparam);
     
 private:
-    CRichView m_RichView;
-    CString m_PathName;
-    BOOL m_IsWrapped;
+    CRichView m_richView;
+    CString m_pathName;
+    BOOL m_isWrapped;
 };
 
 #endif //MAINFRM_H

@@ -9,7 +9,7 @@
 
 CMyCombo::CMyCombo()
 {
-    SetImages(3, IDB_STATUS);
+    SetImage(3, IDB_STATUS);
 }
 
 CMyCombo::~CMyCombo()
@@ -29,10 +29,10 @@ BOOL CMyCombo::AddItems()
 {
     typedef struct
     {
-        int iImage;
-        int iSelectedImage;
-        int iIndent;
-        LPCTSTR pszText;        // Note: LPTSTR would be incorrect here.
+        int image;
+        int selectedImage;
+        int indent;
+        LPCTSTR text;        // Note: LPTSTR would be incorrect here.
     } ITEMINFO;
 
     ITEMINFO IInf[ ] =
@@ -49,11 +49,11 @@ BOOL CMyCombo::AddItems()
         ZeroMemory(&cbei, sizeof(COMBOBOXEXITEM));
         cbei.mask = CBEIF_TEXT | CBEIF_INDENT | CBEIF_IMAGE| CBEIF_SELECTEDIMAGE;
         cbei.iItem          = i;
-        cbei.pszText        = const_cast<LPTSTR>(IInf[i].pszText);
-        cbei.cchTextMax     = sizeof(IInf[i].pszText);
-        cbei.iImage         = IInf[i].iImage;
-        cbei.iSelectedImage = IInf[i].iSelectedImage;
-        cbei.iIndent        = IInf[i].iIndent;
+        cbei.pszText        = const_cast<LPTSTR>(IInf[i].text);
+        cbei.cchTextMax     = sizeof(IInf[i].text);
+        cbei.iImage         = IInf[i].image;
+        cbei.iSelectedImage = IInf[i].selectedImage;
+        cbei.iIndent        = IInf[i].indent;
 
         // Add the items to the ComboBox's dropdown list
         if(-1 == SendMessage(CBEM_INSERTITEM, 0, reinterpret_cast<LPARAM>(&cbei)))
@@ -61,22 +61,22 @@ BOOL CMyCombo::AddItems()
     }
 
     // Assign the existing image list to the ComboBoxEx control
-    SetImageList(m_imlImages);
+    SetImageList(m_images);
 
     return TRUE;
 }
 
-void CMyCombo::SetImages(int nImages, UINT ImageID)
+void CMyCombo::SetImage(int image, UINT ImageID)
 {
-    m_imlImages.DeleteImageList();
+    m_images.DeleteImageList();
 
     CBitmap bm(ImageID);
     BITMAP bmData = bm.GetBitmapData();
-    int iImageWidth  = bmData.bmWidth / nImages;
+    int iImageWidth  = bmData.bmWidth / image;
     int iImageHeight = bmData.bmHeight; 
 
     COLORREF crMask = RGB(255,0,255);
-    m_imlImages.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, nImages, 0);
-    m_imlImages.Add(bm, crMask);
+    m_images.Create(iImageWidth, iImageHeight, ILC_COLOR32 | ILC_MASK, image, 0);
+    m_images.Add(bm, crMask);
 }
 

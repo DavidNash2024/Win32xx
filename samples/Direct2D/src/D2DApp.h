@@ -19,7 +19,7 @@ public:
 private:
     HRESULT CreateDeviceIndependentResources();
 
-    CD2DView m_View;
+    CD2DView m_view;
     ID2D1Factory* m_pDirect2dFactory;       
 };
 

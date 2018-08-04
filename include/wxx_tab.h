@@ -171,20 +171,20 @@ namespace Win32xx
         virtual void    DrawTabBorders(CDC& dcMem, RECT& rcTab);
         virtual void    OnAttach();
         virtual BOOL    OnEraseBkgnd(CDC&) { return TRUE;}
-        virtual LRESULT OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnEraseBkgnd(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnKillFocus(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnPaint(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTCNSelChange(LPNMHDR pNMHDR);
-        virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    NotifyChanged();
         virtual void    NotifyDragged();
         virtual BOOL    NotifyTabClosing(int nPage);
@@ -194,7 +194,7 @@ namespace Win32xx
         virtual void    SetTabSize();
 
         // Not intended to be overridden
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CTab(const CTab&);              // Disable copy construction
@@ -250,13 +250,13 @@ namespace Win32xx
         virtual CWnd*   NewMDIChildFromID(int idMDIChild);
         virtual void    OnAttach();
         virtual void    OnDestroy();
-        virtual LRESULT OnNotify(WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnNotify(WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnSetFocus(UINT, WPARAM, LPARAM);
         virtual BOOL    OnTabClose(int nPage);
-        virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
 
         // Not intended to be overwritten
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CTabbedMDI(const CTabbedMDI&);              // Disable copy construction
@@ -891,19 +891,19 @@ namespace Win32xx
 
 
     // Called when the background is erased,
-    inline LRESULT CTab::OnEraseBkgnd(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnEraseBkgnd(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (GetStyle() & TCS_OWNERDRAWFIXED)
             return 0;
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the left mouse button is pressed.
-    inline LRESULT CTab::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        CPoint pt(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
 
         if (GetCloseRect().PtInRect(pt))
         {
@@ -920,15 +920,15 @@ namespace Win32xx
             ShowListMenu();
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the left mouse button is released.
-    inline LRESULT CTab::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         ReleaseCapture();
-        CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        CPoint pt(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         if (m_IsClosePressed && GetCloseRect().PtInRect(pt))
         {
             int nPage = GetCurSel();
@@ -947,12 +947,12 @@ namespace Win32xx
 
         m_IsClosePressed = FALSE;
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the mouse moves outside of the window.
-    inline LRESULT CTab::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CClientDC dc(*this);
         DrawCloseButton(dc);
@@ -960,16 +960,16 @@ namespace Win32xx
 
         m_IsTracking = FALSE;
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the mouse is moved.
-    inline LRESULT CTab::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CPoint pt;
-        pt.x = GET_X_LPARAM(lParam);
-        pt.y = GET_Y_LPARAM(lParam);
+        pt.x = GET_X_LPARAM(lparam);
+        pt.y = GET_Y_LPARAM(lparam);
 
         if (!m_IsListMenuActive && m_IsListPressed)
         {
@@ -1001,33 +1001,33 @@ namespace Win32xx
         DrawCloseButton(dc);
         DrawListButton(dc);
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Perform a hit test on the non-client area.
-    inline LRESULT CTab::OnNCHitTest(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnNCHitTest(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Ensure we have an arrow cursor when the tab has no view window
         if (GetAllTabs().size() == 0)
             SetCursor(LoadCursor(NULL, IDC_ARROW));
 
         // Cause WM_LBUTTONUP and WM_LBUTTONDOWN messages to be sent for buttons
-        CPoint pt(GET_X_LPARAM(lParam), GET_Y_LPARAM(lParam));
+        CPoint pt(GET_X_LPARAM(lparam), GET_Y_LPARAM(lparam));
         ScreenToClient(pt);
         if (GetCloseRect().PtInRect(pt)) return HTCLIENT;
         if (GetListRect().PtInRect(pt))  return HTCLIENT;
 
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 
     // Handle the notifications we send.
-    inline LRESULT CTab::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(wparam);
 
-        LPNMHDR pNMHDR = (LPNMHDR)lParam;
+        LPNMHDR pNMHDR = (LPNMHDR)lparam;
         switch (pNMHDR->code)
         {
         case TCN_SELCHANGE: return OnTCNSelChange(pNMHDR);
@@ -1051,22 +1051,22 @@ namespace Win32xx
 
 
     // Called when this tab control loses focus
-    inline LRESULT CTab::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnKillFocus(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         m_IsClosePressed = FALSE;
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the left mouse button is double clicked.
-    inline LRESULT CTab::OnLButtonDblClk(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnLButtonDblClk(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        return OnLButtonDown(uMsg, wParam, lParam);
+        return OnLButtonDown(msg, wparam, lparam);
     }
 
 
     // Called when this control needs to be painted.
-    inline LRESULT CTab::OnPaint(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnPaint(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (GetStyle() & TCS_OWNERDRAWFIXED)
         {
@@ -1080,12 +1080,12 @@ namespace Win32xx
             return 0;
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when this control acquires keyboard focus.
-    inline LRESULT CTab::OnSetFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnSetFocus(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Prevent the tab control from grabbing focus when we have a view
         if (GetActiveView() && !m_IsClosePressed)
@@ -1093,25 +1093,25 @@ namespace Win32xx
             GetActiveView()->SetFocus();
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called after the tab control is resized.
-    inline LRESULT CTab::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         RecalcLayout();
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called while the tab control is being resized.
-    inline LRESULT CTab::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // A little hack to reduce tab flicker
         if (IsWindowVisible() && (GetStyle() & TCS_OWNERDRAWFIXED))
         {
-            LPWINDOWPOS pWinPos = (LPWINDOWPOS)lParam;
+            LPWINDOWPOS pWinPos = (LPWINDOWPOS)lparam;
             pWinPos->flags |= SWP_NOREDRAW;
 
             // Do a manual paint when OnDraw isn't called.
@@ -1119,7 +1119,7 @@ namespace Win32xx
                 Paint();
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -1549,26 +1549,26 @@ namespace Win32xx
 
 
     // Provides the default message handling for the tab control.
-    inline LRESULT CTab::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTab::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch(uMsg)
+        switch(msg)
         {
-        case WM_PAINT:              return OnPaint(uMsg, wParam, lParam);
-        case WM_ERASEBKGND:         return OnEraseBkgnd(uMsg, wParam, lParam);
-        case WM_KILLFOCUS:          return OnKillFocus(uMsg, wParam, lParam);
-        case WM_LBUTTONDBLCLK:      return OnLButtonDblClk(uMsg, wParam, lParam);
-        case WM_LBUTTONDOWN:        return OnLButtonDown(uMsg, wParam, lParam);
-        case WM_LBUTTONUP:          return OnLButtonUp(uMsg, wParam, lParam);
-        case WM_MOUSEMOVE:          return OnMouseMove(uMsg, wParam, lParam);
-        case WM_MOUSELEAVE:         return OnMouseLeave(uMsg, wParam, lParam);
-        case WM_NCHITTEST:          return OnNCHitTest(uMsg, wParam, lParam);
-        case WM_SETFOCUS:           return OnSetFocus(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(uMsg, wParam, lParam);
+        case WM_PAINT:              return OnPaint(msg, wparam, lparam);
+        case WM_ERASEBKGND:         return OnEraseBkgnd(msg, wparam, lparam);
+        case WM_KILLFOCUS:          return OnKillFocus(msg, wparam, lparam);
+        case WM_LBUTTONDBLCLK:      return OnLButtonDblClk(msg, wparam, lparam);
+        case WM_LBUTTONDOWN:        return OnLButtonDown(msg, wparam, lparam);
+        case WM_LBUTTONUP:          return OnLButtonUp(msg, wparam, lparam);
+        case WM_MOUSEMOVE:          return OnMouseMove(msg, wparam, lparam);
+        case WM_MOUSELEAVE:         return OnMouseLeave(msg, wparam, lparam);
+        case WM_NCHITTEST:          return OnNCHitTest(msg, wparam, lparam);
+        case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
         }
 
         // pass unhandled messages on for default processing
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
     // Wrappers for Win32 Macros
@@ -2033,9 +2033,9 @@ namespace Win32xx
 
 
     // Handles notifications.
-    inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wParam*/, LPARAM lParam)
+    inline LRESULT CTabbedMDI::OnNotify(WPARAM /*wparam*/, LPARAM lparam)
     {
-        LPNMHDR pnmhdr = (LPNMHDR)lParam;
+        LPNMHDR pnmhdr = (LPNMHDR)lparam;
         assert(pnmhdr);
 
         switch(pnmhdr->code)
@@ -2068,7 +2068,7 @@ namespace Win32xx
 
         case UWN_TABCLOSE:
             {
-                TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(lParam);
+                TABNMHDR* pTabNMHDR = reinterpret_cast<TABNMHDR*>(lparam);
                 return !OnTabClose(pTabNMHDR->nPage);
             }
 
@@ -2090,10 +2090,10 @@ namespace Win32xx
 
 
     // Called when the tabbedMDI window is resized.
-    inline LRESULT CTabbedMDI::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTabbedMDI::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         RecalcLayout();
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -2221,16 +2221,16 @@ namespace Win32xx
 
 
     // Provides default handling for the window's messages.
-    inline LRESULT CTabbedMDI::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CTabbedMDI::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch(uMsg)
+        switch(msg)
         {
-        case WM_SETFOCUS:           return OnSetFocus(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(uMsg, wParam, lParam);
+        case WM_SETFOCUS:           return OnSetFocus(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
         case UWM_GETCTABBEDMDI:     return reinterpret_cast<LRESULT>(this);
         }
 
-        return CWnd::WndProcDefault(uMsg, wParam, lParam);
+        return CWnd::WndProcDefault(msg, wparam, lparam);
     }
 
 } // namespace Win32xx

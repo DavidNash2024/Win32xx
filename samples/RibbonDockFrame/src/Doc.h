@@ -16,8 +16,8 @@ public:
     ~CDoc() {}
 
     std::vector<PlotPoint>& GetAllPoints() {return m_points;}
-    BOOL FileOpen(LPCTSTR szFilename);
-    BOOL FileSave(LPCTSTR szFilename);
+    BOOL FileOpen(LPCTSTR filename);
+    BOOL FileSave(LPCTSTR filename);
     void Serialize(CArchive &ar);
     void StorePoint(PlotPoint& pp);
 

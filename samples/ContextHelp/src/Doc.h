@@ -14,27 +14,27 @@ class CDoc
 public:
     CDoc();
     virtual ~CDoc();
-    void  LoadDocRegistry(LPCTSTR szKeyName);
-    void  SaveDocRegistry(LPCTSTR szKeyName);
+    void  LoadDocRegistry(LPCTSTR keyName);
+    void  SaveDocRegistry(LPCTSTR keyName);
     DWORD GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName);
 
-    BOOL  GetCheckA() { return m_CheckA; }
-    void  SetCheckA(BOOL IsChecked) { m_CheckA = IsChecked; }
+    BOOL  GetCheckA() { return m_checkA; }
+    void  SetCheckA(BOOL isChecked) { m_checkA = isChecked; }
 
-    BOOL  GetCheckB() { return m_CheckB; }
-    void  SetCheckB(BOOL IsChecked) { m_CheckB = IsChecked; }
+    BOOL  GetCheckB() { return m_checkB; }
+    void  SetCheckB(BOOL isChecked) { m_checkB = isChecked; }
 
-    BOOL  GetCheckC() { return m_CheckC; }
-    void  SetCheckC(BOOL IsChecked) { m_CheckC = IsChecked; }
+    BOOL  GetCheckC() { return m_checkC; }
+    void  SetCheckC(BOOL isChecked) { m_checkC = isChecked; }
 
-    UINT  GetRadio() { return m_Radio; }
-    void  SetRadio(UINT radio) { m_Radio = radio; }
+    UINT  GetRadio() { return m_radio; }
+    void  SetRadio(UINT radio) { m_radio = radio; }
 
 private:
-    BOOL  m_CheckA;
-    BOOL  m_CheckB;
-    BOOL  m_CheckC;
-    UINT  m_Radio;
+    BOOL  m_checkA;
+    BOOL  m_checkB;
+    BOOL  m_checkC;
+    UINT  m_radio;
 };
 
 #endif //SDI_DOC_H

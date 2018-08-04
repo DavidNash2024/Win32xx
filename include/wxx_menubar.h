@@ -74,35 +74,35 @@ namespace Win32xx
         CWnd* GetMDIClient() const;
         CWnd* GetActiveMDIChild() const;
         HMENU GetMenu() const {return m_hTopMenu;}
-        virtual LRESULT OnMenuChar(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam);
 
     protected:
         //Overridables
         virtual void OnAttach();
-        virtual LRESULT OnDrawItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnExitMenuLoop(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnInitMenuPopup(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual BOOL    OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnNotifyReflect(WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSysKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnSysKeyUp(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnDrawItem(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnExitMenuLoop(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnKeyDown(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnKillFocus(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual BOOL    OnMenuInput(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnNotifyReflect(WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysKeyDown(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnSysKeyUp(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnTBNDropDown(LPNMTOOLBAR pNMTB);
         virtual LRESULT OnTBNHotItemChange(LPNMTBHOTITEM pNMHI);
-        virtual LRESULT OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam);
-        virtual LRESULT OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
+        virtual LRESULT OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void    PreCreate(CREATESTRUCT& cs);
         virtual void    PreRegisterClass(WNDCLASS& wc);
 
         // Not intended to be overridden
-        LRESULT WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam);
+        LRESULT WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
     private:
         CMenuBar(const CMenuBar&);              // Disable copy construction
@@ -116,7 +116,7 @@ namespace Win32xx
         LRESULT OnPopupMenu();
         void ReleaseFocus();
         void SetHotItem(int nHot);
-        static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam);
+        static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wparam, LPARAM lparam);
 
         enum MDIButtonType
         {
@@ -406,14 +406,14 @@ namespace Win32xx
     }
 
 
-    inline LRESULT CMenuBar::OnMenuChar(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnMenuChar(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
         if (!m_IsMenuActive)
-            DoAltKey(LOWORD(wParam));
+            DoAltKey(LOWORD(wparam));
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -429,39 +429,39 @@ namespace Win32xx
 
 
     // Forwards owner drawing to the frame.
-    inline LRESULT CMenuBar::OnDrawItem(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnDrawItem(UINT, WPARAM wparam, LPARAM lparam)
     {
-        ::SendMessage(m_hFrame, WM_DRAWITEM, wParam, lParam);
+        ::SendMessage(m_hFrame, WM_DRAWITEM, wparam, lparam);
         return TRUE; // handled
     }
 
 
     // Called when a popup menu is closed.
-    inline LRESULT CMenuBar::OnExitMenuLoop(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnExitMenuLoop(UINT, WPARAM wparam, LPARAM lparam)
     {
         if (m_IsExitAfter)
             ExitMenu();
-        ::SendMessage(m_hFrame, WM_EXITMENULOOP, wParam, lParam);
+        ::SendMessage(m_hFrame, WM_EXITMENULOOP, wparam, lparam);
 
         return 0;
     }
 
 
     // Called when a popup menu is created.
-    inline LRESULT CMenuBar::OnInitMenuPopup(UINT, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnInitMenuPopup(UINT, WPARAM wparam, LPARAM lparam)
     {
-        ::SendMessage(m_hFrame, WM_INITMENUPOPUP, wParam, lParam);
+        ::SendMessage(m_hFrame, WM_INITMENUPOPUP, wparam, lparam);
         return 0;
     }
 
 
     // Called when a key is pressed while the menubar has the mouse captured.
-    inline LRESULT CMenuBar::OnKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnKeyDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(lparam);
 
-        switch (wParam)
+        switch (wparam)
         {
         case VK_ESCAPE:
             ExitMenu();
@@ -496,7 +496,7 @@ namespace Win32xx
             if (m_IsKeyMode)
             {
                 UINT ID;
-                if (SendMessage(TB_MAPACCELERATOR, wParam, reinterpret_cast<LPARAM>(&ID)))
+                if (SendMessage(TB_MAPACCELERATOR, wparam, reinterpret_cast<LPARAM>(&ID)))
                 {
                     m_nHotItem = ID;
                     PostMessage(UWM_POPUPMENU, 0, 0);
@@ -505,18 +505,18 @@ namespace Win32xx
                     ::MessageBeep(MB_OK);
             }
             break;
-        } // switch (wParam)
+        } // switch (wparam)
 
         return 0;  // Discard these messages
     }
 
 
     // Called when the menu bar loses focus.
-    inline LRESULT CMenuBar::OnKillFocus(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnKillFocus(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         ExitMenu();
         return 0;
@@ -524,19 +524,19 @@ namespace Win32xx
 
 
     // Called when the left mouse button is pressed.
-    inline LRESULT CMenuBar::OnLButtonDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
+        UNREFERENCED_PARAMETER(msg);
 
         // Do default processing first
-        CallWindowProc(GetPrevWindowProc(), WM_LBUTTONDOWN, wParam, lParam);
+        CallWindowProc(GetPrevWindowProc(), WM_LBUTTONDOWN, wparam, lparam);
 
         GrabFocus();
         m_nMDIButton = 0;
         CPoint pt;
 
-        pt.x = GET_X_LPARAM(lParam);
-        pt.y = GET_Y_LPARAM(lParam);
+        pt.x = GET_X_LPARAM(lparam);
+        pt.y = GET_Y_LPARAM(lparam);
 
         if (IsMDIFrame())
         {
@@ -570,11 +570,11 @@ namespace Win32xx
 
 
     // Called when a key is released.
-    inline LRESULT CMenuBar::OnLButtonUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(uMsg);
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(msg);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         if (IsMDIFrame())
         {
@@ -615,22 +615,22 @@ namespace Win32xx
 
 
     // Forwards the owner draw processing to the frame.
-    inline LRESULT CMenuBar::OnMeasureItem(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnMeasureItem(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        ::SendMessage(m_hFrame, uMsg, wParam, lParam);
+        ::SendMessage(m_hFrame, msg, wparam, lparam);
         return TRUE; // handled
     }
 
 
     // When a popup menu is active, StaticMsgHook directs all menu messages here
-    inline BOOL CMenuBar::OnMenuInput(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline BOOL CMenuBar::OnMenuInput(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch(uMsg)
+        switch(msg)
         {
         case WM_KEYDOWN:
             m_IsExitAfter = FALSE;
             {
-                switch (wParam)
+                switch (wparam)
                 {
                 case VK_ESCAPE:
                     // Use default processing if inside a Sub Menu
@@ -681,7 +681,7 @@ namespace Win32xx
                     m_IsExitAfter = TRUE;
                     break;
 
-                } // switch (wParam)
+                } // switch (wparam)
 
             } // case WM_KEYDOWN
 
@@ -722,19 +722,19 @@ namespace Win32xx
         case WM_MENUSELECT:
             {
                 // store info about selected item
-                m_hSelMenu = reinterpret_cast<HMENU>(lParam);
-                m_IsSelPopup = ((HIWORD(wParam) & MF_POPUP) != 0);
+                m_hSelMenu = reinterpret_cast<HMENU>(lparam);
+                m_IsSelPopup = ((HIWORD(wparam) & MF_POPUP) != 0);
 
                 // Reflect message back to the frame window
-                GetAncestor().SendMessage(WM_MENUSELECT, wParam, lParam);
+                GetAncestor().SendMessage(WM_MENUSELECT, wparam, lparam);
             }
             return TRUE;
 
         case WM_MOUSEMOVE:
             {
                 CPoint pt;
-                pt.x = GET_X_LPARAM(lParam);
-                pt.y = GET_Y_LPARAM(lParam);
+                pt.x = GET_X_LPARAM(lparam);
+                pt.y = GET_Y_LPARAM(lparam);
 
                 // Skip if mouse hasn't moved
                 if ((pt.x == m_OldMousePos.x) && (pt.y == m_OldMousePos.y))
@@ -755,7 +755,7 @@ namespace Win32xx
 
 
     // Called when the cursor leave the client area of the window.
-    inline LRESULT CMenuBar::OnMouseLeave(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnMouseLeave(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         if (IsMDIFrame())
         {
@@ -769,16 +769,16 @@ namespace Win32xx
             }
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Called when the cursor moves.
-    inline LRESULT CMenuBar::OnMouseMove(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         CPoint pt;
-        pt.x = GET_X_LPARAM(lParam);
-        pt.y = GET_Y_LPARAM(lParam);
+        pt.x = GET_X_LPARAM(lparam);
+        pt.y = GET_Y_LPARAM(lparam);
 
         if (IsMDIFrame())
         {
@@ -790,7 +790,7 @@ namespace Win32xx
                 if (m_MDIRect[1].PtInRect(pt)) MDIButton = 1;
                 if (m_MDIRect[2].PtInRect(pt)) MDIButton = 2;
 
-                if (MK_LBUTTON == wParam)  // mouse moved with left mouse button is held down
+                if (MK_LBUTTON == wparam)  // mouse moved with left mouse button is held down
                 {
                     // toggle the MDI button image pressed/unpressed as required
                     if (MDIButton >= 0)
@@ -824,19 +824,19 @@ namespace Win32xx
             }
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
     // Process the menubar's notifications.
-    inline LRESULT CMenuBar::OnNotifyReflect(WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnNotifyReflect(WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
+        UNREFERENCED_PARAMETER(wparam);
 
-        switch (((LPNMHDR)lParam)->code)
+        switch (((LPNMHDR)lparam)->code)
         {
-        case TBN_DROPDOWN:      return OnTBNDropDown((LPNMTOOLBAR) lParam);
-        case TBN_HOTITEMCHANGE: return OnTBNHotItemChange((LPNMTBHOTITEM) lParam);
+        case TBN_DROPDOWN:      return OnTBNDropDown((LPNMTOOLBAR) lparam);
+        case TBN_HOTITEMCHANGE: return OnTBNHotItemChange((LPNMTBHOTITEM) lparam);
         }
 
         return 0;
@@ -932,11 +932,11 @@ namespace Win32xx
     }
 
 
-    inline LRESULT CMenuBar::OnSysCommand(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnSysCommand(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if (SC_KEYMENU == wParam)
+        if (SC_KEYMENU == wparam)
         {
-            if (lParam == 0)
+            if (lparam == 0)
             {
                 // Alt/F10 key toggled
                 GrabFocus();
@@ -946,35 +946,35 @@ namespace Win32xx
             }
             else
                 // Handle key pressed with Alt held down
-                DoAltKey(static_cast<WORD>(lParam));
+                DoAltKey(static_cast<WORD>(lparam));
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
-    inline LRESULT CMenuBar::OnSysKeyDown(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnSysKeyDown(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
-        if ((VK_MENU == wParam) || (VK_F10 == wParam))
+        if ((VK_MENU == wparam) || (VK_F10 == wparam))
             return 0;
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
-    inline LRESULT CMenuBar::OnSysKeyUp(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnSysKeyUp(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(lparam);
 
-        if ((VK_MENU == wParam) || (VK_F10 == wParam))
+        if ((VK_MENU == wparam) || (VK_F10 == wparam))
         {
             ExitMenu();
             return 0;
         }
 
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -1025,10 +1025,10 @@ namespace Win32xx
 
 
     // Called when the menubar has been resized.
-    inline LRESULT CMenuBar::OnWindowPosChanged(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        UNREFERENCED_PARAMETER(wParam);
-        UNREFERENCED_PARAMETER(lParam);
+        UNREFERENCED_PARAMETER(wparam);
+        UNREFERENCED_PARAMETER(lparam);
 
         InvalidateRect(m_MDIRect[0], TRUE);
         InvalidateRect(m_MDIRect[1], TRUE);
@@ -1039,14 +1039,14 @@ namespace Win32xx
         }
 
         RedrawWindow();
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
-    inline LRESULT CMenuBar::OnWindowPosChanging(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::OnWindowPosChanging(UINT msg, WPARAM wparam, LPARAM lparam)
     {
         // Bypass CToolBar::WndProcDefault for this message
-        return FinalWindowProc(uMsg, wParam, lParam);
+        return FinalWindowProc(msg, wparam, lparam);
     }
 
 
@@ -1135,10 +1135,10 @@ namespace Win32xx
 
 
     // This callback used to capture keyboard input while a popup menu is active.
-    inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int nCode, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CALLBACK CMenuBar::StaticMsgHook(int nCode, WPARAM wparam, LPARAM lparam)
     {
         assert( &GetApp() );
-        MSG* pMsg = reinterpret_cast<MSG*>(lParam);
+        MSG* pMsg = reinterpret_cast<MSG*>(lparam);
         TLSData* pTLSData = GetApp().GetTlsData();
         assert(pTLSData);
         CMenuBar* pMenuBar = pTLSData->pMenuBar;
@@ -1152,40 +1152,40 @@ namespace Win32xx
             }
         }
 
-        return CallNextHookEx(pTLSData->hMsgHook, nCode, wParam, lParam);
+        return CallNextHookEx(pTLSData->hMsgHook, nCode, wparam, lparam);
     }
 
 
     // Provides default message processing for the menubar.
-    inline LRESULT CMenuBar::WndProcDefault(UINT uMsg, WPARAM wParam, LPARAM lParam)
+    inline LRESULT CMenuBar::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        switch (uMsg)
+        switch (msg)
         {
         case WM_CHAR:               return 0;  // Discard these messages
-        case WM_DRAWITEM:           return OnDrawItem(uMsg, wParam, lParam);
-        case WM_EXITMENULOOP:       return OnExitMenuLoop(uMsg, wParam, lParam);
-        case WM_INITMENUPOPUP:      return OnInitMenuPopup(uMsg, wParam, lParam);
-        case WM_KEYDOWN:            return OnKeyDown(uMsg, wParam, lParam);
-        case WM_KILLFOCUS:          return OnKillFocus(uMsg, wParam, lParam);
-        case WM_LBUTTONDBLCLK:      return OnLButtonDown(uMsg, wParam, lParam);
-        case WM_LBUTTONDOWN:        return OnLButtonDown(uMsg, wParam, lParam);
-        case WM_LBUTTONUP:          return OnLButtonUp(uMsg, wParam, lParam);
-        case WM_MEASUREITEM:        return OnMeasureItem(uMsg, wParam, lParam);
-        case WM_MOUSELEAVE:         return OnMouseLeave(uMsg, wParam, lParam);
-        case WM_MOUSEMOVE:          return OnMouseMove(uMsg, wParam, lParam);
-        case WM_SYSKEYDOWN:         return OnSysKeyDown(uMsg, wParam, lParam);
-        case WM_SYSKEYUP:           return OnSysKeyUp(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(uMsg, wParam, lParam);
-        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(uMsg, wParam, lParam);
-        case WM_UNINITMENUPOPUP:    return ::SendMessage(m_hFrame, uMsg, wParam, lParam);
-        case WM_MENURBUTTONUP:      return ::SendMessage(m_hFrame, uMsg, wParam, lParam);
+        case WM_DRAWITEM:           return OnDrawItem(msg, wparam, lparam);
+        case WM_EXITMENULOOP:       return OnExitMenuLoop(msg, wparam, lparam);
+        case WM_INITMENUPOPUP:      return OnInitMenuPopup(msg, wparam, lparam);
+        case WM_KEYDOWN:            return OnKeyDown(msg, wparam, lparam);
+        case WM_KILLFOCUS:          return OnKillFocus(msg, wparam, lparam);
+        case WM_LBUTTONDBLCLK:      return OnLButtonDown(msg, wparam, lparam);
+        case WM_LBUTTONDOWN:        return OnLButtonDown(msg, wparam, lparam);
+        case WM_LBUTTONUP:          return OnLButtonUp(msg, wparam, lparam);
+        case WM_MEASUREITEM:        return OnMeasureItem(msg, wparam, lparam);
+        case WM_MOUSELEAVE:         return OnMouseLeave(msg, wparam, lparam);
+        case WM_MOUSEMOVE:          return OnMouseMove(msg, wparam, lparam);
+        case WM_SYSKEYDOWN:         return OnSysKeyDown(msg, wparam, lparam);
+        case WM_SYSKEYUP:           return OnSysKeyUp(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGED:   return OnWindowPosChanged(msg, wparam, lparam);
+        case WM_WINDOWPOSCHANGING:  return OnWindowPosChanging(msg, wparam, lparam);
+        case WM_UNINITMENUPOPUP:    return ::SendMessage(m_hFrame, msg, wparam, lparam);
+        case WM_MENURBUTTONUP:      return ::SendMessage(m_hFrame, msg, wparam, lparam);
 
         // Messages defined by Win32++
         case UWM_POPUPMENU:         return OnPopupMenu();
 
-        } // switch (uMsg)
+        } // switch (msg)
 
-        return CToolBar::WndProcDefault(uMsg, wParam, lParam);
+        return CToolBar::WndProcDefault(msg, wparam, lparam);
     } // LRESULT CMenuBar::WndProcDefault(...)
 
 }

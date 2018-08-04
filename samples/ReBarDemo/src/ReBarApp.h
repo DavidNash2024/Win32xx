@@ -14,10 +14,10 @@ public:
     CReBarApp();
     virtual ~CReBarApp();
     virtual BOOL InitInstance();
-    CMainFrame& GetMainFrame() { return m_Frame; }
+    CMainFrame& GetMainFrame() { return m_frame; }
 
 private:
-    CMainFrame m_Frame;
+    CMainFrame m_frame;
 };
 
 
