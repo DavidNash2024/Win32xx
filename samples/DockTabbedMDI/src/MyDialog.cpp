@@ -29,7 +29,7 @@ void CViewDialog::AppendText(int id, LPCTSTR text)
     }
 
     // Append text
-	dx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
+    dx = SendDlgItemMessage(id, WM_GETTEXTLENGTH, 0, 0);
     SendDlgItemMessage(id, EM_SETSEL, dx, dx);
     SendDlgItemMessage(id, EM_REPLACESEL, 0, reinterpret_cast<LPARAM>(text));
 }
@@ -98,15 +98,15 @@ BOOL CViewDialog::OnInitDialog()
 
     // Initialize dialog resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) ); 
-	m_resizer.AddChild(m_radioA,   topleft, 0);
-	m_resizer.AddChild(m_radioB,   topleft, 0);
-	m_resizer.AddChild(m_radioC,   topleft, 0);
-	m_resizer.AddChild(m_button,   topleft, 0);
-	m_resizer.AddChild(m_checkA,   bottomright, 0);
-	m_resizer.AddChild(m_checkB,   bottomright, 0);
-	m_resizer.AddChild(m_checkC,   bottomright, 0);
-	m_resizer.AddChild(m_richEdit1, topright, RD_STRETCH_WIDTH);
-	m_resizer.AddChild(m_richEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_radioA,   topleft, 0);
+    m_resizer.AddChild(m_radioB,   topleft, 0);
+    m_resizer.AddChild(m_radioC,   topleft, 0);
+    m_resizer.AddChild(m_button,   topleft, 0);
+    m_resizer.AddChild(m_checkA,   bottomright, 0);
+    m_resizer.AddChild(m_checkB,   bottomright, 0);
+    m_resizer.AddChild(m_checkC,   bottomright, 0);
+    m_resizer.AddChild(m_richEdit1, topright, RD_STRETCH_WIDTH);
+    m_resizer.AddChild(m_richEdit2, bottomleft, RD_STRETCH_WIDTH| RD_STRETCH_HEIGHT);
     
     return TRUE;
 }

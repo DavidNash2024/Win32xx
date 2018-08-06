@@ -7,11 +7,11 @@
 using namespace std;
 
 
-class CServerSocket : public CSocket
+class CWorkerSocket : public CSocket
 {
 public:
-    CServerSocket() {}
-    virtual ~CServerSocket() {}
+    CWorkerSocket() {}
+    virtual ~CWorkerSocket() {}
     virtual void OnReceive()
     {
         // This function is called automatically when there is data to receive
@@ -26,7 +26,7 @@ int main()
 {
     // Create the main server socket.
     // It is used to listen for clients
-    CServerSocket server;
+    CSocket server;
     if (!server.Create(AF_INET, SOCK_STREAM))
     {
         cout << "Failed to create socket\n" ;
@@ -48,7 +48,7 @@ int main()
     }
 
     // Create the socket to communicate with the Client
-    CServerSocket client;
+    CWorkerSocket client;
     cout << "Waiting for the client to connect\n";
     do
     {

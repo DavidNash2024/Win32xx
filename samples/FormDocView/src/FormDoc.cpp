@@ -50,8 +50,8 @@ void CFormDoc::SaveDocRegistry(LPCTSTR keyName)
 {
     HKEY hKey;
     CString fullKeyName = _T("Software\\");
-	fullKeyName += keyName;
-	fullKeyName += _T("\\Document Settings");
+    fullKeyName += keyName;
+    fullKeyName += _T("\\Document Settings");
 
     RegCreateKeyEx(HKEY_CURRENT_USER, fullKeyName, 0, NULL,
     REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);

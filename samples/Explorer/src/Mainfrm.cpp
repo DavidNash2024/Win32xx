@@ -27,7 +27,7 @@ void CMainFrame::DoPopupMenu()
     // Position the popup menu
     CToolBar& tb = GetToolBar();
     CRect rc = tb.GetItemRect(tb.CommandToIndex(IDM_VIEWMENU));
-	tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+    tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(tpm);
@@ -105,14 +105,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -232,7 +232,7 @@ void CMainFrame::SetupToolBar()
     if (GetComCtlVersion() >= 472)
     {
         CToolBar& tb = GetToolBar();
-		tb.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
+        tb.SetButtonStyle(IDM_VIEWMENU, BTNS_WHOLEDROPDOWN);
     }
 }
 

@@ -115,7 +115,6 @@
   #if _MSC_VER < 1500
     // Skip loading wspiapi.h
     #define _WSPIAPI_H_
-	#pragma warning (disable : 4355)     // 'this' : used in base member initializer list
   #endif
 #endif
 
@@ -136,7 +135,7 @@ namespace Win32xx
     {
     public:
         CSocket();
-        virtual ~CSocket();
+		virtual ~CSocket();
 
         // Operations
         virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen) const;
@@ -185,13 +184,12 @@ namespace Win32xx
     private:
         CSocket(const CSocket&);                // Disable copy construction
         CSocket& operator = (const CSocket&);   // Disable assignment operator
-        static UINT WINAPI EventThread(LPVOID thread_data);
+        static UINT WINAPI EventThread(LPVOID pThis);
 
         SOCKET m_socket;
         HMODULE m_hWS2_32;
-		CWinThread m_eventThread;	// A worker thread for the events
-		CEvent m_stopRequest;	// A manual reset event to signal the event thread should stop
-		CEvent m_stopped;		// A manual reset event to signal the event thread is stopped
+        CWinThread* m_pThread;   // A worker thread for the events
+        CEvent m_stopRequest;   // A manual reset event to signal the event thread should stop
 
         GETADDRINFO* m_pfnGetAddrInfo;      // pointer for the GetAddrInfo function
         FREEADDRINFO* m_pfnFreeAddrInfo;    // pointer for the FreeAddrInfo function
@@ -203,8 +201,7 @@ namespace Win32xx
 namespace Win32xx
 {
 
-    inline CSocket::CSocket() : m_socket(INVALID_SOCKET), m_eventThread(EventThread, this),
-		m_stopRequest(FALSE, TRUE), m_stopped(FALSE, TRUE)
+    inline CSocket::CSocket() : m_socket(INVALID_SOCKET), m_stopRequest(FALSE, TRUE)
     {
         // Initialise the Windows Socket services
         WSADATA wsaData;
@@ -223,6 +220,8 @@ namespace Win32xx
         m_pfnGetAddrInfo = reinterpret_cast<GETADDRINFO*>( GetProcAddress(m_hWS2_32, "getaddrinfo") );
         m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_hWS2_32, "freeaddrinfo") );
 #endif
+
+		m_pThread = new CWinThread(EventThread, this);
 
     }
 
@@ -261,10 +260,10 @@ namespace Win32xx
             ZeroMemory(&hints, sizeof(hints));
             hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
             ADDRINFO *AddrInfo;
-            CString csPort;
-            csPort.Format(_T("%u"), port);
+            CString portName;
+			portName.Format(_T("%u"), port);
 
-			result = GetAddrInfo(addr, csPort, &hints, &AddrInfo);
+            result = GetAddrInfo(addr, portName, &hints, &AddrInfo);
             if (result != 0)
             {
                 TRACE("GetAddrInfo failed\n");
@@ -272,7 +271,7 @@ namespace Win32xx
             }
 
             // Bind the IP address to the listening socket
-			result =  ::bind( m_socket, AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
+            result =  ::bind( m_socket, AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
                 TRACE("Bind failed\n");
@@ -290,9 +289,9 @@ namespace Win32xx
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
-            clientService.sin_port = htons( (u_short)port );
+            clientService.sin_port = htons( static_cast<u_short>(port) );
 
-			result = ::bind( m_socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
+            result = ::bind( m_socket, reinterpret_cast<SOCKADDR*>( &clientService), sizeof(clientService) );
             if ( 0 != result)
                 TRACE("Bind failed\n");
         }
@@ -326,9 +325,9 @@ namespace Win32xx
             hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
             ADDRINFO *AddrInfo;
 
-            CString csPort;
-            csPort.Format(_T("%u"), port);
-			result = GetAddrInfo(addr, csPort, &hints, &AddrInfo);
+            CString portName;
+			portName.Format(_T("%u"), port);
+            result = GetAddrInfo(addr, portName, &hints, &AddrInfo);
             if (result != 0)
             {
                 TRACE("getaddrinfo failed\n");
@@ -336,7 +335,7 @@ namespace Win32xx
             }
 
             // Bind the IP address to the listening socket
-			result = Connect( AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
+            result = Connect( AddrInfo->ai_addr, static_cast<int>(AddrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
                 TRACE("Connect failed\n");
@@ -354,9 +353,9 @@ namespace Win32xx
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
-            clientService.sin_port = htons( (u_short)port );
+            clientService.sin_port = htons( static_cast<u_short>(port) );
 
-			result = ::connect( m_socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
+            result = ::connect( m_socket, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
             if ( 0 != result)
                 TRACE("Connect failed\n");
         }
@@ -398,8 +397,9 @@ namespace Win32xx
     inline void CSocket::Disconnect()
     {
         ::shutdown(m_socket, SD_BOTH);
-        StopEvents();
-        ::closesocket(m_socket);
+		StopEvents();
+        
+		::closesocket(m_socket);
         m_socket = INVALID_SOCKET;
     }
 
@@ -415,27 +415,25 @@ namespace Win32xx
     //  FD_QOS      Notification of socket Quality Of Service changes
     //  FD_ROUTING_INTERFACE_CHANGE Notification of routing interface changes for the specified destination.
     //  FD_ADDRESS_LIST_CHANGE      Notification of local address list changes for the address family of the socket.
-    inline UINT WINAPI CSocket::EventThread(LPVOID thread_data)
+    inline UINT WINAPI CSocket::EventThread(LPVOID pThis)
     {
         WSANETWORKEVENTS networkEvents;
-        CSocket* pSocket = reinterpret_cast<CSocket*>(thread_data);
-		CEvent& stoppedEvent = pSocket->m_stopped;
-		CEvent& stopRequestEvent = pSocket->m_stopRequest;
-        SOCKET& sClient = pSocket->m_socket;
+        CSocket* pSocket = reinterpret_cast<CSocket*>(pThis);
+        CEvent& stopRequestEvent = pSocket->m_stopRequest;
+        SOCKET& clientSocket = pSocket->m_socket;
 
         WSAEVENT allEvents[2];
         allEvents[0] = ::WSACreateEvent();
-        allEvents[1] = (WSAEVENT)(HANDLE)stopRequestEvent;
-        long Events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
+        allEvents[1] = reinterpret_cast<WSAEVENT>(stopRequestEvent.GetHandle());  // cast supports Borland v5.5
+        long events = FD_READ | FD_WRITE | FD_OOB | FD_ACCEPT | FD_CONNECT | FD_CLOSE;
         if (GetWinVersion() != 1400) // Win Version != Win95
-            Events |= FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
+            events |= FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
         // Associate the network event object (hNetworkEvents) with the
         // specified network events (Events) on socket sClient.
-        if( SOCKET_ERROR == WSAEventSelect(sClient, allEvents[0], Events))
+        if( SOCKET_ERROR == WSAEventSelect(clientSocket, allEvents[0], events))
         {
             TRACE("Error in Event Select\n");
-			stoppedEvent.SetEvent();
             ::WSACloseEvent(allEvents[0]);
             return 0;
         }
@@ -444,33 +442,30 @@ namespace Win32xx
         for (;;) // infinite loop
         {
             // Wait 100 ms for a network event
-            DWORD dwResult = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, THREAD_TIMEOUT, FALSE);
+            DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, THREAD_TIMEOUT, FALSE);
 
             // Check event for stop thread
-            if(::WaitForSingleObject(pSocket->m_stopRequest, 0) == WAIT_OBJECT_0)
+			if (result - WSA_WAIT_EVENT_0 == 1)
             {
                 ::WSACloseEvent(allEvents[0]);
-				stoppedEvent.SetEvent();
                 return 0;
             }
 
-            if (WSA_WAIT_FAILED == dwResult)
+            if (result == WSA_WAIT_FAILED)
             {
                 TRACE("WSAWaitForMultipleEvents failed\n");
                 ::WSACloseEvent(allEvents[0]);
-				stoppedEvent.SetEvent();
                 return 0;
             }
 
             // Proceed if a network event occurred
-            if (WSA_WAIT_TIMEOUT != dwResult)
+            if (result != WSA_WAIT_TIMEOUT)
             {
 
-                if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(sClient, allEvents[0], &networkEvents) )
+                if ( SOCKET_ERROR == ::WSAEnumNetworkEvents(clientSocket, allEvents[0], &networkEvents) )
                 {
                     TRACE("WSAEnumNetworkEvents failed\n");
                     ::WSACloseEvent(allEvents[0]);
-					stoppedEvent.SetEvent();
                     return 0;
                 }
 
@@ -500,11 +495,10 @@ namespace Win32xx
 
                 if (networkEvents.lNetworkEvents & FD_CLOSE)
                 {
-                    ::shutdown(sClient, SD_BOTH);
-                    ::closesocket(sClient);
+                    ::shutdown(clientSocket, SD_BOTH);
+                    ::closesocket(clientSocket);
                     pSocket->OnDisconnect();
                     ::WSACloseEvent(allEvents[0]);
-					stoppedEvent.SetEvent();
                     return 0;
                 }
             }
@@ -697,17 +691,17 @@ namespace Win32xx
             ZeroMemory(&hints, sizeof(hints));
             hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
             ADDRINFO *addrInfo;
-            CString csPort;
-            csPort.Format(_T("%u"), port);
+            CString portName;
+			portName.Format(_T("%u"), port);
 
-			result = GetAddrInfo(addr, csPort, &hints, &addrInfo);
+            result = GetAddrInfo(addr, portName, &hints, &addrInfo);
             if (result != 0)
             {
                 TRACE("GetAddrInfo failed\n");
                 return SOCKET_ERROR;
             }
 
-			result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr, static_cast<int>(addrInfo->ai_addrlen) );
+            result = ::sendto(m_socket, send, len, flags, addrInfo->ai_addr, static_cast<int>(addrInfo->ai_addrlen) );
             if (result == SOCKET_ERROR )
             {
                 TRACE("SendTo failed\n");
@@ -725,9 +719,9 @@ namespace Win32xx
             sockaddr_in clientService;
             clientService.sin_family = AF_INET;
             clientService.sin_addr.s_addr = inet_addr( TtoA(addr) );
-            clientService.sin_port = htons( (u_short)port );
+            clientService.sin_port = htons( static_cast<u_short>(port) );
 
-			result = ::sendto( m_socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
+            result = ::sendto( m_socket, send, len, flags, reinterpret_cast<SOCKADDR*>( &clientService ), sizeof(clientService) );
             if ( SOCKET_ERROR != result)
                 TRACE("SendTo failed\n");
         }
@@ -750,8 +744,9 @@ namespace Win32xx
     // This function starts the thread which monitors the socket for events.
     inline void CSocket::StartEvents()
     {
-        StopEvents();   // Ensure the thread isn't already running
-		m_eventThread.CreateThread();
+		StopEvents();   // Ensure the thread isn't already running
+        
+		m_pThread->CreateThread();
     }
 
 
@@ -761,25 +756,20 @@ namespace Win32xx
 		// Ask the event thread to stop
 		m_stopRequest.SetEvent();
 
-		while(m_eventThread.IsRunning() &&
-			(WAIT_TIMEOUT == ::WaitForSingleObject(m_stopped, THREAD_TIMEOUT * 10)))
+		// Wait for the event thread to signal the m_stopped event.
+		while (WAIT_TIMEOUT == ::WaitForSingleObject(*m_pThread, THREAD_TIMEOUT * 10))
 		{
+			// Waiting for the event thread to signal the m_stopped event.
+
 			// Note: An excessive delay in processing any of the notification functions
 			// can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
 			TRACE("*** Error: Event Thread won't die ***\n");
 		}
 
 		m_stopRequest.ResetEvent();
-		m_stopped.ResetEvent();
     }
 }
 
-// Work around a bugs in older versions of Visual Studio
-#ifdef _MSC_VER
-  #if _MSC_VER < 1500
-	#pragma warning (default : 4355)     // 'this' : used in base member initializer list
-  #endif
-#endif
 
 #endif // #ifndef _WIN32XX_SOCKET_H_
 

@@ -118,7 +118,7 @@ namespace Win32xx
             }
 
             // Close the thread's handle
-            ::CloseHandle(m_hThread);
+            VERIFY(::CloseHandle(m_hThread));
         }
     }
 
@@ -133,10 +133,11 @@ namespace Win32xx
         if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
         if (NULL == m_pThreadParams) m_pThreadParams = this;
 
+		// Reusing the CWinThread
 		if (m_hThread)
 		{
 			assert(!IsRunning());
-			CloseHandle(m_hThread);
+			VERIFY(CloseHandle(m_hThread));
 		}
 
 #ifdef _WIN32_WCE

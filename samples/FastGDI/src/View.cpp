@@ -37,13 +37,13 @@ BOOL CView::LoadFileImage(LPCTSTR filename)
     if (m_image.GetHandle())
     {
         // Set the image scroll size
-		totalSize.cx = GetImageRect().Width();
-		totalSize.cy = GetImageRect().Height();
+        totalSize.cx = GetImageRect().Width();
+        totalSize.cy = GetImageRect().Height();
     }
     else
     {
         // Disable scrolling
-		totalSize = CSize(0, 0);
+        totalSize = CSize(0, 0);
         Invalidate();
     }
 

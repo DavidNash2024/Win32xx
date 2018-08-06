@@ -32,7 +32,7 @@ enum WordWrapType
 
 /*============================================================================*/
     class 
-CRichView : public CRichEdit											/*
+CRichView : public CRichEdit                                            /*
 
     This class is the customized class derived from the CRichEdit class
     for the PrintPreview sample program utilizing a rich edit window.
@@ -47,10 +47,10 @@ CRichView : public CRichEdit											/*
         virtual void    PrintDC(UINT, CDC&, CDC&);
         virtual BOOL    ReadFile(LPCTSTR szFileName);
         virtual void    SetFontDefaults();
-				void    SetDocName(LPCTSTR &szFileName)
-							{ m_sDocPath = szFileName;}
+                void    SetDocName(LPCTSTR &szFileName)
+                            { m_sDocPath = szFileName;}
         virtual void    PrintPages(CPrintDialog& PrintDlg);
-				void    WordWrap(WordWrapType setting);
+                void    WordWrap(WordWrapType setting);
         virtual BOOL    WriteFile(LPCTSTR szFileName);
     
     protected:
@@ -63,9 +63,9 @@ CRichView : public CRichEdit											/*
     private:
           // static callback functions
         static  DWORD CALLBACK RVStreamInCallback(DWORD dwCookie,
-					LPBYTE pbBuff, LONG cb, LONG *pcb);
+                    LPBYTE pbBuff, LONG cb, LONG *pcb);
         static  DWORD CALLBACK RVStreamOutCallback(DWORD dwCookie,
-					LPBYTE pbBuff, LONG cb, LONG *pcb);
+                    LPBYTE pbBuff, LONG cb, LONG *pcb);
         
         CFont   m_Font;
         CString m_sDocPath;

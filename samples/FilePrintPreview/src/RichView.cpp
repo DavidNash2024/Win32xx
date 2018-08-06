@@ -305,24 +305,24 @@ WordWrap(WordWrapType setting)                      /*
     switch (setting)
     {
         case WRAP_NONE:
-			SetTargetDevice(NULL, 1);
-			break;
+            SetTargetDevice(NULL, 1);
+            break;
 
         case WRAP_WINDOW:
-			SetTargetDevice(NULL, 0);
-			break;
+            SetTargetDevice(NULL, 0);
+            break;
 
         case WRAP_PRINTER:
         {
-			CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
-			CDC dcPrinter = PrintDlg.GetPrinterDC();
-			CRect rc = GetPrintRect(dcPrinter);
-			SetTargetDevice(dcPrinter, rc.Width());
-			break;
+            CPrintDialog PrintDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
+            CDC dcPrinter = PrintDlg.GetPrinterDC();
+            CRect rc = GetPrintRect(dcPrinter);
+            SetTargetDevice(dcPrinter, rc.Width());
+            break;
         }
         
         default:
-			break;
+            break;
     }
 }
 

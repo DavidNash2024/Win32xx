@@ -103,11 +103,11 @@ namespace Win32xx
     {
     public:
         // file modes
-        enum mode {store = 0, load = 1};
+        enum Mode {store = 0, load = 1};
 
         // construction and  destruction
-        CArchive(CFile& File, mode Mode);
-        CArchive(LPCTSTR FileName, mode nMode);
+        CArchive(CFile& file, Mode mode);
+        CArchive(LPCTSTR fileName, Mode mode);
         ~CArchive();
 
         // method members
@@ -115,15 +115,15 @@ namespace Win32xx
         UINT    GetObjectSchema();
         bool    IsLoading() const;
         bool    IsStoring() const;
-        void    Read(void* lpBuf, UINT size);
-        LPTSTR  ReadString(LPTSTR szString, UINT nMax);
-        LPSTR   ReadStringA(LPSTR szString, UINT nMax);
-        LPWSTR  ReadStringW(LPWSTR szString, UINT nMax);
-        void    SetObjectSchema(UINT nSchema);
-        void    Write(const void* lpBuf, UINT size);
-        void    WriteString(LPCTSTR string);
-        void    WriteStringA(LPCSTR string);
-        void    WriteStringW(LPCWSTR string);
+        void    Read(void* pBuf, UINT size);
+        LPTSTR  ReadString(LPTSTR pString, UINT max);
+        LPSTR   ReadStringA(LPSTR pString, UINT max);
+        LPWSTR  ReadStringW(LPWSTR pString, UINT max);
+        void    SetObjectSchema(UINT schema);
+        void    Write(const void* pBuf, UINT size);
+        void    WriteString(LPCTSTR pString);
+        void    WriteStringA(LPCSTR pString);
+        void    WriteStringW(LPCWSTR pString);
 
         // insertion operations
         CArchive& operator<<(BYTE by);
@@ -146,7 +146,7 @@ namespace Win32xx
         CArchive& operator<<(const RECT& rc);
         CArchive& operator<<(const SIZE& sz);
         CArchive& operator<<(const ArchiveObject& ao);
-        CArchive& operator<<(const CObject& Ob);
+        CArchive& operator<<(const CObject& object);
 #if !defined (_MSC_VER) ||  ( _MSC_VER > 1310 )
         // wchar_t is not an a built-in type on older MS compilers
         CArchive& operator<<(wchar_t ch);
@@ -173,7 +173,7 @@ namespace Win32xx
         CArchive& operator>>(RECT& rc);
         CArchive& operator>>(SIZE& sz);
         CArchive& operator>>(ArchiveObject& ao);
-        CArchive& operator>>(CObject& Ob);
+        CArchive& operator>>(CObject& object);
 #if !defined (_MSC_VER) ||  ( _MSC_VER > 1310 )
         // wchar_t is not an a built-in type on older MS compilers
         CArchive& operator>>(wchar_t& ch);
@@ -201,11 +201,11 @@ namespace Win32xx
 {
     // Constructs a CArchive object.
     // The specified file must already be open for loading or storing.
-    inline CArchive::CArchive(CFile& File, mode Mode) : m_Schema(static_cast<UINT>(-1)), m_IsFileManaged(false)
+    inline CArchive::CArchive(CFile& file, Mode mode) : m_Schema(static_cast<UINT>(-1)), m_IsFileManaged(false)
     {
-        m_pFile = &File;
+        m_pFile = &file;
 
-        if (Mode == load)
+        if (mode == load)
         {
             m_IsStoring = false;
         }
@@ -219,22 +219,22 @@ namespace Win32xx
     // Constructs a CArchive object.
     // A file with the specified name is created for storing (if required), and
     // also opened. A failure to open the file will throw an exception.
-    inline CArchive::CArchive(LPCTSTR FileName, mode Mode) : m_pFile(0), m_Schema(static_cast<UINT>(-1))
+    inline CArchive::CArchive(LPCTSTR fileName, Mode mode) : m_pFile(0), m_Schema(static_cast<UINT>(-1))
     {
         m_IsFileManaged = true;
 
         try
         {
-            if (Mode == load)
+            if (mode == load)
             {
                 // Open the archive for loading
-                m_pFile = new CFile(FileName, CFile::modeRead);
+                m_pFile = new CFile(fileName, CFile::modeRead);
                 m_IsStoring = false;
             }
             else
             {
                 // Open the archive for storing. Creates file if required
-                m_pFile = new CFile(FileName, CFile::modeCreate);
+                m_pFile = new CFile(fileName, CFile::modeCreate);
                 m_IsStoring = true;
             }
         }
@@ -305,11 +305,11 @@ namespace Win32xx
 
     // Read size bytes from the open archive file into the given lpBuf.
     // Throw an exception if not successful.
-    inline void CArchive::Read(void* lpBuf, UINT size)
+    inline void CArchive::Read(void* pBuf, UINT size)
     {
         // read, simply and  in binary mode, the size into the lpBuf
         assert(m_pFile);
-		UINT nBytes = m_pFile->Read(lpBuf, size);
+		UINT nBytes = m_pFile->Read(pBuf, size);
 		if (nBytes != size)
 			throw CFileException(m_pFile->GetFilePath(), _T("Failed to read from archive."));
     }
@@ -318,19 +318,19 @@ namespace Win32xx
     // on the format of the archived data for special handling when there
     // are several versions of the serialized data to be accommodated
     // by the application.
-    inline void CArchive::SetObjectSchema(UINT nSchema)
+    inline void CArchive::SetObjectSchema(UINT schema)
     {
-        m_Schema = nSchema;
+        m_Schema = schema;
     }
 
 
     // Write size characters of from the lpBuf into the open archive file.
     // Throw an exception if unsuccessful.
-    inline void CArchive::Write(const void* lpBuf, UINT size)
+    inline void CArchive::Write(const void* pBuf, UINT size)
     {
         // write size characters in lpBuf to the  file
         assert(m_pFile);
-        m_pFile->Write(lpBuf, size);
+        m_pFile->Write(pBuf, size);
     }
 
 
@@ -868,18 +868,18 @@ namespace Win32xx
 
     // Write a CObject to the archive. Throw an exception if unable to
     // do so correctly.
-    inline CArchive& CArchive::operator<<(const CObject& Ob)
+    inline CArchive& CArchive::operator<<(const CObject& object)
     {
-        ((CObject&)Ob).Serialize(*this);
+        ((CObject&)object).Serialize(*this);
         return *this;
     }
 
 
     // Read a CObject from the archive. Throw an exception if unable to
     // do so correctly.
-    inline CArchive& CArchive::operator>>(CObject& Ob)
+    inline CArchive& CArchive::operator>>(CObject& object)
     {
-        Ob.Serialize(*this);
+		object.Serialize(*this);
         return *this;
     }
 
@@ -889,14 +889,14 @@ namespace Win32xx
     // in szString. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throw an exception if unable to do so correctly.
-    inline LPTSTR CArchive::ReadString(LPTSTR szString, UINT nMax)
+    inline LPTSTR CArchive::ReadString(LPTSTR pString, UINT max)
     {
-        assert (nMax > 0);
+        assert (max > 0);
 
         CString str;
         *this >> str;
-        lstrcpyn(szString, str.c_str(), nMax);
-        return szString;
+        lstrcpyn(pString, str.c_str(), max);
+        return pString;
     }
 
 
@@ -905,14 +905,14 @@ namespace Win32xx
     // in szString. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throw an exception if unable to do so correctly.
-    inline LPSTR CArchive::ReadStringA(LPSTR szString, UINT nMax)
+    inline LPSTR CArchive::ReadStringA(LPSTR pString, UINT max)
     {
-        assert (nMax > 0);
+        assert (max > 0);
 
         CStringA str;
         *this >> str;
-        lstrcpynA(szString, str.c_str(), nMax);
-        return szString;
+        lstrcpynA(pString, str.c_str(), max);
+        return pString;
     }
 
 
@@ -921,62 +921,62 @@ namespace Win32xx
     // in szString. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throw an exception if unable to do so correctly.
-    inline LPWSTR CArchive::ReadStringW(LPWSTR szString, UINT nMax)
+    inline LPWSTR CArchive::ReadStringW(LPWSTR pString, UINT max)
     {
-        assert (nMax > 0);
+        assert (max > 0);
 
         CStringW str;
         *this >> str;
-        lstrcpynW(szString, str.c_str(), nMax);
-        return szString;
+        lstrcpynW(pString, str.c_str(), max);
+        return pString;
     }
 
 
     // Write the LPCTSTR string into the archive file.
     // The string must be null terminated.
     // Throw an exception if an error occurs.
-    inline void CArchive::WriteString(LPCTSTR string)
+    inline void CArchive::WriteString(LPCTSTR pString)
     {
-        UINT nChars = lstrlen(string);
+        UINT nChars = lstrlen(pString);
         bool IsUnicode = (sizeof(TCHAR) == sizeof(WCHAR));
 
         // Store the Unicode state and number of characters in the archive
         *this << IsUnicode;
         *this << nChars;
 
-        Write(string, nChars*sizeof(TCHAR));
+        Write(pString, nChars*sizeof(TCHAR));
     }
 
 
     // Write the LPCSTR string into the archive file.
     // The string must be null terminated.
     // Throw an exception if an error occurs.
-    inline void CArchive::WriteStringA(LPCSTR string)
+    inline void CArchive::WriteStringA(LPCSTR pString)
     {
-        UINT nChars = lstrlenA(string);
+        UINT nChars = lstrlenA(pString);
         bool IsUnicode = false;
 
         // Store the Unicode state and number of characters in the archive
         *this << IsUnicode;
         *this << nChars;
 
-        Write(string, nChars*sizeof(CHAR));
+        Write(pString, nChars*sizeof(CHAR));
     }
 
 
     // Write the LPCWSTR string into the archive file.
     // The string must be null terminated.
     // Throw an exception if an error occurs.
-    inline void CArchive::WriteStringW(LPCWSTR string)
+    inline void CArchive::WriteStringW(LPCWSTR pString)
     {
-        UINT nChars = lstrlenW(string);
+        UINT nChars = lstrlenW(pString);
         bool IsUnicode = true;
 
         // Store the Unicode state and number of characters in the archive
         *this << IsUnicode;
         *this << nChars;
 
-        Write(string, nChars*sizeof(WCHAR));
+        Write(pString, nChars*sizeof(WCHAR));
     }
 
 } // namespace Win32xx

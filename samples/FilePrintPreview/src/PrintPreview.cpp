@@ -28,16 +28,16 @@
 
 /*=============================================================================*
 
-    Program constants													*/
+    Program constants                                                   */
 
   // zoom states
-static const int	ZOOM_OUT    = 0;
-static const int	ZOOM_WIDTH  = 1;
+static const int    ZOOM_OUT    = 0;
+static const int    ZOOM_WIDTH  = 1;
   // program options
-static const int	BORDER      =   20;		// pixels around rendered preview
-static const double	PREVIEW_MIN	=  2.0;		// minimum preview screen dimension
-static const double	SCREEN_MIN	=  8.0;		// minimum monitor screen dimension
-static const double SCREEN_MAX	= 35.0;		// maximum monitor screen dimension
+static const int    BORDER      =   20;     // pixels around rendered preview
+static const double PREVIEW_MIN =  2.0;     // minimum preview screen dimension
+static const double SCREEN_MIN  =  8.0;     // minimum monitor screen dimension
+static const double SCREEN_MAX  = 35.0;     // maximum monitor screen dimension
   // Registry key for saving screen and initial print preview sizes. Note:
   // this should match the main frame's registry key, but with "Software"
   // added in order to make them appear together with the frame's entries.
@@ -49,7 +49,7 @@ static const LPCTSTR REGISTRY_KEY_NAME = _T("Software\\Win32++\\FilePrintPreview
 
 *=============================================================================*/
     CPrintPreview::
-CPrintPreview(UINT nResID, DWORD dwFlags /* = HIDE_HELP */ )			/*
+CPrintPreview(UINT nResID, DWORD dwFlags /* = HIDE_HELP */ )            /*
 
     Construct the preview dialog object.
 *-----------------------------------------------------------------------------*/
@@ -64,7 +64,7 @@ CPrintPreview(UINT nResID, DWORD dwFlags /* = HIDE_HELP */ )			/*
 
 /*============================================================================*/
     CPrintPreview::
-~CPrintPreview()														/*
+~CPrintPreview()                                                        /*
 
     Destructor.
 *-----------------------------------------------------------------------------*/
@@ -73,7 +73,7 @@ CPrintPreview(UINT nResID, DWORD dwFlags /* = HIDE_HELP */ )			/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-ClosePreview()															/*
+ClosePreview()                                                          /*
 
     Close the preview dialog window and save the screen and initial preview
     window sizes.
@@ -87,7 +87,7 @@ ClosePreview()															/*
 
 /*============================================================================*/
     INT_PTR CPrintPreview::
-DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
+DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 
     Process special messages for the preview dialog.
 *-----------------------------------------------------------------------------*/
@@ -98,14 +98,14 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
     {
         case WM_SYSCOMMAND:
         {
-			switch (LOWORD(wParam))
-			{
-				case SC_CLOSE: // close the window
-					SaveSizesRegistry();
-					Destroy();
-					return TRUE;
-			}
-			break;
+            switch (LOWORD(wParam))
+            {
+                case SC_CLOSE: // close the window
+                    SaveSizesRegistry();
+                    Destroy();
+                    return TRUE;
+            }
+            break;
         }
     }
       // Pass unhandled messages on to parent DialogProc
@@ -113,29 +113,29 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
 }
 
 /*============================================================================*/
-	void CPrintPreview::
-DoDataExchange(CDataExchange& DX)										/*
+    void CPrintPreview::
+DoDataExchange(CDataExchange& DX)                                       /*
 
-	Attach data items to dialog controls and coordinate the exchange between
-	the dialog and data values.
+    Attach data items to dialog controls and coordinate the exchange between
+    the dialog and data values.
 *-----------------------------------------------------------------------------*/
 {
-	DX.DDX_Control(IDC_PREVIEW_PRINT,	  m_ButtonPrint);
-	DX.DDX_Control(IDC_PREVIEW_SETUP,     m_ButtonSetup);
-	DX.DDX_Control(IDC_PREVIEW_PAGE,      m_EditPage);
-	DX.DDX_Control(IDC_PREVIEW_FIRST,     m_ButtonFirst);
-	DX.DDX_Control(IDC_PREVIEW_LAST,      m_ButtonLast);
-	DX.DDX_Control(IDC_PREVIEW_PREV,      m_ButtonPrev);
-	DX.DDX_Control(IDC_PREVIEW_NEXT,      m_ButtonNext);
-	DX.DDX_Control(IDC_PREVIEW_CLOSE,     m_ButtonClose);
-	DX.DDX_Control(IDC_PREVIEW_PANE,      m_PreviewPane);
-	DX.DDX_Control(IDC_PREVIEW_HELP,      m_ButtonPvwHelp);
-	DX.DDX_Control(IDC_PREVIEW_ZOOMCOMBO, m_ComboZoom);
+    DX.DDX_Control(IDC_PREVIEW_PRINT,     m_ButtonPrint);
+    DX.DDX_Control(IDC_PREVIEW_SETUP,     m_ButtonSetup);
+    DX.DDX_Control(IDC_PREVIEW_PAGE,      m_EditPage);
+    DX.DDX_Control(IDC_PREVIEW_FIRST,     m_ButtonFirst);
+    DX.DDX_Control(IDC_PREVIEW_LAST,      m_ButtonLast);
+    DX.DDX_Control(IDC_PREVIEW_PREV,      m_ButtonPrev);
+    DX.DDX_Control(IDC_PREVIEW_NEXT,      m_ButtonNext);
+    DX.DDX_Control(IDC_PREVIEW_CLOSE,     m_ButtonClose);
+    DX.DDX_Control(IDC_PREVIEW_PANE,      m_PreviewPane);
+    DX.DDX_Control(IDC_PREVIEW_HELP,      m_ButtonPvwHelp);
+    DX.DDX_Control(IDC_PREVIEW_ZOOMCOMBO, m_ComboZoom);
 }
 
 /*============================================================================*/
     void CPrintPreview::
-DocPageToBmp(UINT nPage)												/*
+DocPageToBmp(UINT nPage)                                                /*
 
     Format the document nPage page for preview and deposit the image in the
     m_dcMem context. This base class method does this for the nPage page
@@ -148,7 +148,7 @@ DocPageToBmp(UINT nPage)												/*
 
 /*============================================================================*/
     void CPrintPreview::
-DoPreparePreview()														/*
+DoPreparePreview()                                                      /*
 
     Initialize the preview with values other than the defaults, if needed, 
     and determine the page divisions and number of pages to be previewed.
@@ -162,7 +162,7 @@ DoPreparePreview()														/*
 
 /*============================================================================*/
     void CPrintPreview::
-InitializeContexts()													/*
+InitializeContexts()                                                    /*
 
     Get the current device contexts of the default or currently chosen 
     printer and the preview pane and save these as data members. Likewise, 
@@ -187,7 +187,7 @@ InitializeContexts()													/*
     m_dcMem = CMemDC(m_dcPrinter);
       // Create a compatible bitmap in memory for the preview that reduces
       // the size of the memory bitmap.
-	CSize viewport((int)(m_PrinterDots.cx / m_shrink + 0.5),
+    CSize viewport((int)(m_PrinterDots.cx / m_shrink + 0.5),
         (int)(m_PrinterDots.cy / m_shrink + 0.5));
     m_dcMem.CreateCompatibleBitmap(dcPreview, viewport.cx, viewport.cy);
       // set the mapping mode to translate between printer and screen
@@ -199,7 +199,7 @@ InitializeContexts()													/*
 
 /*============================================================================*/
     void CPrintPreview::
-InitializeControls()													/*
+InitializeControls()                                                    /*
 
     Load directional button bitmaps, and initiate resizing of the client
     area.
@@ -223,7 +223,7 @@ InitializeControls()													/*
 
 /*============================================================================*/
     void CPrintPreview::
-InitializeToolTips()													/*
+InitializeToolTips()                                                    /*
 
     Add tooltips to the preview buttons.
 *-----------------------------------------------------------------------------*/
@@ -246,7 +246,7 @@ InitializeToolTips()													/*
 
 /*============================================================================*/
     void CPrintPreview::
-LoadSizesRegistry()														/*
+LoadSizesRegistry()                                                     /*
 
     Load the saved screen and initial preview window size parameters from 
     the registry key labeled REGISTRY_KEY_NAME. 
@@ -270,7 +270,7 @@ LoadSizesRegistry()														/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnCommand(WPARAM wParam, LPARAM lParam)									/*
+OnCommand(WPARAM wParam, LPARAM lParam)                                 /*
 
     Direct the command messages to their processing functions.
 *-----------------------------------------------------------------------------*/
@@ -312,7 +312,7 @@ OnCommand(WPARAM wParam, LPARAM lParam)									/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnInitDialog()															/*
+OnInitDialog()                                                          /*
 
     Attach control IDs to the objects they identify, set up the  automatic 
     resizing mechanism, engage tooltips, set the screen and initial preview
@@ -322,9 +322,9 @@ OnInitDialog()															/*
 {
       // load saved screen and initial preview window sizes
     LoadSizesRegistry();
- 	  // register controls,  attach controls to numeric identifiers
-	UpdateData(m_DX, SENDTOCONTROL);
-	  // enter initial values into controls
+      // register controls,  attach controls to numeric identifiers
+    UpdateData(m_DX, SENDTOCONTROL);
+      // enter initial values into controls
     InitializeControls();
       // add tooltips to the preview buttons
     InitializeToolTips();   
@@ -333,20 +333,20 @@ OnInitDialog()															/*
       // Get the printer resolution, 
     m_PrinterDots = CSize(m_dcPrinter.GetDeviceCaps(HORZRES),
         m_dcPrinter.GetDeviceCaps(VERTRES));
-	  // fill combo box with scale values
-	PopulateScaleBox();
+      // fill combo box with scale values
+    PopulateScaleBox();
       // If screen and initial preview window sizes are initially out of 
-	  // bounds, prompt the user for entry of sizes that are acceptable. 
-	  // Do not take zero for an answer.
+      // bounds, prompt the user for entry of sizes that are acceptable. 
+      // Do not take zero for an answer.
     while (m_ScreenInches.cx < SCREEN_MIN || m_ScreenInches.cx > SCREEN_MAX  ||
-		m_ScreenInches.cy < SCREEN_MIN    || m_ScreenInches.cy > SCREEN_MAX  ||
-		m_PreviewInches.cx < PREVIEW_MIN  || m_PreviewInches.cx > SCREEN_MAX ||
-		m_PreviewInches.cy < PREVIEW_MIN  || m_PreviewInches.cy > SCREEN_MAX)
+        m_ScreenInches.cy < SCREEN_MIN    || m_ScreenInches.cy > SCREEN_MAX  ||
+        m_PreviewInches.cx < PREVIEW_MIN  || m_PreviewInches.cx > SCREEN_MAX ||
+        m_PreviewInches.cy < PREVIEW_MIN  || m_PreviewInches.cy > SCREEN_MAX)
     {
-	    if (!PreviewAndPageSetup())
+        if (!PreviewAndPageSetup())
         {
-			ClosePreview();	
-			return TRUE;
+            ClosePreview(); 
+            return TRUE;
         }
     }
     SetWindowSizes();
@@ -355,14 +355,14 @@ OnInitDialog()															/*
         m_ButtonPvwHelp.ShowWindow(SW_HIDE);
       // start at page 1
     m_nCurrentPage = 0;
-	  // update controls
-	UpdateData(m_DX, SENDTOCONTROL);
+      // update controls
+    UpdateData(m_DX, SENDTOCONTROL);
     return TRUE;
 }
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnNextButton()															/*
+OnNextButton()                                                          /*
 
     Display the next page of the document. This method can only be called
     when there is a valid next page to view.
@@ -374,12 +374,12 @@ OnNextButton()															/*
 
 /*============================================================================*/
     void CPrintPreview::
-OnOK()																	/*
+OnOK()                                                                  /*
 
-	This method is invoked when the ENTER key is pressed, and the base class
-	response is to close the dialog. However, the desired behavior for this 
-	dialog is either to go to the page appearing in the page box when this box
-	has the focus, or otherwise to ignore the ENTER key altogether..
+    This method is invoked when the ENTER key is pressed, and the base class
+    response is to close the dialog. However, the desired behavior for this 
+    dialog is either to go to the page appearing in the page box when this box
+    has the focus, or otherwise to ignore the ENTER key altogether..
 *-----------------------------------------------------------------------------*/
 {
     HWND hwnd = HWND(::GetFocus());
@@ -397,7 +397,7 @@ OnOK()																	/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnFirstButton()															/*
+OnFirstButton()                                                         /*
 
     Display the first page of the document.
 *-----------------------------------------------------------------------------*/
@@ -408,7 +408,7 @@ OnFirstButton()															/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnLastButton()															/*
+OnLastButton()                                                          /*
 
     Display the last page of the document.
 *-----------------------------------------------------------------------------*/
@@ -419,7 +419,7 @@ OnLastButton()															/*
 
 /*============================================================================*/
     void CPrintPreview::
-OnPrepareDC()															/*
+OnPrepareDC()                                                           /*
 
     Called by the OnPrint() member function for each page during print 
     preview. Set all device contexts and associated objects to current
@@ -433,7 +433,7 @@ OnPrepareDC()															/*
 
 /*============================================================================*/
     void CPrintPreview::
-OnPreparePrintPreview()													/*
+OnPreparePrintPreview()                                                 /*
 
     Prepare to preview the document printout. Called by OnPreview() before 
     a document is previewed. Create the print preview dialog window using
@@ -452,7 +452,7 @@ OnPreparePrintPreview()													/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnPrevButton()															/*
+OnPrevButton()                                                          /*
 
     Display the previous page of the document. This method can only be 
     called when there is a valid previous page to view.
@@ -464,7 +464,7 @@ OnPrevButton()															/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnPreview(const CString &docPath)										/*
+OnPreview(const CString &docPath)                                       /*
 
     Display the preview pages of the document. 
 *-----------------------------------------------------------------------------*/
@@ -480,7 +480,7 @@ OnPreview(const CString &docPath)										/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnPreviewHelp()															/*
+OnPreviewHelp()                                                         /*
 
     Respond to requests for help on the print preview function.
 *-----------------------------------------------------------------------------*/
@@ -492,7 +492,7 @@ OnPreviewHelp()															/*
 
 /*============================================================================*/
     void CPrintPreview::
-OnPreviewPage(UINT nPage)												/*
+OnPreviewPage(UINT nPage)                                               /*
 
 *-----------------------------------------------------------------------------*/
 {
@@ -502,7 +502,7 @@ OnPreviewPage(UINT nPage)												/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnPrintButton()															/*
+OnPrintButton()                                                         /*
 
     Respond to requests for printing the document.
 *-----------------------------------------------------------------------------*/
@@ -514,7 +514,7 @@ OnPrintButton()															/*
 
 /*============================================================================*/
     BOOL CPrintPreview::
-OnZoomChange()															/*
+OnZoomChange()                                                          /*
 
     Set the zoom value for the display of the document page.
 *-----------------------------------------------------------------------------*/
@@ -540,37 +540,37 @@ OnZoomChange()															/*
 }
 
 /*============================================================================*/
-	void CPrintPreview::
-PopulateScaleBox()														/*
+    void CPrintPreview::
+PopulateScaleBox()                                                      /*
 
-	Fill the scale combo box with the zoom settings.
+    Fill the scale combo box with the zoom settings.
 *-----------------------------------------------------------------------------*/
 {
-	std::vector<CString> scale;	  // scale selection choices
-	scale.push_back(_T("Fit page"));
-	scale.push_back(_T("Fit width"));
-	scale.push_back(_T("30%"));
-	scale.push_back(_T("40%"));
-	scale.push_back(_T("50%"));
-	scale.push_back(_T("60%"));
-	scale.push_back(_T("70%"));
-	scale.push_back(_T("80%"));
-	scale.push_back(_T("90%"));
-	scale.push_back(_T("100%"));
-	scale.push_back(_T("125%"));
-	scale.push_back(_T("150%"));
-	scale.push_back(_T("175%"));
-	scale.push_back(_T("200%"));
-	  // put the scales in the combo box, select top item
-	m_ComboZoom.ResetContent();
-	for (UINT i = 0; i < scale.size(); i++)
-		m_ComboZoom.AddString(scale[i]);
-	m_ComboZoom.SetCurSel(0);
+    std::vector<CString> scale;   // scale selection choices
+    scale.push_back(_T("Fit page"));
+    scale.push_back(_T("Fit width"));
+    scale.push_back(_T("30%"));
+    scale.push_back(_T("40%"));
+    scale.push_back(_T("50%"));
+    scale.push_back(_T("60%"));
+    scale.push_back(_T("70%"));
+    scale.push_back(_T("80%"));
+    scale.push_back(_T("90%"));
+    scale.push_back(_T("100%"));
+    scale.push_back(_T("125%"));
+    scale.push_back(_T("150%"));
+    scale.push_back(_T("175%"));
+    scale.push_back(_T("200%"));
+      // put the scales in the combo box, select top item
+    m_ComboZoom.ResetContent();
+    for (UINT i = 0; i < scale.size(); i++)
+        m_ComboZoom.AddString(scale[i]);
+    m_ComboZoom.SetCurSel(0);
 }
 
 /*============================================================================*/
     BOOL CPrintPreview::
-PreviewAndPageSetup()													/*
+PreviewAndPageSetup()                                                   /*
 
     Prompt for user input of screen and initial preview window sizes. Do
     printer page setup if requested. Return TRUE if the setup dialog was 
@@ -578,16 +578,16 @@ PreviewAndPageSetup()													/*
 *-----------------------------------------------------------------------------*/
 {
     if (m_SetupDlg.DoModal(*this) == IDOK)
-	{
-		SetWindowSizes();
-		return TRUE;
-	}
-	return FALSE;
+    {
+        SetWindowSizes();
+        return TRUE;
+    }
+    return FALSE;
 }
 
 /*============================================================================*/
     void CPrintPreview::
-PreviewPage(UINT nPage)													/*
+PreviewPage(UINT nPage)                                                 /*
 
     Display page numbered nPage to the screen (view port).
 *-----------------------------------------------------------------------------*/
@@ -611,7 +611,7 @@ PreviewPage(UINT nPage)													/*
 
 /*============================================================================*/
     CString CPrintPreview::
-RegQueryStringValue(CRegKey &key, LPCTSTR pName)						/*
+RegQueryStringValue(CRegKey &key, LPCTSTR pName)                        /*
 
     Return the CString value of a specified value pName found in the
     currently open registry key.
@@ -630,7 +630,7 @@ RegQueryStringValue(CRegKey &key, LPCTSTR pName)						/*
 
 /*============================================================================*/
     void CPrintPreview::
-SaveSizesRegistry()														/*
+SaveSizesRegistry()                                                     /*
 
     Write the screen and initial preview size values into the registry key 
     labeled REGISTRY_KEY_NAME.
@@ -657,7 +657,7 @@ SaveSizesRegistry()														/*
 
 /*============================================================================*/
     void CPrintPreview::
-SetWindowSizes()														/*
+SetWindowSizes()                                                        /*
 
     Set the screen and initial preview window sizes using the current
     values of the m_ScreenInches and m_PreviewInches size members.
@@ -679,17 +679,17 @@ SetWindowSizes()														/*
       // set the dialog size
     CRect rcWorkArea;
     ::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcWorkArea, 0);
-	CSize screen(rcWorkArea.Width(), rcWorkArea.Height());
-	CSize preview(MIN(frame.cx, screen.cx), MIN(frame.cy, screen.cy));
+    CSize screen(rcWorkArea.Width(), rcWorkArea.Height());
+    CSize preview(MIN(frame.cx, screen.cx), MIN(frame.cy, screen.cy));
       // center the preview window on the screen
-	CSize ctr((screen.cx - preview.cx) / 2, (screen.cy - preview.cy) / 2);
+    CSize ctr((screen.cx - preview.cx) / 2, (screen.cy - preview.cy) / 2);
     CRect rcPos(ctr.cx, ctr.cy, ctr.cx + preview.cx, ctr.cy + preview.cy);
     SetWindowPos(NULL, rcPos, SWP_SHOWWINDOW);
 }
 
 /*============================================================================*/
     void CPrintPreview::
-UpdateButtons()															/*
+UpdateButtons()                                                         /*
 
     Enable or disable buttons, according to current page visible.
 *-----------------------------------------------------------------------------*/
@@ -743,7 +743,7 @@ CPreviewPane()                                                          /*
 
 /*============================================================================*/
     DSize CPreviewPane::
-GetZoom()																/*
+GetZoom()                                                               /*
 
     Return the zoom ratio of the view that will contain the rendered 
     document bitmap, under the current zoom state. Zoom is defined as the
@@ -803,7 +803,7 @@ GetZoom()																/*
         if (m_PrevZoomState != m_ZoomState ||
             (ScrollSize != m_ScrollSize && (m_ZoomState != ZOOM_WIDTH ||
             (m_LastWindowSize != WindowSize))))
-				SetScrollSizes(m_ScrollSize = ScrollSize);
+                SetScrollSizes(m_ScrollSize = ScrollSize);
         m_LastWindowSize = WindowSize;
     }
     m_PrevZoomState = m_ZoomState;
@@ -839,7 +839,7 @@ GetZoom()																/*
 
 /*============================================================================*/
     void CPreviewPane::
-OnDraw(CDC& dc)															/*
+OnDraw(CDC& dc)                                                         /*
 
     Copy the bitmap (m_Bitmap) into the PreviewPane, scaling the image
     to fit the window. The dc is the CPaintDC of the screen. The zoom factor
@@ -903,7 +903,7 @@ OnDraw(CDC& dc)															/*
 
 /*============================================================================*/
     BOOL CPreviewPane::
-OnEraseBkgnd(CDC& )														/*
+OnEraseBkgnd(CDC& )                                                     /*
 
     Suppress the background redrawing of the preview pane to avoid flicker.
 *-----------------------------------------------------------------------------*/
@@ -913,7 +913,7 @@ OnEraseBkgnd(CDC& )														/*
 
 /*============================================================================*/
     LRESULT CPreviewPane::
-OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
+OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)                      /*
 
     Respond to a horizontal scroll bar event and set the current scroll
     position accordingly. This override is necessary to prevent the
@@ -968,7 +968,7 @@ OnHScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
 
 /*============================================================================*/
     LRESULT CPreviewPane::
-OnMouseWheel(UINT uMsg, WPARAM wParam, LPARAM lParam)					/*
+OnMouseWheel(UINT uMsg, WPARAM wParam, LPARAM lParam)                   /*
 
     Position the vertical scroll bar using the mouse wheel. This override 
     is necessary to prevent the CScrollView's automatic scroll of the 
@@ -999,7 +999,7 @@ OnMouseWheel(UINT uMsg, WPARAM wParam, LPARAM lParam)					/*
 
 /*============================================================================*/
     LRESULT CPreviewPane::
-OnPaint(UINT, WPARAM, LPARAM)											/*
+OnPaint(UINT, WPARAM, LPARAM)                                           /*
 
     OnDraw is usually suppressed for controls, but it is needed for this
     one, since it is actually the preview window.
@@ -1022,7 +1022,7 @@ OnPaint(UINT, WPARAM, LPARAM)											/*
 
 /*============================================================================*/
     LRESULT CPreviewPane::
-OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
+OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)                      /*
 
     Respond to a vertical scroll bar event and set the current scroll
     position accordingly. This override is necessary to prevent the
@@ -1081,7 +1081,7 @@ OnVScroll(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
 
 *=============================================================================*/
     PreviewSetup::
-PreviewSetup(UINT nResID)												/*
+PreviewSetup(UINT nResID)                                               /*
 
     Construct the preview dialog object.
 *-----------------------------------------------------------------------------*/
@@ -1090,30 +1090,30 @@ PreviewSetup(UINT nResID)												/*
 }
 
 /*============================================================================*/
-	void PreviewSetup::
-DoDataExchange(CDataExchange& DX)										/*
+    void PreviewSetup::
+DoDataExchange(CDataExchange& DX)                                       /*
 
-	Attach member data items to dialog controls and coordinate the exchange
-	and validation of values entered into, and read from, these controls.
+    Attach member data items to dialog controls and coordinate the exchange
+    and validation of values entered into, and read from, these controls.
 *-----------------------------------------------------------------------------*/
 {
-	CPrintPreview& pvw = GetPreviewWnd();
-	DX.DDX_Control(IDC_PAGE_SETUP,	m_PageSetup);
-	DX.DDX_Text(IDC_SCREEN_WIDTH,pvw.m_ScreenInches.cx);
-	DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cx, SCREEN_MIN, SCREEN_MAX);
-	DX.DDX_Text(IDC_SCREEN_HEIGHT,	pvw.m_ScreenInches.cy);
-	DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cy, SCREEN_MIN, SCREEN_MAX);
-	DX.DDX_Text(IDC_PREVIEW_WIDTH,	pvw.m_PreviewInches.cx);
-	DX.DDV_MinMaxDouble(pvw.m_PreviewInches.cx, PREVIEW_MIN, SCREEN_MAX);
-	DX.DDX_Text(IDC_PREVIEW_HEIGHT,	pvw.m_PreviewInches.cy);
-	DX.DDV_MinMaxDouble(pvw.m_PreviewInches.cy, PREVIEW_MIN, SCREEN_MAX);
+    CPrintPreview& pvw = GetPreviewWnd();
+    DX.DDX_Control(IDC_PAGE_SETUP,  m_PageSetup);
+    DX.DDX_Text(IDC_SCREEN_WIDTH,pvw.m_ScreenInches.cx);
+    DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cx, SCREEN_MIN, SCREEN_MAX);
+    DX.DDX_Text(IDC_SCREEN_HEIGHT,  pvw.m_ScreenInches.cy);
+    DX.DDV_MinMaxDouble(pvw.m_ScreenInches.cy, SCREEN_MIN, SCREEN_MAX);
+    DX.DDX_Text(IDC_PREVIEW_WIDTH,  pvw.m_PreviewInches.cx);
+    DX.DDV_MinMaxDouble(pvw.m_PreviewInches.cx, PREVIEW_MIN, SCREEN_MAX);
+    DX.DDX_Text(IDC_PREVIEW_HEIGHT, pvw.m_PreviewInches.cy);
+    DX.DDV_MinMaxDouble(pvw.m_PreviewInches.cy, PREVIEW_MIN, SCREEN_MAX);
 }
 
 /*============================================================================*/
-	void PreviewSetup::
-InitializeToolTips()														/*
+    void PreviewSetup::
+InitializeToolTips()                                                        /*
 
-	Add tooltips to the preview buttons.
+    Add tooltips to the preview buttons.
 *-----------------------------------------------------------------------------*/
 {
     CreateToolTip(*this);
@@ -1122,34 +1122,34 @@ InitializeToolTips()														/*
     AddToolTip(IDC_PREVIEW_WIDTH);
     AddToolTip(IDC_PREVIEW_HEIGHT);
     AddToolTip(IDC_PAGE_SETUP);
-	AddToolTip(IDOK);
-	AddToolTip(IDCANCEL);
+    AddToolTip(IDOK);
+    AddToolTip(IDCANCEL);
 }
 
 /*============================================================================*/
     BOOL    PreviewSetup::
-OnInitDialog()															/*
+OnInitDialog()                                                          /*
 
     Perform initializations necessary for the setup dialog to operate
     correctly. Attach tooltips to controls, controls to objects, and 
     deposit initial values in edit controls.
 *-----------------------------------------------------------------------------*/
 {
- 	  // register controls
-	UpdateData(m_DX, SENDTOCONTROL);
+      // register controls
+    UpdateData(m_DX, SENDTOCONTROL);
      // Add tooltips to the preview buttons
-	InitializeToolTips();
-  	  // update controls
-	UpdateData(m_DX, SENDTOCONTROL);
-	  // save incoming sizes in case of cancel
-	m_InScreenInches  = GetPreviewWnd().m_ScreenInches;
-	m_InPreviewInches = GetPreviewWnd().m_PreviewInches;
+    InitializeToolTips();
+      // update controls
+    UpdateData(m_DX, SENDTOCONTROL);
+      // save incoming sizes in case of cancel
+    m_InScreenInches  = GetPreviewWnd().m_ScreenInches;
+    m_InPreviewInches = GetPreviewWnd().m_PreviewInches;
     return TRUE;
 }
 
 /*============================================================================*/
     INT_PTR PreviewSetup::
-DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
+DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)                     /*
 
     The preview setup message processor.
 *-----------------------------------------------------------------------------*/
@@ -1158,14 +1158,14 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
     {
         case WM_SYSCOMMAND:
         {
-			switch (LOWORD(wParam))
-			{
-				case SC_CLOSE: // close the window
-					OnCancel();
-					return TRUE;
-			}
-			break;
-		}
+            switch (LOWORD(wParam))
+            {
+                case SC_CLOSE: // close the window
+                    OnCancel();
+                    return TRUE;
+            }
+            break;
+        }
         
     }
       // Pass unhandled messages on to parent DialogProc
@@ -1174,7 +1174,7 @@ DialogProc(UINT uMsg, WPARAM wParam, LPARAM lParam)						/*
 
 /*============================================================================*/
     BOOL    PreviewSetup::
-OnCommand(WPARAM wParam, LPARAM)										/*
+OnCommand(WPARAM wParam, LPARAM)                                        /*
 
     Direct command messages to the appropriate processors.
 *-----------------------------------------------------------------------------*/
@@ -1189,15 +1189,15 @@ OnCommand(WPARAM wParam, LPARAM)										/*
 
 /*============================================================================*/
     BOOL    PreviewSetup::
-OnPageSetupButton()														/*
+OnPageSetupButton()                                                     /*
 
     If the current dialog values are valid, call the mainframe page setup 
-	procedure and reset the preview window appropriately for any changes that 
-	might have been made.
+    procedure and reset the preview window appropriately for any changes that 
+    might have been made.
 *-----------------------------------------------------------------------------*/
 {
-	if (!UpdateData(m_DX, READFROMCONTROL))
-		return TRUE;
+    if (!UpdateData(m_DX, READFROMCONTROL))
+        return TRUE;
 
      GetFrame().SendMessage(WM_COMMAND, IDM_FILE_PRINTSETUP, 0);
       // in case the page setup has changed the preview layout, reset the
@@ -1209,29 +1209,29 @@ OnPageSetupButton()														/*
 
 /*============================================================================*/
     void    PreviewSetup::
-OnCancel()																/*
+OnCancel()                                                              /*
                 
     Handle the cancel message from the preview setup dialog.
 *-----------------------------------------------------------------------------*/
 {
-	GetPreviewWnd().m_ScreenInches = m_InScreenInches;
-	GetPreviewWnd().m_PreviewInches = m_InPreviewInches;
+    GetPreviewWnd().m_ScreenInches = m_InScreenInches;
+    GetPreviewWnd().m_PreviewInches = m_InPreviewInches;
 
     CDialog::OnCancel();
 }
 
 /*============================================================================*/
     void    PreviewSetup::
-OnOK()																	/*
+OnOK()                                                                  /*
 
     Handle the response to the ENTER key. The default closes the dialog. If
-	values are invalid, return for correction; otherwise close per the base
-	class procedure.
+    values are invalid, return for correction; otherwise close per the base
+    class procedure.
 *-----------------------------------------------------------------------------*/
 {
       // check the edit control values, which must be positive
-	if (!UpdateData(m_DX, READFROMCONTROL))
-		return;
+    if (!UpdateData(m_DX, READFROMCONTROL))
+        return;
 
     CDialog::OnOK();
 }

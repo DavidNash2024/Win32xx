@@ -134,14 +134,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -202,12 +202,12 @@ void CMainFrame::OnMenuUpdate(UINT id)
     switch (id)
     {
     case IDM_CONTAINER_TOP:
-		check = (m_isContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+        check = (m_isContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
         break;
 
     case IDM_HIDE_SINGLE_TAB:
-		check = (m_hideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
+        check = (m_hideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
         GetFrameMenu().CheckMenuItem(id, check);
         break;
     }

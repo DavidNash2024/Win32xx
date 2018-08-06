@@ -147,14 +147,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -202,19 +202,19 @@ BOOL CMainFrame::OnEditPaste()
 
 BOOL CMainFrame::OnEditDelete()
 {
-	m_richView.Clear();
+    m_richView.Clear();
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditRedo()
 {
-	m_richView.Redo();
+    m_richView.Redo();
     return TRUE;
 }
 
 BOOL CMainFrame::OnEditUndo()
 {
-	m_richView.Undo();
+    m_richView.Undo();
     return TRUE;
 }
 
@@ -504,7 +504,7 @@ void CMainFrame::QuickPrint(CPrintDialog& printDlg)
     di.cbSize = sizeof(DOCINFO);
     di.lpszDocName = m_pathName;
     di.lpszOutput = NULL;   // Do not print to file.
-	printerDC.StartDoc(&di);
+    printerDC.StartDoc(&di);
 
     LONG lTextLength;   // Length of document.
     LONG lTextPrinted;  // Amount of document printed.
@@ -515,7 +515,7 @@ void CMainFrame::QuickPrint(CPrintDialog& printDlg)
     do
     {
         // Start the page.
-		printerDC.StartPage();
+        printerDC.StartPage();
 
         // Print as much text as can fit on a page. The return value is
         // the index of the first character on the next page. Using TRUE
@@ -524,7 +524,7 @@ void CMainFrame::QuickPrint(CPrintDialog& printDlg)
         m_richView.DisplayBand(fr.rc);
 
         // Print last page.
-		printerDC.EndPage();
+        printerDC.EndPage();
 
         // If there is more text to print, adjust the range of characters
         // to start printing at the first character of the next page.
@@ -539,7 +539,7 @@ void CMainFrame::QuickPrint(CPrintDialog& printDlg)
     m_richView.FormatRange();
 
     // End the print job
-	printerDC.EndDoc();
+    printerDC.EndDoc();
 }
 
 BOOL CMainFrame::ReadFile(LPCTSTR szFileName)

@@ -114,8 +114,8 @@ void CContainClasses::AddCombo()
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
     // Adjust button width and convert to separator
-	tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
-	tb.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
+    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);
+    tb.SetButtonWidth(IDM_FILE_SAVE, nComboWidth);
 
     // Determine the size and position of the ComboBox
     int index = tb.CommandToIndex(IDM_FILE_SAVE);
@@ -127,7 +127,7 @@ void CContainClasses::AddCombo()
 
     // Adjust the toolbar height to accomodate the ComboBoxEx control
     CRect rc = m_comboBoxEx.GetWindowRect();
-	tb.SetButtonSize(rc.Height(), rc.Height());
+    tb.SetButtonSize(rc.Height(), rc.Height());
 
     // Add the ComboBox's items
     m_comboBoxEx.AddItems();

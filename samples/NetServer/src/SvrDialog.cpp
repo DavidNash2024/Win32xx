@@ -84,7 +84,7 @@ void CTCPClientDlg::Send()
 CSvrDialog::CSvrDialog(UINT resID) : CDialog(resID), m_isServerStarted(FALSE), 
                                       m_socketType(SOCK_STREAM)
 {
-	ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
+    ZeroMemory(&m_saUDPClient, sizeof(m_saUDPClient));
 
     // Add support for the IP Address control
     // It requires Win95 with IE4 intergrated or a later version of Windows OS.
@@ -148,8 +148,8 @@ void CSvrDialog::LoadCommonControlsEx()
 
             // Call InitCommonControlsEx
             INITCOMMONCONTROLSEX initStruct;
-			initStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-			initStruct.dwICC = ICC_INTERNET_CLASSES;
+            initStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+            initStruct.dwICC = ICC_INTERNET_CLASSES;
             if((!(*pfnInit)(&initStruct)))
                 throw CWinException(_T("InitCommonControlsEx failed"));
         }
@@ -172,8 +172,8 @@ void CSvrDialog::LoadCommonControlsEx()
 // Called when the dialog window is about to be closed
 void CSvrDialog::OnClose()
 {
-	// Disconnect before shutting down the dialog.
-	m_mainSocket.Disconnect();
+    // Disconnect before shutting down the dialog.
+    m_mainSocket.Disconnect();
     PostQuitMessage(0);
 }
 
@@ -312,7 +312,7 @@ BOOL CSvrDialog::OnSend()
 // Accept the connection from the client
 BOOL CSvrDialog::OnSocketAccept()
 {
-    ServerSocketPtr pClient = new CServerSocket;
+    ServerSocketPtr pClient = new CWorkerSocket;
     m_mainSocket.Accept(*pClient, NULL, NULL);
     if (INVALID_SOCKET == m_mainSocket.GetSocket())
     {
@@ -345,13 +345,13 @@ BOOL CSvrDialog::OnSocketAccept()
 
 BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
 {
-    CServerSocket* pClient = reinterpret_cast<CServerSocket*>(wParam);
+    CWorkerSocket* pClient = reinterpret_cast<CWorkerSocket*>(wParam);
 
     // Respond to a socket disconnect notification
     Append(IDC_EDIT_STATUS, _T("Client disconnected"));
 
 
-    // Allocate an iterator for our CServerSocket map
+    // Allocate an iterator for our CWorkerSocket map
     std::map< ServerSocketPtr, TCPClientDlgPtr >::iterator iter;
 
     for (iter = m_connectedClients.begin(); iter != m_connectedClients.end(); ++iter)
@@ -360,7 +360,7 @@ BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
             break;
     }
 
-    // delete the CServerSocket, and remove its pointer
+    // delete the CWorkerSocket, and remove its pointer
     if (iter != m_connectedClients.end())
     {
         m_connectedClients.erase(iter);
@@ -371,7 +371,7 @@ BOOL CSvrDialog::OnSocketDisconnect(WPARAM wParam)
 
 BOOL CSvrDialog::OnSocketReceive(WPARAM wparam)
 {
-    CServerSocket* pClient = reinterpret_cast<CServerSocket*>(wparam);
+    CWorkerSocket* pClient = reinterpret_cast<CWorkerSocket*>(wparam);
     std::vector<char> vChar(1025, '\0');
     char* bufArray = &vChar.front(); // char array with 1025 elements
 
@@ -414,7 +414,7 @@ BOOL CSvrDialog::StartServer()
     m_socketType = (check == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
     // Create the main socket
-	check = m_radioIP4.GetCheck();
+    check = m_radioIP4.GetCheck();
     int IPfamily = (check == BST_CHECKED)? PF_INET : PF_INET6 ;
     if (!m_mainSocket.Create(IPfamily, m_socketType))
     {

@@ -23,7 +23,7 @@ void CViewFiles::OnAttach()
     // Set the image lists
     m_smallImages.Create(16, 15, ILC_COLOR32 | ILC_MASK, 1, 0);
     CBitmap image(IDB_FILEVIEW);
-	m_smallImages.Add( image, RGB(255, 0, 255) );
+    m_smallImages.Add( image, RGB(255, 0, 255) );
     SetImageList(m_smallImages, LVSIL_SMALL);
 
     // Set the report style
@@ -53,13 +53,13 @@ void CViewFiles::SetColumns()
     //initialise the columns
     LV_COLUMN column;
     ZeroMemory(&column, sizeof(column));
-	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-	column.fmt = LVCFMT_LEFT;
-	column.cx = 120;
+    column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+    column.fmt = LVCFMT_LEFT;
+    column.cx = 120;
     TCHAR string[3][20] = {TEXT("Name"), TEXT("Size"), TEXT("Type")};
     for(int i = 0; i < 3; ++i)
     {
-		column.pszText = string[i];
+        column.pszText = string[i];
         InsertColumn(i, column);
     }
 }

@@ -67,8 +67,8 @@ LRESULT CClientDialog::OnActivate(UINT msg, WPARAM wparam, LPARAM lparam)
 // Called when the dialog window is about to be closed
 void CClientDialog::OnClose()
 {
-	// Disconnect before shutting down the dialog
-	m_client.Disconnect();
+    // Disconnect before shutting down the dialog
+    m_client.Disconnect();
     PostQuitMessage(0);
 }
 
@@ -148,7 +148,7 @@ void CClientDialog::LoadCommonControlsEx()
     try
     {
         // Load the Common Controls DLL
-		hModule = ::LoadLibrary(_T("COMCTL32.DLL"));
+        hModule = ::LoadLibrary(_T("COMCTL32.DLL"));
         if (!hModule)
             throw CWinException(_T("Failed to load COMCTL32.DLL"));
 
@@ -160,8 +160,8 @@ void CClientDialog::LoadCommonControlsEx()
 
             // Call InitCommonControlsEx
             INITCOMMONCONTROLSEX initStruct;
-			initStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
-			initStruct.dwICC = ICC_INTERNET_CLASSES;
+            initStruct.dwSize = sizeof(INITCOMMONCONTROLSEX);
+            initStruct.dwICC = ICC_INTERNET_CLASSES;
             if((!(*pfnInit)(&initStruct)))
                 throw CWinException(_T("InitCommonControlsEx failed"));
         }
@@ -250,7 +250,7 @@ void CClientDialog::OnStartClient()
     LRESULT check = m_radioTCP.GetCheck();
     m_socketType = (check == BST_CHECKED)? SOCK_STREAM : SOCK_DGRAM ;
 
-	check = m_radioIP4.GetCheck();
+    check = m_radioIP4.GetCheck();
     int IPfamily = (check == BST_CHECKED)? PF_INET : PF_INET6 ;
 
     if (!m_isClientConnected)

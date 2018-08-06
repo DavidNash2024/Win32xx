@@ -49,7 +49,7 @@ void CRichView::SetFontDefaults()
 
     // Prevent Unicode characters from changing the font
     LRESULT result = SendMessage(EM_GETLANGOPTIONS, 0, 0);
-	result &= ~IMF_AUTOFONT;
+    result &= ~IMF_AUTOFONT;
     SendMessage(EM_SETLANGOPTIONS, 0, result);
 }
 

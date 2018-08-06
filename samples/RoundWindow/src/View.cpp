@@ -36,9 +36,9 @@ BOOL CView::OnColor()
 
 BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
-	UNREFERENCED_PARAMETER(lparam);
+    UNREFERENCED_PARAMETER(lparam);
 
-	UINT id= LOWORD(wparam);
+    UINT id= LOWORD(wparam);
     switch (id)
     {
     case IDM_COLOR:     return OnColor();
@@ -153,7 +153,7 @@ LRESULT CView::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
     m_point.y += GetSystemMetrics(SM_CYCAPTION) + GetSystemMetrics(SM_CYFIXEDFRAME);
 
     // Pass this message on for default processing
-	return FinalWindowProc(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -162,13 +162,13 @@ LRESULT CView::OnLButtonUp(UINT msg, WPARAM wparam, LPARAM lparam)
     ReleaseCapture();
 
     // Pass this message on for default processing
-	return FinalWindowProc(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
 // Respond to a mouse move
 {
-	if (wparam & MK_LBUTTON)
+    if (wparam & MK_LBUTTON)
     {
         CPoint pt = GetCursorPos();
 
@@ -180,7 +180,7 @@ LRESULT CView::OnMouseMove(UINT msg, WPARAM wparam, LPARAM lparam)
     }
 
     // Pass this message on for default processing
-	return FinalWindowProc(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -188,16 +188,16 @@ LRESULT CView::OnRButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     // Create the menu
     CMenu popup;
-	popup.CreatePopupMenu();
-	popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
-	popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
+    popup.CreatePopupMenu();
+    popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_COLOR, _T("Color"));
+    popup.AppendMenu(MF_BYPOSITION | MF_STRING, IDM_EXIT, _T("Exit"));
     
     // Initiate the popup menu
     CPoint pt = GetCursorPos();
-	popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, GetHwnd());
+    popup.TrackPopupMenu(TPM_TOPALIGN | TPM_LEFTALIGN, pt.x, pt.y, GetHwnd());
 
     // Pass this message on for default processing
-	return FinalWindowProc(msg, wparam, lparam);
+    return FinalWindowProc(msg, wparam, lparam);
 }
 
 LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
@@ -206,14 +206,14 @@ LRESULT CView::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
     // the view window here.  Unprocessed messages are passed on for
     //  default processing.
 
-	switch (msg)
+    switch (msg)
     {
-	case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
-	case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
-	case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
-	case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
+    case WM_LBUTTONDOWN:    return OnLButtonDown(msg, wparam, lparam);
+    case WM_LBUTTONUP:      return OnLButtonUp(msg, wparam, lparam);
+    case WM_MOUSEMOVE:      return OnMouseMove(msg, wparam, lparam);
+    case WM_RBUTTONDOWN:    return OnRButtonDown(msg, wparam, lparam);
     }
 
     // pass unhandled messages on for default processing
-	return WndProcDefault(msg, wparam, lparam);
+    return WndProcDefault(msg, wparam, lparam);
 }

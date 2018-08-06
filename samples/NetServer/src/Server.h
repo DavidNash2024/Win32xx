@@ -41,16 +41,28 @@
 // * OnDisconnect can be used to detect when the client is disconnected from the server.
 
 
-
 /////////////////////////////////////////
 // Declaration of the CServerSocket class
+//  A socket which listens for connection requests from clients.
 //
 class CServerSocket : public CSocket
 {
 public:
-    CServerSocket() { }
-    virtual ~CServerSocket() { }
-    virtual void OnAccept();
+	CServerSocket() { }
+	virtual ~CServerSocket() { }
+	virtual void OnAccept();
+};
+
+
+/////////////////////////////////////////
+// Declaration of the CWorkerSocket class
+//  A socket which communicates with clients.
+//
+class CWorkerSocket : public CSocket
+{
+public:
+    CWorkerSocket() { }
+    virtual ~CWorkerSocket() { }
     virtual void OnDisconnect();
     virtual void OnReceive();
 };

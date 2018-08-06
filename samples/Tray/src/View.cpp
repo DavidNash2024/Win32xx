@@ -28,7 +28,7 @@ void CView::Minimize()
 
 void CView::OnAbout()
 {
-	CString str = _T("Tray Example: Demonstrates minimizing a window to the tray.");
+    CString str = _T("Tray Example: Demonstrates minimizing a window to the tray.");
     MessageBox(str, _T("About Tray Example"), MB_OK | MB_ICONINFORMATION);
 }
 
