@@ -70,14 +70,14 @@ int CView::OnCreate(CREATESTRUCT& cs)
 
     // Create the ToolBar's image list from 4 icons
     m_toolBarImages.Create(48, 48, ILC_COLOR32 | ILC_MASK, 0, 0);
-	m_toolBarImages.Add(GetApp().LoadIcon(IDI_TOP));
-	m_toolBarImages.Add(GetApp().LoadIcon(IDI_LEFT));
-	m_toolBarImages.Add(GetApp().LoadIcon(IDI_RIGHT));
-	m_toolBarImages.Add(GetApp().LoadIcon(IDI_BOTTOM));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_TOP));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_LEFT));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_RIGHT));
+    m_toolBarImages.Add(GetApp().LoadIcon(IDI_BOTTOM));
 
     // Create the ToolBar
     m_toolBar.Create(*this);
-	m_toolBar.SetImageList(m_toolBarImages);
+    m_toolBar.SetImageList(m_toolBarImages);
 
     DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | TBSTYLE_TOOLTIPS
                     | TBSTYLE_FLAT | CCS_NORESIZE | CCS_NOPARENTALIGN | CCS_NODIVIDER ;
@@ -108,23 +108,23 @@ void CView::OnDraw(CDC& dc)
     if (clientRect.Width() == tbRect.Width())
     {
         if (clientRect.top == tbRect.top)
-			clientRect.top += tbRect.Height();
+            clientRect.top += tbRect.Height();
         else
-			clientRect.bottom -= tbRect.Height();
+            clientRect.bottom -= tbRect.Height();
     }
     else
     {
         if (clientRect.left == tbRect.left)
-			clientRect.left += tbRect.Width();
+            clientRect.left += tbRect.Width();
         else
-			clientRect.right -= tbRect.Width();
+            clientRect.right -= tbRect.Width();
     }
 
     ScreenToClient(clientRect);
 
     // Display some text in our view window
-	CString text = "\nPress the arrows to change the inner toolbar's orientation,";
-	text += "\n or choose customize toolbar from the ToolBar menu item to modify the toolbar in the frame.";
+    CString text = "\nPress the arrows to change the inner toolbar's orientation,";
+    text += "\n or choose customize toolbar from the ToolBar menu item to modify the toolbar in the frame.";
     dc.DrawText(text, -1, clientRect, DT_CENTER | DT_WORDBREAK);
 }
 

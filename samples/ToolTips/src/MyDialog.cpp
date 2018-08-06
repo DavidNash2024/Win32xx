@@ -78,55 +78,55 @@ BOOL CMyDialog::OnInitDialog()
     m_bubbleTT.Create(*this);
 
     // Set the background colour
-	m_bubbleTT.SetWindowTheme(L" ", L" ");  // Turn XP themes off
-	m_bubbleTT.SetTipBkColor(RGB(150, 255, 255));
+    m_bubbleTT.SetWindowTheme(L" ", L" ");  // Turn XP themes off
+    m_bubbleTT.SetTipBkColor(RGB(150, 255, 255));
 
     // Add controls to the bubble tooltip
-	m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO1), _T("Radio Button 1"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO2), _T("Radio Button 2"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO3), _T("Radio Button 3"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_BUTTON1), _T("Button 1"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK1), _T("Check Box 1"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK2), _T("Check Box 2"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK3), _T("Check Box 3"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_LIST1), _T("List Box"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC1), _T("Picture in a static control"));
-	m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC3), _T("Status display"));
-	m_bubbleTT.AddTool(GetDlgItem(IDOK), _T("OK Button"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO1), _T("Radio Button 1"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO2), _T("Radio Button 2"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_RADIO3), _T("Radio Button 3"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_BUTTON1), _T("Button 1"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK1), _T("Check Box 1"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK2), _T("Check Box 2"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_CHECK3), _T("Check Box 3"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_LIST1), _T("List Box"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC1), _T("Picture in a static control"));
+    m_bubbleTT.AddTool(GetDlgItem(IDC_STATIC3), _T("Status display"));
+    m_bubbleTT.AddTool(GetDlgItem(IDOK), _T("OK Button"));
 
     // Modify tooltip for IDC_RADIO3
     TOOLINFO ti1 = m_bubbleTT.GetToolInfo(GetDlgItem(IDC_RADIO3));
     ti1.uFlags |= TTF_CENTERTIP;
     ti1.lpszText = const_cast<LPTSTR>(_T("Modified tooltip for Radio Button 3"));
-	m_bubbleTT.SetToolInfo(ti1);
+    m_bubbleTT.SetToolInfo(ti1);
 
     // Create a standard tooltip for the Edit and RichEdit controls
     m_toolTip.Create(*this);
 
     // Set the background color
-	m_toolTip.SetWindowTheme(L" ", L" ");    // Turn XP themes off
-	m_toolTip.SetTipBkColor(RGB(255, 255, 125));
+    m_toolTip.SetWindowTheme(L" ", L" ");    // Turn XP themes off
+    m_toolTip.SetTipBkColor(RGB(255, 255, 125));
 
     // Add controls to the standard Tooltip.
     // The tooltip will request the text to display via a TTN_GETDISPINFO notification
-	m_toolTip.AddTool(m_edit, LPSTR_TEXTCALLBACK);
-	m_toolTip.AddTool(m_richEdit, LPSTR_TEXTCALLBACK);
-	m_toolTip.SetMaxTipWidth(500);
+    m_toolTip.AddTool(m_edit, LPSTR_TEXTCALLBACK);
+    m_toolTip.AddTool(m_richEdit, LPSTR_TEXTCALLBACK);
+    m_toolTip.SetMaxTipWidth(500);
 
 
 #ifdef  TTM_SETTITLE    // not supported by some GNU compilers
     // Add Title and Icon to the tooltip (a pretty icon for Vista and above)
     if (GetWinVersion() >= 2600)
-		m_toolTip.SetTitle(reinterpret_cast<UINT>(m_hInfo), _T("Displaying the contents of the control ..."));
+        m_toolTip.SetTitle(reinterpret_cast<UINT>(m_hInfo), _T("Displaying the contents of the control ..."));
     else
-		m_toolTip.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
+        m_toolTip.SetTitle(TTI_INFO, _T("Displaying the contents of the control ..."));
 #endif
 
     // Calculate left half and right have rectangles
     CRect leftRect = GetClientRect();
-	leftRect.right = leftRect.right / 2;
+    leftRect.right = leftRect.right / 2;
     CRect rightRect = GetClientRect();
-	rightRect.left = rightRect.right / 2;
+    rightRect.left = rightRect.right / 2;
 
     // Specify a tooltip using a RECT and a user ID
     m_bubbleTT.AddTool(*this, leftRect,  1, _T("Client area, left side"));

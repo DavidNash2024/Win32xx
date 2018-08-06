@@ -57,14 +57,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -91,12 +91,12 @@ void CMainFrame::OnInitialUpdate()
 {   
     // Add some tabs to the tab control
     m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-	m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-	m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
-	m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
-	m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+    m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+    m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+    m_view.AddTabPage(new CViewFiles, _T("Files"), IDI_FILEVIEW);
+    m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
 
-	m_view.SelectPage(0);
+    m_view.SelectPage(0);
 
     // PreCreate initially set the window as invisible, so show it now.
     ShowWindow();
@@ -133,13 +133,13 @@ void CMainFrame::OnMenuUpdate(UINT id)
             UINT check = (isOwnerDraw)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_DRAW, check);
         }
-		break;
+        break;
     case IDM_TAB_FIXED:
         {
             UINT check = (isFixed)? MF_CHECKED : MF_UNCHECKED;
             GetFrameMenu().CheckMenuItem(IDM_TAB_FIXED, check);
         }
-		break;
+        break;
     }
 
     CFrame::OnMenuUpdate(id);
@@ -153,13 +153,13 @@ BOOL CMainFrame::OnNewFilesTab()
 
 BOOL CMainFrame::OnNewClassesTab()
 {
-	m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
+    m_view.AddTabPage(new CViewClasses, _T("Classes"), IDI_CLASSVIEW);
     return TRUE;
 }
 
 BOOL CMainFrame::OnNewDialogTab()
 {
-	m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
+    m_view.AddTabPage(new CViewDialog(IDD_MYDIALOG), _T("Dialog"), IDI_DIALOGVIEW);
     return TRUE;
 }
 
@@ -170,7 +170,7 @@ BOOL CMainFrame::OnNewTab()
     // Position the popup menu
     CToolBar& tb = GetToolBar();
     RECT rc = tb.GetItemRect(tb.CommandToIndex(IDM_NEW_TAB));
-	tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
+    tb.MapWindowPoints(NULL, (LPPOINT)&rc, 2);
 
     TPMPARAMS tpm;
     tpm.cbSize = sizeof(TPMPARAMS);
@@ -188,8 +188,8 @@ BOOL CMainFrame::OnNewTab()
 BOOL CMainFrame::OnShowButtons()
 {
     BOOL isShown = m_view.GetShowButtons();
-	m_view.SetShowButtons(!isShown);
-	m_view.RedrawWindow();
+    m_view.SetShowButtons(!isShown);
+    m_view.RedrawWindow();
     return TRUE;
 }
 
@@ -198,7 +198,7 @@ BOOL CMainFrame::OnTabClose()
     int tab = m_view.GetCurSel();
 
     if (tab >= 0)
-		m_view.RemoveTabPage(tab);
+        m_view.RemoveTabPage(tab);
 
     return TRUE;
 }
@@ -206,21 +206,21 @@ BOOL CMainFrame::OnTabClose()
 BOOL CMainFrame::OnTabFixedWidth()
 {
     BOOL isFixed = m_view.GetStyle() & TCS_FIXEDWIDTH;
-	m_view.SetFixedWidth(!isFixed);
+    m_view.SetFixedWidth(!isFixed);
     return TRUE;
 }
 
 BOOL CMainFrame::OnTabOwnerDraw()
 {
     BOOL isOwnerDraw = m_view.GetStyle() & TCS_OWNERDRAWFIXED;
-	m_view.SetOwnerDraw(!isOwnerDraw);
+    m_view.SetOwnerDraw(!isOwnerDraw);
     return TRUE;
 }
 
 BOOL CMainFrame::OnTabsAtTop()
 {
     BOOL isAtTop = m_view.GetTabsAtTop();
-	m_view.SetTabsAtTop(!isAtTop);
+    m_view.SetTabsAtTop(!isAtTop);
     return TRUE;
 }
 

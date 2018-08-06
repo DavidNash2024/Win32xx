@@ -70,7 +70,7 @@ void CPreviewPane::Render(CDC& dc)
     if (m_bitmap.GetHandle())
     {
         CMemDC memDC(dc);
-		memDC.SelectObject(m_bitmap);
+        memDC.SelectObject(m_bitmap);
         BITMAP bm = m_bitmap.GetBitmapData();
         int border = 20;
         CRect rcClient = GetClientRect();
@@ -183,11 +183,11 @@ BOOL CPreviewDialog::OnInitDialog()
 
     // Support dialog resizing
     m_resizer.Initialize(*this, CRect(0, 0, 100, 120));
-	m_resizer.AddChild(m_buttonPrint, topleft, 0);
-	m_resizer.AddChild(m_buttonPrev, topleft, 0);
-	m_resizer.AddChild(m_buttonNext, topleft, 0);
-	m_resizer.AddChild(m_buttonClose, topleft, 0);
-	m_resizer.AddChild(m_previewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_buttonPrint, topleft, 0);
+    m_resizer.AddChild(m_buttonPrev, topleft, 0);
+    m_resizer.AddChild(m_buttonNext, topleft, 0);
+    m_resizer.AddChild(m_buttonClose, topleft, 0);
+    m_resizer.AddChild(m_previewPane, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
 
     m_currentPage = 0;
     return TRUE;
@@ -223,7 +223,7 @@ BOOL CPreviewDialog::DoPrintPreview(RECT page, RECT printArea)
     // Get the device contect of the default or currently chosen printer
     CPrintDialog printDlg(PD_USEDEVMODECOPIESANDCOLLATE | PD_RETURNDC);
     CDC printerDC = printDlg.GetPrinterDC();
-	printerDC.SetMapMode(MM_TEXT);
+    printerDC.SetMapMode(MM_TEXT);
 
     FORMATRANGE fr;
     fr.hdcTarget = printerDC;
@@ -296,15 +296,15 @@ void CPreviewDialog::PreviewPage(UINT page)
     int shrink = width > 10000? 8 : 4;
     
     CDC previewDC = GetPreviewPane().GetDC();
-	memDC.CreateCompatibleBitmap(previewDC, width / shrink, height / shrink);
+    memDC.CreateCompatibleBitmap(previewDC, width / shrink, height / shrink);
 
-	memDC.SetMapMode(MM_ANISOTROPIC);
-	memDC.SetWindowExtEx(width, height, NULL);
-	memDC.SetViewportExtEx( width / shrink, height / shrink, NULL);
+    memDC.SetMapMode(MM_ANISOTROPIC);
+    memDC.SetWindowExtEx(width, height, NULL);
+    memDC.SetViewportExtEx( width / shrink, height / shrink, NULL);
 
     // Fill the bitmap with a white background
     CRect rc(0, 0, width, height);
-	memDC.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
+    memDC.FillRect(rc, (HBRUSH)::GetStockObject(WHITE_BRUSH));
 
     // Display text from the richedit control on the memory dc
     GetRichView().FormatRange(fr, TRUE);

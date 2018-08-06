@@ -33,8 +33,8 @@ void CMainFrame::AddCombo()
     CToolBar& tb = GetToolBar();
     if (tb.CommandToIndex(IDM_FILE_SAVE) < 0) return;
 
-	tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);  // Convert the button to a separator
-	tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
+    tb.SetButtonStyle(IDM_FILE_SAVE, TBSTYLE_SEP);  // Convert the button to a separator
+    tb.SetButtonWidth(IDM_FILE_SAVE, comboWidth);
 
     // Determine the size and position of the ComboBox
     int nIndex = tb.CommandToIndex(IDM_FILE_SAVE);
@@ -233,13 +233,13 @@ LRESULT CMainFrame::CustomDrawMenuBar(NMHDR* pNMHDR)
     
     COLORREF clr;
     if (m_color == IDM_BLACK)
-		clr = RGB(255,255,255);
+        clr = RGB(255,255,255);
     else
-		clr = RGB(0, 0, 0);
+        clr = RGB(0, 0, 0);
 
     // Set the text color for the custom draw's device context
     CDC drawDC(lpNMCustomDraw->nmcd.hdc);
-	drawDC.SetTextColor(clr);
+    drawDC.SetTextColor(clr);
 
     return CFrame::CustomDrawMenuBar(pNMHDR);
 }
@@ -261,8 +261,8 @@ BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
 
     HKEY hKey;
     CString fullKeyName = _T("Software\\");
-	fullKeyName += keyName;
-	fullKeyName += (_T("\\Theme Settings"));
+    fullKeyName += keyName;
+    fullKeyName += (_T("\\Theme Settings"));
 
     if (ERROR_SUCCESS == RegOpenKeyEx(HKEY_CURRENT_USER, fullKeyName, 0, KEY_READ, &hKey))
     {
@@ -360,13 +360,13 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
     // call the base class function
@@ -454,7 +454,7 @@ BOOL CMainFrame::OnUseThemes()
     {
         m_useThemes = !m_useThemes;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.UseThemes = m_useThemes;
+        rbt.UseThemes = m_useThemes;
         SetReBarTheme(rbt);
         int band = GetReBar().GetBand(GetMenuBar());
         GetReBar().ShowGripper(band, !m_useThemes);
@@ -486,7 +486,7 @@ BOOL CMainFrame::OnFlatStyle()
     {
         m_useFlatStyle = !m_useFlatStyle;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.FlatStyle = m_useFlatStyle;
+        rbt.FlatStyle = m_useFlatStyle;
         SetReBarTheme(rbt);
 
         GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -502,7 +502,7 @@ BOOL CMainFrame::OnLeftBands()
     {
         m_keepBandsLeft = !m_keepBandsLeft;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.BandsLeft = m_keepBandsLeft;
+        rbt.BandsLeft = m_keepBandsLeft;
         SetReBarTheme(rbt);
 
         GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -518,7 +518,7 @@ BOOL CMainFrame::OnLockMenuBar()
     {
         m_lockMenuBand = !m_lockMenuBand;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.LockMenuBand = m_lockMenuBand;
+        rbt.LockMenuBand = m_lockMenuBand;
         SetReBarTheme(rbt);
         GetReBar().MoveBand(GetReBar().GetBand(GetMenuBar()), 0);   // Move the MenuBar to band 0
         GetReBar().ShowGripper(GetReBar().GetBand(GetMenuBar()), !m_lockMenuBand);
@@ -581,7 +581,7 @@ BOOL CMainFrame::OnRoundBorders()
     {
         m_useRoundBorders = !m_useRoundBorders;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.RoundBorders = m_useRoundBorders;
+        rbt.RoundBorders = m_useRoundBorders;
         SetReBarTheme(rbt);
 
         GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -597,7 +597,7 @@ BOOL CMainFrame::OnShortBands()
     {
         m_useShortBands = !m_useShortBands;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.ShortBands = m_useShortBands;
+        rbt.ShortBands = m_useShortBands;
         SetReBarTheme(rbt);
 
         GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -613,7 +613,7 @@ BOOL CMainFrame::OnUseLines()
     {
         m_useLines = !m_useLines;
         ReBarTheme rbt = GetReBarTheme();
-		rbt.UseLines = m_useLines;
+        rbt.UseLines = m_useLines;
         SetReBarTheme(rbt);
 
         GetReBar().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_ALLCHILDREN);
@@ -755,14 +755,14 @@ void CMainFrame::SetupToolBar()
         // Add the Arrows toolbar
         AddToolBarBand(m_arrows, 0, IDC_ARROWS);
         m_arrows.AddButton(IDM_ARROW_LEFT);
-		m_arrows.AddButton(IDM_ARROW_RIGHT);
+        m_arrows.AddButton(IDM_ARROW_RIGHT);
 
         // Add the Cards toolbar
         AddToolBarBand(m_cards, 0, IDB_CARDS);
         m_cards.AddButton(IDM_CARD_CLUB);
-		m_cards.AddButton(IDM_CARD_DIAMOND);
-		m_cards.AddButton(IDM_CARD_HEART);
-		m_cards.AddButton(IDM_CARD_SPADE);
+        m_cards.AddButton(IDM_CARD_DIAMOND);
+        m_cards.AddButton(IDM_CARD_HEART);
+        m_cards.AddButton(IDM_CARD_SPADE);
         
         // Set the button images
         SetTBImageList(m_arrows, m_arrowImages, IDB_ARROWS, RGB(255,0,255));

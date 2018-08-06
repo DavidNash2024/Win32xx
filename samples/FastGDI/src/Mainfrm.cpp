@@ -84,14 +84,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -132,8 +132,8 @@ BOOL CMainFrame::LoadFile(CString& fileName)
 
         // Turn on the ToolBar adjust button
         CToolBar& tb = GetToolBar();
-		tb.EnableButton(IDM_FILE_SAVEAS);
-		tb.EnableButton(IDM_IMAGE_ADJUST);
+        tb.EnableButton(IDM_FILE_SAVEAS);
+        tb.EnableButton(IDM_IMAGE_ADJUST);
         GetFrameMenu().EnableMenuItem(IDM_IMAGE_ADJUST, MF_BYCOMMAND | MF_ENABLED);
 
         // Resize the frame to match the bitmap
@@ -177,8 +177,8 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     if (m_myView.LoadFileImage(mruText))
     {
         m_pathName = mruText;
-		tb.EnableButton(IDM_FILE_SAVEAS);
-		tb.EnableButton(IDM_IMAGE_ADJUST);
+        tb.EnableButton(IDM_FILE_SAVEAS);
+        tb.EnableButton(IDM_IMAGE_ADJUST);
 
         // Adjust the window size
         CRect rcImage = GetMyView().GetImageRect();
@@ -187,8 +187,8 @@ BOOL CMainFrame::OnFileOpenMRU(WPARAM wparam, LPARAM lparam)
     else
     {
         RemoveMRUEntry(mruText);
-		tb.DisableButton(IDM_FILE_SAVEAS);
-		tb.DisableButton(IDM_IMAGE_ADJUST);
+        tb.DisableButton(IDM_FILE_SAVEAS);
+        tb.DisableButton(IDM_IMAGE_ADJUST);
     }
 
     // Resize the frame to match the bitmap

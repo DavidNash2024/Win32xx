@@ -382,17 +382,17 @@ STDMETHODIMP CMainFrame::UpdateProperty(UINT32 cmdID, __in REFPROPERTYKEY key,  
         if (UI_PKEY_Label == key)
         {
             WCHAR label[MAX_PATH] = L"Recent Files";
-			result = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
+            result = UIInitPropertyFromString(UI_PKEY_Label, label, newValue);
         }
         else if (UI_PKEY_RecentItems == key)
         {
-			result = PopulateRibbonRecentItems(newValue);
+            result = PopulateRibbonRecentItems(newValue);
         }
         break;
 
     case IDC_PEN_COLOR:
         // Set the initial pen color
-		result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
+        result = UIInitPropertyFromUInt32(key, RGB(1, 1, 1), newValue);
         break;
     } 
 

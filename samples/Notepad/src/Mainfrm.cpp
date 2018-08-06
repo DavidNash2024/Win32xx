@@ -207,7 +207,7 @@ BOOL CMainFrame::OnFilePrint()
             LONG textPrinted;  // Amount of document printed.
 
             // Ensure the printer DC is in MM_TEXT mode.
-			printerDC.SetMapMode(MM_TEXT);
+            printerDC.SetMapMode(MM_TEXT);
 
             // Rendering to the same DC we are measuring.
             FORMATRANGE fr;
@@ -242,7 +242,7 @@ BOOL CMainFrame::OnFilePrint()
             di.lpszOutput = NULL;
 
             // Start the document.
-			printerDC.StartDoc(&di);
+            printerDC.StartDoc(&di);
 
             // Find out real size of document in characters.
             textLength = m_richView.GetTextLengthEx(GTL_NUMCHARS);
@@ -250,7 +250,7 @@ BOOL CMainFrame::OnFilePrint()
             do
             {
                 // Start the page.
-				printerDC.StartPage();
+                printerDC.StartPage();
 
                 // Print as much text as can fit on a page. The return value is
                 // the index of the first character on the next page. Using TRUE
@@ -259,7 +259,7 @@ BOOL CMainFrame::OnFilePrint()
                 m_richView.DisplayBand(fr.rc);
 
                 // Print last page.
-				printerDC.EndPage();
+                printerDC.EndPage();
 
                 // If there is more text to print, adjust the range of characters
                 // to start printing at the first character of the next page.
@@ -274,7 +274,7 @@ BOOL CMainFrame::OnFilePrint()
             m_richView.FormatRange();
 
             // End the print job
-			printerDC.EndDoc();
+            printerDC.EndDoc();
         }
         else
             return FALSE;

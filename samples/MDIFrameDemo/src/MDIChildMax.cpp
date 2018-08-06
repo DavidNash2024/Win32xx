@@ -41,19 +41,19 @@ void CMDIChildMax::PreCreate(CREATESTRUCT& cs)
 
 void CViewMax::OnDraw(CDC& dc)
 {
-	//Centre some text in our view window
-	CRect rc = GetClientRect();
-	dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
+    //Centre some text in our view window
+    CRect rc = GetClientRect();
+    dc.DrawText(_T("Maxed Window"), -1, rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 }
 
 LRESULT CViewMax::WndProc(UINT msg, WPARAM wparam, LPARAM lparam)
 {
-	switch (msg)
-	{
-	case WM_SIZE:
-		Invalidate();
-		return 0;
+    switch (msg)
+    {
+    case WM_SIZE:
+        Invalidate();
+        return 0;
 
-	}
-	return WndProcDefault(msg, wparam, lparam);
+    }
+    return WndProcDefault(msg, wparam, lparam);
 }

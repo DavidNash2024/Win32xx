@@ -145,7 +145,7 @@ namespace Win32xx
     inline CFile::~CFile()
     {
         if (m_hFile != 0)
-            ::CloseHandle(m_hFile);
+            VERIFY(::CloseHandle(m_hFile));
     }
 
 

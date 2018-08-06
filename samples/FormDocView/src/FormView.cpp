@@ -128,20 +128,20 @@ BOOL CFormView::OnInitDialog()
     
     // Initialize dialog resizing
     m_resizer.Initialize( *this, CRect(0, 0, 450, 300) );
-	m_resizer.AddChild(m_radioA,   topleft, 0);
-	m_resizer.AddChild(m_radioB,   topleft, 0);
-	m_resizer.AddChild(m_radioC,   topleft, 0);
-	m_resizer.AddChild(m_checkA,   topleft, 0);
-	m_resizer.AddChild(m_checkB,   topleft, 0);
-	m_resizer.AddChild(m_checkC,   topleft, 0);
-	m_resizer.AddChild(m_button,   topleft, 0);
-	m_resizer.AddChild(m_edit,     topleft, RD_STRETCH_WIDTH);
-	m_resizer.AddChild(m_listBox,  topleft, RD_STRETCH_WIDTH);
-	m_resizer.AddChild(m_richEdit, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
-	m_resizer.AddChild(m_picture,  topright, 0);
-	m_resizer.AddChild(m_ok,       bottomright, 0);
-	m_resizer.AddChild(m_group,    bottomright, RD_STRETCH_HEIGHT);
-	m_resizer.AddChild(m_status,   bottomright, RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_radioA,   topleft, 0);
+    m_resizer.AddChild(m_radioB,   topleft, 0);
+    m_resizer.AddChild(m_radioC,   topleft, 0);
+    m_resizer.AddChild(m_checkA,   topleft, 0);
+    m_resizer.AddChild(m_checkB,   topleft, 0);
+    m_resizer.AddChild(m_checkC,   topleft, 0);
+    m_resizer.AddChild(m_button,   topleft, 0);
+    m_resizer.AddChild(m_edit,     topleft, RD_STRETCH_WIDTH);
+    m_resizer.AddChild(m_listBox,  topleft, RD_STRETCH_WIDTH);
+    m_resizer.AddChild(m_richEdit, topleft, RD_STRETCH_WIDTH | RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_picture,  topright, 0);
+    m_resizer.AddChild(m_ok,       bottomright, 0);
+    m_resizer.AddChild(m_group,    bottomright, RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_status,   bottomright, RD_STRETCH_HEIGHT);
     
     return TRUE;
 }
@@ -180,7 +180,7 @@ BOOL CFormView::OnCheckC()
 {
     TRACE("Check Box C\n");
     BOOL isCheckC = GetDoc().GetCheckC();
-	isCheckC = !isCheckC;  // Toggle
+    isCheckC = !isCheckC;  // Toggle
     CheckDlgButton(ID_CHECK_C, isCheckC);
     GetDoc().SetCheckC(isCheckC);
 

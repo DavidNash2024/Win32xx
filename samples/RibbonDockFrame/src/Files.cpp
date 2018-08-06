@@ -88,13 +88,13 @@ void CViewFiles::SetColumns()
     //initialise the columns
     LV_COLUMN column;
     ZeroMemory(&column, sizeof(column));
-	column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
-	column.fmt = LVCFMT_LEFT;
-	column.cx = 120;
+    column.mask = LVCF_FMT | LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
+    column.fmt = LVCFMT_LEFT;
+    column.cx = 120;
     TCHAR string[3][20] = {_T("Name"), _T("Size"), _T("Type")};
     for(int i = 0; i < 3; ++i)
     {
-		column.pszText = string[i];
+        column.pszText = string[i];
         InsertColumn(i, column);
     }
 }

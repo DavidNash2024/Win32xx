@@ -43,7 +43,7 @@ CApp : public CWinApp                                                   /*
 
 /*============================================================================*/
     inline CApp&
-TheApp()																/*
+TheApp()                                                                /*
 
     Return a reference to the CApp object.
 *-----------------------------------------------------------------------------*/
@@ -53,7 +53,7 @@ TheApp()																/*
 
 /*============================================================================*/
     inline CMainFrame& 
-GetFrame()														/*
+GetFrame()                                                      /*
 
     Return a reference to the CMainFrame object.
 *-----------------------------------------------------------------------------*/
@@ -63,7 +63,7 @@ GetFrame()														/*
 
 /*============================================================================*/
     inline CRichView& 
-GetRichView()														/*
+GetRichView()                                                       /*
 
     Return a reference to the rich view object being previewed.
 *-----------------------------------------------------------------------------*/
@@ -71,4 +71,4 @@ GetRichView()														/*
     return GetFrame().GetRichView();
 }
 /*----------------------------------------------------------------------------*/
-#endif // THE_APP_H	
+#endif // THE_APP_H 

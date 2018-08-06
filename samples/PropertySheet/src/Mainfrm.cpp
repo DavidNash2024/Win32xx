@@ -50,14 +50,14 @@ int CMainFrame::OnCreate(CREATESTRUCT& cs)
     // OnCreate controls the way the frame is created.
     // Overriding CFrame::OnCreate is optional.
 
-	// A menu is added if the IDW_MAIN menu resource is defined.
-	// Frames have all options enabled by default. 
-	// Use the following functions to disable options.
+    // A menu is added if the IDW_MAIN menu resource is defined.
+    // Frames have all options enabled by default. 
+    // Use the following functions to disable options.
 
     // UseIndicatorStatus(FALSE);    // Don't show keyboard indicators in the StatusBar
     // UseMenuStatus(FALSE);         // Don't show menu descriptions in the StatusBar
     // UseReBar(FALSE);              // Don't use a ReBar
-	// UseStatusBar(FALSE);          // Don't use a StatusBar
+    // UseStatusBar(FALSE);          // Don't use a StatusBar
     // UseThemes(FALSE);             // Don't use themes
     // UseToolBar(FALSE);            // Don't use a ToolBar
 
@@ -85,13 +85,13 @@ BOOL CMainFrame::OnModeless()
     // Permit only one Modeless property sheet
     if (!m_modelessPS.IsWindow())
     {
-		m_modelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
-		m_modelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
-		m_modelessPS.SetTitle(_T("Modeless Property Sheet"));
-		m_modelessPS.Create(*this);
+        m_modelessPS.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));
+        m_modelessPS.AddPage(new CComboPage(IDD_COMBOBOXES, _T("Combo Boxes")));
+        m_modelessPS.SetTitle(_T("Modeless Property Sheet"));
+        m_modelessPS.Create(*this);
     }
     else
-		m_modelessPS.SetForegroundWindow();
+        m_modelessPS.SetForegroundWindow();
 
     return TRUE;
 }
@@ -99,7 +99,7 @@ BOOL CMainFrame::OnModeless()
 BOOL CMainFrame::OnModal()
 {
     if (m_modelessPS.IsWindow())
-		m_modelessPS.Destroy();
+        m_modelessPS.Destroy();
 
     CMyPropertySheet mps(_T("Modal Property Sheet"), *this);
     mps.AddPage(new CButtonPage(IDD_BUTTONS, _T("Buttons")));

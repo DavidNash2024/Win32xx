@@ -75,19 +75,19 @@ BOOL CMDIChildSimple::OnCommand(WPARAM wparam, LPARAM lparam)
         Invalidate();
         return TRUE;
     case IDM_COLOR_RED:
-		m_view.SetColor(RGB(255, 0, 0));
+        m_view.SetColor(RGB(255, 0, 0));
         Invalidate();
         return TRUE;
     case IDM_COLOR_GREEN:
-		m_view.SetColor(RGB(0, 255, 0));
+        m_view.SetColor(RGB(0, 255, 0));
         Invalidate();
         return TRUE;
     case IDM_COLOR_BLUE:
-		m_view.SetColor(RGB(0, 0, 255));
+        m_view.SetColor(RGB(0, 0, 255));
         Invalidate();
         return TRUE;
     case IDM_COLOR_WHITE:
-		m_view.SetColor(RGB(255, 255, 255));
+        m_view.SetColor(RGB(255, 255, 255));
         Invalidate();
         return TRUE;
     }

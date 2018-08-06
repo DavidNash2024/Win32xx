@@ -16,16 +16,16 @@ int CMetaView::OnCreate(CREATESTRUCT&)
 
     CEnhMetaFileDC metaDC;
     // Creates an enhanced MetaFile called "Pattern.emf", and also the EnhMetaFile device context
-	metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
+    metaDC.CreateEnhanced(NULL, _T("Pattern.emf"), NULL, NULL);
     
     // Draw to the Metafile device context
-	metaDC.Rectangle(0, 0, 100, 100);
-	metaDC.MoveTo(0, 0);
-	metaDC.LineTo(100, 100);
-	metaDC.MoveTo(0, 100);
-	metaDC.LineTo(100, 0);
-	metaDC.CreateSolidBrush(RGB(0, 255, 0));
-	metaDC.Ellipse(20, 20, 80, 80);
+    metaDC.Rectangle(0, 0, 100, 100);
+    metaDC.MoveTo(0, 0);
+    metaDC.LineTo(100, 100);
+    metaDC.MoveTo(0, 100);
+    metaDC.LineTo(100, 0);
+    metaDC.CreateSolidBrush(RGB(0, 255, 0));
+    metaDC.Ellipse(20, 20, 80, 80);
 
     // Close the metafile. The CEnhMetaFile is now ready for use.
     m_enhMetaFile = metaDC.CloseEnhanced();

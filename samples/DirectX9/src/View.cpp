@@ -60,7 +60,7 @@ int CDXView::CDXThread::MessageLoop()
 //
 CDXView::CDX::CDX() : m_pD3D(NULL), m_pd3dDevice(NULL), m_pVB(NULL)
 {
-	ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
+    ZeroMemory(&m_d3dpp, sizeof(m_d3dpp));
 }
 
 CDXView::CDX::~CDX()

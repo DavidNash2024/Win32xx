@@ -151,13 +151,13 @@ STDMETHODIMP CView::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* p
         switch (verb)
         {                           
         case UI_VIEWVERB_CREATE:    // The view was newly created.
-			result = S_OK;
+            result = S_OK;
             break;
         case UI_VIEWVERB_SIZE:      //  The ribbon's size has changed           
-			result = S_OK;
+            result = S_OK;
             break;          
         case UI_VIEWVERB_DESTROY:   // The view was destroyed.
-			result = S_OK;
+            result = S_OK;
             break;
         }
     }  

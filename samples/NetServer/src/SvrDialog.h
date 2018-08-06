@@ -8,10 +8,10 @@
 #include "Server.h"
 
 
-class CServerSocket;
+class CWorkerSocket;
 class CTCPClientDlg;
 
-typedef Shared_Ptr<CServerSocket> ServerSocketPtr;
+typedef Shared_Ptr<CWorkerSocket> ServerSocketPtr;
 typedef Shared_Ptr<CTCPClientDlg> TCPClientDlgPtr;
 
 // Declaration of the CTCPClientDlg class
@@ -60,7 +60,7 @@ public:
     void StopServer();
 
 protected:
-	virtual void OnClose();
+    virtual void OnClose();
     virtual BOOL OnInitDialog();
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);

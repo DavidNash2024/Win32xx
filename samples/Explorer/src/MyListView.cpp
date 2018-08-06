@@ -59,7 +59,7 @@ void CMyListView::DoBackgroundMenu(CPoint& point)
         if(SUCCEEDED(hr))
         {
             CMenu popup;
-			popup.CreatePopupMenu();
+            popup.CreatePopupMenu();
             if(popup.GetHandle())
             {
                 int   i = 0;
@@ -81,7 +81,7 @@ void CMyListView::DoBackgroundMenu(CPoint& point)
                     ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
                     idCmd = popup.TrackPopupMenu(TPM_LEFTALIGN | TPM_RETURNCMD | TPM_RIGHTBUTTON,
-						point.x, point.y, *this, NULL);
+                        point.x, point.y, *this, NULL);
 
                     if(idCmd)
                     {
@@ -157,10 +157,10 @@ void CMyListView::DoDefault(int item)
         ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
         CShellFolder   folder;
         CContextMenu ccm;
-		folder = pInfo->GetParentFolder();
+        folder = pInfo->GetParentFolder();
 
         if (!folder.GetIShellFolder())
-			folder.SHGetDesktopFolder();
+            folder.SHGetDesktopFolder();
 
         if(folder.GetIShellFolder())
         {
@@ -170,7 +170,7 @@ void CMyListView::DoDefault(int item)
             if(SUCCEEDED(hr))
             {
                 CMenu popup;
-				popup.CreatePopupMenu();
+                popup.CreatePopupMenu();
                 if(popup.GetHandle())
                 {
                     hr = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
@@ -182,7 +182,7 @@ void CMyListView::DoDefault(int item)
                         {
                             //determine if the item is a folder
                             ULONG ulAttr = SFGAO_HASSUBFOLDER | SFGAO_FOLDER;
-							folder.GetAttributesOf(1, pInfo->GetRelPidl(), ulAttr);
+                            folder.GetAttributesOf(1, pInfo->GetRelPidl(), ulAttr);
 
                             if ((ulAttr & SFGAO_HASSUBFOLDER) || (ulAttr &SFGAO_FOLDER))
                             {

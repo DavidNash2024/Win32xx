@@ -16,7 +16,7 @@ CBitmap CView::CreateMaskBitmap()
     BITMAP bm;
     GetObject(m_blue, sizeof(BITMAP), &bm);
     CBitmap mask;
-	mask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
+    mask.CreateBitmap(bm.bmWidth, bm.bmHeight, 1, 1, NULL);
     m_ballSize.cx = bm.bmWidth;
     m_ballSize.cy = bm.bmHeight;
 
