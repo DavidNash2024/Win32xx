@@ -177,11 +177,11 @@ namespace Win32xx
         void    DeleteObject();
         HGDIOBJ Detach();
         HGDIOBJ GetHandle() const;
-        int     GetObject(int nCount, LPVOID pObject) const;
+        int     GetObject(int count, LPVOID pObject) const;
 
     protected:
         void    Release();
-        void SetManaged(bool IsManaged) const { m_pData->IsManagedObject = IsManaged; }
+        void SetManaged(bool IsManaged) const { m_pData->isManagedObject = IsManaged; }
 
     private:
         void    AddToMap();
@@ -978,12 +978,12 @@ namespace Win32xx
             }
         }
 
-        void Create(LPCTSTR lpszFilename = NULL)
+        void Create(LPCTSTR pFilename = NULL)
         {
             try
             {
                 assert(GetHDC() == 0);
-                HDC hDC = ::CreateMetaFile(lpszFilename);
+                HDC hDC = ::CreateMetaFile(pFilename);
                 if (hDC == 0)
                     throw CResourceException(_T("Failed to create a DC for the MetaFile"));
 
@@ -1028,12 +1028,12 @@ namespace Win32xx
             }
         }
 
-        void CreateEnhanced(HDC hdcRef, LPCTSTR lpszFileName, const RECT* prcBounds, LPCTSTR lpszDescription)
+        void CreateEnhanced(HDC hRef, LPCTSTR pFileName, const RECT* pBounds, LPCTSTR pDescription)
         {
             try
             {
                 assert(GetHDC() == 0);
-                HDC hDC = ::CreateEnhMetaFile(hdcRef, lpszFileName, prcBounds, lpszDescription);
+                HDC hDC = ::CreateEnhMetaFile(hRef, pFileName, pBounds, pDescription);
                 if (hDC == 0)
                     throw CResourceException(_T("Failed to create a DC for the EnhMetaFile"));
 
@@ -1134,7 +1134,7 @@ namespace Win32xx
     inline CGDIObject::CGDIObject(const CGDIObject& rhs)
     {
         m_pData = rhs.m_pData;
-        InterlockedIncrement(&m_pData->Count);
+        InterlockedIncrement(&m_pData->count);
     }
 
 
@@ -1151,7 +1151,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
-            InterlockedIncrement(&rhs.m_pData->Count);
+            InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
         }
@@ -1198,7 +1198,7 @@ namespace Win32xx
                 {
                     delete m_pData;
                     m_pData = pCGDIData;
-                    InterlockedIncrement(&m_pData->Count);
+                    InterlockedIncrement(&m_pData->count);
                 }
                 else
                 {
@@ -1234,9 +1234,9 @@ namespace Win32xx
         RemoveFromMap();
         m_pData->hGDIObject = 0;
 
-        if (m_pData->Count > 0)
+        if (m_pData->count > 0)
         {
-            if (InterlockedDecrement(&m_pData->Count) == 0)
+            if (InterlockedDecrement(&m_pData->count) == 0)
             {
                 delete m_pData;
             }
@@ -1254,22 +1254,22 @@ namespace Win32xx
         return m_pData->hGDIObject;
     }
 
-    inline int CGDIObject::GetObject(int nCount, LPVOID pObject) const
+    inline int CGDIObject::GetObject(int count, LPVOID pObject) const
     // Retrieves information for the specified graphics object.
     {
         assert(m_pData);
-        return ::GetObject(m_pData->hGDIObject, nCount, pObject);
+        return ::GetObject(m_pData->hGDIObject, count, pObject);
     }
 
     inline void CGDIObject::Release()
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->Count) == 0)
+        if (InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->hGDIObject != NULL)
             {
-                if (m_pData->IsManagedObject)
+                if (m_pData->isManagedObject)
                 {
                     ::DeleteObject(m_pData->hGDIObject);
                 }
@@ -1293,7 +1293,7 @@ namespace Win32xx
             std::map<HGDIOBJ, CGDI_Data*, CompareGDI>::iterator m;
 
             CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_csGDILock);
+            CThreadLock mapLock(App.m_gdiLock);
             m = App.m_mapCGDIData.find(m_pData->hGDIObject);
             if (m != App.m_mapCGDIData.end())
             {
@@ -2782,7 +2782,7 @@ namespace Win32xx
             std::map<HDC, CDC_Data*, CompareHDC>::iterator m;
 
             CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_csGDILock);
+            CThreadLock mapLock(App.m_gdiLock);
             m = App.m_mapCDCData.find(m_pData->hDC);
             if (m != App.m_mapCDCData.end())
             {
@@ -3740,7 +3740,7 @@ namespace Win32xx
     // that is selected into the device context.
     // pPoints: An array of POINT structures that receives the line endpoints and curve control points, in logical coordinates.
     // pTypes: Pointer to an array of bytes that receives the vertex types (PT_MOVETO, PT_LINETO or PT_BEZIERTO).
-    // nCount: The total number of POINT structures that can be stored in the array pointed to by pPoints.
+    // count: The total number of POINT structures that can be stored in the array pointed to by pPoints.
     inline int CDC::GetPath(POINT* pPoints, BYTE* pTypes, int count) const
     {
         assert(m_pData->hDC);
@@ -4703,10 +4703,10 @@ namespace Win32xx
 
 
     // Draws formatted text in the specified rectangle.
-    inline int CDC::DrawText(LPCTSTR pString, int nCount, const RECT& rc, UINT format) const
+    inline int CDC::DrawText(LPCTSTR pString, int count, const RECT& rc, UINT format) const
     {
         assert(m_pData->hDC);
-        return ::DrawText(m_pData->hDC, pString, nCount, (LPRECT)&rc, format );
+        return ::DrawText(m_pData->hDC, pString, count, (LPRECT)&rc, format );
     }
 
 
@@ -4729,10 +4729,10 @@ namespace Win32xx
 
 
     // Retrieves the typeface name of the font that is selected into the device context.
-    inline int CDC::GetTextFace(int nCount, LPTSTR pFacename) const
+    inline int CDC::GetTextFace(int count, LPTSTR pFacename) const
     {
         assert(m_pData->hDC);
-        return ::GetTextFace(m_pData->hDC, nCount, pFacename);
+        return ::GetTextFace(m_pData->hDC, count, pFacename);
     }
 
 

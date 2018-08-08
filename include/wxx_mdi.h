@@ -98,10 +98,10 @@ namespace Win32xx
 
         // These functions aren't virtual, and shouldn't be overridden
         HACCEL GetChildAccel() const { return m_hChildAccel; }
-        HMENU GetChildMenu() const { return m_ChildMenu; }
+        HMENU GetChildMenu() const { return m_childMenu; }
         CWnd& GetView() const           { assert(m_pView); return *m_pView; }
         void SetView(CWnd& wndView);
-        void SetHandles(HMENU MenuName, HACCEL AccelName);
+        void SetHandles(HMENU hMenu, HACCEL hAccel);
         void MDIActivate() const;
         void MDIDestroy() const;
         void MDIMaximize() const;
@@ -123,7 +123,7 @@ namespace Win32xx
         CMDIChild& operator = (const CMDIChild&); // Disable assignment operator
 
         CWnd* m_pView;              // pointer to the View CWnd object
-        CMenu m_ChildMenu;
+        CMenu m_childMenu;
         HACCEL m_hChildAccel;
     };
 
@@ -139,7 +139,7 @@ namespace Win32xx
 
     protected:
         // Overridable virtual functions
-        virtual HWND Create(HWND hWndParent);
+        virtual HWND Create(HWND hParent);
         virtual LRESULT OnMDIActivate(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIDestroy(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIGetActive(UINT msg, WPARAM wparam, LPARAM lparam);
@@ -160,7 +160,7 @@ namespace Win32xx
         virtual CMDIChild* AddMDIChild(CMDIChild* pMDIChild);
         virtual CMDIChild* GetActiveMDIChild() const;
         virtual CMenu GetActiveMenu() const;
-        virtual CWnd& GetMDIClient() const { return m_MDIClient; }
+        virtual CWnd& GetMDIClient() const { return m_mdiClient; }
         virtual BOOL IsMDIChildMaxed() const;
         virtual BOOL IsMDIFrame() const { return TRUE; }
         virtual void RemoveMDIChild(HWND hWnd);
@@ -183,12 +183,12 @@ namespace Win32xx
         virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual LRESULT OnMDIActivated(UINT msg, WPARAM wparam, LPARAM);
         virtual LRESULT OnMDIDestroyed(UINT msg, WPARAM wparam, LPARAM);
-        virtual void    OnMDIMaximized(BOOL IsMaxed);
-        virtual void    OnMenuUpdate(UINT nID);
+        virtual void    OnMDIMaximized(BOOL isMaxed);
+        virtual void    OnMenuUpdate(UINT id);
         virtual BOOL    OnViewStatusBar();
         virtual BOOL    OnViewToolBar();
         virtual LRESULT OnWindowPosChanged(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual BOOL    PreTranslateMessage(MSG& Msg);
+        virtual BOOL    PreTranslateMessage(MSG& msg);
         virtual void    RecalcLayout();
         virtual void    UpdateFrameMenu(CMenu Menu);
 
@@ -199,10 +199,10 @@ namespace Win32xx
     private:
         CMDIFrameT(const CMDIFrameT&);              // Disable copy construction
         CMDIFrameT& operator = (const CMDIFrameT&); // Disable assignment operator
-        void AppendMDIMenu(CMenu MenuWindow);
+        void AppendMDIMenu(CMenu menuWindow);
 
         std::vector<MDIChildPtr> m_vMDIChild;
-        mutable CMDIClient<CWnd> m_MDIClient;
+        mutable CMDIClient<CWnd> m_mdiClient;
     };
 
 
@@ -253,24 +253,24 @@ namespace Win32xx
     // Adds the additional menu items the the "Window" submenu when
     // MDI child windows are created.
     template <class T>
-    inline void CMDIFrameT<T>::AppendMDIMenu(CMenu MenuWindow)
+    inline void CMDIFrameT<T>::AppendMDIMenu(CMenu windowMenu)
     {
-        if (!MenuWindow.GetHandle())
+        if (!windowMenu.GetHandle())
             return;
 
         // Delete previously appended items
-        int nItems = MenuWindow.GetMenuItemCount();
-        UINT uLastID = MenuWindow.GetMenuItemID(--nItems);
+        int nItems = windowMenu.GetMenuItemCount();
+        UINT uLastID = windowMenu.GetMenuItemID(--nItems);
         if ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
         {
             while ((uLastID >= IDW_FIRSTCHILD) && (uLastID < IDW_FIRSTCHILD + 10))
             {
-                MenuWindow.DeleteMenu(nItems, MF_BYPOSITION);
-                uLastID = MenuWindow.GetMenuItemID(--nItems);
+				windowMenu.DeleteMenu(nItems, MF_BYPOSITION);
+                uLastID = windowMenu.GetMenuItemID(--nItems);
             }
 
             //delete the separator too
-            MenuWindow.DeleteMenu(nItems, MF_BYPOSITION);
+			windowMenu.DeleteMenu(nItems, MF_BYPOSITION);
         }
 
         int nWindow = 0;
@@ -284,7 +284,7 @@ namespace Win32xx
             {
                 // Add Separator
                 if (nWindow == 0)
-                    MenuWindow.AppendMenu(MF_SEPARATOR, 0, reinterpret_cast<LPCTSTR>(NULL));
+					windowMenu.AppendMenu(MF_SEPARATOR, 0, reinterpret_cast<LPCTSTR>(NULL));
 
                 // Add a menu entry for each MDI child (up to 9)
                 if (nWindow < 9)
@@ -301,17 +301,17 @@ namespace Win32xx
                     CString MenuString;
                     MenuString.Format(_T("&%d %s"), nWindow+1, strMenuItem.c_str());
 
-                    MenuWindow.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
+					windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, MenuString);
 
                     if (GetActiveMDIChild() == (*v).get())
-                        MenuWindow.CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
+						windowMenu.CheckMenuItem(IDW_FIRSTCHILD+nWindow, MF_CHECKED);
 
                     ++nWindow;
                 }
                 else if (9 == nWindow)
                 // For the 10th MDI child, add this menu item and return
                 {
-                    MenuWindow.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
+					windowMenu.AppendMenu(MF_STRING, IDW_FIRSTCHILD + nWindow, _T("&Windows..."));
                     return;
                 }
             }
@@ -354,9 +354,9 @@ namespace Win32xx
     template <class T>
     inline BOOL CMDIFrameT<T>::IsMDIChildMaxed() const
     {
-        BOOL IsMaxed = FALSE;
-        GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, reinterpret_cast<LPARAM>(&IsMaxed));
-        return IsMaxed;
+        BOOL isMaxed = FALSE;
+        GetMDIClient().SendMessage(WM_MDIGETACTIVE, 0, reinterpret_cast<LPARAM>(&isMaxed));
+        return isMaxed;
     }
 
 
@@ -364,10 +364,10 @@ namespace Win32xx
     // Possible values for nType are:
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being cascaded.
     template <class T>
-    inline void CMDIFrameT<T>::MDICascade(int nType /* = 0*/) const
+    inline void CMDIFrameT<T>::MDICascade(int type /* = 0*/) const
     {
         assert(T::IsWindow());
-        GetMDIClient().SendMessage(WM_MDICASCADE, nType, 0);
+        GetMDIClient().SendMessage(WM_MDICASCADE, type, 0);
     }
 
 
@@ -426,12 +426,12 @@ namespace Win32xx
     // MDITILE_SKIPDISABLED Prevents disabled MDI child windows from being tiled.
     // MDITILE_VERTICAL     Tiles MDI child windows so that one window appears beside another.
     template <class T>
-    inline void CMDIFrameT<T>::MDITile(int nType /* = 0*/) const
+    inline void CMDIFrameT<T>::MDITile(int type /* = 0*/) const
     {
 
 
         assert(T::IsWindow());
-        GetMDIClient().SendMessage(WM_MDITILE, nType, 0);
+        GetMDIClient().SendMessage(WM_MDITILE, type, 0);
     }
 
 
@@ -466,22 +466,22 @@ namespace Win32xx
 
     // Updates the check buttons before displaying the menu.
     template <class T>
-    inline void CMDIFrameT<T>::OnMenuUpdate(UINT nID)
+    inline void CMDIFrameT<T>::OnMenuUpdate(UINT id)
     {
-        switch (nID)
+        switch (id)
         {
         case IDW_VIEW_STATUSBAR:
             {
                 BOOL IsVisible = T::GetStatusBar().IsWindow() && T::GetStatusBar().IsWindowVisible();
-                GetActiveMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+                GetActiveMenu().CheckMenuItem(id, IsVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
 
         case IDW_VIEW_TOOLBAR:
             {
                 BOOL IsVisible = T::GetToolBar().IsWindow() && T::GetToolBar().IsWindowVisible();
-                GetActiveMenu().EnableMenuItem(nID, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
-                GetActiveMenu().CheckMenuItem(nID, IsVisible ? MF_CHECKED : MF_UNCHECKED);
+                GetActiveMenu().EnableMenuItem(id, T::IsUsingToolBar() ? MF_ENABLED : MF_DISABLED);
+                GetActiveMenu().CheckMenuItem(id, IsVisible ? MF_CHECKED : MF_UNCHECKED);
             }
             break;
         }
@@ -523,12 +523,12 @@ namespace Win32xx
 
     // Called when a MDI Child maximized state of the MDI child is checked.
     template <class T>
-    inline void CMDIFrameT<T>::OnMDIMaximized(BOOL IsMax)
+    inline void CMDIFrameT<T>::OnMDIMaximized(BOOL isMax)
     {
         // Override this function to take an action when a MDI child is
         // maximized or restored from maximized.
 
-        UNREFERENCED_PARAMETER(IsMax);
+        UNREFERENCED_PARAMETER(isMax);
     }
 
 
@@ -569,15 +569,15 @@ namespace Win32xx
     // Used to translate window messages before they are dispatched to they are handled in
     // the message loop.
     template <class T>
-    inline BOOL CMDIFrameT<T>::PreTranslateMessage(MSG& Msg)
+    inline BOOL CMDIFrameT<T>::PreTranslateMessage(MSG& msg)
     {
-        if (WM_KEYFIRST <= Msg.message && Msg.message <= WM_KEYLAST)
+        if (WM_KEYFIRST <= msg.message && msg.message <= WM_KEYLAST)
         {
-            if (TranslateMDISysAccel(T::GetView().GetHwnd(), &Msg))
+            if (TranslateMDISysAccel(T::GetView().GetHwnd(), &msg))
                 return TRUE;
         }
 
-        return T::PreTranslateMessage(Msg);
+        return T::PreTranslateMessage(msg);
     }
 
 
@@ -729,9 +729,9 @@ namespace Win32xx
 
     // Creates the MDIClient window.
     template<class T>
-    inline HWND CMDIClient<T>::Create(HWND hWndParent)
+    inline HWND CMDIClient<T>::Create(HWND hParent)
     {
-        assert(hWndParent != 0);
+        assert(hParent != 0);
 
         CLIENTCREATESTRUCT clientcreate;
         clientcreate.hWindowMenu  = 0;
@@ -739,7 +739,7 @@ namespace Win32xx
         DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
         // Create the view window
-        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), dwStyle, 0, 0, 0, 0, hWndParent, NULL, (PSTR) &clientcreate);
+        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), dwStyle, 0, 0, 0, 0, hParent, NULL, (PSTR) &clientcreate);
     }
 
 
@@ -822,7 +822,7 @@ namespace Win32xx
 
     // Create the MDI child window and then maximize if required.
     // This technique avoids unnecessary flicker when creating maximized MDI children.
-    inline HWND CMDIChild::Create(HWND hWndParent /*= NULL*/)
+    inline HWND CMDIChild::Create(HWND hParent /*= NULL*/)
     {
         CREATESTRUCT cs;
         WNDCLASS wc;
@@ -835,7 +835,7 @@ namespace Win32xx
 
         //Determine if the window should be created maximized
         BOOL Max = FALSE;
-        CWnd* pParent = GetCWndPtr(hWndParent);
+        CWnd* pParent = GetCWndPtr(hParent);
         assert(pParent);
         pParent->SendMessage(WM_MDIGETACTIVE, 0, reinterpret_cast<LPARAM>(&Max));
         Max = Max | (cs.style & WS_MAXIMIZE);
@@ -987,7 +987,7 @@ namespace Win32xx
     // Sets the MDI child's menu and accelerator handles.
     inline void CMDIChild::SetHandles(HMENU hMenu, HACCEL hAccel)
     {
-        m_ChildMenu.Attach(hMenu);
+        m_childMenu.Attach(hMenu);
         m_hChildAccel = hAccel;
 
         // Note: It is valid to call SetHandles before the window is created

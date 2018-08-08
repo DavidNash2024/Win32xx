@@ -72,56 +72,56 @@ namespace Win32xx
     public:
         //Construction
         CImageList();
-        CImageList(HIMAGELIST himl);
+        CImageList(HIMAGELIST hImages);
         CImageList(const CImageList& rhs);
         CImageList& operator = (const CImageList& rhs);
-        void operator = (const HIMAGELIST hImageLIst);
+        void operator = (const HIMAGELIST rhs);
         ~CImageList();
 
         //Initialization
-        BOOL Create(int cx, int cy, UINT nFlags, int nInitial, int nGrow);
-        BOOL Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask);
-        BOOL Create(LPCTSTR lpszBitmapID, int cx, int nGrow, COLORREF crMask);
-        BOOL Create(HIMAGELIST hImageList);
+        BOOL Create(int cx, int cy, UINT flags, int initial, int grow);
+        BOOL Create(UINT bitmapID, int cx, int grow, COLORREF mask);
+        BOOL Create(LPCTSTR pBitmapID, int cx, int grow, COLORREF mask);
+        BOOL Create(HIMAGELIST hImages);
 
 #ifndef _WIN32_WCE
-        BOOL CreateDisabledImageList(HIMAGELIST himlNormal);
+        BOOL CreateDisabledImageList(HIMAGELIST hNormal);
 #endif
 
         //Operations
-        int Add(HBITMAP hbmImage, HBITMAP hbmMask) const;
-        int Add(HBITMAP hbmImage, COLORREF crMask) const;
+        int Add(HBITMAP hImage, HBITMAP hMask) const;
+        int Add(HBITMAP hImage, COLORREF mask) const;
         int Add(HICON hIcon) const;
-        void Attach(HIMAGELIST hImageList);
-        BOOL BeginDrag(int nImage, CPoint ptHotSpot) const;
-		BOOL Copy(int iDst, int iSrc, UINT uFlags /*= ILCF_MOVE*/) const;
+        void Attach(HIMAGELIST hImages);
+        BOOL BeginDrag(int image, CPoint hotSpot) const;
+		BOOL Copy(int dst, int src, UINT flags /*= ILCF_MOVE*/) const;
         void DeleteImageList();
         HIMAGELIST Detach();
-        BOOL DragEnter(HWND hWndLock, CPoint point) const;
-        BOOL DragLeave(HWND hWndLock) const;
-        BOOL DragMove(CPoint pt) const;
-        BOOL DragShowNolock(BOOL Show) const;
-        BOOL Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const;
-        BOOL DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const;
-        BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pimldp) const;
+        BOOL DragEnter(HWND hLock, CPoint point) const;
+        BOOL DragLeave(HWND hLock) const;
+        BOOL DragMove(CPoint point) const;
+        BOOL DragShowNolock(BOOL show) const;
+        BOOL Draw(HDC hdc, int image, POINT point, UINT style) const;
+        BOOL DrawEx(HDC hdc, int image, POINT pt, SIZE sz, COLORREF bckgnd, COLORREF frgnd, UINT style) const;
+        BOOL DrawIndirect(IMAGELISTDRAWPARAMS* pILDParams) const;
 		void EndDrag() const;
 		HICON ExtractIcon(int index) const;
-		void Read(LPSTREAM pstm);
-        BOOL Remove(int nImage) const;
-        BOOL Replace(int nImage, HBITMAP hbmImage, HBITMAP hbmMask) const;
-        int Replace(int nImage, HICON hIcon) const;
-		BOOL Write(LPSTREAM pstm) const;
+		void Read(LPSTREAM pStream);
+        BOOL Remove(int image) const;
+        BOOL Replace(int image, HBITMAP hImage, HBITMAP hMask) const;
+        int Replace(int image, HICON hIcon) const;
+		BOOL Write(LPSTREAM pStream) const;
 
         //Attributes
 		COLORREF GetBkColor() const;
-		HIMAGELIST GetDragImage(POINT *ppt, POINT *pptHotspot) const;
+		HIMAGELIST GetDragImage(POINT* pPoint, POINT* pHotspot) const;
 		HIMAGELIST GetHandle() const;
-        HICON GetIcon(int iImage, UINT nFlags) const;
+        HICON GetIcon(int image, UINT flags) const;
         CSize GetIconSize() const;
         int GetImageCount() const;
-        BOOL GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const;
-		COLORREF SetBkColor(COLORREF clrBk) const;
-		BOOL SetDragCursorImage(int iDrag, int dxHotspot, int dyHotspot) const;
+        BOOL GetImageInfo(int image, IMAGEINFO* pImageInfo) const;
+		COLORREF SetBkColor(COLORREF bckgnd) const;
+		BOOL SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const;
 
         //Operators
         operator HIMAGELIST () const;
@@ -145,10 +145,10 @@ namespace Win32xx
     }
 
 
-    inline CImageList::CImageList(HIMAGELIST himl)
+    inline CImageList::CImageList(HIMAGELIST hImages)
     {
         m_pData = new CIml_Data;
-        Attach(himl);
+        Attach(hImages);
     }
 
 
@@ -157,7 +157,7 @@ namespace Win32xx
     inline CImageList::CImageList(const CImageList& rhs)
     {
         m_pData = rhs.m_pData;
-        InterlockedIncrement(&m_pData->Count);
+        InterlockedIncrement(&m_pData->count);
     }
 
 
@@ -166,7 +166,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
-            InterlockedIncrement(&rhs.m_pData->Count);
+            InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
         }
@@ -175,9 +175,9 @@ namespace Win32xx
     }
 
 
-    inline void CImageList::operator = (const HIMAGELIST hImageLIst)
+    inline void CImageList::operator = (const HIMAGELIST rhs)
     {
-        Attach(hImageLIst);
+        Attach(rhs);
     }
 
 
@@ -207,7 +207,7 @@ namespace Win32xx
             std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST>::iterator m;
 
             CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_csMapLock);
+            CThreadLock mapLock(App.m_wndLock);
             m = App.m_mapCImlData.find(m_pData->hImageList);
             if (m != App.m_mapCImlData.end())
             {
@@ -224,20 +224,20 @@ namespace Win32xx
 
     // Adds an image or images to an image list, generating a mask from the specified bitmap.
     // The hbmMask parameter can be NULL.
-    inline int CImageList::Add(HBITMAP hbmImage, HBITMAP hbmMask) const
+    inline int CImageList::Add(HBITMAP hImage, HBITMAP hMask) const
     {
         assert(m_pData);
         assert (m_pData->hImageList);
-        return ImageList_Add(m_pData->hImageList, hbmImage, hbmMask );
+        return ImageList_Add(m_pData->hImageList, hImage, hMask );
     }
 
 
     // Adds an image or images to an image list, using the specified color as the mask.
-    inline int CImageList::Add(HBITMAP hbmImage, COLORREF crMask) const
+    inline int CImageList::Add(HBITMAP hImage, COLORREF mask) const
     {
         assert(m_pData);
         assert (m_pData->hImageList);
-        return ImageList_AddMasked(m_pData->hImageList, hbmImage, crMask);
+        return ImageList_AddMasked(m_pData->hImageList, hImage, mask);
     }
 
 
@@ -254,11 +254,11 @@ namespace Win32xx
 
     // Attaches an existing ImageList to this CImageList
     // hImageList can be NULL
-    inline void CImageList::Attach(HIMAGELIST hImageList)
+    inline void CImageList::Attach(HIMAGELIST hImages)
     {
         assert(m_pData);
 
-        if (hImageList != m_pData->hImageList)
+        if (hImages != m_pData->hImageList)
         {
             // Release any existing ImageList
             if (m_pData->hImageList)
@@ -267,19 +267,19 @@ namespace Win32xx
                 m_pData = new CIml_Data;
             }
 
-            if (hImageList)
+            if (hImages)
             {
                 // Add the image list to this CImageList
-                CIml_Data* pCImlData = GetApp().GetCImlData(hImageList);
+                CIml_Data* pCImlData = GetApp().GetCImlData(hImages);
                 if (pCImlData)
                 {
                     delete m_pData;
                     m_pData = pCImlData;
-                    InterlockedIncrement(&m_pData->Count);
+                    InterlockedIncrement(&m_pData->count);
                 }
                 else
                 {
-                    m_pData->hImageList = hImageList;
+                    m_pData->hImageList = hImages;
                     AddToMap();
                 }
             }
@@ -288,20 +288,20 @@ namespace Win32xx
 
 
     // Begins dragging an image.
-    inline BOOL CImageList::BeginDrag(int nImage, CPoint ptHotSpot) const
+    inline BOOL CImageList::BeginDrag(int image, CPoint hotSpot) const
     {
         assert(m_pData);
         assert(m_pData->hImageList);
-        return ImageList_BeginDrag(m_pData->hImageList, nImage, ptHotSpot.x, ptHotSpot.y);
+        return ImageList_BeginDrag(m_pData->hImageList, image, hotSpot.x, hotSpot.y);
     }
 
 	// Copies images within the image list.
 	// Possible uFlags: ILCF_MOVE, CLCF_SWAP 
-	inline BOOL CImageList::Copy(int iDst, int iSrc, UINT uFlags /*= ILCF_MOVE*/) const
+	inline BOOL CImageList::Copy(int Dest, int Src, UINT flags /*= ILCF_MOVE*/) const
 	{
 		assert(m_pData);
 		assert(m_pData->hImageList);
-		return ImageList_Copy(*this, iDst, *this, iSrc, uFlags);
+		return ImageList_Copy(*this, Dest, *this, Src, flags);
 	}
 
 
@@ -316,11 +316,11 @@ namespace Win32xx
     // ILC_COLORDDB Use a device-dependent bitmap.
     // ILC_MASK     Use a mask. The image list contains two bitmaps, one of which is a monochrome bitmap used as a mask.
     //              If this value is not included, the image list contains only one bitmap.
-    inline BOOL CImageList::Create(int cx, int cy, UINT nFlags, int nInitial, int nGrow)
+    inline BOOL CImageList::Create(int cx, int cy, UINT flags, int initial, int grow)
     {
         assert(m_pData);
 
-        HIMAGELIST himlNew = ImageList_Create(cx, cy, nFlags, nInitial, nGrow);
+        HIMAGELIST himlNew = ImageList_Create(cx, cy, flags, initial, grow);
 
         if (himlNew)
         {
@@ -328,7 +328,7 @@ namespace Win32xx
         //  AddToMap();
 
             Attach(himlNew);
-            m_pData->IsManagedHiml = TRUE;
+            m_pData->isManagedHiml = TRUE;
         }
 
         return ( himlNew != 0 );
@@ -340,13 +340,13 @@ namespace Win32xx
     // nGrow    The number of images by which the image list can grow when the system needs to make room for new images.
     // crMask   The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
     //          and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
-    inline BOOL CImageList::Create(UINT nBitmapID, int cx, int nGrow, COLORREF crMask)
+    inline BOOL CImageList::Create(UINT bitmapID, int cx, int grow, COLORREF mask)
     {
         assert(m_pData);
         assert(NULL == m_pData->hImageList);
 
-        LPCTSTR lpszBitmapID = MAKEINTRESOURCE (nBitmapID);
-        return Create(lpszBitmapID, cx, nGrow, crMask);
+        LPCTSTR lpszBitmapID = MAKEINTRESOURCE (bitmapID);
+        return Create(lpszBitmapID, cx, grow, mask);
     }
 
 
@@ -356,16 +356,16 @@ namespace Win32xx
     // nGrow    The number of images by which the image list can grow when the system needs to make room for new images.
     // crMask   The color used to generate a mask. Each pixel of this color in the specified bitmap is changed to black,
     //          and the corresponding bit in the mask is set to 1. If this parameter is the CLR_NONE value, no mask is generated.
-    inline BOOL CImageList::Create(LPCTSTR lpszBitmapID, int cx, int nGrow, COLORREF crMask)
+    inline BOOL CImageList::Create(LPCTSTR pResourceName, int cx, int grow, COLORREF mask)
     {
         assert(m_pData);
         assert(NULL == m_pData->hImageList);
-        HIMAGELIST himlNew = ImageList_LoadBitmap(GetApp().GetInstanceHandle(), lpszBitmapID, cx, nGrow, crMask);
+        HIMAGELIST himlNew = ImageList_LoadBitmap(GetApp().GetInstanceHandle(), pResourceName, cx, grow, mask);
 
         if (himlNew)
         {
             Attach(himlNew);
-            m_pData->IsManagedHiml = TRUE;
+            m_pData->isManagedHiml = TRUE;
         }
 
         return ( himlNew!= 0 );
@@ -373,15 +373,15 @@ namespace Win32xx
 
 
     // Creates a duplicate ImageList
-    inline BOOL CImageList::Create(HIMAGELIST hImageList)
+    inline BOOL CImageList::Create(HIMAGELIST hImages)
     {
         assert(m_pData);
-        HIMAGELIST himlCopy = ImageList_Duplicate(hImageList);
+        HIMAGELIST himlCopy = ImageList_Duplicate(hImages);
 
         if (himlCopy)
         {
             Attach(himlCopy);
-            m_pData->IsManagedHiml = TRUE;
+            m_pData->isManagedHiml = TRUE;
         }
 
         return ( himlCopy!= 0 );
@@ -407,9 +407,9 @@ namespace Win32xx
         RemoveFromMap();
         m_pData->hImageList = 0;
 
-        if (m_pData->Count > 0)
+        if (m_pData->count > 0)
         {
-            if (InterlockedDecrement(&m_pData->Count) == 0)
+            if (InterlockedDecrement(&m_pData->count) == 0)
             {
                 delete m_pData;
             }
@@ -422,40 +422,40 @@ namespace Win32xx
 
 
     // Displays the drag image at the specified position within the window.
-    inline BOOL CImageList::DragEnter(HWND hWndLock, CPoint point) const
+    inline BOOL CImageList::DragEnter(HWND hLock, CPoint point) const
     {
         assert(m_pData->hImageList);
-        return ImageList_DragEnter(hWndLock, point.x, point.y);
+        return ImageList_DragEnter(hLock, point.x, point.y);
     }
 
 
     // Unlocks the specified window and hides the drag image, allowing the window to be updated.
-    inline BOOL CImageList::DragLeave(HWND hWndLock) const
+    inline BOOL CImageList::DragLeave(HWND hLock) const
     {
-        return ImageList_DragLeave(hWndLock);
+        return ImageList_DragLeave(hLock);
     }
 
 
     // Moves the image that is being dragged during a drag-and-drop operation.
     // This function is typically called in response to a WM_MOUSEMOVE message.
-    inline BOOL CImageList::DragMove(CPoint pt) const
+    inline BOOL CImageList::DragMove(CPoint point) const
     {
-        return ImageList_DragMove(pt.x, pt.y);
+        return ImageList_DragMove(point.x, point.y);
     }
 
 
     // Shows or hides the drag image during a drag operation, without locking the window.
-    inline BOOL CImageList::DragShowNolock(BOOL Show) const
+    inline BOOL CImageList::DragShowNolock(BOOL show) const
     {
-        return ImageList_DragShowNolock(Show);
+        return ImageList_DragShowNolock(show);
     }
 
 
     // Draws an image list item in the specified device context.
-    inline BOOL CImageList::Draw(HDC hdc, int nImage, POINT pt, UINT nStyle) const
+    inline BOOL CImageList::Draw(HDC hdc, int image, POINT point, UINT style) const
     {
         assert(m_pData->hImageList);
-        return ImageList_Draw(m_pData->hImageList, nImage, hdc , pt.x, pt.y, nStyle);
+        return ImageList_Draw(m_pData->hImageList, image, hdc , point.x, point.y, style);
     }
 
 
@@ -475,10 +475,10 @@ namespace Win32xx
     //                  This value has no effect if the image list does not contain a mask.
     // ILD_IMAGE    If the overlay does not require a mask to be drawn set the ILD_IMAGE flag.
     //              This causes ImageList_DrawEx to just draw the image, ignoring the mask.
-    inline BOOL CImageList::DrawEx(HDC hdc, int nImage, POINT pt, SIZE sz, COLORREF clrBk, COLORREF clrFg, UINT nStyle) const
+    inline BOOL CImageList::DrawEx(HDC hdc, int image, POINT pt, SIZE sz, COLORREF bckgnd, COLORREF frgnd, UINT style) const
     {
         assert(m_pData->hImageList);
-        return ImageList_DrawEx(m_pData->hImageList, nImage, hdc, pt.x, pt.y, sz.cx, sz.cy, clrBk, clrFg, nStyle);
+        return ImageList_DrawEx(m_pData->hImageList, image, hdc, pt.x, pt.y, sz.cx, sz.cy, bckgnd, frgnd, style);
     }
 
 
@@ -514,10 +514,13 @@ namespace Win32xx
 
 
 	// Retrieves the temporary image list that is used for the drag image.
-	inline HIMAGELIST CImageList::GetDragImage(POINT *ppt, POINT *pptHotspot) const
+	// pHotspot - Pointer to a POINT structure that receives the offset of the
+	// drag image relative to the drag position.Can be NULL.
+
+	inline HIMAGELIST CImageList::GetDragImage(POINT* pPoint, POINT* pHotspot) const
 	{
 		assert(m_pData->hImageList);
-		return ImageList_GetDragImage(ppt, pptHotspot);
+		return ImageList_GetDragImage(pPoint, pHotspot);
 	}
 
 
@@ -556,76 +559,76 @@ namespace Win32xx
 
 
     // Retrieves information about an image.
-    inline BOOL CImageList::GetImageInfo(int nImage, IMAGEINFO* pImageInfo) const
+    inline BOOL CImageList::GetImageInfo(int image, IMAGEINFO* pImageInfo) const
     {
         assert(m_pData->hImageList);
 		assert(pImageInfo);
-        return ImageList_GetImageInfo(m_pData->hImageList, nImage, pImageInfo);
+        return ImageList_GetImageInfo(m_pData->hImageList, image, pImageInfo);
     }
 
 
 	// Reads the image list from a stream.
-	inline void CImageList::Read(LPSTREAM pstm)
+	inline void CImageList::Read(LPSTREAM pStream)
 	{
 		assert(m_pData->hImageList);
-		HIMAGELIST himl =  ImageList_Read(pstm);
+		HIMAGELIST himl =  ImageList_Read(pStream);
 
 		if (himl)
 		{
-			m_pData->IsManagedHiml = TRUE;
+			m_pData->isManagedHiml = TRUE;
 			Attach(himl);
 		}
 	}
 
 
     // Removes an image from an image list.
-    inline BOOL CImageList::Remove(int nImage) const
+    inline BOOL CImageList::Remove(int image) const
     {
         assert(m_pData->hImageList);
-        return ImageList_Remove(m_pData->hImageList, nImage);
+        return ImageList_Remove(m_pData->hImageList, image);
     }
 
 
     // Replaces an image in an image list with a new image.
-    inline BOOL CImageList::Replace(int nImage, HBITMAP hbmImage, HBITMAP hbmMask) const
+    inline BOOL CImageList::Replace(int image, HBITMAP hImage, HBITMAP hMask) const
     {
         assert (m_pData->hImageList);
-        return ImageList_Replace(m_pData->hImageList, nImage, hbmImage, hbmMask);
+        return ImageList_Replace(m_pData->hImageList, image, hImage, hMask);
     }
 
 
     // Replaces an image with an icon or cursor.
-    inline int CImageList::Replace(int nImage, HICON hIcon) const
+    inline int CImageList::Replace(int image, HICON hIcon) const
     {
         assert (m_pData->hImageList);
-        return ImageList_ReplaceIcon(m_pData->hImageList, nImage, hIcon);
+        return ImageList_ReplaceIcon(m_pData->hImageList, image, hIcon);
     }
 
 
 	// Writes the image list to a stream.
-	inline BOOL CImageList::Write(LPSTREAM pstm) const
+	inline BOOL CImageList::Write(LPSTREAM pStream) const
 	{
 		assert(m_pData->hImageList);
-		return ImageList_Write(*this, pstm);
+		return ImageList_Write(*this, pStream);
 	}
 
 
 	// Sets the background color for an image list.This function only works if you add an icon
 	// or use ImageList_AddMasked with a black and white bitmap. Without a mask, the entire image
 	// is drawn; hence the background color is not visible.
-	inline COLORREF CImageList::SetBkColor(COLORREF clrBk) const
+	inline COLORREF CImageList::SetBkColor(COLORREF bckgnd) const
 	{
 		assert(m_pData->hImageList);
-		return ImageList_SetBkColor(*this, clrBk);
+		return ImageList_SetBkColor(*this, bckgnd);
 	}
 
 	
 	// Creates a new drag image by combining the specified image (typically a mouse cursor image)
 	// with the current drag image.
-	inline BOOL CImageList::SetDragCursorImage(int iDrag, int dxHotspot, int dyHotspot) const
+	inline BOOL CImageList::SetDragCursorImage(int drag, int dxHotspot, int dyHotspot) const
 	{
 		assert(m_pData->hImageList);
-		return ImageList_SetDragCursorImage(*this, iDrag, dxHotspot, dyHotspot);
+		return ImageList_SetDragCursorImage(*this, drag, dxHotspot, dyHotspot);
 	}
 
 
@@ -641,11 +644,11 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->Count) == 0)
+        if (InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->hImageList != NULL)
             {
-                if (m_pData->IsManagedHiml)
+                if (m_pData->isManagedHiml)
                 {
                     ImageList_Destroy(m_pData->hImageList);
                 }
@@ -662,46 +665,47 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     // Creates a gray scale image list from the specified color image list.
-    inline BOOL CImageList::CreateDisabledImageList(HIMAGELIST himlNormal)
+    inline BOOL CImageList::CreateDisabledImageList(HIMAGELIST hNormal)
     {
         assert(NULL == m_pData->hImageList);
-        assert(himlNormal);
+        assert(hNormal);
 
-        int nCount = ImageList_GetImageCount(himlNormal);
-        if (nCount > 0)
+        int count = ImageList_GetImageCount(hNormal);
+        if (count > 0)
         {
             int cx, cy;
-            ImageList_GetIconSize(himlNormal, &cx, &cy);
+            ImageList_GetIconSize(hNormal, &cx, &cy);
 
             // Create the disabled ImageList
-            Create(cx, cy, ILC_COLOR24 | ILC_MASK, nCount, 0);
+            Create(cx, cy, ILC_COLOR24 | ILC_MASK, count, 0);
 
             // Process each image in the ImageList
-            for (int i = 0 ; i < nCount; ++i)
+            for (int i = 0 ; i < count; ++i)
             {
                 CClientDC DesktopDC(NULL);
-                CMemDC dcMem(NULL);
-                dcMem.CreateCompatibleBitmap(DesktopDC, cx, cx);
+                CMemDC memDC(NULL);
+				memDC.CreateCompatibleBitmap(DesktopDC, cx, cx);
                 CRect rc;
                 rc.SetRect(0, 0, cx, cx);
 
                 // Set the mask color to grey for the new ImageList
-                COLORREF crMask = RGB(200, 200, 200);
+                COLORREF mask = RGB(200, 200, 200);
                 if (GetDeviceCaps(DesktopDC, BITSPIXEL) < 24)
                 {
                     HPALETTE hPal = reinterpret_cast<HPALETTE>(GetCurrentObject(DesktopDC, OBJ_PAL));
-                    UINT Index = GetNearestPaletteIndex(hPal, crMask);
-                    if (Index != CLR_INVALID) crMask = PALETTEINDEX(Index);
+                    UINT index = GetNearestPaletteIndex(hPal, mask);
+                    if (index != CLR_INVALID)
+						mask = PALETTEINDEX(index);
                 }
-                dcMem.SolidFill(crMask, rc);
+				memDC.SolidFill(mask, rc);
 
                 // Draw the image on the memory DC
-                ImageList_Draw(himlNormal, i, dcMem , 0, 0, ILD_NORMAL);
+                ImageList_Draw(hNormal, i, memDC, 0, 0, ILD_NORMAL);
 
                 // Detach the bitmap so we can use it.
-                CBitmap Bitmap = dcMem.DetachBitmap();
-                Bitmap.ConvertToDisabled(crMask);
-                Add(Bitmap, crMask);
+                CBitmap bitmap = memDC.DetachBitmap();
+                bitmap.ConvertToDisabled(mask);
+                Add(bitmap, mask);
             }
         }
 

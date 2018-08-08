@@ -107,7 +107,7 @@ namespace Win32xx
         virtual ~CDataExchange();
 
         // Dialog Data Validation (DDV) functions
-        virtual void DDV_MaxChars(CString const& value, int nChars) const;
+        virtual void DDV_MaxChars(CString const& value, int count) const;
         virtual void DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const;
         virtual void DDV_MinMaxDateTime(SYSTEMTIME&, const SYSTEMTIME&, const SYSTEMTIME&) const;
         virtual void DDV_MinMaxDouble(double const& value,double minVal, double maxVal, int precision = DBL_DIG) const;
@@ -121,50 +121,50 @@ namespace Win32xx
         virtual void DDV_MinMaxULong(ULONG value, ULONG minVal, ULONG maxVal) const;
 
         // DDX Initialisation
-        virtual void DDX_Control(int nIDC, CWnd& rCtl);
+        virtual void DDX_Control(int id, CWnd& controlRef);
 
         // Dialog Data eXchange (DDX) functions
-        virtual void DDX_CBIndex(int nIDC, int& index);
-        virtual void DDX_CBString(int nIDC, CString& value);
-        virtual void DDX_CBStringExact(int nIDC, CString& value);
-        virtual void DDX_Check(int nIDC, int& value);
-        virtual void DDX_DateTime(int nIDC, SYSTEMTIME& value);
-        virtual void DDX_LBIndex(int nIDC, int& index);
-        virtual void DDX_LBString(int nIDC, CString& value);
-        virtual void DDX_LBStringExact(int nIDC, CString& value);
-        virtual void DDX_MonthCal(int nIDC, SYSTEMTIME& value);
-        virtual void DDX_Progress(int nIDC, int& value);
-        virtual void DDX_Radio(int nIDC, int& value);
-        virtual void DDX_Scroll(int nIDC, int& value);
-        virtual void DDX_Slider(int nIDC, int& value);
+        virtual void DDX_CBIndex(int id, int& index);
+        virtual void DDX_CBString(int id, CString& value);
+        virtual void DDX_CBStringExact(int id, CString& value);
+        virtual void DDX_Check(int id, int& value);
+        virtual void DDX_DateTime(int id, SYSTEMTIME& value);
+        virtual void DDX_LBIndex(int id, int& index);
+        virtual void DDX_LBString(int id, CString& value);
+        virtual void DDX_LBStringExact(int id, CString& value);
+        virtual void DDX_MonthCal(int id, SYSTEMTIME& value);
+        virtual void DDX_Progress(int id, int& value);
+        virtual void DDX_Radio(int id, int& value);
+        virtual void DDX_Scroll(int id, int& value);
+        virtual void DDX_Slider(int id, int& value);
 
         // DDX text operations
-        virtual void DDX_Text(int nIDC, BYTE& value);
-        virtual void DDX_Text(int nIDC, short& value);
-        virtual void DDX_Text(int nIDC, int& value);
-        virtual void DDX_Text(int nIDC, UINT& value);
-        virtual void DDX_Text(int nIDC, long& value);
-        virtual void DDX_Text(int nIDC, ULONG& value);
-        virtual void DDX_Text(int nIDC, CString& value);
-        virtual void DDX_Text(int nIDC, LPTSTR value, int nMaxLen);
-        virtual void DDX_Text(int nIDC, float& value, int precision = FLT_DIG);
-        virtual void DDX_Text(int nIDC, double& value, int precision = DBL_DIG);
+        virtual void DDX_Text(int id, BYTE& value);
+        virtual void DDX_Text(int id, short& value);
+        virtual void DDX_Text(int id, int& value);
+        virtual void DDX_Text(int id, UINT& value);
+        virtual void DDX_Text(int id, long& value);
+        virtual void DDX_Text(int id, ULONG& value);
+        virtual void DDX_Text(int id, CString& value);
+        virtual void DDX_Text(int id, LPTSTR value, int nMaxLen);
+        virtual void DDX_Text(int id, float& value, int precision = FLT_DIG);
+        virtual void DDX_Text(int id, double& value, int precision = DBL_DIG);
 
         // Helper operations
         void virtual Fail(LPCTSTR message) const;
-        HWND GetLastControl()  const { return m_hWndLastControl; }
-        HWND GetLastEditControl() const { return m_hWndLastEditControl; }
+        HWND GetLastControl()  const { return m_hLastControl; }
+        HWND GetLastEditControl() const { return m_hLastEditControl; }
         void Init(CWnd& dlgWnd, BOOL RetrieveAndValidate);
-        HWND PrepareCtrl(int nIDC);     // return HWND of control
-        HWND PrepareEditCtrl(int nIDC); // record this is an edit
+        HWND PrepareCtrl(int id);     // return HWND of control
+        HWND PrepareEditCtrl(int id); // record this is an edit
 
     private:
         // data members
-        int   m_nID;                    // ID of last-accessed control
-        HWND  m_hWndLastControl;        // handle of last-accessed control
-        HWND  m_hWndLastEditControl;    // handle of last edit control
-        BOOL  m_bEditLastControl;       // most recent control is an edit box
-        BOOL  m_RetrieveAndValidate;    // TRUE means retrieve and validate data
+        int   m_id;                    // ID of last-accessed control
+        HWND  m_hLastControl;        // handle of last-accessed control
+        HWND  m_hLastEditControl;    // handle of last edit control
+        BOOL  m_isEditLastControl;       // most recent control is an edit box
+        BOOL  m_retrieveAndValidate;    // TRUE means retrieve and validate data
         HWND  m_hWndParent;             // parent window
 
         // Message strings. They are assigned in the constructor.
@@ -224,11 +224,11 @@ namespace Win32xx
     // Constructs a DDX-DDV object.
     inline CDataExchange::CDataExchange()
     {
-        m_nID = 0;
-        m_hWndLastControl = 0;
-        m_hWndLastEditControl = 0;
-        m_bEditLastControl = FALSE;
-        m_RetrieveAndValidate = FALSE;
+        m_id = 0;
+        m_hLastControl = 0;
+        m_hLastEditControl = 0;
+        m_isEditLastControl = FALSE;
+        m_retrieveAndValidate = FALSE;
         m_hWndParent = 0;
 
         // DDX anomaly prompting messages
@@ -262,24 +262,24 @@ namespace Win32xx
     ////////////////////////////////////////////////////////////////
 
 
-    // Ensures that the length of value <= nChars when validating, otherwise
+    // Ensures that the length of value <= count when validating, otherwise
     // throws a CUserException. If writing, send the box the message to set
-    // the limit to nChars, which must be at least one.
-    inline void CDataExchange::DDV_MaxChars(CString const& value, int nChars) const
+    // the limit to count, which must be at least one.
+    inline void CDataExchange::DDV_MaxChars(CString const& value, int count) const
 
     {
-        assert(nChars >= 1);  // must allow at least one char
-        if (m_RetrieveAndValidate && value.GetLength() > nChars)
+        assert(count >= 1);  // must allow at least one char
+        if (m_retrieveAndValidate && value.GetLength() > count)
         {
             CString message;
-            message.Format(DDV_MSG_STRING_SIZE, value.c_str(), nChars);
+            message.Format(DDV_MSG_STRING_SIZE, value.c_str(), count);
 
             throw CUserException(message);
         }
-        else if (m_hWndLastControl != NULL && m_bEditLastControl)
+        else if (m_hLastControl != NULL && m_isEditLastControl)
         {
             // limit the control max-chars automatically
-            ::SendMessage(m_hWndLastControl, EM_LIMITTEXT, nChars, 0);
+            ::SendMessage(m_hLastControl, EM_LIMITTEXT, count, 0);
         }
     }
 
@@ -309,15 +309,15 @@ namespace Win32xx
         ULONGLONG max = SystemTimeToULL(maxRange);
         assert(min == zero || max == zero || min <= max);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
         {
             if ((min != zero && min > val) ||
                 (max != zero && max < val))
             {
                   // retrieve the control ID
-                int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
+                int id = static_cast<int>(::GetWindowLongPtr(m_hLastControl, GWLP_ID));
                 CString str = CString(_T("Warning: Date-Time data is out of range "))
-                                + _T("in control ID ") + nIDC + _T(" \n");
+                                + _T("in control ID ") + id + _T(" \n");
                 TRACE(str);
 
                 return;     // continue on
@@ -329,7 +329,7 @@ namespace Win32xx
         sta[0] = minRange;
         sta[1] = maxRange;
 
-        DateTime_SetRange(m_hWndLastControl, GDTR_MIN | GDTR_MAX, sta);
+        DateTime_SetRange(m_hLastControl, GDTR_MIN | GDTR_MAX, sta);
     }
 
 
@@ -342,7 +342,7 @@ namespace Win32xx
         if (minVal <= value && value <= maxVal)
             return;
 
-        if (!m_RetrieveAndValidate)
+        if (!m_retrieveAndValidate)
         {
             // just leave a debugging trace if writing to a control
             TRACE(_T("Warning: control data is out of range.\n"));
@@ -385,7 +385,7 @@ namespace Win32xx
             return;
 
         // just leave a debugging trace if writing to a control
-        if (!m_RetrieveAndValidate)
+        if (!m_retrieveAndValidate)
         {
             TRACE(_T("Warning: current control data is out of range.\n"));
             return;     // don't stop
@@ -416,14 +416,14 @@ namespace Win32xx
         ULONGLONG max = SystemTimeToULL(maxRange);
         assert(min == zero || max == zero || min <= max);
 
-        if (!m_RetrieveAndValidate)
+        if (!m_retrieveAndValidate)
         {
             if ((min != zero && min > val) ||
                 (max != zero && max < val))
             {
-                int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
+                int id = static_cast<int>(::GetWindowLongPtr(m_hLastControl, GWLP_ID));
                 CString str = CString(_T("Warning: Calendar data is out of range "))
-                            + _T("in control ID ") + nIDC + _T(" \n");
+                            + _T("in control ID ") + id + _T(" \n");
                 TRACE(str);
                 return;     // continue on
             }
@@ -434,7 +434,7 @@ namespace Win32xx
         memcpy(&MinMax[0], &minRange, sizeof(SYSTEMTIME));
         memcpy(&MinMax[1], &maxRange, sizeof(SYSTEMTIME));
 
-        MonthCal_SetRange(m_hWndLastControl, dwLimit, &MinMax);
+        MonthCal_SetRange(m_hLastControl, dwLimit, &MinMax);
     }
 
 
@@ -456,15 +456,15 @@ namespace Win32xx
     inline void CDataExchange::DDV_MinMaxSlider(ULONG value, ULONG minVal, ULONG maxVal) const
     {
         assert(minVal <= maxVal);
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
         {
             if (minVal > value || maxVal < value)
             {
     #ifdef _DEBUG
                   // just leave a trace if writing to the control
-                int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
+                int id = static_cast<int>(::GetWindowLongPtr(m_hLastControl, GWLP_ID));
                 CString str = CString(_T("Warning: slider position is outside given "))
-                            + _T("limits in the control with ID ") + nIDC + _T(" \n");
+                            + _T("limits in the control with ID ") + id + _T(" \n");
                 TRACE(str);
     #endif
                 return;     // don't stop now
@@ -472,8 +472,8 @@ namespace Win32xx
         }
 
         // set the range tuple
-        ::SendMessage(m_hWndLastControl,TBM_SETRANGEMIN, FALSE, minVal);
-        ::SendMessage(m_hWndLastControl, TBM_SETRANGEMAX, TRUE, maxVal);
+        ::SendMessage(m_hLastControl,TBM_SETRANGEMIN, FALSE, minVal);
+        ::SendMessage(m_hLastControl, TBM_SETRANGEMAX, TRUE, maxVal);
     }
 
 
@@ -493,12 +493,12 @@ namespace Win32xx
         if (minVal <= value && value <= maxVal)
             return;
 
-        if (!m_RetrieveAndValidate)
+        if (!m_retrieveAndValidate)
         {
             // just leave a debugging trace if writing to a control
-            int nIDC = static_cast<int>(::GetWindowLongPtr(m_hWndLastControl, GWLP_ID));
+            int id = static_cast<int>(::GetWindowLongPtr(m_hLastControl, GWLP_ID));
             CString str = CString(_T("Warning: value is outside limits in control with ID "))
-                           + nIDC + _T(" \n");
+                           + id + _T(" \n");
             TRACE(str);
             return;     // don't stop
         }
@@ -519,16 +519,16 @@ namespace Win32xx
     ////////////////////////////////////////////////////////////////
 
 
-    // This function attaches the window with a control ID of nID
+    // This function attaches the window with a control ID of id
     // to the specified CWnd. Controls are only attached once.
-    inline void CDataExchange::DDX_Control(int nIDC, CWnd& rCtl)
+    inline void CDataExchange::DDX_Control(int id, CWnd& controlRef)
     {
-        if (!rCtl.IsWindow())    // not subclassed yet
+        if (!controlRef.IsWindow())    // not subclassed yet
         {
-            assert (!m_RetrieveAndValidate);
-            HWND hWndCtrl = PrepareCtrl(nIDC);
+            assert (!m_retrieveAndValidate);
+            HWND hWndCtrl = PrepareCtrl(id);
             assert(hWndCtrl);
-            rCtl.Attach(hWndCtrl);
+            controlRef.Attach(hWndCtrl);
         }
     }
 
@@ -543,15 +543,15 @@ namespace Win32xx
     // in a dialog box or other window, and an integer
     // index of that object. It performs a data exchange for the state of
     // the combo box control appearing within the DDX/DDV object m_DX with
-    // the control numbered nIDC. When this function is called, index is set
+    // the control numbered id. When this function is called, index is set
     // to the index of the current combo box selection. If no item is
-    // selected, index is set to 0. When m_DX.m_RetrieveAndValidate is false,
+    // selected, index is set to 0. When m_DX.m_retrieveAndValidate is false,
     // the index item is selected.
-    inline void CDataExchange::DDX_CBIndex(int nIDC, int& index)
+    inline void CDataExchange::DDX_CBIndex(int id, int& index)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
             index = static_cast<int>(::SendMessage(hWndCtrl, CB_GETCURSEL, 0, 0));
         else
             ::SendMessage(hWndCtrl, CB_SETCURSEL, index, 0);
@@ -562,17 +562,17 @@ namespace Win32xx
     // control of a ComboBox control in a dialog box or other window,
     // and a CString data member of that object. It performs a
     // data exchange for the state of the combo box control appearing within
-    // the DDX/DDV object m_DX with the control numbered nIDC. On reading the
+    // the DDX/DDV object m_DX with the control numbered id. On reading the
     // list box, the combo box edit window value is returned as the value.
-    // When m_DX.m_RetrieveAndValidate is false, the list of the combo box
+    // When m_DX.m_retrieveAndValidate is false, the list of the combo box
     // is searched for an item that begins with the characters in the value
     // string. If a matching item is found, it is selected and copied to the
     // edit control. If the search is unsuccessful, the current edit control
     // is not changed.
-    inline void CDataExchange::DDX_CBString(int nIDC, CString& value)
+    inline void CDataExchange::DDX_CBString(int id, CString& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareCtrl(id);
+        if (m_retrieveAndValidate)
         {
             // get the current edit item text or drop list static where possible
             int nLen = ::GetWindowTextLength(hWndCtrl);
@@ -608,20 +608,20 @@ namespace Win32xx
     // control of a combo box control in a dialog box or other window,
     // and a CString data member of that object. It performs a
     // data exchange for the state of the combo box control appearing within
-    // the DDX/DDV object m_DX with the control numbered nIDC. On reading the
+    // the DDX/DDV object m_DX with the control numbered id. On reading the
     // list box, the combo box edit window value is returned as the value.
-    // When m_DX.m_RetrieveAndValidate is false, a case-insensitive search is
+    // When m_DX.m_retrieveAndValidate is false, a case-insensitive search is
     // made in the prevailing sort sense for the first list box string in
     // the combo box that matches the string specified in the value parameter.
     // If a matching item is found, it is selected and copied to the edit
     // window. If the search is unsuccessful, the current edit control
     // is not changed.
-    inline void CDataExchange::DDX_CBStringExact(int nIDC, CString& value)
+    inline void CDataExchange::DDX_CBStringExact(int id, CString& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareCtrl(id);
+        if (m_retrieveAndValidate)
         {
-            DDX_CBString(nIDC, value);
+            DDX_CBString(id, value);
         }
         else if (value != _T(""))   // write to control
         {
@@ -643,11 +643,11 @@ namespace Win32xx
 
 
     // Perform a check box control data exchange on the DDX/DDV object m_DX
-    // with the control numbered nIDC to and from the given int value.
-    inline void CDataExchange::DDX_Check(int nIDC, int& value)
+    // with the control numbered id to and from the given int value.
+    inline void CDataExchange::DDX_Check(int id, int& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareCtrl(id);
+        if (m_retrieveAndValidate)
         {
             value = static_cast<int>(::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0));
             assert(value == BST_CHECKED || value == BST_UNCHECKED ||
@@ -669,16 +669,16 @@ namespace Win32xx
 
 
     // This function manages the transfer of date and/or time data between a
-    // date and time picker control (CDateTime) with control numbered nID
+    // date and time picker control (CDateTime) with control numbered id
     // in a dialog box or other window, and a SYSTEMTIME data member of
     // the object. When called in the read mode, the value is set to the
     // current state of the control. When called in the write mode, the
     // current state of the control is set to the given value.
-    inline void CDataExchange::DDX_DateTime(int nIDC, SYSTEMTIME &value)
+    inline void CDataExchange::DDX_DateTime(int id, SYSTEMTIME &value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
             DateTime_GetSystemtime(hWndCtrl, &value);
         else
             DateTime_SetSystemtime(hWndCtrl, GDT_VALID, &value);
@@ -689,14 +689,14 @@ namespace Win32xx
     // control in a dialog box or other window, and an
     // integer index of that object. It performs a data exchange for the
     // state of the list box control appearing within the DDX/DDV object m_DX
-    // with the control numbered nIDC. When this function is called, index
+    // with the control numbered id. When this function is called, index
     // is set to the index of the current list box selection. If no item
-    // is selected, index is set to LB_ERR. When m_DX.m_RetrieveAndValidate is
+    // is selected, index is set to LB_ERR. When m_DX.m_retrieveAndValidate is
     // false, the index item is selected.
-    inline void CDataExchange::DDX_LBIndex(int nIDC, int& index)
+    inline void CDataExchange::DDX_LBIndex(int id, int& index)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareCtrl(id);
+        if (m_retrieveAndValidate)
             index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0));
         else
             ::SendMessage(hWndCtrl, LB_SETCURSEL, index, 0);
@@ -704,15 +704,15 @@ namespace Win32xx
 
 
     // Perform a data exchange for the state of a list box control on the
-    // DDX/DDV object m_DX with the control numbered nIDC using the given
+    // DDX/DDV object m_DX with the control numbered id using the given
     // CString value. On reading the list box, the selected item is returned
     // in value. If no item is selected, value is set to a string of zero
-    // length. When m_RetrieveAndValidate is false, the item having the given
+    // length. When m_retrieveAndValidate is false, the item having the given
     // case-insensitive value as a prefix, if it exists, is selected.
-    inline void CDataExchange::DDX_LBString(int nIDC, CString& value)
+    inline void CDataExchange::DDX_LBString(int id, CString& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareCtrl(id);
+        if (m_retrieveAndValidate)
         {
              // find the index of the item selected in the list box
             int index = static_cast<int>(::SendMessage(hWndCtrl, LB_GETCURSEL, 0, 0));
@@ -751,18 +751,18 @@ namespace Win32xx
     // control of a list box control in a dialog box or other window,
     // and a CString data member of that object. It performs a
     // data exchange for the state of the list box control appearing within
-    // the DDX/DDV object m_DX with the control numbered nIDC. On reading the
+    // the DDX/DDV object m_DX with the control numbered id. On reading the
     // list box, the current list box selection is returned as the value.
     // If no item is selected, value is set to a string of zero length. When
-    // m_DX.m_RetrieveAndValidate is false, the item having the entire given
+    // m_DX.m_retrieveAndValidate is false, the item having the entire given
     // case-insensitive value as its prefix, if any exists, is selected.
-    inline void CDataExchange::DDX_LBStringExact(int nIDC, CString& value)
+    inline void CDataExchange::DDX_LBStringExact(int id, CString& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareCtrl(id);
+        if (m_retrieveAndValidate)
         {
             // read and return the CString value
-            DDX_LBString(nIDC, value);
+            DDX_LBString(id, value);
         }
         else if (!value.IsEmpty())
         {
@@ -788,7 +788,7 @@ namespace Win32xx
 
 
     // This function manages the transfer of date data between a month
-    // calendar control (CMonthCalendar) with control number nID in a dialog
+    // calendar control (CMonthCalendar) with control number id in a dialog
     // box or other window, and a SYSTEMTIME data member
     // of that object. In particular, the control manages a date value only.
     // The time fields in the time object are set to reflect the creation
@@ -796,11 +796,11 @@ namespace Win32xx
     // with a call to the CMonthCalendar::SetCurSel() member method. In read
     // mode, value is set to the current state of the month calendar control.
     // In write mode, the current state is set to the given value.
-    inline void CDataExchange::DDX_MonthCal(int nIDC, SYSTEMTIME& value)
+    inline void CDataExchange::DDX_MonthCal(int id, SYSTEMTIME& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
         {
             MonthCal_GetCurSel(hWndCtrl, &value);
             value.wHour = 0;
@@ -817,14 +817,14 @@ namespace Win32xx
     // in a dialog box or other window, and an integer
     // progress value for that object. It performs a data exchange for the
     // slider control appearing within the DDX/DDV object m_DX with
-    // the control numbered nIDC. When this function is called, value is set
-    // to the current slider entry.  When m_DX.m_RetrieveAndValidate
+    // the control numbered id. When this function is called, value is set
+    // to the current slider entry.  When m_DX.m_retrieveAndValidate
     // is false, the slider entry is set to value.
-    inline void CDataExchange::DDX_Progress(int nIDC, int& value)
+    inline void CDataExchange::DDX_Progress(int id, int& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
             value = static_cast<int>(::SendMessage(hWndCtrl, PBM_GETPOS, 0, 0));
         else
             ::SendMessage(hWndCtrl, PBM_SETPOS, value, 0);
@@ -832,12 +832,12 @@ namespace Win32xx
 
 
     // Perform a data exchange for the state of a group of auto radio buttons
-    // on the DDX/DDV object m_DX with the control numbered nIDC to and from
-    // the given int value, where the identifier nID is that of the first
+    // on the DDX/DDV object m_DX with the control numbered id to and from
+    // the given int value, where the identifier id is that of the first
     // control in the group.
-    inline void CDataExchange::DDX_Radio(int nIDC, int& value)
+    inline void CDataExchange::DDX_Radio(int id, int& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
         // assure that the control is a radio button and part of a group
         BOOL firstInGroup = ::GetWindowLongPtr(hWndCtrl, GWL_STYLE) & WS_GROUP;
@@ -848,7 +848,7 @@ namespace Win32xx
         assert(isRadioButton);
 
         // preset the returned value to empty in case no button is set
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
             value = -1;
 
         // traverse all buttons in the group: we've already established
@@ -858,7 +858,7 @@ namespace Win32xx
         {
             if (isRadioButton) // this control in the group is a radio button
             {
-                if (m_RetrieveAndValidate) // if asked to read the control
+                if (m_retrieveAndValidate) // if asked to read the control
                 {
                     if (::SendMessage(hWndCtrl, BM_GETCHECK, 0, 0) != 0) // is this button set?
                     {
@@ -896,14 +896,14 @@ namespace Win32xx
     // in a dialog box or other window, and an integer
     // value for that object. It performs a data exchange for the state of
     // the scroll bar control appearing within the DDX/DDV object m_DX with
-    // the control numbered nIDC. When this function is called, value is set
-    // to the current scroll bar position.  When m_DX.m_RetrieveAndValidate
+    // the control numbered id. When this function is called, value is set
+    // to the current scroll bar position.  When m_DX.m_retrieveAndValidate
     // is false, the scroll bar position is set to value.
-    inline void CDataExchange::DDX_Scroll(int nIDC, int& value)
+    inline void CDataExchange::DDX_Scroll(int id, int& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
             value = ::GetScrollPos(hWndCtrl, SB_CTL);
         else
             ::SetScrollPos(hWndCtrl, SB_CTL, value, TRUE);
@@ -914,14 +914,14 @@ namespace Win32xx
     // in a dialog box or other window, and an integer
     // position value for that object. It performs a data exchange for the
     // slider control appearing within the DDX/DDV object m_DX with
-    // the control numbered nIDC. When this function is called, value is set
-    // to the current slider entry.  When m_DX.m_RetrieveAndValidate
+    // the control numbered id. When this function is called, value is set
+    // to the current slider entry.  When m_DX.m_retrieveAndValidate
     // is false, the slider entry is set to value.
-    inline void CDataExchange::DDX_Slider(int nIDC, int& value)
+    inline void CDataExchange::DDX_Slider(int id, int& value)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
 
-        if (m_RetrieveAndValidate)
+        if (m_retrieveAndValidate)
             value = static_cast<int>(::SendMessage(hWndCtrl, TBM_GETPOS, 0, 0));
         else
             ::SendMessage(hWndCtrl, TBM_SETPOS, TRUE, value);
@@ -935,10 +935,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type BYTE.
-    inline void CDataExchange::DDX_Text(int nIDC, BYTE& value)
+    inline void CDataExchange::DDX_Text(int id, BYTE& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             BYTE oldvalue = value;
             CString str;
@@ -962,10 +962,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type short.
-    inline void CDataExchange::DDX_Text(int nIDC, short& value)
+    inline void CDataExchange::DDX_Text(int id, short& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             short oldvalue = value;
             CString str;
@@ -990,10 +990,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type int.
-    inline void CDataExchange::DDX_Text(int nIDC, int& value)
+    inline void CDataExchange::DDX_Text(int id, int& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             int oldvalue = value;
             CString str;
@@ -1017,10 +1017,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type UINT.
-    inline void CDataExchange::DDX_Text(int nIDC, UINT& value)
+    inline void CDataExchange::DDX_Text(int id, UINT& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             UINT oldvalue = value;
             CString str;
@@ -1044,10 +1044,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type long.
-    inline void CDataExchange::DDX_Text(int nIDC, long& value)
+    inline void CDataExchange::DDX_Text(int id, long& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             long oldvalue = value;
             CString str;
@@ -1071,10 +1071,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type ULONG.
-    inline void CDataExchange::DDX_Text(int nIDC, ULONG& value)
+    inline void CDataExchange::DDX_Text(int id, ULONG& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             ULONG oldvalue = value;
             CString str;
@@ -1098,10 +1098,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type float with the given precision.
-    inline void CDataExchange::DDX_Text(int nIDC, float& value, int precision /* = FLT_DIG */)
+    inline void CDataExchange::DDX_Text(int id, float& value, int precision /* = FLT_DIG */)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             float oldvalue = value;
             CString str;
@@ -1125,10 +1125,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type double with the given precision.
-    inline void CDataExchange::DDX_Text(int nIDC, double& value, int precision /* = DBL_DIG */)
+    inline void CDataExchange::DDX_Text(int id, double& value, int precision /* = DBL_DIG */)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             double oldvalue = value;
             CString str;
@@ -1152,10 +1152,10 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type CString.
-    inline void CDataExchange::DDX_Text(int nIDC, CString& value)
+    inline void CDataExchange::DDX_Text(int id, CString& value)
     {
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             value.GetWindowText(hWndCtrl);
         }
@@ -1168,12 +1168,12 @@ namespace Win32xx
 
     // Perform a text box data exchange on the current DDX/DDV object m_DX with
     // data value of type LPTSTR with the given maximum length.
-    inline void CDataExchange::DDX_Text(int nIDC, LPTSTR value, int nMaxLen)
+    inline void CDataExchange::DDX_Text(int id, LPTSTR value, int nMaxLen)
     {
         assert(value);
 
-        HWND hWndCtrl = PrepareEditCtrl(nIDC);
-        if (m_RetrieveAndValidate)
+        HWND hWndCtrl = PrepareEditCtrl(id);
+        if (m_retrieveAndValidate)
         {
             CString str;
             str.GetWindowText(hWndCtrl);
@@ -1194,18 +1194,18 @@ namespace Win32xx
     {
         ::MessageBox(NULL, message, _T("Error"), MB_OK | MB_ICONEXCLAMATION | MB_TASKMODAL);
 
-        if (!m_RetrieveAndValidate)
+        if (!m_retrieveAndValidate)
         {
             TRACE(_T("Warning: CDataExchange::Fail() called while "));
             TRACE(_T("writing to a control.\n"));
         }
-        else if (m_hWndLastControl != NULL)
+        else if (m_hLastControl != NULL)
         {
-            if (m_bEditLastControl) // if the offender is an edit control
+            if (m_isEditLastControl) // if the offender is an edit control
             {
                 // select all characters in the edit item
-                ::SetFocus(m_hWndLastControl);
-                ::SendMessage(m_hWndLastControl, EM_SETSEL, 0, -1);
+                ::SetFocus(m_hLastControl);
+                ::SendMessage(m_hLastControl, EM_SETSEL, 0, -1);
             }
         }
         else
@@ -1223,37 +1223,37 @@ namespace Win32xx
         assert(dlgWnd.IsWindow());
 
         // record the default action and parent window
-        m_RetrieveAndValidate = RetrieveAndValidate;
+        m_retrieveAndValidate = RetrieveAndValidate;
         m_hWndParent       = dlgWnd;
-        m_hWndLastControl  = NULL;
+        m_hLastControl  = NULL;
     }
 
 
-    // Find the handle to the control whose numeric identifier is nID and
+    // Find the handle to the control whose numeric identifier is id and
     // record this as the last control handle encountered. Set the last-edit
     // member to a FALSE default value.
-    inline HWND CDataExchange::PrepareCtrl(int nIDC)
+    inline HWND CDataExchange::PrepareCtrl(int id)
     {
-        assert(nIDC != 0);
-        assert(nIDC != -1); // not allowed
+        assert(id != 0);
+        assert(id != -1); // not allowed
 
-        HWND    hWndCtrl = ::GetDlgItem(m_hWndParent, nIDC);
+        HWND    hWndCtrl = ::GetDlgItem(m_hWndParent, id);
         assert(hWndCtrl);
 
-        m_hWndLastControl  = hWndCtrl;
-        m_bEditLastControl = FALSE; // not an edit item by default
+        m_hLastControl  = hWndCtrl;
+        m_isEditLastControl = FALSE; // not an edit item by default
         return hWndCtrl;
     }
 
 
-    // Get and record the handle corresponding to nIDC and set the m_bEditLastControl
+    // Get and record the handle corresponding to id and set the m_isEditLastControl
     // variable to TRUE. This method is only used for edit controls.
-    inline HWND CDataExchange::PrepareEditCtrl(int nIDC)
+    inline HWND CDataExchange::PrepareEditCtrl(int id)
     {
-        HWND hWndCtrl = PrepareCtrl(nIDC);
+        HWND hWndCtrl = PrepareCtrl(id);
         assert(hWndCtrl);
 
-        m_bEditLastControl = TRUE;
+        m_isEditLastControl = TRUE;
         return hWndCtrl;
     }
 

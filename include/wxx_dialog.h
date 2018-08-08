@@ -82,39 +82,39 @@ namespace Win32xx
     {
 
     public:
-        CDialog(UINT nResID);
-        CDialog(LPCTSTR lpszResName);
-        CDialog(LPCDLGTEMPLATE lpTemplate);
+        CDialog(UINT resID);
+        CDialog(LPCTSTR pResName);
+        CDialog(LPCDLGTEMPLATE pDlgTemplate);
         virtual ~CDialog();
 
         // You probably won't need to override these functions
-        virtual void AttachItem(int nID, CWnd& Wnd);
-        virtual HWND Create(HWND hWndParent = 0) { return DoModeless(hWndParent); }
-        virtual INT_PTR DoModal(HWND hWndParent = 0);
-        virtual HWND DoModeless(HWND hWndParent = 0);
+        virtual void AttachItem(int id, CWnd& wnd);
+        virtual HWND Create(HWND hParent = 0) { return DoModeless(hParent); }
+        virtual INT_PTR DoModal(HWND hParent = 0);
+        virtual HWND DoModeless(HWND hParent = 0);
         virtual BOOL IsModal() const { return m_isModal; }
         BOOL IsIndirect() const { return (NULL != m_pDlgTemplate); }
 
     protected:
         // These are the functions you might wish to override
         virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void EndDialog(INT_PTR nResult);
+        virtual void EndDialog(INT_PTR result);
         virtual void OnCancel();
         virtual void OnClose();
         virtual BOOL OnInitDialog();
         virtual void OnOK();
-        virtual BOOL PreTranslateMessage(MSG& Msg);
+        virtual BOOL PreTranslateMessage(MSG& msg);
 
         // Not intended to be overridden
         virtual INT_PTR DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam);
 
         // Can't override these functions
         DWORD GetDefID() const;
-        void GotoDlgCtrl(HWND hWndCtrl);
+        void GotoDlgCtrl(HWND hControl);
         BOOL MapDialogRect(RECT& rc) const;
         void NextDlgCtrl() const;
         void PrevDlgCtrl() const;
-        void SetDefID(UINT nID);
+        void SetDefID(UINT id);
 
     private:
         CDialog(const CDialog&);              // Disable copy construction
@@ -123,11 +123,11 @@ namespace Win32xx
         static INT_PTR CALLBACK StaticDialogProc(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam);
 
 #ifndef _WIN32_WCE
-        static LRESULT CALLBACK StaticMsgHook(int nCode, WPARAM wparam, LPARAM lparam);
+        static LRESULT CALLBACK StaticMsgHook(int code, WPARAM wparam, LPARAM lparam);
 #endif
 
         BOOL m_isModal;                  // a flag for modal dialogs
-        LPCTSTR m_resourceName;          // the resource name for the dialog
+        LPCTSTR m_pResName;         // the resource name for the dialog
         LPCDLGTEMPLATE m_pDlgTemplate;   // the dialog template for indirect dialogs
     };
 
@@ -162,24 +162,24 @@ namespace Win32xx
         CResizer() : m_hParent(0), m_xScrollPos(0), m_yScrollPos(0) {}
         virtual ~CResizer() {}
 
-        virtual void AddChild(HWND hWnd, Alignment corner, DWORD dwStyle);
+        virtual void AddChild(HWND hWnd, Alignment corner, DWORD style);
         virtual void HandleMessage(UINT msg, WPARAM wparam, LPARAM lparam);
-        virtual void Initialize(HWND hParent, const RECT& rcMin, const RECT& rcMax = CRect(0,0,0,0));
+        virtual void Initialize(HWND hParent, const RECT& minRect, const RECT& maxRect = CRect(0,0,0,0));
         virtual void OnHScroll(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void OnVScroll(UINT msg, WPARAM wparam, LPARAM lparam);
         virtual void RecalcLayout();
-        CRect GetMinRect() const { return m_rcMin; }
-        CRect GetMaxRect() const { return m_rcMax; }
-		void  SetMinRect(const RECT& rcMin) { m_rcMin = rcMin; }
-		void  SetMaxRect(const RECT& rcMax) { m_rcMax = rcMax; }
+        CRect GetMinRect() const { return m_minRect; }
+        CRect GetMaxRect() const { return m_maxRect; }
+		void  SetMinRect(const RECT& minRect) { m_minRect = minRect; }
+		void  SetMaxRect(const RECT& rcMaxRect) { m_maxRect = rcMaxRect; }
 
         struct ResizeData
         {
-            CRect rcInit;
-            CRect rcOld;
+            CRect initRect;
+            CRect oldRect;
             Alignment corner;
-            BOOL IsFixedWidth;
-            BOOL IsFixedHeight;
+            BOOL isFixedWidth;
+            BOOL isFixedHeight;
             HWND hWnd;
         };
 
@@ -187,11 +187,11 @@ namespace Win32xx
         static BOOL CALLBACK EnumWindowsProc(HWND hwnd, LPARAM lparam);
 
         HWND m_hParent;
-        std::vector<ResizeData> m_vResizeData;
+        std::vector<ResizeData> m_resizeData;
 
-        CRect m_rcInit;
-        CRect m_rcMin;
-        CRect m_rcMax;
+        CRect m_initRect;
+        CRect m_minRect;
+        CRect m_maxRect;
 
         int m_xScrollPos;
         int m_yScrollPos;
@@ -210,15 +210,15 @@ namespace Win32xx
     // Definitions for the CDialog class
     //
 
-    inline CDialog::CDialog(LPCTSTR resourceName) : m_isModal(TRUE),
-                        m_resourceName(resourceName), m_pDlgTemplate(NULL)
+    inline CDialog::CDialog(LPCTSTR pResName) : m_isModal(TRUE),
+                        m_pResName(pResName), m_pDlgTemplate(NULL)
     {
         // Initialize the common controls.
         LoadCommonControls();
     }
 
     inline CDialog::CDialog(UINT resID) : m_isModal(TRUE),
-                        m_resourceName(MAKEINTRESOURCE (resID)), m_pDlgTemplate(NULL)
+                        m_pResName(MAKEINTRESOURCE (resID)), m_pDlgTemplate(NULL)
     {
         // Initialize the common controls.
         LoadCommonControls();
@@ -226,7 +226,7 @@ namespace Win32xx
 
     //For indirect dialogs - created from a dialog box template in memory.
     inline CDialog::CDialog(LPCDLGTEMPLATE pDlgTemplate) : m_isModal(TRUE),
-                        m_resourceName(NULL), m_pDlgTemplate(pDlgTemplate)
+                        m_pResName(NULL), m_pDlgTemplate(pDlgTemplate)
     {
         // Initialize the common controls.
         LoadCommonControls();
@@ -245,9 +245,9 @@ namespace Win32xx
 
 
     // Attaches a dialog item to a CWnd
-    inline void CDialog::AttachItem(int nID, CWnd& Wnd)
+    inline void CDialog::AttachItem(int id, CWnd& wnd)
     {
-        Wnd.AttachDlgItem(nID, *this);
+        wnd.AttachDlgItem(id, *this);
     }
 
 
@@ -275,7 +275,7 @@ namespace Win32xx
     // All DialogProc functions should pass unhandled messages to this function.
     inline INT_PTR CDialog::DialogProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        LRESULT lr = 0;
+        LRESULT result = 0;
 
         switch (msg)
         {
@@ -308,13 +308,13 @@ namespace Win32xx
                 // Reflect this message if it's from a control
                 CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
                 if (pWnd != NULL)
-                    lr = pWnd->OnCommand(wparam, lparam);
+					result = pWnd->OnCommand(wparam, lparam);
 
                 // Handle user commands
-                if (!lr)
-                    lr =  OnCommand(wparam, lparam);
+                if (!result)
+					result =  OnCommand(wparam, lparam);
 
-                if (lr) return 0;
+                if (result) return 0;
             }
             break;  // Some commands require default processing
 
@@ -328,21 +328,21 @@ namespace Win32xx
                 // Restricting OnNotifyReflect to child windows avoids double handling.
                 LPNMHDR pNmhdr = reinterpret_cast<LPNMHDR>(lparam);
                 assert(pNmhdr);
-                HWND hwndFrom = pNmhdr->hwndFrom;
-                CWnd* pWndFrom = GetApp().GetCWndFromMap(hwndFrom);
+                HWND hFrom = pNmhdr->hwndFrom;
+                CWnd* pFrom = GetApp().GetCWndFromMap(hFrom);
 
-                if (pWndFrom != NULL)
-                    if (::GetParent(hwndFrom) == m_hWnd)
-                        lr = pWndFrom->OnNotifyReflect(wparam, lparam);
+                if (pFrom != NULL)
+                    if (::GetParent(hFrom) == m_hWnd)
+						result = pFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
-                if (!lr) lr = OnNotify(wparam, lparam);
+                if (!result) result = OnNotify(wparam, lparam);
 
                 // Set the return code for notifications
                 if (IsWindow())
-                    SetWindowLongPtr(DWLP_MSGRESULT, static_cast<LONG_PTR>(lr));
+                    SetWindowLongPtr(DWLP_MSGRESULT, static_cast<LONG_PTR>(result));
 
-                return lr;
+                return result;
             }
 
         case WM_PAINT:
@@ -415,9 +415,9 @@ namespace Win32xx
     {
         assert( &GetApp() );        // Test if Win32++ has been started
         assert(!IsWindow());        // Only one window per CWnd instance allowed
-        assert(m_pDlgTemplate || m_resourceName);  // Dialog layout must be defined.
+        assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
 
-        INT_PTR nResult = 0;
+        INT_PTR result = 0;
         m_isModal=TRUE;
         m_hWnd = 0;
 
@@ -429,7 +429,7 @@ namespace Win32xx
         {
             pTLSData->hMsgHook = ::SetWindowsHookEx(WH_MSGFILTER, (HOOKPROC)StaticMsgHook, NULL, ::GetCurrentThreadId());
         }
-        InterlockedIncrement(&pTLSData->nDlgHooks);
+        InterlockedIncrement(&pTLSData->dlgHooks);
     #endif
 
         HINSTANCE hInstance = GetApp().GetInstanceHandle();
@@ -437,12 +437,12 @@ namespace Win32xx
 
         // Create a modal dialog
         if (IsIndirect())
-            nResult = ::DialogBoxIndirect(hInstance, m_pDlgTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+            result = ::DialogBoxIndirect(hInstance, m_pDlgTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
-            if (::FindResource(GetApp().GetResourceHandle(), m_resourceName, RT_DIALOG))
+            if (::FindResource(GetApp().GetResourceHandle(), m_pResName, RT_DIALOG))
                 hInstance = GetApp().GetResourceHandle();
-            nResult = ::DialogBox(hInstance, m_resourceName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+            result = ::DialogBox(hInstance, m_pResName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up
@@ -450,8 +450,8 @@ namespace Win32xx
         m_hWnd = 0;
 
     #ifndef _WIN32_WCE
-        InterlockedDecrement(&pTLSData->nDlgHooks);
-        if (pTLSData->nDlgHooks == 0)
+        InterlockedDecrement(&pTLSData->dlgHooks);
+        if (pTLSData->dlgHooks == 0)
         {
             ::UnhookWindowsHookEx(pTLSData->hMsgHook);
             pTLSData->hMsgHook = NULL;
@@ -460,12 +460,12 @@ namespace Win32xx
     #endif
 
         // Throw an exception if the dialog creation fails
-        if (nResult == -1)
+        if (result == -1)
         {
             throw CWinException(_T("Dialog creation failed"));
         }
 
-        return nResult;
+        return result;
     }
 
 
@@ -474,7 +474,7 @@ namespace Win32xx
     {
         assert( &GetApp() );        // Test if Win32++ has been started
         assert(!IsWindow());        // Only one window per CWnd instance allowed
-        assert(m_pDlgTemplate || m_resourceName);  // Dialog layout must be defined.
+        assert(m_pDlgTemplate || m_pResName);  // Dialog layout must be defined.
 
         m_isModal=FALSE;
         m_hWnd = 0;
@@ -493,10 +493,10 @@ namespace Win32xx
             hWnd = ::CreateDialogIndirect(hInstance, m_pDlgTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
-            if (::FindResource(GetApp().GetResourceHandle(), m_resourceName, RT_DIALOG))
+            if (::FindResource(GetApp().GetResourceHandle(), m_pResName, RT_DIALOG))
                 hInstance = GetApp().GetResourceHandle();
 
-            hWnd = ::CreateDialog(hInstance, m_resourceName, hParent, (DLGPROC)CDialog::StaticDialogProc);
+            hWnd = ::CreateDialog(hInstance, m_pResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up
@@ -513,12 +513,12 @@ namespace Win32xx
 
 
     // Ends a modal or modeless dialog.
-    inline void CDialog::EndDialog(INT_PTR nResult)
+    inline void CDialog::EndDialog(INT_PTR result)
     {
         assert(IsWindow());
 
         if (IsModal())
-            ::EndDialog(*this, nResult);
+            ::EndDialog(*this, result);
         else
             Destroy();
     }
@@ -557,10 +557,10 @@ namespace Win32xx
 
     // Override this function to filter mouse and keyboard messages prior to
     // being passed to the DialogProc.
-    inline BOOL CDialog::PreTranslateMessage(MSG& Msg)
+    inline BOOL CDialog::PreTranslateMessage(MSG& msg)
     {
         // allow the dialog to translate keyboard input
-        if ((Msg.message >= WM_KEYFIRST) && (Msg.message <= WM_KEYLAST))
+        if ((msg.message >= WM_KEYFIRST) && (msg.message <= WM_KEYLAST))
         {
             // Process dialog keystrokes for modeless dialogs
             if (!IsModal())
@@ -568,7 +568,7 @@ namespace Win32xx
                 TLSData* pTLSData = GetApp().GetTlsData();
                 if (NULL == pTLSData->hMsgHook)
                 {
-                    if (IsDialogMessage(Msg))
+                    if (IsDialogMessage(msg))
                         return TRUE;
                 }
                 else
@@ -587,21 +587,21 @@ namespace Win32xx
     inline DWORD CDialog::GetDefID() const
     {
         assert(IsWindow());
-        DWORD dwID = 0;
-        LRESULT LR = SendMessage(DM_GETDEFID, 0, 0);
-        if (DC_HASDEFID == HIWORD(LR))
-            dwID = LOWORD(LR);
+        DWORD id = 0;
+        LRESULT result = SendMessage(DM_GETDEFID, 0, 0);
+        if (DC_HASDEFID == HIWORD(result))
+			id = LOWORD(result);
 
-        return dwID;
+        return id;
     }
 
 
     // Sets the keyboard focus to the specified control.
-    inline void CDialog::GotoDlgCtrl(HWND hWndCtrl)
+    inline void CDialog::GotoDlgCtrl(HWND hControl)
     {
         assert(IsWindow());
-        assert(::IsWindow(hWndCtrl));
-        SendMessage(WM_NEXTDLGCTL, reinterpret_cast<WPARAM>(hWndCtrl), TRUE);
+        assert(::IsWindow(hControl));
+        SendMessage(WM_NEXTDLGCTL, reinterpret_cast<WPARAM>(hControl), TRUE);
     }
 
 
@@ -630,10 +630,10 @@ namespace Win32xx
 
 
     // Changes the identifier of the default push button for a dialog box.
-    inline void CDialog::SetDefID(UINT nID)
+    inline void CDialog::SetDefID(UINT id)
     {
         assert(IsWindow());
-        SendMessage(DM_SETDEFID, nID, 0);
+        SendMessage(DM_SETDEFID, id, 0);
     }
 
 
@@ -666,42 +666,42 @@ namespace Win32xx
 #ifndef _WIN32_WCE
 
     // Used by Modal Dialogs for idle processing and PreTranslateMessage.
-    inline LRESULT CALLBACK CDialog::StaticMsgHook(int nCode, WPARAM wparam, LPARAM lparam)
+    inline LRESULT CALLBACK CDialog::StaticMsgHook(int code, WPARAM wparam, LPARAM lparam)
     {
         TLSData* pTLSData = GetApp().GetTlsData();
-        MSG Msg;
-        ZeroMemory(&Msg, sizeof(Msg));
+        MSG msg;
+        ZeroMemory(&msg, sizeof(msg));
         LONG lCount = 0;
 
         // While idle, perform idle processing until OnIdle returns FALSE
         // Exclude some messages to avoid calling OnIdle excessively
-        while (!::PeekMessage(&Msg, 0, 0, 0, PM_NOREMOVE) &&
-                            (Msg.message != WM_TIMER) &&
-                            (Msg.message != WM_MOUSEMOVE) &&
-                            (Msg.message != WM_SETCURSOR) &&
+        while (!::PeekMessage(&msg, 0, 0, 0, PM_NOREMOVE) &&
+                            (msg.message != WM_TIMER) &&
+                            (msg.message != WM_MOUSEMOVE) &&
+                            (msg.message != WM_SETCURSOR) &&
                                 GetApp().OnIdle(lCount) != FALSE )
         {
             ++lCount;
         }
         lCount = 0;
 
-        if (nCode == MSGF_DIALOGBOX)
+        if (code == MSGF_DIALOGBOX)
         {
-            MSG* lpMsg = reinterpret_cast<MSG*>(lparam);
-            assert(lpMsg);
+            MSG* pMsg = reinterpret_cast<MSG*>(lparam);
+            assert(pMsg);
 
             // only pre-translate keyboard and mouse events
-            if ((lpMsg->message >= WM_KEYFIRST && lpMsg->message <= WM_KEYLAST) ||
-                (lpMsg->message >= WM_MOUSEFIRST && lpMsg->message <= WM_MOUSELAST))
+            if ((pMsg->message >= WM_KEYFIRST && pMsg->message <= WM_KEYLAST) ||
+                (pMsg->message >= WM_MOUSEFIRST && pMsg->message <= WM_MOUSELAST))
             {
-                for (HWND hWnd = lpMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
+                for (HWND hWnd = pMsg->hwnd; hWnd != NULL; hWnd = ::GetParent(hWnd))
                 {
                     // Only CDialogs respond to this message
                     CDialog* pDialog = reinterpret_cast<CDialog*>(::SendMessage(hWnd, UWM_GETCDIALOG, 0, 0));
                     if (pDialog != 0)
                     {
                         assert(GetCWndPtr(hWnd));
-                        if (pDialog->PreTranslateMessage(*lpMsg))
+                        if (pDialog->PreTranslateMessage(*pMsg))
                             return 1; // Eat the message
 
                         break;  // Pass the message on
@@ -710,7 +710,7 @@ namespace Win32xx
             }
         }
 
-        return ::CallNextHookEx(pTLSData->hMsgHook, nCode, wparam, lparam);
+        return ::CallNextHookEx(pTLSData->hMsgHook, code, wparam, lparam);
     }
 #endif
 
@@ -727,23 +727,23 @@ namespace Win32xx
     // Allowed values are topleft, topright, bottomleft, and bottomright.
     // Set IsFixedWidth to TRUE if the width should be fixed instead of variable.
     // Set IsFixedHeight to TRUE if the height should be fixed instead of variable.
-    void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD dwStyle)
+    void inline CResizer::AddChild(HWND hWnd, Alignment corner, DWORD style)
     {
         assert(::IsWindow(hWnd));
         assert(::GetParent(hWnd) == m_hParent);
 
         ResizeData rd;
         rd.corner = corner;
-        rd.IsFixedWidth  = !(dwStyle & RD_STRETCH_WIDTH);
-        rd.IsFixedHeight = !(dwStyle & RD_STRETCH_HEIGHT);
-        CRect rcInit;
-        ::GetWindowRect(hWnd, &rcInit);
-        ::MapWindowPoints(NULL, m_hParent, (LPPOINT)&rcInit, 2);
-        rd.rcInit = rcInit;
+        rd.isFixedWidth  = !(style & RD_STRETCH_WIDTH);
+        rd.isFixedHeight = !(style & RD_STRETCH_HEIGHT);
+        CRect initRect;
+        ::GetWindowRect(hWnd, &initRect);
+        ::MapWindowPoints(NULL, m_hParent, (LPPOINT)&initRect, 2);
+        rd.initRect = initRect;
         rd.hWnd = hWnd;
 
         std::vector<ResizeData>::iterator iter;
-        for (iter = m_vResizeData.begin(); iter != m_vResizeData.end(); ++ iter)
+        for (iter = m_resizeData.begin(); iter != m_resizeData.end(); ++ iter)
         {
             if ( iter->hWnd == hWnd)
             {
@@ -754,21 +754,21 @@ namespace Win32xx
         }
 
         // Add the value
-        if (iter == m_vResizeData.end())
-            m_vResizeData.push_back(rd);
+        if (iter == m_resizeData.end())
+            m_resizeData.push_back(rd);
     }
 
 
     // A callback function used by EnumChildWindows.
-    inline BOOL CALLBACK CResizer::EnumWindowsProc(HWND hwnd, LPARAM lparam)
+    inline BOOL CALLBACK CResizer::EnumWindowsProc(HWND hWnd, LPARAM lparam)
     {
         CResizer* pResizer = reinterpret_cast<CResizer*>(lparam);
 
         // Only for a child, not other descendants.
-        if (::GetParent(hwnd) == pResizer->m_hParent)
+        if (::GetParent(hWnd) == pResizer->m_hParent)
         {
             // Add the child window to set of windows managed by CResizer.
-            pResizer->AddChild(hwnd, topleft, 0);
+            pResizer->AddChild(hWnd, topleft, 0);
         }
 
         return TRUE;
@@ -800,22 +800,22 @@ namespace Win32xx
     // Sets up the Resizer by specifying the parent window (usually a dialog),
     // and the minimum and maximum allowed rectangle sizes.
     // Note:hParent can either be a CWnd or a window handle (HWND)
-    void inline CResizer::Initialize(HWND hParent, const RECT& rcMin, const RECT& rcMax)
+    void inline CResizer::Initialize(HWND hParent, const RECT& minRect, const RECT& maxRect)
     {
         assert (::IsWindow(hParent));
 
         m_hParent = hParent;
-        VERIFY(::GetClientRect(hParent, &m_rcInit) != 0);
+        VERIFY(::GetClientRect(hParent, &m_initRect) != 0);
 
-        m_rcMin = rcMin;
-        m_rcMax = rcMax;
+        m_minRect = minRect;
+        m_maxRect = maxRect;
 
-        m_vResizeData.clear();
+        m_resizeData.clear();
 
         // Add scroll bar support to the parent window
-        DWORD dwStyle = static_cast<DWORD>(::GetClassLongPtr(hParent, GCL_STYLE));
-        dwStyle |= WS_HSCROLL | WS_VSCROLL;
-        ::SetClassLongPtr(hParent, GCL_STYLE, dwStyle);
+        DWORD style = static_cast<DWORD>(::GetClassLongPtr(hParent, GCL_STYLE));
+        style |= WS_HSCROLL | WS_VSCROLL;
+        ::SetClassLongPtr(hParent, GCL_STYLE, style);
 
         // Calls AddChild for each child window with default settings.
         ::EnumChildWindows(hParent, EnumWindowsProc, reinterpret_cast<LPARAM>(this));
@@ -934,47 +934,47 @@ namespace Win32xx
     // the WM_SIZE message in the parent window.
     void inline CResizer::RecalcLayout()
     {
-        assert (m_rcInit.Width() > 0 && m_rcInit.Height() > 0);
+        assert (m_initRect.Width() > 0 && m_initRect.Height() > 0);
         assert (::IsWindow(m_hParent));
 
-        CRect rcCurrent;
-        VERIFY(::GetClientRect(m_hParent, &rcCurrent) != 0);
+        CRect currentRect;
+        VERIFY(::GetClientRect(m_hParent, &currentRect) != 0);
 
         // Adjust the scrolling if required
-        m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_rcMin.Width()  - rcCurrent.Width() ) );
-        m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_rcMin.Height() - rcCurrent.Height()) );
+        m_xScrollPos = MIN(m_xScrollPos, MAX(0, m_minRect.Width()  - currentRect.Width() ) );
+        m_yScrollPos = MIN(m_yScrollPos, MAX(0, m_minRect.Height() - currentRect.Height()) );
         SCROLLINFO si;
         ZeroMemory(&si, sizeof(si));
         si.cbSize = sizeof(si);
         si.fMask  = SIF_RANGE | SIF_PAGE | SIF_POS;
-        si.nMax   = m_rcMin.Width();
-        si.nPage  = rcCurrent.Width();
+        si.nMax   = m_minRect.Width();
+        si.nPage  = currentRect.Width();
         si.nPos   = m_xScrollPos;
         ::SetScrollInfo(m_hParent, SB_HORZ, &si, TRUE);
-        si.nMax   = m_rcMin.Height();
-        si.nPage  = rcCurrent.Height();
+        si.nMax   = m_minRect.Height();
+        si.nPage  = currentRect.Height();
         si.nPos   = m_yScrollPos;
         ::SetScrollInfo(m_hParent, SB_VERT, &si, TRUE);
 
         // Note: calls to SetScrollInfo may have changed the client rect, so
         // we get it again.
-        VERIFY(::GetClientRect(m_hParent, &rcCurrent) != 0);
+        VERIFY(::GetClientRect(m_hParent, &currentRect) != 0);
 
-        rcCurrent.right  = MAX( rcCurrent.Width(),  m_rcMin.Width() );
-        rcCurrent.bottom = MAX( rcCurrent.Height(), m_rcMin.Height() );
-        if (!m_rcMax.IsRectEmpty())
+		currentRect.right  = MAX(currentRect.Width(),  m_minRect.Width() );
+		currentRect.bottom = MAX(currentRect.Height(), m_minRect.Height() );
+        if (!m_maxRect.IsRectEmpty())
         {
-            rcCurrent.right  = MIN( rcCurrent.Width(),  m_rcMax.Width() );
-            rcCurrent.bottom = MIN( rcCurrent.Height(), m_rcMax.Height() );
+			currentRect.right  = MIN(currentRect.Width(),  m_maxRect.Width() );
+			currentRect.bottom = MIN(currentRect.Height(), m_maxRect.Height() );
         }
 
         // Declare an iterator to step through the vector
         std::vector<ResizeData>::iterator iter;
 
         // Allocates memory for a multiple-window- position structure.
-        HDWP hdwp = ::BeginDeferWindowPos(static_cast<int>(m_vResizeData.size()));
+        HDWP hdwp = ::BeginDeferWindowPos(static_cast<int>(m_resizeData.size()));
 
-        for (iter = m_vResizeData.begin(); iter != m_vResizeData.end(); ++iter)
+        for (iter = m_resizeData.begin(); iter != m_resizeData.end(); ++iter)
         {
             int left   = 0;
             int top    = 0;
@@ -985,34 +985,34 @@ namespace Win32xx
             switch( (*iter).corner )
             {
             case topleft:
-                width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-                height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
-                left   = (*iter).rcInit.left;
-                top    = (*iter).rcInit.top;
+                width  = (*iter).isFixedWidth?  (*iter).initRect.Width()  : (*iter).initRect.Width()  - m_initRect.Width() + currentRect.Width();
+                height = (*iter).isFixedHeight? (*iter).initRect.Height() : (*iter).initRect.Height() - m_initRect.Height() + currentRect.Height();
+                left   = (*iter).initRect.left;
+                top    = (*iter).initRect.top;
                 break;
             case topright:
-                width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-                height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
-                left   = (*iter).rcInit.right - width - m_rcInit.Width() + rcCurrent.Width();
-                top    = (*iter).rcInit.top;
+                width  = (*iter).isFixedWidth?  (*iter).initRect.Width()  : (*iter).initRect.Width()  - m_initRect.Width() + currentRect.Width();
+                height = (*iter).isFixedHeight? (*iter).initRect.Height() : (*iter).initRect.Height() - m_initRect.Height() + currentRect.Height();
+                left   = (*iter).initRect.right - width - m_initRect.Width() + currentRect.Width();
+                top    = (*iter).initRect.top;
                 break;
             case bottomleft:
-                width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-                height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
-                left   = (*iter).rcInit.left;
-                top    = (*iter).rcInit.bottom - height - m_rcInit.Height() + rcCurrent.Height();
+                width  = (*iter).isFixedWidth?  (*iter).initRect.Width()  : (*iter).initRect.Width()  - m_initRect.Width() + currentRect.Width();
+                height = (*iter).isFixedHeight? (*iter).initRect.Height() : (*iter).initRect.Height() - m_initRect.Height() + currentRect.Height();
+                left   = (*iter).initRect.left;
+                top    = (*iter).initRect.bottom - height - m_initRect.Height() + currentRect.Height();
                 break;
             case bottomright:
-                width  = (*iter).IsFixedWidth?  (*iter).rcInit.Width()  : (*iter).rcInit.Width()  - m_rcInit.Width() + rcCurrent.Width();
-                height = (*iter).IsFixedHeight? (*iter).rcInit.Height() : (*iter).rcInit.Height() - m_rcInit.Height() + rcCurrent.Height();
-                left   = (*iter).rcInit.right   - width - m_rcInit.Width() + rcCurrent.Width();
-                top    = (*iter).rcInit.bottom  - height - m_rcInit.Height() + rcCurrent.Height();
+                width  = (*iter).isFixedWidth?  (*iter).initRect.Width()  : (*iter).initRect.Width()  - m_initRect.Width() + currentRect.Width();
+                height = (*iter).isFixedHeight? (*iter).initRect.Height() : (*iter).initRect.Height() - m_initRect.Height() + currentRect.Height();
+                left   = (*iter).initRect.right   - width - m_initRect.Width() + currentRect.Width();
+                top    = (*iter).initRect.bottom  - height - m_initRect.Height() + currentRect.Height();
                 break;
             }
 
             // Determine the position of the child window.
             CRect rc(left - m_xScrollPos, top - m_yScrollPos, left + width - m_xScrollPos, top + height - m_yScrollPos);
-            if ( rc != (*iter).rcOld)
+            if ( rc != (*iter).oldRect)
             {
                 // Note: The tab order of the dialog's controls is determined by the order
                 //       they are specified in the resource script (resource.rc).
@@ -1020,7 +1020,7 @@ namespace Win32xx
                 // Store the window's new position. Repositioning happens later.
                 hdwp = ::DeferWindowPos(hdwp, (*iter).hWnd, NULL, rc.left, rc.top, rc.Width(), rc.Height(), SWP_NOZORDER|SWP_NOCOPYBITS);
 
-                (*iter).rcOld = rc;
+                (*iter).oldRect = rc;
             }
 
         }

@@ -67,7 +67,7 @@ namespace Win32xx
     class CRibbon : public IUICommandHandler, public IUIApplication
     {
     public:
-        CRibbon() : m_cRef(0), m_pRibbonFramework(NULL) {}
+        CRibbon() : m_count(0), m_pRibbonFramework(NULL) {}
         ~CRibbon();
 
         // IUnknown methods.
@@ -86,11 +86,11 @@ namespace Win32xx
             UI_VIEWVERB verb, INT uReasonCode);
 
         // IUICommandHandle methods
-        STDMETHODIMP Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue,
+        STDMETHODIMP Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* value,
                                           __in_opt IUISimplePropertySet* pCommandExecutionProperties);
 
-        STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue,
-                                                 __out PROPVARIANT* ppropvarNewValue);
+        STDMETHODIMP UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
+                                                 __out PROPVARIANT* newValue);
 
         bool virtual CreateRibbon(HWND hWnd);
         void virtual DestroyRibbon();
@@ -99,7 +99,7 @@ namespace Win32xx
 
     private:
         IUIFramework* m_pRibbonFramework;
-        LONG m_cRef;                            // Reference count.
+        LONG m_count;                            // Reference count.
 
     };
 
@@ -117,7 +117,7 @@ namespace Win32xx
         class CRecentFiles : public IUISimplePropertySet
         {
         public:
-            CRecentFiles(PWSTR wszFullPath);
+            CRecentFiles(PWSTR pFullPath);
             ~CRecentFiles() {}
 
             // IUnknown methods.
@@ -126,12 +126,12 @@ namespace Win32xx
             STDMETHODIMP QueryInterface(REFIID iid, void** ppv);
 
             // IUISimplePropertySet methods
-            STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *value);
+            STDMETHODIMP GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT* value);
 
         private:
-            LONG m_cRef;                        // Reference count.
-            WCHAR m_wszDisplayName[MAX_PATH];
-            WCHAR m_wszFullPath[MAX_PATH];
+            LONG m_count;                        // Reference count.
+            WCHAR m_displayName[MAX_PATH];
+            WCHAR m_fullPath[MAX_PATH];
         };
 
         typedef Shared_Ptr<CRecentFiles> RecentFilesPtr;
@@ -141,12 +141,12 @@ namespace Win32xx
         virtual CRect GetViewRect() const;
         virtual int  OnCreate(CREATESTRUCT& cs);
         virtual void OnDestroy();
-        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode);
-        virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue);
+        virtual STDMETHODIMP OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode);
+        virtual HRESULT PopulateRibbonRecentItems(__deref_out PROPVARIANT* value);
         virtual void UpdateMRUMenu();
 
     private:
-        std::vector<RecentFilesPtr> m_vRecentFiles;
+        std::vector<RecentFilesPtr> m_recentFiles;
     };
 
 
@@ -200,7 +200,7 @@ namespace Win32xx
     inline CRibbon::~CRibbon()
     {
         // Reference count must be 0 or we have a leak!
-        assert(m_cRef == 0);
+        assert(m_count == 0);
     }
 
     //////////////////////////////////
@@ -209,24 +209,24 @@ namespace Win32xx
 
     inline STDMETHODIMP_(ULONG) CRibbon::AddRef()
     {
-        return InterlockedIncrement(&m_cRef);
+        return InterlockedIncrement(&m_count);
     }
 
     inline STDMETHODIMP_(ULONG) CRibbon::Release()
     {
-        LONG cRef = InterlockedDecrement(&m_cRef);
+        LONG cRef = InterlockedDecrement(&m_count);
         return cRef;
     }
 
 
     // Responds to execute events on Commands bound to the Command handler.
-    inline STDMETHODIMP CRibbon::Execute(UINT nCmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* ppropvarValue,
+    inline STDMETHODIMP CRibbon::Execute(UINT cmdID, UI_EXECUTIONVERB verb, __in_opt const PROPERTYKEY* key, __in_opt const PROPVARIANT* value,
                                           __in_opt IUISimplePropertySet* pCommandExecutionProperties)
     {
-        UNREFERENCED_PARAMETER (nCmdID);
+        UNREFERENCED_PARAMETER (cmdID);
         UNREFERENCED_PARAMETER (verb);
         UNREFERENCED_PARAMETER (key);
-        UNREFERENCED_PARAMETER (ppropvarValue);
+        UNREFERENCED_PARAMETER (value);
         UNREFERENCED_PARAMETER (pCommandExecutionProperties);
 
         return E_NOTIMPL;
@@ -259,11 +259,11 @@ namespace Win32xx
 
 
     // Called by the Ribbon framework for each command specified in markup, to bind the Command to an IUICommandHandler.
-    inline STDMETHODIMP CRibbon::OnCreateUICommand(UINT nCmdID, __in UI_COMMANDTYPE typeID,
+    inline STDMETHODIMP CRibbon::OnCreateUICommand(UINT cmdID, __in UI_COMMANDTYPE typeID,
                                                  __deref_out IUICommandHandler** ppCommandHandler)
     {
         UNREFERENCED_PARAMETER(typeID);
-        UNREFERENCED_PARAMETER(nCmdID);
+        UNREFERENCED_PARAMETER(cmdID);
 
         // By default we use the single command handler provided as part of CRibbon.
         // Override this function to account for multiple command handlers.
@@ -274,38 +274,38 @@ namespace Win32xx
 
     // Called when the state of the Ribbon changes, for example, created, destroyed, or resized.
     inline STDMETHODIMP CRibbon::OnViewChanged(UINT viewId, __in UI_VIEWTYPE typeId, __in IUnknown* pView,
-                                             UI_VIEWVERB verb, INT uReasonCode)
+                                             UI_VIEWVERB verb, INT reasonCode)
     {
         UNREFERENCED_PARAMETER(viewId);
         UNREFERENCED_PARAMETER(typeId);
         UNREFERENCED_PARAMETER(pView);
         UNREFERENCED_PARAMETER(verb);
-        UNREFERENCED_PARAMETER(uReasonCode);
+        UNREFERENCED_PARAMETER(reasonCode);
 
         return E_NOTIMPL;
     }
 
 
     // Called by the Ribbon framework for each command at the time of ribbon destruction.
-    inline STDMETHODIMP CRibbon::OnDestroyUICommand(UINT32 nCmdID, __in UI_COMMANDTYPE typeID,
+    inline STDMETHODIMP CRibbon::OnDestroyUICommand(UINT32 cmdID, __in UI_COMMANDTYPE typeID,
                                                   __in_opt IUICommandHandler* commandHandler)
     {
         UNREFERENCED_PARAMETER(commandHandler);
         UNREFERENCED_PARAMETER(typeID);
-        UNREFERENCED_PARAMETER(nCmdID);
+        UNREFERENCED_PARAMETER(cmdID);
 
         return E_NOTIMPL;
     }
 
 
     // Called by the Ribbon framework when a command property (PKEY) needs to be updated.
-    inline STDMETHODIMP CRibbon::UpdateProperty(UINT nCmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* ppropvarCurrentValue,
-                                                 __out PROPVARIANT* ppropvarNewValue)
+    inline STDMETHODIMP CRibbon::UpdateProperty(UINT cmdID, __in REFPROPERTYKEY key, __in_opt const PROPVARIANT* currentValue,
+                                                 __out PROPVARIANT* newValue)
     {
-        UNREFERENCED_PARAMETER(nCmdID);
+        UNREFERENCED_PARAMETER(cmdID);
         UNREFERENCED_PARAMETER(key);
-        UNREFERENCED_PARAMETER(ppropvarCurrentValue);
-        UNREFERENCED_PARAMETER(ppropvarNewValue);
+        UNREFERENCED_PARAMETER(currentValue);
+        UNREFERENCED_PARAMETER(newValue);
 
         return E_NOTIMPL;
     }
@@ -322,15 +322,15 @@ namespace Win32xx
         // Connect the host application to the Ribbon framework.
 
         assert(m_pRibbonFramework);
-        HRESULT hr = m_pRibbonFramework->Initialize(hWnd, this);
-        if (FAILED(hr))
+        HRESULT result = m_pRibbonFramework->Initialize(hWnd, this);
+        if (FAILED(result))
         {
             return false;
         }
 
         // Load the binary markup. APPLICATION_RIBBON is the default name generated by uicc.
-        hr = m_pRibbonFramework->LoadUI(GetModuleHandle(NULL), L"APPLICATION_RIBBON");
-        if (FAILED(hr))
+		result = m_pRibbonFramework->LoadUI(GetModuleHandle(NULL), L"APPLICATION_RIBBON");
+        if (FAILED(result))
         {
             return false;
         }
@@ -356,22 +356,22 @@ namespace Win32xx
     // Retrieves the height of the ribbon.
     inline UINT CRibbon::GetRibbonHeight() const
     {
-        HRESULT hr = E_FAIL;
+        HRESULT result = E_FAIL;
         IUIRibbon* pRibbon = NULL;
-        UINT uRibbonHeight = 0;
+        UINT ribbonHeight = 0;
 
         if (GetRibbonFramework())
         {
-            hr = GetRibbonFramework()->GetView(0, IID_PPV_ARGS(&pRibbon));
-            if (SUCCEEDED(hr))
+			result = GetRibbonFramework()->GetView(0, IID_PPV_ARGS(&pRibbon));
+            if (SUCCEEDED(result))
             {
                 // Call to the framework to determine the desired height of the Ribbon.
-                hr = pRibbon->GetHeight(&uRibbonHeight);
+				result = pRibbon->GetHeight(&ribbonHeight);
                 pRibbon->Release();
             }
         }
 
-        return uRibbonHeight;
+        return ribbonHeight;
     }
 
 
@@ -383,20 +383,20 @@ namespace Win32xx
     template <class T>
     inline CRect CRibbonFrameT<T>::GetViewRect() const
     {
-        CRect rcClient = GetClientRect();
+        CRect clientRect = GetClientRect();
 
-        rcClient.top += GetRibbonHeight();
+		clientRect.top += GetRibbonHeight();
 
         if (GetStatusBar().IsWindow() && GetStatusBar().IsWindowVisible())
-            rcClient = ExcludeChildRect(rcClient, GetStatusBar());
+			clientRect = ExcludeChildRect(clientRect, GetStatusBar());
 
         if (GetReBar().IsWindow() && GetReBar().IsWindowVisible())
-            rcClient = ExcludeChildRect(rcClient, GetReBar());
+			clientRect = ExcludeChildRect(clientRect, GetReBar());
         else
             if (GetToolBar().IsWindow() && GetToolBar().IsWindowVisible())
-                rcClient = ExcludeChildRect(rcClient, GetToolBar());
+				clientRect = ExcludeChildRect(clientRect, GetToolBar());
 
-        return rcClient;
+        return clientRect;
     }
 
 
@@ -445,13 +445,13 @@ namespace Win32xx
 
     // Called when the ribbon's view has changed.
     template <class T>
-    inline STDMETHODIMP CRibbonFrameT<T>::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 uReasonCode)
+    inline STDMETHODIMP CRibbonFrameT<T>::OnViewChanged(UINT32 viewId, UI_VIEWTYPE typeId, IUnknown* pView, UI_VIEWVERB verb, INT32 reasonCode)
     {
         UNREFERENCED_PARAMETER(viewId);
         UNREFERENCED_PARAMETER(pView);
-        UNREFERENCED_PARAMETER(uReasonCode);
+        UNREFERENCED_PARAMETER(reasonCode);
 
-        HRESULT hr = E_NOTIMPL;
+        HRESULT result = E_NOTIMPL;
 
         // Checks to see if the view that was changed was a Ribbon view.
         if (UI_VIEWTYPE_RIBBON == typeId)
@@ -459,18 +459,18 @@ namespace Win32xx
             switch (verb)
             {
             case UI_VIEWVERB_CREATE:    // The view was newly created.
-                hr = S_OK;
+				result = S_OK;
                 break;
             case UI_VIEWVERB_SIZE:      // Ribbon size has changed
                 RecalcLayout();
                 break;
             case UI_VIEWVERB_DESTROY:   // The view was destroyed.
-                hr = S_OK;
+				result = S_OK;
                 break;
             }
         }
 
-        return hr;
+        return result;
     }
 
 
@@ -478,36 +478,36 @@ namespace Win32xx
     template <class T>
     inline HRESULT CRibbonFrameT<T>::PopulateRibbonRecentItems(__deref_out PROPVARIANT* pvarValue)
     {
-        LONG iCurrentFile = 0;
-        std::vector<CString> FileNames = GetMRUEntries();
+        LONG currentFile = 0;
+        std::vector<CString> fileNames = GetMRUEntries();
         std::vector<CString>::const_iterator iter;
-        int iFileCount = FileNames.size();
-        HRESULT hr = E_FAIL;
-        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, iFileCount);
-        m_vRecentFiles.clear();
+        int fileCount = fileNames.size();
+        HRESULT result = E_FAIL;
+        SAFEARRAY* psa = SafeArrayCreateVector(VT_UNKNOWN, 0, fileCount);
+        m_recentFiles.clear();
 
         if (psa != NULL)
         {
-            for (iter = FileNames.begin(); iter != FileNames.end(); ++iter)
+            for (iter = fileNames.begin(); iter != fileNames.end(); ++iter)
             {
                 CString strCurrentFile = (*iter);
                 WCHAR wszCurrentFile[MAX_PATH] = {0};
                 lstrcpynW(wszCurrentFile, TtoW(strCurrentFile), MAX_PATH);
 
                 CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
-                m_vRecentFiles.push_back(RecentFilesPtr(pRecentFiles));
-                hr = SafeArrayPutElement(psa, &iCurrentFile, static_cast<void*>(pRecentFiles));
-                ++iCurrentFile;
+                m_recentFiles.push_back(RecentFilesPtr(pRecentFiles));
+				result = SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pRecentFiles));
+                ++currentFile;
             }
 
-            SAFEARRAYBOUND sab = {static_cast<ULONG>(iCurrentFile), 0};
+            SAFEARRAYBOUND sab = {static_cast<ULONG>(currentFile), 0};
             SafeArrayRedim(psa, &sab);
-            hr = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
+			result = UIInitPropertyFromIUnknownArray(UI_PKEY_RecentItems, psa, pvarValue);
 
             SafeArrayDestroy(psa);  // Calls release for each element in the array
         }
 
-        return hr;
+        return result;
     }
 
 
@@ -526,24 +526,24 @@ namespace Win32xx
     // Declaration of the nested CRecentFiles class
     //
     template <class T>
-    inline CRibbonFrameT<T>::CRecentFiles::CRecentFiles(PWSTR wszFullPath) : m_cRef(0)
+    inline CRibbonFrameT<T>::CRecentFiles::CRecentFiles(PWSTR fullPath) : m_count(0)
     {
         SHFILEINFOW sfi;
-        DWORD_PTR dwPtr = NULL;
-        m_wszFullPath[0] = L'\0';
-        m_wszDisplayName[0] = L'\0';
+        DWORD_PTR ptr = NULL;
+        m_fullPath[0] = L'\0';
+        m_displayName[0] = L'\0';
 
-        if (NULL != lstrcpynW(m_wszFullPath, wszFullPath, MAX_PATH))
+        if (NULL != lstrcpynW(m_fullPath, fullPath, MAX_PATH))
         {
-            dwPtr = ::SHGetFileInfoW(wszFullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
+            ptr = ::SHGetFileInfoW(fullPath, FILE_ATTRIBUTE_NORMAL, &sfi, sizeof(sfi), SHGFI_DISPLAYNAME | SHGFI_USEFILEATTRIBUTES);
 
-            if (dwPtr != NULL)
+            if (ptr != NULL)
             {
-                lstrcpynW(m_wszDisplayName, sfi.szDisplayName, MAX_PATH);
+                lstrcpynW(m_displayName, sfi.szDisplayName, MAX_PATH);
             }
             else // Provide a reasonable fall back.
             {
-                lstrcpynW(m_wszDisplayName, m_wszFullPath, MAX_PATH);
+                lstrcpynW(m_displayName, m_fullPath, MAX_PATH);
             }
         }
     }
@@ -551,13 +551,13 @@ namespace Win32xx
     template <class T>
     inline STDMETHODIMP_(ULONG) CRibbonFrameT<T>::CRecentFiles::AddRef()
     {
-        return InterlockedIncrement(&m_cRef);
+        return InterlockedIncrement(&m_count);
     }
 
     template <class T>
     inline STDMETHODIMP_(ULONG) CRibbonFrameT<T>::CRecentFiles::Release()
     {
-        return InterlockedDecrement(&m_cRef);
+        return InterlockedDecrement(&m_count);
     }
 
     template <class T>
@@ -590,18 +590,18 @@ namespace Win32xx
     template <class T>
     inline STDMETHODIMP CRibbonFrameT<T>::CRecentFiles::GetValue(__in REFPROPERTYKEY key, __out PROPVARIANT *ppropvar)
     {
-        HRESULT hr = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
+        HRESULT result = HRESULT_FROM_WIN32(ERROR_NOT_SUPPORTED);
 
         if (key == UI_PKEY_Label)
         {
-            hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
+			result = UIInitPropertyFromString(key, m_displayName, ppropvar);
         }
         else if (key == UI_PKEY_LabelDescription)
         {
-            hr = UIInitPropertyFromString(key, m_wszDisplayName, ppropvar);
+			result = UIInitPropertyFromString(key, m_displayName, ppropvar);
         }
 
-        return hr;
+        return result;
     }
 
 

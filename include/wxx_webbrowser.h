@@ -153,7 +153,7 @@ namespace Win32xx
 
         //Attributes
         LPDISPATCH GetApplication() const;
-        CAXWindow& GetAXWindow() const { return m_AXContainer; }
+        CAXWindow& GetAXWindow() const { return m_axContainer; }
         BOOL GetBusy() const;
         LPDISPATCH GetContainer() const;
         BOOL GetFullScreen() const;
@@ -171,36 +171,36 @@ namespace Win32xx
         CString GetType() const;
         BOOL GetVisible() const;
         long GetWidth() const;
-        void SetFullScreen(BOOL IsFullScreen);
-        void SetHeight(long Height);
-        void SetLeft(long LeftEdge);
-        void SetOffline(BOOL IsOffline);
-        void SetRegisterAsBrowser(BOOL IsBrowser);
-        void SetTheaterMode(BOOL IsTheaterMode);
-        void SetTop(long TopEdge);
-        void SetVisible(BOOL IsVisible);
-        void SetWidth(long Width);
+        void SetFullScreen(BOOL isFullScreen);
+        void SetHeight(long height);
+        void SetLeft(long leftEdge);
+        void SetOffline(BOOL isOffline);
+        void SetRegisterAsBrowser(BOOL isBrowser);
+        void SetTheaterMode(BOOL isTheaterMode);
+        void SetTop(long topEdge);
+        void SetVisible(BOOL isVisible);
+        void SetWidth(long width);
 
         // Operations
         void AddWebBrowserControl();
-        void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut);
+        void ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecEpt, VARIANT* in, VARIANT* out);
         VARIANT GetProperty( LPCTSTR pszProperty);
         void GoBack();
         void GoForward();
         void GoHome();
         void GoSearch();
-        void Navigate(LPCTSTR pszURL, DWORD dwFlags = 0, LPCTSTR pszTargetFrameName = NULL,
-                        LPCTSTR pszHeaders = NULL, LPVOID pvPostData = NULL, DWORD dwPostDataLen = 0);
-        void Navigate2(LPITEMIDLIST pIDL, DWORD dwFlags = 0, LPCTSTR pszTargetFrameName = NULL);
-        void Navigate2(LPCTSTR pszURL, DWORD dwFlags = 0, LPCTSTR pszTargetFrameName = NULL,
-                         LPCTSTR pszHeaders = NULL, LPVOID lpvPostData = NULL, DWORD dwPostDataLen = 0);
-        void PutProperty(LPCTSTR pszPropertyName, const VARIANT& vtValue);
-        void PutProperty(LPCTSTR pszPropertyName, double dValue);
-        void PutProperty(LPCTSTR pszPropertyName, long lValue);
-        void PutProperty(LPCTSTR pszPropertyName, LPCTSTR lpszValue);
-        void PutProperty(LPCTSTR pszPropertyName, short nValue);
+        void Navigate(LPCTSTR pURL, DWORD flags = 0, LPCTSTR pTargetFrameName = NULL,
+                        LPCTSTR pHeaders = NULL, LPVOID pPostData = NULL, DWORD postDataLen = 0);
+        void Navigate2(LPITEMIDLIST pIDL, DWORD flags = 0, LPCTSTR pTargetFrameName = NULL);
+        void Navigate2(LPCTSTR pURL, DWORD flags = 0, LPCTSTR pTargetFrameName = NULL,
+                         LPCTSTR pHeaders = NULL, LPVOID pPostData = NULL, DWORD postDataLen = 0);
+        void PutProperty(LPCTSTR pPropertyName, const VARIANT& value);
+        void PutProperty(LPCTSTR pPropertyName, double value);
+        void PutProperty(LPCTSTR pPropertyName, long value);
+        void PutProperty(LPCTSTR pPropertyName, LPCTSTR pValue);
+        void PutProperty(LPCTSTR pPropertyName, short value);
         void Refresh();
-        void Refresh2(int nLevel);
+        void Refresh2(int evel);
         void Stop();
 
     protected:
@@ -215,7 +215,7 @@ namespace Win32xx
 
     private:
         UINT    GetPidlLength(LPITEMIDLIST pidl);
-        mutable CAXWindow     m_AXContainer;    // The ActiveX Container
+        mutable CAXWindow  m_axContainer;    // The ActiveX Container
         IWebBrowser2* m_pIWebBrowser2;  // Interface to the ActiveX web browser control
     };
 
@@ -1053,87 +1053,87 @@ namespace Win32xx
 
 
     // Sets a value that indicates whether Internet Explorer is in full-screen mode or normal window mode.
-    inline void CWebBrowser::SetFullScreen(BOOL IsFullScreen)
+    inline void CWebBrowser::SetFullScreen(BOOL isFullScreen)
     {
-        VARIANT_BOOL vBool = IsFullScreen ? VARIANT_TRUE : VARIANT_FALSE;
+        VARIANT_BOOL vBool = isFullScreen ? VARIANT_TRUE : VARIANT_FALSE;
         GetIWebBrowser2()->put_FullScreen(vBool);
     }
 
 
     // Sets the height of the object.
-    inline void CWebBrowser::SetHeight(long Height)
+    inline void CWebBrowser::SetHeight(long height)
     {
-        GetIWebBrowser2()->put_Height(Height);
+        GetIWebBrowser2()->put_Height(height);
     }
 
 
     // Sets the coordinate of the left edge of the object.
-    inline void CWebBrowser::SetLeft(long LeftEdge)
+    inline void CWebBrowser::SetLeft(long leftEdge)
     {
-        GetIWebBrowser2()->put_Left(LeftEdge);
+        GetIWebBrowser2()->put_Left(leftEdge);
     }
 
 
     // Sets a value that indicates whether the object is operating in offline mode.
-    inline void CWebBrowser::SetOffline(BOOL IsOffline)
+    inline void CWebBrowser::SetOffline(BOOL isOffline)
     {
-        VARIANT_BOOL vBool = IsOffline ? VARIANT_TRUE : VARIANT_FALSE;
+        VARIANT_BOOL vBool = isOffline ? VARIANT_TRUE : VARIANT_FALSE;
         GetIWebBrowser2()->put_Offline(vBool);
     }
 
 
     // Sets a value that indicates whether the object is registered as a top-level browser window.
-    inline void CWebBrowser::SetRegisterAsBrowser(BOOL IsBrowser)
+    inline void CWebBrowser::SetRegisterAsBrowser(BOOL isBrowser)
     {
-        VARIANT_BOOL vBool = IsBrowser ? VARIANT_TRUE : VARIANT_FALSE;
+        VARIANT_BOOL vBool = isBrowser ? VARIANT_TRUE : VARIANT_FALSE;
         GetIWebBrowser2()->put_RegisterAsBrowser(vBool);
     }
 
 
     // Sets the theatre mode state of the object.
-    inline void CWebBrowser::SetTheaterMode(BOOL IsTheaterMode)
+    inline void CWebBrowser::SetTheaterMode(BOOL isTheaterMode)
     {
-        VARIANT_BOOL vBool = IsTheaterMode ? VARIANT_TRUE : VARIANT_FALSE;
+        VARIANT_BOOL vBool = isTheaterMode ? VARIANT_TRUE : VARIANT_FALSE;
         GetIWebBrowser2()->put_TheaterMode(vBool);
     }
 
 
     // Sets the coordinate of the top edge of the object.
-    inline void CWebBrowser::SetTop(long TopEdge)
+    inline void CWebBrowser::SetTop(long topEdge)
 
     {
-        GetIWebBrowser2()->put_Top(TopEdge);
+        GetIWebBrowser2()->put_Top(topEdge);
     }
 
 
     // Sets a value that indicates whether the object is visible or hidden.
-    inline void CWebBrowser::SetVisible(BOOL IsVisible)
+    inline void CWebBrowser::SetVisible(BOOL isVisible)
     {
-        VARIANT_BOOL vBool = IsVisible ? VARIANT_TRUE : VARIANT_FALSE;
+        VARIANT_BOOL vBool = isVisible ? VARIANT_TRUE : VARIANT_FALSE;
         GetIWebBrowser2()->put_Visible(vBool);
     }
 
 
     // Sets the width of the object.
-    inline void CWebBrowser::SetWidth(long Width)
+    inline void CWebBrowser::SetWidth(long width)
 
     {
-        GetIWebBrowser2()->put_Width(Width);
+        GetIWebBrowser2()->put_Width(width);
     }
 
 
     // Executes a command using the IOleCommandTarget interface.
-    inline void CWebBrowser::ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdexecopt, VARIANT* pvaIn, VARIANT* pvaOut)
+    inline void CWebBrowser::ExecWB(OLECMDID cmdID, OLECMDEXECOPT cmdExecOpt, VARIANT* in, VARIANT* out)
     {
-        GetIWebBrowser2()->ExecWB(cmdID, cmdexecopt, pvaIn, pvaOut);
+        GetIWebBrowser2()->ExecWB(cmdID, cmdExecOpt, in, out);
     }
 
 
     // Gets the value associated with the specified property name.
-    inline VARIANT CWebBrowser::GetProperty( LPCTSTR pszProperty )
+    inline VARIANT CWebBrowser::GetProperty( LPCTSTR pProperty )
     {
         VARIANT v;
-        GetIWebBrowser2()->GetProperty( TtoBSTR(pszProperty), &v );
+        GetIWebBrowser2()->GetProperty( TtoBSTR(pProperty), &v );
         return v;
     }
 
@@ -1167,27 +1167,27 @@ namespace Win32xx
 
 
     // Navigates to a resource identified by a URL or to a file identified by a full path.
-    inline void CWebBrowser::Navigate(LPCTSTR pszURL,   DWORD dwFlags /*= 0*/, LPCTSTR pszTargetFrameName /*= NULL*/,
-                    LPCTSTR pszHeaders /*= NULL*/, LPVOID pvPostData /*= NULL*/,   DWORD dwPostDataLen /*= 0*/)
+    inline void CWebBrowser::Navigate(LPCTSTR pURL,   DWORD flags /*= 0*/, LPCTSTR pTargetFrameName /*= NULL*/,
+                    LPCTSTR pHeaders /*= NULL*/, LPVOID pPostData /*= NULL*/,   DWORD postDataLen /*= 0*/)
     {
         VARIANT Flags;
         Flags.vt = VT_I4;
-        Flags.lVal = dwFlags;
+        Flags.lVal = flags;
 
         VARIANT TargetFrameName;
         TargetFrameName.vt = VT_BSTR;
-        TargetFrameName.bstrVal = SysAllocString(TtoW(pszTargetFrameName));
+        TargetFrameName.bstrVal = SysAllocString(TtoW(pTargetFrameName));
 
-        SAFEARRAY* psa = SafeArrayCreateVector(VT_UI1, 0, dwPostDataLen);
-        CopyMemory(psa->pvData, pvPostData, dwPostDataLen);
+        SAFEARRAY* psa = SafeArrayCreateVector(VT_UI1, 0, postDataLen);
+        CopyMemory(psa->pvData, pPostData, postDataLen);
         VARIANT PostData;
         PostData.vt = VT_ARRAY|VT_UI1;
         PostData.parray = psa;
 
         VARIANT Headers;
         Headers.vt = VT_BSTR;
-        Headers.bstrVal = SysAllocString(TtoW(pszHeaders));
-        BSTR url = SysAllocString(TtoW(pszURL));
+        Headers.bstrVal = SysAllocString(TtoW(pHeaders));
+        BSTR url = SysAllocString(TtoW(pURL));
 
         if (url)
             GetIWebBrowser2()->Navigate(url, &Flags, &TargetFrameName, &PostData, &Headers);
@@ -1200,7 +1200,7 @@ namespace Win32xx
 
 
     // Navigates the browser to a location specified by a pointer to an item identifier list (PIDL) for an entity in the Microsoft Windows Shell namespace.
-    inline void CWebBrowser::Navigate2(LPITEMIDLIST pIDL, DWORD dwFlags /*= 0*/, LPCTSTR pszTargetFrameName /*= NULL*/)
+    inline void CWebBrowser::Navigate2(LPITEMIDLIST pIDL, DWORD flags /*= 0*/, LPCTSTR pTargetFrameName /*= NULL*/)
     {
         UINT cb = GetPidlLength(pIDL);
         LPSAFEARRAY psa = SafeArrayCreateVector(VT_UI1, 0, cb);
@@ -1211,11 +1211,11 @@ namespace Win32xx
 
         VARIANT Flags;
         Flags.vt = VT_I4;
-        Flags.lVal = dwFlags;
+        Flags.lVal = flags;
 
         VARIANT TargetFrameName;
         TargetFrameName.vt = VT_BSTR;
-        TargetFrameName.bstrVal = SysAllocString(TtoW(pszTargetFrameName));
+        TargetFrameName.bstrVal = SysAllocString(TtoW(pTargetFrameName));
 
         GetIWebBrowser2()->Navigate2(&PIDL, &Flags, &TargetFrameName, 0, 0);
 
@@ -1226,31 +1226,31 @@ namespace Win32xx
 
 
     // Navigates the browser to a location that is expressed as a URL.
-    inline void CWebBrowser::Navigate2(LPCTSTR pszURL, DWORD dwFlags /*= 0*/, LPCTSTR pszTargetFrameName /*= NULL*/,
-                     LPCTSTR pszHeaders /*= NULL*/,   LPVOID pvPostData /*= NULL*/, DWORD dwPostDataLen /*= 0*/)
+    inline void CWebBrowser::Navigate2(LPCTSTR pURL, DWORD flags /*= 0*/, LPCTSTR pTargetFrameName /*= NULL*/,
+                     LPCTSTR pHeaders /*= NULL*/,   LPVOID pPostData /*= NULL*/, DWORD postDataLen /*= 0*/)
     {
         VARIANT URL;
         URL.vt = VT_BSTR;
-        URL.bstrVal = SysAllocString(TtoW(pszURL));
+        URL.bstrVal = SysAllocString(TtoW(pURL));
 
         VARIANT Flags;
         Flags.vt = VT_I4;
-        Flags.lVal = dwFlags;
+        Flags.lVal = flags;
 
         VARIANT TargetFrameName;
         TargetFrameName.vt = VT_BSTR;
-        TargetFrameName.bstrVal = SysAllocString(TtoW(pszTargetFrameName));
+        TargetFrameName.bstrVal = SysAllocString(TtoW(pTargetFrameName));
 
         // Store the pidl in a SafeArray, and assign the SafeArray to a VARIANT
-        SAFEARRAY* psa = SafeArrayCreateVector(VT_UI1, 0, dwPostDataLen);
-        CopyMemory(psa->pvData, pvPostData, dwPostDataLen);
+        SAFEARRAY* psa = SafeArrayCreateVector(VT_UI1, 0, postDataLen);
+        CopyMemory(psa->pvData, pPostData, postDataLen);
         VARIANT PostData;
         PostData.vt = VT_ARRAY|VT_UI1;
         PostData.parray = psa;
 
         VARIANT Headers;
         Headers.vt = VT_BSTR;
-        Headers.bstrVal = SysAllocString(TtoW(pszHeaders));
+        Headers.bstrVal = SysAllocString(TtoW(pHeaders));
 
         GetIWebBrowser2()->Navigate2(&URL, &Flags, &TargetFrameName, &PostData, &Headers);
 
@@ -1263,52 +1263,52 @@ namespace Win32xx
 
 
     // Sets the value of a property associated with the object.
-    inline void CWebBrowser::PutProperty(LPCTSTR pszProperty, const VARIANT& vtValue)
+    inline void CWebBrowser::PutProperty(LPCTSTR pProperty, const VARIANT& value)
     {
-        GetIWebBrowser2()->PutProperty(TtoBSTR(pszProperty), vtValue);
+        GetIWebBrowser2()->PutProperty(TtoBSTR(pProperty), value);
     }
 
 
     // Sets the value of a property associated with the object.
-    inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, double dValue)
+    inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, double value)
     {
         VARIANT v;
         v.vt = VT_I4;
-        v.dblVal = dValue;
-        GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
+        v.dblVal = value;
+        GetIWebBrowser2()->PutProperty(TtoBSTR(pPropertyName), v);
         VariantClear(&v);
     }
 
 
     // Sets the value of a property associated with the object.
-    inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, long lValue)
+    inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, long value)
     {
         VARIANT v;
         v.vt = VT_I4;
-        v.lVal= lValue;
-        GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
+        v.lVal= value;
+        GetIWebBrowser2()->PutProperty(TtoBSTR(pPropertyName), v);
         VariantClear(&v);
     }
 
 
     // Sets the value of a property associated with the object.
-    inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, LPCTSTR lpszValue)
+    inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, LPCTSTR pValue)
     {
         VARIANT v;
         v.vt = VT_BSTR;
-        v.bstrVal= SysAllocString(TtoW(lpszValue));
-        GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
+        v.bstrVal= SysAllocString(TtoW(pValue));
+        GetIWebBrowser2()->PutProperty(TtoBSTR(pPropertyName), v);
         VariantClear(&v);
     }
 
 
     // Sets the value of a property associated with the object.
-    inline void CWebBrowser::PutProperty(LPCTSTR pszPropertyName, short nValue)
+    inline void CWebBrowser::PutProperty(LPCTSTR pPropertyName, short value)
     {
         VARIANT v;
         v.vt = VT_I4;
-        v.iVal = nValue;
-        GetIWebBrowser2()->PutProperty(TtoBSTR(pszPropertyName), v);
+        v.iVal = value;
+        GetIWebBrowser2()->PutProperty(TtoBSTR(pPropertyName), v);
         VariantClear(&v);
     }
 
@@ -1321,11 +1321,11 @@ namespace Win32xx
 
 
     // Reloads the file that is currently displayed with the specified refresh level.
-    inline void CWebBrowser::Refresh2(int nLevel)
+    inline void CWebBrowser::Refresh2(int level)
     {
         VARIANT v;
         v.vt = VT_I4;
-        v.intVal = nLevel;
+        v.intVal = level;
         GetIWebBrowser2()->Refresh2(&v);
         VariantClear(&v);
     }

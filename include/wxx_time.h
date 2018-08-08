@@ -125,12 +125,12 @@ namespace Win32xx
         CTime(const CTime& t);
         CTime(time_t t);
         CTime(time_tm& t);
-        CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr, UINT min, UINT sec, int nDST = -1);
-        CTime(UINT year, UINT month, UINT day, UINT hour, UINT min, UINT sec, int nDST = -1);
-        CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int nDST = -1);
-        CTime(WORD wDosDate, WORD wDosTime, int nDST = -1);
-        CTime(const SYSTEMTIME& st, int nDST = -1);
-        CTime(const FILETIME& ft,  int nDST = -1);
+        CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr, UINT min, UINT sec, int isDST = -1);
+        CTime(UINT year, UINT month, UINT day, UINT hour, UINT min, UINT sec, int isDST = -1);
+        CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int isDST = -1);
+        CTime(WORD dosDate, WORD dosTime, int isDST = -1);
+        CTime(const SYSTEMTIME& st, int isDST = -1);
+        CTime(const FILETIME& ft,  int isDST = -1);
 
         // Method members
         bool      GetAsFileTime(FILETIME& ft) const;
@@ -168,9 +168,9 @@ namespace Win32xx
 
         // CString conversion
         CString     Format(LPCTSTR pFormat) const;
-        CString     Format(UINT nFormatID) const;
+        CString     Format(UINT formatID) const;
         CString     FormatGmt(LPCTSTR pFormat) const;
-        CString     FormatGmt(UINT nFormatID) const;
+        CString     FormatGmt(UINT formatID) const;
 
         // Static methods
         static  CTime   GetCurrentTime();
@@ -227,7 +227,7 @@ namespace Win32xx
 
         // CString conversion
         CString     Format(LPCTSTR pFormat) const;
-        CString     Format(UINT nFormatID) const;
+        CString     Format(UINT formatID) const;
 
         // Global friends
         friend  CArchive& operator<<(CArchive&, CTimeSpan&);
@@ -299,7 +299,7 @@ namespace Win32xx
     // Constructs a CTime of the nthwk occurrence of the given wkday (0..6)
     // in the mo month of yr year, at hr:min:sec of that day, local time.
     inline CTime::CTime(UINT yr, UINT mo, UINT wkday, UINT nthwk, UINT hr,
-        UINT min, UINT sec, int nDST /* = -1 */)
+        UINT min, UINT sec, int isDST /* = -1 */)
     {
         // validate parameters w.r.t. ranges
         assert(yr >= 1969); // Last few hours of 1969 might be a valid local time
@@ -314,7 +314,7 @@ namespace Win32xx
         // date.  To start, compute the first of the month in the given year
         // at the given hour, minute, and  second.
         time_tm atm = { static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hr),
-                       1, static_cast<int>(mo - 1), static_cast<int>(yr - 1900), 0, 0, nDST};
+                       1, static_cast<int>(mo - 1), static_cast<int>(yr - 1900), 0, 0, isDST};
 
         // get the (valid) local time of the UTC time corresponding to this
         time_t t1st = UTCtime(&atm);
@@ -333,7 +333,7 @@ namespace Win32xx
         assert(ptm1);
 
         // compute the object time_t
-        ptm1->tm_isdst = nDST;
+        ptm1->tm_isdst = isDST;
         m_time = ::mktime(ptm1);
         assert(m_time != -1);
     }
@@ -346,7 +346,7 @@ namespace Win32xx
     //   day        1–31
     //   hour, min, sec no constraint
     inline CTime::CTime(UINT year, UINT month, UINT day, UINT hour, UINT min,
-        UINT sec, int nDST /* = -1 */)
+        UINT sec, int isDST /* = -1 */)
     {
         // validate parameters w.r.t. ranges
         assert(1 <= day && day   <= 31);
@@ -356,7 +356,7 @@ namespace Win32xx
         // fill out a time_tm with the calendar date
         time_tm atm = {static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hour),
             static_cast<int>(day), static_cast<int>(month - 1), static_cast<int>(year - 1900),
-            0, 0, nDST};
+            0, 0, isDST};
 
         // compute the object time_t
         m_time = ::mktime(&atm);
@@ -366,14 +366,14 @@ namespace Win32xx
 
     // Constructs a CTime using the day-of-year doy, where doy = 1 is
     // January 1 in the specified year.
-    inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int nDST /* = -1 */)
+    inline CTime::CTime(UINT yr, UINT doy, UINT hr, UINT min, UINT sec, int isDST /* = -1 */)
     {
         // validate parameters w.r.t. ranges
         assert(yr >= 1969);  // Last few hours of 1969 might be a valid local time
 
         // fill out a time_tm with the calendar date for Jan 1, yr, hr:min:sec
         time_tm atm1st = {static_cast<int>(sec), static_cast<int>(min), static_cast<int>(hr),
-            1, 0, static_cast<int>(yr - 1900), 0, 0, nDST};
+            1, 0, static_cast<int>(yr - 1900), 0, 0, isDST};
 
         // get the local time of the UTC time corresponding to this
         time_t Jan1 = UTCtime(&atm1st);
@@ -383,35 +383,35 @@ namespace Win32xx
         assert(ptm);
 
         // compute the object time_t
-        ptm->tm_isdst = nDST;
+        ptm->tm_isdst = isDST;
         m_time = ::mktime(ptm);
         assert(m_time != -1);
     }
 
 
-    // Constructs a CTime object from the MS-DOS wDosDate and wDosTime values.
-    inline CTime::CTime(WORD wDosDate, WORD wDosTime, int nDST /* = -1 */)
+    // Constructs a CTime object from the MS-DOS dosDate and dosTime values.
+    inline CTime::CTime(WORD dosDate, WORD dosTime, int isDST /* = -1 */)
     {
         FILETIME ft;
-        VERIFY( ::DosDateTimeToFileTime(wDosDate, wDosTime, &ft) );
-        CTime t(ft, nDST);
+        VERIFY( ::DosDateTimeToFileTime(dosDate, dosTime, &ft) );
+        CTime t(ft, isDST);
         m_time = t.m_time;
     }
 
 
     // Constructs a CTime object from a SYSTEMTIME structure st.
-    inline CTime::CTime(const SYSTEMTIME& st, int nDST /* = -1 */)
+    inline CTime::CTime(const SYSTEMTIME& st, int isDST /* = -1 */)
     {
         CTime t(static_cast<UINT>(st.wYear), static_cast<UINT>(st.wMonth),
             static_cast<UINT>(st.wDay), static_cast<UINT>(st.wHour),
-            static_cast<UINT>(st.wMinute), static_cast<UINT>(st.wSecond), nDST); // asserts if invalid
+            static_cast<UINT>(st.wMinute), static_cast<UINT>(st.wSecond), isDST); // asserts if invalid
 
         m_time = t.m_time;
     }
 
 
     // Constructs a CTime object from a (UTC) FILETIME structure ft.
-    inline CTime::CTime(const FILETIME& ft, int nDST /* = -1 */)
+    inline CTime::CTime(const FILETIME& ft, int isDST /* = -1 */)
     {
         // start by converting ft (a UTC time) to local time
         FILETIME localTime;
@@ -422,7 +422,7 @@ namespace Win32xx
         VERIFY( ::FileTimeToSystemTime(&localTime, &st) );
 
         // then convert the system time to a CTime
-        CTime t(st, nDST);  // asserts if invalid
+        CTime t(st, isDST);  // asserts if invalid
         m_time = t.m_time;
     }
 
@@ -722,10 +722,10 @@ namespace Win32xx
     //   %H - hour (0-23)
     //   %M - minute (0-59)
     //   %S - seconds (0-59)
-    inline CString CTime::Format(UINT nFormatID) const
+    inline CString CTime::Format(UINT formatID) const
     {
         CString strFormat;
-        VERIFY( strFormat.LoadString(nFormatID) );
+        VERIFY( strFormat.LoadString(formatID) );
         return Format(strFormat);
     }
 
@@ -752,10 +752,10 @@ namespace Win32xx
     // Returns a CString that contains formatted timeas a UTC time. The FormatID
     // parammater specifies a resource containing the formatting string which is
     // similar to the printf formatting string.
-    inline CString CTime::FormatGmt(UINT nFormatID) const
+    inline CString CTime::FormatGmt(UINT formatID) const
     {
         CString strFormat;
-        VERIFY( strFormat.LoadString(nFormatID) );
+        VERIFY( strFormat.LoadString(formatID) );
         return FormatGmt(strFormat);
     }
 
@@ -1074,16 +1074,16 @@ namespace Win32xx
 
 
     // Returns a rendering of *this CTimeSpan object in CString form using the
-    // string resource having the nFormatID identifier as the template. The
+    // string resource having the formatID identifier as the template. The
     // valid format directives are
     //   %D - number of days
     //   %H - hour (0-23)
     //   %M - minute (0-59)
     //   %S - seconds (0-59)
-    inline CString CTimeSpan::Format(UINT nFormatID) const
+    inline CString CTimeSpan::Format(UINT formatID) const
     {
         CString strFormat;
-        VERIFY( strFormat.LoadString(nFormatID) );
+        VERIFY( strFormat.LoadString(formatID) );
         return Format(strFormat);
     }
 

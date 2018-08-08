@@ -1585,10 +1585,10 @@ namespace Win32xx
         assert(IsWindow());
         SYSTEMTIME minMax[2];
         ZeroMemory(minMax, 2*sizeof(SYSTEMTIME));
-        int nCount = MonthCal_GetMonthRange(*this, flags, minMax);
+        int count = MonthCal_GetMonthRange(*this, flags, minMax);
         minRange = minMax[0];
         maxRange = minMax[1];
-        return nCount;
+        return count;
     }
 
 
