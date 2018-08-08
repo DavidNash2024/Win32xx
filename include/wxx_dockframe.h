@@ -101,14 +101,14 @@ namespace Win32xx
         CMDIDockFrame();
         virtual ~CMDIDockFrame() {}
 
-        virtual CWnd& GetMDIClient() const      { return m_DockMDIClient; }
-        virtual CDocker::CDockClient& GetDockClient() const { return m_DockMDIClient; }
+        virtual CWnd& GetMDIClient() const      { return m_dockMDIClient; }
+        virtual CDocker::CDockClient& GetDockClient() const { return m_dockMDIClient; }
 
     protected:
         virtual int OnCreate(CREATESTRUCT& cs);
 
     private:
-        mutable CMDIClient<CDocker::CDockClient> m_DockMDIClient;   // MDIClient for docking
+        mutable CMDIClient<CDocker::CDockClient> m_dockMDIClient;   // MDIClient for docking
     };
 
 }

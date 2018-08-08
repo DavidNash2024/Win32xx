@@ -264,11 +264,11 @@ namespace Win32xx
     struct CGDI_Data
     {
         // Constructor
-        CGDI_Data() : hGDIObject(0), Count(1L), IsManagedObject(FALSE) {}
+        CGDI_Data() : hGDIObject(0), count(1L), isManagedObject(false) {}
 
         HGDIOBJ hGDIObject;
-        long    Count;
-        bool    IsManagedObject;
+        long    count;
+        bool    isManagedObject;
     };
 
 
@@ -276,11 +276,11 @@ namespace Win32xx
     struct CIml_Data
     {
         // Constructor
-        CIml_Data() : hImageList(0), IsManagedHiml(FALSE), Count(1L) {}
+        CIml_Data() : hImageList(0), isManagedHiml(false), count(1L) {}
 
         HIMAGELIST  hImageList;
-        bool        IsManagedHiml;
-        long        Count;
+        bool        isManagedHiml;
+        long        count;
     };
 
   #ifndef _WIN32_WCE
@@ -289,12 +289,12 @@ namespace Win32xx
     struct CMenu_Data
     {
         // Constructor
-        CMenu_Data() : hMenu(0), IsManagedMenu(FALSE), Count(1L) {}
+        CMenu_Data() : hMenu(0), isManagedMenu(false), count(1L) {}
 
         std::vector<MenuPtr> vSubMenus; // A vector of smart pointers to CMenu
         HMENU hMenu;
-        bool IsManagedMenu;
-        long Count;
+        bool isManagedMenu;
+        long count;
     };
 
   #endif
@@ -346,9 +346,9 @@ namespace Win32xx
         HWND  hMainWnd;     //  handle to the main window for the thread (usually CFrame)
         CMenuBar* pMenuBar; // pointer to CMenuBar object used for the WH_MSGFILTER hook
         HHOOK hMsgHook;     // WH_MSGFILTER hook for CMenuBar and Modal Dialogs
-        long nDlgHooks;     // Number of Dialog MSG hooks
+        long  dlgHooks;     // Number of Dialog MSG hooks
 
-        TLSData() : pWnd(0), hMainWnd(0), pMenuBar(0), hMsgHook(0), nDlgHooks(0) {} // Constructor
+        TLSData() : pWnd(0), hMainWnd(0), pMenuBar(0), hMsgHook(0), dlgHooks(0) {} // Constructor
     };
 
 
@@ -450,12 +450,12 @@ namespace Win32xx
         virtual BOOL InitInstance();
         virtual int MessageLoop();
         virtual BOOL OnIdle(LONG lCount);
-        virtual BOOL PreTranslateMessage(MSG& Msg);
+        virtual BOOL PreTranslateMessage(MSG& msg);
 
         // Operations
         HANDLE  CreateThread(unsigned initflag = 0, unsigned stack_size = 0, LPSECURITY_ATTRIBUTES pSecurityAttributes = NULL);
         HACCEL  GetAcceleratorTable() const { return m_hAccel; }
-        HWND    GetAcceleratorsWindow() const { return m_hWndAccel; }
+        HWND    GetAcceleratorsWindow() const { return m_hWndForAccel; }
         HWND    GetMainWnd() const;
         HANDLE  GetThread() const;
         int     GetThreadID() const;
@@ -465,7 +465,7 @@ namespace Win32xx
         DWORD   ResumeThread() const;
         void    SetAccelerators(HACCEL hAccel, HWND hWndAccel);
         void    SetMainWnd(HWND hWnd);
-        BOOL    SetThreadPriority(int nPriority) const;
+        BOOL    SetThreadPriority(int priority) const;
         DWORD   SuspendThread() const;
         operator HANDLE () const { return GetThread(); }
 
@@ -478,10 +478,10 @@ namespace Win32xx
         PFNTHREADPROC m_pfnThreadProc;  // Callback function for worker threads
         LPVOID m_pThreadParams;         // Thread parameter for worker threads
         HANDLE m_hThread;               // Handle of this thread
-        UINT m_nThreadID;               // ID of this thread
-        DWORD m_dwThreadID;             // ID of this thread (used for WinCE)
+        UINT m_threadID;                // ID of this thread
+        DWORD m_threadIDForWinCE;       // ID of this thread (for WinCE only)
         HACCEL m_hAccel;                // handle to the accelerator table
-        HWND m_hWndAccel;               // handle to the window for accelerator keys
+        HWND m_hWndForAccel;            // handle to the window for accelerator keys
 
     };
 
@@ -515,14 +515,14 @@ namespace Win32xx
         HINSTANCE GetInstanceHandle() const { return m_hInstance; }
         HINSTANCE GetResourceHandle() const { return (m_hResource ? m_hResource : m_hInstance); }
         TLSData* GetTlsData() const;
-        HCURSOR LoadCursor(LPCTSTR lpszResourceName) const;
-        HCURSOR LoadCursor(int nIDCursor) const;
-        HCURSOR LoadStandardCursor(LPCTSTR lpszCursorName) const;
-        HICON   LoadIcon(LPCTSTR lpszResourceName) const;
+        HCURSOR LoadCursor(LPCTSTR pResourceName) const;
+        HCURSOR LoadCursor(int cursorID) const;
+        HCURSOR LoadStandardCursor(LPCTSTR pCursorName) const;
+        HICON   LoadIcon(LPCTSTR pResourceName) const;
         HICON   LoadIcon(int nIDIcon) const;
-        HICON   LoadStandardIcon(LPCTSTR lpszIconName) const;
-        HANDLE  LoadImage(LPCTSTR lpszResourceName, UINT uType, int cx, int  cy, UINT fuLoad = LR_DEFAULTCOLOR) const;
-        HANDLE  LoadImage(int nIDImage, UINT uType, int cx, int cy, UINT fuLoad = LR_DEFAULTCOLOR) const;
+        HICON   LoadStandardIcon(LPCTSTR pIconName) const;
+        HANDLE  LoadImage(LPCTSTR pResourceName, UINT type, int cx, int  cy, UINT flags = LR_DEFAULTCOLOR) const;
+        HANDLE  LoadImage(int imageID, UINT type, int cx, int cy, UINT flags = LR_DEFAULTCOLOR) const;
         HCURSOR SetCursor(HCURSOR hCursor) const;
         void    SetResourceHandle(HINSTANCE hResource);
         TLSData* SetTlsData();
@@ -536,7 +536,7 @@ namespace Win32xx
         void AddCImlData(HIMAGELIST hIml, CIml_Data* pData);
         CDC_Data* GetCDCData(HDC hDC);
         CGDI_Data* GetCGDIData(HGDIOBJ hObject);
-        CIml_Data* GetCImlData(HIMAGELIST himl);
+        CIml_Data* GetCImlData(HIMAGELIST hImages);
         void GlobalFreeAll(HGLOBAL hGlobal);
         void SetCallback();
         static CWinApp* SetnGetThis(CWinApp* pThis = 0, bool reset = false);
@@ -547,14 +547,14 @@ namespace Win32xx
         std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
         std::map<HWND, CWnd*, CompareHWND> m_mapHWND;       // maps window handles to CWnd objects
         std::vector<TLSDataPtr> m_vTLSData;     // vector of TLSData smart pointers, one for each thread
-        CCriticalSection m_csAppLock;   // thread synchronisation for CWinApp and TLS.
-        CCriticalSection m_csGDILock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
-        CCriticalSection m_csMapLock;   // thread synchronisation for m_mapHWND etc.
-        CCriticalSection m_csPrintLock; // thread synchronisation for printing.
+        CCriticalSection m_appLock;   // thread synchronisation for CWinApp and TLS.
+        CCriticalSection m_gdiLock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
+        CCriticalSection m_wndLock;   // thread synchronisation for m_mapHWND etc.
+        CCriticalSection m_printLock; // thread synchronisation for printing.
         HINSTANCE m_hInstance;          // handle to the application's instance
         HINSTANCE m_hResource;          // handle to the application's resources
-        DWORD m_dwTlsData;              // Thread Local Storage data
-        WNDPROC m_Callback;             // callback address of CWnd::StaticWndowProc
+        DWORD m_tlsData;                // Thread Local Storage data
+        WNDPROC m_callback;             // callback address of CWnd::StaticWndowProc
         HGLOBAL m_hDevMode;             // Used by CPrintDialog and CPageSetupDialog
         HGLOBAL m_hDevNames;            // Used by CPrintDialog and CPageSetupDialog
 

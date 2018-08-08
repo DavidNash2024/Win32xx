@@ -124,24 +124,24 @@ namespace Win32xx
             {
                 // Resize the vector and assign null WCHAR to each element
                 int length = MultiByteToWideChar(codePage, 0, pStr, -1, NULL, 0) + 1;
-                m_vWideArray.assign(length, L'\0');
+                m_wideArray.assign(length, L'\0');
 
                 // Fill our vector with the converted WCHAR array
-                MultiByteToWideChar(codePage, 0, pStr, -1, &m_vWideArray[0], length);
+                MultiByteToWideChar(codePage, 0, pStr, -1, &m_wideArray[0], length);
             }
         }
         ~CAtoW()
         {
             // Clear the array.
-            std::fill(m_vWideArray.begin(), m_vWideArray.end(), L'\0');
+            std::fill(m_wideArray.begin(), m_wideArray.end(), L'\0');
         }
-        operator LPCWSTR() { return m_pStr? &m_vWideArray[0] : NULL; }
-        operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_vWideArray[0] : (LPOLESTR)NULL; }
+        operator LPCWSTR() { return m_pStr? &m_wideArray[0] : NULL; }
+        operator LPOLESTR() { return m_pStr? (LPOLESTR)&m_wideArray[0] : (LPOLESTR)NULL; }
 
     private:
         CAtoW(const CAtoW&);
         CAtoW& operator= (const CAtoW&);
-        std::vector<wchar_t> m_vWideArray;
+        std::vector<wchar_t> m_wideArray;
         LPCSTR m_pStr;
     };
 
@@ -158,23 +158,23 @@ namespace Win32xx
         {
             // Resize the vector and assign null char to each element
             int length = WideCharToMultiByte(codePage, 0, pWStr, -1, NULL, 0, NULL, NULL) + 1;
-            m_vAnsiArray.assign(length, '\0');
+            m_ansiArray.assign(length, '\0');
 
             // Fill our vector with the converted char array
-            WideCharToMultiByte(codePage, 0, pWStr, -1, &m_vAnsiArray[0], length, NULL,NULL);
+            WideCharToMultiByte(codePage, 0, pWStr, -1, &m_ansiArray[0], length, NULL,NULL);
         }
 
         ~CWtoA()
         {
             // Clear the array.
-            std::fill(m_vAnsiArray.begin(), m_vAnsiArray.end(), '\0');
+            std::fill(m_ansiArray.begin(), m_ansiArray.end(), '\0');
         }
-        operator LPCSTR() { return m_pWStr? &m_vAnsiArray[0] : NULL; }
+        operator LPCSTR() { return m_pWStr? &m_ansiArray[0] : NULL; }
 
     private:
         CWtoA(const CWtoA&);
         CWtoA& operator= (const CWtoA&);
-        std::vector<char> m_vAnsiArray;
+        std::vector<char> m_ansiArray;
         LPCWSTR m_pWStr;
     };
 

@@ -98,7 +98,7 @@ namespace Win32xx
     public:
         //Construction
         CMenu();
-        CMenu(UINT nID);
+        CMenu(UINT id);
         CMenu(HMENU hMenu);
         CMenu(const CMenu& rhs);
         CMenu& operator = (const CMenu& rhs);
@@ -113,23 +113,23 @@ namespace Win32xx
         HMENU Detach();
 
         HMENU GetHandle() const;
-        BOOL LoadMenu(LPCTSTR lpszResourceName) const;
-        BOOL LoadMenu(UINT uIDResource) const;
-        BOOL LoadMenuIndirect(const LPMENUTEMPLATE lpMenuTemplate) const;
+        BOOL LoadMenu(LPCTSTR pResName) const;
+        BOOL LoadMenu(UINT resourceID) const;
+        BOOL LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate) const;
 
         //Menu Operations
-        BOOL TrackPopupMenu(UINT uFlags, int x, int y, HWND hWnd, LPCRECT lpRect = 0) const;
-        BOOL TrackPopupMenuEx(UINT uFlags, int x, int y, HWND hWnd, LPTPMPARAMS lptpm) const;
+        BOOL TrackPopupMenu(UINT flags, int x, int y, HWND hWnd, LPCRECT pRect = 0) const;
+        BOOL TrackPopupMenuEx(UINT flags, int x, int y, HWND hWnd, LPTPMPARAMS pTPMP) const;
 
         //Menu Item Operations
-        BOOL AppendMenu(UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL);
-        BOOL AppendMenu(UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap);
-        UINT CheckMenuItem(UINT uIDCheckItem, UINT uCheck) const;
-        BOOL CheckMenuRadioItem(UINT uIDFirst, UINT uIDLast, UINT uIDItem, UINT uFlags) const;
-        BOOL DeleteMenu(UINT uPosition, UINT uFlags) const;
-        UINT EnableMenuItem(UINT uIDEnableItem, UINT uEnable) const;
-        int FindMenuItem(LPCTSTR szMenuString) const;
-        UINT GetDefaultItem(UINT gmdiFlags, BOOL ByPosition = FALSE) const;
+        BOOL AppendMenu(UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL);
+        BOOL AppendMenu(UINT flags, UINT_PTR newItemID, HBITMAP hBitmap);
+        UINT CheckMenuItem(UINT checkItemID, UINT check) const;
+        BOOL CheckMenuRadioItem(UINT firstID, UINT lastID, UINT itemID, UINT flags) const;
+        BOOL DeleteMenu(UINT position, UINT flags) const;
+        UINT EnableMenuItem(UINT enableItemID, UINT enable) const;
+        int FindMenuItem(LPCTSTR pMenuString) const;
+        UINT GetDefaultItem(UINT gmdiFlags, BOOL byPosition = FALSE) const;
         DWORD GetMenuContextHelpId() const;
 
 #if(WINVER >= 0x0500)   // Minimum OS required is Win2000
@@ -138,23 +138,23 @@ namespace Win32xx
 #endif
 
         UINT GetMenuItemCount() const;
-        UINT GetMenuItemID(int nPos) const;
-        BOOL GetMenuItemInfo(UINT uItem, MENUITEMINFO& MenuItemInfo, BOOL ByPosition = FALSE) const;
-        UINT GetMenuState(UINT uID, UINT uFlags) const;
-        int GetMenuString(UINT uIDItem, LPTSTR lpString, int nMaxCount, UINT uFlags) const;
-        int GetMenuString(UINT uIDItem, CString& rString, UINT uFlags) const;
-        CMenu GetSubMenu(int nPos) const;
-        BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL) const;
-        BOOL InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap) const;
-        BOOL InsertMenuItem(UINT uItem, MENUITEMINFO& MenuItemInfo, BOOL ByPosition = FALSE) const;
-        BOOL InsertPopupMenu(UINT uPosition, UINT uFlags, HMENU hPopupMenu, LPCTSTR lpszNewItem) const;
-        BOOL ModifyMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem = 0, LPCTSTR lpszNewItem = NULL) const;
-        BOOL ModifyMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap) const;
-        BOOL RemoveMenu(UINT uPosition, UINT uFlags) const;
-        BOOL SetDefaultItem(UINT uItem, BOOL ByPosition = FALSE) const;
-        BOOL SetMenuContextHelpId(DWORD dwContextHelpId) const;
-        BOOL SetMenuItemBitmaps(UINT uPosition, UINT uFlags, HBITMAP hbmUnchecked, HBITMAP hbmChecked) const;
-        BOOL SetMenuItemInfo(UINT uItem, MENUITEMINFO& MenuItemInfo, BOOL ByPosition = FALSE) const;
+        UINT GetMenuItemID(int pos) const;
+        BOOL GetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
+        UINT GetMenuState(UINT id, UINT flags) const;
+        int GetMenuString(UINT itemID, LPTSTR pString, int maxCount, UINT flags) const;
+        int GetMenuString(UINT itemID, CString& stringRef, UINT flags) const;
+        CMenu GetSubMenu(int pos) const;
+        BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
+        BOOL InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP hBitmap) const;
+        BOOL InsertMenuItem(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
+        BOOL InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR pNewItem) const;
+        BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID = 0, LPCTSTR pNewItem = NULL) const;
+        BOOL ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP hBitmap) const;
+        BOOL RemoveMenu(UINT pos, UINT flags) const;
+        BOOL SetDefaultItem(UINT item, BOOL byPosition = FALSE) const;
+        BOOL SetMenuContextHelpId(DWORD contextHelpID) const;
+        BOOL SetMenuItemBitmaps(UINT pos, UINT flags, HBITMAP hUnchecked, HBITMAP hChecked) const;
+        BOOL SetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition = FALSE) const;
 
         //Operators
         operator HMENU () const;
@@ -197,13 +197,13 @@ namespace Win32xx
     }
 
 
-    inline CMenu::CMenu(UINT nID)
+    inline CMenu::CMenu(UINT id)
     {
         m_pData = new CMenu_Data;
 
-        HMENU menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
+        HMENU menu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(id));
         Attach(menu);
-        m_pData->IsManagedMenu = TRUE;
+        m_pData->isManagedMenu = TRUE;
     }
 
 
@@ -219,7 +219,7 @@ namespace Win32xx
     inline CMenu::CMenu(const CMenu& rhs)
     {
         m_pData = rhs.m_pData;
-        InterlockedIncrement(&m_pData->Count);
+        InterlockedIncrement(&m_pData->count);
     }
 
 
@@ -228,7 +228,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
-            InterlockedIncrement(&rhs.m_pData->Count);
+            InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
         }
@@ -264,11 +264,11 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->Count) == 0)
+        if (InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->hMenu != NULL)
             {
-                if (m_pData->IsManagedMenu)
+                if (m_pData->isManagedMenu)
                 {
                     ::DestroyMenu(m_pData->hMenu);
                 }
@@ -292,7 +292,7 @@ namespace Win32xx
             std::map<HMENU, CMenu_Data*, CompareHMENU>::iterator m;
 
             CWinApp& App = GetApp();
-            CThreadLock mapLock(App.m_csMapLock);
+            CThreadLock mapLock(App.m_wndLock);
             m = App.m_mapCMenuData.find(m_pData->hMenu);
             if (m != App.m_mapCMenuData.end())
             {
@@ -308,20 +308,20 @@ namespace Win32xx
 
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
-    inline BOOL CMenu::AppendMenu(UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/)
+    inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/)
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::AppendMenu(m_pData->hMenu, uFlags, uIDNewItem, lpszNewItem);
+        return ::AppendMenu(m_pData->hMenu, flags, newItemID, pNewItem);
     }
 
 
     // Appends a new item to the end of the specified menu bar, drop-down menu, submenu, or shortcut menu.
-    inline BOOL CMenu::AppendMenu(UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap)
+    inline BOOL CMenu::AppendMenu(UINT flags, UINT_PTR newItemID, HBITMAP hBitmap)
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::AppendMenu(m_pData->hMenu, uFlags, uIDNewItem, reinterpret_cast<LPCTSTR>(hBitmap));
+        return ::AppendMenu(m_pData->hMenu, flags, newItemID, reinterpret_cast<LPCTSTR>(hBitmap));
     }
 
 
@@ -347,7 +347,7 @@ namespace Win32xx
                 {
                     delete m_pData;
                     m_pData = pCMenuData;
-                    InterlockedIncrement(&m_pData->Count);
+                    InterlockedIncrement(&m_pData->count);
                 }
                 else
                 {
@@ -360,21 +360,21 @@ namespace Win32xx
 
 
     // Sets the state of the specified menu item's check-mark attribute to either selected or clear.
-    inline UINT CMenu::CheckMenuItem(UINT uIDCheckItem, UINT uCheck) const
+    inline UINT CMenu::CheckMenuItem(UINT checkItemID, UINT check) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::CheckMenuItem(m_pData->hMenu, uIDCheckItem, uCheck);
+        return ::CheckMenuItem(m_pData->hMenu, checkItemID, check);
     }
 
 
     // Checks a specified menu item and makes it a radio item. At the same time, the function clears
     // all other menu items in the associated group and clears the radio-item type flag for those items.
-    inline BOOL CMenu::CheckMenuRadioItem(UINT uIDFirst, UINT uIDLast, UINT uIDItem, UINT uFlags) const
+    inline BOOL CMenu::CheckMenuRadioItem(UINT firstID, UINT lastID, UINT itemID, UINT flags) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::CheckMenuRadioItem(m_pData->hMenu, uIDFirst, uIDLast, uIDItem, uFlags);
+        return ::CheckMenuRadioItem(m_pData->hMenu, firstID, lastID, itemID, flags);
     }
 
 
@@ -385,7 +385,7 @@ namespace Win32xx
         assert(NULL == m_pData->hMenu);
         m_pData->hMenu = ::CreateMenu();
         AddToMap();
-        m_pData->IsManagedMenu = TRUE;
+        m_pData->isManagedMenu = TRUE;
     }
 
 
@@ -396,16 +396,16 @@ namespace Win32xx
         assert(NULL == m_pData->hMenu);
         m_pData->hMenu = ::CreatePopupMenu();
         AddToMap();
-        m_pData->IsManagedMenu = TRUE;
+        m_pData->isManagedMenu = TRUE;
     }
 
 
     // Deletes an item from the specified menu.
-    inline BOOL CMenu::DeleteMenu(UINT uPosition, UINT uFlags) const
+    inline BOOL CMenu::DeleteMenu(UINT pos, UINT flags) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::DeleteMenu(m_pData->hMenu, uPosition, uFlags);
+        return ::DeleteMenu(m_pData->hMenu, pos, flags);
     }
 
 
@@ -427,9 +427,9 @@ namespace Win32xx
         m_pData->hMenu = 0;
         m_pData->vSubMenus.clear();
 
-        if (m_pData->Count > 0)
+        if (m_pData->count > 0)
         {
-            if (InterlockedDecrement(&m_pData->Count) == 0)
+            if (InterlockedDecrement(&m_pData->count) == 0)
             {
                 delete m_pData;
             }
@@ -453,17 +453,17 @@ namespace Win32xx
     // The uEnable parameter must be a combination of either MF_BYCOMMAND or MF_BYPOSITION
     // and MF_ENABLED, MF_DISABLED, or MF_GRAYED.
     // MF_DISABLED and MF_GRAYED are different without XP themes, but the same with XP themes enabled.
-    inline UINT CMenu::EnableMenuItem(UINT uIDEnableItem, UINT uEnable) const
+    inline UINT CMenu::EnableMenuItem(UINT enableItemID, UINT enable) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::EnableMenuItem(m_pData->hMenu, uIDEnableItem, uEnable);
+        return ::EnableMenuItem(m_pData->hMenu, enableItemID, enable);
     }
 
 
     // Finds the position of a menu item with the specified string.
     // Returns -1 if the string is not found.
-    inline int CMenu::FindMenuItem(LPCTSTR szMenuString) const
+    inline int CMenu::FindMenuItem(LPCTSTR pMenuString) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
@@ -474,7 +474,7 @@ namespace Win32xx
         {
             if (GetMenuString(i, str, MF_BYPOSITION))
             {
-                if (str == szMenuString)
+                if (str == pMenuString)
                     return i;
             }
         }
@@ -486,11 +486,11 @@ namespace Win32xx
     // Determines the default menu item.
     // The gmdiFlags parameter specifies how the function searches for menu items.
     // This parameter can be zero or more of the following values: GMDI_GOINTOPOPUPS; GMDI_USEDISABLED.
-    inline UINT CMenu::GetDefaultItem(UINT gmdiFlags, BOOL ByPosition /*= FALSE*/) const
+    inline UINT CMenu::GetDefaultItem(UINT gmdiFlags, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::GetMenuDefaultItem(m_pData->hMenu, ByPosition, gmdiFlags);
+        return ::GetMenuDefaultItem(m_pData->hMenu, byPosition, gmdiFlags);
     }
 
 
@@ -536,225 +536,225 @@ namespace Win32xx
 
 
     // Retrieves the menu item identifier of a menu item located at the specified position
-    inline UINT CMenu::GetMenuItemID(int nPos) const
+    inline UINT CMenu::GetMenuItemID(int pos) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::GetMenuItemID(m_pData->hMenu, nPos);
+        return ::GetMenuItemID(m_pData->hMenu, pos);
     }
 
 
     // retrieves information about the specified menu item.
-    inline BOOL CMenu::GetMenuItemInfo(UINT uItem, MENUITEMINFO& MenuItemInfo, BOOL ByPosition /*= FALSE*/) const
+    inline BOOL CMenu::GetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        MenuItemInfo.cbSize = GetSizeofMenuItemInfo();
-        return ::GetMenuItemInfo(m_pData->hMenu, uItem, ByPosition, &MenuItemInfo);
+        menuItemInfo.cbSize = GetSizeofMenuItemInfo();
+        return ::GetMenuItemInfo(m_pData->hMenu, item, byPosition, &menuItemInfo);
     }
 
 
     // Retrieves the menu flags associated with the specified menu item.
     // Possible values for uFlags are: MF_BYCOMMAND (default) or MF_BYPOSITION.
-    inline UINT CMenu::GetMenuState(UINT uID, UINT uFlags) const
+    inline UINT CMenu::GetMenuState(UINT id, UINT flags) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::GetMenuState(m_pData->hMenu, uID, uFlags);
+        return ::GetMenuState(m_pData->hMenu, id, flags);
     }
 
 
     // Copies the text string of the specified menu item into the specified buffer.
-    inline int CMenu::GetMenuString(UINT uIDItem, LPTSTR lpString, int nMaxCount, UINT uFlags) const
+    inline int CMenu::GetMenuString(UINT itemID, LPTSTR pString, int maxCount, UINT flags) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        assert(lpString);
-        return ::GetMenuString(m_pData->hMenu, uIDItem, lpString, nMaxCount, uFlags);
+        assert(pString);
+        return ::GetMenuString(m_pData->hMenu, itemID, pString, maxCount, flags);
     }
 
 
     // Copies the text string of the specified menu item into the specified buffer.
-    inline int CMenu::GetMenuString(UINT uIDItem, CString& rString, UINT uFlags) const
+    inline int CMenu::GetMenuString(UINT itemID, CString& stringRef, UINT flags) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        int n = ::GetMenuString(m_pData->hMenu, uIDItem, rString.GetBuffer(MAX_MENU_STRING), MAX_MENU_STRING, uFlags);
-        rString.ReleaseBuffer();
+        int n = ::GetMenuString(m_pData->hMenu, itemID, stringRef.GetBuffer(MAX_MENU_STRING), MAX_MENU_STRING, flags);
+        stringRef.ReleaseBuffer();
         return n;
     }
 
 
     // Retrieves the CMenu object of a pop-up menu.
-    inline CMenu CMenu::GetSubMenu(int nPos) const
+    inline CMenu CMenu::GetSubMenu(int pos) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
         CMenu* pMenu = new CMenu;
-        pMenu->m_pData->hMenu = ::GetSubMenu(m_pData->hMenu, nPos);
-        pMenu->m_pData->IsManagedMenu = FALSE;
+        pMenu->m_pData->hMenu = ::GetSubMenu(m_pData->hMenu, pos);
+        pMenu->m_pData->isManagedMenu = FALSE;
         m_pData->vSubMenus.push_back(pMenu);
         return *pMenu;
     }
 
 
     // Inserts a new menu item into a menu, moving other items down the menu.
-    inline BOOL CMenu::InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/) const
+    inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::InsertMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, lpszNewItem);
+        return ::InsertMenu(m_pData->hMenu, pos, flags, newItemID, pNewItem);
     }
 
 
     // Inserts a new menu item into a menu, moving other items down the menu.
-    inline BOOL CMenu::InsertMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap) const
+    inline BOOL CMenu::InsertMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP hBitmap) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::InsertMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, reinterpret_cast<LPCTSTR>(hBitmap));
+        return ::InsertMenu(m_pData->hMenu, pos, flags, newItemID, reinterpret_cast<LPCTSTR>(hBitmap));
     }
 
 
     // Inserts a new menu item at the specified position in the menu.
-    inline BOOL CMenu::InsertMenuItem(UINT uItem, MENUITEMINFO& MenuItemInfo, BOOL ByPosition /*= FALSE*/) const
+    inline BOOL CMenu::InsertMenuItem(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        MenuItemInfo.cbSize = GetSizeofMenuItemInfo();
-        return ::InsertMenuItem(m_pData->hMenu, uItem, ByPosition, &MenuItemInfo);
+        menuItemInfo.cbSize = GetSizeofMenuItemInfo();
+        return ::InsertMenuItem(m_pData->hMenu, item, byPosition, &menuItemInfo);
     }
 
 
     // Inserts a popup menu item at the specified position in the menu.
-    inline BOOL CMenu::InsertPopupMenu(UINT uPosition, UINT uFlags, HMENU hPopupMenu, LPCTSTR lpszNewItem) const
+    inline BOOL CMenu::InsertPopupMenu(UINT pos, UINT flags, HMENU hPopupMenu, LPCTSTR pNewItem) const
     {
         assert(hPopupMenu);
         assert(IsMenu(m_pData->hMenu));
 
         // Ensure the correct flags are set
-        uFlags &= ~MF_BITMAP;
-        uFlags &= ~MF_OWNERDRAW;
-        uFlags |= MF_POPUP;
+        flags &= ~MF_BITMAP;
+        flags &= ~MF_OWNERDRAW;
+        flags |= MF_POPUP;
 
-        return ::InsertMenu(m_pData->hMenu, uPosition, uFlags, (UINT_PTR)hPopupMenu, lpszNewItem);
+        return ::InsertMenu(m_pData->hMenu, pos, flags, (UINT_PTR)hPopupMenu, pNewItem);
     }
 
 
     // Loads the menu from the specified windows resource.
-    inline BOOL CMenu::LoadMenu(LPCTSTR lpszResourceName) const
+    inline BOOL CMenu::LoadMenu(LPCTSTR pResName) const
     {
         assert(m_pData);
         assert(NULL == m_pData->hMenu);
-        assert(lpszResourceName);
-        m_pData->hMenu = ::LoadMenu(GetApp().GetResourceHandle(), lpszResourceName);
+        assert(pResName);
+        m_pData->hMenu = ::LoadMenu(GetApp().GetResourceHandle(), pResName);
         if (m_pData->hMenu != 0) AddToMap();
         return NULL != m_pData->hMenu;
     }
 
 
     // Loads the menu from the specified windows resource.
-    inline BOOL CMenu::LoadMenu(UINT uIDResource) const
+    inline BOOL CMenu::LoadMenu(UINT resID) const
     {
         assert(m_pData);
         assert(NULL == m_pData->hMenu);
-        m_pData->hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(uIDResource));
+        m_pData->hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(resID));
         if (m_pData->hMenu != 0) AddToMap();
         return NULL != m_pData->hMenu;
     }
 
 
     // Loads the specified menu template and assigns it to this CMenu.
-    inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE lpMenuTemplate) const
+    inline BOOL CMenu::LoadMenuIndirect(const LPMENUTEMPLATE pMenuTemplate) const
     {
         assert(m_pData);
         assert(NULL == m_pData->hMenu);
-        assert(lpMenuTemplate);
-        m_pData->hMenu = ::LoadMenuIndirect(lpMenuTemplate);
+        assert(pMenuTemplate);
+        m_pData->hMenu = ::LoadMenuIndirect(pMenuTemplate);
         if (m_pData->hMenu) AddToMap();
         return NULL != m_pData->hMenu;
     }
 
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behaviour of the menu item.
-    inline BOOL CMenu::ModifyMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem /*= 0*/, LPCTSTR lpszNewItem /*= NULL*/) const
+    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID /*= 0*/, LPCTSTR pNewItem /*= NULL*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::ModifyMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, lpszNewItem);
+        return ::ModifyMenu(m_pData->hMenu, pos, flags, newItemID, pNewItem);
     }
 
 
     // Changes an existing menu item. This function is used to specify the content, appearance, and behaviour of the menu item.
-    inline BOOL CMenu::ModifyMenu(UINT uPosition, UINT uFlags, UINT_PTR uIDNewItem, HBITMAP hBitmap) const
+    inline BOOL CMenu::ModifyMenu(UINT pos, UINT flags, UINT_PTR newItemID, HBITMAP hBitmap) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::ModifyMenu(m_pData->hMenu, uPosition, uFlags, uIDNewItem, reinterpret_cast<LPCTSTR>(hBitmap));
+        return ::ModifyMenu(m_pData->hMenu, pos, flags, newItemID, reinterpret_cast<LPCTSTR>(hBitmap));
     }
 
 
     // Deletes a menu item or detaches a submenu from the menu.
-    inline BOOL CMenu::RemoveMenu(UINT uPosition, UINT uFlags) const
+    inline BOOL CMenu::RemoveMenu(UINT pos, UINT flags) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::RemoveMenu(m_pData->hMenu, uPosition, uFlags);
+        return ::RemoveMenu(m_pData->hMenu, pos, flags);
     }
 
 
     //  sets the default menu item for the menu.
-    inline BOOL CMenu::SetDefaultItem(UINT uItem, BOOL ByPosition /*= FALSE*/) const
+    inline BOOL CMenu::SetDefaultItem(UINT item, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::SetMenuDefaultItem(m_pData->hMenu, uItem, ByPosition);
+        return ::SetMenuDefaultItem(m_pData->hMenu, item, byPosition);
     }
 
 
     // Associates a Help context identifier with the menu.
-    inline BOOL CMenu::SetMenuContextHelpId(DWORD dwContextHelpId) const
+    inline BOOL CMenu::SetMenuContextHelpId(DWORD contextHelpID) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::SetMenuContextHelpId(m_pData->hMenu, dwContextHelpId);
+        return ::SetMenuContextHelpId(m_pData->hMenu, contextHelpID);
     }
 
 
     // Associates the specified bitmap with a menu item.
-    inline BOOL CMenu::SetMenuItemBitmaps(UINT uPosition, UINT uFlags, HBITMAP hbmUnchecked, HBITMAP hbmChecked) const
+    inline BOOL CMenu::SetMenuItemBitmaps(UINT pos, UINT flags, HBITMAP hUnchecked, HBITMAP hChecked) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::SetMenuItemBitmaps(m_pData->hMenu, uPosition, uFlags, hbmUnchecked, hbmChecked);
+        return ::SetMenuItemBitmaps(m_pData->hMenu, pos, flags, hUnchecked, hChecked);
     }
 
 
     // Changes information about a menu item.
-    inline BOOL CMenu::SetMenuItemInfo(UINT uItem, MENUITEMINFO& MenuItemInfo, BOOL ByPosition /*= FALSE*/) const
+    inline BOOL CMenu::SetMenuItemInfo(UINT item, MENUITEMINFO& menuItemInfo, BOOL byPosition /*= FALSE*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        MenuItemInfo.cbSize = GetSizeofMenuItemInfo();
-        return ::SetMenuItemInfo(m_pData->hMenu, uItem, ByPosition, &MenuItemInfo);
+        menuItemInfo.cbSize = GetSizeofMenuItemInfo();
+        return ::SetMenuItemInfo(m_pData->hMenu, item, byPosition, &menuItemInfo);
     }
 
 
     // Displays a shortcut menu at the specified location and tracks the selection of items on the menu.
-    inline BOOL CMenu::TrackPopupMenu(UINT uFlags, int x, int y, HWND hWnd, LPCRECT lpRect /*= 0*/) const
+    inline BOOL CMenu::TrackPopupMenu(UINT flags, int x, int y, HWND hWnd, LPCRECT pRect /*= 0*/) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::TrackPopupMenu(m_pData->hMenu, uFlags, x, y, 0, hWnd, lpRect);
+        return ::TrackPopupMenu(m_pData->hMenu, flags, x, y, 0, hWnd, pRect);
     }
 
 
     // Displays a shortcut menu at the specified location and tracks the selection of items on the shortcut menu.
-    inline BOOL CMenu::TrackPopupMenuEx(UINT uFlags, int x, int y, HWND hWnd, LPTPMPARAMS lptpm) const
+    inline BOOL CMenu::TrackPopupMenuEx(UINT flags, int x, int y, HWND hWnd, LPTPMPARAMS pTPMP) const
     {
         assert(m_pData);
         assert(IsMenu(m_pData->hMenu));
-        return ::TrackPopupMenuEx(m_pData->hMenu, uFlags, x, y, hWnd, lptpm);
+        return ::TrackPopupMenuEx(m_pData->hMenu, flags, x, y, hWnd, pTPMP);
     }
 
 

@@ -81,10 +81,10 @@ namespace Win32xx
         struct CMetaFile_Data   // A structure that contains the data members for CMetaFile
         {
             // Constructor
-            CMetaFile_Data() : hMetaFile(0), Count(1L)  {}
+            CMetaFile_Data() : hMetaFile(0), count(1L)  {}
 
             HMETAFILE hMetaFile;
-            long    Count;
+            long    count;
         };
 
         void Attach(HMETAFILE hMetaFile);
@@ -116,10 +116,10 @@ namespace Win32xx
         struct CEnhMetaFile_Data    // A structure that contains the data members for CEnhMetaFile
         {
             // Constructor
-            CEnhMetaFile_Data() : hEnhMetaFile(0), Count(1L) {}
+            CEnhMetaFile_Data() : hEnhMetaFile(0), count(1L) {}
 
             HENHMETAFILE hEnhMetaFile;
-            long    Count;
+            long    count;
         };
 
         void Attach(HENHMETAFILE hEnhMetaFile);
@@ -157,7 +157,7 @@ namespace Win32xx
     inline CMetaFile::CMetaFile(const CMetaFile& rhs)
     {
         m_pData = rhs.m_pData;
-        InterlockedIncrement(&m_pData->Count);
+        InterlockedIncrement(&m_pData->count);
     }
 
 
@@ -171,7 +171,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
-            InterlockedIncrement(&rhs.m_pData->Count);
+            InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
         }
@@ -210,7 +210,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->Count) == 0)
+        if (InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->hMetaFile != NULL)
             {
@@ -242,7 +242,7 @@ namespace Win32xx
     inline CEnhMetaFile::CEnhMetaFile(const CEnhMetaFile& rhs)
     {
         m_pData = rhs.m_pData;
-        InterlockedIncrement(&m_pData->Count);
+        InterlockedIncrement(&m_pData->count);
     }
 
 
@@ -256,7 +256,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
-            InterlockedIncrement(&rhs.m_pData->Count);
+            InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
         }
@@ -295,7 +295,7 @@ namespace Win32xx
     {
         assert(m_pData);
 
-        if (InterlockedDecrement(&m_pData->Count) == 0)
+        if (InterlockedDecrement(&m_pData->count) == 0)
         {
             if (m_pData->hEnhMetaFile != NULL)
             {

@@ -57,14 +57,14 @@ namespace Win32xx
         virtual void PreRegisterClass(WNDCLASS& wc);
 
         // Attributes
-        CSize   ApproximateViewRect(CSize sz = CSize(-1, -1), int iCount = -1) const;
+        CSize   ApproximateViewRect(CSize sz = CSize(-1, -1), int count = -1) const;
         COLORREF GetBkColor( ) const;
-        BOOL    GetBkImage( LVBKIMAGE& lvbkImage ) const;
+        BOOL    GetBkImage( LVBKIMAGE& image ) const;
         UINT    GetCallbackMask( ) const;
-        BOOL    GetCheckState( UINT nItem ) const;
-        BOOL    GetColumn( int iCol, LVCOLUMN& Column ) const;
-        BOOL    GetColumnOrderArray( LPINT piArray, int iCount = -1 ) const;
-        int     GetColumnWidth( int iCol ) const;
+        BOOL    GetCheckState( UINT item ) const;
+        BOOL    GetColumn( int col, LVCOLUMN& colInfo ) const;
+        BOOL    GetColumnOrderArray( LPINT pArrayOfCol, int count = -1 ) const;
+        int     GetColumnWidth( int col ) const;
         int     GetCountPerPage( ) const;
         HWND    GetEditControl( ) const;
         DWORD   GetExtendedStyle( ) const;
@@ -72,8 +72,8 @@ namespace Win32xx
         HCURSOR GetHotCursor( );
         int     GetHotItem( ) const;
         DWORD   GetHoverTime( ) const;
-        CImageList GetImageList( int nImageType ) const;
-        BOOL    GetItem( LVITEM& lvItem ) const;
+        CImageList GetImageList( int imageType ) const;
+        BOOL    GetItem( LVITEM& itemInfo ) const;
         int     GetItemCount( ) const;
         DWORD_PTR GetItemData( int iItem ) const;
         BOOL    GetItemPosition( int iItem, CPoint& pt ) const;
@@ -85,65 +85,65 @@ namespace Win32xx
         BOOL    GetOrigin( CPoint& pt ) const;
         UINT    GetSelectedCount( ) const;
         int     GetSelectionMark( ) const;
-        int     GetStringWidth( LPCTSTR pszString ) const;
-        BOOL    GetSubItemRect( int iItem, int iSubItem, int iCode, RECT& rc ) const;
+        int     GetStringWidth( LPCTSTR pstring ) const;
+        BOOL    GetSubItemRect( int item, int subItem, int code, RECT& rc ) const;
         COLORREF GetTextBkColor( ) const;
         COLORREF GetTextColor( ) const;
         HWND    GetToolTips( ) const;
         int     GetTopIndex( ) const;
         BOOL    GetViewRect( RECT& rc ) const;
-        void    GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const;
-        BOOL    SetBkColor( COLORREF clrBk ) const;
-        BOOL    SetBkImage( LVBKIMAGE& plvbkImage ) const;
-        BOOL    SetCallbackMask( UINT nMask ) const;
-        void    SetCheckState( int iItem, BOOL Checked = TRUE ) const;
-        BOOL    SetColumn( int iCol, const LVCOLUMN& pColumn ) const;
-        BOOL    SetColumnOrderArray( int iCount, LPINT piArray ) const;
-        BOOL    SetColumnWidth( int iCol, int cx ) const;
-        DWORD   SetExtendedStyle( DWORD dwNewStyle ) const;
+        void    GetWorkAreas( int workAreas, LPRECT pRectArray ) const;
+        BOOL    SetBkColor( COLORREF color ) const;
+        BOOL    SetBkImage( LVBKIMAGE& pImage ) const;
+        BOOL    SetCallbackMask( UINT mask ) const;
+        void    SetCheckState( int item, BOOL checked = TRUE ) const;
+        BOOL    SetColumn( int col, const LVCOLUMN& columnInfo ) const;
+        BOOL    SetColumnOrderArray( int count, LPINT pArrayOfCol) const;
+        BOOL    SetColumnWidth( int col, int cx ) const;
+        DWORD   SetExtendedStyle( DWORD exStyle ) const;
         HCURSOR SetHotCursor( HCURSOR hCursor ) const;
-        int     SetHotItem( int nIndex ) const;
-        DWORD   SetHoverTime( DWORD dwHoverTime = static_cast<DWORD>(-1) ) const;
+        int     SetHotItem( int index ) const;
+        DWORD   SetHoverTime( DWORD hoverTime = static_cast<DWORD>(-1) ) const;
         CSize   SetIconSpacing( int cx, int cy ) const;
         CSize   SetIconSpacing( CSize sz ) const;
-        CImageList SetImageList( HIMAGELIST himlNew, int iImageListType ) const;
-        BOOL    SetItem( LVITEM& Item ) const;
-        BOOL    SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
-                        UINT nState, UINT nStateMask, LPARAM lparam, int iIndent ) const;
-        void    SetItemCount( int iCount ) const;
-        void    SetItemCountEx( int iCount, DWORD dwFlags = LVSICF_NOINVALIDATEALL ) const;
-        BOOL    SetItemData( int iItem, DWORD_PTR dwData ) const;
-        BOOL    SetItemPosition( int iItem, CPoint& pt ) const;
-        BOOL    SetItemState( int iItem, LVITEM& Item ) const;
-        void    SetItemState( int iItem, UINT nState, UINT nMask ) const;
-        void    SetItemText( int iItem, int iSubItem, LPCTSTR pszText ) const;
-        int     SetSelectionMark( int iIndex ) const;
-        BOOL    SetTextBkColor( COLORREF clrBkText ) const;
-        BOOL    SetTextColor( COLORREF clrText ) const;
+        CImageList SetImageList( HIMAGELIST hImages, int imageListType ) const;
+        BOOL    SetItem( LVITEM& itemInfo ) const;
+        BOOL    SetItem( int item, int subItem, UINT mask, LPCTSTR pText, int image,
+                        UINT state, UINT stateMask, LPARAM lparam, int indent ) const;
+        void    SetItemCount( int count ) const;
+        void    SetItemCountEx( int count, DWORD flags = LVSICF_NOINVALIDATEALL ) const;
+        BOOL    SetItemData( int item, DWORD_PTR data ) const;
+        BOOL    SetItemPosition( int item, CPoint& pt ) const;
+        BOOL    SetItemState( int item, LVITEM& itemInfo ) const;
+        void    SetItemState( int item, UINT state, UINT mask ) const;
+        void    SetItemText( int item, int subItem, LPCTSTR pText ) const;
+        int     SetSelectionMark( int index ) const;
+        BOOL    SetTextBkColor( COLORREF color ) const;
+        BOOL    SetTextColor( COLORREF color ) const;
         HWND    SetToolTips ( HWND hToolTip ) const;
-        void    SetWorkAreas( int nWorkAreas, LPCRECT pRectArray ) const;
-        int     SubItemHitTest( LVHITTESTINFO& htInfo ) const;
+        void    SetWorkAreas( int workAreas, LPCRECT pRectArray ) const;
+        int     SubItemHitTest( LVHITTESTINFO& hitInfo) const;
 
         // Operations
         BOOL    Arrange( UINT nCode ) const;
-        CImageList CreateDragImage( int iItem, CPoint& pt ) const;
+        CImageList CreateDragImage( int item, CPoint& pt ) const;
         BOOL    DeleteAllItems( ) const;
-        BOOL    DeleteColumn( int iCol ) const;
-        BOOL    DeleteItem( int iItem ) const;
-        HWND    EditLabel( int iItem ) const;
-        BOOL    EnsureVisible( int iItem, BOOL IsPartialOK ) const;
-        int     FindItem( LVFINDINFO& FindInfo, int iStart = -1 ) const;
+        BOOL    DeleteColumn( int col ) const;
+        BOOL    DeleteItem( int item ) const;
+        HWND    EditLabel( int item ) const;
+        BOOL    EnsureVisible( int item, BOOL isPartialOK ) const;
+        int     FindItem( LVFINDINFO& findInfo, int start = -1 ) const;
         int     HitTest( LVHITTESTINFO& HitTestInfo ) const;
-        int     HitTest( CPoint pt, UINT* pFlags = NULL ) const;
-        int     InsertColumn( int iCol, const LVCOLUMN& pColumn ) const;
-        int     InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat = LVCFMT_LEFT,
-                            int iWidth = -1, int iSubItem = -1 ) const;
-        int     InsertItem( const LVITEM& pItem ) const;
-        int     InsertItem( int iItem, LPCTSTR pszText ) const;
-        int     InsertItem( int iItem, LPCTSTR pszText, int iImage ) const;
-        BOOL    RedrawItems( int iFirst, int iLast ) const;
+        int     HitTest( CPoint pt, UINT* flags = NULL ) const;
+        int     InsertColumn( int col, const LVCOLUMN& colInfo ) const;
+        int     InsertColumn( int col, LPCTSTR pColumnHeading, int format = LVCFMT_LEFT,
+                            int width = -1, int subItem = -1 ) const;
+        int     InsertItem( const LVITEM& itemInfo ) const;
+        int     InsertItem( int item, LPCTSTR pText ) const;
+        int     InsertItem( int item, LPCTSTR pText, int iImage ) const;
+        BOOL    RedrawItems( int first, int last ) const;
         BOOL    Scroll( CSize sz ) const;
-        BOOL    SortItems( PFNLVCOMPARE pfnCompare, DWORD_PTR dwData ) const;
+        BOOL    SortItems( PFNLVCOMPARE pCompareFn, DWORD_PTR data ) const;
         BOOL    Update( int iItem ) const;
 
     private:
@@ -167,10 +167,10 @@ namespace Win32xx
 
 
     // Calculates the approximate width and height required to display a given number of items.
-    inline CSize CListView::ApproximateViewRect(CSize sz /*= CSize(-1, -1)*/, int iCount /* = -1*/) const
+    inline CSize CListView::ApproximateViewRect(CSize sz /*= CSize(-1, -1)*/, int count /* = -1*/) const
     {
         assert(IsWindow());
-        return CSize( ListView_ApproximateViewRect( *this, sz.cx, sz.cy, iCount ) );
+        return CSize( ListView_ApproximateViewRect( *this, sz.cx, sz.cy, count ) );
     }
 
 
@@ -183,10 +183,10 @@ namespace Win32xx
 
 
     // Retrieves the background image in the list-view control.
-    inline BOOL CListView::GetBkImage( LVBKIMAGE& lvbkImage ) const
+    inline BOOL CListView::GetBkImage( LVBKIMAGE& image ) const
     {
         assert(IsWindow());
-        return ListView_GetBkImage( *this, &lvbkImage );
+        return ListView_GetBkImage( *this, &image );
     }
 
 
@@ -199,34 +199,34 @@ namespace Win32xx
 
 
     // Determines if an item in the list-view control is selected.
-    inline BOOL CListView::GetCheckState( UINT nItem ) const
+    inline BOOL CListView::GetCheckState( UINT item ) const
     {
         assert(IsWindow());
-        return ListView_GetCheckState( *this, nItem );
+        return ListView_GetCheckState( *this, item );
     }
 
 
     // Retrieves the attributes of the list-view control's column.
-    inline BOOL CListView::GetColumn( int iCol, LVCOLUMN& Column ) const
+    inline BOOL CListView::GetColumn( int col, LVCOLUMN& colInfo ) const
     {
         assert(IsWindow());
-        return ListView_GetColumn( *this, iCol, &Column );
+        return ListView_GetColumn( *this, col, &colInfo);
     }
 
 
     // Retrieves the current left-to-right order of columns in the list-view control.
-    inline BOOL CListView::GetColumnOrderArray( LPINT piArray, int iCount /*= -1*/ ) const
+    inline BOOL CListView::GetColumnOrderArray( LPINT pArrayOfCol, int count /*= -1*/ ) const
     {
         assert(IsWindow());
-        return ListView_GetColumnOrderArray( *this, iCount, piArray );
+        return ListView_GetColumnOrderArray( *this, count, pArrayOfCol);
     }
 
 
     // Retrieves the width of a column in report or list view.
-    inline int CListView::GetColumnWidth( int iCol ) const
+    inline int CListView::GetColumnWidth( int col ) const
     {
         assert(IsWindow());
-        return ListView_GetColumnWidth( *this, iCol );
+        return ListView_GetColumnWidth( *this, col );
     }
 
 
@@ -288,19 +288,20 @@ namespace Win32xx
 
 
     // Retrieves the handle to an image list used for drawing list-view items.
-    inline CImageList CListView::GetImageList( int nImageType ) const
+	// imageType:  LVSIL_NORMAL; LVSIL_SMALL; or LVSIL_STATE
+    inline CImageList CListView::GetImageList( int imageType ) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = ListView_GetImageList( *this, nImageType );
+        HIMAGELIST himl = ListView_GetImageList( *this, imageType );
         return CImageList(himl);
     }
 
 
     // Retrieves some or all of the list-view item's attributes.
-    inline BOOL CListView::GetItem( LVITEM& Item ) const
+    inline BOOL CListView::GetItem( LVITEM& itemInfo ) const
     {
         assert(IsWindow());
-        return ListView_GetItem( *this, &Item );
+        return ListView_GetItem( *this, &itemInfo );
     }
 
 
@@ -313,13 +314,13 @@ namespace Win32xx
 
 
     // Retrieves the value(lparam) specific to the item.
-    inline DWORD_PTR CListView::GetItemData( int iItem ) const
+    inline DWORD_PTR CListView::GetItemData( int item ) const
     {
         assert(IsWindow());
 
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(lvi));
-        lvi.iItem = iItem;
+        lvi.iItem = item;
         lvi.mask = LVIF_PARAM;
         ListView_GetItem(*this, &lvi);
         return lvi.lParam;
@@ -327,53 +328,54 @@ namespace Win32xx
 
 
     // Retrieves the position of the list-view item.
-    inline BOOL CListView::GetItemPosition( int iItem, CPoint& pt ) const
+    inline BOOL CListView::GetItemPosition( int item, CPoint& pt ) const
     {
         assert(IsWindow());
-        return ListView_GetItemPosition( *this, iItem, &pt );
+        return ListView_GetItemPosition( *this, item, &pt );
     }
 
 
     // Retrieves the bounding rectangle for all or part of an item in the current view.
-    inline BOOL CListView::GetItemRect( int iItem, RECT& rc, UINT nCode ) const
+	// code: LVIR_BOUNDS; LVIR_ICON; LVIR_LABEL; or LVIR_SELECTBOUNDS.
+    inline BOOL CListView::GetItemRect( int item, RECT& rc, UINT code ) const
     {
         assert(IsWindow());
-        return ListView_GetItemRect( *this, iItem, &rc, nCode );
+        return ListView_GetItemRect( *this, item, &rc, code );
     }
 
 
     // Retrieves the state of the list-view item.
-    // Possible values of nMask:
+    // Possible values of mask:
     // LVIS_CUT             The item is marked for a cut-and-paste operation.
     // LVIS_DROPHILITED     The item is highlighted as a drag-and-drop target.
     // LVIS_FOCUSED         The item has the focus, so it is surrounded by a standard focus rectangle.
     // LVIS_SELECTED        The item is selected.
     // LVIS_OVERLAYMASK     Use this mask to retrieve the item's overlay image index.
     // LVIS_STATEIMAGEMASK  Use this mask to retrieve the item's state image index.
-    inline UINT CListView::GetItemState( int iItem, UINT nMask ) const
+    inline UINT CListView::GetItemState( int item, UINT mask ) const
     {
         assert(IsWindow());
-        return  ListView_GetItemState( *this, iItem, nMask );
+        return  ListView_GetItemState( *this, item, mask );
     }
 
 
     // Retrieves the text of the list-view item.
     // Note: Although the list-view control allows any length string to be stored
     //       as item text, only the first 260 characters are displayed.
-    inline CString CListView::GetItemText( int iItem, int iSubItem, UINT nTextMax /* = 260 */ ) const
+    inline CString CListView::GetItemText( int item, int subItem, UINT textMax /* = 260 */ ) const
     {
         assert(IsWindow());
 
         CString str;
-        if (nTextMax > 0)
+        if (textMax > 0)
         {
             LVITEM lvi;
             ZeroMemory(&lvi, sizeof(lvi));
-            lvi.iItem = iItem;
-            lvi.iSubItem = iSubItem;
+            lvi.iItem = item;
+            lvi.iSubItem = subItem;
             lvi.mask = LVIF_TEXT;
-            lvi.cchTextMax = nTextMax;
-            lvi.pszText = str.GetBuffer(nTextMax);
+            lvi.cchTextMax = textMax;
+            lvi.pszText = str.GetBuffer(textMax);
             ListView_GetItem( *this, &lvi );
             str.ReleaseBuffer();
         }
@@ -383,10 +385,10 @@ namespace Win32xx
 
     // Searches for a list-view item that has the specified properties and
     // bears the specified relationship to a specified item.
-    inline int CListView::GetNextItem( int iItem, int iFlags ) const
+    inline int CListView::GetNextItem( int item, int flags ) const
     {
         assert(IsWindow());
-        return ListView_GetNextItem( *this, iItem, iFlags );
+        return ListView_GetNextItem( *this, item, flags );
     }
 
 
@@ -394,9 +396,9 @@ namespace Win32xx
     inline UINT CListView::GetNumberOfWorkAreas( ) const
     {
         assert(IsWindow());
-        UINT nWorkAreas = 0;
-        ListView_GetNumberOfWorkAreas( *this, &nWorkAreas );
-        return nWorkAreas;
+        UINT workAreas = 0;
+        ListView_GetNumberOfWorkAreas( *this, &workAreas );
+        return workAreas;
     }
 
 
@@ -425,18 +427,18 @@ namespace Win32xx
 
 
     // Determines the width of a specified string using the list-view control's current font.
-    inline int CListView::GetStringWidth( LPCTSTR pszString ) const
+    inline int CListView::GetStringWidth( LPCTSTR pString ) const
     {
         assert(IsWindow());
-        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, reinterpret_cast<LPARAM>(pszString)));
+        return static_cast<int>(SendMessage( LVM_GETSTRINGWIDTH, 0, reinterpret_cast<LPARAM>(pString)));
     }
 
 
     // Retrieves information about the rectangle that surrounds a subitem in the list-view control.
-    inline BOOL CListView::GetSubItemRect( int iItem, int iSubItem, int iCode, RECT& rc ) const
+    inline BOOL CListView::GetSubItemRect( int item, int subItem, int code, RECT& rc ) const
     {
         assert(IsWindow());
-        return ListView_GetSubItemRect( *this, iItem, iSubItem, iCode, &rc );
+        return ListView_GetSubItemRect( *this, item, subItem, code, &rc );
     }
 
 
@@ -481,75 +483,75 @@ namespace Win32xx
 
 
     // Retrieves the working areas from the list-view control.
-    inline void CListView::GetWorkAreas( int iWorkAreas, LPRECT pRectArray ) const
+    inline void CListView::GetWorkAreas( int workAreas, LPRECT pRectArray ) const
     {
         assert(IsWindow());
-        ListView_GetWorkAreas( *this, iWorkAreas, pRectArray );
+        ListView_GetWorkAreas( *this, workAreas, pRectArray );
     }
 
 
     // Sets the background color of the list-view control.
-    inline BOOL CListView::SetBkColor( COLORREF clrBk ) const
+    inline BOOL CListView::SetBkColor( COLORREF bkColor ) const
     {
         assert(IsWindow());
-        return ListView_SetBkColor( *this, clrBk );
+        return ListView_SetBkColor( *this, bkColor);
     }
 
 
     // Sets the background image in the list-view control.
-    inline BOOL CListView::SetBkImage( LVBKIMAGE& lvbkImage ) const
+    inline BOOL CListView::SetBkImage( LVBKIMAGE& bkImage ) const
     {
         assert(IsWindow());
-        return ListView_SetBkImage( *this, &lvbkImage );
+        return ListView_SetBkImage( *this, &bkImage);
     }
 
 
     // Changes the callback mask for the list-view control.
-    inline BOOL CListView::SetCallbackMask( UINT nMask ) const
+    inline BOOL CListView::SetCallbackMask( UINT mask ) const
     {
         assert(IsWindow());
-        return ListView_SetCallbackMask( *this, nMask );
+        return ListView_SetCallbackMask( *this, mask );
     }
 
 
     // Used to select or deselect an item in the list-view control.
     // This should only be used for list-view controls with the LVS_EX_CHECKBOXES style.
-    inline void CListView::SetCheckState( int iItem, BOOL Checked /*= TRUE*/ ) const
+    inline void CListView::SetCheckState( int item, BOOL checked /*= TRUE*/ ) const
     {
         assert(IsWindow());
-        ListView_SetItemState(*this, iItem, INDEXTOSTATEIMAGEMASK((Checked!=FALSE)?2:1),LVIS_STATEIMAGEMASK);
+        ListView_SetItemState(*this, item, INDEXTOSTATEIMAGEMASK((checked!=FALSE)?2:1),LVIS_STATEIMAGEMASK);
     }
 
 
     // Sets the attributes of the list-view column.
-    inline BOOL CListView::SetColumn( int iCol, const LVCOLUMN& Column ) const
+    inline BOOL CListView::SetColumn( int col, const LVCOLUMN& colInfo ) const
     {
         assert(IsWindow());
-        return ListView_SetColumn( *this, iCol, &Column );
+        return ListView_SetColumn( *this, col, &colInfo );
     }
 
 
     // Sets the left-to-right order of columns in the list-view control.
-    inline BOOL CListView::SetColumnOrderArray( int iCount, LPINT piArray ) const
+    inline BOOL CListView::SetColumnOrderArray( int count, LPINT pArrayOfCol) const
     {
         assert(IsWindow());
-        return ListView_SetColumnOrderArray( *this, iCount, piArray );
+        return ListView_SetColumnOrderArray( *this, count, pArrayOfCol );
     }
 
 
     // Used to change the width of a column in report view or the width of all columns in list-view mode.
-    inline BOOL CListView::SetColumnWidth( int iCol, int cx ) const
+    inline BOOL CListView::SetColumnWidth( int col, int cx ) const
     {
         assert(IsWindow());
-        return ListView_SetColumnWidth( *this, iCol, cx );
+        return ListView_SetColumnWidth( *this, col, cx );
     }
 
 
     // Sets extended styles for the list-view control.
-    inline DWORD CListView::SetExtendedStyle( DWORD dwNewStyle ) const
+    inline DWORD CListView::SetExtendedStyle( DWORD exStyle ) const
     {
         assert(IsWindow());
-        return ListView_SetExtendedListViewStyle( *this, dwNewStyle );
+        return ListView_SetExtendedListViewStyle( *this, exStyle );
     }
 
 
@@ -563,18 +565,18 @@ namespace Win32xx
 
 
     // Sets the hot item in the list-view control.
-    inline int CListView::SetHotItem( int nIndex ) const
+    inline int CListView::SetHotItem( int index ) const
     {
         assert(IsWindow());
-        return ListView_SetHotItem( *this, nIndex );
+        return ListView_SetHotItem( *this, index );
     }
 
 
     // Sets the amount of time that the mouse cursor must hover over an item before it is selected.
-    inline DWORD CListView::SetHoverTime( DWORD dwHoverTime /*= -1*/ ) const
+    inline DWORD CListView::SetHoverTime( DWORD hoverTime /*= -1*/ ) const
     {
         assert(IsWindow());
-        return ListView_SetHoverTime( *this, dwHoverTime );
+        return ListView_SetHoverTime( *this, hoverTime );
     }
 
 
@@ -595,11 +597,11 @@ namespace Win32xx
 
 
     // Assigns an image list to the list-view control.
-    // Valid iImageListType values: LVSIL_NORMAL, LVSIL_SMALL, LVSIL_STATE.
-    inline CImageList CListView::SetImageList( HIMAGELIST himlNew, int iImageListType ) const
+    // Valid imageListType values: LVSIL_NORMAL, LVSIL_SMALL, LVSIL_STATE.
+    inline CImageList CListView::SetImageList( HIMAGELIST hImages, int imageListType ) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = ListView_SetImageList( *this, himlNew, iImageListType );
+        HIMAGELIST himl = ListView_SetImageList( *this, hImages, imageListType );
         return CImageList(himl);
     }
 
@@ -617,70 +619,70 @@ namespace Win32xx
     //      int iImage;
     //      LPARAM lparam;
     // } LVITEM, *LVITEM&;
-    inline BOOL CListView::SetItem( LVITEM& Item ) const
+    inline BOOL CListView::SetItem( LVITEM& itemInfo ) const
     {
         assert(IsWindow());
-        return ListView_SetItem( *this, &Item );
+        return ListView_SetItem( *this, &itemInfo );
     }
 
 
     // Sets some or all of a list-view item's attributes.
-    inline BOOL CListView::SetItem( int iItem, int iSubItem, UINT nMask, LPCTSTR pszText, int iImage,
-                    UINT nState, UINT nStateMask, LPARAM lparam, int iIndent ) const
+    inline BOOL CListView::SetItem( int item, int subItem, UINT mask, LPCTSTR pText, int image,
+                    UINT state, UINT stateMask, LPARAM lparam, int indent ) const
     {
         assert(IsWindow());
 
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(lvi));
-        lvi.iItem = iItem;
-        lvi.iSubItem = iSubItem;
-        lvi.mask = nMask;
-        lvi.pszText = const_cast<LPTSTR>(pszText);
-        lvi.iImage = iImage;
-        lvi.state = nState;
-        lvi.stateMask = nStateMask;
+        lvi.iItem = item;
+        lvi.iSubItem = subItem;
+        lvi.mask = mask;
+        lvi.pszText = const_cast<LPTSTR>(pText);
+        lvi.iImage = image;
+        lvi.state = state;
+        lvi.stateMask = stateMask;
         lvi.lParam = lparam;
-        lvi.iIndent = iIndent;
+        lvi.iIndent = indent;
 
         return ListView_SetItem( *this, &lvi);
     }
 
 
     // Causes the list-view control to allocate memory for the specified number of items.
-    inline void CListView::SetItemCount( int iCount ) const
+    inline void CListView::SetItemCount( int count ) const
     {
         assert(IsWindow());
-        ListView_SetItemCount( *this, iCount );
+        ListView_SetItemCount( *this, count );
     }
 
 
     // Sets the virtual number of items in a virtual list view.
-    inline void CListView::SetItemCountEx( int iCount, DWORD dwFlags /*= LVSICF_NOINVALIDATEALL*/ ) const
+    inline void CListView::SetItemCountEx( int count, DWORD flags /*= LVSICF_NOINVALIDATEALL*/ ) const
     {
         assert(IsWindow());
-        ListView_SetItemCountEx( *this, iCount, dwFlags );
+        ListView_SetItemCountEx( *this, count, flags );
     }
 
 
     // Sets the value(lparam) specific to the item.
-    inline BOOL CListView::SetItemData( int iItem, DWORD_PTR dwData ) const
+    inline BOOL CListView::SetItemData( int item, DWORD_PTR data ) const
     {
         assert(IsWindow());
 
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(lvi));
-        lvi.iItem = iItem;
-        lvi.lParam = dwData;
+        lvi.iItem = item;
+        lvi.lParam = data;
         lvi.mask = LVIF_PARAM;
         return ListView_SetItem(*this, &lvi);
     }
 
 
     // Moves an item to a specified position in the list-view control (in icon or small icon view).
-    inline BOOL CListView::SetItemPosition( int iItem, CPoint& pt ) const
+    inline BOOL CListView::SetItemPosition( int item, CPoint& pt ) const
     {
         assert(IsWindow());
-        return ListView_SetItemPosition( *this, iItem, pt.x, pt.y );
+        return ListView_SetItemPosition( *this, item, pt.x, pt.y );
     }
 
 
@@ -692,50 +694,50 @@ namespace Win32xx
     // LVIS_SELECTED        The item is selected.
     // LVIS_OVERLAYMASK     Use this mask to retrieve the item's overlay image index.
     // LVIS_STATEIMAGEMASK  Use this mask to retrieve the item's state image index.
-    inline BOOL CListView::SetItemState( int iItem, LVITEM& Item ) const
+    inline BOOL CListView::SetItemState( int item, LVITEM& itemInfo ) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_SETITEMSTATE, iItem, reinterpret_cast<LPARAM>(&Item)) != 0);
+        return (SendMessage(LVM_SETITEMSTATE, item, reinterpret_cast<LPARAM>(&itemInfo)) != 0);
     }
 
 
     // Changes the state of an item in the list-view control.
-    inline void CListView::SetItemState( int iItem, UINT nState, UINT nMask ) const
+    inline void CListView::SetItemState( int item, UINT state, UINT mask ) const
     {
         assert(IsWindow());
-        ListView_SetItemState(*this, iItem, nState, nMask);
+        ListView_SetItemState(*this, item, state, mask);
     }
 
 
     // Sets the text color of the list-view control.
-    inline void CListView::SetItemText( int iItem, int iSubItem, LPCTSTR pszText ) const
+    inline void CListView::SetItemText( int item, int subItem, LPCTSTR pText ) const
     {
         assert(IsWindow());
-        ListView_SetItemText(*this, iItem, iSubItem, const_cast<LPTSTR>(pszText) );
+        ListView_SetItemText(*this, item, subItem, const_cast<LPTSTR>(pText) );
     }
 
 
     // Sets the selection mark in the list-view control.
-    inline int CListView::SetSelectionMark( int iIndex ) const
+    inline int CListView::SetSelectionMark( int index ) const
     {
         assert(IsWindow());
-        return ListView_SetSelectionMark( *this, iIndex );
+        return ListView_SetSelectionMark( *this, index );
     }
 
 
     // Sets the background color of text in the list-view control.
-    inline BOOL CListView::SetTextBkColor( COLORREF clrBkText ) const
+    inline BOOL CListView::SetTextBkColor( COLORREF color ) const
     {
         assert(IsWindow());
-        return ListView_SetTextBkColor( *this, clrBkText );
+        return ListView_SetTextBkColor( *this, color);
     }
 
 
     // Sets the text color of the list-view control.
-    inline BOOL CListView::SetTextColor( COLORREF clrText ) const
+    inline BOOL CListView::SetTextColor( COLORREF color ) const
     {
         assert(IsWindow());
-        return ListView_SetTextColor( *this, clrText );
+        return ListView_SetTextColor( *this, color);
     }
 
 
@@ -748,18 +750,18 @@ namespace Win32xx
 
 
     // Sets the working area within the list-view control.
-    inline void CListView::SetWorkAreas( int nWorkAreas, LPCRECT pRectArray ) const
+    inline void CListView::SetWorkAreas( int workAreas, LPCRECT pRectArray ) const
     {
         assert(IsWindow());
-        ListView_SetWorkAreas( *this, nWorkAreas, pRectArray );
+        ListView_SetWorkAreas( *this, workAreas, pRectArray );
     }
 
 
     // Determines which list-view item or subitem is located at a given position.
-    inline int CListView::SubItemHitTest( LVHITTESTINFO& htInfo ) const
+    inline int CListView::SubItemHitTest( LVHITTESTINFO& hitInfo ) const
     {
         assert(IsWindow());
-        return ListView_SubItemHitTest( *this, &htInfo );
+        return ListView_SubItemHitTest( *this, &hitInfo );
     }
 
 
@@ -767,18 +769,18 @@ namespace Win32xx
     // Operations
 
     // Arranges items in icon view.
-    inline BOOL CListView::Arrange( UINT nCode ) const
+    inline BOOL CListView::Arrange( UINT code ) const
     {
         assert(IsWindow());
-        return ListView_Arrange( *this, nCode );
+        return ListView_Arrange( *this, code );
     }
 
 
     // Creates a drag image list for the specified item.
-    inline CImageList CListView::CreateDragImage( int iItem, CPoint& pt ) const
+    inline CImageList CListView::CreateDragImage( int item, CPoint& pt ) const
     {
         assert(IsWindow());
-        HIMAGELIST himl = ListView_CreateDragImage( *this, iItem, &pt );
+        HIMAGELIST himl = ListView_CreateDragImage( *this, item, &pt );
         return CImageList(himl);
     }
 
@@ -792,145 +794,152 @@ namespace Win32xx
 
 
     // Removes a column from the list-view control.
-    inline BOOL CListView::DeleteColumn( int iCol ) const
+    inline BOOL CListView::DeleteColumn( int col ) const
     {
         assert(IsWindow());
-        return ListView_DeleteColumn( *this, iCol );
+        return ListView_DeleteColumn( *this, col );
     }
 
 
     // Removes an item from the list-view control.
-    inline BOOL CListView::DeleteItem( int iItem ) const
+    inline BOOL CListView::DeleteItem( int item ) const
     {
         assert(IsWindow());
-        return ListView_DeleteItem( *this, iItem );
+        return ListView_DeleteItem( *this, item );
     }
 
 
     // Begins in-place editing of the list-view item's text.
-    inline HWND CListView::EditLabel( int iItem ) const
+    inline HWND CListView::EditLabel( int item ) const
     {
         assert(IsWindow());
-        return ListView_EditLabel( *this, iItem );
+        return ListView_EditLabel( *this, item );
     }
 
 
     // Ensures that a list-view item is either entirely or partially visible,
     // scrolling the list-view control if necessary.
-    inline BOOL CListView::EnsureVisible( int iItem, BOOL IsPartialOK ) const
+    inline BOOL CListView::EnsureVisible( int item, BOOL isPartialOK ) const
     {
         assert(IsWindow());
-        return (SendMessage(LVM_ENSUREVISIBLE, iItem, IsPartialOK ) != 0);
+        return (SendMessage(LVM_ENSUREVISIBLE, item, isPartialOK ) != 0);
     }
 
 
     // Searches for a list-view item with the specified characteristics.
-    inline int CListView::FindItem( LVFINDINFO& FindInfo, int iStart /*= -1*/ ) const
+    inline int CListView::FindItem( LVFINDINFO& findInfo, int start /*= -1*/ ) const
     {
         assert(IsWindow());
-        return ListView_FindItem( *this, iStart, &FindInfo );
+        return ListView_FindItem( *this, start, &findInfo );
     }
 
 
     // Determines which list-view item, if any, is at a specified position.
-    inline int CListView::HitTest( LVHITTESTINFO& HitTestInfo ) const
+    inline int CListView::HitTest( LVHITTESTINFO& hitInfo ) const
     {
         assert(IsWindow());
-        return ListView_HitTest( *this, &HitTestInfo );
+        return ListView_HitTest( *this, &hitInfo );
     }
 
 
     // Determines which list-view item, if any, is at a specified position.
-    inline int CListView::HitTest( CPoint pt, UINT* pFlags /*= NULL*/ ) const
+    inline int CListView::HitTest( CPoint pt, UINT* pflags /*= NULL*/ ) const
     {
         assert(IsWindow());
 
         LVHITTESTINFO hti;
         ZeroMemory(&hti, sizeof(hti));
-        hti.flags = *pFlags;
+        hti.flags = *pflags;
         hti.pt = pt;
         return ListView_HitTest( *this, &hti );
     }
 
 
     // Inserts a new column in the list-view control.
-    inline int CListView::InsertColumn( int iCol, const LVCOLUMN& Column ) const
+    inline int CListView::InsertColumn( int col, const LVCOLUMN& colInfo ) const
     {
         assert(IsWindow());
-        return ListView_InsertColumn( *this, iCol, &Column );
+        return ListView_InsertColumn( *this, col, &colInfo );
     }
 
 
     // Inserts a new column in the list-view control.
-    inline int CListView::InsertColumn( int iCol, LPCTSTR pszColumnHeading, int iFormat /*= LVCFMT_LEFT*/,
-                        int iWidth /*= -1*/, int iSubItem /*= -1*/ ) const
+	// format :
+	//  LVCFMT_BITMAP_ON_RIGHT    The bitmap appears to the right of text.
+	//  LVCFMT_CENTER             Text is centered.
+	//  LVCFMT_IMAGE              The item displays an image from an image list.
+	//  LVCFMT_JUSTIFYMASK        A bitmask used to select those bits of fmt that control field justification.
+	//  LVCFMT_LEFT               Text is left-aligned.
+    //  LVCFMT_RIGHT              Text is right-aligned.
+	inline int CListView::InsertColumn( int col, LPCTSTR pColumnHeading, int format /*= LVCFMT_LEFT*/,
+                        int width /*= -1*/, int subItem /*= -1*/ ) const
     {
         assert(IsWindow());
 
         LVCOLUMN lvc;
         ZeroMemory(&lvc, sizeof(lvc));
         lvc.mask = LVCF_TEXT|LVCF_ORDER|LVCF_FMT;
-        if (-1 != iWidth)
+        if (-1 != width)
         {
             lvc.mask |= LVCF_WIDTH;
-            lvc.cx = iWidth;
+            lvc.cx = width;
         }
-        if (-1 !=  iSubItem)
+        if (-1 !=  subItem)
         {
             lvc.mask |= LVCF_SUBITEM;
-            lvc.iSubItem = iSubItem;
+            lvc.iSubItem = subItem;
         }
 
-        lvc.iOrder = iCol;
-        lvc.pszText = const_cast<LPTSTR>(pszColumnHeading);
-        lvc.fmt = iFormat;
-        lvc.iSubItem = iSubItem;
-        return ListView_InsertColumn( *this, iCol, &lvc );
+        lvc.iOrder = col;
+        lvc.pszText = const_cast<LPTSTR>(pColumnHeading);
+        lvc.fmt = format;
+        lvc.iSubItem = subItem;
+        return ListView_InsertColumn( *this, col, &lvc );
     }
 
 
     // Inserts a new item in the list-view control.
-    inline int CListView::InsertItem( const LVITEM& Item ) const
+    inline int CListView::InsertItem( const LVITEM& itemInfo ) const
     {
         assert(IsWindow());
-        return ListView_InsertItem( *this, &Item );
+        return ListView_InsertItem( *this, &itemInfo);
     }
 
 
     // Inserts a new item in the list-view control.
-    inline int CListView::InsertItem( int iItem, LPCTSTR pszText ) const
+    inline int CListView::InsertItem( int item, LPCTSTR pText ) const
     {
         assert(IsWindow());
 
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(lvi));
-        lvi.iItem = iItem;
-        lvi.pszText = const_cast<LPTSTR>(pszText);
+        lvi.iItem = item;
+        lvi.pszText = const_cast<LPTSTR>(pText);
         lvi.mask = LVIF_TEXT;
         return ListView_InsertItem( *this, &lvi );
     }
 
 
     // Inserts a new item in the list-view control.
-    inline int CListView::InsertItem( int iItem, LPCTSTR pszText, int iImage ) const
+    inline int CListView::InsertItem( int item, LPCTSTR pText, int image ) const
     {
         assert(IsWindow());
 
         LVITEM lvi;
         ZeroMemory(&lvi, sizeof(lvi));
-        lvi.iItem = iItem;
-        lvi.pszText = const_cast<LPTSTR>(pszText);
-        lvi.iImage = iImage;
+        lvi.iItem = item;
+        lvi.pszText = const_cast<LPTSTR>(pText);
+        lvi.iImage = image;
         lvi.mask = LVIF_TEXT | LVIF_IMAGE;
         return ListView_InsertItem( *this, &lvi );
     }
 
 
     // Forces the list-view control to redraw a range of items.
-    inline BOOL CListView::RedrawItems( int iFirst, int iLast ) const
+    inline BOOL CListView::RedrawItems( int first, int last ) const
     {
         assert(IsWindow());
-        return ListView_RedrawItems( *this, iFirst, iLast );
+        return ListView_RedrawItems( *this, first, last );
     }
 
 
@@ -943,19 +952,19 @@ namespace Win32xx
 
 
     // Uses an application-defined comparison function to sort the items of the list-view control.
-    inline BOOL CListView::SortItems( PFNLVCOMPARE pfnCompare, DWORD_PTR dwData ) const
+    inline BOOL CListView::SortItems( PFNLVCOMPARE pCompareFn, DWORD_PTR data ) const
     {
         assert(IsWindow());
-        return ListView_SortItems( *this, pfnCompare, dwData );
+        return ListView_SortItems( *this, pCompareFn, data );
     }
 
 
     // Updates a list-view item. If the list-view control has the LVS_AUTOARRANGE style,
     // the list-view control is rearranged.
-    inline BOOL CListView::Update( int iItem ) const
+    inline BOOL CListView::Update( int item ) const
     {
         assert(IsWindow());
-        return ListView_Update( *this, iItem );
+        return ListView_Update( *this, item );
     }
 
 } // namespace Win32xx

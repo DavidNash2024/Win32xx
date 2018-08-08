@@ -51,26 +51,26 @@ namespace Win32xx
         virtual ~CStatusBar() {}
 
         // Overridables
-        virtual HWND Create(HWND hWndParent);
+        virtual HWND Create(HWND hParent);
         virtual BOOL OnEraseBkgnd(CDC& dc);
         virtual void PreCreate(CREATESTRUCT& cs);
 
         // Attributes
         int GetParts() const;
-        CRect GetPartRect(int iPart) const;
-        CString GetPartText(int iPart) const;
+        CRect GetPartRect(int part) const;
+        CString GetPartText(int part) const;
         BOOL IsSimple() const;
-        BOOL SetPartText(int iPart, LPCTSTR szText, UINT Style = 0) const;
-        BOOL SetPartWidth(int iPart, int iWidth) const;
-        HICON GetPartIcon(int iPart) const;
-        BOOL SetPartIcon(int iPart, HICON hIcon) const;
+        BOOL SetPartText(int part, LPCTSTR pText, UINT style = 0) const;
+        BOOL SetPartWidth(int part, int width) const;
+        HICON GetPartIcon(int part) const;
+        BOOL SetPartIcon(int part, HICON hIcon) const;
 
         // Operations
         CStatusBar(const CStatusBar&);              // Disable copy construction
         CStatusBar& operator = (const CStatusBar&); // Disable assignment operator
 
-        BOOL CreateParts(int iParts, const int iPaneWidths[]) const;
-        void SetSimple(BOOL IsSimple = TRUE) const;
+        BOOL CreateParts(int parts, const int paneWidths[]) const;
+        void SetSimple(BOOL isSimple = TRUE) const;
     };
 
 }
@@ -91,14 +91,14 @@ namespace Win32xx
 
 
     // Creates the window. This is the default method of window creation.
-    inline HWND CStatusBar::Create(HWND hWndParent)
+    inline HWND CStatusBar::Create(HWND hParent)
     {
         // Acquire the CREATESTRUCT parameters
         CREATESTRUCT cs;
         ZeroMemory(&cs, sizeof(cs));
 
         // Add the gripper style if the parent window is resizable
-        DWORD dwParentStyle = static_cast<DWORD>(::GetWindowLongPtr(hWndParent, GWL_STYLE));
+        DWORD dwParentStyle = static_cast<DWORD>(::GetWindowLongPtr(hParent, GWL_STYLE));
         if (dwParentStyle & WS_THICKFRAME)
         {
             cs.style |= SBARS_SIZEGRIP;
@@ -108,7 +108,7 @@ namespace Win32xx
 
         // Create the status bar window
         HWND hWnd = CreateEx(cs.dwExStyle, STATUSCLASSNAME, 0, cs.style,
-            cs.x, cs.y, cs.cx, cs.cy, hWndParent, 0, cs.lpCreateParams);
+            cs.x, cs.y, cs.cx, cs.cy, hParent, 0, cs.lpCreateParams);
 
         return hWnd;
     }
@@ -117,12 +117,12 @@ namespace Win32xx
     // Sets the number of parts in a status window and the coordinate of the right edge of each part.
     // If an element of iPaneWidths is -1, the right edge of the corresponding part extends
     // to the border of the window.
-    inline BOOL CStatusBar::CreateParts(int iParts, const int iPaneWidths[]) const
+    inline BOOL CStatusBar::CreateParts(int parts, const int paneWidths[]) const
     {
         assert(IsWindow());
-        assert(iParts <= 256);
+        assert(parts <= 256);
 
-        return (SendMessage(SB_SETPARTS, iParts, reinterpret_cast<LPARAM>(iPaneWidths)) != 0);
+        return (SendMessage(SB_SETPARTS, parts, reinterpret_cast<LPARAM>(paneWidths)) != 0);
     }
 
 
@@ -135,35 +135,35 @@ namespace Win32xx
 
 
     // Retrieves the icon for a part in the status bar.
-    inline HICON CStatusBar::GetPartIcon(int iPart) const
+    inline HICON CStatusBar::GetPartIcon(int part) const
     {
         assert(IsWindow());
-        return reinterpret_cast<HICON>(SendMessage(SB_GETICON, iPart, 0));
+        return reinterpret_cast<HICON>(SendMessage(SB_GETICON, part, 0));
     }
 
 
     // Retrieves the bounding rectangle of a part in the status bar.
-    inline CRect CStatusBar::GetPartRect(int iPart) const
+    inline CRect CStatusBar::GetPartRect(int part) const
     {
         assert(IsWindow());
 
         CRect rc;
-        SendMessage(SB_GETRECT, iPart, reinterpret_cast<LPARAM>(&rc));
+        SendMessage(SB_GETRECT, part, reinterpret_cast<LPARAM>(&rc));
         return rc;
     }
 
 
     // Retrieves the text from a part in the status bar.
-    inline CString CStatusBar::GetPartText(int iPart) const
+    inline CString CStatusBar::GetPartText(int part) const
     {
         assert(IsWindow());
         CString PaneText;
 
         // Get size of Text array
-        int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, iPart, 0));
+        int iChars = LOWORD (SendMessage(SB_GETTEXTLENGTH, part, 0));
         CString str;
 
-        SendMessage(SB_GETTEXT, iPart, reinterpret_cast<LPARAM>(str.GetBuffer(iChars)));
+        SendMessage(SB_GETTEXT, part, reinterpret_cast<LPARAM>(str.GetBuffer(iChars)));
         str.ReleaseBuffer();
         return str;
     }
@@ -202,32 +202,32 @@ namespace Win32xx
     //SBT_OWNERDRAW     The text is drawn by the parent window.
     //SBT_POPOUT        The text is drawn with a border to appear higher than the plane of the window.
     //SBT_RTLREADING    The text will be displayed in the opposite direction to the text in the parent window.
-    inline BOOL CStatusBar::SetPartText(int iPart, LPCTSTR szText, UINT Style) const
+    inline BOOL CStatusBar::SetPartText(int part, LPCTSTR pText, UINT style) const
     {
         assert(IsWindow());
 
         BOOL Succeeded = FALSE;
-        if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= iPart))
-            Succeeded = (SendMessage(SB_SETTEXT, (iPart | Style), reinterpret_cast<LPARAM>(szText)) != 0);
+        if (static_cast<int>(SendMessage(SB_GETPARTS, 0, 0) >= part))
+            Succeeded = (SendMessage(SB_SETTEXT, (part | style), reinterpret_cast<LPARAM>(pText)) != 0);
 
         return Succeeded;
     }
 
 
     // Sets the icon for a part in the status bar.
-    inline BOOL CStatusBar::SetPartIcon(int iPart, HICON hIcon) const
+    inline BOOL CStatusBar::SetPartIcon(int part, HICON hIcon) const
     {
         assert(IsWindow());
-        return (SendMessage(SB_SETICON, iPart, reinterpret_cast<LPARAM>(hIcon)) != 0);
+        return (SendMessage(SB_SETICON, part, reinterpret_cast<LPARAM>(hIcon)) != 0);
     }
 
 
     // Changes the width of an existing pane, or creates a new pane with the specified width.
     // A width of -1 for the last part sets the width to the border of the window.
-    inline BOOL CStatusBar::SetPartWidth(int iPart, int iWidth) const
+    inline BOOL CStatusBar::SetPartWidth(int part, int width) const
     {
         assert(IsWindow());
-        assert(iPart >= 0 && iPart <= 255);
+        assert(part >= 0 && part <= 255);
 
         // Fill the PartWidths vector with the current width of the StatusBar parts
         int PartsCount = static_cast<int>(SendMessage(SB_GETPARTS, 0, 0));
@@ -236,19 +236,19 @@ namespace Win32xx
         SendMessage(SB_GETPARTS, PartsCount, reinterpret_cast<LPARAM>(pPartWidthArray));
 
         // Fill the NewPartWidths vector with the new width of the StatusBar parts
-        int NewPartsCount = MAX(iPart+1, PartsCount);
+        int NewPartsCount = MAX(part+1, PartsCount);
         std::vector<int> NewPartWidths(NewPartsCount, 0);
         NewPartWidths = PartWidths;
         int* pNewPartWidthArray = &NewPartWidths[0];
 
-        if (iPart == 0)
-            pNewPartWidthArray[iPart] = iWidth;
+        if (part == 0)
+            pNewPartWidthArray[part] = width;
         else
         {
-            if (iWidth >= 0)
-                pNewPartWidthArray[iPart] = pNewPartWidthArray[iPart -1] + iWidth;
+            if (width >= 0)
+                pNewPartWidthArray[part] = pNewPartWidthArray[part -1] + width;
             else
-                pNewPartWidthArray[iPart] = -1;
+                pNewPartWidthArray[part] = -1;
         }
 
         // Set the StatusBar parts with our new parts count and part widths
@@ -260,10 +260,10 @@ namespace Win32xx
 
     // Specifies whether a status window displays simple text or displays all window parts
     // set by a previous SB_SETPARTS message.
-    inline void CStatusBar::SetSimple(BOOL IsSimple /* = TRUE*/) const
+    inline void CStatusBar::SetSimple(BOOL isSimple /* = TRUE*/) const
     {
         assert(IsWindow());
-        SendMessage(SB_SIMPLE, IsSimple, 0);
+        SendMessage(SB_SIMPLE, isSimple, 0);
     }
 
 } // namespace Win32xx
