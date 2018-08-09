@@ -46,8 +46,8 @@
 //  try
 //  {
 //      ...
-//      if (Failed)
-//          throw CUserException(nID));
+//      if (failed)
+//          throw CUserException(id));
 //      ...
 //  }
 //  catch(const CException &e) // catch all exceptions inherited from CException
@@ -62,7 +62,7 @@
 //  try
 //  {
 //      ...
-//      if (Failed)
+//      if (failed)
 //          throw CUserException(_T("Some Text"));
 //      ...
 //  }
@@ -207,8 +207,8 @@ namespace Win32xx
 
 
         // Store error information in m_errorString
-        DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessage(dwFlags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_errorString, MAX_STRING_SIZE-1, NULL);
+        DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+        ::FormatMessage(flags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_errorString, MAX_STRING_SIZE-1, NULL);
     }
 
 
@@ -223,8 +223,8 @@ namespace Win32xx
             lstrcpyn(m_text, pText, MAX_STRING_SIZE-1);
 
         // Store error information in m_errorString
-        DWORD dwFlags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessage(dwFlags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_errorString, MAX_STRING_SIZE-1, NULL);
+        DWORD flags = FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+        ::FormatMessage(flags, NULL, m_error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), m_errorString, MAX_STRING_SIZE-1, NULL);
     }
 
 

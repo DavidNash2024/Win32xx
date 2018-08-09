@@ -121,7 +121,7 @@ namespace Win32xx
     class CFolderDialog : public CDialog
     {
     public:
-        CFolderDialog(UINT nID = 0);
+        CFolderDialog(UINT id = 0);
         virtual ~CFolderDialog();
 
         virtual INT_PTR DoModal(HWND hParent = 0);

@@ -546,7 +546,7 @@ namespace Win32xx
         std::map<HGDIOBJ, CGDI_Data*, CompareGDI> m_mapCGDIData;
         std::map<HIMAGELIST, CIml_Data*, CompareHIMAGELIST> m_mapCImlData;
         std::map<HWND, CWnd*, CompareHWND> m_mapHWND;       // maps window handles to CWnd objects
-        std::vector<TLSDataPtr> m_vTLSData;     // vector of TLSData smart pointers, one for each thread
+        std::vector<TLSDataPtr> m_allTLSData;     // vector of TLSData smart pointers, one for each thread
         CCriticalSection m_appLock;   // thread synchronisation for CWinApp and TLS.
         CCriticalSection m_gdiLock;   // thread synchronisation for m_mapCDCData and m_mapCGDIData.
         CCriticalSection m_wndLock;   // thread synchronisation for m_mapHWND etc.
@@ -599,11 +599,11 @@ namespace Win32xx
     inline int GetWinVersion()
     {
         DWORD dwVersion = GetVersion();
-        int Platform = (dwVersion < 0x80000000)? 2:1;
-        int MajorVer = LOBYTE(LOWORD(dwVersion));
-        int MinorVer = HIBYTE(LOWORD(dwVersion));
+        int platform = (dwVersion < 0x80000000)? 2:1;
+        int majorVer = LOBYTE(LOWORD(dwVersion));
+        int minorVer = HIBYTE(LOWORD(dwVersion));
 
-        int nVersion =  1000*Platform + 100*MajorVer + MinorVer;
+        int nVersion =  1000*platform + 100*majorVer + minorVer;
         return nVersion;
     }
 
@@ -627,12 +627,12 @@ namespace Win32xx
         if (hComCtl == 0)
             return 0;
 
-        int ComCtlVer = 400;
+        int comCtlVer = 400;
 
         if (::GetProcAddress(hComCtl, "InitCommonControlsEx"))
         {
             // InitCommonControlsEx is unique to 4.7 and later
-            ComCtlVer = 470;
+            comCtlVer = 470;
 
             if (::GetProcAddress(hComCtl, "DllGetVersion"))
             {
@@ -646,19 +646,19 @@ namespace Win32xx
                     dvi.cbSize = sizeof dvi;
                     if(NOERROR == pfnDLLGetVersion(&dvi))
                     {
-                        DWORD dwVerMajor = dvi.dwMajorVersion;
-                        DWORD dwVerMinor = dvi.dwMinorVersion;
-                        ComCtlVer = 100 * dwVerMajor + dwVerMinor;
+                        DWORD verMajor = dvi.dwMajorVersion;
+                        DWORD verMinor = dvi.dwMinorVersion;
+                        comCtlVer = 100 * verMajor + verMinor;
                     }
                 }
             }
             else if (::GetProcAddress(hComCtl, "InitializeFlatSB"))
-                ComCtlVer = 471;    // InitializeFlatSB is unique to version 4.71
+                comCtlVer = 471;    // InitializeFlatSB is unique to version 4.71
         }
 
         ::FreeLibrary(hComCtl);
 
-        return ComCtlVer;
+        return comCtlVer;
     }
   #endif
 
@@ -666,14 +666,14 @@ namespace Win32xx
   #ifndef lstrcpyn
 
     // Copies a specified number of characters from a source string into a buffer.
-    inline LPTSTR lstrcpyn(LPTSTR lpstrDest, LPCTSTR lpstrSrc, int nLength)
+    inline LPTSTR lstrcpyn(LPTSTR pDest, LPCTSTR pSrc, int length)
     {
-        if(NULL == lpstrDest || NULL == lpstrSrc || nLength <= 0)
+        if(NULL == pDest || NULL == pSrc || length <= 0)
             return NULL;
-        int nLen = MIN(static_cast<int>(lstrlen(lpstrSrc)), nLength - 1);
-        LPTSTR lpstrRet = reinterpret_cast<LPTSTR>(memcpy(lpstrDest, lpstrSrc, nLen * sizeof(TCHAR)));
-        lpstrDest[nLen] = _T('\0');
-        return lpstrRet;
+        int len = MIN(static_cast<int>(lstrlen(pSrc)), length - 1);
+        LPTSTR pRet = reinterpret_cast<LPTSTR>(memcpy(pDest, pSrc, len * sizeof(TCHAR)));
+        pDest[len] = _T('\0');
+        return pRet;
     }
 
 

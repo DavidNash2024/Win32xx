@@ -296,7 +296,7 @@ namespace Win32xx
     }
 
 	// Copies images within the image list.
-	// Possible uFlags: ILCF_MOVE, CLCF_SWAP 
+	// Possible flags: ILCF_MOVE, CLCF_SWAP 
 	inline BOOL CImageList::Copy(int Dest, int Src, UINT flags /*= ILCF_MOVE*/) const
 	{
 		assert(m_pData);

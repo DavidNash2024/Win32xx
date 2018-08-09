@@ -136,8 +136,8 @@ BOOL CMainFrame::OnCloseMDIs()
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // OnCommand responds to menu and and toolbar input
-    UINT nID = LOWORD(wparam);
-    switch (nID)
+    UINT id = LOWORD(wparam);
+    switch (id)
     {
     case IDM_CLOSE_DOCKERS:     return OnCloseDockers();
     case IDM_CLOSE_MDIS:        return OnCloseMDIs();
@@ -320,18 +320,18 @@ void CMainFrame::OnInitialUpdate()
     HideSingleContainerTab(m_isHideSingleTab);
 
     // Get a copy of the Frame's menu
-    CMenu FrameMenu = GetFrameMenu();
+    CMenu frameMenu = GetFrameMenu();
 
     // Modify the menu
-    int nMenuPos = FrameMenu.GetMenuItemCount() - 1;
-    CMenu WinMenu = m_myTabbedMDI.GetListMenu();
-    FrameMenu.InsertPopupMenu(nMenuPos, MF_BYPOSITION, WinMenu, _T("&Window"));
+    int nMenuPos = frameMenu.GetMenuItemCount() - 1;
+    CMenu winMenu = m_myTabbedMDI.GetListMenu();
+    frameMenu.InsertPopupMenu(nMenuPos, MF_BYPOSITION, winMenu, _T("&Window"));
 
     // Replace the frame's menu with our modified menu
-    SetFrameMenu(FrameMenu);
+    SetFrameMenu(frameMenu);
 
     // PreCreate initially set the window as invisible, so show it now.
-    ShowWindow(GetInitValues().ShowCmd);
+    ShowWindow(GetInitValues().showCmd);
     RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_ALLCHILDREN);
 }
 
@@ -365,22 +365,22 @@ void CMainFrame::OnMenuUpdate(UINT id)
         editMenu.EnableMenuItem(id, MF_BYCOMMAND | flags);
     }
 
-    UINT uCheck;
+    UINT check;
     switch (id)
     {
     case IDM_CONTAINER_TOP:
-        uCheck = (m_isContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
-        GetFrameMenu().CheckMenuItem(id, uCheck);
+        check = (m_isContainerTabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
         break;
 
     case IDM_HIDE_SINGLE_TAB:
-        uCheck = (m_isHideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
-        GetFrameMenu().CheckMenuItem(id, uCheck);
+        check = (m_isHideSingleTab) ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
         break;
 
     case IDM_TABBEDMDI_TOP:
-        uCheck = (m_isMDITabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
-        GetFrameMenu().CheckMenuItem(id, uCheck);
+        check = (m_isMDITabsAtTop) ? MF_CHECKED : MF_UNCHECKED;
+        GetFrameMenu().CheckMenuItem(id, check);
     }
 
     CDockFrame::OnMenuUpdate(id);

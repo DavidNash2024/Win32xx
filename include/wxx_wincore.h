@@ -110,13 +110,13 @@ namespace Win32xx
     // Definitions for the CWnd class
     //
 
-    inline CWnd::CWnd() : m_hWnd(NULL), m_PrevWindowProc(NULL)
+    inline CWnd::CWnd() : m_hWnd(NULL), m_prevWindowProc(NULL)
     {
         // Note: m_hWnd is set in CWnd::CreateEx(...)
     }
 
 
-    inline CWnd::CWnd(HWND hWnd) : m_PrevWindowProc(NULL)
+    inline CWnd::CWnd(HWND hWnd) : m_prevWindowProc(NULL)
     {
         // A private constructor, used internally.
 
@@ -206,20 +206,20 @@ namespace Win32xx
         assert(IsWindow());
 
         CRect rc = GetWindowRect();
-        CRect rcParent;
-        CRect rcDesktop;
+        CRect parentRect;
+        CRect desktopRect;
 
         // Get screen dimensions excluding task bar
-        VERIFY(::SystemParametersInfo(SPI_GETWORKAREA, 0, &rcDesktop, 0) != 0);
+        VERIFY(::SystemParametersInfo(SPI_GETWORKAREA, 0, &desktopRect, 0) != 0);
 
         // Get the parent window dimensions (parent could be the desktop)
-        if (GetParent().GetHwnd() != 0) rcParent = GetParent().GetWindowRect();
-        else rcParent = rcDesktop;
+        if (GetParent().GetHwnd() != 0) parentRect = GetParent().GetWindowRect();
+        else parentRect = desktopRect;
 
  #ifndef _WIN32_WCE
         // Import the GetMonitorInfo and MonitorFromWindow functions
         typedef BOOL(WINAPI* LPGMI)(HMONITOR hMonitor, LPMONITORINFO lpmi);
-        typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD dwFlags);
+        typedef HMONITOR(WINAPI* LPMFW)(HWND hwnd, DWORD flags);
         LPMFW pfnMonitorFromWindow = 0;
         HMODULE hUser32 = LoadLibrary(_T("USER32.DLL"));
         LPGMI pfnGetMonitorInfo = 0;
@@ -243,8 +243,8 @@ namespace Win32xx
 
                 if (pfnGetMonitorInfo(hActiveMonitor, &mi))
                 {
-                    rcDesktop = mi.rcWork;
-                    if (GetParent().GetHwnd() == NULL) rcParent = mi.rcWork;
+					desktopRect = mi.rcWork;
+                    if (GetParent().GetHwnd() == NULL) desktopRect = mi.rcWork;
                 }
             }
             ::FreeLibrary(hUser32);
@@ -253,15 +253,15 @@ namespace Win32xx
  #endif
 
         // Calculate point to center the dialog over the portion of parent window on this monitor
-        rcParent.IntersectRect(rcParent, rcDesktop);
-        int x = rcParent.left + (rcParent.Width() - rc.Width())/2;
-        int y = rcParent.top + (rcParent.Height() - rc.Height())/2;
+		parentRect.IntersectRect(parentRect, desktopRect);
+        int x = parentRect.left + (parentRect.Width() - rc.Width())/2;
+        int y = parentRect.top + (parentRect.Height() - rc.Height())/2;
 
         // Keep the dialog wholly on the monitor display
-        x = (x < rcDesktop.left)? rcDesktop.left : x;
-        x = (x > rcDesktop.right - rc.Width())? rcDesktop.right - rc.Width() : x;
-        y = (y < rcDesktop.top) ? rcDesktop.top: y;
-        y = (y > rcDesktop.bottom - rc.Height())? rcDesktop.bottom - rc.Height() : y;
+        x = (x < desktopRect.left)? desktopRect.left : x;
+        x = (x > desktopRect.right - rc.Width())? desktopRect.right - rc.Width() : x;
+        y = (y < desktopRect.top) ? desktopRect.top: y;
+        y = (y > desktopRect.bottom - rc.Height())? desktopRect.bottom - rc.Height() : y;
 
         SetWindowPos(0, x, y, 0, 0, SWP_NOSIZE);
     }
@@ -274,7 +274,7 @@ namespace Win32xx
             RemoveFromMap();
 
         m_hWnd = 0;
-        m_PrevWindowProc = 0;
+        m_prevWindowProc = 0;
     }
 
 
@@ -316,12 +316,12 @@ namespace Win32xx
         // Allow the CREATESTRUCT parameters to be modified
         PreCreate(cs);
 
-        DWORD dwStyle = cs.style & ~WS_VISIBLE;
+        DWORD style = cs.style & ~WS_VISIBLE;
         HWND hWnd;
 
         // Create the window
 #ifndef _WIN32_WCE
-        hWnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, dwStyle,
+        hWnd = CreateEx(cs.dwExStyle, cs.lpszClass, cs.lpszName, style,
                 cs.x, cs.y, cs.cx, cs.cy, hParent,
                 cs.hMenu, cs.lpCreateParams);
 
@@ -343,17 +343,17 @@ namespace Win32xx
 
 
     // Creates the window by specifying all the window creation parameters
-    inline HWND CWnd::CreateEx(DWORD dwExStyle, LPCTSTR lpszClassName, LPCTSTR lpszWindowName, DWORD dwStyle, const RECT& rc, HWND hWndParent, UINT nID, LPVOID lpParam /*= NULL*/)
+    inline HWND CWnd::CreateEx(DWORD exStyle, LPCTSTR pClassName, LPCTSTR pWindowName, DWORD style, const RECT& rc, HWND hParent, UINT id, LPVOID lparam /*= NULL*/)
     {
         int x = rc.left;
         int y = rc.top;
         int cx = rc.right - rc.left;
         int cy = rc.bottom - rc.top;
 
-        INT_PTR idMenu = nID;
-        HMENU hMenu = hWndParent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(nID));
+        INT_PTR idMenu = id;
+        HMENU hMenu = hParent ? reinterpret_cast<HMENU>(idMenu) : ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(id));
 
-        return CreateEx(dwExStyle, lpszClassName, lpszWindowName, dwStyle, x, y, cx, cy, hWndParent, hMenu, lpParam);
+        return CreateEx(exStyle, pClassName, pWindowName, style, x, y, cx, cy, hParent, hMenu, lparam);
     }
 
 
@@ -364,15 +364,15 @@ namespace Win32xx
         assert( !IsWindow() );      // Only one window per CWnd instance allowed
 
         // Ensure a window class is registered
-        CString ClassName;
+        CString className;
         if (pClassName == 0 || pClassName[0] == _T('\0'))
-            ClassName = _T("Win32++ Window");
+            className = _T("Win32++ Window");
         else
-            ClassName = pClassName;
+            className = pClassName;
 
         WNDCLASS wc;
         ZeroMemory(&wc, sizeof(wc));
-        wc.lpszClassName = ClassName;
+        wc.lpszClassName = className;
         wc.hbrBackground = reinterpret_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH));
         wc.hCursor       = ::LoadCursor(NULL, IDC_ARROW);
 
@@ -391,7 +391,7 @@ namespace Win32xx
         m_hWnd = 0;
 
         // Create window
-        HWND hWnd = ::CreateWindowEx(exStyle, ClassName, pWindowName, style, x, y, width, height,
+        HWND hWnd = ::CreateWindowEx(exStyle, className, pWindowName, style, x, y, width, height,
                                 hWParent, idOrMenu, GetApp().GetInstanceHandle(), lparam);
 
         // Tidy up
@@ -446,10 +446,10 @@ namespace Win32xx
     // Reverse an Attach
     inline HWND CWnd::Detach()
     {
-        assert(m_PrevWindowProc);   // Only previously attached CWnds can be detached
+        assert(m_prevWindowProc);   // Only previously attached CWnds can be detached
 
         if (IsWindow())
-            SetWindowLongPtr(GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_PrevWindowProc));
+            SetWindowLongPtr(GWLP_WNDPROC, reinterpret_cast<LONG_PTR>(m_prevWindowProc));
 
         HWND hWnd = GetHwnd();
         Cleanup();
@@ -480,8 +480,8 @@ namespace Win32xx
     // CMDIChild and CMDIFrame override this function
     inline LRESULT CWnd::FinalWindowProc(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        if (m_PrevWindowProc)
-            return ::CallWindowProc(m_PrevWindowProc, *this, msg, wparam, lparam);
+        if (m_prevWindowProc)
+            return ::CallWindowProc(m_prevWindowProc, *this, msg, wparam, lparam);
         else
             return ::DefWindowProc(*this, msg, wparam, lparam);
     }
@@ -525,11 +525,11 @@ namespace Win32xx
         if (!pfnGetAncestor)
         {
             // Provide our own GetAncestor if necessary
-            HWND hWndParent = ::GetParent(hWnd);
-            while (::IsChild(hWndParent, hWnd))
+            HWND hParent = ::GetParent(hWnd);
+            while (::IsChild(hParent, hWnd))
             {
-                hWnd = hWndParent;
-                hWndParent = ::GetParent(hWnd);
+                hWnd = hParent;
+                hParent = ::GetParent(hWnd);
             }
         }
 
@@ -808,7 +808,7 @@ namespace Win32xx
         // Note: CustomDraw or OwnerDraw are normally used to modify the drawing of
         //       controls, but overriding OnPaint is also an option.
 
-        if (!m_PrevWindowProc)
+        if (!m_prevWindowProc)
         {
             if (::GetUpdateRect(*this, NULL, FALSE))
             {
@@ -892,15 +892,15 @@ namespace Win32xx
         // Check to see if this classname is already registered
         WNDCLASS wcTest;
         ZeroMemory(&wcTest, sizeof(wcTest));
-        BOOL Done = FALSE;
+        BOOL done = FALSE;
 
         if (::GetClassInfo(GetApp().GetInstanceHandle(), wc.lpszClassName, &wcTest))
         {
             wc = wcTest;
-            Done = TRUE;
+            done = TRUE;
         }
 
-        if (!Done)
+        if (!done)
         {
             // Set defaults
             wc.hInstance    = GetApp().GetInstanceHandle();
@@ -909,10 +909,10 @@ namespace Win32xx
             // Register the WNDCLASS structure
             VERIFY ( ::RegisterClass(&wc) != 0 );
 
-            Done = TRUE;
+            done = TRUE;
         }
 
-        return Done;
+        return done;
     }
 
 
@@ -1033,13 +1033,13 @@ namespace Win32xx
         AddToMap();         // Store the CWnd pointer in the HWND map
         LONG_PTR pWndProc = reinterpret_cast<LONG_PTR>(CWnd::StaticWindowProc);
         LONG_PTR pRes = ::SetWindowLongPtr(hWnd, GWLP_WNDPROC, pWndProc);
-        m_PrevWindowProc = reinterpret_cast<WNDPROC>(pRes);
+        m_prevWindowProc = reinterpret_cast<WNDPROC>(pRes);
     }
 
 #ifndef _WIN32_WCE
 
     //  Dialog Data Exchange support. Call this function to retrieve values from
-    //  (RetrieveAndValidate is TRUE) or assign values to (RetrieveAndValidate
+    //  (retrieveAndValidate is TRUE) or assign values to (RetrieveAndValidate
     //  is FALSE) a set of controls appearing in DDX/DDV statements in an
     //  override of the DoDataExchange() member method.
     //
@@ -1103,7 +1103,7 @@ namespace Win32xx
     // All WndProc functions should pass unhandled window messages to this function.
     inline LRESULT CWnd::WndProcDefault(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        LRESULT lr = 0;
+        LRESULT result = 0;
         if (UWM_WINDOWCREATED == msg)
         {
             OnInitialUpdate();
@@ -1122,13 +1122,13 @@ namespace Win32xx
                 // Reflect this message if it's from a control
                 CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
                 if (pWnd != NULL)
-                    lr = pWnd->OnCommand(wparam, lparam);
+					result = pWnd->OnCommand(wparam, lparam);
 
                 // Handle user commands
-                if (0 == lr)
-                    lr =  OnCommand(wparam, lparam);
+                if (0 == result)
+					result =  OnCommand(wparam, lparam);
 
-                if (0 != lr) return 0;
+                if (0 != result) return 0;
             }
             break;  // Note: Some MDI commands require default processing
         case WM_CREATE:
@@ -1151,11 +1151,11 @@ namespace Win32xx
 
                 if (pWndFrom != NULL)
                     if (::GetParent(hwndFrom) == m_hWnd)
-                        lr = pWndFrom->OnNotifyReflect(wparam, lparam);
+						result = pWndFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
-                if (lr == 0) lr = OnNotify(wparam, lparam);
-                if (lr != 0) return lr;
+                if (result == 0) result = OnNotify(wparam, lparam);
+                if (result != 0) return result;
                 break;
             }
 
@@ -1170,10 +1170,10 @@ namespace Win32xx
         case WM_ERASEBKGND:
             {
                 CDC dc(reinterpret_cast<HDC>(wparam));
-                BOOL PreventErasure;
+                BOOL preventErasure;
 
-                PreventErasure = OnEraseBkgnd(dc);
-                if (PreventErasure) return TRUE;
+                preventErasure = OnEraseBkgnd(dc);
+                if (preventErasure) return TRUE;
             }
             break;
 
@@ -1194,8 +1194,8 @@ namespace Win32xx
         case WM_VSCROLL:
         case WM_PARENTNOTIFY:
             {
-                lr = MessageReflect(msg, wparam, lparam);
-                if (lr != 0) return lr;    // Message processed so return
+			    result = MessageReflect(msg, wparam, lparam);
+                if (result != 0) return result;    // Message processed so return
             }
             break;              // Do default processing when message not already processed
 
@@ -1300,11 +1300,11 @@ namespace Win32xx
 
     // The DeferWindowPos function updates the specified multiple window position structure for the window.
     // The hWndInsertAfter can one of:  HWND_BOTTOM, HWND_NOTOPMOST, HWND_TOP, or HWND_TOPMOST
-    inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hInsertAfter, const RECT& rect, UINT uFlags) const
+    inline HDWP CWnd::DeferWindowPos(HDWP hWinPosInfo, HWND hInsertAfter, const RECT& rect, UINT flags) const
     {
         assert(IsWindow());
         return ::DeferWindowPos(hWinPosInfo, *this, hInsertAfter, rect.left, 
-			rect.top, rect.right - rect.left, rect.bottom - rect.top, uFlags);
+			rect.top, rect.right - rect.left, rect.bottom - rect.top, flags);
     }
 
 
@@ -2474,13 +2474,13 @@ namespace Win32xx
 
     // Formats the string as sprintf does.
     template <class T>
-    inline void CStringT<T>::Format(UINT nID, ...)
+    inline void CStringT<T>::Format(UINT id, ...)
     {
         CStringT str;
-        if (str.LoadString(nID))
+        if (str.LoadString(id))
         {
             va_list args;
-            va_start(args, nID);
+            va_start(args, id);
             FormatV(str.c_str(), args);
             va_end(args);
         }
@@ -2489,7 +2489,7 @@ namespace Win32xx
 
     // Loads the string from a Windows resource.
     template <>
-    inline bool CStringT<CHAR>::LoadString(UINT nID)
+    inline bool CStringT<CHAR>::LoadString(UINT id)
     {
         assert (&GetApp());
 
@@ -2507,7 +2507,7 @@ namespace Win32xx
             nSize = nSize * 4;
             vString.assign(nSize+1, 0);
             pTCharArray = &vString[0];
-            nTChars = ::LoadStringA (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
+            nTChars = ::LoadStringA (GetApp().GetResourceHandle(), id, pTCharArray, nSize);
         }
 
         if (nTChars > 0)
@@ -2519,7 +2519,7 @@ namespace Win32xx
 
     // Loads the string from a Windows resource.
     template <>
-    inline bool CStringT<WCHAR>::LoadString(UINT nID)
+    inline bool CStringT<WCHAR>::LoadString(UINT id)
     {
         assert (&GetApp());
 
@@ -2537,7 +2537,7 @@ namespace Win32xx
             nSize = nSize * 4;
             vString.assign(nSize+1, 0);
             pTCharArray = &vString[0];
-            nTChars = ::LoadStringW (GetApp().GetResourceHandle(), nID, pTCharArray, nSize);
+            nTChars = ::LoadStringW (GetApp().GetResourceHandle(), id, pTCharArray, nSize);
         }
 
         if (nTChars > 0)

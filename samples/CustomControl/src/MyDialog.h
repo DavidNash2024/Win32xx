@@ -24,7 +24,7 @@ protected:
 
 private:
     CResizer m_resizer;
-    CWebControl m_myControl;
+    CWebControl m_webControl;
 };
 
 #endif //MYDIALOG_H

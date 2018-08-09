@@ -61,14 +61,14 @@ BOOL CMyCombo::AddItems()
     }
 
     // Assign the existing image list to the ComboBoxEx control
-    SetImageList(m_imlImages);
+    SetImageList(m_images);
 
     return TRUE;
 }
 
 void CMyCombo::SetImages(int nImages, UINT imageID)
 {
-    m_imlImages.DeleteImageList();
+    m_images.DeleteImageList();
 
     CBitmap bm(imageID);
     assert(bm.GetHandle());
@@ -76,8 +76,8 @@ void CMyCombo::SetImages(int nImages, UINT imageID)
     int cy = bmData.bmWidth / nImages;
     int cx = bmData.bmHeight;
 
-    m_imlImages.Create(cx, cy, ILC_COLOR32 | ILC_MASK, nImages, 0);
-    m_imlImages.Add(bm, RGB(255, 0, 255));
+    m_images.Create(cx, cy, ILC_COLOR32 | ILC_MASK, nImages, 0);
+    m_images.Add(bm, RGB(255, 0, 255));
 }
 
 void CMyCombo::OnDestroy()

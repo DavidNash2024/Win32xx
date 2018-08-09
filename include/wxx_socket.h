@@ -756,7 +756,7 @@ namespace Win32xx
 		// Ask the event thread to stop
 		m_stopRequest.SetEvent();
 
-		// Wait for the event thread to signal the m_stopped event.
+		// Wait for the event thread to stop.
 		while (WAIT_TIMEOUT == ::WaitForSingleObject(*m_pThread, THREAD_TIMEOUT * 10))
 		{
 			// Waiting for the event thread to signal the m_stopped event.

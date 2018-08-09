@@ -555,7 +555,7 @@ namespace Win32xx
 
 
     // Retrieves the menu flags associated with the specified menu item.
-    // Possible values for uFlags are: MF_BYCOMMAND (default) or MF_BYPOSITION.
+    // Possible values for flags are: MF_BYCOMMAND (default) or MF_BYPOSITION.
     inline UINT CMenu::GetMenuState(UINT id, UINT flags) const
     {
         assert(m_pData);

@@ -102,8 +102,8 @@ namespace Win32xx
         int GetFirstVisibleLine() const;
         HLOCAL GetHandle() const;
         UINT GetLimitText() const;
-        int GetLine(int nIndex, LPTSTR pBuffer) const;
-        int GetLine(int nIndex, LPTSTR pBuffer, int maxLength) const;
+        int GetLine(int index, LPTSTR pBuffer) const;
+        int GetLine(int index, LPTSTR pBuffer, int maxLength) const;
         int GetLineCount() const;
         DWORD GetMargins() const;
         BOOL GetModify() const;
@@ -334,10 +334,10 @@ namespace Win32xx
     // BS_3STATE, BS_AUTO3STATE, BS_AUTOCHECKBOX, VS_AUTORADIOBUTTON, BS_CHECKBOX, BS_DEFPUSHBUTTON, BS_GROUPBOX,
     // BS_LEFTEXT, BS_OWNERDRAW, BS_BITMAP, BS_BOTTOM, BS_CENTER, BS_ICON, BS_FLAT, BS_MULTILINE, BS_PUSHLIKE,
     // BS_RIGHT, BS_RIGHTBUTTON, BS_TEXT, BS_TOP, BS_TYHPEMASK, BS_VCENTER.
-    inline void CButton::SetButtonStyle(DWORD dwStyle, BOOL Redraw) const
+    inline void CButton::SetButtonStyle(DWORD style, BOOL redraw) const
     {
         assert(IsWindow());
-        SendMessage(BM_SETSTYLE, dwStyle, Redraw);
+        SendMessage(BM_SETSTYLE, style, redraw);
     }
 
 

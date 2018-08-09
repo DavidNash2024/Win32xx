@@ -31,10 +31,10 @@ DWORD CDoc::GetRegDwordFromOpenKey(HKEY hKey, LPCTSTR pName)
 void CDoc::LoadDocRegistry(LPCTSTR keyName)
 {
     HKEY hKey;
-    CString strKey = _T("Software\\");
-    strKey += keyName;
-    strKey += _T("\\Document Settings");
-    if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, strKey, 0,
+    CString fullKeyName = _T("Software\\");
+	fullKeyName += keyName;
+	fullKeyName += _T("\\Document Settings");
+    if (ERROR_SUCCESS ==RegOpenKeyEx(HKEY_CURRENT_USER, fullKeyName, 0,
         KEY_READ, &hKey))
     {
         m_checkA = GetRegDwordFromOpenKey(hKey, _T("CheckA")) & 1;
@@ -49,11 +49,11 @@ void CDoc::LoadDocRegistry(LPCTSTR keyName)
 void CDoc::SaveDocRegistry(LPCTSTR keyName)
 {
     HKEY hKey;
-    CString strKey = _T("Software\\");
-    strKey += keyName;
-    strKey += _T("\\Document Settings");
+    CString fullKeyName = _T("Software\\");
+	fullKeyName += keyName;
+	fullKeyName += _T("\\Document Settings");
 
-    RegCreateKeyEx(HKEY_CURRENT_USER, strKey, 0, NULL,
+    RegCreateKeyEx(HKEY_CURRENT_USER, fullKeyName, 0, NULL,
     REG_OPTION_NON_VOLATILE, KEY_ALL_ACCESS, NULL, &hKey, NULL);
 
     RegSetValueEx(hKey, _T("CheckA"), 0, REG_DWORD, (LPBYTE)&m_checkA, sizeof(BOOL));

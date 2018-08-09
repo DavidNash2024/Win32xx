@@ -25,7 +25,7 @@ CMainFrame::~CMainFrame()
     // Destructor for CMainFrame.
 }
 
-void CMainFrame::AddComboBoxBand(int Listbox_Height)
+void CMainFrame::AddComboBoxBand(int height)
 {
     // Create the ComboboxEx window
     m_comboboxEx.Create(GetReBar());
@@ -35,8 +35,8 @@ void CMainFrame::AddComboBoxBand(int Listbox_Height)
     ZeroMemory(&rbbi, sizeof(rbbi));
     rbbi.cbSize     = sizeof(rbbi);
     rbbi.fMask      = RBBIM_COLORS | RBBIM_CHILDSIZE | RBBIM_STYLE | RBBIM_CHILD | RBBIM_TEXT;
-    rbbi.cyMinChild = Listbox_Height;
-    rbbi.cyMaxChild = Listbox_Height;
+    rbbi.cyMinChild = height;
+    rbbi.cyMaxChild = height;
     rbbi.cxMinChild = 200;
     rbbi.fStyle     = RBBS_BREAK | RBBS_VARIABLEHEIGHT | RBBS_GRIPPERALWAYS;
     rbbi.clrFore    = GetSysColor(COLOR_BTNTEXT);
@@ -209,8 +209,8 @@ BOOL CMainFrame::OnEditDelete()
 BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     // Respond to menu and and toolbar input
-    UINT nID = LOWORD(wparam);  
-    switch(nID)
+    UINT id = LOWORD(wparam);  
+    switch(id)
     {
     case IDM_FILE_EXIT:      return OnFileExit();
     case IDM_HELP_ABOUT:     return OnHelpAbout();
@@ -314,23 +314,23 @@ void CMainFrame::OnNavigateComplete2(DISPPARAMS* pDispParams)
 
     if (pDispParams->rgvarg[0].vt == (VT_BYREF|VT_VARIANT))
     {
-        VARIANT vtURL;
-        vtURL = *pDispParams->rgvarg[0].pvarVal;
-        vtURL.vt = VT_BSTR;
+        VARIANT url;
+		url = *pDispParams->rgvarg[0].pvarVal;
+		url.vt = VT_BSTR;
 
-        str += vtURL.bstrVal;
+        str += url.bstrVal;
         TRACE(str);
-        VariantClear(&vtURL);
+        VariantClear(&url);
     }
 
-    BSTR bstrUrlName;
+    BSTR urlName;
 
-    HRESULT hr = GetBrowser().GetIWebBrowser2()->get_LocationURL(&bstrUrlName);
-    if (FAILED(hr))
+    HRESULT result = GetBrowser().GetIWebBrowser2()->get_LocationURL(&urlName);
+    if (FAILED(result))
         return;
 
     // Update the URL in the ComboboxEx edit box.
-    m_comboboxEx.SetWindowText(WtoT(bstrUrlName));
+    m_comboboxEx.SetWindowText(WtoT(urlName));
 }
 
 void CMainFrame::OnNewWindow2(DISPPARAMS* pDispParams)

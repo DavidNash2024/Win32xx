@@ -20,7 +20,7 @@ protected:
     virtual void PreCreate(CREATESTRUCT& cs);
 
 private:
-    CImageList m_imlImages;
+    CImageList m_images;
 };
 
 

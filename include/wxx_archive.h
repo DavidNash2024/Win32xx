@@ -886,7 +886,7 @@ namespace Win32xx
 
     // The size (in characters) of szString array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
-    // in szString. Strings read from the archive are converted from ANSI
+    // in pString. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throw an exception if unable to do so correctly.
     inline LPTSTR CArchive::ReadString(LPTSTR pString, UINT max)
@@ -900,9 +900,9 @@ namespace Win32xx
     }
 
 
-    // The size (in characters) of szString array must be nMax or greater.
+    // The size (in characters) of pString array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
-    // in szString. Strings read from the archive are converted from ANSI
+    // in pString. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throw an exception if unable to do so correctly.
     inline LPSTR CArchive::ReadStringA(LPSTR pString, UINT max)
@@ -916,9 +916,9 @@ namespace Win32xx
     }
 
 
-    // The size (in characters) of szString array must be nMax or greater.
+    // The size (in characters) of pString array must be nMax or greater.
     // Reads at most nMax-1 TCHAR characters from the archive and store it
-    // in szString. Strings read from the archive are converted from ANSI
+    // in pString. Strings read from the archive are converted from ANSI
     // or Unicode to TCHAR if required, and are NULL terminated.
     // Throw an exception if unable to do so correctly.
     inline LPWSTR CArchive::ReadStringW(LPWSTR pString, UINT max)

@@ -247,10 +247,10 @@ namespace Win32xx
         CString SearchName = m_root + m_findData.cFileName;
         CString FilePath;
 
-        int nBuffSize = ::GetFullPathName(SearchName, 0, 0, 0);
-        if (nBuffSize > 0)
+        int buffSize = ::GetFullPathName(SearchName, 0, 0, 0);
+        if (buffSize > 0)
         {
-            ::GetFullPathName(SearchName, nBuffSize, FilePath.GetBuffer(nBuffSize), 0);
+            ::GetFullPathName(SearchName, buffSize, FilePath.GetBuffer(buffSize), 0);
             FilePath.ReleaseBuffer();
         }
 
@@ -279,9 +279,9 @@ namespace Win32xx
     {
         assert(m_hFileFind != INVALID_HANDLE_VALUE);
 
-        CString strResult(_T("file://"));
-        strResult += GetFilePath();
-        return strResult;
+        CString str(_T("file://"));
+        str += GetFilePath();
+        return str;
     }
 
 

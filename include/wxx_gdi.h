@@ -390,20 +390,20 @@ namespace Win32xx
     struct CDC_Data
     {
         // Constructor
-        CDC_Data() : hDC(0), Count(1L), IsManagedHDC(FALSE), hWnd(0), nSavedDCState(0) {}
+        CDC_Data() : hDC(0), count(1L), isManagedHDC(FALSE), hWnd(0), savedDCState(0) {}
 
         std::vector<GDIPtr> m_vGDIObjects;  // Smart pointers to internally created Bitmaps, Brushes, Fonts, Bitmaps and Regions
-        CBitmap Bitmap;
-        CBrush  Brush;
-        CFont   Font;
-        CPalette Palette;
-        CPen    Pen;
-        CRgn    Rgn;
+        CBitmap bitmap;
+        CBrush  brush;
+        CFont   font;
+        CPalette palette;
+        CPen    pen;
+        CRgn    rgn;
         HDC     hDC;            // The HDC belonging to this CDC
-        long    Count;          // Reference count
-        bool    IsManagedHDC;   // Delete/Release the HDC on destruction
+        long    count;          // Reference count
+        bool    isManagedHDC;   // Delete/Release the HDC on destruction
         HWND    hWnd;           // The HWND of a Window or Client window DC
-        int     nSavedDCState;  // The save state of the HDC.
+        int     savedDCState;  // The save state of the HDC.
     };
 
 
@@ -455,7 +455,7 @@ namespace Win32xx
         CBitmap DetachBitmap();
         BITMAP  GetBitmapData() const;
         HBITMAP GetCurrentBitmap() const;
-        BOOL LoadBitmap(UINT nID);
+        BOOL LoadBitmap(UINT id);
         BOOL LoadBitmap(LPCTSTR pResName);
         BOOL LoadImage(UINT id, UINT flags);
         BOOL LoadImage(LPCTSTR pResName, UINT flags);
@@ -780,7 +780,7 @@ namespace Win32xx
 
     protected:
         void Release();
-        void SetManaged(bool IsManaged) { m_pData->IsManagedHDC = IsManaged; }
+        void SetManaged(bool IsManaged) { m_pData->isManagedHDC = IsManaged; }
 
     private:
         void AddToMap();
@@ -2522,7 +2522,7 @@ namespace Win32xx
     inline CDC::CDC(const CDC& rhs) // Copy constructor
     {
         m_pData = rhs.m_pData;
-        InterlockedIncrement(&m_pData->Count);
+        InterlockedIncrement(&m_pData->count);
     }
 
 
@@ -2532,7 +2532,7 @@ namespace Win32xx
     {
         if (this != &rhs)
         {
-            InterlockedIncrement(&rhs.m_pData->Count);
+            InterlockedIncrement(&rhs.m_pData->count);
             Release();
             m_pData = rhs.m_pData;
         }
@@ -2581,7 +2581,7 @@ namespace Win32xx
                 {
                     delete m_pData;
                     m_pData = pCDCData;
-                    InterlockedIncrement(&m_pData->Count);
+                    InterlockedIncrement(&m_pData->count);
                 }
                 else
                 {
@@ -2594,7 +2594,7 @@ namespace Win32xx
         #endif
 
                     AddToMap();
-                    m_pData->nSavedDCState = ::SaveDC(hDC);
+                    m_pData->savedDCState = ::SaveDC(hDC);
                 }
             }
         }
@@ -2610,11 +2610,11 @@ namespace Win32xx
         HDC hDC = m_pData->hDC;
         RemoveFromMap();
         m_pData->hDC = 0;
-        ::RestoreDC(hDC, m_pData->nSavedDCState);
+        ::RestoreDC(hDC, m_pData->savedDCState);
 
-        if (m_pData->Count > 0)
+        if (m_pData->count > 0)
         {
-            if (InterlockedDecrement(&m_pData->Count) == 0)
+            if (InterlockedDecrement(&m_pData->count) == 0)
             {
                 delete m_pData;
             }
@@ -2649,7 +2649,7 @@ namespace Win32xx
             throw CResourceException(_T("CreateCompatibleDC failed"));
 
         m_pData->hDC = hDC;
-        m_pData->IsManagedHDC = TRUE;
+        m_pData->isManagedHDC = TRUE;
         AddToMap();
 
         return hDC;
@@ -2666,7 +2666,7 @@ namespace Win32xx
             throw CResourceException(_T("CreateDC failed"));
 
         m_pData->hDC = hDC;
-        m_pData->IsManagedHDC = TRUE;
+        m_pData->isManagedHDC = TRUE;
         AddToMap();
         return hDC;
     }
@@ -2685,7 +2685,7 @@ namespace Win32xx
             throw CResourceException(_T("CreateIC failed"));
 
         m_pData->hDC = hDC;
-        m_pData->IsManagedHDC = TRUE;
+        m_pData->isManagedHDC = TRUE;
         AddToMap();
         return hDC;
     }
@@ -2760,9 +2760,9 @@ namespace Win32xx
 
     inline void CDC::Release()
     {
-        if (m_pData->Count > 0)
+        if (m_pData->count > 0)
         {
-            if (InterlockedDecrement(&m_pData->Count) == 0)
+            if (InterlockedDecrement(&m_pData->count) == 0)
             {
                 Destroy();
                 delete m_pData;
@@ -2879,7 +2879,7 @@ namespace Win32xx
         CBitmap bitmap;
         bitmap.CreateCompatibleBitmap(hdc, cx, cy);
         SelectObject(bitmap);
-        m_pData->Bitmap = bitmap;
+        m_pData->bitmap = bitmap;
     }
 
 
@@ -2891,7 +2891,7 @@ namespace Win32xx
         CBitmap bitmap;
         bitmap.CreateBitmap(cx, cy, planes, bitsPerPixel, pColors);
         SelectObject(bitmap);
-        m_pData->Bitmap = bitmap;
+        m_pData->bitmap = bitmap;
     }
 
 #ifndef _WIN32_WCE
@@ -2904,7 +2904,7 @@ namespace Win32xx
         CBitmap newBitmap;
 		newBitmap.CreateBitmapIndirect(bitmap);
         SelectObject(newBitmap);
-        m_pData->Bitmap = newBitmap;
+        m_pData->bitmap = newBitmap;
     }
 
 
@@ -2918,7 +2918,7 @@ namespace Win32xx
         CBitmap newBitmap;
 		newBitmap.CreateDIBitmap(hdc, &bmih, init, pInit, pBMI, flags);
         SelectObject(newBitmap);
-        m_pData->Bitmap = newBitmap;
+        m_pData->bitmap = newBitmap;
     }
 
 #endif
@@ -2933,7 +2933,7 @@ namespace Win32xx
         CBitmap newBitmap;
 		newBitmap.CreateDIBSection(hdc, pBMI, usage, pBits, hSection, offset);
         SelectObject(newBitmap);
-        m_pData->Bitmap = newBitmap;
+        m_pData->bitmap = newBitmap;
     }
 
 
@@ -2946,10 +2946,10 @@ namespace Win32xx
         CBitmap bitmap;
         bitmap.CreateBitmap(1, 1, 1, 1, 0);
 
-        CBitmap OldBitmap = SelectObject(bitmap);
-        m_pData->Bitmap = bitmap;
+        CBitmap oldBitmap = SelectObject(bitmap);
+        m_pData->bitmap = bitmap;
 
-        return OldBitmap;
+        return oldBitmap;
     }
 
 
@@ -2961,10 +2961,10 @@ namespace Win32xx
         {
             RemoveFromMap();
 
-            if (m_pData->IsManagedHDC)
+            if (m_pData->isManagedHDC)
             {
                 // Return the DC back to its initial state
-                ::RestoreDC(m_pData->hDC, m_pData->nSavedDCState);
+                ::RestoreDC(m_pData->hDC, m_pData->savedDCState);
 
                 // We need to release a Window DC, and delete a memory DC
                 if (m_pData->hWnd != 0)
@@ -2976,7 +2976,7 @@ namespace Win32xx
 
             m_pData->hDC = 0;
             m_pData->hWnd = 0;
-            m_pData->IsManagedHDC = FALSE;
+            m_pData->isManagedHDC = FALSE;
         }
     }
 
@@ -3022,7 +3022,7 @@ namespace Win32xx
         if (IsLoaded)
         {
             SelectObject(bitmap);
-            m_pData->Bitmap = bitmap;
+            m_pData->bitmap = bitmap;
         }
 
         return IsLoaded;
@@ -3053,7 +3053,7 @@ namespace Win32xx
         if (IsLoaded)
         {
             SelectObject(bitmap);
-            m_pData->Bitmap = bitmap;
+            m_pData->bitmap = bitmap;
         }
 
         return IsLoaded;
@@ -3072,7 +3072,7 @@ namespace Win32xx
         if (IsLoaded)
         {
             SelectObject(bitmap);
-            m_pData->Bitmap = bitmap;
+            m_pData->bitmap = bitmap;
         }
 
         return IsLoaded;
@@ -3089,7 +3089,7 @@ namespace Win32xx
         CBitmap bitmap;
         bitmap.CreateMappedBitmap(bitmapID, static_cast<WORD>(flags), pColorMap, mapSize);
         SelectObject(bitmap);
-        m_pData->Bitmap = bitmap;
+        m_pData->bitmap = bitmap;
     }
 
 #endif // !_WIN32_WCE
@@ -3105,7 +3105,7 @@ namespace Win32xx
         CBrush brush;
         brush.CreatePatternBrush(hBitmap);
         SelectObject(brush);
-        m_pData->Brush = brush;
+        m_pData->brush = brush;
     }
 
 
@@ -3117,7 +3117,7 @@ namespace Win32xx
         CBrush brush;
         brush.CreateSolidBrush(rgb);
         SelectObject(brush);
-        m_pData->Brush = brush;
+        m_pData->brush = brush;
     }
 
 
@@ -3151,7 +3151,7 @@ namespace Win32xx
         CBrush brush;
         brush.CreateBrushIndirect(logBrush);
         SelectObject(brush);
-        m_pData->Brush = brush;
+        m_pData->brush = brush;
     }
 
 
@@ -3163,7 +3163,7 @@ namespace Win32xx
         CBrush brush;
         brush.CreateHatchBrush(style, rgb);
         SelectObject(brush);
-        m_pData->Brush = brush;
+        m_pData->brush = brush;
     }
 
 
@@ -3175,7 +3175,7 @@ namespace Win32xx
         CBrush brush;
         brush.CreateDIBPatternBrush(hDIBPacked, colorSpec);
         SelectObject(brush);
-        m_pData->Brush = brush;
+        m_pData->brush = brush;
     }
 
 
@@ -3187,7 +3187,7 @@ namespace Win32xx
         CBrush brush;
         brush.CreateDIBPatternBrushPt(pPackedDIB, usage);
         SelectObject(brush);
-        m_pData->Brush = brush;
+        m_pData->brush = brush;
     }
 
 #endif
@@ -3203,7 +3203,7 @@ namespace Win32xx
         CFont font;
         font.CreateFontIndirect(lf);
         SelectObject(font);
-        m_pData->Font = font;
+        m_pData->font = font;
     }
 
 
@@ -3256,7 +3256,7 @@ namespace Win32xx
 			clipPrecision, quality, pitchAndFamily, pFaceName);
         
 		SelectObject(font);
-        m_pData->Font = font;
+        m_pData->font = font;
     }
 
 #endif
@@ -3272,7 +3272,7 @@ namespace Win32xx
         CPalette palette;
         palette.CreatePalette(pLogPalette);
         SelectPalette(palette, forceBkgnd);
-        m_pData->Palette = palette;
+        m_pData->palette = palette;
         RealizePalette();
     }
 
@@ -3319,7 +3319,7 @@ namespace Win32xx
         CPalette palette;
         palette.CreateHalftonePalette(*this);
         ::SelectPalette(m_pData->hDC, palette, forceBkgnd);
-        m_pData->Palette = palette;
+        m_pData->palette = palette;
         ::RealizePalette(m_pData->hDC);
     }
 
@@ -3361,7 +3361,7 @@ namespace Win32xx
         CPen pen;
         pen.CreatePen(style, width, color);
         SelectObject(pen);
-        m_pData->Pen = pen;
+        m_pData->pen = pen;
     }
 
 
@@ -3373,7 +3373,7 @@ namespace Win32xx
         CPen pen;
         pen.CreatePenIndirect(logPen);
         SelectObject(pen);
-        m_pData->Pen = pen;
+        m_pData->pen = pen;
     }
 
 
@@ -3434,7 +3434,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreateRectRgn(left, top, right, bottom);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 
@@ -3448,7 +3448,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreateRectRgnIndirect(rc);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 
@@ -3464,7 +3464,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreateFromData(pXform, count, pRgnData);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 
@@ -3480,7 +3480,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreateEllipticRgn(left, top, right, bottom);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 
@@ -3495,7 +3495,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreateEllipticRgnIndirect(rc);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 
@@ -3510,7 +3510,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreatePolygonRgn(pPointArray, points, polyFillMode);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 
@@ -3524,7 +3524,7 @@ namespace Win32xx
         CRgn rgn;
         rgn.CreatePolyPolygonRgn(pPointArray, pCount, count, polyFillMode);
         int Complexity = SelectClipRgn(rgn);
-        m_pData->Rgn = rgn;
+        m_pData->rgn = rgn;
         return Complexity;
     }
 

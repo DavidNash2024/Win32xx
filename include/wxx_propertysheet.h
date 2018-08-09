@@ -152,7 +152,7 @@ namespace Win32xx
         virtual void SetWizardMode(BOOL isWizard);
 
     protected:
-        virtual BOOL PreTranslateMessage(MSG& Msg);
+        virtual BOOL PreTranslateMessage(MSG& msg);
 
 
     private:
@@ -472,7 +472,7 @@ namespace Win32xx
 
 
     // Enables or disables the various buttons on a wizard property page.
-    // dwFlags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
+    // flags:  A value that specifies which wizard buttons are enabled. You can combine one or more of the following flags.
     //  PSWIZB_BACK             Enable the Back button. If this flag is not set, the Back button is displayed as disabled.
     //  PSWIZB_DISABLEDFINISH   Display a disabled Finish button.
     //  PSWIZB_FINISH           Display an enabled Finish button.

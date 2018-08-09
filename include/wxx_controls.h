@@ -503,7 +503,7 @@ namespace Win32xx
         void DelTool(HWND hControl, UINT id = -1) const;
         BOOL HitTest(HWND hWnd, CPoint pt, const TOOLINFO& toolInfo) const;
         void Pop() const;
-        void RelayEvent(MSG& Msg) const;
+        void RelayEvent(MSG& msg) const;
         void SetToolRect(const RECT& rc, HWND hControl, UINT id = -1) const;
         void Update() const;
         void UpdateTipText(LPCTSTR pText, HWND hControl, UINT id = -1) const;
@@ -670,7 +670,7 @@ namespace Win32xx
     }
 
 
-    // Find the first list box string in a combo box that matches the string specified in lpszString.
+    // Find the first list box string in a combo box that matches the string specified in pString.
     inline int  CComboBox::FindStringExact(int indexStart, LPCTSTR pString) const
     {
         assert(IsWindow());
@@ -2246,7 +2246,7 @@ namespace Win32xx
     // Registers a tool with a ToolTip control.
     // hWndControl specifies the window which triggers the tooltip.
     // rcTool specifies the part of the window which triggers the tooltip.
-    // If lpszText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
+    // If pText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
     // messages are sent to the parent window.
     // uID is a user defined ID. It is required if the control has multiple tooltips.
     inline BOOL CToolTip::AddTool(HWND hControl, const RECT& toolRect, UINT id, LPCTSTR pText /*= LPSTR_TEXTCALLBACK*/) const
@@ -2261,7 +2261,7 @@ namespace Win32xx
 
     // Registers a tool with a ToolTip control.
     // hWndControl specifies the window which triggers the tooltip.
-    // If lpszText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
+    // If pText contains the value LPSTR_TEXTCALLBACK, TTN_NEEDTEXT notification
     // messages are sent to the parent window.
     inline BOOL CToolTip::AddTool(HWND hControl, LPCTSTR pText /*= LPSTR_TEXTCALLBACK*/) const
     {
@@ -2321,8 +2321,8 @@ namespace Win32xx
         CString str;
         TOOLINFO ti = GetToolInfo(hControl, id);
 
-        LPTSTR pszText = str.GetBuffer(80); // Maximum allowed ToolTip is 80 characters for Windows XP and below
-        ti.lpszText = pszText;
+        LPTSTR pText = str.GetBuffer(80); // Maximum allowed ToolTip is 80 characters for Windows XP and below
+        ti.lpszText = pText;
         SendMessage(TTM_GETTEXT, 0, reinterpret_cast<LPARAM>(&ti));
         str.ReleaseBuffer();
 
@@ -2402,7 +2402,7 @@ namespace Win32xx
     // 1) Notifications are passed to the parent window.
     // 2) The control is always identified by its hwnd.
     // 3) The tooltip always manages its messages (uses TTF_SUBCLASS).
-    // Override this function to specify different uFlags.
+    // Override this function to specify different flags.
     inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND hControl) const
     {
         ZeroMemory(&ti, sizeof(ti));
@@ -2422,7 +2422,7 @@ namespace Win32xx
     // 4) A unique uID is required if the control has multiple tooltips.
     // 5) The tooltip always manages its messages (uses TTF_SUBCLASS).
     // 6) The TTF_IDISHWND style is incompatible with using a RECT.
-    // Override this function to specify different uFlags.
+    // Override this function to specify different flags.
     inline void CToolTip::FillToolInfo(TOOLINFO& ti, HWND hControl, const RECT& rc, UINT id) const
     {
         ZeroMemory(&ti, sizeof(ti));

@@ -64,9 +64,9 @@ void CView::OnClose()
 BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 {
     UNREFERENCED_PARAMETER(lparam);
-    WORD nID = LOWORD(wparam);
+    WORD id = LOWORD(wparam);
 
-    switch (nID)
+    switch (id)
     {
     case IDC_BUTTON1:   return OnButton();
     case ID_CHECK_A:    return OnCheckA();
@@ -75,7 +75,7 @@ BOOL CView::OnCommand(WPARAM wparam, LPARAM lparam)
 
     case ID_RADIO_A:
     case ID_RADIO_B:    // intentionally blank
-    case ID_RADIO_C:    return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);
+    case ID_RADIO_C:    return OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);
     } 
   
     return FALSE;
@@ -190,11 +190,11 @@ BOOL CView::OnCheckC()
     return TRUE;
 }
 
-BOOL CView::OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked)
+BOOL CView::OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID)
 {
-    CheckRadioButton(idFirst, idLast, idClicked);
+    CheckRadioButton(firstID, lastID, clickedID);
 
-    GetDoc().SetRadio(idClicked);
+    GetDoc().SetRadio(clickedID);
     SetDlgItemText(IDC_STATUS, _T("Radio changed"));
     TRACE("Radio changed\n");
     

@@ -427,10 +427,10 @@ namespace Win32xx
 
         if (!IsValid)
         {
-            DWORD dwError = CommDlgExtendedError();
-            if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+            DWORD error = CommDlgExtendedError();
+            if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(_T("CColorDialog::DoModal Failed"), dwError);
+                throw CWinException(_T("CColorDialog::DoModal Failed"), error);
 
             OnCancel();
             return IDCANCEL;
@@ -477,7 +477,7 @@ namespace Win32xx
     // Construct a CFileDialog object. IsOpenFileDialog specifies the type of
     // dialog box, OpenFile or SaveFile. The file's default extent and name can
     // be specified, along with the flags for the OPENFILENAME struct.
-    // The pszFilter contains a series of string pairs that specify file filters,
+    // The pFilter contains a series of string pairs that specify file filters,
     // separated by '\0' or '|' chars. Refer to the description of the OPENFILENAME
     // struct in the Windows API documentation.
     inline CFileDialog::CFileDialog(BOOL isOpenFileDialog  /* = TRUE */,
@@ -627,12 +627,12 @@ namespace Win32xx
         // the result of the file choice box is processed here:
         if (!ok)
         {
-            DWORD dwError = CommDlgExtendedError();
-            if (dwError != 0)
+            DWORD error = CommDlgExtendedError();
+            if (error != 0)
             {
                 // ignore the exception caused by closing the dialog
-                if (dwError != CDERR_DIALOGFAILURE || (m_ofn.Flags & OFN_EXPLORER))
-                    throw CWinException(_T("CFileDialog::DoModal Failed"), dwError);
+                if (error != CDERR_DIALOGFAILURE || (m_ofn.Flags & OFN_EXPLORER))
+                    throw CWinException(_T("CFileDialog::DoModal Failed"), error);
             }
 
             OnCancel();
@@ -968,7 +968,7 @@ namespace Win32xx
 		m_ofn.lpstrFilter = NULL;
         m_filter.Empty();
 
-        // convert any '|' characters in pszFilter to NULL characters
+        // convert any '|' characters in pFilter to NULL characters
         if (pFilter)
         {
             CString str = pFilter;
@@ -980,7 +980,7 @@ namespace Win32xx
             }
             else
             {
-                // szFilter doesn't contain '|', so it should be double terminated
+                // pFilter doesn't contain '|', so it should be double terminated
                 int i = 0;
                 while (i < MAX_PATH)
                 {
@@ -1042,12 +1042,12 @@ namespace Win32xx
 
 
     // Sets the title of the fileopen or filesave dialog.
-    inline void CFileDialog::SetTitle(LPCTSTR szTitle)
+    inline void CFileDialog::SetTitle(LPCTSTR pTitle)
 
     {
-        if (szTitle)
+        if (pTitle)
         {
-            m_title = szTitle;
+            m_title = pTitle;
 			m_ofn.lpstrTitle = m_title.c_str();
         }
         else
@@ -1472,10 +1472,10 @@ namespace Win32xx
         // process the result of the font choice box:
         if (!ok)
         {
-            DWORD dwError = CommDlgExtendedError();
-            if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+            DWORD error = CommDlgExtendedError();
+            if ((error != 0) && (error != CDERR_DIALOGFAILURE))
                 // ignore the exception caused by closing the dialog
-                throw CWinException(_T("CFontDialog::DoModal Failed"), dwError);
+                throw CWinException(_T("CFontDialog::DoModal Failed"), error);
 
             OnCancel();
             return IDCANCEL;
@@ -1559,7 +1559,7 @@ namespace Win32xx
     // into elements of the m_logFont member and settings of the option flags.
     inline DWORD CFontDialog::FillInLogFont(const CHARFORMAT& cf)
     {
-        DWORD dwFlags = 0;
+        DWORD flags = 0;
         if (cf.dwMask & CFM_SIZE)
         {
             CDC dc;
@@ -1581,7 +1581,7 @@ namespace Win32xx
         }
         else
         {
-            dwFlags |= CF_NOSTYLESEL;
+            flags |= CF_NOSTYLESEL;
             m_logFont.lfWeight = FW_DONTCARE;
             m_logFont.lfItalic = FALSE;
         }
@@ -1589,7 +1589,7 @@ namespace Win32xx
         if ((cf.dwMask & (CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR)) ==
             (CFM_UNDERLINE|CFM_STRIKEOUT|CFM_COLOR))
         {
-            dwFlags |= CF_EFFECTS;
+            flags |= CF_EFFECTS;
             m_logFont.lfUnderline = (cf.dwEffects & CFE_UNDERLINE) ? TRUE : FALSE;
             m_logFont.lfStrikeOut = (cf.dwEffects & CFE_STRIKEOUT) ? TRUE : FALSE;
         }
@@ -1602,7 +1602,7 @@ namespace Win32xx
         if (cf.dwMask & CFM_CHARSET)
             m_logFont.lfCharSet = cf.bCharSet;
         else
-            dwFlags |= CF_NOSCRIPTSEL;
+            flags |= CF_NOSCRIPTSEL;
 
         m_logFont.lfOutPrecision = OUT_DEFAULT_PRECIS;
         m_logFont.lfClipPrecision = CLIP_DEFAULT_PRECIS;
@@ -1619,7 +1619,7 @@ namespace Win32xx
             m_logFont.lfFaceName[0] = (TCHAR)0;
         }
 
-        return dwFlags;
+        return flags;
     }
 
 
