@@ -406,12 +406,12 @@ namespace Win32xx
         assert(m_hFile);
         assert(method == FILE_BEGIN || method == FILE_CURRENT || method == FILE_END);
 
-        LONG High = LONG(seekTo >> 32);
-        LONG Low = (LONG)(seekTo & 0xFFFFFFFF);
+        LONG high = LONG(seekTo >> 32);
+        LONG low = (LONG)(seekTo & 0xFFFFFFFF);
 
-        DWORD LowPos = SetFilePointer(m_hFile, Low, &High, method);
+        DWORD lowPos = SetFilePointer(m_hFile, low, &high, method);
 
-        ULONGLONG result = (static_cast<ULONGLONG>(High) << 32) + LowPos;
+        ULONGLONG result = (static_cast<ULONGLONG>(high) << 32) + lowPos;
         return result;
     }
 

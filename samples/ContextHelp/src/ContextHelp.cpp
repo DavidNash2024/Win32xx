@@ -94,16 +94,16 @@ HWND CContextHelp::CreateHtmlHelp(HWND hwndCaller, LPCTSTR string, UINT command,
 UINT CContextHelp::GetIDFromCursorPos() const
 // Identifies the window from the cursor position and returns its ID
 {
-    UINT nID = 0;
+    UINT id = 0;
     CPoint pt = GetCursorPos();
-    HWND hWndCtrl = WindowFromPoint(pt);
+    HWND hCtrl = WindowFromPoint(pt);
 
-    if (hWndCtrl != 0)
+    if (hCtrl != 0)
     {
-        nID = ::GetDlgCtrlID(hWndCtrl);
+        id = ::GetDlgCtrlID(hCtrl);
     }
 
-    return nID;
+    return id;
 }
 
 void CContextHelp::ShowHelpTopic(UINT id)

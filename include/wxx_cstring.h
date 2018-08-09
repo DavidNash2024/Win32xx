@@ -194,7 +194,7 @@ namespace Win32xx
         int      Find(T ch, int index = 0 ) const;
         int      Find(const T* pText, int start = 0) const;
         int      FindOneOf(const T* pText) const;
-        void     Format(UINT nID, ...);
+        void     Format(UINT id, ...);
         void     Format(const T* pFormat,...);
         void     FormatV(const T* pFormat, va_list args);
         void     FormatMessage(const T* pFormat,...);
@@ -763,7 +763,7 @@ namespace Win32xx
     }
 
 
-    // Assigns the specified number of charaters from pszText to the CStringT.
+    // Assigns the specified number of charaters from pText to the CStringT.
     template <class T>
     inline void CStringT<T>::Assign(const T* pText, int count)
     {
@@ -1155,8 +1155,8 @@ namespace Win32xx
     {
         Empty();
         CHAR* pTemp = 0;
-        DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageA(dwFlags, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&pTemp), 1, NULL);
+        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+        ::FormatMessageA(flags, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), reinterpret_cast<LPSTR>(&pTemp), 1, NULL);
         m_str.assign(pTemp);
         ::LocalFree(pTemp);
     }
@@ -1168,8 +1168,8 @@ namespace Win32xx
     {
         Empty();
         WCHAR* pTemp = 0;
-        DWORD dwFlags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
-        ::FormatMessageW(dwFlags, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&pTemp, 1, NULL);
+        DWORD flags = FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS;
+        ::FormatMessageW(flags, NULL, error, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPWSTR)&pTemp, 1, NULL);
         m_str.assign(pTemp);
         ::LocalFree(pTemp);
     }
@@ -1433,7 +1433,7 @@ namespace Win32xx
 
 
     // Extracts characters from the string, starting with the first character,
-    // that are not in the set of characters identified by pszCharSet.
+    // that are not in the set of characters identified by pText.
     template <class T>
     inline CStringT<T> CStringT<T>::SpanExcluding(const T* pText) const
     {

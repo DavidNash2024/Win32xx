@@ -1273,8 +1273,8 @@ namespace Win32xx
     inline void CDocker::CDockClient::PreCreate(CREATESTRUCT& cs)
     {
         assert(m_pDocker);
-        DWORD dwStyle = m_pDocker->GetDockStyle();
-        if (dwStyle & DS_CLIENTEDGE)
+        DWORD style = m_pDocker->GetDockStyle();
+        if (style & DS_CLIENTEDGE)
             cs.dwExStyle = WS_EX_CLIENTEDGE;
 
 #if (WINVER >= 0x0500)
@@ -1612,11 +1612,11 @@ namespace Win32xx
         CBitmap bmBottom(IDW_SDBOTTOM);
 
         // Grey out invalid dock targets
-        DWORD dwStyle = m_pOldDockTarget->GetDockStyle();
-        if (dwStyle & DS_NO_DOCKCHILD_LEFT)  bmLeft.TintBitmap(150, 150, 150);
-        if (dwStyle & DS_NO_DOCKCHILD_TOP)   bmTop.TintBitmap(150, 150, 150);
-        if (dwStyle & DS_NO_DOCKCHILD_RIGHT) bmRight.TintBitmap(150, 150, 150);
-        if (dwStyle & DS_NO_DOCKCHILD_BOTTOM) bmBottom.TintBitmap(150, 150, 150);
+        DWORD style = m_pOldDockTarget->GetDockStyle();
+        if (style & DS_NO_DOCKCHILD_LEFT)  bmLeft.TintBitmap(150, 150, 150);
+        if (style & DS_NO_DOCKCHILD_TOP)   bmTop.TintBitmap(150, 150, 150);
+        if (style & DS_NO_DOCKCHILD_RIGHT) bmRight.TintBitmap(150, 150, 150);
+        if (style & DS_NO_DOCKCHILD_BOTTOM) bmBottom.TintBitmap(150, 150, 150);
 
         // Draw the dock targets
         if (bmCentre.GetHandle())   dc.DrawBitmap(0, 0, 88, 88, bmCentre, RGB(255,0,255));
@@ -2066,8 +2066,8 @@ namespace Win32xx
         pDocker->SetParent(*this);
 
         // Change the Docker to a POPUP window
-        DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-        pDocker->SetStyle(dwStyle);
+        DWORD style = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+        pDocker->SetStyle(style);
         pDocker->SetRedraw(FALSE);
         pDocker->SetParent(0);
         pDocker->SetWindowPos(0, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED);
@@ -2355,9 +2355,9 @@ namespace Win32xx
         dockStyle |= DockSide;
 
         // Set the dock styles
-        DWORD dwStyle = WS_CHILD | WS_VISIBLE;
+        DWORD style = WS_CHILD | WS_VISIBLE;
         pDocker->m_isBlockMove = FALSE;
-        pDocker->SetStyle(dwStyle);
+        pDocker->SetStyle(style);
         pDocker->ShowWindow(SW_HIDE);
         pDocker->SetDockStyle(dockStyle);
 
@@ -3069,8 +3069,8 @@ namespace Win32xx
 #if (WINVER >= 0x0500)
         if (GetParent().GetExStyle() & WS_EX_LAYOUTRTL)
         {
-            DWORD dwExStyle = static_cast<DWORD>(GetExStyle());
-            SetExStyle(dwExStyle | WS_EX_LAYOUTRTL);
+            DWORD exStyle = static_cast<DWORD>(GetExStyle());
+            SetExStyle(exStyle | WS_EX_LAYOUTRTL);
         }
 #endif
 
@@ -3877,18 +3877,18 @@ namespace Win32xx
         CDocker* pDocker = GetDockFromView(pContainer);
         if (pDocker == 0)
             throw CUserException(_T("Failed to get docker from container view"));
-        int nID = pDocker->GetDockID();
-        if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), nID))
+        int id = pDocker->GetDockID();
+        if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Parent Container"), id))
             throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
 
         // Store the active (selected) container
         pDocker = GetDockFromView(pContainer->GetActiveContainer());
         if (pDocker == 0)
-            nID = 0;
+			id = 0;
         else
-            nID = pDocker->GetDockID();
+			id = pDocker->GetDockID();
 
-        if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), nID))
+        if (ERROR_SUCCESS != KeyContainer.SetDWORDValue(_T("Active Container"), id))
             throw (CUserException(_T("KeyContainer SetDWORDValue failed")));
 
         // Store the tab order
@@ -3943,15 +3943,15 @@ namespace Win32xx
             {
                 if (dockStyle & DS_CLIENTEDGE)
                 {
-                    DWORD dwExStyle = GetDockClient().GetExStyle() | WS_EX_CLIENTEDGE;
-                    GetDockClient().SetExStyle(dwExStyle);
+                    DWORD exStyle = GetDockClient().GetExStyle() | WS_EX_CLIENTEDGE;
+                    GetDockClient().SetExStyle(exStyle);
                     GetDockClient().RedrawWindow(RDW_INVALIDATE | RDW_UPDATENOW | RDW_ERASE | RDW_FRAME);
                 }
                 else
                 {
-                    DWORD dwExStyle = GetDockClient().GetExStyle();
-                    dwExStyle &= ~WS_EX_CLIENTEDGE;
-                    GetDockClient().SetExStyle(dwExStyle);
+                    DWORD exStyle = GetDockClient().GetExStyle();
+                    exStyle &= ~WS_EX_CLIENTEDGE;
+                    GetDockClient().SetExStyle(exStyle);
                     GetDockClient().RedrawWindow(RDW_INVALIDATE|RDW_UPDATENOW|RDW_ERASE|RDW_FRAME);
                 }
             }
@@ -4099,8 +4099,8 @@ namespace Win32xx
 
     inline void CDocker::ConvertToChild(HWND hParent)
     {
-        DWORD dwStyle = WS_CHILD | WS_VISIBLE;
-        SetStyle(dwStyle);
+        DWORD style = WS_CHILD | WS_VISIBLE;
+        SetStyle(style);
         SetParent(hParent);
         GetDockBar().SetParent(hParent);
     }
@@ -4110,8 +4110,8 @@ namespace Win32xx
     {
         // Change the window to an "undocked" style
         ShowWindow(SW_HIDE);
-        DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
-        SetStyle(dwStyle);
+        DWORD style = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME;
+        SetStyle(style);
 
         // Change the window's parent and reposition it
         if (GetDockBar().IsWindow())
@@ -4121,8 +4121,8 @@ namespace Win32xx
         m_pDockParent = 0;
         SetParent(0);
 
-        DWORD dwStyleShow = showUndocked? SWP_SHOWWINDOW : 0;
-        SetWindowPos(NULL, rc, dwStyleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
+        DWORD styleShow = showUndocked? SWP_SHOWWINDOW : 0;
+        SetWindowPos(NULL, rc, styleShow | SWP_FRAMECHANGED | SWP_NOOWNERZORDER);
         GetDockClient().SetWindowPos(NULL, GetClientRect(), SWP_SHOWWINDOW);
         SetWindowText(GetCaption().c_str());
     }
@@ -4287,8 +4287,8 @@ namespace Win32xx
                 {
                     CRect rc = pDockOld->GetWindowRect();
                     pDockNew->ShowWindow(SW_HIDE);
-                    DWORD dwStyle = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
-                    pDockNew->SetStyle(dwStyle);
+                    DWORD style = WS_POPUP| WS_CAPTION | WS_SYSMENU | WS_THICKFRAME | WS_VISIBLE;
+                    pDockNew->SetStyle(style);
                     pDockNew->m_pDockParent = 0;
                     pDockNew->SetParent(0);
                     pDockNew->SetWindowPos(NULL, rc, SWP_SHOWWINDOW|SWP_FRAMECHANGED| SWP_NOOWNERZORDER);
@@ -5114,10 +5114,10 @@ namespace Win32xx
                 LPNMTTDISPINFO lpDispInfo = (LPNMTTDISPINFO)lparam;
                 if (iIndex >= 0)
                 {
-                    int nID = GetToolBar().GetCommandID(iIndex);
-                    if (nID > 0)
+                    int id = GetToolBar().GetCommandID(iIndex);
+                    if (id > 0)
                     {
-                        m_tooltip = LoadString(nID);
+                        m_tooltip = LoadString(id);
                         lpDispInfo->lpszText = const_cast<LPTSTR>(m_tooltip.c_str());
                     }
                     else

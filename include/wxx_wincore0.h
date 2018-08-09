@@ -137,7 +137,7 @@ namespace Win32xx
 
         // Attributes
         HWND GetHwnd() const                { return m_hWnd; }
-        WNDPROC GetPrevWindowProc() const   { return m_PrevWindowProc; }
+        WNDPROC GetPrevWindowProc() const   { return m_prevWindowProc; }
 
         // Wrappers for Win32 API functions
         // These functions aren't virtual, and shouldn't be overridden
@@ -150,8 +150,8 @@ namespace Win32xx
         BOOL  ClientToScreen(POINT& point) const;
         BOOL  ClientToScreen(RECT& rect) const;
         LRESULT DefWindowProc(UINT msg, WPARAM wparam, LPARAM lparam) const;
-        HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, int x, int y, int cx, int cy, UINT flags) const;
-        HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hWndInsertAfter, const RECT& rect, UINT flags) const;
+        HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hInsertAfter, int x, int y, int cx, int cy, UINT flags) const;
+        HDWP  DeferWindowPos(HDWP hWinPosInfo, HWND hInsertAfter, const RECT& rect, UINT flags) const;
         BOOL  DrawMenuBar() const;
         BOOL  EnableWindow(BOOL Enable = TRUE) const;
         BOOL  EndPaint(PAINTSTRUCT& ps) const;
@@ -214,7 +214,7 @@ namespace Win32xx
         LRESULT SendDlgItemMessage(int dlgItemID, UINT msg, WPARAM wparam, LPARAM lparam) const;
         LRESULT SendMessage(UINT msg, WPARAM wparam = 0, LPARAM lparam = 0) const;
         LRESULT SendMessage(HWND hWnd, UINT msg, WPARAM wparam, LPARAM lparam) const;
-        BOOL  SendNotifyMessage(UINT Msg, WPARAM wparam, LPARAM lparam) const;
+        BOOL  SendNotifyMessage(UINT msg, WPARAM wparam, LPARAM lparam) const;
         CWnd  SetActiveWindow() const;
         CWnd  SetCapture() const;
         ULONG_PTR SetClassLongPtr(int index, LONG_PTR newLong) const;
@@ -326,7 +326,7 @@ namespace Win32xx
         BOOL RemoveFromMap();
         void Subclass(HWND hWnd);
 
-        WNDPROC m_PrevWindowProc;
+        WNDPROC m_prevWindowProc;
 
     }; // class CWnd
 

@@ -95,7 +95,7 @@ namespace Win32xx
         void SetMainIcon(HICON hMainIcon);
         void SetMainIcon(LPCTSTR lpszMainIcon);
         void SetMainInstruction(LPCTSTR pszMainInstruction);
-        void SetOptions(TASKDIALOG_FLAGS dwFlags);
+        void SetOptions(TASKDIALOG_FLAGS flags);
         void SetProgressBarMarquee(BOOL IsEnabled = TRUE, int nMarqueeSpeed = 0) const;
         void SetProgressBarPosition(int nProgressPos) const;
         void SetProgressBarRange(int nMinRange, int nMaxRange) const;
@@ -126,12 +126,12 @@ namespace Win32xx
     private:
         struct TaskButton
         {
-            TaskButton(UINT nID, LPCTSTR pszText) : buttonID(nID)
+            TaskButton(UINT id, LPCTSTR pText) : buttonID(id)
             {
-                if (IS_INTRESOURCE(pszText))        // support MAKEINTRESOURCE
-                    buttonText = LoadString(reinterpret_cast<UINT>(pszText));
+                if (IS_INTRESOURCE(pText))        // support MAKEINTRESOURCE
+                    buttonText = LoadString(reinterpret_cast<UINT>(pText));
                 else
-                    buttonText = pszText;
+                    buttonText = pText;
             }
 
             UINT buttonID;
@@ -207,9 +207,9 @@ namespace Win32xx
         assert(nIDRadioButtonsFirst > 0);
         assert(nIDRadioButtonsLast > nIDRadioButtonsFirst);
 
-        for (int nID = nIDRadioButtonsFirst; nID <= nIDRadioButtonsLast; ++nID)
+        for (int id = nIDRadioButtonsFirst; id <= nIDRadioButtonsLast; ++id)
         {
-            TaskButton tb(nID, MAKEINTRESOURCEW(nID));
+            TaskButton tb(id, MAKEINTRESOURCEW(id));
             m_vRadioButtons.push_back(tb);
         }
     }
@@ -653,10 +653,10 @@ namespace Win32xx
     //  TDF_USE_COMMAND_LINKS, TDF_USE_COMMAND_LINKS_NO_ICON, TDF_EXPAND_FOOTER_AREA, TDF_EXPANDED_BY_DEFAULT,
     //  TDF_VERIFICATION_FLAG_CHECKED, TDF_SHOW_PROGRESS_BAR, TDF_SHOW_MARQUEE_PROGRESS_BAR, TDF_CALLBACK_TIMER,
     //  TDF_POSITION_RELATIVE_TO_WINDOW, TDF_RTL_LAYOUT, TDF_NO_DEFAULT_RADIO_BUTTON, TDF_CAN_BE_MINIMIZED.
-    inline void CTaskDialog::SetOptions(TASKDIALOG_FLAGS dwFlags)
+    inline void CTaskDialog::SetOptions(TASKDIALOG_FLAGS flags)
     {
         assert (GetHwnd() == NULL);
-        m_tc.dwFlags = dwFlags;
+        m_tc.dwFlags = flags;
     }
 
 

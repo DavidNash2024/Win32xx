@@ -203,7 +203,7 @@ namespace Win32xx
     class CPrintDialog : public CCommonDialog
     {
     public:
-        CPrintDialog(DWORD dwFlags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS |
+        CPrintDialog(DWORD flags = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS |
                                         PD_HIDEPRINTTOFILE | PD_NOSELECTION );
         virtual ~CPrintDialog();
 
@@ -257,7 +257,7 @@ namespace Win32xx
     class CPageSetupDialog : public CCommonDialog
     {
     public:
-        CPageSetupDialog( DWORD dwFlags = PSD_MARGINS );
+        CPageSetupDialog( DWORD flags = PSD_MARGINS );
         virtual ~CPageSetupDialog() {}
 
         virtual INT_PTR DoModal(HWND hWndOwner = 0);
@@ -383,19 +383,19 @@ namespace Win32xx
     //
 
 
-    // Constructor for CPrintDialog class. The dwFlags parameter specifies the
+    // Constructor for CPrintDialog class. The flags parameter specifies the
     // flags for the PRINTDLG structure. Refer to the description of the
     // PRINTDLG struct in the Windows API documentation.
-    inline CPrintDialog::CPrintDialog(DWORD dwFlags /* = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION */)
+    inline CPrintDialog::CPrintDialog(DWORD flags /* = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION */)
     {
         // initialize the PRINTDLG member
         ZeroMemory(&m_PD, sizeof(m_PD));
 
-        m_PD.Flags = dwFlags;
+        m_PD.Flags = flags;
 
         // Support the PD_PRINTSETUP flag which displays the obsolete PrintSetup dialog.
         // Note: CPageSetupDialog should be used instead of the PrintSetup dialog.
-        if (dwFlags & PD_PRINTSETUP)
+        if (flags & PD_PRINTSETUP)
         {
             m_PD.Flags &= ~PD_RETURNDC;
         }
@@ -542,13 +542,13 @@ namespace Win32xx
             GlobalUnlock(GetApp().m_hDevMode);
             GlobalUnlock(GetApp().m_hDevNames);
 
-            DWORD dwError = CommDlgExtendedError();
-            if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE))
+            DWORD error = CommDlgExtendedError();
+            if ((error != 0) && (error != CDERR_DIALOGFAILURE))
             // ignore the exception caused by closing the dialog
             {
                 // Reset global memory
                 GlobalFreeAll();
-                throw CWinException(_T("CPrintDialog::DoModal Failed"), dwError);
+                throw CWinException(_T("CPrintDialog::DoModal Failed"), error);
             }
 
             OnCancel();
@@ -750,13 +750,13 @@ namespace Win32xx
     //
 
 
-    // Constructor for CPageSetupDialog class. The dwFlags parameter specifies the
+    // Constructor for CPageSetupDialog class. The flags parameter specifies the
     // flags for the PAGESETUPDLG structure. Refer to the description of the
     // PAGESETUPDLG struct in the Windows API documentation.
-    inline CPageSetupDialog::CPageSetupDialog( DWORD dwFlags /* = PSD_MARGINS */ )
+    inline CPageSetupDialog::CPageSetupDialog( DWORD flags /* = PSD_MARGINS */ )
     {
         ZeroMemory(&m_PSD, sizeof(m_PSD));
-        m_PSD.Flags = dwFlags;
+        m_PSD.Flags = flags;
 
         // Enable the hook proc for the help button
         if (m_PSD.Flags & PSD_SHOWHELP)
@@ -859,12 +859,12 @@ namespace Win32xx
             GlobalUnlock(GetApp().m_hDevMode);
             GlobalUnlock(GetApp().m_hDevNames);
 
-            DWORD dwError = CommDlgExtendedError();
-            if ((dwError != 0) && (dwError != CDERR_DIALOGFAILURE)) // ignore the exception caused by closing the dialog
+            DWORD error = CommDlgExtendedError();
+            if ((error != 0) && (error != CDERR_DIALOGFAILURE)) // ignore the exception caused by closing the dialog
             {
                 // Reset global memory
                 GlobalFreeAll();
-                throw CWinException(_T("CPageSetupDialog::DoModal Failed"), dwError);
+                throw CWinException(_T("CPageSetupDialog::DoModal Failed"), error);
             }
 
             OnCancel();

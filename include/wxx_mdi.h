@@ -736,10 +736,10 @@ namespace Win32xx
         CLIENTCREATESTRUCT clientcreate;
         clientcreate.hWindowMenu  = 0;
         clientcreate.idFirstChild = IDW_FIRSTCHILD;
-        DWORD dwStyle = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
+        DWORD style = WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS | MDIS_ALLCHILDSTYLES;
 
         // Create the view window
-        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), dwStyle, 0, 0, 0, 0, hParent, NULL, (PSTR) &clientcreate);
+        return T::CreateEx(WS_EX_CLIENTEDGE, _T("MDIClient"), _T(""), style, 0, 0, 0, 0, hParent, NULL, (PSTR) &clientcreate);
     }
 
 
@@ -846,9 +846,9 @@ namespace Win32xx
             ClassName = cs.lpszClass;
 
         // Set the window style
-        DWORD dwStyle;
-        dwStyle = cs.style & ~WS_MAXIMIZE;
-        dwStyle |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
+        DWORD style;
+        style = cs.style & ~WS_MAXIMIZE;
+        style |= WS_VISIBLE | WS_OVERLAPPEDWINDOW ;
 
         // Set window size and position
         int x = CW_USEDEFAULT;
@@ -864,13 +864,13 @@ namespace Win32xx
         }
 
         // Set the extended style
-        DWORD dwExStyle = cs.dwExStyle | WS_EX_MDICHILD;
+        DWORD exStyle = cs.dwExStyle | WS_EX_MDICHILD;
 
         // Turn off redraw while creating the window
         pParent->SetRedraw(FALSE);
 
         // Create the window
-        CreateEx(dwExStyle, ClassName, cs.lpszName, dwStyle, x, y,
+        CreateEx(exStyle, ClassName, cs.lpszName, style, x, y,
             cx, cy, pParent->GetHwnd(), cs.hMenu, cs.lpCreateParams);
 
         if (Max)

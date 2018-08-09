@@ -59,7 +59,7 @@ namespace Win32xx
         virtual BOOL AddButton(UINT id, BOOL isEnabled = TRUE, int image = -1);
         virtual void Destroy();
         virtual BOOL ReplaceBitmap(UINT newToolBarID);
-        virtual BOOL SetBitmap(UINT nID);
+        virtual BOOL SetBitmap(UINT id);
         virtual BOOL SetButtonText(int buttonID, LPCTSTR pText);
 
         // Wrappers for Win32 API functions
@@ -197,7 +197,7 @@ namespace Win32xx
     // Adds buttons to the Toolbar. It provides a convenient alternative to AddButtons.
     // A resource ID of 0 is a separator.  iImage is the index of the image in the ImageList.
     // The default is -1 in which case the image based on the button's position is chosen.
-    inline BOOL CToolBar::AddButton(UINT nID, BOOL IsEnabled /* = TRUE */, int iImage /* = -1 */)
+    inline BOOL CToolBar::AddButton(UINT id, BOOL IsEnabled /* = TRUE */, int iImage /* = -1 */)
     {
         assert(IsWindow());
 
@@ -222,14 +222,14 @@ namespace Win32xx
         TBBUTTON tbb;
         ZeroMemory(&tbb, sizeof(tbb));
 
-        if (nID == 0)
+        if (id == 0)
         {
             tbb.fsStyle = TBSTYLE_SEP;
         }
         else
         {
             tbb.iBitmap = nImages;
-            tbb.idCommand = nID;
+            tbb.idCommand = id;
             tbb.fsState = IsEnabled? TBSTATE_ENABLED : 0;
             tbb.fsStyle = TBSTYLE_BUTTON;
         }
@@ -780,27 +780,27 @@ namespace Win32xx
 
 
     // Sets the button images
-    inline BOOL CToolBar::SetBitmap(UINT nID)
+    inline BOOL CToolBar::SetBitmap(UINT id)
     {
         assert(IsWindow());
 
-        CBitmap Bitmap(nID);
-        assert (Bitmap.GetHandle());
-        BITMAP bm = Bitmap.GetBitmapData();
+        CBitmap bitmap(id);
+        assert (bitmap.GetHandle());
+        BITMAP bm = bitmap.GetBitmapData();
 
-        int iImageHeight = bm.bmHeight;
-        int iImageWidth  = MAX(bm.bmHeight, 16);
+        int imageHeight = bm.bmHeight;
+        int imageWidth  = MAX(bm.bmHeight, 16);
 
         // Set the bitmap size first
-        SetBitmapSize(iImageWidth, iImageHeight);
+        SetBitmapSize(imageWidth, imageHeight);
 
-        BOOL Succeeded = FALSE;
+        BOOL succeeded = FALSE;
         if (m_OldToolBarID)
-            Succeeded = ReplaceBitmap(nID);
+            succeeded = ReplaceBitmap(id);
         else
-            Succeeded = AddBitmap(nID);
+            succeeded = AddBitmap(id);
 
-        return Succeeded;
+        return succeeded;
     }
 
 

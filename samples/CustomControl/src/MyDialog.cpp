@@ -85,11 +85,11 @@ BOOL CMyDialog::OnInitDialog()
     SetIconSmall(IDW_MAIN);
 
     // Attach the custom control to a CWnd object
-    m_myControl.AttachDlgItem(IDC_CUSTOMWEB, *this);
+    m_webControl.AttachDlgItem(IDC_CUSTOMWEB, *this);
 
     // Support automatic resizing
     m_resizer.Initialize( *this, CRect(0, 0, 300, 200) );
-    m_resizer.AddChild(m_myControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
+    m_resizer.AddChild(m_webControl, topleft, RD_STRETCH_WIDTH|RD_STRETCH_HEIGHT);
     
     return TRUE;
 }

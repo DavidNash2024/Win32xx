@@ -711,9 +711,9 @@ namespace Win32xx
                 assert(pMDIChild);
                 CMenu ChildMenu = pMDIChild->GetSystemMenu(FALSE);
 
-                UINT nID = ChildMenu.GetDefaultItem(FALSE, 0);
-                if (nID)
-                    pMDIChild->PostMessage(WM_SYSCOMMAND, nID, 0);
+                UINT id = ChildMenu.GetDefaultItem(FALSE, 0);
+                if (id)
+                    pMDIChild->PostMessage(WM_SYSCOMMAND, id, 0);
             }
 
             m_isExitAfter = TRUE;
@@ -904,7 +904,7 @@ namespace Win32xx
 #endif
 
         int xPos = IsRightToLeft? rc.right : rc.left;
-        UINT nID = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
+        UINT id = ::TrackPopupMenuEx(m_hPopupMenu, TPM_LEFTALIGN | TPM_LEFTBUTTON | TPM_VERTICAL,
             xPos, rc.bottom, *this, &tpm);
 
         // We get here once the TrackPopupMenuEx has ended
@@ -919,8 +919,8 @@ namespace Win32xx
         {
             if (pMaxMDIChild && pMaxMDIChild->GetSystemMenu(FALSE) == m_hPopupMenu )
             {
-                if (nID)
-                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, nID, 0);
+                if (id)
+                    pMaxMDIChild->SendMessage(WM_SYSCOMMAND, id, 0);
             }
         }
 

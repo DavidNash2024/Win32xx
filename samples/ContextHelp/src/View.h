@@ -20,7 +20,7 @@ public:
     BOOL OnCheckA();
     BOOL OnCheckB();
     BOOL OnCheckC();
-    BOOL OnRangeOfIDs(UINT idFirst, UINT idLast, UINT idClicked);
+    BOOL OnRangeOfIDs(UINT firstID, UINT lastID, UINT clickedID);
     
 protected:
     virtual INT_PTR DialogProc(UINT msg, WPARAM wparam, LPARAM lparam);

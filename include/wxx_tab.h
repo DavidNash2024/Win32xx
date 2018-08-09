@@ -126,7 +126,7 @@ namespace Win32xx
 
         // Attributes
         const std::vector<TabPageInfo>& GetAllTabs() const { return m_allTabPageInfo; }
-        CImageList GetODImageList() const   { return m_imlODTab; }
+        CImageList GetODImageList() const   { return m_odImages; }
         CFont& GetTabFont() const           { return m_tabFont; }
         BOOL GetShowButtons() const         { return m_isShowingButtons; }
         int GetTabHeight() const            { return m_tabHeight; }
@@ -205,7 +205,7 @@ namespace Win32xx
         std::vector<TabPageInfo> m_allTabPageInfo;
         std::vector<WndPtr> m_tabViews;
         mutable CFont m_tabFont;
-        mutable CImageList m_imlODTab;  // Image List for Owner Draw Tabs
+        mutable CImageList m_odImages;  // Image List for Owner Draw Tabs
         CMenu m_listMenu;
         CWnd* m_pActiveView;
         CPoint m_oldMousePos;
@@ -569,11 +569,11 @@ namespace Win32xx
                 {
                     CString str = GetTabText(i);
                     int iImage = GetTabImageID(i);
-                    CSize szImage = m_imlODTab.GetIconSize();
+                    CSize szImage = m_odImages.GetIconSize();
                     int yOffset = (rcItem.Height() - szImage.cy)/2;
 
                     // Draw the icon
-                    m_imlODTab.Draw(dc, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
+                    m_odImages.Draw(dc, iImage,  CPoint(rcItem.left+5, rcItem.top+yOffset), ILD_NORMAL);
 
                     // Draw the text
 					dc.SelectObject(m_tabFont);
@@ -758,8 +758,8 @@ namespace Win32xx
     // Returns TRUE if the control's tabs are placed at the top
     inline BOOL CTab::GetTabsAtTop() const
     {
-        DWORD dwStyle = GetStyle();
-        return (!(dwStyle & TCS_BOTTOM));
+        DWORD style = GetStyle();
+        return (!(style & TCS_BOTTOM));
     }
 
 
@@ -855,8 +855,8 @@ namespace Win32xx
     inline void CTab::OnAttach()
     {
         // Create and assign the image list
-        m_imlODTab.DeleteImageList();
-        m_imlODTab.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
+        m_odImages.DeleteImageList();
+        m_odImages.Create(16, 16, ILC_MASK|ILC_COLOR32, 0, 0);
 
         // Set the tab control's font
         m_tabFont.DeleteObject();
@@ -867,7 +867,7 @@ namespace Win32xx
 
         // Assign ImageList unless we are owner drawn
         if (!(GetStyle() & TCS_OWNERDRAWFIXED))
-            SetImageList(m_imlODTab);
+            SetImageList(m_odImages);
 
         for (int i = 0; i < static_cast<int>(m_allTabPageInfo.size()); ++i)
         {
@@ -1286,21 +1286,21 @@ namespace Win32xx
     // Enable or disable fixed tab width.
     inline void CTab::SetFixedWidth(BOOL isEnabled)
     {
-        DWORD dwStyle = GetStyle();
+        DWORD style = GetStyle();
         if (isEnabled)
         {
-            SetStyle(dwStyle | TCS_FIXEDWIDTH);
+            SetStyle(style | TCS_FIXEDWIDTH);
 
             // Remove Image list for fixed width and Owner drawn tabs
-            if (dwStyle & TCS_OWNERDRAWFIXED)
+            if (style & TCS_OWNERDRAWFIXED)
                 SetImageList(NULL);
             else
-                SetImageList(m_imlODTab);
+                SetImageList(m_odImages);
         }
         else
         {
-            SetStyle(dwStyle & ~TCS_FIXEDWIDTH);
-            SetImageList(m_imlODTab);
+            SetStyle(style & ~TCS_FIXEDWIDTH);
+            SetImageList(m_odImages);
         }
 
         RecalcLayout();
@@ -1319,21 +1319,21 @@ namespace Win32xx
     // Enable or disable owner draw.
     inline void CTab::SetOwnerDraw(BOOL isEnabled)
     {
-        DWORD dwStyle = GetStyle();
+        DWORD style = GetStyle();
         if (isEnabled)
         {
-            SetStyle(dwStyle | TCS_OWNERDRAWFIXED);
+            SetStyle(style | TCS_OWNERDRAWFIXED);
 
             // Remove Image list for tabs with both fixed width and Owner drawn tabs
-            if (dwStyle & TCS_FIXEDWIDTH)
+            if (style & TCS_FIXEDWIDTH)
                 SetImageList(NULL);
             else
-                SetImageList(m_imlODTab);
+                SetImageList(m_odImages);
         }
         else
         {
-            SetStyle(dwStyle & ~TCS_OWNERDRAWFIXED);
-            SetImageList(m_imlODTab);
+            SetStyle(style & ~TCS_OWNERDRAWFIXED);
+            SetImageList(m_odImages);
         }
 
         RecalcLayout();
@@ -1373,14 +1373,14 @@ namespace Win32xx
     // Positions the tabs at the top or bottom of the control.
     inline void CTab::SetTabsAtTop(BOOL isAtTop)
     {
-        DWORD dwStyle = GetStyle();
+        DWORD style = GetStyle();
 
         if (isAtTop)
-            dwStyle &= ~TCS_BOTTOM;
+            style &= ~TCS_BOTTOM;
         else
-            dwStyle |= TCS_BOTTOM;
+            style |= TCS_BOTTOM;
 
-        SetStyle(dwStyle);
+        SetStyle(style);
 
         RedrawWindow();
         RecalcLayout();
@@ -1695,7 +1695,7 @@ namespace Win32xx
     inline int CTab::InsertItem(int tab, const LPTCITEM pItemInfo) const
     {
         assert(IsWindow());
-        assert(tab);
+        assert(pItemInfo);
         return TabCtrl_InsertItem(*this, tab, pItemInfo);
     }
 
@@ -1859,11 +1859,11 @@ namespace Win32xx
         CLIENTCREATESTRUCT clientcreate ;
         clientcreate.hWindowMenu  = *this;
         clientcreate.idFirstChild = IDW_FIRSTCHILD ;
-        DWORD dwStyle = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
+        DWORD style = WS_CHILD | WS_VISIBLE | MDIS_ALLCHILDSTYLES | WS_CLIPCHILDREN;
 
         // Create the MDICLIENT view window
         if (!CreateEx(0, _T("MDICLIENT"), _T(""),
-            dwStyle, 0, 0, 0, 0, hParent, NULL, (PSTR) &clientcreate))
+            style, 0, 0, 0, 0, hParent, NULL, (PSTR) &clientcreate))
                 throw CWinException(_T("CMDIClient::Create ... CreateEx failed"));
 
         return *this;

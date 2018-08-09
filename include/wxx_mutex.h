@@ -75,11 +75,7 @@ namespace Win32xx
             LPCTSTR pName = NULL, LPSECURITY_ATTRIBUTES pAttributes = NULL);
 
 		HANDLE GetHandle() const { return m_hEvent; }
-
-        operator HANDLE() const 
-        { 
-            return m_hEvent;
-        }
+        operator HANDLE() const  { return m_hEvent; }
         
         void ResetEvent();
         void SetEvent();
@@ -96,8 +92,7 @@ namespace Win32xx
             LPSECURITY_ATTRIBUTES pAttributes = NULL);
 
 		HANDLE GetHandle() const { return m_hMutex; }
-
-        operator HANDLE() const { return m_hMutex; }
+        operator HANDLE() const  { return m_hMutex; }
         
     private:
         HANDLE m_hMutex;    
@@ -110,10 +105,8 @@ namespace Win32xx
             LPSECURITY_ATTRIBUTES pAttributes);
 
 		HANDLE GetHandle() const { return m_hSemaphore; }
-		
-		BOOL ReleaseSemaphore (LONG releaseCount, LONG* pPreviousCount = NULL);
-
-        operator HANDLE() const { return m_hSemaphore; }
+        operator HANDLE() const  { return m_hSemaphore; }
+		BOOL ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount = NULL);
 
     private:
         HANDLE m_hSemaphore;
@@ -131,11 +124,11 @@ namespace Win32xx
     //  pAttributes    - Pointer to a SECURITY_ATTRIBUTES structure that determines whether the returned
     //                   handle can be inherited by child processes. If lpEventAttributes is NULL, the
     //                   handle cannot be inherited.    
-    inline CEvent::CEvent(BOOL isInitiallySignaled, BOOL bManualReset, LPCTSTR pstrName,
+    inline CEvent::CEvent(BOOL isInitiallySignaled, BOOL isManualReset, LPCTSTR pstrName,
                     LPSECURITY_ATTRIBUTES pAttributes)
     : m_hEvent(0)
     {
-        m_hEvent = ::CreateEvent(pAttributes, bManualReset, isInitiallySignaled, pstrName);
+        m_hEvent = ::CreateEvent(pAttributes, isManualReset, isInitiallySignaled, pstrName);
         if (m_hEvent == NULL)
             throw CWinException(_T("Unable to create event"));
     }

@@ -411,7 +411,7 @@ namespace Win32xx
 
     // Creates a modal dialog. A modal dialog box must be closed by the user
     // before the application continues.
-    inline INT_PTR CDialog::DoModal(HWND hWndParent /* = 0 */)
+    inline INT_PTR CDialog::DoModal(HWND hParent /* = 0 */)
     {
         assert( &GetApp() );        // Test if Win32++ has been started
         assert(!IsWindow());        // Only one window per CWnd instance allowed
@@ -437,12 +437,12 @@ namespace Win32xx
 
         // Create a modal dialog
         if (IsIndirect())
-            result = ::DialogBoxIndirect(hInstance, m_pDlgTemplate, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+            result = ::DialogBoxIndirect(hInstance, m_pDlgTemplate, hParent, (DLGPROC)CDialog::StaticDialogProc);
         else
         {
             if (::FindResource(GetApp().GetResourceHandle(), m_pResName, RT_DIALOG))
                 hInstance = GetApp().GetResourceHandle();
-            result = ::DialogBox(hInstance, m_pResName, hWndParent, (DLGPROC)CDialog::StaticDialogProc);
+            result = ::DialogBox(hInstance, m_pResName, hParent, (DLGPROC)CDialog::StaticDialogProc);
         }
 
         // Tidy up
@@ -671,7 +671,7 @@ namespace Win32xx
         TLSData* pTLSData = GetApp().GetTlsData();
         MSG msg;
         ZeroMemory(&msg, sizeof(msg));
-        LONG lCount = 0;
+        LONG count = 0;
 
         // While idle, perform idle processing until OnIdle returns FALSE
         // Exclude some messages to avoid calling OnIdle excessively
@@ -679,11 +679,11 @@ namespace Win32xx
                             (msg.message != WM_TIMER) &&
                             (msg.message != WM_MOUSEMOVE) &&
                             (msg.message != WM_SETCURSOR) &&
-                                GetApp().OnIdle(lCount) != FALSE )
+                                GetApp().OnIdle(count) != FALSE )
         {
-            ++lCount;
+            ++count;
         }
-        lCount = 0;
+        count = 0;
 
         if (code == MSGF_DIALOGBOX)
         {

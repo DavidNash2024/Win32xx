@@ -57,7 +57,7 @@ protected:
     virtual LRESULT OnDockActivated(UINT msg, WPARAM wparam, LPARAM lparam);
     virtual void    OnInitialUpdate();
     virtual LRESULT OnInitMenuPopup(UINT msg, WPARAM wparam, LPARAM lparam);
-    virtual void    OnMenuUpdate(UINT nID);
+    virtual void    OnMenuUpdate(UINT id);
     virtual void    PreCreate(CREATESTRUCT& cs);
     virtual BOOL    SaveRegistrySettings();
     virtual void    SetupMenuIcons();

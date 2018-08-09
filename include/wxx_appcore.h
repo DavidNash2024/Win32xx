@@ -416,7 +416,7 @@ namespace Win32xx
         }
 
         // Do remaining tidy up
-        m_vTLSData.clear();
+        m_allTLSData.clear();
         if (m_tlsData != TLS_OUT_OF_INDEXES)
         {
             ::TlsSetValue(m_tlsData, NULL);
@@ -686,21 +686,21 @@ namespace Win32xx
         WNDCLASS default;
         ZeroMemory(&default, sizeof(default));
 
-        LPCTSTR szClassName     = _T("Win32++ Temporary Window Class");
+        LPCTSTR pClassName    = _T("Win32++ Temporary Window Class");
 		default.hInstance     = GetInstanceHandle();
 		default.lpfnWndProc   = CWnd::StaticWindowProc;
-		default.lpszClassName = szClassName;
+		default.lpszClassName = pClassName;
 
         VERIFY(::RegisterClass(&default) != 0);
 
         // Retrieve the class information
         ZeroMemory(&default, sizeof(default));
-        ::GetClassInfo(GetInstanceHandle(), szClassName, &default);
+        ::GetClassInfo(GetInstanceHandle(), pClassName, &default);
 
         // Save the callback address of CWnd::StaticWindowProc
         assert(default.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.
         m_callback = default.lpfnWndProc;
-        VERIFY(::UnregisterClass(szClassName, GetInstanceHandle()) != 0);
+        VERIFY(::UnregisterClass(pClassName, GetInstanceHandle()) != 0);
     }
 
 
@@ -754,7 +754,7 @@ namespace Win32xx
             pTLSData = new TLSData;
 
             CThreadLock TLSLock(m_appLock);
-            m_vTLSData.push_back(pTLSData); // store as a Shared_Ptr
+            m_allTLSData.push_back(pTLSData); // store as a Shared_Ptr
 
             ::TlsSetValue(m_tlsData, pTLSData);
         }

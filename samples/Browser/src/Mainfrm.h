@@ -46,7 +46,7 @@ public:
 
 
 protected:
-    void AddComboBoxBand(int Listbox_Height);
+    void AddComboBoxBand(int height);
     virtual BOOL OnCommand(WPARAM wparam, LPARAM lparam);
     virtual int  OnCreate(CREATESTRUCT& cs);
     virtual void OnInitialUpdate();

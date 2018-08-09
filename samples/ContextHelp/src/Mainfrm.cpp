@@ -134,18 +134,18 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 UINT CMainFrame::GetIDFromCursorPos()
 // Identifies the window from the cursor position and returns its ID
 {
-    UINT nID = 0;
+    UINT id = 0;
     CPoint pt = GetCursorPos();
-    HWND hWndCtrl = WindowFromPoint(pt);
+    HWND hCtrl = WindowFromPoint(pt);
 
-    if (hWndCtrl == GetToolBar().GetHwnd())
+    if (hCtrl == GetToolBar().GetHwnd())
     {
         // Over the toolbar window, so identify the toolbar button
 
         int nButton = GetToolBar().HitTest();
-        nID = GetToolBar().GetCommandID(nButton);
+		id = GetToolBar().GetCommandID(nButton);
     }
-    else if (hWndCtrl == GetHwnd())
+    else if (hCtrl == GetHwnd())
     {
         // Over the frame window. Check to see if we are over a non-client area spot.
 
@@ -153,15 +153,15 @@ UINT CMainFrame::GetIDFromCursorPos()
         //  cursor hot spot within the non-client area.
         LRESULT lr = SendMessage(WM_NCHITTEST, 0, MAKELPARAM(pt.x, pt.y));
 
-        nID = IDFR_NCFRAME + lr; // As defined in resource.h
+		id = IDFR_NCFRAME + lr; // As defined in resource.h
     }
-    else if (hWndCtrl != 0)
+    else if (hCtrl != 0)
     {
         // The view window (dialog), dialog controls, menubar and statusbar all have control IDs.
-        nID = ::GetDlgCtrlID(hWndCtrl);
+		id = ::GetDlgCtrlID(hCtrl);
     }
 
-    return nID;
+    return id;
 }
 
 BOOL CMainFrame::LoadRegistrySettings(LPCTSTR keyName)
@@ -184,9 +184,9 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 // Processes accelerators, toolbar buttons and menu input
 {
     UNREFERENCED_PARAMETER(lparam);
-    UINT nID = LOWORD(wparam);
+    UINT id = LOWORD(wparam);
 
-    switch(nID)
+    switch(id)
     {
     case IDM_FILE_NEW:       NotImplemented();      return TRUE;
     case IDM_FILE_OPEN:      NotImplemented();      return TRUE;
@@ -304,8 +304,8 @@ LRESULT CMainFrame::OnLButtonDown(UINT msg, WPARAM wparam, LPARAM lparam)
 {
     if (GetCapture() == m_hWnd)
     {
-        UINT nID = GetIDFromCursorPos();
-        ShowHelpTopic(nID);
+        UINT id = GetIDFromCursorPos();
+        ShowHelpTopic(id);
         ReleaseCapture();
         m_isChoosing = FALSE;
         return 0;

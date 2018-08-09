@@ -75,17 +75,17 @@ namespace Win32xx
         CImageList GetImageList( int imageType ) const;
         BOOL    GetItem( LVITEM& itemInfo ) const;
         int     GetItemCount( ) const;
-        DWORD_PTR GetItemData( int iItem ) const;
-        BOOL    GetItemPosition( int iItem, CPoint& pt ) const;
-        BOOL    GetItemRect( int iItem, RECT& rc, UINT nCode ) const;
-        UINT    GetItemState( int iItem, UINT nMask ) const;
-        CString GetItemText( int iItem, int iSubItem, UINT nTextMax = 260 ) const;
-        int     GetNextItem( int iItem, int iFlags ) const;
+        DWORD_PTR GetItemData( int item ) const;
+        BOOL    GetItemPosition( int item, CPoint& pt ) const;
+        BOOL    GetItemRect( int item, RECT& rc, UINT code ) const;
+        UINT    GetItemState( int item, UINT nMask ) const;
+        CString GetItemText( int item, int subItem, UINT textMax = 260 ) const;
+        int     GetNextItem( int item, int flags ) const;
         UINT    GetNumberOfWorkAreas( ) const;
         BOOL    GetOrigin( CPoint& pt ) const;
         UINT    GetSelectedCount( ) const;
         int     GetSelectionMark( ) const;
-        int     GetStringWidth( LPCTSTR pstring ) const;
+        int     GetStringWidth( LPCTSTR pString ) const;
         BOOL    GetSubItemRect( int item, int subItem, int code, RECT& rc ) const;
         COLORREF GetTextBkColor( ) const;
         COLORREF GetTextColor( ) const;
@@ -125,7 +125,7 @@ namespace Win32xx
         int     SubItemHitTest( LVHITTESTINFO& hitInfo) const;
 
         // Operations
-        BOOL    Arrange( UINT nCode ) const;
+        BOOL    Arrange( UINT code ) const;
         CImageList CreateDragImage( int item, CPoint& pt ) const;
         BOOL    DeleteAllItems( ) const;
         BOOL    DeleteColumn( int col ) const;
@@ -843,13 +843,13 @@ namespace Win32xx
 
 
     // Determines which list-view item, if any, is at a specified position.
-    inline int CListView::HitTest( CPoint pt, UINT* pflags /*= NULL*/ ) const
+    inline int CListView::HitTest( CPoint pt, UINT* pFlags /*= NULL*/ ) const
     {
         assert(IsWindow());
 
         LVHITTESTINFO hti;
         ZeroMemory(&hti, sizeof(hti));
-        hti.flags = *pflags;
+        hti.flags = *pFlags;
         hti.pt = pt;
         return ListView_HitTest( *this, &hti );
     }
