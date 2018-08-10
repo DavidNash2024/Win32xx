@@ -15,12 +15,12 @@ int CALLBACK CMyListView::CompareProc(LPARAM param1, LPARAM param2, LPARAM param
     ListItemData*  pItem1 = reinterpret_cast<ListItemData*>(param1);
     ListItemData*  pItem2 = reinterpret_cast<ListItemData*>(param2);
 
-    HRESULT hr = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelPidl(), pItem2->GetRelPidl());
+    HRESULT result = pItem1->GetParentFolder().CompareIDs(0, pItem1->GetRelPidl(), pItem2->GetRelPidl());
 
-    if(FAILED(hr))
+    if(FAILED(result))
         return 0;
 
-    return (short)SCODE_CODE(GetScode(hr));
+    return (short)SCODE_CODE(GetScode(result));
 }
 
 CMyListView::CMyListView()
@@ -50,13 +50,13 @@ void CMyListView::DisplayFolder(CShellFolder& parentFolder, Cpidl& cpidlFull, Cp
 
 void CMyListView::DoBackgroundMenu(CPoint& point)
 {
-    HRESULT hr;
+    HRESULT result;
     if(m_csfCurFolder.GetIShellFolder())
     {
         CContextMenu ccm;
-        hr = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
+		result = m_csfCurFolder.CreateViewObject(GetParent(), IID_IContextMenu, ccm);
 
-        if(SUCCEEDED(hr))
+        if(SUCCEEDED(result))
         {
             CMenu popup;
             popup.CreatePopupMenu();
@@ -74,9 +74,9 @@ void CMyListView::DoBackgroundMenu(CPoint& point)
                     i++;
                 }
 
-                hr = ccm.QueryContextMenu(popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
+				result = ccm.QueryContextMenu(popup, 0, ++idCmdFirst, static_cast<UINT>(-1), CMF_NORMAL | CMF_EXPLORE);
 
-                if(SUCCEEDED(hr))
+                if(SUCCEEDED(result))
                 {
                     ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
 
@@ -153,7 +153,7 @@ void CMyListView::DoDefault(int item)
 
     if(GetItem(lvItem))
     {
-        HRESULT        hr;
+        HRESULT        result;
         ListItemData*  pInfo = reinterpret_cast<ListItemData*>(lvItem.lParam);
         CShellFolder   folder;
         CContextMenu ccm;
@@ -165,17 +165,17 @@ void CMyListView::DoDefault(int item)
         if(folder.GetIShellFolder())
         {
             Cpidl* pCpidl = &(pInfo->GetRelPidl());
-            hr = folder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
+			result = folder.GetUIObjectOf(*this, 1, pCpidl, IID_IContextMenu, 0, ccm);
 
-            if(SUCCEEDED(hr))
+            if(SUCCEEDED(result))
             {
                 CMenu popup;
                 popup.CreatePopupMenu();
                 if(popup.GetHandle())
                 {
-                    hr = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
+					result = ccm.QueryContextMenu(popup, 0, 1, 0x7fff, CMF_DEFAULTONLY | CMF_EXPLORE);
 
-                    if(SUCCEEDED(hr))
+                    if(SUCCEEDED(result))
                     {
                         UINT idCmd = popup.GetMenuItemID(0);
                         if(idCmd && (idCmd != static_cast<UINT>(-1)))
@@ -249,21 +249,21 @@ void CMyListView::DoItemMenu(LPINT pItems, UINT cbItems, CPoint& point)
 
     if(pidlArray[0].GetPidl())
     {
-        HRESULT        hr;
+        HRESULT        result;
         CContextMenu ccm;
 
         if(m_csfCurFolder.GetIShellFolder())
         {
-            hr = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
+			result = m_csfCurFolder.GetUIObjectOf(*this, cbItems, pidlArray, IID_IContextMenu, 0, ccm);
 
-            if(SUCCEEDED(hr))
+            if(SUCCEEDED(result))
             {
                 CMenu Popup;
                 Popup.CreatePopupMenu();
                 if(Popup.GetHandle())
                 {
-                    hr = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
-                    if(SUCCEEDED(hr))
+					result = ccm.QueryContextMenu(Popup, 0, 1, 0x7fff, CMF_NORMAL | CMF_EXPLORE);
+                    if(SUCCEEDED(result))
                     {
                         ccm.QueryInterface(IID_IContextMenu2, m_ccm2);
                         UINT  idCmd;

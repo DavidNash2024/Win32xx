@@ -1360,7 +1360,7 @@ namespace Win32xx
 
     // The GetClassLongPtr function retrieves the specified value from the
     // WNDCLASSEX structure associated with the window.
-    // Possible nIndex values: GCL_CBCLSEXTRA, GCL_CBWNDEXTRA, GCLP_ HBRBACKGROUND, GCLP_HCURSOR,
+    // Possible index values: GCL_CBCLSEXTRA, GCL_CBWNDEXTRA, GCLP_ HBRBACKGROUND, GCLP_HCURSOR,
     // GCLP_HICON, GCLP_HICONSM, GCLP_HMODULE, GCLP_MENUNAME, GCL_STYLE, GCLP_WNDPROC.
     inline ULONG_PTR CWnd::GetClassLongPtr(int index) const
     {
@@ -1559,7 +1559,7 @@ namespace Win32xx
 
 
     // The GetWindowLongPtr function retrieves information about the window.
-    // Possible nIndex values: GWL_EXSTYLE, GWL_STYLE, GWLP_WNDPROC, GWLP_HINSTANCE
+    // Possible index values: GWL_EXSTYLE, GWL_STYLE, GWLP_WNDPROC, GWLP_HINSTANCE
     // GWLP_HWNDPARENT, GWLP_ID, GWLP_USERDATA.
     // Additional nIndex values for dialogs: DWLP_DLGPROC, DWLP_MSGRESULT, DWLP_USER.
     inline LONG_PTR CWnd::GetWindowLongPtr(int index) const
@@ -1985,7 +1985,7 @@ namespace Win32xx
     // The SetWindowLongPtr function changes an attribute of the window.
     // Possible index values: GWL_EXSTYLE, GWL_STYLE, GWLP_WNDPROC, GWLP_HINSTANCE
     // GWLP_HWNDPARENT, GWLP_ID, GWLP_USERDATA.
-    // Additional nIndex values for dialogs: DWLP_DLGPROC, DWLP_MSGRESULT, DWLP_USER.
+    // Additional index values for dialogs: DWLP_DLGPROC, DWLP_MSGRESULT, DWLP_USER.
     inline LONG_PTR CWnd::SetWindowLongPtr(int index, LONG_PTR newLong) const
     {
         assert(IsWindow());

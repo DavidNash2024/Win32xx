@@ -53,10 +53,10 @@ private:
 
     static int CALLBACK CompareProc(LPARAM param1, LPARAM param2, LPARAM paramSort);
     void DeleteItems();
-    void DoItemMenu(HTREEITEM hItem, CPoint& point);
+    void DoItemMenu(HTREEITEM item, CPoint& point);
     void DoContextMenu(CPoint& point);
-    void EnumObjects(HTREEITEM hParentItem, CShellFolder& parentFolder, Cpidl& cpidlParent);
-    BOOL GetChildItems(HTREEITEM hParentItem);
+    void EnumObjects(HTREEITEM parentItem, CShellFolder& parentFolder, Cpidl& cpidlParent);
+    BOOL GetChildItems(HTREEITEM parentItem);
 
     CContextMenu2 m_ccm2;
     std::vector <TreeItemDataPtr> m_pItems;

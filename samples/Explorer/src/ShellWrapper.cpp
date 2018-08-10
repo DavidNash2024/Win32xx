@@ -61,23 +61,23 @@ namespace ShellWrapper
 
     HRESULT CContextMenu::InvokeCommand(CMINVOKECOMMANDINFO& Ici)
     {
-        HRESULT hr = m_pIContextMenu->InvokeCommand(&Ici);
+        HRESULT result = m_pIContextMenu->InvokeCommand(&Ici);
 
-        if (hr != NOERROR)
+        if (result != NOERROR)
         {
             TRACE("CContextMenu::InvokeCommand failed\n");
         }
-        return hr;
+        return result;
     }
 
     HRESULT CContextMenu::QueryInterface(REFIID iid, CContextMenu2& ccm2)
     {
-        HRESULT hr = 0;
+        HRESULT result = 0;
         if (IID_IContextMenu2 == iid)
         {
             IContextMenu2* pIContextMenu2 = NULL;
-            hr = m_pIContextMenu->QueryInterface(iid, (VOID**)&pIContextMenu2);
-            if (S_OK == hr)
+			result = m_pIContextMenu->QueryInterface(iid, (VOID**)&pIContextMenu2);
+            if (S_OK == result)
                 ccm2.Attach(pIContextMenu2);
             else
             {
@@ -87,17 +87,17 @@ namespace ShellWrapper
         else
             TRACE("Not Implemented!\n");
 
-        return hr;
+        return result;
     }
 
     HRESULT CContextMenu::QueryContextMenu(HMENU hmenu, UINT indexMenu, UINT idCmdFirst, UINT idCmdLast, UINT uFlags)
     {
-        HRESULT hr = m_pIContextMenu->QueryContextMenu(hmenu, indexMenu, idCmdFirst, idCmdLast, uFlags) ;
-        if(hr & 0x80000000)
+        HRESULT result = m_pIContextMenu->QueryContextMenu(hmenu, indexMenu, idCmdFirst, idCmdLast, uFlags) ;
+        if(result & 0x80000000)
         {
             TRACE("CContextMenu::QueryContextMenu failed\n");
         }
-        return hr;
+        return result;
     }
 
 
@@ -122,14 +122,14 @@ namespace ShellWrapper
 
     HRESULT CContextMenu2::HandleMenuMsg(UINT msg, WPARAM wparam, LPARAM lparam)
     {
-        HRESULT hr = m_pIContextMenu2->HandleMenuMsg(msg, wparam, lparam);
+        HRESULT result = m_pIContextMenu2->HandleMenuMsg(msg, wparam, lparam);
 
-        if((hr != S_OK) && (hr !=E_NOTIMPL))
+        if((result != S_OK) && (result !=E_NOTIMPL))
         {
             TRACE("CContextMenu2::HandleMenuMsg failed\n");
         }
 
-        return hr;
+        return result;
     }
 
     void CContextMenu2::Release()
@@ -174,15 +174,15 @@ namespace ShellWrapper
         LPSHELLFOLDER FolderTemp;
         LPITEMIDLIST pidl = cpidl.GetPidl();
 
-        HRESULT hr = m_IShellFolder->BindToObject(pidl, pbc, riid, (VOID**)&FolderTemp);
-        if(S_OK == hr)
+        HRESULT result = m_IShellFolder->BindToObject(pidl, pbc, riid, (VOID**)&FolderTemp);
+        if(S_OK == result)
             NewFolder.Attach(FolderTemp);
         else
         {
             TRACE("CShellFolder::BindToObject failed\n");
         }
 
-        return hr;
+        return result;
     }
 
     HRESULT CShellFolder::CompareIDs(LPARAM lparam, const Cpidl& cpidl1, const Cpidl& cpidl2)
@@ -213,24 +213,24 @@ namespace ShellWrapper
     HRESULT CShellFolder::CreateViewObject(HWND hwnd, REFIID riid, CContextMenu& ccm)
     {
         IContextMenu* pcm;
-        HRESULT hr = m_IShellFolder->CreateViewObject(hwnd, riid, (LPVOID*)&pcm);
-        if (S_OK == hr)
+        HRESULT result = m_IShellFolder->CreateViewObject(hwnd, riid, (LPVOID*)&pcm);
+        if (S_OK == result)
             ccm.Attach(pcm);
         else
         {
             TRACE("CShellFolder::CreateViewObject failed\n");
         }
-        return hr;
+        return result;
     }
 
     HRESULT CShellFolder::EnumObjects(HWND hwndOwner, int grfFlags, CEnumIDList& cenumIDList)
     {
         LPENUMIDLIST pEnum;
-        HRESULT hr = 0;
+        HRESULT result = 0;
         if (m_IShellFolder)
         {
-            hr = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
-            if (S_OK == hr)
+			result = m_IShellFolder->EnumObjects(hwndOwner, grfFlags, &pEnum);
+            if (S_OK == result)
                 cenumIDList.Attach(pEnum);
             else
                 TRACE("CShellFolder::EnumObjects failed\n");
@@ -238,30 +238,30 @@ namespace ShellWrapper
         else
             TRACE("CShellFolder::EnumObjects failed\n");
 
-        return hr;
+        return result;
     }
 
     HRESULT CShellFolder::GetAttributesOf(UINT cidl, const Cpidl& cpidl, ULONG& rgfInOut)
     {
         LPCITEMIDLIST pidl = cpidl.GetPidl();
-        HRESULT hr = m_IShellFolder->GetAttributesOf(cidl, &pidl, &rgfInOut);
+        HRESULT result = m_IShellFolder->GetAttributesOf(cidl, &pidl, &rgfInOut);
 
-        if (hr != S_OK)
+        if (result != S_OK)
         {
             TRACE("CShellFolder::GetAttributesOf failed\n");
         }
-        return hr;
+        return result;
     }
 
     HRESULT CShellFolder::SHGetDesktopFolder()
     {
-        HRESULT hr = ::SHGetDesktopFolder(&m_IShellFolder);
+        HRESULT result = ::SHGetDesktopFolder(&m_IShellFolder);
 
-        if (hr != NOERROR)
+        if (result != NOERROR)
         {
             TRACE("CShellFolder::SHGetDesktopFolder failed\n");
         }
-        return hr;
+        return result;
     }
 
     HRESULT CShellFolder::GetUIObjectOf(HWND hwndOwner, UINT nItems, Cpidl* cpidlArray, REFIID riid, UINT rgfReserved, CContextMenu& cm)
@@ -276,9 +276,9 @@ namespace ShellWrapper
             pPidlArray[i] = cpidlArray[i].GetPidl();
 
         IContextMenu* ppv;
-        HRESULT hr = m_IShellFolder->GetUIObjectOf(hwndOwner, nItems, pPidlArray, riid, &rgfReserved, (VOID**)&ppv);
+        HRESULT result = m_IShellFolder->GetUIObjectOf(hwndOwner, nItems, pPidlArray, riid, &rgfReserved, (VOID**)&ppv);
 
-        if (S_OK == hr)
+        if (S_OK == result)
             cm.Attach(ppv);
         else
         {
@@ -286,7 +286,7 @@ namespace ShellWrapper
         }
 
         CoTaskMemFree(pPidlArray);
-        return hr;
+        return result;
     }
 
     //Deletes the memory allocated for m_IShellFolder (if any)
@@ -322,15 +322,15 @@ namespace ShellWrapper
         LPITEMIDLIST pidl;
         if (m_pEnumIDList)
         {
-            HRESULT hr = m_pEnumIDList->Next(Elements, &pidl, &ulFetched);
-            if (NOERROR == hr)
+            HRESULT result = m_pEnumIDList->Next(Elements, &pidl, &ulFetched);
+            if (NOERROR == result)
                 cpidl.Attach(pidl);
 
-            if ((NOERROR != hr) && (S_FALSE != hr))
+            if ((NOERROR != result) && (S_FALSE != result))
             {
                 TRACE("CEnumIDList::Next failed\n");
             }
-            return hr;
+            return result;
         }
         else
             return S_FALSE;
@@ -393,12 +393,12 @@ namespace ShellWrapper
     HRESULT Cpidl::SHGetSpecialFolderLocation(HWND hwnd, int csidl)
     {
         Delete(); //Release the memory for m_pidl
-        HRESULT hr = ::SHGetSpecialFolderLocation(hwnd, csidl, &m_pidl);
-        if (hr != S_OK)
+        HRESULT result = ::SHGetSpecialFolderLocation(hwnd, csidl, &m_pidl);
+        if (result != S_OK)
         {
             TRACE("Cpidl::SHGetSpecialFolderLocation failed\n");
         }
-        return hr;
+        return result;
     }
 
     DWORD_PTR Cpidl::SHGetFileInfo(DWORD dwFileAttributes, SHFILEINFO& sfi, UINT uFlags)

@@ -3401,7 +3401,7 @@ namespace Win32xx
     // Retrieve and Select Stock Objects
 
     // Retrieves a stock brush, pen, or font.
-    // nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
+    // index values:  BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
     //                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,
     //                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT.
     inline HGDIOBJ CDC::GetStockObject(int index) const
@@ -3411,7 +3411,7 @@ namespace Win32xx
 
 
     // Selects a stock brush, pen, or font into the device context.
-    // nIndex values: BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
+    // index values:  BLACK_BRUSH, DKGRAY_BRUSH, DC_BRUSH, HOLLOW_BRUSH, LTGRAY_BRUSH, NULL_BRUSH,
     //                WHITE_BRUSH, BLACK_PEN, DC_PEN, ANSI_FIXED_FONT, ANSI_VAR_FONT, DEVICE_DEFAULT_FONT,
     //                DEFAULT_GUI_FONT, OEM_FIXED_FONT, SYSTEM_FONT, or SYSTEM_FIXED_FONT.
     inline HGDIOBJ CDC::SelectStockObject(int index) const
@@ -4456,7 +4456,7 @@ namespace Win32xx
     {
 #if (WINVER >= 0x0500)
         // Sets the layout of a device context
-        return ::SetLayout(m_pData->hDC, dwLayout);
+        return ::SetLayout(m_pData->hDC, layout);
 #else
         UNREFERENCED_PARAMETER(layout); // no-op
         return 0;

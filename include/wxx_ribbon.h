@@ -490,11 +490,10 @@ namespace Win32xx
         {
             for (iter = fileNames.begin(); iter != fileNames.end(); ++iter)
             {
-                CString strCurrentFile = (*iter);
-                WCHAR wszCurrentFile[MAX_PATH] = {0};
-                lstrcpynW(wszCurrentFile, TtoW(strCurrentFile), MAX_PATH);
+                WCHAR curFileName[MAX_PATH] = {0};
+				lstrcpynW(curFileName, TtoW(*iter), MAX_PATH);
 
-                CRecentFiles* pRecentFiles = new CRecentFiles(wszCurrentFile);
+                CRecentFiles* pRecentFiles = new CRecentFiles(curFileName);
                 m_recentFiles.push_back(RecentFilesPtr(pRecentFiles));
 				result = SafeArrayPutElement(psa, &currentFile, static_cast<void*>(pRecentFiles));
                 ++currentFile;

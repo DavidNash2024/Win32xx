@@ -218,10 +218,10 @@ BOOL CMainFrame::OnCommand(WPARAM wparam, LPARAM lparam)
 
     case ID_RADIO_A:
     case ID_RADIO_B:        // intentionally blank
-    case ID_RADIO_C:        m_view.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, nID);   return TRUE;
+    case ID_RADIO_C:        m_view.OnRangeOfIDs(ID_RADIO_A, ID_RADIO_C, id);   return TRUE;
 
     case IDM_HELP_ABOUT:    m_appHelp.About(*this); return TRUE;    // Menu item
-    case IDM_HELP_CONTENT:  ShowHelpTopic(nID);     return TRUE;    // Menu item
+    case IDM_HELP_CONTENT:  ShowHelpTopic(id);     return TRUE;    // Menu item
     case IDM_HELP_CONTEXT:  ChooseHelpTopic();      return TRUE;    // Toolbar Button
     case IDM_SHIFT_F1:      OnShiftF1();            return TRUE;    // Accelerator
     case IDM_F1:            OnF1();                 return TRUE;    // Accelerator

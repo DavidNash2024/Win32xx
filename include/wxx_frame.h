@@ -370,7 +370,7 @@ namespace Win32xx
         MenuTheme& GetMenuBarTheme() const          { return m_mbTheme; }
         CMenuMetrics& GetMenuMetrics()              { return m_menuMetrics; }
         std::vector<CString> GetMRUEntries() const  { return m_mruEntries; }
-        CString GetMRUEntry(UINT nIndex);
+        CString GetMRUEntry(UINT index);
         UINT GetMRULimit() const                    { return m_maxMRU; }
         CString GetRegistryKeyName() const          { return m_keyName; }
         ReBarTheme& GetReBarTheme() const           { return m_rbTheme; }
@@ -3208,10 +3208,10 @@ namespace Win32xx
     inline void CFrameT<T>::SetFrameMenu(UINT menuID)
     {
         HMENU hMenu = 0;
-        if (ID_MENU != 0)
+        if (menuID != 0)
         {
         // Sets the frame's menu from a resource ID.
-            hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(ID_MENU));
+            hMenu = ::LoadMenu(GetApp().GetResourceHandle(), MAKEINTRESOURCE(menuID));
             assert (hMenu);
         }
 
