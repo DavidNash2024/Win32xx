@@ -683,23 +683,23 @@ namespace Win32xx
     // This technique works for all Window versions, including WinCE.
     inline void CWinApp::SetCallback()
     {
-        WNDCLASS default;
-        ZeroMemory(&default, sizeof(default));
+        WNDCLASS defaultWC;
+        ZeroMemory(&defaultWC, sizeof(defaultWC));
 
         LPCTSTR pClassName    = _T("Win32++ Temporary Window Class");
-		default.hInstance     = GetInstanceHandle();
-		default.lpfnWndProc   = CWnd::StaticWindowProc;
-		default.lpszClassName = pClassName;
+		defaultWC.hInstance     = GetInstanceHandle();
+		defaultWC.lpfnWndProc   = CWnd::StaticWindowProc;
+		defaultWC.lpszClassName = pClassName;
 
-        VERIFY(::RegisterClass(&default) != 0);
+        VERIFY(::RegisterClass(&defaultWC) != 0);
 
         // Retrieve the class information
-        ZeroMemory(&default, sizeof(default));
-        ::GetClassInfo(GetInstanceHandle(), pClassName, &default);
+        ZeroMemory(&defaultWC, sizeof(defaultWC));
+        ::GetClassInfo(GetInstanceHandle(), pClassName, &defaultWC);
 
         // Save the callback address of CWnd::StaticWindowProc
-        assert(default.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.
-        m_callback = default.lpfnWndProc;
+        assert(defaultWC.lpfnWndProc);  // Assert fails when running UNICODE build on ANSI OS.
+        m_callback = defaultWC.lpfnWndProc;
         VERIFY(::UnregisterClass(pClassName, GetInstanceHandle()) != 0);
     }
 

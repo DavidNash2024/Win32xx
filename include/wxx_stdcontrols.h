@@ -443,11 +443,11 @@ namespace Win32xx
 
 
     // Copies characters to a buffer and returns the number of characters copied.
-    inline int CEdit::GetLine(int nIndex, LPTSTR pBuffer, int maxLength) const
+    inline int CEdit::GetLine(int index, LPTSTR pBuffer, int maxLength) const
     {
         assert(IsWindow());
         *(LPWORD)pBuffer = static_cast<WORD>(maxLength);
-        return static_cast<int>(SendMessage(EM_GETLINE, nIndex, reinterpret_cast<LPARAM>(pBuffer)));
+        return static_cast<int>(SendMessage(EM_GETLINE, index, reinterpret_cast<LPARAM>(pBuffer)));
     }
 
 

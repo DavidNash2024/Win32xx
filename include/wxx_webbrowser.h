@@ -43,13 +43,13 @@
 
 #ifdef _MSC_VER
   #pragma warning (disable : 4091)  // temporarily disable C4091 warning
-#endif 
- 
+#endif
+
 #include <shlobj.h>
 
 #ifdef _MSC_VER
   #pragma warning (default : 4091)  // re-enable C4091 warning
-#endif 
+#endif
 
 
 namespace Win32xx
@@ -63,13 +63,13 @@ namespace Win32xx
     public:
         CAXWindow();
         virtual ~CAXWindow();
-        virtual void Activate(BOOL fFocus);
-        virtual void CreateControl(BSTR bstrClsid);
+        virtual void Activate(BOOL focus);
+        virtual void CreateControl(BSTR clsidName);
         virtual void CreateControl(REFCLSID clsid);
         virtual void Remove();
         virtual void SetParent(HWND hWndParent);
         virtual void SetLocation(int x, int y, int width, int height);
-        virtual void SetVisible(BOOL IsVisible);
+        virtual void SetVisible(BOOL isVisible);
         virtual void SetStatusWindow(HWND hWndStatus);
         virtual void TranslateKey(MSG msg);
         IDispatch* GetDispatch();
@@ -82,15 +82,15 @@ namespace Win32xx
 
         // IOleClientSite Methods
         STDMETHODIMP SaveObject();
-        STDMETHODIMP GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, LPMONIKER* ppMk);
+        STDMETHODIMP GetMoniker(DWORD assign, DWORD whichMoniker, LPMONIKER* ppMk);
         STDMETHODIMP GetContainer(LPOLECONTAINER* ppContainer);
         STDMETHODIMP ShowObject();
-        STDMETHODIMP OnShowWindow(BOOL Show);
+        STDMETHODIMP OnShowWindow(BOOL show);
         STDMETHODIMP RequestNewObjectLayout();
 
         // IOleWindow Methods
-        STDMETHODIMP GetWindow(HWND* phwnd);
-        STDMETHODIMP ContextSensitiveHelp(BOOL EnterMode);
+        STDMETHODIMP GetWindow(HWND* pHwnd);
+        STDMETHODIMP ContextSensitiveHelp(BOOL enterMode);
 
         // IOleInPlaceSite Methods
         STDMETHODIMP CanInPlaceActivate();
@@ -98,14 +98,14 @@ namespace Win32xx
         STDMETHODIMP OnUIActivate();
         STDMETHODIMP GetWindowContext(IOleInPlaceFrame** ppFrame, IOleInPlaceUIWindow** ppDoc, LPRECT lprcPosRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo);
         STDMETHODIMP Scroll(SIZE scrollExtent);
-        STDMETHODIMP OnUIDeactivate(BOOL fUndoable);
+        STDMETHODIMP OnUIDeactivate(BOOL undoable);
         STDMETHODIMP OnInPlaceDeactivate();
         STDMETHODIMP DiscardUndoState();
         STDMETHODIMP DeactivateAndUndo();
         STDMETHODIMP OnPosRectChange(LPCRECT lprcPosRect);
 
         // IOleInPlaceUIWindow Methods
-        STDMETHODIMP GetBorder(LPRECT lprectBorder);
+        STDMETHODIMP GetBorder(LPRECT pBorderRect);
         STDMETHODIMP RequestBorderSpace(LPCBORDERWIDTHS lpborderwidths);
         STDMETHODIMP SetBorderSpace(LPCBORDERWIDTHS lpborderwidths);
         STDMETHODIMP SetActiveObject(IOleInPlaceActiveObject* pActiveObject, LPCOLESTR lpszObjName);
@@ -114,24 +114,24 @@ namespace Win32xx
         STDMETHODIMP InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS lpMenuWidths);
         STDMETHODIMP SetMenu(HMENU hmenuShared, HOLEMENU holemenu, HWND hwndActiveObject);
         STDMETHODIMP RemoveMenus(HMENU hmenuShared);
-        STDMETHODIMP SetStatusText(LPCOLESTR pszStatusText);
-        STDMETHODIMP EnableModeless(BOOL Enable);
-        STDMETHODIMP TranslateAccelerator(LPMSG lpmsg, WORD wID);
+        STDMETHODIMP SetStatusText(LPCOLESTR pStatusText);
+        STDMETHODIMP EnableModeless(BOOL enable);
+        STDMETHODIMP TranslateAccelerator(LPMSG pMsg, WORD id);
 
         // IOleControlSite Methods
         STDMETHODIMP OnControlInfoChanged();
-        STDMETHODIMP LockInPlaceActive(BOOL Lock);
+        STDMETHODIMP LockInPlaceActive(BOOL lock);
         STDMETHODIMP GetExtendedControl(IDispatch** ppDisp);
-        STDMETHODIMP TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD dwFlags);
+        STDMETHODIMP TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD flags);
         STDMETHODIMP TranslateAccelerator(LPMSG pMsg, DWORD grfModifiers);
-        STDMETHODIMP OnFocus(BOOL fGotFocus);
+        STDMETHODIMP OnFocus(BOOL gotFocus);
         STDMETHODIMP ShowPropertyFrame();
 
         // IDispatch Methods
         STDMETHODIMP GetIDsOfNames(REFIID riid, OLECHAR** rgszNames, unsigned int cNames, LCID lcid, DISPID* rgdispid);
         STDMETHODIMP GetTypeInfo(unsigned int itinfo, LCID lcid, ITypeInfo** pptinfo);
         STDMETHODIMP GetTypeInfoCount(unsigned int* pctinfo);
-        STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
+        STDMETHODIMP Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pdispparams, VARIANT* result, EXCEPINFO* pexecinfo, unsigned int* puArgErr);
 
     private:
          ULONG       m_cRefs;       // ref count
@@ -244,24 +244,24 @@ namespace Win32xx
     }
 
 
-    inline void CAXWindow::CreateControl(BSTR bstrClsid)
+    inline void CAXWindow::CreateControl(BSTR clsidName)
     {
         CLSID   clsid;
-        if (NOERROR == CLSIDFromString(bstrClsid, &clsid))
+        if (NOERROR == CLSIDFromString(clsidName, &clsid))
             CreateControl(clsid);
     }
 
 
-    inline void CAXWindow::Activate(BOOL fFocus)
+    inline void CAXWindow::Activate(BOOL focus)
     {
         if (!m_pUnk)
             return;
 
-        if (fFocus)
+        if (focus)
         {
             IOleObject* pioo;
-            HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
-            if (FAILED(hr))
+            HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+            if (FAILED(result))
                 return;
 
             pioo->DoVerb(OLEIVERB_UIACTIVATE, NULL, this, 0, m_hWndAX, &m_rcControl);
@@ -278,16 +278,16 @@ namespace Win32xx
         assert(m_pUnk);
 
         IOleObject* pioo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
-        if (FAILED(hr))
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+        if (FAILED(result))
             return;
 
         pioo->SetClientSite(this);
         pioo->Release();
 
         IPersistStreamInit* ppsi;
-        hr = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
-        if (SUCCEEDED(hr))
+		result = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
+        if (SUCCEEDED(result))
         {
             ppsi->InitNew();
             ppsi->Release();
@@ -307,9 +307,9 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::ContextSensitiveHelp(BOOL EnterMode)
+    inline STDMETHODIMP CAXWindow::ContextSensitiveHelp(BOOL enterMode)
     {
-        UNREFERENCED_PARAMETER(EnterMode);
+        UNREFERENCED_PARAMETER(enterMode);
         return E_NOTIMPL;
     }
 
@@ -326,16 +326,16 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::EnableModeless(BOOL Enable)
+    inline STDMETHODIMP CAXWindow::EnableModeless(BOOL enable)
     {
-        UNREFERENCED_PARAMETER(Enable);
+        UNREFERENCED_PARAMETER(enable);
         return E_NOTIMPL;
     }
 
 
-    inline STDMETHODIMP CAXWindow::GetBorder(LPRECT lprectBorder)
+    inline STDMETHODIMP CAXWindow::GetBorder(LPRECT pBorderRect)
     {
-        UNREFERENCED_PARAMETER(lprectBorder);
+        UNREFERENCED_PARAMETER(pBorderRect);
         return E_NOTIMPL;
     }
 
@@ -383,10 +383,10 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, LPMONIKER* ppMk)
+    inline STDMETHODIMP CAXWindow::GetMoniker(DWORD assign, DWORD whichMoniker, LPMONIKER* ppMk)
     {
-        UNREFERENCED_PARAMETER(dwAssign);
-        UNREFERENCED_PARAMETER(dwWhichMoniker);
+        UNREFERENCED_PARAMETER(assign);
+        UNREFERENCED_PARAMETER(whichMoniker);
         UNREFERENCED_PARAMETER(ppMk);
         return E_NOTIMPL;
     }
@@ -418,12 +418,12 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::GetWindow(HWND* lphwnd)
+    inline STDMETHODIMP CAXWindow::GetWindow(HWND* pHwnd)
     {
         if (!IsWindow(m_hWndAX))
             return S_FALSE;
 
-        *lphwnd = m_hWndAX;
+        *pHwnd = m_hWndAX;
         return S_OK;
     }
 
@@ -454,31 +454,31 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS lpMenuWidths)
+    inline STDMETHODIMP CAXWindow::InsertMenus(HMENU hmenuShared, LPOLEMENUGROUPWIDTHS pMenuWidths)
     {
         UNREFERENCED_PARAMETER(hmenuShared);
-        UNREFERENCED_PARAMETER(lpMenuWidths);
+        UNREFERENCED_PARAMETER(pMenuWidths);
         return E_NOTIMPL;
     }
 
 
-    inline STDMETHODIMP CAXWindow::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD wFlags, DISPPARAMS* pdispparams, VARIANT* pvarResult, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
+    inline STDMETHODIMP CAXWindow::Invoke(DISPID dispid, REFIID riid, LCID lcid, WORD flags, DISPPARAMS* pdispparams, VARIANT* result, EXCEPINFO* pexecinfo, unsigned int* puArgErr)
     {
         UNREFERENCED_PARAMETER(dispid);
         UNREFERENCED_PARAMETER((IID)riid);      // IID cast required for the MinGW compiler
         UNREFERENCED_PARAMETER(lcid);
-        UNREFERENCED_PARAMETER(wFlags);
+        UNREFERENCED_PARAMETER(flags);
         UNREFERENCED_PARAMETER(pdispparams);
-        UNREFERENCED_PARAMETER(pvarResult);
+        UNREFERENCED_PARAMETER(result);
         UNREFERENCED_PARAMETER(pexecinfo);
         UNREFERENCED_PARAMETER(puArgErr);
         return DISP_E_MEMBERNOTFOUND;
     }
 
 
-    inline STDMETHODIMP CAXWindow::LockInPlaceActive(BOOL Lock)
+    inline STDMETHODIMP CAXWindow::LockInPlaceActive(BOOL lock)
     {
-        UNREFERENCED_PARAMETER(Lock);
+        UNREFERENCED_PARAMETER(lock);
         return E_NOTIMPL;
     }
 
@@ -489,9 +489,9 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::OnFocus(BOOL fGotFocus)
+    inline STDMETHODIMP CAXWindow::OnFocus(BOOL gotFocus)
     {
-        UNREFERENCED_PARAMETER(fGotFocus);
+        UNREFERENCED_PARAMETER(gotFocus);
         return E_NOTIMPL;
     }
 
@@ -508,16 +508,16 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::OnPosRectChange(LPCRECT lprcPosRect)
+    inline STDMETHODIMP CAXWindow::OnPosRectChange(LPCRECT pPosRect)
     {
-        UNREFERENCED_PARAMETER(lprcPosRect);
+        UNREFERENCED_PARAMETER(pPosRect);
         return S_OK;
     }
 
 
-    inline STDMETHODIMP CAXWindow::OnShowWindow(BOOL Show)
+    inline STDMETHODIMP CAXWindow::OnShowWindow(BOOL show)
     {
-        UNREFERENCED_PARAMETER(Show);
+        UNREFERENCED_PARAMETER(show);
         return S_OK;
     }
 
@@ -528,9 +528,9 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::OnUIDeactivate(BOOL fUndoable)
+    inline STDMETHODIMP CAXWindow::OnUIDeactivate(BOOL undoable)
     {
-        UNREFERENCED_PARAMETER(fUndoable);
+        UNREFERENCED_PARAMETER(undoable);
         return E_NOTIMPL;
     }
 
@@ -579,8 +579,8 @@ namespace Win32xx
             return;
 
         IOleObject* pioo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
-        if (SUCCEEDED(hr))
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+        if (SUCCEEDED(result))
         {
             pioo->Close(OLECLOSE_NOSAVE);
             pioo->SetClientSite(NULL);
@@ -588,8 +588,8 @@ namespace Win32xx
         }
 
         IOleInPlaceObject* pipo;
-        hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
-        if (SUCCEEDED(hr))
+		result = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
+        if (SUCCEEDED(result))
         {
             pipo->UIDeactivate();
             pipo->InPlaceDeactivate();
@@ -655,8 +655,8 @@ namespace Win32xx
             return;
 
         IOleInPlaceObject* pipo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
-        if (FAILED(hr))
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
+        if (FAILED(result))
             return;
 
         pipo->SetObjectRects(&m_rcControl, &m_rcControl);
@@ -679,21 +679,21 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pszStatusText)
+    inline STDMETHODIMP CAXWindow::SetStatusText(LPCOLESTR pStatusText)
     {
-        if (NULL == pszStatusText)
+        if (NULL == pStatusText)
             return E_POINTER;
 
     #ifndef UNICODE
         char status[MAX_PATH];
         // Convert the Wide string to char
-        WideCharToMultiByte(CP_ACP, 0, pszStatusText, -1, status, MAX_PATH, NULL, NULL);
+        WideCharToMultiByte(CP_ACP, 0, pStatusText, -1, status, MAX_PATH, NULL, NULL);
 
         if (IsWindow(m_hWndStatus))
             SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(status));
     #else
         if (IsWindow(m_hWndStatus))
-            SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(pszStatusText));
+            SendMessage(m_hWndStatus, SB_SETTEXT, 0, reinterpret_cast<LPARAM>(pStatusText));
     #endif
 
         return S_OK;
@@ -706,17 +706,17 @@ namespace Win32xx
     }
 
 
-    inline void CAXWindow::SetVisible(BOOL IsVisible)
+    inline void CAXWindow::SetVisible(BOOL isVisible)
     {
         if (!m_pUnk)
             return;
 
         IOleObject* pioo;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
-        if (FAILED(hr))
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleObject, reinterpret_cast<void**>(&pioo));
+        if (FAILED(result))
             return;
 
-        if (IsVisible)
+        if (isVisible)
         {
             pioo->DoVerb(OLEIVERB_INPLACEACTIVATE, NULL, this, 0, m_hWndAX, &m_rcControl);
             pioo->DoVerb(OLEIVERB_SHOW, NULL, this, 0, m_hWndAX, &m_rcControl);
@@ -740,19 +740,19 @@ namespace Win32xx
     }
 
 
-    inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD dwFlags)
+    inline STDMETHODIMP CAXWindow::TransformCoords(POINTL* pptlHimetric, POINTF* pptfContainer, DWORD flags)
     {
         UNREFERENCED_PARAMETER(pptlHimetric);
         UNREFERENCED_PARAMETER(pptfContainer);
-        UNREFERENCED_PARAMETER(dwFlags);
+        UNREFERENCED_PARAMETER(flags);
         return E_NOTIMPL;
     }
 
 
-    inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG lpmsg, WORD wID)
+    inline STDMETHODIMP CAXWindow::TranslateAccelerator(LPMSG pMsg, WORD id)
     {
-        UNREFERENCED_PARAMETER(lpmsg);
-        UNREFERENCED_PARAMETER(wID);
+        UNREFERENCED_PARAMETER(pMsg);
+        UNREFERENCED_PARAMETER(id);
         return S_OK;
     }
 
@@ -771,8 +771,8 @@ namespace Win32xx
             return;
 
         IOleInPlaceActiveObject* pao;
-        HRESULT hr = m_pUnk->QueryInterface(IID_IOleInPlaceActiveObject, reinterpret_cast<void**>(&pao));
-        if (FAILED(hr))
+        HRESULT result = m_pUnk->QueryInterface(IID_IOleInPlaceActiveObject, reinterpret_cast<void**>(&pao));
+        if (FAILED(result))
             return;
 
         pao->TranslateAccelerator(&msg);
@@ -814,11 +814,11 @@ namespace Win32xx
         if(pUnk)
         {
             // Store the pointer to the WebBrowser control
-            HRESULT hr = pUnk->QueryInterface(IID_IWebBrowser2, reinterpret_cast<void**>(&m_pIWebBrowser2));
+            HRESULT result = pUnk->QueryInterface(IID_IWebBrowser2, reinterpret_cast<void**>(&m_pIWebBrowser2));
             pUnk->Release();
 
             // Navigate to an empty page
-            if (SUCCEEDED(hr))
+            if (SUCCEEDED(result))
             {
                 Navigate(_T("about:blank"));
             }

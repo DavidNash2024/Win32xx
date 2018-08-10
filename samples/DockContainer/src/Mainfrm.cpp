@@ -192,7 +192,7 @@ void CMainFrame::OnInitialUpdate()
     HideSingleContainerTab(m_hideSingleTab);
 
     // PreCreate initially set the window as invisible, so show it now.
-    ShowWindow( GetInitValues().ShowCmd );
+    ShowWindow( GetInitValues().showCmd );
 }
 
 void CMainFrame::OnMenuUpdate(UINT id)

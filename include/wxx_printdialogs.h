@@ -215,7 +215,7 @@ namespace Win32xx
         CString GetDeviceName() const;
         CString GetDriverName() const;
         int     GetFromPage() const;
-        const   PRINTDLG& GetParameters()  const { return m_PD; }
+        const   PRINTDLG& GetParameters()  const { return m_pd; }
         CString GetPortName() const;
         CDC     GetPrinterDC() const;
         int     GetToPage() const;
@@ -242,7 +242,7 @@ namespace Win32xx
         }
 
         // printer resources
-        PRINTDLG        m_PD;           // printer selection dlg structure
+        PRINTDLG        m_pd;           // printer selection dlg structure
     };
 
 
@@ -389,34 +389,34 @@ namespace Win32xx
     inline CPrintDialog::CPrintDialog(DWORD flags /* = PD_ALLPAGES | PD_USEDEVMODECOPIES | PD_NOPAGENUMS | PD_HIDEPRINTTOFILE | PD_NOSELECTION */)
     {
         // initialize the PRINTDLG member
-        ZeroMemory(&m_PD, sizeof(m_PD));
+        ZeroMemory(&m_pd, sizeof(m_pd));
 
-        m_PD.Flags = flags;
+        m_pd.Flags = flags;
 
         // Support the PD_PRINTSETUP flag which displays the obsolete PrintSetup dialog.
         // Note: CPageSetupDialog should be used instead of the PrintSetup dialog.
         if (flags & PD_PRINTSETUP)
         {
-            m_PD.Flags &= ~PD_RETURNDC;
+            m_pd.Flags &= ~PD_RETURNDC;
         }
         else
         {
-            m_PD.Flags |= PD_RETURNDC;
+            m_pd.Flags |= PD_RETURNDC;
         }
 
-        m_PD.Flags &= ~PD_RETURNIC;
+        m_pd.Flags &= ~PD_RETURNIC;
 
         // Enable the hook proc for the help button
-        if (m_PD.Flags & PD_SHOWHELP)
-            m_PD.Flags |= PD_ENABLEPRINTHOOK;
+        if (m_pd.Flags & PD_SHOWHELP)
+            m_pd.Flags |= PD_ENABLEPRINTHOOK;
 
-        SetParameters(m_PD);
+        SetParameters(m_pd);
     }
 
     inline CPrintDialog::~CPrintDialog()
     {
-        if (m_PD.hDC)
-            ::DeleteDC(m_PD.hDC);
+        if (m_pd.hDC)
+            ::DeleteDC(m_pd.hDC);
     }
 
 
@@ -512,14 +512,14 @@ namespace Win32xx
         GetApp().UpdateDefaultPrinter();
 
         // Assign values to the PRINTDLG structure
-        m_PD.hDevMode = GetApp().m_hDevMode;
-        m_PD.hDevNames = GetApp().m_hDevNames;
-        m_PD.hwndOwner = hWndOwner;
+        m_pd.hDevMode = GetApp().m_hDevMode;
+        m_pd.hDevNames = GetApp().m_hDevNames;
+        m_pd.hwndOwner = hWndOwner;
 
-        if (m_PD.hDC != 0)
+        if (m_pd.hDC != 0)
         {
-            ::DeleteDC(m_PD.hDC);
-            m_PD.hDC = 0;
+            ::DeleteDC(m_pd.hDC);
+            m_pd.hDC = 0;
         }
 
         // Ensure this thread has the TLS index set
@@ -528,12 +528,12 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // invoke the control and save the result
-        BOOL ok = ::PrintDlg(&m_PD);
+        BOOL ok = ::PrintDlg(&m_pd);
 
         if (ok)
         {
-            GetApp().m_hDevMode = m_PD.hDevMode;
-            GetApp().m_hDevNames = m_PD.hDevNames;
+            GetApp().m_hDevMode = m_pd.hDevMode;
+            GetApp().m_hDevNames = m_pd.hDevNames;
             OnOK();
             ok = IDOK;
         }
@@ -555,8 +555,8 @@ namespace Win32xx
             ok = IDCANCEL;
         }
 
-        m_PD.hDevMode = 0;
-        m_PD.hDevNames = 0;
+        m_pd.hDevMode = 0;
+        m_pd.hDevNames = 0;
 
         return ok;
     }
@@ -565,10 +565,10 @@ namespace Win32xx
     // Retrieves the number of copies requested.
     inline int CPrintDialog::GetCopies() const
     {
-        if (m_PD.Flags & PD_USEDEVMODECOPIES)
+        if (m_pd.Flags & PD_USEDEVMODECOPIES)
             return GetDevMode()->dmCopies;
         else
-            return m_PD.nCopies;
+            return m_pd.nCopies;
     }
 
 
@@ -582,21 +582,21 @@ namespace Win32xx
         // Reset global memory
         GlobalFreeAll();
 
-        if (m_PD.hDC)
+        if (m_pd.hDC)
         {
-            ::DeleteDC(m_PD.hDC);
-            m_PD.hDC = 0;
+            ::DeleteDC(m_pd.hDC);
+            m_pd.hDC = 0;
         }
 
-        m_PD.Flags |= PD_RETURNDEFAULT;
-        ::PrintDlg(&m_PD);
-        m_PD.Flags &= ~PD_RETURNDEFAULT;
+        m_pd.Flags |= PD_RETURNDEFAULT;
+        ::PrintDlg(&m_pd);
+        m_pd.Flags &= ~PD_RETURNDEFAULT;
 
-        GetApp().m_hDevMode = m_PD.hDevMode;
-        GetApp().m_hDevNames = m_PD.hDevNames;
+        GetApp().m_hDevMode = m_pd.hDevMode;
+        GetApp().m_hDevNames = m_pd.hDevNames;
 
-        m_PD.hDevMode = 0;
-        m_PD.hDevNames = 0;
+        m_pd.hDevMode = 0;
+        m_pd.hDevNames = 0;
 
         // Return TRUE if default printer exists
         return (GetApp().m_hDevNames != 0);
@@ -662,7 +662,7 @@ namespace Win32xx
     // Retrieves the starting page of the print range.
     inline int CPrintDialog::GetFromPage() const
     {
-        return (PrintRange() ? m_PD.nFromPage : -1);
+        return (PrintRange() ? m_pd.nFromPage : -1);
     }
 
 
@@ -684,7 +684,7 @@ namespace Win32xx
     // Retrieves the ending page of the print range.
     inline int CPrintDialog::GetToPage() const
     {
-        return (PrintRange() ? m_PD.nToPage : -1);
+        return (PrintRange() ? m_pd.nToPage : -1);
     }
 
 
@@ -700,10 +700,10 @@ namespace Win32xx
     // should collate all printed copies of the document.
     inline BOOL CPrintDialog::PrintCollate() const
     {
-        if (m_PD.Flags & PD_USEDEVMODECOPIES)
+        if (m_pd.Flags & PD_USEDEVMODECOPIES)
             return (GetDevMode()->dmCollate == DMCOLLATE_TRUE);
         else
-            return (m_PD.Flags & PD_COLLATE ? TRUE : FALSE);
+            return (m_pd.Flags & PD_COLLATE ? TRUE : FALSE);
     }
 
 
@@ -711,7 +711,7 @@ namespace Win32xx
     // only a range of pages in the document.
     inline BOOL CPrintDialog::PrintRange() const
     {
-        return m_PD.Flags & PD_PAGENUMS ? TRUE : FALSE;
+        return m_pd.Flags & PD_PAGENUMS ? TRUE : FALSE;
     }
 
 
@@ -719,29 +719,29 @@ namespace Win32xx
     // only the currently selected items.
     inline BOOL CPrintDialog::PrintSelection() const
     {
-        return m_PD.Flags & PD_SELECTION ? TRUE : FALSE;
+        return m_pd.Flags & PD_SELECTION ? TRUE : FALSE;
     }
 
 
     // Set the parameters of the PRINTDLG structure to sensible values
     inline void CPrintDialog::SetParameters(PRINTDLG& pd)
     {
-        m_PD.lStructSize    = sizeof(m_PD);
-        m_PD.hwndOwner      = 0;            // Set this in DoModal
-        m_PD.Flags          = pd.Flags;
-        m_PD.nFromPage      = pd.nFromPage;
-        m_PD.nToPage        = pd.nToPage;
-        m_PD.nMinPage       = pd.nMinPage;
-        m_PD.nMaxPage       = pd.nMaxPage;
-        m_PD.nCopies        = pd.nCopies;
-        m_PD.hInstance      = GetApp().GetResourceHandle();
-        m_PD.lpfnPrintHook  = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-        m_PD.lpfnSetupHook  = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-        m_PD.lCustData      = pd.lCustData;
-        m_PD.hPrintTemplate = pd.hPrintTemplate;
-        m_PD.hSetupTemplate = pd.hSetupTemplate;
-        m_PD.lpPrintTemplateName = pd.lpPrintTemplateName;
-        m_PD.lpSetupTemplateName = pd.lpSetupTemplateName;
+        m_pd.lStructSize    = sizeof(m_pd);
+        m_pd.hwndOwner      = 0;            // Set this in DoModal
+        m_pd.Flags          = pd.Flags;
+        m_pd.nFromPage      = pd.nFromPage;
+        m_pd.nToPage        = pd.nToPage;
+        m_pd.nMinPage       = pd.nMinPage;
+        m_pd.nMaxPage       = pd.nMaxPage;
+        m_pd.nCopies        = pd.nCopies;
+        m_pd.hInstance      = GetApp().GetResourceHandle();
+        m_pd.lpfnPrintHook  = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_pd.lpfnSetupHook  = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_pd.lCustData      = pd.lCustData;
+        m_pd.hPrintTemplate = pd.hPrintTemplate;
+        m_pd.hSetupTemplate = pd.hSetupTemplate;
+        m_pd.lpPrintTemplateName = pd.lpPrintTemplateName;
+        m_pd.lpSetupTemplateName = pd.lpSetupTemplateName;
     }
 
 

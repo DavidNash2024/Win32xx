@@ -199,7 +199,7 @@ namespace Win32xx
         void     FormatV(const T* pFormat, va_list args);
         void     FormatMessage(const T* pFormat,...);
         void     FormatMessageV(const T* pFormat, va_list args);
-        T        GetAt(int nIndex) const;
+        T        GetAt(int index) const;
         T*       GetBuffer(int minBufLength);
         void     GetErrorString(DWORD error);
         void     GetWindowText(HWND hWnd);
@@ -1195,7 +1195,7 @@ namespace Win32xx
     {
         assert(index >= 0);
 
-        nIndex = MIN(nIndex, GetLength());
+        index = MIN(index, GetLength());
         m_str.insert(index, str);
 
         return static_cast<int>(m_str.size());

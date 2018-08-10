@@ -1127,9 +1127,9 @@ namespace Win32xx
 
             // Add the menu title to the string table
             std::vector<TCHAR> vMenuName( MAX_MENU_STRING+1, _T('\0') );
-            TCHAR* szMenuName = &vMenuName[0];
-            GetMenuString(hMenu, i, szMenuName, MAX_MENU_STRING, MF_BYPOSITION);
-            SetButtonText(i  + nMaxedOffset, szMenuName);
+            TCHAR* pMenuName = &vMenuName[0];
+            GetMenuString(hMenu, i, pMenuName, MAX_MENU_STRING, MF_BYPOSITION);
+            SetButtonText(i  + nMaxedOffset, pMenuName);
         }
     }
 

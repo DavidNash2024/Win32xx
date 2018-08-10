@@ -248,18 +248,18 @@ void CMainFrame::SerializeINI(BOOL isStoring)
 
         if (left != failed && top != failed && width != failed && height != failed && showCmd != failed) 
         {
-            values.rcPos = CRect(left, top, left + width, top + height);
-            values.ShowCmd = showCmd;
+            values.position = CRect(left, top, left + width, top + height);
+            values.showCmd = showCmd;
 
             // Set the show state of the status bar
             UINT showStatus = ::GetPrivateProfileInt (key, _T("StatusBar"), 0, fileName);
             if (showStatus != failed)
-                values.ShowStatusBar = showStatus;
+                values.showStatusBar = showStatus;
 
             // Set the show state of the tool bar
             UINT showTool = ::GetPrivateProfileInt (key, _T("ToolBar"), 0, fileName);
             if (showTool != failed)
-                values.ShowToolBar = showTool;
+                values.showToolBar = showTool;
         }
         else
         {

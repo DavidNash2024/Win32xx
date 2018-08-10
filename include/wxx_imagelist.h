@@ -345,8 +345,8 @@ namespace Win32xx
         assert(m_pData);
         assert(NULL == m_pData->hImageList);
 
-        LPCTSTR lpszBitmapID = MAKEINTRESOURCE (bitmapID);
-        return Create(lpszBitmapID, cx, grow, mask);
+        LPCTSTR pBitmapName = MAKEINTRESOURCE (bitmapID);
+        return Create(pBitmapName, cx, grow, mask);
     }
 
 

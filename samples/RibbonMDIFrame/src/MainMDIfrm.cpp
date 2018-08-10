@@ -90,7 +90,7 @@ int CMainMDIFrame::OnCreate(CREATESTRUCT &cs)
     {
         // Set the initial status bar check box
         InitValues values = GetInitValues();
-        BOOL showStatusBar = values.ShowStatusBar;
+        BOOL showStatusBar = values.showStatusBar;
         PROPVARIANT var;
 
         InitPropVariantFromBoolean(showStatusBar, &var);
