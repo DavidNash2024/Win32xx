@@ -47,7 +47,7 @@ CMainFrame::CMainFrame() : m_view(IDD_DIALOG1), m_isChoosing(FALSE)
 
     if (::PathFileExists(helpPath))
     {
-        // Specify the help file used by CAppHelp
+        // Specify the help file used by CHelp
         m_appHelp.SetHelpFilePath(helpPath);
     }
     else
@@ -119,8 +119,10 @@ CString CMainFrame::CreateAppDataFolder(const CString& subfolder)
 
         CString add = subfolder.Mid(from, next - from);
         app_data_path += _T("\\") + add;
-        if (::CreateDirectory(app_data_path, 0) != 0)
-        {
+		::CreateDirectory(app_data_path, 0);
+
+        if ((::CreateDirectory(app_data_path, 0) == 0) && GetLastError() != ERROR_ALREADY_EXISTS)
+        { 
             CString msg = app_data_path + _T("\nDirectory creation error.");
             throw CUserException(msg);
         }

@@ -567,8 +567,8 @@ namespace Win32xx
     {
         assert(IsWindow());
         CHARRANGE range;
-		range.cpMin = first;
-		range.cpMax = last;
+        range.cpMin = first;
+        range.cpMax = last;
 
         CString refString;
         TEXTRANGE tr;
@@ -619,8 +619,8 @@ namespace Win32xx
 
 
     // Retrieves the character index of a given line.
-	// index -   Specifies the zero-based line number. 
-	//           A value of –1 specifies the current line number.  
+    // index -   Specifies the zero-based line number. 
+    //           A value of –1 specifies the current line number.  
     inline int CRichEdit::LineIndex(int lineIndex /* = -1 */) const
     {
         assert(IsWindow());
@@ -629,9 +629,9 @@ namespace Win32xx
 
 
     // Retrieves the length of a given line.
-	// charIndex - Specifies the character index of a character in the line whose length is to be retrieved.
-	//             This parameter can be –1. In this case, the message returns the number of unselected
-	//             characters on lines containing selected characters.
+    // charIndex - Specifies the character index of a character in the line whose length is to be retrieved.
+    //             This parameter can be –1. In this case, the message returns the number of unselected
+    //             characters on lines containing selected characters.
     inline int CRichEdit::LineLength(int charIndex /* = -1 */) const
     {
         assert(IsWindow());

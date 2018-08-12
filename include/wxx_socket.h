@@ -135,7 +135,7 @@ namespace Win32xx
     {
     public:
         CSocket();
-		virtual ~CSocket();
+        virtual ~CSocket();
 
         // Operations
         virtual void Accept(CSocket& rClientSock, struct sockaddr* addr, int* addrlen) const;
@@ -188,8 +188,8 @@ namespace Win32xx
 
         SOCKET m_socket;
         HMODULE m_hWS2_32;
-        CWinThread* m_pThread;   // A worker thread for the events
-        CEvent m_stopRequest;   // A manual reset event to signal the event thread should stop
+        Shared_Ptr<CWinThread> m_threadPtr;  // Smart pointer to the worker thread for the events
+        CEvent m_stopRequest;                // A manual reset event to signal the event thread should stop
 
         GETADDRINFO* m_pfnGetAddrInfo;      // pointer for the GetAddrInfo function
         FREEADDRINFO* m_pfnFreeAddrInfo;    // pointer for the FreeAddrInfo function
@@ -221,7 +221,7 @@ namespace Win32xx
         m_pfnFreeAddrInfo = reinterpret_cast<FREEADDRINFO*>( GetProcAddress(m_hWS2_32, "freeaddrinfo") );
 #endif
 
-		m_pThread = new CWinThread(EventThread, this);
+        m_threadPtr = new CWinThread(EventThread, this);
 
     }
 
@@ -261,7 +261,7 @@ namespace Win32xx
             hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
             ADDRINFO *AddrInfo;
             CString portName;
-			portName.Format(_T("%u"), port);
+            portName.Format(_T("%u"), port);
 
             result = GetAddrInfo(addr, portName, &hints, &AddrInfo);
             if (result != 0)
@@ -326,7 +326,7 @@ namespace Win32xx
             ADDRINFO *AddrInfo;
 
             CString portName;
-			portName.Format(_T("%u"), port);
+            portName.Format(_T("%u"), port);
             result = GetAddrInfo(addr, portName, &hints, &AddrInfo);
             if (result != 0)
             {
@@ -397,9 +397,9 @@ namespace Win32xx
     inline void CSocket::Disconnect()
     {
         ::shutdown(m_socket, SD_BOTH);
-		StopEvents();
+        StopEvents();
         
-		::closesocket(m_socket);
+        ::closesocket(m_socket);
         m_socket = INVALID_SOCKET;
     }
 
@@ -429,8 +429,7 @@ namespace Win32xx
         if (GetWinVersion() != 1400) // Win Version != Win95
             events |= FD_QOS | FD_ROUTING_INTERFACE_CHANGE | FD_ADDRESS_LIST_CHANGE;
 
-        // Associate the network event object (hNetworkEvents) with the
-        // specified network events (Events) on socket sClient.
+        // Associate the network events with the client socket.
         if( SOCKET_ERROR == WSAEventSelect(clientSocket, allEvents[0], events))
         {
             TRACE("Error in Event Select\n");
@@ -445,7 +444,7 @@ namespace Win32xx
             DWORD result = ::WSAWaitForMultipleEvents(2, allEvents, FALSE, THREAD_TIMEOUT, FALSE);
 
             // Check event for stop thread
-			if (result - WSA_WAIT_EVENT_0 == 1)
+            if (result - WSA_WAIT_EVENT_0 == 1)
             {
                 ::WSACloseEvent(allEvents[0]);
                 return 0;
@@ -692,7 +691,7 @@ namespace Win32xx
             hints.ai_flags = AI_NUMERICHOST | AI_PASSIVE;
             ADDRINFO *addrInfo;
             CString portName;
-			portName.Format(_T("%u"), port);
+            portName.Format(_T("%u"), port);
 
             result = GetAddrInfo(addr, portName, &hints, &addrInfo);
             if (result != 0)
@@ -744,29 +743,29 @@ namespace Win32xx
     // This function starts the thread which monitors the socket for events.
     inline void CSocket::StartEvents()
     {
-		StopEvents();   // Ensure the thread isn't already running
+        StopEvents();   // Ensure the thread isn't already running
         
-		m_pThread->CreateThread();
+        m_threadPtr->CreateThread();
     }
 
 
     // Terminates the event thread gracefully (if possible)
     inline void CSocket::StopEvents()
     {
-		// Ask the event thread to stop
-		m_stopRequest.SetEvent();
+        // Ask the event thread to stop
+        m_stopRequest.SetEvent();
 
-		// Wait for the event thread to stop.
-		while (WAIT_TIMEOUT == ::WaitForSingleObject(*m_pThread, THREAD_TIMEOUT * 10))
-		{
-			// Waiting for the event thread to signal the m_stopped event.
+        // Wait for the event thread to stop.
+        while (WAIT_TIMEOUT == ::WaitForSingleObject(*m_threadPtr, THREAD_TIMEOUT * 10))
+        {
+            // Waiting for the event thread to signal the m_stopped event.
 
-			// Note: An excessive delay in processing any of the notification functions
-			// can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
-			TRACE("*** Error: Event Thread won't die ***\n");
-		}
+            // Note: An excessive delay in processing any of the notification functions
+            // can cause us to get here. (Yes one second is an excessive delay. Its a bug!)
+            TRACE("*** Error: Event Thread won't die ***\n");
+        }
 
-		m_stopRequest.ResetEvent();
+        m_stopRequest.ResetEvent();
     }
 }
 

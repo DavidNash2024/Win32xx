@@ -170,8 +170,8 @@ namespace Win32xx
         virtual void RecalcLayout();
         CRect GetMinRect() const { return m_minRect; }
         CRect GetMaxRect() const { return m_maxRect; }
-		void  SetMinRect(const RECT& minRect) { m_minRect = minRect; }
-		void  SetMaxRect(const RECT& rcMaxRect) { m_maxRect = rcMaxRect; }
+        void  SetMinRect(const RECT& minRect) { m_minRect = minRect; }
+        void  SetMaxRect(const RECT& rcMaxRect) { m_maxRect = rcMaxRect; }
 
         struct ResizeData
         {
@@ -308,11 +308,11 @@ namespace Win32xx
                 // Reflect this message if it's from a control
                 CWnd* pWnd = GetCWndPtr(reinterpret_cast<HWND>(lparam));
                 if (pWnd != NULL)
-					result = pWnd->OnCommand(wparam, lparam);
+                    result = pWnd->OnCommand(wparam, lparam);
 
                 // Handle user commands
                 if (!result)
-					result =  OnCommand(wparam, lparam);
+                    result =  OnCommand(wparam, lparam);
 
                 if (result) return 0;
             }
@@ -333,7 +333,7 @@ namespace Win32xx
 
                 if (pFrom != NULL)
                     if (::GetParent(hFrom) == m_hWnd)
-						result = pFrom->OnNotifyReflect(wparam, lparam);
+                        result = pFrom->OnNotifyReflect(wparam, lparam);
 
                 // Handle user notifications
                 if (!result) result = OnNotify(wparam, lparam);
@@ -590,7 +590,7 @@ namespace Win32xx
         DWORD id = 0;
         LRESULT result = SendMessage(DM_GETDEFID, 0, 0);
         if (DC_HASDEFID == HIWORD(result))
-			id = LOWORD(result);
+            id = LOWORD(result);
 
         return id;
     }
@@ -960,12 +960,12 @@ namespace Win32xx
         // we get it again.
         VERIFY(::GetClientRect(m_hParent, &currentRect) != 0);
 
-		currentRect.right  = MAX(currentRect.Width(),  m_minRect.Width() );
-		currentRect.bottom = MAX(currentRect.Height(), m_minRect.Height() );
+        currentRect.right  = MAX(currentRect.Width(),  m_minRect.Width() );
+        currentRect.bottom = MAX(currentRect.Height(), m_minRect.Height() );
         if (!m_maxRect.IsRectEmpty())
         {
-			currentRect.right  = MIN(currentRect.Width(),  m_maxRect.Width() );
-			currentRect.bottom = MIN(currentRect.Height(), m_maxRect.Height() );
+            currentRect.right  = MIN(currentRect.Width(),  m_maxRect.Width() );
+            currentRect.bottom = MIN(currentRect.Height(), m_maxRect.Height() );
         }
 
         // Declare an iterator to step through the vector

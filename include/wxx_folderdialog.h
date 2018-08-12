@@ -237,12 +237,12 @@ namespace Win32xx
         m_bi.pidlRoot = m_pidlRoot;
 
         LPITEMIDLIST pidl = ::SHBrowseForFolder(&m_bi);
-		m_displayName.ReleaseBuffer();
+        m_displayName.ReleaseBuffer();
 
         INT_PTR result = 0;
         if (pidl)
         {
-			m_fullPidl.push_back(pidl);
+            m_fullPidl.push_back(pidl);
             result = IDOK;
             OnOK();
         }
@@ -377,9 +377,9 @@ namespace Win32xx
     inline void CFolderDialog::SetTitle(LPCTSTR pTitle)
     {
         if (pTitle)
-			m_title = pTitle;
+            m_title = pTitle;
         else
-			m_title.Empty();
+            m_title.Empty();
 
         m_bi.lpszTitle = m_title.c_str();
     }

@@ -49,7 +49,7 @@ private:
 
     CView       m_view;
     CDoc        m_doc;
-    CAppHelp    m_appHelp;  // Help object for context help and help about dialog
+    CHelp    m_appHelp;  // Help object for context help and help about dialog
     BOOL        m_isChoosing;
 };
 

@@ -94,7 +94,7 @@ namespace Win32xx
     ///////////////////////////////////////////////////////////////////
     // Acknowledgement:
     //  CGlobalLock is based on code by Rob Caldecott
-	//  See:  https://www.codeproject.com/Articles/16692/WebControls/
+    //  See:  https://www.codeproject.com/Articles/16692/WebControls/
     //
     //////////////////////////////////////////////////////////////////
 

@@ -345,8 +345,8 @@ namespace Win32xx
     {
         // set the parameters in the CHOOSECOLOR struct
         ZeroMemory(&m_ofn,  sizeof(m_ofn));
-		m_ofn.rgbResult = initColor;
-		m_ofn.Flags = flags;
+        m_ofn.rgbResult = initColor;
+        m_ofn.Flags = flags;
 
         // Set all custom colors to white
         for (int i = 0; i <= 15; ++i)
@@ -354,7 +354,7 @@ namespace Win32xx
 
         // Enable the hook proc for the help button
         if (m_ofn.Flags & CC_SHOWHELP)
-			m_ofn.Flags |= CC_ENABLEHOOK;
+            m_ofn.Flags |= CC_ENABLEHOOK;
 
         // Set the CHOOSECOLOR struct parameters to safe values
         SetParameters(m_ofn);
@@ -418,7 +418,7 @@ namespace Win32xx
         // Create the modal dialog
         pTLSData->pWnd = this;
 
-		m_ofn.hwndOwner = hOwner;
+        m_ofn.hwndOwner = hOwner;
 
         // invoke the control and save the result on success
         BOOL IsValid = ::ChooseColor(&m_ofn);
@@ -458,15 +458,15 @@ namespace Win32xx
     // The parameters are set to sensible values.
     inline void CColorDialog::SetParameters(CHOOSECOLOR cc)
     {
-		m_ofn.lStructSize    = sizeof(m_ofn);
-		m_ofn.hwndOwner      = 0;            // Set this in DoModal
-		m_ofn.hInstance      = cc.hInstance;
-		m_ofn.rgbResult      = cc.rgbResult;
-		m_ofn.lpCustColors   = m_customColors;
-		m_ofn.Flags          = cc.Flags;
-		m_ofn.lCustData      = cc.lCustData;
-		m_ofn.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-		m_ofn.lpTemplateName = cc.lpTemplateName;
+        m_ofn.lStructSize    = sizeof(m_ofn);
+        m_ofn.hwndOwner      = 0;            // Set this in DoModal
+        m_ofn.hInstance      = cc.hInstance;
+        m_ofn.rgbResult      = cc.rgbResult;
+        m_ofn.lpCustColors   = m_customColors;
+        m_ofn.Flags          = cc.Flags;
+        m_ofn.lCustData      = cc.lCustData;
+        m_ofn.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_ofn.lpTemplateName = cc.lpTemplateName;
     }
 
 
@@ -493,14 +493,14 @@ namespace Win32xx
         ZeroMemory(&m_ofn, sizeof(m_ofn));
 
         // fill in the OPENFILENAME struct
-		m_ofn.lpstrFile     = const_cast<LPTSTR>(pFileName);
-		m_ofn.lpstrFilter   = pFilter;
-		m_ofn.lpstrDefExt   = pDefExt;
-		m_ofn.Flags         = flags;
+        m_ofn.lpstrFile     = const_cast<LPTSTR>(pFileName);
+        m_ofn.lpstrFilter   = pFilter;
+        m_ofn.lpstrDefExt   = pDefExt;
+        m_ofn.Flags         = flags;
 
         // Enable the hook proc for the help button
         if (m_ofn.Flags & OFN_SHOWHELP)
-			m_ofn.Flags |= OFN_ENABLEHOOK;
+            m_ofn.Flags |= OFN_ENABLEHOOK;
 
         // Safely set the remaining OPENFILENAME values
         SetParameters(m_ofn);
@@ -617,11 +617,11 @@ namespace Win32xx
         // Create the modal dialog
         pTLSData->pWnd = this;
 
-		m_ofn.hwndOwner = hOwner;
-		m_ofn.lpstrFile = m_fileName.GetBuffer(m_ofn.nMaxFile);
+        m_ofn.hwndOwner = hOwner;
+        m_ofn.lpstrFile = m_fileName.GetBuffer(m_ofn.nMaxFile);
         int ok = (m_isOpenFileDialog ? ::GetOpenFileName(&m_ofn) : ::GetSaveFileName(&m_ofn));
         m_fileName.ReleaseBuffer(m_ofn.nMaxFile);
-		m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
+        m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
         m_hWnd = 0;
 
         // the result of the file choice box is processed here:
@@ -930,12 +930,12 @@ namespace Win32xx
         if (pExt)
         {
             m_defExt = pExt;
-			m_ofn.lpstrDefExt = m_defExt.c_str();
+            m_ofn.lpstrDefExt = m_defExt.c_str();
         }
         else
         {
             m_defExt.Empty();
-			m_ofn.lpstrDefExt = NULL;
+            m_ofn.lpstrDefExt = NULL;
         }
     }
 
@@ -947,12 +947,12 @@ namespace Win32xx
         if (pFileName)
         {
             m_fileName = pFileName;
-			m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
+            m_ofn.lpstrFile = const_cast<LPTSTR>(m_fileName.c_str());
         }
         else
         {
             m_fileName.Empty();
-			m_ofn.lpstrFile = NULL;
+            m_ofn.lpstrFile = NULL;
         }
     }
 
@@ -965,7 +965,7 @@ namespace Win32xx
     inline void CFileDialog::SetFilter(LPCTSTR pFilter)
     {
         // Clear any existing filter
-		m_ofn.lpstrFilter = NULL;
+        m_ofn.lpstrFilter = NULL;
         m_filter.Empty();
 
         // convert any '|' characters in pFilter to NULL characters
@@ -976,7 +976,7 @@ namespace Win32xx
             {
                 str.Replace(_T('|'), _T('\0'));
                 m_filter = str;
-				m_ofn.lpstrFilter = m_filter.c_str();
+                m_ofn.lpstrFilter = m_filter.c_str();
             }
             else
             {
@@ -988,7 +988,7 @@ namespace Win32xx
                     if (pFilter[i] == _T('\0') && pFilter[i + 1] == _T('\0'))
                     {
                         m_filter.Assign(pFilter, i+1);
-						m_ofn.lpstrFilter = m_filter.c_str();
+                        m_ofn.lpstrFilter = m_filter.c_str();
                         break;
                     }
                     ++i;
@@ -1009,35 +1009,35 @@ namespace Win32xx
         if (GetWinVersion() < 2500)
             StructSize = OPENFILENAME_SIZE_VERSION_400;
         if (GetWinVersion() >= 2500)
-			m_ofn.FlagsEx =     ofn.FlagsEx;
+            m_ofn.FlagsEx =     ofn.FlagsEx;
   #endif
 
         SetFileName(ofn.lpstrFile);
         SetFilter(ofn.lpstrFilter);
         SetTitle(ofn.lpstrFileTitle);
 
-		m_ofn.lStructSize       = StructSize;
-		m_ofn.hwndOwner         = 0;            // Set this in DoModal
-		m_ofn.hInstance         = GetApp().GetInstanceHandle();
-		m_ofn.lpstrCustomFilter = ofn.lpstrCustomFilter;
-		m_ofn.nMaxCustFilter    = MAX(MAX_PATH, ofn.nMaxCustFilter);
-		m_ofn.nFilterIndex      = ofn.nFilterIndex;
+        m_ofn.lStructSize       = StructSize;
+        m_ofn.hwndOwner         = 0;            // Set this in DoModal
+        m_ofn.hInstance         = GetApp().GetInstanceHandle();
+        m_ofn.lpstrCustomFilter = ofn.lpstrCustomFilter;
+        m_ofn.nMaxCustFilter    = MAX(MAX_PATH, ofn.nMaxCustFilter);
+        m_ofn.nFilterIndex      = ofn.nFilterIndex;
 
         // Allocate a bigger buffer for multiple files
         if (ofn.Flags & OFN_ALLOWMULTISELECT)
-			m_ofn.nMaxFile = MAX(MAX_PATH * 256, ofn.nMaxFile);
+            m_ofn.nMaxFile = MAX(MAX_PATH * 256, ofn.nMaxFile);
         else
-			m_ofn.nMaxFile = MAX(MAX_PATH, ofn.nMaxFile);
+            m_ofn.nMaxFile = MAX(MAX_PATH, ofn.nMaxFile);
 
-		m_ofn.lpstrFileTitle    = ofn.lpstrFileTitle;
-		m_ofn.nMaxFileTitle     = MAX(MAX_PATH, ofn.nMaxFileTitle);
-		m_ofn.lpstrInitialDir   = ofn.lpstrInitialDir;
-		m_ofn.Flags             = ofn.Flags;
-		m_ofn.nFileOffset       = ofn.nFileOffset;
-		m_ofn.nFileExtension    = ofn.nFileExtension;
-		m_ofn.lpstrDefExt       = ofn.lpstrDefExt;
-		m_ofn.lCustData         = ofn.lCustData;
-		m_ofn.lpfnHook          = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_ofn.lpstrFileTitle    = ofn.lpstrFileTitle;
+        m_ofn.nMaxFileTitle     = MAX(MAX_PATH, ofn.nMaxFileTitle);
+        m_ofn.lpstrInitialDir   = ofn.lpstrInitialDir;
+        m_ofn.Flags             = ofn.Flags;
+        m_ofn.nFileOffset       = ofn.nFileOffset;
+        m_ofn.nFileExtension    = ofn.nFileExtension;
+        m_ofn.lpstrDefExt       = ofn.lpstrDefExt;
+        m_ofn.lCustData         = ofn.lCustData;
+        m_ofn.lpfnHook          = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
     }
 
 
@@ -1048,12 +1048,12 @@ namespace Win32xx
         if (pTitle)
         {
             m_title = pTitle;
-			m_ofn.lpstrTitle = m_title.c_str();
+            m_ofn.lpstrTitle = m_title.c_str();
         }
         else
         {
             m_title.Empty();
-			m_ofn.lpstrTitle = NULL;
+            m_ofn.lpstrTitle = NULL;
         }
     }
 
@@ -1098,15 +1098,15 @@ namespace Win32xx
         pTLSData->pWnd = this;
 
         // Initialize the FINDREPLACE struct values
-		m_fr.Flags = flags;
+        m_fr.Flags = flags;
         SetParameters(m_fr);
-		m_fr.hwndOwner = hParent;
+        m_fr.hwndOwner = hParent;
 
-		m_fr.lpstrFindWhat = m_findWhat.GetBuffer(m_fr.wFindWhatLen);
+        m_fr.lpstrFindWhat = m_findWhat.GetBuffer(m_fr.wFindWhatLen);
         if (pFindWhat)
             lstrcpyn(m_fr.lpstrFindWhat, pFindWhat, m_fr.wFindWhatLen);
 
-		m_fr.lpstrReplaceWith = m_replaceWith.GetBuffer(m_fr.wReplaceWithLen);
+        m_fr.lpstrReplaceWith = m_replaceWith.GetBuffer(m_fr.wReplaceWithLen);
         if (pReplaceWith)
             lstrcpyn(m_fr.lpstrReplaceWith, pReplaceWith, m_fr.wReplaceWithLen);
 
@@ -1124,9 +1124,9 @@ namespace Win32xx
         }
 
         m_findWhat.ReleaseBuffer();
-		m_fr.lpstrFindWhat = const_cast<LPTSTR>(m_findWhat.c_str());
+        m_fr.lpstrFindWhat = const_cast<LPTSTR>(m_findWhat.c_str());
         m_replaceWith.ReleaseBuffer();
-		m_fr.lpstrReplaceWith = const_cast<LPTSTR>(m_replaceWith.c_str());
+        m_fr.lpstrReplaceWith = const_cast<LPTSTR>(m_replaceWith.c_str());
 
         return TRUE;
     }
@@ -1286,21 +1286,21 @@ namespace Win32xx
         else
             m_replaceWith.Empty();
 
-		m_fr.lStructSize        = sizeof(m_fr);
-		m_fr.hwndOwner          = 0;        // Set this in Create
-		m_fr.hInstance          = GetApp().GetInstanceHandle();
-		m_fr.Flags              = fr.Flags;
-		m_fr.lpstrFindWhat      = const_cast<LPTSTR>(m_findWhat.c_str());
-		m_fr.lpstrReplaceWith   = const_cast<LPTSTR>(m_replaceWith.c_str());
-		m_fr.wFindWhatLen       = static_cast<WORD>(MAX(fr.wFindWhatLen, maxChars));
-		m_fr.wReplaceWithLen    = static_cast<WORD>(MAX(fr.wReplaceWithLen, maxChars));
-		m_fr.lCustData          = reinterpret_cast<LPARAM>(this);
-		m_fr.lpfnHook           = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-		m_fr.lpTemplateName     = fr.lpTemplateName;
+        m_fr.lStructSize        = sizeof(m_fr);
+        m_fr.hwndOwner          = 0;        // Set this in Create
+        m_fr.hInstance          = GetApp().GetInstanceHandle();
+        m_fr.Flags              = fr.Flags;
+        m_fr.lpstrFindWhat      = const_cast<LPTSTR>(m_findWhat.c_str());
+        m_fr.lpstrReplaceWith   = const_cast<LPTSTR>(m_replaceWith.c_str());
+        m_fr.wFindWhatLen       = static_cast<WORD>(MAX(fr.wFindWhatLen, maxChars));
+        m_fr.wReplaceWithLen    = static_cast<WORD>(MAX(fr.wReplaceWithLen, maxChars));
+        m_fr.lCustData          = reinterpret_cast<LPARAM>(this);
+        m_fr.lpfnHook           = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_fr.lpTemplateName     = fr.lpTemplateName;
 
         // Enable the hook proc for the help button
         if (m_fr.Flags & FR_SHOWHELP)
-			m_fr.Flags |= FR_ENABLEHOOK;
+            m_fr.Flags |= FR_ENABLEHOOK;
     }
 
 
@@ -1320,21 +1320,21 @@ namespace Win32xx
         ZeroMemory(&m_cf, sizeof(m_cf));
 
         // set dialog parameters
-		m_cf.rgbColors   = 0; // black
-		m_cf.lStructSize = sizeof(m_cf);
-		m_cf.Flags  = flags;
-		m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
-		m_cf.lpLogFont = const_cast<LOGFONT*>(&initial);
+        m_cf.rgbColors   = 0; // black
+        m_cf.lStructSize = sizeof(m_cf);
+        m_cf.Flags  = flags;
+        m_cf.Flags |= CF_INITTOLOGFONTSTRUCT;
+        m_cf.lpLogFont = const_cast<LOGFONT*>(&initial);
 
         if (printer)
         {
-			m_cf.hDC = printer;
-			m_cf.Flags |= CF_PRINTERFONTS;
+            m_cf.hDC = printer;
+            m_cf.Flags |= CF_PRINTERFONTS;
         }
 
         // Enable the hook proc for the help button
         if (m_cf.Flags & CF_SHOWHELP)
-			m_cf.Flags |= CF_ENABLEHOOK;
+            m_cf.Flags |= CF_ENABLEHOOK;
 
         SetParameters(m_cf);
     }
@@ -1354,22 +1354,22 @@ namespace Win32xx
         ZeroMemory(&m_cf, sizeof(m_cf));
 
         // set dialog parameters
-		m_cf.lStructSize = sizeof(m_cf);
-		m_cf.Flags  = flags;
-		m_cf.Flags  |= FillInLogFont(charformat);
+        m_cf.lStructSize = sizeof(m_cf);
+        m_cf.Flags  = flags;
+        m_cf.Flags  |= FillInLogFont(charformat);
 
         if (charformat.dwMask & CFM_COLOR)
-			m_cf.rgbColors = charformat.crTextColor;
+            m_cf.rgbColors = charformat.crTextColor;
 
         if (printer)
         {
-			m_cf.hDC = printer;
-			m_cf.Flags |= CF_PRINTERFONTS;
+            m_cf.hDC = printer;
+            m_cf.Flags |= CF_PRINTERFONTS;
         }
 
         // Enable the hook proc for the help button
         if (m_cf.Flags & CF_SHOWHELP)
-			m_cf.Flags |= CF_ENABLEHOOK;
+            m_cf.Flags |= CF_ENABLEHOOK;
 
         SetParameters(m_cf);
     }
@@ -1383,19 +1383,19 @@ namespace Win32xx
         ZeroMemory(&m_cf, sizeof(m_cf));
 
         // set dialog parameters
-		m_cf.rgbColors = 0; // black
-		m_cf.lStructSize = sizeof(m_cf);
-		m_cf.Flags  = flags;
+        m_cf.rgbColors = 0; // black
+        m_cf.lStructSize = sizeof(m_cf);
+        m_cf.Flags  = flags;
 
         if (printer)
         {
-			m_cf.hDC = printer;
-			m_cf.Flags |= CF_PRINTERFONTS;
+            m_cf.hDC = printer;
+            m_cf.Flags |= CF_PRINTERFONTS;
         }
 
         // Enable the hook proc for the help button
         if (m_cf.Flags & CF_SHOWHELP)
-			m_cf.Flags |= CF_ENABLEHOOK;
+            m_cf.Flags |= CF_ENABLEHOOK;
 
         SetParameters(m_cf);
     }
@@ -1459,14 +1459,14 @@ namespace Win32xx
         // Create the modal dialog
         pTLSData->pWnd = this;
 
-		m_cf.hwndOwner = hOwner;
-		m_cf.lpszStyle = m_styleName.GetBuffer(80);
+        m_cf.hwndOwner = hOwner;
+        m_cf.lpszStyle = m_styleName.GetBuffer(80);
 
         // open the font choice dialog
         BOOL ok = ::ChooseFont(&m_cf);
 
         m_styleName.ReleaseBuffer();
-		m_cf.lpszStyle = const_cast<LPTSTR>(m_styleName.c_str());
+        m_cf.lpszStyle = const_cast<LPTSTR>(m_styleName.c_str());
         m_hWnd = 0;
 
         // process the result of the font choice box:
@@ -1637,21 +1637,21 @@ namespace Win32xx
         else
             m_styleName.Empty();
 
-		m_cf.lStructSize    = sizeof(m_cf);
-		m_cf.hwndOwner      = 0;        // Set this in DoModal
-		m_cf.hDC            = cf.hDC;
-		m_cf.lpLogFont      = &m_logFont;
-		m_cf.iPointSize     = cf.iPointSize;
-		m_cf.Flags          = cf.Flags;
-		m_cf.rgbColors      = cf.rgbColors;
-		m_cf.lCustData      = cf.lCustData;
-		m_cf.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
-		m_cf.lpTemplateName = cf.lpTemplateName;
-		m_cf.hInstance      = GetApp().GetInstanceHandle();
-		m_cf.lpszStyle      = const_cast<LPTSTR>(m_styleName.c_str());
-		m_cf.nFontType      = cf.nFontType;
-		m_cf.nSizeMin       = cf.nSizeMin;
-		m_cf.nSizeMax       = cf.nSizeMax;
+        m_cf.lStructSize    = sizeof(m_cf);
+        m_cf.hwndOwner      = 0;        // Set this in DoModal
+        m_cf.hDC            = cf.hDC;
+        m_cf.lpLogFont      = &m_logFont;
+        m_cf.iPointSize     = cf.iPointSize;
+        m_cf.Flags          = cf.Flags;
+        m_cf.rgbColors      = cf.rgbColors;
+        m_cf.lCustData      = cf.lCustData;
+        m_cf.lpfnHook       = reinterpret_cast<LPCCHOOKPROC>(CDHookProc);
+        m_cf.lpTemplateName = cf.lpTemplateName;
+        m_cf.hInstance      = GetApp().GetInstanceHandle();
+        m_cf.lpszStyle      = const_cast<LPTSTR>(m_styleName.c_str());
+        m_cf.nFontType      = cf.nFontType;
+        m_cf.nSizeMin       = cf.nSizeMin;
+        m_cf.nSizeMax       = cf.nSizeMax;
     }
 
 }

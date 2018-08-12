@@ -125,7 +125,7 @@ namespace Win32xx
 
     inline CScrollView::CScrollView()
     {
-		m_backgndBrush.CreateSolidBrush(RGB(255, 255, 255));
+        m_backgndBrush.CreateSolidBrush(RGB(255, 255, 255));
     }
 
 
@@ -383,18 +383,18 @@ namespace Win32xx
             Invalidate();
         }
 
-		m_totalSize = totalSize;
+        m_totalSize = totalSize;
         m_pageSize = pageSize;
         m_lineSize = lineSize;
 
         if (m_pageSize.cx == 0)
-			m_pageSize.cx = m_totalSize.cx / 10;
+            m_pageSize.cx = m_totalSize.cx / 10;
         if (m_pageSize.cy == 0)
-			m_pageSize.cy = m_totalSize.cy / 10;
+            m_pageSize.cy = m_totalSize.cy / 10;
         if (m_lineSize.cx == 0)
-			m_lineSize.cx = m_pageSize.cx / 10;
+            m_lineSize.cx = m_pageSize.cx / 10;
         if (m_lineSize.cy == 0)
-			m_lineSize.cy = m_pageSize.cy / 10;
+            m_lineSize.cy = m_pageSize.cy / 10;
 
         m_currentPos = CPoint(0, 0);
 

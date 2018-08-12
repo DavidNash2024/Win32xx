@@ -288,7 +288,7 @@ namespace Win32xx
     // a CUserException.  BYTE is unsigned char.
     inline void CDataExchange::DDV_MinMaxByte(BYTE value, BYTE minVal, BYTE maxVal) const
     {
-		  DDV_MinMaxULong(value, minVal, maxVal);
+          DDV_MinMaxULong(value, minVal, maxVal);
     }
 
 

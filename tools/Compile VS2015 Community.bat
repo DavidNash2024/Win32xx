@@ -325,6 +325,7 @@ copy Tutorial5\Release\Tutorial5.exe       "..\output\VS2015\Tutorials\Release" 
 copy Tutorial6\Release\Tutorial6.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 copy Tutorial7\Release\Tutorial7.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 copy Tutorial8\Release\Tutorial8.exe       "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
+copy Tutorial10\Release\Tutorial9.exe      "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 copy Tutorial10\Release\Tutorial10.exe     "..\output\VS2015\Tutorials\Release"    >>"..\output\VS2015.log"
 
 REM: Pop the directory change off the stack

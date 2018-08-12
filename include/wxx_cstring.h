@@ -1234,7 +1234,7 @@ namespace Win32xx
     template <>
     inline void CStringT<WCHAR>::MakeLower()
     {
-		std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towlower);
+        std::transform(m_str.begin(), m_str.end(), m_str.begin(), ::towlower);
     }
 
 
@@ -1329,7 +1329,7 @@ namespace Win32xx
         std::advance(it_end, newLength);
 
         std::copy(m_buf.begin(), it_end, m_str.begin());
-		m_buf.clear();
+        m_buf.clear();
     }
 
 

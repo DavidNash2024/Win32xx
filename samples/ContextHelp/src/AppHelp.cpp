@@ -3,24 +3,24 @@
 #include "AppHelp.h"
 #include "resource.h"
 
-CAppHelp::CAppHelp()
+CHelp::CHelp()
 {
     SetCommandHelpTopics();
     SetClientHelpTopics();
     SetFrameHelpTopics();
 }
 
-void CAppHelp::About(HWND hParent)
+void CHelp::About(HWND hParent)
 {
     m_helpAbout.DoModal(hParent);
 }
 
-void CAppHelp::AddHelpTopic(UINT id, LPCTSTR topic)
+void CHelp::AddHelpTopic(UINT id, LPCTSTR topic)
 {
     m_contextHelp.AddHelpTopic(id, topic);
 }
 
-void CAppHelp::SetCommandHelpTopics()
+void CHelp::SetCommandHelpTopics()
 // Define the context help topics to be displayed for the menu items and the toolbar.
 {
     // define the help topics for the menu and status bar
@@ -52,7 +52,7 @@ void CAppHelp::SetCommandHelpTopics()
     AddHelpTopic(IDW_ABOUT,         _T("AboutThisProgram"));
 }
 
-void CAppHelp::SetClientHelpTopics()
+void CHelp::SetClientHelpTopics()
 {
     // define the help topic for the dialog's client area
     AddHelpTopic(IDD_DIALOG1,       _T("clientwindowcontrols"));
@@ -72,7 +72,7 @@ void CAppHelp::SetClientHelpTopics()
     AddHelpTopic(IDOK,              _T("OKButtonUsage"));
 }
 
-void CAppHelp::SetFrameHelpTopics()
+void CHelp::SetFrameHelpTopics()
 {
     // define the context help topics for the frame
     AddHelpTopic(IDFR_CLOSE,        _T("ExitTerminateProgram"));
@@ -82,24 +82,24 @@ void CAppHelp::SetFrameHelpTopics()
     AddHelpTopic(IDFR_HELP,         _T("TitleBarQuestionBox"));
 }
 
-void CAppHelp::SetHelpFilePath(LPCTSTR chmName)
+void CHelp::SetHelpFilePath(LPCTSTR chmName)
 {
     m_contextHelp.SetHelpFilePath(chmName);
 }
 
-void CAppHelp::ShowHelpTopic(UINT id)
+void CHelp::ShowHelpTopic(UINT id)
 // Display the context help for the specified topic
 {
     m_contextHelp.ShowHelpTopic(id);
 }
 
-void CAppHelp::ShowHelpTopic(LPCTSTR topic)
+void CHelp::ShowHelpTopic(LPCTSTR topic)
 // Display the context help for the specified topic
 {
     m_contextHelp.ShowHelpTopic(topic);
 }
 
-void CAppHelp::SetCredits(LPCTSTR credits)
+void CHelp::SetCredits(LPCTSTR credits)
 {
     m_helpAbout.SetCredits(credits);
 }

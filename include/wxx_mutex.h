@@ -74,7 +74,7 @@ namespace Win32xx
         CEvent(BOOL isInitiallySignaled = FALSE, BOOL isManualReset = FALSE, 
             LPCTSTR pName = NULL, LPSECURITY_ATTRIBUTES pAttributes = NULL);
 
-		HANDLE GetHandle() const { return m_hEvent; }
+        HANDLE GetHandle() const { return m_hEvent; }
         operator HANDLE() const  { return m_hEvent; }
         
         void ResetEvent();
@@ -91,7 +91,7 @@ namespace Win32xx
         CMutex(BOOL isInitiallySignaled = FALSE, LPCTSTR pName = FALSE,
             LPSECURITY_ATTRIBUTES pAttributes = NULL);
 
-		HANDLE GetHandle() const { return m_hMutex; }
+        HANDLE GetHandle() const { return m_hMutex; }
         operator HANDLE() const  { return m_hMutex; }
         
     private:
@@ -104,9 +104,9 @@ namespace Win32xx
         CSemaphore(LONG initialCount, LONG maxCount, LPCTSTR pName, 
             LPSECURITY_ATTRIBUTES pAttributes);
 
-		HANDLE GetHandle() const { return m_hSemaphore; }
+        HANDLE GetHandle() const { return m_hSemaphore; }
         operator HANDLE() const  { return m_hSemaphore; }
-		BOOL ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount = NULL);
+        BOOL ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount = NULL);
 
     private:
         HANDLE m_hSemaphore;
@@ -185,17 +185,17 @@ namespace Win32xx
         if (m_hSemaphore == NULL)
             throw CResourceException(_T("Unable to create semaphore"));
     }
-	
-	// Increases the count of the specified semaphore object by a specified amount.
-	// Parameters:
-	//  releaseCount   - Amount by which the semaphore object's current count is to be increased.
-	//                   must be greater than zero.
+    
+    // Increases the count of the specified semaphore object by a specified amount.
+    // Parameters:
+    //  releaseCount   - Amount by which the semaphore object's current count is to be increased.
+    //                   must be greater than zero.
     //  pPreviousCount - pointer to a variable to receive the previous count.
-	inline BOOL CSemaphore::ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount)
-	{	
-		BOOL result = ::ReleaseSemaphore(m_hSemaphore, releaseCount, pPreviousCount);
-		return result;
-	}
+    inline BOOL CSemaphore::ReleaseSemaphore(LONG releaseCount, LONG* pPreviousCount)
+    {   
+        BOOL result = ::ReleaseSemaphore(m_hSemaphore, releaseCount, pPreviousCount);
+        return result;
+    }
             
     
 }

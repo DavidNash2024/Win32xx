@@ -133,12 +133,12 @@ namespace Win32xx
         if (NULL == m_pfnThreadProc) m_pfnThreadProc = CWinThread::StaticThreadProc;
         if (NULL == m_pThreadParams) m_pThreadParams = this;
 
-		// Reusing the CWinThread
-		if (m_hThread)
-		{
-			assert(!IsRunning());
-			VERIFY(CloseHandle(m_hThread));
-		}
+        // Reusing the CWinThread
+        if (m_hThread)
+        {
+            assert(!IsRunning());
+            VERIFY(CloseHandle(m_hThread));
+        }
 
 #ifdef _WIN32_WCE
         m_hThread = reinterpret_cast<HANDLE>(::CreateThread(pSecurityAttributes, stack_size, (LPTHREAD_START_ROUTINE)m_pfnThreadProc, m_pThreadParams, initflag, &m_threadIDForWinCE));
@@ -687,9 +687,9 @@ namespace Win32xx
         ZeroMemory(&defaultWC, sizeof(defaultWC));
 
         LPCTSTR pClassName    = _T("Win32++ Temporary Window Class");
-		defaultWC.hInstance     = GetInstanceHandle();
-		defaultWC.lpfnWndProc   = CWnd::StaticWindowProc;
-		defaultWC.lpszClassName = pClassName;
+        defaultWC.hInstance     = GetInstanceHandle();
+        defaultWC.lpfnWndProc   = CWnd::StaticWindowProc;
+        defaultWC.lpszClassName = pClassName;
 
         VERIFY(::RegisterClass(&defaultWC) != 0);
 

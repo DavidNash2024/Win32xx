@@ -309,9 +309,9 @@ namespace Win32xx
     {
         // read, simply and  in binary mode, the size into the lpBuf
         assert(m_pFile);
-		UINT nBytes = m_pFile->Read(pBuf, size);
-		if (nBytes != size)
-			throw CFileException(m_pFile->GetFilePath(), _T("Failed to read from archive."));
+        UINT nBytes = m_pFile->Read(pBuf, size);
+        if (nBytes != size)
+            throw CFileException(m_pFile->GetFilePath(), _T("Failed to read from archive."));
     }
 
     // Record the archived data schema number.  This acts as a version number
@@ -879,7 +879,7 @@ namespace Win32xx
     // do so correctly.
     inline CArchive& CArchive::operator>>(CObject& object)
     {
-		object.Serialize(*this);
+        object.Serialize(*this);
         return *this;
     }
 

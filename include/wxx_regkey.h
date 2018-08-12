@@ -267,7 +267,7 @@ namespace Win32xx
             HRESULT hr = ::CLSIDFromString(TtoOLE(szGUID), &value);
 
             if (FAILED(hr))
-				result = ERROR_INVALID_DATA;
+                result = ERROR_INVALID_DATA;
         }
 
         return result;
@@ -316,7 +316,7 @@ namespace Win32xx
         TCHAR subKey[MAX_PATH];
         while (ERROR_SUCCESS == ::RegEnumKeyEx(Key, 0, subKey, &size, NULL, NULL, NULL, &time))
         {
-			result = Key.RecurseDeleteKey(subKey);
+            result = Key.RecurseDeleteKey(subKey);
             if (result != ERROR_SUCCESS)
                 return result;
             size = MAX_PATH;
@@ -388,7 +388,7 @@ namespace Win32xx
         {
             pTemp += length;
             bytes += length *sizeof(TCHAR);
-			length = lstrlen(pTemp) +1;
+            length = lstrlen(pTemp) +1;
         }
 
         return ::RegSetValueEx(m_hKey, pValueName, 0, REG_MULTI_SZ, reinterpret_cast<const BYTE*>(pValue), bytes);

@@ -286,7 +286,7 @@ namespace Win32xx
         pioo->Release();
 
         IPersistStreamInit* ppsi;
-		result = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
+        result = m_pUnk->QueryInterface(IID_IPersistStreamInit, reinterpret_cast<void**>(&ppsi));
         if (SUCCEEDED(result))
         {
             ppsi->InitNew();
@@ -588,7 +588,7 @@ namespace Win32xx
         }
 
         IOleInPlaceObject* pipo;
-		result = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
+        result = m_pUnk->QueryInterface(IID_IOleInPlaceObject, reinterpret_cast<void**>(&pipo));
         if (SUCCEEDED(result))
         {
             pipo->UIDeactivate();
